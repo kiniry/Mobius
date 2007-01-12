@@ -355,7 +355,7 @@
 	 				 	 \mbox{\rm\texttt{n} } .\pre\subst{\locVar{s}}{ \stack{\counter + s -\methodd.\numArgs}}_{s = 0}^{ \mbox{\rm\texttt{n} }  .\numArgs }  \\ \\
 	 				 			\wedge \\\\
 								
-	 				 			       \forall res,  m_i ( m_i \in \mbox{\rm\texttt{n} } .\modif )   \\
+	 				 			       \forall res,  m ( m \in \mbox{\rm\texttt{n} } .\modif )   \\
            %( mod \in \mbox{\rm\texttt{n} } .\modif ), \forall res (  \\ 
          \left( \begin{array}{l}
 	 				 				      \mbox{\rm\texttt{n} } .\normalPost %\begin{array}{l}
@@ -377,7 +377,7 @@
 
 
 	 	 \findExcHandler{ \mbox{\rm\texttt{n} }.\exceptions[j] }{i}{\methodd.\excHandlerTable} = \bottom \Rightarrow \\  
-					  \forall e, m_i ( m_i \in \mbox{\rm\texttt{n} } .\modif ),  \\
+					  \forall e, m ( m \in \mbox{\rm\texttt{n} } .\modif ),  \\
 					 \left( \begin{array}{l}
                                                  \mbox{\rm\texttt{n} }.\excPostSpec ( \mbox{\rm\texttt{n} }.\exceptions[j]) \subst{\EXC }{e } %\subst{\mbox{\rm\texttt{n} } .\modif[i]}{  \boundVar_i }_{i=0}^{ \mbox{\rm\texttt{n} }  .\modif.length }  %\subst{\old{\ast}}{\ast}  \Rightarrow \\ 
                                                   \methodd.\getExcPost (i,   \methodd.\exceptions[j] )\subst{\EXC }{e } %\subst{\mbox{\rm\texttt{n} } .\modif[i]}{  \boundVar_i }_{i=0}^{ \mbox{\rm\texttt{n} } .\modif.length }      \\
@@ -388,7 +388,7 @@
  \wedge \\
 
 		     (\findExcHandler{ \mbox{\rm\texttt{m} }.\excPostSpec ( \mbox{\rm\texttt{n} }.\exceptions[j])  }{i}{\methodd.\excHandlerTable} = k    \Rightarrow \\ 
-                    \forall e , m_i ( m_i \in \mbox{\rm\texttt{n} } .\modif ), \\
+                    \forall e , m ( m \in \mbox{\rm\texttt{n} } .\modif ), \\
                               \left( \begin{array}{l}
 						 \mbox{\rm\texttt{n} }.\excPostSpec ( \mbox{\rm\texttt{n} }.\exceptions[j]) \subst{\EXC }{e } 	%\subst{\mbox{\rm\texttt{n} } .\modif[i]}{  \boundVar_i }_{i=0}^{ \mbox{\rm\texttt{n} } .\modif.length } %\subst{\old{\ast}}{\ast} )
  \Rightarrow \\ 
@@ -418,7 +418,7 @@
 						and correctly initialized formal parameters
 						is true we want to establish that the predicate \inter{i}{i+1 } \
 						holds . This implication is quantified over the locations \mbox{\rm\texttt{n}}.\modif \ that a method may modify.
-						We denote the quantification with $ m_i ( m_i \in \mbox{\rm\texttt{n} } .\modif ) $ to say that we quantify over the locations 
+						We denote the quantification with $ m ( m \in \mbox{\rm\texttt{n} } .\modif ) $ to say that we quantify over the locations 
 						which are in the modifies list.
 						%This is done by quantifying over the bound variables $\boundVar_1 \ldots \boundVar_{\mbox{\rm\texttt{n} }  .\modif.length}$.
 						%Note also that in the postcondition of the invoked method, 
@@ -439,7 +439,7 @@
 						$ \mbox{\rm\texttt{n} }.\excPostSpec ( \mbox{\rm\texttt{Exc} })  $ of \texttt{n} holds
 						then  	$ \methodd.\excPostSpec ( \mbox{\rm\texttt{Exc} })  $ for any value of the thrown exception
 						object. 
-						In case the thrown  exception\texttt{Exc} is handled by \methodd, i.e. \\
+						In case the thrown  exception\texttt{Exc} is handled by \methodd, i.e.
 						$ \findExcHandler{ \mbox{\rm\texttt{n} }.\excPostSpec 
 						  ( \mbox{\rm\texttt{n} }.\exceptions[j])  }{i}{\methodd.\excHandlerTable} = k $   then if 
 						the exceptional postcondition $ \mbox{\rm\texttt{n} }.\excPostSpec ( \mbox{\rm\texttt{Exc} })  $ 

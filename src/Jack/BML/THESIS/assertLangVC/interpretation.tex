@@ -31,22 +31,28 @@ or evaluates to  \Mynull. In case  \numConclusion{2}  the statement does not mak
 a state where if either $\expression_1 $ is not a valid reference in the current or is \Mynull{}  or $\expression_2$  is not in the bounds of $\expression_1 $.
 
 Building a logic for partiality is not trivial. Different solutions exist. 
-Gries and Schnieder \cite{gries95avoiding} give a solution which consists in function 
-underspecification  and thus  avoid the problem of undefideness. 
- More particularly, their approach considers all functions as total but for argument values for which the function is actually 
-not defined the function may return whatever value. 
-For instance, in such interpretation of undefidness the formula 
-This approach, although practical requires certain restriction over the definition 
-of recursive functions in order to keep the logic consistent as pointed in \cite{J95PFL}.
-This approach is adopted in JML \cite{JMLRefMan}.
- In  \cite{schieder99adapting}, the authors give 
-  an extension  of the calculus of boolean structures proposed by Dijkstra and Scholten (\cite{WPCDS}) with a  third boolean value 
-undefined.  The logical connectives are extended in a non monotonic way and preserve the properties of the classical logic
-on the price  of having two sorts of equality.
 A naive three valued logic, where expressions may be evaluated to a value or  undefined  in a state and
  formulas might be \false{}, \true{} or undefined in a state appear to loose certain nice properties
  which standard logic with equality have
 as for instance associativity of equality, the excluded middle \cite{gries95avoiding} etc. 
+Gries and Schnieder \cite{gries95avoiding} give a solution which consists in function 
+underspecification  and thus  avoid the problem of undefideness. 
+ More particularly, their approach considers all functions as total but for argument values for which the function is actually 
+not defined the function may return whatever value. 
+For instance, using the semantics of underspecification, the formula $\Mynull.\fieldd== \Mynull.\fieldd$  will evaluate to true.
+This approach is adopted in JML \cite{JMLRefMan}. However, seeing the expressions in specifications 
+as totally defined functions may sometimes lead to unsoundness in program verification.
+ Thus,  not all tools supporting JML support the semantics of underspecification. %%%%Reference esc/java 
+An alternative is to check specifications for if they are well formed.
+ For instance, ESC/java supports well-definedness checks of specifications.
+
+%This approach, although practical requires certain restriction over the definition 
+%of recursive functions in order to keep the logic consistent as pointed in \cite{J95PFL}.
+% In  \cite{schieder99adapting}, the authors give 
+%  an extension  of the calculus of boolean structures proposed by Dijkstra and Scholten (\cite{WPCDS}) with a  third boolean value 
+%undefined.  The logical connectives are extended in a non monotonic way and preserve the properties of the classical logic
+%on the price  of having two sorts of equality.
+
 In \cite{burdy98treatment}, L. Burdy proposes a three valued logic in which the above features of classical logic are preserved.
 He introduces a well-definedness operator $\wellDefined{}: \expression \cup \predWp \rightarrow \predWp$
  over expressions and formulas. Thus, formulas can be either \true{}, \false{} or not defined and
@@ -55,7 +61,8 @@ expressions may evaluate to a value or be undefined. The operator  $\wellDefined
  conditions such that $\expression$(\predWp ) is defined. 
  Particularly, the application of the operator   $\wellDefined{\expression}$  ($\wellDefined{\predWp}$) over $\expression$  (\predWp ) 
  evaluates only either to \true{} or \false{}, i.e.  it holds in a state only if the expression $\expression$ has  a value in this state, otherwise it is interpreted to \false{}.   
- 
+  
+
  This in particular, means that for every formula and its subexpressions additional verification conditions for well-definedness must be generated.
  Thus a formula may hold in a state only under the condition that
  it is  defined, i.e. all the expression contained in the formula should have a meaning in  this state.
@@ -67,7 +74,6 @@ $$
             \begin{array}{l}
               \wellDefined{\expression_1} \wedge \\
      \wellDefined{\expression_2} \wedge \\
-             \instances(\expression_1) \wedge \\
               \expression_1 \neq \Mynull \wedge\\
              0 \le  \expression_2 < \arraylength(\expression_1)
             \end{array} 
@@ -157,13 +163,13 @@ The interpretation $\interp{\predWp}{s}$ is defined in the standard way.
 
  
 We define a function for expression evaluation
- $\evalExpName$ which evaluates expressions in a state and which has the following signature:
+ which evaluates expressions in a state and which has the following signature:
 %\rightharpoonup
 $$
 \evalExpName : \expression \rightarrow \SetConfigs  \rightarrow \SetConfigs  \rightharpoonup  \Values \cup \JavaType
 $$
-The evaluation function   takes as arguments an expression of the assertion language presented in the previous Section 
-\ref{assertLang:lang} and two states (see Section \ref{def} for the definition of state)  and returns a value or a class type
+The evaluation function   takes  an expression of the assertion language presented in the previous Section 
+\ref{assertLang:lang} and a state (see Section \ref{def} for the definition of state)  and returns a value or a class type
 (see Section \ref{types} for the definition of values and types in the language). 
 
 
@@ -379,6 +385,6 @@ The next definition introduces the notion of an assertion formula logically vali
 in every program state. We call such formulas  valid formulas. 
 
 \begin{interpretation}[Valid formulas]\label{assertLang:interpretation:valid}
-  We say that the formula  $ \predWp $ a valid formula if forall states $s$  $\interpSpecTwoStates{\predWp}{s}{s}$. 
+  We say that the formula  $ \predWp $ a valid formula if forall states $s$  $\interp{\predWp}{s}{s}$. 
 We note this with  $\validFormula{\predWp}$ 
 \end{interpretation}

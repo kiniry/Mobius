@@ -1,5 +1,5 @@
 
-%\newtheorem{lemma_1}{Lemma}[section] 
+\newtheorem{proofDef}{Definition}[section] 
 \newtheorem{lemma}{Lemma}[section] % one step sequential execution
 %\newtheorem{lemma1}[lemma0]{Lemma} % progress
 %\newtheorem{lemma3}[lemma0]{Lemma} % progress
@@ -15,6 +15,23 @@
 
 \section{Proof of Correctness } \label{proof}
 
+In the following, we shall consider also that we manipulate meaningful states. A meaningful state means that the heap is 
+well - formed as defined in Definition \ref{heap:wf}. Moreover, in a meaningful state if local variables and the stack  contain only 
+ references from the current heap or integer values.
+\begin{proofDef}[Meaningful state]\label{meaningful}
+The state $\config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc}  $ is meaningful if the heap respects conditions in Def. \ref{heap:wf}
+and every local variable   $ l $ ($l \in \locVarOnly $)  $ l \in \heap.\heapLocs \vee l \in \Myint  $ 
+Moreover, the stack also must contain well formed values : 
+$ (\forall i, 0 \le i \le \counterOnly \Rightarrow \stackOnly(i) \in \heap.\heapLocs \vee \stackOnly(i)\in \Myint   )$
+\end{proofDef}
+
+Actually, the operational semantics preserves the meaninful states, i.e. if an instruction starts execution in a meaningful state 
+it terminates execution in such state
+
+\begin{lemma}[Operational semantics preserves meaningful states]\label{proof:opPresMeaningful}
+If a state $\config{ \heap}{\counterOnly}{\stackOnly}{\locVarOnly}{ \pc}$ is meaningful state and results in the execution of method \methodd{}
+ then the state resulting from one execution step is also meaningful $\methodd \vdash \methodd[\pc] : s \stateTrans s' $ 
+\end{lemma}
 
  
 % The next issue that is important for understanding our approach is that we follow the design by 
@@ -32,6 +49,7 @@
 % \begin{lemma_1}[Provability implies validity]
 %      $$ \forall f , f \in \formulaBc,  \vdash f \ \Rightarrow \ \interp{f}{} $$
 % \end{lemma_1}
+
 
 Our first concern now will  be to establish that the rules for single bytecode instructions have the following property:
  if the \fwpi \ (short for weakest precondition ) of an 
@@ -75,59 +93,30 @@ For every intermediate state $s_n =\config{\heap_n }{\counterOnly_n }{\stackOnly
 \textit{Proof:}
 The proof is by case analysis on the type of instruction. %that will be next executed and by induction on the maximal depth call $k$. 
 We are going to see only the proofs for the instructions \return , \load, \new{} and \putfield{} the other cases being the same
-\begin{enumerate} 
-		\item    $\methodd.\body[\ins{\pc_n}] = \return$ 
-		 
-		     
-		    	\comment{by initial hypothesis we have that the \wpName{} of the current instruction holds } 
-			$$\interp{\wpi{\return}{\pc_{n}}{\methodd}} {\config{\heap_n }{\counterOnly_n }{\stackOnly_n }{\locVarOnly_n }{\pc_n }}  $$
-			\mbox{\rm\comment{by definition the weakest precondition for \return } }
-		        $$\interp {\substitution{ \methodd.\normalPost }{ \result }{\stack{\topStack} }}  { \config{\heap_n }{\counterOnly_n }{\stackOnly_n }{\locVarOnly_n }{\pc_n } }  $$
-			\mbox{\rm\comment{by the substitution property \ref{substRet}  }}
-			 
-                          $$\interp { \normalPost} { \configFinalNorm{\heap_n  }
+\begin{description} 
+		\item[ Return instruction]
+		  By initial hypothesis we have that the \wpName{} of the current instruction holds
+		 \begin{equation*}
+          \interp {\substitution{ \methodd.\normalPost }{ \result }{\stack{\topStack} }}  { \config{\heap_n }{\counterOnly_n }{\stackOnly_n }{\locVarOnly_n }{\pc_n } }  
+\end{equation*}
+		 From Lemma \ref{substRet}, which describes a substitution property for the expression \result, we get:  
+		  $$\interp { \normalPost} { \configFinalNorm{\heap_n  }
 				                                   { \evalExp{ \stack{\topStack}}{\config{\heap_n }{\counterOnly_n }{\stackOnly_n }{\locVarOnly_n }{\pc_n } } }
                          }$$
-			\comment{by definition of the evaluation function $\evalExpName$}
+			 By the definition of the evaluation function, we can get that the postcondition \normalPost{} 
+			 holds in the configuration  $\configFinalNorm{\heap_n  }   { \stackOnly_n ( \counterOnly_n  )  }$
+			
 			 $$  \interp{ \normalPost} { \configFinalNorm{\heap_n  }  
 							    { \stackOnly_n ( \counterOnly_n  )  } } $$
-			\comment{from the operational semantics for \return }\\
-		 	$$ s_{n+1} = \configFinalNorm{\heap_n  } { \stackOnly_n ( \counterOnly_n  )  }$$
-				\comment{and we obtain that }
-			$$	\interp{ \normalPost} {s_{n+1} } $$ 
+			From the operational semantics for \return (Section \ref{opSem}), we have $ s_{n+1} = \configFinalNorm{\heap_n  } { \stackOnly_n ( \counterOnly_n  )  }$
+			which allows us to conclude that this case holds.
 							    
-		
-	\item   $\methodd.\body[\ins{\pc_n }] = \load \ i $ 
-	          All the cases like \store, \arithOp, \iinc, \nop, \dup, \pop, \push {} are proven in a similar way
-	                  
-			  
-			\comment{by initial hypothesis } \\
-			 $$ \interp{\wpi{\load \ i}{\methodd}{\pc_n  }}{\config{\heap_n }{\counterOnly_n }{\stackOnly_n }{\locVarOnly_n }{\pc_n }} $$ 
-			 \mbox{\rm\comment{definition of the wp function} } \\
-			  $$
-			   \interp{  \inter{\pc_n }{\pc_n  +1 } \begin{array}{l} \subst{\topStack}{\topStack + 1} \\
-		                                                 \subst{\stack{\topStack + 1} } {\locVar{i} }
-	                                        \end{array}}{ \config{\heap_n }{\counterOnly_n }{\stackOnly_n }{\locVarOnly_n }{\pc_n } }  $$	
-			\comment{applying the substitution properties \ref{substCntr} and \ref{substStack} }\\
-		
-		       
-		      $$ \numConclusion{1} \ \interpTwoLines{\inter{\pc_n }{\pc_n  +1 }   }
-                                  { \config{\heap_n }{\counterOnly_n  + 1}{ \update{\stackOnly_n }{\counterOnly_n  + 1 }{\locVarOnly_n (i) } }{\locVarOnly_n }{\pc_{n+1} } } $$
-		    
-		   
-			\comment{from the operational semantics of the \load{} instruction in section \ref{opSem}} \\
-		$$ \numConclusion{2} \ s_{n+1} = \config{\heap_n }{\counterOnly_n  + 1}{ \update{\stackOnly_n }{\counterOnly_n  + 1 }{\locVarOnly_n (i) } }{\locVarOnly_n }{\pc_{n+1} } $$
-			 \comment{ from \numConclusion{1} and \numConclusion{2} follows } \\
-			 $$\interp{\inter{\pc_n }{\pc_n  +1 }  }{s_{n + 1}} $$
-		  	 \comment{and the lemma holds in this case } 
+	
 			 
-	\item   $\methodd.\body[\ins{\pc_n}] = \new  \ \clazz $ 
-	        
-		      	\mbox{\rm\comment{by initial hypothesis }} \\ 
-                        $$ \interp{\wpi{\new \ \clazz }{\methodd}{\pc  }}{\config{\heap_n }{\counterOnly_n  }{\stackOnly_n  }{\locVarOnly_n  }{\pc_n  }} $$
-			  \mbox{\rm\comment{definition of the wp function} } \\
+	\item [Instance creation]
+	        From the definition of the \wpName{} instruction for the instruction \new{} we obtain that the following holds:
 			 
-	  $$	\numConclusion{1} \	\interpTwoLines{
+	   \begin{equation*}\label{eq1} \tag{8.1.1.1}	\interpTwoLines{
 		      \begin{array}{l}
 			\forall \referenceOnly,  (\neg \ \instances(\referenceOnly )\wedge  \typeof{\referenceOnly} = \clazz \wedge
 			   \referenceOnly \neq \Mynull) \Rightarrow \\
@@ -136,257 +125,164 @@ We are going to see only the proofs for the instructions \return , \load, \new{}
 			\begin{array}{l} 
                                \subst{ \counter}{ \counter + 1 } \\
 			       \subst{ \stack{ \counter + 1} }{\referenceOnly} \\
-		               \subst{ \fieldd} { \update{\fieldd} { \referenceOnly }{\defaultValue{ \fieldd.  \fieldType } } }_{{\small \forall \fieldd: \FieldSet. \subtype{\fieldd.\declaredIn}{  \clazz}} } \\
+		               \subst{ \fieldd} { \update{\fieldd} { \referenceOnly }{\defaultValue{ \fieldd.  \fieldType } } }_{\small \fieldd: \FieldSet}^{\subtype{\fieldd.\declaredIn}{  \clazz}}   \\
 			       %	\subst{ \typeof{\referenceOnly}}{ \clazz } 
-		       \end{array} \end{array}} {\config{\heap_n  }{\counterOnly_n  }{\stackOnly_n  }{\locVarOnly_n  }{\pc_n  }}   $$
+		       \end{array} \end{array}} {\config{\heap_n  }{\counterOnly_n  }{\stackOnly_n  }{\locVarOnly_n  }{\pc_n  }} 
+		       \end{equation*}  
 		       
-		       \comment{from the operational semantics of \new \ in section \ref{opSem}} \\
+		       Moreover, from the operational semantics of the \new{}  instruction, we obtain that the state $s_{n+1}$ is of the form 
 		       
-		      $$\numConclusion{2} \ s_{n+1} = \config{\heap_{n +1}}{\counterOnly_n  +1  }{\update{\stackOnly_n }{\counterOnly_n  +  1}{ \referenceOnly'} }{\locVarOnly_n  }{\pc_n  +1} $$ 
-		      $$\numConclusion{3} \newRef{\heap}{\clazz} = (\heap_{n+1},\referenceOnly' )$$ 
-		       \\
-		       \comment{instantiate \numConclusion{1} with \mbox{\rm\referenceOnly}$'$  } \\
-		       $$ \numConclusion{4}  \  	 \interpTwoLines{\begin{array}{l}
-			 \neg \ \instances(\referenceOnly' ) \wedge
-			  \referenceOnly' \neq \Mynull \Rightarrow \\
-			  %\typeof{\referenceOnly'} = \clazz  \Rightarrow \\  
-			  
-			\phantom{\forall}	\inter{i}{i+1} 
-			\begin{array}{l} 
-                               \subst{ \counter}{ \counter + 1 } \\
-			       \subst{ \stack{ \counter + 1} }{\referenceOnly'} \\
-		               \subst{ \fieldd} { \update{\fieldd} { \referenceOnly' }{\defaultValue{ \fieldd.  \fieldType } } }_{{\small \forall \fieldd: \FieldSet. \subtype{\fieldd.\declaredIn}{  \clazz}} } %\\
-			     %  	\subst{ \typeof{\referenceOnly'}}{ \clazz } 
-		       \end{array}\end{array} } {\config{\heap _n }{\counterOnly_n  }{\stackOnly_n  }{\locVarOnly_n  }{\pc_n  }}$$
-		       \mbox{\rm\comment{ from     \numConclusion{3}   }} \\
-		       \numConclusion{5} \\
-		       $$\interp{ \begin{array}{l}
-			              \neg \ \instances(\referenceOnly' ) \wedge 
-				      \referenceOnly' \neq \Mynull \wedge 
-				      \typeof{\referenceOnly'} = \clazz 
-				\end{array}} { \config{\heap_n  }{\counterOnly_n  }{\stackOnly_n  }{\locVarOnly_n  }{\pc_n  }  }$$
-		
-		       \comment{ from     \numConclusion{4} and   \numConclusion{5} we obtain that the intermediate predicate holds in state $s_n$ } \\	  
-                        $$ \interpTwoLines{\inter{i}{i+1} 
+		      \begin{equation*}\label{eq2} \tag{8.1.1.2}
+		      s_{n+1} = \config{\heap_{n +1}}{\counterOnly_n  +1  }{\update{\stackOnly_n }{\counterOnly_n  +  1}{ \referenceOnly'} }{\locVarOnly_n  }{\pc_n  +1} \\
+	      	      \end{equation*}
+		      where the heap $\heap_{n+1}$ in state $s_{n+1}$ is obtained from the allocation operator  $\newRef{\heap}{\clazz} = (\heap_{n+1},\referenceOnly' )$
+		      
+		      We can instantiate in \eqref{eq1} with $\referenceOnly'$. Moreover, because the $\referenceOnly'$ is not \Mynull{}  not in the heap $\heap_n$ and is of type \clazz{}
+		      (see Def. \ref{heap:instAlloc} ) we get that  
+		       		       
+                        \begin{equation*} \interpTwoLines{\inter{i}{i+1} 
 			      \begin{array}{l} 
                                     \subst{ \counter}{ \counter + 1 } \\
 			            \subst{ \stack{ \counter + 1} }{\referenceOnly'} \\
-		                    \subst{ \fieldd} { \update{\fieldd} { \referenceOnly' }{\defaultValue{ \fieldd.  \fieldType } } }_{{\small \forall \fieldd: \FieldSet. \subtype{\fieldd.\declaredIn}{  \clazz}} } \\
-                                    %\subst{ \typeof{\referenceOnly'}}{ \clazz } 
-			    \end{array} }{ \config{\heap_n  }{\counterOnly_n  }{\stackOnly_n  }{\locVarOnly_n  }{\pc_n  }  } $$
+		                   \subst{ \fieldd} { \update{\fieldd} { \referenceOnly' }{\defaultValue{ \fieldd.  \fieldType } } }_{\small \fieldd: \FieldSet}^{ \subtype{\fieldd.\declaredIn}{  \clazz}}  			    \end{array} }{ \config{\heap_n  }{\counterOnly_n  }{\stackOnly_n  }{\locVarOnly_n  }{\pc_n  }  } 
+			    \end{equation*}
 		       
-		       \mbox{\rm\textit{\{from lemmas \ref{substCntr},  \ref{substStack} and \ref{substHeap}, \ref{newHeap} }} \\
-		       \mbox{\rm\textit{ and the operational semantics of the instruction \new \} }} \\  
-		       $$\interp{ \inter{i}{i+1} }{s_{n+1}}$$ 
+		       From lemmas \ref{substCntr},  \ref{substStack} and \ref{substHeap}, \ref{newHeap} which state substitution properties for 
+		       the stack counter, the stack and the heap and from  \eqref{eq2}, we conclude that this case holds
+
 		
-\item  $\methodd.\body[\ins{\pc_n }] = \putfield   \ \fieldd $  \\
+\item [Field update] 
                 The cases \getfield, \arrstore, \arrload,  \arraylength{} are similar to this case.
 		This instruction may potentially throw a \NullPointerExc{} as the object reference whose field is updated may be \Mynull.
 		Thus, we should consider three cases : the case when the reference is \Mynull{} and the \NullPointerExc{} exception is not caught,
 		case when the reference is \Mynull{} and the \NullPointerExc{} exception is  caught, and the case when the reference is not \Mynull.
 		We consider in the following only the case, when an uncaught exception of type \NullPointerExc{} is thrown. 
-                		   \comment{by initial hypothesis } \\ 
-                        %$$ \interp{\wpi{\pc_n   }{\methodd}{}}{\config{\heap_n }{\counterOnly_n }{\stackOnly_n }{\locVarOnly_n }{\pc_n }} $$
-			 %\comment{definition of the \wpName{}  function}  \\
-	
-                %   \comment{ we get three cases }
-		%   \begin{enumerate}
-		%          \item the dereferenced reference on the stack top is \Mynull \ and an exception handler starting at 
-                %                instruction $k$ exists for \NullPointerExc \  and $\ins{\pc_n} $ is in its scope   
-		% 		             \comment{thus, we get  the hypothesis   } \\
-		% 		             $$ \interp{ \stack{\counter } = \Mynull }{ \config{\heap_n }{\counterOnly_n}{\stackOnly_n }{\locVarOnly_n }{\pc_n }  }$$  \\
-		% 			      \mbox{\rm\comment{ from the above conclusion and \numConclusion{1} we get   } } \\
-		% 			      $$\interp{ \methodd.\excPost( \pc_n , \NullPointerExc ) 
-		  % 										 }{ \config{\heap _n}{\counterOnly_n }{\stackOnly_n }{\locVarOnly_n }{\pc_n } } $$ \\
-		  % 			     \mbox{\rm\textit{\{ from Def. \ref{wp:exc:defExcRuntime}  of the function $ \methodd.\excPost$ }} \\
-                   %                              \mbox{\rm\textit{ and the assumption that the exception is handled we get \} } } \\
-		  % 		     
-                   %    	 $$\interpTwoLines{ \begin{array}{l} 
-		  % 	       \forall \referenceOnly,\\
-		  % 	       	\Myspace \neg \ \instances(\referenceOnly) \wedge \\
-		  % 		\Myspace \referenceOnly \neq \Mynull \Rightarrow	\\
-		  % 		\Myspace \Myspace  \inter{\pc_n}{\pc_{n+1}} \\
-		  % 		\Myspace \Myspace		         \begin{array}{l}
-		  % 			           \subst{\counter}{0} \\
-		  % 				   \subst{\stack{0}}{\referenceOnly} \\
-		  % 				   \subst{ \fieldd} { \update{\fieldd} { \referenceOnly }{\defaultValueOnly( \fieldd.  \fieldType ) } }_{{\small \forall \fieldd : \FieldSet, \% 
-					  % 	   \subtype{\fieldd.\declaredIn}{ \mbox{ \rm \texttt{Exc}}} } }
-		   % 		                 \end{array} 
-                   %                       \end{array} } {\config{\heap_n  }{\counterOnly_n  }{\stackOnly_n }{\locVarOnly_n }{\pc_n }}$$
-		    %   	\mbox{\rm\textit{\{ from lemmas \ref{substCntr},  \ref{substHeap}, \ref{substStack} and \ref{newHeap}}}\\
-		%	\mbox{\rm\textit{ and the operational semantics of  \putfield \} }}\\
-                        
-		%		$$\interp{ \inter{\pc_n}{\pc_{n+1}}}{ s_{n+1}}$$
-		
-		    		 
-		 $$  \interpTwoLines{ \stack{\counter } \ne \Mynull \Rightarrow \\
-		 				 \Myspace \inter{i}{i+1} \subst{ \counter }{  \counter -2 } 
-		 					     \subst{  \fieldd}{ \update{\fieldd}{ \stack{\counter - 1}}{  \stack{\counter} } }
-		 				        
-		 				        \\
-		 					\wedge \\
-		 					\stack{\counter} = \Mynull \Rightarrow   \methodd.\excPost( i, \NullPointerExc ) }
-                        {\config{\heap_n }{\counterOnly_n }{\stackOnly_n }{\locVarOnly_n }{\pc_n }} $$     
-                   \comment{ because the instruction terminates on an exception of type \NullPointerExc{}, i.e. \stack{\counter}=\Mynull{}  which is not caught we get    } 
-		    
-		  $$ \interp{   \methodd.\excPost( i, \NullPointerExc ) }
-                        {\config{\heap_n }{\counterOnly_n }{\stackOnly_n }{\locVarOnly_n }{\pc_n }} $$
-                 \comment{by Def. \ref{wp:exc:defExcRuntime}  of the function \excPost{} and because the exception is not caught, we obtain } 
-                $$
+		By initial hypothesis, we have that the \wpName{} function holds. In particular, we consider the case when an exception is thrown we get that
+		 	
+                     		    		 
+		 \begin{equation*}\label{eq3} \tag{8.1.3.1}  
+		 			\interp{		\stack{\counter} = \Mynull \Rightarrow   \methodd.\excPost( i, \NullPointerExc ) }
+                        {\config{\heap_n }{\counterOnly_n }{\stackOnly_n }{\locVarOnly_n }{\pc_n }} 
+			\end{equation*}     
+			From the operational semantics of the instruction \putfield{} in case of a thrown exception we get that 
+                    $\stack{\counter}=\Mynull{}$ and thus from \eqref{eq3} we conclude that 
+		      \begin{equation*} \interp{ \methodd.\excPost( i, \NullPointerExc ) } {\config{\heap_n }{\counterOnly_n }{\stackOnly_n }{\locVarOnly_n }{\pc_n }} 
+			\end{equation*}
+		  We unfold the function \excPost{} (see its  Def. \ref{wp:exc:defExcRuntime} ) and obtain
+                \begin{equation*}\label{eq4} \tag{8.1.3.2}  
                \interp{   \begin{array}{l}
                      \forall \referenceOnly
                         (\neg \ \instances(\referenceOnly) \wedge 
-		       \referenceOnly \neq \Mynull	
+		       \referenceOnly \neq \Mynull \wedge 	
 		       \typeof{\referenceOnly} = \NullPointerExc )  \Rightarrow\\
             \methodd.\excPostSpec( \NullPointerExc )
                     \begin{array}{l}
                         \subst{\counter}{0} \\
 			\subst{\stack{0}}{\referenceOnly} \\
                          \subst{ \fieldd} { \update{\fieldd} { \referenceOnly }{\defaultValueOnly( \fieldd.  \fieldType ) } }_{{\small{\fieldd}}}^
-{ {\small \subtype{\fieldd.\declaredIn}{ \NullPointerExc } }} \end{array} }{s_1} \end{array}	$$
-		\comment{because we assume that  \putfield{} makes an exceptional step which is not caught, we get from the operational semantics of \putfield}
-                $$ s_{n+1} = \configFinalExc{\heap'}{\referenceOnly'}, where \ (\heap', \referenceOnly' )= \newRef{\heap}{\NullPointerExc}$$
-		 \comment{from the definition of the function \newRefOnly{} in Section \ref{heap} }
-		 $$ \interp{\methodd.\excPostSpec( \NullPointerExc )
+{ {\small \subtype{\fieldd.\declaredIn}{ \NullPointerExc } }} \end{array} }{s_1} \end{array}	\end{equation*}
+              We assume that the exception is not caught. Thus from the operational  semantics of \putfield{} we get that the instruction 
+	      execution terminates in a terminal exceptional state $\configFinalExc{\heap'}{\referenceOnly'}$ 
+                \begin{equation*}\label{eq5} \tag{8.1.3.3}
+                 s_{n+1} = \configFinalExc{\heap'}{\referenceOnly'}, where \ (\heap', \referenceOnly' )= \newRef{\heap}{\NullPointerExc}
+		 \end{equation*}
+
+		 From Def.\ref{heap:instAlloc}  of the function \newRefOnly, we know that the reference $\reference'$ is not \Mynull, is not in the heap 
+		 $\heap_{n}$ and moreover it is of type   \NullPointerExc. This allows us to instantiate \eqref{eq4} and obtain
+		 \begin{equation*}\label{eq6} \tag{8.1.3.4} \interp{\methodd.\excPostSpec( \NullPointerExc )
                     \begin{array}{l}
                         \subst{\counter}{0} \\
 			\subst{\stack{0}}{\referenceOnly'} \\
                          \subst{ \fieldd} { \update{\fieldd} { \referenceOnly }{\defaultValueOnly( \fieldd.  \fieldType ) } } 
-                        _{{\small{\fieldd}}}^{ {\small \subtype{\fieldd.\declaredIn}{ \NullPointerExc } }} \end{array}}{s_{n}} $$
-
-
- 	\comment{ from lemmas \ref{substCntr},  \ref{substHeap}, \ref{substStack} and \ref{newHeap} we obtain}\\
-           $$ \interp{\methodd.\excPostSpec( \NullPointerExc ) }{s_{n+1}}$$
+                        _{{\small{\fieldd}}}^{ {\small \subtype{\fieldd.\declaredIn}{ \NullPointerExc } }} \end{array}}{s_{n}} \end{equation*}
+			From substitution  lemmas \ref{substCntr},  \ref{substHeap}, \ref{substStack} and \ref{newHeap} conclude that the result holds in this case.
    
-		 %  $$\interp{  \begin{array}{l} 
-		 % 	\forall \referenceOnly,\\
-		 % 	( \neg \ \instances(\referenceOnly) \wedge \\
-		 % 	\referenceOnly \neq \Mynull \Rightarrow	\\
-                 %     	 \methodd.\excPostSpec( \NullPointerExc ) \\
-	 % 		 \begin{array}{l}
-		  %                \subst{\EXC }{\referenceOnly  }\\
-		 % 	        \subst{ \fieldd}{ \update{\fieldd } { \referenceOnly }{\defaultValueOnly( \fieldd.\fieldType ) } }_{\fieldd}^{ 
-		 % 	        \subtype{\fieldd.\declaredIn}{ \mbox{ \rm \texttt{Exc}}} } }    \\
-	 % 		   \end{array} 
-	 % 	    \end{array}  }{ \config{\heap_n }{\counterOnly_n }{\stackOnly_n }{\locVarOnly_n }{\pc_n } } $$  \\  
-	 % 		\mbox{\rm \textit{\{ from lemmas   \ref{substStack}, \ref{substHeap}, \ref{newHeap}  and}}\\
-	 % 		\mbox{\rm \textit{ the operational semantics of \putfield \}}}\\
-	 % 		$$\interp{  \methodd.\excPostSpec(\NullPointerExc  )}{s_{n+1}}	$$	    
-		
-             %     % \item the reference on the stack top is not \Mynull 
-	 % 		 \comment{thus, we get  the hypothesis   } 
-	 % 		$$  \interp{ \stack{\counter } \neq \Mynull }{ \config{\heap }{\counterOnly }{\stackOnly }{\locVarOnly }{\pc }  } $$\\
-	 % 		 \comment{ from the above conclusion and \numConclusion{1} we get   } \\
-	 % 		 $$ \interpTwoLines{\inter{i}{i+1}
-          %                                            
-          %                                                      \subst{ \counter }{  \counter -2 } 
-	 % 						     \subst{  \fieldd}{ \update{\fieldd}{ \stack{\counter - 1}}{  \stack{\counter} } }
-	 % %  					        }{\config{\heap }{\counterOnly }{\stackOnly }{\locVarOnly }{\pc }} $$
-	 % 		 \mbox{\rm\textit{\{ applying lemmas \ref{substCntr} and \ref{substHeap}  and }}\\
-	 % 		\mbox{\rm\textit{ of the operational semantics of \putfield \}} } \\
-	 % 		$$\interp{ \inter{i}{i+1}}{s_{n+1}}$$			       
-						       
-	           
-
-               
-	   %\end{enumerate}
-
- \item method invocation $\methodd.\body[\pc_n] =\invoke \ \mbox{\rm\texttt{n} }$
-We shall ignore here the part of the \wpName{} which concerns the exceptional termination for reasons of clarity. Treating the whole 
+	
+ \item [method invocation]
+In the following, we  ignore here the part of the \wpName{} which concerns the exceptional termination for reasons of clarity. Treating the whole 
 definition of the \wpName{} for method invokation is done in a rather similar way as the part that we sketch here.
+By initial hypothesis, we get that the \wpName{} of method invocation holds.
+This in particular means that the precondition  $ \mbox{\rm\texttt{n} } .\pre$ of the invoked method  \mbox{\rm\texttt{n} } holds
 
-\newcommand{\mInv}{\mbox{\rm \texttt{n}}}
-         %$$\interp{\wpi{ }{\methodd}{\pc_n  }}{\config{\heap_n }{\counterOnly_n }{\stackOnly_n }{\locVarOnly_n }{\pc_n }}$$ \\
-       \comment{definition of the \wpName{} function for method invokation, we get first that the precondition of the invoked method holds  } 
+ \begin{equation*}\label{eq7} \tag{8.1.4.1} 
+	 \interp{  \mbox{\rm\texttt{n} } .\pre \subst{\locVar{s}}{ \stack{\counter + s - \mbox{\rm\texttt{n} }.\numArgs}}_{s = 0}^{ \mbox{\rm\texttt{n} }  .\numArgs } } {s_n}
+\end{equation*}
+Moreover, we get that the postcondition  $\mbox{\rm\texttt{n} } .\normalPost{}$ of the invoked method implies the intermediate predicate \inter{i}{i+1}
+ between  the current and the next instruction in the execution
+ \begin{equation*} \label{eq8} \tag{8.1.4.2}   					
+ s_n \vDash \begin{array}{l} \forall res, m (m \in \mbox{\rm\texttt{n}}.\modif),  \\
+	 		\Myspace	 \mbox{\rm\texttt{n} } .\normalPost 
+						\subst{\result}{  res }	 
+						\subst{ \locVar{s}}{\stack{\counter + s - \mbox{\rm\texttt{n} } .\numArgs} }_{s = 0}^{ \mbox{\rm\texttt{n} }. \numArgs }                                                                                            \Rightarrow \\   \inter{i}{i+1 }  \subst{\counter}{ \counter - \mbox{\rm\texttt{n} } .\numArgs}
+														   \subst{ \stack{\counter -  \mbox{\rm\texttt{n} } .\numArgs  }}{ res }	\end{array}	   	
+\end{equation*}	
+As the verification conditions for the program \Program{} are valid, we can
+ get that the verification conditions that  \mbox{\rm \texttt{n}$'$}
+ is a behavioral subtype the overriden method \mbox{\rm\texttt{n}}  
+ and we get that the first two conditions from Def. \ref{wp:vc:subt} (page \pageref{wp:vc:subt}) hold which concern the behavioral subtyping of 
+   \mbox{\rm \texttt{n}$'$} and \mbox{\rm\texttt{n}}.  
+  From this  fact and  that we consider only meaningful states and from the validity of \eqref{eq8} we deduce that the 
+precondition of  \mbox{\rm \texttt{n}$'$} holds in state $s_n$
+      \begin{equation*}\label{eq9} \tag{8.1.4.3}   
+        \interp{\mbox{\rm \texttt{n}$'$}.\pre \subst{\locVar{i} }{ \stack{\counter + s - \mbox{\rm\texttt{n} }.\numArgs} }_{i=0}^{\mbox{\rm\texttt{n}}.\numArgs }   }{ s_n} 
+      \end{equation*}
 
-	 $$  \numConclusion{1} \   
-\interp{  \mbox{\rm\texttt{n} } .\pre\subst{\locVar{s}}{ \stack{\counter + s - \mbox{\rm\texttt{n} }.\numArgs}}_{s = 0}^{ \mbox{\rm\texttt{n} }  .\numArgs } } {s_n}$$
- 
-\comment{and second we get also that the postcondition of the invoked method \mbox{\rm\texttt{n'} } .\normalPost implies $\inter{i}{i+1}$ }
- $$\begin{array}{l}		
-   					
-	 \numConclusion{2} \  	 s_0, s_n \vDash
-                       \forall res, \boundVar_1 , \ldots ,\boundVar_{\mbox{\rm\texttt{n} } .\modif.length }  \\
-           
-	 				 				      \mbox{\rm\texttt{n} } .\normalPost %\begin{array}{l}
-									\subst{\result}{  res } %\\
-									%\subst{\mbox{\rm\texttt{n} } .\modif[i]}{  \boundVar_i }_{i=0}^{ \mbox{\rm\texttt{n} } .\modif.length }
-									%\subst{\old{\ast}}{\ast}	 
-									\subst{ \locVar{s}}{\stack{\counter + s - \mbox{\rm\texttt{n} } .\numArgs} }_{s = 0}^
-{ \mbox{\rm\texttt{n} }. \numArgs }                                                                                                	%\end{array}  
-                                                                   \Rightarrow \\ 
-										      
-										      \inter{i}{i+1 } %\begin{array}{l}
-										                                   \subst{\counter}{ \counter - \mbox{\rm\texttt{n} } .\numArgs}
-														   \subst{ \stack{\counter -  \mbox{\rm\texttt{n} } .\numArgs  }}{ res }																%	\end{array}																									
-	 				 			 	\end{array} $$
-
-	   \mbox{\rm\textit{\{ As the verification conditions for the program \Program{} are valid, we can}}\\
-	   \mbox{\rm\textit{ get that the verification conditions that  \mbox{\rm \texttt{n'}} }}\\
-	    \mbox{\rm\textit{  is a behavioral subtype the overriden method \mbox{\rm\texttt{n}}  }} \\
-	    \mbox{\rm\textit{ and we get that the first two conditions from Def. \ref{wp:vc:subt} on page \pageref{wp:vc:subt}  hold which we denote as }}\\
-           \mbox{\rm\textit{ \mbox{\rm \ref{wp:vc:subt}.1}  and  \mbox{\rm\ref{wp:vc:subt}.2 } \}}}
-	   $$  \begin{array}{l}\numConclusion{3} \  \validFormula{ \ref{wp:vc:subt}.1 } \\
-	     \numConclusion{4} \  \validFormula{ \ref{wp:vc:subt}.2  } 
-	      \end{array}$$
-  \mbox{\rm\textit{\{from the fact that we consider only valid states, we can deduce from the validity of \numConclusion{1} and  }}\\
-  \mbox{\rm\textit{   \numConclusion{5} that the the precondition of the overriding method holds in state $s_n$ w.r.t. initial state $s_0$ \}} }\\
-      $$\interp{\mbox{\rm \texttt{n'}}.\pre \subst{\locVar{i} }{ \stack{\counter + s - \mbox{\rm\texttt{n} }.\numArgs} }_{i=0}^{\mbox{\rm\texttt{n}}.\numArgs }   }{ s_n}  $$
-
- \mbox{\rm\textit{\{      From the operational semantics of method invocation the method lookup function}}\\
- \mbox{\rm\textit{   \lookupOnly{} will find the method \mbox{\rm \texttt{n'}} which overrides method }}\\
- \mbox{\rm\textit{   \mbox{\rm\texttt{n}} and which will be actually executed.  }}\\
- \mbox{\rm\textit{  The method  \mbox{\rm \texttt{n'}} will be executed at initial state $s'$ described below and ends in the state $ \configFinalNorm{\heap'}{\Res}$}}\\
- \mbox{\rm\textit{ Because \mbox{\rm \texttt{n'}} respects its specification level at \level{k-1}, }}\\
- \mbox{\rm\textit{ we can apply the initial hypothesis for \mbox{\rm\texttt{n'}} and the}} \\
- \mbox{\rm\textit{   concrete initial and ffinal states  and we then get\}}}
-                $$  \begin{array}{l}
-		  \numConclusion{6} \  \interp{ \mbox{\rm \texttt{n'}}.\pre  }{s'}
+    From the operational semantics of method invocation the method lookup function $\lookupOnly{}$ will find the method \mbox{\rm \texttt{n}$'$} which overrides method 
+     \mbox{\rm\texttt{n}} and which will be actually executed. 
+    The method  \mbox{\rm \texttt{n}$'$} will be executed in initial state $s'$ described below and ends in the state $ \configFinalNorm{\heap'}{\Res}$
+   Because \mbox{\rm \texttt{n}$'$} respects its specification level at \level{k-1} 
+   we can apply the initial hypothesis for \mbox{\rm\texttt{n}$'$} and the
+     concrete initial and final states  and we then get
+               
+	 \begin{equation*}\label{eq10} \tag{8.1.4.4}  \begin{array}{l} \interp{  \mbox{\rm \texttt{n}$'$}.\pre  }{s'}
                                            \Rightarrow 
-                                 \interp{ \mbox{\rm \texttt{n'}}.\normalPost  }{\configFinalNorm{\heap'}{\Res}} \\\\
+                                 \interp{ \mbox{\rm \texttt{n}$'$}.\normalPost  }{\configFinalNorm{\heap'}{\Res}} \\\\
 		             where \\              s'=  \config{\heap_n}       
                                                        {0}
 						       {\newStack }
-                                                       {\lbrack \stackOnly_n( \counterOnly_n - \mbox{\rm \texttt{n'}}.\numArgs ),\ldots ,\stackOnly_n( \counterOnly_n)\rbrack }
+                                                       {\lbrack \stackOnly_n( \counterOnly_n - \mbox{\rm \texttt{n}$'$}.\numArgs ),\ldots ,\stackOnly_n( \counterOnly_n)\rbrack }
 						       {0} \\
-						       
-				                      \counterOnly_{n+1} = \counterOnly_n - \mbox{\rm \texttt{n}}.\numArgs + 1 \\
+						       \counterOnly_{n+1} = \counterOnly_n - \mbox{\rm \texttt{n}}.\numArgs + 1 \\
 						       \stackOnly_{n+1} = \update{\stackOnly_n}{\counterOnly_n}{\Res} \\
 						       \pc_{n+1}  = \pc_n + 1 \\
-						       \heap_{n+1} = \heap' \\\\
-            \end{array}$$
+						       \heap_{n+1} = \heap'
+						       \end{array} 
+            \end{equation*}
 
 
- \mbox{\rm\textit{\{ From the validity of method  \mbox{\rm \texttt{n'}} \numConclusion{6} and \numConclusion{5}, we get that the postcondition of  \mbox{\rm \texttt{n'}}  }}\\ 
- \mbox{\rm\textit{ holds in the terminal state $ \configFinalNorm{\heap'}{\Res}$ w.r.t. the initial state $s'$ of the execution of method \mbox{\rm \texttt{n'}}   \} }}
-    $$\numConclusion{7}  \ \interp{\mbox{\rm \texttt{n'}}.\normalPost }{\configFinalNorm{\heap'}{\Res} } $$ 
+   From the fact that method  \mbox{\rm \texttt{n}$'$} respects its specification at level \level{k}, \eqref{eq9} and \eqref{eq10}
+    we get that the postcondition of  \mbox{\rm \texttt{n}$'$}    holds in the terminal state $ \configFinalNorm{\heap'}{\Res}$ w.r.t.
+   the initial state $s'$ of the execution of method \mbox{\rm \texttt{n}$'$}   
+  
+    \begin{equation*}\label{eq11} \tag{8.1.4.5}     
+    \interp{\mbox{\rm \texttt{n}$'$}.\normalPost }{\configFinalNorm{\heap'}{\Res} } 
+    \end{equation*}
 
-  \mbox{\rm\textit{\{  Because the postcondition \mbox{\rm \texttt{n'}}.\normalPost{} does not mention the operand stack, neither the stack counter   }}\\
- \mbox{\rm\textit{ and because of the relation between $s_{n+1}$ and  $ \configFinalNorm{\heap'}{\Res}$  we can conclude that the following also holds } }
+     Because the postcondition $\mbox{\rm \texttt{n}$'$}.\normalPost{}$ does not mention the operand stack, neither the stack counter   
+   and because of the relation between $s_{n+1}$ and  $ \configFinalNorm{\heap'}{\Res}$  we can conclude from \eqref{eq11} that the
+   following holds
 
-$$\numConclusion{7}  \ \interp{\mbox{\rm \texttt{n'}}.\normalPost \subst{ \locVar{s}}{\stack{\counter + s - \mbox{\rm\texttt{n} } .\numArgs} }_{s = 0}^
-{ \mbox{\rm\texttt{n} }. \numArgs }  \subst{\result}{\Res } }{s_{n} } $$
- 
- \mbox{\rm\textit{ \{ We can apply the second part of the behavioral subtyping from Lemma  \ref{wp:vc:subt} which expresses that } } \\
- \mbox{\rm\textit{the method respects its postcondition and because of \numConclusion{7} and get \}} }\\ 
-$$
-\interp{\mbox{\rm \texttt{n}}.\normalPost \subst{ \locVar{s}}{\stack{\counter + s - \mbox{\rm\texttt{n} } .\numArgs} }_{s = 0}^
-{ \mbox{\rm\texttt{n} }. \numArgs }  \subst{\result}{\Res } }{s_{n} } 
-$$
-\mbox{\rm\textit{ \{ We can apply the resulting judgement with modus ponens to \numConclusion{2}  where}}\\
-\mbox{\rm\textit{  we initialise the quantification over the modified locations with their }}\\
-\mbox{\rm\textit{  values in state $s_n$ and the variable $res$ to \Res \} }}
-$$ 
+\begin{equation*} \interp{\mbox{\rm \texttt{n}$'$}.\normalPost \subst{ \locVar{s}}{\stack{\counter + s - \mbox{\rm\texttt{n} } .\numArgs} }_{s = 0}^
+{ \mbox{\rm\texttt{n} }. \numArgs }  \subst{\result}{\Res } }{s_{n} }  
+  \end{equation*}
+This and the fact that the states operational semantics preserves meaningful states (Lemma \ref{proof:opPresMeaningful}), 
+ we can apply  the  verification condition  concerning the fact that   the method \mbox{\rm\texttt{n}$'$ } is a behavioral subtype of \mbox{\rm\texttt{n}}, the postcondition 
+of the former is stronger than latter 
+\begin{equation*} 
+\interp{\mbox{\rm \texttt{n}}.\normalPost \subst{ \locVar{s}}{\stack{\counter + s - \mbox{\rm\texttt{n} } .\numArgs} }_{s = 0}^{ \mbox{\rm\texttt{n} }. \numArgs }  \subst{\result}{\Res } }{s_{n} } 
+\end{equation*}
+  We can apply the resulting judgement with modus ponens to \eqref{eq10}  where
+   we initialise the quantification over the modified locations with their
+   values in state $s_n$ and the variable $res$ to \Res 
+\begin{equation*} 
 \interp{\inter{i}{i+1 }   \subst{\counter}{ \counter - \mbox{\rm\texttt{n} } .\numArgs} \subst{ \stack{\counter -  \mbox{\rm\texttt{n} } .\numArgs  }}{ \Res }}{s_n}
-$$
+\end{equation*}
 
-\mbox{\textit{\{we can apply Lemma \ref{substCntr} for substitution of the stack counter as well as the stack }}\\
-\mbox{\textit{ \label{substStack} and by the operational semantics of the instruction \invoke{} in case of normal termination get  \}}}
+From Lemma \ref{substCntr} for substitution of the stack counter as well as the stack
+ \label{substStack} and by the operational semantics of the instruction \invoke{} in case of normal termination we conclude that this case holds.
 
-$$ 
-\interp{\inter{i}{i+1 }  }{s_{n+1}}
-$$
-\end{enumerate}
+
+\end{description}
 \Qed \\
 
 %The next lemma establishes formally a relation between the \wpName{} of an instruction and the intermediate predicate that must hold
@@ -432,7 +328,7 @@ another step can be made and the \fwpi \ of the next instruction holds.
 
 
 
-\begin{lemma}[Subject reduction] \label{lemma1}
+\begin{lemma} \label{lemma1}
 Let us have a program \Program{} and a method \methodd{} in \Program. 
 %Assume we have a method \methodd \ with normal postcondition  $\methodd.\normalPost$ and exception function $\methodd.\excPostSpec$. 
 For every state  
@@ -476,79 +372,82 @@ then the folloing holds:
 
 \textit{Proof :}
 The proof is by case analysis on the execution relation $\execRel{}$  between the current instruction and the next instruction.
-
- We consider three cases: the case when the next execution step does not enter a cycle (the next instruction is not a loop entry in the sense of Def.\ref{defLoop} )
+ We have three cases: the case when the next execution step does not enter a cycle (the next instruction is not a loop entry in the sense of Def.\ref{defLoop} )
 the case when the current instruction is a loop end and the next instruction to be executed is a loop entry instruction (the execution step is $\execRel_l$ )
 and the case when the current instruction is not a loop end and the next instruction is a loop entry instruction ( corresponds to the first iteration of a loop) 
 
   
-\begin{enumerate}
-  \item the next instruction to be executed is not a loop entry instruction. 
-           $$ \begin{array}{l}
-	      \mbox{\rm \comment{following Def. \ref{inter} of the function \interOnly \ in this case }}\\
-              \numConclusion{1} \ \inter{\pc_n}{\pc_{n+1}} = \wpi{ \ins{\pc_{n+1} }}{\methodd}{}\\
-	      \mbox{\rm \comment{ by initial hypothesis}} \\
-	      \numConclusion{2} \ \interp{\wpi{\ins{\pc_{n}} }{ \methodd }{} }{ s_n }\\
-	      \mbox{\rm \comment{from the previous lemma \ref{lemma0} and \numConclusion{2} , we know that}}\\
-	      \numConclusion{3} \   \interp{\inter{\pc_n}{\pc_{n+1}} }{ s_{n+1} }\\
-	      \mbox{\rm \comment{from \numConclusion{1} and  \numConclusion{3} }}\\
-	      \interp{ \wpi{\ins{\pc_{n+1}}}{\methodd}{} }{ s_{n+1} }
-	      \end{array}$$
+\begin{description}
+  \item [Case 1] the next instruction to be executed is not a loop entry instruction. 
+           	Following Def. \ref{inter} of the function \interOnly \ in this case 
+              we get $ \inter{\pc_n}{\pc_{n+1}} = \wpi{ \ins{\pc_{n+1} }}{\methodd}{}$. By initial hypothesis,
+	       we have moreover that the weakest predicate for $\ins{\pc_{n}}$ is valid in 
+	       state $s_n$, i.e.  $ \interp{\wpi{\ins{\pc_{n}} }{ \methodd }{} }{ s_n }$.
+	      Thus by the previous lemma \ref{lemma0}  we know that 
+	      the predicate $\inter{\pc_n}{\pc_{n+1}}$ holds in $s_{n+1}$, i.e. $\interp{\inter{\pc_n}{\pc_{n+1}} }{ s_{n+1} }$.
+	      This actually means that the judgement 
+	      $\interp{ \wpi{\ins{\pc_{n+1}}}{\methodd}{} }{ s_{n+1} }$	      holds.
 
  
   
-\item $\ins{\pc_n} $ is not a loop end and the next instruction to be executed is a loop entry 
+\item [Case 2]
+ $\ins{\pc_n} $ is not a loop end and the next instruction to be executed is a loop entry 
 instruction at index $loopEntry $ in the array of bytecode instructions of the method \methodd{}.
  %(i.e. the execution step is of kind $\execRel^l$, see Def.\ref{defLoop}  ).
  Thus, there exists a natural number  $ i , 0 \le i < \methodd.\loopSpecTable.length   $   such that
  $ \methodd. \loopSpecTable[i].\posL = loopEntry $,  $ \methodd. \loopSpecTable[i].\invL = I $ and
    $ \methodd. \loopSpecTable[i].\modifL =\{ mod_i, i = 1..s \}$.
 
-$$ \begin{array}{l}
-\mbox{\rm\comment{by initial hypothesis}} \\
-\interp{\wpi{\pc_n}{\methodd}{}}{s_n} \\
-\comment{from Lemma \ref{lemma0} we have }\\
-\interp{\inter{\pc_n}{\pc_{n+1}}}{s_{n+1}} \ = \\
 
- \comment{from the Def. \ref{inter} for an edge between a loop entry and a loop end }\\				    
-            
+
+ %\begin{equation*}\label{eq12} \tag{8.2.1}    
+
+Because initial hypothesis we have that  $\interp{\wpi{\pc_n}{\methodd}{}}{s_n} $, from Lemma \ref{lemma0} we have
+that  the intermediate predicate $\inter{\pc_n}{\pc_{n+1}}$ holds in state $s_{n+1}$, i.e. 
+ $\interp{\inter{\pc_n}{\pc_{n+1}} }{s_{n+1}} $. 
+From the  Def. \ref{inter} of the predicate \interOnly{}, we get that   
+in the case for  an edge between a loop entry and a loop end $\inter{\pc_n}{\pc_{n+1}}$ is of the form:
+     \begin{equation*}
                  \interp{  I \  \wedge
                                              \forall mod_i ,  i = 1..s \left( I \Rightarrow \wpi{\ins{\pc_{n+1}}}{\methodd}{} \right) 
-                                 }  { s_{n+1}  }\\
+                                 }  { s_{n+1}  }
+\end{equation*}
   
-\mbox{\rm \textit{\{we can get from the last formulation and}}\\
-\mbox{\rm \textit{the semantics of the universal quantification\}}}\\
-  \numConclusion{1} \   \interp{I}   {s_{n+1} } \\
+We can get from the last formulation and the semantics of the universal quantification  that 
+ \begin{equation*} 
+\begin{array}{l}
+                  \interp{I}   {s_{n+1} } \\
                               
-                 \numConclusion{2}  \ \interp{ I \Rightarrow \wpi{\ins{\pc_{n+1}}}{\methodd}{} }
+                  \interp{ I \Rightarrow \wpi{\ins{\pc_{n+1}}}{\methodd}{} }
                                      {s_{n+1}  } \\
-   % \end{array} 
-\mbox{\rm \comment{ from \numConclusion{1}  and \numConclusion{2}  }}\\
-  \interp{ \wpi{\ins{\pc_{n+1}}}{\methodd}{} }{s_{n+1}  }\\
-\end{array} $$
-\item $\ins{\pc_n} $ is an end of a cycle \ and the next instruction to be executed is a loop entry 
-instruction at index $loopEntry $ in the array of bytecode instructions of the method \methodd
+    \end{array} 
+\end{equation*}
+By modus ponens, this allows to conclude that $\wpi{\ins{\pc_{n+1}}}{\methodd}{} $ holds in state 
+$s_{n+1} $
+
+\item [Case 3]
+Instruction $\ins{\pc_n} $ is an end of a cycle  and the next instruction to be executed is a loop entry 
+instruction at index $loopEntry $, i.e.  $loopEntry = \pc_{n +1}$ % in the array of bytecode instructions of the method \methodd
  (i.e. the execution step is of kind $\execRel^l$ ).
  Thus, there exists a natural number  $ i , 0 \le i < \methodd.\loopSpecTable.length   $   such that
  $ \methodd. \loopSpecTable[i].\posL = loopEntry $,  $ \methodd. \loopSpecTable[i].\invL = I $ and
    $ \methodd. \loopSpecTable[i].\modifL =\{ mod_i, i = 1..s \}$.
 We consider the case when the current instruction is a sequential instruction. The cases when the current instruction 
-is a jump instruction are similar.   \\ 
-		
-\comment{by hypothesis we get} \\
- $$ \interp{ \wpi{\ins{\pc_n} }{\methodd}{}}{s_n}$$
-
-\comment{ from Def. \ref{inter} and transformation over the above statement} 
-$$\begin{array}{ll} \numConclusion{1} &  \interp{ I}{s_{n + 1}}  \end{array}$$
-\comment{by hypothesis,  $loopEntry = \pc_{n +1}$.
-         From def. \ref{defLoop}, we
-         conclude that there is a prefix  $subP = \methodd.\body[0] \execRel^{*} \ins{loopEntry}$  of the current execution path which does not pass through
-	 $\ins{\pc_n}$. We can conclude that the transition between   $\ins{loopEntry}$ and its predecessor  $ \ins{k} $ ( which is at index $k$ in \methodd.\body)
+is a jump instruction are similar. By initial hypothes we have that 
+ $\interp{ \wpi{\ins{\pc_n} }{\methodd}{}}{s_n}$. 
+From Def. \ref{inter}  for the case when the current instruction is a loop end and the next instruction is a loop entry, we get that the initial hypothesis
+is equivalent to   
+\begin{equation*} \label{eq12} \tag{8.3.1} 
+ \interp{ I}{s_{n + 1}}  
+\end{equation*} 
+   From def. \ref{defLoop}, we  conclude that there is a prefix  $subP = \methodd.\body[0] \execRel^{*} \ins{loopEntry}$  of the current
+ execution path which does not pass through $\ins{\pc_n}$. We can conclude that the transition between   $\ins{loopEntry}$ and its predecessor 
+ $ \ins{k} $ ( which is at index $k$ in \methodd.\body)
 	  in the path $subP$ is not a backedge. By hypothesis we know that 
            $ \forall i , 0 \le i \le  n, \interp{\wpi{\ins{\pc_i}}{\methodd}{}}{s_i}$.  From def.\ref{inter} and
-	 lemma \ref{lemma0} we conclude }
+	 lemma \ref{lemma0} we conclude 
           
-   $$  \numConclusion{2 } \  
+   \begin{equation*} \label{eq13} \tag{8.3.2} 
          \exists k, 0 \le k \le n \Rightarrow 
          \interp{ \begin{array}{l}
 	                                    I 
@@ -557,20 +456,23 @@ $$\begin{array}{ll} \numConclusion{1} &  \interp{ I}{s_{n + 1}}  \end{array}$$
 	                                                           I \Rightarrow 
 	                                                           \wpi{\ins{loopEntry}}{\methodd}{} 
 							      \end{array}\right)
-				 \end{array} }{s_k}  $$
-         \mbox{\rm\textit{\{it also follows that the states $s_k$ and $s_{n+1}$ are the same except for the locations in the}}\\
-        \mbox{\rm\textit{ modifies list \modifL of the loop  \}}} \\ 
-$$ \numConclusion{3} \ 	    s_k =^{\modifL} s_{n+1}   $$
-   \comment{because $ \methodd. \loopSpecTable[i].\modifL =\{ mod_i, i = 1..s \}$  and    from \numConclusion{2} and  \numConclusion{3}     }
- $$  \numConclusion{4} \ \interp { I \Rightarrow \wpi{\ins{loopEntry}}{\methodd}{}} {s_{n+1}}    $$
- \comment{from \numConclusion{1} and  \numConclusion{4} }
-   
- $$  \interp{ \wpi{\ins{loopEntry}}{\methodd}{}}{s_{n+1}} $$
- \comment{because \ins{loopEntry} = $\ins{\pc_{n+1}} $ we conclude}
-	      $$\interp{ \wpi{\ins{\pc_{n+1}} }{\methodd}{} }{s_{n+1}} $$
+				 \end{array} }{s_k} 
+ \end{equation*} 
+
+It also follows that the states $s_k$ and $s_{n+1}$ are the same except for the locations in the
+ modifies list \modifL{} of the loop  $    s_k =^{\modifL} s_{n+1}   $
+ because $ \methodd. \loopSpecTable[i].\modifL =\{ mod_i, i = 1..s \}$  
+ We obtain from  \eqref{eq13} by instantiating every location $mod_i$ in  
+ by its value in $s_{n+1}$
+ \begin{equation*} \label{eq14} \tag{8.3.3} 
+ \interp { I \Rightarrow \wpi{\ins{loopEntry}}{\methodd}{}} {s_{n+1}}    
+\end{equation*}
+
+From \eqref{eq12} and \eqref{eq14} and  because $loopEntry = \pc_{n +1}$ we conclude that 
+\begin{equation*} 	  \interp{ \wpi{\ins{\pc_{n+1}} }{\methodd}{} }{s_{n+1}} \end{equation*}
          
 
-\end{enumerate}
+\end{description}
 
 \Qed
 

@@ -68,9 +68,11 @@ with annotations (e.g. \ loop invariants).
  Despite that  in our implementation we also
   transform  the control graph into an acyclic program, we consider that in a mobile code scenario
  one should limit the number of program transformations for the following reasons.
- A design of a verification condition generator should be as simple as possible especially.
- A verification framework which relies on several layers of transformations
- can be relatively complex.  Second,  a verification condition generator must be proven correct. In the case of several transformations this may be not trivial.
+ A design of a verification condition generator should be as simple as possible especially when it is tailored to be installed 
+on the client site of a mobile code scenario.
+ Bur a verification framework which relies on several transformation layers 
+ can be relatively complex.  Second,  a verification condition generator must be proven correct. 
+In the case of several transformations this may be not trivial.
 
 
 % Another topic related to the present work is PCC.

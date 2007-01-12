@@ -10,9 +10,7 @@ In order to define what it means for the verification calculus to be correct we 
  where its precondition  holds then if it terminates execution then its postcondition holds.
    
  We shall concentrate on the correctness of method pre and postconditions. We shall assume that the modified locations are
- correct. Moreover, we shall not deal with expression referring to the initial state of the heap. This last aspect needs a
- formalization of heaps in intermediate states especially in the case of method calls and loops. Such a formalization and proof of a
-logic which deals old expressions is presented in \cite{}. 
+ correct. 
 
  As we want also to treat recursive calls, we use a technique  known in the literature \cite{Nipkow-MOD2001} which consists in  annotating the execution 
 relation in  the operational semantics with levels. A level of execution  stands for  the maximal call depth in the execution of a  method. 
@@ -50,7 +48,10 @@ $$ \begin{array}{l}
               \frac{ i \neq \invoke \  \methodd \vdash  i: s_1 \stateTrans s_2 }{ \methodd \vdash s_1 \stateTransWeight{k} s_2 , \  \level{k} > 0}
 \end{array}$$
  
-We now first define what does it mean for a method to respect its specification at level \level{k}
+
+
+ 
+The following definition what does it mean for a method to respect its specification at level \level{k}.
 \begin{defCorrect}[method respects its specification at level k] \label{defCorrectLevel}
 For every method \methodd \ with precondition \methodd.\pre, normal postcondition \methodd.\normalPost{}
 and exceptional postcondition function \methodd.\excPostSpec, we say that \methodd{} respects its specification at level \level{k} if 

@@ -359,7 +359,8 @@ But this is in contradiction with \numConclusion{3} and thus the lemma holds als
   Let us have a statement $\stmt$ which is not a try catch statement  neither a try finally statement in method \methodd. Assume that 
   statement $\stmt'$ is its direct substatement, i.e. 
 $\strictsubstatement{\stmt}{\stmt'} $. Let 
- their respective compilations be  $\compileLabel{s}{\stmt}{e}$ and  $\compileLabel{s'}{\stmt'}{e'}$, then the following holds:
+ their respective compilations be  $\compileLabel{s}{\stmt}{e}$ and  $\compileLabel{s'}{\stmt'}{e'}$, then  the exception handlers for the instruction points $e$ and $e'$ are the same:
+
 $$   \forall \mbox{\rm\tt{Exc}}, 
 	  \findExcHandler{\mbox{\rm\tt{Exc}} }{e}{\methodd.\excHandlerTable} = \findExcHandler{\mbox{\rm\tt{Exc}} }{e'}{\methodd.\excHandlerTable} $$
 \end{compProp8A}

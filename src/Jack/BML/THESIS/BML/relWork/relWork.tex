@@ -9,10 +9,8 @@ For instance, the possibility to check a property at run-time, using the \texttt
  as for instance that a reference is not  null is certainly very useful as it
  allows for detecting bugs early in the development process.    
 But  in the presence of mobile code, the need for more
- powerful specification mechanisms arises. In particular, because mobile code verification scheme
- relies on static verification schemes, such specification mechanisms must be suitable 
- for static verification. Moreover, bytecode specification language can be interesting for software audit
- which does not trust the compiler. Another reason to 
+ powerful specification mechanisms on the executable or interpreted code arises. Moreover, it  represents an interest  
+ for software audit which does not trust the compiler. Another reason to 
  consider a rich specification bytecode language  is the verification of programs which
  are written directly in bytecode. 
 
@@ -55,24 +53,33 @@ applications directly.
 
 The Spec\# programming system~\cite{BLS04sp} is probably the system which is closest to BML as  
 introduces in similarly the Design by Contract principles into the C\#
-programming language. %, both at source code level and for CIL, the .NETintermediate language.
-The system consists of the following components:  a programming language Spec\#, a compiler from Spec\# to 
-CIL,( the .NET intermediate language), a runtime checker and a static verification which is
- based on a intermediate language BoogiePL and the static verifier Boogie~\cite{BarnettCDJL05}.
+programming language. However, we consider that the design goals of both Spec\# and BML 
+are not exactly the same.
+ Let us first see what are the components of Spec\#. %, both at source code level and for CIL, the .NETintermediate language.
+ The system consists of the following components:  a programming language Spec\#, a compiler from Spec\# to 
+ CLR,( the .NET intermediate language  \cite{B02EN}), a runtime checker and a static verification scheme
+ based on an intermediate language BoogiePL and the static verifier Boogie~\cite{BarnettCDJL05}.
  In particular, Spec\# is a superset of the programming language  C\#. Spec\# allows for expressing method (preconditions, postconditions and frameconditions )
- and class contracts as well as class contracts (class invariants). Moreover, the language extends the programming type system with non - null types.
- This in particular, means that one of the design goals of Spec\# is to alter the underlying programming language. This is a difference between JML and Spec \#
- and consequently, between BML and Spec\#. Both JML and BML are clearly separated from Java, i.e. they can not force a programmer 
- to change the programming code. The purpose of BML is to provide the means for verifying statically standard Java bytecode.
- Spec\# programs can be verified dynamically and statically. 
- Both verification styles work actually  on  CIL programs.
- Thus the Spec\# compiler produces not only CIL code but also metadata which contains 
- the specification. Moreover, Spec\# supports the C\# custom attributes in specifications which are compiled
- into metadata in the CIL format. This metadata  information is then used by the verification mechanisms on runtime
- or statically. For the moment,  BML is not connected to metadata which becomes official part of the newest
- Java 5 (Tiger). But note that  we have taken the design  decision to relate BML to JML via a compiler. For the moment we have not considered such possibilty 
- but we could exploit in the future the facilities of metadata via a compiler from Java metadata to BML. 
- 
+ and class contracts as well as class contracts (class invariants). Moreover, the language extends the programming type system with non - null types,
+ field initializers and expose blocks for an object (those constructs embrace a  block which  may break the object's invariant and at the end of its execution must reestablish it).
+ These additional elements of the language are enforced with runtime checks emitted by the Spec\# compiler. 
+  Spec\# programs can be verified dynamically and statically. 
+ Both verification styles work on  CLR as similarly to BML, the Spec\# compiler produces not only intermediate interpreted code but also metadata which contains 
+ the translation of the source specifications. %Moreover, Spec\# supports the C\# custom attributes in specifications which are compiled
+ %into metadata in the CIL format. This metadata  information is then used by the verification mechanisms on runtime
+ %or statically. %For the moment,  BML is not connected to metadata which becomes official part of the newest
+ % Java 5 (Tiger). But note that  we have taken the design  decision to relate BML to JML via a compiler. For the moment we have not considered such possibilty 
+ % but we could exploit in the future the facilities of metadata via a compiler from Java metadata to BML. 
+  As we stated above, the design of Spec\# is such that it alters the underlying programming language C\#. This is especially suitable for 
+ producing a high level quality software as programmers are obliged to respect a certain programming discipline. However,  this it does not fill completely 
+ in a mobile code scenario as a specified and statically verified CLR code using the Spec\#  system, should be produced only if the code has been
+ originally written in Spec\#. But obliging mobile code producers to use a special
+ programming system may be a hard restriction. This is a difference between BML and Spec\#.
+ BML targets  standard Java source programs and specifications written in JML which is not part of the Java language. 
+ Moreover, it is compatible with any non optimizing Java compiler and thus does not provide a major restriction over the producer of the source code. 
 
+
+ 
+ 
 
 

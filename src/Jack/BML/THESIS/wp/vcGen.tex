@@ -193,7 +193,7 @@ method   \mbox{\rm\texttt{n}} is a behavioral subtype is given in the following:
 
 $$ 
   \begin{array}{l} 
-          \forall  \boundVar_0,  \ldots , \boundVar_{\mbox{\rm\texttt{n}}.\numArgs },
+          \forall  \boundVar_0,  \ldots , \boundVar_{\mbox{\rm\texttt{n}}.\numArgs },\\
       \left(  \begin{array}{l}  \left( \begin{array}{l}
           \mbox{\rm\texttt{n}}.\pre \wedge  
           \locVar{0} \neq \Mynull \wedge
@@ -255,8 +255,14 @@ The second  condition expresses the fact that the normal postcondition of the
  overriding method is stronger than than the postcondition specified in the
   method it overrides. We quantify over the postcondition result as well as the values of the local variables including the receiver
  of the method call \locVar{0}.
- Finally, the third formula represents a series of
+ The third formula represents a series of
   formulas which show that the postcondition for any exceptional outcome of
-  the overriding method must respect the condition of the overriden method.  Similarly, we want that the implication holds for any
- valid values of the local variables and of the exception object which of the expected exception type \texttt{Exc}. 
+  the overriding method on any exception type \texttt{Exc} declared in   \mbox{\rm\texttt{n}}.\exceptions
+ must respect the condition of the overriden method.  Similarly, we want that the implication holds for any
+ values of the local variables and of the exception object which of the expected exception type \texttt{Exc}. 
+
+Note that here, because we do not treat \oldOnly{} expressions, the verification condition is simple w.r.t. 
+verification conditions which might take into account the initial state.
+ The latter involves a modelisation of the heap which expresses the relation between the initial and final states of a method execution. 
+A detailed explanation for how to construct such verification conditions may refer to  \cite{CP03VTO}.
 

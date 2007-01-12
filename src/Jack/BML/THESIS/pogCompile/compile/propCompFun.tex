@@ -29,15 +29,15 @@ do not restrict at all the compilation process.  We outline the categories of pr
 \begin{itemize}
      
      \item compilation of a statement (expressions) may contain instructions which either target instructions inside the compilation of a statement or  the 
-           first instruction of the next statement, if there is next statement (Properties \ref{compile:prop:compProp0}).
+           first instruction of the next statement, if there is next statement (Such property is given in Lemma \ref{compile:prop:compProp0}).
      
-     \item expressions are compiled into a sequence of instructions which does not contains jumps (Property \ref{compile:prop:compProp3}).
+     \item expressions are compiled into a sequence of instructions which does not contains jumps (treated in Lemma \ref{compile:prop:compProp3}).
      
      %\item substatement relation preserved by the compiler (Properties \ref{compile:prop:compPropSubstmt}, \ref{compile:prop:compProp6}).
 
-     \item a compilation of a source statement contains cycles only if the source statement contains cycles (Property \ref{compile:prop:compProp4}).
+     \item a compilation of a source statement contains cycles only if the source statement contains cycles (treated in Lemma \ref{compile:prop:compProp4}).
      
-     \item exception handler preservation (Properties \ref{compile:prop:compProp8}, \ref{compile:prop:compProp9}). %,  \ref{compile:prop:compProp10}).
+     \item exception handler preservation (Lemmas \ref{compile:prop:compProp8}, \ref{compile:prop:compProp9} treat those cases). %,  \ref{compile:prop:compProp10}).
      
 \end{itemize}
 
@@ -260,8 +260,8 @@ For any exception type \mbox{\rm\tt{Exc}}, the application \findExcHandler{\mbox
 \begin{compProp}[Exception handler property for statements]\label{compile:prop:compProp8}
  Assume that we have a statement  $\stmt$  which is not a try catch  neither a try finally statement in method \methodd. Assume that 
   statement $\stmt'$ is its direct substatement, i.e. 
-$\strictsubstatement{\stmt}{\stmt'} $. 
-Then the exception handlers for the instruction points $e$ and $e'$ are the same:
+$\strictsubstatement{\stmt}{\stmt'} $. Let 
+ their respective compilations be  $\compileLabel{s}{\stmt}{e}$ and  $\compileLabel{s'}{\stmt'}{e'}$, then the exception handlers for the instruction points $e$ and $e'$ are the same:
 $$ \begin{array}{l}
           \forall \mbox{\rm\tt{Exc}}, \findExcHandler{\mbox{\rm\tt{Exc}} }{e}{\methodd.\excHandlerTable} = 
 	 \findExcHandler{\mbox{\rm\tt{Exc}} }{e'}{\methodd.\excHandlerTable} 

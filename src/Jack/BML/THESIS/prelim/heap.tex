@@ -3,6 +3,7 @@
 \index{\heapArrays}
 \index{\heapArrays} 
 \index{\heapTypeOf}
+\newtheorem{heapDef}{Definition}[section]
 
  \subsection{Modeling the object heap} \label{heap}
  An important issue for the modeling of an object oriented programming language and its operational semantics
@@ -47,8 +48,10 @@
 
  In the following, we are interested only in  heap objects \heap \ for which the components
  \heap.\heapFields \ and \heap.\heapArrays \ are functions defined only for references from the proper
- type, i.e. well-typed and which are in the list of references of the heap \heap.\heapLocs{} and are not \Mynull, i.e. well-defined: 
-
+ type, i.e. well-typed and which are in the list of references of the heap \heap.\heapLocs{} and are not \Mynull, i.e. well-defined.
+We give the following formal definition.
+\begin{heapDef}{Well formed heap}\label{heap:wf}
+We say that \heap{} is a well-formed heap if the following holds: 
   $$\begin{array}{l}
            \forall  \fieldd : \FieldSet,   \\
    \begin{array}{ll} 
@@ -66,7 +69,7 @@
  	 
     \end{array}
    $$
-
+\end{heapDef}
 %old formulation
 % $$\begin{array}{ll}
 %          \forall  \fieldd : \FieldSet, \forall \referenceOnly \in \RefValues, &  \referenceOnly \in \Dom( \heap.\heapFields(\fieldd)) \ \bydef\\
@@ -127,10 +130,8 @@
  type \clazz \ has the following name and signature:
  $$ \newRefOnly :  \heap \rightarrow \reff \rightarrow  \heap * \Ref $$
 
- The formalization of the resulting heap and the new reference is the following:
-
-
-
+ The formalization of the resulting heap and the new reference is given by the following definition.
+\begin{heapDef}{Operator for instance allocation}\label{heap:instAlloc}
  $$  \begin{array}{l}
             \newRef{\heap}{\clazz} = (\heap',\referenceOnly )    \bydef\\
 	    \\
@@ -143,11 +144,9 @@
 	           \forall  \fieldd : \FieldSet, & \instanceFlds{\fieldd}{\clazz} \Rightarrow \\
                                                  & \Myspace \heap'.\heapFields := 
 			                           \update{\heap'.\heapFields}{\fieldd}{\update{\fieldd}{\referenceOnly}{ \defaultValue{\fieldd.\fieldType }}} \wedge \\
-			                             
-                                                
       \end{array}
-	  
      \end{array} $$
+\end{heapDef}
 
 In the above definition, we use the function \instanceFldsOnly, which for a given field \fieldd \ and \clazz \ returns true if \fieldd \ is
 an instance field of \clazz: 
@@ -171,7 +170,7 @@ $$
 Identically, when allocating a new object of array type whose elements are of type \anyType \ and length $l$, we obtain 
 a new heap object  $\newArrRef{\heap}{\anyType \lbrack \ \rbrack  }{l} $ which is defined similarly to the previous case: 
 $$ \newArrRefOnly :  \heap \rightarrow  \reffArr \rightarrow  \heap * refArr $$
-
+\begin{heapDef}{Operator for array allocation}\label{heap:arrAlloc}
  $$  \begin{array}{l}
             \newArrRef{\heap}{\anyType\lbrack \ \rbrack}{l} = (\heap', \referenceOnly)      \iff^{def} \\
 	    \\
@@ -185,15 +184,15 @@ $$ \newArrRefOnly :  \heap \rightarrow  \reffArr \rightarrow  \heap * refArr $$
             \update{\heap'.\heapArrays}{(\referenceOnly , i)}{ \defaultValue{\anyType }  } \\
 	     
      \end{array} $$
-
+\end{heapDef}
 
 
 In the following, we adopt few more naming conventions which do not create any ambiguity.
- Getting the function corresponding to a field \fieldd in a heap \heap \ :
+ Getting the function corresponding to a field \fieldd{} in a heap \heap \ :
 $ \heap . \heapFields ( \fieldd)$ is replaced  with $ \heap  ( \fieldd)$ for the sake of simplicity.
  
 The same abbreviation is done for access of an element in an  array object referenced by the reference 
- \referenceOnly at index $i$ in the heap \heap. Thus, the usual denotation:
+ \referenceOnly{} at index $i$ in the heap \heap. Thus, the usual denotation:
 $ \heap . \heapArrays (\referenceOnly, i )$ becomes $ \heap(\referenceOnly, i )$.
  
  

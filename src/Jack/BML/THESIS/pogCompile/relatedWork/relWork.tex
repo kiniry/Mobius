@@ -45,16 +45,19 @@ has limitted resources.
 %are syntactically the same (modulo names and basic types).
 
 %\todo{to be continued.  je ne sais pas comment dire mais il faut dire que c'est un peu tough de retrouve dans un program bytecode les structure qu'ils proposent }
- 
-
-% \todo{because they do not expose those conditions, 
+ % \todo{because they do not expose those conditions, 
 %they cannot use the induction hypothesis because they have not proven that the condition to apply the induction hold}
 
 % Peter Mueller
  In \cite{FB04LBT}, F.Bannwart and P.Muller show how to transform a Hoare style logic derivation on source Java like
  program into a Hoare style logic derivation of a Java bytecode like program. This solution however has similar  shortcoming
 as the previously cited work.
-    
+
+We would like to make a final remark concerning the ability to use such a scheme.
+In order that a verification framework be able to exploit the equivalence between source
+ and bytecode verification conditions it must be provided with bothe verification on source and bytecode. 
+For instance, the Spec\#~\cite{BLS04sp} programming system being not provided with a mechanism for source verification may not benefit from this fact.
+  
 
 
 % see what are the others 

@@ -7,20 +7,34 @@ which benefits from verification over Java source programs. We have also
 introduced the bytecode specification language BML tailored to Java bytecode, a compiler
 from the Java source specification language JML to BML and a verification 
 condition generator for Java bytecode programs. 
-We have shown that the verification procedure is correct w.r.t. a big step  operational semantics of Java bytecode programs. 
-Moreover, we have
-proven that the verification procedure for Java like programs
+We have shown that the verification procedure is correct w.r.t. a big step  operational semantics of Java bytecode programs
+for a particular subset of BML. We also show that the verification procedure for Java like programs
 and Java like bytecode are syntactically equivalent (modulo names and types). 
 %This scheme is actually part of the PCC architecture of the
 %European project Mobius\footnote{the site name} which aims to resolve the problems
 %of mobile and ubicuous computing via PCC. 
-We have developed a prototype of a verification condition generator based on the weakest precondition calculus presented in this thesis, as well 
-as a compiler from the corresponding subset of JML to BML.
+
+Currently, from Fig.\ref{intro:PPO} presented in the introductory Chapter \ref{intro}, we have
+developed the following components 
+\begin{itemize}
+         \item prototype of a verification condition generator based on the weakest precondition calculus presented in this thesis. 
+	 \item a compiler from the corresponding subset of JML to BML  
+	  and an encoding of BML in the class file format 
+\end{itemize}
 These two components have been integrated in the JACK \cite{BRL-JACK} verification framework 
 developed and supported by our research team Everest at INRIA Sophia Antipolis which has been initially designed for
  the verification of Java source programs annotated with JML specification.
 
-We would like to give a brief description of the implementation of the verification condition generator.
+%\The implementation of the verification condition generator handles currently the following aspects of program verification not described here:
+%\begin{description}
+%\  \item[Method multiple specification cases] In this case, every specification case (pre and postcondition) is
+%\    verified separately 
+%\    \item[Handling of aliasing in frame conditions] Although we have discarded here the aspect of aliasing, our implementation does it
+%\      \item[Handling of old constructs in specification]
+%\	\item[] 
+%\\end{description}
+ 
+  We would like to give a brief description of the implementation of the verification condition generator.
 The bytecode verification condition generator works as follows. For the verification of a class file containing BML specification, it will generate verification conditions for every
  method of this class including the constructors. For generating the verification conditions concerning a method implementation, first the control flow
  graph corresponding to the bytecode instruction is built. The latter is transformed into an acyclic control flow graph where the backedges are 
@@ -28,7 +42,9 @@ removed.
  Then the verification procedure proceeds by generating over every execution path in the control flow graph its corresponding verification conditions. 
 For every path which terminates by throwing an uncaught exception, the postcondition is the specified exceptional postcondition for this case. For the paths which terminate normally, 
 the normal postcondition is taken. For every path which terminates with an instruction which is dominated by a loop entry and whose direct successor is the same loop entry, the postcondition 
-is the corresponding loop invariant. The bytecode verification in Jack uses the intermediate language for the verification conditions and thus, bytecode verification conditions 
+is the corresponding loop invariant. 
+
+The bytecode verification in Jack uses the intermediate language for the verification conditions and thus, bytecode verification conditions 
  can be translated to several different theorem provers - Simplify \cite{Simpl05DNS} which is an automatic decision procedure, 
 the Atelier B and the Coq interactive theorem prover assistants. 
 
@@ -37,6 +53,8 @@ the user can see the verification conditions in his favorite language - Java, Si
 to what part of the annotation they refer to, as for instance, a lemma which refers to the establishment of the postcondition, or the preservation of the loop invariant.
 The hypothesis in the lemma also hold the index of the instruction from which they originate. 
 We have used the prototype of the bytecode verification condition generator for the case studies presented in Chapter \ref{applications:optimComp}.
+
+
 
 % JACK (short for Java Applet Correctness Kit) is designed as a plugin for the Java interface development
 % environment eclipse. 
@@ -108,8 +126,8 @@ as this will turn the latter language richer. However, the meaning  of JML const
  These methods does not modify the program state and thus, pure methods can be used in specifications 
  (only side effect free  expressions may occur in expressions).
  This gives more expressive  specifications as with them, for instance, specification can talk about the result of method invocation or use pure methods
- as a predicate relating their  initial and final state.  Moreover, observational purity is certainly 
- of interest \cite{obspure}.
+ as a predicate relating their  initial and final state.
+ Moreover, a methodology which allows for using methods that may have unobservable side effects is also of interest \cite{obspure}.
  Formalizing and establishing the meaning of pure methods is difficult and a literature exists for this problem \cite{DarvasMueller06}.
  As we said above, the treatment of pure methods is the same on source and bytecode.
 
@@ -117,10 +135,10 @@ Also, support for specification constructions for alias control is certainly use
 of class invariants and frame conditions.
 The alias control is guaranteed through ownership type systems which check that only an owner of a reference can modify its contents.
  This can considerably improve the current implementation for the verification of object invariants  \cite{DietlMueller05}.
-In particular, our way of proving object invariants is non modular - at every method call the invariants of all visible \todo{say what does it mean visibility}
+In particular, our way of proving object invariants is non modular - at every method call the invariants of all visible 
 objects must be valid and they are assumed to hold when the call is terminated; similarly, when a method body is verified in its precondition the invariants of all visible
 objects are assumed to hold and at the end of the method body all these invariants must be established. 
-In practice, it is very difficult to verify that all the invariants for the all visible objects in a method  hold.
+In practice, it is very difficult to verify that all the invariants for  all visible objects in a method  hold.
 In order to keep the number of the verification conditions reasonable, we check the invariants only for the current object this and the 
 objects received as parameters which is not sound.
 

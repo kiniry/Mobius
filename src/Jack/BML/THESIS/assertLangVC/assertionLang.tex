@@ -16,9 +16,15 @@ is the assertion language that our  verification condition generator manipulates
 
 
 The assertion language presented here will abstract from most of the BML specification clauses described in Section \ref{BCSLgrammar}.
-Our interest will be focused only on method and loop specification.
-Note that  the assertion language presented here discards class invariants,
+Our interest will be focused only on method and loop specification. Also, 
+the assertion language presented here discards class invariants,
  history constraints  because  they boil down to method pre and postconditions. 
+We shall also restrict our attention to expressions that refer only to one state, i.e. 
+we do not consider \oldOnly{} expressions.
+ This aspect needs a formalization of heaps in intermediate states especially in the
+ case of method invocation. This aspect is well studied for structured object oriented languages.
+ Such a  semantics and proof of a logic which deals expressions referring to the initial state of 
+method execution is presented in  the thesis of Cees Pierik \cite{CP03VTO}. 
 %Specification inheritance in case of overriden methods also can be encoded as method pre and postconditions.  
 
 
