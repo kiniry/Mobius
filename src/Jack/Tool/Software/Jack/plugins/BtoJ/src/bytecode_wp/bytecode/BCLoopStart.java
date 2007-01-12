@@ -59,10 +59,10 @@ public class BCLoopStart extends BCInstruction {
 
 	private BCMethod method;
 
-	// the max. number of iterations this loop may produce
-	private int maxIters;
+
 
 	private boolean checkInit = false;
+
 
 	/**
 	 * @param _instruction
@@ -373,8 +373,30 @@ public class BCLoopStart extends BCInstruction {
 	// * and the second entering in the loop
 	// * @param iterationAllocation The iterationAllocation to set.
 	// */
-	// public void setIterationAllocation(int allocationFromEntryUpToNow) {
-	// this.iterationAllocation = allocationFromEntryUpToNow -
-	// loopStartInstruction.getAllocate() ;
-	// }
+	
+	////////////////////////////////////////////////////////////////////
+	////////////////ANNOTATION FOR MEMORY CONSUMPTIONS/////////////////
+	////////////////////////////////////////////////////////////////////
+	// the max. number of iterations this loop may produce
+	private int maxIters;
+	private int iterationAllocation = -1;
+	private boolean startToCalculate = false;
+	
+	
+	public void setIterationAllocation(int consum) {
+	    this.iterationAllocation = consum;
+	}
+	
+	public int getIterationAllocation() {
+		return iterationAllocation;
+	}
+
+	public boolean isStartToCalculate() {
+		return startToCalculate;
+	}
+
+	public void setStartToCalculate(boolean startToCalculate) {
+		this.startToCalculate = startToCalculate;
+	}
+	
 }
