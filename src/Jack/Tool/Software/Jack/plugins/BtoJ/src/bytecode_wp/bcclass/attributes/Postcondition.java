@@ -54,6 +54,10 @@ public class Postcondition {
 		if (historyConstraint != null) {
 			postSpecCase = Formula.getFormula( postSpecCase , (Formula)historyConstraint.copy(), Connector.AND);
 		}
+		Formula invariant = (Formula)mSpec.getInvariant();
+		if (invariant != null ) {
+			postSpecCase = Formula.getFormula( postSpecCase , (Formula)invariant.copy(), Connector.AND);
+		}
 		Formula retConstraints =  mSpec.getReturnBoolConstraints();
 		if (retConstraints != null) {
 			postSpecCase = Formula.getFormula( postSpecCase , (Formula)retConstraints.copy(), Connector.AND);
