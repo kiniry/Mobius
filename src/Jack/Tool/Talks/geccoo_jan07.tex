@@ -72,22 +72,30 @@ Advantage: tailored techniques
 
 \begin{slide}{Use of existing languages}
 \begin{itemize}
-\item Study different available formats to express such properties
+\item Different formats available to express such properties
 \begin{itemize}
 \item Different kinds of automata
 \item Temporal logic
 \end{itemize}
 \item Define mapping of such a format into JML annotations
-\item Considering both safety and liveness properties
-\item Implementations in JACK and JAG
+\item Safety and liveness properties
+\item Implementation 
+\begin{itemize}
+\item JAG: from temporal property to JML
+\item JACK: propagation and verification
+\end{itemize}
 \end{itemize}
 \end{slide}
 
-\begin{slide}{Development of own language}
+\begin{slide}{Design of specific languages}
 \begin{itemize}
 \item Concrete applications used to identify relevant properties
-\item Result: property language for G\'en\'esyst and access control
-policy language for MECA.  
+\item Results: 
+\begin{itemize}
+\item Property language for G\'en\'esyst 
+\item Access control policy language for MECA
+\item JTPL (Java Temporal Pattern Language)
+\end{itemize}
 \end{itemize}
 \end{slide}
 
@@ -103,15 +111,30 @@ policy language for MECA.
 \begin{alltt}
 \textbf{public void m() \{
    ...
-   \Blue{// will require TRANSACT == 0}
+   \Blue{// requires TRANSACT == 0}
    JCSystem.beginTransaction();
-   \Blue{// TRANSACT modified} 
+   \Blue{// modifies TRANSACT } 
    \Blue{// ensures TRANSACT == 1}
    ...
-   \Blue{// will require TRANSACT == 1}
+   \Blue{// requires TRANSACT == 1}
    JSSystem.commitTransaction();
-   \Blue{// TRANSACT modified} 
+   \Blue{// modifies TRANSACT } 
    \Blue{// ensures TRANSACT == 0}
+   ...
+   \}}
+\end{alltt}
+\end{slide}
+
+\begin{slide}{Propagation example}
+\begin{alltt}
+\textbf{\Red{//@ requires TRANSACT == 0;}
+\Red{//@ modifies TRANSACT;}
+\Red{//@ ensures TRANSACT == 0;}
+public void m() \{
+   ...
+   JCSystem.beginTransaction();
+   ...
+   JSSystem.commitTransaction();
    ...
    \}}
 \end{alltt}
@@ -120,12 +143,12 @@ policy language for MECA.
 \begin{slide}{Current work: formalisation of the annotation
 generation}
 \begin{itemize}
-\item Property expressed as MVA automato
+\item Properties expressed as MVA automata
 \begin{itemize}
-\item transitions labelled with method names
-\item conditional branching
-\item can inspect program state
-\item transitions can update automaton state
+\item Transitions labelled with method names
+\item Conditional branching
+\item Can inspect program state
+\item Transitions can update automaton state
 \end{itemize}
 \item MVA monitors program execution
 \item MVA state encoded with ghost variables, transitions defined as
@@ -152,9 +175,15 @@ verification result
 \item Generates JML annotations for a given temporal property,
 including liveness properties
 \item Tool accepts different input formats (internal representation
-with B\"uchi automat)
+with B\"uchi automata)
 \item For liveness properties a progress condition on the environment
-has to be established: use of Hoare logic with progress condition.
+has to be established: use of Hoare logic with progress condition
+\Red{\[\{|P|\}S\{|Q|\}\]}
+\vspace*{-1em}
+\begin{itemize}
+\item Partial correctness \(\{P\}S\{Q\}\)
+\item If \(S\) diverges, it satisfies a progress hypothesis
+\end{itemize}
 \end{itemize}
 \end{slide}
 
@@ -172,22 +201,32 @@ annotations
 
 \begin{slide}{MECA: Models for Access Control}
 \begin{itemize}
-\item Automatically generates check to ensure access control policies
-\item Based on different access control models
+\item Tool to describe different types of access control policies 
+\begin{itemize}
+\item DAC - Discretionary Access Control
+\item MAC - Mandatory Access Control  
+\item RBAC - Role Based Access Control
+\end{itemize}
+
+
 \item Access control policy and application modeled as B-machines
-\item Meca defines which information must be given to describe the
+\item Meca defines necessary information to describe the
 access control policy
-\item Meca inserts appropriate checks on the permissions in the application
+\item Meca produces a B reference monitor enforcing the security policy 
+(precondition for verification, condition for monitoring)
 \end{itemize}
 \end{slide}
 
-\begin{slide}{Current work: }
-\end{slide}
+%\begin{slide}{Current work: }
+%\end{slide}
 
 \begin{slide}{To summarise}
 \begin{itemize}
-\item Two different approaches: development of special targeted
-language and encoding of existing format in annotations
+\item Two different approaches: 
+\begin{itemize}
+\item Development of special targeted language 
+\item Encoding of existing format in annotations
+\end{itemize}
 \item Work continues in different directions:
 \begin{itemize}
 \item Formalisation
