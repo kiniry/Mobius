@@ -21,14 +21,7 @@ public class CoqFile {
 	String beginning = "";
 	String proof = "";
 	String end= "";
-//	/**
-//	 * @param s
-//	 * @deprecated because
-//	 * @throws IOException
-//	 */
-//	private CoqFile(JpoInputStream s) throws IOException {
-//		proof = s.readUTF();
-//	}
+
 	
 	/**
 	 * A simple constructor.
