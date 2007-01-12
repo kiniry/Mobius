@@ -8,7 +8,9 @@ package bytecode_wp.bcclass;
 
 import jack.util.Logger;
 
+import java.util.Collection;
 import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.Vector;
 
 import jml2b.IJml2bConfiguration;
@@ -216,7 +218,7 @@ public class BCMethod extends AccessFlags {
 		name = _mg.getName();
 		setLocalVariables(_mg, cpGen);
 		setExceptionsThrown(_mg.getExceptions());
-		
+
 		setArgNames(_mg.getArgumentNames());
 		setArgumentTypes(_mg.getArgumentTypes());
 		setReturnType(_mg.getReturnType());
@@ -262,9 +264,10 @@ public class BCMethod extends AccessFlags {
 		setLineNumbers(bcelMethod.getLineNumberTable(bcelMethod
 				.getConstantPool()));
 		setAttributes(bcelMethod.getAttributes());
-		initTrace();//find loop entries
-		if (MEMCHECK ) {
-			initMethCons(); // infer an upper bound for the memory used by the method
+		initTrace();// find loop entries
+		if (MEMCHECK) {
+			initMethCons(); // infer an upper bound for the memory used by the
+							// method
 		}
 		setAsserts();
 		setInvariantToHoldAtMethCall();
@@ -491,7 +494,7 @@ public class BCMethod extends AccessFlags {
 			if (_attributes[i] instanceof Unknown) {
 				privateAttr = (Unknown) _attributes[i];
 				BCAttribute bcAttribute = null;
-				
+
 				if (localVariables != null) {
 					bcAttribute = AttributeReader.readAttribute(privateAttr,
 							clazz, lineNumberTable, localVariables
@@ -559,38 +562,38 @@ public class BCMethod extends AccessFlags {
 
 	/**
 	 * this method sets the local variables of a method
-	 * @param 
+	 * 
+	 * @param
 	 */
 	private void setLocalVariables(MethodGen m, ConstantPoolGen cpGen) {
 		LocalVariableGen[] locVarTable = m.getLocalVariables();
-		if ( (locVarTable == null ) || (locVarTable.length <= 0)) {
-			
-			if ( (bcelMethod != null) && (bcelMethod.isAbstract())) {
-				String[] names  = bcelMethod.getArgumentNames();
-				Type[] types   = bcelMethod.getArgumentTypes();
+		if ((locVarTable == null) || (locVarTable.length <= 0)) {
+
+			if ((bcelMethod != null) && (bcelMethod.isAbstract())) {
+				String[] names = bcelMethod.getArgumentNames();
+				Type[] types = bcelMethod.getArgumentTypes();
 				localVariables = new RegisterTable();
 				for (int i = 0; i < names.length; i++) {
 					JavaType type = JavaType.getJavaType(types[i]);
-					BCLocalVariable lv = new BCLocalVariable(names[i], i, type, this);					
+					BCLocalVariable lv = new BCLocalVariable(names[i], i, type,
+							this);
 					localVariables.addRegister(lv);
 				}
 			}
 			return;
 		}
 
-		
-
 		localVariables = new RegisterTable();
 
 		for (int i = 0; i < locVarTable.length; i++) {
 			JavaType type = JavaType.getJavaType(locVarTable[i].getType());
 			int indLV = locVarTable[i].getIndex();
-			if ( localVariables.searchForDuplicate(indLV) ) {
+			if (localVariables.searchForDuplicate(indLV)) {
 				continue;
 			}
 			BCLocalVariable lv = new BCLocalVariable(locVarTable[i]
 					.getLocalVariable(cpGen), type, this);
-			
+
 			localVariables.addRegister(lv);
 		}
 	}
@@ -1098,8 +1101,8 @@ public class BCMethod extends AccessFlags {
 			addToProveObligations();
 			Util.dump(clazz.getName() + " " + getName() + " " + getSignature());
 			Util.dump(proofObligation);
-			Logger.get().println(getName() + " < num POgs "
-					+ proofObligation.size() + ">");
+			Logger.get().println(
+					getName() + " < num POgs " + proofObligation.size() + ">");
 			return;
 		}
 
@@ -1188,14 +1191,13 @@ public class BCMethod extends AccessFlags {
 				Integer key4 = wp.addHyp(0, this_neq_null);
 				wp.addHypsToVCs(key4);
 			}
-			for (int k = 0 ; k < localVariables.getLength(); k++){
+			for (int k = 0; k < localVariables.getLength(); k++) {
 				Predicate this_subType_ = new Predicate2Ar(new TYPEOF(
 						getLocalVariableAtIndex(k)), getLocalVariableAtIndex(k)
 						.getType(), PredicateSymbol.SUBTYPE);
 				Integer key5 = wp.addHyp(0, this_subType_);
 				wp.addHypsToVCs(key5);
 			}
-			
 
 			/* Logger.get().println(wp); */
 		}
@@ -1208,12 +1210,55 @@ public class BCMethod extends AccessFlags {
 		trace.initWp();
 	}
 
-	/*	*//**
-			 * generates the proof obligations for one specification case
-			 * 
-			 * @param the
-			 *            precondition for the specification case
-			 */
+
+/*	public BCMethod getSuperMethod (IJml2bConfiguration config) {
+		BCClass superCl = clazz.getSuperClass(config);
+		
+		Collection ms = superCl.getMethods();
+		Iterator it = ms.iterator() ;
+		while (it.hasNext()) {
+			
+			BCMethod m = (BCMethod)it.next();
+			JavaType retT = m.getReturnType();
+			if (JavaType. returnType )
+			JavaType[] types =  m.getArgTypes();
+		}
+	} */
+	
+	/**
+	 * generates verification for behavioral subtyping - postcondition case
+	 */		
+	Formula behaveSubtypePost(BCMethod mS) {
+		MethodSpecification methodSpecification = mS.getMethodSpecification();
+		SpecificationCase[] specCasesSuper = methodSpecification
+				.getSpecificationCases();
+		Formula postSuper = specCasesSuper[0].getPostcondition();
+
+		postSuper = (Formula) postSuper.atState(0);
+		postSuper = (Formula)postSuper.removeOLD();
+		// ///////////////////
+		SpecificationCase[] specCasesSub = methodSpecification
+				.getSpecificationCases();
+		Formula postSub = specCasesSub[0].getPostcondition();
+		postSub = (Formula) postSub.atState(0);
+		postSub = (Formula)postSub.removeOLD();
+		
+		Formula cond = Formula.getFormula(postSub,
+				new Predicate2Ar(new BCLocalVariable(0), Expression._NULL,
+						PredicateSymbol.NOTEQ), Connector.AND);
+		
+		for (int k = 0; k < localVariables.getLength(); k++) {
+			Predicate this_subType_ = new Predicate2Ar(new TYPEOF(
+					getLocalVariableAtIndex(k)), getLocalVariableAtIndex(k)
+					.getType(), PredicateSymbol.SUBTYPE);
+			cond = Formula.getFormula(cond, this_subType_ , Connector.AND);
+		}
+		
+		cond = Formula.getFormula(cond, postSuper, Connector.IMPLIES );
+		
+		return cond;
+	}
+
 	/*
 	 * private void setWP(Formula precondition ) { Vector v = trace.getWP(); if
 	 * (proofObligation == null) { proofObligation = new Vector(); } Formula
@@ -1357,14 +1402,15 @@ public class BCMethod extends AccessFlags {
 	// //////////////Memory constraint consumption specification/////
 	// //////////////////////////////////////////////////////////////
 	// /////////////////////////////////////////////////////////////
-	int memUsed =  -1;
+	int memUsed = -1;
+
 	public static boolean MEMCHECK = false;
-	
+
 	private void initMethCons() {
-		memUsed = CalculateMethFrwrd.memConsMeth( bytecode); 
-		System.out.println(getSignature() + " : MEMUSED = " + memUsed );
+		memUsed = CalculateMethFrwrd.memConsMeth(bytecode);
+		System.out.println(getSignature() + " : MEMUSED = " + memUsed);
 	}
-	
+
 	public void initMethodSpecForMemoryConsumption() {
 		// requires MemUsed + alloc <= Max
 		FieldAccess memUsed = new FieldAccess(MemUsedConstant.MemUsedCONSTANT);
