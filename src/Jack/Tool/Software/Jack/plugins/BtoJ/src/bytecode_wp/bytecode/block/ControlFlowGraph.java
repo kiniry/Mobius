@@ -375,8 +375,7 @@ public class ControlFlowGraph {
 
 	/**
 	 * gets for the exception type excThrownType an exception handle
-	 * 
-	 * and finds the wp for it
+	 * and calculates the wp for it
 	 * 
 	 * @param excThrownType
 	 * @param excThrownAtPos
@@ -392,6 +391,9 @@ public class ControlFlowGraph {
 		// the exsures table of the current specification case
 		if (excH == null) {
 			VCGPath vcg = new VCGPath();
+			if (exsTable == null) {
+				return null;
+			}
 			exsTable.getExsPostconditionThrow(excThrownType.getSignature(), vcg);
 			return vcg;
 			///method.getExsuresForException(excThrownType);
@@ -408,8 +410,7 @@ public class ControlFlowGraph {
 		// this
 		
 		VCGPath vcgExcHandler = new VCGPath();
-		method.getMethodSpecification().getSpecificationCases()[0].getPostconditionToProve(vcgExcHandler);
-		
+		method.getMethodSpecification().getSpecificationCases()[0].getPostconditionToProve(vcgExcHandler);		
 		wp(config,  vcgExcHandler, exsTable, excHandlerBlocks);
 		
 		EntryPoint excHandlerEntryPoint = (EntryPoint) Util
