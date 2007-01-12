@@ -31,7 +31,7 @@ public class ExceptionHandlerStartInstruction extends BCInstruction {
 		setPrev(_instruction.getPrev());
 		setBCIndex(_instruction.getBCIndex());
 		setTargeters(_instruction.getTargeters());
-		//		updateTargets(_instruction.getTargeters());
+		
 		setPosition(_instruction.getPosition());
 
 		//actualise the values in the previous and the next instruction
