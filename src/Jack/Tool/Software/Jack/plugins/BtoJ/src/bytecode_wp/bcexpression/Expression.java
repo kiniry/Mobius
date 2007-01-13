@@ -275,11 +275,30 @@ public abstract class Expression {
 		return this;
 	}
 	
-	
+	/**
+	 * @param instrIndex - the instruction at which the value of  array expressions
+	 * is "freezeed"
+	 * the method converts the expression in an expression that represents
+	 * the value of the expression in a state instrIndex
+	 */
+
+	public Expression atStateArr(int instrIndex) {
+		Expression[] subExpr = getSubExpressions();
+		if (subExpr == null) {
+			return this;
+		}
+		Expression[] subExprAtState = new Expression[subExpr.length];
+		for ( int i = 0; i < subExpr.length; i++ ) {
+			subExprAtState[i] = subExpr[i].atStateArr( instrIndex);
+			
+		}	
+		setSubExpressions(subExprAtState);
+		return this;
+	}
 	
 	/**
 	 * @param instrIndex - the instruction at which the value of the expression
-	 * is instantiated 
+	 * is "freezed"
 	 * the method converts the expression in an expression that represents
 	 * the value of the expression in a state instrIndex
 	 */
@@ -312,6 +331,20 @@ public abstract class Expression {
 		Expression[] subExprAtState = new Expression[subExpr.length];
 		for ( int i = 0; i < subExpr.length; i++ ) {
 			subExprAtState[i] = subExpr[i].atState( instrIndex, expr);
+			
+		}	
+		setSubExpressions(subExprAtState);
+		return this;
+	}
+	
+	public Expression atStateOld(int instrIndex) {
+		Expression[] subExpr = getSubExpressions();
+		if (subExpr == null) {
+			return this;
+		}
+		Expression[] subExprAtState = new Expression[subExpr.length];
+		for ( int i = 0; i < subExpr.length; i++ ) {
+			subExprAtState[i] = subExpr[i].atStateOld( instrIndex);
 			
 		}	
 		setSubExpressions(subExprAtState);
