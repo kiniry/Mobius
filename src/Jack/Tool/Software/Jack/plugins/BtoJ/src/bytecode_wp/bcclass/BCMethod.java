@@ -1192,6 +1192,18 @@ public class BCMethod extends AccessFlags {
 				wp.addHypsToVCs(key4);
 			}
 			for (int k = 0; k < localVariables.getLength(); k++) {
+				if ( getLocalVariableAtIndex(k)
+						.getType() == JavaType.JavaINT) {
+					continue;
+				}
+				if ( getLocalVariableAtIndex(k)
+						.getType() == JavaType.JavaINT) {
+					continue;
+				}
+				if ( getLocalVariableAtIndex(k)
+						.getType() == JavaType.JavaCHAR) {
+					continue;
+				}
 				Predicate this_subType_ = new Predicate2Ar(new TYPEOF(
 						getLocalVariableAtIndex(k)), getLocalVariableAtIndex(k)
 						.getType(), PredicateSymbol.SUBTYPE);

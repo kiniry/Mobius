@@ -164,6 +164,8 @@ public class BCClass implements IClass {
 		return superClass;
 	}
 
+
+
 	// sets the interfaces implemented by this class
 	private void setInterfaces(IJml2bConfiguration config) {
 		if (interfaceNames == null) {
@@ -305,6 +307,8 @@ public class BCClass implements IClass {
 		}
 	}
 
+	
+	
 	public Collection getMethodKeys() {
 		return methods.keySet();
 	}
