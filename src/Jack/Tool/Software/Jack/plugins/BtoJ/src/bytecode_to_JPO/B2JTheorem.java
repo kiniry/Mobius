@@ -168,13 +168,19 @@ public class B2JTheorem extends Theorem {
 						.toExpression(config, f.getType(), declaredVatAtState,
 								decl));
 			}
+			BCConstantFieldRef cf = null;
+			try {
+				 cf =(BCConstantFieldRef) f.getConstant();
+			} catch (ClassCastException c) {
+				System.out.print("");
+			}
 			return new BinaryForm(LOCAL_VAR_DECL, 
 					B2JProofs.toExpression(config, f, declaredVatAtState, decl), 
 					new BinaryForm(IS_MEMBER_FIELD, 
 							B2JProofs.toExpression(config, 
-									((BCConstantFieldRef) f.getConstant()).getClassWhereDeclared(),
+									cf.getClassWhereDeclared(),
 									declaredVatAtState, decl), 
-							B2JProofs.toExpression(config, f.getType(), declaredVatAtState, decl)));
+							B2JProofs.toExpression(config, f.getType(), declaredVatAtState, decl)));	
 		}
 	}
 
