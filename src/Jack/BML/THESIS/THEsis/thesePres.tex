@@ -9,6 +9,7 @@
 \usefonttheme{structurebold}
 
 \usepackage[english]{babel}
+\usepackage{pgf}
 %\usepackage{pgf,pgfarrows,pgfnodes,pgfautomata,pgfheaps,graphics}\usepackage{pgflibraryshapes}
 %\usepackage{graphics}
 \usepackage{epsfig}
@@ -279,7 +280,7 @@ The list of Java program verification tools is long
      \item ESC/java
        \item Krakatoa
 	 \item Jive
-	   \item the Key project
+	  % \item the Key project
 	     \item JACK 
 	       \item \ldots
 \end{itemize}
@@ -333,16 +334,11 @@ The list of Java program verification tools is long
    \end{itemize}  
 \end{frame}
 
-\begin{frame}[shrink,fragile]
+\begin{frame}
 \frametitle{PCC architecture}
-\begin{figure}[hc]
 \begin{center}
-%\includegraphics{bc.eps}
-\pgfimage{figs/PCC}
-%\caption{\sc Mobile code verification}
-%\label{intro:mobileVerif}
+\pgfimage[height=\textheight]{figs/PCC}
 \end{center}
-\end{figure}
 \end{frame}
 
 \begin{frame}
@@ -361,17 +357,17 @@ The list of Java program verification tools is long
 \end{frame}
 
 
-\begin{frame}[fragile, shrink]\frametitle{Proposal}
-\begin{center}
-\pgfimage{figs/PPO}
-\end{center}
+\begin{frame}\frametitle{PCC architecture for complex policies}
+   \begin{center}
+       \pgfimage[height=\textheight]{figs/PPO}
+   \end{center}
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%CONTRIBUTIONS%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 \begin{frame}\frametitle{Contributions}   
   \begin{itemize}
-     \item Specification language for bytecode which we shall call BML
+     \item Bytecode specification language BML
      \item Compilation from source JML to BML specification
      \item Verification procedure for bytecode 
      \item Proof preserving compilation
@@ -386,19 +382,13 @@ The list of Java program verification tools is long
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%BML%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{BML}
-\begin{frame}[shrink,fragile]
-\frametitle{From source specification to bytecode specification}
-\begin{figure}[hc]
+\begin{frame}[shrink]\frametitle{From source specification to bytecode specification}
 \begin{center}
-%\includegraphics{bc.eps}
-\pgfimage{figs/PPObml}
-%\caption{\sc Mobile code verification}
-%\label{intro:mobileVerif}
+\pgfimage[height=\textheight]{figs/PPObml}
 \end{center}
-\end{figure}
 \end{frame}
 
-  \begin{frame}[shrink]\frametitle{BML.Design features}
+  \begin{frame}\frametitle{BML.Design features}
    \begin{itemize}
       \item Corresponds to subset of JML
        \item Semantics - the same  as JML
@@ -412,13 +402,10 @@ The list of Java program verification tools is long
 	      \item compiled into user defined class attributes 
 		 in compliance with the JVM specification
 	  \end{itemize}     
-     %  \item Syntax - does not support all the syntactic sugar in JML
-   \end{itemize} 
-\end{frame}
+\end{frame} 
 
-
-
-  \begin{frame}[shrink]\frametitle{BML. Restrictions}
+\begin{frame}\frametitle{BML.Restrictions}
+Restrictions
    \begin{itemize} 
        \item the class file must preserve the relation between source and bytecode 
 	 
@@ -498,14 +485,11 @@ Loop specification
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%VC gen%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Verification condition generator for Java bytecode}
-\begin{frame}[shrink]\frametitle{Bytecode verification condition generator}
+\begin{frame}\frametitle{Bytecode verification condition generator}
 \begin{center}
-%\includegraphics{bc.eps}
-\pgfimage{figs/PPOvc}
-%\caption{\sc Mobile code verification}
-%\label{intro:mobileVerif}
-\end{center}
 
+\pgfimage[height=\textheight]{figs/PPOvc}
+\end{center}
 \end{frame} 
 
 \begin{frame}\frametitle{Features} 
@@ -596,7 +580,7 @@ method min((*@ int \locVar{1} , int \locVar{2}  @*) )
   % \begin{figure}[hc]
      \begin{center}
        %\includegraphics{bc.eps}
-       \pgfimage{figs/PPOproofPres}
+       \pgfimage[height=\textheight]{figs/PPOproofPres}
        %\caption{\sc Mobile code verification}
        %\label{intro:mobileVerif}
      \end{center}
@@ -919,7 +903,7 @@ In the European project Mobius which uses a similar PCC framework they
 		    
 
 \begin{center}
-\pgfimage{figs/PPOtodo}
+\pgfimage{[height=\textheight]figs/PPOtodo}
 \end{center}
 \end{frame}
 
