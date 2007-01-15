@@ -11,6 +11,7 @@ import bytecode_wp.bcexpression.javatype.JavaType;
 import bytecode_wp.bcexpression.jml.TYPEOF;
 import bytecode_wp.formula.Connector;
 import bytecode_wp.formula.Formula;
+import bytecode_wp.formula.Predicate0Ar;
 import bytecode_wp.formula.Predicate2Ar;
 import bytecode_wp.formula.PredicateSymbol;
 import bytecode_wp.formula.Quantificator;
@@ -43,6 +44,9 @@ public class ClassInvariant implements BCAttribute {
      * @return
      */
     public Formula getClassInvariant() {
+    	if ( classInvariant == Predicate0Ar.TRUE ) {
+    		return Predicate0Ar.TRUE;
+    	}
         if (invariantType == ClassInvariant.INSTANCE) {
             Variable v = new Variable(FreshIntGenerator.getInt(), type);
             Formula f = (Formula) classInvariant.copy();
