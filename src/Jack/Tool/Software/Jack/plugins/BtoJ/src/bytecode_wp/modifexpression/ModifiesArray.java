@@ -27,6 +27,7 @@ import bytecode_wp.constants.BCConstantFieldRef;
 import bytecode_wp.constants.BCConstantRef;
 import bytecode_wp.formula.Connector;
 import bytecode_wp.formula.Formula;
+import bytecode_wp.formula.Predicate;
 import bytecode_wp.formula.Predicate0Ar;
 import bytecode_wp.formula.Predicate2Ar;
 import bytecode_wp.formula.PredicateSymbol;
@@ -71,11 +72,7 @@ public class ModifiesArray extends ModifiesExpression {
 		if (isStaticArray(config)) {
 			return Predicate0Ar.TRUE;
 		}
-		if (specArr instanceof ArrayElemFromTo) {
-			condition = (Formula) getConditionForInterval(state);
-			return condition;
-		}
-		if (specArr instanceof AllArrayElem) {
+		if ((specArr instanceof ArrayElemFromTo) ||(specArr instanceof AllArrayElem) ) {
 			condition = (Formula) getConditionForAll(state);
 			return condition;
 		}
@@ -328,15 +325,7 @@ public class ModifiesArray extends ModifiesExpression {
 				new Variable[] {
 						(Variable) arrayModified.getQuantificator()
 								.getBoundVars()[0], i, obj2 });
-		/*
-		 * Formula obj2_eq_impl = Formula.getFormula(
-		 * Formula.getFormula(domain2, this_arr_out_of_interval_unchanged,
-		 * Connector.IMPLIES ), quantificators2);
-		 */
-		/*
-		 * Formula domain3 = new Predicate2Ar(obj2.getType(), _class,
-		 * PredicateSymbol.SUBTYPE);
-		 */
+		
 
 		Formula obj2_eq_impl_quantify = new QuantifiedFormula(Formula
 				.getFormula(Formula.getFormula(obj2_eq_arr_Ref, domain2,
@@ -369,82 +358,71 @@ public class ModifiesArray extends ModifiesExpression {
 	 * 
 	 * 
 	 * if the array accessed is not a static field then the
-	 * @return value is forall o : T (T <: typeof( ref)) forall index :( 0 <=
-	 *         index < length(array)) o != ref => o.arr[i] = old( o.arr[i] )
+	 * @return value is forall r : arrayref,  forall index .
+	 *       ( 0 <= index < length(r)) &&  o != r => r[i] = old( r[i] )
 	 * 
 	 * @param o
 	 * @return
 	 */
 	public Expression getConditionForAll(int state) {
-		// check if the array modified is not a static field
-
-//		Expression array = getModifies().getExpression();
-//		Expression ind1 = new NumberLiteral(0);
-//		Expression ind2 = new FieldAccess(
-//				ArrayLengthConstant.ARRAYLENGTHCONSTANT, array);
-		// forall i :int( i1=< i <i2). ref.a[i]
-		QuantifiedExpression arrayModified = (QuantifiedExpression) getExpression();
-		// ref.a[i]
-		Expression quantifiedExpression = arrayModified
-				.getTheExpressionQuantified();
-		Quantificator quantificators = arrayModified.getQuantificator();
-		Formula dom = arrayModified.getDomain();
-		// ref
-		Expression objDeref = getObjectDereferenced();
-		Expression _class = getType();
-		// /////////
+		Expression array = getModifies().getExpression();
+		JavaArrType arrType = (JavaArrType) array.getType();
 		Variable obj1 = new Variable(FreshIntGenerator.getInt(),
-				(JavaArrType) _class);
-		Formula obj_not_eq_arr_Ref = Formula.getFormula(new Predicate2Ar(obj1,
-				objDeref, PredicateSymbol.EQ), Connector.NOT);
-		// (ref.a[i]).generalise(ref, obj) = obj.a[i]
-		Expression objArr = quantifiedExpression.copy();
-		objArr = objArr.generalize(objDeref, obj1);
+				arrType);
+		JavaType arrayElemType = ((JavaArrType) array.getType()).getElementType();
 
-		dom = (Formula) dom.copy().generalize(objDeref, obj1);
+		Variable index = new Variable(FreshIntGenerator.getInt(),
+				JavaBasicType.JavaINT);
+		Formula obj_not_eq_arr_Ref = Formula.getFormula(new Predicate2Ar(obj1,
+				array, PredicateSymbol.EQ), Connector.NOT);
 
 		Predicate2Ar obj_arr_i1_i2 = null;
-		// obj.a[ i ] == old(obj.a[ i ] )
+		
+		ArrayAccessExpression arrAccExpr = new ArrayAccessExpression(obj1, index);
 		if (state == ClassStateVector.RETURN_STATE) {
-			obj_arr_i1_i2 = new Predicate2Ar(objArr, new OLD(objArr),
+			
+			obj_arr_i1_i2 = new Predicate2Ar(arrAccExpr, new OLD(arrAccExpr),
 					PredicateSymbol.EQ);
 		} else {
-			ArrayAccessExpression arrAccessAtState = (ArrayAccessExpression) objArr
-					.copy();
-			Expression arrAtState = arrAccessAtState.getArray().atState(state);
-			arrAccessAtState.setSubExpressions(new Expression[] { arrAtState,
-					arrAccessAtState.getIndex() });
+			Expression arrAccessAtState =   arrAccExpr.atStateArr( state);
+			/*Expression arrAtState = arrAccessAtState.atState(state);*/
 			// Expression obj1AtState= obj1.copy().atState( state);
 			// Expression arrAtState = objArr.copy();
 			// arrAtState = arrAtState.rename(obj1, obj1AtState );
-			obj_arr_i1_i2 = new Predicate2Ar(objArr.copy(), arrAccessAtState,
+			obj_arr_i1_i2 = new Predicate2Ar(arrAccExpr, arrAccessAtState,
 					PredicateSymbol.EQ);
 		}
-
-		Formula quantify_obj_arr_i1_i2 = Formula.getFormula(dom, obj_arr_i1_i2,
+		SpecArray specArr = getSpecArray();
+		Formula f = null;
+		if ((specArr instanceof ArrayElemFromTo )
+				|| (specArr instanceof AllArrayElem)) {
+			Expression ind1 = null;
+			Expression ind2 = null;
+			
+			if (specArr instanceof ArrayElemFromTo) {
+				ind1 = ((ArrayElemFromTo) getSpecArray()).getStart();
+				ind2 = ((ArrayElemFromTo) getSpecArray()).getEnd();
+			} else if (specArr instanceof AllArrayElem) {
+				ind1 = new FieldAccess(ArrayLengthConstant.ARRAYLENGTHCONSTANT, obj1);
+				ind2 = new NumberLiteral(0);
+			}
+			Predicate	indexLT = Predicate2Ar.getPredicate(ind1, index, PredicateSymbol.GRT );
+			Predicate	indexGT = Predicate2Ar.getPredicate( index ,ind2 ,  PredicateSymbol.GRTEQ );
+			
+			Formula dom = Formula.getFormula(indexLT, indexGT , Connector.AND );
+			Formula quantify_obj_arr_i1_i2 = Formula.getFormula(dom, obj_arr_i1_i2,
 				Connector.IMPLIES);
 
-		quantify_obj_arr_i1_i2 = new QuantifiedFormula(quantify_obj_arr_i1_i2, // obj_arr_i1_i2,
-				quantificators);
-		Formula obj_not_eq_implies = Formula.getFormula(obj_not_eq_arr_Ref,
-				quantify_obj_arr_i1_i2, Connector.IMPLIES);
-		/*
-		 * Formula domain1 = new Predicate2Ar(new TYPEOF(obj1), _class,
-		 * PredicateSymbol.SUBTYPE);
-		 */
-		Quantificator q1 = new Quantificator(Quantificator.FORALL, obj1);
-		/*
-		 * forall o:Type (Type <: type(this) ) o != ref ==> forall i :int.( i1= <
-		 * i <i2). o.a[i] == old(o.a[i])
-		 * 
-		 */
-		/*
-		 * Formula obj_not_eq_implies_quantify = Formula.getFormula(
-		 * Formula.getFormula(domain1, obj_not_eq_implies, Connector.IMPLIES ),
-		 * q1);
-		 */
 
-		Formula f = Formula.getFormula(obj_not_eq_implies, q1);
+			Formula obj_not_eq_implies = Formula.getFormula(obj_not_eq_arr_Ref,
+				quantify_obj_arr_i1_i2, Connector.IMPLIES);
+
+			Quantificator overAllArrs = new Quantificator(Quantificator.FORALL, obj1);
+			Quantificator overInd = new Quantificator(Quantificator.FORALL, index);
+
+			f = Formula.getFormula(obj_not_eq_implies, overAllArrs);
+			f = Formula.getFormula(f, overInd);
+		}
 		return f;
 	}
 
