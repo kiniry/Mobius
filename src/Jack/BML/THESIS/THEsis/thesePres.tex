@@ -34,13 +34,13 @@
 \newcommand{\benchname}[1]{\texttt{#1}}
 
 
-\setbeamercovered{dynamic}
-%\beamertemplatenavigationsymbolsempty
+\setbeamercovered{dynamic}%\beamertemplatenavigationsymbolsempty
 
 \title[]{Java bytecode specification and verification}
 \author[mariela.pavlova@sophia.inria.fr]{\textbf{Mariela Pavlova}}
-\date[CARDIS'06]{Seventh Smart Card Research and Advanced Application IFIP Conference, April 19th, 2006}
-\date[INRIA Sophia Antipolis ]{Supervisors Gilles Barthe and Lilian Burdy}
+
+\date[INRIA Sophia Antipolis ]{Institution: INRIA Sophia Antipolis\\
+Supervisors: Gilles Barthe and Lilian Burdy}
 
 \AtBeginSection[]{\frame{\frametitle{Outline}\tableofcontents[current]}}
 
@@ -62,7 +62,7 @@
 %\newcommand{\ins} {\mbox{\rm\texttt{Ins}}}
 \newcommand{\program}{\mbox{\rm\texttt{P}}}%\xspace}
 \newcommand{\Method}{\mbox{\rm\texttt{Method}}}% method type \xspace}
-\newcommand{\methodd}{\mbox{\rm\textsf{meth}}}
+\newcommand{\methodd}{\mbox{\rm\textit{m}}}
 
 %\newcommand{\subst}[2]{[ #1 \backslash #2]}
 %\newcommand{\requires}{\texttt{requires}}
@@ -98,7 +98,7 @@ else, here you can find our best collection of ring- \\
 tones, cell phone games, themes, screensavers,\\
 backgrounds
 \begin{center}
-\includegraphics[width=4cm]{figs/beestje.ps}
+\pgfimage[width=4cm]{figs/beestje}
 \end{center}
 \alert{Are you sure that you can trust these applications?}
 \end{frame}
@@ -117,7 +117,8 @@ backgrounds
 % security trusted personal devices 
 % are used for security sensitive applications, they manage confidential data
 % and rely on limitted resources
-\begin{frame}\frametitle{Security and trusted personal devices}
+\begin{frame}
+\frametitle{Security and trusted personal devices}
 \begin{itemize}
 \item Trusted personal devices: phones, smart cards, pda's, set
 top boxes, \dots
@@ -131,77 +132,94 @@ top boxes, \dots
 
 \begin{frame}\frametitle{Mobile code and Java}
  % the de facto language for web applications , mobile phones, what ever smart cards
-The defacto language for web applications:
+The de facto language for web applications:
  \begin{itemize}
   \item platform independent execution framework
-  % \item  % With the JVM available in most popular browsers, the concept of mobile code was born. 
+  \item  With the JVM available in most popular browsers, the concept of mobile code was born
   \item widely used in   smart card applications
  \end{itemize}
 
 Security guarantees: 
 \begin{itemize}
-    \item type safety,  bytecode verifier
+    \item type safety
      \item sandbox mechanism
 \end{itemize}
 
-But malicious code may use also 
+But malicious code may also use 
 \begin{itemize}
-     \item logical attacks
+     %\item logical attacks
      \item resource attacks
        \item information leaks
+	 \item or does not respect the internal invariants of the host system
 \end{itemize}
 \end{frame}
 
+\begin{frame}\frametitle{Guaranteeing security }
+\begin{itemize}
+     \item Digital signatures - trusting the signer does not mean that there are no errors or bugs in the code
+     \item Runtime checking -  expensive, incurs runtime overhead
+     \item Formal verification - relies on rigorous modelisation of the programming language and its semantics.
+                          Does not have runtime cost. Provides means to guarantee that the unknown code respects 
+			  the client requirements
+ \end{itemize}
+\end{frame}
 
-
-\begin{frame}\frametitle{Guaranteeing security with formal verification}
+\begin{frame}[shrink,fragile]\frametitle{Formal verification}
   \begin{itemize}
     \item Specification language 
-         \begin{itemize}
-	    \item formalism for expressing program properties
-	  \end{itemize}
-    \item Program calculi for reasoning about program correctness 
-       \begin{itemize}
-	  \item reasoning directly on the operational semantics
-	  \item Hoare logic  
-	  \item Verification condition generators
-       \end{itemize}
-    \item Decision procedure 
-        \begin{itemize}
-	    \item automatic decision procedures
-	    \item interactive theorem prover
-	\end{itemize}
+        % \begin{itemize}
+	%    \item formalism for expressing program properties, e.g. 
+	%      what are the desirable 
+	%%      conditions that  must hold over the program input and output
+	%  \end{itemize}
+    \item Generation of conditions which express program correctness
+         w.r.t. the specification
+       %\begin{itemize}
+	%  \item directly on the operational semantics, requires 
+		%    intensive user interaction
+	 % \item Hoare logic, provides inference rules which allow for 
+	  %   automation, still need user interaction
+	 % \item verification condition generators, automatic generation
+	  %   of formulas, which guarantee program correctness
+      % \end{itemize}
+    \item Proving the condition that express that the program 
+          is correct w.r.t. the specification
+       % \begin{itemize}
+	%    \item automatic decision procedures
+%	    \item interactive theorem prover
+%	\end{itemize}
   \end{itemize}
+
+\begin{center}
+\pgfimage{figs/sourceVerification}
+\end{center}
 \end{frame}
 
 
-\begin{frame}[fragile,shrink]\frametitle{JML.Features}
+\begin{frame}\frametitle{The formal specification language JML}
+ JML stands for  Java Modeling Language and is the de facto specification of JML
   \begin{itemize}
      \item Contract based approach
-             \begin{itemize}
-	         \item preconditions
-		 \item postconditions
-	     \end{itemize}
-       \item Class specification 
-	 \begin{itemize}
-	         \item object invariants
-		 \item class history constraints
-	     \end{itemize}
+             % \begin{itemize}
+	     %    \item preconditions
+	%	 \item postconditions
+	 %    \end{itemize}
+     
        \item Method annotations
-	  \begin{itemize}
-	         \item loop invariants 
-		   \item assertions at particular program points
-	    \end{itemize}
-
-	         \item Special specification constructs  
-	  \begin{itemize}
-	         \item keywords \lstinline!\TYPE!, \lstinline!\result!
-		 \item operators   \lstinline!\old!, \lstinline!\typeof!
-		 \item ghost variables   \lstinline!//@ ghost int Memory!
-	    \end{itemize}
+	 %  \begin{itemize}
+	 %         \item loop invariants 
+	 %	   \item assertions at particular program points
+	  %   \end{itemize}
+ %
+	          \item Special specification constructs  
+	 %  \begin{itemize}
+	   %       \item keywords \lstinline!\TYPE!, \lstinline!\result!
+	 %	 \item operators   \lstinline!\old(e)!, \lstinline!\typeof(e)!
+	 %	 \item specification variables   
+	  %   \end{itemize}
+         \item \ldots
 
   \end{itemize}
-
 \end{frame}
 
 \begin{frame}[fragile,shrink]\frametitle{JML.Example}
@@ -212,7 +230,7 @@ public int sum (int k) {
   int sum = 0;		
   //@loop_modifies sum,i;
   //@loop_invariant i >= 0 && i<=k && 
-  //@(sum == i*(i+1)/2);
+  //@               sum == i*(i+1)/2;
   for  (int i = 0; i < k; i++ ) {
     sum = sum + i;
   } 	
@@ -221,65 +239,62 @@ public int sum (int k) {
 \end{lstlisting} 
 \end{frame}
 
- \begin{frame}\frametitle{Program calculi. Weakest precondition predicate transformers}
-	% \begin{block}{Rules}
-	   \begin{itemize}
-	      \item handles possible side effects
-		{\tiny $$ \wpSrcStmt{ \var = \expressionSrc_2}{\normalPostSrc }{ \excPostSrc } =
-                  \wpSrcExpr{\expressionSrc_2 }{ 
-				    \normalPostSrc \subst{\var}{v}   
-				   }{ \excPostSrc}{v} 
-		  $$ } 
-	      \item exceptional termination 
-		{\tiny $$   \begin{array}{l}  \wpSrcExpr{\expressionSrc.\fieldd  }{\normalPostSrc }{ \excPostSrc }{v}  = \\
-	                        \wpSrcExpr{\expressionSrc }{%\\
-			                  % \phantom{wpiSr} 
-                                             %\begin{array}{l} 
-						        v_1 \neq \Mynull \Rightarrow \normalPostSrc \subst{v}{v_1.\fieldd} %\\
-			                                \wedge% \\
-						        v_1 = \Mynull \Rightarrow%\\
-							 %\Myspace 
-							 %\left( \begin{array}{l} 
-							      % \forall \freshVar, 
-							     % \neg \instances(\freshVar) \wedge \\
-							       %\freshVar \neq \Mynull \Rightarrow%\\ 
-							       \excPostSrc(\NullPointerExc ) %\subst{\EXC}{\freshVar}
-							 % \end{array}\right)
-							        
-		                                 % \end{array}
-						   }{% \\ 
-                                          % \phantom{wpiSrc}
-					    \excPostSrc }{v_1}  
-				\end{array} $$ }
-	      
-	  \end{itemize}
-    %\end{block}
+
+
+ \begin{frame}\frametitle{Program calculi. Weakest precondition  predicate transformers}
+%   \begin{definition}[Definition of function]
+%%
+%%	      $ \wpSrcStmt{ \var = \expressionSrc}{\normalPostSrc } =  \wpSrcExpr{\expressionSrc}{\normalPostSrc \subst{\var}{v} }{v} $
+%      \end{definition}
+
+%%  \begin{definition}[Method respects its specification]
+%%     If a method \methodd{} with precondition  \methodd.$Pre$
+%%       and postcondition \methodd.$Post$ starts execution in state $s_0$ , and terminates execution in $s_1$, i.e.  \ $\methodd: \  s_0  \stateTransTerm s_1 $ 
+%%         and $s_0 \vDash \methodd.Pre $ holds    
+%%        then $s_1 \vDash \methodd.Post$ holds
+%%      \end{definition}
+ \end{frame}
+
+ \begin{frame}\frametitle{Program calculi. Weakest precondition  predicate transformers}
+%%    \begin{theorem}[Soundness of the function]
+%%       If a method \methodd{} with precondition  \methodd.$Pre$
+%%       and postcondition \methodd.$Post$ is such that 
+%%       the verification conditions are valid formulas $ \vDash \methodd.Pre \Rightarrow \wpName{\methodd.body}{\methodd.Post } $ 
+%%       then the \methodd{} respects its specification in the sense of the upper definition
+%%      \end{theorem}    
+  
  \end{frame}
 
 
-\begin{frame}[shrink]\frametitle{Architecture of a program verification tool}
-\begin{center}
-\epsfig{file=figs/sourceVerification.eps}
-\end{center}
+\begin{frame}\frametitle{Java program verification tools}
 
-Several verification tools for Java exist:  The Loop tool, ESC/java, Krakatoa, Loop, Jive, the Key tool, JACK ...
-\end{frame}
-
-
-
-\begin{frame}\frametitle{History of JACK}
+The list of Java program verification tools is long 
 \begin{itemize}
-\item Development started at Gemplus (Jan 2002 to April 2003)\\
-Objective: Give developers tools that help them to provide and be
-accountable for quality of their code
-\begin{itemize}
-\item Conform to specification requirements
-\item Well-documented
-\item Without bugs
-\end{itemize}
-\item Transfered to INRIA (September 2003)
+   \item  The Loop tool
+     \item ESC/java
+       \item Krakatoa
+	 \item Jive
+	   \item the Key project
+	     \item JACK 
+	       \item \ldots
 \end{itemize}
 \end{frame}
+
+
+
+% \begin{frame}\frametitle{History of JACK}
+%\begin{itemize}
+%\item Development started at Gemplus (Jan 2002 to April 2003)\\
+%Objective: Give developers tools that help them to provide and be
+%accountable for quality of their code
+%\begin{itemize}
+%\item Conform to specification requirements
+%\item Well-documented
+%\item Without bugs
+%\end{itemize}
+%\item Transfered to INRIA (September 2003)
+%\end{itemize}
+%\end{frame}
 
 
 
@@ -288,38 +303,62 @@ accountable for quality of their code
 \item Tight integration with IDE Eclipse
 \item JML used as annotation language
 \item Support for Simplify (automatic) and Coq (interactive) prover
-\item Special JACK view for verification condition browsing
+\item User friendly interface
 \end{itemize}
 \end{frame}
 
 
-\begin{frame}\frametitle{Developing an application in Eclipse}
+\begin{frame}[shrink,fragile]\frametitle{Developing an application in Eclipse}
 \vspace*{-1.5em}
-\includegraphics[height=\textheight]{figs/screen1.ps}
+\pgfimage[height=\textheight]{figs/screen1}
 \end{frame}
 
 % source not sufficient
 \begin{frame}\frametitle{However...}
   Source verification not always suitable
    \begin{itemize}
-     \item in mobile code  scenarios, the client receives only executable code   
-     \item software audit which does not trust the compiler
+     \item In mobile code  scenarios, the client receives only the
+           executable code    
+    %\item And even if the executable is accompanied with the source code, 
+     %  the client probably does not trust the compiler
+     %\item software audit which does not trust the compiler
+     \item Need for techniques which allow to reason on low level languages   
+     \item George Necula and Peter Lee propose the Proof Carrying Code (PCC) architecture
+       which allows establishing trust in the unknown executable code
    \end{itemize}  
 \end{frame}
 
+\begin{frame}[shrink,fragile]
+\frametitle{PCC architecture}
+\begin{figure}[hc]
+\begin{center}
+%\includegraphics{bc.eps}
+\pgfimage{figs/PCC}
+%\caption{\sc Mobile code verification}
+%\label{intro:mobileVerif}
+\end{center}
+\end{figure}
+\end{frame}
 
+\begin{frame}
+\frametitle{Limitation of traditional PCC}
+\begin{itemize}
+ \item Suitable for properties like
+       well typedness or safe memory read write access 
+ \item However,% with the development of the network software technologies, 
+       the security requirements also become more complex and 
+       may go beyond safety properties 
+            
+  \item  Need to transfer the verification and expressive power of source verification techniques
+        to executable code  in order to check the mobile code against complex functional policies 
 
-\begin{frame}\frametitle{Motivation}
-  \begin{itemize}
-   \item How  to  bring to bytecode programs the benefit from source verification?
-     \item How to check mobile code against complex functional policies? 
-  \end{itemize}
+\end{itemize}
 \end{frame}
 
 
 \begin{frame}[fragile, shrink]\frametitle{Proposal}
 \begin{center}
-\epsfig{file=figs/toolSetPCC.eps}
+\pgfimage{figs/PPO}
 \end{center}
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%CONTRIBUTIONS%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -327,7 +366,7 @@ accountable for quality of their code
 
 \begin{frame}\frametitle{Contributions}   
   \begin{itemize}
-     \item Specification language for bytecode BML
+     \item Specification language for bytecode which we shall call BML
      \item Compilation from source JML to BML specification
      \item Verification procedure for bytecode 
      \item Proof preserving compilation
@@ -341,12 +380,23 @@ accountable for quality of their code
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%BML%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
+\section{BML}
+\begin{frame}[shrink,fragile]
+\frametitle{From source specification to bytecode specification}
+\begin{figure}[hc]
+\begin{center}
+%\includegraphics{bc.eps}
+\pgfimage{figs/PPObml}
+%\caption{\sc Mobile code verification}
+%\label{intro:mobileVerif}
+\end{center}
+\end{figure}
+\end{frame}
 
   \begin{frame}[shrink]\frametitle{BML.Design features}
    \begin{itemize}
       \item Corresponds to subset of JML
-       \item  semantics - the same  as JML
+       \item Semantics - the same  as JML
      \item Java compiler independent
         \begin{itemize}
 	    \item compilation process separate from Java compiler
@@ -357,7 +407,7 @@ accountable for quality of their code
 	      \item compiled into user defined class attributes 
 		 in compliance with the JVM specification
 	  \end{itemize}     
-      \item Syntax - does not support all the syntactic sugar in JML
+     %  \item Syntax - does not support all the syntactic sugar in JML
    \end{itemize} 
 \end{frame}
 
@@ -365,37 +415,30 @@ accountable for quality of their code
 
   \begin{frame}[shrink]\frametitle{BML. Restrictions}
    \begin{itemize} 
-      \item Compiler 
-	   \begin{itemize} 
-               \item non optimizing compiler
-	       \item not so restrictive as up to date most Java compilers 
-		     do not perform optimizations
-	   \end{itemize}
-      \item Class file format
-	 \begin{itemize} 
-               \item \textbf{Line Number Table} - needed for identifying the exact points of the 
-		 intra method specification
-		 \item \textbf{Local Variable Table}  - needed for linking the names of method parameters
-         \end{itemize}
+       \item the class file must preserve the relation between source and bytecode 
+	 
+	    %be produced by a   non optimizing compiler -  not so restrictive as up to date most Java compilers 
+		%     do not perform optimizations
+	  
+       \item Class file format must contain data structures describing the relation between 
+	    the source and bytecode      
    \end{itemize}
  \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%Compiler from JML to BML%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{frame}[shrink]\frametitle{Compiler from JML to BML}
-     
-   Input : annotated  Java source and its corresponding class file
-   Output : class file containing BML specification 
-     \begin{itemize}
-         \item annotated Java file 
-          \item Compilation of the Java source file 
-	    \item Compilation of ghost variables
-	      \item Desugaring of JML specification
-		\item Linking phase
-		  \item Locating the points for intra method specification 
-		    \item Encoding the BML specification into user defined class attributes
-       \end{itemize}
-\end{frame}
+% \begin{frame}[shrink]\frametitle{Compiler from JML to BML}
+%      
+%      \begin{itemize}
+%          \item Annotated Java file 
+ %          \item Compilation of the Java source file 
+% 	    \item Compilation of ghost variables
+% 	      \item Desugaring of JML specification
+% 		\item Linking phase
+% 		  \item Locating the points for intra method specification 
+% 		    \item Encoding the BML specification into user defined class attributes
+%        \end{itemize}
+% \end{frame}
 
 
 \begin{frame}[fragile,shrink]\frametitle{Example}
@@ -403,11 +446,11 @@ accountable for quality of their code
 \begin{column}{5.1cm}
 {\tiny
 \begin{lstlisting}[language=java]
-//@ requires k >= 0 ;
-//@ ensures \result == k*(k+1)/2;
+//@requires k >= 0 ;
+//@ensures  \result == k*(k+1)/2;
 public int sum (int k) {
   int sum = 0;		
-  //@loop_modifies sum,i;
+  //@loop_modifies  sum,i;
   //@loop_invariant i >= 0 && i<=k && 
   //@(sum == i*(i+1)/2);
   for  (int i = 0; i < k; i++ ) {
@@ -450,90 +493,92 @@ Loop specification
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%VC gen%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Verification condition generator for Java bytecode}
-\begin{frame}[fragile,shrink]\frametitle{Support} 
+\begin{frame}[shrink]\frametitle{Bytecode verification condition generator}
+\begin{center}
+%\includegraphics{bc.eps}
+\pgfimage{figs/PPOvc}
+%\caption{\sc Mobile code verification}
+%\label{intro:mobileVerif}
+\end{center}
+
+\end{frame} 
+
+\begin{frame}\frametitle{Features} 
   \begin{itemize}
-   \item Generates verification conditions for every method separately
-   \item Works over the control flow graph of a method
-   \item Support for object manipulation, exceptions, method invokations, stack manipulation
+
+   
+   \item Supports object manipulation, exceptions, method invocations, stack manipulation
+    \item  Introduce in the language syntax for the stack counter and the 
+         stack elements $\counter$ and $\stack{\counter}$ 
    \item Based on weakest precondition calculus
 \end{itemize}
 
 \end{frame}
-
 \begin{frame}[fragile,shrink]\frametitle{Weakest precondition predicate transformer for bytecode}
 \begin{definition}
-   $$\wpi:  nat \rightarrow \Method  \rightarrow \Pred $$
+   $$\wpi:  nat \rightarrow  \rightarrow \Pred $$
 \end{definition}
 
-
+\begin{example}
    $$ {\small \begin{array}{l}
         
       \frac{ \begin{array}{l}
-	       \wpi(i+1,\methodd)\subst{\counter}{\counter+1} \subst{\stack{\counter + 1}}{\locVar{k}} \\
-              \methodd[i] = \load \  \locVar{k}
+	       \wpi(i+1)\subst{\counter}{\counter+1} \subst{\stack{\counter + 1}}{\locVar{k}} \\
+              
              \end{array}
-           }{\wpi(i,\methodd )} 
+           }{\wpi(i)}_{\tiny \methodd[i] = \load \  \locVar{k} }
          
 	 
 	\\\\\\
 
-      \frac{\begin{array}{l} 
-                  \stack{\counter } \neq \Mynull \Rightarrow 
-                            \wpi(i+1,\methodd)\subst{\stack{\counter}}{f(\stack{\counter} )} \ \wedge \\ 
-			   
-			     \stack{\counter } == \Mynull \Rightarrow \methodd.\excPost( i, \NullPointerExc) \\
-                  \methodd[i] = \getfield \ f 
-          \end{array}
-     } { \wpi(i,\methodd ) }
+    %  \frac{\begin{array}{l} 
+     %               \stack{\counter } \neq \Mynull \Rightarrow 
+    %                          \wpi(i+1)\subst{\stack{\counter}}{f(\stack{\counter} )} \ \wedge \\ 
+ % 			   
+ % 			     \stack{\counter } == \Mynull \Rightarrow \methodd.\excPost( i, \NullPointerExc) \\
+    %               
+    %        \end{array}
+    %   } { \wpi(i ) }_{ \tiny \methodd[i] = \getfield \ f  }
         
       \end{array} } $$
+\end{example}
+
+\begin{block}{Correctness}
+Correctness established for the calculus  under the hypothesis that the control flow graph is reducible
+\end{block}
 
 \end{frame}
 
-\begin{frame}[fragile,shrink]\frametitle{Correctness}
-  \begin{definition} 
-    If a method \methodd{} starts execution in state $s_0$, and terminates execution in $s_1$, i.e.  \ $\methodd: \  s_0 \rightarrow^{*} s_1 $ and
-    $s_0 \vDash \methodd.Pre $ holds     then $s_1 \vDash \methodd.Post$
-    \end{definition}
- 
-Assumption: 
-\begin{itemize}
-   \item reducible control flow graph 
-\end{itemize}
-
-\end{frame}
 
 
 
 \begin{frame}[fragile,shrink]\frametitle{Example}
 \begin{lstlisting}[language=jvmis]
-method min((*@ \locVar{1} , \locVar{2}  @*) )
-(*@\alert<7->{ \{ {\tiny $\locVar{1} \le \locVar{2} \wedge \locVar{1} > \locVar{2} \Rightarrow \locVar{1}  == \locVar{2} \wedge 
-                          \locVar{1} > \locVar{2}    \wedge \locVar{1} \le \locVar{2} \Rightarrow \locVar{2} == \locVar{1} $} \}} @*)
+method min((*@ int \locVar{1} , int \locVar{2}  @*) )
+(*@\alert<7->{ \{ {\tiny $\locVar{1} \le \locVar{2}  \Rightarrow \locVar{1}  ==  min(\locVar{1}, \locVar{2}) \wedge 
+                          \locVar{1} > \locVar{2}    \Rightarrow \locVar{2} == min(\locVar{1}, \locVar{2})  $} \}} @*)
    0: load 1
-(*@\alert<6->{ \{ {\tiny $\stack{\counter } \le \locVar{2} \wedge \locVar{1} > \locVar{2} \Rightarrow \locVar{1}  == \locVar{2} \wedge 
-                          \stack{\counter} > \locVar{2}    \wedge \locVar{1} \le \locVar{2} \Rightarrow \locVar{2} == \locVar{1} $} \}} @*)
+(*@\alert<6->{ \{ {\tiny $\stack{\counter } \le \locVar{2}  \Rightarrow \locVar{1}  ==  min(\locVar{1}, \locVar{2})   \wedge 
+                          \stack{\counter} > \locVar{2}     \Rightarrow \locVar{2} == min(\locVar{1}, \locVar{2}) $} \}} @*)
    1: load 2
-(*@\alert<5->{ \{ {\tiny $\stack{\counter - 1} \le \stack{\counter} \wedge \locVar{1} > \locVar{2} \Rightarrow \locVar{1}  == \locVar{2} \wedge 
-                          \stack{\counter - 1} > \stack{\counter}    \wedge \locVar{1} \le \locVar{2} \Rightarrow \locVar{2} == \locVar{1} $} \}} @*)
+(*@\alert<5->{ \{ {\tiny $\stack{\counter - 1} \le \stack{\counter}  \Rightarrow \locVar{1}  ==   min(\locVar{1}, \locVar{2})  \wedge 
+                          \stack{\counter - 1} > \stack{\counter}    \Rightarrow \locVar{2} ==  min(\locVar{1}, \locVar{2})  $} \}} @*)
    2: if_icmpgt 5
-(*@\alert<4->{ \{ {\tiny $ \locVar{1} > \locVar{2} \Rightarrow \locVar{1}  == \locVar{2} \wedge 
-		\locVar{1} \le \locVar{2} \Rightarrow \locVar{1} == \locVar{1} $} \}} @*)
+(*@\alert<4->{ \{ {\tiny $   \locVar{1} ==  min(\locVar{1}, \locVar{2})  $} \}} @*)
    3: load 1
-(*@\alert<3->{ \{ {\tiny $ \locVar{1} > \locVar{2} \Rightarrow \stack{\counter}== \locVar{2} \wedge 
-		\locVar{1} \le \locVar{2} \Rightarrow   \stack{\counter} == \locVar{1} $} \}} @*)
+(*@\alert<3->{ \{ {\tiny $  \stack{\counter} ==  min(\locVar{1}, \locVar{2})  $ } \}} @*)
    4: return
-(*@\alert<2->{ \{ {\tiny $ \locVar{1} > \locVar{2} \Rightarrow \result == \locVar{2} \wedge 
-		\locVar{1} \le \locVar{2} \Rightarrow \result == \locVar{1} $} \}} @*)
+(*@\alert<2->{ \{ \tiny $  \result == min(\locVar{1}, \locVar{2}) $  \}} @*)
 
-(*@\alert<4->{ \{ {\tiny $ \locVar{1} > \locVar{2} \Rightarrow \locVar{2}  == \locVar{2} \wedge 
-		\locVar{1} \le \locVar{2} \Rightarrow \locVar{2} == \locVar{1} $} \}} @*)
+(*@\alert<4->{ \{ {\tiny $  \locVar{2} ==  min(\locVar{1}, \locVar{2})  $} \}} @*)
    5: load 2
-(*@\alert<3->{ \{ {\tiny $ \locVar{1} > \locVar{2} \Rightarrow \stack{\counter} == \locVar{2} \wedge 
-		\locVar{1} \le \locVar{2} \Rightarrow \stack{\counter} == \locVar{1} $} \}} @*)
+(*@\alert<3->{ \{ {\tiny $  \stack{\counter} ==  min(\locVar{1}, \locVar{2}) $} \}} @*)
    6: return
-(*@\alert<2->{ \{ {\tiny $ \locVar{1} > \locVar{2} \Rightarrow \result == \locVar{2} \wedge 
-		\locVar{1} \le \locVar{2} \Rightarrow \result == \locVar{1} $} \}} @*)
+(*@\alert<2->{ \{ \tiny   $    \result == min(\locVar{1}, \locVar{2}) $ \}} @*)
+
+
+
+
 \end{lstlisting}
 \end{frame}
 
@@ -542,15 +587,31 @@ method min((*@ \locVar{1} , \locVar{2}  @*) )
 
 \section{Proof preserving compilation}
 
-\begin{frame}\frametitle{Compiler}
+\begin{frame}[shrink]\frametitle{Intuition}
+  % \begin{figure}[hc]
+     \begin{center}
+       %\includegraphics{bc.eps}
+       \pgfimage{figs/PPOproofPres}
+       %\caption{\sc Mobile code verification}
+       %\label{intro:mobileVerif}
+     \end{center}
+  % \end{figure}
+\end{frame}
 
-       \begin{itemize}
-           \item Non - optimizing 
-           \item Targets a stack based virtual machine
-	   %\item close to standard Java compilers 
-       \end{itemize}
-       Not so bad as  most of the Java compilers today are non optimizing  and  the result is relevant for the JVM 
- \end{frame}
+\begin{frame}\frametitle{Theoretical result}
+\begin{theorem}
+  if $compile(i, \stmt) = <list \ ins, n>  $ and  $\wpi(n+1) = \normalPostSrc$  then  we have 
+      $ \wpSrcStmt{ \stmt}{\normalPostSrc }  = \wpi(i)  $
+\\
+\vspace{3ex} Corrollary:
+ the verification conditions over  source programs and their compilation are syntactically equivalent 
+   
+ \end{theorem}
+  Such a relation is established for a language with exceptions, object manipulation and creation, method invocation, subroutines
+ 
+  Assumption : non optimizing compilation 
+
+\end{frame}
 
 
 
@@ -558,61 +619,56 @@ method min((*@ \locVar{1} , \locVar{2}  @*) )
 
 \begin{block}
   {\small \begin{tabular}{lll} 
-   $ \compileLabel{i}{ \lstinline!sqr + 2*s ! }{i+4}$ & = &
+   $ compile(i, \lstinline!a + 2*s !) $ & = &
    \begin{tabular}{l} 
-     $\compileLabel{i}{ \lstinline!sqr! }{i}$ \\
-     $\compileLabel{i+1}{ \lstinline!2*s! }{i+3} $\\
-     \lstinline!i+4: add!
-      \end{tabular} \\
-      where & & \\
-      $\compileLabel{i}{ \lstinline!sqr! }{i}$ & = & \lstinline! i: load sqr!\\
-      \\
-      $\compileLabel{i+1}{ \lstinline!2*s! }{i+3}$ & = &
-      \begin{tabular}{l} 
-        % \lstinline!i  : load sqr! \\
+         \lstinline!i  : load a! \\
 	 \lstinline!i+1: const 2!  \\
 	 \lstinline!i+2: load s!   \\
 	 \lstinline!i+3: mul!	   \\
-	 %\lstinline!i+4: add!	    
-   \end{tabular}
+	 \lstinline!i+4: add!	
+    \end{tabular} \\
+   %   where & & \\
+    %     $\compileLabel{i}{ \lstinline!a! }{i}$ & = & \lstinline! i: load a!\\
+    %     \\
+     %    $\compileLabel{i+1}{ \lstinline!2*s! }{i+3}$ & = &
+     %    \begin{tabular}{l} 
+      %     
+ %  	 \lstinline!i+1: const 2!  \\
+% 	 \lstinline!i+2: load s!   \\
+% 	 \lstinline!i+3: mul!	   \\
+	 
+   % \end{tabular}
     \end{tabular}
 }
 \end{block}
 
 
 %\begin{block}
-  {\small
+ % {\small
   $$  \begin{array}{ll}
-         1.1   &     \alert<7->{ \mbox{\rm \lstinline!sqr!} + \mbox{\rm \lstinline!2!}*\mbox{\rm \lstinline!s!} = \mbox{\rm \lstinline!5!}   } \\ 
-         1.2   &   \lstinline!i:  load sqr!  \\
-         1.3   &     \alert<6->{  \stack{\counter} + \mbox{\rm \lstinline!2!}*\mbox{\rm \lstinline!s!} = \mbox{\rm \lstinline! 5!}   }\\
-         1.4   &   \lstinline!i+1: const 2!	  \\
-	 1.5   &     \alert<5->{   \stack{\counter - 1} + \stack{\counter } *\mbox{\rm \lstinline!s!} = \mbox{\rm \lstinline! 5!}    }\\
-	 1.6   &   \lstinline!i+2: load s!	  \\
-	 1.7   &     \alert<4->{   \stack{\counter - 2}  + \stack{\counter - 1} * \stack{\counter} = \mbox{\rm \lstinline! 5!}    }\\
-	 1.8   &   \lstinline!i+3: mul!	          \\
-	 1.9   &     \alert<3->{  \stack{\counter - 1}  + \stack{\counter} = \mbox{\rm \lstinline! 5!}   }\\
-	 1.10  &   \lstinline!i+4: add!	          \\
-	 1.11  &     \alert<2->{  \stack{\counter} = \mbox{\rm \lstinline! 5 !}    } \\       
+         1.1   &     \alert<7->{ \mbox{\rm \lstinline!a!} + \mbox{\rm \lstinline!2!}*\mbox{\rm \lstinline!s!} = \mbox{\rm \lstinline!5!}   } \\ 
+         1.2   &   \lstinline!i:  load a !         \alert<6->{\{  \stack{\counter} + \mbox{\rm \lstinline!2!}*\mbox{\rm \lstinline!s!} = \mbox{\rm \lstinline! 5!} \}  }\\
+         1.3   &   \lstinline!i+1: const 2 !	  \alert<5->{  \{ \stack{\counter - 1} + \stack{\counter } *\mbox{\rm \lstinline!s!} = \mbox{\rm \lstinline! 5!}  \}  }\\
+	 1.4   &   \lstinline!i+2: load s !        \alert<4->{  \{ \stack{\counter - 2}  + \stack{\counter - 1} * \stack{\counter} = \mbox{\rm \lstinline! 5!}   \} }\\
+	 1.5   &   \lstinline!i+3: mul !	          \alert<3->{ \{ \stack{\counter - 1}  + \stack{\counter} = \mbox{\rm \lstinline! 5!} \}  }\\
+	 1.6  &   \lstinline!i+4: add  !	          \alert<2->{ \{ \stack{\counter} = \mbox{\rm \lstinline! 5 !}  \}  } \\       
                & \\
 	       & \\
   %\end{array}$$}
 
 %\end{block}
 
-
-
   % \begin{Example} {
   %{\small $$\begin{array}{ll}
-      2.1   &    \wpSrcExpr{\lstinline!sqr + 2*s ! }{\alert<2->{ v = 5} }{\excPostExpl}{v} =   \\
-      2.2   &  	 \wpSrcExpr{\lstinline!sqr!}{\wpSrcExpr{\lstinline!2*s ! } { \alert<3->{ (v=5)\subst{v}{v_{sqr} + v_{2*s}} } }{\excPostExpl}{v_{2*s}}  }{\excPostExpl}{v_{sqr}} =   \\
-      2.3   & 	 \wpSrcExpr{\lstinline!sqr!}{\wpSrcExpr{\lstinline!2! }{\wpSrcExpr{\lstinline!s! }{ \alert<4->{ (v_{sqr}+v_{2*s}=5)\subst{v_{2*s}}{v_{2}*v_{s}}} }{\excPostExpl}{v_{s}}  }{\excPostExpl}{v_{2}} }{\excPostExpl}{v_{sqr}} =   \\
-      2.4   &	 \wpSrcExpr{\lstinline!sqr!}{\wpSrcExpr{\lstinline!2! }{\alert<5->{ (v_{sqr} + v_{2}*v_{s}=5 ) \subst{v_{s}}{s}} }{\excPostExpl}{v_{2}} }{\excPostExpl}{v_{sqr}} =   \\
-      2.5   &    \wpSrcExpr{\lstinline!sqr!}{\alert<6->{(v_{sqr} + v_{2}*\lstinline!s!=5 ) \subst{v_{2}}{2} } } {\excPostExpl}{v_{sqr}} =   \\
-      %2.6   &	 (v_{sqr} + 2*\lstinline!s!=5 ) \subst{v_{sqr}}{\lstinline!sqr!  } =   \\
-      2.6   & \alert<7->{  \lstinline!sqr! + 2*\lstinline!s!=5  }
+      2.1   &    \wpSrcExpr{\lstinline!a + 2*s ! }{\alert<2->{ v = 5} }{v} =   \\
+      2.2   &  	 \wpSrcExpr{\lstinline!a!}{\wpSrcExpr{\lstinline!2*s ! } { \alert<3->{v_{a} + v_{2*s}=5 } } {v_{2*s}}  } {v_{a}} =   \\
+      2.3   & 	 \wpSrcExpr{\lstinline!a!}{\wpSrcExpr{\lstinline!2! }{\wpSrcExpr{\lstinline!s! }{ \alert<4->{ (v_{a}+v_{2}*v_{s}=5) } } {v_{s}}  } {v_{2}} } {v_{a}} =   \\
+      2.4   &	 \wpSrcExpr{\lstinline!a!}{\wpSrcExpr{\lstinline!2! }{\alert<5->{ (v_{a} + v_{2}*s=5 ) } } {v_{2}} } {v_{a}} =   \\
+      2.5   &    \wpSrcExpr{\lstinline!a!}{\alert<6->{(v_{a} + 2*\lstinline!s!=5 )  } }  {v_{a}} =   \\
+      %2.6   &	 (v_{a} + 2*\lstinline!s!=5 ) \subst{v_{a}}{\lstinline!a!  } =   \\
+      2.6   & \alert<7->{  \lstinline!a! + 2*\lstinline!s!=5  }
 \end{array}$$
-} %}  \end{Example}
+%} %}  \end{Example}
 
 \end{frame}
 
@@ -623,7 +679,7 @@ method min((*@ \locVar{1} , \locVar{2}  @*) )
  
  \subsection{Java-to-Native Compilation}
 
-\begin{frame}[shrink]\frametitle{Java-to-Native Compilation}
+\begin{frame}\frametitle{Java-to-Native Compilation}
  Compiling Java bytecode into native code brings runtime advantages:
 \begin{itemize}
     \item Faster execution
@@ -650,8 +706,8 @@ ireturn
 \begin{column}{5.1cm}
 \begin{lstlisting}[language=C]
 int i, j;
- \alert{if (j == 0)}
-   \alert{THROW(ArithmeticException);}
+ if (j == 0)
+ THROW(ArithmeticExc);
 RETURN_INT(i / j);
 \end{lstlisting}
 \end{column}
@@ -665,7 +721,7 @@ There are many checks of this kind:
 \item Checking affected types are compatible,
 \item ...
 \end{itemize}
-SPECjvm98: 2964 exception check sites for a native size of 23598 bytes (Ishizaki et al.).
+%SPECjvm98: 2964 exception check sites for a native size of 23598 bytes (Ishizaki et al.).
 \end{frame}
 
 
@@ -680,32 +736,33 @@ Methodology:
 \item Annotate source code with JML specification to express that no runtime exception will be thrown
 \item Compile JML specification into BML as user-defined class file attributes
 \item Generate and prove verification conditions over the bytecode and BML
-\item Annotate class files with useless runtime exception check sites attribute
+\item Eliminate the proven check sites in the native code
 \end{enumerate}
 \end{frame}
 
 \begin{frame}
 \frametitle{Experimental Results}
 \begin{center}
-  Number of necessary exception check sites
+  %Number of necessary exception check sites
 
-  \bigskip
-  \begin{tabular}{|l|r@{\extracolsep{0.2cm}}rr|}
-    \hline
-    \multirow{2}*{Program} & \multicolumn{3}{c|}{\# of exception check sites} \\
-    \cline{2-4} & Bytecode & ~~~~~~JC & Proven AOT\\
-    \hline
-    \benchname{crypt} & 190 & 79 & 1\\
-    \benchname{banking} & 170 & 12 & 0\\
-    \benchname{scheduler} & 215 & 25 & 0\\
-    \benchname{tcpip} & 1893 & 288 & 0\\
-    \hline
-  \end{tabular}
+ % \bigskip
+ %   \begin{tabular}{|l|r@{\extracolsep{0.2cm}}rr|}
+  %    \hline
+  %  %    \multirow{2}*{Program} & \multicolumn{3}{c|}{\# of exception check sites} \\
+  %    \cline{2-4} & Bytecode & ~~~~~~JC & Proven AOT\\
+  %  %    \hline
+  %    \benchname{crypt} & 190 & 79 & 1\\
+   %   \benchname{banking} & 170 & 12 & 0\\
+   %   \benchname{scheduler} & 215 & 25 & 0\\
+  %  %    \benchname{tcpip} & 1893 & 288 & 0\\
+   %   \hline
+   % \end{tabular}
+  
   \bigskip
   \begin{tabular}{|l|r@{\extracolsep{0.2cm}}rr|}
     \hline
     \multirow{2}*{Program} &  \multicolumn{3}{c|}{Memory footprint (bytes)}\\
-    \cline{2-4} & Bytecode & Native AOT & Proven AOT\\
+    \cline{2-4} & Bytecode & Standard NC  & Proven NC\\
     \hline
     \benchname{crypt} & 1256 & 5330 & 1592\\
     \benchname{banking} & 2320 & 5634 & 3582\\
@@ -713,7 +770,10 @@ Methodology:
     \benchname{tcpip} & 15497 & 41540 & 18064\\
     \hline
   \end{tabular}
+
 \end{center}
+NC - Java-to-Native Compilation
+
 \end{frame}
 
 % \begin{frame}
@@ -724,12 +784,12 @@ Methodology:
 %\end{itemize}
 %\end{frame}
 
-\subsection{Constraint memory consumption policies using BML}
+\subsection{Constrained memory consumption policies using BML}
  
 \begin{frame} \frametitle{Problem}
 
      \begin{itemize} 
-        \item smart card devices, embedded devices, TPDs have limitted computational resources
+        \item smart card devices, embedded devices, TPDs have limited computational resources
 	  \item vulnerable to denial of service attacks. 
 	    \item need of mechanisms for guaranteeing that an application 
 	      respects the limitation of the device
@@ -832,7 +892,7 @@ Methodology:
 
 \begin{frame}[fragile,shrink]\frametitle{What has been done?}
 \begin{center}
-\includegraphics[height=\textheight]{figs/toolset.eps}
+\pgfimage[height=\textheight]{figs/PPOdone}
 \end{center}
 \end{frame}
 
@@ -840,79 +900,90 @@ Methodology:
  \section{Future work}
 
 \begin{frame}[fragile,shrink]\frametitle{Towards  a PCC }
-  Still missing the certificate. Desirable properties
+  Still missing the certificate. 
+In order to build a full verification architecture,  we need mechanisms for certificate generation and checking
+
+Desirable properties of the certificate:
                     \begin{itemize}
-	                \item  small 
-			  \item easily checked 
-			  \item  hybrid certificates 
-		     \end{itemize}
+	                \item    compact and  easily checked - find the compromise between these features  
+			  \item  generated automatically - hybrid certificates
+		    \end{itemize}
+
+In the European project Mobius which uses a similar PCC framework they 
+			      use Coq proofs of certificates
+		    
 
 \begin{center}
-\includegraphics{figs/toolSetPCC.eps}
+\pgfimage{figs/PPOtodo}
 \end{center}
 \end{frame}
 
 
-\begin{frame}[fragile,shrink]\frametitle{Future directions. Verification condition generator }
+\begin{frame}\frametitle{Future directions. Verification condition generator }
          \begin{itemize}	   
 	    \item Extension of the verification condition generator 
                  \begin{itemize}
-	             \item multithreading
+	             \item multi - threading
 		  \end{itemize}
            \item Machine checked proof
                  \begin{itemize}
 	             \item reliable
 		       \item important for a PCC framework
 		  \end{itemize}
-          \end{itemize}
-\end{frame}
-
-
-
-
-\begin{frame}[fragile,shrink]\frametitle{Future directions. Property coverage  }
-	   
-                  \begin{itemize}
+         
+    \item Property coverage  
+	          \begin{itemize}
 	                \item pure methods 
 			  \item alias control
 			  \item modular verification of class invariants
 			    
 		   \end{itemize}  
-
+ \end{itemize}  
 \end{frame}
+
+
 
 
 \section{Related work}
 
-\begin{frame}[fragile,shrink]\frametitle{Related Work. Low level verification}
-
-
+\begin{frame}[shrink]\frametitle{Bytecode logic}
  \begin{itemize}
-   \item The Spec\# programming system
+    % \item the JACK tool for Java source verification
+    
+    
+     \item  The Spec\# programming system \textit{The Spec\# Programming System: An Overview (Cassis 2003)} 
+      
+     \item Claire Quigley \textit{A Programming Logic for Java Bytecode Programs ( TPHOLs 2003)} 
 
-     \item Peter Muller and Barnwatt
+      \item Peter Muller and Fabian Bannwart, \textit{A program logic for bytecode and the Translation of Proof from Sequential Java (BYTECODE 04)}
+ 
+      \item Tobias Nipkow and Martin Wildmoser \textit{Asserting bytecode safety (ESOP 2005)}
 
-     \item Nipkow Wildmoser
-
-      \item  The Grail project 
 \end{itemize}
-
 \end{frame}
 
-\begin{frame}[fragile,shrink]\frametitle{ Relation between compiled and source code}
-\begin{itemize}
-   \item G.Barthe, T.Rezk A.Saabas - Proof Preserving Compilation 
-
- \item Peter Muller and Barnwatt - Translating Source Logic derivation  into bytecode derivation trees 
-
-
-\item  C.Kunz, G.Barthe T.Rezk, B.Gregoire - Transforming annotations and proofs from source to optimized bytecode
-
+\begin{frame}[shrink]\frametitle{ Certifying compilers} 
+ \begin{itemize}
+      \item George Necula and Peter Lee\textit{ The Design and Implementation of a Certifying Compiler (PLDI 98)} \
+	\ldots
+      \item  The  project Mobile Resource Guarantees (MRG) 
+      \begin{itemize}
+             \item David Aspinall, Lennart Beringer, Martin Hofmann, Hans-Wolfgang Loidl and Alberto Momigliano 
+              \textit{A Program Logic for Resource Verification (TPHOLs2004)}
+              \item Lennart Beringer, Martin Hofmann, Alberto Momigliano and Olha Shkaravska
+           \textit{Automatic Certification of Heap Consumption (LPAR 2004)} 
+        \end{itemize}
  \end{itemize}
-
 \end{frame}
 
-
+    \begin{frame}[shrink]\frametitle{Relation between logic for structured and unstructured languages}
+ \begin{itemize}   
+      \item Gilles Barthe, Tamara Rezk  and Ando Saabas \textit{ Proof Obligations Preserving Compilation (FAST'05)}
+	\item Ando  Saabas and Tarmo Uutsalo \textit{A compositional natural semantics and Hoare logic for low level languages (SOS'05)}
+        \item  C.Kunz, Gilles Barthe, Benjamin Gregoire and Tamara Rezk  \textit{ Certificate Translation for Optimizing Compilers (SAS'06) }
+          \item the European project MOBIUS 
+ \end{itemize}
+\end{frame}
 
 
 

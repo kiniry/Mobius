@@ -46,19 +46,19 @@ overhead which makes it unsuitable for TPDs.
 \end{itemize}
 In this chapter, we study the use of logical methods to specify and
 verify statically precise memory consumption policies for Java
-bytecode programs. In particular, we show a methodology how 
+bytecode programs. In particular, we describe a methodology how 
 to specify precise memory consumption policies
-for (sequential) Java.%, and how verification tools can be used to enforce such memory consumption policies. 
+for (sequential) Java.
 
-
-Our broad conclusion is that logical methods provide a suitable means
+Our broad conclusion is that logical methods can provide a suitable means
 to specify and verify expressive memory consumption policies, with a
-minimal overhead.
+minimal runtime overhead.
 
 The remainder of the chapter is organized as follows. 
 Section \ref{sec:motivation} gives several motivating examples.
-In section \ref{sec:principles},  we begin by describing the principles of our
-approach. Section \ref{sec:examples} illustrates the approach with several examples on recursive methods, exception, inheritance.
+In section \ref{sec:principles},  we begin by describing the principles of
+ the methodology for writing specifications for guaranteeing constrained memory consumption.
+Section \ref{sec:examples} illustrates the approach with several examples on recursive methods, exception, inheritance.
 %Section \ref{sec:infer} presents an algorithm for inferring method specification for constraint memory consumption policies 
 %in terms of preconditions, postconditions and loop invariants. 
-Finally, section \ref{sec:rel} presents an overview of related works.
+Finally, section \ref{sec:rel} presents an overview of related approaches.

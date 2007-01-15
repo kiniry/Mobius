@@ -271,7 +271,7 @@
  
  \newcommand{\clazz}{\mbox{\rm \textit{C}}}
  \newcommand{\fieldd}{\mbox{\rm \textit{f}} }
- %\newcommand{\methodd}{\mbox{\rm \texttt{m}}}
+ %\newcommand{\methodd}{\mbox{\rm \textit{m}}}
  \newcommand{\methodt}{\mbox{\rm \texttt{n}}}
  %%%%%%%%%%%%%%%%%Class attributes %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
  \newcommand{\fields}{\mbox{\rm \textsf{fields}}}
@@ -591,13 +591,13 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%wp for source %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
  % param1 - start protect region,param2 - end protect region, param3 - start exc handler, param4 - exception type
-\newcommand{\wpSrcExpr}[4]{ \wpName^{src}( #1 , #2, #3, \methodd )_{#4} }
-\newcommand{\wpSrcStmt}[3]{ \wpName^{src}( #1 , #2, #3, \methodd ) }
-\newcommand{\preSrc}{\mbox{\rm\textsf{Pre}}^{src}{}}
-\newcommand{\excPostSrc}{\mbox{\rm\textsf{excPost}}^{src}}
+\newcommand{\wpSrcExpr}[3]{ \wpName( #1 , #2 )_{#3} }
+\newcommand{\wpSrcStmt}[2]{ \wpName( #1 , #2) }
+\newcommand{\preSrc}{\mbox{\rm\textsf{Pre}}{}}
+\newcommand{\excPostSrc}{\mbox{\rm\textsf{excPost}}}
 \newcommand{\excPostSpecSrc}{\mbox{\rm\textsf{excPostSpec}}^{src}{}}
-\newcommand{\normalPostSrc}{\mbox{\rm\textsf{nPost}}^{src}{}}
-\newcommand{\exceptionSrc}{\mbox{\rm\textsf{exceptions}}^{src}{}}
+\newcommand{\normalPostSrc}{\mbox{\rm\textsf{Post}}{}}
+\newcommand{\exceptionSrc}{\mbox{\rm\textsf{exceptions}}{}}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%end wp for source %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
