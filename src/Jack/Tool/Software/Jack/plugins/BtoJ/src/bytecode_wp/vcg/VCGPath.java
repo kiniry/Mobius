@@ -132,7 +132,7 @@ public class VCGPath extends Expression {
 	 * @return the identifier of the newly created hypothesis in the pool of hypothesis
 	 */
 	public void addHypForNewInstanceInModifiesGoals( Reference newRef) {
-		if (vcs == null){
+		if (vcs == null) {
 			return;
 		}
 		for ( int i =0; i < vcs.size(); i++) {
@@ -345,6 +345,9 @@ public class VCGPath extends Expression {
 		}
 		Vector vcsToMerge = vcg.getVcs();
 		initVCS();
+		if (vcsToMerge == null) {
+			return;
+		}
 		vcs.addAll(vcsToMerge);
 
 	}
