@@ -375,7 +375,7 @@ public class BCInvoke extends BCFieldOrMethodInstruction {
 		for (int specIndex = 0; specIndex < specCases.length; specIndex++) {
 			Formula postcondition = (Formula) specCases[specIndex]
 					.getPostcondition().copy();
-
+			  
 			Expression quantifyOnResult = null;
 
 			// post(method(index) )[result <-- fresh ]
@@ -383,7 +383,7 @@ public class BCInvoke extends BCFieldOrMethodInstruction {
 				RESULT result = Expression._RESULT;
 				postcondition = (Formula) postcondition.substitute(result,
 						fresh_result);
-				//TODO - commented on 06/10 due to bad subtyping 
+			//TODO - commented on 06/10 due to bad subtyping 
 			/*	if ( method.getReturnType() instanceof JavaObjectType) {
 					quantifyOnResult = new Predicate2Ar(new TYPEOF( fresh_result ), method
 							.getReturnType(), PredicateSymbol.SUBTYPE);
