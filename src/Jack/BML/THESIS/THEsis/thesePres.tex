@@ -88,7 +88,7 @@ Supervisors: Gilles Barthe and Lilian Burdy}
 Welcome to Imserba\bigskip\\
 
 The best mobile phones portal and community in the world
-Mobile phones Portal and Community\bigskip\\
+Mobile phones Portal and Community\bigskip\\  
 
 Imserba brings you the latest mobile phones related \\
 news, informations, stuffs you need for your phones. \\
@@ -99,8 +99,8 @@ tones, cell phone games, themes, screensavers,\\
 backgrounds
 \begin{center}
 \pgfimage[width=4cm]{figs/beestje}
-\end{center}
-\alert{Are you sure that you can trust these applications?}
+\end{center}    
+\alert{Are you sure that you can trust these applications?} 
 \end{frame}
 
 
@@ -241,28 +241,33 @@ public int sum (int k) {
 
 
 
- \begin{frame}\frametitle{Program calculi. Weakest precondition  predicate transformers}
-%   \begin{definition}[Definition of function]
-%%
-%%	      $ \wpSrcStmt{ \var = \expressionSrc}{\normalPostSrc } =  \wpSrcExpr{\expressionSrc}{\normalPostSrc \subst{\var}{v} }{v} $
-%      \end{definition}
+ \begin{frame}[shrink]\frametitle{Program calculi. Weakest precondition  predicate transformers}
+   \begin{definition}[Definition of \wpName{} ]
 
-%%  \begin{definition}[Method respects its specification]
-%%     If a method \methodd{} with precondition  \methodd.$Pre$
-%%       and postcondition \methodd.$Post$ starts execution in state $s_0$ , and terminates execution in $s_1$, i.e.  \ $\methodd: \  s_0  \stateTransTerm s_1 $ 
-%%         and $s_0 \vDash \methodd.Pre $ holds    
-%%        then $s_1 \vDash \methodd.Post$ holds
-%%      \end{definition}
- \end{frame}
+   $$ \begin{array}{l} 
+       \wpName : \stmt \cup \expressionSrc \rightarrow \Pred   \rightarrow \Pred   \\
+       \wpSrcStmt{ \var = \expressionSrc}{\normalPostSrc } =  \wpSrcExpr{\expressionSrc}{\normalPostSrc \subst{\var}{v} }{v} \\
+    \end{array}
+$$
+      \end{definition} 
 
- \begin{frame}\frametitle{Program calculi. Weakest precondition  predicate transformers}
-%%    \begin{theorem}[Soundness of the function]
-%%       If a method \methodd{} with precondition  \methodd.$Pre$
-%%       and postcondition \methodd.$Post$ is such that 
-%%       the verification conditions are valid formulas $ \vDash \methodd.Pre \Rightarrow \wpName{\methodd.body}{\methodd.Post } $ 
-%%       then the \methodd{} respects its specification in the sense of the upper definition
-%%      \end{theorem}    
-  
+  \begin{definition}[Method respects its specification]
+     If a method \methodd{} with precondition  \methodd.$Pre$
+        and postcondition \methodd.$Post$ starts execution in state $s_0$ , and terminates execution in $s_1$, i.e.  \ $\methodd: \  s_0  \stateTransTerm s_1 $ 
+          and $s_0 \vDash \methodd.Pre $ holds    
+         then $s_1 \vDash \methodd.Post$ holds
+       \end{definition}
+ %\end{frame}
+
+ % \begin{frame}\frametitle{Program calculi. Weakest precondition  predicate transformers}
+     \begin{theorem}[Soundness of  \wpName{}]
+        If a method \methodd{} with precondition  \methodd.$Pre$
+        and postcondition \methodd.$Post$ is such that 
+        the verification conditions are valid formulas 
+$ \vDash \methodd.Pre \Rightarrow \wpSrcStmt{\methodd.body}{\methodd.Post } $ 
+        then \methodd{} respects its specification in the sense of the upper definition
+       \end{theorem}    
+   
  \end{frame}
 
 
@@ -598,9 +603,9 @@ method min((*@ int \locVar{1} , int \locVar{2}  @*) )
   % \end{figure}
 \end{frame}
 
-\begin{frame}\frametitle{Theoretical result}
+\begin{frame}\frametitle{Formal definition}
 \begin{theorem}
-  if $compile(i, \stmt) = <list \ ins, n>  $ and  $\wpi(n+1) = \normalPostSrc$  then  we have 
+  If \  $compile(i, \stmt) = <list \ ins, n>  $ and  $\wpi(n+1) = \normalPostSrc$  then  we have 
       $ \wpSrcStmt{ \stmt}{\normalPostSrc }  = \wpi(i)  $
 \\
 \vspace{3ex} Corrollary:
@@ -951,26 +956,26 @@ In the European project Mobius which uses a similar PCC framework they
     % \item the JACK tool for Java source verification
     
     
-     \item  The Spec\# programming system \textit{The Spec\# Programming System: An Overview (Cassis 2003)} 
+     \item  The Spec\# programming system, \textit{The Spec\# Programming System: An Overview (Cassis 2003)} 
       
-     \item Claire Quigley \textit{A Programming Logic for Java Bytecode Programs ( TPHOLs 2003)} 
+     \item Claire Quigley, \textit{A Programming Logic for Java Bytecode Programs ( TPHOLs 2003)} 
 
       \item Peter Muller and Fabian Bannwart, \textit{A program logic for bytecode and the Translation of Proof from Sequential Java (BYTECODE 04)}
  
-      \item Tobias Nipkow and Martin Wildmoser \textit{Asserting bytecode safety (ESOP 2005)}
+      \item Tobias Nipkow and Martin Wildmoser, \textit{Asserting bytecode safety (ESOP 2005)}
 
 \end{itemize}
 \end{frame}
 
 \begin{frame}[shrink]\frametitle{ Certifying compilers} 
  \begin{itemize}
-      \item George Necula and Peter Lee\textit{ The Design and Implementation of a Certifying Compiler (PLDI 98)} \
+      \item George Necula and Peter Lee,\textit{ The Design and Implementation of a Certifying Compiler (PLDI 98)} \
 	\ldots
       \item  The  project Mobile Resource Guarantees (MRG) 
       \begin{itemize}
-             \item David Aspinall, Lennart Beringer, Martin Hofmann, Hans-Wolfgang Loidl and Alberto Momigliano 
+             \item David Aspinall, Lennart Beringer, Martin Hofmann, Hans-Wolfgang Loidl and Alberto Momigliano, 
               \textit{A Program Logic for Resource Verification (TPHOLs2004)}
-              \item Lennart Beringer, Martin Hofmann, Alberto Momigliano and Olha Shkaravska
+              \item Lennart Beringer, Martin Hofmann, Alberto Momigliano and Olha Shkaravska,
            \textit{Automatic Certification of Heap Consumption (LPAR 2004)} 
         \end{itemize}
  \end{itemize}
@@ -978,9 +983,9 @@ In the European project Mobius which uses a similar PCC framework they
 
     \begin{frame}[shrink]\frametitle{Relation between logic for structured and unstructured languages}
  \begin{itemize}   
-      \item Gilles Barthe, Tamara Rezk  and Ando Saabas \textit{ Proof Obligations Preserving Compilation (FAST'05)}
-	\item Ando  Saabas and Tarmo Uutsalo \textit{A compositional natural semantics and Hoare logic for low level languages (SOS'05)}
-        \item  C.Kunz, Gilles Barthe, Benjamin Gregoire and Tamara Rezk  \textit{ Certificate Translation for Optimizing Compilers (SAS'06) }
+      \item Gilles Barthe, Tamara Rezk  and Ando Saabas, \textit{ Proof Obligations Preserving Compilation (FAST'05)}
+	\item Ando  Saabas and Tarmo Uutsalo, \textit{A compositional natural semantics and Hoare logic for low level languages (SOS'05)}
+        \item  C.Kunz, Gilles Barthe, Benjamin Gregoire and Tamara Rezk,  \textit{ Certificate Translation for Optimizing Compilers (SAS'06) }
           \item the European project MOBIUS 
  \end{itemize}
 \end{frame}
