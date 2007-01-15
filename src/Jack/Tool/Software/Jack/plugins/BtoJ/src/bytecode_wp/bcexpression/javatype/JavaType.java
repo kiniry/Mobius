@@ -180,14 +180,19 @@ public class JavaType extends Expression  {
 	 */
 	public static JavaReferenceType getJavaRefType(String _signature) {
 		_signature = _signature.replace('.', '/');
+		
 		if ((!_signature.startsWith("L")) &&  (!_signature.startsWith("["))) {
 			_signature =  "L".concat(_signature);
 		}
 		if (!_signature.endsWith(";")) {
 			_signature =  _signature.concat(";");
 		}
+		
 		if (_signature.equals("Ljava/lang/String;")) {
 			return JavaSTRING;
+		}
+		if  (_signature.equals("LException;" )) {
+			_signature= "Ljava/lang/Exception;";
 		}
 		//
 		if (loadedTypes == null) {
