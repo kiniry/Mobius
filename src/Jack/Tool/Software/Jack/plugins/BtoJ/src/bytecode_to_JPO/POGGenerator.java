@@ -145,26 +145,35 @@ public class POGGenerator implements IRunnableWithProgress {
 		}
 
 		monitor.subTask("Loading annotated class file");
+		try {
 		config.setJavaApplication(new B2JPackage(new JavaClassLoader(cl)));
 		BCClass clazz = ((B2JPackage) config.getPackage())
 				.getClass(absoluteName);
+		BCJmlFile bcjm = null;
 		
-		try {
 			monitor.subTask("Generating proof obligations");
 			long startTime = System.currentTimeMillis();
 			clazz.wp(config);
 			
 			long endTime = System.currentTimeMillis();
 			Util.out.println("WP done " + ( endTime - startTime));
+			try {
 			IdentifierResolver.softInit(config);
-			
-			B2JClass bjc = ((B2JPackage) config.getPackage()).addB2JClass(
+
+			B2JClass bjc = null;
+
+			 bjc = ((B2JPackage) config.getPackage()).addB2JClass(
 					config, clazz, true);
-			BCJmlFile bcjm = new BCJmlFile(bjc, mchName, config.getSubdirectory());
+
+			
+			bcjm = new BCJmlFile(bjc, mchName, config.getSubdirectory());
+
 			File bcSource = new File(config.getSubdirectory(), bcjm.getFlatName()
 					+ BYTECODE_SOURCE_EXTENSION);
+
 			File translationTable = new File(config.getSubdirectory(), bcjm.getFlatName()
 					+ TRANSLATION_TABLE_EXTENSION);
+
 			PrintStream sBcSource = new PrintStream(new FileOutputStream(bcSource));
 			ObjectOutputStream sTranslation = new ObjectOutputStream(new FileOutputStream(translationTable));
 			HashMap hm = new HashMap();
@@ -172,12 +181,13 @@ public class POGGenerator implements IRunnableWithProgress {
 			sTranslation.writeObject(hm);
 			sTranslation.close();
 			sBcSource.close();
-			try {
+
 				Pog.garbageIdent(bcjm);
 			}
 			catch (Throwable e) {
 				e.printStackTrace();
 			}
+			
 			Pog.saveFiles(config, bcjm, monitor, new Vector(), new Vector(),
 					new B2JClassResolver(config, (B2JPackage) config
 							.getPackage(), clazz));
