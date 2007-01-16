@@ -75,24 +75,28 @@ public class B2JClass extends jml2b.structure.java.Class {
 //			for (int i = 0; i < bcma.length; i++)
 //				methods.add(new B2JMethod(null, (BCMethod) bcma[i]));
 //	}
-
-	B2JClass(IJml2bConfiguration config, BCClass cl, boolean internal) {
-		classzz = cl;
-		this.config = config;
-		this.name = cl.getName().replace('.', '_');
-		bcma = cl.getMethods().toArray();
+	void init (BCClass cl, boolean internal) {
+		fields = new Vector();
+		for (int i = 0; i < cl.getFields().length; i++)
+			fields.add(new B2JField(config,cl.getFields()[i], this));
 		methods = new Vector();
 		if (internal)
 			for (int i = 0; i < bcma.length; i++)
 				methods.add(new B2JMethod(config, (BCMethod) bcma[i]));
-		fields = new Vector();
-		for (int i = 0; i < cl.getFields().length; i++)
-			fields.add(new B2JField(config,cl.getFields()[i], this));
-//		for (int i=0; i < classzz.getConstantPool().getSize(); i++) {
-//			if (classzz.getConstantPool().getConstant(i) instanceof BCConstantFieldRef)
-//		fields.add(new B2JField(config, (BCConstantFieldRef) classzz.getConstantPool().getConstant(i), this));
-//		}
 	}
+	B2JClass(IJml2bConfiguration config, BCClass cl) {
+		classzz = cl;
+		this.config = config;
+		this.name = cl.getName().replace('.', '_');
+		bcma = cl.getMethods().toArray();
+		
+	}
+	B2JClass(IJml2bConfiguration config, BCClass cl, boolean internal) {
+		this(config, cl);
+		init(cl, internal);
+	}
+
+	
 
 	public int getNbPo() {
 		int res = 0;

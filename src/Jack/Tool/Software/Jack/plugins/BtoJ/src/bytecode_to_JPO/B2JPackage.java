@@ -6,8 +6,11 @@
  */
 package bytecode_to_JPO;
 
+import jack.util.Logger;
+
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.LinkedList;
 import java.util.Vector;
 
 import jml2b.IJml2bConfiguration;
@@ -50,10 +53,12 @@ public class B2JPackage implements IPackage {
 	}
 	
 	public B2JClass addB2JClass(IJml2bConfiguration config, BCClass clazz, boolean b) {
-		B2JClass c;
-		if ((c = search(clazz.getName())) == null) {
-			c = new B2JClass(config, clazz, b);
+		B2JClass c = search(clazz.getName());
+		if (c == null) {
+			c = new B2JClass(config, clazz);
+			
 			loadedClasses.add(c);
+			c.init(clazz, true);
 		}
 		return c;
 	}
