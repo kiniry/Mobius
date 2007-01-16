@@ -314,7 +314,7 @@ The list of Java program verification tools is long
 \end{frame}
 
 
-\begin{frame}[shrink,fragile]\frametitle{Developing an application in Eclipse}
+\begin{frame}[shrink]\frametitle{Developing an application in Eclipse}
 \vspace*{-1.5em}
 \pgfimage[height=\textheight]{figs/screen1}
 \end{frame}
@@ -335,9 +335,9 @@ The list of Java program verification tools is long
 \end{frame}
 
 \begin{frame}
-\frametitle{PCC architecture}
+\frametitle[shrink]{PCC architecture}
 \begin{center}
-\pgfimage[height=\textheight]{figs/PCC}
+\pgfimage{figs/PCC}
 \end{center}
 \end{frame}
 
@@ -357,7 +357,7 @@ The list of Java program verification tools is long
 \end{frame}
 
 
-\begin{frame}\frametitle{PCC architecture for complex policies}
+\begin{frame}[shrink]\frametitle{PCC architecture for complex policies}
    \begin{center}
        \pgfimage[height=\textheight]{figs/PPO}
    \end{center}
@@ -402,9 +402,10 @@ The list of Java program verification tools is long
 	      \item compiled into user defined class attributes 
 		 in compliance with the JVM specification
 	  \end{itemize}     
-\end{frame} 
+%\end{itemize}
+%\end{frame} 
 
-\begin{frame}\frametitle{BML.Restrictions}
+%\begin{frame}\frametitle{BML.Restrictions}
 Restrictions
    \begin{itemize} 
        \item the class file must preserve the relation between source and bytecode 
@@ -415,7 +416,8 @@ Restrictions
        \item Class file format must contain data structures describing the relation between 
 	    the source and bytecode      
    \end{itemize}
- \end{frame}
+ \end{itemize}
+\end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%Compiler from JML to BML%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -485,10 +487,10 @@ Loop specification
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%VC gen%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Verification condition generator for Java bytecode}
-\begin{frame}\frametitle{Bytecode verification condition generator}
+\begin{frame}[shrink]\frametitle{Bytecode verification condition generator}
 \begin{center}
 
-\pgfimage[height=\textheight]{figs/PPOvc}
+\pgfimage{figs/PPOvc}
 \end{center}
 \end{frame} 
 
@@ -879,7 +881,7 @@ NC - Java-to-Native Compilation
  
 \section{Results}
 
-\begin{frame}[fragile,shrink]\frametitle{What has been done?}
+\begin{frame}[shrink]\frametitle{What has been done?}
 \begin{center}
 \pgfimage[height=\textheight]{figs/PPOdone}
 \end{center}
@@ -888,7 +890,7 @@ NC - Java-to-Native Compilation
 
  \section{Future work}
 
-\begin{frame}[fragile,shrink]\frametitle{Towards  a PCC }
+\begin{frame}[shrink]\frametitle{Towards  a PCC }
   Still missing the certificate. 
 In order to build a full verification architecture,  we need mechanisms for certificate generation and checking
 
@@ -903,7 +905,7 @@ In the European project Mobius which uses a similar PCC framework they
 		    
 
 \begin{center}
-\pgfimage{[height=\textheight]figs/PPOtodo}
+\pgfimage{figs/PPOtodo}
 \end{center}
 \end{frame}
 
