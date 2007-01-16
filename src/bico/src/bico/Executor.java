@@ -27,7 +27,7 @@ public class Executor extends Object {
 
 	/** Bicolano's implementations specific handlings */
 	private ImplemSpecifics is = new MapImplemSpecif();
-	/** the name of the of the output file */
+	/** the name of the output file */
 	private File filename = null;	
 	/** the output file */
 	private BufferedWriter out = null;
@@ -42,9 +42,9 @@ public class Executor extends Object {
 	private MethodHandler mh = new MethodHandler();
 
 	/** BICO version 0.3 */
-	public final static String WELCOME_MSG = "BICO version 0.3";
+	public static final String WELCOME_MSG = "BICO version 0.3";
 	/** the help message */
-	public final static String HELP_MSG = 
+	public static final String HELP_MSG = 
 		"-------------------------------------------------------------------------------------\n" +
 		"Bico converts *.class files into Coq format\n" +
 		"The default behaviour being to generate the files for Bicolano's \n" +
@@ -60,7 +60,11 @@ public class Executor extends Object {
 		"              in its class path\n"+
 		"-------------------------------------------------------------------------------------";
 	/** determine the span of the 'reserved' system class names number default is 100 */
-	private static final int RESERVED_NUMBERS = 100;
+	private static final int RESERVED_PACKAGES = 90;
+	private static final int RESERVED_CLASSES = 100;
+	private static final int RESERVED_FIELDS = 110;
+	private static final int RESERVED_METHODS = 200;
+	private int current_class = RESERVED_CLASSES;
 	
 	
 	/**
@@ -108,24 +112,26 @@ public class Executor extends Object {
 		}
 		
 		if(path.size() > 1) {
-			throw new IllegalArgumentException("It looks bad, " +
-					"you have specified to many valid paths to handle: \n"+ 
-					path+ "\nChoose " +
-					"only one then come back!");
+		    throw new IllegalArgumentException("It looks bad. " +
+						       "You have specified to many valid paths to handle: \n"+ path+ 
+						       "\nChoose only one, then come back!");
 		}
 		if (path.size() == 0) {
-			throw new IllegalArgumentException("You must specify at least one file to write the output file into...");
-
+			throw new IllegalArgumentException("You must specify at least one directory to write the output file into...");
 		}
 		
-		File pathname = new File(path.get(0).toString()); 
+		File pathname = new File(path.get(0).toString());
+		if(!pathname.isDirectory()){
+		    throw new IllegalArgumentException("It looks bad : you have not specified a directory as argument.");
+		}
 		System.out.println("Working path: " + pathname);
-			
+		
 		// FIXME: current solution - only one output file
 		filename = new File(pathname, is.getFileName(coqify(pathname.getName())) + ".v");
+		System.out.println("Output file: " + filename);
 		
-		 speciallibs = new String[] { 
-				"java.lang.Object", "java.lang.Throwable", "java.lang.Exception" 
+		speciallibs = new String[] { 
+		    "java.lang.Object", "java.lang.Throwable", "java.lang.Exception" , "java.lang.String" 
 		};
 
 
@@ -140,10 +146,11 @@ public class Executor extends Object {
 	 * @throws MethodNotFoundException 
 	 */
 	public void start() throws IOException, ClassNotFoundException, MethodNotFoundException {
-		
+
 		//creating file for output
 		if (filename.exists()) {
 			filename.delete();
+			System.err.println("previous file is being overwritten...");
 		}
 		filename.createNewFile();
 		FileWriter fwr = new FileWriter(filename);
@@ -165,23 +172,19 @@ public class Executor extends Object {
 		}
 		System.out.println("Found "+ files.size() +" class file(s) in the working path.");
 		
-		
-		// first we define classes name and interfaces names :)
-		Iterator iter = otherlibs.iterator();
-		while(iter.hasNext()) {
-			defineLibraryClassName(iter.next().toString());
-		}
-		
-		// define the found classes
-		iter = files.iterator();
-		while(iter.hasNext()) {
-			defineDiskClassName(iter.next().toString(), filename.getParent());
-		}
-		
-		out.newLine();
+		// TODO : should be removed : names now defined inside the class modules
+// 		Iterator iter = otherlibs.iterator();
+// 		while(iter.hasNext()) {
+// 			defineLibraryClassName(iter.next().toString());
+// 		}
+// 		iter = files.iterator();
+// 		while(iter.hasNext()) {
+// 			defineDiskClassName(iter.next().toString(), filename.getParent());
+// 		}
+// 		out.newLine();
 		
 		// handle library classes specified as 'the other libs'
-		iter = otherlibs.iterator();
+		Iterator iter = otherlibs.iterator();
 		while(iter.hasNext()) {
 			String current = iter.next().toString();
 			System.out.println("Handling: " + current);
@@ -220,6 +223,7 @@ public class Executor extends Object {
 		}
 		catch (IllegalArgumentException e) {
 			System.err.println(e.getMessage());
+			System.err.println("(try java -jar bico.jar help)");
 			return;
 		}
 		try {
@@ -320,20 +324,36 @@ public class Executor extends Object {
 		writeln(out,1,"Module " + moduleName + ".");
 		out.newLine();
 
+		String pn = jc.getPackageName();
+		if (pn.length() == 0) {
+		    pn = "EmptyPackageName";
+		} else {
+		    char[] pna = pn.toCharArray();
+		    int j=0;
+		    for(int i=0;i<pna.length;i++){
+			if(pna[i]=='.'){
+			    pna[j]=Character.toUpperCase(pna[++i]);
+			}else {
+			    pna[j]=pna[i];
+			}
+			j++;
+		    }
+		    pn = new String(pna,0,j);
+		}
+
 		// TODO check all positives and set correct values
 		// classname
-		//TODO put another package instead of empty...
 		if(jc.isInterface()) {
 			treatedInterfaces.add(moduleName + ".interface");
 			String str = "Definition interfaceName : InterfaceName := "
-							+ moduleName + "_interfaceName.";
+			    + "("+pn+", "+(current_class++)+"%positive).";
 			writeln(out,2,str);
 		}
 		else {
 
 			treatedClasses.add(moduleName + ".class");
 			String str = "Definition className : ClassName := "
-				  + moduleName + "_className.";
+			    + "("+pn+", "+(current_class++) + "%positive).";
 			writeln(out,2,str);
 		}
 		
@@ -350,7 +370,7 @@ public class Executor extends Object {
 				strf = strf.concat("ShortFieldSignature : ShortFieldSignature := FIELDSIGNATURE.Build_t ");
 				writeln(out,2,strf);
 				// !!! here positives
-				jjjj = RESERVED_NUMBERS + i;
+				jjjj = RESERVED_FIELDS + i;
 				strf = "(" + jjjj + "%positive)";
 				writeln(out,3,strf);
 				// !!! here will be conversion
@@ -432,7 +452,7 @@ public class Executor extends Object {
 			if (superClassName==null || superClassName.compareTo("java.lang.Object") == 0) {
 				writeln(out,3,"None");
 			} else {
-				writeln(out,3,"(Some " + superClassName + "_className)");
+				writeln(out,3,"(Some " + superClassName + ".className)");
 			}
 		}
 		String[] inames = jc.getInterfaceNames();
@@ -552,7 +572,7 @@ public class Executor extends Object {
 							String exName=method.getConstantPool().getConstantString(catchType,
 									Constants.CONSTANT_Class);
 							str += coqify(exName);
-							str += "_className) ";
+							str += ".className) ";
 						}
 						str += etab[i].getStartPC() + "%N ";	
 						str += etab[i].getEndPC() + "%N ";	
@@ -683,7 +703,7 @@ public class Executor extends Object {
 		// InstructionList il = mg.getInstructionList();
 		// InstructionHandle ih[] = il.getInstructionHandles();
 		// signature
-		int u = i2 + 10;
+		int u = i2 + RESERVED_METHODS;
 		String name = mh.getName(mg);
 		String str = "Definition "+ name;
 		str += "ShortSignature : ShortMethodSignature := METHODSIGNATURE.Build_t";
@@ -969,10 +989,10 @@ public class Executor extends Object {
 			ObjectType ot = (ObjectType)t;
 	
 			if (ot.referencesClassExact()) { // does thik work?
-				return "(ClassType " + coqify(ot.getClassName())+"_className)";
+				return "(ClassType " + coqify(ot.getClassName())+".className)";
 			} else if (ot.referencesInterfaceExact()) { // does this work?
 				//TODO: adjust to the structure of "interface" modules
-				return "(InterfaceType " + coqify(ot.getClassName())+"_interfaceName)";
+				return "(InterfaceType " + coqify(ot.getClassName())+".interfaceName)";
 			} else {
 				Unhandled("ObjectType", t);	
 				return "(ObjectType javaLangObject (* "+t.toString()+" *) )";	
