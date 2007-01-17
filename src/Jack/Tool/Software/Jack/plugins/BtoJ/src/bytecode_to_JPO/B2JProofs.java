@@ -98,6 +98,24 @@ public class B2JProofs extends Proofs {
 	/** */
 	private static final long serialVersionUID = 1L;
 	private static HashMap hElements = new HashMap();
+	public static class MapElement {
+		public final int state;
+		public final Expression type;
+		private final String str;
+		public MapElement(int s, Expression t) {
+			state = s;
+			type = t;
+			str = "" + state + type.toString();
+		}
+		public boolean equals(Object o) {
+			MapElement m = (MapElement) o;
+			return state == m.state && type.equals(m.type);
+		}
+		public int hashCode() {
+			return str.hashCode();
+		}
+		
+	};
 	private Vector fPos;
 	public  final static Formula $arraylengthBC = new TerminalForm("arraylength");
 	private BCMethod fBcm;
@@ -889,9 +907,11 @@ static jml2b.formula.Formula toExpression(IJml2bConfiguration config, Expression
 				Expression[] subExpr = exp.getSubExpressions();
 				JavaType arrT = null;
 				arrT = ((JavaArrType) subExpr[0].getType()).getElementType();
+				ValueAtState vas = (ValueAtState) e;
 				
-				if(!hElements.containsKey(e)) {
-					hElements.put(e, new ElementsForm( ElementsForm.getElementsName(toType(config, arrT ))));
+				MapElement me = new MapElement(vas.getAtInstruction(), vas.getType());
+				if(!hElements.containsKey(me)) {
+					hElements.put(me, new ElementsForm( ElementsForm.getElementsName(toType(config, arrT ))));
 				}
 				ElementsForm elNewF = (ElementsForm) hElements.get(e);
 				String str = elNewF.getNodeText();
