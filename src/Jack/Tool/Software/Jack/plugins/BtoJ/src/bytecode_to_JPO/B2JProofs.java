@@ -99,7 +99,7 @@ public class B2JProofs extends Proofs {
 	private static final long serialVersionUID = 1L;
 	private static HashMap hElements = new HashMap();
 	private Vector fPos;
-
+	public  final static Formula $arraylengthBC = new TerminalForm("length");
 	private BCMethod fBcm;
 	private IJml2bConfiguration fConfig;
 	private AlreadyCalculatedHypos fHyps = new AlreadyCalculatedHypos();
@@ -572,7 +572,7 @@ static jml2b.formula.Formula toExpression(IJml2bConfiguration config, Expression
 
 		else if (e instanceof BCConstantFieldRef) {
 			if (e == ArrayLengthConstant.ARRAYLENGTHCONSTANT) {
-				return TerminalForm.$arraylength;
+				return $arraylengthBC;
 			} else
 				// TODO AAA Retourner toujours le meme field !!!!!
 				return new TerminalForm(new Identifier(B2JField.search(config, (BCConstantFieldRef) e)));// "f_"
