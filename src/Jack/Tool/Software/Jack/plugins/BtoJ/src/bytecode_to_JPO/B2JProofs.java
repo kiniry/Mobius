@@ -99,7 +99,7 @@ public class B2JProofs extends Proofs {
 	private static final long serialVersionUID = 1L;
 	private static HashMap hElements = new HashMap();
 	private Vector fPos;
-	public  final static Formula $arraylengthBC = new TerminalForm("length");
+	public  final static Formula $arraylengthBC = new TerminalForm("arraylength");
 	private BCMethod fBcm;
 	private IJml2bConfiguration fConfig;
 	private AlreadyCalculatedHypos fHyps = new AlreadyCalculatedHypos();
@@ -897,11 +897,8 @@ static jml2b.formula.Formula toExpression(IJml2bConfiguration config, Expression
 				String str = elNewF.getNodeText();
 				if (!declaredVarAtState.contains(str)) {
 					declaredVarAtState.add(str);
-//					if (decl != null)
-//						decl.add(B2JTheorem.declValueOfConstantAtState(	config,
-//																		(ValueAtState) e,
-//																		declaredVarAtState,
-//																		null));
+					if (decl != null)
+						decl.add(new BinaryForm(IFormToken.LOCAL_ELEMENTS_DECL, elNewF,elNewF.getType()));
 				}
 				return new BinaryForm(IFormToken.ARRAY_ACCESS, new BinaryForm(IFormToken.B_APPLICATION, 
 						elNewF,
