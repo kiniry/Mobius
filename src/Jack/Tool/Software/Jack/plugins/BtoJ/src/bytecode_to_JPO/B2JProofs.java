@@ -14,6 +14,7 @@ import jack.util.Logger;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -96,7 +97,7 @@ public class B2JProofs extends Proofs {
 
 	/** */
 	private static final long serialVersionUID = 1L;
-
+	private static HashMap hElements = new HashMap();
 	private Vector fPos;
 
 	private BCMethod fBcm;
@@ -571,7 +572,7 @@ static jml2b.formula.Formula toExpression(IJml2bConfiguration config, Expression
 
 		else if (e instanceof BCConstantFieldRef) {
 			if (e == ArrayLengthConstant.ARRAYLENGTHCONSTANT) {
-				return TerminalForm.$arraylengthBC;
+				return TerminalForm.$arraylength;
 			} else
 				// TODO AAA Retourner toujours le meme field !!!!!
 				return new TerminalForm(new Identifier(B2JField.search(config, (BCConstantFieldRef) e)));// "f_"
@@ -889,7 +890,19 @@ static jml2b.formula.Formula toExpression(IJml2bConfiguration config, Expression
 				JavaType arrT = null;
 				arrT = ((JavaArrType) subExpr[0].getType()).getElementType();
 				
-				ElementsForm elNewF = new ElementsForm( ElementsForm.getElementsName(toType(config, arrT )));
+				if(hElements.containsKey(e)) {
+					hElements.put(e, new ElementsForm( ElementsForm.getElementsName(toType(config, arrT ))));
+				}
+				ElementsForm elNewF = (ElementsForm) hElements.get(e);
+				String str = elNewF.getNodeText();
+				if (!declaredVarAtState.contains(str)) {
+					declaredVarAtState.add(str);
+					if (decl != null)
+						decl.add(B2JTheorem.declValueOfConstantAtState(	config,
+																		(ValueAtState) e,
+																		declaredVarAtState,
+																		null));
+				}
 				return new BinaryForm(IFormToken.ARRAY_ACCESS, new BinaryForm(IFormToken.B_APPLICATION, 
 						elNewF,
 						toExpression(config, subExpr[0], declaredVarAtState, decl)), toExpression(	config,
@@ -1023,9 +1036,9 @@ static jml2b.formula.Formula toExpression(IJml2bConfiguration config, Expression
 		if (e instanceof JavaObjectType) {
 			String name = ((JavaObjectType) e).getSignature();
 			name = name.substring(1, name.length() - 1).replace('/', '.');
-			return new Type(((B2JPackage) config.getPackage()).addB2JClass(
-					config, ((B2JPackage) config.getPackage()).getClass(name),
-					false));
+			B2JPackage pack =((B2JPackage) config.getPackage());
+			
+			return new Type(pack.addB2JClass(config, pack.getClass(name), false));
 			// TODO JavaObjectType
 			// + ((JavaObjectType) e).getBCConstantClass().getCPIndex());
 		}
