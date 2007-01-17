@@ -116,7 +116,13 @@ public abstract class Expression {
 	
 	public abstract String toString();
 
+	public boolean equals(Object o) {
+		return o.toString().equals(toString());
+	}
 	
+	public int hashCode() {
+		return toString().hashCode();
+	}
 	public  Expression getType() {
 		return new TYPEOF( this );
 	}
