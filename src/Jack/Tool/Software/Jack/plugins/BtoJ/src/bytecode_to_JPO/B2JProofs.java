@@ -890,18 +890,18 @@ static jml2b.formula.Formula toExpression(IJml2bConfiguration config, Expression
 				JavaType arrT = null;
 				arrT = ((JavaArrType) subExpr[0].getType()).getElementType();
 				
-				if(hElements.containsKey(e)) {
+				if(!hElements.containsKey(e)) {
 					hElements.put(e, new ElementsForm( ElementsForm.getElementsName(toType(config, arrT ))));
 				}
 				ElementsForm elNewF = (ElementsForm) hElements.get(e);
 				String str = elNewF.getNodeText();
 				if (!declaredVarAtState.contains(str)) {
 					declaredVarAtState.add(str);
-					if (decl != null)
-						decl.add(B2JTheorem.declValueOfConstantAtState(	config,
-																		(ValueAtState) e,
-																		declaredVarAtState,
-																		null));
+//					if (decl != null)
+//						decl.add(B2JTheorem.declValueOfConstantAtState(	config,
+//																		(ValueAtState) e,
+//																		declaredVarAtState,
+//																		null));
 				}
 				return new BinaryForm(IFormToken.ARRAY_ACCESS, new BinaryForm(IFormToken.B_APPLICATION, 
 						elNewF,
