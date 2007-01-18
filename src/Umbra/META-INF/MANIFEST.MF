@@ -22,9 +22,9 @@ Export-Package: org.apache.bcel,
  org.apache.bcel.verifier.exc,
  org.apache.bcel.verifier.statics,
  org.apache.bcel.verifier.structurals,
- org.org.apache.bcel,
  umbra,
  umbra.instructions
 Import-Package: org.eclipse.ui.part,
  org.eclipse.ui.texteditor
-Bundle-ClassPath: libs/org.apache.bcel_5.1.0/bcel.jar
+Bundle-ClassPath: libs/org.apache.bcel_5.1.0/bcel.jar,
+ libs/bmllib.jar
