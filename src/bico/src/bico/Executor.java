@@ -666,6 +666,9 @@ public class Executor extends Object {
 			while(iter.hasNext()){
 				str += is.classCons(iter.next().toString());
 			}
+			for(int i=0;i<speciallibs.length;i++){
+				str += is.classCons(coqify(speciallibs[i])+".class");
+			}
 			str += " " + is.classEnd() + ".";	
 			writeln(out,1,str);
 		 }
