@@ -215,10 +215,10 @@ public class BytecodeEditor extends TextEditor {
 		JavaClass jc = strin.loadClass(clname);
 		strin.removeClass(jc);
 		//controlPrint(jc);
-		ClassGen cg = new ClassGen(jc);
-		String clname2 = cg.getClassName();
-		ConstantPoolGen cpg = cg.getConstantPool();
-		Method[] methods = jc.getMethods();
+//		ClassGen cg = new ClassGen(jc);
+//		String clname2 = cg.getClassName();
+//		ConstantPoolGen cpg = cg.getConstantPool();
+//		Method[] methods = jc.getMethods();
 //		byte[][] names = new byte[methods.length][256];
 //		byte[][] code = new byte[methods.length][4096];
 //		int[] namesLen = new int[methods.length];
@@ -305,96 +305,96 @@ public class BytecodeEditor extends TextEditor {
 //		return "";
 //	}
 
-	/**
-	 * Computes position of the next instruction line in the Bytecode method.
-	 * 
-	 * @param code	processing Bytecode method
-	 * @param pos	index of a character in code
-	 * @return		index of first ":" in the next instruction line.
-	 */
-	private int nextLineOff(String code, int pos) {
-		// pozycja nast�pnego dwukropka
-		boolean nline = false;
-		int len = code.length();
-		int res = -1;
-		char c;
-		for(;;) {
-			if (pos >= len)
-				break;
-			c = code.charAt(pos);
-			if ((c == ':') && (nline))
-				break;
-			if ((c < '0') || (c > '9'))
-				nline = false;
-			if (c == '\n') {
-				nline = true;
-				res = pos + 1;
-			}
-			pos++;
-		};
-		//if ((res >= len) || (res < 0)) System.out.println("the end");
-		//else System.out.println("<" + code.charAt(res) + ">");
-		return res;
-	}
-	
-	/**
-	 * Counts instructions in a Bytecode
-	 * 
-	 * @param bareCode	processing bytecode method
-	 * @return		number of instructions in bareCode
-	 */
-	private int getOffset(String bareCode) {
-		/* ile dwukropk�w? */
-		int p = 0;
-		int ile = 0;
-		while (p >= 0) {
-			p = nextLineOff(bareCode, p);
-			ile++;
-		};
-		return ile - 1;
-	}
-
-	/**
-	 * Adds comments to one Bytecode method.
-	 * 
-	 * @param bareCode		one method of the Bytecode (as a String with no comments)
-	 * @param commentTab	array of comments (as Strings, without leading slashes)
-	 * 						for each line of bytecode
-	 * @param interlineTab 	array of comments between lines
-	 * @param off			position of bareCode's first line's comment in commentTab
-	 * @return				bareCode with inserted comments from commentTab
-	 */
-	private String addComment(String bareCode, String[] commentTab, String[] interlineTab, int off) {
-		if ((commentTab == null) || (interlineTab == null)) return bareCode;
-		int len = commentTab.length;
-		if (interlineTab.length != len) return bareCode;
-		int n = 0;
-		String newCode = "";
-		System.out.println("off=" + off);
-		for(;;) {
-			int i = nextLineOff(bareCode, 0);
-			if (i == -1)
-				i = bareCode.length() - 1;
-			String line = bareCode.substring(0, i);
-			System.out.println("line = <<" + line + ">>");
-			bareCode = bareCode.substring(i, bareCode.length()) + " ";
-			if (n + off - 1 >= len)
-				break;
-			if (n > 0){
-				if (commentTab[n + off - 1] != null) {
-					line = line.replaceFirst("\n", " //" + commentTab[n + off - 1] + "\n");
-				}
-				if ((interlineTab[n + off - 1] != null)
-					&& (interlineTab[n + off - 1].compareTo("") != 0)) {
-					line = "//" + interlineTab[n + off - 1] + "\n" + line;
-				}
-			}
-			newCode = newCode + line;
-			n++;
-		};
-		newCode += bareCode;
-		return newCode;
-	}
+//	/**
+//	 * Computes position of the next instruction line in the Bytecode method.
+//	 * 
+//	 * @param code	processing Bytecode method
+//	 * @param pos	index of a character in code
+//	 * @return		index of first ":" in the next instruction line.
+//	 */
+//	private int nextLineOff(String code, int pos) {
+//		// pozycja nast�pnego dwukropka
+//		boolean nline = false;
+//		int len = code.length();
+//		int res = -1;
+//		char c;
+//		for(;;) {
+//			if (pos >= len)
+//				break;
+//			c = code.charAt(pos);
+//			if ((c == ':') && (nline))
+//				break;
+//			if ((c < '0') || (c > '9'))
+//				nline = false;
+//			if (c == '\n') {
+//				nline = true;
+//				res = pos + 1;
+//			}
+//			pos++;
+//		};
+//		//if ((res >= len) || (res < 0)) System.out.println("the end");
+//		//else System.out.println("<" + code.charAt(res) + ">");
+//		return res;
+//	}
+//	
+//	/**
+//	 * Counts instructions in a Bytecode
+//	 * 
+//	 * @param bareCode	processing bytecode method
+//	 * @return		number of instructions in bareCode
+//	 */
+//	private int getOffset(String bareCode) {
+//		/* ile dwukropk�w? */
+//		int p = 0;
+//		int ile = 0;
+//		while (p >= 0) {
+//			p = nextLineOff(bareCode, p);
+//			ile++;
+//		};
+//		return ile - 1;
+//	}
+//
+//	/**
+//	 * Adds comments to one Bytecode method.
+//	 * 
+//	 * @param bareCode		one method of the Bytecode (as a String with no comments)
+//	 * @param commentTab	array of comments (as Strings, without leading slashes)
+//	 * 						for each line of bytecode
+//	 * @param interlineTab 	array of comments between lines
+//	 * @param off			position of bareCode's first line's comment in commentTab
+//	 * @return				bareCode with inserted comments from commentTab
+//	 */
+//	private String addComment(String bareCode, String[] commentTab, String[] interlineTab, int off) {
+//		if ((commentTab == null) || (interlineTab == null)) return bareCode;
+//		int len = commentTab.length;
+//		if (interlineTab.length != len) return bareCode;
+//		int n = 0;
+//		String newCode = "";
+//		System.out.println("off=" + off);
+//		for(;;) {
+//			int i = nextLineOff(bareCode, 0);
+//			if (i == -1)
+//				i = bareCode.length() - 1;
+//			String line = bareCode.substring(0, i);
+//			System.out.println("line = <<" + line + ">>");
+//			bareCode = bareCode.substring(i, bareCode.length()) + " ";
+//			if (n + off - 1 >= len)
+//				break;
+//			if (n > 0){
+//				if (commentTab[n + off - 1] != null) {
+//					line = line.replaceFirst("\n", " //" + commentTab[n + off - 1] + "\n");
+//				}
+//				if ((interlineTab[n + off - 1] != null)
+//					&& (interlineTab[n + off - 1].compareTo("") != 0)) {
+//					line = "//" + interlineTab[n + off - 1] + "\n" + line;
+//				}
+//			}
+//			newCode = newCode + line;
+//			n++;
+//		};
+//		newCode += bareCode;
+//		return newCode;
+//	}
 
 	/**
 	 * Updating number of historical versions executed
