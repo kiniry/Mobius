@@ -773,8 +773,16 @@ public class Executor extends Object {
 			char c = name.charAt(0);
 	
 			if (c == 'A' || c == 'B' || c == 'I' || c == 'S') {
-				ret = "V" + name.substring(1,5) + " " + c + "array";
-			} else if (c == 'C' || c == 'D' || c == 'F' || c == 'L') {
+			    ret = "V";
+			    if (ins instanceof StackProducer){ //?aload instructions
+				ret += name.substring(1,6);
+			    }
+			    else if (ins instanceof StackConsumer){ //?astore instructions
+				ret += name.substring(1,7);
+			    }
+			    ret += " " + c + "array";
+			}
+			else if (c == 'C' || c == 'D' || c == 'F' || c == 'L') {
 				ret = Unhandled("ArrayInstruction", ins);
 			} else {
 				ret = Unknown("ArrayInstruction", ins);
@@ -852,9 +860,8 @@ public class Executor extends Object {
 					try {
 						ms = className + "." + mh.getName((InvokeInstruction)fom, cpg) + "Signature";
 					} catch (MethodNotFoundException e) {
-						System.err.println("doInstruction: " + e.getMessage() + " was supposed to be loaded before use...");
+						System.err.println("warning : doInstruction: " + fom.getReferenceType(cpg).toString() + "." +fom.getName(cpg)  + " ("+e.getMessage()+") was supposed to be loaded before use...");
 						ms = className + "." + coqify(fom.getName(cpg)) + "Signature";
-						
 					}
 					ret = name + " " + ms;
 				} else {
