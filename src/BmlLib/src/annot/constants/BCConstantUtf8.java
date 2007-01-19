@@ -15,6 +15,10 @@ public class BCConstantUtf8 extends BCCONSTANT_LITERAL{
 		constant_string = _s;
 	}
 
+	public String toString() {
+		return "Utf8:	" + constant_string;
+	}
+	
 	/* (non-Javadoc)
 	 * @see constants.BCCONSTANT_LITERAL#getLiteral()
 	 */

@@ -2,10 +2,11 @@ package annot.formula;
 
 import java.util.Vector;
 
+import annot.bcclass.BMLConfig;
 import annot.bcexpression.Expression;
 import annot.bcexpression.NumberLiteral;
 import annot.bcexpression.javatype.JavaType;
-//import annot.io.DesugarNegBoolExpr;
+//import annot.bcio.DesugarNegBoolExpr;
 
 public class Formula extends Expression {
 	private byte connector;
@@ -374,7 +375,7 @@ public class Formula extends Expression {
 		return _copy;
 	}
 
-	public String toString() {
+	public String printCode(BMLConfig conf) {
 		String con = "";
 		if (connector == Connector.AND) {
 			con = " && ";
@@ -394,11 +395,12 @@ public class Formula extends Expression {
 		Expression[] subformulas = getSubExpressions();
 		if (subformulas.length == 1) {
 			// XXX czy "!" nie powinien byæ przed nawiasem?
-			return "(" + con + subformulas[0] + ")";
+			return "(" + con + subformulas[0].printCode(conf) + ")";
 		} else {
-			String s = "" + subformulas[0];
+			String s = "" + subformulas[0].printCode(conf);
 			for (int i = 1; i < subformulas.length; i++) {
-				s = s + con + subformulas[i];
+//				System.out.println("[" + subformulas[i].toString() + "]");
+				s = s + con + subformulas[i].printCode(conf);
 			}
 
 			return s;

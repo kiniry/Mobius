@@ -13,6 +13,10 @@ public class BCCONSTANT_String extends BCConstant {
 		string_literal = new StringLiteral(_literal);
 	}
 
+	public String toString() {
+		return "String:	" + string_literal;
+	}
+
 //	/**
 //	 * @return the literal that this data structure contains
 //	 */

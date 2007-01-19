@@ -1,5 +1,7 @@
 package annot.bcexpression;
 
+import annot.bcclass.BMLConfig;
+
 /**
  * @author mpavlova
  * 
@@ -57,16 +59,10 @@ public class Variable extends Expression {
 //	}
 //
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see bcexpression.Expression#toString()
-	 */
-	public String toString() {
-		String s = "var(" + id + ")";
-		return s;
+	public String printCode(BMLConfig conf) {
+		return "VAR("+id+")";
 	}
-
+	
 	/*
 	 * (non-Javadoc)
 	 * 

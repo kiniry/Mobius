@@ -1,5 +1,6 @@
 package annot.bcexpression.jml;
 
+import annot.bcclass.BMLConfig;
 import annot.bcexpression.Expression;
 import annot.bcexpression.javatype.JavaType;
 
@@ -37,12 +38,9 @@ public class OLD extends JMLExpression {
 //		return this;
 //	}
 
-	/* (non-Javadoc)
-	 * @see bcexpression.Expression#toString()
-	 */
-	public String toString() {
+	public String printCode(BMLConfig conf) {
 		Expression expr = getSubExpressions()[0];
-		String s = "old(" + expr.toString() + ")";
+		String s = "old(" + expr.printCode(conf) + ")";
 		return s;
 	}
 

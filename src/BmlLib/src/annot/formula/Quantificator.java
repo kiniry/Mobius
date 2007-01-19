@@ -2,6 +2,7 @@ package annot.formula;
 
 import java.util.Vector;
 
+import annot.bcclass.BMLConfig;
 import annot.bcexpression.Expression;
 
 public class Quantificator extends Expression {
@@ -52,16 +53,16 @@ public class Quantificator extends Expression {
 //		return true;
 //	}
 	
-	public String toString( ) {
-	/*	if (domain == null) {*/
-		String s = "(" + quantifier ;
-		for (int i = 0; i < boundVar.length; i++ ) {
-			 s = s + "  " + boundVar[i] ;
+	public String printCode(BMLConfig conf) {
+		/*	if (domain == null) {*/
+			String s = "(" + quantifier ;
+			for (int i = 0; i < boundVar.length; i++ ) {
+				 s = s + "  " + boundVar[i].printCode(conf);
+			}
+			s = s + "  )";
+			return s;
+			/*return  "(" + quantifier + "  " + boundVar +  "."+ domain.toString() + ")";*/
 		}
-		s = s + "  )";
-		return s;
-		/*return  "(" + quantifier + "  " + boundVar +  "."+ domain.toString() + ")";*/
-	}
 
 //	/**
 //	 * checks if the set of quantified 

@@ -32,6 +32,13 @@ public class BCConstantMethodRef  extends BCConstantRef {
 		argTypes = _argTypes;
 	}
 	
+	public String toString() {
+		String str = "Method:	" + returnType.toString() + "(";
+		for (int i=0; i<argTypes.length; i++)
+			str += argTypes[i].toString() + ((i < argTypes.length-1) ? ", " : "");
+		return str + ")";
+	}
+	
 //	/**
 //	 * @return
 //	 */

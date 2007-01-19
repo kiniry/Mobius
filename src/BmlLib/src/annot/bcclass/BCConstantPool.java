@@ -144,4 +144,17 @@ public class BCConstantPool {
 		 constants = newConstants;
 		 size = constants.length;
 	}
+	
+	public String toString() {
+		String str = "************* CONSTANT POOL **************\n";
+		for (int i=0; i<constants.length; i++) {
+			str += i + ": ";
+			if (constants[i] == null) {
+				str += "null\n";
+			} else {
+				str += constants[i].toString() + "\n";
+			}
+		}
+		return str + "\n";
+	}
 }

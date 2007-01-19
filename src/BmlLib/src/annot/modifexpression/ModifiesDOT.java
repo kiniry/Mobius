@@ -1,6 +1,7 @@
 package annot.modifexpression;
 
 import annot.bcclass.BCClass;
+import annot.bcclass.BMLConfig;
 import annot.bcexpression.Expression;
 
 public class ModifiesDOT extends ModifiesExpression {
@@ -79,12 +80,8 @@ public class ModifiesDOT extends ModifiesExpression {
 //	}
 
 	 
-	/* (non-Javadoc)
-	 * @see bcexpression.Expression#toString()
-	 */
-	public String toString() {
-		String s = getModifies()  + "( " + getSubExpressions()[1]  + ")"; 
+	public String printCode(BMLConfig conf) {
+		String s = getModifies().printCode(conf)  + "( " + getSubExpressions()[1].printCode(conf)  + ")"; 
 		return s;
 	}
-
 }

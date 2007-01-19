@@ -1,6 +1,7 @@
 package annot.modifexpression;
 
 import annot.bcclass.BCClass;
+import annot.bcclass.BMLConfig;
 import annot.bcexpression.Expression;
 
 public class ModifiesIdent extends ModifiesExpression {
@@ -27,14 +28,7 @@ public class ModifiesIdent extends ModifiesExpression {
 //		return null;
 //	}
 	
-	/* (non-Javadoc)
-	 * @see bcexpression.Expression#toString()
-	 */
-	public String toString() {
-		return "modifiesIdent " + getSubExpressions()[0];
+	public String printCode(BMLConfig conf) {
+		return "modifiesIdent " + getSubExpressions()[0].printCode(conf);
 	}
-
-
-	
-
 }

@@ -1,5 +1,6 @@
 package annot.bcclass.attributes;
 
+import annot.bcclass.BMLConfig;
 import annot.formula.Formula;
 import annot.formula.Predicate0Ar;
 
@@ -20,8 +21,8 @@ public class Postcondition {
 		postcondition = f;
 	}
 	
-	public String printCode() {
-		return postcondition.toString();
+	public String printCode(BMLConfig conf) {
+		return postcondition.printCode(conf);
 	}
 	
 	protected void setSpecificationCase(SpecificationCase _specCase) {

@@ -1,5 +1,7 @@
 package annot.bcexpression;
 
+import annot.bcclass.BMLConfig;
+
 //import bytecode_wp.bcexpression.javatype.JavaType;
 //import annot.bcexpression.jml.OLD;
 //import annot.bcexpression.jml.TYPEOF;
@@ -176,22 +178,15 @@ public class FieldAccess extends Expression {
 //		return with;
 //	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see bcexpression.Expression#toString()
-	 */
-	public String toString() {
-		String s = null;
+	public String printCode(BMLConfig conf) {
 		if (getSubExpressions().length == 1) {
-			s = getSubExpressions()[0] + "";
+			return getSubExpressions()[0].printCode(conf);
 		} else {
-			s = getSubExpressions()[1] + "->" + getSubExpressions()[0];
-//			s = getSubExpressions()[0] + "(" + getSubExpressions()[1] + ")";
+			return getSubExpressions()[1].printCode(conf)
+				+ "-->" + getSubExpressions()[0].printCode(conf);
 		}
-		return s;
 	}
-
+	
 	/*
 	 * (non-Javadoc)
 	 * 

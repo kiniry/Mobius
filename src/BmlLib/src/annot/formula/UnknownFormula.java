@@ -1,5 +1,6 @@
 package annot.formula;
 
+import annot.bcclass.BMLConfig;
 import annot.bcexpression.Expression;
 
 // atrapa Formula
@@ -27,4 +28,9 @@ public class UnknownFormula extends Formula {
 		System.out.println("unimplemented: " + opis);
 		return "?";
 	}
+	
+	public String printCode(BMLConfig conf) {
+		return toString();
+	}
+
 }

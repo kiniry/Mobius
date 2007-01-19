@@ -1,4 +1,4 @@
-package annot.io;
+package annot.bcio;
 
 public interface  Code {
 	//logical connectors

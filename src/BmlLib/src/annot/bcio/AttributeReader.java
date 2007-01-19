@@ -1,4 +1,4 @@
-package annot.io;
+package annot.bcio;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
@@ -126,6 +126,7 @@ public class AttributeReader {
 		try {
 			return new SecondConstantPool(new DataInputStream(new ByteArrayInputStream(bytes)));
 		} catch (IOException e) {
+			System.out.println("error in reading cp2");
 			return null;
 		}
 	}
@@ -207,7 +208,7 @@ public class AttributeReader {
 							+ attribute_length);
 		}
 		System.out.println("  loops specification:");
-		printByteArr(bytes); // syso -- wywaliæ
+		printByteArr(bytes); // syso -- wywali
 		SingleLoopSpecification[] loopSpecs = new SingleLoopSpecification[attributes_count];
 		for (int i = 0; i < attributes_count; i++) {
 			if (pos >= attribute_length) {
@@ -366,7 +367,7 @@ public class AttributeReader {
 		pos = 0;
 		int attribute_length = bytes.length;
 		System.out.println("  method specification:");
-		printByteArr(bytes); // syso -- wywaliæ
+		printByteArr(bytes); // syso -- wywali
 		System.out.println("    precondition");
 		Formula precondition = (Formula) readExpression(bytes);
 		int attributes_count = readAttributeCount(bytes);
@@ -383,7 +384,7 @@ public class AttributeReader {
 		for (int i = 0; i < attributes_count; i++) {
 			specCases[i] = readSpecificationCase(bytes);
 		}
-//		SpecificationCase[] specCases = null; // wywaliæ
+//		SpecificationCase[] specCases = null; // wywali
 		MethodSpecification methodSpec = new MethodSpecification(precondition,
 				specCases);
 		System.out.println("  read " + pos + " of " + bytes.length + " bytes " +
@@ -412,7 +413,7 @@ public class AttributeReader {
 	 */
 	private static ModifiesSet readModifies(byte[] bytes)
 			throws ReadAttributeException {
-		// TODO odkomentowaæ resztê konstruktora ModifyExpression
+		// TODO odkomentowa reszt konstruktora ModifyExpression
 		int modifiesCount = readAttributeCount(bytes);
 		ModifiesExpression[] modifies = null;
 

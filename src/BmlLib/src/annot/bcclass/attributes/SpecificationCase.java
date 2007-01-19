@@ -1,5 +1,6 @@
 package annot.bcclass.attributes;
 
+import annot.bcclass.BMLConfig;
 import annot.formula.Formula;
 import annot.formula.Predicate0Ar;
 
@@ -32,16 +33,16 @@ public class SpecificationCase {
 		}
 	}
 
-	public String printCode() {
+	public String printCode(BMLConfig conf) {
 		String code = "";
 		code += " *  (specificationCase)\n";
 		if (precondition != Predicate0Ar.TRUE)
-			code += " *  (precondition): " + precondition.toString() + "\n";
-		if (modifies.getModifiesExpressions()[0].toString() != "\\everything")
-			code += "modifies" + modifies.printCode() + "\n";
+			code += " *  (precondition): " + precondition.printCode(conf) + "\n";
+		if (modifies.getModifiesExpressions()[0].printCode(conf) != "\\everything")
+			code += "modifies" + modifies.printCode(conf) + "\n";
 		if (postcondition.getPostcondition() != Predicate0Ar.TRUE)
-			code += " *  \\ensures " + postcondition.printCode() + "\n";
-		code += exsures.printCode();
+			code += " *  \\ensures " + postcondition.printCode(conf) + "\n";
+		code += exsures.printCode(conf);
 		return code;
 	}
 	

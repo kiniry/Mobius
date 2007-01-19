@@ -1,5 +1,6 @@
 package annot.modifexpression;
 
+import annot.bcclass.BMLConfig;
 import annot.bcexpression.Expression;
 
 public class SingleIndex extends SpecArray {
@@ -12,12 +13,8 @@ public class SingleIndex extends SpecArray {
 		return getSubExpressions()[0];
 	}
 	
-	/* (non-Javadoc)
-	 * @see bcexpression.Expression#toString()
-	 */
-	public String toString() {
-		String s = "" + getSubExpressions()[0];   
+	public String printCode(BMLConfig conf) {
+		String s = "" + getSubExpressions()[0].printCode(conf);   
 		return s;
 	}
-	
 }

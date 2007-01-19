@@ -11,6 +11,10 @@ public class BCCONSTANT_Integer extends BCCONSTANT_LITERAL  {
 		super(_cpIndex);
 		int_constant = new NumberLiteral(_constant);
 	}
+
+	public String toString() {
+		return "INT:	" + int_constant;
+	}
 	
 //	/* (non-Javadoc)
 //	 * @see constants.BCCONSTANT_LITERAL#getLiteral()

@@ -1,4 +1,4 @@
-package annot.io;
+package annot.bcio;
 
 public class ReadAttributeException extends Exception {
 

@@ -21,12 +21,12 @@ import annot.bcclass.attributes.HistoryConstraints;
 import annot.bcclass.attributes.SecondConstantPool;
 import annot.bcclass.utils.MethodSignature;
 import annot.bcexpression.BCLocalVariable;
+import annot.bcio.AttributeReader;
+import annot.bcio.ReadAttributeException;
 import annot.bytecode.block.IllegalLoopException;
-import annot.io.AttributeReader;
-import annot.io.ReadAttributeException;
 
 public class BCClass {
-	private HashMap methods;
+//	private HashMap<String, BCMethod> methods;
 	private Vector<BCMethod> metody;
 	private BCField[] fields;
 	private String className;
@@ -62,11 +62,13 @@ public class BCClass {
 			while (iter.hasNext())
 				((BCMethod)(iter.next())).initMethod();
 		} catch (Exception e) {
-			throw new ReadAttributeException("B³¹d przy inicjalizacji metod");
+			e.printStackTrace();	// XXX: wywalic
+			throw new ReadAttributeException("Bd przy inicjalizacji metod");
 		}
 	}
 	
 	public String printCode() {
+		BMLConfig conf = new BMLConfig(constantPool);
 		String code = "";
 		if (!"".equals(packageName))
 			code += "package " + packageName + "\n\n";
@@ -80,9 +82,9 @@ public class BCClass {
 		}
 		code += " {\n";
 		Iterator iter = metody.iterator();
-//		iter.next(); -- pominiêcie wypisywania inita.
+//		iter.next(); -- pominicie wypisywania inita.
 		while (iter.hasNext())
-			code += ((BCMethod)(iter.next())).printCode() + "\n";
+			code += ((BCMethod)(iter.next())).printCode(conf) + "\n";
 		code += "}\n";
 		return code;
 	}
@@ -140,11 +142,14 @@ public class BCClass {
 				privateAttr = (Unknown) _attributes[i];
 				BCAttribute bcAttribute = AttributeReader.readAttribute(
 						privateAttr, this, new BCLocalVariable[] { new BCLocalVariable(0) });
-				if (bcAttribute instanceof SecondConstantPool) 
+				if (bcAttribute instanceof SecondConstantPool) {
+					System.out.println("Second constant pool detected.");
 					constantPool.add(cp,(SecondConstantPool) bcAttribute);
-				if (bcAttribute instanceof ClassInvariant) {
+				} else if (bcAttribute instanceof ClassInvariant) {
+					System.out.println("Class invariant detected.");
 					classInvariant = (ClassInvariant) bcAttribute;
 				} else if (bcAttribute instanceof HistoryConstraints) {
+					System.out.println("history constraints detected.");
 					historyConstraints = (HistoryConstraints) bcAttribute;
 				}
 			}
@@ -272,16 +277,20 @@ public class BCClass {
 	 */
 	private void initMethods(Method[] _methods, ConstantPoolGen cp)
 			throws ReadAttributeException {
-		methods = new HashMap();
+//		methods = new HashMap();
 		metody = new Vector<BCMethod>();
 		for (int i = 0; i < _methods.length; i++) {
 			MethodGen mg = new MethodGen(_methods[i], className, cp);
 			BCMethod bcm = new BCMethod(mg, this, cp);
-			String key = MethodSignature.getSignature(bcm.getName(), bcm
-					.getArgTypes(), bcm.getReturnType());
-			methods.put(key, bcm);
+//			String key = MethodSignature.getSignature(bcm.getName(), bcm
+//					.getArgTypes(), bcm.getReturnType());
+//			methods.put(key, bcm);
 			metody.addElement(bcm);
 		}
+	}
+	
+	public BCMethod getMethod(int i) {
+		return metody.elementAt(i);
 	}
 
 //	public String getName() {

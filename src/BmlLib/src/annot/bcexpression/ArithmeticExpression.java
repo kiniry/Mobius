@@ -2,6 +2,8 @@ package annot.bcexpression;
 
 import java.util.Vector;
 
+import annot.bcclass.BMLConfig;
+
 //import bytecode_wp.bcexpression.javatype.JavaBasicType;
 //import bytecode_wp.utils.Util;
 
@@ -455,7 +457,7 @@ public class ArithmeticExpression extends Expression {
 //		this.arithmetic_op = arithmetic_op;
 //	}
 
-	public String toString() {
+	public String printCode(BMLConfig conf) {
 		String op = "";
 		if (arithmetic_op == ExpressionConstants.ADD) {
 			op = " + ";
@@ -476,10 +478,14 @@ public class ArithmeticExpression extends Expression {
 			op = " -";
 		}
 		Expression[] subExpr = getSubExpressions();
+		if (getSubExpressions() == null) {
+			System.out.println("E R R O R ! ! !");
+//			return " ERR ";
+		}
 		if (getSubExpressions().length == 1) {
-			return op + subExpr[0];
+			return op + subExpr[0].printCode(conf);
 		} else {
-			return "(" + subExpr[0] + op + subExpr[1] + ")";
+			return "(" + subExpr[0].printCode(conf) + op + subExpr[1].printCode(conf) + ")";
 		}
 	}
 

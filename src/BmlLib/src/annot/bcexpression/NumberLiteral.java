@@ -1,5 +1,7 @@
 package annot.bcexpression;
 
+import annot.bcclass.BMLConfig;
+
 //import bytecode_wp.bcexpression.javatype.JavaBasicType;
 
 public class NumberLiteral extends ArithmeticExpression {
@@ -44,15 +46,10 @@ public class NumberLiteral extends ArithmeticExpression {
 //		return literal;
 //	}
 
-	public String toString() {
-		try {
-			return "" + literal;
-		} catch (NullPointerException e) {
-			e.printStackTrace();
-			return "numberLiteral +  null";
-		}
+	public String printCode(BMLConfig conf) {
+		return "" + literal;
 	}
-
+	
 //	public boolean equals(Expression _expr) {
 //		try {
 //			boolean equals = super.equals(_expr);

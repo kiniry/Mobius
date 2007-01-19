@@ -36,6 +36,10 @@ public class BCConstantClass extends  BCConstant {
 		setName(_name);
 	}
 	
+	public String toString() {
+		return "class:	" + name;
+	}
+	
 //	public int getNameIndex() {
 //		return  nameIndex;
 //	}

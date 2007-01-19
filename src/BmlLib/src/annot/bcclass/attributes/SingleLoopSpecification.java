@@ -1,5 +1,6 @@
 package annot.bcclass.attributes;
 
+import annot.bcclass.BMLConfig;
 import annot.bcexpression.Expression;
 import annot.bcexpression.NumberLiteral;
 import annot.formula.Formula;
@@ -18,12 +19,12 @@ public class SingleLoopSpecification {
 		modifies = _modifies;
 	}
 
-	public String printCode() {
-		String code = "/*\n";
-		code += " *  loop_invariant " + invariant.toString() + "\n";
-		code += " *  loop_modifies " + modifies.printCode() + "\n";
-		if (!"1".equals(decreases.toString()))
-			code += " *  decreases " + decreases.toString() + "\n";
+	public String printCode(BMLConfig conf) {
+		String code = "/* ("+pcIndex+")\n";
+		code += " *  loop_invariant " + invariant.printCode(conf) + "\n";
+		code += " *  loop_modifies " + modifies.printCode(conf) + "\n";
+		if (!"1".equals(decreases.printCode(conf))) // TODO zrób cos z tym
+			code += " *  decreases " + decreases.printCode(conf) + "\n";
 		return code + " */\n";
 	}
 	

@@ -1,5 +1,6 @@
 package annot.formula;
 
+import annot.bcclass.BMLConfig;
 import annot.bcexpression.Expression;
 import annot.bcexpression.NumberLiteral;
 import annot.bcexpression.javatype.JavaReferenceType;
@@ -212,7 +213,7 @@ public class Predicate2Ar extends Predicate {
 //		return this;
 //	}
 
-	public String toString() {
+	public String printCode(BMLConfig conf) {
 		String op = "";
 		if (getPredicateSymbol() == PredicateSymbol.NOTEQ) {
 			op = " =/= ";
@@ -238,7 +239,7 @@ public class Predicate2Ar extends Predicate {
 		if (getPredicateSymbol() == PredicateSymbol.SUBTYPE) {
 			op = " <: ";
 		}
-		return getLeftExpr() + op + getRightExpr();
+		return getLeftExpr().printCode(conf) + op + getRightExpr().printCode(conf);
 
 	}
 

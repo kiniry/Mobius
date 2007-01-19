@@ -1,5 +1,6 @@
 package annot.bcclass.attributes;
 
+import annot.bcclass.BMLConfig;
 import annot.formula.Predicate0Ar;
 
 //import bytecode_wp.bcexpression.javatype.JavaObjectType;
@@ -20,11 +21,11 @@ public class ExsuresTable implements BCAttribute {
 		excPostcondition = exsures;
 	}
 	
-	public String printCode() {
+	public String printCode(BMLConfig conf) {
 		String code = "";
 		for (int i=0; i<excPostcondition.length; i++)
 			if (excPostcondition[i].getPostcondition() != Predicate0Ar.FALSE)
-				code += " *  \\exsures " + excPostcondition[i].printCode() + "\n";
+				code += " *  \\exsures " + excPostcondition[i].printCode(conf) + "\n";
 		return code;
 	}
 	

@@ -1,5 +1,7 @@
 package annot.bcexpression;
 
+import annot.bcclass.BMLConfig;
+
 /**
  * @author mpavlova
  * the class represents array access expression, i.e.  a[i]
@@ -59,16 +61,12 @@ public class ArrayAccessExpression extends Expression {
 //		return array;
 //	}
 
-	/* (non-Javadoc)
-	 * @see bcexpression.Expression#toString()
-	 */
-	public String toString() {
+	public String printCode(BMLConfig conf) {
 		String s ;
 		Expression[] subExpr = getSubExpressions();
-		s =  subExpr[0] + "[" + subExpr[1] + "]";
+		s =  subExpr[0].printCode(conf) + "[" + subExpr[1].printCode(conf) + "]";
 		return s;
 	}
-
 
 	/* (non-Javadoc)
 	 * @see bcexpression.Expression#copy()

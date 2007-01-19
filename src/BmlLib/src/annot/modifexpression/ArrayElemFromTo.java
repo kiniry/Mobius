@@ -1,5 +1,6 @@
 package annot.modifexpression;
 
+import annot.bcclass.BMLConfig;
 import annot.bcexpression.Expression;
  
 public class ArrayElemFromTo extends SpecArray {
@@ -33,12 +34,9 @@ public class ArrayElemFromTo extends SpecArray {
 //		return this;
 //	}*/
 
-	/* (non-Javadoc)
-	 * @see bcexpression.Expression#toString()
-	 */
-	public String toString() {
+	public String printCode(BMLConfig conf) {
 		Expression[] exprs =  getSubExpressions();
-		return exprs[0] + " .. "+ exprs[1];
+		return exprs[0].printCode(conf) + " .. "+ exprs[1].printCode(conf);
 	}
 
 /*	 (non-Javadoc)

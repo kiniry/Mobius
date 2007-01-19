@@ -1,5 +1,7 @@
 package annot.formula;
 
+import annot.bcclass.BMLConfig;
+
 public class QuantifiedFormula extends Formula {
 	private Quantificator[] quantificators;
 
@@ -51,16 +53,15 @@ public class QuantifiedFormula extends Formula {
 //		return _copy;
 //	}
 
-	public String toString() {
+	public String printCode(BMLConfig conf) {
 		Formula subformula = (Formula) getSubExpressions()[0];
 		String s = "";
 		for (int i = 0; i < quantificators.length; i++) {
-			s = s + quantificators[i];
+			s = s + quantificators[i].printCode(conf);
 		}
-		s = s + subformula;
+		s = s + subformula.printCode(conf);
 		return s;
 	}
-
 //	/**
 //	 * the renaming actually here is a special substition which affects also
 //	 * variables under quantifiction rename expr1 by expr2 Renaming must be done

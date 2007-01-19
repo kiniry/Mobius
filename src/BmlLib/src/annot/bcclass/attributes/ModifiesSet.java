@@ -1,6 +1,7 @@
 package annot.bcclass.attributes;
 
 import annot.bcclass.BCClass;
+import annot.bcclass.BMLConfig;
 import annot.modifexpression.Everything;
 import annot.modifexpression.ModifiesExpression;
 
@@ -28,11 +29,11 @@ public class ModifiesSet implements BCAttribute {
 		clazz = _clazz;
 	}
 	
-	public String printCode() {
+	public String printCode(BMLConfig conf) {
 		String code = "";
 		for (int i=0; i<modifiesExpression.length; i++)
 			if (modifiesExpression[i] != null)
-				code += ((i==0) ? "" : ", ") + modifiesExpression[i].toString();
+				code += ((i==0) ? "" : ", ") + modifiesExpression[i].printCode(conf);
 		return code;
 	}
 	

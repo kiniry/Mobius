@@ -3,6 +3,7 @@ package annot.modifexpression;
 import java.util.Vector;
 
 import annot.bcclass.BCClass;
+import annot.bcclass.BMLConfig;
 
 public class ModifiesArray extends ModifiesExpression {
 	public ModifiesArray(ModifiesExpression arrayAccess, SpecArray specArray,
@@ -459,13 +460,8 @@ public class ModifiesArray extends ModifiesExpression {
 //		return f;
 //	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see bcexpression.Expression#toString()
-	 */
-	public String toString() {
-		String s = getModifies().toString() + " [" + getSpecArray() + "]";
+	public String printCode(BMLConfig conf) {
+		String s = getModifies().printCode(conf) + " [" + getSpecArray().printCode(conf) + "]";
 		return s;
 	}
 }

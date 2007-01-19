@@ -1,5 +1,6 @@
 package annot.bcexpression;
 
+import annot.bcclass.BMLConfig;
 import annot.bcexpression.jml.RESULT;
 
 public abstract class Expression {
@@ -98,7 +99,18 @@ public abstract class Expression {
 //		return "?";
 //	}
 //	
-	public abstract String toString();
+//	public abstract String toString();
+	
+	public String toString() {
+		System.out.println("ERROR: called removed method toString().");
+		throw new NullPointerException();
+	}
+	
+//	public abstract printCode(BMLConfig conf);
+	
+	public String printCode(BMLConfig conf) {
+		return toString();
+	}
 //
 //	
 //	public  Expression getType() {

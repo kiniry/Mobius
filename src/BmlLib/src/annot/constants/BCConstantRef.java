@@ -4,7 +4,7 @@ import annot.bcclass.BCConstantPool;
 
 //import jml2b.IJml2bConfiguration;
 //import bytecode_to_JPO.B2JPackage;
-//import annot.io.ReadAttributeException;
+//import annot.bcio.ReadAttributeException;
 //import annot.bcclass.BCClass;
 //import annot.bcclass.BCConstantPool;
 //import annot.bcclass.BCField;

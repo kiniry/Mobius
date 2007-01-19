@@ -3,6 +3,7 @@ package annot.bcexpression;
 import org.apache.bcel.classfile.LocalVariable;
 
 import annot.bcclass.BCMethod;
+import annot.bcclass.BMLConfig;
 import annot.bcexpression.javatype.JavaType;
 
 /**
@@ -110,15 +111,10 @@ public class BCLocalVariable extends Expression {
 //		return this;
 //	}
 
-	/* (non-Javadoc)
-	 * @see bcexpression.Expression#toString()
-	 */
-	public String toString() {
-		// TODO zrobiæ, ¿eby wypisywa³o siê uczciwie.
-		return name;
-//		return "local(" + getIndex() + ")" ;
+	public String printCode(BMLConfig conf) {
+		return "lv("+getIndex()+")";
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see bcexpression.Expression#copy()
 	 */

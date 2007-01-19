@@ -1,5 +1,6 @@
 package annot.bcclass.attributes;
 
+import annot.bcclass.BMLConfig;
 import annot.formula.Formula;
 import annot.formula.Predicate0Ar;
 
@@ -20,13 +21,13 @@ public class MethodSpecification implements BCAttribute{
 		init();
 	}
 	
-	public String printCode() {
+	public String printCode(BMLConfig conf) {
 		String code = "/*\n";
 		if (precondition != null)
 			if (precondition != Predicate0Ar.TRUE)
-				code += " *  requires " + precondition.toString() + "\n";
+				code += " *  requires " + precondition.printCode(conf) + "\n";
 		for (int i=0; i < specificationCases.length; i++)
-			code += specificationCases[i].printCode();
+			code += specificationCases[i].printCode(conf);
 		return code + " */\n";
 	}
 

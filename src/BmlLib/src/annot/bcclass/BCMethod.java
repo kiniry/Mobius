@@ -17,14 +17,14 @@ import annot.bcclass.utils.MethodSignature;
 import annot.bcexpression.BCLocalVariable;
 import annot.bcexpression.javatype.JavaObjectType;
 import annot.bcexpression.javatype.JavaType;
+import annot.bcio.AttributeReader;
+import annot.bcio.ReadAttributeException;
 import annot.bytecode.BCInstruction;
 import annot.bytecode.block.IllegalLoopException;
-import annot.io.AttributeReader;
-import annot.io.ReadAttributeException;
 
 public class BCMethod extends AccessFlags {
 //	public static final String INIT = "<init>";
-	private BCInstruction[] bytecode;
+//	private BCInstruction[] bytecode;
 //	private ControlFlowGraph trace;
 	private String name;
 //	// specification
@@ -69,11 +69,11 @@ public class BCMethod extends AccessFlags {
 		bcelMethod = _mg;
 	}
 
-	public String printCode() {
+	public String printCode(BMLConfig conf) {
 		try {
 			String code = "";
 			if (methodSpecification != null)
-				code += methodSpecification.printCode();
+				code += methodSpecification.printCode(conf);
 			code += bcelMethod.toString() + "\n";
 			String bcode = bcelMethod.getMethod().getCode().toString();
 			bcode = bcode.substring(bcode.indexOf("\n")+1);
@@ -88,7 +88,7 @@ public class BCMethod extends AccessFlags {
 				int pc = Integer.parseInt(line.substring(0, line.indexOf(":")));
 				for (int s=0; s<ls.length; s++)
 					if (ls[s].getLoopIndex() == pc)
-						bcode += ls[s].printCode();
+						bcode += ls[s].printCode(conf);
 				bcode += line + "\n";
 			}
 			return code + bcode;
@@ -1265,4 +1265,18 @@ public class BCMethod extends AccessFlags {
 //			path.addGoal(VcType.INSTANCE_INVARIANT, inv.getClassInvariant());
 //		}
 //	}
+
+	/**
+	 * @return the loopSpecification
+	 */
+	public LoopSpecification getLoopSpecification() {
+		return loopSpecification;
+	}
+
+	/**
+	 * @return the methodSpecification
+	 */
+	public MethodSpecification getMethodSpecification() {
+		return methodSpecification;
+	}
 }
