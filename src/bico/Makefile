@@ -14,7 +14,7 @@ jar-without-bcel: clean java
 clean:
 	@ echo Cleaning...
 	@ rm -f bico.jar
-	
+
 java:
 	@ echo Compiling:
 	mkdir -p tmp
