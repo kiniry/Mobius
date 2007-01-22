@@ -1,0 +1,113 @@
+\section{Conclusion}\label{SecConcl}
+
+Application: resource control, Java-to-native
+
+Combining efforts: single tool set for Mobius
+Traditionally, applications for trusted personal devices undergo
+extensive testing and code review in order to avoid programming errors
+and security flaws. This deliverable lays the first steps towards an
+integration of quality and security considerations in the programming
+phase. More concretely, the work in this task has led to the
+development of methodologies and tools that help developers improve
+the reliability of their code with an acceptable overhead in
+productivity. The tool is integrated in a widely used developer
+environment, namely Eclipse, and provides access to a range of
+techniques that bring increasing levels of reliability.  The
+methodology and the tool have been used satisfactorily for a number of
+purposes, but should be improved further to enhance its applicability.
+
+
+Future work should address limitations of the JML technology, and
+increase support for automation, both at the level of specification
+and verification. In addition, future work should also provide support
+for refinement in JML, as well as for using automated testing
+techniques for proof obligations that have not been discharged
+automatically. This should contribute to making the use of formal
+techniques in Java validation cost effective, and to provide rigorous
+and automated support to facilitate the security evaluations of TPD
+applications.
+
+
+\paragraph{API annotation}
+While the proof obligation generator is largely independent of the
+underlying dialect of Java and of the underlying profile, it relies on
+annotated APIs. In our work, we have found it convenient to focus on
+smartcard case studies and thus we have been able to use annotated
+JavaCard APIs that were developed by the University of Nijmegen.
+However, there are no comprehensively annotated API outside of the
+Java\-Card API, even if previous work on GlobalPlatform security
+requirements done at INRIA could be used to annotate a Java
+implementation of GlobalPlatform. A major issue in adapting our method
+to Trusted Personal Devices will be to annotate the APIs provided by
+INSPIRED. Such a task is labour-intensive, but on the other hand it
+only has to be performed once, and thus an expert can be used for this
+purpose.
+
+\paragraph{Annotation assistants}
+Automated support for annotating programs is of great benefit to allow
+program verification to scale to larger programs. Integrating existing
+tools that generate specific annotations in JACK would greatly improve
+its usefulness. Two lines of work should be pursued independently:
+first, one should integrate tools that generate general-purpose
+annotations, such as defensive specifications that prevent run-time
+exceptions, loop invariants, class invariants or object invariants.
+Second, one should pursue the work on generating annotations from 
+high-level security properties.
+
+
+\paragraph{Support for reasoning about programs}
+Despite having shown its usefulness of a variety of case studies, the
+JML technology is still under development, and many technical issues
+remain to be solved. For example, JML is currently not appropriate for
+reasoning on complex data-structures such as linked-lists or trees
+because no global property on these structures can be stated in JML.
+This limitation of JML is related to the first-order logic on which
+JML is based and that prevents complex quantification over structures
+or predicates. Related to this is the lack of mathematical abstraction
+of JML specifications. For example, to use sets of objects in a
+specification, one has to use a model class, providing a functional Java
+implementation of a set. However, recently we have proposed to add a
+\texttt{native} keyword to JML, which allows to link a JML
+specification directly with a specification in the logic of a theorem
+prover~\cite{Charles06}. 
+
+Another severe restriction of current JML verification
+tools is the limited support they provide for reasoning about
+concurrent programs.  There are some ongoing efforts at Iowa, Kansas,
+and Santa Cruz to extend JML with support for reasoning about
+multi-threaded programs, but at the time of writing no tool support
+has been provided, and it is not clear how the logic relates to the
+Java Memory Model.
+
+
+
+\paragraph{Combining static verification with test and run-time checking}
+While automated provers are rather successful in discharging proof
+obligations, there remain cases where proof obligations have to be
+proved interactively, or checked. Both options are costly in term of
+time invested on establishing the validity of the proof obligation,
+and it should be possible to resort to more automatic techniques, such
+as testing, that is well-established for increasing reliability of
+smartcard obligations. There have been many works that study the
+generation of test cases from JML annotated programs, see
+e.g.~\cite{jll04:ase}. This promising line of work should be pursued
+and better integrated with proofs, in the sense that tests should only
+focus on unproved obligations. A more ambitious goal would be to refine
+annotations according to the results of testing.
+
+
+\paragraph{Support for refinement}
+
+In the software development process, one often wishes to use
+refinement to derive an implementation from a high level
+specification. If the refinement is security preserving, this means
+that one only has to show the security of the high level
+specification, and security of the implementation follows by
+construction. JML provides a very basic support for refinement,
+allowing to first specify the public interface of a class, and then to
+refine this into more detailed specifications and
+implementations. However, there is currently no tool support for
+proving a JML refinement correct. An alternative approach is to do the
+complete refinement using a theorem prover, and then to use the
+\texttt{native} construct~\cite{Charles06} to link the lowest level in
+the refinement chain with a Java implementation.

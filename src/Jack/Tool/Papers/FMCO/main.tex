@@ -1,0 +1,76 @@
+\documentclass{llncs}
+%\usepackage{times}
+\usepackage{epsfig}
+%\usepackage{enumerate}
+%\usepackage{paralist}
+%\usepackage{amsmath}
+%\usepackage{amssymb}
+%\usepackage{amscd}
+%\usepackage{array}
+%\usepackage{tabularx}
+%\usepackage{xspace}
+%\usepackage{url}
+%\usepackage{float}
+\usepackage{multirow}
+\usepackage{listings}
+%\usepackage{latexsym,pstricks,pst-node,pst-tree,boxedminipage,stmaryrd}
+%\usepackage{alltt}
+%\usepackage{fancyhdr}
+%\usepackage{fullpage}
+
+%\markboth{INSPIRED}{INSPIRED}
+
+%\pagestyle{myheadings}
+
+\pagestyle{plain}
+\title{JACK~---~a tool for validation of security and behaviour of Java
+applications\thanks{This work is partially funded by the IST FET
+programme of the European Commission, under the IST-2005-015905
+\textsf{Mobius} project and the IST-2003-507894
+\textsf{Inspired} project.}}
+
+\author{Gilles Barthe\inst{1} \and
+        Lilian Burdy\inst{2} \and
+        Julien Charles\inst{1} \and
+        Benjamin Gr\'egoire\inst{1} \and
+        Marieke Huisman\inst{1} \and
+        Jean-Louis Lanet\inst{3} \and
+        Mariela Pavlova\inst{4}\thanks{Research done while at INRIA Sophia Antipolis} \and
+        Antoine Requet\inst{3}}
+\institute{INRIA Sophia Antipolis, France \and 
+           ClearSy, France \and
+           gemalto, France \and 
+           Ludwig-Maximilians-Universit\"at M\"unchen, Germany}
+
+
+\input {preamble}          % input user-defined commands
+
+\begin{document}
+\maketitle      
+\begin{abstract}
+We describe the main features of JACK (Java Applet Correctness Kit), a
+tool for the verification of Java applications, annotated with JML
+specifications. JACK has been especially designed to improve the
+quality of trusted personal device applications. JACK is fully
+integrated with the IDE Eclipse, and provides an easily accessible
+user interface. In particular, it allows to inspect the generated
+proof obligations in a Java syntax, and to trace them back to the
+source code that gave rise to them. Further, JACK provides support for
+annotation generation, and for interactive verification. The whole
+platform works both for source code and for bytecode, which makes it
+particularly suitable for a proof-carrying code scenario.
+\end{abstract}
+\input{introduction}        
+\input{jml}
+\input{architecture}
+\input{user-interface}
+\input{annot-gen}
+\input{bytecode}
+\input{interactive-verif}
+\input{conclusion}
+
+\bibliographystyle{plain}
+\bibliography{bibli,../specification,/net/home/mhuisman/Research/Everest/Biblio/everest}
+
+\end{document}
+

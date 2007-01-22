@@ -1,0 +1,227 @@
+\section{Introduction}\label{SecIntro}
+
+\paragraph{Motivation}
+Over the last years, the use of trusted personal devices, such as
+mobile phones, PDAs and smart cards, has become more and more
+widespread. As these devices are often used with security-sensitive
+applications, they are an ideal target for attacks. Traditionally,
+research has been focusing on avoiding hardware attacks, where the
+attacker has physical access to the device to observe or tamper with
+it. However, the new generation of trusted personal devices are
+increasingly connected to networks and in addition provide execution
+support for complex programs. This development has put forward the
+risk of logical attacks. These are potentially easier to launch than
+physical attacks (for example they do not require physical access to
+the device, and are easier to replicate from one device to the other),
+and may have a huge impact.  In particular, a malicious attacker
+spreading over the network and disconnecting or disrupting devices
+massively could have deep consequences. 
+
+An important means to avoid such attacks is to improve the quality of
+the software deployed on the device. This is in particular important
+for trusted personal devices, where post-issuance corrections are
+expensive due to their particular deployment process and their mass
+production. This paper reports on the development of a tool that can
+be used exactly for this purpose, \emph{i.e}\ to improve the quality
+of applications for trusted personal devices. Such devices typically
+provide (a variant of) the Java Virtual Machine (JVM)\footnote{The
+standard Java set-up for such devices is the Connected Limited
+Device Configuration (CLDC), see
+\texttt{http://java.sun.com/products/cldc/},
+together with the MIDP profile, see
+\texttt{http://java.sun.com/products/midp/}.}, 
+therefore the tool is tailored to application written in Java
+(bytecode). However, the techniques that are implemented by the tool
+are also relevant to other execution platforms for trusted personal
+devices.
+
+
+%\item they feature mechanisms that contribute to the security of the
+%platform and the applications that execute over it;
+%\item detailed informal specifications of the Java platform are publicly
+%available, and can be scrutinized.
+
+\paragraph{JACK: Java Applet Correctness Kit}
+Concretely, the tool, JACK, allows to verify Java applications that
+are annotated with the Java Modeling Language (JML)\footnote{see
+\texttt{http://www.jmlspecs.org}.}. An advantage of using JML is that
+there is wide range of tools and techniques available that use JML as
+specification language,
+\emph{i.e.}\ JML specifications can be used to improve testing, they
+can be simulated, and in particular they can be verified. We
+distinguish two kinds of verification: at runtime, using
+\texttt{jmlc}, or statically. Several tools provide
+static verification of JML-annotated programs, adopting different
+compromises between soundness and automation (see the related work
+section below for an overview).  JACK implements a weakest
+precondition calculus, that automatically generates proof obligations
+that can be discharged both by automatic and interactive theorem
+provers. The automatic prover that is used is Simplify~\cite{}, a
+well-known prover for program verification, the interactive theorem
+prover that is used is Coq~\cite{}.
+
+
+The main characteristics of JACK that distinguish it from other tools
+are the following:
+\begin{itemize}
+\item full integration with Eclipse IDE\footnote{See
+\texttt{http://www.eclipse.org}.}, including the development of a
+special JACK view that allows to inspect the different proof
+obligations, and from where in the code they originate;
+\item implementation of annotation generation algorithms: to
+generate ``obvious'' annotations, and to encode high-level security
+properties;
+\item support for verification of bytecode programs; and
+\item support for interactive verification, by the development of an interface
+and tactics for Coq and by use of the ``native'' construct, that allows to
+link JML specifications with the logic of the underlying theorem
+prover. 
+\end{itemize}
+This paper illustrates how these characteristics make JACK
+particularly suited for the development of secure applications for
+trusted personal devices.
+
+In particular, JACK provides an algorithm to automaticlly generate
+annotations encoding high-level security policies, and to weave and
+propagate these in the application. These annotations give rise to
+proof obligations, whose discharge (typically automatically)
+guarantees adherence to the security policy. Since JACK also provides
+support for the verification of bytecode, and allows to compile source
+code level JML annotations into bytecode level specifications (written
+in the Bytecode Modeling Language (BML)~\cite{BurdyHP07}, this enables
+a proof-carrying code scenario. In such a scenario, the applications
+come equipped with a specification and a proof that allow the client
+to establish trust in the application. Since the applications usually
+are shipped in bytecode format, also the specification and the
+verification process need to be defined at this level. This scenario
+is even further facilitated by the fact that the compiler from JML to
+BML provided by JACK basically preserves proof obligations. Thus, a
+software developer can verify its application at source code level,
+and ship the application with compiled bytecode level specifications
+and proofs. Notice that, provided the proof obligations can be
+discharged automatically, the whole process is automatic.
+
+However, JACK is a general-purpose tool, and besides the verification
+of high-level security policies, it can be also be used to verify
+complex functional behaviour specifications, by providing advanced
+support for specification development and interactive
+verification. First of all, because of the tight integration with
+Eclipse, the developer does not have to change tools to validate the
+application. A special JACK view is provided, that allows to inspect
+the generated proof obligations in different views (in a Java-like
+syntax, or in the language of the prover). Moreover, syntax colouring
+of the original source code allows to see to which parts of the
+application and specification the proof obligation relates. Second,
+one of the drawbacks of using JML-like annotations for specification
+is that writing them is labour-intensive and error-prone and it is
+easy to forget some. Therefore JACK implements also annotation
+generation algorithms that compute frame conditions and preconditions
+that are sufficient to avoid runtime exceptions. Finally, to support
+the interactive verification, several advanced Coq tactics have been
+developed, and a Coq editor has been integrated into Eclipse. In
+addition, to be able to write expressive specifications, a
+\texttt{native} construct has been proposed for JML, that allows to
+link JML constructs directly with the logic of the underlying
+prover. This allows to develop the theory about these constructs
+directly in the logic of the theorem prover, which makes specification
+and verification much simpler.
+
+
+\paragraph{Related work}
+\begin{itemize}
+\item Other Java/JML tools: ESC/Java, Jive, Key, LOOP, jmlc
+\item Spec\#
+\item JMLEclipse
+\item Bytecode verification platforms EVP, JVer
+\item Fradet for annotation generation?
+\item Claude's JML-ADT
+\end{itemize}
+
+\paragraph{Overview of the paper}
+The next section first gives a quick overview of the relevant JML
+features. It also introduces the running example that we will use to
+illustrate the different features of JACK. Section~\ref{SecArchi} then
+briefly outlines the general architecture of JACK, while
+Section~\ref{SecUI} focuses on its user
+interface. Section~\ref{SecAnnotGen} then describes the different
+annotation generation algorithms that JACK
+implements. Section~\ref{SecBytecode} presents the bytecode
+subcomponents of JACK, while Section~\ref{SecInteractive} explains the
+features that JACK provides to support interactive
+verification. Finally, Section~\ref{SecConcl} concludes and discusses
+how this work will be continued.
+
+Parts of the results described in this paper have been published
+elsewhere (\cite{BurdyRL03} describes the general architecture of
+JACK, \cite{PavlovaBBHL04cardis} describes the annotation generation
+algorithm for security policies, \cite{BP06JSV} describes the
+framework for the verification of bytecode, and \cite{Charles06}
+presents the native construct). However, this is the first time a
+complete overview of JACK and its main features are given in a single
+paper.
+
+
+%\subsection{Security issues}
+%While our focus of is on application validation,
+%security is a holistic property of a system, and formal techniques
+%must therefore be employed at different levels to provide strong
+%guarantees about the security of a TPD and its applications.
+%Essentially, the levels are: the hardware, platform, the libraries,
+%and the applications.
+
+%The TPD security architecture guarantees that
+%downloaded applications are innocuous and comply with some basic
+%policies related to typing, initialization or access control. Such
+%basic policies are the cornerstones upon which the overall security of
+%the smartcard will rely. Therefore it is important to verify that the
+%security architecture does enforce these basic policies as
+%intended. Thus, an important application of formal methods to TPD
+%security is platform verification, which aims at providing an abstract
+%model of the Java platform and security architecture, and at proving
+%that the security functions play their expected role.
+
+%However, it is not sufficient to show that
+%security functions are correctly designed. In particular, one also has
+%to ensure that other components of the infrastructure, in particular
+%API, are correctly designed and implemented. For the purpose of this
+%deliverable, where the focus is on Java based TPD, the Java API and
+%the Global Platform API constitute two prominent components of the
+%infrastructure whose correct design is central to security. 
+
+%Platform and libraries verification is a fundamental step towards
+%guaranteeing the security of TPD, and a prerequisite for Common
+%Criteria evaluations at the highest levels. Nevertheless, the
+%guarantees offered by the Java security architecture are limited, and
+%further verifications must be performed to verify that applications
+%make a legitimate use of the infrastructure, and do not attempt any
+%hostile action.
+
+%Thus, application validation is another important application of
+%formal methods to TPD security. To date, testing campaigns remain the
+%primary means to ensure the quality of applications. However, testing
+%campaigns are expensive and only provide partial guarantees with
+%regard to the reliability of software. Therefore, it is important to
+%develop other advanced techniques for applet validation. In this wqy, there are many facets to applet validation, each with its own
+%objectives and techniques:
+%\begin{itemize}
+%\item one can enhance existing security architectures to enforce
+%security properties not addressed by current architectures, in
+%particular confidentiality and availability.  Verification can be
+%performed by enhanced bytecode verification mechanisms;
+
+%\item one can abandon the realm of type systems and its associated
+%benefits and choose develop logical methods for specifying and
+%verifying either automatically or efficiently a specific class of
+%security properties. Verification can be performed by (possibly
+%efficient and hence incomplete) logic-based proof inference
+%mechanisms;
+
+%\item one can exploit the expressive power of logical methods to
+%require that applications, or at least sensitive fragments of
+%applications, are subjected to functional verification, i.e. to
+%verifications that establish their correctness in terms of
+%functionality as well as security.
+%\end{itemize}
+
+
+

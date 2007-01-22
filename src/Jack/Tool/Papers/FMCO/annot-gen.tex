@@ -1,0 +1,118 @@
+\section{Generating JML Annotations}\label{SecAnnotGen}
+
+While JML is easily accessible to Java developers, actually writing
+the specifications of a smart card application is labour-intensive and
+error-prone, as it is easy to forget some annotations. There
+exist tools which assist in writing these annotations,
+\emph{e.g.}~Daikon~\cite{ErnstCGN01} and Houdini~\cite{FlanaganL01}
+use heuristic methods to produce annotations for simple safety and
+functional invariants.  However, these tools cannot be guided by the
+user---they do not require any user input---and in particular cannot
+be used to synthesise annotations from realistic security policies.
+
+Within JACK, we have implemented several algorithms to generate
+annotations. We can distinguish two sorts of applications for
+annotation generation. The first goal is to generate as much
+``obvious'' annotations as possible, to reduce the burden of
+annotation writing. Given an existing, unannotated, application, one
+first tries to generate preconditions automatically, before specifying
+the more interesting parts of the specification. The second goal is to
+encode high-level properties by encoding these with simple JML
+annotations, that are inserted at all appropriate points in the
+application, so that they can be checked statically.
+
+JACK implements algorithms for both goals, and both will be described
+in this section.
+
+
+\subsection{Generation of Preconditions and Frame Conditions}
+JACK implements two different algorithms to generate ``obvious''
+annotations. The first algorithm is a simple static analysis on the
+program text, which generates modifies clauses. Whenever it sees
+assignments or method calls that change (specification) publicly
+visible fields, these fields are added to the method's modifies
+clause. The algorithm uses a safe over-approximation: whenever it
+encounters references that might be aliased, it will simply generate a
+clause \texttt{modifies \bsl everything;}.
+
+JACK also implements an algorithm to generate the minial preconditions
+to avoid nullpointer and array-out-of-bounds exceptions. This
+algorithm re-uses the implementation of the weakest precondition
+calculus: it computes the weakest precondition for the specification
+\texttt{exsures (NullPointerException) false} (\texttt{exsures
+(ArrayIndexOutOfBoundsException) false}) and inserts this as an
+annotation in the code. 
+
+As an example, Figure~\ref{FigAnnotSpec} shows the annotations that
+are generated for a fragment of the class QuickSort that was presented in
+Figure~\ref{FigJMLSpec}. 
+\begin{figure}[t!]
+{\small
+\begin{verbatim}
+public class QuickSort {
+  private int [] tab;
+
+  /*@ requires this.tab!=null;
+      modifies \everything;
+      exsures (Exception ) false;
+    @*/
+  public void sort() {if(tab.length > 0) sort(0, tab.length -1);}
+
+   /*@ requires this.tab!=null&& 
+                0<=j&& j<this.tab.length&&
+                0<=i&& i<this.tab.length;
+       modifies \everything;
+       exsures (Exception ) false;
+    @*/
+  public void swap(int i, int j) {int tmp; tmp = tab[i]; 
+                                  tab[i] = tab[j]; tab[j] = tmp;}
+
+  ...
+}
+\end{verbatim}
+}
+\caption{Annotations Generated for a Fragment of Class
+\texttt{QuickSort}}\label{FigAnnotSpec} 
+\end{figure}
+It is important to realise that, even though the specifications that
+are generated are not very spectacular, the fact that they can be
+generated automatically can help significantly to reduce the burden of
+annotation writing.
+
+Notice that the annotation generation can be further improved by doing
+some simple analysis on the generated annotations. Often it is the
+case that the preconditions that are generated for the fields of the
+class are the same for (almost) all the methods. In that case, this
+condition is most likely a class invariant, and instead of generating
+it as a precondition for each method, it would be more appropriate to
+generate a single class invariant. In the class \texttt{QuickSort} in
+Figure~\ref{FigAnnotSpec}, this would lead to a clause
+\texttt{invariant this.tab!=null;}. It is future work to implement
+this improvement.
+
+\subsection{Encoding of Security Policies}
+
+Another problem when writing annotations is that a conceptually simple
+high-level property can give rise to many different annotations,
+scattered through the code, that encode this property. This is
+typically the case for many security policies. Current software
+practice for the development of applications for trusted personal
+devices is that security policies give rise to a set of rules that
+should be obeyed by the implementation. Obedience to these rules is
+established by manual code inspection.
+
+However, many of these rules can be formalised as simple automata,
+which are amenable to formal verification. Therefore, we propose a
+method that given a rule to guarantee a security policy, automatically
+annotates an application, in such a way that if the application
+respects the annotations then it also respects the security
+policy. The generation of annotations proceeds in two phases:
+synthesising and weaving.
+\begin{enumerate}
+\item Based on the security policy we \emph{synthesise} core annotations, 
+specifying the behaviour of the methods directly involved.
+\item Next we propagate these annotations to all methods directly or
+indirectly invoking the methods that form the core of the security
+policy, thus \emph{weaving} the security policy throughout the
+application. 
+\end{enumerate} 
