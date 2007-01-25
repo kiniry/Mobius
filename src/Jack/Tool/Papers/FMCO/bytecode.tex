@@ -1,12 +1,330 @@
 \section{A Framework for the Specification and Verification of Bytecode}\label{SecBytecode}
 
 JACK allows one to verify applications not only at source code level,
-but also at bytecode level. 
+but also at bytecode level. This is in particular important to support
+proof carrying code, where bytecode applications are shipped together
+with their specification and a correctness proof. However, the
+possibility to verify bytecode also has an interest in its own: 
+sometimes security-critical applications are developed directly at
+bytecode level, in order not to rely on the correctness of the
+compiler. To be able to formally establish the correctness of such an
+application, one needs support to verify bytecode directly.
+
+This section describes the different parts in the bytecode
+subcomponent of JACK. First of all, we present a specification
+language tailored to bytecode, and we specify how these specifications
+can be encoded in the class file format. Our specification language,
+called BML for Bytecode Modeling Language~\cite{BurdyHP07}, is the
+bytecode cousin of JML. We define and implement a compiler from JML to
+BML specifications. Such a compiler is in particular useful in a proof
+carrying code scenario, where the application developer can do the
+verifications at source code level (\emph{i.e.}\ verify whether the
+source code respects the JML annotations), and then compile both the
+application and the specification to bytecode level. Finally, we have
+also define a verification condition generator for bytecode
+applications annotated with BML, implementing a weakest preconditon
+calculus for bytecode. This allows the tool to generate the proof
+obligations that need to hold for the application to satisfy its
+specification.
+
 \subsection{A Specification Language for Bytecode: BML}
 
+Basically, BML has the same syntax as JML with two exceptions:
+\begin{enumerate}
+\item specifications are not written directly in the program code,
+they are added as special attributes to the bytecode; and
+\item the grammar for expressions only allows bytecode expressions.
+\end{enumerate}
+
+\begin{figure}[t]
+
+\begin{tabular}{lll}
+\multicolumn{2}{l}{\varHook{predicate} ::= \(\ldots\)}\smallskip\\
+\multicolumn{2}{l}{\varHook{unary-expr-not-plus-minus} ::= \(\ldots\)}\\
+\hspace*{1cm} & \(\mid\) \varHook{primary-expr} [\varHook{primary-suffix}]\(\ldots\)\\ 
+
+\multicolumn{3}{l}{\varHook{primary-suffix} ::= \codeHook{.} \varHook{ident}
+\(\mid\) \codeHook{(} [\varHook{expression-list}] \codeHook{)}
+ \(\mid\) \codeHook{[} \varHook{expression} \codeHook{]}}\\
+
+\multicolumn{2}{l}{\varHook{primary-expr} ::= 
+\codeHook{\#}\varHook{natural}} & \% reference in the constant pool \\
+&\(\mid\) \codeHook{lv[}\varHook{natural}\codeHook{]} &\% local variable \\
+&\(\mid\) \varHook{bml-primary}\\
+&
+\multicolumn{2}{l}{\(\mid\) \varHook{constant} \(\mid\)
+\codeHook{super}
+\(\mid\) \codeHook{true} \(\mid\) \codeHook{false} \(\mid\)
+\codeHook{this} \(\mid\) \codeHook{null} 
+\(\mid\) \codeHook{(}\varHook{expression}\codeHook{)}
+\(\mid\) \varHook{jml-primary}}\\
+
+\multicolumn{2}{l}{\varHook{bml-primary} ::= \codeHook{cntr}} &\% counter of the operand stack\\
+&\(\mid\) \codeHook{st(}\varHook{additive-expr}\codeHook{)} &\% stack
+expressions\\
+&\(\mid\) \codeHook{length(}\varHook{expression}\codeHook{)} &\% array
+length 
+\end{tabular}
+
+\caption{Fragment of grammar for BML predicates and specification expressions}\vspace*{-1em}
+\label{FigBMLGrammar}
+\end{figure}
+
+Figure~\ref{FigBMLGrammar} displays the most interesting part of the
+grammar for BML predicates, defining the syntax for primary
+expressions and primary suffixes\footnote{See
+\texttt{http://www-sop.inria.fr/everest/BML} for the full grammar of BML.}.
+Primary expressions, followed by zero or more primary suffixes, are
+the most basic form of expressions, formed by identifiers, bracketed
+expressions \emph{etc}.
+
+Since only bytecode expressions can be used, all field names, class
+names \emph{etc.}\ are replaced by references to the constant pool (a
+number, preceded by the symbol \codeHook{\#}), while registers are
+used to refer to local variables and parameters. The grammar also
+contains several bytecode specific kewyords, such as \codeHook{cntr},
+denoting the stack counter, \codeHook{st(\(e\)} where \(e\) is an
+arithmetic expression, denoting the elements on the stack, and
+\codeHook{length(\(a\))}, denoting the length of any array. In
+addition, the specification-specific JML keywords are also available.
+
+
+To store the BML specifications in the class file, we add
+user-specific attributes to the class file. This means that every
+class contains a table with invariant and constraint annotations,
+while each method has extra attributes containing its
+specifications. Finally, the code for the method body is annotated
+with local annotation tables for the assert annotations and the loop
+specifications. Below we will present more details about the precise
+format of these attributes.
+
+
+\begin{figure}[t]
+{\small
+\begin{verbatim}
+To do...
+\end{verbatim}
+}
+\vspace*{-1em}\caption{Bytecode + BML specification for method \codeHook{produce\unsc bill} in class \codeHook{Bill}}\label{FigBMLSpec}
+\end{figure}
+
+To show a typical BML specification, Figure~\ref{FigBMLSpec} presents
+the BML version of the JML specification of method
+\codeHook{sort} in Figure~\ref{FigJMLSpec}. 
+Notice that the
+field \codeHook{tab} has been assigned the number ?? in the constant
+pool, and that it is always explicitly qualified with \codeHook{lv[0]}
+(denoting \codeHook{this}). This method does not have parameters, but 
+
+
+
+%This class contains a
+%private, but \codeHook{spec\unsc public} (i.e.~publicly visible
+%in specifications) field
+%\codeHook{list}, which is an array of objects. The class invariant says
+%that \codeHook{list} is not null, and in addition, its elements are
+%never null.  Further, the class contains a method \codeHook{replace},
+%which checks if its first parameter \codeHook{obj1} occurs in
+%\codeHook{list}, and if this is the case, replaces it (once) by its
+%second parameter \codeHook{obj2}. 
+
+%\begin{figure}[t!]
+%{\small
+%\begin{verbatim}
+%public class ListArray {
+%//*@ spec_public @*/ private Object[] list;
+%//@ invariant list != null && \nonnullelements(list);
+	
+%/*@ requires obj2 != null;
+%  @ assignable list[*];
+%  @ ensures \result == (\exists int i; 0 <= i && i < list.length && 
+%  @                                    \old(list[i]) == obj1 && list[i] == obj2);
+%  @*/ 
+%  public boolean replace(Object obj1,Object obj2)
+%  {
+%    int i = 0;
+%    /*@ loop_modifies this[*];
+%      @ loop_invariant 0 <= i && i <= list.length && 
+%      @                (\forall int k; 0 <= k && k < i ==> list[k] != obj1);
+%      @*/ 
+%    for (i = 0; i < list.length; i++ ) {
+%      if ( list[i] == obj1) { list[i] = obj2; return true; }}
+%    return false; }
+%}
+%\end{verbatim}
+%}
+%\vspace*{-1em}\caption{JML specification for class \codeHook{ListArray}}\label{FigJMLSpec}
+%\end{figure}
+ 
 \subsection{Encoding of BML Specifications}
+
+As mentioned above, to store BML specifications together with the
+bytecode it specifies, we encode them in the class file format. The
+Java Virtual Machine Specification~\cite{JVMspec} prescribes the
+mandatory elements of the class file: the constant pool, the field
+information and the method information. It allows to add user-specific
+information to the class file (\cite[\S4.7.1]{JVMspec}) as special
+user-specific attributes.  We store BML specifications in such
+user-specific attributes, in a compiler-independent format. The use of
+special attributes ensures that the presence of BML annotations does
+not have any impact on the application's performance, \emph{i.e.}, the
+augmented class file should not slow down loading or normal execution
+of the application. 
+
+For each class, we add the following information to the class file:
+\begin{itemize}
+\item a second constant pool which contains constant references
+      for the BML specification expressions;
+\item an attribute with the ghost fields used in the specification;
+\item an attribute with the model fields used in the specification;
+\item an attribute with the class invariants (both static and object); and
+\item an attribute with the constraints (both static and object).
+\end{itemize}
+Apart from the second constant pool, all extra class attributes
+basically contain the name of the attribute, the number of elements it
+contains, and a list with the actual elements.  For example, the ghost
+field attribute has the format as described in
+Figure~\ref{FigAttributes}. This should be understood as follows: the
+name of the attribute is given as an index into the (second) constant
+pool. This constant pool entry will be representing a string
+\texttt{"Ghost\unsc Field"}. Next we have the length of the attribute,
+which should be 2 + 6*\textbf{fields\unsc count} (the number of fields
+stored in the list). The \textbf{fields} table stores all ghost
+fields. For each field we store its access flags (\emph{e.g.}\
+\texttt{public} or
+\texttt{private}), and the name index and descriptor index, both
+referring to the constant pool. The first must be a string,
+representing the (unqualified) name of the variable, the latter is a
+field descriptor, containing \emph{e.g.}\ type information.  The tags
+\textbf{u2} and \textbf{u4} specifies the size of the attribute, 2 and
+4 bytes, respectively. The other attributes are specified in a similar
+way.
+
+
+
+\begin{figure}[t]
+\textbf{
+\begin{tabular}[t]{l}
+Ghost\unsc Field\unsc attribute \{\\
+\hspace*{1em}
+\begin{tabular}{l}
+u2  attribute\unsc name\unsc index; \\
+u4  attribute\unsc length;\\
+u2  fields\unsc count;\\
+\{\begin{tabular}[t]{l} 
+    u2 access\unsc flags; \\  
+    u name\unsc index;\\
+    u2 descriptor\unsc index;\\
+  \end{tabular}\\
+\} fields[fields\unsc count]; \} \\
+\end{tabular}
+\end{tabular}
+}
+\vspace*{-1em}\caption{Attributes for ghost field declarations}
+\label{FigAttributes}
+\end{figure}
+
+
 
 \subsection{Compiling JML Specifications into BML Specifications}
 
+As mentioned above, we have implemented a compiler from JML
+specifications into BML specifications~--~stored in the class file. 
+The JML specification is compiled separately from the Java source
+code. In fact, the compiler takes as input an annotated Java source file
+\emph{and} the Java class file produced by a non-optimising compiler
+with the debug flag set. 
+
+From the debug information, we use in particular the
+\textbf{Line\_ Number\_Table} and the \textbf{Local\_Variable\_Table}
+attributes. The \textbf{Line\_Number\_Table} links line numbers in the
+Java source code with the Java bytecode instructions.  The
+\textbf{Local\_Variable\_Table} describes the local variables that
+appear in a method.  
+
+The compilation from JML specifications into BML is defined in several
+steps. 
+
+\begin{itemize}
+
+\item Compilation of ghost and model field declarations.
+
+
+\item Linking and resolving of source data structures to bytecode structures. .
+
+\item Locating instructions for annotation statements; this
+information is added as a special \textbf{index} entry in the
+attribute. We use a heuristic algorithm to find the entry point of a
+loop, for more details see~\cite{Pavlova:phd}.
+
+ 
+\item Compilation of JML predicates, taking into account that not all
+source code level primitive types are directly supported at bytecode
+level. 
+
+\item Generation of user-specific class attributes.
+    
+\end{itemize}
+
+
 \subsection{Verification of Bytecode}
+To generate proof obligations, we have implemented a weakest
+precondition calculus for bytecode in JACK. Just as the source code
+level weakest precondition calculus, this works directly on the
+bytecode; the program is not transformed into a guarded commands
+format. Just as for source code, this has the advantage that we can
+easily trace the proof obligation back to the relevant bytecode and
+BML fragment.
+
+The JACK implementation supports all Java bytecode sequential
+instructions, except for floating point arithmetic instructions and 64
+bit data (\java{long} and \java{double} types). This in particular, it
+handles exceptions, object creation, references and subroutines. The
+calculus is defined over the method control flow graph.
+
+
+The verification condition generator proceeds as follows. For each
+method it generates a proof obligations for each execution path by
+applying the weakest predicate transformer to every instruction where
+the method might end (\emph{i.e.}\ \texttt{return} or \texttt{athrow}
+instructions), and at each loop exit point. The weakest precondition
+transformer then follows the control flow backwards, until it reaches
+the entry point instruction. 
+
+For example, we have the following weakest precondition rule for the
+instruction \texttt{load\(_i\)}.
+\[
+\mathit{wp}(\texttt{load}_i, \psi, \psi^{\mathit{Exc}})  = 
+\psi[\texttt{cntr} \leftarrow \texttt{cntr} + 1][\texttt{st(cntr +1)}
+\leftarrow \texttt{lv[i]}]
+\]
+As the example shows, the weakest precondition transformer takes three
+arguments: the instruction for which we calculate the precondition,
+the instruction's normal postcondition $\psi$ and the instruction's
+exceptional postcondition $\phi^{\mathit{Exc}}$. The
+\texttt{load}\(_i\) instruction will always terminate normally. The
+postcondition is updated to reflect the changes to the stack that are
+made, \emph{i.e.}\ the stack counter is increased, and the value that
+was stored in the local variable register \texttt{lv[i]} is not at the
+top of the stack (at position
+\texttt{st(cntr + 1)}. 
+
+For the full wp-calculus for BML-annotated bytecode, and the soudness
+proof we refer to~\cite{Pavlova:phd}. 
+
+Finally we would like to remark that there is a close correspondence
+between the proof obligations generated by JACK at source code level,
+and the proof obligations that are generated once the application and
+the specification are compiled at bytecode level (provided that the
+application is compiled with a non-optimising compiler): modulo names
+and the handling of shorts, bytes and boolean values, the proof
+obligations are equivalent. This means that proofs for proof
+obligations at source code level can be re-used for proof obligations
+at bytecode level. This is in particular important for the proof
+carrying code scenario, where the code producer develops a proof at
+source code level, and then ships bytecode level application and
+specification, because modulo the necessary renamings, he can ship
+directly his proofs, and the code client can verify these using a
+verification condition generator at bytecode level.
+
 
