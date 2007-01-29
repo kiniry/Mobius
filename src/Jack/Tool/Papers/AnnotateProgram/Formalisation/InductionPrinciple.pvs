@@ -5,7 +5,7 @@ BEGIN
 
   P : VAR Program
 
-  stmt_induction : LEMMA
+  stmt_induction : LEMMA % not proven
    FORALL(Q : [Stmt, PState, PState -> bool]) :
     ((FORALL(s : Stmt, sigma1, sigma2 : PState) :
          derives(P)(s, sigma1)(sigma2) IMPLIES

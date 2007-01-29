@@ -41,6 +41,8 @@ BEGIN
   PState : TYPE = [# ex : lift[Excpt],
                      st : PSt #]
 
+
+
   % So far, I'm not modelling that the sets are disjoint
   % This would imply adding a test to update, that vn is in the domain
 
@@ -356,5 +358,10 @@ BEGIN
         derives(P)(s, sigma)(sigma1) AND
         derives(P)(s, sigma)(sigma2) IMPLIES
           sigma1 = sigma2
+
+
+  % problematic to formalise definition 1, because this requires distinguishing
+  % between static (only based on class name) and dynamic (based on object
+  % instance) class lookup
 
 END Semantics

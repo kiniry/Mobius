@@ -1,0 +1,148 @@
+EventType : DATATYPE
+BEGIN
+
+  Entry : Entry?
+  ExitNormal : ExitNormal?
+  ExitExceptional : ExitExceptional?
+
+END EventType
+  
+
+MVA [CP : TYPE, Name : TYPE+] : THEORY
+BEGIN
+
+  IMPORTING JType,
+            Expr[Name],
+            Val
+
+  
+  MVA_VarDecl : TYPE =
+    [# name : Name,
+       jtype : JType,
+       ival : Expr[Name]
+    #]
+
+  Prog_VarDecl : TYPE =
+    [# name : Name,
+       jtype : JType
+    #]
+
+  Store : TYPE = [Name -> Val]
+
+  Guard : TYPE = [Store, Store -> boolean]
+
+  OneAction : TYPE =
+    [# source : Name,
+       target : Expr[Name]
+    #]
+
+  Action : TYPE = list[OneAction]
+
+  skip : Action = null[OneAction]
+
+  IMPORTING EventType
+
+  Event : TYPE =
+    [# EType : EventType,
+       mname : Name
+    #]
+
+  Transition : TYPE =
+    [# scp : CP,
+       event : Event,
+       guard : Guard,
+       action : Action,
+       tcp : CP
+    #]
+   
+  MVA : TYPE =
+    [# name : Name,
+       classname : Name,
+       cps : set[CP],
+       init_cp : CP,
+       evs : set[Event],
+       vdsA : set[MVA_VarDecl],
+       vdsP : set[Prog_VarDecl],
+       ts : set[Transition] 
+    #]
+
+  deterministic(a : MVA) : boolean =
+    FORALL(q : CP, e : Event, stA : Store, stP : Store,
+           p : Guard, t : Transition) :
+      cps(a)(q) IMPLIES 
+      evs(a)(e) IMPLIES
+      ts(a)(t) IMPLIES
+      scp(t) = q IMPLIES
+      event(t) = e IMPLIES
+      guard(t) = p IMPLIES
+      p(stA, stP) IMPLIES
+      FORALL (t1 : Transition) :
+        scp(t1)(q) IMPLIES
+        event(t1)(e) IMPLIES
+        guard(t1) /= p IMPLIES
+        NOT guard(t1)(stA, stP)
+
+  total(a : MVA) : boolean =
+    deterministic(a) AND
+    FORALL(q : CP, e : Event, stA, stP : Store) :
+      EXISTS(t : Transition) : ts(a)(t) AND
+                               scp(t) = q AND
+                               event(t) = e AND
+                               guard(t)(stA, stP)
+
+  
+END MVA
+
+
+MVA_Semantics[CP : TYPE, Name : TYPE+] : THEORY
+BEGIN
+
+  IMPORTING MVA[CP, Name]
+
+  a : VAR (total)
+
+  AState : TYPE =
+    [# cp : CP,
+       stA : Store 
+    #]
+
+  PEvent : TYPE =
+    [# stP : Store,
+       event : Event
+    #]
+
+
+  update(st : Store)(n : Name)(v : Val) : Store =
+    LAMBDA(m : Name) :
+      IF m = n
+      THEN v
+      ELSE st(m)
+      ENDIF
+
+
+  % to be defined!
+  eval(e : Expr)(st : Store) : Val
+
+  % type checking problem, because program expressions cannot be evaluated
+  execute_actions(stA : Store, l : Action) : RECURSIVE Store =
+    IF null?(l)
+    THEN stA
+    ELSE execute_actions(update(stA)(source(car(l)))
+                                    (eval(target(car(l)))(stA)), cdr(l))
+    ENDIF
+  MEASURE length(l)
+
+  step(a) : [AState, PEvent -> AState] =
+    LAMBDA(x : AState, p : PEvent) : 
+      LET t = choose(LAMBDA(t : Transition) : 
+                       ts(a)(t) AND 
+                       scp(t) = cp(x) AND 
+                       event(t) = event(p) AND
+                       guard(t)(stA(x), stP(p))) IN
+      (# cp := tcp(t),
+         stA := execute_actions(stA(x), action(t))
+      #)
+         
+  
+   
+END MVA_Semantics

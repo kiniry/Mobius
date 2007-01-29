@@ -1,0 +1,29 @@
+MonitoredProgram[CP : TYPE, Name : TYPE+] : THEORY
+BEGIN
+
+  IMPORTING Program[Name],
+            MVA[CP, Name]
+
+  MonitoredProgram : TYPE =
+    [# mva : MVA[CP, Name],
+       program : Program[Name]
+    #]
+
+  compatible(a : MVA[CP, Name])(P : Program[Name]) : boolean =
+    EXISTS (c : Class) : 
+      classes(P)(c) AND 
+      name(c) = classname(a) AND
+      (FORALL(v : MVA_VarDecl) :
+         vdsA(a)(v) IMPLIES 
+           EXISTS(pv : GhostVarDecl) : ghostvars(c)(pv) AND
+                                       name(v) = name(pv) AND
+                                       jtype(v) = jtype(pv)) AND
+      (FORALL(v : Prog_VarDecl) :
+        vdsP(a)(v) IMPLIES
+          EXISTS(pv : FieldDecl) : fields(c)(pv) AND name(v) = name(pv))
+    
+  monitored?(MP : MonitoredProgram) : boolean =
+    compatible(mva(MP))(program(MP))
+    
+
+END MonitoredProgram
