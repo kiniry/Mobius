@@ -43,11 +43,7 @@ Invariants = String! inv; Invariants tail;
   if (
     \children[||]{(\member_name != null && \member_name != old_\member_name)}
   ) return new \MemberType(
-    \members[,]{
-      old.get\MemberName() // for primitives (non-children)
-    }{
-      \member_name // for children
-    }
+    \members[,]{\if_primitive{old.get\MemberName()}{\member_name}}
   )
   }
 }
@@ -71,8 +67,6 @@ square brackets and mandatory arguments to contain balanced curly
 brackets.)
 </p>
 
-<p>The C++ style comments in the template are stripped by the code generator.</p>
-
 <p>Here is the full list of macros:</p>
 
 <table border="1">
@@ -87,19 +81,25 @@ freely for comments.</td>
 </tr>
 
 <tr>
-<td>\classes[<i>sep</i>]{<i>abstract</i>}{<i>normal</i>}</td>
-<td>For each class writes <i>abstract</i> if it is abstract or <i>normal</i>
-if it is normal. A separator <i>sep</i> is used if specified.</td>
+<td>\classes[<i>sep</i>]{<i>text</i>}</td>
+<td>For each class writes <i>text</i>.
+    A separator <i>sep</i> is used if specified.</td>
+</tr>
+
+<tr>
+<td>\is_abstract{<i>yes</i>}{<i>no</i>}</td>
+<td>If the current class is abstract writes <i>yes</i>, otherwise
+writes <i>no</i>.</td>
 </tr>
 
 <tr>
 <td>\abstract_classes[<i>sep</i>]{<i>text</i>}</td>
-<td>\classes[<i>sep</i>]{<i>text</i>}{}</td>
+<td>\classes[<i>sep</i>]{\is_abstract{<i>text</i>}{}}</td>
 </tr>
 
 <tr>
 <td>\normal_classes[<i>sep</i>]{<i>text</i>}</td>
-<td>\classes[<i>sep</i>]{}{<i>text</i>}</td>
+<td>\classes[<i>sep</i>]{\is_abstract{}{<i>text</i>}}</td>
 </tr>
 
 <tr>
@@ -113,20 +113,31 @@ if it is normal. A separator <i>sep</i> is used if specified.</td>
 </tr>
 
 <tr>
-<td>\members[<i>sep</i>]{<i>primitive</i>}{<i>child</i>}</td>
-<td>For each member of the current class write <i>primitive</i> if it
-is a primitive or write <i>child</i> if it is a non-primitive. A
-separator <i>sep</i> is used if specified.</td>
+<td>\members[<i>sep</i>]{<i>text</i>}</td>
+<td>For each member of the current class writes <i>text</i>.
+    A separator <i>sep</i> is used if specified.</td>
+</tr>
+
+<tr>
+<td>\if_primitive{<i>yes</i>}{<i>no</i>}</td>
+<td>If the current member is a primitive writes <i>yes</i>, otherwise
+writes <i>no</i>.</td>
+</tr>
+
+<tr>
+<td>\if_nonnull{<i>yes</i>}{<i>no</i>}</td>
+<td>If the current member is a nonnull writes <i>yes</i>, otherwise
+writes <i>no</i>.</td>
 </tr>
 
 <tr>
 <td>\children[<i>sep</i>]{<i>text</i>}</td>
-<td>\members[<i>sep</i>]{}{<i>text</i>}</td>
+<td>\members[<i>sep</i>]{\if_primitive{}{<i>text</i>}}</td>
 </tr>
 
 <tr>
 <td>\primitives[<i>sep</i>]{<i>text</i>}</td>
-<td>\members[<i>sep</i>]{<i>text</i>}{}</td>
+<td>\members[<i>sep</i>]{\if_primitive{<i>text</i>}{}}</td>
 </tr>
 
 <tr>
