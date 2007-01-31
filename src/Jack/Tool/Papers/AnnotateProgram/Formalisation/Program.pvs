@@ -81,7 +81,6 @@ BEGIN
 
 END Stmt
 
-
 SizeFunctions[Name : TYPE+] : THEORY
 BEGIN
 
@@ -176,9 +175,9 @@ BEGIN
                     superClass : lift[Name],
                     % simplified: single invariant
                     inv : BoolExpr,
-                    ghostvars : list[GhostVarDecl],
+                    ghostvars : set[GhostVarDecl],
                     fields : list[FieldDecl],
-                    methods : list[Method] #]
+                    methods : set[Method] #]
 
   Program : TYPE = [# classes : list[Class] #]
 

@@ -29,7 +29,9 @@ BEGIN
 
   Store : TYPE = [Name -> Val]
 
-  Guard : TYPE = [Store, Store -> boolean]
+  IMPORTING State[Name]
+
+  Guard : TYPE = [Store, PSt -> boolean]
 
   OneAction : TYPE =
     [# source : Name,
@@ -66,8 +68,11 @@ BEGIN
        ts : set[Transition] 
     #]
 
+  halted : CP
+
+
   deterministic(a : MVA) : boolean =
-    FORALL(q : CP, e : Event, stA : Store, stP : Store,
+    FORALL(q : CP, e : Event, stA : Store, stP : PSt,
            p : Guard, t : Transition) :
       cps(a)(q) IMPLIES 
       evs(a)(e) IMPLIES
@@ -84,7 +89,7 @@ BEGIN
 
   total(a : MVA) : boolean =
     deterministic(a) AND
-    FORALL(q : CP, e : Event, stA, stP : Store) :
+    FORALL(q : CP, e : Event, stA : Store, stP : PSt) :
       EXISTS(t : Transition) : ts(a)(t) AND
                                scp(t) = q AND
                                event(t) = e AND
@@ -94,7 +99,7 @@ BEGIN
 END MVA
 
 
-MVA_Semantics[CP : TYPE, Name : TYPE+] : THEORY
+MVA_Semantics[CP : TYPE+, Name : TYPE+] : THEORY
 BEGIN
 
   IMPORTING MVA[CP, Name]
@@ -107,7 +112,7 @@ BEGIN
     #]
 
   PEvent : TYPE =
-    [# stP : Store,
+    [# stP : PSt,
        event : Event
     #]
 
@@ -146,3 +151,38 @@ BEGIN
   
    
 END MVA_Semantics
+
+
+MVACompletion[CP, Name : TYPE+] : THEORY
+BEGIN
+
+  IMPORTING MVA[CP, Name]
+
+  a: VAR MVA
+
+  all_guards(cp : CP, e : Event, ts : set[Transition]) : set[Guard] =
+    {p : Guard | EXISTS (t : Transition) : ts(t) AND scp(t) = cp AND
+                                           event(t) = e AND guard(t) = p}
+       
+    
+  build_guard(cp : CP, e : Event, ts : set[Transition]) : Guard = 
+    LAMBDA(stA : Store, stP : PSt) :
+      FORALL(p : Guard) : all_guards(cp, e, ts)(p) IMPLIES NOT p(stA, stP)
+    
+  completeTrans(cps : set[CP], es : set[Event], ts : set[Transition]) :
+      set[Transition] =
+      union({t : Transition | cps(scp(t)) AND es(event(t)) AND
+                              action(t) = skip AND tcp(t) = halted AND
+                              guard(t) = build_guard(scp(t), event(t), ts)},
+            {t : Transition | scp(t) = halted AND es(event(t)) AND
+                              guard(t) = LAMBDA(stA : Store, stP : PSt) : TRUE
+                              AND action(t) = skip AND tcp(t) = halted})
+  completeMVA(a) : MVA =
+    a WITH [cps := add(halted, cps(a)),
+            ts := union(ts(a), completeTrans(cps(a), evs(a), ts(a)))]
+
+  completeMVA_is_total : LEMMA
+    FORALL(a : MVA) :
+      total(completeMVA(a))
+
+END MVACompletion
