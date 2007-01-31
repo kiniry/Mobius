@@ -16,7 +16,7 @@ public class AgMember {
   public String name = null;
 
   /** Whether this member is a primitive. */
-  public boolean primitive = false;
+  public boolean primitive = true;
 
   /**
    * Whether this member should be non-null. (note: This is about members in the
