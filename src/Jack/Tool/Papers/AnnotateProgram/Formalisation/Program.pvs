@@ -175,9 +175,9 @@ BEGIN
                     superClass : lift[Name],
                     % simplified: single invariant
                     inv : BoolExpr,
-                    ghostvars : set[GhostVarDecl],
+                    ghostvars : finite_set[GhostVarDecl],
                     fields : list[FieldDecl],
-                    methods : set[Method] #]
+                    methods : finite_set[Method] #]
 
   Program : TYPE = [# classes : list[Class] #]
 

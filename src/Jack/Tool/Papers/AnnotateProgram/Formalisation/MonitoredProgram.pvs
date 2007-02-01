@@ -23,7 +23,7 @@ BEGIN
           EXISTS(pv : FieldDecl) : fields(c)(pv) AND name(v) = name(pv))
     
   monitored?(MP : MonitoredProgram) : boolean =
-    compatible(mva(MP))(program(MP))
+    compatible(mva(MP))(program(MP)) AND total(mva(MP))
     
 
 END MonitoredProgram

@@ -8,7 +8,7 @@ BEGIN
 END EventType
   
 
-MVA [CP : TYPE, Name : TYPE+] : THEORY
+MVA [CP, Name : TYPE+] : THEORY
 BEGIN
 
   IMPORTING JType,
@@ -60,12 +60,12 @@ BEGIN
   MVA : TYPE =
     [# name : Name,
        classname : Name,
-       cps : set[CP],
+       cps : finite_set[CP],
        init_cp : CP,
-       evs : set[Event],
-       vdsA : set[MVA_VarDecl],
-       vdsP : set[Prog_VarDecl],
-       ts : set[Transition] 
+       evs : finite_set[Event],
+       vdsA : finite_set[MVA_VarDecl],
+       vdsP : finite_set[Prog_VarDecl],
+       ts : finite_set[Transition] 
     #]
 
   halted : CP
@@ -160,17 +160,19 @@ BEGIN
 
   a: VAR MVA
 
-  all_guards(cp : CP, e : Event, ts : set[Transition]) : set[Guard] =
+  all_guards(cp : CP, e : Event, 
+             ts : finite_set[Transition]) : finite_set[Guard] =
     {p : Guard | EXISTS (t : Transition) : ts(t) AND scp(t) = cp AND
                                            event(t) = e AND guard(t) = p}
        
     
-  build_guard(cp : CP, e : Event, ts : set[Transition]) : Guard = 
+  build_guard(cp : CP, e : Event, ts : finite_set[Transition]) : Guard = 
     LAMBDA(stA : Store, stP : PSt) :
       FORALL(p : Guard) : all_guards(cp, e, ts)(p) IMPLIES NOT p(stA, stP)
     
-  completeTrans(cps : set[CP], es : set[Event], ts : set[Transition]) :
-      set[Transition] =
+  completeTrans(cps : finite_set[CP], es : finite_set[Event], 
+                ts : finite_set[Transition]) :
+      finite_set[Transition] =
       union({t : Transition | cps(scp(t)) AND es(event(t)) AND
                               action(t) = skip AND tcp(t) = halted AND
                               guard(t) = build_guard(scp(t), event(t), ts)},
