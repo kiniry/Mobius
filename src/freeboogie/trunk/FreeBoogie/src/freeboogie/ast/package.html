@@ -33,7 +33,7 @@ and <code>C</code> are derived from <code>A</code>. The composition rule
 <code>A = B f1, C f2</code> means that class <code>A</code> has a field
 <code>f1</code> of type <code>B</code> and a field <code>f2</code> fo type
 <code>C</code>. In this context a type (<code>B</code> or <code>C</code>)
-can have the special form <tt>enum(ENUM_NAME; VAL1, VAL2, ...)</tt>.
+can have the special form <tt>enum(ENUM_NAME: VAL1, VAL2, ...)</tt>.
 All the values corresponding to a certain enum name (there might be more than
 one occurence of the name!) appear in an enum declaration embedded in the
 current class. A type name followed by an exclamation mark means that 
@@ -56,7 +56,7 @@ Declaration :> TypeDecl, ConstantDecl, Function, Axiom, VariableDecl,
 Type :> PrimitiveType, Identifier, ArrayType, MatrixType;
 ArrayType = Type! indexType, Type! elemType;
 MatrixType = Type! rowType, Type! colType, Type! elemType;
-PrimitiveType = enum(Literal; BOOL, INT, REF, NAME, ANY) val;
+PrimitiveType = enum(Literal: BOOL, INT, REF, NAME, ANY) val;
 TypeDecl = String! name;
 ConstantDecl = String! id, Type! type;
 
@@ -68,37 +68,37 @@ VariableDecl = String name, Type! type; // split the case were name is mandatory
 
 // Procedures and implementations
 Procedure = Function! signature, Specification spec, Body body;
-Specification = enum(Type; REQUIRES, MODIFIES, ENSURES) type,
+Specification = enum(Type: REQUIRES, MODIFIES, ENSURES) type,
                 Expr! expr, Specification tail;
 Implementation = Function! signature, Body! body;
 Body = LocalDecls vars, Block! block;
 LocalDecls = VariableDecl! decl, LocalDecls tail;
 Block = String! name, Commands cmds, BlockEnd! end;
-BlockEnd = enum(Type;GOTO, RETURN) type, Identifiers dest;
+BlockEnd = enum(Type: GOTO, RETURN) type, Identifiers dest;
 
 // Commands
 Commands = Command! cmd, Commands tail;
 Command :> AssignmentCmd, AssertAssumeCmd, HavocCmd, CallCmd;
 AssignmentCmd = String! lhs, Index idx, Expr! rhs;
-AssertAssumeCmd = enum(Type;ASSERT, ASSUME) type, Expr! expr;
+AssertAssumeCmd = enum(Type: ASSERT, ASSUME) type, Expr! expr;
 HavocCmd = String! name;
 CallCmd = String! function, Identifiers results, Exprs args;
 Index = Expr! a, Expr b
 
 // Expressions
 Expr :> BinaryOp, UnaryOp, Atom;
-BinaryOp = enum(Op; PLUS, MINUS, MUL, DIV, MOD, EQ, NEQ, LT, LE
+BinaryOp = enum(Op: PLUS, MINUS, MUL, DIV, MOD, EQ, NEQ, LT, LE
                     GE, GT, SUBTYPE, EQUIV, IMPLIES, AND, OR) op,
            Expr! left, Expr! right;
-UnaryOp = enum(Op; MINUS, NOT) op, Expr! e;
-Atom <: AtomLit, AtomNum, AtomId, AtomFun, AtomOld, AtomCast, AtomQuant;
-AtomLit = enum(Type; FALSE, TRUE, NULL) val;
+UnaryOp = enum(Op: MINUS, NOT) op, Expr! e;
+Atom :> AtomLit, AtomNum, AtomId, AtomFun, AtomOld, AtomCast, AtomQuant;
+AtomLit = enum(Type: FALSE, TRUE, NULL) val;
 AtomNum = int val;
 AtomId = String! id;
 AtomFun = String! function, Exprs args;
 AtomOld = Expr! e;
 AtomCast = Expr! e, Type! type;
-AtomQuant = enum(Type; EXISTS, FORALL) quant, VariableDecls! vars, Expr! e;
+AtomQuant = enum(Type: EXISTS, FORALL) quant, VariableDecls! vars, Expr! e;
 
 // Some simple lists
 Identifiers = String! name, Identifiers tail;
@@ -111,8 +111,11 @@ Specification: type==Type.MODIFIES ==> \typeof(expr)==Identifier;
 
 <h2>TODO</h2>
 
-Transformer (path compression), parsing of subexprs, strings/streams 
-(or should I put some of these in freeboogie.parser?)
+<p>Transformer (path compression), parsing of subexprs, strings/streams 
+(or should I put some of these in freeboogie.parser?)</p>
+
+<p>The parser is generated with ANTLR. I must study if it's possible
+to provide wrappers that offer the CIL interface: Parse.expr("x+2").</p>
 
 </body>
 
