@@ -15,17 +15,18 @@ bytecode; and
 \item support for interactive verification, both practical
 (development of user interface and tactics) and theoretical (native
 construct to link JML (or BML) specifications with the logic of the
-underlying theorem prover.
+underlying theorem prover).
 \end{itemize}
 
 The JACK tool has been used for several small to medium-scale case
-studies. First of all, we have shown how BML annotations can be
-used to guarantee resource policies related to memory consumptions on
+studies. First of all, we have shown how BML annotations can be used
+to guarantee resource policies related to memory consumptions on
 bytecode applications~\cite{gmg05:sefm}. In addition, we have also
 shown how the verification of exception-freeness at bytecode level can
 be used to reduce the footprint of Java-to-native compilation schemes:
 any condition for a run-time exception for which we can show that it
-will never happen, does not have to be checked at run-time.
+will never happen, does not have to be checked at
+run-time~\cite{DBLP:conf/cardis/CourbotPGV06}.
 
 
 Development and maintenance of a verification tool for a realistic
@@ -35,19 +36,29 @@ has resulted in a drastic improvement of the technologies available to
 verify applications. However, we believe that now the moment has come
 to combine the different technologies, and to bundle this into one
 powerful verification tool. Development of such a tool is one of the
-goals of the IST Mobius project. It is foreseen that all technology
+goals of the IST \textsf{Mobius} project. It is foreseen that all technology
 developed around JACK that distinguish it from other verification
 tools will be integrated in this single verification tool. 
 
-On a more long-term base, work around the single Mobius tool should
-also address limitations of the JML technology, and increase support
-for automation, both at the level of specification and
-verification. In addition, future work should also provide support for
-refinement in JML, as well as for using automated testing techniques
-for proof obligations that have not been discharged
-automatically. This should contribute to making the use of formal
-techniques in Java validation cost effective, and to provide rigorous
-and automated support to facilitate the security evaluations of 
-applications for trusted personal devices.
+Work around this single \textsf{Mobius} tool should also address
+limitations of the JML technology, and increase support for
+automation, both at the level of specification and verification. In
+addition, future work should also provide support for refinement in
+JML, as well as for using automated testing techniques for proof
+obligations that have not been discharged automatically. This would
+make the use of formal techniques in Java validation cost effective,
+and provide rigorous and automated support to facilitate the security
+evaluations of applications for trusted personal devices.
+
+\paragraph{Related work}
+\begin{itemize}
+\item Other Java/JML tools: ESC/Java, Jive, Key, LOOP, jmlc
+\item Spec\#
+\item JMLEclipse
+\item Bytecode verification platforms EVP, JVer
+\item Fradet for annotation generation?
+\item Claude's JML-ADT
+\end{itemize}
+
 
 \subsection*{Acknowledgements}

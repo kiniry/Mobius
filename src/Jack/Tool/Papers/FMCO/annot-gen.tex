@@ -1,129 +1,115 @@
 \section{Generating JML Annotations}\label{SecAnnotGen}
 
 While JML is easily accessible to Java developers, actually writing
-the specifications of a smart card application is labour-intensive and
-error-prone, as it is easy to forget some annotations. There
-exist tools which assist in writing these annotations,
+the specifications of an application is labour-intensive and
+error-prone, as it is easy to forget some annotations. There exist
+tools which assist in writing these annotations,
 \emph{e.g.}~Daikon~\cite{ErnstCGN01} and Houdini~\cite{FlanaganL01}
 use heuristic methods to produce annotations for simple safety and
 functional invariants.  However, these tools cannot be guided by the
 user---they do not require any user input---and in particular cannot
-be used to synthesise annotations from realistic security policies.
+be used to generate annotations from realistic security policies.
 
 Within JACK, we have implemented several algorithms to generate
-annotations. We can distinguish two sorts of applications for
-annotation generation. The first goal is to generate as much
-``obvious'' annotations as possible, to reduce the burden of
-annotation writing. Given an existing, unannotated, application, one
-first tries to generate preconditions automatically, before specifying
-the more interesting parts of the specification. The second goal is to
-encode high-level properties by encoding these with simple JML
-annotations, that are inserted at all appropriate points in the
-application, so that they can be checked statically.
-
-JACK implements algorithms for both goals, and both will be described
-in this section.
+annotations. We can distinguish two goals for annotation
+generation. The first is to reduce the burden of annotation writing by
+generating as much ``obvious'' annotations as possible. Given an
+existing, unannotated, application, one first generates these obvious
+annotations automatically, before developing the more interesting
+parts of the specification. The second goal is to encode high-level
+properties by encoding these with simple JML annotations, that are
+inserted at all appropriate points in the application, so that they
+can be checked statically.  JACK implements algorithms for both goals,
+as described in this section.
 
 
 \subsection{Generation of Preconditions and Frame Conditions}
 JACK implements two different algorithms to generate ``obvious''
 annotations. The first algorithm is a simple static analysis on the
-program text, which generates modifies clauses. Whenever it sees
-assignments or method calls that change (specification) publicly
-visible fields, these fields are added to the method's modifies
-clause. The algorithm uses a safe over-approximation: whenever it
-encounters references that might be aliased, it will simply generate a
-clause \texttt{modifies \bsl everything;}.
+program text, which generates frame conditions. Whenever it sees
+assignments or method calls that change (specification) public fields,
+these fields are added to the method's assignable clause. The
+algorithm uses a safe over-approximation: whenever it encounters
+references that might be aliased, it generates a clause
+\texttt{assignable \bsl everything;}.
 
-JACK also implements an algorithm to generate the minial preconditions
-to avoid nullpointer and array-out-of-bounds exceptions. This
-algorithm re-uses the implementation of the weakest precondition
-calculus: it computes the weakest precondition for the specification
-\texttt{exsures (NullPointerException) false} (\texttt{exsures
-(ArrayIndexOutOfBoundsException) false}) and inserts this as an
-annotation in the code. 
+JACK also implements an algorithm to generate minimal preconditions to
+avoid nullpointer and array-out-of-bounds exceptions. This algorithm
+re-uses the implementation of the wp-calculus: it computes the weakest
+precondition for the specification
+\texttt{signals (NullPointerException) false;} (resp. \texttt{signals
+(ArrayIndexOutOfBoundsException) false;}) and inserts this as 
+annotation in the code.
 
-As an example, Figure~\ref{FigAnnotSpec} shows the annotations that
-are generated for a fragment of the class QuickSort that was presented in
-Figure~\ref{FigJMLSpec}. 
+%\marginpar{MH: Example with more useful assignable clause?}
+
 \begin{figure}[t!]
 {\small
 \begin{verbatim}
-public class QuickSort {
-  private int [] tab;
+/*@ requires this.tab!=null;
+    assignable \everything;
+    signals (Exception) false;
+  @*/
+public void sort() {if(tab.length > 0) sort(0, tab.length -1);}
 
-  /*@ requires this.tab!=null;
-      modifies \everything;
-      exsures (Exception ) false;
-    @*/
-  public void sort() {if(tab.length > 0) sort(0, tab.length -1);}
-
-   /*@ requires this.tab!=null&& 
-                0<=j&& j<this.tab.length&&
-                0<=i&& i<this.tab.length;
-       modifies \everything;
-       exsures (Exception ) false;
-    @*/
-  public void swap(int i, int j) {int tmp; tmp = tab[i]; 
-                                  tab[i] = tab[j]; tab[j] = tmp;}
-
-  ...
-}
+/*@ requires this.tab!=null && 0<=j && j<this.tab.length &&
+             0<=i && i<this.tab.length;
+    assignable \everything;
+    signals (Exception) false;
+ @*/
+public void swap(int i, int j) {int tmp; tmp = tab[i]; 
+                                tab[i] = tab[j]; tab[j] = tmp;}
 \end{verbatim}
 }
-\caption{Annotations Generated for a Fragment of Class
+\caption{Annotations generated for a fragment of class
 \texttt{QuickSort}}\label{FigAnnotSpec} 
 \end{figure}
-It is important to realise that, even though the specifications that
-are generated are not very spectacular, the fact that they can be
-generated \emph{automatically} can help significantly to reduce the
-burden of annotation writing.
 
-Notice that the annotation generation can be further improved by doing
-some simple analysis on the generated annotations. Often it is the
-case that the preconditions that are generated for the fields of the
-class are the same for (almost) all the methods. In that case, this
-condition is most likely a class invariant, and instead of generating
-it as a precondition for each method, it would be more appropriate to
-generate a single class invariant. In the class \texttt{QuickSort} in
-Figure~\ref{FigAnnotSpec}, this would lead to a clause
+As an example, Figure~\ref{FigAnnotSpec} shows the annotations that
+are generated for some methods of the class \texttt{QuickSort} of
+Figure~\ref{FigJMLSpec}.
+It is important to realise that the specifications that
+are generated might not be very spectacular, but they are
+generated \emph{automatically}. % can help significantly to reduce the
+%burden of annotation writing.
+
+The annotation generation can be further improved by applying a simple
+analysis on the generated annotations. Often it is the case that the
+preconditions that are generated for the fields of the class are the
+same for (almost) all methods. In that case, this condition is likely
+to be a class invariant, and instead of generating a precondition for
+each method, it would be more appropriate to generate a single class
+invariant. For example, for the class
+\texttt{QuickSort}, this would produce an annotation
 \texttt{invariant this.tab!=null;}. It is future work to implement
-this improvement.
+this.
 
 \subsection{Encoding of Security Policies}
 
-Another problem when writing annotations is that a conceptually simple
-high-level property can give rise to many different annotations,
-scattered through the code, that encode this property. This is
-typically the case for many security policies. Current software
+Another difficulty when writing annotations is that a conceptually
+simple high-level property can give rise to many different
+annotations, scattered through the code, to encode this property. This
+is typically the case for many security policies. Current software
 practice for the development of applications for trusted personal
-devices is that security policies give rise to a set of rules that
-should be obeyed by the implementation. Obedience to these rules is
-established by manual code inspection.
+devices is that security policies give rise to a set of \emph{security
+rules} that should be obeyed by the implementation. Obedience to these
+rules is established by manual code inspection; however it is
+desirable to have tool support for this, because a typical security
+property may involve several methods from different classes.  Many of
+the security rules can be formalised as simple automata, which are
+amenable to formal verification. Therefore, we propose a method that
+given a security rule, automatically annotates an application, in such
+a way that if the application respects the annotations then it also
+respects the security policy.
 
-However, many of these rules can be formalised as simple automata,
-which are amenable to formal verification. Therefore, we propose a
-method that given a rule to guarantee a security policy, automatically
-annotates an application, in such a way that if the application
-respects the annotations then it also respects the security
-policy. The generation of annotations proceeds in two phases:
-synthesising and weaving.
-\begin{enumerate}
-\item Based on the security policy we \emph{synthesise} core annotations, 
-specifying the behaviour of the methods directly involved.
-\item Next we propagate these annotations to all methods directly or
-indirectly invoking the methods that form the core of the security
-policy, thus \emph{weaving} the security policy throughout the
-application.
-\end{enumerate} 
-The need for such the propagation phase stems from the fact that we
-are interested in doing static verification. The annotations that we
-generate all use JML static ghost variables; since we use only static
-ghost variables, the properties are independent of the particular
-class instances available. Notice that it is important to have tool
-support for the propagation, because a typical security property may
-involve methods from different classes, as will be illustrated by an
-example below.
+The generation of annotations proceeds in two phases: first we
+generate core-annotations that specify the behaviour of the methods
+directly involved, and next we propagate these annotations to all
+methods directly or indirectly invoking the methods that form the core
+of the security policy. The second phase is necessary because we are
+interested in static verification. The annotations that we generate
+all use only JML static ghost variables; therefore the properties are
+independent of the particular class instances available. 
 
 As a typical example of the kind of security rules our approach can
 handle, we consider the atomicity mechanism in Java Card (Java for
@@ -139,7 +125,8 @@ If something happens while executing the transaction (or if
 \texttt{abortTransaction()} is executed), the card will
 roll back its internal state to the state before the transaction was
 begun. To ensure the proper functioning and prevent abuse of this
-mechanism, several security properties can be specified.
+mechanism, applications should respect for example the following
+security rules. 
 
 \begin{quote}
 \textbf{No nested transactions} Only one level of transactions
@@ -150,25 +137,21 @@ transaction.\smallskip\\
 \textbf{Bounded retries}
 No pin verification may happen within a transaction.
 \end{quote} 
-The second property ensures that the \texttt{commitTransaction} will
-always be executed. If the exception is not caught, the
-\texttt{commitTransaction} would be ignored and the transaction would
-not be finished. The last property excludes pin verification within a
-transaction. If this would be allowed, one could abort the transaction
-every time a wrong pin code has been entered. As this rolls
-back the internal state to the state before the transaction was
+The second rule ensures that a transaction will always be closed,
+because if the exception is not caught, \texttt{commitTransaction}
+will not be executed. The last rule avoids the possibility abort the
+transaction every time a wrong pin code has been entered. As this
+would roll back the internal state to the state before the transaction was
 started, this would also reset the retry counter, thus allowing an
 unbounded number of retries. Even though the specification of the Java
 Card API prescribes that the retry counter for pin verification cannot
 be rolled back, in general one has to check this kind of properties.
 
-These properties can be easily encoded with automata, describing in
+Such properties can be easily encoded with automata, describing in
 which states a certain method is allowed to be called. Based on this
-automata, we then generate the core-annotations.
-
-For example, the core-annotations related to the atomicity properties
-specify the methods related to the transaction mechanism declared in
-class
+automata, we then generate core-annotations. For example, the
+atomicity properties above give rise to core-annotations for the
+methods related to the transaction mechanism declared in class
 \texttt{JCSystem} of the Java Card API. A static ghost variable 
 \begin{verbatim}
 /*@ static ghost int TRANS == 0; @*/
@@ -185,54 +168,16 @@ transactions} property, the core-annotations for method
 public static native void beginTransaction() 
                           throws TransactionException;
 \end{verbatim}
-Similar annotations are synthesised for \texttt{commitTransaction} and
-\texttt{abortTransaction}. After propagation, these annotations are 
-sufficient to check for the
-absence of nested transaction (\cite{PavlovaBBHL04cardis} also
-describes the synthesised core-annotations for the other properties).
-
-\marginpar{MH: we could add more example encodings, but I think it would get a
-bit too long}
-
-%To check for the absence of uncaught exceptions inside transactions,
-%we use a special feature of JACK, namely pre- and postcondition
-%annotations for statement blocks (as mentioned in
-%Section~\ref{SecArchicture}). Block annotations are similar to method
-%specifications. As core-annotation, we add the following annotation
-%for \texttt{commitTransaction}.
-%\begin{verbatim}
-%/*@ exsures (Exception) TRANS == 0; @*/
-%public static native void commitTransaction() 
-%                          throws TransactionException;
-%\end{verbatim}
-%This specifies that exceptions only can occur if no transaction is in
-%progress. Propagating these annotations to statement blocks ending
-%with a commit guarantees that if exceptions are thrown, they have to
-%be caught within the transaction.
-
-%%that these only can raise exceptions, if they
-%%do not start a transaction.
-
-%%An exceptional postcondition is added claiming that an exeption can be
-%%thrown only if no transaction is open.  The propagation of this
-%%exceptional postcondition mechanism leads to annotate the block that
-%%terminates with the commit of the transaction and all calling methods.
-
-%Finally, in order to check that only a bounded number of retries of
-%pin-verification is possible, we annotate the method \texttt{check}
-%(declared in the interface \texttt{Pin} in the
-%standard Java Card API) with a precondition, requiring that no
-%transaction is in progress.
-%\begin{verbatim}
-%/*@ requires TRANS == 0; @*/
-%public boolean check(byte[] pin, short offset, byte length);
-%\end{verbatim}
-
-The next step is to propagate the annotations. To understand why this
-is necessary, suppose we are checking the \textbf{No nested
-transactions} property for an application, containing the following
-fragment (where \texttt{m} does not call any other methods, and does
-not contain any set annotations). 
+Similar annotations are generated for \texttt{commitTransaction} and
+\texttt{abortTransaction}(\cite{PavlovaBBHL04cardis} also
+describes the generated core-annotations for the other
+properties). After propagation, these annotations are sufficient to
+check for the absence of nested transaction.  To understand why
+propagation is necessary, suppose we are checking the \textbf{No
+nested transactions} property for an application, containing the
+following fragment (where
+\texttt{m} does not call any other methods, and does not contain any
+set annotations).
 
 \begin{verbatim}
 void m() { ... // some internal computations
@@ -241,21 +186,19 @@ void m() { ... // some internal computations
            JCSystem.commitTransaction(); }
 \end{verbatim}
 
-When applying static verification on this code fragment, rhe
-core-annotation that is synthesised for \texttt{beginTransaction} will
-give rise to a proof obligation that the precondition of the method
+When applying static verification on this code fragment, the
+core-annotations for \texttt{beginTransaction} will give rise to a
+proof obligation that the precondition of method
 \texttt{m} implies that there is no transaction in progress,
 \emph{i.e.}\ \texttt{TRANS == 0} (since \texttt{TRANS} is not modified
-by the code that precedes the call to 
-\texttt{beginTransaction}). Thus, the only way this proof obligation
-could be established is if the precondition of
-\texttt{beginTransaction} is propagated as a precondition for method
-\texttt{m}. However, the
-precondition for \texttt{commitTransaction} (\texttt{TRANS == 1}) does
-not have to be propagated to the specification of \texttt{m}; instead
-it has to be established by the postcondition of
-\texttt{begin\-Transaction}, because the variable \texttt{TRANS} is
-modified by this method. 
+by the code that precedes the call to \texttt{beginTransaction}). The
+only way this proof obligation can be established is if the
+precondition of \texttt{beginTransaction} is propagated as a
+precondition for method \texttt{m}. In contrast, the precondition for
+\texttt{commitTransaction} (\texttt{TRANS == 1}) does not have to be
+propagated to the specification of \texttt{m}; instead it has to be
+established by the postcondition of \texttt{begin\-Transaction},
+because the variable \texttt{TRANS} is modified by this method.
 
 In a similar way, the postcondition for the method
 \texttt{commitTransaction} is propagated to the postcondition of
@@ -264,18 +207,18 @@ verification of yet another method, that contains a call to method
 \texttt{m}. 
 
 The propagation method not only propagates preconditions and normal
-and exceptional postconditions, it also propagates modifies
+and exceptional postconditions, it also propagates assignable
 clauses. We have shown that the algorithm that we use corresponds to
-an abstract version of the weakest precondition calculus (where we do
-not consider concrete variables). We have exploited this
-correspondence in the implementation, by re-using the weakest
-precondition calculus infrastructure to implement the propagation
-algorithm. For a more formal treatment of the propagation algorithm, and
-the correspondence statement, we refer to~\cite{PavlovaBBHL04cardis}. 
+an abstract version of the wp-calculus (where we only consider
+static variables). We have exploited this correspondence in the
+implementation, by re-using the wp-calculus infrastructure to
+implement the propagation algorithm. For a more formal treatment of
+the propagation algorithm, and the correspondence statement, we refer
+to~\cite{PavlovaBBHL04cardis}.
 
-To illustrate the effectiveness of our approach, we tested our method on realistic examples of
-industrial smart card applications, including the so-called Demoney
-case study, developed as a research prototype by Trusted
+To illustrate the effectiveness of our approach, we tested our method
+on several industrial smart card applications, including the so-called
+Demoney case study, developed as a research prototype by Trusted
 Logic\footnote{{\tt http://www.trusted-logic.fr}}, and the PACAP case
 study\footnote{{\tt
 http://www.gemplus.com/smart/r\_d/publications/case-study}}, developed
@@ -283,39 +226,17 @@ by Gemplus. Both examples have been explicitly developed as test cases
 for different formal techniques, illustrating the different issues
 involved when writing smart card applications. We used the
 core-annotations as presented above, and propagated these throughout
-the applications.
+the applications.  For both applications we found that they contained
+no nested transactions, and that they did not contain attempts to
+verify pin codes within transactions. However, in the PACAP
+application we found transactions containing uncaught exceptions. All
+proof obligations generated \emph{w.r.t.}~these properties are trivial
+and can be discharged immediately. However, to emphasise the
+usefulness of having a tool for generating annotations: we encountered
+cases where a single transaction gave rise to twenty-three annotations
+in five different classes. When writing these annotations manually, it
+is all too easy to forget some.
 
-For both applications we found that they contained no nested
-transactions, and that they did not contain attempts to verify pin
-codes within transactions. However, in the PACAP application we found
-transactions containing uncaught exceptions. All proof obligations
-generated \emph{w.r.t.}~these properties are trivial and can be
-discharged immediately. However, to emphasise once more the usefulness
-of having a tool for generating annotations, in the PACAP case study
-we encountered cases where a single transaction gave rise to
-twenty-three annotations in five different classes. When writing these
-annotations manually, it is very easy to forget some of them.
-
-% Consider for example the following code fragment.
-%\begin{verbatim}
-%void appExchangeCurrency(...) { 
-%  ...
-%  /*@ exsures (Exception) TRANS == 0; @*/ 
-%  { ...
-%  JCSystem.beginTransaction();      
-%  try {balance.setValue(decimal2); ...}
-%  catch (DecimalException e) {
-%    ISOException.throwIt(PurseApplet.DECIMAL_OVERFLOW); }
-%  JCSystem.commitTransaction();
-%  } ... }
-%\end{verbatim}
-%The method \texttt{setValue} that is called can actually throw a
-%decimal exception, which would lead to throwing an ISO exception, and
-%the transaction would not be committed. This clearly violates the
-%security policy as described in
-%Section~\ref{SecHighLevelSecProp}. After propagating the
-%core-annotations, and computing the appropriate proof obligations,
-%this violation is found automatically, without any problems.
 
 
 

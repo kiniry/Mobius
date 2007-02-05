@@ -3,63 +3,72 @@
 
 This section gives a short overview of JML, by means of an
 example. Throughout the rest of this paper, we assume the reader is
-familiar with JML, its syntax and its semantics. For a detailed
-overview of JML we refer to its reference
-manual~\cite{JMLReferenceManual05}. A detailed overview of the tools
-which support JML can be found in~\cite{BurdyCCEKLLP05}.
+familiar with JML, its syntax and semantics. For a detailed overview
+of JML we refer to the reference manual~\cite{JMLReferenceManual05}; a
+detailed overview of the tools that support JML can be found
+in~\cite{BurdyCCEKLLP05}.  We would like to emphasise that JML is a
+general specification language; it does not impose any particular
+design method or application domain, instead JML is able to specify
+the behaviour of any Java program~\cite{LeavensBR06}.
+
 
 
 To illustrate the different features of JML, Figure~\ref{FigJMLSpec}
 shows a fragment of an example class specification, defining the class
 \texttt{QuickSort}. It contains a public method
 \texttt{sort}, that sorts the array stored in the private field
-\texttt{tab}. Sorting is implemented with a private method
+\texttt{tab}. Sorting is implemented via a private method
 \texttt{sort}, that implements the quicksort algorithm, whose
-specification will be discussed below (Section~\ref{SecInteractive}). 
+specification will be discussed below
+(Section~\ref{SecInteractive}). The algorithm uses an auxiliary method
+\texttt{swap} that swaps two elements in the array.
 
 \begin{figure}[t!]
 {\small
 \begin{verbatim}
-/**
- * @author jcharles
- */
+/* @author jcharles */
 public class QuickSort {
-  private int [] tab;
+  /*@ spec_public */ private int [] tab;
 
   public QuickSort(int[] tab) {this.tab = tab;}
 
   /*@ requires (tab != null) ;
-    @ modifies tab[0 .. (tab.length -1)];
+    @ assignable tab[0 .. (tab.length -1)];
     @ ensures (\forall int i, j; 0 <= i && i <= (tab.length - 1) ==> 
     @                            0 <= j && j <= (tab.length - 1) ==>
     @                            i < j ==> tab[i] <= tab[j]) &&
     @         (\forall int i; 0 <= i && i <= (tab.length - 1); 
-    @         (\exists int j; 0 <= j && j <= (tab.length - 1) && 
-    @                         \old(tab[j]) == tab[i])); 
-    @*/
+    @             (\exists int j; 0 <= j && j <= (tab.length - 1) && 
+    @                             \old(tab[j]) == tab[i])); */
   public void sort() {if(tab.length > 0) sort(0, tab.length -1);}
 
   private void sort(int lo, int hi) { ... }
+
+  public void swap(int i, int j) { ... }
 }
 \end{verbatim}
 }
-\vspace*{-1em}\caption{Fragment of Class \texttt{QuickSort} with JML Annotations} 
+\vspace*{-1em}\caption{Fragment of class \texttt{QuickSort} with JML annotations} 
 \label{FigJMLSpec}
 \end{figure}
+
+% spec swap
+%  /*@ requires (tab != null) && (0 <= i) && (i < tab.length) && (0 <=
+%j) && (j < tab.length);
+%    @ assignable tab[i], tab[j];
+%    @ ensures tab[i] == \old(tab[j]) && (tab[j] == \old(tab[i]));
+%    @ exsures (Exception) false; @*/
 
 
 In order not to interfere with the standard Java compiler, JML
 specifications are written as special comments (tagged with
 \texttt{@}). Method specifications contain preconditions (keyword
 \jmlKey{requires}), postconditions (\jmlKey{ensures}) and frame
-conditions (\jmlKey{modifies}). The latter specify which variables
+conditions (\jmlKey{assignable}). The latter specifies which variables
 \emph{may} be modified by a method. In a method body, one can
 annotate all statements with an \jmlKey{assert} predicate and loops
-also with invariants (\jmlKey{loop\unsc invariant}), variants
-(\jmlKey{decreases}) and loop frame conditions (\jmlKey{loop\unsc
-modifies}). The latter is a non-standard extension of JML, introduced
-in~\cite{BurdyRL03}, which we found useful to make program
-verification practical. One can also specify class invariants,
+also with invariants (\jmlKey{loop\unsc invariant}), and variants
+(\jmlKey{decreases}). One can also specify class invariants,
 \emph{i.e.}\ properties that should hold in all visible states of the
 execution, and constraints, describing a relation that 
 holds between any two pairs of consecutive visible states (where
@@ -77,58 +86,14 @@ makes the JML specifications easily accessible to Java developers.
 JML allows to declare special specification-only variables: logical
 variables (with keyword \jmlKey{model}) and so-called \jmlKey{ghost}
 variables, that can be assigned to in special \jmlKey{set}
-annotations.
+annotations. Private program variables can be tagged
+\jmlKey{spec\_public}, meaning that they are publicly visible in 
+specifications.
 
-In Figure~\ref{FigJMLSpec}, the specification for \texttt{sort}
-specifies that after calling the method, the array \texttt{tab} should
-be sorted from low to high, and all elements that occurred in the
-array initially, also occur in its afterwards\footnote{Note that this
-specification does not require that the final value of \texttt{tab} is
-a sorted permutation of its initial value, but this could be expressed
-in JML as well.}
-
-Notice that JML is a general specification language; it does not
-impose any particular design method or application domain, instead JML
-is able to specify the behaviour of any Java
-program~\cite{LeavensBR06}. 
-
-%JML uses Java's expression syntax in assertions,
-%thus JML's notation is easy for programmers to learn.  
-%Because JML supports quantifiers such as
-%\verb_\forall_ and \verb_\exists_, and because JML allows ``model''
-%(i.e., specification-only) fields and methods, specifications can
-%easily be made precise and complete.
-%JML assertions are written as special
-%annotation comments in Java code,
-%so that they are ignored by Java compilers but can be used
-%by tools that support JML\@.  Within annotation comments JML extends the
-%Java syntax with several keywords.  It also extends Java's expression syntax with several
-%operators.
-
-%JML specifications correctness can be verified either during runtime
-%or statically~\cite{BurdyCCEKLLP03}. To be verified during runtime, the
-%source code must have been compiled using \texttt{jmlc}, which is a
-%enhanced Java compiler for JML annotated code. This compiler adds to
-%the generated program assertions checking instructions corresponding
-%to the JML specifications of the program: preconditions, postconditions 
-%and loop or class invariants. An exception is raised during the execution 
-%if a JML condition fails. The JML runtime assertion checker can be used
-%for unit testing~\cite{CL02:ecoop}.
-
-
-%For the static verification of Java programs, several tools are
-%available using (variations of) JML as specification language. These
-%tools adopt different compromises between soundness and automation,
-%and thus it is useful to use them in combination, starting from
-%automatic but unsound tools, and pursuing with sound but interactive
-%tools.  Among these tools, ESC/Java2~\cite{CK04:cassis} offers the higher
-%level of automation as it does not require any user interaction and
-%relies on the Simplify automatic prover. It is particularly useful for
-%checking null pointers or array bounds limits; however it is unsound
-%and incomplete.
-
-%In order to further increase the level of reliability of applications,
-%we propose a methodology based on static verification using
-%JACK~\cite{BRL-JACK}, a tool that generates proof obligations that
-%can be discharged using proof assistants or automatic provers.
+Figure~\ref{FigJMLSpec} specifies for method \texttt{sort} that after
+calling the method, the array \texttt{tab} should be sorted from low
+to high, and all elements that occurred in the array initially, also
+occur in its afterwards\footnote{Note that this specification does not
+require that the final value of \texttt{tab} is a sorted permutation
+of its initial value, but this could be expressed in JML as well.}.
 
