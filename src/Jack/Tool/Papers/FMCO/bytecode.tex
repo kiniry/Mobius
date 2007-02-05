@@ -92,20 +92,45 @@ addition, the specification-specific JML keywords are also available.
 \begin{figure}[t]
 {\small
 \begin{verbatim}
-To do...
+requires this.#14 != null && 0 <= lv(1) && lv(1) < length(this.#14) &&
+         0 <= lv(2) && lv(2) < length(this.#14) && true
+assignable #14.this[lv(2)],#14.this[lv(1)]
+ensures this.#14[lv(1)] == \old(this).\old(#14)[\old(lv(2))] && 
+        this.#14[lv(2)] == \old(this).\old(#14)[\old(lv(1))]
+ 0 aload_0
+ 1 getfield #14 
+ 4 iload_1
+ 5 iaload
+ 6 istore_3
+ 7 aload_0
+ 8 getfield #14 
+11 iload_1
+12 aload_0
+13 getfield #14 
+16 iload_2
+17 iaload
+18 iastore
+19 aload_0
+20 getfield #14 
+23 iload_2
+24 iload_3
+25 iastore
+26 return
 \end{verbatim}
 }
-\vspace*{-1em}\caption{Bytecode + BML specification for method \codeHook{sort} in class \codeHook{QuickSort}}\label{FigBMLSpec}
+\vspace*{-1em}\caption{Bytecode + BML specification for method \codeHook{swap} in class \codeHook{QuickSort}}\label{FigBMLSpec}
 \end{figure}
 
 To show a typical BML specification, Figure~\ref{FigBMLSpec} presents
 the BML version of the JML specification of method
-\codeHook{sort} in Figure~\ref{FigJMLSpec}. 
-Notice that the
-field \codeHook{tab} has been assigned the number ?? in the constant
-pool, and that it is always explicitly qualified with \codeHook{lv[0]}
-(denoting \codeHook{this}). This method does not have parameters, but 
-... \marginpar{TO FINISH}
+\codeHook{swap} in Figure~\ref{FigJMLSpec}. 
+Notice that the field \codeHook{tab} has been assigned the number 14
+in the constant pool, and that it is always explicitly qualified with
+\codeHook{lv[0]} (denoting \codeHook{this}). The method's parameters
+\texttt{i} and \texttt{j} are now denoted by the expressions
+\texttt{lv[1]} and \texttt{lv[2]}, respectively. Notice further that
+the BML specification directly corresponds to the original JML
+specification.
 
 
  

@@ -7,11 +7,11 @@ development process: the application developer does not have to learn
 the peculiarities of a new tool, and does not have to switch tools to
 apply formal verification techniques.
 
-The integration in Eclipse consists of two parts: first there is an
-extension of the standard Java view with special JACK-related actions
-(checking a specification, calling an (automatic) prover \emph{etc.}),
-second there is a special JACK view that allows to inspect the
-generated proof obligations.
+The integration in Eclipse consists of two parts: an extension of the
+standard Java view with special JACK-related actions (checking a
+specification, calling an (automatic) prover \emph{etc.}), and a
+special JACK view to inspect the generated proof
+obligations.
 
 \subsection{Extension of the Java View in Eclipse}
 
@@ -21,8 +21,7 @@ different specification constructs. Further, there are buttons and
 menu-options to ``compile'' a JML specification, (\emph{i.e.}\ type
 check and generate proof obligations), call an automatic prover on all
 the generated proof obligations (either Simplify or a special
-Coq tactic), or change to the JACK view to inspect the
-generated proof obligations.
+Coq tactic), or change to the special JACK view.  
 
 Checking the JML specification is not done automatically, while
 editing the file (as is done for Java); instead the user has to launch

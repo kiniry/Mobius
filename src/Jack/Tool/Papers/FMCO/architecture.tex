@@ -54,17 +54,16 @@ precondition infrastructure.
 %drawbacks?}
 
 
-To ensure that lemma generation can be done automatically and to avoid
-exponential explosion of the number of proof obligations, JACK adds
-uses several new specification constructs, introduced
-in~\cite{BurdyRL03}, which we found useful to make program
-verification practical: loops can be annotated with frame conditions
+To ensure that proof obligations can be generated automatically and to
+avoid exponential explosion of the number of proof obligations, JACK
+adds uses several new specification constructs, introduced
+in~\cite{BurdyRL03}: loops can be annotated with frame conditions
 (\texttt{loop\_modifies}) and exceptional postconditions
 (\texttt{loop\_exsures}), and any code block can be specified with a
 block specification (similar to a method specification). The loop
 frame condition is used in the the wp-calculus to make a universal
-quantification over the loop invariant when generating the
-appropriate proof obligations. Block specifications and
+quantification over the loop invariant when generating the appropriate
+proof obligations. Block specifications and
 \texttt{loop\_exsures} clauses improve readability and reduce the
 number of proof obligations, because they reduce the number of paths
 through a method that have to be considered.

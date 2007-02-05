@@ -14,21 +14,20 @@ the behaviour of any Java program~\cite{LeavensBR06}.
 
 
 To illustrate the different features of JML, Figure~\ref{FigJMLSpec}
-shows a fragment of an example class specification, defining the class
+shows a fragment of a specification of class
 \texttt{QuickSort}. It contains a public method
 \texttt{sort}, that sorts the array stored in the private field
-\texttt{tab}. Sorting is implemented via a private method
+\texttt{tab}. Sorting is implemented via  a method \texttt{swap},
+swapping two elements in the array, and a private method
 \texttt{sort}, that implements the quicksort algorithm, whose
-specification will be discussed below
-(Section~\ref{SecInteractive}). The algorithm uses an auxiliary method
-\texttt{swap} that swaps two elements in the array.
+specification will be discussed below (Section~\ref{SecInteractive}).
 
 \begin{figure}[t!]
 {\small
 \begin{verbatim}
 /* @author jcharles */
 public class QuickSort {
-  /*@ spec_public */ private int [] tab;
+  private int [] tab;
 
   public QuickSort(int[] tab) {this.tab = tab;}
 
@@ -42,9 +41,13 @@ public class QuickSort {
     @                             \old(tab[j]) == tab[i])); */
   public void sort() {if(tab.length > 0) sort(0, tab.length -1);}
 
-  private void sort(int lo, int hi) { ... }
-
+  /*@ requires (tab != null) && (0 <= i) && (i < tab.length) && 
+    @          (0 <= j) && (j < tab.length);
+    @ assignable tab[i], tab[j];
+    @ ensures tab[i] == \old(tab[j]) && (tab[j] == \old(tab[i])); */
   public void swap(int i, int j) { ... }
+
+  private void sort(int lo, int hi) { ... }
 }
 \end{verbatim}
 }
@@ -52,12 +55,6 @@ public class QuickSort {
 \label{FigJMLSpec}
 \end{figure}
 
-% spec swap
-%  /*@ requires (tab != null) && (0 <= i) && (i < tab.length) && (0 <=
-%j) && (j < tab.length);
-%    @ assignable tab[i], tab[j];
-%    @ ensures tab[i] == \old(tab[j]) && (tab[j] == \old(tab[i]));
-%    @ exsures (Exception) false; @*/
 
 
 In order not to interfere with the standard Java compiler, JML
@@ -86,14 +83,14 @@ makes the JML specifications easily accessible to Java developers.
 JML allows to declare special specification-only variables: logical
 variables (with keyword \jmlKey{model}) and so-called \jmlKey{ghost}
 variables, that can be assigned to in special \jmlKey{set}
-annotations. Private program variables can be tagged
-\jmlKey{spec\_public}, meaning that they are publicly visible in 
-specifications.
+annotations. 
 
-Figure~\ref{FigJMLSpec} specifies for method \texttt{sort} that after
-calling the method, the array \texttt{tab} should be sorted from low
-to high, and all elements that occurred in the array initially, also
-occur in its afterwards\footnote{Note that this specification does not
-require that the final value of \texttt{tab} is a sorted permutation
-of its initial value, but this could be expressed in JML as well.}.
+Figure~\ref{FigJMLSpec} specifies that method \texttt{sort} sorts the
+array \texttt{tab} from low to high, and all elements that occurred in
+the array initially also occur in its afterwards\footnote{Note that
+this specification does not require that the final value of
+\texttt{tab} is a sorted permutation of its initial value, but this
+could be expressed in JML as well.}, and that method
+\texttt{swap} swaps the contents of the array at positions \texttt{i}
+and \texttt{j}. 
 
