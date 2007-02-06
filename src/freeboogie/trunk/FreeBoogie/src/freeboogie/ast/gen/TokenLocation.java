@@ -2,14 +2,12 @@
 
 package freeboogie.ast.gen;
 
-import freeboogie.util.Err;
-
 /**
  * @author rgrig 
  * @author reviewed by TODO
  *
  */
-public class TokenLocation implements Location<AgToken> {
+public class TokenLocation extends Location<AgToken> {
   private CharLocation begin;
   private CharLocation end;
   
@@ -21,7 +19,7 @@ public class TokenLocation implements Location<AgToken> {
     end = new CharLocation();
   }
 
-  /* @see freeboogie.ast.gen.Location#advance(java.lang.Object) */
+  @Override
   public void advance(AgToken element) {
     begin = new CharLocation(end);
     for (int i = 0; i < element.rep.length(); ++i)
@@ -30,6 +28,7 @@ public class TokenLocation implements Location<AgToken> {
   
   @Override
   public String toString() {
+    assert begin != null; // should not be called without any call to advance
     return "" + begin + "--" + end;
   }
 

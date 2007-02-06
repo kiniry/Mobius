@@ -5,14 +5,10 @@ package freeboogie.ast.gen;
 /**
  * A simple line column structure.
  * 
- * TODO Do I even need this class or shoul I replace it by a dummy,
- *      say, NullLocation? Ah, I need it in TokenLocation, but I was
- *      talking about CharStream.
- * 
  * @author rgrig 
  * @author reviewed by TODO
  */
-public class CharLocation implements Location<Character> {
+public class CharLocation extends Location<Character> {
   private int line, col;
   private boolean eof;
   
@@ -32,6 +28,7 @@ public class CharLocation implements Location<Character> {
     eof = other.eof;
   }
   
+  @Override
   public void advance(Character element) {
     if (element == null) eof = true;
     if (eof) return;

@@ -2,6 +2,8 @@
 
 package freeboogie.ast.gen;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 import freeboogie.util.Err;
@@ -11,14 +13,18 @@ import freeboogie.util.Err;
  * class names to {@code AgClass} objects plus a couple of utility
  * methods.
  * 
+ * TODO Implement a makeConsistent method
+ * 
  * @author rgrig 
  * @author reviewed by TODO
  */
 public class Grammar {
   
+  private Map<String, AgClass> classes;
+  
   /** Creates a new grammar object. */
   public Grammar() {
-    Err.notImplemented();
+    classes = new HashMap<String, AgClass>(100);
   }
   
   /**
@@ -38,14 +44,21 @@ public class Grammar {
    * @param name the class name
    * @return the {@code AgClass} object representing the class
    */
-  public AgClass getClass(String name) {
-    Err.notImplemented();
-    return null;
+  public AgClass getAgClass(String name) {
+    AgClass cls = classes.get(name);
+    if (cls == null) {
+      cls = new AgClass();
+      classes.put(name, cls);
+      cls.name = name;
+    }
+    return cls;
   }
   
   /**
    * Returns a set view of the classes in the grammar. It is a view
    * in the underlying {@code Map}.
+   * 
+   * TODO Do I need this?
    *  
    * @return a set of the classes in the grammar.
    */

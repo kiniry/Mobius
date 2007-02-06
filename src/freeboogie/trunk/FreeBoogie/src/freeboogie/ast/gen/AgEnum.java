@@ -2,8 +2,8 @@
 
 package freeboogie.ast.gen;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Represents an enum from the abstract grammar.
@@ -16,5 +16,5 @@ public class AgEnum {
   public String name = null;
 
   /** The values of the enum. */
-  public List<String> values = new ArrayList<String>(10);
+  public Set<String> values = new HashSet<String>(10);
 }

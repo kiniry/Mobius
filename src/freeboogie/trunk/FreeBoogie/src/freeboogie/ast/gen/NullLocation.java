@@ -9,9 +9,9 @@ package freeboogie.ast.gen;
  * @author reviewed by TODO
  * @param <T> type
  */
-public class NullLocation<T> implements Location<T> {
+public class NullLocation<T> extends Location<T> {
 
-  /* @see freeboogie.ast.gen.Location#advance(java.lang.Object) */
+  @Override
   public void advance(@SuppressWarnings("unused") T element) {
     // Do nothing
   }

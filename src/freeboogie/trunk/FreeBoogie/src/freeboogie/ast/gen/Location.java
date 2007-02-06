@@ -9,13 +9,13 @@ package freeboogie.ast.gen;
  * @author reviewed by TODO
  * @param <T> the type of the stream element
  */
-public interface Location<T> {
+public abstract class Location<T> {
   
   /**
    * Advance the location by one element.
    * @param element the last element eaten (read) from the stream
    */
-  public void advance(T element);
+  public abstract void advance(T element);
   
   /**
    * Returns a human-readable description of the location of the last
@@ -25,6 +25,7 @@ public interface Location<T> {
    * 
    * @return a human-readable description of the location
    */
-  public String toString();
+  @Override
+  public abstract String toString();
 
 }

@@ -32,6 +32,13 @@ class EofReached extends Exception {
  * TODO Idea: in order to improve error messages I could log them,
  * ask users to send the logs and do an empirical study of typical mistakes.
  * 
+ * TODO Comment this file better. Now it's awful.
+ * 
+ * TODO Perhaps is better to have a variable |lastToken| just as I have
+ *      |lastChar| in the lexer.
+ *      
+ * TODO Have a more error resilient mechanism? (instead of skipping stmts) 
+ * 
  * @author rgrig 
  * @author reviewed by TODO
  */
@@ -42,30 +49,44 @@ public class AgParser {
   private AgLexer lexer;
   private Grammar grammar;
   
+  // TODO: count errors
+  private int errors;
+  
+  private boolean okToFinish;
+  
   /**
    * Creates an AG parser.
    */
   public AgParser() {
     grammar = new Grammar();
+    errors = 0;
+    okToFinish = false;
   }
   
   /**
    * Sets the input stream for the next parsing operation. 
    * @param stream the input stream
+   * @throws IOException 
    */
-  public void setInputStream(InputStream stream) {
+  public void setInputStream(InputStream stream) throws IOException {
     lexer = new AgLexer(new CharStream(stream));
   }
   
   /** 
-   * This will read in an AG from the input stream. 
+   * This will read in an AG from the input stream.
+   * 
+   * TODO Should this return the grammar direcly? 
+   *  
    * @throws IOException if thrown by the underlying stream 
-   * */
+   */
   public void parseAg() throws IOException {
     try {
       while (true) parseStatement();
     } catch (EofReached e) {
-      // normal finish
+      if (!okToFinish) {
+        Err.error("The end of file took me by surprise.");
+        Err.help("Did you forget a semicolon?");
+      }
     }
   }
   
@@ -74,45 +95,184 @@ public class AgParser {
    * @return the grammar
    */
   public Grammar getGrammar() {
-    Err.notImplemented();
-    return null;
+    return grammar;
   }
   
   private void parseStatement() throws IOException, EofReached {
+    okToFinish = true;
     AgToken t = nextToken();
     if (t.type != AgToken.Type.ID) {
-      skipStatement();
+      skipStatementBecauseOf(t);
       return;
     }
+    okToFinish = false;
     
     String className = t.rep;
     t = nextToken();
     if (t.type == AgToken.Type.EQ) {
       // parse "class = members"
-      Err.notImplemented();
+      parseMembers(className);
     } else if (t.type == AgToken.Type.COLON) {
-      // parse "class : spec"
-      Err.notImplemented();
+      // parse "class : spec\n"
+      parseSpec(className);
     } else if (t.type == AgToken.Type.SUPERTYPE) {
       // parse "class :> derived"
-      Err.notImplemented();
+      parseSubclasses(className);
     } else {
-      skipStatement();
+      skipStatementBecauseOf(t);
       return;
     }
-    
-    Err.notImplemented();
+    log.fine("Parsed statement from AG (" + className + ").");
   }
   
-  private void skipStatement() {
-    // TODO: report error and do the skipping to the first semicolon
-    Err.notImplemented();
+  private void parseMembers(String className) 
+  throws IOException, EofReached {
+    AgClass cls = grammar.getAgClass(className);
+
+    AgToken t = nextToken();
+    while (true) {
+      if (t.type == AgToken.Type.SEMICOLON) return;
+      AgMember mem = new AgMember();
+      if (t.type == AgToken.Type.ENUM) {
+        mem.type = parseEnum(cls);
+        if (mem.type == null) return;
+      } else if (t.type == AgToken.Type.ID)
+        mem.type = t.rep;
+      else {
+        skipStatementBecauseOf(t);
+        return;
+      }
+      t = nextToken();
+      if (t.type == AgToken.Type.BANG) {
+        mem.nonNull = true;
+        t = nextToken();
+      }
+      if (t.type != AgToken.Type.ID) {
+        err("I was expecting a name for this member.");
+        skipStatementBecauseOf(t);
+        return;
+      }
+      mem.name = t.rep;
+      cls.members.add(mem);
+      t = nextToken();
+    }
+  }
+  
+  /* Reads all the text up to the first newline */
+  private void parseSpec(String className) throws IOException {
+    AgClass cls = grammar.getAgClass(className);
+    StringBuilder sb = new StringBuilder();
+    AgToken tok = lexer.next();
+    while (tok != null && tok.type != AgToken.Type.NL) {
+      sb.append(tok.rep);
+      tok = lexer.next();
+    }
+    if (tok == null) {
+      Err.error("The spec for '" + className + "' ends abruptly.");
+      Err.help("No newline at the end of the grammar file?");
+    }
+    cls.invariants.add(sb.toString());
+  }
+  
+  private void parseSubclasses(String className) 
+  throws IOException, EofReached {
+    grammar.getAgClass(className);
+    AgToken id, sep;
+    id = nextToken();
+    if (id.type == AgToken.Type.SEMICOLON) {
+      err("This :> statement is meaningless.");
+      return;
+    }
+    sep = nextToken();
+    while (true) {
+      if (id.type != AgToken.Type.ID) {
+        skipStatementBecauseOf(id);
+        return;
+      }
+      AgClass derived = grammar.getAgClass(id.rep);
+      if (derived.base != null) {
+        err("You specify multiple base classes for '" + derived.name +"'");
+        Err.help("I'll use '" + derived.base + "'");
+      } else
+        derived.base = className;
+      if (sep.type == AgToken.Type.SEMICOLON) break;
+      if (sep.type != AgToken.Type.COMMA) {
+        skipStatementBecauseOf(sep);
+        return;
+      }
+    } 
+  }
+  
+  /*
+   * Parses (enum_name; val1, ..., valn), adds this to the class cls,
+   * and returns enum_name. Returns null if parsing fails.
+   */
+  private String parseEnum(AgClass cls) throws IOException, EofReached {
+    AgToken t = nextToken();
+    if (t.type != AgToken.Type.LP) {
+      err("I was expecting '(' after 'enum'.");
+      Err.help("Are you trying to use 'enum' as a type name?");
+      skipStatementBecauseOf(t);
+      return null;
+    }
+    
+    t = nextToken();
+    if (t.type != AgToken.Type.ID) {
+      err("There should be an enum name here.");
+      skipStatementBecauseOf(t);
+      return null;
+    }
+    AgEnum agEnum = cls.getEnum(t.rep);
+    
+    t = nextToken();
+    if (t.type != AgToken.Type.COLON) {
+      err("I was expecting ':' after the enum type name.");
+      skipStatementBecauseOf(t);
+      return null;
+    }
+    t = nextToken();
+    if (t.type == AgToken.Type.RP) return agEnum.name;
+    while (true) {
+      if (t.type != AgToken.Type.ID) {
+        err("I was expecting an enum value.");
+        skipStatementBecauseOf(t);
+        return null;
+      }
+      agEnum.values.add(t.rep);
+      t = nextToken();
+      if (t.type == AgToken.Type.RP) break;
+      if (t.type != AgToken.Type.COMMA) {
+        err("I was expecting a comma between enum values.");
+        skipStatementBecauseOf(t);
+        return null;
+      }
+      t = nextToken();
+    }
+      
+    return agEnum.name;
+  }
+  
+  private void skipStatementBecauseOf(AgToken tok) 
+  throws IOException, EofReached {
+    ++errors;
+    StringBuilder sb = new StringBuilder();
+    err("I'm confused by '" + tok.rep + "'");
+    do {
+      tok = nextToken();
+      sb.append(tok); sb.append(' ');
+    } while (tok.type != AgToken.Type.SEMICOLON);
+    Err.error("I skipped: " + sb);
   }
   
   private AgToken nextToken() throws IOException, EofReached {
     AgToken token = lexer.nextGood();
     if (token == null) throw new EofReached();
+    log.finer("read token: " + token.rep);
     return token;
+  }
+
+  private void err(String e) {
+    Err.error("AG" + lexer.getLoc() + ": " + e);
   }
   
   /**

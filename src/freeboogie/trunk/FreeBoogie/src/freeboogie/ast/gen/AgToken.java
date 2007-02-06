@@ -3,9 +3,10 @@
 package freeboogie.ast.gen;
 
 /**
+ * TODO: description
+ * 
  * @author rgrig 
  * @author reviewed by TODO
- *
  */
 public class AgToken {
 
@@ -14,6 +15,7 @@ public class AgToken {
     /** enum */ ENUM,
     /** = */ EQ,
     /** : */ COLON,
+    /** ; */ SEMICOLON,
     /** :> */ SUPERTYPE,
     /** ! */ BANG,
     /** ( */ LP,
@@ -21,6 +23,7 @@ public class AgToken {
     /** , */ COMMA,
     /** identifier */ ID,
     /** whitespace */ WS,
+    /** new-line */ NL,
     /** comment */ COMMENT,
     /** none of the above */ ERROR
   }
@@ -46,7 +49,10 @@ public class AgToken {
    * @return whether this is a syntactically meaningful token
    */
   public boolean isGood() {
-    return type != Type.ERROR && type != Type.COMMENT && type != Type.WS;
+    return type != Type.ERROR 
+      && type != Type.COMMENT 
+      && type != Type.WS
+      && type != Type.NL;
   }
   
   /**

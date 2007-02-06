@@ -3,6 +3,8 @@
 package freeboogie.ast.gen;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import freeboogie.util.Err;
 
@@ -14,6 +16,19 @@ import freeboogie.util.Err;
  */
 public class AgLexer extends PeekStream<AgToken> {
   
+  private static final Map<Character, AgToken.Type> oneCharTokens
+    = new HashMap<Character, AgToken.Type>(7);
+  
+  static {
+    oneCharTokens.put('=', AgToken.Type.EQ);
+    oneCharTokens.put('!', AgToken.Type.BANG);
+    oneCharTokens.put(',', AgToken.Type.COMMA);
+    oneCharTokens.put(';', AgToken.Type.SEMICOLON);
+    oneCharTokens.put('(', AgToken.Type.LP);
+    oneCharTokens.put(')', AgToken.Type.RP);
+    oneCharTokens.put('\n', AgToken.Type.NL);
+  }
+  
   private CharStream stream;
   private Character lastChar;
   private StringBuilder repBuilder;
@@ -21,11 +36,14 @@ public class AgLexer extends PeekStream<AgToken> {
   /**
    * Initializes the lexer.
    * @param stream the underlying stream
+   * @throws IOException if thrown by the underlying stream
    */
-  public AgLexer(CharStream stream) {
+  public AgLexer(CharStream stream) throws IOException {
     super(new TokenLocation());
     this.stream = stream;
     repBuilder = new StringBuilder();
+    lastChar = ' ';
+    readChar();
   }
   
   private void readChar() throws IOException {
@@ -43,29 +61,20 @@ public class AgLexer extends PeekStream<AgToken> {
    * This method always reads one more character than the recognized
    * token and also eats the read characters from the underlying stream.
    * 
+   * TODO: use a mapping for one-char tokens
+   * 
    * TODO: decide if you keep this method as complex as it stands (likely)
    *       and, if so, explain why
+   *       
    * 
    * @see freeboogie.ast.gen.PeekStream#read()
    */
   @Override
   public AgToken read() throws IOException {
-    AgToken.Type type = null;
     if (lastChar == null) return null;
-    else if (lastChar == '=') {
-      type = AgToken.Type.EQ;
-      readChar();
-    } else if (lastChar == '!') {
-      type = AgToken.Type.BANG;
-      readChar();
-    } else if (lastChar == ',') {
-      type = AgToken.Type.COMMA;
-      readChar();
-    } else if (lastChar == '(') {
-      type = AgToken.Type.LP;
-      readChar();
-    } else if (lastChar == ')') {
-      type = AgToken.Type.RP;
+    
+    AgToken.Type type = oneCharTokens.get(lastChar);
+    if (type != null) {
       readChar();
     } else if (Character.isWhitespace(lastChar)) {
       do readChar();
@@ -111,6 +120,7 @@ public class AgLexer extends PeekStream<AgToken> {
     AgToken r;
     do {
       r = next(); 
+      if (r == null) return null;
       if (r.type == AgToken.Type.ERROR) {
         Err.error("I'm ignoring the yucky character '" 
           + r.rep + "' at " + getLoc());
