@@ -5,6 +5,10 @@ package freeboogie.util;
 /**
  * Provides basic facilities for reporting errors.
  * 
+ * TODO: make the error reporting functions format the result;
+ *       at least, they should make sure no more than 70 characters 
+ *       per line are used
+ * 
  * @author rgrig 
  * @author reviewed by TODO
  */
@@ -35,7 +39,7 @@ public class Err {
    * @param h the help message
    */
   public static void help(String h) {
-    if (verboseLevel.compareTo(Level.HELP) <= 0)
+    if (verboseLevel.compareTo(Level.HELP) >= 0)
       System.err.println(h);
   }
   
