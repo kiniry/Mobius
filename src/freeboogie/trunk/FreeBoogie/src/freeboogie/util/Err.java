@@ -72,6 +72,6 @@ public class Err {
   /** Aborts execution. */
   public static void notImplemented() {
     new Exception().printStackTrace();
-    fatal("not implemented", 255);
+    System.exit(255);
   }
 }
