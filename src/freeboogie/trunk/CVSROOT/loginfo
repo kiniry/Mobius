@@ -26,5 +26,5 @@
 # or
 #DEFAULT (echo ""; id; echo %{sVv}; date; cat) >> $CVSROOT/CVSROOT/commitlog
 
-ALL /var/www/gforge/cronjobs/cvs-cron/syncmail %{sVv} freeeboogie-commits@secure.ucd.ie
+ALL /var/www/gforge/cronjobs/cvs-cron/syncmail %{sVv} freeboogie-commits@secure.ucd.ie
 
