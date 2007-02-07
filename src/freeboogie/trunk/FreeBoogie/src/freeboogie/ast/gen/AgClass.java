@@ -39,7 +39,15 @@ public class AgClass {
    * @return an {@code AgEnum} object representing the requested enum
    */
   public AgEnum getEnum(String enumName) {
-    Err.notImplemented();
-    return null;
+    AgEnum r = null;
+    for (AgEnum it : enums) {
+      if (it.name.equals(enumName)) r = it; 
+    }
+    if (r == null) {
+      r = new AgEnum();
+      r.name = enumName;
+      enums.add(r);
+    }
+    return r;
   }
 }

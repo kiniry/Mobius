@@ -20,7 +20,7 @@ public class CharStream extends PeekStream<Character> {
    * @param stream the input stream
    */
   public CharStream(InputStream stream) {
-    super(new NullLocation<Character>());
+    super(new CharLocation());
     this.stream = stream;
   }
 

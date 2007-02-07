@@ -4,8 +4,6 @@ package freeboogie.ast.gen;
 
 import java.io.IOException;
 
-// TODO: debug and test this
-
 /** A singly-list node. */
 class Node<T> {
   /** data */  public T data;
@@ -29,17 +27,30 @@ class Node<T> {
  * @param <T> the type of the stream elements
  */
 public abstract class PeekStream<T> {
+  /*
+   * TODO The method PeekStream.rewind is never used, probably because
+   * the grammar is (almost) LL(1). Does this mean that I should get rid
+   * of all this buffering stuff?
+   */
   
+  
+  /*
+   * These variables refer to the {@code head}, {@code last} element,
+   * and {@code len}gth of a singly linked list that acts as a buffer.
+   */
   private Node<T> head;
-  
   private Node<T> last;
   private int len;
   
-  private Node<T> curNode;
-  private int curPos;
+  private Node<T> curNode; // curNode.data is what next() will return when called
+  private int curPos;      // 0-based index in the list
   
   private Location<T> loc;
   
+  /*
+   * This rather ugly initialization trick is here to ensure that the
+   * constructor does not throw any exception. (TODO change this?)
+   */
   private boolean initialized;
   
   /**
@@ -55,6 +66,7 @@ public abstract class PeekStream<T> {
     head = last = curNode = new Node<T>(read());
     curPos = 0;
     len = 1;
+    initialized = true;
   }
   
   /**

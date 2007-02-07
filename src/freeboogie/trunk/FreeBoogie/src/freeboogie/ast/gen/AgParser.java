@@ -122,16 +122,19 @@ public class AgParser {
       skipStatementBecauseOf(t);
       return;
     }
+    lexer.eat();
     log.fine("Parsed statement from AG (" + className + ").");
   }
   
   private void parseMembers(String className) 
   throws IOException, EofReached {
     AgClass cls = grammar.getAgClass(className);
+    int memCnt = 0;
 
-    AgToken t = nextToken();
-    while (true) {
-      if (t.type == AgToken.Type.SEMICOLON) return;
+    // The user should not see this sentinel token.
+    AgToken t = new AgToken(AgToken.Type.COMMA, "INTERNAL ERROR"); 
+    while (t.type == AgToken.Type.COMMA) {
+      t = nextToken();
       AgMember mem = new AgMember();
       if (t.type == AgToken.Type.ENUM) {
         mem.type = parseEnum(cls);
@@ -139,6 +142,8 @@ public class AgParser {
       } else if (t.type == AgToken.Type.ID)
         mem.type = t.rep;
       else {
+        if (memCnt == 0) 
+          Err.help("You should specify at least one member in a '=' statement.");
         skipStatementBecauseOf(t);
         return;
       }
@@ -154,8 +159,11 @@ public class AgParser {
       }
       mem.name = t.rep;
       cls.members.add(mem);
+      ++memCnt;
       t = nextToken();
     }
+    if (t.type != AgToken.Type.SEMICOLON) 
+      skipStatementBecauseOf(t);
   }
   
   /* Reads all the text up to the first newline */
@@ -183,7 +191,6 @@ public class AgParser {
       err("This :> statement is meaningless.");
       return;
     }
-    sep = nextToken();
     while (true) {
       if (id.type != AgToken.Type.ID) {
         skipStatementBecauseOf(id);
@@ -195,12 +202,14 @@ public class AgParser {
         Err.help("I'll use '" + derived.base + "'");
       } else
         derived.base = className;
+      sep = nextToken();
       if (sep.type == AgToken.Type.SEMICOLON) break;
       if (sep.type != AgToken.Type.COMMA) {
         skipStatementBecauseOf(sep);
         return;
       }
-    } 
+      id = nextToken();
+    }
   }
   
   /*
@@ -259,9 +268,11 @@ public class AgParser {
     err("I'm confused by '" + tok.rep + "'");
     do {
       tok = nextToken();
-      sb.append(tok); sb.append(' ');
+      if (tok.type == AgToken.Type.ID) sb.append(' ');
+      sb.append(tok.rep);
     } while (tok.type != AgToken.Type.SEMICOLON);
     Err.error("I skipped: " + sb);
+    lexer.eat();
   }
   
   private AgToken nextToken() throws IOException, EofReached {
@@ -271,7 +282,8 @@ public class AgParser {
     return token;
   }
 
-  private void err(String e) {
+  private void err(String e) throws IOException {
+    lexer.eat();
     Err.error("AG" + lexer.getLoc() + ": " + e);
   }
   

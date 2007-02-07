@@ -42,12 +42,11 @@ public class AgLexer extends PeekStream<AgToken> {
     super(new TokenLocation());
     this.stream = stream;
     repBuilder = new StringBuilder();
-    lastChar = ' ';
     readChar();
   }
   
   private void readChar() throws IOException {
-    repBuilder.append(lastChar);
+    if (lastChar != null) repBuilder.append(lastChar);
     lastChar = stream.next();
   }
 
@@ -77,9 +76,8 @@ public class AgLexer extends PeekStream<AgToken> {
     if (type != null) {
       readChar();
     } else if (Character.isWhitespace(lastChar)) {
-      do readChar();
-      while (Character.isWhitespace(lastChar));
       type = AgToken.Type.WS;
+      do readChar(); while (Character.isWhitespace(lastChar));
     } else if (lastChar == ':') {
       readChar();
       if (lastChar == '>') { 
@@ -118,14 +116,7 @@ public class AgLexer extends PeekStream<AgToken> {
    */
   public AgToken nextGood() throws IOException {
     AgToken r;
-    do {
-      r = next(); 
-      if (r == null) return null;
-      if (r.type == AgToken.Type.ERROR) {
-        Err.error("I'm ignoring the yucky character '" 
-          + r.rep + "' at " + getLoc());
-      }
-    } while (!r.isGood());
+    do r = next(); while (r != null && !r.isGood());
     return r;
   }
   
