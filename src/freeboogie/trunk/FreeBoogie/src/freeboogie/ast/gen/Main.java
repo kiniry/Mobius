@@ -37,7 +37,7 @@ public class Main {
       Handler logh = new FileHandler("ast_gen.log");
       logh.setFormatter(new SimpleFormatter());
       log.addHandler(logh);
-      log.setLevel(Level.ALL); // for debug
+      //log.setLevel(Level.ALL); // for debug
     } catch (IOException e) {
       System.err.println("I can't create a log file. Nevermind.");
     }

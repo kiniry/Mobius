@@ -5,8 +5,6 @@ package freeboogie.ast.gen;
 import java.util.ArrayList;
 import java.util.List;
 
-import freeboogie.util.Err;
-
 /**
  * Represents a class from the abstract grammar.
  * 

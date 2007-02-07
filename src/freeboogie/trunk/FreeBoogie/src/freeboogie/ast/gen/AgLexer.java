@@ -6,8 +6,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import freeboogie.util.Err;
-
 /**
  * Recognizes abstract gramamr (AG) tokens.
  * 

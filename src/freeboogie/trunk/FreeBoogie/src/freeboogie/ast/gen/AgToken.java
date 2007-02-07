@@ -49,8 +49,7 @@ public class AgToken {
    * @return whether this is a syntactically meaningful token
    */
   public boolean isGood() {
-    return type != Type.ERROR 
-      && type != Type.COMMENT 
+    return type != Type.COMMENT 
       && type != Type.WS
       && type != Type.NL;
   }
