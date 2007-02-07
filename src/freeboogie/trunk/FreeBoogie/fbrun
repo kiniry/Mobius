@@ -1,0 +1,5 @@
+#!/bin/bash
+SCRIPT=`which $0`
+HERE=`dirname $SCRIPT`
+java -classpath $HERE/classes $*
+
