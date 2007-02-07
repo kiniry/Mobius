@@ -19,7 +19,8 @@
   </target>
 
   <target name="compile" depends="init" description="compile the source ">
-    <javac srcdir="${src}" destdir="${build}" deprecation="yes" optimize="yes">
+    <javac srcdir="${src}" destdir="${build}" 
+           deprecation="yes" optimize="yes" debug="true">
       <classpath refid="classpath" /> 
     </javac>
   </target>
@@ -58,6 +59,7 @@
       <fileset dir="test/functional" includes="**/diff.*" />
       <fileset dir="test/functional" includes="**/out" />
       <fileset dir="test/functional" includes="**/err" />
+      <fileset dir="test/functional" includes="**/*.log" />
     </delete>
     <defaultexcludes remove="**/*~" />
     <delete>
