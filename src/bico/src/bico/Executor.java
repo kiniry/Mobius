@@ -172,17 +172,6 @@ public class Executor extends Object {
 		}
 		System.out.println("Found "+ files.size() +" class file(s) in the working path.");
 
-		// TODO : should be removed : names now defined inside the class modules
-// 		Iterator iter = otherlibs.iterator();
-// 		while(iter.hasNext()) {
-// 			defineLibraryClassName(iter.next().toString());
-// 		}
-// 		iter = files.iterator();
-// 		while(iter.hasNext()) {
-// 			defineDiskClassName(iter.next().toString(), filename.getParent());
-// 		}
-// 		out.newLine();
-
 		// handle library classes specified as 'the other libs'
 		Iterator iter = otherlibs.iterator();
 		while(iter.hasNext()) {
@@ -304,20 +293,6 @@ public class Executor extends Object {
 		throws IOException, MethodNotFoundException, ClassNotFoundException {
 
 		Method[] methods = cg.getMethods();
-
-		// FIXME package names have to be dealt with
-//		String str71 = "  Definition ";
-//		String str7 = "";
-//		str7 = jc.getPackageName();
-//		if (str7.length() == 0) {
-//			str71 = str71.concat("EmptyPackageName");
-//		} else {
-//			str71 = str71.concat(coqify(str7) + "PackageName");
-//		}
-//		str71 = str71.concat(" := 2%positive."); // ??always ????
-//		out.write(str71);
-//		out.newLine();
-//		out.newLine();
 
 		String moduleName = coqify(jc.getClassName());
 		System.out.println("  --> Module " + moduleName + ".");
@@ -879,7 +854,7 @@ public class Executor extends Object {
 			} else if (ins instanceof MULTIANEWARRAY) {
 				ret = Unhandled(ins);
 			} else if (ins instanceof NEW) {
-				ret = name + " " + convertType(type);
+				ret = name + " " + coqify(((NEW) ins).getType(cpg).toString()) + ".className"; //convertType(type);
 			} else
 				ret = Unknown("CPInstruction", ins);
 		} else if (ins instanceof DCMPG) {
