@@ -1,0 +1,5 @@
+1. is there a reason that we want a separate consequent rule?  
+   pro : I do not know. Probably, a set of logic rules provided with a consequence rule is more practical
+
+   cons : in the presence of a consequence rule, we have always the choice to apply one or other rule. This make the derivation "not syntax directed"
+          the proof of correctness is far from evident

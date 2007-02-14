@@ -1,0 +1,16 @@
+
+
+
+
+
+
+
+Language.v - simple programming language which has only normal variables
+Semantic.v - big step operational semantics for programs without ghosts
+Logic.v  - logic for  programs without ghosts
+
+LanguageGhost.v - simple programming language which has normal variables and ghost variables and supports assignments to ghosts
+LogicWithGhost.v  - logic for  programs with ghost
+Main.v - the main lemma of the formalization " PG : A -> translate (PG) : lambda (s1 s2 : state). forall (g1: ghostState) , (exists g2:ghostState), A s1 g1 s2 g2 " 
+
+
