@@ -19,7 +19,7 @@ public class MethodHandler {
 			super(mt.toString());
 		}
 	}
-	ArrayList al = new ArrayList();
+	ArrayList<MethodType> al = new ArrayList<MethodType>();
 	private class MethodType {
 		public final String name;
 		public final Type tret;
@@ -86,9 +86,9 @@ public class MethodHandler {
 		}
 	}
 	
-	private List findByName(MethodType mt) {
+	private List<MethodType> findByName(MethodType mt) {
 		Iterator iter = al.iterator();
-		ArrayList ret = new ArrayList();
+		ArrayList<MethodType> ret = new ArrayList<MethodType>();
 		while(iter.hasNext()) {
 			MethodType tmp = (MethodType)iter.next();
 			if(tmp.name.equals(mt.name)) {
