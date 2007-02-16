@@ -1,11 +1,107 @@
+
+
+
 \section{Support for Interactive Verification}\label{SecInteractive}
+One of the interesting feature in Jack is its use for interactive 
+verification. When automatic provers fail to solve a proof obligation,
+the user can try to solve it interactivly (instead of the usual 
+informal verification). It is comparable to what is done within the tool
+ Krakatoa but Jack has the advantage to be integrated in Eclipse.
+More specifically, Jack's case viewer allows to edit every proof that 
+failed automatic verification separately and 
+it also shows the proof source from the Java code. 
+\subsection{The Coq plugin}
+The generated  proof obligations are translated into Coq language, mostly
+straight-forwardly. The main concern in this plugin is the proof readibility,
+and proof reusability.
+That's why we developped a set of facilities for variable name handling,
+pretty printing, the reuse of proofs, the ease to build the proofs and the 
+user extensions.
 
-Julien will write this
-\subsection{A Coq Editor in Eclipse}
+\paragraph{Pretty printing}
+In Jack, facilities for better readibility already exists.
+A difference is made between short variable names, 
+when no other variable is named this way,
+ and long variable names, when there can be an ambiguity. 
+When doing interactive verification the scope of these disambiguations 
+can be mistaken as Jack do it execution case wise and not lemma wise.
+This disambiguation is redone (lemma wise) 
+in the Coq plugin to add better proof readability.
+The main pretty printing is done directly through Coq's own features for
+pretty printing. Each proof obligation is passed to Coq top-level so it
+can be printed in an optimized way.
 
-\subsection{Development of Coq Tactics}
+\paragraph{Lemma generation} 
+A special attention has also be given when generating the proof obligations 
+into a file. First it has a name composed of the full class name, the method
+name, the execution case and the goal. It is done so the user can retrieve 
+the proof obligation with Jack whenever he wants it. Each file is stocked
+locally in a directory named {\tt proofs} 
+for when the lemma is regenerated or reopened; the proof it was containing
+can be replayed (and eventually fail if the conditions have changed too much).
+The normal hypothesis are separated from the invariants; given different names.
+It is specifically useful when a goal has been modified (and considered 
+unproved) by the modification of an invariant. If the proof was not involving
+the use of any invariant; it can be replayed without any changing.
 
-\subsection{Support for Native Specifications}
+\paragraph{Automations}
+The interaction with the theorem has been made tighter than the usual 
+interactive verification's one.
+Jack has 3 {\it interactive-automatic} modes. 
+By {\it automatic} we mean we 
+try to apply a generic proof script to several goals, 
+and if it fails we try another one. 
+The three automatic modes are: the light mode, where we use a proof script
+called lightAutoJack to prove the goals; 
+the tough mode, where we use the proof script toughAutoJack, 
+and the semi-auto mode where the user can write a proof script that will
+be tried on several lemmas.
+
+
+
+\subsection{Jack with Coq in Eclipse}
+Jack's Coq plugin relies on a translation of Jack's Java logic in
+Coq as well as several user extension. Since everything is generated
+inside the Eclipse's workspace, and the user extensions have to be 
+developped as part of the interactive verification process,
+ a smoother interaction of Coq within
+the Eclipse environment was necessary.
+
+\paragraph{Coq editor}
+We added a way to interact directly with Coq through Eclipse's Java 
+environment. Mostly it is a way to directly use Coq and edit Coq files within
+Eclipse. It is alike what has been done for Isabelle in Proof General Eclipse 
+(!!!reference!!!), but for Coq and in a more light-weight fashion.
+It has keyboard shortcuts similar to CoqIde (the current Coq graphical
+interface which is written in OCaml). 
+The main feature we have is the Outline view; 
+which sums up the view of a Coq file in a tree-like fashion (especially useful
+with to see modules hierarchy). There is a search by tags feature which
+permits to search a whole project for the definition of a specific keyword; and
+it is done incrementaly with Eclipse's builder feature. Of course, there is 
+syntax highlighting for Coq files and you can interactively play a Coq file
+as in the usual interactive provers IDE.
+
+
+\paragraph{User extensions: tactics}
+
+One of the key point in interactive verification is the level of difficulty
+to manipulate the proof assistant in order to solve a proof obligation.
+In order to help the user build proof scripts that are both intuitive
+to read and to make, we have used the tactic mechanism of Coq.
+These tactics are written in a pseudo language named Ltac \cite{DEL-00-LTAC}
+which permits to combine primitive tactics.
+The Coq plugin contains a library of those which, based on Jack's Coq 
+implemented Java logic, can help for obvious or really specific proof steps
+in Jack's proof obligations. All these tactics are situated in a library 
+used when a new proof obligation is loaded. Tactics can also be used in 
+really specific user oriented context. There is a special file called 
+'user extension' which is meant to contain user-defined
+special lemmas and special tactics.
+
+
+
+\subsection{Radical user extensions: Native Specifications}
 
 
 
