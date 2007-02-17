@@ -1,4 +1,5 @@
 package bico;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -28,53 +29,69 @@ public class Executor extends Object {
 
 	/** Bicolano's implementations specific handlings */
 	private ImplemSpecifics is = new MapImplemSpecif();
+
 	/** the name of the output file */
 	private File filename = null;
+
 	/** the output file */
 	private BufferedWriter out = null;
+
 	/** classes to be parsed from standard library */
 	private List<String> otherlibs = null;
+
 	/** classes to be read from hand-made files */
 	private String[] speciallibs = null;
 
 	private List<String> treatedClasses = new ArrayList<String>();
+
 	private List<String> treatedInterfaces = new ArrayList<String>();
 
 	private MethodHandler mh = new MethodHandler();
 
+	private Dictionary dico = new CamlDictionary();
+
 	/** BICO version 0.3 */
 	public static final String WELCOME_MSG = "BICO version 0.3";
-	/** the help message */
-	public static final String HELP_MSG =
-		"-------------------------------------------------------------------------------------\n" +
-		"Bico converts *.class files into Coq format\n" +
-		"The default behaviour being to generate the files for Bicolano's \n" +
-		"implementation with maps.\n" +
-		"Its use is 'java -jar bico.jar Args'\n" +
-		"Args being a combination of the following arguments:\n" +
-		"<directory> - specify directory in which Bico does its job (there must be only one \n" +
-		"              directory, and this argument is mandatory)\n" +
-		"help        - it prints this help message\n" +
-		"-list       - forces the use of lists (incompatible with the -map argument)\n"+
-		"-map        - forces the use of maps (incompatible with the -list argument)\n" +
-		"<classname> - generates also the file for this class, bico must be able to find it \n" +
-		"              in its class path\n"+
-		"-------------------------------------------------------------------------------------";
-	/** determine the span of the 'reserved' system class names number default is 100 */
-	//private static final int RESERVED_PACKAGES = 90; //not used as package name are not generated yet
-	private static final int RESERVED_CLASSES = 100;
-	private static final int RESERVED_FIELDS = 110;
-	private static final int RESERVED_METHODS = 200;
-	private int current_class = RESERVED_CLASSES;
 
+	/** the help message */
+	public static final String HELP_MSG = "-------------------------------------------------------------------------------------\n"
+			+ "Bico converts *.class files into Coq format\n"
+			+ "The default behaviour being to generate the files for Bicolano's \n"
+			+ "implementation with maps.\n"
+			+ "Its use is 'java -jar bico.jar Args'\n"
+			+ "Args being a combination of the following arguments:\n"
+			+ "<directory> - specify directory in which Bico does its job (there must be only one \n"
+			+ "              directory, and this argument is mandatory)\n"
+			+ "help        - it prints this help message\n"
+			+ "-list       - forces the use of lists (incompatible with the -map argument)\n"
+			+ "-map        - forces the use of maps (incompatible with the -list argument)\n"
+			+ "<classname> - generates also the file for this class, bico must be able to find it \n"
+			+ "              in its class path\n"
+			+ "-------------------------------------------------------------------------------------";
 
 	/**
-	 * Parses the arguments given in the parameter.
-	 * Each argument is in one cell of the array, as in
-	 * a {@link #main(String[])} method.
-	 * Mainly initialize all the private variables from
-	 * <code>Executor</code>
-	 * @param args The argument given to <tt>bico</tt>
+	 * determine the span of the 'reserved' system class names number default is
+	 * 100
+	 */
+	private static final int RESERVED_PACKAGES = 10;
+
+	private static final int RESERVED_CLASSES = 20;
+
+	private static final int RESERVED_FIELDS = 1;
+
+	private static final int RESERVED_METHODS = 1;
+
+	private int current_class = RESERVED_CLASSES;
+
+	private int current_package = RESERVED_PACKAGES;
+
+	/**
+	 * Parses the arguments given in the parameter. Each argument is in one cell
+	 * of the array, as in a {@link #main(String[])} method. Mainly initialize
+	 * all the private variables from <code>Executor</code>
+	 * 
+	 * @param args
+	 *            The argument given to <tt>bico</tt>
 	 */
 	public Executor(String[] args) {
 
@@ -86,22 +103,18 @@ public class Executor extends Object {
 		boolean bHelp = false;
 		for (int i = 0; i < args.length; i++) {
 			String low = args[i].toLowerCase();
-			if(low.equals("help")) {
+			if (low.equals("help")) {
 				bHelp = true;
-			}
-			else if(low.equals("-map")) {
+			} else if (low.equals("-map")) {
 				is = new MapImplemSpecif();
 				System.out.println("Look like we will use maps...");
-			}
-			else if(low.equals("-list")) {
+			} else if (low.equals("-list")) {
 				is = new ListImplemSpecif();
 				System.out.println("Look like we will use lists...");
-			}
-			else {
-				if(new File(args[i]).exists()) {
+			} else {
+				if (new File(args[i]).exists()) {
 					path.add(args[i]);
-				}
-				else {
+				} else {
 					// we suppose it's to be found in the class path
 					otherlibs.add(args[i]);
 				}
@@ -112,43 +125,48 @@ public class Executor extends Object {
 			System.out.println(HELP_MSG);
 		}
 
-		if(path.size() > 1) {
-		    throw new IllegalArgumentException("It looks bad. " +
-						       "You have specified to many valid paths to handle: \n"+ path+
-						       "\nChoose only one, then come back!");
+		if (path.size() > 1) {
+			throw new IllegalArgumentException("It looks bad. "
+					+ "You have specified to many valid paths to handle: \n"
+					+ path + "\nChoose only one, then come back!");
 		}
 		if (path.size() == 0) {
-			throw new IllegalArgumentException("You must specify at least one directory to write the output file into...");
+			throw new IllegalArgumentException(
+					"You must specify at least one directory to write the output file into...");
 		}
 
 		File pathname = new File(path.get(0).toString());
-		if(!pathname.isDirectory()){
-		    throw new IllegalArgumentException("It looks bad : you have not specified a directory as argument.");
+		if (!pathname.isDirectory()) {
+			throw new IllegalArgumentException(
+					"It looks bad : you have not specified a directory as argument.");
 		}
 		System.out.println("Working path: " + pathname);
 
 		// FIXME: current solution - only one output file
-		filename = new File(pathname, is.getFileName(coqify(pathname.getName())) + ".v");
+		filename = new File(pathname, is
+				.getFileName(coqify(pathname.getName()))
+				+ ".v");
 		System.out.println("Output file: " + filename);
 
-		speciallibs = new String[] {
-		    "java.lang.Object", "java.lang.Throwable", "java.lang.Exception" , "java.lang.String"
-		};
-
+		speciallibs = new String[] { "java.lang.Object", "java.lang.Throwable",
+				"java.lang.Exception", "java.lang.String" };
 
 	}
 
-
 	/**
 	 * Launch bico !
-	 * @throws IOException in case of any I/O errors....
-	 * @throws ClassNotFoundException if libraries file specified in
-	 * 		{@link #otherlibs} cannot be found
+	 * 
+	 * @throws IOException
+	 *             in case of any I/O errors....
+	 * @throws ClassNotFoundException
+	 *             if libraries file specified in {@link #otherlibs} cannot be
+	 *             found
 	 * @throws MethodNotFoundException
 	 */
-	public void start() throws IOException, ClassNotFoundException, MethodNotFoundException {
+	public void start() throws IOException, ClassNotFoundException,
+			MethodNotFoundException {
 
-		//creating file for output
+		// creating file for output
 		if (filename.exists()) {
 			filename.delete();
 			System.err.println("previous file is being overwritten...");
@@ -157,11 +175,10 @@ public class Executor extends Object {
 		FileWriter fwr = new FileWriter(filename);
 		out = new BufferedWriter(fwr);
 
-
-		//write prelude ;)
+		// write prelude ;)
 		doBeginning();
 
-		//scan for classes
+		// scan for classes
 		File f = filename.getParentFile();
 		String[] list = f.list();
 		ArrayList<String> files = new ArrayList<String>();
@@ -171,21 +188,21 @@ public class Executor extends Object {
 				files.add(list[i].substring(0, pom));
 			}
 		}
-		System.out.println("Found "+ files.size() +" class file(s) in the working path.");
+		System.out.println("Found " + files.size()
+				+ " class file(s) in the working path.");
 
 		// handle library classes specified as 'the other libs'
 		Repository strin = SyntheticRepository.getInstance();
 		Iterator iter = otherlibs.iterator();
-		while(iter.hasNext()) {
+		while (iter.hasNext()) {
 			String current = iter.next().toString();
 			System.out.println("Handling: " + current);
 			handleLibraryClass(current, strin);
 		}
 
-
 		// handle the found classes
 		iter = files.iterator();
-		while(iter.hasNext()) {
+		while (iter.hasNext()) {
 			String current = iter.next().toString();
 			System.out.println("Handling: " + current);
 			handleDiskClass(current, filename.getParent(), strin);
@@ -194,47 +211,48 @@ public class Executor extends Object {
 		doEnding();
 
 		out.close(); // closing output file
+		File dicoFile = new File(filename.getParent(),"dico.ml");
+		dicoFile.createNewFile();
+		out = new BufferedWriter(new FileWriter(dicoFile));
+		dico.write(out);
+		out.close();
 	}
-
-
 
 	/**
 	 * Bico main entry point
 	 */
-	public static void main(String[] args) throws
-			IOException {
+	public static void main(String[] args) throws IOException {
 		System.out.println(WELCOME_MSG);
 		System.setSecurityManager(new SecurityManager() {
-			 public void checkPermission(Permission perm) {
-			 }
+			public void checkPermission(Permission perm) {
+			}
 		});
 		Executor exec;
 		try {
 			exec = new Executor(args);
-		}
-		catch (IllegalArgumentException e) {
+		} catch (IllegalArgumentException e) {
 			System.err.println(e.getMessage());
 			System.err.println("(try java -jar bico.jar help)");
 			return;
 		}
 		try {
 			exec.start();
-		}
-		catch (ClassNotFoundException e) {
-		    e.printStackTrace();
-			System.err.println(e.getMessage() +
-					"\nIt was specified as a file to load... it " +
-					"should be in the class path!");
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+			System.err.println(e.getMessage()
+					+ "\nIt was specified as a file to load... it "
+					+ "should be in the class path!");
 		} catch (MethodNotFoundException e) {
-			System.err.println(e.getMessage() +
-					" was supposed to be loaded.");
+			System.err.println(e.getMessage() + " was supposed to be loaded.");
 		}
 	}
 
-
 	/**
 	 * Handle one class from library files
-	 * @param strin is the repository where the class will be store for any further access
+	 * 
+	 * @param strin
+	 *            is the repository where the class will be store for any
+	 *            further access
 	 * @throws MethodNotFoundException
 	 */
 	private void handleLibraryClass(String libname, Repository strin)
@@ -244,71 +262,84 @@ public class Executor extends Object {
 
 	/**
 	 * Handle one class read from disk
-	 * @param strin is the repository where the class will be store for any further access 
+	 * 
+	 * @param strin
+	 *            is the repository where the class will be store for any
+	 *            further access
 	 * @throws MethodNotFoundException
 	 */
-	private void handleDiskClass(String clname, String pathname, Repository strin)
-			throws ClassNotFoundException, IOException, MethodNotFoundException {
+	private void handleDiskClass(String clname, String pathname,
+			Repository strin) throws ClassNotFoundException, IOException,
+			MethodNotFoundException {
 		ClassPath cp = new ClassPath(pathname);
 		handleClass(clname, cp, strin);
 
 	}
+
 	private void handleClass(String clname, ClassPath cp, Repository strin)
-	throws ClassNotFoundException, IOException, MethodNotFoundException {
+			throws ClassNotFoundException, IOException, MethodNotFoundException {
 		JavaClass jc = SyntheticRepository.getInstance(cp).loadClass(clname);
 		strin.storeClass(jc);
 		ClassGen cg = new ClassGen(jc);
 		ConstantPoolGen cpg = cg.getConstantPool();
 		doClass(jc, cg, cpg, strin);
-		//strin.removeClass(jc);
+		// strin.removeClass(jc);
 	}
 
 	/**
 	 * Real handling of one class in jc
-	 * @param strin is the repository where information on classes can be found
+	 * 
+	 * @param strin
+	 *            is the repository where information on classes can be found
 	 * @throws MethodNotFoundException
 	 * @throws ClassNotFoundException
 	 */
-	private void doClass(JavaClass jc, ClassGen cg, ConstantPoolGen cpg, Repository strin)
-		throws IOException, MethodNotFoundException, ClassNotFoundException {
+	private void doClass(JavaClass jc, ClassGen cg, ConstantPoolGen cpg,
+			Repository strin) throws IOException, MethodNotFoundException,
+			ClassNotFoundException {
 
 		Method[] methods = cg.getMethods();
 
 		String moduleName = coqify(jc.getClassName());
 		System.out.println("  --> Module " + moduleName + ".");
-		writeln(out,1,"Module " + moduleName + ".");
+		writeln(out, 1, "Module " + moduleName + ".");
 		out.newLine();
 
 		String pn = jc.getPackageName();
+		int packageName = dico.getCoqPackageName(jc.getPackageName());
+		if (packageName == 0){
+			packageName = current_package++;
+			dico.addPackage(pn, packageName);
+		}
 		if (pn.length() == 0) {
-		    pn = "EmptyPackageName";
+			pn = "EmptyPackageName";
 		} else {
-		    char[] pna = pn.toCharArray();
-		    int j=0;
-		    for(int i=0;i<pna.length;i++){
-			if(pna[i]=='.'){
-			    pna[j]=Character.toUpperCase(pna[++i]);
-			}else {
-			    pna[j]=pna[i];
+			char[] pna = pn.toCharArray();
+			int j = 0;
+			for (int i = 0; i < pna.length; i++) {
+				if (pna[i] == '.') {
+					pna[j] = Character.toUpperCase(pna[++i]);
+				} else {
+					pna[j] = pna[i];
+				}
+				j++;
 			}
-			j++;
-		    }
-		    pn = new String(pna,0,j);
+			pn = new String(pna, 0, j);
 		}
 
+		int className = current_class;
+		dico.addClass(jc.getClassName(), packageName, className);
 		// classname
-		if(jc.isInterface()) {
+		if (jc.isInterface()) {
 			treatedInterfaces.add(moduleName + ".interface");
-			String str = "Definition interfaceName : InterfaceName := "
-			    + "("+pn+", "+(current_class++)+"%positive).";
-			writeln(out,2,str);
-		}
-		else {
-
+			String str = "Definition interfaceName : InterfaceName := " + "("
+					+ pn + ", " + (current_class++) + "%positive).";
+			writeln(out, 2, str);
+		} else {
 			treatedClasses.add(moduleName + ".class");
-			String str = "Definition className : ClassName := "
-			    + "("+pn+", "+(current_class++) + "%positive).";
-			writeln(out,2,str);
+			String str = "Definition className : ClassName := " + "(" + pn
+					+ ", " + (current_class++) + "%positive).";
+			writeln(out, 2, str);
 		}
 
 		out.newLine();
@@ -321,52 +352,58 @@ public class Executor extends Object {
 			for (int i = 0; i < ifield.length; i++) {
 				strf = "Definition ";
 				strf = strf.concat(coqify(ifield[i].getName()));
-				strf = strf.concat("ShortFieldSignature : ShortFieldSignature := FIELDSIGNATURE.Build_t ");
-				writeln(out,2,strf);
+				strf = strf
+						.concat("ShortFieldSignature : ShortFieldSignature := FIELDSIGNATURE.Build_t ");
+				writeln(out, 2, strf);
 				// !!! here positives
 				jjjj = RESERVED_FIELDS + i;
+				dico
+						.addField(ifield[i].getName(), packageName, className,
+								jjjj);
 				strf = "(" + jjjj + "%positive)";
-				writeln(out,3,strf);
+				writeln(out, 3, strf);
 				// !!! here will be conversion
 				strf = convertType(ifield[i].getType(), strin);
-				writeln(out,3,strf);
-				writeln(out,2,".");
+				writeln(out, 3, strf);
+				writeln(out, 2, ".");
 				out.newLine();
 				strf = "Definition ";
 				strf += coqify(ifield[i].getName());
 				strf += "FieldSignature : FieldSignature := (className, "
-						+ coqify(ifield[i].getName()) + "ShortFieldSignature).\n";
-				writeln(out,2,strf);
+						+ coqify(ifield[i].getName())
+						+ "ShortFieldSignature).\n";
+				writeln(out, 2, strf);
 
 				strf = "Definition ";
 				strf = strf.concat(coqify(ifield[i].getName()));
 				strf = strf.concat("Field : Field := FIELD.Build_t");
-				writeln(out,2,strf);
+				writeln(out, 2, strf);
 				strf = coqify(ifield[i].getName()) + "ShortFieldSignature";
-				writeln(out,3,strf);
+				writeln(out, 3, strf);
 				strf = "" + ifield[i].isFinal();
-				writeln(out,3,strf);
+				writeln(out, 3, strf);
 				strf = "" + ifield[i].isStatic();
-				writeln(out,3,strf);
+				writeln(out, 3, strf);
 				String str;
 				if (ifield[i].isPrivate()) {
 					str = "Private";
-				} else
-				if (ifield[i].isProtected()) {
+				} else if (ifield[i].isProtected()) {
 					str = "Protected";
 				}
 				if (ifield[i].isPublic()) {
 					str = "Public";
 				} else {
-//					String attr="0x"+Integer.toHexString(method.getAccessFlags());
-//					System.out.println("Unknown modifier of method "+name+" : "+attr);
+					// String
+					// attr="0x"+Integer.toHexString(method.getAccessFlags());
+					// System.out.println("Unknown modifier of method "+name+" :
+					// "+attr);
 					str = "Package"; // " (* "+attr+" *)"
 				}
-				writeln(out,3,str);
+				writeln(out, 3, str);
 				// FIXME current solution
 				strf = "FIELD.UNDEF";
-				writeln(out,3,strf);
-				writeln(out,2,".");
+				writeln(out, 3, strf);
+				writeln(out, 2, ".");
 				out.newLine();
 			}
 		}
@@ -374,7 +411,11 @@ public class Executor extends Object {
 		// Method[] methods = jc.getMethods();
 		for (int i = 0; i < methods.length; i++) {
 			MethodGen mg = new MethodGen(methods[i], cg.getClassName(), cpg);
-			doMethodSignature(jc, methods[i], mg, out, i, strin);
+			mh.addMethod(mg);
+			int methodName = RESERVED_METHODS + i;
+			dico.addMethod(mg.getClassName() + "." + mg.getName(), packageName,
+					className, methodName);
+			doMethodSignature(jc, methods[i], mg, out, methodName, strin);
 		}
 		for (int i = 0; i < methods.length; i++) {
 			MethodGen mg = new MethodGen(methods[i], cg.getClassName(), cpg);
@@ -383,103 +424,103 @@ public class Executor extends Object {
 
 		doClassDefinition(jc, ifield);
 		out.newLine();
-		writeln(out,1,"End " + coqify(jc.getClassName()) + ".");
+		writeln(out, 1, "End " + coqify(jc.getClassName()) + ".");
 		out.newLine();
 	}
 
-
-	private void doClassDefinition(JavaClass jc, Field[] ifield) throws IOException, MethodNotFoundException {
-		// System.out.println(" Definition class : Class := CLASS.Build_t");
-		// System.out.println(" className");
-		if(jc.isInterface()) {
-			writeln(out,2,"Definition interface : Interface := INTERFACE.Build_t");
-			writeln(out,3,"interfaceName");
+	private void doClassDefinition(JavaClass jc, Field[] ifield)
+			throws IOException, MethodNotFoundException {
+		if (jc.isInterface()) {
+			writeln(out, 2,
+					"Definition interface : Interface := INTERFACE.Build_t");
+			writeln(out, 3, "interfaceName");
+		} else {
+			writeln(out, 2, "Definition class : Class := CLASS.Build_t");
+			writeln(out, 3, "className");
 		}
-		else {
-			writeln(out,2,"Definition class : Class := CLASS.Build_t");
-			writeln(out,3,"className");
-		}
-		if(!jc.isInterface()) {
+		if (!jc.isInterface()) {
 			String superClassName = coqify(jc.getSuperclassName());
-			if (superClassName==null) {
-				writeln(out,3,"None");
+			if (superClassName == null) {
+				writeln(out, 3, "None");
 			} else {
-				writeln(out,3,"(Some " + superClassName + ".className)");
+				writeln(out, 3, "(Some " + superClassName + ".className)");
 			}
 		}
 		String[] inames = jc.getInterfaceNames();
 		if (inames.length == 0) {
-			writeln(out,3,"nil");
+			writeln(out, 3, "nil");
 		} else {
 			String str = "(";
 			for (int i = 0; i < inames.length; i++) {
 				str = str.concat(coqify(inames[i]) + ".interfaceName ::");
 			}
 			str = str.concat("nil)");
-			writeln(out,3,str);
+			writeln(out, 3, str);
 		}
 
 		// fields
 		if (ifield.length == 0) {
-			writeln(out,3,is.getNoFields());
-		}
-		else {
+			writeln(out, 3, is.getNoFields());
+		} else {
 			String str2 = "(";
 			for (int i = 0; i < ifield.length - 1; i++) {
 				str2 += is.fieldsCons(coqify(ifield[i].getName()) + "Field");
 			}
-			str2 += is.fieldsEnd(coqify(ifield[ifield.length - 1].getName()) + "Field");
+			str2 += is.fieldsEnd(coqify(ifield[ifield.length - 1].getName())
+					+ "Field");
 			str2 += ")";
-			writeln(out,3,str2);
+			writeln(out, 3, str2);
 		}
 
 		// methods
 		Method[] imeth = jc.getMethods();
 		if (imeth.length == 0) {
 			// System.out.println(" nil");
-			writeln(out,3,is.getNoMethods());
+			writeln(out, 3, is.getNoMethods());
 		} else {
 			String str2 = "(";
 			for (int i = 0; i < imeth.length - 1; i++) {
 
 				str2 += is.methodsCons(mh.getName(imeth[i]) + "Method");
 			}
-			str2 += is.methodsEnd(coqify(imeth[imeth.length - 1].getName()) + "Method");
+			str2 += is.methodsEnd(coqify(imeth[imeth.length - 1].getName())
+					+ "Method");
 			str2 += ")";
-			writeln(out,3,str2);
+			writeln(out, 3, str2);
 		}
 
-		writeln(out,3,"" + jc.isFinal());
-		writeln(out,3,"" + jc.isPublic());
-		writeln(out,3,"" + jc.isAbstract());
-		writeln(out,2,".");
+		writeln(out, 3, "" + jc.isFinal());
+		writeln(out, 3, "" + jc.isPublic());
+		writeln(out, 3, "" + jc.isAbstract());
+		writeln(out, 2, ".");
 	}
-
-
 
 	/**
 	 * write the method body
-	 * @param strin is the repository where information on classes can be found
+	 * 
+	 * @param strin
+	 *            is the repository where information on classes can be found
 	 * @throws MethodNotFoundException
 	 * @throws ClassNotFoundException
 	 */
-	private void doMethodInstructions(Method method, MethodGen mg, ConstantPoolGen cpg, Repository strin)
-			throws IOException, MethodNotFoundException, ClassNotFoundException {
+	private void doMethodInstructions(Method method, MethodGen mg,
+			ConstantPoolGen cpg, Repository strin) throws IOException,
+			MethodNotFoundException, ClassNotFoundException {
 
 		// LocalVariableGen[] aa = mg.getLocalVariables();
 		// // aa[i].toString();
 		// System.out.println(aa.length);
 		// if (aa.length != 0) {System.out.println(aa[0].toString());}
-
 		String name = mh.getName(mg);
 		String str;
 
 		if (!method.isAbstract()) {
 			// instructions
-			str = "Definition "+name+"Instructions : " + is.instructionsType() + " :=";
+			str = "Definition " + name + "Instructions : "
+					+ is.instructionsType() + " :=";
 
 			// System.out.println(str);
-			writeln(out,2,str);
+			writeln(out, 2, str);
 			InstructionList il = mg.getInstructionList();
 			if (il != null) {
 				Instruction[] listins = il.getInstructions();
@@ -490,17 +531,16 @@ public class Executor extends Object {
 					str = doInstruction(pos, listins[i], cpg, strin);
 					int pos_pre = pos;
 					pos = pos + listins[i].getLength();
-					writeln(out,3,is.instructionsCons(str, pos_pre, pos));
+					writeln(out, 3, is.instructionsCons(str, pos_pre, pos));
 				}
 				// special case for the last instruction
-				writeln(out,3,is.instructionsEnd(doInstruction(pos, listins[listins.length - 1], cpg, strin), pos));
-			}
-			else {
-				writeln(out,3,is.getNoInstructions());
+				writeln(out, 3, is.instructionsEnd(doInstruction(pos,
+						listins[listins.length - 1], cpg, strin), pos));
+			} else {
+				writeln(out, 3, is.getNoInstructions());
 			}
 
-
-			writeln(out,2,".");
+			writeln(out, 2, ".");
 			out.newLine();
 
 			// exception handlers
@@ -508,67 +548,70 @@ public class Executor extends Object {
 			boolean handlers = false;
 			if (code != null) {
 				CodeException[] etab = code.getExceptionTable();
-				if (etab != null && etab.length>0) {
+				if (etab != null && etab.length > 0) {
 					handlers = true;
-					str = "Definition "+name+"Handlers : list ExceptionHandler := ";
-					writeln(out,2,str);
+					str = "Definition " + name
+							+ "Handlers : list ExceptionHandler := ";
+					writeln(out, 2, str);
 					for (int i = 0; i < etab.length; i++) {
 						str = "(EXCEPTIONHANDLER.Build_t ";
-						int catchType=etab[i].getCatchType();
-						if (catchType==0) {
+						int catchType = etab[i].getCatchType();
+						if (catchType == 0) {
 							str += "None ";
 						} else {
 							str += "(Some ";
-							String exName=method.getConstantPool().getConstantString(catchType,
-									Constants.CONSTANT_Class);
+							String exName = method.getConstantPool()
+									.getConstantString(catchType,
+											Constants.CONSTANT_Class);
 							str += coqify(exName);
 							str += ".className) ";
 						}
 						str += etab[i].getStartPC() + "%N ";
 						str += etab[i].getEndPC() + "%N ";
 						str += etab[i].getHandlerPC() + "%N)::";
-						writeln(out,3,str);
+						writeln(out, 3, str);
 					}
-					writeln(out,3,"nil");
-					writeln(out,2,".");
+					writeln(out, 3, "nil");
+					writeln(out, 2, ".");
 					out.newLine();
 				}
 			}
 
 			// body
-			str = "Definition "+name+"Body : BytecodeMethod := BYTECODEMETHOD.Build_t";
+			str = "Definition " + name
+					+ "Body : BytecodeMethod := BYTECODEMETHOD.Build_t";
 			// System.out.println(str);
-			writeln(out,2,str);
+			writeln(out, 2, str);
 			is.printExtraBodyField(out);
 
-			writeln(out,3,name+"Instructions");
+			writeln(out, 3, name + "Instructions");
 			// exception names not handlers now
-			//TODO: Handle handlers for map....
+			// TODO: Handle handlers for map....
 			if (handlers) {
-				writeln(out,3,name+"Handlers");
+				writeln(out, 3, name + "Handlers");
 			} else {
-				writeln(out,3,"nil");
+				writeln(out, 3, "nil");
 			}
-			writeln(out,3,"" + mg.getMaxLocals());
-			writeln(out,3,"" + mg.getMaxStack());
-			writeln(out,2,".");
+			writeln(out, 3, "" + mg.getMaxLocals());
+			writeln(out, 3, "" + mg.getMaxStack());
+			writeln(out, 2, ".");
 			out.newLine();
 		}
 
 		// method
-		str = "Definition "+name+"Method : Method := METHOD.Build_t";
+		str = "Definition " + name + "Method : Method := METHOD.Build_t";
 		// System.out.println(str);
-		writeln(out,2,str);
-		writeln(out,3,name+"ShortSignature");
+		writeln(out, 2, str);
+		writeln(out, 3, name + "ShortSignature");
 		if (method.isAbstract()) {
 			str = "None";
 		} else {
-			str = "(Some "+name+"Body)";
+			str = "(Some " + name + "Body)";
 		}
-		writeln(out,3,str);
-		writeln(out,3,"" + method.isFinal());
-		writeln(out,3,"" + method.isStatic());
-		writeln(out,3,"" + method.isNative());
+		writeln(out, 3, str);
+		writeln(out, 3, "" + method.isFinal());
+		writeln(out, 3, "" + method.isStatic());
+		writeln(out, 3, "" + method.isNative());
 		if (method.isPrivate()) {
 			str = "Private";
 		} else if (method.isProtected()) {
@@ -576,13 +619,14 @@ public class Executor extends Object {
 		} else if (method.isPublic()) {
 			str = "Public";
 		} else {
-//			String attr="0x"+Integer.toHexString(method.getAccessFlags());
-//			System.out.println("Unknown modifier of method "+name+" : "+attr);
+			// String attr="0x"+Integer.toHexString(method.getAccessFlags());
+			// System.out.println("Unknown modifier of method "+name+" :
+			// "+attr);
 			str = "Package"; // " (* "+attr+" *)"
 		}
-		writeln(out,3,str);
+		writeln(out, 3, str);
 		// System.out.println();System.out.println();
-		writeln(out,2,".");
+		writeln(out, 2, ".");
 		out.newLine();
 	}
 
@@ -594,12 +638,28 @@ public class Executor extends Object {
 
 		for (int i = 0; i < speciallibs.length; i++) {
 			String str = is.requireLib(coqify(speciallibs[i]));
-			writeln(out,0,str);
-			//out.newLine();
+			writeln(out, 0, str);
+			// out.newLine();
 		}
-		writeln(out,0,"Import P.");
+		
+		dico.addPackage("java/lang/", 1);
+		dico.addPackage("", 2);
+		
+		dico.addClass("Object", 1, 1);
+		dico.addClass("Exception", 1, 9);
+		dico.addClass("String", 1, 10);
+		dico.addClass("Throwable", 1, 8);
+		
+		dico.addMethod("Object.<init>", 1, 1, 12);
+		dico.addMethod("Exception.<init>", 1, 9, 10);
+		dico.addMethod("String.<init>", 1, 10, 13);
+		dico.addMethod("Throwable.<init>", 1, 8, 11);
+		// TODO complete the list...
+		
+
+		writeln(out, 0, "Import P.");
 		out.newLine();
-		writeln(out,0,"Module TheProgram.");
+		writeln(out, 0, "Module TheProgram.");
 		out.newLine();
 
 	}
@@ -611,96 +671,106 @@ public class Executor extends Object {
 
 		// all classes
 		{
-			String str = "Definition AllClasses : "+ is.classType() +" := ";
+			String str = "Definition AllClasses : " + is.classType() + " := ";
 			Iterator iter = treatedClasses.iterator();
-			while(iter.hasNext()){
+			while (iter.hasNext()) {
 				str += is.classCons(iter.next().toString());
 			}
-			for(int i=0;i<speciallibs.length;i++){
-				str += is.classCons(coqify(speciallibs[i])+".class");
+			for (int i = 0; i < speciallibs.length; i++) {
+				str += is.classCons(coqify(speciallibs[i]) + ".class");
 			}
 			str += " " + is.classEnd() + ".";
-			writeln(out,1,str);
-		 }
+			writeln(out, 1, str);
+		}
 
 		out.newLine();
 
 		// all interfaces
 		{
-			String str = "Definition AllInterfaces : "+ is.interfaceType() +" := ";
+			String str = "Definition AllInterfaces : " + is.interfaceType()
+					+ " := ";
 			Iterator iter = treatedInterfaces.iterator();
-			while(iter.hasNext()){
+			while (iter.hasNext()) {
 				str += is.interfaceCons(iter.next().toString());
 			}
 			str += " " + is.interfaceEnd() + ".";
-			writeln(out,1,str);
+			writeln(out, 1, str);
 		}
 		out.newLine();
-		writeln(out,1,"Definition program : Program := PROG.Build_t");
-		writeln(out,2,"AllClasses");
-		writeln(out,2,"AllInterfaces");
-		writeln(out,1,".");
+		writeln(out, 1, "Definition program : Program := PROG.Build_t");
+		writeln(out, 2, "AllClasses");
+		writeln(out, 2, "AllInterfaces");
+		writeln(out, 1, ".");
 		out.newLine();
-		writeln(out,0,"End TheProgram.");
+		writeln(out, 0, "End TheProgram.");
 		out.newLine();
 	}
 
-
 	/**
 	 * write the method signature
+	 * 
 	 * @param jc
-	 * @param strin is the repository where information on classes can be found
+	 *            the JavaClass to which belongs the method
+	 * @param method
+	 *            the method to add
+	 * @param mg
+	 *            the generator of the method
+	 * @param strin
+	 *            is the repository where information on classes can be found
 	 * @throws ClassNotFoundException
 	 */
 	private void doMethodSignature(JavaClass jc, Method method, MethodGen mg,
-			BufferedWriter out, int i2, Repository strin) throws IOException, ClassNotFoundException {
+			BufferedWriter out, int coqMethodName, Repository strin)
+			throws IOException, ClassNotFoundException, MethodNotFoundException {
 		// InstructionList il = mg.getInstructionList();
 		// InstructionHandle ih[] = il.getInstructionHandles();
 		// signature
-		int u = i2 + RESERVED_METHODS;
 		String name = mh.getName(mg);
-		String str = "Definition "+ name;
+		String str = "Definition " + name;
 		str += "ShortSignature : ShortMethodSignature := METHODSIGNATURE.Build_t";
-		writeln(out,2,str);
-		str = "(" + u + "%positive)";
-		writeln(out,3,str);
+		writeln(out, 2, str);
+		str = "(" + coqMethodName + "%positive)";
+		writeln(out, 3, str);
 		Type[] atrr = method.getArgumentTypes();
 		if (atrr.length == 0) {
-			writeln(out,3,"nil");
+			writeln(out, 3, "nil");
 		} else {
 			str = "(";
 			for (int i = 0; i < atrr.length; i++) {
 				str = str.concat(convertType(atrr[i], strin) + "::");
 			}
 			str = str.concat("nil)");
-			writeln(out,3,str);
+			writeln(out, 3, str);
 		}
 		Type t = method.getReturnType();
-		writeln(out,3,convertTypeOption(t, strin));
-		writeln(out,2,".");
+		writeln(out, 3, convertTypeOption(t, strin));
+		writeln(out, 2, ".");
 		String clName = "className";
-		if(jc.isInterface()) {
+		if (jc.isInterface()) {
 			clName = "interfaceName";
 		}
 
-		str = "Definition "+name +
-		           "Signature : MethodSignature := " +
-		                  "("+ clName+", " + name + "ShortSignature).\n";
-		writeln(out,2,str);
+		str = "Definition " + name + "Signature : MethodSignature := " + "("
+				+ clName + ", " + name + "ShortSignature).\n";
+		writeln(out, 2, str);
 		out.newLine();
 	}
 
 	/**
 	 * Handles one instruction ins at position pos
-	 * @param cpg - constant pool of the method
-	 * @param ins instruction to translate
-	 * @param strin is the repository where information on classes can be found
+	 * 
+	 * @param cpg -
+	 *            constant pool of the method
+	 * @param ins
+	 *            instruction to translate
+	 * @param strin
+	 *            is the repository where information on classes can be found
 	 * @return "(ins)" in Coq syntax
 	 * @throws ClassNotFoundException
 	 * @throws MethodNotFoundException
 	 */
-	private String doInstruction(int pos, Instruction ins,
-			ConstantPoolGen cpg, Repository strin) throws ClassNotFoundException {
+	private String doInstruction(int pos, Instruction ins, ConstantPoolGen cpg,
+			Repository strin) throws ClassNotFoundException {
 		String ret;
 
 		String name = ins.getName();
@@ -729,16 +799,15 @@ public class Executor extends Object {
 			char c = name.charAt(0);
 
 			if (c == 'A' || c == 'B' || c == 'I' || c == 'S') {
-			    ret = "V";
-			    if (ins instanceof StackProducer){ //?aload instructions
-				ret += name.substring(1,6);
-			    }
-			    else if (ins instanceof StackConsumer){ //?astore instructions
-				ret += name.substring(1,7);
-			    }
-			    ret += " " + c + "array";
-			}
-			else if (c == 'C' || c == 'D' || c == 'F' || c == 'L') {
+				ret = "V";
+				if (ins instanceof StackProducer) { // ?aload instructions
+					ret += name.substring(1, 6);
+				} else if (ins instanceof StackConsumer) { // ?astore
+															// instructions
+					ret += name.substring(1, 7);
+				}
+				ret += " " + c + "array";
+			} else if (c == 'C' || c == 'D' || c == 'F' || c == 'L') {
 				ret = Unhandled("ArrayInstruction", ins);
 			} else {
 				ret = Unknown("ArrayInstruction", ins);
@@ -748,7 +817,7 @@ public class Executor extends Object {
 		else if (ins instanceof ATHROW)
 			ret = name;
 		else if (ins instanceof BIPUSH) {
-			ret = "Const BYTE " + printZ(((BIPUSH)ins).getValue());
+			ret = "Const BYTE " + printZ(((BIPUSH) ins).getValue());
 		} else if (ins instanceof BranchInstruction) {
 			String index = printZ(((BranchInstruction) ins).getIndex());
 
@@ -760,8 +829,8 @@ public class Executor extends Object {
 				String op;
 
 				if (name.endsWith("null")) {
-					//  ifnonnull o        --> Ifnull NeRef o
-					//  ifnull o           --> Ifnull EqRef o
+					// ifnonnull o --> Ifnull NeRef o
+					// ifnull o --> Ifnull EqRef o
 					if (name.indexOf("non") != -1) {
 						op = "Ne";
 					} else {
@@ -781,12 +850,12 @@ public class Executor extends Object {
 					}
 				}
 			} else if (ins instanceof JsrInstruction) {
-				ret = Unhandled("JsrInstruction",ins);
+				ret = Unhandled("JsrInstruction", ins);
 			} else if (ins instanceof Select) {
 				// TODO: Select
-				ret = Unimplemented("Select",ins);
+				ret = Unimplemented("Select", ins);
 			} else {
-				ret = Unknown("BranchInstruction",ins);
+				ret = Unknown("BranchInstruction", ins);
 			}
 		} else if (ins instanceof BREAKPOINT) {
 			ret = Unhandled(ins);
@@ -803,28 +872,37 @@ public class Executor extends Object {
 			if (ins instanceof ANEWARRAY) {
 				ret = "Newarray " + convertType(type, strin);
 			} else if (ins instanceof CHECKCAST) {
-				ret = name + " " + convertReferenceType((ReferenceType)type, strin);
+				ret = name + " "
+						+ convertReferenceType((ReferenceType) type, strin);
 			} else if (ins instanceof FieldOrMethod) {
 				FieldOrMethod fom = (FieldOrMethod) ins;
 				String className = coqify(fom.getReferenceType(cpg).toString());
-				//String fmName = coqify(fom.getName(cpg));
+				// String fmName = coqify(fom.getName(cpg));
 				if (ins instanceof FieldInstruction) {
-					String fs = className + "." + coqify(fom.getName(cpg)) + "FieldSignature";
+					String fs = className + "." + coqify(fom.getName(cpg))
+							+ "FieldSignature";
 					ret = name + " " + fs;
 				} else if (ins instanceof InvokeInstruction) {
 					String ms;
 					try {
-						ms = className + "." + mh.getName((InvokeInstruction)fom, cpg) + "Signature";
+						ms = className + "."
+								+ mh.getName((InvokeInstruction) fom, cpg)
+								+ "Signature";
 					} catch (MethodNotFoundException e) {
-						System.err.println("warning : doInstruction: " + fom.getReferenceType(cpg).toString() + "." +fom.getName(cpg)  + " ("+e.getMessage()+") was supposed to be loaded before use...");
-						ms = className + "." + coqify(fom.getName(cpg)) + "Signature";
+						System.err.println("warning : doInstruction: "
+								+ fom.getReferenceType(cpg).toString() + "."
+								+ fom.getName(cpg) + " (" + e.getMessage()
+								+ ") was supposed to be loaded before use...");
+						ms = className + "." + coqify(fom.getName(cpg))
+								+ "Signature";
 					}
 					ret = name + " " + ms;
 				} else {
 					ret = Unknown("FieldOrMethod", ins);
 				}
 			} else if (ins instanceof INSTANCEOF) {
-				ret = name + " " + convertReferenceType((ReferenceType)type, strin);
+				ret = name + " "
+						+ convertReferenceType((ReferenceType) type, strin);
 			} else if (ins instanceof LDC) {
 				ret = Unhandled(ins);
 			} else if (ins instanceof LDC2_W) {
@@ -832,7 +910,8 @@ public class Executor extends Object {
 			} else if (ins instanceof MULTIANEWARRAY) {
 				ret = Unhandled(ins);
 			} else if (ins instanceof NEW) {
-				ret = name + " " + coqify(((NEW) ins).getType(cpg).toString()) + ".className"; //convertType(type);
+				ret = name + " " + coqify(((NEW) ins).getType(cpg).toString())
+						+ ".className"; // convertType(type);
 			} else
 				ret = Unknown("CPInstruction", ins);
 		} else if (ins instanceof DCMPG) {
@@ -861,7 +940,8 @@ public class Executor extends Object {
 			int index = ((LocalVariableInstruction) ins).getIndex();
 
 			if (ins instanceof IINC) {
-				ret = name + " " + index + "%N " + printZ(((IINC) ins).getIncrement());
+				ret = name + " " + index + "%N "
+						+ printZ(((IINC) ins).getIncrement());
 			} else {
 				char c = name.charAt(0);
 
@@ -872,7 +952,8 @@ public class Executor extends Object {
 						name = name.substring(0, under);
 					}
 					// Aload -> Vload Aval
-					ret = "V" + name.substring(1) + " " + c + "val " + index + "%N";
+					ret = "V" + name.substring(1) + " " + c + "val " + index
+							+ "%N";
 				} else if (c == 'D' || c == 'F' || c == 'L') {
 					ret = Unhandled("LocalVariableInstruction", ins);
 				} else {
@@ -905,110 +986,123 @@ public class Executor extends Object {
 				ret = Unknown("ReturnInstruction", ins);
 			}
 		} else if (ins instanceof SIPUSH) {
-			ret = "Const SHORT " + printZ(((SIPUSH)ins).getValue());
+			ret = "Const SHORT " + printZ(((SIPUSH) ins).getValue());
 		} else if (ins instanceof StackInstruction) {
 			ret = name;
 		} else {
 			ret = Unknown("Instruction", ins);
 		}
-		return  "(" + ret + ")";
+		return "(" + ret + ")";
 
 	}
 
+	private static int tab = 2;
 
-
-	private static int tab=2;
 	static void writeln(BufferedWriter out, int tabs, String s)
 			throws IOException {
-		StringBuffer str=new StringBuffer();
-		for(int i=0; i<tabs*tab; i++) {
+		StringBuffer str = new StringBuffer();
+		for (int i = 0; i < tabs * tab; i++) {
 			str.append(' ');
 		}
 		str.append(s);
 		out.write(str.toString());
 		out.newLine();
 	}
+
 	/**
 	 * @return Coq value of t of type primitiveType
 	 */
 	private static String convertPrimitiveType(BasicType t) {
 		if (t == Type.BOOLEAN || t == Type.BYTE || t == Type.SHORT
-			|| t == Type.INT) {
+				|| t == Type.INT) {
 			return (t.toString().toUpperCase());
 		} else {
 			Unhandled("BasicType", t);
-			return ("INT (* "+t.toString()+" *)");
+			return ("INT (* " + t.toString() + " *)");
 		}
 	}
 
 	/**
-	 * @param strin is the repository where information on classes can be found
+	 * @param strin
+	 *            is the repository where information on classes can be found
 	 * @return Coq value of t of type refType
 	 * @throws ClassNotFoundException
 	 */
-	private static String convertReferenceType(ReferenceType t, Repository strin) throws ClassNotFoundException {
+	private static String convertReferenceType(ReferenceType t, Repository strin)
+			throws ClassNotFoundException {
 		if (t instanceof ArrayType) {
-			return "(ArrayType "+convertType(((ArrayType)t).getElementType(), strin)+")";
+			return "(ArrayType "
+					+ convertType(((ArrayType) t).getElementType(), strin)
+					+ ")";
 		} else if (t instanceof ObjectType) {
-			ObjectType ot = (ObjectType)t;
+			ObjectType ot = (ObjectType) t;
 			try {
-				if (ot.referencesClassExact()) { // does thik work?
-					return "(ClassType " + coqify(ot.getClassName())+".className)";
-				} else if (ot.referencesInterfaceExact()) { // does this work?
-					//TODO: adjust to the structure of "interface" modules
-					return "(InterfaceType " + coqify(ot.getClassName())+".interfaceName)";
+				if (ot.referencesClassExact()) {
+					return "(ClassType " + coqify(ot.getClassName())
+							+ ".className)";
+				} else if (ot.referencesInterfaceExact()) {
+					// TODO: adjust to the structure of "interface" modules
+					return "(InterfaceType " + coqify(ot.getClassName())
+							+ ".interfaceName)";
 				} else {
 					Unhandled("ObjectType", t);
-					return "(ObjectType javaLangObject (* "+t.toString()+" *) )";
+					return "(ObjectType javaLangObject (* " + t.toString()
+							+ " *) )";
 				}
 			} catch (ClassNotFoundException e) {
-				JavaClass jc =strin.findClass(ot.getClassName());
-				if (jc != null){
+				JavaClass jc = strin.findClass(ot.getClassName());
+				if (jc != null) {
 					if (jc.isClass())
-						return "(ClassType " + coqify(ot.getClassName())+".className)";
-					else if (jc.isInterface()) 
-						return "(InterfaceType " + coqify(ot.getClassName())+".interfaceName)";
+						return "(ClassType " + coqify(ot.getClassName())
+								+ ".className)";
+					else if (jc.isInterface())
+						return "(InterfaceType " + coqify(ot.getClassName())
+								+ ".interfaceName)";
 				}
 				throw e;
 			}
 		} else {
 			Unhandled("ReferenceType", t);
-			return "(ObjectType javaLangObject (* "+t.toString()+" *) )";
+			return "(ObjectType javaLangObject (* " + t.toString() + " *) )";
 		}
 	}
 
 	/**
-	 * @param strin is the repository where information on classes can be found
+	 * @param strin
+	 *            is the repository where information on classes can be found
 	 * @return Coq value of t of type type
 	 * @throws ClassNotFoundException
 	 */
-	private static String convertType(Type t, Repository strin) throws ClassNotFoundException {
-		if (t  instanceof BasicType) {
-			return "(PrimitiveType " + convertPrimitiveType((BasicType)t) + ")";
+	private static String convertType(Type t, Repository strin)
+			throws ClassNotFoundException {
+		if (t instanceof BasicType) {
+			return "(PrimitiveType " + convertPrimitiveType((BasicType) t)
+					+ ")";
 		} else if (t instanceof ReferenceType) {
-			return "(ReferenceType " + convertReferenceType((ReferenceType)t, strin) + ")";
+			return "(ReferenceType "
+					+ convertReferenceType((ReferenceType) t, strin) + ")";
 		} else {
-			Unhandled ("Unhandled Type: ", t);
-			return "(ReferenceType (ObjectType javaLangObject (* "+t.toString()+" *) )";
+			Unhandled("Unhandled Type: ", t);
+			return "(ReferenceType (ObjectType javaLangObject (* "
+					+ t.toString() + " *) )";
 		}
 	}
 
-
-
-
 	/**
 	 * Handles type or void
-	 * @param strin is the repository where information on classes can be found
+	 * 
+	 * @param strin
+	 *            is the repository where information on classes can be found
 	 * @return (Some "coq type t") or None
 	 * @throws ClassNotFoundException
 	 */
-	private static String convertTypeOption(Type t, Repository strin) throws ClassNotFoundException {
-		if (t==Type.VOID || t==null) {
+	private static String convertTypeOption(Type t, Repository strin)
+			throws ClassNotFoundException {
+		if (t == Type.VOID || t == null) {
 			return "None";
 		}
 		return "(Some " + convertType(t, strin) + ")";
 	}
-
 
 	/**
 	 * for instructions not handled by Bicolano
@@ -1023,6 +1117,7 @@ public class Executor extends Object {
 		System.err.println("Unhandled " + instruction + ": " + name);
 		return "Nop (* " + name + " *)";
 	}
+
 	private static void Unhandled(String str, Type t) {
 		System.err.println("Unhandled type (" + str + "): " + t.toString());
 	}
@@ -1048,18 +1143,20 @@ public class Executor extends Object {
 
 	/**
 	 * for printing offsets
+	 * 
 	 * @return i%Z or (-i)%Z
 	 */
 	private static String printZ(int index) {
-		if (index<0) {
-			return "("+index+")%Z";
+		if (index < 0) {
+			return "(" + index + ")%Z";
 		} else {
-			return String.valueOf(index)+"%Z";
+			return String.valueOf(index) + "%Z";
 		}
 	}
 
 	/**
 	 * for printing offsets
+	 * 
 	 * @return i%Z or (-i)%Z
 	 */
 	private static String printZ(Number index) {
@@ -1079,14 +1176,15 @@ public class Executor extends Object {
 
 	/**
 	 * Replaces all chars not accepted by coq by "_"
+	 * 
 	 * @return null only if str == null
 	 */
 	static String coqify(String str) {
-		if (str==null) {
+		if (str == null) {
 			return null;
 		} else {
 			str = str.replace('.', '_');
-			str = str.replace('/','_');
+			str = str.replace('/', '_');
 			// strout = strout.replace("(","_");
 			// strout = strout.replace(")","_");
 			str = str.replace('>', '_');
