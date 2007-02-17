@@ -2,6 +2,10 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="/umbra/libs/org.apache.bcel_5.1.0/bcel.jar"/>
+	<classpathentry kind="lib" path="bcel-5.2/bcel-5.2.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/Users/laurent/boulot/lande/svn/bico/bcel-5.2/docs/apidocs/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -4,6 +4,7 @@ jar: clean java
 	@ echo Packing:
 	cd tmp; jar xf ${BCEL}; jar cmf  ../manifest.mf ../bico.jar bico org
 	rm -rf tmp
+	cp bico.jar ../implem/
 
 jar-without-bcel: clean java
 	@ echo Packing:
@@ -18,4 +19,4 @@ clean:
 java:
 	@ echo Compiling:
 	mkdir -p tmp
-	cd src; javac -target 1.4 -source 1.4 -sourcepath ../src -classpath  ${BCEL} -d ../tmp `find ./ -name *.java`
+	cd src; javac -source 1.5 -sourcepath ../src -classpath  ${BCEL} -d ../tmp `find ./ -name *.java`
