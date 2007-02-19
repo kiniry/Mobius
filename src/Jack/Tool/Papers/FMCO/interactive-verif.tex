@@ -12,14 +12,14 @@ failed automatic verification separately and
 it also shows the proof source from the Java code. 
 \subsection{The Coq plugin}
 The generated  proof obligations are translated into Coq language, mostly
-straight-forwardly. The main concern in this plugin is the proof readibility,
+straight-forwardly. The main concern in this plugin is the proof readability,
 and proof reusability.
 That's why we developped a set of facilities for variable name handling,
 pretty printing, the reuse of proofs, the ease to build the proofs and the 
 user extensions.
 
 \paragraph{Pretty printing}
-In Jack, facilities for better readibility already exists.
+In Jack, facilities for better readability already exists.
 A difference is made between short variable names, 
 when no other variable is named this way,
  and long variable names, when there can be an ambiguity. 
@@ -28,8 +28,8 @@ can be mistaken as Jack do it execution case wise and not lemma wise.
 This disambiguation is redone (lemma wise) 
 in the Coq plugin to add better proof readability.
 The main pretty printing is done directly through Coq's own features for
-pretty printing. Each proof obligation is passed to Coq top-level so it
-can be printed in an optimized way.
+ printing. Each proof obligation is passed to Coq top-level and the result of 
+Coq's parsing is the proof obligation given to the user to view.
 
 \paragraph{Lemma generation} 
 A special attention has also be given when generating the proof obligations 
@@ -61,7 +61,7 @@ be tried on several lemmas.
 
 \subsection{Jack with Coq in Eclipse}
 Jack's Coq plugin relies on a translation of Jack's Java logic in
-Coq as well as several user extension. Since everything is generated
+Coq as well as several user extensions. Since everything is generated
 inside the Eclipse's workspace, and the user extensions have to be 
 developped as part of the interactive verification process,
  a smoother interaction of Coq within
@@ -69,12 +69,12 @@ the Eclipse environment was necessary.
 
 \paragraph{Coq editor}
 We added a way to interact directly with Coq through Eclipse's Java 
-environment. Mostly it is a way to directly use Coq and edit Coq files within
+environment. It is a way to directly use Coq and edit Coq files within
 Eclipse. It is alike what has been done for Isabelle in Proof General Eclipse 
 \cite{WintersteinAL05}, but for Coq and in a more light-weight fashion.
 It has keyboard shortcuts similar to CoqIde (the current Coq graphical
 interface which is written in OCaml). 
-The main feature we have is the Outline view; 
+The main feature we have is the outline view; 
 which sums up the view of a Coq file in a tree-like fashion (especially useful
 with to see modules hierarchy). There is a search by tags feature which
 permits to search a whole project for the definition of a specific keyword; and
