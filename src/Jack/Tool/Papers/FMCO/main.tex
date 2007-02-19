@@ -8,7 +8,7 @@
 %\usepackage{amscd}
 %\usepackage{array}
 %\usepackage{tabularx}
-%\usepackage{xspace}
+\usepackage{xspace}
 %\usepackage{url}
 %\usepackage{float}
 \usepackage{multirow}
@@ -30,12 +30,13 @@
 \newcommand{\btab}{\begin{tt}\begin{tabbing}}
 \newcommand{\etab}{\end{tabbing}\end{tt}}
 % julien: fin de mes macros
+\newcommand{\native}{\texttt{native}\xspace}
 
 \pagestyle{plain}
 \title{JACK~---~a tool for validation of security and behaviour of Java
-applications\thanks{This work is partially funded by the IST FET
-programme of the European Commission, under the IST-2005-015905
-\textsf{Mobius} and IST-2003-507894 \textsf{Inspired} projects.}}
+applications\thanks{This work is partially funded by the IST programme
+of the European Commission, under the IST-2003-507894
+\textsf{Inspired} and IST-2005-015905 \textsf{Mobius} projects.}}
 
 \author{Gilles Barthe\inst{1} \and
         Lilian Burdy\and %\inst{2} \and
@@ -65,7 +66,7 @@ proof obligations in a Java syntax, and to trace them back to the
 source code that gave rise to them. Further, JACK provides support for
 annotation generation, and for interactive verification. The whole
 platform works both for source code and for bytecode, which makes it
-particularly suitable for a proof-carrying code scenario.
+particularly suitable for a proof carrying code scenario.
 \end{abstract}
 \input{introduction}        
 \input{jml}

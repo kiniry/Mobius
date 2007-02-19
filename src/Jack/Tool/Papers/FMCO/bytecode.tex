@@ -2,13 +2,14 @@
 
 JACK allows one to verify applications not only at source code level,
 but also at bytecode level. This is in particular important to support
-proof carrying code, where bytecode applications are shipped together
-with their specification and a correctness proof. However, the
-possibility to verify bytecode also has an interest on its own: 
-sometimes security-critical applications are developed directly at
-bytecode level, in order not to rely on the correctness of the
-compiler. To be able to formally establish the correctness of such an
-application, one needs support to verify bytecode directly.
+proof carrying code~\cite{Necula97}, where bytecode applications are
+shipped together with their specification and a correctness
+proof. However, the possibility to verify bytecode also has an
+interest on its own: sometimes security-critical applications are
+developed directly at bytecode level, in order not to rely on the
+correctness of the compiler. To be able to formally establish the
+correctness of such an application, one needs support to verify
+bytecode directly.
 
 This section describes the different parts in the bytecode
 subcomponent of JACK. First of all, we present a specification
@@ -215,7 +216,7 @@ with the debug flag set.
 From the debug information, we use in particular the
 \textbf{Line\_ Number\_Table} and the \textbf{Local\_Variable\_Table}
 attributes. The \textbf{Line\_Number\_Table} links line numbers in the
-source code with the bytecode instructions.  The
+source code with the bytecode instructions, while the
 \textbf{Local\_Variable\_Table} describes the local variables that
 appear in a method.  
 
@@ -296,11 +297,13 @@ application is compiled with a non-optimising compiler): modulo names
 and the handling of shorts, bytes and boolean values, the proof
 obligations are equivalent. This means that proofs for proof
 obligations at source code level can be re-used for proof obligations
-at bytecode level. This is in particular important for the proof
-carrying code scenario, where the code producer develops a proof at
-source code level, and then ships bytecode level application and
-specification, because modulo the necessary re-namings, he can ship
-directly his proofs, and the code client can verify these using a
-verification condition generator at bytecode level.
+at bytecode level (see also~\cite{gta05:fast} for a compilation source
+code level proofs to bytecode level proofs). This is in particular
+important for the proof carrying code scenario~\cite{Necula97}, where
+the code producer develops a proof at source code level, and then
+ships bytecode level application and specification, because modulo the
+necessary re-namings, he can ship directly his proofs, and the code
+client can verify these using a verification condition generator at
+bytecode level.
 
 

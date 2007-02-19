@@ -8,20 +8,20 @@ the peculiarities of a new tool, and does not have to switch tools to
 apply formal verification techniques.
 
 The integration in Eclipse consists of two parts: an extension of the
-standard Java view with special JACK-related actions (checking a
-specification, calling an (automatic) prover \emph{etc.}), and a
-special JACK view to inspect the generated proof
+standard Java perspective with special JACK-related actions (checking a
+specification, calling an automatic prover \emph{etc.}), and a
+special JACK perspective to inspect the generated proof
 obligations.
 
-\subsection{Extension of the Java View in Eclipse}
+\subsection{Extension of the Java Perspective in Eclipse}
 
-The standard Java view of Eclipse is extended with several
+The standard Java perspective of Eclipse is extended with several
 JACK-specific features. Menus are added to set the defaults for the
 different specification constructs. Further, there are buttons and
 menu-options to ``compile'' a JML specification, (\emph{i.e.}\ type
 check and generate proof obligations), call an automatic prover on all
 the generated proof obligations (either Simplify or a special
-Coq tactic), or change to the special JACK view.  
+Coq tactic), or change to the special JACK perspective.  
 
 Checking the JML specification is not done automatically, while
 editing the file (as is done for Java); instead the user has to launch
@@ -32,8 +32,10 @@ the mean time such a feature has been developed within the JMLEclipse
 project\footnote{See
 \texttt{http://jmleclipse.projects.cis.ksu.edu/}.}. This project also
 provides syntax highlighting of JML specifications in Eclipse's Java
-view. It is future work to integrate this with the JACK interface.
-%(\emph{e.g.}\ the JMLEclipse project does not accept the keywords that
+perspective. All this could be integrated with the JACK interface. 
+
+%It is future work to integrate this with the JACK interface.
+%%(\emph{e.g.}\ the JMLEclipse project does not accept the keywords that
 %JACK adds to JML. 
 
 Finally, another important constraint is the interface's
@@ -45,7 +47,7 @@ amount of time. Therefore, the prover is called in a non-blocking way,
 launching a special window that allows to see the progress of the
 task.
 
-\subsection{A Proof Obligation Inspection View}
+\subsection{A Proof Obligation Inspection Perspective}
 
 An important feature of JACK is that one can inspect the different
 generated proof obligations. Moreover, one does not have to understand
@@ -59,14 +61,14 @@ they are generated for a specific theorem prover).
 % \epsfig{file=screen1.ps,angle=270,width=\textwidth}
 % the following work better (for me, with the makefile)
 \epsfig{file=screen1, width=\textwidth}
-\caption{JACK's proof obligation inspection view}\label{FigJackView}
+\caption{JACK's proof obligation inspection perspective}\label{FigJackPerspective}
 \end{figure}
 
 %\begin{figure}[th!]
 %    \includegraphics[width=\textwidth]{screen1}
-%\caption{JACK's proof obligation inspection view}\label{FigJackView}
+%\caption{JACK's proof obligation inspection perspective}\label{FigJackPerspective}
 %\end{figure}
-%JACK's proof obligation inspection view provides the following information:
+%JACK's proof obligation inspection perspective provides the following information:
 %\begin{itemize}
 %\item information concerning the current proof status;
 %\item the class methods with their lemmas;
@@ -74,7 +76,7 @@ they are generated for a specific theorem prover).
 %\item the currently selected proof obligation (goal and hypotheses).
 %\end{itemize}
 
-Figure~\ref{FigJackView} shows the inspection of a proof obligation
+Figure~\ref{FigJackPerspective} shows the inspection of a proof obligation
 for the method \texttt{sort} in the QuickSort example of
 Figure~\ref{FigJMLSpec}. The left upper windows allows one to browse
 the proof obligations for the current class. Proven obligations are

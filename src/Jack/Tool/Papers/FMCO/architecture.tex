@@ -1,27 +1,11 @@
 \section{General Architecture of JACK}\label{SecArchitecture}
 
-The development of the JACK tool started in 2002 at the formal methods
-research laboratory of the French smart card producer Gemplus (now
-part of gemalto). Successful case studies with ESC/Java and the LOOP
-tool on an electronic purse smart card
-application~\cite{BreunesseCHJ03} had sufficiently demonstrated that
-verification of JML annotations could help to increase the quality of
-smart card applications. However, the existing tools where either not
-precise enough, or they were too cumbersome to use, to expose
-application developers to them. The JACK tool was designed to overcome
-these problems. The next section will discuss how the tool has been
-made accessible to application developers by integration within the
-IDE Eclipse, and the development of a special JACK view, this
-section describes the general architecture of the tool, and how it
-aims at a high-level of precision.
-
-In 2003, the tool has been transfered to the Everest project at INRIA
-Sophia Antipolis, and been further developed within this team since
-then. The other features of JACK described in this paper have been
-developed after this transfer.
-
-For the development of the JACK architecture, the main design
-principles were the following:
+This section describes the general architecture of JACK, and how it
+aims at a high-level of precision.  The next section will then discuss
+how JACK has been made accessible to application developers by
+integration within the IDE Eclipse, and the development of the special
+JACK perspective, For the development of the JACK architecture, the
+main design principles were the following:
 \begin{itemize}
 \item integration within a widely-used IDE, so that developers do not
 have to learn a new environment, and do not have to switch between tools;
@@ -48,14 +32,17 @@ achieve this, also some program flow information is associated to each
 proof obligation). This connection makes the understanding of the
 generated proof obligations easier. Another advantage of this approach
 is that the algorithms for annotation generation as described below in
-Section~\ref{SecAnnotGen} directly could make use of the weakest
-precondition infrastructure.
+Section~\ref{SecAnnotGen} could make direct use of the weakest
+precondition infrastructure. A drawback of this approach is that the
+size of the generated proof obligation may be exponential in the size
+of the code fragment being checked~\cite{FlanaganSaxe01}.
+
+
 %\marginpar{MH: Please check what I say here! Should we say something about
 %drawbacks?}
 
-
-To ensure that proof obligations can be generated automatically and to
-avoid exponential explosion of the number of proof obligations, JACK
+To avoid this blow up in the size of the proof obligation, and to
+ensure that proof obligations can be generated automatically, JACK
 adds uses several new specification constructs, introduced
 in~\cite{BurdyRL03}: loops can be annotated with frame conditions
 (\texttt{loop\_modifies}) and exceptional postconditions
@@ -77,7 +64,7 @@ simple: one develops a background theory formalising Java's type
 system and memory model, and one defines how the abstract formulae are
 translated into concrete proof obligations for this particular
 prover. Initially, JACK was designed to use the AtelierB
-prover~\cite{Abrial96}, currently Simplify and Coq are the best
+prover~\cite{Abrial96}, now Simplify and Coq are the best
 supported back-end provers for JACK.
 
 

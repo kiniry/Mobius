@@ -30,6 +30,13 @@
 @STRING{TCS     = "Theor. Comp. Sci."}
 @STRING{ACI     = "Acta Informatica"}
 
+@Book{Abrial96,
+    author = "J.-R. Abrial",
+    title = "The {B} Book, Assigning Programs to Meanings",
+    publisher = "Cambridge University Press",
+    year = "1996"
+}
+
 @book{Alexander79,
   author = {C. Alexander},
   title = {The Timeless Way of Building},
@@ -70,6 +77,8 @@ note    = {\texttt{http://www.cis.ksu.edu/santos/bandera/}}
     year = {2001}
 }
 
+
+
 @INPROCEEDINGS{BartheDR04,
    Author = {G. Barthe and P. D'Argenio and T. Rezk},
    Title = {Secure Information Flow by Self-Composition},
@@ -78,6 +87,15 @@ note    = {\texttt{http://www.cis.ksu.edu/santos/bandera/}}
    Year = {2004}
 }
 
+
+@Book{BeckertHS07,
+   editor =        {B. Beckert and R. H{\"a}hnle and P.H. Schmitt},
+   title =         {Verification of Object-Oriented Software: The {KeY} Approach},
+   series        = LNCS,
+   number =        4334,
+   publisher     = springer,
+   year          = {2007}
+}
 
 @book{BerardBLPS99,
   author = 	 {B. B\'erard and M. Bidoit and F. Laroussinie and A. Petit and P. Schnoebelen},
@@ -227,14 +245,14 @@ number = 2422,
 editor = "H. Kirchner and C. Ringeissen"
 }
 
-@techreport{BreunesseCHJ03,
-title = {Formal Methods for Smart Cards: an experience report},
-author = "C. Breunesse and N. Cata{\~n}o and M. Huisman and B. Jacobs",
-number = "NIII-R0316",
-institution = "NIII, University of Nijmegen",
-year = 2003,
-note = "To appear in \emph{Science of Computer Programming}"
-}
+@Comment @techreport{BreunesseCHJ03,
+@Comment title = {Formal Methods for Smart Cards: an experience report},
+@Comment author = "C. Breunesse and N. Cata{\~n}o and M. Huisman and B. Jacobs",
+@Comment number = "NIII-R0316",
+@Comment institution = "NIII, University of Nijmegen",
+@Comment year = 2003,
+@Comment note = "To appear in \emph{Science of Computer Programming}"
+@Comment }
 
 @article{BreunesseCHJ04,
 title = {Formal Methods for Smart Cards: an experience report},
@@ -353,6 +371,12 @@ publisher = springer
   year  = "2003",
 }
 
+@inproceedings{ChanderEILN05,
+title = "{JVer}: A {Java} {Verifier}",
+author = "A. Chander and D. Espinosa and N. Islam and P. Lee and G. Necula",
+booktitle = "Proceedings of the Conference on Computer Aided Verification (CAV'05)",
+year = 2005
+}
 
 @InProceedings{Charles06,
   author =    {Julien Charles},
@@ -405,6 +429,14 @@ publisher = "IEEE Press"
     year = "1999",
 }
 
+@inproceedings{ColcombetF00,
+author = "T. Colcombet and P. Fradet",
+title = "Enforcing Trace Properties by Program Transformation",
+booktitle = "Principles of Programming Languages, POPL'00",
+publisher = "ACM Press",
+pages = "54--66",
+year = 2000
+}
 
 @TechReport{CorbettDHR01,
   author = 	 {J. Corbett and M.B. Dwyer and J. Hatcliff and Robby},
@@ -440,6 +472,16 @@ publisher = "IEEE Press"
     publisher = "IEEE Computer Society Press",
     pages = "258--267",
     year = "1996",
+}
+
+article={Dijkstra75,
+author = "E.W. Dijkstra",
+title = "Guarded commands, nondeterminacy and formal derivation of programs",
+journal = "Communications of the ACM",
+volume = 18,
+issue = 8,
+pages = "453--457", 
+year = 1975
 }
 
 @InProceedings{DwyerAC98,
@@ -813,12 +855,14 @@ year = 2001
 }		  
 
 
-@article{BartJacobsWP,
+
+@article{Jacobs04,
 author = "B. Jacobs",
-title = "Weakest Precondition Reasoning for {Java} Programs with {JML} Annotations",
+title = "Weakest Precondition Reasoning for {Java} Programs with {JML} Annotations", 
 journal = "Journal of Logic and Algebraic Programming",
-year = 2003,
-note = "To appear"
+year = 2004,
+volume = 58, 
+pages = {61--88} 
 }
 
 @UNPUBLISHED{Jacobs03b, 
@@ -911,6 +955,16 @@ note= {\texttt{http://java.sun.com/products/javacard/}}
   volume = 	 {1384},
   series = 	 lncs,
   publisher = springer
+}
+
+@article{LeavensBR06,
+author = "G.T. Leavens and A.L. Baker and C. Ruby",
+title = "Preliminary Design of {JML}: A Behavioral Interface Specification Language for {Java}",
+journal = "ACM SIGSOFT Software Engineering Notes",
+volume = 31,
+issue = 3,
+pages = {1--38}, 
+year = 2006
 }
 
 @INPROCEEDINGS{LeavensBR99b,

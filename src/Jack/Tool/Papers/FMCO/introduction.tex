@@ -1,36 +1,36 @@
 \section{Introduction}\label{SecIntro}
 
 \paragraph{Motivation}
-Over the last years, the use of trusted personal devices, such as
-mobile phones, PDAs and smart cards, has become more and more
+Over the last years, the use of trusted personal devices (TPD), such
+as mobile phones, PDAs and smart cards, has become more and more
 widespread. As these devices are often used with security-sensitive
 applications, they are an ideal target for attacks. Traditionally,
 research has focused on avoiding hardware attacks, where the attacker
 has physical access to the device to observe or tamper with
-it. However, trusted personal devices are more and more connected to
-networks and moreover, provide support to execute complex
-programs. This development has increased the risk of logical attacks,
-which are potentially easier to launch than physical attacks (they do
-not require physical access, and are easier to replicate from one
-device to the other), and may have a huge impact.  In particular, a
-malicious attacker spreading over the network and massively
-disconnecting or disrupting devices could have significant
-consequences.
+it. However, TPD are more and more connected to networks and moreover,
+provide support to execute complex programs. This has increased the
+risk of logical attacks, which are potentially easier to launch than
+physical attacks (they do not require physical access, and are easier
+to replicate from one device to the other), and may have a huge
+impact.  In particular, a malicious attacker spreading over the
+network and massively disconnecting or disrupting devices could have
+significant consequences.
 
 An effective means to avoid such attacks is to improve the quality of
-the software deployed on the device. This is in particular important
-for trusted personal devices, where post-issuance corrections are
-expensive due to their particular deployment process and their mass
-production. This paper describes JACK (the Java Applet Correctness
-Kit), a tool that can be used to improve the quality of applications
-for trusted personal devices. Such devices typically provide (a
-variation of) the Java Virtual Machine\footnote{The standard Java
-set-up for such devices is the Connected Limited Device Configuration,
-see \texttt{http://java.sun.com/products/cldc/}, together with the
-MIDP profile, see \texttt{http://java.sun.com/products/midp/}.},
-therefore JACK is tailored to applications written in Java
-(bytecode). However, the described techniques are also relevant to
-other execution platforms for trusted personal devices.
+the software deployed on the device. %This is in particular important
+%for TPD, where post-issuance corrections are
+%expensive due to their particular deployment process and their mass
+%production. 
+This paper describes JACK (the Java Applet Correctness Kit), a tool
+that can be used to improve the quality of applications for TPD. Such
+devices typically provide the Java Virtual Machine (or one of its
+variations)\footnote{The standard Java set-up for such devices is the
+Connected Limited Device Configuration, see
+\texttt{http://java.sun.com/products/cldc/}, together with the MIDP
+profile, see \texttt{http://java.sun.com/products/midp/}.}. Therefore
+JACK is tailored to applications written in Java (bytecode). However,
+the described techniques are also relevant to other execution
+platforms for TPD.
 
 
 %\item they feature mechanisms that contribute to the security of the
@@ -44,8 +44,9 @@ Java Modeling Language (JML)\footnote{See
 \texttt{http://www.jmlspecs.org}.}. An advantage of using JML is that
 there is wide range of tools and techniques available that use JML as
 specification language, 
-\emph{i.e.}\ for testing, simulation and verification. We
-distinguish two kinds of verification: at runtime, using
+\emph{i.e.}\ for testing, simulation and verification 
+(see~\cite{BurdyCCEKLLP05} for an overview). We distinguish two kinds
+of verification: at runtime, using
 \texttt{jmlc}, or statically. Several tools provide
 static verification of JML-annotated programs, adopting different
 compromises between soundness and automation (see the related work
@@ -57,51 +58,74 @@ Simplify~\cite{Simplify}, the interactive theorem prover that is used
 is Coq~\cite{Coq}.
 
 
+The development of the JACK tool started in 2002 at the formal methods
+research laboratory of the French smart card producer Gemplus (now
+part of gemalto). Successful case studies with ESC/Java and the LOOP
+tool on an electronic purse smart card
+application~\cite{final:Form.Met} had sufficiently demonstrated that
+verification of JML annotations could help to increase the quality of
+smart card applications. However, the existing tools where either not
+precise enough, or they were too cumbersome to use, to expose
+application developers to them. The JACK tool was designed to overcome
+these problems, in particular via the integration of JACK within the
+IDE Eclipse, and the development of a special JACK perspective.
+
+In 2003, the tool has been transfered to the Everest project at INRIA
+Sophia Antipolis, and been further developed within this team since
+then. The other features of JACK described in this paper have been
+developed after this transfer.
+
 The main characteristics of JACK that distinguish it from other static
 verification tools are the following:
 \begin{itemize}
 \item full integration within Eclipse IDE\footnote{See
 \texttt{http://www.eclipse.org}.}, including the development of a
-special JACK view that allows to inspect the different proof
+special JACK perspective that allows to inspect the different proof
 obligations, and from where in the code they originate;
 \item implementation of annotation generation algorithms: to
 generate ``obvious'' annotations, and to encode high-level security
 properties;
 \item support for verification of bytecode programs; and
 \item support for interactive verification, by the development of an interface
-and tactics for Coq and by use of the ``native'' construct, that allows to
+and tactics for Coq and by use of the \native construct, that allows to
 link JML specifications with the logic of the underlying theorem
 prover. 
 \end{itemize}
 This paper illustrates how these characteristics make JACK
 particularly suited for the development of secure applications for
-trusted personal devices.
+TPD.
 
-In particular, JACK provides an algorithm to automatically generate
-annotations encoding high-level security policies, and to weave and
-propagate these in the application. These annotations give rise to
-proof obligations, whose discharge (typically automatically)
-guarantees adherence to the security policy. Since JACK also provides
-support for the verification of bytecode, and allows to compile source
-code level JML annotations into bytecode level specifications (written
-in the Bytecode Modeling Language (BML)~\cite{BurdyHP07}), this
-enables a proof-carrying code scenario. In such a scenario, the
-applications come equipped with a specification and a proof that allow
-the client to establish trust in the application. Since the
-applications usually are shipped in bytecode format, also the
-specification and the verification process need to be defined at this
-level. This scenario is even further facilitated by the fact that the
-compiler from JML to BML provided by JACK basically preserves proof
-obligations. Thus, a software developer can verify its application at
-source code level, and ship the application with compiled bytecode
-level specifications and proofs. Notice that, provided the proof
-obligations can be discharged automatically, this whole process is
-automatic.
+\paragraph{Application Scenarios}
+JACK provides different kinds of support for the application
+developer, ranging from the the automatic verification of a collection
+of common security properties to the interactive verification of
+advanced functional specifications.
 
-However, JACK is a general-purpose tool, and besides the verification
-of high-level security policies, it can be also be used to verify
-complex functional behaviour specifications, by providing advanced
-support for specification development and interactive
+To support the automatic verification of high-level security
+properties, JACK provides an algorithm to automatically generate
+annotations encoding such properties, and to weave and propagate these
+in the application. These annotations give rise to proof obligations,
+whose discharge (typically automatically) guarantees adherence to the
+security policy. Since JACK also provides support for the verification
+of bytecode, and allows to compile source code level JML annotations
+into bytecode level specifications (written in the Bytecode Modeling
+Language (BML)~\cite{BurdyHP07}), this enables a proof carrying code
+scenario~\cite{Necula97}. In such a scenario, the applications come
+equipped with a specification and a proof that allow the client to
+establish trust in the application. Since the applications usually are
+shipped in bytecode format, also the specification and the
+verification process need to be defined at this level. This scenario
+is even further facilitated by the fact that the compiler from JML to
+BML provided by JACK basically preserves proof obligations (see
+also~\cite{gta05:fast}. Thus, a software developer can verify its
+application at source code level, and ship the application with
+compiled bytecode level specifications and proofs. Notice that,
+provided the proof obligations can be discharged automatically, this
+whole process is automatic.
+
+However, as JACK is a general-purpose tool, it can be also be used to
+verify complex functional-behaviour specifications, by providing
+advanced support for specification development and interactive
 verification. First of all, because of the tight integration with
 Eclipse, the developer does not have to change tools to validate the
 application. A special JACK view is provided, that allows to inspect
@@ -118,7 +142,7 @@ exceptions. Finally, to support interactive verification, several
 advanced Coq tactics have been developed, and a Coq editor has been
 integrated into Eclipse. In addition, to be able to write expressive
 specifications, a
-\texttt{native} construct has been proposed for JML, that allows to
+\native construct has been proposed for JML, that allows to
 link JML constructs directly with the logic of the underlying
 prover. This allows to develop the theory about these constructs
 directly in the logic of the theorem prover, which makes specification

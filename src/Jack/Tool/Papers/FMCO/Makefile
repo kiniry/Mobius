@@ -35,7 +35,7 @@ everything: all $(destpdf)
 
 %.dvi: %.tex *.tex 
 	latex $<
-	-bibtex $*
+	-bibtex -min-crossrefs=1000 $*
 	latex $<
 	latex $<
 
@@ -48,7 +48,7 @@ everything: all $(destpdf)
 
 %.pdf : %.tex $(texfiles)  $(bibfiles)
 	pdflatex $<
-	-bibtex $*
+	-bibtex -min-crossrefs=1000 $*
 	 pdflatex $<
 	pdflatex $<
 
