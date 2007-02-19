@@ -101,7 +101,59 @@ special lemmas and special tactics.
 
 
 
-\subsection{Toward native specifications}
+\subsection{Towards native specifications}
+\begin{figure}[t!]
+{\small In JML we define:
+\begin{verbatim}
+/*@ public native class IntList {
+     public native IntList cons (int i);
+     public native static IntList create();
+     ...
+     public native static IntList toList (int [] tab);
+   } @*/ \end{verbatim}}
+
+{\small And in Coq:
+\begin{verbatim}
+Definition IntList := list t_int.
+Definition IntList_create : IntList := nil .  
+Definition IntList_cons:  t_int -> list t_int ->list t_int := 
+            fun (i: t_int) (this: list t_int)  => (i :: this).
+... \end{verbatim}}
+\caption{The definition of native type \texttt{IntList}}\label{CoqAnnot} 
+\end{figure}
+User-extensions through the use of tactics are useful;
+but sometimes users would like more expressivity: instead of having
+tactics and extensions based solely on Jack's Java logic, a user could
+build his own logic and use it with JML annotations. He could 
+even use pre-existing logics and use them with his annotations. That is 
+exactly the purpose of the native construct.
+
+
+The native construct can be used to express some notions contained within
+the annotation directly in the logic of the prover. If we define a native type 
+IntList and we bind it to Coq list of integer type (Fig. \ref{CoqAnnot}), 
+we can use the list library of Coq to do our proofs. The annotation of the
+{\tt sort} method can be defined as annotations for our new type 
+(Fig. \ref{sortnat}). We get more readable annotations;
+the annotations are more natural for a Coq user because of relying upon Java
+logic over the array, we get it defined with a Coq library.
+The user can also define more easily lemmas to help prove some of the proof
+obligations and to add automations for proof scripts.
+
+
+\begin{figure}[t!]
+{\small In JML we define:
+\begin{verbatim}
+//@ ghost IntList list;
+/*@ requires (tab!=null) && list.equals(IntList.toList(tab))
+    assignable tab[0 .. (tab.length -1)], list;
+    ensures list.equals(IntList.toList(tab)) &&
+             list.isSorted() && list.isPermutation();
+ @*/
+public void sort() {if(tab.length > 0) sort(0, tab.length -1);}\end{verbatim}}
+\caption{\texttt{Sort} with natives}\label{sortnat} 
+\end{figure}
+
 
 
 
