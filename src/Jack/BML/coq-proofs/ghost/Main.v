@@ -1,6 +1,7 @@
 Require Import  Logic.
 Require Import LogicWithGhost.
 Require Import Coq.Logic.Classical_Prop.
+Require Import  axioms.
 
 Export Logic.
 Export LogicWithGhost.
@@ -12,8 +13,7 @@ A DERIVABILITY OF A JUDGEMENT WITH GHOSTS ( PROGRAM STATEMENT
  AND ASSERTION WITH GHOSTS )
  IN LOGIC SYSTEM FOR REASONING 
 ABOUT PROGRAMS WITH GHOSTS IMPLIES DERIVABILITY OF 
-THE RESPECTIVE JUDGEMENT WITHOUT GHOST
-  *)
+THE RESPECTIVE STATTEMENT AND JUDGEMENT WITHOUT GHOST *)
 Fixpoint  transform (gstmt: Gstmt){struct gstmt } :stmt  :=
 match gstmt with 
  | (GAffect x e ) => (Affect x e) 
@@ -60,7 +60,7 @@ Lemma ghostLogicImpliesStandardLogic: forall (gst: Gstmt )  ( Gpost : Gassertion
 Proof.
 intros gst.  intros  Gpost ; simpl;auto;
 intros grule.  induction grule.  
-(*assign*)
+(* ASSIGN *)
 unfold transform.
 apply (AffectRule  x e    (fun s1 s2 : state =>
    forall sg1 : gState, exists sg2 : gState, post s1 sg1 s2 sg2) ).
@@ -74,7 +74,7 @@ assumption.
 
 (*******************************************************************************************************)
 
-(*If*)
+(* IF *)
 apply( IfRule  e (transform stmtT)   (transform stmtF)  
             (fun s1 s2 : state =>  forall sg1 : gState, exists sg2 : gState, post1 s1 sg1 s2 sg2)
             (fun s1 s2 : state =>  forall sg1 : gState, exists sg2 : gState, post2 s1 sg1 s2 sg2)).
@@ -243,9 +243,37 @@ Qed.
 
 
 Lemma correctGhost: forall (s: Gstmt)  (s1 s2 : state ) , (  exec_stmt  s1 ( transform s) s2)  ->
-forall ( post : Gassertion),   GRULE s post   -> forall g1 , exists g2, post s1 g1 s2 g2.
+   forall ( post : Gassertion),   GRULE s post   -> forall g1 , exists g2, post s1 g1 s2 g2.
 Proof.
 intros  st s1 s2 exec gPost rule.
 apply ( correct (transform st) s1 s2 exec);
 apply ( ghostLogicImpliesStandardLogic st gPost); simpl;auto.
 Qed.
+
+
+Lemma exi: forall (post : assertion) (s1 s2 : state ), (forall ( g1 : gState), exists  g2: gState, post  s1 s2 ) -> post s1 s2.
+Proof.
+intros.
+elim H.
+intros.
+assumption.
+apply ghostNotEmpty.
+Qed.
+
+(* this lemma uses the weird axiom ghostNotEmpty *)
+Lemma conservative: forall (s: Gstmt)  ( post : assertion) ,   
+GRULE s (fun (s1 : state) (g1 : gState ) (s2 : state) ( g2 : gState ) =>   post s1 s2)  -> RULE (transform s) post.
+Proof.
+intros .  
+assert (H1 := ghostLogicImpliesStandardLogic s   (fun (s1 : state) (_ : gState) (s2 : state) (_ : gState) => post s1 s2)  H);
+simpl;auto.
+simpl in H1.
+
+apply ( conseqRule   (transform s)     (fun s1 s2 : state => gState -> ex (fun _ : gState => post s1 s2))  post  ).
+intros. 
+apply ( exi  post s1 s2). 
+simpl;auto.
+assumption.
+Qed.
+
+

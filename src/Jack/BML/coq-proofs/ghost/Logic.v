@@ -47,6 +47,59 @@ Inductive RULE: stmt -> assertion -> Prop :=
 
 
 
+(* CONSEQUENCE RULE IS DERIVABLE *)
+Lemma  conseqRule : forall (st : stmt )(post1 post2 : assertion), 
+(forall s1 s2, (post1 s1 s2)  ->  (post2 s1 s2) ) -> 
+ RULE st post1 -> RULE  st post2.
+Proof.
+intros st. induction st; 
+intros post1 post2 conseq rule;
+inversion rule;simpl;subst;auto.
+
+(* ASSIGN *)
+apply ( AffectRule   v e post2 )  .      
+intros.
+apply conseq.
+apply H2.
+assumption.
+
+(* IF *)
+apply ( IfRule e st1 st2 post0 post3 post2 ) .  
+intros.
+apply conseq.
+apply H2.
+assumption.
+assumption.
+assumption.
+
+(* WHILE *)
+assert (H1_1 :   forall s1 s2 : state, post0 s1 s2 /\ eval_expr s2 e = 0 -> post2 s1 s2 ).
+intros.
+apply conseq.
+apply H1.
+assumption.
+apply ( WhileRule st post2 post0 e inv  ). 
+assumption.
+assumption.
+assumption.
+assumption.
+
+(* CONSEQ *)
+apply ( SeqRule st1 st2 post0 post3 post2) .  
+intros.
+apply conseq.
+apply H1.
+assumption.
+assumption.
+assumption.
+
+
+(* SKIP *)
+apply (SkipRule post2).
+intros; simpl;auto.
+Qed.
+ 
+
 
 (*PROOF OF SOUNDNESS OF THE ABOVE RULE W.R.T. THE
  OPERATIONAL SEMANTICS GIVEN IN   Semantic.v. THE PROOF IS BY INDUCTION
@@ -87,6 +140,7 @@ apply H6.
 (*WHILE*)
 (*iteration case, condition holds*)
 inversion rule.
+
 apply (H2 s1 s3).
 assert (H100 := IHexec2 (fun s1 s2 => post1 s1 s2 /\ eval_expr s2 e = 0 ) ).
 assert ( RULE (While e stmt) (fun s1 s2 => post1 s1 s2 /\ eval_expr s2 e = 0 ) ).

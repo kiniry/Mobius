@@ -1,6 +1,8 @@
 Require Import ZArith.
 Require Import Bool.
 Require Import BoolEq.
+
+Require Import Coq.Arith.Bool_nat.
 Open Scope Z_scope.
 (*normal variables*)
 (*Definition var := Z.*)
@@ -9,9 +11,12 @@ Definition var := Z.
 Definition eq_var x y := Zeq_bool x y.
 
 (*ghost variables*)
-Definition gVar := Z.
+Definition gVar := nat.
 
-Definition eq_gVar x y := Zeq_bool x y.
+Definition eq_gVar (x y : nat)  :=   
+  match (x  = y) with
+    | True => true
+     end.
 
 Definition value := Z.
 
@@ -23,7 +28,7 @@ Definition update (s:state) (x:var) (v:value) :=
  fun y => if eq_var x y then v else s y.
 
 Definition gUpdate(s: gState ) ( x: gVar) (v:value) := 
- fun y => if eq_var x y then v else s y.
+ fun y => if ( eq_gVar  x  y  ) then v else s y.
 
 (* Definition of expression *)
 
