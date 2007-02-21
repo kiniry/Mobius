@@ -2,60 +2,61 @@
 
 
 \section{Support for Interactive Verification}\label{SecInteractive}
-One of the interesting feature in Jack is its use for interactive 
-verification. When automatic provers fail to solve a proof obligation,
-the user can try to solve it interactivly (instead of the usual 
-informal verification). It is comparable to what is done within the tool
- Krakatoa but Jack has the advantage to be integrated in Eclipse.
-More specifically, Jack's case viewer allows to edit every proof that 
-failed automatic verification separately and 
-it also shows the proof source from the Java code. 
-\subsection{The Coq plugin}
-The generated  proof obligations are translated into Coq language, mostly
-straight-forwardly. The main concern in this plugin is the proof readability,
-and proof reusability.
-That's why we developped a set of facilities for variable name handling,
-pretty printing, the reuse of proofs, the ease to build the proofs and the 
-user extensions.
+When automatic provers fail to solve a proof obligation,
+the user can try to solve it interactively, using the interactive verification
+support of JACK.
+More specifically, the proof obligation inspection 
+perspective of JACK, we saw in section
+\ref{SecUI}, allows to edit every proof that 
+failed automatic verification separately.
+The interactive verification process is done mainly
+with the theorem prover Coq. 
 
-\paragraph{Pretty printing}
-In Jack, facilities for better readability already exists.
-A difference is made between short variable names, 
+First we will discuss the architecture of JACK's Coq plugin, then its 
+integration within JACK and the IDE Eclipse, and finally we will talk of
+ JACK's specific annotation keyword for interactive verification, the 
+{\tt native} keyword. 
+
+\subsection{The Coq Plugin}
+The Coq Plugin translates the JACK's proof obligations
+into the Coq language.
+The proof readability and proof reusability is crucial in interactive 
+verification,
+therefore we developed a set of facilities for variable name handling,
+pretty printing, the reuse of proofs, the ease to build the proofs.
+
+In JACK, a difference is made between short variable names, 
 when no other variable is named this way,
  and long variable names, when there can be an ambiguity. 
 When doing interactive verification the scope of these disambiguations 
-can be mistaken as Jack do it execution case wise and not lemma wise.
-This disambiguation is redone (lemma wise) 
-in the Coq plugin to add better proof readability.
+can be mistaken as JACK generates all the names for one file in one row.
+This disambiguation is redone in the Coq Plugin for each proof obligations.
+This add better proof readability as the variable names are shorter.
+
 The main pretty printing is done directly through Coq's own features for
  printing. Each proof obligation is passed to Coq top-level and the result of 
 Coq's parsing is the proof obligation given to the user to view.
 
-\paragraph{Lemma generation} 
+
 A special attention has also be given when generating the proof obligations 
-into a file. First it has a name composed of the full class name, the method
-name, the execution case and the goal. It is done so the user can retrieve 
-the proof obligation with Jack whenever he wants it. Each file is stocked
-locally in a directory named {\tt proofs} 
-for when the lemma is regenerated or reopened; the proof it was containing
-can be replayed (and eventually fail if the conditions have changed too much).
-The normal hypothesis are separated from the invariants; given different names.
+into a file. First it has a human-readable name so the user can retrieve 
+the proof obligation with Jack whenever he wants it. 
+This way, if the lemma is regenerated or reopened
+ the proof it was containing can be replayed 
+(and eventually fail if the conditions have changed too much).
+
+The normal hypothesis are separated from the invariants and
+are given different names.
 It is specifically useful when a goal has been modified (and considered 
 unproved) by the modification of an invariant. If the proof was not involving
 the use of any invariant; it can be replayed without any changing.
 
-\paragraph{Automations}
-The interaction with the theorem has been made tighter than the usual 
-interactive verification's one.
-Jack has 3 {\it interactive-automatic} modes. 
-By {\it automatic} we mean we 
-try to apply a generic proof script to several goals, 
-and if it fails we try another one. 
-The three automatic modes are: the light mode, where we use a proof script
-called lightAutoJack to prove the goals; 
-the tough mode, where we use the proof script toughAutoJack, 
-and the semi-auto mode where the user can write a proof script that will
-be tried on several lemmas.
+The Coq Plugin also allows automatic resolution of proof obligations
+using generic proof scripts or user-defined ones.
+It evaluates the selected proof scripts on the proof obligations.
+
+
+
 
 
 
