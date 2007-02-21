@@ -24,7 +24,7 @@ underlying theorem prover).
 The JACK tool has been used for several small to medium-scale case
 studies. First of all, we have shown how BML annotations can be used
 to guarantee resource policies related to memory consumptions on
-bytecode applications~\cite{gmg05:sefm}. In addition, we have also
+bytecode applications~\cite{BarthePS05}. In addition, we have also
 shown how the verification of exception-freeness at bytecode level can
 be used to reduce the footprint of Java-to-native compilation
 schemes. Executable code typically contain run-time checks to decide
@@ -59,7 +59,7 @@ tools will be integrated in this single verification tool.
 Several other tools exist for the static verification of JML-annotated
 Java code, but JACK distinguishes itself from these tools by the
 features described in this paper. We briefly describe the most
-relevant other tools. ESC/Java~\cite{CokKiniry04} is probably the most
+relevant other tools. ESC/Java~\cite{CokK04} is probably the most
 used one. It also aims at a high level of automation, but makes an
 explicit trade-off between automation and soundness. The Jive
 tool~\cite{MeyerP00} uses a Hoare-logic for program verification,
@@ -84,12 +84,12 @@ tool to verify annotated bytecode~\cite{ChanderEILN05}, but they do
 not have a special bytecode specification language.  The Extended
 Virtual Platform project aims at developing a framework that allows to
 compile JML annotations, to allow run-time
-checking~\cite{AlagicXVP05}, but they do not allow to write
+checking~\cite{AlagicR05}, but they do not allow to write
 specifications directly at bytecode level.
 
 Most approaches to ensuring high-level security properties are based
 on run-time monitoring, see
-\emph{e.g.}~\/\cite{bartetzko01assertions,Schneider99,Erlingsson03,CF00:popl}. However,
+\emph{e.g.}~\/\cite{bartetzko01assertions,Schneider99,Erlingsson03,ColcombetF00}. However,
 run-time monitoring is not an option for trusted personal devices: for
 the user it would be unacceptable to be blocked in the middle of an
 application, because of a security violation.
