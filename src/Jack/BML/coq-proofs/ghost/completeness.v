@@ -1,5 +1,7 @@
-Require Import GhostImpliesWithoutGhost. 
-Require Import SemanticGhost.
+(*Require Import GhostImpliesWithoutGhost. 
+Require Import SemanticGhost.*)
+Require Import Semantic.
+Require Import Logic.
 Require Import Coq.Logic.Classical_Prop.
 
 (* COMPLETENESS OF THE LOGIC FOR NORMAL ASSERTIONS *)

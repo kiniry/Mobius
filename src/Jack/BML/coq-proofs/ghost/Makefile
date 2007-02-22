@@ -1,4 +1,4 @@
-FILES=BasicDef.vo Semantic.vo Language.vo LanguageGhost.vo LogicWithGhost.vo Logic.vo axioms.vo
+FILES=BasicDef.vo Semantic.vo Language.vo LanguageGhost.vo LogicWithGhost.vo Logic.vo completeness.vo
 
 
 
@@ -13,7 +13,7 @@ noclean: $(FILES)
 	coqc Semantic	 
 	coqc LogicWithGhost
 	coqc Logic
-	coqc axioms
+	coqc completeness
 	coqc Main
 
 

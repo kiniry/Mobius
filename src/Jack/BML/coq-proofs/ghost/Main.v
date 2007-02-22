@@ -1,7 +1,7 @@
 Require Import  Logic.
 Require Import LogicWithGhost.
 Require Import Coq.Logic.Classical_Prop.
-Require Import  axioms.
+
 
 Export Logic.
 Export LogicWithGhost.
@@ -183,7 +183,7 @@ apply (  WhileRule  _
 ).
 
 (*******************************************************************************************)
-(*CONSEQ*)
+(* COMPOSITION *)
 assert (   forall (s1 s2 : state), 
     (exists p : state,
         ( forall ( g1 : gState) , exists g2: gState,  post1 s1 g1 p g2 ) /\ 
@@ -251,16 +251,17 @@ apply ( ghostLogicImpliesStandardLogic st gPost); simpl;auto.
 Qed.
 
 
+
 Lemma exi: forall (post : assertion) (s1 s2 : state ), (forall ( g1 : gState), exists  g2: gState, post  s1 s2 ) -> post s1 s2.
 Proof.
 intros.
-elim H.
+assert ( H1 := H (fun (g : gVar ) => 1 )).
+elim H1.
 intros.
 assumption.
-apply ghostNotEmpty.
 Qed.
 
-(* this lemma uses the weird axiom ghostNotEmpty *)
+
 Lemma conservative: forall (s: Gstmt)  ( post : assertion) ,   
 GRULE s (fun (s1 : state) (g1 : gState ) (s2 : state) ( g2 : gState ) =>   post s1 s2)  -> RULE (transform s) post.
 Proof.
