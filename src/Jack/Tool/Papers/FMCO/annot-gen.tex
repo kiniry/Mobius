@@ -140,10 +140,10 @@ No pin verification may happen within a transaction.
 \end{quote} 
 The second rule ensures that a transaction will always be closed,
 because if the exception is not caught, \texttt{commitTransaction}
-will not be executed. The last rule avoids the possibility abort the
-transaction every time a wrong pin code has been entered. As this
-would roll back the internal state to the state before the transaction was
-started, this would also reset the retry counter, thus allowing an
+will not be executed. The last rule avoids the possibility to abort
+the transaction every time a wrong pin code has been entered. As this
+would roll back the internal state to the state before the transaction
+was started, this would also reset the retry counter, thus allowing an
 unbounded number of retries. Even though the specification of the Java
 Card API prescribes that the retry counter for pin verification cannot
 be rolled back, in general one has to check this kind of properties.

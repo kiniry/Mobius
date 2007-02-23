@@ -117,12 +117,12 @@ establish trust in the application. Since the applications usually are
 shipped in bytecode format, also the specification and the
 verification process need to be defined at this level. This scenario
 is even further facilitated by the fact that the compiler from JML to
-BML provided by JACK basically preserves proof obligations (see
-also~\cite{gta05:fast}. Thus, a software developer can verify its
-application at source code level, and ship the application with
-compiled bytecode level specifications and proofs. Notice that,
-provided the proof obligations can be discharged automatically, this
-whole process is automatic.
+BML provided by JACK basically preserves the generated proof
+obligations (see also~\cite{gta05:fast}). Thus, a software developer
+can verify its application at source code level, and ship the
+application with compiled bytecode level specifications and
+proofs. Notice that, provided the proof obligations can be discharged
+automatically, this whole process is automatic.
 
 However, as JACK is a general-purpose tool, it can be also be used to
 verify complex functional-behaviour specifications, by providing
@@ -153,7 +153,7 @@ and verification simpler.
 \paragraph{Overview of the Paper}
 The next section gives a quick overview of the relevant JML features,
 and presents an example that we will use to illustrate the different
-features of JACK. Section~\ref{SecArchitecture} t briefly outlines the
+features of JACK. Section~\ref{SecArchitecture} briefly outlines the
 general architecture of JACK, while Section~\ref{SecUI} focuses on its
 user interface. Section~\ref{SecAnnotGen} describes the different
 annotation generation algorithms that JACK
@@ -166,7 +166,7 @@ how this work will be continued.
 Parts of the results described in this paper have been published
 elsewhere (\cite{BurdyRL03} describes the general architecture of
 JACK, \cite{PavlovaBBHL04} the annotation generation algorithm
-for security policies, \cite{BP06JSV} the framework for the
+for security policies, \cite{BurdyP06} the framework for the
 verification of bytecode, and \cite{Charles06} the native
 construct). However, this is the first time a complete overview of
 JACK and its main features are given in a single paper.

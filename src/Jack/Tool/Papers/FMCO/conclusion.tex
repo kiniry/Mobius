@@ -56,20 +56,33 @@ tools will be integrated in this single verification tool.
 %evaluations of applications for trusted personal devices.
 
 \paragraph{Related work}
-Several other tools exist for the static verification of JML-annotated
-Java code, but JACK distinguishes itself from these tools by the
-features described in this paper. We briefly describe the most
-relevant other tools. ESC/Java~\cite{CokK04} is probably the most
-used one. It also aims at a high level of automation, but makes an
-explicit trade-off between automation and soundness. The Jive
-tool~\cite{MeyerP00} uses a Hoare-logic for program verification,
-requiring much more user interaction. The Key tool~\cite{BeckertHS07}
-uses a dynamic logic approach, where program verification resembles
-program simulation. The LOOP tool~\cite{BergJ01} translates both the
-program and the annotations into specifications in the logic of the
-PVS theorem prover. Both a Hoare logic and a weakest precondition
-calculus have been proven sound in PVS, and can be used to verify
-whether the program respects its specification.
+Several other tools exist aiming at the static verification of
+JML-annotated Java code, but JACK distinguishes itself from these
+tools by the features described in this paper. We briefly describe the
+most relevant other tools. ESC/Java~\cite{CokK04} is probably the most
+used tool. It also aims at a high level of automation, but makes an
+explicit trade-off between automation and
+soundness. 
+The Jive tool~\cite{MeyerP00} uses a Hoare-logic for program
+verification, requiring much more user interaction. The Key
+tool~\cite{BeckertHS07} uses a dynamic logic approach, where program
+verification resembles program simulation. The LOOP
+tool~\cite{BergJ01} translates both the program and the annotations
+into specifications in the logic of the PVS theorem prover. Both a
+Hoare logic and a weakest precondition calculus have been proven sound
+in PVS, and can be used to verify whether the program respects its
+specification.
+
+Krakatoa~\cite{MarcheP-MU04} translates JML-annotated
+programs into an intermediate format, for which the Why tool generates
+proof obligations. Krakatoa allows the user to specify algebraic
+specifications as part of the annotations, and use these in the
+verification. This resembles the \native construct, however, the
+\native construct directly allows one to use the full expressiveness
+of the logic of the underlying prover, and to directly reuse any
+(library) results already proven about the datatypes. Moreover, the
+use of the native construct allows one to keep on using a Java-like
+syntax in the annotations.
 
 The Spec\#/Boogie project~\cite{BarnettLW04} aims at the specification
 and verification of annotated C\# programs. As JACK, the tool also
