@@ -114,7 +114,7 @@ independent of the particular class instances available.
 
 As a typical example of the kind of security rules our approach can
 handle, we consider the atomicity mechanism in Java Card (Java for
-smart cards) (\cite{PavlovaBBHL04cardis} gives more examples of such
+smart cards) (\cite{PavlovaBBHL04} gives more examples of such
 security rules). A smart card does not include a power supply, thus a
 brutal retrieval from the terminal could interrupt a computation and
 bring the system in an incoherent state. To avoid this, the Java Card
@@ -170,7 +170,7 @@ public static native void beginTransaction()
                           throws TransactionException;
 \end{verbatim}
 Similar annotations are generated for \texttt{commitTransaction} and
-\texttt{abort\-Trans\-action} (\cite{PavlovaBBHL04cardis} also
+\texttt{abort\-Trans\-action} (\cite{PavlovaBBHL04} also
 describes the generated core-annotations for the other
 properties). After propagation, these annotations are sufficient to
 check for the absence of nested transaction.  To understand why
@@ -215,7 +215,7 @@ static variables). We have exploited this correspondence in the
 implementation, by re-using the wp-calculus infrastructure to
 implement the propagation algorithm. For a more formal treatment of
 the propagation algorithm, and the correspondence statement, we refer
-to~\cite{PavlovaBBHL04cardis}.
+to~\cite{PavlovaBBHL04}.
 
 To illustrate the effectiveness of our approach, we tested our method
 on several industrial smart card applications, including the so-called
