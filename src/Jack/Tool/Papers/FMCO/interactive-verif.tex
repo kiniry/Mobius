@@ -125,32 +125,37 @@ Definition IntList_append:   list t_int ->  list t_int -> list t_int := app.
 ... \end{verbatim}}
 \caption{The definition of native type \texttt{IntList}}\label{CoqAnnot} 
 \end{figure}
-Sometimes users would like more expressivity: instead of having
-tactics and extensions based solely on JACK's Java logic, a user may want to
-build his own logic and use it with JML annotations. That is 
+Sometimes users would like more expressivity: instead of having his
+ extensions based solely on JML's constructs, he would like 
+to use constructs more specific to the prover in which he will develop his 
+proofs. This is 
 exactly the purpose of the \native construct \cite{Charles06}.
 
-The \native construct is made to express some notions contained within
-the annotation directly in the logic of the prover. It can be used 
-as \native types and as  \native methods.
-A \native method is a specification method that is like a {\tt pure} method 
-but  it does not throw any exception and is used uniquely through the specifications. 
-A \native type is a type to use with specification methods (\native methods as well as 
-JML's {\tt model} methods). Both are references to a constructs 
-defined in the proof obligation's target language: usually \native types are bounded to 
-types and \native methods to functions definitions.
+The \native construct is used to relate declarations in
+the specifications directly to the logic of the prover. It can be used 
+for types and methods.
+A \native method is a specification-only method that is like a {\tt pure} method 
+but  it does not throw any exception and is used uniquely in the specification.
+It does not have a body nor does it have specifications. 
+A \native type is a type to use with specification methods 
+(\native methods as well as JML's {\tt model} methods). 
+Both are related to constructs 
+defined in the proof obligation's target language: 
+\native types are bound to 
+types and \native methods to function definitions.
 
 
-If we define a \native type IntList and we bind it to a list of integer type 
- (Figure \ref{CoqAnnot}), we can use the list library of the target prover (here Coq) 
+For example, if we define a \native type IntList and we bind it to a 
+list of integer type (Figure \ref{CoqAnnot}), 
+we can use the list library of the target prover (here Coq) 
 in the proofs. The specifications of the
-{\tt sort} method can be defined as specifications using our new type 
+{\tt sort} method can be defined as specifications using this new type 
 (Figure \ref{sortnat}). We get more readable annotations;
 the annotations are more natural for the user because instead
- of relying upon Java logic over the array, we get it defined directly into
+ of relying array, we can define it directly into
 our target proof obligations language syntax.
 The user can also define more easily lemmas to help prove some of the proof
-obligations and to add automations for proof scripts.
+obligations and to add automation for proof scripts.
 
 
 \begin{figure}[t!]
@@ -160,7 +165,7 @@ obligations and to add automations for proof scripts.
 /*@ requires (tab!=null) && list.equals(IntList.toList(tab))
     assignable tab[0 .. (tab.length -1)], list;
     ensures list.equals(IntList.toList(tab)) &&
-             list.isSorted() && list.isPermutation();
+             list.isSorted() && list.isInjection();
  @*/
 public void sort() {if(tab.length > 0) sort(0, tab.length -1);}\end{verbatim}}
 \caption{\texttt{Sort} with natives}\label{sortnat} 
