@@ -68,7 +68,7 @@ public class EqualsAST extends EqualsASTNoDecl {
 
         if (a.decl == ((FieldAccess) b).decl) {
             if (Modifiers.isStatic(a.decl.modifiers)) { return new Boolean(true); }
-            return (Boolean) super.visitFieldAccess(a, b);
+            return super.visitFieldAccess(a, b);
         }
         return new Boolean(false);
     }

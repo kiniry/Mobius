@@ -2,7 +2,7 @@ RCC - a race condition checker for Java
 
 Dependencies
   The library `javafe-1.0.jar' should be placed in the `lib' directory.
-  This file is obtained by running `make dist' in Javafe.
+  This file is obtained by running `make jar' in Javafe.
   We use `ant' as the build tool; it should be installed.
   
 Compilation

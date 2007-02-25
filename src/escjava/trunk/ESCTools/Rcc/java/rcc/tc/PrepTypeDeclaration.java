@@ -54,11 +54,58 @@ import rcc.ast.SubstitutionVec;
 import rcc.ast.TagConstants;
 
 /**
- * NOTE: According to the documentation of <code>javafe.tc.TypeSig</code> this
- * class, which is responsible of typechecking at signature level, meaning that
- * it does not look at fields of types. In order to avoid call cycles it shoud
- * never use functions from <code>FlowInsensitiveChecks</code> which takes
- * care of the last phases of typechecking.
+ * NOTE According to the contract of <code>javafe.tc.Typesig</code> this
+ *      class shall not use <code>FlowInsensitiveChecks</code> to avoid
+ *      call cycles.
+ *      
+ * NOTE Below I use `parameters' as a shorthand for `formal parameters'
+ *      and `arguments' as a shorthand for `actual arguments'.
+ *
+ * See below for some clarifications on 
+ * <code>javafe.tc.PrepTypeDeclaration</code>.
+ * 
+ * The responsabilities of this class include:
+ *  - Transforms the GENERICARGUMENTPRAGMA pragma type modifiers of 
+ *    (as in C<x> f) into GenericArgumentPragma and attach it as a decoration
+ *    on the type name (C). 
+ *  - Each (class) ghost parameter is transformed into a field declaration
+ *    whose parent is the current class declaration and which are attached 
+ *    as a GhostDeclPragma decoration to the current class declaration.
+ *  - Uses the processTypeNameAnnotations hook to change resolution so
+ *    that the signature of the proper instantiation is returned, instead
+ *    of the signature of the generic type when resolving names such as C<x>. 
+ *  - Informs the default instantiation TypeSig what its formal parameters are.
+ *
+ * We override the following methods for unknown reasons:
+ *  - getEnvForCurrentSig
+ *  
+ * We override the following so that we transform generic arguments into
+ * AST decorations and we create TypeSig instantiations.
+ *  - processTypeNameAnnotations
+ *
+ * We override the following methods to process generic parameters into
+ * field declarations added as decorations to the type declaration.
+ *  - visitClassDecl
+ *  - visitInterfaceDecl
+ *
+ * The following notes should accompany 
+ *   <code>javafe.tc.PrepTypeDeclaration</code>,
+ * but at the moment I'm unwilling to touch that.
+ *
+ * This class is used by <code>FlowInsensitiveChecks</code> to identify
+ * members of types, including inherited ones. It is also used for related
+ * queries such as `what are (all) the methods overriden by method X?'.
+ * 
+ * As the doc in <code>javafe.tc.PrepTypeDeclaration</code> says, this
+ * is where typechecking at signature level is done. This means everything
+ * that can be checked without looking in bodies (of constructors, methods,
+ * and static blocks) is checked here. As a side-effect of these checks
+ * the TypeSig is `informed' what are its fields, its methods, and
+ * its constructors (as declarations). 
+ * 
+ * The `main' method is <code>PrepTypeDeclaration.prepTypeSignature</code>.
+ *
+ * TODO Many methods have package visibility. It looks more like an accident.
  */
 public class PrepTypeDeclaration extends javafe.tc.PrepTypeDeclaration {
 
@@ -66,7 +113,17 @@ public class PrepTypeDeclaration extends javafe.tc.PrepTypeDeclaration {
         inst = this;
     } // @ nowarn Invariant
 
-    // TODO: rewrite this to not clone on every iteration.
+    /**
+     * TODO remove the functionality of having guarded_by per class
+     * 
+     * Look at all field declarations in type {@code d} and clone
+     * their pragma modifiers. Conceptually, the code 
+     * {@code A x,y guarded_by l;} is transformed into
+     * {@code A x guarded_by l; A y guarded_by l;}.
+     * 
+     *  Also takes guarded_by annotations on a class and replicates it
+     *  on all non-final field declarations.
+     */
     public void addClassGuardsToFields(TypeDecl d) {
         // add class guards
 
@@ -85,7 +142,7 @@ public class PrepTypeDeclaration extends javafe.tc.PrepTypeDeclaration {
                 fd.pmodifiers = ModifierPragmaVec.make(t);
             }
         }
-
+        
         for (int j = 0; j < d.pmodifiers.size(); j++) {
             ModifierPragma p = d.pmodifiers.elementAt(j);
             if (p.getTag() == TagConstants.GUARDEDBYMODIFIERPRAGMA) {
@@ -102,6 +159,12 @@ public class PrepTypeDeclaration extends javafe.tc.PrepTypeDeclaration {
         }
     }
 
+    /**
+     * Returns whether there are any ghost parameters on this class;
+     * that is, whether it is a 'generic' class.
+     * @param sig The type signature of the class to check.
+     * @return True iff {@code sig} is generic.
+     */
     public boolean hasParameters(javafe.tc.TypeSig sig) {
         if (typeParametersDecoration.get(sig) != null) {
             return true;
@@ -123,119 +186,41 @@ public class PrepTypeDeclaration extends javafe.tc.PrepTypeDeclaration {
         TypeDecl decl = s.getTypeDecl();
 
         checkTypeModifiers(decl, s, true);
-        checkTypeModifierPragmaVec(decl.tmodifiers, decl, getEnvForCurrentSig(
-            s,
-            true), s);
+        checkTypeModifierPragmaVec(
+            decl.tmodifiers, 
+            decl, 
+            getEnvForCurrentSig(s, true), 
+            s);
     }
 
+    /**
+     * TODO comment this!
+     */
     // @ requires decl!=null && currentSig!=null
     public void visitClassDecl(ClassDecl decl, javafe.tc.TypeSig currentSig) {
-        // NOTE: This is the only section that differs from superclass
-        // Check that the modifiers are ok
-        if (!hasParameters(currentSig)) {
+        if (!hasParameters(currentSig)) { 
             addClassGuardsToFields(decl);
         }
-        checkTypeModifiers(decl, currentSig, true);
-        checkTypeModifierPragmaVec(decl.tmodifiers, decl, getEnvForCurrentSig(
-            currentSig,
-            true), currentSig);
-
-        // Visit all enclosed member declarations
-        // They will add themselves to fieldSeq and methodSeq
-        for (int i = 0; i < decl.elems.size(); i++) {
-            visitTypeDeclElem(
-                decl.elems.elementAt(i),
-                currentSig,
-                Modifiers.isAbstract(decl.modifiers),
-                Modifiers.isFinal(decl.modifiers),
-                false);
-        }
-
-        // Add members of direct superclass, if any
-        // superclass may be null, or may name an interface
-        TypeName superClassName = decl.superClass;
-        javafe.tc.TypeSig superClassSig = superClassName == null ? null
-            : TypeSig.getSig(superClassName);
-
-        if (superClassSig != null) {
-            if (superClassSig.getTypeDecl() instanceof ClassDecl) {
-                // check superclass is not final
-                if (Modifiers.isFinal(superClassSig.getTypeDecl().modifiers)) {
-                    ErrorSet.error(
-                        superClassName.getStartLoc(),
-                        "Can't subclass final classes: class "
-                            + superClassSig.getExternalName());
-                } else {
-                    addInheritedMembers(currentSig, superClassSig);
-                }
-                checkSuperTypeAccessible(
-                    currentSig,
-                    superClassSig,
-                    superClassName == null ? decl.getStartLoc()
-                        : superClassName.getStartLoc());
-            } else {
-                ErrorSet.error(
-                    superClassName.getStartLoc(),
-                    "Can't subclass interfaces: interface "
-                        + superClassSig.getExternalName());
-            }
-        }
-
-        // Add members of direct super interfaces
-        checkSuperInterfaces(currentSig, decl.superInterfaces);
-
-        // Check no two abstract methods with same method signature
-        // and different return types
-        for (int i = 0; i < methodSeq.size(); i++) {
-            MethodDecl mdi = (MethodDecl)methodSeq.elementAt(i);
-            for (int j = 0; j < i; j++) {
-                MethodDecl mdj = (MethodDecl)methodSeq.elementAt(j);
-
-                // Check if mdi and mdj are abstract methods
-                // with same signature and different return types
-                if (Modifiers.isAbstract(mdi.modifiers)
-                    && Modifiers.isAbstract(mdj.modifiers)
-                    && Types.isSameMethodSig(mdi, mdj)
-                    && !Types.isSameType(mdi.returnType, mdj.returnType)) {
-                    ErrorSet.error(decl.loc, "Class " + decl.id
-                        + " contains two abstract methods"
-                        + " with same signature"
-                        + " but different return types");
-                }
-            }
-        }
-        // All done
+        checkTypeModifierPragmaVec(
+            decl.tmodifiers, 
+            decl, 
+            getEnvForCurrentSig(currentSig, true), 
+            currentSig);
+        super.visitClassDecl(decl, currentSig);
     }
 
     // @ requires decl!=null && currentSig!=null
     public void visitInterfaceDecl(
         InterfaceDecl decl,
-        javafe.tc.TypeSig currentSig) {
-
+        javafe.tc.TypeSig currentSig
+    ) {
         addClassGuardsToFields(decl);
-        // Check that the modifiers are ok
-        checkTypeModifiers(decl, currentSig, false);
-        checkTypeModifierPragmaVec(decl.tmodifiers, decl, getEnvForCurrentSig(
-            currentSig,
-            true), currentSig);
-
-        // Visit all enclosed member declarations
-        // They will add themselves to fieldSeq and methodSeq
-        for (int i = 0; i < decl.elems.size(); i++)
-            visitTypeDeclElem(
-                decl.elems.elementAt(i),
-                currentSig,
-                true,
-                false,
-                true);
-
-        checkSuperInterfaces(currentSig, decl.superInterfaces);
-
-        // interfaces inherit members from java.lang.Object
-        addInheritedMembers(currentSig, Types.javaLangObject());
-
-        // ### STILL NEED TO CHECK NO DUPLICATE METHOD SIGNATURES ???
-        // All done
+        checkTypeModifierPragmaVec(
+            decl.tmodifiers, 
+            decl, 
+            getEnvForCurrentSig(currentSig, true),
+            currentSig);
+        super.visitInterfaceDecl(decl, currentSig);
     }
 
     static public ASTDecoration typeParametersDecoration = new ASTDecoration(
@@ -249,21 +234,24 @@ public class PrepTypeDeclaration extends javafe.tc.PrepTypeDeclaration {
         TypeModifierPragmaVec v,
         ASTNode ctxt,
         Env env,
-        javafe.tc.TypeSig currentSig) {
+        javafe.tc.TypeSig currentSig
+    ) {
         if (v != null) for (int i = 0; i < v.size(); i++)
             checkTypeModifierPragma(v.elementAt(i), ctxt, env, currentSig);
     }
 
     /**
      * Transforms ghost annotations into field declarations and wraps them in
-     * <code>GhostDeclPragma</code> nodes.
+     * <code>GhostDeclPragma</code> nodes. A link from the ghost annotation
+     * to the newly introduced fields is kept by the {@code parameterDeclDecoration}.
      */
     // @ requires p!=null && env!=null
     protected void checkTypeModifierPragma(
         TypeModifierPragma p,
         ASTNode ctxt,
         Env env,
-        javafe.tc.TypeSig currentSig) {
+        javafe.tc.TypeSig currentSig
+    ) {
         int tag = p.getTag();
         switch (tag) {
         case TagConstants.GENERICPARAMETERPRAGMA: {
@@ -304,7 +292,10 @@ public class PrepTypeDeclaration extends javafe.tc.PrepTypeDeclaration {
 
     static protected InstantiationVec instantiations = InstantiationVec.make();
 
-    static protected EqualsAST equality = new EqualsAST();
+    /**
+     * TODO Comment this!
+     */
+    static protected EqualsASTNoDecl equality = new EqualsAST();
 
     static public final ASTDecoration typeArgumentDecoration = new ASTDecoration(
         "type args");
@@ -319,7 +310,8 @@ public class PrepTypeDeclaration extends javafe.tc.PrepTypeDeclaration {
      */
     protected javafe.tc.TypeSig findInstantiation(
         javafe.tc.TypeSig sig,
-        ExprVec expressions) {
+        ExprVec expressions
+    ) {
         for (int i = 0; i < instantiations.size(); i++) {
             Instantiation instantiation = instantiations.elementAt(i);
             if (instantiation.sig == sig
@@ -367,38 +359,22 @@ public class PrepTypeDeclaration extends javafe.tc.PrepTypeDeclaration {
         }
     }
 
-    // TODO: Comment this!
+    /**
+     * This method is called by the environment at the end of resolving
+     * a type name. At this point <code>sig</code> is what the environment
+     * thinks corresponds to <code>tn</code>, and is not <code>null</code>.
+     * 
+     * We use this hook to select the signature of the instantiation
+     * if <code>tn</code> is a type with ghost arguments.
+     */
     // @ ensures \result != null;
     public javafe.tc.TypeSig processTypeNameAnnotations(
-    /* @ non_null @ */TypeName tn, javafe.tc.TypeSig sig, Env env) {
+        /*@non_null*/ TypeName tn, 
+        javafe.tc.TypeSig sig, 
+        Env env
+    ) {
         Info.out("[process type name annotations for " + tn.name.printName()
             + "]");
-        if (env.getEnclosingClass() == null) {
-            // TODO: What is this mess?
-            // TODO: "_dummy" should be a constant, which also can't be produced
-            // by parser
-            InterfaceDecl dummy = InterfaceDecl.make(
-                0,
-                null,
-                Identifier.intern("_dummy"),
-                TypeNameVec.make(),
-                null,
-                TypeDeclElemVec.make(),
-                Location.NULL,
-                Location.NULL,
-                Location.NULL,
-                Location.NULL);
-            env = new EnvForCU(sig.getCompilationUnit());
-            rcc.tc.TypeSig s = new rcc.tc.TypeSig(
-                sig.packageName,
-                "_dummy",
-                sig,
-                dummy,
-                sig.getCompilationUnit());
-
-            env = s.getEnclosingEnv();
-        }
-
         processGenericArgumentPragmas(tn);
         ExprVec expressions = (ExprVec)typeArgumentDecoration.get(tn);
         return findTypeSignature(env, sig, expressions, tn.getStartLoc());
@@ -407,7 +383,7 @@ public class PrepTypeDeclaration extends javafe.tc.PrepTypeDeclaration {
     /**
      * Get a (fresh or cached) type instantiation corresponding to
      * <code>sig</code> receiving the arguments <code>expressions</code>.
-     * In the process, detect if we don't provide any argument to a templete
+     * In the process, detect if we don't provide any argument to a template
      * type.
      * 
      * @param env The current environment.
@@ -420,7 +396,8 @@ public class PrepTypeDeclaration extends javafe.tc.PrepTypeDeclaration {
         Env env,
         javafe.tc.TypeSig sig,
         ExprVec expressions,
-        int locForError) {
+        int locForError
+    ) {
         if (expressions == null) {
             if (typeParametersDecoration.get(sig) != null) {
                 // We have formal parameters but no actual argument.
@@ -455,9 +432,13 @@ public class PrepTypeDeclaration extends javafe.tc.PrepTypeDeclaration {
     protected javafe.tc.TypeSig createInstantiation(
         Env env,
         javafe.tc.TypeSig sig,
-        ExprVec expressions) {
+        ExprVec expressions
+    ) {
         Info.out("[instantiating " + sig.simpleName + " with "
             + PrettyPrint.inst.toString(expressions) + "]");
+        
+        return sig; // DBG
+        /*
 
         TypeDecl decl = sig.getTypeDecl();
         TypeSig newSig = TypeSig.instantiate(sig, expressions, env);
@@ -494,31 +475,34 @@ public class PrepTypeDeclaration extends javafe.tc.PrepTypeDeclaration {
                     ThisExpr.make(sig, parameter.getStartLoc())),
                 parameter.id,
                 parameter.getStartLoc());
+            AmbiguousVariableAccess aa = AmbiguousVariableAccess.make(
+                SimpleName.make(parameter.id, parameter.getStartLoc()));
             subs.addElement(new Substitution(fa, expr));
-            subs.addElement(new Substitution(
-                AmbiguousVariableAccess.make(SimpleName.make(
-                    parameter.id,
-                    parameter.getStartLoc())),
-                expr));
-
+            subs.addElement(new Substitution(aa, expr));
         }
+        
         // Make `this' point to the type instantiation.
-        subs.addElement(new Substitution(ThisExpr.make(
-            sig,
-            sig.getTypeDecl().getStartLoc()), ThisExpr.make(
-            newSig,
-            sig.getTypeDecl().getStartLoc())));
+        subs.addElement(new Substitution(
+            ThisExpr.make(sig, sig.getTypeDecl().getStartLoc()), 
+            ThisExpr.make(newSig, sig.getTypeDecl().getStartLoc())));
         MultipleSubstitution ms = new MultipleSubstitution(
-            subs,
-            new EqualsASTNoDecl());
+            subs, new EqualsASTNoDecl());
         CloneWithSubstitution clone = new CloneForInstantiation(ms);
         decl = (TypeDecl)clone.clone(decl, true);
         newSig.finishInst(decl, sig, expressions);
         instantiations.addElement(new Instantiation(sig, expressions, newSig));
+        
+        // Fields should have an updated parent.
+        for (int i = 0; i < decl.elems.size(); ++i) {
+            TypeDeclElem declElem = decl.elems.elementAt(i);
+            if (declElem.getParent() != decl)
+                System.out.println("oops");
+        }
 
         // An instance does not have any type parameters.
         typeParametersDecoration.set(newSig, null);
         return newSig;
+        */
     }
 
     /**

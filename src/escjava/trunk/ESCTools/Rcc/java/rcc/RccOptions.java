@@ -157,13 +157,11 @@ public class RccOptions extends SrcToolOptions {
             return offset + 1;
         } else if (option.equals("-nowarn_package")) {
             assertArg(offset, args.length, "nowarn_package");
-            //TODO: What happened to `package status'?
-            //NoWarn.setPackageStatus(args[offset], TagConstants.CHK_AS_ASSUME);
+            NoWarn.setPackageStatus(args[offset], TagConstants.CHK_AS_ASSUME);
             return offset + 1;
         } else if (option.equals("-warn_package")) {
             assertArg(offset, args.length, "warn_package");
-            //TODO: What happened to `package status'?
-            //NoWarn.setPackageStatus(args[offset], TagConstants.CHK_AS_ASSERT);
+            NoWarn.setPackageStatus(args[offset], TagConstants.CHK_AS_ASSERT);
             return offset + 1;
         } else if (option.equals("-ignoreAnnFile")) {
             assertArg(offset, args.length, "ignoreAnnFile");

@@ -49,8 +49,7 @@ public class EnvForInstantiation extends GhostEnv {
     public javafe.tc.TypeSig lookupSimpleTypeName(Identifier id, int loc) {
         // Check for a definition in peer:
         javafe.tc.TypeSig result = peervar.lookupType(null, id, loc); // TODO: check
-        if (result!=null)
-            return result;
+        if (result != null) return result;
         
         // Otherwise, look to enclosing scopes...
         return parent.lookupSimpleTypeName(null, id, loc); // TODO: check
@@ -60,17 +59,13 @@ public class EnvForInstantiation extends GhostEnv {
     /** This is to allow overriding by subclasses **/
     
     protected boolean hasField(Identifier id) {
-
       for (int i = 0; i <  fields.size(); i++) {
             FieldDecl fd =  fields.elementAt(i);
             if (fd.id == id)
                 return true;
         }
-
         
-        if (!FlowInsensitiveChecks.inAnnotation)
-            return false;
-        
+        if (!FlowInsensitiveChecks.inAnnotation) return false;
         return (getGhostField(id.toString(), null) != null);
     }
     

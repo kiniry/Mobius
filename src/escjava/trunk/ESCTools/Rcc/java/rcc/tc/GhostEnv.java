@@ -12,6 +12,7 @@ import javafe.ast.TypeDeclElem;
 import javafe.ast.TypeDeclElemVec;
 import javafe.tc.Env;
 import javafe.tc.EnvForTypeSig;
+import rcc.Dbg;
 import rcc.ast.GhostDeclPragma;
 
 /**
@@ -122,12 +123,12 @@ public class GhostEnv extends EnvForTypeSig {
      **************************************************************************/
 
     /**
-     * * Is a given FieldDecl a ghost field?
-     * <p> * * WARNING: The current implementation of this is slow. If * you
-     * need to call this routine a lot, rewrite it so it runs * faster.
+     * Is a given FieldDecl a ghost field?
+     * WARNING: The current implementation of this is slow.
      */
     public static boolean isGhostField(FieldDecl field) {
         TypeDecl d = field.getParent();
+        Dbg.o("check in " + d.id + "if ghost", field);
 
         TypeDeclElemVec elems = d.elems;
         for (int i = 0; i < elems.size(); i++) {
@@ -141,7 +142,7 @@ public class GhostEnv extends EnvForTypeSig {
     }
 
     /**
-     * * Override to make ghost fields visible if *
+     * Override to make ghost fields visible if *
      * rcc.tc.FlowInsensitiveChecks.inAnnotation is true.
      */
     protected boolean hasField(Identifier id) {

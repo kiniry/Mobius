@@ -84,7 +84,6 @@ public class NoWarn {
     }
 
     public static int getPackageStatus(String name) {
-
         while (true) {
             Integer status = (Integer) packageNoWarns.get(name);
             int lastDot;

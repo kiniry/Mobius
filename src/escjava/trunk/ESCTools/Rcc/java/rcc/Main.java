@@ -185,11 +185,6 @@ public class Main extends javafe.SrcTool {
             // p.del = new RccPrettyPrint(p, new StandardPrettyPrint(p));
             p.setDel(new StandardPrettyPrint(p));
 
-            if (rcc.tc.TypeSig.defaultInstantiationDecoration.get(sig) != null) {
-                td = ((TypeSig) rcc.tc.TypeSig.defaultInstantiationDecoration
-                        .get(sig)).getTypeDecl();
-            }
-
             System.out.println("\n**** Source code with types:");
             p.print(System.out, 0, td);
         }

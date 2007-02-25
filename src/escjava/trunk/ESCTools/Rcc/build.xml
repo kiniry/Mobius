@@ -19,7 +19,8 @@
 	</target>
 
 	<target name="compile" depends="init" description="compile the source ">
-		<javac srcdir="${src}" destdir="${build}" deprecation="yes" optimize="yes">
+		<javac srcdir="${src}" destdir="${build}" deprecation="yes" 
+                  optimize="yes" debug="yes">
 			<classpath refid="classpath" /> 
 		</javac>
 	</target>
