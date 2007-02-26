@@ -1,0 +1,62 @@
+Finite_Set_Prop1[X, Y : TYPE] : THEORY
+BEGIN
+
+  get_y_from_x(P: pred[[X, Y]], x: {x: X | EXISTS (y: Y) : P(x, y)}): Y = 
+    choose({y: Y | P(x, y)})
+
+  subset_prop: LEMMA
+    FORALL (P: pred[[X, Y]]):
+      is_finite(P) IMPLIES
+        is_finite({x: X | EXISTS (y: Y) : P(x, y)})
+
+END Finite_Set_Prop1
+
+
+Epsilon_Props[T : TYPE+] : THEORY
+BEGIN
+
+  epsilon_singleton: LEMMA
+    FORALL (x : T):
+      epsilon(singleton(x)) = x
+
+END Epsilon_Props
+
+
+% Lemmas needed to prove the TCCS
+MVA_Finite_Props[CP, Name : TYPE+] : THEORY
+BEGIN
+
+  IMPORTING MVA[CP, Name], Epsilon_Props
+
+  % TCC1 from MVA_Completion
+  get_t_from_gs(ts: finite_set[Transition],
+                gs: {p: Guard[CP, Name] | EXISTS (t: Transition[CP, Name]): ts(t)
+                                                  AND t`guard = p}): Transition =
+    choose({t: Transition | ts(t) AND gs(t`guard)})
+
+  all_guards_finite: LEMMA
+    FORALL (ts: finite_set[Transition[CP, Name]]):
+      is_finite({p: Guard[CP, Name] | EXISTS (t: Transition[CP, Name]):
+        ts(t) AND t`guard = p})
+
+  all_guards_subset: LEMMA
+    FORALL (cp: CP, e: Event[CP, Name], ts: finite_set[Transition[CP, Name]]):
+      subset?(gs, all_guards)
+      WHERE
+        gs = {p: Guard[CP, Name] | EXISTS (t: Transition[CP, Name]):
+              ts(t) AND t`scp = cp AND t`event = e AND t`guard = p},
+        all_guards = {p: Guard[CP, Name] | EXISTS (t: Transition[CP, Name]):
+                      ts(t) AND t`guard = p}
+
+  % TCC2 from MVA_Completion
+  MC_TCC2_subset2_is_finite: LEMMA
+     FORALL (es: finite_set[Event[CP, Name]]):
+       is_finite({t: Transition[CP, Name] |
+                    scp(t) = halted[CP, Name] AND
+                    es(event(t)) AND
+                    guard(t) =
+                      (LAMBDA (stA: Store[CP, Name], stP: PSt[Name]): TRUE) AND
+                    action(t) = skip[CP, Name] AND
+                    tcp(t) = halted[CP, Name]})
+
+END MVA_Finite_Props

@@ -6,9 +6,10 @@ BEGIN
   ExitExceptional : ExitExceptional?
 
 END EventType
-  
 
-MVA [CP, Name : TYPE+] : THEORY
+
+% Multi Variable Automata
+MVA[CP, Name : TYPE+] : THEORY
 BEGIN
 
   IMPORTING JType,
@@ -50,13 +51,24 @@ BEGIN
     #]
 
   Transition : TYPE =
-    [# scp : CP,
+    [# scp : CP,         % source control point
        event : Event,
        guard : Guard,
        action : Action,
-       tcp : CP
+       tcp : CP          % target control point
     #]
    
+  % halted is our characterization of a state where the automaton is blocked
+  halted : CP
+
+  % An NVA consists of:
+  % a name of the class that the automaton monitors,
+  % a finite set of control points other than halted,
+  % an initial control point,
+  % a finite set of events
+  % a finite set of variable declarations used by the automaton,
+  % a finite set of vars decls from the program that may be used in guards
+  % a finite transition relation
   MVA : TYPE =
     [# name : Name,
        classname : Name,
@@ -65,16 +77,16 @@ BEGIN
        evs : finite_set[Event],
        vdsA : finite_set[MVA_VarDecl],
        vdsP : finite_set[Prog_VarDecl],
-       ts : finite_set[Transition] 
+       ts : finite_set[Transition]
     #]
 
-  halted : CP
-
+  % NOTE: vdsA and vdsP are just the signatures of the variables, they do not
+  %       contain their values 
 
   deterministic(a : MVA) : boolean =
     FORALL(q : CP, e : Event, stA : Store, stP : PSt,
            p : Guard, t : Transition) :
-      cps(a)(q) IMPLIES 
+      cps(a)(q) IMPLIES
       evs(a)(e) IMPLIES
       ts(a)(t) IMPLIES
       scp(t) = q IMPLIES
@@ -88,42 +100,54 @@ BEGIN
         NOT guard(t1)(stA, stP)
 
   total(a : MVA) : boolean =
-    deterministic(a) AND
     FORALL(q : CP, e : Event, stA : Store, stP : PSt) :
       EXISTS(t : Transition) : ts(a)(t) AND
                                scp(t) = q AND
                                event(t) = e AND
                                guard(t)(stA, stP)
 
-  
+  trap_state(q: CP, a : MVA) : boolean =
+    FORALL (t : Transition) :
+      ts(a)(t) AND scp(t) = q IMPLIES
+        tcp(t) = halted
+
+  complete(a : MVA) : boolean =
+    cps(a)(halted) AND
+    trap_state(halted, a) AND
+    deterministic(a) AND
+    total(a)
+
 END MVA
 
 
-MVA_Semantics[CP : TYPE+, Name : TYPE+] : THEORY
+MVA_Semantics[CP, Name : TYPE+] : THEORY
 BEGIN
 
   IMPORTING MVA[CP, Name]
 
   a : VAR (total)
 
+  % The state of a MVA is composed by its currrent control point and values for
+  % its variables
   AState : TYPE =
     [# cp : CP,
        stA : Store 
     #]
 
+  % A program event is an event that occurred in the program together with the 
+  % value of its variables at that point
   PEvent : TYPE =
     [# stP : PSt,
        event : Event
     #]
 
-
+  % Updates a store
   update(st : Store)(n : Name)(v : Val) : Store =
     LAMBDA(m : Name) :
       IF m = n
       THEN v
       ELSE st(m)
       ENDIF
-
 
   % to be defined!
   eval(e : Expr)(st : Store) : Val
@@ -137,6 +161,7 @@ BEGIN
     ENDIF
   MEASURE length(l)
 
+  % Single judgement for a MVA
   step(a) : [AState, PEvent -> AState] =
     LAMBDA(x : AState, p : PEvent) : 
       LET t = choose(LAMBDA(t : Transition) : 
@@ -147,29 +172,39 @@ BEGIN
       (# cp := tcp(t),
          stA := execute_actions(stA(x), action(t))
       #)
-         
-  
    
 END MVA_Semantics
 
 
-MVACompletion[CP, Name : TYPE+] : THEORY
+MVA_Completion[CP, Name : TYPE+] : THEORY
 BEGIN
 
-  IMPORTING MVA[CP, Name]
+  IMPORTING MVA[CP, Name], Epsilon_Props, MVA_Finite_Props
 
-  a: VAR MVA
-
+  % Returns the set of guards from transitions in ts with cp as source control
+  % point and e as event
   all_guards(cp : CP, e : Event, 
              ts : finite_set[Transition]) : finite_set[Guard] =
     {p : Guard | EXISTS (t : Transition) : ts(t) AND scp(t) = cp AND
                                            event(t) = e AND guard(t) = p}
-       
-    
+ 
+  % Returns a guard that is the conjuction of the negation of the guards in ts
+  % with source control point cp and event e
   build_guard(cp : CP, e : Event, ts : finite_set[Transition]) : Guard = 
     LAMBDA(stA : Store, stP : PSt) :
       FORALL(p : Guard) : all_guards(cp, e, ts)(p) IMPLIES NOT p(stA, stP)
-    
+
+  % Lemmas to prove the TCC2
+  MC_TCC2_subset1_is_finite: LEMMA
+     FORALL (cps: finite_set[CP], es: finite_set[Event[CP, Name]],
+             ts: finite_set[Transition[CP, Name]]):
+       is_finite({t: Transition[CP, Name] |
+                    cps(scp(t)) AND es(event(t)) AND
+                    action(t) = skip[CP, Name] AND
+                    tcp(t) = halted[CP, Name] AND
+                    guard(t) = build_guard(scp(t), event(t), ts)})
+
+  % Makes ts complete with respect cps and es
   completeTrans(cps : finite_set[CP], es : finite_set[Event], 
                 ts : finite_set[Transition]) :
       finite_set[Transition] =
@@ -177,14 +212,21 @@ BEGIN
                               action(t) = skip AND tcp(t) = halted AND
                               guard(t) = build_guard(scp(t), event(t), ts)},
             {t : Transition | scp(t) = halted AND es(event(t)) AND
-                              guard(t) = LAMBDA(stA : Store, stP : PSt) : TRUE
+                              guard(t) = (LAMBDA(stA : Store, stP : PSt) : TRUE)
                               AND action(t) = skip AND tcp(t) = halted})
-  completeMVA(a) : MVA =
+
+  % Preconditions for completeMVA
+  completeMVA_pre(a: MVA): boolean =
+    deterministic(a) AND
+    NOT cps(a)(halted)
+
+  % Makes a deterministic MVA total
+  completeMVA(a: (completeMVA_pre)) : MVA =
     a WITH [cps := add(halted, cps(a)),
             ts := union(ts(a), completeTrans(cps(a), evs(a), ts(a)))]
 
-  completeMVA_is_total : LEMMA
-    FORALL(a : MVA) :
-      total(completeMVA(a))
+  completeMVA_is_complete: LEMMA
+    FORALL (a: (completeMVA_pre)) :
+      complete(completeMVA(a))
 
-END MVACompletion
+END MVA_Completion

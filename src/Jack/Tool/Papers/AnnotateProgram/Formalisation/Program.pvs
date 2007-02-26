@@ -4,14 +4,16 @@
 JType : DATATYPE
 BEGIN
 
-  IntType : IntType?
-  BoolType : BoolType?
-  Void : Void?
-  RefType : RefType?
+  IntType : IntType?      % Integers
+  BoolType : BoolType?    % Booleans
+  Void : Void?            % Void
+  RefType : RefType?      % References
 
 END JType
 
 
+% Numerical expressions
+% They are parameterized with a variable name to handle the case of variable evaluation
 NumExpr[Name : TYPE+] : DATATYPE
 BEGIN
 
@@ -24,13 +26,13 @@ BEGIN
 
 END NumExpr
 
-
+% Boolean expressions
 BoolExpr[Name : TYPE+] : DATATYPE
 BEGIN
 
   IMPORTING NumExpr[Name]
 
-  % True, False, not, and, or reserved keywords in PVS
+  % True, False, not, and, or are reserved keywords in PVS
   TT : TT?
   FF : FF?
   Neg(b : BoolExpr) : Neg?
