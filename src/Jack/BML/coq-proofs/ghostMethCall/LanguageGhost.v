@@ -13,7 +13,8 @@ Inductive Gstmt  : Type :=
  | GWhile  : expr    -> Gstmt -> Gstmt
  | GSseq   : Gstmt -> Gstmt -> Gstmt
  | GSkip    : Gstmt 	
- | GSet      : gVar   -> gExpr -> Gstmt.
+ | GSet      : gVar   -> gExpr -> Gstmt
+ | GCall     : methodNames -> Gstmt -> Gstmt.
 
 Inductive progG : Type :=
  | GProg : Gstmt ->  progG.

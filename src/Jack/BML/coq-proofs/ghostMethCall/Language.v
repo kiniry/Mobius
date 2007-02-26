@@ -10,7 +10,7 @@ Export BoolEq.
 Export List.
 Export BasicDef.
 
-Definition methodNames := Set.
+
 
 Inductive stmt  : Type :=
  | Affect : var -> expr -> stmt

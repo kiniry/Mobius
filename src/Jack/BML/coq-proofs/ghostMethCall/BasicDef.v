@@ -5,7 +5,7 @@ Open Scope Z_scope.
 (*normal variables*)
 (*Definition var := Z.*)
 
-
+Definition methodNames := Set.
 Definition var := Z.
  
 Definition eq_var x y := Zeq_bool x y.

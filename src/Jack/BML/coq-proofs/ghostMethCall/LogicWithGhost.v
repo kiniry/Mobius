@@ -5,126 +5,71 @@ Require Import List.
 Require Import BasicDef. *)
 
 Require Import LanguageGhost.
-Require Import Semantic.
+
 
 Export LanguageGhost.
+
 Open Scope Z_scope.
 
 Definition Gassertion := state -> gState -> state -> gState -> Prop.
+Inductive methSpec  : methodNames -> Gassertion -> Type := 
+   | spec : forall  (name :  methodNames ) (ass : Gassertion ),  methSpec name ass. 
 
-Inductive GRULE: Gstmt -> Gassertion -> Prop :=
- | GAffectRule : forall  x e (post : Gassertion)  , 
+Inductive GCTX: Type :=
+    | Gnil : GCTX
+    | Gcons :  forall (n : methodNames ) (body: Gstmt) (  ass : Gassertion) ,  GCTX -> GCTX.
+ 
+Fixpoint  ginList (ctx: GCTX ) ( name2 :  methodNames  ) (body2 : Gstmt)( ass2 : Gassertion ){struct ctx } : Prop  :=
+   match ctx with 
+   | Gnil =>  False
+   | Gcons name1 body1 ass1    l =>         
+       ( name1 = name2 /\ body1 = body2 /\  ass1 = ass2 ) \/    ( ginList l name2 body2 ass2) 
+ 
+end. 
+
+Inductive GRULE:  GCTX -> Gstmt -> Gassertion -> Prop :=
+ | GAffectRule : forall gctx  x e (post : Gassertion)  , 
     ( forall (s1 s2 : state ) (g1 g2: gState), 
       g1 = g2 /\  s2 = update s1 x (eval_expr s1 e) -> post s1  g1 s2 g2 	  ) ->
-     GRULE (GAffect x e)  post
+     GRULE gctx   (GAffect x e)  post
  
- | GIfRule : forall  e (stmtT stmtF: Gstmt ) (post1 post2 post  : Gassertion),
+ | GIfRule : forall  gctx  e (stmtT stmtF: Gstmt ) (post1 post2 post  : Gassertion),
     ( forall (s1 s2 : state ) (g1 g2: gState),     (not (eval_expr s1 e = 0) -> post1 s1 g1 s2 g2) /\ (eval_expr s1 e = 0 ->  post2 s1 g1 s2 g2)  -> post s1 g1 s2 g2) ->	 
-    GRULE stmtT  post1  ->
-    GRULE stmtF  post2  ->
-    GRULE (GIf e stmtT stmtF)  post
+    GRULE gctx stmtT  post1  ->
+    GRULE gctx stmtF  post2  ->
+    GRULE gctx  (GIf e stmtT stmtF)  post
               
 
- | GWhileRule : forall   (stmt : Gstmt ) ( post1 post : Gassertion) e ( inv : Gassertion) , 
+ | GWhileRule : forall  gctx  (stmt : Gstmt ) ( post1 post : Gassertion) e , 
      ( forall (s1 s2 : state ) (g1 g2: gState),   post1 s1 g1 s2 g2 /\   eval_expr s2 e = 0   -> post s1 g1 s2 g2) ->
-     ( forall s p t  gs gp gt,   eval_expr s e <>  0 -> inv s gs p gp -> post1 p gp t gt -> post1 s gs t gt ) -> 
+     ( forall s p t  gs gp gt,   eval_expr s e <>  0 -> post1 s gs p gp -> post1 p gp t gt -> post1 s gs t gt ) -> 
      (forall s gs, eval_expr s e = 0  -> post1 s gs s gs  ) ->
-     GRULE stmt  inv  ->
-     GRULE (GWhile e stmt) post 
+     GRULE gctx stmt  post1  ->
+     GRULE gctx (GWhile e stmt) post 
 
- | GSeqRule: forall (stmt1 stmt2: Gstmt ) ( post1  post2 post : Gassertion), 
+ | GSeqRule: forall gctx (stmt1 stmt2: Gstmt ) ( post1  post2 post : Gassertion), 
    ( forall (s1 s2 : state ) (g1 g2: gState),   (exists p, exists  gp, post1   s1 g1 p  gp /\  post2 p  gp s2 g2)   ->
    post  s1 g1 s2 g2 ) ->  
-   GRULE stmt1  post1 ->
-   GRULE stmt2 post2   ->
-   GRULE (GSseq stmt1 stmt2)  post 
+   GRULE gctx stmt1  post1 ->
+   GRULE gctx stmt2 post2   ->
+   GRULE gctx (GSseq stmt1 stmt2)  post 
    
- | GSkipRule:  forall (post : Gassertion),	
+ | GSkipRule:  forall gctx (post : Gassertion),	
    (forall (s1 s2 : state ) (g1 g2: gState),  g1 = g2 /\ s1 = s2 ->  post  s1 g1 s2 g2 ) ->
-   GRULE GSkip post
+   GRULE gctx GSkip post
 
- | GSetRule : forall x (e : gExpr) (post : Gassertion) ,
+ | GSetRule : forall gctx x (e : gExpr) (post : Gassertion) ,
     (forall (s1 s2 : state ) (g1 g2: gState),    	g2 = gUpdate g1 x (gEval_expr s1 g1 e)  /\ s1 = s2 ->   post  s1 g1 s2 g2 ) ->
-    GRULE (GSet x e)  post .
+    GRULE gctx (GSet x e)  post 
 
-Axiom ext: forall ( A : Gassertion), (fun s1 s2 => A s1 s2) = A.
-
-(*Lemma correct: forall (s: stmt) (s1 s2 : state ),
- (  exec_stmt  s1 s s2) -> forall ( post : assertion),  RULE s post -> post s1 s2.
-
-Proof.
-intros st  s1 s2 execRel.
-induction execRel;intros.
-
-(*case assign*)
-inversion H.
-trivial.
-
-(*case if *)
-intros.
-inversion H0.
-split.
-intros. apply IHexecRel.
-simpl in *.
-assert ( H10 := ext post1).
-rewrite H10.
-assumption.
-intros.
-elim H. assumption.
-
-inversion H0.
-split.
-intros. elim  H7.
-assumption.
-intros.
-apply IHexecRel.
-assert ( H10 := ext post2).
-rewrite H10.
-assumption.
-
-
-(*while case*)
-intros.
-inversion H0.
-
-
-assert ( IH1 := 
-              IHexecRel1  
-              inv
-              H6).
-
-simpl in *.
-
-assert ( IH2 := IHexecRel2 post  H0).
-rewrite <- H5 in  IH2.
-destruct IH2.
-
-split.
-apply ( H3 s1 s2 s3).
-assumption.
-assumption.
-assumption.
-assumption.
-
-inversion H0.
-split.
-apply (H4  s1).
-assumption.
-assumption.
-
-
-(*sequence*)
-intros.
-inversion H.
-
-
-assert ( H7 := IHexecRel1    post1  H2).
-assert ( H9:=  IHexecRel2  post2  H4).
-exists s2.
-split.
-assumption.
-assumption.
-
-Qed.
-*)
+ 
+ | GCallRule : forall  gctx (body : Gstmt )  ( mName : methodNames ) ( post  post1 : Gassertion ) , 
+   (forall (s1 s2 : state )(g1 g2: gState), post1 s1 g1 s2 g2 -> post s1 g1 s2 g2 ) ->
+   GRULE  (Gcons mName body post1    gctx   ) body  post1 ->
+   GRULE gctx (GCall mName body)  post
+ 
+ | GCallRuleCtx : forall gctx  (body : Gstmt ) ( mName : methodNames ) ( post  post1 : Gassertion ) , 
+      (forall (s1 s2 : state )  (g1 g2: gState) ,  post1 s1 g1 s2 g2 -> post s1 g1 s2 g2 ) ->
+      ( ginList gctx   mName body post1 ) ->
+      GRULE gctx  (GCall mName body)  post.
 

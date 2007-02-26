@@ -4,6 +4,7 @@ Require Import SemanticLevels.
 Require Import Coq.Lists.List.
 Require Import Coq.Logic.Classical_Prop.
 Export Language.
+Export  SemanticLevels.
 
 (*LOGIC IN A SP STYLE WITH EXPLICITE CONSEQUENCE RULE *)
 Open Scope Z_scope.
@@ -219,7 +220,6 @@ elim contrad.
 (* induction case *)
 intros ctx mName body post   ass  s1 s2 ass1 exec.
 assert (IH1 := IHn ctx mName body post ass).
-
 assert ( 
 forall (t1 t2 : state) (b : stmt) (a : assertion)
          (mName : methodNames),
@@ -231,20 +231,16 @@ apply (ass1 t1 t2 b a mName0 ).
 assumption.
 apply (  monot n  (Call mName0 b)  t1 t2  H0 ).
 omega.
-
 assert ( forall s1 s2, exec_stmtN n s1 (Call mName body) s2 -> post s1 s2).
 intros.
-
 apply (  IH1 s0 s3 H H0).
 assert ( CtxInc := constructCtx  n ctx mName body post H H0).
-
 assert ( IH3 := ass  n  CtxInc).
 inversion exec.
 simpl;subst;auto.
 assert ( (n0 + 1)%nat = n ).
 omega.
 rewrite H2 in H6.
-
 apply IH3.
 assumption.
 Qed.  
@@ -277,11 +273,9 @@ intros.
 eapply ( IHrule1 (n0 + 1)%nat ). 
 assumption.
 assumption.
-
 intros.
 elim H6.
 assumption.
-
 simpl;subst;auto.
 apply (H s1 s2).
 split.
@@ -296,11 +290,8 @@ assumption.
 (*WHILE*)
 (* iteration case, condition holds *)
 apply H.
-
 inversion exec.
 simpl;subst;auto.
-
-
 assert (execNplus2 := monot  ( n0 +1)%nat st s1 s3  H7 (n0 +2)%nat ).
 assert (execAtnplus2: exec_stmtN (n0 + 2) s1 st s3).
 apply execNplus2.
@@ -315,7 +306,6 @@ omega.
 intros. apply (IHrule  (n0+2)%nat ) .
 assumption.
 assumption.
-
 assert ( IH2 := theDiff H2).
 clear theDiff.
 split.
@@ -330,8 +320,6 @@ assumption.
 (* condition of while is false *)
 simpl;subst;auto.
 
-
-
 (* SEQUENCE *)
 inversion exec.
 simpl;subst;auto.
@@ -342,10 +330,8 @@ apply (IHrule1 (n0+1)%nat ass   s1 s3 H4).
 apply (IHrule2 (n0+1)%nat ass  s3 s2 H6).
 
 (* SKIP *)
-
 inversion exec.
 simpl;subst;auto. 
-
 
 (* PROCEDURE CALL: INDUCTIVE CASE *)
 apply H.
