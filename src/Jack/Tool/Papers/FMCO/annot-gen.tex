@@ -24,20 +24,23 @@ can be checked statically.  JACK implements algorithms for both goals,
 as described in this section.
 
 
-\subsection{Generation of Preconditions and Frame Conditions}
-JACK implements two different algorithms to generate ``obvious''
-annotations. The first algorithm is a simple static analysis on the
-program text, which generates frame conditions. Whenever it sees
-assignments or method calls that change (specification) public fields,
-these fields are added to the method's assignable clause. The
-algorithm uses a safe over-approximation: whenever it encounters
-references that might be aliased, it generates a clause
-\texttt{assignable \bsl everything;}.
+\subsection{Generation of Preconditions}
 
-JACK also implements an algorithm to generate minimal preconditions to
-avoid nullpointer and array-out-of-bounds exceptions. This algorithm
-re-uses the implementation of the wp-calculus: it computes the weakest
-precondition for the specification
+%The first algorithm is a simple static analysis on the
+%program text, which generates frame conditions. Whenever it sees
+%assignments or method calls that change (specification) public fields,
+%these fields are added to the method's assignable clause. The
+%algorithm uses a safe over-approximation: whenever it encounters
+%references that might be aliased, it generates a clause
+%\texttt{assignable \bsl everything;}.
+
+%JACK implements two different algorithms to generate ``obvious''
+%annotations. 
+JACK implements an algorithm to generate ``obvious'' minimal
+preconditions to avoid nullpointer and array-out-of-bounds
+exceptions. This algorithm re-uses the implementation of the
+wp-calculus: it computes the weakest precondition for the
+specification
 \texttt{signals (NullPointerException) false;} (resp. \texttt{signals
 (ArrayIndexOutOfBoundsException) false;}) and inserts this as 
 annotation in the code.
@@ -48,14 +51,12 @@ annotation in the code.
 {\small
 \begin{verbatim}
 /*@ requires this.tab!=null;
-    assignable \everything;
     signals (Exception) false;
   @*/
 public void sort() {if(tab.length > 0) sort(0, tab.length -1);}
 
 /*@ requires this.tab!=null && 0<=j && j<this.tab.length &&
              0<=i && i<this.tab.length;
-    assignable \everything;
     signals (Exception) false;
  @*/
 public void swap(int i, int j) {int tmp; tmp = tab[i]; 

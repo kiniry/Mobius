@@ -1,102 +1,97 @@
 
 
 \section{Support for Interactive Verification}\label{SecInteractive}
-When automatic provers fail to solve a proof obligation,
-the user can % try to change the specifications of the program or
- solve the proof obligation interactively.
-Using the interactive verification support of JACK,
-the proof obligation can be proven or, in case it is unprovable, it
-can be analysed thoroughly to find the source of the error.
-This verification is done with the Coq proof assistant. 
+When automatic provers fail to solve a proof obligation, the user can
+instead try to solve the proof obligation interactively.  In this way,
+the proof obligation can be proven or, in case it is unprovable,
+analysed thoroughly to find the source of the error. JACK provides
+support for interactive verification using the Coq proof
+assistant~\cite{Coq04}. 
 
-First we will discuss the features of JACK's Coq plugin, then its 
-integration within the IDE Eclipse. Finally we will present
- JACK's specific annotation keyword for interactive verification: the 
+This section first discusses the features of JACK's Coq plugin, then
+its integration within the IDE Eclipse. Finally it presents JACK's
+specific annotation keyword for interactive verification: the
 \native keyword. 
 
 \subsection{The Coq Plugin}
-Proof readability and proof reusability is crucial in interactive 
-verification; in contrast to automatic verification 
-where proof obligations are simply sent to the automatic prover 
-and it is of no importance whether the proof obligation is human-readable or not.
-Therefore we developed a set of facilities for pretty printing proof obligations, 
-to reuse the proofs, in particular to allow replaying the proofs 
-when the specifications have changed, and for proof construction.
 
-JACK uses short variable names in proof obligations as much as possible, 
-but in case of ambiguity long variable names are used.
-Basically, JACK generates all variable names for all proof obligations of one 
-file in a row whereas in interactive verification the variables are only 
-considered within the scope a single proof obligation.
-The Coq Plugin corrects this in redoing the disambiguation per proof 
-obligation.
-This results in better proof readability as the variable names are shorter.
-The main pretty printing is done directly through Coq's own pretty printing 
-features. 
+Proof readability and proof reusability is crucial in interactive
+verification, in contrast to automatic verification where proof
+obligations are simply sent to the automatic prover and it is of no
+importance whether the proof obligation is human-readable or not.
+Therefore we developed a set of facilities for pretty printing proof
+obligations, to reuse the proofs~--~in particular to allow replaying
+the proofs when the specifications have changed~--~and for proof
+construction.
+
+JACK uses short variable names in proof obligations as much as
+possible, but in case of ambiguity long variable names are used.
+Basically, JACK generates all variable names for all proof obligations
+of one file in a row, whereas in interactive verification the
+variables only have to be considered within the scope a single proof
+obligation, thus short variable names can be used more often.
+Therefore, the Coq Plugin re-disambiguates per proof obligation.  This
+results in better proof readability as the variable names are shorter.
+The main pretty printing is done directly through Coq's own pretty
+printing features.
 
 
-Special attention has also been given when storing the proof obligations 
-to a file. First, the file has a human-readable name, so the user can retrieve 
-the proof obligation as well as its proof script easily. 
-If the lemma is regenerated or reopened he can step through the proof 
-(and adapt it if necessary), 
-and it does not have to be rewritten from scratch.
-The different kinds of hypotheses are separated from each other and
-are given different names.
-This is in particular important when a proof obligation has been modified 
-(and is considered unproved) by a change to the specification. 
-If the proof did not involve any of the modified hypotheses,
-it remains valid because most of the names remained
-unchanged. This facilitates greatly the reuse of proofs.
+Special attention has also been given when storing the proof
+obligations to a file. First, the file has a human-readable name, so
+the user can easily retrieve the proof obligation as well as its proof
+script. If the lemma is regenerated or reopened, he can step through
+the proof (and adapt it if necessary), and it does not have to be
+rewritten from scratch.  The different kinds of hypotheses are
+separated from each other and are given different names.  This is in
+particular important when a proof obligation has been modified (and is
+considered unproved) by a change to the specification: if the proof
+did not involve any of the modified hypotheses, it remains valid. This
+facilitates greatly the reuse of proofs.
 
-One of the key points in interactive verification is the level of difficulty
-to manipulate the proof assistant in order to construct a proof.
-To help the user  build proof scripts that are both intuitive
-to read and to make, we have used the tactic mechanism of Coq~\cite{DEL-00-LTAC}.
-As JACK generates proof obligations for automatic verification, numerous hypotheses
- are 
-added to help the automatic theorem prover. For interactive verification 
-these hypotheses are usually useless (and annoying). 
-Therefore we have developed tactics to clean up the proof obligations. 
-There are also tactics\footnote{
-See \texttt{http://www-sop.inria.fr/everest/soft/Jack/doc/plugin/coq/Prelude/}
-for a full description of the different tactics.}
- to solve common proof patterns
-generated by JACK: \begin{inparaenum}
+One of the key points in interactive verification is the level of
+difficulty to manipulate the proof assistant in order to construct a
+proof.  To help the user build proof scripts that are both intuitive
+to read and to make, we have used the tactic mechanism of
+Coq~\cite{DEL-00-LTAC}.  As JACK generates proof obligations for
+automatic verification, numerous hypotheses are added to help the
+automatic theorem prover. For interactive verification these
+hypotheses are usually useless (and annoying). Therefore we have
+developed tactics to clean up the proof obligations. There are also
+tactics\footnote{ See
+\texttt{http://www-sop.inria.fr/everest/soft/Jack/doc/plugin/coq/Prelude/}
+for a full description of the different tactics.}  to solve common
+proof patterns generated by JACK: 
+\begin{inparaenum}[(\itshape i\upshape)]
 \item to solve arithmetic goals,
-\item to solve of a proof leads to an absurd case
-\item to solve array-specific proof obligations 
+\item to solve proofs by contradiction,
+\item to solve array-specific proof obligations,
 \item to solve proof obligations related to assignment.
 \end{inparaenum}
- The Coq Plugin also allows automatic resolution of proof 
-obligations using generic proof scripts.
-A user can define application-specific tactics in the Coq Plugin
- to be used for interactive verification or 
-with the automatic resolution.
+Finally, the Coq Plugin also allows automatic resolution of proof
+obligations using generic proof scripts, and application-specific
+tactics can be defined to be used both for interactive verification
+and with automatic resolution.
 
 
 
 \subsection{JACK with Coq in Eclipse}
-An important feature of JACK is that all developments can be done inside Eclipse.
-Therefore, the Coq Plugin contains an editor for Coq, called CoqEditor. 
-CoqEditor provides support for proving and developing user extensions.
 
-CoqEditor provides a way to interact directly with Coq through Eclipse's Java 
-environment, so the user can process and edit Coq files. 
-It is similar to what has been done for Isabelle in 
-Proof General Eclipse \cite{WintersteinAL05}, but more light-weight.
+An important feature of JACK is that all development can be done
+inside Eclipse.  Therefore, the Coq Plugin contains an editor for Coq,
+called CoqEditor. CoqEditor provides a way to interact directly with
+Coq through Eclipse's Java environment, so the user can process and
+edit Coq files (containing proof scripts or user-defined tactics).
+CoqEditor resembles the Isabelle Plugin in Proof General
+Eclipse~\cite{WintersteinAL05}, but uses a more light-weight approach.
 It has keyboard shortcuts similar to CoqIde (the current Coq graphical
-interface, written in OCaml\footnote{Available via the
-Coq distribution (\texttt{http://coq.inria.fr}).}). 
-In addition, CoqEditor has an outline view,
-which sums up the structures of the currently edited Coq file 
-in a tree-like fashion (which is especially useful to see the modules hierarchy), 
-and
-CoqEditor has also an incremental indexing feature which allows the user
-to jump directly from a keyword to its definition.
-Of course, there is syntax highlighting for Coq files 
-and one can interactively process a Coq file.
-
+interface, written in OCaml\footnote{Available via the Coq
+distribution (\texttt{http://coq.inria.fr}).}). Of course, it provides
+syntax highlighting and one can interactively process a Coq file.  In
+addition, CoqEditor has an outline view, that summarises the structure
+of the currently edited Coq file in a tree-like representation (this
+is especially useful to see the modules hierarchy), and an incremental
+indexing feature, that allows the user to jump directly from a keyword
+to its definition.
 
 \subsection{Native specifications}
 \begin{figure}[t!]
@@ -107,47 +102,53 @@ and one can interactively process a Coq file.
      public native static IntList create();
      ...
      public native static IntList toList (int [] tab);
-   } @*/ \end{verbatim}}
+   } @*/ \end{verbatim}
 
-{\small And in Coq:
+And in Coq:
 \begin{verbatim}
 Definition IntList := list t_int.
 Definition IntList_create : IntList := nil .  
 Definition IntList_append:   list t_int ->  list t_int -> list t_int := app.
 ... \end{verbatim}}
-\caption{The definition of native type \texttt{IntList}}\label{CoqAnnot} 
+\caption{The definition of the native type \texttt{IntList}}\label{CoqAnnot} 
 \end{figure}
-Sometimes users would like more expressivity: instead of having 
- extensions based solely on JML's constructs, he would like 
-to use constructs more specific to the prover in which the proofs will be
-developed. This is 
-exactly the purpose of the \native construct \cite{Charles06}.
 
-The \native construct is used to relate declarations in
-the specifications directly to the logic of the prover. It can be used 
-for types and methods.
-A \native method is a specification-only method that has no body and
- does not throw any exception.
-Also, it does not have specifications and must not have any side-effect. 
-A \native type is a type to use with specification methods 
-(\native methods as well as JML's {\tt model} methods). 
-Both are related to constructs 
-defined in the proof obligation's target language: 
-\native types are bound to 
-types and \native methods to function definitions.
+When specifying complex applications, often one needs advanced data
+structures. In JML one can do this using so-called model classes, but
+this makes verification awkward, because all operations on these data
+structures have to be specified by pre-post-condition
+specifications. A more convenient way to do this would be to use
+constructs that are specific to the logic of the prover in which the
+proofs will be developed. This is exactly the functionality provided
+by the \native construct~\cite{Charles06}, \emph{i.e.}\ it relates
+declarations in the JML specification directly to the logic of the
+underlying prover. We have implemented the \native construct for Coq,
+but the same principle can be used to support any other prover.
+
+The \native construct can be used for types and methods.  A \native
+method is a specification-only method that has no body and no (JML)
+specification. It must terminate normally and cannot have any
+side-effects. A \native type is a type to use with specification
+methods (\native methods as well as JML's {\tt model} methods). Both
+are related to constructs defined in the proof obligation's target
+language: \native types are bound to types and \native methods to
+function definitions. When generating the proof obligations, the
+\native constructs are treated as uninterpreted function symbols. The
+user then specifies in a Coq file how the function symbols are bound
+to constructs in Coq. 
 
 
-For example, if we define a \native type IntList and we bind it to a 
-list of integer type (Figure \ref{CoqAnnot}), 
-we can use the list library of the target prover (here Coq) 
-in the proofs. The specifications of the
-{\tt sort} method can be defined as specifications using this new type 
-(Figure \ref{sortnat}). We get more readable annotations;
-the annotations are more natural for the user because instead
- of relying on arrays, we can define it directly into
-our target proof obligations language syntax.
-The user can also define more easily lemmas to prove some of the proof
-obligations and to add automation to proof scripts.
+For example, Figure~\ref{CoqAnnot} defines a \native type IntList and
+binds it to the type of list of integers in Coq. This allows to use
+Coq's list library in the proofs. Using the \native type declaration,
+the specification of the {\tt sort} method (from
+Figure~\ref{FigJMLSpec} on page~\pageref{FigJMLSpec}) can be rewritten
+as in Figure~\ref{sortnat}. Notice that this results in more readable
+and natural annotations, because instead of relying on arrays, we can
+write it directly in our target proof obligations language syntax. The
+use of the \native construct also allows the user to define more
+easily auxiliarly lemmas to use to prove the proof obligations and to
+add automation to proof scripts.
 
 
 \begin{figure}[t!]
@@ -160,7 +161,8 @@ obligations and to add automation to proof scripts.
              list.isSorted() && list.isInjection();
  @*/
 public void sort() {if(tab.length > 0) sort(0, tab.length -1);}\end{verbatim}}
-\caption{\texttt{Sort} with natives}\label{sortnat} 
+\caption{Specification of method \texttt{sort} with \native construct}
+\label{sortnat} 
 \end{figure}
 
 
