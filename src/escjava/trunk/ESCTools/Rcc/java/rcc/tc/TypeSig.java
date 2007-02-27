@@ -16,6 +16,7 @@ import javafe.tc.Env;
 import javafe.util.Assert;
 import javafe.util.ErrorSet;
 import javafe.util.Info;
+import rcc.Dbg;
 import rcc.ast.EqualsASTNoDecl;
 
 /**
@@ -134,6 +135,7 @@ public class TypeSig extends javafe.tc.TypeSig {
         expressions = ExprVec.make(); // shall be filled later 
         defaultInstantiation = this;
         nonDefaultInstantiations = new LinkedList();
+        Dbg.o("create default TypeSig for " + simpleName);
     }
     
     private TypeSig() {
@@ -187,7 +189,8 @@ public class TypeSig extends javafe.tc.TypeSig {
         // No instantiation is suitable. I'll have to make one.
         // TODO enclosing Type, superClass?
         String newSimpleName
-            = simpleName + "<" + PrettyPrint.inst.toString(arguments) + ">"; 
+            = simpleName + "<" + PrettyPrint.inst.toString(arguments) + ">";
+        Dbg.o("create instantiation TypeSig " + newSimpleName);
         TypeSig newInst = new TypeSig(newSimpleName, enclosingEnv, myTypeDecl);
         newInst.expressions = arguments.copy();
         newInst.defaultInstantiation = this;

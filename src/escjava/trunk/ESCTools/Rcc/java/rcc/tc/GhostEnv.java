@@ -2,22 +2,24 @@
 
 package rcc.tc;
 
-import java.util.Enumeration;
 import java.util.Hashtable;
 
+import javafe.ast.ASTDecoration;
 import javafe.ast.FieldDecl;
+import javafe.ast.FormalParaDecl;
+import javafe.ast.FormalParaDeclVec;
 import javafe.ast.Identifier;
-import javafe.ast.TypeDecl;
-import javafe.ast.TypeDeclElem;
-import javafe.ast.TypeDeclElemVec;
 import javafe.tc.Env;
 import javafe.tc.EnvForTypeSig;
-import rcc.Dbg;
-import rcc.ast.GhostDeclPragma;
+import javafe.util.Assert;
 
 /**
- * * This class overrides EnvForTypeSig so that it "sees" ghost fields if *
+ * This class overrides EnvForTypeSig so that it "sees" ghost fields if
  * rcc.tc.FlowInsensitiveChecks.inAnnotation is true.
+ * 
+ * NOTE Ghost fields are identified by their name. Is this shaky?
+ * 
+ * TODO I believe that most of the methods should be moved in TypeSig.
  */
 
 public class GhostEnv extends EnvForTypeSig {
@@ -61,30 +63,36 @@ public class GhostEnv extends EnvForTypeSig {
      * ghost field decl if successfull, otherwise null. * Excluded may be null.
      */
     public FieldDecl getGhostField(String n, FieldDecl excluded) {
-        Enumeration e = collectGhostFields().elements();
-
-        while (e.hasMoreElements()) {
-            FieldDecl f = (FieldDecl) e.nextElement();
-
-            if (!f.id.toString().equals(n)) continue;
-
-            if (f != excluded) return f;
-        }
-
-        return null;
+        collectGhostFields();
+        FieldDecl result = (FieldDecl)fields.get(n);
+        if (result == excluded) return null;
+        return result;
     }
 
     /***************************************************************************
      * * Code to collect all our ghost fields: * *
      **************************************************************************/
 
-    private Hashtable fields; // used like a set
-
+    private Hashtable fields;
+    
     /**
-     * * Add all new ghost fields found in s (including its supertypes) * to
-     * fields.
+     * Add all new ghost fields found in s (including its supertypes) 
+     * to fields.
      */
     private void collectGhostFields(javafe.tc.TypeSig s) {
+        ASTDecoration paramsD = PrepTypeDeclaration.typeParametersDecoration;
+        ASTDecoration declD = PrepTypeDeclaration.parameterDeclDecoration;
+        FormalParaDeclVec params = (FormalParaDeclVec)paramsD.get(s);
+        if (params == null) return;
+        
+        for (int i = 0; i < params.size(); ++i) {
+            FormalParaDecl param = params.elementAt(i);
+            FieldDecl decl = (FieldDecl)declD.get(param);
+            Assert.notFalse(decl != null);
+            fields.put(decl.id.toString(), decl);
+        }
+        
+        /*
         // Iterate over all TypeDeclElems in s:
         TypeDecl d = s.getTypeDecl();
         TypeDeclElemVec elems = d.elems;
@@ -92,53 +100,32 @@ public class GhostEnv extends EnvForTypeSig {
             TypeDeclElem elem = elems.elementAt(i);
             if (elem instanceof GhostDeclPragma) {
                 FieldDecl ghost = ((GhostDeclPragma) elem).decl;
-                if (!fields.containsKey(ghost)) {
-                    fields.put(ghost, ghost);
-                }
+                Assert.notFalse(!fields.containsKey(ghost.id.toString()));
+                fields.put(ghost.id.toString(), ghost);
             }
         }
-
-        /*
-         * // Now recursive to all supertypes: if (d instanceof ClassDecl) {
-         * TypeName superClass = ((ClassDecl)d).superClass; if
-         * (superClass!=null) collectGhostFields(TypeSig.getSig(superClass)); }
-         * for (int i=0; i<d.superInterfaces.size(); i++)
-         * collectGhostFields(TypeSig.getSig( d.superInterfaces.elementAt(i) ));
-         */
+        */
     }
 
     /**
      * * Return all our ghost fields (including our supertypes) as "set".
      */
-    private Hashtable collectGhostFields() {
-        if (fields != null) return fields;
-
+    private void collectGhostFields() {
+        if (fields != null) return;
         fields = new Hashtable(5);
         collectGhostFields(peervar);
-        return fields;
     }
 
-    /***************************************************************************
-     * * Misc. routines: * *
+    /**************************************************************************
+     * Misc. routines: 
      **************************************************************************/
 
     /**
      * Is a given FieldDecl a ghost field?
-     * WARNING: The current implementation of this is slow.
      */
-    public static boolean isGhostField(FieldDecl field) {
-        TypeDecl d = field.getParent();
-        Dbg.o("check in " + d.id + "if ghost", field);
-
-        TypeDeclElemVec elems = d.elems;
-        for (int i = 0; i < elems.size(); i++) {
-            TypeDeclElem elem = elems.elementAt(i);
-            if (elem instanceof GhostDeclPragma) {
-                FieldDecl ghost = ((GhostDeclPragma) elem).decl;
-                if (field == ghost) return true;
-            }
-        }
-        return false;
+    public boolean isGhostField(FieldDecl field) {
+        collectGhostFields();
+        return fields.containsKey(field.id.toString());
     }
 
     /**
@@ -146,11 +133,8 @@ public class GhostEnv extends EnvForTypeSig {
      * rcc.tc.FlowInsensitiveChecks.inAnnotation is true.
      */
     protected boolean hasField(Identifier id) {
-
         if (peervar.hasField(id)) return true;
-
         if (!FlowInsensitiveChecks.inAnnotation) return false;
-
         return (getGhostField(id.toString(), null) != null);
     }
 }

@@ -39,7 +39,6 @@ import javafe.ast.ThisExpr;
 import javafe.ast.Type;
 import javafe.ast.TypeDecl;
 import javafe.ast.TypeDeclElem;
-import javafe.ast.TypeDeclElemPragma;
 import javafe.ast.TypeModifierPragma;
 import javafe.ast.TypeModifierPragmaVec;
 import javafe.ast.TypeName;
@@ -47,8 +46,6 @@ import javafe.ast.TypeObjectDesignator;
 import javafe.ast.VarInit;
 import javafe.ast.VariableAccess;
 import javafe.tc.Env;
-import javafe.tc.EnvForEnclosedScope;
-import javafe.tc.EnvForLocals;
 import javafe.tc.EnvForTypeSig;
 import javafe.tc.LookupException;
 import javafe.tc.TypeSig;
@@ -60,12 +57,10 @@ import javafe.util.Set;
 import rcc.Dbg;
 import rcc.RccOptions;
 import rcc.ast.ArrayGuardModifierPragma;
-import rcc.ast.CloneForInstantiation;
 import rcc.ast.CloneWithSubstitution;
 import rcc.ast.EqualsAST;
 import rcc.ast.EqualsASTNoDecl;
 import rcc.ast.ErrorMsg;
-import rcc.ast.GhostDeclPragma;
 import rcc.ast.GuardedByModifierPragma;
 import rcc.ast.HoldsStmtPragma;
 import rcc.ast.MultipleSubstitution;
@@ -77,6 +72,8 @@ import rcc.ast.TagConstants;
 import rcc.ast.ThreadLocalStatusPragma;
 
 /** 
+ * NOTE routine = method or constructor
+ * 
  * This class is responsible for typechecking the bodies (of methods,
  * constructors, and static blocks). 
  * 
@@ -190,7 +187,10 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
     }
 
     /** Initialize a typechecker. */
-    public FlowInsensitiveChecks() { /* do nothing */}
+    public FlowInsensitiveChecks() {
+        Dbg.o("creating new typechecker");
+        useUniverses = false;
+    }
 
     /**
      * Initialize a typechecker in a certain environment.
@@ -201,6 +201,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
      * @param env The current typing environment.
      */
     public FlowInsensitiveChecks(TypeSig sig, EnvForTypeSig env) {
+        Dbg.o("creating new typechecker");
         this.sig = sig;
 
         TypeSig ts = sig;
@@ -209,6 +210,8 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
         }
         rootSEnv = makeEnvForTypeSig(ts, true);
         rootIEnv = makeEnvForTypeSig(ts, false);
+        
+        useUniverses = false;
     }
 
     // === Extensions to type declaration member checkers ===
@@ -219,6 +222,8 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
      */
     protected void extraCheckFieldDecl(FieldDecl fd) {
         if (fd.init == null) return;
+        
+        Dbg.o("acquire locks for field init", fd.init);
         boolean staticContext = Modifiers.isStatic(fd.modifiers);
         canAssignReadOnly = true;
         locks.mark();
@@ -237,6 +242,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
         }
         Env env = staticContext ? rootSEnv : rootIEnv;
         fd.init = checkInit(env, fd.init, fd.type);
+        Dbg.o("release locks for field initialization", fd.init);
         locks.popToMark();
     }
 
@@ -247,23 +253,28 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
     protected void checkRoutineDeclaration(RoutineDecl rd) {
         try {
             locks.mark();
+            Dbg.o("typechecking routine " + rd.id());
             if (Modifiers.isSynchronized(rd.modifiers)) {
-                if (Modifiers.isStatic(rd.modifiers)) {
+                Dbg.o("add lock for synchronized method " + rd.id());
+                if (Modifiers.isStatic(rd.modifiers)) { 
                     locks.push(ClassLiteral.make(null, rd.getStartLoc()));
                 } else {
                     locks.push(ThisExpr.make(null, rd.getStartLoc()));
                 }
             } else if (rd instanceof ConstructorDecl) {
                 if (RccOptions.get().chl) {
+                    Dbg.o("add (implicit) lock for constructor " + rd.id());
                     locks.push(ThisExpr.make(null, rd.getStartLoc()));
                 }
             }
             ExprVec expressions = getRequiresVec(rd);
+            Dbg.o("add the locks required by the method contract", expressions);
             for (int i = 0; i < expressions.size(); i++) {
                 locks.push(expressions.elementAt(i));
             }
             super.checkTypeDeclElem(rd);
         } finally {
+            Dbg.o("remove locks used while typechecking the body of "+ rd.id());
             locks.popToMark();
         }
     }
@@ -277,6 +288,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
             locks.mark();
             boolean staticContext = Modifiers.isStatic(ib.modifiers); 
             if (RccOptions.get().ihl) {
+                Dbg.o("add (implicit) locks for the initializer in " + ib.parent.id);
                 if (staticContext) {
                     locks.push(ClassLiteral.make(null, ib.getStartLoc()));
                 } else {
@@ -292,6 +304,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
             canAssignReadOnly = true;
             super.checkTypeDeclElem(ib);
         } finally {
+            Dbg.o("remove any locks used while typechecking initializer in " + ib.parent.id);
             locks.popToMark();
         }
     }
@@ -304,6 +317,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
     // the javafe code.
     // @ requires e != null && sig != null;
     protected void checkTypeDeclElem(/*@non_null*/ TypeDeclElem e) {
+        Dbg.o("processing a " + TagConstants.toString(e.getTag()));
         switch (e.getTag()) {
         case TagConstants.FIELDDECL:
             super.checkTypeDeclElem(e);
@@ -323,18 +337,19 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
     }
     
     /**
-     * Get the locks required by a method. TODO: Why is this public?
+     * Get the locks required by a method.
      * 
      * @param rd The method.
      * @return The locks required by <code>rd</code>.
      */
-    static public ExprVec getRequiresVec(RoutineDecl rd) {
+    static protected ExprVec getRequiresVec(RoutineDecl rd) {
         ExprVec expressions = (ExprVec)requiresDecoration.get(rd);
         if (expressions == null) {
-            FlowInsensitiveChecks a = new FlowInsensitiveChecks();
+            Dbg.o("we use another typechecker to look at 'requires' of " + rd.id());
             inAnnotation = true;
-            a.sig = TypeSig.getSig(rd.parent);
-            expressions = a.checkRequiresVec(rd);
+            FlowInsensitiveChecks subChecker = 
+                new FlowInsensitiveChecks(TypeSig.getSig(rd.parent), null);
+            expressions = subChecker.checkRequiresVec(rd);
             inAnnotation = false;
         }
         return expressions;
@@ -354,9 +369,11 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
                 locks.mark();
                 SynchronizeStmt ss = (SynchronizeStmt)s;
                 ss.expr = checkExpr(env, ss.expr, Types.javaLangObject());
+                Dbg.o("enter synchronize statement", ss.expr);
                 locks.push(ss.expr);
                 checkStmt(env, ss.stmt);
             } finally {
+                Dbg.o("exit synchronize statement");
                 locks.popToMark();
             }
             break;
@@ -364,8 +381,12 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
         case TagConstants.CONSTRUCTORINVOCATION: {
             ConstructorInvocation ci = (ConstructorInvocation)s;
             env = super.checkStmt(env, s);
-            if (ci.decl == null) return env; // SNF
+            if (ci == null || ci.decl == null) return env;
             ExprVec expressions = getRequiresVec(ci.decl);
+            
+            Dbg.o("typecheck constructor invocation" + ci.decl.id());
+            Dbg.o("protected by", expressions);
+            
             SubstitutionVec subs = SubstitutionVec.make();
             MultipleSubstitution ms = new MultipleSubstitution(subs);
             checkLocksHeld(
@@ -389,11 +410,11 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
         CloneWithSubstitution c = new CloneWithSubstitution(ms);
         //TODO This is a hack (rgrig). The whole ghost business needs to
         // be reimplemented as currently it is a huge mess.
-        if (!isGhostAccess(e)) {
+        //if (!isGhostAccess(e)) {
             //Dbg.o("I'm changing", e);
             e = (Expr)c.clone(e, true);
             //Dbg.o("into", e);
-        }
+        //}
 
         //System.out.println (" ---locks " + locks.expressionsToString());
         //System.out.println (" ---expression "+e);
@@ -408,12 +429,12 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
      * @param expr The expression to check.
      * @return Whether {@code expr} is a ghost field.
      */
-    private boolean isGhostAccess(Expr expr) {
+    /*private boolean isGhostAccess(Expr expr) {
         if (!(expr instanceof FieldAccess)) return false;
         FieldAccess fa = (FieldAccess)expr;
         if (fa.decl == null) return false;
         return GhostEnv.isGhostField(fa.decl);
-    }
+    }*/
 
     /*
      * DBG protected Expr checkExpr(Env env, Expr x) { if (x != null)
@@ -597,7 +618,9 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
     ) {
         // First do normal typechecking.
         fa = super.checkFieldAccessExpr(env, fa);
-        if (fa.decl == null || inAnnotation) return fa;
+        if (fa == null || fa.decl == null || inAnnotation) return fa;
+        
+        Dbg.o("typecheck access to field", fa.decl);
 
         // If there was no error in the standard typecheck and we
         // are in code then we check that the proper locks are held.
@@ -645,8 +668,8 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
             // TODO support other forms of static field access
         }
         modifyEscapingExpr(env, s, fa);
-        Dbg.o("field access", fa);
         ExprVec expressions = getGuardedVec(fa.decl);
+        Dbg.o("the field access was 'escaped'", fa);
         Dbg.o("locks we should have",expressions);
         MultipleSubstitution ms = new MultipleSubstitution(s);
 
@@ -670,45 +693,47 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
     /* @ non_null */Env env,
     /* @ non_null */MethodInvocation mi) {
         mi = super.checkMethodInvocationExpr(env, mi);
-        if (mi == null) return mi; 
-        if (!inAnnotation) {
-            if (mi.decl == null) return mi;
-            ExprVec expressions = getRequiresVec(mi.decl);
-            boolean staticContext = Modifiers.isStatic(mi.decl.modifiers);
-            SubstitutionVec s = SubstitutionVec.make();
-            if (!staticContext
-                && mi.od.getTag() == TagConstants.EXPROBJECTDESIGNATOR) {
-                s.addElement(new Substitution(ThisExpr.make(
-                    TypeSig.getSig(mi.decl.parent),
-                    mi.od.getStartLoc()), ((ExprObjectDesignator)mi.od).expr));
-            }
-
-            for (int i = 0; i < mi.args.size(); i++) {
-                FormalParaDecl parameter = mi.decl.args.elementAt(i);
-                Expr expr = mi.args.elementAt(i);
-                FieldAccess fa = FieldAccess.make(
-                    ExprObjectDesignator.make(
-                        parameter.getStartLoc(),
-                        ThisExpr.make(
-                            TypeSig.getSig(mi.decl.parent),
-                            parameter.getStartLoc())),
-                    parameter.id,
-                    parameter.getStartLoc());
-                s.addElement(new Substitution(fa, expr));
-                s.addElement(new Substitution(VariableAccess.make(
-                    parameter.id,
-                    parameter.getStartLoc(),
-                    parameter), expr));
-            }
-            modifyEscapingExpr(env, s, mi);
-
-            MultipleSubstitution ms = new MultipleSubstitution(s);
-            checkLocksHeld(
-                ms,
-                expressions,
-                mi.getStartLoc(),
-                mi.decl.pmodifiers);
+        if (mi == null || mi.decl == null || inAnnotation) return mi; 
+        
+        ExprVec expressions = getRequiresVec(mi.decl);
+        
+        Dbg.o("typecheck method invocation", mi);
+        Dbg.o("the locks we should have are", expressions);
+        
+        boolean staticContext = Modifiers.isStatic(mi.decl.modifiers);
+        SubstitutionVec s = SubstitutionVec.make();
+        if (!staticContext
+            && mi.od.getTag() == TagConstants.EXPROBJECTDESIGNATOR) {
+            s.addElement(new Substitution(ThisExpr.make(
+                TypeSig.getSig(mi.decl.parent),
+                mi.od.getStartLoc()), ((ExprObjectDesignator)mi.od).expr));
         }
+
+        for (int i = 0; i < mi.args.size(); i++) {
+            FormalParaDecl parameter = mi.decl.args.elementAt(i);
+            Expr expr = mi.args.elementAt(i);
+            FieldAccess fa = FieldAccess.make(
+                ExprObjectDesignator.make(
+                    parameter.getStartLoc(),
+                    ThisExpr.make(
+                        TypeSig.getSig(mi.decl.parent),
+                        parameter.getStartLoc())),
+                parameter.id,
+                parameter.getStartLoc());
+            s.addElement(new Substitution(fa, expr));
+            s.addElement(new Substitution(VariableAccess.make(
+                parameter.id,
+                parameter.getStartLoc(),
+                parameter), expr));
+        }
+        modifyEscapingExpr(env, s, mi);
+
+        MultipleSubstitution ms = new MultipleSubstitution(s);
+        checkLocksHeld(
+            ms,
+            expressions,
+            mi.getStartLoc(),
+            mi.decl.pmodifiers);
         return mi;
     }
 
@@ -724,39 +749,41 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
     /* @ non_null */Env env,
     /* @ non_null */NewInstanceExpr ne) {
         ne = super.checkNewInstanceExpr(env, ne);
-        if (ne == null) return ne;
-        if (!inAnnotation) {
-            if (ne.decl == null) return ne;
-            ExprVec expressions = getRequiresVec(ne.decl);
-            SubstitutionVec s = SubstitutionVec.make();
+        if (ne == null || ne.decl == null || inAnnotation) return ne;
+        
+        ExprVec expressions = getRequiresVec(ne.decl);
+        
+        Dbg.o("typecheck instantiation", ne);
+        Dbg.o("the constructor requires the locks", expressions);
+        
+        SubstitutionVec s = SubstitutionVec.make();
 
-            for (int i = 0; i < ne.args.size(); i++) {
-                FormalParaDecl parameter = ne.decl.args.elementAt(i);
-                Expr expr = ne.args.elementAt(i);
-                FieldAccess fa = FieldAccess.make(
-                    ExprObjectDesignator.make(
-                        parameter.getStartLoc(),
-                        ThisExpr.make(
-                            TypeSig.getSig(ne.decl.parent),
-                            parameter.getStartLoc())),
-                    parameter.id,
-                    parameter.getStartLoc());
-                s.addElement(new Substitution(fa, expr));
-
-                s.addElement(new Substitution(VariableAccess.make(
-                    parameter.id,
+        for (int i = 0; i < ne.args.size(); i++) {
+            FormalParaDecl parameter = ne.decl.args.elementAt(i);
+            Expr expr = ne.args.elementAt(i);
+            FieldAccess fa = FieldAccess.make(
+                ExprObjectDesignator.make(
                     parameter.getStartLoc(),
-                    parameter), expr));
-            }
+                    ThisExpr.make(
+                        TypeSig.getSig(ne.decl.parent),
+                        parameter.getStartLoc())),
+                parameter.id,
+                parameter.getStartLoc());
+            s.addElement(new Substitution(fa, expr));
 
-            modifyEscapingExpr(env, s, ne);
-            MultipleSubstitution ms = new MultipleSubstitution(s);
-            checkLocksHeld(
-                ms,
-                expressions,
-                ne.getStartLoc(),
-                ne.decl.pmodifiers);
+            s.addElement(new Substitution(VariableAccess.make(
+                parameter.id,
+                parameter.getStartLoc(),
+                parameter), expr));
         }
+
+        modifyEscapingExpr(env, s, ne);
+        MultipleSubstitution ms = new MultipleSubstitution(s);
+        checkLocksHeld(
+            ms,
+            expressions,
+            ne.getStartLoc(),
+            ne.decl.pmodifiers);
         return ne;
     }
 
@@ -777,7 +804,8 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
         //Dbg.o(t);
         if (!inAnnotation && t instanceof ArrayType) {
             ExprVec exps = getElemGuardedVec(t, env);
-            //Dbg.o(t);Dbg.o(exps);
+            Dbg.o("type-check array ref", t);
+            Dbg.o("elements are guarded by", exps);
             MultipleSubstitution ms = new MultipleSubstitution();
             checkLocksHeld(ms, exps, r.locOpenBracket);
         }
@@ -803,21 +831,18 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
     public Env checkModifierPragmaVec(ModifierPragmaVec mod, ASTNode a, Env env) {
         switch (a.getTag()) {
         case TagConstants.METHODDECL:
-        case TagConstants.CONSTRUCTORDECL: {
+        case TagConstants.CONSTRUCTORDECL:
             RoutineDecl rd = (RoutineDecl)a;
             getRequiresVec(rd);
             break;
-        }
-        case TagConstants.FIELDDECL: {
+        case TagConstants.FIELDDECL:
             FieldDecl fd = (FieldDecl)a;
             getGuardedVec(fd);
             break;
-        }
         case TagConstants.CLASSDECL:
-        case TagConstants.INTERFACEDECL: {
+        case TagConstants.INTERFACEDECL:
             getLocalThreadStatus((TypeDecl)a, env);
             break;
-        }
         default:
             super.checkModifierPragmaVec(mod, a, env);
             break;
@@ -884,6 +909,8 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
      * "syntactic" checks on the existing pragmas.
      */
     protected Env checkModifierPragma(ModifierPragma p, ASTNode ctxt, Env env) {
+        
+        Dbg.o("process modifier pragma " + p.toString());
 
         inAnnotation = true; // Must be reset before we exit!
         int tag = p.getTag();
@@ -994,7 +1021,25 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
         return env;
     }
 
-    public ExprVec checkRequiresVec(RoutineDecl rd) {
+    /**
+     * This method should be called once per routine declaration.
+     * It checks whether the requires set is a subset of that for
+     * the overriden method.
+     * 
+     * The |requiresDecoration| on the method declaration is used by
+     * |getRequiresVec| to decide whether to call this method or not
+     * (i.e., this is the mechanism for calling this once per method.)
+     * 
+     * As a side effect (why?) the pragma modifiers for the type that
+     * encloses |rd| are processed.
+     * 
+     * TODO It also used to do some strange-looking processing on formal
+     *      parameters. Now it is commented out until I figure out what should
+     *      happen.
+     * 
+     */
+    protected ExprVec checkRequiresVec(RoutineDecl rd) {
+        
         ExprVec g = ExprVec.make();
 
         requiresDecoration.set(rd, g);
@@ -1006,18 +1051,19 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
         sig = s;
         rootSEnv = makeEnvForTypeSig(s, true); // @ nowarn Invariant
         rootIEnv = makeEnvForTypeSig(s, false); // @ nowarn Invariant
-        boolean staticContext = Modifiers.isStatic(rd.modifiers); // 10/28
+        boolean staticContext = Modifiers.isStatic(rd.modifiers);
 
         Env env = staticContext ? rootSEnv : rootIEnv;
 
-        TypeDecl d = s.getTypeDecl();
-
-        // Process ModifierPragmas
-        checkModifierPragmaVec(d.pmodifiers, d, env);
+        // Collect the requires clauses. Use the base class method to
+        // make sure (only) |checkModifierPragma| is called for each pragma.
+        Dbg.o("collect requires clausses for " + rd.id());
+        super.checkModifierPragmaVec(rd.pmodifiers, rd, env);
 
         leftToRight = false;
 
         // add params
+        /*
         env = new EnvForEnclosedScope(env);
         for (int j = 0; j < rd.args.size(); j++) {
             FormalParaDecl formal = rd.args.elementAt(j);
@@ -1029,11 +1075,11 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
             checkModifierPragmaVec(formal.pmodifiers, formal, env);
             env = new EnvForLocals(env, formal);
         }
-
-        super.checkModifierPragmaVec(rd.pmodifiers, rd, env);
+        */
 
         // check overridden expr ved
         if (rd instanceof MethodDecl) {
+            Dbg.o("check that requires are not stronger than the ones inherited by " + rd.id());
             MethodDecl md = (MethodDecl)rd;
             Set methods = javafe.tc.PrepTypeDeclaration.getInst().getOverrides(
                 md);

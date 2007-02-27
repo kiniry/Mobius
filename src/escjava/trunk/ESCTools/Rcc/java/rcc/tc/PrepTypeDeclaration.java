@@ -6,17 +6,11 @@ import java.util.Hashtable;
 
 import javafe.ast.ASTDecoration;
 import javafe.ast.ASTNode;
-import javafe.ast.AmbiguousVariableAccess;
 import javafe.ast.ClassDecl;
-import javafe.ast.Expr;
-import javafe.ast.ExprObjectDesignator;
 import javafe.ast.ExprVec;
-import javafe.ast.FieldAccess;
 import javafe.ast.FieldDecl;
 import javafe.ast.FieldDeclVec;
 import javafe.ast.FormalParaDecl;
-import javafe.ast.FormalParaDeclVec;
-import javafe.ast.Identifier;
 import javafe.ast.InterfaceDecl;
 import javafe.ast.MethodDecl;
 import javafe.ast.MethodDeclVec;
@@ -24,36 +18,30 @@ import javafe.ast.ModifierPragma;
 import javafe.ast.ModifierPragmaVec;
 import javafe.ast.Modifiers;
 import javafe.ast.PrettyPrint;
-import javafe.ast.SimpleName;
-import javafe.ast.ThisExpr;
 import javafe.ast.TypeDecl;
 import javafe.ast.TypeDeclElem;
-import javafe.ast.TypeDeclElemVec;
 import javafe.ast.TypeModifierPragma;
 import javafe.ast.TypeModifierPragmaVec;
 import javafe.ast.TypeName;
-import javafe.ast.TypeNameVec;
 import javafe.tc.Env;
-import javafe.tc.EnvForCU;
 import javafe.tc.EnvForTypeSig;
 import javafe.util.Assert;
 import javafe.util.ErrorSet;
 import javafe.util.Info;
 import javafe.util.Location;
+import rcc.Dbg;
 import rcc.ast.CloneAST;
-import rcc.ast.CloneForInstantiation;
-import rcc.ast.CloneWithSubstitution;
 import rcc.ast.EqualsAST;
 import rcc.ast.EqualsASTNoDecl;
 import rcc.ast.GenericArgumentPragma;
 import rcc.ast.GenericParameterPragma;
 import rcc.ast.GhostDeclPragma;
-import rcc.ast.MultipleSubstitution;
-import rcc.ast.Substitution;
-import rcc.ast.SubstitutionVec;
 import rcc.ast.TagConstants;
 
 /**
+ * TODO Some of the Dbg.o calls should perhaps be transformed into Info.out
+ *      when I finish packaging RCC.
+ * 
  * NOTE According to the contract of <code>javafe.tc.Typesig</code> this
  *      class shall not use <code>FlowInsensitiveChecks</code> to avoid
  *      call cycles.
@@ -80,13 +68,15 @@ import rcc.ast.TagConstants;
  *  - getEnvForCurrentSig
  *  
  * We override the following so that we transform generic arguments into
- * AST decorations and we create TypeSig instantiations.
+ * AST decorations and we create TypeSig instantiations. (So it handles
+ * the places where you give arguments to types.)
  *  - processTypeNameAnnotations
  *
  * We override the following methods to process generic parameters into
  * field declarations added as decorations to the type declaration.
  *  - visitClassDecl
  *  - visitInterfaceDecl
+ *  (NOTE that the actual work is done in checkTYpeModifierPragma)  
  *
  * The following notes should accompany 
  *   <code>javafe.tc.PrepTypeDeclaration</code>,
@@ -265,9 +255,13 @@ public class PrepTypeDeclaration extends javafe.tc.PrepTypeDeclaration {
             if (pd != null) return;
 
             typeParametersDecoration.set(currentSig, pp.args);
+            Dbg.o("attach the ghost params ", pp.args);
+            Dbg.o("..as a typeParametersDecoration on the current TypeSig, " + currentSig.getExternalName());
+            Dbg.o("..and attach a FieldDecl to each formal using parameterDeclDecoration");
             for (int i = 0; i < pp.args.size(); i++) {
                 FormalParaDecl parameter = pp.args.elementAt(i);
-                env.resolveType(currentSig, parameter.type);
+                // TODO can't I assume this is a final Object? why resolve?
+                env.resolveType(currentSig, parameter.type);  
                 FieldDecl decl = FieldDecl.make(
                     parameter.modifiers | Modifiers.ACC_FINAL,
                     parameter.pmodifiers,
@@ -277,10 +271,6 @@ public class PrepTypeDeclaration extends javafe.tc.PrepTypeDeclaration {
                     null,
                     Location.NULL);
                 decl.setParent((TypeDecl)ctxt);
-                GhostDeclPragma pragma = GhostDeclPragma.make(
-                    decl,
-                    parameter.locId);
-                ((TypeDecl)ctxt).elems.insertElementAt(pragma, 0);
                 parameterDeclDecoration.set(parameter, decl);
             }
             break;
@@ -349,6 +339,7 @@ public class PrepTypeDeclaration extends javafe.tc.PrepTypeDeclaration {
                         tn.getStartLoc(),
                         "can only have one type argument list for class or interface name.");
                 }
+                Dbg.o("I'm moving a GENERICARGUMENTPRAGMA into typeArgumentDecoration", expressions);
                 GenericArgumentPragma gp = (GenericArgumentPragma)p;
                 typeArgumentDecoration.set(tn, gp.expressions);
                 break;
@@ -373,8 +364,8 @@ public class PrepTypeDeclaration extends javafe.tc.PrepTypeDeclaration {
         javafe.tc.TypeSig sig, 
         Env env
     ) {
-        Info.out("[process type name annotations for " + tn.name.printName()
-            + "]");
+        Info.out("[process type name annotations for " + tn.name.printName() + "]");
+        Dbg.o("I'm processing type annotations of " + tn.name.printName());
         processGenericArgumentPragmas(tn);
         ExprVec expressions = (ExprVec)typeArgumentDecoration.get(tn);
         return findTypeSignature(env, sig, expressions, tn.getStartLoc());
@@ -518,12 +509,15 @@ public class PrepTypeDeclaration extends javafe.tc.PrepTypeDeclaration {
      */
     protected EnvForTypeSig getEnvForCurrentSig(
         javafe.tc.TypeSig sig,
-        boolean isStatic) {
+        boolean isStatic
+    ) {
         Env env;
-
+        
         if (sig.state >= TypeSig.PREPPED) {
             return sig.getEnv(isStatic);
         }
+        Dbg.o("creating an EnvForInstantiation. why?");
+
         env = sig.getEnv(isStatic);
         EnvForInstantiation envForCheck = new EnvForInstantiation(
             env,

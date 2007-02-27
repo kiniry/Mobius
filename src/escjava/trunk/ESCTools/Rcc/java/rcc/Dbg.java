@@ -38,9 +38,11 @@ class NullPrintStream extends PrintStream {
  * with an optional tag.
  */
 public class Dbg {
-    private static final PrintStream out = NullPrintStream.out;
-    //private static final PrintStream out = System.err;
+    //private static final PrintStream out = NullPrintStream.out;
+    private static final PrintStream out = System.out;
 
+    public static void o(String t) { out.println(t); }
+    
     public static void o(TypeNameVec a) { o("", a); }
     public static void o(FormalParaDeclVec a) { o("", a); }
     public static void o(ExprVec a) { o("", a); }
