@@ -17,7 +17,7 @@ Inductive methSpec  : methodNames -> assertion -> Type :=
 
 Inductive CTX : Type :=
     | nil : CTX
-    | cons :  forall (n : methodNames ) (body: stmt) (  ass : assertion) ,  CTX -> CTX .
+    | cons :   methodNames -> stmt ->  assertion -> CTX -> CTX .
  
 Fixpoint  inList (ctx: CTX ) ( name2 :  methodNames  ) (body2 :stmt)( ass2 : assertion ){struct ctx } : Prop  :=
    match ctx with 

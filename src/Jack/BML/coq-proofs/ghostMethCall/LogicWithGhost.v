@@ -12,13 +12,15 @@ Export LanguageGhost.
 Open Scope Z_scope.
 
 Definition Gassertion := state -> gState -> state -> gState -> Prop.
+
 Inductive methSpec  : methodNames -> Gassertion -> Type := 
    | spec : forall  (name :  methodNames ) (ass : Gassertion ),  methSpec name ass. 
 
+
 Inductive GCTX: Type :=
     | Gnil : GCTX
-    | Gcons :  forall (n : methodNames ) (body: Gstmt) (  ass : Gassertion) ,  GCTX -> GCTX.
- 
+    | Gcons :   methodNames -> Gstmt -> Gassertion ->  GCTX -> GCTX.
+  
 Fixpoint  ginList (ctx: GCTX ) ( name2 :  methodNames  ) (body2 : Gstmt)( ass2 : Gassertion ){struct ctx } : Prop  :=
    match ctx with 
    | Gnil =>  False
