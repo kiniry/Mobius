@@ -1,4 +1,4 @@
-FILES=BasicDef.vo SemanticLevels.vo Language.vo LanguageGhost.vo  LogicLevels.voLogicWithGhost.vo  Main.vo
+FILES=BasicDef.vo SemanticLevels.vo Language.vo LanguageGhost.vo  Logic.vo LogicWithGhost.vo  Main.vo
 
 
 
@@ -11,7 +11,7 @@ noclean: $(FILES)
 	coqc LanguageGhost
 	coqc Language
 	coqc SemanticLevels	 
-	coqc LogicLevels
+	coqc Logic
 	coqc LogicWithGhost
 	coqc Main
 	

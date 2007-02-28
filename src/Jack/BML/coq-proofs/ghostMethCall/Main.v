@@ -1,9 +1,9 @@
-Require Import  LogicLevels.
+Require Import  Logic.
 Require Import LogicWithGhost.
 Require Import Coq.Logic.Classical_Prop.
 
 
-Export LogicLevels.
+Export Logic.
 Export LogicWithGhost.
 
 (* THILE FILE CONTAINS A DEFINITION OF THE TRANSFORMATION FROM 
