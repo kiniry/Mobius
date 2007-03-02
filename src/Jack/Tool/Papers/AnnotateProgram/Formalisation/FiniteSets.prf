@@ -175,8 +175,8 @@
    694 27 T NIL)))
 (|MVA_Finite_Props|
  (|get_t_from_gs_TCC1| 0
-  (|get_t_from_gs_TCC1-1| NIL 3381068089 3381486214 ("" (SUBTYPE-TCC) NIL NIL)
-   UNCHECKED
+  (|get_t_from_gs_TCC1-1| NIL 3381068089 3381488759 ("" (SUBTYPE-TCC) NIL NIL)
+   PROVED
    ((|nonempty?| CONST-DECL "bool" |sets| NIL)
     (|empty?| CONST-DECL "bool" |sets| NIL)
     (|member| CONST-DECL "bool" |sets| NIL)
@@ -207,9 +207,9 @@
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL))
-   38 38 NIL NIL))
+   41 37 NIL NIL))
  (|all_guards_finite| 0
-  (|all_guards_finite-3| "del" 3381210486 3381486214
+  (|all_guards_finite-3| "del" 3381210486 3381488759
    ("" (SKOLEM-TYPEPRED)
     (("" (EXPAND "is_finite")
       (("" (SKOLEM!)
@@ -256,7 +256,7 @@
         NIL))
       NIL))
     NIL)
-   UNCHECKED
+   PROVED
    ((|number| NONEMPTY-TYPE-DECL NIL |numbers| NIL)
     (|number_field_pred| CONST-DECL "[number -> boolean]" |number_fields| NIL)
     (|number_field| NONEMPTY-TYPE-FROM-DECL NIL |number_fields| NIL)
@@ -271,14 +271,22 @@
     (< CONST-DECL "bool" |reals| NIL)
     (|below| TYPE-EQ-DECL NIL |nat_types| NIL)
     (|get_t_from_gs| CONST-DECL "Transition" |MVA_Finite_Props| NIL)
-    (= CONST-DECL "[T, T -> boolean]" |equalities| NIL) NIL
+    (= CONST-DECL "[T, T -> boolean]" |equalities| NIL)
+    (|ts!1| SKOLEM-CONST-DECL "finite_set[Transition[CP, Name]]"
+     |MVA_Finite_Props| NIL)
     (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
     (|PSt| TYPE-EQ-DECL NIL |State| NIL) (|Store| TYPE-EQ-DECL NIL MVA NIL)
     (|Val| TYPE-DECL NIL |Val_adt| NIL) (|empty?| CONST-DECL "bool" |sets| NIL)
     (|member| CONST-DECL "bool" |sets| NIL)
     (|nonempty?| CONST-DECL "bool" |sets| NIL)
     (|singleton?| CONST-DECL "bool" |sets| NIL)
-    (|singleton| CONST-DECL "(singleton?)" |sets| NIL) NIL NIL
+    (|singleton| CONST-DECL "(singleton?)" |sets| NIL)
+    (|x1!1| SKOLEM-CONST-DECL "({p: Guard[CP, Name] |
+    EXISTS (t: Transition[CP, Name]): ts!1(t) AND t`guard = p})"
+     |MVA_Finite_Props| NIL)
+    (|x2!1| SKOLEM-CONST-DECL "({p: Guard[CP, Name] |
+    EXISTS (t: Transition[CP, Name]): ts!1(t) AND t`guard = p})"
+     |MVA_Finite_Props| NIL)
     (|choose| CONST-DECL "(p)" |sets| NIL)
     (|injective?| CONST-DECL "bool" |functions| NIL)
     (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
@@ -291,7 +299,7 @@
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL))
-   56 51 T NIL)
+   73 73 T NIL)
   (|all_guards_finite-2| "del" 3381210221 3381210221
    ("" (SKOLEM-TYPEPRED)
     (("" (EXPAND "is_finite")
@@ -416,7 +424,7 @@
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL))
    5372106 265 T SHOSTAK))
  (|all_guards_subset| 0
-  (|all_guards_subset-1| NIL 3381123421 3381486214
+  (|all_guards_subset-1| NIL 3381123421 3381488760
    ("" (SKOSIMP)
     (("" (EXPAND "subset?")
       (("" (SKOSIMP)
@@ -433,14 +441,14 @@
         NIL))
       NIL))
     NIL)
-   UNCHECKED
+   PROVED
    ((|subset?| CONST-DECL "bool" |sets| NIL)
     (|member| CONST-DECL "bool" |sets| NIL)
     (CP FORMAL-NONEMPTY-TYPE-DECL NIL |MVA_Finite_Props| NIL)
     (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |MVA_Finite_Props| NIL)
     (|Action| TYPE-EQ-DECL NIL MVA NIL) (|Event| TYPE-EQ-DECL NIL MVA NIL)
     (|Guard| TYPE-EQ-DECL NIL MVA NIL) (|Transition| TYPE-EQ-DECL NIL MVA NIL))
-   8 7 T SHOSTAK))
+   6 7 T SHOSTAK))
  (|MC_TCC2_subset2_is_finite| 0
   (|MC_TCC2_subset2_is_finite-2| NIL 3381488693 3381488714
    ("" (SKOLEM-TYPEPRED)
@@ -645,7 +653,7 @@
      NIL)
     (|real_lt_is_strict_total_order| NAME-JUDGEMENT
      "(strict_total_order?[real])" |real_props| NIL))
-   1841 680 NIL NIL)
+   1841 680 T NIL)
   (|MC_TCC2_subset2_is_finite-1| NIL 3381488620 3381488648
    ("" (SKOLEM-TYPEPRED)
     (("" (EXPAND "is_finite")
@@ -755,4 +763,9 @@
              ("3" (SKOSIMP) (("3" (ASSERT) NIL))))))))))))
     NIL)
    UNFINISHED NIL 2577 544 NIL NIL)))
+(|Set_Props|
+ (|add_member| 0
+  (|add_member-1| NIL 3381494751 3381494769
+   ("" (SKOLEM!) (("" (EXPAND "add") (("" (PROPAX) NIL NIL)) NIL)) NIL) PROVED
+   ((|add| CONST-DECL "(nonempty?)" |sets| NIL)) 1804 2 T SHOSTAK)))
 

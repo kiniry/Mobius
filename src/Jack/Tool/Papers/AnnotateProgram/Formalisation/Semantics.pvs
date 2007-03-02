@@ -30,7 +30,7 @@ BEGIN
   lookup_mthd : [Program, Val, Name, Expr -> Method]
   lookup_inv : [Program, Val -> BoolExpr]
 
-  
+  % Field, ghost and local variables
   % fvs, gvs and lvs are partial functions from name to values
   % Values are integers
   % If it supposed to be a boolean, <= 0 = False, > 0 = True
@@ -41,7 +41,10 @@ BEGIN
   PState : TYPE = [# ex : lift[Excpt],
                      st : PSt #]
 
+  lift_PSt(p : PSt) : PState =
+    (# ex := bottom, st := p #)
 
+  CONVERSION lift_PSt
 
   % So far, I'm not modelling that the sets are disjoint
   % This would imply adding a test to update, that vn is in the domain

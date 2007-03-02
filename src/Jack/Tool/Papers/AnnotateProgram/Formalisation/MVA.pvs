@@ -35,8 +35,8 @@ BEGIN
   Guard : TYPE = [Store, PSt -> boolean]
 
   OneAction : TYPE =
-    [# source : Name,
-       target : Expr[Name]
+    [# target : Name,
+       source : Expr[Name]
     #]
 
   Action : TYPE = list[OneAction]
@@ -65,9 +65,9 @@ BEGIN
   % a name of the class that the automaton monitors,
   % a finite set of control points other than halted,
   % an initial control point,
-  % a finite set of events
+  % a finite set of events,
   % a finite set of variable declarations used by the automaton,
-  % a finite set of vars decls from the program that may be used in guards
+  % a finite set of vars decls from the program that may be used in guards,
   % a finite transition relation
   MVA : TYPE =
     [# name : Name,
@@ -81,37 +81,84 @@ BEGIN
     #]
 
   % NOTE: vdsA and vdsP are just the signatures of the variables, they do not
-  %       contain their values 
+  %       contain their values. That is done by its (operational) semantics.
 
-  deterministic(a : MVA) : boolean =
-    FORALL(q : CP, e : Event, stA : Store, stP : PSt,
-           p : Guard, t : Transition) :
-      cps(a)(q) IMPLIES
-      evs(a)(e) IMPLIES
+  % Functions to get a set of names from a set of variable declarations
+  var_names(V : set[MVA_VarDecl]) : set[Name] =
+    {n : Name | EXISTS (va : MVA_VarDecl) : V(va) AND name(va) = n}
+
+  var_names(V : set[Prog_VarDecl]) : set[Name] =
+    {n : Name | EXISTS (vp : Prog_VarDecl) : V(vp) AND name(vp) = n}
+
+  % Gets the variable' names involved in an expression
+  % TODO: define!
+  var_names(e : Expr[Name]) : set[Name]
+
+  valid_Store(f : Store, a : MVA) : boolean =
+    FORALL (n : Name) :
+      var_names(vdsA(a))(n) IMPLIES
+        NOT Bottom?(f(n))
+
+  valid_PSt(f : PSt, a : MVA) : boolean =
+    FORALL (n : Name) :
+      var_names(vdsA(a))(n) IMPLIES
+        NOT Bottom?(lookup(n, f))
+
+  IMPORTING func_props   % imports domain_set
+
+  % Rules that every MVA must follow:
+  % The initial control point is in the set of control points of the automaton
+  % The name of the variables in vdsA and vdsP are distinct
+  % The source and target of every transition is in the set of control points
+  % The event of every transition is in the set of events
+  % The target of every OneAction in every transition is in vdsA and variables
+  % appearing in the source expression are either in vdsA or in vdsP
+  % Variables appearing in guards are in in vdsA or in vdsP. In our formalization
+  % this means that the Store is defined for each var in vdsA and the PSt is
+  % defined for each var in vdsP (they also may be defined elsewhere)
+  valid_MVA(a : MVA) : boolean =
+    cps(a)(init_cp(a)) AND
+    disjoint?(var_names(vdsA(a)), var_names(vdsP(a))) AND
+    FORALL (t : Transition) :
       ts(a)(t) IMPLIES
-      scp(t) = q IMPLIES
-      event(t) = e IMPLIES
-      guard(t) = p IMPLIES
-      p(stA, stP) IMPLIES
-      FORALL (t1 : Transition) :
-        scp(t1)(q) IMPLIES
-        event(t1)(e) IMPLIES
-        guard(t1) /= p IMPLIES
-        NOT guard(t1)(stA, stP)
+        cps(a)(scp(t)) AND
+        cps(a)(tcp(t)) AND
+        evs(a)(event(t)) AND
+          (FORALL (a : OneAction) :
+            member(a, action(t)) IMPLIES
+              var_names(vdsA(a))(target(a)) AND
+              subset?(var_names(source(a)), 
+                     union(var_names(vdsA(a)), var_names(vdsP(a))))) AND
+          (FORALL (p : Guard) :
+            guard(t) = p IMPLIES
+              valid_Store(proj_1(domain_set(p)), a) AND
+              valid_PSt(proj_2(domain_set(p)), a))
 
-  total(a : MVA) : boolean =
+  deterministic(a : (valid_MVA)) : boolean =
+    FORALL (t1, t2 : Transition, stA : Store, stP : PSt) :
+      ts(a)(t1) IMPLIES
+      ts(a)(t2) IMPLIES
+      valid_Store(stA, a) IMPLIES
+      valid_PSt(stP, a) IMPLIES
+      scp(t2) = scp(t1) IMPLIES
+      event(t2) = event(t1) IMPLIES
+      guard(t1)(stA, stP) IMPLIES
+      guard(t2)(stA, stP) IMPLIES
+        t1 = t2
+
+  total(a : (valid_MVA)) : boolean =
     FORALL(q : CP, e : Event, stA : Store, stP : PSt) :
       EXISTS(t : Transition) : ts(a)(t) AND
                                scp(t) = q AND
                                event(t) = e AND
                                guard(t)(stA, stP)
 
-  trap_state(q: CP, a : MVA) : boolean =
+  trap_state(q : CP, a : (valid_MVA)) : boolean =
     FORALL (t : Transition) :
       ts(a)(t) AND scp(t) = q IMPLIES
         tcp(t) = halted
 
-  complete(a : MVA) : boolean =
+  complete(a : (valid_MVA)) : boolean =
     cps(a)(halted) AND
     trap_state(halted, a) AND
     deterministic(a) AND
@@ -149,15 +196,15 @@ BEGIN
       ELSE st(m)
       ENDIF
 
-  % to be defined!
+  % TODO: define!
   eval(e : Expr)(st : Store) : Val
 
   % type checking problem, because program expressions cannot be evaluated
   execute_actions(stA : Store, l : Action) : RECURSIVE Store =
     IF null?(l)
     THEN stA
-    ELSE execute_actions(update(stA)(source(car(l)))
-                                    (eval(target(car(l)))(stA)), cdr(l))
+    ELSE execute_actions(update(stA)(target(car(l)))
+                                    (eval(source(car(l)))(stA)), cdr(l))
     ENDIF
   MEASURE length(l)
 
@@ -195,6 +242,7 @@ BEGIN
       FORALL(p : Guard) : all_guards(cp, e, ts)(p) IMPLIES NOT p(stA, stP)
 
   % Lemmas to prove the TCC2
+  % TODO: prove
   MC_TCC2_subset1_is_finite: LEMMA
      FORALL (cps: finite_set[CP], es: finite_set[Event[CP, Name]],
              ts: finite_set[Transition[CP, Name]]):
@@ -216,16 +264,36 @@ BEGIN
                               AND action(t) = skip AND tcp(t) = halted})
 
   % Preconditions for completeMVA
-  completeMVA_pre(a: MVA): boolean =
+  completeMVA_pre(a : (valid_MVA)) : boolean =
     deterministic(a) AND
     NOT cps(a)(halted)
 
   % Makes a deterministic MVA total
-  completeMVA(a: (completeMVA_pre)) : MVA =
+  completeMVA(a : (completeMVA_pre)) : MVA =
     a WITH [cps := add(halted, cps(a)),
             ts := union(ts(a), completeTrans(cps(a), evs(a), ts(a)))]
 
-  completeMVA_is_complete: LEMMA
+  %    Lemmas to prove completeMVA_total
+  % TODO: prove (may be long/hard)
+  completeMVA_valid: LEMMA
+    FORALL (a: (completeMVA_pre)) :
+      valid_MVA(completeMVA(a))
+
+  completeMVA_trap: LEMMA
+    FORALL (a: (completeMVA_pre)) :
+      trap_state(halted, completeMVA(a))
+
+  % TODO: prove
+  completeMVA_determ: LEMMA
+    FORALL (a: (completeMVA_pre)) :
+      deterministic(completeMVA(a))
+
+  % TODO: prove
+  completeMVA_total: LEMMA
+    FORALL (a: (completeMVA_pre)) :
+      total(completeMVA(a))
+
+  completeMVA_is_complete: THEOREM
     FORALL (a: (completeMVA_pre)) :
       complete(completeMVA(a))
 
