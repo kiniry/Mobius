@@ -59,10 +59,10 @@ public class Types extends javafe.tc.Types {
         TypeDecl decl,
         CompilationUnit CU
     ) {
-        // TODO is this ok?
         return new rcc.tc.TypeSig(
             packageName,
             simpleName,
+            (TypeSig)enclosingType,
             decl,
             CU);
     }
@@ -139,14 +139,8 @@ public class Types extends javafe.tc.Types {
             
             // Try to also look in the ghost fields of |t|
             TypeSig sig = (TypeSig)t;
-            GhostEnv ge = new GhostEnv(sig.getEnclosingEnv(), sig, false);
-            decl = ge.getGhostField(id.toString(), null);
-            if (decl == null) throw e; // stil not found
-            
-            // Ambiguous? (TODO This is ugly)
-            if (ge.getGhostField(id.toString(), decl) != null)
-                throw new LookupException(LookupException.AMBIGUOUS);
-            
+            decl = sig.getFormal(id.toString()); 
+            if (decl == null) throw e; // still not found
         }
         return decl;
     }

@@ -38,7 +38,6 @@ public class CloneAST extends CloneVisitorSuper {
             rcc.tc.FlowInsensitiveChecks.requiresDecoration.set(a,null);
             rcc.tc.FlowInsensitiveChecks.elemGuardDecoration.set(a,null);
             rcc.tc.FlowInsensitiveChecks.threadLocalDecoration.set(a,null);
-            rcc.tc.PrepTypeDeclaration.typeParametersDecoration.set(a,null);
         }
         
         return a;

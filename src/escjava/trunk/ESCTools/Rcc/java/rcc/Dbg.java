@@ -38,8 +38,8 @@ class NullPrintStream extends PrintStream {
  * with an optional tag.
  */
 public class Dbg {
-    //private static final PrintStream out = NullPrintStream.out;
-    private static final PrintStream out = System.out;
+    private static final PrintStream out = NullPrintStream.out;
+    //private static final PrintStream out = System.out;
 
     public static void o(String t) { out.println(t); }
     

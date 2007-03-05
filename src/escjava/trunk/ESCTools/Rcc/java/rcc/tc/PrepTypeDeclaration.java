@@ -2,40 +2,30 @@
 
 package rcc.tc;
 
-import java.util.Hashtable;
-
 import javafe.ast.ASTDecoration;
 import javafe.ast.ASTNode;
 import javafe.ast.ClassDecl;
 import javafe.ast.ExprVec;
 import javafe.ast.FieldDecl;
-import javafe.ast.FieldDeclVec;
 import javafe.ast.FormalParaDecl;
 import javafe.ast.InterfaceDecl;
-import javafe.ast.MethodDecl;
-import javafe.ast.MethodDeclVec;
 import javafe.ast.ModifierPragma;
 import javafe.ast.ModifierPragmaVec;
 import javafe.ast.Modifiers;
-import javafe.ast.PrettyPrint;
 import javafe.ast.TypeDecl;
 import javafe.ast.TypeDeclElem;
 import javafe.ast.TypeModifierPragma;
 import javafe.ast.TypeModifierPragmaVec;
 import javafe.ast.TypeName;
 import javafe.tc.Env;
-import javafe.tc.EnvForTypeSig;
 import javafe.util.Assert;
 import javafe.util.ErrorSet;
 import javafe.util.Info;
 import javafe.util.Location;
 import rcc.Dbg;
 import rcc.ast.CloneAST;
-import rcc.ast.EqualsAST;
-import rcc.ast.EqualsASTNoDecl;
 import rcc.ast.GenericArgumentPragma;
 import rcc.ast.GenericParameterPragma;
-import rcc.ast.GhostDeclPragma;
 import rcc.ast.TagConstants;
 
 /**
@@ -99,26 +89,24 @@ import rcc.ast.TagConstants;
  */
 public class PrepTypeDeclaration extends javafe.tc.PrepTypeDeclaration {
 
+    /**
+     * This decoration is put on <code>TypeName</code>-s and holds the
+     * ghost argument expression list.
+     */
+    static public final ASTDecoration typeArgumentDecoration 
+        = new ASTDecoration("type args");
+
     public PrepTypeDeclaration() {
         inst = this;
     } // @ nowarn Invariant
 
     /**
-     * TODO remove the functionality of having guarded_by per class
-     * 
      * Look at all field declarations in type {@code d} and clone
      * their pragma modifiers. Conceptually, the code 
      * {@code A x,y guarded_by l;} is transformed into
      * {@code A x guarded_by l; A y guarded_by l;}.
-     * 
-     *  Also takes guarded_by annotations on a class and replicates it
-     *  on all non-final field declarations.
      */
-    public void addClassGuardsToFields(TypeDecl d) {
-        // add class guards
-
-        if (d.pmodifiers == null) return;
-
+    private void cloneGuardedBy(TypeDecl d) {
         // clone because pragmas may be shared between fields, ie Foo f,g,h;
         CloneAST clone = new CloneAST();
         for (int i = 0, sz = d.elems.size(); i < sz; i++) {
@@ -132,55 +120,6 @@ public class PrepTypeDeclaration extends javafe.tc.PrepTypeDeclaration {
                 fd.pmodifiers = ModifierPragmaVec.make(t);
             }
         }
-        
-        for (int j = 0; j < d.pmodifiers.size(); j++) {
-            ModifierPragma p = d.pmodifiers.elementAt(j);
-            if (p.getTag() == TagConstants.GUARDEDBYMODIFIERPRAGMA) {
-                for (int i = 0; i < d.elems.size(); i++) {
-                    TypeDeclElem e = d.elems.elementAt(i);
-                    if (e instanceof FieldDecl) {
-                        FieldDecl fd = (FieldDecl)e;
-                        if (!Modifiers.isFinal(fd.modifiers)) {
-                            fd.pmodifiers.addElement(p);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    /**
-     * Returns whether there are any ghost parameters on this class;
-     * that is, whether it is a 'generic' class.
-     * @param sig The type signature of the class to check.
-     * @return True iff {@code sig} is generic.
-     */
-    public boolean hasParameters(javafe.tc.TypeSig sig) {
-        if (typeParametersDecoration.get(sig) != null) {
-            return true;
-        }
-
-        // look for type parameters
-        TypeModifierPragmaVec v = sig.getTypeDecl().tmodifiers;
-        if (v != null) {
-            for (int i = 0; i < v.size(); i++) {
-                if (v.elementAt(i).getTag() == TagConstants.GENERICPARAMETERPRAGMA) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    public void prepGenericTypeDecl(TypeSig s) {
-        TypeDecl decl = s.getTypeDecl();
-
-        checkTypeModifiers(decl, s, true);
-        checkTypeModifierPragmaVec(
-            decl.tmodifiers, 
-            decl, 
-            getEnvForCurrentSig(s, true), 
-            s);
     }
 
     /**
@@ -188,13 +127,10 @@ public class PrepTypeDeclaration extends javafe.tc.PrepTypeDeclaration {
      */
     // @ requires decl!=null && currentSig!=null
     public void visitClassDecl(ClassDecl decl, javafe.tc.TypeSig currentSig) {
-        if (!hasParameters(currentSig)) { 
-            addClassGuardsToFields(decl);
-        }
+        cloneGuardedBy(decl);
         checkTypeModifierPragmaVec(
             decl.tmodifiers, 
             decl, 
-            getEnvForCurrentSig(currentSig, true), 
             currentSig);
         super.visitClassDecl(decl, currentSig);
     }
@@ -204,30 +140,22 @@ public class PrepTypeDeclaration extends javafe.tc.PrepTypeDeclaration {
         InterfaceDecl decl,
         javafe.tc.TypeSig currentSig
     ) {
-        addClassGuardsToFields(decl);
+        cloneGuardedBy(decl);
         checkTypeModifierPragmaVec(
             decl.tmodifiers, 
             decl, 
-            getEnvForCurrentSig(currentSig, true),
             currentSig);
         super.visitInterfaceDecl(decl, currentSig);
     }
-
-    static public ASTDecoration typeParametersDecoration = new ASTDecoration(
-        "type parameters");
-
-    static public ASTDecoration parameterDeclDecoration = new ASTDecoration(
-        "decl for parameter");
 
     // @ requires env!=null
     protected void checkTypeModifierPragmaVec(
         TypeModifierPragmaVec v,
         ASTNode ctxt,
-        Env env,
         javafe.tc.TypeSig currentSig
     ) {
         if (v != null) for (int i = 0; i < v.size(); i++)
-            checkTypeModifierPragma(v.elementAt(i), ctxt, env, currentSig);
+            checkTypeModifierPragma(v.elementAt(i), ctxt, currentSig);
     }
 
     /**
@@ -239,29 +167,20 @@ public class PrepTypeDeclaration extends javafe.tc.PrepTypeDeclaration {
     protected void checkTypeModifierPragma(
         TypeModifierPragma p,
         ASTNode ctxt,
-        Env env,
         javafe.tc.TypeSig currentSig
     ) {
+        TypeSig sig = (TypeSig)currentSig;
         int tag = p.getTag();
         switch (tag) {
         case TagConstants.GENERICPARAMETERPRAGMA: {
             GenericParameterPragma pp = (GenericParameterPragma)p;
-            Object pd = typeParametersDecoration.get(currentSig);
-            if (pd != null && pd != pp.args) {
-                ErrorSet.error(
-                    ctxt.getStartLoc(),
-                    "can only have one type parameter list  for class or interface declaration.");
+            if (sig.hasFormals()) {
+                // TODO warning for more than one list?
             }
-            if (pd != null) return;
-
-            typeParametersDecoration.set(currentSig, pp.args);
-            Dbg.o("attach the ghost params ", pp.args);
-            Dbg.o("..as a typeParametersDecoration on the current TypeSig, " + currentSig.getExternalName());
-            Dbg.o("..and attach a FieldDecl to each formal using parameterDeclDecoration");
+            
+            sig.resetFormals();
             for (int i = 0; i < pp.args.size(); i++) {
                 FormalParaDecl parameter = pp.args.elementAt(i);
-                // TODO can't I assume this is a final Object? why resolve?
-                env.resolveType(currentSig, parameter.type);  
                 FieldDecl decl = FieldDecl.make(
                     parameter.modifiers | Modifiers.ACC_FINAL,
                     parameter.pmodifiers,
@@ -271,45 +190,21 @@ public class PrepTypeDeclaration extends javafe.tc.PrepTypeDeclaration {
                     null,
                     Location.NULL);
                 decl.setParent((TypeDecl)ctxt);
-                parameterDeclDecoration.set(parameter, decl);
+                sig.addFormal(decl);
+                
+                // TODO make sure these are Objects ?
+                
+                // This attaches a TypeSig to the 'Object' TypeName
+                // (and FlowInsensitiveChecks assumes the signature is set
+                // for all TypeName-s)
+                Env env = getEnvForCurrentSig(currentSig, true);
+                env.resolveType(currentSig, decl.type);
             }
             break;
         }
         default:
             Assert.fail("Unexpected tag " + tag);
         }
-    }
-
-    static protected InstantiationVec instantiations = InstantiationVec.make();
-
-    /**
-     * TODO Comment this!
-     */
-    static protected EqualsASTNoDecl equality = new EqualsAST();
-
-    static public final ASTDecoration typeArgumentDecoration = new ASTDecoration(
-        "type args");
-
-    static Hashtable declsForInstantiations = new Hashtable();
-
-    /**
-     * Look up in <code>instantiations</code> one that matches
-     * <code>sig</code> instantiated with arguments <code>expressions</code>.
-     * 
-     * @return The cached instantiation, if one exists; null otherwise.
-     */
-    protected javafe.tc.TypeSig findInstantiation(
-        javafe.tc.TypeSig sig,
-        ExprVec expressions
-    ) {
-        for (int i = 0; i < instantiations.size(); i++) {
-            Instantiation instantiation = instantiations.elementAt(i);
-            if (instantiation.sig == sig
-                && equality.equals(instantiation.expressions, expressions)) {
-                return instantiation.instantiation;
-            }
-        }
-        return null;
     }
 
     /**
@@ -339,8 +234,8 @@ public class PrepTypeDeclaration extends javafe.tc.PrepTypeDeclaration {
                         tn.getStartLoc(),
                         "can only have one type argument list for class or interface name.");
                 }
-                Dbg.o("I'm moving a GENERICARGUMENTPRAGMA into typeArgumentDecoration", expressions);
                 GenericArgumentPragma gp = (GenericArgumentPragma)p;
+                Dbg.o("I'm moving a GENERICARGUMENTPRAGMA into typeArgumentDecoration", gp.expressions);
                 typeArgumentDecoration.set(tn, gp.expressions);
                 break;
             default:
@@ -367,180 +262,7 @@ public class PrepTypeDeclaration extends javafe.tc.PrepTypeDeclaration {
         Info.out("[process type name annotations for " + tn.name.printName() + "]");
         Dbg.o("I'm processing type annotations of " + tn.name.printName());
         processGenericArgumentPragmas(tn);
-        ExprVec expressions = (ExprVec)typeArgumentDecoration.get(tn);
-        return findTypeSignature(env, sig, expressions, tn.getStartLoc());
-    }
-
-    /**
-     * Get a (fresh or cached) type instantiation corresponding to
-     * <code>sig</code> receiving the arguments <code>expressions</code>.
-     * In the process, detect if we don't provide any argument to a template
-     * type.
-     * 
-     * @param env The current environment.
-     * @param sig The type to be instantiated.
-     * @param expressions The actual type arguments.
-     * @param locForError Where to report an error.
-     * @return A type instantiation.
-     */
-    public javafe.tc.TypeSig findTypeSignature(
-        Env env,
-        javafe.tc.TypeSig sig,
-        ExprVec expressions,
-        int locForError
-    ) {
-        if (expressions == null) {
-            if (typeParametersDecoration.get(sig) != null) {
-                // We have formal parameters but no actual argument.
-                ErrorSet.fatal(locForError, "no type arguments given for "
-                    + sig.simpleName);
-            } else {
-                // Not a "generic" type so [sig] is its own instance.
-                return sig;
-            }
-        }
-
-        // Lookup in the cache of existing instantiations or create a new one.
-        javafe.tc.TypeSig instantiation = findInstantiation(sig, expressions);
-        if (instantiation != null) return instantiation;
-        return createInstantiation(env, sig, expressions);
-    }
-
-    /**
-     * A signature obtained by instantiating <code>sig</code> with
-     * <code>expressions</code>. Note that the resulting signature has not
-     * been prepped (it lacks information about its methods and fields). A bunch
-     * of errors (such as template parameter mismatch) are detected and reported
-     * during the process.
-     * 
-     * @param env The environment in which the instance appears.
-     * @param sig The "template" type signature.
-     * @param expressions The template arguments.
-     * @return A new signature in a new environment pointing to a clone
-     *         declaration that has template arguments substituted for the
-     *         formal parameters.
-     */
-    protected javafe.tc.TypeSig createInstantiation(
-        Env env,
-        javafe.tc.TypeSig sig,
-        ExprVec expressions
-    ) {
-        Info.out("[instantiating " + sig.simpleName + " with "
-            + PrettyPrint.inst.toString(expressions) + "]");
-        
-        return sig; // DBG
-        /*
-
-        TypeDecl decl = sig.getTypeDecl();
-        TypeSig newSig = TypeSig.instantiate(sig, expressions, env);
-        FormalParaDeclVec parameters = (FormalParaDeclVec)PrepTypeDeclaration.typeParametersDecoration.get(sig);
-        if (parameters == null) {
-            Env currEnv = getEnvForCurrentSig(sig, true);
-            checkTypeModifierPragmaVec(decl.tmodifiers, decl, currEnv, sig);
-            parameters = (FormalParaDeclVec)PrepTypeDeclaration.typeParametersDecoration.get(sig);
-            if (parameters == null) {
-                ErrorSet.fatal(
-                    decl.getStartLoc(),
-                    "no type arguments expected for " + sig.simpleName);
-            }
-        }
-        if (expressions == null) {
-            ErrorSet.fatal(decl.getStartLoc(), "no type arguments given for "
-                + sig.simpleName);
-        }
-        if (parameters.size() != expressions.size()) {
-            ErrorSet.fatal(
-                decl.getStartLoc(),
-                "mismatch in number of type arguments for " + sig.simpleName);
-        }
-        SubstitutionVec subs = SubstitutionVec.make();
-        for (int i = 0; i < parameters.size(); i++) {
-            Expr expr = expressions.elementAt(i);
-            FormalParaDecl parameter = parameters.elementAt(i);
-
-            // Prepare a substitution to replace the ghost parameter
-            // with the argument.
-            FieldAccess fa = FieldAccess.make(
-                ExprObjectDesignator.make(
-                    parameter.getStartLoc(),
-                    ThisExpr.make(sig, parameter.getStartLoc())),
-                parameter.id,
-                parameter.getStartLoc());
-            AmbiguousVariableAccess aa = AmbiguousVariableAccess.make(
-                SimpleName.make(parameter.id, parameter.getStartLoc()));
-            subs.addElement(new Substitution(fa, expr));
-            subs.addElement(new Substitution(aa, expr));
-        }
-        
-        // Make `this' point to the type instantiation.
-        subs.addElement(new Substitution(
-            ThisExpr.make(sig, sig.getTypeDecl().getStartLoc()), 
-            ThisExpr.make(newSig, sig.getTypeDecl().getStartLoc())));
-        MultipleSubstitution ms = new MultipleSubstitution(
-            subs, new EqualsASTNoDecl());
-        CloneWithSubstitution clone = new CloneForInstantiation(ms);
-        decl = (TypeDecl)clone.clone(decl, true);
-        newSig.finishInst(decl, sig, expressions);
-        instantiations.addElement(new Instantiation(sig, expressions, newSig));
-        
-        // Fields should have an updated parent.
-        for (int i = 0; i < decl.elems.size(); ++i) {
-            TypeDeclElem declElem = decl.elems.elementAt(i);
-            if (declElem.getParent() != decl)
-                System.out.println("oops");
-        }
-
-        // An instance does not have any type parameters.
-        typeParametersDecoration.set(newSig, null);
-        return newSig;
-        */
-    }
-
-    /**
-     * Returns an environment for <code>sig</code>. The information about
-     * members is taken from <code>fieldsSeq</code> and from
-     * <code>methodsSeq</code>, which were populated by the declaration visit
-     * methods.
-     * 
-     * @param sig The signature for which an environment is requested.
-     * @param isStatic The result contains bindings for non-static members iff
-     *            <code>isStatic</code>.
-     * @return An environment containing all the members of <code>sig</code>.
-     */
-    protected EnvForTypeSig getEnvForCurrentSig(
-        javafe.tc.TypeSig sig,
-        boolean isStatic
-    ) {
-        Env env;
-        
-        if (sig.state >= TypeSig.PREPPED) {
-            return sig.getEnv(isStatic);
-        }
-        Dbg.o("creating an EnvForInstantiation. why?");
-
-        env = sig.getEnv(isStatic);
-        EnvForInstantiation envForCheck = new EnvForInstantiation(
-            env,
-            sig,
-            getFieldsFromStack(),
-            getMethodsFromStack(),
-            isStatic);
-        // DBG: envForCheck.display();
-        return envForCheck;
-    }
-
-    FieldDeclVec getFieldsFromStack() {
-        int sz = fieldSeq.size();
-        FieldDecl v[] = new FieldDecl[sz];
-        fieldSeq.copyInto(v);
-        return FieldDeclVec.make(v);
-    }
-
-    MethodDeclVec getMethodsFromStack() {
-        int sz = methodSeq.size();
-        MethodDecl v[] = new MethodDecl[sz];
-        methodSeq.copyInto(v);
-        return MethodDeclVec.make(v);
+        return sig;
     }
 
 }

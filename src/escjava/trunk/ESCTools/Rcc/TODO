@@ -1,5 +1,18 @@
 
-o [rg] verify that ghost actual parameters are final objects
 
-o [rg] make all tests pass
+
+Changes to the original RCC:
+* allow volatile as synchronization
+* ghost variables handled differently: typecheck guaranteed to
+   terminate
+
+TODO
+
+o [rg] we can require to hold the lock on an argument when calling a
+   method
+o [rg] we can use a ghost in a require
+
+
+
+
 

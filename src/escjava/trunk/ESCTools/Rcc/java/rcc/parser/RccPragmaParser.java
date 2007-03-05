@@ -15,6 +15,7 @@ import javafe.parser.Lex;
 import javafe.parser.Parse;
 import javafe.parser.PragmaParser;
 import javafe.parser.Token;
+import javafe.util.Assert;
 import javafe.util.CorrelatedReader;
 import javafe.util.ErrorSet;
 import javafe.util.Location;
@@ -254,6 +255,7 @@ public class RccPragmaParser extends Parse implements PragmaParser {
                 ExprVec expressions = parseExpressionList(
                     scanner,
                     TagConstants.RBRACE);
+                Assert.notFalse(expressions != null);
                 dst.auxVal = GenericArgumentPragma.make(expressions, loc);
             }
 

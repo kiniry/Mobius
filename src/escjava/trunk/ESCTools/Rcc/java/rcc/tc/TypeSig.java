@@ -7,8 +7,13 @@ import java.util.List;
 
 import javafe.ast.CompilationUnit;
 import javafe.ast.Expr;
+import javafe.ast.ExprObjectDesignator;
 import javafe.ast.ExprVec;
 import javafe.ast.FieldAccess;
+import javafe.ast.FieldDecl;
+import javafe.ast.FieldDeclVec;
+import javafe.ast.Identifier;
+import javafe.ast.MethodDeclVec;
 import javafe.ast.PrettyPrint;
 import javafe.ast.ThisExpr;
 import javafe.ast.TypeDecl;
@@ -73,23 +78,32 @@ import rcc.ast.EqualsASTNoDecl;
  * 
  * TODO do I need to override isSubTypeOf to handle array elem guards?
  * 
+ * TODO check whether two formal parameters have the same name and
+ *      report a fatal(?) error if so
+ * 
  * @see javafe.tc.TypeSig, rcc.tc.PrepTypeDeclaration 
  * @see rcc.tc.FlowInsensitiveChecks
  */
 public class TypeSig extends javafe.tc.TypeSig {
     /**
-     * For default instantiations this holds the formal parameters.
-     * All elements must be FieldAccess.
-     * For other instantiations this holds the actual arguments.
-     * All elements must be ThisExpr or FieldAccess.
+     * This holds the formal paramters.
      */
-    private ExprVec expressions;
+    private FieldDeclVec parameters;
+    
+    /**
+     * This holds the actual arguments.
+     * All elements must be either ThisExpr or FieldAccess.
+     */
+    private ExprVec arguments;
 
     /**
      * Points to the default instantiation of this type signature.
      * For the default instantiation <code>generic==this</code>.
      */
     private TypeSig defaultInstantiation;
+
+    //@invariant parameters == defaultInstantiation.parameters;
+    //@invariant this != defaultInstantiation <==> arguments != null
     
     /**
      * This is non-null iff this is a default instantiation and contains
@@ -132,43 +146,87 @@ public class TypeSig extends javafe.tc.TypeSig {
     }
     
     private void initDefaultInstantiation() {
-        expressions = ExprVec.make(); // shall be filled later 
+        parameters = FieldDeclVec.make(); // shall be filled later
+        arguments = null;
         defaultInstantiation = this;
         nonDefaultInstantiations = new LinkedList();
         Dbg.o("create default TypeSig for " + simpleName);
     }
+
+    /**
+     * This (huge) constructor initializes an instantiation.
+     * (Basically, it does a shallow copy. It is quite ugly and risky
+     * but I couldn't think of a better way that works with JavaFE.)
+     * TODO how to handle the superClass field? 
+     */
+    private TypeSig(
+        CompilationUnit CU,
+        Env enclosingEnv,
+        TypeSig enclosingType,
+        FieldDeclVec fields,
+        FieldDeclVec hiddenfields,
+        boolean member,
+        MethodDeclVec methods,
+        TypeDecl myTypeDecl,
+        String[] packageName,
+        String simpleName,
+        int state,
+        ExprVec arguments,
+        TypeSig defaultInstantiation
+    ) {
+        super(
+            packageName,
+            simpleName,
+            enclosingType,
+            myTypeDecl,
+            CU
+        );
+        this.enclosingEnv = enclosingEnv;
+        this.fields = fields;
+        this.member = member;
+        this.methods = methods;
+        this.state = state; // TODO is this right?
+        this.arguments = arguments;
+        this.defaultInstantiation = defaultInstantiation;
+    }
     
-    private TypeSig() {
-        super(null, null, null); // does this work?
+    public boolean hasFormals() {
+        return defaultInstantiation.parameters != null;
+    }
+    
+    public void resetFormals() {
+        defaultInstantiation.parameters = FieldDeclVec.make();
+    }
+    
+    public void addFormal(FieldDecl formal) {
+        Dbg.o("add formal parameter to (default) TypeSig " + simpleName, formal);
+        defaultInstantiation.parameters.addElement(formal);
     }
     
     /**
-     * If <code>typeName</code> has a <code>typeArgumentDecoration</code>
-     * then we return the instantiation corresponding to those arguments.
-     * Otherwise we return this.
-     * 
-     * This method must be called only for the default instantiation. 
-     * 
-     * @param arguments The arguments for which we want the instantiation.
-     * @return The signature corresponding to <code>typeName</code>.
+     * Are we a normal instance? (As opposed to the default one.)
      */
-    public TypeSig getInstantiation(ExprVec arguments) {
-        Assert.precondition(defaultInstantiation == this);
-        
-        // Check that arguments are either ThisExpr or FieldAccess.
+    public boolean isInstance() {
+        return this != defaultInstantiation;
+    }
+    
+    /**
+     * We return the instantiation that has <code>exprs</code> as arguments.
+     * 
+     * This method must be called only for the default instantiation.
+     * TODO Should I make this callable for instantiations too? 
+     */
+    public TypeSig getInstantiation(ExprVec exprs) {
         int i, j;
-        for (i = 0; i < arguments.size(); ++i) {
-            Expr expr = arguments.elementAt(i);
-            if (expr instanceof ThisExpr) continue;
-            if (expr instanceof FieldAccess) continue;
-            ErrorSet.fatal("A ghost argument must be a final Object field.");
-            // TODO check the 'final Object' bit.
-            return null;
-        }
+        Assert.precondition(defaultInstantiation == this);
+        if (exprs == null) exprs = ExprVec.make();
+
+        // These will become ThisExpr or FieldAccess later:
+        // FlowInsensitiveChecks will do that. TODO provide access.
         
         // Check that the number of arguments is the same as the number
         // of parameters.
-        if (arguments.size() != defaultInstantiation.expressions.size()) {
+        if (exprs.size() != parameters.size()) {
             ErrorSet.fatal("The number of ghost arguments does not match "
                 + "the number of parameters.");
             return null;
@@ -178,25 +236,36 @@ public class TypeSig extends javafe.tc.TypeSig {
         // the arguments syntactically, ignoring declarations.
         for (j = 0; j < nonDefaultInstantiations.size(); ++j) {
             TypeSig inst = (TypeSig)nonDefaultInstantiations.get(j);
-            for (i = 0; i < arguments.size(); ++i) {
-                Expr arg = arguments.elementAt(i);
-                Expr param = inst.expressions.elementAt(i);
-                if (!eq.equals(arg, param)) break;
+            for (i = 0; i < exprs.size(); ++i) {
+                Expr arg1 = exprs.elementAt(i);
+                Expr arg2 = inst.arguments.elementAt(i);
+                if (!eq.equals(arg1, arg2)) break;
             }
-            if (i < arguments.size()) return inst; // found a match
+            if (i == exprs.size()) return inst; // found a match
         }
         
         // No instantiation is suitable. I'll have to make one.
         // TODO enclosing Type, superClass?
         String newSimpleName
-            = simpleName + "<" + PrettyPrint.inst.toString(arguments) + ">";
+            = simpleName + "<" + PrettyPrint.inst.toString(exprs) + ">";
         Dbg.o("create instantiation TypeSig " + newSimpleName);
-        TypeSig newInst = new TypeSig(newSimpleName, enclosingEnv, myTypeDecl);
-        newInst.expressions = arguments.copy();
-        newInst.defaultInstantiation = this;
+        TypeSig newInst = new TypeSig(
+            CU,
+            enclosingEnv,
+            (TypeSig)enclosingType,
+            fields,
+            hiddenfields,
+            member,
+            methods,
+            myTypeDecl,
+            packageName,
+            newSimpleName,
+            state,
+            exprs.copy(),
+            this);
         // we are likely to look for the same instance soon, so insert in front
         nonDefaultInstantiations.add(0, newInst);
-        
+
         Info.out("I have created the instantiation " + newSimpleName);
         
         return newInst;
@@ -205,22 +274,89 @@ public class TypeSig extends javafe.tc.TypeSig {
     /**
      * Given a formal parameter, return the actual argument or null if
      * there isn't such. So null is returned for example when this is
-     * a default instantiation and when <code>formal</code> is not
-     * a ghost field but a normal one.
+     * a default instantiation, and is also returned when <code>formal</code>
+     * is not a ghost field but a normal one.
+     * 
+     * TODO use a hashtable for this
+     * TODO can I really rely on string comparisons?
      */
-    public Expr getActual(Expr formal) {
+    public Expr getActual(String formalName) {
+        if (formalName == null) return null;
+        Dbg.o("searching for the actual corresponding to " + formalName);
         if (defaultInstantiation == this) return null;
-        
-        // Identify the position of the parameter.
-        int pos;
-        ExprVec formals = defaultInstantiation.expressions;
-        for (pos = 0; pos < formals.size(); ++pos) {
-            if (eq.equals(formal, formals.elementAt(pos))) break;
-        }
-        if (pos == formals.size()) return null; // no such formal param
-        
-        // Return the actual argument.
-        return expressions.elementAt(pos);
+        int pos = getFormalPosition(formalName);
+        if (pos < 0) return null;
+        Expr result = arguments.elementAt(pos);
+        Dbg.o("..the argument is", result);
+        return result;
     }
     
+    /**
+     * Given a <code>formalName</code> returns its field declaration
+     * if ther is one or null otherwise. In particular this method
+     * always returns null if this is not the default instantiation.
+     */
+    //@ defaultInstantiation != this ==> \return == null;
+    public FieldDecl getFormal(String formalName) {
+        if (formalName == null) return null;
+        if (defaultInstantiation != this) return null;
+        int pos = getFormalPosition(formalName);
+        if (pos < 0) return null;
+        return parameters.elementAt(pos);
+    }
+    
+    /**
+     * Lookup the <code>formalName</code> in 
+     * <code>defaultInstantion.parameters</code> and return the index,
+     * or -1 if not found. 
+     */
+    private int getFormalPosition(String formalName) {
+        int pos;
+        for (pos = 0; pos < defaultInstantiation.parameters.size(); ++pos) {
+            FieldDecl fd = defaultInstantiation.parameters.elementAt(pos);
+            if (formalName.equals(fd.id.toString())) return pos; 
+        }
+        return -1;
+    }
+
+    /**
+     * If <code>e</code> is a simple field access then it returns the identifier.
+     * Otherwise it returns null.
+     * 
+     * If the expression is represents "x" in the source then we return the
+     * string "x". If the expression represents "this.x" then we return the
+     * string "x". If the expression represents "this", "x.y", or "this.x.y" 
+     * then we return null. For any other type of expression we also return null.
+     */
+    public String getFormalName(Expr e) {
+        if (!(e instanceof FieldAccess)) return null;
+        FieldAccess fa = (FieldAccess)e;
+        if (fa.od != null) {
+            if (!(fa.od instanceof ExprObjectDesignator)) return null;
+            ExprObjectDesignator eod = (ExprObjectDesignator)fa.od;
+            if (!(eod.expr instanceof ThisExpr)) return null;
+        }
+        return fa.id.toString();
+    }
+    
+    /**
+     * Override. When we are in an annotation we also consult formal 
+     * parameters declarations, and consider them as fields.
+     */
+    public boolean hasField(Identifier id) {
+        if (super.hasField(id)) return true;
+        if (!FlowInsensitiveChecks.inAnnotation) return false;
+        return getFormalPosition(id.toString()) >= 0;
+    }
+    
+    /**
+     * Override. TODO.
+     */
+    public javafe.tc.TypeSig lookupType(
+        javafe.tc.TypeSig caller, 
+        Identifier id, 
+        int loc
+    ) {
+        return super.lookupType(caller, id, loc);
+    }
 }
