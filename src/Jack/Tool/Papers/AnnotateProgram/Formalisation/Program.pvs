@@ -181,7 +181,7 @@ BEGIN
                     fields : list[FieldDecl],
                     methods : finite_set[Method] #]
 
-  Program : TYPE = [# classes : list[Class] #]
-
+%  Program : TYPE = [# classes : list[Class] #]
+  Program : TYPE = [# classes : finite_set[Class] #]
 
 END Program

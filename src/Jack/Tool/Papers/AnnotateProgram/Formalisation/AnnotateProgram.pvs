@@ -1,0 +1,54 @@
+% We need a way to get the name of a control point. The simplest solution is to
+% say that cps are names. Another possibility is to define a CONVERSION
+AnnotateProgram[Name : TYPE+, CP: TYPE FROM Name] : THEORY
+BEGIN
+
+  IMPORTING MVA[CP, Name], Program[Name]
+
+  cp, halted: Name
+
+  CONVERSION BExpr, NExpr, StmtExpr
+
+  % Ghost variable declarations
+  % Returns a different integer for each cp.
+  % It is defined axiomatically to avoid overspecification
+  unique(q: CP): int
+
+  unique_is_injective: AXIOM injective?(unique)
+
+  new_gvds(a: MVA): finite_set[GhostVarDecl] =
+   {x: GhostVarDecl | jtype(x) = IntType AND
+     ((EXISTS (q: (cps(a))): name(x) = q AND initval(x) = Int(unique(q))) OR
+      (EXISTS (v: (vdsA(a))): name(x) = name(v) AND initval(x) = ival(v)))}
+
+
+  % Method annotation
+  ann_methods(ms: finite_set[Method], a: MVA): finite_set[Method]
+  
+
+  % Methods completion
+  complete_methods(ms: finite_set[Method], sc: lift[Name], ns: finite_set[Name]):
+      finite_set[Method]
+
+
+  % Class annotation
+  ann_class(c: Class, a: MVA): Class =
+    IF name(c) = classname(a) THEN
+      c WITH [ inv := Conj(inv(c), Neq(NumVarEval(cp), NumVarEval(halted))),
+               ghostvars := union(ghostvars(c), new_gvds(a)),
+               methods := ann_methods(cms, a) ]
+      WHERE
+        mnames = {mn : Name | EXISTS (e: Event): evs(a)(e) AND mname(e) = mn},
+        cms = complete_methods(methods(c), superClass(c), mnames)
+    ELSE c
+    ENDIF
+
+
+  % Program annotation
+  ann_program(p: Program, a: MVA): Program =
+    (# classes := {c : Class | EXISTS (c1: Class): classes(p)(c1) AND 
+                                      c = ann_class(c1, a)} #)
+
+
+
+END AnnotateProgram
