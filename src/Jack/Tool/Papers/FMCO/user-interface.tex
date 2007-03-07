@@ -19,7 +19,7 @@ obligations.
 The standard Java perspective of Eclipse is extended with several
 JACK-specific features. Menus are added to set the defaults for the
 different specification constructs. Further, there are buttons and
-menu-options to ``compile'' a JML specification, (\emph{i.e.}\ type
+menu-options to ``compile'' a JML specification, (\emph{i.e.}, type
 check and generate proof obligations), call an automatic prover on all
 the generated proof obligations (either Simplify or a special
 Coq tactic), or change to the special JACK perspective.  
@@ -77,20 +77,20 @@ they are generated for a specific theorem prover).
 %\item the currently selected proof obligation (goal and hypotheses).
 %\end{itemize}
 
-Figure~\ref{FigJackPerspective} shows the inspection of a proof obligation
-for the method \texttt{sort} in the QuickSort example of
+Figure~\ref{FigJackPerspective} shows the inspection of a proof
+obligation for the method \texttt{sort} in the QuickSort example of
 Figure~\ref{FigJMLSpec}. The left upper windows allows one to browse
 the proof obligations for the current class. Proven obligations are
 ticked, the others are marked with a cross. The right window shows the
 original source code, where the path through the code that corresponds
 to the current proof obligation is coloured, together with the
 relevant part of the method specification. Different colours are used
-to indicate different cases, \emph{i.e.}\ to distinguish normal from
-exceptional execution, and to mark that extra information is
-available, such as a method specification, or the result of a
-conditional expression.  The bottom window shows the proof obligation:
-the left half contains the hypotheses, marked with letters indicating
-their origin, \emph{e.g.}\ a hypothesis marked R originates from the
+to indicate different cases, \emph{i.e.}, to distinguish normal from
+exceptional execution, and to mark that extra information, such as a
+method specification, or the result of a conditional expression, is
+available.  The bottom window shows the proof obligation: the left
+half contains the hypotheses, marked with letters indicating their
+origin, \emph{e.g.}, a hypothesis marked R originates from the
 method's requires clause, while a hypothesis marked L is derived from
 local declarations within the method. The right half of the window
 shows the actual goal that has to be proven. The window name

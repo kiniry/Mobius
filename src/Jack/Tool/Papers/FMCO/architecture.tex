@@ -2,7 +2,7 @@
 \section{General Architecture of JACK}\label{SecArchitecture}
 
 This section describes the general architecture of JACK, and how it
-aims at a high-level of precision.  The next section will then discuss
+aims at a high-level of precision.  The next section then discusses
 how JACK has been made accessible to application developers by
 integration within the IDE Eclipse, and the development of the special
 JACK perspective, For the development of the JACK architecture, the
@@ -11,21 +11,21 @@ main design principles were the following:
 \item integration within a widely-used IDE, so that developers do not
 have to learn a new environment, and do not have to switch between tools;
 \item automatic generation of proof obligations by
-implementation of weakest precondition (wp) calculus;
+implementation of a weakest precondition (wp) calculus;
 \item proof obligations are first-order logic formulae; and
-\item prover independence, \emph{i.e.}\ proof obligations for
+\item prover independence, \emph{i.e.}, proof obligations for
 a single application can be verified with different provers.
 \end{itemize}
 
-The wp-calculus that is implemented is a
-so-called ``direct'' calculus, meaning that it works directly on a AST
-representation of the application, and it does not use a
-transformation into guarded commands, as is done by \emph{e.g.}\
-ESC/Java.  The wp-calculus is based on the classical wp-calculus
-proposed by Dijkstra~\cite{Dijkstra75}, but adapted to Java by
-extending it with side-effects, exceptions and other abrupt
-termination constructs (\emph{cf.}\
-\emph{e.g.}~\cite{Jacobs04}). This direct wp-calculus has the advantage
+The wp-calculus that is implemented is a so-called ``direct''
+calculus, meaning that it works directly on an AST representation of
+the application, and it does not use a transformation into guarded
+commands, as is done by \emph{e.g.},  ESC/Java.  The wp-calculus is
+based on the classical wp-calculus developed by
+Dijkstra~\cite{Dijkstra75}, but adapted to Java by extending it with
+side-effects, exceptions and other abrupt termination constructs
+(\emph{cf.}\
+\emph{e.g.},~\cite{Jacobs04}). This direct wp-calculus has the advantage
 that it is easy to generate proof obligations for each path through a
 method, and then to connect the proof obligation with the path through
 the method that gave rise to this particular proof obligation (to
@@ -44,7 +44,7 @@ of the code fragment being checked~\cite{FlanaganS01}.
 
 To avoid this blow up in the size of the proof obligation, and to
 ensure that proof obligations can be generated automatically, JACK
-adds uses several new specification constructs, introduced
+uses several new specification constructs, introduced
 in~\cite{BurdyRL03}: loops can be annotated with frame conditions
 (\texttt{loop\_modifies}) and exceptional postconditions
 (\texttt{loop\_exsures}), and any code block can be specified with a

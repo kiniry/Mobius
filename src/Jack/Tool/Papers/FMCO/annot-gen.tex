@@ -5,7 +5,7 @@ While JML is easily accessible to Java developers, actually writing
 the specifications of an application is labour-intensive and
 error-prone, as it is easy to forget some annotations. There exist
 tools which assist in writing these annotations,
-\emph{e.g.}~Daikon~\cite{ErnstCGN01} and Houdini~\cite{FlanaganL01}
+\emph{e.g.}, Daikon~\cite{ErnstCGN01} and Houdini~\cite{FlanaganL01}
 use heuristic methods to produce annotations for simple safety and
 functional invariants.  However, these tools cannot be guided by the
 user---they do not require any user input---and in particular cannot
@@ -37,13 +37,13 @@ as described in this section.
 %JACK implements two different algorithms to generate ``obvious''
 %annotations. 
 JACK implements an algorithm to generate ``obvious'' minimal
-preconditions to avoid nullpointer and array-out-of-bounds
+preconditions to avoid null-pointer and array-out-of-bounds
 exceptions. This algorithm re-uses the implementation of the
 wp-calculus: it computes the weakest precondition for the
 specification
 \texttt{signals (NullPointerException) false;} (resp. \texttt{signals
 (ArrayIndexOutOfBoundsException) false;}) and inserts this as 
-annotation in the code.
+annotations in the code.
 
 %\marginpar{MH: Example with more useful assignable clause?}
 
@@ -63,16 +63,16 @@ public void swap(int i, int j) {int tmp; tmp = tab[i];
                                 tab[i] = tab[j]; tab[j] = tmp;}
 \end{verbatim}
 }
-\caption{Annotations generated for a fragment of class
+\caption{Obvious annotations generated for a fragment of class
 \texttt{QuickSort}}\label{FigAnnotSpec} 
 \end{figure}
 
 As an example, Figure~\ref{FigAnnotSpec} shows the annotations that
 are generated for some methods of the class \texttt{QuickSort} of
-Figure~\ref{FigJMLSpec}.
-It is important to realise that the specifications that
-are generated might not be very spectacular, but they are
-generated \emph{automatically}. % can help significantly to reduce the
+Figure~\ref{FigJMLSpec}.  It is important to realise that the
+specifications that are generated might not be very spectacular, but
+that they are generated \emph{automatically}. % can help significantly to
+% reduce the
 %burden of annotation writing.
 
 The annotation generation can be further improved by applying a simple
@@ -139,9 +139,9 @@ transaction.\smallskip\\
 \textbf{Bounded retries}
 No pin verification may happen within a transaction.
 \end{quote} 
-The second rule ensures that a transaction will always be closed,
-because if the exception is not caught, \texttt{commitTransaction}
-will not be executed. The last rule avoids the possibility to abort
+The second rule ensures that a transaction will always be closed;
+if the exception would not be caught, \texttt{commitTransaction}
+would not be executed. The last rule avoids the possibility to abort
 the transaction every time a wrong pin code has been entered. As this
 would roll back the internal state to the state before the transaction
 was started, this would also reset the retry counter, thus allowing an
@@ -192,7 +192,7 @@ When applying static verification on this code fragment, the
 core-annotations for \texttt{beginTransaction} will give rise to a
 proof obligation that the precondition of method
 \texttt{m} implies that there is no transaction in progress,
-\emph{i.e.}\ \texttt{TRANS == 0} (since \texttt{TRANS} is not modified
+\emph{i.e.}, \texttt{TRANS == 0} (since \texttt{TRANS} is not modified
 by the code that precedes the call to \texttt{beginTransaction}). The
 only way this proof obligation can be established is if the
 precondition of \texttt{beginTransaction} is propagated as a
@@ -221,12 +221,12 @@ to~\cite{PavlovaBBHL04}.
 To illustrate the effectiveness of our approach, we tested our method
 on several industrial smart card applications, including the so-called
 Demoney case study, developed as a research prototype by Trusted
-Logic\footnote{{\tt http://www.trusted-logic.fr}}, and the PACAP case
-study\footnote{{\tt
-http://www.gemplus.com/smart/r\_d/publications/case-study}}, developed
-by Gemplus. Both examples have been explicitly developed as test cases
-for different formal techniques, illustrating the different issues
-involved when writing smart card applications. We used the
+Logic\footnote{See {\tt http://www.trusted-logic.fr}.}, and the PACAP
+case study\footnote{See {\tt
+http://www.gemplus.com/smart/r\_d/publications/case-study}.},
+developed by Gemplus. Both examples have been explicitly developed as
+test cases for different formal techniques, illustrating the different
+issues involved when writing smart card applications. We used the
 core-annotations as presented above, and propagated these throughout
 the applications.  For both applications we found that they contained
 no nested transactions, and that they did not contain attempts to

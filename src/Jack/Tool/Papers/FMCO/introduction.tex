@@ -24,9 +24,9 @@ the software deployed on the device. %This is in particular important
 %production. 
 This paper describes JACK (the Java Applet Correctness Kit), a tool
 that can be used to improve the quality of applications for TPD. Such
-devices typically provide the Java Virtual Machine (or one of its
-variations)\footnote{The standard Java set-up for such devices is the
-Connected Limited Device Configuration, see
+devices typically implement the Java Virtual Machine (or one of its
+variations)\footnote{The standard Java set-up for TPD is the Connected
+Limited Device Configuration, see 
 \texttt{http://java.sun.com/products/cldc/}, together with the MIDP
 profile, see \texttt{http://java.sun.com/products/midp/}.}. Therefore
 JACK is tailored to applications written in Java (bytecode). However,
@@ -45,31 +45,32 @@ Java Modeling Language (JML)\footnote{See
 \texttt{http://www.jmlspecs.org}.}. An advantage of using JML is that
 there is wide range of tools and techniques available that use JML as
 specification language, 
-\emph{i.e.}\ for testing, simulation and verification 
+\emph{i.e.}, for testing, simulation and verification 
 (see~\cite{BurdyCCEKLLP03} for an overview). We distinguish two kinds
 of verification: at runtime, using
 \texttt{jmlc}, or statically. Several tools provide
 static verification of JML-annotated programs, adopting different
-compromises between soundness and automation (see the related work
-section below for an overview).  JACK implements a weakest
+compromises between soundness and automation (Section~\ref{SecConcl}
+provides an overview of related work).  JACK implements a weakest
 precondition calculus, that automatically generates proof obligations
 that can be discharged both by automatic and interactive theorem
 provers. The automatic prover that is used is
-Simplify~\cite{DetlefsNS05}, the interactive theorem prover that is used
-is Coq~\cite{Coq04}.
+Simplify~\cite{DetlefsNS05}, the interactive theorem prover that is
+used is Coq~\cite{Coq04}.
 
 
 The development of the JACK tool started in 2002 at the formal methods
 research laboratory of the French smart card producer Gemplus (now
-part of gemalto). Successful case studies with ESC/Java and the LOOP
-tool on an electronic purse smart card
+part of gemalto). Successful case studies with ESC/Java~\cite{CokK04}
+and the LOOP tool~\cite{BergJ01} on an electronic purse smart card
 application~\cite{final:Form.Met} had sufficiently demonstrated that
 verification of JML annotations could help to increase the quality of
 smart card applications. However, the existing tools where either not
-precise enough, or they were too cumbersome to use, to expose
+precise enough, or they were too cumbersome to use to expose
 application developers to them. The JACK tool was designed to overcome
 these problems, in particular via the integration of JACK within the
-IDE Eclipse, and the development of a special JACK perspective.
+IDE Eclipse\footnote{See \texttt{http://www.eclipse.org}.}, and the
+development of a special JACK perspective.
 
 In 2003, the tool has been transfered to the Everest project at INRIA
 Sophia Antipolis, and been further developed within this team since
@@ -79,8 +80,7 @@ developed after this transfer.
 The main characteristics of JACK that distinguish it from other static
 verification tools are the following:
 \begin{itemize}
-\item full integration within Eclipse IDE\footnote{See
-\texttt{http://www.eclipse.org}.}, including the development of a
+\item full integration within Eclipse IDE, including the development of a
 special JACK perspective that allows to inspect the different proof
 obligations, and from where in the code they originate;
 \item implementation of annotation generation algorithms: to
@@ -98,9 +98,9 @@ TPD.
 
 \paragraph{Application Scenarios}
 JACK provides different kinds of support for the application
-developer, ranging from the the automatic verification of a collection
-of common security properties to the interactive verification of
-advanced functional specifications.
+developer, ranging from the the automatic verification of common
+security properties to the interactive verification of complex
+functional specifications.
 
 To support the automatic verification of high-level security
 properties, JACK provides an algorithm to automatically generate
@@ -119,26 +119,26 @@ verification process need to be defined at this level. This scenario
 is even further facilitated by the fact that the compiler from JML to
 BML provided by JACK basically preserves the generated proof
 obligations (see also~\cite{gta05:fast}). Thus, a software developer
-can verify its application at source code level, and ship the
-application with compiled bytecode level specifications and
-proofs. Notice that, provided the proof obligations can be discharged
-automatically, this whole process is automatic.
+can verify its applications at source code level, and ship them with
+compiled bytecode level specifications and proofs. Notice that,
+provided the proof obligations can be discharged automatically, this
+whole process is automatic.
 
 However, as JACK is a general-purpose tool, it can be also be used to
-verify complex functional-behaviour specifications, by providing
-advanced support for specification development and interactive
-verification. First of all, because of the tight integration with
-Eclipse, the developer does not have to change tools to validate the
-application. A special JACK view is provided, that allows to inspect
-the generated proof obligations in different views (in a Java-like
-syntax, or in the language of the prover). Moreover, syntax colouring
-of the original source code allows to see to which parts of the
-application and specification the proof obligation relates. Second,
-one of the drawbacks of using JML-like annotations for specifications
-is that writing them is labour-intensive and error-prone and it is
-easy to forget some. Therefore JACK also can generate ``obvious''
-annotations that are easy to forget, in particular preconditions that
-are sufficient to avoid runtime exceptions. Finally, to support
+verify complex functional-behaviour specifications. For this, it
+provides advanced support for specification development and
+interactive verification. First of all, because of the tight
+integration with Eclipse, the developer does not have to change tools
+to validate the application. A special JACK view is provided, that
+allows to inspect the generated proof obligations in different views
+(in a Java-like syntax, or in the language of the prover). Moreover,
+syntax colouring of the original source code allows to see to which
+parts of the application and specification the proof obligation
+relates. Second, JACK can generate ``obvious'' annotations that are
+easy to forget, in particular preconditions that are sufficient to
+avoid runtime exceptions. This overcomes one of the major drawbacks of
+using JML-like annotations for specifications, namely that writing
+annotations is labour-intensive and error-prone. Finally, to support
 interactive verification, several advanced Coq tactics have been
 developed, and a Coq editor has been integrated into Eclipse. In
 addition, to be able to write expressive specifications, a
@@ -150,11 +150,10 @@ and verification simpler.
 
 
 \paragraph{Overview of the Paper}
-The next section gives a quick overview of the relevant JML features,
-and presents an example that we will use to illustrate the different
-features of JACK. Section~\ref{SecArchitecture} briefly outlines the
-general architecture of JACK, while Section~\ref{SecUI} focuses on its
-user interface. Section~\ref{SecAnnotGen} describes the different
+The next section gives a quick overview of the relevant JML features.
+Section~\ref{SecArchitecture} briefly outlines the general
+architecture of JACK, while Section~\ref{SecUI} focuses on its user
+interface. Section~\ref{SecAnnotGen} describes the different
 annotation generation algorithms that JACK
 implements. Section~\ref{SecBytecode} presents the bytecode
 subcomponents of JACK, while Section~\ref{SecInteractive} explains the

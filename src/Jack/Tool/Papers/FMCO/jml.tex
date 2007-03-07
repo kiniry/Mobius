@@ -7,10 +7,9 @@ example. Throughout the rest of this paper, we assume the reader is
 familiar with JML, its syntax and semantics. For a detailed overview
 of JML we refer to the reference manual~\cite{LeavensPCCRCK05}; a
 detailed overview of the tools that support JML can be found
-in~\cite{BurdyCCEKLLP03}.  Notice that JML is a general specification
-language that does not impose any particular design method or
-application domain, but instead is able to specify the behaviour of
-any Java program~\cite{LeavensBR06}.
+in~\cite{BurdyCCEKLLP03}.  Notice that JML is designed to be a general
+specification language that does not impose any particular design
+method or application domain~\cite{LeavensBR06}.
 
 
 
@@ -25,7 +24,6 @@ swapping two elements in the array, and a private method
 \begin{figure}[t!]
 {\small
 \begin{verbatim}
-/* @author jcharles */
 public class QuickSort {
   private int [] tab;
 
@@ -57,7 +55,7 @@ public class QuickSort {
 
 
 
-In order not to interfere with a Java compiler, JML
+In order not to interfere with the Java compiler, JML
 specifications are written as special comments (tagged with
 \texttt{@}). Method specifications contain preconditions (keyword
 \jmlKey{requires}), postconditions (\jmlKey{ensures}) and frame
@@ -66,7 +64,7 @@ conditions (\jmlKey{assignable}). The latter specifies which variables
 annotate all statements with an \jmlKey{assert} predicate and loops
 also with invariants (\jmlKey{loop\unsc invariant}), and variants
 (\jmlKey{decreases}). One can also specify class invariants,
-\emph{i.e.}\ properties that should hold in all visible states of the
+\emph{i.e.}, properties that should hold in all visible states of the
 execution, and constraints, describing a relation that 
 holds between any two pairs of consecutive visible states (where
 visible states are the states in which a method is called or returned
@@ -75,21 +73,21 @@ from).
 The predicates in the different conditions are side-effect free Java
 boolean expressions, extended with specification-specific keywords,
 such as \jmlKey{\bsl result}, denoting the return value of a non-void
-method, and \jmlKey{\bsl old}, indicating that an expression should be
+method, \jmlKey{\bsl old}, indicating that an expression should be
 evaluated in the pre-state of the method, and the logical quantifiers
 \texttt{\bsl forall} and \texttt{\bsl exists}. Re-using the Java syntax
 makes the JML specifications easily accessible to Java developers.
 
-JML allows to declare special specification-only variables: logical
-variables (with keyword \jmlKey{model}) and so-called \jmlKey{ghost}
-variables, that can be assigned to in special \jmlKey{set}
-annotations. 
+JML allows further to declare special specification-only variables:
+logical variables (with keyword \jmlKey{model}) and so-called
+\jmlKey{ghost} variables, that can be assigned to in special
+\jmlKey{set} annotations.
 
 Figure~\ref{FigJMLSpec} specifies that method \texttt{sort} sorts the
 array \texttt{tab} from low to high, and all elements that occurred in
 the array initially also occur in its afterwards\footnote{Note that
 this specification does not require that the final value of
-\texttt{tab} is a sorted permutation of its initial value, but this
+\texttt{tab} is a sorted permutation of its initial value. However, this
 could be expressed in JML as well.}, and that method
 \texttt{swap} swaps the contents of the array at positions \texttt{i}
 and \texttt{j}. 

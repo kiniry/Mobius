@@ -17,15 +17,16 @@ subcomponent of JACK. First of all, we present a specification
 language tailored to bytecode, and we specify how these specifications
 can be encoded in the class file format. Our specification language,
 called BML for Bytecode Modeling Language~\cite{BurdyHP07}, is the
-bytecode cousin of JML. We define and implement a compiler from JML to
-BML specifications. Such a compiler is in particular useful in a proof
-carrying code scenario, where the application developer can verify the
-application at (the more intuitive) source code level, and then
-compile both the application and the specification to bytecode
-level. Finally, we also define a verification condition generator for
-bytecode applications annotated with BML, implementing a wp-calculus
-for bytecode. This allows to generate the proof obligations for a
-bytecode application to satisfy its BML specification.
+bytecode cousin of JML. Second, we define and implement a compiler
+from JML to BML specifications. Such a compiler is in particular
+useful in a proof carrying code scenario, where the application
+developer can verify the application at (the more intuitive) source
+code level, and then compile both the application and the
+specification to bytecode level. Finally, we also define a
+verification condition generator for bytecode applications annotated
+with BML, implementing a wp-calculus for bytecode. This allows to
+generate the proof obligations for a bytecode application to satisfy
+its BML specification.
 
 \subsection{A Specification Language for Bytecode: BML}
 
@@ -79,7 +80,7 @@ the most basic form of expressions, formed by identifiers, bracketed
 expressions \emph{etc}.
 
 Since only bytecode expressions can be used, all field names, class
-names \emph{etc.}\ are replaced by references to the constant pool (a
+names \emph{etc.}, are replaced by references to the constant pool (a
 number, preceded by the symbol \codeHook{\#}), while registers are
 used to refer to local variables and parameters. The grammar also
 contains several bytecode specific keywords, such as \codeHook{cntr},
@@ -160,8 +161,8 @@ For each class, we add the following information to the class file:
 \item an attribute with the constraints (both static and object).
 \end{itemize}
 Apart from the second constant pool, all extra class attributes
-basically consist the name of the attribute, the number of elements it
-contains, and a list with the actual elements.  As an example,
+basically consist of the name of the attribute, the number of elements
+it contains, and a list with the actual elements.  As an example,
 Figure~\ref{FigAttributes} presents the format of the ghost field
 attribute. This should be understood as follows: the name of the
 attribute is given as an index into the (second) constant pool. This
@@ -169,15 +170,15 @@ constant pool entry will be representing a string
 \texttt{"Ghost\_Field"}. Next we have the length of the attribute,
 which should be 2 + 6*\textbf{fields\_count} (the number of fields
 stored in the list). The \textbf{fields} table stores all ghost
-fields. For each field we store its access flag (\emph{e.g.}\
+fields. For each field we store its access flag (\emph{e.g.},
 \texttt{public} or
 \texttt{private}), and its name and descriptor index, both
 referring to the constant pool. The first must be a string,
 representing the (unqualified) name of the variable, the latter is a
-field descriptor, containing \emph{e.g.}\ type information.  The tags
+field descriptor, containing \emph{e.g.}, type information.  The tags
 \textbf{u2} and \textbf{u4} specifies the size of the attribute, 2 and
-4 bytes, respectively. The other attributes are specified in a similar
-way.
+4 bytes, respectively. The format of the other attributes is
+specified in a similar way (see~\cite{Pavlova07} for more details).
 
 
 
@@ -199,7 +200,7 @@ u2  fields\_count;\\
 \end{tabular}
 \end{tabular}
 }
-\caption{Attributes for ghost field declarations}
+\caption{Format of attribute for ghost field declarations}
 \label{FigAttributes}
 \end{figure}
 
@@ -264,7 +265,7 @@ calculus is defined over the method's control flow graph.
 The verification condition generator proceeds as follows. For each
 method proof obligations are generated for each execution path by
 applying the weakest predicate transformer to every instruction where
-the method might end (\emph{i.e.}\ \texttt{return} or \texttt{athrow}
+the method might end (\emph{i.e.}, \texttt{return} or \texttt{athrow}
 instructions), and at each loop exit point. The wp-calculus then
 follows control flow backwards, until it reaches the entry point
 instruction.
@@ -283,7 +284,7 @@ instruction \texttt{load\(_i\)}.
 \]
 Since the \texttt{load}\(_i\) instruction will always terminate
 normally, only the normal postcondition is involved, after updating it
-to reflect the changes that are made to the stack, \emph{i.e.}\ the
+to reflect the changes that are made to the stack, \emph{i.e.}, the
 value that was stored in the local variable register \texttt{lv[i]} is
 now at the top of the stack (at position \texttt{st(cntr + 1)}),  and 
 the stack counter is increased.
@@ -298,13 +299,13 @@ application is compiled with a non-optimising compiler): modulo names
 and the handling of shorts, bytes and boolean values, the proof
 obligations are equivalent. This means that proofs for proof
 obligations at source code level can be re-used for proof obligations
-at bytecode level (see also~\cite{gta05:fast} for a compilation source
-code level proofs to bytecode level proofs). This is in particular
-important for the proof carrying code scenario~\cite{Necula97}, where
-the code producer develops a proof at source code level, and then
-ships bytecode level application and specification, because modulo the
-necessary re-namings, he can ship directly his proofs, and the code
-client can verify these using a verification condition generator at
-bytecode level.
+at bytecode level (see also~\cite{gta05:fast} for a compilation of
+source code level proofs to bytecode level proofs). This is in
+particular important for the proof carrying code
+scenario~\cite{Necula97}, where the code producer develops a proof at
+source code level, and then ships bytecode level application and
+specification, because modulo the necessary re-namings, he can then
+ship his proofs directly, and the code client can verify these using a
+verification condition generator at bytecode level.
 
 

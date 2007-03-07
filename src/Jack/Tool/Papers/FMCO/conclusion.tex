@@ -1,7 +1,7 @@
 
 \section{Conclusions}\label{SecConcl}
 
-This paper described the main characteristics of JACK, the Java Applet
+This paper describes the main characteristics of JACK, the Java Applet
 Correctness Kit, a tool set for the validation of security and
 functional behaviour properties for Java applications. We have focused
 in particular on the features that distinguish JACK from other similar
@@ -17,7 +17,7 @@ properties with JML annotations;
 bytecode; and
 \item support for interactive verification, both practical
 (development of user interface and tactics) and theoretical (\native
-construct to link JML (or BML) specifications with the logic of the
+construct to link annotations with the logic of the
 underlying theorem prover).
 \end{itemize}
 
@@ -27,7 +27,7 @@ to guarantee resource policies related to memory consumptions on
 bytecode applications~\cite{BarthePS05}. In addition, we have also
 shown how the verification of exception-freeness at bytecode level can
 be used to reduce the footprint of Java-to-native compilation
-schemes. Executable code typically contain run-time checks to decide
+schemes. Executable code typically contains run-time checks to decide
 whether an exception should be thrown. But if it can proven statically
 that the exception \emph{never} will be thrown, there is no need for
 the executable code to contain the run-time
@@ -36,14 +36,15 @@ checks~\cite{DBLP:conf/cardis/CourbotPGV06}.
 
 Development and maintenance of a verification tool for a realistic
 programming language is a major effort. During the last decade several
-such tools have been developed (see the related work section). This
-has resulted in a drastic improvement of the technologies available to
-verify applications. However, we believe that now the moment has come
-to combine the different technologies, and to bundle this into one
-powerful verification tool. Development of such a tool is one of the
-goals of the IST \textsf{Mobius} project. It is foreseen that all technology
-developed around JACK that distinguish it from other verification
-tools will be integrated in this single verification tool. 
+such tools have been developed (see the related work section
+below). This has resulted in a drastic improvement of the technologies
+available to verify applications. However, we believe that now the
+moment has come to combine the different technologies, and to bundle
+this into one powerful verification tool. Development of such a tool
+is one of the goals of the IST \textsf{Mobius} project. It is foreseen
+that all technology developed around JACK that distinguish it from
+other verification tools will be integrated in this single
+verification tool.
 
 %Work around this single \textsf{Mobius} tool should also address
 %limitations of the JML technology, and increase support for
@@ -93,7 +94,7 @@ application. Further, the project mainly aims at automatic
 verification, and does not provide support for annotation generation.
 
 There are several projects that aim at annotating bytecode: JVer is a
-tool to verify annotated bytecode~\cite{ChanderEILN05}, but they do
+tool to verify annotated bytecode~\cite{ChanderEILN05b}, but they do
 not have a special bytecode specification language.  The Extended
 Virtual Platform project aims at developing a framework that allows to
 compile JML annotations, to allow run-time
@@ -102,7 +103,7 @@ specifications directly at bytecode level.
 
 Most approaches to ensuring high-level security properties are based
 on run-time monitoring, see
-\emph{e.g.}~\/\cite{bartetzko01assertions,Schneider99,Erlingsson03,ColcombetF00}. However,
+\emph{e.g.}, \cite{bartetzko01assertions,Schneider99,Erlingsson03,ColcombetF00}. However,
 run-time monitoring is not an option for trusted personal devices: for
 the user it would be unacceptable to be blocked in the middle of an
 application, because of a security violation.
