@@ -2,19 +2,19 @@
 (MVA)
 (|MVA_Semantics|
  (|execute_actions_TCC1| 0
-  (|execute_actions_TCC1-1| NIL 3379076141 3382099628
-   ("" (SUBTYPE-TCC) NIL NIL) PROVED NIL 7 6 NIL NIL))
+  (|execute_actions_TCC1-1| NIL 3379076141 3382264656
+   ("" (SUBTYPE-TCC) NIL NIL) PROVED NIL 135 63 NIL NIL))
  (|execute_actions_TCC2| 0
-  (|execute_actions_TCC2-1| NIL 3379076141 3382099628
+  (|execute_actions_TCC2-1| NIL 3379076141 3382264657
    ("" (TERMINATION-TCC) NIL NIL) PROVED
    ((|length| DEF-DECL "nat" |list_props| NIL)
     (|nnint_plus_posint_is_posint| APPLICATION-JUDGEMENT "posint" |integers|
      NIL)
     (|real_lt_is_strict_total_order| NAME-JUDGEMENT
      "(strict_total_order?[real])" |real_props| NIL))
-   52 52 NIL NIL))
+   64 60 NIL NIL))
  (|step_TCC1| 0
-  (|step_TCC1-1| NIL 3381948551 3382099628
+  (|step_TCC1-1| NIL 3381948551 3382264657
    ("" (SKOLEM-TYPEPRED)
     ((""
       (EXPAND* "nonempty?" "empty?" "member" "total" "valid_AState"
@@ -46,8 +46,8 @@
     (|AState| TYPE-EQ-DECL NIL |MVA_Semantics| NIL)
     (|Store| TYPE-EQ-DECL NIL MVA NIL) (|total| CONST-DECL "boolean" MVA NIL)
     (|valid_MVA| CONST-DECL "boolean" MVA NIL) (MVA TYPE-EQ-DECL NIL MVA NIL)
-    (|Prog_VarDecl| TYPE-EQ-DECL NIL MVA NIL)
-    (|MVA_VarDecl| TYPE-EQ-DECL NIL MVA NIL)
+    (|ProgVarDecl| TYPE-EQ-DECL NIL MVA NIL)
+    (|MVAVarDecl| TYPE-EQ-DECL NIL MVA NIL)
     (|JType| TYPE-DECL NIL |JType_adt| NIL)
     (|Expr| TYPE-DECL NIL |Expr_adt| NIL)
     (|Transition| TYPE-EQ-DECL NIL MVA NIL) (|Guard| TYPE-EQ-DECL NIL MVA NIL)
@@ -59,9 +59,9 @@
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL))
-   13 13 T NIL))
+   32 21 T NIL))
  (|step_yields_valid_state| 0
-  (|step_yields_valid_state-1| NIL 3382077598 3382099629
+  (|step_yields_valid_state-1| NIL 3382077598 3382264657
    ("" (SKOLEM-TYPEPRED)
     (("" (EXPAND* "valid_AState" "valid_PEvent" "step")
       (("" (EXPAND* "valid_AState" "valid_PEvent")
@@ -119,8 +119,8 @@
     (|AState| TYPE-EQ-DECL NIL |MVA_Semantics| NIL)
     (|Store| TYPE-EQ-DECL NIL MVA NIL) (|total| CONST-DECL "boolean" MVA NIL)
     (|valid_MVA| CONST-DECL "boolean" MVA NIL) (MVA TYPE-EQ-DECL NIL MVA NIL)
-    (|Prog_VarDecl| TYPE-EQ-DECL NIL MVA NIL)
-    (|MVA_VarDecl| TYPE-EQ-DECL NIL MVA NIL)
+    (|ProgVarDecl| TYPE-EQ-DECL NIL MVA NIL)
+    (|MVAVarDecl| TYPE-EQ-DECL NIL MVA NIL)
     (|JType| TYPE-DECL NIL |JType_adt| NIL)
     (|Expr| TYPE-DECL NIL |Expr_adt| NIL)
     (|Transition| TYPE-EQ-DECL NIL MVA NIL) (|Guard| TYPE-EQ-DECL NIL MVA NIL)
@@ -132,589 +132,24 @@
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL))
-   48 48 T SHOSTAK)))
-(|MVA_Completion|
+   55 51 T SHOSTAK)))
+(|MVACompletion|
  (|all_guards_TCC1| 0
-  (|all_guards_TCC1-1| NIL 3381054094 3382099630
-   ("" (SKOLEM!)
-    (("" (LEMMA "finite_subset[Guard[CP, Name]]")
-      ((""
-        (LEMMA "finite_subset[Guard[CP, Name]]"
-         ("s"
-          "{p: Guard[CP, Name] | EXISTS (t: Transition[CP, Name]): ts!1(t) AND t`scp = cp!1 AND t`event = e!1 AND t`guard = p}"
-          "A"
-          "{p: Guard[CP, Name] | EXISTS (t: Transition[CP, Name]): ts!1(t) AND t`guard = p}"))
-        (("1" (SPLIT -1)
-          (("1" (PROPAX) NIL NIL)
-           ("2" (DELETE -1 2)
-            (("2" (USE "all_guards_subset[CP, Name]") (("2" (ASSERT) NIL NIL))
-              NIL))
-            NIL))
-          NIL)
-         ("2" (DELETE -1 2) (("2" (USE "all_guards_finite[CP, Name]") NIL NIL))
-          NIL))
-        NIL))
-      NIL))
-    NIL)
-   PROVED
-   ((|finite_subset| FORMULA-DECL NIL |finite_sets| NIL)
-    (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |MVA_Completion| NIL)
-    (|Val| TYPE-DECL NIL |Val_adt| NIL)
-    (CP FORMAL-NONEMPTY-TYPE-DECL NIL |MVA_Completion| NIL)
-    (|Store| TYPE-EQ-DECL NIL MVA NIL) (|PSt| TYPE-EQ-DECL NIL |State| NIL)
-    (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
-    (|Guard| TYPE-EQ-DECL NIL MVA NIL)
-    (|all_guards_finite| FORMULA-DECL NIL |MVA_Finite_Props| NIL)
-    (|all_guards_subset| FORMULA-DECL NIL |MVA_Finite_Props| NIL)
-    (|subset_is_partial_order| NAME-JUDGEMENT "(partial_order?[set[T]])"
-     |sets_lemmas| NIL)
-    (|EventType| TYPE-DECL NIL |EventType_adt| NIL)
-    (= CONST-DECL "[T, T -> boolean]" |equalities| NIL)
-    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
-    (|Transition| TYPE-EQ-DECL NIL MVA NIL) (|Event| TYPE-EQ-DECL NIL MVA NIL)
-    (|Action| TYPE-EQ-DECL NIL MVA NIL)
-    (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
-    (|is_finite| CONST-DECL "bool" |finite_sets| NIL)
-    (|set| TYPE-EQ-DECL NIL |sets| NIL)
-    (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL))
-   110 111 T NIL))
- (|MC_TCC2_subset1_is_finite| 0
-  (|MC_TCC2_subset1_is_finite-4| NIL 3381830570 3382099631
-   ("" (SKOLEM!)
-    (("" (TYPEPRED "cps!1" "es!1")
-      (("" (EXPAND "is_finite")
-        (("" (SKOLEM!)
-          (("" (SKOLEM!)
-            ((""
-              (INST 1 "N!1 * N!2 + N!2 + 1"
-               "LAMBDA (ts: {t: Transition[CP, Name] |
-                                          cps!1(scp(t)) AND es!1(event(t)) AND action(t) = skip[CP, Name] AND tcp(t) = halted[CP, Name]
-                                          AND guard(t) = build_guard(scp(t), event(t), ts!1)}):
-                                            IF empty?(ts) THEN N!1*N!2+N!2
-                                            ELSE f!1(scp(t)) * N!2 + f!2(event(t))
-                                            ENDIF WHERE t=choose(ts)")
-              (("1"
-                (AUTO-REWRITE "injective?"
-                              "nonempty?"
-                              "empty?"
-                              "member"
-                              "singleton"
-                              "choose"
-                              "epsilon_singleton")
-                (("1" (EXPAND "injective?")
-                  (("1" (SKOSIMP)
-                    (("1" (LIFT-IF -3)
-                      (("1" (ASSERT)
-                        (("1" (SPLIT -3)
-                          (("1" (FLATTEN -1) (("1" (INST -1 "x1!1") NIL NIL))
-                            NIL)
-                           ("2" (FLATTEN -1)
-                            (("2" (LIFT-IF -1)
-                              (("2" (SPLIT -1)
-                                (("1" (FLATTEN -1)
-                                  (("1" (INST -1 "x2!1") NIL NIL)) NIL)
-                                 ("2" (FLATTEN -1)
-                                  (("2" (DELETE 1 2)
-                                    (("2" (LEMMA "unique_division")
-                                      (("2"
-                                        (INST -1 "N!2" "f!1(scp(x1!1))"
-                                         "f!1(scp(x2!1))" "f!2(event(x1!1))"
-                                         "f!2(event(x2!1))")
-                                        (("1" (PROP)
-                                          (("1" (DELETE -3)
-                                            (("1"
-                                              (CASE "scp(x1!1)=scp(x2!1)"
-                                                "event(x1!1)=event(x2!1)")
-                                              (("1" (DECOMPOSE-EQUALITY 1) NIL
-                                                NIL)
-                                               ("2" (INST? -5)
-                                                (("2" (SPLIT -5)
-                                                  (("1" (PROPAX) NIL NIL)
-                                                   ("2" (PROPAX) NIL NIL))
-                                                  NIL))
-                                                NIL)
-                                               ("3" (INST? -3)
-                                                (("3" (SPLIT -3)
-                                                  (("1" (PROPAX) NIL NIL)
-                                                   ("2" (PROPAX) NIL NIL))
-                                                  NIL))
-                                                NIL))
-                                              NIL))
-                                            NIL)
-                                           ("2" (ASSERT) NIL NIL))
-                                          NIL)
-                                         ("2" (ASSERT) NIL NIL))
-                                        NIL))
-                                      NIL))
-                                    NIL))
-                                  NIL))
-                                NIL))
-                              NIL))
-                            NIL))
-                          NIL)
-                         ("2" (INST?) NIL NIL))
-                        NIL))
-                      NIL))
-                    NIL))
-                  NIL))
-                NIL)
-               ("2" (AUTO-REWRITE "epsilon_singleton")
-                (("2" (SKOLEM!)
-                  (("2" (LIFT-IF)
-                    (("2" (SPLIT)
-                      (("1" (ASSERT) NIL NIL)
-                       ("2" (DELETE -1 -2)
-                        (("2" (GRIND)
-                          (("2" (LEMMA "both_sides_times_pos_lt1")
-                            (("2" (INST -1 "N!2" "f!1(scp(ts!2))" "N!1")
-                              (("2" (ASSERT) NIL NIL)) NIL))
-                            NIL))
-                          NIL))
-                        NIL))
-                      NIL))
-                    NIL))
-                  NIL))
-                NIL))
-              NIL))
-            NIL))
-          NIL))
-        NIL))
-      NIL))
-    NIL)
-   UNFINISHED
-   ((|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
-    (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
-    (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
-    (CP FORMAL-NONEMPTY-TYPE-DECL NIL |MVA_Completion| NIL)
-    (|set| TYPE-EQ-DECL NIL |sets| NIL)
-    (|is_finite| CONST-DECL "bool" |finite_sets| NIL)
-    (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
-    (|EventType| TYPE-DECL NIL |EventType_adt| NIL)
-    (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |MVA_Completion| NIL)
-    (|Event| TYPE-EQ-DECL NIL MVA NIL) NIL
-    (|choose| CONST-DECL "(p)" |sets| NIL)
-    (|nonempty?| CONST-DECL "bool" |sets| NIL) NIL
-    (|below| TYPE-EQ-DECL NIL |nat_types| NIL) NIL
-    (* CONST-DECL "[numfield, numfield -> numfield]" |number_fields| NIL) NIL
-    (|nat| NONEMPTY-TYPE-EQ-DECL NIL |naturalnumbers| NIL)
-    (+ CONST-DECL "[numfield, numfield -> numfield]" |number_fields| NIL)
-    (|singleton| CONST-DECL "(singleton?)" |sets| NIL)
-    (|singleton?| CONST-DECL "bool" |sets| NIL)
-    (|empty?| CONST-DECL "bool" |sets| NIL)
-    (IF CONST-DECL "[boolean, T, T -> T]" |if_def| NIL)
-    (|numfield| NONEMPTY-TYPE-EQ-DECL NIL |number_fields| NIL)
-    (|nonneg_int| NONEMPTY-TYPE-EQ-DECL NIL |integers| NIL)
-    (>= CONST-DECL "bool" |reals| NIL)
-    (|int| NONEMPTY-TYPE-EQ-DECL NIL |integers| NIL)
-    (|integer_pred| CONST-DECL "[rational -> boolean]" |integers| NIL)
-    (|rational| NONEMPTY-TYPE-FROM-DECL NIL |rationals| NIL)
-    (|rational_pred| CONST-DECL "[real -> boolean]" |rationals| NIL)
-    (< CONST-DECL "bool" |reals| NIL)
-    (|real| NONEMPTY-TYPE-FROM-DECL NIL |reals| NIL)
-    (|real_pred| CONST-DECL "[number_field -> boolean]" |reals| NIL)
-    (|number_field| NONEMPTY-TYPE-FROM-DECL NIL |number_fields| NIL)
-    (|number_field_pred| CONST-DECL "[number -> boolean]" |number_fields| NIL)
-    (|number| NONEMPTY-TYPE-DECL NIL |numbers| NIL) NIL
-    (|build_guard| CONST-DECL "Guard" |MVA_Completion| NIL)
-    (|PSt| TYPE-EQ-DECL NIL |State| NIL) (|Store| TYPE-EQ-DECL NIL MVA NIL)
-    (|Val| TYPE-DECL NIL |Val_adt| NIL) (|halted| CONST-DECL "CP" MVA NIL)
-    (|skip| CONST-DECL "Action" MVA NIL)
-    (= CONST-DECL "[T, T -> boolean]" |equalities| NIL)
-    (|list| TYPE-DECL NIL |list_adt| NIL)
-    (|OneAction| TYPE-EQ-DECL NIL MVA NIL)
-    (|Expr| TYPE-DECL NIL |Expr_adt| NIL) NIL NIL
-    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
-    (|Transition| TYPE-EQ-DECL NIL MVA NIL) (|Guard| TYPE-EQ-DECL NIL MVA NIL)
-    (|Action| TYPE-EQ-DECL NIL MVA NIL)
-    (|nnint_plus_posint_is_posint| APPLICATION-JUDGEMENT "posint" |integers|
-     NIL)
-    (|posint_plus_nnint_is_posint| APPLICATION-JUDGEMENT "posint" |integers|
-     NIL)
-    (|nnint_times_nnint_is_nnint| APPLICATION-JUDGEMENT "nonneg_int" |integers|
-     NIL)
-    (|mult_divides1| APPLICATION-JUDGEMENT "(divides(n))" |divides| NIL)
-    (|mult_divides2| APPLICATION-JUDGEMENT "(divides(m))" |divides| NIL)
-    (|nnint_plus_nnint_is_nnint| APPLICATION-JUDGEMENT "nonneg_int" |integers|
-     NIL)
-    (|nonempty_singleton_finite| APPLICATION-JUDGEMENT "non_empty_finite_set"
-     |finite_sets| NIL)
-    (|injective?| CONST-DECL "bool" |functions| NIL)
-    (|unique_division| FORMULA-DECL NIL |euclidean_division| NIL)
-    (|real_gt_is_strict_total_order| NAME-JUDGEMENT
-     "(strict_total_order?[real])" |real_props| NIL)
-    (> CONST-DECL "bool" |reals| NIL)
-    (|mod| NONEMPTY-TYPE-EQ-DECL NIL |euclidean_division| NIL)
-    (|posnat| NONEMPTY-TYPE-EQ-DECL NIL |integers| NIL)
-    (TRUE CONST-DECL "bool" |booleans| NIL)
-    (|member| CONST-DECL "bool" |sets| NIL)
-    (|epsilon_singleton| FORMULA-DECL NIL |Epsilon_Props| NIL)
-    (|real_lt_is_strict_total_order| NAME-JUDGEMENT
-     "(strict_total_order?[real])" |real_props| NIL)
-    (|nonneg_real| NONEMPTY-TYPE-EQ-DECL NIL |real_types| NIL)
-    (|posreal| NONEMPTY-TYPE-EQ-DECL NIL |real_types| NIL)
-    (|both_sides_times_pos_lt1| FORMULA-DECL NIL |real_props| NIL))
-   51 51 T NIL)
-  (|MC_TCC2_subset1_is_finite-3| NIL 3381830263 3381830558
-   ("" (SKOLEM!)
-    (("" (TYPEPRED "cps!1" "es!1")
-      (("" (EXPAND "is_finite")
-        (("" (SKOLEM!)
-          (("" (SKOLEM!)
-            ((""
-              (INST 1 "N!1 * N!2 * N!2 + 1"
-               "LAMBDA (ts: {t: Transition[CP, Name] |
-                                        cps!1(scp(t)) AND es!1(event(t)) AND action(t) = skip[CP, Name] AND tcp(t) = halted[CP, Name]
-                                        AND guard(t) = build_guard(scp(t), event(t), ts!1)}):
-                                          IF empty?(ts) THEN N!1*N!2+N!2
-                                          ELSE f!1(scp(t)) * N!2 + f!2(event(t))
-                                          ENDIF WHERE t=choose(ts)")
-              (("1"
-                (AUTO-REWRITE "injective?"
-                              "nonempty?"
-                              "empty?"
-                              "member"
-                              "singleton"
-                              "choose"
-                              "epsilon_singleton")
-                (("1" (EXPAND "injective?")
-                  (("1" (SKOSIMP)
-                    (("1" (LIFT-IF -3)
-                      (("1" (ASSERT)
-                        (("1" (SPLIT -3)
-                          (("1" (FLATTEN -1) (("1" (INST -1 "x1!1") NIL NIL))
-                            NIL)
-                           ("2" (FLATTEN -1)
-                            (("2" (LIFT-IF -1)
-                              (("2" (SPLIT -1)
-                                (("1" (FLATTEN -1)
-                                  (("1" (INST -1 "x2!1") NIL NIL)) NIL)
-                                 ("2" (FLATTEN -1)
-                                  (("2" (DELETE 1 2)
-                                    (("2" (LEMMA "unique_division")
-                                      (("2"
-                                        (INST -1 "N!2" "f!1(scp(x1!1))"
-                                         "f!1(scp(x2!1))" "f!2(event(x1!1))"
-                                         "f!2(event(x2!1))")
-                                        (("1" (PROP)
-                                          (("1" (DELETE -3)
-                                            (("1"
-                                              (CASE "scp(x1!1)=scp(x2!1)"
-                                                "event(x1!1)=event(x2!1)")
-                                              (("1" (DECOMPOSE-EQUALITY 1) NIL
-                                                NIL)
-                                               ("2" (INST? -5)
-                                                (("2" (SPLIT -5)
-                                                  (("1" (PROPAX) NIL NIL)
-                                                   ("2" (PROPAX) NIL NIL))
-                                                  NIL))
-                                                NIL)
-                                               ("3" (INST? -3)
-                                                (("3" (SPLIT -3)
-                                                  (("1" (PROPAX) NIL NIL)
-                                                   ("2" (PROPAX) NIL NIL))
-                                                  NIL))
-                                                NIL))
-                                              NIL))
-                                            NIL)
-                                           ("2" (ASSERT) NIL NIL))
-                                          NIL)
-                                         ("2" (ASSERT) NIL NIL))
-                                        NIL))
-                                      NIL))
-                                    NIL))
-                                  NIL))
-                                NIL))
-                              NIL))
-                            NIL))
-                          NIL)
-                         ("2" (INST?) NIL NIL))
-                        NIL))
-                      NIL))
-                    NIL))
-                  NIL))
-                NIL)
-               ("2" (AUTO-REWRITE "epsilon_singleton")
-                (("2" (SKOLEM!)
-                  (("2" (LIFT-IF)
-                    (("2" (SPLIT)
-                      (("1" (ASSERT) (("1" (ASSERT) NIL NIL)) NIL)
-                       ("2" (DELETE -1 -2)
-                        (("2" (GRIND)
-                          (("2" (LEMMA "both_sides_times_pos_lt1")
-                            (("2" (POSTPONE) NIL NIL)) NIL))
-                          NIL))
-                        NIL))
-                      NIL))
-                    NIL))
-                  NIL))
-                NIL))
-              NIL))
-            NIL))
-          NIL))
-        NIL))
-      NIL))
-    NIL)
-   UNFINISHED NIL 3070 41 T NIL)
-  (|MC_TCC2_subset1_is_finite-2| NIL 3381488569 3381830251
-   ("" (SKOLEM!)
-    (("" (TYPEPRED "cps!1" "es!1")
-      (("" (EXPAND "is_finite")
-        (("" (SKOLEM!)
-          (("" (SKOLEM!)
-            ((""
-              (INST 1 "N!2 * (N!1 + 2) + 1"
-               "LAMBDA (ts: {t: Transition[CP, Name] |
-                                      cps!1(scp(t)) AND es!1(event(t)) AND action(t) = skip[CP, Name] AND tcp(t) = halted[CP, Name]
-                                      AND guard(t) = build_guard(scp(t), event(t), ts!1)}):
-                                        IF empty?(ts) THEN N!1*N!2+N!2
-                                        ELSE f!1(scp(t)) * N!2 + f!2(event(t))
-                                        ENDIF WHERE t=choose(ts)")
-              (("1"
-                (AUTO-REWRITE "injective?"
-                              "nonempty?"
-                              "empty?"
-                              "member"
-                              "singleton"
-                              "choose"
-                              "epsilon_singleton")
-                (("1" (EXPAND "injective?")
-                  (("1" (SKOSIMP)
-                    (("1" (LIFT-IF -3)
-                      (("1" (ASSERT)
-                        (("1" (SPLIT -3)
-                          (("1" (FLATTEN -1) (("1" (INST -1 "x1!1") NIL NIL))
-                            NIL)
-                           ("2" (FLATTEN -1)
-                            (("2" (LIFT-IF -1)
-                              (("2" (SPLIT -1)
-                                (("1" (FLATTEN -1)
-                                  (("1" (INST -1 "x2!1") NIL NIL)) NIL)
-                                 ("2" (FLATTEN -1)
-                                  (("2" (DELETE 1 2)
-                                    (("2" (LEMMA "unique_division")
-                                      (("2"
-                                        (INST -1 "N!2" "f!1(scp(x1!1))"
-                                         "f!1(scp(x2!1))" "f!2(event(x1!1))"
-                                         "f!2(event(x2!1))")
-                                        (("1" (PROP)
-                                          (("1" (DELETE -3)
-                                            (("1"
-                                              (CASE "scp(x1!1)=scp(x2!1)"
-                                                "event(x1!1)=event(x2!1)")
-                                              (("1" (DECOMPOSE-EQUALITY 1) NIL
-                                                NIL)
-                                               ("2" (INST? -5)
-                                                (("2" (SPLIT -5)
-                                                  (("1" (PROPAX) NIL NIL)
-                                                   ("2" (PROPAX) NIL NIL))
-                                                  NIL))
-                                                NIL)
-                                               ("3" (INST? -3)
-                                                (("3" (SPLIT -3)
-                                                  (("1" (PROPAX) NIL NIL)
-                                                   ("2" (PROPAX) NIL NIL))
-                                                  NIL))
-                                                NIL))
-                                              NIL))
-                                            NIL)
-                                           ("2" (ASSERT) NIL NIL))
-                                          NIL)
-                                         ("2" (ASSERT) NIL NIL))
-                                        NIL))
-                                      NIL))
-                                    NIL))
-                                  NIL))
-                                NIL))
-                              NIL))
-                            NIL))
-                          NIL)
-                         ("2" (INST?) NIL NIL))
-                        NIL))
-                      NIL))
-                    NIL))
-                  NIL))
-                NIL)
-               ("2" (AUTO-REWRITE "epsilon_singleton")
-                (("2" (SKOLEM!)
-                  (("2" (LIFT-IF)
-                    (("2" (SPLIT)
-                      (("1" (ASSERT) NIL NIL)
-                       ("2" (DELETE -1 -2)
-                        (("2" (GRIND) (("2" (POSTPONE) NIL NIL)) NIL)) NIL))
-                      NIL))
-                    NIL))
-                  NIL))
-                NIL))
-              NIL))
-            NIL))
-          NIL))
-        NIL))
-      NIL))
-    NIL)
-   UNFINISHED NIL 10702 5 T NIL)
-  (|MC_TCC2_subset1_is_finite-1| NIL 3381488368 3381488533
-   (";;; Proof subset2_is_finite-1 for formula MVA_Completion.subset2_is_finite"
-    (SKOLEM-TYPEPRED)
-    ((";;; Proof subset2_is_finite-1 for formula MVA_Completion.subset2_is_finite"
-      (EXPAND "is_finite")
-      ((";;; Proof subset2_is_finite-1 for formula MVA_Completion.subset2_is_finite"
-        (SKOLEM!)
-        ((";;; Proof subset2_is_finite-1 for formula MVA_Completion.subset2_is_finite"
-          (AUTO-REWRITE "nonempty?" "empty?" "member" "choose" "singleton")
-          ((";;; Proof subset2_is_finite-1 for formula MVA_Completion.subset2_is_finite"
-            (INST + "N!1+1" "LAMBDA (ts: ({t: Transition[CP, Name] |
-                                    scp(t) = halted[CP, Name] AND es!1(event(t))
-                                AND guard(t) =
-                                     (LAMBDA (stA: Store[CP, Name], stP: PSt[Name]): TRUE)
-                                AND action(t) = skip[CP, Name]
-                                AND tcp(t) = halted[CP, Name]})):
-                                  IF empty?(ts) THEN N!1
-                                  ELSE f!1(event(choose(ts)))
-                                  ENDIF")
-            (("1" (EXPAND* "injective?" "singleton")
-              (("1" (SKOSIMP)
-                (("1" (LIFT-IF -2)
-                  (("1" (SPLIT -2)
-                    (("1" (FLATTEN)
-                      (("1" (LIFT-IF -2)
-                        (("1" (SPLIT -2)
-                          (("1" (EXPAND* "empty?" "member")
-                            (("1" (INST?) (("1" (INST?) NIL)))))
-                           ("2" (FLATTEN)
-                            (("2" (EXPAND* "empty?" "member")
-                              (("2" (INST? -2)
-                                (("2" (SKOLEM!)
-                                  (("2" (ASSERT)
-                                    (("2" (GRIND) NIL)))))))))))))))))
-                     ("2" (ASSERT)
-                      (("2"
-                        (CASE "epsilon({y:
-                                                             ({t: Transition[CP, Name] |
-                                                                      scp(t) = halted[CP, Name]
-                                                                  AND es!1(event(t))
-                                                                  AND guard(t) =
-                                                                       (LAMBDA (stA: Store[CP, Name],
-                                                                                stP: PSt[Name]):
-                                                                          TRUE)
-                                                                  AND action(t) = skip[CP, Name]
-                                                                  AND tcp(t) = halted[CP, Name]})
-                                                             | y = x1!1}) = x1!1")
-                        (("1" (REPLACE -1 -2)
-                          (("1"
-                            (CASE "epsilon({y_1:
-                                                                   ({t: Transition[CP, Name] |
-                                                                            scp(t) = halted[CP, Name]
-                                                                        AND es!1(event(t))
-                                                                        AND guard(t) =
-                                                                             (LAMBDA (stA: Store[CP, Name],
-                                                                                      stP: PSt[Name]):
-                                                                                TRUE)
-                                                                        AND action(t) = skip[CP, Name]
-                                                                        AND tcp(t) = halted[CP, Name]})
-                                                                   | y_1 = x2!1}) = x2!1")
-                            (("1" (REPLACE -1 -3)
-                              (("1" (DELETE -1 -2)
-                                (("1" (FLATTEN)
-                                  (("1" (SKOLEM!)
-                                    (("1" (LIFT-IF -2)
-                                      (("1" (SPLIT -2)
-                                        (("1" (FLATTEN)
-                                          (("1" (INST? -1)
-                                            (("1"
-                                              (INSTANTIATE -3
-                                               ("event(x1!1)" "event(x2!1)"))
-                                              (("1" (ASSERT) NIL)))))))
-                                         ("2" (FLATTEN)
-                                          (("2" (SKOLEM!)
-                                            (("2"
-                                              (INSTANTIATE -4
-                                               ("event(x1!1)" "event(x2!1)"))
-                                              (("2" (SPLIT -4)
-                                                (("1" (DECOMPOSE-EQUALITY 1)
-                                                  NIL)
-                                                 ("2" (PROPAX)
-                                                  NIL)))))))))))))))))))))
-                             ("2" (HIDE-ALL-BUT 1)
-                              (("2"
-                                (LEMMA
-                                 "epsilon_singleton[({t: Transition[CP, Name] |
-                                                    scp(t) = halted[CP, Name] AND es!1(event(t))
-                                                AND guard(t) =
-                                                     (LAMBDA (stA: Store[CP, Name], stP: PSt[Name]):
-                                                        TRUE)
-                                                AND action(t) = skip[CP, Name]
-                                                AND tcp(t) = halted[CP, Name]})]")
-                                (("2" (INST?)
-                                  (("2" (EXPAND "singleton")
-                                    (("2" (PROPAX) NIL)))))))))))))
-                         ("2" (HIDE-ALL-BUT 1)
-                          (("2"
-                            (LEMMA
-                             "epsilon_singleton[({t: Transition[CP, Name] |
-                                                scp(t) = halted[CP, Name] AND es!1(event(t))
-                                            AND guard(t) =
-                                                 (LAMBDA (stA: Store[CP, Name], stP: PSt[Name]):
-                                                    TRUE)
-                                            AND action(t) = skip[CP, Name]
-                                            AND tcp(t) = halted[CP, Name]})]")
-                            (("2" (INST?)
-                              (("2" (EXPAND "singleton")
-                                (("2" (PROPAX) NIL)))))))))
-                         ("3" (INST?) NIL)))))))))))))
-             ("2" (SKOSIMP) (("2" (SKOLEM!) (("2" (ASSERT) NIL)))))
-             ("3" (SKOSIMP) (("3" (ASSERT) NIL))))))))))))
-    ";;; developed with SHOSTAK decision procedures")
-   UNFINISHED NIL 4475 3 T NIL))
- (|completeTrans_TCC1| 0
-  (|completeTrans_TCC1-3| NIL 3381489148 3382099632
-   ("" (SKOLEM!)
-    (("" (USE "finite_union[Transition[CP, Name]]")
-      (("1" (USE "MC_TCC2_subset2_is_finite[CP, Name]") NIL NIL)
-       ("2" (USE "MC_TCC2_subset1_is_finite[CP, Name]") NIL NIL))
-      NIL))
-    NIL)
-   UNFINISHED
-   (NIL NIL NIL (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
-    (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
-    (|set| TYPE-EQ-DECL NIL |sets| NIL)
-    (|is_finite| CONST-DECL "bool" |finite_sets| NIL)
-    (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
-    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
-    (|EventType| TYPE-DECL NIL |EventType_adt| NIL)
-    (|Expr| TYPE-DECL NIL |Expr_adt| NIL)
-    (|OneAction| TYPE-EQ-DECL NIL MVA NIL)
-    (|list| TYPE-DECL NIL |list_adt| NIL)
-    (= CONST-DECL "[T, T -> boolean]" |equalities| NIL)
-    (|skip| CONST-DECL "Action" MVA NIL) (|halted| CONST-DECL "CP" MVA NIL)
-    (|Val| TYPE-DECL NIL |Val_adt| NIL) (|Store| TYPE-EQ-DECL NIL MVA NIL)
-    (|PSt| TYPE-EQ-DECL NIL |State| NIL)
-    (|build_guard| CONST-DECL "Guard" |MVA_Completion| NIL)
-    (TRUE CONST-DECL "bool" |booleans| NIL)
-    (|finite_union| JUDGEMENT-TCC NIL |finite_sets| NIL)
-    (CP FORMAL-NONEMPTY-TYPE-DECL NIL |MVA_Completion| NIL)
-    (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |MVA_Completion| NIL)
-    (|Action| TYPE-EQ-DECL NIL MVA NIL) (|Event| TYPE-EQ-DECL NIL MVA NIL)
-    (|Guard| TYPE-EQ-DECL NIL MVA NIL) (|Transition| TYPE-EQ-DECL NIL MVA NIL)
-    (|MC_TCC2_subset2_is_finite| FORMULA-DECL NIL |MVA_Finite_Props| NIL)
-    (|MC_TCC2_subset1_is_finite| FORMULA-DECL NIL |MVA_Completion| NIL))
-   116 116 T NIL)
-  (|completeTrans_TCC1-2| NIL 3381489024 3381489046
-   (";;; Proof completeTrans_TCC1-1 for formula MVA_Completion.completeTrans_TCC1"
-    (SKOLEM!)
-    ((";;; Proof completeTrans_TCC1-1 for formula MVA_Completion.completeTrans_TCC1"
-      (USE "finite_union[Transition[CP, Name]]")
-      (("1" (USE "subset2_is_finite") NIL)
-       ("2" (USE "subset1_is_finite") NIL))))
-    ";;; developed with SHOSTAK decision procedures")
-   UNFINISHED NIL 2042 35 T NIL)
-  (|completeTrans_TCC1-1| NIL 3381054094 3381488966 ("" (SUBTYPE-TCC) NIL NIL)
-   UNFINISHED NIL 12436 11384 T NIL))
- (|completeMVA_valid| 0
-  (|completeMVA_valid-1| NIL 3382081427 3382179345
+  (|all_guards_TCC1-1| NIL 3382264515 3382264667 ("" (SUBTYPE-TCC) NIL NIL)
+   UNFINISHED NIL 911 908 NIL NIL))
+ (|complete_trans_TCC1| 0
+  (|complete_trans_TCC1-3| NIL 3382265153 NIL ("" (SKIP) NIL NIL) UNFINISHED
+   NIL NIL NIL NIL NIL)
+  (|complete_trans_TCC1-2| NIL 3382265133 NIL ("" (SKIP) NIL NIL) UNCHECKED NIL
+   NIL NIL NIL NIL)
+  (|complete_trans_TCC1-1| NIL 3382264515 3382264991 ("" (SUBTYPE-TCC) NIL NIL)
+   UNFINISHED NIL 32426 31994 NIL NIL))
+ (|complete_MVA_is_valid| 0
+  (|complete_MVA_is_valid-2| NIL 3382270923 3382270951
    (""
     (AUTO-REWRITE "valid_MVA"
-                  "completeMVA"
-                  "completeTrans"
+                  "complete_MVA"
+                  "complete_trans"
                   "add"
                   "union"
                   "member"
@@ -743,9 +178,9 @@
                       NIL))
                     NIL))
                   NIL)
-                 ("5" (EXPAND "completeMVA_pre")
+                 ("5" (EXPAND "complete_MVA_pre")
                   (("5" (FLATTEN -8) (("5" (REWRITE -1 3) NIL NIL)) NIL)) NIL)
-                 ("6" (EXPAND "completeMVA_pre")
+                 ("6" (EXPAND "complete_MVA_pre")
                   (("6" (FLATTEN -8) (("6" (REWRITE -5 3) NIL NIL)) NIL)) NIL)
                  ("7" (SKOSIMP)
                   (("7" (EXPAND* "domain_set" "singleton_elt" "the" "member")
@@ -778,34 +213,19 @@
         NIL))
       NIL))
     NIL)
-   UNFINISHED NIL 547747 4449 T SHOSTAK))
- (|completeMVA_trap_TCC1| 0
-  (|completeMVA_trap_TCC1-1| NIL 3381741221 3382099673
-   ("" (SKOLEM-TYPEPRED) (("" (USE "completeMVA_valid") NIL NIL)) NIL) PROVED
-   ((|completeMVA_valid| FORMULA-DECL NIL |MVA_Completion| NIL)
-    (|completeMVA_pre| CONST-DECL "boolean" |MVA_Completion| NIL)
-    (|valid_MVA| CONST-DECL "boolean" MVA NIL) (MVA TYPE-EQ-DECL NIL MVA NIL)
-    (|Prog_VarDecl| TYPE-EQ-DECL NIL MVA NIL)
-    (|MVA_VarDecl| TYPE-EQ-DECL NIL MVA NIL)
-    (|JType| TYPE-DECL NIL |JType_adt| NIL)
-    (|Expr| TYPE-DECL NIL |Expr_adt| NIL)
-    (|Transition| TYPE-EQ-DECL NIL MVA NIL) (|Guard| TYPE-EQ-DECL NIL MVA NIL)
-    (|Action| TYPE-EQ-DECL NIL MVA NIL) (|Event| TYPE-EQ-DECL NIL MVA NIL)
-    (|EventType| TYPE-DECL NIL |EventType_adt| NIL)
-    (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
-    (CP FORMAL-NONEMPTY-TYPE-DECL NIL |MVA_Completion| NIL)
-    (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |MVA_Completion| NIL)
-    (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
-    (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
-    (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL))
-   80 80 T NIL))
- (|completeMVA_trap| 0
-  (|completeMVA_trap-1| NIL 3381645621 3382099673
+   UNFINISHED NIL 2173 424 NIL NIL)
+  (|complete_MVA_is_valid-1| NIL 3382270123 3382270129 ("" (POSTPONE) NIL NIL)
+   UNFINISHED NIL 590 1 T SHOSTAK))
+ (|complete_MVA_has_trap_state_TCC1| 0
+  (|complete_MVA_has_trap_state_TCC1-1| NIL 3382264515 3382265214
+   ("" (SUBTYPE-TCC) NIL NIL) UNFINISHED NIL 22336 7539 NIL NIL))
+ (|complete_MVA_has_trap_state| 0
+  (|complete_MVA_has_trap_state-1| NIL 3382270875 3382270880
    ("" (SKOLEM-TYPEPRED)
-    (("" (EXPAND* "trap_state" "completeMVA")
+    (("" (EXPAND* "trap_state" "complete_MVA")
       (("" (SKOSIMP)
         ((""
-          (EXPAND* "completeTrans" "union" "member" "completeMVA_pre"
+          (EXPAND* "complete_trans" "union" "member" "complete_MVA_pre"
            "valid_MVA")
           (("" (PROP)
             (("" (INST?) (("" (PROP) (("" (ASSERT) NIL NIL)) NIL)) NIL)) NIL))
@@ -814,33 +234,33 @@
       NIL))
     NIL)
    PROVED
-   ((|completeMVA| CONST-DECL "MVA" |MVA_Completion| NIL)
-    (|trap_state| CONST-DECL "boolean" MVA NIL)
-    (|member| CONST-DECL "bool" |sets| NIL)
-    (|union| CONST-DECL "set" |sets| NIL)
-    (|completeTrans| CONST-DECL "finite_set[Transition]" |MVA_Completion| NIL)
-    (|completeMVA_pre| CONST-DECL "boolean" |MVA_Completion| NIL)
-    (|valid_MVA| CONST-DECL "boolean" MVA NIL) (MVA TYPE-EQ-DECL NIL MVA NIL)
-    (|Prog_VarDecl| TYPE-EQ-DECL NIL MVA NIL)
-    (|MVA_VarDecl| TYPE-EQ-DECL NIL MVA NIL)
-    (|JType| TYPE-DECL NIL |JType_adt| NIL)
-    (|Expr| TYPE-DECL NIL |Expr_adt| NIL)
-    (|Transition| TYPE-EQ-DECL NIL MVA NIL) (|Guard| TYPE-EQ-DECL NIL MVA NIL)
-    (|Action| TYPE-EQ-DECL NIL MVA NIL) (|Event| TYPE-EQ-DECL NIL MVA NIL)
-    (|EventType| TYPE-DECL NIL |EventType_adt| NIL)
-    (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
-    (CP FORMAL-NONEMPTY-TYPE-DECL NIL |MVA_Completion| NIL)
-    (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |MVA_Completion| NIL)
-    (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
+   ((|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
-    (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL))
-   34 34 T SHOSTAK))
- (|completeMVA_determ| 0
-  (|completeMVA_determ-1| NIL 3381834130 3382099701
+    (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
+    (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |MVACompletion| NIL)
+    (CP FORMAL-NONEMPTY-TYPE-DECL NIL |MVACompletion| NIL)
+    (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
+    (|EventType| TYPE-DECL NIL |EventType_adt| NIL)
+    (|Event| TYPE-EQ-DECL NIL MVA NIL) (|Action| TYPE-EQ-DECL NIL MVA NIL)
+    (|Guard| TYPE-EQ-DECL NIL MVA NIL) (|Transition| TYPE-EQ-DECL NIL MVA NIL)
+    (|Expr| TYPE-DECL NIL |Expr_adt| NIL)
+    (|JType| TYPE-DECL NIL |JType_adt| NIL)
+    (|MVAVarDecl| TYPE-EQ-DECL NIL MVA NIL)
+    (|ProgVarDecl| TYPE-EQ-DECL NIL MVA NIL) (MVA TYPE-EQ-DECL NIL MVA NIL)
+    (|valid_MVA| CONST-DECL "boolean" MVA NIL)
+    (|complete_MVA_pre| CONST-DECL "boolean" |MVACompletion| NIL)
+    (|complete_trans| CONST-DECL "finite_set[Transition]" |MVACompletion| NIL)
+    (|union| CONST-DECL "set" |sets| NIL)
+    (|member| CONST-DECL "bool" |sets| NIL)
+    (|trap_state| CONST-DECL "boolean" MVA NIL)
+    (|complete_MVA| CONST-DECL "MVA" |MVACompletion| NIL))
+   295 42 T NIL))
+ (|complete_MVA_is_deterministic| 0
+  (|complete_MVA_is_deterministic-1| NIL 3382270657 3382270846
    ("" (SKOLEM-TYPEPRED)
-    (("" (EXPAND* "deterministic" "completeMVA")
+    (("" (EXPAND* "deterministic" "complete_MVA")
       (("" (SKOSIMP)
-        (("" (EXPAND "completeMVA_pre")
+        (("" (EXPAND "complete_MVA_pre")
           (("" (FLATTEN -2)
             (("" (CASE* "ts(a!1)(t1!1)" "ts(a!1)(t2!1)")
               (("1" (EXPAND "deterministic")
@@ -852,7 +272,7 @@
                   NIL))
                 NIL)
                ("2" (DELETE -3 -6 -7)
-                (("2" (EXPAND "completeTrans" -4)
+                (("2" (EXPAND "complete_trans" -4)
                   (("2" (EXPAND "union" -4)
                     (("2" (EXPAND "member" -4)
                       (("2" (PROP)
@@ -861,7 +281,11 @@
                             (("1" (PROP)
                               (("1" (INST -9 "t1!1")
                                 (("1" (PROP)
-                                  (("1" (DELETE -4 -5) (("1" (GRIND) NIL NIL))
+                                  (("1" (DELETE -4 -5)
+                                    (("1" (GRIND)
+                                      (("1" (POSTPONE) NIL NIL)
+                                       ("2" (POSTPONE) NIL NIL))
+                                      NIL))
                                     NIL))
                                   NIL))
                                 NIL))
@@ -875,9 +299,10 @@
                   NIL))
                 NIL)
                ("3" (DELETE -3 -5 -6 -7)
-                (("3" (EXPAND* "completeTrans" "union" "member")
+                (("3" (EXPAND* "complete_trans" "union" "member")
                   (("3" (PROP)
-                    (("1" (GRIND) NIL NIL)
+                    (("1" (GRIND)
+                      (("1" (POSTPONE) NIL NIL) ("2" (POSTPONE) NIL NIL)) NIL)
                      ("2" (EXPAND "valid_MVA")
                       (("2" (PROP)
                         (("2" (INST -9 "t2!1")
@@ -893,7 +318,8 @@
                ("4" (DELETE -1 -2 -5 -6)
                 (("4" (GRIND)
                   (("1" (DECOMPOSE-EQUALITY 4) NIL NIL)
-                   ("2" (DECOMPOSE-EQUALITY 4) NIL NIL))
+                   ("2" (DECOMPOSE-EQUALITY 4) NIL NIL)
+                   ("3" (POSTPONE) NIL NIL) ("4" (POSTPONE) NIL NIL))
                   NIL))
                 NIL))
               NIL))
@@ -902,62 +328,13 @@
         NIL))
       NIL))
     NIL)
-   PROVED
-   ((|completeMVA| CONST-DECL "MVA" |MVA_Completion| NIL)
-    (|deterministic| CONST-DECL "boolean" MVA NIL)
-    (|Val| TYPE-DECL NIL |Val_adt| NIL) (|Store| TYPE-EQ-DECL NIL MVA NIL)
-    (|PSt| TYPE-EQ-DECL NIL |State| NIL)
-    (|valid_Store| CONST-DECL "boolean" MVA NIL)
-    (|valid_PSt| CONST-DECL "boolean" MVA NIL)
-    (|completeTrans| CONST-DECL "finite_set[Transition]" |MVA_Completion| NIL)
-    (|member| CONST-DECL "bool" |sets| NIL)
-    (|finite_union| APPLICATION-JUDGEMENT "finite_set" |finite_sets| NIL)
-    (|the| CONST-DECL "(p)" |sets| NIL)
-    (|singleton_elt| CONST-DECL "T" |sets| NIL)
-    (|domain_set| CONST-DECL "X" |func_props| NIL)
-    (|valid_Guard| CONST-DECL "boolean" MVA NIL)
-    (|subset?| CONST-DECL "bool" |sets| NIL)
-    (|valid_Action| CONST-DECL "boolean" MVA NIL)
-    (|valid_Store| CONST-DECL "boolean" MVA NIL)
-    (|lift_PSt| CONST-DECL "PState" |State| NIL)
-    (|is_local| CONST-DECL "bool" |State| NIL)
-    (|lookup_local| CONST-DECL "Val" |State| NIL)
-    (|is_field| CONST-DECL "bool" |State| NIL)
-    (|lookup_field| CONST-DECL "Val" |State| NIL)
-    (|lookup_ghost| CONST-DECL "Val" |State| NIL)
-    (|lookup| CONST-DECL "Val" |State| NIL)
-    (|valid_PSt| CONST-DECL "boolean" MVA NIL)
-    (|extend| CONST-DECL "R" |extend| NIL) (|skip| CONST-DECL "Action" MVA NIL)
-    (|all_guards| CONST-DECL "finite_set[Guard]" |MVA_Completion| NIL)
-    (|build_guard| CONST-DECL "Guard" |MVA_Completion| NIL)
-    (|var_names| CONST-DECL "set[Name]" MVA NIL)
-    (|var_names| CONST-DECL "set[Name]" MVA NIL)
-    (|intersection| CONST-DECL "set" |sets| NIL)
-    (|empty?| CONST-DECL "bool" |sets| NIL)
-    (|disjoint?| CONST-DECL "bool" |sets| NIL)
-    (|union| CONST-DECL "set" |sets| NIL)
-    (|completeMVA_pre| CONST-DECL "boolean" |MVA_Completion| NIL)
-    (|valid_MVA| CONST-DECL "boolean" MVA NIL) (MVA TYPE-EQ-DECL NIL MVA NIL)
-    (|Prog_VarDecl| TYPE-EQ-DECL NIL MVA NIL)
-    (|MVA_VarDecl| TYPE-EQ-DECL NIL MVA NIL)
-    (|JType| TYPE-DECL NIL |JType_adt| NIL)
-    (|Expr| TYPE-DECL NIL |Expr_adt| NIL)
-    (|Transition| TYPE-EQ-DECL NIL MVA NIL) (|Guard| TYPE-EQ-DECL NIL MVA NIL)
-    (|Action| TYPE-EQ-DECL NIL MVA NIL) (|Event| TYPE-EQ-DECL NIL MVA NIL)
-    (|EventType| TYPE-DECL NIL |EventType_adt| NIL)
-    (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
-    (CP FORMAL-NONEMPTY-TYPE-DECL NIL |MVA_Completion| NIL)
-    (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |MVA_Completion| NIL)
-    (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
-    (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
-    (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL))
-   2760 2760 T SHOSTAK))
- (|completeMVA_total| 0
-  (|completeMVA_total-1| NIL 3381936218 3382099725
+   UNFINISHED NIL 18669 3635 T NIL))
+ (|complete_MVA_is_total| 0
+  (|complete_MVA_is_total-1| NIL 3382265612 3382270601
    ("" (SKOLEM-TYPEPRED)
     (("" (EXPAND "total")
       (("" (SKOSIMP)
-        (("" (EXPAND "completeMVA" 1)
+        (("" (EXPAND "complete_MVA" 1)
           ((""
             (CASE
                 "EXISTS (t: Transition[CP, Name]): ts(a!1)(t) AND scp(t) = q!1 AND event(t) = e!1 AND guard(t)(stA!1, stP!1)")
@@ -970,11 +347,11 @@
              ("2" (CASE "q!1 = halted")
               (("1"
                 (INST 2
-                 "(# scp := halted, event := e!1, guard := (LAMBDA (stA: Store, stP: PSt): TRUE), action := skip, tcp := halted #)")
-                (("1" (DELETE -6 -7 1 -2) (("1" (GRIND) NIL NIL)) NIL)) NIL)
+                 "(# scp := halted, event := e!1, guard := (LAMBDA (stA: (valid_Store(vdsA(a!1))) , stP: (valid_PSt(vdsP(a!1)))): TRUE), action := skip, tcp := halted #)")
+                (("1" (HIDE -6 -7 1) (("1" (POSTPONE) NIL NIL)) NIL)) NIL)
                ("2"
                 (INST 3
-                 "(# scp := q!1, event := e!1, guard := build_guard(q!1, e!1, ts(a!1)), action := skip, tcp := halted #)")
+                 "(# scp := q!1, event := e!1, guard := build_guard(q!1, e!1, ts(a!1), vdsA(a!1), vdsP(a!1)), action := skip, tcp := halted #)")
                 (("2" (GRIND) NIL NIL)) NIL))
               NIL))
             NIL))
@@ -982,92 +359,39 @@
         NIL))
       NIL))
     NIL)
-   UNFINISHED
-   ((|total| CONST-DECL "boolean" MVA NIL)
-    (|completeMVA| CONST-DECL "MVA" |MVA_Completion| NIL)
-    (|halted| CONST-DECL "CP" MVA NIL) NIL NIL
-    (|lift_PSt| CONST-DECL "PState" |State| NIL)
-    (|is_local| CONST-DECL "bool" |State| NIL)
-    (|lookup_local| CONST-DECL "Val" |State| NIL)
-    (|is_field| CONST-DECL "bool" |State| NIL)
-    (|lookup_field| CONST-DECL "Val" |State| NIL)
-    (|lookup_ghost| CONST-DECL "Val" |State| NIL)
-    (|lookup| CONST-DECL "Val" |State| NIL) NIL
-    (|deterministic| CONST-DECL "boolean" MVA NIL)
-    (|completeTrans| CONST-DECL "finite_set[Transition]" |MVA_Completion| NIL)
-    (|add| CONST-DECL "(nonempty?)" |sets| NIL)
-    (|finite_union| APPLICATION-JUDGEMENT "finite_set" |finite_sets| NIL)
-    (|nonempty_add_finite| APPLICATION-JUDGEMENT "non_empty_finite_set"
-     |finite_sets| NIL)
-    (|skip| CONST-DECL "Action" MVA NIL) (|list| TYPE-DECL NIL |list_adt| NIL)
-    (|OneAction| TYPE-EQ-DECL NIL MVA NIL)
-    (TRUE CONST-DECL "bool" |booleans| NIL)
-    (|all_guards| CONST-DECL "finite_set[Guard]" |MVA_Completion| NIL)
-    (|valid_Action| CONST-DECL "boolean" MVA NIL)
-    (|subset?| CONST-DECL "bool" |sets| NIL)
-    (|valid_Guard| CONST-DECL "boolean" MVA NIL)
-    (|domain_set| CONST-DECL "X" |func_props| NIL)
-    (|singleton_elt| CONST-DECL "T" |sets| NIL)
-    (|the| CONST-DECL "(p)" |sets| NIL)
-    (|disjoint?| CONST-DECL "bool" |sets| NIL)
-    (|empty?| CONST-DECL "bool" |sets| NIL)
-    (|intersection| CONST-DECL "set" |sets| NIL) NIL
-    (|build_guard| CONST-DECL "Guard" |MVA_Completion| NIL)
-    (|is_finite| CONST-DECL "bool" |finite_sets| NIL)
-    (|set| TYPE-EQ-DECL NIL |sets| NIL) (|union| CONST-DECL "set" |sets| NIL)
-    (|member| CONST-DECL "bool" |sets| NIL)
-    (|PSt| TYPE-EQ-DECL NIL |State| NIL) (|Store| TYPE-EQ-DECL NIL MVA NIL)
-    (|Val| TYPE-DECL NIL |Val_adt| NIL)
-    (= CONST-DECL "[T, T -> boolean]" |equalities| NIL)
-    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
-    (|completeMVA_pre| CONST-DECL "boolean" |MVA_Completion| NIL)
-    (|valid_MVA| CONST-DECL "boolean" MVA NIL) (MVA TYPE-EQ-DECL NIL MVA NIL)
-    (|Prog_VarDecl| TYPE-EQ-DECL NIL MVA NIL)
-    (|MVA_VarDecl| TYPE-EQ-DECL NIL MVA NIL)
+   UNFINISHED NIL 46487 3476 T NIL))
+ (|complete_MVA_is_complete| 0
+  (|complete_MVA_is_complete-1| NIL 3382265489 3382265505
+   ("" (SKOLEM!)
+    (("" (EXPAND "complete")
+      (("" (SPLIT)
+        (("1" (EXPAND "complete_MVA")
+          (("1" (EXPAND "add") (("1" (PROPAX) NIL NIL)) NIL)) NIL)
+         ("2" (USE "complete_MVA_has_trap_state") NIL NIL)
+         ("3" (USE "complete_MVA_is_deterministic") NIL NIL)
+         ("4" (USE "complete_MVA_is_total") NIL NIL))
+        NIL))
+      NIL))
+    NIL)
+   UNCHECKED
+   ((|add| CONST-DECL "(nonempty?)" |sets| NIL)
+    (|complete_MVA| CONST-DECL "MVA" |MVACompletion| NIL)
+    (|complete_MVA_pre| CONST-DECL "boolean" |MVACompletion| NIL)
+    (|valid_MVA| CONST-DECL "boolean" MVA NIL)
+    (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
+    (MVA TYPE-EQ-DECL NIL MVA NIL) (|ProgVarDecl| TYPE-EQ-DECL NIL MVA NIL)
+    (|MVAVarDecl| TYPE-EQ-DECL NIL MVA NIL)
     (|JType| TYPE-DECL NIL |JType_adt| NIL)
     (|Expr| TYPE-DECL NIL |Expr_adt| NIL)
     (|Transition| TYPE-EQ-DECL NIL MVA NIL) (|Guard| TYPE-EQ-DECL NIL MVA NIL)
     (|Action| TYPE-EQ-DECL NIL MVA NIL) (|Event| TYPE-EQ-DECL NIL MVA NIL)
     (|EventType| TYPE-DECL NIL |EventType_adt| NIL)
     (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
-    (CP FORMAL-NONEMPTY-TYPE-DECL NIL |MVA_Completion| NIL)
-    (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |MVA_Completion| NIL)
-    (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
-    (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
-    (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL))
-   2463 2460 T SHOSTAK))
- (|completeMVA_is_complete| 0
-  (|completeMVA_is_complete-1| NIL 3381494310 3382099728
-   ("" (SKOLEM!)
-    (("" (EXPAND "complete")
-      (("" (SPLIT)
-        (("1" (EXPAND "completeMVA")
-          (("1" (EXPAND "add") (("1" (PROPAX) NIL NIL)) NIL)) NIL)
-         ("2" (USE "completeMVA_trap") NIL NIL)
-         ("3" (USE "completeMVA_determ") NIL NIL)
-         ("4" (USE "completeMVA_total") NIL NIL))
-        NIL))
-      NIL))
-    NIL)
-   PROVED
-   ((|complete| CONST-DECL "boolean" MVA NIL)
-    (|completeMVA_total| FORMULA-DECL NIL |MVA_Completion| NIL)
-    (|completeMVA_determ| FORMULA-DECL NIL |MVA_Completion| NIL)
-    (|completeMVA_trap| FORMULA-DECL NIL |MVA_Completion| NIL)
-    (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |MVA_Completion| NIL)
-    (CP FORMAL-NONEMPTY-TYPE-DECL NIL |MVA_Completion| NIL)
-    (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
-    (|EventType| TYPE-DECL NIL |EventType_adt| NIL)
-    (|Event| TYPE-EQ-DECL NIL MVA NIL) (|Action| TYPE-EQ-DECL NIL MVA NIL)
-    (|Guard| TYPE-EQ-DECL NIL MVA NIL) (|Transition| TYPE-EQ-DECL NIL MVA NIL)
-    (|Expr| TYPE-DECL NIL |Expr_adt| NIL)
-    (|JType| TYPE-DECL NIL |JType_adt| NIL)
-    (|MVA_VarDecl| TYPE-EQ-DECL NIL MVA NIL)
-    (|Prog_VarDecl| TYPE-EQ-DECL NIL MVA NIL) (MVA TYPE-EQ-DECL NIL MVA NIL)
-    (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
-    (|valid_MVA| CONST-DECL "boolean" MVA NIL)
-    (|completeMVA_pre| CONST-DECL "boolean" |MVA_Completion| NIL)
-    (|completeMVA| CONST-DECL "MVA" |MVA_Completion| NIL)
-    (|add| CONST-DECL "(nonempty?)" |sets| NIL))
-   238 238 T SHOSTAK)))
+    (CP FORMAL-NONEMPTY-TYPE-DECL NIL |MVACompletion| NIL)
+    (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |MVACompletion| NIL)
+    (|complete_MVA_has_trap_state| FORMULA-DECL NIL |MVACompletion| NIL)
+    (|complete_MVA_is_deterministic| FORMULA-DECL NIL |MVACompletion| NIL)
+    (|complete_MVA_is_total| FORMULA-DECL NIL |MVACompletion| NIL)
+    (|complete| CONST-DECL "boolean" MVA NIL))
+   1358 263 T NIL)))
 

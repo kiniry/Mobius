@@ -3,11 +3,27 @@
 AnnotateProgram[Name : TYPE+, CP: TYPE FROM Name] : THEORY
 BEGIN
 
-  IMPORTING MVA[CP, Name], Program[Name]
+  IMPORTING MVA[CP, Name], 
+            Program[Name], 
+            set2list
 
   cp, halted: Name
 
   CONVERSION BExpr, NExpr, StmtExpr
+
+  % Auxiliary functions
+  get_method_names(ms: set[Method]): set[Name] =
+    {n: Name | EXISTS (m: Method): ms(m) AND name(m) = n}
+
+
+  % Functions whose existence we assume
+%  lookup_mthd: [Program, Val, Name, Expr -> Method]
+
+  % We need a way to get a boolean expression from a guard
+  % TODO: relate the result to p
+  % I will need more information like the automaton and program variables
+  guard2BoolExpr: [Guard -> BoolExpr]
+
 
   % Ghost variable declarations
   % Returns a different integer for each cp.
@@ -18,28 +34,70 @@ BEGIN
 
   new_gvds(a: MVA): finite_set[GhostVarDecl] =
    {x: GhostVarDecl | jtype(x) = IntType AND
-     ((EXISTS (q: (cps(a))): name(x) = q AND initval(x) = Int(unique(q))) OR
-      (EXISTS (v: (vdsA(a))): name(x) = name(v) AND initval(x) = ival(v)))}
+     ((EXISTS (q: (cps(a))): name(x) = q AND init_val(x) = Int(unique(q))) OR
+      (EXISTS (v: (vdsA(a))): name(x) = name(v) AND init_val(x) = init_val(v)))}
 
+  % Event annotation
+  ann_action(l: Action): RECURSIVE Stmt =
+    CASES l OF
+      null: Skip,
+      cons(x, xs): Sequence(Set(target(x), source(x)), ann_action(xs))
+    ENDCASES
+  MEASURE length(l)
+
+  upd_vars(t: Transition): Stmt =
+    Sequence(Set(cp, NumVarEval(tcp(t))), ann_action(action(t)))
+
+  ann_guard_actions(ts: Transition): list[[BoolExpr, Stmt]] =
+    set2list({c: [BoolExpr, Stmt] | EXISTS (t: Transition): ts(t) AND
+              proj_1(c) = guard2BoolExpr(guard(t)) AND proj_2(c) = upd_vars(t)})
+
+  ann_trans_cp(q: CP, ts: set[Transition]): [BoolExpr, Stmt] = (test, stmt)
+    WHERE test = Eq(NumVarEval(cp), NumVarEval(q)),
+          stmt = CaseJML(ann_guard_actions(ts))
+
+  ann_event(ts: set[Transition], cps: set[CP]): Stmt =
+    CaseJML(set2list({c: [BoolExpr, Stmt] | EXISTS (q: CP): cps(q) AND
+      c = ann_trans_cp(q, {t2: Transition | ts(t2) AND scp(t2) = q})}))
 
   % Method annotation
-  ann_methods(ms: finite_set[Method], a: MVA): finite_set[Method]
-  
+  ann_method(m: Method, a: MVA): Method =
+    m WITH [pre_set  := ann_event(filter_event(Entry), cps(a)),
+            post_set := ann_event(filter_event(ExitNormal), cps(a)),
+            exc_set  := ann_event(filter_event(ExitExceptional), cps(a))]
+    WHERE
+       filter_event(et: EventType): set[Transition] =
+         {t: Transition | ts(a)(t) AND event(t) = (# etype := et, 
+                                                     mname := name(m) #)}
+
+  ann_methods(ms: finite_set[Method], a: MVA): finite_set[Method] =
+    {m: Method | EXISTS (m1: Method): ms(m1) AND m = ann_method(m1, a)}
+
 
   % Methods completion
-  complete_methods(ms: finite_set[Method], sc: lift[Name], ns: finite_set[Name]):
-      finite_set[Method]
+  % This function generates some code (not annotations) it is not extrictly
+  % necessary, we may assume that we have all the bodies of the methods
+  % mentioned in the transitions in the working class.
+% TODO: Define lookup with argDecl, change the invocation to this method
+%   override_method(p: Program, n: Name, c: Class): Method =
+%     lookup_mthd(p, This, n, argDecl) WITH ...
+
+%   complete_methods(ms: set[Method], sc: lift[Name], ns: set[Name]): set[Method] =
+%     union(ms, {m: Method | EXISTS (n: Name): ns(n) AND 
+%                                              NOT get_method_names(ms)(n) AND 
+%                                              m = override_method(n, sc)})
 
 
   % Class annotation
   ann_class(c: Class, a: MVA): Class =
-    IF name(c) = classname(a) THEN
+    IF name(c) = class_name(a) THEN
       c WITH [ inv := Conj(inv(c), Neq(NumVarEval(cp), NumVarEval(halted))),
-               ghostvars := union(ghostvars(c), new_gvds(a)),
-               methods := ann_methods(cms, a) ]
-      WHERE
-        mnames = {mn : Name | EXISTS (e: Event): evs(a)(e) AND mname(e) = mn},
-        cms = complete_methods(methods(c), superClass(c), mnames)
+               ghost_vars := union(ghost_vars(c), new_gvds(a)),
+               methods := ann_methods(methods(c), a)]
+%                methods := ann_methods(cms, a) ]
+%       WHERE
+%         mnames = {mn : Name | EXISTS (e: Event): evs(a)(e) AND mname(e) = mn},
+%         cms = complete_methods(methods(c), super_class(c), mnames)
     ELSE c
     ENDIF
 
@@ -48,7 +106,5 @@ BEGIN
   ann_program(p: Program, a: MVA): Program =
     (# classes := {c : Class | EXISTS (c1: Class): classes(p)(c1) AND 
                                       c = ann_class(c1, a)} #)
-
-
 
 END AnnotateProgram

@@ -1,0 +1,40 @@
+					Style Guide
+0. Vocabulary
+Pascal casing: This convention capitalizes the first character of each word. No underscore is used between words.
+Examples: EventType, BoolExpr, MethodCall.
+
+Camel casing: The first character of each word except for the first one is capitalized. No underscore is used between words.
+Examples: annProgram, annMethod.
+NOTE: Camel casing in will not be used in this specification.
+
+PVS casing: words are in lower case and are separated by underscores.
+Examples: ann_program, ann_method
+
+
+1. Names
+1.1 Theories
+Theories are written in Pascal casing. There should be no underscores.
+E.g. MVASemantics, MVACompletion, MonitoredProgramSemantics.
+
+1.2 Datatypes
+Datatypes, constructors and destructors should be in Pascal casing.
+E.g. BoolExpr, BoolVarEval, VarEval?.
+
+1.3 Records
+Record names use Pascal casing but its component use PVS casing. Example
+  MVAVarDecl : TYPE =
+    [# name : Name,
+       jtype : JType,
+       init_val : Expr[Name]
+    #]
+
+1.4 Variables, functions, lemmas, etc
+They use PVS casing. 
+Examples: complete_MVA, lookup_field, ann_program.
+
+NOTE: When on of the words involved is a datatype or a record it is written as its definition. Examples: complete_MVA, valid_PSt.
+
+NOTE: Sometimes a letter is used differentiate two similar names. This may be a capital letter as in vdsA and vdsP
+
+
+2. Spaces

@@ -27,7 +27,12 @@ BEGIN
             Val
 
   % functions whose existence we assume
+  % Parameters: program, target object, method name, actual parameter
+  % NOTE: This is a simplification, we should use the types of the expressions,
+  % not their values, but we are not modeling types.
   lookup_mthd : [Program, Val, Name, Expr -> Method]
+
+  % Parameters: program, target object
   lookup_inv : [Program, Val -> BoolExpr]
 
   % Field, ghost and local variables
@@ -227,12 +232,12 @@ BEGIN
           eval(pre(md))(tau3) AND
           old_val_arg = lookup_local(name(arg(md)), tau3) AND
           tau4 = update_local(name(arg(md)), pv, tau3) AND
-          deriv_stmt(P)(preset(md), tau4, tau5)(m3) AND
+          deriv_stmt(P)(pre_set(md), tau4, tau5)(m3) AND
           deriv_stmt(P)(body(md), tau5, tau6)(m4) AND
           deriv_expr(P)(res(md), tau6, v, tau7)(m5)(deriv_stmt_rec(m5)) AND
           (IF bottom?(ex(tau7))
-           THEN deriv_stmt(P)(postset(md), tau7, tau8)(m6)
-           ELSE deriv_stmt(P)(excset(md), tau7 WITH [ex := bottom],
+           THEN deriv_stmt(P)(post_set(md), tau7, tau8)(m6)
+           ELSE deriv_stmt(P)(exc_set(md), tau7 WITH [ex := bottom],
                                           tau8 WITH [ex := bottom])(m6)
                 AND ex(tau7) = ex(tau8)
            ENDIF) AND

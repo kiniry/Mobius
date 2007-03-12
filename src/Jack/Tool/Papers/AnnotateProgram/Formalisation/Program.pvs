@@ -1,4 +1,10 @@
 % Section 3.1 Abstract Syntax of Program
+% Simplifications:
+% We don't model types and interfaces
+% Just sequential programs
+% Methods have just one parameter
+% No arrays
+
 
 % JType instead of Type, because Type is a reserved keyword in PVS
 JType : DATATYPE
@@ -57,7 +63,7 @@ BEGIN
 
   Assign(target : Name, source : Expr) : Assign?
   BExpr(b : BoolExpr) : BExpr?
-  CondExpr(test : BoolExpr, thenexpr : Expr, elseexpr : Expr) : CondExpr?
+  CondExpr(test : BoolExpr, then_expr : Expr, else_expr : Expr) : CondExpr?
   MethodCall(tgt : Expr, name : Name, arg : Expr) : MethodCall?
   NExpr(n : NumExpr) : NExpr?
 %  QAssign(tgt : Expr, target : Name, source : Expr) : QAssign?
@@ -70,8 +76,10 @@ BEGIN
   
   IMPORTING Expr[Name]
 
-  % if, then and else reserved keywords in PVS
-  IfThenElse(test : BoolExpr, thenstmt : Stmt, elsestmt : Stmt) : IfThenElse?
+  % renamed IfJML to CaseJML. Have to constrain the statements in body
+  % I also must say that the list is finite
+  CaseJML(case : list[[BoolExpr, Stmt]]) : CaseJML?
+  IfThenElse(test : BoolExpr, then_stmt : Stmt, else_stmt : Stmt) : IfThenElse?
   Sequence(s1, s2 : Stmt) : Sequence?
   Set(target : Name, source : Expr) : Set?
   Skip : Skip?
@@ -121,21 +129,24 @@ BEGIN
   MEASURE length(l)
 
   size(e : Expr) : nat =
-    reduce_nat(LAMBDA(e : Name, n : nat) : n + 1,
-               LAMBDA(b : BoolExpr) : size(b),
-               LAMBDA(b : BoolExpr, n1, n2 : nat) : size(b) + n1 + n2 + 1,
-               LAMBDA(n1 : nat, e : Name, n2 : nat) : 1 + n1 + n2,
-               LAMBDA(n : NumExpr) : size(n))(e)
+    reduce_nat(LAMBDA(e : Name, n : nat) : n + 1, % Assign
+               LAMBDA(b : BoolExpr) : size(b),    % BExpr
+               LAMBDA(b : BoolExpr, n1, n2 : nat) : size(b) + n1 + n2 + 1, %Cond
+               LAMBDA(n1 : nat, e : Name, n2 : nat) : 1 + n1 + n2, % MethodCall
+               LAMBDA(n : NumExpr) : size(n))(e)  % NExpr
  
   size(s : Stmt) : nat = 
-    reduce_nat(LAMBDA(e : BoolExpr, n1, n2 : nat) : size(e) + n1 + n2 + 1,
-               LAMBDA(n1, n2 : nat) : n1 + n2 + 1,
-               LAMBDA(e : Name, e : Expr) : size(e) + 1,
-               0,
-               LAMBDA(e : Expr) : size(e) + 1,
-               0,
-               LAMBDA(n1, n2, n3 : nat) : n1 + n2 + n3 + 1,
-               LAMBDA(b : BoolExpr, n : nat) : size(b) + n + 1)(s)
+    reduce_nat(LAMBDA(l: list[[BoolExpr, nat]]) : 
+                 sum(map(LAMBDA (c: [BoolExpr, nat]): 
+                   size(proj_1(c)) + proj_2(c), l)),               % CaseJML
+               LAMBDA(e : BoolExpr, n1, n2 : nat) : size(e) + n1 + n2 + 1, % If
+               LAMBDA(n1, n2 : nat) : n1 + n2 + 1,                 % Sequence
+               LAMBDA(e : Name, e : Expr) : size(e) + 1,           % Set
+               0,                                                  % Skip
+               LAMBDA(e : Expr) : size(e) + 1,                     % StmtExpr
+               0,                                                  % Throw
+               LAMBDA(n1, n2, n3 : nat) : n1 + n2 + n3 + 1,        % TryCatch
+               LAMBDA(b : BoolExpr, n : nat) : size(b) + n + 1)(s) % While
 
                
 END SizeFunctions
@@ -148,13 +159,15 @@ BEGIN
             Stmt[Name],
             Expr[Name]
   
+  This, Super : Name
+
   GhostVarDecl : TYPE = [# jtype : JType, 
                            name : Name,
-                           initval : Expr #]
+                           init_val : Expr #]
 
   FieldDecl : TYPE = [# jtype : JType,
                         name : Name,
-                        initval : Expr #]
+                        init_val : Expr #]
 
   ArgDecl : TYPE = [# jtype : JType,
                       name : Name #]
@@ -164,24 +177,22 @@ BEGIN
                      pre : BoolExpr,
                      post : BoolExpr,
                      body : Stmt,
-                     preset : Stmt,
-                     postset : Stmt,
-                     excset : Stmt,
+                     pre_set : Stmt,
+                     post_set : Stmt,
+                     exc_set : Stmt,
                      res : Expr,
-                     resType : JType #]
+                     res_type : JType #]
 
   % change from original document:
   % superClass is just a name, not a class
   % This avoid that Class is a recursive record definition
   Class : TYPE = [# name : Name,
-                    superClass : lift[Name],
-                    % simplified: single invariant
+                    super_class : lift[Name],
                     inv : BoolExpr,
-                    ghostvars : finite_set[GhostVarDecl],
+                    ghost_vars : finite_set[GhostVarDecl],
                     fields : list[FieldDecl],
                     methods : finite_set[Method] #]
 
-%  Program : TYPE = [# classes : list[Class] #]
   Program : TYPE = [# classes : finite_set[Class] #]
 
 END Program

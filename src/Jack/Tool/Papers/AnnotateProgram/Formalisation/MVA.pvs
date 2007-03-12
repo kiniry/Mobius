@@ -12,18 +12,17 @@ END EventType
 MVA[CP, Name : TYPE+] : THEORY
 BEGIN
 
-  IMPORTING JType,
-            Expr[Name],
+  IMPORTING JType, 
+            Expr[Name], 
             Val
-
   
-  MVA_VarDecl : TYPE =
+  MVAVarDecl : TYPE =
     [# name : Name,
        jtype : JType,
-       ival : Expr[Name]
+       init_val : Expr[Name]
     #]
 
-  Prog_VarDecl : TYPE =
+  ProgVarDecl : TYPE =
     [# name : Name,
        jtype : JType
     #]
@@ -46,7 +45,7 @@ BEGIN
   IMPORTING EventType
 
   Event : TYPE =
-    [# EType : EventType,
+    [# etype : EventType,
        mname : Name
     #]
 
@@ -71,12 +70,12 @@ BEGIN
   % a finite transition relation
   MVA : TYPE =
     [# name : Name,
-       classname : Name,
+       class_name : Name,
        cps : finite_set[CP],
        init_cp : CP,
        evs : finite_set[Event],
-       vdsA : finite_set[MVA_VarDecl],
-       vdsP : finite_set[Prog_VarDecl],
+       vdsA : finite_set[MVAVarDecl],
+       vdsP : finite_set[ProgVarDecl],
        ts : finite_set[Transition]
     #]
 
@@ -84,17 +83,17 @@ BEGIN
   %       contain their values. That is done by its (operational) semantics.
 
   % Functions to get a set of names from a set of variable declarations
-  var_names(V : set[MVA_VarDecl]) : set[Name] =
-    {n : Name | EXISTS (va : MVA_VarDecl) : V(va) AND name(va) = n}
+  var_names(V : set[MVAVarDecl]) : set[Name] =
+    {n : Name | EXISTS (va : MVAVarDecl) : V(va) AND name(va) = n}
 
-  var_names(V : set[Prog_VarDecl]) : set[Name] =
-    {n : Name | EXISTS (vp : Prog_VarDecl) : V(vp) AND name(vp) = n}
+  var_names(V : set[ProgVarDecl]) : set[Name] =
+    {n : Name | EXISTS (vp : ProgVarDecl) : V(vp) AND name(vp) = n}
 
   % Gets the variable' names involved in an expression
   % TODO: define!
   var_names(e : Expr[Name]) : set[Name]
 
-  valid_Store(vdsA : set[MVA_VarDecl])(f : Store) : boolean =
+  valid_Store(vdsA : set[MVAVarDecl])(f : Store) : boolean =
     FORALL (n : Name) :
       var_names(vdsA)(n) IMPLIES
         NOT Bottom?(f(n))
@@ -102,7 +101,7 @@ BEGIN
   valid_Store(f : Store, a : MVA) : boolean =
     valid_Store(vdsA(a))(f)
 
-  valid_PSt(vdsP : set[Prog_VarDecl])(f : PSt) : boolean =
+  valid_PSt(vdsP : set[ProgVarDecl])(f : PSt) : boolean =
     FORALL (n : Name) :
       var_names(vdsP)(n) IMPLIES
         NOT Bottom?(lookup(n, f))
@@ -180,7 +179,7 @@ BEGIN
 
 END MVA
 
-
+% RENAME TO MVASemantics
 MVA_Semantics[CP, Name : TYPE+] : THEORY
 BEGIN
 
@@ -258,10 +257,12 @@ BEGIN
 END MVA_Semantics
 
 
-MVA_Completion[CP, Name : TYPE+] : THEORY
+MVACompletion[CP, Name : TYPE+] : THEORY
 BEGIN
 
-  IMPORTING MVA[CP, Name], Epsilon_Props, MVA_Finite_Props
+  IMPORTING MVA[CP, Name], 
+            Epsilon_Props, 
+            MVA_Finite_Props
 
   % Returns the set of guards from transitions in ts with cp as source control
   % point and e as event
@@ -274,65 +275,59 @@ BEGIN
   % with source control point cp and event e. The sets of variable declarations
   % are needed to make sure that the guard is defined in for those variables.
   build_guard(cp : CP, e : Event, ts : finite_set[Transition], 
-              vdsA : finite_set[MVA_VarDecl], 
-              vdsP : finite_set[Prog_VarDecl]) : Guard = 
-    LAMBDA (stA : (valid_Store(vdsA)), stP : (valid_PSt(vdsP))) :
-      FORALL (p : Guard) : all_guards(cp, e, ts)(p) IMPLIES NOT p(stA, stP)
-
-  % Lemmas to prove the TCC2
-  MC_TCC2_subset1_is_finite: LEMMA
-    FORALL (cps: finite_set[CP], es: finite_set[Event[CP, Name]],
-            ts: finite_set[Transition[CP, Name]], vdsA : finite_set[MVA_VarDecl],
-            vdsP : finite_set[Prog_VarDecl]) :
-      is_finite({t: Transition[CP, Name] |
-                    cps(scp(t)) AND es(event(t)) AND
-                    action(t) = skip[CP, Name] AND
-                    tcp(t) = halted[CP, Name] AND
-                    guard(t) = build_guard(scp(t), event(t), ts, vdsA, vdsP)})
+              vdsA : finite_set[MVAVarDecl], 
+              vdsP : finite_set[ProgVarDecl]) : Guard = 
+%    LAMBDA (stA : (valid_Store(vdsA)), stP : (valid_PSt(vdsP))) :
+%      FORALL (p : Guard) : all_guards(cp, e, ts)(p) IMPLIES NOT p(stA, stP)
+    LAMBDA (stA : Store, stP : PSt) :
+      FORALL (p : Guard) : valid_Store(vdsA)(stA) AND valid_PSt(vdsP)(stP) AND
+                           all_guards(cp, e, ts)(p) IMPLIES NOT p(stA, stP)
 
   % Makes ts complete with respect cps and es
-  completeTrans(cps : finite_set[CP], es : finite_set[Event], 
-                ts : finite_set[Transition], vdsA : finite_set[MVA_VarDecl],
-                vdsP : finite_set[Prog_VarDecl]) : finite_set[Transition] =
-      union({t : Transition | cps(scp(t)) AND es(event(t)) AND
-                              action(t) = skip AND tcp(t) = halted AND
-                              guard(t) = build_guard(scp(t), event(t), ts, vdsA, 
+  % RENAME TO complete_trans
+  complete_trans(cps : finite_set[CP], es : finite_set[Event], 
+                 ts : finite_set[Transition], vdsA : finite_set[MVAVarDecl],
+                 vdsP : finite_set[ProgVarDecl]) : finite_set[Transition] =
+    union({t : Transition | cps(scp(t)) AND es(event(t)) AND
+                            action(t) = skip AND tcp(t) = halted AND
+                            guard(t) = build_guard(scp(t), event(t), ts, vdsA, 
                                                      vdsP)},
-            {t : Transition | scp(t) = halted AND es(event(t)) AND
-                              guard(t) = (LAMBDA (stA : (valid_Store(vdsA)) , 
-                                                  stP : (valid_PSt(vdsP))): TRUE)
-                              AND action(t) = skip AND tcp(t) = halted})
+          {t : Transition | scp(t) = halted AND es(event(t)) AND
+                            guard(t) = (LAMBDA (stA : (valid_Store(vdsA)) , 
+                                                stP : (valid_PSt(vdsP))): TRUE)
+                            AND action(t) = skip AND tcp(t) = halted})
+
 
   % Preconditions for completeMVA
-  completeMVA_pre(a : (valid_MVA)) : boolean =
+  complete_MVA_pre(a : (valid_MVA)) : boolean =
     deterministic(a) AND NOT cps(a)(halted)
 
   % Makes a deterministic MVA total
-  completeMVA(a : (completeMVA_pre)) : MVA =
+  complete_MVA(a : (complete_MVA_pre)) : MVA =
     a WITH [cps := add(halted, cps(a)),
-            ts := union(ts(a), completeTrans(cps(a), evs(a), ts(a), vdsA(a), 
+            ts := union(ts(a), complete_trans(cps(a), evs(a), ts(a), vdsA(a), 
                                              vdsP(a)))]
 
-  %    Lemmas to prove completeMVA_is_complete
-  % TODO: prove (may be long)
-  completeMVA_valid: LEMMA
-    FORALL (a: (completeMVA_pre)) :
-      valid_MVA(completeMVA(a))
 
-  completeMVA_trap: LEMMA
-    FORALL (a: (completeMVA_pre)) :
-      trap_state(halted, completeMVA(a))
+  % TODO: prove the remaining cases
+  complete_MVA_is_valid: LEMMA
+    FORALL (a: (complete_MVA_pre)) :
+      valid_MVA(complete_MVA(a))
 
-  completeMVA_determ: LEMMA
-    FORALL (a: (completeMVA_pre)) :
-      deterministic(completeMVA(a))
+  complete_MVA_has_trap_state: LEMMA
+    FORALL (a: (complete_MVA_pre)) :
+      trap_state(halted, complete_MVA(a))
 
-  completeMVA_total: LEMMA
-    FORALL (a: (completeMVA_pre)) :
-      total(completeMVA(a))
+  complete_MVA_is_deterministic: LEMMA
+    FORALL (a: (complete_MVA_pre)) :
+      deterministic(complete_MVA(a))
 
-  completeMVA_is_complete: THEOREM
-    FORALL (a: (completeMVA_pre)) :
-      complete(completeMVA(a))
+  complete_MVA_is_total: LEMMA
+    FORALL (a: (complete_MVA_pre)) :
+      total(complete_MVA(a))
 
-END MVA_Completion
+  complete_MVA_is_complete: THEOREM
+    FORALL (a: (complete_MVA_pre)) :
+      complete(complete_MVA(a))
+
+END MVACompletion

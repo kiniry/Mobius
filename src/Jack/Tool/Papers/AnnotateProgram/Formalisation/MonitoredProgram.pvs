@@ -9,21 +9,24 @@ BEGIN
        program : Program[Name]
     #]
 
+  %TODO: say that the name of the variables of the automaton do not clash with
+  % the name of any variable declared in the automaton
+  % Do the same for control points and cp
   compatible(a : MVA[CP, Name])(P : Program[Name]) : boolean =
     EXISTS (c : Class) : 
       classes(P)(c) AND 
-      name(c) = classname(a) AND
-      (FORALL(v : MVA_VarDecl) :
+      name(c) = class_name(a) AND
+      (FORALL(v : MVAVarDecl) :
          vdsA(a)(v) IMPLIES 
-           EXISTS(pv : GhostVarDecl) : ghostvars(c)(pv) AND
+           EXISTS(pv : GhostVarDecl) : ghost_vars(c)(pv) AND
                                        name(v) = name(pv) AND
                                        jtype(v) = jtype(pv)) AND
-      (FORALL(v : Prog_VarDecl) :
+      (FORALL(v : ProgVarDecl) :
         vdsP(a)(v) IMPLIES
           EXISTS(pv : FieldDecl) : fields(c)(pv) AND name(v) = name(pv))
     
   monitored?(MP : MonitoredProgram) : boolean =
-    compatible(mva(MP))(program(MP)) AND total(mva(MP))
+    compatible(mva(MP))(program(MP)) AND complete(mva(MP))
     
 
 END MonitoredProgram
@@ -158,23 +161,23 @@ BEGIN
           eval(pre(md))(pstate(tau3)) AND
           tau4 = (# pstate := pstate(tau3),
                     astate := IF evs(mva(MP))
-                                 ((# EType := Entry, mname := mn #))
+                                 ((# etype := Entry, mname := mn #))
                               THEN step(mva(MP))
                                        (astate(tau3), 
                                         (# stP := st(pstate(tau3)),
-                                           event := (# EType := Entry, 
+                                           event := (# etype := Entry, 
                                                        mname := mn #) 
                                         #))
                               ELSE astate(tau3)
                               ENDIF #) AND
           old_val_arg = lookup_local(name(arg(md)), tau4) AND
           tau5 = update_local(name(arg(md)), pv, tau4) AND
-          deriv_stmt(MP)(preset(md), tau5, tau6)(m3) AND
+          deriv_stmt(MP)(pre_set(md), tau5, tau6)(m3) AND
           deriv_stmt(MP)(body(md), tau6, tau7)(m4) AND
           deriv_expr(MP)(res(md), tau7, v, tau8)(m5)(deriv_stmt_rec(m5)) AND
           (IF bottom?(ex(pstate(tau8)))
-           THEN deriv_stmt(MP)(postset(md), tau8, tau9)(m6)
-           ELSE deriv_stmt(MP)(excset(md), tau8 WITH [pstate := 
+           THEN deriv_stmt(MP)(post_set(md), tau8, tau9)(m6)
+           ELSE deriv_stmt(MP)(exc_set(md), tau8 WITH [pstate := 
                                                       pstate(tau8) WITH
                                                       [ex := bottom]],
                                            tau9 WITH [pstate := 
@@ -185,23 +188,23 @@ BEGIN
           tau10 = (# pstate := pstate(tau9),
                      astate := IF bottom?(ex(pstate(tau9)))
                                THEN IF (evs(mva(MP)))
-                                       ((# EType := ExitNormal, 
+                                       ((# etype := ExitNormal, 
                                            mname := mn #))
                                     THEN step(mva(MP))
                                              (astate(tau9),
                                               (# stP := st(pstate(tau9)),
-                                                 event := (# EType := ExitNormal,
+                                                 event := (# etype := ExitNormal,
                                                              mname := mn #)
                                               #))
                                     ELSE astate(tau9)
                                     ENDIF
                                ELSE IF (evs(mva(MP)))
-                                       ((# EType := ExitExceptional, 
+                                       ((# etype := ExitExceptional, 
                                            mname := mn #))
                                     THEN step(mva(MP))
                                              (astate(tau9),
                                               (# stP := st(pstate(tau9)),
-                                                 event := (# EType := ExitExceptional,
+                                                 event := (# etype := ExitExceptional,
                                                              mname := mn #)
                                               #))
                                     ELSE astate(tau9)
