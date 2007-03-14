@@ -1,0 +1,33 @@
+func_props[X, Y : TYPE] : THEORY
+BEGIN
+
+  f : VAR [X -> Y]
+
+  % Returns the domain set of a function 
+  % (the function domain defined in the prelude returns a TYPE)
+  domain_set(f) : X =
+    {x : X | EXISTS (y : Y) : f(x) = y}
+
+END func_props
+
+
+set2list[X: TYPE]: THEORY
+BEGIN
+
+  S: VAR finite_set[X]
+
+  set2list(S): RECURSIVE list[X] =
+    IF empty?(S)
+    THEN null
+    ELSE LET x = choose(S), Ss = remove(x, S) IN
+      cons(x, set2list(Ss))
+    ENDIF
+    MEASURE
+      Card(S)
+
+  %CONVERSION set2list
+
+  set_list_set: LEMMA 
+    FORALL S: list2set(set2list(S)) = S
+
+END set2list

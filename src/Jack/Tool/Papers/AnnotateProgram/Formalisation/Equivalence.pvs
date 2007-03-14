@@ -1,0 +1,55 @@
+Equivalence[Name : TYPE+, CP: TYPE FROM Name] : THEORY
+BEGIN
+
+  IMPORTING Semantics[Name],
+            MonitoredProgramSemantics[CP, Name],
+            MVA_Semantics[CP, Name],
+            AnnotateProgram[Name, CP]
+
+  compatible(sA: AState, sP: PState): boolean =
+    NOT Bottom?(gvs(st(sP))(cp)) AND
+    (FORALL (n: Name): NOT Bottom?(stA(sA)(n)) IMPLIES
+      stA(sA)(n) = gvs(st(sP))(n))
+    
+  % TODO: Relate compatible for A and P with compatible for their states
+
+  cp2val(q: CP): Val =
+    Int(unique(q))
+
+  % THINK: It may be better to have the automaton and program also as
+  % parameters (context)
+  models?(sA: AState, sP: PState): boolean =
+    compatible(sA, sP) AND
+    up?(ex(sP)) AND cp2val(cp(sA)) = gvs(st(sP))(cp) AND
+    FORALL (n: Name): stA(sA)(n) = gvs(st(sP))(n)
+
+  refines?(sMP: MState, sP: PState): boolean =
+    LET psMP = pstate(sMP) IN
+    ex(sP) = ex(psMP) AND
+    fvs(st(sP)) = fvs(st(psMP)) AND
+    lvs(st(sP)) = lvs(st(psMP)) AND
+    FORALL (n: Name): NOT Bottom?(gvs(st(sP))(n)) IMPLIES
+      gvs(st(sP))(n) = gvs(st(psMP))(n)
+
+
+  initial_states_are_equivalent: LEMMA
+    FORALL (p: Program, a: MVA):
+      LET mp = (# mva := a, program := p #) IN
+      valid_MP(mp) IMPLIES
+      refines?(initial_MP_state(mp), initial_Program_state(p))
+
+  % The main result
+  correcteness_of_ann_program: THEOREM
+    FORALL (p: Program, a: MVA):
+      LET mp = (# mva := a, program := p #), 
+          s1MP = initial_MP_state(mp),
+          s1P  = initial_Program_state(p),
+          c = Skip, %!!?
+          ap = ann_program(p, a)
+      IN
+      valid_MP(mp) IMPLIES
+      FORALL (n: nat, s2MP: MState, s2P: PState): 
+        deriv_stmt(mp)(c, s1MP, s2MP)(n) = deriv_stmt(ap)(c, s1P, s2P)(n) IMPLIES
+          refines?(s2MP, s2P)
+
+END Equivalence

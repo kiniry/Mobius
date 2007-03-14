@@ -19,7 +19,7 @@ BEGIN
   MVAVarDecl : TYPE =
     [# name : Name,
        jtype : JType,
-       init_val : Expr[Name]
+       init_val : Val
     #]
 
   ProgVarDecl : TYPE =
@@ -80,7 +80,7 @@ BEGIN
     #]
 
   % NOTE: vdsA and vdsP are just the signatures of the variables, they do not
-  %       contain their values. That is done by its (operational) semantics.
+  %       contain their values. Only states have values for variables.
 
   % Functions to get a set of names from a set of variable declarations
   var_names(V : set[MVAVarDecl]) : set[Name] =
@@ -89,25 +89,34 @@ BEGIN
   var_names(V : set[ProgVarDecl]) : set[Name] =
     {n : Name | EXISTS (vp : ProgVarDecl) : V(vp) AND name(vp) = n}
 
-  % Gets the variable' names involved in an expression
+  % Gets the variable's names involved in an expression
   % TODO: define!
   var_names(e : Expr[Name]) : set[Name]
 
   valid_Store(vdsA : set[MVAVarDecl])(f : Store) : boolean =
     FORALL (n : Name) :
-      var_names(vdsA)(n) IMPLIES
-        NOT Bottom?(f(n))
+      var_names(vdsA)(n) IFF NOT Bottom?(f(n))
 
   valid_Store(f : Store, a : MVA) : boolean =
     valid_Store(vdsA(a))(f)
 
   valid_PSt(vdsP : set[ProgVarDecl])(f : PSt) : boolean =
     FORALL (n : Name) :
-      var_names(vdsP)(n) IMPLIES
-        NOT Bottom?(lookup(n, f))
+      var_names(vdsP)(n) IFF NOT Bottom?(lookup(n, f))
 
   valid_PSt(f : PSt, a : MVA) : boolean =
     valid_PSt(vdsP(a))(f)
+
+  % TODO: It may be necessary (maybe not) to ensure that the initial value 
+  % conforms to the declared type (we need to define conform).
+  valid_vdsA(vds : set[MVAVarDecl]) : boolean =
+    FORALL (vd : MVAVarDecl) : vds(vd) IMPLIES
+      NOT EXISTS (vd1 : MVAVarDecl) : vds(vd1) AND name(vd) = name(vd1)
+
+  % TODO: Same as above
+  valid_vdsP(vds : set[ProgVarDecl]) : boolean =
+    FORALL (vd : ProgVarDecl) : vds(vd) IMPLIES
+      NOT EXISTS (vd1 : ProgVarDecl) : vds(vd1) AND name(vd) = name(vd1)
 
   IMPORTING func_props   % imports domain_set
 
@@ -124,6 +133,7 @@ BEGIN
 
   % Rules that every MVA must follow:
   % The initial control point is in the set of control points of the automaton
+  % The set vdsA and vdsP are "well formed"
   % The name of the variables in vdsA and vdsP are distinct
   % The source and target of every transition is in the set of control points
   % The event of every transition is in the set of events
@@ -134,6 +144,8 @@ BEGIN
   % defined for each var in vdsP (they also may be defined elsewhere)
   valid_MVA(a : MVA) : boolean =
     cps(a)(init_cp(a)) AND
+    valid_vdsA(vdsA(a)) AND
+    valid_vdsP(vdsP(a)) AND
     disjoint?(var_names(vdsA(a)), var_names(vdsP(a))) AND
     FORALL (t : Transition) :
       ts(a)(t) IMPLIES
@@ -179,6 +191,7 @@ BEGIN
 
 END MVA
 
+
 % RENAME TO MVASemantics
 MVA_Semantics[CP, Name : TYPE+] : THEORY
 BEGIN
@@ -191,6 +204,24 @@ BEGIN
     [# cp : CP,
        stA : Store 
     #]
+
+  get_MVAVarDecl(n : Name, a : (valid_MVA)) : lift[MVAVarDecl] =
+    LET vds = {vd : MVAVarDecl | vdsA(a)(vd) AND name(vd) = n}  IN
+      IF empty?(vds) 
+      THEN bottom 
+      ELSE up(choose(vds))
+      ENDIF
+
+  % Initial state of a MVA
+  initial_MVA_state(a : (valid_MVA)) : AState =
+    (# cp := init_cp(a),
+       stA := LAMBDA (n: Name) :
+         LET vd = get_MVAVarDecl(n, a) IN
+         IF bottom?(vd)
+         THEN Bottom
+         ELSE init_val(down(vd))
+         ENDIF
+    #)
 
   valid_AState(s : AState, a : MVA) : boolean =
     cps(a)(cp(s)) AND
@@ -244,6 +275,10 @@ BEGIN
       #)
 
 
+  valid_initial_MVA_state: LEMMA
+    FORALL (a: MVA) : 
+      valid_MVA(a) IMPLIES valid_AState(initial_MVA_state(a), a)
+
   %TODO: prove (needs the definition of eval for Expressions)
   execute_action_yields_valid_state: LEMMA
     FORALL (a : MVA, stA : Store, l : Action) :
@@ -251,7 +286,7 @@ BEGIN
         valid_Store(execute_actions(stA, l), a)
 
   step_yields_valid_state : THEOREM
-    FORALL (a : (total), x : (valid_AState(a)), p : (valid_PEvent(a))):
+    FORALL (a : (total), x : (valid_AState(a)), p : (valid_PEvent(a))) :
       valid_AState(step(a)(x, p), a) 
    
 END MVA_Semantics
@@ -284,7 +319,6 @@ BEGIN
                            all_guards(cp, e, ts)(p) IMPLIES NOT p(stA, stP)
 
   % Makes ts complete with respect cps and es
-  % RENAME TO complete_trans
   complete_trans(cps : finite_set[CP], es : finite_set[Event], 
                  ts : finite_set[Transition], vdsA : finite_set[MVAVarDecl],
                  vdsP : finite_set[ProgVarDecl]) : finite_set[Transition] =

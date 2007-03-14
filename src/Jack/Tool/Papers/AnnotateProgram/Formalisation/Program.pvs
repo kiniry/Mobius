@@ -1,9 +1,24 @@
 % Section 3.1 Abstract Syntax of Program
+
 % Simplifications:
 % We don't model types and interfaces
 % Just sequential programs
 % Methods have just one parameter
 % No arrays
+% Initial values for fields are Val, not Expr. This is because otherwise we have
+%   to define an order to evaluate those expressions and avoid recursive 
+%   initializations
+% Only two types of exceptions: Throwable and NullPointer
+% Local variables are declared at the beginning of the body (like in Pascal)
+% We do not model inheritance and static overloading of methods (their names can
+%   be "mangled", .i.e the contain the information to disambiguate then
+% We have a store for the whole program, thus fields and ghost vars names
+%   contain the class name they belong to. Local vars and formal args contain
+%   also their method names
+
+% Our additions
+% CaseJML: allows to do a case distiction on the value of a ghost var
+% Methods have a pre_set, post_set and exc_set clause
 
 
 % JType instead of Type, because Type is a reserved keyword in PVS
@@ -156,26 +171,33 @@ Program[Name : TYPE+] : THEORY
 BEGIN
   
   IMPORTING JType,
+            Val,
             Stmt[Name],
             Expr[Name]
   
+  main : Name
+
   This, Super : Name
 
   GhostVarDecl : TYPE = [# jtype : JType, 
                            name : Name,
-                           init_val : Expr #]
+                           init_val : Val #]
 
   FieldDecl : TYPE = [# jtype : JType,
                         name : Name,
-                        init_val : Expr #]
+                        init_val : Val #]
 
   ArgDecl : TYPE = [# jtype : JType,
                       name : Name #]
+
+  LocalVarDecl : TYPE = [# jtype : JType,
+                           name : Name #]
 
   Method : TYPE = [# name : Name,
                      arg : ArgDecl,
                      pre : BoolExpr,
                      post : BoolExpr,
+                     lvars : finite_set[LocalVarDecl],
                      body : Stmt,
                      pre_set : Stmt,
                      post_set : Stmt,
@@ -190,9 +212,68 @@ BEGIN
                     super_class : lift[Name],
                     inv : BoolExpr,
                     ghost_vars : finite_set[GhostVarDecl],
-                    fields : list[FieldDecl],
+                    fields : finite_set[FieldDecl],
                     methods : finite_set[Method] #]
 
   Program : TYPE = [# classes : finite_set[Class] #]
+
+  % TODO: define (long!)
+  var_names(p : Program) : finite_set[Name]
+
+  %
+  % Program requirements (see the assumptions at the beginning of the file)
+  % NOTE: Since the declarations are sets we can avoid some duplicate tests.
+  % We include only the requirements needed for the proofs
+  %
+
+  % There is at least one class with a method called main
+  exists_main(p : Program) : boolean = 
+    EXISTS (c : Class) : classes(p)(c) AND name(c) = main
+
+  % Every variable used has a declaration
+  unique_declarations(p : Program) : boolean =
+    FORALL (n : Name) : var_names(p)(n) IMPLIES
+      (EXISTS (fd : FieldDecl, c : Class) :
+        classes(p)(c) AND fields(c)(fd) AND name(fd) = n) OR
+      (EXISTS (gd : GhostVarDecl, c : Class) :
+        classes(p)(c) AND ghost_vars(c)(gd) AND name(gd) = n) OR
+      (EXISTS (ad : ArgDecl, c : Class, m : Method) :
+        classes(p)(c) AND methods(c)(m) AND arg(m)(ad) AND name(ad) = n) OR
+      (EXISTS (ld : LocalVarDecl, c : Class, m : Method) :
+        classes(p)(c) AND methods(c)(m) AND lvars(m)(ld) AND name(ld) = n)
+
+  % Variable names are unique
+  % NOTE: The parser complains if the closing brackets are together: }}
+  % We have reported this bug
+  unique_var_names(p : Program) : boolean =
+    LET fdss = {nss : setofsets[Name] | EXISTS (c : Class, fds : set[FieldDecl]) :
+          classes(p)(c) AND fields(c) = fds AND
+          FORALL (ns : set[Name]) : nss(ns) IMPLIES
+            ns = {n : Name | EXISTS (fd : FieldDecl) : fds(fd) AND name(fd) = n} },
+        gdss = {nss : setofsets[Name] | EXISTS (c : Class, gds : set[GhostVarDecl]) :
+          classes(p)(c) AND ghost_vars(c) = gds AND
+          FORALL (ns : set[Name]) : nss(ns) IMPLIES
+            ns = {n : Name | EXISTS (gd : GhostVarDecl) : 
+              gds(gd) AND name(gd) = n} },
+        ldss = {nss : setofsets[Name] | EXISTS (c : Class, ms : set[Method]) :
+          classes(p)(c) AND methods(c) = ms AND
+          FORALL (ns : Name) : nss(ns) IMPLIES
+            ns = {n : Name | EXISTS (m : Method, ld : LocalVarDecl) : 
+              ms(m) AND lvars(m)(ld) AND name(ld) = n} },
+        ads  = {ns : set[Name] | EXISTS (c : Class, ms : set[Method]) :
+          classes(p)(c) AND methods(c) = ms AND
+          FORALL (n : Name) : ns(n) IMPLIES
+            EXISTS (m : Method, ad : ArgDecl) : 
+              ms(m) AND arg(m) = ad AND name(ad) = n}
+    IN
+    empty?(Intersection({ns : set[Name] | fdss(ns) OR gdss(ns) OR 
+                                          ns = ads OR ldss(ns)}))
+
+  % TODO:
+  % Well-formed CaseJML
+  valid_Program(p : Program) : boolean =
+    exists_main(p) AND
+    unique_declarations(p) AND
+    unique_var_names(p)
 
 END Program

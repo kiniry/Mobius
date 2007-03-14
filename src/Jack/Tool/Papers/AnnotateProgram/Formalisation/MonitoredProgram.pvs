@@ -9,10 +9,14 @@ BEGIN
        program : Program[Name]
     #]
 
-  %TODO: say that the name of the variables of the automaton do not clash with
+  % TODO: say that the name of the variables of the automaton do not clash with
   % the name of any variable declared in the automaton
   % Do the same for control points and cp
+  % THINK: I guess that the variables of the program that the automaton access
+  % must be field (they can not be local vars or ghost vars).
   compatible(a : MVA[CP, Name])(P : Program[Name]) : boolean =
+    valid_MVA(a) AND
+    valid_Program(P) AND
     EXISTS (c : Class) : 
       classes(P)(c) AND 
       name(c) = class_name(a) AND
@@ -25,8 +29,10 @@ BEGIN
         vdsP(a)(v) IMPLIES
           EXISTS(pv : FieldDecl) : fields(c)(pv) AND name(v) = name(pv))
     
-  monitored?(MP : MonitoredProgram) : boolean =
-    compatible(mva(MP))(program(MP)) AND complete(mva(MP))
+  valid_MP(MP : MonitoredProgram) : boolean =
+    complete(mva(MP)) AND
+    valid_Program(program(MP)) AND
+    compatible(mva(MP))(program(MP))
     
 
 END MonitoredProgram
@@ -40,9 +46,14 @@ BEGIN
             MVA_Semantics[CP, Name]
 
   MState : TYPE =
-    [# pstate : PState[Name],
-       astate : AState[CP, Name]
+    [# astate : AState[CP, Name],
+       pstate : PState[Name]
     #]
+
+  initial_MP_state(mp : MonitoredProgram) : MState =
+    (# astate := initial_MVA_state(mva(mp)),
+       pstate := initial_Program_state(program(mp))
+    #)
 
   is_local(vn : Name, sigma : MState) : bool =
     NOT Bottom?(lvs(st(pstate(sigma)))(vn))
@@ -102,14 +113,14 @@ BEGIN
     ELSE update_ghost(vn, v, sigma)
     ENDIF
 
-  deriv_expr(MP : (monitored?))
+  deriv_expr(MP : (valid_MP))
             (c : Expr, sigma1 : MState, v : Val, sigma2 : MState)
             (n : nat)
-            (deriv_stmt : [(monitored?) -> [Stmt, MState, MState -> [below(n) -> bool]]]) 
+            (deriv_stmt : [(valid_MP) -> [Stmt, MState, MState -> [below(n) -> bool]]]) 
             : RECURSIVE bool =
     LET deriv_stmt_rec = 
       LAMBDA(p : below(n)) :
-        LAMBDA(MP : (monitored?))(s : Stmt, sigma1, sigma2 : MState)
+        LAMBDA(MP : (valid_MP))(s : Stmt, sigma1, sigma2 : MState)
               (m : below(p)) : deriv_stmt(MP)(s, sigma1, sigma2)(m)
     IN
     IF up?(ex(pstate(sigma1)))
@@ -224,12 +235,12 @@ BEGIN
   MEASURE n
     
 
-  deriv_stmt(MP : (monitored?))(c : Stmt, sigma1, sigma2 : MState)
+  deriv_stmt(MP : (valid_MP))(c : Stmt, sigma1, sigma2 : MState)
             (n : nat) : 
     RECURSIVE bool =
     LET deriv_stmt_rec = 
         LAMBDA(p : below(n)) : 
-          LAMBDA(MP : (monitored?))(s : Stmt, sigma1, sigma2 : MState)
+          LAMBDA(MP : (valid_MP))(s : Stmt, sigma1, sigma2 : MState)
                 (m : below(p)) : deriv_stmt(MP)(s, sigma1, sigma2)(m)
     IN
     IF up?(ex(pstate(sigma1)))
