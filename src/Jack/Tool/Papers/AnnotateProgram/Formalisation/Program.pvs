@@ -1,14 +1,15 @@
 % Section 3.1 Abstract Syntax of Program
 
 % Simplifications:
-% We don't model types and interfaces
 % Just sequential programs
+% We don't model types and interfaces
 % Methods have just one parameter
 % No arrays
 % Initial values for fields are Val, not Expr. This is because otherwise we have
 %   to define an order to evaluate those expressions and avoid recursive 
 %   initializations
-% Only two types of exceptions: Throwable and NullPointer
+% Only two types of exceptions: Throwable and NullPointer. We also model JML 
+%   exceptions
 % Local variables are declared at the beginning of the body (like in Pascal)
 % We do not model inheritance and static overloading of methods (their names can
 %   be "mangled", .i.e the contain the information to disambiguate then
@@ -93,8 +94,10 @@ BEGIN
 
   % renamed IfJML to CaseJML. Have to constrain the statements in body
   % I also must say that the list is finite
+%  Access(n : Name) : Access?
   CaseJML(case : list[[BoolExpr, Stmt]]) : CaseJML?
   IfThenElse(test : BoolExpr, then_stmt : Stmt, else_stmt : Stmt) : IfThenElse?
+%  Lit(v : Val) : Lit?
   Sequence(s1, s2 : Stmt) : Sequence?
   Set(target : Name, source : Expr) : Set?
   Skip : Skip?
@@ -215,7 +218,8 @@ BEGIN
                     fields : finite_set[FieldDecl],
                     methods : finite_set[Method] #]
 
-  Program : TYPE = [# classes : finite_set[Class] #]
+  Program : TYPE = [# classes : finite_set[Class],
+                      main : Method #]
 
   % TODO: define (long!)
   var_names(p : Program) : finite_set[Name]
@@ -226,9 +230,10 @@ BEGIN
   % We include only the requirements needed for the proofs
   %
 
-  % There is at least one class with a method called main
-  exists_main(p : Program) : boolean = 
-    EXISTS (c : Class) : classes(p)(c) AND name(c) = main
+  % The main method is one of the methods of the program
+  valid_main(p : Program) : boolean = 
+    EXISTS (m : Method) : main(p) = m AND EXISTS (c : Class) :
+      classes(p)(c) AND methods(c)(m)
 
   % Every variable used has a declaration
   unique_declarations(p : Program) : boolean =
@@ -269,10 +274,13 @@ BEGIN
     empty?(Intersection({ns : set[Name] | fdss(ns) OR gdss(ns) OR 
                                           ns = ads OR ldss(ns)}))
 
+%    valid_method_call
+
   % TODO:
   % Well-formed CaseJML
+  % Type checks: assignments, method calls, etc, etc
   valid_Program(p : Program) : boolean =
-    exists_main(p) AND
+    valid_main(p) AND
     unique_declarations(p) AND
     unique_var_names(p)
 

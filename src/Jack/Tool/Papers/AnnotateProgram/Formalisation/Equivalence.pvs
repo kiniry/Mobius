@@ -39,17 +39,24 @@ BEGIN
       refines?(initial_MP_state(mp), initial_Program_state(p))
 
   % The main result
+  % NOTE: Because of the way we defined the semantics we can use the seme n for
+  % the annotated program and the monitores program
   correcteness_of_ann_program: THEOREM
     FORALL (p: Program, a: MVA):
-      LET mp = (# mva := a, program := p #), 
+      LET mp = (# mva := a, program := p #),
+          ap = ann_program(p, a),
           s1MP = initial_MP_state(mp),
           s1P  = initial_Program_state(p),
-          c = Skip, %!!?
-          ap = ann_program(p, a)
-      IN
+          c1 = main(p),
+          c2 = main(ap) IN
       valid_MP(mp) IMPLIES
-      FORALL (n: nat, s2MP: MState, s2P: PState): 
-        deriv_stmt(mp)(c, s1MP, s2MP)(n) = deriv_stmt(ap)(c, s1P, s2P)(n) IMPLIES
-          refines?(s2MP, s2P)
+      FORALL (n: nat, s2MP: MState, s2P: PState):
+        deriv_stmt(mp)(c1, s1MP, s2MP)(n) = deriv_stmt(ap)(c2, s1P, s2P)(n)
+          IMPLIES refines?(s2MP, s2P)
+
+  breach?(p: Program, s1, s2: PState, n: nat): boolean
+
+%   JMLExc_iff_breached_assertion: COROLLARY
+%     up?(ex(s2P)) AND down(ex(s2P)) = JMLExc IMPLIES
 
 END Equivalence

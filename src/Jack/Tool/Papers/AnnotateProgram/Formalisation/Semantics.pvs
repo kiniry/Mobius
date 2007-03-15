@@ -4,6 +4,7 @@ BEGIN
 
   Throwable : Throwable?
   NullPointer : NullPointer?
+  JMLExc : JMLExc?
 
 END Excpt
 
@@ -430,5 +431,11 @@ BEGIN
   % problematic to formalise definition 1, because this requires distinguishing
   % between static (only based on class name) and dynamic (based on object
   % instance) class lookup
+
+  % Executes n steps of the program p with argument a
+  % THINK: Do we have to typecheck the argument?
+  run_Program(p : Program, n : nat, a : Val) : PState
+%    MethodCall(
+
 
 END Semantics
