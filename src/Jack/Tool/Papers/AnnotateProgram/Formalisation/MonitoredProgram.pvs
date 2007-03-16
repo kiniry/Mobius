@@ -305,4 +305,16 @@ BEGIN
   ENDIF
   MEASURE n
 
+  %TODO: State and prove the lemmas about the determinism of deriv_expr and
+  %      deriv_stmt
+
+
+  run_MonitoredProgram(mp: MonitoredProgram)(s2 : MState)(n : nat) : boolean =
+    LET p  = program(mp),
+        s1 = initial_MP_state(mp),
+        c  = StmtExpr(MethodCall(Access(This), name(main(p)), Lit(arg(p))))
+    IN
+      deriv_stmt(mp)(c, s1, s2)(n)
+
+
 END MonitoredProgramSemantics

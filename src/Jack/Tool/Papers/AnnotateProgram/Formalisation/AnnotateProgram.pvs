@@ -106,6 +106,7 @@ BEGIN
   ann_program(p: Program, a: MVA): Program =
     (# classes := {c : Class | EXISTS (c1: Class): classes(p)(c1) AND 
                                       c = ann_class(c1, a)},
-       main := main(p)  #)
+       main := main(p), 
+       arg := arg(p) #)
 
 END AnnotateProgram

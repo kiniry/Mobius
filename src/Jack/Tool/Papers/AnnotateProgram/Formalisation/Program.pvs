@@ -16,6 +16,7 @@
 % We have a store for the whole program, thus fields and ghost vars names
 %   contain the class name they belong to. Local vars and formal args contain
 %   also their method names
+% No static fields nor static methods
 
 % Our additions
 % CaseJML: allows to do a case distiction on the value of a ghost var
@@ -75,11 +76,14 @@ Expr[Name : TYPE+] : DATATYPE
 BEGIN
 
   IMPORTING BoolExpr[Name],
-            NumExpr[Name]
+            NumExpr[Name],
+            Val
 
+  Access(n : Name) : Access?
   Assign(target : Name, source : Expr) : Assign?
   BExpr(b : BoolExpr) : BExpr?
   CondExpr(test : BoolExpr, then_expr : Expr, else_expr : Expr) : CondExpr?
+  Lit(v : Val) : Lit?
   MethodCall(tgt : Expr, name : Name, arg : Expr) : MethodCall?
   NExpr(n : NumExpr) : NExpr?
 %  QAssign(tgt : Expr, target : Name, source : Expr) : QAssign?
@@ -93,11 +97,8 @@ BEGIN
   IMPORTING Expr[Name]
 
   % renamed IfJML to CaseJML. Have to constrain the statements in body
-  % I also must say that the list is finite
-%  Access(n : Name) : Access?
   CaseJML(case : list[[BoolExpr, Stmt]]) : CaseJML?
   IfThenElse(test : BoolExpr, then_stmt : Stmt, else_stmt : Stmt) : IfThenElse?
-%  Lit(v : Val) : Lit?
   Sequence(s1, s2 : Stmt) : Sequence?
   Set(target : Name, source : Expr) : Set?
   Skip : Skip?
@@ -147,9 +148,12 @@ BEGIN
   MEASURE length(l)
 
   size(e : Expr) : nat =
-    reduce_nat(LAMBDA(e : Name, n : nat) : n + 1, % Assign
+%  Lit(v : Val) : Lit?
+    reduce_nat(LAMBDA(e : Name) : 1,              % Access
+               LAMBDA(e : Name, n : nat) : n + 1, % Assign
                LAMBDA(b : BoolExpr) : size(b),    % BExpr
                LAMBDA(b : BoolExpr, n1, n2 : nat) : size(b) + n1 + n2 + 1, %Cond
+               LAMBDA(v : Val) : 1,               % Lit
                LAMBDA(n1 : nat, e : Name, n2 : nat) : 1 + n1 + n2, % MethodCall
                LAMBDA(n : NumExpr) : size(n))(e)  % NExpr
  
@@ -219,7 +223,8 @@ BEGIN
                     methods : finite_set[Method] #]
 
   Program : TYPE = [# classes : finite_set[Class],
-                      main : Method #]
+                      main : Method,
+                      arg : Val #]
 
   % TODO: define (long!)
   var_names(p : Program) : finite_set[Name]
@@ -277,7 +282,7 @@ BEGIN
 %    valid_method_call
 
   % TODO:
-  % Well-formed CaseJML
+  % Well-formed CaseJML (the list must be finite)
   % Type checks: assignments, method calls, etc, etc
   valid_Program(p : Program) : boolean =
     valid_main(p) AND

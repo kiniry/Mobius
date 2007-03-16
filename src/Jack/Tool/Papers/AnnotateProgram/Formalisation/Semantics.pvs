@@ -8,6 +8,7 @@ BEGIN
 
 END Excpt
 
+
 Val : DATATYPE 
 BEGIN
 
@@ -121,8 +122,8 @@ BEGIN
     ELSE FALSE
     ENDIF
 
-
 END State
+
 
 Evaluation[Name : TYPE+] : THEORY
 BEGIN
@@ -235,6 +236,7 @@ BEGIN
     #)
 
 
+  %TODO: Add the semantics of Access and Lit
   deriv_expr(P : Program)
             (c : Expr, sigma1 : PState, v : Val, sigma2 : PState)
             (n : nat)
@@ -313,6 +315,8 @@ BEGIN
     ENDIF
   MEASURE n
 
+
+  %TODO: Add the semantics of CaseJML
   deriv_stmt(P : Program)(c : Stmt, sigma1, sigma2 : PState)(n : nat) : 
     RECURSIVE bool =
     LET deriv_stmt_rec = 
@@ -375,67 +379,84 @@ BEGIN
   ENDIF
   MEASURE n
     
-  derives(P : Program)
+  derives(p : Program)
          (e : Expr, sigma1 : PState)(v : Val, sigma2 : PState) : bool =
-    EXISTS(n : nat) : deriv_expr(P)(e, sigma1, v, sigma2)(n)
+    EXISTS(n : nat) : deriv_expr(p)(e, sigma1, v, sigma2)(n)
       (LAMBDA(P : Program)(s : Stmt, sigma1, sigma2 : PState)
-             (m : below(n)) : deriv_stmt(P)(s, sigma1, sigma2)(m))
+             (m : below(n)) : deriv_stmt(p)(s, sigma1, sigma2)(m))
 
-  derives(P : Program)
+  derives(p : Program)
          (s : Stmt, sigma1 : PState)(sigma2 : PState) : bool =
-    EXISTS(n : nat) : deriv_stmt(P)(s, sigma1, sigma2)(n)
+    EXISTS(n : nat) : deriv_stmt(p)(s, sigma1, sigma2)(n)
 
 
   IMPORTING WF[nat, nat]
 
   expr_determ_step : LEMMA % :-)
-    FORALL(P : Program)(n1, n2 : nat)(e : Expr)(sigma : PState) :
+    FORALL(p : Program)(n1, n2 : nat)(e : Expr)(sigma : PState) :
     LET deriv_stmt_rec = 
-        LAMBDA(p : nat) : 
-          LAMBDA(P : Program)(s : Stmt, sigma1, sigma2 : PState)
-                (m : below(p)) : deriv_stmt(P)(s, sigma1, sigma2)(m)
+        LAMBDA(k : nat) : 
+          LAMBDA(p : Program)(c : Stmt, sigma1, sigma2 : PState)
+                (m : below(k)) : deriv_stmt(p)(c, sigma1, sigma2)(m)
     IN
       FORALL(v1, v2 : Val, sigma1, sigma2 : PState) :
-      (FORALL(s : Stmt)(sigma, sigma1, sigma2 : PState)
+      (FORALL(c : Stmt)(sigma, sigma1, sigma2 : PState)
              (m1 : below(n1), m2 : below(n2)) :
-        deriv_stmt_rec(n1)(P)(s, sigma, sigma1)(m1) AND
-        deriv_stmt_rec(n2)(P)(s, sigma, sigma2)(m2) IMPLIES
+        deriv_stmt_rec(n1)(p)(c, sigma, sigma1)(m1) AND
+        deriv_stmt_rec(n2)(p)(c, sigma, sigma2)(m2) IMPLIES
           sigma1 = sigma2 AND m1 = m2)
       IMPLIES
-        deriv_expr(P)(e, sigma, v1, sigma1)(n1)(deriv_stmt_rec(n1)) AND
-        deriv_expr(P)(e, sigma, v2, sigma2)(n2)(deriv_stmt_rec(n2)) IMPLIES
+        deriv_expr(p)(e, sigma, v1, sigma1)(n1)(deriv_stmt_rec(n1)) AND
+        deriv_expr(p)(e, sigma, v2, sigma2)(n2)(deriv_stmt_rec(n2)) IMPLIES
           v1 = v2 AND sigma1 = sigma2 AND n1 = n2
 
   stmt_determ_step : LEMMA % :-)
-    FORALL(P : Program)(n1, n2 : nat)(s : Stmt)(sigma : PState) :
+    FORALL(p : Program)(n1, n2 : nat)(c : Stmt)(sigma : PState) :
       FORALL(sigma1, sigma2 : PState) :
-        deriv_stmt(P)(s, sigma, sigma1)(n1) AND
-        deriv_stmt(P)(s, sigma, sigma2)(n2) IMPLIES
+        deriv_stmt(p)(c, sigma, sigma1)(n1) AND
+        deriv_stmt(p)(c, sigma, sigma2)(n2) IMPLIES
           sigma1 = sigma2 AND n1 = n2
   
   expr_determ : LEMMA % :-)
-    FORALL(P : Program)(sigma : PState)(e : Expr) :
+    FORALL(p : Program)(sigma : PState)(e : Expr) :
       FORALL(v1, v2 : Val, sigma1, sigma2 : PState) :
-        derives(P)(e, sigma)(v1, sigma1) AND
-        derives(P)(e, sigma)(v2, sigma2) IMPLIES
+        derives(p)(e, sigma)(v1, sigma1) AND
+        derives(p)(e, sigma)(v2, sigma2) IMPLIES
           v1 = v2 AND sigma1 = sigma2
 
   stmt_determ : LEMMA % :-)
-    FORALL(P : Program)(sigma : PState)(s : Stmt) :
+    FORALL(p : Program)(sigma : PState)(c : Stmt) :
       FORALL(sigma1, sigma2 : PState) :
-        derives(P)(s, sigma)(sigma1) AND
-        derives(P)(s, sigma)(sigma2) IMPLIES
+        derives(p)(c, sigma)(sigma1) AND
+        derives(p)(c, sigma)(sigma2) IMPLIES
           sigma1 = sigma2
 
 
-  % problematic to formalise definition 1, because this requires distinguishing
-  % between static (only based on class name) and dynamic (based on object
-  % instance) class lookup
+  eval_expr(p : Program)(e : Expr, s1 : PState)(n : nat) : [Val, PState] =
+    choose({v_s2 : [Val, PState] | 
+      deriv_expr(p)(e, s1, proj_1(v_s2), proj_2(v_s2))(n)(deriv_stmt)})
+
+  exec_stmt(p : Program)(c : Stmt, s1 : PState)(n : nat) : PState =
+    choose({s2 : PState | deriv_stmt(p)(c, s1, s2)(n)})
+
 
   % Executes n steps of the program p with argument a
-  % THINK: Do we have to typecheck the argument?
-  run_Program(p : Program, n : nat, a : Val) : PState
-%    MethodCall(
+%   run_Program(p : Program)(main : Name, a : Val)(s2 : PState)(n : nat) : PState
+%     wf_method(main, p) AND wf_mthd_call(main, a) IMPLIES
+%     LET s1 = initial_Program_state(p),
+%         c  = StmtExpr(MethodCall(Access(This), name(main(p)), Lit(arg(p))))
+%     IN
+%       deriv_stmt(p)(c, s1, s2)(n)
+  run_Program(p : Program)(s2 : PState)(n : nat) : boolean =
+    LET s1 = initial_Program_state(p),
+        c  = StmtExpr(MethodCall(Access(This), name(main(p)), Lit(arg(p))))
+    IN
+      deriv_stmt(p)(c, s1, s2)(n)
 
+  run_Program(p : Program)(n : nat) : PState =
+    LET s1 = initial_Program_state(p),
+        c  = StmtExpr(MethodCall(Access(This), name(main(p)), Lit(arg(p))))
+    IN
+      exec_stmt(p)(c, s1)(n)
 
 END Semantics
