@@ -48,13 +48,12 @@ X \Rightarrow c \Rightarrow \wpName (\stmt, X)
  Actually, the predicate $X$ is the loop invariant but it is a fact there is no automatic procedure for finding an invariant for any loop.
  This means that the weakest precondition function can neither be completely automated. However, there do exist techniques for an approximative calculation of invariants: 
 induction -iteration  \cite{SI77IABC} based on iteration of the weakest precondition function over the loop body,
-predicate abstraction methods \cite{FQ03PAQ} using abstract interpretation, dynamic invariant detection in the Daikon tool \cite{ernst99dynamically}.
-For instance, ESC/java uses the Daikon  for inferring loop invariants \cite{NimmerE01:RV}.  
-However, all of these approaches have shortcomings either because the calculation is very intensive and may loop forever (in the first case),
+predicate abstraction methods \cite{FQ03PAQ} using abstract interpretation or dynamic invariant detection (used in the Daikon tool \cite{ernst99dynamically}).
+For instance, the extended static checker for Java ESC/java uses the Daikon tool  for inferring loop invariants \cite{NimmerE01:RV}.  
+Unfortunately, all of these approaches have shortcomings either because the calculation is very intensive and may loop forever (in the first case),
  because  of an underapproximation (as in the second case) or not always returning 
-a result (as in the third case).  
-We can actually ``help'' the \wpName~ by supplying the loop invariants for the loop statements.
- In that case, the rules of \wpName~ for loop would be :
+a result (as in the third case). We can actually ``help'' the \wpName~ by supplying the loop invariants for the loop statements.
+ In that case, the rule of \wpName~ in the case for loop would be :
 $$ \begin{array}{l} 
     \wpName ( \while  ( c ) \lbrack \invariant \rbrack \  \do \{ \stmt \} ,Post) = \\
    \invariant \wedge \\

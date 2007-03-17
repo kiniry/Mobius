@@ -406,17 +406,17 @@ For a detailed discussion on visible states, the reader may refer to the JML ref
 	in the poststate. Similarly, a finalizer of an object must preserve the invariants of all the other objects and include in its precondition 
 	the object's invariant. Also every method must preserve
 	the invariants of the objects of all classes.
-	This actually makes the verification of class invariants a difficult task as all objects in 
+	This actually makes the verification of class invariants a difficult task as the invariants of all objects in 
 	the heap must be mentioned in every method's pre and postcondition (except for the particular cases of constructors and finalizers).  
-	When applications are large, this may even make the verification impossible because the number of verification conditions is not manageable.
+	When applications are large, the number of verification conditions may be  practically unmanageable and thus the verification process may be very hard.
 	Another problem is that the verification is non modular, i.e. extending an application with a new class requires to verify the whole application once again 
-	in order to see that the application respects the invariant of the newly added class.
+	in order to establish that the application does not violate the invariant of the objects of the newly added class.
 	That is why verification tools may make some compromises.  
 	In JACK, for instance, constructors in a class \texttt{C} preserve the invariants of all objects of class \texttt{C} and establish the invariant of the receiver
 	object of the constructor. Non constructor and non finalizer methods declared in class \texttt{C} preserve the invariant of all objects of class \texttt{C}.   
 	 
 	A recent approach which relies on alias control type systems \cite{DietlMueller05,Naumann-vstteFAC} facilitates the verification of invariants and 
-	makes it modular. This technique establishes a hierarchy  relation of ``owner and owned'' objects  in the heap and only owners of an object may modify its contents.
+	makes it modular. This technique relies on a hierarchy  relation of ``owner and owned'' objects  in the heap where only owners of an object may modify its contents.
 	The alias control is guaranteed through ownership type systems which check that only an owner of a reference can modify its contents. 
 	Such technique  can be used also for the sound treatment of layer object structures \cite{Mueller-Poetzsch-Heffter-Leavens06}.
 	
