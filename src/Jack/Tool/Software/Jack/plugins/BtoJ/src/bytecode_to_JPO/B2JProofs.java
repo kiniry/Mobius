@@ -85,6 +85,7 @@ import bytecode_wp.formula.Predicate2Ar;
 import bytecode_wp.formula.PredicateSymbol;
 import bytecode_wp.formula.Quantificator;
 import bytecode_wp.formula.QuantifiedFormula;
+import bytecode_wp.utils.Util;
 import bytecode_wp.vcg.Hypothesis;
 import bytecode_wp.vcg.VCGPath;
 import jml2b.formula.Formula;
@@ -166,7 +167,7 @@ public class B2JProofs extends Proofs {
 		Enumeration e = fPos.elements();
 		fHyps = new AlreadyCalculatedHypos();
 		while (e.hasMoreElements()) {
-			VCGPath f = (VCGPath) e.nextElement();
+			VCGPath  f = (VCGPath) e.nextElement();
 			for (int i = 0; i < f.getNumVc(); i++) {
 				try {
 					Enumeration e1 = f.getHypothesisAt(i).elements();
@@ -175,9 +176,16 @@ public class B2JProofs extends Proofs {
 						toFormula(h.getFormula(), new HashSet()).garbageIdent();
 					}
 					e1 = f.getGoalsAt(i).elements();
-					while (e1.hasMoreElements())
-						toFormula(
-								(bytecode_wp.formula.Formula) e1.nextElement(), new HashSet()).garbageIdent();
+					while (e1.hasMoreElements()) {
+						bytecode_wp.formula.Formula form = (bytecode_wp.formula.Formula)e1.nextElement();
+						jml2b.formula.Formula bf = toFormula(form, new HashSet());
+						
+						if (bf != null) {
+							bf.garbageIdent();
+						} else {
+							Util.dump("here");
+						}
+					}
 				} catch (Jml2bException je) {
 					;
 				}
@@ -555,13 +563,15 @@ static jml2b.formula.Formula toExpression(IJml2bConfiguration config, Expression
 					
 			}
 			Expression[] subExpr = e.getSubExpressions();
-
+			
+			
 			if (subExpr.length == 2) {
 				return new BinaryForm(op, toExpression(config, subExpr[0], declaredVarAtState, decl),
 						toExpression(config, subExpr[1], declaredVarAtState, decl));
 			} else {
 				return new UnaryForm(op, toExpression(config, subExpr[0], declaredVarAtState, decl));
 			}
+			
 		}
 
 		else if (e instanceof ArrayAccessExpression) {
@@ -909,11 +919,11 @@ static jml2b.formula.Formula toExpression(IJml2bConfiguration config, Expression
 				arrT = ((JavaArrType) subExpr[0].getType()).getElementType();
 				ValueAtState vas = (ValueAtState) e;
 				
-				MapElement me = new MapElement(vas.getAtInstruction(), vas.getType());
+				MapElement me = new MapElement(vas.getAtInstruction(), arrT);
 				if(!hElements.containsKey(me)) {
 					hElements.put(me, new ElementsForm( ElementsForm.getElementsName(toType(config, arrT ))));
 				}
-				ElementsForm elNewF = (ElementsForm) hElements.get(e);
+				ElementsForm elNewF = (ElementsForm) hElements.get(me);
 				String str = elNewF.getNodeText();
 				if (!declaredVarAtState.contains(str)) {
 					declaredVarAtState.add(str);

@@ -125,7 +125,7 @@ public class POGGenerator implements IRunnableWithProgress {
 				.getActiveWorkbenchWindow().getActivePage().getActivePart();
 		IWorkbenchPartSite site = activePart.getSite();
 		
-		
+		try {
 		
 
 		B2JConfig config = new B2JConfig(project);
@@ -145,7 +145,7 @@ public class POGGenerator implements IRunnableWithProgress {
 		}
 
 		monitor.subTask("Loading annotated class file");
-		try {
+		
 		config.setJavaApplication(new B2JPackage(new JavaClassLoader(cl)));
 		BCClass clazz = ((B2JPackage) config.getPackage())
 				.getClass(absoluteName);
@@ -162,31 +162,40 @@ public class POGGenerator implements IRunnableWithProgress {
 
 			B2JClass bjc = null;
 
+			Logger.warn.println("here");
+			try {
 			 bjc = ((B2JPackage) config.getPackage()).addB2JClass(
 					config, clazz, true);
-
-			
-			bcjm = new BCJmlFile(bjc, mchName, config.getSubdirectory());
-
-			File bcSource = new File(config.getSubdirectory(), bcjm.getFlatName()
-					+ BYTECODE_SOURCE_EXTENSION);
-
-			File translationTable = new File(config.getSubdirectory(), bcjm.getFlatName()
-					+ TRANSLATION_TABLE_EXTENSION);
-
-			PrintStream sBcSource = new PrintStream(new FileOutputStream(bcSource));
-			ObjectOutputStream sTranslation = new ObjectOutputStream(new FileOutputStream(translationTable));
-			HashMap hm = new HashMap();
-			bjc.saveCode(sBcSource, hm);
-			sTranslation.writeObject(hm);
-			sTranslation.close();
-			sBcSource.close();
-
-				Pog.garbageIdent(bcjm);
 			}
 			catch (Throwable e) {
 				e.printStackTrace();
 			}
+				Logger.warn.println("here");
+			
+			bcjm = new BCJmlFile(bjc, mchName, config.getSubdirectory());
+
+			Logger.warn.println("here");
+			File bcSource = new File(config.getSubdirectory(), bcjm.getFlatName()
+					+ BYTECODE_SOURCE_EXTENSION);
+			Logger.warn.println("here");
+			File translationTable = new File(config.getSubdirectory(), bcjm.getFlatName()
+					+ TRANSLATION_TABLE_EXTENSION);
+
+			Logger.warn.println("here");
+			PrintStream sBcSource = new PrintStream(new FileOutputStream(bcSource));
+			Logger.warn.println("here");
+			ObjectOutputStream sTranslation = new ObjectOutputStream(new FileOutputStream(translationTable));
+			HashMap hm = new HashMap();
+			Logger.warn.println("here");
+			bjc.saveCode(sBcSource, hm);
+			Logger.warn.println("here");
+			sTranslation.writeObject(hm);
+			Logger.warn.println("here");
+			sTranslation.close();
+			sBcSource.close();
+			Logger.warn.println("here");
+			Pog.garbageIdent(bcjm);
+			
 			
 			Pog.saveFiles(config, bcjm, monitor, new Vector(), new Vector(),
 					new B2JClassResolver(config, (B2JPackage) config
@@ -202,6 +211,11 @@ public class POGGenerator implements IRunnableWithProgress {
 				} catch (CoreException ce) {
 					Logger.err.println(ce);
 				}
+			}
+			}
+			catch (Throwable e) {
+				e.printStackTrace();
+				throw e;
 			}
 		} catch (RuntimeException e) {
 			e.printStackTrace();
@@ -224,14 +238,15 @@ public class POGGenerator implements IRunnableWithProgress {
 			Logger.warn.println(e);
 			e.printStackTrace();
 		}
-		
+		catch (Throwable e) {
+		}
 		monitor.setCanceled(false);
 		monitor.done();
 		/*
 		 * long endTime = System.currentTimeMillis(); long execTime = endTime -
 		 * startTime; Logger.get().println("WP done " + execTime + "ms");
 		 */
-
+		
 	}
 
 	private static IPath getClassPath(IProject iproject) {
