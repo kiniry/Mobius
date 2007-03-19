@@ -201,7 +201,8 @@ BEGIN
       ts(a)(t) AND scp(t) = q IMPLIES
         tcp(t) = halted
 
-  complete(a : (wf_MVA)) : boolean =
+  complete(a : MVA) : boolean =
+    wf_MVA(a) AND
     cps(a)(halted) AND
     trap_state(halted, a) AND
     deterministic(a) AND

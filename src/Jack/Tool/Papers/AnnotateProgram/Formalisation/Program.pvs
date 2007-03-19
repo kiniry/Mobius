@@ -236,7 +236,7 @@ BEGIN
   %
 
   % The main method is one of the methods of the program
-  valid_main(p : Program) : boolean = 
+  wf_main(p : Program) : boolean = 
     EXISTS (m : Method) : main(p) = m AND EXISTS (c : Class) :
       classes(p)(c) AND methods(c)(m)
 
@@ -284,8 +284,8 @@ BEGIN
   % TODO:
   % Well-formed CaseJML (the list must be finite)
   % Type checks: assignments, method calls, etc, etc
-  valid_Program(p : Program) : boolean =
-    valid_main(p) AND
+  wf_Program(p : Program) : boolean =
+    wf_main(p) AND
     unique_declarations(p) AND
     unique_var_names(p)
 

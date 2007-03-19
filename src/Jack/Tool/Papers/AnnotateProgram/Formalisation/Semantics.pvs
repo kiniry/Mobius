@@ -186,7 +186,7 @@ BEGIN
       RefType : Null
     ENDCASES
 
-  get_FieldDecl(n : Name, p : (valid_Program)) : lift[FieldDecl] =
+  get_FieldDecl(n : Name, p : (wf_Program)) : lift[FieldDecl] =
     LET fds = {fd : FieldDecl | EXISTS (c : Class) : classes(p)(c) AND
                                   fields(c)(fd) AND name(fd) = n} IN
       IF empty?(fds)
@@ -194,7 +194,7 @@ BEGIN
       ELSE up(choose(fds))
       ENDIF
 
-  get_GhostVarDecl(n : Name, p : (valid_Program)) : lift[GhostVarDecl] =
+  get_GhostVarDecl(n : Name, p : (wf_Program)) : lift[GhostVarDecl] =
     LET gds = {gd : GhostVarDecl | EXISTS (c : Class) : classes(p)(c) AND
                                      ghost_vars(c)(gd) AND name(gd) = n} IN
       IF empty?(gds)
@@ -202,7 +202,7 @@ BEGIN
       ELSE up(choose(gds))
       ENDIF
 
-  get_LocalVarDecl(n : Name, p : (valid_Program)) : lift[LocalVarDecl] =
+  get_LocalVarDecl(n : Name, p : (wf_Program)) : lift[LocalVarDecl] =
     LET lds = {ld : LocalVarDecl | EXISTS (c : Class, m : Method) : 
                                      classes(p)(c) AND methods(c)(m) AND 
                                      lvars(m)(ld) AND name(ld) = n} IN
@@ -211,7 +211,7 @@ BEGIN
       ELSE up(choose(lds))
       ENDIF
 
-  initial_Program_state(p : (valid_Program)) : PState =
+  initial_Program_state(p : (wf_Program)) : PState =
     (# ex := bottom,
        st :=
          (# fvs := LAMBDA (n : Name) :
