@@ -8,7 +8,7 @@ BEGIN
 END EventType
 
 
-% Multi Variable Automata
+% Multi-Variable Automata
 MVA[CP, Name : TYPE+] : THEORY
 BEGIN
 
@@ -82,6 +82,15 @@ BEGIN
   % NOTE: vdsA and vdsP are just the signatures of the variables, they do not
   %       contain their values. Only states have values for variables.
 
+
+END MVA
+
+
+WellFormedMVA[CP, Name : TYPE+] : THEORY
+BEGIN
+
+  IMPORTING MVA[CP, Name]
+
   % Functions to get a set of names from a set of variable declarations
   var_names(V : set[MVAVarDecl]) : set[Name] =
     {n : Name | EXISTS (va : MVAVarDecl) : V(va) AND name(va) = n}
@@ -90,41 +99,41 @@ BEGIN
     {n : Name | EXISTS (vp : ProgVarDecl) : V(vp) AND name(vp) = n}
 
   % Gets the variable's names involved in an expression
-  % TODO: define!
+  % TODO: define and move to another file
   var_names(e : Expr[Name]) : set[Name]
 
-  valid_Store(vdsA : set[MVAVarDecl])(f : Store) : boolean =
+  wf_Store(vdsA : set[MVAVarDecl])(f : Store) : boolean =
     FORALL (n : Name) :
       var_names(vdsA)(n) IFF NOT Bottom?(f(n))
 
-  valid_Store(f : Store, a : MVA) : boolean =
-    valid_Store(vdsA(a))(f)
+  wf_Store(f : Store, a : MVA) : boolean =
+    wf_Store(vdsA(a))(f)
 
-  valid_PSt(vdsP : set[ProgVarDecl])(f : PSt) : boolean =
+  wf_PSt(vdsP : set[ProgVarDecl])(f : PSt) : boolean =
     FORALL (n : Name) :
       var_names(vdsP)(n) IFF NOT Bottom?(lookup(n, f))
 
-  valid_PSt(f : PSt, a : MVA) : boolean =
-    valid_PSt(vdsP(a))(f)
+  wf_PSt(f : PSt, a : MVA) : boolean =
+    wf_PSt(vdsP(a))(f)
 
   % TODO: It may be necessary (maybe not) to ensure that the initial value 
   % conforms to the declared type (we need to define conform).
-  valid_vdsA(vds : set[MVAVarDecl]) : boolean =
+  wf_vdsA(vds : set[MVAVarDecl]) : boolean =
     FORALL (vd : MVAVarDecl) : vds(vd) IMPLIES
       NOT EXISTS (vd1 : MVAVarDecl) : vds(vd1) AND name(vd) = name(vd1)
 
   % TODO: Same as above
-  valid_vdsP(vds : set[ProgVarDecl]) : boolean =
+  wf_vdsP(vds : set[ProgVarDecl]) : boolean =
     FORALL (vd : ProgVarDecl) : vds(vd) IMPLIES
       NOT EXISTS (vd1 : ProgVarDecl) : vds(vd1) AND name(vd) = name(vd1)
 
   IMPORTING func_props   % imports domain_set
 
-  valid_Guard(p : Guard, a : MVA) : boolean =
-    valid_Store(proj_1(domain_set(p)), a) AND
-    valid_PSt(proj_2(domain_set(p)), a)
+  wf_Guard(p : Guard, a : MVA) : boolean =
+    wf_Store(proj_1(domain_set(p)), a) AND
+    wf_PSt(proj_2(domain_set(p)), a)
 
-  valid_Action(l : Action, a : MVA) : boolean =
+  wf_Action(l : Action, a : MVA) : boolean =
     FORALL (c : OneAction) :
       member(c, l) IMPLIES
         var_names(vdsA(a))(target(c)) AND
@@ -142,61 +151,71 @@ BEGIN
   % Variables appearing in guards are in in vdsA or in vdsP. In our formalization
   % this means that the Store is defined for each var in vdsA and the PSt is
   % defined for each var in vdsP (they also may be defined elsewhere)
-  valid_MVA(a : MVA) : boolean =
+  wf_MVA(a : MVA) : boolean =
     cps(a)(init_cp(a)) AND
-    valid_vdsA(vdsA(a)) AND
-    valid_vdsP(vdsP(a)) AND
+    wf_vdsA(vdsA(a)) AND
+    wf_vdsP(vdsP(a)) AND
     disjoint?(var_names(vdsA(a)), var_names(vdsP(a))) AND
     FORALL (t : Transition) :
       ts(a)(t) IMPLIES
         cps(a)(scp(t)) AND
         cps(a)(tcp(t)) AND
         evs(a)(event(t)) AND
-        valid_Guard(guard(t), a) AND
-        valid_Action(action(t), a)
+        wf_Guard(guard(t), a) AND
+        wf_Action(action(t), a)
 
-  deterministic(a : (valid_MVA)) : boolean =
+
+END WellFormedMVA
+
+
+MVAProperties[CP, Name : TYPE+] : THEORY
+BEGIN
+
+  IMPORTING WellFormedMVA[CP, Name]
+
+  deterministic(a : (wf_MVA)) : boolean =
     FORALL (t1, t2 : Transition, stA : Store, stP : PSt) :
       ts(a)(t1) IMPLIES
       ts(a)(t2) IMPLIES
-      valid_Store(stA, a) IMPLIES
-      valid_PSt(stP, a) IMPLIES
+      wf_Store(stA, a) IMPLIES
+      wf_PSt(stP, a) IMPLIES
       scp(t2) = scp(t1) IMPLIES
       event(t2) = event(t1) IMPLIES
       guard(t1)(stA, stP) IMPLIES
       guard(t2)(stA, stP) IMPLIES
         t1 = t2
 
-  total(a : (valid_MVA)) : boolean =
+  total(a : (wf_MVA)) : boolean =
     FORALL (q : CP, e : Event, stA : Store, stP : PSt) :
       cps(a)(q) IMPLIES
       evs(a)(e) IMPLIES
-      valid_Store(stA, a) IMPLIES
-      valid_PSt(stP, a) IMPLIES
+      wf_Store(stA, a) IMPLIES
+      wf_PSt(stP, a) IMPLIES
         EXISTS (t : Transition) : ts(a)(t) AND
                                   scp(t) = q AND
                                   event(t) = e AND
                                   guard(t)(stA, stP)
 
-  trap_state(q : CP, a : (valid_MVA)) : boolean =
+  trap_state(q : CP, a : (wf_MVA)) : boolean =
     FORALL (t : Transition) :
       ts(a)(t) AND scp(t) = q IMPLIES
         tcp(t) = halted
 
-  complete(a : (valid_MVA)) : boolean =
+  complete(a : (wf_MVA)) : boolean =
     cps(a)(halted) AND
     trap_state(halted, a) AND
     deterministic(a) AND
     total(a)
 
-END MVA
+
+END MVAProperties
 
 
 % RENAME TO MVASemantics
-MVA_Semantics[CP, Name : TYPE+] : THEORY
+MVASemantics[CP, Name : TYPE+] : THEORY
 BEGIN
 
-  IMPORTING MVA[CP, Name]
+  IMPORTING MVAProperties[CP, Name]
 
   % The state of a MVA is composed by its currrent control point and values for
   % its variables
@@ -205,7 +224,7 @@ BEGIN
        stA : Store 
     #]
 
-  get_MVAVarDecl(n : Name, a : (valid_MVA)) : lift[MVAVarDecl] =
+  get_MVAVarDecl(n : Name, a : (wf_MVA)) : lift[MVAVarDecl] =
     LET vds = {vd : MVAVarDecl | vdsA(a)(vd) AND name(vd) = n}  IN
       IF empty?(vds) 
       THEN bottom 
@@ -213,7 +232,7 @@ BEGIN
       ENDIF
 
   % Initial state of a MVA
-  initial_MVA_state(a : (valid_MVA)) : AState =
+  initial_MVA_state(a : (wf_MVA)) : AState =
     (# cp := init_cp(a),
        stA := LAMBDA (n: Name) :
          LET vd = get_MVAVarDecl(n, a) IN
@@ -223,12 +242,6 @@ BEGIN
          ENDIF
     #)
 
-  valid_AState(s : AState, a : MVA) : boolean =
-    cps(a)(cp(s)) AND
-    valid_Store(stA(s), a)
-
-  valid_AState(a : MVA)(s : AState) : boolean =
-    valid_AState(s, a)
 
   % A program event is an event that occurred in the program together with the 
   % value of its variables at that point
@@ -236,12 +249,6 @@ BEGIN
     [# stP : PSt,
        event : Event
     #]
-
-  valid_PEvent(pe : PEvent, a : MVA) : boolean =
-    evs(a)(event(pe)) AND valid_PSt(stP(pe), a)
-
-  valid_PEvent(a : MVA)(pe : PEvent) : boolean =
-    valid_PEvent(pe, a)
 
   % Updates a store
   update(st : Store)(n : Name)(v : Val) : Store =
@@ -263,8 +270,24 @@ BEGIN
     ENDIF
   MEASURE length(l)
 
+
+  %%%  Well formed states
+  wf_AState(s : AState, a : MVA) : boolean =
+    cps(a)(cp(s)) AND
+    wf_Store(stA(s), a)
+
+  wf_AState(a : MVA)(s : AState) : boolean =
+    wf_AState(s, a)
+
+  wf_PEvent(pe : PEvent, a : MVA) : boolean =
+    evs(a)(event(pe)) AND wf_PSt(stP(pe), a)
+
+  wf_PEvent(a : MVA)(pe : PEvent) : boolean =
+    wf_PEvent(pe, a)
+
+
   % Single judgement for a MVA
-  step(a : (total))(x : (valid_AState(a)), p : (valid_PEvent(a))) : AState =
+  step(a : (total))(x : (wf_AState(a)), p : (wf_PEvent(a))) : AState =
       LET t = choose(LAMBDA (t : Transition) : 
                        ts(a)(t) AND 
                        scp(t) = cp(x) AND 
@@ -274,34 +297,35 @@ BEGIN
          stA := execute_actions(stA(x), action(t))
       #)
 
+  %%%  Well formed lemmas
+  wf_initial_MVA_state: LEMMA
+    FORALL (a: MVA) :
+      wf_MVA(a) IMPLIES wf_AState(initial_MVA_state(a), a)
 
-  valid_initial_MVA_state: LEMMA
-    FORALL (a: MVA) : 
-      valid_MVA(a) IMPLIES valid_AState(initial_MVA_state(a), a)
-
-  %TODO: prove (needs the definition of eval for Expressions)
-  execute_action_yields_valid_state: LEMMA
+  % TODO: prove (needs the definition of eval for Expressions)
+  execute_action_yields_wf_state: LEMMA
     FORALL (a : MVA, stA : Store, l : Action) :
-      valid_Store(stA, a) IMPLIES
-        valid_Store(execute_actions(stA, l), a)
+      wf_Store(stA, a) IMPLIES
+        wf_Store(execute_actions(stA, l), a)
 
-  step_yields_valid_state : THEOREM
-    FORALL (a : (total), x : (valid_AState(a)), p : (valid_PEvent(a))) :
-      valid_AState(step(a)(x, p), a) 
-   
-END MVA_Semantics
+  step_yields_wf_state : THEOREM % :-)
+    FORALL (a : (total), x : (wf_AState(a)), p : (wf_PEvent(a))) :
+      wf_AState(step(a)(x, p), a) 
+
+
+END MVASemantics
 
 
 MVACompletion[CP, Name : TYPE+] : THEORY
 BEGIN
 
-  IMPORTING MVA[CP, Name], 
-            Epsilon_Props, 
-            MVA_Finite_Props
+  IMPORTING MVAProperties[CP, Name],
+            EpsilonProps, 
+            MVAFiniteProps
 
   % Returns the set of guards from transitions in ts with cp as source control
   % point and e as event
-  all_guards(cp : CP, e : Event, 
+  all_guards(cp : CP, e : Event,
              ts : finite_set[Transition]) : finite_set[Guard] =
     {p : Guard | EXISTS (t : Transition) : ts(t) AND scp(t) = cp AND
                                            event(t) = e AND guard(t) = p}
@@ -312,11 +336,8 @@ BEGIN
   build_guard(cp : CP, e : Event, ts : finite_set[Transition], 
               vdsA : finite_set[MVAVarDecl], 
               vdsP : finite_set[ProgVarDecl]) : Guard = 
-%    LAMBDA (stA : (valid_Store(vdsA)), stP : (valid_PSt(vdsP))) :
-%      FORALL (p : Guard) : all_guards(cp, e, ts)(p) IMPLIES NOT p(stA, stP)
-    LAMBDA (stA : Store, stP : PSt) :
-      FORALL (p : Guard) : valid_Store(vdsA)(stA) AND valid_PSt(vdsP)(stP) AND
-                           all_guards(cp, e, ts)(p) IMPLIES NOT p(stA, stP)
+   LAMBDA (stA : (wf_Store(vdsA)), stP : (wf_PSt(vdsP))) :
+     FORALL (p : Guard) : all_guards(cp, e, ts)(p) IMPLIES NOT p(stA, stP)
 
   % Makes ts complete with respect cps and es
   complete_trans(cps : finite_set[CP], es : finite_set[Event], 
@@ -327,13 +348,13 @@ BEGIN
                             guard(t) = build_guard(scp(t), event(t), ts, vdsA, 
                                                      vdsP)},
           {t : Transition | scp(t) = halted AND es(event(t)) AND
-                            guard(t) = (LAMBDA (stA : (valid_Store(vdsA)) , 
-                                                stP : (valid_PSt(vdsP))): TRUE)
+                            guard(t) = (LAMBDA (stA : (wf_Store(vdsA)) , 
+                                                stP : (wf_PSt(vdsP))): TRUE)
                             AND action(t) = skip AND tcp(t) = halted})
 
 
   % Preconditions for completeMVA
-  complete_MVA_pre(a : (valid_MVA)) : boolean =
+  complete_MVA_pre(a : (wf_MVA)) : boolean =
     deterministic(a) AND NOT cps(a)(halted)
 
   % Makes a deterministic MVA total
@@ -343,24 +364,26 @@ BEGIN
                                              vdsP(a)))]
 
 
-  % TODO: prove the remaining cases
+  % TODO: prove the remaining cases (Fix the proof)
   complete_MVA_is_valid: LEMMA
     FORALL (a: (complete_MVA_pre)) :
-      valid_MVA(complete_MVA(a))
+      wf_MVA(complete_MVA(a))
 
-  complete_MVA_has_trap_state: LEMMA
+  complete_MVA_has_trap_state: LEMMA % :-)
     FORALL (a: (complete_MVA_pre)) :
       trap_state(halted, complete_MVA(a))
 
+  % TODO: Fix the proof
   complete_MVA_is_deterministic: LEMMA
     FORALL (a: (complete_MVA_pre)) :
       deterministic(complete_MVA(a))
 
+  % TODO: Fix the proof
   complete_MVA_is_total: LEMMA
     FORALL (a: (complete_MVA_pre)) :
       total(complete_MVA(a))
 
-  complete_MVA_is_complete: THEOREM
+  complete_MVA_is_complete: THEOREM % :-)
     FORALL (a: (complete_MVA_pre)) :
       complete(complete_MVA(a))
 
