@@ -956,6 +956,21 @@ public class Main extends javafe.SrcTool
             }
         }
 	//$$
+	
+	
+	if (options().tvcg) {
+        String method = sig.toString() + ".";
+        if (r instanceof MethodDecl)
+            method += ((MethodDecl) r).id;
+        else
+            method += "<constructor>";
+
+		System.out.println("[NEW VC generating VC for " + method + "]");
+		
+		Expr e = GC.implies(initState.getInitialState(), vcBody);
+		new Lifter(e).run();
+		return "skip";
+	}
 
 	Expr vc = GC.implies(initState.getInitialState(), vcBody);
 

@@ -302,6 +302,9 @@ public class Options extends javafe.SrcToolOptions {
 
     // use the new verification conditions generator
     public boolean nvcg = false;
+    
+    // use the even newer typed one 
+    public boolean tvcg = false;
 
     // check "is-defined conditions" (IDCs) rather than normal specification correctness.
     public boolean idc = false;
@@ -889,6 +892,10 @@ public class Options extends javafe.SrcToolOptions {
             
             return offset+1;
 
+        } else if (option.equals("-tvcg")) {
+            tvcg = true;
+            return offset;
+            
         } else if (option.equals("-perr")) {
             pErr = true;
 
