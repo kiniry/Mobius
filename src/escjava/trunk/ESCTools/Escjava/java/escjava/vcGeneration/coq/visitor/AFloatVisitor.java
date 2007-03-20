@@ -12,47 +12,47 @@ public abstract class AFloatVisitor extends AIntegralVisitor {
 		super(out, prover, ppout);
 	}
 	
-	public void visitTFloat(/*@ non_null @*/ TFloat n) throws IOException{
+	public void visitTFloat(/*@ non_null @*/ TFloat n){
 		out.appendN(" (* a float value *)"+n.value);
 	}
-    public void visitTFloatEQ(/*@ non_null @*/ TFloatEQ n) throws IOException{
+    public void visitTFloatEQ(/*@ non_null @*/ TFloatEQ n){
     	spacedBinOp("(* Float Eq *) =", n);
     }
 				  
-    public void visitTFloatGE(/*@ non_null @*/ TFloatGE n) throws IOException{
+    public void visitTFloatGE(/*@ non_null @*/ TFloatGE n){
     	binOp(">=", n); 
     }
 				  
-    public void visitTFloatGT(/*@ non_null @*/ TFloatGT n) throws IOException{
+    public void visitTFloatGT(/*@ non_null @*/ TFloatGT n){
     	binOp(">", n); 
     }
 				  
-    public void visitTFloatLE(/*@ non_null @*/ TFloatLE n) throws IOException{
+    public void visitTFloatLE(/*@ non_null @*/ TFloatLE n){
     	binOp("<=", n); 
     }
 				  
-    public void visitTFloatLT(/*@ non_null @*/ TFloatLT n) throws IOException{
+    public void visitTFloatLT(/*@ non_null @*/ TFloatLT n){
     	binOp("<", n); 
     }
 				  
-    public void visitTFloatNE(/*@ non_null @*/ TFloatNE n) throws IOException{
+    public void visitTFloatNE(/*@ non_null @*/ TFloatNE n){
     	binOp("<>", n); 
     }
     
 				  
-    public void visitTFloatAdd(/*@ non_null @*/ TFloatAdd n) throws IOException{
+    public void visitTFloatAdd(/*@ non_null @*/ TFloatAdd n){
     	binOp("+", n); 
     }
 
-    public void visitTFloatDiv(/*@ non_null @*/ TFloatDiv n) throws IOException{
+    public void visitTFloatDiv(/*@ non_null @*/ TFloatDiv n){
     	binOp("/", n); 
     }
 
-    public void visitTFloatMod(/*@ non_null @*/ TFloatMod n) throws IOException{
+    public void visitTFloatMod(/*@ non_null @*/ TFloatMod n){
     	binOp("mod", n);
     }
 
-    public void visitTFloatMul(/*@ non_null @*/ TFloatMul n) throws IOException{
+    public void visitTFloatMul(/*@ non_null @*/ TFloatMul n){
     	binOp("*", n);
     }
 }

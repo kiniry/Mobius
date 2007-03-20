@@ -1,6 +1,7 @@
 package escjava.vcGeneration.coq;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -15,6 +16,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javafe.ast.Expr;
+import javafe.util.ErrorSet;
 import escjava.Main;
 import escjava.translate.GC;
 import escjava.translate.InitialState;
@@ -79,7 +81,7 @@ public class CoqProver extends ProverType {
 	/**
 	 * @return an instance of the class {@link TCoqVisitor}.
 	 */
-    public TVisitor visitor(Writer out) throws IOException {
+    public TVisitor visitor(Writer out) {
         return new TCoqVisitor(out, this);
     }
 
@@ -91,7 +93,7 @@ public class CoqProver extends ProverType {
      * @param vc the generated verification condition.
      * @return the Coq vernacular file representing the proof.
      */
-    public void getProof(Writer output, String proofName, TNode term) throws IOException {
+    public void getProof(Writer output, String proofName, TNode term) {
     	String src = Main.options.userSourcePath;
     	
     	if(src == null) {
@@ -119,39 +121,43 @@ public class CoqProver extends ProverType {
     		coqProofDir.mkdir();
     	}
     	Prelude p = new Prelude(new File(coqProofDir, PRELUDE_PATH));
-    	p.generate();
-    	String className = proofName.substring(3, proofName.lastIndexOf("_"));
-    	className = className.substring(0, className.lastIndexOf("_"));
-    	if(className.charAt(className.length() - 1) == '_') {
-    		// _constructor_ case
+    	try {
+    		p.generate();
+    		String className = proofName.substring(3, proofName.lastIndexOf("_"));
     		className = className.substring(0, className.lastIndexOf("_"));
+    		if(className.charAt(className.length() - 1) == '_') {
+    			// _constructor_ case
+    			className = className.substring(0, className.lastIndexOf("_"));
+    			className = className.substring(0, className.lastIndexOf("_"));
+    		}
     		className = className.substring(0, className.lastIndexOf("_"));
-    	}
-    	className = className.substring(0, className.lastIndexOf("_"));
-    	String methodName = proofName.substring(4 + className.length());
-    	int ind = methodName.lastIndexOf('_', methodName.lastIndexOf('_') - 1);
-    	methodName = methodName.substring(0, ind) + "." + methodName.substring(ind +1);
-    	System.out.println(className);
-    	File coqCurrentClassDir = new File(coqProofDir, className);
-    	coqCurrentClassDir.mkdir();
-    	File coqCurrentProofDir = new File(coqCurrentClassDir, methodName);
-    	coqCurrentProofDir.mkdir();
-    	if (!(term instanceof TRoot)) {
-    		TDisplay.err("For coq pretty printer, the node should be a root node!" + 
-    				term.getClass());
-    		return;
-    	}
-    	TRoot root = (TRoot) term;
-    	
-    	Iterator iter = root.sons.iterator();
-    	int size = root.sons.size();
-    	int count = 1;
-    	while(iter.hasNext()) {
-    		File proof = new File(coqCurrentProofDir, "goal" + ppNumber(count, size) + ".v");
-    		term = (TNode) iter.next();
-    		String script = getProofScript(proof);
-    		writeProofObligation(proofName, proof, term, script);
-        	count++;
+    		String methodName = proofName.substring(4 + className.length());
+    		int ind = methodName.lastIndexOf('_', methodName.lastIndexOf('_') - 1);
+    		methodName = methodName.substring(0, ind) + "." + methodName.substring(ind +1);
+    		System.out.println(className);
+    		File coqCurrentClassDir = new File(coqProofDir, className);
+    		coqCurrentClassDir.mkdir();
+    		File coqCurrentProofDir = new File(coqCurrentClassDir, methodName);
+    		coqCurrentProofDir.mkdir();
+    		if (!(term instanceof TRoot)) {
+    			TDisplay.err("For coq pretty printer, the node should be a root node!" + 
+    					term.getClass());
+    			return;
+    		}
+    		TRoot root = (TRoot) term;
+    		
+    		Iterator iter = root.sons.iterator();
+    		int size = root.sons.size();
+    		int count = 1;
+    		while(iter.hasNext()) {
+    			File proof = new File(coqCurrentProofDir, "goal" + ppNumber(count, size) + ".v");
+    			term = (TNode) iter.next();
+    			String script = getProofScript(proof);
+    			writeProofObligation(proofName, proof, term, script);
+    			count++;
+    		}
+    	} catch (IOException e) {
+    		ErrorSet.fatal("internal error: " + e.getMessage());
     	}
     }
 
@@ -164,7 +170,7 @@ public class CoqProver extends ProverType {
      * @return the list of term corresponding to the original term
      * @throws IOException
      */
-	private TRoot simplifyProofObligation(TRoot term) throws IOException {
+	private TRoot simplifyProofObligation(TRoot term) {
         TProofTyperVisitor tptv = new TProofTyperVisitor();
         term.accept(tptv);
 		TProofSimplifier tps = new TProofSimplifier();
@@ -194,6 +200,7 @@ public class CoqProver extends ProverType {
      */
 	private String getProofScript(File proof) throws IOException {
 		if(proof.exists()) {
+			
 			LineNumberReader lnr = new LineNumberReader(new FileReader(proof));
 			String red;
 			while((red = lnr.readLine()) != null) {
@@ -321,7 +328,7 @@ public class CoqProver extends ProverType {
      * (non-Javadoc)
      * @see escjava.vcGeneration.ProverType#rewrite(escjava.vcGeneration.TNode)
      */
-    public TNode rewrite(TNode tree) throws IOException {
+    public TNode rewrite(TNode tree) {
     	TRoot root;
     	if (!(tree instanceof TRoot)) {
     		TDisplay.warn(
@@ -590,7 +597,7 @@ public class CoqProver extends ProverType {
      * @param s The output
      * @param variablesNames the variables' names.
      */
-    public void generateDeclarations(/*@ non_null @*/Writer s, HashMap variablesNames) throws IOException {
+    public void generateDeclarations(/*@ non_null @*/Writer s, HashMap variablesNames) {
     	Set keySet = variablesNames.keySet();
 
         Iterator iter = keySet.iterator();
@@ -615,11 +622,14 @@ public class CoqProver extends ProverType {
             
             // only writes variables with a known type ;)
             if (viTemp.type != null) {
-                s.write("(");
-                s.write(viTemp.getVariableInfo() + " : "
-                        + viTemp.type.getTypeInfo());
-                s.write(")");
-
+            	try {
+                    s.write("(");
+                    s.write(viTemp.getVariableInfo() + " : "
+                            + viTemp.type.getTypeInfo());
+                    s.write(")");
+        		} catch (IOException e) {
+        			ErrorSet.fatal("internal error: " + e.getMessage());
+        		}
             } 
             else {
             	TDisplay.err("I won't write the variable " + viTemp.getVariableInfo() +" because I've got no idea of its type.");

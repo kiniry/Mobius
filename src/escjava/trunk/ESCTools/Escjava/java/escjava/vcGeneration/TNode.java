@@ -118,7 +118,7 @@ abstract public class TNode {
         prover.init();
     }
 
-    protected void generateDeclarations(/*@ non_null @*/Writer s, ProverType p) throws IOException {
+    protected void generateDeclarations(/*@ non_null @*/Writer s, ProverType p) {
         p.generateDeclarations(s, variablesName);
     }
 
@@ -440,7 +440,7 @@ abstract public class TNode {
             return getShortName() + id;
     }
 
-    abstract public void accept(/*@ non_null @*/TVisitor v) throws IOException;
+    abstract public void accept(/*@ non_null @*/TVisitor v);
 
     static public void printInfo() {
 

@@ -35,7 +35,7 @@ public class TCoqBoolVisitor extends TCoqVisitor {
 	 * <code>True</code> or <code>False</code>.
 	 * @see TCoqVisitor#visitTBoolean(TBoolean)
 	 */
-	public void visitTBoolean(/*@ non_null @*/ TBoolean n) throws IOException{	
+	public void visitTBoolean(/*@ non_null @*/ TBoolean n){	
 		if(n.value)
 		    out.appendN("True");
 		else
@@ -47,7 +47,7 @@ public class TCoqBoolVisitor extends TCoqVisitor {
 	  * should be translated in the form <code>myvar = true</code>
 	  * @param n the variable to translate.
 	  */
-	 public void visitTName(/*@ non_null @*/ TName n) throws IOException{
+	 public void visitTName(/*@ non_null @*/ TName n){
 		    VariableInfo vi = TNode.getVariableInfo(n.name);
 		    String name = p.getVariableInfo(vi);
 		    if(name.equals("Z"))
@@ -55,7 +55,7 @@ public class TCoqBoolVisitor extends TCoqVisitor {
 			out.appendN(name + " = true");
 	 }
 	 
-	 public void visitTSelect(/*@ non_null @*/ TSelect n) throws IOException{
+	 public void visitTSelect(/*@ non_null @*/ TSelect n){
 	    	String pre = "";
 	    	if(TNode._integer.equals(((TNode)n.sons.get(1)).type))
 	    		pre = "arr";
@@ -63,7 +63,7 @@ public class TCoqBoolVisitor extends TCoqVisitor {
 	    	out.appendN(" = true");
 	    }
 	 
-	 public void visitTBoolNot(/*@ non_null @*/ TBoolNot n) throws IOException{
+	 public void visitTBoolNot(/*@ non_null @*/ TBoolNot n){
 	    	unaryProp("not ", n);
 	 }
 }

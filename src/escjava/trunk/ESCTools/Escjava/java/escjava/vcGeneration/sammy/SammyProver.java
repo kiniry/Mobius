@@ -15,11 +15,11 @@ public class SammyProver extends ProverType {
         return label;
     }
     
-    public TVisitor visitor(Writer out) throws IOException {
+    public TVisitor visitor(Writer out) {
         return null; //FIXME
     }
     
-    public void getProof(Writer out, String proofName, TNode term) throws IOException {
+    public void getProof(Writer out, String proofName, TNode term) {
         //FIXME
     }
     
@@ -88,7 +88,7 @@ public class SammyProver extends ProverType {
         return tree;
     }
 
-    public void generateDeclarations(/*@ non_null @*/ Writer s, HashMap variablesName) throws IOException {
+    public void generateDeclarations(/*@ non_null @*/ Writer s, HashMap variablesName) {
 	// TODO Auto-generated method stub
     }
 }

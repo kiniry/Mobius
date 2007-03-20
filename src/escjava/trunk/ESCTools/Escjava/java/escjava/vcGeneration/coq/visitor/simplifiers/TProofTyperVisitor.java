@@ -91,14 +91,14 @@ public class TProofTyperVisitor extends TVisitor {
         super(null);
     }
     
-	public void setAllTypesTo(TFunction f, TypeInfo ti) throws IOException {
+	public void setAllTypesTo(TFunction f, TypeInfo ti) {
 		for(int i = 0; i < f.sons.size(); i++) {
 			TNode t = f.getChildAt(i);
 			t.type = ti;
 			t.accept(this);
 		}
 	}
-	public void visitSons(TFunction f) throws IOException {
+	public void visitSons(TFunction f) {
 		for(int i = 0; i < f.sons.size(); i++) {
 			TNode t = f.getChildAt(i);
 			t.accept(this);
@@ -114,7 +114,7 @@ public class TProofTyperVisitor extends TVisitor {
 	}
 	
 
-	public void visitTName(/*@non_null*/TName n) throws IOException {
+	public void visitTName(/*@non_null*/TName n) {
 		if (n.type != null) {		
 			VariableInfo vi = TNode.getVariableInfo(n.name);
 			if(vi.type == null) {
@@ -131,49 +131,49 @@ public class TProofTyperVisitor extends TVisitor {
 		}
 	}
 
-	public void visitTRoot(/*@non_null*/TRoot n) throws IOException {
+	public void visitTRoot(/*@non_null*/TRoot n) {
 		visitSons(n);
 	}
 
-	public void visitTBoolImplies(/*@non_null*/TBoolImplies n) throws IOException {
+	public void visitTBoolImplies(/*@non_null*/TBoolImplies n) {
 		n.type = TNode._boolean;
 		setAllTypesTo(n, TNode._boolean);
 	}
 
-	public void visitTBoolAnd(/*@non_null*/TBoolAnd n) throws IOException {
+	public void visitTBoolAnd(/*@non_null*/TBoolAnd n) {
 		n.type = TNode._boolean;
 		setAllTypesTo(n, TNode._boolean);
 	}
 
-	public void visitTBoolOr(/*@non_null*/TBoolOr n) throws IOException {
+	public void visitTBoolOr(/*@non_null*/TBoolOr n) {
 		n.type = TNode._boolean;
 		setAllTypesTo(n, TNode._boolean);
 	}
 
-	public void visitTBoolNot(/*@non_null*/TBoolNot n) throws IOException {
+	public void visitTBoolNot(/*@non_null*/TBoolNot n) {
 		n.type = TNode._boolean;
 		setAllTypesTo(n, TNode._boolean);
 	}
 
-	public void visitTBoolEQ(/*@non_null*/TBoolEQ n) throws IOException {
+	public void visitTBoolEQ(/*@non_null*/TBoolEQ n) {
 		n.type = TNode._boolean;
 		setAllTypesTo(n, TNode._boolean);
 	}
 
-	public void visitTBoolNE(/*@non_null*/TBoolNE n) throws IOException {
+	public void visitTBoolNE(/*@non_null*/TBoolNE n) {
 		n.type = TNode._boolean;
 		setAllTypesTo(n, TNode._boolean);
 	}
 
-	public void visitTAllocLT(/*@non_null*/TAllocLT n) throws IOException {
+	public void visitTAllocLT(/*@non_null*/TAllocLT n) {
 		visitSons(n);
 	}
 
-	public void visitTAllocLE(/*@non_null*/TAllocLE n) throws IOException {
+	public void visitTAllocLE(/*@non_null*/TAllocLE n) {
 		visitSons(n);
 	}
 
-	public void visitTAnyEQ(/*@non_null*/TAnyEQ n) throws IOException {
+	public void visitTAnyEQ(/*@non_null*/TAnyEQ n) {
 		visitSons(n);
 		if(sonsAreBool(n)) {
 			// in fact the node was wrong.
@@ -195,142 +195,142 @@ public class TProofTyperVisitor extends TVisitor {
 		
 	}
 
-	public void visitTAnyNE(/*@non_null*/TAnyNE n) throws IOException {
+	public void visitTAnyNE(/*@non_null*/TAnyNE n) {
 		visitSons(n);
 		n.type = TNode._boolean;
 	}
 
-	public void visitTIntegralEQ(/*@non_null*/TIntegralEQ n) throws IOException {
+	public void visitTIntegralEQ(/*@non_null*/TIntegralEQ n) {
 		n.type = TNode._boolean;
 		setAllTypesTo(n, TNode._integer);
 	}
 
-	public void visitTIntegralGE(/*@non_null*/TIntegralGE n) throws IOException {
+	public void visitTIntegralGE(/*@non_null*/TIntegralGE n) {
 		n.type = TNode._boolean;
 		setAllTypesTo(n, TNode._integer);
 	}
 
-	public void visitTIntegralGT(/*@non_null*/TIntegralGT n) throws IOException {
+	public void visitTIntegralGT(/*@non_null*/TIntegralGT n) {
 		n.type = TNode._boolean;
 		setAllTypesTo(n, TNode._integer);
 	}
 
-	public void visitTIntegralLE(/*@non_null*/TIntegralLE n) throws IOException {
-		n.type = TNode._boolean;
-		setAllTypesTo(n, TNode._integer);
-		
-	}
-
-	public void visitTIntegralLT(/*@non_null*/TIntegralLT n) throws IOException {
+	public void visitTIntegralLE(/*@non_null*/TIntegralLE n) {
 		n.type = TNode._boolean;
 		setAllTypesTo(n, TNode._integer);
 		
 	}
 
-	public void visitTIntegralNE(/*@non_null*/TIntegralNE n) throws IOException {
+	public void visitTIntegralLT(/*@non_null*/TIntegralLT n) {
+		n.type = TNode._boolean;
+		setAllTypesTo(n, TNode._integer);
+		
+	}
+
+	public void visitTIntegralNE(/*@non_null*/TIntegralNE n) {
 		n.type = TNode._boolean;
 		setAllTypesTo(n, TNode._integer);
 	}
 
-	public void visitTIntegralAdd(/*@non_null*/TIntegralAdd n) throws IOException {
+	public void visitTIntegralAdd(/*@non_null*/TIntegralAdd n) {
 		n.type = TNode._integer;
 		setAllTypesTo(n, TNode._integer);
 	}
 
-	public void visitTIntegralDiv(/*@non_null*/TIntegralDiv n) throws IOException {
+	public void visitTIntegralDiv(/*@non_null*/TIntegralDiv n) {
 		n.type = TNode._integer;
 		setAllTypesTo(n, TNode._integer);
 		
 	}
 
-	public void visitTIntegralMod(/*@non_null*/TIntegralMod n) throws IOException {
+	public void visitTIntegralMod(/*@non_null*/TIntegralMod n) {
 		n.type = TNode._integer;
 		setAllTypesTo(n, TNode._integer);
 	}
 
-	public void visitTIntegralMul(/*@non_null*/TIntegralMul n) throws IOException {
+	public void visitTIntegralMul(/*@non_null*/TIntegralMul n) {
 		n.type = TNode._integer;
 		setAllTypesTo(n, TNode._integer);	
 	}
 	
-	public void visitTIntegralSub(/*@non_null*/TIntegralSub n) throws IOException {
+	public void visitTIntegralSub(/*@non_null*/TIntegralSub n) {
 		n.type = TNode._integer;
 		setAllTypesTo(n, TNode._integer);
 	}
 
-	public void visitTFloatEQ(/*@non_null*/TFloatEQ n) throws IOException {
+	public void visitTFloatEQ(/*@non_null*/TFloatEQ n) {
 		n.type = TNode._boolean;
 		visitSons(n);
 	}
 
-	public void visitTFloatGE(/*@non_null*/TFloatGE n) throws IOException {
+	public void visitTFloatGE(/*@non_null*/TFloatGE n) {
 		n.type = TNode._boolean;
 		visitSons(n);
 	}
 
-	public void visitTFloatGT(/*@non_null*/TFloatGT n) throws IOException {
+	public void visitTFloatGT(/*@non_null*/TFloatGT n) {
 		n.type = TNode._boolean;
 		visitSons(n);
 	}
 
-	public void visitTFloatLE(/*@non_null*/TFloatLE n) throws IOException {
-		n.type = TNode._boolean;
-		visitSons(n);
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void visitTFloatLT(/*@non_null*/TFloatLT n) throws IOException {
+	public void visitTFloatLE(/*@non_null*/TFloatLE n) {
 		n.type = TNode._boolean;
 		visitSons(n);
 		// TODO Auto-generated method stub
 		
 	}
 
-	public void visitTFloatNE(/*@non_null*/TFloatNE n) throws IOException {
+	public void visitTFloatLT(/*@non_null*/TFloatLT n) {
 		n.type = TNode._boolean;
 		visitSons(n);
 		// TODO Auto-generated method stub
 		
 	}
 
-	public void visitTFloatAdd(/*@non_null*/TFloatAdd n) throws IOException {
+	public void visitTFloatNE(/*@non_null*/TFloatNE n) {
+		n.type = TNode._boolean;
 		visitSons(n);
 		// TODO Auto-generated method stub
 		
 	}
 
-	public void visitTFloatDiv(/*@non_null*/TFloatDiv n) throws IOException {
+	public void visitTFloatAdd(/*@non_null*/TFloatAdd n) {
 		visitSons(n);
 		// TODO Auto-generated method stub
 		
 	}
 
-	public void visitTFloatMod(/*@non_null*/TFloatMod n) throws IOException {
+	public void visitTFloatDiv(/*@non_null*/TFloatDiv n) {
 		visitSons(n);
 		// TODO Auto-generated method stub
 		
 	}
 
-	public void visitTFloatMul(/*@non_null*/TFloatMul n) throws IOException {
+	public void visitTFloatMod(/*@non_null*/TFloatMod n) {
 		visitSons(n);
 		// TODO Auto-generated method stub
 		
 	}
 
-	public void visitTLockLE(/*@non_null*/TLockLE n) throws IOException {
+	public void visitTFloatMul(/*@non_null*/TFloatMul n) {
 		visitSons(n);
 		// TODO Auto-generated method stub
 		
 	}
 
-	public void visitTLockLT(/*@non_null*/TLockLT n) throws IOException {
+	public void visitTLockLE(/*@non_null*/TLockLE n) {
 		visitSons(n);
 		// TODO Auto-generated method stub
 		
 	}
 
-	public void visitTRefEQ(/*@non_null*/TRefEQ n) throws IOException {
+	public void visitTLockLT(/*@non_null*/TLockLT n) {
+		visitSons(n);
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void visitTRefEQ(/*@non_null*/TRefEQ n) {
 		visitSons(n);
 		if(sonsAreBool(n)) {
 			// in fact the node was wrong.
@@ -349,12 +349,12 @@ public class TProofTyperVisitor extends TVisitor {
 		}
 	}
 
-	public void visitTRefNE(/*@non_null*/TRefNE n) throws IOException {
+	public void visitTRefNE(/*@non_null*/TRefNE n) {
 		n.type = TNode._boolean;
 		visitSons(n);
 	}
 
-	public void visitTTypeEQ(/*@non_null*/TTypeEQ n) throws IOException {
+	public void visitTTypeEQ(/*@non_null*/TTypeEQ n) {
 		visitSons(n);
 		if(sonsAreBool(n)) {
 			// in fact the node was wrong.
@@ -373,165 +373,165 @@ public class TProofTyperVisitor extends TVisitor {
 		}
 	}
 
-	public void visitTTypeNE(/*@non_null*/TTypeNE n) throws IOException {
+	public void visitTTypeNE(/*@non_null*/TTypeNE n) {
 		n.type = TNode._boolean;
 		visitSons(n);
 		// TODO Auto-generated method stub
 		
 	}
 
-	public void visitTTypeLE(/*@non_null*/TTypeLE n) throws IOException {
+	public void visitTTypeLE(/*@non_null*/TTypeLE n) {
 		n.type = TNode._boolean;
 		visitSons(n);
 		// TODO Auto-generated method stub
 		
 	}
 
-	public void visitTCast(/*@non_null*/TCast n) throws IOException {
+	public void visitTCast(/*@non_null*/TCast n) {
 		visitSons(n);
 		// TODO Auto-generated method stub
 		
 	}
 
-	public void visitTIs(/*@non_null*/TIs n) throws IOException {
+	public void visitTIs(/*@non_null*/TIs n) {
 		visitSons(n);
 		// TODO Auto-generated method stub
 		
 	}
 
-	public void visitTSelect(/*@non_null*/TSelect n) throws IOException {
+	public void visitTSelect(/*@non_null*/TSelect n) {
 		((TNode)n.sons.get(0)).type = TNode._Reference;
 		visitSons(n);
 		
 	}
 
-	public void visitTStore(/*@non_null*/TStore n) throws IOException {
+	public void visitTStore(/*@non_null*/TStore n) {
 		visitSons(n);
 		// TODO Auto-generated method stub
 		
 	}
 
-	public void visitTTypeOf(/*@non_null*/TTypeOf n) throws IOException {
+	public void visitTTypeOf(/*@non_null*/TTypeOf n) {
 		setAllTypesTo(n, TNode._Reference);
 		
 	}
 
-	public void visitTForAll(/*@non_null*/TForAll n) throws IOException {
+	public void visitTForAll(/*@non_null*/TForAll n) {
 		n.type = TNode._boolean;
 		visitSons(n);	
 	}
 
-	public void visitTExist(/*@non_null*/TExist n) throws IOException {
+	public void visitTExist(/*@non_null*/TExist n) {
 		n.type = TNode._boolean;
 		visitSons(n);
 		
 	}
 
-	public void visitTIsAllocated(/*@non_null*/TIsAllocated n) throws IOException {
+	public void visitTIsAllocated(/*@non_null*/TIsAllocated n) {
 		visitSons(n);
 	}
 
-	public void visitTEClosedTime(/*@non_null*/TEClosedTime n) throws IOException {
+	public void visitTEClosedTime(/*@non_null*/TEClosedTime n) {
 		setAllTypesTo(n, TNode._Reference); // type the sons with the elem type
 	}
 
-	public void visitTFClosedTime(/*@non_null*/TFClosedTime n) throws IOException {
+	public void visitTFClosedTime(/*@non_null*/TFClosedTime n) {
 		visitSons(n);
 		// TODO Auto-generated method stub
 		
 	}
 
-	public void visitTAsElems(/*@non_null*/TAsElems n) throws IOException {
+	public void visitTAsElems(/*@non_null*/TAsElems n) {
 		visitSons(n);
 		// TODO Auto-generated method stub
 		
 	}
 
-	public void visitTAsField(/*@non_null*/TAsField n) throws IOException {
+	public void visitTAsField(/*@non_null*/TAsField n) {
 		visitSons(n);
 		// TODO Auto-generated method stub
 		
 	}
 
-	public void visitTAsLockSet(/*@non_null*/TAsLockSet n) throws IOException {
+	public void visitTAsLockSet(/*@non_null*/TAsLockSet n) {
 		visitSons(n);
 		// TODO Auto-generated method stub
 		
 	}
 
-	public void visitTArrayLength(/*@non_null*/TArrayLength n) throws IOException {
+	public void visitTArrayLength(/*@non_null*/TArrayLength n) {
 		visitSons(n);
 		// TODO Auto-generated method stub
 		
 	}
 
-	public void visitTArrayFresh(/*@non_null*/TArrayFresh n) throws IOException {
+	public void visitTArrayFresh(/*@non_null*/TArrayFresh n) {
 		visitSons(n);
 		// TODO Auto-generated method stub
 		
 	}
 
-	public void visitTArrayShapeOne(/*@non_null*/TArrayShapeOne n) throws IOException {
+	public void visitTArrayShapeOne(/*@non_null*/TArrayShapeOne n) {
 		visitSons(n);
 		// TODO Auto-generated method stub
 		
 	}
 
-	public void visitTArrayShapeMore(/*@non_null*/TArrayShapeMore n) throws IOException {
+	public void visitTArrayShapeMore(/*@non_null*/TArrayShapeMore n) {
 		visitSons(n);
 		// TODO Auto-generated method stub
 		
 	}
 
-	public void visitTIsNewArray(/*@non_null*/TIsNewArray n) throws IOException {
+	public void visitTIsNewArray(/*@non_null*/TIsNewArray n) {
 		visitSons(n);
 		// TODO Auto-generated method stub
 		
 	}
 
-	public void visitTUnset(/*@non_null*/TUnset n) throws IOException {
+	public void visitTUnset(/*@non_null*/TUnset n) {
 		visitSons(n);
 		// TODO Auto-generated method stub
 		
 	}
 
-	public void visitTMethodCall(/*@non_null*/TMethodCall n) throws IOException {
+	public void visitTMethodCall(/*@non_null*/TMethodCall n) {
 		visitSons(n);
 	}
 	
-	public void visitTString(/*@non_null*/TString n) throws IOException {
+	public void visitTString(/*@non_null*/TString n) {
 		n.type = TNode._String;
 	}
 
-	public void visitTBoolean(/*@non_null*/TBoolean n) throws IOException {
+	public void visitTBoolean(/*@non_null*/TBoolean n) {
 		n.type = TNode._boolean;
 		
 	}
 
-	public void visitTChar(/*@non_null*/TChar n) throws IOException {
+	public void visitTChar(/*@non_null*/TChar n) {
 		n.type = TNode._char;
 	}
 
-	public void visitTInt(/*@non_null*/TInt n) throws IOException {
+	public void visitTInt(/*@non_null*/TInt n) {
 		n.type = TNode._integer;
 	}
 
-	public void visitTFloat(/*@non_null*/TFloat n) throws IOException {
+	public void visitTFloat(/*@non_null*/TFloat n) {
 		n.type = TNode._float;
 		
 	}
 
-	public void visitTDouble(/*@non_null*/TDouble n) throws IOException {
+	public void visitTDouble(/*@non_null*/TDouble n) {
 		n.type = TNode._double;
 		
 	}
 
-	public void visitTNull(/*@non_null*/TNull n) throws IOException {
+	public void visitTNull(/*@non_null*/TNull n) {
 		n.type = TNode._Reference;
 		
 	}
 
-	public void visitTSum(/*@non_null@*/ TSum s) throws IOException {
+	public void visitTSum(/*@non_null@*/ TSum s) {
 	
 	}
 

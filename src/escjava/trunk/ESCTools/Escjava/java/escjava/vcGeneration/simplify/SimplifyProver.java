@@ -13,11 +13,11 @@ public class SimplifyProver extends ProverType {
         return label;
     }
     
-    public TVisitor visitor(Writer out) throws IOException {
+    public TVisitor visitor(Writer out) {
         return new TSimplifyVisitor(out);
     }
 
-    public void getProof(Writer out, String proofName, TNode term) throws IOException {
+    public void getProof(Writer out, String proofName, TNode term) {
         generateTerm(out, term);
     }
 
@@ -101,7 +101,7 @@ public class SimplifyProver extends ProverType {
         return tree;
     }
 
-	public void generateDeclarations(/*@non_null*/Writer s, HashMap variablesName) throws IOException {
+	public void generateDeclarations(/*@non_null*/Writer s, HashMap variablesName) {
 		// TODO Auto-generated method stub
 		
 	}

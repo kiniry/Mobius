@@ -19,11 +19,11 @@ public class PvsProver extends ProverType {
         return label;
     }
     
-    public TVisitor visitor(Writer out) throws IOException {
+    public TVisitor visitor(Writer out) {
         return new TPvsVisitor(out);
     }
 
-    public void getProof(Writer out, String proofName, TNode term) throws IOException {
+    public void getProof(Writer out, String proofName, TNode term) {
         try {
             out.write(proofName + " : CONJECTURE\n"); // let's be modest...
             out.write("ForAll(\n");
@@ -253,16 +253,11 @@ public class PvsProver extends ProverType {
      */   
     public TNode rewrite(TNode tree) {
         TProofSimplifier psvi = new TProofSimplifier();
-        try {
-            tree.accept(psvi);
-        } catch (IOException e) {
-            // This should never happen!
-            System.out.println(e.getMessage());
-        }
+        tree.accept(psvi);
         return tree;
     }
 
-	public void generateDeclarations(/*@ non_null */ Writer s, HashMap variablesName) throws IOException {
+	public void generateDeclarations(/*@ non_null */ Writer s, HashMap variablesName) {
         Set keySet = variablesName.keySet();
 
         Iterator iter = keySet.iterator();

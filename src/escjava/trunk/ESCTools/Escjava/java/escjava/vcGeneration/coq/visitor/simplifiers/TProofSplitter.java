@@ -57,7 +57,7 @@ public class TProofSplitter extends ATSimplifier {
 	 * (non-Javadoc)
 	 * @see escjava.vcGeneration.TVisitor#visitTRoot(escjava.vcGeneration.TRoot)
 	 */
-	public void visitTRoot(/*@ non_null @*/ TRoot n) throws IOException {
+	public void visitTRoot(/*@ non_null @*/ TRoot n) {
 		
 		if(morbidity == MORBIDITY_THRESHOLD)
 			return;
@@ -76,7 +76,7 @@ public class TProofSplitter extends ATSimplifier {
 	 * (non-Javadoc)
 	 * @see escjava.vcGeneration.TVisitor#visitTBoolImplies(escjava.vcGeneration.TBoolImplies)
 	 */
-	public void visitTBoolImplies(/*@ non_null @*/ TBoolImplies n) throws IOException {
+	public void visitTBoolImplies(/*@ non_null @*/ TBoolImplies n) {
 		if(n.sons.size() != 2) {
 			  TDisplay.err(n.sons.size() +"sons, that's suspicious");
 		}

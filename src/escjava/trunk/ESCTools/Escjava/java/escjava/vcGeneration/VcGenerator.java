@@ -66,7 +66,7 @@ public class VcGenerator {
         TNode.init(prover);
     }
 
-    public void getProof(Writer out, String proofName) throws IOException {
+    public void getProof(Writer out, String proofName) {
 
         if (!computationDone) {
             generateIfpTree(oldRootNode, false);
@@ -98,7 +98,7 @@ public class VcGenerator {
     /*@
      @ ensures computationDone;
      @*/
-    public String toDot() throws IOException {
+    public String toDot() {
         if (!computationDone)
             generateIfpTree(oldRootNode, false);
 

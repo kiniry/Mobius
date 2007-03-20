@@ -38,7 +38,7 @@ public class TCoqVisitor extends ANotHandledVisitor {
     /* 
      * non automatic generated class
      */ 
-    public void visitTName(/*@ non_null @*/ TName n) throws IOException{
+    public void visitTName(/*@ non_null @*/ TName n){
 
 	/*
 	 * This call handles everything, ie if n is a variable or a type name
@@ -50,7 +50,7 @@ public class TCoqVisitor extends ANotHandledVisitor {
 		out.appendN(name);
     }
 
-    public void visitTRoot(/*@ non_null @*/ TRoot n) throws IOException{
+    public void visitTRoot(/*@ non_null @*/ TRoot n){
     	Iterator iter = n.sons.iterator();
     	while(iter.hasNext()) {
     		((TNode)iter.next()).accept(tcv);
@@ -61,28 +61,28 @@ public class TCoqVisitor extends ANotHandledVisitor {
     /*
      * class created using the perl script
      */
-    public void visitTBoolImplies(/*@ non_null @*/ TBoolImplies n) throws IOException{
+    public void visitTBoolImplies(/*@ non_null @*/ TBoolImplies n){
     	genericPropOp("->", n);
     }
 
-    public void visitTBoolAnd(/*@ non_null @*/ TBoolAnd n) throws IOException{
+    public void visitTBoolAnd(/*@ non_null @*/ TBoolAnd n){
     	genericPropOp("/\\", n);
     }
 
-    public void visitTBoolOr(/*@ non_null @*/ TBoolOr n) throws IOException{
+    public void visitTBoolOr(/*@ non_null @*/ TBoolOr n){
     	genericPropOp("\\/", n);
     }
 
-    public void visitTBoolNot(/*@ non_null @*/ TBoolNot n) throws IOException{
+    public void visitTBoolNot(/*@ non_null @*/ TBoolNot n){
     	unaryGeneric("negb ", n);
     }
     
-    public void visitTBoolEQ(/*@ non_null @*/ TBoolEQ n) throws IOException{
+    public void visitTBoolEQ(/*@ non_null @*/ TBoolEQ n){
     
     	printBoolEq(n);
     
     }
-    public void printBoolEq(TFunction n) throws IOException{
+    public void printBoolEq(TFunction n){
     	//String s = "=";
        	if(n.sons.size() < 2 )
     	    System.err.println("java.escjava.vcGeneration.TCoqVisitor.printBoolEq : the spaced out binary operator named = has a number of sons equals to "+n.sons.size()+" which is different from 2");
@@ -116,19 +116,19 @@ public class TCoqVisitor extends ANotHandledVisitor {
     	    out.reduceI();
     }
     
-    public void visitTBoolNE(/*@ non_null @*/ TBoolNE n) throws IOException{
+    public void visitTBoolNE(/*@ non_null @*/ TBoolNE n){
     	binOp("<>", n);
     }
 
-    public void visitTAllocLT(/*@ non_null @*/ TAllocLT n) throws IOException{
+    public void visitTAllocLT(/*@ non_null @*/ TAllocLT n){
     	binOp("<", n);
     }
 
-    public void visitTAllocLE(/*@ non_null @*/ TAllocLE n) throws IOException{
+    public void visitTAllocLE(/*@ non_null @*/ TAllocLE n){
     	binOp("<=", n);
     }
 
-    public void visitTAnyEQ(/*@ non_null @*/ TAnyEQ n) throws IOException{
+    public void visitTAnyEQ(/*@ non_null @*/ TAnyEQ n){
     	if(n.sons.size() == 2) {
     		Object son = n.sons.get(1);
     		if((son instanceof TAsLockSet) || 
@@ -143,41 +143,41 @@ public class TCoqVisitor extends ANotHandledVisitor {
     	
     }
 
-    public void visitTAnyNE(/*@ non_null @*/ TAnyNE n) throws IOException{
+    public void visitTAnyNE(/*@ non_null @*/ TAnyNE n){
     	binOp("<>", n);
     }
     
 		
 
 				  
-    public void visitTRefEQ(/*@ non_null @*/ TRefEQ n) throws IOException{
+    public void visitTRefEQ(/*@ non_null @*/ TRefEQ n){
     	spacedBinOp("(* Ref Eq *) =", n);
     }
 				  
-    public void visitTRefNE(/*@ non_null @*/ TRefNE n) throws IOException{
+    public void visitTRefNE(/*@ non_null @*/ TRefNE n){
     	binOp("<>", n);
     }
 				  
-    public void visitTTypeEQ(/*@ non_null @*/ TTypeEQ n) throws IOException{
+    public void visitTTypeEQ(/*@ non_null @*/ TTypeEQ n){
     	spacedBinOp("(* Type Eq *) =", n);
     }
 				  
-    public void visitTTypeNE(/*@ non_null @*/ TTypeNE n) throws IOException{
+    public void visitTTypeNE(/*@ non_null @*/ TTypeNE n){
     	binOp("<>", n);
     }
 				  
-    public void visitTTypeLE(/*@ non_null @*/ TTypeLE n) throws IOException{
+    public void visitTTypeLE(/*@ non_null @*/ TTypeLE n){
     	genericFun("subtypes", n); //
     }
 	
  
 
 
-    public void visitTTypeOf(/*@ non_null @*/ TTypeOf n) throws IOException{
+    public void visitTTypeOf(/*@ non_null @*/ TTypeOf n){
     	genericFun("typeof",n);
     }
 
-    public void visitTForAll(/*@ non_null @*/ TForAll n) throws IOException{
+    public void visitTForAll(/*@ non_null @*/ TForAll n){
     	out.appendI("(forall ");	
     	int i =0;
     	StringBuffer sb = new StringBuffer();
@@ -213,52 +213,52 @@ public class TCoqVisitor extends ANotHandledVisitor {
 
     //
 				  
-    public void visitTIsAllocated(/*@ non_null @*/ TIsAllocated n) throws IOException{
+    public void visitTIsAllocated(/*@ non_null @*/ TIsAllocated n){
     	genericFun("isAllocated", n);
     }
 
-    public void visitTEClosedTime(/*@ non_null @*/ TEClosedTime n) throws IOException{
+    public void visitTEClosedTime(/*@ non_null @*/ TEClosedTime n){
     	genericFun("eClosedTime", n);
     }
 				  
-    public void visitTFClosedTime(/*@ non_null @*/ TFClosedTime n) throws IOException{
+    public void visitTFClosedTime(/*@ non_null @*/ TFClosedTime n){
     	genericFun("fClosedTime", n);
     }
-    public void visitTAsElems(/*@ non_null @*/ TAsElems n) throws IOException{
+    public void visitTAsElems(/*@ non_null @*/ TAsElems n){
     	genericFun("asElems", n);
     }
 				  
-    public void visitTAsField(/*@ non_null @*/ TAsField n) throws IOException{
+    public void visitTAsField(/*@ non_null @*/ TAsField n){
     	genericFun("asField", n);
     }
 
-    public void visitTString(/*@ non_null @*/ TString n) throws IOException{
+    public void visitTString(/*@ non_null @*/ TString n){
     	out.appendN(" (typeof " + n.value+ ")" );
     }
 
-    public void visitTBoolean(/*@ non_null @*/ TBoolean n) throws IOException{
+    public void visitTBoolean(/*@ non_null @*/ TBoolean n){
 	if(n.value)
 	    out.appendN(" (* bool*) true");
 	else
 	    out.appendN("false");
     }
 
-    public void visitTChar(/*@ non_null @*/ TChar n) throws IOException{
+    public void visitTChar(/*@ non_null @*/ TChar n){
 	out.appendN(" (* a char value *)"+n.value);
     }
 	  
-    public void visitTDouble(/*@ non_null @*/ TDouble n) throws IOException{
+    public void visitTDouble(/*@ non_null @*/ TDouble n){
     	out.appendN(" (* a double value *)"+n.value); 
     }
-    public void visitTNull(/*@ non_null @*/ TNull n) throws IOException{
+    public void visitTNull(/*@ non_null @*/ TNull n){
     	out.appendN(" null");
     }
 
-	public void visitTMethodCall(/*@non_null*/TMethodCall call) throws IOException {
+	public void visitTMethodCall(/*@non_null*/TMethodCall call) {
 		genericFun(p.getVariableInfo(call.getName()), call);
 	}
 
-	public void visitTUnset(/*@non_null*/TUnset n) throws IOException {
+	public void visitTUnset(/*@non_null*/TUnset n) {
 		genericFun("unset", n);
 	}
 

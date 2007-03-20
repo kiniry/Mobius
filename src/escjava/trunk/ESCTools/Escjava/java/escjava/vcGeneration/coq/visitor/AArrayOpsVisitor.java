@@ -12,15 +12,15 @@ public abstract class AArrayOpsVisitor extends AFloatVisitor {
 		super(out, prover, ppout);
 	}
 	
-    public void visitTAsLockSet(/*@ non_null @*/ TAsLockSet n) throws IOException{
+    public void visitTAsLockSet(/*@ non_null @*/ TAsLockSet n){
     	genericFun("asLockSet", n);
     	
     }
 				  
-    public void visitTArrayLength(/*@ non_null @*/ TArrayLength n) throws IOException{
+    public void visitTArrayLength(/*@ non_null @*/ TArrayLength n){
     	genericFun("arrayLength", n);
     }
-    public void visitTArrayFresh(/*@ non_null @*/ TArrayFresh n) throws IOException{
+    public void visitTArrayFresh(/*@ non_null @*/ TArrayFresh n){
     	if(TNode._boolean.equals(n.getChildAt(6).type)) {
     		String s= "arrayFreshBool";
     	
@@ -48,15 +48,15 @@ public abstract class AArrayOpsVisitor extends AFloatVisitor {
     		genericFun("arrayFresh", n);     	
     	
     }
-    public void visitTArrayShapeOne(/*@ non_null @*/ TArrayShapeOne n) throws IOException{
+    public void visitTArrayShapeOne(/*@ non_null @*/ TArrayShapeOne n){
     	genericFun("arrayShapeOne", n);
     }
-    public void visitTArrayShapeMore(/*@ non_null @*/ TArrayShapeMore n) throws IOException{
+    public void visitTArrayShapeMore(/*@ non_null @*/ TArrayShapeMore n){
     	genericFun("arrayShapeMore", n);
     }
     
 	  
-    public void visitTSelect(/*@ non_null @*/ TSelect n) throws IOException{
+    public void visitTSelect(/*@ non_null @*/ TSelect n){
     	String pre = "";
     	if(TNode._integer.equals(((TNode)n.sons.get(1)).type))
     		pre = "arr";
@@ -71,7 +71,7 @@ public abstract class AArrayOpsVisitor extends AFloatVisitor {
 //    	else
 //    		genericFun("RefHeap." +pre +"select ", n);
     }
-    public void visitTStore(/*@ non_null @*/ TStore n) throws IOException{
+    public void visitTStore(/*@ non_null @*/ TStore n){
     	String pre = "";
     	TNode index =(TNode)n.sons.get(1);
 //    	TNode val =(TNode)n.sons.get(2);
@@ -100,7 +100,7 @@ public abstract class AArrayOpsVisitor extends AFloatVisitor {
     }
 	  
 
-    public void visitTIsNewArray(/*@ non_null @*/ TIsNewArray n) throws IOException{
+    public void visitTIsNewArray(/*@ non_null @*/ TIsNewArray n){
     	genericFun("isNewArray", n);
     }
 }

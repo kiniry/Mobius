@@ -9,7 +9,7 @@ import java.io.IOException;
  * @author Carl Pulley
  *
  */
-public class XmlProverException extends IOException {
+public class XmlProverException extends RuntimeException {
 
     public String stylesheet;
     

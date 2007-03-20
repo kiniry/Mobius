@@ -9,6 +9,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javafe.ast.Expr;
+import javafe.util.ErrorSet;
 
 import escjava.translate.GC;
 import escjava.translate.InitialState;
@@ -43,18 +44,22 @@ public class Cvc3Prover extends ProverType {
     }
     
     // cvc3's visitor
-    public TVisitor visitor(Writer out) throws IOException {
+    public TVisitor visitor(Writer out) {
         return new TCvc3Visitor(out,this);
     }
     
     // turn the ast into a cvc formula to be asserted/queried
-    public void getProof(Writer out, String proofName, TNode term) throws IOException {
-        out.write("INCLUDE \"header.cvc3\";\n");
-        generateDeclarations(out,term);
-        generatePureMethodDeclarations(out);
-        out.write("QUERY\n");
-        generateTerm(out,term);
-        out.write(";");
+    public void getProof(Writer out, String proofName, TNode term) {
+    	try {     		
+    		out.write("INCLUDE \"header.cvc3\";\n");
+    		generateDeclarations(out,term);
+    		generatePureMethodDeclarations(out);
+    		out.write("QUERY\n");
+    		generateTerm(out,term);
+    		out.write(";");
+    	} catch (IOException e) {
+    		ErrorSet.fatal("internal error: " + e.getMessage());
+    	}
     }
     
 
@@ -231,106 +236,114 @@ public class Cvc3Prover extends ProverType {
 
     // Generate declarations for pure methods (later used with "MethodCall" nodes
     // adapted from coq code
-    public void generatePureMethodDeclarations (Writer s) throws IOException {
-      Vector methNames = TMethodCall.methNames;
-      Vector methDefs = TMethodCall.methDefs;
-      for (int i = 0; i<methNames.size();i++) {
-        s.write(getVariableInfo(((VariableInfo)methNames.get(i)))+ " : ");
-        TMethodCall tmc = (TMethodCall)(methDefs.get(i));
-        Vector v = tmc.getArgType();
-        int j=0;
-        if (v.size() > 1)
-          s.write("(");
-        for (;j<v.size();j++) {
-          TypeInfo ti = (TypeInfo)v.get(j);
-          if (ti == null) 
-            s.write("JavaValue");
-          else
-            s.write(getTypeInfo(ti));
-
-          if (j < v.size()-1)
-            s.write (",");
-        }
-        if (v.size() > 1)
-          s.write(")");
-        if (tmc.type == null) 
-          s.write (" -> JavaValue;\n");
-        else
-          s.write (" -> " + tmc.type.def + ";\n");
-      }
+    public void generatePureMethodDeclarations (Writer s) {
+    	Vector methNames = TMethodCall.methNames;
+    	Vector methDefs = TMethodCall.methDefs;
+    	try {
+    		for (int i = 0; i<methNames.size();i++) {
+    			s.write(getVariableInfo(((VariableInfo)methNames.get(i)))+ " : ");
+    			TMethodCall tmc = (TMethodCall)(methDefs.get(i));
+    			Vector v = tmc.getArgType();
+    			int j=0;
+    			if (v.size() > 1)
+    				s.write("(");
+    			for (;j<v.size();j++) {
+    				TypeInfo ti = (TypeInfo)v.get(j);
+    				if (ti == null) 
+    					s.write("JavaValue");
+    				else
+    					s.write(getTypeInfo(ti));
+    				
+    				if (j < v.size()-1)
+    					s.write (",");
+    			}
+    			if (v.size() > 1)
+    				s.write(")");
+    			if (tmc.type == null) 
+    				s.write (" -> JavaValue;\n");
+    			else
+    				s.write (" -> " + tmc.type.def + ";\n");
+    		}
+    	} catch (IOException e) {
+    		ErrorSet.fatal("internal error: " + e.getMessage());
+    	}
     }
-
+    
     // so this goes through the map of variable info and prints out type decls.
-// this will probably not work with local (quantified) variables...
-// may need to rename those
-    public void generateDeclarations(/*@ non_null @*/ Writer s, HashMap variablesNames) throws IOException {
-       Set keySet = variablesNames.keySet();
-       Iterator iter = keySet.iterator();
-       String keytmp = null;
-       VariableInfo vitmp = null;
-       HashMap varhash = new HashMap();
-       // include pre-defined vars
-//       varhash.put("ecReturn",null);
-//       varhash.put("ecThrow",null);
-       varhash.put("alloc",null);
-       varhash.put("alloc_",null);
-       varhash.put("LS",null);
-       varhash.put("elems",null);
-       varhash.put("javaInt",null);
-       varhash.put("javaChar",null);
-       varhash.put("javaDouble",null);
-       varhash.put("javaBool",null);
-       varhash.put("javaFloat",null);
-       varhash.put("java'lang'Object",null); // base Object type
-       varhash.put("Object",null); // base Object type
-       varhash.put("Exception",null); // Exception class type
-       varhash.put("not_handled",null); // this will be handled in the visitor
-
-       while (iter.hasNext()) {
-         try {
-           keytmp = (String) iter.next();
-         } catch (Exception e) {
-           System.err.println(e.getMessage());
-         }
-
-         vitmp = (VariableInfo) variablesNames.get(keytmp);
-// from coq -- ??
-         String name = vitmp.getVariableInfo().toString();
-
-// make sure we don't re-define anything!
-         if (varhash.containsKey(name))
-           continue;
-         varhash.put(name,vitmp);
-  
-         if (vitmp.type != null) {
-           // declare variable
-           s.write(vitmp.getVariableInfo() + " : "
-             + vitmp.type.getTypeInfo());
-           // declare new object types
-           if (vitmp.type.getTypeInfo().equals("JavaType"))
-             s.write(" = "+getClassTypeValue(vitmp.getVariableInfo()));
-
-           s.write(";\n");
-// only assert the types of javatype vars!!
-           // now add static type decl:
-//           s.write("  ASSERT s_type("+vitmp.getVariableInfo()+")="
-//              +vitmp.type.getTypeInfo());
-//           s.write(";\n");
-           // dynamic type decl?
-//           s.write("  ASSERT d_type("+vitmp.getVariableInfo()+")="
-//              +vitmp.type.getTypeInfo());
-//           s.write(";\n");
-
-         } else {
-           s.write(vitmp.getVariableInfo() + " : S;\n");
-           // static type decl
-//           s.write("  ASSERT s_type("+vitmp.getVariableInfo()+")= S");
-//           s.write(";\n");
-           // dynamic type decl?
-
-           TDisplay.warn("Type of variable " + keytmp
-                          + " is not set when declarating variables for the proof, skipping it...");
-         }
-       }
+//  this will probably not work with local (quantified) variables...
+//  may need to rename those
+    public void generateDeclarations(/*@ non_null @*/ Writer s, HashMap variablesNames) {
+    	try {
+    		Set keySet = variablesNames.keySet();
+    		Iterator iter = keySet.iterator();
+    		String keytmp = null;
+    		VariableInfo vitmp = null;
+    		HashMap varhash = new HashMap();
+    		// include pre-defined vars
+//  		varhash.put("ecReturn",null);
+//  		varhash.put("ecThrow",null);
+    		varhash.put("alloc",null);
+    		varhash.put("alloc_",null);
+    		varhash.put("LS",null);
+    		varhash.put("elems",null);
+    		varhash.put("javaInt",null);
+    		varhash.put("javaChar",null);
+    		varhash.put("javaDouble",null);
+    		varhash.put("javaBool",null);
+    		varhash.put("javaFloat",null);
+    		varhash.put("java'lang'Object",null); // base Object type
+    		varhash.put("Object",null); // base Object type
+    		varhash.put("Exception",null); // Exception class type
+    		varhash.put("not_handled",null); // this will be handled in the visitor
+    		
+    		while (iter.hasNext()) {
+    			try {
+    				keytmp = (String) iter.next();
+    			} catch (Exception e) {
+    				System.err.println(e.getMessage());
+    			}
+    			
+    			vitmp = (VariableInfo) variablesNames.get(keytmp);
+//  			from coq -- ??
+    			String name = vitmp.getVariableInfo().toString();
+    			
+//  			make sure we don't re-define anything!
+    			if (varhash.containsKey(name))
+    				continue;
+    			varhash.put(name,vitmp);
+    			
+    			if (vitmp.type != null) {
+    				// declare variable
+    				s.write(vitmp.getVariableInfo() + " : "
+    						+ vitmp.type.getTypeInfo());
+    				// declare new object types
+    				if (vitmp.type.getTypeInfo().equals("JavaType"))
+    					s.write(" = "+getClassTypeValue(vitmp.getVariableInfo()));
+    				
+    				s.write(";\n");
+//  				only assert the types of javatype vars!!
+    				// now add static type decl:
+//  				s.write("  ASSERT s_type("+vitmp.getVariableInfo()+")="
+//  				+vitmp.type.getTypeInfo());
+//  				s.write(";\n");
+    				// dynamic type decl?
+//  				s.write("  ASSERT d_type("+vitmp.getVariableInfo()+")="
+//  				+vitmp.type.getTypeInfo());
+//  				s.write(";\n");
+    				
+    			} else {
+    				s.write(vitmp.getVariableInfo() + " : S;\n");
+    				// static type decl
+//  				s.write("  ASSERT s_type("+vitmp.getVariableInfo()+")= S");
+//  				s.write(";\n");
+    				// dynamic type decl?
+    				
+    				TDisplay.warn("Type of variable " + keytmp
+    						+ " is not set when declarating variables for the proof, skipping it...");
+    			}
+    		}
+    	} catch (IOException e) {
+    		ErrorSet.fatal("internal error: " + e.getMessage());
+    	}
     }
 }

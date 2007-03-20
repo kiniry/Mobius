@@ -24,7 +24,7 @@ public class TAndRemover  extends ATSimplifier{
 	 * (non-Javadoc)
 	 * @see escjava.vcGeneration.TVisitor#visitTBoolImplies(escjava.vcGeneration.TBoolImplies)
 	 */
-	public void visitTBoolImplies(/*@non_null@*/ TBoolImplies n) throws IOException {
+	public void visitTBoolImplies(/*@non_null@*/ TBoolImplies n) {
 		if(n.sons.size() != 2)
 			  TDisplay.err(n.sons.size() +"sons, that's suspicious");
 

@@ -20,26 +20,26 @@ public abstract class ANotHandledVisitor extends AArrayOpsVisitor{
 	}
 	
     // FIXME: LockLE and LockLT have the same symbol
-    public void visitTLockLE(/*@ non_null @*/ TLockLE n) throws IOException{
+    public void visitTLockLE(/*@ non_null @*/ TLockLE n){
     	binOp("lockLess", n);
     }
 
-    public void visitTLockLT(/*@ non_null @*/ TLockLT n) throws IOException{
+    public void visitTLockLT(/*@ non_null @*/ TLockLT n){
     	binOp("lockLess", n);
     }
     
-    public void visitTCast(/*@ non_null @*/ TCast n) throws IOException{
+    public void visitTCast(/*@ non_null @*/ TCast n){
     	genericFun("cast", n);
     }
 			
-    public void visitTIs(/*@ non_null @*/ TIs n) throws IOException{
+    public void visitTIs(/*@ non_null @*/ TIs n){
     	out.appendN("(* TIs *) True");
     }
 
     /**
      * FIXME: Not handled yet.
      */
-    public void visitTExist(/*@ non_null @*/ TExist n) throws IOException{
+    public void visitTExist(/*@ non_null @*/ TExist n){
     	out.appendN("(* TExist *) True");
     }
 }

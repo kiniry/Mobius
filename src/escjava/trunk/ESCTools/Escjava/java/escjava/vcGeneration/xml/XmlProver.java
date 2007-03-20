@@ -10,6 +10,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import javafe.ast.Expr;
+import javafe.util.ErrorSet;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -85,7 +86,7 @@ public class XmlProver extends ProverType {
     
     private TXmlVisitor visitor = null;
     
-    public TVisitor visitor(Writer out) throws IOException {
+    public TVisitor visitor(Writer out) {
         if (visitor == null) {
             visitor = new TXmlVisitor(out);
         }
@@ -110,7 +111,7 @@ public class XmlProver extends ProverType {
      * <i>XMLPROVERPATH</i> for a file named <i>&lt;stylesheet&gt;.xslt</i>. <i>XMLPROVERPATH</i> has a default value of '.'</li>
      * </ul>
      */
-    public void getProof(Writer out, String proofName, TNode term) throws IOException {
+    public void getProof(Writer out, String proofName, TNode term) {
         try {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();
@@ -163,7 +164,11 @@ public class XmlProver extends ProverType {
                                 + ".xslt");
                         if (fileSrc.exists() && fileSrc.isFile()
                                 && fileSrc.canRead()) {
-                            src = new FileInputStream(fileSrc);
+                    		try {
+                    			src = new FileInputStream(fileSrc);
+                    		} catch (IOException e) {
+                    			ErrorSet.fatal("internal error: " + e.getMessage());
+                    		}
                             break;
                         }
                     }
@@ -254,7 +259,7 @@ public class XmlProver extends ProverType {
         return tree;
     }
 
-	public void generateDeclarations(/*@non_null*/Writer s, HashMap variableNames) throws IOException {
+	public void generateDeclarations(/*@non_null*/Writer s, HashMap variableNames) {
         Set keySet = variableNames.keySet();
         Iterator iter = keySet.iterator();
         String keyTemp = null;

@@ -14,7 +14,7 @@ public class TName extends TVariable {
         this.name = name;
     }
 
-    public void accept(/*@ non_null @*/TVisitor v) throws IOException {
+    public void accept(/*@ non_null @*/TVisitor v) {
         v.visitTName(this);
     }
     protected void typeTree(){

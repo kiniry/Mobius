@@ -144,7 +144,7 @@ public abstract class ATSimplifier extends TVisitor {
 	 * (non-Javadoc)
 	 * @see escjava.vcGeneration.TVisitor#visitTRoot(escjava.vcGeneration.TRoot)
 	 */
-	public void visitTRoot(/*@non_null@*/ TRoot n) throws IOException {
+	public void visitTRoot(/*@non_null@*/ TRoot n) {
 		Iterator iter = ((List) n.sons.clone()).iterator();
 		while(iter.hasNext()) {
 		    ((TNode)iter.next()).accept(this);
@@ -152,243 +152,243 @@ public abstract class ATSimplifier extends TVisitor {
 	}
 	
 	
-	public void visitTAllocLE(/*@non_null@*/ TAllocLE n) throws IOException {
+	public void visitTAllocLE(/*@non_null@*/ TAllocLE n) {
 		
 	}
 
-	public void visitTAllocLT(/*@non_null@*/ TAllocLT n) throws IOException {
+	public void visitTAllocLT(/*@non_null@*/ TAllocLT n) {
 		
 	}
 
-	public void visitTAnyEQ(/*@non_null@*/ TAnyEQ n) throws IOException {
+	public void visitTAnyEQ(/*@non_null@*/ TAnyEQ n) {
 		
 	}
 
-	public void visitTAnyNE(/*@non_null@*/ TAnyNE n) throws IOException {
+	public void visitTAnyNE(/*@non_null@*/ TAnyNE n) {
 		
 	}
 
-	public void visitTArrayFresh(/*@non_null@*/ TArrayFresh n) throws IOException {
+	public void visitTArrayFresh(/*@non_null@*/ TArrayFresh n) {
 		
 	}
 
-	public void visitTArrayLength(/*@non_null@*/ TArrayLength n) throws IOException {
+	public void visitTArrayLength(/*@non_null@*/ TArrayLength n) {
 		
 	}
 
-	public void visitTArrayShapeMore(/*@non_null@*/ TArrayShapeMore n) throws IOException {
+	public void visitTArrayShapeMore(/*@non_null@*/ TArrayShapeMore n) {
 		
 	}
 
-	public void visitTArrayShapeOne(/*@non_null@*/ TArrayShapeOne n) throws IOException {
+	public void visitTArrayShapeOne(/*@non_null@*/ TArrayShapeOne n) {
 		
 	}
 
-	public void visitTAsElems(/*@non_null@*/ TAsElems n) throws IOException {
+	public void visitTAsElems(/*@non_null@*/ TAsElems n) {
 		
 	}
 
-	public void visitTAsField(/*@non_null@*/ TAsField n) throws IOException {
+	public void visitTAsField(/*@non_null@*/ TAsField n) {
 		
 	}
 
-	public void visitTAsLockSet(/*@non_null@*/ TAsLockSet n) throws IOException {
+	public void visitTAsLockSet(/*@non_null@*/ TAsLockSet n) {
 		
 	}
 
-	public void visitTBoolAnd(/*@non_null@*/ TBoolAnd n) throws IOException {
+	public void visitTBoolAnd(/*@non_null@*/ TBoolAnd n) {
 		
 	}
 
-	public void visitTBoolEQ(/*@non_null@*/ TBoolEQ n) throws IOException {
+	public void visitTBoolEQ(/*@non_null@*/ TBoolEQ n) {
 		
 	}
 
-	public void visitTBoolNE(/*@non_null@*/ TBoolNE n) throws IOException {
+	public void visitTBoolNE(/*@non_null@*/ TBoolNE n) {
 		
 	}
 
-	public void visitTBoolNot(/*@non_null@*/ TBoolNot n) throws IOException {
+	public void visitTBoolNot(/*@non_null@*/ TBoolNot n) {
 		
 	}
 
-	public void visitTBoolOr(/*@non_null@*/ TBoolOr n) throws IOException {
+	public void visitTBoolOr(/*@non_null@*/ TBoolOr n) {
 		
 	}
 
-	public void visitTBoolean(/*@non_null@*/ TBoolean n) throws IOException {
+	public void visitTBoolean(/*@non_null@*/ TBoolean n) {
 		
 	}
 
-	public void visitTCast(/*@non_null@*/ TCast n) throws IOException {
+	public void visitTCast(/*@non_null@*/ TCast n) {
 		
 	}
 
-	public void visitTChar(/*@non_null@*/ TChar n) throws IOException {
+	public void visitTChar(/*@non_null@*/ TChar n) {
 		
 	}
 
-	public void visitTDouble(/*@non_null@*/ TDouble n) throws IOException {
+	public void visitTDouble(/*@non_null@*/ TDouble n) {
 		
 	}
 
-	public void visitTEClosedTime(/*@non_null@*/ TEClosedTime n) throws IOException {
+	public void visitTEClosedTime(/*@non_null@*/ TEClosedTime n) {
 		
 	}
 
-	public void visitTExist(/*@non_null@*/ TExist n) throws IOException {
+	public void visitTExist(/*@non_null@*/ TExist n) {
 		
 	}
 
-	public void visitTFClosedTime(/*@non_null@*/ TFClosedTime n) throws IOException {
+	public void visitTFClosedTime(/*@non_null@*/ TFClosedTime n) {
 		
 	}
 
-	public void visitTFloat(/*@non_null@*/ TFloat n) throws IOException {
+	public void visitTFloat(/*@non_null@*/ TFloat n) {
 		
 	}
 
-	public void visitTFloatAdd(/*@non_null@*/ TFloatAdd n) throws IOException {
+	public void visitTFloatAdd(/*@non_null@*/ TFloatAdd n) {
 		
 	}
 
-	public void visitTFloatDiv(/*@non_null@*/ TFloatDiv n) throws IOException {
+	public void visitTFloatDiv(/*@non_null@*/ TFloatDiv n) {
 		
 	}
 
-	public void visitTFloatEQ(/*@non_null@*/ TFloatEQ n) throws IOException {
+	public void visitTFloatEQ(/*@non_null@*/ TFloatEQ n) {
 		
 	}
 
-	public void visitTFloatGE(/*@non_null@*/ TFloatGE n) throws IOException {
+	public void visitTFloatGE(/*@non_null@*/ TFloatGE n) {
 		
 	}
 
-	public void visitTFloatGT(/*@non_null@*/ TFloatGT n) throws IOException {
+	public void visitTFloatGT(/*@non_null@*/ TFloatGT n) {
 		
 	}
 
-	public void visitTFloatLE(/*@non_null@*/ TFloatLE n) throws IOException {
+	public void visitTFloatLE(/*@non_null@*/ TFloatLE n) {
 		
 	}
 
-	public void visitTFloatLT(/*@non_null@*/ TFloatLT n) throws IOException {
+	public void visitTFloatLT(/*@non_null@*/ TFloatLT n) {
 		
 	}
 
-	public void visitTFloatMod(/*@non_null@*/ TFloatMod n) throws IOException {
+	public void visitTFloatMod(/*@non_null@*/ TFloatMod n) {
 		
 	}
 
-	public void visitTFloatMul(/*@non_null@*/ TFloatMul n) throws IOException {
+	public void visitTFloatMul(/*@non_null@*/ TFloatMul n) {
 		
 	}
 
-	public void visitTFloatNE(/*@non_null@*/ TFloatNE n) throws IOException {
+	public void visitTFloatNE(/*@non_null@*/ TFloatNE n) {
 		
 	}
 
-	public void visitTForAll(/*@non_null@*/ TForAll n) throws IOException {
+	public void visitTForAll(/*@non_null@*/ TForAll n) {
 		
 	}
 
-	public void visitTInt(/*@non_null@*/ TInt n) throws IOException {
+	public void visitTInt(/*@non_null@*/ TInt n) {
 		
 	}
 
-	public void visitTIntegralAdd(/*@non_null@*/ TIntegralAdd n) throws IOException {
+	public void visitTIntegralAdd(/*@non_null@*/ TIntegralAdd n) {
 		
 	}
 
-	public void visitTIntegralDiv(/*@non_null@*/ TIntegralDiv n) throws IOException {
+	public void visitTIntegralDiv(/*@non_null@*/ TIntegralDiv n) {
 		
 	}
 
-	public void visitTIntegralEQ(/*@non_null@*/ TIntegralEQ n) throws IOException {
+	public void visitTIntegralEQ(/*@non_null@*/ TIntegralEQ n) {
 		
 	}
 
-	public void visitTIntegralGE(/*@non_null@*/ TIntegralGE n) throws IOException {
+	public void visitTIntegralGE(/*@non_null@*/ TIntegralGE n) {
 		
 	}
 
-	public void visitTIntegralGT(/*@non_null@*/ TIntegralGT n) throws IOException {
+	public void visitTIntegralGT(/*@non_null@*/ TIntegralGT n) {
 		
 	}
 
-	public void visitTIntegralLE(/*@non_null@*/ TIntegralLE n) throws IOException {
+	public void visitTIntegralLE(/*@non_null@*/ TIntegralLE n) {
 		
 	}
 
-	public void visitTIntegralLT(/*@non_null@*/ TIntegralLT n) throws IOException {
+	public void visitTIntegralLT(/*@non_null@*/ TIntegralLT n) {
 		
 	}
 
-	public void visitTIntegralMod(/*@non_null@*/ TIntegralMod n) throws IOException {
+	public void visitTIntegralMod(/*@non_null@*/ TIntegralMod n) {
 		
 	}
 
-	public void visitTIntegralMul(/*@non_null@*/ TIntegralMul n) throws IOException {
+	public void visitTIntegralMul(/*@non_null@*/ TIntegralMul n) {
 		
 	}
 
-	public void visitTIntegralNE(/*@non_null@*/ TIntegralNE n) throws IOException {
+	public void visitTIntegralNE(/*@non_null@*/ TIntegralNE n) {
 		
 	}
 
-	public void visitTIntegralSub(/*@non_null@*/ TIntegralSub sub) throws IOException {
+	public void visitTIntegralSub(/*@non_null@*/ TIntegralSub sub) {
 		
 	}
 
-	public void visitTIs(/*@non_null@*/ TIs n) throws IOException {
+	public void visitTIs(/*@non_null@*/ TIs n) {
 		
 	}
 
-	public void visitTIsAllocated(/*@non_null@*/ TIsAllocated n) throws IOException {
+	public void visitTIsAllocated(/*@non_null@*/ TIsAllocated n) {
 		
 	}
 
-	public void visitTIsNewArray(/*@non_null@*/ TIsNewArray n) throws IOException {
+	public void visitTIsNewArray(/*@non_null@*/ TIsNewArray n) {
 		
 	}
 
-	public void visitTLockLE(/*@non_null@*/ TLockLE n) throws IOException {
+	public void visitTLockLE(/*@non_null@*/ TLockLE n) {
 		
 	}
 
-	public void visitTLockLT(/*@non_null@*/ TLockLT n) throws IOException {
+	public void visitTLockLT(/*@non_null@*/ TLockLT n) {
 		
 	}
 
-	public void visitTMethodCall(/*@non_null@*/ TMethodCall call) throws IOException {
+	public void visitTMethodCall(/*@non_null@*/ TMethodCall call) {
 		
 	}
 
-	public void visitTName(/*@non_null@*/ TName n) throws IOException {
+	public void visitTName(/*@non_null@*/ TName n) {
 		
 	}
 
-	public void visitTNull(/*@non_null@*/ TNull n) throws IOException {
+	public void visitTNull(/*@non_null@*/ TNull n) {
 		
 	}
 
-	public void visitTRefEQ(/*@non_null@*/ TRefEQ n) throws IOException {
+	public void visitTRefEQ(/*@non_null@*/ TRefEQ n) {
 		
 	}
 
-	public void visitTRefNE(/*@non_null@*/ TRefNE n) throws IOException {
+	public void visitTRefNE(/*@non_null@*/ TRefNE n) {
 		
 	}
 
-	public void visitTSelect(/*@non_null@*/ TSelect n) throws IOException {
+	public void visitTSelect(/*@non_null@*/ TSelect n) {
 		
 	}
 
-	public void visitTStore(/*@non_null@*/ TStore n) throws IOException {
+	public void visitTStore(/*@non_null@*/ TStore n) {
 		
 	}
 
-	public void visitTString(/*@non_null@*/ TString n) throws IOException {
+	public void visitTString(/*@non_null@*/ TString n) {
 		
 	}
 
@@ -396,23 +396,23 @@ public abstract class ATSimplifier extends TVisitor {
 	
 	}
 
-	public void visitTTypeEQ(/*@non_null@*/ TTypeEQ n) throws IOException {
+	public void visitTTypeEQ(/*@non_null@*/ TTypeEQ n) {
 		
 	}
 
-	public void visitTTypeLE(/*@non_null@*/ TTypeLE n) throws IOException {
+	public void visitTTypeLE(/*@non_null@*/ TTypeLE n) {
 	
 	}
 
-	public void visitTTypeNE(/*@non_null@*/ TTypeNE n) throws IOException {
+	public void visitTTypeNE(/*@non_null@*/ TTypeNE n) {
 	
 	}
 
-	public void visitTTypeOf(/*@non_null@*/ TTypeOf n) throws IOException {
+	public void visitTTypeOf(/*@non_null@*/ TTypeOf n) {
 	
 	}
 
-	public void visitTUnset(/*@non_null@*/ TUnset n) throws IOException {	
+	public void visitTUnset(/*@non_null@*/ TUnset n) {	
 	}
 
 }
