@@ -38,6 +38,10 @@ JAVAFE_SOURCE_DIR_REL ?= $(ESCTOOLS_ROOT_REL)/Javafe/java
 ESCJAVA_SOURCE_FILES_RELATIVE = \
 	$(wildcard $(ESCJAVA_SOURCE_DIR_REL)/escjava/ant/*.java) \
 	$(wildcard $(ESCJAVA_SOURCE_DIR_REL)/escjava/ast/*.java) \
+	$(wildcard $(ESCJAVA_SOURCE_DIR_REL)/escjava/dfa/*.java) \
+	$(wildcard $(ESCJAVA_SOURCE_DIR_REL)/escjava/dfa/cfd/*.java) \
+	$(wildcard $(ESCJAVA_SOURCE_DIR_REL)/escjava/dfa/buildcfd/*.java) \
+	$(wildcard $(ESCJAVA_SOURCE_DIR_REL)/escjava/dfa/daganalysis/*.java) \
 	$(wildcard $(ESCJAVA_SOURCE_DIR_REL)/escjava/backpred/*.java) \
 	$(wildcard $(ESCJAVA_SOURCE_DIR_REL)/escjava/gui/*.java) \
 	$(wildcard $(ESCJAVA_SOURCE_DIR_REL)/escjava/parser/*.java) \
@@ -48,13 +52,13 @@ ESCJAVA_SOURCE_FILES_RELATIVE = \
 	$(wildcard $(ESCJAVA_SOURCE_DIR_REL)/escjava/tc/*.java) \
 	$(wildcard $(ESCJAVA_SOURCE_DIR_REL)/escjava/translate/*.java) \
 	$(wildcard $(ESCJAVA_SOURCE_DIR_REL)/escjava/vcGeneration/*.java) \
-        $(wildcard $(ESCJAVA_SOURCE_DIR_REL)/escjava/vcGeneration/coq/*.java) \
-        $(wildcard $(ESCJAVA_SOURCE_DIR_REL)/escjava/vcGeneration/coq/visitor/*.java) \
-        $(wildcard $(ESCJAVA_SOURCE_DIR_REL)/escjava/vcGeneration/cvc3/*.java) \
-        $(wildcard $(ESCJAVA_SOURCE_DIR_REL)/escjava/vcGeneration/pvs/*.java) \
-        $(wildcard $(ESCJAVA_SOURCE_DIR_REL)/escjava/vcGeneration/sammy/*.java) \
-        $(wildcard $(ESCJAVA_SOURCE_DIR_REL)/escjava/vcGeneration/simplify/*.java) \
-        $(wildcard $(ESCJAVA_SOURCE_DIR_REL)/escjava/vcGeneration/xml/*.java) \
+	$(wildcard $(ESCJAVA_SOURCE_DIR_REL)/escjava/vcGeneration/coq/*.java) \
+	$(wildcard $(ESCJAVA_SOURCE_DIR_REL)/escjava/vcGeneration/coq/visitor/*.java) \
+	$(wildcard $(ESCJAVA_SOURCE_DIR_REL)/escjava/vcGeneration/cvc3/*.java) \
+	$(wildcard $(ESCJAVA_SOURCE_DIR_REL)/escjava/vcGeneration/pvs/*.java) \
+	$(wildcard $(ESCJAVA_SOURCE_DIR_REL)/escjava/vcGeneration/sammy/*.java) \
+	$(wildcard $(ESCJAVA_SOURCE_DIR_REL)/escjava/vcGeneration/simplify/*.java) \
+	$(wildcard $(ESCJAVA_SOURCE_DIR_REL)/escjava/vcGeneration/xml/*.java) \
 	$(wildcard $(ESCJAVA_SOURCE_DIR_REL)/escjava/*.java)
 
 ESCJAVA_SOURCE_FILES = \
@@ -451,11 +455,11 @@ self_test_nocheck: build
 self_test: build
 	@echo PROVER_KILL_TIME=${PROVER_KILL_TIME}
 	@echo JAVA_VM_FLAGS=${JAVA_VM_FLAGS}
-	export JAVA_VM_FLAGS=$(JAVA_VM_FLAGS); \
+	export JAVA_VM_FLAGS="$(JAVA_VM_FLAGS)"; \
 	${ESCJ} -classpath "$(call canonicalize,${ESCJAVA_BUILD_CLASSPATH}:)${CLASSPATH}" \
 		-sourcepath "$(call canonicalize,${SOURCEPATH})" \
 		-vclimit 1000000 \
-		-source 1.4 -quiet -nosemicolonwarnings \
+		-source 1.4 -nosemicolonwarnings \
 		$(ESCJ_EXTRA_FLAGS) \
 		$(PACKAGE_LIST)
 
