@@ -4,23 +4,20 @@ package freeboogie.ast.gen;
 
 import java.io.IOException;
 
-/** A singly-list node. */
-class Node<T> {
-  /** data */  public T data;
-  /** next */ public Node<T> next;
-  
-  /**
-   * Initializes a node to put at the end of the list.
-   * @param data the data to put in the node
-   */
-  public Node(T data) {
-    this.data = data;
-    this.next = null;
-  }
-}
-
 /**
- * Provides a next-rewind-eat interface. 
+ * Provides a convenient interface for reading a stream of {@code T}s.
+ * 
+ * Elements are read one by one using the method {@code next}. The current
+ * position in the stream can be {@code mark}ed. The method {@code rewind}
+ * goes to the closest previous marked position or to the beginning of
+ * the stream. The elements from the beginning of the stream to the current
+ * position can be {@code eat}en. In general, elements should be eaten
+ * whenever you know you will not need to rewind and read them again,
+ * so that memory is not wasted.
+ *
+ * The user of this class should implement the method {@code read}
+ * which returns element in order or {@code null} if the end-of-file
+ * is reached.
  * 
  * @author rgrig 
  * @author reviewed by TODO
@@ -28,97 +25,130 @@ class Node<T> {
  */
 public abstract class PeekStream<T> {
   /*
-   * TODO The method PeekStream.rewind is never used, probably because
-   * the grammar is (almost) LL(1). Does this mean that I should get rid
-   * of all this buffering stuff?
+   * TODO describe the implementation.
    */
+
+  private class Node<S> {
+    /** data */  public S data;
+    /** next */ public Node<S> next;
+    
+    /**
+     * {@code next} is set to {@code null}.
+     * @param data the data to put in the node
+     */
+    public Node(S data) {
+      this.data = data;
+      this.next = null;
+    }
+    
+    /**
+     * @param data the data to put in the note
+     * @param next the next node
+     */
+    public Node(S data, Node<S> next) {
+      this.data = data;
+      this.next = next;
+    }
+  }
   
+  private class ElLocPair {
+    /** Element */
+    public T elem;
+    
+    /** Location of _previous_ element. */
+    public Location<T> loc;
+    
+    /**
+     * Initialization
+     * @param elem the element
+     * @param loc the location of the previous element
+     */
+    public ElLocPair(T elem, Location<T> loc) {
+      this.elem = elem; this.loc = loc;
+    }
+  }
   
-  /*
-   * These variables refer to the {@code head}, {@code last} element,
-   * and {@code len}gth of a singly linked list that acts as a buffer.
-   */
-  private Node<T> head;
-  private Node<T> last;
-  private int len;
+  private Node<ElLocPair> buffer;
+  private Node<ElLocPair> nextElement; 
+  private Node<Node<ElLocPair>> markedStack;
   
-  private Node<T> curNode; // curNode.data is what next() will return when called
-  private int curPos;      // 0-based index in the list
-  
-  private Location<T> loc;
-  
-  /*
-   * This rather ugly initialization trick is here to ensure that the
-   * constructor does not throw any exception. (TODO change this?)
-   */
-  private boolean initialized;
-  
+  private Location<T> initLoc;
+
   /**
    * Creates a {@code PeekStream} and sets a location tracking object.
    * @param loc the location tracking object
    */
   public PeekStream(Location<T> loc) {
-    this.loc = loc;
-    initialized = false;
+    initLoc = loc;
+    markedStack = null;
+    
+    // The constructor cannnot call read() because the subclass is not init
+    buffer = nextElement = null;
   }
 
-  private void init() throws IOException {
-    head = last = curNode = new Node<T>(read());
-    curPos = 0;
-    len = 1;
-    initialized = true;
-  }
-  
   /**
-   * Returns the next element in the stream, or {@code null} if beyond. 
+   * Returns the next element in the stream, or {@code null} if beyond its end. 
    * @return the next element in the stream
    * @throws IOException if thrown by underlying stream
    */
   public T next() throws IOException {
-    if (!initialized) init();
-    if (curPos == len - 1) {
-      if (curNode.data == null) return null;
-      last.next = new Node<T>(read());
-      last = last.next;
-      ++len;
+    if (buffer == null) {
+      ElLocPair x = new ElLocPair(read(), initLoc);
+      buffer = nextElement = new Node<ElLocPair>(x);
     }
-    T result = curNode.data;
-    curNode = curNode.next;
-    ++curPos;
+    if (nextElement.data.elem == null) return null;
+    T result = nextElement.data.elem;
+    if (nextElement.next == null) {
+      Location<T> l = nextElement.data.loc.advance(result);
+      ElLocPair x = new ElLocPair(read(), l);
+      nextElement.next = new Node<ElLocPair>(x);
+    }
+    nextElement = nextElement.next;
     return result;
   }
   
   /**
-   * Go back to the begining of the (non-yet-eaten) stream.
-   * @throws IOException if thrown by the underlying stream
+   * Marks the current position (if not already marked).
+   * @see freeboogie.ast.gen.PeekStream#rewind()
    */
-  public void rewind() throws IOException {
-    if (!initialized) init();
-    curPos = 0;
-    curNode = head;
+  public void mark() {
+    if (markedStack != null && markedStack.data == nextElement) return;
+    markedStack = new Node<Node<ElLocPair>>(nextElement, markedStack);
+  }
+  
+  /**
+   * Go back to the previously marked element or to the beginning of 
+   * the (not-yet-eaten) stream if no element is marked.
+   */
+  public void rewind() {
+    if (markedStack == null) nextElement = buffer;
+    else {
+      nextElement = markedStack.data;
+      markedStack = markedStack.next;
+    }
   }
   
   /**
    * Eats the elements from the beginning up to, and including, the
    * last element read by {@code next}. 
-   * @throws IOException if thrown by the underlying stream
    */
-  public void eat() throws IOException {
-    if (!initialized) init();
-    while (head != curNode) {
-      loc.advance(head.data);
-      head = head.next;
+  public void eat() {
+    while (buffer != nextElement) {
+      if (markedStack != null && markedStack.data == buffer) 
+        markedStack = markedStack.next;
+      buffer = buffer.next;
     }
-    len -= curPos;
-    curPos = 0;
   }
   
   /**
-   * Returns the location in the stream of the first uneaten element.
+   * Returns the location of the current element (that is, the one before
+   * what {@code next} would return). If {@code next} was not called then
+   * return the location object given to the constructor.
    * @return the location in the stream
    */
   public Location<T> getLoc() {
-    return loc;
+    if (buffer == null) return initLoc;
+    return nextElement.data.loc;
   }
   
   /**
@@ -127,5 +157,5 @@ public abstract class PeekStream<T> {
    * @return the next element in the underlying stream
    * @throws IOException if thrown by the underlying stream
    */
-  public abstract T read() throws IOException; 
+  protected abstract T read() throws IOException; 
 }

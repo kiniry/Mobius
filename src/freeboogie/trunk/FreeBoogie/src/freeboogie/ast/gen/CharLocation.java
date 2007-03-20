@@ -3,7 +3,7 @@
 package freeboogie.ast.gen;
 
 /**
- * A simple line column structure.
+ * A simple line-column structure.
  * 
  * @author rgrig 
  * @author reviewed by TODO
@@ -11,10 +11,12 @@ package freeboogie.ast.gen;
 public class CharLocation extends Location<Character> {
   private int line, col;
   private boolean eof;
+  private boolean newLine;
   
-  /** Initializiation */
+  /** Initialization */
   public CharLocation() {
-    line = col = 0;
+    line = 0;
+    col = -1;
     eof = false;
   }
   
@@ -29,12 +31,15 @@ public class CharLocation extends Location<Character> {
   }
   
   @Override
-  public void advance(Character element) {
-    if (element == null) eof = true;
-    if (eof) return;
-    if (element == '\n') {
-      ++line; col = 0;
-    } else ++col;
+  public Location<Character> advance(Character element) {
+    CharLocation result = new CharLocation(this);
+    if (element == null) result.eof = true;
+    if (result.eof) return result;
+    if (newLine) {
+      ++result.line; result.col = 0;
+    } else ++result.col;
+    result.newLine = element == '\n';
+    return result;
   }
   
   @Override
@@ -42,5 +47,4 @@ public class CharLocation extends Location<Character> {
     if (eof) return "EOF";
     return "(" + (line + 1) + ", " + (col + 1) + ")";
   }
-
 }

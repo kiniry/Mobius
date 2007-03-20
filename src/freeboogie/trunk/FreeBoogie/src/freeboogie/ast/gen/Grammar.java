@@ -4,37 +4,25 @@ package freeboogie.ast.gen;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
-
-import freeboogie.util.Err;
 
 /**
  * Represents an abstract grammag (AG). It is basically a map from
  * class names to {@code AgClass} objects plus a couple of utility
  * methods.
  * 
- * TODO Implement a makeConsistent method
- * 
  * @author rgrig 
  * @author reviewed by TODO
  */
 public class Grammar {
-  
-  private Map<String, AgClass> classes;
+
+  /**
+   * A map from class names to {@code AgClass} objects.
+   */
+  public Map<String, AgClass> classes;
   
   /** Creates a new grammar object. */
   public Grammar() {
     classes = new HashMap<String, AgClass>(100);
-  }
-  
-  /**
-   * Sets the default base class name. If this method is not called
-   * then "Node" is used.
-   * 
-   * @param name the default base class name
-   */
-  public void setDefaultBaseClassName(String name) {
-    Err.notImplemented();
   }
   
   /**
@@ -55,16 +43,18 @@ public class Grammar {
   }
   
   /**
-   * Returns a set view of the classes in the grammar. It is a view
-   * in the underlying {@code Map}.
+   * We set here all things that are left behind by {@code AgParser}.
    * 
-   * TODO Do I need this?
-   *  
-   * @return a set of the classes in the grammar.
+   * Right now there is only one thing `left behind': the primitive
+   * status of members. A member is considered to be a primitive iff
+   * its type is not a class name.
    */
-  public Set<AgClass> getClasses() {
-    Err.notImplemented();
-    return null;
+  public void makeConsistent() {
+    for (AgClass c : classes.values()) {
+      for (AgMember m : c.members) {
+        m.primitive = classes.containsKey(m.type);
+      }
+    }
   }
   
   /**
@@ -73,8 +63,7 @@ public class Grammar {
    * @param args
    */
   public static void main(String[] args) {
-  // TODO Auto-generated method stub
-
+    // TODO Auto-generated method stub
   }
 
 }

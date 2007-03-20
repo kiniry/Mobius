@@ -10,10 +10,10 @@ package freeboogie.ast.gen;
  * @param <T> type
  */
 public class NullLocation<T> extends Location<T> {
-
+  
   @Override
-  public void advance(@SuppressWarnings("unused") T element) {
-    // Do nothing
+  public Location<T> advance(@SuppressWarnings("unused") T element) {
+    return this;
   }
   
   @Override

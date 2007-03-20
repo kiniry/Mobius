@@ -6,7 +6,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.logging.FileHandler;
 import java.util.logging.Handler;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
@@ -42,6 +41,7 @@ public class Main {
       System.err.println("I can't create a log file. Nevermind.");
     }
 
+    // Read the abstract grammar. 
     Grammar grammar = null;
     try {
       AgParser agParser = new AgParser();
@@ -50,6 +50,16 @@ public class Main {
       grammar = agParser.getGrammar();
     } catch (IOException e) {
       Err.fatal("I can't read the abstract grammar.", 2);
+    }
+    
+    // Process templates one by one.
+    for (int i = 1; i < args.length; ++i) {
+      try {
+        AgTemplate template = new AgTemplate(args[i]);
+        template.process(grammar);
+      } catch (IOException e) {
+        Err.error("I couldn't process (completely) template " + args[i]);
+      }
     }
   }
 }

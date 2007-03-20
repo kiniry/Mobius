@@ -282,7 +282,7 @@ public class AgParser {
     return token;
   }
 
-  private void err(String e) throws IOException {
+  private void err(String e) {
     lexer.eat();
     Err.error("AG" + lexer.getLoc() + ": " + e);
   }
