@@ -1,8 +1,4 @@
-(*Require Import ZArith.
-Require Import Bool.
-Require Import BoolEq.
-Require Import List.
-Require Import BasicDef. *)
+
 Require Import Language.
 Require Import Semantic.
 
@@ -115,13 +111,13 @@ apply (H2 s (update s x (eval_expr s e))).
 trivial.
 
 (*IF *)
-inversion rule.
+inversion rule;simpl;subst;auto.
 apply  ( H3 s1 s2).
 split.
 intros.
 apply ( IHexec post1).
-simpl.
-apply H5.
+simpl. 
+ apply H5.
 intros.
 elim H.
 assumption.
