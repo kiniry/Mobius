@@ -1,125 +1,121 @@
 AnnotateProgram[CP : TYPE+] : THEORY
 BEGIN
 
-  IMPORTING MonitoredProgram[CP, string]
+  IMPORTING WellFormedMonitoredProgram[CP, string],
+            set2list
 
-  MP : VAR (monitored?)
-  a : VAR MVA
+  mp : VAR (wf_MP)
+  a : VAR (wf_MVA)
 
   unique : (injective?[CP,nat])
 
   name_of : (injective?[CP,string])
 
-  newGVDs(MP) : finite_set[GhostVarDecl] =
-    add((# jtype := IntType, 
-           name := "cp", 
-           initval := NExpr(NumVarEval(name_of(init_cp(mva(MP))))) #),
-    add((# jtype := IntType,
-           name := "halted",
-           initval := NExpr(Int(-1)) #),
-    union({g : GhostVarDecl | jtype(g) = IntType AND
-                              EXISTS(cp : CP) : 
-                                cps(mva(MP))(cp) AND 
-                                name(g) = name_of(cp) AND
-                                initval(g) = NExpr(Int(unique(cp)))},
-          {g : GhostVarDecl | EXISTS(v : MVA_VarDecl) :
-                                vdsA(mva(MP))(v) AND
-                                jtype(v) = jtype(g) AND
-                                name(v) = name(g) AND
-                                ival(v) = initval(g)})))
 
-  lookupMethod(n : string, c : lift[string]) : Method
+  % Ghost variable declarations
 
-  overrideMethod(MP)(n : string, c : lift[string]) : Method =
-    LET m = lookupMethod(n, c) IN
-    LET mc = MethodCall(%Super,  % HACK!!
-                        NExpr(Int(0)), name(m), NExpr(NumVarEval(name(arg(m))))) IN
-    LET new_body = StmtExpr(mc) IN %IF Void?(resType(m))
-%                   THEN StmtExpr(mc) 
-%                   ELSE mc % Return(mc) Return not defined
-%                   ENDIF IN
-    m WITH [body := new_body]
-
-  completeMethods(MP)(ms : finite_set[Method], c : lift[string], 
-                      nse : finite_set[Event]) : 
-                     finite_set[Method] =
-    union(ms, { m : Method | EXISTS (n : string) :
-                               m = overrideMethod(MP)(n, c) AND
-                               {n : string | EXISTS (e : Event) : nse(e) AND
-                                           n = mname(e)}(n) AND
-                               NOT {n : string | 
-                                           EXISTS (m : Method) : ms(m) AND
-                                           n = name(m)}(n)})
-
-  filterEv(a)(et : EventType)(m : string) : finite_set[Transition] =
-    {t : Transition |ts(a)(t) AND EType(event(t)) = et AND mname(event(t)) = m}
+  new_gvds(mp) : finite_set[GhostVarDecl] =
+   {g : GhostVarDecl | jtype(g) = IntType AND
+     ((EXISTS (q : (cps(mva(mp)))) : name(g) = name_of(q) AND 
+                                     init_val(g) = Int(unique(q))) OR
+      (EXISTS (v : (vdsA(mva(mp)))) : name(g) = name(v) AND
+                                      init_val(g) = init_val(v)))}
 
 
-  IfJML(b : finite_set[[BoolExpr, Stmt]]) : RECURSIVE Stmt =
-    IF nonempty?(b)
-    THEN LET x = choose(b) IN
-         IfThenElse(proj_1(x), proj_2(x), IfJML(remove(x, b)))
-    ELSE Skip
-    ENDIF
-  MEASURE card(b)
+  % Event annotation
 
-  annActions(acs : Action) : RECURSIVE Stmt =
-    IF null?(acs)
-    THEN Skip
-    ELSE Sequence(Set(source(car(acs)), target(car(acs))), 
-                  annActions(cdr(acs)))
-    ENDIF
-  MEASURE length(acs)
+  ann_action(l : Action) : RECURSIVE Stmt =
+    CASES l OF
+      null : Skip,
+      cons(x, xs) : Sequence(Set(target(x), source(x)), ann_action(xs))
+    ENDCASES
+  MEASURE length(l)
 
-
-  updVars(t : Transition) : Stmt =
+  upd_vars(t : Transition) : Stmt =
     Sequence(Set("cp", NExpr(NumVarEval(name_of(tcp(t))))), 
-             annActions(action(t)))
+             ann_action(action(t)))
 
   IMPORTING Evaluation[string]
 
-  annGuardsActions(ts : finite_set[Transition]) : 
-                   finite_set[[BoolExpr, Stmt]] =
-    { x : [BoolExpr, Stmt] |EXISTS (t : Transition) : ts(t) AND
-                             (FORALL(stA : Store, stP : PSt) :
+  ann_guard_actions(mp)(ts : finite_set[Transition]) : list[[BoolExpr, Stmt]] =
+    set2list({x : [BoolExpr, Stmt] | EXISTS (t : Transition) : ts(t) AND
+                           (FORALL (stA : (wf_Store(mva(mp))), 
+                                    stP : (wf_PSt(mva(mp)))) :
                               eval(proj_1(x))((# ex := bottom, st := stP #)) =
                               guard(t)(stA, stP)) AND
-                              proj_2(x) = updVars(t)}
+                            proj_2(x) = upd_vars(t)})
 
-  annTransCP(q : CP, ts : finite_set[Transition]) : [BoolExpr, Stmt] =
+  ann_trans_cp(mp)(q : CP, ts : finite_set[Transition]) : [BoolExpr, Stmt] =
     (Eq(NumVarEval("cp"), NumVarEval(name_of(q))),
-     IfJML(annGuardsActions(ts)))
+     CaseJML(ann_guard_actions(mp)(ts)))
 
-  annEvent(ts : finite_set[Transition]) : Stmt =
-    LET branches = {x : [BoolExpr, Stmt] |  
-                    EXISTS(t : Transition) : ts(t) AND 
-                                            x = annTransCP(scp(t), t)}
-    IN 
-    IfJML(branches)
+  % Generates annotations to update the control point and the variables when an
+  % event occurs
+  ann_event(mp)(ts: set[Transition]): Stmt =
+    CaseJML(set2list({c : [BoolExpr, Stmt] | EXISTS (q : CP) : 
+              cps(mva(mp))(q) AND
+              c = ann_trans_cp(mp)(q,
+                                  {t: Transition | ts(t) AND scp(t) = q})}))
 
-  annMethod(MP)(m : Method) : Method =
-    m WITH [preset := annEvent(filterEv(mva(MP))(Entry)(name(m))),
-            postset := annEvent(filterEv(mva(MP))(ExitNormal)(name(m))),
-            excset := annEvent(filterEv(mva(MP))(ExitExceptional)(name(m)))]
 
-  annMethods(MP)(ms : finite_set[Method]) : finite_set[Method] =
-    {m : Method | EXISTS (n : Method) : ms(n) AND m = annMethod(MP)(n)}
+  % Method annotation
 
-  annClass(MP)(c : Class) : Class =
-    IF name(c) = classname(mva(MP))
+  filter_event(a)(et : EventType)(m : string) : finite_set[Transition] =
+    {t : Transition | ts(a)(t) AND etype(event(t)) = et AND mname(event(t)) = m}
+
+  ann_method(mp)(m : Method) : Method =
+    LET ann_event_type = LAMBDA (et : EventType) : 
+                           ann_event(mp)(filter_event(mva(mp))(et)(name(m)))
+    IN
+    m WITH [pre_set  := ann_event_type(Entry),
+            post_set := ann_event_type(ExitNormal),
+            exc_set  := ann_event_type(ExitExceptional)]
+
+
+  ann_methods(mp)(ms : finite_set[Method]) : finite_set[Method] =
+    {m : Method | EXISTS (n : Method) : ms(n) AND m = ann_method(mp)(n)}
+
+
+  % Class annotation
+
+  ann_class(mp)(c : Class) : Class =
+    IF name(c) = class_name(mva(mp))
     THEN c WITH [inv := Conj(inv(c), 
-                        Neq(NumVarEval("cp"), NumVarEval("halted"))),
-                 ghostvars := union(ghostvars(c),
-                                     newGVDs(MP)),
-                 methods := annMethods(MP)(completeMethods(MP)(methods(c),
-                                                           superClass(c),
-                                                           evs(mva(MP))))]
+                             Neq(NumVarEval("cp"), NumVarEval("halted"))),
+                 ghost_vars := union(ghost_vars(c),
+                                     new_gvds(mp)),
+                 methods := ann_methods(mp)(methods(c))]
     ELSE c
     ENDIF
 
-  annProgram(MP) : Program = (# classes := map (annClass(MP)) 
-                                           (classes (program(MP))) #)
 
+  % Program annotation
+
+  % NOTE: The case where there is no class c in p such that 
+  % name(c) = class_name(a) is trivial, thus to simplify proofs we restrict
+  % ourselves cases where such a class exists
+  ann_program_pre(mp): boolean =
+    LET a = mva(mp), p = program(mp) IN
+    wf_MP(mp) AND
+    EXISTS (c: Class):
+      classes(p)(c) AND name(c) = class_name(a) AND
+      (NOT EXISTS (gv : GhostVarDecl) :
+        ghost_vars(c)(gv) AND name(gv) = "cp") AND
+      (FORALL (q : (cps(a))) : NOT EXISTS (gd : GhostVarDecl) :
+          ghost_vars(c)(gd) AND name(gd) = name_of(q)) AND
+      (FORALL (vd : MVAVarDecl) :
+        vdsA(a)(vd) IMPLIES NOT EXISTS (gd : GhostVarDecl) :
+          ghost_vars(c)(gd) AND name(gd) = name(vd))
+
+  ann_program(mp) : Program = 
+    LET p = program(mp) IN
+    (# classes := {c : Class | EXISTS (c1 : Class) : 
+                     classes(p)(c1) AND c = ann_class(mp)(c1)} #)
+
+
+  ann_program_yields_wf_program: LEMMA
+    FORALL (mp : (wf_MP)) :
+      wf_Program(ann_program(mp))
 
 
 END AnnotateProgram

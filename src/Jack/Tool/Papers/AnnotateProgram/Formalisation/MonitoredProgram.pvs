@@ -2,42 +2,47 @@ MonitoredProgram[CP, Name : TYPE+] : THEORY
 BEGIN
 
   IMPORTING Program[Name],
-            MVAProperties[CP, Name]
+            MVA[CP, Name]
 
   MonitoredProgram : TYPE =
     [# mva : MVA[CP, Name],
        program : Program[Name]
     #]
 
-  % TODO: say that the name of the variables of the automaton do not clash with
-  % the name of any variable declared in the automaton
-  % Do the same for control points and cp
-  % THINK: I guess that the variables of the program that the automaton access
-  % must be field (they can not be local vars or ghost vars).
+
+
+END MonitoredProgram
+
+
+WellFormedMonitoredProgram[CP, Name : TYPE+] : THEORY
+BEGIN
+
+  IMPORTING MonitoredProgram[CP, Name],
+            WellFormedMVA[CP, Name],
+            WellFormedProgram[Name]
+
+  % NOTE: We restrict to the case where the automaton monitors at least one of
+  % classes of the program.
+  % Notice that the program does not need to have ghost variables modelling the
+  % automata
   wf_MP(MP : MonitoredProgram) : boolean =
     LET a = mva(MP), p = program(MP) IN
     complete(a) AND
     wf_Program(p) AND
-    EXISTS (c : Class) : 
+    EXISTS (c : Class) :
       classes(p)(c) AND 
       name(c) = class_name(a) AND
-      (FORALL(v : MVAVarDecl) :
-         vdsA(a)(v) IMPLIES 
-           EXISTS(pv : GhostVarDecl) : ghost_vars(c)(pv) AND
-                                       name(v) = name(pv) AND
-                                       jtype(v) = jtype(pv)) AND
-      (FORALL(v : ProgVarDecl) :
+      (FORALL (v : ProgVarDecl) :
         vdsP(a)(v) IMPLIES
-          EXISTS(pv : FieldDecl) : fields(c)(pv) AND name(v) = name(pv))
+          EXISTS (fd : FieldDecl) : fields(c)(fd) AND name(v) = name(fd))
     
-
-END MonitoredProgram
+END WellFormedMonitoredProgram
 
 
 MonitoredProgramSemantics[CP, Name : TYPE+] : THEORY
 BEGIN
 
-  IMPORTING MonitoredProgram[CP, Name],
+  IMPORTING WellFormedMonitoredProgram[CP, Name],
             Semantics[Name],
             MVASemantics[CP, Name]
 
@@ -305,10 +310,13 @@ BEGIN
   %      deriv_stmt
 
 
-  run_MonitoredProgram(mp: MonitoredProgram)(s2 : MState)(n : nat) : boolean =
+  run_MonitoredProgram(mp: (wf_MP))(main : Method, arg : int)
+                      (s2 : MState)(n : nat) : boolean =
     LET p  = program(mp),
         s1 = initial_MP_state(mp),
-        c  = StmtExpr(MethodCall(Access(This), name(main(p)), Lit(arg(p))))
+        c  = StmtExpr(MethodCall(RExpr(RefVarEval(This)), 
+                                 name(main), 
+                                 NExpr(Int(arg))))
     IN
       deriv_stmt(mp)(c, s1, s2)(n)
 

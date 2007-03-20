@@ -32,6 +32,7 @@ BEGIN
   Void : Void?            % Void
   RefType : RefType?      % References
 
+
 END JType
 
 
@@ -47,7 +48,9 @@ BEGIN
   Div(b1, b2 : NumExpr) : Div?
   NumVarEval(varname : Name) : VarEval?
 
+
 END NumExpr
+
 
 % Boolean expressions
 BoolExpr[Name : TYPE+] : DATATYPE
@@ -69,34 +72,46 @@ BEGIN
   Gt (b1, b2 : NumExpr) : Gt?
   BoolVarEval(varname : Name) : VarEval?
 
+
 END BoolExpr
 
 
+% Reference expressions
+RefExpr[Name : TYPE+] : DATATYPE
+BEGIN
+
+  Null : Null?
+  RefVarEval(varname : Name) : RefVarEval?
+
+
+END RefExpr
+
+
+% Program's expressions
 Expr[Name : TYPE+] : DATATYPE
 BEGIN
 
   IMPORTING BoolExpr[Name],
             NumExpr[Name],
-            Val
+            RefExpr[Name]
 
-  Access(n : Name) : Access?
   Assign(target : Name, source : Expr) : Assign?
   BExpr(b : BoolExpr) : BExpr?
   CondExpr(test : BoolExpr, then_expr : Expr, else_expr : Expr) : CondExpr?
-  Lit(v : Val) : Lit?
   MethodCall(tgt : Expr, name : Name, arg : Expr) : MethodCall?
   NExpr(n : NumExpr) : NExpr?
-%  QAssign(tgt : Expr, target : Name, source : Expr) : QAssign?
+  RExpr(r : RefExpr) : RExpr?
+
 
 END Expr
 
 
+% Program's statements
 Stmt[Name : TYPE+] : DATATYPE
 BEGIN
   
   IMPORTING Expr[Name]
 
-  % renamed IfJML to CaseJML. Have to constrain the statements in body
   CaseJML(case : list[[BoolExpr, Stmt]]) : CaseJML?
   IfThenElse(test : BoolExpr, then_stmt : Stmt, else_stmt : Stmt) : IfThenElse?
   Sequence(s1, s2 : Stmt) : Sequence?
@@ -108,14 +123,14 @@ BEGIN
   TryCatch (try : Stmt, catch : Stmt, finally : Stmt) : TryCatch?
   While(test : BoolExpr, body : Stmt) : While?
 
+
 END Stmt
+
 
 SizeFunctions[Name : TYPE+] : THEORY
 BEGIN
 
-  IMPORTING NumExpr[Name],
-            BoolExpr[Name],
-            Expr[Name],
+  IMPORTING Expr[Name],
             Stmt[Name]
 
   size(n : NumExpr) : nat = 
@@ -148,18 +163,18 @@ BEGIN
   MEASURE length(l)
 
   size(e : Expr) : nat =
-%  Lit(v : Val) : Lit?
-    reduce_nat(LAMBDA(e : Name) : 1,              % Access
-               LAMBDA(e : Name, n : nat) : n + 1, % Assign
+    reduce_nat(LAMBDA(e : Name, n : nat) : n + 1, % Assign
                LAMBDA(b : BoolExpr) : size(b),    % BExpr
                LAMBDA(b : BoolExpr, n1, n2 : nat) : size(b) + n1 + n2 + 1, %Cond
-               LAMBDA(v : Val) : 1,               % Lit
                LAMBDA(n1 : nat, e : Name, n2 : nat) : 1 + n1 + n2, % MethodCall
-               LAMBDA(n : NumExpr) : size(n))(e)  % NExpr
+               LAMBDA(n : NumExpr) : size(n),     % NExpr
+               % TODO: Fix this!!
+%               LAMBDA(r : RefExpr) : size(r))(e)  % RExpr
+               LAMBDA(r : RefExpr) : size(TT))(e) % RExpr
  
   size(s : Stmt) : nat = 
-    reduce_nat(LAMBDA(l: list[[BoolExpr, nat]]) : 
-                 sum(map(LAMBDA (c: [BoolExpr, nat]): 
+    reduce_nat(LAMBDA(l : list[[BoolExpr, nat]]) : 
+                 sum(map(LAMBDA (c : [BoolExpr, nat]) :
                    size(proj_1(c)) + proj_2(c), l)),               % CaseJML
                LAMBDA(e : BoolExpr, n1, n2 : nat) : size(e) + n1 + n2 + 1, % If
                LAMBDA(n1, n2 : nat) : n1 + n2 + 1,                 % Sequence
@@ -222,23 +237,35 @@ BEGIN
                     fields : finite_set[FieldDecl],
                     methods : finite_set[Method] #]
 
-  Program : TYPE = [# classes : finite_set[Class],
-                      main : Method,
-                      arg : Val #]
+  Program : TYPE = [# classes : finite_set[Class] #]
 
   % TODO: define (long!)
   var_names(p : Program) : finite_set[Name]
 
-  %
-  % Program requirements (see the assumptions at the beginning of the file)
-  % NOTE: Since the declarations are sets we can avoid some duplicate tests.
-  % We include only the requirements needed for the proofs
-  %
+
+END Program
+
+
+% Program requirements (see the assumptions at the beginning of the file)
+% NOTE: Since the declarations are sets we can avoid some duplicate tests.
+% We include only the requirements needed for the proofs
+WellFormedProgram[Name : TYPE+] : THEORY
+BEGIN
+
+  IMPORTING Program[Name]
 
   % The main method is one of the methods of the program
-  wf_main(p : Program) : boolean = 
-    EXISTS (m : Method) : main(p) = m AND EXISTS (c : Class) :
-      classes(p)(c) AND methods(c)(m)
+%   wf_main(p : Program) : boolean = 
+%     EXISTS (m : Method) : main(p) = m AND EXISTS (c : Class) :
+%       classes(p)(c) AND methods(c)(m)
+
+  % Names of classes are unique within a program
+  unique_class_names(p : Program) : boolean =
+    FORALL (c1, c2 : Class) :
+      classes(p)(c1) AND 
+      classes(p)(c2) AND 
+      name(c1) = name(c2) IMPLIES
+        c1 = c2
 
   % Every variable used has a declaration
   unique_declarations(p : Program) : boolean =
@@ -279,14 +306,15 @@ BEGIN
     empty?(Intersection({ns : set[Name] | fdss(ns) OR gdss(ns) OR 
                                           ns = ads OR ldss(ns)}))
 
-%    valid_method_call
-
   % TODO:
+  % Name of classes are unique
   % Well-formed CaseJML (the list must be finite)
   % Type checks: assignments, method calls, etc, etc
   wf_Program(p : Program) : boolean =
-    wf_main(p) AND
+%    wf_main(p) AND
+    unique_class_names(p) AND
     unique_declarations(p) AND
     unique_var_names(p)
 
-END Program
+
+END WellFormedProgram

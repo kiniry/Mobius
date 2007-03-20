@@ -36,5 +36,28 @@ NOTE: When on of the words involved is a datatype or a record it is written as i
 
 NOTE: Sometimes a letter is used differentiate two similar names. This may be a capital letter as in vdsA and vdsP
 
+1.5 Keywords
+PVS keywords are written in capitals. E.g. AND, FORALL, LAMBDA
+
 
 2. Spaces
+2.1 Colons
+Leave a space before and after a colon. Examples
+FORALL (v : Var) :
+some_name : LEMMA
+
+2.2 Keywords
+Leave a space between a keyword and a parenthesis. Applicable to FORALL, EXISTS and LAMBDA. Example:
+LAMBDA (x : X) : (not LAMBDA(x : X))
+
+
+3. Indentation
+Use an indentation of 2 spaces
+Try not to exceed the column 80
+
+
+4. Comments
+4.1 Tags
+Use the following tags in comments: NOTE, TODO, THINK
+
+

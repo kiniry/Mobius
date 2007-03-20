@@ -102,19 +102,19 @@ BEGIN
   % TODO: define and move to another file
   var_names(e : Expr[Name]) : set[Name]
 
-  wf_Store(vdsA : set[MVAVarDecl])(f : Store) : boolean =
+  wf_Store(a : MVA)(f : Store) : boolean =
     FORALL (n : Name) :
-      var_names(vdsA)(n) IFF NOT Bottom?(f(n))
+      var_names(vdsA(a))(n) IFF NOT Bottom?(f(n))
 
   wf_Store(f : Store, a : MVA) : boolean =
-    wf_Store(vdsA(a))(f)
+    wf_Store(a)(f)
 
-  wf_PSt(vdsP : set[ProgVarDecl])(f : PSt) : boolean =
+  wf_PSt(a : MVA)(f : PSt) : boolean =
     FORALL (n : Name) :
-      var_names(vdsP)(n) IFF NOT Bottom?(lookup(n, f))
+      var_names(vdsP(a))(n) IFF NOT Bottom?(lookup(n, f))
 
   wf_PSt(f : PSt, a : MVA) : boolean =
-    wf_PSt(vdsP(a))(f)
+    wf_PSt(a)(f)
 
   % TODO: It may be necessary (maybe not) to ensure that the initial value 
   % conforms to the declared type (we need to define conform).
@@ -165,14 +165,6 @@ BEGIN
         wf_Action(action(t), a)
 
 
-END WellFormedMVA
-
-
-MVAProperties[CP, Name : TYPE+] : THEORY
-BEGIN
-
-  IMPORTING WellFormedMVA[CP, Name]
-
   deterministic(a : (wf_MVA)) : boolean =
     FORALL (t1, t2 : Transition, stA : Store, stP : PSt) :
       ts(a)(t1) IMPLIES
@@ -201,6 +193,8 @@ BEGIN
       ts(a)(t) AND scp(t) = q IMPLIES
         tcp(t) = halted
 
+  % A MVA does not necessarily have to pass through our completion function to
+  % be usable. These are the conditions we require to work with a MVA
   complete(a : MVA) : boolean =
     wf_MVA(a) AND
     cps(a)(halted) AND
@@ -209,14 +203,14 @@ BEGIN
     total(a)
 
 
-END MVAProperties
+END WellFormedMVA
 
 
-% RENAME TO MVASemantics
+
 MVASemantics[CP, Name : TYPE+] : THEORY
 BEGIN
 
-  IMPORTING MVAProperties[CP, Name]
+  IMPORTING WellFormedMVA[CP, Name]
 
   % The state of a MVA is composed by its currrent control point and values for
   % its variables
@@ -320,7 +314,7 @@ END MVASemantics
 MVACompletion[CP, Name : TYPE+] : THEORY
 BEGIN
 
-  IMPORTING MVAProperties[CP, Name],
+  IMPORTING WellFormedMVA[CP, Name],
             EpsilonProps, 
             MVAFiniteProps
 
@@ -334,23 +328,20 @@ BEGIN
   % Returns a guard that is the conjuction of the negation of the guards in ts
   % with source control point cp and event e. The sets of variable declarations
   % are needed to make sure that the guard is defined in for those variables.
-  build_guard(cp : CP, e : Event, ts : finite_set[Transition], 
-              vdsA : finite_set[MVAVarDecl], 
-              vdsP : finite_set[ProgVarDecl]) : Guard = 
-   LAMBDA (stA : (wf_Store(vdsA)), stP : (wf_PSt(vdsP))) :
-     FORALL (p : Guard) : all_guards(cp, e, ts)(p) IMPLIES NOT p(stA, stP)
+  build_guard(a : MVA)(cp : CP, e : Event, vdsA : finite_set[MVAVarDecl],
+                       vdsP : finite_set[ProgVarDecl]) : Guard =
+   LAMBDA (stA : (wf_Store(a)), stP : (wf_PSt(a))) :
+     FORALL (p : Guard) : all_guards(cp, e, ts(a))(p) IMPLIES NOT p(stA, stP)
 
-  % Makes ts complete with respect cps and es
-  complete_trans(cps : finite_set[CP], es : finite_set[Event], 
-                 ts : finite_set[Transition], vdsA : finite_set[MVAVarDecl],
-                 vdsP : finite_set[ProgVarDecl]) : finite_set[Transition] =
-    union({t : Transition | cps(scp(t)) AND es(event(t)) AND
+  % Makes ts(a) complete with respect cps and evs(a)
+  complete_trans(a : MVA) : finite_set[Transition] =
+    union({t : Transition | cps(a)(scp(t)) AND evs(a)(event(t)) AND
                             action(t) = skip AND tcp(t) = halted AND
-                            guard(t) = build_guard(scp(t), event(t), ts, vdsA, 
-                                                     vdsP)},
-          {t : Transition | scp(t) = halted AND es(event(t)) AND
-                            guard(t) = (LAMBDA (stA : (wf_Store(vdsA)) , 
-                                                stP : (wf_PSt(vdsP))): TRUE)
+                            guard(t) = build_guard(a)(scp(t), event(t),
+                                                      vdsA(a), vdsP(a))},
+          {t : Transition | scp(t) = halted AND evs(a)(event(t)) AND
+                            guard(t) = (LAMBDA (stA : (wf_Store(a)),
+                                                stP : (wf_PSt(a))) : TRUE)
                             AND action(t) = skip AND tcp(t) = halted})
 
 
@@ -361,8 +352,9 @@ BEGIN
   % Makes a deterministic MVA total
   complete_MVA(a : (complete_MVA_pre)) : MVA =
     a WITH [cps := add(halted, cps(a)),
-            ts := union(ts(a), complete_trans(cps(a), evs(a), ts(a), vdsA(a), 
-                                             vdsP(a)))]
+            ts := union(ts(a), complete_trans(a))]
+%            ts := union(ts(a), complete_trans(cps(a), evs(a), ts(a), vdsA(a), 
+%                                             vdsP(a)))]
 
 
   % TODO: prove the remaining cases (Fix the proof)

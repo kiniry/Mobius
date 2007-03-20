@@ -26,17 +26,17 @@ State [Name : TYPE+] : THEORY
 BEGIN
 
   IMPORTING Excpt,
-            Program[Name],
+            WellFormedProgram[Name],
             Val
 
   % functions whose existence we assume
   % Parameters: program, target object, method name, actual parameter
   % NOTE: This is a simplification, we should use the types of the expressions,
   % not their values, but we are not modeling types.
-  lookup_mthd : [Program, Val, Name, Expr -> Method]
+  lookup_mthd : [(wf_Program), Val, Name, Expr -> Method]
 
   % Parameters: program, target object
-  lookup_inv : [Program, Val -> BoolExpr]
+  lookup_inv : [(wf_Program), Val -> BoolExpr]
 
   % Field, ghost and local variables
   % fvs, gvs and lvs are partial functions from name to values
@@ -237,15 +237,15 @@ BEGIN
 
 
   %TODO: Add the semantics of Access and Lit
-  deriv_expr(P : Program)
+  deriv_expr(p : (wf_Program))
             (c : Expr, sigma1 : PState, v : Val, sigma2 : PState)
             (n : nat)
             (deriv_stmt : [Program -> [Stmt, PState, PState -> [below(n) -> bool]]])
             : RECURSIVE bool =
     LET deriv_stmt_rec = 
-        LAMBDA(p : below(n)) : 
-          LAMBDA(P : Program)(s : Stmt, sigma1, sigma2 : PState)
-                (m : below(p)) : deriv_stmt(P)(s, sigma1, sigma2)(m)
+        LAMBDA(k : below(n)) : 
+          LAMBDA(p : (wf_Program))(s : Stmt, sigma1, sigma2 : PState)
+                (m : below(k)) : deriv_stmt(p)(s, sigma1, sigma2)(m)
     IN
     IF up?(ex(sigma1))
     % sigma1 is an exceptional state
@@ -259,7 +259,7 @@ BEGIN
         NOT Bottom?(v) AND
         n > 0 AND
         (EXISTS (tau : PState) : 
-           deriv_expr(P)(e, sigma1, v, tau)(n - 1)(deriv_stmt_rec(n - 1)) AND
+           deriv_expr(p)(e, sigma1, v, tau)(n - 1)(deriv_stmt_rec(n - 1)) AND
            sigma2 = (IF up?(ex(tau))
                      THEN tau
                      ELSE update_local(vn, v, tau)
@@ -272,8 +272,8 @@ BEGIN
       CondExpr(c, t, e) : 
         n > 0 AND
         IF eval(c)(sigma1)
-        THEN deriv_expr(P)(t, sigma1, v, sigma2)(n - 1)(deriv_stmt_rec(n - 1))
-        ELSE deriv_expr(P)(e, sigma1, v, sigma2)(n - 1)(deriv_stmt_rec(n - 1))
+        THEN deriv_expr(p)(t, sigma1, v, sigma2)(n - 1)(deriv_stmt_rec(n - 1))
+        ELSE deriv_expr(p)(e, sigma1, v, sigma2)(n - 1)(deriv_stmt_rec(n - 1))
         ENDIF,
       % MC_p
       MethodCall(e, mn, p) :
@@ -282,24 +282,24 @@ BEGIN
               (tau1, tau2, tau3, tau4, tau5, tau6, tau7, tau8, tau9 : PState)
               (old_val_arg : Val)(md : Method)(inv : BoolExpr) :
           n = m1 + m2 + m3 + m4 + m5 + m6 + 1 AND
-          deriv_expr(P)(e, sigma1, a, tau1)(m1)(deriv_stmt_rec(m1)) AND
-          deriv_expr(P)(p, tau1, pv, tau2)(m2)(deriv_stmt_rec(m2)) AND
+          deriv_expr(p)(e, sigma1, a, tau1)(m1)(deriv_stmt_rec(m1)) AND
+          deriv_expr(p)(p, tau1, pv, tau2)(m2)(deriv_stmt_rec(m2)) AND
           (tau3 = (IF up?(ex(tau1)) AND Null?(a)
                    THEN tau2 WITH [ex := up(NullPointer)]
                    ELSE tau2 
                    ENDIF)) AND
-          md = lookup_mthd(P, a, mn, p) AND
-          inv = lookup_inv(P, a) AND
+          md = lookup_mthd(p, a, mn, p) AND
+          inv = lookup_inv(p, a) AND
           eval(inv)(tau3) AND
           eval(pre(md))(tau3) AND
           old_val_arg = lookup_local(name(arg(md)), tau3) AND
           tau4 = update_local(name(arg(md)), pv, tau3) AND
-          deriv_stmt(P)(pre_set(md), tau4, tau5)(m3) AND
-          deriv_stmt(P)(body(md), tau5, tau6)(m4) AND
-          deriv_expr(P)(res(md), tau6, v, tau7)(m5)(deriv_stmt_rec(m5)) AND
+          deriv_stmt(p)(pre_set(md), tau4, tau5)(m3) AND
+          deriv_stmt(p)(body(md), tau5, tau6)(m4) AND
+          deriv_expr(p)(res(md), tau6, v, tau7)(m5)(deriv_stmt_rec(m5)) AND
           (IF bottom?(ex(tau7))
-           THEN deriv_stmt(P)(post_set(md), tau7, tau8)(m6)
-           ELSE deriv_stmt(P)(exc_set(md), tau7 WITH [ex := bottom],
+           THEN deriv_stmt(p)(post_set(md), tau7, tau8)(m6)
+           ELSE deriv_stmt(p)(exc_set(md), tau7 WITH [ex := bottom],
                                           tau8 WITH [ex := bottom])(m6)
                 AND ex(tau7) = ex(tau8)
            ENDIF) AND
@@ -317,12 +317,12 @@ BEGIN
 
 
   %TODO: Add the semantics of CaseJML
-  deriv_stmt(P : Program)(c : Stmt, sigma1, sigma2 : PState)(n : nat) : 
+  deriv_stmt(p : (wf_Program))(c : Stmt, sigma1, sigma2 : PState)(n : nat) : 
     RECURSIVE bool =
     LET deriv_stmt_rec = 
-        LAMBDA(p : below(n)) : 
-          LAMBDA(P : Program)(s : Stmt, sigma1, sigma2 : PState)
-                (m : below(p)) : deriv_stmt(P)(s, sigma1, sigma2)(m)
+        LAMBDA(k : below(n)) : 
+          LAMBDA(p : (wf_Program))(s : Stmt, sigma1, sigma2 : PState)
+                (m : below(k)) : deriv_stmt(p)(s, sigma1, sigma2)(m)
     IN
     IF up?(ex(sigma1))
     % sigma1 is an exceptional state
@@ -333,20 +333,20 @@ BEGIN
       % If_p
       IfThenElse(e, c1, c2) :
           n > 0 AND 
-          deriv_stmt(P)(IF eval(e)(sigma1) THEN c1 ELSE c2 ENDIF, 
+          deriv_stmt(p)(IF eval(e)(sigma1) THEN c1 ELSE c2 ENDIF, 
                            sigma1, sigma2)(n - 1),
       % Seq_p
       Sequence(c1, c2) :
          EXISTS(m1, m2 : nat)(tau : PState) :
            n = m1 + m2 + 1 AND
-           deriv_stmt(P)(c1, sigma1, tau)(m1) AND
-           deriv_stmt(P)(c2, tau, sigma2)(m2),
+           deriv_stmt(p)(c1, sigma1, tau)(m1) AND
+           deriv_stmt(p)(c2, tau, sigma2)(m2),
       % LU_p
       Set(vn, e) :
          is_ghost(vn, sigma1) AND
          n > 0 AND
          EXISTS (tau : PState)(v : Val) :
-           deriv_expr(P)(e, sigma1, v, tau)(n - 1)(deriv_stmt_rec(n - 1)) AND
+           deriv_expr(p)(e, sigma1, v, tau)(n - 1)(deriv_stmt_rec(n - 1)) AND
            (sigma2 = IF up?(ex(tau))
                      THEN tau
                      ELSE update_ghost(vn, v, tau)
@@ -357,40 +357,42 @@ BEGIN
       StmtExpr(e) : 
          n > 0 AND
          EXISTS (v : Val) :
-           deriv_expr(P)(e, sigma1, v, sigma2)(n - 1)(deriv_stmt_rec(n - 1)),
+           deriv_expr(p)(e, sigma1, v, sigma2)(n - 1)(deriv_stmt_rec(n - 1)),
       % Throw_p
       Throw: sigma2 = sigma1 WITH [ex := up(Throwable)] AND n = 0,
       % TryCatch_p
       TryCatch(c1, c2, c3) :
         EXISTS(m1, m2, m3 : nat)(tau1, tau2, tau3 : PState) :
           n = m1 + m2 + m3 + 1 AND
-          deriv_stmt(P)(c1, sigma1, tau1)(m1) AND
-          deriv_stmt(P)(IF up?(ex(tau1)) THEN c2 ELSE Skip ENDIF, 
+          deriv_stmt(p)(c1, sigma1, tau1)(m1) AND
+          deriv_stmt(p)(IF up?(ex(tau1)) THEN c2 ELSE Skip ENDIF, 
                            tau1 WITH [ex := bottom], tau2)(m2) AND
-          deriv_stmt(P)(c3, tau2 WITH [ex := bottom], tau3)(m3) AND
+          deriv_stmt(p)(c3, tau2 WITH [ex := bottom], tau3)(m3) AND
           sigma2 = (# ex := IF up?(ex(tau2)) THEN ex(tau2) ELSE ex(tau3) ENDIF,
                       st := st(tau3) #),
       % While_p
       While(e, c) : 
         n > 0 AND
-        deriv_stmt(P)(IfThenElse(e, While(e, c), Skip), sigma1, sigma2)(n - 1)
+        deriv_stmt(p)(IfThenElse(e, While(e, c), Skip), sigma1, sigma2)(n - 1)
 
     ENDCASES
   ENDIF
   MEASURE n
     
-  derives(p : Program)
+  derives(p : (wf_Program))
          (e : Expr, sigma1 : PState)(v : Val, sigma2 : PState) : bool =
     EXISTS(n : nat) : deriv_expr(p)(e, sigma1, v, sigma2)(n)
       (LAMBDA(P : Program)(s : Stmt, sigma1, sigma2 : PState)
              (m : below(n)) : deriv_stmt(p)(s, sigma1, sigma2)(m))
 
-  derives(p : Program)
+  derives(p : (wf_Program))
          (s : Stmt, sigma1 : PState)(sigma2 : PState) : bool =
     EXISTS(n : nat) : deriv_stmt(p)(s, sigma1, sigma2)(n)
 
 
   IMPORTING WF[nat, nat]
+
+  % TODO: Fix these proofs. Add the new cases (CaseJML, Access, Lit)
 
   expr_determ_step : LEMMA % :-)
     FORALL(p : Program)(n1, n2 : nat)(e : Expr)(sigma : PState) :
@@ -432,31 +434,22 @@ BEGIN
           sigma1 = sigma2
 
 
-  eval_expr(p : Program)(e : Expr, s1 : PState)(n : nat) : [Val, PState] =
+  eval_expr(p : (wf_Program))(e : Expr, s1 : PState)(n : nat) : [Val, PState] =
     choose({v_s2 : [Val, PState] | 
       deriv_expr(p)(e, s1, proj_1(v_s2), proj_2(v_s2))(n)(deriv_stmt)})
 
-  exec_stmt(p : Program)(c : Stmt, s1 : PState)(n : nat) : PState =
+  exec_stmt(p : (wf_Program))(c : Stmt, s1 : PState)(n : nat) : PState =
     choose({s2 : PState | deriv_stmt(p)(c, s1, s2)(n)})
 
 
   % Executes n steps of the program p with argument a
-%   run_Program(p : Program)(main : Name, a : Val)(s2 : PState)(n : nat) : PState
-%     wf_method(main, p) AND wf_mthd_call(main, a) IMPLIES
-%     LET s1 = initial_Program_state(p),
-%         c  = StmtExpr(MethodCall(Access(This), name(main(p)), Lit(arg(p))))
-%     IN
-%       deriv_stmt(p)(c, s1, s2)(n)
-  run_Program(p : Program)(s2 : PState)(n : nat) : boolean =
+  run_Program(p : (wf_Program))(main : Method, arg : int)
+             (s2 : PState)(n : nat) : boolean =
     LET s1 = initial_Program_state(p),
-        c  = StmtExpr(MethodCall(Access(This), name(main(p)), Lit(arg(p))))
+        c  = StmtExpr(MethodCall(RExpr(RefVarEval(This)),
+                                 name(main),
+                                 NExpr(Int(arg))))
     IN
       deriv_stmt(p)(c, s1, s2)(n)
-
-  run_Program(p : Program)(n : nat) : PState =
-    LET s1 = initial_Program_state(p),
-        c  = StmtExpr(MethodCall(Access(This), name(main(p)), Lit(arg(p))))
-    IN
-      exec_stmt(p)(c, s1)(n)
 
 END Semantics
