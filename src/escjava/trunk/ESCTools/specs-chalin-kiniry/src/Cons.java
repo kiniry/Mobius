@@ -1,109 +1,97 @@
 // $Id$
+package escjava.model_classes;
 
 /**
- * Cons objects can be "chained" together.  We formally define "chain"
- * as follows:
- * - null is a chain
- * - a Cons object is a chain if its second is a chain.
- * (nothing else is a chain).
+ * Cons objects are functional list constructors (like in ML).
+ * Each Cons has a head and a tail. They are both non-null if the
+ * represented list is non-empty and are both null if the represented
+ * list is empty.
  *
- * Note: it is impossible to create cyclic chains because Cons cells
- * are immutable and can only be constructed by the single constuctor
- * herein.
+ * The name Cons is a bit improper. In functional languages a List
+ * is either Empty or a Cons, which is made of a head (element) and
+ * a Tail (List). Unfortunately the name List is already taken by
+ * Java. Furthermore we use this class to also represent Empty
+ * using nulls, as described above.
+ *
+ * @author Patrice Chalin
+ * @author Joseph Kiniry
+ * @author Radu Grigore
  */
 
 // immutable!
 public final /*@ pure @*/ class Cons
 {
-  /*@ spec_public @*/ private final /* null */ Object first;
-  /*@ spec_public @*/ private final /* null */ Object second;
+  private final Object head;
+  private final Cons tail;
 
-  /*@ private normal_behavior
-    @  modifies this.first, this.second;
-    @  ensures this.first == first;
-    @  ensures this.second == second;
-    @*/
-  public Cons(final Object first, final Object second) {
-    this.first = first;
-    this.second = second;
-  }
+  //@ invariant (head == null) <==> (tail == null);
+
+  // TODO: Make these work in ESC/Java?
+  // invariant (\forall Cons a, b;; a.equals(b) <==> b.equals(a));
+  // invariant (\forall Cons a;; a.equals(a));
+  // invariant (\forall Cons a, b, c;; a.equals(b) && b.equals(c) ==> a.equals(c));
 
   /*@ normal_behavior
-    @   ensures \result == first;
+    @   ensures empty();
     @*/
-  public Object first() {
-    return first;
-  }
-
-  /*@ normal_behavior
-    @   ensures \result == second;
-    @*/
-  public Object second() {
-    return second;
+  public Cons() {
+    head = null;
+    tail = null;
   }
   
-  /*@ also 
-    @ public normal_behavior
-    @   ensures \result == ((other instanceof Cons) &&
-    @                       first() == ((Cons)other).first() &&
-    @                       second() == ((Cons)other).second());
+  /*@ normal_behavior
+    @  requires head != null;
+    @  requires tail != null;
+    @  ensures this.head == head;
+    @  ensures this.tail == tail;
+    @  ensures !empty();
+    @*/
+  public Cons(final Object head, final Cons tail) {
+    this.head = head;
+    this.tail = tail;
+  }
+
+  /*@ normal_behavior
+    @   ensures \result == head;
+    @*/
+  public /*@ pure */ Object head() {
+    return head;
+  }
+
+  /*@ normal_behavior
+    @   ensures \result == tail;
+    @*/
+  public /*@ pure */ Object tail() {
+    return tail;
+  }
+  
+  /*@ also normal_behavior
+    @   requires empty();
+    @   ensures \result <==> (other instanceof Cons) &&
+    @                        ((Cons)other).empty();
+    @ also normal_behavior
+    @   requires !empty();
+    @   ensures \result <==> (other instanceof Cons) &&
+    @                        head().equals(((Cons)other).head()) &&
+    @                        tail().equals(((Cons)other).tail());
     @*/
   public boolean equals(Object other) {
-    return (other instanceof Cons) &&
-      first() == ((Cons)other).first() &&
-      second() == ((Cons)other).second();
+    if (!(other instanceof Cons)) {
+      return false;
+    }
+    Cons cons_other = (Cons)other;
+    if (empty()) {
+      return cons_other.empty();
+    }
+    return 
+      head.equals(cons_other.head()) && 
+      tail.equals(cons_other.tail());
   }
 
-  /*@ public normal_behavior
-    @   requires Cons.isChain(this);
-    @   ensures \result == Cons.length(this);
-    @
-    @ public model \bigint length() {
-    @   return length(this);
-    @ }
+  /*@ normal_behavior
+    @   ensures \result == (head == null);
     @*/
-
-  // -----------------------------------------------------------------
-  // Helpers
-
-  /*@ public normal_behavior
-    @   requires isChain(c);
-    @   ensures \result == (c == null ? 0 : 1 + length((Cons)(c.second())));
-    @
-    @ public static pure model \bigint length(Cons c) {
-    @   return (c == null ? 0 : 1 + length((Cons)(c.second())));
-    @ }    
-    @*/
-
-  /*@ public normal_behavior
-    @   requires isChain(chain);
-    @   ensures \result == (chain != null && 
-    @                       (chain.first() == o ||
-    @                        isMemberHelper((Cons)chain.second(), o)));
-    @*/
-  /*@ pure spec_public @*/ private static boolean 
-    isMemberHelper(Cons chain,
-                   /*@ non_null @*/ Object o) {
-    return (chain != null && 
-            (chain.first == o || isMemberHelper((Cons)chain.second, o)));
-  }
-
-  /*@ public normal_behavior
-    @   requires isChain(chain);
-    @   ensures \result == isMemberHelper(chain, o);
-    @*/
-  public static /*@ pure @*/ boolean isMember(Cons chain,
-                                              /*@ non_null @*/ Object o) {
-    return isMemberHelper(chain, o);
-  }
-
-  /*@ public normal_behavior
-    @   ensures \result == 
-    @     (c == null || c.second == null || 
-    @      (c.second instanceof Cons && isChain((Cons)c.second)));
-    @*/
-  public static /*@ pure @*/ boolean isChain(Cons c) {
-    return c == null || c.second == null || 
-      (c.second instanceof Cons && isChain((Cons)c.second));
+  public boolean empty() {
+    return head == null;
   }
 }

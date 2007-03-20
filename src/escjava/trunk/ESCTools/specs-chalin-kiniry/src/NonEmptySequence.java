@@ -47,7 +47,7 @@ public final class NonEmptySequence extends Sequence
     @ also
     @ private normal_behavior
     @   requires !isEmpty();
-    @   modifies chain;
+    @   modifies \nothing;
     @   ensures  \result == (elts.second() == null
     @                       ? EmptySequence.make()
     @                       : getCached(chain, (Pair)elts.second()));
@@ -67,7 +67,7 @@ public final class NonEmptySequence extends Sequence
     @   modifies elts;
     @   ensures  !isEmpty();
     @ also
-    @ protected normal_behavior
+    @ normal_behavior
     @   requires Pair.isChain(e);
     @   modifies elts;
     @   ensures  elts == e;

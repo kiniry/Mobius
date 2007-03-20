@@ -9,6 +9,7 @@
  *
  * @author Patrice Chalin
  * @author Joe Kiniry
+ * @author Radu grigore
  */
 
 public abstract class Sequence
@@ -46,7 +47,7 @@ public abstract class Sequence
   //------------------------------------------------------------------------------
   // Cache
 
-  // ToDo: rename chain to cache
+  // TODO : rename chain to cache
 
   /**
    * The chain of all Sequences.

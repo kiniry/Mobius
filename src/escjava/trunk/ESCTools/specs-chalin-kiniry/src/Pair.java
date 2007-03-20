@@ -1,10 +1,12 @@
 // $Id$
+package escjava.model_classes;
 
 /**
  * Model class for immutable pairs.
  *
  * @author Patrice Chalin
  * @author Joe Kiniry
+ * @author Radu Grigore
  */
 
 public final /*@ pure @*/ class Pair
@@ -126,13 +128,14 @@ public final /*@ pure @*/ class Pair
                                 /* null */ Object first, 
                                 /* null */ Object second)
   {
-    if(chain == null)
+    if(chain == null) {
       return null;
+    }
 
-    Pair p = (Pair)chain.first();
+    Pair p = (Pair)chain.head();
     return same(p, first, second)
       ? p
-      : getCachedHelper((Cons)chain.second(), first, second);
+      : getCachedHelper((Cons)chain.tail(), first, second);
   }
 
   /**
@@ -143,8 +146,8 @@ public final /*@ pure @*/ class Pair
     @   ensures \result == getCachedHelper(chain, first, second);
     @*/
   private static /*@ pure @*/ /* null */ Pair getCached(Object first, Object second) {
-    for (Cons c = chain; c != null; c = (Cons)(c.second())) {
-      Pair p = (Pair)(c.first());
+    for (Cons c = chain; c != null; c = (Cons)(c.tail())) {
+      Pair p = (Pair)(c.head());
       if (p.first == first && p.second == second)
         return p;
     }

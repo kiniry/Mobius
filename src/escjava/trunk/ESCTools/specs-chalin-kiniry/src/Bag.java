@@ -1,11 +1,11 @@
 // $Id$
+package escjava.model_classes;
 
 // immutable!
 public final /*@ pure @*/ class Bag
 {
   //@ public pure model \bigint size();
 
-  //------------------------------------------------------------------------------
   // Queries
 
   public boolean isEmpty() {
@@ -17,10 +17,9 @@ public final /*@ pure @*/ class Bag
   }
 
   public boolean equals(Object o) {
-    return false;
+    return this == o;
   }
 
-  //------------------------------------------------------------------------------
   // Selectors
 
   public Object choose() {
@@ -35,14 +34,12 @@ public final /*@ pure @*/ class Bag
     return null;
   }
 
-  //------------------------------------------------------------------------------
   // Constructors and factory methods
 
   public static Bag empty() {
     return null;
   }
 
-  //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // Helpers methods
 }
 

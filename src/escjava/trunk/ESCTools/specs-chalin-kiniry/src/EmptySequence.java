@@ -50,7 +50,7 @@ public final class EmptySequence extends Sequence
     @   ensures isEmpty();
     @   ensures elts == null;
     @*/
-  private /*@ pure @*/ EmptySequence() {
+  /* pure  */ EmptySequence() {
     // relying upon default initialization of elts
     //@ assert elts == null;
   }
