@@ -1,13 +1,10 @@
-(*Require Import ZArith.
-Require Import Bool.
-Require Import BoolEq.
-Require Import List.
-Require Import BasicDef. *)
+
 Require Import Language.
-Require Import Semantic.
+Require Import SemanticLevels.
 Require Import Coq.Lists.List.
+Require Import Coq.Logic.Classical_Prop.
 Export Language.
-Export Semantic.
+Export  SemanticLevels.
 
 (*LOGIC IN A SP STYLE WITH EXPLICITE CONSEQUENCE RULE *)
 Open Scope Z_scope.
@@ -20,7 +17,7 @@ Inductive methSpec  : methodNames -> assertion -> Type :=
 
 Inductive CTX : Type :=
     | nil : CTX
-    | cons :  forall (n : methodNames ) (body: stmt) (  ass : assertion) ,  CTX -> CTX .
+    | cons :   methodNames -> stmt ->  assertion -> CTX -> CTX .
  
 Fixpoint  inList (ctx: CTX ) ( name2 :  methodNames  ) (body2 :stmt)( ass2 : assertion ){struct ctx } : Prop  :=
    match ctx with 
@@ -40,10 +37,8 @@ end.
                                                              end
 end. 
 *)
-Axiom inHeadOrTail : forall (ctx : CTX)  n b a hn hb ha tail , 
-ctx = cons hn hb ha tail -> 
-       ( inList  ctx n b a ) ->
-              ( hn = n /\ hb = b /\  ha = a ) \/    ( inList  tail n b a )  .
+
+
 
 (*RULES FOR REASONING OVER PROGRAMS AND ASSERTIONS.  
 THE CONSEQUENCE RULE IS IMPLICITE AS IT IS INLINED IN EVERY RULE*)
@@ -60,11 +55,11 @@ Inductive RULE: CTX -> stmt -> assertion -> Prop :=
     RULE ctx stmtF   post2   ->
     RULE ctx (If e stmtT stmtF) post 
 
- | WhileRule : forall  ctx  (st : stmt ) ( post post1  : assertion) e ( inv : assertion) ,
+ | WhileRule : forall  ctx  (st : stmt ) ( post post1  : assertion) e (* inv : assertion *) ,
      (forall s1 s2, post1 s1 s2  /\   eval_expr s2 e = 0-> post s1 s2 ) ->
-     ( forall s p t ,   eval_expr s e <>  0 -> inv s p -> post1 p t -> post1 s t ) -> 
+     ( forall s p t ,   eval_expr s e <>  0 -> post1 s p -> post1 p t -> post1 s t ) -> 
      (forall s , eval_expr s e = 0  -> post1 s s   ) ->
-     RULE ctx st  inv  ->
+     RULE ctx st  post1 ->
      RULE ctx (While e st) post  
 
  |  SeqRule: forall ctx (stmt1 stmt2: stmt ) ( post1  post2  post: assertion), 
@@ -88,152 +83,266 @@ Inductive RULE: CTX -> stmt -> assertion -> Prop :=
       RULE ctx  (Call mName body)  post.
 
 
-Lemma auxCall : 
-forall (s1 s2: state) (post : assertion) (st : Language.stmt), 
-(
-(forall (t1 t2 : state) (n : methodNames) ,
-           exec_stmt t1 (Call n st) t2 -> post t1 t2) -> post s1 s2 )  ->  
-exec_stmt s1 st s2 -> post s1 s2. 
+Lemma  mplus2eqmplus1plus1: forall n0 n, (n0+2)%nat = S n -> (n0 + 1)%nat = n.
 Proof.
-intros s1 s2 post st. induction st.
-intros exec ass.
-apply ass.
 intros.
-
+omega.
 Qed.
+
+Lemma whileAux: 
+forall n s1 s2 (post : assertion)  st e,  exec_stmtN n s1 (While e  st) s2 -> 
+   (forall s : state, eval_expr s e = 0 -> post s s ) -> 
+   
+   (forall s p t : state,
+              eval_expr s e <> 0 -> post s p -> post p t -> post s t ) ->
+   (forall s1 s2 : state, exec_stmtN n s1 st s2 -> post s1 s2 ) -> 
+ (  post s1 s2  /\ eval_expr s2 e = 0 ) .
+Proof.
+
+intros n. induction n. 
+
+(* base case : n =0 *)
+ intros s1 s2 post  st e exW.
+intros.
+assert ( contrad := levelgt0  (While e  st)  s1 s2  exW ) .
+elim contrad.
+
+(* inductive case*)
+intros.
+inversion H.
+simpl;subst;auto.
+assert (A := mplus2eqmplus1plus1 n0 n H3).
+rewrite A in H8.
+rewrite A in H10.
+
+
+assert (H1000 := IHn s3 s2 post st e H10 H0 H1).
+assert (forall s1 s2 : state, exec_stmtN n s1 st s2 -> post s1 s2). 
+apply ( forSmallerAlso1 n (S n) st post).
+omega.
+assumption.
+
+assert (H1001 := H1000 H4).
+destruct H1001. 
+
+split.
+apply ( H1 s1 s3 s2 ).
+assumption.
+apply ( H2 s1 s3).
+apply (monot  n st s1 s3   H8).
+omega.
+assumption.
+assumption.
+simpl;subst;auto.
+Qed.
+
+
+(* SIMPLE VERSION OF AUXILIARY LEMMA FOR PROCEDURE CALLS WHICH PROCEEDS BY INDUCION 
+OVER THE CALL DEPTH N. IT IS USED IN THE PROOF OF SOUNDNESS IN THE CASE
+OF A METHOD CALL*)
+Lemma callAux : forall  M  mName body (post: assertion) ,
+(forall n : nat,
+         (forall (t1 t2 : state) ,
+          exec_stmtN n t1 (Call mName body) t2 -> post t1 t2) ->
+         forall s1 s2 : state, exec_stmtN n s1 body s2 -> post s1 s2 ) -> 
+
+  forall s1 s2 , 
+     exec_stmtN M s1 (Call mName body) s2 ->  post s1 s2. 
+Proof.
+intros n. induction n.
+(* base case : n =0 *)
+intros  mName body post   ass  s1 s2  exW  .
+assert ( contrad := levelgt0  (Call mName body)  s1 s2  exW ) .
+elim contrad.
+
+
+(* induction case *)
+intros mName body post   ass  s1 s2 exec.
+assert (IH1 := IHn mName body post ass).
+assert ( IH3 := ass n IH1).
+inversion exec.
+simpl;subst;auto.
+assert ( (n0 + 1)%nat = n ).
+omega.
+rewrite H0 in H4.
+clear H0 H.
+apply IH3.
+assumption.
+Qed.  
+
+Lemma constructCtx : forall n ctx mName body ( post : assertion ),
+( forall (t1 t2 : state) (b : stmt) (a : assertion) (mName : methodNames),
+    inList ctx mName b a -> exec_stmtN n t1 (Call mName b) t2 -> a t1 t2 ) ->
+(forall s1 s2 ,  exec_stmtN n s1 (Call mName body) s2 -> post s1 s2 ) -> 
+
+ (forall (t1 t2 : state) (b : stmt) (a : assertion) (mName0 : methodNames),
+       inList (cons mName body post ctx) mName0 b a ->
+       exec_stmtN n t1 (Call mName0 b) t2 -> a t1 t2).
+Proof.
+intros.
+elim H1.
+intros.
+destruct H3 as ( name, ( bodies, posts)).
+rewrite <- bodies in H2.
+rewrite <- posts .
+rewrite <- name in H2.
+apply H0.
+assumption.
+intros.
+apply ( H t1 t2 b a mName0).
+assumption.
+assumption.
+Qed.
+
+
+Lemma callAux1 : forall  M  ctx mName body (post: assertion) ,
+
+(forall n : nat,
+         (forall (t1 t2 : state) (b : stmt) (a : assertion)
+            (mName0 : methodNames),
+          inList (cons mName body post ctx) mName0 b a ->
+          exec_stmtN n t1 (Call mName0 b) t2 -> a t1 t2) ->
+         forall s1 s2 : state, exec_stmtN n s1 body s2 -> post s1 s2) -> 
+
+
+
+  forall s1 s2 ,  (forall (t1 t2 : state) (b : stmt) (a : assertion) (mName : methodNames),
+      inList ctx mName b a -> exec_stmtN M t1 (Call mName b) t2 -> a t1 t2) ->
+     exec_stmtN M s1 (Call mName body) s2 ->  post s1 s2. 
+Proof.
+intros n. induction n.
+(* base case : n =0 *)
+intros ctx mName body post   ass  s1 s2 ass1  exW  .
+assert ( contrad := levelgt0  (Call mName body)  s1 s2  exW ) .
+elim contrad.
+
+
+(* induction case *)
+intros ctx mName body post   ass  s1 s2 ass1 exec.
+assert (IH1 := IHn ctx mName body post ass).
+assert ( 
+forall (t1 t2 : state) (b : stmt) (a : assertion)
+         (mName : methodNames),
+       inList ctx mName b a ->
+       exec_stmtN n t1 (Call mName b) t2 -> a t1 t2
+).
+intros.
+apply (ass1 t1 t2 b a mName0 ).
+assumption.
+apply (  monot n  (Call mName0 b)  t1 t2  H0 ).
+omega.
+assert ( forall s1 s2, exec_stmtN n s1 (Call mName body) s2 -> post s1 s2).
+intros.
+apply (  IH1 s0 s3 H H0).
+assert ( CtxInc := constructCtx  n ctx mName body post H H0).
+assert ( IH3 := ass  n  CtxInc).
+inversion exec.
+simpl;subst;auto.
+assert ( (n0 + 1)%nat = n ).
+omega.
+rewrite H2 in H6.
+apply IH3.
+assumption.
+Qed.  
+
 
 (*PROOF OF SOUNDNESS OF THE ABOVE RULE W.R.T. THE
  OPERATIONAL SEMANTICS GIVEN IN   Semantic.v. THE PROOF IS BY INDUCTION
- OVER THE OPERATIONAL SEMANTICS*)
- Lemma correct: forall (s: stmt) (s1 s2 : state ), (  exec_stmt  s1 s s2)  -> 
-forall ctx  ( post : assertion),   RULE ctx s post   ->  
-(forall t1 t2 n b ( a : assertion) , ( inList  ctx n b a  ) -> exec_stmt t1 (Call n b) t2 -> a t1 t2 )  -> post s1 s2.
+ OVER THE  LOGIC RULES *)
+ Lemma correct: forall  (s: stmt)  ctx  ( post : assertion),   RULE ctx s post   ->  
+forall n, 
+(forall t1 t2  b ( a : assertion)  (mName : methodNames ), ( inList  ctx mName b a  ) ->  
+                           exec_stmtN n t1 (Call mName b) t2 -> a t1 t2 ) ->
+   forall  (s1 s2 : state ),  exec_stmtN  n s1 s s2 -> post s1 s2.
 
 Proof. 
-intros st   s1 s2 exec. induction exec; simpl;auto. intros ctx post rule context.
+intros  st    ctx post rule;
+induction rule; intros n ass s1 s2 exec ; simpl;subst;auto.
+
 (* ASSIGN *)
-inversion rule.
-apply (H3 s (update s x (eval_expr s e))).
+apply H.
+inversion exec.
 trivial.
 
 (* IF *) 
-intros ctx post rule context.
-inversion rule.
-apply  ( H4  s1 s2).
+inversion exec.
+simpl;subst;auto.
+apply (H s1 s2).
 split.
 intros.
-apply ( IHexec  ctx post1).
-simpl.
-apply H6.
+eapply ( IHrule1 (n0 + 1)%nat ). 
+assumption.
 assumption.
 intros.
-elim H.
+elim H6.
 assumption.
-
-intros ctx post rule context.
-inversion rule.
-apply  ( H4 s1 s2).
+simpl;subst;auto.
+apply (H s1 s2).
 split.
 intros.
-elim H8.
+elim H0.
 assumption.
 intros.
-apply ( IHexec ctx post2).
-simpl.
-apply H7.
+eapply ( IHrule2 (n0 + 1)%nat ) .  
+assumption.
 assumption.
 
 (*WHILE*)
 (* iteration case, condition holds *)
- intros ctx post rule context.
-inversion rule.
-apply (H2 s1 s3).
-assert (H100 := IHexec2 ctx (fun s1 s2 => post1 s1 s2 /\ eval_expr s2 e = 0 ) ).
-assert ( RULE ctx (While e stmt)  (fun s1 s2 => post1 s1 s2 /\ eval_expr s2 e = 0 ) ).
-apply ( WhileRule ctx stmt  (fun s1 s2 => post1 s1 s2 /\ eval_expr s2 e = 0 )  post1 e inv ).
+apply H.
+inversion exec.
+simpl;subst;auto.
+assert (execNplus2 := monot  ( n0 +1)%nat st s1 s3  H7 (n0 +2)%nat ).
+assert (execAtnplus2: exec_stmtN (n0 + 2) s1 st s3).
+apply execNplus2.
+omega.
+clear execNplus2.
 
-
-intros.
+assert (IH1 := IHrule (n0+2)%nat ass  s1 s3  execAtnplus2).
+assert (theDiff:= whileAux ( n0 + 1)   s3 s2  post1 st e H9  H1 H0).
+assert (forall s1 s2 : state, exec_stmtN (n0 + 1) s1 st s2 -> post1 s1 s2).
+apply (forSmallerAlso1 (n0 + 1) ( n0 +2 ) st post1  ). 
+omega.
+intros. apply (IHrule  (n0+2)%nat ) .
 assumption.
 assumption.
-assumption.
-assumption.
-assert (H102 := H100 H8).
-simpl in *.
-destruct H102.
-assumption.
+assert ( IH2 := theDiff H2).
+clear theDiff.
 split.
-apply ( H3 s1 s2 s3).
-assumption.
-apply (IHexec1 ctx inv H7).
+apply (H0 s1 s3 s2 ).
 assumption.
 assumption.
+destruct IH2.
+assumption.
+destruct IH2.
 assumption.
 
-(*  condition is false *)
-intros ctx post rule context.
-inversion rule.
-apply (H2 s1 s1).
-split.
-apply (H5 s1).
-assumption.
-assumption.
+(* condition of while is false *)
+simpl;subst;auto.
 
 (* SEQUENCE *)
-intros ctx post rule context.
-inversion rule.
-apply (H1 s1 s3).
-exists s2.
+inversion exec.
+simpl;subst;auto.
+apply (H s1 s2).
+exists s3.
 split.
-apply (IHexec1 ctx post1 H3).
-assumption.
-apply (IHexec2 ctx post2 H5).
-assumption.
+apply (IHrule1 (n0+1)%nat ass   s1 s3 H4).
+apply (IHrule2 (n0+1)%nat ass  s3 s2 H6).
 
 (* SKIP *)
-intros ctx post rule context.
-inversion rule.
-apply (H s s).
-trivial.
+inversion exec.
+simpl;subst;auto. 
 
+(* PROCEDURE CALL: INDUCTIVE CASE *)
+apply H.
+apply ( callAux1 n ctx  mName body post1 IHrule  s1 s2 ass exec).
 
-(* PROCEDURE CALL *)
-intros ctx  post  rule ctxass.
-inversion rule.
-subst; eauto; simpl.
-
-apply (H2 s1 s2).
-
-assert ( H110 := IHexec (cons mName stmt post1 ctx)   post1 H4).
-
-apply ( IHexec (cons mName stmt post1 ctx)   post1 H4).
-intros.
-assert ( H01 := inHeadOrTail  (cons mName stmt post1 ctx) n b a  mName stmt post1 ctx ).
-assert ( mName = n /\ stmt = b /\ post1 = a \/ inList ctx n b a  ).
-apply H01.
-trivial.
+(* PROCEDURE CALL*)
+apply H.
+apply (ass s1 s2  body post1 mName ).
 assumption.
-clear H01.
-elim H1. 
-clear H1.
-intros H01.
-
-destruct H01 as  (l ,   r ).
-destruct r as (r1, r2).
-rewrite <- r2 .
-apply ( IHexec (cons mName stmt post1 ctx)   post1 H4).
-
-
-(*The case when the assertion belongs to the context*)
-Focus 2.
-inversion rule.
-subst; eauto; simpl.
-intros.
-apply (H2 s1 s2 ).
-assert (HH := H s1 s2 mName stmt post1 H4).
-apply HH.
-apply (ExecCall s1 s2 stmt mName).
 assumption.
+Qed.
 
-Qed. 
+
  
