@@ -18,7 +18,6 @@ import escjava.ast.Modifiers;
 import escjava.backpred.FindContributors;
 import escjava.dfa.daganalysis.ReachabilityAnalysis;
 import escjava.gui.GUI;
-import escjava.invariantguessing.LoopInvariantGuessing;
 import escjava.AnnotationHandler;
 
 import javafe.reader.StandardTypeReader;
