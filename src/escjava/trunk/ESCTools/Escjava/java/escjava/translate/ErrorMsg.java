@@ -191,7 +191,7 @@ public final class ErrorMsg
 	if (counterexampleContext == null) {
 	    counterexampleContext = SList.make();
 	}
-
+/*
 	int k = s.indexOf('@');
 	//Assert.notFalse(k != -1 || assocOnly);
 	int locUse = 0;
@@ -225,17 +225,20 @@ public final class ErrorMsg
 	}
     
 	int tag = TagConstants.checkFromString(s);
-	String msg = chkToMsg( tag, hasAssocDecl );
+    
+    */
+    LabelData loc = LabelData.parse(s);
+	String msg = chkToMsg(loc.getMsgTag(), loc.hasDeclLoc());
 	if (msg == null) return;
 
-	if (locUse != Location.NULL) ErrorSet.warning( locUse, 
-			  msg+" (" + TagConstants.toString(tag) + ")" );
-	else if (tag != TagConstants.CHKADDINFO)
-		ErrorSet.warning( msg+" (" + TagConstants.toString(tag) + ")" );
+	if (loc.hasUseLoc()) 
+        ErrorSet.warning(loc.getUseLoc(),  msg+" (" + loc.getMsgShort() + ")" );
+	else if (loc.getMsgTag() != TagConstants.CHKADDINFO)
+		ErrorSet.warning( msg+" (" + loc.getMsgShort() + ")" );
 
-	if( locDecl != Location.NULL) {
-	    ErrorSet.getReporter().reportAssociatedInfo2(locDecl, assocDeclClipPolicy);
-	    if (!Location.isWholeFileLoc(locDecl)) {
+	if (loc.hasDeclLoc()) {
+	    ErrorSet.getReporter().reportAssociatedInfo2(loc.getDeclLoc(), assocDeclClipPolicy);
+	    if (!Location.isWholeFileLoc(loc.getDeclLoc())) {
 		//System.out.println("Associated declaration is "
 		//	       + Location.toString(locDecl) + ":");
 		//ErrorSet.displayColumn(locDecl, assocDeclClipPolicy);
@@ -245,9 +248,9 @@ public final class ErrorMsg
 	    }
 	}
 
-	if( locAux != Location.NULL) {
-	    ErrorSet.getReporter().reportAssociatedInfo2(locAux, assocDeclClipPolicy);
-	    if (!Location.isWholeFileLoc(locAux)) {
+	if (loc.hasAuxLoc()) {
+	    ErrorSet.getReporter().reportAssociatedInfo2(loc.getAuxLoc(), assocDeclClipPolicy);
+	    if (!Location.isWholeFileLoc(loc.getAuxLoc())) {
 		//System.out.println("Associated declaration is "
 		//	       + Location.toString(locAux) + ":");
 		//ErrorSet.displayColumn(locAux, assocDeclClipPolicy);
@@ -257,7 +260,7 @@ public final class ErrorMsg
 	    }
 	}
 
-	switch (tag) {
+	switch (loc.getMsgTag()) {
 	case TagConstants.CHKLOOPOBJECTINVARIANT:
 	case TagConstants.CHKOBJECTINVARIANT:
 	    displayInvariantContext(counterexampleContext, out);
@@ -265,18 +268,18 @@ public final class ErrorMsg
 
 	if (Main.options().suggest) {
 	    Object auxInfo;
-	    if (auxID == -1) {
+	    if (loc.getAuxId() == -1) {
 		auxInfo = null;
 	    } else {
-		auxInfo = AuxInfo.get(auxID);
+		auxInfo = AuxInfo.get(loc.getAuxId());
 	    }
-	    String sug = Suggestion.generate(tag, auxInfo, rd, directTargets, 
-					     counterexampleContext, locDecl);
+	    String sug = Suggestion.generate(loc.getMsgTag(), auxInfo, rd, directTargets, 
+					     counterexampleContext, loc.getDeclLoc());
 	    if (sug == null) {
 		sug = "none";
 	    }
-	    System.out.println("Suggestion [" + Location.toLineNumber(locUse)+
-			       "," + Location.toColumn(locUse) + "]: " + sug);
+	    System.out.println("Suggestion [" + Location.toLineNumber(loc.getUseLoc())+
+			       "," + Location.toColumn(loc.getUseLoc()) + "]: " + sug);
 	}
       } catch (javafe.util.AssertionFailureException e) {
 	System.out.println("FAILED TO PRINT ERROR MESSAGE FOR " + s);
@@ -291,7 +294,7 @@ public final class ErrorMsg
 	new AssocDeclClipPolicy();
 
 
-    private static String chkToMsg( int tag, boolean hasAssocDecl ) {
+    public static String chkToMsg( int tag, boolean hasAssocDecl ) {
 	String r = null;
 	// Finally, describe the error
 	switch (tag) {
@@ -571,7 +574,7 @@ public final class ErrorMsg
      * into a number.
      **/
   
-    private static int toNumber(String s, int k) {
+    public static int toNumber(String s, int k) {
 	int n = 0;
 	while (k < s.length()) {
 	    n = 10*n + s.charAt(k) - '0';
