@@ -16,7 +16,9 @@ import escjava.ast.TagConstants;
 import escjava.ast.Modifiers;
 
 import escjava.backpred.FindContributors;
+import escjava.dfa.daganalysis.ReachabilityAnalysis;
 import escjava.gui.GUI;
+import escjava.invariantguessing.LoopInvariantGuessing;
 import escjava.AnnotationHandler;
 
 import javafe.reader.StandardTypeReader;
@@ -1011,24 +1013,39 @@ public class Main extends javafe.SrcTool
 
         // Process Simplify's output
         String status = "unexpectedly missing Simplify output";
-	try {
+        try {
+            int stat = doProving(vc, r, directTargets, null);
+            switch (stat) {
+            case Status.STATICCHECKED_OK:
+                status = "passed";
+                break;
+            case Status.STATICCHECKED_ERROR:
+                status = "failed";
+                break;
+            case Status.STATICCHECKED_TIMEOUT:
+                status = "timed out";
+                break;
+            default:
+                status = "unexpectedly missing Simplify output";
+            }
 
-	    int stat = doProving(vc,r,directTargets,null);
-	    switch (stat) {
-	    case Status.STATICCHECKED_OK: status = "passed"; break;
-	    case Status.STATICCHECKED_ERROR: status = "failed"; break;
-	    case Status.STATICCHECKED_TIMEOUT: status = "timed out"; break;
-	    default: status = "unexpectedly missing Simplify output";
-	    }
-	
-	} catch (escjava.prover.SubProcess.Died e) {
-	    //System.out.println("DIED");
-	    ProverManager.died();
-	} catch (FatalError e) {
-	    //System.out.println("DIED");
-	    ProverManager.died();
-	}
-
+        } catch (escjava.prover.SubProcess.Died e) {
+            // System.out.println("DIED");
+            ProverManager.died();
+        } catch (FatalError e) {
+            // System.out.println("DIED");
+            ProverManager.died();
+        }
+    
+        if (options().enableReachabilityAnalysis) {
+            // Gives warnings for unreached code (assertions for now)
+            if (options().dsa) {
+                ReachabilityAnalysis.analyze(gc);
+            } else {
+                ErrorSet.caution("Skipping reachability analysis because DSA is turned off.");
+            }
+        }
+    
         String proofTime = timeUsed(startTime);
         if (options().statsTime) {
             System.out.println("    [Time: "+timeUsed(routineStartTime)
@@ -1364,6 +1381,13 @@ public class Main extends javafe.SrcTool
                                        initState.getPreMap(),
                                        r.getEndLoc(),nobody);
 
+        // loop invariant guessing, based on assertions inside a loop
+        /*
+        if (Main.options().loopTranslation == Options.LOOP_SAFE) {
+           LoopInvariantGuessing.traverse(fullCmd, gctranslator);
+        }
+        */
+        
         if (Main.options().loopTranslation == Options.LOOP_SAFE &&
             Main.options().predAbstract) {
             long T = java.lang.System.currentTimeMillis();
