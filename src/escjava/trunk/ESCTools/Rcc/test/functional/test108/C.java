@@ -12,4 +12,5 @@ class F  {
 class G {
     void f() {
         F.s = "123";
-    }}
+    }
+}

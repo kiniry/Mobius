@@ -19,12 +19,24 @@ Associated declaration is "C.java", line 6, col 13:
 C.java:20: Warning: incorrect use of annotation.  guarded_by modifiers only allowed on fields and classes. (Modifiers)
     /*# guarded_by fs */
         ^
-C.java:23: Warning: possible race condition.  Lock 'this' may not be held.  Locks currently held are '()'. (Race)
+C.java:23: Warning: possible race condition.  Lock 'this' may not be held. We only have '()'. (Race)
         s = "asd";
         ^
-Associated declaration is "C.java", line 4, col 17:
+Associated declaration is "C.java", line 4, col 4:
     String s /*# guarded_by this */;
-                 ^
+    ^
+C.java:28: Warning: lock expression may not be constant.   (ConstantLocks)
+        synchronized(s) {
+                     ^
+Associated declaration is "C.java", line 28, col 21:
+        synchronized(s) {
+                     ^
+C.java:30: Warning: lock expression may not be constant.   (ConstantLocks)
+            synchronized(o) {
+                         ^
+Associated declaration is "C.java", line 30, col 25:
+            synchronized(o) {
+                         ^
 C.java:35: Warning: lock expression may not be constant.   (ConstantLocks)
     /*# guarded_by s */
                    ^
@@ -43,11 +55,11 @@ Associated declaration is "C.java", line 37, col 16:
 C.java:37: Warning: incorrect use of annotation.  guarded_by modifiers only allowed on fields and classes. (Modifiers)
         C o /*# guarded_by s */;
         ^
-C.java:38: Warning: possible race condition.  Lock 'this' may not be held.  Locks currently held are '()'. (Race)
+C.java:38: Warning: possible race condition.  Lock 'this' may not be held. We only have '()'. (Race)
         s = "asd";
         ^
-Associated declaration is "C.java", line 4, col 17:
+Associated declaration is "C.java", line 4, col 4:
     String s /*# guarded_by this */;
-                 ^
-10 warnings
+    ^
+12 warnings
 1 error

@@ -1,4 +1,4 @@
-/*# thread_shared */ class OwnerInfo {}
+class OwnerInfo {}
 
 public class Account {
   private OwnerInfo ownerInfo /*# guarded_by this */;

@@ -1,93 +1,69 @@
-C.java:12: Warning: possible race condition.  Lock 'b' may not be held.  Locks currently held are '()'. (Race)
+C.java:12: Warning: possible race condition.  Lock 'b' may not be held. We only have '()'. (Race)
         b.s[3] = "asd";
         ^
-Associated declaration is "C.java", line 4, col 46:
+Associated declaration is "C.java", line 4, col 4:
     String s[ /*# elems_guarded_by o */]  /*# guarded_by this */;
-                                              ^
-C.java:12: Warning: possible race condition.  Lock 'b.o' may not be held.  Locks currently held are '()'. (Race)
+    ^
+C.java:12: Warning: possible race condition.  Lock 'b.o' may not be held. We only have '()'. (Race)
         b.s[3] = "asd";
            ^
-Associated declaration is "C.java", line 12, col 8:
-        b.s[3] = "asd";
-        ^
-C.java:20: Warning: possible race condition.  Lock 'b.o' may not be held.  Locks currently held are '(b)'. (Race)
+C.java:13: Warning: lock expression may not be constant.   (ConstantLocks)
+        synchronized(b.o) {
+                     ^
+Associated declaration is "C.java", line 13, col 21:
+        synchronized(b.o) {
+                     ^
+C.java:14: Warning: lock expression may not be constant.   (ConstantLocks)
+            synchronized(b) {
+                         ^
+Associated declaration is "C.java", line 14, col 25:
+            synchronized(b) {
+                         ^
+C.java:19: Warning: lock expression may not be constant.   (ConstantLocks)
+        synchronized(b) {
+                     ^
+Associated declaration is "C.java", line 19, col 21:
+        synchronized(b) {
+                     ^
+C.java:20: Warning: possible race condition.  Lock 'b.o' may not be held. We only have '(b)'. (Race)
             b.s[3] = "asd";
                ^
-Associated declaration is "C.java", line 20, col 12:
-            b.s[3] = "asd";
-            ^
-C.java:33: Warning: possible race condition.  Lock 'o1' may not be held.  Locks currently held are '(o)'. (Race)
+C.java:33: Warning: possible race condition.  Lock 'o1' may not be held. We only have '(o)'. (Race)
             b[1][1] = null;
                 ^
-Associated declaration is "C.java", line 33, col 12:
-            b[1][1] = null;
-            ^
-C.java:33: Warning: possible race condition.  Lock 'o2' may not be held.  Locks currently held are '(o)'. (Race)
+C.java:33: Warning: possible race condition.  Lock 'o2' may not be held. We only have '(o)'. (Race)
             b[1][1] = null;
                 ^
-Associated declaration is "C.java", line 33, col 12:
-            b[1][1] = null;
-            ^
-C.java:39: Warning: possible race condition.  Lock 'o2' may not be held.  Locks currently held are '(o, o1)'. (Race)
+C.java:39: Warning: possible race condition.  Lock 'o2' may not be held. We only have '(o, o1)'. (Race)
                 b[1][1] = null;
                     ^
-Associated declaration is "C.java", line 39, col 16:
-                b[1][1] = null;
-                ^
-C.java:44: Warning: possible race condition.  Lock 'o' may not be held.  Locks currently held are '(o1)'. (Race)
+C.java:44: Warning: possible race condition.  Lock 'o' may not be held. We only have '(o1)'. (Race)
             b[1] = null;
              ^
-Associated declaration is "C.java", line 44, col 12:
-            b[1] = null;
-            ^
-C.java:45: Warning: possible race condition.  Lock 'o' may not be held.  Locks currently held are '(o1)'. (Race)
+C.java:45: Warning: possible race condition.  Lock 'o' may not be held. We only have '(o1)'. (Race)
             b[1][1] = null;
              ^
-Associated declaration is "C.java", line 45, col 12:
-            b[1][1] = null;
-            ^
-C.java:45: Warning: possible race condition.  Lock 'o2' may not be held.  Locks currently held are '(o1)'. (Race)
+C.java:45: Warning: possible race condition.  Lock 'o2' may not be held. We only have '(o1)'. (Race)
             b[1][1] = null;
                 ^
-Associated declaration is "C.java", line 45, col 12:
-            b[1][1] = null;
-            ^
-C.java:59: Warning: possible race condition.  Lock 'o1' may not be held.  Locks currently held are '(o)'. (Race)
+C.java:59: Warning: possible race condition.  Lock 'o1' may not be held. We only have '(o)'. (Race)
             b2[1][1] = null;
                  ^
-Associated declaration is "C.java", line 57, col 69:
- ... ded_by o */][ /*# elems_guarded_by o1,o2 */];
-                                        ^
-C.java:59: Warning: possible race condition.  Lock 'o2' may not be held.  Locks currently held are '(o)'. (Race)
+C.java:59: Warning: possible race condition.  Lock 'o2' may not be held. We only have '(o)'. (Race)
             b2[1][1] = null;
                  ^
-Associated declaration is "C.java", line 57, col 72:
- ... _by o */][ /*# elems_guarded_by o1,o2 */];
-                                        ^
-C.java:67: Warning: possible race condition.  Lock 'o2' may not be held.  Locks currently held are '(o, o1)'. (Race)
+C.java:67: Warning: possible race condition.  Lock 'o2' may not be held. We only have '(o, o1)'. (Race)
                 b[1][1] = null;
                     ^
-Associated declaration is "C.java", line 67, col 16:
-                b[1][1] = null;
-                ^
-C.java:72: Warning: possible race condition.  Lock 'o' may not be held.  Locks currently held are '(o1)'. (Race)
+C.java:72: Warning: possible race condition.  Lock 'o' may not be held. We only have '(o1)'. (Race)
             b[1] = null;
              ^
-Associated declaration is "C.java", line 72, col 12:
-            b[1] = null;
-            ^
-C.java:73: Warning: possible race condition.  Lock 'o' may not be held.  Locks currently held are '(o1)'. (Race)
+C.java:73: Warning: possible race condition.  Lock 'o' may not be held. We only have '(o1)'. (Race)
             b[1][1] = null;
              ^
-Associated declaration is "C.java", line 73, col 12:
-            b[1][1] = null;
-            ^
-C.java:73: Warning: possible race condition.  Lock 'o2' may not be held.  Locks currently held are '(o1)'. (Race)
+C.java:73: Warning: possible race condition.  Lock 'o2' may not be held. We only have '(o1)'. (Race)
             b[1][1] = null;
                 ^
-Associated declaration is "C.java", line 73, col 12:
-            b[1][1] = null;
-            ^
 C.java:84: Warning: lock expression may not be constant.   (ConstantLocks)
         int x2[/*# elems_guarded_by x */];
                                     ^
@@ -100,5 +76,5 @@ C.java:85: Error: Value of type int[/*# elems_guarded_by x  */] cannot be assign
 C.java:86: Error: Value of type int[/*# elems_guarded_by o  */] cannot be assigned to location of type int[/*# elems_guarded_by x  */]
         x2 = x;
            ^
-16 warnings
+19 warnings
 2 errors

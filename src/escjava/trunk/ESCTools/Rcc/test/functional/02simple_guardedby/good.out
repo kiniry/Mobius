@@ -7,10 +7,10 @@ C.java:3: Warning: lock expression may not be constant.   (ConstantLocks)
 Associated declaration is "C.java", line 3, col 22:
   private int data /*#guarded_by lock*/;
                       ^
-C.java:6: Warning: possible race condition.  Lock 'lock' may not be held.  Locks currently held are '()'. (Race)
+C.java:6: Warning: possible race condition.  Lock 'lock' may not be held. We only have '()'. (Race)
     data = 1;
     ^
-Associated declaration is "C.java", line 3, col 22:
+Associated declaration is "C.java", line 3, col 10:
   private int data /*#guarded_by lock*/;
-                      ^
+          ^
 3 warnings

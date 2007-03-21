@@ -1,21 +1,21 @@
-C.java:27: Warning: possible race condition.  Lock 'this' may not be held.  Locks currently held are '()'. (Race)
+C.java:27: Warning: possible race condition.  Lock 'this' may not be held. We only have '()'. (Race)
         s = "asd";
         ^
-Associated declaration is "C.java", line 3, col 18:
+Associated declaration is "C.java", line 3, col 4:
     String s  /*# guarded_by this */;
-                  ^
+    ^
 C.java:32: Warning: lock expression may not be constant.   (ConstantLocks)
     static Object o /*# guarded_by G.o */;
                                    ^
 Associated declaration is "C.java", line 32, col 24:
     static Object o /*# guarded_by G.o */;
                         ^
-C.java:35: Warning: possible race condition.  Lock 'o' may not be held.  Locks currently held are '()'. (Race)
+C.java:35: Warning: lock expression may not be constant.   (ConstantLocks)
         synchronized(G.o) { 
-                      ^
-Associated declaration is "C.java", line 32, col 24:
-    static Object o /*# guarded_by G.o */;
-                        ^
+                     ^
+Associated declaration is "C.java", line 35, col 21:
+        synchronized(G.o) { 
+                     ^
 C.java:50: Warning: lock expression may not be constant.   (ConstantLocks)
     /*# requires this, G.o */
                        ^
@@ -28,16 +28,16 @@ C.java:51: Warning: requires set must be a subset of superclass method's.   (Sup
 Associated declaration is "C.java", line 50, col 8:
     /*# requires this, G.o */
         ^
-C.java:36: Warning: possible race condition.  Lock 'this' may not be held.  Locks currently held are '(o)'. (Race)
+C.java:36: Warning: possible race condition.  Lock 'this' may not be held. We only have '(o)'. (Race)
             f();
             ^
 Associated declaration is "C.java", line 50, col 8:
     /*# requires this, G.o */
         ^
-C.java:41: Warning: possible race condition.  Lock 'o' may not be held.  Locks currently held are '()'. (Race)
+C.java:41: Warning: lock expression may not be constant.   (ConstantLocks)
         synchronized(G.o) {
-                      ^
-Associated declaration is "C.java", line 32, col 24:
-    static Object o /*# guarded_by G.o */;
-                        ^
+                     ^
+Associated declaration is "C.java", line 41, col 21:
+        synchronized(G.o) {
+                     ^
 7 warnings

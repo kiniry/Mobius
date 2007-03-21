@@ -27,7 +27,7 @@ import rcc.tc.TypeCheck;
 public class Main extends javafe.SrcTool {
 
     /** Our version number */
-    public final String version = "0.3.0";
+    public final String version = "1.0.0";
 
     public Vector commandLineFiles;
 

@@ -5,13 +5,16 @@ Changes to the original RCC:
 * allow volatile as synchronization
 * ghost variables handled differently: typecheck guaranteed to
    terminate
+* we can use a ghost in a require
 
 TODO
 
-o [rg] we can require to hold the lock on an argument when calling a
-   method
-o [rg] we can use a ghost in a require
 
+o [rg] test arrays
+
+o [rg] test subtyping
+
+o [rg] test static stuff
 
 
 

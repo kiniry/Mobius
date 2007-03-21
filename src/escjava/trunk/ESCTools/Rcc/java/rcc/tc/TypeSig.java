@@ -5,6 +5,7 @@ package rcc.tc;
 import java.util.LinkedList;
 import java.util.List;
 
+import javafe.ast.ASTDecoration;
 import javafe.ast.CompilationUnit;
 import javafe.ast.Expr;
 import javafe.ast.ExprObjectDesignator;
@@ -17,6 +18,7 @@ import javafe.ast.MethodDeclVec;
 import javafe.ast.PrettyPrint;
 import javafe.ast.ThisExpr;
 import javafe.ast.TypeDecl;
+import javafe.ast.TypeName;
 import javafe.tc.Env;
 import javafe.util.Assert;
 import javafe.util.ErrorSet;
@@ -59,24 +61,11 @@ import rcc.ast.EqualsASTNoDecl;
  *   superClass.
  *
  * The default instantiation shall not be used while doing flow insensitive
- * checks. A class that has no generic parameter has a default instantiation
- * and exactly one other instantiation (with an empty |expressions| list)
- * which is the one to be used by <code>FlowInsensitiveChecks</code>. 
+ * checks. A class that has no generic parameter has only a default instantiation.
+ * Although this is ugly it simplifies the implementation later.
  *
  * We provide methods to figure out if a field is a ghost field and, if so,
  * what is the expression it is instantiated with in this TypeSig.
- * 
- * The default instantiation is created by JavaFE by calling 
- * Types.makeTypeSigInstance. (TODO We need a method to make sure that
- * parameters end up somehow in the default instantiation.) 
- * Other instantiations are created when type names with arguments are
- * resolved. No two TypeSig objects have o1.generic == o2.generic and
- * o1.expressions == o2.expressions, where the latter equality is syntactical.
- * To do this, we keep references from the default instantiation x to all
- * the other TypeSig object y for which y.generic == x in the list
- * <code>nonDefaultInstantiations</code>.
- * 
- * TODO do I need to override isSubTypeOf to handle array elem guards?
  * 
  * TODO check whether two formal parameters have the same name and
  *      report a fatal(?) error if so
@@ -116,6 +105,14 @@ public class TypeSig extends javafe.tc.TypeSig {
      */
     private static final EqualsASTNoDecl eq = new EqualsASTNoDecl();
 
+    /**
+     * Constructor for shortly lived instances. See the terribly ugly hack
+     * used to override Types.getSig. (which follows the terribly ugly hack
+     * that is already used in lots of places in JavaFE, ESCJAVA, etc.)
+     */
+    public TypeSig() {
+        // do nothing
+    }
 
     /*
      * All constructors of javafe.tc.TypeSig have counterparts here that
@@ -178,9 +175,10 @@ public class TypeSig extends javafe.tc.TypeSig {
             packageName,
             simpleName,
             enclosingType,
-            myTypeDecl,
+            null,
             CU
         );
+        this.myTypeDecl = myTypeDecl;
         this.enclosingEnv = enclosingEnv;
         this.fields = fields;
         this.member = member;
@@ -188,6 +186,7 @@ public class TypeSig extends javafe.tc.TypeSig {
         this.state = state; // TODO is this right?
         this.arguments = arguments;
         this.defaultInstantiation = defaultInstantiation;
+        Dbg.o("create (non-default) instantiation for " + simpleName);
     }
     
     public boolean hasFormals() {
@@ -220,9 +219,16 @@ public class TypeSig extends javafe.tc.TypeSig {
         int i, j;
         Assert.precondition(defaultInstantiation == this);
         if (exprs == null) exprs = ExprVec.make();
-
-        // These will become ThisExpr or FieldAccess later:
-        // FlowInsensitiveChecks will do that. TODO provide access.
+        if (exprs.size() == 0) return this;
+        
+        // Do they have the write type?
+        for (i = 0; i < exprs.size(); ++i) {
+            Expr e = exprs.elementAt(i);
+            if (e instanceof ThisExpr) continue;
+            if (e instanceof FieldAccess) continue;
+            System.err.println(e.getClass().getName());
+            Assert.fail("Internal error");
+        }
         
         // Check that the number of arguments is the same as the number
         // of parameters.
@@ -265,10 +271,32 @@ public class TypeSig extends javafe.tc.TypeSig {
             this);
         // we are likely to look for the same instance soon, so insert in front
         nonDefaultInstantiations.add(0, newInst);
+        Dbg.o("..instantiation is " + System.identityHashCode(newInst));
 
         Info.out("I have created the instantiation " + newSimpleName);
         
         return newInst;
+    }
+    
+    /**
+     * Override. If the TypeSig associated with <code>tn</code> is the
+     * a default instantiation replace it by the proper instantiation.
+     */
+    protected javafe.tc.TypeSig getSigInstance(TypeName tn) {
+        TypeSig ts = (TypeSig)super.getSigInstance(tn);
+        if (ts.isInstance()) return ts;
+        /*
+        // get the proper instantiation
+        ASTDecoration argsDeco = PrepTypeDeclaration.typeArgumentDecoration;
+        ExprVec args = (ExprVec)argsDeco.get(tn);
+        if (args == null) {
+            args = ExprVec.make();
+            argsDeco.set(tn, args);
+        }
+        ts = ts.getInstantiation(args);
+        TypeSig.setSig(tn, ts);
+        */
+        return ts;
     }
     
     /**
@@ -358,5 +386,13 @@ public class TypeSig extends javafe.tc.TypeSig {
         int loc
     ) {
         return super.lookupType(caller, id, loc);
+    }
+    
+    /**
+     * Always forward to the default instantiation.
+     */
+    public void prep() {
+        if (isInstance()) defaultInstantiation.prep();
+        super.prep();
     }
 }

@@ -113,6 +113,8 @@ public class PrepTypeDeclaration extends javafe.tc.PrepTypeDeclaration {
             TypeDeclElem e = d.elems.elementAt(i);
             if (e instanceof FieldDecl) {
                 FieldDecl fd = (FieldDecl)e;
+                if (fd.pmodifiers == null) 
+                    fd.pmodifiers = ModifierPragmaVec.make();
                 ModifierPragma t[] = fd.pmodifiers.toArray();
                 for (int j = 0; j < t.length; j++) {
                     t[j] = (ModifierPragma)clone.clone(t[j], true);

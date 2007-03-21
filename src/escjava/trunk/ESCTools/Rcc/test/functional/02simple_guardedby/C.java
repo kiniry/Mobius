@@ -1,4 +1,4 @@
-/*#thread_shared*/ public class C {
+public class C {
   private Object lock;
   private int data /*#guarded_by lock*/;
 

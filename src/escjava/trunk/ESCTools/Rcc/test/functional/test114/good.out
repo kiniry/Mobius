@@ -1,12 +1,12 @@
-C.java:18: Warning: possible race condition.  Lock 'F.d' may not be held.  Locks currently held are '()'. (Race)
+C.java:11: Caution: Variable d might not have been initialized
+    public static final Object d;
+                               ^
+C.java:18: Warning: possible race condition.  Lock 'd' may not be held. We only have '()'. (Race)
         dd.a = 2;
         ^
-Associated declaration is "C.java", line 6, col 21:
+Associated declaration is "C.java", line 6, col 11:
     public int a /*# guarded_by o */;
-                     ^
-C.java:29: Warning: lock expression may not be constant.   (ConstantLocks)
-    D/*#{z}*/ dd;
-         ^
+           ^
 C.java:28: Warning:  field 'GG.z' must be guarded in a thread shared class (SharedField)
     Object z;
     ^
@@ -22,10 +22,8 @@ Associated declaration is "C.java", line 30, col 17:
 C.java:29: Warning: lock expression may not be constant.   (ConstantLocks)
     D/*#{z}*/ dd;
          ^
-Associated declaration is "C.java", line 6, col 21:
-    public int a /*# guarded_by o */;
-                     ^
-C.java:36: Warning:  field 'G<(G.this.o)>.dd' must be guarded in a thread shared class (SharedField)
+C.java:36: Warning:  field 'G.dd' must be guarded in a thread shared class (SharedField)
     D/*#{o}*/ dd;
     ^
-7 warnings
+1 caution
+6 warnings

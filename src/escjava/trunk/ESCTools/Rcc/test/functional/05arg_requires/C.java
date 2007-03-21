@@ -3,8 +3,15 @@ class A {
 }
 
 public class C {
-  public void doit(A a) /*#requires a*/ {
+  public void doit(final A a) /*#requires a*/ {
     a.x = 0;
     doit(a);
+  }
+
+  public void go() {
+    A b = new A();
+    synchronized (b) {
+      doit(b);
+    }
   }
 }

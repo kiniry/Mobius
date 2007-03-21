@@ -1,13 +1,13 @@
-C.java:5: Warning: possible race condition.  Lock 's' may not be held.  Locks currently held are '()'. (Race)
+C.java:5: Warning: possible race condition.  Lock 's' may not be held. We only have '()'. (Race)
         new C(this);
         ^
-Associated declaration is "C.java", line 8, col 14:
+Associated declaration is "C.java", line 8, col 4:
     C(C c) /*#requires C.s */ {}
-              ^
-C.java:19: Warning: possible race condition.  Lock 's' may not be held.  Locks currently held are '()'. (Race)
+    ^
+C.java:19: Warning: possible race condition.  Lock 's' may not be held. We only have '()'. (Race)
         new C(b);
         ^
-Associated declaration is "C.java", line 8, col 14:
+Associated declaration is "C.java", line 8, col 4:
     C(C c) /*#requires C.s */ {}
-              ^
+    ^
 2 warnings
