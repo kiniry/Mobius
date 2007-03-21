@@ -778,6 +778,14 @@ public final class GC {
   }
 
   //@ ensures \result != null;
+  public static /*@ non_null */ Expr nary(/*@ non_null @*/ Identifier id, /*@ non_null @*/  ASTNode symbol, /*@ non_null @*/ ExprVec ev) {
+	Expr e = nary(Location.NULL, Location.NULL, TagConstants.METHODCALL, ev);
+	((NaryExpr)e).methodName = id;
+	((NaryExpr)e).symbol = symbol;
+	return e;
+  }
+
+  //@ ensures \result != null;
   public static /*@ non_null */ Expr nary(/*@ non_null @*/ Identifier id, /*@ non_null @*/ Expr e) {
 	ExprVec ev = ExprVec.make(1);
 	ev.addElement(e);

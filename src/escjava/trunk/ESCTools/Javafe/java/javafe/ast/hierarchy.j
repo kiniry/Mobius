@@ -632,6 +632,9 @@ public class LocalVarDecl extends GenericVarDecl
 
   // The "locAssignOp" field is used only if "init" is non-null
   //# int locAssignOp
+  
+  // used to track where the variable came from in DSA
+  public GenericVarDecl source;
 
   //# PostCheckCall
   private void postCheck() {

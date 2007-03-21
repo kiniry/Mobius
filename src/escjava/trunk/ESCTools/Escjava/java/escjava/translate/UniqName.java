@@ -337,12 +337,14 @@ public final class UniqName {
 	} else {
 	    id = Identifier.intern(v.id.toString() + suffix);
 	}
-	return LocalVarDecl.make( Modifiers.NONE,
+	LocalVarDecl d = LocalVarDecl.make( Modifiers.NONE,
 				  null,
 				  id,
 				  v.decl.type,
 				  loc,
 				  null, Location.NULL );
+	d.source = v.decl;
+	return d;
     }
 
     //@ ensures \result != null;
@@ -357,12 +359,14 @@ public final class UniqName {
 	} else {
 	    id = Identifier.intern(vd.id.toString() + suffix);
 	}
-	return LocalVarDecl.make( Modifiers.NONE,
+	LocalVarDecl d = LocalVarDecl.make( Modifiers.NONE,
 				  null,
 				  id,
 				  vd.type,
 				  loc,
 				  null, Location.NULL );
+	d.source = vd;
+	return d;
     }
 
 

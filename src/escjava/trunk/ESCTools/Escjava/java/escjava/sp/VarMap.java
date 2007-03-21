@@ -236,6 +236,8 @@ public class VarMap
                                          var.type,
                                          uloc,
                                          null, Location.NULL );
+                varPrime.source = var;
+                
                 VariableAccess varPrimeRef = VariableAccess.make( var.id, loc,
                                                                   varPrime );
                 VariableAccess varRef = VariableAccess.make( var.id, loc, var );

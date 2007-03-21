@@ -415,6 +415,7 @@ public class Substitute {
 	    nu.addElement( doSubst( subst, ne.exprs.elementAt(i), rhsVars ) );
 	  }
 	  result =  NaryExpr.make(ne.sloc, ne.eloc, ne.op, ne.methodName, nu);
+	  ((NaryExpr)result).symbol = ne.symbol;
 	} else if (e instanceof BinaryExpr) {
 
 	  BinaryExpr be = (BinaryExpr)e;

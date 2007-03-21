@@ -4,6 +4,8 @@ import javafe.ast.*;
 import javafe.tc.*;
 import javafe.util.*;
 import escjava.ast.*;
+import escjava.ast.Modifiers;
+import escjava.tc.GhostEnv;
 import escjava.translate.*;
 import escjava.vcGeneration.NodeBuilder.PredSymbol;
 import escjava.vcGeneration.NodeBuilder.Sort;
@@ -17,8 +19,11 @@ import java.util.regex.Pattern;
 
 public class Lifter extends EscNodeBuilder
 {
+	final static boolean doTrace = false;
+	
 	private void trace(String msg)
 	{
+		Assert.notFalse (doTrace);
 		ErrorSet.caution(msg);
 	}
 	
@@ -74,7 +79,8 @@ public class Lifter extends EscNodeBuilder
 		public void assign(Sort s)
 		{
 			Assert.notFalse(ref == null);
-			trace("assign: ?" + id + " <- " + s);
+			if (doTrace)
+				trace("assign: ?" + id + " <- " + s);
 			if (occurCheck(s))
 				ErrorSet.error("cyclic sort found");
 			else
@@ -162,25 +168,30 @@ public class Lifter extends EscNodeBuilder
 					r == sortInt ? symValueToInt : 
 					r == sortRef ? symValueToRef : 
 					r == sortBool ? symValueToBool : 
-					r == sortPred ? symValueToPred :
+					r == sortPred ? symValueToPred : // TODO flag this with warning
 					r == sortReal ? symValueToReal :
 					null;
 			else if (p == sortInt && r == sortReal) {
 				conv = symIntToReal;
 				minpass = 0;
+			} else if (p == sortPred && (r == sortValue || r == sortBool)) {
+				conv = symPredToBool;
+				ErrorSet.caution("using pred -> bool conversion! in arg #" + (1+i) + " of " + fn + " / " + this);				
+			} else if (p == sortBool && r == sortPred) {
+				conv = symIsTrue;
+				minpass = 1;
 			}
 			
-			if (pass >= 1 && r == sortPred && p == sortBool) {
-				args[i] = new FnTerm(symIsTrue, new Term[] { args[i] });
-			} else if (pass >= minpass && conv != null) {
+			if (pass >= minpass && conv != null) {
 				args[i] = new FnTerm(conv, new Term[] { args[i] });
-			} else
-				require(p, r, args[i] + ", which is arg #" + (1+i) + " of " + this);
+			} else if (!require(p, r, args[i]))
+				ErrorSet.error("which is arg #" + (1+i) + " of " + fn + " / " + this);
 		}
 		
 		public void infer()
 		{
-			trace("start infer " + pass + ": " + fn + " / " + this + " -> " + retType);
+			if (doTrace)
+				trace("start infer " + pass + ": " + fn + " / " + this + " -> " + retType);
 			
 			if (args.length != fn.argumentTypes.length) {
 				ErrorSet.error("wrong number of parameters to " + fn + " ---> " + this);
@@ -249,7 +260,8 @@ public class Lifter extends EscNodeBuilder
 				for (int i = 0; i < args.length; ++i)
 					enforceArgType(i, fn.argumentTypes[i]);					
 			
-			trace("infer " + pass + ": " + fn + " / " + this + " -> " + retType);
+			if (doTrace)
+				trace("infer " + pass + ": " + fn + " / " + this + " -> " + retType);
 		}
 		
 		public void printTo(StringBuffer sb)
@@ -276,7 +288,7 @@ public class Lifter extends EscNodeBuilder
 		public final QuantVariable[] vars;
 		public final Term[][] pats;
 		public final Term[] nopats;
-		public final Term body;
+		public Term body;
 		
 		public QuantTerm(boolean universal, QuantVariable[] vars, Term body, Term[][] pats, Term[] nopats)
 		{
@@ -288,12 +300,19 @@ public class Lifter extends EscNodeBuilder
 		}
 		
 		public Sort getSort() { return sortPred; } 		
-		public void infer()
+		public void infer()		
 		{			
-			trace("infer start q " + pass + ": " + this);
+			if (doTrace)
+				trace("infer start q " + pass + ": " + this);
 			body.infer();
+			if (follow(body.getSort()) == sortBool)
+				body = new FnTerm(symIsTrue, new Term[] { body });
+			if (follow(body.getSort()) == sortValue)
+				// TODO warning
+				body = new FnTerm(symValueToPred, new Term[] { body });			
 			unify(body.getSort(), sortPred, this);
-			trace("infer q " + pass + ": " + this);
+			if (doTrace)
+				trace("infer q " + pass + ": " + this);
 		}
 		
 		public void printTo(StringBuffer sb)
@@ -381,7 +400,9 @@ public class Lifter extends EscNodeBuilder
     public FnSymbol symValueToBool = registerFnSymbol("%valueToBool", new Sort[] { sortValue }, sortBool);
     public FnSymbol symValueToReal = registerFnSymbol("%valueToReal", new Sort[] { sortValue }, sortReal);
     public FnSymbol symIntToReal = registerFnSymbol("%intToReal", new Sort[] { sortInt }, sortReal);
+    
     public PredSymbol symValueToPred = registerPredSymbol("%valueToPred", new Sort[] { sortValue });
+    public FnSymbol symPredToBool = registerFnSymbol("%predToBool", new Sort[] { sortPred }, sortBool);
     
     // should probably be in EscNodeBuilder:    
     public FnSymbol symIntern = registerFnSymbol("|:intern|", new Sort[] { sortInt, sortInt }, sortString, TagConstants.INTERN);
@@ -460,7 +481,7 @@ public class Lifter extends EscNodeBuilder
 	}
 	
 	public void run()
-	{
+	{		
 		Term m = transform(main);
 		
 		pass = 0;
@@ -493,12 +514,12 @@ public class Lifter extends EscNodeBuilder
 	}
 	
 	// make sure s1<:s2
-	private void require(Sort s1, Sort s2, Object where)
+	private boolean require(Sort s1, Sort s2, Object where)
 	{
 		s1 = follow(s1);
 		s2 = follow(s2);
 		
-		if (s1 == s2) return;
+		if (s1 == s2) return true;
 		
 		if (!isFinalized(s1))
 			((SortVar)s1).assign(s2);
@@ -508,31 +529,35 @@ public class Lifter extends EscNodeBuilder
 		{}
 		else if (s1.getMapFrom() != null && s2.getMapFrom() != null) {
 			if (isFinalized(s2.getMapTo()) && s2.getMapTo().getMapFrom() != null) {
-				unify(sortRef, s1.getMapFrom(), where);
-				unify(sortRef, s2.getMapFrom(), where);
-				unify(sortArrayValue, s1.getMapTo(), where);
-				unify(sortArrayValue, s2.getMapTo(), where);
+				return unify(sortRef, s1.getMapFrom(), where) &&
+					   unify(sortRef, s2.getMapFrom(), where) &&
+					   unify(sortArrayValue, s1.getMapTo(), where) &&
+					   unify(sortArrayValue, s2.getMapTo(), where);
 			}
 			else {
-				unify(s1.getMapFrom(), s2.getMapFrom(), where);
-				unify(s1.getMapTo(), s2.getMapTo(), where);
+				return unify(s1.getMapFrom(), s2.getMapFrom(), where) &&
+					   unify(s1.getMapTo(), s2.getMapTo(), where);
 			}
 		}
-		else
-			ErrorSet.error("the sort >" + s1 + "< is required to be subsort of >" + s2 + "< in " + where);			
+		else {
+			ErrorSet.error("the sort >" + s1 + "< is required to be subsort of >" + s2 + "< in " + where);
+			return false;
+		}
+		
+		return true;
 	}
 	
-	private void unify(Sort s1, Sort s2, Object where)
+	private boolean unify(Sort s1, Sort s2, Object where)
 	{
-		require(s1, s2, where);
-		require(s2, s1, where);
+		return require(s1, s2, where) && require(s2, s1, where);
 	}
 	
 	private Term symbolRef(String name, Sort s)
 	{
 		FnSymbol fn = getFnSymbol(name, 0);
 		if (s != null)
-			require(s, fn.retType, "symbol ref " + name);
+			if (!require(s, fn.retType, "symbol ref"))
+				ErrorSet.error("symbol ref " + name);
 		return new FnTerm(fn, emptyTerms);
 	}
 	
@@ -544,6 +569,7 @@ public class Lifter extends EscNodeBuilder
 	private FnSymbol getFnSymbol(String name, int arity)
 	{
 		name = name + "." + arity;
+		
 		if (!symbolTypes.containsKey(name)) {			
 			FnSymbol fn;
 			if (arity == 0)
@@ -555,8 +581,13 @@ public class Lifter extends EscNodeBuilder
 				fn = registerFnSymbol(name, args, new SortVar());
 			}
 			symbolTypes.put(name, fn);
-			if (arity == 0 && name.startsWith("elems<") || name.equals("elems"))
-				unify(fn.retType, sortElems, "elems<* hack");
+			if (arity == 0 && name.startsWith("elems") && 
+					(name.startsWith("elems<") || 
+					 name.equals("elems") ||
+					 name.startsWith("elems@") ||
+					 name.startsWith("elems-") ||
+					 name.startsWith("elems:")))
+				unify(fn.retType, sortElems, "elems* hack");
 			if (arity == 0 && name.startsWith("owner:") || name.equals("owner"))
 				unify(fn.retType, sortOwner, "owner hack");
 			return fn;
@@ -577,15 +608,32 @@ public class Lifter extends EscNodeBuilder
 		switch (t.getTag()) {
 		case TagConstants.ARRAYTYPE:
 			return sortArray;
-		case TagConstants.LONGTYPE:
+			
+		case TagConstants.BOOLEANTYPE:
+			return sortBool;
+		
+		case TagConstants.DOUBLETYPE:
+		case TagConstants.FLOATTYPE:
+			return sortReal;
+			
+		case TagConstants.BYTETYPE:
+		case TagConstants.SHORTTYPE:
 		case TagConstants.INTTYPE:
+		case TagConstants.CHARTYPE:
+		case TagConstants.LONGTYPE:
+		case TagConstants.BIGINTTYPE:
 			return sortInt;
+			
+		case TagConstants.TYPESIG:
 		case TagConstants.TYPENAME:
 			return sortRef;
+			
 		case TagConstants.ANY:
 			return new SortVar();
+			
 		default:
-			ErrorSet.caution("unknown type: " + TagConstants.toString(t.getTag()));
+			ErrorSet.caution("unknown type: " + TagConstants.toString(t.getTag()) + ":" + PrettyPrint.inst.toString(t));
+			
 			return new SortVar();
 		}
 	}
@@ -626,8 +674,10 @@ public class Lifter extends EscNodeBuilder
 				String v = (String)m.value;
 				if (number.matcher(v).matches())
 					return new IntLiteral(Long.parseLong(v));
-				else
+				else {
+					//ErrorSet.caution("symbol lit " + v);
 					return symbolRef(v);
+				}
 			}
 			default:
 				ErrorSet.fatal("Instanceof LiteralExpr, case missed :"
@@ -719,10 +769,12 @@ public class Lifter extends EscNodeBuilder
 				LiteralExpr lit = (LiteralExpr)n.childAt(2);
 				String op = (String)lit.value;
 				if (arity == 1) {
+					//ErrorSet.caution("Dttfsa " + op);
 					return symbolRef(op);
 				} else if (op.equals("identity")) {
-					Assert.notFalse(arity == 2);
-					return transform((ASTNode)n.childAt(3));
+					Assert.notFalse(arity == 3);
+					Term body = transform((ASTNode)n.childAt(3));
+					return body;
 				} else {
 					arity--;
 					fn = getFnSymbol(op, arity);
@@ -737,7 +789,50 @@ public class Lifter extends EscNodeBuilder
 				Assert.fail("sum unhandled"); break;
 				
 			case TagConstants.METHODCALL:
-				fn = getFnSymbol(m.methodName.toString(), arity); break;
+				ASTNode sym = m.symbol;
+				fn = getFnSymbol(m.methodName.toString(), arity); 
+				if (sym == null) {
+					ErrorSet.caution("no symbol stored in methodCall: " + m.methodName);
+				} else if (sym instanceof FieldDecl) {
+					Assert.notFalse(arity <= 2);
+					Sort ft = typeToSort(((FieldDecl)sym).type);
+					if (arity == 0) {
+						Sort s = registerMapSort(sortRef, ft);
+						unify(fn.retType, s, "mc");
+					} else {
+						unify(fn.retType, ft, "mc1");
+						for (int i = 0; i < fn.argumentTypes.length; ++i)
+							unify(fn.argumentTypes[i], sortRef, "mca");
+					}
+				} else if (sym instanceof GenericVarDecl) {
+					ErrorSet.caution("gvd in methodCall: " + m.methodName);
+				} else if (sym instanceof MethodDecl) {
+					MethodDecl md = (MethodDecl)sym;
+					int off = arity - md.args.size(); 
+					Assert.notFalse(off <= 2);
+					for (int i = 0; i < arity; ++i) {
+						Sort s = sortRef;
+						if (i >= off)
+							s = typeToSort(md.args.elementAt(i - off).type);
+						unify(fn.argumentTypes[i], s, "mda");
+					}
+					unify(fn.retType, typeToSort(md.returnType), "mdr");									
+				} else if (sym instanceof ConstructorDecl) {
+					ConstructorDecl md = (ConstructorDecl)sym;
+					int off = arity - md.args.size(); 
+					Assert.notFalse(off <= 2);
+					for (int i = 0; i < arity; ++i) {
+						Sort s = sortTime;
+						if (i >= off)
+							s = typeToSort(md.args.elementAt(i - off).type);
+						unify(fn.argumentTypes[i], s, "cda");
+					}
+					unify(fn.retType, sortRef, "mdr");
+				} else {
+					ErrorSet.error("unknown symbol stored in methodcall: " + sym.getClass());
+				}
+				//ErrorSet.caution("MethodCall " + fn);
+				break;
 				
 			default:
 				Integer itag = new Integer(m.getTag());
@@ -871,14 +966,36 @@ public class Lifter extends EscNodeBuilder
 			
 		} else if (n instanceof VariableAccess) {
 			VariableAccess m = (VariableAccess) n;
-			
 			for (int i = 0; i < quantifiedVars.size(); ++i) {
 				QuantVariable q = (QuantVariable)quantifiedVars.elementAt(i);
 				if (q.var == m.decl)
 					return new QuantVariableRef(q);
 			}
 			
-			return symbolRef (UniqName.variable(m.decl));
+			Sort s = null;
+			String name = UniqName.variable(m.decl);
+			
+			GenericVarDecl decl = m.decl;
+			
+			while (decl instanceof LocalVarDecl && ((LocalVarDecl)decl).source != null)
+				decl = ((LocalVarDecl)decl).source;				
+			
+			if (decl instanceof FieldDecl) {
+				FieldDecl d = (FieldDecl)decl;
+				if (Modifiers.isStatic(d.getModifiers()))
+					s = typeToSort(d.type);
+				else
+					s = registerMapSort(sortRef, typeToSort(d.type));
+				//ErrorSet.caution("VariableAccess " + name + " -> " + s);
+			} else if (decl instanceof LocalVarDecl || decl instanceof FormalParaDecl) {
+				GenericVarDecl g = (GenericVarDecl)decl;
+				s = typeToSort(g.type);
+				//ErrorSet.caution("VariableAccess local " + name + " -> " + s);
+			} else {
+				ErrorSet.caution("unknown decl in VariableAccess " + m.decl.getClass());
+			}
+			
+			return symbolRef (name, s);
 			
 		} else {
 			ErrorSet.fatal("unhandled tag " + TagConstants.toString(n.getTag()));

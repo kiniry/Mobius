@@ -2057,6 +2057,7 @@ public final class GetSpec {
     Identifier id = Identifier.intern(name + "@" + postfix);
     LocalVarDecl ld = LocalVarDecl.make(vd.modifiers, vd.pmodifiers, id,
         vd.type, vd.locId, null, Location.NULL);
+    ld.source = vd;
     VariableAccess va = VariableAccess.make(id, vd.locId, ld);
     
     return va;

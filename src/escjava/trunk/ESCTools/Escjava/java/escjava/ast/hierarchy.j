@@ -170,7 +170,9 @@ public class NaryExpr extends GCExpr
 {
   //# int op
   //# Identifier methodName
-  //# Expr* exprs
+  //# Expr* exprs  
+  
+  public ASTNode symbol;
 
   //@ public represents startLoc <- sloc; //FIXME should not have to repeat this (because its in GCExpr)
 

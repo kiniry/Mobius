@@ -290,7 +290,7 @@ public class TrAnExpr {
             ExprVec arg = ExprVec.make(2);
             arg.addElement(stateVar(sp));
             arg.addElement(lhs);
-            return GC.nary(id,arg);
+            return GC.nary(id, va.decl, arg);
           } else {
             return GC.nary(fa.getStartLoc(), fa.getEndLoc(),
                 TagConstants.SELECT, apply(sp, va), lhs);
@@ -474,7 +474,7 @@ public class TrAnExpr {
               }
             } else System.out.print("[[" + o.getClass() + "]]");
           }
-          v = GC.nary(vv.id,ev);
+          v = GC.nary(vv.id, vv.decl, ev);
           //v = MethodInvocation.make(ExprObjectDesignator.make(Location.NULL,ThisExpr.make(null,Location.NULL)),vv.id,null, Location.NULL, Location.NULL, ev);
         }
         boolean genSimpleVar = false;
@@ -545,6 +545,7 @@ public class TrAnExpr {
           }
           Expr ne = GC.nary(me.getStartLoc(), me.getEndLoc(),
               constructorname,ev);
+          ((NaryExpr)ne).symbol = me.decl;
           // Adds alloc < newalloc
           trSpecExprAuxAssumptions.addElement(
               GC.nary(TagConstants.ALLOCLT, currentAlloc, newAlloc));
@@ -603,7 +604,7 @@ public class TrAnExpr {
               }
             } else System.out.print("[[" + o.getClass() + "]]");  // FIXME
           }
-          v = GC.nary(vv.id,ev);
+          v = GC.nary(vv.id, vv.decl, ev);
         }
         /*
          System.out.print("METHOD " + me.decl.parent.id + " " + me.decl.id + " " );
@@ -672,6 +673,7 @@ public class TrAnExpr {
           }
           Expr ne = GC.nary(me.getStartLoc(), me.getEndLoc(),
               TagConstants.METHODCALL,ev);
+          ((NaryExpr)ne).symbol = me.decl;
           ((NaryExpr)ne).methodName = fullName(me.decl,useSuper); 
           return ne;
         }
@@ -810,7 +812,7 @@ public class TrAnExpr {
             }
           }
         }
-        Expr vaf = GC.nary(va.id, args);
+        Expr vaf = GC.nary(va.id, va.decl, args);
         GeneralizedQuantifiedExpr qe = (GeneralizedQuantifiedExpr)e;
         Expr tex = trSpecExpr(qe.expr,sp,st);
         Expr rex = trSpecExpr(qe.rangeExpr,sp,st);
@@ -1275,7 +1277,7 @@ public class TrAnExpr {
       VariableAccess vn = makeVarAccess( a, Location.NULL);
       ev.addElement(vn);
     }    
-    Expr fcall = GC.nary(fullName(rd,false), ev);
+    Expr fcall = GC.nary(fullName(rd,false), rd, ev);
     return GC.nary(TagConstants.ANYEQ, v, fcall);
   }
   
@@ -2034,8 +2036,7 @@ public class TrAnExpr {
       for (int k=0; k<bounds.size(); ++k) {
         ev.addElement( makeVarAccess( (GenericVarDecl)bounds.get(k), Location.NULL));
       }
-      return GC.nary(fullName(rd,false), ev);
-      
+      return GC.nary(fullName(rd,false), rd, ev);      
   }
 
   static private Expr createForall(Expr expr, Expr fcall, ArrayList bounds)  {
@@ -2054,8 +2055,10 @@ public class TrAnExpr {
   /** Translates an individual represents clause into a class-level axiom. */
   static public Expr getRepresentsAxiom(NamedExprDeclPragma p, Hashtable sp) {
     boolean isStatic;
+    ASTNode symbol = null;
     if (p.target instanceof FieldAccess) {
       isStatic = Modifiers.isStatic(((FieldAccess)p.target).decl.modifiers);
+      symbol = ((FieldAccess)p.target).decl;
     } else {
       System.out.println("UNSUPPORTED OPTION-GRA " + p.target.getClass());  // FIXME - array access ??
       isStatic = false;
@@ -2066,7 +2069,7 @@ public class TrAnExpr {
     args.addElement(stateVar(sp));
     if (!isStatic) args.addElement(specialThisExpr);
     ExprVec pats = ExprVec.make(2);
-    Expr fcall = GC.nary(representsMethodName(p.target), args);
+    Expr fcall = GC.nary(representsMethodName(p.target), symbol, args);
     pats.addElement(fcall);
     Expr e = TrAnExpr.trSpecExpr(p.expr, null, null);
     //e = GC.forallwithpats(newThis,e,pats);

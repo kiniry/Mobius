@@ -27,7 +27,7 @@ public abstract class EscNodeBuilder extends NodeBuilder
 	final public Sort sortBoolField = registerMapSort(sortRef, sortBool, sortField);
 	final public Sort sortRefField = registerMapSort(sortRef, sortRef, sortField);
 	
-	final public Sort sortOwner = registerMapSort(sortValue, sortRef, sortField);
+	final public Sort sortOwner = registerMapSort(sortRef, sortRef, sortField);
 	
 	final public Sort sortArray = sortRef;
 	final public Sort sortArrayValue = registerMapSort(sortInt, sortValue);
@@ -57,7 +57,7 @@ public abstract class EscNodeBuilder extends NodeBuilder
 	public FnSymbol symTypeOf = registerFnSymbol("typeof", new Sort[] { sortValue }, sortType, TagConstants.TYPEOF);	
 	// Allocation status
 	public PredSymbol symIsAllocated = registerPredSymbol("isAllocated", new Sort[] { sortRef, sortTime }, TagConstants.ISALLOCATED);
-	public FnSymbol symEClosedTime = registerFnSymbol("eClosedTime", new Sort[] { sortElems }, sortTime, TagConstants.ECLOSEDTIME);
+	public FnSymbol symEClosedTime = registerFnSymbol("eClosedTime", new Sort[] { sortElems }, sortTime, TagConstants.ECLOSEDTIME); 
 	public FnSymbol symFClosedTime = registerFnSymbol("fClosedTime", new Sort[] { sortField }, sortTime, TagConstants.FCLOSEDTIME);
 	// The as-trick
 	public FnSymbol symAsElems = registerFnSymbol("asElems", new Sort[] { sortElems }, sortElems, TagConstants.ASELEMS);
