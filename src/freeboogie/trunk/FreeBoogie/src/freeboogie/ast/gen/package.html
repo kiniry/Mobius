@@ -52,13 +52,21 @@ Invariants = String! inv; Invariants tail;
 <p>Three type of macros appear above. The macro <tt>\file</tt> can appear
 anywhere and directs the output of the code generator. The macros
 <tt>\class_name</tt>,
-<tt>\member_type</tt>, and
-<tt>\member_name</tt>
+<tt>\base_name</tt>,
+<tt>\member_type</tt>,
+<tt>\member_name</tt>,
+<tt>\enum_name</tt>, and
+<tt>\value_name</tt>
 expand to identifiers and they come in four flavors, CORRESPONDING_TO
 the_four widelyUsed CaseConventions. The macros
+<tt>\abstract_classes</tt>,
 <tt>\normal_classes</tt>,
-<tt>\children</tt>, and
-<tt>\members</tt>
+<tt>\members</tt>,
+<tt>\children</tt>,
+<tt>\primitives</tt>,
+<tt>\enums</tt>,
+<tt>\values</tt>, and
+<tt>\invariants</tt>
 expand to lists and have an optional first argument to be used as a
 separator. This optional argument is delimited by square brackets,
 while all others are delimited by curly brackets in TeX style.
@@ -116,6 +124,16 @@ writes <i>no</i>.</td>
 <td>\members[<i>sep</i>]{<i>text</i>}</td>
 <td>For each member of the current class writes <i>text</i>.
     A separator <i>sep</i> is used if specified.</td>
+</tr>
+
+<tr>
+<td>\member_type</td>
+<td>The type of the current member. (also \MemberType, \memberType, and \MEMBER_TYPE)</td>
+</tr>
+
+<tr>
+<td>\member_name</td>
+<td>The name of the current member. (also \MemberName, \memberName, and \MEMBER_NAME)</td>
 </tr>
 
 <tr>

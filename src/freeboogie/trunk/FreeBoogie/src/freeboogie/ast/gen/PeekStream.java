@@ -25,7 +25,18 @@ import java.io.IOException;
  */
 public abstract class PeekStream<T> {
   /*
-   * TODO describe the implementation.
+   * We keep a |buffer| of elements that have been used and of locations.
+   * An element is paired with the location of the previous element.
+   * The field |nextElement| points into the |buffer| to a node that
+   * contains the element to be returned by the subsequent call to |next|
+   * and the location returned by a call to |getLoc|.
+   * 
+   * Some of the nodes in |buffer| are marked by being added to the stack
+   * |markedStack|. This stack is used to |rewind|.
+   * 
+   * NOTE Even if the time and space complexity of this implementation is
+   * reasonable it should be noted that the constant factors (especially for
+   * space) are quite big. 
    */
 
   private class Node<S> {
@@ -149,6 +160,16 @@ public abstract class PeekStream<T> {
   public Location<T> getLoc() {
     if (buffer == null) return initLoc;
     return nextElement.data.loc;
+  }
+  
+  /**
+   * Returns a the name of this {@code PeekStream}. It is meant to be 
+   * used for reporting errors, debugging, and so on.
+   * 
+   * @return the name of this {@code PeekStream} 
+   */
+  public String getName() {
+    return "";
   }
   
   /**

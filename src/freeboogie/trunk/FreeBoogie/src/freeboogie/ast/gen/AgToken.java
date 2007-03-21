@@ -8,7 +8,7 @@ package freeboogie.ast.gen;
  * @author rgrig 
  * @author reviewed by TODO
  */
-public class AgToken {
+public class AgToken extends Token {
 
   /** The tokens in an AG. */
   public enum Type {
@@ -31,17 +31,14 @@ public class AgToken {
   /** The type of token. */
   public Type type;
   
-  /** How it appears in the input file. */
-  public String rep;
-  
   /**
-   * Initializes a token;
+   * Initializes a token.
    * @param type the token type
    * @param rep the token representation in the input stream
    */
   public AgToken(Type type, String rep) {
+    super(rep);
     this.type = type;
-    this.rep = rep;
   }
   
   /**

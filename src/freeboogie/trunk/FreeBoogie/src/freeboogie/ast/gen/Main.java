@@ -3,6 +3,7 @@
 package freeboogie.ast.gen;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.logging.FileHandler;
 import java.util.logging.Handler;
@@ -55,8 +56,10 @@ public class Main {
     // Process templates one by one.
     for (int i = 1; i < args.length; ++i) {
       try {
-        AgTemplate template = new AgTemplate(args[i]);
+        TemplateParser template = new TemplateParser(args[i]);
         template.process(grammar);
+      } catch (FileNotFoundException e) {
+        Err.error("I can't find " + args[i] + ". I'll skip this template.");
       } catch (IOException e) {
         Err.error("I couldn't process (completely) template " + args[i]);
       }

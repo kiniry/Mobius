@@ -10,8 +10,10 @@ package freeboogie.ast.gen;
  * 
  * @author rgrig 
  * @author reviewed by TODO
+ * 
+ * @param <T> the token type.
  */
-public class TokenLocation extends Location<AgToken> {
+public class TokenLocation<T extends Token> extends Location<T> {
   private CharLocation begin;
   private CharLocation end;
   
@@ -32,8 +34,8 @@ public class TokenLocation extends Location<AgToken> {
   }
 
   @Override
-  public Location<AgToken> advance(AgToken element) {
-    TokenLocation r = new TokenLocation(this);
+  public Location<T> advance(T element) {
+    TokenLocation<T> r = new TokenLocation<T>(this);
     r.begin = r.end;
     if (element.rep.length() > 0)
       r.begin = (CharLocation)r.begin.advance(element.rep.charAt(0));

@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Recognizes abstract gramamr (AG) tokens.
+ * Recognizes abstract grammar (AG) tokens.
  * 
  * @author rgrig 
  * @author reviewed by TODO
@@ -37,7 +37,7 @@ public class AgLexer extends PeekStream<AgToken> {
    * @throws IOException if thrown by the underlying stream
    */
   public AgLexer(CharStream stream) throws IOException {
-    super(new TokenLocation());
+    super(new TokenLocation<AgToken>());
     this.stream = stream;
     repBuilder = new StringBuilder();
     readChar();
@@ -58,16 +58,13 @@ public class AgLexer extends PeekStream<AgToken> {
    * This method always reads one more character than the recognized
    * token and also eats the read characters from the underlying stream.
    * 
-   * TODO: use a mapping for one-char tokens
-   * 
    * TODO: decide if you keep this method as complex as it stands (likely)
    *       and, if so, explain why
-   *       
    * 
    * @see freeboogie.ast.gen.PeekStream#read()
    */
   @Override
-  public AgToken read() throws IOException {
+  protected AgToken read() throws IOException {
     if (lastChar == null) return null;
     
     AgToken.Type type = oneCharTokens.get(lastChar);
