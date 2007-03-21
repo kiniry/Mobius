@@ -224,14 +224,10 @@ public class Lifter extends EscNodeBuilder
 				enforceArgType(2, val);
 			}
 			else if (fn == symAnyEQ || fn == symAnyNE) {
-				// we don't really want to enforce that, as we might
-				// want to compare arrays to nulls for example
-				/*
 				Sort common = new SortVar();
 				
 				enforceArgType(0, common);
 				enforceArgType(1, common);
-				*/
 				
 				if (follow(args[0].getSort()) == sortPred ||
 					follow(args[1].getSort()) == sortPred)
@@ -282,6 +278,17 @@ public class Lifter extends EscNodeBuilder
 		}
 	}
 	
+	Term toPred(Term body)
+	{
+		if (follow(body.getSort()) == sortBool)
+			body = new FnTerm(symIsTrue, new Term[] { body });
+		if (follow(body.getSort()) == sortValue)
+			// TODO warning
+			body = new FnTerm(symValueToPred, new Term[] { body });			
+		unify(body.getSort(), sortPred, this);
+		return body;		
+	}
+	
 	class QuantTerm extends Term
 	{
 		public final boolean universal;
@@ -305,12 +312,7 @@ public class Lifter extends EscNodeBuilder
 			if (doTrace)
 				trace("infer start q " + pass + ": " + this);
 			body.infer();
-			if (follow(body.getSort()) == sortBool)
-				body = new FnTerm(symIsTrue, new Term[] { body });
-			if (follow(body.getSort()) == sortValue)
-				// TODO warning
-				body = new FnTerm(symValueToPred, new Term[] { body });			
-			unify(body.getSort(), sortPred, this);
+			body = toPred(body);
 			if (doTrace)
 				trace("infer q " + pass + ": " + this);
 		}
@@ -336,6 +338,35 @@ public class Lifter extends EscNodeBuilder
 			var = v;
 			name = n;
 			type = typeToSort(v.type);
+		}
+	}
+	
+	class LabeledTerm extends Term
+	{
+		public final boolean positive;
+		public final String label;
+		public Term body;
+		
+		public LabeledTerm(boolean pos, String l, Term b)
+		{
+			positive = pos;
+			label = l;
+			body = b;
+		}
+		
+		public Sort getSort() { return body.getSort(); } 		
+		public void infer() 
+		{
+			body.infer();
+			body = toPred(body);
+		}		
+		
+		public void printTo(StringBuffer sb)
+		{
+			if (!positive)
+				sb.append("~");
+			sb.append(label).append(": ");
+			body.printTo(sb);
 		}
 	}
 	
@@ -686,7 +717,8 @@ public class Lifter extends EscNodeBuilder
 			}
 		}
 		else if (n instanceof LabelExpr) {
-			return transform(((LabelExpr)n).expr);
+			LabelExpr l = ((LabelExpr)n);			
+			return new LabeledTerm(l.positive, l.label.toString(), transform(l.expr));
 		}
 		// name of a method
 		else if (n instanceof NaryExpr) {
