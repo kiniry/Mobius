@@ -21,9 +21,10 @@ the implementation may still contain errors. This, of course, is not desirable i
 program applications as is the case for applications which target the domains mentioned above.
 
  Another possibility is to use formal verification methods. 
-Contrary to program testing,  program verification guarantees that if the verification procedure  
-has been successful then the implementation respects the initial requirements for the software. There are two major approaches 
-in formal verification as for instance model checking and program logic. In this thesis, we will focus on the second approach.  
+Contrary to program testing, formal program verification guarantees that if the verification procedure  
+has been successful then the implementation respects the initial requirements for the software. 
+The field of formal verification is vast and there  exist different 
+approaches as for instance model checking, type systems or program logic. In this thesis, we shall focus on the last approach.   
 In Fig.\ \ref{intro:srcVerif}, we give a general outline of the architecture for verifying source code programs.
 \begin{figure}[ht!]
 %\begin{frameit}
@@ -147,7 +148,7 @@ The complexity of type checking algorithms is small and thus, do not compromise 
 However, because traditional PCC is completely automated, it can only deal with safety properties, like well typedness or safe memory read and write access.
 These properties are very important as they guarantee that the execution of the whole system will not be violated by the untrusted application.
 However, restricting the verification mechanism only to safety properties is not satisfactory, because there are 
-potentially scenarios where the client security policy may involve more complex properties over the untrusted application.
+potentially situations in which the client security policy may be more complex.
 For instance, the client may have functional requirements over the unknown code. An example is  when an updated version  of an interface   implementation
  is downloaded on the  client computer system and patches an old implementation of the interface. In this cases, the client system needs guarantees
  that the unknown software component respects the interface specification.

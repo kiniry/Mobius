@@ -1,4 +1,4 @@
-\newtheorem{compPropApp}{Lemma}[section]
+\newtheorem{compPropApp}{Lemma}[chapter]
 %\newtheorem{compProp1}[compProp2]{Lemma}
 %\newtheorem{compProp7}[compProp2]{Lemma}
 %\newtheorem{compProp11}[compProp2]{Lemma}
@@ -9,7 +9,7 @@
 \newtheorem*{compProp8A}{Lemma  \ref{compile:prop:compProp8}}
 \newtheorem*{compProp9A}{Lemma  \ref{compile:prop:compProp4}}
 
-\section{Proofs of properties from Section \ref{compile:prop} }\label{appendix:compile:prop}
+\chapter{Proofs of properties from Section \ref{compile:prop} }\label{appendix:compile:prop}
 
 
 \begin{compProp0A}%[Compilation of statements and expressions]\label{compile:prop:compProp0}
@@ -21,7 +21,7 @@
 The proof  is by structural induction over the compiled statement.
 We sketch the case for compositional statement, the other cases being similar. 
 Remind that by compiler definition, we get that the compilation of $\stmt_1; \stmt_2$ starting at index $s$ is
- $\compileLabel{s}{\stmt_1; \stmt_2}{e} = \compileLabel{s}{\stmt_1}{e'};\compileLabel{e'+1}{\stmt_2}{e}$.
+ $\compileLabel{s}{\stmt_1; \stmt_2}{e}$ $ = \compileLabel{s}{\stmt_1}{e'};\compileLabel{e'+1}{\stmt_2}{e}$.
 By  induction hypothesis, we get that the lemma holds for $\compileLabel{e'+1}{\stmt_2}{e}$ and we get that $e \execRel e+1$ 
 which means that this case holds.
 \Qed \\
@@ -170,7 +170,7 @@ we have that
 $$ \scriptsize{\compileLabel{s}{\stmt_1;\stmt_2}{e} = \compileLabel{s}{\stmt_1}{e'}\compileLabel{e'+1}{\stmt_2}{s}}$$
  By induction hypothesis, the lemma holds for  the compilations of $\stmt_1$ and   $\stmt_2$ which are 
 $\compileLabel{s}{\stmt_1}{e'}$ and  $\compileLabel{e'+1}{\stmt_2}{s}$.
-Let us which are the other possible execution edges in the compilation.
+Let us see which are the other possible execution edges in the compilation.
 
 % We know  from Lemma \ref{compile:prop:compProp0} that instruction 
 %$e' + 1$ may execute immediately after $e'$, i.e. $e' \execRel e'+ 1$. Let us assume that $e' \execRel^{l} e'+ 1 $.  Following Def. \ref{defLoop},
@@ -181,7 +181,7 @@ Let us which are the other possible execution edges in the compilation.
 %Because there are no jumps from outside inside statements by Lemma \ref{compile:prop:compProp2} except for the first instruction, this means that 
 %every path that reaches $e'+1$ passes through instruction $s$
 
-The only possibility which remains following
+%The only possibility which remains following
   Lemma \ref{compile:prop:compProp0} and Lemma \ref{compile:prop:compProp2}  is
 $e' \execRel e'+1$. We will show  by contradiction that the execution relation between $e'$ and $e'+1$ is not a loop execution relation.
 Assume that the execution is a loop execution relation, i.e. $e' \execRel^{l} e'+1$. Following Def. \ref{defLoop}, this means that every path $P$ in the control flow graph 

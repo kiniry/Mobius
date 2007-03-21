@@ -97,7 +97,7 @@ public class ListArray {
     //@ loop_modifies i, list[*];
     //@ loop_invariant i <= list.length && i >=0 
     //@ &&(\forall int k;0 <= k && k < i ==> 
-    //@    list[k] != obj1  && list[k] == \old(list[k]));
+    //@    list[k] != obj1 && list[k] == \old(list[k]));
     for (i = 0; i < list.length; i++ ){
       if ( list[i] == obj1){
         list[i] = obj2;

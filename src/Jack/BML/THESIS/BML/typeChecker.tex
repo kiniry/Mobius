@@ -39,7 +39,7 @@ Examples for structural constraint are :
 \begin{itemize}
     \item All references to the constant pool must be to an entry of the appropriate type. For example:
           the field access expression  $\fieldAccess{\expression}{\ident}$ is such that the
-	  $\ident$ must reference a field in the constant pool; or for the expression $\type{\ident}$, \ident
+	  $\ident$ must reference a field in the constant pool; or for the expression $\type{\ident}$, $\ident$
 	  must be a reference to a constant class in the constant pool
     
     \item every $\ident$ in a BML specification must be a correct index in the constant pool table. 
@@ -50,9 +50,9 @@ Examples for structural constraint are :
 
 An extension of the Java bytecode verifier may perform the checks
  over BML specification against such kind of structural and type constraints.
-However, we have not worked on this problem and is a good candidate for a future work.
+However, we have not worked on this problem and is a good candidate for future work.
 For the curious reader, it will be certainly of interest to turn to the Java Virtual Machine 
-specification \cite{VMSpec} which contains the official
+description \cite{VMSpec} which contains the official
  specification of the Java bytecode verifier    
 or to the existing literature on bytecode verification (see the overview article ~\cite{Ljbc}).
  

@@ -1,30 +1,40 @@
-\documentclass[book,10pt]{book}
+%\documentclass[book,10pt]{book}
+\documentclass[10pt,a4paper]{book}
 \input{cmd.tex}
 \usepackage{url}
 \usepackage{amsmath, amsthm, amssymb} 
 \usepackage{alltt}
-%\usepackage{amssymb}
+
 \usepackage{epsfig}
 \usepackage{listings}
 \usepackage{longtable}
 \usepackage{multirow}
 \usepackage{color}
 \usepackage{vmargin}
+
 %create an index
 \usepackage{makeidx}
 \makeindex
 \setpapersize{A4}
-%listing package settings
+
+%\usepackage[headings]{fullpage}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%JML STYLES%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \def\lstlanguagefiles{Jml.sty}
 \lstloadlanguages{Jml}
 \lstset{language=Jml,flexiblecolumns=false}
 \lstset{escapeinside={(*@}{@*)}}
+\lstset{language=Jml}
+\lstset{frameround=tttt}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%Frame script for figures%%%%%%%%%%%%%%%%%%
-%% The frameit and Frameit environments formats text within a single
-%% Anything can be framed, including verbatim text.
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%FRAME SCRIPT FOR FIGURES%%%%%%%%%%%%%%%%%%%%%%%%%
+%% The frameit and Frameit environments formats text within a single%%%%%%
+%% Anything can be framed, including verbatim text.%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \def\doframeit#1{\vbox{%
   \hrule height\fboxrule
     \hbox{%
@@ -38,33 +48,79 @@
 
 \def\endframeit{\ifhmode \par \nointerlineskip \fi \egroup
 \doframeit{\box0}}
-%%%%%%%%%%%%%%%%%%%%%%%%%Frame script for figures%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\date{}
 
 
-\title{ A framework for formal verification of Java bytecode against  functional and security policies}
-    \begin{document}
-    \lstset{language=Jml}
-    \lstset{frameround=tttt}
-    %\lstset{commentstyle=\textsf}
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% %%%%%%%%%%%%%  FANCY HEADING %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-    \renewcommand{\topfraction}{0.9}
-    \renewcommand{\textfraction}{0.05}
-    \renewcommand{\floatpagefraction}{0.75}
+\usepackage{fancyhdr}
 
-\maketitle
+
+\begin{document} 
+\renewcommand{\thepage}{\roman{page}}
+\pagestyle{plain}
+\renewcommand{\topfraction}{0.9}
+\renewcommand{\textfraction}{0.05}
+\renewcommand{\floatpagefraction}{0.75}
+
+
+\input{title.tex}
+\setcounter{tocdepth}{3}
+\setcounter{secnumdepth}{3}
+
+\input{introFrCourt.tex}
+
+
+\cleardoublepage
 \tableofcontents
 
+\cleardoublepage
+\renewcommand{\thepage}{\arabic{page}}
+\setcounter{page}{1}
 
-%1
+
+\pagestyle{fancy}
+% with this we ensure that the chapter and section
+% headings are in lowercase.
+\renewcommand{\chaptermark}[1]{%
+        \markboth{#1}{}}
+\renewcommand{\sectionmark}[1]{%
+        \markright{\thesection\ #1}}
+\fancyhf{} % delete current header and footer
+\fancyhead[LE,RO]{\bfseries\thepage}
+\fancyhead[LO]{\bfseries\rightmark}
+\fancyhead[RE]{\bfseries\leftmark}
+\renewcommand{\headrulewidth}{0.5pt}
+\renewcommand{\footrulewidth}{0pt}
+\addtolength{\headheight}{1.0pt}% {0.5pt} % space for the rule
+\fancypagestyle{plain}{%
+   \fancyhead{} % get rid of headers on plain pages
+   \renewcommand{\headrulewidth}{0pt} % and the line
+}
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%% Introduction %%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Introduction}
   \input{intro/intro.tex}\label{intro}
- 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%% Overview of   %%%%%%
+%%%%%%%%%%% Java and Java %%%%%%  
+%%%%%%%%%%% verification  %%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \chapter{Java verification overview}\label{javaVerif}
    \input{javaVerif/intro.tex}
    \input{javaVerif/source/source.tex}
    \input{javaVerif/prelim.tex}
-%   \input{javaVerif/JMLsemantics.tex}
+   %\input{javaVerif/JMLsemantics.tex}
    \input{javaVerif/verifStyles.tex}
    \input{javaVerif/wpSrc/srcWp.tex}	
    \input{assertLangVC/substitution.tex}
@@ -111,18 +167,14 @@
 \section{Assertion language for the verification condition generator}\label{assertLang}
   \input{assertLangVC/assertionLang.tex}\label{assertLang}
   \input{assertLangVC/BMLfragment.tex}
-
   \input{assertLangVC/interpretation.tex}
-
   \input{assertLangVC/extendMethod.tex} 
- 
   \input{wp/wpbc.tex} 
   \input{wp/intermPred.tex}
   \input{wp/excPred.tex} 
   \input{wp/wpSingleInstr.tex}
   \input{wp/vcGen.tex}
   \input{wp/smallExample.tex}
- % \input{wp/discussionVC.tex}
   \input{wp/relWork.tex} 
   
 
@@ -150,19 +202,13 @@
   %    \input bytecode/bcLang.tex
 	 
   \input{pogCompile/compile/compile.tex}
-  %  \input{pogCompile/compile/compExcH.tex} 
-  %  \input{pogCompile/compile/compLoopInv.tex} 
   \input{pogCompile/compile/compExpr.tex} 
   
-  %deprecated\input{pogCompile/compile/compCtrlStmt.tex}
+
   
   \input{pogCompile/compile/propCompFun.tex}
-    %\input{pogCompile/wpSrc/example.tex}
-    % \section{Weakest precondition calculus over the compilation of source expressions and statements}\label{pog:wpBcGeneral}
-    % \input{pogCompile/wpBc/bcWp.tex}
-    % \input{pogCompile/wpBc/wpProp.tex}
-    % \input{pogCompile/pogEquiv/aux.tex} 
- \section{Establishing the equivalence between verification conditions on source and bytecode level} \label{pog:wpBcGeneral}
+    
+    \section{Establishing the equivalence between verification conditions on source and bytecode level} \label{pog:wpBcGeneral}
     \input{pogCompile/wpBc/wpProp.tex}
     \input{pogCompile/relatedWork/relWork.tex}
  
@@ -180,8 +226,8 @@
 %  \input{applications/memory/infer}\label{sec:infer}
   \section{Related work}\label{sec:rel}
   \input{applications/memory/relatedworks}
-%      %deprecated\section{Conclusion}\label{sec:conc}
-%       % deprecated\input{applications/memory/conclusion}
+% %deprecated\section{Conclusion}\label{sec:conc}
+% %deprecated\input{applications/memory/conclusion}
 
 %9 
 \chapter{A low-footprint Java-to-native compilation scheme using BML}\label{applications:optimComp}
@@ -192,11 +238,10 @@
   \input{applications/optimCompiler/algo}
   \input{applications/optimCompiler/spec}
   \input{applications/optimCompiler/proof2optim}
-  %deprec\input{applications/optimCompiler/preciseness} 
   \input{applications/optimCompiler/results} 
   \input{applications/optimCompiler/limitations} 
   \input{applications/optimCompiler/relWork}
-  %deprecated\input{applications/optimCompiler/conclusion} 
+  
  
 
 %10
@@ -204,12 +249,10 @@
  \input{conclusion/conclusion}
 
 
-\chapter{Appendix}
-\appendix
-%
-    \input{appendix/bmlEncode/appendix}\label{BMLencode}
 
-    \input{appendix/pogCompile/compile/propCompFun}\label{pogProofs}
+\appendix
+  \input{appendix/bmlEncode/appendix}\label{BMLencode}
+  \input{appendix/pogCompile/compile/propCompFun}\label{pogProofs}
     
    % COMMENTED TEMPORARY \input{appendix/pogCompile/pogEquiv/aux}
 
@@ -217,6 +260,4 @@
 \printindex 
 \bibliographystyle{plain}
 \bibliography{biblio,specification,bib_mem-wpc,optimComp}
-
-
 \end{document}

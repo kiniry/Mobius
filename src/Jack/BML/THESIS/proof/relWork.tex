@@ -19,18 +19,20 @@ Being  a verification condition generator, a Hoare logic tailored to a structure
  its verification scheme \cite{Jacobs04WPJ}. The Jive system which is an interactive program theorem prover tailored to a Java subset is
  also  proven correct \cite{MH00Arc}.
    
- In \cite{BannwartMueller05}, Bannwart and Muller  give a soundness proof of the bytecode a Hoare style
- logic they define tailored to Java-like bytecode  which also uses also an induction over the method call depth and
- thus, is valid for recursive methods. 
+ In \cite{BannwartMueller05}, Bannwart and Muller define a   Hoare style
+ logic for a Java-like bytecode and prove its correctness on paper using a similar proof 
+ technique as used here. 
 
- The bytecode logic presented  M. Wildmoser and T. Nipkow \cite{WildmoserN-ESOP05} also is supplied with a proof in Isabelle/HOL. There, the soundness
- result is expressed w.r.t. to a safety policy. A safety policy is expressed not only as method pre and postconditions but also as 
-annotations at intermediate  program  points. For instance, such a policy can be that no instruction may cause an arithmetic overflow, thus
-arithmetic instructions in a bytecode will be accompanied by an assertion which expresses this fact.
+ The bytecode logic presented  M. Wildmoser and T. Nipkow \cite{WildmoserN-ESOP05} is  also  supplied with a proof of soundness  done in the theorem prover Isabelle/HOL.
+ There, the soundness result is expressed w.r.t. to a safety policy. A safety policy is expressed not only in terms of
+  method pre and postconditions but but also as annotations at intermediate  program  points.
+ In particular, the authors prove the soundness of their verification condition generator with respect to 
+the policy for no arithmetic overflow.  This means that the policy is expressed also as assertions which 
+accompany instructions and which express that the instruction will not throw an arithmetic exception.
 Their soundness result states that if the verification conditions are provable then
  the assertions which express the safety policy holds at the particular program states. 
 We have decided not prove the soundness of intermediate assertions in order to keep things simple,
- although we consider this will not present a major problem. This issue is described in Section \ref{conclusion}.
+ although we consider this will not present a major problem.% This issue is described in Section \ref{conclusion}.
 
 A verification framework whose objectives is to provide a full automation may sacrifice completeness or even soundness.
 This can be especially the case of verification systems for source code verification where user 

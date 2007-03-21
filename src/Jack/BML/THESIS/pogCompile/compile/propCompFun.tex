@@ -110,9 +110,8 @@ Stated formally, we get the following property.
 
 \begin{compProp}[Cycles in the control flow graph]\label{compile:prop:compProp4}  % cycles in bytecode only if the source has  
 
-The compilation \\ $\compileLabel{s}{\stmt}{e}$ of a $\stmt$ may contain an instruction $\ins{k}$ and \ins{j}  which are respectively 
-a loop entry and a loop end  in the sense of Def.
-\ref{defLoop} (i.e. there exists $\ins{j}$ such that $\ins{j} \execRel^{l} \ins{k}$ ) if and only if  $\stmt$  contains 
+The compilation  $\compileLabel{s}{\stmt}{e}$ of a statement $\stmt$ may contain an instruction $\ins{k}$ and \ins{j}  which are respectively 
+a loop entry and a loop end  in the sense of Def.\ref{defLoop} (i.e. there exists $\ins{j}$ such that $\ins{j} \execRel^{l} \ins{k}$ ) if and only if  $\stmt$  contains 
  a substatement $\stmt'$ which is a loop statement:
  $$ \ins{j} = \loopStart{\stmt'}  - 1 \wedge  \ins{k} = \loopStart{\stmt'}  $$
 
@@ -212,7 +211,7 @@ a loop entry and a loop end  in the sense of Def.
 % exception handler element are the start and end indexes of the compilation of a source statement in the original source program and this statement 
 %is the try statement of either try finally or try catch statement.
 In the following,  we will need the notion of substatement relation.
- For denoting that  $\ExprStmt'$ is a substatement of  $\ExprStmt$ (i.e.$\ExprStmt'$ is contained in  $\ExprStmt$  )
+ For denoting that  $\ExprStmt'$ is a substatement of  $\ExprStmt$ (i.e. $\ExprStmt'$ is contained in  $\ExprStmt$  )
 we shall use the notation $\substatement{\ExprStmt }{\ExprStmt'}$. 
 We also use the notion of a direct substatement(subexpression) which  means the following:
 
@@ -251,8 +250,7 @@ stores \lstinline!-1! in the local variable \lstinline!abs! which stands for tha
 the object  \lstinline!n! is \Mynull.   
 Finally the method returns the value of the local variable \lstinline!abs!.
 
-Thus, consider in Fig. \ref{pogEquiv:compile:prop:exc} 
-the bytecode version of the program. The last  instruction in the compilation of the \lstinline!if! statement is the 
+Consider in Fig. \ref{pogEquiv:compile:prop:exc} the bytecode version of the program. The last  instruction in the compilation of the \lstinline!if! statement is the 
 instruction at index 21 and the last instruction in the compilation of the \lstinline!else! branch is 7. 
 For any exception type \mbox{\rm\tt{Exc}}, the application \findExcHandler{\mbox{\rm\tt{Exc}} }{21}{\lstinline!abs!.\ExcHandler} returns the same value  as
 \findExcHandler{\mbox{\rm\tt{Exc}} }{7}{\lstinline!abs!.\ExcHandler}. 

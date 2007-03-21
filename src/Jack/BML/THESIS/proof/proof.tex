@@ -16,7 +16,7 @@
 \section{Proof of Correctness } \label{proof}
 
 In the following, we shall consider also that we manipulate meaningful states. A meaningful state means that the heap is 
-well - formed as defined in Definition \ref{heap:wf}. Moreover, in a meaningful state if local variables and the stack  contain only 
+well - formed as defined in Definition \ref{heap:wf}. Moreover, in a meaningful state local variables and the stack  contain only 
  references from the current heap or integer values.
 \begin{proofDef}[Meaningful state]\label{meaningful}
 The state $\config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc}  $ is meaningful if the heap respects conditions in Def. \ref{heap:wf}
@@ -92,7 +92,8 @@ For every intermediate state $s_n =\config{\heap_n }{\counterOnly_n }{\stackOnly
 \end{lemma}
 \textit{Proof:}
 The proof is by case analysis on the type of instruction. %that will be next executed and by induction on the maximal depth call $k$. 
-We are going to see only the proofs for the instructions \return , \load, \new{} and \putfield{} the other cases being the same
+We are going to see only the proofs for the instructions 
+\return , \load, \new, \putfield{} and \invoke{}, the other cases being the same
 \begin{description} 
 		\item[ Return instruction]
 		  By initial hypothesis we have that the \wpName{} of the current instruction holds

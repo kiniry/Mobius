@@ -1,8 +1,0 @@
-\BOOKMARK [1][]{Outline1}{Context}{}
-\BOOKMARK [1][]{Outline2}{New approach for bytecode verification}{}
-\BOOKMARK [1][]{Outline3}{Bytecode verification scheme for complex policies}{}
-\BOOKMARK [2][]{Outline3.1.15}{Bytecode Modeling Language }{Outline3}
-\BOOKMARK [2][]{Outline3.2.17}{Compiler from JML to BML}{Outline3}
-\BOOKMARK [2][]{Outline3.3.20}{Verification condition generator}{Outline3}
-\BOOKMARK [2][]{Outline3.4.21}{Relation for proof obligation on source and bytecode}{Outline3}
-\BOOKMARK [1][]{Outline4}{Conclusion. Towards a PCC for complex policies}{}
