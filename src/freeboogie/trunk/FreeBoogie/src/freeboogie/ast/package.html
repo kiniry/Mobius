@@ -83,11 +83,11 @@ AssignmentCmd = String! lhs, Index idx, Expr! rhs;
 AssertAssumeCmd = enum(Type: ASSERT, ASSUME) type, Expr! expr;
 HavocCmd = String! name;
 CallCmd = String! function, Identifiers results, Exprs args;
-Index = Expr! a, Expr b
+Index = Expr! a, Expr b;
 
 // Expressions
 Expr :> BinaryOp, UnaryOp, Atom;
-BinaryOp = enum(Op: PLUS, MINUS, MUL, DIV, MOD, EQ, NEQ, LT, LE
+BinaryOp = enum(Op: PLUS, MINUS, MUL, DIV, MOD, EQ, NEQ, LT, LE,
                     GE, GT, SUBTYPE, EQUIV, IMPLIES, AND, OR) op,
            Expr! left, Expr! right;
 UnaryOp = enum(Op: MINUS, NOT) op, Expr! e;
@@ -106,8 +106,14 @@ Exprs = Expr! expr, Exprs tail;
 VariableDecls = VariableDecl! decl, VariableDecls tail;
 
 // Extra invariants
-Specification: type==Type.MODIFIES ==> \typeof(expr)==Identifier;
+Specification: type==Type.MODIFIES ==> \typeof(expr)==Identifier
 </pre>
+
+<p>The invariants specified for classes are delimited by the end of the
+line, not by semicolons. This way you are free to use semicolons when
+writing them. In fact, everything up to the end of the line is considered
+as just text by the code generator in {@code freeboogie.ast.gen}, but
+we will typically use JML invariants.</p>
 
 <h2>TODO</h2>
 
