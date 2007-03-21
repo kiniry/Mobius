@@ -10,8 +10,8 @@ FIGSCALE = 0.5
 
 CORECP	= .
 BOOTCP	= ~/Sandboxes/JML2/specs:~/Sandboxes/JML2/:/System/Library/Frameworks/JavaVM.framework/Versions/1.4.2/Classes/classes.jar
-JMLCP	= /usr/local/Java/JML/bin/jmlruntime.jar:/usr/local/Java/JML/bin/jmljunitruntime.jar
-JUNITCP	= /usr/local/Java/jars/junit.jar
+JMLCP	= /home/rg/JML/bin/jmlruntime.jar:/home/rg/JML/bin/jmljunitruntime.jar
+JUNITCP	= /usr/share/java/junit.jar
 CHECKSTYLECP	= /usr/local/checkstyle/checkstyle-optional.jar:/usr/local/checkstyle/checkstyle-all.jar
 
 # local variables for build process
@@ -191,7 +191,7 @@ $(timestamppath)/jmlunit.stamp:	$(javafiles)
 jmlunit_classes:	jmlunit $(timestamppath)/jmlunit_classes.stamp
 
 $(timestamppath)/jmlunit_classes.stamp:	$(jmlunitfiles)
-	mkdir -p $(jmlc_path)
+	@mkdir -p $(jmlc_path)
 	export CLASSPATH=$(JUNIT_CLASSPATH);\
 	javac -g -d $(jmlc_path) -source 1.4 $(jmlunitpat) && \
 	touch $(timestamppath)/jmlunit_classes.stamp
@@ -262,7 +262,7 @@ source_docs:	javadoc jmldoc
 
 javadoc:	$(timestamppath)/javadoc.stamp
 
-$(timestamppath)/javadoc.stamp:	$(javafiles) $(srcpath)/package.html $(basedocdir)/overview.html
+$(timestamppath)/javadoc.stamp:	$(javafiles)
 	mkdir -p $(javadocdir); \
 	export CLASSPATH=$(BASE_CLASSPATH);\
 	$(javadoc) -d $(javadocdir) $(javadocflags) \
@@ -276,7 +276,7 @@ $(timestamppath)/javadoc.stamp:	$(javafiles) $(srcpath)/package.html $(basedocdi
 
 jmldoc:		$(timestamppath)/jmldoc.stamp
 
-$(timestamppath)/jmldoc.stamp:	$(javafiles) $(srcpath)/package.html $(basedocdir)/overview.html
+$(timestamppath)/jmldoc.stamp:	$(javafiles)  
 	mkdir -p $(jmldocdir); \
 	export CLASSPATH=$(BASE_CLASSPATH);\
 	$(jmldoc) -d $(jmldocdir) $(jmldocflags) \
@@ -285,12 +285,12 @@ $(timestamppath)/jmldoc.stamp:	$(javafiles) $(srcpath)/package.html $(basedocdir
 	-doctitle "CK Model Classes" \
 	-header $(copyright) \
 	-footer $(copyright) \
-	ck \
+	modelclasses; \
 	touch $(timestamppath)/jmldoc.stamp
 
 
 release:
-	@echo '$(RELEASE)' > $(version_file)
+	echo '$(RELEASE)' > $(version_file)
 	date >> $(version_file)
 
 distr:	$(timestamppath)/distr.stamp
