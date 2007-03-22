@@ -21,10 +21,14 @@ BEGIN
             WellFormedMVA[CP, Name],
             WellFormedProgram[Name]
 
+  
   % NOTE: We restrict to the case where the automaton monitors at least one of
   % classes of the program.
   % Notice that the program does not need to have ghost variables modelling the
   % automata
+  % Requirements:
+  % Variables in vdsP must be fields
+  % Every method mentioned in the events must be in the class
   wf_MP(MP : MonitoredProgram) : boolean =
     LET a = mva(MP), p = program(MP) IN
     complete(a) AND
@@ -34,7 +38,11 @@ BEGIN
       name(c) = class_name(a) AND
       (FORALL (v : ProgVarDecl) :
         vdsP(a)(v) IMPLIES
-          EXISTS (fd : FieldDecl) : fields(c)(fd) AND name(v) = name(fd))
+          EXISTS (fd : FieldDecl) : fields(c)(fd) AND name(v) = name(fd)) AND
+      (FORALL (ev : Event, n : Name) :
+        evs(a)(ev) IMPLIES
+        mname(ev) = n IMPLIES
+          EXISTS (m : Method) : methods(c)(m) AND name(m) = n)
     
 END WellFormedMonitoredProgram
 

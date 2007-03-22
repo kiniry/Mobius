@@ -92,53 +92,67 @@ BEGIN
   IMPORTING MVA[CP, Name]
 
   % Functions to get a set of names from a set of variable declarations
-  var_names(V : set[MVAVarDecl]) : set[Name] =
-    {n : Name | EXISTS (va : MVAVarDecl) : V(va) AND name(va) = n}
+  var_names(vds : set[MVAVarDecl]) : set[Name] =
+    {n : Name | EXISTS (va : MVAVarDecl) : vds(va) AND name(va) = n}
 
-  var_names(V : set[ProgVarDecl]) : set[Name] =
-    {n : Name | EXISTS (vp : ProgVarDecl) : V(vp) AND name(vp) = n}
+  var_names(vds : set[ProgVarDecl]) : set[Name] =
+    {n : Name | EXISTS (vp : ProgVarDecl) : vds(vp) AND name(vp) = n}
 
   % Gets the variable's names involved in an expression
   % TODO: define and move to another file
   var_names(e : Expr[Name]) : set[Name]
 
-  wf_Store(a : MVA)(f : Store) : boolean =
+  % THINK: Do we really need to ask that the store is only (IFF) defined
+  % for the declared variables?. Same for PSt
+  wf_Store(vds : finite_set[MVAVarDecl])(f : Store) : boolean =
     FORALL (n : Name) :
-      var_names(vdsA(a))(n) IFF NOT Bottom?(f(n))
+      var_names(vds)(n) IFF NOT Bottom?(f(n))
+
+  wf_Store(a : MVA)(f : Store) : boolean =
+    wf_Store(vdsA(a))(f)
 
   wf_Store(f : Store, a : MVA) : boolean =
-    wf_Store(a)(f)
+    wf_Store(vdsA(a))(f)
+
+  wf_PSt(vds : finite_set[ProgVarDecl])(f : PSt) : boolean =
+    FORALL (n : Name) :
+      var_names(vds)(n) IFF NOT Bottom?(lookup(n, f))
 
   wf_PSt(a : MVA)(f : PSt) : boolean =
-    FORALL (n : Name) :
-      var_names(vdsP(a))(n) IFF NOT Bottom?(lookup(n, f))
+    wf_PSt(vdsP(a))(f)
 
   wf_PSt(f : PSt, a : MVA) : boolean =
-    wf_PSt(a)(f)
+    wf_PSt(vdsP(a))(f)
 
   % TODO: It may be necessary (maybe not) to ensure that the initial value 
   % conforms to the declared type (we need to define conform).
   wf_vdsA(vds : set[MVAVarDecl]) : boolean =
-    FORALL (vd : MVAVarDecl) : vds(vd) IMPLIES
-      NOT EXISTS (vd1 : MVAVarDecl) : vds(vd1) AND name(vd) = name(vd1)
+    FORALL (vd1, vd2 : MVAVarDecl) : vds(vd1) IMPLIES vds(vd2) IMPLIES
+      name(vd1) = name(vd2) IMPLIES vd1 = vd2
 
   % TODO: Same as above
   wf_vdsP(vds : set[ProgVarDecl]) : boolean =
-    FORALL (vd : ProgVarDecl) : vds(vd) IMPLIES
-      NOT EXISTS (vd1 : ProgVarDecl) : vds(vd1) AND name(vd) = name(vd1)
+    FORALL (vd1, vd2 : ProgVarDecl) : vds(vd1) IMPLIES vds(vd2) IMPLIES
+      name(vd1) = name(vd2) IMPLIES vd1 = vd2
 
   IMPORTING func_props   % imports domain_set
 
-  wf_Guard(p : Guard, a : MVA) : boolean =
+  wf_Guard(a : MVA)(p : Guard) : boolean =
     wf_Store(proj_1(domain_set(p)), a) AND
     wf_PSt(proj_2(domain_set(p)), a)
 
-  wf_Action(l : Action, a : MVA) : boolean =
+  wf_Guard(p : Guard, a : MVA) : boolean =
+    wf_Guard(a)(p)
+
+  wf_Action(a : MVA)(l : Action) : boolean =
     FORALL (c : OneAction) :
       member(c, l) IMPLIES
         var_names(vdsA(a))(target(c)) AND
         subset?(var_names(source(c)), 
                 union(var_names(vdsA(a)), var_names(vdsP(a))))
+
+  wf_Action(l : Action, a : MVA) : boolean =
+    wf_Action(a)(l)
 
   % Rules that every MVA must follow:
   % The initial control point is in the set of control points of the automaton
@@ -266,7 +280,8 @@ BEGIN
   MEASURE length(l)
 
 
-  %%%  Well formed states
+  %  Well formed states
+
   wf_AState(s : AState, a : MVA) : boolean =
     cps(a)(cp(s)) AND
     wf_Store(stA(s), a)
@@ -292,7 +307,9 @@ BEGIN
          stA := execute_actions(stA(x), action(t))
       #)
 
-  %%%  Well formed lemmas
+
+  %  Well formed lemmas
+
   wf_initial_MVA_state: LEMMA
     FORALL (a: MVA) :
       wf_MVA(a) IMPLIES wf_AState(initial_MVA_state(a), a)

@@ -239,9 +239,6 @@ BEGIN
 
   Program : TYPE = [# classes : finite_set[Class] #]
 
-  % TODO: define (long!)
-  var_names(p : Program) : finite_set[Name]
-
 
 END Program
 
@@ -253,6 +250,9 @@ WellFormedProgram[Name : TYPE+] : THEORY
 BEGIN
 
   IMPORTING Program[Name]
+
+  % TODO: define (long!)
+  var_names(p : Program) : finite_set[Name]
 
   % The main method is one of the methods of the program
 %   wf_main(p : Program) : boolean = 
@@ -267,18 +267,6 @@ BEGIN
       name(c1) = name(c2) IMPLIES
         c1 = c2
 
-  % Every variable used has a declaration
-  unique_declarations(p : Program) : boolean =
-    FORALL (n : Name) : var_names(p)(n) IMPLIES
-      (EXISTS (fd : FieldDecl, c : Class) :
-        classes(p)(c) AND fields(c)(fd) AND name(fd) = n) OR
-      (EXISTS (gd : GhostVarDecl, c : Class) :
-        classes(p)(c) AND ghost_vars(c)(gd) AND name(gd) = n) OR
-      (EXISTS (ad : ArgDecl, c : Class, m : Method) :
-        classes(p)(c) AND methods(c)(m) AND arg(m)(ad) AND name(ad) = n) OR
-      (EXISTS (ld : LocalVarDecl, c : Class, m : Method) :
-        classes(p)(c) AND methods(c)(m) AND lvars(m)(ld) AND name(ld) = n)
-
   % Variable names are unique
   % NOTE: The parser complains if the closing brackets are together: }}
   % We have reported this bug
@@ -290,12 +278,12 @@ BEGIN
         gdss = {nss : setofsets[Name] | EXISTS (c : Class, gds : set[GhostVarDecl]) :
           classes(p)(c) AND ghost_vars(c) = gds AND
           FORALL (ns : set[Name]) : nss(ns) IMPLIES
-            ns = {n : Name | EXISTS (gd : GhostVarDecl) : 
+            ns = {n : Name | EXISTS (gd : GhostVarDecl) :
               gds(gd) AND name(gd) = n} },
         ldss = {nss : setofsets[Name] | EXISTS (c : Class, ms : set[Method]) :
           classes(p)(c) AND methods(c) = ms AND
           FORALL (ns : Name) : nss(ns) IMPLIES
-            ns = {n : Name | EXISTS (m : Method, ld : LocalVarDecl) : 
+            ns = {n : Name | EXISTS (m : Method, ld : LocalVarDecl) :
               ms(m) AND lvars(m)(ld) AND name(ld) = n} },
         ads  = {ns : set[Name] | EXISTS (c : Class, ms : set[Method]) :
           classes(p)(c) AND methods(c) = ms AND
@@ -306,15 +294,50 @@ BEGIN
     empty?(Intersection({ns : set[Name] | fdss(ns) OR gdss(ns) OR 
                                           ns = ads OR ldss(ns)}))
 
+  % Every variable used has a declaration
+  vars_are_declared(p : Program) : boolean =
+    FORALL (n : Name) : var_names(p)(n) IMPLIES
+      (EXISTS (fd : FieldDecl, c : Class) :
+        classes(p)(c) AND fields(c)(fd) AND name(fd) = n) OR
+      (EXISTS (gd : GhostVarDecl, c : Class) :
+        classes(p)(c) AND ghost_vars(c)(gd) AND name(gd) = n) OR
+      (EXISTS (ad : ArgDecl, c : Class, m : Method) :
+        classes(p)(c) AND methods(c)(m) AND arg(m)(ad) AND name(ad) = n) OR
+      (EXISTS (ld : LocalVarDecl, c : Class, m : Method) :
+        classes(p)(c) AND methods(c)(m) AND lvars(m)(ld) AND name(ld) = n)
+
+  % TODO: Con esto no necesito vars_are_declared
+  % Hacer algo similar para las otras variables
+  field_declarations_are_unique(p : Program) : boolean =
+    FORALL (n : Name) : 
+      var_names(p)(n) IMPLIES
+      EXISTS (fd : FieldDecl, c : Class) : 
+        classes(p)(c) AND fields(c)(fd) AND name(fd) = n AND
+        FORALL (c1 : Class, m : Method) : classes(p)(c1) AND methods(c1)(m) AND
+        (FORALL (fd1 : FieldDecl) : 
+          fields(c1)(fd1) AND name(fd1) = n IMPLIES fd = fd1 AND c = c1) AND
+        (FORALL (gd : GhostVarDecl) :
+          ghost_vars(c1)(gd) IMPLIES name(gd) /= n) AND
+        (FORALL (ad : ArgDecl) :
+          arg(m)(ad) IMPLIES name(ad) /= n) AND
+        (FORALL (ld : LocalVarDecl) :
+          lvars(m)(ld) IMPLIES name(ld) /= n)
+
+  % We require vars to have different names, even if they are in different 
+  % classes
+  declarations_are_unique(p : Program) : boolean =
+    field_declarations_are_unique(p)
+
   % TODO:
-  % Name of classes are unique
+  % Declarations are unique
   % Well-formed CaseJML (the list must be finite)
   % Type checks: assignments, method calls, etc, etc
   wf_Program(p : Program) : boolean =
 %    wf_main(p) AND
     unique_class_names(p) AND
-    unique_declarations(p) AND
-    unique_var_names(p)
+    unique_var_names(p) AND
+    vars_are_declared(p) AND
+    declarations_are_unique(p)
 
 
 END WellFormedProgram

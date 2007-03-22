@@ -1,4 +1,4 @@
-Equivalence[CP, Name : TYPE+] : THEORY
+Equivalence[CP : TYPE+] : THEORY
 BEGIN
 
   IMPORTING MVASemantics[CP, string],
@@ -47,6 +47,8 @@ BEGIN
         MP_modeled?(initial_MP_state(mp), 
                     initial_Program_state(ann_program(mp)))
 
+%  main_invariant : THEOREM
+
   % The main result
   % NOTE: Because of the way the semantics are defined, we can use the seme n
   % for both derivations
@@ -54,8 +56,9 @@ BEGIN
     FORALL (mp : MonitoredProgram)(main : Method, arg : int)
            (n : nat, s2MP : MState, s2AP : PState) :
       ann_program_pre(mp) IMPLIES
-        run_Program(ann_program(mp))(main, arg)(s2AP)(n) AND
-        run_MonitoredProgram(mp)(main, arg)(s2MP)(n) IMPLIES
-          MP_modeled?(s2MP, s2AP)
+      run_Program(ann_program(mp))(main, arg)(s2AP)(n) IMPLIES
+      run_MonitoredProgram(mp)(main, arg)(s2MP)(n) IMPLIES
+        MP_modeled?(s2MP, s2AP)
+
 
 END Equivalence
