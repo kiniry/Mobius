@@ -228,6 +228,25 @@ public abstract class SList extends SExp
 
 
     /**
+     * Convert the current list to an fresh array.
+     * @return an array
+     */
+    public SExp[] toArray()
+    {
+    	SExp[] res = new SExp[length()];
+    	SList remaining = this;
+    	int i = 0;
+
+    	while (remaining instanceof SPair) {
+    	    SPair p = (SPair)remaining;
+    	    res[i++] = p.head;
+    	    remaining = p.tail;
+    	}
+    	
+    	return res;
+    }
+
+    /**
      * If we represent a non-empty list, return it as a
      * <code>SPair</code>; otherwise, throw <code>SExpTypeError</code>.
      */
