@@ -1,4 +1,4 @@
-package escjava.vcGeneration;
+package escjava.sortedProver;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,9 +9,6 @@ import java.util.Iterator;
 import javafe.util.Assert;
 import javafe.util.Set;
 import escjava.prover.Atom;
-import escjava.vcGeneration.NodeBuilder.SAny;
-import escjava.vcGeneration.NodeBuilder.SPred;
-import escjava.vcGeneration.NodeBuilder.Sort;
 
 public class SimplifyNodeBuilder extends EscNodeBuilder
 {

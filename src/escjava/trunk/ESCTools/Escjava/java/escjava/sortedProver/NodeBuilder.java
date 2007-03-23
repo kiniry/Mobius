@@ -1,6 +1,8 @@
-package escjava.vcGeneration;
+package escjava.sortedProver;
 
 import java.util.Hashtable;
+
+import escjava.vcGeneration.TDisplay;
 
 public abstract class NodeBuilder
 {

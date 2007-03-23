@@ -38,6 +38,8 @@ import escjava.vcGeneration.*;
 
 import javafe.util.*;
 
+import escjava.sortedProver.Lifter;
+import escjava.sortedProver.SimplifyNodeBuilder;
 import escjava.soundness.*;
 import javafe.ast.LShiftVisitor;
 

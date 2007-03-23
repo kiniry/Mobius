@@ -1,19 +1,25 @@
-package escjava.vcGeneration;
+package escjava.sortedProver;
 
 import javafe.ast.*;
 import javafe.tc.*;
 import javafe.util.*;
 import escjava.ast.*;
 import escjava.ast.Modifiers;
+import escjava.sortedProver.NodeBuilder.FnSymbol;
+import escjava.sortedProver.NodeBuilder.PredSymbol;
+import escjava.sortedProver.NodeBuilder.QuantVar;
+import escjava.sortedProver.NodeBuilder.SAny;
+import escjava.sortedProver.NodeBuilder.SBool;
+import escjava.sortedProver.NodeBuilder.SInt;
+import escjava.sortedProver.NodeBuilder.SMap;
+import escjava.sortedProver.NodeBuilder.SPred;
+import escjava.sortedProver.NodeBuilder.SReal;
+import escjava.sortedProver.NodeBuilder.SRef;
+import escjava.sortedProver.NodeBuilder.STerm;
+import escjava.sortedProver.NodeBuilder.SValue;
+import escjava.sortedProver.NodeBuilder.Sort;
 import escjava.tc.GhostEnv;
 import escjava.translate.*;
-import escjava.vcGeneration.NodeBuilder.PredSymbol;
-import escjava.vcGeneration.NodeBuilder.SAny;
-import escjava.vcGeneration.NodeBuilder.SBool;
-import escjava.vcGeneration.NodeBuilder.SPred;
-import escjava.vcGeneration.NodeBuilder.STerm;
-import escjava.vcGeneration.NodeBuilder.SValue;
-import escjava.vcGeneration.NodeBuilder.Sort;
 import escjava.ast.TagConstants;
 import escjava.prover.Atom;
 

@@ -1,10 +1,10 @@
-package escjava.vcGeneration;
+package escjava.sortedProver;
 
 import javafe.util.ErrorSet;
 import escjava.ast.TagConstants;
-import escjava.vcGeneration.NodeBuilder.FnSymbol;
-import escjava.vcGeneration.NodeBuilder.PredSymbol;
-import escjava.vcGeneration.NodeBuilder.Sort;
+import escjava.sortedProver.NodeBuilder.FnSymbol;
+import escjava.sortedProver.NodeBuilder.PredSymbol;
+import escjava.sortedProver.NodeBuilder.Sort;
 
 public abstract class EscNodeBuilder extends NodeBuilder
 {
