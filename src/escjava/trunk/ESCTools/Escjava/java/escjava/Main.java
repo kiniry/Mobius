@@ -990,7 +990,7 @@ public class Main extends javafe.SrcTool
         // Translate VC to a string
         Info.out("[converting VC to a string]");
 
-        if (options().pvc || (Info.on && options().traceInfo > 0)) { 
+        if (!options().tvcg && (options().pvc || (Info.on && options().traceInfo > 0))) { 
             VcToString.compute(vc, System.out);
 	}
 

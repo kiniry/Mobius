@@ -1072,11 +1072,11 @@ public class Lifter extends EscNodeBuilder
 					Term body = transform((ASTNode)n.childAt(3));
 					return body;
 				} else {
-					arity--;
+					arity -= 2;
 					fn = getFnSymbol(op, arity);
 					Term[] args = new Term[arity];
 					for (int i = 0; i < arity; ++i)
-						args[i] = transform((ASTNode)n.childAt(i+2));
+						args[i] = transform((ASTNode)n.childAt(i+3));
 					return new FnTerm(fn, args); 
 				}
 			}
@@ -1148,10 +1148,12 @@ public class Lifter extends EscNodeBuilder
 			}
 			
 			Term[] args = new Term[arity];
+			
 			for (int i = 0; i < arity; ++i)
 				args[i] = transform((ASTNode)n.childAt(i+1));
 			FnTerm res = new FnTerm(fn, args);
 			res.tag = tag;
+			
 			return res;
 			
 		} else if (n instanceof PrimitiveType) { // javafe/Type

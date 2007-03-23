@@ -4,6 +4,7 @@ import java.util.Enumeration;
 import java.util.Properties;
 
 import javafe.util.Assert;
+import javafe.util.Info;
 
 import escjava.backpred.BackPred;
 import escjava.prover.ProverResponse;
@@ -84,7 +85,10 @@ public class SimplifyProver extends SortedProver
 	{
 		labels = null;
 	    simpl.startProve();
-	    simpl.subProcessToStream().println(formulaToString(formula));
+	    String form = formulaToString(formula);
+	    if (Info.on)
+	    	Info.out("[proving formula\n" + form + "]");
+	    simpl.subProcessToStream().println(form);
         Enumeration en = simpl.streamProve();
         
         SimplifyOutput lastOut = null;        
