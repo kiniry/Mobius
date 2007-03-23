@@ -18,7 +18,6 @@ public abstract class NodeBuilder
 	public interface SInt extends SValue { }
 	public interface SReal extends SValue { }
 	public interface SRef extends SValue { }
-	public interface SString extends SRef { }
 	
 	// Arithmetic predicate IDs
 	public final static int predFirst = 1;
@@ -37,7 +36,18 @@ public abstract class NodeBuilder
 	public final static int funMUL = funSUB + 1;
 	public final static int funDIV = funMUL + 1;
 	public final static int funMOD = funDIV + 1;
-	public final static int funLast = funMOD;
+	public final static int funASR32 = funMOD + 1; // signed shift right
+	public final static int funUSR32 = funASR32 + 1; // unsigned
+	public final static int funSL32 = funUSR32 + 1;
+	public final static int funASR64 = funSL32 + 1;
+	public final static int funUSR64 = funASR64 + 1;
+	public final static int funSL64 = funUSR64 + 1;
+	public final static int funLast = funUSR64;
+	
+	// Unary arithmetic functions, I think that binary negation could also go here
+	public final static int funUniFirst = funLast + 1;
+	public final static int funNEG = funUniFirst;
+	public final static int funUniLast = funNEG;
 	
 	private Hashtable symbolsById = new Hashtable();
 	private Hashtable sortsByName = new Hashtable();
@@ -92,11 +102,13 @@ public abstract class NodeBuilder
 		
 		public boolean isSubSortOf(Sort other)
 		{
-			if (this == other)
+			other = other.theRealThing();
+			Sort th = theRealThing();
+			if (th == other)
 				return true;
-			if (getSuperSort() == null)
+			if (th.getSuperSort() == null)
 				return false;
-			return getSuperSort().isSubSortOf(other);
+			return th.getSuperSort().isSubSortOf(other);
 		}
 		
 		// TODO use HashSet
@@ -113,17 +125,17 @@ public abstract class NodeBuilder
 
 		public Sort/*?*/ getSuperSort()
 		{
-			return superSort;
+			return theRealThing().superSort;
 		}
 
 		public Sort/*?*/ getMapFrom()
 		{
-			return mapFrom;
+			return theRealThing().mapFrom;
 		}
 
 		public Sort/*?*/ getMapTo()
 		{
-			return mapTo;
+			return theRealThing().mapTo;
 		}
 		
 		public String toString()
@@ -131,7 +143,12 @@ public abstract class NodeBuilder
 			if (getMapFrom() != null)
 				return getSuperSort().name + "[" + getMapFrom() + "," + getMapTo() + "]";
 			else
-				return name;
+				return theRealThing().name;
+		}
+		
+		public Sort theRealThing()
+		{
+			return this;
 		}
 	}
 	
@@ -288,8 +305,15 @@ public abstract class NodeBuilder
 	abstract public SPred buildIff(SPred arg1, SPred arg2);
 	abstract public SPred buildXor(SPred arg1, SPred arg2);
 	abstract public SPred buildAnd(SPred[] args);
-	abstract public SPred buildOr(SPred[] args);
+	abstract public SPred buildOr(SPred[] args);	
 	abstract public SPred buildNot(SPred arg);
+	abstract public SPred buildTrue();
+	
+	abstract public SPred buildDistinct(SAny[] terms);
+	
+	abstract public SPred buildLabel(boolean positive, String name, SPred pred);
+	
+	abstract public SValue buildITE(SPred cond, SValue then_part, SValue else_part);
 	
 	//@ requires \nonnullelements(vars);
 	//@ requires \nonnullelements(pats);
@@ -311,12 +335,19 @@ public abstract class NodeBuilder
 	//@ requires funFirst <= realFunTag && realFunTag <= funLast;
 	abstract public SReal buildRealFun(int realFunTag, SReal arg1, SReal arg2);
 	
+	//@ requires funUniFirst <= intFunTag && intFunTag <= funUniLast;
+	abstract public SInt buildIntFun(int intFunTag, SInt arg1);
+	
+	//@ requires funUniFirst <= realFunTag && realFunTag <= funUniLast;
+	abstract public SReal buildRealFun(int realFunTag, SReal arg1);
+	
 	// Literals
-	abstract public SString buildString(String s);
 	abstract public SBool buildBool(boolean b);
 	abstract public SInt buildInt(long n);
 	abstract public SReal buildReal(double f);
 	abstract public SRef buildNull();
+	// we though about having buildString() here but we're not sure what the
+	// semantics should be
 		
 	// Maps
 	protected void checkSelect(Sort map, SValue val)
@@ -339,4 +370,8 @@ public abstract class NodeBuilder
 	// Equality
 	abstract public SPred buildAnyEQ(SAny arg1, SAny arg2);
 	abstract public SPred buildAnyNE(SAny arg1, SAny arg2);
+	
+	// Type conversions
+	abstract public SValue buildValueConversion(Sort from, Sort to, SValue val);
+	abstract public SPred buildIsTrue(SBool val);
 }

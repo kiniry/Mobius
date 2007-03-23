@@ -1,19 +1,13 @@
 package escjava.vcGeneration;
 
+import javafe.util.ErrorSet;
 import escjava.ast.TagConstants;
+import escjava.vcGeneration.NodeBuilder.FnSymbol;
+import escjava.vcGeneration.NodeBuilder.PredSymbol;
 import escjava.vcGeneration.NodeBuilder.Sort;
 
 public abstract class EscNodeBuilder extends NodeBuilder
 {
-	public interface SShape extends SAny { }
-	public interface STime extends SInt { }
-	public interface SType extends SAny { }
-	public interface SField extends SMap { }
-	public interface SElems extends SMap { }
-	public interface SLockSet extends SMap { }
-	public interface SLock extends SRef { }
-	public interface SArray extends SRef { }
-	
 	final public Sort sortShape = registerSort("shape", sortAny);
 	final public Sort sortTime = registerSort("time", sortInt);
 	// it seems instances of java.lang.Class are treated as equal to
@@ -27,18 +21,18 @@ public abstract class EscNodeBuilder extends NodeBuilder
 	final public Sort sortBoolField = registerMapSort(sortRef, sortBool, sortField);
 	final public Sort sortRefField = registerMapSort(sortRef, sortRef, sortField);
 	
-	final public Sort sortOwner = registerMapSort(sortRef, sortRef, sortField);
+	final public Sort sortOwner = registerMapSort(sortRef, sortRef, sortField); // RefField
 	
 	final public Sort sortArray = sortRef;
 	final public Sort sortArrayValue = registerMapSort(sortInt, sortValue);
 	final public Sort sortElems = registerMapSort(sortRef, sortArrayValue);
 	
-	final public Sort sortLockSet = registerMapSort(sortLock, sortBool);
+	final public Sort sortLockSet = registerMapSort(sortLock, sortBool); // BoolField
 		
 	// TODO reflect distinction between Array and ArrayValue in types of functions
 	
 	// Don't make these final, so deriving class can redefine them
-	// if it wishes so. It can also override builder methods.
+	// if it wishes so.
 	
 	// Equality
 	public PredSymbol symRefEQ = registerPredSymbol("refEQ", new Sort[] { sortRef, sortRef }, TagConstants.REFEQ);
@@ -73,103 +67,104 @@ public abstract class EscNodeBuilder extends NodeBuilder
 	public FnSymbol symUnset = registerFnSymbol("unset", new Sort[] { sortArrayValue, sortInt, sortInt }, sortArrayValue, TagConstants.UNSET);
 	
 	// stuff unhandled by the T* interface
-	public FnSymbol symArray = registerFnSymbol("array", new Sort[] { sortType }, sortType);
+	public FnSymbol symArray = registerFnSymbol("array", new Sort[] { sortType }, sortType);	
+    public FnSymbol symIntern = registerFnSymbol("|:intern|", new Sort[] { sortInt, sortInt }, sortString, TagConstants.INTERN);
+    public PredSymbol symInterned = registerPredSymbol("|:interned|", new Sort[] { sortString }, TagConstants.INTERNED);
+    public FnSymbol symStringCat = registerFnSymbol("stringCat", new Sort[] { sortString, sortString, sortTime }, sortString, TagConstants.STRINGCAT);
+    // the 3rd argument seems to be sometimes int and sometimes string
+    public PredSymbol symStringCatP = registerPredSymbol("stringCatP", new Sort[] { sortString, sortString, sortValue, sortTime, sortTime }, TagConstants.STRINGCATP);
+    public PredSymbol symNonNullElems = registerPredSymbol("nonnullelements", new Sort[] { sortArray, sortElems }, TagConstants.ELEMSNONNULL);
+    public FnSymbol symElemType = registerFnSymbol("elemtype", new Sort[] { sortType }, sortType, TagConstants.ELEMTYPE);
+    public FnSymbol symMax = registerFnSymbol("max", new Sort[] { sortLockSet }, sortLock, TagConstants.MAX);
+    public FnSymbol symArrayMake = registerFnSymbol("arrayMake", new Sort[] { sortTime, sortTime, sortShape, sortType, sortValue }, sortArray, TagConstants.ARRAYMAKE);
+    public FnSymbol symClassLiteral = registerFnSymbol("classLiteral", new Sort[] { sortType }, sortRef, TagConstants.CLASSLITERALFUNC);
 
-	
-	public SPred buildRefEQ(SRef arg1, SRef arg2)
+
+    public FnSymbol mapFnSymbolTo(EscNodeBuilder other, FnSymbol sym)
+    {
+    	if (sym == symRefEQ) return other.symRefEQ;
+    	else if (sym == symRefNE) return other.symRefNE;
+    	else if (sym == symAllocLT) return other.symAllocLT;
+    	else if (sym == symAllocLE) return other.symAllocLE;
+    	else if (sym == symLockLT) return other.symLockLT;
+    	else if (sym == symLockLE) return other.symLockLE;
+    	else if (sym == symTypeEQ) return other.symTypeEQ;
+    	else if (sym == symTypeNE) return other.symTypeNE;
+    	else if (sym == symTypeLE) return other.symTypeLE;
+    	else if (sym == symIs) return other.symIs;
+    	else if (sym == symCast) return other.symCast;
+    	else if (sym == symTypeOf) return other.symTypeOf;
+    	else if (sym == symIsAllocated) return other.symIsAllocated;
+    	else if (sym == symEClosedTime) return other.symEClosedTime;
+    	else if (sym == symFClosedTime) return other.symFClosedTime;
+    	else if (sym == symAsElems) return other.symAsElems;
+    	else if (sym == symAsField) return other.symAsField;
+    	else if (sym == symAsLockSet) return other.symAsLockSet;
+    	else if (sym == symArrayLength) return other.symArrayLength;
+    	else if (sym == symArrayShapeOne) return other.symArrayShapeOne;
+    	else if (sym == symArrayShapeMore) return other.symArrayShapeMore;
+    	else if (sym == symArrayFresh) return other.symArrayFresh;
+    	else if (sym == symIsNewArray) return other.symIsNewArray;
+    	else if (sym == symUnset) return other.symUnset;
+    	else if (sym == symArray) return other.symArray;
+    	else if (sym == symIntern) return other.symIntern;
+    	else if (sym == symInterned) return other.symInterned;
+    	else if (sym == symStringCat) return other.symStringCat;
+    	else if (sym == symStringCatP) return other.symStringCatP;
+    	else if (sym == symNonNullElems) return other.symNonNullElems;
+    	else if (sym == symElemType) return other.symElemType;
+    	else if (sym == symMax) return other.symMax;
+    	else if (sym == symArrayMake) return other.symArrayMake;
+    	else if (sym == symClassLiteral) return other.symClassLiteral;
+    	//ErrorSet.fatal("cannot map " + sym + " from " + this + " to " + other);
+    	return null;
+    }
+    
+    public Sort canonicalizeSort(Sort s)
+    {
+    	s = s.theRealThing();
+    	Sort from = s.getMapFrom();
+    	if (from != null) from = from.theRealThing();
+    	if (from == null) {
+    		return s;
+    	} else if (from == sortRef) {
+    		Sort to = s.getMapFrom().theRealThing();
+    		if (to == sortRef) return sortRefField;
+    		if (to == sortInt) return sortIntField;
+    		if (to == sortBool) return sortBoolField;
+    		if (to == sortReal) return sortRealField;
+    		to = canonicalizeSort(to);
+    		if (to == sortArrayValue) return sortElems;
+    		return s;
+    	} else if (from == sortInt) {
+    		Sort to = s.getMapFrom().theRealThing();
+    		if (to == sortValue) return sortArrayValue;
+    		return s;
+    	} else {
+    		return s;
+    	}
+    }
+
+	public Sort mapSortTo(EscNodeBuilder other, Sort sort)
 	{
-		return buildPredCall(symRefEQ, new SAny[] { arg1, arg2 });
-	}
-	public SPred buildRefNE(SRef arg1, SRef arg2)
-	{
-		return buildPredCall(symRefNE, new SAny[] { arg1, arg2 });
-	}	
-	public SPred buildAllocLT(STime arg1, STime arg2)
-	{
-		return buildPredCall(symAllocLT, new SAny[] { arg1, arg2 });
-	}
-	public SPred buildAllocLE(STime arg1, STime arg2)
-	{
-		return buildPredCall(symAllocLE, new SAny[] { arg1, arg2 });
-	}
-	public SPred buildLockLE(SLock arg1, SLock arg2)
-	{
-		return buildPredCall(symLockLE, new SAny[] { arg1, arg2 });
-	}
-	public SPred buildLockLT(SLock arg1, SLock arg2)
-	{
-		return buildPredCall(symLockLT, new SAny[] { arg1, arg2 });
-	}	
-	public SPred buildTypeEQ(SType arg1, SType arg2)
-	{
-		return buildPredCall(symTypeEQ, new SAny[] { arg1, arg2 });
-	}
-	public SPred buildTypeNE(SType arg1, SType arg2)
-	{
-		return buildPredCall(symTypeNE, new SAny[] { arg1, arg2 });
-	}
-	public SPred buildTypeLE(SType arg1, SType arg2)
-	{
-		return buildPredCall(symTypeLE, new SAny[] { arg1, arg2 });
-	}	
-	public SPred buildIs(SValue arg1, SType arg2)
-	{
-		return buildPredCall(symIs, new SAny[] { arg1, arg2 });
-	}
-	public SRef buildCast(SValue arg1, SType arg2)
-	{
-		return (SRef)buildFnCall(symCast, new SAny[] { arg1, arg2 });
-	}
-	public SType buildTypeOf(SValue arg1)
-	{
-		return (SType)buildFnCall(symTypeOf, new SAny[] { arg1 });
-	}	
-	public SPred buildIsAllocated(SRef arg1, STime arg2)
-	{
-		return buildPredCall(symIsAllocated, new SAny[] { arg1, arg2 });
-	}
-	public STime buildEClosedTime(SElems arg1)
-	{
-		return (STime)buildFnCall(symEClosedTime, new SAny[] { arg1 });
-	}
-	public STime buildFClosedTime(SField arg1)
-	{
-		return (STime)buildFnCall(symFClosedTime, new SAny[] { arg1 });
-	}
-	public SElems buildAsElems(SElems arg1)
-	{
-		return (SElems)buildFnCall(symAsElems, new SAny[] { arg1 });
-	}
-	public SField buildAsField(SField arg1, SType arg2)
-	{
-		return (SField)buildFnCall(symAsField, new SAny[] { arg1, arg2 });
-	}
-	public SLockSet buildAsLockSet(SLockSet arg1)
-	{
-		return (SLockSet)buildFnCall(symAsLockSet, new SAny[] { arg1 });
-	}
-	public SPred buildIsNewArray(SArray arg1)
-	{
-		return buildPredCall(symIsNewArray, new SAny[] { arg1 });
-	}
-	public SInt buildArrayLength(SArray arg1)
-	{
-		return (SInt)buildFnCall(symArrayLength, new SAny[] { arg1 });
-	}
-	public SShape buildArrayShapeOne(SInt arg1)
-	{
-		return (SShape)buildFnCall(symArrayShapeOne, new SAny[] { arg1 });
-	}
-	public SShape buildArrayShapeMore(SInt arg1, SShape arg2)
-	{
-		return (SShape)buildFnCall(symArrayShapeMore, new SAny[] { arg1, arg2 });
-	}
-	public SPred buildArrayFresh(SArray a, STime alloc1, STime alloc2, SElems elems, SShape shape, SType type, SValue zero)
-	{
-		return buildPredCall(symArrayFresh, new SAny[] { a, alloc1, alloc2, elems, shape, type, zero });
-	}
-	public SArray buildUnset(SArray e, SInt low, SInt high)
-	{
-		return (SArray)buildFnCall(symUnset, new SAny[] { e, low, high });
+		sort = canonicalizeSort(sort);
+		if (sort == sortIntField) return other.sortIntField;
+		else if (sort == sortRealField) return other.sortRealField;
+		else if (sort == sortBoolField) return other.sortBoolField;
+		else if (sort == sortRefField) return other.sortRefField;
+		else if (sort == sortArrayValue) return other.sortArrayValue;
+		else if (sort == sortElems) return other.sortElems;
+		else if (sort == sortShape) return other.sortShape;
+		else if (sort == sortTime) return other.sortTime;
+		else if (sort == sortPred) return other.sortPred;
+		else if (sort == sortAny) return other.sortAny;
+		else if (sort == sortValue) return other.sortValue;
+		else if (sort == sortBool) return other.sortBool;
+		else if (sort == sortInt) return other.sortInt;
+		else if (sort == sortReal) return other.sortReal;
+		else if (sort == sortRef) return other.sortRef;
+		else if (sort == sortMap) return other.sortMap;
+		ErrorSet.fatal("cannot map " + sort + " from " + this + " to " + other);
+		return null;
 	}
 }

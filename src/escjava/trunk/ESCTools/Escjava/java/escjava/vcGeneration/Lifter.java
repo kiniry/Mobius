@@ -8,11 +8,17 @@ import escjava.ast.Modifiers;
 import escjava.tc.GhostEnv;
 import escjava.translate.*;
 import escjava.vcGeneration.NodeBuilder.PredSymbol;
+import escjava.vcGeneration.NodeBuilder.SAny;
+import escjava.vcGeneration.NodeBuilder.SBool;
+import escjava.vcGeneration.NodeBuilder.SPred;
+import escjava.vcGeneration.NodeBuilder.STerm;
+import escjava.vcGeneration.NodeBuilder.SValue;
 import escjava.vcGeneration.NodeBuilder.Sort;
 import escjava.ast.TagConstants;
 import escjava.prover.Atom;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Stack;
 import java.util.regex.Pattern;
@@ -27,6 +33,11 @@ public class Lifter extends EscNodeBuilder
 		ErrorSet.caution(msg);
 	}
 	
+	EscNodeBuilder dumpBuilder;
+	final Hashtable fnTranslations = new Hashtable();
+	final ArrayList stringConstants = new ArrayList();
+	final ArrayList distinctSymbols = new ArrayList();
+	
 	class SortVar extends Sort
 	{
 		private Sort ref;
@@ -36,21 +47,31 @@ public class Lifter extends EscNodeBuilder
 			super("sortVar", null, null, null);
 		}
 		
+		void refSet()
+		{
+			if (ref == null) {
+				if (dumpBuilder != null)
+					ref = sortRef;
+				else
+					Assert.fail("ref == null");
+			}
+		}
+		
 		public Sort/*?*/ getSuperSort()
 		{
-			Assert.notFalse(ref != null);
+			refSet();
 			return ref.getSuperSort();
 		}
 
 		public Sort/*?*/ getMapFrom()
 		{
-			Assert.notFalse(ref != null);
+			refSet();			
 			return ref.getMapFrom();
 		}
 
 		public Sort/*?*/ getMapTo()
 		{
-			Assert.notFalse(ref != null);
+			refSet();			
 			return ref.getMapTo();
 		}
 		
@@ -87,10 +108,13 @@ public class Lifter extends EscNodeBuilder
 				ref = s;
 		}
 		
-		public Sort follow()
+		public Sort theRealThing()
 		{
+			if (dumpBuilder != null)
+				refSet();
+			
 			if (ref != null && ref instanceof SortVar)
-				return ((SortVar)ref).follow();
+				return ref.theRealThing();
 			return ref == null ? this : ref;
 		}
 		
@@ -117,6 +141,53 @@ public class Lifter extends EscNodeBuilder
 			printTo(sb);
 			return sb.toString();
 		}
+		
+		abstract public STerm dump();
+		
+		public SPred dumpPred()
+		{	
+			//ErrorSet.caution("( dumpPred");
+			Assert.notFalse(follow(getSort()) == sortPred);
+			SPred p = (SPred)dump();
+			//ErrorSet.caution(" dumpPred )");
+			return p;
+		}
+		
+		public SAny dumpAny()
+		{
+			Assert.notFalse(follow(getSort()) != sortPred);
+			return (SAny)dump();
+		}
+		
+		public SValue dumpValue()
+		{
+			Assert.notFalse(getSort().isSubSortOf(sortValue));
+			return (SValue)dump();
+		}
+		
+		public SInt dumpInt()
+		{
+			Assert.notFalse(getSort().isSubSortOf(sortInt));
+			return (SInt)dump();
+		}
+		
+		public SBool dumpBool()
+		{
+			Assert.notFalse(getSort().isSubSortOf(sortBool));
+			return (SBool)dump();
+		}
+		
+		public SReal dumpReal()
+		{
+			Assert.notFalse(getSort().isSubSortOf(sortReal));
+			return (SReal)dump();
+		}
+		
+		public SRef dumpRef()
+		{
+			Assert.notFalse(getSort().isSubSortOf(sortRef));
+			return (SRef)dump();
+		}
 	}
 	
 	class QuantVariableRef extends Term
@@ -131,6 +202,11 @@ public class Lifter extends EscNodeBuilder
 		{
 			sb.append("?" + qvar.name + ":" + qvar.type);
 		}
+		
+		public STerm dump()
+		{
+			return dumpBuilder.buildQVarRef(qvar.qvar); 
+		}
 	}
 	
 	class FnTerm extends Term
@@ -139,6 +215,8 @@ public class Lifter extends EscNodeBuilder
 		final public Term[] args;
 		public int tag;
 		final public Sort retType;
+		public boolean isStringConst;
+		public boolean isDistinctSymbol;
 		
 		public FnTerm(FnSymbol fn, Term[] args)
 		{
@@ -276,6 +354,122 @@ public class Lifter extends EscNodeBuilder
 			
 			sb.append(":").append(retType);
 		}
+		
+		public STerm dump()
+		{
+			boolean isPred = follow(fn.retType) == sortPred;
+			FnSymbol tfn = mapFnSymbolTo(dumpBuilder, fn);
+			if (tfn == null && fnTranslations.containsKey(fn))
+				tfn = (FnSymbol)fnTranslations.get(fn);
+				
+			if (tfn != null)
+				if (isPred)
+					return dumpBuilder.buildPredCall((PredSymbol)tfn, dumpArray(args));
+				else
+					return dumpBuilder.buildFnCall(tfn, dumpArray(args));
+			
+			if (fn == symImplies)
+				return dumpBuilder.buildImplies(args[0].dumpPred(), args[1].dumpPred());
+			if (fn == symIff)
+				return dumpBuilder.buildIff(args[0].dumpPred(), args[1].dumpPred());
+			if (fn == symXor)
+				return dumpBuilder.buildXor(args[0].dumpPred(), args[1].dumpPred());
+			if (fn == symNot)
+				return dumpBuilder.buildNot(args[0].dumpPred());
+			if (fn.name.startsWith("%and."))
+				return dumpBuilder.buildAnd(dumpPredArray(args));
+			if (fn.name.startsWith("%or."))
+				return dumpBuilder.buildOr(dumpPredArray(args));
+			if (fn == symTermConditional)
+				return dumpBuilder.buildITE(args[0].dumpPred(), args[1].dumpValue(), args[2].dumpValue());
+			if (fn == symIntPred)
+				return dumpBuilder.buildIntPred(tag, args[0].dumpInt(), args[1].dumpInt());
+			if (fn == symIntFn)
+				return dumpBuilder.buildIntFun(tag, args[0].dumpInt(), args[1].dumpInt());
+			if (fn == symRealPred)
+				return dumpBuilder.buildRealPred(tag, args[0].dumpReal(), args[1].dumpReal());
+			if (fn == symRealFn)
+				return dumpBuilder.buildRealFun(tag, args[0].dumpReal(), args[1].dumpReal());			
+			if (fn == symIntegralNeg)
+				return dumpBuilder.buildIntFun(funNEG, args[0].dumpInt());
+			if (fn == symFloatingNeg)
+				return dumpBuilder.buildRealFun(funNEG, args[0].dumpReal());
+			if (fn == symSelect)
+				return dumpBuilder.buildSelect((SMap)args[0].dump(), args[1].dumpValue());
+			if (fn == symStore)
+				return dumpBuilder.buildStore((SMap)args[0].dump(), args[1].dumpValue(), args[2].dumpValue());
+			
+			if (fn == symAnyEQ || fn == symAnyNE) {
+				Sort t1 = args[0].getSort().theRealThing();
+				Sort t2 = args[1].getSort().theRealThing();
+				
+				int tag = fn == symAnyEQ ? predEQ : predNE;
+ 
+				if (t1.isSubSortOf(sortInt) && t2.isSubSortOf(sortInt))
+					return dumpBuilder.buildIntPred(tag, args[0].dumpInt(), args[1].dumpInt());
+				
+				if (t1.isSubSortOf(sortReal) && t2.isSubSortOf(sortReal))
+					return dumpBuilder.buildRealPred(tag, args[0].dumpReal(), args[1].dumpReal());
+				
+				if (fn == symAnyEQ)
+					return dumpBuilder.buildAnyEQ(args[0].dumpAny(), args[1].dumpAny());
+				else
+					return dumpBuilder.buildAnyNE(args[0].dumpAny(), args[1].dumpAny());				
+			}
+			
+			if (fn == symIsTrue)
+				return dumpBuilder.buildIsTrue(args[0].dumpBool());
+			
+			if (fn == symValueToPred)
+				return dumpBuilder.buildIsTrue(
+						(SBool)dumpBuilder.buildValueConversion(
+								dumpBuilder.sortValue, dumpBuilder.sortBool, 
+								args[0].dumpBool()));
+			
+			if (fn == symPredToBool)
+				return dumpBuilder.buildITE(args[0].dumpPred(),
+						dumpBuilder.buildBool(true),
+						dumpBuilder.buildBool(false));
+			
+			if (fn == symValueToBool || fn == symValueToInt || fn == symValueToReal ||
+				fn == symValueToRef || fn == symIntToReal)
+				return dumpBuilder.buildValueConversion(mapSortTo(dumpBuilder, fn.argumentTypes[0]),
+								mapSortTo(dumpBuilder, fn.retType), args[0].dumpValue());
+			
+			Assert.notFalse(! fn.name.startsWith("%"));
+			
+			tfn = isPred ? dumpBuilder.registerPredSymbol(fn.name, mapSorts(fn.argumentTypes)) :
+						   dumpBuilder.registerFnSymbol(fn.name, mapSorts(fn.argumentTypes), 
+								   					mapSortTo(dumpBuilder, fn.retType));
+			fnTranslations.put(fn, tfn);
+			if (isStringConst) stringConstants.add(this);
+			if (isDistinctSymbol) distinctSymbols.add(this);
+			return dump();			
+		}
+	}
+	
+	Sort[] mapSorts(Sort[] s)
+	{
+		Sort[] res = new Sort[s.length];
+		for (int i = 0; i < s.length; ++i)
+			res[i] = mapSortTo(dumpBuilder, s[i]);
+		return res;
+	}
+	
+	SAny[] dumpArray(Term[] args)
+	{
+		SAny[] params = new SAny[args.length];
+		for (int i = 0; i < args.length; ++i)
+			params[i] = args[i].dumpAny();
+		return params;
+	}
+	
+	SPred[] dumpPredArray(Term[] args)
+	{
+		SPred[] params = new SPred[args.length];
+		for (int i = 0; i < args.length; ++i)
+			params[i] = args[i].dumpPred();
+		return params;
 	}
 	
 	Term toPred(Term body)
@@ -325,6 +519,43 @@ public class Lifter extends EscNodeBuilder
 			sb.append("] ");
 			body.printTo(sb);
 		}
+		
+		public STerm dump()
+		{
+			QuantVar[] qvars = new QuantVar[vars.length];
+			QuantVar[] prev = new QuantVar[vars.length];
+			for (int i = 0; i < vars.length; ++i) {
+				prev[i] = vars[i].qvar;
+				vars[i].qvar = dumpBuilder.registerQuantifiedVariable(vars[i].name, 
+											mapSortTo(dumpBuilder, vars[i].type));
+				qvars[i] = vars[i].qvar;
+			}
+			SPred qbody = (SPred) body.dump();
+			SAny[][] qpats = null;
+			SAny[] qnopats = null;
+			
+			if (pats != null) {
+				qpats = new SAny[pats.length][];
+				for (int i = 0; i < pats.length; ++i)
+					qpats[i] = dumpArray(pats[i]);				
+			}
+			
+			if (nopats != null) qnopats = dumpArray(nopats);
+			
+			for (int i = 0; i < vars.length; ++i) {
+				vars[i].qvar = prev[i];
+			}
+			
+			if (universal)
+				return dumpBuilder.buildForAll(qvars, qbody, qpats, qnopats);
+			else if (qpats == null && qnopats == null)
+				return dumpBuilder.buildExists(qvars, qbody);
+			else
+				return dumpBuilder.buildNot( 
+						dumpBuilder.buildForAll(qvars,
+								dumpBuilder.buildNot(qbody),
+								qpats, qnopats));
+		}
 	}
 	
 	class QuantVariable
@@ -332,6 +563,8 @@ public class Lifter extends EscNodeBuilder
 		public final GenericVarDecl var;
 		public final String name;
 		public final Sort type;
+		
+		public QuantVar qvar;
 		
 		public QuantVariable(GenericVarDecl v, String n)
 		{
@@ -368,6 +601,11 @@ public class Lifter extends EscNodeBuilder
 			sb.append(label).append(": ");
 			body.printTo(sb);
 		}
+		
+		public STerm dump()
+		{
+			return dumpBuilder.buildLabel(positive, label, (SPred)body.dump());
+		}
 	}
 	
 	class IntLiteral extends Term
@@ -377,6 +615,7 @@ public class Lifter extends EscNodeBuilder
 		public Sort getSort() { return sortInt; }
 		public void infer() { }
 		public void printTo(StringBuffer sb) { sb.append(value); }
+		public STerm dump() { return dumpBuilder.buildInt(value); }
 	}
 	
 	class RealLiteral extends Term
@@ -385,6 +624,7 @@ public class Lifter extends EscNodeBuilder
 		public RealLiteral(double v) { value = v; }
 		public Sort getSort() { return sortReal; } 
 		public void infer() { }
+		public STerm dump() { return dumpBuilder.buildReal(value); }
 	}
 	
 	class BoolLiteral extends Term
@@ -393,15 +633,7 @@ public class Lifter extends EscNodeBuilder
 		public BoolLiteral(boolean v) {	value = v; }
 		public Sort getSort() { return sortBool; }
 		public void infer() { }
-	}
-	
-	class StringLiteral extends Term
-	{
-		final public String value;
-		public StringLiteral(String v) { value = v; }
-		public Sort getSort() { return sortString; }
-		public void infer() { }
-		public void printTo(StringBuffer sb) { sb.append("\"" + value + "\""); }		
+		public STerm dump() { return dumpBuilder.buildBool(value); }
 	}
 	
 	class NullLiteral extends Term
@@ -409,6 +641,7 @@ public class Lifter extends EscNodeBuilder
 		public NullLiteral() { }
 		public Sort getSort() { return sortRef; }
 		public void infer() { }
+		public STerm dump() { return dumpBuilder.buildNull(); }
 	}
 	
 	public PredSymbol symImplies = registerPredSymbol("%implies", new Sort[] { sortPred, sortPred }, TagConstants.BOOLIMPLIES);
@@ -416,10 +649,13 @@ public class Lifter extends EscNodeBuilder
 	public PredSymbol symIff = registerPredSymbol("%iff", new Sort[] { sortPred, sortPred }, TagConstants.BOOLEQ);
 	public PredSymbol symXor = registerPredSymbol("%xor", new Sort[] { sortPred, sortPred }, TagConstants.BOOLNE);
 	public PredSymbol symNot = registerPredSymbol("%not", new Sort[] { sortPred }, TagConstants.BOOLNOT);
+    public FnSymbol symTermConditional = registerFnSymbol("%ite", new Sort[] { sortPred, sortValue, sortValue }, sortValue, TagConstants.CONDITIONAL);
 	public PredSymbol symIntPred = registerPredSymbol("%int-pred", new Sort[] { sortInt, sortInt });
 	public PredSymbol symRealPred = registerPredSymbol("%real-pred", new Sort[] { sortReal, sortReal });
 	public FnSymbol symIntFn = registerFnSymbol("%int-pred", new Sort[] { sortInt, sortInt }, sortInt);
 	public FnSymbol symRealFn = registerFnSymbol("%real-pred", new Sort[] { sortReal, sortReal }, sortReal);
+    public FnSymbol symIntegralNeg = registerFnSymbol("%integralNeg", new Sort[] { sortInt }, sortInt, TagConstants.INTEGRALNEG);
+    public FnSymbol symFloatingNeg = registerFnSymbol("%floatingNeg", new Sort[] { sortReal }, sortReal, TagConstants.FLOATINGNEG);    
 	public FnSymbol symSelect = registerFnSymbol("%select", new Sort[] { sortMap, sortValue }, sortValue, TagConstants.SELECT);
 	public FnSymbol symStore = registerFnSymbol("%store", new Sort[] { sortMap, sortValue, sortValue }, sortMap, TagConstants.STORE);
 	public PredSymbol symAnyEQ = registerPredSymbol("%anyEQ", new Sort[] { sortValue, sortValue }, TagConstants.ANYEQ);
@@ -433,32 +669,16 @@ public class Lifter extends EscNodeBuilder
     public FnSymbol symIntToReal = registerFnSymbol("%intToReal", new Sort[] { sortInt }, sortReal);
     
     public PredSymbol symValueToPred = registerPredSymbol("%valueToPred", new Sort[] { sortValue });
-    public FnSymbol symPredToBool = registerFnSymbol("%predToBool", new Sort[] { sortPred }, sortBool);
+    public FnSymbol symPredToBool = registerFnSymbol("%predToBool", new Sort[] { sortPred }, sortBool);    
     
-    // should probably be in EscNodeBuilder:    
-    public FnSymbol symIntern = registerFnSymbol("|:intern|", new Sort[] { sortInt, sortInt }, sortString, TagConstants.INTERN);
-    public PredSymbol symInterned = registerPredSymbol("|:interned|", new Sort[] { sortString }, TagConstants.INTERNED);
-    public FnSymbol symStringCat = registerFnSymbol("stringCat", new Sort[] { sortString, sortString, sortTime }, sortString, TagConstants.STRINGCAT);
-    // the 3rd argument seems to be sometimes int and sometimes string
-    public PredSymbol symStringCatP = registerPredSymbol("stringCatP", new Sort[] { sortString, sortString, sortValue, sortTime, sortTime }, TagConstants.STRINGCATP);
-    // these two should go to NodeBuilder
-    public FnSymbol symIntegralNeg = registerFnSymbol("integralNeg", new Sort[] { sortInt }, sortInt, TagConstants.INTEGRALNEG);
-    public FnSymbol symFloatingNeg = registerFnSymbol("floatingNeg", new Sort[] { sortReal }, sortReal, TagConstants.FLOATINGNEG);
-    // this is just ITE
-    public FnSymbol symTermConditional = registerFnSymbol("termConditional", new Sort[] { sortPred, sortValue, sortValue }, sortValue, TagConstants.CONDITIONAL);
-    public PredSymbol symNonNullElems = registerPredSymbol("nonnullelements", new Sort[] { sortArray, sortElems }, TagConstants.ELEMSNONNULL);
-    public FnSymbol symElemType = registerFnSymbol("elemtype", new Sort[] { sortType }, sortType, TagConstants.ELEMTYPE);
-    public FnSymbol symMax = registerFnSymbol("max", new Sort[] { sortLockSet }, sortLock, TagConstants.MAX);
-    public FnSymbol symArrayMake = registerFnSymbol("arrayMake", new Sort[] { sortTime, sortTime, sortShape, sortType, sortValue }, sortArray, TagConstants.ARRAYMAKE);
-    public FnSymbol symClassLiteral = registerFnSymbol("classLiteral", new Sort[] { sortType }, sortRef, TagConstants.CLASSLITERALFUNC);
-    
+    /*
     public FnSymbol symIntShiftUR = registerFnSymbol("intShiftUR", new Sort[] { sortInt, sortInt }, sortInt, TagConstants.INTSHIFTRU);
     public FnSymbol symIntShiftL = registerFnSymbol("intShiftL", new Sort[] { sortInt, sortInt }, sortInt, TagConstants.INTSHIFTL);
     public FnSymbol symIntShiftAR = registerFnSymbol("intShiftAR", new Sort[] { sortInt, sortInt }, sortInt, TagConstants.INTSHIFTR);
     public FnSymbol symLongShiftAR = registerFnSymbol("longShiftAR", new Sort[] { sortInt, sortInt }, sortInt, TagConstants.LONGSHIFTR);
     public FnSymbol symLongShiftUR = registerFnSymbol("longShiftUR", new Sort[] { sortInt, sortInt }, sortInt, TagConstants.LONGSHIFTRU);
     public FnSymbol symLongShiftL = registerFnSymbol("longShiftL", new Sort[] { sortInt, sortInt }, sortInt, TagConstants.LONGSHIFTL);
-    // end
+    */
 	
 	// we just want Sort and the like, don't implement anything	
 	static class Die extends RuntimeException { }
@@ -473,13 +693,18 @@ public class Lifter extends EscNodeBuilder
 	public SPred buildAnd(SPred[] args) { throw new Die(); }
 	public SPred buildOr(SPred[] args) { throw new Die(); }
 	public SPred buildNot(SPred arg) { throw new Die(); }
+	public SValue buildITE(SPred cond, SValue then_part, SValue else_part) { throw new Die(); }
+	public SPred buildTrue() { throw new Die(); }
+	public SPred buildDistinct(SAny[] terms) { throw new Die(); }
+	public SPred buildLabel(boolean positive, String name, SPred pred) { throw new Die(); }
 	public SPred buildForAll(QuantVar[] vars, SPred body, STerm[][] pats, STerm[] nopats) { throw new Die(); }
 	public SPred buildExists(QuantVar[] vars, SPred body) { throw new Die(); }
 	public SPred buildIntPred(int intPredTag, SInt arg1, SInt arg2) { throw new Die(); }
 	public SInt buildIntFun(int intFunTag, SInt arg1, SInt arg2) { throw new Die(); }
 	public SPred buildRealPred(int realPredTag, SReal arg1, SReal arg2) { throw new Die(); }
 	public SReal buildRealFun(int realFunTag, SReal arg1, SReal arg2) { throw new Die(); }
-	public SString buildString(String s) { throw new Die(); }
+	public SInt buildIntFun(int intFunTag, SInt arg1) { throw new Die(); }
+	public SReal buildRealFun(int realFunTag, SReal arg1) { throw new Die(); }
 	public SBool buildBool(boolean b) { throw new Die(); }
 	public SInt buildInt(long n) { throw new Die(); }
 	public SReal buildReal(double f) { throw new Die(); }
@@ -488,6 +713,9 @@ public class Lifter extends EscNodeBuilder
 	public SMap buildStore(SMap map, SValue idx, SValue val) { throw new Die(); }
 	public SPred buildAnyEQ(SAny arg1, SAny arg2) { throw new Die(); }
 	public SPred buildAnyNE(SAny arg1, SAny arg2) { throw new Die(); }
+	public SValue buildValueConversion(Sort from, Sort to, SValue val) { throw new Die(); }
+	public SPred buildIsTrue(SBool val) { throw new Die(); }
+
 	
 	int pass;
 	final int lastPass = 3;
@@ -511,20 +739,56 @@ public class Lifter extends EscNodeBuilder
 			return false;
 	}
 	
-	public void run()
-	{		
-		Term m = transform(main);
-		
-		pass = 0;
-		while (pass <= lastPass) {
-			m.infer();
-			pass++;
-		}
-	}
+	Term root;
 	
 	public Lifter(Expr e)
 	{
 		main = e;
+	}
+	
+	public void run() 
+	{		
+		root = transform(main);
+		
+		pass = 0;
+		while (pass <= lastPass) {
+			root.infer();
+			pass++;
+		}
+	}
+	
+	public SPred build(EscNodeBuilder builder)
+	{
+		if (root == null)
+			run();
+		
+		dumpBuilder = builder;
+		fnTranslations.clear();
+		stringConstants.clear();
+		distinctSymbols.clear();
+		
+		SPred res = root.dumpPred();
+		
+		SPred[] assumptions = new SPred[stringConstants.size() * 2 + 1];
+		
+		for (int i = 0; i < stringConstants.size(); ++i) {
+			SRef str = ((Term)stringConstants.get(i)).dumpRef();
+			assumptions[2*i] = dumpBuilder.buildAnyNE(str, dumpBuilder.buildNull());
+			assumptions[2*i+1] = dumpBuilder.buildAnyEQ(
+					dumpBuilder.buildFnCall(symTypeOf, new SAny[] { str }),
+					symbolRef("T_java.lang.String", sortType).dumpAny());
+		}
+		
+		SAny[] terms = new SAny[distinctSymbols.size()];
+		for (int i = 0; i < terms.length; ++i)
+			terms[i] = ((Term)distinctSymbols.get(i)).dumpAny();
+		assumptions[stringConstants.size()*2] = 
+			terms.length == 0 ? dumpBuilder.buildTrue() : dumpBuilder.buildDistinct(terms);
+		
+		res = dumpBuilder.buildImplies(dumpBuilder.buildAnd(assumptions), res); 
+					
+		dumpBuilder = null;
+		return res;
 	}
 	
 	final Stack quantifiedVars = new Stack();
@@ -534,9 +798,7 @@ public class Lifter extends EscNodeBuilder
 	
 	Sort follow(Sort s)
 	{
-		if (s != null && s instanceof SortVar)
-			return ((SortVar)s).follow();
-		return s;		
+		return s.theRealThing();
 	}
 	
 	private boolean isFinalized(Sort s)
@@ -583,7 +845,7 @@ public class Lifter extends EscNodeBuilder
 		return require(s1, s2, where) && require(s2, s1, where);
 	}
 	
-	private Term symbolRef(String name, Sort s)
+	private FnTerm symbolRef(String name, Sort s)
 	{
 		FnSymbol fn = getFnSymbol(name, 0);
 		if (s != null)
@@ -592,7 +854,7 @@ public class Lifter extends EscNodeBuilder
 		return new FnTerm(fn, emptyTerms);
 	}
 	
-	private Term symbolRef(String name)
+	private FnTerm symbolRef(String name)
 	{
 		return symbolRef(name, null);
 	}
@@ -686,8 +948,11 @@ public class Lifter extends EscNodeBuilder
 			LiteralExpr m = (LiteralExpr) n;
 			
 			switch (m.getTag()) {
-			case TagConstants.STRINGLIT: 
-				return new StringLiteral((String) m.value);
+			case TagConstants.STRINGLIT:
+				String s = "S_" + UniqName.locToSuffix(m.loc);
+				FnTerm f = symbolRef(s, sortString);
+				f.isStringConst = true;
+				return f;
 			case TagConstants.BOOLEANLIT: 
 				return new BoolLiteral(((Boolean) m.value).booleanValue());
 			case TagConstants.INTLIT:
@@ -707,7 +972,9 @@ public class Lifter extends EscNodeBuilder
 					return new IntLiteral(Long.parseLong(v));
 				else {
 					//ErrorSet.caution("symbol lit " + v);
-					return symbolRef(v);
+					FnTerm a = symbolRef(v);
+					a.isDistinctSymbol = true;
+					return a;
 				}
 			}
 			default:
@@ -770,6 +1037,20 @@ public class Lifter extends EscNodeBuilder
 				fn = symIntFn; tag = funMUL; break;
 			case TagConstants.INTEGRALSUB:
 				fn = symIntFn; tag = funSUB; break;
+				
+			case TagConstants.INTSHIFTRU:
+				fn = symIntFn; tag = funUSR32; break;
+			case TagConstants.INTSHIFTR:
+				fn = symIntFn; tag = funASR32; break;
+			case TagConstants.INTSHIFTL:
+				fn = symIntFn; tag = funSL32; break;
+				
+			case TagConstants.LONGSHIFTRU:
+				fn = symIntFn; tag = funUSR64; break;
+			case TagConstants.LONGSHIFTR:
+				fn = symIntFn; tag = funASR64; break;
+			case TagConstants.LONGSHIFTL:
+				fn = symIntFn; tag = funSL64; break;
 				
 			// real comparisons
 			case TagConstants.FLOATINGEQ:
@@ -886,7 +1167,9 @@ public class Lifter extends EscNodeBuilder
 			Term[] args = new Term[arity];
 			for (int i = 0; i < arity; ++i)
 				args[i] = transform((ASTNode)n.childAt(i+1));
-			return new FnTerm(fn, args); 
+			FnTerm res = new FnTerm(fn, args);
+			res.tag = tag;
+			return res;
 			
 		} else if (n instanceof PrimitiveType) { // javafe/Type
 			// this means this variable represent a primitive java type like
@@ -921,10 +1204,10 @@ public class Lifter extends EscNodeBuilder
 			Term[] nopats;
 			
 			if (m.pats != null) {
-				pats = new Term[m.pats.size()][];
+				pats = new Term[1][];
+				pats[0] = new Term[pats.length];
 				for (int i = 0; i < pats.length; ++i)
-					// FIXME what about multitriggers?
-					pats[i] = new Term[] { transform(m.pats.elementAt(i)) };
+					pats[0][i] = transform(m.pats.elementAt(i));
 			} else { 
 				pats = new Term[0][];
 			}
