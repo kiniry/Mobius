@@ -327,6 +327,16 @@ public class SimplifyNodeBuilder extends EscNodeBuilder
 	{
 		return sx("EQ", trueConst, val);
 	}
+	
+	public SPred buildDistinct(SAny[] terms)
+	{
+		return sx("DISTINCT", terms);
+	}
+	
+	public SPred buildTrue()
+	{
+		return sx("TRUE");
+	}
 
 	// from VcToString
 	protected static final long MaxIntegral = 1000000;
@@ -364,15 +374,5 @@ public class SimplifyNodeBuilder extends EscNodeBuilder
 		
 		integralPrintNames.put(l, name);
 		return name;
-	}
-	
-	public SPred buildDistinct(SAny[] terms)
-	{
-		return sx("DISTINCT", terms);
-	}
-	
-	public SPred buildTrue()
-	{
-		return sx("TRUE");
 	}
 }

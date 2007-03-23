@@ -35,17 +35,48 @@ import java.util.regex.Pattern;
 public class Lifter extends EscNodeBuilder
 {
 	final static boolean doTrace = false;
+	final Stack quantifiedVars = new Stack();
+	final Hashtable symbolTypes = new Hashtable();
+	final Term[] emptyTerms = new Term[0];
+	final EscNodeBuilder builder;
+	final SortedBackPred backPred = new SortedBackPred();	
+	int pass;
+	int methodNo = 0;
+	final int lastPass = 3;
 	
-	private void trace(String msg)
+	// public interface
+	public SPred convert(Expr main) 
 	{
-		Assert.notFalse (doTrace);
-		ErrorSet.caution(msg);
+		methodNo++;
+		return doConvert(transform(main));
 	}
 	
-	EscNodeBuilder dumpBuilder;
-	final Hashtable fnTranslations = new Hashtable();
-	final ArrayList stringConstants = new ArrayList();
-	final ArrayList distinctSymbols = new ArrayList();
+	public Lifter(EscNodeBuilder b)
+	{
+		builder = b;
+	}
+	
+	public SPred generateBackPred(/*@ non_null */ FindContributors scope)
+	{
+		Assert.notFalse(methodNo == 0);
+		backPred.genTypeBackPred(scope, null);
+
+		Term[] terms = new Term[backPred.axioms.size()];
+		terms = (Term[])backPred.axioms.toArray(terms);
+		Term axioms = new FnTerm(giantBoolConective(TagConstants.BOOLAND, terms.length), terms);
+		
+		SAny[] dist = new SAny[backPred.distinct.size()];
+		dumpBuilder = builder;
+		for (int i = 0; i < dist.length; ++i)
+			dist[i] = ((Term)backPred.distinct.get(i)).dumpAny();
+		dumpBuilder = null;
+		
+		SPred and1 = doConvert(axioms);
+		SPred and2 = builder.buildDistinct(dist);
+		methodNo++;
+		return builder.buildAnd(new SPred[] { and1, and2 });
+	}
+	// end public interface
 	
 	class SortVar extends Sort
 	{
@@ -385,9 +416,9 @@ public class Lifter extends EscNodeBuilder
 				return dumpBuilder.buildXor(args[0].dumpPred(), args[1].dumpPred());
 			if (fn == symNot)
 				return dumpBuilder.buildNot(args[0].dumpPred());
-			if (fn.name.startsWith("%and."))
+			if (fn.name == "%and")
 				return dumpBuilder.buildAnd(dumpPredArray(args));
-			if (fn.name.startsWith("%or."))
+			if (fn.name == "%or")
 				return dumpBuilder.buildOr(dumpPredArray(args));
 			if (fn == symTermConditional)
 				return dumpBuilder.buildITE(args[0].dumpPred(), args[1].dumpValue(), args[2].dumpValue());
@@ -455,49 +486,6 @@ public class Lifter extends EscNodeBuilder
 			if (isDistinctSymbol) distinctSymbols.add(this);
 			return dump();			
 		}
-	}
-	
-	Sort[] mapSorts(Sort[] s)
-	{
-		Sort[] res = new Sort[s.length];
-		for (int i = 0; i < s.length; ++i)
-			res[i] = mapSortTo(dumpBuilder, s[i]);
-		return res;
-	}
-	
-	SAny[] dumpArray(Term[] args)
-	{
-		SAny[] params = new SAny[args.length];
-		for (int i = 0; i < args.length; ++i)
-			params[i] = args[i].dumpAny();
-		return params;
-	}
-	
-	SPred[] dumpPredArray(Term[] args)
-	{
-		SPred[] params = new SPred[args.length];
-		for (int i = 0; i < args.length; ++i)
-			params[i] = args[i].dumpPred();
-		return params;
-	}
-	
-	STerm[] dumpTermArray(Term[] args)
-	{
-		STerm[] params = new SAny[args.length];
-		for (int i = 0; i < args.length; ++i)
-			params[i] = args[i].dump();
-		return params;
-	}
-	
-	Term toPred(Term body)
-	{
-		if (follow(body.getSort()) == sortBool)
-			body = new FnTerm(symIsTrue, new Term[] { body });
-		if (follow(body.getSort()) == sortValue)
-			// TODO warning
-			body = new FnTerm(symValueToPred, new Term[] { body });			
-		unify(body.getSort(), sortPred, this);
-		return body;		
 	}
 	
 	class QuantTerm extends Term
@@ -662,8 +650,8 @@ public class Lifter extends EscNodeBuilder
 	}
 	
 	public PredSymbol symImplies = registerPredSymbol("%implies", new Sort[] { sortPred, sortPred }, TagConstants.BOOLIMPLIES);
-	public PredSymbol symOr = registerPredSymbol("%or.2", new Sort[] { sortPred, sortPred });
-	public PredSymbol symAnd = registerPredSymbol("%and.2", new Sort[] { sortPred, sortPred });
+	public PredSymbol symOr = registerPredSymbol("%or", new Sort[] { sortPred, sortPred });
+	public PredSymbol symAnd = registerPredSymbol("%and", new Sort[] { sortPred, sortPred });
 	public PredSymbol symIff = registerPredSymbol("%iff", new Sort[] { sortPred, sortPred }, TagConstants.BOOLEQ);
 	public PredSymbol symXor = registerPredSymbol("%xor", new Sort[] { sortPred, sortPred }, TagConstants.BOOLNE);
 	public PredSymbol symNot = registerPredSymbol("%not", new Sort[] { sortPred }, TagConstants.BOOLNOT);
@@ -689,15 +677,6 @@ public class Lifter extends EscNodeBuilder
     public PredSymbol symValueToPred = registerPredSymbol("%valueToPred", new Sort[] { sortValue });
     public FnSymbol symPredToBool = registerFnSymbol("%predToBool", new Sort[] { sortPred }, sortBool);    
     
-    /*
-    public FnSymbol symIntShiftUR = registerFnSymbol("intShiftUR", new Sort[] { sortInt, sortInt }, sortInt, TagConstants.INTSHIFTRU);
-    public FnSymbol symIntShiftL = registerFnSymbol("intShiftL", new Sort[] { sortInt, sortInt }, sortInt, TagConstants.INTSHIFTL);
-    public FnSymbol symIntShiftAR = registerFnSymbol("intShiftAR", new Sort[] { sortInt, sortInt }, sortInt, TagConstants.INTSHIFTR);
-    public FnSymbol symLongShiftAR = registerFnSymbol("longShiftAR", new Sort[] { sortInt, sortInt }, sortInt, TagConstants.LONGSHIFTR);
-    public FnSymbol symLongShiftUR = registerFnSymbol("longShiftUR", new Sort[] { sortInt, sortInt }, sortInt, TagConstants.LONGSHIFTRU);
-    public FnSymbol symLongShiftL = registerFnSymbol("longShiftL", new Sort[] { sortInt, sortInt }, sortInt, TagConstants.LONGSHIFTL);
-    */
-	
 	// we just want Sort and the like, don't implement anything	
 	static class Die extends RuntimeException { }
 	public SAny buildFnCall(FnSymbol fn, SAny[] args) { throw new Die(); }
@@ -734,10 +713,6 @@ public class Lifter extends EscNodeBuilder
 	public SValue buildValueConversion(Sort from, Sort to, SValue val) { throw new Die(); }
 	public SPred buildIsTrue(SBool val) { throw new Die(); }
 
-	
-	int pass;
-	final int lastPass = 3;
-	
 	boolean isEarlySort(Sort s, Sort p)
 	{
 		return isEarlySort(s) || isEarlySort(p);
@@ -757,31 +732,6 @@ public class Lifter extends EscNodeBuilder
 			return false;
 	}
 	
-	public Lifter(EscNodeBuilder b)
-	{
-		builder = b;
-	}
-	
-	public SPred generateBackPred(/*@ non_null */ FindContributors scope)
-	{
-		Assert.notFalse(backPred.distinct.size() == 0);
-		backPred.genTypeBackPred(scope, null);
-
-		Term[] terms = new Term[backPred.axioms.size()];
-		terms = (Term[])backPred.axioms.toArray(terms);
-		Term axioms = new FnTerm(giantBoolConective(TagConstants.BOOLAND, terms.length), terms);
-		
-		SAny[] dist = new SAny[backPred.distinct.size()];
-		dumpBuilder = builder;
-		for (int i = 0; i < dist.length; ++i)
-			dist[i] = ((Term)backPred.distinct.get(i)).dumpAny();
-		dumpBuilder = null;
-		
-		SPred and1 = doConvert(axioms);
-		SPred and2 = builder.buildDistinct(dist);
-		return builder.buildAnd(new SPred[] { and1, and2 });
-	}
-	
 	SPred doConvert(Term root) 
 	{		
 		pass = 0;
@@ -791,11 +741,6 @@ public class Lifter extends EscNodeBuilder
 		}
 		
 		return build(root);
-	}
-	
-	public SPred convert(Expr main) 
-	{		
-		return doConvert(transform(main));
 	}
 	
 	SPred build(Term root)
@@ -827,12 +772,6 @@ public class Lifter extends EscNodeBuilder
 		dumpBuilder = null;
 		return res;
 	}
-	
-	final Stack quantifiedVars = new Stack();
-	final Hashtable symbolTypes = new Hashtable();
-	final Term[] emptyTerms = new Term[0];
-	final EscNodeBuilder builder;
-	final SortedBackPred backPred = new SortedBackPred();
 	
 	Sort follow(Sort s)
 	{
@@ -899,41 +838,43 @@ public class Lifter extends EscNodeBuilder
 	
 	private FnSymbol getFnSymbol(String name, int arity)
 	{
-		name = name + "." + arity;
+		String nameCur = name + "." + arity + "." + methodNo;
+		String name0 = name + "." + arity + ".0";
 		
-		if (!symbolTypes.containsKey(name)) {			
-			FnSymbol fn;
-			if (arity == 0)
-				fn = registerConstant(name, new SortVar());
-			else {
-				Sort[] args = new Sort[arity];
-				for (int i = 0; i < arity; ++i)
-					args[i] = new SortVar();
-				fn = registerFnSymbol(name, args, new SortVar());
-			}
-			symbolTypes.put(name, fn);
-			if (arity == 0 && name.startsWith("elems") && 
-					(name.startsWith("elems<") || 
-					 name.equals("elems") ||
-					 name.startsWith("elems@") ||
-					 name.startsWith("elems-") ||
-					 name.startsWith("elems:")))
-				unify(fn.retType, sortElems, "elems* hack");
-			if (arity == 0 && name.startsWith("owner:") || name.equals("owner"))
-				unify(fn.retType, sortOwner, "owner hack");
-			return fn;
+		if (symbolTypes.containsKey(nameCur))
+			return (FnSymbol)symbolTypes.get(nameCur);
+		
+		if (symbolTypes.containsKey(name0))
+			return (FnSymbol)symbolTypes.get(name0);
+		
+		FnSymbol fn;
+		if (arity == 0)
+			fn = registerConstant(name, new SortVar());
+		else {
+			Sort[] args = new Sort[arity];
+			for (int i = 0; i < arity; ++i)
+				args[i] = new SortVar();
+			fn = registerFnSymbol(name, args, new SortVar());
 		}
-		return (FnSymbol)symbolTypes.get(name);
+		symbolTypes.put(nameCur, fn);
+		if (arity == 0 && name.startsWith("elems") && 
+				(name.startsWith("elems<") || 
+						name.equals("elems") ||
+						name.startsWith("elems@") ||
+						name.startsWith("elems-") ||
+						name.startsWith("elems:")))
+			unify(fn.retType, sortElems, "elems* hack");
+		if (arity == 0 && name.startsWith("owner:") || name.equals("owner"))
+			unify(fn.retType, sortOwner, "owner hack");
+		return fn;
 	}
 	
-	private Term transform(/*@ non_null @*/ASTNode n)
+	private void trace(String msg)
 	{
-		//ErrorSet.caution("enter " + TagConstants.toString(n.getTag()) + " " + n);
-		Term t = doTransform(n);
-		//ErrorSet.caution("exit " + TagConstants.toString(n.getTag()));
-		return t;
+		Assert.notFalse (doTrace);
+		ErrorSet.caution(msg);
 	}
-	
+		
 	private Sort typeToSort(Type t)
 	{
 		switch (t.getTag()) {
@@ -969,8 +910,16 @@ public class Lifter extends EscNodeBuilder
 		}
 	}
 	
-	private Pattern number = Pattern.compile("[0-9]+");
-	
+	private FnSymbol giantBoolConective(int tag, int arity) {
+		FnSymbol fn;
+		fn = getFnSymbol(tag == TagConstants.BOOLOR ? "%or" : "%and",
+						 arity);
+		for (int i = 0; i < fn.argumentTypes.length; ++i)
+			unify(fn.argumentTypes[i], sortPred, "and/or");
+		unify(fn.retType, sortPred, "and/or");
+		return fn;
+	}	
+	private Pattern number = Pattern.compile("[0-9]+");	
 	private Term doTransform(/*@ non_null @*/ASTNode n)
 	{		
 		// declarations & instancations
@@ -1351,17 +1300,13 @@ public class Lifter extends EscNodeBuilder
 			return null;
 		}
 	}
-
-	private FnSymbol giantBoolConective(int tag, int arity) {
-		FnSymbol fn;
-		fn = getFnSymbol(tag == TagConstants.BOOLOR ? "%or" : "%and",
-						 arity);
-		for (int i = 0; i < fn.argumentTypes.length; ++i)
-			unify(fn.argumentTypes[i], sortPred, "and/or");
-		unify(fn.retType, sortPred, "and/or");
-		return fn;
-	}	
-
+	private Term transform(/*@ non_null @*/ASTNode n)
+	{
+		//ErrorSet.caution("enter " + TagConstants.toString(n.getTag()) + " " + n);
+		Term t = doTransform(n);
+		//ErrorSet.caution("exit " + TagConstants.toString(n.getTag()));
+		return t;
+	}
 
 	public class SortedBackPred extends BackPred 
 	{
@@ -1549,4 +1494,53 @@ public class Lifter extends EscNodeBuilder
 		
 	}
 
+	// dump	
+	EscNodeBuilder dumpBuilder;
+	final Hashtable fnTranslations = new Hashtable();
+	final ArrayList stringConstants = new ArrayList();
+	final ArrayList distinctSymbols = new ArrayList();
+	
+	Sort[] mapSorts(Sort[] s)
+	{
+		Sort[] res = new Sort[s.length];
+		for (int i = 0; i < s.length; ++i)
+			res[i] = mapSortTo(dumpBuilder, s[i]);
+		return res;
+	}
+	
+	SAny[] dumpArray(Term[] args)
+	{
+		SAny[] params = new SAny[args.length];
+		for (int i = 0; i < args.length; ++i)
+			params[i] = args[i].dumpAny();
+		return params;
+	}
+	
+	SPred[] dumpPredArray(Term[] args)
+	{
+		SPred[] params = new SPred[args.length];
+		for (int i = 0; i < args.length; ++i)
+			params[i] = args[i].dumpPred();
+		return params;
+	}
+	
+	STerm[] dumpTermArray(Term[] args)
+	{
+		STerm[] params = new SAny[args.length];
+		for (int i = 0; i < args.length; ++i)
+			params[i] = args[i].dump();
+		return params;
+	}
+	
+	Term toPred(Term body)
+	{
+		if (follow(body.getSort()) == sortBool)
+			body = new FnTerm(symIsTrue, new Term[] { body });
+		if (follow(body.getSort()) == sortValue)
+			// TODO warning
+			body = new FnTerm(symValueToPred, new Term[] { body });			
+		unify(body.getSort(), sortPred, this);
+		return body;		
+	}
+	
 }

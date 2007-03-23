@@ -237,6 +237,7 @@ public abstract class NodeBuilder
 		return p;			
 	}
 	
+	// The names are only unique within a given formula to be checked. 
 	//@ requires \nonnullelements(args);
 	public FnSymbol registerFnSymbol(String name, Sort[] args, Sort ret_type)
 	{
