@@ -29,7 +29,7 @@ public class SimplifyResult extends SimplifyOutput
     //@ ensures this.kind == kind;
     //@ ensures this.labels == labels;
     //@ ensures this.context == context;
-    SimplifyResult(int kind, SList labels, SList context) {
+    public SimplifyResult(int kind, SList labels, SList context) {
         super(kind);
         this.labels = labels;
         this.context = context;

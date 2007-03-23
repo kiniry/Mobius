@@ -21,10 +21,13 @@ import escjava.sortedProver.NodeBuilder.Sort;
 import escjava.tc.GhostEnv;
 import escjava.translate.*;
 import escjava.ast.TagConstants;
+import escjava.backpred.BackPred;
+import escjava.backpred.FindContributors;
 import escjava.prover.Atom;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Stack;
 import java.util.regex.Pattern;
@@ -478,6 +481,14 @@ public class Lifter extends EscNodeBuilder
 		return params;
 	}
 	
+	STerm[] dumpTermArray(Term[] args)
+	{
+		STerm[] params = new SAny[args.length];
+		for (int i = 0; i < args.length; ++i)
+			params[i] = args[i].dump();
+		return params;
+	}
+	
 	Term toPred(Term body)
 	{
 		if (follow(body.getSort()) == sortBool)
@@ -537,16 +548,16 @@ public class Lifter extends EscNodeBuilder
 				qvars[i] = vars[i].qvar;
 			}
 			SPred qbody = (SPred) body.dump();
-			SAny[][] qpats = null;
-			SAny[] qnopats = null;
+			STerm[][] qpats = null;
+			STerm[] qnopats = null;
 			
 			if (pats != null) {
 				qpats = new SAny[pats.length][];
 				for (int i = 0; i < pats.length; ++i)
-					qpats[i] = dumpArray(pats[i]);				
+					qpats[i] = dumpTermArray(pats[i]);				
 			}
 			
-			if (nopats != null) qnopats = dumpArray(nopats);
+			if (nopats != null) qnopats = dumpTermArray(nopats);
 			
 			for (int i = 0; i < vars.length; ++i) {
 				vars[i].qvar = prev[i];
@@ -651,6 +662,7 @@ public class Lifter extends EscNodeBuilder
 	}
 	
 	public PredSymbol symImplies = registerPredSymbol("%implies", new Sort[] { sortPred, sortPred }, TagConstants.BOOLIMPLIES);
+	public PredSymbol symOr = registerPredSymbol("%or.2", new Sort[] { sortPred, sortPred });
 	public PredSymbol symAnd = registerPredSymbol("%and.2", new Sort[] { sortPred, sortPred });
 	public PredSymbol symIff = registerPredSymbol("%iff", new Sort[] { sortPred, sortPred }, TagConstants.BOOLEQ);
 	public PredSymbol symXor = registerPredSymbol("%xor", new Sort[] { sortPred, sortPred }, TagConstants.BOOLNE);
@@ -745,31 +757,50 @@ public class Lifter extends EscNodeBuilder
 			return false;
 	}
 	
-	Term root;
-	
-	public Lifter(Expr e)
+	public Lifter(EscNodeBuilder b)
 	{
-		main = e;
+		builder = b;
 	}
 	
-	public void run() 
-	{		
-		root = transform(main);
+	public SPred generateBackPred(/*@ non_null */ FindContributors scope)
+	{
+		Assert.notFalse(backPred.distinct.size() == 0);
+		backPred.genTypeBackPred(scope, null);
+
+		Term[] terms = new Term[backPred.axioms.size()];
+		terms = (Term[])backPred.axioms.toArray(terms);
+		Term axioms = new FnTerm(giantBoolConective(TagConstants.BOOLAND, terms.length), terms);
 		
+		SAny[] dist = new SAny[backPred.distinct.size()];
+		dumpBuilder = builder;
+		for (int i = 0; i < dist.length; ++i)
+			dist[i] = ((Term)backPred.distinct.get(i)).dumpAny();
+		dumpBuilder = null;
+		
+		SPred and1 = doConvert(axioms);
+		SPred and2 = builder.buildDistinct(dist);
+		return builder.buildAnd(new SPred[] { and1, and2 });
+	}
+	
+	SPred doConvert(Term root) 
+	{		
 		pass = 0;
 		while (pass <= lastPass) {
 			root.infer();
 			pass++;
 		}
+		
+		return build(root);
 	}
 	
-	public SPred build(EscNodeBuilder builder)
+	public SPred convert(Expr main) 
+	{		
+		return doConvert(transform(main));
+	}
+	
+	SPred build(Term root)
 	{
-		if (root == null)
-			run();
-		
 		dumpBuilder = builder;
-		fnTranslations.clear();
 		stringConstants.clear();
 		distinctSymbols.clear();
 		
@@ -800,7 +831,8 @@ public class Lifter extends EscNodeBuilder
 	final Stack quantifiedVars = new Stack();
 	final Hashtable symbolTypes = new Hashtable();
 	final Term[] emptyTerms = new Term[0];
-	final Expr main;
+	final EscNodeBuilder builder;
+	final SortedBackPred backPred = new SortedBackPred();
 	
 	Sort follow(Sort s)
 	{
@@ -1011,11 +1043,7 @@ public class Lifter extends EscNodeBuilder
 			case TagConstants.BOOLAND:
 			case TagConstants.BOOLANDX:
 			case TagConstants.BOOLOR:
-				fn = getFnSymbol(m.getTag() == TagConstants.BOOLOR ? "%or" : "%and",
-								 arity);
-				for (int i = 0; i < fn.argumentTypes.length; ++i)
-					unify(fn.argumentTypes[i], sortPred, "and/or");
-				unify(fn.retType, sortPred, "and/or");
+				fn = giantBoolConective(m.getTag(), arity);
 				break;
 			
 			// integral comparisons
@@ -1322,5 +1350,203 @@ public class Lifter extends EscNodeBuilder
 			ErrorSet.fatal("unhandled tag " + TagConstants.toString(n.getTag()));
 			return null;
 		}
+	}
+
+	private FnSymbol giantBoolConective(int tag, int arity) {
+		FnSymbol fn;
+		fn = getFnSymbol(tag == TagConstants.BOOLOR ? "%or" : "%and",
+						 arity);
+		for (int i = 0; i < fn.argumentTypes.length; ++i)
+			unify(fn.argumentTypes[i], sortPred, "and/or");
+		unify(fn.retType, sortPred, "and/or");
+		return fn;
 	}	
+
+
+	public class SortedBackPred extends BackPred 
+	{
+		ArrayList axioms = new ArrayList();
+		ArrayList distinct = new ArrayList();
+		
+		/**
+		 * Return the type-specific background predicate as a formula.
+		 */
+		public void genTypeBackPred(/*@ non_null */ FindContributors scope,
+				/*@ non_null */ PrintStream proverStream)
+		{
+			distinct.add(transform(Types.booleanType));
+			distinct.add(transform(Types.charType));
+			distinct.add(transform(Types.byteType));
+			distinct.add(transform(Types.shortType));
+			distinct.add(transform(Types.intType));
+			distinct.add(transform(Types.longType));
+			distinct.add(transform(Types.floatType));
+			distinct.add(transform(Types.doubleType));
+			distinct.add(transform(Types.voidType));
+			distinct.add(transform(escjava.tc.Types.typecodeType));
+						
+			// Print them out, and add their contribution to the BP. 
+			Info.out("[TypeSig contributors for "
+					+Types.printName(scope.originType)+":");
+			for( Enumeration typeSigs = scope.typeSigs();
+			typeSigs.hasMoreElements(); )
+			{
+				TypeSig sig2 = (TypeSig)typeSigs.nextElement();
+				Info.out("    "+Types.printName( sig2 ));
+				addContribution( sig2.getTypeDecl(), proverStream );
+				distinct.add(transform(sig2));
+			}
+			Info.out("]");
+			
+			// Handle constant fields' contribution:
+			for( Enumeration fields = scope.fields();
+			fields.hasMoreElements(); ) {
+				FieldDecl fd = (FieldDecl)fields.nextElement();
+				if (!Modifiers.isFinal(fd.modifiers) || fd.init==null)
+					continue;
+				
+				int loc = fd.init.getStartLoc();
+				VariableAccess f = VariableAccess.make(fd.id, loc, fd);
+				
+				if (Modifiers.isStatic(fd.modifiers)) {
+					genFinalInitInfo(fd.init, null, null, f, fd.type, loc, 
+							proverStream);
+				} else {
+					LocalVarDecl sDecl = UniqName.newBoundVariable('s');
+					VariableAccess s = TrAnExpr.makeVarAccess(sDecl, Location.NULL);
+					genFinalInitInfo(fd.init, sDecl, s, GC.select(f, s), fd.type, 
+							loc, proverStream);
+				}
+			}
+		}
+		
+		//@ requires sDecl != null ==> s != null;
+		protected void produce(GenericVarDecl sDecl, Expr s,
+				/*@ non_null */ Expr e,
+				/*@ non_null */ PrintStream proverStream) {
+			if (sDecl != null) {
+				Expr ant = GC.nary(TagConstants.REFNE, s, GC.nulllit);
+				ExprVec nopats = ExprVec.make(1);
+				nopats.addElement(ant);
+				e = GC.forall(sDecl, GC.implies(ant, e), nopats);
+			}
+			
+			axioms.add(transform(e));
+		}
+		
+		/**
+		 * Add to b the contribution from a particular TypeDecl, which is
+		 * a formula.
+		 */
+		
+		protected void addContribution(/*@ non_null */ TypeDecl d,
+				/*@ non_null */ PrintStream proverStream) {
+			
+			TypeSig sig = TypeCheck.inst.getSig(d);
+			
+			// === ESCJ 8: Section 1.1
+			
+			if( d instanceof ClassDecl ) {
+				ClassDecl cd = (ClassDecl)d;
+				
+				if( cd.superClass != null ) {
+					saySubClass( sig, cd.superClass, proverStream );
+				}
+				
+				if( Modifiers.isFinal(cd.modifiers) )
+					sayIsFinal( sig, proverStream );
+				
+			} else {
+				saySubType( sig, Types.javaLangObject(), proverStream );
+			}
+			
+			for( int i=0; i<d.superInterfaces.size(); i++ )
+				saySubType( sig, d.superInterfaces.elementAt(i), proverStream );
+			
+			saySuper(d, proverStream);
+		}
+		
+		
+		FnTerm fn(FnSymbol f, Term a1)
+		{
+			return new FnTerm(f, new Term[] { a1 });
+		}
+		
+		FnTerm fn(FnSymbol f, Term a1, Term a2)
+		{
+			return new FnTerm(f, new Term[] { a1, a2 });
+		}
+		
+		void say(Term t)
+		{
+			axioms.add(t);
+		}
+		
+		/** Record in the background predicate that x is a subclass of y. */
+		
+		private void saySubClass( Type x, Type y,
+				/*@ non_null */ PrintStream proverStream ) 
+		{
+			Term tx = transform(x), ty = transform(y);
+			say(fn(symAnyEQ, fn(symAsChild, tx, ty), tx));
+		}
+		
+		/** Record in the background predicate that x is a subtype of y. */
+		
+		private void saySubType( Type x, Type y,
+				/*@ non_null */ PrintStream proverStream )
+		{
+			say(fn(symTypeLE, transform(x), transform(y)));
+		}
+		
+		private void saySuper(TypeDecl d, /*@ non_null*/ PrintStream proverStream)
+		{
+			Expr sig = GC.typeExpr(TypeCheck.inst.getSig(d));
+			
+            LocalVarDecl boundVar = UniqName.newBoundVariable("t");
+            Expr boundVarAccess = VariableAccess.make(boundVar.id, d.locId, boundVar);
+
+            Expr subt = GC.nary(TagConstants.TYPEEQ, boundVarAccess, sig);
+            
+			if( d instanceof ClassDecl ) {
+				ClassDecl cd = (ClassDecl)d;
+				
+				if( cd.superClass != null ) {
+					subt = GC.or(subt,
+							GC.nary(TagConstants.TYPELE, GC.typeExpr(cd.superClass), boundVarAccess));
+				}
+			} else {
+				subt = GC.or(subt,
+						GC.nary(TagConstants.TYPEEQ, GC.typeExpr(Types.javaLangObject()), 
+													 boundVarAccess));
+			}
+			
+			for( int i=0; i<d.superInterfaces.size(); i++ ) {
+				subt = GC.or(subt,
+						GC.nary(TagConstants.TYPELE, GC.typeExpr(d.superInterfaces.elementAt(i)), 
+													 boundVarAccess));
+			}
+			
+			Expr pat = GC.nary(TagConstants.TYPELE, sig, boundVarAccess); 
+            Expr body = GC.nary(TagConstants.BOOLEQ, pat, subt);
+			say(transform(GC.forallwithpats(boundVar,body, ExprVec.make(new Expr[] { pat }))));
+		}
+		
+		/** Record in the background predicate that x is final. */
+		
+		private void sayIsFinal( Type x,
+				/*@ non_null */ PrintStream proverStream ) 
+		{
+			Expr sig = GC.typeExpr(x);
+			
+            LocalVarDecl boundVar = UniqName.newBoundVariable("t");
+            Expr boundVarAccess = VariableAccess.make(boundVar.id, x.getStartLoc(), boundVar);
+            
+			Expr pat = GC.nary(TagConstants.TYPELE, boundVarAccess, sig); 
+            Expr body = GC.nary(TagConstants.BOOLEQ, pat, GC.nary(TagConstants.TYPEEQ, boundVarAccess, sig));
+			say(transform(GC.forallwithpats(boundVar,body, ExprVec.make(new Expr[] { pat }))));
+		}
+		
+	}
+
 }

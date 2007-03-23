@@ -54,6 +54,7 @@ public abstract class EscNodeBuilder extends NodeBuilder
 	public FnSymbol symEClosedTime = registerFnSymbol("eClosedTime", new Sort[] { sortElems }, sortTime, TagConstants.ECLOSEDTIME); 
 	public FnSymbol symFClosedTime = registerFnSymbol("fClosedTime", new Sort[] { sortField }, sortTime, TagConstants.FCLOSEDTIME);
 	// The as-trick
+	public FnSymbol symAsChild = registerFnSymbol("asChild", new Sort[] { sortType, sortType }, sortType );
 	public FnSymbol symAsElems = registerFnSymbol("asElems", new Sort[] { sortElems }, sortElems, TagConstants.ASELEMS);
 	public FnSymbol symAsField = registerFnSymbol("asField", new Sort[] { sortField, sortType }, sortField, TagConstants.ASFIELD);
 	public FnSymbol symAsLockSet = registerFnSymbol("asLockSet", new Sort[] { sortLockSet }, sortLockSet, TagConstants.ASLOCKSET);

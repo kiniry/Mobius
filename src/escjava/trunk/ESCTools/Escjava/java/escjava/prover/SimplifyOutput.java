@@ -44,7 +44,7 @@ public class SimplifyOutput
     //@   requires VALID <= kind && kind < END;
     //@   modifies this.kind;
     //@   ensures this.kind == kind;
-    SimplifyOutput(int kind) {
+    public SimplifyOutput(int kind) {
         this.kind = kind;
     }
 

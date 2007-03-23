@@ -36,7 +36,7 @@ public class BackPred
      * simplify commands. 
      */
 
-    public static void genUnivBackPred(/*@ non_null */ PrintStream proverStream) {
+    public void genUnivBackPred(/*@ non_null */ PrintStream proverStream) {
         if (escjava.Main.options().univBackPredFile == null) {
             proverStream.print(DefaultUnivBackPred.s);
             return;
@@ -60,7 +60,7 @@ public class BackPred
     /**
      * Return the type-specific background predicate as a formula.
      */
-    public static void genTypeBackPred(/*@ non_null */ FindContributors scope,
+    public void genTypeBackPred(/*@ non_null */ FindContributors scope,
                                        /*@ non_null */ PrintStream proverStream) {
         // set up the background predicate buffer
         proverStream.print("(AND ");
@@ -124,13 +124,13 @@ public class BackPred
 
     //@ requires loc != Location.NULL;
     //@ requires sDecl != null ==> s != null;
-    private static void genFinalInitInfo(/*@ non_null */ VarInit initExpr,
+    protected void genFinalInitInfo(/*@ non_null */ VarInit initExpr,
                                          GenericVarDecl sDecl, Expr s,
                                          /*@ non_null */ Expr x,
                                          /*@ non_null */ Type type,
                                          int loc,
                                          /*@ non_null */ PrintStream proverStream) {
-        /* The dynamic type of the field is subtype of the static type of the
+        /* The dynamic type of the field is subtype of the type of the
          * initializing expression.
          */
         {
@@ -234,7 +234,7 @@ public class BackPred
     }
 
     //@ requires sDecl != null ==> s != null;
-    private static void produce(GenericVarDecl sDecl, Expr s,
+    protected void produce(GenericVarDecl sDecl, Expr s,
                                 /*@ non_null */ Expr e,
                                 /*@ non_null */ PrintStream proverStream) {
         if (sDecl != null) {
@@ -252,7 +252,7 @@ public class BackPred
      * a formula.
      */
 
-    static protected void addContribution(/*@ non_null */ TypeDecl d,
+    protected void addContribution(/*@ non_null */ TypeDecl d,
                                 /*@ non_null */ PrintStream proverStream) {
 
         TypeSig sig = TypeCheck.inst.getSig(d);
@@ -282,7 +282,7 @@ public class BackPred
 
     /** Record in the background predicate that x is a subclass of y. */
 
-    private static void saySubClass( Type x, Type y,
+    private void saySubClass( Type x, Type y,
                                      /*@ non_null */ PrintStream proverStream ) {
 
         saySubType( x, y, proverStream );
@@ -293,14 +293,14 @@ public class BackPred
 
     /** Record in the background predicate that x is a subtype of y. */
 
-    private static void saySubType( Type x, Type y,
+    private void saySubType( Type x, Type y,
                                     /*@ non_null */ PrintStream proverStream ) {
 
         bg( "(<: "+simplifyTypeName(x)+" "+simplifyTypeName(y)+")" , proverStream);
 
     }
 
-    private static void saySuper(TypeDecl d, /*@ non_null*/ PrintStream proverStream) {
+    private void saySuper(TypeDecl d, /*@ non_null*/ PrintStream proverStream) {
         TypeSig sig = TypeCheck.inst.getSig(d);
         String n = simplifyTypeName(sig);
         StringBuffer b = new StringBuffer();
@@ -328,7 +328,7 @@ public class BackPred
 
     /** Record in the background predicate that x is final. */
 
-    private static void sayIsFinal( Type x,
+    private void sayIsFinal( Type x,
                                     /*@ non_null */ PrintStream proverStream ) {
         String n = simplifyTypeName(x);
         bg( "(FORALL (t) (PATS (<: t "+n+")) (IFF (<: t "+n+") (EQ t "+n+")))",
@@ -350,7 +350,7 @@ public class BackPred
      * around this expression and adds it to the background predicate.
      */
 
-    protected static void bgi(/*@ non_null */ String s,
+    protected void bgi(/*@ non_null */ String s,
                             /*@ non_null */ PrintStream proverStream) {
         proverStream.print("\n(FORALL (s) (IMPLIES (NEQ s null) ");
         proverStream.print(s);
@@ -362,7 +362,7 @@ public class BackPred
      * predicate. 
      */
 
-    protected static void bg(/*@ non_null */ String s,
+    protected void bg(/*@ non_null */ String s,
                            /*@ non_null */ PrintStream proverStream) {
         proverStream.print('\n');
         proverStream.print(s);
@@ -375,7 +375,7 @@ public class BackPred
      * Do we know statically that an expression always returns a
      * non-null value?
      */
-    protected static boolean isStaticallyNonNull(VarInit e) {
+    protected boolean isStaticallyNonNull(VarInit e) {
 	int tag = e.getTag();
 
 	// New expressions are always non-null:
@@ -420,7 +420,7 @@ public class BackPred
      * <code>loc</code>.
      */
     //@ requires e!=null && loc!=Location.NULL;
-    protected static LiteralExpr eval(Expr e, int loc) {
+    protected LiteralExpr eval(Expr e, int loc) {
 	Object val = ConstantExpr.eval(e);
 
 	if (val instanceof Boolean)
@@ -449,7 +449,7 @@ public class BackPred
      */
     //@ requires e1 != null && e2!=null && t!=null;
     //@ ensures \result != null;
-    protected static Expr eq(Expr e1, Expr e2, Type t) {
+    protected Expr eq(Expr e1, Expr e2, Type t) {
 	if (!(t instanceof PrimitiveType))
 	    return GC.nary(TagConstants.REFEQ, e1, e2);
 

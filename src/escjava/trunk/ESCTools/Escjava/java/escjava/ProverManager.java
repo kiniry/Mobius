@@ -4,9 +4,13 @@ package escjava;
 
 import escjava.backpred.FindContributors;
 import escjava.prover.*;
+import escjava.sortedProver.Lifter;
+import escjava.sortedProver.SimplifyProver;
+import escjava.sortedProver.SortedProver;
 import escjava.translate.VcToString;
 import javafe.ast.ASTNode;
 import javafe.ast.Expr;
+import javafe.util.Assert;
 import javafe.util.FatalError;
 import java.io.PrintStream;
 import java.util.Enumeration;
@@ -33,6 +37,9 @@ public class ProverManager {
   public static boolean useSammy = false;
   public static boolean useHarvey = false;
   public static boolean useCvc3 = false;
+  public static boolean useSorted = false;
+  
+  static escjava.backpred.BackPred backPred = new escjava.backpred.BackPred();
 
   //@ ensures isStarted && prover != null;
   synchronized
@@ -60,7 +67,7 @@ public class ProverManager {
       if (!Main.options().quiet)
         System.out.println("  Prover started:" + Main.timeUsed(startTime));
       
-      escjava.backpred.BackPred.genUnivBackPred(simplify.subProcessToStream());
+      backPred.genUnivBackPred(simplify.subProcessToStream());
       simplify.sendCommands("");
       
     }
@@ -82,6 +89,24 @@ public class ProverManager {
       // note: the backpred is included as part of the vcGen code
     } 
     
+    if (useSorted && sortedProver == null) {
+        long startTime = java.lang.System.currentTimeMillis();
+        sortedProver = new SimplifyProver();
+
+        if (!Main.options().quiet) 
+          System.out.println("  Sorted prover started:" + Main.timeUsed(startTime));
+
+        Properties flags = new Properties();
+        //flags.setProperty(" ","-timeout 0");
+        sortedProver.setProverResourceFlags(flags);
+        
+        lifter = new Lifter(sortedProver.getNodeBuilder());
+
+        sortedProver.startProver();
+        sortedProver.sendBackgroundPredicate();
+    }
+    	
+    
     if (listener != null) listener.stateChanged(1);
     isStarted = true;
     status = STARTED;
@@ -90,6 +115,7 @@ public class ProverManager {
   
   synchronized
   static public /*@ non_null */ Simplify prover() {
+	Assert.notFalse(useSimplify);
     start();
     return simplify;
   }
@@ -113,6 +139,11 @@ public class ProverManager {
     if(useCvc3) {
       cvc3.stop_prover();
       cvc3 = null;
+    }
+    
+    if (useSorted) {
+    	sortedProver.stopProver();
+    	sortedProver = null;
     }
     
     if (listener != null) 
@@ -145,6 +176,11 @@ public class ProverManager {
       cvc3 = null;
     }
     
+    if (useSorted) {
+    	sortedProver.stopProver();
+    	sortedProver = null;
+    }
+    
     isStarted = false;
     status = NOTSTARTED;
   }
@@ -154,20 +190,29 @@ public class ProverManager {
    */
   synchronized
   static public void push(/*@ non_null @*/ Expr vc) {
-    PrintStream ps = simplify.subProcessToStream();
-    ps.print("\n(BG_PUSH ");
-    VcToString.computePC(vc, ps);
-    ps.println(")");
-    simplify.sendCommands("");
+	  if (useSorted) {
+		  sortedProver.makeAssumption(lifter.convert(vc));
+	  }
+	  else {
+		  Assert.notFalse(useSimplify);
+		  PrintStream ps = simplify.subProcessToStream();
+		  ps.print("\n(BG_PUSH ");
+		  VcToString.computePC(vc, ps);
+		  ps.println(")");
+		  simplify.sendCommands("");
+	  }
   }
   
   synchronized
   static public void push(/*@ non_null */ FindContributors scope) {
     start();
-    if (simplify != null) {
+    if (useSorted) {
+    	sortedProver.makeAssumption(lifter.generateBackPred(scope));
+    }
+    else if (simplify != null) {
       PrintStream ps = simplify.subProcessToStream();
       ps.print("\n(BG_PUSH ");
-      escjava.backpred.BackPred.genTypeBackPred(scope, ps);
+      backPred.genTypeBackPred(scope, ps);
       ps.println(")");
       simplify.sendCommands("");
       savedScope = scope;
@@ -181,7 +226,7 @@ public class ProverManager {
   synchronized
   static public /*@ non_null */ Enumeration prove(/*@ non_null */ Expr vc, /*@ nullable */ FindContributors scope) {
    
-    if (useSimplify) { 
+    if (useSimplify || useSorted) { 
       if (scope == null) {
         if (savedScope != null && status != PUSHED) push(savedScope);
       } else {
@@ -196,16 +241,52 @@ public class ProverManager {
       }
       if (listener != null) listener.stateChanged(2);
       try {
-        simplify.startProve();
-        VcToString.compute(vc, simplify.subProcessToStream());
- 
-        Enumeration en = simplify.streamProve();
-        if (listener != null) listener.stateChanged(1);
-        return en;
+    	  if (useSorted) {
+    		  ProverResponse resp = sortedProver.isValid(lifter.convert(vc), new Properties());
+    		  
+    		  String[] labels = sortedProver.getLabels(); 
+    		  SList slabels = null;
+    		  if (labels != null) {
+    			  SExp[] labels2 = new SExp[labels.length];
+    			  for (int i = 0; i < labels.length; ++i)
+    				  labels2[i] = SExp.fancyMake(labels[i]);
+    			  slabels = SList.fromArray(labels2);
+    		  }
+    			  
+    		  SimplifyOutput tmp = null;
+    		  if (resp == ProverResponse.YES)
+    			  tmp = new SimplifyOutput(SimplifyOutput.VALID);
+    		  else if (resp == ProverResponse.COUNTER_EXAMPLE) {
+    			  tmp = new SimplifyResult(SimplifyOutput.COUNTEREXAMPLE, slabels, null);
+    		  } else {
+    			  tmp = new SimplifyResult(SimplifyOutput.INVALID, slabels, null);
+    		  }
+    		  
+    		  final SimplifyOutput res = tmp;
+    		  
+    		  return new Enumeration() {
+    			  SimplifyOutput current = res;    			  
+    			  public boolean hasMoreElements() {  return (current != null); }
+    			  public Object nextElement() {
+    				  if (current == null) throw new java.util.NoSuchElementException();
+    				  Object value = current;
+    				  current = null;
+    				  return value;
+    			  }
+    		  };
+    	  } else {
+    		  simplify.startProve();
+    		  VcToString.compute(vc, simplify.subProcessToStream());
+    		  
+    		  Enumeration en = simplify.streamProve();
+    		  if (listener != null) listener.stateChanged(1);
+    		  return en;
+    	  }
       } catch (FatalError e) {
         died();
         return null;
       }
+      
     }
     else {
       return null;
@@ -217,10 +298,12 @@ public class ProverManager {
    */
   synchronized
   static public void pop() {
-    if (simplify != null)
-      simplify.sendCommand("(BG_POP)");
-    savedScope = null;
-    status = STARTED;
+	  if (useSorted)
+		  sortedProver.retractAssumption(1);
+	  else  if (simplify != null)
+		  simplify.sendCommand("(BG_POP)");
+	  savedScope = null;
+	  status = STARTED;
   }
   
   /**
@@ -241,4 +324,10 @@ public class ProverManager {
    * Our Cvc3 instance.
    */
   public static /*@ nullable */ Cvc3 cvc3;
+  
+  /*
+   * Our generic sorted prover instance.
+   */
+  public static /*@ nullable */ SortedProver sortedProver;
+  public static /*@ nullable */ Lifter lifter;
 }

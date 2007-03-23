@@ -4,7 +4,7 @@ import java.util.Properties;
 import escjava.prover.ProverResponse;
 import escjava.sortedProver.NodeBuilder.SPred;
 
-public abstract class Prover
+public abstract class SortedProver
 {
     /*
      * Variables indicating the state of the prover

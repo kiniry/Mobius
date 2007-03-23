@@ -5,6 +5,7 @@ import java.util.Properties;
 
 import javafe.util.Assert;
 
+import escjava.backpred.BackPred;
 import escjava.prover.ProverResponse;
 import escjava.prover.SExp;
 import escjava.prover.SList;
@@ -15,11 +16,12 @@ import escjava.sortedProver.NodeBuilder.SPred;
 import escjava.sortedProver.SimplifyNodeBuilder.Sx;
 import escjava.translate.VcToString;
 
-public class SimplifyProver extends Prover
+public class SimplifyProver extends SortedProver
 {
 	SimplifyNodeBuilder nodeBuilder = new SimplifyNodeBuilder();
 	Simplify simpl = new Simplify();
 	int pushHeight;
+	BackPred backPred = new BackPred();
 
 	public EscNodeBuilder getNodeBuilder()
 	{
@@ -40,7 +42,7 @@ public class SimplifyProver extends Prover
 	public ProverResponse sendBackgroundPredicate()
 	{
 		backgroundPredicateSent = true;
-		escjava.backpred.BackPred.genUnivBackPred(simpl.subProcessToStream());
+		backPred.genUnivBackPred(simpl.subProcessToStream());
 		simpl.sendCommands("");
 		return ProverResponse.OK;
 	}

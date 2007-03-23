@@ -129,7 +129,7 @@ public class SimplifyNodeBuilder extends EscNodeBuilder
 	{
 		// defpreds.add(fn);
 		
-		if (fn == symAllocLT || fn == symAllocLE)
+		if (fn == symAllocLT || fn == symAllocLE || fn == symTypeLE)
 			return sx(fn.name, args);
 			
 		return sx("EQ", sx(fn.name, args), trueConst);
@@ -198,7 +198,7 @@ public class SimplifyNodeBuilder extends EscNodeBuilder
 		case predGT: sym = ">"; break;
 		case predLT: sym = "<"; break;
 		case predEQ: sym = "EQ"; break;
-		case predNE: sym = "NE"; break;
+		case predNE: sym = "NEQ"; break;
 		default: Assert.fail(""); sym = null;
 		}
 		
@@ -315,7 +315,7 @@ public class SimplifyNodeBuilder extends EscNodeBuilder
 
 	public SPred buildAnyNE(SAny arg1, SAny arg2) 
 	{
-		return sx("NE", arg1, arg2);
+		return sx("NEQ", arg1, arg2);
 	}
 
 	public SValue buildValueConversion(Sort from, Sort to, SValue val) 
