@@ -1,0 +1,540 @@
+
+\documentclass[c]{beamer}
+
+
+\usetheme{default}
+\usepackage{listings}
+%\usepackage{juanlespin}
+\usefonttheme{structurebold}
+
+\usepackage[english]{babel}
+\usepackage{pgf}
+\usepackage{epsfig}
+\usepackage{amsmath,amssymb}
+\usepackage[latin1]{inputenc}
+\usepackage{multirow}
+ 
+%%%%%%%%%%%%%%CARDIS%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{tikz}
+\usepackage{graphics}
+\usepackage{pgflibraryshapes}
+
+\usepackage{listings}
+
+\lstset{escapeinside={(*@}{@*)}}
+\lstset{commentstyle=\color{blue!50!black}\textit,tabsize=2,keywordstyle=\color{green!50!black}}
+\lstset{backgroundcolor=\color{lightgray!50}}
+%\lstset{numbers=left, numberstyle=\footnotesize}
+
+
+\setbeamertemplate{navigation symbols}{}
+\newcommand{\textttbf}[1]{\texttt{\textbf{#1}}}
+
+
+\newcommand{\varHook}[1]{\mbox{\slshape #1}}
+\newcommand{\codeHook}[1]{\mbox{\ttfamily #1}}
+
+\def \bsl       {\symbol{92}}
+\newcommand{\unsc}{\_}
+
+\setbeamercovered{dynamic}%\beamertemplatenavigationsymbolsempty
+
+\title[]{Preliminary design of BML: A behavioral interface specification language for Java bytecode }
+\author[mariela.pavlova@sophia.inria.fr]{Lilian Burdy, Marieke Huisman, \textbf{Mariela Pavlova}}
+
+\date[]{Institute:  Ludwig-Maximilian University, Munich, Germany }
+\pgfdeclareimage[height=3cm]{mobius_transparent}{mobius_transparent}
+\logo{\pgfuseimage{mobius_transparent}}
+
+\AtBeginSection[]{\frame{\frametitle{Outline}\tableofcontents[current]}}
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+%\logo{mobius_transparent}
+\end{frame}
+ 
+
+
+
+\input{cmd.tex}
+\section{Context and Motivations}
+
+
+\begin{frame}\frametitle{The need for a specification language  for Java bytecode }
+
+%% Although source verification has shown its utility  for software audit, there are scenarios 
+%% in which it will be hardly applicable
+\begin{itemize}
+ \item Verification of applications  \textit{developed directly in bytecode}
+ \item Verification of safety critical applications 
+   \textit{ without trusting the compiler}
+ \item Establishing trust in mobile code originating from untrusted entity \textit{w.r.t. complex functional and security policies}
+\end{itemize}
+
+%\begin{block}{In those cases we need }
+%A specification language tailored to bytecode  into which to express the  security properties over bytecode programs
+%\end{block}
+\end{frame}
+
+\logo{}
+\begin{frame}[shrink]\frametitle{Mobile code and  PCC for complex policies }  
+\only<1>{
+ \begin{center}
+     \pgfimage{figs/PPO}
+ \end{center}
+}
+
+\only<2>{
+ \begin{center}
+     \pgfimage{figs/PPObml}
+ \end{center}
+}
+\end{frame}
+
+\logo{\pgfuseimage{mobius_transparent}}
+
+\section{Contributions}
+\begin{frame}\frametitle{Contributions}
+ \begin{itemize}
+   \item Bytecode Modeling Language (BML)  
+   \item Encoding of BML into the Java class file format
+       %%  \begin{itemize}
+%%          \item   specification language for Java bytecode programs  
+%%          \item inspired by the Java Modeling Language (JML)
+%%       \end{itemize}
+   
+   \item Compiler from JML to BML
+\end{itemize}
+\end{frame}
+
+\section{JML}
+
+\begin{frame}\frametitle{The formal specification language JML}
+ JML stands for  Java Modeling Language and is the de facto specification language of Java
+  \begin{itemize}
+     \item Contract based approach  (preconditions and postconditions)
+     \item Object invariants 
+     \item Method annotations  (e.g. loop invariants, loop frame conditions in JACK)  
+     \item Special specification constructs (e.g. \old{e}, \result) 
+     \item Specification variables  
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile,shrink]\frametitle{Example of  JML specified Java code}
+
+%% public class ListArray { 
+%% private Object[] list;
+  
+%% //@ requires list != null;
+%% //@ modifies list[*];
+%% //@ ensures \result ==(\exists int i; 
+%% //@ 0 <= i && i < list.length && 
+%% //@ \old(list[i]) == obj1 && list[i] == obj2);
+%% boolean replace(Object obj1,Object obj2){
+%%   int i = 0;
+    
+%%   //@ loop_modifies i, list[*];
+%%   //@ loop_invariant i <= list.length && i >=0 
+%%   //@ &&
+%%   //@ (\forall int k;0 <= k && k < i ==> 
+%%   //@   list[k] != obj1  && 
+%%   //@   list[k] == old(list[k]));
+%%   for (i = 0; i < list.length; i++ ){
+%%     if ( list[i] == obj1){
+%%       list[i] = obj2;
+%%       return true;	
+%%     }
+%%   } 
+%%   return false;
+%% }}
+ \begin{lstlisting}[language=java]
+//@ requires n > 0;
+//@ ensures sum <= \old(sum)+n*(n+1)/2;
+public boolean produce_bill(int n){
+  try{
+    //@ loop_modifies sum, i;
+    //@ loop_invariant 0 <=  i && 0 <= sum &&
+    //@ i<= n+1 && sum<=\old(sum)+(i-1)*i/2;
+    for (int i=1;i<=n;i++) { 
+      this.sum = this.sum + round_cost(i);}
+    return true;} 
+   catch (Exception e){ 
+    return false;}} 
+ \end{lstlisting}
+\end{frame} 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%BML%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+%\begin{frame}[shrink]\frametitle{From source specification to bytecode specification}
+%\begin{center}
+%\pgfimage[height=\textheight]{figs/PPObml}
+%\end{center}
+%\end{frame}
+
+\section{BML}
+
+
+\subsection{Syntax and Semantics}
+
+ \begin{frame}\frametitle{Design features of BML}
+    The bytecode counterpart of JML
+       \begin{itemize}
+          \item Syntax  
+	      \begin{itemize}
+                \item  corresponds to a subset of JML (JML level 0)
+                \item  specific constructs to the JVM %(\stack{\counter}  and \counter)  
+              \end{itemize}
+	  \item Semantics - the same  as JML
+       \end{itemize}
+ \end{frame}    
+
+\begin{frame} \frametitle{ Syntax of BML}
+\begin{tabular}{lll}
+\multicolumn{2}{l}{\varHook{predicate} ::= \(\ldots\)}\smallskip\\
+\multicolumn{2}{l}{\varHook{unary-expr-not-plus-minus} ::= \(\ldots\)}\\
+\hspace*{1cm} & \(\mid\) \varHook{primary-expr} [\varHook{primary-suffix}]\(\ldots\)\\ 
+
+\multicolumn{3}{l}{\varHook{primary-suffix} ::= \codeHook{.} \varHook{ident}
+\(\mid\) \codeHook{(} [\varHook{expression-list}] \codeHook{)}}\\
+& \(\mid\) \codeHook{[} \varHook{expression} \codeHook{]}\\
+
+\multicolumn{2}{l}{\varHook{primary-expr} ::= } \\
+&\(\mid\) \alert{\codeHook{\#}\varHook{natural}} \\
+&\(\mid\) \alert{\codeHook{lv[}\varHook{natural}\codeHook{]}} \\
+&\(\mid\) \varHook{bml-primary}\\
+&
+\multicolumn{2}{l}{\(\mid\) \varHook{constant} \(\mid\)
+\codeHook{super}
+\(\mid\) \codeHook{true} \(\mid\) \codeHook{false} \(\mid\)} \\
+& \(\mid\) \codeHook{null} 
+\(\mid\) \codeHook{(}\varHook{expression}\codeHook{)}
+\(\mid\) \varHook{jml-primary}\\
+ & & \\
+
+%% \end{tabular}
+%% \end{frame}
+
+
+%% \begin{frame}\frametitle{Syntax of BML (2)}
+
+%% \begin{tabular}{ll}
+
+\multicolumn{2}{l}{\varHook{bml-primary} ::= } \\
+&\(\mid\) \alert{\codeHook{cntr} } \\
+&\(\mid\) \alert{\codeHook{st(}\varHook{additive-expr}\codeHook{)}} \\
+&\(\mid\) \alert{\codeHook{length(}\varHook{expression}\codeHook{)}} 
+\end{tabular}
+\end{frame} 
+  
+ 
+\subsection{Encoding in the class file format}
+
+\begin{frame}\frametitle{Encoding BML in the class file. Features}
+  \begin{itemize} 
+              \item Does not affect  the Java Virtual Machine (JVM)
+               
+     	      \item Uses user defined class attributes 
+		 in compliance with the JVM specification
+	     \item Every specification construct has its own attribute (method contracts, internal assertions, object invariants, ghost fields~\ldots)
+            \end{itemize}  
+\end{frame}
+
+\begin{frame}\frametitle{Encoding of Ghost fields in the class file}
+
+\begin{tabular}[t]{l}
+Ghost\unsc Field\unsc attribute \{\\
+\hspace*{1em}
+\begin{tabular}{l}
+u2  attribute\unsc name\unsc index; \\
+u4  attribute\unsc length;\\
+u2  fields\unsc count;\\
+\{\begin{tabular}[t]{l} 
+    u2 access\unsc flags; \\  
+    u2 name\unsc index;\\
+    u2 descriptor\unsc index;\\
+  \end{tabular}\\
+\} fields[fields\unsc count]; \} \\
+\end{tabular}
+\end{tabular}
+
+\end{frame}
+
+
+\subsection{Example of  BML specification}
+
+\begin{frame}[fragile,shrink]\frametitle{Example of a BML specification}
+
+ \begin{lstlisting}[language=jvmis]
+{|
+requires 
+ lv[1] > 0 
+ensures 
+ lv[0].#24<=\old(lv[0].#24)+lv[1]*(lv[1]+1)/2
+|}
+0  iconst_1
+1  istore_2
+2  goto 22 
+5  aload_0
+6  aload_0
+7  getfield #24 <Bill.sum>
+10 aload_0
+11 iload_2
+12 invokevirtual #26 <Bill.round_cost>
+15 iadd
+16 putfield #24 <Bill.sum>
+19 iinc 2 by 1
+loop_modifies lv[2], lv[3] 
+loop_invariant 
+ 0<=lv[2]&&0<=lv[0].#24 && lv[2]<=lv[1]+1 &&
+ lv[0].#24<=\old(lv[0].#24) + (lv[2]-1)*lv[2]/2
+22 iload_2
+23 iload_1
+24 if_cmple 5 
+27 iconst_1
+28 ireturn
+29 astore_3
+30 iconst_0
+31 ireturn
+\end{lstlisting}
+%% \begin{center}
+%% \pgfimage[height=5in]{figs/exampleBml}
+%% \end{center}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%Compiler from JML to BML%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Compiler from JML to BML}
+
+ \begin{frame}\frametitle{The JML2BML compiler}
+   \begin{itemize}
+         \item Independent  of any Java compiler
+	 \item Proof obligation preservation 
+	       in the case of non - optimizing Java compilation 
+   \end{itemize}
+   \end{frame}
+
+
+\begin{frame}\frametitle{Compilation process}
+     
+     \begin{itemize}
+         \item Java source file with JML specification 
+          \item Compilation of the Java source file (by a compiler which produces \texttt{Line\_Number\_table} and 
+ \texttt{Local\_Variable\_table})
+	    \item Compilation of ghost variables (declare those in user defined class attribute)
+	      %\item Desugaring of JML specification (heavy weight specification )
+		\item Linking phase (convert source names into bytecode names)
+		  \item Locating the points for intra method specification (e.g. find the correct place for loop invariants)
+		    \item Encoding the BML specification into user defined class attributes
+       \end{itemize}
+\end{frame}
+
+
+
+
+\section{BML verification}
+
+\begin{frame}\frametitle{Verification over bytecode and BML specifications}
+ \begin{itemize}
+   \item Development in the Jack tool \footnote{http://www-sop.inria.fr/everest/soft/Jack} of a
+         verification condition for a prototype version of BML 
+   \item  the official version of BML takes part in the European project Mobius  and is the first step in building a PCC framework
+           for complex security policies. An ongoing work in Mobius  is the development of a 
+	   verification condition generator for Java bytecode and BML 
+	   which will be based on the design principles of the esc/java\footnote{http://secure.ucd.ie/products/opensource/ESCJava2} and Jack tools
+\end{itemize}
+\end{frame}
+
+
+
+
+
+%\section{More}
+
+%% \begin{frame}\frametitle{Highlights in BML}
+%%   \begin{itemize}
+%% \item Bytecode cousin of Java Modeling Language (JML)
+%% \item Easy reading of specifications
+%% \item Specifications stored together with the class file
+%% \item Compiler for JML specifications defined
+%% \end{itemize}
+%% \end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Related work}
+
+\begin{frame}\frametitle{Related work}
+\begin{itemize}
+      \item The MRG project 
+      \item Bytecode logic developed by Fabian Bannwart  and  Peter M{\"u}ller
+      \item JVer verifies bytecode annotated with source code level specifications 
+      \item The Spec\# Programming system - tailored to C\# and the .NET intermediate language
+      \item The Extended Virtual Platform project
+\end{itemize}
+\end{frame}
+
+\section{Conclusion}
+
+
+
+
+\subsection{Directions for future work}
+
+\begin{frame} \frametitle{Future work. Tool support}
+ As part of the Mobius PCC framework, a tool set around BML  will be developed:
+   \begin{itemize}
+      \item  Extensions of the JML2BML compiler developed in JACK
+      \item BML viewer  and  editor
+      \item Tool for checking the well - typedness and structure of BML specifications
+      \item Verification condition generator using a guarded command language
+   \end{itemize}       
+\end{frame}
+
+
+
+
+\begin{frame}[shrink]\frametitle{Future work. Integrating BML in PCC for complex policies}
+\vspace{3cm}
+Differently from the traditional PCC, Mobius proposes an alternative PCC architecture which targets sophisticated functional and security requirements. 
+An implementation of such architecture will rely  on BML.
+
+
+%%  \begin{center}
+%%      \pgfimage{figs/PCC}
+%%  \end{center}
+\end{frame}
+
+\logo{} 
+
+\begin{frame}[shrink]\frametitle{Future work. Integrating BML in PCC for complex policies}
+
+ \begin{center}
+     \pgfimage{figs/toolset}
+ \end{center}
+
+\end{frame}
+
+\logo{\pgfuseimage{mobius_transparent}}
+\begin{frame}\frametitle{To know more about BML } 
+
+\vspace{2cm}
+%\begin{itemize}
+%\item \alert{Should I say my thesis ?} 
+The web page with the BML Reference Manual (under development)
+\begin{center}
+\texttt{http://www-sop.inria.fr/everest/BML}
+\end{center}
+%\end{itemize}
+\end{frame}
+
+%% \begin{frame}\frametitle{}
+%% \vspace{3cm}
+%% \hspace{2cm}
+%% \large{Questions?} 
+%% \end{frame}
+% \section{Conclusion}
+
+%% \begin{frame}\frametitle{Conclusion and future work}
+%% \begin{itemize}
+%%      \item definition of Java bytecode  language BML - support for JML level 0, support a syntax close to the Java bytecode 
+           
+%%      \item compiler from JML to BML specifications
+%%      \item this work is  part of the European project Mobius and is the first step in building a PCC framework
+%%            for complex security policies
+     
+   
+%% \end{itemize}
+%% \end{frame}
+
+
+
+
+%% \begin{frame}[fragile,shrink]\frametitle{JML.Example}
+%%   \begin{lstlisting}[language=java]
+%% //@ requires k >= 0 ;
+%% //@ ensures \result == k*(k+1)/2;
+%% public int sum (int k) {
+%%   int sum = 0;		
+%%   //@loop_modifies sum,i;
+%%   //@loop_invariant i >= 0 && i<=k && 
+%%   //@               sum == i*(i+1)/2;
+%%   for  (int i = 0; i < k; i++ ) {
+%%     sum = sum + i;
+%%   } 	
+%%   return sum;
+%% }
+%% \end{lstlisting} 
+%% \end{frame}
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%CONTRIBUTIONS%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+%% \begin{frame}[fragile,shrink]\frametitle{Example}
+%% \begin{columns}
+%% \begin{column}{5.1cm}
+%% {\tiny
+%% \begin{lstlisting}[language=java]
+%% //@requires k >= 0 ;
+%% //@ensures  \result == k*(k+1)/2;
+%% public int sum (int k) {
+%%   int sum = 0;		
+%%   //@loop_modifies  sum,i;
+%%   //@loop_invariant i >= 0 && i<=k && 
+%%   //@(sum == i*(i+1)/2);
+%%   for  (int i = 0; i < k; i++ ) {
+%%     sum = sum + i;
+%%   } 	
+%%   return sum;
+%% }
+%% \end{lstlisting}}
+%% \end{column}
+
+%% \begin{column}{5.1cm}
+%% {\tiny
+%% \begin{lstlisting}[language=jvmis]
+%% //@requires lv[1] >= 0;
+%% //@ensures result == lv[1]*(lv[1] + 1)/2;
+%% Loop specification
+%% //@atIndex 14 
+%% //@modifies  lv[2], lv[3]
+%% //@invariant lv[3]>=0 && lv[3]<=lv[1] &&
+%% //@    lv[2]==lv[3]*(lv[3]+1)/2
+%% 0 iconst_0
+%% 1 istore_2
+%% 2 iconst_0
+%% 3 istore_3
+%% 4 goto 14 
+%% 7 iload_2
+%% 8 iload_3
+%% 9 iadd
+%% 10 istore_2 
+%% 11 iinc 3 
+%% 14 iload_3
+%% 15 iload_1
+%% 16 if_icmplt 7 
+%% 19 iload_2
+%% 20 ireturn
+%% \end{lstlisting}}
+%% \end{column}
+%% \end{columns}
+%% \end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%VC gen%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+
+
+\end{document}
+
