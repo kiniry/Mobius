@@ -133,7 +133,6 @@ public abstract class NewProver {
       @           \result == ProverResponse.SYNTAX_ERROR ||
       @           \result == ProverResponse.PROGRESS_INFORMATION ||
       @           \result == ProverResponse.TIMEOUT ||
-      @           \result == ProverResponse.NO ||
       @           \result == ProverResponse.FAIL;
       @*/
 
