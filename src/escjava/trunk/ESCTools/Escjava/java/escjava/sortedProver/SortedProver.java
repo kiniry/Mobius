@@ -127,28 +127,23 @@ public abstract class SortedProver
      * its axioms, and the current set of assumptions.
      *
      * @param formula the formula to check.
+     * @param callback the callbacks that will be called during the search
      * @param properties a set of hints, primarily resource bounds on
      * this validity check.
      * @return a response code.
-     *
-     * @design kiniry 30 June 2004 - Possible alternative names for this
-     * method include check(), isEntailed(), isAnEntailedModelOf().
-     * I prefer isValid().
      */
     /*@   requires started;
       @   ensures \result == ProverResponse.YES ||
       @           \result == ProverResponse.NO ||
-      @           \result == ProverResponse.COUNTER_EXAMPLE ||
       @           \result == ProverResponse.SYNTAX_ERROR ||
-      @           \result == ProverResponse.PROGRESS_INFORMATION ||
       @           \result == ProverResponse.TIMEOUT ||
       @           \result == ProverResponse.FAIL;
       @*/
 
-    public abstract /*@ non_null @*/ ProverResponse isValid(/*@ non_null @*/ SPred formula,
-							     Properties properties);
-    
-    public abstract String[] getLabels();
+    public abstract /*@ non_null @*/ ProverResponse isValid(
+    		    /*@ non_null @*/ SPred formula,
+    			/*@ non_null @*/ SortedProverCallback callback,
+    			/*@ non_null @*/ Properties properties);
     
     /**
      * Stop the prover.

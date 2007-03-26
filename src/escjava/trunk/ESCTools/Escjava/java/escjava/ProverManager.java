@@ -7,12 +7,15 @@ import escjava.prover.*;
 import escjava.sortedProver.Lifter;
 import escjava.sortedProver.SimplifyProver;
 import escjava.sortedProver.SortedProver;
+import escjava.sortedProver.SortedProverCallback;
+import escjava.sortedProver.NodeBuilder.SPred;
 import escjava.translate.VcToString;
 import javafe.ast.ASTNode;
 import javafe.ast.Expr;
 import javafe.util.Assert;
 import javafe.util.FatalError;
 import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Properties;
 
@@ -242,36 +245,36 @@ public class ProverManager {
       if (listener != null) listener.stateChanged(2);
       try {
     	  if (useSorted) {
-    		  ProverResponse resp = sortedProver.isValid(lifter.convert(vc), new Properties());
-    		  
-    		  String[] labels = sortedProver.getLabels(); 
-    		  SList slabels = null;
-    		  if (labels != null) {
-    			  SExp[] labels2 = new SExp[labels.length];
-    			  for (int i = 0; i < labels.length; ++i)
-    				  labels2[i] = SExp.fancyMake(labels[i]);
-    			  slabels = SList.fromArray(labels2);
-    		  }
+    		  final ArrayList responses = new ArrayList();
+    		  SortedProverCallback cb = new SortedProverCallback() {
+    			  public SPred counterExample(String[] labels)
+    			  {
+    				  SExp[] labels2 = new SExp[labels.length];
+    				  for (int i = 0; i < labels.length; ++i)
+    					  labels2[i] = SExp.fancyMake(labels[i]);
+    				  responses.add (
+    						  new SimplifyResult(SimplifyOutput.COUNTEREXAMPLE, 
+    								  SList.fromArray(labels2), null));
+    				  return null;    				  
+    			  }
     			  
-    		  SimplifyOutput tmp = null;
-    		  if (resp == ProverResponse.YES)
-    			  tmp = new SimplifyOutput(SimplifyOutput.VALID);
-    		  else if (resp == ProverResponse.COUNTER_EXAMPLE) {
-    			  tmp = new SimplifyResult(SimplifyOutput.COUNTEREXAMPLE, slabels, null);
-    		  } else {
-    			  tmp = new SimplifyResult(SimplifyOutput.INVALID, slabels, null);
-    		  }
+    			  public boolean progressIndication(int cfls, int eta)
+    			  {
+    				  return true;
+    			  }
+    		  };
     		  
-    		  final SimplifyOutput res = tmp;
+    		  ProverResponse resp = sortedProver.isValid(lifter.convert(vc), cb, new Properties());
+    		  responses.add(new SimplifyOutput(
+    				  resp == ProverResponse.YES ? SimplifyOutput.VALID
+    						  : SimplifyOutput.INVALID));
     		  
     		  return new Enumeration() {
-    			  SimplifyOutput current = res;    			  
-    			  public boolean hasMoreElements() {  return (current != null); }
+    			  int pos = 0;    			  
+    			  public boolean hasMoreElements() {  return (pos < responses.size()); }
     			  public Object nextElement() {
-    				  if (current == null) throw new java.util.NoSuchElementException();
-    				  Object value = current;
-    				  current = null;
-    				  return value;
+    				  if (pos >= responses.size()) throw new java.util.NoSuchElementException();
+    				  return responses.get(pos++);
     			  }
     		  };
     	  } else {

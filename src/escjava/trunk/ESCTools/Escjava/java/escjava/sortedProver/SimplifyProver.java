@@ -79,19 +79,17 @@ public class SimplifyProver extends SortedProver
 		return ProverResponse.OK;
 	}
 	
-	String[] labels;
-
-	public ProverResponse isValid(SPred formula, Properties properties)
+	public ProverResponse isValid(SPred formula, SortedProverCallback callback, Properties properties)
 	{
-		labels = null;
 	    simpl.startProve();
 	    String form = formulaToString(formula);
 	    if (Info.on)
 	    	Info.out("[proving formula\n" + form + "]");
 	    simpl.subProcessToStream().println(form);
         Enumeration en = simpl.streamProve();
+        int cc = 0;
         
-        SimplifyOutput lastOut = null;        
+        SimplifyOutput lastOut = null; 
         while (en.hasMoreElements()) {
         	lastOut = (SimplifyOutput) en.nextElement();
         	
@@ -99,12 +97,12 @@ public class SimplifyProver extends SortedProver
         		SList labs = ((SimplifyResult)lastOut).getLabels();
         		if (labs != null) {
         			SExp[] lst = labs.toArray();
-        			labels = new String[lst.length];
+        			String[] labels = new String[lst.length];
         			for (int i = 0; i < lst.length; ++i)
         				labels[i] = lst[i].toString();
+        			SPred hint = callback.counterExample(labels);
+        			// we ignore any possible hint returned
         		}
-        		
-        		return ProverResponse.COUNTER_EXAMPLE;
         	}
         }
         
@@ -119,10 +117,5 @@ public class SimplifyProver extends SortedProver
 		started = false;
 		simpl.close();
 		return ProverResponse.OK;
-	}
-
-	public String[] getLabels()
-	{
-		return labels;
 	}
 }

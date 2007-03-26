@@ -127,11 +127,17 @@ public class SimplifyNodeBuilder extends EscNodeBuilder
 
 	public SPred buildPredCall(PredSymbol fn, SAny[] args)
 	{
-		// defpreds.add(fn);
+		if (fn == symRefNE || fn == symTypeNE) 
+			return sx("NEQ", args);
 		
-		if (fn == symAllocLT || fn == symAllocLE || fn == symTypeLE)
+		else if (fn == symRefEQ || fn == symTypeEQ) 
+			return sx("EQ", args);
+		
+		if (fn == symAllocLT || fn == symAllocLE || fn == symTypeLE || fn == symArrayFresh ||
+				fn == symIsAllocated)
 			return sx(fn.name, args);
 			
+		// defpreds.add(fn);
 		return sx("EQ", sx(fn.name, args), trueConst);
 	}
 

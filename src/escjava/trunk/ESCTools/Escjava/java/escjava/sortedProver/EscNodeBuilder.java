@@ -68,7 +68,7 @@ public abstract class EscNodeBuilder extends NodeBuilder
 	public FnSymbol symUnset = registerFnSymbol("unset", new Sort[] { sortArrayValue, sortInt, sortInt }, sortArrayValue, TagConstants.UNSET);
 	
 	// stuff unhandled by the T* interface
-	public FnSymbol symArray = registerFnSymbol("array", new Sort[] { sortType }, sortType);	
+	public FnSymbol symArray = registerFnSymbol("_array", new Sort[] { sortType }, sortType);	
     public FnSymbol symIntern = registerFnSymbol("|intern:|", new Sort[] { sortInt, sortInt }, sortString, TagConstants.INTERN);
     public PredSymbol symInterned = registerPredSymbol("|interned:|", new Sort[] { sortString }, TagConstants.INTERNED);
     public FnSymbol symStringCat = registerFnSymbol("stringCat", new Sort[] { sortString, sortString, sortTime }, sortString, TagConstants.STRINGCAT);

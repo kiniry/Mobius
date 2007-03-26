@@ -464,7 +464,7 @@ public class Lifter extends EscNodeBuilder
 				return dumpBuilder.buildIsTrue(
 						(SBool)dumpBuilder.buildValueConversion(
 								dumpBuilder.sortValue, dumpBuilder.sortBool, 
-								args[0].dumpBool()));
+								args[0].dumpValue()));
 			
 			if (fn == symPredToBool)
 				return dumpBuilder.buildITE(args[0].dumpPred(),
@@ -1250,19 +1250,9 @@ public class Lifter extends EscNodeBuilder
 			TypeExpr m = (TypeExpr) n;
 			return transform(m.type);
 			
-		} else if (n instanceof TypeName) { // javafe/Type
-			// this represents a type			
-			TypeName m = (TypeName) n;
-			String s = m.name.printName();
-			
-			Assert.notFalse(s != null, 
-					"case n instanceof TypeName, warning null reference not expected");
-			
-			return symbolRef(s, sortType);
-			
-		} else if (n instanceof TypeSig) {
-			TypeSig m = (TypeSig) n;
-			return symbolRef(m.getExternalName(), sortType);
+		} else if (n instanceof Type) { // javafe/Type
+			Type t = (Type) n;
+			return symbolRef(UniqName.type(t), sortType);
 			
 		} else if (n instanceof VariableAccess) {
 			VariableAccess m = (VariableAccess) n;
@@ -1434,6 +1424,7 @@ public class Lifter extends EscNodeBuilder
 		private void saySubClass( Type x, Type y,
 				/*@ non_null */ PrintStream proverStream ) 
 		{
+			saySubType( x, y, proverStream );
 			Term tx = transform(x), ty = transform(y);
 			say(fn(symAnyEQ, fn(symAsChild, tx, ty), tx));
 		}
