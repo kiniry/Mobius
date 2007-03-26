@@ -154,6 +154,7 @@ fi
 
 ## (Optional) Supply a definition for JAVA if you want to use a different VM
 : ${JAVA:=java}
+export JAVA
 
 # (Optional) If no standard arguments are set, set some escjava defaults for now.
 if [ -z "$ESCJ_STDARGS" ]; then
@@ -168,6 +169,7 @@ fi
 # value of CLASSPATH set in the environment.  If that is not set, the
 # default is the current directory.
 : ${CLASSPATH:=.}
+export CLASSPATH
 
 if [ -z "$ESC_SPECS" ]; then
     if [ -n "$ESCTOOLS_RELEASE" ]; then
@@ -179,10 +181,12 @@ fi
 
 ## (Optional) Set this to whatever flags the VM needs (empty by default)
 : ${JAVA_VM_FLAGS=""}
+export JAVA_VM_FLAGS
 
 ## (Optional) Define ESC_REMOTE_DEBUG to something non-empty to provide 
 ## the flags for debugging a run of escjava
 : ${JAVA_VM_DEBUG_FLAGS:="-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,address=8000,server=y,suspend=y"}
+export JAVA_VM_DEBUG_FLAGS
 
 if [ -n "$ESC_REMOTE_DEBUG" ]; then
     JAVA_VM_FLAGS="$JAVA_VM_DEBUG_FLAGS $JAVA_VM_FLAGS"
@@ -213,6 +217,7 @@ fi
 ## Simplify settings
 : ${PROVER_KILL_TIME:=300}
 : ${PROVER_CC_LIMIT:=10}
+export PROVER_KILL_TIME PROVER_CC_LIMIT
 
 # ESC/Java's class and spec path.
 if [ -n "$COMSPEC" ]; then 
