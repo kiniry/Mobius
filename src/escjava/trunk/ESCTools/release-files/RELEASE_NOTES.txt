@@ -1,9 +1,9 @@
 -------------------------------------------------------------------
-version 2.0b0 "Mobius PVE Internal Release" (1 October 2006)
+version 2.0b0 "Mobius PVE Internal Release" (2 October 2006)
 
 As we are now moving into beta releases, we will focus on fixing bugs
 and writing documentation and will not add any new major features to
-ESC/Java2.  Thus, the bug list below s relatively large, but should
+ESC/Java2.  Thus, the bug list below is relatively large, but should
 shrink significantly over time.
 
 Note also that we plan on having much more regular releases now that
