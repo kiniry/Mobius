@@ -96,7 +96,7 @@ public final class ErrorMsg
 		out.println();
 	    }     
 
-	    if (Info.on || Main.options().pcc) {
+	    if (counterexampleContext != null && (Info.on || Main.options().pcc)) {
 		Assert.notFalse(counterexampleContext.length() > 1 &&
 				counterexampleContext.at(0).toString().equals("AND"));
 		out.println("Full counterexample context:");
