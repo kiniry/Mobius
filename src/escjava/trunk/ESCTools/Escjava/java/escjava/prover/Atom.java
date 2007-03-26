@@ -156,9 +156,10 @@ final public class Atom extends SExp {
     boolean identifier = true;
     for (int i=0; i<symbol.length(); i++) {
       char c = symbol.charAt(i);
-      if ((c>='a' && c<='z') || (c>='A' && c<='Z') || (c=='_'))
+      if ((c>='a' && c<='z') || (c>='A' && c<='Z'))
         continue;
-      if (c>='0' && c<='9' && i>0)
+      // Simplify doesn't like ids starting with _
+      if ((c>='0' && c<='9') || (c=='_') && i>0)
         continue;
       identifier = false; break;
     }
