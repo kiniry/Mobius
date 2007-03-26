@@ -54,7 +54,7 @@ public class Lifter extends EscNodeBuilder
 	public Lifter(EscNodeBuilder b)
 	{
 		builder = b;
-	}
+	} 
 	
 	public SPred generateBackPred(/*@ non_null */ FindContributors scope)
 	{

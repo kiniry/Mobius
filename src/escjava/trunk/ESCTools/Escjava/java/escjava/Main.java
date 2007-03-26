@@ -577,8 +577,11 @@ public class Main extends javafe.SrcTool
 	    // ==== Start stage 3 ====
 	    if (3 <= stages) {
 
-		if (6 <= stages || options().predAbstract)
+		if (6 <= stages || options().predAbstract) {
+			if (options().tvcg)
+				ProverManager.kill();
 		    ProverManager.push(scope);
+		}
 
 		LabelInfoToString.reset();
 		InitialState initState = new InitialState(scope);

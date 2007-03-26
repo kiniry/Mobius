@@ -54,7 +54,7 @@ public class SimplifyNodeBuilder extends EscNodeBuilder
 			} else {
 				sb.append("(").append(head);
 				int limit = LIMIT - ind;
-				if (ind < 0 || length(limit) <= limit) {
+				if (ind < 0 || length(limit) <= limit /*|| head.equals("FORALL")*/) {
 					for (int i = 0; i < args.length; ++i) {
 						sb.append(" ");
 						args[i].dump(-1, sb);
@@ -70,6 +70,25 @@ public class SimplifyNodeBuilder extends EscNodeBuilder
 				sb.append(")");
 			}
 			if (ind >= 0) sb.append("\n");
+		}
+		
+		
+		Sx toBoolFn()
+		{
+			String h;
+			if (head == "AND") h = "boolAnd";
+			else if (head == "OR") h = "boolOr";
+			else if (head == "NOT") h = "boolNot";
+			else if (head == "IFF") h = "boolEq";
+			else if (head == "IMPLIES") h = "boolImplies";
+			else if (head == "NEQ") h = "refNE";
+			else if (head == "EQ") h = "refEQ";
+			else h = head;
+			
+			Sx[] a = new Sx[args.length];
+			for (int i = 0; i < a.length; ++i)
+				a[i] = args[i].toBoolFn();
+			return new Sx(h, a);
 		}
 	}
 	
@@ -134,7 +153,7 @@ public class SimplifyNodeBuilder extends EscNodeBuilder
 			return sx("EQ", args);
 		
 		if (fn == symAllocLT || fn == symAllocLE || fn == symTypeLE || fn == symArrayFresh ||
-				fn == symIsAllocated)
+				fn == symIsAllocated || fn == symIs)
 			return sx(fn.name, args);
 			
 		// defpreds.add(fn);
@@ -155,8 +174,7 @@ public class SimplifyNodeBuilder extends EscNodeBuilder
 
 	public SValue buildITE(SPred cond, SValue then_part, SValue else_part)
 	{
-		// TODO: this is probably wrong
-		return sx("termConditional", new STerm[] { cond, then_part, else_part });
+		return sx("termConditional", new STerm[] { ((Sx)cond).toBoolFn (), then_part, else_part });
 	}
 
 	public SPred buildForAll(QuantVar[] vars, SPred body, STerm[][] pats,
@@ -247,7 +265,7 @@ public class SimplifyNodeBuilder extends EscNodeBuilder
 		default: Assert.fail(""); sym = null;
 		}
 		
-		return sx(sym, arg1, arg2);
+		return sx("EQ", sx(sym, arg1, arg2), trueConst);
 	}
 
 	public SReal buildRealFun(int realFunTag, SReal arg1, SReal arg2) 

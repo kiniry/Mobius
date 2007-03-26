@@ -144,7 +144,7 @@ public class ProverManager {
       cvc3 = null;
     }
     
-    if (useSorted) {
+    if (useSorted && sortedProver != null) {
     	sortedProver.stopProver();
     	sortedProver = null;
     }
@@ -211,6 +211,8 @@ public class ProverManager {
     start();
     if (useSorted) {
     	sortedProver.makeAssumption(lifter.generateBackPred(scope));
+        savedScope = scope;
+        status = PUSHED;
     }
     else if (simplify != null) {
       PrintStream ps = simplify.subProcessToStream();
@@ -301,7 +303,7 @@ public class ProverManager {
    */
   synchronized
   static public void pop() {
-	  if (useSorted)
+	  if (sortedProver != null)
 		  sortedProver.retractAssumption(1);
 	  else  if (simplify != null)
 		  simplify.sendCommand("(BG_POP)");
