@@ -133,7 +133,7 @@ public class TagConstants extends javafe.ast.TagConstants
         //alx: dw special case for IMPL_PEER, it isn't a keyword
         if (code==TagConstants.IMPL_PEER)
         	return "[peer]";
-	//alx-end
+        //alx-end
 
         return "Tag unknown to javafe.parser.TagConstants <" + code 
             + " (+" + (code - javafe.ast.TagConstants.LAST_TAG) + ") >";
@@ -206,10 +206,10 @@ public class TagConstants extends javafe.ast.TagConstants
         "package", "private", "protected", "public", "return",
         "short", "static", "strictfp", "super", "switch", "synchronized", "this",
         "throw", "throws", "transient", "true", "try", "void", "volatile", 
-	//alx: dw added rep, peer & readonly
-	"rep", "peer", "readonly", 
-	//alx-end
-	"while"
+        //alx: dw added rep, peer & readonly
+        "rep", "peer", "readonly", 
+        //alx-end
+        "while"
     };
 
     //@ invariant \nonnullelements(otherStrings);
@@ -219,7 +219,7 @@ public class TagConstants extends javafe.ast.TagConstants
         "CHARLIT", "INTLIT", "2147483648",
         "LONGLIT", "9223372036854775808L", "FLOATLIT", "DOUBLELIT", "STRINGLIT",
         "LEXICALPRAGMA", "MODIFIERPRAGMA", "POSTMODIFIERPRAGMA",
-	"STMTPRAGMA", "TYPEDECLELEMPRAGMA", 
+        "STMTPRAGMA", "TYPEDECLELEMPRAGMA", 
         "TYPEMODIFIERPRAGMA", "EOF"
     };
 
@@ -230,7 +230,7 @@ public class TagConstants extends javafe.ast.TagConstants
         CHARLIT, INTLIT, MAX_INT_PLUS_ONE,
         LONGLIT, MAX_LONG_PLUS_ONE, FLOATLIT, DOUBLELIT, STRINGLIT,
         LEXICALPRAGMA, MODIFIERPRAGMA, POSTMODIFIERPRAGMA,
-	STMTPRAGMA, TYPEDECLELEMPRAGMA,
+        STMTPRAGMA, TYPEDECLELEMPRAGMA,
         TYPEMODIFIERPRAGMA, EOF
     };
 
