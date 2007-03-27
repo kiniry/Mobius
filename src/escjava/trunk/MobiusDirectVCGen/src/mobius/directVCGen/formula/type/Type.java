@@ -144,11 +144,27 @@ public class Type implements IFormula{
 		return tType;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see mobius.directVCGen.formula.IFormula#get(int)
+	 */
 	public IFormula get(int index) {
 		return null;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see mobius.directVCGen.formula.IFormula#set(int, mobius.directVCGen.formula.IFormula)
+	 */
 	public void set(int slot, IFormula f) {
 		
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see mobius.directVCGen.formula.IFormula#size()
+	 */
+	public int size() {
+		return 0;
 	}
 }
