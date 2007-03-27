@@ -12,4 +12,5 @@ public interface INumVisitor extends IBoolVisitor {
 	public void visitNMinus(NMinus nm) throws FormulaException;
 	public void visitNMod(NMod nm) throws FormulaException;
 	public void visitNMult(NMult nm) throws FormulaException;
+	public void visitNSub(NSub ns) throws FormulaException;
 }

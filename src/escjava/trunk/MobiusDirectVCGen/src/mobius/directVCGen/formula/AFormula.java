@@ -95,5 +95,9 @@ public abstract class AFormula implements IFormula {
 			throw new TypeErrorException("The return type is " + getType() + " instead of " + t);
 		}
 	}
+	
+	public int size() {
+		return fArgs.size();
+	}
 
 }

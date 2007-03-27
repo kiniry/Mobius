@@ -28,4 +28,7 @@ public abstract class ANumVisitor extends ABoolVisitor
 	public void visitNMult(NMult nm) throws FormulaException {
 		visitChildren(nm);
 	}
+	public void visitNSub(NSub ns) throws FormulaException {
+		visitChildren(ns);
+	}
 }

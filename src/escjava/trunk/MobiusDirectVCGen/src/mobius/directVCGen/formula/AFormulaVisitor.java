@@ -18,7 +18,11 @@ public abstract class AFormulaVisitor implements IFormulaVisitor {
 		}
 	}
 	
-	public void visitDummyFormula(DummyFormula df) throws FormulaException {
+	/*
+	 * (non-Javadoc)
+	 * @see mobius.directVCGen.formula.IFormulaVisitor#visitDummyFormula(mobius.directVCGen.formula.IFormula)
+	 */
+	public void visitDummyFormula(IFormula df) throws FormulaException {
 		visitChildren(df);
 	}
 
