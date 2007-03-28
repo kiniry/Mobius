@@ -232,10 +232,10 @@ public class CFD  {
     
     // Adds all nodes reachable from [n] (children) to [graphNodes].
     /*@ public normal_behavior
-      @   assignable graphNodes.objectState; 
       @   requires n != null;
       @   requires graphNodes != null;
       @   requires \type(Node) <: graphNodes.elementType;
+      @   assignable graphNodes.objectState;
       @   ensures graphNodes.contains(n);
       */
     private void collectNodes(Node n, List graphNodes) {

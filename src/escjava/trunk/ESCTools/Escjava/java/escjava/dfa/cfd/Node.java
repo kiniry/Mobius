@@ -58,7 +58,7 @@ public abstract class Node {
      * @return variable scope for this node represented as a variable
      *         declaration vector
      */
-    /*@ pure @*/ public /*@ pure @*/ GenericVarDeclVec  getScope() {
+    /*@ pure @*/ public /*@ non_null @*/ GenericVarDeclVec  getScope() {
         return this.scope;
     }
 
