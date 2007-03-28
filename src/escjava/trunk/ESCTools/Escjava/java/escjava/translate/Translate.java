@@ -3581,6 +3581,9 @@ public final class Translate
       case TagConstants.GHOST:
       case TagConstants.NON_NULL:		// handled above
       case TagConstants.NULLABLE:
+      case TagConstants.PEER:  // new Universes modifiers must be ignored (see bug 103)
+      case TagConstants.READONLY:
+      case TagConstants.REP:
         break;
 
       case TagConstants.MODEL:
