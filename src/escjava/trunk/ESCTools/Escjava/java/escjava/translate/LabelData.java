@@ -121,7 +121,7 @@ public class LabelData implements Comparable {
         return r;
     }
 
-    public/* @non_null */String toString() {
+    public/*@ non_null */String toString() {
         String r = msgShort;
         char openC = '[', closeC = ']';
         
@@ -132,7 +132,7 @@ public class LabelData implements Comparable {
         return r;
     }
 
-    public int compareTo(Object o) {
+    public int compareTo(/*@ non_null @*/Object o) {
         LabelData ld = (LabelData) o;
 
         // prone to overflow!
