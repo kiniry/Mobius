@@ -10,28 +10,30 @@ import escjava.ast.GenericVarDeclVec;
  * This class represents a coupling node in control flow diagram.
  */
 public class CouplingNode extends Node {
-    public CouplingNode() {
-        super(GenericVarDeclVec.make(0));
+
+    
+    public CouplingNode(GenericVarDeclVec scope) {
+        super(scope);
     }
 
-    public void accept(NodeVisitor nodeVisitor) {
+    public void accept(/*@ non_null @*/NodeVisitor nodeVisitor) {
         nodeVisitor.visitCouplingNode(this);
     }
 
-    public Expr computeSp(Expr pre) {
+    public /*@ non_null @*/ Expr computeSp(/*@ non_null @*/Expr pre) {
         return (Expr)pre.clone();
     }
     
-    public String toString() {
-     return "[coupling node]";
+    public/*@ non_null */String toString() {
+        return "[coupling node]";
     }
 
-    void printToDot(Writer dot) throws IOException {
+    void printToDot(/*@ non_null @*/Writer dot) throws IOException {
         dot.write("" + hashCode() + "[shape=point, width=0.15];\n");
     }
 
     public Node shallowCopy() {
-        return new CouplingNode();
+        return new CouplingNode(this.scope.copy());
     }
 
    

@@ -4,6 +4,7 @@ package escjava.dfa.daganalysis;
  * Created on Mar 16, 2006
  */
 
+import java.util.HashMap;
 import java.util.Hashtable;
 
 import org.apache.tools.ant.taskdefs.condition.IsSet;
@@ -50,6 +51,15 @@ public class AlgebraUtils {
         }
         return retv;
     }
+    
+    public static boolean contains(GenericVarDeclVec varVec, GenericVarDecl var) {
+        for (int i = 0; i < varVec.size(); i++) {
+            GenericVarDecl vi = varVec.elementAt(i);
+            if (vi.id.equals(var.id) && vi.locId == var.locId) 
+                return true;
+        }
+        return false;
+    }
 
     public static boolean contains(/*@ non_null @*/ExprVec ev, /*@ non_null @*/Expr e) {
         for (int i = 0; i < ev.size(); i++) {
@@ -91,8 +101,7 @@ public class AlgebraUtils {
         return subset(vec1, vec2) && subset(vec2, vec1);
     }
 
-    public static boolean intersect(GenericVarDeclVec vec1,
-            GenericVarDeclVec vec2) {
+    public static boolean intersect(GenericVarDeclVec vec1, GenericVarDeclVec vec2) {
         for (int i = 0; i < vec1.size(); i++) {
             GenericVarDecl decl1 = vec1.elementAt(i);
             if (vec2.contains(decl1))
@@ -415,16 +424,38 @@ public class AlgebraUtils {
         return retv;
     }
 
+    private static boolean complementaryNary(int tag1, int tag2) {        
+         final int[][] complementary = 
+           { {TagConstants.ANYEQ, TagConstants.ANYNE },
+             { TagConstants.INTEGRALEQ, TagConstants.INTEGRALNE}, 
+             { TagConstants.REFEQ, TagConstants.REFNE},
+             { TagConstants.FLOATINGEQ, TagConstants.FLOATINGNE }
+             };
+         for (int i = 0; i < complementary.length; i++) {
+             if (complementary[i][0] == tag1)
+                 return complementary[i][1] == tag2;
+             if (complementary[i][0] == tag2)
+                 return complementary[i][1] == tag1;             
+         }
+         
+         return false;         
+    }
+    
     public static boolean isComplementary(Expr e1, Expr e2) {
+        
+        if (complementaryNary(e1.getTag(), e2.getTag())) {
+            ExprVec ev1 = ((NaryExpr) e1).exprs;
+            ExprVec ev2 = ((NaryExpr) e2).exprs;
+            return  isSame(ev1, ev2);
+            }
+            
         if (e1.getTag() == TagConstants.BOOLNOT) {
             NaryExpr nex = (NaryExpr) e1;
             e1 = nex.exprs.elementAt(0);
-            e2 = e2;
         } else {
             if (e2.getTag() == TagConstants.BOOLNOT) {
                 NaryExpr nex = (NaryExpr) e2;
                 e2 = nex.exprs.elementAt(0);
-                e1 = e1;
             } else {
                 return false;
             }
@@ -504,7 +535,7 @@ public class AlgebraUtils {
      *         expression is a boolean literal with the given value
      */
     public static boolean isBooleanLiteral(Expr expr, boolean value) {
-        Expr stripped = stripOffLabels(expr);
+        expr = stripOffLabels(expr);
         if (expr instanceof LiteralExpr) {
             LiteralExpr le = (LiteralExpr) expr;
             Object storedValue = le.value;
@@ -557,7 +588,7 @@ public class AlgebraUtils {
      */
     public static boolean usesVar(GenericVarDecl varDecl, Expr e) {
         GenericVarDeclVec eVars = getVars(e);
-        return eVars.contains(varDecl);
+        return contains(eVars, varDecl);
     }
 
     static void remove(GenericVarDeclVec a, GenericVarDeclVec b) {
@@ -681,12 +712,36 @@ public class AlgebraUtils {
         }
     }
 
+    
+    
     static void setAppend(ExprVec ev, ExprVec appendix) {
         for (int i = 0; i < appendix.size(); i++) {
             Expr e = appendix.elementAt(i);
             setAdd(e, ev);
         }
     }
+    
+    
+   public static void setAdd(GenericVarDecl vd, GenericVarDeclVec vdVec) {
+       boolean alreadyThere = false;
+       for (int i = 0; i < vdVec.size(); i++) {
+           if (vdVec.elementAt(i).id.equals(vd.id)) {
+               alreadyThere = true;
+               break;
+           }
+       }
+       if (!alreadyThere) {
+           vdVec.addElement(vd);
+       }
+   }
+   
+   public static void setAppend(GenericVarDeclVec vdVec, GenericVarDeclVec appendix) {
+       for (int i = 0; i < appendix.size(); i++) {
+           GenericVarDecl vd = appendix.elementAt(i);
+           setAdd(vd, vdVec);
+       }
+   }
+  
 
     public static ExprVec join(ExprVec ev1, ExprVec ev2) {
         ExprVec retv = ExprVec.make();
@@ -784,12 +839,12 @@ public class AlgebraUtils {
      * Compares two expression vectors using <code>isSame</code> method to
      * compare the elements .
      */
-    public static boolean isSame(ExprVec v1, ExprVec v2) {
+    private static boolean isSame(ExprVec v1, ExprVec v2, HashMap varBinding) {
         if (v1.size() != v2.size())
             return false;
 
         for (int i = 0; i < v1.size(); i++) {
-            boolean areSame = isSame(v1.elementAt(i), v2.elementAt(i));
+            boolean areSame = isSame(v1.elementAt(i), v2.elementAt(i), varBinding);
             if (!areSame) {
                 return false;
             }
@@ -798,30 +853,38 @@ public class AlgebraUtils {
         return true;
     }
 
-    public static boolean isSameNullSafe(ExprVec p1, ExprVec p2) {
+    private static boolean isSameNullSafe(ExprVec p1, ExprVec p2, HashMap varBinding) {
         if ((p1 == null && p2 != null) || (p1 != null && p2 == null)) {
             return false;
         } else {
             // either both non-null or both null
-            if (p1 != null && p2 != null && !isSame(p1, p2))
+            if (p1 != null && p2 != null && !isSame(p1, p2, varBinding))
                 return false; // both non-null but different
         }
         return true;
     }
 
-    public static boolean isSameNullSafe(Expr p1, Expr p2) {
+    private static boolean isSameNullSafe(Expr p1, Expr p2, HashMap varBinding) {
         if ((p1 == null && p2 != null) || (p1 != null && p2 == null)) {
             return false;
         } else {
             // either both non-null or both null
-            if (p1 != null && p2 != null && !isSame(p1, p2))
+            if (p1 != null && p2 != null && !isSame(p1, p2, varBinding))
                 return false; // both non-null but different
         }
 
         return true;
     }
-
+    
+    public static boolean isSame(ExprVec ev1, ExprVec ev2) {
+      return isSame(ev1, ev2, new HashMap());    
+    }
+    
     public static boolean isSame(Expr p1, Expr p2) {
+      return isSame(p1, p2, new HashMap());
+    }
+
+    public static boolean isSame(Expr p1, Expr p2, HashMap varBinding) {
         p1 = stripOffLabels(p1);
         p2 = stripOffLabels(p2);
 
@@ -833,12 +896,18 @@ public class AlgebraUtils {
                     && (p2 instanceof VariableAccess)) {
                 VariableAccess va1 = (VariableAccess) p1;
                 VariableAccess va2 = (VariableAccess) p2;
-                retv = (va1.id).equals(va2.id);
+                GenericVarDecl va1Binding = (GenericVarDecl) varBinding.get(va1.decl);
+                retv = false;
+                if (va1Binding != null) {
+                    retv = va2.decl.id.equals(va1Binding.id) && (va2.decl.locId == va1Binding.locId);;
+                } else {
+                   retv = (va1.id).equals(va2.id) && (va1.decl.locId == va2.decl.locId);
+                }
             } else {
                 if (p1 instanceof NaryExpr && p2 instanceof NaryExpr) {
                     NaryExpr n1 = (NaryExpr) p1;
                     NaryExpr n2 = (NaryExpr) p2;
-                    retv = (n1.op == n2.op) && isSame(n1.exprs, n2.exprs);
+                    retv = (n1.op == n2.op) && isSame(n1.exprs, n2.exprs, varBinding);
                 } else {
                     if (p1 instanceof TypeExpr && p2 instanceof TypeExpr) {
                         TypeExpr te1 = (TypeExpr) p1;
@@ -851,11 +920,19 @@ public class AlgebraUtils {
                             QuantifiedExpr q1 = (QuantifiedExpr) p1;
                             QuantifiedExpr q2 = (QuantifiedExpr) p2;
 
-                            retv = q1.quantifier == q2.quantifier
-                                    && setEquals(q1.vars, q2.vars)
-                                    && isSameNullSafe(q1.rangeExpr,
-                                            q2.rangeExpr)
-                                    && isSame(q1.expr, q2.expr);
+                            HashMap qBinding = (HashMap)varBinding.clone();
+                            GenericVarDeclVec vars1 = q1.vars;
+                            GenericVarDeclVec vars2 = q2.vars;
+                            
+                            if ((vars1.size() != vars2.size()) || (q1.quantifier != q2.quantifier)) {
+                                retv = false;
+                            } else {
+                                for (int i = 0; i < vars1.size(); i++) {
+                                    qBinding.put(vars1.elementAt(i), vars2.elementAt(i));
+                                }
+                                retv = isSameNullSafe(q1.rangeExpr, q2.rangeExpr, qBinding)
+                                        && isSame(q1.expr, q2.expr, qBinding);
+                            }
                         } else {
                             if (p1 instanceof BinaryExpr
                                     && p2 instanceof BinaryExpr) {
@@ -884,14 +961,17 @@ public class AlgebraUtils {
             }
         }
 
-        /*
-         * Debug print System.out.println("--- Comparing: ");
-         * PredicateAbstraction.printExpr(p1); System.out.println(",\n");
-         * PredicateAbstraction.printExpr(p2); System.out.println("\n");
-         * 
-         * if (retv) { System.out.println("---- Same"); } else {
-         * System.out.println("---- Different"); } End of debug print
-         */
+
+//         System.out.println("--- Comparing: ");
+//         printExpression(p1); System.out.println(",\n");
+//         printExpression(p2); System.out.println("\n");
+//         
+//         if (retv) {
+//            System.out.println("---- Same");
+//        } else {
+//            System.out.println("---- Different");
+//        } 
+//        
 
         return retv;
     }
@@ -932,7 +1012,7 @@ public class AlgebraUtils {
             return GC.truelit;
                     
         switch (e.getTag()) {
-        case TagConstants.AND: {
+        case TagConstants.BOOLAND: {
             NaryExpr and = (NaryExpr) e;
             ExprVec conj = and.exprs;
             ExprVec retv = ExprVec.make(conj.size());
@@ -1016,6 +1096,15 @@ public class AlgebraUtils {
         return implySimple(andSimple(lList), rh);       
     }
     
+    private static Expr pruneImplication(Expr expr) {
+      if (expr.getTag() == TagConstants.BOOLIMPLIES) {
+          ExprVec evec = ((NaryExpr) expr).exprs;
+          return pruneImplication(evec.elementAt(0), evec.elementAt(1));
+      } else
+          return expr;
+      
+    }
+    
     public static Expr pruneImplications(Expr expr) {
         Expr pred = stripOffLabels(expr);
 
@@ -1077,17 +1166,17 @@ public class AlgebraUtils {
 
     }
     
-    public static Expr vytkniAndFromOr_plunge(Expr o) {    
+    private static Expr vytkniAndFromOr_deep(Expr o) {    
         int tag = o.getTag();
         if (tag == TagConstants.BOOLOR)
-            return vytkniAndFromOr(o);
+            return factorAndFromOr(o);
 
         if (o instanceof NaryExpr) {
             NaryExpr ne = (NaryExpr) o;
             ExprVec oldVec = ne.exprs;
             ExprVec newVec = ExprVec.make(oldVec.size());
             for (int i = 0; i < oldVec.size(); i++) {
-                newVec.addElement(vytkniAndFromOr_plunge(oldVec.elementAt(i)));
+                newVec.addElement(vytkniAndFromOr_deep(oldVec.elementAt(i)));
             }
 
             NaryExpr retv = NaryExpr.make(ne.sloc, ne.eloc, ne.op, ne.methodName, newVec);
@@ -1100,6 +1189,7 @@ public class AlgebraUtils {
 
     public static Expr stripOffLabelsDeep(Expr e) {
         e = stripOffLabels(e);
+        
         if (e instanceof NaryExpr) {
             NaryExpr ne = (NaryExpr) e;
             ExprVec oldVec = ne.exprs;
@@ -1121,9 +1211,11 @@ public class AlgebraUtils {
         
         return e;
     }
+    
+    
 
     
-    public static Expr vytkniAndFromOr(Expr o) {
+    public static Expr factorAndFromOr(Expr o) {
         if (o.getTag() != TagConstants.BOOLOR)
             return o;
         
@@ -1149,10 +1241,12 @@ public class AlgebraUtils {
         
     }
     
-    static boolean isSymmetricBinary(int tag) {
+    static boolean isReflexiveBinary(int tag) {
         return (tag == TagConstants.ANYEQ) || 
-               (tag == TagConstants.INTEGRALEQ) || (tag == TagConstants.FLOATINGEQ) || 
+               (tag == TagConstants.FLOATINGEQ) ||
+               (tag == TagConstants.FLOATINGLE) ||
                (tag == TagConstants.INTEGRALEQ) ||
+               (tag == TagConstants.INTEGRALLE) ||
                (tag == TagConstants.REFEQ);    
     }
     
@@ -1181,7 +1275,7 @@ public class AlgebraUtils {
     
     static Expr normalizeEq(Expr p) {
         int tag = p.getTag();
-        if (isSymmetricBinary(tag)) {
+        if (isReflexiveBinary(tag)) {
             NaryExpr eq = (NaryExpr) p;
             ExprVec ev = eq.exprs;
             Expr e0 = ev.elementAt(0);
@@ -1206,6 +1300,8 @@ public class AlgebraUtils {
             return GC.truelit;
         }
         
+        disj = remove(disj, GC.falselit);
+        
         return GC.or(disj);
     }
     
@@ -1221,11 +1317,34 @@ public class AlgebraUtils {
         return andSimple(conj);
     }
     
+    public static Expr pruneAnd(Expr e) {
+        ExprVec conjs = flattenAnd(e);
+        ExprVec newConjs;
+        for (int i = 0; i < conjs.size(); i++) {
+            Expr conj = conjs.elementAt(i);
+            newConjs = ExprVec.make(conjs.size());
+            for (int k = 0; k < conjs.size(); k++) {
+                if (k == i) {
+                    newConjs.addElement(conj);
+                } else {
+                    newConjs.addElement(addFact(conj, conjs.elementAt(k)));
+                }                    
+            }
+            conjs = newConjs;
+        }
+        
+        return andSimple(conjs);
+    }
+    
     static Expr normalize_deep(Expr e) {   
         e = normalizeOr(e);
         e = normalizeEq(e);
         e = normalizeAnd(e);
         e = normalizeIff(e);
+        e = factorAndFromOr(e);
+        e = pruneQuantifiedExpr(e);
+        e = pruneAnd(e);
+        e = pruneImplication(e);
 
         if (e instanceof NaryExpr) {
             NaryExpr ne = (NaryExpr) e;
@@ -1247,18 +1366,21 @@ public class AlgebraUtils {
         return e;
     }
     
-    public static Expr grind(Expr pred) {
-       pred = stripOffLabelsDeep(pred);
-       Expr oldPred = pred;
-       do {
-           oldPred = pred;
-           pred = removeLetExpressions(pred);
-           pred = vytkniAndFromOr_plunge(pred);
-           pred = pruneImplications(pred);
-           pred = pruneQuantifiedExpr(pred);
-           pred = normalize_deep(pred);
-       } while (!isSame(oldPred, pred));
-       return pred;
+    public static Expr grind(Expr pred) {     
+        pred = stripOffLabelsDeep(pred);
+        
+        Expr oldPred = pred;
+        do {
+            oldPred = pred;
+            //printExpression("Before grind iter: ", pred);
+            pred = removeLetExpressions(pred);
+            //printExpression("after let remove: ", pred);
+           // pred = pruneImplications(pred);
+           // printExpression("Implication prune: ", pred);
+            pred = normalize_deep(pred);
+            //printExpression("Normalize: ", pred);
+        } while (!isSame(oldPred, pred));
+        return pred;
     }
     
     public static ExprVec findCommon(ExprVec e1, ExprVec e2) {
@@ -1473,9 +1595,9 @@ public class AlgebraUtils {
     // only debugging purposes
     public static void printExpression(String s, Expr e) {
         System.out.println(s);
-        printExpression(e);
-        
+        printExpression(e);        
         System.out.println();
+        System.out.flush();
     }
 
     // only debugging purposes
@@ -1506,17 +1628,19 @@ public class AlgebraUtils {
               for (int i = 0; i < qe.vars.size(); i++) {
                   System.out.print(Atom.printableVersion(UniqName.variable(qe.vars.elementAt(i))));
                   if (i == qe.vars.size() -1) {
-                      System.out.println(')');
+                      System.out.println(");");
                   } else {
                       System.out.print(' ');
                   }                  
               }
-              if (qe.rangeExpr != null && !isTrueLit(qe.expr)) printExpression(qe.rangeExpr, level + 1);
+ /*             if (qe.rangeExpr != null && !isTrueLit(qe.expr)) {
+                  printExpression(qe.rangeExpr, level + 1); System.out.print(';');
+              } */
               printExpression(qe.expr, level + 1);
               System.out.print(')');
           } else {    
-          System.out.print(indent(level));
-          VcToString.computeTypeSpecific(e, System.out);
+             System.out.print(indent(level));
+             VcToString.computeTypeSpecific(e, System.out);
           }
       }        
     }

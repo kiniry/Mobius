@@ -35,11 +35,13 @@ public class GCtoCFDBuilder {
 	 * 
 	 * @return a list of graphs
 	 */
-	//@ ensures \result != null;
-	//@ ensures \result == this.unreachable;
-	public List getUnreachable() {
-		return unreachable;
-	}
+    //@ public behavior
+    //@   ensures \result != null;
+    //@ also private behavior
+    //@   ensures \result == this.unreachable;
+    public List getUnreachable() {
+        return unreachable;
+    }
 
     
     protected CFD constructLoopGraph(LoopCmd loopCommand, GenericVarDeclVec scope) {
@@ -82,7 +84,7 @@ public class GCtoCFDBuilder {
 			return constructGraph(call.desugared, scope);
 		}
 		case TagConstants.LOOPCMD: {
-            //  utilize the desugared version of the loop
+            // defer the decision what to do for descendants
             LoopCmd loopCommand = (LoopCmd) command;
             return constructLoopGraph(loopCommand, scope);
             //return constructGraph(loopCmd.desugared, scope);
@@ -131,7 +133,7 @@ public class GCtoCFDBuilder {
                     GuardedCmd command2 = cc.g2;
                     CFD cfd1 = constructGraph(command1, scope);
                     CFD cfd2 = constructGraph(command2, scope);
-                    cfd1.orWith(cfd2);
+                    cfd1.orWith(cfd2, scope);
                     return cfd1;
                 }
 		case TagConstants.TRYCMD: {
@@ -157,7 +159,7 @@ public class GCtoCFDBuilder {
                             en.connectTo(catchNode);
                         }
                         // join exits of the try and the catch block
-                        cfdTry.andExits(cfdTry.getExitNode(), cfdCatch.getExitNode());
+                        cfdTry.andExits(cfdTry.getExitNode(), cfdCatch.getExitNode(), scope);
                         // the exception nodes of the catch block become exception nodes of the returned graph
                         cfdTry.setExceptionNodes(cfdCatch.getExceptionNodes());
                         return cfdTry;

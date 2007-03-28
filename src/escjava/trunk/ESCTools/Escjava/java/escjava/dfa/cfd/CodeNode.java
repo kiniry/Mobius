@@ -17,8 +17,7 @@ import escjava.translate.GC;
  */
 public class CodeNode extends Node {
 
-    //@ invariant code != null;
-    GuardedCmd code;
+    private final /*@ non_null @*/ GuardedCmd code;
 
     /**
      * Initializes a new instance of the Node class.
@@ -29,24 +28,23 @@ public class CodeNode extends Node {
         super(scope);
         this.code = code;
     }
-
-
-    //@ ensures \result == this.code;
+    
+    //@ private behavior
+    //@    ensures \result == code;
     /*@ pure @*/public /*@ non_null @*/GuardedCmd getCode() {
-        return this.code;
+        return code;
     }
     
     public void accept(/*@ non_null @*/NodeVisitor nodeVisitor) {
         nodeVisitor.visitCodeNode(this);
     }
-
    
     /**
      * Computes the stronest postcondition of this node, given a precondition.    
      * This implementation assumes that the code associated to this node is one of the commands ASSERT, ASSUME, SKIP.
      * @param pre precondition
      */
-    public Expr computeSp(Expr pre) {
+    public /*@ non_null @*/Expr computeSp(/*@ non_null @*/Expr pre) {
         int t = code.getTag();
           
         Assert.notFalse(
@@ -59,10 +57,11 @@ public class CodeNode extends Node {
         return preAndPost;
     }
     
-    public String toString() {
+    public /*@ non_null @*/String toString() {
         return "[code node: " + getCodeString() + "]";
      }
     
+    //@ assignable \nothing;
     private String getCodeString() {
         if (PrettyPrint.inst != null && PrettyPrint.inst instanceof EscPrettyPrint) {
             ByteArrayOutputStream bs = new ByteArrayOutputStream();
@@ -73,7 +72,7 @@ public class CodeNode extends Node {
             return this.code.toString();
     }
     
-     void printToDot(Writer dot) throws IOException {
+     void printToDot(/*@ non_null @*/Writer dot) throws IOException {
          dot.write("" + hashCode() + " [label=\"" + getCodeString() + "\"];\n");      
     }
 

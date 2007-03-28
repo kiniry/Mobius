@@ -2,7 +2,6 @@ package escjava.dfa.cfd;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.io.StringWriter;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,6 +16,8 @@ import java.util.List;
 import javafe.util.Assert;
 
 
+
+import escjava.ast.GenericVarDeclVec;
 import escjava.dfa.cfd.NodeList.Enumeration;
 
 public class CFD  {
@@ -35,7 +36,10 @@ public class CFD  {
      * Initializes a new instance of CFD class. Both init and exit node are set
      * to null. The list of exceptions nodes is initialized with the empty list.
      */
-    //@ ensures isEmpty();
+    /*@ public normal_behavior
+      @    ensures isEmpty(); */
+    /*@ also private behavior
+      @   ensures initNode == null  & exitNode == null & exceptionNodes.isEmpty();  */  
     public CFD() {
         this.initNode = null;
         this.exitNode = null;
@@ -65,7 +69,8 @@ public class CFD  {
      * 
      * @return true iff this graph is empty
      */
-    //@ ensures \result <==> (initNode == null);
+    //@ protected behavior
+    //@   ensures \result <==> (initNode == null);
     /*@ pure @*/ public boolean isEmpty() {
         return initNode == null;
     }
@@ -90,7 +95,7 @@ public class CFD  {
         return this.exitNode;
     }
 
-    public /*@ non_null @*/NodeList getExceptionNodes() {
+    /*@ pure @*/ public /*@ non_null @*/NodeList getExceptionNodes() {
         return this.exceptionNodes;
     }
     
@@ -138,9 +143,9 @@ public class CFD  {
      *            a cfd that will be ored with this
      */
     //@ requires !cfd.isEmpty() & !this.isEmpty();
-    public void orWith(/*@ non_null @*/CFD cfd) {
-        this.orInits(this.initNode, cfd.initNode);
-        this.andExits(this.exitNode, cfd.exitNode);
+    public void orWith(/*@ non_null @*/CFD cfd, GenericVarDeclVec scope) {
+        this.orInits(this.initNode, cfd.initNode, scope);
+        this.andExits(this.exitNode, cfd.exitNode, scope);
         this.exceptionNodes.append(cfd.exceptionNodes);
     }
 
@@ -156,11 +161,11 @@ public class CFD  {
      *            a node that will be connected to the new exit node, may be
      *            null
      */
-    public void andExits(Node e1, Node e2) {
+    public void andExits(Node e1, Node e2, GenericVarDeclVec scope) {
         if (e1 == null && e2 == null) {
             this.exitNode = null;
         } else {
-            Node newExit = new CouplingNode();
+            Node newExit = new CouplingNode(scope);
             if (e1 != null)
                 e1.connectTo(newExit);
 
@@ -174,8 +179,8 @@ public class CFD  {
     /**
      * Creates a new init node it to the given ones.
      */
-    public void orInits(/*@ non_null @*/Node i1, /*@ non_null @*/ Node i2) {
-        Node newInit = new CouplingNode();
+    public void orInits(/*@ non_null @*/Node i1, /*@ non_null @*/ Node i2, GenericVarDeclVec scope) {
+        Node newInit = new CouplingNode(scope);
         newInit.connectTo(i1);
         newInit.connectTo(i2);
         this.initNode = newInit;
@@ -185,20 +190,24 @@ public class CFD  {
      * Initializes this CFD with a single node, that being both the initial and
      * the exit node of that graph, no exception nodes are created.
      */
-    //@ requires n != null;
-    //@ ensures !isEmpty();
-    public void createSimpleCFD(Node n) {
+    //@ public normal_behavior
+    //@   ensures !this.isEmpty();
+    //@ also private behavior
+    //@  assignable initNode, exitNode;
+    public void createSimpleCFD(/*@ non_null @*/Node n) {
         this.initNode = n;
         this.exitNode = n;
     }
     
-    public static CFD simpleCFD(Node n) {
+    //@ requires n != null;
+    //@ ensures !\result.isEmpty();
+    public static CFD simpleCFD(/*@ non_null @*/Node n) {
         CFD retv = new CFD();
         retv.createSimpleCFD(n);
         return retv;
     }
     
-    public String toString() {
+    public /*@ non_null @*/ String toString() {
         LinkedList graphNodes = new LinkedList();
 
         if (!isEmpty()) {
@@ -231,14 +240,11 @@ public class CFD  {
     }
     
     // Adds all nodes reachable from [n] (children) to [graphNodes].
-    /*@ public normal_behavior
-      @   requires n != null;
-      @   requires graphNodes != null;
-      @   requires \type(Node) <: graphNodes.elementType;
-      @   assignable graphNodes.objectState;
-      @   ensures graphNodes.contains(n);
-      */
-    private void collectNodes(Node n, List graphNodes) {
+
+    //@ requires (\type(Node) <: graphNodes.elementType);
+    //@ assignable graphNodes.objectState; 
+    //@ ensures graphNodes.contains(n);
+    private void collectNodes(/*@ non_null @*/Node n, /*@ non_null @*/List graphNodes) {
         if (graphNodes.contains(n))
             return;
         graphNodes.add(n);
@@ -257,62 +263,81 @@ public class CFD  {
      * 
      */
     class Clonear {
-        Map cloneMap;
+        private Map cloneMap;
 
-        public Clonear() {
-            cloneMap = new HashMap();
-        }
-
-        CFD cloneGraph() {
+        private CFD cloneGraph() {                        
             CFD cloneGraph = new CFD();
             
-            // create the clone of the init node, which will clone everything reachable from initNode as well
-            cloneGraph.initNode = nodeClone(initNode);
-            
-            // clone exitNode
-            cloneGraph.exitNode = nodeClone(exitNode);
-            
-            // clone te list of exceptionNodes
-            nodeListClone(cloneGraph.exceptionNodes, exceptionNodes);
+            if (isEmpty()) {
+                //@ assert cloneGraph.isEmpty();
+                return cloneGraph;
+            }
 
+            cloneMap = new HashMap();
+            List toClone = new LinkedList();
+            toClone.add(initNode);
+            cloneMap.put(initNode, initNode.shallowCopy());
+    
+            long counter = 0;
+            // loop_invariant (\forall int i; 0 <= i & i < toClone.size(); toClone.get(i) != null); 
+            while (!toClone.isEmpty()) {
+                Node toCloneNode = (Node) toClone.get(0);                               
+                toClone.remove(0);
+                
+                Node clone = (Node) cloneMap.get(toCloneNode);
+        
+                addUncloned(toClone, toCloneNode.children);
+                addUncloned(toClone, toCloneNode.parents);
+                addClones(clone.children, toCloneNode.children);
+                addClones(clone.parents, toCloneNode.parents);
+                              
+                ++counter;
+            }          
+            
+            cloneGraph.initNode = (Node) cloneMap.get(initNode);
+            cloneGraph.exitNode = (Node) cloneMap.get(exitNode);            
+
+            // clone the list of exceptionNodes 
+            addClones(cloneGraph.exceptionNodes, exceptionNodes);
+            
+            System.out.println("Cloned: " + counter);
+            
             return cloneGraph;
 
         }
 
+        //@ assignable toClone.objectState;
+        //@ assignable cloneMap.objectState;
+        private void addUncloned(/*@ non_null @*/List toClone, /*@ non_null @*/NodeList nodeList) {
+            for (Enumeration i = nodeList.elements(); i.hasMoreElements(); ) {
+                Node node = i.nextElement();
+                if (!cloneMap.containsKey(node)) { 
+                    toClone.add(node);
+                    cloneMap.put(node, node.shallowCopy());
+                }
+            }
+                   
+        }
+        
         // Populates [dest] with clones of the nodes in [source].
-        void nodeListClone(NodeList dest, NodeList source) {
+        //@ assignable dest.objectState;
+        //??? ensures dest.getCount() = source.getCount() + \old(dest).getCount();
+        private void addClones(/*@ non_null @*/NodeList dest, /*@ non_null @*/NodeList source) {
             for (Enumeration e = source.elements(); e.hasMoreElements();) {
                 Node node = e.nextElement();
-                dest.addNode(nodeClone(node));
+                Node clone = (Node) cloneMap.get(node);
+                Assert.notFalse(clone != null, "The node hasn't been cloned");
+                dest.addNode(clone);
             }
         }
-
-        // Clones [orig], if not already cloned, and connects it to the appropriat clones.
-        Node nodeClone(Node orig) {
-            if (orig == null)
-                return null;
-            
-            if (cloneMap.containsKey(orig)) {
-                return (Node) cloneMap.get(orig);
-            }
-
-            Node nodeClone = orig.shallowCopy();
-            
-            cloneMap.put(orig, nodeClone);
-            
-            nodeListClone(nodeClone.parents, orig.parents);
-            nodeListClone(nodeClone.children, orig.children);
-
-            return nodeClone;
-        }
-
+        
     }   
    
     // ------------ debugging code
     
     // ---- printing
     
-    // @ requires out != null & a != null & b != null;
+    //@ requires out != null & a != null & b != null;
     private void printDotEdge(Writer out, Node a, Node b) throws IOException {
         out.write("" + a.hashCode() + " -> " + b.hashCode() + ";\n");
     }
@@ -340,7 +365,8 @@ public class CFD  {
             printToDot(out, initNode, visited);
         
         // close the dot
-        printDotClose(out);            
+        printDotClose(out);
+        out.flush();
     }
         
 
@@ -355,7 +381,9 @@ public class CFD  {
 
         // print node
         n.printToDot(out);
-
+         
+        out.flush();
+        
         // print edges to children and recursively the children
         for (Enumeration en = n.getChildren().elements(); en.hasMoreElements();) {
             Node child = (Node) en.nextElement();
@@ -421,5 +449,95 @@ public class CFD  {
         
     }
    
+    public boolean isAcyclic() {
+        if (this.isEmpty())
+            return true;
+        
+        HashSet visited = new HashSet(), onPath = new HashSet();
+        return isAcyclic(this.initNode, visited, onPath);
+    }
+    
+    protected boolean isAcyclic(Node n, Set visited, Set onPath) {
+        if (visited.contains(n)) {
+            return true;
+        }
+        
+        visited.add(n);
+        
+        if (onPath.contains(n)) {
+            return false;
+        }
+        
+        onPath.add(n);
+        for (Enumeration it = n.children.elements(); it.hasMoreElements(); ) {
+            Node child = it.nextElement();
+            if (!isAcyclic(child, visited, onPath)) {
+                return false;
+            }                
+        }
+        
+        onPath.remove(n);
+        return true;        
+    }
+    
+    public int size() {        
+        if (isEmpty()) {
+            return 0;
+        }
+        
+        Set visited = new HashSet();
+        return sizeReachable(this.initNode, visited);        
+    }
+    
+    int sizeReachable(Node n, Set visisted) {
+        if (visisted.contains(n))
+            return 0;
+        visited.add(n);
+        int size = 1;
+        for (Enumeration e = n.children.elements(); e.hasMoreElements();) {
+            Node child = e.nextElement();
+            size += sizeReachable(child, visisted);
+        }
+        return size;
+    }
+    
+    public boolean isConsistent() {
+        //List nodes = computeNodes();
+
+        System.out.println("isConsistent start");
+        Set visited = new HashSet();
+        List nodes = new LinkedList();
+        nodes.add(this.initNode);
+        
+        while (!nodes.isEmpty()) {
+            Node n = (Node) nodes.get(0);
+            nodes.remove(0);
+            visited.add(n);
+            
+            for (Enumeration ce = n.children.elements(); ce.hasMoreElements();) {
+                Node child = ce.nextElement();
+                if (!child.parents.member(n)) {
+                    System.out.print("+++ Parent-Child violation: " + n + ", " + child);
+                    return false;
+                }
+                
+                if (!visited.contains(child)) {
+                   nodes.add(child);
+                }
+            }
+            
+            for (Enumeration ce = n.parents.elements(); ce.hasMoreElements();) {
+                Node child = ce.nextElement();
+                if (!child.children.member(n)) {
+                    System.out.print("+++ Child-Parent violation: " + n + ", " + child);
+                    return false;
+                }
+            }
+
+        }
+               
+        System.out.println("Is consistent done.");
+        return true;      
+    }
 
 }

@@ -24,7 +24,6 @@ public abstract class Node {
      *
      * @param scope  vector variables representing scope of the new node
      */
-    //@ requires scope != null;
     public Node(GenericVarDeclVec scope) {
         this.scope = scope;
         this.parents = new NodeList();
@@ -42,14 +41,14 @@ public abstract class Node {
     /**
      * Returns the children node list.
      */
-    /*@ pure @*/ public /*@ non_null @*/ NodeList getChildren() {
+    /*@ pure */ public /*@ non_null */ NodeList getChildren() {
         return this.children;
     }
 
     /**
      * Returns parent node list.
      */
-    /*@ pure @*/ public /*@ non_null @*/ NodeList getParents() {
+    /*@ pure */ public /*@ non_null */ NodeList getParents() {
         return this.parents;
     }
 
@@ -58,7 +57,8 @@ public abstract class Node {
      * @return variable scope for this node represented as a variable
      *         declaration vector
      */
-    /*@ pure @*/ public /*@ non_null @*/ GenericVarDeclVec  getScope() {
+
+    /*@ pure @*/ public GenericVarDeclVec  getScope() {
         return this.scope;
     }
 
@@ -73,13 +73,13 @@ public abstract class Node {
         to.parents.addNode(this);
     }
 	
-    public abstract void accept(/*@ non_null @*/NodeVisitor visitor);
+    public abstract void accept(/*@ non_null */NodeVisitor visitor);
  
     /**
      * Compute the strongest postcondition given a precondition.
      * @param pre the precondition
      */
-    abstract public Expr computeSp(/*@ non_null @*/Expr pre); 
+    abstract public /*@ non_null */Expr computeSp(/*@ non_null */Expr pre); 
     
-    abstract void printToDot(/*@ non_null @*/Writer dot) throws IOException;
+    abstract void printToDot(/*@ non_null */Writer dot) throws IOException;
 }

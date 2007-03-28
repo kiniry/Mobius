@@ -55,9 +55,7 @@ public class Simplifier {
             AlgebraUtils.printExpression("Seems like prover has died on", e);
             //exc.printStackTrace();
             ProverManager.kill(); // killing the prover process
-            System.out.println("Killed");
             ProverManager.start(); // restarting the prover (might be unnecessary as ProverManager.prover() calls start)
-            System.out.println("Started");
                      
         }
         return queryValid;

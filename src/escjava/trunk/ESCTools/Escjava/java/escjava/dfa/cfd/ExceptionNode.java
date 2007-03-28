@@ -10,23 +10,25 @@ import escjava.ast.GenericVarDeclVec;
  * This class represents an exception node in control flow diagram.
  */
 public class ExceptionNode extends Node {
+    private static final String strRepresentation = "[exception node]"; 
+    
     public ExceptionNode () {
         super(GenericVarDeclVec.make(0));
     }
 
-    public  void accept(NodeVisitor nodeVisitor) {
+    public  void accept(/*@ non_null @*/NodeVisitor nodeVisitor) {
         nodeVisitor.visitExceptionNode(this);
     }
     
-    public Expr computeSp(Expr pre) {
+    public /*@ non_null @*/Expr computeSp(/*@ non_null @*/Expr pre) {
         return (Expr)pre.clone();
     }
 
-    public String toString() {
-        return "[exception node]";
-       }
+    public /*@ non_null @*/String toString() {
+        return strRepresentation;
+    }
 
-    void printToDot(Writer dot) throws IOException {
+    void printToDot(/*@ non_null @*/Writer dot) throws IOException {
             dot.write("" + hashCode() + " [label=\"" + "RAISE" + "\"];\n");           
     }
 

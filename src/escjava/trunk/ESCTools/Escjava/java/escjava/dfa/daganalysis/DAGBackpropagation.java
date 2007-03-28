@@ -18,34 +18,33 @@ public class DAGBackpropagation {
 
     /**
      * The control-flow diagram on which the analysis is performed.
-     *
      */
     CFD cfd;
 
     /**
      * The predicate that is back-propagated.
-     *
      */
     Expr reachPredicate;
 
     /**
      * The back-propagation will lead to thid  node.
-     *
      */
     Node start;
 
     /**
      * Back-propagation will start from this node.
-     *
      */
     Node reach;
 
-    //@ ensures	this.cfd == cfd;
-    //@ ensures this.reachPredicate == reachPredicate;
-    //@ ensures this.start == start;
-    //@ ensures this.reach == reach;
+    //@ private behavior
+    //@   ensures	this.cfd == cfd;
+    //@   ensures this.reachPredicate == reachPredicate;
+    //@   ensures this.start == start;
+    //@   ensures this.reach == reach;
     public DAGBackpropagation(CFD cfd) {
         this.cfd = cfd;
+        Assert.notFalse(cfd.isConsistent(), "The input graph is not consistent");
+        Assert.notFalse(cfd.isAcyclic(), "The input graph is not acyclic");
     }
 
     /**
@@ -133,22 +132,19 @@ public class DAGBackpropagation {
         Expr fromExpr = this.getInfo(from).getExpr();
         if ((to instanceof CouplingNode) || (to instanceof ExceptionNode)) {
             info = fromExpr;
-        }
-        else
+        } else {
             if (to instanceof CodeNode) {
                 CodeNode cn = (CodeNode) to;
                 info = backPropAdjacentCodeNode(fromExpr, cn);
 
-            }
-            else {
+            } else {
                 //@ unreachable;
                 Assert.fail("Fall thru on " + to);
             }
-
-        if (info != null) {
-            info = variableClosure(info, to.getScope(), from.getScope());
-            this.getInfo(to).andExprWith(info);
         }
+
+         info = variableClosure(info, to.getScope(), from.getScope());
+         this.getInfo(to).andExprWith(info);
     }
 
     Expr variableClosure(Expr expression, GenericVarDeclVec newScope, GenericVarDeclVec oldScope) {
@@ -179,6 +175,7 @@ public class DAGBackpropagation {
      */
     //@ requires expression != null;
     //@ requires to != null;
+    //@ ensures \result != null;
     Expr backPropAdjacentCodeNode(Expr expression, CodeNode to) {
         GuardedCmd command = to.getCode();
 
@@ -187,18 +184,25 @@ public class DAGBackpropagation {
             info = expression;
         }
         else {// compute the weakest precondition otherwise
-
+            int tag = command.getTag();
+           
+            
             // convert asserts to assumes
-            if (command.getTag() == TagConstants.ASSERTCMD) {
+            if (tag == TagConstants.ASSERTCMD) {
                 command = assertToAssume((ExprCmd) command);
             }
-
-            if (command instanceof ExprCmd) {
-                command = stripOfLabelsCommand((ExprCmd) command);
+            
+            if (tag == TagConstants.ASSUME) {
+                ExprCmd ecmd = (ExprCmd) command;
+                ecmd = stripOffLabelsCommand((ExprCmd) command);
+                Expr commandPred = ecmd.pred;
+                if (!AlgebraUtils.shareVariables(commandPred, expression)) {
+                    return expression; // skip expressions that do not share variables with the back propagagted one
+                }
             }
-
+                     
             info = wp(command, expression);
-	    info = AlgebraUtils.consolidateAnds(info);
+	        //info = AlgebraUtils.grind(info);
         }
 
         return info;
@@ -206,16 +210,28 @@ public class DAGBackpropagation {
 
 
     /**
-     * Computes normal behaviour - weakest precondtion for a given command and postcondition.
+     * Computes normal behaviour - weakest precondtion for a given command and
+     * postcondition.
      */
-    public static Expr wp(GuardedCmd command, Expr normalPost) {
+    private static Expr wp(GuardedCmd command, Expr normalPost) {
         if (command instanceof AssignCmd) {
             AssignCmd assignCmd = (AssignCmd) command;
             return wpAssignCommand(assignCmd, normalPost);
-        }
-        else {
-            Expr normalWP = Ejp.compute(command, normalPost,  GC.falselit);
-            return normalWP;
+        } else {
+            int tag = command.getTag();
+            switch (tag) {
+            case TagConstants.ASSUMECMD:
+                Expr pred = ((ExprCmd) command).pred;
+                return GC.implies(pred, normalPost);
+            default:
+                ((EscPrettyPrint) PrettyPrint.inst).print(System.out, 0, command);
+                System.out.println(); System.out.println();
+                
+                
+                Assert.fail("Unexpected command " + command);
+                return null;
+            }
+
         }
     }
 
@@ -261,15 +277,15 @@ public class DAGBackpropagation {
         return wpNormal;
     }
 
-    static ExprCmd stripOfLabelsCommand(ExprCmd command) {
+    static ExprCmd stripOffLabelsCommand(ExprCmd command) {
         Expr pred = command.pred;
         Expr stripped = AlgebraUtils.stripOffLabels(pred);
         return ExprCmd.make(command.cmd, stripped, command.loc);
     }
 
-    static GuardedCmd assertToAssume(ExprCmd assertCmd) {
+    static ExprCmd assertToAssume(ExprCmd assertCmd) {
         Expr pred = assertCmd.pred;
-        return GC.assume(pred);
+        return ExprCmd.make(TagConstants.ASSUMECMD, pred, assertCmd.loc);        
     }
 
     /**
@@ -287,6 +303,8 @@ public class DAGBackpropagation {
             ExprCmd ec = (ExprCmd)command;
             Expr pred = ec.pred;
             return AlgebraUtils.isTrueLit(pred);
+        case TagConstants.SKIPCMD:
+            return true;
         default:
             return false;
         }
