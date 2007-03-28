@@ -47,7 +47,7 @@ public class TagConstants extends OperatorTags
     public static final int BYTELIT = NULLLIT + 1;
     public static final int SHORTLIT = BYTELIT + 1;
 
-    public static final int LAST_TAG = NULLLIT;
+    public static final int LAST_TAG = SHORTLIT;
 
     //@ private invariant \nonnullelements(tags);
     private static final /*@ non_null @*/ String[] tags = { 
@@ -56,7 +56,8 @@ public class TagConstants extends OperatorTags
         "BYTETYPE", "SHORTTYPE", "INTTYPE", "LONGTYPE",
         "FLOATTYPE", "DOUBLETYPE",
         "BOOLEANLIT", "INTLIT", "LONGLIT", "CHARLIT",
-        "FLOATLIT", "DOUBLELIT", "STRINGLIT", "NULLLIT" };
+        "FLOATLIT", "DOUBLELIT", "STRINGLIT", "NULLLIT",
+        "BYTELIT", "SHORTLIT" };
 
     //@ requires tag <= LAST_TAG;
     //@ ensures \result != null;
