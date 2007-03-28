@@ -28,7 +28,7 @@ public class Logic {
 	 * @param f2 The second argument of the and, of type Prop
 	 * @return a newly created and connector
 	 */
-	public static ALogic and(AFormula f1, AFormula f2) {
+	public static ALogic and(IFormula f1, IFormula f2) {
 		if((f1.getType() != f2.getType() && f1.getType() != Type.prop))
 			throw new IllegalArgumentException("Bad type when creating and, " +
 					"found: " + f1.getType() + " and " + f2.getType());
@@ -41,7 +41,7 @@ public class Logic {
 	 * @param e the boolean object to convert
 	 * @return the BoolProp conversion object
 	 */
-	public static ALogic boolToProp(AFormula e) {
+	public static ALogic boolToProp(IFormula e) {
 		if(e.getType() != Type.bool)
 			throw new IllegalArgumentException("Bad type when creating BoolProp, " +
 				"found: " + e.getType());
@@ -56,7 +56,7 @@ public class Logic {
 	 * @param f2 the right argument
 	 * @return an equal object
 	 */
-	public static ALogic equals(AFormula f1, AFormula f2) {
+	public static ALogic equals(IFormula f1, IFormula f2) {
 		if(f1.getType() != f2.getType())
 			throw new IllegalArgumentException("Different types when creating equals, " +
 					"found: " + f1.getType() + " and " + f2.getType());
@@ -70,7 +70,7 @@ public class Logic {
 	 * @param f2 the second element of the implies
 	 * @return a nicely created implies
 	 */
-	public static ALogic implies(AFormula f1, AFormula f2) {
+	public static ALogic implies(IFormula f1, IFormula f2) {
 		if((f1.getType() != f2.getType() && f1.getType() != Type.prop))
 			throw new IllegalArgumentException("Bad type when creating the implies, " +
 					"found: " + f1.getType() + " and " + f2.getType());
@@ -84,7 +84,7 @@ public class Logic {
 	 * @param f2 the right parameter of the or
 	 * @return the newly created object
 	 */
-	public static ALogic or(AFormula f1, AFormula f2) {
+	public static ALogic or(IFormula f1, IFormula f2) {
 		if((f1.getType() != f2.getType() && f1.getType() != Type.prop))
 			throw new IllegalArgumentException("Bad type when creating or, " +
 					"found: " + f1.getType() + " and " + f2.getType());
@@ -96,7 +96,7 @@ public class Logic {
 	 * @param f the formula to negate (of type prop)
 	 * @return return the new not construct
 	 */
-	public static ALogic not(AFormula f) {
+	public static ALogic not(IFormula f) {
 		if(f.getType() != Type.prop)
 			throw new IllegalArgumentException("Bad type when creating BoolProp, " +
 				"found: " + f.getType());
@@ -109,7 +109,7 @@ public class Logic {
 	 * @param f the formula which is the body of the forall
 	 * @return the forall construct newly created
 	 */
-	public static ALogic forall(Variable v, AFormula f) {
+	public static ALogic forall(Variable v, IFormula f) {
 		if(f.getType() != Type.prop)
 			throw new IllegalArgumentException("Bad type when creating BoolProp, " +
 				"found: " + f.getType());
@@ -123,7 +123,7 @@ public class Logic {
 	 * @param f the body of the forall
 	 * @return the newly created forall
 	 */
-	public static ALogic forall(Vector<Variable> v, AFormula f) {
+	public static ALogic forall(Vector<Variable> v, IFormula f) {
 		if(f.getType() != Type.prop)
 			throw new IllegalArgumentException("Bad type when creating BoolProp, " +
 				"found: " + f.getType());
@@ -136,7 +136,7 @@ public class Logic {
 	 * @param f the formula which is the body of the forall
 	 * @return the forall construct newly created
 	 */
-	public static ALogic exists(Variable v, AFormula f) {
+	public static ALogic exists(Variable v, IFormula f) {
 		if(f.getType() != Type.prop)
 			throw new IllegalArgumentException("Bad type when creating BoolProp, " +
 				"found: " + f.getType());
@@ -150,7 +150,7 @@ public class Logic {
 	 * @param f the body of the forall
 	 * @return the newly created forall
 	 */
-	public static ALogic exists(Vector<Variable> v, AFormula f) {
+	public static ALogic exists(Vector<Variable> v, IFormula f) {
 		if(f.getType() != Type.prop)
 			throw new IllegalArgumentException("Bad type when creating BoolProp, " +
 				"found: " + f.getType());

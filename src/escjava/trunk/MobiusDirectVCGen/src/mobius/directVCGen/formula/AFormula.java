@@ -86,7 +86,8 @@ public abstract class AFormula implements IFormula {
 		while(iterArgs.hasNext()) {
 			IFormula arg = iterArgs.next();
 			IFormula typ = iterType.next();
-			if(!arg.getType().equals(typ))
+			if((!arg.getType().equals(typ)) &&
+				(!arg.getType().equals(Type.undef)))
 				throw new TypeErrorException(arg.getType()+ 
 						" is not the same as " + typ.getType());
 		}
