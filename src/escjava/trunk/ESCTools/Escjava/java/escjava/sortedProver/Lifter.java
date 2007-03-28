@@ -228,6 +228,10 @@ public class Lifter extends EscNodeBuilder
 			Assert.notFalse(getSort().isSubSortOf(sortRef));
 			return (SRef)dump();
 		}
+		
+		public void enforceLabelSense(int sense)
+		{			
+		}
 	}
 	
 	class QuantVariableRef extends Term
@@ -486,6 +490,22 @@ public class Lifter extends EscNodeBuilder
 			if (isDistinctSymbol) distinctSymbols.add(this);
 			return dump();			
 		}
+		
+		public void enforceLabelSense(int sense)
+		{
+			if (fn == symNot)
+				args[0].enforceLabelSense(-sense);
+			else if (fn == symImplies) {
+				args[0].enforceLabelSense(-sense);
+				args[0].enforceLabelSense(sense);
+			} else if (fn == symXor || fn == symIff) {
+				args[0].enforceLabelSense(0);
+				args[1].enforceLabelSense(0);
+			} else {
+				for (int i = 0; i < args.length; ++i)
+					args[i].enforceLabelSense(sense);
+			}
+		}
 	}
 	
 	class QuantTerm extends Term
@@ -561,6 +581,11 @@ public class Lifter extends EscNodeBuilder
 								dumpBuilder.buildNot(qbody),
 								qpats, qnopats));
 		}
+		
+		public void enforceLabelSense(int sense)
+		{
+			body.enforceLabelSense(sense);
+		}
 	}
 	
 	class QuantVariable
@@ -610,6 +635,14 @@ public class Lifter extends EscNodeBuilder
 		public STerm dump()
 		{
 			return dumpBuilder.buildLabel(positive, label, (SPred)body.dump());
+		}
+		
+		public void enforceLabelSense(int sense)
+		{
+			if ((positive && sense > 0) || (!positive && sense < 0)) {}
+			else
+				ErrorSet.error("label: " + label + " used with wrong sense s="+sense);
+			body.enforceLabelSense(sense);
 		}
 	}
 	
@@ -750,6 +783,7 @@ public class Lifter extends EscNodeBuilder
 		distinctSymbols.clear();
 		
 		SPred res = root.dumpPred();
+		root.enforceLabelSense(-1);
 		
 		SPred[] assumptions = new SPred[stringConstants.size() * 2 + 1];
 		
@@ -767,7 +801,8 @@ public class Lifter extends EscNodeBuilder
 		assumptions[stringConstants.size()*2] = 
 			terms.length == 0 ? dumpBuilder.buildTrue() : dumpBuilder.buildDistinct(terms);
 		
-		res = dumpBuilder.buildImplies(dumpBuilder.buildAnd(assumptions), res); 
+		res = dumpBuilder.buildImplies(dumpBuilder.buildAnd(assumptions), res);
+		
 					
 		dumpBuilder = null;
 		return res;
