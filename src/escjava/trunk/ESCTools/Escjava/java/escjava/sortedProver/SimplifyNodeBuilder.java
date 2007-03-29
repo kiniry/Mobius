@@ -10,8 +10,10 @@ import javafe.util.Assert;
 import javafe.util.Set;
 import escjava.prover.Atom;
 
+/*@ non_null_by_default @*/
 public class SimplifyNodeBuilder extends EscNodeBuilder
 {
+	/*@ non_null_by_default @*/
 	class Sx implements SMap, SBool, SInt, SReal, SPred
 	{
 		private static final int LIMIT = 100;
@@ -364,19 +366,19 @@ public class SimplifyNodeBuilder extends EscNodeBuilder
 
 	// from VcToString
 	protected static final long MaxIntegral = 1000000;
-	protected static final/*@ non_null */Long minThreshold = new Long(-MaxIntegral);
-	protected static final/*@ non_null */Long maxThreshold = new Long(MaxIntegral);
+	protected static final Long minThreshold = new Long(-MaxIntegral);
+	protected static final Long maxThreshold = new Long(MaxIntegral);
 	//+@ invariant integralPrintNames.keyType == \type(Long);
 	//+@ invariant integralPrintNames.elementType == \type(String);
 	//@ spec_public
-	protected static/*@  non_null */Hashtable integralPrintNames;
+	protected static Hashtable integralPrintNames = new Hashtable();
 	
 	/**
 	 * * Convert an integral # into its printname according to the rules * of ESCJ
 	 * 23b, part 9.
 	 */
 	
-	protected/*@ non_null */String integralPrintName(long n) {
+	protected String integralPrintName(long n) {
 		if (-MaxIntegral <= n && n <= MaxIntegral) {
 			return String.valueOf(n);
 		}

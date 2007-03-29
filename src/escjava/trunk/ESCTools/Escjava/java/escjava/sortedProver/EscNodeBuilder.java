@@ -6,6 +6,7 @@ import escjava.sortedProver.NodeBuilder.FnSymbol;
 import escjava.sortedProver.NodeBuilder.PredSymbol;
 import escjava.sortedProver.NodeBuilder.Sort;
 
+/*@ non_null_by_default @*/
 public abstract class EscNodeBuilder extends NodeBuilder
 {
 	final public Sort sortShape = registerSort("shape", sortAny);
@@ -81,7 +82,7 @@ public abstract class EscNodeBuilder extends NodeBuilder
     public FnSymbol symClassLiteral = registerFnSymbol("classLiteral", new Sort[] { sortType }, sortRef, TagConstants.CLASSLITERALFUNC);
 
 
-    public FnSymbol mapFnSymbolTo(EscNodeBuilder other, FnSymbol sym)
+    public /*@ nullable @*/FnSymbol mapFnSymbolTo(EscNodeBuilder other, FnSymbol sym)
     {
     	if (sym == symRefEQ) return other.symRefEQ;
     	else if (sym == symRefNE) return other.symRefNE;

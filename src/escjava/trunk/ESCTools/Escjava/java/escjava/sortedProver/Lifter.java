@@ -32,6 +32,7 @@ import java.util.Hashtable;
 import java.util.Stack;
 import java.util.regex.Pattern;
 
+/*@ non_null_by_default @*/
 public class Lifter extends EscNodeBuilder
 {
 	final static boolean doTrace = false;
@@ -56,10 +57,11 @@ public class Lifter extends EscNodeBuilder
 		builder = b;
 	} 
 	
-	public SPred generateBackPred(/*@ non_null */ FindContributors scope)
+	public SPred generateBackPred(FindContributors scope)
 	{
 		Assert.notFalse(methodNo == 0);
-		backPred.genTypeBackPred(scope, null);
+		
+		backPred.genTypeBackPred(scope, System.err);
 
 		Term[] terms = new Term[backPred.axioms.size()];
 		terms = (Term[])backPred.axioms.toArray(terms);
@@ -78,9 +80,10 @@ public class Lifter extends EscNodeBuilder
 	}
 	// end public interface
 	
+	/*@ non_null_by_default @*/
 	class SortVar extends Sort
 	{
-		private Sort ref;
+		private /*@ nullable @*/Sort ref;
 		
 		public SortVar()
 		{
@@ -97,19 +100,19 @@ public class Lifter extends EscNodeBuilder
 			}
 		}
 		
-		public Sort/*?*/ getSuperSort()
+		public /*@ nullable @*/Sort getSuperSort()
 		{
 			refSet();
 			return ref.getSuperSort();
 		}
 
-		public Sort/*?*/ getMapFrom()
+		public /*@ nullable @*/Sort getMapFrom()
 		{
 			refSet();			
 			return ref.getMapFrom();
 		}
 
-		public Sort/*?*/ getMapTo()
+		public /*@ nullable @*/Sort getMapTo()
 		{
 			refSet();			
 			return ref.getMapTo();
@@ -165,6 +168,7 @@ public class Lifter extends EscNodeBuilder
 		}
 	}
 	
+	/*@ non_null_by_default @*/
 	abstract class Term
 	{	
 		abstract public Sort getSort();
@@ -234,6 +238,7 @@ public class Lifter extends EscNodeBuilder
 		}
 	}
 	
+	/*@ non_null_by_default @*/
 	class QuantVariableRef extends Term
 	{
 		final public QuantVariable qvar;
@@ -253,6 +258,7 @@ public class Lifter extends EscNodeBuilder
 		}
 	}
 	
+	/*@ non_null_by_default @*/
 	class FnTerm extends Term
 	{
 		public FnSymbol fn;
@@ -508,6 +514,7 @@ public class Lifter extends EscNodeBuilder
 		}
 	}
 	
+	/*@ non_null_by_default @*/
 	class QuantTerm extends Term
 	{
 		public final boolean universal;
@@ -588,6 +595,7 @@ public class Lifter extends EscNodeBuilder
 		}
 	}
 	
+	/*@ non_null_by_default @*/
 	class QuantVariable
 	{
 		public final GenericVarDecl var;
@@ -604,6 +612,7 @@ public class Lifter extends EscNodeBuilder
 		}
 	}
 	
+	/*@ non_null_by_default @*/
 	class LabeledTerm extends Term
 	{
 		public final boolean positive;
@@ -646,6 +655,7 @@ public class Lifter extends EscNodeBuilder
 		}
 	}
 	
+	/*@ non_null_by_default @*/
 	class IntLiteral extends Term
 	{
 		final public long value;
@@ -656,6 +666,7 @@ public class Lifter extends EscNodeBuilder
 		public STerm dump() { return dumpBuilder.buildInt(value); }
 	}
 	
+	/*@ non_null_by_default @*/
 	class RealLiteral extends Term
 	{
 		final public double value;
@@ -665,6 +676,7 @@ public class Lifter extends EscNodeBuilder
 		public STerm dump() { return dumpBuilder.buildReal(value); }
 	}
 	
+	/*@ non_null_by_default @*/
 	class BoolLiteral extends Term
 	{
 		final public boolean value;
@@ -674,6 +686,7 @@ public class Lifter extends EscNodeBuilder
 		public STerm dump() { return dumpBuilder.buildBool(value); }
 	}
 	
+	/*@ non_null_by_default @*/
 	class NullLiteral extends Term
 	{
 		public NullLiteral() { }
@@ -813,7 +826,7 @@ public class Lifter extends EscNodeBuilder
 		return s.theRealThing();
 	}
 	
-	private boolean isFinalized(Sort s)
+	private boolean isFinalized(/*@ nullable @*/Sort s)
 	{
 		return s != null && !(s instanceof SortVar && !((SortVar)s).isFinalized());
 	}
@@ -857,7 +870,7 @@ public class Lifter extends EscNodeBuilder
 		return require(s1, s2, where) && require(s2, s1, where);
 	}
 	
-	private FnTerm symbolRef(String name, Sort s)
+	private FnTerm symbolRef(String name, /*@ nullable @*/Sort s)
 	{
 		FnSymbol fn = getFnSymbol(name, 0);
 		if (s != null)
@@ -955,7 +968,7 @@ public class Lifter extends EscNodeBuilder
 		return fn;
 	}	
 	private Pattern number = Pattern.compile("[0-9]+");	
-	private Term doTransform(/*@ non_null @*/ASTNode n)
+	private Term doTransform(ASTNode n)
 	{		
 		// declarations & instancations
 		int nbChilds = n.childCount();
@@ -1327,7 +1340,7 @@ public class Lifter extends EscNodeBuilder
 			return null;
 		}
 	}
-	private Term transform(/*@ non_null @*/ASTNode n)
+	private Term transform(ASTNode n)
 	{
 		//ErrorSet.caution("enter " + TagConstants.toString(n.getTag()) + " " + n);
 		Term t = doTransform(n);
@@ -1335,6 +1348,7 @@ public class Lifter extends EscNodeBuilder
 		return t;
 	}
 
+	/*@ non_null_by_default @*/
 	public class SortedBackPred extends BackPred 
 	{
 		ArrayList axioms = new ArrayList();
@@ -1343,8 +1357,8 @@ public class Lifter extends EscNodeBuilder
 		/**
 		 * Return the type-specific background predicate as a formula.
 		 */
-		public void genTypeBackPred(/*@ non_null */ FindContributors scope,
-				/*@ non_null */ PrintStream proverStream)
+		public void genTypeBackPred(FindContributors scope,
+									PrintStream proverStream)
 		{
 			distinct.add(transform(Types.booleanType));
 			distinct.add(transform(Types.charType));
@@ -1392,8 +1406,7 @@ public class Lifter extends EscNodeBuilder
 			}
 		}
 		
-		//@ requires sDecl != null ==> s != null;
-		protected void produce(GenericVarDecl sDecl, Expr s,
+		protected void produce(/*@ nullable @*/GenericVarDecl sDecl, /*@ nullable @*/Expr s,
 				/*@ non_null */ Expr e,
 				/*@ non_null */ PrintStream proverStream) {
 			if (sDecl != null) {
@@ -1457,7 +1470,7 @@ public class Lifter extends EscNodeBuilder
 		/** Record in the background predicate that x is a subclass of y. */
 		
 		private void saySubClass( Type x, Type y,
-				/*@ non_null */ PrintStream proverStream ) 
+								  PrintStream proverStream ) 
 		{
 			saySubType( x, y, proverStream );
 			Term tx = transform(x), ty = transform(y);
@@ -1467,7 +1480,7 @@ public class Lifter extends EscNodeBuilder
 		/** Record in the background predicate that x is a subtype of y. */
 		
 		private void saySubType( Type x, Type y,
-				/*@ non_null */ PrintStream proverStream )
+								PrintStream proverStream )
 		{
 			say(fn(symTypeLE, transform(x), transform(y)));
 		}
@@ -1523,7 +1536,7 @@ public class Lifter extends EscNodeBuilder
 	}
 
 	// dump	
-	EscNodeBuilder dumpBuilder;
+	/*@ nullable @*/EscNodeBuilder dumpBuilder;
 	final Hashtable fnTranslations = new Hashtable();
 	final ArrayList stringConstants = new ArrayList();
 	final ArrayList distinctSymbols = new ArrayList();

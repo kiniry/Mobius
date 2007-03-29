@@ -17,6 +17,7 @@ import escjava.sortedProver.NodeBuilder.SPred;
 import escjava.sortedProver.SimplifyNodeBuilder.Sx;
 import escjava.translate.VcToString;
 
+/*@ non_null_by_default @*/
 public class SimplifyProver extends SortedProver
 {
 	SimplifyNodeBuilder nodeBuilder = new SimplifyNodeBuilder();

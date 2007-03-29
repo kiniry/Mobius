@@ -2,13 +2,17 @@ package escjava.sortedProver;
 
 import java.util.Hashtable;
 
+import javafe.util.Assert;
+
 import escjava.vcGeneration.TDisplay;
 
+/*@ non_null_by_default @*/
 public abstract class NodeBuilder
 {
 	public interface STerm { }
 	public interface SPred extends STerm { }
 	
+	/*@ non_null_by_default @*/
 	public interface SAny extends STerm
 	{ 
 		boolean isSubSortOf(Sort s);
@@ -70,6 +74,7 @@ public abstract class NodeBuilder
 	public final Sort[] emptySorts = new Sort[0];
 	public final SAny[] emptyArgs = new SAny[0];
 	
+	/*@ non_null_by_default @*/
 	public class Symbol
 	{
 		public final int id;
@@ -88,13 +93,14 @@ public abstract class NodeBuilder
 		}
 	}
 	
+	/*@ non_null_by_default @*/
 	public class Sort extends Symbol
 	{
-		private final Sort/*?*/ superSort;
-		private final Sort/*?*/ mapFrom;
-		private final Sort/*?*/ mapTo;
+		private final /*@ nullable @*/Sort superSort;
+		private final /*@ nullable @*/Sort mapFrom;
+		private final /*@ nullable @*/Sort mapTo;
 		
-		protected Sort(String name, Sort superSort, Sort/*?*/ mapFrom, Sort/*?*/ mapTo)
+		protected Sort(String name, Sort superSort, /*@ nullable @*/Sort mapFrom, /*@ nullable @*/Sort mapTo)
 		{
 			super(name);
 			this.superSort = superSort;
@@ -114,7 +120,7 @@ public abstract class NodeBuilder
 		}
 		
 		// TODO use HashSet
-		public Sort/*?*/ commonSuperSort(Sort other)
+		public /*@ nullable @*/Sort commonSuperSort(Sort other)
 		{
 			Hashtable h = new Hashtable();
 			for (Sort s = this; s != null; s = s.getSuperSort())
@@ -125,17 +131,17 @@ public abstract class NodeBuilder
 			return null;
 		}
 
-		public Sort/*?*/ getSuperSort()
+		public /*@ nullable @*/Sort getSuperSort()
 		{
 			return theRealThing().superSort;
 		}
 
-		public Sort/*?*/ getMapFrom()
+		public /*@ nullable @*/Sort getMapFrom()
 		{
 			return theRealThing().mapFrom;
 		}
 
-		public Sort/*?*/ getMapTo()
+		public /*@ nullable @*/Sort getMapTo()
 		{
 			return theRealThing().mapTo;
 		}
@@ -154,6 +160,7 @@ public abstract class NodeBuilder
 		}
 	}
 	
+	/*@ non_null_by_default @*/
 	public class QuantVar extends Symbol 
 	{
 		public final Sort type;
@@ -169,6 +176,7 @@ public abstract class NodeBuilder
 		}
 	}
 	
+	/*@ non_null_by_default @*/
 	public class FnSymbol extends Symbol 
 	{
 		public final Sort[] argumentTypes;
@@ -192,6 +200,7 @@ public abstract class NodeBuilder
 		}
 	}
 	
+	/*@ non_null_by_default @*/
 	public class PredSymbol extends FnSymbol 
 	{ 
 		protected PredSymbol(String name, Sort[] args)
@@ -201,7 +210,7 @@ public abstract class NodeBuilder
 	}
 	
 	// Registration and generic stuff
-	public Sort registerSort(String name, Sort superSort)
+	public Sort registerSort(String name, /*@ nullable @*/Sort superSort)
 	{
 		Sort s = new Sort(name, superSort, null, null);
 		sortsByName.put(name, s);
@@ -265,7 +274,7 @@ public abstract class NodeBuilder
 	
 	protected void validateSymbol(Symbol s)
 	{
-		//@ assert symbolsById(s.id) == s;
+		Assert.notFalse (symbolsById.get(new Integer(s.id)) == s);
 	}
 	
 	//@ requires \nonnullelements(args);
@@ -319,8 +328,8 @@ public abstract class NodeBuilder
 	abstract public SValue buildITE(SPred cond, SValue then_part, SValue else_part);
 	
 	//@ requires \nonnullelements(vars);
-	//@ requires \nonnullelements(pats);
-	//@ requires \nonnullelements(nopats);
+	//@ requires pats != null ==> \nonnullelements(pats);
+	//@ requires pats != null ==> \nonnullelements(nopats);
 	abstract public SPred buildForAll(QuantVar[] vars, SPred body, STerm[][] pats, STerm[] nopats);
 	//@ requires \nonnullelements(vars);
 	abstract public SPred buildExists(QuantVar[] vars, SPred body);

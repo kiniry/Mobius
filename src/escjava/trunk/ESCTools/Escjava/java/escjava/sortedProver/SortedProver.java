@@ -4,6 +4,7 @@ import java.util.Properties;
 import escjava.prover.ProverResponse;
 import escjava.sortedProver.NodeBuilder.SPred;
 
+/*@ non_null_by_default @*/
 public abstract class SortedProver
 {
     /*
@@ -18,7 +19,7 @@ public abstract class SortedProver
      *
      * @return a {@link NodeBuilder} object for the current prover.
      */
-    public abstract /*@ non_null @*/ EscNodeBuilder getNodeBuilder();
+    public abstract EscNodeBuilder getNodeBuilder();
 
     /**
      * Start up the prover.  After the prover is started correctly it
@@ -41,7 +42,7 @@ public abstract class SortedProver
       @   ensures started;
       @*/
 
-    public abstract /*@ non_null @*/ ProverResponse startProver();
+    public abstract ProverResponse startProver();
 
     /**
      * Send arbitrary information to the prover.  Typically this
@@ -60,7 +61,7 @@ public abstract class SortedProver
       @           \result == ProverResponse.PROGRESS_INFORMATION;
       @*/
 
-    public abstract /*@ non_null @*/ ProverResponse setProverResourceFlags(/*@ non_null @*/ Properties properties);
+    public abstract ProverResponse setProverResourceFlags(Properties properties);
 
     /**
      * Send the theory background predicate to the solver.
@@ -76,7 +77,7 @@ public abstract class SortedProver
       @   ensures backgroundPredicateSent;
       @*/
     
-    public abstract /*@ non_null @*/ ProverResponse sendBackgroundPredicate();
+    public abstract ProverResponse sendBackgroundPredicate();
 
     /**
      * Declare a new axiom in the current theory.
@@ -91,7 +92,7 @@ public abstract class SortedProver
       @           \result == ProverResponse.INCONSISTENCY_WARNING;
       @*/
 
-    public abstract /*@ non_null @*/ ProverResponse declareAxiom(/*@ non_null @*/ SPred formula);
+    public abstract ProverResponse declareAxiom(SPred formula);
 
     /**
      * Make an assumption.
@@ -120,7 +121,7 @@ public abstract class SortedProver
       @           \result == ProverResponse.FAIL;
       @*/
 
-    public abstract /*@ non_null @*/ ProverResponse retractAssumption(int count);
+    public abstract ProverResponse retractAssumption(int count);
 
     /**
      * Check the validity of the given formula given the current theory,
@@ -140,10 +141,10 @@ public abstract class SortedProver
       @           \result == ProverResponse.FAIL;
       @*/
 
-    public abstract /*@ non_null @*/ ProverResponse isValid(
-    		    /*@ non_null @*/ SPred formula,
-    			/*@ non_null @*/ SortedProverCallback callback,
-    			/*@ non_null @*/ Properties properties);
+    public abstract ProverResponse isValid(
+    		     SPred formula,
+    			 SortedProverCallback callback,
+    			 Properties properties);
     
     /**
      * Stop the prover.
@@ -158,5 +159,5 @@ public abstract class SortedProver
       @   ensures started == false;
       @*/
 
-    public abstract /*@ non_null @*/ ProverResponse stopProver();
+    public abstract ProverResponse stopProver();
 }

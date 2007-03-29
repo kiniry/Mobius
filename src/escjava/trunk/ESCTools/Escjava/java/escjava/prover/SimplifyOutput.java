@@ -31,7 +31,7 @@ public class SimplifyOutput
     public static final int END = WARNING_TRIGGERLESS_QUANT + 1;
 
     // What kind of output are we?
-    int kind;
+    /*@ spec_public @*/ int kind;
     //@ invariant VALID <= kind && kind < END;
 
     //@ normal_behavior

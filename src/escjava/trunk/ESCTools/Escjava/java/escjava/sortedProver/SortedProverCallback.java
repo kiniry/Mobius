@@ -14,7 +14,8 @@ public interface SortedProverCallback
 	 * hint.  The prover can treat the formula returned as a theory tautology (in
 	 * which case it can say the formula is valid).  It is however free to ignore that.
 	 */
-	SPred counterExample(String[] labels);
+	//@ requires \nonnullelements(labels);
+	/*@ nullable @*/SPred counterExample(String[] labels);
 	
 	/**
 	 * Called by prover from time to time.  The parameters are by no means accurate.
