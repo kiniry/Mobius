@@ -4,9 +4,11 @@ package escjava;
 
 import escjava.backpred.FindContributors;
 import escjava.prover.*;
+import escjava.sortedProver.CounterExampleResponse;
 import escjava.sortedProver.Lifter;
 import escjava.sortedProver.SortedProver;
 import escjava.sortedProver.SortedProverCallback;
+import escjava.sortedProver.SortedProverResponse;
 import escjava.sortedProver.NodeBuilder.SPred;
 import escjava.translate.VcToString;
 import javafe.ast.ASTNode;
@@ -258,26 +260,23 @@ public class ProverManager {
     	  if (useSorted) {
     		  final ArrayList responses = new ArrayList();
     		  SortedProverCallback cb = new SortedProverCallback() {
-    			  public SPred counterExample(String[] labels)
+    			  public void processResponse(SortedProverResponse resp)
     			  {
-    				  SExp[] labels2 = new SExp[labels.length];
-    				  for (int i = 0; i < labels.length; ++i)
-    					  labels2[i] = SExp.fancyMake(labels[i]);
-    				  responses.add (
-    						  new SimplifyResult(SimplifyOutput.COUNTEREXAMPLE, 
-    								  SList.fromArray(labels2), null));
-    				  return null;    				  
-    			  }
-    			  
-    			  public boolean progressIndication(int cfls, int eta)
-    			  {
-    				  return true;
+    				  if (resp.getTag() == SortedProverResponse.COUNTER_EXAMPLE) {
+    					  String[] labels = ((CounterExampleResponse)resp).getLabels();
+    					  SExp[] labels2 = new SExp[labels.length];
+    					  for (int i = 0; i < labels.length; ++i)
+    						  labels2[i] = SExp.fancyMake(labels[i]);
+    					  responses.add (
+    							  new SimplifyResult(SimplifyOutput.COUNTEREXAMPLE, 
+    									  SList.fromArray(labels2), null));
+    				  }
     			  }
     		  };
     		  
-    		  ProverResponse resp = sortedProver.isValid(lifter.convert(vc), cb, new Properties());
+    		  SortedProverResponse resp = sortedProver.isValid(lifter.convert(vc), cb, new Properties());
     		  responses.add(new SimplifyOutput(
-    				  resp == ProverResponse.YES ? SimplifyOutput.VALID
+    				  resp.getTag() == SortedProverResponse.YES ? SimplifyOutput.VALID
     						  : SimplifyOutput.INVALID));
     		  
     		  return new Enumeration() {

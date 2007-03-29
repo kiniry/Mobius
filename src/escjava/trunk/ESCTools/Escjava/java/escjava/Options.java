@@ -908,7 +908,7 @@ public class Options extends javafe.SrcToolOptions {
 
             pProver = new String(args[offset]).split(",");
             
-            return offset;
+            return offset+1;
             
         } else if (option.equals("-perr")) {
             pErr = true;

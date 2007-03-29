@@ -7,12 +7,13 @@ import javafe.util.Assert;
 import javafe.util.Info;
 
 import escjava.backpred.BackPred;
-import escjava.prover.ProverResponse;
+import escjava.sortedProver.SortedProverResponse;
 import escjava.prover.SExp;
 import escjava.prover.SList;
 import escjava.prover.Simplify;
 import escjava.prover.SimplifyOutput;
 import escjava.prover.SimplifyResult;
+import escjava.sortedProver.CounterExampleResponse;
 import escjava.sortedProver.EscNodeBuilder;
 import escjava.sortedProver.NodeBuilder;
 import escjava.sortedProver.SortedProver;
@@ -28,36 +29,38 @@ public class SimplifyProver extends SortedProver
 	Simplify simpl = new Simplify();
 	int pushHeight;
 	BackPred backPred = new BackPred();
+	
+	SortedProverResponse ok = new SortedProverResponse(SortedProverResponse.OK);
 
 	public EscNodeBuilder getNodeBuilder()
 	{
 		return nodeBuilder;
 	}
 
-	public ProverResponse startProver()
+	public SortedProverResponse startProver()
 	{
 		started = true;
-		return ProverResponse.OK;
+		return ok;
 	}
 
-	public ProverResponse setProverResourceFlags(Properties properties)
+	public SortedProverResponse setProverResourceFlags(Properties properties)
 	{
-		return ProverResponse.OK;
+		return ok;
 	}
 
-	public ProverResponse sendBackgroundPredicate()
+	public SortedProverResponse sendBackgroundPredicate()
 	{
 		backgroundPredicateSent = true;
 		backPred.genUnivBackPred(simpl.subProcessToStream());
 		simpl.sendCommands("");
-		return ProverResponse.OK;
+		return ok;
 	}
 
-	public ProverResponse declareAxiom(SPred formula) 
+	public SortedProverResponse declareAxiom(SPred formula) 
 	{
 		Assert.notFalse(pushHeight == 0);
 		simpl.sendCommand("(BG_PUSH\n" + formulaToString(formula) + "\n)");
-		return ProverResponse.OK;
+		return ok;
 	}
 	
 	String formulaToString(SPred form)
@@ -68,23 +71,23 @@ public class SimplifyProver extends SortedProver
 		return sb.toString();
 	}
 
-	public ProverResponse makeAssumption(SPred formula)
+	public SortedProverResponse makeAssumption(SPred formula)
 	{	
 		pushHeight++;
 		simpl.sendCommand("(BG_PUSH\n" + formulaToString(formula) + "\n)");
-		return ProverResponse.OK;
+		return ok;
 	}
 
-	public ProverResponse retractAssumption(int count)
+	public SortedProverResponse retractAssumption(int count)
 	{
 		Assert.notFalse(pushHeight >= count);
 		pushHeight -= count;
 		while (count-- > 0)
 			simpl.sendCommand("(BG_POP)");
-		return ProverResponse.OK;
+		return ok;
 	}
 	
-	public ProverResponse isValid(SPred formula, SortedProverCallback callback, Properties properties)
+	public SortedProverResponse isValid(SPred formula, SortedProverCallback callback, Properties properties)
 	{
 	    simpl.startProve();
 	    String form = formulaToString(formula);
@@ -105,22 +108,22 @@ public class SimplifyProver extends SortedProver
         			String[] labels = new String[lst.length];
         			for (int i = 0; i < lst.length; ++i)
         				labels[i] = lst[i].toString();
-        			SPred hint = callback.counterExample(labels);
-        			// we ignore any possible hint returned
+        			callback.processResponse(new CounterExampleResponse(labels));        			
+        			// we ignore any possible discharge hint called on the response
         		}
         	}
         }
         
         if (lastOut != null && lastOut.getKind() == SimplifyOutput.VALID)
-        	return ProverResponse.YES;
+        	return new SortedProverResponse(SortedProverResponse.YES);
         
-		return ProverResponse.NO;
+		return new SortedProverResponse(SortedProverResponse.NO);
 	}
 
-	public ProverResponse stopProver()
+	public SortedProverResponse stopProver()
 	{
 		started = false;
 		simpl.close();
-		return ProverResponse.OK;
+		return ok;
 	}
 }

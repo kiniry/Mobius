@@ -4,7 +4,6 @@ import java.util.Properties;
 
 import javafe.ast.CastExpr;
 import javafe.util.ErrorSet;
-import escjava.prover.ProverResponse;
 import escjava.sortedProver.NodeBuilder.SPred;
 
 /*@ non_null_by_default @*/
@@ -30,11 +29,11 @@ public abstract class SortedProver
      * the other methods of this API.
      *
      * @return a response code.  A response code of {@link
-     * ProverResponse#OK} indicates that the prover started successfully
+     * SortedProverResponse#OK} indicates that the prover started successfully
      * and is ready to receive commands.  A response code of {@link
-     * ProverResponse#FAIL} indicates that the prover did not start
+     * SortedProverResponse#FAIL} indicates that the prover did not start
      * successfully and is not ready to receive commands.  In the latter
-     * case, {@link ProverResponse.FAIL.info} can contain additional
+     * case, {@link SortedProverResponse.FAIL.info} can contain additional
      * arbitrary information about the failure.
      */
 
@@ -45,7 +44,7 @@ public abstract class SortedProver
       @   ensures started;
       @*/
 
-    public abstract ProverResponse startProver();
+    public abstract SortedProverResponse startProver();
 
     /**
      * Send arbitrary information to the prover.  Typically this
@@ -64,7 +63,7 @@ public abstract class SortedProver
       @           \result == ProverResponse.PROGRESS_INFORMATION;
       @*/
 
-    public abstract ProverResponse setProverResourceFlags(Properties properties);
+    public abstract SortedProverResponse setProverResourceFlags(Properties properties);
 
     /**
      * Send the theory background predicate to the solver.
@@ -80,7 +79,7 @@ public abstract class SortedProver
       @   ensures backgroundPredicateSent;
       @*/
     
-    public abstract ProverResponse sendBackgroundPredicate();
+    public abstract SortedProverResponse sendBackgroundPredicate();
 
     /**
      * Declare a new axiom in the current theory.
@@ -95,7 +94,7 @@ public abstract class SortedProver
       @           \result == ProverResponse.INCONSISTENCY_WARNING;
       @*/
 
-    public abstract ProverResponse declareAxiom(SPred formula);
+    public abstract SortedProverResponse declareAxiom(SPred formula);
 
     /**
      * Make an assumption.
@@ -110,7 +109,7 @@ public abstract class SortedProver
       @           \result == ProverResponse.INCONSISTENCY_WARNING;
       @*/
 
-    public abstract /*@ non_null @*/ ProverResponse makeAssumption(/*@ non_null @*/ SPred formula);
+    public abstract /*@ non_null @*/ SortedProverResponse makeAssumption(/*@ non_null @*/ SPred formula);
 
     /**
      * Retract some assumptions.
@@ -124,7 +123,7 @@ public abstract class SortedProver
       @           \result == ProverResponse.FAIL;
       @*/
 
-    public abstract ProverResponse retractAssumption(int count);
+    public abstract SortedProverResponse retractAssumption(int count);
 
     /**
      * Check the validity of the given formula given the current theory,
@@ -144,7 +143,7 @@ public abstract class SortedProver
       @           \result == ProverResponse.FAIL;
       @*/
 
-    public abstract ProverResponse isValid(
+    public abstract SortedProverResponse isValid(
     		     SPred formula,
     			 SortedProverCallback callback,
     			 Properties properties);
@@ -162,7 +161,7 @@ public abstract class SortedProver
       @   ensures started == false;
       @*/
 
-    public abstract ProverResponse stopProver();
+    public abstract SortedProverResponse stopProver();
     
     
     public static /*@ nullable @*/SortedProver getProver(String name)
