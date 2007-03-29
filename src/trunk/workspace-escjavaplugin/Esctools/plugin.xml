@@ -3,8 +3,8 @@
 <plugin
    id="escjava.esctools"
    name="Esctools Library Plug-in"
-   version="1.1.0"
-   provider-name="David R. Cok">
+   version="1.1.2"
+   provider-name="David R. Cok and the MOBIUS Project">
 
    <runtime>
      <library name="esctools2.jar">
