@@ -1,34 +1,10 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Esc/Java2 tools
+Bundle-Name: Esctools Library Plug-in
 Bundle-SymbolicName: escjava.esctools
-Bundle-Version: 1.1.1
+Bundle-Version: 1.1.2
 Bundle-Localization: plugin
-Bundle-Vendor: David R. Cok and MOBIUS Project
+Bundle-Vendor: David R. Cok and the MOBIUS Project
 Import-Package: org.osgi.framework;version="1.3.0"
 Eclipse-LazyStart: true
-Export-Package: escjava, 
-                escjava.ant, 
-                escjava.ast, 
-                escjava.bakpred, 
-                escjava.gui,
-                escjava.pa,
-                escjava.pa.generic,
-                escjava.parser,
-                escjava.prover,
-                escjava.reader,
-                escjava.sp,
-                escjava.tc,
-                escjava.translate,
-                javafe,
-                javafe.ast,
-                javafe.decsrc,
-                javafe.filespace,
-                javafe.genericfile,
-                javafe.parser,
-                javafe.reader,
-                javafe.tc,
-                javafe.util,
-                junitutils,
-                tohtml
 Bundle-ClassPath: esctools2.jar
