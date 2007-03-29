@@ -39,7 +39,6 @@ import escjava.vcGeneration.*;
 import javafe.util.*;
 
 import escjava.sortedProver.Lifter;
-import escjava.sortedProver.SimplifyNodeBuilder;
 import escjava.soundness.*;
 import javafe.ast.LShiftVisitor;
 
@@ -256,7 +255,8 @@ public class Main extends javafe.SrcTool
 	ProverManager.useSammy = options().useSammy;
 	ProverManager.useHarvey = options().useHarvey;
     ProverManager.useCvc3 = options().useCvc3;
-    ProverManager.useSorted = options().tvcg;
+    ProverManager.useSorted = options().svcg;
+    ProverManager.sortedProvers = options().pProver;
 	//$$
 
         if (!options().quiet) {
@@ -578,7 +578,7 @@ public class Main extends javafe.SrcTool
 	    if (3 <= stages) {
 
 		if (6 <= stages || options().predAbstract) {
-			if (options().tvcg)
+			if (options().svcg)
 				ProverManager.kill();
 		    ProverManager.push(scope);
 		}
@@ -993,7 +993,7 @@ public class Main extends javafe.SrcTool
         // Translate VC to a string
         Info.out("[converting VC to a string]");
 
-        if (!options().tvcg && (options().pvc || (Info.on && options().traceInfo > 0))) { 
+        if (!options().svcg && (options().pvc || (Info.on && options().traceInfo > 0))) { 
             VcToString.compute(vc, System.out);
 	}
 

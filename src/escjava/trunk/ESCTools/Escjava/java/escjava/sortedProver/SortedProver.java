@@ -1,6 +1,9 @@
 package escjava.sortedProver;
 
 import java.util.Properties;
+
+import javafe.ast.CastExpr;
+import javafe.util.ErrorSet;
 import escjava.prover.ProverResponse;
 import escjava.sortedProver.NodeBuilder.SPred;
 
@@ -160,4 +163,28 @@ public abstract class SortedProver
       @*/
 
     public abstract ProverResponse stopProver();
+    
+    
+    public static /*@ nullable @*/SortedProver getProver(String name)
+    {
+    	try {	
+        	String firstLetter = name.substring(0, 1).toLowerCase();
+        	String tail = name.substring(1);
+        	String capName = firstLetter.toUpperCase() + tail;
+        	String nonCapName = firstLetter + tail;
+    		Class c = Class.forName("escjava.sortedProver." + nonCapName + "." + capName + "Prover");
+    		return (SortedProver) (c.newInstance());
+    	} catch (ClassNotFoundException e) {
+    		return null;
+    	} catch (IllegalAccessException e) {
+    		ErrorSet.fatal("problems instantiating prover (access): " + e);
+    		return null;
+    	} catch (InstantiationException e) {
+    		ErrorSet.fatal("problems instantiating prover (inst): " + e);
+    		return null;
+    	} catch (ClassCastException e) {
+    		ErrorSet.fatal("problems instantiating prover (cast): " + e);
+    		return null;
+    	}		
+    }
 }

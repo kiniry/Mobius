@@ -273,6 +273,9 @@ public class Options extends javafe.SrcToolOptions {
             { "-vc2dot", "Output the gc tree in dot format" },
             { "-pToDot", "Output the translation of the gc tree in dot format" },
             
+            {
+                "-svcg <prover>",
+                "Use the yet-newer, sorted logic, verification condition generator and invoke the <prover> (eg. simplify, pvs, coq, etc.)." },
             //$$
             { "-ReachabilityAnalysis, -era", "Enable reachability analysis." },
 	    { "-idc", "Check that assertions are defined (i.e. not undefined) in the sense of the new JML semantics."},
@@ -304,7 +307,7 @@ public class Options extends javafe.SrcToolOptions {
     public boolean nvcg = false;
     
     // use the even newer typed one 
-    public boolean tvcg = false;
+    public boolean svcg = false;
 
     // check "is-defined conditions" (IDCs) rather than normal specification correctness.
     public boolean idc = false;
@@ -892,8 +895,19 @@ public class Options extends javafe.SrcToolOptions {
             
             return offset+1;
 
-        } else if (option.equals("-tvcg")) {
-            tvcg = true;
+        } else if (option.equals("-svcg")) {
+            svcg = true;  
+            
+            if ((offset >= args.length) || (args[offset].charAt(0) == '-')) {
+                throw new UsageError(
+                        "Option "
+                                + option
+                                + " requires a comma separated argument indicating which prover(s) you want to use.\n"
+                                + "(e.g. \"" + option + " pvs\" or \"" + option + " simplify,coq\")");
+            }
+
+            pProver = new String(args[offset]).split(",");
+            
             return offset;
             
         } else if (option.equals("-perr")) {

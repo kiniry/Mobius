@@ -1,4 +1,4 @@
-package escjava.sortedProver;
+package escjava.sortedProver.simplify;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,6 +9,21 @@ import java.util.Iterator;
 import javafe.util.Assert;
 import javafe.util.Set;
 import escjava.prover.Atom;
+import escjava.sortedProver.EscNodeBuilder;
+import escjava.sortedProver.NodeBuilder;
+import escjava.sortedProver.NodeBuilder.FnSymbol;
+import escjava.sortedProver.NodeBuilder.PredSymbol;
+import escjava.sortedProver.NodeBuilder.QuantVar;
+import escjava.sortedProver.NodeBuilder.SAny;
+import escjava.sortedProver.NodeBuilder.SBool;
+import escjava.sortedProver.NodeBuilder.SInt;
+import escjava.sortedProver.NodeBuilder.SMap;
+import escjava.sortedProver.NodeBuilder.SPred;
+import escjava.sortedProver.NodeBuilder.SReal;
+import escjava.sortedProver.NodeBuilder.SRef;
+import escjava.sortedProver.NodeBuilder.STerm;
+import escjava.sortedProver.NodeBuilder.SValue;
+import escjava.sortedProver.NodeBuilder.Sort;
 
 /*@ non_null_by_default @*/
 public class SimplifyNodeBuilder extends EscNodeBuilder

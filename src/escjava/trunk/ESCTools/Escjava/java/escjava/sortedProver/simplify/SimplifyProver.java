@@ -1,4 +1,4 @@
-package escjava.sortedProver;
+package escjava.sortedProver.simplify;
 
 import java.util.Enumeration;
 import java.util.Properties;
@@ -13,8 +13,12 @@ import escjava.prover.SList;
 import escjava.prover.Simplify;
 import escjava.prover.SimplifyOutput;
 import escjava.prover.SimplifyResult;
+import escjava.sortedProver.EscNodeBuilder;
+import escjava.sortedProver.NodeBuilder;
+import escjava.sortedProver.SortedProver;
+import escjava.sortedProver.SortedProverCallback;
 import escjava.sortedProver.NodeBuilder.SPred;
-import escjava.sortedProver.SimplifyNodeBuilder.Sx;
+import escjava.sortedProver.simplify.SimplifyNodeBuilder.Sx;
 import escjava.translate.VcToString;
 
 /*@ non_null_by_default @*/

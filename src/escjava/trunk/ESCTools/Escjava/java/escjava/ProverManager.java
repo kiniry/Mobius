@@ -5,7 +5,6 @@ package escjava;
 import escjava.backpred.FindContributors;
 import escjava.prover.*;
 import escjava.sortedProver.Lifter;
-import escjava.sortedProver.SimplifyProver;
 import escjava.sortedProver.SortedProver;
 import escjava.sortedProver.SortedProverCallback;
 import escjava.sortedProver.NodeBuilder.SPred;
@@ -13,6 +12,7 @@ import escjava.translate.VcToString;
 import javafe.ast.ASTNode;
 import javafe.ast.Expr;
 import javafe.util.Assert;
+import javafe.util.ErrorSet;
 import javafe.util.FatalError;
 import java.io.PrintStream;
 import java.util.ArrayList;
@@ -41,6 +41,7 @@ public class ProverManager {
   public static boolean useHarvey = false;
   public static boolean useCvc3 = false;
   public static boolean useSorted = false;
+  public static String[] sortedProvers;
   
   static escjava.backpred.BackPred backPred = new escjava.backpred.BackPred();
 
@@ -94,7 +95,15 @@ public class ProverManager {
     
     if (useSorted && sortedProver == null) {
         long startTime = java.lang.System.currentTimeMillis();
-        sortedProver = new SimplifyProver();
+        
+        Assert.notFalse (sortedProvers != null && sortedProvers.length != 0);
+        
+        if (sortedProvers.length > 1)
+        	ErrorSet.caution("sorry, only a single prover at once supported, using the first one");
+        sortedProver = SortedProver.getProver(sortedProvers[0]);
+        if (sortedProver == null) {
+        	ErrorSet.fatal("cannot find prover: " + sortedProvers[0]);
+        }
 
         if (!Main.options().quiet) 
           System.out.println("  Sorted prover started:" + Main.timeUsed(startTime));
