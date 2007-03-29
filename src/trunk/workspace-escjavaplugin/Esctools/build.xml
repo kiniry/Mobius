@@ -1,13 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- $Id$ -->
-<!-- $Log$
-<!-- Revision 1.2  2007/03/29 15:18:18  jkiniry
-<!-- I have added the properties version_number, esctools_plugin_project_path, and escjava2_project_path to support a more flexible build and release process.
-
-I have also added the target gather.new.jars.from.escjava2 to copy the esctools2.jar and escspecs.jar jarfiles into the plugin's sandbox.
-
-Finally, I reviewed the build.xml file for clarity (thus, several documentation updates) and to ensure that it contained to path or operating-specific dependencies.
-<!-- -->
 <project name="escjava.esctools" default="build.jars" basedir=".">
 
 	<property name="basews" value="${ws}"/>
