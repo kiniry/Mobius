@@ -323,10 +323,12 @@ public class BPLPrinter implements BPLVisitor<Object> {
     if (body.getVariableDeclarations().length > 0) {
       printNewLine();
       for (BPLVariableDeclaration var : body.getVariableDeclarations()) {
-        printComments(var, true);
-        printIndentation();
-        var.accept(this);
-        printNewLine();
+        if (var.getVariables().length > 0) {
+          printComments(var, true);
+          printIndentation();
+          var.accept(this);
+          printNewLine();
+        }
       }
     }
 

@@ -31,6 +31,7 @@ import b2bpl.bytecode.TypeLoader;
 import b2bpl.bytecode.instructions.AThrowInstruction;
 import b2bpl.bytecode.instructions.Instruction;
 import b2bpl.bytecode.instructions.InvokeInstruction;
+import b2bpl.bytecode.instructions.InvokeSpecialInstruction;
 
 
 /**
@@ -52,8 +53,8 @@ public class FlowAnalyzer extends Analyzer {
    */
   private final boolean modelRuntimeExceptions;
 
-  /** The instructions of the {@code BCMethod} being analyzed. */
-  private Instructions insns;
+  /** The bytecode method being analyzed. */
+  private BCMethod method;
 
   /**
    * A map from the bytecode instructions as represented in the ASM bytecode
@@ -97,10 +98,17 @@ public class FlowAnalyzer extends Analyzer {
   public Frame[] analyze(String owner, MethodNode asmMethod)
       throws AnalyzerException {
     JClassType ownerType = TypeLoader.getClassType(owner);
-    BCMethod method = ownerType.getMethod(asmMethod.name, asmMethod.desc);
-    insns = method.getInstructions();
+    method = ownerType.getMethod(asmMethod.name, asmMethod.desc);
+    Instructions insns = method.getInstructions();
 
     computeMap(asmMethod.instructions);
+
+    // Initialize the flag as of whether the this object has been initialized
+    // at the individual bytecode methods.
+    for (InstructionHandle insn : insns) {
+      // The flag is set to true unless the method is a constructor.
+      insn.setThisInitialized(!method.isConstructor());
+    }
 
     activeHandlers = new List[insns.size()];
     for (int i = 0; i < insns.size(); i++) {
@@ -156,11 +164,47 @@ public class FlowAnalyzer extends Analyzer {
     }
   }
 
-  protected boolean newControlFlowExceptionEdge(int insn, int successor) {
+  private boolean isThisInitializer(int asmInsn) {
+    Instruction insn =
+      method.getInstructions().get(map[asmInsn]).getInstruction();
+    if (method.isConstructor() && (insn instanceof InvokeSpecialInstruction)) {
+      BCMethod initMethod = ((InvokeSpecialInstruction) insn).getMethod();
+
+      Frame asmInsnFrame = getFrames()[asmInsn];
+      Value receiverValue = asmInsnFrame.getStack(
+          asmInsnFrame.getStackSize() - (initMethod.getParameterCount() + 1));
+
+      Frame asmFirstFrame = getFrames()[0];
+      Value thisValue = asmFirstFrame.getLocal(0);
+
+      return receiverValue == thisValue;
+    }
+    return false;
+  }
+
+  protected void newControlFlowEdge(int asmInsn, int asmSuccessor) {
+    // Update the information as of whether the this object has been
+    // initialized at the given instruction.
+    InstructionHandle insn = method.getInstructions().get(map[asmInsn]);
+    InstructionHandle successor =
+      method.getInstructions().get(map[asmSuccessor]);
+    successor.setThisInitialized(
+        insn.isThisInitialized() || isThisInitializer(asmInsn));
+  }
+
+  protected boolean newControlFlowExceptionEdge(int asmInsn, int asmSuccessor) {
+    // Update the information as of whether the this object has been
+    // initialized at the given instruction.
+    InstructionHandle insn = method.getInstructions().get(map[asmInsn]);
+    InstructionHandle successor =
+      method.getInstructions().get(map[asmSuccessor]);
+    successor.setThisInitialized(
+        insn.isThisInitialized() || isThisInitializer(asmInsn));
+
     return newControlFlowExceptionEdge(
-        insns.get(map[insn]),
-        insns.get(map[successor]),
-        getFrames()[insn]);
+        method.getInstructions().get(map[asmInsn]),
+        method.getInstructions().get(map[asmSuccessor]),
+        getFrames()[asmInsn]);
   }
 
   /**

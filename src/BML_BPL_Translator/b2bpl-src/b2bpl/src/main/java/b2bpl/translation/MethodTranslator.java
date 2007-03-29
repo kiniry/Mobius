@@ -109,6 +109,8 @@ import b2bpl.bytecode.bml.ast.BMLLoopInvariant;
 import b2bpl.bytecode.bml.ast.BMLLoopModifiesClause;
 import b2bpl.bytecode.bml.ast.BMLLoopSpecification;
 import b2bpl.bytecode.bml.ast.BMLLoopVariant;
+import b2bpl.bytecode.bml.ast.BMLMethodSpecification;
+import b2bpl.bytecode.bml.ast.BMLSpecificationCase;
 import b2bpl.bytecode.bml.ast.BMLStoreRef;
 import b2bpl.bytecode.instructions.AALoadInstruction;
 import b2bpl.bytecode.instructions.AAStoreInstruction;
@@ -333,35 +335,36 @@ public class MethodTranslator implements TranslationConstants {
     for (int i = 0; i < method.getMaxLocals(); i++) {
       BPLVariable regr = new BPLVariable(refLocalVar(i), BPLBuiltInType.REF);
       BPLVariable regi = new BPLVariable(intLocalVar(i), BPLBuiltInType.INT);
-      vars.add(new BPLVariableDeclaration(regr, regi));
+      // vars.add(new BPLVariableDeclaration(regr, regi));
+      vars.add(filterVariableDeclarations(blocks, regr, regi));
     }
 
     // The stack variables.
     for (int i = 0; i < method.getMaxStack(); i++) {
       BPLVariable stackr = new BPLVariable(refStackVar(i), BPLBuiltInType.REF);
       BPLVariable stacki = new BPLVariable(intStackVar(i), BPLBuiltInType.INT);
-      vars.add(new BPLVariableDeclaration(stackr, stacki));
+      // vars.add(new BPLVariableDeclaration(stackr, stacki));
+      vars.add(filterVariableDeclarations(blocks, stackr, stacki));
     }
 
     // Helper variables for storing the return value of a method call.
-    BPLVariable callResultr =
-      new BPLVariable(REF_CALL_RESULT_VAR, BPLBuiltInType.REF);
-    BPLVariable callResulti =
-      new BPLVariable(INT_CALL_RESULT_VAR, BPLBuiltInType.INT);
-    vars.add(new BPLVariableDeclaration(callResultr, callResulti));
+    BPLVariable callResultr = new BPLVariable(REF_CALL_RESULT_VAR, BPLBuiltInType.REF);
+    BPLVariable callResulti = new BPLVariable(INT_CALL_RESULT_VAR, BPLBuiltInType.INT);
+    // vars.add(new BPLVariableDeclaration(callResultr, callResulti));
+    vars.add(filterVariableDeclarations(blocks, callResultr, callResulti));
 
     // Helper variables for swapping two values.
     BPLVariable swapr = new BPLVariable(REF_SWAP_VAR, BPLBuiltInType.REF);
     BPLVariable swapi = new BPLVariable(INT_SWAP_VAR, BPLBuiltInType.INT);
-    vars.add(new BPLVariableDeclaration(swapr, swapi));
+    // vars.add(new BPLVariableDeclaration(swapr, swapi));
+    vars.add(filterVariableDeclarations(blocks, swapr, swapi));
 
     // The diverse heap variables being maintained.
-    BPLVariable heap = new BPLVariable(HEAP_VAR, new BPLTypeName(HEAP_TYPE));
-    BPLVariable oldHeap =
-      new BPLVariable(OLD_HEAP_VAR, new BPLTypeName(HEAP_TYPE));
-    BPLVariable preHeap =
-      new BPLVariable(PRE_HEAP_VAR, new BPLTypeName(HEAP_TYPE));
-    vars.add(new BPLVariableDeclaration(heap, oldHeap, preHeap));
+    BPLVariable heap    = new BPLVariable(HEAP_VAR, new BPLTypeName(HEAP_TYPE));
+    BPLVariable oldHeap = new BPLVariable(OLD_HEAP_VAR, new BPLTypeName(HEAP_TYPE));
+    BPLVariable preHeap = new BPLVariable(PRE_HEAP_VAR, new BPLTypeName(HEAP_TYPE));
+    // vars.add(new BPLVariableDeclaration(heap, oldHeap, preHeap));
+    vars.add(filterVariableDeclarations(blocks, heap, oldHeap, preHeap));
 
     // The variables which store a copy of the current heap at each loop header.
     // These variables are dynamically "allocated" during the translation of the
@@ -371,8 +374,7 @@ public class MethodTranslator implements TranslationConstants {
       for (String loopHeapVar : loopHeapVars.values()) {
         lhVars.add(new BPLVariable(loopHeapVar, new BPLTypeName(HEAP_TYPE)));
       }
-      vars.add(new BPLVariableDeclaration(
-          lhVars.toArray(new BPLVariable[lhVars.size()])));
+      vars.add(new BPLVariableDeclaration(lhVars.toArray(new BPLVariable[lhVars.size()])));
     }
 
     // The variables which store the value of loop variant expressions at each
@@ -383,10 +385,9 @@ public class MethodTranslator implements TranslationConstants {
       for (String loopHeapVar : loopVariantVars.values()) {
         lvVars.add(new BPLVariable(loopHeapVar, BPLBuiltInType.INT));
       }
-      vars.add(new BPLVariableDeclaration(
-          lvVars.toArray(new BPLVariable[lvVars.size()])));
-    }
-
+      vars.add(new BPLVariableDeclaration(lvVars.toArray(new BPLVariable[lvVars.size()])));
+    }  
+    
     // Build the different parts of the BoogiePL procedure.
     String name = getProcedureName(method);
     BPLImplementationBody body = new BPLImplementationBody(
@@ -407,6 +408,28 @@ public class MethodTranslator implements TranslationConstants {
     return new BPLProcedure(name, inParams, outParams, null, body);
   }
 
+  
+  /**
+   * Filters only variable declarations for variables which actually appear in the procedure implementation.
+   * @param blocks List of blocks of the current procedure.
+   * @param vars List of BPLVariables which might be used in this procedure.
+   * @return BPLVariableDeclaration declaring all variables which actually appear in the implementation.
+   */
+  private BPLVariableDeclaration filterVariableDeclarations(List<BPLBasicBlock> blocks, BPLVariable... vars) {
+    List<BPLVariable> new_vars = new ArrayList<BPLVariable>();
+    for (BPLBasicBlock block : blocks) {
+      for (BPLCommand command : block.getCommands()) {
+        for (BPLVariable var : vars) {
+          if (command.toString().contains(var.getName()) && !new_vars.contains(var)) {
+            new_vars.add(var);
+          }
+        }
+      }
+    }
+    return new BPLVariableDeclaration(new_vars.toArray(new BPLVariable[new_vars.size()]));
+  }
+  
+  
   /**
    * Returns the name to use for the BoogiePL procedure resulting from the
    * translation of the given bytecode {@code method}. The returned string
@@ -1033,12 +1056,36 @@ public class MethodTranslator implements TranslationConstants {
     return translateLocalSpecification(variant.getExpression(), loopHead);
   }
 
-  private BPLExpression translateMethodFrame(
+  public BPLExpression translateMethodFrame(
       BCMethod method,
       String oldHeap,
       String[] parameters) {
-    BMLStoreRef[] storeRefs =
-      project.getSpecificationDesugarer().getModifiesStoreRefs(method);
+    List<BPLExpression> expr = new ArrayList<BPLExpression>();
+    List<BCMethod> overrides = method.getOverrides();
+    for (BCMethod override : overrides) {
+      BMLMethodSpecification spec = override.getSpecification();
+      if (spec != null) {
+        BMLSpecificationCase[] specCases = spec.getCases();
+        for (int i = 0; i < specCases.length; i++) {
+          BMLStoreRef[] storeRefs = specCases[i].getModifies().getStoreRefs();
+          BMLExpression requires;
+          if (specCases.length == 1) {
+            requires = spec.getRequires().getPredicate();
+          } else {
+            requires = specCases[i].getRequires().getPredicate();
+          }
+          expr.add(translateMethodFrame(requires, storeRefs, oldHeap, parameters));
+        }
+      }
+    }
+    return logicalAnd(expr.toArray(new BPLExpression[expr.size()]));
+  }
+
+  private BPLExpression translateMethodFrame(
+      BMLExpression requires,
+      BMLStoreRef[] storeRefs,
+      String oldHeap,
+      String[] parameters) {
     if (storeRefs.length > 0) {
       String l = quantVarName("l");
       ModifiesFilter filter =
@@ -1050,9 +1097,29 @@ public class MethodTranslator implements TranslationConstants {
       expr = implies(expr, isEqual(left, right));
       BPLVariable lVar = new BPLVariable(l, new BPLTypeName(LOCATION_TYPE));
       expr = forall(lVar, expr);
-      return expr;
+      SpecificationTranslator translator =
+        SpecificationTranslator.forPrecondition(oldHeap, parameters);
+      BPLExpression pre = translator.translate(context, requires);
+      return implies(pre, expr);
     }
     return BPLBoolLiteral.TRUE;
+    // REVIEW[om]: Remove!
+//    BMLStoreRef[] storeRefs =
+//      project.getSpecificationDesugarer().getModifiesStoreRefs(method);
+//    if (storeRefs.length > 0) {
+//      String l = quantVarName("l");
+//      ModifiesFilter filter =
+//        ModifiesFilter.forMethod(oldHeap, parameters, l);
+//      BPLExpression expr = filter.translate(context, storeRefs);
+//      expr = logicalAnd(alive(rval(obj(var(l))), var(oldHeap)), expr);
+//      BPLExpression left = get(var(HEAP_VAR), var(l));
+//      BPLExpression right = get(var(oldHeap), var(l));
+//      expr = implies(expr, isEqual(left, right));
+//      BPLVariable lVar = new BPLVariable(l, new BPLTypeName(LOCATION_TYPE));
+//      expr = forall(lVar, expr);
+//      return expr;
+//    }
+//    return BPLBoolLiteral.TRUE;
   }
 
   private BPLExpression translateLoopFrame(
@@ -1557,6 +1624,11 @@ public class MethodTranslator implements TranslationConstants {
       // First, we generate the block which handles the thrown exception.
       startBlock(trueBlock);
       addAssume(logicalNot(logicalAnd(normalConditions)));
+      // Havoc the exception object and assume its static type.
+      addHavoc(var(refStackVar(0)));
+      addAssume(alive(rval(var(refStackVar(0))), var(HEAP_VAR)));
+      addAssume(nonNull(var(refStackVar(0))));
+      addAssume(isEqual(typ(rval(var(refStackVar(0)))), typeRef(exception)));
       endBlock(labels.toArray(new String[labels.size()]));
 
       // Subsequently, we generate the block for the case where no exception is
@@ -1788,9 +1860,9 @@ public class MethodTranslator implements TranslationConstants {
       }
 
       // Assert the invariants on the relevant objects.
-      // If the method being invoked is a super constructor, the this object
-      // has not been initialized yet, so its invariant must not hold.
-      assertExposedInvariants(isSuperConstructorCall(invokedMethod, handle));
+      // If the this object has not been initialized yet (inside a constructor),
+      // its invariant is not required to hold.
+      assertExposedInvariants(!handle.isThisInitialized());
 
       // Start the actual desugaring of the method call.
 

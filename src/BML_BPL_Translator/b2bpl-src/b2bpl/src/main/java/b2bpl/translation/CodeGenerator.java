@@ -122,12 +122,12 @@ public final class CodeGenerator implements TranslationConstants {
         allocation);
   }
 
-  public static BPLExpression isMultiArray(
+  public static BPLExpression isNewMultiArray(
       BPLExpression value,
       BPLExpression heap,
       BPLExpression allocation) {
     return new BPLFunctionApplication(
-        IS_MULTI_ARRAY_FUNC,
+        IS_NEW_MULTI_ARRAY_FUNC,
         value,
         heap,
         allocation);

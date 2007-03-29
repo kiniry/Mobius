@@ -40,7 +40,7 @@ public class ExceptionHandler {
 
   public boolean isActiveFor(InstructionHandle instruction) {
     return (start.getIndex() <= instruction.getIndex())
-           && (end.getIndex() > instruction.getIndex());
+          && (end.getIndex() >  instruction.getIndex());
   }
 
   public String toString() {

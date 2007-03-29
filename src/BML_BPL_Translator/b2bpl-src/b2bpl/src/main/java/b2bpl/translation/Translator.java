@@ -33,7 +33,7 @@ import static b2bpl.translation.CodeGenerator.isEqual;
 import static b2bpl.translation.CodeGenerator.isEquiv;
 import static b2bpl.translation.CodeGenerator.isInRange;
 import static b2bpl.translation.CodeGenerator.isInstanceOf;
-import static b2bpl.translation.CodeGenerator.isMultiArray;
+import static b2bpl.translation.CodeGenerator.isNewMultiArray;
 import static b2bpl.translation.CodeGenerator.isOfType;
 import static b2bpl.translation.CodeGenerator.isStatic;
 import static b2bpl.translation.CodeGenerator.isSubtype;
@@ -1332,7 +1332,7 @@ public class Translator implements TranslationConstants {
     {
       // Multi-dimensional arrays
       addFunction(
-          IS_MULTI_ARRAY_FUNC,
+          IS_NEW_MULTI_ARRAY_FUNC,
           new BPLTypeName(VALUE_TYPE),
           new BPLTypeName(HEAP_TYPE),
           new BPLTypeName(ALLOCATION_TYPE),
@@ -1356,7 +1356,7 @@ public class Translator implements TranslationConstants {
       BPLVariable aVar = new BPLVariable(a, new BPLTypeName(ALLOCATION_TYPE));
       addAxiom(forall(
           hVar, tVar, iVar, aVar,
-          isMultiArray(
+          isNewMultiArray(
               heapNew(var(h), multiArrayAlloc(var(t), var(i), var(a))),
               var(h),
               multiArrayAlloc(var(t), var(i), var(a)))));
@@ -1369,7 +1369,7 @@ public class Translator implements TranslationConstants {
       addAxiom(forall(
           vVar, hVar, tVar, iVar,
           isEquiv(
-              isMultiArray(var(v), var(h), arrayAlloc(var(t), var(i))),
+              isNewMultiArray(var(v), var(h), arrayAlloc(var(t), var(i))),
               logicalAnd(
                   logicalNot(alive(var(v), var(h))),
                   isEqual(typ(var(v)), arrayType(var(t))),
@@ -1385,7 +1385,7 @@ public class Translator implements TranslationConstants {
       addAxiom(forall(
           vVar, hVar, tVar, iVar, aVar,
           isEquiv(
-              isMultiArray(var(v), var(h), multiArrayAlloc(var(t), var(i), var(a))),
+              isNewMultiArray(var(v), var(h), multiArrayAlloc(var(t), var(i), var(a))),
               logicalAnd(
                   logicalNot(alive(var(v), var(h))),
                   isEqual(typ(var(v)), arrayType(var(t))),
@@ -1393,7 +1393,7 @@ public class Translator implements TranslationConstants {
                   forall(
                       eVar,
                       logicalAnd(
-                          isMultiArray(get(var(h), arrayLoc(toref(var(v)), var(e))), var(h), var(a)),
+                          isNewMultiArray(get(var(h), arrayLoc(toref(var(v)), var(e))), var(h), var(a)),
                           isEqual(
                               multiArrayParent(get(var(h), arrayLoc(toref(var(v)), var(e)))),
                               var(v)),

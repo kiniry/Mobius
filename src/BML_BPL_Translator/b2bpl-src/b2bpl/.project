@@ -14,4 +14,16 @@
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>b2bpl</name>
+			<type>2</type>
+			<location>D:/Common/Studies/Master Thesis/Programs/b2bpl</location>
+		</link>
+		<link>
+			<name>bin</name>
+			<type>2</type>
+			<location>D:/Common/Studies/Master Thesis/Programs/b2bpl/bin</location>
+		</link>
+	</linkedResources>
 </projectDescription>

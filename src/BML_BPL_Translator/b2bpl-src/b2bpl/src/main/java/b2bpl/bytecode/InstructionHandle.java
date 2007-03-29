@@ -31,6 +31,8 @@ public final class InstructionHandle {
 
   private StackFrame frame;
 
+  private boolean isThisInitialized;
+
   public Instruction getInstruction() {
     return instruction;
   }
@@ -93,6 +95,14 @@ public final class InstructionHandle {
 
   public void setFrame(StackFrame frame) {
     this.frame = frame;
+  }
+
+  public boolean isThisInitialized() {
+    return isThisInitialized;
+  }
+
+  public void setThisInitialized(boolean isThisInitialized) {
+    this.isThisInitialized = isThisInitialized;
   }
 
   public void accept(InstructionVisitor visitor) {

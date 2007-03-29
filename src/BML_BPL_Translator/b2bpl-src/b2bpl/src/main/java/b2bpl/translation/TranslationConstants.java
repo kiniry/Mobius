@@ -101,7 +101,7 @@ public interface TranslationConstants {
 
   String MULTI_ARRAY_ALLOC_FUNC = FUNC_PREFIX + "multiArrayAlloc";
 
-  String IS_MULTI_ARRAY_FUNC = FUNC_PREFIX + "isMultiArray";
+  String IS_NEW_MULTI_ARRAY_FUNC = FUNC_PREFIX + "isNewMultiArray";
 
   String MULTI_ARRAY_PARENT_FUNC = FUNC_PREFIX + "multiArrayParent";
 
