@@ -1,0 +1,31 @@
+<html>
+<body>
+Contains classes related to the analysis of Java bytecode.
+
+<p>
+Most classes are related to the flow analysis of bytecode methods:
+<ul>
+  <li>
+    The {@link b2bpl.bytecode.analysis.ControlFlowGraph ControlFlowGraph} class
+    provides a simple implementation of a control flow graph whose vertices and
+    edges are represented by the {@link b2bpl.bytecode.analysis.BasicBlock
+    BasicBlock} and {@link b2bpl.bytecode.analysis.Edge Edge} classes,
+    respectively. In addition, the {@code ControlFlowGraph} class also embodies
+    a set of loop analysis algorithms. The actual construction of a
+    {@code ControlFlowGraph} for a given bytecode method is performed by the
+    {@link b2bpl.bytecode.analysis.CFGBuilder CFGBuilder} class.
+  </li>
+  <li>
+    The {@link b2bpl.bytecode.analysis.FlowAnalyzer FlowAnalyzer} class performs
+    a dataflow analysis on a given bytecode method and is based on the analysis
+    framework of the ASM bytecode library. The flow analysis results in the
+    computation of the {@link b2bpl.bytecode.analysis.StackFrame StackFrame}s
+    at the individual bytecode instructions.
+  </li>
+</ul>
+In addition, a {@link b2bpl.bytecode.analysis.SemanticAnalyzer SemanticAnalyzer}
+is provided which performs a semantic analysis on a whole bytecode class
+including BML specifications.
+</p>
+</body>
+</html>
