@@ -1,48 +1,28 @@
 package mobius.directVCGen;
 
-import java.util.Enumeration;
 import java.util.Vector;
 
 import javafe.ast.DelegatingPrettyPrint;
-import javafe.ast.Expr;
-import javafe.ast.FieldDecl;
-import javafe.ast.GenericVarDecl;
-import javafe.ast.Identifier;
-import javafe.ast.MethodDecl;
 import javafe.ast.PrettyPrint;
 import javafe.ast.RoutineDecl;
 import javafe.ast.StandardPrettyPrint;
 import javafe.ast.TypeDecl;
 import javafe.ast.TypeDeclElem;
-import javafe.ast.VariableAccess;
 import javafe.tc.OutsideEnv;
 import javafe.tc.TypeSig;
-import javafe.util.Assert;
 import javafe.util.ErrorSet;
 import javafe.util.FatalError;
 import javafe.util.Info;
 import javafe.util.Location;
-import javafe.util.Set;
 import mobius.directVCGen.formula.IFormula;
 import mobius.directVCGen.vcgen.VCGenVisitor;
-import escjava.Options;
-import escjava.ast.ConditionVec;
 import escjava.ast.EscPrettyPrint;
 import escjava.ast.GuardedCmd;
-import escjava.ast.Spec;
-import escjava.ast.TagConstants;
 import escjava.backpred.FindContributors;
-import escjava.pa.Traverse;
 import escjava.tc.TypeCheck;
-import escjava.translate.GC;
-import escjava.translate.GetSpec;
-import escjava.translate.Helper;
 import escjava.translate.InitialState;
-import escjava.translate.InlineConstructor;
 import escjava.translate.LabelInfoToString;
 import escjava.translate.NoWarn;
-import escjava.translate.Targets;
-import escjava.translate.TrAnExpr;
 import escjava.translate.Translate;
 import escjava.translate.UniqName;
 import escjava.translate.VcToString;
@@ -135,8 +115,8 @@ public class Main extends escjava.Main {
 	    
 	    processTD_stage1(td, sig, errorCount);
 	    System.out.println(currentTime() - startTime);
-	    Vector<IFormula> vcs= new Vector<IFormula>();
-	    vcs = (Vector<IFormula>) td.accept(new VCGenVisitor(), vcs);
+	    Vector<IFormula> vcs; 
+	    vcs = (Vector<IFormula>) td.accept(new VCGenVisitor(), null);
 	    //sig.accept(new VCGenVisitor(), vcs);
 	    System.out.println(vcs);
 //	    FindContributors scope =  new FindContributors(sig);
@@ -373,180 +353,5 @@ public class Main extends escjava.Main {
     }
 	
 	
-	/**
-	 * This method computes the guarded command (including assuming
-	 * the precondition, the translated body, the checked
-	 * postcondition, and the modifies constraints) for the method or
-	 * constructor <code>r</code> in scope <code>scope</code>.
-	 *
-	 * @return <code>null</code> if <code>r</code> doesn't have a body.
-	 */
-	
-	//@ requires r != null;
-	//@ requires initState != null;
-	protected Vector<IFormula> computeVCs(RoutineDecl r, InitialState initState) {
-		if (r.getTag() == TagConstants.METHODDECL &&
-				((MethodDecl)r).body == null && !Main.options().idc) {
-			// no body
-			return null;
-		}
 
-		// don't check the routine if it's a helper
-		if (Helper.isHelper(r)) {
-			return null;
-		}
-		
-		FindContributors scope = new FindContributors(r);
-		TrAnExpr.initForRoutine();
-		/*
-		 * Compute an upper bound for synTargs if -O7 given.
-		 *
-		 * For now, do this via the kludge of calling trBody...  !!!!
-		 */
-		Set predictedSynTargs = null;
-		if (!options().useAllInvPreBody) {
-			long T = java.lang.System.currentTimeMillis();
-			/*
-			 * Compute translation assuming synTargs is empty:
-			 * (gives same set of targets faster than using null)
-			 */
-			GuardedCmd tmpBody;
-			if (r.body==null && Main.options().idc) {
-				tmpBody=null;
-				predictedSynTargs=new Set();
-			}
-			else {
-				tmpBody=gctranslator.trBody(r, scope,
-						initState.getPreMap(),
-						/*predictedSynTargs*/new Set(),
-						null,
-						/* issueCautions */ false);
-				if (options().noDirectTargetsOpt)
-					predictedSynTargs = Targets.normal(tmpBody);
-				else
-					predictedSynTargs = Targets.direct(tmpBody);
-			}
-			if (options().statsTime)
-				System.out.println("      [prediction time: " + timeUsed(T) + "]");
-		   	}
-		
-		
-		
-		   /*
-		* Translate the body:
-		*/
-		/* Note: initState.preMap is the same for all declarations.
-		   This may be overkill (FIXME).
-		   It might be better to use information from scope directly
-		   since it is generated from the routine decl.
-		   However, I don't know for sure what would go missing.  DRCok
-		*/
-		GuardedCmd body;
-		Set fullSynTargs;
-		   Set synTargs;
-		// Denotes whether the method has body or not
-		// used in GetSpec.surroundBodyBySpec()
-		boolean nobody=false;
-		if (r.body==null && Main.options().idc)
-		{
-		  GuardedCmd gc3=GC.gets(GC.ecvar, GC.ec_return);
-		  nobody=true;
-		  //GuardedCmd gc2=GC.assume(GC.falselit);
-		  //GuardedCmd gc3=GC.seq(gc1,gc2);
-		  body=gc3;
-		  if (r.getTag()==TagConstants.CONSTRUCTORDECL)
-		  {
-		    // get java.lang.Object
-		TypeSig obj = escjava.tc.Types.javaLangObject();
-		FieldDecl owner = null; // make the compiler happy
-		boolean found = true;
-		boolean save = escjava.tc.FlowInsensitiveChecks.inAnnotation;
-		try {
-		  escjava.tc.FlowInsensitiveChecks.inAnnotation = true;
-		  owner = escjava.tc.Types.lookupField(obj, 
-					Identifier.intern("owner"), 
-					obj);
-		} catch (javafe.tc.LookupException e) {
-		  found = false;
-		} finally {
-		  escjava.tc.FlowInsensitiveChecks.inAnnotation = save;
-		}
-		// if we couldn't find the owner ghost field, there's nothing to do
-		    if (found) 
-		    {
-		      VariableAccess ownerVA = TrAnExpr.makeVarAccess(owner,
-								      Location.NULL);
-		      Expr ownerNull = GC.nary(TagConstants.REFEQ, 
-					       GC.select(ownerVA,GC.resultvar), 
-					       GC.nulllit);
-		      GuardedCmd gcOwner=GC.assume(ownerNull);
-		      body=GC.seq(gc3,gcOwner);
-		    }
-		  }
-		  fullSynTargs=new Set();
-		  synTargs=new Set();
-		}
-		else
-		{
-		
-		  body = gctranslator.trBody(r, scope,
-					     initState.getPreMap(),
-					     predictedSynTargs, null,
-					     /* issueCautions */ true);
-		  fullSynTargs=Targets.normal(body);
-		  if (options().noDirectTargetsOpt)
-		       synTargs = fullSynTargs;
-		  else
-		       synTargs = Targets.direct(body);
-		
-		}
-		
-		/*
-		 * Verify predictedSynTargs if present that
-		 * synTargs is a subset of predictedSynTargs.
-		 */
-		if (predictedSynTargs != null) {
-			Enumeration e = synTargs.elements();
-			while (e.hasMoreElements()) {
-				GenericVarDecl target = (GenericVarDecl)(e.nextElement());
-				Assert.notFalse(predictedSynTargs.contains(target));
-			}
-		}
-		
-		TrAnExpr.translate = gctranslator;
-		Spec spec = GetSpec.getSpecForBody(r, scope, synTargs,
-				initState.getPreMap());
-		GetSpec.addAxioms(Translate.axsToAdd,spec.preAssumptions);
-		gctranslator.addMoreLocations(spec.postconditionLocations);
-		
-		// if the current RoutineDecl corresponds to one of our
-		// constructor-inlined methods, then zero out its postconditions
-		if (r instanceof MethodDecl &&
-				InlineConstructor.isConstructorInlinedMethod((MethodDecl) r))
-		    	spec.post = ConditionVec.make();
-		GuardedCmd fullCmd = 
-			GetSpec.surroundBodyBySpec(body, spec, scope, fullSynTargs,
-					initState.getPreMap(),
-					r.getEndLoc(),nobody);
-			
-		// loop invariant guessing, based on assertions inside a loop
-		/*
-		   if (Main.options().loopTranslation == Options.LOOP_SAFE) {
-		      LoopInvariantGuessing.traverse(fullCmd, gctranslator);
-		   }
-		 */
-		   
-		if (Main.options().loopTranslation == Options.LOOP_SAFE &&
-		       Main.options().predAbstract) {
-			long T = java.lang.System.currentTimeMillis();
-			Traverse.compute(fullCmd, initState, gctranslator);
-			if (options().statsTime) {
-				System.out.println("      [predicate abstraction time: " + 
-						timeUsed(T) + "]");
-			}
-		}
-		Translate.addTraceLabelSequenceNumbers(fullCmd);
-			
-		return new Vector<IFormula>();	
-	}
 }

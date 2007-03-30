@@ -14,6 +14,14 @@ public class Num {
 		args.add(arg2);
 		return new NAdd(args);
 	}
+	
+	public static AExpression sub(IFormula arg1, IFormula arg2) {
+		Vector<IFormula> args = new Vector<IFormula>();
+		args.add(arg1);
+		args.add(arg2);
+		return new NSub(args);
+	}
+	
 	public static AExpression value(int i) {
 		return new NInt(i);
 	}

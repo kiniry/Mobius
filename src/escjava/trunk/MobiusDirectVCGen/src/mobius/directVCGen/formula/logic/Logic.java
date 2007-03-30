@@ -2,7 +2,6 @@ package mobius.directVCGen.formula.logic;
 
 import java.util.Vector;
 
-import mobius.directVCGen.formula.AFormula;
 import mobius.directVCGen.formula.IFormula;
 import mobius.directVCGen.formula.expression.Expression;
 import mobius.directVCGen.formula.expression.Variable;

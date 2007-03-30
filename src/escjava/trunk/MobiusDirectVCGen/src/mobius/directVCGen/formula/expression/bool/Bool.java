@@ -86,4 +86,11 @@ public class Bool {
 				Bool.TRUE), Bool.FALSE)), Bool.TRUE);
 		System.out.println(formula);
 	}
+
+	public static AExpression value(boolean b) {
+		if(b)
+			return TRUE;
+		else
+			return FALSE;
+	}
 }
