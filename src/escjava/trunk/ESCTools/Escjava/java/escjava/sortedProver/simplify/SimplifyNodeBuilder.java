@@ -29,7 +29,7 @@ import escjava.sortedProver.NodeBuilder.Sort;
 public class SimplifyNodeBuilder extends EscNodeBuilder
 {
 	/*@ non_null_by_default @*/
-	class Sx implements SMap, SBool, SInt, SReal, SPred
+	public class Sx implements SMap, SBool, SInt, SReal, SPred
 	{
 		private static final int LIMIT = 100;
 		public final String head;
@@ -109,7 +109,7 @@ public class SimplifyNodeBuilder extends EscNodeBuilder
 		}
 	}
 	
-	Sx sx(String name, STerm[] args)
+	protected Sx sx(String name, STerm[] args)
 	{
 		if (args instanceof Sx[])
 			return new Sx(name, (Sx[])args);
@@ -119,11 +119,11 @@ public class SimplifyNodeBuilder extends EscNodeBuilder
 			temp[i] = (Sx)args[i];
 		return new Sx(name, temp);		
 	}	
-	Sx sx(String name) { return new Sx(name, new Sx[0]); }	
-	Sx sx(String name, STerm a1) { return new Sx(name, new Sx[] { (Sx)a1 }); }	
-	Sx sx(String name, STerm a1, STerm a2) { return new Sx(name, new Sx[] { (Sx)a1, (Sx)a2 }); }
+	protected Sx sx(String name) { return new Sx(name, new Sx[0]); }	
+	protected Sx sx(String name, STerm a1) { return new Sx(name, new Sx[] { (Sx)a1 }); }	
+	protected Sx sx(String name, STerm a1, STerm a2) { return new Sx(name, new Sx[] { (Sx)a1, (Sx)a2 }); }
 	
-	Sx trueConst = sx("|@true|");
+	protected Sx trueConst = sx("|@true|");
 	
 	final HashSet defpreds = new HashSet();
 	
