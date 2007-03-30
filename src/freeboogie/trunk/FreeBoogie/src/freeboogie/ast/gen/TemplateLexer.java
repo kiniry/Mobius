@@ -12,6 +12,8 @@ import freeboogie.util.Err;
  * TODO: description
  * 
  * TODO keep track of the filename here so it is given with errors
+ * 
+ * NOTE The lexing is not very efficient.
  *
  * @author rgrig 
  * @author reviewed by TODO
@@ -70,7 +72,30 @@ public class TemplateLexer extends PeekStream<TemplateToken> {
     macros.put("\\invariants", TemplateToken.Type.INVARIANTS);
     macros.put("\\inv", TemplateToken.Type.INV);
     
-    idCases.put("class_name", TemplateToken.Case.LOWER_CASE);
+    idCases.put("\\class_name", TemplateToken.Case.LOWER_CASE);
+    idCases.put("\\className", TemplateToken.Case.CAMEL_CASE);
+    idCases.put("\\ClassName", TemplateToken.Case.PASCAL_CASE);
+    idCases.put("\\CLASS_NAME", TemplateToken.Case.UPPER_CASE);
+    idCases.put("\\base_name", TemplateToken.Case.LOWER_CASE);
+    idCases.put("\\baseName", TemplateToken.Case.CAMEL_CASE);
+    idCases.put("\\BaseName", TemplateToken.Case.PASCAL_CASE);
+    idCases.put("\\BASE_NAME", TemplateToken.Case.UPPER_CASE);
+    idCases.put("\\member_type", TemplateToken.Case.LOWER_CASE);
+    idCases.put("\\memberType", TemplateToken.Case.CAMEL_CASE);
+    idCases.put("\\MemberType", TemplateToken.Case.PASCAL_CASE);
+    idCases.put("\\MEMBER_TYPE", TemplateToken.Case.UPPER_CASE);
+    idCases.put("\\member_name", TemplateToken.Case.LOWER_CASE);
+    idCases.put("\\memberName", TemplateToken.Case.CAMEL_CASE);
+    idCases.put("\\MemberName", TemplateToken.Case.PASCAL_CASE);
+    idCases.put("\\MEMBER_NAME", TemplateToken.Case.UPPER_CASE);
+    idCases.put("\\enum_name", TemplateToken.Case.LOWER_CASE);
+    idCases.put("\\enumName", TemplateToken.Case.CAMEL_CASE);
+    idCases.put("\\EnumName", TemplateToken.Case.PASCAL_CASE);
+    idCases.put("\\ENUM_NAME", TemplateToken.Case.UPPER_CASE);
+    idCases.put("\\value_name", TemplateToken.Case.LOWER_CASE);
+    idCases.put("\\valueName", TemplateToken.Case.CAMEL_CASE);
+    idCases.put("\\ValueName", TemplateToken.Case.PASCAL_CASE);
+    idCases.put("\\VALUE_NAME", TemplateToken.Case.UPPER_CASE);
     
     oneCharTokens.put('[', TemplateToken.Type.LB);
     oneCharTokens.put(']', TemplateToken.Type.RB);
@@ -110,13 +135,13 @@ public class TemplateLexer extends PeekStream<TemplateToken> {
     
     TemplateToken.Type type = oneCharTokens.get(lastChar);
     TemplateToken.Case idCase = null;
-    sb = new StringBuilder(lastChar);
+    sb = new StringBuilder();
+    sb.append(lastChar);
     
     if (type != null) {
       lastChar = stream.next();
     } else if (lastChar == '\\') {
       // read the macro
-      // TODO this is obscenely inefficient (toString makes a copy)
       while (sb.length() <= maxMacroLen && !macros.containsKey(sb.toString())) {
         lastChar = stream.next();
         sb.append(lastChar);
@@ -131,6 +156,7 @@ public class TemplateLexer extends PeekStream<TemplateToken> {
         lastChar = stream.next();
         type = macros.get(sb.toString());
         idCase = idCases.get(sb.toString());
+        assert idCase != null;
       }
     } else {
       // read in plain text

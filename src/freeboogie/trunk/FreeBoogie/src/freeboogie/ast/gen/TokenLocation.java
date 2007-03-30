@@ -34,7 +34,7 @@ public class TokenLocation<T extends Token> extends Location<T> {
   }
 
   @Override
-  public Location<T> advance(T element) {
+  public TokenLocation<T> advance(T element) {
     TokenLocation<T> r = new TokenLocation<T>(this);
     r.begin = r.end;
     if (element.rep.length() > 0)

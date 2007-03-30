@@ -3,6 +3,7 @@
 package freeboogie.ast.gen;
 
 import java.io.IOException;
+import java.util.logging.Logger;
 
 /**
  * Provides a convenient interface for reading a stream of {@code T}s.
@@ -79,6 +80,8 @@ public abstract class PeekStream<T> {
     }
   }
   
+  private static final Logger log = Logger.getLogger("freeboogie.ast.gen");
+  
   private Node<ElLocPair> buffer;
   private Node<ElLocPair> nextElement; 
   private Node<Node<ElLocPair>> markedStack;
@@ -130,6 +133,7 @@ public abstract class PeekStream<T> {
   /**
    * Go back to the previously marked element or to the beginning of 
    * the (not-yet-eaten) stream if no element is marked.
+   * @see freeboogie.ast.gen.PeekStream#mark()
    */
   public void rewind() {
     if (markedStack == null) nextElement = buffer;
@@ -144,6 +148,8 @@ public abstract class PeekStream<T> {
    * last element read by {@code next}. 
    */
   public void eat() {
+    log.entering("PeekStream", "eat");
+    //System.out.println("eat");
     while (buffer != nextElement) {
       if (markedStack != null && markedStack.data == buffer) 
         markedStack = markedStack.next;
