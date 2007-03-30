@@ -503,7 +503,7 @@ public class Lifter extends EscNodeBuilder
 				args[0].enforceLabelSense(-sense);
 			else if (fn == symImplies) {
 				args[0].enforceLabelSense(-sense);
-				args[0].enforceLabelSense(sense);
+				args[1].enforceLabelSense(sense);
 			} else if (fn == symXor || fn == symIff) {
 				args[0].enforceLabelSense(0);
 				args[1].enforceLabelSense(0);
@@ -618,6 +618,8 @@ public class Lifter extends EscNodeBuilder
 		public final boolean positive;
 		public final String label;
 		public Term body;
+		boolean dirty;
+		boolean skipIt;
 		
 		public LabeledTerm(boolean pos, String l, Term b)
 		{
@@ -643,14 +645,22 @@ public class Lifter extends EscNodeBuilder
 		
 		public STerm dump()
 		{
-			return dumpBuilder.buildLabel(positive, label, (SPred)body.dump());
+			if (skipIt)
+				return body.dump();
+			else
+				return dumpBuilder.buildLabel(positive, label, (SPred)body.dump());
 		}
 		
 		public void enforceLabelSense(int sense)
 		{
+			Assert.notFalse(!dirty);
+			dirty = true;
 			if ((positive && sense > 0) || (!positive && sense < 0)) {}
-			else
-				ErrorSet.error("label: " + label + " used with wrong sense s="+sense);
+			else {
+				//ErrorSet.error("label: " + label + " used with wrong sense s="+sense);
+				//ErrorSet.caution("change positive: " + positive + " into " + (sense < 0));
+				skipIt = true;
+			}
 			body.enforceLabelSense(sense);
 		}
 	}
@@ -795,8 +805,8 @@ public class Lifter extends EscNodeBuilder
 		stringConstants.clear();
 		distinctSymbols.clear();
 		
-		SPred res = root.dumpPred();
 		root.enforceLabelSense(-1);
+		SPred res = root.dumpPred();
 		
 		SPred[] assumptions = new SPred[stringConstants.size() * 2 + 1];
 		
