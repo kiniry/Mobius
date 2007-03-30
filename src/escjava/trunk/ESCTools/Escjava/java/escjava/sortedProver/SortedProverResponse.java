@@ -13,9 +13,9 @@ public class SortedProverResponse
      * A response tag to indicate that something is seriously
      * wrong with the corresponding call and/or the prover and a failure
      * has taken place.  A response code of FAIL typically indicates a
-     * non-correctable situation.  The {@link #info} field should be
+     * non-correctable situation.  The {@link getInfo()} method should be
      * consulted for additional information, and no further calls, but
-     * for {@link ProverInterface#stop_prover()} should be made.
+     * for {@link SortedProver#stopProver()} should be made.
      */
     public static final int FAIL = 2;
 
@@ -34,38 +34,37 @@ public class SortedProverResponse
     /**
      * A response tag to indicate a counter-example is
      * available.  The counter-example is contained in the {@link
-     * #formula} field of this response object.
+     * CounterExampleResponse}.
      */
     public static final int COUNTER_EXAMPLE = 5;
 	
     /**
      * A response tag to indicate a syntax error in the
-     * corresponding prover call.  The {@link #info} field should be
+     * corresponding prover call.  The {@link getInfo()} method should be
      * consulted for additional information.
      */
     public static final int SYNTAX_ERROR = 6;
 
     /**
      * A response tag to indicate that some progress
-     * information is available from the prover.  The {@link #info}
-     * field should be consulted for additional information.
+     * information is available from the prover.  Look in the {@link ProgressResponse}
+     * class for additional information.
      */
     public static final int PROGRESS_INFORMATION = 7;
 
     /**
      * A response tag to indicate that the prover has timed
-     * out on the corresponding prover call.  The {@link #info} and/or
-     * {@link #formula} fields should be consulted for additional
-     * information.
+     * out on the corresponding prover call.  The {@link getInfo()} method 
+     * should be consulted for additional information.
      */
     public static final int TIMEOUT = 8;
 
     /**
      * A response tag to indicate an inconsistency warning
      * from the prover for one or more of the previous {@link
-     * ProverInterface#declare_axiom(Formula)} and {@link
-     * ProverInterface#make_assumption(Formula)} calls.  The {@link
-     * #info} and/or {@link #formula} fields should be consulted for
+     * SortedProver#declareAxiom(SPred)} and {@link
+     * SortedProver#makeAssumption(SPred)} calls.  The {@link
+     * getInfo()} method should be consulted for
      * additional information.
      */
     public static final int INCONSISTENCY_WARNING = 9;
@@ -75,8 +74,8 @@ public class SortedProverResponse
     private final Properties info = new Properties();
     private final int tag;
     
-    //@ invariant tag == COUNTER_EXAMPLE ==> this instanceof CounterExampleResponse;
-    //@ invariant tag == PROGRESS_INFORMATION ==> this instanceof ProgressResponse;
+    //@ private invariant tag == COUNTER_EXAMPLE ==> this instanceof CounterExampleResponse;
+    //@ private invariant tag == PROGRESS_INFORMATION ==> this instanceof ProgressResponse;
 
     /**
      * A set of properties.  Typically, this field is used to represent

@@ -272,6 +272,7 @@ public abstract class NodeBuilder
 		return new QuantVar(name, type);
 	}
 	
+	/*
 	protected void validateSymbol(Symbol s)
 	{
 		Assert.notFalse (symbolsById.get(new Integer(s.id)) == s);
@@ -304,6 +305,7 @@ public abstract class NodeBuilder
 		validateSymbol(v);
 		return v.type;
 	}
+	*/
 	
 	//@ requires \nonnullelements(args);
 	abstract public SAny buildFnCall(FnSymbol fn, SAny[] args);
@@ -322,7 +324,17 @@ public abstract class NodeBuilder
 	abstract public SPred buildTrue();
 	
 	abstract public SPred buildDistinct(SAny[] terms);
-	
+
+	/* Possible translation is:
+	 * 
+	 *   if (positive) pred /\ P_name else pred \/ N_name
+	 *   
+	 * And then return as P_name if it's assigned true in the model
+	 * and N_name if it's assigned false.
+	 * 
+	 * You need to return this stuff in CounterExampleResponse class (without P_
+	 * or N_ of course).
+	 */
 	abstract public SPred buildLabel(boolean positive, String name, SPred pred);
 	
 	abstract public SValue buildITE(SPred cond, SValue then_part, SValue else_part);
@@ -362,6 +374,7 @@ public abstract class NodeBuilder
 	// semantics should be
 		
 	// Maps
+	/*
 	protected void checkSelect(Sort map, SValue val)
 	{
 		if (!val.isSubSortOf(map.getMapFrom()))
@@ -375,6 +388,7 @@ public abstract class NodeBuilder
 		if (!idx.isSubSortOf(map.getMapTo()))
 			TDisplay.err("value sort mismatch when storing to " + map);
 	}
+	*/
 	
 	abstract public SValue buildSelect(SMap map, SValue idx);
 	abstract public SMap buildStore(SMap map, SValue idx, SValue val);

@@ -16,14 +16,6 @@ public abstract class SortedProver
     public boolean backgroundPredicateSent = false;
 
     /**
-     * Get the {@link NodeBuilder} object that can be used to construct
-     * formulas for the current prover.
-     *
-     * @return a {@link NodeBuilder} object for the current prover.
-     */
-    public abstract EscNodeBuilder getNodeBuilder();
-
-    /**
      * Start up the prover.  After the prover is started correctly it
      * should be ready to receive any of the commands embodied by all
      * the other methods of this API.
@@ -33,18 +25,27 @@ public abstract class SortedProver
      * and is ready to receive commands.  A response code of {@link
      * SortedProverResponse#FAIL} indicates that the prover did not start
      * successfully and is not ready to receive commands.  In the latter
-     * case, {@link SortedProverResponse.FAIL.info} can contain additional
+     * case, calling {@link getInfo()} on reponse object can revail additional
      * arbitrary information about the failure.
      */
 
     /*@ public normal_behavior
       @   assignable started;
-      @   ensures \result == ProverResponse.OK ||
-      @           \result == ProverResponse.FAIL;
+      @   ensures \result.getTag() == SortedProverResponse.OK ||
+      @           \result.getTag() == SortedProverResponse.FAIL;
       @   ensures started;
       @*/
 
     public abstract SortedProverResponse startProver();
+
+    /**
+     * Get the {@link NodeBuilder} object that can be used to construct
+     * formulas for the current prover.
+     *
+     * @return a {@link NodeBuilder} object for the current prover.
+     */
+    /*@   requires started; @*/
+    public abstract EscNodeBuilder getNodeBuilder();
 
     /**
      * Send arbitrary information to the prover.  Typically this
@@ -57,10 +58,9 @@ public abstract class SortedProver
      * @return a response code.
      */
     /*@   requires started;
-      @   ensures \result == ProverResponse.OK || 
-      @           \result == ProverResponse.FAIL ||
-      @           \result == ProverResponse.SYNTAX_ERROR ||
-      @           \result == ProverResponse.PROGRESS_INFORMATION;
+      @   ensures \result.getTag() == SortedProverResponse.OK || 
+      @           \result.getTag() == SortedProverResponse.FAIL ||
+      @           \result.getTag() == SortedProverResponse.SYNTAX_ERROR;
       @*/
 
     public abstract SortedProverResponse setProverResourceFlags(Properties properties);
@@ -72,10 +72,10 @@ public abstract class SortedProver
      */
     /*@   requires started;
       @   requires !backgroundPredicateSent;
-      @   ensures \result == ProverResponse.OK || 
-      @           \result == ProverResponse.FAIL ||
-      @           \result == ProverResponse.SYNTAX_ERROR ||
-      @           \result == ProverResponse.INCONSISTENCY_WARNING;
+      @   ensures \result.getTag() == SortedProverResponse.OK || 
+      @           \result.getTag() == SortedProverResponse.FAIL ||
+      @           \result.getTag() == SortedProverResponse.SYNTAX_ERROR ||
+      @           \result.getTag() == SortedProverResponse.INCONSISTENCY_WARNING;
       @   ensures backgroundPredicateSent;
       @*/
     
@@ -88,10 +88,10 @@ public abstract class SortedProver
      * @return a response code.
      */
     /*@   requires started;
-      @   ensures \result == ProverResponse.OK || 
-      @           \result == ProverResponse.FAIL ||
-      @           \result == ProverResponse.SYNTAX_ERROR ||
-      @           \result == ProverResponse.INCONSISTENCY_WARNING;
+      @   ensures \result.getTag() == SortedProverResponse.OK || 
+      @           \result.getTag() == SortedProverResponse.FAIL ||
+      @           \result.getTag() == SortedProverResponse.SYNTAX_ERROR ||
+      @           \result.getTag() == SortedProverResponse.INCONSISTENCY_WARNING;
       @*/
 
     public abstract SortedProverResponse declareAxiom(SPred formula);
@@ -103,10 +103,10 @@ public abstract class SortedProver
      * @return a response code.
      */
     /*@   requires started;
-      @   ensures \result == ProverResponse.OK || 
-      @           \result == ProverResponse.FAIL ||
-      @           \result == ProverResponse.SYNTAX_ERROR ||
-      @           \result == ProverResponse.INCONSISTENCY_WARNING;
+      @   ensures \result.getTag() == SortedProverResponse.OK || 
+      @           \result.getTag() == SortedProverResponse.FAIL ||
+      @           \result.getTag() == SortedProverResponse.SYNTAX_ERROR ||
+      @           \result.getTag() == SortedProverResponse.INCONSISTENCY_WARNING;
       @*/
 
     public abstract /*@ non_null @*/ SortedProverResponse makeAssumption(/*@ non_null @*/ SPred formula);
@@ -119,8 +119,8 @@ public abstract class SortedProver
      */
     /*@   requires started;
       @   requires count >= 0 ;
-      @   ensures \result == ProverResponse.OK ||
-      @           \result == ProverResponse.FAIL;
+      @   ensures \result.getTag() == SortedProverResponse.OK ||
+      @           \result.getTag() == SortedProverResponse.FAIL;
       @*/
 
     public abstract SortedProverResponse retractAssumption(int count);
@@ -136,11 +136,11 @@ public abstract class SortedProver
      * @return a response code.
      */
     /*@   requires started;
-      @   ensures \result == ProverResponse.YES ||
-      @           \result == ProverResponse.NO ||
-      @           \result == ProverResponse.SYNTAX_ERROR ||
-      @           \result == ProverResponse.TIMEOUT ||
-      @           \result == ProverResponse.FAIL;
+      @   ensures \result.getTag() == SortedProverResponse.YES ||
+      @           \result.getTag() == SortedProverResponse.NO ||
+      @           \result.getTag() == SortedProverResponse.SYNTAX_ERROR ||
+      @           \result.getTag() == SortedProverResponse.TIMEOUT ||
+      @           \result.getTag() == SortedProverResponse.FAIL;
       @*/
 
     public abstract SortedProverResponse isValid(
@@ -156,14 +156,21 @@ public abstract class SortedProver
     /*@ public normal_behavior
       @   requires started;
       @   assignable started;
-      @   ensures \result == ProverResponse.OK ||
-      @           \result == ProverResponse.FAIL;
+      @   ensures \result.getTag() == SortedProverResponse.OK ||
+      @           \result.getTag() == SortedProverResponse.FAIL;
       @   ensures started == false;
       @*/
 
     public abstract SortedProverResponse stopProver();
     
     
+    /**
+     * Lookup and instantiate a new prover instance.
+     * 
+     * @param name the type of the prover to find
+     * @return a SortedProver or null if the class was not found, if there are
+     * any other problems with the prover, it will print error message and abort.
+     */
     public static /*@ nullable @*/SortedProver getProver(String name)
     {
     	try {	
