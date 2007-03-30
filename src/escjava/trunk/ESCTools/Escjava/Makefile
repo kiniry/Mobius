@@ -59,6 +59,9 @@ ESCJAVA_SOURCE_FILES_RELATIVE = \
 	$(wildcard $(ESCJAVA_SOURCE_DIR_REL)/escjava/vcGeneration/sammy/*.java) \
 	$(wildcard $(ESCJAVA_SOURCE_DIR_REL)/escjava/vcGeneration/simplify/*.java) \
 	$(wildcard $(ESCJAVA_SOURCE_DIR_REL)/escjava/vcGeneration/xml/*.java) \
+	$(wildcard $(ESCJAVA_SOURCE_DIR_REL)/escjava/sortedProver/*.java) \
+	$(wildcard $(ESCJAVA_SOURCE_DIR_REL)/escjava/sortedProver/simplify/*.java) \
+	$(wildcard $(ESCJAVA_SOURCE_DIR_REL)/escjava/sortedProver/fx7/*.java) \
 	$(wildcard $(ESCJAVA_SOURCE_DIR_REL)/escjava/*.java)
 
 ESCJAVA_SOURCE_FILES = \
