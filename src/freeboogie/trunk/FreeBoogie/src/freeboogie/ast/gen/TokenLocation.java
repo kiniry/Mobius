@@ -38,9 +38,9 @@ public class TokenLocation<T extends Token> extends Location<T> {
     TokenLocation<T> r = new TokenLocation<T>(this);
     r.begin = r.end;
     if (element.rep.length() > 0)
-      r.begin = (CharLocation)r.begin.advance(element.rep.charAt(0));
+      r.begin = r.begin.advance(element.rep.charAt(0));
     for (int i = 0; i < element.rep.length(); ++i)
-      r.end = (CharLocation)r.end.advance(element.rep.charAt(i));
+      r.end = r.end.advance(element.rep.charAt(i));
     return r;
   }
   
