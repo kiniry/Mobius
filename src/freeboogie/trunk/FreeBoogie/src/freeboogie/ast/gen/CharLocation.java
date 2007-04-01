@@ -31,7 +31,7 @@ public class CharLocation extends Location<Character> {
   }
   
   @Override
-  public Location<Character> advance(Character element) {
+  public CharLocation advance(Character element) {
     CharLocation result = new CharLocation(this);
     if (element == null) result.eof = true;
     if (result.eof) return result;
