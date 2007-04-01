@@ -83,6 +83,7 @@ for t in $TESTS; do
 
     if (( $OUT_WRONG || $ERR_WRONG )); then
         error "Expected output is wrong for test $t!" $t
+	cd ..
         continue
     else
         PASSED="$PASSED $t"
