@@ -149,7 +149,6 @@ public abstract class PeekStream<T> {
    */
   public void eat() {
     log.entering("PeekStream", "eat");
-    //System.out.println("eat");
     while (buffer != nextElement) {
       if (markedStack != null && markedStack.data == buffer) 
         markedStack = markedStack.next;

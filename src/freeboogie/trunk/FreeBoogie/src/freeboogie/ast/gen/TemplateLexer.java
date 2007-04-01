@@ -42,19 +42,23 @@ public class TemplateLexer extends PeekStream<TemplateToken> {
     macros.put("\\className", TemplateToken.Type.CLASS_NAME);
     macros.put("\\ClassName", TemplateToken.Type.CLASS_NAME);
     macros.put("\\CLASS_NAME", TemplateToken.Type.CLASS_NAME);
+    macros.put("\\Classname", TemplateToken.Type.CLASS_NAME);
     macros.put("\\base_name", TemplateToken.Type.BASE_NAME);
     macros.put("\\baseName", TemplateToken.Type.BASE_NAME);
     macros.put("\\BaseName", TemplateToken.Type.BASE_NAME);
     macros.put("\\BASE_NAME", TemplateToken.Type.BASE_NAME);
+    macros.put("\\Basename", TemplateToken.Type.BASE_NAME);
     macros.put("\\members", TemplateToken.Type.MEMBERS);
     macros.put("\\member_type", TemplateToken.Type.MEMBER_TYPE);
     macros.put("\\memberType", TemplateToken.Type.MEMBER_TYPE);
     macros.put("\\MemberType", TemplateToken.Type.MEMBER_TYPE);
     macros.put("\\MEMBER_TYPE", TemplateToken.Type.MEMBER_TYPE);
+    macros.put("\\Membertype", TemplateToken.Type.MEMBER_TYPE);
     macros.put("\\member_name", TemplateToken.Type.MEMBER_NAME);
     macros.put("\\memberName", TemplateToken.Type.MEMBER_NAME);
     macros.put("\\MemberName", TemplateToken.Type.MEMBER_NAME);
     macros.put("\\MEMBER_NAME", TemplateToken.Type.MEMBER_NAME);
+    macros.put("\\Membername", TemplateToken.Type.MEMBER_NAME);
     macros.put("\\if_primitive", TemplateToken.Type.IF_PRIMITIVE);
     macros.put("\\if_nonnull", TemplateToken.Type.IF_NONNULL);
     macros.put("\\children", TemplateToken.Type.CHILDREN);
@@ -64,11 +68,13 @@ public class TemplateLexer extends PeekStream<TemplateToken> {
     macros.put("\\enumName", TemplateToken.Type.ENUM_NAME);
     macros.put("\\EnumName", TemplateToken.Type.ENUM_NAME);
     macros.put("\\ENUM_NAME", TemplateToken.Type.ENUM_NAME);
+    macros.put("\\Enumname", TemplateToken.Type.ENUM_NAME);
     macros.put("\\values", TemplateToken.Type.VALUES);
     macros.put("\\value_name", TemplateToken.Type.VALUE_NAME);
     macros.put("\\valueName", TemplateToken.Type.VALUE_NAME);
     macros.put("\\ValueName", TemplateToken.Type.VALUE_NAME);
     macros.put("\\VALUE_NAME", TemplateToken.Type.VALUE_NAME);
+    macros.put("\\Valuename", TemplateToken.Type.VALUE_NAME);
     macros.put("\\invariants", TemplateToken.Type.INVARIANTS);
     macros.put("\\inv", TemplateToken.Type.INV);
     
@@ -76,26 +82,32 @@ public class TemplateLexer extends PeekStream<TemplateToken> {
     idCases.put("\\className", TemplateToken.Case.CAMEL_CASE);
     idCases.put("\\ClassName", TemplateToken.Case.PASCAL_CASE);
     idCases.put("\\CLASS_NAME", TemplateToken.Case.UPPER_CASE);
+    idCases.put("\\Classname", TemplateToken.Case.ORIGINAL_CASE);
     idCases.put("\\base_name", TemplateToken.Case.LOWER_CASE);
     idCases.put("\\baseName", TemplateToken.Case.CAMEL_CASE);
     idCases.put("\\BaseName", TemplateToken.Case.PASCAL_CASE);
     idCases.put("\\BASE_NAME", TemplateToken.Case.UPPER_CASE);
+    idCases.put("\\Basename", TemplateToken.Case.ORIGINAL_CASE);
     idCases.put("\\member_type", TemplateToken.Case.LOWER_CASE);
     idCases.put("\\memberType", TemplateToken.Case.CAMEL_CASE);
     idCases.put("\\MemberType", TemplateToken.Case.PASCAL_CASE);
     idCases.put("\\MEMBER_TYPE", TemplateToken.Case.UPPER_CASE);
+    idCases.put("\\Membertype", TemplateToken.Case.ORIGINAL_CASE);
     idCases.put("\\member_name", TemplateToken.Case.LOWER_CASE);
     idCases.put("\\memberName", TemplateToken.Case.CAMEL_CASE);
     idCases.put("\\MemberName", TemplateToken.Case.PASCAL_CASE);
     idCases.put("\\MEMBER_NAME", TemplateToken.Case.UPPER_CASE);
+    idCases.put("\\Membername", TemplateToken.Case.ORIGINAL_CASE);
     idCases.put("\\enum_name", TemplateToken.Case.LOWER_CASE);
     idCases.put("\\enumName", TemplateToken.Case.CAMEL_CASE);
     idCases.put("\\EnumName", TemplateToken.Case.PASCAL_CASE);
     idCases.put("\\ENUM_NAME", TemplateToken.Case.UPPER_CASE);
+    idCases.put("\\Enumname", TemplateToken.Case.ORIGINAL_CASE);
     idCases.put("\\value_name", TemplateToken.Case.LOWER_CASE);
     idCases.put("\\valueName", TemplateToken.Case.CAMEL_CASE);
     idCases.put("\\ValueName", TemplateToken.Case.PASCAL_CASE);
     idCases.put("\\VALUE_NAME", TemplateToken.Case.UPPER_CASE);
+    idCases.put("\\Valuename", TemplateToken.Case.ORIGINAL_CASE);
     
     oneCharTokens.put('[', TemplateToken.Type.LB);
     oneCharTokens.put(']', TemplateToken.Type.RB);
@@ -141,13 +153,18 @@ public class TemplateLexer extends PeekStream<TemplateToken> {
     if (type != null) {
       lastChar = stream.next();
     } else if (lastChar == '\\') {
+      stream.mark();
       // read the macro
       while (sb.length() <= maxMacroLen && !macros.containsKey(sb.toString())) {
         lastChar = stream.next();
         sb.append(lastChar);
       }
       if (sb.length() > maxMacroLen) {
-        err("Please don't use '\\' in templates.");
+        err("Please don't use '\\' outside macro names.");
+        sb.setLength(0);
+        sb.append('\\');
+        stream.rewind();
+        lastChar = null;
         type = TemplateToken.Type.OTHER;
       } else if (lastChar == null) {
         err("The template ends abruptly while I was reading a macro: " + sb);

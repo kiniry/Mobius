@@ -9,15 +9,20 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.Stack;
-import java.util.Map.Entry;
 import java.util.logging.Logger;
 
 import freeboogie.util.Err;
 
 /**
  * TODO: description
+ * 
+ * TODO: consider adding an optional parameter for macros that indicates
+ *       a nesting level such that, for example, the following is legal
+ *          \classes{(\classes{\ClassName[0],\ClassName[1]})}
+ *       and prints all pairs of class names.
  *
  * @author rgrig 
  * @author reviewed by TODO
@@ -57,6 +62,9 @@ public class TemplateParser {
   
   private boolean balancedWarning = true;
   
+  private Set<AgClass> abstractClasses;
+  private Set<AgClass> normalClasses;
+  
   /**
    * @param fileName the name of the template file
    * @throws FileNotFoundException if the template file is not found
@@ -73,6 +81,9 @@ public class TemplateParser {
     enumContext = new Stack<AgEnum>();
     valueContext = new Stack<String>();
     invariantContext = new Stack<String>();
+    
+    abstractClasses = null;
+    normalClasses = null;
   }
 
   /**
@@ -215,80 +226,163 @@ public class TemplateParser {
     processList(grammar.classes.values(), classContext);
   }
   
-  private void processIsAbstract() {
-    Err.notImplemented();
+  private void processYesNo(boolean yes) throws IOException {
+    if (!yes) skipToRc(curlyCnt, false);
+    readToken();
+    if (lastToken.type != TemplateToken.Type.LC) {
+      err("An if macro should be followed by {yes}{no}.");
+      Err.help("I'll act as if <" + lastToken.rep + "> was {.");
+    }
+    processTop(curlyCnt - 1, Integer.MAX_VALUE);
+    if (yes) skipToRc(curlyCnt, false);
   }
   
-  private void processAbstractClasses() {
-    Err.notImplemented();
+  private void processIsAbstract() throws IOException {
+    if (!checkContext(classContext)) {
+      skipToRc(curlyCnt, true);
+      skipToRc(curlyCnt, true);
+      return;
+    }
+    processYesNo(classContext.peek().members.isEmpty());
   }
   
-  private void processNormalClasses() {
-    Err.notImplemented();
+  private void splitClasses() {
+    if (abstractClasses == null) return;
+    abstractClasses = new HashSet<AgClass>(101);
+    normalClasses = new HashSet<AgClass>(101);
+    for (AgClass c: grammar.classes.values()) {
+      if (c.members.isEmpty())
+        abstractClasses.add(c);
+      else
+        normalClasses.add(c);
+    }
+  }
+  
+  private void processAbstractClasses() throws IOException {
+    splitClasses();
+    processList(abstractClasses, classContext);
+  }
+  
+  private void processNormalClasses() throws IOException {
+    splitClasses();
+    processList(normalClasses, classContext);
+  }
+  
+  private <T> boolean checkContext(Stack<T> context) throws IOException {
+    if (context.isEmpty()) {
+      err("Macro used in a wrong context.");
+      write("<WRONG_MACRO>");
+      return false;
+    }
+    return true;
   }
   
   private void processClassName() throws IOException {
-    if (classContext.isEmpty()) {
-      err("You can only use \\class_name inside a macro that enumerates classes.");
+    if (checkContext(classContext)) 
+      writeId(classContext.peek().name, lastToken.idCase);
+  }
+  
+  private void processBaseName() throws IOException {
+    if (checkContext(classContext))  
+      writeId(classContext.peek().base, lastToken.idCase);
+  }
+  
+  private void processMembers() throws IOException {
+    if (!checkContext(classContext)) {
+      skipToRc(curlyCnt, true);
       return;
     }
-    writeId(classContext.peek().name, lastToken.idCase);
+    processList(classContext.peek().members, memberContext);
   }
   
-  private void processBaseName() {
-    Err.notImplemented();
+  private void processMemberType() throws IOException {
+    if (checkContext(memberContext))
+      writeId(memberContext.peek().type, lastToken.idCase);
   }
   
-  private void processMembers() {
-    Err.notImplemented();
+  private void processMemberName() throws IOException {
+    if (checkContext(memberContext))
+      writeId(memberContext.peek().name, lastToken.idCase);
   }
   
-  private void processMemberType() {
-    Err.notImplemented();
+  private void processIfPrimitive() throws IOException {
+    if (!checkContext(memberContext)) {
+      skipToRc(curlyCnt, true);
+      skipToRc(curlyCnt, true);
+      return;
+    }
+    processYesNo(memberContext.peek().primitive);
   }
   
-  private void processMemberName() {
-    Err.notImplemented();
+  private void processIfNonnull() throws IOException {
+    if (!checkContext(memberContext)) {
+      skipToRc(curlyCnt, true);
+      skipToRc(curlyCnt, true);
+      return;
+    }
+    processYesNo(memberContext.peek().nonNull);
+  }
+
+  // TODO I don't like the duplicated code processChiildren+processPrimitives
+  private void processChildren() throws IOException {
+    if (!checkContext(classContext)) {
+      skipToRc(curlyCnt, true);
+      return;
+    }
+    HashSet<AgMember> children = new HashSet<AgMember>(23);
+    for (AgMember m : classContext.peek().members)
+      if (!m.primitive) children.add(m);
+    processList(children, memberContext);
   }
   
-  private void processIfPrimitive() {
-    Err.notImplemented();
+  private void processPrimitives() throws IOException {
+    if (!checkContext(classContext)) {
+      skipToRc(curlyCnt, true);
+      return;
+    }
+    HashSet<AgMember> primitives = new HashSet<AgMember>(23);
+    for (AgMember m : classContext.peek().members)
+      if (m.primitive) primitives.add(m);
+    processList(primitives, memberContext);
   }
   
-  private void processIfNonnull() {
-    Err.notImplemented();
+  private void processEnums() throws IOException {
+    if (!checkContext(classContext)) {
+      skipToRc(curlyCnt, true);
+      return;
+    }
+    processList(classContext.peek().enums, enumContext);
   }
   
-  private void processChildren() {
-    Err.notImplemented();
+  private void processEnumName() throws IOException {
+    if (checkContext(enumContext))
+      writeId(enumContext.peek().name, lastToken.idCase);
   }
   
-  private void processPrimitives() {
-    Err.notImplemented();
+  private void processValues() throws IOException {
+    if (!checkContext(enumContext)) {
+      skipToRc(curlyCnt, true);
+      return;
+    }
+    processList(enumContext.peek().values, valueContext);
   }
   
-  private void processEnums() {
-    Err.notImplemented();
+  private void processValueName() throws IOException {
+    if (checkContext(valueContext))
+      writeId(valueContext.peek(), lastToken.idCase);
   }
   
-  private void processEnumName() {
-    Err.notImplemented();
+  private void processInvariants() throws IOException {
+    if (!checkContext(classContext)) {
+      skipToRc(curlyCnt, true);
+      return;
+    }
+    processList(classContext.peek().invariants, invariantContext);
   }
   
-  private void processValues() {
-    Err.notImplemented();
-  }
-  
-  private void processValueName() {
-    Err.notImplemented();
-  }
-  
-  private void processInvariants() {
-    Err.notImplemented();
-  }
-  
-  private void processInv() {
-    Err.notImplemented();
+  private void processInv() throws IOException {
+    if (checkContext(invariantContext))
+      write(invariantContext.peek());
   }
   
   private void skipToRc(int cnt, boolean warn) throws IOException {
@@ -344,6 +438,10 @@ public class TemplateParser {
    */
   // candidate for memoization
   private void writeId(String id, TemplateToken.Case cs) throws IOException {
+    if (cs == TemplateToken.Case.ORIGINAL_CASE) {
+      write(id);
+      return;
+    }
     StringBuilder res = new StringBuilder(id.length());
     boolean first = true;
     boolean prevIs_ = true;

@@ -44,7 +44,8 @@ public class TemplateToken extends Token {
     /** camelCase */ CAMEL_CASE,
     /** PascalCase */ PASCAL_CASE,
     /** lower_case */ LOWER_CASE,
-    /** UPPER_CASE */ UPPER_CASE
+    /** UPPER_CASE */ UPPER_CASE,
+    /** as it appears in the abstract grammar */ ORIGINAL_CASE
   }
 
   /** The type of this token. */
