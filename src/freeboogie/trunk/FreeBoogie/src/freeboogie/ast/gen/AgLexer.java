@@ -15,7 +15,7 @@ import java.util.Map;
 public class AgLexer extends PeekStream<AgToken> {
   
   private static final Map<Character, AgToken.Type> oneCharTokens
-    = new HashMap<Character, AgToken.Type>(7);
+    = new HashMap<Character, AgToken.Type>(17);
   
   static {
     oneCharTokens.put('=', AgToken.Type.EQ);
@@ -57,9 +57,8 @@ public class AgLexer extends PeekStream<AgToken> {
   /*
    * This method always reads one more character than the recognized
    * token and also eats the read characters from the underlying stream.
-   * 
-   * TODO: decide if you keep this method as complex as it stands (likely)
-   *       and, if so, explain why
+   *
+   * The method is a bit too complex but lexers usually are.
    * 
    * @see freeboogie.ast.gen.PeekStream#read()
    */

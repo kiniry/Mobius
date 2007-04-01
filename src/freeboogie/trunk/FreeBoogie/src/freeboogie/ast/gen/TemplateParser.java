@@ -17,12 +17,29 @@ import java.util.logging.Logger;
 import freeboogie.util.Err;
 
 /**
- * TODO: description
+ * The template parser. This is where the output is produced.
+ * By default the output is set to {@code null} which means that
+ * the beginning of a template can contain arbitrary comments.
+ * The <tt>\file</tt> macro switches the output to another
+ * destination. (A common trick is to use /dev/stdout as a sink
+ * to inform the user about the progress of the template processing.)
+ * 
+ * Some macros must be nested in others. For example \class_name
+ * must be nested in \classes or \normal_classes or \abstract_classes.
+ * If the nesting is incorrect a warning is printed on the console
+ * and <WRONG_MACRO> goes to the output. If there are nested \classes
+ * macros then only the innermost one is considered. (In most
+ * applications nested list macros should not be needed.)
  * 
  * TODO: consider adding an optional parameter for macros that indicates
  *       a nesting level such that, for example, the following is legal
  *          \classes{(\classes{\ClassName[0],\ClassName[1]})}
  *       and prints all pairs of class names.
+ * 
+ * TODO If nested list macros are deemed unnecessary then switch the
+ *      context stacks to single (nullable) elements.
+ *      
+ * TODO The duplicated code is a bit too much for my taste.
  *
  * @author rgrig 
  * @author reviewed by TODO
@@ -100,6 +117,10 @@ public class TemplateParser {
   /*
    * For now I will enforce {} and [] to be balanced pretty much 
    * everywhere.
+   * 
+   * The function dispatches the work to the appropriate worker.
+   * It also takes care of stoping when a } or a ] with a given
+   * nesting level is seen.
    */
   private void processTop(int curlyStop, int bracketStop) throws IOException {
     readToken();
@@ -165,7 +186,8 @@ public class TemplateParser {
       err("Hey, \\file should be followed by {");
       Err.help("I'm gonna stop producing output.");
       switchOutput(null);
-      return; // TODO skip to } ?
+      skipToRc(curlyCnt, true);
+      return;
     }
     StringWriter sw = new StringWriter();
     switchOutput(sw);
@@ -247,7 +269,7 @@ public class TemplateParser {
   }
   
   private void splitClasses() {
-    if (abstractClasses == null) return;
+    if (abstractClasses != null) return;
     abstractClasses = new HashSet<AgClass>(101);
     normalClasses = new HashSet<AgClass>(101);
     for (AgClass c: grammar.classes.values()) {
@@ -323,7 +345,6 @@ public class TemplateParser {
     processYesNo(memberContext.peek().nonNull);
   }
 
-  // TODO I don't like the duplicated code processChiildren+processPrimitives
   private void processChildren() throws IOException {
     if (!checkContext(classContext)) {
       skipToRc(curlyCnt, true);
@@ -500,13 +521,5 @@ public class TemplateParser {
   
   private void err(String e) {
     Err.error(lexer.getName() + lexer.getLoc() + ": " + e);
-  }
-
-  /**
-   * TODO testing
-   * @param args
-   */
-  public static void main(String[] args) {
-    // TODO Auto-generated method stub
   }
 }

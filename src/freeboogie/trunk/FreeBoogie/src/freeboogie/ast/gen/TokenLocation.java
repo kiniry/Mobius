@@ -3,7 +3,7 @@
 package freeboogie.ast.gen;
 
 /**
- * TODO describe
+ * A location for {@code Token}-s.
  * 
  * I'll use the convention that an empty token is described by two
  * pointers just before it.
@@ -47,13 +47,5 @@ public class TokenLocation<T extends Token> extends Location<T> {
   @Override
   public String toString() {
     return "" + begin + "--" + end;
-  }
-
-  /**
-   * TODO testing
-   * @param args
-   */
-  public static void main(String[] args) {
-    // TODO Auto-generated method stub
   }
 }

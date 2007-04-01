@@ -29,16 +29,6 @@ class EofReached extends Exception {
  * explore the design space of a parse more, for example by giving really
  * custom error messages and hints of what might be wrong.
  * 
- * TODO Idea: in order to improve error messages I could log them,
- * ask users to send the logs and do an empirical study of typical mistakes.
- * 
- * TODO Comment this file better. Now it's awful.
- * 
- * TODO Perhaps is better to have a variable |lastToken| just as I have
- *      |lastChar| in the lexer.
- *      
- * TODO Have a more error resilient mechanism? (instead of skipping stmts) 
- * 
  * @author rgrig 
  * @author reviewed by TODO
  */
@@ -49,9 +39,6 @@ public class AgParser {
   private AgLexer lexer;
   private Grammar grammar;
   
-  // TODO: count errors
-  private int errors;
-  
   private boolean okToFinish;
   
   /**
@@ -59,7 +46,6 @@ public class AgParser {
    */
   public AgParser() {
     grammar = new Grammar();
-    errors = 0;
     okToFinish = false;
   }
   
@@ -75,8 +61,6 @@ public class AgParser {
   /** 
    * This will read in an AG from the input stream.
    * 
-   * TODO Should this return the grammar direcly? 
-   *  
    * @throws IOException if thrown by the underlying stream 
    */
   public void parseAg() throws IOException {
@@ -86,7 +70,7 @@ public class AgParser {
       if (!okToFinish) {
         Err.error("The end of file took me by surprise.");
         Err.help("Did you forget a semicolon?");
-      }
+      } 
     }
   }
   
@@ -263,7 +247,6 @@ public class AgParser {
   
   private void skipStatementBecauseOf(AgToken tok) 
   throws IOException, EofReached {
-    ++errors;
     StringBuilder sb = new StringBuilder();
     err("I'm confused by '" + tok.rep + "'");
     do {

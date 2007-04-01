@@ -20,15 +20,4 @@ public class NullLocation<T> extends Location<T> {
   public String toString() {
     return "(location not tracked)";
   }
-
-  /**
-   * For testing. (TODO)
-   * 
-   * @param args
-   */
-  public static void main(String[] args) {
-  // TODO Auto-generated method stub
-
-  }
-
 }

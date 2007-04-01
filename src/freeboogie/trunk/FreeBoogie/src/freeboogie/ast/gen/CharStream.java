@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * TODO Description.
+ * A character stream.
  * 
  * @author rgrig 
  * @author reviewed by TODO
@@ -50,14 +50,5 @@ public class CharStream extends PeekStream<Character> {
     int c = stream.read();
     if (c != -1) r = Character.valueOf((char) c);
     return r;
-  }
-
-  /**
-   * For testing. (TODO)
-   * 
-   * @param args
-   */
-  public static void main(String[] args) {
-    // TODO Auto-generated method stub
   }
 }

@@ -3,7 +3,7 @@
 package freeboogie.ast.gen;
 
 /**
- * TODO: description
+ * A generic token. It has a string representation.
  *
  * @author rgrig 
  * @author reviewed by TODO
@@ -22,14 +22,4 @@ public abstract class Token {
   public Token(String rep) {
     this.rep = rep;
   }
-
-  /**
-   * TODO tests
-   * 
-   * @param args
-   */
-  public static void main(String[] args) {
-    // TODO Auto-generated method stub
-  }
-
 }

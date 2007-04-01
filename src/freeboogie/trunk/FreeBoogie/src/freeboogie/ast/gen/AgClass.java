@@ -15,7 +15,7 @@ public class AgClass {
   /** The name of the class. */
   public String name = null;
   
-  /** The base class of this class. TODO: default? */
+  /** The base class of this class. Should be nonnull for a consistent grammar. */
   public String base = null;
   
   /** The class members. */

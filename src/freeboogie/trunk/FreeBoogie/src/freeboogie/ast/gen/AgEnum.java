@@ -16,5 +16,5 @@ public class AgEnum {
   public String name = null;
 
   /** The values of the enum. */
-  public Set<String> values = new HashSet<String>(10);
+  public Set<String> values = new HashSet<String>(23);
 }

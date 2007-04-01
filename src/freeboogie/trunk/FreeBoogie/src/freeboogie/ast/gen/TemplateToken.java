@@ -69,12 +69,4 @@ public class TemplateToken extends Token {
     this.type = type;
     this.idCase = idCase;
   }
-
-  /**
-   * @param args
-   */
-  public static void main(String[] args) {
-    // TODO Auto-generated method stub
-  }
-
 }

@@ -3,7 +3,7 @@
 package freeboogie.ast.gen;
 
 /**
- * TODO: description
+ * Represents an abstract grammar token.
  * 
  * @author rgrig 
  * @author reviewed by TODO
@@ -50,13 +50,4 @@ public class AgToken extends Token {
       && type != Type.WS
       && type != Type.NL;
   }
-  
-  /**
-   * @param args
-   */
-  public static void main(String[] args) {
-  // TODO Auto-generated method stub
-
-  }
-
 }

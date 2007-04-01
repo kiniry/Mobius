@@ -9,12 +9,10 @@ import java.util.Map;
 import freeboogie.util.Err;
 
 /**
- * TODO: description
+ * Lexer for template files. The macros and teh delimiters they use 
+ * are recognized; everything inbetween is considered as the token
+ * `other' and will be later copied verabtim to the output. 
  * 
- * TODO keep track of the filename here so it is given with errors
- * 
- * NOTE The lexing is not very efficient.
- *
  * @author rgrig 
  * @author reviewed by TODO
  */
@@ -76,7 +74,7 @@ public class TemplateLexer extends PeekStream<TemplateToken> {
     macros.put("\\VALUE_NAME", TemplateToken.Type.VALUE_NAME);
     macros.put("\\Valuename", TemplateToken.Type.VALUE_NAME);
     macros.put("\\invariants", TemplateToken.Type.INVARIANTS);
-    macros.put("\\inv", TemplateToken.Type.INV);
+    macros.put("\\inv_text", TemplateToken.Type.INV);
     
     idCases.put("\\class_name", TemplateToken.Case.LOWER_CASE);
     idCases.put("\\className", TemplateToken.Case.CAMEL_CASE);
@@ -192,13 +190,4 @@ public class TemplateLexer extends PeekStream<TemplateToken> {
   private void err(String e) {
     Err.error(getName() + stream.getLoc() + ": " + e);
   }
-
-  /**
-   * TODO tests
-   * @param args
-   */
-  public static void main(String[] args) {
-    // TODO Auto-generated method stub
-  }
-
 }

@@ -45,25 +45,20 @@ public class Grammar {
   /**
    * We set here all things that are left behind by {@code AgParser}.
    * 
-   * Right now there is only one thing `left behind': the primitive
-   * status of members. A member is considered to be a primitive iff
-   * its type is not a class name.
+   * A member is considered to be a primitive iff its type is not a 
+   * class name.
+   * 
+   * If a class does not have an explicit base class it is set 
+   * to |defaultBase|.
+   * 
+   * @param defaultBaseName the default base class name 
    */
-  public void makeConsistent() {
+  public void makeConsistent(String defaultBaseName) {
     for (AgClass c : classes.values()) {
+      if (c.base == null) c.base = defaultBaseName;
       for (AgMember m : c.members) {
         m.primitive = classes.containsKey(m.type);
       }
     }
   }
-  
-  /**
-   * For testing. (TODO)
-   * 
-   * @param args
-   */
-  public static void main(String[] args) {
-    // TODO Auto-generated method stub
-  }
-
 }
