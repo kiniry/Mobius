@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Represents an abstract grammag (AG). It is basically a map from
+ * Represents an abstract grammar (AG). It is basically a map from
  * class names to {@code AgClass} objects plus a couple of utility
  * methods.
  * 
@@ -48,6 +48,10 @@ public class Grammar {
    * A member is considered to be a primitive iff its type is not a 
    * class name.
    * 
+   * A member is considered to have an enum type if an enum with the
+   * type name exists. The user should be careful not to have name
+   * conflicts between classes and enums.
+   * 
    * If a class does not have an explicit base class it is set 
    * to |defaultBase|.
    * 
@@ -57,8 +61,8 @@ public class Grammar {
     for (AgClass c : classes.values()) {
       if (c.base == null) c.base = defaultBaseName;
       for (AgMember m : c.members) {
-        m.primitive = !classes.containsKey(m.type);
         m.isenum = c.hasEnum(m.type);
+        m.primitive = m.isenum || !classes.containsKey(m.type);
       }
     }
   }

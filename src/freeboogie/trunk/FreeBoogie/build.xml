@@ -28,13 +28,20 @@
     description="generates AST">
     <java fork="yes" dir="${ast}" classpath="${build}"
       classname="freeboogie.ast.gen.Main">
-      <arg value="${ast}/fb.ag" />
-      <arg value="${ast}/abstract_classes.tpl" />
-      <arg value="${ast}/normal_classes.tpl" />
-      <arg value="${ast}/evaluator.tpl" />
-      <arg value="${ast}/transformer.tpl" />
-      <arg value="${ast}/list.tpl" />
+      <arg value="fb.ag" />
+      <arg value="abstract_classes.tpl" />
+      <arg value="normal_classes.tpl" />
+      <arg value="evaluator.tpl" />
+      <arg value="transformer.tpl" />
+      <arg value="html.tpl" />
+      <arg value="list.tpl" />
     </java>
+    <exec dir="${ast}" executable="dot">
+      <arg value="-Tgif" />
+      <arg value="hierarchy.dot" />
+      <arg value="-o" />
+      <arg value="hierarchy.gif" />
+    </exec>
   </target>
 
   <!-- TODO: Parser generation -->

@@ -11,7 +11,7 @@ import java.util.List;
  * @author rgrig 
  * @author reviewed by TODO
  */
-public class AgClass {
+public class AgClass implements Comparable<AgClass> {
   /** The name of the class. */
   public String name = null;
   
@@ -58,5 +58,10 @@ public class AgClass {
       enums.add(r);
     }
     return r;
+  }
+
+  /* @see java.lang.Comparable#compareTo(java.lang.Object) */
+  public int compareTo(AgClass o) {
+    return name.compareTo(o.name);
   }
 }

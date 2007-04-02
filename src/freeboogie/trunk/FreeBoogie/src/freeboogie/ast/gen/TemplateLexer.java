@@ -33,7 +33,7 @@ public class TemplateLexer extends PeekStream<TemplateToken> {
   static {
     macros.put("\\file", TemplateToken.Type.FILE);
     macros.put("\\classes", TemplateToken.Type.CLASSES);
-    macros.put("\\is_abstract", TemplateToken.Type.IS_ABSTRACT);
+    macros.put("\\if_abstract", TemplateToken.Type.IF_ABSTRACT);
     macros.put("\\abstract_classes", TemplateToken.Type.ABSTRACT_CLASSES);
     macros.put("\\normal_classes", TemplateToken.Type.NORMAL_CLASSES);
     macros.put("\\class_name", TemplateToken.Type.CLASS_NAME);

@@ -5,6 +5,9 @@ a way that adds new generated files.
 Almost all files in this directory are generated.
 
 \file{generated.list}
+ag.html
+hierarchy.dot
+hierarchy.gif
 Evaluator.java
 Transformer.java
 \classes{\ClassName.java

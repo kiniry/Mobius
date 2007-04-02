@@ -14,7 +14,7 @@ public class TemplateToken extends Token {
   public enum Type {
     /** \file */ FILE,
     /** \classes */ CLASSES,
-    /** \is_abstract */ IS_ABSTRACT,
+    /** \is_abstract */ IF_ABSTRACT,
     /** \abstract_classes */ ABSTRACT_CLASSES,
     /** \normal_classes */ NORMAL_CLASSES,
     /** \class_name */ CLASS_NAME,

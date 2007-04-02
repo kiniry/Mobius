@@ -95,19 +95,19 @@ freely for comments.</td>
 </tr>
 
 <tr>
-<td>\is_abstract{<i>yes</i>}{<i>no</i>}</td>
+<td>\if_abstract{<i>yes</i>}{<i>no</i>}</td>
 <td>If the current class is abstract writes <i>yes</i>, otherwise
 writes <i>no</i>.</td>
 </tr>
 
 <tr>
 <td>\abstract_classes[<i>sep</i>]{<i>text</i>}</td>
-<td>\classes[<i>sep</i>]{\is_abstract{<i>text</i>}{}}</td>
+<td>\classes[<i>sep</i>]{\if_abstract{<i>text</i>}{}}</td>
 </tr>
 
 <tr>
 <td>\normal_classes[<i>sep</i>]{<i>text</i>}</td>
-<td>\classes[<i>sep</i>]{\is_abstract{}{<i>text</i>}}</td>
+<td>\classes[<i>sep</i>]{\if_abstract{}{<i>text</i>}}</td>
 </tr>
 
 <tr>
@@ -139,12 +139,19 @@ writes <i>no</i>.</td>
 <tr>
 <td>\if_primitive{<i>yes</i>}{<i>no</i>}</td>
 <td>If the current member is a primitive writes <i>yes</i>, otherwise
-writes <i>no</i>.</td>
+writes <i>no</i>. A member is considered a primitive if it does not
+appear on the left hand side of a '=' rule in the abstract grammar.</td>
 </tr>
 
 <tr>
 <td>\if_nonnull{<i>yes</i>}{<i>no</i>}</td>
 <td>If the current member is a nonnull writes <i>yes</i>, otherwise
+writes <i>no</i>.</td>
+</tr>
+
+<tr>
+<td>\if_enum{<i>yes</i>}{<i>no</i>}</td>
+<td>If the current member's type is an enum type it writes <i>yes</i>, otherwise
 writes <i>no</i>.</td>
 </tr>
 

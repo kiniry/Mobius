@@ -14,12 +14,12 @@ public class \ClassName extends \BaseName {
   }}
 \invariants{  //@ invariant \inv_text;
 }
-\children{  private \MemberType \memberName;
+\children{  private final \MemberType \memberName;
 }
-\primitives{  private \Membertype \memberName;
+\primitives{  private final \Membertype \memberName;
 }
 
-  public \ClassName(\members[, ]{\if_primitive{\Membertype}{\MemberType} \member_name}) {
+  public \ClassName(\members[, ]{\if_primitive{\Membertype}{\MemberType} \memberName}) {
 \members{    this.\memberName = \memberName; \if_nonnull{assert \memberName != null;}{}
 }  }
 

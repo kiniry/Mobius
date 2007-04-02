@@ -8,10 +8,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.Stack;
+import java.util.TreeSet;
 import java.util.logging.Logger;
 
 import freeboogie.util.Err;
@@ -115,7 +117,7 @@ public class TemplateParser {
   public void process(Grammar g) throws IOException {
     grammar = g;
     processTop(Integer.MAX_VALUE, Integer.MAX_VALUE);
-    output.flush();
+    if (output != null) output.flush();
   }
 
   /*
@@ -134,7 +136,7 @@ public class TemplateParser {
         processFile(); break;
       case CLASSES:
         processClasses(); break;
-      case IS_ABSTRACT:
+      case IF_ABSTRACT:
         processIsAbstract(); break;
       case ABSTRACT_CLASSES:
         processAbstractClasses(); break;
@@ -276,8 +278,8 @@ public class TemplateParser {
   
   private void splitClasses() {
     if (abstractClasses != null) return;
-    abstractClasses = new HashSet<AgClass>(101);
-    normalClasses = new HashSet<AgClass>(101);
+    abstractClasses = new TreeSet<AgClass>();
+    normalClasses = new TreeSet<AgClass>();
     for (AgClass c: grammar.classes.values()) {
       if (c.members.isEmpty())
         abstractClasses.add(c);
@@ -365,7 +367,7 @@ public class TemplateParser {
       skipToRc(curlyCnt, true);
       return;
     }
-    HashSet<AgMember> children = new HashSet<AgMember>(23);
+    List<AgMember> children = new ArrayList<AgMember>(23);
     for (AgMember m : classContext.peek().members)
       if (!m.primitive) children.add(m);
     processList(children, memberContext);
@@ -376,7 +378,7 @@ public class TemplateParser {
       skipToRc(curlyCnt, true);
       return;
     }
-    HashSet<AgMember> primitives = new HashSet<AgMember>(23);
+    List<AgMember> primitives = new ArrayList<AgMember>(23);
     for (AgMember m : classContext.peek().members)
       if (m.primitive) primitives.add(m);
     processList(primitives, memberContext);
