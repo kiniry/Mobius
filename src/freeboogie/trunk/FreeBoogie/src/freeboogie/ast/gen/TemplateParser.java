@@ -84,7 +84,9 @@ public class TemplateParser {
   private TemplateToken lastToken;
   
   private boolean balancedWarning = true;
-  
+
+  // classes are processed in alphabetical order
+  private Set<AgClass> orderedClasses;
   private Set<AgClass> abstractClasses;
   private Set<AgClass> normalClasses;
   
@@ -104,7 +106,8 @@ public class TemplateParser {
     enumContext = new Stack<AgEnum>();
     valueContext = new Stack<String>();
     invariantContext = new Stack<String>();
-    
+
+    orderedClasses = null;
     abstractClasses = null;
     normalClasses = null;
   }
@@ -253,7 +256,8 @@ public class TemplateParser {
   }
   
   private void processClasses() throws IOException {
-    processList(grammar.classes.values(), classContext);
+    splitClasses();
+    processList(orderedClasses, classContext);
   }
   
   private void processYesNo(boolean yes) throws IOException {
@@ -278,9 +282,11 @@ public class TemplateParser {
   
   private void splitClasses() {
     if (abstractClasses != null) return;
+    orderedClasses = new TreeSet<AgClass>();
     abstractClasses = new TreeSet<AgClass>();
     normalClasses = new TreeSet<AgClass>();
     for (AgClass c: grammar.classes.values()) {
+      orderedClasses.add(c);
       if (c.members.isEmpty())
         abstractClasses.add(c);
       else
