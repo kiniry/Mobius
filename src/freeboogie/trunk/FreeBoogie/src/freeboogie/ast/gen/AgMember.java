@@ -17,6 +17,9 @@ public class AgMember {
 
   /** Whether this member is a primitive. */
   public boolean primitive = true;
+  
+  /** Whether this member's type is an enum. */
+  public boolean isenum = false;
 
   /**
    * Whether this member should be non-null. (note: This is about members in the

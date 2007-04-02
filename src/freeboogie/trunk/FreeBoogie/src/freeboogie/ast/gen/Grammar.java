@@ -56,8 +56,10 @@ public class Grammar {
   public void makeConsistent(String defaultBaseName) {
     for (AgClass c : classes.values()) {
       if (c.base == null) c.base = defaultBaseName;
-      for (AgMember m : c.members)
+      for (AgMember m : c.members) {
         m.primitive = !classes.containsKey(m.type);
+        m.isenum = c.hasEnum(m.type);
+      }
     }
   }
 }

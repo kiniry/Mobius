@@ -27,6 +27,20 @@ public class AgClass {
   /** The (textual) invariants that this class must obey. */
   public List<String> invariants = new ArrayList<String>();
   
+  private AgEnum getExistentEnum(String enumName) {
+    for (AgEnum e : enums) if (e.name.equals(enumName)) return e;
+    return null;
+  }
+  
+  /**
+   * Returns whether an enum with the given name exists already.
+   * @param enumName The enum neme to test.
+   * @return Whether an enum with that name exists.
+   */
+  public boolean hasEnum(String enumName) {
+    return getExistentEnum(enumName) != null;
+  }
+  
   /**
    * Returns the enum with a certain name or creates one if none
    * exists. This function does a linear search so it is a good
@@ -37,10 +51,7 @@ public class AgClass {
    * @return an {@code AgEnum} object representing the requested enum
    */
   public AgEnum getEnum(String enumName) {
-    AgEnum r = null;
-    for (AgEnum it : enums) {
-      if (it.name.equals(enumName)) r = it; 
-    }
+    AgEnum r = getExistentEnum(enumName);
     if (r == null) {
       r = new AgEnum();
       r.name = enumName;

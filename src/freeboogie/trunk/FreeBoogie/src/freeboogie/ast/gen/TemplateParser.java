@@ -40,6 +40,10 @@ import freeboogie.util.Err;
  *      context stacks to single (nullable) elements.
  *      
  * TODO The duplicated code is a bit too much for my taste.
+ * 
+ * TODO I may want to add macro definitions such as
+ *      \def\Type{\if_primitive{\if_enum{\ClassName.}{}\Membertype}{\MemberType}}
+ *      It gets tedious to write it.
  *
  * @author rgrig 
  * @author reviewed by TODO
@@ -150,6 +154,8 @@ public class TemplateParser {
         processIfPrimitive(); break;
       case IF_NONNULL:
         processIfNonnull(); break;
+      case IF_ENUM:
+        processIfEnum(); break;
       case CHILDREN:
         processChildren(); break;
       case PRIMITIVES:
@@ -343,6 +349,15 @@ public class TemplateParser {
       return;
     }
     processYesNo(memberContext.peek().nonNull);
+  }
+  
+  private void processIfEnum() throws IOException {
+    if (!checkContext(memberContext)) {
+      skipToRc(curlyCnt, true);
+      skipToRc(curlyCnt, true);
+      return;
+    }
+    processYesNo(memberContext.peek().isenum);
   }
 
   private void processChildren() throws IOException {

@@ -59,6 +59,7 @@ public class TemplateLexer extends PeekStream<TemplateToken> {
     macros.put("\\Membername", TemplateToken.Type.MEMBER_NAME);
     macros.put("\\if_primitive", TemplateToken.Type.IF_PRIMITIVE);
     macros.put("\\if_nonnull", TemplateToken.Type.IF_NONNULL);
+    macros.put("\\if_enum", TemplateToken.Type.IF_ENUM);
     macros.put("\\children", TemplateToken.Type.CHILDREN);
     macros.put("\\primitives", TemplateToken.Type.PRIMITIVES);
     macros.put("\\enums", TemplateToken.Type.ENUMS);

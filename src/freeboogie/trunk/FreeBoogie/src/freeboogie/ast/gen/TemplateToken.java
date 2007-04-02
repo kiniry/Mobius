@@ -24,6 +24,7 @@ public class TemplateToken extends Token {
     /** \member_name */ MEMBER_NAME,
     /** \if_primitive */ IF_PRIMITIVE,
     /** \if_nonnull */ IF_NONNULL,
+    /** \if_enum */ IF_ENUM,
     /** \children */ CHILDREN,
     /** \primitives */ PRIMITIVES,
     /** \enums */ ENUMS,
