@@ -27,8 +27,6 @@ BEGIN
        jtype : JType
     #]
 
-  Store : TYPE = [Name -> Val]
-
   IMPORTING State[Name]
 
   Guard : TYPE = [Store, PSt -> boolean]
@@ -89,7 +87,9 @@ END MVA
 WellFormedMVA[CP, Name : TYPE+] : THEORY
 BEGIN
 
-  IMPORTING MVA[CP, Name]
+  IMPORTING MVA[CP, Name],
+            func_props,               % imports domain_set
+            WellFormedProgram[Name]   % imports var_names(e : Expr) : set[Name]
 
   % Functions to get a set of names from a set of variable declarations
   var_names(vds : set[MVAVarDecl]) : set[Name] =
@@ -98,15 +98,12 @@ BEGIN
   var_names(vds : set[ProgVarDecl]) : set[Name] =
     {n : Name | EXISTS (vp : ProgVarDecl) : vds(vp) AND name(vp) = n}
 
-  % Gets the variable's names involved in an expression
-  % TODO: define and move to another file
-  var_names(e : Expr[Name]) : set[Name]
 
-  % THINK: Do we really need to ask that the store is only (IFF) defined
-  % for the declared variables?. Same for PSt
-  wf_Store(vds : finite_set[MVAVarDecl])(f : Store) : boolean =
+  % NOTE: We may also require Int?(f(n)) OR Bool?(f(n)) but we don't care
+  % about type checking now. Same for wf_PSt (using fvs(f)(n))
+  wf_Store(vds : finite_set[MVAVarDecl])(st : Store) : boolean =
     FORALL (n : Name) :
-      var_names(vds)(n) IFF NOT Bottom?(f(n))
+      var_names(vds)(n) IFF NOT Bottom?(st(n))
 
   wf_Store(a : MVA)(f : Store) : boolean =
     wf_Store(vdsA(a))(f)
@@ -114,9 +111,10 @@ BEGIN
   wf_Store(f : Store, a : MVA) : boolean =
     wf_Store(vdsA(a))(f)
 
-  wf_PSt(vds : finite_set[ProgVarDecl])(f : PSt) : boolean =
+  % NOTE: Recall that we assume that variables in PSt are fields
+  wf_PSt(vds : finite_set[ProgVarDecl])(st : PSt) : boolean =
     FORALL (n : Name) :
-      var_names(vds)(n) IFF NOT Bottom?(lookup(n, f))
+      var_names(vds)(n) IFF NOT Bottom?(fvs(st)(n))
 
   wf_PSt(a : MVA)(f : PSt) : boolean =
     wf_PSt(vdsP(a))(f)
@@ -135,8 +133,8 @@ BEGIN
     FORALL (vd1, vd2 : ProgVarDecl) : vds(vd1) IMPLIES vds(vd2) IMPLIES
       name(vd1) = name(vd2) IMPLIES vd1 = vd2
 
-  IMPORTING func_props   % imports domain_set
-
+  % A guard is well formed if its domain states are defined for all variables
+  % vdsA or vdsP
   wf_Guard(a : MVA)(p : Guard) : boolean =
     wf_Store(proj_1(domain_set(p)), a) AND
     wf_PSt(proj_2(domain_set(p)), a)
@@ -162,9 +160,7 @@ BEGIN
   % The event of every transition is in the set of events
   % The target of every OneAction in every transition is in vdsA and variables
   % appearing in the source expression are either in vdsA or in vdsP
-  % Variables appearing in guards are in in vdsA or in vdsP. In our formalization
-  % this means that the Store is defined for each var in vdsA and the PSt is
-  % defined for each var in vdsP (they also may be defined elsewhere)
+  % Guards and actions are well formed
   wf_MVA(a : MVA) : boolean =
     cps(a)(init_cp(a)) AND
     wf_vdsA(vdsA(a)) AND
@@ -218,7 +214,6 @@ BEGIN
 
 
 END WellFormedMVA
-
 
 
 MVASemantics[CP, Name : TYPE+] : THEORY
@@ -335,27 +330,24 @@ BEGIN
             EpsilonProps, 
             MVAFiniteProps
 
-  % Returns the set of guards from transitions in ts with cp as source control
+  % Returns the set of guards from transitions with cp as source control
   % point and e as event
-  all_guards(cp : CP, e : Event,
-             ts : finite_set[Transition]) : finite_set[Guard] =
-    {p : Guard | EXISTS (t : Transition) : ts(t) AND scp(t) = cp AND
+  all_guards(a : MVA)(cp : CP, e : Event) : finite_set[Guard] =
+    {p : Guard | EXISTS (t : Transition) : ts(a)(t) AND scp(t) = cp AND
                                            event(t) = e AND guard(t) = p}
  
   % Returns a guard that is the conjuction of the negation of the guards in ts
   % with source control point cp and event e. The sets of variable declarations
   % are needed to make sure that the guard is defined in for those variables.
-  build_guard(a : MVA)(cp : CP, e : Event, vdsA : finite_set[MVAVarDecl],
-                       vdsP : finite_set[ProgVarDecl]) : Guard =
+  build_guard(a : MVA)(cp : CP, e : Event) : Guard =
    LAMBDA (stA : (wf_Store(a)), stP : (wf_PSt(a))) :
-     FORALL (p : Guard) : all_guards(cp, e, ts(a))(p) IMPLIES NOT p(stA, stP)
+     FORALL (p : Guard) : all_guards(a)(cp, e)(p) IMPLIES NOT p(stA, stP)
 
   % Makes ts(a) complete with respect cps and evs(a)
   complete_trans(a : MVA) : finite_set[Transition] =
     union({t : Transition | cps(a)(scp(t)) AND evs(a)(event(t)) AND
-                            action(t) = skip AND tcp(t) = halted AND
-                            guard(t) = build_guard(a)(scp(t), event(t),
-                                                      vdsA(a), vdsP(a))},
+                            guard(t) = build_guard(a)(scp(t), event(t)) AND
+                            action(t) = skip AND tcp(t) = halted},
           {t : Transition | scp(t) = halted AND evs(a)(event(t)) AND
                             guard(t) = (LAMBDA (stA : (wf_Store(a)),
                                                 stP : (wf_PSt(a))) : TRUE)
@@ -370,8 +362,6 @@ BEGIN
   complete_MVA(a : (complete_MVA_pre)) : MVA =
     a WITH [cps := add(halted, cps(a)),
             ts := union(ts(a), complete_trans(a))]
-%            ts := union(ts(a), complete_trans(cps(a), evs(a), ts(a), vdsA(a), 
-%                                             vdsP(a)))]
 
 
   % TODO: prove the remaining cases (Fix the proof)
@@ -383,13 +373,11 @@ BEGIN
     FORALL (a: (complete_MVA_pre)) :
       trap_state(halted, complete_MVA(a))
 
-  % TODO: Fix the proof
-  complete_MVA_is_deterministic: LEMMA
+  complete_MVA_is_deterministic: LEMMA % :-)
     FORALL (a: (complete_MVA_pre)) :
       deterministic(complete_MVA(a))
 
-  % TODO: Fix the proof
-  complete_MVA_is_total: LEMMA
+  complete_MVA_is_total: LEMMA % :-)
     FORALL (a: (complete_MVA_pre)) :
       total(complete_MVA(a))
 

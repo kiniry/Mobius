@@ -1,0 +1,74 @@
+(Equivalence
+ (JMLExc_iff_assertion_breached_TCC1 0
+  (JMLExc_iff_assertion_breached_TCC1-1 nil 3383291150 nil
+   ("" (subtype-tcc) nil nil) unchecked nil nil nil nil nil))
+ (initial_states_are_equivalent_TCC1 0
+  (initial_states_are_equivalent_TCC1-1 nil 3383291150 nil
+   ("" (subtype-tcc) nil nil) unchecked nil nil nil nil nil))
+ (initial_states_are_equivalent_TCC2 0
+  (initial_states_are_equivalent_TCC2-1 nil 3383456193 nil
+   ("" (subtype-tcc) nil nil) unchecked nil nil nil nil nil))
+ (initial_states_are_equivalent 0
+  (initial_states_are_equivalent-1 nil 3383291365 3384084875
+   ("" (skosimp)
+    (("" (expand "MP_modeled?")
+      (("" (split)
+        (("1" (expand "MVA_modeled?")
+          (("1" (split)
+            (("1"
+              (expand* "cp2val" "initial_MP_state"
+               "initial_Program_state")
+              (("1" (lift-if)
+                (("1" (prop)
+                  (("1" (postpone) nil nil)
+                   ("2" (expand "initial_MVA_state")
+                    (("2" (expand "get_GhostVarDecl")
+                      (("2" (lift-if)
+                        (("2" (prop)
+                          (("1" (assert) nil nil)
+                           ("2" (delete 1)
+                            (("2" (lemma "get_GhostVarDecl_is_determ")
+                              (("2"
+                                (inst -1 "\"cp\"" "ann_program(mp!1)")
+                                (("1"
+                                  (beta)
+                                  (("1"
+                                    (prop)
+                                    (("1"
+                                      (use
+                                       "choose_singleton?[{gd: GhostVarDecl[string] | EXISTS (c: Class[string]):
+            classes(ann_program(mp!1))(c) AND ghost_vars(c)(gd) AND name(gd) = \"cp\"}]")
+                                      (("1"
+                                        (prop)
+                                        (("1" (postpone) nil nil)
+                                         ("2"
+                                          (hide-all-but (-1 1))
+                                          (("2" (grind) nil nil))
+                                          nil))
+                                        nil)
+                                       ("2" (postpone) nil nil)
+                                       ("3" (postpone) nil nil))
+                                      nil)
+                                     ("2" (postpone) nil nil))
+                                    nil))
+                                  nil)
+                                 ("2" (postpone) nil nil))
+                                nil))
+                              nil))
+                            nil))
+                          nil))
+                        nil))
+                      nil))
+                    nil))
+                  nil))
+                nil))
+              nil)
+             ("2" (postpone) nil nil) ("3" (postpone) nil nil))
+            nil))
+          nil)
+         ("2" (postpone) nil nil))
+        nil))
+      nil))
+    nil)
+   unfinished nil 614103 2890 t shostak)))
+

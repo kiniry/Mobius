@@ -17,8 +17,12 @@ EpsilonProps[T : TYPE+] : THEORY
 BEGIN
 
   epsilon_singleton: LEMMA % :-)
-    FORALL (x : T):
+    FORALL (x : T) :
       epsilon(singleton(x)) = x
+
+  choose_singleton? : LEMMA % :-)
+    FORALL (s : set[T]) :
+      singleton?(s) IMPLIES choose(s) = the(s)
 
 END EpsilonProps
 
@@ -58,7 +62,7 @@ BEGIN
                     scp(t) = halted[CP, Name] AND
                     es(event(t)) AND
                     guard(t) =
-                      (LAMBDA (stA: Store[CP, Name], stP: PSt[Name]): TRUE) AND
+                      (LAMBDA (stA: Store[Name], stP: PSt[Name]): TRUE) AND
                     action(t) = skip[CP, Name] AND
                     tcp(t) = halted[CP, Name]})
 

@@ -1,7 +1,7 @@
 (FiniteSetProps
  (get_y_from_x_TCC1 0
   (get_y_from_x_TCC1-1 nil 3383049701 nil ("" (subtype-tcc) nil nil)
-   nil nil nil nil nil nil))
+   unchecked nil nil nil nil nil))
  (subset_prop 0
   (subset_prop-1 nil 3383049728 3383049866
    ("" (skosimp)
@@ -41,14 +41,10 @@
         nil))
       nil))
     nil)
-   proved
+   untried
    ((injective? const-decl "bool" functions nil)
     (set type-eq-decl nil sets nil)
-    (nonempty? const-decl "bool" sets nil)
-    (x1!1 skolem-const-decl "({x: X | EXISTS (y: Y): P!1(x, y)})"
-     FiniteSetProps nil)
-    (x2!1 skolem-const-decl "({x: X | EXISTS (y: Y): P!1(x, y)})"
-     FiniteSetProps nil)
+    (nonempty? const-decl "bool" sets nil) nil nil
     (choose const-decl "(p)" sets nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
     (empty? const-decl "bool" sets nil)
@@ -71,8 +67,7 @@
     (Y formal-type-decl nil FiniteSetProps nil)
     (boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
-    (pred type-eq-decl nil defined_types nil)
-    (P!1 skolem-const-decl "pred[[X, Y]]" FiniteSetProps nil)
+    (pred type-eq-decl nil defined_types nil) nil
     (get_y_from_x const-decl "Y" FiniteSetProps nil)
     (is_finite const-decl "bool" finite_sets nil))
    244 150 t nil)))
@@ -89,7 +84,7 @@
         nil))
       nil))
     nil)
-   proved
+   unfinished
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (pred type-eq-decl nil defined_types nil)
@@ -98,11 +93,21 @@
     (singleton const-decl "(singleton?)" sets nil)
     (epsilon_ax formula-decl nil epsilons nil)
     (T formal-nonempty-type-decl nil EpsilonProps nil))
-   2785 30 t nil)))
+   2785 30 t nil))
+ (choose_singleton?_TCC1 0
+  (choose_singleton?_TCC1-1 nil 3384083790 nil
+   ("" (subtype-tcc) nil nil) nil nil nil nil nil nil))
+ (choose_singleton? 0
+  (choose_singleton?-1 nil 3384083791 3384083832
+   ("" (skosimp)
+    (("" (expand* "choose" "the" "singleton" "member") nil nil)) nil)
+   proved
+   ((choose const-decl "(p)" sets nil) (the const-decl "(p)" sets nil))
+   40327 20 t shostak)))
 (MVAFiniteProps
  (get_t_from_gs_TCC1 0
   (get_t_from_gs_TCC1-1 nil 3383051006 nil ("" (subtype-tcc) nil nil)
-   unfinished nil nil nil nil nil))
+   unchecked nil nil nil nil nil))
  (all_guards_finite 0
   (all_guards_finite-2 nil 3383051076 3383051086
    ("" (skolem-typepred)
@@ -153,7 +158,7 @@
         nil))
       nil))
     nil)
-   unchecked
+   unfinished
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
@@ -186,7 +191,7 @@
     (number_field_pred const-decl "[number -> boolean]" number_fields
      nil)
     (number nonempty-type-decl nil numbers nil)
-    (Val type-decl nil Val_adt nil) (Store type-eq-decl nil MVA nil)
+    (Val type-decl nil Val_adt nil) nil
     (PSt type-eq-decl nil State nil)
     (AND const-decl "[bool, bool -> bool]" booleans nil)
     (= const-decl "[T, T -> boolean]" equalities nil)
@@ -222,7 +227,7 @@
         nil))
       nil))
     nil)
-   proved-complete
+   unfinished
    ((Transition type-eq-decl nil MVA nil)
     (Guard type-eq-decl nil MVA nil) (Event type-eq-decl nil MVA nil)
     (Action type-eq-decl nil MVA nil)
@@ -388,7 +393,7 @@
         nil))
       nil))
     nil)
-   proved-complete
+   unfinished
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
@@ -412,16 +417,15 @@
     (OneAction type-eq-decl nil MVA nil)
     (Expr type-decl nil Expr_adt nil)
     (TRUE const-decl "bool" booleans nil)
-    (PSt type-eq-decl nil State nil) (Store type-eq-decl nil MVA nil)
-    (Val type-decl nil Val_adt nil) nil
-    (halted const-decl "CP" MVA nil)
+    (PSt type-eq-decl nil State nil) nil
+    (Val type-decl nil Val_adt nil) (halted const-decl "CP" MVA nil)
     (= const-decl "[T, T -> boolean]" equalities nil)
     (AND const-decl "[bool, bool -> bool]" booleans nil)
     (Transition type-eq-decl nil MVA nil)
     (Guard type-eq-decl nil MVA nil) (Action type-eq-decl nil MVA nil)
     (+ const-decl "[numfield, numfield -> numfield]" number_fields nil)
-    (numfield nonempty-type-eq-decl nil number_fields nil) nil
-    (below type-eq-decl nil nat_types nil) nil
+    (numfield nonempty-type-eq-decl nil number_fields nil)
+    (below type-eq-decl nil nat_types nil)
     (nat nonempty-type-eq-decl nil naturalnumbers nil)
     (>= const-decl "bool" reals nil)
     (int nonempty-type-eq-decl nil integers nil)

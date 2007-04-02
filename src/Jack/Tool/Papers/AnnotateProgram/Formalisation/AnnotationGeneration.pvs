@@ -7,19 +7,20 @@ BEGIN
   mp : VAR (wf_MP)
   a : VAR (wf_MVA)
 
-  unique : (injective?[CP,nat])
+  unique : (injective?[CP, nat])
 
-  name_of : (injective?[CP,string])
+  name_of : (injective?[CP, string])
 
 
   % Ghost variable declarations
 
   new_gvds(mp) : finite_set[GhostVarDecl] =
-   {g : GhostVarDecl | jtype(g) = IntType AND
-     ((EXISTS (q : (cps(mva(mp)))) : name(g) = name_of(q) AND 
-                                     init_val(g) = Int(unique(q))) OR
-      (EXISTS (v : (vdsA(mva(mp)))) : name(g) = name(v) AND
-                                      init_val(g) = init_val(v)))}
+   {gd : GhostVarDecl | jtype(gd) = IntType AND
+     (name(gd) = "cp" AND init_val(gd) = Int(unique(init_cp(mva(mp))))) OR
+     ((EXISTS (q : (cps(mva(mp)))) : name(gd) = name_of(q) AND 
+                                     init_val(gd) = Int(unique(q))) OR
+      (EXISTS (v : (vdsA(mva(mp)))) : name(gd) = name(v) AND
+                                      init_val(gd) = init_val(v)))}
 
 
   % Event annotation
@@ -113,9 +114,42 @@ BEGIN
                      classes(p)(c1) AND c = ann_class(mp)(c1)} #)
 
 
-  ann_program_yields_wf_program: LEMMA
-    FORALL (mp : (wf_MP)) :
+  ann_program_yields_wf_program : LEMMA
+    FORALL (mp : (ann_program_pre)) :
       wf_Program(ann_program(mp))
+
+
+  get_annotated_class(mp : (ann_program_pre)) : Class =
+    choose({c : Class | classes(ann_program(mp))(c) 
+      AND name(c) = class_name(mva(mp))})
+
+  annotated_class_is_unique : LEMMA % :-)
+    FORALL (mp : (ann_program_pre)) :
+    singleton?({c : Class | classes(ann_program(mp))(c) 
+      AND name(c) = class_name(mva(mp))})
+
+
+  ann_program_preserves_structure : LEMMA % :-)
+    FORALL (mp : (ann_program_pre), c : Class) :
+      classes(program(mp))(c) IMPLIES
+      IF name(c) = class_name(mva(mp)) THEN
+        FORALL (m : Method, s : Stmt) :
+        LET c1 = ann_class(mp)(c), 
+            m1 = ann_method(mp)(m) 
+        IN
+          methods(c)(m) IMPLIES
+           classes(ann_program(mp))(c1) AND
+           methods(c1)(m1) AND
+           name(m1) = name(m) AND
+           body(m1) = body(m) AND
+           pre(m1) = pre(m) AND
+           post(m1) = post(m) AND
+           lvars(m1) = lvars(m) AND
+           res(m1) = res(m) AND
+           res_type(m1) = res_type(m)
+      ELSE
+        classes(ann_program(mp))(c)
+      ENDIF
 
 
 END AnnotateProgram

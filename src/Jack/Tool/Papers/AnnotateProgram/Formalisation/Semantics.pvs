@@ -6,9 +6,16 @@ BEGIN
   NullPointer : NullPointer?
   JMLExc : JMLExc?
 
+
 END Excpt
 
 
+% NOTE: Bottom is used to model the partiality of Store. We may define Store as
+% Store(ns : set[Name]) : TYPE [{n : Name | ns(n)} -> Val], but then the names
+% for which it is defined will be in the type. That would be inconvenient,
+% specially for programs, which have three stores (and the values for which lvs
+% is defined change over time).
+% Do not confuse Bottom (a Val) with bottom, a constructor of the lift datatype
 Val : DATATYPE 
 BEGIN
 
@@ -19,10 +26,11 @@ BEGIN
   Unit : Unit?        % dummy value returned to void functions
   Bottom : Bottom?    % undefined value
 
+
 END Val
 
 
-State [Name : TYPE+] : THEORY
+State[Name : TYPE+] : THEORY
 BEGIN
 
   IMPORTING Excpt,
@@ -38,13 +46,14 @@ BEGIN
   % Parameters: program, target object
   lookup_inv : [(wf_Program), Val -> BoolExpr]
 
+
+  Store : TYPE = [Name -> Val]
+
   % Field, ghost and local variables
   % fvs, gvs and lvs are partial functions from name to values
   % Values are integers
   % If it supposed to be a boolean, <= 0 = False, > 0 = True
-  PSt : TYPE = [# fvs : [Name -> Val],
-                  gvs : [Name -> Val], 
-                  lvs : [Name -> Val] #]
+  PSt : TYPE = [# fvs, gvs, lvs : Store #]
 
   PState : TYPE = [# ex : lift[Excpt],
                      st : PSt #]
@@ -122,6 +131,7 @@ BEGIN
     ELSE FALSE
     ENDIF
 
+
 END State
 
 
@@ -171,7 +181,6 @@ BEGIN
 END Evaluation
 
 
-
 Semantics[Name : TYPE+] : THEORY
 BEGIN
 
@@ -210,6 +219,29 @@ BEGIN
       THEN bottom
       ELSE up(choose(lds))
       ENDIF
+
+  get_FieldDecl_is_determ : LEMMA
+    FORALL (n : Name, p : (wf_Program)) :
+    LET fds = {fd : FieldDecl | EXISTS (c : Class) : classes(p)(c) AND
+                                  fields(c)(fd) AND name(fd) = n}
+    IN
+      nonempty?(fds) IMPLIES singleton?(fds)
+
+  get_GhostVarDecl_is_determ : LEMMA
+    FORALL (n : Name, p : (wf_Program)) :
+    LET gds = {gd : GhostVarDecl | EXISTS (c : Class) : classes(p)(c) AND
+                                     ghost_vars(c)(gd) AND name(gd) = n}
+    IN
+      nonempty?(gds) IMPLIES singleton?(gds)
+
+  get_LocalVarDecl_is_determ : LEMMA
+    FORALL (n : Name, p : (wf_Program)) :
+    LET lds = {ld : LocalVarDecl | EXISTS (c : Class, m : Method) : 
+                                     classes(p)(c) AND methods(c)(m) AND
+                                     lvars(m)(ld) AND name(ld) = n}
+    IN
+      nonempty?(lds) IMPLIES singleton?(lds)
+
 
   initial_Program_state(p : (wf_Program)) : PState =
     (# ex := bottom,
@@ -451,5 +483,6 @@ BEGIN
                                  NExpr(Int(arg))))
     IN
       deriv_stmt(p)(c, s1, s2)(n)
+
 
 END Semantics

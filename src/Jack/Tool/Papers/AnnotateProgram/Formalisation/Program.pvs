@@ -17,6 +17,8 @@
 %   contain the class name they belong to. Local vars and formal args contain
 %   also their method names
 % No static fields nor static methods
+% No return instruction. Methods have a result component that is an expression
+%   whose value is the value to be returned
 
 % Our additions
 % CaseJML: allows to do a case distiction on the value of a ghost var
@@ -112,7 +114,7 @@ BEGIN
   
   IMPORTING Expr[Name]
 
-  CaseJML(case : list[[BoolExpr, Stmt]]) : CaseJML?
+  CaseJML(branches : list[[BoolExpr, Stmt]]) : CaseJML?
   IfThenElse(test : BoolExpr, then_stmt : Stmt, else_stmt : Stmt) : IfThenElse?
   Sequence(s1, s2 : Stmt) : Sequence?
   Set(target : Name, source : Expr) : Set?
@@ -155,6 +157,8 @@ BEGIN
                LAMBDA(n1, n2 : NumExpr) : size(n1) + size(n2) + 1,
                LAMBDA(vn : Name) : 0)(b)
 
+  size(r : RefExpr) : nat = 1
+
   sum(l : list[nat]) : RECURSIVE nat =
     CASES l OF
       null : 0,
@@ -166,11 +170,9 @@ BEGIN
     reduce_nat(LAMBDA(e : Name, n : nat) : n + 1, % Assign
                LAMBDA(b : BoolExpr) : size(b),    % BExpr
                LAMBDA(b : BoolExpr, n1, n2 : nat) : size(b) + n1 + n2 + 1, %Cond
-               LAMBDA(n1 : nat, e : Name, n2 : nat) : 1 + n1 + n2, % MethodCall
+               LAMBDA(n1 : nat, e : Name, n2 : nat) : 1 + n1 + n2,  % MethodCall
                LAMBDA(n : NumExpr) : size(n),     % NExpr
-               % TODO: Fix this!!
-%               LAMBDA(r : RefExpr) : size(r))(e)  % RExpr
-               LAMBDA(r : RefExpr) : size(TT))(e) % RExpr
+               LAMBDA(r : RefExpr) : size(r))(e)  % RExpr
  
   size(s : Stmt) : nat = 
     reduce_nat(LAMBDA(l : list[[BoolExpr, nat]]) : 
@@ -251,13 +253,81 @@ BEGIN
 
   IMPORTING Program[Name]
 
-  % TODO: define (long!)
-  var_names(p : Program) : finite_set[Name]
+  % Used variable names
+  % NOTE: we can't say that the result is a finite set because the statement
+  % may not be well formed. If we defined wf_Stmt then we can say that
+  % wf_Stmt(c) IMPLIES is_finite?(var_names(c))
 
-  % The main method is one of the methods of the program
-%   wf_main(p : Program) : boolean = 
-%     EXISTS (m : Method) : main(p) = m AND EXISTS (c : Class) :
-%       classes(p)(c) AND methods(c)(m)
+  var_names(ne : NumExpr) : set[Name] =
+    reduce[Name, set[Name]](
+      LAMBDA (i : int) : emptyset,
+      LAMBDA (ns1, ns2 : set[Name]) : union(ns1, ns2),
+      LAMBDA (ns1, ns2 : set[Name]) : union(ns1, ns2),
+      LAMBDA (ns1, ns2 : set[Name]) : union(ns1, ns2),
+      LAMBDA (ns1, ns2 : set[Name]) : union(ns1, ns2),
+      LAMBDA (n : Name) : singleton(n))(ne)
+
+  var_names(be : BoolExpr) : set[Name] =
+    reduce[Name, set[Name]](
+      emptyset,
+      emptyset,
+      id,
+      LAMBDA (ns1, ns2 : set[Name]) : union(ns1, ns2),
+      LAMBDA (ns1, ns2 : set[Name]) : union(ns1, ns2),
+      LAMBDA (ne1, ne2 : NumExpr) : union(var_names(ne1), var_names(ne2)),
+      LAMBDA (ne1, ne2 : NumExpr) : union(var_names(ne1), var_names(ne2)),
+      LAMBDA (ne1, ne2 : NumExpr) : union(var_names(ne1), var_names(ne2)),
+      LAMBDA (ne1, ne2 : NumExpr) : union(var_names(ne1), var_names(ne2)),
+      LAMBDA (ne1, ne2 : NumExpr) : union(var_names(ne1), var_names(ne2)),
+      LAMBDA (ne1, ne2 : NumExpr) : union(var_names(ne1), var_names(ne2)),
+      LAMBDA (n : Name) : singleton(n))(be)
+
+  var_names(re : RefExpr) : set[Name] = 
+    reduce[Name, set[Name]](
+      emptyset,                                                     % Null
+      LAMBDA (n : Name) : singleton(n))(re)                         % RefVarEval
+
+  var_names(e : Expr) : set[Name] =
+    reduce[Name, set[Name]](
+      LAMBDA (t : Name, s : set[Name]) : add(t, s),                 % Assign
+      LAMBDA (b : BoolExpr) : var_names(b),                         % BExpr
+      LAMBDA (b : BoolExpr, s1, s2 : set[Name]) :
+        union(var_names(b), union(s1, s2)),                         % CondExpr
+      LAMBDA (e : set[Name], m : Name, a : set[Name]) : union(e, a),% MethodCall
+      LAMBDA (ne : NumExpr) : var_names(ne),                        % NExpr
+      LAMBDA (re : RefExpr) : var_names(re))(e)                     % RExpr
+
+  var_names(s : Stmt) : set[Name] =
+    reduce[Name, set[Name]](
+      LAMBDA (branches : list[[BoolExpr, set[Name]]]) :             % CaseJML
+        Union({ns : Name | EXISTS (x : [BoolExpr, set[Name]]) :
+               member(x, branches) AND  ns = var_names(proj_1(x)) OR
+               ns = proj_2(x)}),
+      LAMBDA (b : BoolExpr, s1, s2 : set[Name]) :                   % IfThenElse
+        union(var_names(b), union(s1, s2)),
+          LAMBDA (s1, s2 : set[Name]) : union(s1, s2),              % Sequence
+      LAMBDA (target : Name, source : Expr[Name]) :                 % Set
+        add(target, var_names(source)),
+      emptyset,                                                     % Skip
+      LAMBDA (expr : Expr) : var_names(expr),                       % StmtExpr
+      emptyset,                                                     % Throw
+      LAMBDA (t, c, f : set[Name]) : union(t, union(c, f)),         % TryCatch
+      LAMBDA (b : BoolExpr, ns : set[Name]) :                       % While
+        union(var_names(b), ns))(s)
+
+  var_names(m : Method) : set[Name] =
+    Union({ns : set[Name] | ns = var_names(pre(m)) OR ns = var_names(post(m)) OR
+      ns = var_names(body(m)) OR ns = var_names(pre_set(m)) OR 
+      ns = var_names(post_set(m)) OR ns = var_names(exc_set(m))})
+
+  var_names(c : Class) : set[Name] = 
+    Union({ns : set[Name] | EXISTS (m : Method) :
+      methods(c)(m) AND ns = var_names(m)})
+
+  var_names(p : Program) : set[Name] =
+    Union({ns : set[Name] | EXISTS (c : Class) :
+      classes(p)(c) AND ns = var_names(c)})
+
 
   % Names of classes are unique within a program
   unique_class_names(p : Program) : boolean =
@@ -309,12 +379,12 @@ BEGIN
   % TODO: Con esto no necesito vars_are_declared
   % Hacer algo similar para las otras variables
   field_declarations_are_unique(p : Program) : boolean =
-    FORALL (n : Name) : 
+    FORALL (n : Name) :
       var_names(p)(n) IMPLIES
-      EXISTS (fd : FieldDecl, c : Class) : 
+      EXISTS (fd : FieldDecl, c : Class) :
         classes(p)(c) AND fields(c)(fd) AND name(fd) = n AND
         FORALL (c1 : Class, m : Method) : classes(p)(c1) AND methods(c1)(m) AND
-        (FORALL (fd1 : FieldDecl) : 
+        (FORALL (fd1 : FieldDecl) :
           fields(c1)(fd1) AND name(fd1) = n IMPLIES fd = fd1 AND c = c1) AND
         (FORALL (gd : GhostVarDecl) :
           ghost_vars(c1)(gd) IMPLIES name(gd) /= n) AND
@@ -323,21 +393,81 @@ BEGIN
         (FORALL (ld : LocalVarDecl) :
           lvars(m)(ld) IMPLIES name(ld) /= n)
 
+  ghost_declarations_are_unique(p : Program) : boolean =
+    FORALL (n : Name) :
+      var_names(p)(n) IMPLIES
+      EXISTS (gd : GhostVarDecl, c : Class) :
+        classes(p)(c) AND ghost_vars(c)(gd) AND name(gd) = n AND
+        FORALL (c1 : Class, m : Method) : classes(p)(c1) AND methods(c1)(m) AND
+        (FORALL (fd : FieldDecl) :
+          fields(c1)(fd) IMPLIES name(fd) /= n) AND
+        (FORALL (gd1 : GhostVarDecl) :
+          ghost_vars(c1)(gd1) AND name(gd1) = n IMPLIES gd = gd1 AND c = c1) AND
+        (FORALL (ad : ArgDecl) :
+          arg(m)(ad) IMPLIES name(ad) /= n) AND
+        (FORALL (ld : LocalVarDecl) :
+          lvars(m)(ld) IMPLIES name(ld) /= n)
+
+  arg_declarations_are_unique(p : Program) : boolean =
+    FORALL (n : Name) :
+      var_names(p)(n) IMPLIES
+      EXISTS (ad : ArgDecl, c : Class, m : Method) :
+        classes(p)(c) AND methods(c)(m) AND lvars(m)(ad) AND name(ad) = n AND
+        FORALL (c1 : Class, m1 : Method) : classes(p)(c1) AND methods(c1)(m1) AND
+        (FORALL (fd : FieldDecl) :
+          fields(c1)(fd) IMPLIES name(fd) /= n) AND
+        (FORALL (gd : GhostVarDecl) :
+          ghost_vars(c1)(gd) IMPLIES name(gd) /= n) AND
+        (FORALL (ad1 : ArgDecl) :
+          arg(m1)(ad1) AND name(ad1) = n IMPLIES ad = ad1 AND m = m1 AND c = c1) AND
+        (FORALL (ld : LocalVarDecl) :
+          lvars(m)(ld) IMPLIES name(ld) /= n)
+
+  local_declarations_are_unique(p : Program) : boolean =
+    FORALL (n : Name) :
+      var_names(p)(n) IMPLIES
+      EXISTS (ld : LocalVarDecl, c : Class, m : Method) :
+        classes(p)(c) AND methods(c)(m) AND lvars(m)(ld) AND name(ld) = n AND
+        FORALL (c1 : Class, m1 : Method) : classes(p)(c1) AND methods(c1)(m1) AND
+        (FORALL (fd : FieldDecl) :
+          fields(c1)(fd) IMPLIES name(fd) /= n) AND
+        (FORALL (gd : GhostVarDecl) :
+          ghost_vars(c1)(gd) IMPLIES name(gd) /= n) AND
+        (FORALL (ad : ArgDecl) :
+          arg(m)(ad) IMPLIES name(ad) /= n) AND
+        (FORALL (ld1 : LocalVarDecl) :
+          lvars(m1)(ld1) AND name(ld1) = n IMPLIES ld = ld1 AND m = m1 AND c = c1)
+
   % We require vars to have different names, even if they are in different 
   % classes
   declarations_are_unique(p : Program) : boolean =
-    field_declarations_are_unique(p)
+    field_declarations_are_unique(p) AND
+    ghost_declarations_are_unique(p) AND
+    arg_declarations_are_unique(p) AND
+    local_declarations_are_unique(p)
+
+
+  % A CaseJML is well formed if the list of braches is finite and the stmts are
+  % composed only by set stmts or other CaseJML.
+  % THINK: Should it be recursive?
+  wf_CaseJML(c : Stmt) : boolean =
+    CaseJML?(c) AND
+    (EXISTS (n : nat) : length(branches(c)) = n) AND
+    FORALL (x : [BoolExpr, Stmt]) :
+      member(x, branches(c)) IMPLIES
+        Set?(proj_2(x)) OR CaseJML?(proj_2(x))
+
+%  wf_MethodCall(
+
 
   % TODO:
-  % Declarations are unique
   % Well-formed CaseJML (the list must be finite)
   % Type checks: assignments, method calls, etc, etc
   wf_Program(p : Program) : boolean =
-%    wf_main(p) AND
     unique_class_names(p) AND
     unique_var_names(p) AND
-    vars_are_declared(p) AND
-    declarations_are_unique(p)
+    vars_are_declared(p) AND   % This is redundant with declarations_are unique 
+    declarations_are_unique(p) % but is convenient to find a declaration
 
 
 END WellFormedProgram

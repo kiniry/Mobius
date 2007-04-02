@@ -11,10 +11,10 @@ BEGIN
 
   % Says if an MVA state is modeled by a Program state
   MVA_modeled?(sA : AState, sP : PState) : boolean =
-    cp2val(cp(sA)) = gvs(st(sP))("cp") AND
+    (cp2val(cp(sA)) = gvs(st(sP))("cp")) AND
     (FORALL (n : string) : NOT Bottom?(stA(sA)(n)) IMPLIES
       stA(sA)(n) = gvs(st(sP))(n)) AND
-    cp(sA) = halted IMPLIES up?(ex(sP)) AND down(ex(sP)) = JMLExc
+    (cp(sA) = halted IMPLIES up?(ex(sP)) AND down(ex(sP)) = JMLExc)
 
   % Says s2P is a "super state" of s1P
   Program_modeled?(s1P, s2P : PState) : boolean =
@@ -40,6 +40,8 @@ BEGIN
       down(ex(s2P)) = JMLExc IMPLIES
         assertion_breached?(p)(initial_Program_state(p), s2P, n)
 
+
+  IMPORTING EpsilonProps  % imports choose_singleton?
 
   initial_states_are_equivalent : LEMMA
     FORALL (mp : MonitoredProgram) :
