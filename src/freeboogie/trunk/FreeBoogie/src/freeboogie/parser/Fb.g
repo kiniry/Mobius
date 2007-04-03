@@ -20,7 +20,7 @@ variable:	'var' id_type_list ';';
 
 procedure
 	:	'procedure' ID signature ';' spec*
-	|	'procedure' ID signature spec* body
+//	|	'procedure' ID signature spec* body
 	;
 	
 signature
