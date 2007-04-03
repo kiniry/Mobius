@@ -9,7 +9,7 @@
   (initial_states_are_equivalent_TCC2-1 nil 3383456193 nil
    ("" (subtype-tcc) nil nil) unchecked nil nil nil nil nil))
  (initial_states_are_equivalent 0
-  (initial_states_are_equivalent-1 nil 3383291365 3384084875
+  (initial_states_are_equivalent-1 nil 3383291365 3384516249
    ("" (skosimp)
     (("" (expand "MP_modeled?")
       (("" (split)
@@ -63,12 +63,50 @@
                   nil))
                 nil))
               nil)
-             ("2" (postpone) nil nil) ("3" (postpone) nil nil))
+             ("2" (postpone) nil nil)
+             ("3" (flatten)
+              (("3"
+                (expand* "initial_MP_state" "initial_Program_state"
+                 "initial_MVA_state" "ann_program_pre" "wf_MP"
+                 "complete")
+                (("3" (prop) nil nil)) nil))
+              nil))
             nil))
           nil)
-         ("2" (postpone) nil nil))
+         ("2"
+          (expand* "Program_modeled?" "initial_MP_state"
+           "initial_Program_state" "ann_program_pre")
+          (("2" (expand "wf_MP")
+            (("2" (prop)
+              (("1" (apply-extensionality)
+                (("1" (hide 2)
+                  (("1" (lift-if)
+                    (("1" (prop)
+                      (("1" (lift-if)
+                        (("1" (prop)
+                          (("1" (hide-all-but (-1 1))
+                            (("1" (grind) nil nil)) nil))
+                          nil))
+                        nil)
+                       ("2" (lift-if)
+                        (("2" (prop)
+                          (("1" (postpone) nil nil)
+                           ("2" (postpone) nil nil))
+                          nil))
+                        nil))
+                      nil))
+                    nil))
+                  nil)
+                 ("2" (postpone) nil nil) ("3" (postpone) nil nil)
+                 ("4" (postpone) nil nil) ("5" (postpone) nil nil)
+                 ("6" (postpone) nil nil) ("7" (postpone) nil nil))
+                nil)
+               ("2" (postpone) nil nil) ("3" (postpone) nil nil))
+              nil))
+            nil))
+          nil))
         nil))
       nil))
     nil)
-   unfinished nil 614103 2890 t shostak)))
+   unfinished nil 2658012 15280 t shostak)))
 

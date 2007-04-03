@@ -469,5 +469,6 @@ BEGIN
     vars_are_declared(p) AND   % This is redundant with declarations_are unique 
     declarations_are_unique(p) % but is convenient to find a declaration
 
+  AUTO_REWRITE- wf_Program, var_names
 
 END WellFormedProgram

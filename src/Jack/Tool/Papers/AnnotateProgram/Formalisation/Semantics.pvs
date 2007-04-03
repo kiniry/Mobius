@@ -1,4 +1,5 @@
 % Operational semantics, section 3.2
+
 Excpt : DATATYPE
 BEGIN
 
@@ -37,7 +38,7 @@ BEGIN
             WellFormedProgram[Name],
             Val
 
-  % functions whose existence we assume
+  % Functions whose existence we assume
   % Parameters: program, target object, method name, actual parameter
   % NOTE: This is a simplification, we should use the types of the expressions,
   % not their values, but we are not modeling types.

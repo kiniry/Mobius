@@ -209,8 +209,11 @@ BEGIN
     wf_MVA(a) AND
     cps(a)(halted) AND
     trap_state(halted, a) AND
+    NOT init_cp(a) = halted AND  % needed to prove initial_states_are_equivalent
     deterministic(a) AND
     total(a)
+
+  AUTO_REWRITE- complete, total, deterministic
 
 
 END WellFormedMVA
@@ -364,25 +367,26 @@ BEGIN
             ts := union(ts(a), complete_trans(a))]
 
 
-  % TODO: prove the remaining cases (Fix the proof)
-  complete_MVA_is_valid: LEMMA
-    FORALL (a: (complete_MVA_pre)) :
+  % TODO: prove
+  complete_MVA_yields_wf_MVA : LEMMA
+    FORALL (a : (complete_MVA_pre)) :
       wf_MVA(complete_MVA(a))
 
   complete_MVA_has_trap_state: LEMMA % :-)
-    FORALL (a: (complete_MVA_pre)) :
+    FORALL (a : (complete_MVA_pre)) :
       trap_state(halted, complete_MVA(a))
 
-  complete_MVA_is_deterministic: LEMMA % :-)
-    FORALL (a: (complete_MVA_pre)) :
+  complete_MVA_is_deterministic : LEMMA % :-)
+    FORALL (a : (complete_MVA_pre)) :
       deterministic(complete_MVA(a))
 
-  complete_MVA_is_total: LEMMA % :-)
-    FORALL (a: (complete_MVA_pre)) :
+  complete_MVA_is_total : LEMMA % :-)
+    FORALL (a : (complete_MVA_pre)) :
       total(complete_MVA(a))
 
-  complete_MVA_is_complete: THEOREM % :-)
-    FORALL (a: (complete_MVA_pre)) :
+  complete_MVA_is_complete : THEOREM % :-)
+    FORALL (a : (complete_MVA_pre)) :
       complete(complete_MVA(a))
+
 
 END MVACompletion
