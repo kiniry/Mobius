@@ -498,6 +498,29 @@ public class VcToString {
   // ======================================================================
   
   /**
+   * Print nary expression as binary, ie. the expression op(a0, a1, a2) is translated into op(op(a0, a1), a2).
+   */
+  //@ requires ne.exprs.size() >= 2;
+  protected void printNaryAsBinary(/*@ non_null */PrintStream out, /*@ non_null */Hashtable subst,
+    /*@ non_null */NaryExpr ne, /*@ non_null */String op) {
+        for (int j = 0; j < ne.exprs.size() - 1; j++) {
+            out.print('(');
+            out.print(op);
+            out.print(' ');
+        }
+        printTerm(out, subst, ne.exprs.elementAt(0));
+        out.print(' ');
+        printTerm(out, subst, ne.exprs.elementAt(1));
+        out.print(')');
+        for (int j = 2; j < ne.exprs.size(); j++) {
+            out.print(' ');
+            printTerm(out, subst, ne.exprs.elementAt(j));
+            out.print(')');
+        }
+    }
+
+
+  /**
    * <code>insideNoPats</code> is really a parameter to *
    * <code>printTerm</code>.
    */
@@ -728,12 +751,18 @@ public class VcToString {
           default:
             op = TagConstants.toVcString(tag);
         }
-        out.print("(" + op);
-        for (int i = 0; i < ne.exprs.size(); i++) {
-          out.print(" ");
-          printTerm(out, subst, ne.exprs.elementAt(i));
+
+        if (ne.exprs.size() > 2 && ((tag == TagConstants.BOOLAND) || (tag == TagConstants.BOOLOR))) {
+            // print nary boolAnd and boolOr in their binary forms
+            printNaryAsBinary(out, subst, ne, op);
+        } else {
+            out.print("(" + op);
+            for (int i = 0; i < ne.exprs.size(); i++) {
+                out.print(" ");
+                printTerm(out, subst, ne.exprs.elementAt(i));
+            }
+            out.print(")");
         }
-        out.print(")");
         break;
       }
       
