@@ -15,8 +15,8 @@ export TOP = ../../../../..
 include ${TOP}/Makefile.defs
 
 all: cvc3jniw.o
-	$(CC) -shared -Wl,-soname,libcvc3jniw.so -L$(CVC_LIB_DIR)\
-	-o libcvc3jniw.so cvc3jniw.o -lc -lcvclite
+	$(CC) -shared -Wl,-soname,libcvc3jniw.so -L$(CVC_LIB_DIR) \
+	-o libcvc3jniw.so cvc3jniw.o -lc -lcvc3
 	cp libcvc3jniw.so ${TOP}/libs
 
 Cvc3Wrapper.class: Cvc3WrapperException.java Cvc3Wrapper.java

@@ -420,9 +420,6 @@ export CC ?= g++
 export CVC_LIB_DIR ?= /usr/local/lib
 ## Include directory of CVC install (default)
 export CVC_INCLUDE_DIR ?= /usr/local/include/cvcl
-## Compilation flags for CVC (generally needed to resolve STL locations)
-## This may need to be changed, depending on local cvc installation.
-export CVC_FLAGS ?= -DHAVE___GNU_CXX__EXT_HASH_MAP -DHAVE___GNU_CXX__EXT_HASH_SET
 export LD_LIBRARY_PATH = ${MOCHA_LIBRARY_PATH}:${CVC_LIB_DIR}:${ESCTOOLS_ROOT}/libs
 
 # End of file

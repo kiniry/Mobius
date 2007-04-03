@@ -27,7 +27,7 @@
 // #define JNIW_DEBUG
 
 using namespace std;
-using namespace CVCL;
+using namespace CVC3;
 
 ValidityChecker *JNIW_vc = NULL; // CVC instance
 CLFlags JNIW_flags;
