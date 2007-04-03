@@ -9,8 +9,6 @@ Open Scope Z_scope.
 
 
 
-
-
 (*RULES FOR REASONING OVER PROGRAMS AND ASSERTIONS.  
 THE CONSEQUENCE RULE IS IMPLICITE AS IT IS INLINED IN EVERY RULE*)
 Inductive RULET (MS : methPost) :  stmt -> assertion -> Prop :=

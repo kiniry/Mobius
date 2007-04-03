@@ -11,7 +11,7 @@ Export BoolEq.
 Export List.
 Export BasicDef.
 
-Variable methodNames : Set.
+
 
 Inductive stmt  : Type :=
  | Affect : var -> expr -> stmt
@@ -26,8 +26,14 @@ Inductive stmt  : Type :=
 Parameter meth_dec: forall x y : methodNames, {x = y} + {x <> y}.
 Definition eq_methNames : methodNames -> methodNames -> bool := (fun x y => if (meth_dec x y) then true else false).
 
+(*Specification notions*)
+(*assertion is a function of states, ghost states and traces to propositions *)
 Definition assertion := state -> list event -> state -> Prop.
+
+(* a function which maps method names to method postconditions *)
 Definition methPost := methodNames -> assertion.
+(* a function which maps method names to method strong invariants*)
+Definition methInv := methodNames ->   assertion.
 
 Definition body := methodNames -> stmt.
  

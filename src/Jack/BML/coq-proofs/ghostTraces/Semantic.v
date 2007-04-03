@@ -11,6 +11,12 @@ Require Import Language.
  | Noevent : event
  | Event :  forall (e : eventName) , event  . *)
 
+(*BIG STEP OPERATIONAL SEMANTICS WHICH DESCRIBE TERMINATING EXECUTIONS. 
+   THE DEFINITION IS PARAMETRIZED WITH A PROGRAM (WHICH IS DEFINED AS A SET OF METHODS) 
+   AND A FUNCTION B (OF TYPE body) WHICH MAPS METHOD NAMES TO METHOD BODIES (THOSE ARE STATEMENTS).
+   THE SEMANTICS MANIPULATES INITIAL AND TERMINAL STATE BUT ALSO A TRACE OF EVENTS 
+   WHICH ARE EMITTED DURING THE EXECUTION OF THE STATEMENT
+*)
 Inductive t_exec (P : program)(B: body) :  state -> stmt -> list event -> state -> Prop := 
 
  | ExecAffect      : forall s x e, 
@@ -51,6 +57,11 @@ Inductive t_exec (P : program)(B: body) :  state -> stmt -> list event -> state 
 
  | ExecSignal : forall s event, t_exec P B s ( Signal  event ) (  event :: nil ) s .
 
+
+(* RELATION WHICH DESCRIBED THE REACHABLE STATES IN THE EXECUTION OF A STATEMENT. 
+    IT ALSO CONTAINS THE TRACE OF EVENTS EMITTED FROM IN THE EXECUTION STARTING 
+    FROM THE INITIAL STATE UPTO THE CURRENT STATE
+*)
 Inductive reach (P : program)(B: body): state -> stmt -> list event ->  state -> Prop := 
 
  | ReachAffect      : forall s x e, 
@@ -66,25 +77,30 @@ Inductive reach (P : program)(B: body): state -> stmt -> list event ->  state ->
      reach P B s1 stmtF eventsF   s2 ->
      reach P B s1 (If e stmtT stmtF) eventsF  s2
 
+(*WHILE*)
+(*this constructor describes as a reachable state the final state of a loop execution *)
  | ReachWhile_false  : forall s1 e  stmt,
      eval_expr s1 e = 0 ->
      reach P B s1 (While e  stmt) nil s1
 
+(* every state reachable in the execution of the loop body is reachable in the execution of the whole loop *)
  | ReachWhile_true1  : forall s1 s2  e  stmt eventsB,
      eval_expr s1 e <> 0 ->
      reach P B s1 stmt eventsB s2 ->
      reach P B s1 (While e stmt) eventsB s2
 
+(* every state occurring in a loop execution after one terminated iteration is reachable in the loop *)
  | ReachWhile_true2  : forall s1 s2 s3 e  stmt eventsB eventsW,
      eval_expr s1 e <> 0 ->
      t_exec P B s1 stmt eventsB s2 ->
      reach   P B s2 (While e stmt) eventsW  s3 ->
      reach   P B s1 (While e stmt) (app eventsB eventsW) s3
-
+(*SEQUENCE*)
+(*every state reachable in the first statement is reachable by the sequence statement*)
  | ReachSseq1   : forall s1 s2 stmt1 stmt2 events1,
       reach P B s1 stmt1 events1 s2 -> 
       reach P B s1 (Sseq stmt1 stmt2) events1 s2
-
+(*every state reachable in the second statement is reachable by the sequence statement on the condition that the first statement has terminated*)
  | ReachSseq2   : forall s1 s2 s3 stmt1 stmt2 events1 events2,
       t_exec P B s1 stmt1 events1 s2 -> 
       reach  P  B s2  stmt2 events2 s3 -> 
