@@ -30,7 +30,7 @@ public class Options extends javafe.SrcToolOptions {
                     "Treat Java assert statements like JML assert statements.  -eaJML and -eaJava are mutually exclusive switches.  -eaJML is the default setting." },
             {
                     "-Loop <iteration_count>[.0|.5]",
-                    "Consider <iteration_count> iterations of all loops (i.e., unroll all loops <iteration_count> times; if <iteration_count>.5, evaluate loop guard one extra time." },
+                    "Consider <iteration_count> iterations of all loops (i.e., unroll all loops <iteration_count> times); if <iteration_count>.5, evaluate loop guard one extra time. The default is -Loop 1.5." },
             {
                     "-NoCheck",
                     "Do all steps, including verification condition generation, but perform no checking with the prover." },
@@ -477,6 +477,7 @@ public class Options extends javafe.SrcToolOptions {
 
     //@ invariant LOOP_FAST <= loopTranslation && loopTranslation <= LOOP_FALL_THRU;
 
+    // Documentation above needs to changed if these values are changed.
     // The default loop unrolling is: -loop 1.5 
     public int loopUnrollCount = 1;
 
