@@ -19,8 +19,6 @@ fun mName => ( fun s1 events s2=> forall g1, exists g2, ( GInv mName) s1 g1 even
  implies derivability of the respective interpretation of formulas in a logic without ghosts  *)
 Lemma ghostReachImpliesStandardReach: forall  (gst: Gstmt )  (Body : Gbody )( Gpost : Gassertion)  (GSpec: GmethPost) (GInv : GmethInv)   , 
  let st := transform Body gst in 
- (* let post  :=   ( fun s1 s2 => forall (sg1: gState), exists sg2: gState, Gpost s1 sg1 s2 sg2 ) in *)
- (* let ctx := transformCtx gtx in *)
  RULERG GSpec GInv gst Gpost -> RULER ( transformPost GSpec) (transformInv  GInv) st (fun s1 event s2 =>  forall g1, exists g2, Gpost s1 g1 event s2 g2 ).
 
 Proof.

@@ -226,8 +226,7 @@ Qed.
 Lemma correct :  forall MS  M    (B : body) ( P : program) , 
  (forall st (N : methodNames) (spec : assertion),  (In N P) -> spec = (MS N) -> st = B N -> RULET MS st spec )   ->     
     (In M P) -> 
-forall (s1 s2 : state )   events,  (  t_exec  P B s1 (B M)  events s2) ->   ( RULET MS (B M) ( MS M) )  ->
-( MS M) s1 events s2.
+forall (s1 s2 : state )   events,  (  t_exec  P B s1 (B M)  events s2 ) -> ( MS M) s1 events s2.
 
 Proof. 
 intros.
@@ -235,5 +234,8 @@ intros.
 apply (correctAux MS (B M) B P).
 assumption.
 assumption.
+apply (H (B M ) M (MS M )  ).
 assumption.
+trivial.
+trivial.
 Qed.

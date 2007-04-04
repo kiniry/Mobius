@@ -23,8 +23,7 @@ Inductive RULER (MS : methPost) (MI : methInv ) :  stmt -> assertion -> Prop :=
  
  | IfRuleR : forall   e (stmtT stmtF: stmt ) ( post1  post2 post : assertion) , 
     ( forall ( s1 s2: state) event,  ( (not (eval_expr s1 e = 0)) -> post1 s1  event s2) /\ 
-                                          (eval_expr s1 e = 0 ->  post2 s1 event s2)  -> post s1 event s2) ->
-    
+                                          (eval_expr s1 e = 0 ->  post2 s1 event s2)  -> post s1 event s2) -> 
     RULER MS MI stmtT   post1   ->
     RULER MS MI stmtF   post2   ->
 	
@@ -234,7 +233,7 @@ Lemma correctReach :  forall MS MI M    (B : body) ( P : program) ,
  (forall st (N : methodNames) (spec : assertion),  (In N P) -> spec = (MS N) -> st = B N -> RULET MS st spec )   ->     
  (forall st (N : methodNames) (spec : assertion),  (In N P) -> spec = (MI N) -> st = B N -> RULER MS MI st spec )  -> 
     (In M P) -> 
-forall (s1 s2 : state )   events,  (  reach  P B s1 (B M)  events s2) ->   ( RULER MS MI (B M) ( MI M) )  -> ( MI M) s1 events s2.
+forall (s1 s2 : state )   events,  (  reach  P B s1 (B M)  events s2) ->  ( MI M) s1 events s2.
 
 Proof. 
 intros.
@@ -243,5 +242,10 @@ apply (correctAuxReach MS MI  (B M) B P).
 assumption.
 assumption.
 assumption.
+apply (H0 (B M)  M (MI M)   ).
 assumption.
+trivial.
+trivial.
 Qed.
+
+
