@@ -1,0 +1,188 @@
+%%% ADT file generated from Program
+
+RefExpr_adt[Name: TYPE+]: THEORY
+ BEGIN
+  ASSUMING
+   Name_TCC1: ASSUMPTION EXISTS (x: Name): TRUE;
+  ENDASSUMING
+
+  RefExpr: TYPE
+
+  Null?, RefVarEval?: [RefExpr -> boolean]
+
+  Null: (Null?)
+
+  RefVarEval: [Name -> (RefVarEval?)]
+
+  varname: [(RefVarEval?) -> Name]
+
+  RefExpr_ord: [RefExpr -> upto(1)]
+
+  RefExpr_ord_defaxiom: AXIOM
+    RefExpr_ord(Null) = 0 AND
+     (FORALL (varname: Name): RefExpr_ord(RefVarEval(varname)) = 1);
+
+  ord(x: RefExpr): upto(1) =
+      CASES x OF Null: 0, RefVarEval(RefVarEval1_var): 1 ENDCASES
+
+  RefExpr_Null_extensionality: AXIOM
+    FORALL (Null?_var: (Null?), Null?_var2: (Null?)):
+      Null?_var = Null?_var2;
+
+  RefExpr_RefVarEval_extensionality: AXIOM
+    FORALL (RefVarEval?_var: (RefVarEval?),
+            RefVarEval?_var2: (RefVarEval?)):
+      varname(RefVarEval?_var) = varname(RefVarEval?_var2) IMPLIES
+       RefVarEval?_var = RefVarEval?_var2;
+
+  RefExpr_RefVarEval_eta: AXIOM
+    FORALL (RefVarEval?_var: (RefVarEval?)):
+      RefVarEval(varname(RefVarEval?_var)) = RefVarEval?_var;
+
+  RefExpr_varname_RefVarEval: AXIOM
+    FORALL (RefVarEval1_var: Name):
+      varname(RefVarEval(RefVarEval1_var)) = RefVarEval1_var;
+
+  RefExpr_inclusive: AXIOM
+    FORALL (RefExpr_var: RefExpr):
+      Null?(RefExpr_var) OR RefVarEval?(RefExpr_var);
+
+  RefExpr_induction: AXIOM
+    FORALL (p: [RefExpr -> boolean]):
+      (p(Null) AND
+        (FORALL (RefVarEval1_var: Name): p(RefVarEval(RefVarEval1_var))))
+       IMPLIES (FORALL (RefExpr_var: RefExpr): p(RefExpr_var));
+
+  every(p: PRED[Name])(a: RefExpr):  boolean =
+      CASES a
+        OF Null: TRUE, RefVarEval(RefVarEval1_var): p(RefVarEval1_var)
+        ENDCASES;
+
+  every(p: PRED[Name], a: RefExpr):  boolean =
+      CASES a
+        OF Null: TRUE, RefVarEval(RefVarEval1_var): p(RefVarEval1_var)
+        ENDCASES;
+
+  some(p: PRED[Name])(a: RefExpr):  boolean =
+      CASES a
+        OF Null: FALSE, RefVarEval(RefVarEval1_var): p(RefVarEval1_var)
+        ENDCASES;
+
+  some(p: PRED[Name], a: RefExpr):  boolean =
+      CASES a
+        OF Null: FALSE, RefVarEval(RefVarEval1_var): p(RefVarEval1_var)
+        ENDCASES;
+
+  subterm(x: RefExpr, y: RefExpr):  boolean = x = y;
+
+  <<:  (well_founded?[RefExpr]) = LAMBDA (x, y: RefExpr): FALSE;
+
+  RefExpr_well_founded: AXIOM well_founded?[RefExpr](<<);
+
+  reduce_nat(Null?_fun: nat, RefVarEval?_fun: [Name -> nat]):
+        [RefExpr -> nat] =
+      LAMBDA (RefExpr_adtvar: RefExpr):
+        LET red: [RefExpr -> nat] = reduce_nat(Null?_fun, RefVarEval?_fun)
+          IN
+          CASES RefExpr_adtvar
+            OF Null: Null?_fun,
+               RefVarEval(RefVarEval1_var):
+                 RefVarEval?_fun(RefVarEval1_var)
+            ENDCASES;
+
+  REDUCE_nat(Null?_fun: [RefExpr -> nat],
+             RefVarEval?_fun: [[Name, RefExpr] -> nat]):
+        [RefExpr -> nat] =
+      LAMBDA (RefExpr_adtvar: RefExpr):
+        LET red: [RefExpr -> nat] = REDUCE_nat(Null?_fun, RefVarEval?_fun)
+          IN
+          CASES RefExpr_adtvar
+            OF Null: Null?_fun(RefExpr_adtvar),
+               RefVarEval(RefVarEval1_var):
+                 RefVarEval?_fun(RefVarEval1_var, RefExpr_adtvar)
+            ENDCASES;
+
+  reduce_ordinal(Null?_fun: ordinal, RefVarEval?_fun: [Name -> ordinal]):
+        [RefExpr -> ordinal] =
+      LAMBDA (RefExpr_adtvar: RefExpr):
+        LET red: [RefExpr -> ordinal] =
+              reduce_ordinal(Null?_fun, RefVarEval?_fun)
+          IN
+          CASES RefExpr_adtvar
+            OF Null: Null?_fun,
+               RefVarEval(RefVarEval1_var):
+                 RefVarEval?_fun(RefVarEval1_var)
+            ENDCASES;
+
+  REDUCE_ordinal(Null?_fun: [RefExpr -> ordinal],
+                 RefVarEval?_fun: [[Name, RefExpr] -> ordinal]):
+        [RefExpr -> ordinal] =
+      LAMBDA (RefExpr_adtvar: RefExpr):
+        LET red: [RefExpr -> ordinal] =
+              REDUCE_ordinal(Null?_fun, RefVarEval?_fun)
+          IN
+          CASES RefExpr_adtvar
+            OF Null: Null?_fun(RefExpr_adtvar),
+               RefVarEval(RefVarEval1_var):
+                 RefVarEval?_fun(RefVarEval1_var, RefExpr_adtvar)
+            ENDCASES;
+ END RefExpr_adt
+
+RefExpr_adt_map[Name: TYPE+, Name1: TYPE+]: THEORY
+ BEGIN
+  ASSUMING
+   Name_TCC1: ASSUMPTION EXISTS (x: Name): TRUE;
+
+   Name1_TCC1: ASSUMPTION EXISTS (x: Name1): TRUE;
+  ENDASSUMING
+
+  IMPORTING RefExpr_adt
+
+  map(f: [Name -> Name1])(a: RefExpr[Name]):  RefExpr[Name1] =
+      CASES a
+        OF Null: Null,
+           RefVarEval(RefVarEval1_var): RefVarEval(f(RefVarEval1_var))
+        ENDCASES;
+
+  map(f: [Name -> Name1], a: RefExpr[Name]):  RefExpr[Name1] =
+      CASES a
+        OF Null: Null,
+           RefVarEval(RefVarEval1_var): RefVarEval(f(RefVarEval1_var))
+        ENDCASES;
+
+  every(R: [[Name, Name1] -> boolean])
+       (x: RefExpr[Name], y: RefExpr[Name1]):
+        boolean =
+      Null?(x) AND Null?(y) OR
+       RefVarEval?(x) AND RefVarEval?(y) AND R(varname(x), varname(y));
+ END RefExpr_adt_map
+
+RefExpr_adt_reduce[Name: TYPE+, range: TYPE]: THEORY
+ BEGIN
+  ASSUMING
+   Name_TCC1: ASSUMPTION EXISTS (x: Name): TRUE;
+  ENDASSUMING
+
+  IMPORTING RefExpr_adt[Name]
+
+  reduce(Null?_fun: range, RefVarEval?_fun: [Name -> range]):
+        [RefExpr -> range] =
+      LAMBDA (RefExpr_adtvar: RefExpr):
+        LET red: [RefExpr -> range] = reduce(Null?_fun, RefVarEval?_fun) IN
+          CASES RefExpr_adtvar
+            OF Null: Null?_fun,
+               RefVarEval(RefVarEval1_var):
+                 RefVarEval?_fun(RefVarEval1_var)
+            ENDCASES;
+
+  REDUCE(Null?_fun: [RefExpr -> range],
+         RefVarEval?_fun: [[Name, RefExpr] -> range]):
+        [RefExpr -> range] =
+      LAMBDA (RefExpr_adtvar: RefExpr):
+        LET red: [RefExpr -> range] = REDUCE(Null?_fun, RefVarEval?_fun) IN
+          CASES RefExpr_adtvar
+            OF Null: Null?_fun(RefExpr_adtvar),
+               RefVarEval(RefVarEval1_var):
+                 RefVarEval?_fun(RefVarEval1_var, RefExpr_adtvar)
+            ENDCASES;
+ END RefExpr_adt_reduce

@@ -226,6 +226,9 @@ BEGIN
                      pre_set : Stmt,
                      post_set : Stmt,
                      exc_set : Stmt,
+%                     pre_set : [Name -> Val],
+%                     post_set : [Name -> Val],
+%                     exc_set : [Name -> Val],
                      res : Expr,
                      res_type : JType #]
 
@@ -240,6 +243,32 @@ BEGIN
                     methods : finite_set[Method] #]
 
   Program : TYPE = [# classes : finite_set[Class] #]
+
+
+  get_FieldDecl(n : Name, p : Program) : lift[FieldDecl] =
+    LET fds = {fd : FieldDecl | EXISTS (c : Class) : classes(p)(c) AND
+                                  fields(c)(fd) AND name(fd) = n} IN
+      IF empty?(fds)
+      THEN bottom
+      ELSE up(choose(fds))
+      ENDIF
+
+  get_GhostVarDecl(n : Name, p : Program) : lift[GhostVarDecl] =
+    LET gds = {gd : GhostVarDecl | EXISTS (c : Class) : classes(p)(c) AND
+                                     ghost_vars(c)(gd) AND name(gd) = n} IN
+      IF empty?(gds)
+      THEN bottom
+      ELSE up(choose(gds))
+      ENDIF
+
+  get_LocalVarDecl(n : Name, p : Program) : lift[LocalVarDecl] =
+    LET lds = {ld : LocalVarDecl | EXISTS (c : Class, m : Method) : 
+                                     classes(p)(c) AND methods(c)(m) AND 
+                                     lvars(m)(ld) AND name(ld) = n} IN
+      IF empty?(lds)
+      THEN bottom
+      ELSE up(choose(lds))
+      ENDIF
 
 
 END Program
@@ -470,5 +499,29 @@ BEGIN
     declarations_are_unique(p) % but is convenient to find a declaration
 
   AUTO_REWRITE- wf_Program, var_names
+
+
+  get_FieldDecl_is_determ : LEMMA
+    FORALL (n : Name, p : (wf_Program)) :
+    LET fds = {fd : FieldDecl | EXISTS (c : Class) : classes(p)(c) AND
+                                  fields(c)(fd) AND name(fd) = n}
+    IN
+      nonempty?(fds) IMPLIES singleton?(fds)
+
+  get_GhostVarDecl_is_determ : LEMMA
+    FORALL (n : Name, p : (wf_Program)) :
+    LET gds = {gd : GhostVarDecl | EXISTS (c : Class) : classes(p)(c) AND
+                                     ghost_vars(c)(gd) AND name(gd) = n}
+    IN
+      nonempty?(gds) IMPLIES singleton?(gds)
+
+  get_LocalVarDecl_is_determ : LEMMA
+    FORALL (n : Name, p : (wf_Program)) :
+    LET lds = {ld : LocalVarDecl | EXISTS (c : Class, m : Method) : 
+                                     classes(p)(c) AND methods(c)(m) AND
+                                     lvars(m)(ld) AND name(ld) = n}
+    IN
+      nonempty?(lds) IMPLIES singleton?(lds)
+
 
 END WellFormedProgram

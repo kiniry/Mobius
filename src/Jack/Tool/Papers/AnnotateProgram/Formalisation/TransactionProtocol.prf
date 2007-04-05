@@ -1,0 +1,105 @@
+(TransactionProtocol
+ (IMP_WellFormedMVA_TCC1 0
+  (IMP_WellFormedMVA_TCC1-1 nil 3383892294 nil
+   ("" (existence-tcc) nil nil) nil nil nil nil nil nil))
+ (make_Guard_yield_wf_Guard_TCC1 0
+  (make_Guard_yield_wf_Guard_TCC1-1 nil 3383892294 nil
+   ("" (subtype-tcc) nil nil) nil nil nil nil nil nil))
+ (make_Guard_yield_wf_Guard_TCC2 0
+  (make_Guard_yield_wf_Guard_TCC2-1 nil 3383892294 nil
+   ("" (subtype-tcc) nil nil) nil nil nil nil nil nil))
+ (transaction_protocol_TCC1 0
+  (transaction_protocol_TCC1-1 nil 3383892294 nil
+   ("" (subtype-tcc) nil nil) nil nil nil nil nil nil))
+ (transaction_protocol_TCC2 0
+  (transaction_protocol_TCC2-1 nil 3383892294 nil
+   ("" (subtype-tcc) nil nil) nil nil nil nil nil nil))
+ (transaction_protocol_TCC3 0
+  (transaction_protocol_TCC3-1 nil 3383892294 nil
+   ("" (subtype-tcc) nil nil) nil nil nil nil nil nil))
+ (transaction_protocol_is_well_formed 0
+  (transaction_protocol_is_well_formed-1 nil 3383892295 3383897629
+   ("" (expand* "wf_MVA" "transaction_protocol")
+    (("" (split)
+      (("1" (postpone) nil nil) ("2" (postpone) nil nil)
+       ("3" (postpone) nil nil) ("4" (postpone) nil nil)
+       ("5" (skosimp)
+        (("5" (split)
+          (("1" (postpone) nil nil) ("2" (postpone) nil nil)
+           ("3" (postpone) nil nil)
+           ("4" (expand "wf_Guard")
+            (("4" (expand* "wf_Guard" "wf_Store" "wf_PSt")
+              (("4" (expand* "wf_Store" "wf_PSt")
+                (("4" (expand* "var_names" "singleton" "domain_set")
+                  (("4" (split)
+                    (("1" (skosimp)
+                      (("1" (expand "vdsA")
+                        (("1" (skolem!)
+                          (("1" (expand "T_VarDecl")
+                            (("1" (expand "singleton")
+                              (("1"
+                                (flatten)
+                                (("1"
+                                  (expand "ts")
+                                  (("1"
+                                    (split)
+                                    (("1"
+                                      (rewrite -1)
+                                      (("1"
+                                        (expand "t1")
+                                        (("1"
+                                          (expand "TRUE_guard")
+                                          (("1"
+                                            (expand*
+                                             "make_Guard"
+                                             "wf_Store"
+                                             "wf_PSt")
+                                            (("1"
+                                              (expand*
+                                               "extend"
+                                               "wf_Store"
+                                               "wf_PSt")
+                                              (("1"
+                                                (assert)
+                                                (("1"
+                                                  (expand*
+                                                   "singleton_elt"
+                                                   "the"
+                                                   "member")
+                                                  (("1"
+                                                    (postpone)
+                                                    nil
+                                                    nil))
+                                                  nil))
+                                                nil))
+                                              nil))
+                                            nil))
+                                          nil))
+                                        nil))
+                                      nil)
+                                     ("2" (postpone) nil nil)
+                                     ("3" (postpone) nil nil)
+                                     ("4" (postpone) nil nil)
+                                     ("5" (postpone) nil nil)
+                                     ("6" (postpone) nil nil))
+                                    nil))
+                                  nil))
+                                nil))
+                              nil))
+                            nil))
+                          nil))
+                        nil))
+                      nil)
+                     ("2" (postpone) nil nil))
+                    nil))
+                  nil))
+                nil))
+              nil))
+            nil)
+           ("5" (postpone) nil nil))
+          nil))
+        nil))
+      nil))
+    nil)
+   unfinished nil 5333488 7280 t shostak)))
+

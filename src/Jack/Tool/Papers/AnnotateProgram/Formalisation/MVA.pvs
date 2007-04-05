@@ -295,14 +295,14 @@ BEGIN
 
 
   % Single judgement for a MVA
-  step(a : (total))(x : (wf_AState(a)), p : (wf_PEvent(a))) : AState =
+  step(a : (total))(s : (wf_AState(a)), pe : (wf_PEvent(a))) : AState =
       LET t = choose(LAMBDA (t : Transition) : 
                        ts(a)(t) AND 
-                       scp(t) = cp(x) AND 
-                       event(t) = event(p) AND
-                       guard(t)(stA(x), stP(p))) IN
+                       scp(t) = cp(s) AND 
+                       event(t) = event(pe) AND
+                       guard(t)(stA(s), stP(pe))) IN
       (# cp := tcp(t),
-         stA := execute_actions(stA(x), action(t))
+         stA := execute_actions(stA(s), action(t))
       #)
 
 
@@ -319,8 +319,8 @@ BEGIN
         wf_Store(execute_actions(stA, l), a)
 
   step_yields_wf_state : THEOREM % :-)
-    FORALL (a : (total), x : (wf_AState(a)), p : (wf_PEvent(a))) :
-      wf_AState(step(a)(x, p), a) 
+    FORALL (a : (total), s : (wf_AState(a)), pe : (wf_PEvent(a))) :
+      wf_AState(step(a)(s, pe), a) 
 
 
 END MVASemantics

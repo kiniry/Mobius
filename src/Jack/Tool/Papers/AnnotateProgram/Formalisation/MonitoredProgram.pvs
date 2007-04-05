@@ -10,7 +10,6 @@ BEGIN
     #]
 
 
-
 END MonitoredProgram
 
 
@@ -43,7 +42,8 @@ BEGIN
         evs(a)(ev) IMPLIES
         mname(ev) = n IMPLIES
           EXISTS (m : Method) : methods(c)(m) AND name(m) = n)
-    
+
+
 END WellFormedMonitoredProgram
 
 
@@ -51,274 +51,90 @@ MonitoredProgramSemantics[CP, Name : TYPE+] : THEORY
 BEGIN
 
   IMPORTING WellFormedMonitoredProgram[CP, Name],
-            Semantics[Name],
             MVASemantics[CP, Name]
 
+  % Monitored Program State
   MState : TYPE =
     [# astate : AState[CP, Name],
-       pstate : PState[Name]
+       pstate : PState[Name],
+       gvs : Store
     #]
+
+
+  % Instantiation of its semantics
+
+  execute_set(vn : Name, v : Val, s : MState) : MState =
+    IF up?(ex(pstate(s)))
+    THEN s
+    ELSE s WITH [gvs := gvs(s) WITH [vn := v]]
+    ENDIF
+
+  execute_assert(b : boolean, s : MState) : MState =
+    IF b
+    THEN s
+    ELSE s WITH [pstate := pstate(s) WITH [ex := up(JMLExc)]]
+    ENDIF
+
+  on_method_entry(md : Method, mp : MonitoredProgram, s : MState) : MState = 
+    (# astate := IF evs(mva(mp))((# etype := Entry, mname := name(md) #))
+                 THEN step(mva(mp))(astate(s), 
+                                    (# stP := st(pstate(s)),
+                                       event := (# etype := Entry, 
+                                                   mname := name(md) #)
+                                    #))
+                 ELSE astate(s)
+                 ENDIF,
+       pstate := pstate(s),
+       gvs := gvs(s)
+    #)
+
+
+  on_method_exit(etype : EventType)(md : Method, mp : MonitoredProgram, 
+                 s : MState) : MState =
+    (# astate := IF (evs(mva(mp)))((# etype := etype, mname := name(md) #))
+                 THEN step(mva(mp))(astate(s),
+                                    (# stP := st(pstate(s)),
+                                       event := (# etype := etype,
+                                                   mname := name(md) #)
+                                    #))
+                 ELSE astate(s)
+                 ENDIF,
+       pstate := pstate(s),
+       gvs := gvs(s)
+    #)
+
+  on_method_exit_normal : [[Method, MonitoredProgram, MState] -> MState] =
+    on_method_exit(ExitNormal)
+
+  on_method_exit_exceptional : [[Method, MonitoredProgram, MState] -> MState] =
+    on_method_exit(ExitExceptional)
+
+  IMPORTING Semantics[Name, MonitoredProgram, MState, 
+                      LAMBDA (mp : MonitoredProgram) : program(mp),
+                      LAMBDA (s : MState) : pstate(s),
+                      LAMBDA (upd : [PState -> PState], s : MState) :
+                        s WITH [pstate := upd(pstate(s))],
+                      execute_set,
+                      execute_assert,
+                      execute_assert,
+                      execute_assert,
+                      on_method_entry,
+                      on_method_exit_normal,
+                      on_method_exit_exceptional]
+                       
 
   initial_MP_state(mp : MonitoredProgram) : MState =
     (# astate := initial_MVA_state(mva(mp)),
-       pstate := initial_Program_state(program(mp))
+       pstate := initial_Program_state(mp),
+       gvs := LAMBDA (n : Name) :
+         LET gd = get_GhostVarDecl(n, program(mp)) IN
+         IF bottom?(gd)
+         THEN Bottom
+         ELSE init_val(down(gd))
+         ENDIF
     #)
 
-  is_local(vn : Name, sigma : MState) : bool =
-    NOT Bottom?(lvs(st(pstate(sigma)))(vn))
-
-  is_field(vn : Name, sigma : MState) : bool =
-    NOT Bottom?(fvs(st(pstate(sigma)))(vn))
-
-  is_ghost(vn : Name, sigma : MState) : bool =
-    NOT Bottom?(gvs(st(pstate(sigma)))(vn))
-
-  lookup_local(vn : Name, sigma : MState) : Val =
-    lvs(st(pstate(sigma)))(vn)
-
-  lookup_field(vn : Name, sigma : MState) : Val =
-    fvs(st(pstate(sigma)))(vn)
-
-  lookup_ghost(vn : Name, sigma : MState) : Val =
-    gvs(st(pstate(sigma)))(vn)
-
-  update_local(vn : Name, v : Val, sigma : MState) : MState =
-    (# pstate :=
-        (# ex := ex(pstate(sigma)),
-           st := (# fvs := fvs(st(pstate(sigma))),
-                    gvs := gvs(st(pstate(sigma))),
-                    lvs := lvs(st(pstate(sigma))) WITH [vn := v] #) #),
-     astate := astate(sigma) #)
-                
-  update_field(vn : Name, v : Val, sigma : MState) : MState =
-    (# pstate :=
-        (# ex := ex(pstate(sigma)),
-           st := (# fvs := fvs(st(pstate(sigma))) WITH [vn := v],
-                    gvs := gvs(st(pstate(sigma))),
-                    lvs := lvs(st(pstate(sigma))) #) #),
-     astate := astate(sigma) #)
-
-  update_ghost(vn : Name, v : Val, sigma : MState) : MState =
-    (# pstate :=
-        (# ex := ex(pstate(sigma)),
-           st := (# fvs := fvs(st(pstate(sigma))), 
-                    gvs := gvs(st(pstate(sigma))) WITH [vn := v],
-                    lvs := lvs(st(pstate(sigma))) #) #),
-     astate := astate(sigma) #)
-    
-  lookup(vn : Name, sigma : MState) : Val =
-    IF is_local(vn, sigma)
-    THEN lookup_local(vn, sigma)
-    ELSIF is_field(vn, sigma)
-    THEN lookup_field(vn, sigma)
-    ELSE lookup_ghost(vn, sigma)
-    ENDIF
-
-  update(vn : Name, v : Val, sigma : MState) : MState =
-    IF is_local(vn, sigma)
-    THEN update_local(vn, v, sigma)
-    ELSIF is_field(vn, sigma)
-    THEN update_field(vn, v, sigma)
-    ELSE update_ghost(vn, v, sigma)
-    ENDIF
-
-  deriv_expr(MP : (wf_MP))
-            (c : Expr, sigma1 : MState, v : Val, sigma2 : MState)
-            (n : nat)
-            (deriv_stmt : [(wf_MP) -> [Stmt, MState, MState -> [below(n) -> bool]]]) 
-            : RECURSIVE bool =
-    LET deriv_stmt_rec = 
-      LAMBDA(p : below(n)) :
-        LAMBDA(MP : (wf_MP))(s : Stmt, sigma1, sigma2 : MState)
-              (m : below(p)) : deriv_stmt(MP)(s, sigma1, sigma2)(m)
-    IN
-    IF up?(ex(pstate(sigma1)))
-    % sigma1 is an exceptional state
-    % exceptions are simply propagated
-    THEN sigma1 = sigma2 AND v = Bottom AND n = 0
-    ELSE % sigma1 is a normal state
-    CASES c OF
-      % LU_p
-      Assign(vn, e) : 
-        is_local(vn, sigma1) AND
-        NOT Bottom?(v) AND
-        n > 0 AND
-        (EXISTS (tau : MState) : 
-           deriv_expr(MP)(e, sigma1, v, tau)(n - 1)(deriv_stmt_rec(n - 1)) AND
-           sigma2 = (IF up?(ex(pstate(tau)))
-                     THEN tau
-                     ELSE update_local(vn, v, tau)
-                     ENDIF)),
-      BExpr(b) : 
-        sigma1 = sigma2 AND 
-        NOT Bottom?(v) AND
-        v = Bool(eval(b)(pstate(sigma1))) AND
-        n = 0,
-      CondExpr(c, t, e) : 
-        n > 0 AND
-        IF eval(c)(pstate(sigma1))
-        THEN deriv_expr(MP)(t, sigma1, v, sigma2)(n - 1)(deriv_stmt_rec(n - 1))
-        ELSE deriv_expr(MP)(e, sigma1, v, sigma2)(n - 1)(deriv_stmt_rec(n - 1))
-        ENDIF,
-      % MC_p
-      MethodCall(e, mn, p) :
-        EXISTS(m1, m2, m3, m4, m5, m6 : nat)
-              (a, pv : Val)
-              (tau1, tau2, tau3, tau4, tau5, tau6, tau7, tau8, tau9, tau10 : MState)
-              (old_val_arg : Val)(md : Method)(inv : BoolExpr) :
-          n = m1 + m2 + m3 + m4 + m5 + m6 + 1 AND
-          deriv_expr(MP)(e, sigma1, a, tau1)(m1)(deriv_stmt_rec(m1)) AND
-          deriv_expr(MP)(p, tau1, pv, tau2)(m2)(deriv_stmt_rec(m2)) AND
-          (tau3 = (IF up?(ex(pstate(tau1))) AND Null?(a)
-                   THEN tau2 WITH [pstate := pstate(tau2) WITH 
-                                   [ex := up(NullPointer)]]
-                   ELSE tau2 
-                   ENDIF)) AND
-          md = lookup_mthd(program(MP), a, mn, p) AND
-          inv = lookup_inv(program(MP), a) AND
-          eval(inv)(pstate(tau3)) AND
-          NOT cp(astate(tau2)) = halted AND
-          eval(pre(md))(pstate(tau3)) AND
-          tau4 = (# pstate := pstate(tau3),
-                    astate := IF evs(mva(MP))
-                                 ((# etype := Entry, mname := mn #))
-                              THEN step(mva(MP))
-                                       (astate(tau3), 
-                                        (# stP := st(pstate(tau3)),
-                                           event := (# etype := Entry, 
-                                                       mname := mn #) 
-                                        #))
-                              ELSE astate(tau3)
-                              ENDIF #) AND
-          old_val_arg = lookup_local(name(arg(md)), tau4) AND
-          tau5 = update_local(name(arg(md)), pv, tau4) AND
-          deriv_stmt(MP)(pre_set(md), tau5, tau6)(m3) AND
-          deriv_stmt(MP)(body(md), tau6, tau7)(m4) AND
-          deriv_expr(MP)(res(md), tau7, v, tau8)(m5)(deriv_stmt_rec(m5)) AND
-          (IF bottom?(ex(pstate(tau8)))
-           THEN deriv_stmt(MP)(post_set(md), tau8, tau9)(m6)
-           ELSE deriv_stmt(MP)(exc_set(md), tau8 WITH [pstate := 
-                                                      pstate(tau8) WITH
-                                                      [ex := bottom]],
-                                           tau9 WITH [pstate := 
-                                                      pstate(tau8) WITH
-                                                      [ex := bottom]])(m6)
-                AND ex(pstate(tau8)) = ex(pstate(tau9))
-           ENDIF) AND
-          tau10 = (# pstate := pstate(tau9),
-                     astate := IF bottom?(ex(pstate(tau9)))
-                               THEN IF (evs(mva(MP)))
-                                       ((# etype := ExitNormal, 
-                                           mname := mn #))
-                                    THEN step(mva(MP))
-                                             (astate(tau9),
-                                              (# stP := st(pstate(tau9)),
-                                                 event := (# etype := ExitNormal,
-                                                             mname := mn #)
-                                              #))
-                                    ELSE astate(tau9)
-                                    ENDIF
-                               ELSE IF (evs(mva(MP)))
-                                       ((# etype := ExitExceptional, 
-                                           mname := mn #))
-                                    THEN step(mva(MP))
-                                             (astate(tau9),
-                                              (# stP := st(pstate(tau9)),
-                                                 event := (# etype := ExitExceptional,
-                                                             mname := mn #)
-                                              #))
-                                    ELSE astate(tau9)
-                                    ENDIF 
-                               ENDIF #) AND
-          sigma2 = update_local(name(arg(md)), old_val_arg, tau10) AND
-          eval(inv)(pstate(sigma2)) AND
-          eval(post(md))(pstate(sigma2)) AND
-          NOT cp(astate(sigma2)) = halted,
-      NExpr(n) : 
-        sigma1 = sigma2 AND
-        NOT Bottom?(v) AND
-        v = Int(eval(n)(pstate(sigma1))) AND
-        n = 0
-    ENDCASES
-    ENDIF
-  MEASURE n
-    
-
-  deriv_stmt(MP : (wf_MP))(c : Stmt, sigma1, sigma2 : MState)
-            (n : nat) : 
-    RECURSIVE bool =
-    LET deriv_stmt_rec = 
-        LAMBDA(p : below(n)) : 
-          LAMBDA(MP : (wf_MP))(s : Stmt, sigma1, sigma2 : MState)
-                (m : below(p)) : deriv_stmt(MP)(s, sigma1, sigma2)(m)
-    IN
-    IF up?(ex(pstate(sigma1)))
-    % sigma1 is an exceptional state
-    % exceptions are simply propagated
-    THEN sigma1 = sigma2 AND n = 0
-    ELSE % sigma1 is a normal state
-    CASES c OF
-      % If_p
-      IfThenElse(e, c1, c2) :
-          n > 0 AND 
-          deriv_stmt(MP)(IF eval(e)(pstate(sigma1)) THEN c1 ELSE c2 ENDIF, 
-                           sigma1, sigma2)(n - 1),
-      % Seq_p
-      Sequence(c1, c2) :
-         EXISTS(m1, m2 : nat)(tau : MState) :
-           n = m1 + m2 + 1 AND
-           deriv_stmt(MP)(c1, sigma1, tau)(m1) AND
-           deriv_stmt(MP)(c2, tau, sigma2)(m2),
-      % LU_p
-      Set(vn, e) :
-         is_ghost(vn, sigma1) AND
-         n > 0 AND
-         EXISTS (tau : MState)(v : Val) :
-           deriv_expr(MP)(e, sigma1, v, tau)(n - 1)(deriv_stmt_rec(n - 1)) AND
-           (sigma2 = IF up?(ex(pstate(tau)))
-                     THEN tau
-                     ELSE update_ghost(vn, v, tau)
-                     ENDIF),
-      % Skip_p
-      Skip : sigma1 = sigma2 AND n = 0,
-      % StmtExpr_p
-      StmtExpr(e) : 
-         n > 0 AND
-         EXISTS (v : Val) :
-           deriv_expr(MP)(e, sigma1, v, sigma2)(n - 1)(deriv_stmt_rec(n - 1)),
-      % Throw_p
-      Throw: sigma2 = sigma1 WITH [pstate := pstate(sigma1) WITH 
-                                             [ex := up(Throwable)]] AND n = 0,
-      % TryCatch_p
-      TryCatch(c1, c2, c3) :
-        EXISTS(m1, m2, m3 : nat)(tau1, tau2, tau3 : MState) :
-          n = m1 + m2 + m3 + 1 AND
-          deriv_stmt(MP)(c1, sigma1, tau1)(m1) AND
-          deriv_stmt(MP)(IF up?(ex(pstate(tau1))) THEN c2 ELSE Skip ENDIF, 
-                            tau1 WITH [pstate := pstate(tau1) WITH
-                                                 [ex := bottom]], tau2)(m2) AND
-          deriv_stmt(MP)(c3, tau2 WITH [pstate := pstate(tau2) WITH
-                                                 [ex := bottom]], tau3)(m3) AND
-          sigma2 = (# pstate := (# ex := IF up?(ex(pstate(tau2))) 
-                                         THEN ex(pstate(tau2)) 
-                                         ELSE ex(pstate(tau3)) 
-                                         ENDIF,
-                                   st := st(pstate(tau3)) #),
-                      astate := astate(tau3) #),
-      % While_p
-      While(e, c) : 
-        n > 0 AND
-        deriv_stmt(MP)(IfThenElse(e, While(e, c), Skip), sigma1, sigma2)(n - 1)
-
-    ENDCASES
-  ENDIF
-  MEASURE n
-
-  %TODO: State and prove the lemmas about the determinism of deriv_expr and
-  %      deriv_stmt
-
-
-  run_MonitoredProgram(mp: (wf_MP))(main : Method, arg : int)
+  run_MonitoredProgram(mp : (wf_MP))(main : Method, arg : int)
                       (s2 : MState)(n : nat) : boolean =
     LET p  = program(mp),
         s1 = initial_MP_state(mp),

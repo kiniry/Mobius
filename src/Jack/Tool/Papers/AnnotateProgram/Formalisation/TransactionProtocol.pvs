@@ -1,0 +1,140 @@
+TransactionProtocol : THEORY
+BEGIN
+
+  CP : TYPE
+
+  IMPORTING WellFormedMVA[CP, string],
+            Semantics
+
+%  EXPORTING transaction_protocol
+
+  % Control points
+  no_trans, in_trans : CP
+
+  cps : set[CP] = {q : CP | q = no_trans OR q = in_trans}
+
+  % Events
+  bt_called : Event = (# etype := Entry, mname := "beginTransaction" #)
+
+  at_called : Event = (# etype := Entry, mname := "abortTransaction" #)
+
+  ct_called : Event = (# etype := Entry, mname := "commitTransaction" #)
+
+  evs : set[Event] = {e : Event | 
+    e = bt_called OR e = at_called OR e = ct_called }
+
+  % OneActions
+  inc_T : OneAction = (# target := "T", 
+                         source := NExpr(Plus(NumVarEval("T"), Int(1))) #)
+
+  dec_T : OneAction = (# target := "T", 
+                         source := NExpr(Minus(NumVarEval("T"), Int(1))) #)
+
+  % MVA Variables
+  T_VarDecl : MVAVarDecl = (# name := "T", jtype := IntType, init_val := Int(0) #)
+
+  vdsA : set[MVAVarDecl] = singleton(T_VarDecl)
+
+  % Program Variables
+  vdsP : set[ProgVarDecl] = emptyset
+
+  % Guards
+  % Guards must be defined only for the declared variables
+  make_Guard(vdsA : finite_set[MVAVarDecl], vdsP : finite_set[ProgVarDecl])
+            (p : pred[[(wf_Store(vdsA)), (wf_PSt(vdsP))]]) : Guard =
+    LAMBDA (stA : (wf_Store(vdsA)), stP : (wf_PSt(vdsP))) : p(stA, stP)
+
+  make_Guard(a : MVA)(p : pred[[Store, PSt]]) : Guard =
+    make_Guard(vdsA(a), vdsP(a))(p)
+
+  make_TRUE_Guard(vdsA : finite_set[MVAVarDecl], 
+                  vdsP : finite_set[ProgVarDecl]) : Guard =
+    make_Guard(vdsA, vdsP)
+              (LAMBDA (stA : (wf_Store(vdsA)), stP : (wf_PSt(vdsP))) : TRUE)
+
+  make_TRUE_Guard(a : MVA) : Guard =
+    make_TRUE_Guard(vdsA(a), vdsP(a))
+
+  % TODO: How do I prove this !?
+  make_Guard_yield_wf_Guard : LEMMA
+    FORALL (a : MVA)
+           (p : pred[[(wf_Store(vdsA)), (wf_PSt(vdsP))]]) :
+      wf_Guard(a)(make_Guard(vdsA, vdsP)(p))
+
+  AUTO_REWRITE make_Guard_yield_wf_Guard
+
+  T_is_one : Guard = 
+    make_Guard(vdsA, vdsP)
+              (LAMBDA (stA : (wf_Store(vdsA)), stP : (wf_PSt(vdsP))) : 
+                 val2int(stA("T")) = 1)
+
+  T_gt_one : Guard = 
+    make_Guard(vdsA, vdsP)
+              (LAMBDA (stA : (wf_Store(vdsA)), stP : (wf_PSt(vdsP))) : 
+                 val2int(stA("T")) > 1)
+
+  TRUE_guard : Guard = 
+    make_Guard(vdsA, vdsP)
+              (LAMBDA (stA : (wf_Store(vdsA)), stP : (wf_PSt(vdsP))) : TRUE)
+
+
+  % Transitions
+  t1 : Transition = (# scp := no_trans,
+                       event := bt_called,
+                       guard := TRUE_guard,
+                       action := (: inc_T :),
+                       tcp := in_trans #)
+
+  t2 : Transition = (# scp := in_trans,
+                       event := bt_called,
+                       guard := TRUE_guard,
+                       action := (: inc_T :),
+                       tcp := in_trans #)
+
+  t3 : Transition = (# scp := in_trans,
+                       event := at_called,
+                       guard := T_gt_one,
+                       action := (: dec_T :),
+                       tcp := in_trans #)
+
+  t4 : Transition = (# scp := in_trans,
+                       event := ct_called,
+                       guard := T_gt_one,
+                       action := (: dec_T :),
+                       tcp := in_trans #)
+
+  t5 : Transition = (# scp := in_trans,
+                       event := at_called,
+                       guard := T_is_one,
+                       action := (: dec_T :),
+                       tcp := no_trans #)
+
+  t6 : Transition = (# scp := in_trans,
+                       event := at_called,
+                       guard := T_is_one,
+                       action := (: dec_T :),
+                       tcp := no_trans #)
+
+  ts : set[Transition] = {t : Transition |  
+    t = t1 OR t = t2 OR t = t3 OR t = t4 OR t = t5 OR t = t6}
+
+
+  % MVA
+  transaction_protocol : MVA =
+    (# name := "transaction_protocol",
+       class_name := "Transactions.java",
+       cps := cps,
+       init_cp := no_trans,
+       evs := evs,
+       vdsA := vdsA,
+       vdsP := vdsP,
+       ts := ts
+    #)
+
+  % TODO : I have problem proving that guards are well formed
+  % To prove that actions are well formed we need to define 
+  % var_names for expressions
+  transaction_protocol_is_well_formed : LEMMA
+    wf_MVA(transaction_protocol)
+
+END TransactionProtocol
