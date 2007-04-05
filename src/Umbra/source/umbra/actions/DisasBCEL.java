@@ -36,6 +36,11 @@ import umbra.editor.Composition;
 
 public class DisasBCEL implements IEditorActionDelegate {
 	
+	private final String MESSAGE_DIALOG_TITLE = "Disassemble Bytecode";
+	private final String BYTECODE_EXTENSION   = ".btc";
+	private final String JAVA_EXTENSION       = ".java";
+	private final String CLASS_EXTENSION      = ".class";
+	
 	/**
 	 * TODO
 	 */
@@ -49,16 +54,15 @@ public class DisasBCEL implements IEditorActionDelegate {
 	public void run(IAction action) {
 		IPath active = ((FileEditorInput)editor.getEditorInput()).getFile().getFullPath();
 		if (editor.isSaveOnCloseNeeded()) {
-			MessageDialog.openWarning(editor.getSite().getShell(), "Bytecode", "You must save it before!");
+			MessageDialog.openWarning(editor.getSite().getShell(), MESSAGE_DIALOG_TITLE, "You must save the bytecode before you disassemble it.");
 			return;
-		}	
-		int lind = active.toOSString().lastIndexOf(".java");
-		if (lind == -1) MessageDialog.openInformation(editor.getSite().getShell(), "Bytecode", "This is not a \".java\" file");
+		}
+		int lind = active.toOSString().lastIndexOf(JAVA_EXTENSION);
+		if (lind == -1) MessageDialog.openInformation(editor.getSite().getShell(), MESSAGE_DIALOG_TITLE, "This is not a \"" + JAVA_EXTENSION + "\" file.");
 		else {
 			//replaceClass(active);
 			String actlind = active.toOSString().substring(0, lind);
-			String fname = actlind + ".btc";
-			//fname = "hello/plik.txt";
+			String fname = actlind + BYTECODE_EXTENSION;
 			IWorkspace workspace = ResourcesPlugin.getWorkspace();
 			IFile file = workspace.getRoot().getFile(new Path(fname));
 			FileEditorInput input = new FileEditorInput(file);
@@ -88,8 +92,8 @@ public class DisasBCEL implements IEditorActionDelegate {
 	 * TODO
 	 */
 	private void replaceClass(IPath active) {
-		String fnameFrom = active.toOSString().replaceFirst(".java", ".class");
-		String lastSegment = active.lastSegment().replaceFirst(".java", ".class");
+		String fnameFrom = active.toOSString().replaceFirst(JAVA_EXTENSION, CLASS_EXTENSION);
+		String lastSegment = active.lastSegment().replaceFirst(JAVA_EXTENSION, CLASS_EXTENSION);
 		String fnameTo = active.removeLastSegments(1).append("_" + lastSegment).toOSString();
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot(); 
 		IFile fileFrom = root.getFile(new Path(fnameFrom));
