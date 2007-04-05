@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Umbra Plug-in
-Bundle-SymbolicName: Umbra;singleton:=true
+Bundle-SymbolicName: umbra;singleton:=true
 Bundle-Version: 1.0.0
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.core.runtime,
@@ -27,4 +27,7 @@ Export-Package: org.apache.bcel,
 Import-Package: org.eclipse.ui.part,
  org.eclipse.ui.texteditor
 Bundle-ClassPath: libs/org.apache.bcel_5.1.0/bcel.jar,
- libs/bmllib.jar
+ libs/bmllib.jar,
+ asm.jar,
+ b2bpl.jar
+Eclipse-LazyStart: false
