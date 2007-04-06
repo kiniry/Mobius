@@ -251,12 +251,12 @@ public class Main extends javafe.SrcTool
         super.setup();
 
 	//$$
-	ProverManager.useSimplify = options().useSimplify;
-	ProverManager.useSammy = options().useSammy;
-	ProverManager.useHarvey = options().useHarvey;
-    ProverManager.useCvc3 = options().useCvc3;
-    ProverManager.useSorted = options().svcg;
-    ProverManager.sortedProvers = options().pProver;
+	ProverManager.useSimplify = options().isProverEnabled(Options.simplifyName);
+	ProverManager.useSammy = options().isProverEnabled(Options.sammyName);
+	ProverManager.useHarvey = options().isProverEnabled(Options.harveyName);
+        ProverManager.useCvc3 = options().isProverEnabled(Options.cvc3Name);;
+        ProverManager.useSorted = options().svcg;
+        ProverManager.sortedProvers = options().pProver;
 	//$$
 
         if (!options().quiet) {

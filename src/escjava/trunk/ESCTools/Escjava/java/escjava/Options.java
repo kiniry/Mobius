@@ -14,6 +14,8 @@ import escjava.ast.*;
 import escjava.ast.TagConstants;
 import escjava.translate.NoWarn;
 
+import javafe.util.Assert;
+
 /**
  * This class parses the options on the command-line and is a structure for holding
  * the values of options.
@@ -61,8 +63,8 @@ public class Options extends javafe.SrcToolOptions {
                     "-PlainWarning",
                     "Suppress the output of the partial counterexample in the case of invariant warnings." },
             //$$
-            { "-Prover",
-                    "Use provers listed after this option, for example : -Prover simplify harvey" },
+            { "-Prover <prover_list>",
+                    "Specify which prover(s) should be used; <prover_list> is a comma-separated list of names of the provers to be enabled. Usage example : '-Prover simplify,harvey'. Simplify is the default prover if this option is not used." },
             //$$
             {
                     "-Routine [<routine_identifier> | <fully_quality_routine_signature>]",
@@ -294,14 +296,13 @@ public class Options extends javafe.SrcToolOptions {
     public String simplify = System.getProperty("simplify");
 
     //$$
-    /*
-     * Flags indicating which prover you want to use
-     */
-    public boolean useSimplify = true;
-    // -> by default simplify is used when the option -Prover is not given.
-    public boolean useSammy = false;
-    public boolean useHarvey = false;
-    public boolean useCvc3 = false;
+    public static final String simplifyName = "Simplify";
+    public static final String sammyName ="Sammy";
+    public static final String harveyName = "haRVey";
+    public static final String cvc3Name = "CVC3";
+    private final String[] supportedProvers = { simplifyName, sammyName, harveyName, cvc3Name };
+    private final String[] defaultProvers =  { simplifyName };
+    private Set enabledProvers;
 
     // use the new verification conditions generator
     public boolean nvcg = false;
@@ -646,7 +647,92 @@ public class Options extends javafe.SrcToolOptions {
         return super.showNonOptions();
     }
 
+
+    // Prover settings
+
+    /*@ pure */ public boolean isSupportedProver(/*@ non_null*/String prover) {
+        return isMember(prover, supportedProvers);
+    }
+    /*@ pure */ public boolean isDefaultProver(/*@ non_null*/String prover) {
+        return isMember(prover, defaultProvers);
+    }
+
+    //@ requires \nonnullelements(ps);
+    /*@ pure*/ boolean isMember(/*@ non_null */String p, /*@ non_null*/String[] ps) {
+        for (int i = 0; i < ps.length; i++) {
+            if (p.compareToIgnoreCase(ps[i]) == 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /** Determines whether the specified prover is enabled. 
+     * @param proverName String identifying the prover, it has to be in the list of supported provers.
+     */
+    /*@ pure */boolean isProverEnabled(/*@ non_null */String proverName) {
+        proverName = proverName.toLowerCase();
+        Assert.notFalse(isSupportedProver(proverName), "Prover name " + proverName + " is not in the list of supported provers.");
+        return enabledProvers.contains(proverName);
+    }
+
+
+    private void enableProver(/*@ non_null */String proverName) {
+        enabledProvers.add(proverName.toLowerCase());
+    }
+
+
+    private void diableProver(/*@ non_null */String proverName) {
+        enabledProvers.remove(proverName.toLowerCase());
+    }
+
+    /** Initialized the  <code>proverEnabled</code> table.  */
+    private void initializeProverSetting() {
+        enabledProvers = new Set();
+        disableAllProvers();
+        enableProvers(defaultProvers);
+    }
+
+
+    /** Disables all supported provers. */
+    private void disableAllProvers() {
+        enabledProvers.clear();
+    }
+
+    /** Enables the specified provers. */
+    //@ requires \nonnullelements(ps);
+    private void enableProvers(/*@ non_null */String[] ps) {
+        for (int i = 0; i < ps.length; i++) {
+            enableProver(ps[i]);
+        }
+    }
+
     // Option processing
+    private static final Option optLoop            = Option.registerOption(new String[] {"-Loop"});
+    private static final Option optLoopSafe        = Option.registerOption(new String[] {"-LoopSafe"});
+    private static final Option optLoopFallThru    = Option.registerOption(new String[] {"-LoopFallThru"});
+    private static final Option optPredAbstract    = Option.registerOption(new String[] {"-PredAbstract"});
+    private static final Option optInferPredicates = Option.registerOption(new String[] {"-InferPredicates"});
+
+    private static final Option optEaJava = Option.registerOption(new String[] {"-JavaAssertions", "-eaJava"});
+    private static final Option optEaJML  = Option.registerOption(new String[] {"-JMLAssertions", "-eaJML"});
+
+    private static final Option optProver = Option.registerOption(new String[] {"-Prover"});
+
+
+    private static final Option[][] excludes = { 
+        { optLoopSafe, optLoop, optLoopFallThru }, // options optLoopSafe, optLoop, optLoopFallThru are mutually excluded
+        { optEaJava, optEaJML }
+    };
+
+    private OptionsConsistency consistency = new OptionsConsistency(excludes);
+
+     public Options() {
+         consistency.addInduces(optPredAbstract, new Option[] { optLoopSafe }); // options optPredAbstract implie loopSafe on
+         consistency.addInduces(optInferPredicates, new Option[] { optPredAbstract });
+
+         initializeProverSetting();
+    }
 
     /**
      * Process next tool option.
@@ -655,6 +741,17 @@ public class Options extends javafe.SrcToolOptions {
      * specification of this routine.
      */
     public int processOption(String option, String[] args, int offset) throws UsageError {
+        Option regOption = Option.findOption(option);
+        if (regOption != null) {
+            // check if this option is not excluded by some other option
+            OptionsConsistency.Conflict conflict = consistency.isConflict(regOption);
+            if (conflict != null) 
+                throw new UsageError("Option " + option + " cannnot be set, because " + conflict.getOpt2() + " conflicts with " + conflict.getOpt1() +  ".");
+
+            // add the option to the on set
+            consistency.set(regOption);
+        }
+
         // First, change option to lowercase for case-less comparison.
         option = option.toLowerCase();
 
@@ -803,84 +900,29 @@ public class Options extends javafe.SrcToolOptions {
             return offset;
         }
         //$$
-        /*
-         * Surely it's possible to reuse some pre existing feature of Javafe
-         * to do that, but it's simple, works and did not interfer with the 
-         * rest of the code, so that's nice for me atm . There will be time
-         * to FIXME...
-         * Clement
-         * Update : we can do it in the same way that Stats, it changes the syntax from
-         * '-Prover sammy simplify' to '-Prover sammy,simplify' but the code would be shorter
-         */
-        else if (option.equals("-prover")) {
-            useSimplify = false; // override default settings
-
-            int newOffset = offset;
-
+        else if (optProver.isMe(option)) {
             if ((offset >= args.length) || (args[offset].charAt(0) == '-')) {
                 throw new UsageError(
                         "Option "
                                 + option
-                                + " requires one argument or more indicating which prover you want to use.\n"
-                                + "(e.g., \"-Prover simplify sammy\")");
+                                + " requires one argument or more indicating which provers you want to use.\n"
+                                + "(e.g., '-Prover simplify,sammy')");
+            }
+            // split the provided argument by commas into individual provers
+            String[] provers = args[offset].split(",");
+
+            // test if the given provers are supported 
+            for (int i = 0; i < provers.length; i++) {
+                if (!isSupportedProver(provers[i])) {
+                    throw new UsageError("Unknown prover: '" + provers[i] + "', when processing the option " + option + ".");
+                }
             }
 
-            // all strings are converted to lower case 
-            // thus no need for huge test
-            String optionChecked;
+            // override default settings
+            disableAllProvers();
+            enableProvers(provers);
 
-            if (offset + 1 <= args.length) { // at least one more command after
-
-                optionChecked = new String(args[offset]).toLowerCase();
-
-                if (optionChecked.equals("simplify"))
-                    useSimplify = true;
-                if (optionChecked.equals("sammy"))
-                    useSammy = true;
-                if (optionChecked.equals("harvey"))
-                    useHarvey = true;
-                if (optionChecked.equals("cvc3"))
-                    useCvc3 = true;
-
-                newOffset++;
-            }
-
-            if (offset + 2 <= args.length) { // at least two more commands after
-
-                optionChecked = new String(args[newOffset]).toLowerCase();
-
-                if (optionChecked.equals("simplify"))
-                    useSimplify = true;
-                if (optionChecked.equals("sammy"))
-                    useSammy = true;
-                if (optionChecked.equals("harvey"))
-                    useHarvey = true;
-                if (optionChecked.equals("cvc3"))
-                    useCvc3 = true;
-
-                newOffset++;
-            }
-
-            if (offset + 3 <= args.length) { // at least three more commands after
-
-                optionChecked = new String(args[newOffset]).toLowerCase();
-
-                if (optionChecked.equals("simplify"))
-                    useSimplify = true;
-                if (optionChecked.equals("sammy"))
-                    useSammy = true;
-                if (optionChecked.equals("harvey"))
-                    useHarvey = true;
-                if (optionChecked.equals("cvc3"))
-                    useCvc3 = true;
-
-                newOffset++;
-            }
-
-            newOffset--;
-
-            return newOffset;
-
+            return offset + 1;
         } else if (option.equals("-nvcg")) {
             nvcg = true;
 
@@ -1154,14 +1196,14 @@ public class Options extends javafe.SrcToolOptions {
                 }
             }
             return offset + 1;
-        } else if (option.equals("-loopsafe")) {
+        } else if (optLoopSafe.isMe(option)) {
             loopTranslation = LOOP_SAFE;
             return offset;
         } else if (option.equals("-precisetargets")) {
             preciseTargets = true;
             loopTranslation = LOOP_SAFE;
             return offset;
-        } else if (option.equals("-loop")) {
+        } else if (optLoop.isMe(option)) {
             // syntax:  -loop <N>[.0|.5]
             if (offset == args.length) {
                 throw new UsageError("Option " + option
@@ -1200,7 +1242,7 @@ public class Options extends javafe.SrcToolOptions {
             loopUnrollCount = cnt;
             loopUnrollHalf = andAHalf;
             return offset + 1;
-        } else if (option.equals("-loopfallthru")) {
+        } else if (optLoopFallThru.isMe(option)) {
             loopTranslation = LOOP_FALL_THRU;
             return offset;
         } else if (option.equals("-mapsunrollcount")) {
@@ -1210,12 +1252,12 @@ public class Options extends javafe.SrcToolOptions {
             }
             mapsUnrollCount = Integer.parseInt(args[offset]);
             return offset + 1;
-        } else if (option.equals("-predabstract")) {
+        } else if (optPredAbstract.isMe(option)) {
             predAbstract = true;
             loopTranslation = LOOP_SAFE;
             lastVarUseOpt = false;
             return offset;
-        } else if (option.equals("-inferpredicates")) {
+        } else if (optInferPredicates.isMe(option)) {
             inferPredicates = true;
             predAbstract = true;
             loopTranslation = LOOP_SAFE;
@@ -1360,12 +1402,12 @@ public class Options extends javafe.SrcToolOptions {
                 || option.equals("-showdesugaredspecs")) {
             desugaredSpecs = true;
             return offset;
-        } else if (option.equals("-javaassertions") || option.equals("-eajava")) {
+        } else if (optEaJava.isMe(option)) {
             assertionMode = JAVA_ASSERTIONS;
             assertionsEnabled = true;
             assertIsKeyword = true;
             return offset;
-        } else if (option.equals("-jmlassertions") || option.equals("-eajml")) {
+        } else if (optEaJML.isMe(option)) {
             assertionMode = JML_ASSERTIONS;
             assertIsKeyword = true;
             assertionsEnabled = true;
