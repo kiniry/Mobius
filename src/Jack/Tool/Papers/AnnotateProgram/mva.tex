@@ -1,0 +1,69 @@
+\section{Modeling Security Properties with Automata}\label{SecMVA}
+
+\subsection{Multi-Variable Automata}
+First we define the precise format of the automata that we use to
+encode security properties. Our automata are in particular suited to
+describe the monitoring of an application, because transitions can
+depend on the state of the program being monitored. We call these
+automata \emph{Multi-Variable Automata} (MVA), because the internal
+state of the automata is defined as a set of variables. Transitions
+between states are labelled with events and so-called actions, that
+describe updates on the automaton variables. A transition can also
+have a guard, that depends on the automation variables, \emph{and} on
+the program variables of the program that is being monitored.
+, used in the
+program and in the MVA, and let \(\CP\) be an infinite, nonempty set
+of control points. 
+We will use PVS-like abstract datatypes and record notation, to define
+data types and tuples with appropriate accessor functions. We first
+define the types of variable types, values and stores. These describe
+the types, values and stores for both automaton and program values.
+
+\[
+\begin{array}{rcl}
+\Store & = & \Name \rightarrow \Val
+\end{array}
+\]
+
+For convenience, we will sometimes write \(\Store_A\) to denote the
+store of all elements in \(A\). Further, we also define some auxiliary
+types that are specific to MVA, namely those of (MVA and program)
+variable declarations, events and transitions. The variable types that
+we distinguish here are booleans, integers, references and a special
+void type.  Both the automaton variables and the program variables
+have any of these types. An MVA declares a set of automaton variable,
+consisting of their name, type and an initial value, and a set of
+program variables it uses, specifying only their name and
+type. Transitions are labelled with events, where an event is a tuple
+of an event type (entry, exit or exceptional exit) and a method
+name. Each transition can update the MVA variables by executing a list
+of actions, where each action assigns the result of an expression
+(containing both program and MVA variables) to
+a MVA variable. The exact type of expressions Finally, the transitions also can have a guard, which
+uses 
+\[
+\begin{array}{rcl}
+\VarDeclA & = \opr & \name : \Name, \type : \Type, \init : \Val \clr\\
+\VarDeclP & = \opr & \name : \Name, \type : \Type \clr\\
+\EVENT & = \opr & \etype : (\entry \mid \exit \mid \excexit), 
+                 \mname : \Name \clr\\
+\TRANS & = \opr & \scp : \CP, \event : \EVENT, \guard :
+\Store_{\VarDeclA} \times \Store_{\VarDeclP} \rightarrow \mathbb{B}, 
+\end{array}
+\]
+
+
+An MVA is formally defined as follows.
+
+\begin{definition}\textbf{\emph{[Multi-Variable Automaton]}}
+A \emph{multi-variable automaton} \(\MVA\) is defined as the
+following tuple:
+\[
+\begin{array}{rcl}
+\MVA & = \opr & \name, \clname : \Name, \cps : \setof{\CP},
+            \init : \CP, \evs : \setof{\EVENT},\\
+     &   &  \vdsA : \setof{\VarDeclA}, \vdsP : \setof{\VarDeclP},\\
+     &   &  \trans : \setof{\TRANS} \clr
+\end{array}
+\]
+\end{definition}

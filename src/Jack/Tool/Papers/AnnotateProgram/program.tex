@@ -1,0 +1,143 @@
+
+\section{Programs and Semantics}\label{SecProgram}
+
+
+\begin{figure}[t]
+\[
+\begin{array}{rcl}
+\Type & = & \Bool \mid \Int \mid \Ref \mid \Void\\
+\NumExpr & = & \I(i : \mathbb{I}) \mid \Plus(n_1, n_2 : \NumExpr) \mid \ldots \mid 
+               \EvalN(n : \Name) \\
+\BoolExpr & = & \ttt \mid \fff \mid \Not(b : \BoolExpr) \mid \Conj(b_1,
+b_2 : \BoolExpr) \mid \ldots \mid \\
+          &   & \GT(n_1, n_2 : \NumExpr) \mid \EvalB(n
+: \Name) \\
+\RefExpr & = & \Null \mid \EvalR(n : \Name)\\
+\Val & = & \B(b : \mathbb{B}) \mid \I(i : \mathbb{I}) \mid \Null \mid
+\R(i : \mathbb{I}) \mid \One \mid \bot\\
+\end{array}
+\]
+\caption{Variable types, numerical, boolean and reference expressions
+and values}
+\label{FigProgramBase}
+\end{figure}
+
+\begin{figure}[t]
+\[
+\begin{array}{rcl}
+\Expr & = & \BExpr(b : \BoolExpr) \mid
+            \NExpr(n : \NumExpr) \mid
+            \RExpr(r : \RefExpr) \mid\\
+      &   & \CondExpr(c : \BoolExpr, e_1, e_2 : \Expr) \mid
+            \Assign(n : \Name, e : \Expr) \mid \\
+      &   & \Call(o : \Expr, n : \Name, p : \Expr) \smallskip\\
+\Stmt & = & \Skip \mid
+            \Sequence(s_1, s_2 : \Stmt) \mid
+            \IfThenElse(c : \BoolExpr, s_1, s_2 : \Stmt) \mid\\
+      &   & \While(c : \BoolExpr, s : \Stmt) \mid
+            \StmtExpr(e : \Expr) \mid
+            \Throw \mid\\
+      &   & \TryCatch(t, c, f : \Stmt) \mid
+            \Set(n : \Name, e : \Expr) \mid\\
+      &   & \CaseJML(b : \listof{\BoolExpr \times \Stmt})
+\end{array}
+\]
+\caption{Abstract syntax of expressions and
+statements}\label{FigExprStmt}
+\end{figure}
+
+\begin{figure}[t]
+\[
+\begin{array}{rcl}
+\FieldDecl & = \opr & \type : \Type, \name : \Name, \init : \Val \clr\\
+\ArgDecl & = \opr & \type : \Type, \name : \Name \clr\\
+\LocalVarDecl & = \opr & \type : \Type, \name : \Name \clr\\
+\GhostVarDecl & = \opr & \type : \Type, \name : \Name, \init : \Val \clr\\
+\end{array}
+\]
+\caption{Different types for variable declarations}\label{FigDeclarations}
+\end{figure}
+
+\begin{figure}[t]
+\[
+\begin{array}{rcl}
+\Method & = \opr & \name : \Name, 
+                   \param : \ArgDecl, 
+                   \lvars : \setof{\LocalVarDecl},
+                   \body : \Stmt,\\
+        &        & \res : \Expr,
+                   \restype : \Type,
+                   \pre : \Expr,
+                   \post : \Expr, \\
+        &        & \preset : \Stmt,
+                   \postset : \Stmt,
+                   \excset : \Stmt \clr \\
+\Class & = \opr & \name : \Name,
+                  \super : \Name_{\bot},
+                  \fields : \setof{\FieldDecl},
+                  \methods : \setof{\Method},\\
+        &       & \inv : \Expr,
+                  \ghostvars : \setof{\GhostVarDecl} \clr\\
+\Program & = \opr & \classes : \setof{\Class} \clr
+\end{array}
+\]
+\caption{Abstract Syntax for Programs}\label{FigProgram}
+\end{figure}
+
+\subsection{Program Syntax}\label{SecSyntax}
+
+Before defining the format of automata that we use to express security
+properties and the annotation generation algorithm, we first formally
+define the abstract syntax of programs. We will use a PVS-like
+notation to declare abstract data types and records. Let \(\Name\) be
+an infinite, set of names, containing the special names \textsf{this}
+and \textsf{super}. Figure~\ref{FigProgramBase} defines the variable
+types, numerical, boolean and reference expressions. It also defines
+the type of values that a variable can contain. Notice that we have
+special type \(\Void\), inhabited by \(\One\) to model methods without
+results. We use \(\mathbb{B}\) and \(\mathbb{I}\) to denote the
+standard sets of booleans and integers, respectively. Reference values
+contain a number, which can be considered as the location where the
+object is stored; \(\bot\) is used to denote the outcome of an
+undefined expression. 
+
+Next, Figure~\ref{FigExprStmt} defines the abstract data types for
+program expressions and statements. Notice that we have a few language
+constructs that are used to represent JML annotations (\(\Set\) and
+\(\CaseJML\), explained below) The standard program semantics ignores 
+these statements, but the annotated program semantics evaluates these,
+and updates the store of the specification accordingly. The language
+that we consider is a restricted subset of (sequential) Java. In
+particular, we consider that there is only a single exception object,
+and that methods have only one parameter. However, we believe that it
+contains all constructs that are relevant for proving correctness of
+our approach. Implementing the technique for the full language is only
+an engineering issue (see Section~\ref{SecImplem}).
+
+Figure~\ref{FigDeclarations} defines the different kinds of variable
+declarations that can occur in a program. Notice that field and ghost
+variable declarations are explicitly initialised, while parameters and
+local variables are not. Ghost variables is one of the JML concepts
+that occur in our program syntax. They will be used to represent the
+control behaviour of the monitoring automaton. The \(\Set\) statement
+defined above is used to update ghost variables. Further, we consider
+that methods can be annotated with pre- and postconditions, and that
+we have class invariants. To support our annotation generation
+algorithm, we also specify for each method special annotations, called
+\(\preset\),
+\(\postset\) and \(\excset\). These annotations describe the updates
+to the ghost variables at method entry, exit and exceptional exit,
+respectively. To be able to write the updates conveniently, we have
+defined a special \(\CaseJML\) statement. Our annotation generation
+algorithm proceeds in two steps: first we generate the special pre-
+and post-set annotations, using the \(\CaseJML\) construct, then we
+translate this further into ``standard'' JML. Finally,
+Figure~\ref{FigProgram} describes the syntax for methods, classes and
+programs. To ensure every method has an appropriate return expression,
+this expression is part of the method signature.
+
+\subsection{Natural Semantics}\label{SecSemantics}
+
+
+
+
