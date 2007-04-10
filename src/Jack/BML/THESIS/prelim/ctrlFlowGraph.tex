@@ -26,7 +26,7 @@ Recall from Section \ref{clazz} that every method \methodd \ has an array of byt
  and this is the first element in the method body $\methodd.\body[0]$.
 
  The array of bytecode instructions of a method \methodd \ determine the control flow graph $G( V , \execRel ) $   of method \methodd \ 
-in which the vertices are the instruction indexes of the method body:
+in which the vertexes are the instruction indexes of the method body:
 
 $$ V = \{ k \mid   0 \leq k < \methodd.\body.length  \}$$
 
@@ -38,7 +38,7 @@ $$ V = \{ k \mid   0 \leq k < \methodd.\body.length  \}$$
 
  Fig.\ \ref{defEdge} gives the definition of  the execution relation between instructions.
 Note first that we rather use the infix notation $j \execRel k$ instead of $(j, k) \in \execRel$.
- Moreover, there is an edge between two vertices $j$ and  $k$ if they may execute immediately one after another.
+ Moreover, there is an edge between two vertices's $j$ and  $k$ if they may execute immediately one after another.
  We say that $j$ is a predecessor of $k$ and that  $k$ is a successor of  $j$.
  The definition states the \return \  instruction  does not have successors.
 If  $\methodd.\body[j ]$ is the jump instruction $ \ifCond \ k $ then  its successors are the instruction at index $k$   and the instruction at index $j$ in $\methodd.\body$.
@@ -113,7 +113,7 @@ We assume that the control flow graph of every method is reducible, i.e. every l
 as it is rarely the case that a compiler produce a bytecode with a non reducible control flow graph and the practice shows that even hand written
 code is usually reducible. However, there exist algorithms to transform a non reducible control flow graph into a reducible one. 
 For more information on program control flow graphs, the curious reader may refer to \cite{ARUCom1986}.
-The next definition identifies backedges in the reducible control flow graph ( intuitively, the edge that goes 
+The next definition identifies backlogs in the reducible control flow graph ( intuitively, the edge that goes 
 from an instruction in a given loop in the control flow graph to the loop entry)  with the special execution relation $\execRel^l$ as follows:
  
 \begin{defLoop}[Backedge Definition]
@@ -156,8 +156,8 @@ of the control flow graph.
 \begin{figure}[ht!]
 \begin{frameit}
 \begin{center}
-%\includegraphics{bc.eps}
-\epsfig{file=figs/bc.eps, height=5in,  width=1.5in}
+
+\epsfig{file=figs/bytecode.eps} %, height=5in,  width=1.5in}
 \caption{{ \sc The control flow graph of the source program from Fig.\ \ref{replaceSrc}} }
 \label{ctrlflow}
 \end{center}

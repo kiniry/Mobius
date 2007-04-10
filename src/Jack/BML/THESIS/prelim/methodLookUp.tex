@@ -3,16 +3,16 @@
 
 Java allows that a class   declares a method \methodd{} with the same signature as in one of its super types.
 In this case, we say that method \methodd{}  overrides the corresponding method in the super type or interface.
-This is a nice object-oriented feature which allows when defining subtypes to change the behavior of the subtype
+When defining subtypes, this feature of Java allows to change the behavior of the subtype
  w.r.t. the superclass behavior.
 
-This however complicates slightly the invokation mechanism. Let us see why.
+This however complicates slightly the invocation mechanism. Let us see why.
  The problem arises because the types of variables  on execution time differ from the type 
 with which they are declared. In particular, in Java we talk about  dynamic type and static type of expressions.
 Dynamic types can not be determined statically, they can only be determined on execution time.
 For instance, if we have a Java expression 
 $a.\methodd()$ where  the variable $a$ is declared with type $A$ and class $A$ has a subclass $B$,
- in the general case it is not possible  to deteremine statically if $a$ contains 
+ in the general case it is not possible  to determine statically if $a$ contains 
 a reference value of dynamic type $B$ or dynamic type $A$.
  If a method  \methodd{} is invoked on object of dynamic type $B$
 accordingly to the semantics of Java, we intend to call the method declared in the class $B$ if a method with such signature is declared in $B$.

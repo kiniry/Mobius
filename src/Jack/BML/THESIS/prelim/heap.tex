@@ -50,8 +50,8 @@
  \heap.\heapFields \ and \heap.\heapArrays \ are functions defined only for references from the proper
  type, i.e. well-typed and which are in the list of references of the heap \heap.\heapLocs{} and are not \Mynull, i.e. well-defined.
 We give the following formal definition.
-\begin{heapDef}{Well formed heap}\label{heap:wf}
-We say that \heap{} is a well-formed heap if the following holds: 
+\begin{heapDef}\label{heap:wf}
+We say that the heap \heap{} is well-formed if the following holds: 
   $$\begin{array}{l}
            \forall  \fieldd : \FieldSet,   \\
    \begin{array}{ll} 
