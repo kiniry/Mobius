@@ -352,10 +352,10 @@ public class ClassReader {
      * @return the bytecode read from the given input stream.
      * @throws IOException if a problem occurs during reading.
      */
-    private static byte[] readClass(final InputStream is) throws IOException {
-        if (is == null) {
-            throw new IOException("Class not found");
-        }
+    private static byte[] readClass(final InputStream is) throws IOException { 
+        
+        if (is == null) throw new IOException("Input stream is invalid.");
+
         byte[] b = new byte[is.available()];
         int len = 0;
         while (true) {
