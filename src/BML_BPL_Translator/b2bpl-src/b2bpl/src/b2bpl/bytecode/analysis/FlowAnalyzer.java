@@ -95,9 +95,12 @@ public class FlowAnalyzer extends Analyzer {
    * @param asmMethod  The ASM representation of the method.
    * @return           The ASM stack frames of the individual instructions.
    */
-  public Frame[] analyze(String owner, MethodNode asmMethod)
-      throws AnalyzerException {
+  public Frame[] analyze(String owner, MethodNode asmMethod) throws AnalyzerException {
+    
+    if (asmMethod == null) return null;
+    
     JClassType ownerType = TypeLoader.getClassType(owner);
+       
     method = ownerType.getMethod(asmMethod.name, asmMethod.desc);
     Instructions insns = method.getInstructions();
 

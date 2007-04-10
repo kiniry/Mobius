@@ -41,7 +41,7 @@ public class BPLImplementation extends BPLDeclaration {
   public BPLImplementationBody getBody() {
     return body;
   }
-
+  
   public BPLProcedure getProcedure() {
     return procedure;
   }

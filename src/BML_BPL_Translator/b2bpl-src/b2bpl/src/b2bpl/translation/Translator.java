@@ -38,6 +38,7 @@ import static b2bpl.translation.CodeGenerator.isOfType;
 import static b2bpl.translation.CodeGenerator.isStatic;
 import static b2bpl.translation.CodeGenerator.isSubtype;
 import static b2bpl.translation.CodeGenerator.isValueType;
+import static b2bpl.translation.CodeGenerator.isReturnType;
 import static b2bpl.translation.CodeGenerator.ival;
 import static b2bpl.translation.CodeGenerator.less;
 import static b2bpl.translation.CodeGenerator.lessEqual;
@@ -1538,6 +1539,24 @@ public class Translator implements TranslationConstants {
                   isEqual(var(t1), arrayType(elementType(var(t1)))),
                   isSubtype(elementType(var(t1)), var(t2)))),
           trigger(isSubtype(var(t1), arrayType(var(t2))))));
+    }
+    
+    {
+      // Method calls (exception handling)
+      addComment("Exception handling");
+      
+      String n = quantVarName("normal");
+      String ex = quantVarName("exceptional");
+      
+      BPLVariable normal = new BPLVariable(n, BPLBuiltInType.NAME);
+      BPLVariable exceptional = new BPLVariable(ex, BPLBuiltInType.NAME);
+      addConstants(normal, exceptional);
+      
+      addTypes(RETURN_TYPE);
+      
+      addFunction(IS_RETURN_TYPE_FUNC, BPLBuiltInType.NAME, BPLBuiltInType.BOOL);
+      addAxiom(isReturnType(var(n)));
+      addAxiom(isReturnType(var(ex)));
     }
   }
 

@@ -74,12 +74,17 @@ import b2bpl.bpl.ast.BPLBasicBlock;
 import b2bpl.bpl.ast.BPLBoolLiteral;
 import b2bpl.bpl.ast.BPLBuiltInType;
 import b2bpl.bpl.ast.BPLCommand;
+import b2bpl.bpl.ast.BPLEnsuresClause;
 import b2bpl.bpl.ast.BPLExpression;
 import b2bpl.bpl.ast.BPLGotoCommand;
 import b2bpl.bpl.ast.BPLHavocCommand;
+import b2bpl.bpl.ast.BPLImplementation;
 import b2bpl.bpl.ast.BPLImplementationBody;
 import b2bpl.bpl.ast.BPLProcedure;
+import b2bpl.bpl.ast.BPLRequiresClause;
 import b2bpl.bpl.ast.BPLReturnCommand;
+import b2bpl.bpl.ast.BPLSpecification;
+import b2bpl.bpl.ast.BPLSpecificationClause;
 import b2bpl.bpl.ast.BPLTransferCommand;
 import b2bpl.bpl.ast.BPLType;
 import b2bpl.bpl.ast.BPLTypeName;
@@ -393,6 +398,7 @@ public class MethodTranslator implements TranslationConstants {
     BPLImplementationBody body = new BPLImplementationBody(
         vars.toArray(new BPLVariableDeclaration[vars.size()]),
         blocks.toArray(new BPLBasicBlock[blocks.size()]));
+      
     JType[] paramTypes = method.getRealParameterTypes();
     BPLVariable[] inParams = new BPLVariable[paramTypes.length];
     for (int i = 0; i < inParams.length; i++) {
@@ -405,7 +411,14 @@ public class MethodTranslator implements TranslationConstants {
           new BPLVariable(RESULT_VAR, type(method.getReturnType()))
       };
     }
-    return new BPLProcedure(name, inParams, outParams, null, body);
+    
+    BPLImplementation implementation = new BPLImplementation(name, inParams, outParams, body);
+    
+    BPLSpecificationClause requires = new BPLRequiresClause(BPLBoolLiteral.TRUE);
+    BPLSpecificationClause ensures = new BPLEnsuresClause(BPLBoolLiteral.TRUE);
+    BPLSpecification spec = new BPLSpecification(requires, ensures);
+    
+    return new BPLProcedure(name, inParams, outParams, spec, implementation);
   }
 
   
@@ -605,6 +618,8 @@ public class MethodTranslator implements TranslationConstants {
     assumeAllInvariants(method.isConstructor());
 
     // Assume the method's effective precondition.
+    // TODO[sw]: remove this check and insert appropriate "requires" clause in the
+    //           procedure declaration
     addAssume(translatePrecondition(method, getInParameters()));
 
     endBlock(method.getCFG().getEntryBlock().outEdgeIterator().next());
@@ -632,7 +647,10 @@ public class MethodTranslator implements TranslationConstants {
   private void translatePost() {
     // Handle the normal termination of the method.
     startBlock(POST_BLOCK_LABEL);
+    
     // Assert the effective normal postcondition of the method.
+    // TODO[sw]: remove this check and insert appropriate "ensures" clause in the
+    //           procedure declaration
     addAssert(translatePostcondition(
         method,
         OLD_HEAP_VAR,
@@ -1088,8 +1106,7 @@ public class MethodTranslator implements TranslationConstants {
       String[] parameters) {
     if (storeRefs.length > 0) {
       String l = quantVarName("l");
-      ModifiesFilter filter =
-        ModifiesFilter.forMethod(oldHeap, parameters, l);
+      ModifiesFilter filter = ModifiesFilter.forMethod(oldHeap, parameters, l);
       BPLExpression expr = filter.translate(context, storeRefs);
       expr = logicalAnd(alive(rval(obj(var(l))), var(oldHeap)), expr);
       BPLExpression left = get(var(HEAP_VAR), var(l));
@@ -1097,8 +1114,7 @@ public class MethodTranslator implements TranslationConstants {
       expr = implies(expr, isEqual(left, right));
       BPLVariable lVar = new BPLVariable(l, new BPLTypeName(LOCATION_TYPE));
       expr = forall(lVar, expr);
-      SpecificationTranslator translator =
-        SpecificationTranslator.forPrecondition(oldHeap, parameters);
+      SpecificationTranslator translator = SpecificationTranslator.forPrecondition(oldHeap, parameters);
       BPLExpression pre = translator.translate(context, requires);
       return implies(pre, expr);
     }

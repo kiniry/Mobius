@@ -155,12 +155,15 @@ public class SemanticAnalyzer {
   private void analyzeMethodBodies(JClassType type) {
     InstructionAnalyzer insnAnalyzer = new InstructionAnalyzer();
     CFGBuilder cfgBuilder = new CFGBuilder(project.isModelRuntimeExceptions());
-    FlowAnalyzer flowAnalyzer =
-      new FlowAnalyzer(project.isModelRuntimeExceptions());
+    
+    FlowAnalyzer flowAnalyzer = new FlowAnalyzer(project.isModelRuntimeExceptions());
+   
     for (BCMethod method : type.getMethods()) {
       try {
         if (method.getInstructions() != null) {
+          
           method.getInstructions().accept(insnAnalyzer);
+          
           flowAnalyzer.analyze(type.getInternalName(), getASMMethod(method));
           ControlFlowGraph cfg = cfgBuilder.build(method);
           cfg.analyze();

@@ -44,8 +44,7 @@ public class Project {
    *
    * @see #getSpecificationProvider()
    */
-  private SpecificationProvider specificationProvider =
-    new DefaultSpecificationProvider();
+  private SpecificationProvider specificationProvider = new DefaultSpecificationProvider();
 
   /**
    * The {@link SpecificationDesugarer} to be used for BML specifications.
@@ -53,8 +52,7 @@ public class Project {
    *
    * @see #getSpecificationDesugarer()
    */
-  private SpecificationDesugarer specificationDesugarer =
-    new StandardDesugarer();
+  private SpecificationDesugarer specificationDesugarer = new StandardDesugarer();
 
   /**
    * The set of transformators to apply to the BoogiePL program generated during
@@ -70,7 +68,7 @@ public class Project {
    * BoogiePL program. Defaults to the string {@code "-"} which represents
    * the standard output.
    *
-   * @see #translateSeparately
+   * C@see #translateSeparately
    * @see #getOutFile()
    */
   private String outFile = "-";
@@ -117,6 +115,14 @@ public class Project {
    * @see #getMaxIntConstant()
    */
   private int maxIntConstant = 100000;
+  
+  /**
+   * The root directory used to look for the given classes if they are
+   * not found in the Java's class path.
+   * 
+   * @see #getBaseDirectory = "";
+   */
+  private String baseDirectory = "";
 
   /**
    * Creates a new project which is configured according to the set of command
@@ -137,7 +143,12 @@ public class Project {
       String[] args,
       PrintWriter messageWriter) {
     Project project = new Project();
-
+  
+    System.out.print("> b2bpl.Main ");
+    for (String arg : args) System.out.print(arg + " ");
+    System.out.println();
+    
+    
     List<String> types = new ArrayList<String>();
     List<BPLTransformator> transformators = new ArrayList<BPLTransformator>();
 
@@ -147,23 +158,32 @@ public class Project {
         printHelpMessage(messageWriter);
         return null;
       } else if ("-o".equals(args[i])) {
+        // An explicit output file has been specified
         project.outFile = args[i + 1];
         i += 2;
       } else if ("-s".equals(args[i])) {
         project.translateSeparately = true;
         i++;
       } else if ("-t".equals(args[i])) {
+        // Check invariants in "this" object only
         project.thisInvariantsOnly = true;
         i++;
       } else if ("-l".equals(args[i])) {
+        // Turn on loop transformation
         transformators.add(new LoopTransformator());
         i++;
       } else if ("-r".equals(args[i])) {
+        // Handle runtime exceptions
         project.modelRuntimeExceptions = true;
         i++;
       } else if ("-c".equals(args[i])) {
+        // Set maximum integer constant that is treated as a number
         project.modelRuntimeExceptions = true;
         project.maxIntConstant = Integer.valueOf(args[i + 1]);
+        i += 2;
+      } else if ("-basedir".equals(args[i])) {
+        // Set base directory for classes that are not located in the CLASSPATH
+        project.baseDirectory = args[i + 1];
         i += 2;
       } else {
         if (args[i].endsWith(".class")) {
@@ -174,9 +194,8 @@ public class Project {
       }
     }
 
-    project.projectTypes = types.toArray(new String[types.size()]);
-    project.transformators =
-      transformators.toArray(new BPLTransformator[transformators.size()]);
+    project.projectTypes   = types.toArray(new String[types.size()]);
+    project.transformators = transformators.toArray(new BPLTransformator[transformators.size()]);
 
     return project;
   }
@@ -220,6 +239,10 @@ public class Project {
   public int getMaxIntConstant() {
     return maxIntConstant;
   }
+  
+  public String getBaseDirectory() {
+    return baseDirectory;
+  }
 
   /**
    * Prints the help message describing the command line arguments supported
@@ -238,6 +261,7 @@ public class Project {
     messageWriter.write("  -l              Perform a sound elimination of loops in the BoogiePL program.\n");
     messageWriter.write("  -r              Model runtime exceptions of bytecode instructions (instead of ruling them out).\n");
     messageWriter.write("  -c <constant>   The magnitude of the largest integer constant to represent explicitly.\n");
+    messageWriter.write("  -basedir <path> Base directory where class files are located (if different from CLASSPATH)");
     messageWriter.write('\n');
     messageWriter.write("<files>:\n");
     messageWriter.write("  The class files or type names of the classes to verify (drawn from the CLASSPATH).\n");

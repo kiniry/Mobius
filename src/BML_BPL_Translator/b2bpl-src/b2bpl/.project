@@ -3,6 +3,7 @@
 	<name>b2bpl</name>
 	<comment></comment>
 	<projects>
+		<project>asm</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
@@ -14,11 +15,4 @@
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
-	<linkedResources>
-		<link>
-			<name>bin</name>
-			<type>2</type>
-			<location>D:/Common/Studies/Master Thesis/Programs/b2bpl/bin</location>
-		</link>
-	</linkedResources>
 </projectDescription>

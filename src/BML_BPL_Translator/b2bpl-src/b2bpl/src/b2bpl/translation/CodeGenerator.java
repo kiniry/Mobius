@@ -152,6 +152,10 @@ public final class CodeGenerator implements TranslationConstants {
   public static BPLExpression isValueType(BPLExpression type) {
     return new BPLFunctionApplication(IS_VALUE_TYPE_FUNC, type);
   }
+  
+  public static BPLExpression isReturnType(BPLExpression type) {
+    return new BPLFunctionApplication(IS_RETURN_TYPE_FUNC, type);
+  }
 
   public static BPLExpression inv(
       BPLExpression type,

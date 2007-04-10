@@ -32,6 +32,7 @@ public class Main implements TroubleReporter {
 
   public static void main(String[] args) {
     new Main(args).compile();
+    System.exit(0);
   }
 
   public void compile() {
@@ -41,6 +42,7 @@ public class Main implements TroubleReporter {
 
     try {
       try {
+        TypeLoader.setProject(project);
         TypeLoader.setProjectTypes(project.getProjectTypes());
         TypeLoader.setSpecificationProvider(project.getSpecificationProvider());
         TypeLoader.setSemanticAnalyzer(new SemanticAnalyzer(project, this));
@@ -48,7 +50,7 @@ public class Main implements TroubleReporter {
 
         String[] projectTypeNames = project.getProjectTypes();
         JClassType[] projectTypes = new JClassType[projectTypeNames.length];
-        for (int i = 0; i < projectTypes.length; i++) {
+        for (int i = 0; i < projectTypes.length; i++) { 
           projectTypes[i] = TypeLoader.getClassType(projectTypeNames[i]);
         }
 
@@ -113,10 +115,10 @@ public class Main implements TroubleReporter {
 
     switch (message.getDescription().getKind()) {
       case ERROR:
-        msg += "[error]";
+        msg += "[Error]";
         break;
       case WARNING:
-        msg += "[warning]";
+        msg += "[Warning]";
         break;
     }
     msg += " ";

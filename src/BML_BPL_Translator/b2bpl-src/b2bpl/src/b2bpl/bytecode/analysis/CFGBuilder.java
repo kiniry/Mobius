@@ -193,8 +193,8 @@ public class CFGBuilder {
       // As long as the current instruction has no successor blocks and the next
       // instructions is not the leader of a basic block, we have not found the
       // end of the basic block.
-      while ((successorBlocks.get(last) == null)
-             && (blocks.get(last.getNext()) == null)) {
+      
+      while ((successorBlocks.get(last) == null) && (blocks.get(last.getNext()) == null)) {
         last = last.getNext();
       }
 

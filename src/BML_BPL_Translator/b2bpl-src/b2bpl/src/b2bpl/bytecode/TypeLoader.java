@@ -1,6 +1,11 @@
 package b2bpl.bytecode;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -16,6 +21,7 @@ import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.tree.ClassNode;
 
+import b2bpl.Project;
 import b2bpl.bytecode.analysis.SemanticAnalyzer;
 import b2bpl.bytecode.attributes.AssertAttribute;
 import b2bpl.bytecode.attributes.AssumeAttribute;
@@ -34,16 +40,15 @@ import b2bpl.bytecode.instructions.Instruction;
 
 public class TypeLoader {
 
-  private static final HashMap<String, JClassType> classTypes =
-    new HashMap<String, JClassType>();
+  private static final HashMap<String, JClassType> classTypes = new HashMap<String, JClassType>();
 
-  private static final HashSet<JClassType> loadedClassTypes =
-    new HashSet<JClassType>();
+  private static final HashSet<JClassType> loadedClassTypes = new HashSet<JClassType>();
 
+  private static Project project = null;
+  
   private static HashSet<String> projectTypes = new HashSet<String>();
 
-  private static SpecificationProvider specProvider =
-    new EmptySpecificationProvider();
+  private static SpecificationProvider specProvider = new EmptySpecificationProvider();
 
   private static SemanticAnalyzer semanticAnalyzer;
 
@@ -51,6 +56,10 @@ public class TypeLoader {
 
   private TypeLoader() {
     // hide the constructor
+  }
+  
+  public static void setProject(Project p) {
+    project = p;
   }
 
   public static void setProjectTypes(String... types) {
@@ -75,15 +84,61 @@ public class TypeLoader {
   public static JClassType getClassType(String name) {
     name = name.replace('.', '/');
     JClassType type = classTypes.get(name);
+    
     if (type == null) {
       type = new JClassType(name);
       classTypes.put(name, type);
+      
+      
     }
     return type;
   }
+  
+  private static ClassReader getClassReader(String typeName) {
+    try {
+      // Create class reader from type name
+      System.out.println("Reading class from name:\t" + typeName);
+      return new ClassReader(typeName);
+    } catch (IOException ioex) {
+      // Create class reader from file stream
+      System.out.println("Reading class from stream:\t" + typeName);
+         
+      InputStream is = null;
+      
+      String localPath = project.getBaseDirectory(); // typeName.substring(0, typeName.lastIndexOf("\\"));
+      File file = new File(localPath);
+      
+      try {
+        // Convert File to a URL
+        URL url = file.toURL();         // file:/c:/myclasses/
+        URL[] urls = new URL[] { url };
+        
+        // Create a new class loader with the directory
+        ClassLoader cl = new URLClassLoader(urls);
+        // Class cls = cl.loadClass(typeName);
+        
+        // Create input stream containing the contents of the given class      
+        String className = typeName.replace('.', '/') + ".class";
+        is = cl.getResourceAsStream(className);
+      } catch (MalformedURLException murlex) {
+        System.err.println(murlex.toString());
+      //} catch (ClassNotFoundException cnfex) {
+      //  System.err.println(cnfex.toString());
+      }
+  
+      try {
+        return new ClassReader(is);
+      } catch (IOException ioe) {
+        System.err.println("Cannot create class reader from " + typeName);
+      }
+      return null;
+    }
+  }
 
   public static void loadType(String name) {
+    
     JClassType type = getClassType(name);
+    
     if (loadedClassTypes.add(type)) {
       try {
         int flags = ClassReader.SKIP_DEBUG | ClassReader.SKIP_FRAMES;
@@ -107,13 +162,18 @@ public class TypeLoader {
           };
           flags |= ClassReader.SKIP_CODE;
         }
-        ClassReader reader = new ClassReader(type.getName());
+       
+        System.out.println("L 166: " + type.getName());
+        ClassReader reader = getClassReader(type.getName());
+
         JClassTypeBuilder builder = new JClassTypeBuilder(type);
+        
         reader.accept(specProvider.forClass(type, builder), attributes, flags);
         semanticAnalyzer.analyze(type);
-      } catch (IOException ioe) {
-        troubleReporter.reportTrouble(
-            new TroubleMessage(B2BPLMessages.CLASS_NOT_FOUND, name));
+        
+      //} catch (IOException ioe) {
+      //  troubleReporter.reportTrouble(
+      //      new TroubleMessage(B2BPLMessages.CLASS_NOT_FOUND, name));
       } catch (TroubleException te) {
         if (te.getTroubleMessage().getPosition() == null) {
           te.getTroubleMessage().setPosition(
@@ -131,7 +191,8 @@ public class TypeLoader {
   public static ClassNode getASMClassTypeNode(JClassType type) {
     try {
       ClassNode cn = new ClassNode();
-      ClassReader cr = new ClassReader(type.getName());
+      System.out.println("L 194: " + type.getName());
+      ClassReader cr = TypeLoader.getClassReader(type.getName()); // new ClassReader(type.getName());
       cr.accept(cn, ClassReader.SKIP_DEBUG | ClassReader.SKIP_FRAMES);
       return cn;
     } catch (Exception e) {

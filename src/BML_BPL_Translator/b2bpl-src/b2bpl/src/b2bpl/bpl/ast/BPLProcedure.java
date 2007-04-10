@@ -13,7 +13,7 @@ public class BPLProcedure extends BPLDeclaration {
 
   private final BPLSpecification specification;
 
-  private final BPLImplementationBody body;
+  private final BPLImplementation implementation;
 
   public BPLProcedure(
       String name,
@@ -28,12 +28,12 @@ public class BPLProcedure extends BPLDeclaration {
       BPLVariable[] inParameters,
       BPLVariable[] outParameters,
       BPLSpecification specification,
-      BPLImplementationBody body) {
+      BPLImplementation implementation) {
     this.name = name;
     this.inParameters = inParameters;
     this.outParameters = outParameters;
     this.specification = specification;
-    this.body = body;
+    this.implementation = implementation;
   }
 
   public String getName() {
@@ -52,8 +52,8 @@ public class BPLProcedure extends BPLDeclaration {
     return specification;
   }
 
-  public BPLImplementationBody getBody() {
-    return body;
+  public BPLImplementation getImplementation() {
+    return implementation;
   }
 
   public <R> R accept(BPLVisitor<R> visitor) {
@@ -84,9 +84,9 @@ public class BPLProcedure extends BPLDeclaration {
       }
       sb.append(')');
     }
-    if (body == null) {
-      sb.append(';');
-    }
+    
+    sb.append(System.getProperty("line.separator"));
+    sb.append('{');  
     sb.append(System.getProperty("line.separator"));
     if (specification != null) {
       for (BPLSpecificationClause clause : specification.getClauses()) {
@@ -95,11 +95,14 @@ public class BPLProcedure extends BPLDeclaration {
         sb.append(System.getProperty("line.separator"));
       }
     }
-    if (body != null) {
-      sb.append('{');
+    sb.append('}');
+    sb.append(System.getProperty("line.separator"));
+    
+    if (implementation != null) {
+      // sb.append('{');
       sb.append(System.getProperty("line.separator"));
-      sb.append(body);
-      sb.append('}');
+      sb.append(implementation);
+      // sb.append('}');
     }
 
     return sb.toString();

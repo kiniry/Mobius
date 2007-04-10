@@ -209,19 +209,21 @@ public class BPLPrinter implements BPLVisitor<Object> {
       printList(procedure.getOutParameters());
       print(')');
     }
-
-    if (procedure.getBody() == null) {
-      print(';');
-    }
-
+   
+    printNewLine();
+    print('{');
     printNewLine();
 
     if (procedure.getSpecification() != null) {
       procedure.getSpecification().accept(this);
     }
+    
+    print('}');
+    printNewLine();
+    printNewLine();
 
-    if (procedure.getBody() != null) {
-      procedure.getBody().accept(this);
+    if (procedure.getImplementation() != null) {
+      procedure.getImplementation().accept(this);
     }
 
     return null;

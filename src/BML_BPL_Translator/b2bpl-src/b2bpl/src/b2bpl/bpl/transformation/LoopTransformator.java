@@ -323,18 +323,24 @@ public class LoopTransformator implements BPLTransformator {
     }
 
     public Object visitProcedure(BPLProcedure procedure) {
-      if (procedure.getBody() == null) {
+      if (procedure.getImplementation() == null) {
         // If a procedure has no implementation body, it may be passed on
         // without any transformation.
         declarations.add(procedure);
       } else {
         // Pass on a new procedure whose body has been transformed.
+        
+        BPLImplementation i = procedure.getImplementation();
+        BPLImplementation transformedImplementation = new BPLImplementation(i.getProcedureName(),
+                                                                            i.getInParameters(),
+                                                                            i.getOutParameters(),
+                                                                            transformLoops(i.getBody()));
         declarations.add(new BPLProcedure(
             procedure.getName(),
             procedure.getInParameters(),
             procedure.getOutParameters(),
             procedure.getSpecification(),
-            transformLoops(procedure.getBody())));
+            transformedImplementation));
       }
       return null;
     }

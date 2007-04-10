@@ -18,6 +18,8 @@ public interface TranslationConstants {
   String LOCATION_TYPE = "Location";
 
   String ALLOCATION_TYPE = "Allocation";
+  
+  String RETURN_TYPE = "ReturnType";
 
   String HEAP_VAR = "heap";
 
@@ -76,6 +78,8 @@ public interface TranslationConstants {
   String IS_VALUE_TYPE_FUNC = FUNC_PREFIX + "isValueType";
 
   String IS_ARRAY_TYPE_FUNC = FUNC_PREFIX + "isArrayType";
+  
+  String IS_RETURN_TYPE_FUNC = FUNC_PREFIX + "isReturnType";
 
   String INV_FUNC = FUNC_PREFIX + "inv";
 
