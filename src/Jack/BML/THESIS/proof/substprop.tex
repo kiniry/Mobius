@@ -85,7 +85,7 @@ or of type \Myint{},   $s_1 =   \config{\heap}{\counterOnly}{ \stackOnly }{\locV
 \end{enumerate}
 \end{substHeap}
 \textit{Proof} \\
-We scatch only the first part of the lemma, the second part is by structural induction as in the previous lemma, second case.
+We sketch only the first part of the lemma, the second part is by structural induction as in the previous lemma, second case.
 \begin{enumerate}
 \item   By structural induction on the structure of $\expression_1$.  We look at the case when $\expression_1 = \expression_2.\fieldd$
     \begin{longtable}{l} 
@@ -134,7 +134,7 @@ if we have that the states $s_1$ and $s_2$ are such that
  \end{newHeap}
 
 \textit{Proof} \\
-We scatch only the first part of the lemma, the second part is by structural induction as in the first lemma, second case.
+We sketch only the first part of the lemma, the second part is by structural induction as in the first lemma, second case.
 \begin{enumerate}
 \item   By structural induction on the structure of $\expression_1$.  We look at the case when $\expression_1 = \stack{\counter}.\fieldt$ where the field \fieldt{}
  is declared in class \clazz.
@@ -148,12 +148,13 @@ We scatch only the first part of the lemma, the second part is by structural ind
          $\evalExp{ \referenceOnly.\fieldt \subst{ \fieldd}{ \update{\fieldd }
          { \referenceOnly }{\defaultValueOnly( \fieldd.  \fieldType )  } }_{ \small{ \fieldd}}^ { \small \subtype{ \fieldd.\declaredIn}{ \clazz} }
                                   }{s_1}  =$ \\ 
-         \{ \textit{  as by initial hypothesis \fieldt{} is declared in class \clazz{}  the series of substitutions over } \\
-        \textit{  the fields declared in any subtype of \clazz{} results in} \} \\
+         \{ \textit{as by initial hypothesis \fieldt{} is declared in class \clazz{}  the series of substitutions over } \\
+           \textit{the fields declared in any subtype of \clazz{} results in} \} \\
            $\evalExp{\referenceOnly.\update{\fieldt}{ \referenceOnly}{ \defaultValueOnly( \fieldt.\fieldType ) } }{s_1}=$ \\
             \comment{simplify the field update expression }  \\
             $\evalExp{ \defaultValueOnly( \fieldt.\fieldType ) } {s_1} = $ \\
-              \comment{by initial hypothesis about the state $s_2$ and definition of the function $\newRef{\heap}{\clazz}$  in section \ref{heap} we get}\\
+              \{ \textit{by initial hypothesis about the state $s_2$ and definition of the function $\newRef{\heap}{\clazz}$  } \\
+              \textit{   in section \ref{heap} we get} \}\\
               $ \evalExp{\stack{\counter}.\fieldt  }{s_2 } $
      \end{longtable}
        
@@ -204,7 +205,7 @@ if we have that the states $s_1$ and $s_2$ are such that
 \begin{substCntr}[Update the stack counter]\label{substCntr}
 For any expressions $ \expression_1, \expression_2 $ 
 if we have that the states $s_1$ and $s_2$ are such that
- $s_1 =   \config{\heap}{\counterOnly}{ \stackOnly }{\locVarOnly}{\pc }$, %$\evalExp{ \expression_2}{ s_1  } : \Myint$  and 
+ $s_1 =   \config{\heap}{\counterOnly}{ \stackOnly }{\locVarOnly}{\pc }$,  % $\evalExp{ \expression_2}{ s_1  } : \Myint$  and 
 $s_2 =  \config{\heap}{\evalExp{ \expression_2}{ s_1  } }{ \stackOnly }{\locVarOnly}{\pc }  $ then 
 the following holds:
 \begin{enumerate}

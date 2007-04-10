@@ -10,16 +10,16 @@
  Fig. \ref{pogEq:compile:compExpr:defExpr} shows the compilation scheme for expressions.
  Let us look in more detail the compilation of  the instance creation expression
  $\newSrc \ \class  (\expressionSrc )$.
- This case is not trivial because of the way the new instance is initialised.
+ This case is not trivial because of the way the new instance is initialized.
  The first instruction in the compilation is the instruction $s : \new \ \class$ which 
  creates a new reference in the heap and pushes it on the stack top 
  (see for the operational semantics of the instruction in Section \ref{opSem}). 
- Once the new instance is created the instructor must be invoked in order to initialise
+ Once the new instance is created the instructor must be invoked in order to initialize
  its (instance) fields. This is done by first duplicating the reference (instruction \dup) and then invoking the constructor \Constructor{\class}
  of \class{} by passing it as argument the duplicated reference. 
  This has as effect that after the invokation of the constructor the stack top contains 
  the reference to the newly created instance which is
- now initialised. Note that this compilation follows closely 
+ now initialized. Note that this compilation follows closely 
  the JVM specification (see \cite[\S 7.8]{VMSpec}) which mandates 
  how standard Java compilers must compile instance creation expressions.  
   
@@ -180,12 +180,12 @@ control will be transfered to the instruction at index \excType.
  Fig \ref{pogEq:compile:compExpr:defExc} contains also the compilation scheme for a try finally statement.
  Remind that  the semantics of the statement is that however the try statement terminates execution 
  the finally statement must be executed after it and the whole statement terminates execution as the try terminated execution.
- Thus, the compilation of statetement $\stmt_1$ is followed by 
+ Thus, the compilation of statement $\stmt_1$ is followed by 
  the compilation of statement $\stmt_2$. This should assure that after the normal execution of  $\stmt_1$ $\stmt_2$
  will be executed. However, we have also to guarantee that  $\stmt_2$ will execute after $\stmt_1$ if the latter 
  terminates on exception. For this, we create an exception handler  which protects $\stmt_1$ from any exception thrown.
  The exception handler stores the reference to the thrown object in variable  $l$ then executes the compiled
- finally statement  $\stmt_2$, then loads the exception reference on the stack and rethrows it.
+ finally statement  $\stmt_2$, then loads the exception reference on the stack and re-throws it.
   
  
 
@@ -193,13 +193,13 @@ control will be transfered to the instruction at index \excType.
  \ret \ instructions. However, the semantics of the programs produced by the compiler presented here and a compiler which follows closely the JVM specification 
  is equivalent. 
  In the following, we discuss informally why this is true.
- The semantics of a \jsr \ k insruction is to  jump to the first instruction of the compiled subroutine which starts at index $k$ and pushes on the
+ The semantics of a \jsr \ k instruction is to  jump to the first instruction of the compiled subroutine which starts at index $k$ and pushes on the
  operand stack the index of the next instruction of the \jsr \ that caused the execution of the subroutine. 
  The first instruction of the compilation
  of the subroutine stores the stack top element in the local variable at index $k$ ( i.e. stores in the local variable at index $k$ the
  index of the instruction following the \jsr{} instruction). Thus, after the code of the subroutine is 
  executed, the \ret \ k instruction jumps to 
- the instruction following the corresponding \jsr. This behaviour can be actually simulated by programs without \jsr \ and \ret \ but which inline the subroutine code
+ the instruction following the corresponding \jsr. This behavior can be actually simulated by programs without \jsr \ and \ret \ but which inline the subroutine code
  at the places where a \jsr \ to the subroutine is done.
  We assume that the local variable $l$ is not used in the compilation of the statement $\stmt_2$, which guarantees that after any execution which 
  terminates normally of $\compileLabel{e'' + 3}{\stmt_2}{e - 2}$ the local variable  $l$ will still hold the thrown object. We also assume that the 
@@ -302,7 +302,7 @@ provided with specification written in JML. The specification states
 that the method returns the square of its parameter and that the loop
 invariant is \lstinline!(0 <= s) && (s <= v) && sqr == s*s!. In Fig. \ref{pogEquiv:compile:prop}, we 
 then show the respective compilation of method \lstinline!square!.
-The example shows the correspondance between  the bytecode (left) resulting from the compilation described above and the source lines(right)
+The example shows the correspondence between  the bytecode (left) resulting from the compilation described above and the source lines(right)
  of method  \lstinline!square! from Fig. \ref{pogComp:source:example}.
 
 

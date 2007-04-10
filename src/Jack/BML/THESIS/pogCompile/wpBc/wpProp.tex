@@ -142,7 +142,7 @@ the cases for field access and arithmetic expressions.
 
 
 \begin{description}
-       \item[field accesss]
+       \item[field access]
             
 	            From the compiler definition we have
                      \begin{equation*}\label{pog1} \tag{\ref{pogComp:relWpExpr}.1}
@@ -175,7 +175,7 @@ the cases for field access and arithmetic expressions.
 		 
 		  Because the execution relation between $e$ and $e+1 $ is not a loop backedge by Lemma \ref{compile:prop:compProp3}
 		  which establishes that compilation of expressions does not contain loop entries and 
-		  rom the Def. \ref{inter} of the function \interOnly{}:
+		  from the Def. \ref{inter} of the function \interOnly{}:
 		  \numConclusion{5} $ \inter{e-1}{e} = \wpi{e}{\methodd}{}$ 
 		
 		 definition of the \wpName{} function for \getfield{}
@@ -358,14 +358,16 @@ Let us remind the definition of the \wpName{} for  while statements
 	       \invariant \Rightarrow %\\
 	 	     %\Myspace    \Myspace 
 		     \wpSrcExpr{\expressionSrc_1}{
-                     \wpSrcExpr{\expressionSrc_2}{   %\\\phantom{wp^{src}} 
-		     \begin{array}{l}  		
+                     \wpSrcExpr{\expressionSrc_2}{  \mbox{\rm\textsf{P}} 		     
+	       }{\excPostSrc } {v_2}}{\excPostSrc}{v_1}      %\end{array}
+     \\ \\
+ where \\
+%\begin{array}{l}
+\mbox{\rm\textsf{P}} =   		
 		           ( v_1 \rel v_2 )        \Rightarrow \  \wpSrcStmt{ \stmt }{\invariant} {\excPostSrc} \\ 
                            \wedge\\  
 		          \neg (v_1 \rel v_2)    \Rightarrow  \normalPostSrc
 		     \end{array}
-	       }{\excPostSrc } {v_2}}{ %\\ \phantom{\invariant \Rightarrow wpiSr\expressionSrc_1}
-	      \excPostSrc}{v_1}      \end{array}
 \end{equation*}
     
    

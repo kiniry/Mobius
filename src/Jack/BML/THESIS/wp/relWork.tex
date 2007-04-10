@@ -36,8 +36,8 @@ Following the work of Nick Benton, Bannwart and Muller \cite{BannwartMueller05} 
 for a bytecode language with objects and  exceptions. A compiler from source proofs into bytecode proofs is also defined. 
 As in our work, they assume that the bytecode is well-typed. 
 In particular, they define a Hoare-style bytecode logic which consists in building a derivation tree 
-and the leaves of the derivation tree must be proven in a classical logic. This is different from our solution
-where we generate directly  verification conditions using a weakest precondition calculus which are then proven in a logic.
+and the leaves of the derivation tree must be proved in a classical logic. This is different from our solution
+where we generate directly  verification conditions using a weakest precondition calculus which are then proved in a logic.
  A main inconvenient of using  Hoare logic triples for proving program correctness is that this is  
   a complex process and needs even in simple cases a high level of user interaction and competence. Of course, our approach
  also requires user interaction as far as the generated verification conditions are hard to prove but automation 
@@ -45,7 +45,7 @@ where we generate directly  verification conditions using a weakest precondition
   
  In ~\cite{WildmoserN-ESOP05}, M. Wildmoser and T. Nipkow describe a framework for verifying Jinja (a Java   bytecode subset) which features
  object manipulation, exceptions, method invocations. The verification framework is   based on a verification condition generator which uses
- weakest preconditions. The  framework is developped  in the interactive theorem prover Isabelle/HOL and proven sound and complete. 
+ weakest preconditions. The  framework is developped  in the interactive theorem prover Isabelle/HOL and proved sound and complete. 
  They show how the safety policy against an arithmetic overflow can be checked. As in our case, they also assume that the program is provided
 with annotations (e.g. \ loop invariants). 
 
@@ -71,7 +71,7 @@ with annotations (e.g. \ loop invariants).
  A design of a verification condition generator should be as simple as possible especially when it is tailored to be installed 
 on the client site of a mobile code scenario.
  Bur a verification framework which relies on several transformation layers 
- can be relatively complex.  Second,  a verification condition generator must be proven correct. 
+ can be relatively complex.  Second,  a verification condition generator must be proved correct. 
 In the case of several transformations this may be not trivial.
 
 

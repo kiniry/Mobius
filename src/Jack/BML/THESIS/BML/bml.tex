@@ -306,7 +306,7 @@ Method specification:
 A particular feature of BML is that it supports stack expressions which do not have a counterpart in JML.
 These expressions are related to
  the way in which the virtual machine works, i.e. we refer to the stack and the stack counter.
-Because intermediate calculations are done by using the stack, often we will need stack expressions in order to characterise the states before and after an instruction
+Because intermediate calculations are done by using the stack, often we will need stack expressions in order to characterize the states before and after an instruction
 execution. Stack expressions are represented in BML as follows:
 \begin{itemize}
       \item  $\counter$ represents the stack counter.
@@ -434,7 +434,7 @@ We look now what are the syntax constructs that may appear in the frame conditio
  In the figure, we remark that BML does not have the syntactic sugar for normal and exceptional behavior.
  On the contrary, the specification now states 
 as precondition the disjunction of the preconditions of every specification case and 
-the specification cases explicitely declare their behavior as described in subsection~\ref{javaVerif:JML:lightHeavy} from Chapter~\ref{BCSLprelim}.
+the specification cases explicitly declare their behavior as described in subsection~\ref{javaVerif:JML:lightHeavy} from Chapter~\ref{BCSLprelim}.
 % The first specification case (the first bunch of specification enclosed in $\{|$ $ |\}$  ) corresponds to the \jmlKey{normal\_behavior} specification case in the code from Fig. \ref{bml:heavySp}.
 
  % Note that it does not have an analog for the JML keyword
@@ -501,7 +501,7 @@ ghost variable is assigned to.
 We illustrate by in example in Fig. \ref{bml:loopBML} how BML loop specification looks like.
 The example  represents the bytecode and the BML specification of the source program in Fig. \ref{replaceSrc}. The first line of the BML specification 
 specifies that the loop entry is the instruction at index  19 in the array of bytecode instructions. The predicate
- representing  the loop invariant introduced by the keword \loopInv \ respects the syntax for BML expressions and predicates
+ representing  the loop invariant introduced by the keyword \loopInv \ respects the syntax for BML expressions and predicates
  that we described above. 
  
 \begin{figure}

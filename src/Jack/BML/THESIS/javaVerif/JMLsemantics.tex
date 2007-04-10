@@ -21,8 +21,8 @@ method pre and postconditions:
   \item [Behavioral subtyping for overriding methods]
         Method overriding appears in case when in a subclass a method is reimplemented.  For instance, in Fig. \ref{assertLang:lang:inherit},
 	we give an example of a class \lstinline!B! which extends class   \lstinline!A! and overrides method  \lstinline!m!. 
-	To deal with method overriding the virtual machine uses dinamically bounding, i.e. it is on execution time that the virtual machine decides which method to execute.
-	If we go back to the figure, this means that the invokation of method   \lstinline!m! on the object reference of type \lstinline!A!
+	To deal with method overriding the virtual machine uses dynamically bounding, i.e. it is on execution time that the virtual machine decides which method to execute.
+	If we go back to the figure, this means that the invocation of method   \lstinline!m! on the object reference of type \lstinline!A!
         may stand for the method  \lstinline!m! declared in class \lstinline!B! or the one declared in \lstinline!A! because the dynamic type of the
 	reference stored in the field  \lstinline!a! may be \lstinline!A! or \lstinline!B!. Because  method \lstinline!m! from
         class \lstinline!B! can be called whenever method  \lstinline!m! from  \lstinline!A! may be called, we want that the former has the same 
@@ -31,7 +31,7 @@ method pre and postconditions:
 	
         This is expressed by the two covariant conditions over their postconditions:
 	\begin{itemize}
-	   \item the precondition of the  overriden method must  imply
+	   \item the precondition of the  overridden method must  imply
 	         the precondition of the overriding method 
 	   \item the postcondition of the overriding method must imply 
 	         the postcondition of the overriden method.

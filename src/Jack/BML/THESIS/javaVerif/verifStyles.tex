@@ -32,7 +32,7 @@ Although the inference rule tells us what must be proved for the substatements f
 A user interaction is needed to determine  $Post'$. This situation occurs often also with the other rules in the logic.
 Actually,  even for small programs, a lot of human interaction  is necessary when  using Hoare style reasoning.
   
-Another possibility is to apply a  more calculational approach. It consists in an algorithm \wpName~ which 
+Another possibility is to apply a  more calculation approach. It consists in an algorithm \wpName~ which 
 from a given postcondition $Post$   of statement $\stmt$ calculates the weakest predicate $\wpName(\stmt, Post)$ 
 that must hold in the  prestate of $\stmt$. Then, for establishing that
   $\stmt$ respects a precondition  $Pre$ and the postcondition   $Post$ it is sufficient to show that $Pre$ implies $\wpName(\stmt, Post) $, i.e. that 
@@ -51,7 +51,7 @@ induction -iteration  \cite{SI77IABC} based on iteration of the weakest precondi
 predicate abstraction methods \cite{FQ03PAQ} using abstract interpretation or dynamic invariant detection (used in the Daikon tool \cite{ernst99dynamically}).
 For instance, the extended static checker for Java ESC/java uses the Daikon tool  for inferring loop invariants \cite{NimmerE01:RV}.  
 Unfortunately, all of these approaches have shortcomings either because the calculation is very intensive and may loop forever (in the first case),
- because  of an underapproximation (as in the second case) or not always returning 
+ because  of an under-approximation (as in the second case) or not always returning 
 a result (as in the third case). We can actually ``help'' the \wpName~ by supplying the loop invariants for the loop statements.
  In that case, the rule of \wpName~ in the case for loop would be :
 $$ \begin{array}{l} 

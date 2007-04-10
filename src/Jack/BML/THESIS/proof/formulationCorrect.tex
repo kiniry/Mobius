@@ -45,16 +45,18 @@ Thus, a method invocation labeled with \level{0} does not exist. Moreover, if th
  For the other instructions the weight of the maximal call depth is just passed. The rules for the instructions different from 
 method invocation have this general form: 
 $$ \begin{array}{l}
-              \frac{ i \neq \invoke \  \methodd \vdash  i: s_1 \stateTrans s_2 }{ \methodd \vdash s_1 \stateTransWeight{k} s_2 , \  \level{k} > 0}
+              \frac{ i \neq \invoke \ \ \methodd \vdash  i: s_1 \stateTransWeight{k} s_2 \  \level{k} > 0}{ \methodd \vdash s_1 \stateTransWeight{k} s_2 }
 \end{array}$$
  
 
 
  
-The following definition what does it mean for a method to respect its specification at level \level{k}.
+
+A method respects its specification if every terminating execution is such that if in its initial state
+ the method precondition holds  then in its final state the method postcondition holds. We also have to define the method correctness at execution at level  \level{k} which follows. 
 \begin{defCorrect}[method respects its specification at level k] \label{defCorrectLevel}
 For every method \methodd \ with precondition \methodd.\pre, normal postcondition \methodd.\normalPost{}
-and exceptional postcondition function \methodd.\excPostSpec, we say that \methodd{} respects its specification at level \level{k} if 
+and the exceptional postcondition function \methodd.\excPostSpec, we say that \methodd{} respects its specification at level \level{k} if 
 for every two states $s_0$ and $s_1$ such that :
 \begin{itemize}
       
@@ -101,7 +103,7 @@ if for all levels $\level{k} \ge 0 $ the program is correct at level \level{k}.
 
 Let us now see informally the correctness condition for the verification calculus. 
 We would like to establish that if the verification conditions
-generated for all methods in a program are valid then we can conlcude that the program is correct. 
+generated for all methods in a program are valid then we can conclude that the program is correct. 
 %are valid 
 %and the precondition of the method holds in the initial state of the method 
 %then the postcondition of  the method holds in its final state if the method terminates. 

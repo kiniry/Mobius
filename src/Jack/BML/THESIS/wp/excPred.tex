@@ -36,7 +36,7 @@ Thus, for every method \methodd \  we define  the auxiliary function $ \methodd.
 $$\methodd.\excPost : int   \longrightarrow \excType \longrightarrow  \predWp  $$
  
 $ \methodd.\excPost(\mbox{ \rm \textit{i}},  \mbox{ \rm \texttt{Exc}})$ 
-returns the predicate that must hold in the preststate of the instruction at index \textit{i}  which may throw a runtime exception of type \texttt{Exc}.
+returns the predicate that must hold in the prestate of the instruction at index \textit{i}  which may throw a runtime exception of type \texttt{Exc}.
 Note that the function $\methodd.\excPost$  does not deal with programmatic exceptions thrown by the instruction \athrow,
  neither exception caused by a method invocation
 (execution of instruction \invoke) as the exceptions thrown by those instructions are handled in a different way as we

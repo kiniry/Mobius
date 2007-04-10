@@ -72,7 +72,7 @@ Actually, the compilation of every statement or expression in the example has th
 
 
 Next, we give a definition for a set of instructions such that they execute sequentially which will be used for 
-establishing afterwards the properties of the bytecode instructions resulting in expression compilation.
+establishing afterwords the properties of the bytecode instructions resulting in expression compilation.
  
 \begin{seqInstr}[Block of instructions] \label{seqInstr}
 We say that the list of instructions  $l  = \lbrack \ins{i_1} \ldots \ins{i_n} \rbrack$ is a block of instructions
@@ -286,7 +286,7 @@ $$ \begin{array}{l}
 $$
 \end{compProp}
 
-The next property states that a try catch statement is such that $ \try \ \{ \stmt_1 \} $ $ \catch \ (\excType \ \var )\{ \stmt_2 \}  $ 
+The next property states that a try catch statement $ \try \ \{ \stmt_1 \} $ $ \catch \ (\excType \ \var )$ $\{ \stmt_2 \}  $  is such that
 any exception \texttt{E} which is a subtype of \excType{} and thrown by  the last instruction in the compilation of the try statement $ \stmt_1 $ is handled by the 
 compilation of the exception handler $\stmt_2$. Moreover, an 
  an exception \texttt{E'} which is not a subtype of \excType{} thrown by the  last instruction in the compilation of $\stmt_1$

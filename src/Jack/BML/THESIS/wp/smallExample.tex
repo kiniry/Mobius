@@ -23,7 +23,7 @@ For every instruction which does not targets a loop entry instruction the precon
 The precondition of the instruction at line 37 is calculated also upon the loop invariant but also confirms that the invariant implies
 the precondition of the loop entry instruction.
 
-Finally, we can remark that the  verification condition for the method \lstinline!Pre ==> Pre0! is valid.
+Finally, we can remark that the  verification condition for the method $Pre \Rightarrow  Pre0$ is valid.
 
 
 
@@ -33,82 +33,79 @@ Finally, we can remark that the  verification condition for the method \lstinlin
 \begin{figure}
 {\scriptsize
 \begin{lstlisting}[frame=trbl]
-{Pre: reg(1) >= 0}
-{Pre0:= 
- 0>=0 && 0<=reg(1)&& 0==0*(0-1)/2
- && 
- forall reg(3), reg(2)
-    reg(3)>=0 &&reg(3)<=reg(1)&&reg(2)==reg(3)*(reg(3)-1)/2
-       ==> reg(3)<reg(1) ==> Pre5 
-       &&
-       reg(3)>= reg(1) ==>  Pre13}
+{(*@$ Pre:= \locVar{1} \ge  0 $@*) }
+{(*@$Pre0$@*) :=    0(*@$\ge$@*) 0 (*@$\wedge$@*) 0(*@$\le\locVar{1} \wedge  0==0*(0-1)/2 \wedge  $@*) 
+(*@$ \forall \locVar{3}, \locVar{2},$@*) 
+(*@$    \locVar{3} \ge 0 \wedge  \locVar{3} \le \locVar{1} \wedge \locVar{2} == \locVar{3}  *(\locVar{3} -1)/2 $@*)  
+(*@$      \Rightarrow \locVar{3} <\locVar{1}  \Rightarrow  Pre5 \wedge  $@*)        
+(*@$    \locVar{3} \ge \locVar{1} \Rightarrow  Pre13    $@*) 
+ }
 0 const 0
 
-{0>=0 && 0<=reg(1)&& st(cntr)==0*(0-1)/2
- && 
- forall reg(3), reg(2)
-    reg(3)>=0 &&reg(3)<=reg(1)&&reg(2)==reg(3)*(reg(3)-1)/2
-       ==> reg(3)<reg(1) ==> Pre5 
-       &&
-       reg(3)>= reg(1) ==>  Pre13}
+{(*@$ 0 \ge 0 \wedge  0 \le \locVar{1} \wedge \stack{\counter} ==0*(0-1)/2$@*) 
+ (*@$  \wedge $@*)
+(*@$ \forall \locVar{3} , \locVar{2} $@*) 
+(*@$\locVar{3}>=0 \wedge \locVar{3} \le \locVar{1}\wedge  \locVar{2}==\locVar{3}*(\locVar{3}-1)/2$@*) 
+ (*@$\Rightarrow \locVar{3}< \locVar{1} \Rightarrow Pre5 $ @*) 
+   (*@ $ \wedge$ @*) 
+ (*@ $  \locVar{3}>= \locVar{1} \Rightarrow  Pre13 $ @*)   }
 1 store 2
 
-{0>=0 && 0<=reg(1)&& reg(2)==0*(0-1)/2
- && 
- forall reg(3), reg(2)
-    reg(3)>=0 &&reg(3)<=reg(1)&&reg(2)==reg(3)*(reg(3)-1)/2
-       ==> reg(3)<reg(1) ==> Pre5 
-       &&
-       reg(3)>= reg(1) ==>  Pre13}
+{(*@ $ 0\ge0 \wedge 0<=\locVar{1}\wedge \locVar{2}==0*(0-1)/2 $ @*) 
+ (*@$ \wedge 
+ \forall \locVar{3}, \locVar{2} $ @*) 
+  (*@$   \locVar{3}\ge0 \wedge\locVar{3}<=\locVar{1}\wedge \locVar{2}==\locVar{3}*(\locVar{3}-1)/2 $ @*) 
+    (*@$    \Rightarrow \locVar{3}<\locVar{1} \Rightarrow Pre5  $ @*) 
+    (*@$    \wedge $ @*) 
+     (*@$   \locVar{3}\ge \locVar{1} \Rightarrow  Pre13 $ @*) }
 2 const 0
 
-{st(cntr)>=0 && st(cntr)<=reg(1)&&reg(2)==st(cntr)*(st(cntr)+1)/2
- && 
- forall reg(3),reg(2), 
-    reg(3)>=0&&reg(3)<=reg(1)&&reg(2)==reg(3)*(reg(3)-1)/2==> 
-       reg(3)<reg(1) ==> Pre5  && reg(3)>= reg(1) ==> Pre13}
+{(*@ $ \stack{\counter}\ge0 \wedge \stack{\counter}<=\locVar{1}\wedge\locVar{2}==\stack{\counter}*(\stack{\counter}+1)/2 $ @*)
+(*@ $ \wedge $ @*)
+(*@ $ \forall \locVar{3},\locVar{2}, $ @*)
+(*@ $     \locVar{3}\ge0\wedge\locVar{3}<=\locVar{1}\wedge\locVar{2}==\locVar{3}*(\locVar{3}-1)/2\Rightarrow $ @*)
+(*@ $  \locVar{3}<\locVar{1} \Rightarrow Pre5  \wedge \locVar{3}\ge \locVar{1} \Rightarrow Pre13 $ @*) }
 3 store 3
 
-{I && forall reg(2),reg(3) (I ==> Pre10) }
+{(*@$I \wedge \forall \locVar{2},\locVar{3} (I \Rightarrow Pre10) $ @*) }
 4 goto 10
 
-{Pre5:=
- reg(3)+1>=0&&reg(3)+1<=reg(1)&&reg(2)+reg(3)==(reg(3)+1)*(reg(3))/2}
+{(*@ $ Pre5:=
+ \locVar{3}+1\ge0\wedge\locVar{3}+1<=\locVar{1}\wedge\locVar{2}+\locVar{3}==(\locVar{3}+1)*(\locVar{3})/2 $ @*)  }
 5 load 2
 
-{reg(3)+1>=0&&reg(3)+1<=reg(1)&&st(cntr)+reg(3)==(reg(3)+1)*(reg(3))/2}
+{(*@ $ \locVar{3}+1\ge0\wedge\locVar{3}+1<=\locVar{1}\wedge\stack{\counter}+\locVar{3}==(\locVar{3}+1)*(\locVar{3})/2 $ @*)  }
 6 load 3
 
-{reg(3)+1>=0&&reg(3)+1<=reg(1)&&
- st(cntr-1)+st(cntr)==(reg(3)+1)*(reg(3))/2}
+{(*@ $ \locVar{3}+1\ge0\wedge\locVar{3}+1<=\locVar{1}\wedge  $ @*)
+(*@ $\stack{\counter - 1}+\stack{\counter}==(\locVar{3}+1)*(\locVar{3})/2$ @*) }
 7 add
 
-{reg(3)+1>=0&&reg(3)+1<=reg(1)&&
- st(cntr)==(reg(3)+1)*(reg(3))/2}
+{(*@ $ \locVar{3}+1\ge0\wedge\locVar{3}+1<=\locVar{1}\wedge  $ @*)
+(*@ $ \stack{\counter}==(\locVar{3}+1)*(\locVar{3})/2  $ @*) }
 8 store 2
 
-{reg(3)+1>=0&&reg(3)+1<=reg(1)&&
- reg(2)==(reg(3)+1)*(reg(3))/2}
+{(*@ $ \locVar{3}+1\ge0\wedge\locVar{3}+1<=\locVar{1}\wedge $ @*)
+(*@ $  \locVar{2}==(\locVar{3}+1)*(\locVar{3})/2 $ @*)}
 9 iinc 3 //LOOP END
 
-{Pre10 := reg(3)<reg(1) ==> Pre5 
-          &&
-          reg(3)>= reg(1) ==>  Pre13}
+{(*@ $   Pre10 := \locVar{3}<\locVar{1} \Rightarrow Pre5 \wedge $ @*)
+    (*@ $       \locVar{3} \ge \locVar{1} \Rightarrow  Pre13  $ @*)}
 10 load 3 //LOOP ENTRY
 
-{st(cntr)<reg(1)==>Pre5 
- &&
-st(cntr)>=reg(1)==>Pre13}
+{ (*@ $ \stack{\counter}<\locVar{1}\Rightarrow Pre5  \wedge $ @*)
+ (*@ $  
+\stack{\counter}\ge\locVar{1}\Rightarrow Pre13 $ @*)  }
 11 load 1
 
-{st(cntr - 1) < st(cntr) ==> Pre5 
- &&
- st(cntr - 1) >= st(cntr) ==>  Pre13}
+{ (*@ $ \stack{\counter - 1}  < \stack{\counter} \Rightarrow Pre5  \wedge $ @*)
+ (*@ $ 
+ \stack{\counter - 1}  \ge \stack{\counter} \Rightarrow  Pre13 $ @*)}
 12 if_icmplt 5 
 
-{Pre13:= st(cntr) ==reg(1)*(reg(1)+1)/2}
+{ (*@ $  Pre13:= \stack{\counter} ==\locVar{1}*(\locVar{1}+1)/2 $ @*) }
 13 return
-{Post: \result==reg(1)*(reg(1)+1)/2}
+{ (*@ $  Post:= \result==\locVar{1}*(\locVar{1}+1)/2  $ @*) }
 \end{lstlisting} }
 \caption{\sc weakest precondition predicates for the instructions of the   bytecode of method \lstinline!sum!}
 \label{wp:example:sumVC}

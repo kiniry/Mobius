@@ -24,14 +24,14 @@ class A {
   int (*@ \fieldd @*);
   
   A(int c) {
-   \fieldd = c;
+   (*@\fieldd@*) = c;
   }
 
   int (*@ \texttt{eqField} @*) ( A a ) {
     if (a !=  (*@ \Mynull @*)) {
       return 0;
     }
-    if ( a.(*@\fieldd @*) == this.(*@\fieldd @*) ) {
+    if ( a.(*@\fieldd@*) == this.(*@\fieldd @*) ) {
       return 1;
     } else {
       return 0;

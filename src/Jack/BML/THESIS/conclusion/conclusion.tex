@@ -37,7 +37,7 @@ developed and supported by our research team Everest at INRIA Sophia Antipolis w
   We would like to give a brief description of the implementation of the verification condition generator.
 The bytecode verification condition generator works as follows. For the verification of a class file containing BML specification, it will generate verification conditions for every
  method of this class including the constructors. For generating the verification conditions concerning a method implementation, first the control flow
- graph corresponding to the bytecode instruction is built. The latter is transformed into an acyclic control flow graph where the backedges are 
+ graph corresponding to the bytecode instruction is built. The latter is transformed into an acyclic control flow graph where the back-edges are 
 removed.
  Then the verification procedure proceeds by generating over every execution path in the control flow graph its corresponding verification conditions. 
 For every path which terminates by throwing an uncaught exception, the postcondition is the specified exceptional postcondition for this case. For the paths which terminate normally, 
@@ -80,7 +80,7 @@ and race conditions. Such properties can be ensured  by type systems \cite{FA99T
 The earliest works in the field of parallel program  verification are
   the Owicki and Gries approach   
 \cite{nipkow99owickigries}  and the rely - guarantee approach. However, 
-the first approach is not modular and requires a large amount of verification conditions while for the second, the annotation procedure can not be automatised.
+the first approach is not modular and requires a large amount of verification conditions while for the second, the annotation procedure can not be automatized.
 
 % Such techniques for reasoning over the correctness of parallel programs  exist.
 % One of the first logic - based verification techniques for parallel programs is due to Owicki and Gries 
@@ -251,6 +251,6 @@ This is actually an approach which will be adopted in the Mobius project.
 The objective of this thesis was to build a bytecode verification framework
  for dealing with potentially sophisticated security and functional policies. A further objective, pursued in the European project
  Mobius (short for Ubiquity, Mobility and Security) 
-is to build basis for guaranteeing security and trust in program application in the presence of mobile and ubicuous computing. We hope that we have convinced
+is to build basis for guaranteeing security and trust in program application in the presence of mobile and ubiquitous computing. We hope that we have convinced
 the reader for the importance of such techniques and in particular of the evolution from source verification to
  low level verification  and the necessity of an interactive verification process for building evidence for the security of unknown applications. 

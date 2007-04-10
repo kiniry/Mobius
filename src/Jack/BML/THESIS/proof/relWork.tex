@@ -17,7 +17,7 @@ Being  a verification condition generator, a Hoare logic tailored to a structure
  The Loop tool designed to support JML and tailored to the PVS theorem prover
   provides also a proof of soundness of the weakest precondition calculus which underlines
  its verification scheme \cite{Jacobs04WPJ}. The Jive system which is an interactive program theorem prover tailored to a Java subset is
- also  proven correct \cite{MH00Arc}.
+ also  proved correct \cite{MH00Arc}.
    
  In \cite{BannwartMueller05}, Bannwart and Muller define a   Hoare style
  logic for a Java-like bytecode and prove its correctness on paper using a similar proof 
@@ -50,7 +50,7 @@ the proof of soundness in a difficult task.
  The proof for soundness presented here would seem large w.r.t. 
 the proof of soundness of Spec\# presented in  \cite{leinoWPUP}. Spec\# relies on several transformations over the 
 bytecode. First, a transformation of the potentially irreducible control flow graph to a reducible one is done.
-The second step  is converting the reducible control flow graph into an acyclic graph by removing the loop backedges.
+The second step  is converting the reducible control flow graph into an acyclic graph by removing the loop back-edges.
  The third step consists in translating programs into a single-assignment form.
 The fourth step is converting the program into a  guarded command language and finally, the fifth and last 
 step is passifying the guarded command language program which means changing assignments

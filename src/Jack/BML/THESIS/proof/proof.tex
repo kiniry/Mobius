@@ -25,12 +25,13 @@ Moreover, the stack also must contain well formed values :
 $ (\forall i, 0 \le i \le \counterOnly \Rightarrow \stackOnly(i) \in \heap.\heapLocs \vee \stackOnly(i)\in \Myint   )$
 \end{proofDef}
 
-Actually, the operational semantics preserves the meaninful states, i.e. if an instruction starts execution in a meaningful state 
+Actually, the operational semantics preserves the meaningful states, i.e. if an instruction starts execution in a meaningful state 
 it terminates execution in such state
 
 \begin{lemma}[Operational semantics preserves meaningful states]\label{proof:opPresMeaningful}
-If a state $\config{ \heap}{\counterOnly}{\stackOnly}{\locVarOnly}{ \pc}$ is meaningful state and results in the execution of method \methodd{}
- then the state resulting from one execution step is also meaningful $\methodd \vdash \methodd[\pc] : s \stateTrans s' $ 
+If the state  $s$  with the following configuration $\config{ \heap}{\counterOnly}{\stackOnly}{\locVarOnly}{ \pc}$ is meaningful  and occurs in
+ the execution of method \methodd{} then the state $s'$ resulting from one execution step, i.e. 
+ $\methodd \vdash \methodd[\pc] : s \stateTrans s' $ is also meaningful.  
 \end{lemma}
 
  
@@ -80,7 +81,7 @@ For every intermediate state $s_n =\config{\heap_n }{\counterOnly_n }{\stackOnly
 	 $ s_{n+1} = \configFinalExc{ \heap_{n+1}}{  \referenceOnly   }$ and $\heapTypeOf(\referenceOnly) = \Exc  $ and  $\newRef{\heap_n}{\Exc} = (\heap_{n+1}, \referenceOnly )$
 	 then  $\interp{\methodd.\excPostSpec( \Exc)}{\configFinalExc{ \heap_{n+1}}{  \referenceOnly   } } $ holds.
 	
-	 \item if $\methodd.\body[\ins{\pc_n}] = \athrow $ throws a not handled exception of type $\Exc$,
+	 \item if $\methodd.\body[\ins{\pc_n}] = \athrow $ throws a not handled exception of type $\Exc$ and moreover we have that
 	 	 $ s_{n+1} =\configFinalExc{ \heap_{n}}{  \stackOnly (\counterOnly)} $ and $\heap.\heapTypeOf(\stackOnly (\counterOnly) ) = \Exc  $ 
 	 then  $\interp{\methodd.\excPostSpec( \Exc)}{\configFinalExc{ \heap_{n}}{  \stackOnly (\counterOnly)   } } $  holds.
 	 
@@ -109,7 +110,7 @@ We are going to see only the proofs for the instructions
 			
 			 $$  \interp{ \normalPost} { \configFinalNorm{\heap_n  }  
 							    { \stackOnly_n ( \counterOnly_n  )  } } $$
-			From the operational semantics for \return (Section \ref{opSem}), we have $ s_{n+1} = \configFinalNorm{\heap_n  } { \stackOnly_n ( \counterOnly_n  )  }$
+			From the operational semantics for \return \ (Section \ref{opSem}), we have that the state  $ s_{n+1} = \configFinalNorm{\heap_n  } { \stackOnly_n ( \counterOnly_n  )  }$
 			which allows us to conclude that this case holds.
 							    
 	
@@ -200,7 +201,7 @@ We are going to see only the proofs for the instructions
    
 	
  \item [method invocation]
-In the following, we  ignore here the part of the \wpName{} which concerns the exceptional termination for reasons of clarity. Treating the whole 
+In the following, we  ignore the part of the predicate calculated by the \wpName{} predicate transformer which concerns the exceptional termination for reasons of clarity. Treating the whole 
 definition of the \wpName{} for method invokation is done in a rather similar way as the part that we sketch here.
 By initial hypothesis, we get that the \wpName{} of method invocation holds.
 This in particular means that the precondition  $ \mbox{\rm\texttt{n} } .\pre$ of the invoked method  \mbox{\rm\texttt{n} } holds
@@ -272,8 +273,8 @@ of the former is stronger than latter
 \begin{equation*} 
 \interp{\mbox{\rm \texttt{n}}.\normalPost \subst{ \locVar{s}}{\stack{\counter + s - \mbox{\rm\texttt{n} } .\numArgs} }_{s = 0}^{ \mbox{\rm\texttt{n} }. \numArgs }  \subst{\result}{\Res } }{s_{n} } 
 \end{equation*}
-  We can apply the resulting judgement with modus ponens to \eqref{eq10}  where
-   we initialise the quantification over the modified locations with their
+  We can apply the resulting judgment with modus ponens to \eqref{eq10}  where
+   we initialize the quantification over the modified locations with their
    values in state $s_n$ and the variable $res$ to \Res 
 \begin{equation*} 
 \interp{\inter{i}{i+1 }   \subst{\counter}{ \counter - \mbox{\rm\texttt{n} } .\numArgs} \subst{ \stack{\counter -  \mbox{\rm\texttt{n} } .\numArgs  }}{ \Res }}{s_n}
@@ -331,10 +332,9 @@ another step can be made and the \fwpi \ of the next instruction holds.
 
 \begin{lemma} \label{lemma1}
 Let us have a program \Program{} and a method \methodd{} in \Program. 
-%Assume we have a method \methodd \ with normal postcondition  $\methodd.\normalPost$ and exception function $\methodd.\excPostSpec$. 
-For every state  
+For every two state configurations   
  $ \config{\heap_{0}}{\counterOnly_{0}}{\stackOnly_{0}}{\locVarOnly_{0}}{\pc_{0}}$ 
-and state $\config{\heap_n}{\counterOnly_n}{\stackOnly_n}{\locVarOnly_n}{\pc_n} $ denoted respectively with $s_0$ and  $s_n$,
+and  $\config{\heap_n}{\counterOnly_n}{\stackOnly_n}{\locVarOnly_n}{\pc_n} $ denoted respectively with $s_0$ and  $s_n$,
 such that :
  \begin{itemize}
          \item $ \methodd.\body[0] : s_{0} \stateTransWeight{k}^{n} s_n$
@@ -345,16 +345,16 @@ such that :
         % \item    %$ \forall \mbox{ \rm \texttt{n}} : \MethodSet . \mbox{ \rm \texttt{n}}   \neq \methodd \ n$  is correct w.r.t. its specification
  \end{itemize}
 
-then the folloing holds:
+then the following holds:
 \begin{enumerate}
-	\item if $\methodd.\body[\ins{\pc_n}] = \return$ and $s_{n+1} =\configFinalNorm{\heap_n}{\stackOnly_n( \counterOnly_n )} $ then $\interp{\methodd.\normalPost} {s_{n+1} } $ holds.  
+	\item if $\methodd.\body[\ins{\pc_n}] = \return$ and $s_{n+1} =\configFinalNorm{\heap_n}{\stackOnly_n( \counterOnly_n )} $ then $\interp{\methodd.\normalPost} {s_{n+1} }$ holds.  
 	
         	\item if $\methodd.\body[\ins{\pc_n}] \neq \athrow  $ throws a not handled exception of type $\Exc$,
 	 $ s_{n+1} = \configFinalExc{ \heap_{n+1}}{  \referenceOnly   }$, $\heap.\heapTypeOf(\referenceOnly) = \Exc  $ and  $\newRef{\heap_n}{\Exc} = (\heap_{n+1}, \referenceOnly )$
-	 then  $\interp{\methodd.\excPostSpec( \Exc)}{\configFinalExc{ \heap_{n+1}}{  \referenceOnly   } } $ holds.
+	 then the following  holds \\ $\interp{\methodd.\excPostSpec( \Exc)}{\configFinalExc{\heap_{n+1}}{\referenceOnly}}$.
 	
-	 \item if $\methodd.\body[\ins{\pc_n}] = \athrow $ throws a not handled exception of type $\Exc$,
-	 	 $ s_{n+1} =\configFinalExc{ \heap_{n}}{  \stackOnly (\counterOnly)} $ and $\heap.\heapTypeOf(\stackOnly (\counterOnly) ) = \Exc  $ 
+	 \item if $\methodd.\body[\ins{\pc_n}] = \athrow $ throws a not handled exception of type $\Exc$
+	 and we have moreover that $ s_{n+1} =\configFinalExc{ \heap_{n}}{  \stackOnly (\counterOnly)} $ and $\heap.\heapTypeOf(\stackOnly (\counterOnly) ) = \Exc  $ 
 	 then  $\interp{\methodd.\excPostSpec( \Exc)}{\configFinalExc{ \heap_{n}}{  \stackOnly (\counterOnly)   } } $  holds.
 
 
@@ -386,7 +386,7 @@ and the case when the current instruction is not a loop end and the next instruc
 	       state $s_n$, i.e.  $ \interp{\wpi{\ins{\pc_{n}} }{ \methodd }{} }{ s_n }$.
 	      Thus by the previous lemma \ref{lemma0}  we know that 
 	      the predicate $\inter{\pc_n}{\pc_{n+1}}$ holds in $s_{n+1}$, i.e. $\interp{\inter{\pc_n}{\pc_{n+1}} }{ s_{n+1} }$.
-	      This actually means that the judgement 
+	      This actually means that the judgment 
 	      $\interp{ \wpi{\ins{\pc_{n+1}}}{\methodd}{} }{ s_{n+1} }$	      holds.
 
  
@@ -404,10 +404,10 @@ instruction at index $loopEntry $ in the array of bytecode instructions of the m
  %\begin{equation*}\label{eq12} \tag{8.2.1}    
 
 Because initial hypothesis we have that  $\interp{\wpi{\pc_n}{\methodd}{}}{s_n} $, from Lemma \ref{lemma0} we have
-that  the intermediate predicate $\inter{\pc_n}{\pc_{n+1}}$ holds in state $s_{n+1}$, i.e. 
+that  the intermediate predicate $\inter{\pc_n}{\pc_{n+1}}$ holds in state $s_{n+1}$, i.e. the following holds
  $\interp{\inter{\pc_n}{\pc_{n+1}} }{s_{n+1}} $. 
 From the  Def. \ref{inter} of the predicate \interOnly{}, we get that   
-in the case for  an edge between a loop entry and a loop end $\inter{\pc_n}{\pc_{n+1}}$ is of the form:
+in the case for  an edge between loop entry and  loop end instructions  $\inter{\pc_n}{\pc_{n+1}}$ is of the form:
      \begin{equation*}
                  \interp{  I \  \wedge
                                              \forall mod_i ,  i = 1..s \left( I \Rightarrow \wpi{\ins{\pc_{n+1}}}{\methodd}{} \right) 
@@ -434,7 +434,7 @@ instruction at index $loopEntry $, i.e.  $loopEntry = \pc_{n +1}$ % in the array
  $ \methodd. \loopSpecTable[i].\posL = loopEntry $,  $ \methodd. \loopSpecTable[i].\invL = I $ and
    $ \methodd. \loopSpecTable[i].\modifL =\{ mod_i, i = 1..s \}$.
 We consider the case when the current instruction is a sequential instruction. The cases when the current instruction 
-is a jump instruction are similar. By initial hypothes we have that 
+is a jump instruction are similar. By initial hypothesis we have that 
  $\interp{ \wpi{\ins{\pc_n} }{\methodd}{}}{s_n}$. 
 From Def. \ref{inter}  for the case when the current instruction is a loop end and the next instruction is a loop entry, we get that the initial hypothesis
 is equivalent to   
@@ -570,7 +570,7 @@ We can apply Lemma \ref{lemmaMethRespSpec} to every single method  \methodd{} in
 every method  \methodd{} is correct w.r.t. its specification at level \level{k}. This means that the program is correct at level k. 
 \end{description}
 From the base case and the inductive case, we can conclude that the program \Program{} is correct for every level \level{k} 
-and thus, we have proven the statement.
+and thus, we have proved the statement.
  
 \Qed
 

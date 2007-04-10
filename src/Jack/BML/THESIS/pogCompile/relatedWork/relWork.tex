@@ -22,14 +22,14 @@ In \cite{SU05CNS}, Saabas and Uustalu present a goto language provided with a co
 They give a Hoare logic rules for the SGoto language and compiler from the source language into SGoto.
 They show that if a source program has a Hoare logic derivation
  against a pre and postcondition then its compilation in SGoto will also have a Hoare
- logic derivation in the aformentioned Hoare logic rules for the SGoto language. 
+ logic derivation in the aforementioned Hoare logic rules for the SGoto language. 
 A limitation of such an approach is that the bytecode logic is defined over structured pieces of code. 
 In particular, in a  PCC framework this could be problematic. The first reason is that the code producer must supply along with the 
 bytecode and the certificate the structure of the unstructured code that the client has used to
  generate the certificate. The second reason is that the certificate  can be potentially large  as it consists of a Hoare logic
  derivation and thus, contains annotation for every instruction in the bytecode. In a PCC scenario, this could slow down the downloading
 time of the certificate if it comes via a network or could be problematic if it must be stored on a device  where it will be checked especially if the device
-has limitted resources.
+has limited resources.
 %In case of a non-optimizing compiler, this will allow the client to reveal the original source 
 %which can be an undesirable compromise for the producer. 
 %Here, we propose a direct relation between source and bytecode verification conditions which does not require that the producer
@@ -55,7 +55,7 @@ as the previously cited work.
 
 We would like to make a final remark concerning the ability to use such a scheme.
 In order that a verification framework be able to exploit the equivalence between source
- and bytecode verification conditions it must be provided with bothe verification on source and bytecode. 
+ and bytecode verification conditions it must be provided with both verification on source and bytecode. 
 For instance, the Spec\#~\cite{BLS04sp} programming system being not provided with a mechanism for source verification may not benefit from this fact.
   
 

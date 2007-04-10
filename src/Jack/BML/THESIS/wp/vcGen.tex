@@ -29,9 +29,10 @@ states that the specified method precondition  \methodd.\pre{} implies the
  actually reflect properly the semantics of our programming language. Thus the
  verification condition  will be as shown in the following: % Fig. \ref{vc:impl}. 
 %\begin{frameit}
-\begin{thmVC}\label{wp:vc:impl}The verification condition which expresses that a method \methodd{}
-  respects its specification precondition \methodd.\pre{}, postcondition
-  \methodd.\normalPost{} and exceptional postcondition function   \methodd.\excPostSpec{} is:
+\begin{thmVC}\label{wp:vc:impl} Let us have a method \methodd{}
+ with a precondition \methodd.\pre{}, postcondition
+  \methodd.\normalPost{} and exceptional postcondition function   \methodd.\excPostSpec{}. The verification condition which expresses that the method respects its
+ specification is the following:
 
  $$ \methodd.\pre  \wedge \locVar{0} \wedge \instances( \locVar{0} ) \wedge
 \neq \Mynull   
@@ -243,7 +244,7 @@ $$
 %\caption{Verification conditions for behavioral subtyping}\label{vc:subty}
 %\end{frameit}
 %\end{figure}
-As in the verfication conditions conditions concerning  only method
+As in the verification conditions conditions concerning  only method
 specification above, they all use additional assumption concerning the types
 and values of the local variables. As explained above, the first condition expresses the fact that
 the precondition of the overriding method is stronger than the precondition it
@@ -263,6 +264,6 @@ The second  condition expresses the fact that the normal postcondition of the
 
 Note that here, because we do not treat \oldOnly{} expressions, the verification condition is simple w.r.t. 
 verification conditions which might take into account the initial state.
- The latter involves a modelisation of the heap which expresses the relation between the initial and final states of a method execution. 
+ The latter involves a modeling of the heap which expresses the relation between the initial and final states of a method execution. 
 A detailed explanation for how to construct such verification conditions may refer to  \cite{CP03VTO}.
 
