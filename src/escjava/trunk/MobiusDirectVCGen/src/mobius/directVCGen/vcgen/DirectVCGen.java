@@ -60,7 +60,7 @@ public class DirectVCGen extends ExpressionVisitor {
 		er.post = post;
 		ExprResult init = (ExprResult) decl.init.accept(this, er);
 		
-		return init.post.subst(v, init.res);
+		return null; //init.post.subst(v, init.res);
 	}
 	
 	
@@ -72,7 +72,7 @@ public class DirectVCGen extends ExpressionVisitor {
 		ExprResult er = new ExprResult();
 		er.post = post;
 		ExprResult as = getAssert(stmtAssert, er);
-		return Logic.and(Logic.boolToProp(as.res), Logic.implies(Logic.boolToProp(as.res), as.post));
+		return null; //Logic.and(Logic.boolToProp(as.res), Logic.implies(Logic.boolToProp(as.res), as.post));
 	}
 	
 	private ExprResult getAssert(ExprStmtPragma esp, ExprResult post) {

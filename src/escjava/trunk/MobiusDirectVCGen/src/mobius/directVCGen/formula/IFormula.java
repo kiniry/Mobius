@@ -67,7 +67,7 @@ public interface IFormula extends Iterable<IFormula> {
 	public static final int fMult = 	54;
 	public static final int fSub = 		55;
 	
-	
+	public static final int rNull = 	60;
 	/**
 	 * Return the type of the formula.
 	 * @return the type of the formula; cannot be null.

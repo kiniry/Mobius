@@ -3,24 +3,26 @@
  */
 package mobius.directVCGen.vcgen.intern;
 
-import java.util.Vector;
-
 import mobius.directVCGen.formula.IFormula;
 import mobius.directVCGen.formula.expression.Variable;
 
 public class ExprResult {
-	/** the result of the expression */
-	public IFormula res;
+	/** the temporary variable; used in the vcGen of expressions */
+	public Variable vtmp;
 	/** the current postcondition */
 	public IFormula post;
 	
-	/** the side conditions generated */
-	public IFormula sc;
+	/** the excp post condition... */
+	public IFormula excpost;
 	
-	/** variables to bind due to the side conditions */
-	public final Vector<Variable> vars = new Vector<Variable>();
+	public void substWith(IFormula f) {
+		post.subst(vtmp, f);
+	}
 	
 	public String toString() {
-		return "result:" + res + "\npostcondition : " + post;
+		if(vtmp != null) {
+			return "temp var:" + vtmp  + "\npostcondition : " + post;
+		}
+		return  "\npostcondition : " + post;
 	}
 }
