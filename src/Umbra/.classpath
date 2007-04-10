@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="source"/>
-	<classpathentry exported="true" kind="lib" path="libs/bmllib.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins">
 		<accessrules>
-			<accessrule kind="accessible" pattern="org/eclipse/ui/texteditor/*"/>
+			<accessrule kind="accessible" pattern="org/eclipse/ui/texteditor/AbstractDecoratedTextEditor"/>
 		</accessrules>
 	</classpathentry>
 	<classpathentry kind="lib" path="libs/org.apache.bcel_5.1.0/bcel.jar"/>
+	<classpathentry kind="lib" path="b2bpl.jar"/>
+	<classpathentry kind="lib" path="libs/bmllib.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
