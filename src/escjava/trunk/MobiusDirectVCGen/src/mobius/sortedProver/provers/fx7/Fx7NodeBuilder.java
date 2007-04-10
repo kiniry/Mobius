@@ -1,6 +1,6 @@
-package escjava.sortedProver.provers.fx7;
+package mobius.sortedProver.provers.fx7;
 
-import escjava.sortedProver.provers.simplify.SimplifyNodeBuilder;
+import mobius.sortedProver.provers.simplify.SimplifyNodeBuilder;
 
 /*@ non_null_by_default @*/
 public class Fx7NodeBuilder extends SimplifyNodeBuilder

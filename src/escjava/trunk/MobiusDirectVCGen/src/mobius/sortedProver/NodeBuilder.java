@@ -1,16 +1,12 @@
-package escjava.sortedProver;
+package mobius.sortedProver;
 
 import java.util.Hashtable;
 
-import javafe.ast.Expr;
-import javafe.ast.Identifier;
-import javafe.util.Assert;
+import mobius.sortedProver.nodebuilder.members.FnSymbol;
+import mobius.sortedProver.nodebuilder.members.PredSymbol;
+import mobius.sortedProver.nodebuilder.members.QuantVar;
+import mobius.sortedProver.nodebuilder.members.Sort;
 
-import escjava.sortedProver.nodebuilder.members.FnSymbol;
-import escjava.sortedProver.nodebuilder.members.PredSymbol;
-import escjava.sortedProver.nodebuilder.members.QuantVar;
-import escjava.sortedProver.nodebuilder.members.Sort;
-import escjava.vcGeneration.TDisplay;
 
 /*@ non_null_by_default @*/
 public abstract class NodeBuilder

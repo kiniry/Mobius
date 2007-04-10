@@ -1,7 +1,7 @@
 /**
  * 
  */
-package escjava.sortedProver.nodebuilder.members;
+package mobius.sortedProver.nodebuilder.members;
 
 
 public class FnSymbol extends Symbol 

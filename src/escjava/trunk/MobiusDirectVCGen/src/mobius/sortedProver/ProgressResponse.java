@@ -1,4 +1,6 @@
-package escjava.sortedProver;
+package mobius.sortedProver;
+
+import escjava.sortedProver.SortedProverResponse;
 
 /**
  * This response is returned by the prover from time to time, the estimates are by no means accurate.

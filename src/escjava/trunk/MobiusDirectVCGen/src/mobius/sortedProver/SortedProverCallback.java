@@ -1,6 +1,7 @@
-package escjava.sortedProver;
+package mobius.sortedProver;
 
-import escjava.sortedProver.NodeBuilder.SPred;
+import mobius.sortedProver.NodeBuilder.SPred;
+import escjava.sortedProver.SortedProverResponse;
 
 public interface SortedProverCallback
 {

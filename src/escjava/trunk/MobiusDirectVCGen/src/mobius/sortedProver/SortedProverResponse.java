@@ -1,5 +1,9 @@
-package escjava.sortedProver;
+package mobius.sortedProver;
 import java.util.Properties;
+
+import escjava.sortedProver.CounterExampleResponse;
+import escjava.sortedProver.ProgressResponse;
+import escjava.sortedProver.SortedProver;
 
 /*@ non_null_by_default @*/
 public class SortedProverResponse

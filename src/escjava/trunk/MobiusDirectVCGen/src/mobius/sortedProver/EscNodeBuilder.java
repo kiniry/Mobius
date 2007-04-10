@@ -1,10 +1,10 @@
-package escjava.sortedProver;
+package mobius.sortedProver;
 
+import mobius.sortedProver.nodebuilder.members.FnSymbol;
+import mobius.sortedProver.nodebuilder.members.PredSymbol;
+import mobius.sortedProver.nodebuilder.members.Sort;
 import javafe.util.ErrorSet;
 import escjava.ast.TagConstants;
-import escjava.sortedProver.nodebuilder.members.FnSymbol;
-import escjava.sortedProver.nodebuilder.members.PredSymbol;
-import escjava.sortedProver.nodebuilder.members.Sort;
 
 /*@ non_null_by_default @*/
 public abstract class EscNodeBuilder extends NodeBuilder

@@ -1,10 +1,11 @@
-package escjava.sortedProver;
+package mobius.sortedProver;
 
 import java.util.Properties;
 
+import mobius.sortedProver.NodeBuilder.SPred;
+
 import javafe.ast.CastExpr;
 import javafe.util.ErrorSet;
-import escjava.sortedProver.NodeBuilder.SPred;
 
 /*@ non_null_by_default @*/
 public abstract class SortedProver
@@ -178,7 +179,7 @@ public abstract class SortedProver
         	String tail = name.substring(1);
         	String capName = firstLetter.toUpperCase() + tail;
         	String nonCapName = firstLetter + tail;
-    		Class c = Class.forName("escjava.sortedProver." + nonCapName + "." + capName + "Prover");
+    		Class c = Class.forName("mobius.sortedProver." + nonCapName + "." + capName + "Prover");
     		return (SortedProver) (c.newInstance());
     	} catch (ClassNotFoundException e) {
     		return null;

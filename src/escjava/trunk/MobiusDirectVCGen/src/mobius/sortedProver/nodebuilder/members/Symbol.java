@@ -1,9 +1,9 @@
 /**
  * 
  */
-package escjava.sortedProver.nodebuilder.members;
+package mobius.sortedProver.nodebuilder.members;
 
-import escjava.sortedProver.NodeBuilder;
+import mobius.sortedProver.NodeBuilder;
 
 public class Symbol
 {

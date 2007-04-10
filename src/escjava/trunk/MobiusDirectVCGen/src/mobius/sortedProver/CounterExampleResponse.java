@@ -1,6 +1,7 @@
-package escjava.sortedProver;
+package mobius.sortedProver;
 
-import escjava.sortedProver.NodeBuilder.SPred;
+import mobius.sortedProver.NodeBuilder.SPred;
+import escjava.sortedProver.SortedProverResponse;
 
 /**
  * This response is returned when the prover finds a counter example.

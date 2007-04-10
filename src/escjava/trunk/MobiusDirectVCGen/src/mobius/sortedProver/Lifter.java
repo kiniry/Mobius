@@ -1,41 +1,70 @@
-package escjava.sortedProver;
+package mobius.sortedProver;
 
-import javafe.ast.*;
-import javafe.tc.*;
-import javafe.util.*;
-import escjava.ast.*;
-import escjava.ast.Modifiers;
-import escjava.sortedProver.NodeBuilder.SAny;
-import escjava.sortedProver.NodeBuilder.SBool;
-import escjava.sortedProver.NodeBuilder.SInt;
-import escjava.sortedProver.NodeBuilder.SMap;
-import escjava.sortedProver.NodeBuilder.SPred;
-import escjava.sortedProver.NodeBuilder.SReal;
-import escjava.sortedProver.NodeBuilder.SRef;
-import escjava.sortedProver.NodeBuilder.STerm;
-import escjava.sortedProver.NodeBuilder.SValue;
-import escjava.sortedProver.nodebuilder.members.FnSymbol;
-import escjava.sortedProver.nodebuilder.members.PredSymbol;
-import escjava.sortedProver.nodebuilder.members.QuantVar;
-import escjava.sortedProver.nodebuilder.members.Sort;
-import escjava.tc.GhostEnv;
-import escjava.translate.*;
-import escjava.ast.TagConstants;
-import escjava.backpred.BackPred;
-import escjava.backpred.FindContributors;
-import escjava.prover.Atom;
-
-import java.io.*;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Stack;
 import java.util.regex.Pattern;
 
+import mobius.sortedProver.lifter.members.BoolLiteral;
+import mobius.sortedProver.lifter.members.FnTerm;
+import mobius.sortedProver.lifter.members.IntLiteral;
+import mobius.sortedProver.lifter.members.LabeledTerm;
+import mobius.sortedProver.lifter.members.NullLiteral;
+import mobius.sortedProver.lifter.members.QuantTerm;
+import mobius.sortedProver.lifter.members.QuantVariable;
+import mobius.sortedProver.lifter.members.QuantVariableRef;
+import mobius.sortedProver.lifter.members.RealLiteral;
+import mobius.sortedProver.lifter.members.SortVar;
+import mobius.sortedProver.lifter.members.Term;
+import mobius.sortedProver.nodebuilder.members.FnSymbol;
+import mobius.sortedProver.nodebuilder.members.PredSymbol;
+import mobius.sortedProver.nodebuilder.members.QuantVar;
+import mobius.sortedProver.nodebuilder.members.Sort;
+
+import javafe.ast.ASTNode;
+import javafe.ast.ArrayType;
+import javafe.ast.ClassDecl;
+import javafe.ast.ConstructorDecl;
+import javafe.ast.Expr;
+import javafe.ast.ExprVec;
+import javafe.ast.FieldDecl;
+import javafe.ast.FormalParaDecl;
+import javafe.ast.GenericVarDecl;
+import javafe.ast.LiteralExpr;
+import javafe.ast.LocalVarDecl;
+import javafe.ast.MethodDecl;
+import javafe.ast.PrettyPrint;
+import javafe.ast.PrimitiveType;
+import javafe.ast.SimpleName;
+import javafe.ast.Type;
+import javafe.ast.TypeDecl;
+import javafe.ast.VariableAccess;
+import javafe.tc.TypeCheck;
+import javafe.tc.TypeSig;
+import javafe.tc.Types;
+import javafe.util.Assert;
+import javafe.util.ErrorSet;
+import javafe.util.Info;
+import javafe.util.Location;
+import escjava.ast.LabelExpr;
+import escjava.ast.Modifiers;
+import escjava.ast.NaryExpr;
+import escjava.ast.QuantifiedExpr;
+import escjava.ast.SubstExpr;
+import escjava.ast.TagConstants;
+import escjava.ast.TypeExpr;
+import escjava.backpred.BackPred;
+import escjava.backpred.FindContributors;
+import escjava.translate.GC;
+import escjava.translate.TrAnExpr;
+import escjava.translate.UniqName;
+
 /*@ non_null_by_default @*/
 public class Lifter extends EscNodeBuilder
 {
-	final static boolean doTrace = false;
+	public final static boolean doTrace = false;
 	final Stack quantifiedVars = new Stack();
 	final Hashtable symbolTypes = new Hashtable();
 	final Term[] emptyTerms = new Term[0];
@@ -79,651 +108,6 @@ public class Lifter extends EscNodeBuilder
 		return builder.buildAnd(new SPred[] { and1, and2 });
 	}
 	// end public interface
-	
-	/*@ non_null_by_default @*/
-	static class SortVar extends Sort
-	{
-		private /*@ nullable @*/Sort ref;
-		
-		public SortVar()
-		{
-			super("sortVar", null, null, null);
-		}
-		
-		void refSet()
-		{
-			if (ref == null) {
-				//if (dumpBuilder != null)
-					ref = sortRef;
-//				else
-//					Assert.fail("ref == null");
-			}
-		}
-		
-		public /*@ nullable @*/Sort getSuperSort()
-		{
-			refSet();
-			return ref.getSuperSort();
-		}
-
-		public /*@ nullable @*/Sort getMapFrom()
-		{
-			refSet();			
-			return ref.getMapFrom();
-		}
-
-		public /*@ nullable @*/Sort getMapTo()
-		{
-			refSet();			
-			return ref.getMapTo();
-		}
-		
-		public boolean isFinalized()
-		{
-			if (ref == null) return false;
-			if (ref instanceof SortVar)
-				return ((SortVar)ref).isFinalized();
-			return true;
-		}
-		
-		boolean occurCheck(Sort s)
-		{
-			if (s == this)
-				return true;
-				
-			if (s instanceof SortVar && !((SortVar)s).isFinalized())
-			{
-				return false;
-			}
-			else if (s.getMapFrom() != null) {
-				return occurCheck(s.getMapFrom()) || occurCheck(s.getMapTo());
-			} else return false;
-		}
-		
-		public void assign(Sort s)
-		{
-			Assert.notFalse(ref == null);
-			if (doTrace)
-				trace("assign: ?" + id + " <- " + s);
-			if (occurCheck(s))
-				ErrorSet.error("cyclic sort found");
-			else
-				ref = s;
-		}
-		
-		public Sort theRealThing(EscNodeBuilder builder)
-		{
-			if (builder != null)
-				refSet();
-			
-			if (ref != null && ref instanceof SortVar)
-				return ref.theRealThing();
-			return ref == null ? this : ref;
-		}
-		
-		public String toString()
-		{
-			if (ref == null) return "?" + id;
-			else return ref.toString();
-		}
-	}
-	
-	/*@ non_null_by_default @*/
-	static abstract class Term
-	{	/*@ nullable @*/EscNodeBuilder dumpBuilder;
-		abstract public Sort getSort();
-		abstract public void infer(int pass);
-		
-		public void printTo(StringBuffer sb)
-		{
-			sb.append(super.toString());		
-		}
-		
-		public String toString()
-		{
-			StringBuffer sb = new StringBuffer();
-			printTo(sb);
-			return sb.toString();
-		}
-		
-		abstract public STerm dump();
-		
-		public SPred dumpPred()
-		{	
-			//ErrorSet.caution("( dumpPred");
-			Assert.notFalse(follow(getSort()) == sortPred);
-			SPred p = (SPred)dump();
-			//ErrorSet.caution(" dumpPred )");
-			return p;
-		}
-		
-		public SAny dumpAny()
-		{
-			Assert.notFalse(follow(getSort()) != sortPred);
-			return (SAny)dump();
-		}
-		
-		public SValue dumpValue()
-		{
-			Assert.notFalse(getSort().isSubSortOf(sortValue));
-			return (SValue)dump();
-		}
-		
-		public SInt dumpInt()
-		{
-			Assert.notFalse(getSort().isSubSortOf(sortInt));
-			return (SInt)dump();
-		}
-		
-		public SBool dumpBool()
-		{
-			Assert.notFalse(getSort().isSubSortOf(sortBool));
-			return (SBool)dump();
-		}
-		
-		public SReal dumpReal()
-		{
-			Assert.notFalse(getSort().isSubSortOf(sortReal));
-			return (SReal)dump();
-		}
-		
-		public SRef dumpRef()
-		{
-			Assert.notFalse(getSort().isSubSortOf(sortRef));
-			return (SRef)dump();
-		}
-		
-		public void enforceLabelSense(int sense)
-		{			
-		}
-	}
-	
-	/*@ non_null_by_default @*/
-	static class QuantVariableRef extends Term
-	{
-		final public QuantVariable qvar;
-		
-		public QuantVariableRef(QuantVariable q) { qvar = q; }		
-		public Sort getSort() { return qvar.type; }
-		public void infer(int pass) { }
-		
-		public void printTo(StringBuffer sb)
-		{
-			sb.append("?" + qvar.name + ":" + qvar.type);
-		}
-		
-		public STerm dump()
-		{
-			return dumpBuilder.buildQVarRef(qvar.qvar); 
-		}
-	}
-	
-	/*@ non_null_by_default @*/
-	static class FnTerm extends Term
-	{
-		int pass;
-		public FnSymbol fn;
-		final public Term[] args;
-		public int tag;
-		final public Sort retType;
-		public boolean isStringConst;
-		public boolean isDistinctSymbol;
-		
-		public FnTerm(FnSymbol fn, Term[] args)
-		{
-			this.fn = fn;
-			this.args = args;
-			if (fn == symSelect || fn == symStore || fn == symAsField)
-				retType = new SortVar();
-			else
-				retType = fn.retType;
-		}
-		
-		public Sort getSort() { return retType; }
-		
-		void enforceArgType(int i, Sort r)
-		{
-			r = follow(r);
-			Sort p = follow(args[i].getSort());
-			
-			if (isEarlySort (r, p))
-				return;
-			
-			FnSymbol conv = null;
-			
-			int minpass = 2;
-			if (p == sortValue)
-				conv =
-					r == sortInt ? symValueToInt : 
-					r == sortRef ? symValueToRef : 
-					r == sortBool ? symValueToBool : 
-					r == sortPred ? symValueToPred : // TODO flag this with warning
-					r == sortReal ? symValueToReal :
-					null;
-			else if (p == sortInt && r == sortReal) {
-				conv = symIntToReal;
-				minpass = 0;
-			} else if (p == sortPred && (r == sortValue || r == sortBool)) {
-				conv = symPredToBool;
-				ErrorSet.caution("using pred -> bool conversion! in arg #" + (1+i) + " of " + fn + " / " + this);				
-			} else if (p == sortBool && r == sortPred) {
-				conv = symIsTrue;
-				minpass = 1;
-			}
-			
-			if (pass >= minpass && conv != null) {
-				args[i] = new FnTerm(conv, new Term[] { args[i] });
-			} else if (!require(p, r, args[i]))
-				ErrorSet.error("which is arg #" + (1+i) + " of " + fn + " / " + this);
-		}
-		
-		public void infer(int pass)
-		{
-			this.pass = pass;
-			if (doTrace)
-				trace("start infer " + pass + ": " + fn + " / " + this + " -> " + retType);
-			
-			if (args.length != fn.argumentTypes.length) {
-				ErrorSet.error("wrong number of parameters to " + fn + " ---> " + this);
-				return;
-			}
-			
-			for (int i = 0; i < args.length; ++i)
-				args[i].infer(pass);			
-			
-			boolean skip = pass < lastPass;
-			
-			if (fn == symSelect)
-			{
-				Sort idx = new SortVar();
-				Sort map = registerMapSort(idx, retType);
-				
-				enforceArgType(0, map);
-				enforceArgType(1, idx);
-			}
-			else if (fn == symStore)
-			{
-				Sort idx = new SortVar();
-				Sort val = new SortVar();
-				Sort map = registerMapSort(idx, val);
-				
-				if (!isEarlySort(retType, map))
-					unify(retType, map, this);				
-				enforceArgType(0, map);
-				enforceArgType(1, idx);
-				enforceArgType(2, val);
-			}
-			else if (fn == symAnyEQ || fn == symAnyNE) {
-				Sort common = new SortVar();
-				
-				enforceArgType(0, common);
-				enforceArgType(1, common);
-				
-				if (follow(args[0].getSort()) == sortPred ||
-					follow(args[1].getSort()) == sortPred)
-				{
-					if (fn == symAnyEQ)
-						fn = symIff;
-					else
-						fn = symXor;
-					skip = false;
-				}
-			}
-			else if (fn == symAsField) {
-				Sort field = registerMapSort(new SortVar(), new SortVar(), sortField);
-				
-				enforceArgType(0, field);
-				enforceArgType(1, sortType);				
-				unify(field, retType, this);				
-			}
-			else if (fn == symFClosedTime) {
-				Sort field = registerMapSort(new SortVar(), new SortVar(), sortField);
-				
-				enforceArgType(0, field);				
-			} else skip = false;
-			
-			if (!skip)
-				for (int i = 0; i < args.length; ++i)
-					enforceArgType(i, fn.argumentTypes[i]);					
-			
-			if (doTrace)
-				trace("infer " + pass + ": " + fn + " / " + this + " -> " + retType);
-		}
-		
-		public void printTo(StringBuffer sb)
-		{
-			sb.append(fn.name);
-			
-			if (args.length > 0) {
-				sb.append("(");
-				for (int i = 0; i < args.length; ++i) {
-					args[i].printTo(sb);
-					if (i != args.length - 1)
-						sb.append(", ");
-				}
-				sb.append(")");
-			}
-			
-			sb.append(":").append(retType);
-		}
-		
-		public STerm dump()
-		{
-			boolean isPred = follow(fn.retType) == sortPred;
-			FnSymbol tfn = mapFnSymbolTo(dumpBuilder, fn);
-			if (tfn == null && fnTranslations.containsKey(fn))
-				tfn = (FnSymbol)fnTranslations.get(fn);
-				
-			if (tfn != null)
-				if (isPred)
-					return dumpBuilder.buildPredCall((PredSymbol)tfn, dumpArray(args));
-				else
-					return dumpBuilder.buildFnCall(tfn, dumpArray(args));
-			
-			if (fn == symImplies)
-				return dumpBuilder.buildImplies(args[0].dumpPred(), args[1].dumpPred());
-			if (fn == symIff)
-				return dumpBuilder.buildIff(args[0].dumpPred(), args[1].dumpPred());
-			if (fn == symXor)
-				return dumpBuilder.buildXor(args[0].dumpPred(), args[1].dumpPred());
-			if (fn == symNot)
-				return dumpBuilder.buildNot(args[0].dumpPred());
-			if (fn.name == "%and")
-				return dumpBuilder.buildAnd(dumpPredArray(args));
-			if (fn.name == "%or")
-				return dumpBuilder.buildOr(dumpPredArray(args));
-			if (fn == symTermConditional)
-				return dumpBuilder.buildITE(args[0].dumpPred(), args[1].dumpValue(), args[2].dumpValue());
-			if (fn == symIntPred)
-				return dumpBuilder.buildIntPred(tag, args[0].dumpInt(), args[1].dumpInt());
-			if (fn == symIntFn)
-				return dumpBuilder.buildIntFun(tag, args[0].dumpInt(), args[1].dumpInt());
-			if (fn == symRealPred)
-				return dumpBuilder.buildRealPred(tag, args[0].dumpReal(), args[1].dumpReal());
-			if (fn == symRealFn)
-				return dumpBuilder.buildRealFun(tag, args[0].dumpReal(), args[1].dumpReal());			
-			if (fn == symIntegralNeg)
-				return dumpBuilder.buildIntFun(funNEG, args[0].dumpInt());
-			if (fn == symFloatingNeg)
-				return dumpBuilder.buildRealFun(funNEG, args[0].dumpReal());
-			if (fn == symSelect)
-				return dumpBuilder.buildSelect((SMap)args[0].dump(), args[1].dumpValue());
-			if (fn == symStore)
-				return dumpBuilder.buildStore((SMap)args[0].dump(), args[1].dumpValue(), args[2].dumpValue());
-			
-			if (fn == symAnyEQ || fn == symAnyNE) {
-				Sort t1 = args[0].getSort().theRealThing();
-				Sort t2 = args[1].getSort().theRealThing();
-				
-				int tag = fn == symAnyEQ ? predEQ : predNE;
- 
-				if (t1.isSubSortOf(sortInt) && t2.isSubSortOf(sortInt))
-					return dumpBuilder.buildIntPred(tag, args[0].dumpInt(), args[1].dumpInt());
-				
-				if (t1.isSubSortOf(sortReal) && t2.isSubSortOf(sortReal))
-					return dumpBuilder.buildRealPred(tag, args[0].dumpReal(), args[1].dumpReal());
-				
-				if (fn == symAnyEQ)
-					return dumpBuilder.buildAnyEQ(args[0].dumpAny(), args[1].dumpAny());
-				else
-					return dumpBuilder.buildAnyNE(args[0].dumpAny(), args[1].dumpAny());				
-			}
-			
-			if (fn == symIsTrue)
-				return dumpBuilder.buildIsTrue(args[0].dumpBool());
-			
-			if (fn == symValueToPred)
-				return dumpBuilder.buildIsTrue(
-						(SBool)dumpBuilder.buildValueConversion(
-								dumpBuilder.sortValue, dumpBuilder.sortBool, 
-								args[0].dumpValue()));
-			
-			if (fn == symPredToBool)
-				return dumpBuilder.buildITE(args[0].dumpPred(),
-						dumpBuilder.buildBool(true),
-						dumpBuilder.buildBool(false));
-			
-			if (fn == symValueToBool || fn == symValueToInt || fn == symValueToReal ||
-				fn == symValueToRef || fn == symIntToReal)
-				return dumpBuilder.buildValueConversion(mapSortTo(dumpBuilder, fn.argumentTypes[0]),
-								mapSortTo(dumpBuilder, fn.retType), args[0].dumpValue());
-			
-			Assert.notFalse(! fn.name.startsWith("%"));
-			
-			tfn = isPred ? dumpBuilder.registerPredSymbol(fn.name, mapSorts(dumpBuilder, fn.argumentTypes)) :
-						   dumpBuilder.registerFnSymbol(fn.name, mapSorts(dumpBuilder, fn.argumentTypes), 
-								   					mapSortTo(dumpBuilder, fn.retType));
-			fnTranslations.put(fn, tfn);
-			if (isStringConst) stringConstants.add(this);
-			if (isDistinctSymbol) distinctSymbols.add(this);
-			return dump();			
-		}
-		
-		public void enforceLabelSense(int sense)
-		{
-			if (fn == symNot)
-				args[0].enforceLabelSense(-sense);
-			else if (fn == symImplies) {
-				args[0].enforceLabelSense(-sense);
-				args[1].enforceLabelSense(sense);
-			} else if (fn == symXor || fn == symIff) {
-				args[0].enforceLabelSense(0);
-				args[1].enforceLabelSense(0);
-			} else {
-				for (int i = 0; i < args.length; ++i)
-					args[i].enforceLabelSense(sense);
-			}
-		}
-		boolean isEarlySort(Sort s, Sort p)
-		{
-			return isEarlySort( s) || isEarlySort( p);
-		}
-		
-		boolean isEarlySort(Sort s)
-		{
-			s = follow(s);
-			
-			if (pass == 0)
-				return s == sortAny || s == sortPred || s == sortValue || s == sortRef;
-			else if (pass == 1)
-				return s == sortAny || s == sortPred || s == sortValue;
-			else if (pass == 2)
-				return s == sortAny || s == sortPred;
-			else
-				return false;
-		}
-	}
-	
-	/*@ non_null_by_default @*/
-	class QuantTerm extends Term
-	{
-		public final boolean universal;
-		public final QuantVariable[] vars;
-		public final Term[][] pats;
-		public final Term[] nopats;
-		public Term body;
-		
-		public QuantTerm(boolean universal, QuantVariable[] vars, Term body, Term[][] pats, Term[] nopats)
-		{
-			this.universal = universal;
-			this.vars = vars;
-			this.body = body;
-			this.pats = pats;
-			this.nopats = nopats;		
-		}
-		
-		public Sort getSort() { return sortPred; } 		
-		public void infer(int pass)		
-		{			
-			if (doTrace)
-				trace("infer start q " + pass + ": " + this);
-			body.infer(pass);
-			body = toPred(body);
-			if (doTrace)
-				trace("infer q " + pass + ": " + this);
-		}
-		
-		public void printTo(StringBuffer sb)
-		{
-			sb.append("forall [");
-			for (int i = 0; i < vars.length; ++i)
-				sb.append(vars[i].name + ":" + vars[i].type + /*"/" + vars[i].var.type +*/ ", ");
-			sb.append("] ");
-			body.printTo(sb);
-		}
-		
-		public STerm dump()
-		{
-			QuantVar[] qvars = new QuantVar[vars.length];
-			QuantVar[] prev = new QuantVar[vars.length];
-			for (int i = 0; i < vars.length; ++i) {
-				prev[i] = vars[i].qvar;
-				vars[i].qvar = dumpBuilder.registerQuantifiedVariable(vars[i].name, 
-											mapSortTo(dumpBuilder, vars[i].type));
-				qvars[i] = vars[i].qvar;
-			}
-			SPred qbody = (SPred) body.dump();
-			STerm[][] qpats = null;
-			STerm[] qnopats = null;
-			
-			if (pats != null) {
-				qpats = new SAny[pats.length][];
-				for (int i = 0; i < pats.length; ++i)
-					qpats[i] = dumpTermArray(pats[i]);				
-			}
-			
-			if (nopats != null) qnopats = dumpTermArray(nopats);
-			
-			for (int i = 0; i < vars.length; ++i) {
-				vars[i].qvar = prev[i];
-			}
-			
-			if (universal)
-				return dumpBuilder.buildForAll(qvars, qbody, qpats, qnopats);
-			else if (qpats == null && qnopats == null)
-				return dumpBuilder.buildExists(qvars, qbody);
-			else
-				return dumpBuilder.buildNot( 
-						dumpBuilder.buildForAll(qvars,
-								dumpBuilder.buildNot(qbody),
-								qpats, qnopats));
-		}
-		
-		public void enforceLabelSense(int sense)
-		{
-			body.enforceLabelSense(sense);
-		}
-	}
-	
-	/*@ non_null_by_default @*/
-	class QuantVariable
-	{
-		public final GenericVarDecl var;
-		public final String name;
-		public final Sort type;
-		
-		public QuantVar qvar;
-		
-		public QuantVariable(GenericVarDecl v, String n)
-		{
-			var = v;
-			name = n;
-			type = typeToSort(v.type);
-		}
-	}
-	
-	/*@ non_null_by_default @*/
-	class LabeledTerm extends Term
-	{
-		public final boolean positive;
-		public final String label;
-		public Term body;
-		boolean dirty;
-		boolean skipIt;
-		
-		public LabeledTerm(boolean pos, String l, Term b)
-		{
-			positive = pos;
-			label = l;
-			body = b;
-		}
-		
-		public Sort getSort() { return body.getSort(); } 		
-		public void infer(int pass) 
-		{
-			body.infer(pass);
-			body = toPred(body);
-		}		
-		
-		public void printTo(StringBuffer sb)
-		{
-			if (!positive)
-				sb.append("~");
-			sb.append(label).append(": ");
-			body.printTo(sb);
-		}
-		
-		public STerm dump()
-		{
-			if (skipIt)
-				return body.dump();
-			else
-				return dumpBuilder.buildLabel(positive, label, (SPred)body.dump());
-		}
-		
-		public void enforceLabelSense(int sense)
-		{
-			Assert.notFalse(!dirty);
-			dirty = true;
-			if ((positive && sense > 0) || (!positive && sense < 0)) {}
-			else {
-				//ErrorSet.error("label: " + label + " used with wrong sense s="+sense);
-				//ErrorSet.caution("change positive: " + positive + " into " + (sense < 0));
-				skipIt = true;
-			}
-			body.enforceLabelSense(sense);
-		}
-	}
-	
-	/*@ non_null_by_default @*/
-	class IntLiteral extends Term
-	{
-		final public long value;
-		public IntLiteral(long v) { value = v; }
-		public Sort getSort() { return sortInt; }
-		public void infer(int pass) { }
-		public void printTo(StringBuffer sb) { sb.append(value); }
-		public STerm dump() { return dumpBuilder.buildInt(value); }
-	}
-	
-	/*@ non_null_by_default @*/
-	class RealLiteral extends Term
-	{
-		final public double value;
-		public RealLiteral(double v) { value = v; }
-		public Sort getSort() { return sortReal; } 
-		public void infer(int pass) { }
-		public STerm dump() { return dumpBuilder.buildReal(value); }
-	}
-	
-	/*@ non_null_by_default @*/
-	class BoolLiteral extends Term
-	{
-		final public boolean value;
-		public BoolLiteral(boolean v) {	value = v; }
-		public Sort getSort() { return sortBool; }
-		public void infer(int pass) { }
-		public STerm dump() { return dumpBuilder.buildBool(value); }
-	}
-	
-	/*@ non_null_by_default @*/
-	class NullLiteral extends Term
-	{
-		public NullLiteral() { }
-		public Sort getSort() { return sortRef; }
-		public void infer(int pass) { }
-		public STerm dump() { return dumpBuilder.buildNull(); }
-	}
 	
 	public static PredSymbol symImplies = registerPredSymbol("%implies", new Sort[] { sortPred, sortPred }, TagConstants.BOOLIMPLIES);
 	public static PredSymbol symOr = registerPredSymbol("%or", new Sort[] { sortPred, sortPred });
@@ -834,18 +218,18 @@ public class Lifter extends EscNodeBuilder
 		return res;
 	}
 	
-	static Sort follow(Sort s)
+	public static Sort follow(Sort s)
 	{
 		return s.theRealThing();
 	}
 	
-	private static boolean isFinalized(/*@ nullable @*/Sort s)
+	public static boolean isFinalized(/*@ nullable @*/Sort s)
 	{
 		return s != null && !(s instanceof SortVar && !((SortVar)s).isFinalized());
 	}
 	
 	// make sure s1<:s2
-	private static boolean require(Sort s1, Sort s2, Object where)
+	public static boolean require(Sort s1, Sort s2, Object where)
 	{
 		s1 = follow(s1);
 		s2 = follow(s2);
@@ -878,12 +262,12 @@ public class Lifter extends EscNodeBuilder
 		return true;
 	}
 	
-	private static boolean unify(Sort s1, Sort s2, Object where)
+	public static boolean unify(Sort s1, Sort s2, Object where)
 	{
 		return require(s1, s2, where) && require(s2, s1, where);
 	}
 	
-	private FnTerm symbolRef(String name, /*@ nullable @*/Sort s)
+	FnTerm symbolRef(String name, /*@ nullable @*/Sort s)
 	{
 		FnSymbol fn = getFnSymbol(name, 0);
 		if (s != null)
@@ -892,12 +276,12 @@ public class Lifter extends EscNodeBuilder
 		return new FnTerm(fn, emptyTerms);
 	}
 	
-	private FnTerm symbolRef(String name)
+	FnTerm symbolRef(String name)
 	{
 		return symbolRef(name, null);
 	}
 	
-	private FnSymbol getFnSymbol(String name, int arity)
+	FnSymbol getFnSymbol(String name, int arity)
 	{
 		String nameCur = name + "." + arity + "." + methodNo;
 		String name0 = name + "." + arity + ".0";
@@ -930,13 +314,13 @@ public class Lifter extends EscNodeBuilder
 		return fn;
 	}
 	
-	private static void trace(String msg)
+	public static void trace(String msg)
 	{
 		Assert.notFalse (doTrace);
 		ErrorSet.caution(msg);
 	}
 		
-	private Sort typeToSort(Type t)
+	public static Sort typeToSort(Type t)
 	{
 		switch (t.getTag()) {
 		case TagConstants.ARRAYTYPE:
@@ -971,7 +355,7 @@ public class Lifter extends EscNodeBuilder
 		}
 	}
 	
-	private FnSymbol giantBoolConective(int tag, int arity) {
+	FnSymbol giantBoolConective(int tag, int arity) {
 		FnSymbol fn;
 		fn = getFnSymbol(tag == TagConstants.BOOLOR ? "%or" : "%and",
 						 arity);
@@ -981,7 +365,7 @@ public class Lifter extends EscNodeBuilder
 		return fn;
 	}	
 	private Pattern number = Pattern.compile("[0-9]+");	
-	private Term doTransform(ASTNode n)
+	Term doTransform(ASTNode n)
 	{		
 		// declarations & instancations
 		int nbChilds = n.childCount();
@@ -1550,11 +934,11 @@ public class Lifter extends EscNodeBuilder
 
 	// dump	
 	/*@ nullable @*/EscNodeBuilder dumpBuilder;
-	static final Hashtable fnTranslations = new Hashtable();
-	static final ArrayList stringConstants = new ArrayList();
-	static final ArrayList distinctSymbols = new ArrayList();
+	public static final Hashtable fnTranslations = new Hashtable();
+	public static final ArrayList stringConstants = new ArrayList();
+	public static final ArrayList distinctSymbols = new ArrayList();
 	
-	static Sort[] mapSorts(EscNodeBuilder builder, Sort[] s)
+	public static Sort[] mapSorts(EscNodeBuilder builder, Sort[] s)
 	{
 		Sort[] res = new Sort[s.length];
 		for (int i = 0; i < s.length; ++i)
@@ -1562,7 +946,7 @@ public class Lifter extends EscNodeBuilder
 		return res;
 	}
 	
-	static SAny[] dumpArray(Term[] args)
+	public static SAny[] dumpArray(Term[] args)
 	{
 		SAny[] params = new SAny[args.length];
 		for (int i = 0; i < args.length; ++i)
@@ -1570,7 +954,7 @@ public class Lifter extends EscNodeBuilder
 		return params;
 	}
 	
-	static SPred[] dumpPredArray(Term[] args)
+	public static SPred[] dumpPredArray(Term[] args)
 	{
 		SPred[] params = new SPred[args.length];
 		for (int i = 0; i < args.length; ++i)
@@ -1578,7 +962,7 @@ public class Lifter extends EscNodeBuilder
 		return params;
 	}
 	
-	static STerm[] dumpTermArray(Term[] args)
+	public static STerm[] dumpTermArray(Term[] args)
 	{
 		STerm[] params = new SAny[args.length];
 		for (int i = 0; i < args.length; ++i)
@@ -1586,14 +970,14 @@ public class Lifter extends EscNodeBuilder
 		return params;
 	}
 	
-	Term toPred(Term body)
+	public static Term toPred(Term body)
 	{
 		if (follow(body.getSort()) == sortBool)
 			body = new FnTerm(symIsTrue, new Term[] { body });
 		if (follow(body.getSort()) == sortValue)
 			// TODO warning
 			body = new FnTerm(symValueToPred, new Term[] { body });			
-		unify(body.getSort(), sortPred, this);
+		unify(body.getSort(), sortPred, null);
 		return body;		
 	}
 	

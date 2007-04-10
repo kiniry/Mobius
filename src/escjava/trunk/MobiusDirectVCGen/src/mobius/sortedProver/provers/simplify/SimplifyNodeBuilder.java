@@ -1,4 +1,4 @@
-package escjava.sortedProver.provers.simplify;
+package mobius.sortedProver.provers.simplify;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -6,26 +6,27 @@ import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
 
+import mobius.sortedProver.EscNodeBuilder;
+import mobius.sortedProver.NodeBuilder;
+import mobius.sortedProver.NodeBuilder.SAny;
+import mobius.sortedProver.NodeBuilder.SBool;
+import mobius.sortedProver.NodeBuilder.SInt;
+import mobius.sortedProver.NodeBuilder.SMap;
+import mobius.sortedProver.NodeBuilder.SPred;
+import mobius.sortedProver.NodeBuilder.SReal;
+import mobius.sortedProver.NodeBuilder.SRef;
+import mobius.sortedProver.NodeBuilder.STerm;
+import mobius.sortedProver.NodeBuilder.SValue;
+import mobius.sortedProver.nodebuilder.members.FnSymbol;
+import mobius.sortedProver.nodebuilder.members.PredSymbol;
+import mobius.sortedProver.nodebuilder.members.QuantVar;
+import mobius.sortedProver.nodebuilder.members.Sort;
+
 import javafe.ast.Expr;
 import javafe.ast.Identifier;
 import javafe.util.Assert;
 import javafe.util.Set;
 import escjava.prover.Atom;
-import escjava.sortedProver.EscNodeBuilder;
-import escjava.sortedProver.NodeBuilder;
-import escjava.sortedProver.NodeBuilder.SAny;
-import escjava.sortedProver.NodeBuilder.SBool;
-import escjava.sortedProver.NodeBuilder.SInt;
-import escjava.sortedProver.NodeBuilder.SMap;
-import escjava.sortedProver.NodeBuilder.SPred;
-import escjava.sortedProver.NodeBuilder.SReal;
-import escjava.sortedProver.NodeBuilder.SRef;
-import escjava.sortedProver.NodeBuilder.STerm;
-import escjava.sortedProver.NodeBuilder.SValue;
-import escjava.sortedProver.nodebuilder.members.FnSymbol;
-import escjava.sortedProver.nodebuilder.members.PredSymbol;
-import escjava.sortedProver.nodebuilder.members.QuantVar;
-import escjava.sortedProver.nodebuilder.members.Sort;
 
 /*@ non_null_by_default @*/
 public class SimplifyNodeBuilder extends EscNodeBuilder

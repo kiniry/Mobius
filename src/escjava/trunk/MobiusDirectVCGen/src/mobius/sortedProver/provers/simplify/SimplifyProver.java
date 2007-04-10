@@ -1,25 +1,26 @@
-package escjava.sortedProver.provers.simplify;
+package mobius.sortedProver.provers.simplify;
 
 import java.util.Enumeration;
 import java.util.Properties;
+
+import mobius.sortedProver.CounterExampleResponse;
+import mobius.sortedProver.EscNodeBuilder;
+import mobius.sortedProver.NodeBuilder;
+import mobius.sortedProver.SortedProver;
+import mobius.sortedProver.SortedProverCallback;
+import mobius.sortedProver.SortedProverResponse;
+import mobius.sortedProver.NodeBuilder.SPred;
+import mobius.sortedProver.provers.simplify.SimplifyNodeBuilder.Sx;
 
 import javafe.util.Assert;
 import javafe.util.Info;
 
 import escjava.backpred.BackPred;
-import escjava.sortedProver.SortedProverResponse;
 import escjava.prover.SExp;
 import escjava.prover.SList;
 import escjava.prover.Simplify;
 import escjava.prover.SimplifyOutput;
 import escjava.prover.SimplifyResult;
-import escjava.sortedProver.CounterExampleResponse;
-import escjava.sortedProver.EscNodeBuilder;
-import escjava.sortedProver.NodeBuilder;
-import escjava.sortedProver.SortedProver;
-import escjava.sortedProver.SortedProverCallback;
-import escjava.sortedProver.NodeBuilder.SPred;
-import escjava.sortedProver.provers.simplify.SimplifyNodeBuilder.Sx;
 import escjava.translate.VcToString;
 
 /*@ non_null_by_default @*/
