@@ -2,12 +2,23 @@ package mobius.directVCGen.vcgen.intern;
 
 import mobius.directVCGen.formula.Bool;
 import mobius.directVCGen.formula.Expression;
+import mobius.directVCGen.formula.Formula;
 import mobius.directVCGen.formula.Num;
 import javafe.ast.BinaryExpr;
+import javafe.ast.FieldDecl;
+import javafe.ast.FormalParaDecl;
+import javafe.ast.GenericVarDecl;
 import javafe.ast.LiteralExpr;
+import javafe.ast.LocalVarDecl;
 import javafe.ast.UnaryExpr;
 import javafe.ast.VariableAccess;
+import javafe.util.ErrorSet;
+import escjava.ast.Modifiers;
 import escjava.ast.TagConstants;
+import escjava.sortedProver.Lifter.QuantVariable;
+import escjava.sortedProver.Lifter.Term;
+import escjava.sortedProver.NodeBuilder.Sort;
+import escjava.translate.UniqName;
 
 public class ExpressionVisitor extends ABasicVisitor {
 	public Object visitBinaryExpr(BinaryExpr expr, Object o) {
@@ -124,9 +135,36 @@ public class ExpressionVisitor extends ABasicVisitor {
 		}
 	}
 	
-	public Object visitVariableAccess(VariableAccess acc, Object o) {
+	public Object visitVariableAccess(VariableAccess m, Object o) {
 		ExprResult res = (ExprResult) o;
-		res.substWith(Expression.var(acc.id.toString()));
+		
+		Sort s = null;
+		String name = UniqName.variable(m.decl);
+			
+		GenericVarDecl decl = m.decl;
+			
+		if (decl instanceof LocalVarDecl && ((LocalVarDecl)decl).source != null) {
+			decl = ((LocalVarDecl)decl).source;				
+			
+			if (decl instanceof FieldDecl) {
+				FieldDecl d = (FieldDecl)decl;
+				if (Modifiers.isStatic(d.getModifiers()))
+					s = Formula.getCurrentLifter().typeToSort(d.type);
+				else
+					s = Formula.getCurrentLifter().registerMapSort(Formula.getCurrentLifter().sortRef, Formula.getCurrentLifter().typeToSort(d.type));
+				//ErrorSet.caution("VariableAccess " + name + " -> " + s);
+			} else if (decl instanceof LocalVarDecl || decl instanceof FormalParaDecl) {
+				GenericVarDecl g = (GenericVarDecl)decl;
+				s = Formula.getCurrentLifter().typeToSort(g.type);
+				//ErrorSet.caution("VariableAccess local " + name + " -> " + s);
+			} else {
+				ErrorSet.caution("unknown decl in VariableAccess " + m.decl.getClass());
+			}
+			
+			
+			
+		}
+		res.substWith(Expression.var(name, s));
 		return  res;
 	}
 	public ExprResult vcGenPostfixInc(UnaryExpr expr, ExprResult r) {

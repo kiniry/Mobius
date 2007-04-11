@@ -3,6 +3,8 @@ package mobius.directVCGen.formula;
 
 import java.util.Vector;
 
+import escjava.sortedProver.Lifter.QuantTerm;
+import escjava.sortedProver.Lifter.QuantVariable;
 import escjava.sortedProver.Lifter.Term;
 
 public class Logic {
@@ -105,18 +107,20 @@ public class Logic {
 		return Formula.lf.mkFnTerm(Formula.lf.symNot, new Term []{f});
 	}
 	
-//	/**
-//	 * Creates a forall binding only one variable from the formula f.
-//	 * @param v the variable to bind
-//	 * @param f the formula which is the body of the forall
-//	 * @return the forall construct newly created
-//	 */
-//	public static ALogic forall(Variable v, IFormula f) {
-//		if(f.getType() != Type.prop)
-//			throw new IllegalArgumentException("Bad type when creating BoolProp, " +
-//				"found: " + f.getType());
-//		return new ForAll(v, f);
-//	}
+	/**
+	 * Creates a forall binding only one variable from the formula f.
+	 * @param v the variable to bind
+	 * @param f the formula which is the body of the forall
+	 * @return the forall construct newly created
+	 */
+	public static QuantTerm forall(QuantVariable v, Term f) {
+	
+		if(f.getSort() != Formula.lf.sortPred)
+			throw new IllegalArgumentException("Bad type when creating BoolProp, " +
+				"found: " + f.getSort());
+		
+		return Formula.lf.mkQuantTerm(true, new QuantVariable [] {v}, f, null, null);
+	}
 //	/**
 //	 * Creates an exists binding only one variable from the formula f.
 //	 * @param v the variable to bind
