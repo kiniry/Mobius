@@ -14,11 +14,11 @@ import javafe.util.ErrorSet;
 import javafe.util.FatalError;
 import javafe.util.Info;
 import javafe.util.Location;
-import mobius.directVCGen.formula.IFormula;
 import mobius.directVCGen.vcgen.VCGenVisitor;
 import escjava.ast.EscPrettyPrint;
 import escjava.ast.GuardedCmd;
 import escjava.backpred.FindContributors;
+import escjava.sortedProver.Lifter.Term;
 import escjava.tc.TypeCheck;
 import escjava.translate.InitialState;
 import escjava.translate.LabelInfoToString;
@@ -115,8 +115,8 @@ public class Main extends escjava.Main {
 	    
 	    processTD_stage1(td, sig, errorCount);
 	    System.out.println(currentTime() - startTime);
-	    Vector<IFormula> vcs; 
-	    vcs = (Vector<IFormula>) td.accept(new VCGenVisitor(), null);
+	    Vector<Term> vcs; 
+	    vcs = (Vector<Term>) td.accept(new VCGenVisitor(), null);
 	    //sig.accept(new VCGenVisitor(), vcs);
 	    System.out.println(vcs);
 //	    FindContributors scope =  new FindContributors(sig);

@@ -1,10 +1,11 @@
 package mobius.directVCGen.formula;
 
-import mobius.directVCGen.formula.expression.bool.Bool;
+import escjava.sortedProver.Lifter;
 
 public class Formula {
-
-	public static IFormula equals(IFormula f1, IFormula f2) {
-		return Bool.equals(f1, f2);
+	static Lifter lf = new Lifter(null);
+	public Lifter getCurrentLifter() {
+		return lf;
 	}
+	
 }
