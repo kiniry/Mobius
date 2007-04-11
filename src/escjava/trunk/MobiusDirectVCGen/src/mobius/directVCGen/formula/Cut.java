@@ -6,6 +6,9 @@ import javafe.ast.Stmt.Annotation;
 
 public class Cut implements Annotation {
 
+	/**
+	 * FOL-Term that should be 'cutted' in the VCGen at this point
+	 */
 	public Term formula;
 	
 }
