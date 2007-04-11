@@ -3,9 +3,8 @@ package mobius.directVCGen.formula;
 import java.util.Vector;
 
 import escjava.sortedProver.Lifter.Term;
-import javafe.ast.Stmt.Annotation;
 
-public class Set implements Annotation {
+public class Set extends AAnnotation {
 
 	/**
 	 * FOL-Terms  containing variable declarations. (Each Term is just a Variable)

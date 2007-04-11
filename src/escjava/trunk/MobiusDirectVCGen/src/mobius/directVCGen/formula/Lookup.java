@@ -37,7 +37,7 @@ public class Lookup {
 //	 * Returns all annotations for method m
 //	 * @param m the method of interest
 //	 */
-//	public static ??? method_annotation(MethodDecl m){
+//	public static  method_annotation(MethodDecl m){
 //		return null;
 //	}
 	
