@@ -4,7 +4,8 @@ import escjava.sortedProver.Lifter;
 
 public class Formula {
 	static Lifter lf = new Lifter(null);
-	public Lifter getCurrentLifter() {
+	
+	public static Lifter getCurrentLifter() {
 		return lf;
 	}
 	

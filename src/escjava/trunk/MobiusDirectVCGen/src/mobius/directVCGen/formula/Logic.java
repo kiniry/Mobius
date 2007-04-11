@@ -93,18 +93,18 @@ public class Logic {
 	}
 	
 	
-//	/**
-//	 * Creates and returns the negation of a formula
-//	 * @param f the formula to negate (of type prop)
-//	 * @return return the new not construct
-//	 */
-//	public static ALogic not(IFormula f) {
-//		if(f.getType() != Type.prop)
-//			throw new IllegalArgumentException("Bad type when creating BoolProp, " +
-//				"found: " + f.getType());
-//		return new Not(f);
-//	}
-//	
+	/**
+	 * Creates and returns the negation of a formula
+	 * @param f the formula to negate (of type prop)
+	 * @return return the new not construct
+	 */
+	public static Term not(Term f) {
+		if(f.getSort() != Formula.lf.sortPred)
+			throw new IllegalArgumentException("Bad type when creating BoolProp, " +
+				"found: " + f.getSort());
+		return Formula.lf.mkFnTerm(Formula.lf.symNot, new Term []{f});
+	}
+	
 //	/**
 //	 * Creates a forall binding only one variable from the formula f.
 //	 * @param v the variable to bind
