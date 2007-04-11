@@ -710,8 +710,8 @@ public abstract class Stmt extends ASTNode
 	public static interface Annotation {
 	}
 	
-	protected Annotation annotPre;
-	protected Annotation annotPost;
+	public Annotation annotPre;
+	public Annotation annotPost;
 	
 }
 
