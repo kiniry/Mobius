@@ -29,9 +29,12 @@ public class GCSanity {
     }
   }
 
-  /** Checks that there are no duplicate definitions of local variables,
-    * including implicit outermost declarations and considering dynamic
-    * inflections.  Also checks that dynamic-inflection prefixes are unique.
+  /** Checks that there are no duplicate definitions of local
+    * variables, including implicit outermost declarations and
+    * considering dynamic inflections.  Also checks that
+    * dynamic-inflection prefixes are unique in nesting, i.e. there
+    * are no two dynamic commands with the same inflections where
+    * one would be inside another.
     *
     * @param edci       ever declared with current inflection
     * @param cdni       currently declared with nonempty inflection
@@ -138,14 +141,16 @@ public class GCSanity {
       }
 
     case TagConstants.DYNINSTCMD:
-      {
-	DynInstCmd dc = (DynInstCmd)g;
-	Set edciNew = new Set();
-	String infl = inflection + "-" + dc.s;
-	Assert.notFalse(! sp.add(infl.intern()));
-	checkDeclsAndUses(dc.g, edciNew, cdni, euei, uuei, infl, sp);
-	break;
-      }
+        {
+            DynInstCmd dc = (DynInstCmd)g;
+            Set edciNew = new Set();
+            String infl = inflection + "-" + dc.s;
+            String internInfl = infl.intern();
+            Assert.notFalse(!sp.add(internInfl));
+            checkDeclsAndUses(dc.g, edciNew, cdni, euei, uuei, infl, sp);
+            sp.remove(internInfl);
+            break;
+        }
 
     case TagConstants.SEQCMD:
       {
