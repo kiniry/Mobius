@@ -3,19 +3,19 @@
  */
 package mobius.directVCGen.vcgen.intern;
 
-import mobius.directVCGen.formula.IFormula;
-import mobius.directVCGen.formula.expression.Variable;
+import escjava.sortedProver.Lifter.QuantVariableRef;
+import escjava.sortedProver.Lifter.Term;
 
 public class ExprResult {
 	/** the temporary variable; used in the vcGen of expressions */
-	public Variable vtmp;
+	public QuantVariableRef vtmp;
 	/** the current postcondition */
-	public IFormula post;
+	public Term post;
 	
 	/** the excp post condition... */
-	public IFormula excpost;
+	public Term excpost;
 	
-	public void substWith(IFormula f) {
+	public void substWith(Term f) {
 		post.subst(vtmp, f);
 	}
 	

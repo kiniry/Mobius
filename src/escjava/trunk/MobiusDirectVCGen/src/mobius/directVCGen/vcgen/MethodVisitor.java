@@ -1,7 +1,7 @@
 package mobius.directVCGen.vcgen;
 
-import mobius.directVCGen.formula.IFormula;
-import mobius.directVCGen.formula.logic.Logic;
+import escjava.sortedProver.Lifter.Term;
+import mobius.directVCGen.formula.Logic;
 import mobius.directVCGen.vcgen.intern.ABasicVisitor;
 import javafe.ast.BlockStmt;
 import javafe.ast.MethodDecl;
@@ -15,7 +15,7 @@ public class MethodVisitor extends ABasicVisitor {
 	}
 
 	public /*@non_null*/ Object visitBlockStmt(/*@non_null*/ BlockStmt x, Object o) {
-		IFormula post = Logic.TRUE;
+		Term post = Logic.True();
 		DirectVCGen dvcg = new DirectVCGen();
 		System.out.println(x.accept(dvcg, post));
 		

@@ -7,18 +7,17 @@ import javafe.ast.BlockStmt;
 import javafe.ast.EvalStmt;
 import javafe.ast.LocalVarDecl;
 import javafe.ast.VarDeclStmt;
-import mobius.directVCGen.formula.IFormula;
-import mobius.directVCGen.formula.expression.Expression;
-import mobius.directVCGen.formula.expression.Variable;
-import mobius.directVCGen.formula.logic.Logic;
+import mobius.directVCGen.formula.Expression;
 import mobius.directVCGen.vcgen.intern.ExprResult;
 import mobius.directVCGen.vcgen.intern.ExpressionVisitor;
-import mobius.directVCGen.vcgen.intern.TypeVisitor;
 import escjava.ast.ExprStmtPragma;
 import escjava.ast.TagConstants;
+import escjava.sortedProver.Lifter;
+import escjava.sortedProver.Lifter.QuantVariableRef;
+import escjava.sortedProver.Lifter.Term;
 
 public class DirectVCGen extends ExpressionVisitor {
-	public final Vector<IFormula> vcs = new Vector<IFormula>();
+	public final Vector<Term> vcs = new Vector<Term>();
 	
 	
 	@Override
@@ -35,7 +34,7 @@ public class DirectVCGen extends ExpressionVisitor {
 	}
 	
 	public Object visitExprStmtPragma(ExprStmtPragma esp, Object o) {
-		IFormula post = (IFormula) o;
+		Term post = (Term) o;
 		switch(esp.tag) {
 			case TagConstants.ASSERT:
 				return vcGenAssert(esp, post);
@@ -44,7 +43,7 @@ public class DirectVCGen extends ExpressionVisitor {
 		}
 	}
 	public Object visitEvalStmt(EvalStmt esp, Object o) {
-		IFormula post = (IFormula) o;
+		Term post = (Term) o;
 		ExprResult er = new ExprResult();
 		er.post = post;
 		er = (ExprResult)this.visitASTNode(esp, er);
@@ -53,9 +52,10 @@ public class DirectVCGen extends ExpressionVisitor {
 	}
 
 	public Object visitVarDeclStmt(VarDeclStmt stmt, Object o) {
-		IFormula post = (IFormula) o;
+		Term post = (Lifter.Term ) o;
 		LocalVarDecl decl = stmt.decl;
-		Variable v = Expression.var(decl.id.toString(), TypeVisitor.convert2Type(decl.type));
+		QuantVariableRef v = Expression.var(decl.id.toString());
+		
 		ExprResult er = new ExprResult();
 		er.post = post;
 		ExprResult init = (ExprResult) decl.init.accept(this, er);
@@ -68,7 +68,7 @@ public class DirectVCGen extends ExpressionVisitor {
 	
 
 
-	public IFormula vcGenAssert(ExprStmtPragma stmtAssert, IFormula post) {
+	public Term vcGenAssert(ExprStmtPragma stmtAssert, Term post) {
 		ExprResult er = new ExprResult();
 		er.post = post;
 		ExprResult as = getAssert(stmtAssert, er);

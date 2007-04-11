@@ -2,7 +2,6 @@ package mobius.directVCGen.vcgen.intern;
 
 import escjava.ast.TagConstants;
 import javafe.ast.PrimitiveType;
-import mobius.directVCGen.formula.type.Type;
 
 public class TypeVisitor extends ABasicVisitor {
 	protected static TypeVisitor inst = new TypeVisitor();

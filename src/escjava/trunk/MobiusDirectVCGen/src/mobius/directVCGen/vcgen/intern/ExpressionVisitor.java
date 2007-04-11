@@ -1,13 +1,12 @@
 package mobius.directVCGen.vcgen.intern;
 
+import mobius.directVCGen.formula.Bool;
+import mobius.directVCGen.formula.Expression;
+import mobius.directVCGen.formula.Num;
 import javafe.ast.BinaryExpr;
 import javafe.ast.LiteralExpr;
 import javafe.ast.UnaryExpr;
 import javafe.ast.VariableAccess;
-import mobius.directVCGen.formula.expression.Expression;
-import mobius.directVCGen.formula.expression.bool.Bool;
-import mobius.directVCGen.formula.expression.num.Num;
-import mobius.directVCGen.formula.type.Type;
 import escjava.ast.TagConstants;
 
 public class ExpressionVisitor extends ABasicVisitor {
@@ -127,7 +126,7 @@ public class ExpressionVisitor extends ABasicVisitor {
 	
 	public Object visitVariableAccess(VariableAccess acc, Object o) {
 		ExprResult res = (ExprResult) o;
-		res.substWith(Expression.var(acc.id.toString(), Type.undef));
+		res.substWith(Expression.var(acc.id.toString()));
 		return  res;
 	}
 	public ExprResult vcGenPostfixInc(UnaryExpr expr, ExprResult r) {
