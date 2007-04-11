@@ -81,7 +81,7 @@ public class Lifter extends EscNodeBuilder
 	// end public interface
 	
 	/*@ non_null_by_default @*/
-	class SortVar extends Sort
+	public class SortVar extends Sort
 	{
 		private /*@ nullable @*/Sort ref;
 		
@@ -169,11 +169,14 @@ public class Lifter extends EscNodeBuilder
 	}
 	
 	/*@ non_null_by_default @*/
-	abstract class Term
+	public abstract class Term
 	{	
 		abstract public Sort getSort();
 		abstract public void infer();
 		
+		public Term subst(QuantVariableRef qvr, Term t) {
+			return this;
+		}
 		public void printTo(StringBuffer sb)
 		{
 			sb.append(super.toString());		
@@ -239,7 +242,7 @@ public class Lifter extends EscNodeBuilder
 	}
 	
 	/*@ non_null_by_default @*/
-	class QuantVariableRef extends Term
+	public class QuantVariableRef extends Term
 	{
 		final public QuantVariable qvar;
 		
@@ -258,8 +261,12 @@ public class Lifter extends EscNodeBuilder
 		}
 	}
 	
+	public QuantVariableRef mkQuantVariableRef (QuantVariable q) {
+		return new QuantVariableRef(q);
+	}
+	
 	/*@ non_null_by_default @*/
-	class FnTerm extends Term
+	public class FnTerm extends Term
 	{
 		public FnSymbol fn;
 		final public Term[] args;
@@ -514,8 +521,11 @@ public class Lifter extends EscNodeBuilder
 		}
 	}
 	
+	public FnTerm mkFnTerm(FnSymbol fn, Term[] args) {
+		return new FnTerm(fn, args);
+	}
 	/*@ non_null_by_default @*/
-	class QuantTerm extends Term
+	public class QuantTerm extends Term
 	{
 		public final boolean universal;
 		public final QuantVariable[] vars;
@@ -595,8 +605,12 @@ public class Lifter extends EscNodeBuilder
 		}
 	}
 	
+	public QuantTerm mkQuantTerm(boolean universal, QuantVariable[] vars, Term body, Term[][] pats, Term[] nopats) {
+		return new QuantTerm(universal, vars, body, pats, nopats);
+	}
+	
 	/*@ non_null_by_default @*/
-	class QuantVariable
+	public class QuantVariable
 	{
 		public final GenericVarDecl var;
 		public final String name;
@@ -611,9 +625,11 @@ public class Lifter extends EscNodeBuilder
 			type = typeToSort(v.type);
 		}
 	}
-	
+	public QuantVariable mkQuantVariable(GenericVarDecl v, String n) {
+		return new QuantVariable(v, n);
+	}
 	/*@ non_null_by_default @*/
-	class LabeledTerm extends Term
+	public class LabeledTerm extends Term
 	{
 		public final boolean positive;
 		public final String label;
@@ -664,9 +680,12 @@ public class Lifter extends EscNodeBuilder
 			body.enforceLabelSense(sense);
 		}
 	}
+	public LabeledTerm mkLabeledTerm(boolean pos, String l, Term b) {
+		return new LabeledTerm(pos, l, b);
+	}
 	
 	/*@ non_null_by_default @*/
-	class IntLiteral extends Term
+	public class IntLiteral extends Term
 	{
 		final public long value;
 		public IntLiteral(long v) { value = v; }
@@ -675,9 +694,12 @@ public class Lifter extends EscNodeBuilder
 		public void printTo(StringBuffer sb) { sb.append(value); }
 		public STerm dump() { return dumpBuilder.buildInt(value); }
 	}
+	public IntLiteral mkIntLiteral(long v) {
+		return new IntLiteral(v);
+	}
 	
 	/*@ non_null_by_default @*/
-	class RealLiteral extends Term
+	public class RealLiteral extends Term
 	{
 		final public double value;
 		public RealLiteral(double v) { value = v; }
@@ -685,9 +707,11 @@ public class Lifter extends EscNodeBuilder
 		public void infer() { }
 		public STerm dump() { return dumpBuilder.buildReal(value); }
 	}
-	
+	public RealLiteral mkRealLiteral(double v) {
+		return new RealLiteral(v);
+	}
 	/*@ non_null_by_default @*/
-	class BoolLiteral extends Term
+	public class BoolLiteral extends Term
 	{
 		final public boolean value;
 		public BoolLiteral(boolean v) {	value = v; }
@@ -695,14 +719,22 @@ public class Lifter extends EscNodeBuilder
 		public void infer() { }
 		public STerm dump() { return dumpBuilder.buildBool(value); }
 	}
-	
+	public BoolLiteral mkBoolLiteral(boolean v) {
+		return new BoolLiteral(v);
+	}
+	public FnTerm mkPredLiteral(boolean v) {
+		return mkFnTerm(symIsTrue, new Term[] {mkBoolLiteral(v)});
+	}
 	/*@ non_null_by_default @*/
-	class NullLiteral extends Term
+	public class NullLiteral extends Term
 	{
 		public NullLiteral() { }
 		public Sort getSort() { return sortRef; }
 		public void infer() { }
 		public STerm dump() { return dumpBuilder.buildNull(); }
+	}
+	public NullLiteral mkNullLiteral() {
+		return new NullLiteral();
 	}
 	
 	public PredSymbol symImplies = registerPredSymbol("%implies", new Sort[] { sortPred, sortPred }, TagConstants.BOOLIMPLIES);
@@ -788,7 +820,7 @@ public class Lifter extends EscNodeBuilder
 			return false;
 	}
 	
-	SPred doConvert(Term root) 
+	public SPred doConvert(Term root) 
 	{		
 		pass = 0;
 		while (pass <= lastPass) {
@@ -799,7 +831,7 @@ public class Lifter extends EscNodeBuilder
 		return build(root);
 	}
 	
-	SPred build(Term root)
+	public SPred build(Term root)
 	{
 		dumpBuilder = builder;
 		stringConstants.clear();
@@ -1350,7 +1382,7 @@ public class Lifter extends EscNodeBuilder
 			return null;
 		}
 	}
-	private Term transform(ASTNode n)
+	public Term transform(ASTNode n)
 	{
 		//ErrorSet.caution("enter " + TagConstants.toString(n.getTag()) + " " + n);
 		Term t = doTransform(n);
