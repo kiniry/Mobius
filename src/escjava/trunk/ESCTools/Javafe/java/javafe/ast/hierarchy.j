@@ -705,9 +705,15 @@ public class FormalParaDecl extends GenericVarDecl
 
 /** Represents a BlockStatement syntactic unit (which includes
  * variable declarations). */
-
 public abstract class Stmt extends ASTNode
-{ }
+{ 
+	public static interface Annotation {
+	}
+	
+	protected Annotation annotPre;
+	protected Annotation annotPost;
+	
+}
 
 // Abstract class containing common parts of Block and SwitchBlock
 // syntactic units.
