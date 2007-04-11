@@ -210,15 +210,13 @@ public class BPLPrinter implements BPLVisitor<Object> {
       print(')');
     }
    
-    printNewLine();
-    print('{');
+    print(';');
     printNewLine();
 
     if (procedure.getSpecification() != null) {
       procedure.getSpecification().accept(this);
     }
     
-    print('}');
     printNewLine();
     printNewLine();
 
