@@ -119,7 +119,7 @@ public class DirectVCGen extends ExpressionVisitor {
 	}
 	
 	public /*@non_null*/ Object visitSwitchStmt(/*@non_null*/ SwitchStmt x, Object o) {
-		return visitStmt(x, o)
+		return visitStmt(x, o);
 	}	
 
 	public /*@non_null*/ Object visitAssertStmt(/*@non_null*/ AssertStmt x, Object o) {
@@ -132,7 +132,7 @@ public class DirectVCGen extends ExpressionVisitor {
 
 	public /*@non_null*/ Object visitWhileStmt(/*@non_null*/ WhileStmt x, Object o) {
 		Term post = treatAnnot( (Term) o, x.annotPost);
-		Term inv = x.annotPre.invariant();
+		Term inv = x.annotPre.formula;
 		Term bodypre = (Term) x.stmt.accept(this, inv);
 		ExprResult r = new ExprResult();
 		QuantVariableRef v = Expression.var("bool");
@@ -167,7 +167,7 @@ public class DirectVCGen extends ExpressionVisitor {
 		Term post = treatAnnot((Term) o, x.annotPost);
 		ExprResult r = new ExprResult();
 		r.post = post;
-		r.vtmp = result;
+		r.vtmp = Expression.var("result");
 		post=((ExprResult) x.expr.accept(this, r)).post;
 		return treatAnnot(post, x.annotPre);
 	}	
@@ -227,3 +227,4 @@ public class DirectVCGen extends ExpressionVisitor {
 		  public /*@non_null*/ Object visitCatchClause(/*@non_null*/ CatchClause x, Object o) {
 		    return visitASTNode(x, o);
 		  }
+}
