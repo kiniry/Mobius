@@ -174,7 +174,7 @@ public class Lifter extends EscNodeBuilder
 		abstract public Sort getSort();
 		abstract public void infer();
 		
-		public Term subst(QuantVariableRef qvr, Term t) {
+		public Term subst(Term v, Term t) {
 			return this;
 		}
 		public void printTo(StringBuffer sb)
@@ -624,7 +624,17 @@ public class Lifter extends EscNodeBuilder
 			name = n;
 			type = typeToSort(v.type);
 		}
+		
+		public QuantVariable(String n, Sort s) {
+			var = null;
+			type = s;
+			name = n;
+		}
 	}
+	public QuantVariable mkQuantVariable(String n, Sort s) {
+		return new QuantVariable(n, s);
+	}
+	
 	public QuantVariable mkQuantVariable(GenericVarDecl v, String n) {
 		return new QuantVariable(v, n);
 	}
@@ -912,7 +922,7 @@ public class Lifter extends EscNodeBuilder
 		return require(s1, s2, where) && require(s2, s1, where);
 	}
 	
-	private FnTerm symbolRef(String name, /*@ nullable @*/Sort s)
+	public FnTerm symbolRef(String name, /*@ nullable @*/Sort s)
 	{
 		FnSymbol fn = getFnSymbol(name, 0);
 		if (s != null)
@@ -921,8 +931,7 @@ public class Lifter extends EscNodeBuilder
 		return new FnTerm(fn, emptyTerms);
 	}
 	
-	private FnTerm symbolRef(String name)
-	{
+	public FnTerm symbolRef(String name) {
 		return symbolRef(name, null);
 	}
 	
@@ -965,7 +974,7 @@ public class Lifter extends EscNodeBuilder
 		ErrorSet.caution(msg);
 	}
 		
-	private Sort typeToSort(Type t)
+	public Sort typeToSort(Type t)
 	{
 		switch (t.getTag()) {
 		case TagConstants.ARRAYTYPE:
