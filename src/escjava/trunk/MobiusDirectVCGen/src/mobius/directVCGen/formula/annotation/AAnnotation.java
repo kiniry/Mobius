@@ -4,10 +4,15 @@ import escjava.sortedProver.Lifter.Term;
 import javafe.ast.Stmt.Annotation;
 
 public abstract class AAnnotation implements Annotation {
+	/** an undefined id */
 	public static final int undef = 0;
+	/** the id of an assert class */
 	public static final int annotAssert = undef + 1;
+	/** the id of an assume class */
 	public static final int annotAssume = annotAssert + 1;
+	/** the id of a cut class */
 	public static final int annotCut = annotAssume + 1;
+	/** the id of a set class */
 	public static final int annotSet = annotCut + 1;
 	
 	/**
@@ -20,6 +25,18 @@ public abstract class AAnnotation implements Annotation {
 	 */
 	public Annotation next;
 	
+	/**
+	 * Return the ID of the class in order to do a switch
+	 * @return an idea precising which class the current object is from
+	 */
 	public abstract int getID();
+	
+	/*
+	 * (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString() {
+		return "(" + formula + ") -> " +  next;
+	}
 	
 }
