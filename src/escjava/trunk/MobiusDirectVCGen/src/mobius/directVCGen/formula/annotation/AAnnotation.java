@@ -20,6 +20,11 @@ public abstract class AAnnotation implements Annotation {
 	 */
 	public Term formula;
 	
+	public Term invariant () {
+		if (this.getID() != annotAssume) 
+			throw new IllegalArgumentException("The formula is not an assertion");
+		return this.formula;
+	}
 	/**
 	 * Annotations can be chained together
 	 */
