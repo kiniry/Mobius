@@ -58,8 +58,8 @@ BEGIN
     FORALL (mp : MonitoredProgram)(main : Method, arg : int)
            (n : nat, s2MP : MState, s2AP : APState) :
       ann_program_pre(mp) IMPLIES
-      run_Program(ann_program(mp))(main, arg)(s2AP)(n) IMPLIES
-      run_MonitoredProgram(mp)(main, arg)(s2MP)(n) IMPLIES
+      run_annotated_program(ann_program(mp))(main, arg)(s2AP)(n) IMPLIES
+      run_monitored_program(mp)(main, arg)(s2MP)(n) IMPLIES
         MP_modeled?(s2MP, s2AP)
 
 

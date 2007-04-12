@@ -226,9 +226,6 @@ BEGIN
                      pre_set : Stmt,
                      post_set : Stmt,
                      exc_set : Stmt,
-%                     pre_set : [Name -> Val],
-%                     post_set : [Name -> Val],
-%                     exc_set : [Name -> Val],
                      res : Expr,
                      res_type : JType #]
 

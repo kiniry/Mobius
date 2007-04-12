@@ -64,6 +64,9 @@ BEGIN
   filter_event(a)(et : EventType)(m : string) : finite_set[Transition] =
     {t : Transition | ts(a)(t) AND etype(event(t)) = et AND mname(event(t)) = m}
 
+  % THINK: what happes if the program already had a pre_set?
+  % Either we should say in ann_program_pre that all methods have Skip as x_set
+  % or we should use a Seq here (but the proof will be harder)
   ann_method(mp)(m : Method) : Method =
     LET ann_event_type = LAMBDA (et : EventType) : 
                            ann_event(mp)(filter_event(mva(mp))(et)(name(m)))

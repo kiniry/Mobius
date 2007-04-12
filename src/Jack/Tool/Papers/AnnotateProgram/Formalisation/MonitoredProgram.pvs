@@ -47,10 +47,12 @@ BEGIN
 END WellFormedMonitoredProgram
 
 
+% The semantics of MonitoredPrograms assumes that the program is annotated, thus
+% this can be thought as MonitoredAnnotatedProgramSemantics
 MonitoredProgramSemantics[CP, Name : TYPE+] : THEORY
 BEGIN
 
-  IMPORTING WellFormedMonitoredProgram[CP, Name],
+  IMPORTING MonitoredProgram[CP, Name],
             MVASemantics[CP, Name]
 
   % Monitored Program State
@@ -60,68 +62,93 @@ BEGIN
        gvs : Store
     #]
 
+  IMPORTING Semantics[Name, MonitoredProgram, MState, 
+                      LAMBDA (mp : MonitoredProgram) : program(mp),
+                      LAMBDA (s : MState) : pstate(s),
+                      LAMBDA (upd : [PState -> PState], s : MState) :
+                        s WITH [pstate := upd(pstate(s))]]                       
 
   % Instantiation of its semantics
 
-  execute_set(vn : Name, v : Val, s : MState) : MState =
+  execute_set : (execute_set_type) =
+    LAMBDA (vn : Name, v : Val, s : MState) :
     IF up?(ex(pstate(s)))
     THEN s
     ELSE s WITH [gvs := gvs(s) WITH [vn := v]]
     ENDIF
 
-  execute_assert(b : boolean, s : MState) : MState =
-    IF b
-    THEN s
-    ELSE s WITH [pstate := pstate(s) WITH [ex := up(JMLExc)]]
+  check_assertion(mp : MonitoredProgram)(n : nat)
+                 (deriv_expr : [MonitoredProgram -> [Expr, MState, Val, MState ->
+                                                    [below(n + 1) -> bool]]])
+                 (a : BoolExpr, s1, s2 : MState) : boolean =
+    EXISTS (tau1 : MState, v : Val) :
+      deriv_expr(mp)(BExpr(a), s1, v, tau1)(n) AND
+      s2 = IF Bool?(v) THEN
+             IF b(v)
+             THEN tau1
+             ELSE tau1 WITH [pstate := pstate(tau1) WITH [ex := up(JMLExc)]]
+             ENDIF
+           ELSE tau1 % This won't happen in a well formed program
+           ENDIF
+
+
+  on_method_MVA(etype : EventType)
+               (mp : MonitoredProgram, md : Method, s : MState) : AState =
+    IF (evs(mva(mp)))((# etype := etype, mname := name(md) #))
+    THEN step(mva(mp))(astate(s), (# stP := st(pstate(s)),
+                                     event := (# etype := etype,
+                                                 mname := name(md) #)
+                                  #))
+    ELSE astate(s)
     ENDIF
 
-  on_method_entry(md : Method, mp : MonitoredProgram, s : MState) : MState = 
-    (# astate := IF evs(mva(mp))((# etype := Entry, mname := name(md) #))
-                 THEN step(mva(mp))(astate(s), 
-                                    (# stP := st(pstate(s)),
-                                       event := (# etype := Entry, 
-                                                   mname := name(md) #)
-                                    #))
-                 ELSE astate(s)
-                 ENDIF,
-       pstate := pstate(s),
-       gvs := gvs(s)
-    #)
+  on_method_entry : (on_method_entry_type) =
+    LAMBDA (mp : MonitoredProgram, md : Method, a : Val, s1, s2 : MState,
+            n : nat,
+            deriv_stmt : [MonitoredProgram -> [Stmt, MState, MState ->
+                                     [below(n + 1) -> bool]]],
+            deriv_expr : [MonitoredProgram -> [Expr, MState, Val, MState ->
+                                     [below(n + 1) -> bool]]]) :
+    astate(s2) = on_method_MVA(Entry)(mp, md, s1)  AND
+    EXISTS (m1, m2, m3 : nat, tau1, tau2 : MState, inv : BoolExpr) :
+      n = m1 + m2 + m3 AND
+      inv = down(lookup_inv(program(mp), a)) AND
+      check_assertion(mp)(m1)(deriv_expr)(inv, s1, tau1) AND
+      check_assertion(mp)(m2)(deriv_expr)(pre(md), tau1, tau2) AND
+      deriv_stmt(mp)(pre_set(md), tau2, s2)(m3) AND
+      st(pstate(s1)) = st(pstate(s2))
+      
+  on_method_exit_normal : (on_method_exit_type) =
+    LAMBDA (mp : MonitoredProgram, md : Method, a : Val, s1, s2 : MState,
+            n : nat,
+            deriv_stmt : [MonitoredProgram -> [Stmt, MState, MState ->
+                                     [below(n + 1) -> bool]]],
+            deriv_expr : [MonitoredProgram -> [Expr, MState, Val, MState ->
+                                     [below(n + 1) -> bool]]]) :
+    astate(s2) = on_method_MVA(ExitNormal)(mp, md, s1)  AND
+    EXISTS (m1, m2, m3 : nat, tau1, tau2 : MState, inv : BoolExpr) :
+      n = m1 + m2 + m3 AND
+      deriv_stmt(mp)(post_set(md), s1, tau1)(m1) AND
+      check_assertion(mp)(m1)(deriv_expr)(post(md), tau1, tau2) AND
+      inv = down(lookup_inv(program(mp), a)) AND
+      check_assertion(mp)(m2)(deriv_expr)(inv, tau2, s2) AND
+      st(pstate(s1)) = st(pstate(s2))
 
+  on_method_exit_exceptional : (on_method_exit_type) =
+    LAMBDA (mp : MonitoredProgram, md : Method, a : Val, s1, s2 : MState,
+            n : nat,
+            deriv_stmt : [MonitoredProgram -> [Stmt, MState, MState ->
+                                     [below(n + 1) -> bool]]],
+            deriv_expr : [MonitoredProgram -> [Expr, MState, Val, MState ->
+                                     [below(n + 1) -> bool]]]) :
+    astate(s2) = on_method_MVA(ExitExceptional)(mp, md, s1)  AND
+    EXISTS (m1, m2 : nat, tau1, tau2 : MState, inv : BoolExpr) :
+      n = m1 + m2 AND
+      deriv_stmt(mp)(exc_set(md), s1, tau1)(m1) AND
+      inv = down(lookup_inv(program(mp), a)) AND
+      check_assertion(mp)(m2)(deriv_expr)(inv, tau1, s2) AND
+      st(pstate(s1)) = st(pstate(s2))
 
-  on_method_exit(etype : EventType)(md : Method, mp : MonitoredProgram, 
-                 s : MState) : MState =
-    (# astate := IF (evs(mva(mp)))((# etype := etype, mname := name(md) #))
-                 THEN step(mva(mp))(astate(s),
-                                    (# stP := st(pstate(s)),
-                                       event := (# etype := etype,
-                                                   mname := name(md) #)
-                                    #))
-                 ELSE astate(s)
-                 ENDIF,
-       pstate := pstate(s),
-       gvs := gvs(s)
-    #)
-
-  on_method_exit_normal : [[Method, MonitoredProgram, MState] -> MState] =
-    on_method_exit(ExitNormal)
-
-  on_method_exit_exceptional : [[Method, MonitoredProgram, MState] -> MState] =
-    on_method_exit(ExitExceptional)
-
-  IMPORTING Semantics[Name, MonitoredProgram, MState, 
-                      LAMBDA (mp : MonitoredProgram) : program(mp),
-                      LAMBDA (s : MState) : pstate(s),
-                      LAMBDA (upd : [PState -> PState], s : MState) :
-                        s WITH [pstate := upd(pstate(s))],
-                      execute_set,
-                      execute_assert,
-                      execute_assert,
-                      execute_assert,
-                      on_method_entry,
-                      on_method_exit_normal,
-                      on_method_exit_exceptional]
-                       
 
   initial_MP_state(mp : MonitoredProgram) : MState =
     (# astate := initial_MVA_state(mva(mp)),
@@ -134,7 +161,7 @@ BEGIN
          ENDIF
     #)
 
-  run_MonitoredProgram(mp : (wf_MP))(main : Method, arg : int)
+  run_monitored_program(mp : MonitoredProgram)(main : Method, arg : int)
                       (s2 : MState)(n : nat) : boolean =
     LET p  = program(mp),
         s1 = initial_MP_state(mp),
@@ -143,6 +170,8 @@ BEGIN
                                  NExpr(Int(arg))))
     IN
       deriv_stmt(mp)(c, s1, s2)(n)
+                (execute_set, on_method_entry, on_method_exit_normal,
+                 on_method_exit_exceptional)
 
 
 END MonitoredProgramSemantics
