@@ -11,55 +11,68 @@ public class AnnotationDecoration extends ASTDecoration {
 	public AnnotationDecoration() {
 		super("annotationDecorations");
 	}
-	static final int pre = 0;
-	static final int post = 1;
+	
+	public static class Annotation {
+		protected final Vector<AAnnotation> pre = new Vector<AAnnotation>();
 
-	@SuppressWarnings("unchecked")
+		protected final Vector<AAnnotation> post = new Vector<AAnnotation>();
+
+		protected AAnnotation inv = null;
+	}
+
 	public Vector<AAnnotation> getAnnotPre(ASTNode n) {
-		Vector<Vector<AAnnotation>> v = getAnnot(n);
+		Annotation v = getAnnot(n);
 		if(v == null)
 			return null;
 		else 
-			return v.get(pre);
+			return v.pre;
 	}
 	
-	@SuppressWarnings("unchecked")
 	public Vector<AAnnotation> getAnnotPost(ASTNode n) {
-		Vector<Vector<AAnnotation>> v = getAnnot(n);
+		Annotation v = getAnnot(n);
 		if(v == null)
 			return null;
 		else 
-			return v.get(post);
+			return v.post;
 	}
 	
 	
 	@SuppressWarnings("unchecked")
-	public Vector<Vector<AAnnotation>> getAnnot(ASTNode n) {
-		Vector<Vector<AAnnotation>> v = (Vector<Vector<AAnnotation>>)super.get(n);
+	public Annotation getAnnot(ASTNode n) {
+		Annotation v = (Annotation) super.get(n);
 		return v;
 	}
 	
 	
 	public void setAnnotPre(ASTNode n, Vector<AAnnotation> v) {
-		Vector<Vector<AAnnotation>> res = getAnnot(n);
+		Annotation res = getAnnot(n);
 		if(res == null) {
-			super.set(n, res = new Vector<Vector<AAnnotation>>(2));
+			super.set(n, res = new Annotation());
 		}
-		res.set(pre, v);
+		res.pre.clear();
+		res.pre.addAll(v);
 	}
 	public void setAnnotPost(ASTNode n, Vector<AAnnotation> v) {
-		Vector<Vector<AAnnotation>> res = getAnnot(n);
+		Annotation res = getAnnot(n);
 		if(res == null) {
-			super.set(n, res = new Vector<Vector<AAnnotation>>(2));
+			super.set(n, res = new Annotation());
 		}
-		res.set(post, v);
+		res.post.clear();
+		res.post.addAll(v);
 	}
 	
+	public void setInvariant(ASTNode n, AAnnotation inv) {
+		Annotation res = getAnnot(n);
+		if(res == null) {
+			super.set(n, res = new Annotation());
+		}
+		res.inv = inv;
+	}
 	@SuppressWarnings("unchecked")
 	public AAnnotation getInvariant(ASTNode n) {
-		Vector<AAnnotation> v =  (Vector<AAnnotation>)getAnnotPre(n);
-		if (v == null || v.size() == 0)
+		Annotation v =  getAnnot(n);
+		if (v == null)
 			return null;
-		return v.lastElement();
+		return v.inv;
 	}
 }
