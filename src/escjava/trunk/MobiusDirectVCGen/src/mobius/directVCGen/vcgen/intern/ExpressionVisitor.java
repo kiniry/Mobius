@@ -99,11 +99,11 @@ public class ExpressionVisitor extends ABasicVisitor {
 			case TagConstants.DOUBLELIT:
 			case TagConstants.STRINGLIT:
 			case TagConstants.NULLLIT:
-				throw new IllegalArgumentException("Unmanaged construct :" +
-						TagConstants.toString(expr.tag) +" " +  expr);
+			//	throw new IllegalArgumentException("Unmanaged construct :" +
+				//		TagConstants.toString(expr.tag) +" " +  expr);
 			default:
-				throw new IllegalArgumentException("Unknown construct :" +
-						TagConstants.toString(expr.tag) +" " +  expr);
+				//throw new IllegalArgumentException("Unknown construct :" +
+					//	TagConstants.toString(expr.tag) +" " +  expr);
 		}
 		return result;
 	}

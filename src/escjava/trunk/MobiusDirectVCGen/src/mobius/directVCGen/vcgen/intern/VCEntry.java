@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import mobius.directVCGen.formula.Logic;
+
 import javafe.ast.Identifier;
 import javafe.ast.Type;
 import javafe.ast.TypeDecl;
@@ -47,6 +49,7 @@ public class VCEntry {
 		public String toString() {
 			return "( " + excp + ", " + post + ")";
 		}
+	
 	}
 
 	public static class Post {
@@ -71,7 +74,22 @@ public class VCEntry {
 			}
 			return post;
 		}
-		
+		public static Post and(Post p1, Post p2) {
+			if (p1 == null) return p2;
+			if (p2 == null) return p1;
+			return new Post(p1.var, 
+					Logic.and(p1.post, p2.post.subst(p2.var, p1.var)));
+		}
+		public static Post implies(Post p1, Post p2) {
+			if (p1 == null) return p2;
+			if (p2 == null) return p1;
+			return new Post(p1.var, 
+					Logic.implies(p1.post, p2.post.subst(p2.var, p1.var)));			
+		}
+		public static Post not(Post p1) {
+			return new Post(p1.var, 
+					Logic.not(p1.post));			
+		}
 		public String toString() {
 			if(var != null) {
 				return "temp var:" + var  + "\npostcondition : " + post;

@@ -111,12 +111,13 @@ public class Main extends escjava.Main {
 		long startTime = currentTime();
 		int errorCount = ErrorSet.errors;
 		TypeSig sig = TypeCheck.inst.getSig(td);
-		/* FindContributors scope = */ new FindContributors(sig);
+		sig.typecheck();
+//		/* FindContributors scope = */ new FindContributors(sig);
 	    
-	    processTD_stage1(td, sig, errorCount);
-	    System.out.println(currentTime() - startTime);
-//	    Vector<Term> vcs; 
-//	    vcs = (Vector<Term>) td.accept(new VCGenVisitor(), null);
+//	    processTD_stage1(td, sig, errorCount);
+//	    System.out.println(currentTime() - startTime);
+	    Vector<Term> vcs; 
+	    vcs = (Vector<Term>) sig.getCompilationUnit().accept(new VCGenVisitor(), null);
 	    //sig.accept(new VCGenVisitor(), vcs);
 	    System.out.println(td);
 //	    FindContributors scope =  new FindContributors(sig);

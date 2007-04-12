@@ -3,6 +3,7 @@ package mobius.directVCGen.formula;
 
 import java.util.Vector;
 
+import escjava.sortedProver.Lifter.FnTerm;
 import escjava.sortedProver.Lifter.QuantTerm;
 import escjava.sortedProver.Lifter.QuantVariable;
 import escjava.sortedProver.Lifter.Term;
@@ -121,6 +122,10 @@ public class Logic {
 		
 		return Formula.lf.mkQuantTerm(true, new QuantVariable [] {v}, f, null, null);
 	}
+	public static FnTerm typeLE(Term t1, Term t2) {
+		return Formula.lf.mkFnTerm(Formula.lf.symTypeLE, new Term[] {t1, t2});
+	}
+	
 //	/**
 //	 * Creates an exists binding only one variable from the formula f.
 //	 * @param v the variable to bind
