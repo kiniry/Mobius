@@ -1,4 +1,4 @@
-package mobius.directVCGen.formula;
+package mobius.directVCGen.formula.annotation;
 
 import escjava.sortedProver.Lifter.Term;
 import javafe.ast.Stmt.Annotation;

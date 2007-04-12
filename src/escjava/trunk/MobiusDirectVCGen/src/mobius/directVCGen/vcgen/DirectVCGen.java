@@ -34,6 +34,7 @@ import javafe.ast.Stmt.Annotation;
 import mobius.directVCGen.formula.Expression;
 import mobius.directVCGen.formula.Formula;
 import mobius.directVCGen.formula.Logic;
+import mobius.directVCGen.formula.annotation.AAnnotation;
 import mobius.directVCGen.vcgen.intern.ExprResult;
 import mobius.directVCGen.vcgen.intern.ExpressionVisitor;
 import escjava.ast.AnOverview;
@@ -132,7 +133,8 @@ public class DirectVCGen extends ExpressionVisitor {
 
 	public /*@non_null*/ Object visitWhileStmt(/*@non_null*/ WhileStmt x, Object o) {
 		Term post = treatAnnot( (Term) o, x.annotPost);
-		Term inv = x.annotPre.formula;
+		AAnnotation annotPre = (AAnnotation)x.annotPre;
+		Term inv = annotPre.formula;
 		Term bodypre = (Term) x.stmt.accept(this, inv);
 		ExprResult r = new ExprResult();
 		QuantVariableRef v = Expression.var("bool");
