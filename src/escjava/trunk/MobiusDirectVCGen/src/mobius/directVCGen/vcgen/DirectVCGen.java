@@ -35,7 +35,7 @@ import mobius.directVCGen.formula.Expression;
 import mobius.directVCGen.formula.Formula;
 import mobius.directVCGen.formula.Logic;
 import mobius.directVCGen.formula.annotation.AAnnotation;
-import mobius.directVCGen.vcgen.intern.ExprResult;
+import mobius.directVCGen.vcgen.intern.VCEntry;
 import mobius.directVCGen.vcgen.intern.ExpressionVisitor;
 import escjava.ast.AnOverview;
 import escjava.ast.ArrayRangeRefExpr;
@@ -136,14 +136,14 @@ public class DirectVCGen extends ExpressionVisitor {
 		AAnnotation annotPre = (AAnnotation)x.annotPre;
 		Term inv = annotPre.formula;
 		Term bodypre = (Term) x.stmt.accept(this, inv);
-		ExprResult r = new ExprResult();
+		VCEntry r = new VCEntry();
 		QuantVariableRef v = Expression.var("bool");
-		r.vtmp = v;
-		r.post = 
-		  Logic.and(Logic.implies(Logic.boolToProp(v), bodypre),
-				    Logic.implies(Logic.not(Logic.boolToProp(v)), post));
-		Term aux = ((ExprResult) x.expr.accept(this, r)).post;
-		vcs.add(Logic.implies(inv, aux));  
+//		r.var = v;
+//		r.post = 
+//		  Logic.and(Logic.implies(Logic.boolToProp(v), bodypre),
+//				    Logic.implies(Logic.not(Logic.boolToProp(v)), post));
+//		Term aux = ((VCEntry) x.expr.accept(this, r)).post;
+//		vcs.add(Logic.implies(inv, aux));  
 		return inv;
 	}
 
@@ -157,9 +157,9 @@ public class DirectVCGen extends ExpressionVisitor {
 
 	public /*@non_null*/ Object visitEvalStmt(/*@non_null*/ EvalStmt x, Object o) {
 		Term post = treatAnnot( (Term) o, x.annotPost);
-		ExprResult r = new ExprResult();
-		r.post = post;
-		post = ((ExprResult)x.expr.accept(this, r)).post;
+		VCEntry r = new VCEntry();
+//		r.post = post;
+//		post = ((VCEntry)x.expr.accept(this, r)).post;
 		return treatAnnot(post, x.annotPre);
 	}
 
@@ -167,10 +167,10 @@ public class DirectVCGen extends ExpressionVisitor {
 		// Goog to ensure that x.annotPost == Null
 		// and so remove this line
 		Term post = treatAnnot((Term) o, x.annotPost);
-		ExprResult r = new ExprResult();
-		r.post = post;
-		r.vtmp = Expression.var("result");
-		post=((ExprResult) x.expr.accept(this, r)).post;
+		VCEntry r = new VCEntry();
+//		r.post = post;
+//		r.var = Expression.var("result");
+//		post=((VCEntry) x.expr.accept(this, r)).post;
 		return treatAnnot(post, x.annotPre);
 	}	
 

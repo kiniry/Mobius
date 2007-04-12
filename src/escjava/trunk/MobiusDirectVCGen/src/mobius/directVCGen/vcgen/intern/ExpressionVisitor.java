@@ -24,7 +24,7 @@ public class ExpressionVisitor extends ABasicVisitor {
 	public Object visitBinaryExpr(BinaryExpr expr, Object o) {
 		
 		//System.out.println(TagConstants.toString(expr.op));
-		ExprResult post = (ExprResult) o;
+		VCEntry post = (VCEntry) o;
 		switch(expr.op) {
 			case TagConstants.EQ:
 				return vcGenEquals(expr, post);
@@ -63,10 +63,10 @@ public class ExpressionVisitor extends ABasicVisitor {
 		}
 	}
 	
-	public ExprResult vcGenEquals(BinaryExpr expr, ExprResult post) {
-		post = (ExprResult)expr.right.accept(this, post);
+	public VCEntry vcGenEquals(BinaryExpr expr, VCEntry post) {
+		post = (VCEntry)expr.right.accept(this, post);
 //		IFormula right = post.;
-//		post = (ExprResult)expr.left.accept(this, post);
+//		post = (VCEntry)expr.left.accept(this, post);
 //		IFormula left = post.res;
 //
 //		
@@ -75,24 +75,24 @@ public class ExpressionVisitor extends ABasicVisitor {
 	}
 
 	public Object visitLiteralExpr(LiteralExpr expr,  Object o) {
-		ExprResult result = (ExprResult) o;
+		VCEntry result = (VCEntry) o;
 		
 		//System.out.println(TagConstants.toString(expr.tag));
 		switch (expr.tag) {
 			case TagConstants.BOOLEANLIT:
-				result.substWith(Bool.value((Boolean)expr.value));
-				break;
-			case TagConstants.INTLIT:
-				result.substWith(Num.value((Integer)expr.value));
-				break;
-			case TagConstants.LONGLIT:
-				result.substWith(Num.value((Long)expr.value));
-				break;
-			case TagConstants.BYTELIT:
-				result.substWith(Num.value((Byte)expr.value));
-				break;
-			case TagConstants.SHORTLIT: 
-				result.substWith(Num.value((Short)expr.value));
+//				result.substWith(Bool.value((Boolean)expr.value));
+//				break;
+//			case TagConstants.INTLIT:
+//				result.substWith(Num.value((Integer)expr.value));
+//				break;
+//			case TagConstants.LONGLIT:
+//				result.substWith(Num.value((Long)expr.value));
+//				break;
+//			case TagConstants.BYTELIT:
+//				result.substWith(Num.value((Byte)expr.value));
+//				break;
+//			case TagConstants.SHORTLIT: 
+//				result.substWith(Num.value((Short)expr.value));
 				break;
 			case TagConstants.FLOATLIT:;
 			case TagConstants.CHARLIT:
@@ -110,7 +110,7 @@ public class ExpressionVisitor extends ABasicVisitor {
 
 	public Object visitUnaryExpr(UnaryExpr expr, Object o) {
 		//System.out.println(TagConstants.toString(expr.op));
-		ExprResult post = (ExprResult) o;
+		VCEntry post = (VCEntry) o;
 		switch(expr.op) {
 			case TagConstants.POSTFIXINC:
 				return vcGenPostfixInc(expr, post);
@@ -136,7 +136,7 @@ public class ExpressionVisitor extends ABasicVisitor {
 	}
 	
 	public Object visitVariableAccess(VariableAccess m, Object o) {
-		ExprResult res = (ExprResult) o;
+		VCEntry res = (VCEntry) o;
 		
 		Sort s = null;
 		String name = UniqName.variable(m.decl);
@@ -164,31 +164,31 @@ public class ExpressionVisitor extends ABasicVisitor {
 			
 			
 		}
-		res.substWith(Expression.var(name, s));
+//		res.substWith(Expression.var(name, s));
 		return  res;
 	}
-	public ExprResult vcGenPostfixInc(UnaryExpr expr, ExprResult r) {
-		//ExprResult res = (ExprResult)visitASTNode(expr, r);
+	public VCEntry vcGenPostfixInc(UnaryExpr expr, VCEntry r) {
+		//VCEntry res = (VCEntry)visitASTNode(expr, r);
 //		Variable v = (Variable)res.res;
 //		res.post = res.post.subst(v, Num.add(v, Num.value(1)));
 		return r;
 	}
 
-	public ExprResult vcGenInc(UnaryExpr expr, ExprResult r) {
-		ExprResult res = (ExprResult)visitASTNode(expr, r);
+	public VCEntry vcGenInc(UnaryExpr expr, VCEntry r) {
+		VCEntry res = (VCEntry)visitASTNode(expr, r);
 //		Variable v = (Variable)res.res;
 //		res.res = Num.add(v, Num.value(1));
 //		res.post = res.post.subst(v, res.res);
 		return res;
 	}
-	public ExprResult vcGenPostfixDec(UnaryExpr expr, ExprResult r) {
-		ExprResult res = (ExprResult)visitASTNode(expr, r);
+	public VCEntry vcGenPostfixDec(UnaryExpr expr, VCEntry r) {
+		VCEntry res = (VCEntry)visitASTNode(expr, r);
 //		Variable v = (Variable)res.res;
 //		res.post = res.post.subst(v, Num.sub(v, Num.value(1)));
 		return res;
 	}
-	public ExprResult vcGenDec(UnaryExpr expr, ExprResult r) {
-		ExprResult res = (ExprResult)visitASTNode(expr, r);
+	public VCEntry vcGenDec(UnaryExpr expr, VCEntry r) {
+		VCEntry res = (VCEntry)visitASTNode(expr, r);
 //		Variable v = (Variable)res.res;
 //		res.res = Num.sub(v, Num.value(1));
 //		res.post = res.post.subst(v, res.res);

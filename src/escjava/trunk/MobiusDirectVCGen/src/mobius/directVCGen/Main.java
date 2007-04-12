@@ -115,10 +115,10 @@ public class Main extends escjava.Main {
 	    
 	    processTD_stage1(td, sig, errorCount);
 	    System.out.println(currentTime() - startTime);
-	    Vector<Term> vcs; 
-	    vcs = (Vector<Term>) td.accept(new VCGenVisitor(), null);
+//	    Vector<Term> vcs; 
+//	    vcs = (Vector<Term>) td.accept(new VCGenVisitor(), null);
 	    //sig.accept(new VCGenVisitor(), vcs);
-	    System.out.println(vcs);
+	    System.out.println(td);
 //	    FindContributors scope =  new FindContributors(sig);
 //	    if (stages < 2) {
 //			return false;

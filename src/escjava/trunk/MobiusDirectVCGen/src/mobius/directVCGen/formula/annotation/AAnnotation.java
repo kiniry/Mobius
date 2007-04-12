@@ -27,7 +27,7 @@ public abstract class AAnnotation implements Annotation {
 	
 	/**
 	 * Return the ID of the class in order to do a switch
-	 * @return an idea precising which class the current object is from
+	 * @return an id precising which class the current object is from
 	 */
 	public abstract int getID();
 	
