@@ -17,5 +17,10 @@ public class Set extends AAnnotation {
 	 * FOL-Terms translation of JML's set statement
 	 */
 	public Vector<Term> assignments;
+
+	@Override
+	public int getID() {
+		return annotSet;
+	}
 	
 }
