@@ -1,9 +1,5 @@
 package mobius.directVCGen.formula;
 
-import java.util.List;
-import java.util.Vector;
-
-import mobius.directVCGen.vcgen.intern.VCEntry.ExcpPost;
 import mobius.directVCGen.vcgen.intern.VCEntry.Post;
 
 import escjava.sortedProver.Lifter.Term;
@@ -17,15 +13,15 @@ public class Lookup {
 	 * @param m the method of interest
 	 */
 	public static Term precondition(MethodDecl m){
-		return null;
+		return Logic.True();
 	}
 
 	/**
 	 * Returns the FOL Term representation of the normal postcondition of method m.
 	 * @param m the method of interest
 	 */
-	public static List<Post> normal_postconditions(MethodDecl m){
-		return null;
+	public static Post normal_postcondition(MethodDecl m){
+		return new Post(Expression.var(Formula.lf.sortRef),Logic.True());
 	}
 
 	/**
@@ -33,8 +29,8 @@ public class Lookup {
 	 * The exceptional postcondition will always look like this: Sort => Term
 	 * @param m the method of interest
 	 */
-	public static List<ExcpPost> exceptional_postconditions(MethodDecl m){
-		return null;
+	public static Post exceptional_postcondition(MethodDecl m){
+		return new Post(Expression.var(Formula.lf.sortRef),Logic.True());
 	}
 
 //	/**
@@ -46,7 +42,7 @@ public class Lookup {
 //	}
 	
 	public static Term invariant(ClassDecl c){
-		return null;
+		return Logic.True();
 	}
 	
 }
