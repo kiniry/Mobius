@@ -4,6 +4,7 @@ import mobius.directVCGen.formula.Bool;
 import mobius.directVCGen.formula.Expression;
 import mobius.directVCGen.formula.Formula;
 import mobius.directVCGen.formula.Num;
+import mobius.directVCGen.vcgen.intern.VCEntry.Post;
 import javafe.ast.BinaryExpr;
 import javafe.ast.FieldDecl;
 import javafe.ast.FormalParaDecl;
@@ -75,24 +76,25 @@ public class ExpressionVisitor extends ABasicVisitor {
 	}
 
 	public Object visitLiteralExpr(LiteralExpr expr,  Object o) {
-		VCEntry result = (VCEntry) o;
+		VCEntry vce = (VCEntry) o;
+		Post result = vce.post;
 		
 		//System.out.println(TagConstants.toString(expr.tag));
 		switch (expr.tag) {
 			case TagConstants.BOOLEANLIT:
-//				result.substWith(Bool.value((Boolean)expr.value));
-//				break;
-//			case TagConstants.INTLIT:
-//				result.substWith(Num.value((Integer)expr.value));
-//				break;
-//			case TagConstants.LONGLIT:
-//				result.substWith(Num.value((Long)expr.value));
-//				break;
-//			case TagConstants.BYTELIT:
-//				result.substWith(Num.value((Byte)expr.value));
-//				break;
-//			case TagConstants.SHORTLIT: 
-//				result.substWith(Num.value((Short)expr.value));
+				result.substWith(Bool.value((Boolean)expr.value));
+				break;
+			case TagConstants.INTLIT:
+				result.substWith(Num.value((Integer)expr.value));
+				break;
+			case TagConstants.LONGLIT:
+				result.substWith(Num.value((Long)expr.value));
+				break;
+			case TagConstants.BYTELIT:
+				result.substWith(Num.value((Byte)expr.value));
+				break;
+			case TagConstants.SHORTLIT: 
+				result.substWith(Num.value((Short)expr.value));
 				break;
 			case TagConstants.FLOATLIT:;
 			case TagConstants.CHARLIT:

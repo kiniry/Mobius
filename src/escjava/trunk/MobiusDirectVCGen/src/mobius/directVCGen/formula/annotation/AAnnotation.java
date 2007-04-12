@@ -3,7 +3,7 @@ package mobius.directVCGen.formula.annotation;
 import escjava.sortedProver.Lifter.Term;
 import javafe.ast.Stmt.Annotation;
 
-public abstract class AAnnotation implements Annotation {
+public abstract class AAnnotation {
 	/** an undefined id */
 	public static final int undef = 0;
 	/** the id of an assert class */

@@ -8,7 +8,7 @@ import escjava.sortedProver.NodeBuilder.Sort;
 
 public class Expression {
 	public static Term preHeap = var("\\preHeap");
-	public static Term heap;
+	public static Term heap = var("\\heap");
 		
 	public static QuantVariableRef var(String str) {
 		QuantVariable v = null;
