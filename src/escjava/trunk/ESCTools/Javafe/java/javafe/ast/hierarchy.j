@@ -707,11 +707,6 @@ public class FormalParaDecl extends GenericVarDecl
  * variable declarations). */
 public abstract class Stmt extends ASTNode
 { 
-	public static interface Annotation {
-	}
-	
-	public Annotation annotPre;
-	public Annotation annotPost;
 	
 }
 
