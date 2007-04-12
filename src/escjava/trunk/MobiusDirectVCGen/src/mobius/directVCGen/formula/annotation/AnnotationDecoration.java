@@ -56,7 +56,7 @@ public class AnnotationDecoration extends ASTDecoration {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public AAnnotation getLastPre(ASTNode n) {
+	public AAnnotation getInvariant(ASTNode n) {
 		Vector<AAnnotation> v =  (Vector<AAnnotation>)getAnnotPre(n);
 		if (v == null || v.size() == 0)
 			return null;

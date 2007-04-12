@@ -1,7 +1,6 @@
 package mobius.directVCGen.formula.annotation;
 
 import escjava.sortedProver.Lifter.Term;
-import javafe.ast.Stmt.Annotation;
 
 public abstract class AAnnotation {
 	/** an undefined id */
@@ -25,10 +24,6 @@ public abstract class AAnnotation {
 			throw new IllegalArgumentException("The formula is not an assertion");
 		return this.formula;
 	}
-	/**
-	 * Annotations can be chained together
-	 */
-	public Annotation next;
 	
 	/**
 	 * Return the ID of the class in order to do a switch
@@ -41,7 +36,7 @@ public abstract class AAnnotation {
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString() {
-		return "(" + formula + ") -> " +  next;
+		return "" + formula;
 	}
 	
 }

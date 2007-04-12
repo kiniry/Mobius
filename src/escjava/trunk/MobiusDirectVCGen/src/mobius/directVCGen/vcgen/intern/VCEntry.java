@@ -17,24 +17,27 @@ public class VCEntry {
 	public Post post;
 	
 	/** the excp post condition... */
-	public final List<ExcpPost> excpost = new ArrayList<ExcpPost>();
-	
+	public final List<ExcpPost> lexcpost = new ArrayList<ExcpPost>();
+	public final Post excpost; 
 	public final HashMap<Identifier, Post> lbrpost = new HashMap<Identifier, Post>(); 
 	public Post brpost;
 	public final HashMap<Identifier, Post> lcontpost = new HashMap<Identifier, Post>(); 
 	public Post contpost;
-	
-	public VCEntry () {
-		
+
+	public VCEntry (Post exc) {
+        excpost = exc;    		
 	}
 	
-
-	
+	public VCEntry () {
+        excpost = null;    		
+	}
+		
 	public VCEntry(VCEntry ve) {
 		post = ve.post;
 		brpost = ve.brpost;
 		contpost = ve.contpost;
-		excpost.addAll(ve.excpost);
+		excpost = ve.excpost;
+		lexcpost.addAll(ve.lexcpost);
 		lbrpost.putAll(ve.lbrpost);
 		lcontpost.putAll(ve.lcontpost);
 	}
