@@ -259,6 +259,13 @@ public class Lifter extends EscNodeBuilder
 		{
 			return dumpBuilder.buildQVarRef(qvar.qvar); 
 		}
+		public boolean equals(Object o) {
+			if(!(o instanceof QuantVariableRef)) {
+				return false;
+			}
+			QuantVariableRef qvr = (QuantVariableRef) o;
+			return qvr.qvar.equals(this.qvar);
+		}
 	}
 	
 	public QuantVariableRef mkQuantVariableRef (QuantVariable q) {
@@ -275,6 +282,7 @@ public class Lifter extends EscNodeBuilder
 		public boolean isStringConst;
 		public boolean isDistinctSymbol;
 		
+
 		public FnTerm(FnSymbol fn, Term[] args)
 		{
 			this.fn = fn;
@@ -393,6 +401,25 @@ public class Lifter extends EscNodeBuilder
 			
 			if (doTrace)
 				trace("infer " + pass + ": " + fn + " / " + this + " -> " + retType);
+		}
+		
+		public Term subst(Term t, Term subst) {
+			if(t.equals(this))
+				return subst;
+			else {
+				Term[] res = new Term[args.length];
+				boolean bHasChanged = false;
+				for(int i = 0; i < args.length; i++) {
+					res[i] = args[i].subst(t, subst);
+					bHasChanged = (res[i] != args[i]); 
+				}
+				if (bHasChanged) {
+					return new FnTerm(fn, args);
+				}
+				else {
+					return this;
+				}
+			}
 		}
 		
 		public void printTo(StringBuffer sb)
@@ -629,6 +656,13 @@ public class Lifter extends EscNodeBuilder
 			var = null;
 			type = s;
 			name = n;
+		}
+		public boolean equals(Object o) {
+			if(!(o instanceof QuantVariable)) {
+				return false;
+			}
+			QuantVariable qv = (QuantVariable) o;
+			return name.equals(qv.name) && type.equals(qv.type);
 		}
 	}
 	public QuantVariable mkQuantVariable(String n, Sort s) {
