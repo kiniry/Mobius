@@ -1,0 +1,32 @@
+\paragraph{}
+Dans cette th\`ese, nous proposons une architecture qui
+ permet la v\'erification de code mobile respectant des politiques de
+s\'ecurit\'e potentiellement complexes.
+ En particuli\`er, cette architecture est une version du paradigme du code
+ contenant ses preuves propos\'ee par George Necula. Dans cette
+derni\`ere, le producteur de code
+ mobile utilise le compilateur certifiant pour g\'en\'erer le code
+\'ex\'ecutable ainsi qu'un certificat qui montre que le code
+ satisfait les politiques de s\'ecurit\'e du client qui \'ex\'ecute le
+code mobile. Le  compilateur certifiant \'etant automatique,
+ seules des politiques de s\'ecurit\'es d\'ecidables peuvent \^etre
+trait\'ees, telles la correction du typage, ou l'acc\`es s\'ecuris\'e
+ \`a la m\'emoire. Le d\'eveloppement rapide de technologies
+ dans des domains  critiques comme les cartes \`a puce requiert des
+politiques de s\'ecurit\'es  plus complexes (par exemple des propri\'et\'es fonctionelles) que les politiques de
+s\'ecurit\'es d\'ecidables.
+
+ Pour repondre \`a ce besoin,  dans cette th\`ese nous introduisons
+les composants suivants:
+ un langage de Mod\'elisation de Bytecode d\'erivant de JML
+ (Java Modeling Language), un compilateur des annotations du code
+source au code compil\'e, un g\'en\'erateur de conditions \`a
+v\'erifier pour le code compil\'e Java, et l'\'equivalence entre les
+obligations de preuve entre le code source et le code compil\'e.
+Bas\'ee sur ces composants, notre architecture permet au producteur de
+code de g\'en\'erer le certificat de code mobile interactivement et donc permet de certifier des propri\'et\'es qui vont au del\`a 
+des propri\'et\'es d\'ecidables. 
+
+\paragraph{}
+Mots Cl\'es : program static verification, verification condition generator,  program logic, mobile code, PCC, certified code,
+ Java, bytecode, proof preserving compilation, specification languages    
