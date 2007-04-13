@@ -30,7 +30,8 @@ and values}
             \RExpr(r : \RefExpr) \mid\\
       &   & \CondExpr(c : \BoolExpr, e_1, e_2 : \Expr) \mid
             \Assign(n : \Name, e : \Expr) \mid \\
-      &   & \Call(o : \Expr, n : \Name, p : \Expr) \smallskip\\
+      &   & \Call(o : \Expr, n : \Name, p : \Expr) \mid
+            \EvalG(n : \Name) \smallskip\\
 \Stmt & = & \Skip \mid
             \Sequence(s_1, s_2 : \Stmt) \mid
             \IfThenElse(c : \BoolExpr, s_1, s_2 : \Stmt) \mid\\
@@ -103,38 +104,39 @@ undefined expression.
 
 Next, Figure~\ref{FigExprStmt} defines the abstract data types for
 program expressions and statements. Notice that we have a few language
-constructs that are used to represent JML annotations (\(\Set\) and
-\(\CaseJML\), explained below) The standard program semantics ignores 
-these statements, but the annotated program semantics evaluates these,
-and updates the store of the specification accordingly. The language
-that we consider is a restricted subset of (sequential) Java. In
-particular, we consider that there is only a single exception object,
-and that methods have only one parameter. However, we believe that it
-contains all constructs that are relevant for proving correctness of
-our approach. Implementing the technique for the full language is only
-an engineering issue (see Section~\ref{SecImplem}).
+constructs that are used to represent JML annotations (\EvalG, \(\Set\) and
+\(\CaseJML\), to lookup and update ghost variables, respectively). 
+The standard program semantics ignores these statements, but the
+annotated program semantics evaluates these, and updates the store of
+the specification accordingly. The language that we consider is a
+restricted subset of (sequential) Java. In particular, we consider
+that there are only a few exceptions, and that methods have
+only one parameter. However, we believe that it contains all
+constructs that are relevant for proving correctness of our
+approach. Implementing the technique for the full language is only an
+engineering issue (see Section~\ref{SecImplem}).
 
 Figure~\ref{FigDeclarations} defines the different kinds of variable
 declarations that can occur in a program. Notice that field and ghost
 variable declarations are explicitly initialised, while parameters and
-local variables are not. Ghost variables is one of the JML concepts
+local variables are not. Ghost variables are one of the JML concepts
 that occur in our program syntax. They will be used to represent the
 control behaviour of the monitoring automaton. The \(\Set\) statement
-defined above is used to update ghost variables. Further, we consider
-that methods can be annotated with pre- and postconditions, and that
-we have class invariants. To support our annotation generation
-algorithm, we also specify for each method special annotations, called
+is used to update ghost variables. The \(\CaseJML\) statement
+abbreviates a list of conditional ghost variable updates.  Further,
+methods can be annotated with pre- and postconditions, and classes
+with invariants. To support our annotation generation algorithm, we
+also specify for each method special annotations, called
 \(\preset\),
 \(\postset\) and \(\excset\). These annotations describe the updates
 to the ghost variables at method entry, exit and exceptional exit,
-respectively. To be able to write the updates conveniently, we have
-defined a special \(\CaseJML\) statement. Our annotation generation
-algorithm proceeds in two steps: first we generate the special pre-
-and post-set annotations, using the \(\CaseJML\) construct, then we
-translate this further into ``standard'' JML. Finally,
-Figure~\ref{FigProgram} describes the syntax for methods, classes and
-programs. To ensure every method has an appropriate return expression,
-this expression is part of the method signature.
+respectively. The annotation generation algorithm proceeds in two
+steps: first we generate the special pre- and post-set annotations,
+using the \(\CaseJML\) construct, then we translate this further into
+``standard'' JML. Finally, Figure~\ref{FigProgram} describes the
+syntax for methods, classes and programs. To ensure every method has
+an appropriate return expression, this expression is part of the
+method signature.
 
 \subsection{Natural Semantics}\label{SecSemantics}
 The behaviour of a program is described using a big step semantics. We
@@ -240,21 +242,24 @@ explicitly require that the initial state is not exceptional. We use
 \((\# \ex :=  \bot, \st := \sigma \#)\). Most of the evaluation rules
 are standard, and we do not give them explicitly here, but instead
 refer to Von Oheimb's thesis. The only exception to this are the rules
-that involve annotations, \emph{i.e.,} the rules for method call, the
-\(\Set\) and the \(\CaseJML\) statement, given in
-Figure~\ref{FigEvalRules}. The functions \gammain, \gammanorm,
+that involve annotations, \emph{i.e.,} the rules for method call,
+looking up and updating ghost variables. Figure~\ref{FigEvalRules}
+shows the adapted rule for method calls. The functions \gammain, \gammanorm,
 \gammaexc specify what happens upn method entry, normal termination
-of a method and exceptional termination of a method. The functions
-\deltaset and \deltacase describe how the JML annotation statements
-\Set and \CaseJML are evaluated. To evaluate a program without
-considering the specifications, these functions are all instantiated
-as identity relations, \emph{i.e.,} \(\gammain(P, \md, r, \tau_1,
-\tau_2) = \gammanorm(P, \md, r, \tau_1, \tau_2) = \gammaexc(P, \md, r,
-\tau_1, \tau_2) = (\tau_1 = \tau_2)\), and \(\deltaset(P, \tau_1, n,
-e, \tau_2) = \deltacase(P, \tau_1, b, \tau_2) = (\tau_1 =
-\tau_2)\). In this case \(\FullProgram\) and \(\Program\) and
-\(\FullState\) and \(\Pstate\) are identified, thus also \program and
-\progstate are identify functions.
+of a method and exceptional termination of a method. The rules for
+looking up and updating ghost variables (\EvalG, \Set and \CaseJML
+completely rely on functions \deltaeval, \deltaset and \deltacase,
+that are appropriately instantiated for each kind of semantics.
+
+To evaluate a program without
+considering the specifications, 
+\(\FullProgram\) and \(\Program\) and
+\(\FullState\) and \(\Pstate\) are identical, thus \program and
+\progstate are identify functions. Also the specification evaluation
+functions are instantiated as identity relations, \emph{i.e.,}
+\(\gammain(P, \md, r, \tau_1, \tau_2) = \gammanorm(\ldots) = \gammaexc(\ldots) = (\tau_1 = \tau_2)\), and \(\deltaeval(P, \tau_1,
+\tau_2, \ldots) = \deltaset(\ldots) = \deltacase(\ldots) = (\tau_1 =
+\tau_2)\). 
 
 Figure~\ref{FigAnnotatedSem} shows the instantiation of the semantics
 for a runtime annotation evaluation semantics.
@@ -269,10 +274,11 @@ for a runtime annotation evaluation semantics.
 
 \gammain(P, \md, r, \tau_1, \tau_2) & = & \\
 \gammanorm(P, \md, r, \tau_1, \tau_2) & = & \\
-\gammaexc(P, \md, r, \tau_1, \tau_2) & = & \\
+\gammaexc(P, \md, r, \tau_1, \tau_2) & = & \smallskip\\
 
-\deltaset(P, \tau_1, e, n, \tau_2) & = & \\
-\deltacase(P, \tau_1, b, \tau_2) & = & \\
+\deltaeval(P, \EvalG(n), \tau_1, v, \tau_2) & = & \\
+\deltaset(P, \Set(e, n), \tau_1, \tau_2) & = & \\
+\deltacase(P, \CaseJML(b), \tau_1, \tau_2) & = & \\
 \end{array}
 \]
 \caption{Instantation of semantics for runtime annotation evaluation}
