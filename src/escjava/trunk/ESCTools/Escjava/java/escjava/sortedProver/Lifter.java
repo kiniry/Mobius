@@ -266,6 +266,12 @@ public class Lifter extends EscNodeBuilder
 			QuantVariableRef qvr = (QuantVariableRef) o;
 			return qvr.qvar.equals(this.qvar);
 		}
+		
+		public Term subst(Term v, Term subst) {
+			if (v.equals(this))
+				return subst;
+			return this;
+		}
 	}
 	
 	public QuantVariableRef mkQuantVariableRef (QuantVariable q) {
@@ -404,6 +410,8 @@ public class Lifter extends EscNodeBuilder
 		}
 		
 		public Term subst(Term t, Term subst) {
+			if (subst == null)
+				throw new NullPointerException();
 			if(t.equals(this))
 				return subst;
 			else {
@@ -411,10 +419,10 @@ public class Lifter extends EscNodeBuilder
 				boolean bHasChanged = false;
 				for(int i = 0; i < args.length; i++) {
 					res[i] = args[i].subst(t, subst);
-					bHasChanged = (res[i] != args[i]); 
+					bHasChanged |= (res[i] != args[i]); 
 				}
 				if (bHasChanged) {
-					return new FnTerm(fn, args);
+					return new FnTerm(fn, res);
 				}
 				else {
 					return this;
