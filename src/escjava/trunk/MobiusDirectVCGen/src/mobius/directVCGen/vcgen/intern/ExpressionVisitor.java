@@ -1,11 +1,5 @@
 package mobius.directVCGen.vcgen.intern;
 
-import mobius.directVCGen.formula.Bool;
-import mobius.directVCGen.formula.Expression;
-import mobius.directVCGen.formula.Formula;
-import mobius.directVCGen.formula.Num;
-import mobius.directVCGen.formula.Ref;
-import mobius.directVCGen.vcgen.intern.VCEntry.Post;
 import javafe.ast.AmbiguousMethodInvocation;
 import javafe.ast.AmbiguousVariableAccess;
 import javafe.ast.ArrayInit;
@@ -41,21 +35,30 @@ import javafe.ast.UnaryExpr;
 import javafe.ast.VarInit;
 import javafe.ast.VariableAccess;
 import javafe.util.ErrorSet;
+import mobius.directVCGen.formula.Bool;
+import mobius.directVCGen.formula.Expression;
+import mobius.directVCGen.formula.Formula;
+import mobius.directVCGen.formula.Num;
+import mobius.directVCGen.formula.Ref;
+import mobius.directVCGen.vcgen.intern.VCEntry.Post;
 import escjava.ast.Modifiers;
 import escjava.ast.TagConstants;
-import escjava.sortedProver.Lifter.QuantVariable;
 import escjava.sortedProver.Lifter.Term;
 import escjava.sortedProver.NodeBuilder.Sort;
 import escjava.translate.UniqName;
 
 public class ExpressionVisitor extends ABasicVisitor {
+	ExpressionVCGen vcg;
+	public ExpressionVisitor() {
+		vcg = new ExpressionVCGen(this);
+	}
 	public Object visitBinaryExpr(BinaryExpr expr, Object o) {
 		
 		//System.out.println(TagConstants.toString(expr.op));
 		VCEntry post = (VCEntry) o;
 		switch(expr.op) {
 			case TagConstants.EQ:
-				return vcGenEquals(expr, post);
+				return vcg.equals(expr, post);
 				
 			case TagConstants.OR:
 			case TagConstants.AND:
@@ -91,58 +94,49 @@ public class ExpressionVisitor extends ABasicVisitor {
 		}
 	}
 	
-	public VCEntry vcGenEquals(BinaryExpr expr, VCEntry post) {
-		post = (VCEntry)expr.right.accept(this, post);
-//		IFormula right = post.;
-//		post = (VCEntry)expr.left.accept(this, post);
-//		IFormula left = post.res;
-//
-//		
-//		post.res = Formula.equals(left, right);
-		return post;
-	}
+
 
 	public Object visitLiteralExpr(LiteralExpr expr,  Object o) {
 		VCEntry vce = (VCEntry) o;
 		Post result = vce.post;
-		
+		Term term = null;
 		//System.out.println(TagConstants.toString(expr.tag));
 		switch (expr.tag) {
 			case TagConstants.BOOLEANLIT:
-				result.substWith(Bool.value((Boolean)expr.value));
+				term = result.substWith(Bool.value((Boolean)expr.value));
 				break;
 			case TagConstants.INTLIT:
-				result.substWith(Num.value((Integer)expr.value));
+				term = result.substWith(Num.value((Integer)expr.value));
 				break;
 			case TagConstants.LONGLIT:
-				result.substWith(Num.value((Long)expr.value));
+				term = result.substWith(Num.value((Long)expr.value));
 				break;
 			case TagConstants.BYTELIT:
 				result.substWith(Num.value((Byte)expr.value));
 				break;
 			case TagConstants.SHORTLIT: 
-				result.substWith(Num.value((Short)expr.value));
+				term = result.substWith(Num.value((Short)expr.value));
 				break;
 			case TagConstants.FLOATLIT:
-				result.substWith(Num.value((Float)expr.value));
+				term = result.substWith(Num.value((Float)expr.value));
 				break;
 			case TagConstants.CHARLIT:
 				result.substWith(Num.value((Character)expr.value));
 				break;
 			case TagConstants.DOUBLELIT:
-				result.substWith(Num.value((Double)expr.value));
+				term = result.substWith(Num.value((Double)expr.value));
 				break;
 			case TagConstants.STRINGLIT:
-				result.substWith(Ref.strValue((String)expr.value));
+				term = result.substWith(Ref.strValue((String)expr.value));
 				break;
 			case TagConstants.NULLLIT:
-				result.substWith(Ref.Null());
+				term = result.substWith(Ref.Null());
 				break;
 			default:
 				throw new IllegalArgumentException("Unknown construct :" +
 						TagConstants.toString(expr.tag) +" " +  expr);
 		}
-		return result;
+		return new Post(result.var, term);
 	}
 
 	public Object visitUnaryExpr(UnaryExpr expr, Object o) {
@@ -150,14 +144,14 @@ public class ExpressionVisitor extends ABasicVisitor {
 		VCEntry post = (VCEntry) o;
 		switch(expr.op) {
 			case TagConstants.POSTFIXINC:
-				return vcGenPostfixInc(expr, post);
+				//return vcGenPostfixInc(expr, post);
 			case TagConstants.INC:
-				return vcGenInc(expr, post);
+				//return vcGenInc(expr, post);
 			case TagConstants.POSTFIXDEC:
-				return vcGenPostfixDec(expr, post);
+				//return vcGenPostfixDec(expr, post);
 			case TagConstants.DEC:
-				return vcGenDec(expr, post);
-				
+				//return vcGenDec(expr, post);
+				return post.post;
 			case TagConstants.BITNOT:
 			case TagConstants.UNARYADD:
 			case TagConstants.UNARYSUB:
@@ -198,36 +192,10 @@ public class ExpressionVisitor extends ABasicVisitor {
 				ErrorSet.caution("unknown decl in VariableAccess " + m.decl.getClass());
 			}
 		}
-		res.post.substWith(Expression.var(name, s));
+//		res.post.substWith(Expression.var(name, s));
 		return  res;
 	}
-	public VCEntry vcGenPostfixInc(UnaryExpr expr, VCEntry r) {
-//		VCEntry res = (VCEntry)visitASTNode(expr, r);
-//		Variable v = (Variable)res.res;
-//		res.post = res.post.subst(v, Num.add(v, Num.value(1)));
-		return r;
-	}
 
-	public VCEntry vcGenInc(UnaryExpr expr, VCEntry r) {
-		VCEntry res = (VCEntry)visitASTNode(expr, r);
-//		Variable v = (Variable)res.res;
-//		res.res = Num.add(v, Num.value(1));
-//		res.post = res.post.subst(v, res.res);
-		return res;
-	}
-	public VCEntry vcGenPostfixDec(UnaryExpr expr, VCEntry r) {
-		VCEntry res = (VCEntry)visitASTNode(expr, r);
-//		Variable v = (Variable)res.res;
-//		res.post = res.post.subst(v, Num.sub(v, Num.value(1)));
-		return res;
-	}
-	public VCEntry vcGenDec(UnaryExpr expr, VCEntry r) {
-		VCEntry res = (VCEntry)visitASTNode(expr, r);
-//		Variable v = (Variable)res.res;
-//		res.res = Num.sub(v, Num.value(1));
-//		res.post = res.post.subst(v, res.res);
-		return res;
-	}
 	
 
 	  public /*@non_null*/ Object visitVarInit(/*@non_null*/ VarInit x, Object o) {
@@ -239,11 +207,11 @@ public class ExpressionVisitor extends ABasicVisitor {
 	  }
 
 	  public /*@non_null*/ Object visitExpr(/*@non_null*/ Expr x, Object o) {
-	    return visitVarInit(x, o);
+	    throw new IllegalArgumentException("Illegal expr!!!!");
 	  }
 
 	  public /*@non_null*/ Object visitThisExpr(/*@non_null*/ ThisExpr x, Object o) {
-	    return visitExpr(x, o);
+	    return visitExpr(x, o);// variable particuliere
 	  }
 
 	  public /*@non_null*/ Object visitArrayRefExpr(/*@non_null*/ ArrayRefExpr x, Object o) {
@@ -295,21 +263,6 @@ public class ExpressionVisitor extends ABasicVisitor {
 	    return visitExpr(x, o);
 	  }
 
-	  public /*@non_null*/ Object visitObjectDesignator(/*@non_null*/ ObjectDesignator x, Object o) {
-	    return visitASTNode(x, o);
-	  }
-
-	  public /*@non_null*/ Object visitExprObjectDesignator(/*@non_null*/ ExprObjectDesignator x, Object o) {
-	    return visitObjectDesignator(x, o);
-	  }
-
-	  public /*@non_null*/ Object visitTypeObjectDesignator(/*@non_null*/ TypeObjectDesignator x, Object o) {
-	    return visitObjectDesignator(x, o);
-	  }
-
-	  public /*@non_null*/ Object visitSuperObjectDesignator(/*@non_null*/ SuperObjectDesignator x, Object o) {
-	    return visitObjectDesignator(x, o);
-	  }
 
 	  public /*@non_null*/ Object visitType(/*@non_null*/ Type x, Object o) {
 	    return visitASTNode(x, o);

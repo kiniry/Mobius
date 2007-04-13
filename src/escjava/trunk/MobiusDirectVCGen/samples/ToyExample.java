@@ -3,7 +3,7 @@ public class ToyExample {
 
   public static void f() {
     int i = 0;
-    i++;
+    if(i == 0);
     while (true) {
     	if(i == 0)
     		continue;

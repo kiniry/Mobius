@@ -1,8 +1,6 @@
 package mobius.directVCGen.formula;
 
 
-import java.util.Vector;
-
 import escjava.sortedProver.Lifter.FnTerm;
 import escjava.sortedProver.Lifter.QuantTerm;
 import escjava.sortedProver.Lifter.QuantVariable;
@@ -74,6 +72,8 @@ public class Logic {
 	 * @return a nicely created implies
 	 */
 	public static Term implies(Term f1, Term f2) {
+		if(f1 == null || f2 == null)
+			throw new NullPointerException("Arguments were:" + f1 +", " +  f2);
 		if((f1.getSort() != f2.getSort() && f1.getSort() != Formula.lf.sortPred))
 			throw new IllegalArgumentException("Bad type when creating the implies, " +
 					"found: " + f1.getSort() + " and " + f2.getSort());

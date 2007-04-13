@@ -31,7 +31,12 @@ public class VCEntry {
 	public VCEntry () {
         excpost = null;    		
 	}
-		
+	public VCEntry(Post post, Post excpost, Post brpost, Post contpost) {
+		this.post = post;
+		this.brpost = brpost;
+		this.contpost = contpost;
+		this.excpost = excpost;
+	}	
 	public VCEntry(VCEntry ve) {
 		post = ve.post;
 		brpost = ve.brpost;
@@ -95,9 +100,9 @@ public class VCEntry {
 		}
 		public String toString() {
 			if(var != null) {
-				return "temp var:" + var  + "\npostcondition : " + post;
+				return "(var:" + var  + ") (postcondition : " + post + ")";
 			}
-			return  "\npostcondition : " + post;
+			return  "(postcondition : " + post + ")";
 		}
 	}
 }

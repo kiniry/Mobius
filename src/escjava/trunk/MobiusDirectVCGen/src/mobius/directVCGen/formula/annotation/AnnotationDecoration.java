@@ -2,6 +2,8 @@ package mobius.directVCGen.formula.annotation;
 
 import java.util.Vector;
 
+import mobius.directVCGen.formula.Logic;
+
 import escjava.sortedProver.Lifter.Term;
 
 import javafe.ast.ASTDecoration;
@@ -70,11 +72,15 @@ public class AnnotationDecoration extends ASTDecoration {
 		}
 		res.inv = inv;
 	}
+	
+	
 	@SuppressWarnings("unchecked")
 	public Term getInvariant(ASTNode n) {
-		Annotation v =  getAnnot(n);
-		if (v == null)
-			return null;
-		return v.inv;
+		// jgc: while no proper annotations are made - returns Logic.True...
+//		Annotation v =  getAnnot(n);
+//		if (v == null)
+//			return null;
+//		return v.inv;
+		return Logic.True();
 	}
 }

@@ -9,8 +9,7 @@ import escjava.sortedProver.NodeBuilder.Sort;
 
 public class Formula {
 	static Lifter lf = new Lifter(null);
-	
-	public static Lifter getCurrentLifter() {
+    public static Lifter getCurrentLifter() {
 		return lf;
 	}
 
@@ -20,5 +19,9 @@ public class Formula {
 	public static Sort getSort(VarInit e) {
 		Type t = FlowInsensitiveChecks.getType(e);
 		return lf.typeToSort(t);
+	}	
+	public static Type getType(VarInit e) {
+		Type t = FlowInsensitiveChecks.getType(e);
+		return t;
 	}
 }
