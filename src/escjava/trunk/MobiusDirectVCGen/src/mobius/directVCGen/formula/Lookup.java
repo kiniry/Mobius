@@ -1,6 +1,6 @@
 package mobius.directVCGen.formula;
 
-import mobius.directVCGen.vcgen.intern.VCEntry.Post;
+import mobius.directVCGen.vcgen.struct.Post;
 
 import escjava.sortedProver.Lifter.Term;
 import javafe.ast.ClassDecl;

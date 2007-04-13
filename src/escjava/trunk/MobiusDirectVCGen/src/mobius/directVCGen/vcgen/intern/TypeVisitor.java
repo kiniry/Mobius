@@ -1,42 +1,43 @@
 package mobius.directVCGen.vcgen.intern;
 
-import mobius.directVCGen.formula.Formula;
-import escjava.ast.TagConstants;
-import escjava.sortedProver.Lifter;
-import escjava.sortedProver.NodeBuilder.Sort;
 import javafe.ast.PrimitiveType;
 import javafe.ast.Type;
+import mobius.directVCGen.formula.Bool;
+import mobius.directVCGen.formula.Formula;
+import mobius.directVCGen.formula.Logic;
+import mobius.directVCGen.formula.Num;
+import mobius.directVCGen.formula.Ref;
+import escjava.ast.TagConstants;
+import escjava.sortedProver.NodeBuilder.Sort;
 
 public class TypeVisitor extends ABasicVisitor {
 	protected static TypeVisitor inst = new TypeVisitor();
 	public static Sort convert2Type(Type type) {
-		;
-		Sort t = (Sort)type.accept(inst, Formula.getCurrentLifter().sortAny);
+		Sort t = (Sort)type.accept(inst, Formula.sort);
 		
 		return t;
 	}
 	
 	public Object visitPrimitiveType(PrimitiveType pt, Object o) {
 		//System.out.println(TagConstants.toString(pt.tag));
-		Lifter lf = Formula.getCurrentLifter();
 		switch (pt.tag) {
 			case TagConstants.INTTYPE:
 			case TagConstants.LONGTYPE:
 			case TagConstants.BYTETYPE:
 			case TagConstants.SHORTTYPE:
 			case TagConstants.CHARTYPE:
-				return lf.sortInt;
+				return Num.sortInt;
 			case TagConstants.BOOLEANTYPE:
-				return lf.sortBool;
+				return Bool.sort;
 			case TagConstants.VOIDTYPE:
-				return lf.sortPred; // void type is more or less prop type
+				return Logic.sort; // void type is more or less prop type
 				// in my world ;)
 				
 			case TagConstants.DOUBLETYPE:
 			case TagConstants.FLOATTYPE:
-				return lf.sortReal;
+				return Num.sortReal;
 			case TagConstants.NULLTYPE:
-				return lf.sortRef;
+				return Ref.sort;
 			case TagConstants.ERRORTYPE:
 			throw new IllegalArgumentException("Unmanaged construct :" +
 						TagConstants.toString(pt.tag) +" " +  pt);

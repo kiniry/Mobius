@@ -1,9 +1,8 @@
 package mobius.directVCGen.vcgen;
 
-import mobius.directVCGen.vcgen.intern.ABasicVisitor;
 import javafe.ast.ClassDecl;
 import javafe.ast.MethodDecl;
-import javafe.ast.Stmt;
+import mobius.directVCGen.vcgen.intern.ABasicVisitor;
 
 public class VCGenVisitor extends ABasicVisitor {
 

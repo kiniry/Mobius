@@ -37,15 +37,17 @@ import javafe.ast.VarDeclStmt;
 import javafe.ast.VarInit;
 import javafe.ast.WhileStmt;
 import javafe.tc.FlowInsensitiveChecks;
+import mobius.directVCGen.formula.Bool;
 import mobius.directVCGen.formula.Expression;
 import mobius.directVCGen.formula.Formula;
 import mobius.directVCGen.formula.Logic;
+import mobius.directVCGen.formula.Ref;
 import mobius.directVCGen.formula.annotation.AAnnotation;
 import mobius.directVCGen.formula.annotation.AnnotationDecoration;
 import mobius.directVCGen.vcgen.intern.ExpressionVisitor;
-import mobius.directVCGen.vcgen.intern.VCEntry;
-import mobius.directVCGen.vcgen.intern.VCEntry.ExcpPost;
-import mobius.directVCGen.vcgen.intern.VCEntry.Post;
+import mobius.directVCGen.vcgen.struct.ExcpPost;
+import mobius.directVCGen.vcgen.struct.Post;
+import mobius.directVCGen.vcgen.struct.VCEntry;
 import escjava.sortedProver.Lifter.QuantVariable;
 import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
@@ -141,7 +143,7 @@ public class DirectVCGen extends ExpressionVisitor {
 		else 
 			bodypre = (Post) x.stmt.accept(this, vceBody);
 		
-		QuantVariableRef v = Expression.var(Formula.getCurrentLifter().sortBool);
+		QuantVariableRef v = Expression.var(Bool.sort);
 		vce.post = new Post(v,
 				Logic.and(Logic.implies(Logic.boolToProp(v), bodypre.post),
 						Logic.implies(Logic.not(Logic.boolToProp(v)), post)));
@@ -192,7 +194,7 @@ public class DirectVCGen extends ExpressionVisitor {
 				res = p.post;
 			}
 			else if (Types.isSubClassOrEq(p.excp,typ)) {
-					Term var = Expression.var(Formula.getCurrentLifter().sortRef);
+					Term var = Expression.var(Ref.sort);
 					Post typeof = new Post(Logic.typeLE(
 							Expression.typeof(Expression.heap, var), 
 							Formula.translate(p.excp)));
@@ -267,7 +269,7 @@ public class DirectVCGen extends ExpressionVisitor {
 		vce.post = postBranch;
 		Post preF = (Post) x.els.accept(this, vce);
 		
-		QuantVariableRef v = Expression.var(Formula.getCurrentLifter().sortBool);
+		QuantVariableRef v = Expression.var(Bool.sort);
 	
 		vce.post = new Post(v,
 				Logic.and(Logic.implies(Logic.boolToProp(v), preT.post),
@@ -344,7 +346,7 @@ public class DirectVCGen extends ExpressionVisitor {
 		for(CatchClause c: catches) {
 			ExcpPost ep;
 			Type t = c.arg.type;
-			QuantVariableRef excp = Expression.var(c.arg.id, Formula.translate(t));
+			QuantVariableRef excp = Expression.var(c.arg);
 			vce.post = olpost;
 			Post epost = (Post)c.body.accept(this, vce);
 			epost = new Post(excp, epost.post);

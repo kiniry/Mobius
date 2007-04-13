@@ -1,13 +1,12 @@
 package mobius.directVCGen.vcgen;
 
-import escjava.sortedProver.Lifter.Term;
+import javafe.ast.BlockStmt;
+import javafe.ast.MethodDecl;
 import mobius.directVCGen.formula.Expression;
 import mobius.directVCGen.formula.Logic;
 import mobius.directVCGen.vcgen.intern.ABasicVisitor;
-import mobius.directVCGen.vcgen.intern.VCEntry;
-import mobius.directVCGen.vcgen.intern.VCEntry.Post;
-import javafe.ast.BlockStmt;
-import javafe.ast.MethodDecl;
+import mobius.directVCGen.vcgen.struct.Post;
+import mobius.directVCGen.vcgen.struct.VCEntry;
 
 
 public class MethodVisitor extends ABasicVisitor {

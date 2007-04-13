@@ -5,7 +5,8 @@ import javafe.ast.Expr;
 import mobius.directVCGen.formula.Bool;
 import mobius.directVCGen.formula.Expression;
 import mobius.directVCGen.formula.Formula;
-import mobius.directVCGen.vcgen.intern.VCEntry.Post;
+import mobius.directVCGen.vcgen.struct.Post;
+import mobius.directVCGen.vcgen.struct.VCEntry;
 import escjava.sortedProver.Lifter.QuantVariableRef;
 
 public class ExpressionVCGen {

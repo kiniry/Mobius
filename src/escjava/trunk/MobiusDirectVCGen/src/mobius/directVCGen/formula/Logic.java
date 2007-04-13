@@ -4,9 +4,14 @@ package mobius.directVCGen.formula;
 import escjava.sortedProver.Lifter.FnTerm;
 import escjava.sortedProver.Lifter.QuantTerm;
 import escjava.sortedProver.Lifter.QuantVariable;
+import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
+import escjava.sortedProver.NodeBuilder.Sort;
 
 public class Logic {
+	/** the sort to represent the predicates */
+	public static Sort sort = Formula.lf.sortPred;
+
 	/** 
 	 * The true of type prop 
 	 */
@@ -30,7 +35,7 @@ public class Logic {
 	 * @return a newly created and connector
 	 */
 	public static Term and(Term f1, Term f2) {
-		if((f1.getSort() != Formula.lf.sortPred && f2.getSort() != Formula.lf.sortPred))
+		if((f1.getSort() != sort && f2.getSort() != sort))
 			throw new IllegalArgumentException("Bad type when creating and, " +
 					"found: " + f1.getSort() + " and " + f2.getSort());
 		return Formula.lf.mkFnTerm(Formula.lf.symAnd, new Term[]{f1, f2});
@@ -43,7 +48,7 @@ public class Logic {
 	 * @return the BoolProp conversion object
 	 */
 	public static Term boolToProp(Term e) {
-		if(e.getSort() != Formula.lf.sortBool)
+		if(e.getSort() != Bool.sort)
 			throw new IllegalArgumentException("Bad type when creating BoolProp, " +
 				"found: " + e.getSort());
 		return Formula.lf.mkFnTerm(Formula.lf.symIsTrue, new Term[] {e});
@@ -74,7 +79,7 @@ public class Logic {
 	public static Term implies(Term f1, Term f2) {
 		if(f1 == null || f2 == null)
 			throw new NullPointerException("Arguments were:" + f1 +", " +  f2);
-		if((f1.getSort() != f2.getSort() && f1.getSort() != Formula.lf.sortPred))
+		if((f1.getSort() != f2.getSort() && f1.getSort() != sort))
 			throw new IllegalArgumentException("Bad type when creating the implies, " +
 					"found: " + f1.getSort() + " and " + f2.getSort());
 
@@ -102,7 +107,7 @@ public class Logic {
 	 * @return return the new not construct
 	 */
 	public static Term not(Term f) {
-		if(f.getSort() != Formula.lf.sortPred)
+		if(f.getSort() != sort)
 			throw new IllegalArgumentException("Bad type when creating BoolProp, " +
 				"found: " + f.getSort());
 		return Formula.lf.mkFnTerm(Formula.lf.symNot, new Term []{f});
@@ -116,7 +121,7 @@ public class Logic {
 	 */
 	public static QuantTerm forall(QuantVariable v, Term f) {
 	
-		if(f.getSort() != Formula.lf.sortPred)
+		if(f.getSort() != sort)
 			throw new IllegalArgumentException("Bad type when creating BoolProp, " +
 				"found: " + f.getSort());
 		
@@ -131,7 +136,7 @@ public class Logic {
 	 */
 	public static QuantTerm forall(QuantVariable[] v, Term f) {
 	
-		if(f.getSort() != Formula.lf.sortPred)
+		if(f.getSort() != sort)
 			throw new IllegalArgumentException("Bad type when creating BoolProp, " +
 				"found: " + f.getSort());
 		
@@ -146,7 +151,7 @@ public class Logic {
 	 */
 	public static QuantTerm exists(QuantVariable v, Term f) {
 	
-		if(f.getSort() != Formula.lf.sortPred)
+		if(f.getSort() != sort)
 			throw new IllegalArgumentException("Bad type when creating BoolProp, " +
 				"found: " + f.getSort());
 		
@@ -161,7 +166,7 @@ public class Logic {
 	 */
 	public static QuantTerm exists(QuantVariable[] v, Term f) {
 	
-		if(f.getSort() != Formula.lf.sortPred)
+		if(f.getSort() != sort)
 			throw new IllegalArgumentException("Bad type when creating BoolProp, " +
 				"found: " + f.getSort());
 		
@@ -171,36 +176,24 @@ public class Logic {
 	public static FnTerm typeLE(Term t1, Term t2) {
 		return Formula.lf.mkFnTerm(Formula.lf.symTypeLE, new Term[] {t1, t2});
 	}
-	
-//	/**
-//	 * Creates an exists binding only one variable from the formula f.
-//	 * @param v the variable to bind
-//	 * @param f the formula which is the body of the forall
-//	 * @return the forall construct newly created
-//	 */
-//	public static ALogic exists(Variable v, IFormula f) {
-//		if(f.getType() != Type.prop)
-//			throw new IllegalArgumentException("Bad type when creating BoolProp, " +
-//				"found: " + f.getType());
-//		return new Exists(v, f);
-//	}
+
 
 	/**
 	 * Main for testing purpose.
 	 * @param args ignored
 	 */
 	public static void main(String [] args) {
-//		Vector<Variable> vars = new Vector<Variable>();
-//		Variable v1 = Expression.var("v1", Type.prop);
-//		Variable v2 = Expression.var("v2", Type.bool);
-//		vars.add(v1);
-//		
-//		IFormula formula = 
-//			 Logic.forall(vars, Logic.implies(v1, v2));
-//		System.out.println(formula);
-//		System.out.println(formula.subst(v2,
-//				Logic.implies(Logic.boolToProp(v2), 
-//						Logic.FALSE)));
+		QuantVariable [] vars = { Expression.var("v1", Logic.sort),
+								  Expression.var("v2", Bool.sort) };
+		
+		QuantVariableRef rv1 = Expression.refFromVar(vars[0]);
+		QuantVariableRef rv2 = Expression.refFromVar(vars[1]);
+		Term formula = 
+			 Logic.forall(vars, Logic.implies(rv1, rv2));
+		System.out.println(formula);
+		System.out.println(formula.subst(rv2,
+				Logic.implies(Logic.boolToProp(rv2), 
+						Logic.False())));
 		System.out.println(Logic.and(Logic.True(), Logic.False()));
 	}
 }

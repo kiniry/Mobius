@@ -1,6 +1,6 @@
 package mobius.directVCGen.formula;
 
-import javafe.ast.Identifier;
+import javafe.ast.FormalParaDecl;
 import javafe.ast.LocalVarDecl;
 import escjava.sortedProver.Lifter.FnTerm;
 import escjava.sortedProver.Lifter.QuantVariable;
@@ -10,9 +10,9 @@ import escjava.sortedProver.NodeBuilder.Sort;
 import escjava.translate.UniqName;
 
 public class Expression {
-	public static Term preHeap = var("\\preHeap");
-	public static Term heap = var("\\heap");
-	public static Term varthis = var("this");
+	public static QuantVariableRef preHeap = refFromVar(var("\\preHeap", Formula.sort));
+	public static QuantVariableRef heap = refFromVar(var("\\heap", Formula.sort));
+	public static QuantVariableRef varthis = refFromVar(var("this", Ref.sort));
 	
 	
 	public static QuantVariableRef var(String str) {
@@ -25,16 +25,15 @@ public class Expression {
 		QuantVariable v =  Formula.lf.mkQuantVariable("x" + varCounter++, s);
 		return Formula.lf.mkQuantVariableRef(v);
 	}
-	public static FnTerm var(String name, Sort s) {
+	public static FnTerm sym(String name, Sort s) {
 		return Formula.lf.symbolRef (name, s);
+	}
+	public static QuantVariable var(String name, Sort s) {
+		return Formula.lf.mkQuantVariable(name, s);
 	}
 	
 	public static FnTerm typeof(Term heap, Term var) {
 		return Formula.lf.mkFnTerm(Formula.lf.symTypeOf, new Term[] {heap, var});
-	}
-	public static QuantVariableRef var(Identifier id, Term term) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 	public static QuantVariableRef refFromVar(QuantVariable qv) {
 		return Formula.lf.mkQuantVariableRef(qv);
@@ -42,4 +41,8 @@ public class Expression {
 	public static QuantVariable var(LocalVarDecl decl) {
 		return Formula.lf.mkQuantVariable(decl, UniqName.variable(decl));
 	}
+	public static QuantVariableRef var(FormalParaDecl arg) {
+		return refFromVar(Formula.lf.mkQuantVariable(arg, UniqName.variable(arg)));
+	}
+	
 }
