@@ -219,8 +219,8 @@ BEGIN
 
   Method : TYPE = [# name : Name,
                      arg : ArgDecl,
-                     pre : BoolExpr,
-                     post : BoolExpr,
+                     pre : Expr,
+                     post : Expr,
                      lvars : finite_set[LocalVarDecl],
                      body : Stmt,
                      pre_set : Stmt,
@@ -234,7 +234,7 @@ BEGIN
   % This avoid that Class is a recursive record definition
   Class : TYPE = [# name : Name,
                     super_class : lift[Name],
-                    inv : BoolExpr,
+                    inv : Expr,
                     ghost_vars : finite_set[GhostVarDecl],
                     fields : finite_set[FieldDecl],
                     methods : finite_set[Method] #]
@@ -483,12 +483,11 @@ BEGIN
       member(x, branches(c)) IMPLIES
         Set?(proj_2(x)) OR CaseJML?(proj_2(x))
 
-%  wf_MethodCall(
-
 
   % TODO:
   % Well-formed CaseJML (the list must be finite)
   % Type checks: assignments, method calls, etc, etc
+  % Assertions (pre, post, inv) are boolean expressions
   wf_Program(p : Program) : boolean =
     unique_class_names(p) AND
     unique_var_names(p) AND

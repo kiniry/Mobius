@@ -52,15 +52,14 @@ BEGIN
                     initial_AP_state(ann_program(mp)))
 
   % The main result
-  % NOTE: Because of the way the semantics are defined, we can use the seme n
-  % for both derivations
   correcteness_of_ann_program : THEOREM
     FORALL (mp : MonitoredProgram)(main : Method, arg : int)
-           (n : nat, s2MP : MState, s2AP : APState) :
+           (n : nat, sMP : MState, sAP : APState) :
       ann_program_pre(mp) IMPLIES
-      run_annotated_program(ann_program(mp))(main, arg)(s2AP)(n) IMPLIES
-      run_monitored_program(mp)(main, arg)(s2MP)(n) IMPLIES
-        MP_modeled?(s2MP, s2AP)
+      run_monitored_program(mp)(main, arg)(sMP)(n) IMPLIES
+        EXISTS (m : nat) :
+          run_annotated_program(ann_program(mp))(main, arg)(sAP)(m) AND
+          MP_modeled?(sMP, sAP)
 
 
 END Equivalence

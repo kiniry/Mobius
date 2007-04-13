@@ -84,8 +84,8 @@ BEGIN
 
   ann_class(mp)(c : Class) : Class =
     IF name(c) = class_name(mva(mp))
-    THEN c WITH [inv := Conj(inv(c), 
-                             Neq(NumVarEval("cp"), NumVarEval("halted"))),
+    THEN c WITH [inv := BExpr(Conj(b(inv(c)), Neq(NumVarEval("cp"), 
+                                                  NumVarEval("halted")))),
                  ghost_vars := union(ghost_vars(c),
                                      new_gvds(mp)),
                  methods := ann_methods(mp)(methods(c))]
