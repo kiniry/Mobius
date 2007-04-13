@@ -14,6 +14,7 @@ import javafe.ast.ContinueStmt;
 import javafe.ast.DoStmt;
 import javafe.ast.EvalStmt;
 import javafe.ast.ForStmt;
+import javafe.ast.Identifier;
 import javafe.ast.IfStmt;
 import javafe.ast.LabelStmt;
 import javafe.ast.ReturnStmt;
@@ -64,10 +65,17 @@ public class DirectVCGen extends ExpressionVisitor {
 		return illegalStmt(x, o);
 	}
 	
+	public VCEntry mkEntryBlock (VCEntry vce) {
+		VCEntry res = new VCEntry(vce);
+		res.brpost = vce.post;
+	    return res;	
+		
+	}
 	@Override
 	public /*@non_null*/ Object visitBlockStmt(/*@non_null*/ BlockStmt x, Object o) {		
 		int max = x.childCount();
 		VCEntry vce = (VCEntry) o;
+		vce = mkEntryBlock(vce);
 		vce.post = treatAnnot(vce, annot.getAnnotPost(x));
 		
 		for(int i = max - 1; i >= 0; i--) {
@@ -77,6 +85,18 @@ public class DirectVCGen extends ExpressionVisitor {
 			}
 		}
 		return treatAnnot( vce, annot.getAnnotPre(x));
+	}	
+	
+	public Post visitWhileBlockStmt (/*@non_null*/ BlockStmt x, VCEntry vce) {		
+		int max = x.childCount();
+		assert (annot.getAnnotPost(x) == null && annot.getAnnotPre(x) == null);
+		for(int i = max - 1; i >= 0; i--) {
+			Object child = x.childAt(i);
+			if(child instanceof ASTNode) {
+				vce.post = (Post) ((ASTNode) child).accept(this, vce);
+			}
+		}
+		return vce.post;
 	}	
 	
 	@Override
@@ -93,24 +113,28 @@ public class DirectVCGen extends ExpressionVisitor {
 		res.brpost = ve.post;
 		res.post = inv;
 		res.contpost = inv;
-		return res;
-		
+		return res;	
 	}
 
 	public /*@non_null*/ Object visitWhileStmt(/*@non_null*/ WhileStmt x, Object o) {
 		VCEntry vce = (VCEntry)o;
 		vce.post = treatAnnot( vce, annot.getAnnotPost(x));
-		Term inv = annot.getInvariant(x).formula;
+		Term inv = annot.getInvariant(x);
 		Term post = vce.post.post;
 		Post pinv = new Post(inv);
 		VCEntry vceBody = mkEntryWhile(vce, pinv);
-		Post bodypre = (Post) x.stmt.accept(this, vceBody);
+		Post bodypre;
+		if (x.stmt instanceof BlockStmt)
+			bodypre = visitWhileBlockStmt((BlockStmt)x.stmt, vceBody);
+		else 
+			bodypre = (Post) x.stmt.accept(this, vceBody);
+		
 		QuantVariableRef v = Expression.var(Formula.getCurrentLifter().sortBool);
 		vce.post = new Post(v,
 				Logic.and(Logic.implies(Logic.boolToProp(v), bodypre.post),
 						Logic.implies(Logic.not(Logic.boolToProp(v)), post)));
 		// the only field that can be modified in a VCentry is post 
-		Term aux = ((VCEntry) x.expr.accept(exprVisitor, vce)).post.post;
+		Term aux = ((Post) x.expr.accept(exprVisitor, vce)).post;
 		vcs.add(Logic.implies(inv, aux));
 		
 		vce.post = pinv;
@@ -170,21 +194,52 @@ public class DirectVCGen extends ExpressionVisitor {
 
 	public /*@non_null*/ Object visitThrowStmt(/*@non_null*/ ThrowStmt x, Object o) {
 		VCEntry vce = (VCEntry)o;
+		vce.post = treatAnnot( vce, annot.getAnnotPost(x));
 		Type typ = FlowInsensitiveChecks.getType(x.expr) ;
 		vce.post = getExcpPost(typ, vce);
-		return ((Post)x.expr.accept(exprVisitor, vce)).post;
+		vce.post = ((Post)x.expr.accept(exprVisitor, vce));
+		return treatAnnot(vce, annot.getAnnotPre(x));
+	}
+	
+	public Post getBreakPost(Identifier label,VCEntry vce) {
+		if (label == null) return vce.brpost; 
+		return vce.lbrpost.get(label);
 	}
 	
 	public /*@non_null*/ Object visitBreakStmt(/*@non_null*/ BreakStmt x, Object o) {
-		return visitBranchStmt(x, o);
+		VCEntry vce = (VCEntry) o;
+		vce.post = getBreakPost(x.label, vce);
+		return treatAnnot(vce, annot.getAnnotPre(x));
+	}
+	
+	public Post getContinuePost(Identifier label,VCEntry vce) {
+		if (label == null) return vce.contpost; 
+		return vce.lcontpost.get(label);
 	}
 	
 	public /*@non_null*/ Object visitContinueStmt(/*@non_null*/ ContinueStmt x, Object o) {
-		return visitBranchStmt(x, o);
+		VCEntry vce = (VCEntry) o;
+		vce.post = getContinuePost(x.label, vce);
+		return treatAnnot(vce, annot.getAnnotPre(x));
+	}
+	
+	public VCEntry mkEntryLoopLabel(Identifier label, VCEntry ve, Post continu) {
+		VCEntry res = new VCEntry(ve);
+		res.brpost = ve.post;
+		res.contpost = continu;
+		res.lbrpost.put(label, ve.post);
+		res.lcontpost.put(label, continu);
+		return res;	
 	}
 	
 	public /*@non_null*/ Object visitLabelStmt(/*@non_null*/ LabelStmt x, Object o) {
-		return visitStmt(x, o);
+		Stmt s = x.stmt;
+		VCEntry vce = (VCEntry)o;
+		vce.post = treatAnnot(vce, annot.getAnnotPre(x));
+		if (s instanceof WhileStmt || s instanceof DoStmt || s instanceof ForStmt ) {
+			vce = mkEntryLoopLabel(x.label, vce, new Post(annot.getInvariant(s)));
+		}
+		return x.stmt.accept(this, vce);
 	}
 	
 	public /*@non_null*/ Object visitIfStmt(/*@non_null*/ IfStmt x, Object o) {
