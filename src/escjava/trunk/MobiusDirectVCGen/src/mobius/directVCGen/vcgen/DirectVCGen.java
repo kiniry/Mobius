@@ -235,29 +235,35 @@ public class DirectVCGen extends ExpressionVisitor {
 	public /*@non_null*/ Object visitLabelStmt(/*@non_null*/ LabelStmt x, Object o) {
 		Stmt s = x.stmt;
 		VCEntry vce = (VCEntry)o;
-		vce.post = treatAnnot(vce, annot.getAnnotPre(x));
+		vce.post = treatAnnot(vce, annot.getAnnotPost(x));
 		if (s instanceof WhileStmt || s instanceof DoStmt || s instanceof ForStmt ) {
 			vce = mkEntryLoopLabel(x.label, vce, new Post(annot.getInvariant(s)));
 		}
-		return x.stmt.accept(this, vce);
+		vce.post = (Post) x.stmt.accept(exprVisitor, vce);
+		return treatAnnot(vce, annot.getAnnotPre(x));
 	}
 	
 	public /*@non_null*/ Object visitIfStmt(/*@non_null*/ IfStmt x, Object o) {
-		return visitStmt(x, o);
+		VCEntry vce = (VCEntry) o;
+		Post postBranch = treatAnnot(vce, annot.getAnnotPost(x));
+		vce.post = postBranch;
+		Post preT = (Post) x.thn.accept(this, vce);
+		vce.post = postBranch;
+		Post preF = (Post) x.els.accept(this, vce);
+		QuantVariableRef v = Expression.var(Formula.getCurrentLifter().sortBool);
+		vce.post = new Post(v,
+				Logic.and(Logic.implies(Logic.boolToProp(v), preT.post),
+						Logic.implies(Logic.not(Logic.boolToProp(v)), preF.post)));
+	    vce.post = (Post) x.accept(exprVisitor, vce);	
+		return treatAnnot(vce, annot.getAnnotPre(x));
 	}
-	
-	public /*@non_null*/ Object visitForStmt(/*@non_null*/ ForStmt x, Object o) {
-		return visitStmt(x, o);
-	}
-	
+		
 	public /*@non_null*/ Object visitSkipStmt(/*@non_null*/ SkipStmt x, Object o) {
-		return visitStmt(x, o);
+		VCEntry vce = (VCEntry) o;
+		vce.post = treatAnnot(vce, annot.getAnnotPost(x));
+		return treatAnnot(vce, annot.getAnnotPre(x));
 	}
-	
-	public /*@non_null*/ Object visitSwitchLabel(/*@non_null*/ SwitchLabel x, Object o) {
-		return visitStmt(x, o);
-	}
-	
+		
 	public /*@non_null*/ Object visitTryFinallyStmt(/*@non_null*/ TryFinallyStmt x, Object o) {
 		return visitStmt(x, o);
 	}
@@ -265,39 +271,49 @@ public class DirectVCGen extends ExpressionVisitor {
 	public /*@non_null*/ Object visitTryCatchStmt(/*@non_null*/ TryCatchStmt x, Object o) {
 		return visitStmt(x, o);
 	}
-	
-	public /*@non_null*/ Object visitStmtPragma(/*@non_null*/ StmtPragma x, Object o) {
-		return visitStmt(x, o);
-	}
-	
-	public /*@non_null*/ Object visitConstructorInvocation(/*@non_null*/ ConstructorInvocation x, Object o) {
-		return visitStmt(x, o);
-	}
-	
+
 	public /*@non_null*/ Object visitCatchClause(/*@non_null*/ CatchClause x, Object o) {
 		return visitASTNode(x, o);
+	}
+	
+
+	public /*@non_null*/ Object visitConstructorInvocation(/*@non_null*/ ConstructorInvocation x, Object o) {
+		return visitStmt(x, o);
 	}
 	
 	public /*@non_null*/ Object visitDoStmt(/*@non_null*/ DoStmt x, Object o) {
 		return visitStmt(x, o);
 	}
-
-	public /*@non_null*/ Object visitSynchronizeStmt(/*@non_null*/ SynchronizeStmt x, Object o) {
-		return visitStmt(x, o);
-	}
 	
-
 	public /*@non_null*/ Object visitSwitchStmt(/*@non_null*/ SwitchStmt x, Object o) {
 		return visitStmt(x, o);
 	}	
-
-	
 
 	public /*@non_null*/ Object visitVarDeclStmt(/*@non_null*/ VarDeclStmt x, Object o) {
 		return visitStmt(x, o);
 	}
 		
-	public /*@non_null*/ Object visitBranchStmt(/*@non_null*/ BranchStmt x, Object o) {
+/	public /*@non_null* / Object visitBranchStmt(/*@non_null* / BranchStmt x, Object o) {
 		return visitStmt(x, o);
 	}
+*/
+	
+	public /*@non_null*/ Object visitForStmt(/*@non_null*/ ForStmt x, Object o) {
+		return visitStmt(x, o);
+	}
+
+	public /*@non_null*/ Object visitSwitchLabel(/*@non_null*/ SwitchLabel x, Object o) {
+		return visitStmt(x, o);
+	}
+
+	public /*@non_null*/ Object visitStmtPragma(/*@non_null*/ StmtPragma x, Object o) {
+		return illegalStmt(x, o);
+	}
+
+	public /*@non_null*/ Object visitSynchronizeStmt(/*@non_null*/ SynchronizeStmt x, Object o) {
+		return illegalStmt(x, o);
+	}
+	
+
+
 }	
