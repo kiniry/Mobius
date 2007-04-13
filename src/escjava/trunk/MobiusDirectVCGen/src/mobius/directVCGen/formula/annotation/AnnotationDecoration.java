@@ -2,6 +2,8 @@ package mobius.directVCGen.formula.annotation;
 
 import java.util.Vector;
 
+import escjava.sortedProver.Lifter.Term;
+
 import javafe.ast.ASTDecoration;
 import javafe.ast.ASTNode;
 
@@ -17,7 +19,7 @@ public class AnnotationDecoration extends ASTDecoration {
 
 		protected final Vector<AAnnotation> post = new Vector<AAnnotation>();
 
-		protected AAnnotation inv = null;
+		protected Term inv = null;
 	}
 
 	public Vector<AAnnotation> getAnnotPre(ASTNode n) {
@@ -61,7 +63,7 @@ public class AnnotationDecoration extends ASTDecoration {
 		res.post.addAll(v);
 	}
 	
-	public void setInvariant(ASTNode n, AAnnotation inv) {
+	public void setInvariant(ASTNode n, Term inv) {
 		Annotation res = getAnnot(n);
 		if(res == null) {
 			super.set(n, res = new Annotation());
@@ -69,7 +71,7 @@ public class AnnotationDecoration extends ASTDecoration {
 		res.inv = inv;
 	}
 	@SuppressWarnings("unchecked")
-	public AAnnotation getInvariant(ASTNode n) {
+	public Term getInvariant(ASTNode n) {
 		Annotation v =  getAnnot(n);
 		if (v == null)
 			return null;

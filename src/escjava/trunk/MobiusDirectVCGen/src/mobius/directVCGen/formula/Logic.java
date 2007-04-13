@@ -1,8 +1,6 @@
 package mobius.directVCGen.formula;
 
 
-import java.util.Vector;
-
 import escjava.sortedProver.Lifter.FnTerm;
 import escjava.sortedProver.Lifter.QuantTerm;
 import escjava.sortedProver.Lifter.QuantVariable;
@@ -122,23 +120,31 @@ public class Logic {
 		
 		return Formula.lf.mkQuantTerm(true, new QuantVariable [] {v}, f, null, null);
 	}
+	
+
+	
+	/**
+	 * Creates an exists binding only one variable from the formula f.
+	 * @param v the variable to bind
+	 * @param f the formula which is the body of the forall
+	 * @return the forall construct newly created
+	 */
+	public static QuantTerm exists(QuantVariable v, Term f) {
+	
+		if(f.getSort() != Formula.lf.sortPred)
+			throw new IllegalArgumentException("Bad type when creating BoolProp, " +
+				"found: " + f.getSort());
+		
+		return Formula.lf.mkQuantTerm(false, new QuantVariable [] {v}, f, null, null);
+	}	
+		
+
+
+	
 	public static FnTerm typeLE(Term t1, Term t2) {
 		return Formula.lf.mkFnTerm(Formula.lf.symTypeLE, new Term[] {t1, t2});
 	}
 	
-//	/**
-//	 * Creates an exists binding only one variable from the formula f.
-//	 * @param v the variable to bind
-//	 * @param f the formula which is the body of the forall
-//	 * @return the forall construct newly created
-//	 */
-//	public static ALogic exists(Variable v, IFormula f) {
-//		if(f.getType() != Type.prop)
-//			throw new IllegalArgumentException("Bad type when creating BoolProp, " +
-//				"found: " + f.getType());
-//		return new Exists(v, f);
-//	}
-
 	/**
 	 * Main for testing purpose.
 	 * @param args ignored
