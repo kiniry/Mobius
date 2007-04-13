@@ -137,6 +137,170 @@ programs. To ensure every method has an appropriate return expression,
 this expression is part of the method signature.
 
 \subsection{Natural Semantics}\label{SecSemantics}
+The behaviour of a program is described using a big step semantics. We
+basically follow Von Oheimb's formalisation of Java~\cite{vOheimb?},
+with simplifications wherever possible because of our simplified
+program syntax. However, in our setting we use both the semantics of
+an (annotated) program and of a monitored program (as defined in the
+next section). To be able to do this in a uniform way, we modularise
+the evaluation rules with functions that describe how the annotations
+or monitoring automaton is handled at a particular point. This allows
+us to define standard program semantics, runtime annotation evaluation
+semantics and monitoring program semantics by varying only a small set
+of functions.
+
+We use the following notations: 
+$\stp{c,\sigma}{\sigma'}$  denotes that execution of statement $c$
+transforms state $s$ into $s'$ in the context of program P, while
+$\etp{c,\sigma}{v,\sigma'}$  denotes that expression $e$ evaluates to
+$v$, while transforming state $s$ into $s'$ in the context of program
+\(P\). A basic program state \(\Pstate\) is composed of an optional
+exception and a store. We only distinguish a few basic exceptions: 
+\(\Excp = \Throwable \mid \NullPointer\). The store maps every field
+and local variable to a value.
+
+\[
+\begin{array}{rcl}
+\Pstate & = \opr & \ex : \Excp_{\bot}, \st : \PStore \clr\\
+\PStore & = \opr & \fvs : \Name \mapsto \Val, \lvs : \Name \mapsto \Val \clr
+\end{array}
+\]
+
+The program state of an annotated program is extended with a store for
+ghost variables:
+\[
+\Astate = \opr \pstate : \Pstate, \gvs : \Name \mapsto \Val \clr
+\]
+
+The evaluation rules assume that we have a program \(p\) of type
+\(\FullProgram\), and a state \(\sigma\) of type
+\(\FullState\). Further, they assume that there are functions
+\(\program\) and \(\progstate\) that return the basic program, and the
+basic program state, respectively. These types and functions are
+instantiated differently for each semantics. 
+
+\begin{figure}[t]
+\[
+\begin{array}{c}
+\begin{array}{lc}
+\br{\Call}     &
+\begin{array}{c}
+\Norm(\progstate(\sigma_0))\\
+\etp{o, \sigma_0}{r,\tau_1}\\
+\etp{p, \tau1}{\act, \tau_2}\\
+\tau_3 =  \pif{\exc(\progstate(\tau_2)) \neg= \bot \wedge r = \Null}
+              {\tau_2 \with \progstate.\ex := \NullPointer}{\tau_2}\\
+\md = lookup\_mthd(P, r, \mn, \act)\\
+\gammain(P, \md, r, \tau_3, \tau_4) \\
+\oldval = \tau_4.\progstate.\st.\lvs (\md.\param.\name)\\
+\tau_5 = \tau_4 \with \progstate.\st.\lvs := (\md.\param \mapsto \act) \\
+%\_3 = \sigma_2(lvs:=init\_vars(\md.lvars[this \mapsto a][\md.pn \mapsto pv]))\\
+\stp{\md.body, \tau_5}{\tau_6}\\
+\etp{\md.\res, \tau_6}{v,\tau_7}\\
+\pif{\exc(\progstate(\tau_6)) = \bot}{\gammanorm(P, \md, r, \tau_7,
+\tau_8)}{\gammaexc(P, \md, r, \tau_7, \tau_8)}\\
+\hline
+\etp{\Call(o,\mn,p), \Norm(\sigma_0)}{v, \tau_8 \with
+\progstate.\st.\lvs := \oldval}
+\end{array}
+\end{array}
+\medskip\\
+\begin{array}{ccc}
+\begin{array}{lc}
+\br{\Set}     &
+\begin{array}{c}
+\Norm(\progstate(\sigma_0))\\
+\deltaset(P, \sigma_0, n, e, \sigma_1)\\
+\hline
+\stp{\Set(n, e), \sigma_0}{\sigma_1}
+\end{array}
+\end{array}
+&\ \ &
+\begin{array}{lc}
+\br{\CaseJML}     &
+\begin{array}{c}
+\Norm(\progstate(\sigma_0))\\
+\deltacase(P, \sigma_0, b, \sigma_1)\\
+\hline
+\stp{\CaseJML(b), \sigma_0}{\sigma_1}
+\end{array}
+\end{array}
+\end{array}
+
+\end{array}
+\]
+\caption{Evaluation rules for method calls, \(\Set\) and \CaseJML statements}\label{FigEvalRules}
+\end{figure}
+
+When statements or expressions are evaluated, uncaught exceptions are
+propagated. Exceptions can only by caught explicitly within a
+\(\TryCatch\) statement. The evaluation rules for all statements
+explicitly require that the initial state is not exceptional. We use
+\(\Norm(\sigma)\) as abbreviation for basic program states of the form
+\((\# \ex :=  \bot, \st := \sigma \#)\). Most of the evaluation rules
+are standard, and we do not give them explicitly here, but instead
+refer to Von Oheimb's thesis. The only exception to this are the rules
+that involve annotations, \emph{i.e.,} the rules for method call, the
+\(\Set\) and the \(\CaseJML\) statement, given in
+Figure~\ref{FigEvalRules}. The functions \gammain, \gammanorm,
+\gammaexc specify what happens upn method entry, normal termination
+of a method and exceptional termination of a method. The functions
+\deltaset and \deltacase describe how the JML annotation statements
+\Set and \CaseJML are evaluated. To evaluate a program without
+considering the specifications, these functions are all instantiated
+as identity relations, \emph{i.e.,} \(\gammain(P, \md, r, \tau_1,
+\tau_2) = \gammanorm(P, \md, r, \tau_1, \tau_2) = \gammaexc(P, \md, r,
+\tau_1, \tau_2) = (\tau_1 = \tau_2)\), and \(\deltaset(P, \tau_1, n,
+e, \tau_2) = \deltacase(P, \tau_1, b, \tau_2) = (\tau_1 =
+\tau_2)\). In this case \(\FullProgram\) and \(\Program\) and
+\(\FullState\) and \(\Pstate\) are identified, thus also \program and
+\progstate are identify functions.
+
+Figure~\ref{FigAnnotatedSem} shows the instantiation of the semantics
+for a runtime annotation evaluation semantics.
+
+\begin{figure}[t]
+\[
+\begin{array}{rcl}
+\FullProgram & = & \Program\\
+\FullState & = & \Astate\\
+\program & = & \id\\
+\progstate & = & \pstate\smallskip\\
+
+\gammain(P, \md, r, \tau_1, \tau_2) & = & \\
+\gammanorm(P, \md, r, \tau_1, \tau_2) & = & \\
+\gammaexc(P, \md, r, \tau_1, \tau_2) & = & \\
+
+\deltaset(P, \tau_1, e, n, \tau_2) & = & \\
+\deltacase(P, \tau_1, b, \tau_2) & = & \\
+\end{array}
+\]
+\caption{Instantation of semantics for runtime annotation evaluation}
+\label{FigAnnotatedSem}
+\end{figure}
+
+\subsubsection{PVS formalisation}
+To formalise the program semantics in PVS is not completely
+straightforward. PVS does not allow one to define mutually recursive
+definitions, and moreover for every recursive method call, termination
+has to be shown. As a solution, we defined a function
+\texttt{deriv\_expr} parametrised with a
+natural number \(n\), and a function \texttt{deriv\_stmt}, where the
+argument \texttt{deriv\_stmt} is only applicable to natural numbers
+strictly less than \(n\). The number \(n\) provides an upperbound on
+the number of recursive method calls that are going to be made.  The
+function \texttt{deriv\_stmt}, applied to natural number \(m\) can
+then directly call the \texttt{deriv\_expr} function, with
+\texttt{deriv\_stmt} as argument, but restricted to calls to numbers
+strictly less than \(m\). 
+The parameters \gammain, \gammanorm \emph{etc.} are all parametrised
+with \texttt{deriv\_expr} and \texttt{deriv\_stmt}, but again
+restricted to be applicable only for strictly smaller natural
+numbers. We can then prove for both functions the natural number
+argument is going to decrease strictly, and this is sufficient to
+guarantee termination.
+
+
 
 
 
