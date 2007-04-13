@@ -20,7 +20,7 @@ public class Lookup {
 	 * Returns the FOL Term representation of the normal postcondition of method m.
 	 * @param m the method of interest
 	 */
-	public static Post normal_postcondition(MethodDecl m){
+	public static Post normalPostcondition(MethodDecl m){
 		return new Post(Expression.var(Formula.lf.sortRef),Logic.True());
 	}
 
@@ -29,7 +29,7 @@ public class Lookup {
 	 * The exceptional postcondition will always look like this: Sort => Term
 	 * @param m the method of interest
 	 */
-	public static Post exceptional_postcondition(MethodDecl m){
+	public static Post exceptionalPostcondition(MethodDecl m){
 		return new Post(Expression.var(Formula.lf.sortRef),Logic.True());
 	}
 
