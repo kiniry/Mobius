@@ -174,9 +174,17 @@ BEGIN
       FORALL (s1, s2 : FullState, upd : [PState[Name] -> PState[Name]]) :
         f(upd, s1) = s2 IMPLIES pstate(s2) = upd(pstate(s1))
 
-  execute_set_type(f : [Name, Val, FullState -> FullState]) : bool =
-    FORALL (vn : Name, v : Val, s1, s2 : FullState) :
-      f(vn, v, s1) = s2 IMPLIES pstate(s2) = pstate(s1)
+  execute_set_type
+    (f : [FullProgram, Name, Expr, FullState, FullState, n : nat,
+     [FullProgram -> [Stmt, FullState, FullState -> [below(n + 1) -> bool]]],
+     [FullProgram -> [Expr, FullState, Val, FullState -> [below(n+1) -> bool]]]
+       -> bool]) : bool =
+    FORALL (p : FullProgram, vn : Name, e : Expr, s1, s2 : FullState, n : nat,
+            ds : [FullProgram -> [Stmt, FullState, FullState ->
+              [below(n + 1) -> bool]]],
+            de : [FullProgram -> [Expr, FullState, Val, FullState ->
+              [below(n + 1) -> bool]]]) :
+      f(p, vn, e, s1, s2, n, ds, de) IMPLIES pstate(s2) = pstate(s1)
 
   on_method_entry_type
     (f : [FullProgram, Method[Name], Val, FullState, FullState, n : nat,
@@ -268,26 +276,24 @@ BEGIN
             : RECURSIVE bool =
     LET 
     % deriv_expr with the execute_set and on_method_x arguments instantiated
-     deriv_expr_inst =
-       LAMBDA (p : FullProgram)
-              (c : Expr, sigma1 : FullState, v : Val, sigma2 : FullState)
-              (n : nat)
-              (deriv_stmt : [FullProgram -> [Stmt, FullState, FullState ->
-                                            [below(n) -> bool]]]) :
-         deriv_expr(p)(execute_set, on_method_entry, on_method_exit_normal, 
-                       on_method_exit_exceptional)
-                   (c, sigma1, v, sigma2)(n)(deriv_stmt),
-     deriv_stmt_rec =
-       LAMBDA (k : below(n))
-              (p : FullProgram)(s : Stmt, sigma1, sigma2 : FullState)
-              (m : below(k)) : 
-         deriv_stmt(p)(s, sigma1, sigma2)(m),
-     deriv_expr_rec =
-       LAMBDA (k : below(n))
-              (p : FullProgram)
-              (c : Expr, sigma1 : FullState, v : Val, sigma2 : FullState)
-              (m : below(k)) : 
-         deriv_expr_inst(p)(c, sigma1, v, sigma2)(m)(deriv_stmt_rec(m))
+      deriv_expr_inst =
+        LAMBDA (c : Expr, sigma1 : FullState, v : Val, sigma2 : FullState)
+               (n : nat)
+               (deriv_stmt : [FullProgram -> [Stmt, FullState, FullState ->
+                                             [below(n) -> bool]]]) :
+          deriv_expr(p)(execute_set, on_method_entry, on_method_exit_normal, 
+                        on_method_exit_exceptional)
+                    (c, sigma1, v, sigma2)(n)(deriv_stmt),
+      deriv_stmt_rec =
+        LAMBDA (k : below(n))(p : FullProgram)
+               (s : Stmt, sigma1, sigma2 : FullState)
+               (m : below(k)) : 
+          deriv_stmt(p)(s, sigma1, sigma2)(m),
+      deriv_expr_rec =
+        LAMBDA (k : below(n))(p : FullProgram)
+               (c : Expr, sigma1 : FullState, v : Val, sigma2 : FullState)
+               (m : below(k)) : 
+          deriv_expr_inst(c, sigma1, v, sigma2)(m)(deriv_stmt_rec(m))
     IN
     IF up?(ex(pstate(sigma1)))
     % sigma1 is an exceptional state
@@ -300,7 +306,7 @@ BEGIN
         NOT Bottom?(v) AND
         n > 0 AND
         (EXISTS (tau : FullState) : 
-           deriv_expr_inst(p)(e, sigma1, v, tau)(n - 1)(deriv_stmt_rec(n - 1))
+           deriv_expr_inst(e, sigma1, v, tau)(n - 1)(deriv_stmt_rec(n - 1))
            AND
            sigma2 = (IF up?(ex(pstate(tau)))
                      THEN tau
@@ -313,7 +319,7 @@ BEGIN
         n = 0,
       CondExpr(c, t, e) :
         n > 0 AND
-        deriv_expr_inst(p)(IF eval(c)(pstate(sigma1)) THEN t ELSE e ENDIF,
+        deriv_expr_inst(IF eval(c)(pstate(sigma1)) THEN t ELSE e ENDIF,
                            sigma1, v, sigma2)(n - 1)(deriv_stmt_rec(n - 1)),
       %TODO: update the values of this and initialize the local vars
       MethodCall(e, mn, pr) :
@@ -322,9 +328,9 @@ BEGIN
                (a, pv, old_val_arg : Val)(md : Method)(inv : BoolExpr) :
           n = m1 + m2 + m3 + m4 + m5 + m6 + 1 AND
           % evaluate the receiver object
-          deriv_expr_inst(p)(e, sigma1, a, tau1)(m1)(deriv_stmt_rec(m1)) AND
+          deriv_expr_inst(e, sigma1, a, tau1)(m1)(deriv_stmt_rec(m1)) AND
           % evaluate the parameter
-          deriv_expr_inst(p)(pr, tau1, pv, tau2)(m2)(deriv_stmt_rec(m2)) AND
+          deriv_expr_inst(pr, tau1, pv, tau2)(m2)(deriv_stmt_rec(m2)) AND
           % see if the receiver is null
           (tau3 = (IF up?(ex(pstate(tau1))) AND Null?(a)
                    THEN update_FullState(LAMBDA (s : PState) : s WITH 
@@ -344,7 +350,7 @@ BEGIN
           % execute the body
           deriv_stmt(p)(body(md), tau5, tau6)(m4) AND
           % evaluate the result
-          deriv_expr_inst(p)(res(md), tau6, v, tau7)(m5)(deriv_stmt_rec(m5)) AND
+          deriv_expr_inst(res(md), tau6, v, tau7)(m5)(deriv_stmt_rec(m5)) AND
           % actions taken at the exit of the method
           IF bottom?(ex(pstate(tau7)))
           THEN on_method_exit_normal(p, md, a, tau7, tau8, m6, 
@@ -375,8 +381,7 @@ BEGIN
     LET 
       % deriv_expr with the execute_set and on_method_x arguments instantiated
       deriv_expr_inst =
-        LAMBDA (p : FullProgram)
-               (c : Expr, sigma1 : FullState, v : Val, sigma2 : FullState)
+        LAMBDA (c : Expr, sigma1 : FullState, v : Val, sigma2 : FullState)
                (n : nat)
                (deriv_stmt : [FullProgram -> [Stmt, FullState, FullState ->
                                              [below(n) -> bool]]]) :
@@ -384,15 +389,20 @@ BEGIN
                         on_method_exit_exceptional)
                     (c, sigma1, v, sigma2)(n)(deriv_stmt),
       deriv_stmt_inst =
-        LAMBDA (p : FullProgram)(c : Stmt, sigma1, sigma2 : FullState)
-               (n : nat) :
+        LAMBDA (c : Stmt, sigma1, sigma2 : FullState)(n : nat) :
           deriv_stmt(p)(execute_set, on_method_entry, on_method_exit_normal, 
                         on_method_exit_exceptional)
                     (c, sigma1, sigma2)(n),
+      % THINK : maybe we should say k : bellow(n+1) to allow k being n
       deriv_stmt_rec =
         LAMBDA (k : below(n))(p : FullProgram)
                (s : Stmt, sigma1, sigma2 : FullState)(m : below(k)) :
-          deriv_stmt_inst(p)(s, sigma1, sigma2)(m)
+          deriv_stmt_inst(s, sigma1, sigma2)(m),
+      deriv_expr_rec =
+        LAMBDA (k : below(n))(p : FullProgram)
+               (c : Expr, sigma1 : FullState, v : Val, sigma2 : FullState)
+               (m : below(k)) : 
+          deriv_expr_inst(c, sigma1, v, sigma2)(m)(deriv_stmt_rec(m))
     IN
     IF up?(ex(pstate(sigma1)))
     % sigma1 is an exceptional state
@@ -403,31 +413,29 @@ BEGIN
       CaseJML(l) :
          CASES l OF
          null : sigma1 = sigma2 AND n = 0,
-         cons(x, xs) : deriv_stmt_inst(p)(IfThenElse(proj_1(x), proj_2(x),
-                                                     CaseJML(xs)),
-                                          sigma1, sigma2)
-                                      (n - 1)
+         cons(x, xs) : deriv_stmt_inst(IfThenElse(proj_1(x), proj_2(x),
+                                                  CaseJML(xs)),
+                                       sigma1, sigma2)(n - 1)
                        AND n > 0
          ENDCASES,
       IfThenElse(e, c1, c2) :
           n > 0 AND
-          deriv_stmt_inst(p)(IF eval(e)(pstate(sigma1)) THEN c1 ELSE c2 ENDIF,
+          deriv_stmt_inst(IF eval(e)(pstate(sigma1)) THEN c1 ELSE c2 ENDIF,
                              sigma1, sigma2)(n - 1),
       Sequence(c1, c2) :
          EXISTS(m1, m2 : nat)(tau : FullState) :
            n = m1 + m2 + 1 AND
-           deriv_stmt_inst(p)(c1, sigma1, tau)(m1) AND
-           deriv_stmt_inst(p)(c2, tau, sigma2)(m2),
+           deriv_stmt_inst(c1, sigma1, tau)(m1) AND
+           deriv_stmt_inst(c2, tau, sigma2)(m2),
       Set(vn, e) :
          n > 0 AND
-         EXISTS (tau : FullState)(v : Val) :
-           deriv_expr_inst(p)(e, sigma1, v, tau)(n - 1)(deriv_stmt_rec(n - 1))
-           AND sigma2 = execute_set(vn, v, tau),
+         execute_set(p, vn, e, sigma1, sigma2, n, 
+                     deriv_stmt_rec(n), deriv_expr_rec(n)),
       Skip : sigma1 = sigma2 AND n = 0,
       StmtExpr(e) :
          n > 0 AND
          EXISTS (v : Val) :
-           deriv_expr_inst(p)(e, sigma1, v, sigma2)(n - 1)(deriv_stmt_rec(n - 1)),
+           deriv_expr_inst(e, sigma1, v, sigma2)(n - 1)(deriv_stmt_rec(n - 1)),
       Throw: 
         n = 0 AND
         sigma2 = update_FullState(LAMBDA (s : PState) : 
@@ -436,12 +444,12 @@ BEGIN
       TryCatch(c1, c2, c3) :
         EXISTS(m1, m2, m3 : nat)(tau1, tau2, tau3 : FullState) :
           n = m1 + m2 + m3 + 1 AND
-          deriv_stmt_inst(p)(c1, sigma1, tau1)(m1) AND
-          deriv_stmt_inst(p)(IF up?(ex(pstate(tau1))) THEN c2 ELSE Skip ENDIF,
+          deriv_stmt_inst(c1, sigma1, tau1)(m1) AND
+          deriv_stmt_inst(IF up?(ex(pstate(tau1))) THEN c2 ELSE Skip ENDIF,
                              update_FullState(LAMBDA (s : PState) : 
                                               s WITH [ex := bottom], tau1),
                              tau2)(m2) AND
-          deriv_stmt_inst(p)(c3, update_FullState(LAMBDA (s : PState) : 
+          deriv_stmt_inst(c3, update_FullState(LAMBDA (s : PState) : 
                                                   s WITH [ex := bottom], tau2),
                         tau3)(m3) AND
           sigma2 = update_FullState(LAMBDA (s : PState) :
@@ -452,8 +460,7 @@ BEGIN
                                     tau3),
       While(e, c) :
         n > 0 AND
-        deriv_stmt_inst(p)(IfThenElse(e, While(e, c), Skip), sigma1, sigma2)
-                       (n - 1)
+        deriv_stmt_inst(IfThenElse(e, While(e, c), Skip), sigma1, sigma2)(n - 1)
 
     ENDCASES
   ENDIF
@@ -587,7 +594,13 @@ BEGIN
             Semantics[Name, Program, PState, id, id,
                       LAMBDA (upd : [PState -> PState], s : PState) : upd(s)]
 
-  execute_set(vn : Name, v : Val, s : PState) : PState = s
+  execute_set : (execute_set_type) =
+    LAMBDA (p : Program, vn : Name, e : Expr, s1, s2 : PState, n : nat,
+            deriv_stmt : [Program -> [Stmt, PState, PState ->
+                                     [below(n + 1) -> bool]]],
+            deriv_expr : [Program -> [Expr, PState, Val, PState ->
+                                     [below(n + 1) -> bool]]]) :
+      s1 = s2
 
   on_method_x : (on_method_entry_type) =
     LAMBDA (p : Program, md : Method, a : Val, s1, s2 : PState,
@@ -621,11 +634,17 @@ BEGIN
                         s WITH [pstate := upd(pstate(s))]]
 
   execute_set : (execute_set_type) =
-    LAMBDA (vn : Name, v : Val, s : APState) :
-      IF up?(ex(pstate(s)))
-      THEN s
-      ELSE s WITH [gvs := gvs(s) WITH [vn := v]]
-      ENDIF
+    LAMBDA (p : Program, vn : Name, e : Expr, s1, s2 : APState, n : nat,
+            deriv_stmt : [Program -> [Stmt, APState, APState ->
+                                     [below(n + 1) -> bool]]],
+            deriv_expr : [Program -> [Expr, APState, Val, APState ->
+                                     [below(n + 1) -> bool]]]) :
+      EXISTS (tau : APState, v : Val) :
+        deriv_expr(p)(e, s1, v, tau)(n - 1) AND
+        s2 = IF up?(ex(pstate(s1)))
+             THEN s1
+             ELSE s1 WITH [gvs := gvs(s1) WITH [vn := v]]
+             ENDIF
 
   on_method_entry : (on_method_entry_type) =
     LAMBDA (p : Program, md : Method, a : Val, s1, s2 : APState, n : nat,
