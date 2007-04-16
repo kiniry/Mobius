@@ -2,9 +2,10 @@
 public class ToyExample {
 
   public static void f() {
-    float i = 1;
+    int i = 1;
+    int j;
 //    if(i == 0);
-    i = 2 / i;
+    j = i = 2 / i;
 //    while (true) {
 //    	if(i == 0)
 //    		continue;
