@@ -119,6 +119,7 @@ public interface Collection {
 
     /*@ public normal_behavior
       @   ensures \result != null;
+      @   ensures \fresh(\result);
       @   ensures \result.elementType == elementType;
       @   ensures containsNull == \result.returnsNull;
       @*/
