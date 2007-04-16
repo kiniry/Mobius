@@ -19,12 +19,6 @@ public abstract class AAnnotation {
 	 */
 	public Term formula;
 	
-	public Term invariant () {
-		if (this.getID() != annotAssume) 
-			throw new IllegalArgumentException("The formula is not an assertion");
-		return this.formula;
-	}
-	
 	/**
 	 * Return the ID of the class in order to do a switch
 	 * @return an id precising which class the current object is from
