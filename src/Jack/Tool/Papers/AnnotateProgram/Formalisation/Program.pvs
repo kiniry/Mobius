@@ -242,6 +242,16 @@ BEGIN
   Program : TYPE = [# classes : finite_set[Class] #]
 
 
+  % Functions whose existence we assume
+  % Parameters: program, target object, method name, actual parameter
+  % NOTE: This is a simplification, we should use the types of the expressions,
+  % not their values, but we are not modeling types.
+  lookup_mthd : [Program, Val, Name, Expr -> lift[Method]]
+
+  % Parameters: program, target object
+  lookup_inv : [Program, Val -> lift[Expr]]
+
+
   get_FieldDecl(n : Name, p : Program) : lift[FieldDecl] =
     LET fds = {fd : FieldDecl | EXISTS (c : Class) : classes(p)(c) AND
                                   fields(c)(fd) AND name(fd) = n} IN

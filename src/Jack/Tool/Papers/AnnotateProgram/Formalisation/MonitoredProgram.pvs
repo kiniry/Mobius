@@ -62,20 +62,32 @@ BEGIN
        gvs : Store
     #]
 
-  IMPORTING Semantics[Name, MonitoredProgram, MState, 
-                      LAMBDA (mp : MonitoredProgram) : program(mp),
-                      LAMBDA (s : MState) : pstate(s),
-                      LAMBDA (upd : [PState -> PState], s : MState) :
-                        s WITH [pstate := upd(pstate(s))]]                       
+  IMPORTING SemanticsTypes[Name, MonitoredProgram, MState, 
+                           LAMBDA (s : MState) : pstate(s)]
+
+  update_state : (update_FullState_type) =
+    LAMBDA (upd : [PState -> PState], s : MState) :
+      s WITH [pstate := upd(pstate(s))]
+
+  IMPORTING SemanticsCommon[Name, MonitoredProgram, MState, 
+                            LAMBDA (s : MState) : pstate(s),
+                            update_state]
 
   % Instantiation of its semantics
 
   execute_set : (execute_set_type) =
-    LAMBDA (vn : Name, v : Val, s : MState) :
-    IF up?(ex(pstate(s)))
-    THEN s
-    ELSE s WITH [gvs := gvs(s) WITH [vn := v]]
-    ENDIF
+    LAMBDA (mp : MonitoredProgram, vn : Name, e : Expr, s1, s2 : MState,
+            n : nat,
+            deriv_stmt : [MonitoredProgram -> [Stmt, MState, MState ->
+                                              [below(n + 1) -> bool]]],
+            deriv_expr : [MonitoredProgram -> [Expr, MState, Val, MState ->
+                                              [below(n + 1) -> bool]]]) :
+      EXISTS (tau : MState, v : Val) :
+        deriv_expr(mp)(e, s1, v, tau)(n - 1) AND
+        s2 = IF up?(ex(pstate(s1)))
+             THEN s1
+             ELSE s1 WITH [gvs := gvs(s1) WITH [vn := v]]
+             ENDIF
 
   on_method_MVA(etype : EventType)
                (mp : MonitoredProgram, md : Method, s : MState) : AState =
@@ -135,6 +147,16 @@ BEGIN
       st(pstate(s1)) = st(pstate(s2))
 
 
+  IMPORTING Semantics[Name, MonitoredProgram, MState, 
+                      LAMBDA (mp : MonitoredProgram) : program(mp),
+                      LAMBDA (s : MState) : pstate(s),
+                      update_state,
+                      execute_set,
+                      on_method_entry,
+                      on_method_exit_normal,
+                      on_method_exit_exceptional]
+
+
   initial_MP_state(mp : MonitoredProgram) : MState =
     (# astate := initial_MVA_state(mva(mp)),
        pstate := initial_Program_state(mp),
@@ -148,9 +170,7 @@ BEGIN
 
   run_monitored_program(mp : MonitoredProgram)(main : Method, arg : int)
                       (s2 : MState)(n : nat) : boolean =
-    run_FullProgram(mp)(execute_set, on_method_entry, on_method_exit_normal, 
-                        on_method_exit_exceptional)
-                   (main, arg)(initial_MP_state(mp), s2)(n)
+    run_FullProgram(mp)(main, arg)(initial_MP_state(mp), s2)(n)
 
 
 END MonitoredProgramSemantics
