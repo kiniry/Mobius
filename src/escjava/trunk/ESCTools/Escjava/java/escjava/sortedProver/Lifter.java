@@ -422,7 +422,9 @@ public class Lifter extends EscNodeBuilder
 					bHasChanged |= (res[i] != args[i]); 
 				}
 				if (bHasChanged) {
-					return new FnTerm(fn, res);
+					FnTerm f = new FnTerm(fn, res);
+					f.tag = tag;
+					return f;
 				}
 				else {
 					return this;
@@ -433,7 +435,8 @@ public class Lifter extends EscNodeBuilder
 		public void printTo(StringBuffer sb)
 		{
 			sb.append(fn.name);
-			
+			if(tag != 0) 
+				sb.append(" " + TagConstants.toString(tag));
 			if (args.length > 0) {
 				sb.append("(");
 				for (int i = 0; i < args.length; ++i) {
@@ -801,9 +804,12 @@ public class Lifter extends EscNodeBuilder
     public FnSymbol symTermConditional = registerFnSymbol("%ite", new Sort[] { sortPred, sortValue, sortValue }, sortValue, TagConstants.CONDITIONAL);
 	public PredSymbol symIntPred = registerPredSymbol("%int-pred", new Sort[] { sortInt, sortInt });
 	public PredSymbol symRealPred = registerPredSymbol("%real-pred", new Sort[] { sortReal, sortReal });
-	public FnSymbol symIntFn = registerFnSymbol("%int-pred", new Sort[] { sortInt, sortInt }, sortInt);
-	public FnSymbol symRealFn = registerFnSymbol("%real-pred", new Sort[] { sortReal, sortReal }, sortReal);
-	public FnSymbol symBoolFn = registerFnSymbol("%bool-pred", new Sort[] { sortBool, sortBool }, sortBool);
+	public FnSymbol symBoolPred = registerFnSymbol("%bool-pred", new Sort[] { sortBool, sortBool }, sortPred);
+	public FnSymbol symIntBoolFn = registerFnSymbol("%int-bool-fn", new Sort[] { sortInt, sortInt }, sortBool);
+	public FnSymbol symRealBoolFn = registerFnSymbol("%real-bool-fn", new Sort[] { sortReal, sortReal }, sortBool);
+	public FnSymbol symIntFn = registerFnSymbol("%int-fn", new Sort[] { sortInt, sortInt }, sortInt);
+	public FnSymbol symRealFn = registerFnSymbol("%real-fn", new Sort[] { sortReal, sortReal }, sortReal);
+	public FnSymbol symBoolFn = registerFnSymbol("%bool-fn", new Sort[] { sortBool, sortBool }, sortBool);
     public FnSymbol symIntegralNeg = registerFnSymbol("%integralNeg", new Sort[] { sortInt }, sortInt, TagConstants.INTEGRALNEG);
     public FnSymbol symFloatingNeg = registerFnSymbol("%floatingNeg", new Sort[] { sortReal }, sortReal, TagConstants.FLOATINGNEG);    
 	public FnSymbol symSelect = registerFnSymbol("%select", new Sort[] { sortMap, sortValue }, sortValue, TagConstants.SELECT);
