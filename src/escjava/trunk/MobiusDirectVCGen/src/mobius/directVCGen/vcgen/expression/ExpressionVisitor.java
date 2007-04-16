@@ -1,4 +1,4 @@
-package mobius.directVCGen.vcgen.intern;
+package mobius.directVCGen.vcgen.expression;
 
 import javafe.ast.AmbiguousMethodInvocation;
 import javafe.ast.AmbiguousVariableAccess;
@@ -32,13 +32,16 @@ import javafe.ast.VarInit;
 import javafe.ast.VariableAccess;
 import javafe.util.ErrorSet;
 import mobius.directVCGen.formula.Bool;
+import mobius.directVCGen.formula.Expression;
 import mobius.directVCGen.formula.Formula;
 import mobius.directVCGen.formula.Num;
 import mobius.directVCGen.formula.Ref;
+import mobius.directVCGen.vcgen.intern.ABasicVisitor;
 import mobius.directVCGen.vcgen.struct.Post;
 import mobius.directVCGen.vcgen.struct.VCEntry;
 import escjava.ast.Modifiers;
 import escjava.ast.TagConstants;
+import escjava.sortedProver.Lifter.QuantVariable;
 import escjava.sortedProver.Lifter.Term;
 import escjava.sortedProver.NodeBuilder.Sort;
 import escjava.translate.UniqName;
@@ -55,26 +58,42 @@ public class ExpressionVisitor extends ABasicVisitor {
 		switch(expr.op) {
 			case TagConstants.EQ:
 				return vcg.equals(expr, post);
-				
 			case TagConstants.OR:
+				return vcg.or(expr, post);
 			case TagConstants.AND:
-			case TagConstants.BITOR:
-			case TagConstants.BITXOR:
-			case TagConstants.BITAND:
+				return vcg.and(expr, post);
 			case TagConstants.NE:
-
+				return vcg.ne(expr, post);
 			case TagConstants.GE:
+				return vcg.ge(expr, post);
 			case TagConstants.GT:
+				return vcg.gt(expr, post);
 			case TagConstants.LE:
+				return vcg.le(expr, post);
 			case TagConstants.LT:
+				return vcg.lt(expr, post);
+			case TagConstants.BITOR:
+				return vcg.bitor(expr, post);
+			case TagConstants.BITXOR:
+				return vcg.bitxor(expr, post);
+			case TagConstants.BITAND:
+				return vcg.bitand(expr, post);
 			case TagConstants.LSHIFT:
+				return vcg.lshift(expr, post);
 			case TagConstants.RSHIFT:
+				return vcg.rshift(expr, post);
 			case TagConstants.URSHIFT:
+				return vcg.urshift(expr, post);
 			case TagConstants.ADD:
+				return vcg.add(expr, post);
 			case TagConstants.SUB:
+				return vcg.sub(expr, post);
 			case TagConstants.DIV:
+				return vcg.div(expr, post);
 			case TagConstants.MOD:
+				return vcg.mod(expr, post);
 			case TagConstants.STAR:
+				return vcg.star(expr, post);
 		// jml specific operators
 			case TagConstants.IMPLIES:
 			case TagConstants.EXPLIES:
@@ -169,26 +188,33 @@ public class ExpressionVisitor extends ABasicVisitor {
 		String name = UniqName.variable(m.decl);
 		
 		GenericVarDecl decl = m.decl;
+		
+		decl = ((LocalVarDecl)decl).source;	
+		assert(decl != null);
+		
+		switch (decl.getTag()) {
+			case TagConstants.FIELDDECL: {
+					FieldDecl d = (FieldDecl)decl;
+					if (Modifiers.isStatic(d.getModifiers()))
+						s = Formula.typeToSort(d.type);
+					else
+						s = Formula.getCurrentLifter().registerMapSort(Ref.sort, Formula.typeToSort(d.type));
+					
+				}
+				break;
+			case TagConstants.LOCALVARDECL:
+			case TagConstants.FORMALPARADECL: {
+					GenericVarDecl g = (GenericVarDecl)decl;
+					s = Formula.typeToSort(g.type);
+				}
+				break;
+			default:
+				throw new IllegalArgumentException("Unknown type of variable declaration: " + decl);
+				
 			
-		if (decl instanceof LocalVarDecl && ((LocalVarDecl)decl).source != null) {
-			decl = ((LocalVarDecl)decl).source;				
-			
-			if (decl instanceof FieldDecl) {
-				FieldDecl d = (FieldDecl)decl;
-				if (Modifiers.isStatic(d.getModifiers()))
-					s = Formula.getCurrentLifter().typeToSort(d.type);
-				else
-					s = Formula.getCurrentLifter().registerMapSort(Formula.getCurrentLifter().sortRef, Formula.getCurrentLifter().typeToSort(d.type));
-				//ErrorSet.caution("VariableAccess " + name + " -> " + s);
-			} else if (decl instanceof LocalVarDecl || decl instanceof FormalParaDecl) {
-				GenericVarDecl g = (GenericVarDecl)decl;
-				s = Formula.getCurrentLifter().typeToSort(g.type);
-				//ErrorSet.caution("VariableAccess local " + name + " -> " + s);
-			} else {
-				ErrorSet.caution("unknown decl in VariableAccess " + m.decl.getClass());
-			}
 		}
-//		res.post.substWith(Expression.var(name, s));
+		
+		QuantVariable var = Expression.var(name, s);
 		return  res;
 	}
 

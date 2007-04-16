@@ -15,7 +15,6 @@ public class Formula {
 	 * Every use of this function should be replaced by a 'proper'
 	 * library call.
 	 * @deprecated
-	 * @return
 	 */
     public static Lifter getCurrentLifter() {
 		return lf;
@@ -32,4 +31,7 @@ public class Formula {
 		Type t = FlowInsensitiveChecks.getType(e);
 		return t;
 	}
+	public static Sort typeToSort(Type t) {
+		return lf.typeToSort(t);
+	}	
 }

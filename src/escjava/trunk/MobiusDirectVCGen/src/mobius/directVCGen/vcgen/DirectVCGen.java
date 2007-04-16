@@ -44,7 +44,7 @@ import mobius.directVCGen.formula.Logic;
 import mobius.directVCGen.formula.Ref;
 import mobius.directVCGen.formula.annotation.AAnnotation;
 import mobius.directVCGen.formula.annotation.AnnotationDecoration;
-import mobius.directVCGen.vcgen.intern.ExpressionVisitor;
+import mobius.directVCGen.vcgen.expression.ExpressionVisitor;
 import mobius.directVCGen.vcgen.struct.ExcpPost;
 import mobius.directVCGen.vcgen.struct.Post;
 import mobius.directVCGen.vcgen.struct.VCEntry;

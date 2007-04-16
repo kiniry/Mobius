@@ -1,5 +1,7 @@
 package mobius.directVCGen.formula;
 
+import escjava.ast.TagConstants;
+import escjava.sortedProver.Lifter.FnTerm;
 import escjava.sortedProver.Lifter.Term;
 import escjava.sortedProver.NodeBuilder.Sort;
 
@@ -35,4 +37,96 @@ public class Num {
 		return Formula.lf.mkRealLiteral(d);
 	}
 
+	public static Term add(Term l, Term r) {
+		if(l.getSort() != r.getSort())
+			throw new IllegalArgumentException("The sort of " + l + 
+					" is different from the sort of " + r + ".");
+		FnTerm t = null;
+		if (l.getSort() == Num.sortInt) {
+			t = Formula.lf.mkFnTerm(Formula.lf.symIntFn, new Term[] {l, r});
+			t.tag = TagConstants.INTEGRALADD;
+		}
+		else if (l.getSort() == Num.sortReal) {
+			t = Formula.lf.mkFnTerm(Formula.lf.symRealFn, new Term[] {l, r});
+			t.tag = TagConstants.FLOATINGADD;
+		}
+		else {
+			throw new IllegalArgumentException("The sort " + l.getSort() + " is invalid!"); 
+		}
+		return t;
+	}
+	public static Term sub(Term l, Term r) {
+		if(l.getSort() != r.getSort())
+			throw new IllegalArgumentException("The sort of " + l + 
+					" is different from the sort of " + r + ".");
+		FnTerm t = null;
+		if (l.getSort() == Num.sortInt) {
+			t = Formula.lf.mkFnTerm(Formula.lf.symIntFn, new Term[] {l, r});
+			t.tag = TagConstants.INTEGRALSUB;
+		}
+		else if (l.getSort() == Num.sortReal) {
+			t = Formula.lf.mkFnTerm(Formula.lf.symRealFn, new Term[] {l, r});
+			t.tag = TagConstants.FLOATINGSUB;
+		}
+		else {
+			throw new IllegalArgumentException("The sort " + l.getSort() + " is invalid!"); 
+		}
+		return t;
+	}
+	
+	public static Term div(Term l, Term r) {
+		if(l.getSort() != r.getSort())
+			throw new IllegalArgumentException("The sort of " + l + 
+					" is different from the sort of " + r + ".");
+		FnTerm t = null;
+		if (l.getSort() == Num.sortInt) {
+			t = Formula.lf.mkFnTerm(Formula.lf.symIntFn, new Term[] {l, r});
+			t.tag = TagConstants.INTEGRALDIV;
+		}
+		else if (l.getSort() == Num.sortReal) {
+			t = Formula.lf.mkFnTerm(Formula.lf.symRealFn, new Term[] {l, r});
+			t.tag = TagConstants.FLOATINGDIV;
+		}
+		else {
+			throw new IllegalArgumentException("The sort " + l.getSort() + " is invalid!"); 
+		}
+		return t;
+	}
+	
+	public static Term mul(Term l, Term r) {
+		if(l.getSort() != r.getSort())
+			throw new IllegalArgumentException("The sort of " + l + 
+					" is different from the sort of " + r + ".");
+		FnTerm t = null;
+		if (l.getSort() == Num.sortInt) {
+			t = Formula.lf.mkFnTerm(Formula.lf.symIntFn, new Term[] {l, r});
+			t.tag = TagConstants.INTEGRALMUL;
+		}
+		else if (l.getSort() == Num.sortReal) {
+			t = Formula.lf.mkFnTerm(Formula.lf.symRealFn, new Term[] {l, r});
+			t.tag = TagConstants.FLOATINGMUL;
+		}
+		else {
+			throw new IllegalArgumentException("The sort " + l.getSort() + " is invalid!"); 
+		}
+		return t;
+	}
+	public static Term mod(Term l, Term r) {
+		if(l.getSort() != r.getSort())
+			throw new IllegalArgumentException("The sort of " + l + 
+					" is different from the sort of " + r + ".");
+		FnTerm t = null;
+		if (l.getSort() == Num.sortInt) {
+			t = Formula.lf.mkFnTerm(Formula.lf.symIntFn, new Term[] {l, r});
+			t.tag = TagConstants.INTEGRALMOD;
+		}
+		else if (l.getSort() == Num.sortReal) {
+			t = Formula.lf.mkFnTerm(Formula.lf.symRealFn, new Term[] {l, r});
+			t.tag = TagConstants.FLOATINGMOD;
+		}
+		else {
+			throw new IllegalArgumentException("The sort " + l.getSort() + " is invalid!"); 
+		}
+		return t;
+	}
 }
