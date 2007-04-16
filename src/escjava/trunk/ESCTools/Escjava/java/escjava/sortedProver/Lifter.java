@@ -770,6 +770,9 @@ public class Lifter extends EscNodeBuilder
 		public Sort getSort() { return sortBool; }
 		public void infer() { }
 		public STerm dump() { return dumpBuilder.buildBool(value); }
+		public void printTo(StringBuffer sb) {
+			sb.append(value);
+		}
 	}
 	public BoolLiteral mkBoolLiteral(boolean v) {
 		return new BoolLiteral(v);
@@ -800,6 +803,7 @@ public class Lifter extends EscNodeBuilder
 	public PredSymbol symRealPred = registerPredSymbol("%real-pred", new Sort[] { sortReal, sortReal });
 	public FnSymbol symIntFn = registerFnSymbol("%int-pred", new Sort[] { sortInt, sortInt }, sortInt);
 	public FnSymbol symRealFn = registerFnSymbol("%real-pred", new Sort[] { sortReal, sortReal }, sortReal);
+	public FnSymbol symBoolFn = registerFnSymbol("%bool-pred", new Sort[] { sortBool, sortBool }, sortBool);
     public FnSymbol symIntegralNeg = registerFnSymbol("%integralNeg", new Sort[] { sortInt }, sortInt, TagConstants.INTEGRALNEG);
     public FnSymbol symFloatingNeg = registerFnSymbol("%floatingNeg", new Sort[] { sortReal }, sortReal, TagConstants.FLOATINGNEG);    
 	public FnSymbol symSelect = registerFnSymbol("%select", new Sort[] { sortMap, sortValue }, sortValue, TagConstants.SELECT);
