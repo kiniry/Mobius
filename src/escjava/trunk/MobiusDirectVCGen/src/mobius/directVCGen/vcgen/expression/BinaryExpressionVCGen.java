@@ -187,33 +187,93 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn{
 	}
 	
 	public Object bitor(BinaryExpr expr, VCEntry post) {
-		// TODO Auto-generated method stub
-		return null;
+		Expr right = expr.right;
+		Expr left = expr.left;
+		
+		QuantVariableRef rvar = Expression.var(Formula.getSort(right));
+		QuantVariableRef lvar = Expression.var(Formula.getSort(left));
+		Post rPost = new Post(rvar, post.post.substWith(Expression.bitor(lvar, rvar)));
+		post.post = rPost;
+		Post pre = getPre(right, post);
+		Post lPost = new Post(lvar, pre.post);
+		post.post = lPost;
+		pre = getPre(right, post);
+		return pre;
 	}
 
 	public Object bitxor(BinaryExpr expr, VCEntry post) {
-		// TODO Auto-generated method stub
-		return null;
+		Expr right = expr.right;
+		Expr left = expr.left;
+		
+		QuantVariableRef rvar = Expression.var(Formula.getSort(right));
+		QuantVariableRef lvar = Expression.var(Formula.getSort(left));
+		Post rPost = new Post(rvar, post.post.substWith(Expression.bitxor(lvar, rvar)));
+		post.post = rPost;
+		Post pre = getPre(right, post);
+		Post lPost = new Post(lvar, pre.post);
+		post.post = lPost;
+		pre = getPre(right, post);
+		return pre;
 	}
 
 	public Object bitand(BinaryExpr expr, VCEntry post) {
-		// TODO Auto-generated method stub
-		return null;
+		Expr right = expr.right;
+		Expr left = expr.left;
+		
+		QuantVariableRef rvar = Expression.var(Formula.getSort(right));
+		QuantVariableRef lvar = Expression.var(Formula.getSort(left));
+		Post rPost = new Post(rvar, post.post.substWith(Expression.bitand(lvar, rvar)));
+		post.post = rPost;
+		Post pre = getPre(right, post);
+		Post lPost = new Post(lvar, pre.post);
+		post.post = lPost;
+		pre = getPre(right, post);
+		return pre;
 	}
 
 	public Object lshift(BinaryExpr expr, VCEntry post) {
-		// TODO Auto-generated method stub
-		return null;
+		Expr right = expr.right;
+		Expr left = expr.left;
+		
+		QuantVariableRef rvar = Expression.var(Formula.getSort(right));
+		QuantVariableRef lvar = Expression.var(Formula.getSort(left));
+		Post rPost = new Post(rvar, post.post.substWith(Num.lshift(lvar, rvar)));
+		post.post = rPost;
+		Post pre = getPre(right, post);
+		Post lPost = new Post(lvar, pre.post);
+		post.post = lPost;
+		pre = getPre(right, post);
+		return pre;
 	}
 
 	public Object rshift(BinaryExpr expr, VCEntry post) {
-		// TODO Auto-generated method stub
-		return null;
+		Expr right = expr.right;
+		Expr left = expr.left;
+		
+		QuantVariableRef rvar = Expression.var(Formula.getSort(right));
+		QuantVariableRef lvar = Expression.var(Formula.getSort(left));
+		Post rPost = new Post(rvar, post.post.substWith(Num.rshift(lvar, rvar)));
+		post.post = rPost;
+		Post pre = getPre(right, post);
+		Post lPost = new Post(lvar, pre.post);
+		post.post = lPost;
+		pre = getPre(right, post);
+		return pre;
 	}
 
 	public Object urshift(BinaryExpr expr, VCEntry post) {
-		// TODO Auto-generated method stub
-		return null;
+		Expr right = expr.right;
+		Expr left = expr.left;
+		
+		QuantVariableRef rvar = Expression.var(Formula.getSort(right));
+		QuantVariableRef lvar = Expression.var(Formula.getSort(left));
+		Post rPost = new Post(rvar, post.post.substWith(Num.urshift(lvar, rvar)));
+		post.post = rPost;
+		Post pre = getPre(right, post);
+		Post lPost = new Post(lvar, pre.post);
+		post.post = lPost;
+		pre = getPre(right, post);
+		return pre;
 	}
 	
 	public Object div(BinaryExpr expr, VCEntry post) {

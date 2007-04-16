@@ -129,4 +129,61 @@ public class Num {
 		}
 		return t;
 	}
+
+	public static Term lshift(Term l, Term r) {
+		if(l.getSort() != r.getSort())
+			throw new IllegalArgumentException("The sort of " + l + 
+					" is different from the sort of " + r + ".");
+		FnTerm t = null;
+		if (l.getSort() == Num.sortInt) {
+			t = Formula.lf.mkFnTerm(Formula.lf.symIntFn, new Term[] {l, r});
+			t.tag = TagConstants.LSHIFT;
+		}
+		else if (l.getSort() == Num.sortReal) {
+			t = Formula.lf.mkFnTerm(Formula.lf.symRealFn, new Term[] {l, r});
+			t.tag = TagConstants.LSHIFT;
+		}
+		else {
+			throw new IllegalArgumentException("The sort " + l.getSort() + " is invalid!"); 
+		}
+		return t;
+	}
+
+	public static Term rshift(Term l, Term r) {
+		if(l.getSort() != r.getSort())
+			throw new IllegalArgumentException("The sort of " + l + 
+					" is different from the sort of " + r + ".");
+		FnTerm t = null;
+		if (l.getSort() == Num.sortInt) {
+			t = Formula.lf.mkFnTerm(Formula.lf.symIntFn, new Term[] {l, r});
+			t.tag = TagConstants.RSHIFT;
+		}
+		else if (l.getSort() == Num.sortReal) {
+			t = Formula.lf.mkFnTerm(Formula.lf.symRealFn, new Term[] {l, r});
+			t.tag = TagConstants.RSHIFT;
+		}
+		else {
+			throw new IllegalArgumentException("The sort " + l.getSort() + " is invalid!"); 
+		}
+		return t;
+	}
+
+	public static Term urshift(Term l, Term r) {
+		if(l.getSort() != r.getSort())
+			throw new IllegalArgumentException("The sort of " + l + 
+					" is different from the sort of " + r + ".");
+		FnTerm t = null;
+		if (l.getSort() == Num.sortInt) {
+			t = Formula.lf.mkFnTerm(Formula.lf.symIntFn, new Term[] {l, r});
+			t.tag = TagConstants.URSHIFT;
+		}
+		else if (l.getSort() == Num.sortReal) {
+			t = Formula.lf.mkFnTerm(Formula.lf.symRealFn, new Term[] {l, r});
+			t.tag = TagConstants.URSHIFT;
+		}
+		else {
+			throw new IllegalArgumentException("The sort " + l.getSort() + " is invalid!"); 
+		}
+		return t;
+	}
 }
