@@ -38,10 +38,19 @@ public class Num {
 	}
 
 	public static Term add(Term l, Term r) {
-		if(l.getSort() != r.getSort())
+		if(l.getSort() != r.getSort()&& 
+				(!Num.isNum(r.getSort()) || !Num.isNum(l.getSort())))
 			throw new IllegalArgumentException("The sort of " + l + 
 					" is different from the sort of " + r + ".");
 		FnTerm t = null;
+		if(l.getSort() != r.getSort()) {
+			if(l.getSort() == Num.sortInt) {
+				l = Num.intToReal(l);
+			}
+			else {
+				r = Num.intToReal(r);
+			}
+		}
 		if (l.getSort() == Num.sortInt) {
 			t = Formula.lf.mkFnTerm(Formula.lf.symIntFn, new Term[] {l, r});
 			t.tag = TagConstants.INTEGRALADD;
@@ -56,7 +65,8 @@ public class Num {
 		return t;
 	}
 	public static Term sub(Term l, Term r) {
-		if(l.getSort() != r.getSort())
+		if(l.getSort() != r.getSort()&& 
+				(!Num.isNum(r.getSort()) || !Num.isNum(l.getSort())))
 			throw new IllegalArgumentException("The sort of " + l + 
 					" is different from the sort of " + r + ".");
 		FnTerm t = null;
@@ -75,7 +85,8 @@ public class Num {
 	}
 	
 	public static Term div(Term l, Term r) {
-		if(l.getSort() != r.getSort())
+		if(l.getSort() != r.getSort()&& 
+				(!Num.isNum(r.getSort()) || !Num.isNum(l.getSort())))
 			throw new IllegalArgumentException("The sort of " + l + 
 					" is different from the sort of " + r + ".");
 		FnTerm t = null;
@@ -94,7 +105,8 @@ public class Num {
 	}
 	
 	public static Term mul(Term l, Term r) {
-		if(l.getSort() != r.getSort())
+		if(l.getSort() != r.getSort()&& 
+				(!Num.isNum(r.getSort()) || !Num.isNum(l.getSort())))
 			throw new IllegalArgumentException("The sort of " + l + 
 					" is different from the sort of " + r + ".");
 		FnTerm t = null;
@@ -112,7 +124,8 @@ public class Num {
 		return t;
 	}
 	public static Term mod(Term l, Term r) {
-		if(l.getSort() != r.getSort())
+		if(l.getSort() != r.getSort()&& 
+				(!Num.isNum(r.getSort()) || !Num.isNum(l.getSort())))
 			throw new IllegalArgumentException("The sort of " + l + 
 					" is different from the sort of " + r + ".");
 		FnTerm t = null;
@@ -131,7 +144,8 @@ public class Num {
 	}
 
 	public static Term lshift(Term l, Term r) {
-		if(l.getSort() != r.getSort())
+		if(l.getSort() != r.getSort()&& 
+				(!Num.isNum(r.getSort()) || !Num.isNum(l.getSort())))
 			throw new IllegalArgumentException("The sort of " + l + 
 					" is different from the sort of " + r + ".");
 		FnTerm t = null;
@@ -150,7 +164,8 @@ public class Num {
 	}
 
 	public static Term rshift(Term l, Term r) {
-		if(l.getSort() != r.getSort())
+		if(l.getSort() != r.getSort()&& 
+				(!Num.isNum(r.getSort()) || !Num.isNum(l.getSort())))
 			throw new IllegalArgumentException("The sort of " + l + 
 					" is different from the sort of " + r + ".");
 		FnTerm t = null;
@@ -169,7 +184,8 @@ public class Num {
 	}
 
 	public static Term urshift(Term l, Term r) {
-		if(l.getSort() != r.getSort())
+		if(l.getSort() != r.getSort()&& 
+				(!Num.isNum(r.getSort()) || !Num.isNum(l.getSort())))
 			throw new IllegalArgumentException("The sort of " + l + 
 					" is different from the sort of " + r + ".");
 		FnTerm t = null;
@@ -185,5 +201,13 @@ public class Num {
 			throw new IllegalArgumentException("The sort " + l.getSort() + " is invalid!"); 
 		}
 		return t;
+	}
+
+	public static boolean isNum(Sort sort) {
+		return sort == sortInt || sort == sortReal;
+	}
+
+	public static Term intToReal(Term r) {
+		return Formula.lf.mkFnTerm(Formula.lf.symIntToReal, new Term [] {r});
 	}
 }

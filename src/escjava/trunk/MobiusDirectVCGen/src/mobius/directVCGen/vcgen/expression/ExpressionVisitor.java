@@ -13,7 +13,6 @@ import javafe.ast.ErrorType;
 import javafe.ast.Expr;
 import javafe.ast.FieldAccess;
 import javafe.ast.FieldDecl;
-import javafe.ast.FormalParaDecl;
 import javafe.ast.GenericVarDecl;
 import javafe.ast.InstanceOfExpr;
 import javafe.ast.JavafePrimitiveType;
@@ -30,7 +29,6 @@ import javafe.ast.TypeName;
 import javafe.ast.UnaryExpr;
 import javafe.ast.VarInit;
 import javafe.ast.VariableAccess;
-import javafe.util.ErrorSet;
 import mobius.directVCGen.formula.Bool;
 import mobius.directVCGen.formula.Expression;
 import mobius.directVCGen.formula.Formula;
@@ -41,7 +39,7 @@ import mobius.directVCGen.vcgen.struct.Post;
 import mobius.directVCGen.vcgen.struct.VCEntry;
 import escjava.ast.Modifiers;
 import escjava.ast.TagConstants;
-import escjava.sortedProver.Lifter.QuantVariable;
+import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
 import escjava.sortedProver.NodeBuilder.Sort;
 import escjava.translate.UniqName;
@@ -94,6 +92,18 @@ public class ExpressionVisitor extends ABasicVisitor {
 				return vcg.mod(expr, post);
 			case TagConstants.STAR:
 				return vcg.star(expr, post);
+			case TagConstants.ASSIGN:
+				return vcg.assign(expr, post);
+			case TagConstants.ASGMUL:
+			case TagConstants.ASGDIV:
+			case TagConstants.ASGREM:
+			case TagConstants.ASGADD:
+			case TagConstants.ASGSUB:
+			case TagConstants.ASGLSHIFT:
+			case TagConstants.ASGRSHIFT:
+			case TagConstants.ASGURSHIFT:
+			case TagConstants.ASGBITAND:
+				return post.post;
 		// jml specific operators
 			case TagConstants.IMPLIES:
 			case TagConstants.EXPLIES:
@@ -188,9 +198,9 @@ public class ExpressionVisitor extends ABasicVisitor {
 		String name = UniqName.variable(m.decl);
 		
 		GenericVarDecl decl = m.decl;
-		
-		decl = ((LocalVarDecl)decl).source;	
-		assert(decl != null);
+		if(((LocalVarDecl)decl).source != null)
+			decl = ((LocalVarDecl)decl).source;	
+		//assert(decl != null);
 		
 		switch (decl.getTag()) {
 			case TagConstants.FIELDDECL: {
@@ -214,8 +224,8 @@ public class ExpressionVisitor extends ABasicVisitor {
 			
 		}
 		
-		QuantVariable var = Expression.var(name, s);
-		return  res;
+		QuantVariableRef var = Expression.refFromVar(Expression.var(name, s));
+		return  new Post(res.post.var, res.post.substWith(var));
 	}
 
 	

@@ -6,13 +6,28 @@ import escjava.sortedProver.Lifter.Term;
 import escjava.sortedProver.NodeBuilder.Sort;
 
 public class Bool {
-
+	/** the sort representing the booleans */
+	public static Sort sort = Formula.lf.sortBool;
+		
+	/**
+	 * Returns the term representing the given value b.
+	 * @param b The boolean value to convert to a term
+	 * @return a BoolLiteral term
+	 */
 	public static Term value(Boolean b) {	
 		return Formula.lf.mkBoolLiteral(b);
 	}
 
+	/**
+	 * Returns the right equality from the argument type.
+	 * @param l The left element of the equality
+	 * @param r The right element of the equality
+	 * @return an equality over the terms
+	 * @throws IllegalArgumentException if the types of the arguments are bad.
+	 */
 	public static Term equals(Term l, Term r) {
-		if(l.getSort() != r.getSort())
+		if(l.getSort() != r.getSort() && 
+				(!Num.isNum(r.getSort()) || !Num.isNum(l.getSort())))
 			throw new IllegalArgumentException("The sort of " + l + 
 					" is different from the sort of " + r + ".");
 		FnTerm t = null;
@@ -20,13 +35,23 @@ public class Bool {
 			t = Formula.lf.mkFnTerm(Formula.lf.symBoolFn, new Term[] {l, r});
 			t.tag = TagConstants.BOOLEQ;
 		}
-		else if (l.getSort() == Num.sortInt) {
-			t = Formula.lf.mkFnTerm(Formula.lf.symIntBoolFn, new Term[] {l, r});
-			t.tag = TagConstants.INTEGRALEQ;
-		}
 		else if (l.getSort() == Num.sortReal) {
+			if(r.getSort() == Num.sortInt) {
+				r = Num.intToReal(r);
+			}
 			t = Formula.lf.mkFnTerm(Formula.lf.symRealBoolFn, new Term[] {l, r});
 			t.tag = TagConstants.FLOATINGEQ;
+		}
+		else if (l.getSort() == Num.sortInt) {
+			if(r.getSort() == Num.sortReal) {
+				l = Num.intToReal(l);
+				t = Formula.lf.mkFnTerm(Formula.lf.symRealBoolFn, new Term[] {l, r});
+				t.tag = TagConstants.FLOATINGEQ;
+			}
+			else {
+				t = Formula.lf.mkFnTerm(Formula.lf.symIntBoolFn, new Term[] {l, r});
+				t.tag = TagConstants.INTEGRALEQ;
+			}
 		}
 		else {
 			throw new IllegalArgumentException("The sort " + l.getSort() + " is invalid!"); 
@@ -34,10 +59,13 @@ public class Bool {
 		return t;
 	}
 
-
-	public static Sort sort = Formula.lf.sortBool;
-
-
+	/**
+	 * Returns a boolean Or expression.
+	 * @param l The left element of the expression
+	 * @param r The right element of the expression
+	 * @return a term representing a boolean or 
+	 * a FnTerm with tag {@link TagConstants#BOOLOR}
+	 */
 	public static Term or(Term l, Term r) {
 		if(l.getSort() != Bool.sort || r.getSort() != Bool.sort)
 			throw new IllegalArgumentException("The sorts of the arguments should be bool found: " + l.getSort() + 
@@ -46,7 +74,13 @@ public class Bool {
 		t.tag = TagConstants.BOOLOR;
 		return t;
 	}
-	
+	 
+	/**
+	 * Returns a boolean and expression.
+	 * @param l The left element of the expression
+	 * @param r The right expression of the expression
+	 * @return The and expression a FnTerm with tag {@link TagConstants#BOOLAND}
+	 */
 	public static Term and(Term l, Term r) {
 		if(l.getSort() != Bool.sort || r.getSort() != Bool.sort)
 			throw new IllegalArgumentException("The sorts of the arguments should be bool found: " + l.getSort() + 
@@ -56,6 +90,11 @@ public class Bool {
 		return t;
 	}
 
+	/**
+	 * Returns a boolean not expression.
+	 * @param t the boolean expression to turn to a not
+	 * @return A Not expression of type FnTerm with tag {@link TagConstants#BOOLNOT}
+	 */
 	public static Term not(Term t) {
 		if(t.getSort() != Bool.sort )
 			throw new IllegalArgumentException("The sorts of the arguments should be bool found: " + t.getSort());
@@ -64,7 +103,9 @@ public class Bool {
 		return res;
 	}
 
+
 	public static Term ge(Term l, Term r) {
+		// TODO: the type checking is bad - correct it
 		if(l.getSort() != r.getSort())
 			throw new IllegalArgumentException("The sort of " + l + 
 					" is different from the sort of " + r + ".");
@@ -83,7 +124,8 @@ public class Bool {
 		return t;
 	}
 
-	public static Term gt(Term l, Term r) {
+	public static Term gt(Term l, Term r) {		
+		// TODO: the type checking is bad - correct it
 		if(l.getSort() != r.getSort())
 			throw new IllegalArgumentException("The sort of " + l + 
 					" is different from the sort of " + r + ".");

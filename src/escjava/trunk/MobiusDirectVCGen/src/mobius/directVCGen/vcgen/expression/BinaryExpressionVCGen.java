@@ -5,10 +5,13 @@ import javafe.ast.Expr;
 import mobius.directVCGen.formula.Bool;
 import mobius.directVCGen.formula.Expression;
 import mobius.directVCGen.formula.Formula;
+import mobius.directVCGen.formula.Logic;
 import mobius.directVCGen.formula.Num;
+import mobius.directVCGen.vcgen.DirectVCGen;
 import mobius.directVCGen.vcgen.struct.Post;
 import mobius.directVCGen.vcgen.struct.VCEntry;
 import escjava.sortedProver.Lifter.QuantVariableRef;
+import escjava.tc.Types;
 
 public class BinaryExpressionVCGen extends ABasicExpressionVCGEn{
 
@@ -26,11 +29,11 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn{
 		Post pre = getPre(right, post);
 		Post lPost = new Post(lvar, pre.post);
 		post.post = lPost;
-		pre = getPre(right, post);
+		pre = getPre(left, post);
 		return pre;
 	}
 
-	public Object or(BinaryExpr expr, VCEntry post) {
+	public Post or(BinaryExpr expr, VCEntry post) {
 		Expr right = expr.right;
 		Expr left = expr.left;
 		
@@ -41,11 +44,11 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn{
 		Post pre = getPre(right, post);
 		Post lPost = new Post(lvar, pre.post);
 		post.post = lPost;
-		pre = getPre(right, post);
+		pre = getPre(left, post);
 		return pre;
 	}
 
-	public Object and(BinaryExpr expr, VCEntry post) {
+	public Post and(BinaryExpr expr, VCEntry post) {
 		Expr right = expr.right;
 		Expr left = expr.left;
 		
@@ -56,11 +59,11 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn{
 		Post pre = getPre(right, post);
 		Post lPost = new Post(lvar, pre.post);
 		post.post = lPost;
-		pre = getPre(right, post);
+		pre = getPre(left, post);
 		return pre;
 	}
 
-	public Object ne(BinaryExpr expr, VCEntry post) {
+	public Post ne(BinaryExpr expr, VCEntry post) {
 		Expr right = expr.right;
 		Expr left = expr.left;
 		
@@ -71,11 +74,11 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn{
 		Post pre = getPre(right, post);
 		Post lPost = new Post(lvar, pre.post);
 		post.post = lPost;
-		pre = getPre(right, post);
+		pre = getPre(left, post);
 		return pre;
 	}
 
-	public Object ge(BinaryExpr expr, VCEntry post) {
+	public Post ge(BinaryExpr expr, VCEntry post) {
 		Expr right = expr.right;
 		Expr left = expr.left;
 		
@@ -86,11 +89,11 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn{
 		Post pre = getPre(right, post);
 		Post lPost = new Post(lvar, pre.post);
 		post.post = lPost;
-		pre = getPre(right, post);
+		pre = getPre(left, post);
 		return pre;
 	}
 
-	public Object gt(BinaryExpr expr, VCEntry post) {
+	public Post gt(BinaryExpr expr, VCEntry post) {
 		Expr right = expr.right;
 		Expr left = expr.left;
 		
@@ -101,12 +104,12 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn{
 		Post pre = getPre(right, post);
 		Post lPost = new Post(lvar, pre.post);
 		post.post = lPost;
-		pre = getPre(right, post);
+		pre = getPre(left, post);
 		return pre;
 
 	}
 
-	public Object le(BinaryExpr expr, VCEntry post) {
+	public Post le(BinaryExpr expr, VCEntry post) {
 		Expr right = expr.right;
 		Expr left = expr.left;
 		
@@ -117,11 +120,11 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn{
 		Post pre = getPre(right, post);
 		Post lPost = new Post(lvar, pre.post);
 		post.post = lPost;
-		pre = getPre(right, post);
+		pre = getPre(left, post);
 		return pre;
 	}
 
-	public Object lt(BinaryExpr expr, VCEntry post) {
+	public Post lt(BinaryExpr expr, VCEntry post) {
 		Expr right = expr.right;
 		Expr left = expr.left;
 		
@@ -132,13 +135,13 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn{
 		Post pre = getPre(right, post);
 		Post lPost = new Post(lvar, pre.post);
 		post.post = lPost;
-		pre = getPre(right, post);
+		pre = getPre(left, post);
 		return pre;
 	}
 
 	
 
-	public Object add(BinaryExpr expr, VCEntry post) {
+	public Post add(BinaryExpr expr, VCEntry post) {
 		Expr right = expr.right;
 		Expr left = expr.left;
 		
@@ -149,11 +152,11 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn{
 		Post pre = getPre(right, post);
 		Post lPost = new Post(lvar, pre.post);
 		post.post = lPost;
-		pre = getPre(right, post);
+		pre = getPre(left, post);
 		return pre;
 	}
 
-	public Object sub(BinaryExpr expr, VCEntry post) {
+	public Post sub(BinaryExpr expr, VCEntry post) {
 		Expr right = expr.right;
 		Expr left = expr.left;
 		
@@ -164,13 +167,13 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn{
 		Post pre = getPre(right, post);
 		Post lPost = new Post(lvar, pre.post);
 		post.post = lPost;
-		pre = getPre(right, post);
+		pre = getPre(left, post);
 		return pre;
 	}
 
 
 
-	public Object star(BinaryExpr expr, VCEntry post) {
+	public Post star(BinaryExpr expr, VCEntry post) {
 	
 		Expr right = expr.right;
 		Expr left = expr.left;
@@ -182,11 +185,11 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn{
 		Post pre = getPre(right, post);
 		Post lPost = new Post(lvar, pre.post);
 		post.post = lPost;
-		pre = getPre(right, post);
+		pre = getPre(left, post);
 		return pre;
 	}
 	
-	public Object bitor(BinaryExpr expr, VCEntry post) {
+	public Post bitor(BinaryExpr expr, VCEntry post) {
 		Expr right = expr.right;
 		Expr left = expr.left;
 		
@@ -197,11 +200,11 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn{
 		Post pre = getPre(right, post);
 		Post lPost = new Post(lvar, pre.post);
 		post.post = lPost;
-		pre = getPre(right, post);
+		pre = getPre(left, post);
 		return pre;
 	}
 
-	public Object bitxor(BinaryExpr expr, VCEntry post) {
+	public Post bitxor(BinaryExpr expr, VCEntry post) {
 		Expr right = expr.right;
 		Expr left = expr.left;
 		
@@ -212,11 +215,11 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn{
 		Post pre = getPre(right, post);
 		Post lPost = new Post(lvar, pre.post);
 		post.post = lPost;
-		pre = getPre(right, post);
+		pre = getPre(left, post);
 		return pre;
 	}
 
-	public Object bitand(BinaryExpr expr, VCEntry post) {
+	public Post bitand(BinaryExpr expr, VCEntry post) {
 		Expr right = expr.right;
 		Expr left = expr.left;
 		
@@ -227,11 +230,11 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn{
 		Post pre = getPre(right, post);
 		Post lPost = new Post(lvar, pre.post);
 		post.post = lPost;
-		pre = getPre(right, post);
+		pre = getPre(left, post);
 		return pre;
 	}
 
-	public Object lshift(BinaryExpr expr, VCEntry post) {
+	public Post lshift(BinaryExpr expr, VCEntry post) {
 		Expr right = expr.right;
 		Expr left = expr.left;
 		
@@ -242,11 +245,11 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn{
 		Post pre = getPre(right, post);
 		Post lPost = new Post(lvar, pre.post);
 		post.post = lPost;
-		pre = getPre(right, post);
+		pre = getPre(left, post);
 		return pre;
 	}
 
-	public Object rshift(BinaryExpr expr, VCEntry post) {
+	public Post rshift(BinaryExpr expr, VCEntry post) {
 		Expr right = expr.right;
 		Expr left = expr.left;
 		
@@ -257,11 +260,11 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn{
 		Post pre = getPre(right, post);
 		Post lPost = new Post(lvar, pre.post);
 		post.post = lPost;
-		pre = getPre(right, post);
+		pre = getPre(left, post);
 		return pre;
 	}
 
-	public Object urshift(BinaryExpr expr, VCEntry post) {
+	public Post urshift(BinaryExpr expr, VCEntry post) {
 		Expr right = expr.right;
 		Expr left = expr.left;
 		
@@ -272,39 +275,61 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn{
 		Post pre = getPre(right, post);
 		Post lPost = new Post(lvar, pre.post);
 		post.post = lPost;
-		pre = getPre(right, post);
+		pre = getPre(left, post);
 		return pre;
 	}
 	
-	public Object div(BinaryExpr expr, VCEntry post) {
-		// TODO: Handle the exceptional case
+	public Post div(BinaryExpr expr, VCEntry post) {
 		Expr right = expr.right;
 		Expr left = expr.left;
 		
 		QuantVariableRef rvar = Expression.var(Formula.getSort(right));
 		QuantVariableRef lvar = Expression.var(Formula.getSort(left));
-		Post rPost = new Post(rvar, post.post.substWith(Num.div(lvar, rvar)));
+		
+		Post rPost = new Post(rvar, Logic.and(
+				Logic.implies(Logic.not(Logic.equals(rvar, Num.value(0))), 
+						      post.post.substWith(Num.div(lvar, rvar))),
+				Logic.implies(Logic.equals(rvar, Num.value(0)),
+						DirectVCGen.getExcpPost(Types.getJavaLang("ArithmeticException"), post).post)));
+		
 		post.post = rPost;
 		Post pre = getPre(right, post);
 		Post lPost = new Post(lvar, pre.post);
 		post.post = lPost;
-		pre = getPre(right, post);
+		pre = getPre(left, post);
 		return pre;
 	}
-
-	public Object mod(BinaryExpr expr, VCEntry post) {
-		// TODO: Handle the exceptional case
+	public Post assign(BinaryExpr expr, VCEntry post) {
+		// TODO: Handle it
 		Expr right = expr.right;
 		Expr left = expr.left;
 		
 		QuantVariableRef rvar = Expression.var(Formula.getSort(right));
 		QuantVariableRef lvar = Expression.var(Formula.getSort(left));
-		Post rPost = new Post(rvar, post.post.substWith(Num.mod(lvar, rvar)));
+		Post rPost = new Post(rvar, post.post.substWith(Bool.equals(lvar, rvar)));
 		post.post = rPost;
 		Post pre = getPre(right, post);
 		Post lPost = new Post(lvar, pre.post);
 		post.post = lPost;
-		pre = getPre(right, post);
+		pre = getPre(left, post);
+		return pre;
+	}
+	public Post mod(BinaryExpr expr, VCEntry post) {
+		Expr right = expr.right;
+		Expr left = expr.left;
+		
+		QuantVariableRef rvar = Expression.var(Formula.getSort(right));
+		QuantVariableRef lvar = Expression.var(Formula.getSort(left));
+		Post rPost = new Post(rvar, Logic.and(
+				Logic.implies(Logic.not(Logic.equalsZero(rvar)), 
+						      post.post.substWith(Num.mod(lvar, rvar))),
+				Logic.implies(Logic.equalsZero(rvar),
+						DirectVCGen.getExcpPost(Types.getJavaLang("ArithmeticException"), post).post)));
+		post.post = rPost;
+		Post pre = getPre(right, post);
+		Post lPost = new Post(lvar, pre.post);
+		post.post = lPost;
+		pre = getPre(left, post);
 		return pre;
 	}
 }

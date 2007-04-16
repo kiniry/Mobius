@@ -185,7 +185,7 @@ public class DirectVCGen extends ExpressionVisitor {
 		
 	}
 	
-	public Post getExcpPost(Type typ, VCEntry vce) {
+	public static Post getExcpPost(Type typ, VCEntry vce) {
 		Iterator iter = vce.lexcpost.iterator();
 		Post res = vce.excpost;
 		while(iter.hasNext()) {

@@ -1,6 +1,7 @@
 package mobius.directVCGen.formula;
 
 
+import escjava.ast.TagConstants;
 import escjava.sortedProver.Lifter.FnTerm;
 import escjava.sortedProver.Lifter.QuantTerm;
 import escjava.sortedProver.Lifter.QuantVariable;
@@ -58,16 +59,42 @@ public class Logic {
 	/**
 	 * Create an equals object; it has 2 arguments, and
 	 * they must have the same type.
-	 * @param f1 the left argument
-	 * @param f2 the right argument
+	 * @param l the left argument
+	 * @param r the right argument
 	 * @return an equal object
 	 */
-	public static Term equals(Term f1, Term f2) {
-		if(f1.getSort() != f2.getSort())
+	public static Term equals(Term l, Term r) {
+		if(l.getSort() != r.getSort() && 
+				(!Num.isNum(r.getSort()) || !Num.isNum(l.getSort())))
 			throw new IllegalArgumentException("Different types when creating equals, " +
-					"found: " + f1.getSort() + " and " + f2.getSort());
-
-		return  Formula.lf.mkFnTerm(Formula.lf.symAnyEQ, new Term[]{f1, f2});
+					"found: " + l.getSort() + " and " + r.getSort());
+		FnTerm t = null;
+		if(l.getSort() == Bool.sort) {
+			t = Formula.lf.mkFnTerm(Formula.lf.symBoolPred, new Term[] {l, r});
+			t.tag = TagConstants.BOOLEQ;
+		}
+		else if (l.getSort() == Num.sortInt) {
+			if(r.getSort() == Num.sortReal) {
+				l = Num.intToReal(l);
+				t = Formula.lf.mkFnTerm(Formula.lf.symRealBoolFn, new Term[] {l, r});
+				t.tag = TagConstants.FLOATINGEQ;
+			}
+			else {
+				t = Formula.lf.mkFnTerm(Formula.lf.symIntPred, new Term[] {l, r});
+				t.tag = TagConstants.INTEGRALEQ;	
+			}
+		}
+		else if (l.getSort() == Num.sortReal) {
+			if(r.getSort() == Num.sortInt) {
+				r = Num.intToReal(r);
+			}
+			t = Formula.lf.mkFnTerm(Formula.lf.symRealPred, new Term[] {l, r});
+			t.tag = TagConstants.FLOATINGEQ;
+		}
+		else {
+			Formula.lf.mkFnTerm(Formula.lf.symAnyEQ, new Term[]{l, r});
+		}
+		return  t;
 	}
 	
 	/**
@@ -195,5 +222,19 @@ public class Logic {
 				Logic.implies(Logic.boolToProp(rv2), 
 						Logic.False())));
 		System.out.println(Logic.and(Logic.True(), Logic.False()));
+	}
+
+	public static Term equalsZero(Term t) {
+		Term res = null;
+		if(t.getSort() == Num.sortInt) {
+			t = equals(t, Num.value(new Integer(0)));
+		}
+		else if (t.getSort() == Num.sortReal) {
+			t = equals(t, Num.value(new Float(0)));
+		}
+		else {
+			throw new IllegalArgumentException("The sort " + t.getSort() + " is invalid!"); 
+		}
+		return res;
 	}
 }
