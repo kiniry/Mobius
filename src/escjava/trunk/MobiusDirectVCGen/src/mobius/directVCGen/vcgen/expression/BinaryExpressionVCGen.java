@@ -2,6 +2,7 @@ package mobius.directVCGen.vcgen.expression;
 
 import javafe.ast.BinaryExpr;
 import javafe.ast.Expr;
+import javafe.ast.ExprObjectDesignator;
 import javafe.ast.FieldAccess;
 import javafe.ast.FieldDecl;
 import javafe.ast.GenericVarDecl;
@@ -313,55 +314,13 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn{
 		pre = getPre(left, post);
 		return pre;
 	}
-	public Post visitVariableAccessForWrite(VariableAccess m, VCEntry post) {
-		
-		Sort s = null;
-		String name = UniqName.variable(m.decl);
-		
-		GenericVarDecl decl = m.decl;
-		if(((LocalVarDecl)decl).source != null)
-			decl = ((LocalVarDecl)decl).source;	
-		//assert(decl != null);
-		
-		switch (decl.getTag()) {
-			case TagConstants.FIELDDECL: {
-					FieldDecl d = (FieldDecl)decl;
-					if (Modifiers.isStatic(d.getModifiers()))
-						s = Formula.typeToSort(d.type);
-					else
-						s = Formula.getCurrentLifter().registerMapSort(Ref.sort, Formula.typeToSort(d.type));
-					return post.post;
-					// TODO: Treat correctly the fields
-				}
-			case TagConstants.LOCALVARDECL:
-			case TagConstants.FORMALPARADECL: {
-					GenericVarDecl g = (GenericVarDecl)decl;
-					s = Formula.typeToSort(g.type);
-					QuantVariableRef var = Expression.refFromVar(Expression.var(name, s));
-					Post p = new Post(post.post.var, post.post.post.subst(var, post.post.var));
-					return p;
-				}
-			default:
-				throw new IllegalArgumentException("Unknown type of variable declaration: " + decl);
-				
-			
-		}
-		
-		
-	}
 
-	public Post visitFieldAccessForWrite(FieldAccess field, VCEntry post) {
-		
-		
-
-		return post.post;
-	}
+	
 	
 	public Post assign(BinaryExpr expr, VCEntry post) {
-		// TODO: Handle it
 		Expr right = expr.right;
 		Expr left = expr.left;
-		Post pr = post.post;
+		//Post pr = post.post;
 		if(left instanceof VariableAccess) {
 			VariableAccess va = (VariableAccess) left;
 			String name = UniqName.variable(va.decl);
@@ -380,27 +339,43 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn{
 			switch(od.getTag()) {
 				case TagConstants.EXPROBJECTDESIGNATOR: {
 					// can be null
-					System.out.println(field);
-					break;
+					//System.out.println(field.decl.parent);
+					ExprObjectDesignator eod = (ExprObjectDesignator) od;
+					Sort s = Formula.typeToSort(field.decl.type);
+					QuantVariable f = Expression.var(field.decl);
+					QuantVariableRef val = Expression.var(s);
+					QuantVariableRef obj = Expression.var(Ref.sort);
+					field.od.type();
+					post.post = new Post(val, Logic.and(
+							Logic.implies(Logic.not(Logic.equalsNull(obj)), 
+									post.post.post.subst(Heap.var, 
+														 Heap.store(Heap.var, obj, f, val))), 
+							Logic.implies(Logic.equalsNull(obj), DirectVCGen.getExcpPost(Types.getJavaLang("NullPointerException"), post).post)
+														 ));
+					Post pre = getPre(right, post);
+					post.post = new Post(obj, pre.post);
+					pre = getPre(eod.expr, post);
+					return pre;
+
 				}
 				case TagConstants.SUPEROBJECTDESIGNATOR:
+					// TODO: the case for super
 				case TagConstants.TYPEOBJECTDESIGNATOR: {
 					// cannot be null
-					System.out.println(field);
-					String name = UniqName.variable(field.decl);
+					//System.out.println(field);
 					Sort s = Formula.typeToSort(field.decl.type);
-					QuantVariable f = Expression.var(name, s);
-					Term val = null;
-					Heap.store(Heap.var, f, val );
-					break;
+					QuantVariable f = Expression.var(field.decl);
+				
+					QuantVariableRef val = Expression.var(s);
+					Post p = new Post(val, post.post.post.subst(Heap.var, Heap.store(Heap.var, f, val)));
+					post.post = p;
+					Post pre = getPre(right, post);
+					return pre;
 				}
 				default: 
-					throw new IllegalArgumentException("Unknown objec designator type ! " + od);
+					throw new IllegalArgumentException("Unknown object designator type ! " + od);
 				
 			}
-			Post pre = getPre(right, post);
-			return pre;
-//			pre = visitFieldAccessForWrite((FieldAccess) left, post);
 		}
 	}
 

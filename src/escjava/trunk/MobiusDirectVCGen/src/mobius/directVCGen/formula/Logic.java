@@ -242,7 +242,7 @@ public class Logic {
 	public static Term equalsNull(Term t) {
 		Term res = null;
 		if (t.getSort() == Ref.sort) {
-			t = equals(t, Ref.Null());
+			res = equals(t, Ref.Null());
 		}
 		else {
 			throw new IllegalArgumentException("The sort " + t.getSort() + " is invalid!"); 

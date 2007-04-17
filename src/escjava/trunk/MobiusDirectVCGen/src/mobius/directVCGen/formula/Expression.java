@@ -1,6 +1,7 @@
 package mobius.directVCGen.formula;
 
 import javafe.ast.FormalParaDecl;
+import javafe.ast.GenericVarDecl;
 import javafe.ast.LocalVarDecl;
 import escjava.ast.TagConstants;
 import escjava.sortedProver.Lifter.FnTerm;
@@ -36,7 +37,7 @@ public class Expression {
 	public static QuantVariableRef refFromVar(QuantVariable qv) {
 		return Formula.lf.mkQuantVariableRef(qv);
 	}
-	public static QuantVariable var(LocalVarDecl decl) {
+	public static QuantVariable var(GenericVarDecl decl) {
 		return Formula.lf.mkQuantVariable(decl, UniqName.variable(decl));
 	}
 	public static QuantVariableRef var(FormalParaDecl arg) {
