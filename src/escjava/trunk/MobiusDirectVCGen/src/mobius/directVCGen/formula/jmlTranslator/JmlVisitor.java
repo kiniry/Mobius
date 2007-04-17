@@ -1,7 +1,9 @@
 package mobius.directVCGen.formula.jmlTranslator;
 
+import mobius.directVCGen.formula.*;
 import javafe.ast.ASTNode;
 import javafe.ast.BinaryExpr;
+import javafe.ast.LiteralExpr;
 import escjava.ast.AnOverview;
 import escjava.ast.ArrayRangeRefExpr;
 import escjava.ast.CondExprModifierPragma;
@@ -53,6 +55,7 @@ import escjava.ast.VarDeclModifierPragma;
 import escjava.ast.VarExprModifierPragma;
 import escjava.ast.VisitorArgResult;
 import escjava.ast.WildRefExpr;
+import escjava.sortedProver.Lifter.Term;
 
 public class JmlVisitor extends VisitorArgResult{
 
@@ -62,11 +65,31 @@ public class JmlVisitor extends VisitorArgResult{
 		translator = new JmlExprToFormula(this);
 	}
 	
+	
+	public Object visitASTNode(ASTNode x, Object o) {
+		System.out.println(x);
+		int max = x.childCount();
+		for(int i = 0; i < max; i++) {
+			Object child = x.childAt(i);
+			if(child instanceof ASTNode) {
+				o = ((ASTNode) child).accept(this, o);
+			}
+			
+		}
+		return o;
+	}
+	
 	@Override
 	public Object visitAnOverview(AnOverview x, Object o) {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	 public /*@non_null*/ Object visitLiteralExpr(/*@non_null*/ LiteralExpr x, Object o) {
+		 //x.value; 
+		 return Logic.True();//x.value;
+	 }
+	
 
 	@Override
 	public Object visitArrayRangeRefExpr(ArrayRangeRefExpr x, Object o) {
@@ -134,10 +157,9 @@ public class JmlVisitor extends VisitorArgResult{
 		return null;
 	}
 
-	@Override
+	
 	public Object visitExprModifierPragma(ExprModifierPragma x, Object o) {
-		// TODO Auto-generated method stub
-		return null;
+		return visitASTNode(x, o);
 	}
 
 	@Override
@@ -146,10 +168,8 @@ public class JmlVisitor extends VisitorArgResult{
 		return null;
 	}
 
-	@Override
 	public Object visitGCExpr(GCExpr x, Object o) {
-		// TODO Auto-generated method stub
-		return null;
+		return visitASTNode(x, o);
 	}
 
 	@Override
@@ -356,59 +376,88 @@ public class JmlVisitor extends VisitorArgResult{
 		return null;
 	}
 
-	@Override
-	public Object visitASTNode(ASTNode x, Object o) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	
 	
 	public Object visitBinaryExpr(BinaryExpr expr, Object o){
 	
 		switch(expr.op) {
-		case TagConstants.EQ:
-		case TagConstants.OR:
-		case TagConstants.AND:
+		case TagConstants.EQ: 
+			return translator.eq(expr);
+		case TagConstants.OR: 
+			break;
+		case TagConstants.AND: 
+			return translator.and(expr);
 		case TagConstants.NE:
-		case TagConstants.GE:
-		case TagConstants.GT:
-		case TagConstants.LE:
-		case TagConstants.LT:
-		case TagConstants.BITOR:
-		case TagConstants.BITXOR:
-		case TagConstants.BITAND:
+			return translator.ne(expr);
+		case TagConstants.GE:  //greater equal
+			return translator.ge(expr);
+		case TagConstants.GT: //greater than
+			return translator.gt(expr);
+		case TagConstants.LE:  //less equal
+			return translator.le(expr);
+		case TagConstants.LT:  //less than
+			return translator.lt(expr);
+		case TagConstants.BITOR: 
+			return translator.bitor(expr);
+		case TagConstants.BITXOR: 
+			return translator.bitxor(expr);
+		case TagConstants.BITAND: 
+			return translator.bitand(expr);
 		case TagConstants.LSHIFT:
-		case TagConstants.RSHIFT:
+			return translator.lshift(expr);
+		case TagConstants.RSHIFT: 
+			return translator.rshift(expr);
 		case TagConstants.URSHIFT:
-		case TagConstants.ADD:
+			return translator.urshift(expr);
+		case TagConstants.ADD: 
 			return translator.add(expr);
-		case TagConstants.SUB:
-		case TagConstants.DIV:
-		case TagConstants.MOD:
-		case TagConstants.STAR:
-
+		case TagConstants.SUB: 
+			return translator.sub(expr);
+		case TagConstants.DIV: 
+			return translator.div(expr);
+		case TagConstants.MOD: 
+			return translator.mod(expr);
+		case TagConstants.STAR: 
+			return translator.star(expr);
 		case TagConstants.ASSIGN:
-
-		case TagConstants.ASGMUL:
-		case TagConstants.ASGDIV:
-		case TagConstants.ASGREM:
-		case TagConstants.ASGADD:
-		case TagConstants.ASGSUB:
-		case TagConstants.ASGLSHIFT:
-		case TagConstants.ASGRSHIFT:
-		case TagConstants.ASGURSHIFT:
-		case TagConstants.ASGBITAND:
-	// jml specific operators
-		case TagConstants.IMPLIES:
+			return translator.assign(expr);
+		case TagConstants.ASGMUL: 
+			return translator.asgmul(expr);
+		case TagConstants.ASGDIV: 
+			return translator.asgdiv(expr);
+		case TagConstants.ASGREM: 
+			return translator.asgrem(expr);
+		case TagConstants.ASGADD: 
+			return translator.asgadd(expr);
+		case TagConstants.ASGSUB: 
+			return translator.asgsub(expr);
+		case TagConstants.ASGLSHIFT: 
+			return translator.asglshift(expr);
+		case TagConstants.ASGRSHIFT: 
+			return translator.asgrshift(expr);
+		case TagConstants.ASGURSHIFT: 
+			return translator.asgurshif(expr);
+		case TagConstants.ASGBITAND: 
+			return translator.asgbitand(expr);
+	// jml specific operators 
+		case TagConstants.IMPLIES: 
+			return translator.implies(expr);
 		case TagConstants.EXPLIES:
+			return translator.explies(expr);
 		case TagConstants.IFF: // equivalence (equality)
-		case TagConstants.NIFF:     // discrepance (xor)
-		case TagConstants.SUBTYPE:
-		case TagConstants.DOTDOT:
+			return translator.iff(expr);
+		case TagConstants.NIFF:    // discrepance (xor)
+			return translator.niff(expr);
+		case TagConstants.SUBTYPE: 
+			return translator.subtype(expr);
+		case TagConstants.DOTDOT: 
+			return translator.dotdot(expr);
 
 		default:
 			throw new IllegalArgumentException("Unknown construct :" +
 					TagConstants.toString(expr.op) +" " +  expr);
 		}		
+		return null;
 	}
 
 }
