@@ -1,6 +1,7 @@
 package mobius.directVCGen.formula.jmlTranslator;
 
 import javafe.ast.ASTNode;
+import javafe.ast.BinaryExpr;
 import escjava.ast.AnOverview;
 import escjava.ast.ArrayRangeRefExpr;
 import escjava.ast.CondExprModifierPragma;
@@ -47,6 +48,7 @@ import escjava.ast.SimpleStmtPragma;
 import escjava.ast.SkolemConstantPragma;
 import escjava.ast.Spec;
 import escjava.ast.StillDeferredDeclPragma;
+import escjava.ast.TagConstants;
 import escjava.ast.VarDeclModifierPragma;
 import escjava.ast.VarExprModifierPragma;
 import escjava.ast.VisitorArgResult;
@@ -54,6 +56,12 @@ import escjava.ast.WildRefExpr;
 
 public class JmlVisitor extends VisitorArgResult{
 
+	JmlExprToFormula translator;
+	
+	public JmlVisitor(){
+		translator = new JmlExprToFormula(this);
+	}
+	
 	@Override
 	public Object visitAnOverview(AnOverview x, Object o) {
 		// TODO Auto-generated method stub
@@ -352,6 +360,55 @@ public class JmlVisitor extends VisitorArgResult{
 	public Object visitASTNode(ASTNode x, Object o) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	public Object visitBinaryExpr(BinaryExpr expr, Object o){
+	
+		switch(expr.op) {
+		case TagConstants.EQ:
+		case TagConstants.OR:
+		case TagConstants.AND:
+		case TagConstants.NE:
+		case TagConstants.GE:
+		case TagConstants.GT:
+		case TagConstants.LE:
+		case TagConstants.LT:
+		case TagConstants.BITOR:
+		case TagConstants.BITXOR:
+		case TagConstants.BITAND:
+		case TagConstants.LSHIFT:
+		case TagConstants.RSHIFT:
+		case TagConstants.URSHIFT:
+		case TagConstants.ADD:
+			return translator.add(expr);
+		case TagConstants.SUB:
+		case TagConstants.DIV:
+		case TagConstants.MOD:
+		case TagConstants.STAR:
+
+		case TagConstants.ASSIGN:
+
+		case TagConstants.ASGMUL:
+		case TagConstants.ASGDIV:
+		case TagConstants.ASGREM:
+		case TagConstants.ASGADD:
+		case TagConstants.ASGSUB:
+		case TagConstants.ASGLSHIFT:
+		case TagConstants.ASGRSHIFT:
+		case TagConstants.ASGURSHIFT:
+		case TagConstants.ASGBITAND:
+	// jml specific operators
+		case TagConstants.IMPLIES:
+		case TagConstants.EXPLIES:
+		case TagConstants.IFF: // equivalence (equality)
+		case TagConstants.NIFF:     // discrepance (xor)
+		case TagConstants.SUBTYPE:
+		case TagConstants.DOTDOT:
+
+		default:
+			throw new IllegalArgumentException("Unknown construct :" +
+					TagConstants.toString(expr.op) +" " +  expr);
+		}		
 	}
 
 }
