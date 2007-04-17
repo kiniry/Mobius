@@ -227,8 +227,10 @@ public class ExpressionVisitor extends ABasicVisitor {
 		QuantVariableRef var = Expression.refFromVar(Expression.var(name, s));
 		return  new Post(res.post.var, res.post.substWith(var));
 	}
-
-	
+	public /*@non_null*/ Object visitParenExpr(/*@non_null*/ ParenExpr x, Object o) {
+		// TODO: Check if a Paren Expr is as dumb as that
+		return vcg.getPre(x.expr, (VCEntry) o);
+	}
 
 	  public /*@non_null*/ Object visitVarInit(/*@non_null*/ VarInit x, Object o) {
 	    return visitASTNode(x, o);
@@ -270,9 +272,7 @@ public class ExpressionVisitor extends ABasicVisitor {
 	    return visitExpr(x, o);
 	  }
 
-	  public /*@non_null*/ Object visitParenExpr(/*@non_null*/ ParenExpr x, Object o) {
-	    return visitExpr(x, o);
-	  }
+	 
 
 	  public /*@non_null*/ Object visitAmbiguousVariableAccess(/*@non_null*/ AmbiguousVariableAccess x, Object o) {
 	    return visitExpr(x, o);

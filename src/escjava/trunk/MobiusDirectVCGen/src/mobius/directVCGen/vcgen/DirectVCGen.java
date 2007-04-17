@@ -40,6 +40,7 @@ import javafe.tc.FlowInsensitiveChecks;
 import mobius.directVCGen.formula.Bool;
 import mobius.directVCGen.formula.Expression;
 import mobius.directVCGen.formula.Formula;
+import mobius.directVCGen.formula.Heap;
 import mobius.directVCGen.formula.Logic;
 import mobius.directVCGen.formula.Ref;
 import mobius.directVCGen.formula.annotation.AAnnotation;
@@ -196,7 +197,7 @@ public class DirectVCGen extends ExpressionVisitor {
 			else if (Types.isSubClassOrEq(p.excp,typ)) {
 					Term var = Expression.var(Ref.sort);
 					Post typeof = new Post(Logic.typeLE(
-							Expression.typeof(Expression.heap, var), 
+							Expression.typeof(Heap.var, var), 
 							Formula.translate(p.excp)));
 					res = Post.and(Post.implies(typeof, p.post), 
 							Post.implies(Post.not(typeof), res));

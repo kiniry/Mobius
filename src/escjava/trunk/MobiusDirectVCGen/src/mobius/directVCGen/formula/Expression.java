@@ -11,13 +11,10 @@ import escjava.sortedProver.NodeBuilder.Sort;
 import escjava.translate.UniqName;
 
 public class Expression {
-	public static QuantVariableRef preHeap = refFromVar(var("\\preHeap", Formula.sort));
-	public static QuantVariableRef heap = refFromVar(var("\\heap", Formula.sort));
-	public static QuantVariableRef varthis = refFromVar(var("this", Ref.sort));
 	
 	
 	public static QuantVariableRef var(String str) {
-		QuantVariable v = null;
+		QuantVariable v = Formula.lf.mkQuantVariable(str, Logic.sort);
 		return Formula.lf.mkQuantVariableRef(v);
 	}
 	private static int varCounter = 0;

@@ -2,13 +2,16 @@ package mobius.directVCGen.vcgen.expression;
 
 import javafe.ast.BinaryExpr;
 import javafe.ast.Expr;
+import javafe.ast.FieldAccess;
 import javafe.ast.FieldDecl;
 import javafe.ast.GenericVarDecl;
 import javafe.ast.LocalVarDecl;
+import javafe.ast.ObjectDesignator;
 import javafe.ast.VariableAccess;
 import mobius.directVCGen.formula.Bool;
 import mobius.directVCGen.formula.Expression;
 import mobius.directVCGen.formula.Formula;
+import mobius.directVCGen.formula.Heap;
 import mobius.directVCGen.formula.Logic;
 import mobius.directVCGen.formula.Num;
 import mobius.directVCGen.formula.Ref;
@@ -17,7 +20,9 @@ import mobius.directVCGen.vcgen.struct.Post;
 import mobius.directVCGen.vcgen.struct.VCEntry;
 import escjava.ast.Modifiers;
 import escjava.ast.TagConstants;
+import escjava.sortedProver.Lifter.QuantVariable;
 import escjava.sortedProver.Lifter.QuantVariableRef;
+import escjava.sortedProver.Lifter.Term;
 import escjava.sortedProver.NodeBuilder.Sort;
 import escjava.tc.Types;
 import escjava.translate.UniqName;
@@ -345,15 +350,60 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn{
 		
 	}
 
+	public Post visitFieldAccessForWrite(FieldAccess field, VCEntry post) {
+		
+		
+
+		return post.post;
+	}
+	
 	public Post assign(BinaryExpr expr, VCEntry post) {
 		// TODO: Handle it
 		Expr right = expr.right;
 		Expr left = expr.left;
-		
-		post.post = visitVariableAccessForWrite((VariableAccess) expr.left, post);
-		Post pre = getPre(right,  post);
-		return pre;
+		Post pr = post.post;
+		if(left instanceof VariableAccess) {
+			VariableAccess va = (VariableAccess) left;
+			String name = UniqName.variable(va.decl);
+			Sort s = Formula.typeToSort(va.decl.type);
+			QuantVariableRef var = Expression.refFromVar(Expression.var(name, s));
+			QuantVariableRef tmpvar = post.post.var;
+			Post newPost = new Post(tmpvar, post.post.post.subst(var, tmpvar));
+			post.post = newPost;
+			Post pre = getPre(right, post);
+			return pre;
+
+		}
+		else { // left instanceof FieldAccess
+			FieldAccess field = (FieldAccess) left;
+			ObjectDesignator od = field.od;
+			switch(od.getTag()) {
+				case TagConstants.EXPROBJECTDESIGNATOR: {
+					// can be null
+					System.out.println(field);
+					break;
+				}
+				case TagConstants.SUPEROBJECTDESIGNATOR:
+				case TagConstants.TYPEOBJECTDESIGNATOR: {
+					// cannot be null
+					System.out.println(field);
+					String name = UniqName.variable(field.decl);
+					Sort s = Formula.typeToSort(field.decl.type);
+					QuantVariable f = Expression.var(name, s);
+					Term val = null;
+					Heap.store(Heap.var, f, val );
+					break;
+				}
+				default: 
+					throw new IllegalArgumentException("Unknown objec designator type ! " + od);
+				
+			}
+			Post pre = getPre(right, post);
+			return pre;
+//			pre = visitFieldAccessForWrite((FieldAccess) left, post);
+		}
 	}
+
 	public Post mod(BinaryExpr expr, VCEntry post) {
 		Expr right = expr.right;
 		Expr left = expr.left;
