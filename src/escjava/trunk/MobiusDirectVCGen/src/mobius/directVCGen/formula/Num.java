@@ -37,7 +37,7 @@ public class Num {
 		return Formula.lf.mkRealLiteral(d);
 	}
 
-	public static Term add(Term l, Term r) {
+	private static Term arith(Term l, Term r, int inttag, int realtag) {
 		if(l.getSort() != r.getSort()&& 
 				(!Num.isNum(r.getSort()) || !Num.isNum(l.getSort())))
 			throw new IllegalArgumentException("The sort of " + l + 
@@ -53,94 +53,37 @@ public class Num {
 		}
 		if (l.getSort() == Num.sortInt) {
 			t = Formula.lf.mkFnTerm(Formula.lf.symIntFn, new Term[] {l, r});
-			t.tag = TagConstants.INTEGRALADD;
+			t.tag = inttag;
 		}
 		else if (l.getSort() == Num.sortReal) {
 			t = Formula.lf.mkFnTerm(Formula.lf.symRealFn, new Term[] {l, r});
-			t.tag = TagConstants.FLOATINGADD;
+			t.tag = realtag;
 		}
 		else {
 			throw new IllegalArgumentException("The sort " + l.getSort() + " is invalid!"); 
 		}
 		return t;
 	}
+	public static Term add(Term l, Term r) {
+		return arith(l, r, TagConstants.INTEGRALADD, TagConstants.FLOATINGADD);
+	}
+	
+	
 	public static Term sub(Term l, Term r) {
-		if(l.getSort() != r.getSort()&& 
-				(!Num.isNum(r.getSort()) || !Num.isNum(l.getSort())))
-			throw new IllegalArgumentException("The sort of " + l + 
-					" is different from the sort of " + r + ".");
-		FnTerm t = null;
-		if (l.getSort() == Num.sortInt) {
-			t = Formula.lf.mkFnTerm(Formula.lf.symIntFn, new Term[] {l, r});
-			t.tag = TagConstants.INTEGRALSUB;
-		}
-		else if (l.getSort() == Num.sortReal) {
-			t = Formula.lf.mkFnTerm(Formula.lf.symRealFn, new Term[] {l, r});
-			t.tag = TagConstants.FLOATINGSUB;
-		}
-		else {
-			throw new IllegalArgumentException("The sort " + l.getSort() + " is invalid!"); 
-		}
-		return t;
+		return arith(l, r, TagConstants.INTEGRALSUB, TagConstants.FLOATINGSUB);
+	
 	}
 	
 	public static Term div(Term l, Term r) {
-		if(l.getSort() != r.getSort()&& 
-				(!Num.isNum(r.getSort()) || !Num.isNum(l.getSort())))
-			throw new IllegalArgumentException("The sort of " + l + 
-					" is different from the sort of " + r + ".");
-		FnTerm t = null;
-		if (l.getSort() == Num.sortInt) {
-			t = Formula.lf.mkFnTerm(Formula.lf.symIntFn, new Term[] {l, r});
-			t.tag = TagConstants.INTEGRALDIV;
-		}
-		else if (l.getSort() == Num.sortReal) {
-			t = Formula.lf.mkFnTerm(Formula.lf.symRealFn, new Term[] {l, r});
-			t.tag = TagConstants.FLOATINGDIV;
-		}
-		else {
-			throw new IllegalArgumentException("The sort " + l.getSort() + " is invalid!"); 
-		}
-		return t;
+		return arith(l, r, TagConstants.INTEGRALDIV, TagConstants.FLOATINGDIV);
 	}
 	
 	public static Term mul(Term l, Term r) {
-		if(l.getSort() != r.getSort()&& 
-				(!Num.isNum(r.getSort()) || !Num.isNum(l.getSort())))
-			throw new IllegalArgumentException("The sort of " + l + 
-					" is different from the sort of " + r + ".");
-		FnTerm t = null;
-		if (l.getSort() == Num.sortInt) {
-			t = Formula.lf.mkFnTerm(Formula.lf.symIntFn, new Term[] {l, r});
-			t.tag = TagConstants.INTEGRALMUL;
-		}
-		else if (l.getSort() == Num.sortReal) {
-			t = Formula.lf.mkFnTerm(Formula.lf.symRealFn, new Term[] {l, r});
-			t.tag = TagConstants.FLOATINGMUL;
-		}
-		else {
-			throw new IllegalArgumentException("The sort " + l.getSort() + " is invalid!"); 
-		}
-		return t;
+		return arith(l, r, TagConstants.INTEGRALMUL, TagConstants.FLOATINGMUL);
 	}
+	
 	public static Term mod(Term l, Term r) {
-		if(l.getSort() != r.getSort()&& 
-				(!Num.isNum(r.getSort()) || !Num.isNum(l.getSort())))
-			throw new IllegalArgumentException("The sort of " + l + 
-					" is different from the sort of " + r + ".");
-		FnTerm t = null;
-		if (l.getSort() == Num.sortInt) {
-			t = Formula.lf.mkFnTerm(Formula.lf.symIntFn, new Term[] {l, r});
-			t.tag = TagConstants.INTEGRALMOD;
-		}
-		else if (l.getSort() == Num.sortReal) {
-			t = Formula.lf.mkFnTerm(Formula.lf.symRealFn, new Term[] {l, r});
-			t.tag = TagConstants.FLOATINGMOD;
-		}
-		else {
-			throw new IllegalArgumentException("The sort " + l.getSort() + " is invalid!"); 
-		}
-		return t;
+		return arith(l, r, TagConstants.INTEGRALMOD, TagConstants.FLOATINGMOD);
 	}
 
 	public static Term lshift(Term l, Term r) {
