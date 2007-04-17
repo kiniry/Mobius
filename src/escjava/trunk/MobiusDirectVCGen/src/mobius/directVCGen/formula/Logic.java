@@ -1,8 +1,6 @@
 package mobius.directVCGen.formula;
 
 
-import escjava.ast.TagConstants;
-//import escjava.sortedProver.Lifter;
 import escjava.sortedProver.NodeBuilder;
 import escjava.sortedProver.Lifter.FnTerm;
 import escjava.sortedProver.Lifter.QuantTerm;
@@ -73,17 +71,20 @@ public class Logic {
 		FnTerm t = null;
 		if(l.getSort() == Bool.sort) {
 			t = Formula.lf.mkFnTerm(Formula.lf.symBoolPred, new Term[] {l, r});
-			t.tag = TagConstants.BOOLEQ;
+			t.tag = NodeBuilder.predEQ;
+		}
+		if(l.getSort() == Ref.sort) {
+			t = Formula.lf.mkFnTerm(Formula.lf.symRefEQ, new Term[] {l, r});
 		}
 		else if (l.getSort() == Num.sortInt) {
 			if(r.getSort() == Num.sortReal) {
 				l = Num.intToReal(l);
 				t = Formula.lf.mkFnTerm(Formula.lf.symRealBoolFn, new Term[] {l, r});
-				t.tag = TagConstants.FLOATINGEQ;
+				t.tag = NodeBuilder.predEQ;
 			}
 			else {
 				t = Formula.lf.mkFnTerm(Formula.lf.symIntPred, new Term[] {l, r});
-				t.tag = TagConstants.INTEGRALEQ;	
+				t.tag = NodeBuilder.predEQ;
 			}
 		}
 		else if (l.getSort() == Num.sortReal) {
@@ -91,7 +92,7 @@ public class Logic {
 				r = Num.intToReal(r);
 			}
 			t = Formula.lf.mkFnTerm(Formula.lf.symRealPred, new Term[] {l, r});
-			t.tag = TagConstants.FLOATINGEQ;
+			t.tag = NodeBuilder.predEQ;
 		}
 		else {
 			Formula.lf.mkFnTerm(Formula.lf.symAnyEQ, new Term[]{l, r});
@@ -232,6 +233,16 @@ public class Logic {
 		}
 		else if (t.getSort() == Num.sortReal) {
 			t = equals(t, Num.value(new Float(0)));
+		}
+		else {
+			throw new IllegalArgumentException("The sort " + t.getSort() + " is invalid!"); 
+		}
+		return res;
+	}
+	public static Term equalsNull(Term t) {
+		Term res = null;
+		if (t.getSort() == Ref.sort) {
+			t = equals(t, Ref.Null());
 		}
 		else {
 			throw new IllegalArgumentException("The sort " + t.getSort() + " is invalid!"); 
