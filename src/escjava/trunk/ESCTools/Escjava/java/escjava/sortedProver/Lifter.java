@@ -853,6 +853,12 @@ public class Lifter extends EscNodeBuilder
     public FnSymbol symValueToInt = registerFnSymbol("%valueToInt", new Sort[] { sortValue }, sortInt);
     public FnSymbol symValueToBool = registerFnSymbol("%valueToBool", new Sort[] { sortValue }, sortBool);
     public FnSymbol symValueToReal = registerFnSymbol("%valueToReal", new Sort[] { sortValue }, sortReal);
+
+    public FnSymbol symRefToValue = registerFnSymbol("%RefToValue", new Sort[] { sortRef}, sortValue);
+    public FnSymbol symIntToValue = registerFnSymbol("%IntToValue", new Sort[] { sortInt}, sortValue);
+    public FnSymbol symBoolToValue = registerFnSymbol("%BoolToValue", new Sort[] {sortBool}, sortValue);
+    public FnSymbol symRealToValue = registerFnSymbol("%RealToValue", new Sort[] {sortReal}, sortValue);
+
     public FnSymbol symIntToReal = registerFnSymbol("%intToReal", new Sort[] { sortInt }, sortReal);
     
     public PredSymbol symValueToPred = registerPredSymbol("%valueToPred", new Sort[] { sortValue });
