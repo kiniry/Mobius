@@ -2,6 +2,8 @@ package mobius.directVCGen.formula;
 
 
 import escjava.ast.TagConstants;
+//import escjava.sortedProver.Lifter;
+import escjava.sortedProver.NodeBuilder;
 import escjava.sortedProver.Lifter.FnTerm;
 import escjava.sortedProver.Lifter.QuantTerm;
 import escjava.sortedProver.Lifter.QuantVariable;
@@ -204,7 +206,66 @@ public class Logic {
 		return Formula.lf.mkFnTerm(Formula.lf.symTypeLE, new Term[] {t1, t2});
 	}
 
+	/**
+	 * Create an object representing an integer addition.
+	 * @param f1 the left parameter of the addition
+	 * @param f2 the right parameter of the addition
+	 * @return the newly created object
+	 */
+	public static Term add(Term f1, Term f2) {
+		return intArith(f1, f2, NodeBuilder.funADD);
+	}
+	
+	/**
+	 * Create an object representing an integer subtraction.
+	 * @param f1 the left parameter of the subtraction
+	 * @param f2 the right parameter of the subtraction
+	 * @return the newly created object
+	 */
+	public static Term sub(Term f1, Term f2) {
+		return intArith(f1, f2, NodeBuilder.funSUB);
+	}
+	
+	/**
+	 * Create an object representing an integer multiplication.
+	 * @param f1 the left parameter of the multiplication
+	 * @param f2 the right parameter of the multiplication
+	 * @return the newly created object
+	 */
+	public static Term mul(Term f1, Term f2) {
+		return intArith(f1, f2, NodeBuilder.funMUL);
+	}
+	
+	/**
+	 * Create an object representing an integer division.
+	 * @param f1 the left parameter of the division
+	 * @param f2 the right parameter of the division
+	 * @return the newly created object
+	 */
+	public static Term div(Term f1, Term f2) {
+		return intArith(f1, f2, NodeBuilder.funDIV);
+	}
+	
+	/**
+	 * Create an object representing an integer modulo.
+	 * @param f1 the left parameter of the modulo
+	 * @param f2 the right parameter of the modulo
+	 * @return the newly created object
+	 */
+	public static Term mod(Term f1, Term f2) {
+		return intArith(f1, f2, NodeBuilder.funMOD);
+	}
+	
+	
+	private static Term intArith(Term f1, Term f2, int fun) {
+		if((f1.getSort() != f2.getSort() && f1.getSort() != Formula.lf.sortInt))
+			throw new IllegalArgumentException("Bad type when creating or, " +
+					"found: " + f1.getSort() + " and " + f2.getSort());
 
+		return Formula.lf.mkFnTerm(Formula.lf.symIntFn, new Term[]{f1, f2}, fun);
+	}
+	
+	
 	/**
 	 * Main for testing purpose.
 	 * @param args ignored
