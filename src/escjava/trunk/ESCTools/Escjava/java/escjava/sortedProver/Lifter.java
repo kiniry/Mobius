@@ -436,7 +436,7 @@ public class Lifter extends EscNodeBuilder
 		{
 			sb.append(fn.name);
 			if(tag != 0) 
-				sb.append(" " + TagConstants.toString(tag));
+				sb.append(" " + tagsIds[tag]);
 			if (args.length > 0) {
 				sb.append("(");
 				for (int i = 0; i < args.length; ++i) {
@@ -602,9 +602,12 @@ public class Lifter extends EscNodeBuilder
 		public void printTo(StringBuffer sb)
 		{
 			sb.append("forall [");
-			for (int i = 0; i < vars.length; ++i)
+			int max = vars.length -1;
+			int i;
+			for (i = 0; i < max; ++i)
 				sb.append(vars[i].name + ":" + vars[i].type + /*"/" + vars[i].var.type +*/ ", ");
-			sb.append("] ");
+			sb.append(vars[i].name + ":" + vars[i].type + "] ");
+
 			body.printTo(sb);
 		}
 		

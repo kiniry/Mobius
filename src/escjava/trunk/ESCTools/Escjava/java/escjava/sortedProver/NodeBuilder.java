@@ -54,6 +54,12 @@ public abstract class NodeBuilder
 	public final static int funUniFirst = funLast + 1;
 	public final static int funNEG = funUniFirst;
 	public final static int funUniLast = funNEG;
+	public final static String [] tagsIds  = {
+		"Unknown", "predEQ", "predNE", "predLT", 
+		"predGT", "predLE", "predGE", "funADD", 
+		"funSUB", "funMUL", "funDIV", "funMOD", 
+		"funASR32", "funUSR32", "funSL32", "funASR64", 
+		"funUSR64", "funSL64", "funNEG"};
 	
 	private Hashtable symbolsById = new Hashtable();
 	private Hashtable sortsByName = new Hashtable();
