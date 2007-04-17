@@ -99,7 +99,8 @@ BEGIN
 
   Assign(target : Name, source : Expr) : Assign?
   BExpr(b : BoolExpr) : BExpr?
-  CondExpr(test : BoolExpr, then_expr : Expr, else_expr : Expr) : CondExpr?
+  % We don't need CondExpr anymore
+  CondExpr(test : Expr, then_expr : Expr, else_expr : Expr) : CondExpr?
   MethodCall(tgt : Expr, name : Name, arg : Expr) : MethodCall?
   NExpr(n : NumExpr) : NExpr?
   RExpr(r : RefExpr) : RExpr?
@@ -114,8 +115,8 @@ BEGIN
   
   IMPORTING Expr[Name]
 
-  CaseJML(branches : list[[BoolExpr, Stmt]]) : CaseJML?
-  IfThenElse(test : BoolExpr, then_stmt : Stmt, else_stmt : Stmt) : IfThenElse?
+  CaseJML(branches : list[[Expr, Stmt]]) : CaseJML?
+  IfThenElse(test : Expr, then_stmt : Stmt, else_stmt : Stmt) : IfThenElse?
   Sequence(s1, s2 : Stmt) : Sequence?
   Set(target : Name, source : Expr) : Set?
   Skip : Skip?
@@ -123,7 +124,7 @@ BEGIN
   Throw : Throw?
   % optional catch and finally modelled by lifting types
   TryCatch (try : Stmt, catch : Stmt, finally : Stmt) : TryCatch?
-  While(test : BoolExpr, body : Stmt) : While?
+  While(test : Expr, body : Stmt) : While?
 
 
 END Stmt
@@ -167,25 +168,25 @@ BEGIN
   MEASURE length(l)
 
   size(e : Expr) : nat =
-    reduce_nat(LAMBDA(e : Name, n : nat) : n + 1, % Assign
-               LAMBDA(b : BoolExpr) : size(b),    % BExpr
-               LAMBDA(b : BoolExpr, n1, n2 : nat) : size(b) + n1 + n2 + 1, %Cond
-               LAMBDA(n1 : nat, e : Name, n2 : nat) : 1 + n1 + n2,  % MethodCall
-               LAMBDA(n : NumExpr) : size(n),     % NExpr
-               LAMBDA(r : RefExpr) : size(r))(e)  % RExpr
+    reduce_nat(LAMBDA(e : Name, n : nat) : n + 1,                  % Assign
+               LAMBDA(b : BoolExpr) : size(b),                     % BExpr
+               LAMBDA(n1, n2, n3 : nat) : n1 + n2 + n3 + 1,        % CondExpr
+               LAMBDA(n1 : nat, e : Name, n2 : nat) : n1 + n2 + 1, % MethodCall
+               LAMBDA(n : NumExpr) : size(n),                      % NExpr
+               LAMBDA(r : RefExpr) : size(r))(e)                   % RExpr
  
   size(s : Stmt) : nat = 
-    reduce_nat(LAMBDA(l : list[[BoolExpr, nat]]) : 
-                 sum(map(LAMBDA (c : [BoolExpr, nat]) :
+    reduce_nat(LAMBDA(l : list[[Expr, nat]]) : 
+                 sum(map(LAMBDA (c : [Expr, nat]) :
                    size(proj_1(c)) + proj_2(c), l)),               % CaseJML
-               LAMBDA(e : BoolExpr, n1, n2 : nat) : size(e) + n1 + n2 + 1, % If
+               LAMBDA(e : Expr, n1, n2 : nat) : size(e) + n1 + n2 +1, % If
                LAMBDA(n1, n2 : nat) : n1 + n2 + 1,                 % Sequence
                LAMBDA(e : Name, e : Expr) : size(e) + 1,           % Set
                0,                                                  % Skip
                LAMBDA(e : Expr) : size(e) + 1,                     % StmtExpr
                0,                                                  % Throw
                LAMBDA(n1, n2, n3 : nat) : n1 + n2 + n3 + 1,        % TryCatch
-               LAMBDA(b : BoolExpr, n : nat) : size(b) + n + 1)(s) % While
+               LAMBDA(e : Expr, n : nat) : size(e) + n + 1)(s)     % While
 
                
 END SizeFunctions
@@ -203,6 +204,9 @@ BEGIN
 
   This, Super : Name
 
+  %NOTE: it is not correct to have Val in programs because they belong to the
+  % semantic domain, however, we do so to simplify the definition of the initial
+  % state (otherwise we would have to define an order of initialization).
   GhostVarDecl : TYPE = [# jtype : JType, 
                            name : Name,
                            init_val : Val #]
@@ -229,9 +233,6 @@ BEGIN
                      res : Expr,
                      res_type : JType #]
 
-  % change from original document:
-  % superClass is just a name, not a class
-  % This avoid that Class is a recursive record definition
   Class : TYPE = [# name : Name,
                     super_class : lift[Name],
                     inv : Expr,
@@ -327,28 +328,27 @@ BEGIN
     reduce[Name, set[Name]](
       LAMBDA (t : Name, s : set[Name]) : add(t, s),                 % Assign
       LAMBDA (b : BoolExpr) : var_names(b),                         % BExpr
-      LAMBDA (b : BoolExpr, s1, s2 : set[Name]) :
-        union(var_names(b), union(s1, s2)),                         % CondExpr
+      LAMBDA (s1, s2, s3 : set[Name]) : union(s1, union(s2, s3)),   % CondExpr
       LAMBDA (e : set[Name], m : Name, a : set[Name]) : union(e, a),% MethodCall
       LAMBDA (ne : NumExpr) : var_names(ne),                        % NExpr
       LAMBDA (re : RefExpr) : var_names(re))(e)                     % RExpr
 
   var_names(s : Stmt) : set[Name] =
     reduce[Name, set[Name]](
-      LAMBDA (branches : list[[BoolExpr, set[Name]]]) :             % CaseJML
-        Union({ns : Name | EXISTS (x : [BoolExpr, set[Name]]) :
+      LAMBDA (branches : list[[Expr, set[Name]]]) :                 % CaseJML
+        Union({ns : Name | EXISTS (x : [Expr, set[Name]]) :
                member(x, branches) AND  ns = var_names(proj_1(x)) OR
                ns = proj_2(x)}),
-      LAMBDA (b : BoolExpr, s1, s2 : set[Name]) :                   % IfThenElse
+      LAMBDA (b : Expr, s1, s2 : set[Name]) :                       % IfThenElse
         union(var_names(b), union(s1, s2)),
-          LAMBDA (s1, s2 : set[Name]) : union(s1, s2),              % Sequence
+      LAMBDA (s1, s2 : set[Name]) : union(s1, s2),                  % Sequence
       LAMBDA (target : Name, source : Expr[Name]) :                 % Set
         add(target, var_names(source)),
       emptyset,                                                     % Skip
       LAMBDA (expr : Expr) : var_names(expr),                       % StmtExpr
       emptyset,                                                     % Throw
       LAMBDA (t, c, f : set[Name]) : union(t, union(c, f)),         % TryCatch
-      LAMBDA (b : BoolExpr, ns : set[Name]) :                       % While
+      LAMBDA (b : Expr, ns : set[Name]) :                           % While
         union(var_names(b), ns))(s)
 
   var_names(m : Method) : set[Name] =
@@ -489,7 +489,7 @@ BEGIN
   wf_CaseJML(c : Stmt) : boolean =
     CaseJML?(c) AND
     (EXISTS (n : nat) : length(branches(c)) = n) AND
-    FORALL (x : [BoolExpr, Stmt]) :
+    FORALL (x : [Expr, Stmt]) :
       member(x, branches(c)) IMPLIES
         Set?(proj_2(x)) OR CaseJML?(proj_2(x))
 

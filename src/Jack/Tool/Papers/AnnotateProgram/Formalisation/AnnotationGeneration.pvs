@@ -36,24 +36,35 @@ BEGIN
     Sequence(Set("cp", NExpr(NumVarEval(name_of(tcp(t))))), 
              ann_action(action(t)))
 
-  IMPORTING Evaluation[string]
+  IMPORTING ProgramSemantics[string]
 
-  ann_guard_actions(mp)(ts : finite_set[Transition]) : list[[BoolExpr, Stmt]] =
-    set2list({x : [BoolExpr, Stmt] | EXISTS (t : Transition) : ts(t) AND
-                           (FORALL (stA : (wf_Store(mva(mp))), 
-                                    stP : (wf_PSt(mva(mp)))) :
-                              eval(proj_1(x))((# ex := bottom, st := stP #)) =
-                              guard(t)(stA, stP)) AND
-                            proj_2(x) = upd_vars(t)})
+%   ann_guard_actions(mp)(ts : finite_set[Transition]) : list[[Expr, Stmt]] =
+%     set2list({x : [Expr, Stmt] | EXISTS (t : Transition) : ts(t) AND
+%                            (FORALL (stA : (wf_Store(mva(mp))), 
+%                                     stP : (wf_PSt(mva(mp)))) :
+%                               eval(proj_1(x))((# ex := bottom, st := stP #)) =
+%                               guard(t)(stA, stP)) AND
+%                             proj_2(x) = upd_vars(t)})
 
-  ann_trans_cp(mp)(q : CP, ts : finite_set[Transition]) : [BoolExpr, Stmt] =
-    (Eq(NumVarEval("cp"), NumVarEval(name_of(q))),
+  ann_guard_actions(mp)(ts : finite_set[Transition]) : list[[Expr, Stmt]] =
+    set2list({x : [Expr, Stmt] | EXISTS (t : Transition) :
+      ts(t) AND
+      (FORALL (stA : (wf_Store(mva(mp))), stP : (wf_PSt(mva(mp))))
+              (s : PState, v : Val, n : nat) :
+        s = (# ex := bottom, st := stP #) AND
+        % guards have no side-effect
+        deriv_expr(program(mp))(proj_1(x), s, v, s)(n) IMPLIES
+        b(v) = guard(t)(stA, stP)) AND
+      proj_2(x) = upd_vars(t)})
+
+  ann_trans_cp(mp)(q : CP, ts : finite_set[Transition]) : [Expr, Stmt] =
+    (BExpr(Eq(NumVarEval("cp"), NumVarEval(name_of(q)))),
      CaseJML(ann_guard_actions(mp)(ts)))
 
   % Generates annotations to update the control point and the variables when an
   % event occurs
   ann_event(mp)(ts: set[Transition]): Stmt =
-    CaseJML(set2list({c : [BoolExpr, Stmt] | EXISTS (q : CP) : 
+    CaseJML(set2list({c : [Expr, Stmt] | EXISTS (q : CP) : 
               cps(mva(mp))(q) AND
               c = ann_trans_cp(mp)(q,
                                   {t: Transition | ts(t) AND scp(t) = q})}))

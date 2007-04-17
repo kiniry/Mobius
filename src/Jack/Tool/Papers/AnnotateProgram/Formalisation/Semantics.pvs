@@ -324,9 +324,11 @@ BEGIN
         v = Bool(eval(b)(pstate(sigma1))) AND
         n = 0,
       CondExpr(c, t, e) :
-        n > 0 AND
-        deriv_expr(p)(IF eval(c)(pstate(sigma1)) THEN t ELSE e ENDIF,
-                           sigma1, v, sigma2)(n - 1)(deriv_stmt_rec(n - 1)),
+        EXISTS (tau : FullState, v1 : Val, m1, m2 : nat) :
+          n = m1 + m2 AND
+          deriv_expr(p)(c, sigma1, v1, tau)(m1)(deriv_stmt_rec(m1)) AND
+          deriv_expr(p)(IF b(v1) THEN t ELSE e ENDIF,
+                           tau, v, sigma2)(m2)(deriv_stmt_rec(m2)),
       %TODO: update the values of this and initialize the local vars
       MethodCall(e, mn, pr) :
         EXISTS (m1, m2, m3, m4, m5, m6 : nat)
@@ -407,9 +409,10 @@ BEGIN
                        AND n > 0
          ENDCASES,
       IfThenElse(e, c1, c2) :
-          n > 0 AND
-          deriv_stmt(p)(IF eval(e)(pstate(sigma1)) THEN c1 ELSE c2 ENDIF,
-                             sigma1, sigma2)(n - 1),
+        EXISTS (tau : FullState, v : Val, m1, m2 : nat) :
+          n = m1 + m2 AND
+          deriv_expr(p)(e, sigma1, v, tau)(m1)(deriv_stmt_rec(m1)) AND
+          deriv_stmt(p)(IF b(v) THEN c1 ELSE c2 ENDIF, tau, sigma2)(m2),
       Sequence(c1, c2) :
          EXISTS(m1, m2 : nat)(tau : FullState) :
            n = m1 + m2 + 1 AND
