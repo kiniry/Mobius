@@ -1,6 +1,6 @@
 package mobius.directVCGen.formula;
 
-import escjava.ast.TagConstants;
+import escjava.sortedProver.NodeBuilder;
 import escjava.sortedProver.Lifter.FnTerm;
 import escjava.sortedProver.Lifter.Term;
 import escjava.sortedProver.NodeBuilder.Sort;
@@ -37,7 +37,7 @@ public class Num {
 		return Formula.lf.mkRealLiteral(d);
 	}
 
-	private static Term arith(Term l, Term r, int inttag, int realtag) {
+	private static Term arith(Term l, Term r, int tag) {
 		if(l.getSort() != r.getSort()&& 
 				(!Num.isNum(r.getSort()) || !Num.isNum(l.getSort())))
 			throw new IllegalArgumentException("The sort of " + l + 
@@ -53,11 +53,11 @@ public class Num {
 		}
 		if (l.getSort() == Num.sortInt) {
 			t = Formula.lf.mkFnTerm(Formula.lf.symIntFn, new Term[] {l, r});
-			t.tag = inttag;
+			t.tag = tag;
 		}
 		else if (l.getSort() == Num.sortReal) {
 			t = Formula.lf.mkFnTerm(Formula.lf.symRealFn, new Term[] {l, r});
-			t.tag = realtag;
+			t.tag = tag;
 		}
 		else {
 			throw new IllegalArgumentException("The sort " + l.getSort() + " is invalid!"); 
@@ -65,40 +65,37 @@ public class Num {
 		return t;
 	}
 	public static Term add(Term l, Term r) {
-		return arith(l, r, TagConstants.INTEGRALADD, TagConstants.FLOATINGADD);
+		return arith(l, r, NodeBuilder.funADD);
 	}
 	
 	
 	public static Term sub(Term l, Term r) {
-		return arith(l, r, TagConstants.INTEGRALSUB, TagConstants.FLOATINGSUB);
+		return arith(l, r, NodeBuilder.funSUB);
 	
 	}
 	
 	public static Term div(Term l, Term r) {
-		return arith(l, r, TagConstants.INTEGRALDIV, TagConstants.FLOATINGDIV);
+		return arith(l, r, NodeBuilder.funDIV);
 	}
 	
 	public static Term mul(Term l, Term r) {
-		return arith(l, r, TagConstants.INTEGRALMUL, TagConstants.FLOATINGMUL);
+		return arith(l, r, NodeBuilder.funMUL);
 	}
 	
 	public static Term mod(Term l, Term r) {
-		return arith(l, r, TagConstants.INTEGRALMOD, TagConstants.FLOATINGMOD);
+		return arith(l, r, NodeBuilder.funMOD);
 	}
 
+	
 	public static Term lshift(Term l, Term r) {
-		if(l.getSort() != r.getSort()&& 
-				(!Num.isNum(r.getSort()) || !Num.isNum(l.getSort())))
+		// TODO: understand when to handle 64 bits case
+		if(l.getSort() != r.getSort())
 			throw new IllegalArgumentException("The sort of " + l + 
 					" is different from the sort of " + r + ".");
 		FnTerm t = null;
 		if (l.getSort() == Num.sortInt) {
 			t = Formula.lf.mkFnTerm(Formula.lf.symIntFn, new Term[] {l, r});
-			t.tag = TagConstants.LSHIFT;
-		}
-		else if (l.getSort() == Num.sortReal) {
-			t = Formula.lf.mkFnTerm(Formula.lf.symRealFn, new Term[] {l, r});
-			t.tag = TagConstants.LSHIFT;
+			t.tag = NodeBuilder.funSL32;
 		}
 		else {
 			throw new IllegalArgumentException("The sort " + l.getSort() + " is invalid!"); 
@@ -107,18 +104,14 @@ public class Num {
 	}
 
 	public static Term rshift(Term l, Term r) {
-		if(l.getSort() != r.getSort()&& 
-				(!Num.isNum(r.getSort()) || !Num.isNum(l.getSort())))
+		// TODO: understand when to handle 64 bits case
+		if(l.getSort() != r.getSort())
 			throw new IllegalArgumentException("The sort of " + l + 
 					" is different from the sort of " + r + ".");
 		FnTerm t = null;
 		if (l.getSort() == Num.sortInt) {
 			t = Formula.lf.mkFnTerm(Formula.lf.symIntFn, new Term[] {l, r});
-			t.tag = TagConstants.RSHIFT;
-		}
-		else if (l.getSort() == Num.sortReal) {
-			t = Formula.lf.mkFnTerm(Formula.lf.symRealFn, new Term[] {l, r});
-			t.tag = TagConstants.RSHIFT;
+			t.tag =  NodeBuilder.funASR32;
 		}
 		else {
 			throw new IllegalArgumentException("The sort " + l.getSort() + " is invalid!"); 
@@ -127,6 +120,7 @@ public class Num {
 	}
 
 	public static Term urshift(Term l, Term r) {
+		// TODO: understand when to handle 64 bits case
 		if(l.getSort() != r.getSort()&& 
 				(!Num.isNum(r.getSort()) || !Num.isNum(l.getSort())))
 			throw new IllegalArgumentException("The sort of " + l + 
@@ -134,11 +128,7 @@ public class Num {
 		FnTerm t = null;
 		if (l.getSort() == Num.sortInt) {
 			t = Formula.lf.mkFnTerm(Formula.lf.symIntFn, new Term[] {l, r});
-			t.tag = TagConstants.URSHIFT;
-		}
-		else if (l.getSort() == Num.sortReal) {
-			t = Formula.lf.mkFnTerm(Formula.lf.symRealFn, new Term[] {l, r});
-			t.tag = TagConstants.URSHIFT;
+			t.tag = NodeBuilder.funUSR32;
 		}
 		else {
 			throw new IllegalArgumentException("The sort " + l.getSort() + " is invalid!"); 
