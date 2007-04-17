@@ -562,6 +562,14 @@ public class Lifter extends EscNodeBuilder
 	public FnTerm mkFnTerm(FnSymbol fn, Term[] args) {
 		return new FnTerm(fn, args);
 	}
+	
+	
+	public FnTerm mkFnTerm(FnSymbol fn, Term[] args, int tag) {
+		FnTerm res = new FnTerm(fn, args);
+		res.tag = tag;
+		return res;
+	}
+	
 	/*@ non_null_by_default @*/
 	public class QuantTerm extends Term
 	{
