@@ -79,11 +79,11 @@ public class Logic {
 			if(r.getSort() == Num.sortReal) {
 				l = Num.intToReal(l);
 				t = Formula.lf.mkFnTerm(Formula.lf.symRealBoolFn, new Term[] {l, r});
-				t.tag = TagConstants.FLOATINGEQ;
+				t.tag = NodeBuilder.predEQ;
 			}
 			else {
 				t = Formula.lf.mkFnTerm(Formula.lf.symIntPred, new Term[] {l, r});
-				t.tag = TagConstants.INTEGRALEQ;	
+				t.tag = NodeBuilder.predEQ;
 			}
 		}
 		else if (l.getSort() == Num.sortReal) {
@@ -91,7 +91,7 @@ public class Logic {
 				r = Num.intToReal(r);
 			}
 			t = Formula.lf.mkFnTerm(Formula.lf.symRealPred, new Term[] {l, r});
-			t.tag = TagConstants.FLOATINGEQ;
+			t.tag = NodeBuilder.predEQ;
 		}
 		else {
 			Formula.lf.mkFnTerm(Formula.lf.symAnyEQ, new Term[]{l, r});
@@ -211,6 +211,7 @@ public class Logic {
 	 * @param f1 the left parameter of the addition
 	 * @param f2 the right parameter of the addition
 	 * @return the newly created object
+	 * @deprecated use the methods in the class {@link Num} instead
 	 */
 	public static Term add(Term f1, Term f2) {
 		return intArith(f1, f2, NodeBuilder.funADD);
@@ -221,6 +222,7 @@ public class Logic {
 	 * @param f1 the left parameter of the subtraction
 	 * @param f2 the right parameter of the subtraction
 	 * @return the newly created object
+	 * @deprecated use the methods in the class {@link Num} instead
 	 */
 	public static Term sub(Term f1, Term f2) {
 		return intArith(f1, f2, NodeBuilder.funSUB);
@@ -231,6 +233,7 @@ public class Logic {
 	 * @param f1 the left parameter of the multiplication
 	 * @param f2 the right parameter of the multiplication
 	 * @return the newly created object
+	 * @deprecated use the methods in the class {@link Num} instead
 	 */
 	public static Term mul(Term f1, Term f2) {
 		return intArith(f1, f2, NodeBuilder.funMUL);
@@ -241,6 +244,7 @@ public class Logic {
 	 * @param f1 the left parameter of the division
 	 * @param f2 the right parameter of the division
 	 * @return the newly created object
+	 * @deprecated use the methods in the class {@link Num} instead
 	 */
 	public static Term div(Term f1, Term f2) {
 		return intArith(f1, f2, NodeBuilder.funDIV);
@@ -251,6 +255,7 @@ public class Logic {
 	 * @param f1 the left parameter of the modulo
 	 * @param f2 the right parameter of the modulo
 	 * @return the newly created object
+	 * @deprecated use the methods in the class {@link Num} instead
 	 */
 	public static Term mod(Term f1, Term f2) {
 		return intArith(f1, f2, NodeBuilder.funMOD);
