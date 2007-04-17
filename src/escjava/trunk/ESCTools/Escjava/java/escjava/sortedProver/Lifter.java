@@ -819,6 +819,9 @@ public class Lifter extends EscNodeBuilder
 		public NullLiteral() { }
 		public Sort getSort() { return sortRef; }
 		public void infer() { }
+		public void printTo(StringBuffer sb) {
+			sb.append("null");
+		}
 		public STerm dump() { return dumpBuilder.buildNull(); }
 	}
 	public NullLiteral mkNullLiteral() {
