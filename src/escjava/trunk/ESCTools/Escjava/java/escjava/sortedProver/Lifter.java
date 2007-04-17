@@ -649,6 +649,25 @@ public class Lifter extends EscNodeBuilder
 		{
 			body.enforceLabelSense(sense);
 		}
+		
+		public Term subst(Term t, Term subst) {
+			if (subst == null)
+				throw new NullPointerException();
+			if(t.equals(this))
+				return subst;
+			else {
+				boolean bHasChanged = false;
+				Term res = body.subst(t, subst);
+				bHasChanged = (res != body); 
+				if (bHasChanged) {
+					QuantTerm f = new QuantTerm(universal, vars, res, pats, nopats);
+					return f;
+				}
+				else {
+					return this;
+				}
+			}
+		}
 	}
 	
 	public QuantTerm mkQuantTerm(boolean universal, QuantVariable[] vars, Term body, Term[][] pats, Term[] nopats) {
