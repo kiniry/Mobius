@@ -8,6 +8,7 @@ public class BlockSample {
     }
     
      {
+    	 
     	 i++;
     }
     Throwable o;
