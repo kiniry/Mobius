@@ -4,6 +4,20 @@ Require Import BoolEq.
 
 Require Import Coq.Arith.Bool_nat.
 Open Scope Z_scope.
+
+(* program variables  *)
+Definition var := Set.
+Parameter var_dec: forall x y : var, {x = y} + {x <> y}.
+Definition eq_var : var -> var -> bool :=   (fun x y => if (var_dec x y) then true else false).
+(**************************)
+
+(* ghost variables *)
+Definition gVar := Set.
+Parameter gVar_dec: forall x y : var, {x = y} + {x <> y}.
+Definition eq_gVar : gVar -> gVar -> bool := (fun x y => if ( gVar_dec x y) then true else false).
+(**************************)
+
+(*
 (*normal variables*)
 (*Definition var := Z.*)
 Definition var := Z.
@@ -17,12 +31,12 @@ Definition eq_gVar (x y : nat)  :=
   match (x  = y) with
     | True => true
      end.
-
+*)
 Definition value := Z.
 
-Definition state : Set := var -> Z.
+Definition state : Type := var -> Z.
 
-Definition gState : Set := gVar -> Z.
+Definition gState : Type := gVar -> Z.
  
 Definition update (s:state) (x:var) (v:value) :=
  fun y => if eq_var x y then v else s y.
@@ -45,13 +59,13 @@ Inductive binop: Set :=
  | Ole   : binop
  | Oeq   : binop.
 
-Inductive expr : Set :=
+Inductive expr : Type :=
  | Econst : Z -> expr
  | Evar   : var -> expr
  | EbinOp : binop -> expr -> expr -> expr
  | EunOp  : unop -> expr -> expr.
 
-Inductive gExpr : Set :=
+Inductive gExpr : Type :=
  | gEconst : Z -> gExpr
  | gEvar   : var -> gExpr
  | gvar : gVar -> gExpr

@@ -19,7 +19,7 @@ Inductive exec_stmtN : nat -> state -> stmt -> state -> Prop :=
  | ExecIf_falseN    : forall n s1 s2 e stmtT stmtF,
      
      eval_expr s1 e = 0 -> 
-     exec_stmtN (n +1 ) s1 stmtF s2 ->
+     exec_stmtN (n +1) s1 stmtF s2 ->
      exec_stmtN (n +1) s1 (If e stmtT stmtF) s2
 
  | ExecWhile_trueN  : forall n s1 s2 s3 e  stmt,
@@ -48,8 +48,87 @@ Inductive exec_stmtN : nat -> state -> stmt -> state -> Prop :=
        exec_stmtN ( n + 2) s1 (Call mName  stmt) s2.
 
 
+(*Require Import  Coq.Init.Peano. *)
+Inductive exec_stmt :  state -> stmt -> state -> Prop := 
+
+ | ExecAffect     : forall s x e, 
+     exec_stmt s (Affect x e) (update s x (eval_expr s e))
+
+ | ExecIf_true    : forall  s1 s2 e stmtT stmtF,
+     
+     eval_expr s1 e <> 0  -> 
+     exec_stmt  s1 stmtT s2 ->
+     exec_stmt s1 (If e stmtT stmtF) s2
+
+ | ExecIf_false    : forall  s1 s2 e stmtT stmtF,
+     
+     eval_expr s1 e = 0 -> 
+     exec_stmt  s1 stmtF s2 ->
+     exec_stmt  s1 (If e stmtT stmtF) s2
+
+ | ExecWhile_true  : forall s1 s2 s3 e  stmt,
+     
+     eval_expr s1 e <> 0 ->
+     exec_stmt s1 stmt s2 ->
+     exec_stmt s2 (While e stmt) s3 ->
+     exec_stmt s1 (While e stmt) s3
+
+ | ExecWhile_false  : forall  s1 e  stmt,
+     
+     eval_expr s1 e = 0 ->
+     exec_stmt  s1 (While e  stmt) s1
+ 
+ | ExecSseq   : forall s1 s2 s3 i stmt,
+      
+      exec_stmt  s1 i s2 -> 
+      exec_stmt  s2 stmt s3 -> 
+      exec_stmt  s1 (Sseq i stmt) s3
+
+ | ExecSkip : forall  s,  exec_stmt  s Skip s
+ 
+ | ExecCall: forall  s1 s2 stmt mName,  
+       
+       exec_stmt s1 stmt s2 -> 
+       exec_stmt s1 (Call mName  stmt) s2.
 
 
+(*TO BE CONTINUED *)
+(*
+Lemma execNimpliesExec : forall s1 s2 stmt ,  
+( exists n , exec_stmtN  n s1 stmt s2) ->  exec_stmt s1 stmt s2.
+
+Proof. intros s1 s2 stmt. induction stmt.
+intros.
+elim H.
+intros.
+inversion H0.
+simpl; subst;auto.
+apply (ExecAffect ).
+
+intros.
+elim H.
+intros.
+inversion H0.
+simpl;subst;auto.
+apply ExecIf_true .
+assumption.
+apply IHstmt1.
+
+exists (n + 1)%nat.
+assumption.
+simpl;subst;auto.
+apply ExecIf_false.
+assumption.
+apply IHstmt2.
+
+exists (n + 1)%nat.
+assumption.
+
+
+intros.
+
+Qed. *)
+ 
 Lemma levelgt0: forall  st s1 s2 , exec_stmtN 0 s1 st s2  -> False. 
 Proof.
 intros  st s1 s2 exec. induction st; inversion exec; simpl; subst; auto; omega. 

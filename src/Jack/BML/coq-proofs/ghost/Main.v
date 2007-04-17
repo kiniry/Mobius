@@ -1,7 +1,7 @@
 Require Import  Logic.
 Require Import LogicWithGhost.
 Require Import Coq.Logic.Classical_Prop.
-
+Require Import Coq.Bool.Bool.
 
 Export Logic.
 Export LogicWithGhost.
@@ -70,7 +70,6 @@ exists sg1.
 apply (H s1 s2 sg1 sg1).
 split.
 trivial.
-assumption.
 
 (*******************************************************************************************************)
 
@@ -129,7 +128,7 @@ apply ( H1 s gs1 H2).
 
 assert(  forall (s p t : state),   eval_expr s e <> 0 -> (forall gs, exists gp, inv s gs p gp ) -> 
  (forall gp, exists gt, post1 p gp t gt) -> ( forall gs, exists gt, post1 s gs t gt)).
-intros.
+intros s p t  H3 H4 H5 gs.
 assert (H11 := H4 gs).
 elim H11.
 intros.

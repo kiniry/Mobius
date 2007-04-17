@@ -5,8 +5,9 @@ Open Scope Z_scope.
 (*normal variables*)
 (*Definition var := Z.*)
 
-Definition methodNames := Set.
+Variable methodNames : Set.
 
+Variable  event :  Set.
 (* program variables  *)
 Definition var := Set.
 Parameter var_dec: forall x y : var, {x = y} + {x <> y}.
@@ -50,7 +51,7 @@ Inductive binop: Set :=
  | Oadd  : binop
  | Osub  : binop
  | Omul  : binop
- | Odiv  : binop
+ | Odiv  :  binop
  | Oand  : binop
  | Oor   : binop
  | Ole   : binop

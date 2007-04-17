@@ -9,12 +9,8 @@ Open Scope Z_scope.
 
 
 
-(*RULES FOR REASONING OVER PROGRAMS AND ASSERTIONS. THIS ASSERTIONS MUST HOLD IN 
-  THE TERMINAL STATE  OF THE STATEMENT EXECUTION. THUS, THIS LOGIC RULES EXPRESS PARTIAL 
-  CORRECTNESS. METHODS ARE PROVIDED WITH SPECIFICATIONS WHICH STATE
-   WHAT MUST HOLD IN THE TERMINAL STATE OF A METHOD. THE SPECIFICATIONS ARE GIVEN 
-   BY THE MAPPING FROM METHOD NAMES TO ASSERTIONS. 
-  THE CONSEQUENCE RULE IS IMPLICITE AS IT IS INLINED IN EVERY RULE*)
+(*RULES FOR REASONING OVER PROGRAMS AND ASSERTIONS.  
+THE CONSEQUENCE RULE IS IMPLICITE AS IT IS INLINED IN EVERY RULE*)
 Inductive RULET (MS : methPost) :  stmt -> assertion -> Prop :=
  
  | AffectRule : forall   x e (post : assertion) , 
@@ -85,7 +81,7 @@ intros.
 apply conseq.
 apply H1.
 assumption.
-apply ( WhileRule MS st post2 post0 e inv  ).  
+apply ( WhileRule MS st post2 post0 e inv  ). 
 assumption.
 assumption.
 assumption.
@@ -114,7 +110,7 @@ apply (SignalRule MS post2).
 intros; simpl;auto.
 
 Qed.
- (*
+ 
 (*This lemma just shows that we can prove the soundness using the right hand side of the following implication*)
 Lemma aux: forall MS (st: stmt) (B : body) ( P : program)  ,  
 (forall ( post : assertion),   RULET MS st post   -> forall (s1 s2 : state )  event,  (  t_exec  P B s1 st event s2) -> post s1 event s2) -> 
@@ -124,17 +120,19 @@ intros.
 apply H.
 assumption.
 assumption.
-Qed.*)
+Qed.
 
+Variable A : assertion.
 
 
 (*PROOF OF SOUNDNESS OF THE ABOVE RULE W.R.T. THE
  OPERATIONAL SEMANTICS GIVEN IN   Semantic.v. THE PROOF IS BY INDUCTION
- OVER THE OPERATIONAL SEMANTICS GIVEN BY THE INDUCTIVE DEFINITION t_exec *)
- Lemma correctAux: forall MS stmt   (B : body) ( P : program) , 
+ OVER THE OPERATIONAL SEMANTICS*)
+Lemma correctAux: forall MS stmt   (B : body) ( P : program) , 
  (forall st (N : methodNames) (spec : assertion),  (In N P) -> spec = (MS N) -> st = B N -> RULET MS st spec )  -> 
 forall (s1 s2 : state )   events,  (  t_exec  P B s1 stmt  events s2) ->  forall Post , ( RULET MS stmt Post )  ->
-Post s1 events s2. 
+Post s1 events s2.
+
 Proof. 
 intros MS  stmt body Prog    MethVerified s1 s2 events exec; induction exec;
 intros Post rule ; inversion rule; simpl; subst; auto.
@@ -219,13 +217,12 @@ trivial.
 Qed. 
  
 
-(* MAIN SOUNDNESS THEOREM WHICH STATES THAT IF ALL METHOD BODIES HAVE A PROOF TREE W.R.T. THE
- METHOD SPECIFICATION, THEN FOR EVERY TERMINATING EXECUTION OF EVERY METHOD THE RESPECTIVE 
-  METHOD  SPECIFICATION HOLDS W.R.T. THE INITIAL AND FINAL STATE OF THE TERMINATING EXECUTION *)
+
 Lemma correct :  forall MS  M    (B : body) ( P : program) , 
- (forall st (N : methodNames) (spec : assertion),    (In N P) -> spec = (MS N) -> st = B N -> RULET MS st spec )   ->     
+ (forall st (N : methodNames) (spec : assertion),  (In N P) -> spec = (MS N) -> st = B N -> RULET MS st spec )   ->     
     (In M P) -> 
-forall (s1 s2 : state )   events,  (  t_exec  P B s1 (B M)  events s2 ) -> ( MS M) s1 events s2.
+forall (s1 s2 : state )   events,  (  t_exec  P B s1 (B M)  events s2) ->   ( RULET MS (B M) ( MS M) )  ->
+( MS M) s1 events s2.
 
 Proof. 
 intros.
@@ -233,8 +230,5 @@ intros.
 apply (correctAux MS (B M) B P).
 assumption.
 assumption.
-apply (H (B M ) M (MS M )  ).
 assumption.
-trivial.
-trivial.
 Qed.

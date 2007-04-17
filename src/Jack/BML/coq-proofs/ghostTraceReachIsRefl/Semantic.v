@@ -64,7 +64,8 @@ Inductive t_exec (P : program)(B: body) :  state -> stmt -> list event -> state 
 *)
 Inductive reach (P : program)(B: body): state -> stmt -> list event ->  state -> Prop := 
 
- | ReachAffect      : forall s x e, 
+ | ReachAffect      : forall s  s1  x e, 
+     s1 = (update s x (eval_expr s e)) \/ s = s1 ->
      reach P B s (Affect x e)  nil (update s x (eval_expr s e))
 
  | ReachIf_true     : forall s1 s2 e stmtT stmtF eventsT ,
@@ -113,7 +114,10 @@ Inductive reach (P : program)(B: body): state -> stmt -> list event ->  state ->
        reach P B s1 (B mName) eventsB s2 -> 
        reach P B s1 (Call mName  ) eventsB  s2
 
- | ReachSignal : forall s event, reach P B s (Signal event ) ( event :: nil) s  .
+ | ReachSignal : forall s event, reach P B s (Signal event ) ( event :: nil) s  
+ 
+ | ReachRefl : forall s stmt, 
+        reach P B s stmt nil s.
 
 
 (*
