@@ -4,6 +4,8 @@
 \usepackage{url}
 \usepackage{amsmath, amsthm, amssymb} 
 \usepackage{alltt}
+%% \usepackage[T1,T2A]{fontenc}
+%% \usepackage{bulgarian,english}{babel}
 
 \usepackage{epsfig}
 \usepackage{listings}
@@ -17,8 +19,18 @@
 \makeindex
 \setpapersize{A4}
 
-%\usepackage[headings]{fullpage}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%USING CYRILLIC FONTS%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage[OT2,OT1]{fontenc}
+\newcommand\cyr{%
+\renewcommand\rmdefault{wncyr}%
+\renewcommand\sfdefault{wncyss}%
+\renewcommand\encodingdefault{OT2}%
+\normalfont
+\selectfont}
+\DeclareTextFontCommand{\textcyr}{\cyr}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%JML STYLES%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -71,8 +83,21 @@
 \setcounter{tocdepth}{3}
 \setcounter{secnumdepth}{3}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%% Resume en Francais %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \input{introFrCourt.tex}
 
+\chapter*{}
+\input{posv.tex}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%   Remerciements %%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% \setlanguage{bulgarian}
+\chapter*{Remerciements}
+\input{thanks.tex}
+%% \setlanguage{english}
 
 \cleardoublepage
 \tableofcontents
@@ -120,14 +145,13 @@
    \input{javaVerif/intro.tex}
    \input{javaVerif/source/source.tex}
    \input{javaVerif/prelim.tex}
-   %\input{javaVerif/JMLsemantics.tex}
    \input{javaVerif/verifStyles.tex}
    \input{javaVerif/wpSrc/srcWp.tex}	
    \input{assertLangVC/substitution.tex}
    \input{javaVerif/wpSrc/wpSrcExpr.tex}
    \input{javaVerif/wpSrc/wpSrcStmt.tex}
-   %\input{javaVerif/jack.tex}
-%2
+   
+
 \chapter{Java bytecode language and its operational semantics} \label{opSem:prelim}
   \input{prelim/intro.tex}   
   \input{prelim/notation.tex} 
@@ -145,11 +169,10 @@
   \input{prelim/ctrlFlowGraph.tex}
   \input{prelim/relWork.tex} 
 
-%3
+
 \chapter{Bytecode modeling language} \label{bcsl}
   \lstset{numbers=left,numberstyle=\small,stepnumber=1,numbersep=5pt}
   \input{BML/intro.tex} 
-  %\input{BML/prelim.tex}
   \input{BML/designBml.tex}
   \input{BML/bml.tex}
   \input{BML/typeChecker.tex}
@@ -159,11 +182,11 @@
 
 
 
-%5
+
 \chapter{Verification condition generator for Java bytecode } \label{wpGeneral}
   \input{wp/intro.tex}
 
- %4
+
 \section{Assertion language for the verification condition generator}\label{assertLang}
   \input{assertLangVC/assertionLang.tex}\label{assertLang}
   \input{assertLangVC/BMLfragment.tex}
@@ -178,7 +201,6 @@
   \input{wp/relWork.tex} 
   
 
-%6
 \chapter{Correctness of the verification condition generator}\label{proofGeneral}
   \input{proof/intro.tex}
   \input{proof/formulationCorrect.tex} 
@@ -189,30 +211,18 @@
 
 
 
-%7
+
 \chapter{Equivalence between Java source and bytecode proof obligations}\label{pogEquiv}
-       % deprecated\input{pogCompile/cmdPogComp.tex}
   \input{pogCompile/intro.tex}
- 
- 
-   
-  % may be we do not need this section as in the intro of the chapter
-  % we will say that the target language is already introduced in Chapter 2  
-  % \input bytecode/intro.tex      
-  %    \input bytecode/bcLang.tex
-	 
   \input{pogCompile/compile/compile.tex}
   \input{pogCompile/compile/compExpr.tex} 
-  
-
-  
   \input{pogCompile/compile/propCompFun.tex}
     
-    \section{Establishing the equivalence between verification conditions on source and bytecode level} \label{pog:wpBcGeneral}
+ \section{Establishing the equivalence between verification conditions on source and bytecode level} \label{pog:wpBcGeneral}
     \input{pogCompile/wpBc/wpProp.tex}
     \input{pogCompile/relatedWork/relWork.tex}
  
-%8
+
 \chapter{Constrained memory consumption policies using verification condition generator}\label{applications:memory}
   \input{applications/memory/mydefThesis}
   \lstset{numbers=none}
@@ -222,14 +232,10 @@
   \input{applications/memory/motivatingExample}
   \input{applications/memory/technical}
   \input{applications/memory/examples}
-%  \section{Inferring memory allocation for methods}\label{sec:infer}
-%  \input{applications/memory/infer}\label{sec:infer}
   \section{Related work}\label{sec:rel}
   \input{applications/memory/relatedworks}
-% %deprecated\section{Conclusion}\label{sec:conc}
-% %deprecated\input{applications/memory/conclusion}
 
-%9 
+
 \chapter{A low-footprint Java-to-native compilation scheme using BML}\label{applications:optimComp}
   \lstset{frameround=tttt}
   \input{applications/optimCompiler/intro}
@@ -244,7 +250,7 @@
   
  
 
-%10
+
  \chapter{Conclusion}\label{conclusion}
  \input{conclusion/conclusion}
 
