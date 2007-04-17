@@ -187,6 +187,11 @@ public class JmlExprToFormula {
 		return null;
 	}
 
+	public Object or(BinaryExpr expr) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	
 
 }

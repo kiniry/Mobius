@@ -384,7 +384,7 @@ public class JmlVisitor extends VisitorArgResult{
 		case TagConstants.EQ: 
 			return translator.eq(expr);
 		case TagConstants.OR: 
-			break;
+			return translator.or(expr);
 		case TagConstants.AND: 
 			return translator.and(expr);
 		case TagConstants.NE:
@@ -457,7 +457,6 @@ public class JmlVisitor extends VisitorArgResult{
 			throw new IllegalArgumentException("Unknown construct :" +
 					TagConstants.toString(expr.op) +" " +  expr);
 		}		
-		return null;
 	}
 
 }
