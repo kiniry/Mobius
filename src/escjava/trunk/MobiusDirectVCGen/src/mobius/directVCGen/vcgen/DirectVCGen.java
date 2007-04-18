@@ -14,12 +14,19 @@ import javafe.ast.Visitor;
 public class DirectVCGen extends Visitor {
 
 
-	
+	/*
+	 * (non-Javadoc)
+	 * @see javafe.ast.Visitor#visitClassDecl(javafe.ast.ClassDecl)
+	 */
 	public void visitClassDecl(/*@non_null*/ ClassDecl x) {
 		System.out.println("Treating class: " + x.id);
 		visitTypeDecl(x);
 	}
 	
+	/*
+	 * (non-Javadoc)
+	 * @see javafe.ast.Visitor#visitMethodDecl(javafe.ast.MethodDecl)
+	 */
 	public void visitMethodDecl(/*@non_null*/ MethodDecl x) {	
 		MethodVisitor mv = MethodVisitor.treatMethod(x);
 		System.out.println(mv);

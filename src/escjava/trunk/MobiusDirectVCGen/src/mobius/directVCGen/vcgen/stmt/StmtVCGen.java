@@ -54,6 +54,10 @@ import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
 import escjava.tc.Types;
 
+/**
+ * This class does the weakest precondition calculus for the statements.
+ * @author B. Grégoire, J. Charles
+ */
 public class StmtVCGen extends ExpressionVisitor {
 	/** the side conditions that were generated */
 	public final Vector<Term> vcs = new Vector<Term>();

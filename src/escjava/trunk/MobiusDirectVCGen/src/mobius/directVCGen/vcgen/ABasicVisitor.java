@@ -52,6 +52,11 @@ import escjava.ast.VarExprModifierPragma;
 import escjava.ast.VisitorArgResult;
 import escjava.ast.WildRefExpr;
 
+/**
+ * A visitor that do all the basic handlings.
+ * The only implemented method is {@link #visitASTNode(ASTNode, Object)}.
+ * @author J. Charles
+ */
 public abstract class ABasicVisitor extends VisitorArgResult{
 
 	@Override
@@ -310,7 +315,4 @@ public abstract class ABasicVisitor extends VisitorArgResult{
 	public Object visitWildRefExpr(WildRefExpr x, Object o) {
 		return visitASTNode(x, o);
 	}
-
-
-
 }
