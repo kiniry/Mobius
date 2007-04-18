@@ -1,10 +1,6 @@
 package mobius.directVCGen.formula;
 
-import javafe.ast.Type;
-import javafe.ast.VarInit;
-import javafe.tc.FlowInsensitiveChecks;
 import escjava.sortedProver.Lifter;
-import escjava.sortedProver.Lifter.Term;
 import escjava.sortedProver.NodeBuilder.Sort;
 
 public class Formula {
@@ -20,18 +16,5 @@ public class Formula {
 		return lf;
 	}
 
-	public static Term translate(Type type) {
-		return lf.symbolRef(type.toString());
-	}
-	public static Sort getSort(VarInit e) {
-		Type t = FlowInsensitiveChecks.getType(e);
-		return lf.typeToSort(t);
-	}	
-	public static Type getType(VarInit e) {
-		Type t = FlowInsensitiveChecks.getType(e);
-		return t;
-	}
-	public static Sort typeToSort(Type t) {
-		return lf.typeToSort(t);
-	}	
+	
 }

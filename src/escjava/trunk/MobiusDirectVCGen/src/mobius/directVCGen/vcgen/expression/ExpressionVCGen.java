@@ -7,23 +7,24 @@ import javafe.ast.FormalParaDecl;
 import javafe.ast.FormalParaDeclVec;
 import javafe.ast.InstanceOfExpr;
 import javafe.ast.MethodInvocation;
+import mobius.directVCGen.formula.Bool;
 import mobius.directVCGen.formula.Expression;
+import mobius.directVCGen.formula.Heap;
 import mobius.directVCGen.formula.Logic;
 import mobius.directVCGen.formula.Lookup;
 import mobius.directVCGen.formula.Ref;
+import mobius.directVCGen.formula.Type;
 import mobius.directVCGen.vcgen.stmt.StmtVCGen;
 import mobius.directVCGen.vcgen.struct.Post;
 import mobius.directVCGen.vcgen.struct.VCEntry;
 import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
 import escjava.tc.Types;
+import escjava.translate.UniqName;
 
 
 public class ExpressionVCGen extends BinaryExpressionVCGen{
 
-	
-
-	
 	public ExpressionVCGen(ExpressionVisitor vis) {
 		super(vis);
 	}
@@ -59,10 +60,19 @@ public class ExpressionVCGen extends BinaryExpressionVCGen{
 
 	public Post instanceOf(InstanceOfExpr x, VCEntry entry) {
 		Post p = entry.post;
-		Expression.rvar(Ref.sort);
-		return null;
+		
+		QuantVariableRef r = Expression.rvar(Ref.sort);
+		p = new Post(r,
+			Logic.and(Logic.implies(Logic.typeLE(Type.of(Heap.var, r), 
+									Expression.sym(UniqName.type(x.type), Ref.sort)),
+								p.substWith(Bool.value(true))), 
+				  Logic.implies(Logic.not(Logic.typeLE(Type.of(Heap.var, r), 
+									Expression.sym(UniqName.type(x.type), Ref.sort))),
+								p.substWith(Bool.value(false)))));
+		entry.post = p;
+		Post pre = getPre(x.expr, entry);
+		return pre;
 	}
-
 	
 	
 }

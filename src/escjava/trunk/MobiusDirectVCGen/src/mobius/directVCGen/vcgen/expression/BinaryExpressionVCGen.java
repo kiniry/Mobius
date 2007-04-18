@@ -8,11 +8,11 @@ import javafe.ast.ObjectDesignator;
 import javafe.ast.VariableAccess;
 import mobius.directVCGen.formula.Bool;
 import mobius.directVCGen.formula.Expression;
-import mobius.directVCGen.formula.Formula;
 import mobius.directVCGen.formula.Heap;
 import mobius.directVCGen.formula.Logic;
 import mobius.directVCGen.formula.Num;
 import mobius.directVCGen.formula.Ref;
+import mobius.directVCGen.formula.Type;
 import mobius.directVCGen.vcgen.stmt.StmtVCGen;
 import mobius.directVCGen.vcgen.struct.Post;
 import mobius.directVCGen.vcgen.struct.VCEntry;
@@ -32,8 +32,8 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn{
 		Expr right = expr.right;
 		Expr left = expr.left;
 		
-		QuantVariableRef rvar = Expression.rvar(Formula.getSort(right));
-		QuantVariableRef lvar = Expression.rvar(Formula.getSort(left));
+		QuantVariableRef rvar = Expression.rvar(Type.getSort(right));
+		QuantVariableRef lvar = Expression.rvar(Type.getSort(left));
 		Post rPost = new Post(rvar, post.post.substWith(Bool.equals(lvar, rvar)));
 		post.post = rPost;
 		Post pre = getPre(right, post);
@@ -47,8 +47,8 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn{
 		Expr right = expr.right;
 		Expr left = expr.left;
 		
-		QuantVariableRef rvar = Expression.rvar(Formula.getSort(right));
-		QuantVariableRef lvar = Expression.rvar(Formula.getSort(left));
+		QuantVariableRef rvar = Expression.rvar(Type.getSort(right));
+		QuantVariableRef lvar = Expression.rvar(Type.getSort(left));
 		Post rPost = new Post(rvar, post.post.substWith(Bool.or(lvar, rvar)));
 		post.post = rPost;
 		Post pre = getPre(right, post);
@@ -62,8 +62,8 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn{
 		Expr right = expr.right;
 		Expr left = expr.left;
 		
-		QuantVariableRef rvar = Expression.rvar(Formula.getSort(right));
-		QuantVariableRef lvar = Expression.rvar(Formula.getSort(left));
+		QuantVariableRef rvar = Expression.rvar(Type.getSort(right));
+		QuantVariableRef lvar = Expression.rvar(Type.getSort(left));
 		Post rPost = new Post(rvar, post.post.substWith(Bool.and(lvar, rvar)));
 		post.post = rPost;
 		Post pre = getPre(right, post);
@@ -77,8 +77,8 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn{
 		Expr right = expr.right;
 		Expr left = expr.left;
 		
-		QuantVariableRef rvar = Expression.rvar(Formula.getSort(right));
-		QuantVariableRef lvar = Expression.rvar(Formula.getSort(left));
+		QuantVariableRef rvar = Expression.rvar(Type.getSort(right));
+		QuantVariableRef lvar = Expression.rvar(Type.getSort(left));
 		Post rPost = new Post(rvar, post.post.substWith(Bool.not(Bool.equals(lvar, rvar))));
 		post.post = rPost;
 		Post pre = getPre(right, post);
@@ -92,8 +92,8 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn{
 		Expr right = expr.right;
 		Expr left = expr.left;
 		
-		QuantVariableRef rvar = Expression.rvar(Formula.getSort(right));
-		QuantVariableRef lvar = Expression.rvar(Formula.getSort(left));
+		QuantVariableRef rvar = Expression.rvar(Type.getSort(right));
+		QuantVariableRef lvar = Expression.rvar(Type.getSort(left));
 		Post rPost = new Post(rvar, post.post.substWith(Bool.ge(lvar, rvar)));
 		post.post = rPost;
 		Post pre = getPre(right, post);
@@ -107,8 +107,8 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn{
 		Expr right = expr.right;
 		Expr left = expr.left;
 		
-		QuantVariableRef rvar = Expression.rvar(Formula.getSort(right));
-		QuantVariableRef lvar = Expression.rvar(Formula.getSort(left));
+		QuantVariableRef rvar = Expression.rvar(Type.getSort(right));
+		QuantVariableRef lvar = Expression.rvar(Type.getSort(left));
 		Post rPost = new Post(rvar, post.post.substWith(Bool.gt(lvar, rvar)));
 		post.post = rPost;
 		Post pre = getPre(right, post);
@@ -123,8 +123,8 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn{
 		Expr right = expr.right;
 		Expr left = expr.left;
 		
-		QuantVariableRef rvar = Expression.rvar(Formula.getSort(right));
-		QuantVariableRef lvar = Expression.rvar(Formula.getSort(left));
+		QuantVariableRef rvar = Expression.rvar(Type.getSort(right));
+		QuantVariableRef lvar = Expression.rvar(Type.getSort(left));
 		Post rPost = new Post(rvar, post.post.substWith(Bool.not(Bool.gt(lvar, rvar))));
 		post.post = rPost;
 		Post pre = getPre(right, post);
@@ -138,8 +138,8 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn{
 		Expr right = expr.right;
 		Expr left = expr.left;
 		
-		QuantVariableRef rvar = Expression.rvar(Formula.getSort(right));
-		QuantVariableRef lvar = Expression.rvar(Formula.getSort(left));
+		QuantVariableRef rvar = Expression.rvar(Type.getSort(right));
+		QuantVariableRef lvar = Expression.rvar(Type.getSort(left));
 		Post rPost = new Post(rvar, post.post.substWith(Bool.not(Bool.ge(lvar, rvar))));
 		post.post = rPost;
 		Post pre = getPre(right, post);
@@ -155,8 +155,8 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn{
 		Expr right = expr.right;
 		Expr left = expr.left;
 		
-		QuantVariableRef rvar = Expression.rvar(Formula.getSort(right));
-		QuantVariableRef lvar = Expression.rvar(Formula.getSort(left));
+		QuantVariableRef rvar = Expression.rvar(Type.getSort(right));
+		QuantVariableRef lvar = Expression.rvar(Type.getSort(left));
 		Post rPost = new Post(rvar, post.post.substWith(Num.add(lvar, rvar)));
 		post.post = rPost;
 		Post pre = getPre(right, post);
@@ -170,8 +170,8 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn{
 		Expr right = expr.right;
 		Expr left = expr.left;
 		
-		QuantVariableRef rvar = Expression.rvar(Formula.getSort(right));
-		QuantVariableRef lvar = Expression.rvar(Formula.getSort(left));
+		QuantVariableRef rvar = Expression.rvar(Type.getSort(right));
+		QuantVariableRef lvar = Expression.rvar(Type.getSort(left));
 		Post rPost = new Post(rvar, post.post.substWith(Num.sub(lvar, rvar)));
 		post.post = rPost;
 		Post pre = getPre(right, post);
@@ -188,8 +188,8 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn{
 		Expr right = expr.right;
 		Expr left = expr.left;
 		
-		QuantVariableRef rvar = Expression.rvar(Formula.getSort(right));
-		QuantVariableRef lvar = Expression.rvar(Formula.getSort(left));
+		QuantVariableRef rvar = Expression.rvar(Type.getSort(right));
+		QuantVariableRef lvar = Expression.rvar(Type.getSort(left));
 		Post rPost = new Post(rvar, post.post.substWith(Num.mul(lvar, rvar)));
 		post.post = rPost;
 		Post pre = getPre(right, post);
@@ -203,8 +203,8 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn{
 		Expr right = expr.right;
 		Expr left = expr.left;
 		
-		QuantVariableRef rvar = Expression.rvar(Formula.getSort(right));
-		QuantVariableRef lvar = Expression.rvar(Formula.getSort(left));
+		QuantVariableRef rvar = Expression.rvar(Type.getSort(right));
+		QuantVariableRef lvar = Expression.rvar(Type.getSort(left));
 		Post rPost = new Post(rvar, post.post.substWith(Expression.bitor(lvar, rvar)));
 		post.post = rPost;
 		Post pre = getPre(right, post);
@@ -218,8 +218,8 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn{
 		Expr right = expr.right;
 		Expr left = expr.left;
 		
-		QuantVariableRef rvar = Expression.rvar(Formula.getSort(right));
-		QuantVariableRef lvar = Expression.rvar(Formula.getSort(left));
+		QuantVariableRef rvar = Expression.rvar(Type.getSort(right));
+		QuantVariableRef lvar = Expression.rvar(Type.getSort(left));
 		Post rPost = new Post(rvar, post.post.substWith(Expression.bitxor(lvar, rvar)));
 		post.post = rPost;
 		Post pre = getPre(right, post);
@@ -233,8 +233,8 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn{
 		Expr right = expr.right;
 		Expr left = expr.left;
 		
-		QuantVariableRef rvar = Expression.rvar(Formula.getSort(right));
-		QuantVariableRef lvar = Expression.rvar(Formula.getSort(left));
+		QuantVariableRef rvar = Expression.rvar(Type.getSort(right));
+		QuantVariableRef lvar = Expression.rvar(Type.getSort(left));
 		Post rPost = new Post(rvar, post.post.substWith(Expression.bitand(lvar, rvar)));
 		post.post = rPost;
 		Post pre = getPre(right, post);
@@ -248,8 +248,8 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn{
 		Expr right = expr.right;
 		Expr left = expr.left;
 		
-		QuantVariableRef rvar = Expression.rvar(Formula.getSort(right));
-		QuantVariableRef lvar = Expression.rvar(Formula.getSort(left));
+		QuantVariableRef rvar = Expression.rvar(Type.getSort(right));
+		QuantVariableRef lvar = Expression.rvar(Type.getSort(left));
 		Post rPost = new Post(rvar, post.post.substWith(Num.lshift(lvar, rvar)));
 		post.post = rPost;
 		Post pre = getPre(right, post);
@@ -263,8 +263,8 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn{
 		Expr right = expr.right;
 		Expr left = expr.left;
 		
-		QuantVariableRef rvar = Expression.rvar(Formula.getSort(right));
-		QuantVariableRef lvar = Expression.rvar(Formula.getSort(left));
+		QuantVariableRef rvar = Expression.rvar(Type.getSort(right));
+		QuantVariableRef lvar = Expression.rvar(Type.getSort(left));
 		Post rPost = new Post(rvar, post.post.substWith(Num.rshift(lvar, rvar)));
 		post.post = rPost;
 		Post pre = getPre(right, post);
@@ -278,8 +278,8 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn{
 		Expr right = expr.right;
 		Expr left = expr.left;
 		
-		QuantVariableRef rvar = Expression.rvar(Formula.getSort(right));
-		QuantVariableRef lvar = Expression.rvar(Formula.getSort(left));
+		QuantVariableRef rvar = Expression.rvar(Type.getSort(right));
+		QuantVariableRef lvar = Expression.rvar(Type.getSort(left));
 		Post rPost = new Post(rvar, post.post.substWith(Num.urshift(lvar, rvar)));
 		post.post = rPost;
 		Post pre = getPre(right, post);
@@ -293,8 +293,8 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn{
 		Expr right = expr.right;
 		Expr left = expr.left;
 		
-		QuantVariableRef rvar = Expression.rvar(Formula.getSort(right));
-		QuantVariableRef lvar = Expression.rvar(Formula.getSort(left));
+		QuantVariableRef rvar = Expression.rvar(Type.getSort(right));
+		QuantVariableRef lvar = Expression.rvar(Type.getSort(left));
 		
 		Post rPost = new Post(rvar, Logic.and(
 				Logic.implies(Logic.not(Logic.equals(rvar, Num.value(0))), 
@@ -318,7 +318,7 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn{
 		if(left instanceof VariableAccess) {
 			VariableAccess va = (VariableAccess) left;
 			String name = UniqName.variable(va.decl);
-			Sort s = Formula.typeToSort(va.decl.type);
+			Sort s = Type.typeToSort(va.decl.type);
 			QuantVariableRef var = Expression.refFromVar(Expression.var(name, s));
 			QuantVariableRef tmpvar = post.post.var;
 			Post newPost = new Post(tmpvar, post.post.post.subst(var, tmpvar));
@@ -335,7 +335,7 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn{
 					// can be null
 					//System.out.println(field.decl.parent);
 					ExprObjectDesignator eod = (ExprObjectDesignator) od;
-					Sort s = Formula.typeToSort(field.decl.type);
+					Sort s = Type.typeToSort(field.decl.type);
 					QuantVariable f = Expression.var(field.decl);
 					QuantVariableRef val = Expression.rvar(s);
 					QuantVariableRef obj = Expression.rvar(Ref.sort);
@@ -357,7 +357,7 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn{
 				case TagConstants.TYPEOBJECTDESIGNATOR: {
 					// cannot be null
 					//System.out.println(field);
-					Sort s = Formula.typeToSort(field.decl.type);
+					Sort s = Type.typeToSort(field.decl.type);
 					QuantVariable f = Expression.var(field.decl);
 				
 					QuantVariableRef val = Expression.rvar(s);
@@ -377,8 +377,8 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn{
 		Expr right = expr.right;
 		Expr left = expr.left;
 		
-		QuantVariableRef rvar = Expression.rvar(Formula.getSort(right));
-		QuantVariableRef lvar = Expression.rvar(Formula.getSort(left));
+		QuantVariableRef rvar = Expression.rvar(Type.getSort(right));
+		QuantVariableRef lvar = Expression.rvar(Type.getSort(left));
 		Post rPost = new Post(rvar, Logic.and(
 				Logic.implies(Logic.not(Logic.equalsZero(rvar)), 
 						      post.post.substWith(Num.mod(lvar, rvar))),

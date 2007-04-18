@@ -4,45 +4,29 @@ import javafe.ast.AmbiguousMethodInvocation;
 import javafe.ast.AmbiguousVariableAccess;
 import javafe.ast.ArrayInit;
 import javafe.ast.ArrayRefExpr;
-import javafe.ast.ArrayType;
 import javafe.ast.BinaryExpr;
 import javafe.ast.CastExpr;
-import javafe.ast.ClassLiteral;
 import javafe.ast.CondExpr;
-import javafe.ast.ErrorType;
 import javafe.ast.Expr;
 import javafe.ast.FieldAccess;
-import javafe.ast.FieldDecl;
-import javafe.ast.GenericVarDecl;
 import javafe.ast.InstanceOfExpr;
-import javafe.ast.JavafePrimitiveType;
 import javafe.ast.LiteralExpr;
-import javafe.ast.LocalVarDecl;
 import javafe.ast.MethodInvocation;
 import javafe.ast.NewArrayExpr;
 import javafe.ast.NewInstanceExpr;
 import javafe.ast.ParenExpr;
-import javafe.ast.PrimitiveType;
 import javafe.ast.ThisExpr;
-import javafe.ast.Type;
-import javafe.ast.TypeName;
 import javafe.ast.UnaryExpr;
 import javafe.ast.VarInit;
 import javafe.ast.VariableAccess;
 import mobius.directVCGen.formula.Bool;
-import mobius.directVCGen.formula.Expression;
-import mobius.directVCGen.formula.Formula;
 import mobius.directVCGen.formula.Num;
 import mobius.directVCGen.formula.Ref;
 import mobius.directVCGen.vcgen.ABasicVisitor;
 import mobius.directVCGen.vcgen.struct.Post;
 import mobius.directVCGen.vcgen.struct.VCEntry;
-import escjava.ast.Modifiers;
 import escjava.ast.TagConstants;
-import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
-import escjava.sortedProver.NodeBuilder.Sort;
-import escjava.translate.UniqName;
 
 public class ExpressionVisitor extends ABasicVisitor {
 	ExpressionVCGen vcg;
@@ -95,6 +79,7 @@ public class ExpressionVisitor extends ABasicVisitor {
 			case TagConstants.ASSIGN:
 				return vcg.assign(expr, post);
 			case TagConstants.ASGMUL:
+				// TODO: finish all these operators
 			case TagConstants.ASGDIV:
 			case TagConstants.ASGREM:
 			case TagConstants.ASGADD:
@@ -104,11 +89,12 @@ public class ExpressionVisitor extends ABasicVisitor {
 			case TagConstants.ASGURSHIFT:
 			case TagConstants.ASGBITAND:
 				return post.post;
-		// jml specific operators
+			
+			// jml specific operators
 			case TagConstants.IMPLIES:
 			case TagConstants.EXPLIES:
-			case TagConstants.IFF: // equivalence (equality)
-			case TagConstants.NIFF:     // discrepance (xor)
+			case TagConstants.IFF: 
+			case TagConstants.NIFF:
 			case TagConstants.SUBTYPE:
 			case TagConstants.DOTDOT:
 				throw new IllegalArgumentException("Unmanaged construct :" +
@@ -165,7 +151,7 @@ public class ExpressionVisitor extends ABasicVisitor {
 	}
 
 	public Object visitUnaryExpr(UnaryExpr expr, Object o) {
-		//System.out.println(TagConstants.toString(expr.op));
+		// TODO: do the unary expressions
 		VCEntry post = (VCEntry) o;
 		switch(expr.op) {
 			case TagConstants.POSTFIXINC:
@@ -223,6 +209,7 @@ public class ExpressionVisitor extends ABasicVisitor {
 		return  res.post;
 	}
 	
+	
 	  public /*@non_null*/ Object visitVarInit(/*@non_null*/ VarInit x, Object o) {
 	    return visitASTNode(x, o);
 	  }
@@ -273,33 +260,4 @@ public class ExpressionVisitor extends ABasicVisitor {
 
 	  
 
-	  public /*@non_null*/ Object visitClassLiteral(/*@non_null*/ ClassLiteral x, Object o) {
-	    return visitExpr(x, o);
-	  }
-
-
-	  public /*@non_null*/ Object visitType(/*@non_null*/ Type x, Object o) {
-	    return visitASTNode(x, o);
-	  }
-
-	  public /*@non_null*/ Object visitErrorType(/*@non_null*/ ErrorType x, Object o) {
-	    return visitType(x, o);
-	  }
-
-	  public /*@non_null*/ Object visitPrimitiveType(/*@non_null*/ PrimitiveType x, Object o) {
-	    return visitType(x, o);
-	  }
-
-	  public /*@non_null*/ Object visitJavafePrimitiveType(/*@non_null*/ JavafePrimitiveType x, Object o) {
-	    return visitPrimitiveType(x, o);
-	  }
-
-	  public /*@non_null*/ Object visitTypeName(/*@non_null*/ TypeName x, Object o) {
-	    return visitType(x, o);
-	  }
-
-	  public /*@non_null*/ Object visitArrayType(/*@non_null*/ ArrayType x, Object o) {
-	    return visitType(x, o);
-	  }
-	  
 }

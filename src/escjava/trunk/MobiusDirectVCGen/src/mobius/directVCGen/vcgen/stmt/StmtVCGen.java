@@ -32,17 +32,16 @@ import javafe.ast.SynchronizeStmt;
 import javafe.ast.ThrowStmt;
 import javafe.ast.TryCatchStmt;
 import javafe.ast.TryFinallyStmt;
-import javafe.ast.Type;
 import javafe.ast.VarDeclStmt;
 import javafe.ast.VarInit;
 import javafe.ast.WhileStmt;
 import javafe.tc.FlowInsensitiveChecks;
 import mobius.directVCGen.formula.Bool;
 import mobius.directVCGen.formula.Expression;
-import mobius.directVCGen.formula.Formula;
 import mobius.directVCGen.formula.Heap;
 import mobius.directVCGen.formula.Logic;
 import mobius.directVCGen.formula.Ref;
+import mobius.directVCGen.formula.Type;
 import mobius.directVCGen.formula.annotation.AAnnotation;
 import mobius.directVCGen.formula.annotation.AnnotationDecoration;
 import mobius.directVCGen.vcgen.expression.ExpressionVisitor;
@@ -178,7 +177,7 @@ public class StmtVCGen extends ExpressionVisitor {
 		return treatAnnot(vce, annot.getAnnotPre(x));
 	}	
 
-	public Post getExcpPostExact(Type typ, VCEntry vce) {
+	public static Post getExcpPostExact(javafe.ast.Type typ, VCEntry vce) {
 		Iterator iter = vce.lexcpost.iterator();
 		while(iter.hasNext()) {
 			ExcpPost p = (ExcpPost)iter.next();
@@ -190,7 +189,7 @@ public class StmtVCGen extends ExpressionVisitor {
 		
 	}
 	
-	public static Post getExcpPost(Type typ, VCEntry vce) {
+	public static Post getExcpPost(javafe.ast.Type typ, VCEntry vce) {
 		Iterator iter = vce.lexcpost.iterator();
 		Post res = vce.excpost;
 		while(iter.hasNext()) {
@@ -201,8 +200,8 @@ public class StmtVCGen extends ExpressionVisitor {
 			else if (Types.isSubClassOrEq(p.excp,typ)) {
 					Term var = Expression.rvar(Ref.sort);
 					Post typeof = new Post(Logic.typeLE(
-							Expression.typeof(Heap.var, var), 
-							Formula.translate(p.excp)));
+							Type.of(Heap.var, var), 
+							Type.translate(p.excp)));
 					res = Post.and(Post.implies(typeof, p.post), 
 							Post.implies(Post.not(typeof), res));
 			}	
@@ -214,7 +213,7 @@ public class StmtVCGen extends ExpressionVisitor {
 	public /*@non_null*/ Object visitThrowStmt(/*@non_null*/ ThrowStmt x, Object o) {
 		VCEntry vce = (VCEntry)o;
 		vce.post = treatAnnot( vce, annot.getAnnotPost(x));
-		Type typ = FlowInsensitiveChecks.getType(x.expr) ;
+		javafe.ast.Type typ = FlowInsensitiveChecks.getType(x.expr) ;
 		vce.post = getExcpPost(typ, vce);
 		vce.post = ((Post)x.expr.accept(exprVisitor, vce));
 		return treatAnnot(vce, annot.getAnnotPre(x));
@@ -350,7 +349,7 @@ public class StmtVCGen extends ExpressionVisitor {
 		Post olpost = vce.post;
 		for(CatchClause c: catches) {
 			ExcpPost ep;
-			Type t = c.arg.type;
+			javafe.ast.Type t = c.arg.type;
 			QuantVariableRef excp = Expression.rvar(c.arg);
 			vce.post = olpost;
 			Post epost = (Post)c.body.accept(this, vce);
