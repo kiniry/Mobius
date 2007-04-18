@@ -191,42 +191,7 @@ public class ExpressionVisitor extends ABasicVisitor {
 		}
 	}
 	
-	public Object visitVariableAccess(VariableAccess m, Object o) {
-		VCEntry res = (VCEntry) o;
-		
-		Sort s = null;
-		String name = UniqName.variable(m.decl);
-		
-		GenericVarDecl decl = m.decl;
-		if(((LocalVarDecl)decl).source != null)
-			decl = ((LocalVarDecl)decl).source;	
-		//assert(decl != null);
-		
-		switch (decl.getTag()) {
-			case TagConstants.FIELDDECL: {
-					FieldDecl d = (FieldDecl)decl;
-					if (Modifiers.isStatic(d.getModifiers()))
-						s = Formula.typeToSort(d.type);
-					else
-						s = Formula.getCurrentLifter().registerMapSort(Ref.sort, Formula.typeToSort(d.type));
-					
-				}
-				break;
-			case TagConstants.LOCALVARDECL:
-			case TagConstants.FORMALPARADECL: {
-					GenericVarDecl g = (GenericVarDecl)decl;
-					s = Formula.typeToSort(g.type);
-				}
-				break;
-			default:
-				throw new IllegalArgumentException("Unknown type of variable declaration: " + decl);
-				
-			
-		}
-		
-		QuantVariableRef var = Expression.refFromVar(Expression.var(name, s));
-		return  new Post(res.post.var, res.post.substWith(var));
-	}
+	
 	public /*@non_null*/ Object visitThisExpr(/*@non_null*/ ThisExpr x, Object o) {
 		VCEntry vce = (VCEntry) o;
 		return new Post(vce.post.substWith(Ref.varthis));// variable particuliere
@@ -241,6 +206,23 @@ public class ExpressionVisitor extends ABasicVisitor {
 		return vcg.methodInvocation(x, (VCEntry) o);
 	}
 	
+	public /*@non_null*/ Object visitExpr(/*@non_null*/ Expr x, Object o) {
+		throw new IllegalArgumentException("Illegal expr!!!!");
+	}
+	
+	public /*@non_null*/ Object visitInstanceOfExpr(/*@non_null*/ InstanceOfExpr x, Object o) {
+		return vcg.instanceOf(x, (VCEntry) o);
+	}
+
+	
+	
+	public Object visitVariableAccess(VariableAccess m, Object o) {
+		VCEntry res = (VCEntry) o;
+		
+		
+		return  res.post;
+	}
+	
 	  public /*@non_null*/ Object visitVarInit(/*@non_null*/ VarInit x, Object o) {
 	    return visitASTNode(x, o);
 	  }
@@ -249,9 +231,7 @@ public class ExpressionVisitor extends ABasicVisitor {
 	    return visitVarInit(x, o);
 	  }
 
-	  public /*@non_null*/ Object visitExpr(/*@non_null*/ Expr x, Object o) {
-	    throw new IllegalArgumentException("Illegal expr!!!!");
-	  }
+	  
 
 	  
 
@@ -271,9 +251,6 @@ public class ExpressionVisitor extends ABasicVisitor {
 	    return visitExpr(x, o);
 	  }
 
-	  public /*@non_null*/ Object visitInstanceOfExpr(/*@non_null*/ InstanceOfExpr x, Object o) {
-	    return visitExpr(x, o);
-	  }
 
 	  public /*@non_null*/ Object visitCastExpr(/*@non_null*/ CastExpr x, Object o) {
 	    return visitExpr(x, o);

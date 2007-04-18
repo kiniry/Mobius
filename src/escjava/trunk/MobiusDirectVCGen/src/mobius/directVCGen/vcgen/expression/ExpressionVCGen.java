@@ -5,6 +5,7 @@ import java.util.Vector;
 import javafe.ast.ExprVec;
 import javafe.ast.FormalParaDecl;
 import javafe.ast.FormalParaDeclVec;
+import javafe.ast.InstanceOfExpr;
 import javafe.ast.MethodInvocation;
 import mobius.directVCGen.formula.Expression;
 import mobius.directVCGen.formula.Logic;
@@ -32,19 +33,19 @@ public class ExpressionVCGen extends BinaryExpressionVCGen{
 		FormalParaDeclVec fpdvec = mi.decl.args;
 		FormalParaDecl[] args = fpdvec.toArray();
 		for (FormalParaDecl fpd: args) {
-			v.add(Expression.var(fpd));
+			v.add(Expression.rvar(fpd));
 		}
 		return v;
 	}
-	public Object methodInvocation(MethodInvocation mi, VCEntry entry) {
+	public Post methodInvocation(MethodInvocation mi, VCEntry entry) {
 		Post normalPost = Lookup.normalPostcondition(mi.decl);
 		Post excpPost = Lookup.exceptionalPostcondition(mi.decl);
 		Term pre = Lookup.precondition(mi.decl);
-		QuantVariableRef exc = Expression.var(Ref.sort);
+		QuantVariableRef exc = Expression.rvar(Ref.sort);
 		Term tExcp = Logic.forall(exc.qvar, Logic.implies(excpPost.substWith(exc), 
 				               		StmtVCGen.getExcpPost(Types.javaLangThrowable(), entry).substWith(exc)));
 		Term tNormal = normalPost.substWith(entry.post.var);
-		QuantVariableRef res = Expression.var(entry.post.var.getSort());
+		QuantVariableRef res = Expression.rvar(entry.post.var.getSort());
 		tNormal = Logic.forall(res.qvar, Logic.implies(tNormal, entry.post.post));
 		entry.post = new Post(Logic.and(pre, Logic.implies(pre, Logic.and(tNormal, tExcp))));
 		Vector<QuantVariableRef> v = mkArguments(mi);
@@ -54,6 +55,12 @@ public class ExpressionVCGen extends BinaryExpressionVCGen{
 			entry.post = getPre(ev.elementAt(i), entry);
 		}
 		return entry.post;
+	}
+
+	public Post instanceOf(InstanceOfExpr x, VCEntry entry) {
+		Post p = entry.post;
+		Expression.rvar(Ref.sort);
+		return null;
 	}
 
 	

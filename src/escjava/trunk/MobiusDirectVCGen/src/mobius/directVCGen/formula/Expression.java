@@ -20,15 +20,24 @@ public class Expression {
 	}
 	private static int varCounter = 0;
 
-	public static QuantVariableRef var(Sort s) {
-		QuantVariable v =  Formula.lf.mkQuantVariable("x" + varCounter++, s);
-		return Formula.lf.mkQuantVariableRef(v);
-	}
+
 	public static FnTerm sym(String name, Sort s) {
 		return Formula.lf.symbolRef (name, s);
 	}
 	public static QuantVariable var(String name, Sort s) {
 		return Formula.lf.mkQuantVariable(name, s);
+	}
+	public static QuantVariable var(GenericVarDecl decl) {
+		return Formula.lf.mkQuantVariable(decl, UniqName.variable(decl));
+	}
+	
+	public static QuantVariableRef rvar(Sort s) {
+		QuantVariable v =  Formula.lf.mkQuantVariable("x" + varCounter++, s);
+		return Formula.lf.mkQuantVariableRef(v);
+	}
+
+	public static QuantVariableRef rvar(FormalParaDecl arg) {
+		return refFromVar(Formula.lf.mkQuantVariable(arg, UniqName.variable(arg)));
 	}
 	
 	public static FnTerm typeof(Term heap, Term var) {
@@ -37,12 +46,8 @@ public class Expression {
 	public static QuantVariableRef refFromVar(QuantVariable qv) {
 		return Formula.lf.mkQuantVariableRef(qv);
 	}
-	public static QuantVariable var(GenericVarDecl decl) {
-		return Formula.lf.mkQuantVariable(decl, UniqName.variable(decl));
-	}
-	public static QuantVariableRef var(FormalParaDecl arg) {
-		return refFromVar(Formula.lf.mkQuantVariable(arg, UniqName.variable(arg)));
-	}
+	
+	
 	public static Term bitor(Term l, Term r) {
 		if(l.getSort() != r.getSort())
 			throw new IllegalArgumentException("The sort of " + l + 

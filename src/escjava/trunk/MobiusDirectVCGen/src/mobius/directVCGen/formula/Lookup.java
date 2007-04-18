@@ -21,7 +21,7 @@ public class Lookup {
 	 * @param m the method of interest
 	 */
 	public static Post normalPostcondition(MethodDecl m){
-		return new Post(Expression.var(Formula.lf.sortRef),Logic.True());
+		return new Post(Expression.rvar(Formula.lf.sortRef),Logic.True());
 	}
 
 	/**
@@ -30,7 +30,7 @@ public class Lookup {
 	 * @param m the method of interest
 	 */
 	public static Post exceptionalPostcondition(MethodDecl m){
-		return new Post(Expression.var(Formula.lf.sortRef),Logic.True());
+		return new Post(Expression.rvar(Formula.lf.sortRef),Logic.True());
 	}
 
 //	/**

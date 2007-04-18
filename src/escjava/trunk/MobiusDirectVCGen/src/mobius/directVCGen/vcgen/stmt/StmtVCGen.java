@@ -148,7 +148,7 @@ public class StmtVCGen extends ExpressionVisitor {
 		else 
 			bodypre = (Post) x.stmt.accept(this, vceBody);
 		
-		QuantVariableRef v = Expression.var(Bool.sort);
+		QuantVariableRef v = Expression.rvar(Bool.sort);
 		vce.post = new Post(v,
 				Logic.and(Logic.implies(Logic.boolToProp(v), bodypre.post),
 						Logic.implies(Logic.not(Logic.boolToProp(v)), post)));
@@ -199,7 +199,7 @@ public class StmtVCGen extends ExpressionVisitor {
 				res = p.post;
 			}
 			else if (Types.isSubClassOrEq(p.excp,typ)) {
-					Term var = Expression.var(Ref.sort);
+					Term var = Expression.rvar(Ref.sort);
 					Post typeof = new Post(Logic.typeLE(
 							Expression.typeof(Heap.var, var), 
 							Formula.translate(p.excp)));
@@ -274,7 +274,7 @@ public class StmtVCGen extends ExpressionVisitor {
 		vce.post = postBranch;
 		Post preF = (Post) x.els.accept(this, vce);
 		
-		QuantVariableRef v = Expression.var(Bool.sort);
+		QuantVariableRef v = Expression.rvar(Bool.sort);
 	
 		vce.post = new Post(v,
 				Logic.and(Logic.implies(Logic.boolToProp(v), preT.post),
@@ -351,7 +351,7 @@ public class StmtVCGen extends ExpressionVisitor {
 		for(CatchClause c: catches) {
 			ExcpPost ep;
 			Type t = c.arg.type;
-			QuantVariableRef excp = Expression.var(c.arg);
+			QuantVariableRef excp = Expression.rvar(c.arg);
 			vce.post = olpost;
 			Post epost = (Post)c.body.accept(this, vce);
 			epost = new Post(excp, epost.post);
