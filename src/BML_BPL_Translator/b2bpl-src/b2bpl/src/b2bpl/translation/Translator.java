@@ -31,14 +31,15 @@ import static b2bpl.translation.CodeGenerator.inv;
 import static b2bpl.translation.CodeGenerator.isClassType;
 import static b2bpl.translation.CodeGenerator.isEqual;
 import static b2bpl.translation.CodeGenerator.isEquiv;
+import static b2bpl.translation.CodeGenerator.isExceptionalReturnState;
 import static b2bpl.translation.CodeGenerator.isInRange;
 import static b2bpl.translation.CodeGenerator.isInstanceOf;
 import static b2bpl.translation.CodeGenerator.isNewMultiArray;
+import static b2bpl.translation.CodeGenerator.isNormalReturnState;
 import static b2bpl.translation.CodeGenerator.isOfType;
 import static b2bpl.translation.CodeGenerator.isStatic;
 import static b2bpl.translation.CodeGenerator.isSubtype;
 import static b2bpl.translation.CodeGenerator.isValueType;
-import static b2bpl.translation.CodeGenerator.isReturnType;
 import static b2bpl.translation.CodeGenerator.ival;
 import static b2bpl.translation.CodeGenerator.less;
 import static b2bpl.translation.CodeGenerator.lessEqual;
@@ -84,11 +85,15 @@ import b2bpl.bpl.ast.BPLExpression;
 import b2bpl.bpl.ast.BPLFunction;
 import b2bpl.bpl.ast.BPLFunctionParameter;
 import b2bpl.bpl.ast.BPLIntLiteral;
+import b2bpl.bpl.ast.BPLProcedure;
 import b2bpl.bpl.ast.BPLProgram;
+import b2bpl.bpl.ast.BPLSpecification;
+import b2bpl.bpl.ast.BPLSpecificationClause;
 import b2bpl.bpl.ast.BPLType;
 import b2bpl.bpl.ast.BPLTypeDeclaration;
 import b2bpl.bpl.ast.BPLTypeName;
 import b2bpl.bpl.ast.BPLVariable;
+import b2bpl.bpl.ast.BPLVariableDeclaration;
 import b2bpl.bytecode.BCField;
 import b2bpl.bytecode.BCMethod;
 import b2bpl.bytecode.JArrayType;
@@ -764,6 +769,8 @@ public class Translator implements TranslationConstants {
     // Müller/Poetzsch Heffter BoogiePL store axiomatization
     //
     addTypes(HEAP_TYPE);
+    
+    addDeclaration(new BPLVariableDeclaration(new BPLVariable[] { new BPLVariable(HEAP_VAR, new BPLTypeName(HEAP_TYPE)) } ));
 
     //
     // Values (objects, primitive values, arrays)
@@ -1408,7 +1415,6 @@ public class Translator implements TranslationConstants {
    * Axiomatizes some aspects of the JVM type system.
    */
   private void axiomatizeTypeSystem() {
-
     //
     // Types
     //
@@ -1434,8 +1440,7 @@ public class Translator implements TranslationConstants {
     }
 
     {
-      addComment("Returns whether an integer constant is in the range of a"
-                 + " given value type.");
+      addComment("Returns whether an integer constant is in the range of a given value type.");
       addFunction(
           IS_IN_RANGE_FUNC,
           BPLBuiltInType.INT,
@@ -1458,8 +1463,7 @@ public class Translator implements TranslationConstants {
       String t = quantVarName("t");
       BPLVariable iVar = new BPLVariable(i, BPLBuiltInType.INT);
       BPLVariable tVar = new BPLVariable(t, BPLBuiltInType.NAME);
-      addComment("Associate the types of integer values to their corresponding"
-                 + " value ranges.");
+      addComment("Associate the types of integer values to their corresponding value ranges.");
       addAxiom(forall(
           iVar, tVar,
           isEquiv(
@@ -1545,18 +1549,26 @@ public class Translator implements TranslationConstants {
       // Method calls (exception handling)
       addComment("Exception handling");
       
-      String n = quantVarName("normal");
-      String ex = quantVarName("exceptional");
+      addTypes(RETURN_STATE_TYPE);
       
-      BPLVariable normal = new BPLVariable(n, BPLBuiltInType.NAME);
-      BPLVariable exceptional = new BPLVariable(ex, BPLBuiltInType.NAME);
+      String n = quantVarName(NORMAL_RETURN_STATE);
+      String ex = quantVarName(EXCEPTIONAL_RETURN_STATE); 
+      
+      BPLType returnState = new BPLTypeName(RETURN_STATE_TYPE);
+      BPLVariable normal = new BPLVariable(n, returnState);
+      BPLVariable exceptional = new BPLVariable(ex, returnState);
       addConstants(normal, exceptional);
       
-      addTypes(RETURN_TYPE);
-      
-      addFunction(IS_RETURN_TYPE_FUNC, BPLBuiltInType.NAME, BPLBuiltInType.BOOL);
-      addAxiom(isReturnType(var(n)));
-      addAxiom(isReturnType(var(ex)));
+      addFunction(IS_NORMAL_RETURN_STATE_FUNC, returnState, BPLBuiltInType.BOOL);
+      addFunction(IS_EXCEPTIONAL_RETURN_STATE_FUNC, returnState, BPLBuiltInType.BOOL);
+      addAxiom(isNormalReturnState(var(n)));
+      addAxiom(isExceptionalReturnState(var(ex)));
+    }
+    
+    {
+      // TODO: temporary axiomatization of Java type system
+      declarations.add(new BPLProcedure("java.lang.Object..init", new BPLVariable[0], new BPLVariable[0], new BPLSpecification(new BPLSpecificationClause[0])));
+      declarations.add(new BPLProcedure("java.lang.Exception..init", new BPLVariable[0], new BPLVariable[0], new BPLSpecification(new BPLSpecificationClause[0])));
     }
   }
 

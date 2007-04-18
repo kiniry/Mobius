@@ -86,9 +86,6 @@ public class BPLProcedure extends BPLDeclaration {
     }
     sb.append(';');
     
-    // sb.append(System.getProperty("line.separator"));
-    // sb.append('{');  
-    sb.append(System.getProperty("line.separator"));
     if (specification != null) {
       for (BPLSpecificationClause clause : specification.getClauses()) {
         sb.append("  ");
@@ -96,14 +93,11 @@ public class BPLProcedure extends BPLDeclaration {
         sb.append(System.getProperty("line.separator"));
       }
     }
-    // sb.append('}');
     sb.append(System.getProperty("line.separator"));
     
     if (implementation != null) {
-      // sb.append('{');
       sb.append(System.getProperty("line.separator"));
       sb.append(implementation);
-      // sb.append('}');
     }
 
     return sb.toString();

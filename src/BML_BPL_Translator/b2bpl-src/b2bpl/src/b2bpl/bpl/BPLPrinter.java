@@ -218,7 +218,6 @@ public class BPLPrinter implements BPLVisitor<Object> {
     }
     
     printNewLine();
-    printNewLine();
 
     if (procedure.getImplementation() != null) {
       procedure.getImplementation().accept(this);
@@ -291,9 +290,7 @@ public class BPLPrinter implements BPLVisitor<Object> {
   }
 
   public Object visitRequiresClause(BPLRequiresClause clause) {
-    if (clause.isFree()) {
-      print("free ");
-    }
+    if (clause.isFree()) print("free ");
     print("requires ");
     clause.getExpression().accept(this);
     print(';');
@@ -308,9 +305,7 @@ public class BPLPrinter implements BPLVisitor<Object> {
   }
 
   public Object visitEnsuresClause(BPLEnsuresClause clause) {
-    if (clause.isFree()) {
-      print("free ");
-    }
+    if (clause.isFree()) print("free ");
     print("ensures ");
     clause.getExpression().accept(this);
     print(';');

@@ -1,5 +1,8 @@
 package b2bpl.translation;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import b2bpl.bpl.ast.BPLBinaryArithmeticExpression;
 import b2bpl.bpl.ast.BPLBinaryLogicalExpression;
 import b2bpl.bpl.ast.BPLBoolLiteral;
@@ -153,8 +156,12 @@ public final class CodeGenerator implements TranslationConstants {
     return new BPLFunctionApplication(IS_VALUE_TYPE_FUNC, type);
   }
   
-  public static BPLExpression isReturnType(BPLExpression type) {
-    return new BPLFunctionApplication(IS_RETURN_TYPE_FUNC, type);
+  public static BPLExpression isNormalReturnState(BPLExpression type) {
+    return new BPLFunctionApplication(IS_NORMAL_RETURN_STATE_FUNC, type);
+  }
+  
+  public static BPLExpression isExceptionalReturnState(BPLExpression type) {
+    return new BPLFunctionApplication(IS_EXCEPTIONAL_RETURN_STATE_FUNC, type);
   }
 
   public static BPLExpression inv(
@@ -346,7 +353,7 @@ public final class CodeGenerator implements TranslationConstants {
       BPLExpression right) {
     return new BPLFunctionApplication(XOR_FUNC, left, right);
   }
-
+  
   public static BPLExpression fieldAccess(
       TranslationContext context,
       String heapVar,
@@ -447,29 +454,47 @@ public final class CodeGenerator implements TranslationConstants {
   }
 
   public static BPLExpression logicalAnd(BPLExpression... operands) {
-    if (operands.length == 0) {
+    // Filter all expressions that are not of type BPLBoolLiteral.TRUE 
+    List<BPLExpression> ops = new ArrayList<BPLExpression>();
+    for (BPLExpression expr : operands) {
+      if (expr != BPLBoolLiteral.TRUE) {
+        ops.add(expr);
+      }
+    }
+    
+    if (ops.size() == 0) {
       return BPLBoolLiteral.TRUE;
     }
-    BPLExpression result = operands[0];
-    for (int i = 1; i < operands.length; i++) {
+    
+    BPLExpression result = ops.get(0);
+    for (int i = 1; i < ops.size(); i++) {
       result = new BPLBinaryLogicalExpression(
-          BPLBinaryLogicalExpression.Operator.AND,
-          result,
-          operands[i]);
+        BPLBinaryLogicalExpression.Operator.AND,
+        result,
+        ops.get(i));
     }
     return result;
   }
 
   public static BPLExpression logicalOr(BPLExpression... operands) {
-    if (operands.length == 0) {
+    // Filter all expressions that are not of type BPLBoolLiteral.FALSE 
+    List<BPLExpression> ops = new ArrayList<BPLExpression>();
+    for (BPLExpression expr : operands) {
+      if (expr != BPLBoolLiteral.FALSE) {
+        ops.add(expr);
+      }
+    }
+    
+    if (ops.size() == 0) {
       return BPLBoolLiteral.FALSE;
     }
-    BPLExpression result = operands[0];
-    for (int i = 1; i < operands.length; i++) {
+    
+    BPLExpression result = ops.get(0);
+    for (int i = 1; i < ops.size(); i++) {
       result = new BPLBinaryLogicalExpression(
-          BPLBinaryLogicalExpression.Operator.OR,
-          result,
-          operands[i]);
+        BPLBinaryLogicalExpression.Operator.OR,
+        result,
+        ops.get(i));
     }
     return result;
   }

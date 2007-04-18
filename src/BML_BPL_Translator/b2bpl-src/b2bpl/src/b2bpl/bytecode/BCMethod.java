@@ -7,6 +7,7 @@ import b2bpl.bytecode.bml.ast.BMLAssertStatement;
 import b2bpl.bytecode.bml.ast.BMLAssumeStatement;
 import b2bpl.bytecode.bml.ast.BMLLoopSpecification;
 import b2bpl.bytecode.bml.ast.BMLMethodSpecification;
+import b2bpl.translation.TranslationConstants;
 
 
 public class BCMethod extends BCMember {
@@ -92,6 +93,21 @@ public class BCMethod extends BCMember {
 
   public String getQualifiedName() {
     return owner.getName() + "." + name;
+  }
+  
+  public String getQualifiedBoogiePLName() {
+    StringBuffer s = new StringBuffer();
+    s.append(owner.getName());
+    s.append('.');
+    
+    s.append(name.replace(Constants.CONSTRUCTOR_NAME, TranslationConstants.CONSTRUCTOR_NAME));
+    
+    if (this.returnType.getName() != "void") {
+      s.append('.');
+      s.append(this.returnType.toString());
+    }
+    
+    return s.toString();
   }
 
   public BMLMethodSpecification getSpecification() {

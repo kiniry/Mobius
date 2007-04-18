@@ -19,25 +19,25 @@ public interface TranslationConstants {
 
   String ALLOCATION_TYPE = "Allocation";
   
-  String RETURN_TYPE = "ReturnType";
+  String RETURN_STATE_TYPE = "ReturnState";
 
   String HEAP_VAR = "heap";
 
-  String OLD_HEAP_VAR = "oldHeap";
+  String OLD_HEAP_VAR = "old_heap";
 
-  String PRE_HEAP_VAR = "preHeap";
+  String PRE_HEAP_VAR = "pre_heap";
 
-  String LOOP_HEAP_VAR_PREFIX = "loopHeap";
+  String LOOP_HEAP_VAR_PREFIX = "loop_heap";
 
-  String LOOP_VARIANT_VAR_PREFIX = "loopVariant";
+  String LOOP_VARIANT_VAR_PREFIX = "loop_variant";
 
   String VALUE_TYPE = "Value";
 
   String RESULT_VAR = "result";
 
-  String INT_TYPE_ABBREV = "i";
+  String INT_TYPE_ABBREV = "_i";
 
-  String REF_TYPE_ABBREV = "r";
+  String REF_TYPE_ABBREV = "_r";
 
   String PARAM_VAR_PREFIX = "param";
 
@@ -45,11 +45,25 @@ public interface TranslationConstants {
 
   String STACK_VAR_PREFIX = "stack";
 
-  String CALL_RESULT_VAR_PREFIX = "callResult";
+  // String CALL_RESULT_VAR_PREFIX = "callResult";
+  
+  // String THIS_VAR = "this";
+  
+  String NORMAL_RETURN_STATE = "normal";
+  
+  String EXCEPTIONAL_RETURN_STATE = "exceptional";
 
-  String INT_CALL_RESULT_VAR = CALL_RESULT_VAR_PREFIX + INT_TYPE_ABBREV;
+  String RETURN_STATE_VAR = "rs";
+  
+  String RETURN_VALUE_VAR = "rv";
+  
+  String RETURN_STATE_PARAM = "retstate";
+  
+  String RETURN_VALUE_PARAM = "retvalue";
 
-  String REF_CALL_RESULT_VAR = CALL_RESULT_VAR_PREFIX + REF_TYPE_ABBREV;
+  String INT_CALL_RESULT_VAR = /* CALL_RESULT_VAR_PREFIX */ RETURN_VALUE_VAR + INT_TYPE_ABBREV;
+
+  String REF_CALL_RESULT_VAR = /* CALL_RESULT_VAR_PREFIX */ RETURN_VALUE_VAR + REF_TYPE_ABBREV;
 
   String SWAP_VAR_PREFIX = "swap";
 
@@ -72,6 +86,10 @@ public interface TranslationConstants {
   String OR_FUNC = FUNC_PREFIX + "or";
 
   String XOR_FUNC = FUNC_PREFIX + "xor";
+  
+  String AND_OP = "&&";
+  
+  String OR_OP = "||";
 
   String IS_CLASS_TYPE_FUNC = FUNC_PREFIX + "isClassType";
 
@@ -79,7 +97,9 @@ public interface TranslationConstants {
 
   String IS_ARRAY_TYPE_FUNC = FUNC_PREFIX + "isArrayType";
   
-  String IS_RETURN_TYPE_FUNC = FUNC_PREFIX + "isReturnType";
+  String IS_NORMAL_RETURN_STATE_FUNC = FUNC_PREFIX + "isNormalReturnState";
+  
+  String IS_EXCEPTIONAL_RETURN_STATE_FUNC = FUNC_PREFIX + "isExceptionalReturnState";
 
   String INV_FUNC = FUNC_PREFIX + "inv";
 
@@ -156,6 +176,8 @@ public interface TranslationConstants {
   String PRE_BLOCK_LABEL = "pre";
 
   String POST_BLOCK_LABEL= "post";
+  
+  String EXCEPTION_HANDLERS_LABEL = "exception_handlers";
 
   String POSTX_BLOCK_LABEL_PREFIX = "postX_";
 
