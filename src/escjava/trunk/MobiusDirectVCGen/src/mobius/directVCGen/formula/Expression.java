@@ -17,7 +17,8 @@ public class Expression {
 		QuantVariable v = Formula.lf.mkQuantVariable(str, Logic.sort);
 		return Formula.lf.mkQuantVariableRef(v);
 	}
-	private static int varCounter = 0;
+	/** counter to create anonymous variables */
+	private static int [] varCounters = {0, 0, 0, 0, 0};
 
 
 	public static FnTerm sym(String name, Sort s) {
@@ -31,14 +32,41 @@ public class Expression {
 	}
 	
 	public static QuantVariableRef rvar(Sort s) {
-		QuantVariable v =  Formula.lf.mkQuantVariable("x" + varCounter++, s);
+		String name = null;
+		if(s == Bool.sort) {
+			name = "b" + varCounters[0] ;
+			varCounters[0]++;
+		} 
+		else if(s == Ref.sort) {
+			name = "r" + varCounters[1] ;
+			varCounters[1]++;
+		}
+		else if(s == Num.sortInt) {
+			name = "i" + varCounters[2] ;
+			varCounters[2]++;
+		}
+		else if(s == Num.sortReal) {
+			name = "f" + varCounters[3] ;
+			varCounters[3]++;
+		}
+		else {
+			name = "x" + varCounters[4] ;
+			varCounters[4]++;
+		}
+		
+		QuantVariable v =  Formula.lf.mkQuantVariable(name, s);
 		return Formula.lf.mkQuantVariableRef(v);
 	}
 
 	public static QuantVariableRef rvar(FormalParaDecl arg) {
 		return refFromVar(Formula.lf.mkQuantVariable(arg, UniqName.variable(arg)));
 	}
-	
+	public static Term rvar(String str, Sort s) {
+		return refFromVar(var(str, s));
+	}
+	public static QuantVariableRef rvar(GenericVarDecl decl) {
+		return refFromVar(var(decl));
+	}	
 
 	public static QuantVariableRef refFromVar(QuantVariable qv) {
 		return Formula.lf.mkQuantVariableRef(qv);
@@ -111,5 +139,7 @@ public class Expression {
 		}
 		return t;
 	}
+
+
 	
 }

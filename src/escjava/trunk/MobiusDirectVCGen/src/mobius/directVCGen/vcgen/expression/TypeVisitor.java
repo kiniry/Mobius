@@ -16,6 +16,10 @@ import mobius.directVCGen.vcgen.ABasicVisitor;
 import escjava.ast.TagConstants;
 import escjava.sortedProver.NodeBuilder.Sort;
 
+/**
+ * @deprecated should be useless
+ * @author J. Charles
+ */
 public class TypeVisitor extends ABasicVisitor {
 	protected static TypeVisitor inst = new TypeVisitor();
 	public static Sort convert2Type(Type type) {

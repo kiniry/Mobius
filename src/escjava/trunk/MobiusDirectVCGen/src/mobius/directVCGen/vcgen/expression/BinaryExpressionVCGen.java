@@ -20,7 +20,6 @@ import escjava.ast.TagConstants;
 import escjava.sortedProver.Lifter.QuantVariable;
 import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.NodeBuilder.Sort;
-import escjava.translate.UniqName;
 
 public class BinaryExpressionVCGen extends ABasicExpressionVCGEn{
 
@@ -316,9 +315,7 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn{
 		Expr left = expr.left;
 		if(left instanceof VariableAccess) {
 			VariableAccess va = (VariableAccess) left;
-			String name = UniqName.variable(va.decl);
-			Sort s = Type.typeToSort(va.decl.type);
-			QuantVariableRef var = Expression.refFromVar(Expression.var(name, s));
+			QuantVariableRef var = Expression.rvar(va.decl);
 			QuantVariableRef tmpvar = post.post.var;
 			Post newPost = new Post(tmpvar, post.post.post.subst(var, tmpvar));
 			post.post = newPost;
@@ -334,8 +331,8 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn{
 					// can be null
 					//System.out.println(field.decl.parent);
 					ExprObjectDesignator eod = (ExprObjectDesignator) od;
-					Sort s = Type.typeToSort(field.decl.type);
 					QuantVariable f = Expression.var(field.decl);
+					Sort s = f.type;
 					QuantVariableRef val = Expression.rvar(s);
 					QuantVariableRef obj = Expression.rvar(Ref.sort);
 					field.od.type();
@@ -356,9 +353,8 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn{
 				case TagConstants.TYPEOBJECTDESIGNATOR: {
 					// cannot be null
 					//System.out.println(field);
-					Sort s = Type.typeToSort(field.decl.type);
 					QuantVariable f = Expression.var(field.decl);
-				
+					Sort s = f.type;
 					QuantVariableRef val = Expression.rvar(s);
 					Post p = new Post(val, post.post.post.subst(Heap.var, Heap.store(Heap.var, f, val)));
 					post.post = p;
