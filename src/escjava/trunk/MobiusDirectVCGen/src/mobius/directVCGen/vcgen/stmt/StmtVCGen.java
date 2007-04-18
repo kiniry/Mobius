@@ -35,7 +35,6 @@ import javafe.ast.TryFinallyStmt;
 import javafe.ast.VarDeclStmt;
 import javafe.ast.VarInit;
 import javafe.ast.WhileStmt;
-import javafe.tc.FlowInsensitiveChecks;
 import mobius.directVCGen.formula.Bool;
 import mobius.directVCGen.formula.Expression;
 import mobius.directVCGen.formula.Heap;
@@ -51,7 +50,6 @@ import mobius.directVCGen.vcgen.struct.VCEntry;
 import escjava.sortedProver.Lifter.QuantVariable;
 import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
-import escjava.tc.Types;
 
 /**
  * This class does the weakest precondition calculus for the statements.
@@ -177,11 +175,11 @@ public class StmtVCGen extends ExpressionVisitor {
 		return treatAnnot(vce, annot.getAnnotPre(x));
 	}	
 
-	public static Post getExcpPostExact(javafe.ast.Type typ, VCEntry vce) {
+	public static Post getExcpPostExact(Term typ, VCEntry vce) {
 		Iterator iter = vce.lexcpost.iterator();
 		while(iter.hasNext()) {
 			ExcpPost p = (ExcpPost)iter.next();
-			if (Types.isSubClassOrEq(typ, p.excp)) {
+			if (Type.isSubClassOrEq(typ, p.type)) {
 				return p.post;
 			}
 		}
@@ -189,19 +187,19 @@ public class StmtVCGen extends ExpressionVisitor {
 		
 	}
 	
-	public static Post getExcpPost(javafe.ast.Type typ, VCEntry vce) {
+	public static Post getExcpPost(Term typ, VCEntry vce) {
 		Iterator iter = vce.lexcpost.iterator();
 		Post res = vce.excpost;
 		while(iter.hasNext()) {
 			ExcpPost p = (ExcpPost)iter.next();
-			if (Types.isSubClassOrEq(typ, p.excp)) {
+			if (Type.isSubClassOrEq(typ, p.type)) {
 				res = p.post;
 			}
-			else if (Types.isSubClassOrEq(p.excp,typ)) {
+			else if (Type.isSubClassOrEq(p.type,typ)) {
 					Term var = Expression.rvar(Ref.sort);
 					Post typeof = new Post(Logic.typeLE(
 							Type.of(Heap.var, var), 
-							Type.translate(p.excp)));
+							p.type));
 					res = Post.and(Post.implies(typeof, p.post), 
 							Post.implies(Post.not(typeof), res));
 			}	
@@ -213,7 +211,7 @@ public class StmtVCGen extends ExpressionVisitor {
 	public /*@non_null*/ Object visitThrowStmt(/*@non_null*/ ThrowStmt x, Object o) {
 		VCEntry vce = (VCEntry)o;
 		vce.post = treatAnnot( vce, annot.getAnnotPost(x));
-		javafe.ast.Type typ = FlowInsensitiveChecks.getType(x.expr) ;
+		Term typ = Type.getType(x.expr);
 		vce.post = getExcpPost(typ, vce);
 		vce.post = ((Post)x.expr.accept(exprVisitor, vce));
 		return treatAnnot(vce, annot.getAnnotPre(x));
@@ -329,7 +327,7 @@ public class StmtVCGen extends ExpressionVisitor {
 		for(ExcpPost exc : vce.lexcpost) {
 			vcetmp.post = exc.post;
 			Post p = visitInnerBlockStmt(sFinally,  vcetmp);
-			lexcpost.add(new ExcpPost(exc.excp, p));
+			lexcpost.add(new ExcpPost(exc.type, p));
 		}
 		
 		VCEntry entFinally = new VCEntry(post, excpost, brpost,contpost);
@@ -349,7 +347,7 @@ public class StmtVCGen extends ExpressionVisitor {
 		Post olpost = vce.post;
 		for(CatchClause c: catches) {
 			ExcpPost ep;
-			javafe.ast.Type t = c.arg.type;
+			Term t = Type.translate(c.arg.type);
 			QuantVariableRef excp = Expression.rvar(c.arg);
 			vce.post = olpost;
 			Post epost = (Post)c.body.accept(this, vce);

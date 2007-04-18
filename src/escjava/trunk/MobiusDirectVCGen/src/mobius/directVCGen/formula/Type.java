@@ -1,5 +1,6 @@
 package mobius.directVCGen.formula;
 
+import javafe.ast.Expr;
 import javafe.ast.VarInit;
 import javafe.tc.FlowInsensitiveChecks;
 import escjava.sortedProver.Lifter.FnTerm;
@@ -20,14 +21,33 @@ public class Type {
 		return Formula.lf.typeToSort(t);
 	}
 	
-	/**
-	 * @deprecated
-	 */
-	public static javafe.ast.Type getType(VarInit e) {
-		javafe.ast.Type t = FlowInsensitiveChecks.getType(e);
-		return t;
-	}
 	public static Sort typeToSort(javafe.ast.Type t) {
 		return Formula.lf.typeToSort(t);
+	}
+	public static boolean isSubClassOrEq(Term typ1, Term typ2) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	public static Term getType(VarInit expr) {
+		return translate(FlowInsensitiveChecks.getType(expr)) ;
+	}
+	public static Term javaLangThrowable() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	/**
+	 * @deprecated used for convenience only
+	 */
+	public static Term getJavaLang(String string) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	public static Term javaLangArithmeticException() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	public static Term javaLangNullPointerException() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
