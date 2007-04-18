@@ -2,12 +2,10 @@ package mobius.directVCGen.vcgen;
 
 import java.util.Vector;
 
-import javafe.ast.ASTNode;
 import javafe.ast.BlockStmt;
 import javafe.ast.FormalParaDecl;
 import javafe.ast.FormalParaDeclVec;
 import javafe.ast.MethodDecl;
-import javafe.ast.Visitor;
 import mobius.directVCGen.formula.Logic;
 import mobius.directVCGen.formula.Lookup;
 import mobius.directVCGen.vcgen.stmt.StmtVCGen;
@@ -21,7 +19,7 @@ import escjava.tc.Types;
  * single method.
  * @author J. Charles
  */
-public class MethodVisitor extends Visitor {
+public class MethodVisitor extends DirectVCGen {
 	/** the name of the method associated with this object */
 	private MethodDecl meth;
 	/** the vcs that have been calculated */
@@ -29,7 +27,7 @@ public class MethodVisitor extends Visitor {
 	
 	public static MethodVisitor treatMethod(MethodDecl x) {
 		MethodVisitor mv = new MethodVisitor(x);
-		x.accept(mv);
+		x.body.accept(mv);
 		return mv;
 	}
 	
@@ -78,20 +76,7 @@ public class MethodVisitor extends Visitor {
 		return res;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see javafe.ast.Visitor#visitASTNode(javafe.ast.ASTNode)
-	 */
-	@Override
-	public void visitASTNode(ASTNode x) {
-		int max = x.childCount();
-		for(int i = 0; i < max; i++) {
-			Object child = x.childAt(i);
-			if(child instanceof ASTNode) {
-				((ASTNode) child).accept(this);
-			}
-		}		
-	}
+
 	
 	/**
 	 * This method is made to pretty print method names
