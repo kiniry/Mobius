@@ -34,7 +34,7 @@ import mobius.directVCGen.formula.Expression;
 import mobius.directVCGen.formula.Formula;
 import mobius.directVCGen.formula.Num;
 import mobius.directVCGen.formula.Ref;
-import mobius.directVCGen.vcgen.intern.ABasicVisitor;
+import mobius.directVCGen.vcgen.ABasicVisitor;
 import mobius.directVCGen.vcgen.struct.Post;
 import mobius.directVCGen.vcgen.struct.VCEntry;
 import escjava.ast.Modifiers;

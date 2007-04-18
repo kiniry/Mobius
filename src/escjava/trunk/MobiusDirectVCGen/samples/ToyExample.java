@@ -3,15 +3,16 @@ public class ToyExample {
 	int f;
 	public static class A {
 		static int fs = 2;
+		public static ToyExample t(int i) {
+			return null;
+		}
 	}
-	public ToyExample t() {
-		return null;
-	}
+	
   public void f() {
     int i = 1;
     int j;
     ;
-    t().f = ((f = 1) + (A.fs = 0));
+    A.t(i).f = ((f = 1) + (A.fs = 0));
     
 //    if(i == 0);
     j = i = 2 / i;

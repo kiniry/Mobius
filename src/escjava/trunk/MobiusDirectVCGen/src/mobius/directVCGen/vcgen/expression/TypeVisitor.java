@@ -1,4 +1,4 @@
-package mobius.directVCGen.vcgen.intern;
+package mobius.directVCGen.vcgen.expression;
 
 import javafe.ast.PrimitiveType;
 import javafe.ast.Type;
@@ -7,6 +7,7 @@ import mobius.directVCGen.formula.Formula;
 import mobius.directVCGen.formula.Logic;
 import mobius.directVCGen.formula.Num;
 import mobius.directVCGen.formula.Ref;
+import mobius.directVCGen.vcgen.ABasicVisitor;
 import escjava.ast.TagConstants;
 import escjava.sortedProver.NodeBuilder.Sort;
 

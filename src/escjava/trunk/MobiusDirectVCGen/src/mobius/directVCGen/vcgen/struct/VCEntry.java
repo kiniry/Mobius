@@ -29,6 +29,9 @@ public class VCEntry {
 	public VCEntry () {
 		this(null, null, null, null);
 	}
+	public VCEntry(Post post, Post excpost) {
+		this(post, excpost, null, null);
+	}
 	public VCEntry(Post post, Post excpost, Post brpost, Post contpost) {
 		this.post = post;
 		this.brpost = brpost;

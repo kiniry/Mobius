@@ -1,4 +1,4 @@
-package mobius.directVCGen.vcgen.intern;
+package mobius.directVCGen.vcgen;
 
 import javafe.ast.ASTNode;
 import escjava.ast.AnOverview;

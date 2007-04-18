@@ -14,7 +14,7 @@ import javafe.util.ErrorSet;
 import javafe.util.FatalError;
 import javafe.util.Info;
 import javafe.util.Location;
-import mobius.directVCGen.vcgen.VCGenVisitor;
+import mobius.directVCGen.vcgen.DirectVCGen;
 import escjava.ast.EscPrettyPrint;
 import escjava.ast.GuardedCmd;
 import escjava.backpred.FindContributors;
@@ -117,8 +117,8 @@ public class Main extends escjava.Main {
 //	    processTD_stage1(td, sig, errorCount);
 //	    System.out.println(currentTime() - startTime);
 	    Vector<Term> vcs; 
-	    vcs = (Vector<Term>) sig.getCompilationUnit().accept(new VCGenVisitor(), null);
-	    //sig.accept(new VCGenVisitor(), vcs);
+	    vcs = (Vector<Term>) sig.getCompilationUnit().accept(new DirectVCGen(), null);
+	    //sig.accept(new DirectVCGen(), vcs);
 	    System.out.println(td);
 //	    FindContributors scope =  new FindContributors(sig);
 //	    if (stages < 2) {

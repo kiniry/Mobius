@@ -10,7 +10,7 @@ import mobius.directVCGen.formula.Expression;
 import mobius.directVCGen.formula.Logic;
 import mobius.directVCGen.formula.Lookup;
 import mobius.directVCGen.formula.Ref;
-import mobius.directVCGen.vcgen.DirectVCGen;
+import mobius.directVCGen.vcgen.stmt.StmtVCGen;
 import mobius.directVCGen.vcgen.struct.Post;
 import mobius.directVCGen.vcgen.struct.VCEntry;
 import escjava.sortedProver.Lifter.QuantVariableRef;
@@ -42,7 +42,7 @@ public class ExpressionVCGen extends BinaryExpressionVCGen{
 		Term pre = Lookup.precondition(mi.decl);
 		QuantVariableRef exc = Expression.var(Ref.sort);
 		Term tExcp = Logic.forall(exc.qvar, Logic.implies(excpPost.substWith(exc), 
-				               		DirectVCGen.getExcpPost(Types.javaLangThrowable(), entry).substWith(exc)));
+				               		StmtVCGen.getExcpPost(Types.javaLangThrowable(), entry).substWith(exc)));
 		Term tNormal = normalPost.substWith(entry.post.var);
 		QuantVariableRef res = Expression.var(entry.post.var.getSort());
 		tNormal = Logic.forall(res.qvar, Logic.implies(tNormal, entry.post.post));
