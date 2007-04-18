@@ -19,7 +19,6 @@ import mobius.directVCGen.vcgen.struct.Post;
 import mobius.directVCGen.vcgen.struct.VCEntry;
 import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
-import escjava.translate.UniqName;
 
 
 public class ExpressionVCGen extends BinaryExpressionVCGen{
@@ -63,11 +62,11 @@ public class ExpressionVCGen extends BinaryExpressionVCGen{
 		QuantVariableRef r = Expression.rvar(Ref.sort);
 		p = new Post(r,
 			Logic.and(Logic.implies(Logic.typeLE(Type.of(Heap.var, r), 
-									Expression.sym(UniqName.type(x.type), Ref.sort)),
-								p.substWith(Bool.value(true))), 
-				  Logic.implies(Logic.not(Logic.typeLE(Type.of(Heap.var, r), 
-									Expression.sym(UniqName.type(x.type), Ref.sort))),
-								p.substWith(Bool.value(false)))));
+												 Type.translate(x.type)),
+								    p.substWith(Bool.value(true))), 
+				      Logic.implies(Logic.not(Logic.typeLE(Type.of(Heap.var, r), 
+						  								   Type.translate(x.type))),
+						  			p.substWith(Bool.value(false)))));
 		entry.post = p;
 		Post pre = getPre(x.expr, entry);
 		return pre;

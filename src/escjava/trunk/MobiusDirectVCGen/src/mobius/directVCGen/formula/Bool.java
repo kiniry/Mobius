@@ -1,6 +1,7 @@
 package mobius.directVCGen.formula;
 
 import escjava.ast.TagConstants;
+import escjava.sortedProver.NodeBuilder;
 import escjava.sortedProver.Lifter.FnTerm;
 import escjava.sortedProver.Lifter.Term;
 import escjava.sortedProver.NodeBuilder.Sort;
@@ -105,42 +106,58 @@ public class Bool {
 
 
 	public static Term ge(Term l, Term r) {
-		// TODO: the type checking is bad - correct it
-		if(l.getSort() != r.getSort())
+		if(l.getSort() != r.getSort() &&
+				(!Num.isNum(l.getSort()) || !Num.isNum(r.getSort())))
 			throw new IllegalArgumentException("The sort of " + l + 
 					" is different from the sort of " + r + ".");
 		FnTerm t = null;
 		if (l.getSort() == Num.sortInt) {
-			t = Formula.lf.mkFnTerm(Formula.lf.symIntBoolFn, new Term[] {l, r});
-			t.tag = TagConstants.INTEGRALGE;
+			if(r.getSort() == Num.sortReal) {
+				l = Num.intToReal(l);
+				t = Formula.lf.mkFnTerm(Formula.lf.symRealBoolFn, new Term[] {l, r});
+			}
+			else {
+				t = Formula.lf.mkFnTerm(Formula.lf.symIntBoolFn, new Term[] {l, r});
+			}
+			
 		}
 		else if (l.getSort() == Num.sortReal) {
+			if(r.getSort() == Num.sortInt) {
+				r = Num.intToReal(r);
+			}
 			t = Formula.lf.mkFnTerm(Formula.lf.symRealBoolFn, new Term[] {l, r});
-			t.tag = TagConstants.FLOATINGGE;
 		}
 		else {
 			throw new IllegalArgumentException("The sort " + l.getSort() + " is invalid!"); 
 		}
+		t.tag = NodeBuilder.predGE;
 		return t;
 	}
 
 	public static Term gt(Term l, Term r) {		
-		// TODO: the type checking is bad - correct it
 		if(l.getSort() != r.getSort())
 			throw new IllegalArgumentException("The sort of " + l + 
 					" is different from the sort of " + r + ".");
 		FnTerm t = null;
 		if (l.getSort() == Num.sortInt) {
-			t = Formula.lf.mkFnTerm(Formula.lf.symIntBoolFn, new Term[] {l, r});
-			t.tag = TagConstants.INTEGRALGT;
+			if(r.getSort() == Num.sortReal) {
+				l = Num.intToReal(l);
+				t = Formula.lf.mkFnTerm(Formula.lf.symRealBoolFn, new Term[] {l, r});
+			}
+			else {
+				t = Formula.lf.mkFnTerm(Formula.lf.symIntBoolFn, new Term[] {l, r});
+			}
 		}
 		else if (l.getSort() == Num.sortReal) {
+			if(r.getSort() == Num.sortInt) {
+				r = Num.intToReal(r);
+			}
 			t = Formula.lf.mkFnTerm(Formula.lf.symRealBoolFn, new Term[] {l, r});
-			t.tag = TagConstants.FLOATINGGT;
 		}
 		else {
 			throw new IllegalArgumentException("The sort " + l.getSort() + " is invalid!"); 
 		}
+		t.tag = NodeBuilder.predGT;
 		return t;
 	}
 }
