@@ -15,7 +15,7 @@ import org.eclipse.ui.texteditor.AbstractDecoratedTextEditor;
  * This class has been modificated with relation to the generated automatically
  * to allow adding listener that is responsible for error checking
  * 
- * @author Wojciech WÄ…s
+ * @author Wojciech W±s
  */
 public class BytecodeDocumentProvider extends FileDocumentProvider {
 

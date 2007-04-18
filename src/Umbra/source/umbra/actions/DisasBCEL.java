@@ -9,7 +9,7 @@ import java.io.IOException;
 import org.apache.bcel.classfile.JavaClass;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.IWorkspaceRoot;
+//import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -23,26 +23,29 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditor;
 
+import umbra.UmbraHelper;
 import umbra.editor.BytecodeEditor;
 import umbra.editor.Composition;
 
 /**
  * This class defines the action related to Java source editor.
  * Its execution causes generating new related bytecode file
- * in new editor window.
+ * in a new editor window.
  * 
  * @author BYTECODE team
  */
 
 public class DisasBCEL implements IEditorActionDelegate {
 	
+	/**
+	 * The title of the window with messages generated from within the
+	 * objects of the DisasBCEL.
+	 */
 	private final String MESSAGE_DIALOG_TITLE = "Disassemble Bytecode";
-	private final String BYTECODE_EXTENSION   = ".btc";
-	private final String JAVA_EXTENSION       = ".java";
-	private final String CLASS_EXTENSION      = ".class";
 	
 	/**
-	 * TODO
+	 * The editor of a Java file for which the bytecode file is
+	 * generated.
 	 */
 	private IEditorPart editor;
 
@@ -50,26 +53,40 @@ public class DisasBCEL implements IEditorActionDelegate {
 	 * Finds JavaClass structure related to the current Java
 	 * source. Generates new bytecode from it and displays
 	 * it in a new bytecode editor window.
+	 * 
+	 * @param see the IActionDelegate.run(IAction)
 	 */
 	public void run(IAction action) {
-		IPath active = ((FileEditorInput)editor.getEditorInput()).getFile().getFullPath();
+		IPath active = ((FileEditorInput)editor.getEditorInput()).
+			getFile().getFullPath();
 		if (editor.isSaveOnCloseNeeded()) {
-			MessageDialog.openWarning(editor.getSite().getShell(), MESSAGE_DIALOG_TITLE, "You must save the bytecode before you disassemble it.");
+			MessageDialog.openWarning(editor.getSite().getShell(), 
+									  MESSAGE_DIALOG_TITLE, 
+									  "You must save the code before you "+
+									  "disassemble it.");
 			return;
 		}
-		int lind = active.toOSString().lastIndexOf(JAVA_EXTENSION);
-		if (lind == -1) MessageDialog.openInformation(editor.getSite().getShell(), MESSAGE_DIALOG_TITLE, "This is not a \"" + JAVA_EXTENSION + "\" file.");
+		int lind = active.toOSString().lastIndexOf(UmbraHelper.JAVA_EXTENSION);
+		if (lind == -1) MessageDialog.openInformation(editor.getSite().
+				                                             getShell(), 
+				                                  MESSAGE_DIALOG_TITLE, 
+				                                  "This is not a \"" + 
+				                                  UmbraHelper.JAVA_EXTENSION + 
+				                                  "\" file.");
 		else {
 			//replaceClass(active);
-			String actlind = active.toOSString().substring(0, lind);
-			String fname = actlind + BYTECODE_EXTENSION;
+			String fname = UmbraHelper.replaceLast(active.toOSString(), 
+					                            UmbraHelper.JAVA_EXTENSION,
+					                            UmbraHelper.BYTECODE_EXTENSION); 
 			IWorkspace workspace = ResourcesPlugin.getWorkspace();
 			IFile file = workspace.getRoot().getFile(new Path(fname));
 			FileEditorInput input = new FileEditorInput(file);
 			try {
 				IWorkbenchPage page = editor.getEditorSite().getPage();
 				//BytecodeEditor bcEditor = (BytecodeEditor)page.openEditor(input, "org.eclipse.jdt.ui.CompilationUnitEditor", true);
-				BytecodeEditor bcEditor = (BytecodeEditor)page.openEditor(input, "umbra.BytecodeEditor", true);
+				BytecodeEditor bcEditor = (BytecodeEditor)page.openEditor(input,
+						"umbra.BytecodeEditor", 
+						true);
 				bcEditor.refreshBytecode(active, null, null);
 				input = new FileEditorInput(file);
 				JavaClass jc = bcEditor.getJavaClass();
@@ -89,12 +106,15 @@ public class DisasBCEL implements IEditorActionDelegate {
 	}
 	
 	/**
-	 * TODO
-	 */
+	 * T ODO
+	 * /
 	private void replaceClass(IPath active) {
-		String fnameFrom = active.toOSString().replaceFirst(JAVA_EXTENSION, CLASS_EXTENSION);
-		String lastSegment = active.lastSegment().replaceFirst(JAVA_EXTENSION, CLASS_EXTENSION);
-		String fnameTo = active.removeLastSegments(1).append("_" + lastSegment).toOSString();
+		String fnameFrom = active.toOSString().replaceFirst(JAVA_EXTENSION, 
+				                                            CLASS_EXTENSION);
+		String lastSegment = active.lastSegment().replaceFirst(JAVA_EXTENSION, 
+				                                               CLASS_EXTENSION);
+		String fnameTo = active.removeLastSegments(1).
+		                        append("_" + lastSegment).toOSString();
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot(); 
 		IFile fileFrom = root.getFile(new Path(fnameFrom));
 		IPath pathTo = new Path(fnameTo);
@@ -106,16 +126,16 @@ public class DisasBCEL implements IEditorActionDelegate {
 			e.printStackTrace();
 		}
 	}
-	
+	*/
 
 	/**
-	 * TODO
+	 * Currently, does nothing.
 	 */
 	public void selectionChanged(IAction action, ISelection selection) {
 	}
 
 	/**
-	 * TODO
+	 * It sets the editor with the Java source code.
 	 */
 	public void setActiveEditor(IAction action, IEditorPart targetEditor) {
 		editor = targetEditor;

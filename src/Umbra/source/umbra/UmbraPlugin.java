@@ -10,13 +10,12 @@ import org.osgi.framework.BundleContext;
 public class UmbraPlugin extends AbstractUIPlugin {
 
 	/**
-	 * TODO
+	 * The shared instance of the plugin.
 	 */
-	//The shared instance.
 	private static UmbraPlugin plugin;
 	
 	/**
-	 * The constructor.
+	 * The constructor which shares the instance.
 	 */
 	public UmbraPlugin() {
 		plugin = this;

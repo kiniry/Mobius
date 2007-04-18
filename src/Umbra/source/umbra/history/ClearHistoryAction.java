@@ -16,12 +16,13 @@ import org.eclipse.ui.IEditorActionDelegate;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.part.FileEditorInput;
 
+import umbra.UmbraHelper;
 import umbra.editor.BytecodeEditor;
 
 /**
  * The action that removes historical versions of code.
  * 
- * @author Wojtek WÄ…s
+ * @author Wojtek W±s
  */
 public class ClearHistoryAction implements IEditorActionDelegate {
 
@@ -47,14 +48,17 @@ public class ClearHistoryAction implements IEditorActionDelegate {
 			IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 			IFile inputFile = ((FileEditorInput)editor.getEditorInput()).getFile();
 			IPath active = inputFile.getFullPath();
-			String fname = active.toOSString().replaceFirst(".btc", ext); 
+			String fname = active.toOSString().replaceFirst(
+					                 UmbraHelper.BYTECODE_EXTENSION, ext); 
 			IFile file = root.getFile(new Path(fname));
 			try {
 				file.delete(true, null);
 			} catch (CoreException e) {
 				e.printStackTrace();
 			}
-			String lastSegment = active.lastSegment().replaceFirst(".btc", ".class");
+			String lastSegment = active.lastSegment().replaceFirst(
+					                       UmbraHelper.BYTECODE_EXTENSION, 
+					                       UmbraHelper.CLASS_EXTENSION);
 			String clname = active.removeLastSegments(1).append("_" + i + "_" + lastSegment).toOSString(); 
 			IFile classFile = root.getFile(new Path(clname));
 			try {

@@ -7,7 +7,7 @@ package umbra.tests;
  */
 
 /**
- * @author Wojtek Wï¿½s
+ * @author Wojtek W±s
  *
  * TODO write description
  */

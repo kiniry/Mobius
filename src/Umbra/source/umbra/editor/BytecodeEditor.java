@@ -31,6 +31,7 @@ import org.eclipse.ui.texteditor.AbstractDecoratedTextEditor;
 import annot.bcclass.BCClass;
 import annot.bcio.ReadAttributeException;
 
+import umbra.UmbraHelper;
 import umbra.history.IHistory;
 
 /**
@@ -154,8 +155,12 @@ public class BytecodeEditor extends TextEditor {
 	public void doSave(IProgressMonitor progressMonitor) {
 		super.doSave(progressMonitor);
 		IPath active = ((FileEditorInput)getEditorInput()).getFile().getFullPath();
-		String fnameFrom = active.toOSString().replaceFirst(".btc", ".class");
-		String lastSegment = active.lastSegment().replaceFirst(".btc", ".class");
+		String fnameFrom = active.toOSString().replaceFirst(
+				                    UmbraHelper.BYTECODE_EXTENSION, 
+				                    UmbraHelper.CLASS_EXTENSION);
+		String lastSegment = active.lastSegment().replaceFirst(
+				                    UmbraHelper.BYTECODE_EXTENSION, 
+				                    UmbraHelper.BYTECODE_EXTENSION);
 		String fnameTo = active.removeLastSegments(1).append("_" + lastSegment).toOSString();
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot(); 
 		IFile fileFrom = root.getFile(new Path(fnameFrom));
@@ -188,14 +193,14 @@ public class BytecodeEditor extends TextEditor {
 	
 	/**
 	 * Generates input file from JavaClass structure
-	 * and put it into the editor window.
+	 * and puts it into the editor window.
 	 * The input file is created literally from JavaClass
 	 * code getting methods.
 	 * Possibly comments can be inserted if they are given
 	 * as a parameter (in the situation that they have been
 	 * previously written).
-	 * There is temporary limit of 256 signs for method name
-	 * and 4096 signs for method code.
+	 * There is temporary limit of 256 characters for method name
+	 * and 4096 characters for method code.
 	 * 
 	 * @param path			The relative path of the input file
 	 * @param commentTab	Table of comments to be inserted

@@ -16,6 +16,7 @@ import org.eclipse.ui.IEditorActionDelegate;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.part.FileEditorInput;
 
+import umbra.UmbraHelper;
 import umbra.editor.BytecodeEditor;
 
 /**
@@ -51,7 +52,9 @@ public class HistoryAction implements IEditorActionDelegate {
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 		IFile fileFrom = ((FileEditorInput)editor.getEditorInput()).getFile();
 		IPath active = fileFrom.getFullPath();
-		String fnameTo = active.toOSString().replaceFirst(".btc", ext);
+		String fnameTo = active.toOSString().replaceFirst(
+				                 UmbraHelper.BYTECODE_EXTENSION, 
+				                 ext);
 		IPath pathTo = new Path(fnameTo);
 		IFile fileTo = root.getFile(pathTo);
 		try {
@@ -60,7 +63,9 @@ public class HistoryAction implements IEditorActionDelegate {
 		} catch (CoreException e) {
 			e.printStackTrace();
 		}
-		String lastSegment = active.lastSegment().replaceFirst(".btc", ".class");
+		String lastSegment = active.lastSegment().replaceFirst(
+				                        UmbraHelper.BYTECODE_EXTENSION,
+				                        UmbraHelper.CLASS_EXTENSION);
 		String clnameFrom = active.removeLastSegments(1).append(lastSegment).toOSString();
 		String clnameTo = active.removeLastSegments(1).append("_" + num + "_" + lastSegment).toOSString();
 		IFile classFrom = root.getFile(new Path(clnameFrom));

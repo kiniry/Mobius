@@ -46,6 +46,7 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditor;
 import org.eclipse.ui.texteditor.AbstractTextEditor;
 
+import umbra.UmbraHelper;
 import umbra.UmbraPlugin;
 
 
@@ -257,8 +258,12 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
 		public void run() {
 			IFile file = ((FileEditorInput)editor.getEditorInput()).getFile();
 			IPath active = file.getFullPath();
-			String fnameTo = active.toOSString().replaceFirst(".btc", ".class");
-			String lastSegment = active.lastSegment().replaceFirst(".btc", ".class");
+			String fnameTo = active.toOSString().replaceFirst(
+					                  UmbraHelper.BYTECODE_EXTENSION, 
+					                  UmbraHelper.CLASS_EXTENSION);
+			String lastSegment = active.lastSegment().replaceFirst(
+					                  UmbraHelper.BYTECODE_EXTENSION,
+					                  UmbraHelper.CLASS_EXTENSION);
 			String fnameFrom = active.removeLastSegments(1).append("_" + lastSegment).toOSString();
 			IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot(); 
 			IFile fileFrom = root.getFile(new Path(fnameFrom));
@@ -327,8 +332,12 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
 			}	
 			IFile file = ((FileEditorInput)editor.getEditorInput()).getFile();
 			IPath path = file.getFullPath();
-			String fnameFrom = path.toOSString().replaceFirst(".btc", ".class");
-			String lastSegment = path.lastSegment().replaceFirst(".btc", ".class");
+			String fnameFrom = path.toOSString().replaceFirst(
+					                  UmbraHelper.BYTECODE_EXTENSION,
+					                  UmbraHelper.CLASS_EXTENSION);
+			String lastSegment = path.lastSegment().replaceFirst(
+					                  UmbraHelper.BYTECODE_EXTENSION,
+					                  UmbraHelper.CLASS_EXTENSION);
 			String fnameTo = path.removeLastSegments(1).append("_" + lastSegment).toOSString();
 			IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot(); 
 			IFile fileFrom = root.getFile(new Path(fnameFrom));
@@ -438,7 +447,9 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
 			IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot(); 
 			IFile file = ((FileEditorInput)editor.getEditorInput()).getFile();
 			IPath active = file.getFullPath();
-			String fnameFrom = active.toOSString().replaceFirst(".btc", ext);
+			String fnameFrom = active.toOSString().replaceFirst(
+					                   UmbraHelper.BYTECODE_EXTENSION, 
+					                   ext);
 			IFile fileFrom = root.getFile(new Path(fnameFrom));
 			if (!fileFrom.exists()) {
 				MessageDialog.openInformation(shell, "Restore bytecode", "The file " + fnameFrom + " does not exist");
@@ -450,7 +461,9 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
 			} catch (CoreException e) {
 				e.printStackTrace();
 			}
-			String lastSegment = active.lastSegment().replaceFirst(".btc", ".class");
+			String lastSegment = active.lastSegment().replaceFirst(
+					                      UmbraHelper.BYTECODE_EXTENSION, 
+					                      UmbraHelper.CLASS_EXTENSION);
 			String clnameTo = active.removeLastSegments(1).append(lastSegment).toOSString();
 			String clnameFrom = active.removeLastSegments(1).append("_" + num + "_" + lastSegment).toOSString();
 			IFile classFrom = root.getFile(new Path(clnameFrom));

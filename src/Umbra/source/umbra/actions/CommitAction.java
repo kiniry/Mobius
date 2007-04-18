@@ -12,37 +12,48 @@ import org.eclipse.ui.IEditorActionDelegate;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.part.FileEditorInput;
 
+import umbra.UmbraHelper;
+
 /**
  * The action is used to commit changes made to Java source code.
  * After running it the rebuild action will create a Bytecode related
  * to the commited version.
  * 
- * @author Wojciech WÄ…s
+ * @author Wojciech W±s
  *
  */
 public class CommitAction implements IEditorActionDelegate {
 	
 	/**
-	 * TODO
+	 * The editor for the corresponding Java file.
 	 */
 	private IEditorPart editor;
 
 	/**
-	 * TODO
+	 * The method saves the editor for the Java code file.
 	 */
 	public void setActiveEditor(IAction action, IEditorPart targetEditor) {
 		editor = targetEditor;
 	}
 
 	/**
-	 * TODO
+	 * This method is invoked when the Umbra "Commit" button is pressed
+	 * in a Java file editor. It saves the current Java file and deletes
+	 * from workspace the original class file which contains the result
+	 * of Java compilation (@see BytecodeEditor#doSave(IProgressMonitor)).
+	 * 
+	 * @param action the action that triggered the operation 
+	 * @see IActionDelegate#run(IAction)
 	 */
 	public void run(IAction action) {
 			editor.doSave(null);
 			IFile file = ((FileEditorInput)editor.getEditorInput()).getFile();
 			IPath active = file.getFullPath();
-			String lastSegment = active.lastSegment().replaceFirst(".java", ".class");
-			String fnameFrom = active.removeLastSegments(1).append("_" + lastSegment).toOSString();
+			String lastSegment = UmbraHelper.replaceLast(active.lastSegment(), 
+					                               UmbraHelper.JAVA_EXTENSION, 
+					                               UmbraHelper.CLASS_EXTENSION);
+			String fnameFrom = active.removeLastSegments(1).
+			                          append("_" + lastSegment).toOSString();
 			IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot(); 
 			IFile fileFrom = root.getFile(new Path(fnameFrom));
 			try {
@@ -53,11 +64,10 @@ public class CommitAction implements IEditorActionDelegate {
 	}
 
 	/**
-	 * TODO
+	 * The method reacts when the selected area changes in the Java
+	 * source code editor. Currently, it does nothing.
 	 */
 	public void selectionChanged(IAction action, ISelection selection) {
-		// TODO Auto-generated method stub
-
 	}
 
 }
