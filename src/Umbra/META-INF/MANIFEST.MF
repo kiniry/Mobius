@@ -30,4 +30,5 @@ Bundle-ClassPath: libs/org.apache.bcel_5.1.0/bcel.jar,
  libs/bmllib.jar,
  asm.jar,
  b2bpl.jar
-Eclipse-LazyStart: false
+Eclipse-LazyStart: true
+Bundle-Activator: umbra.UmbraPlugin
