@@ -33,6 +33,7 @@ import java.util.Comparator;
  * @author Clyde Ruby
  * @author Patrice Chalin
  * @author Joseph R. Kiniry
+ * @author Mikolas Janota
  */
 //-@ immutable 
 public final class String
@@ -764,8 +765,9 @@ public final class String
     /*@  public normal_behavior
       @   requires 0 <= beginIndex;
       @   requires beginIndex <= length();
-      @   ensures \result == substring(beginIndex, length())
-      @            && \fresh(\result);
+      @   ensures equals(\result, substring(beginIndex, length()));
+      @   ensures \fresh(\result);
+      @   ensures_redundantly (beginIndex == 0) ==> equals(\result, this);
       @ also
       @  public exceptional_behavior
       @   requires beginIndex < 0 || beginIndex > length();
