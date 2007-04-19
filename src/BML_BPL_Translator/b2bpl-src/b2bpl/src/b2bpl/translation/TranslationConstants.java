@@ -13,15 +13,15 @@ public interface TranslationConstants {
 
   String FUNC_PREFIX = "";
 
-  String HEAP_TYPE = "Store";
+  String HEAP_TYPE =         "Store";
 
-  String LOCATION_TYPE = "Location";
+  String LOCATION_TYPE =     "Location";
 
-  String ALLOCATION_TYPE = "Allocation";
+  String ALLOCATION_TYPE =   "Allocation";
   
   String RETURN_STATE_TYPE = "ReturnState";
 
-  String HEAP_VAR = "heap";
+  String HEAP_VAR     = "heap";
 
   String OLD_HEAP_VAR = "old_heap";
 
@@ -49,7 +49,7 @@ public interface TranslationConstants {
   
   // String THIS_VAR = "this";
   
-  String NORMAL_RETURN_STATE = "normal";
+  String NORMAL_RETURN_STATE =      "normal";
   
   String EXCEPTIONAL_RETURN_STATE = "exceptional";
 
@@ -57,9 +57,13 @@ public interface TranslationConstants {
   
   String RETURN_VALUE_VAR = "rv";
   
+  String EXCEPTION_VAR    = "ex";
+  
   String RETURN_STATE_PARAM = "retstate";
   
   String RETURN_VALUE_PARAM = "retvalue";
+  
+  String EXCEPTION_PARAM    = "exception";
 
   String INT_CALL_RESULT_VAR = /* CALL_RESULT_VAR_PREFIX */ RETURN_VALUE_VAR + INT_TYPE_ABBREV;
 
@@ -75,21 +79,21 @@ public interface TranslationConstants {
 
   String INT2BOOL_FUNC = FUNC_PREFIX + "int2bool";
 
-  String SHL_FUNC = FUNC_PREFIX + "shl";
+  String SHL_FUNC = FUNC_PREFIX +  "shl";
 
-  String SHR_FUNC = FUNC_PREFIX + "shr";
+  String SHR_FUNC = FUNC_PREFIX +  "shr";
 
   String USHR_FUNC = FUNC_PREFIX + "ushr";
 
-  String AND_FUNC = FUNC_PREFIX + "and";
+  String AND_FUNC = FUNC_PREFIX +  "and";
 
-  String OR_FUNC = FUNC_PREFIX + "or";
+  String OR_FUNC = FUNC_PREFIX +   "or";
 
-  String XOR_FUNC = FUNC_PREFIX + "xor";
+  String XOR_FUNC = FUNC_PREFIX +  "xor";
   
   String AND_OP = "&&";
   
-  String OR_OP = "||";
+  String OR_OP =  "||";
 
   String IS_CLASS_TYPE_FUNC = FUNC_PREFIX + "isClassType";
 

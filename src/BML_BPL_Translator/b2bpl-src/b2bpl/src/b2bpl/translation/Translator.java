@@ -1567,8 +1567,22 @@ public class Translator implements TranslationConstants {
     
     {
       // TODO: temporary axiomatization of Java type system
-      declarations.add(new BPLProcedure("java.lang.Object..init", new BPLVariable[0], new BPLVariable[0], new BPLSpecification(new BPLSpecificationClause[0])));
-      declarations.add(new BPLProcedure("java.lang.Exception..init", new BPLVariable[0], new BPLVariable[0], new BPLSpecification(new BPLSpecificationClause[0])));
+      declarations.add(new BPLProcedure(
+          "java.lang.Object..init",
+          new BPLVariable[] { new BPLVariable("param0", BPLBuiltInType.REF) },
+          new BPLVariable[] {
+              new BPLVariable(RETURN_STATE_VAR, new BPLTypeName(RETURN_STATE_TYPE)),
+              new BPLVariable(EXCEPTION_VAR, BPLBuiltInType.REF)
+          },
+          new BPLSpecification(new BPLSpecificationClause[0])));
+      declarations.add(new BPLProcedure(
+          "java.lang.Exception..init",
+          new BPLVariable[] { new BPLVariable("param0", BPLBuiltInType.REF) },
+          new BPLVariable[] {
+              new BPLVariable(RETURN_STATE_VAR, new BPLTypeName(RETURN_STATE_TYPE)),
+              new BPLVariable(EXCEPTION_VAR, BPLBuiltInType.REF)
+          },
+          new BPLSpecification(new BPLSpecificationClause[0])));
     }
   }
 
