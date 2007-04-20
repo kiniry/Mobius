@@ -140,9 +140,9 @@ public class SimplifyNodeBuilder extends EscNodeBuilder
 		return sx(c.name);
 	}
 
-	public SAny buildQVarRef(QuantVariable v)
+	public SAny buildQVarRef(QuantVar v)
 	{
-		return sx(v.qvar.name);
+		return sx(v.name);
 	}
 
 	public SPred buildPredCall(PredSymbol fn, SAny[] args)

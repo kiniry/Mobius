@@ -257,7 +257,7 @@ public class Lifter extends EscNodeBuilder
 		
 		public STerm dump()
 		{
-			return dumpBuilder.buildQVarRef(qvar); 
+			return dumpBuilder.buildQVarRef(qvar.qvar); 
 		}
 		public boolean equals(Object o) {
 			if(!(o instanceof QuantVariableRef)) {
@@ -716,11 +716,15 @@ public class Lifter extends EscNodeBuilder
 		}
 	}
 	public QuantVariable mkQuantVariable(String n, Sort s) {
-		return new QuantVariable(n, s);
+		QuantVariable v = new QuantVariable(n, s);
+		v.qvar = new QuantVar(n, s);
+		return v;
 	}
 	
-	public QuantVariable mkQuantVariable(GenericVarDecl v, String n) {
-		return new QuantVariable(v, n);
+	public QuantVariable mkQuantVariable(GenericVarDecl g, String n) {
+		QuantVariable v = new QuantVariable(g, n);
+		v.qvar = new QuantVar(n, v.type);
+		return v; 
 	}
 	/*@ non_null_by_default @*/
 	public class LabeledTerm extends Term
@@ -880,7 +884,7 @@ public class Lifter extends EscNodeBuilder
 	static class Die extends RuntimeException { }
 	public SAny buildFnCall(FnSymbol fn, SAny[] args) { throw new Die(); }
 	public SAny buildConstantRef(FnSymbol c) { throw new Die(); }
-	public SAny buildQVarRef(QuantVariable v) { throw new Die(); }
+	public SAny buildQVarRef(QuantVar v) { throw new Die(); }
 	public SPred buildPredCall(PredSymbol fn, SAny[] args) { throw new Die(); }
 	
 	public SPred buildImplies(SPred arg1, SPred arg2) { throw new Die(); }

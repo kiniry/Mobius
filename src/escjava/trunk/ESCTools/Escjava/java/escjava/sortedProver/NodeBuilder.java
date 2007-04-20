@@ -317,7 +317,7 @@ public abstract class NodeBuilder
 	//@ requires \nonnullelements(args);
 	abstract public SAny buildFnCall(FnSymbol fn, SAny[] args);
 	abstract public SAny buildConstantRef(FnSymbol c);
-	abstract public SAny buildQVarRef(QuantVariable v);
+	abstract public SAny buildQVarRef(QuantVar v);
 	//@ requires \nonnullelements(args);
 	abstract public SPred buildPredCall(PredSymbol fn, SAny[] args);
 	
