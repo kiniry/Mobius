@@ -102,7 +102,7 @@ public class Bool {
 	}
 
 
-	public static Term ge(Term l, Term r) {
+	public static Term le(Term l, Term r) {
 		if(l.getSort() != r.getSort() &&
 				(!Num.isNum(l.getSort()) || !Num.isNum(r.getSort())))
 			throw new IllegalArgumentException("The sort of " + l + 
@@ -127,11 +127,11 @@ public class Bool {
 		else {
 			throw new IllegalArgumentException("The sort " + l.getSort() + " is invalid!"); 
 		}
-		t.tag = NodeBuilder.predGE;
+		t.tag = NodeBuilder.predLE;
 		return t;
 	}
 
-	public static Term gt(Term l, Term r) {		
+	public static Term lt(Term l, Term r) {		
 		if(l.getSort() != r.getSort())
 			throw new IllegalArgumentException("The sort of " + l + 
 					" is different from the sort of " + r + ".");
@@ -154,7 +154,7 @@ public class Bool {
 		else {
 			throw new IllegalArgumentException("The sort " + l.getSort() + " is invalid!"); 
 		}
-		t.tag = NodeBuilder.predGT;
+		t.tag = NodeBuilder.predLT;
 		return t;
 	}
 }
