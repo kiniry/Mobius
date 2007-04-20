@@ -13,7 +13,6 @@ import mobius.directVCGen.formula.Logic;
 import mobius.directVCGen.formula.Num;
 import mobius.directVCGen.formula.Ref;
 import mobius.directVCGen.formula.Type;
-import mobius.directVCGen.vcgen.stmt.StmtVCGen;
 import mobius.directVCGen.vcgen.struct.Post;
 import mobius.directVCGen.vcgen.struct.VCEntry;
 import escjava.ast.TagConstants;
@@ -298,7 +297,7 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn{
 				Logic.implies(Logic.not(Logic.equals(rvar, Num.value(0))), 
 						      post.post.substWith(Num.div(lvar, rvar))),
 				Logic.implies(Logic.equals(rvar, Num.value(0)),
-						StmtVCGen.getExcpPost(Type.javaLangArithmeticException(), post).post)));
+						getNewExcpPost(Type.javaLangArithmeticException(), post))));
 		
 		post.post = rPost;
 		Post pre = getPre(right, post);
@@ -340,7 +339,7 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn{
 							Logic.implies(Logic.not(Logic.equalsNull(obj)), 
 									post.post.post.subst(Heap.var, 
 														 Heap.store(Heap.var, obj, f, val))), 
-							Logic.implies(Logic.equalsNull(obj), StmtVCGen.getExcpPost(Type.javaLangNullPointerException(), post).post)
+							Logic.implies(Logic.equalsNull(obj), getNewExcpPost(Type.javaLangNullPointerException(), post))
 														 ));
 					Post pre = getPre(right, post);
 					post.post = new Post(obj, pre.post);
@@ -378,7 +377,7 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn{
 				Logic.implies(Logic.not(Logic.equalsZero(rvar)), 
 						      post.post.substWith(Num.mod(lvar, rvar))),
 				Logic.implies(Logic.equalsZero(rvar),
-						StmtVCGen.getExcpPost(Type.javaLangArithmeticException(), post).post)));
+						getNewExcpPost(Type.javaLangArithmeticException(), post))));
 		post.post = rPost;
 		Post pre = getPre(right, post);
 		Post lPost = new Post(lvar, pre.post);

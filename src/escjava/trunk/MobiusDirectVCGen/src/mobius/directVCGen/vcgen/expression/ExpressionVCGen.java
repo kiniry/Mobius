@@ -2,6 +2,8 @@ package mobius.directVCGen.vcgen.expression;
 
 import java.util.Vector;
 
+import javafe.ast.CastExpr;
+import javafe.ast.CondExpr;
 import javafe.ast.ExprVec;
 import javafe.ast.FormalParaDecl;
 import javafe.ast.FormalParaDeclVec;
@@ -53,6 +55,7 @@ public class ExpressionVCGen extends BinaryExpressionVCGen{
 			entry.post = new Post(v.elementAt(i), entry.post.post);
 			entry.post = getPre(ev.elementAt(i), entry);
 		}
+		
 		return entry.post;
 	}
 
@@ -70,6 +73,39 @@ public class ExpressionVCGen extends BinaryExpressionVCGen{
 		entry.post = p;
 		Post pre = getPre(x.expr, entry);
 		return pre;
+	}
+
+	public Post condExpr(CondExpr x, VCEntry e) {
+		// of the form (cond ? st1 : st2 )
+		QuantVariableRef cond = Expression.rvar(Bool.sort);
+
+
+		QuantVariableRef st1 = Expression.rvar(Type.getSort(x.thn));		
+		Post pthen = new Post(st1, e.post.substWith(st1));
+		e.post = pthen;
+		pthen = getPre(x.thn, e);
+
+		
+		QuantVariableRef st2 = Expression.rvar(Type.getSort(x.els));
+		Post pelse = new Post(st1, e.post.substWith(st2));
+		e.post = pelse;
+		pelse = getPre(x.els, e);
+		
+		Post pcond = new Post(cond, Logic.and(Logic.implies(Logic.boolToProp(cond), pthen.post),
+											  Logic.implies(Logic.not(Logic.boolToProp(cond)), pelse.post)));
+		// now for the wp...
+		e.post = pcond;
+		pcond = getPre(x.test, e);
+		return pcond;
+	}
+
+	public Post castExpr(CastExpr x, VCEntry e) {
+		Post p = new Post(e.post.var, 
+							Logic.implies(Logic.typeLE(Type.of(Heap.var, e.post.var), Type.translate(x.type)),
+										  e.post.post));
+		e.post = p;
+		p = getPre(x.expr, e);
+		return p;
 	}
 	
 	

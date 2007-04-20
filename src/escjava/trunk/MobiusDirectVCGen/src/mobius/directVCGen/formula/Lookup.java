@@ -13,7 +13,7 @@ public class Lookup {
 	 * @param m the method of interest
 	 */
 	public static Term precondition(MethodDecl m){
-		return Logic.True();
+		return Expression.rvar(m.id + "_pre", Logic.sort);//Logic.True();
 	}
 
 	/**
@@ -21,7 +21,7 @@ public class Lookup {
 	 * @param m the method of interest
 	 */
 	public static Post normalPostcondition(MethodDecl m){
-		return new Post(Expression.rvar(Formula.lf.sortRef),Logic.True());
+		return new Post(Expression.rvar(Formula.lf.sortRef),Expression.rvar(m.id + "_norm", Logic.sort));//Logic.True());
 	}
 
 	/**
@@ -30,7 +30,7 @@ public class Lookup {
 	 * @param m the method of interest
 	 */
 	public static Post exceptionalPostcondition(MethodDecl m){
-		return new Post(Expression.rvar(Formula.lf.sortRef),Logic.True());
+		return new Post(Expression.rvar(Formula.lf.sortRef),Expression.rvar(m.id + "_excp", Logic.sort));//Logic.True());
 	}
 
 //	/**

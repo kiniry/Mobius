@@ -34,29 +34,26 @@ public class Bool {
 		FnTerm t = null;
 		if(l.getSort() == Bool.sort) {
 			t = Formula.lf.mkFnTerm(Formula.lf.symBoolFn, new Term[] {l, r});
-			t.tag = TagConstants.BOOLEQ;
 		}
 		else if (l.getSort() == Num.sortReal) {
 			if(r.getSort() == Num.sortInt) {
 				r = Num.intToReal(r);
 			}
 			t = Formula.lf.mkFnTerm(Formula.lf.symRealBoolFn, new Term[] {l, r});
-			t.tag = TagConstants.FLOATINGEQ;
 		}
 		else if (l.getSort() == Num.sortInt) {
 			if(r.getSort() == Num.sortReal) {
 				l = Num.intToReal(l);
 				t = Formula.lf.mkFnTerm(Formula.lf.symRealBoolFn, new Term[] {l, r});
-				t.tag = TagConstants.FLOATINGEQ;
 			}
 			else {
 				t = Formula.lf.mkFnTerm(Formula.lf.symIntBoolFn, new Term[] {l, r});
-				t.tag = TagConstants.INTEGRALEQ;
 			}
 		}
 		else {
 			throw new IllegalArgumentException("The sort " + l.getSort() + " is invalid!"); 
 		}
+		t.tag = NodeBuilder.predEQ;
 		return t;
 	}
 

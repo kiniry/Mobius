@@ -57,6 +57,7 @@ public class Type {
 	 * @return a valid sort as decided by 
 	 * {@link escjava.sortedProver.Lifter#typeToSort(javafe.ast.Type)}
 	 * @see #getType(VarInit)
+	 * @see #translate(javafe.ast.Type)
 	 */
 	public static Sort getSort(VarInit e) {
 		javafe.ast.Type t = FlowInsensitiveChecks.getType(e);
@@ -88,6 +89,7 @@ public class Type {
 	 * @param expr the expression to get the type from
 	 * @return a term representing a type
 	 * @see #getSort(VarInit)
+	 * @see #translate(javafe.ast.Type)
 	 */
 	public static Term getType(VarInit expr) {
 		return translate(FlowInsensitiveChecks.getType(expr)) ;

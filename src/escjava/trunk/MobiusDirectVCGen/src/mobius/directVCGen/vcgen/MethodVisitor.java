@@ -6,6 +6,7 @@ import javafe.ast.BlockStmt;
 import javafe.ast.FormalParaDecl;
 import javafe.ast.FormalParaDeclVec;
 import javafe.ast.MethodDecl;
+import mobius.directVCGen.formula.Formula;
 import mobius.directVCGen.formula.Logic;
 import mobius.directVCGen.formula.Lookup;
 import mobius.directVCGen.vcgen.stmt.StmtVCGen;
@@ -68,9 +69,12 @@ public class MethodVisitor extends DirectVCGen {
 		else {
 			res += "\nproof obligation:";
 		}
-		
 		for(Term t: vcs) {
 			res += "\n" + t;
+		}
+		System.out.println(res);
+		for(Term t: vcs) {
+			res += "\n" + Formula.generateFormulas(t);
 		}
 
 		return res;

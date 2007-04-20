@@ -20,12 +20,16 @@ import javafe.ast.UnaryExpr;
 import javafe.ast.VarInit;
 import javafe.ast.VariableAccess;
 import mobius.directVCGen.formula.Bool;
+import mobius.directVCGen.formula.Expression;
+import mobius.directVCGen.formula.Heap;
 import mobius.directVCGen.formula.Num;
 import mobius.directVCGen.formula.Ref;
 import mobius.directVCGen.vcgen.ABasicVisitor;
 import mobius.directVCGen.vcgen.struct.Post;
 import mobius.directVCGen.vcgen.struct.VCEntry;
 import escjava.ast.TagConstants;
+import escjava.sortedProver.Lifter.QuantVariable;
+import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
 
 public class ExpressionVisitor extends ABasicVisitor {
@@ -199,65 +203,54 @@ public class ExpressionVisitor extends ABasicVisitor {
 	public /*@non_null*/ Object visitInstanceOfExpr(/*@non_null*/ InstanceOfExpr x, Object o) {
 		return vcg.instanceOf(x, (VCEntry) o);
 	}
+	
+	public /*@non_null*/ Object visitCondExpr(/*@non_null*/ CondExpr x, Object o) {
+		return vcg.condExpr(x, (VCEntry) o);
+	}
+	
 
+	public /*@non_null*/ Object visitCastExpr(/*@non_null*/ CastExpr x, Object o) {
+		return vcg.castExpr(x, (VCEntry) o);
+	}
+	
 	
 	
 	public Object visitVariableAccess(VariableAccess m, Object o) {
 		VCEntry res = (VCEntry) o;
+		QuantVariableRef v = Expression.rvar(m.decl);
+
 		
-		
-		return  res.post;
+		return  new Post(res.post.substWith(v));
 	}
 	
-	
-	  public /*@non_null*/ Object visitVarInit(/*@non_null*/ VarInit x, Object o) {
-	    return visitASTNode(x, o);
-	  }
+	public /*@non_null*/ Object visitFieldAccess(/*@non_null*/ FieldAccess x, Object o) {
+		VCEntry res = (VCEntry) o;
+		QuantVariableRef obj = Expression.rvar(Ref.sort);
+		QuantVariable f = Expression.var(x.decl);
+		return new Post(res.post.substWith(Heap.select(Heap.var, obj, f)));
+		
+	}
 
-	  public /*@non_null*/ Object visitArrayInit(/*@non_null*/ ArrayInit x, Object o) {
-	    return visitVarInit(x, o);
-	  }
+	public /*@non_null*/ Object visitVarInit(/*@non_null*/ VarInit x, Object o) {
+		return visitASTNode(x, o);
+	}
+	public /*@non_null*/ Object visitArrayInit(/*@non_null*/ ArrayInit x, Object o) {
+		return visitVarInit(x, o);
+	}
+	public /*@non_null*/ Object visitArrayRefExpr(/*@non_null*/ ArrayRefExpr x, Object o) {
+		return visitExpr(x, o);
+	}
+	public /*@non_null*/ Object visitNewInstanceExpr(/*@non_null*/ NewInstanceExpr x, Object o) {
+		return visitExpr(x, o);
+	}
 
-	  
-
-	  
-
-	  public /*@non_null*/ Object visitArrayRefExpr(/*@non_null*/ ArrayRefExpr x, Object o) {
+	public /*@non_null*/ Object visitNewArrayExpr(/*@non_null*/ NewArrayExpr x, Object o) {
+		return visitExpr(x, o);
+	}
+	public /*@non_null*/ Object visitAmbiguousVariableAccess(/*@non_null*/ AmbiguousVariableAccess x, Object o) {
 	    return visitExpr(x, o);
-	  }
-
-	  public /*@non_null*/ Object visitNewInstanceExpr(/*@non_null*/ NewInstanceExpr x, Object o) {
+	}
+	public /*@non_null*/ Object visitAmbiguousMethodInvocation(/*@non_null*/ AmbiguousMethodInvocation x, Object o) {
 	    return visitExpr(x, o);
-	  }
-
-	  public /*@non_null*/ Object visitNewArrayExpr(/*@non_null*/ NewArrayExpr x, Object o) {
-	    return visitExpr(x, o);
-	  }
-
-	  public /*@non_null*/ Object visitCondExpr(/*@non_null*/ CondExpr x, Object o) {
-	    return visitExpr(x, o);
-	  }
-
-
-	  public /*@non_null*/ Object visitCastExpr(/*@non_null*/ CastExpr x, Object o) {
-	    return visitExpr(x, o);
-	  }
-
-	 
-
-	  public /*@non_null*/ Object visitAmbiguousVariableAccess(/*@non_null*/ AmbiguousVariableAccess x, Object o) {
-	    return visitExpr(x, o);
-	  }
-
-
-	  public /*@non_null*/ Object visitFieldAccess(/*@non_null*/ FieldAccess x, Object o) {
-	    return visitExpr(x, o);
-	  }
-
-	  public /*@non_null*/ Object visitAmbiguousMethodInvocation(/*@non_null*/ AmbiguousMethodInvocation x, Object o) {
-	    return visitExpr(x, o);
-	  }
-
-	  
-
+	}
 }

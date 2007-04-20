@@ -157,7 +157,22 @@ public class Logic {
 		
 		return Formula.lf.mkQuantTerm(true, new QuantVariable [] {v}, f, null, null);
 	}
-
+	
+	/**
+	 * Creates a universal binding for only one variable from the formula f.
+	 * @param v a reference to the variable to bind
+	 * @param f the formula which is the body of the forall
+	 * @return the forall construct newly created
+	 */
+	public static QuantTerm forall(QuantVariableRef v, Term f) {
+	
+		if(f.getSort() != sort)
+			throw new IllegalArgumentException("Bad type when creating BoolProp, " +
+				"found: " + f.getSort());
+		
+		return Formula.lf.mkQuantTerm(true, new QuantVariable [] {v.qvar}, f, null, null);
+	}
+	
 	/**
 	 * Creates a universal binding for several vars from the formula f.
 	 * @param v the variable to bind

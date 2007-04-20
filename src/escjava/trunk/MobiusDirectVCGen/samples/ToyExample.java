@@ -1,21 +1,13 @@
 
 public class ToyExample {
 	int f;
-	public static class A {
-		static int fs = 2;
-		public static ToyExample t(int i) {
-			return null;
-		}
-	}
-	
-  public void f() {
+	public void f() {
     int i = 1;
-    int j;
+    ToyExample j = null;
     ;
-    A.t(i).f = ((f = 1) + (A.fs = 0));
+    ((A) j).t(i).f = (((i == 1)? 2: 1) + (A.fs = 0));
     
 //    if(i == 0);
-    j = i = 2 / i;
 //    while (true) {
 //    	if(i == 0)
 //    		continue;
