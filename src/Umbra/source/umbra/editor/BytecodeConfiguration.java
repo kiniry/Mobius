@@ -10,7 +10,7 @@ import org.eclipse.jface.text.source.SourceViewerConfiguration;
 
 
 /**
- * This class is used by Bytecode Editor with the matter of
+ * This class is used by the Bytecode Editor with the matter of
  * double click strategy and color versions. It has been generated
  * automatically and some changes has been made, for example
  * involving special ways of colouring and possibility of

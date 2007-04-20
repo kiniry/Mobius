@@ -7,6 +7,9 @@ import org.eclipse.jface.text.rules.SingleLineRule;
 import org.eclipse.jface.text.rules.WhitespaceRule;
 import org.eclipse.jface.text.rules.WordRule;
 
+import umbra.editor.parsing.BytecodeWhitespaceDetector;
+import umbra.editor.parsing.SpecialWordDetector;
+
 /**
  * This method defines coloring rules in tags.
  * It has been generated automatically except obtaing

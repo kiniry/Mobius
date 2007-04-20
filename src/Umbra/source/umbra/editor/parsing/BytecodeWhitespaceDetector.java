@@ -1,11 +1,11 @@
-package umbra.editor;
+package umbra.editor.parsing;
 
 import org.eclipse.jface.text.rules.IWhitespaceDetector;
 
 /**
  * New definition of whitespace
  * 
- * @author Wojciech WÄ…s
+ * @author Wojciech W±s
  */
 public class BytecodeWhitespaceDetector implements IWhitespaceDetector {
 

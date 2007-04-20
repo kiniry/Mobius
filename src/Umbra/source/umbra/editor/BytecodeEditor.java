@@ -111,8 +111,7 @@ public class BytecodeEditor extends TextEditor {
 	}
 	
 	/**
-	 * @return Java code editor 
-	 * that Bytecode has been generated from
+	 * @return Java code editor that Bytecode has been generated from
 	 */
 	public AbstractDecoratedTextEditor getRelatedEditor() {
 		return relatedEditor;
