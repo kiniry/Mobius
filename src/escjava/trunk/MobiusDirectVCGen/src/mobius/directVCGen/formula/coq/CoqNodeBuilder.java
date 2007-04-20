@@ -4,7 +4,6 @@ import mobius.directVCGen.formula.Logic;
 import mobius.directVCGen.formula.Num;
 import mobius.directVCGen.formula.Ref;
 import escjava.sortedProver.EscNodeBuilder;
-import escjava.sortedProver.Lifter.QuantVariable;
 
 /*@ non_null_by_default @*/
 public class CoqNodeBuilder extends EscNodeBuilder {
@@ -14,7 +13,7 @@ public class CoqNodeBuilder extends EscNodeBuilder {
 		private String rep;
 		/** tells if the notation is a prefix notation */
 		private final boolean prefix;
-		private final STerm [] args;
+		protected final STerm [] args;
 		
 		public CTerm (boolean prefix, String rep, STerm [] args) {
 			this.prefix = prefix;
@@ -26,32 +25,32 @@ public class CoqNodeBuilder extends EscNodeBuilder {
 			String res = "";
 			if (args.length == 0) {
 				return rep;
-			}
-			if(args.length == 1) {
+			} 
+			else if(args.length == 1) {
 				if(prefix) {
-					res = "(" + args[0] + " " + rep + ")";
-				}
-				else {
 					res = "(" + rep + " " + args[0] + ")";
 				}
-			}
-			if(args.length == 2) {
-				if (!prefix) {
-					res = "(" + args[0] + " " + rep + " " + args[1] + ")";
+				else {
+					res = "(" + args[0] + " " + rep + ")";
 				}
 			}
 			else {
-				res = "(" + rep;
-				for (STerm t: args) {
-					res += " " + t;
+				if ((!prefix) && (args.length == 2)) {
+					
+						res = "(" + args[0] + " " + rep + " " + args[1] + ")";
 				}
-				res += ")";
+				else {
+					res = "(" + rep;
+					for (STerm t: args) {
+						res += " " + t;
+					}
+					res += ")";
+				}
 			}
 			return res;
 		}
 		public boolean isSubSortOf(Sort s) {
-			// TODO: understand the use of that
-			return false;
+			throw new UnsupportedOperationException("This operation is not used it seems...");
 		}
 	}
 	
@@ -68,6 +67,67 @@ public class CoqNodeBuilder extends EscNodeBuilder {
 			super(false, rep, new STerm[0]);
 		}
 	}
+	public class CForall extends CPred {
+		public final QuantVar[] vars;
+		public CForall(QuantVar[] vars, STerm body) {
+			super(false, "forall", new STerm[]{body});
+			this.vars = vars;
+		}
+		
+		public String toString() {
+			String res  = "(forall";
+			for(QuantVar v: vars) {
+				res += " (" + normalize(v.name) + ":" + getCoqSort(v.type) + ")";
+			}
+			res += ", " + args[0] + ")";
+			return res;
+		}
+
+	}
+	public static QuantVar[] removeFirst(QuantVar[] vars) {
+		QuantVar[] res = new QuantVar [vars.length - 1];
+		for(int i = 1; i < vars.length; i++) {
+			res[i -1] = vars[i];
+		}
+		return res;
+	}
+	public class CExists extends CForall {
+
+		public CExists(QuantVar[] vars, STerm body) {
+			super(new QuantVar[] {vars[0]}, buildExists(removeFirst(vars), (SPred)body));
+		}
+		
+
+
+		public String toString() {
+			String res  = "(exists";
+			res +=  normalize(vars[0].name) + ":" + getCoqSort(vars[0].type);
+			res += ", " + args[0] + ")";
+			return res;
+		}
+
+	}
+
+
+	private String getCoqSort(Sort type) {
+		if(type == sortPred) {
+			return "Prop";
+		}
+		if(type == sortInt) {
+			return "Z";
+		}
+		if(type == sortReal) {
+			return "Real";
+		}
+		if(type == sortRef) {
+			return "Reference";
+		}
+		if(type == sortBool) {
+			return "bool";
+		}
+		throw new IllegalArgumentException("Unknown sort: " + type);
+	}
+	
 	
 	public class CValue extends CTerm implements SValue {
 
@@ -154,37 +214,158 @@ public class CoqNodeBuilder extends EscNodeBuilder {
 	}
 
 	@Override
-	public SAny buildConstantRef(FnSymbol c) {
-		// TODO Auto-generated method stub
-		return null;
+	public SPred buildImplies(SPred arg1, SPred arg2) {
+		return new CPred(false, "->", new STerm [] {arg1, arg2});
+	}
+	
+	@Override
+	public SPred buildForAll(QuantVar[] vars, SPred body, STerm[][] pats, STerm[] nopats) {
+		return new CForall(vars, body);
+	}
+	
+	@Override
+	public SAny buildQVarRef(QuantVar v) {
+		String name = normalize(v.name);
+		if (v.type == sortBool) {
+			return new CBool(name);
+		}
+		else if (v.type == Ref.sort) {
+			return new CRef(name);
+		}
+		else if (v.type == Num.sortInt) {
+			return new CInt(name);
+		}
+		else if (v.type == Num.sortReal) {
+			return new CReal(name);
+		}
+		else if (v.type == Logic.sort) {
+			return new CPred(name);
+		}
+		else
+			throw new IllegalArgumentException("Unknown Type: " + v.type);
+	}
+
+	private String normalize(String name) {
+		if(name.startsWith("#"))
+			return name.substring(1);
+		return name;
+	}
+
+	@Override
+	public SInt buildInt(long n) {
+		return new CInt("" + n);
+	}
+
+	@Override
+	public SBool buildIntBoolFun(int tag, SInt arg1, SInt arg2) {
+		switch (tag) {
+			case predEQ:
+				return new CBool("Z_eq_bool", new STerm[]{arg1, arg2});
+			case predLT:
+				return new CBool("Z_lt_bool", new STerm[]{arg1, arg2});
+			case predLE:
+				return new CBool("Z_le_bool", new STerm[]{arg1, arg2});
+
+			case predGT:	
+			case predGE:
+				throw new UnsupportedOperationException("Constructs gt or ge should"
+						+ " be desugared to lt and le...");
+			default:
+				throw new IllegalArgumentException("Unknown tag " + tag);
+				
+		}
+	}
+	@Override
+	public SPred buildIsTrue(SBool val) {
+		return new CPred("IsTrue", new STerm[] {val});
 	}
 
 	@Override
 	public SPred buildDistinct(SAny[] terms) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new UnsupportedOperationException("Distinct elements don't mean anything for Coq!");
 	}
-
+	
 	@Override
 	public SPred buildExists(QuantVar[] vars, SPred body) {
-		// TODO Auto-generated method stub
-		return null;
+		if(vars.length == 0)
+			return body;
+		return new CExists(vars, body);
 	}
 
 	@Override
-	public SAny buildFnCall(FnSymbol fn, SAny[] args) {
-		// TODO Auto-generated method stub
-		return null;
+	public SRef buildNull() {
+		return new CRef("null");
 	}
-
-	@Override
-	public SPred buildForAll(QuantVar[] vars, SPred body, STerm[][] pats, STerm[] nopats) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
+	
 	@Override
 	public SValue buildITE(SPred cond, SValue then_part, SValue else_part) {
+		// should not appear in this form ... the typing is a bit loosy
+		throw new UnsupportedOperationException("I don't like this construct, get rid of it!");
+	}
+	@Override
+	public SPred buildNot(SPred arg) {
+		return new CPred("not", new STerm[] {arg});
+	}
+	
+	@Override
+	public SPred buildTrue() {
+		return new CPred("True");
+	}
+	
+	@Override
+	public SReal buildReal(double f) {
+		throw new UnsupportedOperationException("Translation of reals is not supported yet!");
+	}
+
+	@Override
+	public SBool buildRealBoolFun(int realPredTag, SReal arg1, SReal arg2) {
+		throw new UnsupportedOperationException("Translation of reals is not supported yet!");
+	}
+
+	@Override
+	public SReal buildRealFun(int realFunTag, SReal arg1, SReal arg2) {
+		throw new UnsupportedOperationException("Translation of reals is not supported yet!");
+	}
+
+	@Override
+	public SReal buildRealFun(int realFunTag, SReal arg1) {
+		throw new UnsupportedOperationException("Translation of reals is not supported yet!");
+	}
+
+	@Override
+	public SPred buildRealPred(int realPredTag, SReal arg1, SReal arg2) {
+		throw new UnsupportedOperationException("Translation of reals is not supported yet!");
+	}
+
+	@Override
+	public SPred buildOr(SPred[] args) {
+		return new CPred(false, "\\/", args);
+	}
+	
+	@Override
+	public SPred buildPredCall(PredSymbol fn, SAny[] args) {
+		if(fn == symRefEQ) {
+			return new CPred(false, "=", args);
+		}
+		if(fn == symRefNE) {
+			return this.buildNot(new CPred(false, "=", args));
+		}
+		throw new IllegalArgumentException("Unknown symbol: " + fn);
+	}
+	
+	@Override
+	public SAny buildFnCall(FnSymbol fn, SAny[] args) {
+		throw new IllegalArgumentException("Unknown symbol: " + fn);
+	}
+
+	@Override
+	public SPred buildLabel(boolean positive, String name, SPred pred) {
+		throw new UnsupportedOperationException("Labels have no real meanings for us, right?");
+	}
+	
+	
+	@Override
+	public SAny buildConstantRef(FnSymbol c) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -195,30 +376,7 @@ public class CoqNodeBuilder extends EscNodeBuilder {
 		return null;
 	}
 
-	@Override
-	public SPred buildImplies(SPred arg1, SPred arg2) {
-		return new CPred(false, "->", new STerm [] {arg1, arg2});
-	}
 
-	@Override
-	public SInt buildInt(long n) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public SBool buildIntBoolFun(int tag, SInt arg1, SInt arg2) {
-		switch (tag) {
-			case predEQ:
-				break;
-			case predGT:
-				break;	
-			case predGE:
-				break;
-				
-		}
-		return null;
-	}
 
 	@Override
 	public SInt buildIntFun(int intFunTag, SInt arg1, SInt arg2) {
@@ -238,93 +396,11 @@ public class CoqNodeBuilder extends EscNodeBuilder {
 		return null;
 	}
 
-	@Override
-	public SPred buildIsTrue(SBool val) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
-	@Override
-	public SPred buildLabel(boolean positive, String name, SPred pred) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
-	@Override
-	public SPred buildNot(SPred arg) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
-	@Override
-	public SRef buildNull() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
-	@Override
-	public SPred buildOr(SPred[] args) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public SPred buildPredCall(PredSymbol fn, SAny[] args) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public SAny buildQVarRef(QuantVariable v) {
-		if (v.type == sortBool) {
-			return new CBool(v.name);
-		}
-		else if (v.type == Ref.sort) {
-			return new CRef(v.name);
-		}
-		else if (v.type == Num.sortInt) {
-			return new CInt(v.name);
-		}
-		else if (v.type == Num.sortReal) {
-			return new CReal(v.name);
-		}
-		else if (v.type == Logic.sort) {
-			return new CPred(v.name);
-		}
-		else
-			throw new IllegalArgumentException("Unknown Type: " + v.type);
-	}
-
-	@Override
-	public SReal buildReal(double f) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public SBool buildRealBoolFun(int realPredTag, SReal arg1, SReal arg2) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public SReal buildRealFun(int realFunTag, SReal arg1, SReal arg2) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public SReal buildRealFun(int realFunTag, SReal arg1) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public SPred buildRealPred(int realPredTag, SReal arg1, SReal arg2) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
+	
 	@Override
 	public SValue buildSelect(SMap map, SValue idx) {
 		// TODO Auto-generated method stub
@@ -337,11 +413,7 @@ public class CoqNodeBuilder extends EscNodeBuilder {
 		return null;
 	}
 
-	@Override
-	public SPred buildTrue() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+
 
 	@Override
 	public SValue buildValueConversion(Sort from, Sort to, SValue val) {
@@ -354,8 +426,5 @@ public class CoqNodeBuilder extends EscNodeBuilder {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-	
-	
 	
 }
