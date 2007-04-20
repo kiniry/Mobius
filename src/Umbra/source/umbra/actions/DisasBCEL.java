@@ -9,7 +9,6 @@ import java.io.IOException;
 import org.apache.bcel.classfile.JavaClass;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspace;
-//import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -23,6 +22,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditor;
 
+import umbra.IUmbraConstants;
 import umbra.UmbraHelper;
 import umbra.editor.BytecodeEditor;
 import umbra.editor.Composition;
@@ -35,14 +35,8 @@ import umbra.editor.Composition;
  * @author BYTECODE team
  */
 
-public class DisasBCEL implements IEditorActionDelegate {
-	
-	/**
-	 * The title of the window with messages generated from within the
-	 * objects of the DisasBCEL.
-	 */
-	private final String MESSAGE_DIALOG_TITLE = "Disassemble Bytecode";
-	
+public class DisasBCEL implements IEditorActionDelegate, IUmbraConstants {
+		
 	/**
 	 * The editor of a Java file for which the bytecode file is
 	 * generated.
@@ -57,42 +51,36 @@ public class DisasBCEL implements IEditorActionDelegate {
 	 * @param see the IActionDelegate.run(IAction)
 	 */
 	public void run(IAction action) {
-		IPath active = ((FileEditorInput)editor.getEditorInput()).
-			getFile().getFullPath();
+		IPath active = ((FileEditorInput)editor.getEditorInput()).getFile().getFullPath();
 		if (editor.isSaveOnCloseNeeded()) {
 			MessageDialog.openWarning(editor.getSite().getShell(), 
-									  MESSAGE_DIALOG_TITLE, 
-									  "You must save the code before you "+
-									  "disassemble it.");
+					                  DISAS_MESSAGE_TITLE, 
+					                  DISAS_SAVE_BYTECODE_FIRST);
 			return;
 		}
 		int lind = active.toOSString().lastIndexOf(UmbraHelper.JAVA_EXTENSION);
-		if (lind == -1) MessageDialog.openInformation(editor.getSite().
-				                                             getShell(), 
-				                                  MESSAGE_DIALOG_TITLE, 
-				                                  "This is not a \"" + 
-				                                  UmbraHelper.JAVA_EXTENSION + 
-				                                  "\" file.");
-		else {
+		if (lind == -1) {
+			MessageDialog.openInformation(editor.getSite().getShell(), 
+					                      DISAS_MESSAGE_TITLE, 
+					                      INVALID_EXTENSION.replace(SUBSTITUTE, UmbraHelper.JAVA_EXTENSION));
+		} else {
 			//replaceClass(active);
 			String fname = UmbraHelper.replaceLast(active.toOSString(), 
-					                            UmbraHelper.JAVA_EXTENSION,
-					                            UmbraHelper.BYTECODE_EXTENSION); 
+					                               UmbraHelper.JAVA_EXTENSION,
+					                               UmbraHelper.BYTECODE_EXTENSION); 
 			IWorkspace workspace = ResourcesPlugin.getWorkspace();
 			IFile file = workspace.getRoot().getFile(new Path(fname));
 			FileEditorInput input = new FileEditorInput(file);
 			try {
 				IWorkbenchPage page = editor.getEditorSite().getPage();
 				//BytecodeEditor bcEditor = (BytecodeEditor)page.openEditor(input, "org.eclipse.jdt.ui.CompilationUnitEditor", true);
-				BytecodeEditor bcEditor = (BytecodeEditor)page.openEditor(input,
-						"umbra.BytecodeEditor", 
-						true);
+				BytecodeEditor bcEditor = (BytecodeEditor)page.openEditor(input, BYTECODE_EDITOR_CLASS, true);
 				bcEditor.refreshBytecode(active, null, null);
 				input = new FileEditorInput(file);
 				JavaClass jc = bcEditor.getJavaClass();
 				Composition.startDisas();
 				page.closeEditor(bcEditor, true);
-				bcEditor = (BytecodeEditor)page.openEditor(input, "umbra.BytecodeEditor", true);
+				bcEditor = (BytecodeEditor)page.openEditor(input, BYTECODE_EDITOR_CLASS, true);
 				bcEditor.setRelation((AbstractDecoratedTextEditor)editor, jc);
 				Composition.stopDisas();
 			} catch (CoreException e) {

@@ -2,7 +2,6 @@ package umbra.actions;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +22,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditor;
 
+import umbra.IUmbraConstants;
 import umbra.UmbraHelper;
 import umbra.editor.BytecodeEditor;
 import b2bpl.Main;
@@ -37,12 +37,7 @@ import b2bpl.Project;
  * @author Samuel Willimann
  *
  */
-public class B2bplAction implements IEditorActionDelegate {
-	
-	/**
-	 * TODO
-	 */
-	private final String MESSAGE_DIALOG_TITLE = "Bytecode To BoogiePL";
+public class B2bplAction implements IEditorActionDelegate, IUmbraConstants {
 	
 	/**
 	 * TODO
@@ -63,17 +58,15 @@ public class B2bplAction implements IEditorActionDelegate {
 
 		IPath active = ((FileEditorInput)editor.getEditorInput()).getFile().getFullPath();
 		if (editor.isSaveOnCloseNeeded()) {
-			MessageDialog.openWarning(editor.getSite().getShell(), MESSAGE_DIALOG_TITLE, "You must save the bytecode before you translate it into BoogiePL.");
+			MessageDialog.openWarning(editor.getSite().getShell(),
+					                  B2BPL_MESSAGE_TITLE,
+					                  B2BPL_SAVE_BYTECODE_FIRST);
 			return;
 		}
-		int lind = active.toOSString().
-		                  lastIndexOf(UmbraHelper.BYTECODE_EXTENSION);
-		if (lind == -1) MessageDialog.openInformation(editor.getSite().
-				                                             getShell(), 
-				                                      MESSAGE_DIALOG_TITLE, 
-				                                      "This is not a \"" + 
-				                                      UmbraHelper.BYTECODE_EXTENSION+ 
-				                                      "\" file.");
+		int lind = active.toOSString().lastIndexOf(UmbraHelper.BYTECODE_EXTENSION);
+		if (lind == -1) MessageDialog.openInformation(editor.getSite().getShell(), 
+				                                      B2BPL_MESSAGE_TITLE,
+				                                      INVALID_EXTENSION.replace(SUBSTITUTE, UmbraHelper.BYTECODE_EXTENSION));
 		else {
 			//replaceClass(active);
 
@@ -138,12 +131,12 @@ public class B2bplAction implements IEditorActionDelegate {
 		FileEditorInput input = new FileEditorInput(file);
 		try {
 			IWorkbenchPage page = editor.getEditorSite().getPage();
-			BytecodeEditor bplEditor = (BytecodeEditor)page.openEditor(input, "umbra.BoogiePLEditor", true);
+			BytecodeEditor bplEditor = (BytecodeEditor)page.openEditor(input, BOOGIEPL_EDITOR_CLASS, true);
 			bplEditor.refreshBytecode(active, null, null);
 			input = new FileEditorInput(file);
 			JavaClass jc = bplEditor.getJavaClass();
 			page.closeEditor(bplEditor, true);
-			bplEditor = (BytecodeEditor)page.openEditor(input, "umbra.BoogiePLEditor", true);
+			bplEditor = (BytecodeEditor)page.openEditor(input, BOOGIEPL_EDITOR_CLASS, true);
 			bplEditor.setRelation((AbstractDecoratedTextEditor)editor, jc);
 		} catch (CoreException e) {
 			e.printStackTrace();
