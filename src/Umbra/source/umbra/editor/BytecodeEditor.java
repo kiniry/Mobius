@@ -212,7 +212,12 @@ public class BytecodeEditor extends TextEditor {
 		String pathName = getPath(path).toOSString(); 	
 		FileEditorInput input = (FileEditorInput)getEditorInput();
 		IFile file = input.getFile();
+		
+		// Get class name along with package name
 		String clname = path.lastSegment().substring(0, path.lastSegment().lastIndexOf("."));
+		String tmp = path.removeFirstSegments(1).toOSString();
+		clname = tmp.substring(0, tmp.lastIndexOf("."));
+		
 		ClassPath cp = new ClassPath(pathName);
 		System.out.println("pathName = " + pathName);
 		SyntheticRepository strin = SyntheticRepository.getInstance(cp);

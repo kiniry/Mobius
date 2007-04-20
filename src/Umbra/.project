@@ -3,6 +3,7 @@
 	<name>umbra</name>
 	<comment></comment>
 	<projects>
+		<project>b2bpl</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

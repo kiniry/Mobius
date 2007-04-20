@@ -117,6 +117,7 @@ public class B2bplAction implements IEditorActionDelegate {
 			}
 			
 			//-------------- Load .bpl file in editor
+			// TODO: Create BoogiePL Editor
 			
 			loadBPLFile(active, lind);
 		}

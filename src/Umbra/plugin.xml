@@ -1,20 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
 <plugin>
-
-   <extension
-         point="org.eclipse.ui.editors">
+   <extension point="org.eclipse.ui.editors">
       <editor
             class="umbra.editor.BytecodeEditor"
-            icon="icons/b01m.gif"
+            icon="icons/umbra.bytecode.file.gif"
             default="true"
             name="Bytecode Editor"
             contributorClass="umbra.editor.BytecodeEditorContributor"
             id="umbra.BytecodeEditor"
             extensions="btc"/>
+      <editor
+            class="umbra.editor.boogiepl.BoogiePLEditor"
+            icon="icons/umbra.bytecode.file.gif"
+            default="true"
+            name="BoogiePL Editor"
+            contributorClass="umbra.editor.boogiepl.BoogiePLEditorContributor"
+            id="umbra.BoogiePLEditor"
+            extensions="bpl"/>
    </extension>
-   <extension
-         point="org.eclipse.ui.editorActions">
+   <extension point="org.eclipse.ui.editorActions">
       <editorContribution
             targetID="org.eclipse.jdt.ui.CompilationUnitEditor"
             id="umbra.javaEditorContribution">
@@ -26,24 +31,24 @@
          <action
                toolbarPath="showGroup"
                label="Disassemble"
-               tooltip="Disassemble"
-               icon="icons/b01m.gif"
+               tooltip="Disassemble from Bytecode"
+               icon="icons/umbra.disassemble.gif"
                class="umbra.actions.DisasBCEL"
                menubarPath="umbra.bytecodeMenu/showGroup"
                id="umbra.BCELTest"/>
          <action
                toolbarPath="showGroup"
-               label="Synchronize"
-               tooltip="Synchronize"
+               label="Show Bytecode"
+               tooltip="Show Bytecode of selected statement"
                class="umbra.actions.SynchrSBAction"
-               icon="icons/synchr.bmp"
+               icon="icons/umbra.synchronize.gif"
                menubarPath="umbra.bytecodeMenu/showGroup"
                id="umbra.synchrAction"/>
          <action
                class="umbra.actions.CommitAction"
-               icon="icons/sample.gif"
+               icon="icons/umbra.commit.gif"
                id="umbra.commit"
-               label="Commit"
+               label="&amp;Commit Changes in Bytecode"
                menubarPath="umbra.bytecodeMenu/showGroup"
                style="push"
                toolbarPath="showGroup"/>
@@ -55,15 +60,32 @@
                label="&amp;Bytecode"
                id="umbra.bytecodeMenu">
                <separator name="synchrGroup"/>
+               <separator name="verifyGroup"/>
                <separator name="historyGroup"/>
                <separator name="helpGroup"/>
-         </menu>      
+         </menu>
+         <action
+               toolbarPath="verifyGroup"
+               label="Convert to BoogiePL"
+               tooltip="Convert to BoogiePL"
+               icon="icons/umbra.boogiepl.gif"
+               class="umbra.actions.B2bplAction"
+               menubarPath="umbra.bytecodeMenu/verifyGroup"
+               id="umbra.toBoogiePL"/>
+         <action
+               toolbarPath="verifyGroup"
+               label="Verify Bytecode"
+               tooltip="Verify Bytecode by creating BoogiePL and sending in to Boogie"
+               icon="icons/umbra.boogiepl.gif"
+               class="umbra.actions.VerifyAction"
+               menubarPath="umbra.bytecodeMenu/verifyGroup"
+               id="umbra.verify"/>
          <action
                toolbarPath="historyGroup"
                label="&amp;Add to history"
                tooltip="Add to history"
                class="umbra.history.HistoryAction"
-               icon="icons/addH.GIF"
+               icon="icons/umbra.addtohistory.gif"
                menubarPath="umbra.bytecodeMenu/historyGroup"
                id="umbra.history"/>
          <action
@@ -71,7 +93,7 @@
                label="&amp;Clear history"
                tooltip="Clear history"
                class="umbra.history.ClearHistoryAction"
-               icon="icons/clearH.GIF"
+               icon="icons/umbra.clearhistory.gif"
                menubarPath="umbra.bytecodeMenu/historyGroup"
                id="umbra.clearHistory"/>
          <action
@@ -79,7 +101,7 @@
                label="&amp;Installation Info"
                tooltip="Installation Info"
                class="umbra.info.InstalInfoAction"
-               icon="icons/info.gif"
+               icon="icons/umbra.help.gif"
                menubarPath="umbra.bytecodeMenu/helpGroup"
                id="umbra.instalInfo"/>
          <action
@@ -87,10 +109,9 @@
                label="&amp;User Guide"
                tooltip="User Guide"
                class="umbra.info.UserGuideAction"
-               icon="icons/help.gif"
+               icon="icons/umbra.help.gif"
                menubarPath="umbra.bytecodeMenu/helpGroup"
                id="umbra.userGuide"/>
       </editorContribution>
    </extension>
-
 </plugin>
