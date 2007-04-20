@@ -257,7 +257,7 @@ public class Lifter extends EscNodeBuilder
 		
 		public STerm dump()
 		{
-			return dumpBuilder.buildQVarRef(qvar.qvar); 
+			return dumpBuilder.buildQVarRef(qvar); 
 		}
 		public boolean equals(Object o) {
 			if(!(o instanceof QuantVariableRef)) {
@@ -435,8 +435,10 @@ public class Lifter extends EscNodeBuilder
 		public void printTo(StringBuffer sb)
 		{
 			sb.append(fn.name);
-			if(tag != 0) 
+			if(tag != 0 && tag < tagsIds.length) 
 				sb.append(" " + tagsIds[tag]);
+			if (tag > tagsIds.length)
+				sb.append(" " + TagConstants.toString(tag));
 			if (args.length > 0) {
 				sb.append("(");
 				for (int i = 0; i < args.length; ++i) {
@@ -871,7 +873,7 @@ public class Lifter extends EscNodeBuilder
 	static class Die extends RuntimeException { }
 	public SAny buildFnCall(FnSymbol fn, SAny[] args) { throw new Die(); }
 	public SAny buildConstantRef(FnSymbol c) { throw new Die(); }
-	public SAny buildQVarRef(QuantVar v) { throw new Die(); }
+	public SAny buildQVarRef(QuantVariable v) { throw new Die(); }
 	public SPred buildPredCall(PredSymbol fn, SAny[] args) { throw new Die(); }
 	
 	public SPred buildImplies(SPred arg1, SPred arg2) { throw new Die(); }

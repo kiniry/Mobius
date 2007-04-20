@@ -4,6 +4,7 @@ import java.util.Hashtable;
 
 import javafe.util.Assert;
 
+import escjava.sortedProver.Lifter.QuantVariable;
 import escjava.vcGeneration.TDisplay;
 
 /*@ non_null_by_default @*/
@@ -316,7 +317,7 @@ public abstract class NodeBuilder
 	//@ requires \nonnullelements(args);
 	abstract public SAny buildFnCall(FnSymbol fn, SAny[] args);
 	abstract public SAny buildConstantRef(FnSymbol c);
-	abstract public SAny buildQVarRef(QuantVar v);
+	abstract public SAny buildQVarRef(QuantVariable v);
 	//@ requires \nonnullelements(args);
 	abstract public SPred buildPredCall(PredSymbol fn, SAny[] args);
 	

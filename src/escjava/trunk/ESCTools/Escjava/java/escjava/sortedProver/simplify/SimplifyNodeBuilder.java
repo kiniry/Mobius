@@ -11,6 +11,7 @@ import javafe.util.Set;
 import escjava.prover.Atom;
 import escjava.sortedProver.EscNodeBuilder;
 import escjava.sortedProver.NodeBuilder;
+import escjava.sortedProver.Lifter.QuantVariable;
 import escjava.sortedProver.NodeBuilder.FnSymbol;
 import escjava.sortedProver.NodeBuilder.PredSymbol;
 import escjava.sortedProver.NodeBuilder.QuantVar;
@@ -156,9 +157,9 @@ public class SimplifyNodeBuilder extends EscNodeBuilder
 		return sx(c.name);
 	}
 
-	public SAny buildQVarRef(QuantVar v)
+	public SAny buildQVarRef(QuantVariable v)
 	{
-		return sx(v.name);
+		return sx(v.qvar.name);
 	}
 
 	public SPred buildPredCall(PredSymbol fn, SAny[] args)
