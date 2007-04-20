@@ -39,7 +39,7 @@ public class Lifter extends EscNodeBuilder
 	final Stack quantifiedVars = new Stack();
 	final Hashtable symbolTypes = new Hashtable();
 	final Term[] emptyTerms = new Term[0];
-	final EscNodeBuilder builder;
+	public final EscNodeBuilder builder;
 	final SortedBackPred backPred = new SortedBackPred();	
 	int pass;
 	int methodNo = 0;
@@ -1681,7 +1681,9 @@ public class Lifter extends EscNodeBuilder
 	}
 
 	// dump	
-	/*@ nullable @*/EscNodeBuilder dumpBuilder;
+	// jgc: made it public but this is the WRONG way. a new build method (simpler) should be
+	//  add instead
+	public /*@ nullable @*/EscNodeBuilder dumpBuilder;
 	final Hashtable fnTranslations = new Hashtable();
 	final ArrayList stringConstants = new ArrayList();
 	final ArrayList distinctSymbols = new ArrayList();
