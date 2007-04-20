@@ -13,10 +13,6 @@ package umbra;
 public class UmbraHelper {
 
 	/**
-	 * The file extension for the files with the bytecode representation.
-	 */
-	static public final String BYTECODE_EXTENSION   = ".btc";
-	/**
 	 * The file extension for the Java files.
 	 */
 	static public final String JAVA_EXTENSION       = ".java";
@@ -25,30 +21,35 @@ public class UmbraHelper {
 	 */
 	static public final String CLASS_EXTENSION      = ".class";
 	/**
+	 * The file extension for the files with the bytecode representation.
+	 */
+	static public final String BYTECODE_EXTENSION   = ".btc";
+	/**
 	 * The extension for BoogiePL files.
 	 */	
 	static public final String BOOGIEPL_EXTENSION = ".bpl";
 
 	
 	/**
-	 * This method replaces the last occurrence of the <code>string2</code>
-	 * with the <code>string3</code> in <code>string</code>. It serves to 
-	 * exchange the file sufficies. In case <code>string2</code> does not
+	 * This method replaces the last occurrence of the <code>oldSuffix</code>
+	 * with the <code>newSuffix</code> in <code>string</code>. It serves to 
+	 * exchange the file sufficies. In case <code>oldSuffix</code> does not
 	 * occur in <code>string</code> it returns <code>string</code>.
 	 * 
 	 * @param string string to replace the suffix from
-	 * @param string2 the suffix to replace
-	 * @param string3 the new suffix
+	 * @param oldSuffix the suffix to replace
+	 * @param newSuffix the new suffix
 	 * @return the string with replaced suffix
 	 */
-	public static String replaceLast(String string, 
-			                          String string2, String string3) {
+	public static String replaceLast(String string, String oldSuffix, String newSuffix) {
 
-		int where = string.lastIndexOf(string2);
-		if (where==-1) { //does not occur
+		int where = string.lastIndexOf(oldSuffix);
+		if (where == -1) {
+			// Given suffix does not occur
 			return string;
 		} else {
-			return string.substring(0,where).concat(string3);
+			// Replace suffix
+			return string.substring(0, where).concat(newSuffix);
 		}
 	}
 	
