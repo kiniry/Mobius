@@ -42,15 +42,12 @@ public class UmbraHelper {
 	 * @return the string with replaced suffix
 	 */
 	public static String replaceLast(String string, String oldSuffix, String newSuffix) {
-
-		int where = string.lastIndexOf(oldSuffix);
-		if (where == -1) {
+		if (string.endsWith(oldSuffix)) {
+			// Return string with new suffix
+			return string.substring(0, string.lastIndexOf(oldSuffix)).concat(newSuffix);
+		} else {
 			// Given suffix does not occur
 			return string;
-		} else {
-			// Replace suffix
-			return string.substring(0, where).concat(newSuffix);
 		}
 	}
-	
 }
