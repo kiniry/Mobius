@@ -25,6 +25,7 @@ package java.lang;
  * @author Curtis Clifton with help from the JML Seminar participants summer 1999.
  * @author Gary T. Leavens
  * @author David R. Cok
+ * @author Mikolas Janota
  */
 //-@ immutable
 public /*@ pure @*/ final 
@@ -520,10 +521,10 @@ public /*@ pure @*/ final
       @                         ch == '\u001C' ||  // FILE SEPARATOR
       @                         ch == '\u001D' ||  // GROUP SEPARATOR
       @                         ch == '\u001E' ||  // RECORD SEPARATOR
-      @                         ch == '\u001F';    // UNIT SEPARATOR
-      @   ensures_redundantly \result <==> (* ch is a Java whitespace 
-      @                                      character *);
-      @*/
+      @                         ch == '\u001F';    // UNIT SEPARATOR */
+     /*>>> commenting out as the comments is translated into result==true at the moment 
+      >@   ensures_redundantly  \result <==> (* ch is a Java whitespace character *);
+      >@*/
     public static /*@ pure @*/ boolean isWhitespace(char ch); 
 
     /*@  public normal_behavior
@@ -537,6 +538,7 @@ public /*@ pure @*/ final
     /*@  public normal_behavior
       @   ensures UNASSIGNED <= \result && \result <= OTHER_SYMBOL
       @            && (* \result == the Unicode character category of ch *);
+      @   ensures (ch == '\u0020' || ch == '\u00A0' || ch == '\u2000') ==> (\result == SPACE_SEPARATOR);
       @*/
     public static /*@ pure @*/ int getType(char ch);
 
