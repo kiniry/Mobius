@@ -27,3 +27,16 @@ static int a = 3 can be compiled as a postcondition to the static initialisation
 clinit()
 
 Thus the examples of J.Kiniry may pass
+
+
+
+
+====================================================================================================
+Jan 2007 MultinewArray is bad implemented. Must be changed
+
+
+
+
+
+
+
