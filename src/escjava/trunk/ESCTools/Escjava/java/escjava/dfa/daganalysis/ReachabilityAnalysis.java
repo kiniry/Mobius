@@ -266,8 +266,8 @@ public class ReachabilityAnalysis {
         }
         
         // DBG
-         System.out.println("Constructed graph: " + graph);
-         graph.printStats();
+        //  System.out.println("Constructed graph: " + graph);
+        //  graph.printStats();
          
          
         // do DFS
