@@ -5,7 +5,7 @@ import org.eclipse.jface.text.rules.IWhitespaceDetector;
 /**
  * New definition of whitespace
  * 
- * @author Wojciech W±s
+ * @author Wojciech WÄ…s
  */
 public class BytecodeWhitespaceDetector implements IWhitespaceDetector {
 

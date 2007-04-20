@@ -10,7 +10,7 @@ import org.apache.bcel.generic.INSTANCEOF;
 import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.NEW;
 
-import umbra.editor.IBytecodeStrings;
+import umbra.editor.parsing.IBytecodeStrings;
 
 /**
  * This class is related to some subset of instructions 

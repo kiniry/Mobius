@@ -9,7 +9,8 @@ import org.apache.bcel.generic.INVOKESTATIC;
 import org.apache.bcel.generic.INVOKEVIRTUAL;
 import org.apache.bcel.generic.Instruction;
 
-import umbra.editor.IBytecodeStrings;
+import umbra.editor.parsing.IBytecodeStrings;
+
 
 /**
  * This class is related to some subset of instructions 

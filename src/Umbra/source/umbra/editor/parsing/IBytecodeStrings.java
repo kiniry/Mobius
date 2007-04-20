@@ -1,7 +1,7 @@
 /*
  * Created on 2005-04-30
  */
-package umbra.editor;
+package umbra.editor.parsing;
 
 /**
  * Some string arrays used to identify keywords and instruction

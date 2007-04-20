@@ -18,7 +18,7 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 
 import umbra.editor.BytecodeDocument;
-import umbra.editor.IBytecodeStrings;
+import umbra.editor.parsing.IBytecodeStrings;
 
 /**
  * This class defines some structures related to BCEL as well

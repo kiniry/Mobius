@@ -1,4 +1,4 @@
-package umbra.editor;
+package umbra.editor.parsing;
 
 import org.eclipse.jface.text.rules.*;
 

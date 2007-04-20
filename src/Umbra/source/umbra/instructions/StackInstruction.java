@@ -16,7 +16,8 @@ import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.LLOAD;
 import org.apache.bcel.generic.LSTORE;
 
-import umbra.editor.IBytecodeStrings;
+import umbra.editor.parsing.IBytecodeStrings;
+
 
 /**
  * This class is related to some subset of instructions 

@@ -9,7 +9,8 @@ import org.apache.bcel.generic.LDC;
 import org.apache.bcel.generic.LDC2_W;
 import org.apache.bcel.generic.LDC_W;
 
-import umbra.editor.IBytecodeStrings;
+import umbra.editor.parsing.IBytecodeStrings;
+
 
 /**
  * This class is related to some subset of instructions 

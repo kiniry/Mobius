@@ -1,4 +1,4 @@
-package umbra.editor;
+package umbra.editor.parsing;
 
 import org.eclipse.jface.text.rules.IRule;
 import org.eclipse.jface.text.rules.IToken;
@@ -7,6 +7,8 @@ import org.eclipse.jface.text.rules.SingleLineRule;
 import org.eclipse.jface.text.rules.WhitespaceRule;
 import org.eclipse.jface.text.rules.WordRule;
 
+import umbra.editor.ColorManager;
+import umbra.editor.IColorValues;
 import umbra.editor.parsing.BytecodeWhitespaceDetector;
 import umbra.editor.parsing.SpecialWordDetector;
 

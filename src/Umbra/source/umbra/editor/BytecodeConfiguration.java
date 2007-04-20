@@ -8,6 +8,11 @@ import org.eclipse.jface.text.rules.DefaultDamagerRepairer;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.SourceViewerConfiguration;
 
+import umbra.editor.parsing.BytecodePartitionScanner;
+import umbra.editor.parsing.BytecodeScanner;
+import umbra.editor.parsing.BytecodeTagScanner;
+import umbra.editor.parsing.TokenGetter;
+
 
 /**
  * This class is used by the Bytecode Editor with the matter of

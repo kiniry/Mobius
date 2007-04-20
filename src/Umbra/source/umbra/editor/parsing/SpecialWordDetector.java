@@ -5,7 +5,6 @@ package umbra.editor.parsing;
 
 import org.eclipse.jface.text.rules.IWordDetector;
 
-import umbra.editor.IBytecodeStrings;
 
 
 /**

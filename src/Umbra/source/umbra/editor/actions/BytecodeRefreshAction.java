@@ -23,9 +23,10 @@ import umbra.editor.BytecodeEditorContributor;
  * This action is equal to generating bytecode again from the
  * Java code after saving binary file.
  * 
- * @author Wojtek W±s 
+ * @author Wojtek WÄ…s 
  */
 public class BytecodeRefreshAction extends Action {
+
 	/**
 	 * TODO
 	 */
@@ -73,8 +74,10 @@ public class BytecodeRefreshAction extends Action {
 		try {
 			String[] commentTab = bytecodeContribution.getCommentTab();
 			String[] interlineTab = bytecodeContribution.getInterlineTab();
+			System.err.println(interlineTab.length);
 			for (int i = 0; i < interlineTab.length; i++) {
 				System.out.println("" + i + ". " + interlineTab[i]);
+				System.err.println("" + i + ". " + interlineTab[i]);
 			}
 			((BytecodeEditor)editor).refreshBytecode(active, commentTab, interlineTab);
 			FileEditorInput input = new FileEditorInput(file);

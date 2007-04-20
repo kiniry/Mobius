@@ -42,7 +42,7 @@ import umbra.editor.actions.BytecodeSynchrAction;
  * synchronization of cursor's positions from Bytecode to Java code,
  * color changing and checking syntax correctness. 
  * 
- * @author Wojtek W±s
+ * @author Wojtek WÄ…s
  */
 public class BytecodeEditorContributor extends EditorActionBarContributor {
 
@@ -51,14 +51,15 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
 	 */
 	private BytecodeContribution bytecodeContribution;
 	/**
-	 * TODO
+	 * The action to change the color mode to the next one.
 	 */
 	private BytecodeEditorAction actionPlus;
 	/**
-	 * TODO
+	 * The action to change the color mode to the previous one.
 	 */
 	private BytecodeEditorAction actionMinus;
 	/**
+	 * The action to refresh 
 	 * TODO
 	 */
 	private BytecodeRefreshAction refreshAction;

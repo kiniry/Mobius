@@ -6,7 +6,8 @@ package umbra.instructions;
 import org.apache.bcel.generic.IINC;
 import org.apache.bcel.generic.Instruction;
 
-import umbra.editor.IBytecodeStrings;
+import umbra.editor.parsing.IBytecodeStrings;
+
 
 /**
  * This class is related to some subset of instructions 

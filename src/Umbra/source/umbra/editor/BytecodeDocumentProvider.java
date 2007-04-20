@@ -10,12 +10,14 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.editors.text.FileDocumentProvider;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditor;
 
+import umbra.editor.parsing.BytecodePartitionScanner;
+
 
 /**
  * This class has been modificated with relation to the generated automatically
  * to allow adding listener that is responsible for error checking
  * 
- * @author Wojciech W±s
+ * @author Wojciech Wï¿½s
  */
 public class BytecodeDocumentProvider extends FileDocumentProvider {
 

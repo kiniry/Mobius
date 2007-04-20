@@ -31,7 +31,7 @@ import umbra.editor.actions.BytecodeRebuildAction;
  * If modification happens in the same method, Bytecode
  * modification is privileged.
  * 
- * @author Wojtek W±s  
+ * @author Wojtek WÄ…s  
  */
 public class BytecodeCombineAction extends Action {
 	/**
