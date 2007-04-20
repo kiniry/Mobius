@@ -115,6 +115,14 @@ public abstract class NodeBuilder
 			this.mapTo = mapTo;
 		}
 		
+		public boolean equals(Object o) {
+			if (o instanceof Sort) {
+				Sort s= (Sort) o;
+				return s.name.equals(name);
+			}
+			return false;
+		}
+		
 		public boolean isSubSortOf(Sort other)
 		{
 			other = other.theRealThing();
@@ -412,4 +420,7 @@ public abstract class NodeBuilder
 	// Type conversions
 	abstract public SValue buildValueConversion(Sort from, Sort to, SValue val);
 	abstract public SPred buildIsTrue(SBool val);
+	
+	// Mobius specific stuff
+	abstract public SPred buildNewObject(SAny oldh, SAny heap, SRef r) ;
 }

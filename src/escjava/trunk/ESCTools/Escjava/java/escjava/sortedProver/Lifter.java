@@ -539,6 +539,10 @@ public class Lifter extends EscNodeBuilder
 			if (fn == symRealBoolFn) {
 				return dumpBuilder.buildRealBoolFun(tag, args[0].dumpReal(), args[1].dumpReal());
 			}
+			if (fn == symNewObj) {
+				return dumpBuilder.buildNewObject(args[0].dumpAny(), args[1].dumpAny(),
+						args[2].dumpRef());
+			}
 			System.out.println(fn.name);
 			Assert.notFalse(! fn.name.startsWith("%"));
 			
@@ -861,6 +865,8 @@ public class Lifter extends EscNodeBuilder
     public FnSymbol symFloatingNeg = registerFnSymbol("%floatingNeg", new Sort[] { sortReal }, sortReal, TagConstants.FLOATINGNEG);    
 	public FnSymbol symSelect = registerFnSymbol("%select", new Sort[] { sortMap, sortValue }, sortValue, TagConstants.SELECT);
 	public FnSymbol symStore = registerFnSymbol("%store", new Sort[] { sortMap, sortValue, sortValue }, sortMap, TagConstants.STORE);
+
+	
 	public PredSymbol symAnyEQ = registerPredSymbol("%anyEQ", new Sort[] { sortValue, sortValue }, TagConstants.ANYEQ);
 	public PredSymbol symAnyNE = registerPredSymbol("%anyNE", new Sort[] { sortValue, sortValue }, TagConstants.ANYNE);
 	public PredSymbol symIsTrue = registerPredSymbol("%isTrue", new Sort[] { sortBool });
@@ -879,6 +885,17 @@ public class Lifter extends EscNodeBuilder
     
     public PredSymbol symValueToPred = registerPredSymbol("%valueToPred", new Sort[] { sortValue });
     public FnSymbol symPredToBool = registerFnSymbol("%predToBool", new Sort[] { sortPred }, sortBool);    
+    
+    
+    // mobius direct vcgen specific constructs
+    /** symbol to mean a new object has been created */
+    public FnSymbol symNewObj = registerFnSymbol("%new", new Sort[] { sortMap, sortMap, sortRef }, sortPred, TagConstants.NEW);
+    /** symbol for special select */
+    public FnSymbol symMSelect = registerFnSymbol("%select", new Sort[] { sortMap, sortRef, sortRef }, sortValue, TagConstants.SELECT);
+	/** symbol for special store */
+    public FnSymbol symMStore = registerFnSymbol("%store", new Sort[] { sortMap, sortRef, sortRef, sortValue }, sortMap, TagConstants.STORE);
+	
+    
     
 	// we just want Sort and the like, don't implement anything	
 	static class Die extends RuntimeException { }
@@ -915,8 +932,11 @@ public class Lifter extends EscNodeBuilder
 	public SMap buildStore(SMap map, SValue idx, SValue val) { throw new Die(); }
 	public SPred buildAnyEQ(SAny arg1, SAny arg2) { throw new Die(); }
 	public SPred buildAnyNE(SAny arg1, SAny arg2) { throw new Die(); }
+
 	public SValue buildValueConversion(Sort from, Sort to, SValue val) { throw new Die(); }
 	public SPred buildIsTrue(SBool val) { throw new Die(); }
+
+	public SPred buildNewObject(SAny oldh, SAny heap, SRef r) { throw new Die(); }
 
 	boolean isEarlySort(Sort s, Sort p)
 	{
