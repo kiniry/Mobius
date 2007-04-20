@@ -7,14 +7,14 @@ import escjava.sortedProver.NodeBuilder.Sort;
 
 public class Heap {
 	public static Sort sort = Formula.lf.sortMap;
-	public static QuantVariableRef varPre = Expression.refFromVar(Expression.var("\\preHeap", Formula.sort));
-	public static QuantVariableRef var = Expression.refFromVar(Expression.var("\\heap", Formula.sort));
+	public static QuantVariableRef varPre = Expression.rvar("preHeap", sort);
+	public static QuantVariableRef var = Expression.rvar("heap", sort);
 	
 	public static Term store(QuantVariableRef heap, QuantVariable var, Term val) {
 		return Formula.lf.mkFnTerm(Formula.lf.symStore, new Term[] {heap, Expression.refFromVar(var), sortToValue(val)});
 	}
 	public static Term store(QuantVariableRef heap, QuantVariableRef obj, QuantVariable var, Term val) {
-		return Formula.lf.mkFnTerm(Formula.lf.symStore, new Term[] {heap, obj, Expression.refFromVar(var), sortToValue(val)});
+		return Formula.lf.mkFnTerm(Formula.lf.symMStore, new Term[] {heap, obj, Expression.refFromVar(var), sortToValue(val)});
 	}
 	public static Term select(QuantVariableRef heap, QuantVariable var) {
 		Term select = Formula.lf.mkFnTerm(Formula.lf.symSelect, 
@@ -22,7 +22,7 @@ public class Heap {
 		return valueToSort(select, var.type);
 	}
 	public static Term select(QuantVariableRef heap, QuantVariableRef obj, QuantVariable var) {
-		Term select = Formula.lf.mkFnTerm(Formula.lf.symSelect, 
+		Term select = Formula.lf.mkFnTerm(Formula.lf.symMSelect, 
 				new Term[] {heap, obj, Expression.refFromVar(var)});
 		return valueToSort(select, var.type);
 	}
@@ -62,6 +62,16 @@ public class Heap {
 			throw new IllegalArgumentException("Bad type " +
 					"found: " + t.getSort());
 		}
+	}
+	
+	private static int heapc =0;
+	public static QuantVariableRef newVar() {
+		return Expression.rvar("heap" + (heapc++), Heap.sort);
+	}
+	public static Term newElem(Term oldheap, Term heap,  QuantVariableRef e) {
+		if(oldheap == null)
+			throw new NullPointerException();
+		return Formula.lf.mkFnTerm(Formula.lf.symNewObj, new Term[] {oldheap, heap, e});
 	}
 	
 }

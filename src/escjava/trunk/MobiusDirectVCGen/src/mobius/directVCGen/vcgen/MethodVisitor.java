@@ -69,12 +69,11 @@ public class MethodVisitor extends DirectVCGen {
 		else {
 			res += "\nproof obligation:";
 		}
+	
 		for(Term t: vcs) {
 			res += "\n" + t;
-		}
-		System.out.println(res);
-		for(Term t: vcs) {
 			res += "\n" + Formula.generateFormulas(t);
+			res += "\n";
 		}
 
 		return res;

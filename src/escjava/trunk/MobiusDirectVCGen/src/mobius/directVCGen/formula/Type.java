@@ -26,6 +26,11 @@ public class Type {
 	 * @return a newly created term representing a typeof construct
 	 */
 	public static FnTerm of(Term heap, Term var) {
+		if(heap.getSort() != Heap.sort)
+			throw new IllegalArgumentException("Type of the first param should be heap (" + Heap.sort + "), found: " + heap.getSort());
+		if(var.getSort() != Ref.sort)
+			throw new IllegalArgumentException("Type of the second param should be ref (" + Ref.sort + "), found: " + var.getSort());
+
 		return Formula.lf.mkFnTerm(Formula.lf.symTypeOf, new Term[] {heap, var});
 	}
 	

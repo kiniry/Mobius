@@ -47,7 +47,7 @@ public class ExpressionVCGen extends BinaryExpressionVCGen{
 				               		StmtVCGen.getExcpPost(Type.javaLangThrowable(), entry).substWith(exc)));
 		Term tNormal = normalPost.substWith(entry.post.var);
 		QuantVariableRef res = Expression.rvar(entry.post.var.getSort());
-		tNormal = Logic.forall(res.qvar, Logic.implies(tNormal, entry.post.post));
+		tNormal = Logic.forall(res.qvar, Logic.implies(tNormal, entry.post.substWith(res)));
 		entry.post = new Post(Logic.and(pre, Logic.implies(pre, Logic.and(tNormal, tExcp))));
 		Vector<QuantVariableRef> v = mkArguments(mi);
 		ExprVec ev = mi.args;

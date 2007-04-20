@@ -64,7 +64,7 @@ public class Expression {
 	public static QuantVariableRef rvar(FormalParaDecl arg) {
 		return refFromVar(Formula.lf.mkQuantVariable(arg, UniqName.variable(arg)));
 	}
-	public static Term rvar(String str, Sort s) {
+	public static QuantVariableRef rvar(String str, Sort s) {
 		return refFromVar(var(str, s));
 	}
 	public static QuantVariableRef rvar(GenericVarDecl decl) {

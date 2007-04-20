@@ -67,8 +67,7 @@ public class VCEntry {
 		this.post = post;
 		this.brpost = brpost;
 		this.contpost = contpost;
-		this.excpost =  new Post(Expression.refFromVar(Expression.var("e", Ref.sort)),
-								 Expression.refFromVar(Expression.var("excp post", Logic.sort))); //excpost;
+		this.excpost =  excpost;
 	}
 	
 	/**

@@ -4,8 +4,10 @@ import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
 import javafe.ast.Expr;
 import mobius.directVCGen.formula.Expression;
+import mobius.directVCGen.formula.Heap;
 import mobius.directVCGen.formula.Logic;
 import mobius.directVCGen.formula.Ref;
+import mobius.directVCGen.formula.Type;
 import mobius.directVCGen.vcgen.stmt.StmtVCGen;
 import mobius.directVCGen.vcgen.struct.Post;
 import mobius.directVCGen.vcgen.struct.VCEntry;
@@ -22,6 +24,11 @@ public abstract class ABasicExpressionVCGEn {
 	public Term getNewExcpPost(Term type, VCEntry post) {
 		Post p = StmtVCGen.getExcpPost(type, post);
 		QuantVariableRef e = Expression.rvar(Ref.sort);
-		return Logic.forall(e, p.substWith(e));
+		QuantVariableRef heap = Heap.newVar();
+		return Logic.forall(e,
+				Logic.forall(heap,
+						Logic.implies(Logic.equals(Type.of(heap, e), type),
+								Logic.implies(Heap.newElem(Heap.var, heap, e),
+						 			p.substWith(e).subst(Heap.var, heap)))));
 	}
 }

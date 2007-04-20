@@ -1,8 +1,5 @@
 package mobius.directVCGen.formula.coq;
 
-import mobius.directVCGen.formula.Logic;
-import mobius.directVCGen.formula.Num;
-import mobius.directVCGen.formula.Ref;
 import escjava.sortedProver.EscNodeBuilder;
 
 /*@ non_null_by_default @*/
@@ -67,6 +64,32 @@ public class CoqNodeBuilder extends EscNodeBuilder {
 			super(false, rep, new STerm[0]);
 		}
 	}
+	public class CMap extends CTerm implements SMap {
+
+		public CMap(boolean pref, String rep, STerm [] args) {
+			super(pref, rep, args);
+		}
+		public CMap(String rep, STerm [] args) {
+			super(true, rep, args);
+		}
+		
+		public CMap(String rep) {
+			super(false, rep, new STerm[0]);
+		}
+	}
+	public class CType extends CTerm implements SAny {
+
+		public CType(boolean pref, String rep, STerm [] args) {
+			super(pref, rep, args);
+		}
+		public CType(String rep, STerm [] args) {
+			super(true, rep, args);
+		}
+		
+		public CType(String rep) {
+			super(false, rep, new STerm[0]);
+		}
+	}
 	public class CForall extends CPred {
 		public final QuantVar[] vars;
 		public CForall(QuantVar[] vars, STerm body) {
@@ -124,6 +147,9 @@ public class CoqNodeBuilder extends EscNodeBuilder {
 		}
 		if(type == sortBool) {
 			return "bool";
+		}
+		if(type == sortMap) {
+			return "Heap";
 		}
 		throw new IllegalArgumentException("Unknown sort: " + type);
 	}
@@ -229,17 +255,20 @@ public class CoqNodeBuilder extends EscNodeBuilder {
 		if (v.type == sortBool) {
 			return new CBool(name);
 		}
-		else if (v.type == Ref.sort) {
+		else if (v.type.equals(sortRef)) {
 			return new CRef(name);
 		}
-		else if (v.type == Num.sortInt) {
+		else if (v.type.equals(sortInt)) {
 			return new CInt(name);
 		}
-		else if (v.type == Num.sortReal) {
+		else if (v.type.equals(sortReal)) {
 			return new CReal(name);
 		}
-		else if (v.type == Logic.sort) {
+		else if (v.type.equals(sortPred)) {
 			return new CPred(name);
+		}
+		else if (v.type.equals(sortMap)) {
+			return new CMap(name);
 		}
 		else
 			throw new IllegalArgumentException("Unknown Type: " + v.type);
@@ -247,7 +276,9 @@ public class CoqNodeBuilder extends EscNodeBuilder {
 
 	private String normalize(String name) {
 		if(name.startsWith("#"))
-			return name.substring(1);
+			name = name.substring(1);
+		name = name.replace(':', '_');
+		name = name.replace('.', '_');
 		return name;
 	}
 
@@ -260,11 +291,11 @@ public class CoqNodeBuilder extends EscNodeBuilder {
 	public SBool buildIntBoolFun(int tag, SInt arg1, SInt arg2) {
 		switch (tag) {
 			case predEQ:
-				return new CBool("Z_eq_bool", new STerm[]{arg1, arg2});
+				return new CBool("Zeq_bool", new STerm[]{arg1, arg2});
 			case predLT:
-				return new CBool("Z_lt_bool", new STerm[]{arg1, arg2});
+				return new CBool("Zlt_bool", new STerm[]{arg1, arg2});
 			case predLE:
-				return new CBool("Z_le_bool", new STerm[]{arg1, arg2});
+				return new CBool("Zle_bool", new STerm[]{arg1, arg2});
 
 			case predGT:	
 			case predGE:
@@ -277,7 +308,7 @@ public class CoqNodeBuilder extends EscNodeBuilder {
 	}
 	@Override
 	public SPred buildIsTrue(SBool val) {
-		return new CPred("IsTrue", new STerm[] {val});
+		return new CPred("Is_true", new STerm[] {val});
 	}
 
 	@Override
@@ -355,6 +386,11 @@ public class CoqNodeBuilder extends EscNodeBuilder {
 	
 	@Override
 	public SAny buildFnCall(FnSymbol fn, SAny[] args) {
+		if(fn.equals(symTypeOf)) {
+			if(args.length == 2) {
+				return new CType("typeof", args);
+			}
+		}
 		throw new IllegalArgumentException("Unknown symbol: " + fn);
 	}
 
@@ -367,34 +403,36 @@ public class CoqNodeBuilder extends EscNodeBuilder {
 	@Override
 	public SAny buildConstantRef(FnSymbol c) {
 		// TODO Auto-generated method stub
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public SPred buildIff(SPred arg1, SPred arg2) {
 		// TODO Auto-generated method stub
-		return null;
+		throw new UnsupportedOperationException();
+		
 	}
-
-
 
 	@Override
 	public SInt buildIntFun(int intFunTag, SInt arg1, SInt arg2) {
 		// TODO Auto-generated method stub
-		return null;
+		throw new UnsupportedOperationException();
+
 	}
 
 	@Override
 	public SInt buildIntFun(int intFunTag, SInt arg1) {
 		// TODO Auto-generated method stub
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public SPred buildIntPred(int intPredTag, SInt arg1, SInt arg2) {
 		// TODO Auto-generated method stub
-		return null;
+		throw new UnsupportedOperationException();
 	}
+
+
 
 
 
@@ -402,29 +440,66 @@ public class CoqNodeBuilder extends EscNodeBuilder {
 
 	
 	@Override
-	public SValue buildSelect(SMap map, SValue idx) {
+	public SPred buildXor(SPred arg1, SPred arg2) {
 		// TODO Auto-generated method stub
-		return null;
+		throw new UnsupportedOperationException();
 	}
-
+	
+	@Override
+	public SValue buildSelect(SMap map, SValue idx) {		
+		return new CValue("select", new STerm[] {map, idx});
+	}
 	@Override
 	public SMap buildStore(SMap map, SValue idx, SValue val) {
-		// TODO Auto-generated method stub
-		return null;
+		return new CMap("store", new STerm[] {map, idx, val});
 	}
-
-
 
 	@Override
 	public SValue buildValueConversion(Sort from, Sort to, SValue val) {
-		// TODO Auto-generated method stub
-		return null;
+		if(from == sortValue) {
+			if(to == sortRef) {
+				return new CValue("valueToRef", new STerm[] {val});
+			}
+			else if(to == sortBool) {
+				return new CValue("valueToBool", new STerm[] {val});
+			}
+			else if(to == sortInt) {
+				return new CValue("valueToInt", new STerm[] {val});
+			}
+			else if(to == sortReal) {
+				throw new UnsupportedOperationException("We do not support reals right now...");
+			}
+			else 
+				throw new IllegalArgumentException("The conversion can only be done from a value to a simple type. Found:" + to);
+			
+		}
+		else {
+			if (to != sortValue) {
+				throw new IllegalArgumentException("The conversion can only be done from a simple type to a value. Found:" + to);
+			}
+			if(from == sortRef) {
+				return new CRef("refToValue", new STerm[] {val});
+			}
+			else if(from == sortBool) {
+				return new CBool("boolToValue", new STerm[] {val});
+			}
+			else if(from == sortInt) {
+				return new CInt("intToValue", new STerm[] {val});
+			}
+			else if(from == sortReal) {
+				throw new UnsupportedOperationException("We do not support reals right now...");
+			}
+			else 
+				throw new IllegalArgumentException("The conversion can only be done from a value to a simple type. Found:" + to);
+			
+		}
 	}
 
+
+
 	@Override
-	public SPred buildXor(SPred arg1, SPred arg2) {
-		// TODO Auto-generated method stub
-		return null;
+	public SPred buildNewObject(SAny oldh, SAny heap, SRef r) {
+		return new CPred("newObject", new STerm[] {oldh, heap, r});
 	}
 	
 }
