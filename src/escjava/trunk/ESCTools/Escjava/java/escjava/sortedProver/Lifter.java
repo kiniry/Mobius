@@ -529,10 +529,17 @@ public class Lifter extends EscNodeBuilder
 						dumpBuilder.buildBool(false));
 			
 			if (fn == symValueToBool || fn == symValueToInt || fn == symValueToReal ||
-				fn == symValueToRef || fn == symIntToReal)
+				fn == symValueToRef || fn == symIntToReal || fn == symBoolToValue || 
+				fn == symIntToValue || fn == symRealToValue || fn == symRefToValue)
 				return dumpBuilder.buildValueConversion(mapSortTo(dumpBuilder, fn.argumentTypes[0]),
 								mapSortTo(dumpBuilder, fn.retType), args[0].dumpValue());
-			
+			if (fn == symIntBoolFn) {
+				return dumpBuilder.buildIntBoolFun(tag, args[0].dumpInt(), args[1].dumpInt());
+			}
+			if (fn == symRealBoolFn) {
+				return dumpBuilder.buildRealBoolFun(tag, args[0].dumpReal(), args[1].dumpReal());
+			}
+			System.out.println(fn.name);
 			Assert.notFalse(! fn.name.startsWith("%"));
 			
 			tfn = isPred ? dumpBuilder.registerPredSymbol(fn.name, mapSorts(fn.argumentTypes)) :
@@ -890,7 +897,9 @@ public class Lifter extends EscNodeBuilder
 	public SPred buildExists(QuantVar[] vars, SPred body) { throw new Die(); }
 	public SPred buildIntPred(int intPredTag, SInt arg1, SInt arg2) { throw new Die(); }
 	public SInt buildIntFun(int intFunTag, SInt arg1, SInt arg2) { throw new Die(); }
+	public SBool buildIntBoolFun(int intFunTag, SInt arg1, SInt arg2) { throw new Die(); }
 	public SPred buildRealPred(int realPredTag, SReal arg1, SReal arg2) { throw new Die(); }
+	public SBool buildRealBoolFun(int realPredTag, SReal arg1, SReal arg2) { throw new Die(); }
 	public SReal buildRealFun(int realFunTag, SReal arg1, SReal arg2) { throw new Die(); }
 	public SInt buildIntFun(int intFunTag, SInt arg1) { throw new Die(); }
 	public SReal buildRealFun(int realFunTag, SReal arg1) { throw new Die(); }

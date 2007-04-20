@@ -360,8 +360,13 @@ public abstract class NodeBuilder
 	//@ requires funFirst <= intFunTag && intFunTag <= funLast;
 	abstract public SInt buildIntFun(int intFunTag, SInt arg1, SInt arg2);
 	
+	//@ requires predFirst <= intPredTag && intPredTag <= predLast;
+	abstract public SBool buildIntBoolFun(int intFunTag, SInt arg1, SInt arg2);
+	
 	//@ requires predFirst <= realPredTag && realPredTag <= predLast;
 	abstract public SPred buildRealPred(int realPredTag, SReal arg1, SReal arg2);
+	//@ requires predFirst <= realPredTag && realPredTag <= predLast;
+	abstract public SBool buildRealBoolFun(int realPredTag, SReal arg1, SReal arg2);
 	
 	//@ requires funFirst <= realFunTag && realFunTag <= funLast;
 	abstract public SReal buildRealFun(int realFunTag, SReal arg1, SReal arg2);
