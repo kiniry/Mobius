@@ -18,7 +18,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IEditorPart;
 
-import umbra.instructions.boogiepl.BoogiePLController;
+// import umbra.instructions.boogiepl.BoogiePLController;
 
 /**
  * TODO
@@ -50,7 +50,7 @@ public class BoogiePLContribution extends ControlContribution {
 	/**
 	 * TODO
 	 */
-	private BoogiePLController bcc;	
+	// private BoogiePLController bcc;	
 	/**
 	 * TODO
 	 */
@@ -69,6 +69,7 @@ public class BoogiePLContribution extends ControlContribution {
 	 */
 	private void init(IDocument doc) throws BadLocationException
 	{
+		/*
 		bcc = new BoogiePLController();
 		bcc.init(doc);
 		if (modTable) {
@@ -78,6 +79,7 @@ public class BoogiePLContribution extends ControlContribution {
 		bcc.checkAllLines(0, doc.getNumberOfLines() - 2);
 		ready = true;
 		return;
+		*/
 	}
 	
 	/**
@@ -111,7 +113,7 @@ public class BoogiePLContribution extends ControlContribution {
 				startRem = event.fDocument.getLineOfOffset(event.getOffset());
 				int len = event.fLength;
 				stopRem = event.fDocument.getLineOfOffset(event.getOffset() + len);
-				bcc.removeIncorrects(startRem, stopRem);
+				// bcc.removeIncorrects(startRem, stopRem);
 			} catch (BadLocationException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -131,6 +133,7 @@ public class BoogiePLContribution extends ControlContribution {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			/*
 			bcc.addAllLines(event.fDocument, startRem, stopRem, start, stop);
 			startRem = -1;
 			stopRem = -1;
@@ -138,6 +141,7 @@ public class BoogiePLContribution extends ControlContribution {
 			if (!bcc.allCorrect()) 
 				displayError(bcc.getFirstError());
 			else displayCorrect();
+			*/
 		}
 		
 	}
@@ -233,7 +237,7 @@ public class BoogiePLContribution extends ControlContribution {
 	 * TODO
 	 */
 	public boolean[] getModified() {
-		return bcc.getModified();
+		return null; // return bcc.getModified();
 	}
 	
 	/**
@@ -248,13 +252,13 @@ public class BoogiePLContribution extends ControlContribution {
 	 * TODO
 	 */
 	public String[] getCommentTab() {
-		return bcc.getComments();
+		return null; // return bcc.getComments();
 	}
 	
 	/**
 	 * TODO
 	 */
 	public String[] getInterlineTab() {
-		return bcc.getInterline();
+		return null; // return bcc.getInterline();
 	}
 }
