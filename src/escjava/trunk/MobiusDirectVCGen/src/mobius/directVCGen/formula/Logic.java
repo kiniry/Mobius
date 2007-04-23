@@ -281,4 +281,24 @@ public class Logic {
 		}
 		return res;
 	}
+
+	public static Object ge(Term term, Term term2) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public static Object gt(Term term, Term term2) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public static Object le(Term term, Term term2) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public static Object lt(Term term, Term term2) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
