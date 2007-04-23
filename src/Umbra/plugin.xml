@@ -4,7 +4,7 @@
    <extension point="org.eclipse.ui.editors">
       <editor
             class="umbra.editor.BytecodeEditor"
-            icon="icons/umbra.bytecode.file.gif"
+            icon="icons/bytecode_file.gif"
             default="true"
             name="Bytecode Editor"
             contributorClass="umbra.editor.BytecodeEditorContributor"
@@ -12,7 +12,7 @@
             extensions="btc"/>
       <editor
             class="umbra.editor.boogiepl.BoogiePLEditor"
-            icon="icons/umbra.bytecode.file.gif"
+            icon="icons/bytecode_file.gif"
             default="true"
             name="BoogiePL Editor"
             contributorClass="umbra.editor.boogiepl.BoogiePLEditorContributor"
@@ -32,7 +32,7 @@
                toolbarPath="showGroup"
                label="Disassemble"
                tooltip="Disassemble from Bytecode"
-               icon="icons/umbra.disassemble.gif"
+               icon="icons/disassemble.gif"
                class="umbra.actions.DisasBCEL"
                menubarPath="umbra.bytecodeMenu/showGroup"
                id="umbra.BCELTest"/>
@@ -41,12 +41,12 @@
                label="Show Bytecode"
                tooltip="Show Bytecode of selected statement"
                class="umbra.actions.SynchrSBAction"
-               icon="icons/umbra.synchronize.gif"
+               icon="icons/synchronize.gif"
                menubarPath="umbra.bytecodeMenu/showGroup"
                id="umbra.synchrAction"/>
          <action
                class="umbra.actions.CommitAction"
-               icon="icons/umbra.commit.gif"
+               icon="icons/commit.gif"
                id="umbra.commit"
                label="&amp;Commit Changes in Bytecode"
                menubarPath="umbra.bytecodeMenu/showGroup"
@@ -68,7 +68,7 @@
                toolbarPath="verifyGroup"
                label="Convert to BoogiePL"
                tooltip="Convert to BoogiePL"
-               icon="icons/umbra.boogiepl.gif"
+               icon="icons/convert_to_boogiepl.gif"
                class="umbra.editor.actions.BytecodeToBoogiePLAction"
                menubarPath="umbra.bytecodeMenu/verifyGroup"
                id="umbra.toBoogiePL"/>
@@ -76,7 +76,7 @@
                toolbarPath="verifyGroup"
                label="Verify Bytecode"
                tooltip="Verify Bytecode by creating BoogiePL and sending in to Boogie"
-               icon="icons/umbra.boogiepl.gif"
+               icon="icons/convert_to_boogiepl.gif"
                class="umbra.actions.VerifyAction"
                menubarPath="umbra.bytecodeMenu/verifyGroup"
                id="umbra.verify"/>
@@ -85,7 +85,7 @@
                label="&amp;Add to history"
                tooltip="Add to history"
                class="umbra.history.HistoryAction"
-               icon="icons/umbra.addtohistory.gif"
+               icon="icons/add_to_history.gif"
                menubarPath="umbra.bytecodeMenu/historyGroup"
                id="umbra.history"/>
          <action
@@ -93,7 +93,7 @@
                label="&amp;Clear history"
                tooltip="Clear history"
                class="umbra.history.ClearHistoryAction"
-               icon="icons/umbra.clearhistory.gif"
+               icon="icons/clear_history.gif"
                menubarPath="umbra.bytecodeMenu/historyGroup"
                id="umbra.clearHistory"/>
          <action
@@ -101,7 +101,7 @@
                label="&amp;Installation Info"
                tooltip="Installation Info"
                class="umbra.info.InstalInfoAction"
-               icon="icons/umbra.help.gif"
+               icon="icons/help.gif"
                menubarPath="umbra.bytecodeMenu/helpGroup"
                id="umbra.instalInfo"/>
          <action
@@ -109,7 +109,7 @@
                label="&amp;User Guide"
                tooltip="User Guide"
                class="umbra.info.UserGuideAction"
-               icon="icons/umbra.help.gif"
+               icon="icons/help.gif"
                menubarPath="umbra.bytecodeMenu/helpGroup"
                id="umbra.userGuide"/>
       </editorContribution>

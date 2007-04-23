@@ -103,10 +103,10 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
 		ImageDescriptor iconRight = ImageDescriptor.createFromURL(new URL(installURL, "icons/change_color_backward.gif"));
 		ImageDescriptor iconLeft = ImageDescriptor.createFromURL(new URL(installURL, "icons/change_color_forward.gif"));
 		ImageDescriptor refreshIcon = ImageDescriptor.createFromURL(new URL(installURL, "icons/refresh.gif"));
-		ImageDescriptor rebuildIcon = ImageDescriptor.createFromURL(new URL(installURL, "icons/rebuild.bytecode.gif"));
+		ImageDescriptor rebuildIcon = ImageDescriptor.createFromURL(new URL(installURL, "icons/rebuild_bytecode.gif"));
 		ImageDescriptor combineIcon = ImageDescriptor.createFromURL(new URL(installURL, "icons/combine.gif"));
 		ImageDescriptor restoreIcon = ImageDescriptor.createFromURL(new URL(installURL, "icons/restoreH.gif"));
-		ImageDescriptor synchrIcon = ImageDescriptor.createFromURL(new URL(installURL, "icons/synchr.gif"));
+		ImageDescriptor synchrIcon = ImageDescriptor.createFromURL(new URL(installURL, "icons/synchronize.gif"));
 		actionPlus.setImageDescriptor(iconRight);
 		actionMinus.setImageDescriptor(iconLeft);
 		refreshAction.setImageDescriptor(refreshIcon);

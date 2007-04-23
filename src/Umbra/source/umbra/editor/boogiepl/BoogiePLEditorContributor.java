@@ -534,13 +534,13 @@ public class BoogiePLEditorContributor extends EditorActionBarContributor {
 		combineAction = new BoogiePLCombineAction();
 		restoreAction = new BoogiePLRestoreAction();
 		synchrAction = new BoogiePLSynchrAction();
-		ImageDescriptor iconRight = ImageDescriptor.createFromURL(new URL(UmbraPlugin.getDefault().getDescriptor().getInstallURL(), "icons/chcol1.gif"));
-		ImageDescriptor iconLeft = ImageDescriptor.createFromURL(new URL(UmbraPlugin.getDefault().getDescriptor().getInstallURL(), "icons/chcol2.gif"));
+		ImageDescriptor iconRight = ImageDescriptor.createFromURL(new URL(UmbraPlugin.getDefault().getDescriptor().getInstallURL(), "icons/change_color_backward.gif"));
+		ImageDescriptor iconLeft = ImageDescriptor.createFromURL(new URL(UmbraPlugin.getDefault().getDescriptor().getInstallURL(), "icons/change_color_forward.gif"));
 		ImageDescriptor refreshIcon = ImageDescriptor.createFromURL(new URL(UmbraPlugin.getDefault().getDescriptor().getInstallURL(), "icons/refresh.gif"));
-		ImageDescriptor rebuildIcon = ImageDescriptor.createFromURL(new URL(UmbraPlugin.getDefault().getDescriptor().getInstallURL(), "icons/rebuild.bytecode.gif"));
+		ImageDescriptor rebuildIcon = ImageDescriptor.createFromURL(new URL(UmbraPlugin.getDefault().getDescriptor().getInstallURL(), "icons/rebuild_bytecode.gif"));
 		ImageDescriptor combineIcon = ImageDescriptor.createFromURL(new URL(UmbraPlugin.getDefault().getDescriptor().getInstallURL(), "icons/combine.gif"));
 		ImageDescriptor restoreIcon = ImageDescriptor.createFromURL(new URL(UmbraPlugin.getDefault().getDescriptor().getInstallURL(), "icons/restoreH.gif"));
-		ImageDescriptor synchrIcon = ImageDescriptor.createFromURL(new URL(UmbraPlugin.getDefault().getDescriptor().getInstallURL(), "icons/synchr.gif"));
+		ImageDescriptor synchrIcon = ImageDescriptor.createFromURL(new URL(UmbraPlugin.getDefault().getDescriptor().getInstallURL(), "icons/synchronize.gif"));
 		actionPlus.setImageDescriptor(iconRight);
 		actionMinus.setImageDescriptor(iconLeft);
 		refreshAction.setImageDescriptor(refreshIcon);
