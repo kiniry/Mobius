@@ -51,6 +51,8 @@ public class BytecodeToBoogiePLAction implements IEditorActionDelegate, IUmbraCo
 	public void setActiveEditor(IAction action, IEditorPart targetEditor) {
 		editor = targetEditor;
 		
+		BytecodeRebuildAction rbc = new BytecodeRebuildAction(null);
+		
 		/* FIXME inserted in order to refresh Bytecode view */
 		IPath active = ((FileEditorInput)editor.getEditorInput()).getFile().getFullPath();
 		

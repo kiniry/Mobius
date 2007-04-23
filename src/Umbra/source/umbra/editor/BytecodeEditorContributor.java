@@ -100,8 +100,8 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
 		restoreAction = new BytecodeRestoreAction(this, bytecodeContribution);
 		synchrAction = new BytecodeSynchrAction();
 		URL installURL = UmbraPlugin.getDefault().getDescriptor().getInstallURL();
-		ImageDescriptor iconRight = ImageDescriptor.createFromURL(new URL(installURL, "icons/chcol1.gif"));
-		ImageDescriptor iconLeft = ImageDescriptor.createFromURL(new URL(installURL, "icons/chcol2.gif"));
+		ImageDescriptor iconRight = ImageDescriptor.createFromURL(new URL(installURL, "icons/change_color_backward.gif"));
+		ImageDescriptor iconLeft = ImageDescriptor.createFromURL(new URL(installURL, "icons/change_color_forward.gif"));
 		ImageDescriptor refreshIcon = ImageDescriptor.createFromURL(new URL(installURL, "icons/refresh.gif"));
 		ImageDescriptor rebuildIcon = ImageDescriptor.createFromURL(new URL(installURL, "icons/rebuild.bytecode.gif"));
 		ImageDescriptor combineIcon = ImageDescriptor.createFromURL(new URL(installURL, "icons/combine.gif"));
