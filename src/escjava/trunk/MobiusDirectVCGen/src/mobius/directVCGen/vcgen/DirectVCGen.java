@@ -1,5 +1,7 @@
 package mobius.directVCGen.vcgen;
 
+import java.io.File;
+
 import javafe.ast.ASTNode;
 import javafe.ast.ClassDecl;
 import javafe.ast.MethodDecl;
@@ -13,13 +15,22 @@ import javafe.ast.Visitor;
  */
 public class DirectVCGen extends Visitor {
 
+	private final File basedir;
+	private File classDir;
+	
+	public DirectVCGen(File basedir) {
+		this.basedir = basedir;
+	}
 
 	/*
 	 * (non-Javadoc)
 	 * @see javafe.ast.Visitor#visitClassDecl(javafe.ast.ClassDecl)
 	 */
 	public void visitClassDecl(/*@non_null*/ ClassDecl x) {
+
 		System.out.println("Treating class: " + x.id);
+		classDir = new File(basedir, "" + x.id);
+		classDir.mkdirs();
 		visitTypeDecl(x);
 	}
 	
@@ -28,7 +39,7 @@ public class DirectVCGen extends Visitor {
 	 * @see javafe.ast.Visitor#visitMethodDecl(javafe.ast.MethodDecl)
 	 */
 	public void visitMethodDecl(/*@non_null*/ MethodDecl x) {	
-		MethodVisitor mv = MethodVisitor.treatMethod(x);
+		MethodVisitor mv = MethodVisitor.treatMethod(classDir, x);
 		System.out.println(mv);
 	}
 	/*
@@ -44,6 +55,10 @@ public class DirectVCGen extends Visitor {
 				((ASTNode) child).accept(this);
 			}
 		}		
+	}
+	
+	public File getBaseDir() {
+		return basedir;
 	}
 	
 }

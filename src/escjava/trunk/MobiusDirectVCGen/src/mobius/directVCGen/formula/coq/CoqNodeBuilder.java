@@ -381,6 +381,10 @@ public class CoqNodeBuilder extends EscNodeBuilder {
 		if(fn == symRefNE) {
 			return this.buildNot(new CPred(false, "=", args));
 		}
+		if(fn == symTypeLE) {
+			return this.buildNot(new CPred("subtype", args));
+		}
+		
 		throw new IllegalArgumentException("Unknown symbol: " + fn);
 	}
 	

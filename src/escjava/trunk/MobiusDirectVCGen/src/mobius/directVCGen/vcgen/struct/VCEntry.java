@@ -4,10 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import mobius.directVCGen.formula.Expression;
-import mobius.directVCGen.formula.Logic;
-import mobius.directVCGen.formula.Ref;
-
 import javafe.ast.Identifier;
 
 /**

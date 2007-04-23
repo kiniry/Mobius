@@ -1,5 +1,9 @@
 package mobius.directVCGen.vcgen;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
 import java.util.Vector;
 
 import javafe.ast.BlockStmt;
@@ -26,18 +30,43 @@ public class MethodVisitor extends DirectVCGen {
 	/** the vcs that have been calculated */
 	private Vector<Term> vcs = new Vector<Term>();
 	
-	public static MethodVisitor treatMethod(MethodDecl x) {
-		MethodVisitor mv = new MethodVisitor(x);
+	public static MethodVisitor treatMethod(File basedir, MethodDecl x) {
+		
+		MethodVisitor mv = new MethodVisitor(new File(basedir, "" + x.id), x);
+		
 		x.body.accept(mv);
+		mv.dump();
 		return mv;
 	}
 	
+	private void dump() {
+		int num = 1;
+		String rawsuffix = ".raw";
+		String proversuffix = ".v";
+		for(Term t: vcs) {
+			String name = "goal" + num++;
+			try {
+				PrintStream fos = new PrintStream(new FileOutputStream(new File(getBaseDir(), name + rawsuffix)));
+				fos.println(t);
+				fos.close();
+				fos = new PrintStream(new FileOutputStream(new File(getBaseDir(), name + proversuffix)));
+				fos.println(Formula.generateFormulas(t));
+				fos.close();
+			}
+			catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
 	/**
 	 * The internal constructor should not be called from outside
 	 * (IMHO it makes no sense).
 	 * @param x the method to treat
 	 */
-	private MethodVisitor(MethodDecl x) {
+	private MethodVisitor(File basedir, MethodDecl x) {
+		super(basedir);
+		basedir.mkdirs();
 		meth = x;
 	}
 
@@ -105,4 +134,6 @@ public class MethodVisitor extends DirectVCGen {
 		res += ")";
 		return res;
 	}
+	
+
 } 

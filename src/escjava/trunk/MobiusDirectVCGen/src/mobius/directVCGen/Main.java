@@ -1,5 +1,11 @@
 package mobius.directVCGen;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.io.PrintStream;
+
 import javafe.ast.DelegatingPrettyPrint;
 import javafe.ast.StandardPrettyPrint;
 import javafe.ast.TypeDecl;
@@ -13,6 +19,8 @@ import escjava.tc.TypeCheck;
 import escjava.translate.NoWarn;
 
 public class Main extends escjava.Main {
+	public static PrintStream out;
+	public static File basedir;
 	
 	/**
 	 * The main entry point.
@@ -20,7 +28,35 @@ public class Main extends escjava.Main {
 	 * ignored anyway -
 	 */
 	public static void main(/*@ non_null @*/ String[] args) {
-		int exitcode = compile(args);
+		// the first argument is the output dir
+		String[] escargs = new String [args.length - 1];
+		for(int i = 1; i < args.length; escargs[i - 1] = args[i++]);
+		
+		// Configuring base dir
+		basedir = new File(args[0], "proofs" + File.separator);
+		System.out.println("Output dir is set to: " + basedir);
+		System.out.print("Making the directories if they don't exist... ");
+		
+		if(!basedir.exists()) {
+			if(!basedir.mkdir()) {
+				System.out.println("\nDid not managed to make the dir... exiting.");
+				return;
+			}
+		}
+		System.out.println("done.");
+		
+		// Configuring log file
+		File logfile = new File(basedir, "MobiusDirectVCGen.log");
+		System.out.println("Setting the output to the log file: " + logfile);
+		out = System.out;
+		try {
+			System.setOut(new PrintStream(new FileOutputStream(logfile)));
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			return;
+		}
+		// Launching the beast
+		int exitcode = compile(escargs);
 		if (exitcode != 0) 
 			System.exit(exitcode);
 	}
@@ -62,11 +98,12 @@ public class Main extends escjava.Main {
 	//@ also
 	//@ requires td != null;
 	public void handleTD(TypeDecl td) {
+		
 	    long startTime = currentTime();
+	    
 	    javafe.tc.TypeSig sig = TypeCheck.inst.getSig(td);
-	
-	    if (!options().quiet)
-	        System.out.println("\n" + sig.toString() + " ...");
+	    out.println("Processing " + sig.toString() + ".");
+	    System.out.println("Processing " + sig.toString() + ".");
 	
 	    if (Location.toLineNumber(td.getEndLoc()) < options().startLine)
 	        return;
@@ -107,7 +144,7 @@ public class Main extends escjava.Main {
 		System.out.println("[" + timeUsed(startTime) + "]\n");
 		
 		long midTime = currentTime();
-		sig.getCompilationUnit().accept(new DirectVCGen());
+		sig.getCompilationUnit().accept(new DirectVCGen(basedir));
 	    System.out.println("[" + timeUsed(midTime) + "]\n");
 
 	    return false;
@@ -125,8 +162,15 @@ public class Main extends escjava.Main {
 		// Create a pretty-printer that shows types
 		DelegatingPrettyPrint p = new javafe.tc.TypePrint();
 		p.setDel(new EscPrettyPrint(p, new StandardPrettyPrint(p)));
-		System.out.println("\n**** Source code with types:");
-		p.print(System.out, 0, td);
+		OutputStream out;
+		try {
+			out = new FileOutputStream(new File(basedir, sig.toString() + ".typ"));
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			return false;
+		}
+		System.out.println("Writing the Source code with types.");
+		p.print(out, 0, td);
 	
 	    // Turn off extended static checking and abort if any errors
 	    // occured while type checking *this* TypeDecl:
