@@ -57,7 +57,7 @@ public class Bool {
 		return res;
 	}
 	
-	private static Term intBinaryOp(Term l, Term r, int tag){
+	private static Term numBinaryOp(Term l, Term r, int tag){
 		if(l.getSort() != r.getSort() &&
 				(!Num.isNum(l.getSort()) || !Num.isNum(r.getSort())))
 			throw new IllegalArgumentException("The sort of " + l + 
@@ -157,7 +157,7 @@ public class Bool {
 	 * @return The and expression a FnTerm with tag {@link NodeBuilder#predLE}
 	 */
 	public static Term le(Term l, Term r) {
-		return intBinaryOp(l,r,NodeBuilder.predLE);
+		return numBinaryOp(l,r,NodeBuilder.predLE);
 	}
 
 	/**
@@ -167,7 +167,7 @@ public class Bool {
 	 * @return The and expression a FnTerm with tag {@link NodeBuilder#predLE}
 	 */
 	public static Term lt(Term l, Term r) {		
-		return intBinaryOp(l,r,NodeBuilder.predLT);
+		return numBinaryOp(l,r,NodeBuilder.predLT);
 	}
 
 	/**
@@ -177,7 +177,7 @@ public class Bool {
 	 * @return The and expression a FnTerm with tag {@link NodeBuilder#predLE}
 	 */
 	public static Term ge(Term l, Term r) {		
-		return intBinaryOp(l,r,NodeBuilder.predGE);
+		return numBinaryOp(l,r,NodeBuilder.predGE);
 	}
 	
 	/**
@@ -187,7 +187,7 @@ public class Bool {
 	 * @return The and expression a FnTerm with tag {@link NodeBuilder#predLE}
 	 */
 	public static Term gt(Term l, Term r) {		
-		return intBinaryOp(l,r,NodeBuilder.predGT);
+		return numBinaryOp(l,r,NodeBuilder.predGT);
 	}
 	
 
