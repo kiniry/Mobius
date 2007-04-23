@@ -95,7 +95,7 @@ public class Logic {
 			t.tag = NodeBuilder.predEQ;
 		}
 		else {
-			Formula.lf.mkFnTerm(Formula.lf.symAnyEQ, new Term[]{l, r});
+			t = Formula.lf.mkFnTerm(Formula.lf.symAnyEQ, new Term[]{l, r});
 		}
 		return  t;
 	}
