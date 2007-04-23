@@ -117,6 +117,23 @@ public class Logic {
 	}
 	
 	/**
+	 * Create an object representing a logical full implies.
+	 * @param f1 the first element of the full implies
+	 * @param f2 the second element of the full implies
+	 * @return a nicely created fullimplies
+	 */
+	public static Term fullImplies(Term f1, Term f2) {
+		if(f1 == null || f2 == null)
+			throw new NullPointerException("Arguments were:" + f1 +", " +  f2);
+		if((f1.getSort() != f2.getSort() && f1.getSort() != sort))
+			throw new IllegalArgumentException("Bad type when creating the implies, " +
+					"found: " + f1.getSort() + " and " + f2.getSort());
+
+		return Formula.lf.mkFnTerm(Formula.lf.symIff, new Term[]{f1, f2});
+	} 
+	
+	
+	/**
 	 * Create an object representing an Or.
 	 * @param f1 the left parameter of the or
 	 * @param f2 the right parameter of the or
