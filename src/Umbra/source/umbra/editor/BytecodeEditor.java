@@ -217,6 +217,7 @@ public class BytecodeEditor extends TextEditor {
 		String clname = path.lastSegment().substring(0, path.lastSegment().lastIndexOf("."));
 		String tmp = path.removeFirstSegments(1).toOSString();
 		clname = tmp.substring(0, tmp.lastIndexOf("."));
+		System.out.println("clname = " + clname);
 		
 		ClassPath cp = new ClassPath(pathName);
 		System.out.println("pathName = " + pathName);

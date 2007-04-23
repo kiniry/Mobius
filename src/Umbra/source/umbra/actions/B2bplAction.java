@@ -25,6 +25,7 @@ import org.eclipse.ui.texteditor.AbstractDecoratedTextEditor;
 import umbra.IUmbraConstants;
 import umbra.UmbraHelper;
 import umbra.editor.BytecodeEditor;
+import umbra.editor.Composition;
 import b2bpl.Main;
 import b2bpl.Project;
 
@@ -49,6 +50,38 @@ public class B2bplAction implements IEditorActionDelegate, IUmbraConstants {
 	 */
 	public void setActiveEditor(IAction action, IEditorPart targetEditor) {
 		editor = targetEditor;
+		
+		
+		/* FIXME inserted in order to refresh Bytecode view */
+		IPath active = ((FileEditorInput)editor.getEditorInput()).getFile().getFullPath();
+		
+		String fname = active.toOSString();		
+		IWorkspace workspace = ResourcesPlugin.getWorkspace();
+
+		IFile javaFile = workspace.getRoot().getFile(new Path(UmbraHelper.replaceLast(fname, UmbraHelper.BYTECODE_EXTENSION, UmbraHelper.JAVA_EXTENSION)));
+		
+		IFile bytecodeFile = workspace.getRoot().getFile(new Path(fname));
+		
+		FileEditorInput input = new FileEditorInput(bytecodeFile);
+		try {
+			IWorkbenchPage page = editor.getEditorSite().getPage();
+
+			BytecodeEditor bcEditor = (BytecodeEditor)page.openEditor(input, BYTECODE_EDITOR_CLASS, true);
+			bcEditor.refreshBytecode(javaFile.getFullPath(), null, null);
+			input = new FileEditorInput(bytecodeFile);
+			JavaClass jc = bcEditor.getJavaClass();
+			Composition.startDisas();
+			page.closeEditor(bcEditor, true);
+			bcEditor = (BytecodeEditor)page.openEditor(input, BYTECODE_EDITOR_CLASS, true);			
+			bcEditor.setRelation((AbstractDecoratedTextEditor)editor, jc);
+			Composition.stopDisas();
+		} catch (CoreException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**

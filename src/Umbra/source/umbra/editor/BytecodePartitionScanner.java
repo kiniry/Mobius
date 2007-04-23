@@ -2,7 +2,7 @@ package umbra.editor;
 
 import org.eclipse.jface.text.rules.*;
 
-import umbra.editor.TagRule;
+import umbra.editor.parsing.TagRule;
 
 /**
  * @author Generated automatically

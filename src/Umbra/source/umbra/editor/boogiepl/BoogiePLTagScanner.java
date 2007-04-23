@@ -10,7 +10,7 @@ import org.eclipse.jface.text.rules.WordRule;
 import umbra.editor.ColorManager;
 import umbra.editor.IColorValues;
 // import umbra.editor.SpecialWordDetector;
-import umbra.editor.TokenGetter;
+import umbra.editor.parsing.TokenGetter;
 
 /**
  * This method defines coloring rules in tags.

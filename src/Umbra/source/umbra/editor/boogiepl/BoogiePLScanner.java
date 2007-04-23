@@ -12,9 +12,9 @@ import org.eclipse.jface.text.rules.WordRule;
 import umbra.editor.ColorManager;
 import umbra.editor.boogiepl.IBoogiePLStrings;
 import umbra.editor.IColorValues;
-import umbra.editor.SpecialNumberRule;
+import umbra.editor.parsing.SpecialNumberRule;
 // import umbra.editor.SpecialWordDetector;
-import umbra.editor.TokenGetter;
+import umbra.editor.parsing.TokenGetter;
 
 
 /**

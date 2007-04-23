@@ -11,7 +11,7 @@ import org.eclipse.jface.text.source.SourceViewerConfiguration;
 import umbra.editor.ColorManager;
 import umbra.editor.IColorValues;
 import umbra.editor.NonRuleBasedDamagerRepairer;
-import umbra.editor.TokenGetter;
+import umbra.editor.parsing.TokenGetter;
 
 
 /**
