@@ -1,4 +1,4 @@
-package umbra.actions;
+package umbra.editor.actions;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -38,7 +38,7 @@ import b2bpl.Project;
  * @author Samuel Willimann
  *
  */
-public class B2bplAction implements IEditorActionDelegate, IUmbraConstants {
+public class BytecodeToBoogiePLAction implements IEditorActionDelegate, IUmbraConstants {
 	
 	/**
 	 * TODO
@@ -124,7 +124,7 @@ public class B2bplAction implements IEditorActionDelegate, IUmbraConstants {
 					                 substring(projectPath.length() + 1 ).
 					                 replace('\\', '.');
 			
-			List args = new ArrayList();	
+			List<String> args = new ArrayList<String>();	
 			args.add("-basedir"); args.add(projectPath);
 			args.add("-o"); args.add(boogiePLPath);
 			args.add(javaPath);
