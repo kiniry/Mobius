@@ -69,7 +69,7 @@
                label="Convert to BoogiePL"
                tooltip="Convert to BoogiePL"
                icon="icons/umbra.boogiepl.gif"
-               class="umbra.actions.B2bplAction"
+               class="umbra.editor.actions.BytecodeToBoogiePLAction"
                menubarPath="umbra.bytecodeMenu/verifyGroup"
                id="umbra.toBoogiePL"/>
          <action
