@@ -1,8 +1,11 @@
 package mobius.directVCGen.formula.jmlTranslator;
 
 import mobius.directVCGen.formula.*;
+
+import java.util.Properties;
 import javafe.ast.ASTNode;
 import javafe.ast.BinaryExpr;
+import javafe.ast.InstanceOfExpr;
 import javafe.ast.LiteralExpr;
 import escjava.ast.AnOverview;
 import escjava.ast.ArrayRangeRefExpr;
@@ -55,7 +58,7 @@ import escjava.ast.VarDeclModifierPragma;
 import escjava.ast.VarExprModifierPragma;
 import escjava.ast.VisitorArgResult;
 import escjava.ast.WildRefExpr;
-import escjava.sortedProver.Lifter.Term;
+
 
 public class JmlVisitor extends VisitorArgResult{
 
@@ -66,13 +69,17 @@ public class JmlVisitor extends VisitorArgResult{
 	}
 	
 	
-	public Object visitASTNode(ASTNode x, Object o) {
-		System.out.println(x);
+	public Object visitASTNode(ASTNode x, Object prop) {
+		Object o = null;
 		int max = x.childCount();
 		for(int i = 0; i < max; i++) {
 			Object child = x.childAt(i);
 			if(child instanceof ASTNode) {
-				o = ((ASTNode) child).accept(this, o);
+				o = ((ASTNode) child).accept(this, prop);
+				if (o != null)
+				{
+					System.out.println( o.toString() + x.getClass().getName());
+				}
 			}
 			
 		}
@@ -86,11 +93,15 @@ public class JmlVisitor extends VisitorArgResult{
 	}
 	
 	 public /*@non_null*/ Object visitLiteralExpr(/*@non_null*/ LiteralExpr x, Object o) {
-		 //x.value; 
-		 return Logic.True();//x.value;
-	 }
-	
+		return translator.lit(x,o);
+	}
 
+	 //I just return "true == true" cause heap isn't available yet
+	 public /*@non_null*/ Object visitInstanceOfExpr(/*@non_null*/ InstanceOfExpr x, Object o) {
+		 //return translator.eq(Type.of(heap, x.type),Type.translate(x.type));
+		 return Logic.equals(Bool.value(true),Bool.value(true));	  
+	 }
+	 
 	@Override
 	public Object visitArrayRangeRefExpr(ArrayRangeRefExpr x, Object o) {
 		// TODO Auto-generated method stub
@@ -206,6 +217,7 @@ public class JmlVisitor extends VisitorArgResult{
 	public Object visitImportPragma(ImportPragma x, Object o) {
 		// TODO Auto-generated method stub
 		return null;
+		//return visitASTNode(x, o);
 	}
 
 	@Override
@@ -312,8 +324,7 @@ public class JmlVisitor extends VisitorArgResult{
 
 	@Override
 	public Object visitResExpr(ResExpr x, Object o) {
-		// TODO Auto-generated method stub
-		return null;
+		return translator.res(x,o);
 	}
 
 	@Override
@@ -367,7 +378,7 @@ public class JmlVisitor extends VisitorArgResult{
 	@Override
 	public Object visitVarExprModifierPragma(VarExprModifierPragma x, Object o) {
 		// TODO Auto-generated method stub
-		return null;
+		return visitASTNode(x, o); 
 	}
 
 	@Override
@@ -382,76 +393,76 @@ public class JmlVisitor extends VisitorArgResult{
 	
 		switch(expr.op) {
 		case TagConstants.EQ: 
-			return translator.eq(expr);
+			return translator.eq(expr, o);
 		case TagConstants.OR: 
-			return translator.or(expr);
+			return translator.or(expr, o);
 		case TagConstants.AND: 
-			return translator.and(expr);
+			return translator.and(expr, o);
 		case TagConstants.NE:
-			return translator.ne(expr);
-		case TagConstants.GE:  //greater equal
-			return translator.ge(expr);
-		case TagConstants.GT: //greater than
-			return translator.gt(expr);
-		case TagConstants.LE:  //less equal
-			return translator.le(expr);
-		case TagConstants.LT:  //less than
-			return translator.lt(expr);
+			return translator.ne(expr, o);
+		case TagConstants.GE: 
+			return translator.ge(expr, o);
+		case TagConstants.GT: 
+			return translator.gt(expr, o);
+		case TagConstants.LE: 
+			return translator.le(expr, o);
+		case TagConstants.LT:  
+			return translator.lt(expr, o);
 		case TagConstants.BITOR: 
-			return translator.bitor(expr);
+			return translator.bitor(expr, o);
 		case TagConstants.BITXOR: 
-			return translator.bitxor(expr);
+			return translator.bitxor(expr, o);
 		case TagConstants.BITAND: 
-			return translator.bitand(expr);
+			return translator.bitand(expr, o);
 		case TagConstants.LSHIFT:
-			return translator.lshift(expr);
+			return translator.lshift(expr, o);
 		case TagConstants.RSHIFT: 
-			return translator.rshift(expr);
+			return translator.rshift(expr, o);
 		case TagConstants.URSHIFT:
-			return translator.urshift(expr);
+			return translator.urshift(expr, o);
 		case TagConstants.ADD: 
-			return translator.add(expr);
+			return translator.add(expr, o);
 		case TagConstants.SUB: 
-			return translator.sub(expr);
+			return translator.sub(expr, o);
 		case TagConstants.DIV: 
-			return translator.div(expr);
+			return translator.div(expr, o);
 		case TagConstants.MOD: 
-			return translator.mod(expr);
+			return translator.mod(expr, o);
 		case TagConstants.STAR: 
-			return translator.star(expr);
+			return translator.star(expr, o);
 		case TagConstants.ASSIGN:
-			return translator.assign(expr);
+			return translator.assign(expr, o);
 		case TagConstants.ASGMUL: 
-			return translator.asgmul(expr);
+			return translator.asgmul(expr, o);
 		case TagConstants.ASGDIV: 
-			return translator.asgdiv(expr);
+			return translator.asgdiv(expr, o);
 		case TagConstants.ASGREM: 
-			return translator.asgrem(expr);
+			return translator.asgrem(expr, o);
 		case TagConstants.ASGADD: 
-			return translator.asgadd(expr);
+			return translator.asgadd(expr, o);
 		case TagConstants.ASGSUB: 
-			return translator.asgsub(expr);
+			return translator.asgsub(expr, o);
 		case TagConstants.ASGLSHIFT: 
-			return translator.asglshift(expr);
+			return translator.asglshift(expr, o);
 		case TagConstants.ASGRSHIFT: 
-			return translator.asgrshift(expr);
+			return translator.asgrshift(expr, o);
 		case TagConstants.ASGURSHIFT: 
-			return translator.asgurshif(expr);
+			return translator.asgurshif(expr, o);
 		case TagConstants.ASGBITAND: 
-			return translator.asgbitand(expr);
+			return translator.asgbitand(expr, o);
 	// jml specific operators 
 		case TagConstants.IMPLIES: 
-			return translator.implies(expr);
+			return translator.implies(expr, o);
 		case TagConstants.EXPLIES:
-			return translator.explies(expr);
+			return translator.explies(expr, o);
 		case TagConstants.IFF: // equivalence (equality)
-			return translator.iff(expr);
+			return translator.iff(expr, o);
 		case TagConstants.NIFF:    // discrepance (xor)
-			return translator.niff(expr);
+			return translator.niff(expr, o);
 		case TagConstants.SUBTYPE: 
-			return translator.subtype(expr);
+			return translator.subtype(expr, o);
 		case TagConstants.DOTDOT: 
-			return translator.dotdot(expr);
+			return translator.dotdot(expr, o);
 
 		default:
 			throw new IllegalArgumentException("Unknown construct :" +
