@@ -1,10 +1,9 @@
-Require Import Bool.
-Require Import Sumbool.
-Print LoadPath.
 Add LoadPath "/home/jcharles/sources/EscJava-workspace/MobiusDirectVCGen/logic/Formalisation/Bicolano".
 Add LoadPath "/home/jcharles/sources/EscJava-workspace/MobiusDirectVCGen/logic/Formalisation/Library".
 Add LoadPath "/home/jcharles/sources/EscJava-workspace/MobiusDirectVCGen/logic/Formalisation/Library/Map".
-Print LoadPath.
+
+Require Import Bool.
+Require Import Sumbool.
 Require Import "ImplemProgramWithList".
 Require Import "ImplemDomain".
 
