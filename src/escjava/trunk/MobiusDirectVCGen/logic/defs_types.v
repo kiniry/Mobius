@@ -29,9 +29,6 @@ Definition T_java_lang_NullPointerException :=(javaLang, NullPointerException).
 Variable loc: value -> Location.
 
 
-Lemma l:
-(f_pre -> (t_pre /\ (t_pre -> ((forall (r7:value), (t_norm -> (((Is_true (Zeq_bool 1 1)) -> (((not (r7 = Null)) -> f_norm) /\ ((r7 = Null) -> (forall (r3:value), (forall (heap0:Heap.t), (((Heap.new (Heap.update heap fs_6_6_12 (iValue 0)) p (Heap.LocationObject T_java_lang_NullPointerException)) = (Some ((loc r3) , heap0))) -> f_excp)))))) /\ ((not (Is_true (Zeq_bool 1 1))) -> (((not (r7 = Null)) -> f_norm) /\ ((r7 = Null) -> (forall (r3:value), (forall (heap0:Heap.t), (((Heap.new (Heap.update heap fs_6_6_12 (iValue 0)) p (Heap.LocationObject T_java_lang_NullPointerException)) = (Some ((loc r3) , heap0))) -> f_excp))))))))) /\ (forall (r6:value), (t_excp -> f_excp)))))).
-Proof.
-intros; repeat (split; intros).
+
 
 

@@ -39,7 +39,7 @@ public class DirectVCGen extends Visitor {
 	 * @see javafe.ast.Visitor#visitMethodDecl(javafe.ast.MethodDecl)
 	 */
 	public void visitMethodDecl(/*@non_null*/ MethodDecl x) {	
-		MethodVisitor mv = MethodVisitor.treatMethod(classDir, x);
+		MethodVisitor mv = MethodVisitor.treatMethod(basedir, classDir, x);
 		System.out.println(mv);
 	}
 	/*

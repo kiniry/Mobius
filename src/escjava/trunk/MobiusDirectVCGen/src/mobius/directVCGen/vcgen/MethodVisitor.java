@@ -13,6 +13,7 @@ import javafe.ast.MethodDecl;
 import mobius.directVCGen.formula.Formula;
 import mobius.directVCGen.formula.Logic;
 import mobius.directVCGen.formula.Lookup;
+import mobius.directVCGen.formula.coq.CoqFile;
 import mobius.directVCGen.vcgen.stmt.StmtVCGen;
 import mobius.directVCGen.vcgen.struct.Post;
 import mobius.directVCGen.vcgen.struct.VCEntry;
@@ -29,10 +30,11 @@ public class MethodVisitor extends DirectVCGen {
 	private MethodDecl meth;
 	/** the vcs that have been calculated */
 	private Vector<Term> vcs = new Vector<Term>();
+	private File configdir;
 	
-	public static MethodVisitor treatMethod(File basedir, MethodDecl x) {
+	public static MethodVisitor treatMethod(File basedir, File classDir, MethodDecl x) {
 		
-		MethodVisitor mv = new MethodVisitor(new File(basedir, "" + x.id), x);
+		MethodVisitor mv = new MethodVisitor(basedir, new File(classDir, "" + x.id), x);
 		
 		x.body.accept(mv);
 		mv.dump();
@@ -42,16 +44,16 @@ public class MethodVisitor extends DirectVCGen {
 	private void dump() {
 		int num = 1;
 		String rawsuffix = ".raw";
-		String proversuffix = ".v";
+		
 		for(Term t: vcs) {
 			String name = "goal" + num++;
 			try {
 				PrintStream fos = new PrintStream(new FileOutputStream(new File(getBaseDir(), name + rawsuffix)));
 				fos.println(t);
 				fos.close();
-				fos = new PrintStream(new FileOutputStream(new File(getBaseDir(), name + proversuffix)));
-				fos.println(Formula.generateFormulas(t));
-				fos.close();
+				CoqFile cf = new CoqFile(configdir, getBaseDir(), name);
+				cf.writeProof(Formula.generateFormulas(t));
+				
 			}
 			catch (IOException e) {
 				e.printStackTrace();
@@ -62,10 +64,12 @@ public class MethodVisitor extends DirectVCGen {
 	/**
 	 * The internal constructor should not be called from outside
 	 * (IMHO it makes no sense).
+	 * @param file 
 	 * @param x the method to treat
 	 */
-	private MethodVisitor(File basedir, MethodDecl x) {
+	private MethodVisitor(File configdir, File basedir,  MethodDecl x) {
 		super(basedir);
+		this.configdir = configdir;
 		basedir.mkdirs();
 		meth = x;
 	}

@@ -3,8 +3,14 @@ package mobius.directVCGen;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 import javafe.ast.DelegatingPrettyPrint;
 import javafe.ast.StandardPrettyPrint;
@@ -13,6 +19,7 @@ import javafe.tc.OutsideEnv;
 import javafe.tc.TypeSig;
 import javafe.util.ErrorSet;
 import javafe.util.Location;
+import mobius.directVCGen.bicolano.Unarchiver;
 import mobius.directVCGen.vcgen.DirectVCGen;
 import escjava.ast.EscPrettyPrint;
 import escjava.tc.TypeCheck;
@@ -21,22 +28,27 @@ import escjava.translate.NoWarn;
 public class Main extends escjava.Main {
 	public static PrintStream out;
 	public static File basedir;
-	
+	public static File bicodir;
 	/**
 	 * The main entry point.
 	 * @param args ESC/Java styles of args - most of them will be
 	 * ignored anyway -
 	 */
-	public static void main(/*@ non_null @*/ String[] args) {
+	public static void main(/*@ non_null @*/ String[] args)  {
 		// the first argument is the output dir
-		String[] escargs = new String [args.length - 1];
-		for(int i = 1; i < args.length; escargs[i - 1] = args[i++]);
+		if (args.length < 2) {
+			System.out.println("I need at least 2 arguments the current directory, " +
+					"and the path to the file bicolano.jar");
+			return;
+		}
+		
+		String[] escargs = new String [args.length - 2];
+		for(int i = 2; i < args.length; escargs[i - 2] = args[i++]);
 		
 		// Configuring base dir
 		basedir = new File(args[0], "proofs" + File.separator);
 		System.out.println("Output dir is set to: " + basedir);
 		System.out.print("Making the directories if they don't exist... ");
-		
 		if(!basedir.exists()) {
 			if(!basedir.mkdir()) {
 				System.out.println("\nDid not managed to make the dir... exiting.");
@@ -44,6 +56,16 @@ public class Main extends escjava.Main {
 			}
 		}
 		System.out.println("done.");
+		
+		// Configuring bicolano and all the preludes
+		bicodir = new File(args[1]);
+		Unarchiver arc = new Unarchiver(bicodir);
+		try {
+			arc.inflat(basedir);
+		} catch (IOException e1) {
+			e1.printStackTrace();
+			return;
+		}
 		
 		// Configuring log file
 		File logfile = new File(basedir, "MobiusDirectVCGen.log");
@@ -55,6 +77,8 @@ public class Main extends escjava.Main {
 			e.printStackTrace();
 			return;
 		}
+		
+		
 		// Launching the beast
 		int exitcode = compile(escargs);
 		if (exitcode != 0) 
@@ -62,6 +86,9 @@ public class Main extends escjava.Main {
 	}
 	
 	
+
+
+
 	public static int compile(String[] args) {
 	    try {
 	    	Main t = new Main();
@@ -184,6 +211,6 @@ public class Main extends escjava.Main {
 	    }   
 		return true;
 	}
-	
+
 
 }
