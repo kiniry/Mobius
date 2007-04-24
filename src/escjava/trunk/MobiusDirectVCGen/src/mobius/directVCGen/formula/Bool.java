@@ -190,5 +190,25 @@ public class Bool {
 		return numBinaryOp(l,r,NodeBuilder.predGT);
 	}
 	
+	
+	/**
+	 * Create an object representing a logical implies.
+	 * @param f1 the first element of the implies
+	 * @param f2 the second element of the implies
+	 * @return a nicely created implies
+	 */
+	public static Term implies(Term f1, Term f2) {
+		return boolBinaryOp(f1,f2, TagConstants.BOOLIMPLIES);
+	}
+	
+	/**
+	 * Create an object representing a logical full implies.
+	 * @param f1 the first element of the full implies
+	 * @param f2 the second element of the full implies
+	 * @return a nicely created fullimplies
+	 */
+	public static Term fullImplies(Term f1, Term f2) {
+		return boolBinaryOp(f1,f2, TagConstants.BOOLEQ);
+	} 
 
 }
