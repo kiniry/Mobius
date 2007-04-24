@@ -540,8 +540,8 @@ public class Lifter extends EscNodeBuilder
 				return dumpBuilder.buildRealBoolFun(tag, args[0].dumpReal(), args[1].dumpReal());
 			}
 			if (fn == symNewObj) {
-				return dumpBuilder.buildNewObject(args[0].dumpAny(), args[1].dumpAny(),
-						args[2].dumpRef());
+				return dumpBuilder.buildNewObject(args[0].dumpAny(), args[1].dumpAny(), args[2].dumpAny(),
+						args[3].dumpRef());
 			}
 			System.out.println(fn.name);
 			Assert.notFalse(! fn.name.startsWith("%"));
@@ -889,7 +889,7 @@ public class Lifter extends EscNodeBuilder
     
     // mobius direct vcgen specific constructs
     /** symbol to mean a new object has been created */
-    public FnSymbol symNewObj = registerFnSymbol("%new", new Sort[] { sortMap, sortMap, sortRef }, sortPred, TagConstants.NEW);
+    public FnSymbol symNewObj = registerFnSymbol("%new", new Sort[] { sortMap, sortType, sortMap, sortRef }, sortPred, TagConstants.NEW);
     /** symbol for special select */
     public FnSymbol symMSelect = registerFnSymbol("%select", new Sort[] { sortMap, sortRef, sortRef }, sortValue, TagConstants.SELECT);
 	/** symbol for special store */
@@ -936,7 +936,7 @@ public class Lifter extends EscNodeBuilder
 	public SValue buildValueConversion(Sort from, Sort to, SValue val) { throw new Die(); }
 	public SPred buildIsTrue(SBool val) { throw new Die(); }
 
-	public SPred buildNewObject(SAny oldh, SAny heap, SRef r) { throw new Die(); }
+	public SPred buildNewObject(SAny oldh, SAny type, SAny heap, SRef r) { throw new Die(); }
 
 	boolean isEarlySort(Sort s, Sort p)
 	{

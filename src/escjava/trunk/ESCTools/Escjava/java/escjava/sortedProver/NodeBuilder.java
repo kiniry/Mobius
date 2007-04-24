@@ -422,5 +422,5 @@ public abstract class NodeBuilder
 	abstract public SPred buildIsTrue(SBool val);
 	
 	// Mobius specific stuff
-	abstract public SPred buildNewObject(SAny oldh, SAny heap, SRef r) ;
+	abstract public SPred buildNewObject(SAny oldh, SAny type, SAny heap, SRef r) ;
 }

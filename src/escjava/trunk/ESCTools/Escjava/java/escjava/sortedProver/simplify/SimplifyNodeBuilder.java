@@ -407,7 +407,7 @@ public class SimplifyNodeBuilder extends EscNodeBuilder
 	public SBool buildRealBoolFun(int realPredTag, SReal arg1, SReal arg2) {
 		return (SBool) buildRealPred(realPredTag, arg1, arg2);
 	}
-	public SPred buildNewObject(SAny oldh, SAny heap, SRef r) {
+	public SPred buildNewObject(SAny oldh, SAny type, SAny heap, SRef r) {
 		throw new UnsupportedOperationException();
 	}
 }
