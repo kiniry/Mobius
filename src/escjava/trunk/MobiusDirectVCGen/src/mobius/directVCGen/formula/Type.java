@@ -10,7 +10,7 @@ import escjava.sortedProver.NodeBuilder.Sort;
 import escjava.tc.Types;
 import escjava.translate.UniqName;
 
-public class Type {
+public class Type{
 	/** the sort representing a type */
 	public static Sort sort = Formula.lf.sortType;
 	/** an hash map not to compute twice the types/term correspondance */

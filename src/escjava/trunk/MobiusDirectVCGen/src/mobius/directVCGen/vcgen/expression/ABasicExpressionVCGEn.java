@@ -27,8 +27,7 @@ public abstract class ABasicExpressionVCGEn {
 		QuantVariableRef heap = Heap.newVar();
 		return Logic.forall(e,
 				Logic.forall(heap,
-						Logic.implies(Logic.typeLE(Type.of(heap, e), type),
-								Logic.implies(Heap.newElem(Heap.var, heap, e),
-						 			p.substWith(e).subst(Heap.var, heap)))));
+							Logic.implies(Heap.newObject(Heap.var, type, heap, e),
+						 			p.substWith(e).subst(Heap.var, heap))));
 	}
 }

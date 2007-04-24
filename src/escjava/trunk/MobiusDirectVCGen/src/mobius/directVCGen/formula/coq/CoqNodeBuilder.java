@@ -1,5 +1,6 @@
 package mobius.directVCGen.formula.coq;
 
+import mobius.directVCGen.formula.Formula;
 import escjava.sortedProver.EscNodeBuilder;
 
 /*@ non_null_by_default @*/
@@ -77,6 +78,19 @@ public class CoqNodeBuilder extends EscNodeBuilder {
 			super(false, rep, new STerm[0]);
 		}
 	}
+	public class CAny extends CTerm implements SMap {
+
+		public CAny(boolean pref, String rep, STerm [] args) {
+			super(pref, rep, args);
+		}
+		public CAny(String rep, STerm [] args) {
+			super(true, rep, args);
+		}
+		
+		public CAny(String rep) {
+			super(false, rep, new STerm[0]);
+		}
+	}
 	public class CType extends CTerm implements SAny {
 
 		public CType(boolean pref, String rep, STerm [] args) {
@@ -143,13 +157,13 @@ public class CoqNodeBuilder extends EscNodeBuilder {
 			return "Real";
 		}
 		if(type == sortRef) {
-			return "Reference";
+			return "value";
 		}
 		if(type == sortBool) {
 			return "bool";
 		}
 		if(type == sortMap) {
-			return "Heap";
+			return "Heap.t";
 		}
 		throw new IllegalArgumentException("Unknown sort: " + type);
 	}
@@ -270,6 +284,9 @@ public class CoqNodeBuilder extends EscNodeBuilder {
 		else if (v.type.equals(sortMap)) {
 			return new CMap(name);
 		}
+		else if (v.type.equals(sortAny)) {
+			return new CAny(name);
+		}
 		else
 			throw new IllegalArgumentException("Unknown Type: " + v.type);
 	}
@@ -325,7 +342,7 @@ public class CoqNodeBuilder extends EscNodeBuilder {
 
 	@Override
 	public SRef buildNull() {
-		return new CRef("null");
+		return new CRef("Null");
 	}
 	
 	@Override
@@ -382,7 +399,9 @@ public class CoqNodeBuilder extends EscNodeBuilder {
 			return this.buildNot(new CPred(false, "=", args));
 		}
 		if(fn == symTypeLE) {
-			return this.buildNot(new CPred("subtype", args));
+			SAny [] realargs = {buildQVarRef(Formula.program.qvar),
+									args[0], args[1]};
+			return new CPred("subclass_name", realargs);
 		}
 		
 		throw new IllegalArgumentException("Unknown symbol: " + fn);
@@ -451,24 +470,24 @@ public class CoqNodeBuilder extends EscNodeBuilder {
 	
 	@Override
 	public SValue buildSelect(SMap map, SValue idx) {		
-		return new CValue("select", new STerm[] {map, idx});
+		return new CValue("Heap.get", new STerm[] {map, idx});
 	}
 	@Override
 	public SMap buildStore(SMap map, SValue idx, SValue val) {
-		return new CMap("store", new STerm[] {map, idx, val});
+		return new CMap("Heap.update", new STerm[] {map, idx, val});
 	}
 
 	@Override
 	public SValue buildValueConversion(Sort from, Sort to, SValue val) {
 		if(from == sortValue) {
 			if(to == sortRef) {
-				return new CValue("valueToRef", new STerm[] {val});
+				return new CValue("vRef", new STerm[] {val});
 			}
 			else if(to == sortBool) {
-				return new CValue("valueToBool", new STerm[] {val});
+				return new CValue("vBool", new STerm[] {val});
 			}
 			else if(to == sortInt) {
-				return new CValue("valueToInt", new STerm[] {val});
+				return new CValue("vInt", new STerm[] {val});
 			}
 			else if(to == sortReal) {
 				throw new UnsupportedOperationException("We do not support reals right now...");
@@ -482,13 +501,13 @@ public class CoqNodeBuilder extends EscNodeBuilder {
 				throw new IllegalArgumentException("The conversion can only be done from a simple type to a value. Found:" + to);
 			}
 			if(from == sortRef) {
-				return new CRef("refToValue", new STerm[] {val});
+				return new CRef("rValue", new STerm[] {val});
 			}
 			else if(from == sortBool) {
-				return new CBool("boolToValue", new STerm[] {val});
+				return new CBool("bValue", new STerm[] {val});
 			}
 			else if(from == sortInt) {
-				return new CInt("intToValue", new STerm[] {val});
+				return new CInt("iValue", new STerm[] {val});
 			}
 			else if(from == sortReal) {
 				throw new UnsupportedOperationException("We do not support reals right now...");
@@ -502,8 +521,12 @@ public class CoqNodeBuilder extends EscNodeBuilder {
 
 
 	@Override
-	public SPred buildNewObject(SAny oldh, SAny heap, SRef r) {
-		return new CPred("newObject", new STerm[] {oldh, heap, r});
+	public SPred buildNewObject(SAny oldh, SAny type, SAny heap, SRef r) {
+		CPred left = new CPred("Heap.new", new STerm[] {oldh, buildQVarRef(Formula.program.qvar), new CType("Heap.LocationObject", new STerm[] {type})});
+        CPred right = new CPred("Some", new STerm[] {new CPred(false, ",", new STerm[] {new CPred("loc", new STerm[] {r}), heap})});
+    		
+		SPred res = new CPred(false, "=",new STerm[] {left, right});
+		return res;
 	}
 	
 }

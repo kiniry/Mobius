@@ -68,10 +68,10 @@ public class Heap {
 	public static QuantVariableRef newVar() {
 		return Expression.rvar("heap" + (heapc++), Heap.sort);
 	}
-	public static Term newElem(Term oldheap, Term heap,  QuantVariableRef e) {
+	public static Term newObject(Term oldheap, Term type, Term heap,  QuantVariableRef e) {
 		if(oldheap == null)
 			throw new NullPointerException();
-		return Formula.lf.mkFnTerm(Formula.lf.symNewObj, new Term[] {oldheap, heap, e});
+		return Formula.lf.mkFnTerm(Formula.lf.symNewObj, new Term[] {oldheap, type, heap, e});
 	}
 	
 }

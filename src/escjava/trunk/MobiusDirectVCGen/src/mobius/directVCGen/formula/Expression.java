@@ -16,9 +16,8 @@ public class Expression {
 	private static int [] varCounters = {0, 0, 0, 0, 0};
 
 
-	public static QuantVariableRef var(String str) {
-		QuantVariable v = Formula.lf.mkQuantVariable(str, Logic.sort);
-		return Formula.lf.mkQuantVariableRef(v);
+	public static QuantVariable var(String str) {
+		return Formula.lf.mkQuantVariable(str, Formula.sort);
 	}
 	public static QuantVariable var(String name, Sort s) {
 		return Formula.lf.mkQuantVariable(name, s);

@@ -79,9 +79,9 @@ public class Logic {
 	 * @return the BoolProp conversion object
 	 */
 	public static Term boolToProp(Term e) {	
-		if (e.getSort() == Logic.sort)
+		if (e.getSort() == Bool.sort)
 			return Formula.lf.mkFnTerm(Formula.lf.symIsTrue, new Term[] {e});
-		else if (e.getSort() == Bool.sort)
+		else if (e.getSort() == Logic.sort)
 			return e;
 		else 
 			throw new IllegalArgumentException("Bad type when creating BoolProp, " +
