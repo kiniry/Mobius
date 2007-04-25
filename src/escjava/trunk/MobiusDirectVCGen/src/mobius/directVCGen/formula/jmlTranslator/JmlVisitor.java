@@ -6,6 +6,7 @@ import java.util.Properties;
 import javafe.ast.ASTNode;
 import javafe.ast.BinaryExpr;
 import javafe.ast.InstanceOfExpr;
+import javafe.ast.JavafePrimitiveType;
 import javafe.ast.LiteralExpr;
 import javafe.ast.VariableAccess;
 import escjava.ast.AnOverview;
@@ -38,6 +39,7 @@ import escjava.ast.ModelProgamModifierPragma;
 import escjava.ast.ModelTypePragma;
 import escjava.ast.ModifiesGroupPragma;
 import escjava.ast.NamedExprDeclPragma;
+import escjava.ast.NaryExpr;
 import escjava.ast.NestedModifierPragma;
 import escjava.ast.NotModifiedExpr;
 import escjava.ast.NotSpecifiedExpr;
@@ -99,10 +101,59 @@ public class JmlVisitor extends VisitorArgResult{
 	 
 	 
 	 
+	 
+	 /*
+	  * public static  boolean isValidTag(int tag) {
+	    return (tag == TagConstants.BOOLEANTYPE || tag == TagConstants.INTTYPE
+		|| tag == TagConstants.LONGTYPE || tag == TagConstants.CHARTYPE
+		|| tag == TagConstants.FLOATTYPE || tag == TagConstants.DOUBLETYPE
+		|| tag == TagConstants.VOIDTYPE || tag == TagConstants.NULLTYPE
+		|| tag == TagConstants.BYTETYPE || tag == TagConstants.SHORTTYPE);
+    }
+	  */
 	 public /*@non_null*/ Object visitVariableAccess(/*@non_null*/ VariableAccess x, Object o) {		 
-		 return translator.varAccess(x,o);
+		 Boolean oldProp = (Boolean) ((Properties) o).get("old");	
+		 String id = (String) x.id.toString();
+		 int tag = ((JavafePrimitiveType) x.getDecorations()[1]).tag;
+		 
+		 if(oldProp.booleanValue())
+		 {
+			 id += "Pre"; //for ghos-variables
+		 }
+		 
+		 switch(tag)
+		 {
+		 case TagConstants.BOOLEANTYPE: 
+			 if (((Properties) o).get("pre").equals("true"))
+				 return Expression.rvar(id, Logic.sort);
+			 else
+				 return Expression.rvar(id, Bool.sort);
+		 case TagConstants.CHARTYPE: 
+		 case TagConstants.VOIDTYPE:
+		 case TagConstants.NULLTYPE:
+		 case TagConstants.BYTETYPE:
+		 case TagConstants.SHORTTYPE:
+		 case TagConstants.INTTYPE: return Expression.rvar(id, Num.sortInt);
+		 case TagConstants.LONGTYPE:
+		 case TagConstants.FLOATTYPE:return Expression.rvar(id, Num.sortReal);
+		 case TagConstants.DOUBLETYPE:
+		 default: //throw Exception
+		 }
+		 return null;
 	}
 	 
+	 
+	 
+	 
+	 
+	 
+	 public /*@non_null*/ Object visitNaryExpr(/*@non_null*/ NaryExpr x, Object o) {		 
+		 
+			//wenn old, dann auf true setzen
+		 ((Properties) o).put("old",true);
+		 
+			return visitGCExpr(x, o);
+	}
 	 
 
 	 //I just return "true == true" cause heap isn't available yet

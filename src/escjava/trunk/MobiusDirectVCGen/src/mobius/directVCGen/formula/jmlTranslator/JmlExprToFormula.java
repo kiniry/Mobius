@@ -56,15 +56,15 @@ public class JmlExprToFormula {
 	 * @return term in the excepted sort, if possible
 	 */
 	public Object eq(BinaryExpr expr, Object o) {
-		Object pred = ((Properties) o).get("pred");
+		Boolean pred_old = (Boolean) ((Properties) o).get("pred");
 		//set Properties.prop:=false (equality operation wants sortBool)
-		Object prop = ((Properties) o).put("pred", false);
-		Term t1 = (Term)expr.left.accept(v,prop);
-		Term t2 = (Term)expr.right.accept(v,prop);
+		((Properties) o).put("pred", false);
+		Term t1 = (Term)expr.left.accept(v,o);
+		Term t2 = (Term)expr.right.accept(v,o);
 		
-		if (prop.equals(false) && (t1.getSort() != Logic.sort)&&(t2.getSort() != Logic.sort))
+		if (!pred_old.booleanValue()&& (t1.getSort() != Logic.sort)&&(t2.getSort() != Logic.sort))
 				return Bool.equals(t1, t2);	
-		else if (pred.equals(true) && (t1.getSort() != Logic.sort)&& (t2.getSort() != Logic.sort))
+		else if (pred_old.booleanValue() && (t1.getSort() != Logic.sort)&& (t2.getSort() != Logic.sort))
 				return Logic.equals(t1,t2);		
 		else
 			return Logic.fullImplies(Logic.boolToProp(t1),Logic.boolToProp(t2));	
@@ -75,10 +75,10 @@ public class JmlExprToFormula {
 	 * ne(t1,t2) <--> not(equal(t1,t2))
 	 */
 	public Object ne(BinaryExpr expr, Object o) {
-		Object pred = ((Properties) o).get("pred");		
+		Boolean pred= (Boolean) ((Properties) o).get("pred");		
 		Term t = (Term) eq(expr,o);
 				
-		if (pred.equals(false) && (t.getSort() != Logic.sort))
+		if (!pred.booleanValue() && (t.getSort() != Logic.sort))
 			return Bool.not(t);
 		else
 			return Logic.not(Logic.boolToProp(t));	
@@ -87,11 +87,11 @@ public class JmlExprToFormula {
 	
 	
 	public Object ge(BinaryExpr expr, Object o) {
-		Object pred = ((Properties) o).get("pred");		
+		Boolean pred= (Boolean) ((Properties) o).get("pred");		
 		Term t1 = (Term)expr.left.accept(v,o);
 		Term t2 = (Term)expr.right.accept(v,o);
 				
-		if (pred.equals(false) && (t1.getSort() != Logic.sort)&&(t2.getSort() != Logic.sort))
+		if (!pred.booleanValue() && (t1.getSort() != Logic.sort)&&(t2.getSort() != Logic.sort))
 			return Bool.ge(t1, t2);
 		else
 			return Logic.ge(Logic.boolToProp(t1),Logic.boolToProp(t2));			
@@ -99,11 +99,11 @@ public class JmlExprToFormula {
 
 	
 	public Object gt(BinaryExpr expr, Object o) {
-		Object pred = ((Properties) o).get("pred");		
+		Boolean pred= (Boolean) ((Properties) o).get("pred");		
 		Term t1 = (Term)expr.left.accept(v,o);
 		Term t2 = (Term)expr.right.accept(v,o);
 				
-		if (pred.equals(false) && (t1.getSort() != Logic.sort)&&(t2.getSort() != Logic.sort))
+		if (!pred.booleanValue() && (t1.getSort() != Logic.sort)&&(t2.getSort() != Logic.sort))
 			return Bool.gt(t1, t2);
 		else
 			return Logic.gt(Logic.boolToProp(t1),Logic.boolToProp(t2));			
@@ -111,11 +111,11 @@ public class JmlExprToFormula {
 	
 	
 	public Object le(BinaryExpr expr, Object o) {
-		Object pred = ((Properties) o).get("pred");		
+		Boolean pred= (Boolean) ((Properties) o).get("pred");		
 		Term t1 = (Term)expr.left.accept(v,o);
 		Term t2 = (Term)expr.right.accept(v,o);
 				
-		if (pred.equals(false) && (t1.getSort() != Logic.sort)&&(t2.getSort() != Logic.sort))
+		if (!pred.booleanValue() && (t1.getSort() != Logic.sort)&&(t2.getSort() != Logic.sort))
 			return Bool.le(t1, t2);
 		else
 			return Logic.le(Logic.boolToProp(t1),Logic.boolToProp(t2));			
@@ -123,11 +123,11 @@ public class JmlExprToFormula {
 
 	
 	public Object lt(BinaryExpr expr, Object o) {
-		Object pred = ((Properties) o).get("pred");		
+		Boolean pred= (Boolean) ((Properties) o).get("pred");		
 		Term t1 = (Term)expr.left.accept(v,o);
 		Term t2 = (Term)expr.right.accept(v,o);
 				
-		if (pred.equals(false) && (t1.getSort() != Logic.sort)&&(t2.getSort() != Logic.sort))
+		if (!pred.booleanValue() && (t1.getSort() != Logic.sort)&&(t2.getSort() != Logic.sort))
 			return Bool.lt(t1, t2);
 		else
 			return Logic.lt(Logic.boolToProp(t1),Logic.boolToProp(t2));			
@@ -243,11 +243,11 @@ public class JmlExprToFormula {
 	}
 
 	public Object implies(BinaryExpr expr, Object o) {
-		Object pred = ((Properties) o).get("pred");		
+		Boolean pred= (Boolean) ((Properties) o).get("pred");		
 		Term t1 = (Term)expr.left.accept(v,o);
 		Term t2 = (Term)expr.right.accept(v,o);
 				
-		if (pred.equals(false) && (t1.getSort() != Logic.sort)&&(t2.getSort() != Logic.sort))
+		if (!pred.booleanValue() && (t1.getSort() != Logic.sort)&&(t2.getSort() != Logic.sort))
 			return Bool.implies(t1, t2);
 		else
 			return Logic.implies(Logic.boolToProp(t1),Logic.boolToProp(t2));			
@@ -333,9 +333,6 @@ public class JmlExprToFormula {
 		return Num.value(3); //Testing
 	}
 
-	public Object varAccess(VariableAccess x, Object o) {	
-		return null;
-	}
 	
 
 }
