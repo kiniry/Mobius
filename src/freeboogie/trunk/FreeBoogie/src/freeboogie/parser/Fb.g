@@ -1,9 +1,9 @@
 grammar Fb;
 
-@header { package freeboogie.parser; }
+@header {package freeboogie.parser;}
 @lexer::header {package freeboogie.parser;}
 
-program	:	 decl*;
+program	:	 decl* EOF;
 
 decl	:	type_decl|constant|function|axiom|variable|procedure|implementation;
 
@@ -12,26 +12,30 @@ type_decl
 
 constant:	'const' id_type_list ';';
 
-function:	'function' id_list '(' (opt_id_type_list)? ')' 'returns' '(' opt_id_type ')' ';';
+function
+    :   'function' id_list '(' (opt_id_type_list)? ')' 
+        'returns' '(' (opt_id_type)? ')' ';';
 
-axiom	:	'axiom' expr;
+axiom	:	'axiom' expr ';';
 
 variable:	'var' id_type_list ';';
 
+/* NOTE that this is a bit more permissive than what appears in the
+   deline2005btp technical report. */
 procedure
-	:	'procedure' ID signature ';' spec*
-//	|	'procedure' ID signature spec* body
+    :   'procedure' ID signature ';'? spec* body?
 	;
 	
 signature
-	:	'(' id_type_list ')' ('returns' '('id_type_list ')')?;
+	:	'(' (id_type_list)? ')' ('returns' '(' (id_type_list)? ')')?;
 
-spec	:	'requires' expr ';'
-	|	'modifies' (id_list)?';'
-	|	'ensures' expr ';';
+spec
+    :	'free'? 'requires' expr ';'
+    |	'modifies' (id_list)?';'
+    |	'free'? 'ensures' expr ';';
 	
 implementation
-	:	'implementation' ID signature body;
+    :   'implementation' ID signature body;
 	
 body	:	'{' local_var_decl* block+ '}';
 
@@ -44,49 +48,49 @@ block_end
 	:	'goto' id_list ';'
 	|	'return' ';';
 	
-command	:	ID ':=' expr ';'
-	|	ID index ':=' expr ';'
-	|	'assert' expr ';'
-	|	'assume' expr ';'
-	|	'havoc' id_list ';'
-	| 	'call' (id_list ':=')? ID '(' (expr_list)? ')' ';'
-	;
+command	
+    :	ID ':=' expr ';'
+    |	ID index ':=' expr ';'
+    |	'assert' expr ';'
+    |	'assume' expr ';'
+    |	'havoc' id_list ';'
+    | 	'call' (id_list ':=')? ID '(' (expr_list)? ')' ';'
+    ;
 	
-index 	:	'[' expr ']'
-/*	|	'[' expr ',' expr ']'*/
-	;
+index 	
+    :   '[' expr (',' expr)? ']';
 
-expr	:	equivalence;
 
-equivalence
-	:	implication ('<==>' equivalence)?;
-	
-implication
-	:	logical_expr ('==>' implication)?;
-	
-logical_expr
-	:	relation
-/*	|	relation '&&' and_expr*/
-/*	|	relation '||' or_expr*/
-	;
-	
-//and_expr:	relation ('&&' and_expr)?;
+/* BEGIN expression grammar.
 
-//or_expr	:	relation ('||' or_expr)?;
+   See http://www.engr.mun.ca/~theo/Misc/exp_parsing.htm
+   for a succint presentation of how to implement precedence
+   and associativity in a LL-grammar, the classical way.
 
-relation:	term (rel_op term)?;
+   The precedence increases
+     <==>
+     ==>
+     &&, ||
+     =, !=, <, <=, >=, >, <:
+     +, -
+     *, /, %
 
-term	:	factor (add_op term)?;
+   All are left associative
+   The unary operators are ! and -.
+   Typechecking takes care of booleans added to integers 
+   and the like.
+ */
 
-factor	:	unary_expr (mul_op factor)?;
+expr:   expr_a ('<==>' expr_a)*;
+expr_a: expr_b ('==>' expr_b)*;
+expr_b: expr_c (('&&'|'||') expr_c)*;
+expr_c: expr_d (('=='|'!='|'<'|'<='|'>='|'>'|'<:') expr_d)*;
+expr_d: expr_e (('+'|'-') expr_e)*;
+expr_e: expr_f (('*'|'/'|'%') expr_f)*;
+expr_f: atom index? | '(' expr ')' | '-' expr_f | '!' expr_f;
 
-unary_expr
-	:	atom index+
-	|	'!' unary_expr
-	| 	'-' unary_expr
-	;
-	
-atom	:	'false'
+atom
+	:	'false'
 	|	'true'
 	|	'null'
 	|	INT
@@ -95,19 +99,21 @@ atom	:	'false'
 	|	'old' '(' expr ')'
 	|	'cast' '(' expr ',' type ')'
 	|	quantification
-	|	'(' expr ')'
 	;
+
+/* END of the expression grammar */
+
 	
 quantification
-	:	'(' quant_op id_type_list '::' expr ')';
+	:	'(' quant_op id_type_list '::' triggers expr ')';
 	
-rel_op	:	'='|'!='|'<'|'<='|'>='|'>'|'<:';
-
-add_op	:	'+' | '-';
-
-mul_op	:	'*' | '/' | '%';
-
 quant_op:	'forall' | 'exists';
+
+triggers
+    :   ('{' ':nopats'? expr_list '}')*;
+
+
+/* BEGIN list rules */
 	
 expr_list
 	:	expr (',' expr_list)?;
@@ -120,20 +126,27 @@ opt_id_type_list
 id_type_list
 	:	id_type (',' id_type_list)?;
 	
+/* END list rules */
+
+
 id_type	:	ID ':' type;
 
 opt_id_type
 	:	(ID ':')? type;
 
 
-type	:	'bool'
-	|	'int'
-	|	'ref'
-	|	'name'
-	|	ID
-	|	'any'
-	|	'[' type (',' type)? ']' type
-	;
+simple_type
+    :	'bool'
+    |	'int'
+    |	'ref'
+    |	'name'
+    |	ID
+    |	'any'
+    |	'[' simple_type (',' simple_type)? ']' simple_type
+    ;
+
+type
+    : simple_type ('where' expr)?;
 	
 
 ID      : 	
@@ -143,4 +156,11 @@ ID      :
 	
 ALPHA	:	;
 INT     : 	'0'..'9'+ ;
-WS      : 	(' '|'\t'|'\n')+ {$channel=HIDDEN;};
+WS      : 	(' '|'\t'|'\n'|'\r')+ {$channel=HIDDEN;};
+COMMENT
+    :   '/*' ( options {greedy=false;} : . )* '*/' {$channel=HIDDEN;}
+    ;
+
+LINE_COMMENT
+    : '//' ~('\n'|'\r')* '\r'? '\n' {$channel=HIDDEN;}
+    ;
