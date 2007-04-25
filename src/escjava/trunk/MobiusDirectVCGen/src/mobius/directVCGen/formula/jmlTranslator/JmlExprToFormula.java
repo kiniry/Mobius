@@ -46,13 +46,7 @@ public class JmlExprToFormula {
 		Term t1 = (Term)expr.left.accept(v,o);
 		Term t2 = (Term)expr.right.accept(v,o);
 		
-		if (t1.getSort() != Num.sortInt) {
-			return Ref.add(t1,t2);
-		}
-		else
-		{
 			return Num.add(t1,t2);
-		}
 	}
 	
 	/**
@@ -259,7 +253,6 @@ public class JmlExprToFormula {
 			return Logic.implies(Logic.boolToProp(t1),Logic.boolToProp(t2));			
 	}
 
-	
 	public Object explies(BinaryExpr expr, Object o) {
 		// TODO Auto-generated method stub
 		return null;
