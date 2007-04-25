@@ -8,6 +8,7 @@ import escjava.ast.TagConstants;
 import escjava.sortedProver.Lifter.Term;
 import javafe.ast.BinaryExpr;
 import javafe.ast.LiteralExpr;
+import javafe.ast.VariableAccess;
 
 public class JmlExprToFormula {
 
@@ -44,7 +45,14 @@ public class JmlExprToFormula {
 	public Term add(BinaryExpr expr, Object o) {
 		Term t1 = (Term)expr.left.accept(v,o);
 		Term t2 = (Term)expr.right.accept(v,o);
-		return Num.add(t1, t2);
+		
+		if (t1.getSort() != Num.sortInt) {
+			return Ref.add(t1,t2);
+		}
+		else
+		{
+			return Num.add(t1,t2);
+		}
 	}
 	
 	/**
@@ -73,10 +81,17 @@ public class JmlExprToFormula {
 	 * ne(t1,t2) <--> not(equal(t1,t2))
 	 */
 	public Object ne(BinaryExpr expr, Object o) {
+		Object pred = ((Properties) o).get("pred");		
 		Term t = (Term) eq(expr,o);
-		return Logic.not(t);
+				
+		if (pred.equals(false) && (t.getSort() != Logic.sort))
+			return Bool.not(t);
+		else
+			return Logic.not(Logic.boolToProp(t));	
 	}
 
+	
+	
 	public Object ge(BinaryExpr expr, Object o) {
 		Object pred = ((Properties) o).get("pred");		
 		Term t1 = (Term)expr.left.accept(v,o);
@@ -234,11 +249,17 @@ public class JmlExprToFormula {
 	}
 
 	public Object implies(BinaryExpr expr, Object o) {
+		Object pred = ((Properties) o).get("pred");		
 		Term t1 = (Term)expr.left.accept(v,o);
 		Term t2 = (Term)expr.right.accept(v,o);
-		return Logic.implies(t1, t2);
+				
+		if (pred.equals(false) && (t1.getSort() != Logic.sort)&&(t2.getSort() != Logic.sort))
+			return Bool.implies(t1, t2);
+		else
+			return Logic.implies(Logic.boolToProp(t1),Logic.boolToProp(t2));			
 	}
 
+	
 	public Object explies(BinaryExpr expr, Object o) {
 		// TODO Auto-generated method stub
 		return null;
@@ -317,6 +338,10 @@ public class JmlExprToFormula {
 		x.getTag(); //wrong tag
 		
 		return Num.value(3); //Testing
+	}
+
+	public Object varAccess(VariableAccess x, Object o) {	
+		return Ref.strValue(x.toString());
 	}
 	
 

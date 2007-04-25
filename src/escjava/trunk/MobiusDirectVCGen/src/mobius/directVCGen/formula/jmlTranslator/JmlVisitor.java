@@ -7,6 +7,7 @@ import javafe.ast.ASTNode;
 import javafe.ast.BinaryExpr;
 import javafe.ast.InstanceOfExpr;
 import javafe.ast.LiteralExpr;
+import javafe.ast.VariableAccess;
 import escjava.ast.AnOverview;
 import escjava.ast.ArrayRangeRefExpr;
 import escjava.ast.CondExprModifierPragma;
@@ -78,7 +79,7 @@ public class JmlVisitor extends VisitorArgResult{
 				o = ((ASTNode) child).accept(this, prop);
 				if (o != null)
 				{
-					System.out.println( o.toString() + x.getClass().getName());
+					System.out.println( o.toString() + " " + x.getClass().getName());
 				}
 			}
 			
@@ -95,6 +96,14 @@ public class JmlVisitor extends VisitorArgResult{
 	 public /*@non_null*/ Object visitLiteralExpr(/*@non_null*/ LiteralExpr x, Object o) {
 		return translator.lit(x,o);
 	}
+	 
+	 
+	 
+	 public /*@non_null*/ Object visitVariableAccess(/*@non_null*/ VariableAccess x, Object o) {		 
+		 return translator.varAccess(x,o);
+	}
+	 
+	 
 
 	 //I just return "true == true" cause heap isn't available yet
 	 public /*@non_null*/ Object visitInstanceOfExpr(/*@non_null*/ InstanceOfExpr x, Object o) {
