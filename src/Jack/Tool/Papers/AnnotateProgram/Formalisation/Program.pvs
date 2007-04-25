@@ -120,10 +120,10 @@ BEGIN
   Sequence(s1, s2 : Stmt) : Sequence?
   Set(target : Name, source : Expr) : Set?
   Skip : Skip?
-  StmtExpr (expr : Expr) : StmtExpr?
+  StmtExpr(expr : Expr) : StmtExpr?
   Throw : Throw?
   % optional catch and finally modelled by lifting types
-  TryCatch (try : Stmt, catch : Stmt, finally : Stmt) : TryCatch?
+  TryCatch(try : Stmt, catch : Stmt, finally : Stmt) : TryCatch?
   While(test : Expr, body : Stmt) : While?
 
 

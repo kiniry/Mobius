@@ -6,29 +6,56 @@ BEGIN
             MonitoredProgramSemantics[CP, string],
             AnnotateProgram[CP]
 
-  cp2val(q : CP) : Val =
-    Int(unique(q))
+  cp2val(q : CP) : Val = Int(unique(q))
 
   % Says if an MVA state is modeled by a state of an annotated program
   MVA_modeled?(sA : AState, sAP : APState) : boolean =
     (cp2val(cp(sA)) = gvs(sAP)("cp")) AND
     (FORALL (n : string) : NOT Bottom?(stA(sA)(n)) IMPLIES
       stA(sA)(n) = gvs(sAP)(n)) AND
-    (cp(sA) = halted IMPLIES 
-      up?(ex(pstate(sAP))) AND down(ex(pstate(sAP))) = JMLExc)
+    (cp(sA) = halted IMPLIES
+      down(ex(pstate(sAP))) = JMLExc)
 
-  % Says if s2AP is a "super state" of s1AP
-  Program_modeled?(s1AP, s2AP : APState) : boolean =
-    LET s1 = pstate(s1AP), s2 = pstate(s2AP) IN
+  % Says if sAP2 is a "super state" of sAP1
+  Program_modeled?(sAP1, sAP2 : APState) : boolean =
+    LET s1 = pstate(sAP1), s2 = pstate(sAP2) IN
     ex(s1) = ex(s2) AND
     fvs(st(s1)) = fvs(st(s2)) AND
     lvs(st(s1)) = lvs(st(s2)) AND
-    FORALL (n : string) : NOT Bottom?(gvs(s1AP)(n)) IMPLIES
-      gvs(s1AP)(n) = gvs(s2AP)(n)
+    FORALL (n : string) : NOT Bottom?(gvs(sAP1)(n)) IMPLIES
+      gvs(sAP1)(n) = gvs(sAP2)(n)
 
-  MP_modeled?(sMP : MState, sAP : APState) : boolean =
-    MVA_modeled?(astate(sMP), sAP) AND 
+  Program_modeled?(sMP : MPState, sAP : APState) : boolean =
     Program_modeled?((# pstate := pstate(sMP), gvs := gvs(sMP) #), sAP)
+
+  % Says if an state of a MP is correctly modeled by a state of an AP
+  MP_modeled?(sMP : MPState, sAP : APState) : boolean =
+    MVA_modeled?(astate(sMP), sAP) AND 
+    Program_modeled?(sMP, sAP)
+
+
+  % Properties about MP_modeled?
+
+  MP_modeled_implies_same_exception : LEMMA % :-)
+    FORALL (sMP : MPState, sAP : APState) :
+      MP_modeled?(sMP, sAP) IMPLIES ex(pstate(sMP)) = ex(pstate(sAP))
+
+  MP_modeled_preserved_by_update : LEMMA
+    FORALL (sMP : MPState, sAP : APState)(vn : string, v : Val) :
+      MP_modeled?(sMP, sAP) IMPLIES 
+        MP_modeled?(update_state_MP(update(vn, v), sMP),
+                    update_state_AP(update(vn, v), sAP))
+
+%   MP_modeled_preserved_by_update2 : LEMMA
+%     FORALL (mp : MonitoredProgram, ap : Program)
+%            (sMP : MPState, sAP : APState)(vn : string, v : Val) :
+%       ann_program_pre(mp) IMPLIES
+%       ap = ann_program(mp) IMPLIES
+%       wf_state(mp, sMP) IMPLIES 
+%       wf_state(ap, sAP) IMPLIES
+%       MP_modeled?(sMP, sAP) IMPLIES 
+%         MP_modeled?(update_state_MP(update(vn, v), sMP),
+%                     update_state_AP(update(vn, v), sAP))
 
 
 %   % TODO: Define
@@ -51,10 +78,49 @@ BEGIN
         MP_modeled?(initial_MP_state(mp), 
                     initial_AP_state(ann_program(mp)))
 
+
+  execute_set_equivalence : LEMMA
+    FORALL (mp : MonitoredProgram, ap : Program, vn : string, e : Expr,
+            n1, n2 : nat, sMP1, sMP2 : MPState, sAP1, sAP2 : APState) :
+      ap = ann_program(mp) IMPLIES
+      Program_modeled?(sMP1, sAP1) IMPLIES
+      (FORALL (n1, n2 : nat)(e : Expr, v1, v2 : Val)
+              (sMP1, sMP2 : MPState, sAP1, sAP2 : APState) :
+        deriv_expr(mp)(e, sMP1, v1, sMP2)(n1) IMPLIES
+        deriv_expr(ap)(e, sAP1, v2, sAP2)(n2) IMPLIES
+          v1 = v2 AND
+          MP_modeled?(sMP2, sAP2)) IMPLIES
+      execute_set_MP(mp, vn, e, sMP1, sMP2, n1, deriv_stmt, deriv_expr) IMPLIES
+      execute_set_AP(ap, vn, e, sAP1, sAP2, n1, deriv_stmt, deriv_expr) IMPLIES
+      Program_modeled?(sMP2, sAP2)
+
+
+  deriv_expr_equivalence : LEMMA
+    FORALL (mp : MonitoredProgram, ap : Program)
+           (e : Expr, v1, v2 : Val)
+           (sMP1, sMP2 : MPState, sAP1, sAP2 : APState)
+           (n1, n2 : nat) :
+      ap = ann_program(mp) IMPLIES
+      MP_modeled?(sMP1, sAP1) IMPLIES
+      deriv_expr(mp)(e, sMP1, v1, sMP2)(n1) IMPLIES
+      deriv_expr(ap)(e, sAP1, v2, sAP2)(n2) IMPLIES
+        v1 = v2 AND
+        MP_modeled?(sMP2, sAP2)
+
+  deriv_stmt_equivalence : LEMMA
+    FORALL (mp : MonitoredProgram, ap : Program)(n1, n2 : nat)(c : Stmt)
+           (sMP1, sMP2 : MPState, sAP1, sAP2 : APState) :
+      ap = ann_program(mp) IMPLIES
+      MP_modeled?(sMP1, sAP1) IMPLIES
+      deriv_stmt(mp)(c, sMP1, sMP2)(n1) IMPLIES
+      deriv_stmt(ap)(c, sAP1, sAP2)(n2) IMPLIES
+        MP_modeled?(sMP2, sAP2)
+
+
   % The main result
   correcteness_of_ann_program : THEOREM
     FORALL (mp : MonitoredProgram)(main : Method, arg : int)
-           (n : nat, sMP : MState, sAP : APState) :
+           (n : nat, sMP : MPState, sAP : APState) :
       ann_program_pre(mp) IMPLIES
       run_monitored_program(mp)(main, arg)(sMP)(n) IMPLIES
         EXISTS (m : nat) :

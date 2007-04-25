@@ -69,22 +69,15 @@ BEGIN
   lookup_field(vn : Name, sigma : PState) : Val =
     fvs(st(sigma))(vn)
 
-  update_local(vn : Name, v : Val, sigma : PState) : PState =
+  update_local(vn : Name, v : Val)(sigma : PState) : PState =
     (# ex := ex(sigma),
        st := (# fvs := fvs(st(sigma)),
                 lvs := lvs(st(sigma)) WITH [vn := v] #) #)
-
-  % Used in the general semantics (consider removing the other later)
-  update_local(vn : Name, v : Val)(sigma : PState) : PState =
-    update_local(vn, v, sigma)
                 
-  update_field(vn : Name, v : Val, sigma : PState) : PState =
+  update_field(vn : Name, v : Val)(sigma : PState) : PState =
     (# ex := ex(sigma),
        st := (# fvs := fvs(st(sigma)) WITH [vn := v],
                 lvs := lvs(st(sigma)) #) #)
-
-  update_field(vn : Name, v : Val)(sigma : PState) : PState =
-    update_field(vn, v, sigma)
 
   lookup(vn : Name, sigma : PState) : Val =
     IF is_local(vn, sigma)
@@ -92,12 +85,11 @@ BEGIN
     ELSE lookup_field(vn, sigma)
     ENDIF
 
-  update(vn : Name, v : Val, sigma : PState) : PState =
+  update(vn : Name, v : Val)(sigma : PState) : PState =
     IF is_local(vn, sigma)
-    THEN update_local(vn, v, sigma)
-    ELSE update_field(vn, v, sigma)
+    THEN update_local(vn, v)(sigma)
+    ELSE update_field(vn, v)(sigma)
     ENDIF
- 
 
   val2int(v : Val) : int = 
     IF Int?(v) 
@@ -186,6 +178,19 @@ BEGIN
               [below(n + 1) -> bool]]]) :
       f(p, vn, e, s1, s2, n, ds, de) IMPLIES pstate(s2) = pstate(s1)
 
+  execute_CaseJML_type
+    (f : [FullProgram, list[[Expr, Stmt]], FullState, FullState, n : nat,
+     [FullProgram -> [Stmt, FullState, FullState -> [below(n + 1) -> bool]]],
+     [FullProgram -> [Expr, FullState, Val, FullState -> [below(n+1) -> bool]]]
+       -> bool]) : bool =
+    FORALL (p : FullProgram, branches : list[[Expr, Stmt]], s1, s2 : FullState,
+            n : nat,
+            ds : [FullProgram -> [Stmt, FullState, FullState ->
+              [below(n + 1) -> bool]]],
+            de : [FullProgram -> [Expr, FullState, Val, FullState ->
+              [below(n + 1) -> bool]]]) :
+      f(p, branches, s1, s2, n, ds, de) IMPLIES pstate(s2) = pstate(s1)
+
   on_method_entry_type
     (f : [FullProgram, Method[Name], Val, FullState, FullState, n : nat,
      [FullProgram -> [Stmt, FullState, FullState -> [below(n + 1) -> bool]]],
@@ -238,6 +243,21 @@ BEGIN
            ELSE tau1 % This won't happen in a well formed program
            ENDIF
 
+  execute_CaseJML : (execute_CaseJML_type) =
+    LAMBDA (p : FullProgram, branches : list[[Expr, Stmt]], s1, s2 : FullState,
+            n : nat,
+            deriv_stmt : [FullProgram -> [Stmt, FullState, FullState ->
+                                         [below(n + 1) -> bool]]],
+            deriv_expr : [FullProgram -> [Expr, FullState, Val, FullState ->
+                                         [below(n + 1) -> bool]]]) :
+      CASES branches OF
+        null : s1 = s2 AND n = 0,
+        cons(x, xs) : deriv_stmt(p)(IfThenElse(proj_1(x), proj_2(x), 
+                                               CaseJML(xs)),
+                                    s1, s2)(n - 1)
+                       AND n > 0
+      ENDCASES
+
 
 END SemanticsCommon
 
@@ -250,12 +270,15 @@ Semantics[Name : TYPE+,
           (IMPORTING SemanticsTypes[Name, FullProgram, FullState, pstate])
           update_FullState : (update_FullState_type),
           execute_set : (execute_set_type),
+          execute_CaseJML : (execute_CaseJML_type),
           on_method_entry : (on_method_entry_type),
           on_method_exit_normal : (on_method_exit_type),
           on_method_exit_exceptional : (on_method_exit_type)] : THEORY
 BEGIN
 
   IMPORTING Evaluation[Name]
+
+  get_address(vn : Name) : int
 
   default_value(t : JType) : Val =
     CASES t OF
@@ -284,6 +307,9 @@ BEGIN
     #)
 
 
+  % THINK: Should we say in each case NOT Bottom?(v)?. Recall that sematincs
+  % should be defined even for not well-formed programs (in which case the
+  % result may be meaningless)
   deriv_expr(p : FullProgram)
             (c : Expr, sigma1 : FullState, v : Val, sigma2 : FullState)
             (n : nat)
@@ -309,14 +335,13 @@ BEGIN
     ELSE % sigma1 is a normal state
     CASES c OF
       Assign(vn, e) :
-        is_local(vn, pstate(sigma1)) AND
         NOT Bottom?(v) AND
         n > 0 AND
         (EXISTS (tau : FullState) : 
            deriv_expr(p)(e, sigma1, v, tau)(n - 1)(deriv_stmt_rec(n - 1)) AND
            sigma2 = (IF up?(ex(pstate(tau)))
                      THEN tau
-                     ELSE update_FullState(update_local(vn, v), tau)
+                     ELSE update_FullState(update(vn, v), tau)
                      ENDIF)),
       BExpr(b) :
         sigma1 = sigma2 AND 
@@ -329,7 +354,7 @@ BEGIN
           deriv_expr(p)(c, sigma1, v1, tau)(m1)(deriv_stmt_rec(m1)) AND
           deriv_expr(p)(IF b(v1) THEN t ELSE e ENDIF,
                            tau, v, sigma2)(m2)(deriv_stmt_rec(m2)),
-      %TODO: update the values of this and initialize the local vars
+      %TODO: update the values of "this" and initialize the local vars
       MethodCall(e, mn, pr) :
         EXISTS (m1, m2, m3, m4, m5, m6 : nat)
                (tau1, tau2, tau3, tau4, tau5, tau6, tau7, tau8 : FullState)
@@ -369,10 +394,18 @@ BEGIN
           % restore the value of the argument
           sigma2 = update_FullState(update_local(name(arg(md)), old_val_arg),
                                     tau8),
-      NExpr(n) : 
+      NExpr(n) :
         sigma1 = sigma2 AND
         NOT Bottom?(v) AND
         v = Int(eval(n)(pstate(sigma1))) AND
+        n = 0,
+      RExpr(r) :
+        sigma1 = sigma2 AND
+        NOT Bottom?(v) AND
+        v = CASES r OF
+              Null : Null,
+              RefVarEval(vn) : RefType(get_address(vn))
+            ENDCASES AND
         n = 0
     ENDCASES
     ENDIF
@@ -401,13 +434,8 @@ BEGIN
     ELSE % sigma1 is a normal state
     CASES c OF
       CaseJML(l) :
-         CASES l OF
-         null : sigma1 = sigma2 AND n = 0,
-         cons(x, xs) : deriv_stmt(p)(IfThenElse(proj_1(x), proj_2(x),
-                                                  CaseJML(xs)),
-                                       sigma1, sigma2)(n - 1)
-                       AND n > 0
-         ENDCASES,
+        execute_CaseJML(p, l, sigma1, sigma2, n,
+                        deriv_stmt_rec(n), deriv_expr_rec(n)),
       IfThenElse(e, c1, c2) :
         EXISTS (tau : FullState, v : Val, m1, m2 : nat) :
           n = m1 + m2 AND
@@ -452,7 +480,6 @@ BEGIN
       While(e, c) :
         n > 0 AND
         deriv_stmt(p)(IfThenElse(e, While(e, c), Skip), sigma1, sigma2)(n - 1)
-
     ENDCASES
   ENDIF
   MEASURE n
@@ -477,49 +504,49 @@ BEGIN
       deriv_stmt(p)(s, sigma1, sigma2)(n)
 
 
-  IMPORTING WF[nat, nat]
+  IMPORTING WF[nat, nat] % used in the proofs
 
   % TODO: Write similar lemmas and adapt the proofs
   % I should say that the function given as parameters are deterministic
 
-%   expr_determ_step : LEMMA % :-)
-%     FORALL (p : FullProgram)(n1, n2 : nat)(e : Expr)(sigma : FullState) :
-%     LET deriv_stmt_rec = 
-%         LAMBDA (k : nat) : 
-%           LAMBDA (p : FullProgram)(c : Stmt, sigma1, sigma2 : FullState)
-%                  (m : below(k)) : deriv_stmt(p)(c, sigma1, sigma2)(m)
-%     IN
-%       FORALL (v1, v2 : Val, sigma1, sigma2 : FullState) :
-%         (FORALL (c : Stmt)(sigma, sigma1, sigma2 : FullState)
-%                 (m1 : below(n1), m2 : below(n2)) :
-%           deriv_stmt_rec(n1)(p)(c, sigma, sigma1)(m1) AND
-%           deriv_stmt_rec(n2)(p)(c, sigma, sigma2)(m2) IMPLIES
-%             sigma1 = sigma2 AND m1 = m2)
-%         IMPLIES
-%           deriv_expr(p)(e, sigma, v1, sigma1)(n1)(deriv_stmt_rec(n1)) AND
-%           deriv_expr(p)(e, sigma, v2, sigma2)(n2)(deriv_stmt_rec(n2)) IMPLIES
-%             v1 = v2 AND sigma1 = sigma2 AND n1 = n2
+  expr_determ_step : LEMMA
+    FORALL (p : FullProgram)(n1, n2 : nat)(e : Expr)(sigma : FullState) :
+    LET deriv_stmt_rec = 
+        LAMBDA (k : nat) : 
+          LAMBDA (p : FullProgram)(c : Stmt, sigma1, sigma2 : FullState)
+                 (m : below(k)) : deriv_stmt(p)(c, sigma1, sigma2)(m)
+    IN
+      FORALL (v1, v2 : Val, sigma1, sigma2 : FullState) :
+        (FORALL (c : Stmt)(sigma, sigma1, sigma2 : FullState)
+                (m1 : below(n1), m2 : below(n2)) :
+          deriv_stmt_rec(n1)(p)(c, sigma, sigma1)(m1) AND
+          deriv_stmt_rec(n2)(p)(c, sigma, sigma2)(m2) IMPLIES
+            sigma1 = sigma2 AND m1 = m2)
+        IMPLIES
+          deriv_expr(p)(e, sigma, v1, sigma1)(n1)(deriv_stmt_rec(n1)) AND
+          deriv_expr(p)(e, sigma, v2, sigma2)(n2)(deriv_stmt_rec(n2)) IMPLIES
+            v1 = v2 AND sigma1 = sigma2 AND n1 = n2
 
-%   stmt_determ_step : LEMMA % :-)
-%     FORALL (p : FullProgram)(n1, n2 : nat)(c : Stmt)(sigma : FullState) :
-%       FORALL (sigma1, sigma2 : FullState) :
-%         deriv_stmt(p)(c, sigma, sigma1)(n1) AND
-%         deriv_stmt(p)(c, sigma, sigma2)(n2) IMPLIES
-%           sigma1 = sigma2 AND n1 = n2
+  stmt_determ_step : LEMMA
+    FORALL (p : FullProgram)(n1, n2 : nat)(c : Stmt)(sigma : FullState) :
+      FORALL (sigma1, sigma2 : FullState) :
+        deriv_stmt(p)(c, sigma, sigma1)(n1) AND
+        deriv_stmt(p)(c, sigma, sigma2)(n2) IMPLIES
+          sigma1 = sigma2 AND n1 = n2
   
-%   expr_determ : LEMMA % :-)
-%     FORALL (p : FullProgram)(sigma : FullState)(e : Expr) :
-%       FORALL (v1, v2 : Val, sigma1, sigma2 : FullState) :
-%         derives(p)(e, sigma)(v1, sigma1) AND
-%         derives(p)(e, sigma)(v2, sigma2) IMPLIES
-%           v1 = v2 AND sigma1 = sigma2
+  expr_determ : LEMMA
+    FORALL (p : FullProgram)(sigma : FullState)(e : Expr) :
+      FORALL (v1, v2 : Val, sigma1, sigma2 : FullState) :
+        derives(p)(e, sigma)(v1, sigma1) AND
+        derives(p)(e, sigma)(v2, sigma2) IMPLIES
+          v1 = v2 AND sigma1 = sigma2
 
-%   stmt_determ : LEMMA % :-)
-%     FORALL (p : FullProgram)(sigma : FullState)(c : Stmt) :
-%       FORALL (sigma1, sigma2 : FullState) :
-%         derives(p)(c, sigma)(sigma1) AND
-%         derives(p)(c, sigma)(sigma2) IMPLIES
-%           sigma1 = sigma2
+  stmt_determ : LEMMA
+    FORALL (p : FullProgram)(sigma : FullState)(c : Stmt) :
+      FORALL (sigma1, sigma2 : FullState) :
+        derives(p)(c, sigma)(sigma1) AND
+        derives(p)(c, sigma)(sigma2) IMPLIES
+          sigma1 = sigma2
 
 
   run_FullProgram(p : FullProgram)(main : Method, arg : int)
@@ -550,6 +577,15 @@ BEGIN
                                      [below(n + 1) -> bool]]]) :
       s1 = s2
 
+  execute_CaseJML : (execute_CaseJML_type) =
+    LAMBDA (p : Program, branches : list[[Expr, Stmt]], s1, s2 : PState,
+            n : nat,
+            deriv_stmt : [Program -> [Stmt, PState, PState ->
+                                     [below(n + 1) -> bool]]],
+            deriv_expr : [Program -> [Expr, PState, Val, PState ->
+                                     [below(n + 1) -> bool]]]) :
+      s1 = s2
+
   on_method_x : (on_method_entry_type) =
     LAMBDA (p : Program, md : Method, a : Val, s1, s2 : PState,
             n : nat,
@@ -561,7 +597,8 @@ BEGIN
 
   IMPORTING Semantics[Name, Program, PState, id, id,
                       LAMBDA (upd : [PState -> PState], s : PState) : upd(s),
-                      execute_set, on_method_x, on_method_x, on_method_x]
+                      execute_set, execute_CaseJML,
+                      on_method_x, on_method_x, on_method_x]
 
   run_program(p : Program)(main : Method, arg : int)(s2 : PState)
              (n : nat) : boolean =
@@ -581,15 +618,15 @@ BEGIN
   IMPORTING SemanticsTypes[Name, Program, APState,
                            LAMBDA (s : APState) : pstate(s)]
 
-  update_state : (update_FullState_type) =
+  update_state_AP : (update_FullState_type) =
     LAMBDA (upd : [PState -> PState], s : APState) : 
       s WITH [pstate := upd(pstate(s))]
 
   IMPORTING SemanticsCommon[Name, Program, APState,
                             LAMBDA (s : APState) : pstate(s),
-                            update_state]
+                            update_state_AP]
 
-  execute_set : (execute_set_type) =
+  execute_set_AP : (execute_set_type) =
     LAMBDA (p : Program, vn : Name, e : Expr, s1, s2 : APState, n : nat,
             deriv_stmt : [Program -> [Stmt, APState, APState ->
                                      [below(n + 1) -> bool]]],
@@ -602,7 +639,7 @@ BEGIN
              ELSE s1 WITH [gvs := gvs(s1) WITH [vn := v]]
              ENDIF
 
-  on_method_entry : (on_method_entry_type) =
+  on_method_entry_AP : (on_method_entry_type) =
     LAMBDA (p : Program, md : Method, a : Val, s1, s2 : APState, n : nat,
             deriv_stmt : [Program -> [Stmt, APState, APState ->
                                      [below(n + 1) -> bool]]],
@@ -616,7 +653,7 @@ BEGIN
       deriv_stmt(p)(pre_set(md), tau2, s2)(m3) AND
       st(pstate(s1)) = st(pstate(s2))
 
-  on_method_exit_normal : (on_method_exit_type) =
+  on_method_exit_normal_AP : (on_method_exit_type) =
     LAMBDA (p : Program, md : Method, a : Val, s1, s2 : APState, n : nat,
             deriv_stmt : [Program -> [Stmt, APState, APState ->
                                      [below(n + 1) -> bool]]],
@@ -632,7 +669,7 @@ BEGIN
 
   % If there was an exception, there is no need to chech the postcondition
   % (JML has an exceptional postcondition but we are not modelling it)
-  on_method_exit_exceptional : (on_method_exit_type) =
+  on_method_exit_exceptional_AP : (on_method_exit_type) =
     LAMBDA (p : Program, md : Method, a : Val, s1, s2 : APState, n : nat,
             deriv_stmt : [Program -> [Stmt, APState, APState ->
                                      [below(n + 1) -> bool]]],
@@ -648,11 +685,12 @@ BEGIN
 
   IMPORTING Semantics[Name, Program, APState, id,
                       LAMBDA (s : APState) : pstate(s),
-                      update_state,
-                      execute_set,
-                      on_method_entry,
-                      on_method_exit_normal,
-                      on_method_exit_exceptional]
+                      update_state_AP,
+                      execute_set_AP,
+                      execute_CaseJML,
+                      on_method_entry_AP,
+                      on_method_exit_normal_AP,
+                      on_method_exit_exceptional_AP]
 
 
   initial_AP_state(p : Program) : APState =

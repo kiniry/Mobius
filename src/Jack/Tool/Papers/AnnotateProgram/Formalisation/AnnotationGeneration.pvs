@@ -167,3 +167,17 @@ BEGIN
 
 
 END AnnotateProgram
+
+
+% Properties relating MP to AP
+AnnotateProgramProperties[Name, CP : TYPE+] : THEORY
+BEGIN
+
+  IMPORTING AnnotateProgram[CP]
+
+%   ann_program_preserves_var : LEMMA
+%     FORALL (mp : MonitoredProgram, ap : Program)
+%       ap = annotate_program(mp) AND
+
+
+END AnnotateProgramProperties
