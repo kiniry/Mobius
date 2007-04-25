@@ -334,7 +334,7 @@ public class JmlExprToFormula {
 	}
 
 	public Object varAccess(VariableAccess x, Object o) {	
-		return Ref.strValue(x.toString());
+		return null;
 	}
 	
 
