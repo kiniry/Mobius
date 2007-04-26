@@ -3,8 +3,11 @@ package mobius.directVCGen.formula.jmlTranslator;
 import mobius.directVCGen.formula.*;
 
 import java.util.Properties;
+
+import sun.misc.Sort;
 import javafe.ast.ASTNode;
 import javafe.ast.BinaryExpr;
+import javafe.ast.FieldAccess;
 import javafe.ast.InstanceOfExpr;
 import javafe.ast.JavafePrimitiveType;
 import javafe.ast.LiteralExpr;
@@ -61,6 +64,8 @@ import escjava.ast.VarDeclModifierPragma;
 import escjava.ast.VarExprModifierPragma;
 import escjava.ast.VisitorArgResult;
 import escjava.ast.WildRefExpr;
+import escjava.sortedProver.Lifter.QuantVariable;
+import escjava.sortedProver.Lifter.QuantVariableRef;
 
 
 public class JmlVisitor extends VisitorArgResult{
@@ -112,19 +117,20 @@ public class JmlVisitor extends VisitorArgResult{
     }
 	  */
 	 public /*@non_null*/ Object visitVariableAccess(/*@non_null*/ VariableAccess x, Object o) {		 
-		 Boolean oldProp = (Boolean) ((Properties) o).get("old");	
+		 Boolean oldProp = (Boolean) ((Properties) o).get("old");
+		 Boolean predProp = (Boolean) ((Properties)o).get("pred");
 		 String id = (String) x.id.toString();
 		 int tag = ((JavafePrimitiveType) x.getDecorations()[1]).tag;
 		 
 		 if(oldProp.booleanValue())
 		 {
-			 id += "Pre"; //for ghos-variables
+			 id += "Pre"; 
 		 }
 		 
 		 switch(tag)
 		 {
 		 case TagConstants.BOOLEANTYPE: 
-			 if (((Properties) o).get("pre").equals("true"))
+			 if (predProp.booleanValue())
 				 return Expression.rvar(id, Logic.sort);
 			 else
 				 return Expression.rvar(id, Bool.sort);
@@ -133,7 +139,7 @@ public class JmlVisitor extends VisitorArgResult{
 		 case TagConstants.NULLTYPE:
 		 case TagConstants.BYTETYPE:
 		 case TagConstants.SHORTTYPE:
-		 case TagConstants.INTTYPE: return Expression.rvar(id, Num.sortInt);
+		 case TagConstants.INTTYPE: return Expression.rvar(id, Num.sortInt); 
 		 case TagConstants.LONGTYPE:
 		 case TagConstants.FLOATTYPE:return Expression.rvar(id, Num.sortReal);
 		 case TagConstants.DOUBLETYPE:
@@ -142,7 +148,75 @@ public class JmlVisitor extends VisitorArgResult{
 		 return null;
 	}
 	 
-	 
+	 public /*@non_null*/ Object visitFieldAccess(/*@non_null*/ FieldAccess x, Object o) {		 
+		 Boolean oldProp = (Boolean) ((Properties) o).get("old");
+		 Boolean predProp = (Boolean) ((Properties)o).get("pred");
+		 String idObj = x.decl.parent.id.toString(); 
+		 String idVar = (String) x.id.toString(); 
+		 QuantVariableRef heap;
+		 QuantVariableRef obj;
+		 QuantVariable var;
+		 int tag = ((JavafePrimitiveType) x.getDecorations()[1]).tag;
+		 
+		 if(oldProp.booleanValue())
+		 {
+			 idObj += "Pre";
+			 heap = Heap.varPre;
+		 }
+		 else
+		 {
+			 heap = Heap.var;
+		 }
+		 
+		 switch(tag)
+		 {
+		 case TagConstants.BOOLEANTYPE: 
+			 if (predProp.booleanValue())
+				{ 
+				 var = Expression.var(idVar, Logic.sort);
+				 obj =  Expression.rvar(idObj, Logic.sort); //Sort anpassen
+				}
+			 	
+			 else
+			 {
+				 var = Expression.var(idVar, Bool.sort);
+				 obj =  Expression.rvar(idObj, Bool.sort); //Sort anpassen
+			 }
+			 break;
+		 case TagConstants.CHARTYPE: 
+		 case TagConstants.VOIDTYPE:
+		 case TagConstants.NULLTYPE:
+		 case TagConstants.BYTETYPE:
+		 case TagConstants.SHORTTYPE:
+		 case TagConstants.INTTYPE: 
+			 var = Expression.var(idVar, Num.sortInt); 
+			 obj = Expression.rvar(idObj, Num.sortInt); break;
+		 case TagConstants.LONGTYPE:
+		 case TagConstants.FLOATTYPE:
+			 var = Expression.var(idVar, Num.sortReal); 
+			 obj = Expression.rvar(idObj, Num.sortReal); break;
+		 case TagConstants.DOUBLETYPE:
+		 default: 
+			 //throw exception
+			var = null;
+		 	obj = null;
+		 }
+		 
+		 return Heap.select(heap, obj, var);
+		 
+		 /**
+		  * (Quantvarref heap, Quantvarref obj, Quantvar var)
+		  * old:
+		  * heap: Heap.varPre 
+		  * obj: Expression.rvar("xPre",sort...)
+		  * var: Expression.var("f", sort...)
+		  * 
+		  * not old:
+		  * heap: Heap.var
+		  * obj: Expression.rvar("x", sort...)
+		  * var: Expression.var("f", sort...)
+		  */
+	}
 	 
 	 
 	 
@@ -156,10 +230,10 @@ public class JmlVisitor extends VisitorArgResult{
 	}
 	 
 
-	 //I just return "true == true" cause heap isn't available yet
 	 public /*@non_null*/ Object visitInstanceOfExpr(/*@non_null*/ InstanceOfExpr x, Object o) {
-		 //return translator.eq(Type.of(heap, x.type),Type.translate(x.type));
-		 return Logic.equals(Bool.value(true),Bool.value(true));	  
+		 // return Ref.varthis;
+		// return Expression.rvar(Sort sort);
+		 return Logic.equals(Bool.value(true),Bool.value(true));
 	 }
 	 
 	@Override
@@ -171,7 +245,8 @@ public class JmlVisitor extends VisitorArgResult{
 	@Override
 	public Object visitCondExprModifierPragma(CondExprModifierPragma x, Object o) {
 		// TODO Auto-generated method stub
-		return null;
+		//return null;
+		return visitASTNode(x, o);
 	}
 
 	@Override
@@ -197,7 +272,7 @@ public class JmlVisitor extends VisitorArgResult{
 		// TODO Auto-generated method stub
 		return null;
 	}
-
+	
 	@Override
 	public Object visitDefPredLetExpr(DefPredLetExpr x, Object o) {
 		// TODO Auto-generated method stub
@@ -219,7 +294,8 @@ public class JmlVisitor extends VisitorArgResult{
 	@Override
 	public Object visitEverythingExpr(EverythingExpr x, Object o) {
 		// TODO Auto-generated method stub
-		return null;
+		//return null;
+		return visitASTNode(x, o);
 	}
 
 	@Override
@@ -236,7 +312,7 @@ public class JmlVisitor extends VisitorArgResult{
 	@Override
 	public Object visitExprStmtPragma(ExprStmtPragma x, Object o) {
 		// TODO Auto-generated method stub
-		return null;
+		return visitASTNode(x, o);
 	}
 
 	public Object visitGCExpr(GCExpr x, Object o) {
@@ -276,8 +352,8 @@ public class JmlVisitor extends VisitorArgResult{
 	@Override
 	public Object visitImportPragma(ImportPragma x, Object o) {
 		// TODO Auto-generated method stub
-		return null;
-		//return visitASTNode(x, o);
+		//return null;
+		return visitASTNode(x, o);
 	}
 
 	@Override
@@ -325,7 +401,8 @@ public class JmlVisitor extends VisitorArgResult{
 	@Override
 	public Object visitModifiesGroupPragma(ModifiesGroupPragma x, Object o) {
 		// TODO Auto-generated method stub
-		return null;
+		//return null;
+		return visitASTNode(x, o);
 	}
 
 	@Override
