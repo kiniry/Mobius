@@ -28,6 +28,7 @@ package java.util;
  * @author Gary T. Leavens
  * @author David Cok
  * @author Erik Poll
+ * @author Mikolas Janota
  */
 public class Vector extends AbstractList
        implements List, RandomAccess, Cloneable, java.io.Serializable
@@ -54,7 +55,10 @@ public class Vector extends AbstractList
     protected /*@ spec_public @*/ int elementCount; //@ in objectState;
 
     //@ public invariant 0 <= elementCount;
-    //@ public invariant elementCount == size();
+
+    // I'm commenting out the following, since this is guaranteed by the postcondition of size()
+    // and this only baffles the prover.
+    //>>@ public invariant elementCount == size();
 
 
     // Public Constructors
