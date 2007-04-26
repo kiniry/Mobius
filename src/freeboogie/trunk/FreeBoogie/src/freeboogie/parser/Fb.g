@@ -94,7 +94,7 @@ atom
 	|	'true'
 	|	'null'
 	|	INT
-	|	ID
+	|	ID 
 	|	ID '(' (expr_list?) ')'
 	|	'old' '(' expr ')'
 	|	'cast' '(' expr ',' type ')'
@@ -143,6 +143,7 @@ simple_type
     |	ID
     |	'any'
     |	'[' simple_type (',' simple_type)? ']' simple_type
+    |   '<' simple_type '>' simple_type
     ;
 
 type
@@ -151,10 +152,9 @@ type
 
 ID      : 	
 		('a'..'z'|'A'..'Z'|'\''|'~'|'#'|'$'|'.'|'?'|'_'|'^') 
-		('a'..'z'|'A'..'Z'|'\''|'~'|'#'|'$'|'.'|'?'|'_'|'^'| '0'..'9')*
+		('a'..'z'|'A'..'Z'|'\''|'~'|'#'|'$'|'.'|'?'|'_'|'^'|'`'|'0'..'9')*
 	;
 	
-ALPHA	:	;
 INT     : 	'0'..'9'+ ;
 WS      : 	(' '|'\t'|'\n'|'\r')+ {$channel=HIDDEN;};
 COMMENT
