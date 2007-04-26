@@ -226,6 +226,29 @@ public class SpecificationTranslator {
         null,
         null);
   }
+  
+  /**
+   * Static factory method for creating a specification translator appropriate
+   * for translating modifies varialbes .
+   *
+   * @param heap        The name of the current heap variable.
+   * @param parameters  The names of the method's parameters.
+   * @return            A specification translator for translating method's
+   *                    modifies variables.
+   */
+  public static SpecificationTranslator forModifiesClause(
+      String heap,
+      String[] parameters) {
+    return new SpecificationTranslator(
+        heap,
+        null,
+        // Extract the potential this object from the parameters.
+        (parameters.length == 0) ? null : parameters[0],
+        null,
+        null,
+        null,
+        null);
+  }
 
   /**
    * Static factory method for creating a specification translator appropriate
@@ -308,8 +331,7 @@ public class SpecificationTranslator {
     // Since boolean variables are mapped to int variables in the BoogiePL
     // program, we must explicitly convert them to BoogiePL bool values
     // whenever they are used as predicates.
-    if ((specification instanceof BMLPredicate)
-        && !specification.isPredicate()) {
+    if ((specification instanceof BMLPredicate) && !specification.isPredicate()) {
       bplExpr = int2bool(bplExpr);
     }
 
@@ -402,8 +424,7 @@ public class SpecificationTranslator {
       }
     }
 
-    public BPLExpression visitQuantifierExpression(
-        BMLQuantifierExpression expr) {
+    public BPLExpression visitQuantifierExpression(BMLQuantifierExpression expr) {
       JType[] bvTypes = expr.getVariableTypes();
 
       // Add the new bound variables to the context of the translation.

@@ -36,6 +36,7 @@ import b2bpl.bpl.ast.BPLModifiesClause;
 import b2bpl.bpl.ast.BPLNode;
 import b2bpl.bpl.ast.BPLNullLiteral;
 import b2bpl.bpl.ast.BPLOldExpression;
+import b2bpl.bpl.ast.BPLOldVariableExpression;
 import b2bpl.bpl.ast.BPLParameterizedType;
 import b2bpl.bpl.ast.BPLPartialOrderExpression;
 import b2bpl.bpl.ast.BPLProcedure;
@@ -596,6 +597,13 @@ public class BPLPrinter implements BPLVisitor<Object> {
 
   public Object visitVariableExpression(BPLVariableExpression expr) {
     print(expr.getIdentifier());
+    return null;
+  }
+  
+  public Object visitOldVariableExpression(BPLOldVariableExpression expr) {
+    print("old(");
+    print(expr.getIdentifier());
+    print(")");
     return null;
   }
 

@@ -59,6 +59,8 @@ public interface TranslationConstants {
   
   String EXCEPTION_VAR    = "ex";
   
+  String RETURN_HEAP_PARAM =  "retheap";
+  
   String RETURN_STATE_PARAM = "retstate";
   
   String RETURN_VALUE_PARAM = "retvalue";

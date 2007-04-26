@@ -13,6 +13,7 @@ import b2bpl.bpl.ast.BPLExpression;
 import b2bpl.bpl.ast.BPLFunctionApplication;
 import b2bpl.bpl.ast.BPLLogicalNotExpression;
 import b2bpl.bpl.ast.BPLNullLiteral;
+import b2bpl.bpl.ast.BPLOldVariableExpression;
 import b2bpl.bpl.ast.BPLPartialOrderExpression;
 import b2bpl.bpl.ast.BPLQuantifierExpression;
 import b2bpl.bpl.ast.BPLRelationalExpression;
@@ -60,6 +61,10 @@ public final class CodeGenerator implements TranslationConstants {
 
   public static BPLVariableExpression var(String name) {
     return new BPLVariableExpression(name);
+  }
+  
+  public static BPLOldVariableExpression old(String name) {
+    return new BPLOldVariableExpression(name);
   }
 
   public static BPLExpression fieldLoc(

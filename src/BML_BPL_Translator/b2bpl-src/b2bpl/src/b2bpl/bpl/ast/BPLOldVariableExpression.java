@@ -3,15 +3,15 @@ package b2bpl.bpl.ast;
 import b2bpl.bpl.BPLVisitor;
 
 
-public class BPLVariableExpression extends BPLExpression {
+public class BPLOldVariableExpression extends BPLExpression {
 
-  public static final BPLVariableExpression[] EMPTY_ARRAY = new BPLVariableExpression[0];
+  public static final BPLOldVariableExpression[] EMPTY_ARRAY = new BPLOldVariableExpression[0];
 
   private final String identifier;
 
   private BPLVariable variable;
 
-  public BPLVariableExpression(String identifier) {
+  public BPLOldVariableExpression(String identifier) {
     super(Precedence.ATOM);
     this.identifier = identifier;
   }
@@ -29,7 +29,7 @@ public class BPLVariableExpression extends BPLExpression {
   }
 
   public <R> R accept(BPLVisitor<R> visitor) {
-    return visitor.visitVariableExpression(this);
+    return visitor.visitOldVariableExpression(this);
   }
 
   public String toString() {

@@ -770,6 +770,7 @@ public class Translator implements TranslationConstants {
     //
     addTypes(HEAP_TYPE);
     
+    // Create global heap variable for entire program
     addDeclaration(new BPLVariableDeclaration(new BPLVariable[] { new BPLVariable(HEAP_VAR, new BPLTypeName(HEAP_TYPE)) } ));
 
     //
@@ -1512,6 +1513,7 @@ public class Translator implements TranslationConstants {
     {
       JType object = TypeLoader.getClassType("java.lang.Object");
       JType cloneable = TypeLoader.getClassType("java.lang.Cloneable");
+      JType throwable = TypeLoader.getClassType("java.lang.Throwable");
       JType serializable = TypeLoader.getClassType("java.io.Serializable");
 
       String t = quantVarName("t");
@@ -1521,7 +1523,10 @@ public class Translator implements TranslationConstants {
           logicalAnd(
               isSubtype(arrayType(var(t)), typeRef(object)),
               isSubtype(arrayType(var(t)), typeRef(cloneable)),
-              isSubtype(arrayType(var(t)), typeRef(serializable)))));
+              isSubtype(arrayType(var(t)), typeRef(serializable)),
+              isSubtype(arrayType(var(t)), typeRef(throwable))
+          )
+      ));
 
       String t1 = quantVarName("t1");
       String t2 = quantVarName("t2");
@@ -1531,7 +1536,9 @@ public class Translator implements TranslationConstants {
           t1Var, t2Var,
           implies(
               isSubtype(var(t1), var(t2)),
-              isSubtype(arrayType(var(t1)), arrayType(var(t2))))));
+              isSubtype(arrayType(var(t1)), arrayType(var(t2)))
+          )
+      ));
 
       t1Var = new BPLVariable(t1, BPLBuiltInType.NAME);
       t2Var = new BPLVariable(t2, BPLBuiltInType.NAME);
@@ -1566,10 +1573,20 @@ public class Translator implements TranslationConstants {
     }
     
     {
+      
       // TODO: temporary axiomatization of Java type system
+      declarations.add(axiomatizeHelperProcedure("java.lang.Object..init"));
+      declarations.add(axiomatizeHelperProcedure("java.lang.Throwable..init"));
+      declarations.add(axiomatizeHelperProcedure("java.lang.Exception..init"));
+      declarations.add(axiomatizeHelperProcedure("java.io.PrintStream.println"));
+      
+      /*
+      BPLVariable heap_var = new BPLVariable(HEAP_VAR, new BPLTypeName(HEAP_TYPE));
+      BPLVariable this_var = new BPLVariable("param0", BPLBuiltInType.REF);
+      
       declarations.add(new BPLProcedure(
           "java.lang.Object..init",
-          new BPLVariable[] { new BPLVariable("param0", BPLBuiltInType.REF) },
+          new BPLVariable[] { heap_var, this_var },
           new BPLVariable[] {
               new BPLVariable(RETURN_STATE_VAR, new BPLTypeName(RETURN_STATE_TYPE)),
               new BPLVariable(EXCEPTION_VAR, BPLBuiltInType.REF)
@@ -1577,13 +1594,38 @@ public class Translator implements TranslationConstants {
           new BPLSpecification(new BPLSpecificationClause[0])));
       declarations.add(new BPLProcedure(
           "java.lang.Exception..init",
-          new BPLVariable[] { new BPLVariable("param0", BPLBuiltInType.REF) },
+          new BPLVariable[] { heap_var, this_var },
           new BPLVariable[] {
               new BPLVariable(RETURN_STATE_VAR, new BPLTypeName(RETURN_STATE_TYPE)),
               new BPLVariable(EXCEPTION_VAR, BPLBuiltInType.REF)
           },
           new BPLSpecification(new BPLSpecificationClause[0])));
+      declarations.add(new BPLProcedure(
+          "java.io.PrintStream.println",
+          new BPLVariable[] { heap_var, this_var },
+          new BPLVariable[] {
+              new BPLVariable(RETURN_STATE_VAR, new BPLTypeName(RETURN_STATE_TYPE)),
+              new BPLVariable(EXCEPTION_VAR, BPLBuiltInType.REF)
+          },
+          new BPLSpecification(new BPLSpecificationClause[0])));
+     */
     }
+  }
+  
+  private BPLProcedure axiomatizeHelperProcedure(String name) {
+    //@deprecated BPLVariable heap_var = new BPLVariable(HEAP_VAR, new BPLTypeName(HEAP_TYPE));
+    BPLVariable this_var = new BPLVariable("param0", BPLBuiltInType.REF);
+    
+    return new BPLProcedure(
+        name,
+        new BPLVariable[] { this_var },
+        new BPLVariable[] {
+            //@deprecated new BPLVariable(RETURN_HEAP_PARAM, new BPLTypeName(HEAP_TYPE)),
+            new BPLVariable(RETURN_STATE_VAR, new BPLTypeName(RETURN_STATE_TYPE)),
+            new BPLVariable(EXCEPTION_VAR, BPLBuiltInType.REF)
+        },
+        new BPLSpecification(new BPLSpecificationClause[0])
+    );
   }
 
   /**

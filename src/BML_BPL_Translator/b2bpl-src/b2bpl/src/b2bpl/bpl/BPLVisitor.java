@@ -14,7 +14,6 @@ import b2bpl.bpl.ast.BPLBuiltInType;
 import b2bpl.bpl.ast.BPLCallCommand;
 import b2bpl.bpl.ast.BPLCastExpression;
 import b2bpl.bpl.ast.BPLConstantDeclaration;
-import b2bpl.bpl.ast.BPLTypeName;
 import b2bpl.bpl.ast.BPLEnsuresClause;
 import b2bpl.bpl.ast.BPLEqualityExpression;
 import b2bpl.bpl.ast.BPLFunction;
@@ -29,6 +28,7 @@ import b2bpl.bpl.ast.BPLLogicalNotExpression;
 import b2bpl.bpl.ast.BPLModifiesClause;
 import b2bpl.bpl.ast.BPLNullLiteral;
 import b2bpl.bpl.ast.BPLOldExpression;
+import b2bpl.bpl.ast.BPLOldVariableExpression;
 import b2bpl.bpl.ast.BPLParameterizedType;
 import b2bpl.bpl.ast.BPLPartialOrderExpression;
 import b2bpl.bpl.ast.BPLProcedure;
@@ -40,6 +40,7 @@ import b2bpl.bpl.ast.BPLReturnCommand;
 import b2bpl.bpl.ast.BPLSpecification;
 import b2bpl.bpl.ast.BPLTrigger;
 import b2bpl.bpl.ast.BPLTypeDeclaration;
+import b2bpl.bpl.ast.BPLTypeName;
 import b2bpl.bpl.ast.BPLUnaryMinusExpression;
 import b2bpl.bpl.ast.BPLVariable;
 import b2bpl.bpl.ast.BPLVariableDeclaration;
@@ -117,6 +118,8 @@ public interface BPLVisitor<R> {
   R visitNullLiteral(BPLNullLiteral literal);
 
   R visitOldExpression(BPLOldExpression expr);
+  
+  R visitOldVariableExpression(BPLOldVariableExpression expr);
 
   R visitQuantifierExpression(BPLQuantifierExpression expr);
 
