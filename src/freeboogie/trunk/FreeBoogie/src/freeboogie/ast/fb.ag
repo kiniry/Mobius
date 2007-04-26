@@ -7,10 +7,11 @@ Declaration :> TypeDecl, ConstantDecl, Function, Axiom, VariableDecl,
                Procedure, Implementation;
 
 // Types and constants
-Type :> PrimitiveType, Identifier, ArrayType, MatrixType;
+Type :> PrimitiveType, Identifier, ArrayType, MatrixType, GenericType;
 ArrayType = Type! indexType, Type! elemType;
 MatrixType = Type! rowType, Type! colType, Type! elemType;
 PrimitiveType = enum(Literal: BOOL, INT, REF, NAME, ANY) val;
+GenericType = Type! param, Type! type;
 TypeDecl = String! name;
 ConstantDecl = String! id, Type! type;
 
