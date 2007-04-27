@@ -169,15 +169,37 @@ BEGIN
 END AnnotateProgram
 
 
-% Properties relating MP to AP
-AnnotateProgramProperties[Name, CP : TYPE+] : THEORY
+% Properties relating MPs and APs through ann_program
+AnnotateProgramProperties[CP, Name : TYPE+] : THEORY
 BEGIN
 
-  IMPORTING AnnotateProgram[CP]
+  IMPORTING AnnotateProgram[CP],
+            AnnotatedProgramSemantics[string],
+            MonitoredProgramSemantics[CP, string]
 
-%   ann_program_preserves_var : LEMMA
-%     FORALL (mp : MonitoredProgram, ap : Program)
-%       ap = annotate_program(mp) AND
+  ann_program_preserves_var_decls : LEMMA
+    FORALL (mp : MonitoredProgram)(vn : string) :
+      ann_program_pre(mp) IMPLIES
+        (is_declared_as_field(program(mp))(vn) IFF
+         is_declared_as_field(ann_program(mp))(vn))
+        AND
+        (is_declared_as_ghost(program(mp))(vn) IMPLIES
+         is_declared_as_ghost(ann_program(mp))(vn))
+        AND
+        (is_declared_as_arg(program(mp))(vn) IFF
+         is_declared_as_arg(ann_program(mp))(vn))
+        AND
+        (is_declared_as_local(program(mp))(vn) IFF
+         is_declared_as_local(ann_program(mp))(vn))
+
+  ann_program_preserves_state_vars : LEMMA
+    FORALL (mp : MonitoredProgram)(vn : string)
+           (sMP : MPState, sAP : APState) :
+      ann_program_pre(mp) IMPLIES
+      wf_state(mp)(sMP) IMPLIES
+      wf_state(ann_program(mp))(sAP) IMPLIES
+        (is_field(vn, pstate(sMP)) IFF is_field(vn, pstate(sAP))) AND
+        (is_local(vn, pstate(sMP)) IFF is_local(vn, pstate(sAP)))
 
 
 END AnnotateProgramProperties

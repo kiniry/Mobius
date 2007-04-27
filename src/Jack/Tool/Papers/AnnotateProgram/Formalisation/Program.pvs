@@ -400,20 +400,33 @@ BEGIN
     empty?(Intersection({ns : set[Name] | fdss(ns) OR gdss(ns) OR 
                                           ns = ads OR ldss(ns)}))
 
+
+  is_declared_as_field(p : Program)(vn : Name) : boolean =
+    EXISTS (c : Class, fd : FieldDecl) :
+      classes(p)(c) AND fields(c)(fd) AND name(fd) = vn
+
+  is_declared_as_ghost(p : Program)(vn : Name) : boolean =
+    EXISTS (c : Class, gd : GhostVarDecl) :
+      classes(p)(c) AND fields(c)(gd) AND name(gd) = vn
+
+  is_declared_as_arg(p : Program)(vn : Name) : boolean =
+    EXISTS (ad : ArgDecl, c : Class, m : Method) :
+      classes(p)(c) AND methods(c)(m) AND arg(m)(ad) AND name(ad) = vn
+
+  is_declared_as_local(p : Program)(vn : Name) : boolean =
+    EXISTS (c : Class, m : Method, ld : LocalVarDecl) :
+      classes(p)(c) AND methods(c)(m) AND lvars(m)(ld) AND name(ld) = vn
+
+
   % Every variable used has a declaration
   vars_are_declared(p : Program) : boolean =
-    FORALL (n : Name) : var_names(p)(n) IMPLIES
-      (EXISTS (fd : FieldDecl, c : Class) :
-        classes(p)(c) AND fields(c)(fd) AND name(fd) = n) OR
-      (EXISTS (gd : GhostVarDecl, c : Class) :
-        classes(p)(c) AND ghost_vars(c)(gd) AND name(gd) = n) OR
-      (EXISTS (ad : ArgDecl, c : Class, m : Method) :
-        classes(p)(c) AND methods(c)(m) AND arg(m)(ad) AND name(ad) = n) OR
-      (EXISTS (ld : LocalVarDecl, c : Class, m : Method) :
-        classes(p)(c) AND methods(c)(m) AND lvars(m)(ld) AND name(ld) = n)
+    FORALL (vn : Name) : 
+      var_names(p)(vn) IMPLIES
+        (is_declared_as_field(p)(vn) OR
+         is_declared_as_ghost(p)(vn) OR
+         is_declared_as_arg(p)(vn) OR
+         is_declared_as_local(p)(vn))
 
-  % TODO: Con esto no necesito vars_are_declared
-  % Hacer algo similar para las otras variables
   field_declarations_are_unique(p : Program) : boolean =
     FORALL (n : Name) :
       var_names(p)(n) IMPLIES

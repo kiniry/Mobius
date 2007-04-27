@@ -52,7 +52,7 @@ END WellFormedMonitoredProgram
 MonitoredProgramSemantics[CP, Name : TYPE+] : THEORY
 BEGIN
 
-  IMPORTING MonitoredProgram[CP, Name],
+  IMPORTING WellFormedMonitoredProgram[CP, Name],
             MVASemantics[CP, Name]
 
   % Monitored Program State
@@ -61,6 +61,16 @@ BEGIN
        pstate : PState[Name],
        gvs : Store
     #]
+
+  is_ghost(vn : Name, sigma : MPState) : boolean =
+    NOT Bottom?(gvs(sigma)(vn))
+
+  wf_state(mp : MonitoredProgram)(sigma : MPState) : boolean =
+    wf_AState(mva(mp))(astate(sigma)) AND
+    wf_state(program(mp))(pstate(sigma)) AND
+    FORALL (vn : Name) :
+      is_ghost(vn, sigma) IFF is_declared_as_ghost(program(mp))(vn)
+
 
   IMPORTING SemanticsTypes[Name, MonitoredProgram, MPState, 
                            LAMBDA (s : MPState) : pstate(s)]
@@ -172,6 +182,20 @@ BEGIN
   run_monitored_program(mp : MonitoredProgram)(main : Method, arg : int)
                       (s2 : MPState)(n : nat) : boolean =
     run_FullProgram(mp)(main, arg)(initial_MP_state(mp), s2)(n)
+
+
+  % Well-formedness properties
+
+  wf_update_state_MP : LEMMA
+    FORALL (mp : MonitoredProgram, s1, s2 : MPState, 
+            upd : [PState[Name] -> PState[Name]]) :
+      wf_state(mp)(s1) IMPLIES
+      update_state_MP(upd, s1) = s2 IMPLIES
+        wf_state(mp)(s2)
+
+  wf_initial_MP_state : LEMMA
+    FORALL (mp : MonitoredProgram) :
+      wf_MP(mp) IMPLIES wf_state(mp)(initial_MP_state(mp))
 
 
 END MonitoredProgramSemantics

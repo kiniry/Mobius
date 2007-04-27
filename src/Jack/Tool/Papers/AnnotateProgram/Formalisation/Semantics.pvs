@@ -57,10 +57,10 @@ BEGIN
   % So far, I'm not modelling that the sets are disjoint
   % This would imply adding a test to update, that vn is in the domain
 
-  is_local(vn : Name, sigma : PState) : bool =
+  is_local(vn : Name, sigma : PState) : boolean =
     NOT Bottom?(lvs(st(sigma))(vn))
 
-  is_field(vn : Name, sigma : PState) : bool =
+  is_field(vn : Name, sigma : PState) : boolean =
     NOT Bottom?(fvs(st(sigma))(vn))
 
   lookup_local(vn : Name, sigma : PState) : Val =
@@ -102,6 +102,21 @@ BEGIN
     THEN b(v)
     ELSE FALSE
     ENDIF
+
+
+  % Well formed states
+  wf_state(p : Program)(s : PState) : boolean =
+    FORALL (vn : Name) :
+      (is_field(vn, s) IFF is_declared_as_field(p)(vn)) AND
+      (is_local(vn, s) IFF is_declared_as_local(p)(vn))
+
+
+  % Well formed states properties
+  wf_state_vars_local_or_field : LEMMA
+    FORALL (p : Program, s : PState, vn : Name) :
+      wf_state(p)(s) IMPLIES
+        ((is_field(vn, s) IMPLIES NOT is_local(vn, s)) AND
+         (is_local(vn, s) IMPLIES NOT is_field(vn, s)))
 
 
 END State
@@ -306,6 +321,10 @@ BEGIN
          #)
     #)
 
+  wf_initial_Program_state : LEMMA
+    FORALL (p : FullProgram) :
+      wf_Program(program(p)) IMPLIES wf_state(program(p))(initial_Program_state(p))
+
 
   % THINK: Should we say in each case NOT Bottom?(v)?. Recall that sematincs
   % should be defined even for not well-formed programs (in which case the
@@ -486,12 +505,12 @@ BEGIN
 
   % Version that does not has deriv_stmt as argument
   deriv_expr(p : FullProgram)
-            (c : Expr, sigma1 : FullState, v : Val, sigma2 : FullState)
+            (e : Expr, sigma1 : FullState, v : Val, sigma2 : FullState)
             (n : nat) : bool =
-    deriv_expr(p)(c, sigma1, v, sigma2)(n)
-              (LAMBDA (p : FullProgram)(s : Stmt, sigma1, sigma2 : FullState)
+    deriv_expr(p)(e, sigma1, v, sigma2)(n)
+              (LAMBDA (p : FullProgram)(c : Stmt, sigma1, sigma2 : FullState)
                       (m : below(n)) : 
-                 deriv_stmt(p)(s, sigma1, sigma2)(m))
+                 deriv_stmt(p)(c, sigma1, sigma2)(m))
 
   derives(p : FullProgram)
          (e : Expr, sigma1 : FullState)(v : Val, sigma2 : FullState) : bool =
@@ -527,6 +546,20 @@ BEGIN
           deriv_expr(p)(e, sigma, v2, sigma2)(n2)(deriv_stmt_rec(n2)) IMPLIES
             v1 = v2 AND sigma1 = sigma2 AND n1 = n2
 
+  % THINK: Is this the same as above?
+  expr_determ_step2 : LEMMA
+    FORALL (p : FullProgram)(n1, n2 : nat)(e : Expr)
+           (v1, v2 : Val, sigma, sigma1, sigma2 : FullState) :
+        (FORALL (c : Stmt)(sigma, sigma1, sigma2 : FullState)
+                (m1 : below(n1), m2 : below(n2)) :
+          deriv_stmt(p)(c, sigma, sigma1)(m1) AND
+          deriv_stmt(p)(c, sigma, sigma2)(m2) IMPLIES
+            sigma1 = sigma2 AND m1 = m2)
+        IMPLIES
+          deriv_expr(p)(e, sigma, v1, sigma1)(n1) AND
+          deriv_expr(p)(e, sigma, v2, sigma2)(n2) IMPLIES
+            v1 = v2 AND sigma1 = sigma2 AND n1 = n2
+
   stmt_determ_step : LEMMA
     FORALL (p : FullProgram)(n1, n2 : nat)(c : Stmt)(sigma : FullState) :
       FORALL (sigma1, sigma2 : FullState) :
@@ -547,6 +580,22 @@ BEGIN
         derives(p)(c, sigma)(sigma1) AND
         derives(p)(c, sigma)(sigma2) IMPLIES
           sigma1 = sigma2
+
+
+  deriv_expr_yields_wf_state : LEMMA
+    FORALL (p : FullProgram, e : Expr, v : Val)
+           (sigma1, sigma2 : FullState, n : nat) :
+      wf_Program(program(p)) IMPLIES
+      wf_state(program(p))(pstate(sigma1)) IMPLIES
+      deriv_expr(p)(e, sigma1, v, sigma2)(n) IMPLIES
+        wf_state(program(p))(pstate(sigma2))
+
+  deriv_stmt_yields_wf_state : LEMMA
+    FORALL (p : FullProgram, c : Stmt, sigma1, sigma2 : FullState, n : nat) :
+      wf_Program(program(p)) IMPLIES
+      wf_state(program(p))(pstate(sigma1)) IMPLIES
+      deriv_stmt(p)(c, sigma1, sigma2)(n) IMPLIES
+        wf_state(program(p))(pstate(sigma2))
 
 
   run_FullProgram(p : FullProgram)(main : Method, arg : int)
@@ -614,6 +663,15 @@ BEGIN
   IMPORTING State[Name]
 
   APState : TYPE = [# gvs : Store, pstate : PState #]
+
+  is_ghost(vn : Name, sigma : APState) : boolean =
+    NOT Bottom?(gvs(sigma)(vn))
+
+  wf_state(p : Program)(sigma : APState) : boolean =
+    wf_state(p)(pstate(sigma)) AND
+    FORALL (vn : Name) :
+      is_ghost(vn, sigma) IFF is_declared_as_ghost(p)(vn)
+
 
   IMPORTING SemanticsTypes[Name, Program, APState,
                            LAMBDA (s : APState) : pstate(s)]
@@ -706,6 +764,20 @@ BEGIN
   run_annotated_program(p : Program)(main : Method, arg : int)
                        (s2 : APState)(n : nat) : boolean =
     run_FullProgram(p)(main, arg)(initial_AP_state(p), s2)(n)
+
+
+  % Well-formedness properties
+
+  wf_update_state_AP : LEMMA
+    FORALL (p : Program, s1, s2 : APState, 
+            upd : [PState[Name] -> PState[Name]]) :
+      wf_state(p)(s1) IMPLIES
+      update_state_AP(upd, s1) = s2 IMPLIES
+        wf_state(p)(s2)
+
+  wf_initial_AP_state : LEMMA
+    FORALL (p : Program) :
+      wf_Program(p) IMPLIES wf_state(p)(initial_AP_state(p))
 
 
 END AnnotatedProgramSemantics
