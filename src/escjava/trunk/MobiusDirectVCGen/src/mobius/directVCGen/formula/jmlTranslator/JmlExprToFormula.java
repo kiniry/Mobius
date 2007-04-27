@@ -7,6 +7,7 @@ import escjava.ast.ResExpr;
 import escjava.ast.TagConstants;
 import escjava.sortedProver.Lifter.Term;
 import javafe.ast.BinaryExpr;
+import javafe.ast.InstanceOfExpr;
 import javafe.ast.LiteralExpr;
 import javafe.ast.VariableAccess;
 
@@ -188,8 +189,9 @@ public class JmlExprToFormula {
 	}
 
 	public Object star(BinaryExpr expr, Object o) {
-		// TODO Auto-generated method stub
-		return null;
+		Term t1 = (Term)expr.left.accept(v,o);
+		Term t2 = (Term)expr.right.accept(v,o);
+		return Num.mul(t1, t2);
 	}
 
 	public Object assign(BinaryExpr expr, Object o) {
@@ -280,7 +282,13 @@ public class JmlExprToFormula {
 	}
 
 	
-	
+	public Object instanceOfExpr(InstanceOfExpr x, Object o) {
+		Term refTerm = (Term) x.expr.accept(this.v, o) ;
+		Term tType = Type.of(Heap.var, refTerm);
+		Term sortType = Type.translate(x.type);
+		return Logic.typeLE(tType,sortType);
+	}
+
 
 	
 	/* To know how a tag and the type of an expression fits together look at the list given in LiteralExpr -> isValidValue(int tag, Object value)
@@ -333,6 +341,7 @@ public class JmlExprToFormula {
 		return Num.value(3); //Testing
 	}
 
+	
 	
 
 }
