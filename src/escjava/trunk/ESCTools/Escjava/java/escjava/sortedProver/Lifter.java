@@ -543,7 +543,8 @@ public class Lifter extends EscNodeBuilder
 				return dumpBuilder.buildNewObject(args[0].dumpAny(), args[1].dumpAny(), args[2].dumpAny(),
 						args[3].dumpRef());
 			}
-			System.out.println(fn.name);
+			if(fn.name.startsWith("%"))
+				System.out.println(fn.name);
 			Assert.notFalse(! fn.name.startsWith("%"));
 			
 			tfn = isPred ? dumpBuilder.registerPredSymbol(fn.name, mapSorts(fn.argumentTypes)) :
