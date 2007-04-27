@@ -104,20 +104,20 @@ class LabelDataUtil implements Comparator {
  * Right now it uses SP (which is the default in escjava).
  */
 public class ReachabilityAnalysis {
+    
+    private static long constructTime = 0;
+    private static long getNodesTime = 0;
+    private static long spTime = 0;
+    private static long proverTime = 0;
 
-    // The (acyclic) control flow diagram/graph we analyze.
+    // the control flow graph and all its nodes
     private CFD graph;
-
     private Set graphNodes;
 
-    // Maps processed nodes to their postcondition
-    private Map cache;
+    // strongest postconditions
+    private Map spOfNode;
 
-    // Map of reported errort to a boolean detemining whether that error is ever
-    // checked
-    Map reportErrors;
-
-    String assertLabel(GuardedCmd gc) {
+    private String assertLabel(GuardedCmd gc) {
         if (gc.getTag() == TagConstants.ASSERTCMD) {
             ExprCmd ec = (ExprCmd) gc;
             Expr e = ec.pred;
@@ -137,15 +137,9 @@ public class ReachabilityAnalysis {
         if (graphNodes.contains(n))
             return;
         graphNodes.add(n);
-
-        String label = getLabel(n);
-        if (label != null)
-            reportErrors.put(label, new Boolean(false));
-
         Enumeration c = n.getChildren().elements();
-        while (c.hasMoreElements()) {
+        while (c.hasMoreElements())
             collectNodes(c.nextElement());
-        }
     }
 
     String getLabel(Node n) {
@@ -160,144 +154,61 @@ public class ReachabilityAnalysis {
 
     // Compute the strongest postcondition (SP) of [n].
     private Expr spDfs(Node n) {
-        Expr sp = (Expr) cache.get(n);
-        if (sp != null)
-            return sp;
+        Expr sp = (Expr) spOfNode.get(n);
+        if (sp != null) return sp;
 
-        // compute precondition for [n] as a conjuction of its preconditions
+        // compute precondition for [n] as a disjunction of its preconditions
         Enumeration p = n.getParents().elements();
         Expr pre = GC.falselit;
-        while (p.hasMoreElements()) {
+        while (p.hasMoreElements()) 
             pre = GC.or(pre, spDfs(p.nextElement()));
-        }
 
         // compute the sp
         Expr post = n.computeSp(pre);
 
-        // System.out.println("Checking postcondition for the node: " + n);
-
-        // check if false
-
-        boolean isCodeNode = n instanceof CodeNode;
-
-        boolean isFalse;
-        boolean runProver;
-
-        // TODO: see how this can be done nicer
-        // Runs the prover only when at least one of the node's parent 
-        // doesn't have the identity SP transformer
-        if (isCodeNode) {
-            boolean allParentsIdentity = true;
-            for (Enumeration en = n.getParents().elements(); en
-                    .hasMoreElements();) {
-                Node parent = en.nextElement();
-                if (parent instanceof CodeNode) // TODO: bleh!
-                    allParentsIdentity = false;
-            }
-
-            runProver = n.getParents().getCount() == 0 || !allParentsIdentity;
-        } else {
-            runProver = true;
-        }
-        
-
-        // testing what happend if prover ran only in non-chain nodes
-//        if ((n.getChildren().getCount() == 1) && (n.getParents().getCount() == 1) ) 
-//            runProver = false;
-        
-        if (runProver) {
-            isFalse = Simplifier.isFalse(pre);
-        } else {
-            // if we're not running the prover, we just check for the false literal
-            isFalse = GC.isFalse(pre);
-        }
-
-        if (isFalse) {
-            if (isCodeNode) {
-                System.out.print("*** Code:  ");
-
-                ((EscPrettyPrint) PrettyPrint.inst).print(System.out, 0,
-                        ((CodeNode) n).getCode());
-
-                System.out.println("    is unreachable.");
-            }
-
-            post = GC.falselit; // pass on the result 
-        } else {
-            if (isCodeNode) {
-                String label = getLabel(n);
-                if (label != null) {
-                    Assert
-                            .notFalse(reportErrors.containsKey(label),
-                                    "This label should have been included in the hash map during node collection.");
-                    reportErrors.put(label, new Boolean(true)); // mark label as
-                    // reachable
-                }
-            }
-        }
-
         // return and cache
-        cache.put(n, post);
+        spOfNode.put(n, post);
         return post;
     }
 
     private void internalAnalyze(GuardedCmd gc) {
-        // DBG
-//        System.out.println("\n**** Analysing Guarded Command:");
-//        ((EscPrettyPrint) PrettyPrint.inst).print(System.out, 0, gc);
-//        System.out.println("");
-
-        // construct the graph
+        // construct the graph, assumming that gc doesn't contain VARIN
+        constructTime = System.currentTimeMillis();
         GCtoCFDBuilder builder = new GCtoCFDBuilder();
-        graph = builder.constructGraph(gc, null); // assumes gc does not
-                                                    // contain VARIN command
+        graph = builder.constructGraph(gc, null);
+        if (graph.isEmpty()) return; // nothing to check
+        constructTime = System.currentTimeMillis() - constructTime;
 
-        if (graph.isEmpty()) { // TODO: make this nicer
-            System.err.println("Empty graph!!");
-            return;
-        }
-
-        List unreachable = builder.getUnreachable();
-
-        // TODO: collect labels from these as well:
-        for (Iterator it = unreachable.iterator(); it.hasNext();) {
-            CFD c = (CFD) it.next();
-//            System.out.println("Unreachable:" + c);
-        }
-        
         // DBG
-        //  System.out.println("Constructed graph: " + graph);
-        //  graph.printStats();
-         
+        //System.out.println("Constructed graph: " + graph);
+        graph.printStats();
          
         // do DFS
-        reportErrors = new HashMap();
+        getNodesTime = System.currentTimeMillis();
+        spOfNode = new HashMap();
         graphNodes = new HashSet();
         collectNodes(graph.getInitNode());
-        cache = new HashMap();
+        getNodesTime = System.currentTimeMillis() - getNodesTime;
 
         // set the initial node always reachable
-        cache.put(graph.getInitNode(), (Expr) GC.truelit);
+        spTime = System.currentTimeMillis();
+        spOfNode.put(graph.getInitNode(), (Expr) GC.truelit);
         Iterator nodes = graphNodes.iterator();
-        while (nodes.hasNext()) {
-            spDfs((Node) nodes.next());
-        }
-
-        // collect (and sort) the labels that were never reached
-        Set unreachedLabels = new TreeSet(new LabelDataUtil());
-        for (Iterator it = reportErrors.entrySet().iterator(); it.hasNext();) {
-            Entry e = (Entry) it.next();
-            String label = (String) e.getKey();
-            boolean checked = ((Boolean) e.getValue()).booleanValue();
-            if (!checked) {
-                unreachedLabels.add(LabelData.parse(label));
-            }
-        }
+        while (nodes.hasNext()) spDfs((Node)nodes.next());
+        spTime = System.currentTimeMillis() - spTime;
         
-        // report errors
-        for (Iterator it = unreachedLabels.iterator(); it.hasNext();) {
-            reportUnreachableLabel((LabelData)it.next());
-        }
+        // check whether the exit code has an unsatisfiable postcondition
+        proverTime = System.currentTimeMillis();
+        Expr spOfExit = (Expr)spOfNode.get(graph.getExitNode());
+        if (Simplifier.isFalse(spOfExit))
+            ErrorSet.error("The method never terminates.");
+        proverTime = System.currentTimeMillis() - proverTime;
+        
+        // report times
+        System.err.println("construct_time " + constructTime);
+        System.err.println("get_nodes_time " + getNodesTime);
+        System.err.println("sp_time " + spTime);
+        System.err.println("prover_time " + proverTime);
     }
     
     private static final String POST_WARN =
@@ -308,25 +219,21 @@ public class ReachabilityAnalysis {
     /**
      * Reports errors for unchecked code, unchecked assertions, and unchecked
      * postconditions. The location is not reported for postconditions.
-     * We do not report @unreachable as being unreached. We also skip
-     * labels with no location information---just for robustness.
-     * 
-     * TODO: We might want to not report exceptionals postconditions
-     *       because we think that means the postcondition is already reported.
+     * We do not report @unreachable as being unreached. We skip
+     * labels with no location information.
      */
     private void reportUnreachableLabel(LabelData ld) {
         String suffix = " (" + ld.getMsgShort() + ")";
         int loc = LabelDataUtil.getLocation(ld);
         
-        // robustness check
         if (loc == Location.NULL) return;
         
         switch (ld.getMsgTag()) {
         case TagConstants.CHKCODEREACHABILITY:
             return; // the user wants this to be unreachable so don't report
         case TagConstants.CHKPOSTCONDITION:
-        case TagConstants.CHKUNEXPECTEDEXCEPTION:  // TODO: check this is really for exsures
-        case TagConstants.CHKUNEXPECTEDEXCEPTION2: // TODO: check this is really for exsures
+        case TagConstants.CHKUNEXPECTEDEXCEPTION:
+        case TagConstants.CHKUNEXPECTEDEXCEPTION2:
             ErrorSet.warning(POST_WARN + suffix);
             break;
         case TagConstants.CHKASSERT:

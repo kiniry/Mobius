@@ -429,15 +429,10 @@ public class CFD  {
     public void printStats() {
         visited = new HashSet();
         count(this.getInitNode());      
-//        System.err.println("Chain count: " + chainsCnt);
-//        System.err.println("Edge  count: " + totalLenChains);
-//        System.err.println("Avg. length: " + 1.0*totalLenChains / 1.0*chainsCnt);
-//        System.err.println("Node count: " + visited.size());
+        System.err.println("size " + visited.size());
+        System.err.println("avg_chain_len " + (1.0 * totalLenChains / chainsCnt));
         
-        double avgChain = 1.0*totalLenChains / chainsCnt;
-        System.err.println(""+ chainsCnt + '\t' + totalLenChains + '\t' + avgChain + '\t' +  visited.size() );
-        
-        
+/*        
         OutputStreamWriter ow = new OutputStreamWriter(System.err);
         try {
             ow.write("\n\n===== dot representation of the graph ====\n"); 
@@ -446,7 +441,7 @@ public class CFD  {
         } catch (IOException e) {
             System.err.println("Can't print to the err output.");
         }
-        
+*/        
     }
    
     public boolean isAcyclic() {

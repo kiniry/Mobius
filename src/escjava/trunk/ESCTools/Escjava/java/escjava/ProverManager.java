@@ -306,6 +306,23 @@ public class ProverManager {
     }
   }
   
+  // timeout is given in seconds
+  synchronized
+  public boolean isValid(Expr vc, int timeout)
+  {
+      SortedProverCallback cb = new SortedProverCallback() {
+          public void processResponse(SortedProverResponse resp)
+          {
+          }
+      };
+      
+      Properties props = new Properties();
+      props.setProperty("timeout", ""+timeout);      
+      SortedProverResponse resp = sortedProver.isValid(lifter.convert(vc), cb, props);
+      
+      return resp.getTag() == SortedProverResponse.YES;
+  }
+  
   /*
    * Specific to simplify
    */
