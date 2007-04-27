@@ -155,8 +155,11 @@ public class Fx7Prover extends SortedProver
 	    				Info.out("  --> " + labels[i]);
 	    			}
 	    		callback.processResponse(new CounterExampleResponse(labels));
-	    	} else
-	    		ErrorSet.fatal("no labels, no donut: " + ans);
+	    	} else {
+	    		// It happens if there were no labels in the query.
+	    		// ErrorSet.fatal("no labels, no donut: " + ans);
+	    	}
+	    	
 			return new SortedProverResponse(SortedProverResponse.NO);
 	    } else if (ans.startsWith("ANSWER: UNSAT")) {
 	    	return new SortedProverResponse(SortedProverResponse.YES);
