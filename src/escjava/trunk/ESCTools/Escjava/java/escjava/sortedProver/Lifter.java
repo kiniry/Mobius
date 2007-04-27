@@ -889,11 +889,11 @@ public class Lifter extends EscNodeBuilder
     
     // mobius direct vcgen specific constructs
     /** symbol to mean a new object has been created */
-    public FnSymbol symNewObj = registerFnSymbol("%new", new Sort[] { sortMap, sortType, sortMap, sortRef }, sortPred, TagConstants.NEW);
+    public FnSymbol symNewObj = registerFnSymbol("%new", new Sort[] { sortMap, sortType, sortMap, sortRef }, sortPred);
     /** symbol for special select */
-    public FnSymbol symMSelect = registerFnSymbol("%select", new Sort[] { sortMap, sortRef, sortRef }, sortValue, TagConstants.SELECT);
+    public FnSymbol symMSelect = registerFnSymbol("%mobiusselect", new Sort[] { sortMap, sortRef, sortRef }, sortValue);
 	/** symbol for special store */
-    public FnSymbol symMStore = registerFnSymbol("%store", new Sort[] { sortMap, sortRef, sortRef, sortValue }, sortMap, TagConstants.STORE);
+    public FnSymbol symMStore = registerFnSymbol("%mobiusstore", new Sort[] { sortMap, sortRef, sortRef, sortValue }, sortMap);
 	
     
     
