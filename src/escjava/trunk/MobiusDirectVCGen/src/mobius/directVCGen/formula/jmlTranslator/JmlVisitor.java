@@ -68,6 +68,7 @@ import escjava.ast.WildRefExpr;
 import escjava.sortedProver.Lifter.QuantVariable;
 import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
+import escjava.tc.TypeSig;
 
 
 public class JmlVisitor extends VisitorArgResult{
@@ -116,48 +117,53 @@ public class JmlVisitor extends VisitorArgResult{
 	 public /*@non_null*/ Object visitVariableAccess(/*@non_null*/ VariableAccess x, Object o) {		 
 		 Boolean oldProp = (Boolean) ((Properties) o).get("old");
 		 Boolean predProp = (Boolean) ((Properties)o).get("pred");
-		 String id = (String) x.id.toString();
-		 int tag = ((JavafePrimitiveType) x.getDecorations()[1]).tag;
 		 
+		 String id = (String) x.id.toString();
 		 if(oldProp.booleanValue())
 		 {
 			 id += "Pre"; 
 		 }
 		 
-		 switch(tag)
-		 {
-		 case TagConstants.BOOLEANTYPE: 
-			 if (predProp.booleanValue())
-				 return Expression.rvar(id, Logic.sort);
-			 else
-				 return Expression.rvar(id, Bool.sort);
-		 case TagConstants.CHARTYPE: 
-		 case TagConstants.VOIDTYPE:
-		 case TagConstants.NULLTYPE:
-		 case TagConstants.BYTETYPE:
-		 case TagConstants.SHORTTYPE:
-		 case TagConstants.INTTYPE: return Expression.rvar(id, Num.sortInt); 
-		 case TagConstants.LONGTYPE:
-		 case TagConstants.FLOATTYPE:return Expression.rvar(id, Num.sortReal);
-		 case TagConstants.DOUBLETYPE:
-		 default: throw new IllegalArgumentException("The sort " + tag + " is illegal.");
+		 Object typeInfo = x.getDecorations()[1];
+		 if (typeInfo instanceof JavafePrimitiveType) {
+			 int tag = ((JavafePrimitiveType) typeInfo).tag;
+			 switch(tag){
+				 case TagConstants.BOOLEANTYPE: 
+					 if (predProp.booleanValue())
+						 return Expression.rvar(id, Logic.sort);
+					 else
+						 return Expression.rvar(id, Bool.sort);
+				 case TagConstants.CHARTYPE: 
+				 case TagConstants.VOIDTYPE:
+				 case TagConstants.NULLTYPE:
+				 case TagConstants.BYTETYPE:
+				 case TagConstants.SHORTTYPE:
+				 case TagConstants.INTTYPE: return Expression.rvar(id, Num.sortInt); 
+				 case TagConstants.LONGTYPE:
+				 case TagConstants.FLOATTYPE:return Expression.rvar(id, Num.sortReal);
+				 case TagConstants.DOUBLETYPE:
+				 default: throw new IllegalArgumentException("The tag " + tag + " is not known in this context.");
+			 }
+		 } else if (typeInfo instanceof TypeSig) {
+			 return Expression.rvar(id, Ref.sort);
 		 }
+		return null;
 	}
 	 
 	 
 	 public /*@non_null*/ Object visitFieldAccess(/*@non_null*/ FieldAccess x, Object o) {		 
 		 Boolean oldProp = (Boolean) ((Properties) o).get("old");
 		 Boolean predProp = (Boolean) ((Properties)o).get("pred");
-		 String idObj = x.decl.parent.id.toString(); 
+		 QuantVariableRef obj = (QuantVariableRef) x.od.accept(this, o);
 		 String idVar = (String) x.id.toString(); 
 		 QuantVariableRef heap = Heap.var;
-		 QuantVariableRef obj;
 		 QuantVariable var;
+		 
 		 int tag = ((JavafePrimitiveType) x.getDecorations()[1]).tag;
 		 
 		 if(oldProp.booleanValue())
 		 {
-			 idObj += "Pre";
+			 //idObj += "Pre";
 			 heap = Heap.varPre;
 		 }
 				 
@@ -183,7 +189,7 @@ public class JmlVisitor extends VisitorArgResult{
 		 default: 
 			 throw new IllegalArgumentException("The sort of " + tag + " is illegal.");
 		 }
-		 obj =  Expression.rvar(idObj, Ref.sort);
+		 //obj =  Expression.rvar(idObj, Ref.sort);
 		 return Heap.select(heap, obj, var);
 	}
 	 

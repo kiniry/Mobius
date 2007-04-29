@@ -95,7 +95,7 @@ public class JmlExprToFormula {
 		if (!pred.booleanValue() && (t1.getSort() != Logic.sort)&&(t2.getSort() != Logic.sort))
 			return Bool.ge(t1, t2);
 		else
-			return Logic.ge(Logic.boolToProp(t1),Logic.boolToProp(t2));			
+			return Logic.ge(t1, t2);			
 	}
 
 	
@@ -107,7 +107,7 @@ public class JmlExprToFormula {
 		if (!pred.booleanValue() && (t1.getSort() != Logic.sort)&&(t2.getSort() != Logic.sort))
 			return Bool.gt(t1, t2);
 		else
-			return Logic.gt(Logic.boolToProp(t1),Logic.boolToProp(t2));			
+			return Logic.gt(t1, t2);			
 	}
 	
 	
@@ -119,7 +119,7 @@ public class JmlExprToFormula {
 		if (!pred.booleanValue() && (t1.getSort() != Logic.sort)&&(t2.getSort() != Logic.sort))
 			return Bool.le(t1, t2);
 		else
-			return Logic.le(Logic.boolToProp(t1),Logic.boolToProp(t2));			
+			return Logic.le(t1, t2);			
 	}
 
 	
@@ -131,7 +131,7 @@ public class JmlExprToFormula {
 		if (!pred.booleanValue() && (t1.getSort() != Logic.sort)&&(t2.getSort() != Logic.sort))
 			return Bool.lt(t1, t2);
 		else
-			return Logic.lt(Logic.boolToProp(t1),Logic.boolToProp(t2));			
+			return Logic.lt(t1, t2);			
 	}
 
 	public Object bitor(BinaryExpr expr, Object o) {
