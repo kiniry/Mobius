@@ -8,46 +8,15 @@ Executing:
   -classpath /sw/share/java/javacc/javacc.jar:/sw/share/java/junit/junit.jar:.:/Users/mikolas/bin/eclipse/plugins/org.junit_3.8.1/junit.jar
   -specs ESCTOOLSROOT/specs
   -nowarn Deadlock
-  -nowarn Deadlock -specs ESCTOOLSROOT/specs -classpath :/Users/mikolas/SandBoxes/ESCTools/Utils:/Users/mikolas/SandBoxes/ESCTools/Utils/junit.jar:/Users/mikolas/SandBoxes/ESCTools/Utils/ant.jar:. -classpath :/Users/mikolas/SandBoxes/ESCTools/Utils:/Users/mikolas/SandBoxes/ESCTools/Utils/junit.jar:/Users/mikolas/SandBoxes/ESCTools/Utils/ant.jar:. -specs /Users/mikolas/SandBoxes/ESCTools/specs TestVector.java
+  -quiet -nowarn Deadlock -specs ESCTOOLSROOT/specs -classpath :/Users/mikolas/SandBoxes/ESCTools/Utils:/Users/mikolas/SandBoxes/ESCTools/Utils/junit.jar:/Users/mikolas/SandBoxes/ESCTools/Utils/ant.jar:. -classpath :/Users/mikolas/SandBoxes/ESCTools/Utils:/Users/mikolas/SandBoxes/ESCTools/Utils/junit.jar:/Users/mikolas/SandBoxes/ESCTools/Utils/ant.jar:. -specs /Users/mikolas/SandBoxes/ESCTools/specs TestVector.java
 ==================================================================
-ESC/Java version ESCJava-CURRENT-CVS
-    [0.064 s 10378432 bytes]
-
-TestVector ...
-  Prover started:0.417 s 15460448 bytes
-    [2.293 s 15851448 bytes]
-
-TestVector: testVtc1() ...
-------------------------------------------------------------------------
 TestVector.java:7: Warning: Possible assertion failure (Assert)
         //@ assert false; // TEST FOR CONSISTENCY 1
             ^
-------------------------------------------------------------------------
-    [0.935 s 16774040 bytes]  failed
-
-TestVector: testVtc2() ...
-------------------------------------------------------------------------
 TestVector.java:12: Warning: Possible assertion failure (Assert)
         //@ assert false; // TEST FOR CONSISTENCY 2
             ^
-------------------------------------------------------------------------
-    [1.136 s 16937608 bytes]  failed
-
-TestVector: testVt3() ...
-------------------------------------------------------------------------
 TestVector.java:19: Warning: Possible assertion failure (Assert)
         //@ assert v.elementCount == 10; // SHOULD FAIL
             ^
-------------------------------------------------------------------------
-    [25.985 s 17543760 bytes]  failed
-
-TestVector: testVt4() ...
-    [75.892 s 19595664 bytes]  passed
-
-TestVector: testVtR_positive(java.lang.Object[]) ...
-    [48.376 s 20917104 bytes]  passed
-
-TestVector: TestVector() ...
-    [0.014 s 21122704 bytes]  passed
-  [154.633 s 21123584 bytes total]
 3 warnings
