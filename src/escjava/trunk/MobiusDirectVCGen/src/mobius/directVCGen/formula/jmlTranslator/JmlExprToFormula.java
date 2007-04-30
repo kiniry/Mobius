@@ -3,6 +3,8 @@ package mobius.directVCGen.formula.jmlTranslator;
 import mobius.directVCGen.formula.*;
 
 import java.util.Properties;
+
+import escjava.ast.NaryExpr;
 import escjava.ast.ResExpr;
 import escjava.ast.TagConstants;
 import escjava.sortedProver.Lifter.QuantVariable;
@@ -337,7 +339,7 @@ public class JmlExprToFormula {
 		return null;
 	}
 
-	//Claudia: Not yet implemented
+	
 	public Object res(ResExpr x, Object o) {
 		return ((Properties) o).get("result");
 	}
@@ -358,12 +360,20 @@ public class JmlExprToFormula {
 	public Object fieldAccess(FieldAccess x, Object o) {
 		 Boolean oldProp = (Boolean) ((Properties) o).get("old");
 		 //Boolean predProp = (Boolean) ((Properties)o).get("pred");
-		 QuantVariableRef obj = (QuantVariableRef) x.od.accept(v, o);
+		 Term obj = (Term) x.od.accept(v, o);
 		 QuantVariableRef heap = Heap.var;
 		 if(oldProp.booleanValue()) heap = Heap.varPre;
 		 String idVar = (String) x.id.toString(); 
 		 QuantVariable var = Expression.var(idVar, Type.typeToSort((javafe.ast.Type) x.getDecorations()[1]));
 		 return Heap.select(heap, obj, var);
+	}
+
+	public Object naryExpr(NaryExpr x, Object o) {
+		 Boolean old= (Boolean) ((Properties) o).get("old");	
+	     ((Properties) o).put("old",true); 
+		 Object res = v.visitGCExpr(x, o);
+		 ((Properties) o).put("old",old);
+		 return res;
 	}
 
 	

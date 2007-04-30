@@ -7,12 +7,17 @@ import java.util.Properties;
 import sun.misc.Sort;
 import javafe.ast.ASTNode;
 import javafe.ast.BinaryExpr;
+import javafe.ast.BlockStmt;
 import javafe.ast.FieldAccess;
 import javafe.ast.InstanceOfExpr;
 import javafe.ast.JavafePrimitiveType;
 import javafe.ast.LiteralExpr;
+import javafe.ast.LocalVarDecl;
 import javafe.ast.MethodDecl;
+import javafe.ast.ModifierPragma;
+import javafe.ast.Stmt;
 import javafe.ast.ThisExpr;
+import javafe.ast.VarDeclStmt;
 import javafe.ast.VariableAccess;
 import escjava.ast.AnOverview;
 import escjava.ast.ArrayRangeRefExpr;
@@ -103,6 +108,8 @@ public class JmlVisitor extends VisitorArgResult{
 		return o;
 	}
 
+	
+	
 	@Override
 	public /*@non_null*/ Object visitMethodDecl(/*@non_null*/ MethodDecl x, Object o) {
 		((Properties) o).put("result", Expression.rvar("result",Type.typeToSort(x.returnType)));
@@ -130,16 +137,18 @@ public class JmlVisitor extends VisitorArgResult{
 		 return translator.fieldAccess(x,o);
 	}
 	 
-	 
+	 public /*@non_null*/ Object visitLocalVarDecl(/*@non_null*/ LocalVarDecl x, Object o) {
+		 //TODO: do something meaningfull.
+		 return null;
+	 }
 	 
 	 
 	 public /*@non_null*/ Object visitNaryExpr(/*@non_null*/ NaryExpr x, Object o) {
-		 Boolean old= (Boolean) ((Properties) o).get("old");	
-		 if (x.op== TagConstants.PRE)
-			 ((Properties) o).put("old",true); 
-		 Object res = visitGCExpr(x, o);;
-		 ((Properties) o).put("old",old);
-		 return res;
+		 if (x.op== TagConstants.PRE) {
+			 return translator.naryExpr(x,o);
+		 } else {
+			 return visitGCExpr(x, o);
+		 }
 	}
 	 
 
@@ -223,9 +232,41 @@ public class JmlVisitor extends VisitorArgResult{
 
 	
 	public Object visitExprModifierPragma(ExprModifierPragma x, Object o) {
-		return visitASTNode(x, o);
+		Object res = visitASTNode(x, o);
+		
+		return res;
 	}
 
+	@Override
+    public /*@non_null*/ Object visitBlockStmt(/*@non_null*/ BlockStmt x, Object o) {
+	    //Properties prop = ((Properties) o);
+		Term t=null;
+		boolean interesting;
+	    for(Stmt s: x.stmts.toArray()){
+	    	if (s instanceof ExprStmtPragma){
+	    		 t = (Term)s.accept(this, o);
+	    	} else
+	    	if (s instanceof VarDeclStmt){
+	    		interesting = false;
+	    		for (ModifierPragma p: ((VarDeclStmt) s).decl.pmodifiers.toArray()){
+	    			if (p.getTag() == 399) {
+	    				interesting = true;
+	    				break;
+	    			}
+	    		}
+	    		if (interesting){
+	    			t = (Term)s.accept(this, o);
+	    		}
+	    	} else
+	    	if (s instanceof SetStmtPragma) {
+	    		t = (Term)s.accept(this, o);
+	    	} else {
+	    		//Not interested, next please!
+	    	}
+	    }
+        return t;
+    }	
+	
 	@Override
 	public Object visitExprStmtPragma(ExprStmtPragma x, Object o) {
 		// TODO Auto-generated method stub
