@@ -95,7 +95,7 @@ public class JmlExprToFormula {
 		Term t1 = (Term)expr.left.accept(v,o);
 		Term t2 = (Term)expr.right.accept(v,o);
 				
-		if (!pred.booleanValue() && (t1.getSort() != Logic.sort)&&(t2.getSort() != Logic.sort))
+		if (!pred.booleanValue())
 			return Bool.ge(t1, t2);
 		else
 			return Logic.ge(t1,t2);			
@@ -107,7 +107,7 @@ public class JmlExprToFormula {
 		Term t1 = (Term)expr.left.accept(v,o);
 		Term t2 = (Term)expr.right.accept(v,o);
 				
-		if (!pred.booleanValue() && (t1.getSort() != Logic.sort)&&(t2.getSort() != Logic.sort))
+		if (!pred.booleanValue())
 			return Bool.gt(t1, t2);
 		else
 			return Logic.gt(t1, t2);			
@@ -119,7 +119,7 @@ public class JmlExprToFormula {
 		Term t1 = (Term)expr.left.accept(v,o);
 		Term t2 = (Term)expr.right.accept(v,o);
 				
-		if (!pred.booleanValue() && (t1.getSort() != Logic.sort)&&(t2.getSort() != Logic.sort))
+		if (!pred.booleanValue())
 			return Bool.le(t1, t2);
 		else
 			return Logic.le(t1, t2);			
@@ -131,7 +131,7 @@ public class JmlExprToFormula {
 		Term t1 = (Term)expr.left.accept(v,o);
 		Term t2 = (Term)expr.right.accept(v,o);
 				
-		if (!pred.booleanValue() && (t1.getSort() != Logic.sort)&&(t2.getSort() != Logic.sort))
+		if (!pred.booleanValue())
 			return Bool.lt(t1, t2);
 		else
 			return Logic.lt(t1, t2);			
