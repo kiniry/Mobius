@@ -13,7 +13,7 @@ public class Heap {
 	public static Term store(QuantVariableRef heap, QuantVariable var, Term val) {
 		return Formula.lf.mkFnTerm(Formula.lf.symStore, new Term[] {heap, Expression.refFromVar(var), sortToValue(val)});
 	}
-	public static Term store(QuantVariableRef heap, QuantVariableRef obj, QuantVariable var, Term val) {
+	public static Term store(QuantVariableRef heap, Term obj, QuantVariable var, Term val) {
 		return Formula.lf.mkFnTerm(Formula.lf.symMStore, new Term[] {heap, obj, Expression.refFromVar(var), sortToValue(val)});
 	}
 	public static Term select(QuantVariableRef heap, QuantVariable var) {
@@ -21,7 +21,7 @@ public class Heap {
 				new Term[] {heap, Expression.refFromVar(var)});
 		return valueToSort(select, var.type);
 	}
-	public static Term select(QuantVariableRef heap, QuantVariableRef obj, QuantVariable var) {
+	public static Term select(QuantVariableRef heap, Term obj, QuantVariable var) {
 		Term select = Formula.lf.mkFnTerm(Formula.lf.symMSelect, 
 				new Term[] {heap, obj, Expression.refFromVar(var)});
 		return valueToSort(select, var.type);
