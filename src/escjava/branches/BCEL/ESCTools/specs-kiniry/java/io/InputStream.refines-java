@@ -1,0 +1,210 @@
+// @(#)$Id$
+
+// Copyright (C) 2004 Iowa State University
+
+// This file is part of JML
+
+// JML is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation; either version 2, or (at your option)
+// any later version.
+
+// JML is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// You should have received a copy of the GNU General Public License
+// along with JML; see the file COPYING.  If not, write to
+// the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
+
+package java.io;
+
+/**
+ * JML's specification of {@link java.util.InputStream}.
+ *
+ * @version $Revision$
+ * @author David Cok
+ * @author Joseph R. Kiniry
+ */
+
+// Ambiguity: Can any method besides close() close a stream?
+// Perhaps also?
+//   ensures isOpen == \old(isOpen);
+// on all methods but close()?
+
+// Perhaps would also like to specify that all methods of children
+// modifies objectState?  But we cannot say that because this is an
+// abstract class and objectState is an instance model.
+
+public abstract class InputStream
+{
+  //@ public model boolean isOpen;
+
+  /*@ public normal_behavior
+    @   modifies isOpen;
+    @   ensures isOpen;
+    @*/
+  public /*@ pure @*/ InputStream();
+
+  /*
+   * Ambiguities: What happens when you read() a stream that is not open?
+   */
+  /*@ public normal_behavior
+    @   requires isOpen;
+    @   ensures isOpen;
+    @   ensures (0 <= \result && \result <= 255) || (\result == -1);
+    @ also
+    @ public exceptional_behavior
+    @   signals (IOException) !isOpen;
+    @*/
+  // Perhaps also?
+  // public exceptional_behavior
+  //   requires !isOpen;
+  //   modifies \nothing;
+  //   signals (IOException);
+  public abstract /*@ pure @*/ int read() throws IOException;
+
+  /**
+   * Ambiguities:
+   * <ul>
+   * <li> what happens in the case that a stream is not open and
+   *   <ul>
+   *     <li> the array b is null? </li>
+   *     <li> the array b is of length 0? </li>
+   *   </ul>
+   * </ul>
+   * JML limitation?: Would like to specify in the first case that the
+   * elements of the array modified are dependent upon \result, but we
+   * cannot use \result in a modifies clause.  E.g.,
+   *   modifies b[0..(\result-1)];
+   */
+  /*@ public normal_behavior
+    @   requires isOpen;
+    @   requires b != null;
+    @   ensures isOpen;
+    @ {|
+    @     requires b.length > 0;
+    @     modifies b[*];
+    @     ensures 0 < \result && \result <= b.length;
+    @     ensures (\forall int i; 0 <= i && i < \result; 0 <= b[i] && b[i] <= 255);
+    @     ensures (\forall int i; \result <= i && i < b.length; b[i] == \old(b[i]));
+    @     ensures_redundantly 0 <= b[0] && b[0] <= 255;
+    @   also
+    @     requires b.length == 0;
+    @     modifies \nothing;
+    @     ensures \result == 0;
+    @ |}
+    @ also
+    @ public exceptional_behavior
+    @   modifies \nothing;
+    @ {|
+    @     requires b == null;
+    @     signals (NullPointerException);
+    @   also
+    @     requires !isOpen;
+    @     signals (IOException);
+    @   also
+    @     signals (IOException);
+    @ |}
+    @*/
+  // Perhaps also?
+  // public exceptional_behavior
+  //   requires !isOpen;
+  //   requires b == null;
+  //   modifies \nothing;
+  //   signals (NullPointerException or IOException) (!isOpen? isOpen?)
+  public int read(byte[] b) throws IOException;
+
+  public int read(byte[] b, int off, int len) throws IOException;
+
+  /**
+   * Ambiguity: what happens if one tries to skip a stream that is not open?
+   */
+  /*@ public normal_behavior
+    @   requires isOpen;
+    @   ensures isOpen;
+    @ {|
+    @     requires n <= 0;
+    @     ensures \result == 0;
+    @   also
+    @     requires 0 < n;
+    @     ensures \result <= n;
+    @ |}
+    @ also
+    @ public exceptional_behavior
+    @   signals (IOException);
+    @*/
+  public /*@ pure @*/ long skip(long n) throws IOException;
+
+  /*
+   * Ambiguity: Is the stream still open if an exception is thrown?
+   */
+  /*@ public normal_behavior
+    @   modifies isOpen;
+    @   ensures !isOpen;
+    @ also
+    @ public exceptional_behavior
+    @   signals (IOException);
+    @*/
+  // Perhaps also?:
+  // public exceptional_behavior
+  //   modifies isOpen;
+  //   signals (IOException) !isOpen;
+  public /*@ pure @*/ void close() throws IOException;
+
+  /*
+   * Ambiguity: what happens if one tries to check the available bytes
+   * of a stream that is not open?  Does the stream close?  If we try
+   * to check the available bytes of an open stream and an exception
+   * is thrown, is the stream guaranteed still open?
+   */
+  /*@ public normal_behavior
+    @   requires isOpen;
+    @   ensures \result == 0;
+    @   ensures isOpen;
+    @ also
+    @ public exceptional_behavior
+    @   signals (IOException);
+    @*/
+  // Perhaps also?
+  // public exceptional_behavior
+  //   requires !isOpen;
+  //   signals (IOException);
+  // or
+  // public exceptional_behavior
+  //   signals (IOException) isOpen;
+  public /*@ pure @*/ int available() throws IOException;
+
+  // Ambiguity: Must loc be non-negative?  What happens if !markSupported()?
+  /*@ public behavior
+    @   modifies \nothing;
+    @*/
+  public synchronized void mark(int loc);
+
+  /*@ public normal_behavior
+    @   requires \typeof(this) == \type(InputStream);
+    @   ensures !\result;
+    @*/
+  public /*@ pure @*/ boolean markSupported();
+
+  // Ambiguity: Must the stream remain open if an exception is thrown?
+  /*@ public exceptional_behavior
+    @   requires isOpen;
+    @   requires \typeof(this) == \type(InputStream);
+    @   modifies \nothing;
+    @   signals (IOException) isOpen;
+    @ also
+    @ protected normal_behavior
+    @   requires isOpen;
+    @   requires !markSupported();
+    @   modifies \nothing;
+    @   ensures isOpen;
+    @ also
+    @ protected exceptional_behavior
+    @   requires !markSupported();
+    @   modifies \nothing;
+    @   signals (IOException);
+    @*/
+  public synchronized void reset() throws IOException;
+}

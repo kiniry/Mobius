@@ -1,0 +1,37 @@
+C.java:10: Warning: lock expression may not be constant.   (ConstantLocks)
+    synchronized(c) {
+                 ^
+Associated declaration is "C.java", line 10, col 17:
+    synchronized(c) {
+                 ^
+C.java:11: Warning: possible race condition.  Lock 'c.s' may not be held. We only have '(c)'. (Race)
+      c.t = "1";
+      ^
+Associated declaration is "C.java", line 4, col 2:
+  String t  /*# guarded_by this, s */;
+  ^
+C.java:12: Warning: lock expression may not be constant.   (ConstantLocks)
+      synchronized(c.s) {
+                   ^
+Associated declaration is "C.java", line 12, col 19:
+      synchronized(c.s) {
+                   ^
+C.java:33: Warning: lock expression may not be constant.   (ConstantLocks)
+    synchronized(e) {
+                 ^
+Associated declaration is "C.java", line 33, col 17:
+    synchronized(e) {
+                 ^
+C.java:34: Warning: lock expression may not be constant.   (ConstantLocks)
+      synchronized(e.o) {
+                   ^
+Associated declaration is "C.java", line 34, col 19:
+      synchronized(e.o) {
+                   ^
+C.java:35: Warning: lock expression may not be constant.   (ConstantLocks)
+        synchronized(e.e.o) {
+                     ^
+Associated declaration is "C.java", line 35, col 21:
+        synchronized(e.e.o) {
+                     ^
+6 warnings

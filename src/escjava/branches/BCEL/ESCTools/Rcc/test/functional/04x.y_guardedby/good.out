@@ -1,0 +1,7 @@
+C.java:10: Warning: possible race condition.  Lock 'a.y' may not be held. We only have '(this)'. (Race)
+    a.x = 0;    // lock y may not be held, nothing about this
+    ^
+Associated declaration is "C.java", line 3, col 9:
+  public int x /*#guarded_by y*/;
+         ^
+1 warning
