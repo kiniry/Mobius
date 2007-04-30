@@ -5,15 +5,18 @@ import mobius.directVCGen.formula.*;
 import java.util.Properties;
 import escjava.ast.ResExpr;
 import escjava.ast.TagConstants;
+import escjava.sortedProver.Lifter.QuantVariable;
+import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
 import javafe.ast.BinaryExpr;
+import javafe.ast.FieldAccess;
 import javafe.ast.InstanceOfExpr;
 import javafe.ast.LiteralExpr;
 import javafe.ast.VariableAccess;
 
 public class JmlExprToFormula {
 
-	JmlVisitor v;
+	private JmlVisitor v;
 	
 	public JmlExprToFormula(JmlVisitor visitor) {
 		v = visitor;
@@ -59,10 +62,10 @@ public class JmlExprToFormula {
 	public Object eq(BinaryExpr expr, Object o) {
 		Boolean pred_old = (Boolean) ((Properties) o).get("pred");
 		//set Properties.prop:=false (equality operation wants sortBool)
-		((Properties) o).put("pred", false);
+		((Properties) o).put("pred", new Boolean(false));
 		Term t1 = (Term)expr.left.accept(v,o);
 		Term t2 = (Term)expr.right.accept(v,o);
-		
+		((Properties) o).put("pred", pred_old);
 		if (!pred_old.booleanValue()&& (t1.getSort() != Logic.sort)&&(t2.getSort() != Logic.sort))
 				return Bool.equals(t1, t2);	
 		else if (pred_old.booleanValue() && (t1.getSort() != Logic.sort)&& (t2.getSort() != Logic.sort))
@@ -88,14 +91,14 @@ public class JmlExprToFormula {
 	
 	
 	public Object ge(BinaryExpr expr, Object o) {
-		Boolean pred= (Boolean) ((Properties) o).get("pred");		
+		Boolean pred= (Boolean) ((Properties) o).get("pred");
 		Term t1 = (Term)expr.left.accept(v,o);
 		Term t2 = (Term)expr.right.accept(v,o);
 				
 		if (!pred.booleanValue() && (t1.getSort() != Logic.sort)&&(t2.getSort() != Logic.sort))
 			return Bool.ge(t1, t2);
 		else
-			return Logic.ge(t1, t2);			
+			return Logic.ge(t1,t2);			
 	}
 
 	
@@ -336,12 +339,33 @@ public class JmlExprToFormula {
 
 	//Claudia: Not yet implemented
 	public Object res(ResExpr x, Object o) {
-		x.getTag(); //wrong tag
-		
-		return Num.value(3); //Testing
+		return ((Properties) o).get("result");
 	}
 
-	
+	public Object variableAccess(VariableAccess x, Object o) {
+		 Boolean oldProp = (Boolean) ((Properties) o).get("old");
+		 Boolean predProp = (Boolean) ((Properties)o).get("pred");
+		 
+		 String id = (String) x.id.toString();
+		 if(oldProp.booleanValue()) id += "Pre"; 
+		 
+		 Term res = Expression.rvar(id, Type.typeToSort((javafe.ast.Type) x.getDecorations()[1]));
+		 if (predProp.booleanValue() && res.getSort() == Bool.sort)
+			 res = Logic.boolToProp(res);
+		 return res;
+	}
+
+	public Object fieldAccess(FieldAccess x, Object o) {
+		 Boolean oldProp = (Boolean) ((Properties) o).get("old");
+		 //Boolean predProp = (Boolean) ((Properties)o).get("pred");
+		 QuantVariableRef obj = (QuantVariableRef) x.od.accept(v, o);
+		 QuantVariableRef heap = Heap.var;
+		 if(oldProp.booleanValue()) heap = Heap.varPre;
+		 String idVar = (String) x.id.toString(); 
+		 QuantVariable var = Expression.var(idVar, Type.typeToSort((javafe.ast.Type) x.getDecorations()[1]));
+		 return Heap.select(heap, obj, var);
+	}
+
 	
 
 }
