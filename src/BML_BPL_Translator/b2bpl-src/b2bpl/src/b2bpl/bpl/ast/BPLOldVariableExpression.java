@@ -33,6 +33,6 @@ public class BPLOldVariableExpression extends BPLExpression {
   }
 
   public String toString() {
-    return identifier;
+    return "old(" + identifier + ")";
   }
 }

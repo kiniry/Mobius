@@ -18,7 +18,6 @@ import static b2bpl.translation.CodeGenerator.divide;
 import static b2bpl.translation.CodeGenerator.elementType;
 import static b2bpl.translation.CodeGenerator.fieldAccess;
 import static b2bpl.translation.CodeGenerator.fieldLoc;
-import static b2bpl.translation.CodeGenerator.fieldType;
 import static b2bpl.translation.CodeGenerator.fieldUpdate;
 import static b2bpl.translation.CodeGenerator.forall;
 import static b2bpl.translation.CodeGenerator.get;
@@ -31,7 +30,6 @@ import static b2bpl.translation.CodeGenerator.heapNewArray;
 import static b2bpl.translation.CodeGenerator.icast;
 import static b2bpl.translation.CodeGenerator.ifThenElse;
 import static b2bpl.translation.CodeGenerator.implies;
-import static b2bpl.translation.CodeGenerator.initVal;
 import static b2bpl.translation.CodeGenerator.inv;
 import static b2bpl.translation.CodeGenerator.isEqual;
 import static b2bpl.translation.CodeGenerator.isExceptionalReturnState;
@@ -98,7 +96,6 @@ import b2bpl.bpl.ast.BPLVariableDeclaration;
 import b2bpl.bpl.ast.BPLVariableExpression;
 import b2bpl.bytecode.BCField;
 import b2bpl.bytecode.BCMethod;
-import b2bpl.bytecode.Constants;
 import b2bpl.bytecode.ExceptionHandler;
 import b2bpl.bytecode.InstructionHandle;
 import b2bpl.bytecode.InstructionVisitor;
@@ -419,7 +416,7 @@ public class MethodTranslator implements TranslationConstants {
         vars.toArray(new BPLVariableDeclaration[vars.size()]),
         blocks.toArray(new BPLBasicBlock[blocks.size()]));
 
-    boolean provideReturnValue = !method.isVoid();
+    boolean provideReturnValue = !method.isVoid() || method.isConstructor();
     
     JType[] paramTypes = method.getRealParameterTypes();
     
@@ -437,7 +434,11 @@ public class MethodTranslator implements TranslationConstants {
     //@deprecated outParams.add(new BPLVariable(RETURN_HEAP_PARAM, new BPLTypeName(HEAP_TYPE)));
     outParams.add(new BPLVariable(RETURN_STATE_PARAM, new BPLTypeName(RETURN_STATE_TYPE)));
     if (provideReturnValue) {
-      outParams.add(new BPLVariable(RETURN_VALUE_PARAM, type(method.getReturnType())));
+      if (method.isConstructor()) {
+        outParams.add(new BPLVariable(RETURN_VALUE_PARAM, BPLBuiltInType.REF));
+      } else {
+        outParams.add(new BPLVariable(RETURN_VALUE_PARAM, type(method.getReturnType())));
+      }
     }
     outParams.add(new BPLVariable(EXCEPTION_PARAM, BPLBuiltInType.REF));
 
@@ -472,7 +473,7 @@ public class MethodTranslator implements TranslationConstants {
     List<BPLRequiresClause> requiresClauses = new ArrayList<BPLRequiresClause>();
 
     // If we have a this object, then it is not null.
-    if (!method.isStatic() && !method.isConstructor()) {
+    if (!method.isStatic() /* && !method.isConstructor() */ ) {
       requiresClauses.add(new BPLRequiresClause(notEqual(
           var(thisVar()),
           BPLNullLiteral.NULL)));
@@ -517,8 +518,7 @@ public class MethodTranslator implements TranslationConstants {
         // We only insert the appropriate assumption for types which are
         // compatible to the type of the this object since other assumptions are
         // redundant.
-        if (method.getOwner().isSubtypeOf(params[i])
-            || params[i].isSubtypeOf(method.getOwner())) {
+        if (method.getOwner().isSubtypeOf(params[i]) || params[i].isSubtypeOf(method.getOwner())) {
           requiresClauses.add(new BPLRequiresClause(notEqual(
               var(thisVar()),
               var(paramVar(i)))));
@@ -526,6 +526,7 @@ public class MethodTranslator implements TranslationConstants {
       }
 
       // No object in the heap is equal to the this object.
+      /* TODO revise the following two requirements
       String l = quantVarName("l");
       BPLVariable lVar = new BPLVariable(l, new BPLTypeName(LOCATION_TYPE));
       requiresClauses.add(new BPLRequiresClause(forall(lVar, notEqual(
@@ -538,6 +539,7 @@ public class MethodTranslator implements TranslationConstants {
       requiresClauses.add(new BPLRequiresClause(forall(fVar, isEqual(get(
           var(HEAP_VAR),
           fieldLoc(var(thisVar()), var(f))), initVal(fieldType(var(f)))))));
+      */
     }
 
 
@@ -605,8 +607,39 @@ public class MethodTranslator implements TranslationConstants {
     // Assert the method's frame condition.
     ensuresClauses.add(new BPLEnsuresClause(true, translateMethodFrame(
         method,
-        HEAP_VAR,
-        getInParameters())));
+        getInParameters()
+    )));
+    
+    // BPLEnsuresClause ec = new BPLEnsuresClause(true, translateMethodFrame(method, getInParameters()));
+    // System.out.println("MF(" + method.getQualifiedName() + ") = " + ec.toString());
+    
+    // TODO
+    // ensures (forall v: Value    :: alive(v, old(heap)) ==> alive(v, heap));
+    // ensures (forall l: Location :: l != fieldLoc(param0, Account.balance) ==> get(heap, l) == get(old(heap), l));
+    /*
+    String v = quantVarName("v");
+    BPLVariable vVar = new BPLVariable(v, new BPLTypeName(VALUE_TYPE));
+    ensuresClauses.add(new BPLEnsuresClause(true,
+        forall(vVar, implies(alive(var(v), old(HEAP_VAR)), alive(var(v), var(HEAP_VAR))))
+    ));
+
+    String l = quantVarName("l");
+    BPLVariable lVar = new BPLVariable(l, new BPLTypeName(LOCATION_TYPE));
+    
+    ensuresClauses.add(new BPLEnsuresClause(true,
+        forall(lVar, implies(
+            notEqual(
+                var(l),
+                // TODO: for all variables mentioned in the 
+                fieldLoc(var(paramVar(0)), var("accounting.Account.balance")) // ref, name
+            ),
+            isEqual(
+                get(var(HEAP_VAR), var(l)),
+                get(old(HEAP_VAR), var(l))
+            )
+        ))
+    ));
+    */
 
     // Assert the effective normal postcondition of the method.
     BPLExpression Q = translatePostcondition(
@@ -615,35 +648,41 @@ public class MethodTranslator implements TranslationConstants {
         RESULT_VAR,
         getInParameters());
     
-    // TODO: ensure that this-object is initialized (!= null) and alive in the heap;
+    boolean provideReturnValue = !method.isVoid() || method.isConstructor();
 
-    // Ensure normal postcondition (omit it if it is TRUE)
-    // if (Q != BPLBoolLiteral.TRUE) {
+    // Ensure normal postcondition
     BPLExpression condition = null;
     if (method.isConstructor()) {
       condition = isNormalReturnState(var(RETURN_STATE_PARAM));
+      Q = logicalAnd(
+            Q,
+            notEqual(var(RETURN_VALUE_PARAM), BPLNullLiteral.NULL),
+            alive(rval(var(RETURN_VALUE_PARAM)), var(HEAP_VAR)),
+            isOfType(rval(var(RETURN_VALUE_PARAM)), typeRef(method.getOwner()))
+      );
     } else {
-      if (!method.isVoid()) {
+      if (provideReturnValue) {
         if (method.getReturnType().isReferenceType()) {
+          // The method's return value is a reference type (ref)
           condition = logicalAnd(
-              isNormalReturnState(var(RETURN_STATE_PARAM)),
-              alive(rval(var(RETURN_VALUE_PARAM)), var(HEAP_VAR)),
-              isOfType(rval(var(RETURN_VALUE_PARAM)), typeRef(method
-                  .getReturnType())));
+            isNormalReturnState(var(RETURN_STATE_PARAM)),
+            alive(rval(var(RETURN_VALUE_PARAM)), var(HEAP_VAR)),
+            isOfType(rval(var(RETURN_VALUE_PARAM)), typeRef(method.getReturnType())));
         } else {
+          // The method's return value is not a reference type
+          // (in this particular case, we assume type int)
           condition = logicalAnd(
-              isNormalReturnState(var(RETURN_STATE_PARAM)),
-              alive(ival(var(RETURN_VALUE_PARAM)), var(HEAP_VAR)),
-              isOfType(ival(var(RETURN_VALUE_PARAM)), typeRef(method
-                  .getReturnType())));
+            isNormalReturnState(var(RETURN_STATE_PARAM)),
+            alive(ival(var(RETURN_VALUE_PARAM)), var(HEAP_VAR)),
+            isOfType(ival(var(RETURN_VALUE_PARAM)), typeRef(method.getReturnType())));
         }
       } else {
         condition = isNormalReturnState(var(RETURN_STATE_PARAM));
       }
     }
 
+    // Handle normal method termination
     ensuresClauses.add(new BPLEnsuresClause(implies(condition, Q)));
-    // }
 
     // Handle the different exceptional terminations of the method.
     JClassType[] exceptions = method.getExceptionTypes();
@@ -933,6 +972,27 @@ public class MethodTranslator implements TranslationConstants {
      */
     
     //@deprecated addAssignment(var(RETURN_HEAP_PARAM), var(HEAP_VAR));
+    
+    boolean provideReturnValue = !method.isVoid() || method.isConstructor();
+    
+    if (provideReturnValue) {
+      
+      JType retType = method.isConstructor()
+        ? method.getOwner()
+        : method.getReturnType();
+      
+      BPLExpression topElem = var(stackVar(0, retType));
+      
+      if (method.getReturnType().isReferenceType() || method.isConstructor()) {
+        addAssume(notEqual(topElem, BPLNullLiteral.NULL));
+        addAssume(alive(rval(topElem), var(HEAP_VAR)));
+      } else {
+        addAssume(alive(ival(topElem), var(HEAP_VAR)));
+      }
+      addAssignment(var(RETURN_VALUE_PARAM), var(stackVar(0, retType)));
+      addAssignment(var(RETURN_STATE_PARAM), var(NORMAL_RETURN_STATE));
+      
+    }
 
     endBlock();
   }
@@ -1363,7 +1423,6 @@ public class MethodTranslator implements TranslationConstants {
 
   public BPLExpression translateMethodFrame(
       BCMethod method,
-      String oldHeap,
       String[] parameters) {
     List<BPLExpression> expr = new ArrayList<BPLExpression>();
     List<BCMethod> overrides = method.getOverrides();
@@ -1382,7 +1441,6 @@ public class MethodTranslator implements TranslationConstants {
           expr.add(translateMethodFrame(
               requires,
               storeRefs,
-              oldHeap,
               parameters));
         }
       }
@@ -1393,20 +1451,18 @@ public class MethodTranslator implements TranslationConstants {
   private BPLExpression translateMethodFrame(
       BMLExpression requires,
       BMLStoreRef[] storeRefs,
-      String oldHeap,
       String[] parameters) {
     if (storeRefs.length > 0) {
       String l = quantVarName("l");
-      ModifiesFilter filter = ModifiesFilter.forMethod(oldHeap, parameters, l);
+      ModifiesFilter filter = ModifiesFilter.forMethod(old(HEAP_VAR).toString(), parameters, l);
       BPLExpression expr = filter.translate(context, storeRefs);
-      expr = logicalAnd(alive(rval(obj(var(l))), var(oldHeap)), expr);
+      expr = logicalAnd(alive(rval(obj(var(l))), old(HEAP_VAR)), expr);
       BPLExpression left = get(var(HEAP_VAR), var(l));
-      BPLExpression right = get(var(oldHeap), var(l));
+      BPLExpression right = get(old(HEAP_VAR), var(l));
       expr = implies(expr, isEqual(left, right));
       BPLVariable lVar = new BPLVariable(l, new BPLTypeName(LOCATION_TYPE));
       expr = forall(lVar, expr);
-      SpecificationTranslator translator = SpecificationTranslator
-          .forPrecondition(oldHeap, parameters);
+      SpecificationTranslator translator = SpecificationTranslator.forPrecondition(old(HEAP_VAR).toString(), parameters);
       BPLExpression pre = translator.translate(context, requires);
       return implies(pre, expr);
     }
@@ -1558,8 +1614,11 @@ public class MethodTranslator implements TranslationConstants {
    *          terminate.
    */
   private void endBlock(BPLTransferCommand transferCommand) {
-    BPLBasicBlock block = new BPLBasicBlock(blockLabel, commands
-        .toArray(new BPLCommand[commands.size()]), transferCommand);
+    BPLBasicBlock block = new BPLBasicBlock(
+        blockLabel,
+        commands.toArray(new BPLCommand[commands.size()]),
+        transferCommand
+    );
     blocks.add(block);
     blockLabel = null;
   }
@@ -2206,7 +2265,7 @@ public class MethodTranslator implements TranslationConstants {
           var(HEAP_VAR)))));
 
       // Assume the method's frame condition.
-      addAssume(translateMethodFrame(invokedMethod, PRE_HEAP_VAR, args));
+      addAssume(translateMethodFrame(invokedMethod, args));
 
       // Assume the object invariants as justified by the verification
       // methodology.
@@ -2306,7 +2365,12 @@ public class MethodTranslator implements TranslationConstants {
       JType[] params = invokedMethod.getRealParameterTypes();
       int first = handle.getFrame().getStackSize() - params.length;
       
-      boolean provideReturnValue = false;
+      boolean provideReturnValue = !invokedMethod.isVoid() || invokedMethod.isConstructor();
+           
+      JType retType = (invokedMethod.isConstructor()
+        ? invokedMethod.getOwner()
+        : invokedMethod.getReturnType()
+      );
 
       // Non-static method calls may throw a NullPointerException.
       if (!invokedMethod.isStatic()) {
@@ -2331,13 +2395,9 @@ public class MethodTranslator implements TranslationConstants {
       boolean isConstructor = invokedMethod.isConstructor()
           || invokedMethod.getQualifiedName().contains(Constants.CONSTRUCTOR_NAME);
       */
-
-      provideReturnValue = /* !isConstructor && */ !invokedMethod.isVoid();
       
       if (provideReturnValue) {
-        resultVars.add(new BPLVariableExpression(returnValueVar(
-            callStatements,
-            invokedMethod.getReturnType())));
+        resultVars.add(new BPLVariableExpression(returnValueVar(callStatements, retType)));
       }
       resultVars.add(new BPLVariableExpression(exceptionVar(callStatements)));
 
@@ -2364,12 +2424,11 @@ public class MethodTranslator implements TranslationConstants {
       addCommand(callCmd);
 
       if (provideReturnValue) {
+        
         // TODO: assign returned method result to a stack variable
-        addAssignment(var(stackVar(0, invokedMethod.getReturnType())),
-            new BPLVariableExpression(returnValueVar(
-                callStatements,
-                invokedMethod.getReturnType()
-            ))
+        addAssignment(
+            var(stackVar(0, retType)),
+            new BPLVariableExpression(returnValueVar(callStatements, retType))
         );
       }
 
@@ -2377,7 +2436,7 @@ public class MethodTranslator implements TranslationConstants {
       // and jump to the appropriate exception handler defined below.
 
       JClassType[] exceptions = invokedMethod.getExceptionTypes();
-      if (exceptions.length > 0) {
+      //if (exceptions.length > 0) {
         // For every exception thrown by the method call, we create a synthetic
         // BoogiePL block in which we assume the corresponding exceptional
         // postcondition.
@@ -2385,16 +2444,16 @@ public class MethodTranslator implements TranslationConstants {
         // Branch to the blocks modeling the normal and the individual
         // exceptional terminations of the method call.
         String[] labels = new String[exceptions.length + 1];
-        labels[0] = normalPostBlockLabel(cfgBlock);
+        labels[0] = normalPostBlockLabel(cfgBlock) + "_" + callStatements;
         for (int i = 0; i < exceptions.length; i++) {
-          labels[i + 1] = exceptionalPostBlockLabel(cfgBlock, exceptions[i]);
+          labels[i + 1] = exceptionalPostBlockLabel(cfgBlock, exceptions[i]) + "_" + callStatements;
         }
         endBlock(labels);
 
         for (JClassType exception : exceptions) {
           // Create the actual blocks for the individual exceptions and assume
           // the corresponding exceptional postcondition.
-          startBlock(exceptionalPostBlockLabel(cfgBlock, exception));
+          startBlock(exceptionalPostBlockLabel(cfgBlock, exception) + "_" + callStatements);
 
           // Havoc the exception object and assume its static type.
           //addHavoc(var(refStackVar(0)));
@@ -2407,6 +2466,7 @@ public class MethodTranslator implements TranslationConstants {
           addAssume(isInstanceOf(
               rval(var(exceptionVar(callStatements))),
               typeRef(exception)));
+          addAssume(isExceptionalReturnState(var(RETURN_STATE_VAR + callStatements)));
 
           // Assume the corresponding exceptional postcondition.
           /*
@@ -2423,23 +2483,30 @@ public class MethodTranslator implements TranslationConstants {
         // Finally, open the BoogiePL block representing the normal termination
         // of the method. The subsequent translation can simply continue inside
         // this block.
-        startBlock(normalPostBlockLabel(cfgBlock));
-      }
+        startBlock(normalPostBlockLabel(cfgBlock) + "_" + callStatements);
+      //}
 
-      JType returnType = invokedMethod.getReturnType();
-      String resultVar = returnValueVar(callStatements, returnType);
+      // JType returnType = invokedMethod.getReturnType();
+      String resultVar = returnValueVar(callStatements, retType);
 
-      // If the method has a return value, we havoc it and assume its static
-      // type.
-      if (!invokedMethod.isVoid()) {
+      // If the method has a return value, we havoc it and assume its static type.
+      if (provideReturnValue) {
         addHavoc(var(resultVar));
-        if (returnType.isReferenceType()) {
+        if (retType.isReferenceType()) {
           addAssume(alive(rval(var(resultVar)), var(HEAP_VAR)));
-          addAssume(isOfType(rval(var(resultVar)), typeRef(returnType)));
+          addAssume(isOfType(rval(var(resultVar)), typeRef(retType)));
         } else {
-          addAssume(isOfType(ival(var(resultVar)), typeRef(returnType)));
+          addAssume(isOfType(ival(var(resultVar)), typeRef(retType)));
         }
+        /*deprecated 
+        if (method.isConstructor()) {
+          addAssume(isOfType(rval(var(RETURN_VALUE_PARAM)), typeRef(method.getOwner())));
+        } else {
+          addAssume(isOfType(rval(var(RETURN_VALUE_PARAM)), typeRef(method.getReturnType())));
+        }
+        */
       }
+      addAssume(isNormalReturnState(var(RETURN_STATE_VAR + callStatements)));
 
       // Assume the method's normal postcondition.
       addAssume(translatePostcondition(
@@ -2450,8 +2517,8 @@ public class MethodTranslator implements TranslationConstants {
 
       // If the method has a return value, we copy the helper variable
       // callResult to the actual stack variable which will hold the value.
-      if (!invokedMethod.isVoid()) {
-        String resultStackVar = stackVar(first, returnType);
+      if (provideReturnValue) {
+        String resultStackVar = stackVar(first, retType);
         addAssignment(var(resultStackVar), var(resultVar));
       }
 

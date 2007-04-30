@@ -81,10 +81,12 @@ import b2bpl.bpl.ast.BPLBoolLiteral;
 import b2bpl.bpl.ast.BPLBuiltInType;
 import b2bpl.bpl.ast.BPLConstantDeclaration;
 import b2bpl.bpl.ast.BPLDeclaration;
+import b2bpl.bpl.ast.BPLEnsuresClause;
 import b2bpl.bpl.ast.BPLExpression;
 import b2bpl.bpl.ast.BPLFunction;
 import b2bpl.bpl.ast.BPLFunctionParameter;
 import b2bpl.bpl.ast.BPLIntLiteral;
+import b2bpl.bpl.ast.BPLNullLiteral;
 import b2bpl.bpl.ast.BPLProcedure;
 import b2bpl.bpl.ast.BPLProgram;
 import b2bpl.bpl.ast.BPLSpecification;
@@ -1622,9 +1624,13 @@ public class Translator implements TranslationConstants {
         new BPLVariable[] {
             //@deprecated new BPLVariable(RETURN_HEAP_PARAM, new BPLTypeName(HEAP_TYPE)),
             new BPLVariable(RETURN_STATE_VAR, new BPLTypeName(RETURN_STATE_TYPE)),
+            new BPLVariable(RETURN_VALUE_VAR, BPLBuiltInType.REF),
             new BPLVariable(EXCEPTION_VAR, BPLBuiltInType.REF)
         },
-        new BPLSpecification(new BPLSpecificationClause[0])
+        new BPLSpecification(new BPLSpecificationClause[] {
+            new BPLEnsuresClause(notEqual(var(RETURN_VALUE_VAR), BPLNullLiteral.NULL)),
+            new BPLEnsuresClause(alive(rval(var(RETURN_VALUE_VAR)), var(HEAP_VAR)))
+        })
     );
   }
 
