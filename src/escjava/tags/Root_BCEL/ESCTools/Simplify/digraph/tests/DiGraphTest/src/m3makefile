@@ -1,0 +1,22 @@
+% Copyright (C) 1996, Digital Equipment Corporation
+% All rights reserved.
+% See the file COPYRIGHT for a full description.
+%
+% Last modified on Tue Jul 16 21:18:54 PDT 2002 by saxe   
+%      modified on Mon Oct 14 09:54:55 PDT 1996 by heydon 
+%      modified on Thu Sep  5 16:34:03 PDT 1996 by detlefs
+
+import		("libm3")
+import		("digraph")
+
+digraph		("Int", "Int", "Integer", "Integer")
+digraph		("Int", "Null", "Integer", "NullEdgeType")
+implementation	("DiGraphTest")
+
+% On systems that do not support shared libraries the following
+% line (or, on some systems, the one after it) is necessary:
+% option("standalone", "T")
+% "build_standalone()
+% Using cm3 on OS X, neither line is necessary.
+
+program		("DiGraphTest")

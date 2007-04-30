@@ -1,0 +1,10 @@
+// preconditions
+assume (\forall Example e, o; o != null ==>
+       less(statePre,e,o) == e.value < o.value);
+assume less(statePre,min,max);
+// body
+...
+// postconditions
+assume (\forall Example e, o;  o != null ==>
+       less(statePost,e,o) == e.value < o.value);
+assert !less(statePost,this,min);

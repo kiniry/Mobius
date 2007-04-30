@@ -1,0 +1,7 @@
+C.java:11: Warning: possible race condition.  Lock 'c.s' may not be held.  Locks currently held are '(c)'. (Race)
+      c.t = "1";
+      ^
+Associated declaration is "C.java", line 4, col 16:
+  String t  /*# guarded_by this, s */;
+                ^
+1 warning
