@@ -52,6 +52,11 @@ BEGIN
       wf_state(mp)(update_state_MP(update(vn, v), sMP)) IMPLIES
         wf_state(mp)(sMP)
 
+  wf_state_implies_updated_MP_state : LEMMA
+    FORALL (mp : MonitoredProgram, sMP : MPState, vn : string, v : Val) :
+      wf_state(mp)(sMP) IMPLIES
+        wf_state(mp)(update_state_MP(update(vn, v), sMP))
+
   wf_updated_AP_state_implies_wf_state : LEMMA
     FORALL (ap : Program, sAP : APState, vn : string, v : Val) :
       wf_state(ap)(update_state_AP(update(vn, v), sAP)) IMPLIES
@@ -64,6 +69,17 @@ BEGIN
         MP_modeled?(mp)(update_state_MP(update(vn, v), sMP),
                         update_state_AP(update(vn, v), sAP))
 
+  MP_modeled_preserved_by_update2 : LEMMA
+    FORALL (mp : MonitoredProgram)(sMP : MPState, sAP : APState)
+           (upd : [PState -> PState]) :
+      (FORALL (s : PState) : 
+        wf_state(program(mp))(s) IMPLIES
+          wf_state(program(mp))(upd(s))) IMPLIES
+      MP_modeled?(mp)(sMP, sAP) IMPLIES
+        MP_modeled?(mp)(update_state_MP(upd, sMP),
+                        update_state_AP(upd, sAP))
+
+  % TODO: last case left
   MP_modeled_implies_same_num_eval : LEMMA
     FORALL (mp : MonitoredProgram)
            (sMP : MPState, sAP : APState)(n : NumExpr) :
@@ -77,7 +93,8 @@ BEGIN
         eval(b)(pstate(sMP)) = eval(b)(pstate(sAP))
 
 
-  deriv_expr_maintains_equivalence : LEMMA
+  % Main lemmas used in the proof of the correcteness_of_ann_program
+  deriv_expr_maintains_equivalence : THEOREM
     FORALL (mp : MonitoredProgram, ap : Program)
            (e : Expr, v1, v2 : Val)
            (sMP1, sMP2 : MPState, sAP1, sAP2 : APState)
@@ -89,7 +106,7 @@ BEGIN
         v1 = v2 AND
         MP_modeled?(mp)(sMP2, sAP2)
 
-  deriv_stmt_maintains_equivalence : LEMMA
+  deriv_stmt_maintains_equivalence : THEOREM
     FORALL (mp : MonitoredProgram, ap : Program)(n1, n2 : nat)(c : Stmt)
            (sMP1, sMP2 : MPState, sAP1, sAP2 : APState) :
       ap = ann_program(mp) IMPLIES
