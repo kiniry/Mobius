@@ -10,23 +10,24 @@ Require Import "ImplemDomain".
 Module Dom := Make P.
 
 Import Dom.
-Definition f_pre: Prop := True.
-Definition f_norm: Prop := True.
-Definition f_excp: Prop := False.
 
-Definition t_pre: Prop := True.
-Definition t_norm : Prop := True.
-Definition t_excp: Prop := False.
 Variable heap: Heap.t.
 Import Prog.
 Variable p: Program.
 Variable iValue: Z -> value.
 Variable fs_6_6_12: Heap.AdressingMode.
 Variable typeof : Heap.t -> value -> ClassName.
+Variable this: value.
+Variable undef: Location.
 
-
-Definition T_java_lang_NullPointerException :=(javaLang, NullPointerException).
-Variable loc: value -> Location.
+Definition loc (v: value): Location := 
+match v with 
+| Ref r => r
+| _ => undef
+end.
+Lemma simple_loc : forall r, loc (Ref r) = r.
+intros; simpl; auto.
+Qed.
 
 
 

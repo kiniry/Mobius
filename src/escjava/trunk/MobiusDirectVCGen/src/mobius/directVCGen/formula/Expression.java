@@ -14,6 +14,7 @@ public class Expression {
 	
 	/** counter to create anonymous variables */
 	private static int [] varCounters = {0, 0, 0, 0, 0};
+	public static String result = "\\result";
 
 
 	public static QuantVariable var(String str) {

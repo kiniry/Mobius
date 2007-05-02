@@ -309,16 +309,16 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn{
 
 	
 	
-	public Post assign(BinaryExpr expr, VCEntry post) {
+	public Post assign(BinaryExpr expr, VCEntry entry) {
 		Expr right = expr.right;
 		Expr left = expr.left;
 		if(left instanceof VariableAccess) {
 			VariableAccess va = (VariableAccess) left;
 			QuantVariableRef var = Expression.rvar(va.decl);
-			QuantVariableRef tmpvar = post.post.var;
-			Post newPost = new Post(tmpvar, post.post.post.subst(var, tmpvar));
-			post.post = newPost;
-			Post pre = getPre(right, post);
+			QuantVariableRef tmpvar = entry.post.var;
+			Post newPost = new Post(tmpvar, entry.post.post.subst(var, tmpvar));
+			entry.post = newPost;
+			Post pre = getPre(right, entry);
 			return pre;
 
 		}
@@ -329,22 +329,16 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn{
 				case TagConstants.EXPROBJECTDESIGNATOR: {
 					// can be null
 					//System.out.println(field.decl.parent);
-					ExprObjectDesignator eod = (ExprObjectDesignator) od;
 					QuantVariable f = Expression.var(field.decl);
 					Sort s = f.type;
 					QuantVariableRef val = Expression.rvar(s);
 					QuantVariableRef obj = Expression.rvar(Ref.sort);
-					field.od.type();
-					post.post = new Post(val, Logic.and(
-							Logic.implies(Logic.not(Logic.equalsNull(obj)), 
-									post.post.post.subst(Heap.var, 
-														 Heap.store(Heap.var, obj, f, val))), 
-							Logic.implies(Logic.equalsNull(obj), getNewExcpPost(Type.javaLangNullPointerException(), post))
-														 ));
-					Post pre = getPre(right, post);
-					post.post = new Post(obj, pre.post);
-					pre = getPre(eod.expr, post);
-					return pre;
+					
+					entry.post = new Post(val, entry.post.post.subst(Heap.var, 
+														 Heap.store(Heap.var, obj, f, val)));
+					Post pre = getPre(right, entry);
+					entry.post = new Post(obj, pre.post);
+					return getPre(od, entry);
 
 				}
 				case TagConstants.SUPEROBJECTDESIGNATOR:
@@ -355,15 +349,17 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn{
 					QuantVariable f = Expression.var(field.decl);
 					Sort s = f.type;
 					QuantVariableRef val = Expression.rvar(s);
-					Post p = new Post(val, post.post.post.subst(Heap.var, Heap.store(Heap.var, f, val)));
-					post.post = p;
-					Post pre = getPre(right, post);
-					return pre;
+					Post p = new Post(val, entry.post.post.subst(Heap.var, Heap.store(Heap.var, f, val)));
+					entry.post = p;
+					Post pre = getPre(right, entry);
+					entry.post = pre;
+					return getPre(od, entry);
 				}
 				default: 
 					throw new IllegalArgumentException("Unknown object designator type ! " + od);
 				
 			}
+			
 		}
 	}
 

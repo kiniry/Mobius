@@ -1,6 +1,7 @@
 package mobius.directVCGen.formula;
 
 import java.util.HashMap;
+import java.util.Vector;
 
 import javafe.ast.VarInit;
 import javafe.tc.FlowInsensitiveChecks;
@@ -145,5 +146,15 @@ public class Type{
 	 */
 	public static Sort typeToSort(javafe.ast.Type t) {
 		return Formula.lf.typeToSort(t);
+	}
+	
+	public static Vector<String> getAllTypes() {
+		Formula.lf.dumpBuilder = Formula.lf.builder;
+		Vector<String> v = new Vector<String>();
+		for(Term t: revtyp.keySet()) {
+			v.add(t.dump().toString());
+		}
+		Formula.lf.dumpBuilder = null;
+		return v;
 	}
 }

@@ -161,6 +161,9 @@ public class StmtVCGen extends ExpressionVisitor {
 	public /*@non_null*/ Object visitEvalStmt(/*@non_null*/ EvalStmt x, Object o) {
 		VCEntry vce = (VCEntry) o;
 		vce.post = treatAnnot( vce, annot.getAnnotPost(x));
+		Post p = vce.post;
+		vce.post = new Post(Expression.rvar(Type.getSort(x.expr)),
+							p.post);
 		vce.post = (Post)x.expr.accept(exprVisitor, vce);
 		return treatAnnot(vce, annot.getAnnotPre(x));
 	}

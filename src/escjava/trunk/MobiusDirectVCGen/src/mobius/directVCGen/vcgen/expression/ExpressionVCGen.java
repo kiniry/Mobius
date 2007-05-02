@@ -4,11 +4,14 @@ import java.util.Vector;
 
 import javafe.ast.CastExpr;
 import javafe.ast.CondExpr;
+import javafe.ast.ExprObjectDesignator;
 import javafe.ast.ExprVec;
 import javafe.ast.FormalParaDecl;
 import javafe.ast.FormalParaDeclVec;
 import javafe.ast.InstanceOfExpr;
 import javafe.ast.MethodInvocation;
+import javafe.ast.NewInstanceExpr;
+import javafe.ast.ObjectDesignator;
 import mobius.directVCGen.formula.Bool;
 import mobius.directVCGen.formula.Expression;
 import mobius.directVCGen.formula.Heap;
@@ -19,6 +22,7 @@ import mobius.directVCGen.formula.Type;
 import mobius.directVCGen.vcgen.stmt.StmtVCGen;
 import mobius.directVCGen.vcgen.struct.Post;
 import mobius.directVCGen.vcgen.struct.VCEntry;
+import escjava.ast.TagConstants;
 import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
 
@@ -42,12 +46,17 @@ public class ExpressionVCGen extends BinaryExpressionVCGen{
 		Post normalPost = Lookup.normalPostcondition(mi.decl);
 		Post excpPost = Lookup.exceptionalPostcondition(mi.decl);
 		Term pre = Lookup.precondition(mi.decl);
+
+		
+		// first: the exceptional post
 		QuantVariableRef exc = Expression.rvar(Ref.sort);
 		Term tExcp = Logic.forall(exc.qvar, Logic.implies(excpPost.substWith(exc), 
 				               		StmtVCGen.getExcpPost(Type.javaLangThrowable(), entry).substWith(exc)));
-		Term tNormal = normalPost.substWith(entry.post.var);
-		QuantVariableRef res = Expression.rvar(entry.post.var.getSort());
-		tNormal = Logic.forall(res.qvar, Logic.implies(tNormal, entry.post.substWith(res)));
+		// the normal post
+		QuantVariableRef res = entry.post.var;		
+		Term tNormal = normalPost.substWith(res);
+		tNormal = Logic.forall(res, Logic.implies(tNormal, entry.post.substWith(res)));
+
 		entry.post = new Post(Logic.and(pre, Logic.implies(pre, Logic.and(tNormal, tExcp))));
 		Vector<QuantVariableRef> v = mkArguments(mi);
 		ExprVec ev = mi.args;
@@ -55,9 +64,12 @@ public class ExpressionVCGen extends BinaryExpressionVCGen{
 			entry.post = new Post(v.elementAt(i), entry.post.post);
 			entry.post = getPre(ev.elementAt(i), entry);
 		}
-		
+		entry.post = new Post(Ref.varthis, entry.post.post);
+		entry.post = getPre(mi.od, entry);
 		return entry.post;
 	}
+
+
 
 	public Post instanceOf(InstanceOfExpr x, VCEntry entry) {
 		Post p = entry.post;
@@ -106,6 +118,39 @@ public class ExpressionVCGen extends BinaryExpressionVCGen{
 		e.post = p;
 		p = getPre(x.expr, e);
 		return p;
+	}
+
+	public Post objectDesignator(ObjectDesignator od, VCEntry entry) {
+		switch(od.getTag()) {
+			case TagConstants.EXPROBJECTDESIGNATOR: {
+				// can be null
+				//System.out.println(field.decl.parent);
+				ExprObjectDesignator eod = (ExprObjectDesignator) od;
+				//QuantVariable f = Expression.var(field.decl);
+				//Sort s = f.type;
+				QuantVariableRef obj = entry.post.var;
+				entry.post = new Post(obj, Logic.and(
+						Logic.implies(Logic.not(Logic.equalsNull(obj)), entry.post.post), 
+						Logic.implies(Logic.equalsNull(obj), getNewExcpPost(Type.javaLangNullPointerException(), entry))
+													 ));
+				return getPre(eod.expr, entry);
+
+			}
+			case TagConstants.SUPEROBJECTDESIGNATOR:
+				// TODO: the case for super
+			case TagConstants.TYPEOBJECTDESIGNATOR: {
+				// cannot be null
+				//System.out.println(field);
+				return entry.post;
+			}
+			default: 
+				throw new IllegalArgumentException("Unknown object designator type ! " + od);
+			
+		}
+	}
+
+	public Post newInstance(NewInstanceExpr ni, VCEntry entry) {
+		return null;
 	}
 	
 	

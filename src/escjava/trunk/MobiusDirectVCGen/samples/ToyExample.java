@@ -1,10 +1,10 @@
 
 public class ToyExample {
 	int f;
-	public void f() {
+	public void f(ToyExample a) {
     int i = 1;
     ToyExample j = null;
-    ;
+    j = a;
     ((A) j).t(i).f = (((i == 1)? 2: 1) + (A.fs = 0));
     
 //    if(i == 0);

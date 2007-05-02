@@ -14,6 +14,7 @@ import javafe.ast.LiteralExpr;
 import javafe.ast.MethodInvocation;
 import javafe.ast.NewArrayExpr;
 import javafe.ast.NewInstanceExpr;
+import javafe.ast.ObjectDesignator;
 import javafe.ast.ParenExpr;
 import javafe.ast.ThisExpr;
 import javafe.ast.UnaryExpr;
@@ -231,6 +232,14 @@ public class ExpressionVisitor extends ABasicVisitor {
 		
 	}
 
+	public /*@non_null*/ Object visitNewInstanceExpr(/*@non_null*/ NewInstanceExpr x, Object o) {
+		return vcg.newInstance(x, (VCEntry) o);
+	}
+	public /*@non_null*/ Object visitObjectDesignator(/*@non_null*/ ObjectDesignator od, Object vce) {
+	    return vcg.objectDesignator(od, (VCEntry) vce);
+	}
+	
+	
 	public /*@non_null*/ Object visitVarInit(/*@non_null*/ VarInit x, Object o) {
 		return visitASTNode(x, o);
 	}
@@ -240,9 +249,7 @@ public class ExpressionVisitor extends ABasicVisitor {
 	public /*@non_null*/ Object visitArrayRefExpr(/*@non_null*/ ArrayRefExpr x, Object o) {
 		return visitExpr(x, o);
 	}
-	public /*@non_null*/ Object visitNewInstanceExpr(/*@non_null*/ NewInstanceExpr x, Object o) {
-		return visitExpr(x, o);
-	}
+
 
 	public /*@non_null*/ Object visitNewArrayExpr(/*@non_null*/ NewArrayExpr x, Object o) {
 		return visitExpr(x, o);
@@ -253,4 +260,5 @@ public class ExpressionVisitor extends ABasicVisitor {
 	public /*@non_null*/ Object visitAmbiguousMethodInvocation(/*@non_null*/ AmbiguousMethodInvocation x, Object o) {
 	    return visitExpr(x, o);
 	}
+
 }

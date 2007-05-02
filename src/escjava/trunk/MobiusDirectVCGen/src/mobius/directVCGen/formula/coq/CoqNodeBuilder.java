@@ -2,6 +2,8 @@ package mobius.directVCGen.formula.coq;
 
 import mobius.directVCGen.formula.Formula;
 import escjava.sortedProver.EscNodeBuilder;
+import escjava.sortedProver.Lifter.SortVar;
+import escjava.sortedProver.Lifter.Term;
 
 /*@ non_null_by_default @*/
 public class CoqNodeBuilder extends EscNodeBuilder {
@@ -114,7 +116,7 @@ public class CoqNodeBuilder extends EscNodeBuilder {
 		public String toString() {
 			String res  = "(forall";
 			for(QuantVar v: vars) {
-				res += " (" + normalize(v.name) + ":" + getCoqSort(v.type) + ")";
+				res += " (" + normalize(v.name) + ":" + buildSort(v.type) + ")";
 			}
 			res += ", " + args[0] + ")";
 			return res;
@@ -138,7 +140,7 @@ public class CoqNodeBuilder extends EscNodeBuilder {
 
 		public String toString() {
 			String res  = "(exists";
-			res +=  normalize(vars[0].name) + ":" + getCoqSort(vars[0].type);
+			res +=  normalize(vars[0].name) + ":" + buildSort(vars[0].type);
 			res += ", " + args[0] + ")";
 			return res;
 		}
@@ -146,26 +148,32 @@ public class CoqNodeBuilder extends EscNodeBuilder {
 	}
 
 
-	private String getCoqSort(Sort type) {
-		if(type == sortPred) {
-			return "Prop";
+	public SAny buildSort(Sort type) {
+		if(type instanceof SortVar) {
+			type = type.theRealThing();
 		}
-		if(type == sortInt) {
-			return "Z";
+		if(type.equals(sortPred)) {
+			return new CAny("Prop");
 		}
-		if(type == sortReal) {
-			return "Real";
+		if(type.equals(sortInt)) {
+			return new CAny("Z");
 		}
-		if(type == sortRef) {
-			return "value";
+		if(type.equals(sortReal)) {
+			return new CAny("Real");
 		}
-		if(type == sortBool) {
-			return "bool";
+		if(type.equals(sortRef)) {
+			return new CAny("value");
 		}
-		if(type == sortMap) {
-			return "Heap.t";
+		if(type.equals(sortBool)) {
+			return new CAny("bool");
 		}
-		throw new IllegalArgumentException("Unknown sort: " + type);
+		if(type.equals(sortMap)) {
+			return new CAny("Heap.t");
+		}
+		else {
+			return new CAny("value");
+		}
+		//throw new IllegalArgumentException("Unknown sort: " + type + " " + type.getClass());
 	}
 	
 	
@@ -266,29 +274,34 @@ public class CoqNodeBuilder extends EscNodeBuilder {
 	@Override
 	public SAny buildQVarRef(QuantVar v) {
 		String name = normalize(v.name);
-		if (v.type == sortBool) {
+		Sort s = v.type;
+		if(s instanceof SortVar) {
+			s = s.theRealThing();
+		}
+		
+		if (s.equals(sortBool)) {
 			return new CBool(name);
 		}
-		else if (v.type.equals(sortRef)) {
+		else if (s.equals(sortRef)) {
 			return new CRef(name);
 		}
-		else if (v.type.equals(sortInt)) {
+		else if (s.equals(sortInt)) {
 			return new CInt(name);
 		}
-		else if (v.type.equals(sortReal)) {
+		else if (s.equals(sortReal)) {
 			return new CReal(name);
 		}
-		else if (v.type.equals(sortPred)) {
+		else if (s.equals(sortPred)) {
 			return new CPred(name);
 		}
-		else if (v.type.equals(sortMap)) {
+		else if (s.equals(sortMap)) {
 			return new CMap(name);
 		}
-		else if (v.type.equals(sortAny)) {
+		else if (s.equals(sortAny)) {
 			return new CAny(name);
 		}
 		else
-			throw new IllegalArgumentException("Unknown Type: " + v.type);
+			throw new IllegalArgumentException("Unknown Type: " + s.getClass() + " " + sortRef.getClass());
 	}
 
 	private String normalize(String name) {
@@ -296,6 +309,7 @@ public class CoqNodeBuilder extends EscNodeBuilder {
 			name = name.substring(1);
 		name = name.replace(':', '_');
 		name = name.replace('.', '_');
+		name = name.replace('\\', '_');
 		return name;
 	}
 
@@ -403,8 +417,10 @@ public class CoqNodeBuilder extends EscNodeBuilder {
 									args[0], args[1]};
 			return new CPred("subclass_name", realargs);
 		}
-		
-		throw new IllegalArgumentException("Unknown symbol: " + fn);
+		else {
+			return new CPred(fn.name, args);
+		}
+		//throw new IllegalArgumentException("Unknown symbol: " + fn);
 	}
 	
 	@Override

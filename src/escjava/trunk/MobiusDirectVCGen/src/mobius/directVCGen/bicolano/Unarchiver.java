@@ -4,16 +4,21 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.LineNumberReader;
+import java.io.PrintStream;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 public class Unarchiver {
-	private final File bicodir;
-
+	private final File bicofile;
+	private static final String bicodir = "Formalisation" + File.separator + "Bicolano";
+	private static final String libdir = "Formalisation" + File.separator + "Library";
+	private static final String libmapdir = libdir + File.separator + "Map";
 	public Unarchiver(File bicodir) {
-		this.bicodir = bicodir;
+		this.bicofile = bicodir;
 		System.out.println("Bicolano file's path is: " + bicodir);
 		if(!bicodir.canRead()) {
 			System.out.println("Bad path given to find Bicolano, exiting... ");
@@ -33,7 +38,7 @@ public class Unarchiver {
 			System.out.println("Bicolano seems not present in the basedir, inflating it.");
 		}
 
-		JarFile bico = new JarFile(bicodir);
+		JarFile bico = new JarFile(bicofile);
 		EntryIterator iter = new EntryIterator(bico.entries());
 
 		for (JarEntry entry: iter) {
@@ -46,7 +51,24 @@ public class Unarchiver {
 				f.getParentFile().mkdirs();
 				
 			}
-
+			if(name.startsWith("defs_")) {
+				// special case for prelude file
+				PrintStream out = new PrintStream(new FileOutputStream(f));
+				LineNumberReader in = new LineNumberReader(new InputStreamReader(bico.getInputStream(entry)));
+				// we skip the first three lines
+				in.readLine(); in.readLine(); in.readLine();
+				// and we replace them by system dependent lines
+				out.println("Add LoadPath \"" + basedir.getAbsolutePath() + File.separator + bicodir + "\".");
+				out.println("Add LoadPath \"" + basedir.getAbsolutePath() + File.separator + libdir + "\".");
+				out.println("Add LoadPath \"" + basedir.getAbsolutePath() + File.separator + libmapdir + "\".");
+				String str;
+				while((str = in.readLine()) != null) {
+					out.println(str);
+				}
+				out.close();
+				in.close();
+				continue;
+			}
 			FileOutputStream out = (new FileOutputStream(f));
 			InputStream in = bico.getInputStream(entry);
 			copy(in, out);
