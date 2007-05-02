@@ -316,7 +316,7 @@ public class JmlVisitor extends VisitorArgResult{
 
 	public /*@non_null*/ Object visitVarDeclStmt(/*@non_null*/ VarDeclStmt x, Object o) {
 		//It's only called if we have a ghost variable declaration
-		return null;
+		return Expression.rvar(x.decl.id.toString(),Type.typeToSort(x.decl.type));
 	}	
 	
 	@Override
