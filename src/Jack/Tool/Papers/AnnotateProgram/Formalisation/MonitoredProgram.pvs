@@ -197,5 +197,20 @@ BEGIN
     FORALL (mp : MonitoredProgram) :
       wf_MP(mp) IMPLIES wf_state(mp)(initial_MP_state(mp))
 
+  deriv_expr_yields_wf_state_MP : LEMMA
+    FORALL (mp : MonitoredProgram, e : Expr, v : Val)
+           (sigma1, sigma2 : MPState, n : nat) :
+      wf_MP(mp) IMPLIES
+      wf_state(mp)(sigma1) IMPLIES
+      deriv_expr(mp)(e, sigma1, v, sigma2)(n) IMPLIES
+        wf_state(mp)(sigma2)
+
+  deriv_stmt_yields_wf_state_MP : LEMMA
+    FORALL (mp : MonitoredProgram, c : Stmt, sigma1, sigma2 : MPState, n : nat) :
+      wf_MP(mp) IMPLIES
+      wf_state(mp)(sigma1) IMPLIES
+      deriv_stmt(mp)(c, sigma1, sigma2)(n) IMPLIES
+        wf_state(mp)(sigma2)
+
 
 END MonitoredProgramSemantics

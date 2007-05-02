@@ -24,96 +24,95 @@ BEGIN
       gvs(sMP)(n) = gvs(sAP)(n)
 
   % Says if an state of a MP is correctly modeled by a state of an AP
-  MP_modeled?(mp : MonitoredProgram)
-             (sMP : MPState, sAP : APState) : boolean =
-    ann_program_pre(mp) AND
-    wf_state(mp)(sMP) AND
-    wf_state(ann_program(mp))(sAP) AND
-      MVA_modeled?(astate(sMP), sAP) AND 
-      Program_modeled?(sMP, sAP)
+  MP_modeled?(sMP : MPState, sAP : APState) : boolean =
+    MVA_modeled?(astate(sMP), sAP) AND 
+    Program_modeled?(sMP, sAP)
 
+  related_states(mp : MonitoredProgram, ap : Program)
+                (sMP : MPState, sAP : APState) : boolean =
+    ann_program_pre(mp) AND
+    ap = ann_program(mp) AND
+    wf_state(mp)(sMP) AND
+    wf_state(ap)(sAP) AND
+    MP_modeled?(sMP, sAP)
+
+  related_states_implies_wf_mp_and_ap : LEMMA % :-)
+    FORALL (mp : MonitoredProgram, ap : Program)
+           (sMP : MPState, sAP : APState) :
+      related_states(mp, ap)(sMP, sAP) IMPLIES
+        wf_MP(mp) AND wf_Program(ap)
 
   IMPORTING EpsilonProps  % imports choose_singleton?
 
   initial_states_are_equivalent : LEMMA
     FORALL (mp : MonitoredProgram) :
-      MP_modeled?(mp)(initial_MP_state(mp), 
-                      initial_AP_state(ann_program(mp)))
+      MP_modeled?(initial_MP_state(mp), 
+                  initial_AP_state(ann_program(mp)))
 
 
   % Properties about MP_modeled?
 
   MP_modeled_implies_same_exception : LEMMA % :-)
-    FORALL (mp : MonitoredProgram)(sMP : MPState, sAP : APState) :
-      MP_modeled?(mp)(sMP, sAP) IMPLIES ex(pstate(sMP)) = ex(pstate(sAP))
+    FORALL (sMP : MPState, sAP : APState) :
+      MP_modeled?(sMP, sAP) IMPLIES ex(pstate(sMP)) = ex(pstate(sAP))
 
-  wf_updated_MP_state_implies_wf_state : LEMMA
-    FORALL (mp : MonitoredProgram, sMP : MPState, vn : string, v : Val) :
-      wf_state(mp)(update_state_MP(update(vn, v), sMP)) IMPLIES
-        wf_state(mp)(sMP)
-
-  wf_state_implies_updated_MP_state : LEMMA
-    FORALL (mp : MonitoredProgram, sMP : MPState, vn : string, v : Val) :
-      wf_state(mp)(sMP) IMPLIES
-        wf_state(mp)(update_state_MP(update(vn, v), sMP))
-
-  wf_updated_AP_state_implies_wf_state : LEMMA
-    FORALL (ap : Program, sAP : APState, vn : string, v : Val) :
-      wf_state(ap)(update_state_AP(update(vn, v), sAP)) IMPLIES
-        wf_state(ap)(sAP)
-
-  MP_modeled_preserved_by_update : LEMMA
-    FORALL (mp : MonitoredProgram)
+  MP_modeled_preserved_by_update : LEMMA  % :-)
+    FORALL (mp : MonitoredProgram, ap : Program)
            (sMP : MPState, sAP : APState)(vn : string, v : Val) :
-      MP_modeled?(mp)(sMP, sAP) IMPLIES 
-        MP_modeled?(mp)(update_state_MP(update(vn, v), sMP),
-                        update_state_AP(update(vn, v), sAP))
+      related_states(mp, ap)(sMP, sAP) IMPLIES
+        MP_modeled?(update_state_MP(update(vn, v), sMP),
+                    update_state_AP(update(vn, v), sAP))
 
-  MP_modeled_preserved_by_update2 : LEMMA
-    FORALL (mp : MonitoredProgram)(sMP : MPState, sAP : APState)
-           (upd : [PState -> PState]) :
-      (FORALL (s : PState) : 
-        wf_state(program(mp))(s) IMPLIES
-          wf_state(program(mp))(upd(s))) IMPLIES
-      MP_modeled?(mp)(sMP, sAP) IMPLIES
-        MP_modeled?(mp)(update_state_MP(upd, sMP),
-                        update_state_AP(upd, sAP))
+  % Only remains to show that down(x) = y IMPLIES x = up(y) which seems obvious
+  MP_modeled_implies_cp_not_halted : LEMMA
+    FORALL (mp : MonitoredProgram, sMP : MPState, sAP : APState) :
+      MP_modeled?(sMP, sAP) IMPLIES
+      NOT up?(ex(pstate(sAP))) IMPLIES 
+        NOT cp(astate(sMP)) = halted
+
+  MP_modeled_preserved_by_update2 : LEMMA % :-)
+    FORALL (mp : MonitoredProgram, ap : Program)
+           (sMP : MPState, sAP : APState)(upd : [PState -> PState]) :
+      related_states(mp, ap)(sMP, sAP) IMPLIES
+      NOT up?(ex(pstate(sAP))) IMPLIES
+        MP_modeled?(update_state_MP(upd, sMP),
+                    update_state_AP(upd, sAP))
 
   % TODO: last case left
   MP_modeled_implies_same_num_eval : LEMMA
-    FORALL (mp : MonitoredProgram)
+    FORALL (mp : MonitoredProgram, ap : Program)
            (sMP : MPState, sAP : APState)(n : NumExpr) :
-      MP_modeled?(mp)(sMP, sAP) IMPLIES
+      related_states(mp, ap)(sMP, sAP) IMPLIES
         eval(n)(pstate(sMP)) = eval(n)(pstate(sAP))
 
+  % TODO: last case left
   MP_modeled_implies_same_bool_eval : LEMMA
-    FORALL (mp : MonitoredProgram)
+    FORALL (mp : MonitoredProgram, ap : Program)
            (sMP : MPState, sAP : APState)(b : BoolExpr) :
-      MP_modeled?(mp)(sMP, sAP) IMPLIES
+      related_states(mp, ap)(sMP, sAP) IMPLIES
         eval(b)(pstate(sMP)) = eval(b)(pstate(sAP))
 
 
   % Main lemmas used in the proof of the correcteness_of_ann_program
+
   deriv_expr_maintains_equivalence : THEOREM
     FORALL (mp : MonitoredProgram, ap : Program)
            (e : Expr, v1, v2 : Val)
            (sMP1, sMP2 : MPState, sAP1, sAP2 : APState)
            (n1, n2 : nat) :
-      ap = ann_program(mp) IMPLIES
-      MP_modeled?(mp)(sMP1, sAP1) IMPLIES
+      related_states(mp, ap)(sMP1, sAP1) IMPLIES
       deriv_expr(mp)(e, sMP1, v1, sMP2)(n1) IMPLIES
       deriv_expr(ap)(e, sAP1, v2, sAP2)(n2) IMPLIES
         v1 = v2 AND
-        MP_modeled?(mp)(sMP2, sAP2)
+        MP_modeled?(sMP2, sAP2)
 
   deriv_stmt_maintains_equivalence : THEOREM
     FORALL (mp : MonitoredProgram, ap : Program)(n1, n2 : nat)(c : Stmt)
            (sMP1, sMP2 : MPState, sAP1, sAP2 : APState) :
-      ap = ann_program(mp) IMPLIES
-      MP_modeled?(mp)(sMP1, sAP1) IMPLIES
+      related_states(mp, ap)(sMP1, sAP1) IMPLIES
       deriv_stmt(mp)(c, sMP1, sMP2)(n1) IMPLIES
       deriv_stmt(ap)(c, sAP1, sAP2)(n2) IMPLIES
-        MP_modeled?(mp)(sMP2, sAP2)
+        MP_modeled?(sMP2, sAP2)
 
 
   % The main result
@@ -123,7 +122,7 @@ BEGIN
       ann_program_pre(mp) IMPLIES
       run_monitored_program(mp)(main, arg)(sMP)(n) IMPLIES
       run_annotated_program(ann_program(mp))(main, arg)(sAP)(m) IMPLIES
-        MP_modeled?(mp)(sMP, sAP)
+        MP_modeled?(sMP, sAP)
 
 
 END Equivalence

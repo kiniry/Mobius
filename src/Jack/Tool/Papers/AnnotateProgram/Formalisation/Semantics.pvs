@@ -582,22 +582,6 @@ BEGIN
           sigma1 = sigma2
 
 
-  deriv_expr_yields_wf_state : LEMMA
-    FORALL (p : FullProgram, e : Expr, v : Val)
-           (sigma1, sigma2 : FullState, n : nat) :
-      wf_Program(program(p)) IMPLIES
-      wf_state(program(p))(pstate(sigma1)) IMPLIES
-      deriv_expr(p)(e, sigma1, v, sigma2)(n) IMPLIES
-        wf_state(program(p))(pstate(sigma2))
-
-  deriv_stmt_yields_wf_state : LEMMA
-    FORALL (p : FullProgram, c : Stmt, sigma1, sigma2 : FullState, n : nat) :
-      wf_Program(program(p)) IMPLIES
-      wf_state(program(p))(pstate(sigma1)) IMPLIES
-      deriv_stmt(p)(c, sigma1, sigma2)(n) IMPLIES
-        wf_state(program(p))(pstate(sigma2))
-
-
   run_FullProgram(p : FullProgram)(main : Method, arg : int)
                  (s1, s2 : FullState)(n : nat) : boolean =
     LET c  = StmtExpr(MethodCall(RExpr(RefVarEval(This)),
@@ -778,6 +762,21 @@ BEGIN
   wf_initial_AP_state : LEMMA
     FORALL (p : Program) :
       wf_Program(p) IMPLIES wf_state(p)(initial_AP_state(p))
+
+  deriv_expr_yields_wf_state_AP : LEMMA
+    FORALL (p : Program, e : Expr, v : Val)
+           (sigma1, sigma2 : APState, n : nat) :
+      wf_Program(p) IMPLIES
+      wf_state(p)(sigma1) IMPLIES
+      deriv_expr(p)(e, sigma1, v, sigma2)(n) IMPLIES
+        wf_state(p)(sigma2)
+
+  deriv_stmt_yields_wf_state_AP : LEMMA
+    FORALL (p : Program, c : Stmt, sigma1, sigma2 : APState, n : nat) :
+      wf_Program(p) IMPLIES
+      wf_state(p)(sigma1) IMPLIES
+      deriv_stmt(p)(c, sigma1, sigma2)(n) IMPLIES
+        wf_state(p)(sigma2)
 
 
 END AnnotatedProgramSemantics

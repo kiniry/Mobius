@@ -2,9 +2,44 @@
  (MVA_modeled?_TCC1 0
   (MVA_modeled?_TCC1-1 nil 3386483209 nil ("" (subtype-tcc) nil nil)
    unchecked nil nil nil nil nil))
- (MP_modeled?_TCC1 0
-  (MP_modeled?_TCC1-1 nil 3386667098 nil ("" (subtype-tcc) nil nil)
+ (related_states_TCC1 0
+  (related_states_TCC1-1 nil 3387016743 nil ("" (subtype-tcc) nil nil)
    unchecked nil nil nil nil nil))
+ (related_states_implies_wf_mp_and_ap 0
+  (related_states_implies_wf_mp_and_ap-1 nil 3387084141 3387084246
+   ("" (skosimp*)
+    (("" (expand "related_states")
+      (("" (flatten)
+        (("" (use "ann_program_yields_wf_program")
+          (("" (expand "ann_program_pre")
+            (("" (prop) (("" (replace -4) (("" (propax) nil nil)) nil))
+              nil))
+            nil))
+          nil))
+        nil))
+      nil))
+    nil)
+   proved
+   ((related_states const-decl "boolean" Equivalence nil)
+    (ann_program_yields_wf_program formula-decl nil AnnotateProgram
+     nil)
+    (CP formal-nonempty-type-decl nil Equivalence nil)
+    (nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (below type-eq-decl nil nat_types nil)
+    (character type-decl nil character_adt nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (char? adt-recognizer-decl "[character -> boolean]" character_adt
+     nil)
+    (char type-eq-decl nil strings nil)
+    (string type-eq-decl nil strings nil)
+    (MVA type-eq-decl nil MVA nil)
+    (Program type-eq-decl nil Program nil)
+    (MonitoredProgram type-eq-decl nil MonitoredProgram nil)
+    (wf_MP const-decl "boolean" WellFormedMonitoredProgram nil)
+    (ann_program_pre const-decl "boolean" AnnotateProgram nil)
+    (mp!1 skolem-const-decl "MonitoredProgram[CP, string]" Equivalence
+     nil))
+   105849 310 t shostak))
  (initial_states_are_equivalent 0
   (initial_states_are_equivalent-1 nil 3383291365 3384516249
    ("" (skosimp)
@@ -107,55 +142,106 @@
     nil)
    unfinished nil 2658012 15280 t shostak))
  (MP_modeled_implies_same_exception 0
-  (MP_modeled_implies_same_exception-1 nil 3386411363 3386591983
+  (MP_modeled_implies_same_exception-1 nil 3386411363 3387017059
    ("" (skosimp)
     (("" (expand "MP_modeled?")
       (("" (expand "Program_modeled?") (("" (assert) nil nil)) nil))
       nil))
     nil)
-   unfinished ((Program_modeled? const-decl "boolean" Equivalence nil))
-   52363 40 t shostak))
+   unfinished
+   ((Program_modeled? const-decl "boolean" Equivalence nil)
+    (MP_modeled? const-decl "boolean" Equivalence nil))
+   68 40 t shostak))
  (MP_modeled_preserved_by_update 0
-  (MP_modeled_preserved_by_update-2 nil 3386678151 3387011723
+  (MP_modeled_preserved_by_update-2 nil 3386678151 3387016920
    ("" (skosimp*)
-    (("" (expand "MP_modeled?")
-      (("" (prop)
-        (("1" (use "wf_state_implies_updated_MP_state")
-          (("1" (assert) nil nil)) nil)
-         ("2" (use "ann_program_preserves_state_vars")
-          (("2" (assert)
-            (("2" (lemma "wf_state_vars_local_or_field")
-              (("2"
-                (inst -1 "ann_program(mp!1)" "pstate(sAP!1)" "vn!1")
-                (("2" (split -1)
-                  (("1" (hide-all-but (-1 -2 -4 1))
-                    (("1" (flatten)
-                      (("1"
-                        (expand* "update_state_MP" "update_state_AP"
-                         "update" "update_field" "update_local")
-                        (("1" (lift-if) (("1" (postpone) nil nil))
-                          nil))
+    (("" (expand "related_states")
+      (("" (flatten)
+        ((""
+          (expand* "MP_modeled?" "update_state_MP" "update_state_AP")
+          (("" (prop)
+            (("1"
+              (expand* "MVA_modeled?" "update" "update_local"
+               "update_field")
+              nil nil)
+             ("2"
+              (expand* "Program_modeled?" "update" "update_local"
+               "update_field")
+              (("2" (use "ann_program_preserves_state_vars")
+                (("2" (assert)
+                  (("2" (lemma "wf_state_vars_local_or_field")
+                    (("2"
+                      (inst -1 "ann_program(mp!1)" "pstate(sAP!1)"
+                       "vn!1")
+                      (("2" (split -1)
+                        (("1" (flatten)
+                          (("1" (lift-if)
+                            (("1" (lift-if) (("1" (assert) nil nil))
+                              nil))
+                            nil))
+                          nil)
+                         ("2" (expand "wf_state" -4)
+                          (("2" (flatten -4) nil nil)) nil))
                         nil))
-                      nil))
-                    nil)
-                   ("2" (lemma "wf_updated_AP_state_implies_wf_state")
-                    (("2" (use "wf_updated_AP_state_implies_wf_state")
-                      (("2" (assert) (("2" (postpone) nil nil)) nil))
                       nil))
                     nil))
                   nil))
                 nil))
               nil))
             nil))
-          nil)
-         ("3" (use "wf_updated_AP_state_implies_wf_state")
-          (("3" (assert) (("3" (postpone) nil nil)) nil)) nil)
-         ("4" (use "wf_updated_AP_state_implies_wf_state")
-          (("4" (assert) (("4" (postpone) nil nil)) nil)) nil))
+          nil))
         nil))
       nil))
     nil)
-   unfinished nil 812999 1450 t nil)
+   unfinished
+   ((related_states const-decl "boolean" Equivalence nil)
+    (update_state_MP const-decl "(update_FullState_type)"
+     MonitoredProgramSemantics nil)
+    (update_state_AP const-decl "(update_FullState_type)"
+     AnnotatedProgramSemantics nil)
+    (MP_modeled? const-decl "boolean" Equivalence nil)
+    (Program_modeled? const-decl "boolean" Equivalence nil)
+    (Val type-decl nil Val_adt nil) (JType type-decl nil JType_adt nil)
+    (FieldDecl type-eq-decl nil Program nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (GhostVarDecl type-eq-decl nil Program nil)
+    (Expr type-decl nil Expr_adt nil)
+    (ArgDecl type-eq-decl nil Program nil)
+    (Stmt type-decl nil Stmt_adt nil)
+    (LocalVarDecl type-eq-decl nil Program nil)
+    (Method type-eq-decl nil Program nil)
+    (lift type-decl nil lift_adt nil)
+    (Class type-eq-decl nil Program nil)
+    (wf_MP const-decl "boolean" WellFormedMonitoredProgram nil)
+    (ann_program const-decl "Program" AnnotateProgram nil)
+    (Excpt type-decl nil Excpt_adt nil)
+    (PSt type-eq-decl nil State nil)
+    (wf_state const-decl "boolean" AnnotatedProgramSemantics nil)
+    (wf_state_vars_local_or_field formula-decl nil State nil)
+    (APState type-eq-decl nil AnnotatedProgramSemantics nil)
+    (MonitoredProgram type-eq-decl nil MonitoredProgram nil)
+    (Program type-eq-decl nil Program nil)
+    (MVA type-eq-decl nil MVA nil)
+    (MPState type-eq-decl nil MonitoredProgramSemantics nil)
+    (PState type-eq-decl nil State nil)
+    (Store type-eq-decl nil State nil)
+    (AState type-eq-decl nil MVASemantics nil)
+    (string type-eq-decl nil strings nil)
+    (char type-eq-decl nil strings nil)
+    (char? adt-recognizer-decl "[character -> boolean]" character_adt
+     nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (character type-decl nil character_adt nil)
+    (below type-eq-decl nil nat_types nil)
+    (nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (CP formal-nonempty-type-decl nil Equivalence nil)
+    (ann_program_preserves_state_vars formula-decl nil
+     AnnotateProgramProperties nil)
+    (MVA_modeled? const-decl "boolean" Equivalence nil)
+    (update const-decl "PState" State nil)
+    (update_local const-decl "PState" State nil)
+    (update_field const-decl "PState" State nil))
+   92452 570 t nil)
   (MP_modeled_preserved_by_update-1 nil 3386476534 3386667099
    ("" (skosimp*)
     (("" (expand* "MP_modeled?" "update_state_MP" "update_state_AP")
@@ -236,8 +322,81 @@
     (update_state_MP const-decl "(update_FullState_type)"
      MonitoredProgramSemantics nil))
    1381 530 t shostak))
+ (MP_modeled_implies_cp_not_halted 0
+  (MP_modeled_implies_cp_not_halted-1 nil 3387023160 3387024322
+   ("" (skosimp)
+    (("" (expand* "MP_modeled?" "MVA_modeled?")
+      (("" (flatten)
+        (("" (assert)
+          (("" (hide-all-but (-3 1))
+            (("" (case "ex(pstate(sAP!1)) = up(JMLExc)")
+              (("1" (replace -1) (("1" (assert) nil nil)) nil)
+               ("2" (case "up(down(ex(pstate(sAP!1)))) = up(JMLExc)")
+                (("1" (assert) (("1" (postpone) nil nil)) nil)
+                 ("2" (postpone) nil nil))
+                nil))
+              nil))
+            nil))
+          nil))
+        nil))
+      nil))
+    nil)
+   unfinished nil 1162160 300 t shostak))
+ (MP_modeled_preserved_by_update2 0
+  (MP_modeled_preserved_by_update2-1 nil 3387021054 3387024789
+   ("" (skosimp*)
+    (("" (expand "related_states")
+      (("" (flatten)
+        (("" (use "MP_modeled_implies_cp_not_halted")
+          (("" (assert)
+            ((""
+              (expand* "MP_modeled?" "update_state_MP"
+               "update_state_AP")
+              (("" (prop)
+                (("1" (expand "MVA_modeled?") (("1" (propax) nil nil))
+                  nil)
+                 ("2" (expand "Program_modeled?")
+                  (("2" (flatten)
+                    (("2" (replace -5) (("2" (propax) nil nil)) nil))
+                    nil))
+                  nil))
+                nil))
+              nil))
+            nil))
+          nil))
+        nil))
+      nil))
+    nil)
+   unfinished
+   ((related_states const-decl "boolean" Equivalence nil)
+    (MP_modeled_implies_cp_not_halted formula-decl nil Equivalence nil)
+    (APState type-eq-decl nil AnnotatedProgramSemantics nil)
+    (MPState type-eq-decl nil MonitoredProgramSemantics nil)
+    (PState type-eq-decl nil State nil)
+    (Store type-eq-decl nil State nil)
+    (AState type-eq-decl nil MVASemantics nil)
+    (string type-eq-decl nil strings nil)
+    (char type-eq-decl nil strings nil)
+    (char? adt-recognizer-decl "[character -> boolean]" character_adt
+     nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (character type-decl nil character_adt nil)
+    (below type-eq-decl nil nat_types nil)
+    (nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (CP formal-nonempty-type-decl nil Equivalence nil)
+    (MVA type-eq-decl nil MVA nil)
+    (Program type-eq-decl nil Program nil)
+    (MonitoredProgram type-eq-decl nil MonitoredProgram nil)
+    (update_state_MP const-decl "(update_FullState_type)"
+     MonitoredProgramSemantics nil)
+    (update_state_AP const-decl "(update_FullState_type)"
+     AnnotatedProgramSemantics nil)
+    (MP_modeled? const-decl "boolean" Equivalence nil)
+    (Program_modeled? const-decl "boolean" Equivalence nil)
+    (MVA_modeled? const-decl "boolean" Equivalence nil))
+   141214 380 t shostak))
  (MP_modeled_implies_same_num_eval 0
-  (MP_modeled_implies_same_num_eval-1 nil 3386678588 3386680211
+  (MP_modeled_implies_same_num_eval-1 nil 3386678588 3387017239
    ("" (skolem!)
     (("" (skolem!)
       (("" (induct "n")
@@ -281,283 +440,272 @@
         nil))
       nil))
     nil)
-   unfinished nil 1623010 40250 t shostak))
+   unfinished nil 40635 1600 t shostak))
+ (MP_modeled_implies_same_bool_eval 0
+  (MP_modeled_implies_same_bool_eval-1 nil 3387017252 3387020598
+   ("" (skosimp)
+    (("" (skosimp)
+      (("" (induct "b")
+        (("1" (expand "eval") (("1" (propax) nil nil)) nil)
+         ("2" (expand "eval") (("2" (propax) nil nil)) nil)
+         ("3" (expand "related_states")
+          (("3" (skosimp)
+            (("3" (assert)
+              (("3" (expand "eval" 1)
+                (("3" (replace -1) (("3" (propax) nil nil)) nil)) nil))
+              nil))
+            nil))
+          nil)
+         ("4" (skosimp)
+          (("4" (expand "related_states")
+            (("4" (flatten)
+              (("4" (assert)
+                (("4" (expand "eval" 1)
+                  (("4" (replace -1)
+                    (("4" (replace -2) (("4" (propax) nil nil)) nil))
+                    nil))
+                  nil))
+                nil))
+              nil))
+            nil))
+          nil)
+         ("5" (skosimp)
+          (("5" (expand "related_states")
+            (("5" (flatten)
+              (("5" (assert)
+                (("5" (expand "eval" 1)
+                  (("5" (replace -1)
+                    (("5" (replace -2) (("5" (propax) nil nil)) nil))
+                    nil))
+                  nil))
+                nil))
+              nil))
+            nil))
+          nil)
+         ("6" (skosimp)
+          (("6" (use "MP_modeled_implies_same_num_eval")
+            (("6" (lemma "MP_modeled_implies_same_num_eval")
+              (("6" (inst -1 "mp!1" "sMP!1" "sAP!1" "Lt2_var!1")
+                (("6" (expand "related_states")
+                  (("6" (flatten)
+                    (("6" (assert)
+                      (("6" (expand "eval" 1)
+                        (("6" (replace -1)
+                          (("6" (replace -2) (("6" (propax) nil nil))
+                            nil))
+                          nil))
+                        nil))
+                      nil))
+                    nil))
+                  nil))
+                nil))
+              nil))
+            nil))
+          nil)
+         ("7" (skosimp)
+          (("7" (use "MP_modeled_implies_same_num_eval")
+            (("7" (lemma "MP_modeled_implies_same_num_eval")
+              (("7" (inst -1 "mp!1" "sMP!1" "sAP!1" "Le2_var!1")
+                (("7" (assert)
+                  (("7" (expand "eval" 1)
+                    (("7" (replace -1)
+                      (("7" (replace -2) (("7" (propax) nil nil)) nil))
+                      nil))
+                    nil))
+                  nil))
+                nil))
+              nil))
+            nil))
+          nil)
+         ("8" (skosimp)
+          (("8" (use "MP_modeled_implies_same_num_eval")
+            (("8" (lemma "MP_modeled_implies_same_num_eval")
+              (("8" (inst -1 "mp!1" "sMP!1" "sAP!1" "Eq2_var!1")
+                (("8" (assert)
+                  (("8" (expand "eval" 1)
+                    (("8" (replace -1)
+                      (("8" (replace -2) (("8" (propax) nil nil)) nil))
+                      nil))
+                    nil))
+                  nil))
+                nil))
+              nil))
+            nil))
+          nil)
+         ("9" (skosimp)
+          (("9" (use "MP_modeled_implies_same_num_eval")
+            (("9" (lemma "MP_modeled_implies_same_num_eval")
+              (("9" (inst -1 "mp!1" "sMP!1" "sAP!1" "Neq2_var!1")
+                (("9" (assert)
+                  (("9" (expand "eval" 1)
+                    (("9" (replace -1)
+                      (("9" (replace -2) (("9" (propax) nil nil)) nil))
+                      nil))
+                    nil))
+                  nil))
+                nil))
+              nil))
+            nil))
+          nil)
+         ("10" (skosimp)
+          (("10" (use "MP_modeled_implies_same_num_eval")
+            (("10" (lemma "MP_modeled_implies_same_num_eval")
+              (("10" (inst -1 "mp!1" "sMP!1" "sAP!1" "Ge2_var!1")
+                (("10" (assert)
+                  (("10" (expand "eval" 1)
+                    (("10" (replace -1)
+                      (("10" (replace -2) (("10" (propax) nil nil))
+                        nil))
+                      nil))
+                    nil))
+                  nil))
+                nil))
+              nil))
+            nil))
+          nil)
+         ("11" (skosimp)
+          (("11" (use "MP_modeled_implies_same_num_eval")
+            (("11" (lemma "MP_modeled_implies_same_num_eval")
+              (("11" (inst -1 "mp!1" "sMP!1" "sAP!1" "Gt2_var!1")
+                (("11" (assert)
+                  (("11" (expand "eval" 1)
+                    (("11" (replace -1)
+                      (("11" (replace -2) (("11" (propax) nil nil))
+                        nil))
+                      nil))
+                    nil))
+                  nil))
+                nil))
+              nil))
+            nil))
+          nil)
+         ("12" (skosimp)
+          (("12" (expand* "related_states" "eval" "val2bool" "lookup")
+            (("12" (use "ann_program_preserves_state_vars")
+              (("12" (flatten)
+                (("12" (use "wf_state_vars_local_or_field")
+                  (("12" (lift-if)
+                    (("12" (lift-if)
+                      (("12" (expand "wf_state" -4)
+                        (("12" (flatten) (("12" (postpone) nil nil))
+                          nil))
+                        nil))
+                      nil))
+                    nil))
+                  nil))
+                nil))
+              nil))
+            nil))
+          nil))
+        nil))
+      nil))
+    nil)
+   unfinished nil 871591 2970 t shostak))
  (deriv_expr_maintains_equivalence 0
-  (deriv_expr_maintains_equivalence-1 nil 3386497242 3387008105
+  (deriv_expr_maintains_equivalence-1 nil 3386497242 3387088283
    ("" (skosimp)
     (("" (induct e)
       (("1" (skosimp*)
-        (("1" (expand "deriv_expr" (-4 -5))
-          (("1" (expand "deriv_expr" (-4 -5))
-            (("1" (use "MP_modeled_implies_same_exception")
-              (("1" (assert)
-                (("1" (case "up?(ex(pstate(sMP1!1)))")
+        (("1" (expand "related_states")
+          (("1" (flatten)
+            (("1" (expand "deriv_expr" (-7 -8))
+              (("1" (expand "deriv_expr" (-7 -8))
+                (("1" (use "MP_modeled_implies_same_exception")
                   (("1" (assert)
-                    (("1" (prop)
-                      (("1" (assert) nil nil) ("2" (assert) nil nil))
-                      nil))
-                    nil)
-                   ("2" (assert)
-                    (("2" (flatten)
-                      (("2" (skosimp*)
-                        (("2"
-                          (inst -2 "v1!1" "v2!1" "sMP1!1" "tau!1"
-                           "sAP1!1" "tau!2" "n1!1 - 1" "n2!1 - 1")
-                          (("1" (assert)
-                            (("1" (split)
-                              (("1"
-                                (lift-if)
-                                (("1"
-                                  (lemma
-                                   "MP_modeled_implies_same_exception")
-                                  (("1"
-                                    (inst -1 "mp!1" "tau!1" "tau!2")
-                                    (("1"
-                                      (split -1)
-                                      (("1"
-                                        (case "up?(ex(pstate(tau!1)))")
-                                        (("1"
-                                          (assert)
-                                          (("1"
-                                            (rewrite -9)
-                                            (("1"
-                                              (rewrite -11)
-                                              nil
-                                              nil))
-                                            nil))
-                                          nil)
-                                         ("2"
-                                          (assert)
-                                          (("2"
-                                            (prop)
-                                            (("2"
-                                              (use
-                                               "MP_modeled_preserved_by_update")
-                                              (("2" (assert) nil nil))
-                                              nil))
-                                            nil))
-                                          nil))
-                                        nil)
-                                       ("2" (flatten) nil nil))
-                                      nil))
-                                    nil))
-                                  nil))
-                                nil)
-                               ("2"
-                                (expand "deriv_expr" 1)
-                                (("2" (propax) nil nil))
-                                nil)
-                               ("3"
-                                (expand "deriv_expr" 1)
-                                (("3" (propax) nil nil))
-                                nil))
-                              nil))
-                            nil)
-                           ("2" (assert) nil nil)
-                           ("3" (assert) nil nil))
-                          nil))
-                        nil))
-                      nil))
-                    nil))
-                  nil))
-                nil))
-              nil))
-            nil))
-          nil))
-        nil)
-       ("2" (skosimp*)
-        (("2" (expand "deriv_expr" (-3 -4))
-          (("2" (expand "deriv_expr" (-3 -4))
-            (("2" (use "MP_modeled_implies_same_exception")
-              (("2" (assert)
-                (("2" (case "up?(ex(pstate(sMP1!1)))")
-                  (("1" (assert)
-                    (("1" (prop)
-                      (("1" (assert) nil nil)
-                       ("2" (rewrite -8) (("2" (rewrite -5) nil nil))
-                        nil))
-                      nil))
-                    nil)
-                   ("2" (assert)
-                    (("2" (prop)
-                      (("1" (rewrite -5)
-                        (("1" (rewrite -7)
-                          (("1"
-                            (use "MP_modeled_implies_same_bool_eval")
-                            (("1" (assert) nil nil)) nil))
+                    (("1" (case "up?(ex(pstate(sMP1!1)))")
+                      (("1" (assert)
+                        (("1" (prop)
+                          (("1" (assert) nil nil)
+                           ("2" (assert) nil nil))
                           nil))
                         nil)
-                       ("2" (rewrite -4) (("2" (rewrite -6) nil nil))
-                        nil))
-                      nil))
-                    nil))
-                  nil))
-                nil))
-              nil))
-            nil))
-          nil))
-        nil)
-       ("3" (postpone) nil nil)
-       ("4" (skosimp*)
-        (("4" (expand "deriv_expr" (-5 -6))
-          (("4" (expand "deriv_expr" (-5 -6))
-            (("4" (use "MP_modeled_implies_same_exception")
-              (("4" (assert)
-                (("4" (case "up?(ex(pstate(sMP1!1)))")
-                  (("1" (assert)
-                    (("1" (prop)
-                      (("1" (assert) nil nil)
-                       ("2" (rewrite -7) (("2" (rewrite -9) nil nil))
-                        nil))
-                      nil))
-                    nil)
-                   ("2" (assert)
-                    (("2" (skosimp*)
-                      (("2"
-                        (inst -2 "a!1" "a!2" "sMP1!1" "tau1!1" "sAP1!1"
-                         "tau1!2" "m1!1" "m1!2")
-                        (("2" (split -2)
-                          (("1"
-                            (inst -3 "pv!1" "pv!2" "tau1!1" "tau2!1"
-                             "tau1!2" "tau2!2" "m2!1" "m2!2")
-                            (("1" (expand "deriv_expr" -3)
+                       ("2" (assert)
+                        (("2" (flatten)
+                          (("2" (skosimp*)
+                            (("2"
+                              (inst -2 "v1!1" "v2!1" "sMP1!1" "tau!1"
+                               "sAP1!1" "tau!2" "n1!1 - 1" "n2!1 - 1")
                               (("1"
-                                (flatten)
+                                (expand "deriv_expr" -2)
                                 (("1"
                                   (assert)
                                   (("1"
-                                    (flatten)
+                                    (lift-if)
                                     (("1"
-                                      (hide -3 -7 -9 -10 -21 -22)
+                                      (lemma
+                                       "MP_modeled_implies_same_exception")
                                       (("1"
-                                        (lemma
-                                         "MP_modeled_implies_same_exception")
+                                        (inst -1 "tau!1" "tau!2")
                                         (("1"
-                                          (inst
-                                           -1
-                                           "mp!1"
-                                           "tau1!1"
-                                           "tau1!2")
+                                          (flatten)
                                           (("1"
                                             (assert)
                                             (("1"
                                               (case
-                                               "MP_modeled?(mp!1)(tau3!1, tau3!2)")
-                                              (("1"
-                                                (hide
-                                                 -2
-                                                 -3
-                                                 -4
-                                                 -6
-                                                 -9
-                                                 -19)
-                                                (("1"
-                                                  (postpone)
-                                                  nil
-                                                  nil))
-                                                nil)
+                                               "up?(ex(pstate(tau!1)))")
+                                              (("1" (assert) nil nil)
                                                ("2"
-                                                (hide-all-but
-                                                 (-1
-                                                  -2
-                                                  -5
-                                                  -6
-                                                  -8
-                                                  -18
-                                                  1))
+                                                (assert)
                                                 (("2"
-                                                  (lift-if)
+                                                  (use
+                                                   "MP_modeled_preserved_by_update2")
                                                   (("2"
-                                                    (case
-                                                     "up?(ex(pstate(tau1!1))) AND Null?(a!1)")
-                                                    (("1"
-                                                      (split)
-                                                      (("1"
-                                                        (split)
-                                                        (("1"
-                                                          (flatten)
-                                                          (("1"
-                                                            (postpone)
-                                                            nil
-                                                            nil))
-                                                          nil)
-                                                         ("2"
-                                                          (prop)
-                                                          (("1"
-                                                            (rewrite
-                                                             -7)
-                                                            nil
-                                                            nil)
-                                                           ("2"
-                                                            (rewrite
-                                                             -8)
-                                                            nil
-                                                            nil))
-                                                          nil))
-                                                        nil)
-                                                       ("2"
-                                                        (rewrite -4)
+                                                    (expand
+                                                     "related_states")
+                                                    (("2"
+                                                      (lemma
+                                                       "related_states_implies_wf_mp_and_ap")
+                                                      (("2"
+                                                        (inst
+                                                         -1
+                                                         "mp!1"
+                                                         "ap!1"
+                                                         "sMP1!1"
+                                                         "sAP1!1")
                                                         (("2"
-                                                          (rewrite -3)
+                                                          (expand
+                                                           "related_states")
                                                           (("2"
-                                                            (prop)
-                                                            nil
-                                                            nil))
-                                                          nil))
-                                                        nil))
-                                                      nil)
-                                                     ("2"
-                                                      (split -5)
-                                                      (("1"
-                                                        (split -6)
-                                                        (("1"
-                                                          (flatten)
-                                                          (("1"
-                                                            (replace
-                                                             -7)
-                                                            (("1"
-                                                              (assert)
-                                                              nil
-                                                              nil))
-                                                            nil))
-                                                          nil)
-                                                         ("2"
-                                                          (replace -3)
-                                                          (("2"
-                                                            (flatten)
+                                                            (lemma
+                                                             "deriv_expr_yields_wf_state_MP")
                                                             (("2"
-                                                              (assert)
-                                                              nil
-                                                              nil))
-                                                            nil))
-                                                          nil))
-                                                        nil)
-                                                       ("2"
-                                                        (flatten)
-                                                        (("2"
-                                                          (split -6)
-                                                          (("1"
-                                                            (flatten)
-                                                            (("1"
-                                                              (replace
-                                                               -5)
-                                                              (("1"
-                                                                (assert)
-                                                                nil
-                                                                nil))
-                                                              nil))
-                                                            nil)
-                                                           ("2"
-                                                            (flatten)
-                                                            (("2"
-                                                              (replace
-                                                               -1)
+                                                              (inst
+                                                               -1
+                                                               "mp!1"
+                                                               "Assign2_var!1"
+                                                               "v1!1"
+                                                               "sMP1!1"
+                                                               "tau!1"
+                                                               "n1!1 -1")
                                                               (("2"
-                                                                (replace
-                                                                 -2)
+                                                                (lemma
+                                                                 "deriv_expr_yields_wf_state_AP")
                                                                 (("2"
-                                                                  (propax)
-                                                                  nil
+                                                                  (inst
+                                                                   -1
+                                                                   "ap!1"
+                                                                   "Assign2_var!1"
+                                                                   "v2!1"
+                                                                   "sAP1!1"
+                                                                   "tau!2"
+                                                                   "n2!1 -1")
+                                                                  (("2"
+                                                                    (flatten)
+                                                                    (("2"
+                                                                      (replace
+                                                                       -10)
+                                                                      (("2"
+                                                                        (expand
+                                                                         "deriv_expr"
+                                                                         (-1
+                                                                          -2))
+                                                                        (("2"
+                                                                          (assert)
+                                                                          nil
+                                                                          nil))
+                                                                        nil))
+                                                                      nil))
+                                                                    nil))
                                                                   nil))
                                                                 nil))
                                                               nil))
@@ -575,14 +723,11 @@
                                       nil))
                                     nil))
                                   nil))
-                                nil))
+                                nil)
+                               ("2" (assert) nil nil)
+                               ("3" (assert) nil nil))
                               nil))
-                            nil)
-                           ("2" (expand "deriv_expr" 1)
-                            (("2" (propax) nil nil)) nil)
-                           ("3" (expand "deriv_expr" 1)
-                            (("3" (propax) nil nil)) nil)
-                           ("4" (propax) nil nil))
+                            nil))
                           nil))
                         nil))
                       nil))
@@ -593,22 +738,66 @@
             nil))
           nil))
         nil)
-       ("5" (skosimp*)
-        (("5" (expand "deriv_expr")
-          (("5" (expand "deriv_expr")
-            (("5" (use "MP_modeled_implies_same_exception")
-              (("5" (assert)
-                (("5" (case "up?(ex(pstate(sMP1!1)))")
-                  (("1" (assert)
-                    (("1" (prop)
-                      (("1" (assert) nil nil) ("2" (assert) nil nil))
+       ("2" (skosimp*)
+        (("2" (expand* "related_states" "deriv_expr")
+          (("2" (expand "deriv_expr")
+            (("2" (flatten)
+              (("2" (use "MP_modeled_implies_same_exception")
+                (("2" (assert)
+                  (("2" (case "up?(ex(pstate(sMP1!1)))")
+                    (("1" (assert)
+                      (("1" (prop)
+                        (("1" (assert) nil nil) ("2" (assert) nil nil))
+                        nil))
+                      nil)
+                     ("2" (assert)
+                      (("2" (prop)
+                        (("1" (use "MP_modeled_implies_same_bool_eval")
+                          (("1" (assert)
+                            (("1" (expand "related_states")
+                              (("1" (propax) nil nil)) nil))
+                            nil))
+                          nil)
+                         ("2" (assert) nil nil))
+                        nil))
                       nil))
-                    nil)
-                   ("2" (assert)
-                    (("2" (prop)
-                      (("1" (use "MP_modeled_implies_same_num_eval")
-                        (("1" (assert) nil nil)) nil)
-                       ("2" (rewrite -4) (("2" (rewrite -6) nil nil))
+                    nil))
+                  nil))
+                nil))
+              nil))
+            nil))
+          nil))
+        nil)
+       ("3" (skosimp*)
+        (("3" (expand "related_states")
+          (("3" (flatten)
+            (("3" (expand "deriv_expr" (-9 -10))
+              (("3" (postpone) nil nil)) nil))
+            nil))
+          nil))
+        nil)
+       ("4" (postpone) nil nil)
+       ("5" (skosimp*)
+        (("5" (expand* "related_states" "deriv_expr")
+          (("5" (expand "deriv_expr")
+            (("5" (flatten)
+              (("5" (use "MP_modeled_implies_same_exception")
+                (("5" (assert)
+                  (("5" (case "up?(ex(pstate(sMP1!1)))")
+                    (("1" (assert)
+                      (("1" (prop)
+                        (("1" (assert) nil nil) ("2" (assert) nil nil))
+                        nil))
+                      nil)
+                     ("2" (assert)
+                      (("2" (prop)
+                        (("1" (use "MP_modeled_implies_same_num_eval")
+                          (("1" (assert)
+                            (("1" (expand "related_states")
+                              (("1" (propax) nil nil)) nil))
+                            nil))
+                          nil)
+                         ("2" (assert) nil nil))
                         nil))
                       nil))
                     nil))
@@ -619,30 +808,32 @@
           nil))
         nil)
        ("6" (skosimp*)
-        (("6" (expand "deriv_expr")
+        (("6" (expand* "related_states" "deriv_expr")
           (("6" (expand "deriv_expr")
-            (("6" (use "MP_modeled_implies_same_exception")
-              (("6" (assert)
-                (("6" (case "up?(ex(pstate(sMP1!1)))")
-                  (("1" (assert)
-                    (("1" (prop)
-                      (("1" (assert) nil nil)
-                       ("2" (rewrite -5) (("2" (rewrite -7) nil nil))
+            (("6" (flatten)
+              (("6" (use "MP_modeled_implies_same_exception")
+                (("6" (assert)
+                  (("6" (case "up?(ex(pstate(sMP1!1)))")
+                    (("1" (assert)
+                      (("1" (prop)
+                        (("1" (assert) nil nil) ("2" (assert) nil nil))
                         nil))
-                      nil))
-                    nil)
-                   ("2" (assert)
-                    (("2" (prop)
-                      (("1" (case "RExpr1_var!1 = Null")
-                        (("1" (assert) nil nil)
-                         ("2" (assert)
-                          (("2" (replace -5 2)
+                      nil)
+                     ("2" (assert)
+                      (("2" (prop)
+                        (("1" (case "RExpr1_var!1 = Null")
+                          (("1" (assert) nil nil)
+                           ("2" (assert)
                             (("2" (replace -8 2)
-                              (("2" (postpone) nil nil)) nil))
+                              (("2"
+                                (replace -11 2)
+                                (("2" (postpone) nil nil))
+                                nil))
+                              nil))
                             nil))
-                          nil))
-                        nil)
-                       ("2" (assert) nil nil))
+                          nil)
+                         ("2" (assert) nil nil))
+                        nil))
                       nil))
                     nil))
                   nil))
@@ -650,40 +841,128 @@
               nil))
             nil))
           nil))
-        nil)
-       ("7" (skosimp*)
-        (("7" (expand "MP_modeled?")
-          (("7" (expand "ann_program_pre") (("7" (flatten) nil nil))
-            nil))
-          nil))
         nil))
       nil))
     nil)
-   unfinished nil 10234636 56060 t nil))
+   unfinished nil 907730 10550 t nil))
  (deriv_stmt_maintains_equivalence 0
   (deriv_stmt_maintains_equivalence-1 nil 3386674579 3386674587
    ("" (postpone) nil nil) unfinished nil 7597 10 t shostak))
  (correcteness_of_ann_program 0
-  (correctness_of_ann_program-1 "" 3386566650 3386566650
+  (correctness_of_ann_program-1 "" 3386566650 3387086788
    ("" (skosimp*)
     ((""
       (expand* "run_monitored_program" "run_annotated_program"
        "run_FullProgram")
       (("" (use "initial_states_are_equivalent")
-        (("" (assert)
-          (("" (lemma "deriv_stmt_maintains_equivalence")
-            ((""
-              (inst -1 "mp!1" "ann_program(mp!1)" "n!1" "m!1"
-               "StmtExpr(MethodCall(RExpr(RefVarEval(This)), name(main!1), NExpr(Int(arg!1))))"
-               "initial_MP_state(mp!1)" "sMP!1"
-               "initial_AP_state(ann_program(mp!1))" "sAP!1")
-              (("" (assert) nil nil)) nil))
+        (("" (lemma "deriv_stmt_maintains_equivalence")
+          ((""
+            (inst -1 "mp!1" "ann_program(mp!1)" "n!1" "m!1"
+             "StmtExpr(MethodCall(RExpr(RefVarEval(This)), name(main!1), NExpr(Int(arg!1))))"
+             "initial_MP_state(mp!1)" "sMP!1"
+             "initial_AP_state(ann_program(mp!1))" "sAP!1")
+            (("" (assert)
+              (("" (expand "related_states")
+                (("" (use "wf_initial_MP_state")
+                  (("" (use "wf_initial_AP_state")
+                    (("" (use "ann_program_yields_wf_program")
+                      (("" (assert)
+                        (("" (expand "ann_program_pre")
+                          (("" (flatten) (("" (assert) nil nil)) nil))
+                          nil))
+                        nil))
+                      nil))
+                    nil))
+                  nil))
+                nil))
+              nil))
             nil))
           nil))
         nil))
       nil))
     nil)
-   unfinished nil 32756 440 nil shostak)
+   proved
+   ((run_annotated_program const-decl "boolean"
+     AnnotatedProgramSemantics nil)
+    (run_FullProgram const-decl "boolean" Semantics nil)
+    (run_monitored_program const-decl "boolean"
+     MonitoredProgramSemantics nil)
+    (deriv_stmt_maintains_equivalence formula-decl nil Equivalence nil)
+    (wf_initial_MP_state formula-decl nil MonitoredProgramSemantics
+     nil)
+    (ann_program_yields_wf_program formula-decl nil AnnotateProgram
+     nil)
+    (ann_program_pre const-decl "boolean" AnnotateProgram nil)
+    (wf_initial_AP_state formula-decl nil AnnotatedProgramSemantics
+     nil)
+    (related_states const-decl "boolean" Equivalence nil)
+    (initial_AP_state const-decl "APState" AnnotatedProgramSemantics
+     nil)
+    (APState type-eq-decl nil AnnotatedProgramSemantics nil)
+    (initial_MP_state const-decl "MPState" MonitoredProgramSemantics
+     nil)
+    (MPState type-eq-decl nil MonitoredProgramSemantics nil)
+    (PState type-eq-decl nil State nil)
+    (Store type-eq-decl nil State nil)
+    (AState type-eq-decl nil MVASemantics nil)
+    (Int adt-constructor-decl "[int -> (Int?)]" NumExpr_adt nil)
+    (Int? adt-recognizer-decl "[NumExpr -> boolean]" NumExpr_adt nil)
+    (NExpr adt-constructor-decl "[NumExpr -> (NExpr?)]" Expr_adt nil)
+    (NExpr? adt-recognizer-decl "[Expr -> boolean]" Expr_adt nil)
+    (NumExpr type-decl nil NumExpr_adt nil)
+    (This const-decl "Name" Program nil)
+    (RefVarEval adt-constructor-decl "[Name -> (RefVarEval?)]"
+     RefExpr_adt nil)
+    (RefVarEval? adt-recognizer-decl "[RefExpr -> boolean]" RefExpr_adt
+     nil)
+    (RExpr adt-constructor-decl "[RefExpr -> (RExpr?)]" Expr_adt nil)
+    (RExpr? adt-recognizer-decl "[Expr -> boolean]" Expr_adt nil)
+    (RefExpr type-decl nil RefExpr_adt nil)
+    (MethodCall adt-constructor-decl
+     "[[Expr, Name, Expr] -> (MethodCall?)]" Expr_adt nil)
+    (MethodCall? adt-recognizer-decl "[Expr -> boolean]" Expr_adt nil)
+    (StmtExpr adt-constructor-decl "[Expr -> (StmtExpr?)]" Stmt_adt
+     nil)
+    (StmtExpr? adt-recognizer-decl "[Stmt -> boolean]" Stmt_adt nil)
+    (>= const-decl "bool" reals nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (int nonempty-type-eq-decl nil integers nil)
+    (integer_pred const-decl "[rational -> boolean]" integers nil)
+    (rational nonempty-type-from-decl nil rationals nil)
+    (rational_pred const-decl "[real -> boolean]" rationals nil)
+    (real nonempty-type-from-decl nil reals nil)
+    (real_pred const-decl "[number_field -> boolean]" reals nil)
+    (number_field nonempty-type-from-decl nil number_fields nil)
+    (number_field_pred const-decl "[number -> boolean]" number_fields
+     nil)
+    (number nonempty-type-decl nil numbers nil)
+    (ann_program const-decl "Program" AnnotateProgram nil)
+    (wf_MP const-decl "boolean" WellFormedMonitoredProgram nil)
+    (Class type-eq-decl nil Program nil)
+    (lift type-decl nil lift_adt nil)
+    (Method type-eq-decl nil Program nil)
+    (LocalVarDecl type-eq-decl nil Program nil)
+    (Stmt type-decl nil Stmt_adt nil)
+    (ArgDecl type-eq-decl nil Program nil)
+    (Expr type-decl nil Expr_adt nil)
+    (GhostVarDecl type-eq-decl nil Program nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (FieldDecl type-eq-decl nil Program nil)
+    (JType type-decl nil JType_adt nil) (Val type-decl nil Val_adt nil)
+    (CP formal-nonempty-type-decl nil Equivalence nil)
+    (nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (below type-eq-decl nil nat_types nil)
+    (character type-decl nil character_adt nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (char? adt-recognizer-decl "[character -> boolean]" character_adt
+     nil)
+    (char type-eq-decl nil strings nil)
+    (string type-eq-decl nil strings nil)
+    (MVA type-eq-decl nil MVA nil)
+    (Program type-eq-decl nil Program nil)
+    (MonitoredProgram type-eq-decl nil MonitoredProgram nil)
+    (initial_states_are_equivalent formula-decl nil Equivalence nil))
+   535076 1550 t shostak)
   (correcteness_of_ann_program-2 nil 3386566615 nil
    (";;; Proof correcteness_of_ann_program-1 for formula Equivalence.correcteness_of_ann_program"
     (skosimp*)
