@@ -3205,8 +3205,18 @@ public final class Translate
     InlineSettings is = (InlineSettings)inlineDecoration.get(mi);
     code.addElement( call( mi.decl, argsRaw, args, scope, mi.locId, 
                            mi.getEndLoc(), mi.locOpenParen, false, is, eod, false));
-    return protect(protect, GC.resultvar, mi.locOpenParen,
-                   mi.decl.id.toString());
+    
+    
+    if (Main.options().svcg) {
+    	VariableAccess tmpRes = temporary("uniqueResult", mi.locOpenParen);
+    	code.addElement(GC.gets(tmpRes, GC.resultvar));   
+    	code.addElement(modify(GC.resultvar, mi.locOpenParen));
+    	
+    	return tmpRes;
+    } else {    
+    	return protect(protect, GC.resultvar, mi.locOpenParen,
+    			mi.decl.id.toString());
+    }
   }
 
   
@@ -3822,10 +3832,16 @@ public final class Translate
   /** Modifies a GC designator. GC designator can include SubstExpr. */
   
   private GuardedCmd modify(/*@ non_null */ VariableAccess va, int loc) {
-    VariableAccess newVal = temporary(va.id.toString(), loc, loc);
-    return GC.gets(va, newVal);
+	  return modify(va, loc, null);
   }
   
+  private GuardedCmd modify(/*@ non_null */ VariableAccess va, int loc, Type type) {
+    VariableAccess newVal = temporary(va.id.toString(), loc, loc);
+    if (type != null)
+    	newVal.decl.type = type;
+	return GC.gets(va, newVal);
+  }
+	  
   private GuardedCmd modify(/*@ non_null */ Expr e, Hashtable pt, int loc) {
     VariableAccess newVal = temporary("after@" + UniqName.locToSuffix(loc),
                                       e.getStartLoc(), e.getStartLoc());
@@ -4279,13 +4295,18 @@ public final class Translate
         }
 		
       }
+      
+      Type returnType = null;
+      //if (rd instanceof MethodDecl)
+    	//  returnType = ((MethodDecl)rd).returnType;
+      
 
       // modify EC, RES, XRES
       code.addElement(modify(GC.ecvar, scall));
       if (!spec.dmd.isConstructor()) {
         if (freshResult) code.addElement(GC.gets(GC.resultvar, eod));
         else {
-          code.addElement(modify(GC.resultvar, scall));
+          code.addElement(modify(GC.resultvar, scall, returnType));
         }
       }
       code.addElement(modify(GC.xresultvar, scall));
