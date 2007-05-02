@@ -410,4 +410,7 @@ public class SimplifyNodeBuilder extends EscNodeBuilder
 	public SPred buildNewObject(SAny oldh, SAny type, SAny heap, SRef r) {
 		throw new UnsupportedOperationException();
 	}
+	public SAny buildSort(Sort s) {
+		throw new UnsupportedOperationException();
+	}
 }

@@ -93,6 +93,15 @@ public abstract class NodeBuilder
 			this.id = currentSymbol++;
 			symbolsById.put(new Integer(id), this);
 		}
+		public boolean equals(Object o) {
+			if(this == o)
+				return true;
+			if(o instanceof Symbol) {
+				Symbol s = (Symbol) o;
+				return name.equals(s.name);
+			}
+			return false;
+		}
 		
 		public String toString()
 		{
@@ -116,11 +125,8 @@ public abstract class NodeBuilder
 		}
 		
 		public boolean equals(Object o) {
-			if (o instanceof Sort) {
-				Sort s= (Sort) o;
-				return s.name.equals(name);
-			}
-			return false;
+
+			return super.equals(o);
 		}
 		
 		public boolean isSubSortOf(Sort other)
@@ -423,4 +429,5 @@ public abstract class NodeBuilder
 	
 	// Mobius specific stuff
 	abstract public SPred buildNewObject(SAny oldh, SAny type, SAny heap, SRef r) ;
+	abstract public SAny buildSort(Sort s);
 }

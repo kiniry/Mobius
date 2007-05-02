@@ -169,4 +169,5 @@ public abstract class EscNodeBuilder extends NodeBuilder
 		ErrorSet.fatal("cannot map " + sort + " from " + this + " to " + other);
 		return null;
 	}
+
 }

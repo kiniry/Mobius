@@ -938,6 +938,7 @@ public class Lifter extends EscNodeBuilder
 	public SPred buildIsTrue(SBool val) { throw new Die(); }
 
 	public SPred buildNewObject(SAny oldh, SAny type, SAny heap, SRef r) { throw new Die(); }
+	public SAny buildSort(Sort s) { throw new Die(); };
 
 	boolean isEarlySort(Sort s, Sort p)
 	{
@@ -1063,7 +1064,7 @@ public class Lifter extends EscNodeBuilder
 		return symbolRef(name, null);
 	}
 	
-	private FnSymbol getFnSymbol(String name, int arity)
+	public FnSymbol getFnSymbol(String name, int arity)
 	{
 		String nameCur = name + "." + arity + "." + methodNo;
 		String name0 = name + "." + arity + ".0";
@@ -1541,6 +1542,7 @@ public class Lifter extends EscNodeBuilder
 	}
 
 	/*@ non_null_by_default @*/
+	//TODO: maybe update the doc...
 	public class SortedBackPred extends BackPred 
 	{
 		ArrayList axioms = new ArrayList();
@@ -1549,6 +1551,7 @@ public class Lifter extends EscNodeBuilder
 		/**
 		 * Return the type-specific background predicate as a formula.
 		 */
+
 		public void genTypeBackPred(FindContributors scope,
 									PrintStream proverStream)
 		{
@@ -1729,7 +1732,7 @@ public class Lifter extends EscNodeBuilder
 
 	// dump	
 	// jgc: made it public but this is the WRONG way. a new build method (simpler) should be
-	//  add instead
+	//  added instead
 	public /*@ nullable @*/EscNodeBuilder dumpBuilder;
 	final Hashtable fnTranslations = new Hashtable();
 	final ArrayList stringConstants = new ArrayList();
