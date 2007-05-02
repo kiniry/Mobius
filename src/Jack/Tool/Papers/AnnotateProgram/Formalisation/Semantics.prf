@@ -4,72 +4,67 @@
 (Evaluation
  (eval_TCC1 0
   (eval_TCC1-1 nil 3371189456 3371189465 ("" (termination-tcc) nil nil)
-   unchecked (nil nil) 796 600 nil nil))
+   unchecked nil 796 600 nil nil))
  (eval_TCC2 0
   (eval_TCC2-1 nil 3371189456 3371189466 ("" (termination-tcc) nil nil)
-   unchecked (nil nil) 569 490 nil nil))
+   unchecked nil 569 490 nil nil))
  (eval_TCC3 0
   (eval_TCC3-1 nil 3371189456 3371189466 ("" (termination-tcc) nil nil)
-   unchecked (nil nil) 552 470 nil nil))
+   unchecked nil 552 470 nil nil))
  (eval_TCC4 0
   (eval_TCC4-1 nil 3371189456 3371189467 ("" (termination-tcc) nil nil)
-   unchecked (nil nil) 531 470 nil nil))
+   unchecked nil 531 470 nil nil))
  (eval_TCC5 0
   (eval_TCC5-1 nil 3371189456 3371189467 ("" (termination-tcc) nil nil)
-   unchecked (nil nil) 529 470 nil nil))
+   unchecked nil 529 470 nil nil))
  (eval_TCC6 0
   (eval_TCC6-1 nil 3371189456 3371189468 ("" (termination-tcc) nil nil)
-   unchecked (nil nil) 535 470 nil nil))
+   unchecked nil 535 470 nil nil))
  (eval_TCC7 0
   (eval_TCC7-1 nil 3371189456 3371189468 ("" (termination-tcc) nil nil)
-   unchecked (nil nil) 541 480 nil nil))
+   unchecked nil 541 480 nil nil))
  (eval_TCC8 0
   (eval_TCC8-1 nil 3371189456 3371189469 ("" (termination-tcc) nil nil)
-   unchecked (nil nil) 575 490 nil nil))
+   unchecked nil 575 490 nil nil))
  (eval_TCC9 0
   (eval_TCC9-1 nil 3371189456 3371189469 ("" (subtype-tcc) nil nil)
    unchecked ((/= const-decl "boolean" notequal nil)) 149 90 nil nil))
  (eval_TCC10 0
   (eval_TCC10-1 nil 3371189456 3371189471
-   ("" (termination-tcc) nil nil) unchecked (nil nil) 2392 2120 nil
-   nil))
+   ("" (termination-tcc) nil nil) unchecked nil 2392 2120 nil nil))
  (eval_TCC11 0
   (eval_TCC11-1 nil 3371189456 3371189474
-   ("" (termination-tcc) nil nil) unchecked (nil nil) 2538 2280 nil
-   nil))
+   ("" (termination-tcc) nil nil) unchecked nil 2538 2280 nil nil))
  (eval_TCC12 0
   (eval_TCC12-1 nil 3371189456 3371189477
-   ("" (termination-tcc) nil nil) unchecked (nil nil) 2586 2300 nil
-   nil))
+   ("" (termination-tcc) nil nil) unchecked nil 2586 2300 nil nil))
  (eval_TCC13 0
   (eval_TCC13-1 nil 3371189456 3371189479
-   ("" (termination-tcc) nil nil) unchecked (nil nil) 2468 2190 nil
-   nil))
+   ("" (termination-tcc) nil nil) unchecked nil 2468 2190 nil nil))
  (eval_TCC14 0
   (eval_TCC14-1 nil 3371189456 3371189482
-   ("" (termination-tcc) nil nil) unchecked (nil nil) 2574 2300 nil
-   nil)))
+   ("" (termination-tcc) nil nil) unchecked nil 2574 2300 nil nil)))
 (SemanticsTypes)
 (SemanticsCommon
  (check_assertion_TCC1 0
   (check_assertion_TCC1-1 nil 3385977476 nil ("" (subtype-tcc) nil nil)
-   nil nil nil nil nil nil))
+   unchecked nil nil nil nil nil))
  (execute_CaseJML_TCC1 0
   (execute_CaseJML_TCC1-1 nil 3385977476 nil ("" (subtype-tcc) nil nil)
-   nil nil nil nil nil nil))
+   unchecked nil nil nil nil nil))
  (execute_CaseJML_TCC2 0
   (execute_CaseJML_TCC2-1 nil 3385977476 nil ("" (subtype-tcc) nil nil)
-   nil nil nil nil nil nil))
+   unchecked nil nil nil nil nil))
  (IMP_State_TCC1 0
-  (IMP_State_TCC1-1 nil 3385977476 nil ("" (existence-tcc) nil nil) nil
-   nil nil nil nil nil)))
+  (IMP_State_TCC1-1 nil 3385977476 nil ("" (existence-tcc) nil nil)
+   unchecked nil nil nil nil nil)))
 (Semantics
  (initial_Program_state_TCC1 0
   (initial_Program_state_TCC1-1 nil 3385977479 nil
-   ("" (subtype-tcc) nil nil) nil nil nil nil nil nil))
+   ("" (subtype-tcc) nil nil) unchecked nil nil nil nil nil))
  (initial_Program_state_TCC2 0
   (initial_Program_state_TCC2-1 nil 3385977479 nil
-   ("" (subtype-tcc) nil nil) nil nil nil nil nil nil))
+   ("" (subtype-tcc) nil nil) unchecked nil nil nil nil nil))
  (deriv_expr_TCC1 0
   (deriv_expr_TCC1-1 nil 3371191509 3372770409
    ("" (subtype-tcc) nil nil) unchecked nil 16 10 nil nil))
@@ -77,7 +72,7 @@
   (deriv_expr_TCC2-1 nil 3371191509 3372770409
    ("" (subtype-tcc) nil nil) unchecked
    ((boolean nonempty-type-decl nil booleans nil)
-    (bool nonempty-type-eq-decl nil booleans nil) nil
+    (bool nonempty-type-eq-decl nil booleans nil)
     (number nonempty-type-decl nil numbers nil)
     (number_field_pred const-decl "[number -> boolean]" number_fields
      nil)
@@ -89,13 +84,13 @@
     (rational nonempty-type-from-decl nil rationals nil)
     (integer_pred const-decl "[rational -> boolean]" integers nil)
     (int nonempty-type-eq-decl nil integers nil)
-    (nat nonempty-type-eq-decl nil naturalnumbers nil) nil nil)
+    (nat nonempty-type-eq-decl nil naturalnumbers nil))
    263 180 nil nil))
  (deriv_expr_TCC3 0
   (deriv_expr_TCC3-1 nil 3371191509 3372770409
    ("" (subtype-tcc) nil nil) unchecked
    ((boolean nonempty-type-decl nil booleans nil)
-    (bool nonempty-type-eq-decl nil booleans nil) nil
+    (bool nonempty-type-eq-decl nil booleans nil)
     (number nonempty-type-decl nil numbers nil)
     (number_field_pred const-decl "[number -> boolean]" number_fields
      nil)
@@ -107,16 +102,16 @@
     (rational nonempty-type-from-decl nil rationals nil)
     (integer_pred const-decl "[rational -> boolean]" integers nil)
     (int nonempty-type-eq-decl nil integers nil)
-    (nat nonempty-type-eq-decl nil naturalnumbers nil) nil nil)
+    (nat nonempty-type-eq-decl nil naturalnumbers nil))
    217 150 nil nil))
  (deriv_expr_TCC4 0
   (deriv_expr_TCC4-1 nil 3371191509 3372770409
-   ("" (termination-tcc) nil nil) unchecked (nil nil) 54 30 nil nil))
+   ("" (termination-tcc) nil nil) unchecked nil 54 30 nil nil))
  (deriv_expr_TCC5 0
   (deriv_expr_TCC5-1 nil 3371191509 3372770409
    ("" (subtype-tcc) nil nil) unchecked
    ((boolean nonempty-type-decl nil booleans nil)
-    (bool nonempty-type-eq-decl nil booleans nil) nil
+    (bool nonempty-type-eq-decl nil booleans nil)
     (number nonempty-type-decl nil numbers nil)
     (number_field_pred const-decl "[number -> boolean]" number_fields
      nil)
@@ -134,7 +129,7 @@
   (deriv_expr_TCC6-1 nil 3371191509 3372770410
    ("" (subtype-tcc) nil nil) unchecked
    ((boolean nonempty-type-decl nil booleans nil)
-    (bool nonempty-type-eq-decl nil booleans nil) nil
+    (bool nonempty-type-eq-decl nil booleans nil)
     (number nonempty-type-decl nil numbers nil)
     (number_field_pred const-decl "[number -> boolean]" number_fields
      nil)
@@ -155,7 +150,7 @@
   (deriv_expr_TCC8-1 nil 3371191509 3372770410
    ("" (subtype-tcc) nil nil) unchecked
    ((boolean nonempty-type-decl nil booleans nil)
-    (bool nonempty-type-eq-decl nil booleans nil) nil
+    (bool nonempty-type-eq-decl nil booleans nil)
     (number nonempty-type-decl nil numbers nil)
     (number_field_pred const-decl "[number -> boolean]" number_fields
      nil)
@@ -173,7 +168,7 @@
   (deriv_expr_TCC9-1 nil 3371191509 3372770410
    ("" (subtype-tcc) nil nil) unchecked
    ((boolean nonempty-type-decl nil booleans nil)
-    (bool nonempty-type-eq-decl nil booleans nil) nil
+    (bool nonempty-type-eq-decl nil booleans nil)
     (number nonempty-type-decl nil numbers nil)
     (number_field_pred const-decl "[number -> boolean]" number_fields
      nil)
@@ -194,7 +189,7 @@
   (deriv_expr_TCC11-1 nil 3371191509 3372770411
    ("" (subtype-tcc) nil nil) unchecked
    ((boolean nonempty-type-decl nil booleans nil)
-    (bool nonempty-type-eq-decl nil booleans nil) nil
+    (bool nonempty-type-eq-decl nil booleans nil)
     (number nonempty-type-decl nil numbers nil)
     (number_field_pred const-decl "[number -> boolean]" number_fields
      nil)
@@ -212,7 +207,7 @@
   (deriv_expr_TCC12-1 nil 3371191509 3372770412
    ("" (subtype-tcc) nil nil) unchecked
    ((boolean nonempty-type-decl nil booleans nil)
-    (bool nonempty-type-eq-decl nil booleans nil) nil
+    (bool nonempty-type-eq-decl nil booleans nil)
     (number nonempty-type-decl nil numbers nil)
     (number_field_pred const-decl "[number -> boolean]" number_fields
      nil)
@@ -230,7 +225,7 @@
   (deriv_expr_TCC13-1 nil 3371191509 3372770413
    ("" (subtype-tcc) nil nil) unchecked
    ((boolean nonempty-type-decl nil booleans nil)
-    (bool nonempty-type-eq-decl nil booleans nil) nil
+    (bool nonempty-type-eq-decl nil booleans nil)
     (number nonempty-type-decl nil numbers nil)
     (number_field_pred const-decl "[number -> boolean]" number_fields
      nil)
@@ -242,13 +237,13 @@
     (rational nonempty-type-from-decl nil rationals nil)
     (integer_pred const-decl "[rational -> boolean]" integers nil)
     (int nonempty-type-eq-decl nil integers nil)
-    (nat nonempty-type-eq-decl nil naturalnumbers nil) nil nil nil)
+    (nat nonempty-type-eq-decl nil naturalnumbers nil))
    1046 850 nil nil))
  (deriv_expr_TCC14 0
   (deriv_expr_TCC14-1 nil 3371191509 3372770414
    ("" (subtype-tcc) nil nil) unchecked
    ((boolean nonempty-type-decl nil booleans nil)
-    (bool nonempty-type-eq-decl nil booleans nil) nil
+    (bool nonempty-type-eq-decl nil booleans nil)
     (number nonempty-type-decl nil numbers nil)
     (number_field_pred const-decl "[number -> boolean]" number_fields
      nil)
@@ -260,13 +255,13 @@
     (rational nonempty-type-from-decl nil rationals nil)
     (integer_pred const-decl "[rational -> boolean]" integers nil)
     (int nonempty-type-eq-decl nil integers nil)
-    (nat nonempty-type-eq-decl nil naturalnumbers nil) nil nil nil)
+    (nat nonempty-type-eq-decl nil naturalnumbers nil))
    1061 810 nil nil))
  (deriv_expr_TCC15 0
   (deriv_expr_TCC15-1 nil 3371191509 3372770415
    ("" (subtype-tcc) nil nil) unchecked
    ((boolean nonempty-type-decl nil booleans nil)
-    (bool nonempty-type-eq-decl nil booleans nil) nil
+    (bool nonempty-type-eq-decl nil booleans nil)
     (number nonempty-type-decl nil numbers nil)
     (number_field_pred const-decl "[number -> boolean]" number_fields
      nil)
@@ -278,31 +273,13 @@
     (rational nonempty-type-from-decl nil rationals nil)
     (integer_pred const-decl "[rational -> boolean]" integers nil)
     (int nonempty-type-eq-decl nil integers nil)
-    (nat nonempty-type-eq-decl nil naturalnumbers nil) nil nil nil)
+    (nat nonempty-type-eq-decl nil naturalnumbers nil))
    1043 790 nil nil))
- (deriv_expr_TCC16 0
-  (deriv_expr_TCC16-1 nil 3371191509 3372770416
-   ("" (subtype-tcc) nil nil) unchecked
-   ((boolean nonempty-type-decl nil booleans nil)
-    (bool nonempty-type-eq-decl nil booleans nil) nil
-    (number nonempty-type-decl nil numbers nil)
-    (number_field_pred const-decl "[number -> boolean]" number_fields
-     nil)
-    (number_field nonempty-type-from-decl nil number_fields nil)
-    (real_pred const-decl "[number_field -> boolean]" reals nil)
-    (real nonempty-type-from-decl nil reals nil)
-    (>= const-decl "bool" reals nil)
-    (rational_pred const-decl "[real -> boolean]" rationals nil)
-    (rational nonempty-type-from-decl nil rationals nil)
-    (integer_pred const-decl "[rational -> boolean]" integers nil)
-    (int nonempty-type-eq-decl nil integers nil)
-    (nat nonempty-type-eq-decl nil naturalnumbers nil) nil nil nil)
-   1094 840 nil nil))
  (deriv_stmt_TCC1 0
   (deriv_stmt_TCC1-1 nil 3371191509 3372770419
    ("" (subtype-tcc) nil nil) unchecked
    ((boolean nonempty-type-decl nil booleans nil)
-    (bool nonempty-type-eq-decl nil booleans nil) nil
+    (bool nonempty-type-eq-decl nil booleans nil)
     (number nonempty-type-decl nil numbers nil)
     (number_field_pred const-decl "[number -> boolean]" number_fields
      nil)
@@ -323,7 +300,7 @@
   (deriv_stmt_TCC3-1 nil 3371191509 3372770419
    ("" (termination-tcc) nil nil) unchecked
    ((boolean nonempty-type-decl nil booleans nil)
-    (bool nonempty-type-eq-decl nil booleans nil) nil
+    (bool nonempty-type-eq-decl nil booleans nil)
     (number nonempty-type-decl nil numbers nil)
     (number_field_pred const-decl "[number -> boolean]" number_fields
      nil)
@@ -341,7 +318,7 @@
   (deriv_stmt_TCC4-1 nil 3371191509 3372770420
    ("" (termination-tcc) nil nil) unchecked
    ((boolean nonempty-type-decl nil booleans nil)
-    (bool nonempty-type-eq-decl nil booleans nil) nil
+    (bool nonempty-type-eq-decl nil booleans nil)
     (number nonempty-type-decl nil numbers nil)
     (number_field_pred const-decl "[number -> boolean]" number_fields
      nil)
@@ -359,7 +336,7 @@
   (deriv_stmt_TCC5-1 nil 3371191509 3372770420
    ("" (subtype-tcc) nil nil) unchecked
    ((boolean nonempty-type-decl nil booleans nil)
-    (bool nonempty-type-eq-decl nil booleans nil) nil
+    (bool nonempty-type-eq-decl nil booleans nil)
     (number nonempty-type-decl nil numbers nil)
     (number_field_pred const-decl "[number -> boolean]" number_fields
      nil)
@@ -371,13 +348,13 @@
     (rational nonempty-type-from-decl nil rationals nil)
     (integer_pred const-decl "[rational -> boolean]" integers nil)
     (int nonempty-type-eq-decl nil integers nil)
-    (nat nonempty-type-eq-decl nil naturalnumbers nil) nil nil)
+    (nat nonempty-type-eq-decl nil naturalnumbers nil))
    207 160 nil nil))
  (deriv_stmt_TCC6 0
   (deriv_stmt_TCC6-1 nil 3371191509 3372770420
    ("" (subtype-tcc) nil nil) unchecked
    ((boolean nonempty-type-decl nil booleans nil)
-    (bool nonempty-type-eq-decl nil booleans nil) nil
+    (bool nonempty-type-eq-decl nil booleans nil)
     (number nonempty-type-decl nil numbers nil)
     (number_field_pred const-decl "[number -> boolean]" number_fields
      nil)
@@ -389,13 +366,13 @@
     (rational nonempty-type-from-decl nil rationals nil)
     (integer_pred const-decl "[rational -> boolean]" integers nil)
     (int nonempty-type-eq-decl nil integers nil)
-    (nat nonempty-type-eq-decl nil naturalnumbers nil) nil nil)
+    (nat nonempty-type-eq-decl nil naturalnumbers nil))
    226 160 nil nil))
  (deriv_stmt_TCC7 0
   (deriv_stmt_TCC7-1 nil 3371191509 3372770421
    ("" (subtype-tcc) nil nil) unchecked
    ((boolean nonempty-type-decl nil booleans nil)
-    (bool nonempty-type-eq-decl nil booleans nil) nil
+    (bool nonempty-type-eq-decl nil booleans nil)
     (number nonempty-type-decl nil numbers nil)
     (number_field_pred const-decl "[number -> boolean]" number_fields
      nil)
@@ -413,7 +390,7 @@
   (deriv_stmt_TCC8-1 nil 3371191509 3372770421
    ("" (subtype-tcc) nil nil) unchecked
    ((boolean nonempty-type-decl nil booleans nil)
-    (bool nonempty-type-eq-decl nil booleans nil) nil
+    (bool nonempty-type-eq-decl nil booleans nil)
     (number nonempty-type-decl nil numbers nil)
     (number_field_pred const-decl "[number -> boolean]" number_fields
      nil)
@@ -431,7 +408,7 @@
   (deriv_stmt_TCC9-1 nil 3371191509 3372770421
    ("" (termination-tcc) nil nil) unchecked
    ((boolean nonempty-type-decl nil booleans nil)
-    (bool nonempty-type-eq-decl nil booleans nil) nil
+    (bool nonempty-type-eq-decl nil booleans nil)
     (number nonempty-type-decl nil numbers nil)
     (number_field_pred const-decl "[number -> boolean]" number_fields
      nil)
@@ -449,7 +426,7 @@
   (deriv_stmt_TCC10-1 nil 3371191509 3372770422
    ("" (termination-tcc) nil nil) unchecked
    ((boolean nonempty-type-decl nil booleans nil)
-    (bool nonempty-type-eq-decl nil booleans nil) nil
+    (bool nonempty-type-eq-decl nil booleans nil)
     (number nonempty-type-decl nil numbers nil)
     (number_field_pred const-decl "[number -> boolean]" number_fields
      nil)
@@ -467,7 +444,7 @@
   (deriv_stmt_TCC11-1 nil 3371191509 3372770422
    ("" (termination-tcc) nil nil) unchecked
    ((boolean nonempty-type-decl nil booleans nil)
-    (bool nonempty-type-eq-decl nil booleans nil) nil
+    (bool nonempty-type-eq-decl nil booleans nil)
     (number nonempty-type-decl nil numbers nil)
     (number_field_pred const-decl "[number -> boolean]" number_fields
      nil)
@@ -485,7 +462,7 @@
   (deriv_stmt_TCC12-1 nil 3371191509 3372770423
    ("" (subtype-tcc) nil nil) unchecked
    ((boolean nonempty-type-decl nil booleans nil)
-    (bool nonempty-type-eq-decl nil booleans nil) nil
+    (bool nonempty-type-eq-decl nil booleans nil)
     (number nonempty-type-decl nil numbers nil)
     (number_field_pred const-decl "[number -> boolean]" number_fields
      nil)
@@ -504,19 +481,19 @@
    ("" (termination-tcc) nil nil) unchecked nil 32 30 nil nil))
  (deriv_stmt_TCC14 0
   (deriv_stmt_TCC14-1 nil 3385977479 nil ("" (termination-tcc) nil nil)
-   nil nil nil nil nil nil))
+   unchecked nil nil nil nil nil))
  (deriv_stmt_TCC15 0
   (deriv_stmt_TCC15-1 nil 3385977479 nil ("" (termination-tcc) nil nil)
-   nil nil nil nil nil nil))
+   unchecked nil nil nil nil nil))
  (deriv_stmt_TCC16 0
   (deriv_stmt_TCC16-1 nil 3385977479 nil ("" (termination-tcc) nil nil)
-   nil nil nil nil nil nil))
+   unchecked nil nil nil nil nil))
  (deriv_stmt_TCC17 0
-  (deriv_stmt_TCC17-1 nil 3385977479 nil ("" (subtype-tcc) nil nil) nil
-   nil nil nil nil nil))
+  (deriv_stmt_TCC17-1 nil 3385977479 nil ("" (subtype-tcc) nil nil)
+   unchecked nil nil nil nil nil))
  (deriv_stmt_TCC18 0
   (deriv_stmt_TCC18-1 nil 3385977479 nil ("" (termination-tcc) nil nil)
-   nil nil nil nil nil nil))
+   unchecked nil nil nil nil nil))
  (expr_determ_step 0
   (expr_determ_step-3 "adapted proof for the new semantics" 3385988510
    3385988510
@@ -970,6 +947,7 @@
                                                           (flatten)
                                                           (("1"
                                                             (replace
+
                                                              -2)
                                                             (("1"
                                                               (case-replace
@@ -992,6 +970,7 @@
                                                                       (flatten)
                                                                       (("1"
                                                                         (replace
+
                                                                          -10)
                                                                         (("1"
                                                                           (inst-cp
@@ -1008,6 +987,7 @@
                                                                               (flatten)
                                                                               (("1"
                                                                                 (replace
+
                                                                                  -10)
                                                                                 (("1"
                                                                                   (inst-cp
@@ -1033,6 +1013,7 @@
                                                                                             (flatten)
                                                                                             (("1"
                                                                                               (replace
+
                                                                                                -2)
                                                                                               (("1"
                                                                                                 (case
@@ -1054,6 +1035,7 @@
                                                                                                         (flatten)
                                                                                                         (("1"
                                                                                                           (replace
+
                                                                                                            -14)
                                                                                                           (("1"
                                                                                                             (assert)
@@ -1388,17 +1370,15 @@
     (int nonempty-type-eq-decl nil integers nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (>= const-decl "bool" reals nil)
-    (nat nonempty-type-eq-decl nil naturalnumbers nil) nil
+    (nat nonempty-type-eq-decl nil naturalnumbers nil)
     (< const-decl "bool" reals nil)
     (well_founded? const-decl "bool" orders nil)
-    (pred type-eq-decl nil defined_types nil) nil nil nil
+    (pred type-eq-decl nil defined_types nil)
     (posint_plus_nnint_is_posint application-judgement "posint"
      integers nil)
-    nil nil nil
     (bottom? adt-recognizer-decl "[lift -> boolean]" lift_adt nil)
-    (bottom adt-constructor-decl "(bottom?)" lift_adt nil) nil nil nil
-    nil nil nil nil
-    (up? adt-recognizer-decl "[lift -> boolean]" lift_adt nil) nil
+    (bottom adt-constructor-decl "(bottom?)" lift_adt nil)
+    (up? adt-recognizer-decl "[lift -> boolean]" lift_adt nil)
     (- const-decl "[numfield, numfield -> numfield]" number_fields nil)
     (numfield nonempty-type-eq-decl nil number_fields nil)
     (int_minus_int_is_int application-judgement "int" integers nil)
@@ -1408,12 +1388,12 @@
      "(strict_total_order?[real])" real_props nil)
     (real_gt_is_strict_total_order name-judgement
      "(strict_total_order?[real])" real_props nil)
-    nil nil (= const-decl "[T, T -> boolean]" equalities nil) nil nil
-    nil nil nil nil (finite_set type-eq-decl nil finite_sets nil) nil
-    (list type-decl nil list_adt nil) nil nil
-    (below type-eq-decl nil naturalnumbers nil) nil nil nil nil nil
-    (lift type-decl nil lift_adt nil) nil nil nil
-    (wf_nat formula-decl nil naturalnumbers nil) nil)
+    (= const-decl "[T, T -> boolean]" equalities nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (list type-decl nil list_adt nil)
+    (below type-eq-decl nil naturalnumbers nil)
+    (lift type-decl nil lift_adt nil)
+    (wf_nat formula-decl nil naturalnumbers nil))
    6837 4989 nil nil)
   (expr_determ_step-1 nil 3372767918 3382347154
    ("" (assert)
@@ -1681,6 +1661,7 @@
                                                           (flatten)
                                                           (("1"
                                                             (replace
+
                                                              -2)
                                                             (("1"
                                                               (case-replace
@@ -1703,6 +1684,7 @@
                                                                       (flatten)
                                                                       (("1"
                                                                         (replace
+
                                                                          -10)
                                                                         (("1"
                                                                           (inst-cp
@@ -1719,6 +1701,7 @@
                                                                               (flatten)
                                                                               (("1"
                                                                                 (replace
+
                                                                                  -10)
                                                                                 (("1"
                                                                                   (inst-cp
@@ -1744,6 +1727,7 @@
                                                                                             (flatten)
                                                                                             (("1"
                                                                                               (replace
+
                                                                                                -2)
                                                                                               (("1"
                                                                                                 (case
@@ -1765,6 +1749,7 @@
                                                                                                         (flatten)
                                                                                                         (("1"
                                                                                                           (replace
+
                                                                                                            -14)
                                                                                                           (("1"
                                                                                                             (assert)
@@ -2085,7 +2070,7 @@
       nil))
     nil)
    unfinished
-   ((< const-decl "bool" reals nil) nil
+   ((< const-decl "bool" reals nil)
     (nat nonempty-type-eq-decl nil naturalnumbers nil)
     (>= const-decl "bool" reals nil)
     (bool nonempty-type-eq-decl nil booleans nil)
@@ -2102,19 +2087,96 @@
     (number nonempty-type-decl nil numbers nil)
     (wf_induction formula-decl nil wf_induction nil)
     (well_founded? const-decl "bool" orders nil)
-    (pred type-eq-decl nil defined_types nil) nil nil nil nil nil nil
+    (pred type-eq-decl nil defined_types nil)
     (bottom? adt-recognizer-decl "[lift -> boolean]" lift_adt nil)
-    (bottom adt-constructor-decl "(bottom?)" lift_adt nil) nil nil nil
-    nil nil nil nil
+    (bottom adt-constructor-decl "(bottom?)" lift_adt nil)
     (up? adt-recognizer-decl "[lift -> boolean]" lift_adt nil)
     (numfield nonempty-type-eq-decl nil number_fields nil)
     (- const-decl "[numfield, numfield -> numfield]" number_fields nil)
-    nil nil (= const-decl "[T, T -> boolean]" equalities nil) nil nil
-    nil nil nil nil nil (list type-decl nil list_adt nil) nil nil
-    (below type-eq-decl nil naturalnumbers nil) nil nil nil nil nil
-    (lift type-decl nil lift_adt nil) nil nil nil
-    (wf_nat formula-decl nil naturalnumbers nil) nil)
+    (= const-decl "[T, T -> boolean]" equalities nil)
+    (list type-decl nil list_adt nil)
+    (below type-eq-decl nil naturalnumbers nil)
+    (lift type-decl nil lift_adt nil)
+    (wf_nat formula-decl nil naturalnumbers nil))
    9788 4901 t shostak))
+ (expr_determ_step2 0
+  (expr_determ_step2-1 nil 3387107674 3387107760
+   ("" (skosimp*)
+    (("" (expand "deriv_expr")
+      (("" (use "expr_determ_step")
+        (("" (assert)
+          (("" (inst?)
+            (("" (assert)
+              (("" (split -1)
+                (("1" (propax) nil nil) ("2" (propax) nil nil)) nil))
+              nil))
+            nil))
+          nil))
+        nil))
+      nil))
+    nil)
+   unchecked
+   ((deriv_expr const-decl "bool" Semantics nil)
+    (Val type-decl nil Val_adt nil)
+    (FullState formal-type-decl nil Semantics nil)
+    (Expr type-decl nil Expr_adt nil)
+    (Name formal-nonempty-type-decl nil Semantics nil)
+    (FullProgram formal-type-decl nil Semantics nil)
+    (number nonempty-type-decl nil numbers nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (number_field_pred const-decl "[number -> boolean]" number_fields
+     nil)
+    (number_field nonempty-type-from-decl nil number_fields nil)
+    (real_pred const-decl "[number_field -> boolean]" reals nil)
+    (real nonempty-type-from-decl nil reals nil)
+    (rational_pred const-decl "[real -> boolean]" rationals nil)
+    (rational nonempty-type-from-decl nil rationals nil)
+    (integer_pred const-decl "[rational -> boolean]" integers nil)
+    (int nonempty-type-eq-decl nil integers nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (>= const-decl "bool" reals nil)
+    (nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (expr_determ_step formula-decl nil Semantics nil))
+   85945 1830 t shostak))
+ (expr_determ_step3 0
+  (expr_determ_step3-1 nil 3387107828 3387107862
+   ("" (skosimp*)
+    (("" (assert)
+      (("" (skosimp*)
+        (("" (use "expr_determ_step2")
+          (("" (expand "deriv_expr" -1)
+            (("" (assert)
+              (("" (split -1)
+                (("1" (propax) nil nil) ("2" (propax) nil nil)) nil))
+              nil))
+            nil))
+          nil))
+        nil))
+      nil))
+    nil)
+   proved
+   ((expr_determ_step2 formula-decl nil Semantics nil)
+    (FullState formal-type-decl nil Semantics nil)
+    (Val type-decl nil Val_adt nil)
+    (nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (>= const-decl "bool" reals nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (int nonempty-type-eq-decl nil integers nil)
+    (integer_pred const-decl "[rational -> boolean]" integers nil)
+    (rational nonempty-type-from-decl nil rationals nil)
+    (rational_pred const-decl "[real -> boolean]" rationals nil)
+    (real nonempty-type-from-decl nil reals nil)
+    (real_pred const-decl "[number_field -> boolean]" reals nil)
+    (number_field nonempty-type-from-decl nil number_fields nil)
+    (number_field_pred const-decl "[number -> boolean]" number_fields
+     nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (number nonempty-type-decl nil numbers nil)
+    (FullProgram formal-type-decl nil Semantics nil)
+    (Name formal-nonempty-type-decl nil Semantics nil)
+    (Expr type-decl nil Expr_adt nil)
+    (deriv_expr const-decl "bool" Semantics nil))
+   33802 1180 t shostak))
  (stmt_determ_step 0
   (stmt_determ_step-1 nil 3371194190 3382347193
    ("" (skosimp)
@@ -2485,6 +2547,7 @@
                                                           (flatten)
                                                           (("1"
                                                             (replace
+
                                                              -13)
                                                             (("1"
                                                               (inst
@@ -2634,31 +2697,28 @@
       nil))
     nil)
    unfinished
-   (nil (wf_nat formula-decl nil naturalnumbers nil) nil nil nil
-    (lift type-decl nil lift_adt nil) nil nil nil nil nil nil
-    (list type-decl nil list_adt nil) nil
-    (finite_set type-eq-decl nil finite_sets nil) nil nil nil nil nil
-    nil (= const-decl "[T, T -> boolean]" equalities nil) nil nil nil
-    nil nil (bottom adt-constructor-decl "(bottom?)" lift_adt nil)
-    (bottom? adt-recognizer-decl "[lift -> boolean]" lift_adt nil) nil
-    nil nil nil nil nil (below type-eq-decl nil naturalnumbers nil) nil
-    nil nil nil nil
+   ((wf_nat formula-decl nil naturalnumbers nil)
+    (lift type-decl nil lift_adt nil) (list type-decl nil list_adt nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (= const-decl "[T, T -> boolean]" equalities nil)
+    (bottom adt-constructor-decl "(bottom?)" lift_adt nil)
+    (bottom? adt-recognizer-decl "[lift -> boolean]" lift_adt nil)
+    (below type-eq-decl nil naturalnumbers nil)
     (posint_plus_nnint_is_posint application-judgement "posint"
      integers nil)
-    nil nil
-    (int_minus_int_is_int application-judgement "int" integers nil) nil
-    nil (up? adt-recognizer-decl "[lift -> boolean]" lift_adt nil)
+    (int_minus_int_is_int application-judgement "int" integers nil)
+    (up? adt-recognizer-decl "[lift -> boolean]" lift_adt nil)
     (real_lt_is_strict_total_order name-judgement
      "(strict_total_order?[real])" real_props nil)
     (real_ge_is_total_order name-judgement "(total_order?[real])"
      real_props nil)
     (- const-decl "[numfield, numfield -> numfield]" number_fields nil)
-    (numfield nonempty-type-eq-decl nil number_fields nil) nil
+    (numfield nonempty-type-eq-decl nil number_fields nil)
     (real_gt_is_strict_total_order name-judgement
      "(strict_total_order?[real])" real_props nil)
-    nil (pred type-eq-decl nil defined_types nil)
+    (pred type-eq-decl nil defined_types nil)
     (well_founded? const-decl "bool" orders nil)
-    (< const-decl "bool" reals nil) nil
+    (< const-decl "bool" reals nil)
     (nat nonempty-type-eq-decl nil naturalnumbers nil)
     (>= const-decl "bool" reals nil)
     (bool nonempty-type-eq-decl nil booleans nil)
@@ -2706,7 +2766,7 @@
     nil)
    unfinished
    ((< const-decl "bool" reals nil)
-    (below type-eq-decl nil naturalnumbers nil) nil nil
+    (below type-eq-decl nil naturalnumbers nil)
     (nat nonempty-type-eq-decl nil naturalnumbers nil)
     (>= const-decl "bool" reals nil)
     (bool nonempty-type-eq-decl nil booleans nil)
@@ -2720,10 +2780,10 @@
     (number_field_pred const-decl "[number -> boolean]" number_fields
      nil)
     (boolean nonempty-type-decl nil booleans nil)
-    (number nonempty-type-decl nil numbers nil) nil nil nil nil
-    (lift type-decl nil lift_adt nil) nil nil nil nil
-    (finite_set type-eq-decl nil finite_sets nil) nil
-    (list type-decl nil list_adt nil) nil nil nil nil nil nil nil)
+    (number nonempty-type-decl nil numbers nil)
+    (lift type-decl nil lift_adt nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (list type-decl nil list_adt nil))
    1362 1360 t shostak))
  (stmt_determ 0
   (stmt_determ-1 nil 3371193973 3382347243
@@ -2737,7 +2797,7 @@
       nil))
     nil)
    unfinished
-   (nil (number nonempty-type-decl nil numbers nil)
+   ((number nonempty-type-decl nil numbers nil)
     (boolean nonempty-type-decl nil booleans nil)
     (number_field_pred const-decl "[number -> boolean]" number_fields
      nil)
@@ -2750,77 +2810,77 @@
     (int nonempty-type-eq-decl nil integers nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (>= const-decl "bool" reals nil)
-    (nat nonempty-type-eq-decl nil naturalnumbers nil) nil nil nil nil
-    (lift type-decl nil lift_adt nil) nil nil nil nil nil nil nil
-    (finite_set type-eq-decl nil finite_sets nil) nil
-    (list type-decl nil list_adt nil) nil nil nil)
+    (nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (lift type-decl nil lift_adt nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (list type-decl nil list_adt nil))
    1274 1270 t shostak)))
 (ProgramSemantics
  (execute_set_TCC1 0
-  (execute_set_TCC1-1 nil 3385977480 nil ("" (subtype-tcc) nil nil) nil
-   nil nil nil nil nil))
+  (execute_set_TCC1-1 nil 3385977480 nil ("" (subtype-tcc) nil nil)
+   unchecked nil nil nil nil nil))
  (execute_CaseJML_TCC1 0
   (execute_CaseJML_TCC1-1 nil 3385977480 nil ("" (subtype-tcc) nil nil)
-   nil nil nil nil nil nil))
+   unchecked nil nil nil nil nil))
  (on_method_x_TCC1 0
-  (on_method_x_TCC1-1 nil 3385977480 nil ("" (subtype-tcc) nil nil) nil
-   nil nil nil nil nil))
+  (on_method_x_TCC1-1 nil 3385977480 nil ("" (subtype-tcc) nil nil)
+   unchecked nil nil nil nil nil))
  (IMP_Semantics_TCC1 0
   (IMP_Semantics_TCC1-1 nil 3385977480 nil ("" (subtype-tcc) nil nil)
-   nil nil nil nil nil nil))
+   unchecked nil nil nil nil nil))
  (IMP_Semantics_TCC2 0
   (IMP_Semantics_TCC2-1 nil 3385977480 nil ("" (subtype-tcc) nil nil)
-   nil nil nil nil nil nil)))
+   unchecked nil nil nil nil nil)))
 (AnnotatedProgramSemantics
- (update_state_TCC1 0
-  (update_state_TCC1-1 nil 3385977481 nil ("" (subtype-tcc) nil nil)
-   nil nil nil nil nil nil))
- (execute_set_TCC1 0
-  (execute_set_TCC1-1 nil 3385977481 nil ("" (subtype-tcc) nil nil) nil
-   nil nil nil nil nil))
- (execute_set_TCC2 0
-  (execute_set_TCC2-1 nil 3385977481 nil ("" (subtype-tcc) nil nil) nil
-   nil nil nil nil nil))
- (on_method_entry_TCC1 0
-  (on_method_entry_TCC1-1 nil 3385977481 nil ("" (subtype-tcc) nil nil)
-   nil nil nil nil nil nil))
- (on_method_entry_TCC2 0
-  (on_method_entry_TCC2-1 nil 3385977481 nil ("" (subtype-tcc) nil nil)
-   nil nil nil nil nil nil))
- (on_method_entry_TCC3 0
-  (on_method_entry_TCC3-1 nil 3385977481 nil ("" (subtype-tcc) nil nil)
-   nil nil nil nil nil nil))
- (on_method_entry_TCC4 0
-  (on_method_entry_TCC4-1 nil 3385977481 nil ("" (subtype-tcc) nil nil)
-   nil nil nil nil nil nil))
- (on_method_entry_TCC5 0
-  (on_method_entry_TCC5-1 nil 3385977481 nil ("" (subtype-tcc) nil nil)
-   nil nil nil nil nil nil))
- (on_method_exit_normal_TCC1 0
-  (on_method_exit_normal_TCC1-1 nil 3385977481 nil
-   ("" (subtype-tcc) nil nil) nil nil nil nil nil nil))
- (on_method_exit_normal_TCC2 0
-  (on_method_exit_normal_TCC2-1 nil 3385977481 nil
-   ("" (subtype-tcc) nil nil) nil nil nil nil nil nil))
- (on_method_exit_normal_TCC3 0
-  (on_method_exit_normal_TCC3-1 nil 3385977481 nil
-   ("" (subtype-tcc) nil nil) nil nil nil nil nil nil))
- (on_method_exit_normal_TCC4 0
-  (on_method_exit_normal_TCC4-1 nil 3385977481 nil
-   ("" (subtype-tcc) nil nil) nil nil nil nil nil nil))
- (on_method_exit_exceptional_TCC1 0
-  (on_method_exit_exceptional_TCC1-1 nil 3385977481 nil
-   ("" (subtype-tcc) nil nil) nil nil nil nil nil nil))
- (on_method_exit_exceptional_TCC2 0
-  (on_method_exit_exceptional_TCC2-1 nil 3385977481 nil
-   ("" (subtype-tcc) nil nil) nil nil nil nil nil nil))
- (on_method_exit_exceptional_TCC3 0
-  (on_method_exit_exceptional_TCC3-1 nil 3385977481 nil
-   ("" (subtype-tcc) nil nil) nil nil nil nil nil nil))
- (on_method_exit_exceptional_TCC4 0
-  (on_method_exit_exceptional_TCC4-1 nil 3385977481 nil
-   ("" (subtype-tcc) nil nil) nil nil nil nil nil nil))
+ (update_state_AP_TCC1 0
+  (update_state_AP_TCC1-1 nil 3387107674 nil ("" (subtype-tcc) nil nil)
+   unfinished nil nil nil nil nil))
+ (execute_set_AP_TCC1 0
+  (execute_set_AP_TCC1-1 nil 3387107674 nil ("" (subtype-tcc) nil nil)
+   unfinished nil nil nil nil nil))
+ (execute_set_AP_TCC2 0
+  (execute_set_AP_TCC2-1 nil 3387107674 nil ("" (subtype-tcc) nil nil)
+   unfinished nil nil nil nil nil))
+ (on_method_entry_AP_TCC1 0
+  (on_method_entry_AP_TCC1-1 nil 3387107674 nil
+   ("" (subtype-tcc) nil nil) unfinished nil nil nil nil nil))
+ (on_method_entry_AP_TCC2 0
+  (on_method_entry_AP_TCC2-1 nil 3387107674 nil
+   ("" (subtype-tcc) nil nil) unfinished nil nil nil nil nil))
+ (on_method_entry_AP_TCC3 0
+  (on_method_entry_AP_TCC3-1 nil 3387107674 nil
+   ("" (subtype-tcc) nil nil) unfinished nil nil nil nil nil))
+ (on_method_entry_AP_TCC4 0
+  (on_method_entry_AP_TCC4-1 nil 3387107674 nil
+   ("" (subtype-tcc) nil nil) unfinished nil nil nil nil nil))
+ (on_method_entry_AP_TCC5 0
+  (on_method_entry_AP_TCC5-1 nil 3387107674 nil
+   ("" (subtype-tcc) nil nil) unfinished nil nil nil nil nil))
+ (on_method_exit_normal_AP_TCC1 0
+  (on_method_exit_normal_AP_TCC1-1 nil 3387107674 nil
+   ("" (subtype-tcc) nil nil) unfinished nil nil nil nil nil))
+ (on_method_exit_normal_AP_TCC2 0
+  (on_method_exit_normal_AP_TCC2-1 nil 3387107674 nil
+   ("" (subtype-tcc) nil nil) unfinished nil nil nil nil nil))
+ (on_method_exit_normal_AP_TCC3 0
+  (on_method_exit_normal_AP_TCC3-1 nil 3387107674 nil
+   ("" (subtype-tcc) nil nil) unfinished nil nil nil nil nil))
+ (on_method_exit_normal_AP_TCC4 0
+  (on_method_exit_normal_AP_TCC4-1 nil 3387107674 nil
+   ("" (subtype-tcc) nil nil) unfinished nil nil nil nil nil))
+ (on_method_exit_exceptional_AP_TCC1 0
+  (on_method_exit_exceptional_AP_TCC1-1 nil 3387107674 nil
+   ("" (subtype-tcc) nil nil) unfinished nil nil nil nil nil))
+ (on_method_exit_exceptional_AP_TCC2 0
+  (on_method_exit_exceptional_AP_TCC2-1 nil 3387107674 nil
+   ("" (subtype-tcc) nil nil) unfinished nil nil nil nil nil))
+ (on_method_exit_exceptional_AP_TCC3 0
+  (on_method_exit_exceptional_AP_TCC3-1 nil 3387107674 nil
+   ("" (subtype-tcc) nil nil) unfinished nil nil nil nil nil))
+ (on_method_exit_exceptional_AP_TCC4 0
+  (on_method_exit_exceptional_AP_TCC4-1 nil 3387107674 nil
+   ("" (subtype-tcc) nil nil) unfinished nil nil nil nil nil))
  (initial_AP_state_TCC1 0
   (initial_AP_state_TCC1-1 nil 3385977481 nil
-   ("" (subtype-tcc) nil nil) nil nil nil nil nil nil)))
+   ("" (subtype-tcc) nil nil) unchecked nil nil nil nil nil)))
 
