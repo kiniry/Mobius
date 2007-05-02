@@ -1074,6 +1074,11 @@ public class Lifter extends EscNodeBuilder
 		if (symbolTypes.containsKey(name0))
 			return (FnSymbol)symbolTypes.get(name0);
 		
+		if (name.startsWith("RES-53")) {
+			int x = 7;
+			x++;
+		}
+		
 		FnSymbol fn;
 		if (arity == 0)
 			fn = registerConstant(name, new SortVar());
@@ -1125,8 +1130,16 @@ public class Lifter extends EscNodeBuilder
 			
 		case TagConstants.TYPESIG:
 		case TagConstants.TYPENAME:
+		case TagConstants.TYPECODE:
+		//case TagConstants.TYPE:
+		//case TagConstants.TYPETYPE:
 			return sortRef;
-			
+		
+		// HACK! HACK! HACK! HACK! HACK! HACK!
+		case TagConstants.VOIDTYPE:
+			return sortRef;
+    	// HACK! HACK! HACK! HACK! HACK! HACK! (end)
+		
 		case TagConstants.ANY:
 			return new SortVar();
 			
