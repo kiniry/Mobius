@@ -23,7 +23,7 @@
 # What better comment than the one given here in the 'run' file!  Hence,
 # the 'run' file is prepended to the 'ans' and 'out' files.
 
-PROVER_CC_LIMIT=20
+export PROVER_CC_LIMIT=20
 ${ESCJ} -useOldStringHandling $* C.java > out.raw
 sort out.raw | cat run -
 sort ans.raw | cat run - > ans
