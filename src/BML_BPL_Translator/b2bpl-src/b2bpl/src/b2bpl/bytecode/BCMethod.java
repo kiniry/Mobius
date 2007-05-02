@@ -7,7 +7,7 @@ import b2bpl.bytecode.bml.ast.BMLAssertStatement;
 import b2bpl.bytecode.bml.ast.BMLAssumeStatement;
 import b2bpl.bytecode.bml.ast.BMLLoopSpecification;
 import b2bpl.bytecode.bml.ast.BMLMethodSpecification;
-import b2bpl.translation.TranslationConstants;
+import b2bpl.translation.ITranslationConstants;
 
 
 public class BCMethod extends BCMember {
@@ -100,7 +100,7 @@ public class BCMethod extends BCMember {
     s.append(owner.getName());
     s.append('.');
     
-    s.append(name.replace(Constants.CONSTRUCTOR_NAME, TranslationConstants.CONSTRUCTOR_NAME));
+    s.append(name.replace(IConstants.CONSTRUCTOR_NAME, ITranslationConstants.CONSTRUCTOR_NAME));
     
     if (this.returnType.getName() != "void") {
       s.append('.');

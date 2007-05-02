@@ -1,6 +1,6 @@
 package b2bpl.bpl.ast;
 
-import b2bpl.bpl.BPLVisitor;
+import b2bpl.bpl.IBPLVisitor;
 
 
 public class BPLBinaryLogicalExpression extends BPLBinaryExpression {
@@ -39,7 +39,7 @@ public class BPLBinaryLogicalExpression extends BPLBinaryExpression {
     return isAssociativeTo(other);
   }
 
-  public <R> R accept(BPLVisitor<R> visitor) {
+  public <R> R accept(IBPLVisitor<R> visitor) {
     return visitor.visitBinaryLogicalExpression(this);
   }
 

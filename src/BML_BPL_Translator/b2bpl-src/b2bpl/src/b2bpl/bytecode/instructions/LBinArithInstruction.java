@@ -1,7 +1,7 @@
 package b2bpl.bytecode.instructions;
 
-import b2bpl.bytecode.InstructionVisitor;
-import b2bpl.bytecode.Opcodes;
+import b2bpl.bytecode.IInstructionVisitor;
+import b2bpl.bytecode.IOpCodes;
 
 
 public class LBinArithInstruction extends ArithmeticInstruction {
@@ -9,19 +9,19 @@ public class LBinArithInstruction extends ArithmeticInstruction {
   private static String[] runtimeExceptions;
 
   public static final LBinArithInstruction LADD =
-    new LBinArithInstruction(Opcodes.LADD);
+    new LBinArithInstruction(IOpCodes.LADD);
 
   public static final LBinArithInstruction LSUB =
-    new LBinArithInstruction(Opcodes.LSUB);
+    new LBinArithInstruction(IOpCodes.LSUB);
 
   public static final LBinArithInstruction LMUL =
-    new LBinArithInstruction(Opcodes.LMUL);
+    new LBinArithInstruction(IOpCodes.LMUL);
 
   public static final LBinArithInstruction LDIV =
-    new LBinArithInstruction(Opcodes.LDIV);
+    new LBinArithInstruction(IOpCodes.LDIV);
 
   public static final LBinArithInstruction LREM =
-    new LBinArithInstruction(Opcodes.LREM);
+    new LBinArithInstruction(IOpCodes.LREM);
 
   private LBinArithInstruction(int opcode) {
     super(opcode);
@@ -38,11 +38,11 @@ public class LBinArithInstruction extends ArithmeticInstruction {
     return runtimeExceptions;
   }
 
-  public void accept(InstructionVisitor visitor) {
+  public void accept(IInstructionVisitor visitor) {
     visitor.visitLBinArithInstruction(this);
   }
 
   public String toString() {
-    return Opcodes.NAMES[opcode];
+    return IOpCodes.NAMES[opcode];
   }
 }

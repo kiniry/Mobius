@@ -1,7 +1,7 @@
 package b2bpl.bytecode;
 
 
-public interface Constants {
+public interface IConstants {
 
   String CONSTRUCTOR_NAME = "<init>";
 

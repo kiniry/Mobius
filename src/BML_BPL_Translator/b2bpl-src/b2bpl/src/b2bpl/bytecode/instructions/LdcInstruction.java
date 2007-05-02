@@ -1,7 +1,7 @@
 package b2bpl.bytecode.instructions;
 
-import b2bpl.bytecode.InstructionVisitor;
-import b2bpl.bytecode.Opcodes;
+import b2bpl.bytecode.IInstructionVisitor;
+import b2bpl.bytecode.IOpCodes;
 
 
 public class LdcInstruction extends Instruction {
@@ -10,7 +10,7 @@ public class LdcInstruction extends Instruction {
 
   public LdcInstruction(Object constant) {
     super(((constant instanceof Long) || (constant instanceof Double)) ?
-            Opcodes.LDC2_W : Opcodes.LDC);
+            IOpCodes.LDC2_W : IOpCodes.LDC);
     this.constant = constant;
   }
 
@@ -18,14 +18,14 @@ public class LdcInstruction extends Instruction {
     return constant;
   }
 
-  public void accept(InstructionVisitor visitor) {
+  public void accept(IInstructionVisitor visitor) {
     visitor.visitLdcInstruction(this);
   }
 
   public String toString() {
     StringBuffer sb = new StringBuffer();
 
-    sb.append(Opcodes.NAMES[opcode]).append(" ");
+    sb.append(IOpCodes.NAMES[opcode]).append(" ");
     if (constant instanceof String) {
       sb.append('"').append(constant).append('"');
     } else {

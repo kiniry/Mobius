@@ -20,7 +20,7 @@ import b2bpl.bpl.ast.BPLBuiltInType;
 import b2bpl.bpl.ast.BPLExpression;
 import b2bpl.bpl.ast.BPLVariable;
 import b2bpl.bytecode.BCField;
-import b2bpl.bytecode.bml.BMLStoreRefVisitor;
+import b2bpl.bytecode.bml.IBMLStoreRefVisitor;
 import b2bpl.bytecode.bml.ast.BMLArrayAllStoreRef;
 import b2bpl.bytecode.bml.ast.BMLArrayElementStoreRef;
 import b2bpl.bytecode.bml.ast.BMLArrayRangeStoreRef;
@@ -68,7 +68,7 @@ public class ModifiesFilter {
    * The translation context to be used during the translation of the current
    * BML store reference.
    */
-  private TranslationContext context;
+  private ITranslationContext context;
 
   /**
    * Constructor with all the possible parameterizations of a modifies clause
@@ -176,7 +176,7 @@ public class ModifiesFilter {
    *                   references.
    */
   public BPLExpression translate(
-      TranslationContext context,
+      ITranslationContext context,
       BMLStoreRef... storeRefs) {
     this.context = context;
     Filter filter = new Filter();
@@ -192,7 +192,7 @@ public class ModifiesFilter {
    *
    * @author Ovidio Mallo
    */
-  private final class Filter implements BMLStoreRefVisitor<BPLExpression> {
+  private final class Filter implements IBMLStoreRefVisitor<BPLExpression> {
 
     /**
      * State variable to keep track of whether we currently are on the LHS of a

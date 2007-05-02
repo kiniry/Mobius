@@ -105,7 +105,7 @@ public final class InstructionHandle {
     this.isThisInitialized = isThisInitialized;
   }
 
-  public void accept(InstructionVisitor visitor) {
+  public void accept(IInstructionVisitor visitor) {
     if (instruction != null) {
       instruction.accept(visitor);
     }

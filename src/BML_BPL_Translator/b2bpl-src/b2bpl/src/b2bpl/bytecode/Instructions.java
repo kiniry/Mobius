@@ -82,7 +82,7 @@ public class Instructions implements Iterable<InstructionHandle> {
     };
   }
 
-  public void accept(InstructionVisitor visitor) {
+  public void accept(IInstructionVisitor visitor) {
     InstructionHandle current = first;
     while (current != null) {
       current.accept(visitor);

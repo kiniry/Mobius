@@ -1,6 +1,6 @@
 package b2bpl.bpl.ast;
 
-import b2bpl.bpl.BPLVisitor;
+import b2bpl.bpl.IBPLVisitor;
 
 
 public class BPLOldExpression extends BPLExpression {
@@ -20,7 +20,7 @@ public class BPLOldExpression extends BPLExpression {
     return expression.isPredicate();
   }
 
-  public <R> R accept(BPLVisitor<R> visitor) {
+  public <R> R accept(IBPLVisitor<R> visitor) {
     return visitor.visitOldExpression(this);
   }
 }

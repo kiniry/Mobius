@@ -1,8 +1,8 @@
 package b2bpl.bytecode.instructions;
 
 import b2bpl.bytecode.InstructionHandle;
-import b2bpl.bytecode.InstructionVisitor;
-import b2bpl.bytecode.Opcodes;
+import b2bpl.bytecode.IInstructionVisitor;
+import b2bpl.bytecode.IOpCodes;
 
 
 public class IfACmpInstruction extends AbstractIfInstruction {
@@ -12,14 +12,14 @@ public class IfACmpInstruction extends AbstractIfInstruction {
   }
 
   public static IfACmpInstruction createEqual(InstructionHandle target) {
-    return new IfACmpInstruction(Opcodes.IF_ACMPEQ, target);
+    return new IfACmpInstruction(IOpCodes.IF_ACMPEQ, target);
   }
 
   public static IfACmpInstruction createNotEqual(InstructionHandle target) {
-    return new IfACmpInstruction(Opcodes.IF_ACMPNE, target);
+    return new IfACmpInstruction(IOpCodes.IF_ACMPNE, target);
   }
 
-  public void accept(InstructionVisitor visitor) {
+  public void accept(IInstructionVisitor visitor) {
     visitor.visitIfACmpInstruction(this);
   }
 }

@@ -1,7 +1,7 @@
 package b2bpl.translation;
 
 
-public interface TranslationConstants {
+public interface ITranslationConstants {
 
   String CONSTRUCTOR_NAME = ".init";
 

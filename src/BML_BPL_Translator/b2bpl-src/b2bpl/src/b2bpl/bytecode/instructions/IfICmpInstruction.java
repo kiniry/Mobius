@@ -1,8 +1,8 @@
 package b2bpl.bytecode.instructions;
 
 import b2bpl.bytecode.InstructionHandle;
-import b2bpl.bytecode.InstructionVisitor;
-import b2bpl.bytecode.Opcodes;
+import b2bpl.bytecode.IInstructionVisitor;
+import b2bpl.bytecode.IOpCodes;
 
 
 public class IfICmpInstruction extends AbstractIfInstruction {
@@ -12,30 +12,30 @@ public class IfICmpInstruction extends AbstractIfInstruction {
   }
 
   public static IfICmpInstruction createEqual(InstructionHandle target) {
-    return new IfICmpInstruction(Opcodes.IF_ICMPEQ, target);
+    return new IfICmpInstruction(IOpCodes.IF_ICMPEQ, target);
   }
 
   public static IfICmpInstruction createNotEqual(InstructionHandle target) {
-    return new IfICmpInstruction(Opcodes.IF_ICMPNE, target);
+    return new IfICmpInstruction(IOpCodes.IF_ICMPNE, target);
   }
 
   public static IfICmpInstruction createLower(InstructionHandle target) {
-    return new IfICmpInstruction(Opcodes.IF_ICMPLT, target);
+    return new IfICmpInstruction(IOpCodes.IF_ICMPLT, target);
   }
 
   public static IfICmpInstruction createGreaterEqual(InstructionHandle target) {
-    return new IfICmpInstruction(Opcodes.IF_ICMPGE, target);
+    return new IfICmpInstruction(IOpCodes.IF_ICMPGE, target);
   }
 
   public static IfICmpInstruction createGreater(InstructionHandle target) {
-    return new IfICmpInstruction(Opcodes.IF_ICMPGT, target);
+    return new IfICmpInstruction(IOpCodes.IF_ICMPGT, target);
   }
 
   public static IfICmpInstruction createLowerEqual(InstructionHandle target) {
-    return new IfICmpInstruction(Opcodes.IF_ICMPLE, target);
+    return new IfICmpInstruction(IOpCodes.IF_ICMPLE, target);
   }
 
-  public void accept(InstructionVisitor visitor) {
+  public void accept(IInstructionVisitor visitor) {
     visitor.visitIfICmpInstruction(this);
   }
 }

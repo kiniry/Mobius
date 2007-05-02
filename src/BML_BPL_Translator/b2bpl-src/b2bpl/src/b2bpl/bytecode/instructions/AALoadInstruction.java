@@ -1,7 +1,7 @@
 package b2bpl.bytecode.instructions;
 
-import b2bpl.bytecode.InstructionVisitor;
-import b2bpl.bytecode.Opcodes;
+import b2bpl.bytecode.IInstructionVisitor;
+import b2bpl.bytecode.IOpCodes;
 
 
 public class AALoadInstruction extends Instruction {
@@ -14,18 +14,18 @@ public class AALoadInstruction extends Instruction {
   public static final AALoadInstruction AALOAD = new AALoadInstruction();
 
   private AALoadInstruction() {
-    super(Opcodes.AALOAD);
+    super(IOpCodes.AALOAD);
   }
 
   public String[] getRuntimeExceptions() {
     return RUNTIME_EXCEPTIONS;
   }
 
-  public void accept(InstructionVisitor visitor) {
+  public void accept(IInstructionVisitor visitor) {
     visitor.visitAALoadInstruction(this);
   }
 
   public String toString() {
-    return Opcodes.NAMES[opcode];
+    return IOpCodes.NAMES[opcode];
   }
 }

@@ -4,11 +4,11 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-import b2bpl.bpl.transformation.BPLTransformator;
+import b2bpl.bpl.transformation.IBPLTransformator;
 import b2bpl.bpl.transformation.LoopTransformator;
 import b2bpl.bytecode.DefaultSpecificationProvider;
-import b2bpl.bytecode.SpecificationProvider;
-import b2bpl.bytecode.bml.SpecificationDesugarer;
+import b2bpl.bytecode.ISpecificationProvider;
+import b2bpl.bytecode.bml.ISpecificationDesugarer;
 import b2bpl.bytecode.bml.StandardDesugarer;
 
 
@@ -24,8 +24,8 @@ import b2bpl.bytecode.bml.StandardDesugarer;
  * command line arguments.
  *
  * @see Main
- * @see SpecificationProvider
- * @see BPLTransformator
+ * @see ISpecificationProvider
+ * @see IBPLTransformator
  *
  * @author Ovidio Mallo
  */
@@ -39,20 +39,20 @@ public class Project {
   private String[] projectTypes = new String[0];
 
   /**
-   * The optional {@link SpecificationProvider} to be used for the project.
+   * The optional {@link ISpecificationProvider} to be used for the project.
    * Defaults to a minimal {@code DefaultSpecificationProvider}.
    *
    * @see #getSpecificationProvider()
    */
-  private SpecificationProvider specificationProvider = new DefaultSpecificationProvider();
+  private ISpecificationProvider specificationProvider = new DefaultSpecificationProvider();
 
   /**
-   * The {@link SpecificationDesugarer} to be used for BML specifications.
+   * The {@link ISpecificationDesugarer} to be used for BML specifications.
    * Defaults to a {@link StandardDesugarer}.
    *
    * @see #getSpecificationDesugarer()
    */
-  private SpecificationDesugarer specificationDesugarer = new StandardDesugarer();
+  private ISpecificationDesugarer specificationDesugarer = new StandardDesugarer();
 
   /**
    * The set of transformators to apply to the BoogiePL program generated during
@@ -60,7 +60,7 @@ public class Project {
    *
    * @see #getTransformators()
    */
-  private BPLTransformator[] transformators = new BPLTransformator[0];
+  private IBPLTransformator[] transformators = new IBPLTransformator[0];
 
   /**
    * The file to which to output the BoogiePL program generated during the
@@ -150,7 +150,7 @@ public class Project {
     
     
     List<String> types = new ArrayList<String>();
-    List<BPLTransformator> transformators = new ArrayList<BPLTransformator>();
+    List<IBPLTransformator> transformators = new ArrayList<IBPLTransformator>();
 
     int i = 0;
     while (i < args.length) {
@@ -195,7 +195,7 @@ public class Project {
     }
 
     project.projectTypes   = types.toArray(new String[types.size()]);
-    project.transformators = transformators.toArray(new BPLTransformator[transformators.size()]);
+    project.transformators = transformators.toArray(new IBPLTransformator[transformators.size()]);
 
     return project;
   }
@@ -204,15 +204,15 @@ public class Project {
     return projectTypes;
   }
 
-  public SpecificationProvider getSpecificationProvider() {
+  public ISpecificationProvider getSpecificationProvider() {
     return specificationProvider;
   }
 
-  public SpecificationDesugarer getSpecificationDesugarer() {
+  public ISpecificationDesugarer getSpecificationDesugarer() {
     return specificationDesugarer;
   }
 
-  public BPLTransformator[] getTransformators() {
+  public IBPLTransformator[] getTransformators() {
     return transformators;
   }
 

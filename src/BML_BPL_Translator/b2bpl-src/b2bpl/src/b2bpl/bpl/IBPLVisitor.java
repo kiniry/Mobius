@@ -47,7 +47,7 @@ import b2bpl.bpl.ast.BPLVariableDeclaration;
 import b2bpl.bpl.ast.BPLVariableExpression;
 
 
-public interface BPLVisitor<R> {
+public interface IBPLVisitor<R> {
 
   R visitProgram(BPLProgram program);
 

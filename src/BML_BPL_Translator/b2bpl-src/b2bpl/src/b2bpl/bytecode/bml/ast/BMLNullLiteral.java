@@ -1,6 +1,6 @@
 package b2bpl.bytecode.bml.ast;
 
-import b2bpl.bytecode.bml.BMLExpressionVisitor;
+import b2bpl.bytecode.bml.IBMLExpressionVisitor;
 
 
 public class BMLNullLiteral extends BMLLiteral {
@@ -11,7 +11,7 @@ public class BMLNullLiteral extends BMLLiteral {
     // hide the constructor
   }
 
-  public <R> R accept(BMLExpressionVisitor<R> visitor) {
+  public <R> R accept(IBMLExpressionVisitor<R> visitor) {
     return visitor.visitNullLiteral(this);
   }
 

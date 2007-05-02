@@ -1,6 +1,6 @@
 package b2bpl.bytecode.bml.ast;
 
-import b2bpl.bytecode.bml.BMLExpressionVisitor;
+import b2bpl.bytecode.bml.IBMLExpressionVisitor;
 
 
 public class BMLPredicate extends BMLExpression {
@@ -19,7 +19,7 @@ public class BMLPredicate extends BMLExpression {
     return expression.isPredicate();
   }
 
-  public <R> R accept(BMLExpressionVisitor<R> visitor) {
+  public <R> R accept(IBMLExpressionVisitor<R> visitor) {
     return visitor.visitPredicate(this);
   }
 

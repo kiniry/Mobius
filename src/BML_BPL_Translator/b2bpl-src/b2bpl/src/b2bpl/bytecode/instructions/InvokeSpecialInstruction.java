@@ -1,9 +1,9 @@
 package b2bpl.bytecode.instructions;
 
-import b2bpl.bytecode.InstructionVisitor;
+import b2bpl.bytecode.IInstructionVisitor;
 import b2bpl.bytecode.JReferenceType;
 import b2bpl.bytecode.JType;
-import b2bpl.bytecode.Opcodes;
+import b2bpl.bytecode.IOpCodes;
 
 
 public class InvokeSpecialInstruction extends InvokeInstruction {
@@ -18,7 +18,7 @@ public class InvokeSpecialInstruction extends InvokeInstruction {
       JType returnType,
       JType[] parameterTypes) {
     super(
-        Opcodes.INVOKESPECIAL,
+        IOpCodes.INVOKESPECIAL,
         methodOwner,
         methodName,
         returnType,
@@ -29,7 +29,7 @@ public class InvokeSpecialInstruction extends InvokeInstruction {
     return RUNTIME_EXCEPTIONS;
   }
 
-  public void accept(InstructionVisitor visitor) {
+  public void accept(IInstructionVisitor visitor) {
     visitor.visitInvokeSpecialInstruction(this);
   }
 }

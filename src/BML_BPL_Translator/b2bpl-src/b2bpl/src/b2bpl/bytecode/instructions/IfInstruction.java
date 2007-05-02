@@ -1,8 +1,8 @@
 package b2bpl.bytecode.instructions;
 
 import b2bpl.bytecode.InstructionHandle;
-import b2bpl.bytecode.InstructionVisitor;
-import b2bpl.bytecode.Opcodes;
+import b2bpl.bytecode.IInstructionVisitor;
+import b2bpl.bytecode.IOpCodes;
 
 
 public class IfInstruction extends AbstractIfInstruction {
@@ -12,30 +12,30 @@ public class IfInstruction extends AbstractIfInstruction {
   }
 
   public static IfInstruction createEqual(InstructionHandle target) {
-    return new IfInstruction(Opcodes.IFEQ, target);
+    return new IfInstruction(IOpCodes.IFEQ, target);
   }
 
   public static IfInstruction createNotEqual(InstructionHandle target) {
-    return new IfInstruction(Opcodes.IFNE, target);
+    return new IfInstruction(IOpCodes.IFNE, target);
   }
 
   public static IfInstruction createLower(InstructionHandle target) {
-    return new IfInstruction(Opcodes.IFLT, target);
+    return new IfInstruction(IOpCodes.IFLT, target);
   }
 
   public static IfInstruction createGreaterEqual(InstructionHandle target) {
-    return new IfInstruction(Opcodes.IFGE, target);
+    return new IfInstruction(IOpCodes.IFGE, target);
   }
 
   public static IfInstruction createGreater(InstructionHandle target) {
-    return new IfInstruction(Opcodes.IFGT, target);
+    return new IfInstruction(IOpCodes.IFGT, target);
   }
 
   public static IfInstruction createLowerEqual(InstructionHandle target) {
-    return new IfInstruction(Opcodes.IFLE, target);
+    return new IfInstruction(IOpCodes.IFLE, target);
   }
 
-  public void accept(InstructionVisitor visitor) {
+  public void accept(IInstructionVisitor visitor) {
     visitor.visitIfInstruction(this);
   }
 }

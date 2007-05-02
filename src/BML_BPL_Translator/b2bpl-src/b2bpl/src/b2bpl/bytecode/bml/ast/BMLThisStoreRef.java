@@ -1,6 +1,6 @@
 package b2bpl.bytecode.bml.ast;
 
-import b2bpl.bytecode.bml.BMLStoreRefVisitor;
+import b2bpl.bytecode.bml.IBMLStoreRefVisitor;
 
 
 public class BMLThisStoreRef extends BMLStoreRefExpression {
@@ -15,7 +15,7 @@ public class BMLThisStoreRef extends BMLStoreRefExpression {
     return "this";
   }
 
-  public <R> R accept(BMLStoreRefVisitor<R> visitor) {
+  public <R> R accept(IBMLStoreRefVisitor<R> visitor) {
     return visitor.visitThisStoreRef(this);
   }
 }

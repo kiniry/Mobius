@@ -1,7 +1,7 @@
 package b2bpl.bytecode.bml.ast;
 
 import b2bpl.bytecode.BCField;
-import b2bpl.bytecode.bml.BMLExpressionVisitor;
+import b2bpl.bytecode.bml.IBMLExpressionVisitor;
 
 
 public class BMLFieldAccessExpression extends BMLExpression {
@@ -29,7 +29,7 @@ public class BMLFieldAccessExpression extends BMLExpression {
     return fieldReference.getField();
   }
 
-  public <R> R accept(BMLExpressionVisitor<R> visitor) {
+  public <R> R accept(IBMLExpressionVisitor<R> visitor) {
     return visitor.visitFieldAccessExpression(this);
   }
 

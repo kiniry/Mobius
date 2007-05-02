@@ -57,7 +57,7 @@ import b2bpl.bpl.ast.BPLVariableDeclaration;
 import b2bpl.bpl.ast.BPLVariableExpression;
 
 
-public class BPLPrinter implements BPLVisitor<Object> {
+public class BPLPrinter implements IBPLVisitor<Object> {
 
   protected final PrintWriter printer;
 

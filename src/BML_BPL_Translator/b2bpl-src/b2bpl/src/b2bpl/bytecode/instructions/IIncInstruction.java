@@ -1,7 +1,7 @@
 package b2bpl.bytecode.instructions;
 
-import b2bpl.bytecode.InstructionVisitor;
-import b2bpl.bytecode.Opcodes;
+import b2bpl.bytecode.IInstructionVisitor;
+import b2bpl.bytecode.IOpCodes;
 
 
 public class IIncInstruction extends ArithmeticInstruction {
@@ -11,7 +11,7 @@ public class IIncInstruction extends ArithmeticInstruction {
   private final int constant;
 
   public IIncInstruction(int index, int constant) {
-    super(Opcodes.IINC);
+    super(IOpCodes.IINC);
     this.index = index;
     this.constant = constant;
   }
@@ -24,11 +24,11 @@ public class IIncInstruction extends ArithmeticInstruction {
     return constant;
   }
 
-  public void accept(InstructionVisitor visitor) {
+  public void accept(IInstructionVisitor visitor) {
     visitor.visitIIncInstruction(this);
   }
 
   public String toString() {
-    return Opcodes.NAMES[opcode] + " " + index + ", " + constant;
+    return IOpCodes.NAMES[opcode] + " " + index + ", " + constant;
   }
 }

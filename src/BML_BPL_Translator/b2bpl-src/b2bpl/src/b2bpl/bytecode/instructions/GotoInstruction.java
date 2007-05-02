@@ -1,21 +1,21 @@
 package b2bpl.bytecode.instructions;
 
 import b2bpl.bytecode.InstructionHandle;
-import b2bpl.bytecode.InstructionVisitor;
-import b2bpl.bytecode.Opcodes;
+import b2bpl.bytecode.IInstructionVisitor;
+import b2bpl.bytecode.IOpCodes;
 
 
 public class GotoInstruction extends BranchInstruction {
 
   public GotoInstruction(InstructionHandle target) {
-    super(Opcodes.GOTO, target);
+    super(IOpCodes.GOTO, target);
   }
 
   public boolean isUnconditionalBranch() {
     return true;
   }
 
-  public void accept(InstructionVisitor visitor) {
+  public void accept(IInstructionVisitor visitor) {
     visitor.visitGotoInstruction(this);
   }
 }

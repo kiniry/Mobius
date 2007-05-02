@@ -8,7 +8,7 @@ import b2bpl.bytecode.bml.ast.BMLConstraint;
 import b2bpl.bytecode.bml.ast.BMLInvariant;
 
 
-public class JClassType extends JReferenceType implements Constants {
+public class JClassType extends JReferenceType implements IConstants {
 
   public static final JClassType[] EMPTY_ARRAY = new JClassType[0];
 

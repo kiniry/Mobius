@@ -1,9 +1,9 @@
 package b2bpl.bytecode.instructions;
 
-import b2bpl.bytecode.InstructionVisitor;
+import b2bpl.bytecode.IInstructionVisitor;
 import b2bpl.bytecode.JReferenceType;
 import b2bpl.bytecode.JType;
-import b2bpl.bytecode.Opcodes;
+import b2bpl.bytecode.IOpCodes;
 
 
 public class GetFieldInstruction extends FieldInstruction {
@@ -16,14 +16,14 @@ public class GetFieldInstruction extends FieldInstruction {
       JReferenceType fieldOwner,
       String fieldName,
       JType fieldType) {
-    super(Opcodes.GETFIELD, fieldOwner, fieldName, fieldType);
+    super(IOpCodes.GETFIELD, fieldOwner, fieldName, fieldType);
   }
 
   public String[] getRuntimeExceptions() {
     return RUNTIME_EXCEPTIONS;
   }
 
-  public void accept(InstructionVisitor visitor) {
+  public void accept(IInstructionVisitor visitor) {
     visitor.visitGetFieldInstruction(this);
   }
 }

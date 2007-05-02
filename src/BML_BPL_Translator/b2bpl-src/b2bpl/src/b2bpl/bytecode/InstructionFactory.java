@@ -70,141 +70,141 @@ public class InstructionFactory {
   public static Instruction fromInsn(int opcode)
       throws UnsupportedInstructionException {
     switch (opcode) {
-      case Opcodes.NOP:
+      case IOpCodes.NOP:
         return NopInstruction.NOP;
-      case Opcodes.ICONST_M1:
+      case IOpCodes.ICONST_M1:
         return VConstantInstruction.ICONST_M1;
-      case Opcodes.ICONST_0:
+      case IOpCodes.ICONST_0:
         return VConstantInstruction.ICONST_0;
-      case Opcodes.ICONST_1:
+      case IOpCodes.ICONST_1:
         return VConstantInstruction.ICONST_1;
-      case Opcodes.ICONST_2:
+      case IOpCodes.ICONST_2:
         return VConstantInstruction.ICONST_2;
-      case Opcodes.ICONST_3:
+      case IOpCodes.ICONST_3:
         return VConstantInstruction.ICONST_3;
-      case Opcodes.ICONST_4:
+      case IOpCodes.ICONST_4:
         return VConstantInstruction.ICONST_4;
-      case Opcodes.ICONST_5:
+      case IOpCodes.ICONST_5:
         return VConstantInstruction.ICONST_5;
-      case Opcodes.LCONST_0:
+      case IOpCodes.LCONST_0:
         return VConstantInstruction.LCONST_0;
-      case Opcodes.LCONST_1:
+      case IOpCodes.LCONST_1:
         return VConstantInstruction.LCONST_1;
-      case Opcodes.ACONST_NULL:
+      case IOpCodes.ACONST_NULL:
         return AConstNullInstruction.ACONST_NULL;
-      case Opcodes.IALOAD:
+      case IOpCodes.IALOAD:
         return VALoadInstruction.IALOAD;
-      case Opcodes.SALOAD:
+      case IOpCodes.SALOAD:
         return VALoadInstruction.SALOAD;
-      case Opcodes.BALOAD:
+      case IOpCodes.BALOAD:
         return VALoadInstruction.BALOAD;
-      case Opcodes.CALOAD:
+      case IOpCodes.CALOAD:
         return VALoadInstruction.CALOAD;
-      case Opcodes.LALOAD:
+      case IOpCodes.LALOAD:
         return VALoadInstruction.LALOAD;
-      case Opcodes.AALOAD:
+      case IOpCodes.AALOAD:
         return AALoadInstruction.AALOAD;
-      case Opcodes.IASTORE:
+      case IOpCodes.IASTORE:
         return VAStoreInstruction.IASTORE;
-      case Opcodes.SASTORE:
+      case IOpCodes.SASTORE:
         return VAStoreInstruction.SASTORE;
-      case Opcodes.BASTORE:
+      case IOpCodes.BASTORE:
         return VAStoreInstruction.BASTORE;
-      case Opcodes.CASTORE:
+      case IOpCodes.CASTORE:
         return VAStoreInstruction.CASTORE;
-      case Opcodes.LASTORE:
+      case IOpCodes.LASTORE:
         return VAStoreInstruction.LASTORE;
-      case Opcodes.AASTORE:
+      case IOpCodes.AASTORE:
         return AAStoreInstruction.AASTORE;
-      case Opcodes.ARRAYLENGTH:
+      case IOpCodes.ARRAYLENGTH:
         return ArrayLengthInstruction.ARRAYLENGTH;
-      case Opcodes.IADD:
+      case IOpCodes.IADD:
         return IBinArithInstruction.IADD;
-      case Opcodes.ISUB:
+      case IOpCodes.ISUB:
         return IBinArithInstruction.ISUB;
-      case Opcodes.IMUL:
+      case IOpCodes.IMUL:
         return IBinArithInstruction.IMUL;
-      case Opcodes.IDIV:
+      case IOpCodes.IDIV:
         return IBinArithInstruction.IDIV;
-      case Opcodes.IREM:
+      case IOpCodes.IREM:
         return IBinArithInstruction.IREM;
-      case Opcodes.LADD:
+      case IOpCodes.LADD:
         return LBinArithInstruction.LADD;
-      case Opcodes.LSUB:
+      case IOpCodes.LSUB:
         return LBinArithInstruction.LSUB;
-      case Opcodes.LMUL:
+      case IOpCodes.LMUL:
         return LBinArithInstruction.LMUL;
-      case Opcodes.LDIV:
+      case IOpCodes.LDIV:
         return LBinArithInstruction.LDIV;
-      case Opcodes.LREM:
+      case IOpCodes.LREM:
         return LBinArithInstruction.LREM;
-      case Opcodes.INEG:
+      case IOpCodes.INEG:
         return INegInstruction.INEG;
-      case Opcodes.LNEG:
+      case IOpCodes.LNEG:
         return LNegInstruction.LNEG;
-      case Opcodes.ISHL:
+      case IOpCodes.ISHL:
         return IBitwiseInstruction.ISHL;
-      case Opcodes.ISHR:
+      case IOpCodes.ISHR:
         return IBitwiseInstruction.ISHR;
-      case Opcodes.IUSHR:
+      case IOpCodes.IUSHR:
         return IBitwiseInstruction.IUSHR;
-      case Opcodes.IAND:
+      case IOpCodes.IAND:
         return IBitwiseInstruction.IAND;
-      case Opcodes.IOR:
+      case IOpCodes.IOR:
         return IBitwiseInstruction.IOR;
-      case Opcodes.IXOR:
+      case IOpCodes.IXOR:
         return IBitwiseInstruction.IXOR;
-      case Opcodes.LSHL:
+      case IOpCodes.LSHL:
         return LBitwiseInstruction.LSHL;
-      case Opcodes.LSHR:
+      case IOpCodes.LSHR:
         return LBitwiseInstruction.LSHR;
-      case Opcodes.LUSHR:
+      case IOpCodes.LUSHR:
         return LBitwiseInstruction.LUSHR;
-      case Opcodes.LAND:
+      case IOpCodes.LAND:
         return LBitwiseInstruction.LAND;
-      case Opcodes.LOR:
+      case IOpCodes.LOR:
         return LBitwiseInstruction.LOR;
-      case Opcodes.LXOR:
+      case IOpCodes.LXOR:
         return LBitwiseInstruction.LXOR;
-      case Opcodes.I2S:
+      case IOpCodes.I2S:
         return VCastInstruction.I2S;
-      case Opcodes.I2B:
+      case IOpCodes.I2B:
         return VCastInstruction.I2B;
-      case Opcodes.I2C:
+      case IOpCodes.I2C:
         return VCastInstruction.I2C;
-      case Opcodes.I2L:
+      case IOpCodes.I2L:
         return VCastInstruction.I2L;
-      case Opcodes.L2I:
+      case IOpCodes.L2I:
         return VCastInstruction.L2I;
-      case Opcodes.LCMP:
+      case IOpCodes.LCMP:
         return LCmpInstruction.LCMP;
-      case Opcodes.RETURN:
+      case IOpCodes.RETURN:
         return ReturnInstruction.RETURN;
-      case Opcodes.IRETURN:
+      case IOpCodes.IRETURN:
         return IReturnInstruction.IRETURN;
-      case Opcodes.LRETURN:
+      case IOpCodes.LRETURN:
         return LReturnInstruction.LRETURN;
-      case Opcodes.ARETURN:
+      case IOpCodes.ARETURN:
         return AReturnInstruction.ARETURN;
-      case Opcodes.ATHROW:
+      case IOpCodes.ATHROW:
         return AThrowInstruction.ATHROW;
-      case Opcodes.POP:
+      case IOpCodes.POP:
         return PopInstruction.POP;
-      case Opcodes.POP2:
+      case IOpCodes.POP2:
         return Pop2Instruction.POP2;
-      case Opcodes.SWAP:
+      case IOpCodes.SWAP:
         return SwapInstruction.SWAP;
-      case Opcodes.DUP:
+      case IOpCodes.DUP:
         return DupInstruction.DUP;
-      case Opcodes.DUP2:
+      case IOpCodes.DUP2:
         return Dup2Instruction.DUP2;
-      case Opcodes.DUP_X1:
+      case IOpCodes.DUP_X1:
         return DupX1Instruction.DUP_X1;
-      case Opcodes.DUP_X2:
+      case IOpCodes.DUP_X2:
         return DupX2Instruction.DUP_X2;
-      case Opcodes.DUP2_X1:
+      case IOpCodes.DUP2_X1:
         return Dup2X1Instruction.DUP2_X1;
-      case Opcodes.DUP2_X2:
+      case IOpCodes.DUP2_X2:
         return Dup2X2Instruction.DUP2_X2;
       default:
         throw new UnsupportedInstructionException(opcode);
@@ -214,26 +214,26 @@ public class InstructionFactory {
   public static Instruction fromIntInsn(int opcode, int operand)
       throws UnsupportedInstructionException {
     switch (opcode) {
-      case Opcodes.BIPUSH:
-      case Opcodes.SIPUSH:
+      case IOpCodes.BIPUSH:
+      case IOpCodes.SIPUSH:
         return VConstantInstruction.createIConstant(operand);
-      case Opcodes.NEWARRAY:
+      case IOpCodes.NEWARRAY:
         switch (operand) {
-          case Opcodes.T_BOOLEAN:
+          case IOpCodes.T_BOOLEAN:
             return new NewArrayInstruction(JBaseType.BOOLEAN);
-          case Opcodes.T_CHAR:
+          case IOpCodes.T_CHAR:
             return new NewArrayInstruction(JBaseType.CHAR);
-          case Opcodes.T_FLOAT:
+          case IOpCodes.T_FLOAT:
             return new NewArrayInstruction(JBaseType.FLOAT);
-          case Opcodes.T_DOUBLE:
+          case IOpCodes.T_DOUBLE:
             return new NewArrayInstruction(JBaseType.DOUBLE);
-          case Opcodes.T_BYTE:
+          case IOpCodes.T_BYTE:
             return new NewArrayInstruction(JBaseType.BYTE);
-          case Opcodes.T_SHORT:
+          case IOpCodes.T_SHORT:
             return new NewArrayInstruction(JBaseType.SHORT);
-          case Opcodes.T_INT:
+          case IOpCodes.T_INT:
             return new NewArrayInstruction(JBaseType.INT);
-          case Opcodes.T_LONG:
+          case IOpCodes.T_LONG:
           default:
             return new NewArrayInstruction(JBaseType.LONG);
         }
@@ -245,17 +245,17 @@ public class InstructionFactory {
   public static Instruction fromVarInsn(int opcode, int var)
       throws UnsupportedInstructionException {
     switch (opcode) {
-      case Opcodes.ILOAD:
+      case IOpCodes.ILOAD:
         return ILoadInstruction.createOptimal(var);
-      case Opcodes.LLOAD:
+      case IOpCodes.LLOAD:
         return LLoadInstruction.createOptimal(var);
-      case Opcodes.ALOAD:
+      case IOpCodes.ALOAD:
         return ALoadInstruction.createOptimal(var);
-      case Opcodes.ISTORE:
+      case IOpCodes.ISTORE:
         return IStoreInstruction.createOptimal(var);
-      case Opcodes.LSTORE:
+      case IOpCodes.LSTORE:
         return LStoreInstruction.createOptimal(var);
-      case Opcodes.ASTORE:
+      case IOpCodes.ASTORE:
         return AStoreInstruction.createOptimal(var);
       default:
         throw new UnsupportedInstructionException(opcode);
@@ -265,13 +265,13 @@ public class InstructionFactory {
   public static Instruction fromTypeInsn(int opcode, JReferenceType type)
       throws UnsupportedInstructionException {
     switch (opcode) {
-      case Opcodes.NEW:
+      case IOpCodes.NEW:
         return new NewInstruction(type);
-      case Opcodes.ANEWARRAY:
+      case IOpCodes.ANEWARRAY:
         return new ANewArrayInstruction(type);
-      case Opcodes.CHECKCAST:
+      case IOpCodes.CHECKCAST:
         return new CheckCastInstruction(type);
-      case Opcodes.INSTANCEOF:
+      case IOpCodes.INSTANCEOF:
         return new InstanceOfInstruction(type);
       default:
         throw new UnsupportedInstructionException(opcode);
@@ -284,13 +284,13 @@ public class InstructionFactory {
       String name,
       JType type) throws UnsupportedInstructionException {
     switch (opcode) {
-      case Opcodes.GETFIELD:
+      case IOpCodes.GETFIELD:
         return new GetFieldInstruction(owner, name, type);
-      case Opcodes.PUTFIELD:
+      case IOpCodes.PUTFIELD:
         return new PutFieldInstruction(owner, name, type);
-      case Opcodes.GETSTATIC:
+      case IOpCodes.GETSTATIC:
         return new GetStaticInstruction(owner, name, type);
-      case Opcodes.PUTSTATIC:
+      case IOpCodes.PUTSTATIC:
         return new PutStaticInstruction(owner, name, type);
       default:
         throw new UnsupportedInstructionException(opcode);
@@ -304,25 +304,25 @@ public class InstructionFactory {
       JType returnType,
       JType[] parameterTypes) throws UnsupportedInstructionException {
     switch (opcode) {
-      case Opcodes.INVOKEVIRTUAL:
+      case IOpCodes.INVOKEVIRTUAL:
         return new InvokeVirtualInstruction(
             owner,
             name,
             returnType,
             parameterTypes);
-      case Opcodes.INVOKESTATIC:
+      case IOpCodes.INVOKESTATIC:
         return new InvokeStaticInstruction(
             owner,
             name,
             returnType,
             parameterTypes);
-      case Opcodes.INVOKESPECIAL:
+      case IOpCodes.INVOKESPECIAL:
         return new InvokeSpecialInstruction(
             owner,
             name,
             returnType,
             parameterTypes);
-      case Opcodes.INVOKEINTERFACE:
+      case IOpCodes.INVOKEINTERFACE:
         return new InvokeInterfaceInstruction(
             owner,
             name,
@@ -336,40 +336,40 @@ public class InstructionFactory {
   public static Instruction fromJumpInsn(int opcode, InstructionHandle target)
       throws UnsupportedInstructionException {
     switch (opcode) {
-      case Opcodes.IF_ICMPEQ:
+      case IOpCodes.IF_ICMPEQ:
         return IfICmpInstruction.createEqual(target);
-      case Opcodes.IF_ICMPNE:
+      case IOpCodes.IF_ICMPNE:
         return IfICmpInstruction.createNotEqual(target);
-      case Opcodes.IF_ICMPLT:
+      case IOpCodes.IF_ICMPLT:
         return IfICmpInstruction.createLower(target);
-      case Opcodes.IF_ICMPGE:
+      case IOpCodes.IF_ICMPGE:
         return IfICmpInstruction.createGreaterEqual(target);
-      case Opcodes.IF_ICMPGT:
+      case IOpCodes.IF_ICMPGT:
         return IfICmpInstruction.createGreater(target);
-      case Opcodes.IF_ICMPLE:
+      case IOpCodes.IF_ICMPLE:
         return IfICmpInstruction.createLowerEqual(target);
-      case Opcodes.IF_ACMPEQ:
+      case IOpCodes.IF_ACMPEQ:
         return IfACmpInstruction.createEqual(target);
-      case Opcodes.IF_ACMPNE:
+      case IOpCodes.IF_ACMPNE:
         return IfACmpInstruction.createNotEqual(target);
-      case Opcodes.IFEQ:
+      case IOpCodes.IFEQ:
         return IfInstruction.createEqual(target);
-      case Opcodes.IFNE:
+      case IOpCodes.IFNE:
         return IfInstruction.createNotEqual(target);
-      case Opcodes.IFLT:
+      case IOpCodes.IFLT:
         return IfInstruction.createLower(target);
-      case Opcodes.IFGE:
+      case IOpCodes.IFGE:
         return IfInstruction.createGreaterEqual(target);
-      case Opcodes.IFGT:
+      case IOpCodes.IFGT:
         return IfInstruction.createGreater(target);
-      case Opcodes.IFLE:
+      case IOpCodes.IFLE:
         return IfInstruction.createLowerEqual(target);
-      case Opcodes.IFNONNULL:
+      case IOpCodes.IFNONNULL:
         return new IfNonNullInstruction(target);
-      case Opcodes.IFNULL:
+      case IOpCodes.IFNULL:
         return new IfNullInstruction(target);
-      case Opcodes.GOTO:
-      case Opcodes.GOTO_W:
+      case IOpCodes.GOTO:
+      case IOpCodes.GOTO_W:
         return new GotoInstruction(target);
       default:
         throw new UnsupportedInstructionException(opcode);

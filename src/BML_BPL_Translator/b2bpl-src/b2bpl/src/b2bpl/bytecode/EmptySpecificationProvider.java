@@ -5,7 +5,7 @@ import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.MethodVisitor;
 
 
-public class EmptySpecificationProvider implements SpecificationProvider {
+public class EmptySpecificationProvider implements ISpecificationProvider {
 
   public ClassVisitor forClass(JClassType type, ClassVisitor classVisitor) {
     return classVisitor;

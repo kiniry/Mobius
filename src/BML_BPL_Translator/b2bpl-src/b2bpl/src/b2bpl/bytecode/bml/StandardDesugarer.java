@@ -19,7 +19,7 @@ import b2bpl.bytecode.bml.ast.BMLSpecificationCase;
 import b2bpl.bytecode.bml.ast.BMLStoreRef;
 
 
-public class StandardDesugarer implements SpecificationDesugarer {
+public class StandardDesugarer implements ISpecificationDesugarer {
 
   public BMLExpression getObjectInvariant(
       JClassType type,

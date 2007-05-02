@@ -1,26 +1,26 @@
 package b2bpl.bytecode.instructions;
 
-import b2bpl.bytecode.InstructionVisitor;
+import b2bpl.bytecode.IInstructionVisitor;
 import b2bpl.bytecode.JBaseType;
-import b2bpl.bytecode.Opcodes;
+import b2bpl.bytecode.IOpCodes;
 
 
 public class VCastInstruction extends Instruction {
 
   public static final VCastInstruction I2S =
-    new VCastInstruction(Opcodes.I2S, JBaseType.INT, JBaseType.SHORT);
+    new VCastInstruction(IOpCodes.I2S, JBaseType.INT, JBaseType.SHORT);
 
   public static final VCastInstruction I2B =
-    new VCastInstruction(Opcodes.I2B, JBaseType.INT, JBaseType.BYTE);
+    new VCastInstruction(IOpCodes.I2B, JBaseType.INT, JBaseType.BYTE);
 
   public static final VCastInstruction I2C =
-    new VCastInstruction(Opcodes.I2C, JBaseType.INT, JBaseType.CHAR);
+    new VCastInstruction(IOpCodes.I2C, JBaseType.INT, JBaseType.CHAR);
 
   public static final VCastInstruction I2L =
-    new VCastInstruction(Opcodes.I2L, JBaseType.INT, JBaseType.LONG);
+    new VCastInstruction(IOpCodes.I2L, JBaseType.INT, JBaseType.LONG);
 
   public static final VCastInstruction L2I =
-    new VCastInstruction(Opcodes.L2I, JBaseType.LONG, JBaseType.INT);
+    new VCastInstruction(IOpCodes.L2I, JBaseType.LONG, JBaseType.INT);
 
   private final JBaseType sourceType;
 
@@ -43,11 +43,11 @@ public class VCastInstruction extends Instruction {
     return targetType;
   }
 
-  public void accept(InstructionVisitor visitor) {
+  public void accept(IInstructionVisitor visitor) {
     visitor.visitVCastInstruction(this);
   }
 
   public String toString() {
-    return Opcodes.NAMES[opcode];
+    return IOpCodes.NAMES[opcode];
   }
 }

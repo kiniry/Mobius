@@ -1,6 +1,6 @@
 package b2bpl.bpl.ast;
 
-import b2bpl.bpl.BPLVisitor;
+import b2bpl.bpl.IBPLVisitor;
 
 
 public class BPLFunctionApplication extends BPLExpression {
@@ -35,7 +35,7 @@ public class BPLFunctionApplication extends BPLExpression {
     this.function = function;
   }
 
-  public <R> R accept(BPLVisitor<R> visitor) {
+  public <R> R accept(IBPLVisitor<R> visitor) {
     return visitor.visitFunctionApplication(this);
   }
 

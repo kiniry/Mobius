@@ -54,7 +54,7 @@ import b2bpl.bpl.ast.BPLVariable;
 import b2bpl.bytecode.BCField;
 import b2bpl.bytecode.JArrayType;
 import b2bpl.bytecode.JType;
-import b2bpl.bytecode.bml.BMLExpressionVisitor;
+import b2bpl.bytecode.bml.IBMLExpressionVisitor;
 import b2bpl.bytecode.bml.ast.BMLArrayAccessExpression;
 import b2bpl.bytecode.bml.ast.BMLArrayLengthExpression;
 import b2bpl.bytecode.bml.ast.BMLBinaryArithmeticExpression;
@@ -112,7 +112,7 @@ public class SpecificationTranslator {
    * The translation context to be used during the translation of the current
    * BML specification.
    */
-  private TranslationContext context;
+  private ITranslationContext context;
 
   /** The name of current heap to use in the translation. */
   protected final String heap;
@@ -323,7 +323,7 @@ public class SpecificationTranslator {
    *                       translation of the given BML specification.
    */
   public BPLExpression translate(
-      TranslationContext context,
+      ITranslationContext context,
       BMLExpression specification) {
     this.context = context;
     BPLExpression bplExpr = specification.accept(new Translator());
@@ -344,7 +344,7 @@ public class SpecificationTranslator {
    * @author Ovidio Mallo
    */
   private final class Translator
-      implements BMLExpressionVisitor<BPLExpression> {
+      implements IBMLExpressionVisitor<BPLExpression> {
 
     /**
      * State variable to keep track of whether we currently are inside a BML

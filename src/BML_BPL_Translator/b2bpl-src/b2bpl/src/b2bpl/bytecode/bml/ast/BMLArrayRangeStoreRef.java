@@ -1,6 +1,6 @@
 package b2bpl.bytecode.bml.ast;
 
-import b2bpl.bytecode.bml.BMLStoreRefVisitor;
+import b2bpl.bytecode.bml.IBMLStoreRefVisitor;
 
 
 public class BMLArrayRangeStoreRef extends BMLStoreRefExpression {
@@ -32,7 +32,7 @@ public class BMLArrayRangeStoreRef extends BMLStoreRefExpression {
     return endIndex;
   }
 
-  public <R> R accept(BMLStoreRefVisitor<R> visitor) {
+  public <R> R accept(IBMLStoreRefVisitor<R> visitor) {
     return visitor.visitArrayRangeStoreRef(this);
   }
 

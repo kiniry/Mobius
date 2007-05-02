@@ -1,7 +1,7 @@
 package b2bpl.bytecode;
 
 
-public interface Opcodes {
+public interface IOpCodes {
 
   int NOP = 0;
 

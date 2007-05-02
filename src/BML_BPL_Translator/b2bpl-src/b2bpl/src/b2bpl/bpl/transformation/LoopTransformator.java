@@ -89,7 +89,7 @@ import b2bpl.bpl.ast.BPLVariableExpression;
  *
  * @author Ovidio Mallo
  */
-public class LoopTransformator implements BPLTransformator {
+public class LoopTransformator implements IBPLTransformator {
 
   /** The set of declarations of the new, transformed BoogiePL program. */
   private List<BPLDeclaration> declarations;

@@ -1,7 +1,7 @@
 package b2bpl.bytecode.instructions;
 
 import b2bpl.bytecode.InstructionHandle;
-import b2bpl.bytecode.Opcodes;
+import b2bpl.bytecode.IOpCodes;
 
 
 public abstract class BranchInstruction extends Instruction {
@@ -18,6 +18,6 @@ public abstract class BranchInstruction extends Instruction {
   }
 
   public String toString() {
-    return Opcodes.NAMES[opcode] + " " + target.getIndex();
+    return IOpCodes.NAMES[opcode] + " " + target.getIndex();
   }
 }

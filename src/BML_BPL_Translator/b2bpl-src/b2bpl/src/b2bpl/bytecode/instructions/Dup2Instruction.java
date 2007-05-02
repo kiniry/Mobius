@@ -1,7 +1,7 @@
 package b2bpl.bytecode.instructions;
 
-import b2bpl.bytecode.InstructionVisitor;
-import b2bpl.bytecode.Opcodes;
+import b2bpl.bytecode.IInstructionVisitor;
+import b2bpl.bytecode.IOpCodes;
 
 
 public class Dup2Instruction extends Instruction {
@@ -9,14 +9,14 @@ public class Dup2Instruction extends Instruction {
   public static final Dup2Instruction DUP2 = new Dup2Instruction();
 
   private Dup2Instruction() {
-    super(Opcodes.DUP2);
+    super(IOpCodes.DUP2);
   }
 
-  public void accept(InstructionVisitor visitor) {
+  public void accept(IInstructionVisitor visitor) {
     visitor.visitDup2Instruction(this);
   }
 
   public String toString() {
-    return Opcodes.NAMES[opcode];
+    return IOpCodes.NAMES[opcode];
   }
 }

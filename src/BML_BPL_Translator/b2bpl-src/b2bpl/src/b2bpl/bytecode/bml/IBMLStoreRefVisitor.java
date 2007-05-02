@@ -19,7 +19,7 @@ import b2bpl.bytecode.bml.ast.BMLThisStoreRef;
  *
  * @author Ovidio Mallo
  */
-public interface BMLStoreRefVisitor<R> {
+public interface IBMLStoreRefVisitor<R> {
 
   R visitEverythingStoreRef(BMLEverythingStoreRef storeRef);
 

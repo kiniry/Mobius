@@ -1,38 +1,38 @@
 package b2bpl.bytecode.instructions;
 
-import b2bpl.bytecode.InstructionVisitor;
-import b2bpl.bytecode.Opcodes;
+import b2bpl.bytecode.IInstructionVisitor;
+import b2bpl.bytecode.IOpCodes;
 
 
 public class LBitwiseInstruction extends ArithmeticInstruction {
 
   public static final LBitwiseInstruction LSHL =
-    new LBitwiseInstruction(Opcodes.LSHL);
+    new LBitwiseInstruction(IOpCodes.LSHL);
 
   public static final LBitwiseInstruction LSHR =
-    new LBitwiseInstruction(Opcodes.LSHR);
+    new LBitwiseInstruction(IOpCodes.LSHR);
 
   public static final LBitwiseInstruction LUSHR =
-    new LBitwiseInstruction(Opcodes.LUSHR);
+    new LBitwiseInstruction(IOpCodes.LUSHR);
 
   public static final LBitwiseInstruction LAND =
-    new LBitwiseInstruction(Opcodes.LAND);
+    new LBitwiseInstruction(IOpCodes.LAND);
 
   public static final LBitwiseInstruction LOR =
-    new LBitwiseInstruction(Opcodes.LOR);
+    new LBitwiseInstruction(IOpCodes.LOR);
 
   public static final LBitwiseInstruction LXOR =
-    new LBitwiseInstruction(Opcodes.LXOR);
+    new LBitwiseInstruction(IOpCodes.LXOR);
 
   private LBitwiseInstruction(int opcode) {
     super(opcode);
   }
 
-  public void accept(InstructionVisitor visitor) {
+  public void accept(IInstructionVisitor visitor) {
     visitor.visitLBitwiseInstruction(this);
   }
 
   public String toString() {
-    return Opcodes.NAMES[opcode];
+    return IOpCodes.NAMES[opcode];
   }
 }

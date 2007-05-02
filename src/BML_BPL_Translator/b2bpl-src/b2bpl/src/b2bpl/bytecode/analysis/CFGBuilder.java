@@ -6,7 +6,7 @@ import java.util.HashSet;
 import b2bpl.bytecode.BCMethod;
 import b2bpl.bytecode.ExceptionHandler;
 import b2bpl.bytecode.InstructionHandle;
-import b2bpl.bytecode.InstructionVisitor;
+import b2bpl.bytecode.IInstructionVisitor;
 import b2bpl.bytecode.Instructions;
 import b2bpl.bytecode.JClassType;
 import b2bpl.bytecode.JNullType;
@@ -364,7 +364,7 @@ public class CFGBuilder {
    *
    * @author Ovidio Mallo
    */
-  private final class Builder implements InstructionVisitor {
+  private final class Builder implements IInstructionVisitor {
 
     /**
      * The instruction handle of the instruction being visited. Should be

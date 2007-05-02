@@ -62,7 +62,7 @@ import b2bpl.bytecode.instructions.VCastInstruction;
 import b2bpl.bytecode.instructions.VConstantInstruction;
 
 
-public interface InstructionVisitor {
+public interface IInstructionVisitor {
 
   void visitNopInstruction(NopInstruction insn);
 

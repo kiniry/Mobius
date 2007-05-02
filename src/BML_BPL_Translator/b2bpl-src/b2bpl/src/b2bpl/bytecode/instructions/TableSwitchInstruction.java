@@ -1,8 +1,8 @@
 package b2bpl.bytecode.instructions;
 
 import b2bpl.bytecode.InstructionHandle;
-import b2bpl.bytecode.InstructionVisitor;
-import b2bpl.bytecode.Opcodes;
+import b2bpl.bytecode.IInstructionVisitor;
+import b2bpl.bytecode.IOpCodes;
 
 
 public class TableSwitchInstruction extends SwitchInstruction {
@@ -20,7 +20,7 @@ public class TableSwitchInstruction extends SwitchInstruction {
       int maxIndex,
       InstructionHandle defaultTarget,
       InstructionHandle[] targets) {
-    super(Opcodes.TABLESWITCH);
+    super(IOpCodes.TABLESWITCH);
     this.minIndex = minIndex;
     this.maxIndex = maxIndex;
     this.defaultTarget = defaultTarget;
@@ -47,14 +47,14 @@ public class TableSwitchInstruction extends SwitchInstruction {
     return true;
   }
 
-  public void accept(InstructionVisitor visitor) {
+  public void accept(IInstructionVisitor visitor) {
     visitor.visitTableSwitchInstruction(this);
   }
 
   public String toString() {
     StringBuffer sb = new StringBuffer();
 
-    sb.append(Opcodes.NAMES[opcode]);
+    sb.append(IOpCodes.NAMES[opcode]);
     sb.append(" [").append(minIndex).append(", ").append(maxIndex).append("]");
     sb.append(System.getProperty("line.separator"));
     for (int i = 0; i < targets.length; i++) {

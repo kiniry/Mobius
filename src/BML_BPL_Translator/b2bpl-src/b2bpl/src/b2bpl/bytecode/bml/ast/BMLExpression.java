@@ -1,7 +1,7 @@
 package b2bpl.bytecode.bml.ast;
 
 import b2bpl.bytecode.JType;
-import b2bpl.bytecode.bml.BMLExpressionVisitor;
+import b2bpl.bytecode.bml.IBMLExpressionVisitor;
 
 
 public abstract class BMLExpression {
@@ -20,5 +20,5 @@ public abstract class BMLExpression {
     this.type = type;
   }
 
-  public abstract <R> R accept(BMLExpressionVisitor<R> visitor);
+  public abstract <R> R accept(IBMLExpressionVisitor<R> visitor);
 }

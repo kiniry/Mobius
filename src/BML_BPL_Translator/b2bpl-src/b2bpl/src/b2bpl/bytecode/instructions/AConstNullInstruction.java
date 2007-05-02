@@ -1,7 +1,7 @@
 package b2bpl.bytecode.instructions;
 
-import b2bpl.bytecode.InstructionVisitor;
-import b2bpl.bytecode.Opcodes;
+import b2bpl.bytecode.IInstructionVisitor;
+import b2bpl.bytecode.IOpCodes;
 
 
 public class AConstNullInstruction extends Instruction {
@@ -10,14 +10,14 @@ public class AConstNullInstruction extends Instruction {
     new AConstNullInstruction();
 
   private AConstNullInstruction() {
-    super(Opcodes.ACONST_NULL);
+    super(IOpCodes.ACONST_NULL);
   }
 
-  public void accept(InstructionVisitor visitor) {
+  public void accept(IInstructionVisitor visitor) {
     visitor.visitAConstNullInstruction(this);
   }
 
   public String toString() {
-    return Opcodes.NAMES[opcode];
+    return IOpCodes.NAMES[opcode];
   }
 }

@@ -1,9 +1,9 @@
 package b2bpl.bytecode.instructions;
 
-import b2bpl.bytecode.InstructionVisitor;
+import b2bpl.bytecode.IInstructionVisitor;
 import b2bpl.bytecode.JReferenceType;
 import b2bpl.bytecode.JType;
-import b2bpl.bytecode.Opcodes;
+import b2bpl.bytecode.IOpCodes;
 
 
 public class InvokeStaticInstruction extends InvokeInstruction {
@@ -14,14 +14,14 @@ public class InvokeStaticInstruction extends InvokeInstruction {
       JType returnType,
       JType[] parameterTypes) {
     super(
-        Opcodes.INVOKESTATIC,
+        IOpCodes.INVOKESTATIC,
         methodOwner,
         methodName,
         returnType,
         parameterTypes);
   }
 
-  public void accept(InstructionVisitor visitor) {
+  public void accept(IInstructionVisitor visitor) {
     visitor.visitInvokeStaticInstruction(this);
   }
 }

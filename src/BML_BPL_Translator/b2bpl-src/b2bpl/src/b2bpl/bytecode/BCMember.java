@@ -1,7 +1,7 @@
 package b2bpl.bytecode;
 
 
-public abstract class BCMember implements Constants {
+public abstract class BCMember implements IConstants {
 
   protected final int accessModifiers;
 

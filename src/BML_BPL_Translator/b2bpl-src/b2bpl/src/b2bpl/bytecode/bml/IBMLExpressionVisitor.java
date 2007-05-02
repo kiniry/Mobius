@@ -38,7 +38,7 @@ import b2bpl.bytecode.bml.ast.BMLUnaryMinusExpression;
  *
  * @author Ovidio Mallo
  */
-public interface BMLExpressionVisitor<R> {
+public interface IBMLExpressionVisitor<R> {
 
   R visitQuantifierExpression(BMLQuantifierExpression expr);
 

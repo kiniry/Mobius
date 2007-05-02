@@ -1,6 +1,6 @@
 package b2bpl.bpl.ast;
 
-import b2bpl.bpl.BPLVisitor;
+import b2bpl.bpl.IBPLVisitor;
 
 
 public class BPLQuantifierExpression extends BPLExpression {
@@ -36,7 +36,7 @@ public class BPLQuantifierExpression extends BPLExpression {
     return true;
   }
 
-  public <R> R accept(BPLVisitor<R> visitor) {
+  public <R> R accept(IBPLVisitor<R> visitor) {
     return visitor.visitQuantifierExpression(this);
   }
 

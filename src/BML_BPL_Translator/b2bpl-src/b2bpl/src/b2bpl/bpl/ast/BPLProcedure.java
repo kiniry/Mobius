@@ -1,6 +1,6 @@
 package b2bpl.bpl.ast;
 
-import b2bpl.bpl.BPLVisitor;
+import b2bpl.bpl.IBPLVisitor;
 
 
 public class BPLProcedure extends BPLDeclaration {
@@ -56,7 +56,7 @@ public class BPLProcedure extends BPLDeclaration {
     return implementation;
   }
 
-  public <R> R accept(BPLVisitor<R> visitor) {
+  public <R> R accept(IBPLVisitor<R> visitor) {
     return visitor.visitProcedure(this);
   }
 

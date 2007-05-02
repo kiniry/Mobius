@@ -1,8 +1,8 @@
 package b2bpl.bytecode.instructions;
 
-import b2bpl.bytecode.InstructionVisitor;
+import b2bpl.bytecode.IInstructionVisitor;
 import b2bpl.bytecode.JReferenceType;
-import b2bpl.bytecode.Opcodes;
+import b2bpl.bytecode.IOpCodes;
 
 
 public class ANewArrayInstruction extends Instruction {
@@ -14,7 +14,7 @@ public class ANewArrayInstruction extends Instruction {
   private final JReferenceType type;
 
   public ANewArrayInstruction(JReferenceType type) {
-    super(Opcodes.ANEWARRAY);
+    super(IOpCodes.ANEWARRAY);
     this.type = type;
   }
 
@@ -26,11 +26,11 @@ public class ANewArrayInstruction extends Instruction {
     return RUNTIME_EXCEPTIONS;
   }
 
-  public void accept(InstructionVisitor visitor) {
+  public void accept(IInstructionVisitor visitor) {
     visitor.visitANewArrayInstruction(this);
   }
 
   public String toString() {
-    return Opcodes.NAMES[opcode] + " " + type.getName();
+    return IOpCodes.NAMES[opcode] + " " + type.getName();
   }
 }

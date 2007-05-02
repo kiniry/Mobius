@@ -7,7 +7,7 @@ import b2bpl.bytecode.bml.ast.BMLExpression;
 import b2bpl.bytecode.bml.ast.BMLStoreRef;
 
 
-public interface SpecificationDesugarer {
+public interface ISpecificationDesugarer {
 
   BMLExpression getObjectInvariant(JClassType type, boolean includeSupertypes);
 

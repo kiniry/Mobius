@@ -166,7 +166,7 @@ import b2bpl.bytecode.bml.ast.BMLExpression;
  * </ul>
  * Since BML specifications and bytecode methods may contain type references
  * and other references which may require global axioms to be generated, the
- * {@code Translator} passes a {@link TranslationContext} to every
+ * {@code Translator} passes a {@link ITranslationContext} to every
  * {@code SpecificationTranslator} and {@code MethodTranslator} which
  * should be used to translate those references.
  * </p>
@@ -176,11 +176,11 @@ import b2bpl.bytecode.bml.ast.BMLExpression;
  * @see Project#getMaxIntConstant()
  * @see SpecificationTranslator
  * @see MethodTranslator
- * @see TranslationContext
+ * @see ITranslationContext
  *
  * @author Ovidio Mallo
  */
-public class Translator implements TranslationConstants {
+public class Translator implements ITranslationConstants {
 
   /** The project containing the settings of the translation. */
   private final Project project;
@@ -1849,12 +1849,12 @@ public class Translator implements TranslationConstants {
   }
 
   /**
-   * Implementation of the {@link TranslationContext} interface which handles
+   * Implementation of the {@link ITranslationContext} interface which handles
    * the translation of different kinds of references.
    *
    * @author Ovidio Mallo
    */
-  private final class Context implements TranslationContext {
+  private final class Context implements ITranslationContext {
 
     /** The types referenced during the translation. */
     private HashSet<JClassType> typeReferences;

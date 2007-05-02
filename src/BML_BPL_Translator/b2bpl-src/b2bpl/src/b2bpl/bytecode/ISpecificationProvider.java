@@ -5,7 +5,7 @@ import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.MethodVisitor;
 
 
-public interface SpecificationProvider {
+public interface ISpecificationProvider {
 
   ClassVisitor forClass(JClassType type, ClassVisitor classVisitor);
 

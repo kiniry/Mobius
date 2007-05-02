@@ -48,11 +48,11 @@ public class TypeLoader {
   
   private static HashSet<String> projectTypes = new HashSet<String>();
 
-  private static SpecificationProvider specProvider = new EmptySpecificationProvider();
+  private static ISpecificationProvider specProvider = new EmptySpecificationProvider();
 
   private static SemanticAnalyzer semanticAnalyzer;
 
-  private static TroubleReporter troubleReporter;
+  private static ITroubleReporter troubleReporter;
 
   private TypeLoader() {
     // hide the constructor
@@ -69,7 +69,7 @@ public class TypeLoader {
     }
   }
 
-  public static void setSpecificationProvider(SpecificationProvider provider) {
+  public static void setSpecificationProvider(ISpecificationProvider provider) {
     specProvider = provider;
   }
 
@@ -77,7 +77,7 @@ public class TypeLoader {
     semanticAnalyzer = analyzer;
   }
 
-  public static void setTroubleReporter(TroubleReporter reporter) {
+  public static void setTroubleReporter(ITroubleReporter reporter) {
     troubleReporter = reporter;
   }
 
@@ -390,8 +390,7 @@ public class TypeLoader {
 
     public void visitAttribute(Attribute attribute) {
       if (attribute instanceof MethodSpecificationAttribute) {
-        MethodSpecificationAttribute specAttr =
-          (MethodSpecificationAttribute) attribute;
+        MethodSpecificationAttribute specAttr = (MethodSpecificationAttribute) attribute;
         method.setSpecification(specAttr.getSpecification());
       } else if (attribute instanceof LoopSpecificationAttribute) {
         loopSpecAttr = (LoopSpecificationAttribute) attribute;
@@ -424,7 +423,7 @@ public class TypeLoader {
         addInstruction(InstructionFactory.fromInsn(opcode));
       } catch (UnsupportedInstructionException e) {
         reportTrouble(
-            B2BPLMessages.UNSUPPORTED_INSTRUCTION, Opcodes.NAMES[opcode]);
+            B2BPLMessages.UNSUPPORTED_INSTRUCTION, IOpCodes.NAMES[opcode]);
       }
     }
 
@@ -433,7 +432,7 @@ public class TypeLoader {
         addInstruction(InstructionFactory.fromIntInsn(opcode, operand));
       } catch (UnsupportedInstructionException e) {
         reportTrouble(
-            B2BPLMessages.UNSUPPORTED_INSTRUCTION, Opcodes.NAMES[opcode]);
+            B2BPLMessages.UNSUPPORTED_INSTRUCTION, IOpCodes.NAMES[opcode]);
       }
     }
 
@@ -442,7 +441,7 @@ public class TypeLoader {
         addInstruction(InstructionFactory.fromVarInsn(opcode, var));
       } catch (UnsupportedInstructionException e) {
         reportTrouble(
-            B2BPLMessages.UNSUPPORTED_INSTRUCTION, Opcodes.NAMES[opcode]);
+            B2BPLMessages.UNSUPPORTED_INSTRUCTION, IOpCodes.NAMES[opcode]);
       }
     }
 
@@ -460,7 +459,7 @@ public class TypeLoader {
         addInstruction(InstructionFactory.fromTypeInsn(opcode, type));
       } catch (UnsupportedInstructionException e) {
         reportTrouble(
-            B2BPLMessages.UNSUPPORTED_INSTRUCTION, Opcodes.NAMES[opcode]);
+            B2BPLMessages.UNSUPPORTED_INSTRUCTION, IOpCodes.NAMES[opcode]);
       }
     }
 
@@ -477,7 +476,7 @@ public class TypeLoader {
             JType.fromDescriptor(descriptor)));
       } catch (UnsupportedInstructionException e) {
         reportTrouble(
-            B2BPLMessages.UNSUPPORTED_INSTRUCTION, Opcodes.NAMES[opcode]);
+            B2BPLMessages.UNSUPPORTED_INSTRUCTION, IOpCodes.NAMES[opcode]);
       }
     }
 
@@ -506,7 +505,7 @@ public class TypeLoader {
             parameterTypes));
       } catch (UnsupportedInstructionException e) {
         reportTrouble(
-            B2BPLMessages.UNSUPPORTED_INSTRUCTION, Opcodes.NAMES[opcode]);
+            B2BPLMessages.UNSUPPORTED_INSTRUCTION, IOpCodes.NAMES[opcode]);
       }
     }
 
@@ -517,7 +516,7 @@ public class TypeLoader {
             getHandleFor(label)));
       } catch (UnsupportedInstructionException e) {
         reportTrouble(
-            B2BPLMessages.UNSUPPORTED_INSTRUCTION, Opcodes.NAMES[opcode]);
+            B2BPLMessages.UNSUPPORTED_INSTRUCTION, IOpCodes.NAMES[opcode]);
       }
     }
 
@@ -530,7 +529,7 @@ public class TypeLoader {
         addInstruction(InstructionFactory.fromLdcInsn(cst));
       } catch (UnsupportedInstructionException e) {
         reportTrouble(
-            B2BPLMessages.UNSUPPORTED_INSTRUCTION, Opcodes.NAMES[Opcodes.LDC]);
+            B2BPLMessages.UNSUPPORTED_INSTRUCTION, IOpCodes.NAMES[IOpCodes.LDC]);
       }
     }
 
@@ -539,7 +538,7 @@ public class TypeLoader {
         addInstruction(InstructionFactory.fromIincInsn(var, increment));
       } catch (UnsupportedInstructionException e) {
         reportTrouble(
-            B2BPLMessages.UNSUPPORTED_INSTRUCTION, Opcodes.NAMES[Opcodes.IINC]);
+            B2BPLMessages.UNSUPPORTED_INSTRUCTION, IOpCodes.NAMES[IOpCodes.IINC]);
       }
     }
 
@@ -562,7 +561,7 @@ public class TypeLoader {
       } catch (UnsupportedInstructionException e) {
         reportTrouble(
             B2BPLMessages.UNSUPPORTED_INSTRUCTION,
-            Opcodes.NAMES[Opcodes.TABLESWITCH]);
+            IOpCodes.NAMES[IOpCodes.TABLESWITCH]);
       }
     }
 
@@ -580,7 +579,7 @@ public class TypeLoader {
       } catch (UnsupportedInstructionException e) {
         reportTrouble(
             B2BPLMessages.UNSUPPORTED_INSTRUCTION,
-            Opcodes.NAMES[Opcodes.LOOKUPSWITCH]);
+            IOpCodes.NAMES[IOpCodes.LOOKUPSWITCH]);
       }
     }
 
@@ -592,7 +591,7 @@ public class TypeLoader {
       } catch (UnsupportedInstructionException e) {
         reportTrouble(
             B2BPLMessages.UNSUPPORTED_INSTRUCTION,
-            Opcodes.NAMES[Opcodes.MULTIANEWARRAY]);
+            IOpCodes.NAMES[IOpCodes.MULTIANEWARRAY]);
       }
     }
 

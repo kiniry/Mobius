@@ -8,7 +8,7 @@ public class UnsupportedInstructionException extends RuntimeException {
   private final int opcode;
 
   public UnsupportedInstructionException(int opcode) {
-    this(opcode, "Unsupported instruction: " + Opcodes.NAMES[opcode]);
+    this(opcode, "Unsupported instruction: " + IOpCodes.NAMES[opcode]);
   }
 
   public UnsupportedInstructionException(int opcode, String message) {

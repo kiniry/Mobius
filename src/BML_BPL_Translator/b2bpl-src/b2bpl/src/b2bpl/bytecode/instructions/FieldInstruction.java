@@ -3,7 +3,7 @@ package b2bpl.bytecode.instructions;
 import b2bpl.bytecode.BCField;
 import b2bpl.bytecode.JReferenceType;
 import b2bpl.bytecode.JType;
-import b2bpl.bytecode.Opcodes;
+import b2bpl.bytecode.IOpCodes;
 
 
 public abstract class FieldInstruction extends Instruction {
@@ -57,7 +57,7 @@ public abstract class FieldInstruction extends Instruction {
   public String toString() {
     StringBuffer sb = new StringBuffer();
 
-    sb.append(Opcodes.NAMES[opcode]);
+    sb.append(IOpCodes.NAMES[opcode]);
     sb.append(' ');
     sb.append(fieldOwner.getName());
     sb.append('.');

@@ -1,25 +1,25 @@
 package b2bpl.bytecode.instructions;
 
-import b2bpl.bytecode.InstructionVisitor;
-import b2bpl.bytecode.Opcodes;
+import b2bpl.bytecode.IInstructionVisitor;
+import b2bpl.bytecode.IOpCodes;
 
 
 public class ALoadInstruction extends LocalVariableInstruction {
 
   public static final ALoadInstruction ALOAD_0 =
-    new ALoadInstruction(Opcodes.ALOAD_0, 0);
+    new ALoadInstruction(IOpCodes.ALOAD_0, 0);
 
   public static final ALoadInstruction ALOAD_1 =
-    new ALoadInstruction(Opcodes.ALOAD_1, 1);
+    new ALoadInstruction(IOpCodes.ALOAD_1, 1);
 
   public static final ALoadInstruction ALOAD_2 =
-    new ALoadInstruction(Opcodes.ALOAD_2, 2);
+    new ALoadInstruction(IOpCodes.ALOAD_2, 2);
 
   public static final ALoadInstruction ALOAD_3 =
-    new ALoadInstruction(Opcodes.ALOAD_3, 3);
+    new ALoadInstruction(IOpCodes.ALOAD_3, 3);
 
   public ALoadInstruction(int index) {
-    this(Opcodes.ALOAD, index);
+    this(IOpCodes.ALOAD, index);
   }
 
   private ALoadInstruction(int opcode, int index) {
@@ -41,14 +41,14 @@ public class ALoadInstruction extends LocalVariableInstruction {
     }
   }
 
-  public void accept(InstructionVisitor visitor) {
+  public void accept(IInstructionVisitor visitor) {
     visitor.visitALoadInstruction(this);
   }
 
   public String toString() {
-    if (opcode == Opcodes.ALOAD) {
-      return Opcodes.NAMES[opcode] + " " + index;
+    if (opcode == IOpCodes.ALOAD) {
+      return IOpCodes.NAMES[opcode] + " " + index;
     }
-    return Opcodes.NAMES[opcode];
+    return IOpCodes.NAMES[opcode];
   }
 }

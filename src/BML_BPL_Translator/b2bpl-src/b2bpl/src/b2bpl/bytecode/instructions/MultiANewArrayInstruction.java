@@ -1,8 +1,8 @@
 package b2bpl.bytecode.instructions;
 
-import b2bpl.bytecode.InstructionVisitor;
+import b2bpl.bytecode.IInstructionVisitor;
 import b2bpl.bytecode.JArrayType;
-import b2bpl.bytecode.Opcodes;
+import b2bpl.bytecode.IOpCodes;
 
 
 public class MultiANewArrayInstruction extends Instruction {
@@ -16,7 +16,7 @@ public class MultiANewArrayInstruction extends Instruction {
   private final int dimensionCount;
 
   public MultiANewArrayInstruction(JArrayType type, int dimensionCount) {
-    super(Opcodes.MULTIANEWARRAY);
+    super(IOpCodes.MULTIANEWARRAY);
     this.type = type;
     this.dimensionCount = dimensionCount;
   }
@@ -33,11 +33,11 @@ public class MultiANewArrayInstruction extends Instruction {
     return RUNTIME_EXCEPTIONS;
   }
 
-  public void accept(InstructionVisitor visitor) {
+  public void accept(IInstructionVisitor visitor) {
     visitor.visitMultiANewArrayInstruction(this);
   }
 
   public String toString() {
-    return Opcodes.NAMES[opcode] + " " + type.getName() + ", " + dimensionCount;
+    return IOpCodes.NAMES[opcode] + " " + type.getName() + ", " + dimensionCount;
   }
 }

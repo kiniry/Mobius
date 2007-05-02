@@ -28,7 +28,7 @@ import b2bpl.bytecode.JType;
  *
  * @author Ovidio Mallo
  */
-public interface TranslationContext {
+public interface ITranslationContext {
 
   /**
    * Triggers the translation of the given {@code type} reference and

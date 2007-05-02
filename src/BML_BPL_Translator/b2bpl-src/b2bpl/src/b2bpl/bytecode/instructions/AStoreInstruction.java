@@ -1,25 +1,25 @@
 package b2bpl.bytecode.instructions;
 
-import b2bpl.bytecode.InstructionVisitor;
-import b2bpl.bytecode.Opcodes;
+import b2bpl.bytecode.IInstructionVisitor;
+import b2bpl.bytecode.IOpCodes;
 
 
 public class AStoreInstruction extends LocalVariableInstruction {
 
   public static final AStoreInstruction ASTORE_0 =
-    new AStoreInstruction(Opcodes.ASTORE_0, 0);
+    new AStoreInstruction(IOpCodes.ASTORE_0, 0);
 
   public static final AStoreInstruction ASTORE_1 =
-    new AStoreInstruction(Opcodes.ASTORE_1, 1);
+    new AStoreInstruction(IOpCodes.ASTORE_1, 1);
 
   public static final AStoreInstruction ASTORE_2 =
-    new AStoreInstruction(Opcodes.ASTORE_2, 2);
+    new AStoreInstruction(IOpCodes.ASTORE_2, 2);
 
   public static final AStoreInstruction ASTORE_3 =
-    new AStoreInstruction(Opcodes.ASTORE_3, 3);
+    new AStoreInstruction(IOpCodes.ASTORE_3, 3);
 
   public AStoreInstruction(int index) {
-    this(Opcodes.ASTORE, index);
+    this(IOpCodes.ASTORE, index);
   }
 
   private AStoreInstruction(int opcode, int index) {
@@ -41,14 +41,14 @@ public class AStoreInstruction extends LocalVariableInstruction {
     }
   }
 
-  public void accept(InstructionVisitor visitor) {
+  public void accept(IInstructionVisitor visitor) {
     visitor.visitAStoreInstruction(this);
   }
 
   public String toString() {
-    if (opcode == Opcodes.ASTORE) {
-      return Opcodes.NAMES[opcode] + " " + index;
+    if (opcode == IOpCodes.ASTORE) {
+      return IOpCodes.NAMES[opcode] + " " + index;
     }
-    return Opcodes.NAMES[opcode];
+    return IOpCodes.NAMES[opcode];
   }
 }

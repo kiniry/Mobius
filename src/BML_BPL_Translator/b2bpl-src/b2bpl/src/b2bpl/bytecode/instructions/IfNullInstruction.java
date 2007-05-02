@@ -1,17 +1,17 @@
 package b2bpl.bytecode.instructions;
 
 import b2bpl.bytecode.InstructionHandle;
-import b2bpl.bytecode.InstructionVisitor;
-import b2bpl.bytecode.Opcodes;
+import b2bpl.bytecode.IInstructionVisitor;
+import b2bpl.bytecode.IOpCodes;
 
 
 public class IfNullInstruction extends AbstractIfInstruction {
 
   public IfNullInstruction(InstructionHandle target) {
-    super(Opcodes.IFNULL, target);
+    super(IOpCodes.IFNULL, target);
   }
 
-  public void accept(InstructionVisitor visitor) {
+  public void accept(IInstructionVisitor visitor) {
     visitor.visitIfNullInstruction(this);
   }
 }

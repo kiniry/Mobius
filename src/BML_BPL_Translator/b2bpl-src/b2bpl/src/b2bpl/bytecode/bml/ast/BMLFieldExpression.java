@@ -3,7 +3,7 @@ package b2bpl.bytecode.bml.ast;
 import b2bpl.bytecode.BCField;
 import b2bpl.bytecode.JReferenceType;
 import b2bpl.bytecode.JType;
-import b2bpl.bytecode.bml.BMLExpressionVisitor;
+import b2bpl.bytecode.bml.IBMLExpressionVisitor;
 
 
 public class BMLFieldExpression extends BMLExpression {
@@ -64,7 +64,7 @@ public class BMLFieldExpression extends BMLExpression {
     this.field = field;
   }
 
-  public <R> R accept(BMLExpressionVisitor<R> visitor) {
+  public <R> R accept(IBMLExpressionVisitor<R> visitor) {
     return visitor.visitFieldExpression(this);
   }
 

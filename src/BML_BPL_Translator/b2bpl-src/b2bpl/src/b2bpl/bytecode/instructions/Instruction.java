@@ -1,6 +1,6 @@
 package b2bpl.bytecode.instructions;
 
-import b2bpl.bytecode.InstructionVisitor;
+import b2bpl.bytecode.IInstructionVisitor;
 
 
 public abstract class Instruction {
@@ -25,5 +25,5 @@ public abstract class Instruction {
     return NO_RUNTIME_EXCEPTIONS;
   }
 
-  public abstract void accept(InstructionVisitor visitor);
+  public abstract void accept(IInstructionVisitor visitor);
 }

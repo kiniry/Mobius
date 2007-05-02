@@ -1,8 +1,8 @@
 package b2bpl.bytecode.instructions;
 
-import b2bpl.bytecode.InstructionVisitor;
+import b2bpl.bytecode.IInstructionVisitor;
 import b2bpl.bytecode.JReferenceType;
-import b2bpl.bytecode.Opcodes;
+import b2bpl.bytecode.IOpCodes;
 
 
 public class CheckCastInstruction extends Instruction {
@@ -14,7 +14,7 @@ public class CheckCastInstruction extends Instruction {
   private final JReferenceType type;
 
   public CheckCastInstruction(JReferenceType type) {
-    super(Opcodes.CHECKCAST);
+    super(IOpCodes.CHECKCAST);
     this.type = type;
   }
 
@@ -26,11 +26,11 @@ public class CheckCastInstruction extends Instruction {
     return RUNTIME_EXCEPTIONS;
   }
 
-  public void accept(InstructionVisitor visitor) {
+  public void accept(IInstructionVisitor visitor) {
     visitor.visitCheckCastInstruction(this);
   }
 
   public String toString() {
-    return Opcodes.NAMES[opcode] + " " + type.getName();
+    return IOpCodes.NAMES[opcode] + " " + type.getName();
   }
 }

@@ -3,7 +3,7 @@ package b2bpl.bpl.ast;
 import java.util.ArrayList;
 import java.util.List;
 
-import b2bpl.bpl.BPLVisitor;
+import b2bpl.bpl.IBPLVisitor;
 
 
 public class BPLSpecification extends BPLNode {
@@ -26,7 +26,7 @@ public class BPLSpecification extends BPLNode {
     return clauses;
   }
 
-  public <R> R accept(BPLVisitor<R> visitor) {
+  public <R> R accept(IBPLVisitor<R> visitor) {
     return visitor.visitSpecification(this);
   }
 }

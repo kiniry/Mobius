@@ -3,7 +3,7 @@ package b2bpl.bytecode.bml.ast;
 import b2bpl.bytecode.BCField;
 import b2bpl.bytecode.JReferenceType;
 import b2bpl.bytecode.JType;
-import b2bpl.bytecode.bml.BMLStoreRefVisitor;
+import b2bpl.bytecode.bml.IBMLStoreRefVisitor;
 
 
 public class BMLFieldStoreRef extends BMLStoreRefExpression {
@@ -64,7 +64,7 @@ public class BMLFieldStoreRef extends BMLStoreRefExpression {
     this.field = field;
   }
 
-  public <R> R accept(BMLStoreRefVisitor<R> visitor) {
+  public <R> R accept(IBMLStoreRefVisitor<R> visitor) {
     return visitor.visitFieldStoreRef(this);
   }
 

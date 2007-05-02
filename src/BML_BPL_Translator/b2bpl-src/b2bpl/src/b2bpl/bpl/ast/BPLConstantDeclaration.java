@@ -1,6 +1,6 @@
 package b2bpl.bpl.ast;
 
-import b2bpl.bpl.BPLVisitor;
+import b2bpl.bpl.IBPLVisitor;
 
 
 public class BPLConstantDeclaration extends BPLDeclaration {
@@ -15,7 +15,7 @@ public class BPLConstantDeclaration extends BPLDeclaration {
     return constants;
   }
 
-  public <R> R accept(BPLVisitor<R> visitor) {
+  public <R> R accept(IBPLVisitor<R> visitor) {
     return visitor.visitConstantDeclaration(this);
   }
 

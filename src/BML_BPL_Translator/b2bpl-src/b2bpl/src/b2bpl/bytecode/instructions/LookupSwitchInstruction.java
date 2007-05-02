@@ -1,8 +1,8 @@
 package b2bpl.bytecode.instructions;
 
 import b2bpl.bytecode.InstructionHandle;
-import b2bpl.bytecode.InstructionVisitor;
-import b2bpl.bytecode.Opcodes;
+import b2bpl.bytecode.IInstructionVisitor;
+import b2bpl.bytecode.IOpCodes;
 
 
 public class LookupSwitchInstruction extends SwitchInstruction {
@@ -17,7 +17,7 @@ public class LookupSwitchInstruction extends SwitchInstruction {
       InstructionHandle defaultTarget,
       int[] keys,
       InstructionHandle[] targets) {
-    super(Opcodes.LOOKUPSWITCH);
+    super(IOpCodes.LOOKUPSWITCH);
     this.defaultTarget = defaultTarget;
     this.keys = keys;
     this.targets = targets;
@@ -39,14 +39,14 @@ public class LookupSwitchInstruction extends SwitchInstruction {
     return true;
   }
 
-  public void accept(InstructionVisitor visitor) {
+  public void accept(IInstructionVisitor visitor) {
     visitor.visitLookupSwitchInstruction(this);
   }
 
   public String toString() {
     StringBuffer sb = new StringBuffer();
 
-    sb.append(Opcodes.NAMES[opcode]);
+    sb.append(IOpCodes.NAMES[opcode]);
     sb.append(System.getProperty("line.separator"));
     for (int i = 0; i < targets.length; i++) {
       sb.append("        case ");

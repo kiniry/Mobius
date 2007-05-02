@@ -1,44 +1,44 @@
 package b2bpl.bytecode.instructions;
 
-import b2bpl.bytecode.InstructionVisitor;
-import b2bpl.bytecode.Opcodes;
+import b2bpl.bytecode.IInstructionVisitor;
+import b2bpl.bytecode.IOpCodes;
 
 
 public class VConstantInstruction extends Instruction {
 
   public static final VConstantInstruction ICONST_M1 =
-    new VConstantInstruction(Opcodes.ICONST_M1, -1);
+    new VConstantInstruction(IOpCodes.ICONST_M1, -1);
 
   public static final VConstantInstruction ICONST_0 =
-    new VConstantInstruction(Opcodes.ICONST_0, 0);
+    new VConstantInstruction(IOpCodes.ICONST_0, 0);
 
   public static final VConstantInstruction ICONST_1 =
-    new VConstantInstruction(Opcodes.ICONST_1, 1);
+    new VConstantInstruction(IOpCodes.ICONST_1, 1);
 
   public static final VConstantInstruction ICONST_2 =
-    new VConstantInstruction(Opcodes.ICONST_2, 2);
+    new VConstantInstruction(IOpCodes.ICONST_2, 2);
 
   public static final VConstantInstruction ICONST_3 =
-    new VConstantInstruction(Opcodes.ICONST_3, 3);
+    new VConstantInstruction(IOpCodes.ICONST_3, 3);
 
   public static final VConstantInstruction ICONST_4 =
-    new VConstantInstruction(Opcodes.ICONST_4, 4);
+    new VConstantInstruction(IOpCodes.ICONST_4, 4);
 
   public static final VConstantInstruction ICONST_5 =
-    new VConstantInstruction(Opcodes.ICONST_5, 5);
+    new VConstantInstruction(IOpCodes.ICONST_5, 5);
 
   public static final VConstantInstruction LCONST_0 =
-    new VConstantInstruction(Opcodes.LCONST_0, 0);
+    new VConstantInstruction(IOpCodes.LCONST_0, 0);
 
   public static final VConstantInstruction LCONST_1 =
-    new VConstantInstruction(Opcodes.LCONST_1, 1);
+    new VConstantInstruction(IOpCodes.LCONST_1, 1);
 
   private final int constant;
 
   public VConstantInstruction(int constant) {
     this(
         ((Byte.MIN_VALUE <= constant) && (constant <= Byte.MAX_VALUE)) ?
-              Opcodes.BIPUSH : Opcodes.SIPUSH,
+              IOpCodes.BIPUSH : IOpCodes.SIPUSH,
         constant);
   }
 
@@ -72,14 +72,14 @@ public class VConstantInstruction extends Instruction {
     return constant;
   }
 
-  public void accept(InstructionVisitor visitor) {
+  public void accept(IInstructionVisitor visitor) {
     visitor.visitVConstantInstruction(this);
   }
 
   public String toString() {
-    if ((opcode == Opcodes.BIPUSH) || (opcode == Opcodes.SIPUSH)) {
-      return Opcodes.NAMES[opcode] + " " + constant;
+    if ((opcode == IOpCodes.BIPUSH) || (opcode == IOpCodes.SIPUSH)) {
+      return IOpCodes.NAMES[opcode] + " " + constant;
     }
-    return Opcodes.NAMES[opcode];
+    return IOpCodes.NAMES[opcode];
   }
 }

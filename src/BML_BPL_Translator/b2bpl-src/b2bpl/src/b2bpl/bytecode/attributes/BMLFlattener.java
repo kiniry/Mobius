@@ -4,8 +4,8 @@ import org.objectweb.asm.ByteVector;
 import org.objectweb.asm.ClassWriter;
 
 import b2bpl.bytecode.JType;
-import b2bpl.bytecode.bml.BMLExpressionVisitor;
-import b2bpl.bytecode.bml.BMLStoreRefVisitor;
+import b2bpl.bytecode.bml.IBMLExpressionVisitor;
+import b2bpl.bytecode.bml.IBMLStoreRefVisitor;
 import b2bpl.bytecode.bml.ast.BMLArrayAccessExpression;
 import b2bpl.bytecode.bml.ast.BMLArrayElementStoreRef;
 import b2bpl.bytecode.bml.ast.BMLArrayLengthExpression;
@@ -46,7 +46,7 @@ import b2bpl.bytecode.bml.ast.BMLUnaryMinusExpression;
 
 
 public class BMLFlattener
-    implements BMLExpressionVisitor<Object>, BMLStoreRefVisitor<Object> {
+    implements IBMLExpressionVisitor<Object>, IBMLStoreRefVisitor<Object> {
 
   private final ClassWriter writer;
 

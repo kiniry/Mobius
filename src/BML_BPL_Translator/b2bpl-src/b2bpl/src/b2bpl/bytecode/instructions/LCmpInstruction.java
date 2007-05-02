@@ -1,7 +1,7 @@
 package b2bpl.bytecode.instructions;
 
-import b2bpl.bytecode.InstructionVisitor;
-import b2bpl.bytecode.Opcodes;
+import b2bpl.bytecode.IInstructionVisitor;
+import b2bpl.bytecode.IOpCodes;
 
 
 public class LCmpInstruction extends Instruction {
@@ -9,14 +9,14 @@ public class LCmpInstruction extends Instruction {
   public static final LCmpInstruction LCMP = new LCmpInstruction();
 
   private LCmpInstruction() {
-    super(Opcodes.LCMP);
+    super(IOpCodes.LCMP);
   }
 
-  public void accept(InstructionVisitor visitor) {
+  public void accept(IInstructionVisitor visitor) {
     visitor.visitLCmpInstruction(this);
   }
 
   public String toString() {
-    return Opcodes.NAMES[opcode];
+    return IOpCodes.NAMES[opcode];
   }
 }

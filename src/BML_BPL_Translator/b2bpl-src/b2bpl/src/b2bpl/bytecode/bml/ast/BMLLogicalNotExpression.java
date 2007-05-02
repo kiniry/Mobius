@@ -1,6 +1,6 @@
 package b2bpl.bytecode.bml.ast;
 
-import b2bpl.bytecode.bml.BMLExpressionVisitor;
+import b2bpl.bytecode.bml.IBMLExpressionVisitor;
 
 
 public class BMLLogicalNotExpression extends BMLUnaryExpression {
@@ -13,7 +13,7 @@ public class BMLLogicalNotExpression extends BMLUnaryExpression {
     return true;
   }
 
-  public <R> R accept(BMLExpressionVisitor<R> visitor) {
+  public <R> R accept(IBMLExpressionVisitor<R> visitor) {
     return visitor.visitLogicalNotExpression(this);
   }
 

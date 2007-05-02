@@ -17,7 +17,6 @@ import static b2bpl.translation.CodeGenerator.cast;
 import static b2bpl.translation.CodeGenerator.divide;
 import static b2bpl.translation.CodeGenerator.elementType;
 import static b2bpl.translation.CodeGenerator.fieldAccess;
-import static b2bpl.translation.CodeGenerator.fieldLoc;
 import static b2bpl.translation.CodeGenerator.fieldUpdate;
 import static b2bpl.translation.CodeGenerator.forall;
 import static b2bpl.translation.CodeGenerator.get;
@@ -98,12 +97,12 @@ import b2bpl.bytecode.BCField;
 import b2bpl.bytecode.BCMethod;
 import b2bpl.bytecode.ExceptionHandler;
 import b2bpl.bytecode.InstructionHandle;
-import b2bpl.bytecode.InstructionVisitor;
+import b2bpl.bytecode.IInstructionVisitor;
 import b2bpl.bytecode.JArrayType;
 import b2bpl.bytecode.JClassType;
 import b2bpl.bytecode.JNullType;
 import b2bpl.bytecode.JType;
-import b2bpl.bytecode.Opcodes;
+import b2bpl.bytecode.IOpCodes;
 import b2bpl.bytecode.TypeLoader;
 import b2bpl.bytecode.analysis.BasicBlock;
 import b2bpl.bytecode.analysis.ControlFlowGraph;
@@ -233,7 +232,7 @@ import b2bpl.bytecode.instructions.VConstantInstruction;
  * 
  * @author Ovidio Mallo, Samuel Willimann
  */
-public class MethodTranslator implements TranslationConstants {
+public class MethodTranslator implements ITranslationConstants {
 
   /** The project containing the settings of the translation. */
   private final Project project;
@@ -242,7 +241,7 @@ public class MethodTranslator implements TranslationConstants {
    * The translation context to be used during the translation of the current
    * bytecode method.
    */
-  private TranslationContext context;
+  private ITranslationContext context;
 
   /** The bytecode method currently being translated. */
   private BCMethod method;
@@ -295,7 +294,7 @@ public class MethodTranslator implements TranslationConstants {
    * @param project The project containing the configurations of the
    *          translation.
    * 
-   * @see #translate(TranslationContext, BCMethod)
+   * @see #translate(ITranslationContext, BCMethod)
    */
   public MethodTranslator(Project project) {
     this.project = project;
@@ -311,7 +310,7 @@ public class MethodTranslator implements TranslationConstants {
    * @return The BoogiePL procedure resulting from the translation of the given
    *         bytecode method.
    */
-  public BPLProcedure translate(TranslationContext context, BCMethod method) {
+  public BPLProcedure translate(ITranslationContext context, BCMethod method) {
     this.context = context;
     this.method = method;
     initTranslation();
@@ -1913,7 +1912,7 @@ public class MethodTranslator implements TranslationConstants {
    * 
    * @author Ovidio Mallo
    */
-  private final class InstructionTranslator implements InstructionVisitor {
+  private final class InstructionTranslator implements IInstructionVisitor {
 
     /**
      * The basic block in the method's control flow graph to which the
@@ -2548,27 +2547,27 @@ public class MethodTranslator implements TranslationConstants {
       String right = intStackVar(stackRight);
       BPLExpression expr;
       switch (opcode) {
-        case Opcodes.IADD:
-        case Opcodes.LADD:
+        case IOpCodes.IADD:
+        case IOpCodes.LADD:
           expr = add(var(left), var(right));
           break;
-        case Opcodes.ISUB:
-        case Opcodes.LSUB:
+        case IOpCodes.ISUB:
+        case IOpCodes.LSUB:
           expr = sub(var(left), var(right));
           break;
-        case Opcodes.IMUL:
-        case Opcodes.LMUL:
+        case IOpCodes.IMUL:
+        case IOpCodes.LMUL:
           expr = multiply(var(left), var(right));
           break;
-        case Opcodes.IDIV:
-        case Opcodes.LDIV:
+        case IOpCodes.IDIV:
+        case IOpCodes.LDIV:
           translateRuntimeException("java.lang.ArithmeticException", notEqual(
               var(right),
               intLiteral(0)));
           expr = divide(var(left), var(right));
           break;
-        case Opcodes.IREM:
-        case Opcodes.LREM:
+        case IOpCodes.IREM:
+        case IOpCodes.LREM:
         default:
           translateRuntimeException("java.lang.ArithmeticException", notEqual(
               var(right),
@@ -2594,28 +2593,28 @@ public class MethodTranslator implements TranslationConstants {
       String right = intStackVar(stackRight);
       BPLExpression expr;
       switch (opcode) {
-        case Opcodes.ISHL:
-        case Opcodes.LSHL:
+        case IOpCodes.ISHL:
+        case IOpCodes.LSHL:
           expr = bitShl(var(left), var(right));
           break;
-        case Opcodes.ISHR:
-        case Opcodes.LSHR:
+        case IOpCodes.ISHR:
+        case IOpCodes.LSHR:
           expr = bitShr(var(left), var(right));
           break;
-        case Opcodes.IUSHR:
-        case Opcodes.LUSHR:
+        case IOpCodes.IUSHR:
+        case IOpCodes.LUSHR:
           expr = bitUShr(var(left), var(right));
           break;
-        case Opcodes.IAND:
-        case Opcodes.LAND:
+        case IOpCodes.IAND:
+        case IOpCodes.LAND:
           expr = bitAnd(var(left), var(right));
           break;
-        case Opcodes.IOR:
-        case Opcodes.LOR:
+        case IOpCodes.IOR:
+        case IOpCodes.LOR:
           expr = bitOr(var(left), var(right));
           break;
-        case Opcodes.IXOR:
-        case Opcodes.LXOR:
+        case IOpCodes.IXOR:
+        case IOpCodes.LXOR:
         default:
           expr = bitXor(var(left), var(right));
           break;
@@ -2693,27 +2692,27 @@ public class MethodTranslator implements TranslationConstants {
       BPLExpression cmpTrue;
       BPLExpression cmpFalse;
       switch (insn.getOpcode()) {
-        case Opcodes.IF_ICMPEQ:
+        case IOpCodes.IF_ICMPEQ:
           cmpTrue = isEqual(var(left), var(right));
           cmpFalse = notEqual(var(left), var(right));
           break;
-        case Opcodes.IF_ICMPNE:
+        case IOpCodes.IF_ICMPNE:
           cmpTrue = notEqual(var(left), var(right));
           cmpFalse = isEqual(var(left), var(right));
           break;
-        case Opcodes.IF_ICMPLT:
+        case IOpCodes.IF_ICMPLT:
           cmpTrue = less(var(left), var(right));
           cmpFalse = greaterEqual(var(left), var(right));
           break;
-        case Opcodes.IF_ICMPGE:
+        case IOpCodes.IF_ICMPGE:
           cmpTrue = greaterEqual(var(left), var(right));
           cmpFalse = less(var(left), var(right));
           break;
-        case Opcodes.IF_ICMPGT:
+        case IOpCodes.IF_ICMPGT:
           cmpTrue = greater(var(left), var(right));
           cmpFalse = lessEqual(var(left), var(right));
           break;
-        case Opcodes.IF_ICMPLE:
+        case IOpCodes.IF_ICMPLE:
         default:
           cmpTrue = lessEqual(var(left), var(right));
           cmpFalse = greater(var(left), var(right));
@@ -2728,11 +2727,11 @@ public class MethodTranslator implements TranslationConstants {
       BPLExpression cmpTrue;
       BPLExpression cmpFalse;
       switch (insn.getOpcode()) {
-        case Opcodes.IF_ACMPEQ:
+        case IOpCodes.IF_ACMPEQ:
           cmpTrue = isEqual(var(left), var(right));
           cmpFalse = notEqual(var(left), var(right));
           break;
-        case Opcodes.IF_ACMPNE:
+        case IOpCodes.IF_ACMPNE:
         default:
           cmpTrue = notEqual(var(left), var(right));
           cmpFalse = isEqual(var(left), var(right));
@@ -2746,27 +2745,27 @@ public class MethodTranslator implements TranslationConstants {
       BPLExpression cmpTrue;
       BPLExpression cmpFalse;
       switch (insn.getOpcode()) {
-        case Opcodes.IFEQ:
+        case IOpCodes.IFEQ:
           cmpTrue = isEqual(var(operand), intLiteral(0));
           cmpFalse = notEqual(var(operand), intLiteral(0));
           break;
-        case Opcodes.IFNE:
+        case IOpCodes.IFNE:
           cmpTrue = notEqual(var(operand), intLiteral(0));
           cmpFalse = isEqual(var(operand), intLiteral(0));
           break;
-        case Opcodes.IFLT:
+        case IOpCodes.IFLT:
           cmpTrue = less(var(operand), intLiteral(0));
           cmpFalse = greaterEqual(var(operand), intLiteral(0));
           break;
-        case Opcodes.IFGE:
+        case IOpCodes.IFGE:
           cmpTrue = greaterEqual(var(operand), intLiteral(0));
           cmpFalse = less(var(operand), intLiteral(0));
           break;
-        case Opcodes.IFGT:
+        case IOpCodes.IFGT:
           cmpTrue = greater(var(operand), intLiteral(0));
           cmpFalse = lessEqual(var(operand), intLiteral(0));
           break;
-        case Opcodes.IFLE:
+        case IOpCodes.IFLE:
         default:
           cmpTrue = lessEqual(var(operand), intLiteral(0));
           cmpFalse = greater(var(operand), intLiteral(0));

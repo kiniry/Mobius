@@ -16,7 +16,7 @@ import b2bpl.bpl.ast.BPLProgram;
  *
  * @author Ovidio Mallo
  */
-public interface BPLTransformator {
+public interface IBPLTransformator {
 
   /**
    * Performs an arbitrary set of transformations on the given {@code program}

@@ -53,7 +53,7 @@ import b2bpl.bytecode.JType;
  *
  * @author Ovidio Mallo
  */
-public final class CodeGenerator implements TranslationConstants {
+public final class CodeGenerator implements ITranslationConstants {
 
   public static String quantVarName(String name) {
     return name;
@@ -74,7 +74,7 @@ public final class CodeGenerator implements TranslationConstants {
   }
 
   public static BPLExpression fieldLoc(
-      TranslationContext context,
+      ITranslationContext context,
       BPLExpression reference,
       BCField field) {
     if (field.isStatic()) {
@@ -198,14 +198,14 @@ public final class CodeGenerator implements TranslationConstants {
   }
 
   public static BPLExpression heapNew(
-      TranslationContext context,
+      ITranslationContext context,
       BPLExpression heap,
       JType type) {
     return heapNew(heap, objectAlloc(context.translateTypeReference(type)));
   }
 
   public static BPLExpression heapNewArray(
-      TranslationContext context,
+      ITranslationContext context,
       BPLExpression heap,
       JType type,
       BPLExpression length) {
@@ -221,14 +221,14 @@ public final class CodeGenerator implements TranslationConstants {
   }
 
   public static BPLExpression heapAdd(
-      TranslationContext context,
+      ITranslationContext context,
       BPLExpression heap,
       JType type) {
     return heapAdd(heap, objectAlloc(context.translateTypeReference(type)));
   }
 
   public static BPLExpression heapAddArray(
-      TranslationContext context,
+      ITranslationContext context,
       BPLExpression heap,
       JType type,
       BPLExpression length) {
@@ -360,7 +360,7 @@ public final class CodeGenerator implements TranslationConstants {
   }
   
   public static BPLExpression fieldAccess(
-      TranslationContext context,
+      ITranslationContext context,
       String heapVar,
       BPLExpression reference,
       BCField field) {
@@ -372,7 +372,7 @@ public final class CodeGenerator implements TranslationConstants {
   }
 
   public static BPLExpression fieldUpdate(
-      TranslationContext context,
+      ITranslationContext context,
       String heapVar,
       BPLExpression reference,
       BCField field,

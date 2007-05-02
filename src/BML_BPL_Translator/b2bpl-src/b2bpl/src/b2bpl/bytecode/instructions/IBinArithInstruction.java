@@ -1,7 +1,7 @@
 package b2bpl.bytecode.instructions;
 
-import b2bpl.bytecode.InstructionVisitor;
-import b2bpl.bytecode.Opcodes;
+import b2bpl.bytecode.IInstructionVisitor;
+import b2bpl.bytecode.IOpCodes;
 
 
 public class IBinArithInstruction extends ArithmeticInstruction {
@@ -9,19 +9,19 @@ public class IBinArithInstruction extends ArithmeticInstruction {
   private static String[] runtimeExceptions;
 
   public static final IBinArithInstruction IADD =
-    new IBinArithInstruction(Opcodes.IADD);
+    new IBinArithInstruction(IOpCodes.IADD);
 
   public static final IBinArithInstruction ISUB =
-    new IBinArithInstruction(Opcodes.ISUB);
+    new IBinArithInstruction(IOpCodes.ISUB);
 
   public static final IBinArithInstruction IMUL =
-    new IBinArithInstruction(Opcodes.IMUL);
+    new IBinArithInstruction(IOpCodes.IMUL);
 
   public static final IBinArithInstruction IDIV =
-    new IBinArithInstruction(Opcodes.IDIV);
+    new IBinArithInstruction(IOpCodes.IDIV);
 
   public static final IBinArithInstruction IREM =
-    new IBinArithInstruction(Opcodes.IREM);
+    new IBinArithInstruction(IOpCodes.IREM);
 
   private IBinArithInstruction(int opcode) {
     super(opcode);
@@ -38,11 +38,11 @@ public class IBinArithInstruction extends ArithmeticInstruction {
     return runtimeExceptions;
   }
 
-  public void accept(InstructionVisitor visitor) {
+  public void accept(IInstructionVisitor visitor) {
     visitor.visitIBinArithInstruction(this);
   }
 
   public String toString() {
-    return Opcodes.NAMES[opcode];
+    return IOpCodes.NAMES[opcode];
   }
 }

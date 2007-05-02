@@ -16,7 +16,7 @@ import b2bpl.bytecode.bml.ast.BMLRequiresClause;
 import b2bpl.bytecode.bml.ast.BMLSpecificationCase;
 
 
-public class DefaultSpecificationProvider implements SpecificationProvider {
+public class DefaultSpecificationProvider implements ISpecificationProvider {
 
   public ClassVisitor forClass(JClassType type, ClassVisitor classVisitor) {
     return classVisitor;

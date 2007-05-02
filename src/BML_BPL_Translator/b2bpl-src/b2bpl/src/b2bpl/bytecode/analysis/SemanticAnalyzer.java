@@ -21,10 +21,10 @@ import b2bpl.bytecode.JNullType;
 import b2bpl.bytecode.JType;
 import b2bpl.bytecode.TroubleMessage;
 import b2bpl.bytecode.TroublePosition;
-import b2bpl.bytecode.TroubleReporter;
+import b2bpl.bytecode.ITroubleReporter;
 import b2bpl.bytecode.TypeLoader;
-import b2bpl.bytecode.bml.BMLExpressionVisitor;
-import b2bpl.bytecode.bml.BMLStoreRefVisitor;
+import b2bpl.bytecode.bml.IBMLExpressionVisitor;
+import b2bpl.bytecode.bml.IBMLStoreRefVisitor;
 import b2bpl.bytecode.bml.ast.BMLArrayAccessExpression;
 import b2bpl.bytecode.bml.ast.BMLArrayAllStoreRef;
 import b2bpl.bytecode.bml.ast.BMLArrayElementStoreRef;
@@ -86,12 +86,12 @@ public class SemanticAnalyzer {
 
   private final Project project;
 
-  private final TroubleReporter troubleReporter;
+  private final ITroubleReporter troubleReporter;
 
   private HashMap<String, MethodNode> asmMethods =
     new HashMap<String, MethodNode>();
 
-  public SemanticAnalyzer(Project project, TroubleReporter troubleReporter) {
+  public SemanticAnalyzer(Project project, ITroubleReporter troubleReporter) {
     this.project = project;
     this.troubleReporter = troubleReporter;
   }
@@ -259,7 +259,7 @@ public class SemanticAnalyzer {
   }
 
   private static final class BMLAnalyzer
-      implements BMLExpressionVisitor<Object>, BMLStoreRefVisitor<Object> {
+      implements IBMLExpressionVisitor<Object>, IBMLStoreRefVisitor<Object> {
 
     private final JClassType type;
 

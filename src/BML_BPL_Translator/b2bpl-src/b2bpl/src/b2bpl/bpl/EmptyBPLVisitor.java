@@ -47,7 +47,7 @@ import b2bpl.bpl.ast.BPLVariableDeclaration;
 import b2bpl.bpl.ast.BPLVariableExpression;
 
 
-public class EmptyBPLVisitor<R> implements BPLVisitor<R> {
+public class EmptyBPLVisitor<R> implements IBPLVisitor<R> {
 
   public R visitProgram(BPLProgram program) {
     // do nothing

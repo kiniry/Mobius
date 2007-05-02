@@ -1,8 +1,8 @@
 package b2bpl.bytecode.instructions;
 
-import b2bpl.bytecode.InstructionVisitor;
+import b2bpl.bytecode.IInstructionVisitor;
 import b2bpl.bytecode.JReferenceType;
-import b2bpl.bytecode.Opcodes;
+import b2bpl.bytecode.IOpCodes;
 
 
 public class NewInstruction extends Instruction {
@@ -10,7 +10,7 @@ public class NewInstruction extends Instruction {
   private final JReferenceType type;
 
   public NewInstruction(JReferenceType type) {
-    super(Opcodes.NEW);
+    super(IOpCodes.NEW);
     this.type = type;
   }
 
@@ -18,11 +18,11 @@ public class NewInstruction extends Instruction {
     return type;
   }
 
-  public void accept(InstructionVisitor visitor) {
+  public void accept(IInstructionVisitor visitor) {
     visitor.visitNewInstruction(this);
   }
 
   public String toString() {
-    return Opcodes.NAMES[opcode] + " " + type.getName();
+    return IOpCodes.NAMES[opcode] + " " + type.getName();
   }
 }
