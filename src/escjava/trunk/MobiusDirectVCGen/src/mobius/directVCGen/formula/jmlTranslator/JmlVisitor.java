@@ -1,14 +1,22 @@
 package mobius.directVCGen.formula.jmlTranslator;
 
 import mobius.directVCGen.formula.*;
+import mobius.directVCGen.formula.annotation.AAnnotation;
+import mobius.directVCGen.formula.annotation.AnnotationDecoration;
+import mobius.directVCGen.formula.annotation.Assume;
+import mobius.directVCGen.formula.annotation.Cut;
+import mobius.directVCGen.formula.annotation.Set;
 
 import java.util.Properties;
+import java.util.Vector;
 
 import sun.misc.Sort;
 import javafe.ast.ASTNode;
 import javafe.ast.BinaryExpr;
 import javafe.ast.BlockStmt;
+import javafe.ast.DoStmt;
 import javafe.ast.FieldAccess;
+import javafe.ast.ForStmt;
 import javafe.ast.InstanceOfExpr;
 import javafe.ast.JavafePrimitiveType;
 import javafe.ast.LiteralExpr;
@@ -19,6 +27,7 @@ import javafe.ast.Stmt;
 import javafe.ast.ThisExpr;
 import javafe.ast.VarDeclStmt;
 import javafe.ast.VariableAccess;
+import javafe.ast.WhileStmt;
 import escjava.ast.AnOverview;
 import escjava.ast.ArrayRangeRefExpr;
 import escjava.ast.CondExprModifierPragma;
@@ -112,7 +121,7 @@ public class JmlVisitor extends VisitorArgResult{
 	
 	@Override
 	public /*@non_null*/ Object visitMethodDecl(/*@non_null*/ MethodDecl x, Object o) {
-		((Properties) o).put("result", Expression.rvar("result",Type.typeToSort(x.returnType)));
+		((Properties) o).put("result", Expression.rvar(Expression.result,Type.typeToSort(x.returnType)));
 		return visitRoutineDecl(x, o);
 	}	
 	
@@ -239,33 +248,76 @@ public class JmlVisitor extends VisitorArgResult{
 
 	@Override
     public /*@non_null*/ Object visitBlockStmt(/*@non_null*/ BlockStmt x, Object o) {
-	    //Properties prop = ((Properties) o);
-		Term t=null;
+	    Term t=null;
 		boolean interesting;
+		Vector<AAnnotation> annos = new Vector<AAnnotation>();
+		Term inv = null;
 	    for(Stmt s: x.stmts.toArray()){
+	    	interesting = false;
+	    	//We are interested in Asserts, Assumes and Loop Invariants
 	    	if (s instanceof ExprStmtPragma){
-	    		 t = (Term)s.accept(this, o);
+	    		interesting = true; 
+	    		t = (Term)s.accept(this, o);
+	    		switch (s.getTag()){
+	    		case TagConstants.ASSERT:
+	    			annos.add(new Cut(t));
+	    			break;
+	    		case TagConstants.ASSUME:
+	    			annos.add(new Assume(t));
+	    			break;
+	    		case TagConstants.LOOP_INVARIANT:
+	    		case TagConstants.MAINTAINING:
+	    			inv = t;
+	    			break;
+	    		}
 	    	} else
+	    	
+	    	//We are also interested in ghost var declarations
 	    	if (s instanceof VarDeclStmt){
-	    		interesting = false;
+	    		
 	    		for (ModifierPragma p: ((VarDeclStmt) s).decl.pmodifiers.toArray()){
-	    			if (p.getTag() == 399) {
+	    			if (p.getTag() == TagConstants.GHOST) {
 	    				interesting = true;
 	    				break;
 	    			}
 	    		}
 	    		if (interesting){
 	    			t = (Term)s.accept(this, o);
+	    			Set ghostVar = new Set();
+	    			ghostVar.declaration = t;
+	    			annos.add(ghostVar);
 	    		}
 	    	} else
+	    	
+	    	//Also set statements should be processed
 	    	if (s instanceof SetStmtPragma) {
-	    		t = (Term)s.accept(this, o);
+	    		interesting = true;
+	    		//t = (Term)s.accept(this, o);
+	    		//TODO: Support set statements.
+	    	}
+	    	
+	    	if (interesting){
+    			x.stmts.removeElement(s);
 	    	} else {
-	    		//Not interested, next please!
+	    		if (!annos.isEmpty()){
+	    			AnnotationDecoration.inst.setAnnotPre(s, annos);
+	    			annos.clear();
+	    		}
+	    		if (inv != null){
+	    			if (s instanceof WhileStmt || s instanceof ForStmt || s instanceof DoStmt){
+	    				AnnotationDecoration.inst.setInvariant(s, inv);
+	    				inv = null;
+	    			}
+	    		}
 	    	}
 	    }
         return t;
     }	
+
+	public /*@non_null*/ Object visitVarDeclStmt(/*@non_null*/ VarDeclStmt x, Object o) {
+		//It's only called if we have a ghost variable declaration
+		return null;
+	}	
 	
 	@Override
 	public Object visitExprStmtPragma(ExprStmtPragma x, Object o) {
