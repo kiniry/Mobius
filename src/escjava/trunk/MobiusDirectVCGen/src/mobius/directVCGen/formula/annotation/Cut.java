@@ -1,5 +1,7 @@
 package mobius.directVCGen.formula.annotation;
 
+import escjava.sortedProver.Lifter.Term;
+
 
 public class Cut extends AAnnotation {
 
@@ -8,5 +10,8 @@ public class Cut extends AAnnotation {
 		return annotCut;
 	}
 
+	public Cut(Term t){
+		super(t);
+	}
 	
 }

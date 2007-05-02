@@ -1,5 +1,7 @@
 package mobius.directVCGen.formula.annotation;
 
+import escjava.sortedProver.Lifter.Term;
+
 
 public class Assert extends AAnnotation {
 
@@ -8,5 +10,8 @@ public class Assert extends AAnnotation {
 		return annotAssert;
 	}
 
+	public Assert(Term t){
+		super(t);
+	}
 	
 }

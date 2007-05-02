@@ -19,6 +19,13 @@ public abstract class AAnnotation {
 	 */
 	public Term formula;
 	
+	public AAnnotation(){
+	}
+	
+	public AAnnotation(Term t){
+		this.formula = t;
+	}
+	
 	/**
 	 * Return the ID of the class in order to do a switch
 	 * @return an id precising which class the current object is from

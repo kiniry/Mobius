@@ -11,12 +11,12 @@ public class Set extends AAnnotation {
 	 * FOL-Terms  containing variable declarations. (Each Term is just a Variable)
 	 * TODO: Could maybe be Vector<SortVar> instead
 	 */
-	public Vector<Term> declarations;
+	public Term declaration;
 	
 	/**
 	 * FOL-Terms translation of JML's set statement
 	 */
-	public Vector<Term> assignments;
+	public Term assignment;
 
 	@Override
 	public int getID() {
