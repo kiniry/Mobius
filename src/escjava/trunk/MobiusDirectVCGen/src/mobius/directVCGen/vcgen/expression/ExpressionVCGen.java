@@ -11,6 +11,7 @@ import javafe.ast.FormalParaDecl;
 import javafe.ast.FormalParaDeclVec;
 import javafe.ast.InstanceOfExpr;
 import javafe.ast.MethodInvocation;
+import javafe.ast.NewArrayExpr;
 import javafe.ast.NewInstanceExpr;
 import javafe.ast.ObjectDesignator;
 import mobius.directVCGen.formula.Bool;
@@ -18,6 +19,7 @@ import mobius.directVCGen.formula.Expression;
 import mobius.directVCGen.formula.Heap;
 import mobius.directVCGen.formula.Logic;
 import mobius.directVCGen.formula.Lookup;
+import mobius.directVCGen.formula.Num;
 import mobius.directVCGen.formula.Ref;
 import mobius.directVCGen.formula.Type;
 import mobius.directVCGen.vcgen.stmt.StmtVCGen;
@@ -205,11 +207,19 @@ public class ExpressionVCGen extends BinaryExpressionVCGen{
 			QuantVariableRef obj = Expression.rvar(Ref.sort);
 			Term normal = entry.post.substWith(Heap.select(Heap.var, obj, f));
 			entry.post = new Post(obj, normal);
-			Post p = this.objectDesignator(field.od, entry);
+			Post p = objectDesignator(field.od, entry);
 
 			return p;			
 		}
 		
+	}
+
+	public Post newArray(NewArrayExpr narr, VCEntry entry) {
+		QuantVariableRef newHeap = Heap.newVar();
+		QuantVariableRef loc = entry.post.var;
+		QuantVariableRef dim = Expression.rvar(Num.sortInt);
+		Term arr = Heap.newArray(Heap.var, Type.translate(narr.type), newHeap, dim,loc);
+		return new Post(arr);
 	}
 	
 	

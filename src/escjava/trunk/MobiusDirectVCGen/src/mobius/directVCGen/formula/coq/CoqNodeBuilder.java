@@ -3,7 +3,7 @@ package mobius.directVCGen.formula.coq;
 import mobius.directVCGen.formula.Formula;
 import escjava.sortedProver.EscNodeBuilder;
 import escjava.sortedProver.Lifter.SortVar;
-import escjava.sortedProver.Lifter.Term;
+import escjava.sortedProver.NodeBuilder.SAny;
 
 /*@ non_null_by_default @*/
 public class CoqNodeBuilder extends EscNodeBuilder {
@@ -439,50 +439,7 @@ public class CoqNodeBuilder extends EscNodeBuilder {
 	}
 	
 	
-	@Override
-	public SAny buildConstantRef(FnSymbol c) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException();
-	}
 
-	@Override
-	public SPred buildIff(SPred arg1, SPred arg2) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException();
-		
-	}
-
-	@Override
-	public SInt buildIntFun(int intFunTag, SInt arg1, SInt arg2) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException();
-
-	}
-
-	@Override
-	public SInt buildIntFun(int intFunTag, SInt arg1) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public SPred buildIntPred(int intPredTag, SInt arg1, SInt arg2) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException();
-	}
-
-
-
-
-
-
-
-	
-	@Override
-	public SPred buildXor(SPred arg1, SPred arg2) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException();
-	}
 	
 
 
@@ -533,7 +490,7 @@ public class CoqNodeBuilder extends EscNodeBuilder {
 
 
 	@Override
-	public SPred buildNewObject(SAny oldh, SAny type, SAny heap, SRef r) {
+	public SPred buildNewObject(SMap oldh, SAny type, SMap heap, SRef r) {
 		CPred left = new CPred("Heap.new", new STerm[] {oldh, buildQVarRef(Formula.program.qvar), new CType("Heap.LocationObject", new STerm[] {type})});
         CPred right = new CPred("Some", new STerm[] {new CPred(false, ",", new STerm[] {getLoc(r), heap})});
     		
@@ -552,16 +509,74 @@ public class CoqNodeBuilder extends EscNodeBuilder {
 	}
 	
 	@Override
-	public SValue buildMSelect(SMap heap, SRef obj, SValue idx) {
-		CRef addr = new CRef("Heap.DynamicField", new STerm [] {getLoc(obj), idx});
+	public SValue buildDynSelect(SMap heap, SRef obj, SAny field) {
+		CRef addr = new CRef("Heap.DynamicField", new STerm [] {getLoc(obj), field});
 		return new CValue("Heap.get", new STerm[] {heap, addr});
 	}
 
 	@Override
-	public SMap buildMStore(SMap map, SRef obj, SValue idx, SValue val) {
-		CRef addr = new CRef("Heap.DynamicField", new STerm [] {getLoc(obj), idx});
+	public SMap buildDynStore(SMap map, SRef obj, SAny field, SValue val) {
+		CRef addr = new CRef("Heap.DynamicField", new STerm [] {getLoc(obj), field});
 		return new CMap("Heap.update", new STerm[] {map, addr, val});
 		
 	}
+
+	@Override
+	public SValue buildArrSelect(SMap map, SRef obj, SInt idx) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public SMap buildArrStore(SMap map, SRef obj, SInt idx, SValue val) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public SPred buildNewArray(SMap oldh, SAny type, SMap heap, SRef r, SInt len) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public SAny buildConstantRef(FnSymbol c) {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public SPred buildIff(SPred arg1, SPred arg2) {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException();
+		
+	}
+
+	@Override
+	public SInt buildIntFun(int intFunTag, SInt arg1, SInt arg2) {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException();
+
+	}
+
+	@Override
+	public SInt buildIntFun(int intFunTag, SInt arg1) {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public SPred buildIntPred(int intPredTag, SInt arg1, SInt arg2) {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException();
+	}
+
+	
+	@Override
+	public SPred buildXor(SPred arg1, SPred arg2) {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException();
+	}
+
 	
 }

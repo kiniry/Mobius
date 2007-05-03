@@ -1,5 +1,6 @@
 package mobius.directVCGen.vcgen.expression;
 
+import javafe.ast.ASTNode;
 import javafe.ast.AmbiguousMethodInvocation;
 import javafe.ast.AmbiguousVariableAccess;
 import javafe.ast.ArrayInit;
@@ -36,6 +37,12 @@ public class ExpressionVisitor extends ABasicVisitor {
 	public ExpressionVisitor() {
 		vcg = new ExpressionVCGen(this);
 	}
+	
+	public static Object illegalExpr(ASTNode x, Object o){
+		throw new IllegalArgumentException("Illegal Expression");
+	}
+	
+	
 	public Object visitBinaryExpr(BinaryExpr expr, Object o) {
 		
 		//System.out.println(TagConstants.toString(expr.op));
@@ -235,20 +242,23 @@ public class ExpressionVisitor extends ABasicVisitor {
 	}
 	
 	
+	
 	public /*@non_null*/ Object visitVarInit(/*@non_null*/ VarInit x, Object o) {
-		return visitASTNode(x, o);
+		return illegalExpr(x, o);
 	}
+
 	public /*@non_null*/ Object visitArrayInit(/*@non_null*/ ArrayInit x, Object o) {
-		return visitVarInit(x, o);
+		return illegalExpr(x, o);
 	}
+	
 	public /*@non_null*/ Object visitArrayRefExpr(/*@non_null*/ ArrayRefExpr x, Object o) {
 		return visitExpr(x, o);
 	}
-
-
 	public /*@non_null*/ Object visitNewArrayExpr(/*@non_null*/ NewArrayExpr x, Object o) {
-		return visitExpr(x, o);
+		return vcg.newArray(x, (VCEntry) o);
 	}
+	
+	
 	public /*@non_null*/ Object visitAmbiguousVariableAccess(/*@non_null*/ AmbiguousVariableAccess x, Object o) {
 	    return visitExpr(x, o);
 	}

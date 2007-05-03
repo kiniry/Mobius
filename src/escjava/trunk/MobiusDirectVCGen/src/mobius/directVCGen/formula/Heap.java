@@ -14,7 +14,7 @@ public class Heap {
 		return Formula.lf.mkFnTerm(Formula.lf.symStore, new Term[] {heap, Expression.refFromVar(var), sortToValue(val)});
 	}
 	public static Term store(QuantVariableRef heap, Term obj, QuantVariable var, Term val) {
-		return Formula.lf.mkFnTerm(Formula.lf.symMStore, new Term[] {heap, obj, Expression.refFromVar(var), sortToValue(val)});
+		return Formula.lf.mkFnTerm(Formula.lf.symDynStore, new Term[] {heap, obj, Expression.refFromVar(var), sortToValue(val)});
 	}
 	public static Term select(QuantVariableRef heap, QuantVariable var) {
 		Term select = Formula.lf.mkFnTerm(Formula.lf.symSelect, 
@@ -22,7 +22,7 @@ public class Heap {
 		return valueToSort(select, var.type);
 	}
 	public static Term select(QuantVariableRef heap, Term obj, QuantVariable var) {
-		Term select = Formula.lf.mkFnTerm(Formula.lf.symMSelect, 
+		Term select = Formula.lf.mkFnTerm(Formula.lf.symDynSelect, 
 				new Term[] {heap, obj, Expression.refFromVar(var)});
 		return valueToSort(select, var.type);
 	}
@@ -81,6 +81,12 @@ public class Heap {
 		if(oldheap == null)
 			throw new NullPointerException();
 		return Formula.lf.mkFnTerm(Formula.lf.symNewObj, new Term[] {oldheap, type, heap, e});
+	}
+	public static Term newArray(QuantVariableRef oldheap,  Term type, QuantVariableRef heap, QuantVariableRef dim, QuantVariableRef loc) {
+		if(oldheap == null)
+			throw new NullPointerException();
+		return Formula.lf.mkFnTerm(Formula.lf.symNewArray, new Term[] {oldheap, type, heap, dim, loc});
+
 	}
 	
 }
