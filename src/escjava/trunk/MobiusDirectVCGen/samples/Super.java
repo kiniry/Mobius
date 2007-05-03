@@ -1,30 +1,22 @@
-
 public class Super {
 
-	boolean i;
+	Super i;
+	int j,k;
 	
-	
-	//invariant i > 0; 
-	
-	//public behavior
-	//  requires x > 0;
-	//  requires i == 1;
-	//  ensures i == 1;
-	//  ensures \result > 0;
-	//@  requires i ==> x;
-	public boolean f(boolean x){
-		return x;
-	}
-	
+	//@ ensures \result == this;
+	//@ assignable \everything;
+	public Super f(Super i){
+		
+		//assert true;
+		//assume false;
+		int noghosti = 0;
+		//@ghost int ghosti = 3;
+		noghosti = 1;
+		//@set ghosti = 5;
+		//maintaining noghosti >= 0;
+		while (noghosti <10){
+			noghosti++;
+		}
+		return i;
+	}	
 }
-
-//public class Sub extends Super {
-//
-//	//@also public behavior
-//	//@  requires x > -2;
-//	//@  ensures \result > 2;
-//	public int f(int x){
-//		
-//	}
-//	
-//}
