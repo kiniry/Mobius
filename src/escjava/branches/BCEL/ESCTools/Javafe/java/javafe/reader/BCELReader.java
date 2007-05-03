@@ -465,14 +465,31 @@ class BCELReader extends Reader {
       fieldDecl = new FieldDecl[n];
    }
 
-   
+/**
+ * 
+ * @param i
+ * @param fname
+ * @param fieldType
+ * @param mod
+ * @throws ClassFormatError
+ */   
    protected void set_field(int i, String fname, Type fieldType, int mod) throws ClassFormatError {
-      String fieldTypeName = fieldType.toString();
+
+      javafe.ast.Type astType = readType(fieldType);
       fieldDecl[i] = // @ nowarn IndexTooBig;
-      FieldDecl.make(mod, null, Identifier.intern(fname), DescriptorParser.parseField(fieldTypeName),
+      FieldDecl.make(mod, null, Identifier.intern(fname), astType,
             classLocation, null, classLocation);
    }
 
+   /**
+    * 
+    * @param fieldType
+    * @return
+    */
+   protected javafe.ast.Type readType(Type fieldType) {
+      
+      return null;
+   }
    /**
     * Call back from ClassFileParser.
     */
