@@ -32,6 +32,7 @@ import javafe.ast.LiteralExpr;
 import javafe.ast.MethodDecl;
 import javafe.ast.Modifiers;
 import javafe.ast.Name;
+import javafe.ast.PrettyPrint;
 import javafe.ast.RoutineDecl;
 import javafe.ast.StmtVec;
 import javafe.ast.TagConstants;
@@ -42,16 +43,18 @@ import javafe.ast.TypeDeclVec;
 import javafe.ast.TypeName;
 import javafe.ast.TypeNameVec;
 import javafe.genericfile.GenericFile;
+import javafe.genericfile.NormalGenericFile;
 import javafe.util.Location;
 
 import com.sun.org.apache.bcel.internal.Constants;
+import com.sun.org.apache.bcel.internal.classfile.ClassParser;
 import com.sun.org.apache.bcel.internal.classfile.Field;
 import com.sun.org.apache.bcel.internal.classfile.JavaClass;
 import com.sun.org.apache.bcel.internal.classfile.Method;
 
 /*
- * ------------------------------------------------------------------------- BCELAdaptor
- * (derived from ASTClassFileParser)
+ * ------------------------------------------------------------------------- 
+ * BCELAdaptor (derived from ASTClassFileParser)
  * -------------------------------------------------------------------------
  */
 
@@ -60,7 +63,7 @@ import com.sun.org.apache.bcel.internal.classfile.Method;
  * components of the class file that have no relevance to type checking (e.g. method bodies).
  */
 
-class BCELAdaptor {
+class BCELReader extends Reader {
    /* -- package instance methods ------------------------------------------- */
 
    /**
@@ -132,43 +135,31 @@ class BCELAdaptor {
    protected boolean omitPrivateFields = true;
 
    /**
-    * Parse a BCEL representation of classfile into a new class parser. 
-    * Resulting class file is stored in
-    * <code>typeDecl</code>; this will be a "spec only" declaration. 
-    * Its package is stored
-    * in <code>classPackage</code> and a location for it is stored in
-    * <code>classLocation</code>.
+    * Load a BCEL representation of a binary classfile.  
     * 
-    * @param javaClass
-    *           the BCEL representation of the binary classfile
     * @param inputFile
     *           the name of the binary classfile
     * @param includeBodies 
     *           if true, bodies are included, if not, only a spec is produced
     * @throws IOException 
-    * @throws ClassFormatError 
     */
-   protected BCELAdaptor(JavaClass javaClass, GenericFile inputFile, boolean includeBodies) throws ClassFormatError, IOException {
-      this.javaClass = javaClass;
-
+   protected BCELReader(GenericFile inputFile, boolean includeBodies) throws IOException {
+      
       this.includeBodies = includeBodies;
       this.classLocation = Location.createWholeFileLoc(inputFile);
+      
+//    Parse the class file using the BCEL parser
+      ClassParser classParser = new ClassParser(inputFile.getInputStream(), inputFile
+            .getLocalName());
+      this.javaClass = classParser.parse();
 
-      parse_file(); // @ nowarn Invariant; // "parse_file" is a helper
 
-      removeExtraArg();
    }
 
    /**
-    * Parse a BCEL representation of classfile into a new class parser. 
-    * Resulting class file is stored in
-    * <code>typeDecl</code>; this will be a "spec only" declaration. 
-    * Its package is stored
-    * in <code>classPackage</code> and a location for it is stored in
-    * <code>classLocation</code>.
+    * Load a BCEL representation of a binary classfile. 
     * 
-    * @param javaClass
-    *           the BCEL representation of the binary classfile
+    *  
     * @param inputFile
     *           the name of the binary classfile
     * @param includeBodies 
@@ -176,8 +167,8 @@ class BCELAdaptor {
     * @throws IOException 
     * @throws ClassFormatError 
     */
-   public static BCELAdaptor make(JavaClass javaClass, GenericFile inputFile, boolean includeBodies) throws ClassFormatError, IOException {
-      return new BCELAdaptor(javaClass, inputFile, includeBodies);
+   public static BCELReader make(GenericFile inputFile, boolean includeBodies) throws ClassFormatError, IOException {
+      return new BCELReader(inputFile, includeBodies);
    }
 
    /**
@@ -213,7 +204,7 @@ class BCELAdaptor {
     * @return An abstract syntax tree of a compilation unit.
     */
 
-   public CompilationUnit convertToAST() {
+   public CompilationUnit read() {
 
       int loc = javaClass.getClassNameIndex();
       Name pkgName = Name.make(javaClass.getPackageName(), 1);
@@ -257,6 +248,9 @@ class BCELAdaptor {
                super_class);
       }
       typeDecl.specOnly = true;
+      
+      removeExtraArg();
+
 
       // Return
       TypeDeclVec types = TypeDeclVec.make(new TypeDecl[] { typeDecl });
@@ -317,37 +311,8 @@ class BCELAdaptor {
       }
    }
 
-   /**
-    * Parse the file and set <code>typeDecl</code>.
-    */
-   // @ also ensures typeDecl != null;
-   protected void parse_file() throws ClassFormatError, IOException {
-
-      set_num_interfaces (javaClass.getInterfaces().length);
-      TypeNameVec interfaceVec = TypeNameVec.make(typeNames); // @ nowarn Pre;
-
-      int predict = classMembers.size() + routineDecl.length + fieldDecl.length;
-      TypeDeclElemVec elementVec = TypeDeclElemVec.make(predict);
-
-      elementVec.append(classMembers);
-
-      // only add routines and fields that are not synthetic.
-      this.addNonSyntheticDecls(elementVec, routineDecl);
-      this.addNonSyntheticDecls(elementVec, fieldDecl);
-
-      // @ assume classIdentifier != null;
-      if ((javaClass.isInterface())) {
-         typeDecl = (TypeDecl) InterfaceDecl.make(modifiers, null, classIdentifier,
-               interfaceVec, null, elementVec, classLocation, classLocation, classLocation,
-               classLocation);
-      } else {
-         typeDecl = (TypeDecl) ClassDecl.make(modifiers, null, classIdentifier, interfaceVec,
-               null, elementVec, classLocation, classLocation, classLocation, classLocation,
-               super_class);
-      }
-      typeDecl.specOnly = true;
-   }
-
+ 
+ 
     
    protected void set_num_constants(int cnum) throws ClassFormatError {
       constants = new Object[cnum];
@@ -398,7 +363,7 @@ class BCELAdaptor {
                if (icf == null) {
                   throw new IOException(icfn + ": inner class not found");
                }
-               BCELAdaptor parser = BCELAdaptor.make(javaClass, icf, true);
+               BCELReader parser = BCELReader.make(icf, true);
 
                if (Modifiers.isPublic(parser.typeDecl.modifiers)) {
                }
@@ -530,18 +495,34 @@ class BCELAdaptor {
    }
 
     
+   /**
+    * Parse a method
+    * 
+    * @param i
+    * @param mname
+    * @param sig
+    * @param mod
+    * @throws ClassFormatError
+    */
    protected void set_method(int i, String mname, String sig, int mod) throws ClassFormatError {
       MethodSignature signature = DescriptorParser.parseMethod(sig);
       FormalParaDeclVec formalVec = FormalParaDeclVec.make(makeFormals(signature));
       BlockStmt body = null;
 
-      routineDecl[i] = // @ nowarn IndexTooBig;
-      mname.equals("<init>") ? (RoutineDecl) ConstructorDecl
-            .make(mod, null, null, formalVec, emptyTypeNameVec, body, Location.NULL,
-                  classLocation, classLocation, classLocation) : (RoutineDecl) MethodDecl
-            .make(mod, null, null, formalVec, emptyTypeNameVec, body, Location.NULL,
-                  classLocation, classLocation, classLocation, Identifier.intern(mname),
-                  signature.getReturn(), classLocation);
+      if (mname.equals("<init>")) {
+      RoutineDecl constructor = (RoutineDecl) ConstructorDecl
+                  .make(mod, null, null, formalVec, emptyTypeNameVec, body, Location.NULL,
+                        classLocation, classLocation, classLocation);
+      routineDecl[i] = constructor;
+      }
+      else {
+         
+      }
+      RoutineDecl otherMethod = (RoutineDecl) MethodDecl
+                  .make(mod, null, null, formalVec, emptyTypeNameVec, body, Location.NULL,
+                        classLocation, classLocation, classLocation, Identifier.intern(mname),
+                        signature.getReturn(), classLocation);
+      routineDecl[i] = otherMethod;
    }
 
     
@@ -746,5 +727,39 @@ class BCELAdaptor {
     * UNUSED //@ invariant nullIdentifier != null; private static final Identifier
     * nullIdentifier = Identifier.intern("");
     */
+   
+   /*******************************************************************************************
+    * * Test methods: * *
+    ******************************************************************************************/
+
+   // @ requires \nonnullelements(args);
+   public static void main(String[] args) {
+      if (args.length != 1) {
+         System.err.println("BCELAdaptor: <source filename>");
+         System.exit(1);
+      }
+
+      GenericFile target = new NormalGenericFile(args[0]);
+      BCELReader reader;
+      try {
+         reader = BCELReader.make(target,false);
+         CompilationUnit cu = reader.read();
+         if (cu != null)
+            PrettyPrint.inst.print(System.out, cu);
+
+      } catch (ClassFormatError e) {
+         // TODO Auto-generated catch block
+         e.printStackTrace();
+      } catch (IOException e) {
+         // TODO Auto-generated catch block
+         e.printStackTrace();
+      }
+
+         }
+
+   public CompilationUnit read(GenericFile target, boolean avoidSpec) {
+      
+      return null;
+   }
 
 }
