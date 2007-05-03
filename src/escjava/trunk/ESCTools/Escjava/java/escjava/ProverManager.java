@@ -110,9 +110,7 @@ public class ProverManager {
         if (!Main.options().quiet) 
           System.out.println("  Sorted prover started:" + Main.timeUsed(startTime));
 
-        Properties flags = new Properties();
-        //flags.setProperty(" ","-timeout 0");
-        sortedProver.setProverResourceFlags(flags);
+        sortedProver.setProverResourceFlags(Main.options().svcgProverResourceFlags);
         
         lifter = new Lifter(sortedProver.getNodeBuilder());
 

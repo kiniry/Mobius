@@ -48,6 +48,11 @@ public class Fx7Prover extends SortedProver
 
 	public SortedProverResponse setProverResourceFlags(Properties properties)
 	{
+		Enumeration e = properties.keys();
+		while (e.hasMoreElements()) {
+			String key = (String)e.nextElement();
+			send("(PRAGMA " + key + " " + properties.getProperty(key) + ")\n");			
+		}
 		return ok;
 	}
 	
@@ -140,6 +145,7 @@ public class Fx7Prover extends SortedProver
 	
 	public SortedProverResponse isValid(SPred formula, SortedProverCallback callback, Properties properties)
 	{
+		setProverResourceFlags(properties);
 	    String form = formulaToString(formula);
 	    send(form);
 	    String ans = readLine(ANSWER);

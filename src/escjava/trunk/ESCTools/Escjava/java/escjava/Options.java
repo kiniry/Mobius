@@ -4,6 +4,7 @@ package escjava;
 
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Properties;
 import java.util.Vector;
 import java.io.*;
 
@@ -275,9 +276,10 @@ public class Options extends javafe.SrcToolOptions {
             { "-vc2dot", "Output the gc tree in dot format" },
             { "-pToDot", "Output the translation of the gc tree in dot format" },
             
-            {
-                "-svcg <prover>",
-                "Use the yet-newer, sorted logic, verification condition generator and invoke the <prover> (eg. simplify, pvs, coq, etc.)." },
+            {   "-svcg <prover>",
+                "Use the yet-newer, sorted logic, verification condition generator " +
+                "and invoke the <prover> (e.g., simplify, fx7, cvc etc.). " +
+                "Prover resource flags can be added after colon, (e.g., fx7:TimeLimit=30,MaxQuantIters=100)."},
             //$$
             { "-ReachabilityAnalysis, -era", "Enable reachability analysis." },
 	    { "-idc", "Check that assertions are defined (i.e. not undefined) in the sense of the new JML semantics."},
@@ -309,6 +311,7 @@ public class Options extends javafe.SrcToolOptions {
     
     // use the even newer typed one 
     public boolean svcg = false;
+    public Properties svcgProverResourceFlags = new Properties(); 
 
     // check "is-defined conditions" (IDCs) rather than normal specification correctness.
     public boolean idc = false;
@@ -943,13 +946,32 @@ public class Options extends javafe.SrcToolOptions {
             
             if ((offset >= args.length) || (args[offset].charAt(0) == '-')) {
                 throw new UsageError(
-                        "Option "
-                                + option
-                                + " requires a comma separated argument indicating which prover(s) you want to use.\n"
-                                + "(e.g. \"" + option + " pvs\" or \"" + option + " simplify,coq\")");
+                        "Option " + option
+                                + " requires an argument indicating which prover you want to use.\n"
+                                + "(e.g. \"" + option + " simplify\" or \"" + option + " fx7:TimeLimit=10\")");
+            }
+            
+            String prover =args[offset];
+        	int idx = prover.indexOf(':');
+        	
+            if (idx > 0) {
+            	String options = prover.substring(idx + 1);
+            	prover = prover.substring(0, idx);
+            	String[] opts = options.split(",");
+            	for (int i = 0; i < opts.length; ++i) {
+            		idx = opts[i].indexOf('='); 
+            		if (idx > 0) {
+            			svcgProverResourceFlags.setProperty(
+            					opts[i].substring(0, idx), 
+            					opts[i].substring(idx + 1));
+            		} else {
+                        throw new UsageError(
+                                "Prover parameter in -svcg is supposed to have name=value format, got: " + opts[i]);            			
+            		}            		
+            	}            		
             }
 
-            pProver = new String(args[offset]).split(",");
+            pProver = new String[] { prover };
             
             return offset+1;
             
