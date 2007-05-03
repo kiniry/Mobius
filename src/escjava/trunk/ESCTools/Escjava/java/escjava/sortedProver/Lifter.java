@@ -279,6 +279,10 @@ public class Lifter extends EscNodeBuilder
 			QuantVariableRef qvr = (QuantVariableRef) o;
 			return qvr.qvar.equals(this.qvar);
 		}
+		public int hashCode() {
+			return qvar.hashCode();
+		}
+		
 		
 		public Term subst(Term v, Term subst) {
 			if (v.equals(this))
@@ -732,11 +736,16 @@ public class Lifter extends EscNodeBuilder
 			name = n;
 		}
 		public boolean equals(Object o) {
+			if(o == this)
+				return true;
 			if(!(o instanceof QuantVariable)) {
 				return false;
 			}
-			QuantVariable qv = (QuantVariable) o;
-			return name.equals(qv.name) && type.equals(qv.type);
+			return this.hashCode() == o.hashCode();
+		}
+		
+		public int hashCode() {
+			return name.hashCode();
 		}
 	}
 	public QuantVariable mkQuantVariable(String n, Sort s) {
