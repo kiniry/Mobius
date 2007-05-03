@@ -1,8 +1,8 @@
 \section{Modeling Security Properties with Automata}\label{SecMVA}
 
 \subsection{Multi-Variable Automata}
-First we define the precise format of the automata that we use to
-encode security properties. Our automata are in particular suited to
+Next we define the precise format of the automata that we use to
+encode security properties. Our automata are particularly suited to
 describe the monitoring of an application, because transitions can
 depend on the state of the program being monitored. We call these
 automata \emph{Multi-Variable Automata} (MVA), because the internal
@@ -11,53 +11,38 @@ between states are labelled with events and so-called actions, that
 describe updates on the automaton variables. A transition can also
 have a guard, that depends on the automation variables, \emph{and} on
 the program variables of the program that is being monitored.
-, used in the
-program and in the MVA, and let \(\CP\) be an infinite, nonempty set
-of control points. 
-We will use PVS-like abstract datatypes and record notation, to define
-data types and tuples with appropriate accessor functions. We first
-define the types of variable types, values and stores. These describe
-the types, values and stores for both automaton and program values.
 
-\[
-\begin{array}{rcl}
-\Store & = & \Name \rightarrow \Val
-\end{array}
-\]
-
-For convenience, we will sometimes write \(\Store_A\) to denote the
-store of all elements in \(A\). Further, we also define some auxiliary
-types that are specific to MVA, namely those of (MVA and program)
-variable declarations, events and transitions. The variable types that
-we distinguish here are booleans, integers, references and a special
-void type.  Both the automaton variables and the program variables
-have any of these types. An MVA declares a set of automaton variable,
-consisting of their name, type and an initial value, and a set of
-program variables it uses, specifying only their name and
-type. Transitions are labelled with events, where an event is a tuple
-of an event type (entry, exit or exceptional exit) and a method
-name. Each transition can update the MVA variables by executing a list
-of actions, where each action assigns the result of an expression
-(containing both program and MVA variables) to
-a MVA variable. The exact type of expressions Finally, the transitions also can have a guard, which
-uses 
+Let \(\CP\) be an infinite, nonempty set of control points.  First we
+define some auxiliary types, namely those of (MVA and program)
+variable declarations, events and transitions. An MVA declares a set
+of special automaton variables, consisting of their name, type and an
+initial value, and a set of used program variables, specifying only
+their name and type. Transitions go from source to target control
+points. They are labelled with events, where an event is a tuple of an
+event type (entry, exit or exceptional exit) and a method name. Each
+transition can update the MVA variables by executing a list of
+actions, where each action assigns the result of an expression
+(containing both program and MVA variables) to a MVA
+variable. Finally, a transition can have a guard, a predicate whose
+value depends on the state of the automaton (\MVAstate) and of the
+program variables (\Pstate). 
 \[
 \begin{array}{rcl}
 \VarDeclA & = \opr & \name : \Name, \type : \Type, \init : \Val \clr\\
 \VarDeclP & = \opr & \name : \Name, \type : \Type \clr\\
 \EVENT & = \opr & \etype : (\entry \mid \exit \mid \excexit), 
                  \mname : \Name \clr\\
-\TRANS & = \opr & \scp : \CP, \event : \EVENT, \guard :
-\Store_{\VarDeclA} \times \Store_{\VarDeclP} \rightarrow \mathbb{B}, 
+\TRANS & = \opr & \scp, \tcp : \CP, \event : \EVENT, \\
+& & 
+\guard : \MVAstate \times \Pstate \rightarrow \mathbb{B}, \\
+&& \action : (\opr \target : \Name, \expr : \Expr \clr)^* \clr
 \end{array}
 \]
 
 
-An MVA is formally defined as follows.
-
-\begin{definition}\textbf{\emph{[Multi-Variable Automaton]}}
-A \emph{multi-variable automaton} \(\MVA\) is defined as the
-following tuple:
+A MVA contains a name, a class name (denoting the monitored class), an
+initial control point, and sets of events, automaton and program
+variable declarations and transitions. 
 \[
 \begin{array}{rcl}
 \MVA & = \opr & \name, \clname : \Name, \cps : \setof{\CP},
@@ -66,4 +51,103 @@ following tuple:
      &   &  \trans : \setof{\TRANS} \clr
 \end{array}
 \]
-\end{definition}
+
+An MVA is \emph{deterministic} if for every source control
+point and event there is always at most one guard that holds. Here we
+restrict ourselves to deterministic MVA. Notice that it is not obvious
+to transform a non-deterministic MVA into a deterministic MVA, because
+the actions done by the overlapping transitions might be different. We
+believe that this is realistic restriction, and that most important
+security properties can be expressed as deterministic MVAs. 
+
+An MVA is \emph{total} is there is always exactly one guard that holds
+for a given source control point and event. Every deterministic MVA
+can be completed into a total MVA by adding a special control state
+\halted by adding transitions for every control point and every event
+to this \halted control point, with as guard the negation of the
+disjunction of all other guards. In addition, one adds unconditional
+transitions from \halted to \halted for every possible event.
+
+\paragraph{MVA Transitions} The state of a MVA consists of a current control
+point, and the store of automaton variables.
+\[
+\MVAstate = \opr \cp : \CP, \stA : \Store \clr
+\]
+Notice that the program store is not part of the automaton
+state. Given a total MVA \(a\), the transition relation \(\Delta_a\)
+describes how given a program store and an event, \(a\) changes its
+internal state (where \textit{apply} is a function that updates the
+automaton store according to the list of actions in the obvious way).
+\[
+\begin{array}{l}
+\Delta_a  :  \MVAstate \times \Pstate \times \EVENT \rightarrow
+\MVAstate\\
+\Delta_a(\sigma_A, \sigma_P, e) = \\
+\quad
+\begin{array}[t]{l}
+\mathsf{let\ }t = \epsilon(\{t\in \trans(a)\mid
+  \begin{array}[t]{l}
+     \scp(t) = \cp(\sigma_A) \wedge \event(t) = e \wedge \\
+     \guard(t)(\stA(\sigma_A), \st(\fvs(\sigma_P)))\}) \mathsf{\ in}
+  \end{array}\\
+\quad \opri \cp := \tcp(t), \stA := \mathit{apply}(\action(t),
+\stA(\sigma_A)) \clri
+\end{array}
+
+\end{array}
+\]
+
+\subsection{Monitored Program Semantics}
+Given the definitions of MVA's and MVA transitions, we can instantiate
+the general program semantics to a monitored program semantics. This
+semantics is only defined when the MVA total and compatible with the
+program. An MVA \(a\) is said to be compatible with program \(P\),
+denoted \(a \sqsubseteq P\) if the program contains the class \(c\) that is
+being monitored, all variables declared as program variables in
+\(a\) are fields of the class \(c\) with the correct type, and every
+event name corresponds to a method in the class. 
+
+A monitored program is a product of the MVA and the program.
+The state of a monitored program consists of the state of the MVA and
+the program.
+
+\[ 
+\begin{array}{rcl}
+\Mprogram & =  & \opr \mva : \MVA, \program : \Program \clr\\
+\Mstate & = & \opr \mvastate : \MVAstate, \progstate : \Pstate \clr
+\end{array}
+\]
+Thus, \FullProgram gets instantiated as \Mprogram and \FullState as
+\Mstate, with mappings \program and \progstate. Now we can give
+appropriate instantiations for the \(\gamma\)- and
+\(\delta\)-functions. In fact, the \(\delta\)-functions are the same as
+for the standard or annotated program semantics (depending on whether
+we wish the monitored program to evaluate annotations that are
+possibly already there). For clarity we only show here how \gammain
+changes the state of the monitor; it is straightforward to add 
+annotation evaluation to this. 
+\[
+\begin{array}{l}
+\gammain(P, md, r, \tau_1, \tau_2) = \\
+\quad
+\begin{array}[t]{l}
+\mathsf{let\ } e = \opri \etype := \entry, \mname := \name(md) \clri \\
+\mathsf{in\ }
+\begin{array}[t]{l}
+\mathsf{if\ }  e \in \evs(\mva(P)) \\
+\mathsf{then\ }\begin{array}[t]{l}
+       \mvastate(\tau_2) = \Delta_a(\mvastate(\tau_1),
+\progstate(\tau_1), e) \wedge \\
+      \progstate(\tau_1) = \progstate(\tau_2)
+      \end{array}\\
+\mathsf{else\ } \tau_1 = \tau_2
+\end{array}
+\end{array}
+\end{array}
+\]
+
+\subsection{Example properties}
+To illustrate the expressive power of MVA, here are some typical
+security properties and their encoding as MVAs. 
+
+

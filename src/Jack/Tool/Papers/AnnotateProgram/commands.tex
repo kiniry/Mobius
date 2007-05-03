@@ -41,14 +41,20 @@
 
 \newcommand{\Val}{\ensuremath{\mathit{Val}}\xspace}
 
-\newcommand{\opr}{\ensuremath{\mathsf{[\#}}}
-\newcommand{\clr}{\ensuremath{\ \mathsf{\#]}}}
+\newcommand{\opr}{\ensuremath{\texttt{[\#\:}}}
+\newcommand{\clr}{\ensuremath{\ \texttt{\#]}}}
+\newcommand{\opri}{\ensuremath{\texttt{(\#\:}}}
+\newcommand{\clri}{\ensuremath{\ \texttt{\#)}}}
 
 \newcommand{\scp}{\ensuremath{\mathsf{source}}\xspace}
 \newcommand{\tcp}{\ensuremath{\mathsf{dest}}\xspace}
+\newcommand{\cp}{\ensuremath{\mathsf{current}}\xspace}
 \newcommand{\event}{\ensuremath{\mathsf{event}}\xspace}
 \newcommand{\guard}{\ensuremath{\mathsf{guard}}\xspace}
 \newcommand{\action}{\ensuremath{\mathsf{action}}\xspace}
+
+\newcommand{\target}{\ensuremath{\mathsf{target}}\xspace}
+\newcommand{\expr}{\ensuremath{\mathsf{expr}}\xspace}
 
 \newcommand{\listof}[1]{\ensuremath{\mathsf{list[}{#1}\mathsf{]}}\xspace}
 
@@ -120,24 +126,32 @@
 
 \newcommand{\Pstate}{\ensuremath{\mathit{PState}}\xspace}
 \newcommand{\FullProgram}{\ensuremath{\mathit{FullProgram}}\xspace}
+\newcommand{\Mprogram}{\ensuremath{\mathit{MProgram}}\xspace}
 \newcommand{\FullState}{\ensuremath{\mathit{FullState}}\xspace}
 \newcommand{\Astate}{\ensuremath{\mathit{AState}}\xspace}
+\newcommand{\Mstate}{\ensuremath{\mathit{MState}}\xspace}
+\newcommand{\MVAstate}{\ensuremath{\mathit{MVAState}}\xspace}
 \newcommand{\pstate}{\ensuremath{\mathsf{pstate}}\xspace}
 \newcommand{\progstate}{\ensuremath{\mathsf{prog\_state}}\xspace}
 \newcommand{\program}{\ensuremath{\mathsf{program}}\xspace}
 \newcommand{\PStore}{\ensuremath{\mathit{PStore}}\xspace}
+\newcommand{\mva}{\ensuremath{\mathsf{mva}}\xspace}
+\newcommand{\mvastate}{\ensuremath{\mathsf{mva\_state}}\xspace}
 \newcommand{\ex}{\ensuremath{\mathsf{exc}}\xspace}
 \newcommand{\st}{\ensuremath{\mathsf{store}}\xspace}
+\newcommand{\stA}{\ensuremath{\mathsf{store_A}}\xspace}
 \newcommand{\Excp}{\ensuremath{\mathit{Excp}}\xspace}
 \newcommand{\Norm}{\ensuremath{\mathsf{Norm}}\xspace}
 \newcommand{\Throwable}{\ensuremath{\mathsf{Throwable}}\xspace}
-\newcommand{\NullPointer}{\ensuremath{\mathsf{NullPointerException}}\xspace}
+\newcommand{\NullPointer}{\ensuremath{\mathsf{RunTimeException}}\xspace}
+\newcommand{\JMLExc}{\ensuremath{\mathsf{JMLException}}\xspace}
 \newcommand{\fvs}{\ensuremath{\mathsf{fields}}\xspace}
 \newcommand{\gvs}{\ensuremath{\mathsf{ghost\_vars}}\xspace}
 \newcommand{\lvs}{\ensuremath{\mathsf{loc\_vars}}\xspace}
 
 \newcommand{\exc}{\ensuremath{\mathit{exc}}\xspace}
 \newcommand{\act}{\ensuremath{\mathit{act}}\xspace}
+
 \newcommand{\etp}[2]{%
   P \vdash \langle #1 \rangle \triangleright_P \langle #2 \rangle}
 \newcommand{\stp}[2]{%
@@ -161,3 +175,9 @@
 \newcommand{\pif}[3]{\mathsf{if}\, #1\, \mathsf{then}\, #2\, \mathsf{else}\, #3}
 
 \newcommand{\oldval}{\ensuremath{\mathit{old\_val}}\xspace}
+\newcommand{\halted}{\ensuremath{\mathsf{halted}}\xspace}
+
+\newcommand{\bp}{\ensuremath{\phantom{(}}}
+
+
+\newcommand{\url}[1]{\texttt{#1}}

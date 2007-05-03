@@ -47,7 +47,7 @@ kind of properties.
 As a first step towards static verification of security properties,
 this paper proposes a translation from security properties expressed
 as an automaton (or a safety temporal logic formula, which can be
-translated into an automaton~\cite{Wolper?}) into a specification that
+translated into an automaton~\cite{Wolper01}) into a specification that
 can be verified by a standard program verification tool. Since the
 Java Virtual Machine (and variations) is the most common platform for
 trusted personal devices\footnote{The standard Java set-up for such
@@ -56,13 +56,13 @@ devices is the Connected Limited Device Configuration, see
 profile, see
 \texttt{http://java.sun.com/products/midp/}.}, we use JML as the
 program verification specification language.  JML (Java Modeling
-Language)~\cite{Leavens...} is a behavioural interface specification
+Language)~\cite{LeavensPCCRCK05} is a behavioural interface specification
 langugage for Java. It allows to express pre-postcondition style
 specifications, but also provides more advanced constructs like class
 invariants and history constraints. Several tools exist that allow to
 statically verify whether a program respects its JML annotations,
 \emph{e.g.}\ ESC/Java~\cite{CokK04} and
-JACK~\cite{BartheCGHLPR07}. Moreover, one can also do
+JACK~\cite{BartheBCGHMPPSV06}. Moreover, one can also do
 runtime checking of a JML specification using the
 \texttt{jmlc} and
 \texttt{jmlrac} tools. Runtime checking of a JML specifications means
@@ -78,7 +78,7 @@ application monitored by the automaton does not produce a security
 violation, runtime checking of the generated JML annotations will 
 not produce an annotation exception. The next step is to
 propagate the annotations (as described
-in~\cite{PavlovaBBHL04cardis}), which means that the annotations that
+in~\cite{PavlovaBBHL04}), which means that the annotations that
 are generated directly give rise to new program
 annotations. Eventually, this will produce a completely annotated
 application, and if it can be proven statically that the annotated
@@ -87,9 +87,9 @@ property expressed by the automaton.
 
 This paper focuses on the first step of the process: from automata to
 core-annotations. All results in the paper have been established
-formally using the PVS theorem prover~\cite{Owre?}. In earlier work,
+formally using the PVS theorem prover~\cite{OwreRRSS96}. In earlier work,
 we have presented the propagation
-algorithm~\cite{PavlovaBBHL04cardis}, and proven correctness for a
+algorithm~\cite{PavlovaBBHL04}, and proven correctness for a
 limited case (only static properties that do not depend on concrete
 program instances are considered, and branching conditions are not
 taken into account~--~the two possible branches are simply both
