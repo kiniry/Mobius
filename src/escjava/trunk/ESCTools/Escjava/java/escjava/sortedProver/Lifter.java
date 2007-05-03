@@ -1,36 +1,49 @@
 package escjava.sortedProver;
 
-import javafe.ast.*;
-import javafe.tc.*;
-import javafe.util.*;
-import escjava.ast.*;
-import escjava.ast.Modifiers;
-import escjava.sortedProver.NodeBuilder.FnSymbol;
-import escjava.sortedProver.NodeBuilder.PredSymbol;
-import escjava.sortedProver.NodeBuilder.QuantVar;
-import escjava.sortedProver.NodeBuilder.SAny;
-import escjava.sortedProver.NodeBuilder.SBool;
-import escjava.sortedProver.NodeBuilder.SInt;
-import escjava.sortedProver.NodeBuilder.SMap;
-import escjava.sortedProver.NodeBuilder.SPred;
-import escjava.sortedProver.NodeBuilder.SReal;
-import escjava.sortedProver.NodeBuilder.SRef;
-import escjava.sortedProver.NodeBuilder.STerm;
-import escjava.sortedProver.NodeBuilder.SValue;
-import escjava.sortedProver.NodeBuilder.Sort;
-import escjava.tc.GhostEnv;
-import escjava.translate.*;
-import escjava.ast.TagConstants;
-import escjava.backpred.BackPred;
-import escjava.backpred.FindContributors;
-import escjava.prover.Atom;
-
-import java.io.*;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Stack;
 import java.util.regex.Pattern;
+
+import javafe.ast.ASTNode;
+import javafe.ast.ArrayType;
+import javafe.ast.ClassDecl;
+import javafe.ast.ConstructorDecl;
+import javafe.ast.Expr;
+import javafe.ast.ExprVec;
+import javafe.ast.FieldDecl;
+import javafe.ast.FormalParaDecl;
+import javafe.ast.GenericVarDecl;
+import javafe.ast.LiteralExpr;
+import javafe.ast.LocalVarDecl;
+import javafe.ast.MethodDecl;
+import javafe.ast.PrettyPrint;
+import javafe.ast.PrimitiveType;
+import javafe.ast.SimpleName;
+import javafe.ast.Type;
+import javafe.ast.TypeDecl;
+import javafe.ast.VariableAccess;
+import javafe.tc.TypeCheck;
+import javafe.tc.TypeSig;
+import javafe.tc.Types;
+import javafe.util.Assert;
+import javafe.util.ErrorSet;
+import javafe.util.Info;
+import javafe.util.Location;
+import escjava.ast.LabelExpr;
+import escjava.ast.Modifiers;
+import escjava.ast.NaryExpr;
+import escjava.ast.QuantifiedExpr;
+import escjava.ast.SubstExpr;
+import escjava.ast.TagConstants;
+import escjava.ast.TypeExpr;
+import escjava.backpred.BackPred;
+import escjava.backpred.FindContributors;
+import escjava.translate.GC;
+import escjava.translate.TrAnExpr;
+import escjava.translate.UniqName;
 
 /*@ non_null_by_default @*/
 public class Lifter extends EscNodeBuilder
@@ -543,6 +556,12 @@ public class Lifter extends EscNodeBuilder
 				return dumpBuilder.buildNewObject(args[0].dumpAny(), args[1].dumpAny(), args[2].dumpAny(),
 						args[3].dumpRef());
 			}
+			if (fn == symMSelect){
+				return dumpBuilder.buildMSelect((SMap)args[0].dump(), args[1].dumpRef(), args[2].dumpValue());
+			}
+			if (fn == symMStore){
+				return dumpBuilder.buildMStore((SMap)args[0].dump(), args[1].dumpRef(), args[2].dumpValue(), args[3].dumpValue());
+			}
 			if(fn.name.startsWith("%"))
 				System.out.println(fn.name);
 			Assert.notFalse(! fn.name.startsWith("%"));
@@ -899,7 +918,7 @@ public class Lifter extends EscNodeBuilder
     
     
 	// we just want Sort and the like, don't implement anything	
-	static class Die extends RuntimeException { }
+	static class Die extends RuntimeException { private static final long serialVersionUID = 1L; }
 	public SAny buildFnCall(FnSymbol fn, SAny[] args) { throw new Die(); }
 	public SAny buildConstantRef(FnSymbol c) { throw new Die(); }
 	public SAny buildQVarRef(QuantVar v) { throw new Die(); }
@@ -937,9 +956,12 @@ public class Lifter extends EscNodeBuilder
 	public SValue buildValueConversion(Sort from, Sort to, SValue val) { throw new Die(); }
 	public SPred buildIsTrue(SBool val) { throw new Die(); }
 
+	// Mobius specific stuff...
 	public SPred buildNewObject(SAny oldh, SAny type, SAny heap, SRef r) { throw new Die(); }
-	public SAny buildSort(Sort s) { throw new Die(); };
-
+	public SAny buildSort(Sort s) { throw new Die(); }
+	public SValue buildMSelect(SMap map, SRef obj, SValue idx) {throw new Die(); }
+	public SMap buildMStore(SMap map, SRef obj, SValue idx, SValue val) {throw new Die(); }
+	
 	boolean isEarlySort(Sort s, Sort p)
 	{
 		return isEarlySort(s) || isEarlySort(p);
@@ -1164,8 +1186,8 @@ public class Lifter extends EscNodeBuilder
 	private Term doTransform(ASTNode n)
 	{		
 		// declarations & instancations
-		int nbChilds = n.childCount();
-		Object o = null;
+		/* int nbChilds = n.childCount();
+		   Object o = null; */
 		
 		// all types checked are in alphabetical order
 		if (n instanceof ArrayType) {			
@@ -1408,7 +1430,7 @@ public class Lifter extends EscNodeBuilder
 		} else if (n instanceof QuantifiedExpr) {
 			QuantifiedExpr m = (QuantifiedExpr) n;
 			
-			String s = TagConstants.toString(m.getTag());
+			//String s = TagConstants.toString(m.getTag());
 			
 			boolean universal = false;
 			
@@ -1473,7 +1495,7 @@ public class Lifter extends EscNodeBuilder
 			return null;
 			
 		} else if (n instanceof SubstExpr) {
-			SubstExpr m = (SubstExpr) n;
+			//SubstExpr m = (SubstExpr) n;
 			
 			ErrorSet.fatal("SubstExpr viewed and not handled");
 			return null;
@@ -1780,5 +1802,7 @@ public class Lifter extends EscNodeBuilder
 		unify(body.getSort(), sortPred, this);
 		return body;		
 	}
+
+
 	
 }

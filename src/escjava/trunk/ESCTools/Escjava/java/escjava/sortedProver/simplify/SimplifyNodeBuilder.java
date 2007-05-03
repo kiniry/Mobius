@@ -7,7 +7,6 @@ import java.util.Iterator;
 import javafe.util.Assert;
 import escjava.prover.Atom;
 import escjava.sortedProver.EscNodeBuilder;
-import escjava.sortedProver.Lifter.QuantVariable;
 
 /*@ non_null_by_default @*/
 public class SimplifyNodeBuilder extends EscNodeBuilder
@@ -407,10 +406,18 @@ public class SimplifyNodeBuilder extends EscNodeBuilder
 	public SBool buildRealBoolFun(int realPredTag, SReal arg1, SReal arg2) {
 		return (SBool) buildRealPred(realPredTag, arg1, arg2);
 	}
+	
+	// Mobius stuff
 	public SPred buildNewObject(SAny oldh, SAny type, SAny heap, SRef r) {
 		throw new UnsupportedOperationException();
 	}
 	public SAny buildSort(Sort s) {
+		throw new UnsupportedOperationException();
+	}
+	public SValue buildMSelect(SMap map, SRef obj, SValue idx) {
+		throw new UnsupportedOperationException();
+	}
+	public SMap buildMStore(SMap map, SRef obj, SValue idx, SValue val) {
 		throw new UnsupportedOperationException();
 	}
 }

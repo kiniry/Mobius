@@ -430,4 +430,7 @@ public abstract class NodeBuilder
 	// Mobius specific stuff
 	abstract public SPred buildNewObject(SAny oldh, SAny type, SAny heap, SRef r) ;
 	abstract public SAny buildSort(Sort s);
+	abstract public SValue buildMSelect(SMap map, SRef obj, SValue idx);
+	abstract public SMap buildMStore(SMap map, SRef obj, SValue idx, SValue val);
+	
 }
