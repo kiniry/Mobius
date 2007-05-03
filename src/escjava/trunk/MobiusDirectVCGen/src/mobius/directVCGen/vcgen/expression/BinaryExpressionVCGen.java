@@ -2,7 +2,6 @@ package mobius.directVCGen.vcgen.expression;
 
 import javafe.ast.BinaryExpr;
 import javafe.ast.Expr;
-import javafe.ast.ExprObjectDesignator;
 import javafe.ast.FieldAccess;
 import javafe.ast.ObjectDesignator;
 import javafe.ast.VariableAccess;
@@ -10,6 +9,7 @@ import mobius.directVCGen.formula.Bool;
 import mobius.directVCGen.formula.Expression;
 import mobius.directVCGen.formula.Heap;
 import mobius.directVCGen.formula.Logic;
+import mobius.directVCGen.formula.Lookup;
 import mobius.directVCGen.formula.Num;
 import mobius.directVCGen.formula.Ref;
 import mobius.directVCGen.formula.Type;
@@ -325,11 +325,12 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn{
 		else { // left instanceof FieldAccess
 			FieldAccess field = (FieldAccess) left;
 			ObjectDesignator od = field.od;
+			QuantVariable f = Expression.var(field.decl);
+			Lookup.fieldsToDeclare.add(f);
 			switch(od.getTag()) {
 				case TagConstants.EXPROBJECTDESIGNATOR: {
 					// can be null
 					//System.out.println(field.decl.parent);
-					QuantVariable f = Expression.var(field.decl);
 					Sort s = f.type;
 					QuantVariableRef val = Expression.rvar(s);
 					QuantVariableRef obj = Expression.rvar(Ref.sort);
@@ -346,7 +347,6 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn{
 				case TagConstants.TYPEOBJECTDESIGNATOR: {
 					// cannot be null
 					//System.out.println(field);
-					QuantVariable f = Expression.var(field.decl);
 					Sort s = f.type;
 					QuantVariableRef val = Expression.rvar(s);
 					Post p = new Post(val, entry.post.post.subst(Heap.var, Heap.store(Heap.var, f, val)));

@@ -3,6 +3,7 @@ package mobius.directVCGen.formula;
 import java.util.HashMap;
 import java.util.Vector;
 
+import javafe.ast.TypeDecl;
 import javafe.ast.VarInit;
 import javafe.tc.FlowInsensitiveChecks;
 import escjava.sortedProver.Lifter.FnTerm;
@@ -157,4 +158,6 @@ public class Type{
 		Formula.lf.dumpBuilder = null;
 		return v;
 	}
+
+
 }

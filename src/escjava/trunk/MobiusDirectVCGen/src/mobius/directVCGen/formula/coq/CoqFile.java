@@ -4,10 +4,12 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
+import java.util.Set;
 import java.util.Vector;
 
 import mobius.directVCGen.formula.Formula;
 
+import escjava.sortedProver.Lifter.QuantVariable;
 import escjava.sortedProver.NodeBuilder.FnSymbol;
 import escjava.sortedProver.NodeBuilder.STerm;
 import escjava.sortedProver.NodeBuilder.Sort;
@@ -34,7 +36,7 @@ public class CoqFile {
 	}
 
 
-	public void writeDefs(Vector<FnSymbol> symToDeclare, Vector<String> classNames) {
+	public void writeDefs(Vector<FnSymbol> symToDeclare, Set<QuantVariable> fieldsToDeclare, Vector<String> classNames) {
 		out.println("Add LoadPath \"" + base + "\".\n" +
 			    "Add LoadPath \"" + base + File.separator + "Formalisation\".\n" +
 	            "Add LoadPath \"" + base + File.separator + "Formalisation" +
@@ -47,6 +49,10 @@ public class CoqFile {
 		out.println("Load \"defs_types.v\".\n");
 		for(String name: classNames) {
 			out.println("Variable " + name + ": ClassName.");
+		}
+		out.println();
+		for(QuantVariable field: fieldsToDeclare) {
+			out.println("Variable " + CoqNodeBuilder.normalize(field.name) + ": FieldSignature.");
 		}
 		out.println();
 		for(FnSymbol sym : symToDeclare) {

@@ -1,11 +1,13 @@
 package mobius.directVCGen.formula;
 
+import java.util.HashSet;
 import java.util.Vector;
 
 import mobius.directVCGen.vcgen.struct.Post;
 
 import escjava.ast.Modifiers;
 import escjava.ast.TagConstants;
+import escjava.sortedProver.Lifter.QuantVariable;
 import escjava.sortedProver.Lifter.Term;
 import escjava.sortedProver.NodeBuilder.FnSymbol;
 import escjava.sortedProver.NodeBuilder.Sort;
@@ -18,7 +20,8 @@ import javafe.ast.RoutineDecl;
 
 public class Lookup {
 	public static Vector<FnSymbol> symToDeclare = new Vector<FnSymbol>();
-
+	public static HashSet<QuantVariable> fieldsToDeclare = new HashSet<QuantVariable>();
+	
 	public static Term buildStdCond (RoutineDecl m, String name, boolean hasResult) {
 		int arity = m.args.size();
 		boolean incThis = false;
@@ -26,11 +29,12 @@ public class Lookup {
 		Sort returnType = Ref.sort;  
 		if(m instanceof MethodDecl) {
 			returnType = Type.typeToSort(((MethodDecl) m).returnType);
+			if((m.getModifiers() & Modifiers.ACC_STATIC) == 0) {
+				arity ++;
+				incThis = true;
+			}
 		}
-		if((m.getModifiers() & Modifiers.ACC_STATIC) == 0) {
-			arity ++;
-			incThis = true;
-		}
+		
 		if((m instanceof ConstructorDecl) ||
 				((MethodDecl)m).returnType.getTag() == TagConstants.VOIDTYPE) {
 			hasResult = false;
@@ -56,7 +60,7 @@ public class Lookup {
 			s[s.length - 1] = args[args.length - 1].getSort();
 		}
 		if(m instanceof ConstructorDecl) {
-			name = ((ConstructorDecl)m).parent + name;
+			name = ((ConstructorDecl)m).parent.id + name;
 		}
 		else {
 			name = ((MethodDecl)m).id+ name;

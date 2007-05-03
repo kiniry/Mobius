@@ -1,0 +1,9 @@
+Things to do when I (or we) will have time:
+
+- Properly handle the fields especially generate them when 
+  generating all the class names.
+  
+- Same for the class names generation
+
+- Make the Coq back-end type properly everything
+	see: select, store, MSelect, MStore are badly constructed.

@@ -304,7 +304,7 @@ public class CoqNodeBuilder extends EscNodeBuilder {
 			throw new IllegalArgumentException("Unknown Type: " + s.getClass() + " " + sortRef.getClass());
 	}
 
-	private String normalize(String name) {
+	public static String normalize(String name) {
 		if(name.startsWith("#"))
 			name = name.substring(1);
 		name = name.replace(':', '_');
@@ -484,14 +484,7 @@ public class CoqNodeBuilder extends EscNodeBuilder {
 		throw new UnsupportedOperationException();
 	}
 	
-	@Override
-	public SValue buildSelect(SMap map, SValue idx) {		
-		return new CValue("Heap.get", new STerm[] {map, idx});
-	}
-	@Override
-	public SMap buildStore(SMap map, SValue idx, SValue val) {
-		return new CMap("Heap.update", new STerm[] {map, idx, val});
-	}
+
 
 	@Override
 	public SValue buildValueConversion(Sort from, Sort to, SValue val) {
@@ -534,15 +527,41 @@ public class CoqNodeBuilder extends EscNodeBuilder {
 		}
 	}
 
+	private SRef getLoc(SValue r) {
+		return new CRef("loc", new STerm[] {r});
+	}
 
 
 	@Override
 	public SPred buildNewObject(SAny oldh, SAny type, SAny heap, SRef r) {
 		CPred left = new CPred("Heap.new", new STerm[] {oldh, buildQVarRef(Formula.program.qvar), new CType("Heap.LocationObject", new STerm[] {type})});
-        CPred right = new CPred("Some", new STerm[] {new CPred(false, ",", new STerm[] {new CPred("loc", new STerm[] {r}), heap})});
+        CPred right = new CPred("Some", new STerm[] {new CPred(false, ",", new STerm[] {getLoc(r), heap})});
     		
 		SPred res = new CPred(false, "=",new STerm[] {left, right});
 		return res;
+	}
+	@Override
+	public SValue buildSelect(SMap map, SValue idx) {		
+		CRef addr = new CRef("Heap.StaticField", new STerm [] {idx});
+		return new CValue("Heap.get", new STerm[] {map, addr});
+	}
+	@Override
+	public SMap buildStore(SMap map, SValue idx, SValue val) {
+		CRef addr = new CRef("Heap.StaticField", new STerm [] {idx});
+		return new CMap("Heap.update", new STerm[] {map, addr, val});
+	}
+	
+	@Override
+	public SValue buildMSelect(SMap heap, SRef obj, SValue idx) {
+		CRef addr = new CRef("Heap.DynamicField", new STerm [] {getLoc(obj), idx});
+		return new CValue("Heap.get", new STerm[] {heap, addr});
+	}
+
+	@Override
+	public SMap buildMStore(SMap map, SRef obj, SValue idx, SValue val) {
+		CRef addr = new CRef("Heap.DynamicField", new STerm [] {getLoc(obj), idx});
+		return new CMap("Heap.update", new STerm[] {map, addr, val});
+		
 	}
 	
 }

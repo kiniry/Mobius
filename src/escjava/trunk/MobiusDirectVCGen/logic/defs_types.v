@@ -15,7 +15,6 @@ Variable heap: Heap.t.
 Import Prog.
 Variable p: Program.
 Variable iValue: Z -> value.
-Variable fs_6_6_12: Heap.AdressingMode.
 Variable typeof : Heap.t -> value -> ClassName.
 Variable this: value.
 Variable undef: Location.

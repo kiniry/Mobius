@@ -55,7 +55,7 @@ public class MethodVisitor extends DirectVCGen {
 				fos.println(t);
 				fos.close();
 				CoqFile cf = new CoqFile(configdir, getBaseDir(), name);
-				cf.writeDefs(Lookup.symToDeclare, Type.getAllTypes());
+				cf.writeDefs(Lookup.symToDeclare, Lookup.fieldsToDeclare, Type.getAllTypes());
 				cf.writeProof(Formula.generateFormulas(t));
 				
 			}

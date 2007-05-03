@@ -68,6 +68,15 @@ public class Heap {
 	public static QuantVariableRef newVar() {
 		return Expression.rvar("heap" + (heapc++), Heap.sort);
 	}
+	
+	/**
+	 * 
+	 * @param oldheap the old heap
+	 * @param type the type of the newly allocated thing
+	 * @param heap the new heap
+	 * @param e the location that has been allocated, represented by a variable
+	 * @return
+	 */
 	public static Term newObject(Term oldheap, Term type, Term heap,  QuantVariableRef e) {
 		if(oldheap == null)
 			throw new NullPointerException();

@@ -22,14 +22,12 @@ import javafe.ast.VarInit;
 import javafe.ast.VariableAccess;
 import mobius.directVCGen.formula.Bool;
 import mobius.directVCGen.formula.Expression;
-import mobius.directVCGen.formula.Heap;
 import mobius.directVCGen.formula.Num;
 import mobius.directVCGen.formula.Ref;
 import mobius.directVCGen.vcgen.ABasicVisitor;
 import mobius.directVCGen.vcgen.struct.Post;
 import mobius.directVCGen.vcgen.struct.VCEntry;
 import escjava.ast.TagConstants;
-import escjava.sortedProver.Lifter.QuantVariable;
 import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
 
@@ -219,16 +217,13 @@ public class ExpressionVisitor extends ABasicVisitor {
 	public Object visitVariableAccess(VariableAccess m, Object o) {
 		VCEntry res = (VCEntry) o;
 		QuantVariableRef v = Expression.rvar(m.decl);
-
-		
 		return  new Post(res.post.substWith(v));
 	}
 	
 	public /*@non_null*/ Object visitFieldAccess(/*@non_null*/ FieldAccess x, Object o) {
-		VCEntry res = (VCEntry) o;
-		QuantVariableRef obj = Expression.rvar(Ref.sort);
-		QuantVariable f = Expression.var(x.decl);
-		return new Post(res.post.substWith(Heap.select(Heap.var, obj, f)));
+		return vcg.fieldAccess(x, (VCEntry) o);
+
+
 		
 	}
 

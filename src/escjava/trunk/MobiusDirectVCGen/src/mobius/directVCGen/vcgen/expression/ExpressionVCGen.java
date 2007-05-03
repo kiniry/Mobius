@@ -6,6 +6,7 @@ import javafe.ast.CastExpr;
 import javafe.ast.CondExpr;
 import javafe.ast.ExprObjectDesignator;
 import javafe.ast.ExprVec;
+import javafe.ast.FieldAccess;
 import javafe.ast.FormalParaDecl;
 import javafe.ast.FormalParaDeclVec;
 import javafe.ast.InstanceOfExpr;
@@ -22,7 +23,9 @@ import mobius.directVCGen.formula.Type;
 import mobius.directVCGen.vcgen.stmt.StmtVCGen;
 import mobius.directVCGen.vcgen.struct.Post;
 import mobius.directVCGen.vcgen.struct.VCEntry;
+import escjava.ast.Modifiers;
 import escjava.ast.TagConstants;
+import escjava.sortedProver.Lifter.QuantVariable;
 import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
 
@@ -42,20 +45,29 @@ public class ExpressionVCGen extends BinaryExpressionVCGen{
 		}
 		return v;
 	}
+	public static Vector<QuantVariableRef> mkArguments(NewInstanceExpr mi) {
+		Vector<QuantVariableRef> v = new Vector<QuantVariableRef>();
+		FormalParaDeclVec fpdvec = mi.decl.args;
+		FormalParaDecl[] args = fpdvec.toArray();
+		for (FormalParaDecl fpd: args) {
+			v.add(Expression.rvar(fpd));
+		}
+		return v;
+	}
 	public Post methodInvocation(MethodInvocation mi, VCEntry entry) {
 		Post normalPost = Lookup.normalPostcondition(mi.decl);
 		Post excpPost = Lookup.exceptionalPostcondition(mi.decl);
 		Term pre = Lookup.precondition(mi.decl);
-
+		QuantVariableRef newThis = Expression.rvar(Ref.sort);
 		
 		// first: the exceptional post
 		QuantVariableRef exc = Expression.rvar(Ref.sort);
-		Term tExcp = Logic.forall(exc.qvar, Logic.implies(excpPost.substWith(exc), 
+		Term tExcp = Logic.forall(exc.qvar, Logic.implies(excpPost.substWith(exc).subst(Ref.varthis, newThis), 
 				               		StmtVCGen.getExcpPost(Type.javaLangThrowable(), entry).substWith(exc)));
 		// the normal post
 		QuantVariableRef res = entry.post.var;		
 		Term tNormal = normalPost.substWith(res);
-		tNormal = Logic.forall(res, Logic.implies(tNormal, entry.post.substWith(res)));
+		tNormal = Logic.forall(res, Logic.implies(tNormal, entry.post.substWith(res)).subst(Ref.varthis, newThis));
 
 		entry.post = new Post(Logic.and(pre, Logic.implies(pre, Logic.and(tNormal, tExcp))));
 		Vector<QuantVariableRef> v = mkArguments(mi);
@@ -64,7 +76,7 @@ public class ExpressionVCGen extends BinaryExpressionVCGen{
 			entry.post = new Post(v.elementAt(i), entry.post.post);
 			entry.post = getPre(ev.elementAt(i), entry);
 		}
-		entry.post = new Post(Ref.varthis, entry.post.post);
+		entry.post = new Post(newThis, entry.post.post);
 		entry.post = getPre(mi.od, entry);
 		return entry.post;
 	}
@@ -150,7 +162,54 @@ public class ExpressionVCGen extends BinaryExpressionVCGen{
 	}
 
 	public Post newInstance(NewInstanceExpr ni, VCEntry entry) {
-		return null;
+		QuantVariableRef newheap = Heap.newVar();
+	
+		
+		Post normalPost = Lookup.normalPostcondition(ni.decl);
+		Post excpPost = Lookup.exceptionalPostcondition(ni.decl);
+		Term pre = Lookup.precondition(ni.decl);
+		QuantVariableRef newThis = entry.post.var;
+		
+		// first: the exceptional post
+		QuantVariableRef exc = Expression.rvar(Ref.sort);
+		Term tExcp = Logic.forall(exc.qvar, Logic.implies(excpPost.substWith(exc).subst(Ref.varthis, newThis), 
+				               		StmtVCGen.getExcpPost(Type.javaLangThrowable(), entry).substWith(exc)));
+		// the normal post
+		QuantVariableRef res = entry.post.var;		
+		Term tNormal = normalPost.substWith(res);
+		tNormal = Logic.forall(res, Logic.implies(tNormal, entry.post.substWith(res)).subst(Ref.varthis, newThis));
+
+		entry.post = new Post(Logic.and(pre, Logic.implies(pre, Logic.and(tNormal, tExcp))));
+		
+		entry.post = new Post(Logic.forall(newThis, Logic.forall(newheap, Logic.implies(
+								Heap.newObject(Heap.var, Type.translate(ni.type), newheap, newThis), entry.post.post.subst(Heap.var, newheap)))));
+		
+		Vector<QuantVariableRef> v = mkArguments(ni);
+		ExprVec ev = ni.args;
+		for (int i = ev.size() - 1; i >= 0; i--) {
+			entry.post = new Post(v.elementAt(i), entry.post.post);
+			entry.post = getPre(ev.elementAt(i), entry);
+		}
+		entry.post = new Post(newThis, entry.post.post);
+		return entry.post;
+	}
+
+	public Post fieldAccess(FieldAccess field, VCEntry entry) {
+	
+		QuantVariable f = Expression.var(field.decl);
+		Lookup.fieldsToDeclare.add(f);
+		if(Modifiers.isStatic(field.decl.modifiers)) {
+			return new Post(entry.post.substWith(Heap.select(Heap.var, f)));
+		}
+		else { // not static :)
+			QuantVariableRef obj = Expression.rvar(Ref.sort);
+			Term normal = entry.post.substWith(Heap.select(Heap.var, obj, f));
+			entry.post = new Post(obj, normal);
+			Post p = this.objectDesignator(field.od, entry);
+
+			return p;			
+		}
+		
 	}
 	
 	
