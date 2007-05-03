@@ -14,6 +14,8 @@ import sun.misc.Sort;
 import javafe.ast.ASTNode;
 import javafe.ast.BinaryExpr;
 import javafe.ast.BlockStmt;
+import javafe.ast.ClassDecl;
+import javafe.ast.CompilationUnit;
 import javafe.ast.DoStmt;
 import javafe.ast.FieldAccess;
 import javafe.ast.ForStmt;
@@ -89,8 +91,12 @@ import escjava.tc.TypeSig;
 public class JmlVisitor extends VisitorArgResult{
 
 	JmlExprToFormula translator;
+	Properties p;
 	
 	public JmlVisitor(){
+		p = new Properties();
+		p.put("pred", new Boolean(true));
+		p.put("old", new Boolean(false));
 		translator = new JmlExprToFormula(this);
 	}
 	
@@ -116,8 +122,11 @@ public class JmlVisitor extends VisitorArgResult{
 		}
 		return o;
 	}
-
 	
+	@Override
+	public /*@non_null*/ Object visitClassDecl(/*@non_null*/ ClassDecl x, Object o) {
+		return visitTypeDecl(x, p);
+	}
 	
 	@Override
 	public /*@non_null*/ Object visitMethodDecl(/*@non_null*/ MethodDecl x, Object o) {
@@ -284,7 +293,7 @@ public class JmlVisitor extends VisitorArgResult{
 	    		if (interesting){
 	    			t = (Term)s.accept(this, o);
 	    			Set ghostVar = new Set();
-	    			ghostVar.declaration = t;
+	    			ghostVar.declaration = (QuantVariableRef) t;
 	    			annos.add(ghostVar);
 	    		}
 	    	} else
@@ -292,7 +301,10 @@ public class JmlVisitor extends VisitorArgResult{
 	    	//Also set statements should be processed
 	    	if (s instanceof SetStmtPragma) {
 	    		interesting = true;
-	    		//t = (Term)s.accept(this, o);
+	    		Set.Assignment assign = (Set.Assignment)s.accept(this, o);
+	    		Set ghostSet = new Set();
+	    		ghostSet.assignment = assign;
+	    		annos.add(ghostSet);
 	    		//TODO: Support set statements.
 	    	}
 	    	
@@ -483,8 +495,10 @@ public class JmlVisitor extends VisitorArgResult{
 
 	@Override
 	public Object visitSetStmtPragma(SetStmtPragma x, Object o) {
-		// TODO Auto-generated method stub
-		return null;
+		Set.Assignment res = new Set.Assignment();
+		res.var = (QuantVariableRef) x.target.accept(this, o);
+		res.expr = (Term) x.value.accept(this,0);
+		return res;
 	}
 
 	@Override
