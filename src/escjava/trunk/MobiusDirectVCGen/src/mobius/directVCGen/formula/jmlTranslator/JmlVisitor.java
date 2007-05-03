@@ -275,7 +275,71 @@ public class JmlVisitor extends VisitorArgResult{
 
 	@Override
     public /*@non_null*/ Object visitBlockStmt(/*@non_null*/ BlockStmt x, Object o) {
-		translator.blockStmt(x,o);
+	    Term t=null;
+		boolean interesting;
+		Vector<AAnnotation> annos = new Vector<AAnnotation>();
+		Term inv = null;
+	    for(Stmt s: x.stmts.toArray()){
+	    	interesting = false;
+	    	//We are interested in Asserts, Assumes and Loop Invariants
+	    	if (s instanceof ExprStmtPragma){
+	    		interesting = true; 
+	    		t = (Term)s.accept(this, o);
+	    		switch (s.getTag()){
+	    		case TagConstants.ASSERT:
+	    			annos.add(new Cut(t));
+	    			break;
+	    		case TagConstants.ASSUME:
+	    			annos.add(new Assume(t));
+	    			break;
+	    		case TagConstants.LOOP_INVARIANT:
+	    		case TagConstants.MAINTAINING:
+	    			inv = t;
+	    			break;
+	    		}
+	    	} else
+	    	
+	    	//We are also interested in ghost var declarations
+	    	if (s instanceof VarDeclStmt){
+	    		
+	    		for (ModifierPragma p: ((VarDeclStmt) s).decl.pmodifiers.toArray()){
+	    			if (p.getTag() == TagConstants.GHOST) {
+	    				interesting = true;
+	    				break;
+	    			}
+	    		}
+	    		if (interesting){
+	    			t = (Term)s.accept(this, o);
+	    			Set ghostVar = new Set();
+	    			ghostVar.declaration = (QuantVariableRef) t;
+	    			annos.add(ghostVar);
+	    		}
+	    	} else
+	    	
+	    	//Also set statements should be processed
+	    	if (s instanceof SetStmtPragma) {
+	    		interesting = true;
+	    		Set.Assignment assign = (Set.Assignment)s.accept(this, o);
+	    		Set ghostSet = new Set();
+	    		ghostSet.assignment = assign;
+	    		annos.add(ghostSet);
+	    	}
+	    	
+	    	if (interesting){
+    			x.stmts.removeElement(s);
+	    	} else {
+	    		if (!annos.isEmpty()){
+	    			AnnotationDecoration.inst.setAnnotPre(s, annos);
+	    			annos.clear();
+	    		}
+	    		if (inv != null){
+	    			if (s instanceof WhileStmt || s instanceof ForStmt || s instanceof DoStmt){
+	    				AnnotationDecoration.inst.setInvariant(s, inv);
+	    				inv = null;
+	    			}
+	    		}
+	    	}
+	    }
 		return null;
     }	
 
