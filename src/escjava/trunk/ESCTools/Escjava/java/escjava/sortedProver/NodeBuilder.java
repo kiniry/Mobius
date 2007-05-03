@@ -2,11 +2,6 @@ package escjava.sortedProver;
 
 import java.util.Hashtable;
 
-import javafe.util.Assert;
-
-import escjava.sortedProver.Lifter.QuantVariable;
-import escjava.vcGeneration.TDisplay;
-
 /*@ non_null_by_default @*/
 public abstract class NodeBuilder
 {
@@ -428,9 +423,11 @@ public abstract class NodeBuilder
 	abstract public SPred buildIsTrue(SBool val);
 	
 	// Mobius specific stuff
-	abstract public SPred buildNewObject(SAny oldh, SAny type, SAny heap, SRef r) ;
+	abstract public SPred buildNewObject(SMap oldh, SAny type, SMap heap, SRef r) ;
 	abstract public SAny buildSort(Sort s);
-	abstract public SValue buildMSelect(SMap map, SRef obj, SValue idx);
-	abstract public SMap buildMStore(SMap map, SRef obj, SValue idx, SValue val);
-	
+	abstract public SValue buildDynSelect(SMap map, SRef obj, SAny field);
+	abstract public SMap buildDynStore(SMap map, SRef obj, SAny field, SValue val);
+	abstract public SPred buildNewArray(SMap oldh, SAny type, SMap heap, SRef r, SInt len) ;
+	abstract public SValue buildArrSelect(SMap map, SRef obj, SInt idx);
+	abstract public SMap buildArrStore(SMap map, SRef obj, SInt idx, SValue val);
 }

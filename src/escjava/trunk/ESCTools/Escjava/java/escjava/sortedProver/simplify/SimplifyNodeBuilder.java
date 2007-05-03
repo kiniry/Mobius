@@ -408,16 +408,26 @@ public class SimplifyNodeBuilder extends EscNodeBuilder
 	}
 	
 	// Mobius stuff
-	public SPred buildNewObject(SAny oldh, SAny type, SAny heap, SRef r) {
+	public SPred buildNewObject(SMap oldh, SAny type, SMap heap, SRef r) {
 		throw new UnsupportedOperationException();
 	}
 	public SAny buildSort(Sort s) {
 		throw new UnsupportedOperationException();
 	}
-	public SValue buildMSelect(SMap map, SRef obj, SValue idx) {
+	public SValue buildDynSelect(SMap map, SRef obj, SAny field) {
 		throw new UnsupportedOperationException();
 	}
-	public SMap buildMStore(SMap map, SRef obj, SValue idx, SValue val) {
+	public SMap buildDynStore(SMap map, SRef obj, SAny field, SValue val) {
 		throw new UnsupportedOperationException();
 	}
+	public SValue buildArrSelect(SMap map, SRef obj, SInt idx) {
+		throw new UnsupportedOperationException();
+	}
+	public SMap buildArrStore(SMap map, SRef obj, SInt idx, SValue val) {
+		throw new UnsupportedOperationException();
+	}
+	public SPred buildNewArray(SMap oldh, SAny type, SMap heap, SRef r, SInt len) {
+		throw new UnsupportedOperationException();
+	}
+
 }
