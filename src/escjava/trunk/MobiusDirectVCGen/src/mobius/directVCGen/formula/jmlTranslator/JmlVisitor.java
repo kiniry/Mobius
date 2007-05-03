@@ -6,6 +6,8 @@ import mobius.directVCGen.formula.annotation.AnnotationDecoration;
 import mobius.directVCGen.formula.annotation.Assume;
 import mobius.directVCGen.formula.annotation.Cut;
 import mobius.directVCGen.formula.annotation.Set;
+import mobius.directVCGen.vcgen.struct.Post;
+
 import java.util.Properties;
 import java.util.Vector;
 import javafe.ast.ASTNode;
@@ -258,13 +260,14 @@ public class JmlVisitor extends VisitorArgResult{
 	
 	public Object visitExprModifierPragma(ExprModifierPragma x, Object o) {
 		RoutineDecl rd = (RoutineDecl)((Properties) o).get("method");
-		Term res = (Term)visitASTNode(x, o);
+		QuantVariableRef result = (QuantVariableRef)((Properties) o).get("result");
+		Term t = (Term)visitASTNode(x, o);
 		switch (x.getTag()){
 		case TagConstants.REQUIRES:
-			Lookup.preconditions.put(rd, res);
+			Lookup.preconditions.put(rd, t);
 			break;
 		case TagConstants.ENSURES:
-			Lookup.preconditions.put(rd, res);
+			Lookup.postconditions.put(rd, new Post(result, t));
 			break;
 		}
 		return null;
