@@ -43,13 +43,14 @@ import javafe.genericfile.GenericFile;
 import javafe.genericfile.NormalGenericFile;
 import javafe.util.Location;
 
-import com.sun.org.apache.bcel.internal.Constants;
-import com.sun.org.apache.bcel.internal.classfile.ClassParser;
-import com.sun.org.apache.bcel.internal.classfile.Constant;
-import com.sun.org.apache.bcel.internal.classfile.ConstantPool;
-import com.sun.org.apache.bcel.internal.classfile.Field;
-import com.sun.org.apache.bcel.internal.classfile.JavaClass;
-import com.sun.org.apache.bcel.internal.classfile.Method;
+import org.apache.bcel.Constants;
+import org.apache.bcel.classfile.ClassParser;
+import org.apache.bcel.classfile.Constant;
+import org.apache.bcel.classfile.ConstantPool;
+import org.apache.bcel.classfile.Field;
+import org.apache.bcel.classfile.JavaClass;
+import org.apache.bcel.classfile.Method;
+import org.apache.bcel.generic.Type;
 
 /*
  * ------------------------------------------------------------------------- 
@@ -171,14 +172,15 @@ class BCELReader extends Reader {
     * 
     * @author dermotcochran
     * @return An abstract syntax tree of a compilation unit.
+    * @throws ClassNotFoundException 
     * @throws CloneNotSupportedException 
     * @throws ClassFormatError 
     */
 
-   protected CompilationUnit convertBCELtoAST() {
+   protected CompilationUnit convertBCELtoAST() throws ClassNotFoundException {
       
       ConstantPool constantPool = javaClass.getConstantPool();
-      loadConstants(constantPool);
+      readConstants(constantPool);
       
       int classNameIndex = javaClass.getClassNameIndex();
       set_this_class (classNameIndex);
@@ -189,15 +191,17 @@ class BCELReader extends Reader {
       ImportDeclVec imports = extractImportDeclVec(javaClass);
       TypeDeclVec elems = extractTypeDeclVec(javaClass);
 
-      int[] interfaces = javaClass.getInterfaces();
+      JavaClass[] interfaces = javaClass.getInterfaces();
       TypeNameVec interfaceVec = TypeNameVec.make(interfaces.length); // @ nowarn Pre
       set_num_interfaces (interfaces.length);
       
       Method[] methods = javaClass.getMethods();
-      loadMethods(methods);
+      readMethods(methods);
 
       Field[] fields = javaClass.getFields();
-      fieldDecl = new FieldDecl[fields.length];
+      readFields(fields);
+      
+      
       int predict = classMembers.size() + methods.length + fields.length;
       TypeDeclElemVec elementVec = TypeDeclElemVec.make(predict);
 
@@ -231,17 +235,34 @@ class BCELReader extends Reader {
    }
    
    /**
+    * read fields from BCEL into AST
+    * 
+    * @param fields
+    * @throws ClassFormatError
+    */
+   protected void readFields(Field[] fields) throws ClassFormatError {
+      set_num_fields(fields.length);
+      for (int loopIndex = 0; loopIndex < fields.length; loopIndex++) {
+         Field field = fields[loopIndex];
+         Type fieldType = field.getType();
+         set_field(loopIndex, field.getName(), fieldType, modifiers);
+      }
+   }
+   
+   /**
     * 
     * @param constantPool
     * @throws ClassFormatError
     */
-   protected void loadConstants(ConstantPool constantPool) throws ClassFormatError {
+   protected void readConstants(ConstantPool constantPool) throws ClassFormatError {
       int numberOfConstants = constantPool.getLength();
       set_num_constants (numberOfConstants);
       
-      for (int loopIndex = 0; loopIndex < numberOfConstants; loopIndex++) {
+      for (int loopIndex = 1; loopIndex < numberOfConstants; loopIndex++) {
          Constant constant = constantPool.getConstant(loopIndex);
-         set_const(loopIndex, constant.getTag(),constant.copy());
+         byte constantTypeTag = constant.getTag();
+         String constantValue = constant.toString();
+         set_const(loopIndex, constantTypeTag,constantValue);
       }
    }
    
@@ -250,12 +271,12 @@ class BCELReader extends Reader {
     * @param methods
     * @throws ClassFormatError
     */
-   protected void loadMethods(Method[] methods) throws ClassFormatError {
+   protected void readMethods(Method[] methods) throws ClassFormatError {
       routineDecl = new RoutineDecl [methods.length];
       for (int loopVar = 0; loopVar < methods.length; loopVar++) {
-         int mod = 0;
+         
          Method method = methods[loopVar];
-         set_method(loopVar, method.getName(), method.getSignature(), mod);
+         set_method(loopVar, method.getName(), method.getSignature(), modifiers);
          routineDecl[loopVar].body = // @ nowarn Null, IndexTooBig;
          BlockStmt.make(StmtVec.make(), classLocation, classLocation);
          routineDecl[loopVar].locOpenBrace = classLocation;
@@ -444,12 +465,11 @@ class BCELReader extends Reader {
       fieldDecl = new FieldDecl[n];
    }
 
-   /**
-    * Call back from ClassFileParser.
-    */
-   protected void set_field(int i, String fname, String type, int mod) throws ClassFormatError {
+   
+   protected void set_field(int i, String fname, Type fieldType, int mod) throws ClassFormatError {
+      String fieldTypeName = fieldType.toString();
       fieldDecl[i] = // @ nowarn IndexTooBig;
-      FieldDecl.make(mod, null, Identifier.intern(fname), DescriptorParser.parseField(type),
+      FieldDecl.make(mod, null, Identifier.intern(fname), DescriptorParser.parseField(fieldTypeName),
             classLocation, null, classLocation);
    }
 
@@ -546,7 +566,7 @@ class BCELReader extends Reader {
     
  
    protected void set_method_attribute(int i, String aname, DataInput stream, int n)
-         throws IOException, ClassFormatError {
+         throws IOException, ClassFormatError, ClassNotFoundException {
       // look for the Exceptions attribute and modify the appropriate method, if
       // necessary
 
@@ -651,17 +671,18 @@ class BCELReader extends Reader {
     * Parse a sequence of type names from BCEL
     * 
     * @return an array of type names
+    * @throws ClassNotFoundException 
      */
    // @ requires stream != null;
    // @ ensures \nonnullelements(\result);
    // @ ensures \typeof(\result)==\type(TypeName[]);
-   private TypeName[] parseTypeNames() throws ClassFormatError {
-      int[] interfaces = javaClass.getInterfaces();
+   private TypeName[] parseTypeNames() throws ClassFormatError, ClassNotFoundException {
+      JavaClass[] interfaces = javaClass.getInterfaces();
       int count = interfaces.length;
       TypeName[] names = new TypeName[count];
 
       for (int i = 0; i < count; i++) {
-         int index = interfaces[i];
+         int index = interfaces[i].getClassNameIndex();
 
          if (index >= constants.length)
             throw new ClassFormatError("unknown constant");
@@ -777,21 +798,27 @@ class BCELReader extends Reader {
       this.includeBodies = avoidSpec;
       this.classLocation = Location.createWholeFileLoc(target);
       
-//    Parse the class file using the BCEL parser
+      // Parse the binary class file using the BCEL parser
       ClassParser classParser;
       try {
          classParser = new ClassParser(target.getInputStream(), target
                .getLocalName());
           this.javaClass = classParser.parse();
+          return convertBCELtoAST();
+          
       } catch (ClassFormatError e) {
          // TODO Auto-generated catch block
          e.printStackTrace();
       } catch (IOException e) {
          // TODO Auto-generated catch block
          e.printStackTrace();
+      } catch (ClassNotFoundException e) {
+         // TODO Auto-generated catch block
+         e.printStackTrace();
       }
+      return null;
 
-      return convertBCELtoAST();
+      
    }
 
 }
