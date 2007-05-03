@@ -1,20 +1,37 @@
 package mobius.directVCGen.formula.jmlTranslator;
 
 import mobius.directVCGen.formula.*;
+import mobius.directVCGen.formula.annotation.AAnnotation;
+import mobius.directVCGen.formula.annotation.AnnotationDecoration;
+import mobius.directVCGen.formula.annotation.Assume;
+import mobius.directVCGen.formula.annotation.Cut;
+import mobius.directVCGen.formula.annotation.Set;
 
 import java.util.Properties;
+import java.util.Vector;
 
+import escjava.ast.ExprStmtPragma;
 import escjava.ast.NaryExpr;
 import escjava.ast.ResExpr;
+import escjava.ast.SetStmtPragma;
 import escjava.ast.TagConstants;
 import escjava.sortedProver.Lifter.QuantVariable;
 import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
 import javafe.ast.BinaryExpr;
+import javafe.ast.BlockStmt;
+import javafe.ast.DoStmt;
 import javafe.ast.FieldAccess;
+import javafe.ast.ForStmt;
+import javafe.ast.FormalParaDecl;
+import javafe.ast.GenericVarDecl;
 import javafe.ast.InstanceOfExpr;
 import javafe.ast.LiteralExpr;
+import javafe.ast.ModifierPragma;
+import javafe.ast.Stmt;
+import javafe.ast.VarDeclStmt;
 import javafe.ast.VariableAccess;
+import javafe.ast.WhileStmt;
 
 public class JmlExprToFormula {
 
@@ -327,7 +344,7 @@ public class JmlExprToFormula {
 		case TagConstants.STRINGLIT:
 			break;
 		case TagConstants.NULLLIT:
-			break;
+			return Ref.Null();
 		case TagConstants.BYTELIT:
 			return Num.value((Byte) x.value);
 		case TagConstants.SHORTLIT:
@@ -357,6 +374,19 @@ public class JmlExprToFormula {
 		 return res;
 	}
 
+	public Object genericVarDecl(GenericVarDecl x, Object o) {
+		 Boolean oldProp = (Boolean) ((Properties) o).get("old");
+		 Boolean predProp = (Boolean) ((Properties)o).get("pred");
+		 
+		 String id = (String) x.id.toString();
+		 if(oldProp.booleanValue()) id += "Pre"; 
+		 
+		 Term res = Expression.rvar(id, Type.typeToSort(x.type));
+		 if (predProp.booleanValue() && res.getSort() == Bool.sort)
+			 res = Logic.boolToProp(res);
+		 return res;
+	}
+	
 	public Object fieldAccess(FieldAccess x, Object o) {
 		 Boolean oldProp = (Boolean) ((Properties) o).get("old");
 		 //Boolean predProp = (Boolean) ((Properties)o).get("pred");
@@ -375,6 +405,76 @@ public class JmlExprToFormula {
 		 ((Properties) o).put("old",old);
 		 return res;
 	}
+
+	public void blockStmt(BlockStmt x, Object o) {
+	    Term t=null;
+		boolean interesting;
+		Vector<AAnnotation> annos = new Vector<AAnnotation>();
+		Term inv = null;
+	    for(Stmt s: x.stmts.toArray()){
+	    	interesting = false;
+	    	//We are interested in Asserts, Assumes and Loop Invariants
+	    	if (s instanceof ExprStmtPragma){
+	    		interesting = true; 
+	    		t = (Term)s.accept(v, o);
+	    		switch (s.getTag()){
+	    		case TagConstants.ASSERT:
+	    			annos.add(new Cut(t));
+	    			break;
+	    		case TagConstants.ASSUME:
+	    			annos.add(new Assume(t));
+	    			break;
+	    		case TagConstants.LOOP_INVARIANT:
+	    		case TagConstants.MAINTAINING:
+	    			inv = t;
+	    			break;
+	    		}
+	    	} else
+	    	
+	    	//We are also interested in ghost var declarations
+	    	if (s instanceof VarDeclStmt){
+	    		
+	    		for (ModifierPragma p: ((VarDeclStmt) s).decl.pmodifiers.toArray()){
+	    			if (p.getTag() == TagConstants.GHOST) {
+	    				interesting = true;
+	    				break;
+	    			}
+	    		}
+	    		if (interesting){
+	    			t = (Term)s.accept(v, o);
+	    			Set ghostVar = new Set();
+	    			ghostVar.declaration = (QuantVariableRef) t;
+	    			annos.add(ghostVar);
+	    		}
+	    	} else
+	    	
+	    	//Also set statements should be processed
+	    	if (s instanceof SetStmtPragma) {
+	    		interesting = true;
+	    		Set.Assignment assign = (Set.Assignment)s.accept(v, o);
+	    		Set ghostSet = new Set();
+	    		ghostSet.assignment = assign;
+	    		annos.add(ghostSet);
+	    	}
+	    	
+	    	if (interesting){
+    			x.stmts.removeElement(s);
+	    	} else {
+	    		if (!annos.isEmpty()){
+	    			AnnotationDecoration.inst.setAnnotPre(s, annos);
+	    			annos.clear();
+	    		}
+	    		if (inv != null){
+	    			if (s instanceof WhileStmt || s instanceof ForStmt || s instanceof DoStmt){
+	    				AnnotationDecoration.inst.setInvariant(s, inv);
+	    				inv = null;
+	    			}
+	    		}
+	    	}
+	    }
+	}
+
+
 
 	
 

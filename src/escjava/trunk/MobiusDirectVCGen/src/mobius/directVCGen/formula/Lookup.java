@@ -1,5 +1,6 @@
 package mobius.directVCGen.formula;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Vector;
 
@@ -21,6 +22,9 @@ import javafe.ast.RoutineDecl;
 public class Lookup {
 	public static Vector<FnSymbol> symToDeclare = new Vector<FnSymbol>();
 	public static HashSet<QuantVariable> fieldsToDeclare = new HashSet<QuantVariable>();
+	
+	public static HashMap<RoutineDecl, Term> preconditions = new HashMap<RoutineDecl, Term>();
+	public static HashMap<RoutineDecl, Post> postconditions = new HashMap<RoutineDecl, Post>();
 	
 	public static Term buildStdCond (RoutineDecl m, String name, boolean hasResult) {
 		int arity = m.args.size();

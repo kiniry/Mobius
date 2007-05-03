@@ -24,6 +24,9 @@ public class Set extends AAnnotation {
 		return annotSet;
 	}
 	
+	/**
+	 * Inner class that represents an JML assignment (set statement)
+	 */
 	public static class Assignment{
 		public QuantVariableRef var =null;
 		public Term expr =null;
