@@ -48,23 +48,23 @@
 (SemanticsCommon
  (check_assertion_TCC1 0
   (check_assertion_TCC1-1 nil 3385977476 nil ("" (subtype-tcc) nil nil)
-   unchecked nil nil nil nil nil))
+   unfinished nil nil nil nil nil))
  (execute_CaseJML_TCC1 0
   (execute_CaseJML_TCC1-1 nil 3385977476 nil ("" (subtype-tcc) nil nil)
-   unchecked nil nil nil nil nil))
+   unfinished nil nil nil nil nil))
  (execute_CaseJML_TCC2 0
   (execute_CaseJML_TCC2-1 nil 3385977476 nil ("" (subtype-tcc) nil nil)
-   unchecked nil nil nil nil nil))
+   unfinished nil nil nil nil nil))
  (IMP_State_TCC1 0
   (IMP_State_TCC1-1 nil 3385977476 nil ("" (existence-tcc) nil nil)
-   unchecked nil nil nil nil nil)))
+   unfinished nil nil nil nil nil)))
 (Semantics
  (initial_Program_state_TCC1 0
   (initial_Program_state_TCC1-1 nil 3385977479 nil
-   ("" (subtype-tcc) nil nil) unchecked nil nil nil nil nil))
+   ("" (subtype-tcc) nil nil) unfinished nil nil nil nil nil))
  (initial_Program_state_TCC2 0
   (initial_Program_state_TCC2-1 nil 3385977479 nil
-   ("" (subtype-tcc) nil nil) unchecked nil nil nil nil nil))
+   ("" (subtype-tcc) nil nil) unfinished nil nil nil nil nil))
  (deriv_expr_TCC1 0
   (deriv_expr_TCC1-1 nil 3371191509 3372770409
    ("" (subtype-tcc) nil nil) unchecked nil 16 10 nil nil))
@@ -481,19 +481,19 @@
    ("" (termination-tcc) nil nil) unchecked nil 32 30 nil nil))
  (deriv_stmt_TCC14 0
   (deriv_stmt_TCC14-1 nil 3385977479 nil ("" (termination-tcc) nil nil)
-   unchecked nil nil nil nil nil))
+   unfinished nil nil nil nil nil))
  (deriv_stmt_TCC15 0
   (deriv_stmt_TCC15-1 nil 3385977479 nil ("" (termination-tcc) nil nil)
-   unchecked nil nil nil nil nil))
+   unfinished nil nil nil nil nil))
  (deriv_stmt_TCC16 0
   (deriv_stmt_TCC16-1 nil 3385977479 nil ("" (termination-tcc) nil nil)
-   unchecked nil nil nil nil nil))
+   unfinished nil nil nil nil nil))
  (deriv_stmt_TCC17 0
   (deriv_stmt_TCC17-1 nil 3385977479 nil ("" (subtype-tcc) nil nil)
-   unchecked nil nil nil nil nil))
+   unfinished nil nil nil nil nil))
  (deriv_stmt_TCC18 0
   (deriv_stmt_TCC18-1 nil 3385977479 nil ("" (termination-tcc) nil nil)
-   unchecked nil nil nil nil nil))
+   unfinished nil nil nil nil nil))
  (expr_determ_step 0
   (expr_determ_step-3 "adapted proof for the new semantics" 3385988510
    3385988510
@@ -947,7 +947,6 @@
                                                           (flatten)
                                                           (("1"
                                                             (replace
-
                                                              -2)
                                                             (("1"
                                                               (case-replace
@@ -970,7 +969,6 @@
                                                                       (flatten)
                                                                       (("1"
                                                                         (replace
-
                                                                          -10)
                                                                         (("1"
                                                                           (inst-cp
@@ -987,7 +985,6 @@
                                                                               (flatten)
                                                                               (("1"
                                                                                 (replace
-
                                                                                  -10)
                                                                                 (("1"
                                                                                   (inst-cp
@@ -1013,7 +1010,6 @@
                                                                                             (flatten)
                                                                                             (("1"
                                                                                               (replace
-
                                                                                                -2)
                                                                                               (("1"
                                                                                                 (case
@@ -1035,7 +1031,6 @@
                                                                                                         (flatten)
                                                                                                         (("1"
                                                                                                           (replace
-
                                                                                                            -14)
                                                                                                           (("1"
                                                                                                             (assert)
@@ -1661,7 +1656,6 @@
                                                           (flatten)
                                                           (("1"
                                                             (replace
-
                                                              -2)
                                                             (("1"
                                                               (case-replace
@@ -1684,7 +1678,6 @@
                                                                       (flatten)
                                                                       (("1"
                                                                         (replace
-
                                                                          -10)
                                                                         (("1"
                                                                           (inst-cp
@@ -1701,7 +1694,6 @@
                                                                               (flatten)
                                                                               (("1"
                                                                                 (replace
-
                                                                                  -10)
                                                                                 (("1"
                                                                                   (inst-cp
@@ -1727,7 +1719,6 @@
                                                                                             (flatten)
                                                                                             (("1"
                                                                                               (replace
-
                                                                                                -2)
                                                                                               (("1"
                                                                                                 (case
@@ -1749,7 +1740,6 @@
                                                                                                         (flatten)
                                                                                                         (("1"
                                                                                                           (replace
-
                                                                                                            -14)
                                                                                                           (("1"
                                                                                                             (assert)
@@ -2115,7 +2105,7 @@
         nil))
       nil))
     nil)
-   unchecked
+   untried
    ((deriv_expr const-decl "bool" Semantics nil)
     (Val type-decl nil Val_adt nil)
     (FullState formal-type-decl nil Semantics nil)
@@ -2138,45 +2128,6 @@
     (nat nonempty-type-eq-decl nil naturalnumbers nil)
     (expr_determ_step formula-decl nil Semantics nil))
    85945 1830 t shostak))
- (expr_determ_step3 0
-  (expr_determ_step3-1 nil 3387107828 3387107862
-   ("" (skosimp*)
-    (("" (assert)
-      (("" (skosimp*)
-        (("" (use "expr_determ_step2")
-          (("" (expand "deriv_expr" -1)
-            (("" (assert)
-              (("" (split -1)
-                (("1" (propax) nil nil) ("2" (propax) nil nil)) nil))
-              nil))
-            nil))
-          nil))
-        nil))
-      nil))
-    nil)
-   proved
-   ((expr_determ_step2 formula-decl nil Semantics nil)
-    (FullState formal-type-decl nil Semantics nil)
-    (Val type-decl nil Val_adt nil)
-    (nat nonempty-type-eq-decl nil naturalnumbers nil)
-    (>= const-decl "bool" reals nil)
-    (bool nonempty-type-eq-decl nil booleans nil)
-    (int nonempty-type-eq-decl nil integers nil)
-    (integer_pred const-decl "[rational -> boolean]" integers nil)
-    (rational nonempty-type-from-decl nil rationals nil)
-    (rational_pred const-decl "[real -> boolean]" rationals nil)
-    (real nonempty-type-from-decl nil reals nil)
-    (real_pred const-decl "[number_field -> boolean]" reals nil)
-    (number_field nonempty-type-from-decl nil number_fields nil)
-    (number_field_pred const-decl "[number -> boolean]" number_fields
-     nil)
-    (boolean nonempty-type-decl nil booleans nil)
-    (number nonempty-type-decl nil numbers nil)
-    (FullProgram formal-type-decl nil Semantics nil)
-    (Name formal-nonempty-type-decl nil Semantics nil)
-    (Expr type-decl nil Expr_adt nil)
-    (deriv_expr const-decl "bool" Semantics nil))
-   33802 1180 t shostak))
  (stmt_determ_step 0
   (stmt_determ_step-1 nil 3371194190 3382347193
    ("" (skosimp)
@@ -2547,7 +2498,6 @@
                                                           (flatten)
                                                           (("1"
                                                             (replace
-
                                                              -13)
                                                             (("1"
                                                               (inst
@@ -2818,69 +2768,104 @@
 (ProgramSemantics
  (execute_set_TCC1 0
   (execute_set_TCC1-1 nil 3385977480 nil ("" (subtype-tcc) nil nil)
-   unchecked nil nil nil nil nil))
+   unfinished nil nil nil nil nil))
  (execute_CaseJML_TCC1 0
   (execute_CaseJML_TCC1-1 nil 3385977480 nil ("" (subtype-tcc) nil nil)
-   unchecked nil nil nil nil nil))
+   unfinished nil nil nil nil nil))
  (on_method_x_TCC1 0
   (on_method_x_TCC1-1 nil 3385977480 nil ("" (subtype-tcc) nil nil)
-   unchecked nil nil nil nil nil))
+   unfinished nil nil nil nil nil))
  (IMP_Semantics_TCC1 0
   (IMP_Semantics_TCC1-1 nil 3385977480 nil ("" (subtype-tcc) nil nil)
-   unchecked nil nil nil nil nil))
+   unfinished nil nil nil nil nil))
  (IMP_Semantics_TCC2 0
   (IMP_Semantics_TCC2-1 nil 3385977480 nil ("" (subtype-tcc) nil nil)
-   unchecked nil nil nil nil nil)))
+   unfinished nil nil nil nil nil)))
 (AnnotatedProgramSemantics
  (update_state_AP_TCC1 0
   (update_state_AP_TCC1-1 nil 3387107674 nil ("" (subtype-tcc) nil nil)
-   unfinished nil nil nil nil nil))
+   unchecked nil nil nil nil nil))
  (execute_set_AP_TCC1 0
   (execute_set_AP_TCC1-1 nil 3387107674 nil ("" (subtype-tcc) nil nil)
-   unfinished nil nil nil nil nil))
+   unchecked nil nil nil nil nil))
  (execute_set_AP_TCC2 0
   (execute_set_AP_TCC2-1 nil 3387107674 nil ("" (subtype-tcc) nil nil)
-   unfinished nil nil nil nil nil))
+   unchecked nil nil nil nil nil))
  (on_method_entry_AP_TCC1 0
   (on_method_entry_AP_TCC1-1 nil 3387107674 nil
-   ("" (subtype-tcc) nil nil) unfinished nil nil nil nil nil))
+   ("" (subtype-tcc) nil nil) unchecked nil nil nil nil nil))
  (on_method_entry_AP_TCC2 0
   (on_method_entry_AP_TCC2-1 nil 3387107674 nil
-   ("" (subtype-tcc) nil nil) unfinished nil nil nil nil nil))
+   ("" (subtype-tcc) nil nil) unchecked nil nil nil nil nil))
  (on_method_entry_AP_TCC3 0
   (on_method_entry_AP_TCC3-1 nil 3387107674 nil
-   ("" (subtype-tcc) nil nil) unfinished nil nil nil nil nil))
+   ("" (subtype-tcc) nil nil) unchecked nil nil nil nil nil))
  (on_method_entry_AP_TCC4 0
   (on_method_entry_AP_TCC4-1 nil 3387107674 nil
-   ("" (subtype-tcc) nil nil) unfinished nil nil nil nil nil))
+   ("" (subtype-tcc) nil nil) unchecked nil nil nil nil nil))
  (on_method_entry_AP_TCC5 0
   (on_method_entry_AP_TCC5-1 nil 3387107674 nil
-   ("" (subtype-tcc) nil nil) unfinished nil nil nil nil nil))
+   ("" (subtype-tcc) nil nil) unchecked nil nil nil nil nil))
  (on_method_exit_normal_AP_TCC1 0
   (on_method_exit_normal_AP_TCC1-1 nil 3387107674 nil
-   ("" (subtype-tcc) nil nil) unfinished nil nil nil nil nil))
+   ("" (subtype-tcc) nil nil) unchecked nil nil nil nil nil))
  (on_method_exit_normal_AP_TCC2 0
   (on_method_exit_normal_AP_TCC2-1 nil 3387107674 nil
-   ("" (subtype-tcc) nil nil) unfinished nil nil nil nil nil))
+   ("" (subtype-tcc) nil nil) unchecked nil nil nil nil nil))
  (on_method_exit_normal_AP_TCC3 0
   (on_method_exit_normal_AP_TCC3-1 nil 3387107674 nil
-   ("" (subtype-tcc) nil nil) unfinished nil nil nil nil nil))
+   ("" (subtype-tcc) nil nil) unchecked nil nil nil nil nil))
  (on_method_exit_normal_AP_TCC4 0
   (on_method_exit_normal_AP_TCC4-1 nil 3387107674 nil
-   ("" (subtype-tcc) nil nil) unfinished nil nil nil nil nil))
+   ("" (subtype-tcc) nil nil) unchecked nil nil nil nil nil))
  (on_method_exit_exceptional_AP_TCC1 0
   (on_method_exit_exceptional_AP_TCC1-1 nil 3387107674 nil
-   ("" (subtype-tcc) nil nil) unfinished nil nil nil nil nil))
+   ("" (subtype-tcc) nil nil) unchecked nil nil nil nil nil))
  (on_method_exit_exceptional_AP_TCC2 0
   (on_method_exit_exceptional_AP_TCC2-1 nil 3387107674 nil
-   ("" (subtype-tcc) nil nil) unfinished nil nil nil nil nil))
+   ("" (subtype-tcc) nil nil) unchecked nil nil nil nil nil))
  (on_method_exit_exceptional_AP_TCC3 0
   (on_method_exit_exceptional_AP_TCC3-1 nil 3387107674 nil
-   ("" (subtype-tcc) nil nil) unfinished nil nil nil nil nil))
+   ("" (subtype-tcc) nil nil) unchecked nil nil nil nil nil))
  (on_method_exit_exceptional_AP_TCC4 0
   (on_method_exit_exceptional_AP_TCC4-1 nil 3387107674 nil
-   ("" (subtype-tcc) nil nil) unfinished nil nil nil nil nil))
+   ("" (subtype-tcc) nil nil) unchecked nil nil nil nil nil))
  (initial_AP_state_TCC1 0
   (initial_AP_state_TCC1-1 nil 3385977481 nil
-   ("" (subtype-tcc) nil nil) unchecked nil nil nil nil nil)))
+   ("" (subtype-tcc) nil nil) unfinished nil nil nil nil nil))
+ (wf_update_state_AP 0
+  (wf_update_state_AP-1 nil 3387169852 3387173821
+   ("" (skosimp*)
+    (("" (expand "wf_state")
+      (("" (prop)
+        (("1" (expand "wf_state")
+          (("1" (hide -3)
+            (("1" (skolem!)
+              (("1" (inst?) (("1" (inst?) (("1" (grind) nil nil)) nil))
+                nil))
+              nil))
+            nil))
+          nil)
+         ("2" (skolem!)
+          (("2" (inst?)
+            (("2" (inst?) (("2" (flatten) (("2" (grind) nil nil)) nil))
+              nil))
+            nil))
+          nil))
+        nil))
+      nil))
+    nil)
+   proved
+   ((wf_state const-decl "boolean" AnnotatedProgramSemantics nil)
+    (wf_state const-decl "boolean" State nil)
+    (is_local const-decl "boolean" AnnotatedProgramSemantics nil)
+    (is_field const-decl "boolean" AnnotatedProgramSemantics nil)
+    (is_field const-decl "boolean" State nil)
+    (update_state_AP const-decl "(update_FullState_type)"
+     AnnotatedProgramSemantics nil)
+    (is_declared_as_local const-decl "boolean" WellFormedProgram nil)
+    (is_local const-decl "boolean" State nil)
+    (is_declared_as_field const-decl "boolean" WellFormedProgram nil)
+    (Name formal-nonempty-type-decl nil AnnotatedProgramSemantics nil))
+   329259 2420 t shostak)))
 

@@ -4,8 +4,8 @@ BEGIN
   IMPORTING WellFormedMonitoredProgram[CP, string],
             set2list
 
-  mp : VAR (wf_MP)
-  a : VAR (wf_MVA)
+  mp : VAR MonitoredProgram
+  a : VAR MVA
 
   unique : (injective?[CP, nat])
 
@@ -109,7 +109,7 @@ BEGIN
   % NOTE: The case where there is no class c in p such that 
   % name(c) = class_name(a) is trivial, thus to simplify proofs we restrict
   % ourselves cases where such a class exists
-  ann_program_pre(mp): boolean =
+  ann_program_pre(mp : MonitoredProgram): boolean =
     LET a = mva(mp), p = program(mp) IN
     wf_MP(mp) AND
     EXISTS (c: Class):
@@ -128,27 +128,28 @@ BEGIN
                      classes(p)(c1) AND c = ann_class(mp)(c1)} #)
 
 
+END AnnotateProgram
+
+
+% Properties relating MPs and APs through ann_program
+AnnotateProgramProperties[CP, Name : TYPE+] : THEORY
+BEGIN
+
+  IMPORTING AnnotateProgram[CP],
+            AnnotatedProgramSemantics[string],
+            MonitoredProgramSemantics[CP, string]
+
+  % TODO: prove!
   ann_program_yields_wf_program : LEMMA
     FORALL (mp : (ann_program_pre)) :
       wf_Program(ann_program(mp))
-
-
-  get_annotated_class(mp : (ann_program_pre)) : Class =
-    choose({c : Class | classes(ann_program(mp))(c) 
-      AND name(c) = class_name(mva(mp))})
-
-  annotated_class_is_unique : LEMMA % :-)
-    FORALL (mp : (ann_program_pre)) :
-    singleton?({c : Class | classes(ann_program(mp))(c) 
-      AND name(c) = class_name(mva(mp))})
-
 
   ann_program_preserves_structure : LEMMA % :-)
     FORALL (mp : (ann_program_pre), c : Class) :
       classes(program(mp))(c) IMPLIES
       IF name(c) = class_name(mva(mp)) THEN
-        FORALL (m : Method, s : Stmt) :
-        LET c1 = ann_class(mp)(c), 
+        FORALL (m : Method) :
+        LET c1 = ann_class(mp)(c),
             m1 = ann_method(mp)(m) 
         IN
           methods(c)(m) IMPLIES
@@ -165,18 +166,6 @@ BEGIN
         classes(ann_program(mp))(c)
       ENDIF
 
-
-END AnnotateProgram
-
-
-% Properties relating MPs and APs through ann_program
-AnnotateProgramProperties[CP, Name : TYPE+] : THEORY
-BEGIN
-
-  IMPORTING AnnotateProgram[CP],
-            AnnotatedProgramSemantics[string],
-            MonitoredProgramSemantics[CP, string]
-
   ann_program_preserves_var_decls : LEMMA
     FORALL (mp : MonitoredProgram)(vn : string) :
       ann_program_pre(mp) IMPLIES
@@ -192,6 +181,7 @@ BEGIN
         (is_declared_as_local(program(mp))(vn) IFF
          is_declared_as_local(ann_program(mp))(vn))
 
+  % TODO: prove!
   ann_program_preserves_state_vars : LEMMA
     FORALL (mp : MonitoredProgram)(vn : string)
            (sMP : MPState, sAP : APState) :
@@ -200,6 +190,31 @@ BEGIN
       wf_state(ann_program(mp))(sAP) IMPLIES
         (is_field(vn, pstate(sMP)) IFF is_field(vn, pstate(sAP))) AND
         (is_local(vn, pstate(sMP)) IFF is_local(vn, pstate(sAP)))
+
+  lookup_mthd_axiom : AXIOM
+    FORALL (p : Program, s : PState, m : Method, mn : string, tgt : Val) :
+      up?(lookup_mthd(p, tgt, mn)) IMPLIES
+      m = down(lookup_mthd(p, tgt, mn)) IMPLIES
+        LET c = down(get_class(p)(tgt, s)) IN
+        up?(get_class(p)(tgt, s)) AND
+        classes(p)(c) AND
+        methods(c)(m) AND
+        name(m) = mn
+
+  % TODO: I need to say that the classes to which the retrieved methods belong
+  % are the same
+  lookup_mthd_ann_program : LEMMA
+    FORALL (mp : MonitoredProgram, s : PState, 
+            m1, m2 : Method, mn : string, tgt : Val) :
+      ann_program_pre(mp) IMPLIES
+      up?(lookup_mthd(program(mp), tgt, mn)) IMPLIES
+      up?(lookup_mthd(ann_program(mp), tgt, mn)) IMPLIES
+      m1 = down(lookup_mthd(program(mp), tgt, mn)) IMPLIES
+      m2 = down(lookup_mthd(ann_program(mp), tgt, mn)) IMPLIES
+        IF name(down(get_class(program(mp))(tgt, s))) = class_name(mva(mp))
+        THEN m2 = ann_method(mp)(m1)
+        ELSE m2 = m1
+        ENDIF
 
 
 END AnnotateProgramProperties

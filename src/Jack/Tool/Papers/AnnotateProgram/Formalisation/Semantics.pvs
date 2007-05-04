@@ -103,6 +103,9 @@ BEGIN
     ELSE FALSE
     ENDIF
 
+  get_address(vn : Name) : int
+
+  get_class(p : Program)(a : Val, s : PState) : lift[Class]
 
   % Well formed states
   wf_state(p : Program)(s : PState) : boolean =
@@ -243,6 +246,12 @@ SemanticsCommon[Name : TYPE,
                 update_FullState : (update_FullState_type)] : THEORY
 BEGIN
 
+  is_field(vn : Name, sigma : FullState) : boolean =
+    is_field(vn, pstate(sigma))
+
+  is_local(vn : Name, sigma : FullState) : boolean =
+    is_local(vn, pstate(sigma))
+
   check_assertion(p : FullProgram)
                  (e : Expr, s1, s2 : FullState)(n : nat)
                  (deriv_expr : [FullProgram -> [Expr, FullState, Val, FullState ->
@@ -292,8 +301,6 @@ Semantics[Name : TYPE+,
 BEGIN
 
   IMPORTING Evaluation[Name]
-
-  get_address(vn : Name) : int
 
   default_value(t : JType) : Val =
     CASES t OF
@@ -383,14 +390,17 @@ BEGIN
           deriv_expr(p)(e, sigma1, a, tau1)(m1)(deriv_stmt_rec(m1)) AND
           % evaluate the parameter
           deriv_expr(p)(pr, tau1, pv, tau2)(m2)(deriv_stmt_rec(m2)) AND
-          % see if the receiver is null
-          (tau3 = (IF up?(ex(pstate(tau1))) AND Null?(a)
+          % see if the receiver is null (and there were no previous exceptions)
+          (tau3 = (IF bottom?(ex(pstate(tau2))) AND Null?(a)
                    THEN update_FullState(LAMBDA (s : PState) : s WITH 
                                            [ex := up(NullPointer)], tau2)
                    ELSE tau2
                    ENDIF)) AND
           % lookup method definition
-          md = down(lookup_mthd(program(p), a, mn, pr)) AND
+          IF up?(lookup_mthd(program(p), a, mn))
+          THEN md = down(lookup_mthd(program(p), a, mn))
+          ELSE FALSE
+          ENDIF AND
           % actions taken at the entry of the method
           on_method_entry(p, md, a, tau3, tau4, m3, deriv_stmt_rec(m3+1),
             deriv_expr_rec(m3+1)) AND
@@ -509,7 +519,7 @@ BEGIN
             (n : nat) : bool =
     deriv_expr(p)(e, sigma1, v, sigma2)(n)
               (LAMBDA (p : FullProgram)(c : Stmt, sigma1, sigma2 : FullState)
-                      (m : below(n)) : 
+                      (m : below(n)) :
                  deriv_stmt(p)(c, sigma1, sigma2)(m))
 
   derives(p : FullProgram)
@@ -525,8 +535,7 @@ BEGIN
 
   IMPORTING WF[nat, nat] % used in the proofs
 
-  % TODO: Write similar lemmas and adapt the proofs
-  % I should say that the function given as parameters are deterministic
+  % TODO: adapt the proofs
 
   expr_determ_step : LEMMA
     FORALL (p : FullProgram)(n1, n2 : nat)(e : Expr)(sigma : FullState) :
@@ -546,7 +555,6 @@ BEGIN
           deriv_expr(p)(e, sigma, v2, sigma2)(n2)(deriv_stmt_rec(n2)) IMPLIES
             v1 = v2 AND sigma1 = sigma2 AND n1 = n2
 
-  % THINK: Is this the same as above?
   expr_determ_step2 : LEMMA
     FORALL (p : FullProgram)(n1, n2 : nat)(e : Expr)
            (v1, v2 : Val, sigma, sigma1, sigma2 : FullState) :
@@ -558,24 +566,6 @@ BEGIN
         IMPLIES
           deriv_expr(p)(e, sigma, v1, sigma1)(n1) AND
           deriv_expr(p)(e, sigma, v2, sigma2)(n2) IMPLIES
-            v1 = v2 AND sigma1 = sigma2 AND n1 = n2
-
-  expr_determ_step3 : LEMMA
-    FORALL (p : FullProgram)(n1, n2 : nat)(e : Expr)(sigma : FullState) :
-    LET deriv_stmt_rec = 
-        LAMBDA (k : nat) : 
-          LAMBDA (p : FullProgram)(c : Stmt, sigma1, sigma2 : FullState)
-                 (m : below(k)) : deriv_stmt(p)(c, sigma1, sigma2)(m)
-    IN
-      FORALL (v1, v2 : Val, sigma1, sigma2 : FullState) :
-        (FORALL (c : Stmt)(sigma, sigma1, sigma2 : FullState)
-                (m1 : below(n1), m2 : below(n2)) :
-          deriv_stmt_rec(n1)(p)(c, sigma, sigma1)(m1) AND
-          deriv_stmt_rec(n2)(p)(c, sigma, sigma2)(m2) IMPLIES
-            sigma1 = sigma2 AND m1 = m2)
-        IMPLIES
-          deriv_expr(p)(e, sigma, v1, sigma1)(n1)(deriv_stmt_rec(n1)) AND
-          deriv_expr(p)(e, sigma, v2, sigma2)(n2)(deriv_stmt_rec(n2)) IMPLIES
             v1 = v2 AND sigma1 = sigma2 AND n1 = n2
 
   stmt_determ_step : LEMMA
@@ -694,9 +684,9 @@ BEGIN
                                      [below(n + 1) -> bool]]]) :
       EXISTS (tau : APState, v : Val) :
         deriv_expr(p)(e, s1, v, tau)(n - 1) AND
-        s2 = IF up?(ex(pstate(s1)))
-             THEN s1
-             ELSE s1 WITH [gvs := gvs(s1) WITH [vn := v]]
+        s2 = IF up?(ex(pstate(tau)))
+             THEN tau
+             ELSE tau WITH [gvs := gvs(tau) WITH [vn := v]]
              ENDIF
 
   on_method_entry_AP : (on_method_entry_type) =
@@ -707,7 +697,7 @@ BEGIN
                                      [below(n + 1) -> bool]]]) :
     EXISTS (m1, m2, m3 : nat, tau1, tau2 : APState, inv : Expr) :
       n = m1 + m2 + m3 AND
-      inv = down(lookup_inv(p, a)) AND
+      inv = lookup_inv(p, a) AND
       check_assertion(p)(inv, s1, tau1)(m1)(deriv_expr) AND
       check_assertion(p)(pre(md), tau1, tau2)(m2)(deriv_expr) AND
       deriv_stmt(p)(pre_set(md), tau2, s2)(m3) AND
@@ -723,7 +713,7 @@ BEGIN
       n = m1 + m2 + m3 AND
       deriv_stmt(p)(post_set(md), s1, tau1)(m1) AND
       check_assertion(p)(post(md), tau1, tau2)(m1)(deriv_expr) AND
-      inv = down(lookup_inv(p, a)) AND
+      inv = lookup_inv(p, a) AND
       check_assertion(p)(inv, tau2, s2)(m2)(deriv_expr) AND
       st(pstate(s1)) = st(pstate(s2))
 
@@ -738,7 +728,7 @@ BEGIN
     EXISTS (m1, m2 : nat, tau1, tau2 : APState, inv : Expr) :
       n = m1 + m2 AND
       deriv_stmt(p)(exc_set(md), s1, tau1)(m1) AND
-      inv = down(lookup_inv(p, a)) AND
+      inv = lookup_inv(p, a) AND
       check_assertion(p)(inv, tau1, s2)(m2)(deriv_expr) AND
       st(pstate(s1)) = st(pstate(s2))
 
@@ -770,11 +760,15 @@ BEGIN
 
   % Well-formedness properties
 
-  wf_update_state_AP : LEMMA
+  wf_update_state_AP : LEMMA % :-)
     FORALL (p : Program, s1, s2 : APState, 
             upd : [PState[Name] -> PState[Name]]) :
       wf_state(p)(s1) IMPLIES
       update_state_AP(upd, s1) = s2 IMPLIES
+      (FORALL (vn : Name) :
+        (is_field(vn, s1) IFF is_field(vn, s2)) AND
+        (is_local(vn, s1) IFF is_local(vn, s2)) AND
+        (is_ghost(vn, s1) IFF is_ghost(vn, s2))) IMPLIES
         wf_state(p)(s2)
 
   wf_initial_AP_state : LEMMA

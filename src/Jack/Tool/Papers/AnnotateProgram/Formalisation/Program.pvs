@@ -244,13 +244,11 @@ BEGIN
 
 
   % Functions whose existence we assume
-  % Parameters: program, target object, method name, actual parameter
-  % NOTE: This is a simplification, we should use the types of the expressions,
-  % not their values, but we are not modeling types.
-  lookup_mthd : [Program, Val, Name, Expr -> lift[Method]]
 
-  % Parameters: program, target object
-  lookup_inv : [Program, Val -> lift[Expr]]
+  lookup_mthd(p : Program, tgt : Val, mn : Name) : lift[Method]
+
+  % If it can't find an invariant in tgt it just returns TRUE
+  lookup_inv(p : Program, tgt : Val) : Expr
 
 
   get_FieldDecl(n : Name, p : Program) : lift[FieldDecl] =
@@ -506,6 +504,7 @@ BEGIN
       member(x, branches(c)) IMPLIES
         Set?(proj_2(x)) OR CaseJML?(proj_2(x))
 
+  wf_Class(c : Class) : boolean
 
   % TODO:
   % Well-formed CaseJML (the list must be finite)
@@ -518,7 +517,6 @@ BEGIN
     declarations_are_unique(p) % but is convenient to find a declaration
 
   AUTO_REWRITE- wf_Program, var_names
-
 
   get_FieldDecl_is_determ : LEMMA
     FORALL (n : Name, p : (wf_Program)) :
@@ -542,5 +540,21 @@ BEGIN
     IN
       nonempty?(lds) IMPLIES singleton?(lds)
 
+
+  % Properties needed of well-formed programs
+
+  wf_program_has_wf_classes : LEMMA
+    FORALL (p : Program, c : Class) :
+      wf_Program(p) IMPLIES
+      classes(p)(c) IMPLIES
+        wf_Class(c)
+
+  wf_class_implies_unique_method_names : LEMMA
+    FORALL (c : Class, m1, m2 : Method) :
+      wf_Class(c) IMPLIES
+      methods(c)(m1) IMPLIES
+      methods(c)(m2) IMPLIES
+      name(m1) = name(m2) IMPLIES
+        m1 = m2
 
 END WellFormedProgram

@@ -101,6 +101,7 @@ BEGIN
 
   % NOTE: We may also require Int?(f(n)) OR Bool?(f(n)) but we don't care
   % about type checking now. Same for wf_PSt (using fvs(f)(n))
+  % TODO: Maybe it is better to have just one version
   wf_Store(vds : finite_set[MVAVarDecl])(st : Store) : boolean =
     FORALL (n : Name) :
       var_names(vds)(n) IFF NOT Bottom?(st(n))
@@ -228,7 +229,7 @@ BEGIN
   % its variables
   AState : TYPE =
     [# cp : CP,
-       stA : Store 
+       stA : Store
     #]
 
   get_MVAVarDecl(n : Name, a : (wf_MVA)) : lift[MVAVarDecl] =

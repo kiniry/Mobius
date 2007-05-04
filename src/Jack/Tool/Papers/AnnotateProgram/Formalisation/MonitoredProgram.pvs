@@ -94,9 +94,9 @@ BEGIN
                                               [below(n + 1) -> bool]]]) :
       EXISTS (tau : MPState, v : Val) :
         deriv_expr(mp)(e, s1, v, tau)(n - 1) AND
-        s2 = IF up?(ex(pstate(s1)))
-             THEN s1
-             ELSE s1 WITH [gvs := gvs(s1) WITH [vn := v]]
+        s2 = IF up?(ex(pstate(tau)))
+             THEN tau
+             ELSE tau WITH [gvs := gvs(tau) WITH [vn := v]]
              ENDIF
 
   on_method_MVA(etype : EventType)
@@ -119,7 +119,7 @@ BEGIN
     astate(s2) = on_method_MVA(Entry)(mp, md, s1)  AND
     EXISTS (m1, m2, m3 : nat, tau1, tau2 : MPState, inv : Expr) :
       n = m1 + m2 + m3 AND
-      inv = down(lookup_inv(program(mp), a)) AND
+      inv = lookup_inv(program(mp), a) AND
       check_assertion(mp)(inv, s1, tau1)(m1)(deriv_expr) AND
       check_assertion(mp)(pre(md), tau1, tau2)(m2)(deriv_expr) AND
       deriv_stmt(mp)(pre_set(md), tau2, s2)(m3) AND
@@ -137,7 +137,7 @@ BEGIN
       n = m1 + m2 + m3 AND
       deriv_stmt(mp)(post_set(md), s1, tau1)(m1) AND
       check_assertion(mp)(post(md), tau1, tau2)(m1)(deriv_expr) AND
-      inv = down(lookup_inv(program(mp), a)) AND
+      inv = lookup_inv(program(mp), a) AND
       check_assertion(mp)(inv, tau2, s2)(m2)(deriv_expr) AND
       st(pstate(s1)) = st(pstate(s2))
 
@@ -152,7 +152,7 @@ BEGIN
     EXISTS (m1, m2 : nat, tau1, tau2 : MPState, inv : Expr) :
       n = m1 + m2 AND
       deriv_stmt(mp)(exc_set(md), s1, tau1)(m1) AND
-      inv = down(lookup_inv(program(mp), a)) AND
+      inv = lookup_inv(program(mp), a) AND
       check_assertion(mp)(inv, tau1, s2)(m2)(deriv_expr) AND
       st(pstate(s1)) = st(pstate(s2))
 
@@ -186,11 +186,15 @@ BEGIN
 
   % Well-formedness properties
 
-  wf_update_state_MP : LEMMA
+  wf_update_state_MP : LEMMA % :-)
     FORALL (mp : MonitoredProgram, s1, s2 : MPState, 
             upd : [PState[Name] -> PState[Name]]) :
       wf_state(mp)(s1) IMPLIES
       update_state_MP(upd, s1) = s2 IMPLIES
+      (FORALL (vn : Name) :
+        (is_field(vn, s1) IFF is_field(vn, s2)) AND
+        (is_local(vn, s1) IFF is_local(vn, s2)) AND
+        (is_ghost(vn, s1) IFF is_ghost(vn, s2))) IMPLIES
         wf_state(mp)(s2)
 
   wf_initial_MP_state : LEMMA

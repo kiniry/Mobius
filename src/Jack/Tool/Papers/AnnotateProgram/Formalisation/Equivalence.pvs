@@ -15,7 +15,7 @@ BEGIN
     (FORALL (n : string) : NOT Bottom?(stA(sA)(n)) IMPLIES
       stA(sA)(n) = gvs(sAP)(n)) AND
     (cp(sA) = halted IMPLIES
-      down(ex(pstate(sAP))) = JMLExc)
+      up?(ex(pstate(sAP))) AND down(ex(pstate(sAP))) = JMLExc)
 
   % Says if sAP is a "super state" of sMP
   Program_modeled?(sMP : MPState, sAP : APState) : boolean =
@@ -42,13 +42,6 @@ BEGIN
       related_states(mp, ap)(sMP, sAP) IMPLIES
         wf_MP(mp) AND wf_Program(ap)
 
-  IMPORTING EpsilonProps  % imports choose_singleton?
-
-  initial_states_are_equivalent : LEMMA
-    FORALL (mp : MonitoredProgram) :
-      MP_modeled?(initial_MP_state(mp), 
-                  initial_AP_state(ann_program(mp)))
-
 
   % Properties about MP_modeled?
 
@@ -63,13 +56,13 @@ BEGIN
         MP_modeled?(update_state_MP(update(vn, v), sMP),
                     update_state_AP(update(vn, v), sAP))
 
-  % Only remains to show that down(x) = y IMPLIES x = up(y) which seems obvious
-  MP_modeled_implies_cp_not_halted : LEMMA
+  MP_modeled_implies_cp_not_halted : LEMMA % :-)
     FORALL (mp : MonitoredProgram, sMP : MPState, sAP : APState) :
       MP_modeled?(sMP, sAP) IMPLIES
-      NOT up?(ex(pstate(sAP))) IMPLIES 
+      NOT up?(ex(pstate(sAP))) IMPLIES
         NOT cp(astate(sMP)) = halted
 
+  % NOTE: If cp(astate(sMP)) = halted, upd must leave the JML exception in sAP
   MP_modeled_preserved_by_update2 : LEMMA % :-)
     FORALL (mp : MonitoredProgram, ap : Program)
            (sMP : MPState, sAP : APState)(upd : [PState -> PState]) :
@@ -78,15 +71,13 @@ BEGIN
         MP_modeled?(update_state_MP(upd, sMP),
                     update_state_AP(upd, sAP))
 
-  % TODO: last case left
-  MP_modeled_implies_same_num_eval : LEMMA
+  MP_modeled_implies_same_num_eval : LEMMA % :-)
     FORALL (mp : MonitoredProgram, ap : Program)
            (sMP : MPState, sAP : APState)(n : NumExpr) :
       related_states(mp, ap)(sMP, sAP) IMPLIES
         eval(n)(pstate(sMP)) = eval(n)(pstate(sAP))
 
-  % TODO: last case left
-  MP_modeled_implies_same_bool_eval : LEMMA
+  MP_modeled_implies_same_bool_eval : LEMMA % :-)
     FORALL (mp : MonitoredProgram, ap : Program)
            (sMP : MPState, sAP : APState)(b : BoolExpr) :
       related_states(mp, ap)(sMP, sAP) IMPLIES
@@ -94,6 +85,11 @@ BEGIN
 
 
   % Main lemmas used in the proof of the correcteness_of_ann_program
+
+  initial_states_are_equivalent : LEMMA
+    FORALL (mp : MonitoredProgram) :
+      MP_modeled?(initial_MP_state(mp),
+                  initial_AP_state(ann_program(mp)))
 
   deriv_expr_maintains_equivalence : THEOREM
     FORALL (mp : MonitoredProgram, ap : Program)
