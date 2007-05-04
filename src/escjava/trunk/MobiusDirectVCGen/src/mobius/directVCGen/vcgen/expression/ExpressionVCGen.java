@@ -2,6 +2,7 @@ package mobius.directVCGen.vcgen.expression;
 
 import java.util.Vector;
 
+import javafe.ast.ArrayInit;
 import javafe.ast.CastExpr;
 import javafe.ast.CondExpr;
 import javafe.ast.ExprObjectDesignator;
@@ -218,8 +219,18 @@ public class ExpressionVCGen extends BinaryExpressionVCGen{
 		QuantVariableRef newHeap = Heap.newVar();
 		QuantVariableRef loc = entry.post.var;
 		QuantVariableRef dim = Expression.rvar(Num.sortInt);
-		Term arr = Heap.newArray(Heap.var, Type.translate(narr.type), newHeap, dim,loc);
-		return new Post(arr);
+		ArrayInit init= narr.init;
+		Term arr;
+		Post pre = entry.post;
+		if (init != null) {
+			entry.post = new Post(loc, entry.post.post);
+			pre = getPre(narr.init, entry);
+		}
+		// TODO: do it for multi arrays
+		arr = Heap.newArray(Heap.var, Type.translate(narr.type), newHeap, dim,loc);
+		pre = new Post(loc, Logic.implies(arr, pre.post));
+		
+		return pre;
 	}
 	
 	

@@ -3,7 +3,6 @@ package mobius.directVCGen.formula.coq;
 import mobius.directVCGen.formula.Formula;
 import escjava.sortedProver.EscNodeBuilder;
 import escjava.sortedProver.Lifter.SortVar;
-import escjava.sortedProver.NodeBuilder.SAny;
 
 /*@ non_null_by_default @*/
 public class CoqNodeBuilder extends EscNodeBuilder {
@@ -522,21 +521,24 @@ public class CoqNodeBuilder extends EscNodeBuilder {
 	}
 
 	@Override
-	public SValue buildArrSelect(SMap map, SRef obj, SInt idx) {
-		// TODO Auto-generated method stub
-		return null;
+	public SValue buildArrSelect(SMap heap, SRef obj, SInt idx) {
+		CRef addr = new CRef("Heap.ArrayElement", new STerm [] {getLoc(obj), idx});
+		return new CValue("Heap.get", new STerm[] {heap, addr});
 	}
 
 	@Override
 	public SMap buildArrStore(SMap map, SRef obj, SInt idx, SValue val) {
-		// TODO Auto-generated method stub
-		return null;
+		CRef addr = new CRef("Heap.ArrayElement", new STerm [] {getLoc(obj), idx});
+		return new CMap("Heap.update", new STerm[] {map, addr, val});
 	}
 
 	@Override
 	public SPred buildNewArray(SMap oldh, SAny type, SMap heap, SRef r, SInt len) {
-		// TODO Auto-generated method stub
-		return null;
+		CPred left = new CPred("Heap.new", new STerm[] {oldh, buildQVarRef(Formula.program.qvar), new CType("Heap.LocationArray", new STerm[] {len, type})});
+        CPred right = new CPred("Some", new STerm[] {new CPred(false, ",", new STerm[] {getLoc(r), heap})});
+    		
+		SPred res = new CPred(false, "=",new STerm[] {left, right});
+		return res;
 	}
 
 	@Override

@@ -82,7 +82,7 @@ public class Heap {
 			throw new NullPointerException();
 		return Formula.lf.mkFnTerm(Formula.lf.symNewObj, new Term[] {oldheap, type, heap, e});
 	}
-	public static Term newArray(QuantVariableRef oldheap,  Term type, QuantVariableRef heap, QuantVariableRef dim, QuantVariableRef loc) {
+	public static Term newArray(QuantVariableRef oldheap,  Term type, QuantVariableRef heap, Term dim, QuantVariableRef loc) {
 		if(oldheap == null)
 			throw new NullPointerException();
 		return Formula.lf.mkFnTerm(Formula.lf.symNewArray, new Term[] {oldheap, type, heap, dim, loc});

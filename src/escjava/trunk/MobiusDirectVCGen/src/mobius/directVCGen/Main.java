@@ -20,6 +20,7 @@ import javafe.tc.TypeSig;
 import javafe.util.ErrorSet;
 import javafe.util.Location;
 import mobius.directVCGen.bicolano.Unarchiver;
+import mobius.directVCGen.formula.jmlTranslator.JmlVisitor;
 import mobius.directVCGen.vcgen.DirectVCGen;
 import escjava.ast.EscPrettyPrint;
 import escjava.tc.TypeCheck;
@@ -37,7 +38,7 @@ public class Main extends escjava.Main {
 	public static void main(/*@ non_null @*/ String[] args)  {
 		// the first argument is the output dir
 		if (args.length < 2) {
-			System.out.println("I need at least 2 arguments the current directory, " +
+			System.out.println("I need at least 2 arguments the output directory, " +
 					"and the path to the file bicolano.jar");
 			return;
 		}
@@ -171,8 +172,11 @@ public class Main extends escjava.Main {
 		System.out.println("[" + timeUsed(startTime) + "]\n");
 		
 		long midTime = currentTime();
+		sig.getCompilationUnit().accept(new JmlVisitor(),null);
+		System.out.println("[" + timeUsed(midTime) + "]\n");
+		long endTime = currentTime();
 		sig.getCompilationUnit().accept(new DirectVCGen(basedir));
-	    System.out.println("[" + timeUsed(midTime) + "]\n");
+	    System.out.println("[" + timeUsed(endTime) + "]\n");
 
 	    return false;
 	    
