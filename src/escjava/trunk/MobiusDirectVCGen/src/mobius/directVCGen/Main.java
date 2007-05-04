@@ -4,13 +4,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
-import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
 
 import javafe.ast.DelegatingPrettyPrint;
 import javafe.ast.StandardPrettyPrint;
@@ -60,8 +55,8 @@ public class Main extends escjava.Main {
 		
 		// Configuring bicolano and all the preludes
 		bicodir = new File(args[1]);
-		Unarchiver arc = new Unarchiver(bicodir);
 		try {
+			Unarchiver arc = new Unarchiver(bicodir);
 			arc.inflat(basedir);
 		} catch (IOException e1) {
 			e1.printStackTrace();

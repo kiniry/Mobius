@@ -12,19 +12,43 @@ import java.util.Iterator;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+/**
+ * A class to inflat bicolano as well as the static preludes from
+ * a jar file.
+ * @author J. Charles
+ */
 public class Unarchiver {
-	private final File bicofile;
+	/** the directory in the archive of bicolano: /Formalisation/Bicolano */
 	private static final String bicodir = "Formalisation" + File.separator + "Bicolano";
+	/** the directory in the archive of the library: /Formalisation/Library */
 	private static final String libdir = "Formalisation" + File.separator + "Library";
+	/** the directory in the archive of the Map library: /Formalisation/Library/Map */
 	private static final String libmapdir = libdir + File.separator + "Map";
-	public Unarchiver(File bicodir) {
-		this.bicofile = bicodir;
-		System.out.println("Bicolano file's path is: " + bicodir);
-		if(!bicodir.canRead()) {
-			System.out.println("Bad path given to find Bicolano, exiting... ");
-			return;
+
+	/** the jar file containing bicolano */
+	private final File bicofile;
+	
+	/**
+	 * Create an object to unarchive the specified 
+	 * file containing bicolano and the prelude.
+	 * @param file a jar file containing bicolano
+	 * @throws IOException if the file cannot be read
+	 */
+	public Unarchiver(File file) throws IOException {
+		this.bicofile = file;
+		System.out.println("Bicolano file's path is: " + file);
+		if(!file.canRead()) {
+			throw new IOException("Bad path given to find Bicolano, exiting... ");
+			
 		}
 	}
+
+	/**
+	 * Copy all the data contained in the input to the output.
+	 * @param in The input stream
+	 * @param out The output stream
+	 * @throws IOException If an error of reading or writing occur.
+	 */
 	public static void copy(InputStream in, FileOutputStream out) throws IOException {
 		final byte [] buff = new byte[1024];
 		int res;
@@ -32,6 +56,12 @@ public class Unarchiver {
 			out.write(buff, 0, res);
 		}
 	}
+	
+	/**
+	 * Inflat the content of the bicolano jar file to a specific directory.
+	 * @param basedir The directory where to inflat bicolano
+	 * @throws IOException if an error of reading or writing occur.
+	 */
 	public void inflat(File basedir) throws IOException {
 		File b = new File(basedir, "Formalisation");
 		if(!b.exists()) {
@@ -77,25 +107,55 @@ public class Unarchiver {
 		}
 	}
 	
+	/**
+	 * An object to make Iterable an enumeration of a jar.
+	 * Just for convenience... 
+	 * I don't understand why it is not already available in Java's jar
+	 * library. Anyone got a clue? If I am somewhat wrong please mail me
+	 * I'd be glad to know how I could handle that more elegantly.
+	 * @author J. Charles
+	 */
 	private static class EntryIterator implements Iterator<JarEntry>, Iterable<JarEntry> {
-		Enumeration<JarEntry> e;
+		/** the enumeration to make iterable */
+		private Enumeration<JarEntry> e;
+		
+		/**
+		 * Create an iterable object from an enumeration object.
+		 * @param e the enumeration to turn to iterable.
+		 */
 		public EntryIterator(Enumeration<JarEntry>  e) {
 			this.e = e;
 		}
 
+		/*
+		 * (non-Javadoc)
+		 * @see java.util.Iterator#hasNext()
+		 */
 		public boolean hasNext() {
 			return e.hasMoreElements();
 		}
 
+		/*
+		 * (non-Javadoc)
+		 * @see java.util.Iterator#next()
+		 */
 		public JarEntry next() {
 			return e.nextElement();
 		}
 
+		/*
+		 * (non-Javadoc)
+		 * @see java.util.Iterator#remove()
+		 */
 		public void remove() {
 			throw new UnsupportedOperationException();
 			
 		}
 
+		/*
+		 * (non-Javadoc)
+		 * @see java.lang.Iterable#iterator()
+		 */
 		public Iterator<JarEntry> iterator() {
 			return this;
 		}
