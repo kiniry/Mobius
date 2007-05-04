@@ -25,6 +25,10 @@ public class UmbraHelper {
 	 */
 	static public final String BYTECODE_EXTENSION   = ".btc";
 	/**
+	 * The file extension for the history files.
+	 */
+	static public final String BYTECODE_HISTORY_EXTENSION   = ".bt";
+	/**
 	 * The extension for BoogiePL files.
 	 */	
 	static public final String BOOGIEPL_EXTENSION = ".bpl";

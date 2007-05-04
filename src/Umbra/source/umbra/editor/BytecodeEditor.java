@@ -410,8 +410,7 @@ public class BytecodeEditor extends TextEditor {
 	 * Updating number of historical versions executed
 	 * after adding new version
 	 * 
-	 * @return Current number of versions; 
-	 * -1 if limit has been reached
+	 * @return Current number of versions; -1 if limit has been reached
 	 */
 	public int newHistory() {
 		if (historyNum == IHistory.maxHistory) return -1;
@@ -423,7 +422,6 @@ public class BytecodeEditor extends TextEditor {
 	 * Updating number of historical versions
 	 * when all of them are removed.
 	 */
-	
 	public void clearHistory() {
 		historyNum = -1;
 	}

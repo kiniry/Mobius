@@ -20,41 +20,51 @@ import umbra.UmbraHelper;
 import umbra.editor.BytecodeEditor;
 
 /**
- * This class defines an action that adds current bytecode
- * to history.
+ * This class defines an action that adds current bytecode snapshot
+ * to the history stack.
  * 
- * @author Wojtek WÄ…s
+ * @author Wojtek W±s
  */
 public class HistoryAction implements IEditorActionDelegate {
 
 	/**
-	 * TODO
+	 * The editor for which a historical snapshot should be added.
 	 */
 	private IEditorPart editor;
 	
 	/**
-	 * TODO
+	 * The method sets the editor for which the history item should be
+	 * added.
+	 * 
+	 * @param action currently ignored
+	 * @param targetEditor the editor to clear history for.
 	 */
 	public void setActiveEditor(IAction action, IEditorPart targetEditor) {
 		editor = targetEditor;
 	}
 
 	/**
-	 * TODO
+	 * This method increments the counter of the existing history snapshots.
+	 * In case the history stack is full an appropriate message is 
+	 * displayed. Otherwise, the file that might have remained from the
+	 * previous session is deleted and the class file for the current
+	 * editor takes up its place.
+	 * 
+	 * 	@param action the action to add the history snapshot
 	 */
 	public void run(IAction action) { 
 		int num = ((BytecodeEditor)editor).newHistory();
 		if (num == -1) {
-			MessageDialog.openInformation(editor.getEditorSite().getShell(), "History", "History is already full.");
+			MessageDialog.openInformation(editor.getEditorSite().getShell(), 
+					                     "History", "History is already full.");
 			return;
 		}
-		String ext = ".bt" + num;
+		String ext = UmbraHelper.BYTECODE_HISTORY_EXTENSION + num;
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 		IFile fileFrom = ((FileEditorInput)editor.getEditorInput()).getFile();
 		IPath active = fileFrom.getFullPath();
-		String fnameTo = active.toOSString().replaceFirst(
-				                 UmbraHelper.BYTECODE_EXTENSION, 
-				                 ext);
+		String fnameTo = UmbraHelper.replaceLast(active.toOSString(), 
+				UmbraHelper.BYTECODE_EXTENSION, ext);
 		IPath pathTo = new Path(fnameTo);
 		IFile fileTo = root.getFile(pathTo);
 		try {
@@ -63,11 +73,13 @@ public class HistoryAction implements IEditorActionDelegate {
 		} catch (CoreException e) {
 			e.printStackTrace();
 		}
-		String lastSegment = active.lastSegment().replaceFirst(
+		String lastSegment = UmbraHelper.replaceLast(active.lastSegment(), 
 				                        UmbraHelper.BYTECODE_EXTENSION,
 				                        UmbraHelper.CLASS_EXTENSION);
-		String clnameFrom = active.removeLastSegments(1).append(lastSegment).toOSString();
-		String clnameTo = active.removeLastSegments(1).append("_" + num + "_" + lastSegment).toOSString();
+		String clnameFrom = active.removeLastSegments(1).append(lastSegment).
+		                                                 toOSString();
+		String clnameTo = active.removeLastSegments(1).append("_" + num + 
+				                               "_" + lastSegment).toOSString();
 		IFile classFrom = root.getFile(new Path(clnameFrom));
 		IPath clpathTo = new Path(clnameTo);
 		IFile classTo = root.getFile(clpathTo);
@@ -80,10 +92,9 @@ public class HistoryAction implements IEditorActionDelegate {
 	}
 
 	/**
-	 * TODO
+	 * Currently does nothing.
 	 */
 	public void selectionChanged(IAction action, ISelection selection) {
-	
 	}
 
 }

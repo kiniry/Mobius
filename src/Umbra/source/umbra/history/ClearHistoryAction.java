@@ -27,24 +27,33 @@ import umbra.editor.BytecodeEditor;
 public class ClearHistoryAction implements IEditorActionDelegate {
 
 	/**
-	 * TODO
+	 * The editor of the bytecode for which we clear the history.
 	 */
 	private IEditorPart editor;
 	
 	/**
-	 * TODO
+	 * The method sets the editor for which the history should be cleared.
+	 * 
+	 * @param action ignored
+	 * @param targetEditor the editor to clear history for.
 	 */
 	public void setActiveEditor(IAction action, IEditorPart targetEditor) {
 		editor = targetEditor;
 	}
 
 	/**
-	 * TODO
+	 * This method clears the history for the currently active editor.
+	 * It resets the counter of the historical versions and then
+	 * deletes all the files in the workspace that represent the 
+	 * historical versions of the current file.
+	 * 
+	 * @param action the action to clear the history
+	 * 
 	 */
 	public void run(IAction action) {
 		((BytecodeEditor)editor).clearHistory();
 		for (int i = 0; i <= IHistory.maxHistory; i++) {
-			String ext = ".bt" + i; 
+			String ext = UmbraHelper.BYTECODE_HISTORY_EXTENSION + i; 
 			IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 			IFile inputFile = ((FileEditorInput)editor.getEditorInput()).getFile();
 			IPath active = inputFile.getFullPath();
@@ -59,7 +68,8 @@ public class ClearHistoryAction implements IEditorActionDelegate {
 			String lastSegment = active.lastSegment().replaceFirst(
 					                       UmbraHelper.BYTECODE_EXTENSION, 
 					                       UmbraHelper.CLASS_EXTENSION);
-			String clname = active.removeLastSegments(1).append("_" + i + "_" + lastSegment).toOSString(); 
+			String clname = active.removeLastSegments(1).append("_" + i + 
+					                        "_" + lastSegment).toOSString(); 
 			IFile classFile = root.getFile(new Path(clname));
 			try {
 				classFile.delete(true, null);
@@ -71,10 +81,9 @@ public class ClearHistoryAction implements IEditorActionDelegate {
 	}
 
 	/**
-	 * TODO
+	 * Currently does nothing.
 	 */
 	public void selectionChanged(IAction action, ISelection selection) {
-
 	}
 
 }

@@ -76,7 +76,7 @@ public class BytecodeRestoreAction extends Action {
 		int num = 0;
 		if (strnum == "1") num = 1;
 		else if (strnum == "2") num = 2;
-		String ext = ".bt" + num;
+		String ext = UmbraHelper.BYTECODE_HISTORY_EXTENSION + num;
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot(); 
 		IFile file = ((FileEditorInput)editor.getEditorInput()).getFile();
 		IPath active = file.getFullPath();
@@ -124,6 +124,11 @@ public class BytecodeRestoreAction extends Action {
 		contributor.synchrEnable();
 	}
 	
+	/**
+	 * TODO
+	 * 
+	 * @param part
+	 */
 	public void setActiveEditor(IEditorPart part) {
 		editor = part;
 	}
