@@ -1030,6 +1030,14 @@ public final class GC {
   public static /*@ non_null */ Expr implies(int sloc, int eloc, /*@ non_null @*/ Expr c0, /*@ non_null @*/ Expr c1) {
     return nary( sloc, eloc, TagConstants.BOOLIMPLIES, c0, c1);
   }
+  
+  public static /*@ non_null */ Expr equiv(/*@ non_null */ Expr c0, /*@ non_null */ Expr c1) {
+      return equiv(Location.NULL, Location.NULL, c0, c1);
+  }
+  
+  public static /*@ non_null */ Expr equiv(int sloc, int eloc, /*@ non_null */ Expr c0, /*@ non_null */ Expr c1) {
+      return nary(sloc, eloc, TagConstants.BOOLEQ, c0, c1);
+  }
 
   //@ ensures \result != null;
   public static /*@ non_null */ Expr forall(/*@ non_null @*/ GenericVarDecl v, /*@ non_null @*/ Expr e) {

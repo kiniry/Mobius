@@ -684,8 +684,7 @@ public class Options extends javafe.SrcToolOptions {
         enabledProvers.add(proverName.toLowerCase());
     }
 
-
-    private void diableProver(/*@ non_null */String proverName) {
+    private void disableProver(String proverName) {
         enabledProvers.remove(proverName.toLowerCase());
     }
 

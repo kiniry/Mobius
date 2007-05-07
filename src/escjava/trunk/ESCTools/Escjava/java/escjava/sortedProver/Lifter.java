@@ -50,18 +50,37 @@ public class Lifter extends EscNodeBuilder
 {
 	final static boolean doTrace = false;
 	final Stack quantifiedVars = new Stack();
-	final Hashtable symbolTypes = new Hashtable();
+	final Hashtable bgSymbolTypes = new Hashtable();
+    Hashtable symbolTypes = new Hashtable();
 	final Term[] emptyTerms = new Term[0];
 	public final EscNodeBuilder builder;
 	final SortedBackPred backPred = new SortedBackPred();	
 	int pass;
 	int methodNo = 0;
 	final int lastPass = 3;
+    
+    /**
+     * Print a warning message. Originally the messages went to
+     * ErrorSet.caution but that is rather annoying for the user.
+     * Anyway, the purpose of this method is to provide one place
+     * for the debugger to redirect various rather internal error
+     * messages.
+     * @param s the error message
+     */
+    private static void warn(String s) {
+        Info.out(s); // printed only in verbose mode
+    }
+    
+    private void newMethod()
+    {
+        methodNo++;
+        symbolTypes = new Hashtable();
+    }
 	
 	// public interface
 	public SPred convert(Expr main) 
 	{
-		methodNo++;
+		newMethod();
 		return doConvert(transform(main));
 	}
 	
@@ -88,7 +107,7 @@ public class Lifter extends EscNodeBuilder
 		
 		SPred and1 = doConvert(axioms);
 		SPred and2 = builder.buildDistinct(dist);
-		methodNo++;
+		newMethod();
 		return builder.buildAnd(new SPred[] { and1, and2 });
 	}
 	// end public interface
@@ -342,7 +361,7 @@ public class Lifter extends EscNodeBuilder
 				minpass = 0;
 			} else if (p == sortPred && (r == sortValue || r == sortBool)) {
 				conv = symPredToBool;
-				ErrorSet.caution("using pred -> bool conversion! in arg #" + (1+i) + " of " + fn + " / " + this);				
+				warn("using pred -> bool conversion! in arg #" + (1+i) + " of " + fn + " / " + this);				
 			} else if (p == sortBool && r == sortPred) {
 				conv = symIsTrue;
 				minpass = 1;
@@ -1016,6 +1035,7 @@ public class Lifter extends EscNodeBuilder
 		dumpBuilder = builder;
 		stringConstants.clear();
 		distinctSymbols.clear();
+        fnTranslations.clear();
 		
 		root.enforceLabelSense(-1);
 		SPred res = root.dumpPred();
@@ -1107,19 +1127,13 @@ public class Lifter extends EscNodeBuilder
 	
 	public FnSymbol getFnSymbol(String name, int arity)
 	{
-		String nameCur = name + "." + arity + "." + methodNo;
-		String name0 = name + "." + arity + ".0";
+        String nameHt = name + "." + arity;
+        
+		if (symbolTypes.containsKey(nameHt))
+			return (FnSymbol)symbolTypes.get(nameHt);
 		
-		if (symbolTypes.containsKey(nameCur))
-			return (FnSymbol)symbolTypes.get(nameCur);
-		
-		if (symbolTypes.containsKey(name0))
-			return (FnSymbol)symbolTypes.get(name0);
-		
-		if (name.startsWith("RES-53")) {
-			int x = 7;
-			x++;
-		}
+		if (bgSymbolTypes.containsKey(nameHt))
+			return (FnSymbol)bgSymbolTypes.get(nameHt);
 		
 		FnSymbol fn;
 		if (arity == 0)
@@ -1130,7 +1144,7 @@ public class Lifter extends EscNodeBuilder
 				args[i] = new SortVar();
 			fn = registerFnSymbol(name, args, new SortVar());
 		}
-		symbolTypes.put(nameCur, fn);
+		(methodNo == 0 ? bgSymbolTypes : symbolTypes).put(nameHt, fn);
 		if (arity == 0 && name.startsWith("elems") && 
 				(name.startsWith("elems<") || 
 						name.equals("elems") ||
@@ -1146,7 +1160,7 @@ public class Lifter extends EscNodeBuilder
 	private void trace(String msg)
 	{
 		Assert.notFalse (doTrace);
-		ErrorSet.caution(msg);
+		warn(msg);
 	}
 		
 	public Sort typeToSort(Type t)
@@ -1186,7 +1200,7 @@ public class Lifter extends EscNodeBuilder
 			return new SortVar();
 			
 		default:
-			ErrorSet.caution("unknown type: " + TagConstants.toString(t.getTag()) + ":" + PrettyPrint.inst.toString(t));
+			warn("unknown type: " + TagConstants.toString(t.getTag()) + ":" + PrettyPrint.inst.toString(t));
 			
 			return new SortVar();
 		}
@@ -1370,7 +1384,7 @@ public class Lifter extends EscNodeBuilder
 				ASTNode sym = m.symbol;
 				fn = getFnSymbol(m.methodName.toString(), arity); 
 				if (sym == null) {
-					ErrorSet.caution("no symbol stored in methodCall: " + m.methodName);
+                    Info.out("no symbol stored in methodCall: " + m.methodName);
 				} else if (sym instanceof FieldDecl) {
 					Assert.notFalse(arity <= 2);
 					Sort ft = typeToSort(((FieldDecl)sym).type);
@@ -1383,7 +1397,7 @@ public class Lifter extends EscNodeBuilder
 							unify(fn.argumentTypes[i], sortRef, "mca");
 					}
 				} else if (sym instanceof GenericVarDecl) {
-					ErrorSet.caution("gvd in methodCall: " + m.methodName);
+					warn("gvd in methodCall: " + m.methodName);
 				} else if (sym instanceof MethodDecl) {
 					MethodDecl md = (MethodDecl)sym;
 					int off = arity - md.args.size(); 
@@ -1564,7 +1578,7 @@ public class Lifter extends EscNodeBuilder
 				s = typeToSort(g.type);
 				//ErrorSet.caution("VariableAccess local " + name + " -> " + s);
 			} else {
-				ErrorSet.caution("unknown decl in VariableAccess " + m.decl.getClass());
+				warn("unknown decl in VariableAccess " + m.decl.getClass());
 			}
 			
 			return symbolRef (name, s);

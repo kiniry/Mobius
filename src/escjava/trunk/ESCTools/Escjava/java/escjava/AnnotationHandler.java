@@ -1194,7 +1194,7 @@ public class AnnotationHandler {
     javafe.tc.FlowInsensitiveChecks.setType(e, Types.booleanType);
     return e;
   }
-
+  
   /**
    * Returns true if the argument is literally true, and returns false if it is
    * not a literal or is literally false.

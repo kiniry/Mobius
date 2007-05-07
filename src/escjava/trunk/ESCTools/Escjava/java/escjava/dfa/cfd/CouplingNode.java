@@ -28,7 +28,7 @@ public class CouplingNode extends Node {
         return "[coupling node]";
     }
 
-    void printToDot(/*@ non_null @*/Writer dot) throws IOException {
+    void printToDot(/*@ non_null @*/Writer dot, boolean bold) throws IOException {
         dot.write("" + hashCode() + "[shape=point, width=0.15];\n");
     }
 

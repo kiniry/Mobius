@@ -136,7 +136,7 @@ public class SPVC
                 }
 
             case TagConstants.TRYCMD:
-                /* norm(A ! B) == norm(A) | (exc(A) & norm(B )
+                /* norm(A ! B) == norm(A) | (exc(A) & norm(B))
                  exc(A ! B) == exc(A) & exc(B)
                  wrong(A ! B) == wrong(A) | (exc(A) & wrong(B))
                  */

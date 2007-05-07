@@ -28,7 +28,7 @@ public class ExceptionNode extends Node {
         return strRepresentation;
     }
 
-    void printToDot(/*@ non_null @*/Writer dot) throws IOException {
+    void printToDot(/*@ non_null @*/Writer dot, boolean bold) throws IOException {
             dot.write("" + hashCode() + " [label=\"" + "RAISE" + "\"];\n");           
     }
 

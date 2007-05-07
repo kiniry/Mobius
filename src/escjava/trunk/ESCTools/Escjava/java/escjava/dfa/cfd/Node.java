@@ -81,5 +81,5 @@ public abstract class Node {
      */
     abstract public /*@ non_null */Expr computeSp(/*@ non_null */Expr pre); 
     
-    abstract void printToDot(/*@ non_null */Writer dot) throws IOException;
+    abstract void printToDot(/*@ non_null */Writer dot, boolean bold) throws IOException;
 }

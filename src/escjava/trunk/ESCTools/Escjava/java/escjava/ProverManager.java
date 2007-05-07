@@ -306,19 +306,34 @@ public class ProverManager {
   
   // timeout is given in seconds
   synchronized
-  public boolean isValid(Expr vc, int timeout)
+  public boolean isValid(Expr vc, Properties props)
   {
-      SortedProverCallback cb = new SortedProverCallback() {
-          public void processResponse(SortedProverResponse resp)
-          {
+      if (savedScope != null && status != PUSHED) push(savedScope);
+      
+      if (useSorted) {
+          SortedProverCallback cb = new SortedProverCallback() {
+              public void processResponse(SortedProverResponse resp) {}
+          };
+          start();
+          SortedProverResponse resp = sortedProver.isValid(lifter.convert(vc), cb, props);
+          
+          return resp.getTag() == SortedProverResponse.YES;
+      } else {
+          Assert.notFalse(useSimplify);
+          PrintStream ps = simplify.subProcessToStream();
+          simplify.startProve();
+          VcToString.compute(vc, ps);
+          Enumeration results = simplify.streamProve();
+          while (results.hasMoreElements()) {
+              SimplifyOutput so = (SimplifyOutput)results.nextElement();
+              //System.err.println(so.getKind());
+              if (so.getKind() == SimplifyOutput.VALID) {
+                  Assert.notFalse(!results.hasMoreElements());
+                  return true;
+              }
           }
-      };
-      
-      Properties props = new Properties();
-      props.setProperty("timeout", ""+timeout);      
-      SortedProverResponse resp = sortedProver.isValid(lifter.convert(vc), cb, props);
-      
-      return resp.getTag() == SortedProverResponse.YES;
+          return false;
+      }
   }
   
   /*
@@ -329,7 +344,7 @@ public class ProverManager {
 	  if (sortedProver != null)
 		  sortedProver.retractAssumption(1);
 	  else  if (simplify != null)
-		  simplify.sendCommand("(BG_POP)");
+		  simplify.sendCommand("\n(BG_POP)");
 	  savedScope = null;
 	  status = STARTED;
   }

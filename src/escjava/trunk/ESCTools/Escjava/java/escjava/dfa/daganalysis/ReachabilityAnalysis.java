@@ -1,41 +1,42 @@
 package escjava.dfa.daganalysis;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
 
-import java.util.List;
-import java.util.Map.Entry;
-
-import escjava.ast.EscPrettyPrint;
+import javafe.ast.Expr;
+import javafe.ast.ExprVec;
+import javafe.ast.VariableAccess;
+import javafe.util.Assert;
+import javafe.util.ErrorSet;
+import javafe.util.Location;
 import escjava.ast.ExprCmd;
 import escjava.ast.GuardedCmd;
 import escjava.ast.LabelExpr;
+import escjava.ast.NaryExpr;
 import escjava.ast.TagConstants;
 import escjava.dfa.buildcfd.GCtoCFDBuilder;
 import escjava.dfa.cfd.CFD;
 import escjava.dfa.cfd.CodeNode;
 import escjava.dfa.cfd.Node;
 import escjava.dfa.cfd.NodeList.Enumeration;
-import escjava.translate.ErrorMsg;
 import escjava.translate.GC;
 import escjava.translate.LabelData;
-
-import javafe.ast.Expr;
-import javafe.ast.PrettyPrint;
-import javafe.util.Assert;
-import javafe.util.ErrorSet;
-import javafe.util.Location;
+import escjava.translate.VcToString;
 
 /**
  * Used to sort labels such as those corresponding to postcondition
  * checks come first and otherwise are sorted by file line number;
  * also helps to extract a location---the most significant one---
  * from the label.
+ * 
+ * TODO: All these labels look horrible. Why both LabelData and ints? etc.
+ * TODO: Make static all methods that can be statics so that |this| is
+ *       not carried around.
  * 
  * @author mikolas rgrig
  */
@@ -88,6 +89,19 @@ class LabelDataUtil implements Comparator {
     }
 }
 
+/** A simple structure to associate label information to nodes. */
+class NodeAndLabel {
+    public Node node;
+    public LabelData ld;
+    public int loc;
+    public NodeAndLabel(Node n, String label) {
+        Assert.notFalse(label != null);
+        ld = LabelData.parse(label);
+        loc = LabelDataUtil.getLocation(ld);
+        node = n;
+    }
+}
+
 
 /**
  * Finds commands that are unreachable. Example:
@@ -99,24 +113,68 @@ class LabelDataUtil implements Comparator {
  *     }
  *   }
  * </tt>
- * 
- * TODO: make it parametrizable so it uses SP or WP according to the command line options.
- * Right now it uses SP (which is the default in escjava).
  */
 public class ReachabilityAnalysis {
-    
-    private static long constructTime = 0;
-    private static long getNodesTime = 0;
-    private static long spTime = 0;
-    private static long proverTime = 0;
-
-    // the control flow graph and all its nodes
+    // the control flow graph, its nodes, and those we are interested in
     private CFD graph;
-    private Set graphNodes;
+    private HashSet graphNodes;
+    private HashSet interestingNodes; // (NodeAndLabel)
 
     // strongest postconditions
     private Map spOfNode;
-
+    
+    
+    /*
+     * The DAG-to-tree transformation. Tree is an euphemism because only
+     * sharing that shrinks the size of the printed version is eliminated.
+     * 
+     * We maintain three maps
+     *   dag -> var -> tree -> size
+     * of type
+     *   NaryExpr -> VariableAccess -> NaryExpr -> Integer
+     * These are used to cache partial results. Note that some unnecessary
+     * plucking is done because of this caching. I could clear the caches
+     * between two invocations of dagToTree if I really want to keep the
+     * size to a minimum.
+     */
+    
+    // variables used for transforming the VC dag into a VC (almost-)tree
+    private HashMap dagToVarCache; // (NaryExpr->VariableAccess)
+    private HashMap varToTreeCache; // (VariableAccess->NaryExpr)
+    private HashMap treeToSizeCache; // (NaryExpr->Integer)
+    private HashMap parentsCnt; // counts parents for VC nodes (NaryExpr->Integer)
+    private HashSet seenExprs; // used to limit various DAG traversals
+    private HashSet usedVariables; // used to collect the variables used by a tree
+    private static final String NAME = "ratmpvar"; // used to name variables
+    private int varNameCnt; // to make the variable names unique
+    
+    /* When this is 1 all sharing that makes VCs bigger is eliminated.
+     * Bigger values leave some sharing in therefore resulting in slightly
+     * bigger VCs. However, they _might_ be processed quicker.
+     * TODO: perhaps remove this parameter
+     */
+    private static final int THRESHOLD = 0;
+    
+    
+    // These are used to represent the compressed graph of the labels.
+    private int labelCnt;
+    private NodeAndLabel[] labels; // identified later on by indices in this array
+    private Expr[] postconditions; // maps labels to their postconditions
+    private int[] labelState; // unknown, sat, or unsat
+    private int[] labelChildrenCnt; // used mostly during construction
+    private int[] labelParentsCnt; // used mostly during construction
+    private int[][] labelChildren;
+    private int[][] labelParents;
+    
+    // NOTE that automatic provers are incomplete and sometimes they will
+    // say invalid (interpreted here as SAT) even if the formula is actually
+    // unsatisfiable.  We'll make sure we never set the state UNSAT for
+    // situations where we don't really know. This way we wan't warn when there
+    // really isn't a problem.
+    private static final int UNKNOWN = 0; // the prover was not asked or it didn't know
+    private static final int SAT = 1;  // satisfiable, the program can reach the label
+    private static final int UNSAT = 2; // unsatifiable, we should warn
+    
     private String assertLabel(GuardedCmd gc) {
         if (gc.getTag() == TagConstants.ASSERTCMD) {
             ExprCmd ec = (ExprCmd) gc;
@@ -134,22 +192,186 @@ public class ReachabilityAnalysis {
 
     // Adds all nodes reachable from [n] (children) to [graphNodes].
     private void collectNodes(Node n) {
-        if (graphNodes.contains(n))
-            return;
+        if (graphNodes.contains(n)) return;
         graphNodes.add(n);
+        
+        String label = getLabel(n);
+        if (label != null) {
+            NodeAndLabel nl = new NodeAndLabel(n, label);
+            if (nl.loc != Location.NULL) interestingNodes.add(nl);
+        }
+        
         Enumeration c = n.getChildren().elements();
         while (c.hasMoreElements())
             collectNodes(c.nextElement());
     }
+    
+    /**
+     * This method propagagates the label state accordign to the graph structure.
+     * The complexity is O(V(V+E)). Typically the graph is sparse and the
+     * number of vertices is less than 20. So a smarter method is not needed.
+     */
+    private void propagate() {
+        int i, j, k;
+        for (i = 0; i < labelCnt; ++i) {
+            for (j = 0; j < labelCnt; ++j) if (labelState[j] == UNKNOWN) {
+                // is it SAT? (if has a SAT child whose only father it is)
+                for (k = 0; k < labelChildren[j].length && labelParents[labelChildren[j][k]].length != 1; ++k);
+                if (k != labelChildren[j].length) {
+                    labelState[j] = SAT;
+                    continue;
+                }
+                
+                // is it UNSAT? (if it has parents and all are UNSAT)
+                for (k = 0; k < labelParents[j].length && labelState[labelParents[j][k]] == UNSAT; ++k);
+                if (k != 0 && k == labelParents[j].length) 
+                    labelState[j] = UNSAT;
+            }
+        }
+    }
 
-    String getLabel(Node n) {
+    private String getLabel(Node n) {
         if (n instanceof CodeNode) {
             CodeNode cn = (CodeNode) n;
             String label = assertLabel(cn.getCode());
             return label;
         }
-
         return null;
+    }
+    
+    private int getParentsCnt(NaryExpr e) {
+        Integer i = (Integer)parentsCnt.get(e);
+        if (i == null) return 0;
+        return i.intValue();
+    }
+    
+    private void incParentsCnt(NaryExpr e) {
+        parentsCnt.put(e, new Integer(getParentsCnt(e) + 1));
+    }
+    
+    private void countParents(NaryExpr e) {
+        if (seenExprs.contains(e)) return;
+        seenExprs.add(e);
+        for (int i = 0; i < e.exprs.size(); ++i) {
+            Expr o = e.exprs.elementAt(i);
+            if (o == null || !(o instanceof NaryExpr)) continue;
+            NaryExpr c = (NaryExpr)o;
+            incParentsCnt(c);
+            countParents(c);
+        }
+    }
+    
+    /**
+     * Gets (an approximation of) the print size of a tree.
+     */
+    private int getSize(NaryExpr tree) {
+        Integer s = (Integer)treeToSizeCache.get(tree);
+        if (s != null) return s.intValue();
+        int sz = 1;
+        for (int i = 0; i < tree.exprs.size(); ++i) {
+            Expr e = tree.exprs.elementAt(i);
+            if (e instanceof NaryExpr) 
+                sz += getSize((NaryExpr)e);
+            else 
+                ++sz;
+        }
+        treeToSizeCache.put(tree, new Integer(sz));
+        return sz;
+    }
+    
+    /**
+     * Transforms a DAG into an (almost-)tree by eliminating sharing of
+     * big structures, where `big' means that the printed version would be
+     * bigger with sharing than without.
+     * 
+     * This function is memoized using the maps dagToVarCache and
+     * varToTreeCache.
+     * 
+     * This function adds the variables used in plucking to the 
+     * pluckedVars set.
+     * 
+     * It assumes that dagParentsCnt maps |e| and all NaryExpr-essions
+     * reachable from |e| to the number of parents they have.
+     * 
+     * TODO: review and maybe rewrite
+     */
+    private NaryExpr recDagToTree(NaryExpr dag) {
+        VariableAccess v = (VariableAccess)dagToVarCache.get(dag);
+        if (v != null) return (NaryExpr)varToTreeCache.get(v);
+        
+        ExprVec ncv = ExprVec.make(); // new children vector
+        for (int i = 0; i < dag.exprs.size(); ++i) {
+            Expr e = dag.exprs.elementAt(i);
+            if (!(e instanceof NaryExpr)) {
+                ncv.addElement(e);
+                continue;
+            }
+            NaryExpr c = (NaryExpr)e; // child
+            NaryExpr nc = recDagToTree(c); // new (plucked) child
+            int ncsz = getSize(nc); // print size of nc
+            int ncp = getParentsCnt(c); // parents count
+            if (ncsz * (ncp - 1) <= ncp + THRESHOLD) {
+                ncv.addElement(nc);
+                continue;
+            }
+            v = (VariableAccess)dagToVarCache.get(c);
+            ncv.addElement(v);
+        }
+        
+        // put the result in cache so we don't work twice
+        NaryExpr tree = NaryExpr.make(dag.sloc, dag.eloc, dag.op, dag.methodName, ncv);
+        v = GC.makeVar(NAME + varNameCnt++);
+        dagToVarCache.put(dag, v);
+        varToTreeCache.put(v, tree);
+        
+        return tree;
+    }
+    
+    private void recGetUsedVars(NaryExpr e) {
+        if (seenExprs.contains(e)) return;
+        seenExprs.add(e);
+        for (int i = 0; i < e.exprs.size(); ++i) {
+            Expr c = e.exprs.elementAt(i);
+            if (c instanceof NaryExpr) recGetUsedVars((NaryExpr)c);
+            else if (c instanceof VariableAccess) {
+                NaryExpr tree = (NaryExpr)varToTreeCache.get(c);
+                if (tree != null) {
+                    usedVariables.add(c);
+                    recGetUsedVars(tree);
+                }
+            }
+        }
+    }
+    
+    private void getUsedVars(NaryExpr e) {
+        //TimeUtil.start("get_used_vars_time");
+        seenExprs = new HashSet();
+        usedVariables = new HashSet();
+        recGetUsedVars(e);
+        //TimeUtil.stoprep("get_used_vars_time");
+    }
+    
+    private NaryExpr dagToTree(NaryExpr dag) {
+        TimeUtil.start("dag_to_tree_time");
+        // count the parents for each node reachable from dag
+        parentsCnt = new HashMap();
+        seenExprs = new HashSet(); countParents(dag);
+        
+        // do the plucking
+        NaryExpr ne = recDagToTree(dag);
+        
+        // get the used variables and add their definitions
+        getUsedVars(ne);
+        ExprVec exprs = ExprVec.make();
+        Iterator it = usedVariables.iterator();
+        while (it.hasNext()) {
+            VariableAccess v = (VariableAccess)it.next();
+            Expr def = (Expr)varToTreeCache.get(v);
+            exprs.addElement(GC.equiv(v, def));
+        }
+        exprs.addElement(ne);
+        TimeUtil.stoprep("dag_to_tree_time");
+        return (NaryExpr)GC.and(exprs);
     }
 
     // Compute the strongest postcondition (SP) of [n].
@@ -159,56 +381,68 @@ public class ReachabilityAnalysis {
 
         // compute precondition for [n] as a disjunction of its preconditions
         Enumeration p = n.getParents().elements();
-        Expr pre = GC.falselit;
-        while (p.hasMoreElements()) 
-            pre = GC.or(pre, spDfs(p.nextElement()));
+        Expr pre = null;
+        while (p.hasMoreElements()) {
+            Expr onePre = spDfs(p.nextElement());
+            if (pre == null) pre = onePre;
+            else pre = GC.or(pre, onePre);
+        }
 
         // compute the sp
         Expr post = n.computeSp(pre);
-
+        
         // return and cache
         spOfNode.put(n, post);
         return post;
     }
 
     private void internalAnalyze(GuardedCmd gc) {
+        // initialize the caches used by the DAG-to-(almost-)tree translation
+        dagToVarCache = new HashMap();
+        varToTreeCache = new HashMap();
+        treeToSizeCache = new HashMap();
+        
         // construct the graph, assumming that gc doesn't contain VARIN
-        constructTime = System.currentTimeMillis();
         GCtoCFDBuilder builder = new GCtoCFDBuilder();
         graph = builder.constructGraph(gc, null);
         if (graph.isEmpty()) return; // nothing to check
-        constructTime = System.currentTimeMillis() - constructTime;
 
         // DBG
         //System.out.println("Constructed graph: " + graph);
-        graph.printStats();
+        //graph.printStats();
          
         // do DFS
-        getNodesTime = System.currentTimeMillis();
         spOfNode = new HashMap();
         graphNodes = new HashSet();
+        interestingNodes = new HashSet();
         collectNodes(graph.getInitNode());
-        getNodesTime = System.currentTimeMillis() - getNodesTime;
 
-        // set the initial node always reachable
-        spTime = System.currentTimeMillis();
-        spOfNode.put(graph.getInitNode(), (Expr) GC.truelit);
+        // set the initial node postcondition
+        Node init = graph.getInitNode();
+        spOfNode.put(init, init.computeSp(GC.truelit));
         Iterator nodes = graphNodes.iterator();
         while (nodes.hasNext()) spDfs((Node)nodes.next());
-        spTime = System.currentTimeMillis() - spTime;
         
-        // check whether the exit code has an unsatisfiable postcondition
-        proverTime = System.currentTimeMillis();
-        Expr spOfExit = (Expr)spOfNode.get(graph.getExitNode());
-        if (Simplifier.isFalse(spOfExit))
-            ErrorSet.error("The method never terminates.");
-        proverTime = System.currentTimeMillis() - proverTime;
-        
-        // report times
-        System.err.println("construct_time " + constructTime);
-        System.err.println("get_nodes_time " + getNodesTime);
-        System.err.println("sp_time " + spTime);
-        System.err.println("prover_time " + proverTime);
+        // check the interesting nodes and report the possible errors
+        // we transform the dag to tree before calling the prover
+        Iterator it = interestingNodes.iterator();
+        ExprVec all = ExprVec.make();
+        while (it.hasNext()) {
+            NodeAndLabel nl = (NodeAndLabel)it.next();
+            Expr sp = (Expr)spOfNode.get(nl.node);
+            all.addElement(sp);
+            if (sp instanceof NaryExpr) sp = dagToTree((NaryExpr)sp);
+            if (Simplifier.isFalse(sp)) reportUnreachable(nl);
+        }
+        NaryExpr allq = (NaryExpr)GC.and(all);
+        allq = dagToTree(allq);
+        TimeUtil.start("all_query");
+        if (!Simplifier.isFalse(allq))
+            System.out.println("All OK.");
+        TimeUtil.stoprep("all_query");
+        System.err.print("nodes " + graphNodes.size() + " ");
+        System.err.print("labels " + interestingNodes.size() + " ");
+        System.err.println("improve " + 1.0 * graphNodes.size() / interestingNodes.size());
     }
     
     private static final String POST_WARN =
@@ -222,13 +456,11 @@ public class ReachabilityAnalysis {
      * We do not report @unreachable as being unreached. We skip
      * labels with no location information.
      */
-    private void reportUnreachableLabel(LabelData ld) {
-        String suffix = " (" + ld.getMsgShort() + ")";
-        int loc = LabelDataUtil.getLocation(ld);
+    private void reportUnreachable(NodeAndLabel nl) {
+        String suffix = " (" + nl.ld.getMsgShort() + ")";
+        Assert.notFalse(nl.loc != Location.NULL);
         
-        if (loc == Location.NULL) return;
-        
-        switch (ld.getMsgTag()) {
+        switch (nl.ld.getMsgTag()) {
         case TagConstants.CHKCODEREACHABILITY:
             return; // the user wants this to be unreachable so don't report
         case TagConstants.CHKPOSTCONDITION:
@@ -240,11 +472,11 @@ public class ReachabilityAnalysis {
         case TagConstants.CHKEXPRDEFINEDNESS:
         case TagConstants.CHKEXPRDEFNORMPOST:
         case TagConstants.CHKEXPRDEFEXCEPOST:
-            ErrorSet.warning(loc, ASSERT_WARN + suffix);
+            ErrorSet.warning(nl.loc, ASSERT_WARN + suffix);
             break;
         default:
             // we assume it's code (for now)
-            ErrorSet.warning(loc, CODE_WARN + suffix);
+            ErrorSet.warning(nl.loc, CODE_WARN + suffix);
         }
     }
 

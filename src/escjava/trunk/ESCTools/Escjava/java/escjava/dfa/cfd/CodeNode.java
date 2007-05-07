@@ -46,15 +46,17 @@ public class CodeNode extends Node {
      */
     public /*@ non_null @*/Expr computeSp(/*@ non_null @*/Expr pre) {
         int t = code.getTag();
-          
-        Assert.notFalse(
-                t == TagConstants.ASSERTCMD || t == TagConstants.ASSUMECMD || t == TagConstants.SKIPCMD, 
-                "The command associated to this code is not supported by this method (" + this.getCode() + ").");
-       
-        if (GC.isFalse(pre)) return GC.falselit;
-        Expr post =  SPVC.computeN(code);
-        Expr preAndPost = GC.and(pre, post);
-        return preAndPost;
+        
+        switch (t) {
+        case TagConstants.ASSERTCMD:
+        case TagConstants.ASSUMECMD:
+            return GC.and(pre,((ExprCmd)code).pred);
+        case TagConstants.SKIPCMD:
+            return pre;
+        default:
+            Assert.fail("The command associated to this code is not supported by this method (" + this.getCode() + ").");
+            return null;
+        }
     }
     
     public /*@ non_null @*/String toString() {
@@ -72,8 +74,9 @@ public class CodeNode extends Node {
             return this.code.toString();
     }
     
-     void printToDot(/*@ non_null @*/Writer dot) throws IOException {
-         dot.write("" + hashCode() + " [label=\"" + getCodeString() + "\"];\n");      
+     void printToDot(/*@ non_null @*/Writer dot, boolean bold) throws IOException {
+         dot.write("" + hashCode() + " [label=\"" + getCodeString() + "\"" +
+               (bold?",style=bold":"")  +"];\n");      
     }
 
 
