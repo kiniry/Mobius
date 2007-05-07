@@ -5,6 +5,7 @@ import java.util.Properties;
 
 import javafe.util.Assert;
 import javafe.util.ErrorSet;
+import javafe.util.FatalError;
 import javafe.util.Info;
 
 import escjava.backpred.BackPred;
@@ -15,6 +16,7 @@ import escjava.prover.Simplify;
 import escjava.prover.SimplifyOutput;
 import escjava.prover.SimplifyResult;
 import escjava.prover.SubProcess;
+import escjava.prover.SubProcess.Died;
 import escjava.sortedProver.CounterExampleResponse;
 import escjava.sortedProver.EscNodeBuilder;
 import escjava.sortedProver.NodeBuilder;
@@ -100,8 +102,11 @@ public class Fx7Prover extends SortedProver
 	
 	void send(String s)
 	{
-		if (Info.on)
-			Info.out("[calling fx7 with:\n" + s + "\n]");
+		if (Info.on) {
+			Info.out("[calling fx7 with:\n");
+			System.out.print(s);
+			Info.out("]");
+		}
 		fx7.send(s);
 	}
 
@@ -169,7 +174,29 @@ public class Fx7Prover extends SortedProver
 			return new SortedProverResponse(SortedProverResponse.NO);
 	    } else if (ans.startsWith("ANSWER: UNSAT")) {
 	    	return new SortedProverResponse(SortedProverResponse.YES);
+	    } else if (ans.startsWith("ANSWER: TIMEOUT")) {
+	    	return new SortedProverResponse(SortedProverResponse.TIMEOUT);
 	    } else {
+	    	try {
+	    		send("(PING)");
+	    		boolean ok = false;
+	    		while (true) {
+	    			String line = readLine();
+	    			if (line.equals("EOF")) {
+	    				break;
+	    			} else if (line.startsWith("ANSWER: PONG")) {
+	    				ok = true;
+	    				break;
+	    			} else {
+	    				if (ans.length() < 10000)
+	    					ans += line + "\n";
+	    			}
+	    		}
+	    	} catch (FatalError e) {	    			    		
+	    	}
+	    	
+	    	// TODO if ok is set, then there is probably no need to restart the prover
+	    	
 	    	ErrorSet.fatal("got some evil response from fx7: " + ans);
 	    	return new SortedProverResponse(SortedProverResponse.FAIL);
 	    }

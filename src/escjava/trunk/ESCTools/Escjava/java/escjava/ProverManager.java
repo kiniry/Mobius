@@ -16,6 +16,8 @@ import javafe.ast.Expr;
 import javafe.util.Assert;
 import javafe.util.ErrorSet;
 import javafe.util.FatalError;
+import javafe.util.Info;
+
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -272,7 +274,16 @@ public class ProverManager {
     			  }
     		  };
     		  
-    		  SortedProverResponse resp = sortedProver.isValid(lifter.convert(vc), cb, new Properties());
+    		  Info.out ("[running lifter]");
+    		  SPred pred = lifter.convert(vc);
+    		 
+    		  Info.out ("[calling prover]");
+    		  SortedProverResponse resp = sortedProver.isValid(pred, cb, new Properties());
+    		  Info.out ("[prover done]");
+    		  
+              if (resp.getTag() == SortedProverResponse.FAIL)
+            	  died();
+
     		  responses.add(new SimplifyOutput(
     				  resp.getTag() == SortedProverResponse.YES ? SimplifyOutput.VALID
     						  : SimplifyOutput.INVALID));
@@ -316,6 +327,8 @@ public class ProverManager {
           };
           start();
           SortedProverResponse resp = sortedProver.isValid(lifter.convert(vc), cb, props);
+          if (resp.getTag() == SortedProverResponse.FAIL)
+        	  died();
           
           return resp.getTag() == SortedProverResponse.YES;
       } else {
