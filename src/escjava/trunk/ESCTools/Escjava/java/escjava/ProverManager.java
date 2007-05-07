@@ -258,6 +258,7 @@ public class ProverManager {
       if (listener != null) listener.stateChanged(2);
       try {
     	  if (useSorted) {
+    		      		  
     		  final ArrayList responses = new ArrayList();
     		  SortedProverCallback cb = new SortedProverCallback() {
     			  public void processResponse(SortedProverResponse resp)
@@ -274,12 +275,7 @@ public class ProverManager {
     			  }
     		  };
     		  
-    		  Info.out ("[running lifter]");
-    		  SPred pred = lifter.convert(vc);
-    		 
-    		  Info.out ("[calling prover]");
-    		  SortedProverResponse resp = sortedProver.isValid(pred, cb, new Properties());
-    		  Info.out ("[prover done]");
+    		  SortedProverResponse resp = liftAndProve(vc, cb, new Properties());
     		  
               if (resp.getTag() == SortedProverResponse.FAIL)
             	  died();
@@ -315,6 +311,34 @@ public class ProverManager {
     }
   }
   
+  static int cnt = 0;
+
+  private static SortedProverResponse liftAndProve(Expr vc, SortedProverCallback cb, Properties props)
+  {
+	  //long startTime = Main.currentTime();
+	  Info.out ("[running lifter]");
+	  
+	  //System.err.println("[pre-lifter time " + Main.timeUsed(startTime) + "]");
+	  //Runtime.getRuntime().gc();
+	  //System.err.println("[pre-lifter, after GC time " + Main.timeUsed(startTime) + "]");
+	  SPred pred = lifter.convert(vc);
+	  
+	  //System.err.println("[lifter time " + Main.timeUsed(startTime) + "]");
+	  
+	  Info.out ("[calling prover]");
+	  SortedProverResponse resp = sortedProver.isValid(pred, cb, props);
+	  Info.out ("[prover done]");
+	  
+	  //System.err.println("[prover time " + Main.timeUsed(startTime) + "]");
+	  pred = null;
+	  //Runtime.getRuntime().gc();
+	  //System.err.println("[after gc " + Main.timeUsed(startTime) + "]");
+	  
+	  //if (cnt++ > 2) System.exit(0);
+	  
+	  return resp;
+  }
+  
   // timeout is given in seconds
   synchronized
   public boolean isValid(Expr vc, Properties props)
@@ -326,7 +350,7 @@ public class ProverManager {
               public void processResponse(SortedProverResponse resp) {}
           };
           start();
-          SortedProverResponse resp = sortedProver.isValid(lifter.convert(vc), cb, props);
+          SortedProverResponse resp = liftAndProve(vc, cb, props); 
           if (resp.getTag() == SortedProverResponse.FAIL)
         	  died();
           

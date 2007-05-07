@@ -57,8 +57,8 @@ public abstract class NodeBuilder
 		"funASR32", "funUSR32", "funSL32", "funASR64", 
 		"funUSR64", "funSL64", "funNEG"};
 	
-	private Hashtable symbolsById = new Hashtable();
-	private Hashtable sortsByName = new Hashtable();
+	//private Hashtable symbolsById = new Hashtable();
+	//private Hashtable sortsByName = new Hashtable();
 	private int currentSymbol = 1;
 	
 	public final Sort sortPred   = registerSort("PRED",   null);
@@ -86,7 +86,7 @@ public abstract class NodeBuilder
 		{
 			this.name = name;
 			this.id = currentSymbol++;
-			symbolsById.put(new Integer(id), this);
+			//symbolsById.put(new Integer(id), this);
 		}
 		public boolean equals(Object o) {
 			if(this == o)
@@ -229,7 +229,7 @@ public abstract class NodeBuilder
 	public Sort registerSort(String name, /*@ nullable @*/Sort superSort)
 	{
 		Sort s = new Sort(name, superSort, null, null);
-		sortsByName.put(name, s);
+		//sortsByName.put(name, s);
 		return s;
 	}	
 	
@@ -238,7 +238,7 @@ public abstract class NodeBuilder
 	{
 		String name = superSort.name + "[" + mapFrom.name + "," + mapTo.name + "]";
 		Sort s = new Sort(name, superSort, mapFrom, mapTo);
-		sortsByName.put(name, s);
+		//sortsByName.put(name, s);
 		return s;
 	}
 	

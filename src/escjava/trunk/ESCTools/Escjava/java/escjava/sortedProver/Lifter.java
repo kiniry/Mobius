@@ -81,7 +81,9 @@ public class Lifter extends EscNodeBuilder
 	public SPred convert(Expr main) 
 	{
 		newMethod();
-		return doConvert(transform(main));
+		SPred res = doConvert(transform(main));
+		symbolTypes = null;
+		return res;
 	}
 	
 	public Lifter(EscNodeBuilder b)
