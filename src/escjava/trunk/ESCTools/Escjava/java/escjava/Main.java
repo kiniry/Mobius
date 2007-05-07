@@ -1020,7 +1020,7 @@ public class Main extends javafe.SrcTool
         // Process Simplify's output
         String status = "unexpectedly missing Simplify output";
         try {
-            int stat = Status.STATICCHECKED_OK;//doProving(vc, r, directTargets, null);
+            int stat = doProving(vc, r, directTargets, null);
             switch (stat) {
             case Status.STATICCHECKED_OK:
                 status = "passed";
