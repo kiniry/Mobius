@@ -94,6 +94,11 @@ class NodeAndLabel {
     public Node node;
     public LabelData ld;
     public int loc;
+    public NodeAndLabel(Node n) {
+        node = n;
+        ld = null;
+        loc = Location.NULL;
+    }
     public NodeAndLabel(Node n, String label) {
         Assert.notFalse(label != null);
         ld = LabelData.parse(label);
@@ -118,7 +123,6 @@ public class ReachabilityAnalysis {
     // the control flow graph, its nodes, and those we are interested in
     private CFD graph;
     private HashSet graphNodes;
-    private HashSet interestingNodes; // (NodeAndLabel)
 
     // strongest postconditions
     private Map spOfNode;
@@ -157,14 +161,29 @@ public class ReachabilityAnalysis {
     
     
     // These are used to represent the compressed graph of the labels.
-    private int labelCnt;
+    private HashMap/*<Node,Integer>*/ nodeToLabelCache;
     private NodeAndLabel[] labels; // identified later on by indices in this array
     private Expr[] postconditions; // maps labels to their postconditions
     private int[] labelState; // unknown, sat, or unsat
-    private int[] labelChildrenCnt; // used mostly during construction
-    private int[] labelParentsCnt; // used mostly during construction
     private int[][] labelChildren;
     private int[][] labelParents;
+    private int[] dominator; // the immediate dominators
+    private int[][] dominated; // the nodes immediately dominated
+    private int[] dominatedCnt; // used during the construction of the dominator tree
+    
+    // used by various DFS-like algorithms
+    private boolean[] labelTag; // is thelabel processed
+    private int[] labelsDfs; // dfs order of the labels
+    private int[] invLabelsDfs; // inverse of labelsDfs
+    private int labelOrder; // used during construction
+
+    // Auxiliar information used during the construction of the above
+    // NOTE: in a sane programming language I would just use these but
+    //       I just hate casting and (un)boxing stuff all over the place.
+    private ArrayList/*<NodeAndLabel>*/ labelsTmp;
+    private ArrayList/*<HashSet<Integer>>*/ labelParentsTmp;
+    private ArrayList/*<HashSet<Integer>>*/ labelChildrenTmp;
+    
     
     // NOTE that automatic provers are incomplete and sometimes they will
     // say invalid (interpreted here as SAT) even if the formula is actually
@@ -189,45 +208,178 @@ public class ReachabilityAnalysis {
         }
         return null;
     }
-
-    // Adds all nodes reachable from [n] (children) to [graphNodes].
-    private void collectNodes(Node n) {
-        if (graphNodes.contains(n)) return;
-        graphNodes.add(n);
+    
+    /**
+     * Returns -1 if |n| is not an interesting node. Otherwise it
+     * returns its index. Uses |nodeToLabelCache| to cache the results. 
+     */
+    private int nodeToLabelIdx(Node n) {
+        Integer idx = (Integer)nodeToLabelCache.get(n);
+        if (idx != null) return idx.intValue();
         
+        int result = -1;
         String label = getLabel(n);
         if (label != null) {
             NodeAndLabel nl = new NodeAndLabel(n, label);
-            if (nl.loc != Location.NULL) interestingNodes.add(nl);
+            if (nl.loc != Location.NULL) {
+                result = labelsTmp.size();
+                labelsTmp.add(nl);
+            }
         }
+        nodeToLabelCache.put(n, new Integer(result));
+        labelParentsTmp.add(new HashSet());
+        labelChildrenTmp.add(new HashSet());
+        return result;
+    }
+
+    private void recComputeDfsOrder(int l) {
+        if (labelTag[l]) return;
+        labelTag[l] = true;
+        labelsDfs[labelOrder] = l;
+        invLabelsDfs[l] = labelOrder++;
+        for (int i = 0; i < labelChildren[l].length; ++i)
+            recComputeDfsOrder(labelChildren[l][i]);
+    }
+    
+    private void computeDfsOrder() {
+        labelsDfs = new int[labels.length];
+        invLabelsDfs = new int[labels.length];
+        labelTag = new boolean[labels.length];
+        labelOrder = 0;
+        recComputeDfsOrder(0);
+    }
+    
+    // Adds all nodes reachable from [n] (children) to [graphNodes].
+    // Also collects the interesting nodes.
+    private void recCollectNodes(Node n, int labeledParent) {
+        int thisLabel = nodeToLabelIdx(n);
+        if (thisLabel != -1) {
+            if (graphNodes.contains(n)) return;
+            labeledParent = thisLabel;
+        }
+        graphNodes.add(n);
+        HashSet/*<Integer>*/ children = (HashSet)labelChildrenTmp.get(labeledParent);
         
         Enumeration c = n.getChildren().elements();
-        while (c.hasMoreElements())
-            collectNodes(c.nextElement());
+        while (c.hasMoreElements()) {
+            Node child = c.nextElement();
+            int childLabel = nodeToLabelIdx(child);
+            if (childLabel != -1) {
+                HashSet/*<Integer>*/ parents = (HashSet)labelParentsTmp.get(childLabel);
+                parents.add(new Integer(labeledParent));
+                children.add(new Integer(childLabel));
+            }
+            recCollectNodes(child, labeledParent);
+        }
+    }
+    
+    private int[] toIntArray(HashSet/*<Integer>*/ al) {
+        int[] result = new int[al.size()];
+        Iterator it = al.iterator();
+        int i = 0;
+        while (it.hasNext())
+            result[i++] = ((Integer)it.next()).intValue(); 
+        return result;
     }
     
     /**
-     * This method propagagates the label state accordign to the graph structure.
-     * The complexity is O(V(V+E)). Typically the graph is sparse and the
-     * number of vertices is less than 20. So a smarter method is not needed.
+     * Collects all nodes reachable from the initial node of |graph| into
+     * |graphNodes|. It also constructs a smaller graphs that contains only
+     * the labeled (i.e., interesting) nodes.
      */
-    private void propagate() {
-        int i, j, k;
-        for (i = 0; i < labelCnt; ++i) {
-            for (j = 0; j < labelCnt; ++j) if (labelState[j] == UNKNOWN) {
-                // is it SAT? (if has a SAT child whose only father it is)
-                for (k = 0; k < labelChildren[j].length && labelParents[labelChildren[j][k]].length != 1; ++k);
-                if (k != labelChildren[j].length) {
-                    labelState[j] = SAT;
-                    continue;
+    private void collectNodes() {
+        graphNodes = new HashSet();
+        nodeToLabelCache = new HashMap/*<Node,Integer>*/();
+        labelsTmp = new ArrayList();
+        labelParentsTmp = new ArrayList();
+        labelChildrenTmp = new ArrayList();
+        Node init = graph.getInitNode();
+        String label = getLabel(init);
+        NodeAndLabel nl = label == null ? 
+            new NodeAndLabel(init) : new NodeAndLabel(init, label);
+        labelsTmp.add(nl);
+        nodeToLabelCache.put(init, new Integer(0));
+        labelParentsTmp.add(new HashSet());
+        labelChildrenTmp.add(new HashSet());
+        recCollectNodes(init, 0);
+        
+        // Conver ArrayLists to simple arrays. (I wouldn't do this in a later
+        // version of Java.)
+        labels = (NodeAndLabel[])labelsTmp.toArray(new NodeAndLabel[0]);
+        postconditions = new Expr[labels.length];
+        labelParents = new int[labels.length][];
+        labelChildren = new int[labels.length][];
+        for (int i = 0; i < labels.length; ++i) {
+            labelParents[i] = toIntArray((HashSet)labelParentsTmp.get(i));
+            labelChildren[i] = toIntArray((HashSet)labelChildrenTmp.get(i));
+        }
+        
+        // These are not needed anymore, don't waste memory
+        labelsTmp = null;
+        labelParentsTmp = null;
+        labelChildrenTmp = null;
+        
+        // Prepare for later
+        labelState = new int[labels.length];
+        computeDfsOrder();
+        computeDominators();
+        printLabelsAndDominators();
+    }
+    
+    private void propagateUnsat(int x) {
+        if (labelState[x] != UNKNOWN) return;
+        System.err.println("unsat " + x);
+        labelState[x] = UNSAT;
+        for (int i = 0; i < dominated[x].length; ++i)
+            propagateUnsat(dominated[x][i]);
+    }
+    
+    private void propagateSat(int x) {
+        if (labelState[x] != UNKNOWN) return;
+        System.err.println("sat " + x);
+        labelState[x] = SAT;
+        propagateSat(dominator[x]);
+    }
+    
+    private void computeDominators() {
+        dominator = new int[labels.length];
+        for (int i = 0; i < labels.length; ++i) {
+            if (labelParents[i].length == 0) 
+                dominator[i] = 0;
+            else 
+                dominator[i] = labelParents[i][0];
+        }
+        for (int i = 0; i < labels.length; ++i) {
+            for (int j = 0; j < labelParents[i].length; ++j) {
+                int d = labelParents[i][j];
+                while (dominator[i] != d) {
+                    if (invLabelsDfs[dominator[i]] < invLabelsDfs[d])
+                        d = dominator[d];
+                    else
+                        dominator[i] = dominator[dominator[i]];
                 }
-                
-                // is it UNSAT? (if it has parents and all are UNSAT)
-                for (k = 0; k < labelParents[j].length && labelState[labelParents[j][k]] == UNSAT; ++k);
-                if (k != 0 && k == labelParents[j].length) 
-                    labelState[j] = UNSAT;
             }
         }
+        dominated = new int[labels.length][];
+        dominatedCnt = new int[labels.length];
+        for (int i = 0; i < labels.length; ++i)
+            ++dominatedCnt[dominator[i]];
+        for (int i = 0; i < labels.length; ++i) {
+            dominated[i] = new int[dominatedCnt[i]];
+            dominatedCnt[i] = 0;
+        }
+        for (int i = 0; i < labels.length; ++i)
+            dominated[dominator[i]][dominatedCnt[dominator[i]]++] = i;
+    }
+    
+    private void printLabelsAndDominators() {
+        System.out.println("digraph x {");
+        for (int i = 0; i < labels.length; ++i) {
+            for (int j = 0; j < labelChildren[i].length; ++j)
+                System.out.println("" + i + "->" + labelChildren[i][j]);
+            System.out.println("" + i + "->" + dominator[i] + "[color=blue]");
+        }
+        System.out.println("}");
     }
 
     private String getLabel(Node n) {
@@ -391,8 +543,10 @@ public class ReachabilityAnalysis {
         // compute the sp
         Expr post = n.computeSp(pre);
         
-        // return and cache
+        // cache and store if interesting
         spOfNode.put(n, post);
+        int idx = nodeToLabelIdx(n);
+        if (idx != -1) postconditions[idx] = post;
         return post;
     }
 
@@ -409,40 +563,30 @@ public class ReachabilityAnalysis {
 
         // DBG
         //System.out.println("Constructed graph: " + graph);
-        //graph.printStats();
+        graph.printStats();
          
         // do DFS
+        collectNodes();
         spOfNode = new HashMap();
-        graphNodes = new HashSet();
-        interestingNodes = new HashSet();
-        collectNodes(graph.getInitNode());
-
-        // set the initial node postcondition
         Node init = graph.getInitNode();
-        spOfNode.put(init, init.computeSp(GC.truelit));
+        postconditions[0] = init.computeSp(GC.truelit);
+        spOfNode.put(init, postconditions[0]);
         Iterator nodes = graphNodes.iterator();
         while (nodes.hasNext()) spDfs((Node)nodes.next());
         
         // check the interesting nodes and report the possible errors
         // we transform the dag to tree before calling the prover
-        Iterator it = interestingNodes.iterator();
-        ExprVec all = ExprVec.make();
-        while (it.hasNext()) {
-            NodeAndLabel nl = (NodeAndLabel)it.next();
-            Expr sp = (Expr)spOfNode.get(nl.node);
-            all.addElement(sp);
-            if (sp instanceof NaryExpr) sp = dagToTree((NaryExpr)sp);
-            if (Simplifier.isFalse(sp)) reportUnreachable(nl);
+        for (int i = labels.length - 1; i >= 0; --i) if (labelState[i] == UNKNOWN) {
+            if (postconditions[i] instanceof NaryExpr)
+                postconditions[i] = dagToTree((NaryExpr)postconditions[i]);
+            if (Simplifier.isFalse(postconditions[i]))
+                propagateUnsat(i);
+            else
+                propagateSat(i);
         }
-        NaryExpr allq = (NaryExpr)GC.and(all);
-        allq = dagToTree(allq);
-        TimeUtil.start("all_query");
-        if (!Simplifier.isFalse(allq))
-            System.out.println("All OK.");
-        TimeUtil.stoprep("all_query");
-        System.err.print("nodes " + graphNodes.size() + " ");
-        System.err.print("labels " + interestingNodes.size() + " ");
-        System.err.println("improve " + 1.0 * graphNodes.size() / interestingNodes.size());
+        
+        for (int i = 0; i < labels.length; ++i) if (labelState[i] == UNSAT)
+            reportUnreachable(labels[i]);
     }
     
     private static final String POST_WARN =
