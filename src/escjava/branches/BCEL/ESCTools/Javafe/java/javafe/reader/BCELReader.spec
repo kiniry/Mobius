@@ -735,27 +735,7 @@ class BCELReader extends Reader {
       // @ requires stream != null;
       // @ ensures \nonnullelements(\result);
       // @ ensures \typeof(\result)==\type(TypeName[]);
-      private TypeName[] parseTypeNames() throws ClassFormatError, ClassNotFoundException {
-         JavaClass[] interfaces = javaClass.getInterfaces();
-         int count = interfaces.length;
-         TypeName[] names = new TypeName[count];
-   
-         for (int i = 0; i < count; i++) {
-            int index = interfaces[i].getClassNameIndex();
-   
-            if (index >= constants.length)
-               throw new ClassFormatError("unknown constant");
-   
-            Object constant = constants[index];
-   
-            if (!(constant instanceof TypeName))
-               throw new ClassFormatError("not a class constant");
-   
-            names[i] = (TypeName) constant;
-         }
-   
-         return names;
-      }
+      protected TypeName[] parseTypeNames() throws ClassFormatError, ClassNotFoundException;
    
       /**
        * Construct a vector of formal parameters from a method signature.
@@ -767,18 +747,7 @@ class BCELReader extends Reader {
       // @ requires signature != null;
       // @ ensures \nonnullelements(\result);
       // @ ensures \typeof(\result) == \type(FormalParaDecl[]);
-      private FormalParaDecl[] makeFormals(MethodSignature signature) {
-         int length = signature.countParameters();
-         FormalParaDecl[] formals = new FormalParaDecl[length];
-   
-         for (int i = 0; i < length; i++) {
-            Identifier id = Identifier.intern("arg" + i);
-            formals[i] = FormalParaDecl
-                  .make(0, null, id, signature.parameterAt(i), classLocation);
-         }
-   
-         return formals;
-      }
+      protected FormalParaDecl[] makeFormals(MethodSignature signature);
    
       /* -- private class methods ---------------------------------------------- */
    
