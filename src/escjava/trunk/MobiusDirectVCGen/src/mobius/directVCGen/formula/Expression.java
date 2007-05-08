@@ -15,7 +15,12 @@ public class Expression {
 	/** counter to create anonymous variables */
 	private static int [] varCounters = {0, 0, 0, 0, 0};
 	public static String result = "\\result";
+	
+	public static String oldPrefix = "\\pre_";
 
+	public static String old(String s){
+		return oldPrefix + s;
+	}
 
 	public static QuantVariable var(String str) {
 		return Formula.lf.mkQuantVariable(str, Formula.sort);

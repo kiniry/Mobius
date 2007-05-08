@@ -29,6 +29,7 @@ import javafe.ast.InstanceOfExpr;
 import javafe.ast.LiteralExpr;
 import javafe.ast.ModifierPragma;
 import javafe.ast.Stmt;
+import javafe.ast.ThisExpr;
 import javafe.ast.VarDeclStmt;
 import javafe.ast.VariableAccess;
 import javafe.ast.WhileStmt;
@@ -326,7 +327,7 @@ public class JmlExprToFormula {
          if (tag == TagConstants.DOUBLELIT)  return value instanceof Double;
          if (tag == TagConstants.STRINGLIT)  return value instanceof String;
 	 */
-	public Object lit(LiteralExpr x, Object o) {
+	public Object literal(LiteralExpr x, Object o) {
 		switch (x.getTag())
 		{
 		case TagConstants.BOOLEANLIT: 
@@ -357,7 +358,7 @@ public class JmlExprToFormula {
 	}
 
 	
-	public Object res(ResExpr x, Object o) {
+	public Object resultLiteral(ResExpr x, Object o) {
 		return ((Properties) o).get("result");
 	}
 
@@ -366,7 +367,7 @@ public class JmlExprToFormula {
 		 Boolean predProp = (Boolean) ((Properties)o).get("pred");
 		 
 		 String id = (String) x.id.toString();
-		 if(oldProp.booleanValue()) id += "Pre"; 
+		 if(oldProp.booleanValue()) id = Expression.old(id); 
 		 
 		 Term res = Expression.rvar(id, Type.typeToSort((javafe.ast.Type) x.getDecorations()[1]));
 		 if (predProp.booleanValue() && res.getSort() == Bool.sort)
@@ -379,7 +380,7 @@ public class JmlExprToFormula {
 		 Boolean predProp = (Boolean) ((Properties)o).get("pred");
 		 
 		 String id = (String) x.id.toString();
-		 if(oldProp.booleanValue()) id += "Pre"; 
+		 if(oldProp.booleanValue()) id = Expression.old(id); 
 		 
 		 Term res = Expression.rvar(id, Type.typeToSort(x.type));
 		 if (predProp.booleanValue() && res.getSort() == Bool.sort)
@@ -406,76 +407,8 @@ public class JmlExprToFormula {
 		 return res;
 	}
 
-	public void blockStmt(BlockStmt x, Object o) {
-	    Term t=null;
-		boolean interesting;
-		Vector<AAnnotation> annos = new Vector<AAnnotation>();
-		Term inv = null;
-	    for(Stmt s: x.stmts.toArray()){
-	    	interesting = false;
-	    	//We are interested in Asserts, Assumes and Loop Invariants
-	    	if (s instanceof ExprStmtPragma){
-	    		interesting = true; 
-	    		t = (Term)s.accept(v, o);
-	    		switch (s.getTag()){
-	    		case TagConstants.ASSERT:
-	    			annos.add(new Cut(t));
-	    			break;
-	    		case TagConstants.ASSUME:
-	    			annos.add(new Assume(t));
-	    			break;
-	    		case TagConstants.LOOP_INVARIANT:
-	    		case TagConstants.MAINTAINING:
-	    			inv = t;
-	    			break;
-	    		}
-	    	} else
-	    	
-	    	//We are also interested in ghost var declarations
-	    	if (s instanceof VarDeclStmt){
-	    		
-	    		for (ModifierPragma p: ((VarDeclStmt) s).decl.pmodifiers.toArray()){
-	    			if (p.getTag() == TagConstants.GHOST) {
-	    				interesting = true;
-	    				break;
-	    			}
-	    		}
-	    		if (interesting){
-	    			t = (Term)s.accept(v, o);
-	    			Set ghostVar = new Set();
-	    			ghostVar.declaration = (QuantVariableRef) t;
-	    			annos.add(ghostVar);
-	    		}
-	    	} else
-	    	
-	    	//Also set statements should be processed
-	    	if (s instanceof SetStmtPragma) {
-	    		interesting = true;
-	    		Set.Assignment assign = (Set.Assignment)s.accept(v, o);
-	    		Set ghostSet = new Set();
-	    		ghostSet.assignment = assign;
-	    		annos.add(ghostSet);
-	    	}
-	    	
-	    	if (interesting){
-    			x.stmts.removeElement(s);
-	    	} else {
-	    		if (!annos.isEmpty()){
-	    			AnnotationDecoration.inst.setAnnotPre(s, annos);
-	    			annos.clear();
-	    		}
-	    		if (inv != null){
-	    			if (s instanceof WhileStmt || s instanceof ForStmt || s instanceof DoStmt){
-	    				AnnotationDecoration.inst.setInvariant(s, inv);
-	    				inv = null;
-	    			}
-	    		}
-	    	}
-	    }
+	public Object thisLiteral(ThisExpr x, Object o) {
+		// TODO Auto-generated method stub
+		return Ref.varthis;
 	}
-
-
-
-	
-
 }

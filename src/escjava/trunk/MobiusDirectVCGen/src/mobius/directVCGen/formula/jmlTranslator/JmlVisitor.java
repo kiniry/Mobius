@@ -91,6 +91,7 @@ public class JmlVisitor extends VisitorArgResult{
 	JmlExprToFormula translator;
 	Properties p;
 	
+	
 	public JmlVisitor(){
 		p = new Properties();
 		p.put("pred", new Boolean(true));
@@ -98,7 +99,7 @@ public class JmlVisitor extends VisitorArgResult{
 		translator = new JmlExprToFormula(this);
 	}
 	
-	
+	@Override
 	public Object visitASTNode(ASTNode x, Object prop) {
 		Object o = null;
 		int max = x.childCount();
@@ -134,11 +135,13 @@ public class JmlVisitor extends VisitorArgResult{
 		return visitRoutineDecl(x, o);
 	}
 	
+	@Override
 	public /*@non_null*/ Object visitConstructorDecl(/*@non_null*/ ConstructorDecl x, Object o) {
 		((Properties) o).put("method", x);
 		return visitRoutineDecl(x, o);
 	}
 	
+	@Override
 	public /*@non_null*/ Object visitFormalParaDecl(/*@non_null*/ FormalParaDecl x, Object o) {
 		return translator.genericVarDecl(x,o);
 	}
@@ -149,27 +152,29 @@ public class JmlVisitor extends VisitorArgResult{
 		return null;
 	}
 	
+	@Override
 	 public /*@non_null*/ Object visitLiteralExpr(/*@non_null*/ LiteralExpr x, Object o) {
-		return translator.lit(x,o);
+		return translator.literal(x,o);
 	}
 	 
 	 
-	 
+	 @Override
 	 public /*@non_null*/ Object visitVariableAccess(/*@non_null*/ VariableAccess x, Object o) {		 
 		 return translator.variableAccess(x,o);
 	}
 	 
-	 
+	 @Override
 	 public /*@non_null*/ Object visitFieldAccess(/*@non_null*/ FieldAccess x, Object o) {		 
 		 return translator.fieldAccess(x,o);
 	}
 	 
+	 @Override
 	 public /*@non_null*/ Object visitLocalVarDecl(/*@non_null*/ LocalVarDecl x, Object o) {
 		 //TODO: do something meaningfull.
 		 return null;
 	 }
 	 
-	 
+	 @Override
 	 public /*@non_null*/ Object visitNaryExpr(/*@non_null*/ NaryExpr x, Object o) {
 		 if (x.op== TagConstants.PRE) {
 			 return translator.naryExpr(x,o);
@@ -178,14 +183,15 @@ public class JmlVisitor extends VisitorArgResult{
 		 }
 	}
 	 
-
+	 @Override
 	 public /*@non_null*/ Object visitInstanceOfExpr(/*@non_null*/ InstanceOfExpr x, Object o) {
 		return translator.instanceOfExpr(x, o);
 	 }
 	 
+	 @Override
 	 public Object  visitThisExpr(ThisExpr x, Object o) {
-		return Ref.varthis;
-		}
+		 return translator.thisLiteral(x,o);
+	 }
 	 
 	
 	 
@@ -257,7 +263,7 @@ public class JmlVisitor extends VisitorArgResult{
 		return null;
 	}
 
-	
+	@Override
 	public Object visitExprModifierPragma(ExprModifierPragma x, Object o) {
 		RoutineDecl rd = (RoutineDecl)((Properties) o).get("method");
 		QuantVariableRef result = (QuantVariableRef)((Properties) o).get("result");
@@ -276,9 +282,20 @@ public class JmlVisitor extends VisitorArgResult{
 	@Override
     public /*@non_null*/ Object visitBlockStmt(/*@non_null*/ BlockStmt x, Object o) {
 	    Term t=null;
-		boolean interesting;
+	    Term t1=null;
+	    Term t2=null;
+		Set  set=null;
+		Set.Assignment assignment=null;
+	    boolean interesting;
 		Vector<AAnnotation> annos = new Vector<AAnnotation>();
 		Term inv = null;
+		MethodDecl m = (MethodDecl) ((Properties) o).get("method");
+		for(FormalParaDecl p: m.args.toArray()){
+			 t1 = Expression.rvar(p.id.toString(), Type.typeToSort(p.type));
+			 t2 = Expression.rvar(Expression.old(p.id.toString()), Type.typeToSort(p.type));
+			 assignment = new Set.Assignment((QuantVariableRef) t2, t1);
+			 annos.add(new Set((QuantVariableRef) t2, assignment)); 
+		}
 	    for(Stmt s: x.stmts.toArray()){
 	    	interesting = false;
 	    	//We are interested in Asserts, Assumes and Loop Invariants
@@ -319,10 +336,10 @@ public class JmlVisitor extends VisitorArgResult{
 	    	//Also set statements should be processed
 	    	if (s instanceof SetStmtPragma) {
 	    		interesting = true;
-	    		Set.Assignment assign = (Set.Assignment)s.accept(this, o);
-	    		Set ghostSet = new Set();
-	    		ghostSet.assignment = assign;
-	    		annos.add(ghostSet);
+	    		assignment = (Set.Assignment)s.accept(this, o);
+	    		set = new Set();
+	    		set.assignment = assignment;
+	    		annos.add(set);
 	    	}
 	    	
 	    	if (interesting){
@@ -343,6 +360,7 @@ public class JmlVisitor extends VisitorArgResult{
 		return null;
     }	
 
+	@Override
 	public /*@non_null*/ Object visitVarDeclStmt(/*@non_null*/ VarDeclStmt x, Object o) {
 		//It's only called if we have a ghost variable declaration
 		return Expression.rvar(x.decl.id.toString(),Type.typeToSort(x.decl.type));
@@ -354,6 +372,7 @@ public class JmlVisitor extends VisitorArgResult{
 		return visitASTNode(x, o);
 	}
 
+	@Override
 	public Object visitGCExpr(GCExpr x, Object o) {
 		return visitASTNode(x, o);
 	}
@@ -501,7 +520,7 @@ public class JmlVisitor extends VisitorArgResult{
 
 	@Override
 	public Object visitResExpr(ResExpr x, Object o) {
-		return translator.res(x,o);
+		return translator.resultLiteral(x,o);
 	}
 
 	@Override
@@ -567,7 +586,7 @@ public class JmlVisitor extends VisitorArgResult{
 	}
 
 	
-	
+	@Override
 	public Object visitBinaryExpr(BinaryExpr expr, Object o){
 	
 		switch(expr.op) {

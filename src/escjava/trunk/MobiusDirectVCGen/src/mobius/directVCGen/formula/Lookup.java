@@ -102,14 +102,6 @@ public class Lookup {
 	public static Post exceptionalPostcondition(RoutineDecl m){
 		return new Post(Expression.rvar(Expression.result, Ref.sort),buildStdCond (m, "_excp", false)); 
 	}
-
-//	/**
-//	 * Returns all annotations for method m
-//	 * @param m the method of interest
-//	 */
-//	public static  method_annotation(MethodDecl m){
-//		return null;
-//	}
 	
 	public static Term invariant(ClassDecl c){
 		return Logic.True();

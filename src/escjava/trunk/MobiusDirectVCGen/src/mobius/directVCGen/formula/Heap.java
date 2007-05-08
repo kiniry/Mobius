@@ -7,7 +7,7 @@ import escjava.sortedProver.NodeBuilder.Sort;
 
 public class Heap {
 	public static Sort sort = Formula.lf.sortMap;
-	public static QuantVariableRef varPre = Expression.rvar("preHeap", sort);
+	public static QuantVariableRef varPre = Expression.rvar(Expression.old("heap"), sort);
 	public static QuantVariableRef var = Expression.rvar("heap", sort);
 	
 	public static Term store(QuantVariableRef heap, QuantVariable var, Term val) {
