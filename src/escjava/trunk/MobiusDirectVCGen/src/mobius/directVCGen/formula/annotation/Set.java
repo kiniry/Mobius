@@ -24,10 +24,26 @@ public class Set extends AAnnotation {
 		return annotSet;
 	}
 	
+	public Set(){
+		super();
+	}
+	
+	public Set(QuantVariableRef decl, Assignment assign){
+		this.declaration= decl;
+		this.assignment = assign;
+	}
+	
 	/**
 	 * Inner class that represents an JML assignment (set statement)
 	 */
 	public static class Assignment{
+		public Assignment(){
+			super();
+		};
+		public Assignment(QuantVariableRef var, Term expr){
+			this.var = var;
+			this.expr= expr;
+		}
 		public QuantVariableRef var =null;
 		public Term expr =null;
 		public  /*@non_null*/String toString() {
