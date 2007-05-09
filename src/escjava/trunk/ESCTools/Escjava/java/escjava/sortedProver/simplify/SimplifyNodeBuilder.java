@@ -429,5 +429,8 @@ public class SimplifyNodeBuilder extends EscNodeBuilder
 	public SPred buildNewArray(SMap oldh, SAny type, SMap heap, SRef r, SInt len) {
 		throw new UnsupportedOperationException();
 	}
+	public SPred buildAssignCompat(SMap map, SValue val, SAny type) {
+		throw new UnsupportedOperationException();
+	}
 
 }

@@ -297,8 +297,7 @@ public class Lifter extends EscNodeBuilder
 			if(!(o instanceof QuantVariableRef)) {
 				return false;
 			}
-			QuantVariableRef qvr = (QuantVariableRef) o;
-			return qvr.qvar.equals(this.qvar);
+			return o.hashCode() == this.hashCode();
 		}
 		public int hashCode() {
 			return qvar.hashCode();
@@ -587,6 +586,22 @@ public class Lifter extends EscNodeBuilder
 			if (fn == symDynStore){
 				return dumpBuilder.buildDynStore((SMap)args[0].dump(), args[1].dumpRef(), args[2].dumpValue(), args[3].dumpValue());
 			}
+			
+			if (fn == symArrSelect){
+				return dumpBuilder.buildArrSelect((SMap)args[0].dump(), args[1].dumpRef(), args[2].dumpInt());
+			}
+			if (fn == symArrStore){
+				return dumpBuilder.buildArrStore((SMap)args[0].dump(), args[1].dumpRef(), args[2].dumpInt(), args[3].dumpValue());
+			}
+			if (fn == symNewArray) {
+				return dumpBuilder.buildNewArray((SMap)args[0].dump(), args[1].dumpAny(), (SMap)args[2].dump(),
+						args[3].dumpRef(), args[4].dumpInt());
+			}
+			if (fn == symAssignCompat) {
+				return dumpBuilder.buildAssignCompat((SMap)args[0].dump(),  args[1].dumpValue(),
+							args[1].dumpAny());
+			}
+			
 			if(fn.name.startsWith("%"))
 				System.out.println(fn.name);
 			Assert.notFalse(! fn.name.startsWith("%"));
@@ -950,6 +965,8 @@ public class Lifter extends EscNodeBuilder
     public FnSymbol symArrSelect = registerFnSymbol("%arrSelect", new Sort[] { sortMap, sortRef, sortInt }, sortValue);
 	/** symbol for array store */
     public FnSymbol symArrStore = registerFnSymbol("%arrStore", new Sort[] { sortMap, sortRef, sortInt, sortValue }, sortMap);
+    /** bicolano special subtyping relation */
+    public FnSymbol symAssignCompat = registerFnSymbol("%assignCompat", new Sort[] { sortMap, sortValue, sortType }, sortPred);
 	
     
     
@@ -1000,7 +1017,8 @@ public class Lifter extends EscNodeBuilder
 	public SPred buildNewArray(SMap oldh, SAny type, SMap heap, SRef r, SInt len) { throw new Die(); }
 	public SValue buildArrSelect(SMap map, SRef obj, SInt idx) {throw new Die(); }
 	public SMap buildArrStore(SMap map, SRef obj, SInt idx, SValue val) {throw new Die(); }
-	
+	public SPred buildAssignCompat(SMap map, SValue val, SAny type) {throw new Die(); }
+
 	
 	boolean isEarlySort(Sort s, Sort p)
 	{

@@ -430,4 +430,5 @@ public abstract class NodeBuilder
 	abstract public SPred buildNewArray(SMap oldh, SAny type, SMap heap, SRef r, SInt len) ;
 	abstract public SValue buildArrSelect(SMap map, SRef obj, SInt idx);
 	abstract public SMap buildArrStore(SMap map, SRef obj, SInt idx, SValue val);
+	abstract public SPred buildAssignCompat(SMap map, SValue val, SAny type);
 }
