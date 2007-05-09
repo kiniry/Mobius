@@ -243,38 +243,22 @@ BEGIN
   Program : TYPE = [# classes : finite_set[Class] #]
 
 
-  % Functions whose existence we assume
+%  get_FieldDecls_Class(n : Name, c : Class) : list[FieldDecl] = 
+%    set2list(fields(c))
 
-  lookup_mthd(p : Program, tgt : Val, mn : Name) : lift[Method]
+%  get_FieldDecls(n : Name, classes : list[Class]) : RECURSIVE list[FieldDecl] =
+%     CASES classes OF
+%       null : null,
+%       cons(c, cs) : append(get_FieldsDecls_Class(c), get_FieldsDecls(cs))
+%     ENDCASES
+%     MEASURE length(classes(cs))
+%    concat(map(get_FieldsDecls_Class)(classes))
 
-  % If it can't find an invariant in tgt it just returns TRUE
-  lookup_inv(p : Program, tgt : Val) : Expr
+  get_FieldDecl(n : Name, p : Program) : lift[FieldDecl]
 
+  get_LocalVarDecl(n : Name, p : Program) : lift[FieldDecl]
 
-  get_FieldDecl(n : Name, p : Program) : lift[FieldDecl] =
-    LET fds = {fd : FieldDecl | EXISTS (c : Class) : classes(p)(c) AND
-                                  fields(c)(fd) AND name(fd) = n} IN
-      IF empty?(fds)
-      THEN bottom
-      ELSE up(choose(fds))
-      ENDIF
-
-  get_GhostVarDecl(n : Name, p : Program) : lift[GhostVarDecl] =
-    LET gds = {gd : GhostVarDecl | EXISTS (c : Class) : classes(p)(c) AND
-                                     ghost_vars(c)(gd) AND name(gd) = n} IN
-      IF empty?(gds)
-      THEN bottom
-      ELSE up(choose(gds))
-      ENDIF
-
-  get_LocalVarDecl(n : Name, p : Program) : lift[LocalVarDecl] =
-    LET lds = {ld : LocalVarDecl | EXISTS (c : Class, m : Method) : 
-                                     classes(p)(c) AND methods(c)(m) AND 
-                                     lvars(m)(ld) AND name(ld) = n} IN
-      IF empty?(lds)
-      THEN bottom
-      ELSE up(choose(lds))
-      ENDIF
+  get_GhostVarDecl(n : Name, p : Program) : lift[FieldDecl]
 
 
 END Program
@@ -363,42 +347,6 @@ BEGIN
       classes(p)(c) AND ns = var_names(c)})
 
 
-  % Names of classes are unique within a program
-  unique_class_names(p : Program) : boolean =
-    FORALL (c1, c2 : Class) :
-      classes(p)(c1) AND 
-      classes(p)(c2) AND 
-      name(c1) = name(c2) IMPLIES
-        c1 = c2
-
-  % Variable names are unique
-  % NOTE: The parser complains if the closing brackets are together: }}
-  % We have reported this bug
-  unique_var_names(p : Program) : boolean =
-    LET fdss = {nss : setofsets[Name] | EXISTS (c : Class, fds : set[FieldDecl]) :
-          classes(p)(c) AND fields(c) = fds AND
-          FORALL (ns : set[Name]) : nss(ns) IMPLIES
-            ns = {n : Name | EXISTS (fd : FieldDecl) : fds(fd) AND name(fd) = n} },
-        gdss = {nss : setofsets[Name] | EXISTS (c : Class, gds : set[GhostVarDecl]) :
-          classes(p)(c) AND ghost_vars(c) = gds AND
-          FORALL (ns : set[Name]) : nss(ns) IMPLIES
-            ns = {n : Name | EXISTS (gd : GhostVarDecl) :
-              gds(gd) AND name(gd) = n} },
-        ldss = {nss : setofsets[Name] | EXISTS (c : Class, ms : set[Method]) :
-          classes(p)(c) AND methods(c) = ms AND
-          FORALL (ns : Name) : nss(ns) IMPLIES
-            ns = {n : Name | EXISTS (m : Method, ld : LocalVarDecl) :
-              ms(m) AND lvars(m)(ld) AND name(ld) = n} },
-        ads  = {ns : set[Name] | EXISTS (c : Class, ms : set[Method]) :
-          classes(p)(c) AND methods(c) = ms AND
-          FORALL (n : Name) : ns(n) IMPLIES
-            EXISTS (m : Method, ad : ArgDecl) : 
-              ms(m) AND arg(m) = ad AND name(ad) = n}
-    IN
-    empty?(Intersection({ns : set[Name] | fdss(ns) OR gdss(ns) OR 
-                                          ns = ads OR ldss(ns)}))
-
-
   is_declared_as_field(p : Program)(vn : Name) : boolean =
     EXISTS (c : Class, fd : FieldDecl) :
       classes(p)(c) AND fields(c)(fd) AND name(fd) = vn
@@ -416,132 +364,29 @@ BEGIN
       classes(p)(c) AND methods(c)(m) AND lvars(m)(ld) AND name(ld) = vn
 
 
-  % Every variable used has a declaration
-  vars_are_declared(p : Program) : boolean =
-    FORALL (vn : Name) : 
-      var_names(p)(vn) IMPLIES
-        (is_declared_as_field(p)(vn) OR
-         is_declared_as_ghost(p)(vn) OR
-         is_declared_as_arg(p)(vn) OR
-         is_declared_as_local(p)(vn))
-
-  field_declarations_are_unique(p : Program) : boolean =
-    FORALL (n : Name) :
-      var_names(p)(n) IMPLIES
-      EXISTS (fd : FieldDecl, c : Class) :
-        classes(p)(c) AND fields(c)(fd) AND name(fd) = n AND
-        FORALL (c1 : Class, m : Method) : classes(p)(c1) AND methods(c1)(m) AND
-        (FORALL (fd1 : FieldDecl) :
-          fields(c1)(fd1) AND name(fd1) = n IMPLIES fd = fd1 AND c = c1) AND
-        (FORALL (gd : GhostVarDecl) :
-          ghost_vars(c1)(gd) IMPLIES name(gd) /= n) AND
-        (FORALL (ad : ArgDecl) :
-          arg(m)(ad) IMPLIES name(ad) /= n) AND
-        (FORALL (ld : LocalVarDecl) :
-          lvars(m)(ld) IMPLIES name(ld) /= n)
-
-  ghost_declarations_are_unique(p : Program) : boolean =
-    FORALL (n : Name) :
-      var_names(p)(n) IMPLIES
-      EXISTS (gd : GhostVarDecl, c : Class) :
-        classes(p)(c) AND ghost_vars(c)(gd) AND name(gd) = n AND
-        FORALL (c1 : Class, m : Method) : classes(p)(c1) AND methods(c1)(m) AND
-        (FORALL (fd : FieldDecl) :
-          fields(c1)(fd) IMPLIES name(fd) /= n) AND
-        (FORALL (gd1 : GhostVarDecl) :
-          ghost_vars(c1)(gd1) AND name(gd1) = n IMPLIES gd = gd1 AND c = c1) AND
-        (FORALL (ad : ArgDecl) :
-          arg(m)(ad) IMPLIES name(ad) /= n) AND
-        (FORALL (ld : LocalVarDecl) :
-          lvars(m)(ld) IMPLIES name(ld) /= n)
-
-  arg_declarations_are_unique(p : Program) : boolean =
-    FORALL (n : Name) :
-      var_names(p)(n) IMPLIES
-      EXISTS (ad : ArgDecl, c : Class, m : Method) :
-        classes(p)(c) AND methods(c)(m) AND lvars(m)(ad) AND name(ad) = n AND
-        FORALL (c1 : Class, m1 : Method) : classes(p)(c1) AND methods(c1)(m1) AND
-        (FORALL (fd : FieldDecl) :
-          fields(c1)(fd) IMPLIES name(fd) /= n) AND
-        (FORALL (gd : GhostVarDecl) :
-          ghost_vars(c1)(gd) IMPLIES name(gd) /= n) AND
-        (FORALL (ad1 : ArgDecl) :
-          arg(m1)(ad1) AND name(ad1) = n IMPLIES ad = ad1 AND m = m1 AND c = c1) AND
-        (FORALL (ld : LocalVarDecl) :
-          lvars(m)(ld) IMPLIES name(ld) /= n)
-
-  local_declarations_are_unique(p : Program) : boolean =
-    FORALL (n : Name) :
-      var_names(p)(n) IMPLIES
-      EXISTS (ld : LocalVarDecl, c : Class, m : Method) :
-        classes(p)(c) AND methods(c)(m) AND lvars(m)(ld) AND name(ld) = n AND
-        FORALL (c1 : Class, m1 : Method) : classes(p)(c1) AND methods(c1)(m1) AND
-        (FORALL (fd : FieldDecl) :
-          fields(c1)(fd) IMPLIES name(fd) /= n) AND
-        (FORALL (gd : GhostVarDecl) :
-          ghost_vars(c1)(gd) IMPLIES name(gd) /= n) AND
-        (FORALL (ad : ArgDecl) :
-          arg(m)(ad) IMPLIES name(ad) /= n) AND
-        (FORALL (ld1 : LocalVarDecl) :
-          lvars(m1)(ld1) AND name(ld1) = n IMPLIES ld = ld1 AND m = m1 AND c = c1)
-
-  % We require vars to have different names, even if they are in different 
-  % classes
-  declarations_are_unique(p : Program) : boolean =
-    field_declarations_are_unique(p) AND
-    ghost_declarations_are_unique(p) AND
-    arg_declarations_are_unique(p) AND
-    local_declarations_are_unique(p)
-
-
-  % A CaseJML is well formed if the list of braches is finite and the stmts are
-  % composed only by set stmts or other CaseJML.
-  % THINK: Should it be recursive?
-  wf_CaseJML(c : Stmt) : boolean =
-    CaseJML?(c) AND
-    (EXISTS (n : nat) : length(branches(c)) = n) AND
-    FORALL (x : [Expr, Stmt]) :
-      member(x, branches(c)) IMPLIES
-        Set?(proj_2(x)) OR CaseJML?(proj_2(x))
+  % Names of classes are unique within a program
+  unique_class_names(p : Program) : boolean =
+    FORALL (c1, c2 : Class) :
+      classes(p)(c1) AND 
+      classes(p)(c2) AND 
+      name(c1) = name(c2) IMPLIES
+        c1 = c2
 
   wf_Class(c : Class) : boolean
 
-  % TODO:
-  % Well-formed CaseJML (the list must be finite)
-  % Type checks: assignments, method calls, etc, etc
-  % Assertions (pre, post, inv) are boolean expressions
-  wf_Program(p : Program) : boolean =
-    unique_class_names(p) AND
-    unique_var_names(p) AND
-    vars_are_declared(p) AND   % This is redundant with declarations_are unique 
-    declarations_are_unique(p) % but is convenient to find a declaration
+  wf_Program(p : Program) : boolean
 
   AUTO_REWRITE- wf_Program, var_names
 
-  get_FieldDecl_is_determ : LEMMA
-    FORALL (n : Name, p : (wf_Program)) :
-    LET fds = {fd : FieldDecl | EXISTS (c : Class) : classes(p)(c) AND
-                                  fields(c)(fd) AND name(fd) = n}
-    IN
-      nonempty?(fds) IMPLIES singleton?(fds)
-
-  get_GhostVarDecl_is_determ : LEMMA
-    FORALL (n : Name, p : (wf_Program)) :
-    LET gds = {gd : GhostVarDecl | EXISTS (c : Class) : classes(p)(c) AND
-                                     ghost_vars(c)(gd) AND name(gd) = n}
-    IN
-      nonempty?(gds) IMPLIES singleton?(gds)
-
-  get_LocalVarDecl_is_determ : LEMMA
-    FORALL (n : Name, p : (wf_Program)) :
-    LET lds = {ld : LocalVarDecl | EXISTS (c : Class, m : Method) : 
-                                     classes(p)(c) AND methods(c)(m) AND
-                                     lvars(m)(ld) AND name(ld) = n}
-    IN
-      nonempty?(lds) IMPLIES singleton?(lds)
-
-
   % Properties needed of well-formed programs
+
+  wf_program_has_unique_class_names : LEMMA
+    FORALL (p : Program, c1, c2 : Class) :
+      wf_Program(p) IMPLIES
+      classes(p)(c1) IMPLIES
+      classes(p)(c2) IMPLIES
+      name(c1) = name(c2) IMPLIES
+        c1 = c2
 
   wf_program_has_wf_classes : LEMMA
     FORALL (p : Program, c : Class) :
@@ -549,12 +394,13 @@ BEGIN
       classes(p)(c) IMPLIES
         wf_Class(c)
 
-  wf_class_implies_unique_method_names : LEMMA
+  wf_class_has_unique_method_names : LEMMA
     FORALL (c : Class, m1, m2 : Method) :
       wf_Class(c) IMPLIES
       methods(c)(m1) IMPLIES
       methods(c)(m2) IMPLIES
       name(m1) = name(m2) IMPLIES
         m1 = m2
+
 
 END WellFormedProgram

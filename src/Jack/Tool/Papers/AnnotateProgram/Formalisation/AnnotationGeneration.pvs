@@ -36,7 +36,7 @@ BEGIN
     Sequence(Set("cp", NExpr(NumVarEval(name_of(tcp(t))))), 
              ann_action(action(t)))
 
-  IMPORTING ProgramSemantics[string]
+  IMPORTING MonitoredProgramSemantics[CP, string]
 
 %   ann_guard_actions(mp)(ts : finite_set[Transition]) : list[[Expr, Stmt]] =
 %     set2list({x : [Expr, Stmt] | EXISTS (t : Transition) : ts(t) AND
@@ -50,11 +50,10 @@ BEGIN
     set2list({x : [Expr, Stmt] | EXISTS (t : Transition) :
       ts(t) AND
       (FORALL (stA : (wf_Store(mva(mp))), stP : (wf_PSt(mva(mp))))
-              (s : PState, v : Val, n : nat) :
-        s = (# ex := bottom, st := stP #) AND
-        % guards have no side-effect
-        deriv_expr(program(mp))(proj_1(x), s, v, s)(n) IMPLIES
-        b(v) = guard(t)(stA, stP)) AND
+              (sMP1, sMP2 : MPState, v : Val, n : nat) :
+        pstate(sMP1) = (# ex := bottom, st := stP #) IMPLIES
+        deriv_expr(mp)(proj_1(x), sMP1, v, sMP2)(n) IMPLIES
+          b(v) = guard(t)(stA, stP)) AND
       proj_2(x) = upd_vars(t)})
 
   ann_trans_cp(mp)(q : CP, ts : finite_set[Transition]) : [Expr, Stmt] =
@@ -141,30 +140,39 @@ BEGIN
 
   % TODO: prove!
   ann_program_yields_wf_program : LEMMA
-    FORALL (mp : (ann_program_pre)) :
-      wf_Program(ann_program(mp))
+    FORALL (mp : MonitoredProgram) :
+      ann_program_pre(mp) IMPLIES
+        wf_Program(ann_program(mp))
 
+  % NOT USED
   ann_program_preserves_structure : LEMMA % :-)
     FORALL (mp : (ann_program_pre), c : Class) :
       classes(program(mp))(c) IMPLIES
       IF name(c) = class_name(mva(mp)) THEN
+        LET c1 = ann_class(mp)(c) IN
+        name(c) = name(c1) AND
         FORALL (m : Method) :
-        LET c1 = ann_class(mp)(c),
-            m1 = ann_method(mp)(m) 
-        IN
+        LET m1 = ann_method(mp)(m) IN
           methods(c)(m) IMPLIES
-           classes(ann_program(mp))(c1) AND
-           methods(c1)(m1) AND
-           name(m1) = name(m) AND
-           body(m1) = body(m) AND
-           pre(m1) = pre(m) AND
-           post(m1) = post(m) AND
-           lvars(m1) = lvars(m) AND
-           res(m1) = res(m) AND
-           res_type(m1) = res_type(m)
+            classes(ann_program(mp))(c1) AND
+            methods(c1)(m1) AND
+            name(m1) = name(m) AND
+            body(m1) = body(m) AND
+            pre(m1) = pre(m) AND
+            post(m1) = post(m) AND
+            lvars(m1) = lvars(m) AND
+            res(m1) = res(m) AND
+            res_type(m1) = res_type(m)
       ELSE
         classes(ann_program(mp))(c)
       ENDIF
+
+  % NOT USED
+  wf_class_ann_program : LEMMA
+    FORALL (mp : MonitoredProgram, c : Class) :
+      ann_program_pre(mp) IMPLIES
+      classes(ann_program(mp))(c) IMPLIES
+        wf_Class(c)
 
   ann_program_preserves_var_decls : LEMMA
     FORALL (mp : MonitoredProgram)(vn : string) :
@@ -191,19 +199,39 @@ BEGIN
         (is_field(vn, pstate(sMP)) IFF is_field(vn, pstate(sAP))) AND
         (is_local(vn, pstate(sMP)) IFF is_local(vn, pstate(sAP)))
 
-  lookup_mthd_axiom : AXIOM
-    FORALL (p : Program, s : PState, m : Method, mn : string, tgt : Val) :
-      up?(lookup_mthd(p, tgt, mn)) IMPLIES
-      m = down(lookup_mthd(p, tgt, mn)) IMPLIES
-        LET c = down(get_class(p)(tgt, s)) IN
-        up?(get_class(p)(tgt, s)) AND
-        classes(p)(c) AND
-        methods(c)(m) AND
-        name(m) = mn
+  % THINK: I won't be able to prove this, maybe taken as axiom of get_class
+  get_class_ann_program : LEMMA
+    FORALL (mp : MonitoredProgram, c1, c2 : Class, s : PState, tgt : Val) :
+      ann_program_pre(mp) IMPLIES
+      up?(get_class(program(mp))(tgt, s)) IMPLIES
+      up?(get_class(ann_program(mp))(tgt, s)) IMPLIES
+      c1 = down(get_class(program(mp))(tgt, s)) IMPLIES
+      c2 = down(get_class(ann_program(mp))(tgt, s)) IMPLIES
+        name(c1) = name(c2)
 
-  % TODO: I need to say that the classes to which the retrieved methods belong
-  % are the same
-  lookup_mthd_ann_program : LEMMA
+  same_class_name_ann_class_implies_same_class : LEMMA % :-)
+    FORALL (mp : MonitoredProgram, c1, c2 : Class) :
+      ann_program_pre(mp) IMPLIES
+      classes(program(mp))(c1) IMPLIES
+      classes(ann_program(mp))(c2) IMPLIES
+      name(c1) = name(c2) IMPLIES
+        IF name(c1) = class_name(mva(mp))
+        THEN c2 = ann_class(mp)(c1)
+        ELSE c2 = c1
+        ENDIF
+
+  same_method_name_ann_class_implies_same_method : LEMMA % :-)
+    FORALL (mp : MonitoredProgram, c1, c2 : Class, m1, m2 : Method) :
+      ann_program_pre(mp) IMPLIES
+      classes(program(mp))(c1) IMPLIES
+      c2 = ann_class(mp)(c1) IMPLIES
+      name(c1) = class_name(mva(mp)) IMPLIES
+      methods(c1)(m1) IMPLIES
+      methods(c2)(m2) IMPLIES
+      name(m1) = name(m2) IMPLIES
+        m2 = ann_method(mp)(m1)
+
+  lookup_mthd_ann_program : LEMMA % :-)
     FORALL (mp : MonitoredProgram, s : PState, 
             m1, m2 : Method, mn : string, tgt : Val) :
       ann_program_pre(mp) IMPLIES
@@ -215,6 +243,24 @@ BEGIN
         THEN m2 = ann_method(mp)(m1)
         ELSE m2 = m1
         ENDIF
+
+  % TODO: prove!
+  ann_program_preserves_side_effect_freedom : LEMMA
+    FORALL (mp : MonitoredProgram) :
+      ann_program_pre(mp) IMPLIES
+      assertions_have_no_side_effect(mp) IMPLIES
+        assertions_have_no_side_effect(ann_program(mp))
+
+
+  ann_program_defines_MVA_vars : LEMMA
+    FORALL (mp : MonitoredProgram, ap : Program) :
+      ann_program_pre(mp) IMPLIES
+      ap = ann_program(mp) IMPLIES
+        up?(get_GhostVarDecl("cp", ap)) AND
+        (FORALL (q : CP) :
+          cps(mva(mp))(q) IMPLIES up?(get_GhostVarDecl(name_of(q), ap))) AND
+        (FORALL (v : MVAVarDecl) :
+          vdsA(mva(mp))(v) IMPLIES up?(get_GhostVarDecl(name(v), ap)))
 
 
 END AnnotateProgramProperties

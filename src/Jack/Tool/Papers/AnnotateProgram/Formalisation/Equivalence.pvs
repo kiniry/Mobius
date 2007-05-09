@@ -83,6 +83,70 @@ BEGIN
       related_states(mp, ap)(sMP, sAP) IMPLIES
         eval(b)(pstate(sMP)) = eval(b)(pstate(sAP))
 
+  % THINK: I must say that the two v's are the same, but how do I get that?
+  MP_modeled_preverved_by_assertion_checking : LEMMA
+    FORALL (mp : MonitoredProgram, ap : Program)
+           (sMP1, sMP2 : MPState, sAP1, sAP2 : APState, 
+            assertion : Expr, n1, n2 : nat,
+            deriv_expr_MP : [MonitoredProgram -> [Expr, MPState, Val, MPState ->
+                                                 [below(n1 + 1) -> bool]]],
+            deriv_expr_AP : [Program -> [Expr, APState, Val, APState ->
+                                        [below(n2 + 1) -> bool]]]) :
+      related_states(mp, ap)(sMP1, sAP1) IMPLIES
+      (FORALL (v : Val, tau : MPState) :
+        deriv_expr_MP(mp)(assertion, sMP1, v, tau)(n1)
+          IMPLIES sMP1 = tau) IMPLIES
+      (FORALL (v : Val, tau : APState) :
+        deriv_expr_AP(ap)(assertion, sAP1, v, tau)(n2) 
+          IMPLIES sAP1 = tau) IMPLIES
+      check_assertion(mp)(assertion, sMP1, sMP2)(n1)(deriv_expr_MP) IMPLIES
+      check_assertion(ap)(assertion, sAP1, sAP2)(n2)(deriv_expr_AP) IMPLIES
+        MP_modeled?(sMP2, sAP2)
+
+  % THINK: The invariant (retrieved by lookup_inv) in the annotated class should
+  % include the added check cp != halted
+  on_method_entry_for_ann_method_equivalence  : LEMMA
+    FORALL (mp : MonitoredProgram, ap : Program)
+           (sMP1, sMP2 : MPState, sAP1, sAP2 : APState, c : Class, 
+            m1, m2 : Method, a : Val, n1, n2 : nat,
+            deriv_stmt_MP : [MonitoredProgram -> [Stmt, MPState, MPState ->
+                                                 [below(n1 + 1) -> bool]]],
+            deriv_expr_MP : [MonitoredProgram -> [Expr, MPState, Val, MPState ->
+                                                 [below(n1 + 1) -> bool]]],
+            deriv_stmt_AP : [Program -> [Stmt, APState, APState ->
+                                        [below(n2 + 1) -> bool]]],
+            deriv_expr_AP : [Program -> [Expr, APState, Val, APState ->
+                                        [below(n2 + 1) -> bool]]]) :
+      related_states(mp, ap)(sMP1, sAP1) IMPLIES
+      assertions_have_no_side_effect(mp) IMPLIES
+      classes(program(mp))(c) IMPLIES
+      methods(c)(m1) IMPLIES
+      m2 = ann_method(mp)(m1) IMPLIES
+      on_method_entry_MP(mp, m1, a, sMP1, sMP2, n1, deriv_stmt_MP, 
+                         deriv_expr_MP) IMPLIES
+      on_method_entry_AP(ap, m2, a, sAP1, sAP2, n2, deriv_stmt_AP, 
+                         deriv_expr_AP) IMPLIES
+        MP_modeled?(sMP2, sAP2)
+
+  on_method_entry_for_same_method_equivalence  : LEMMA
+    FORALL (mp : MonitoredProgram, ap : Program)
+           (sMP1, sMP2 : MPState, sAP1, sAP2 : APState, m : Method,
+            a : Val, n1, n2 : nat,
+            deriv_stmt_MP : [MonitoredProgram -> [Stmt, MPState, MPState ->
+                                                 [below(n1 + 1) -> bool]]],
+            deriv_expr_MP : [MonitoredProgram -> [Expr, MPState, Val, MPState ->
+                                                 [below(n1 + 1) -> bool]]],
+            deriv_stmt_AP : [Program -> [Stmt, APState, APState ->
+                                        [below(n2 + 1) -> bool]]],
+            deriv_expr_AP : [Program -> [Expr, APState, Val, APState ->
+                                        [below(n2 + 1) -> bool]]]) :
+      related_states(mp, ap)(sMP1, sAP1) IMPLIES
+      on_method_entry_MP(mp, m, a, sMP1, sMP2, n1, deriv_stmt_MP, 
+                         deriv_expr_MP) IMPLIES
+      on_method_entry_AP(ap, m, a, sAP1, sAP2, n2, deriv_stmt_AP, 
+                         deriv_expr_AP) IMPLIES
+      MP_modeled?(sMP2, sAP2)
+
 
   % Main lemmas used in the proof of the correcteness_of_ann_program
 
