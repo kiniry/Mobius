@@ -97,7 +97,7 @@ public class Options extends javafe.SrcToolOptions {
             { "-PrettyPrintVC, -ppvc", "Pretty-print verification conditions" },
             {
                     "-pxLog <filename>",
-                    "Pretty-print the commands (S-expressions)sent to Simplify in the file named <filename>" },
+                    "Pretty-print the commands (S-expressions) sent to Simplify in the file named <filename>" },
             {
                     "-sxLog <filename>",
                     "Print the commands (S-expressions) sent to Simplify in the file named <filename>" },
