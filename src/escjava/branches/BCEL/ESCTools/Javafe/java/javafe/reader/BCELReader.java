@@ -1,15 +1,13 @@
-/* Copyright 2000, 2001, Compaq Computer Corporation */
 /* Copyright 2007, Systems Research Group, University College Dublin, Ireland */
 
 /*
- * ========================================================================= BCELAdaptor.java
- * (derived from ASTClassFileParser.java)
+ * ========================================================================= 
+ * BCELReader.java
  * =========================================================================
  */
 
 package javafe.reader;
 
-import java.io.DataInput;
 import java.io.IOException;
 import java.util.Vector;
 
@@ -42,6 +40,7 @@ import javafe.genericfile.NormalGenericFile;
 import javafe.util.Location;
 
 import org.apache.bcel.Constants;
+import org.apache.bcel.classfile.Attribute;
 import org.apache.bcel.classfile.ClassParser;
 import org.apache.bcel.classfile.Constant;
 import org.apache.bcel.classfile.ConstantPool;
@@ -53,7 +52,6 @@ import org.apache.bcel.generic.Type;
 /*
  * ------------------------------------------------------------------------- 
  * BCELReader
- * (derived from BinRaeder & ASTClassFileParser) This class is
  * -------------------------------------------------------------------------
  */
 
@@ -66,12 +64,6 @@ import org.apache.bcel.generic.Type;
 
 class BCELReader extends Reader {
    /* -- package instance methods ------------------------------------------- */
-
-   /*
-    * ------------------------------------------------------------------------- BCELAdaptor
-    * (derived from BinRaeder & ASTClassFileParser) This class is
-    * -------------------------------------------------------------------------
-    */
    
    /**
     * The package name of the class being parsed. Initialized by constructor (by way of
@@ -113,6 +105,7 @@ class BCELReader extends Reader {
          }
          if ((javaClass.isInterface()) && elems[i] instanceof RoutineDecl) {
             RoutineDecl rd = (RoutineDecl) elems[i];
+            
             if (Modifiers.isStatic(rd.modifiers)) {
                continue;
             }
@@ -130,7 +123,7 @@ class BCELReader extends Reader {
     * Vector of methods and fields with Synthetic attributes. Use this to weed out synthetic
     * while constructing TypeDecl.
     */
-   private/* @ non_null */Vector synthetics = new Vector();
+   private/* @ non_null */Vector<RoutineDecl> synthetics = new Vector<RoutineDecl>();
 
    /**
     * Flag indicating whether the class being parsed has the synthetic attribute.
@@ -142,7 +135,7 @@ class BCELReader extends Reader {
    protected boolean omitPrivateFields = true;
 
    /**
-    * 
+    * Default constructor - does nothing
     */
    public BCELReader() {
    }
@@ -176,12 +169,6 @@ class BCELReader extends Reader {
     * Convert the BCEL JavaClass format into an abstract syntax tree of a compilation unit
     * suitable for extended static checking.
     * 
-    * @requires javaClass != null;
-    * 
-    * @ensures \result != null;
-    * 
-    * 
-    * @author dermotcochran
     * @return An abstract syntax tree of a compilation unit.
     * 
     * @throws ClassNotFoundException
@@ -197,8 +184,8 @@ class BCELReader extends Reader {
       int classNameIndex = javaClass.getClassNameIndex();
       set_this_class(classNameIndex);
 
-      int loc = classNameIndex;
-      Name pkgName = Name.make(javaClass.getPackageName(), javaClass.getClassNameIndex());
+      int classLocationIndex = classNameIndex;
+      Name pkgName = Name.make(javaClass.getPackageName(), classLocationIndex);
       TypeDeclElemVec otherPragmas = extractTypeDeclElemVec(javaClass);
       ImportDeclVec imports = extractImportDeclVec(javaClass);
       TypeDeclVec elems = extractTypeDeclVec(javaClass);
@@ -241,7 +228,7 @@ class BCELReader extends Reader {
       TypeDeclElemVec emptyTypeDeclElemVec = TypeDeclElemVec.make();
       ImportDeclVec emptyImportDeclVec = ImportDeclVec.make();
       CompilationUnit result = CompilationUnit.make(pkgName, null, emptyImportDeclVec, types,
-            loc, emptyTypeDeclElemVec);
+            classLocationIndex, emptyTypeDeclElemVec);
       return result;
    }
 
@@ -285,8 +272,9 @@ class BCELReader extends Reader {
    /**
     * @param methods
     * @throws ClassFormatError
+ * @throws ClassNotFoundException 
     */
-   protected void readMethods(Method[] methods) throws ClassFormatError {
+   protected void readMethods(Method[] methods) throws ClassFormatError, ClassNotFoundException {
       routineDecl = new RoutineDecl[methods.length];
       for (int loopVar = 0; loopVar < methods.length; loopVar++) {
 
@@ -295,8 +283,38 @@ class BCELReader extends Reader {
          routineDecl[loopVar].body = // @ nowarn Null, IndexTooBig;
          BlockStmt.make(StmtVec.make(), classLocation, classLocation);
          routineDecl[loopVar].locOpenBrace = classLocation;
+         
+         // Set method attributes
+         Attribute[] attributes = method.getAttributes();
+         for (int attributeLoopVar = 0; attributeLoopVar < attributes.length; attributeLoopVar++) {
+        	 
+        	 // Get attribute Name
+        	 String attributeName = getAttributeName(attributes, attributeLoopVar);
+        	 
+        	 if (attributeName.equals("Exceptions")) {
+                 routineDecl[attributeLoopVar].raises = TypeNameVec.make(parseTypeNames()); 
+              } else if (attributeName.equals("Synthetic")) {
+                 synthetics.addElement(routineDecl[attributeLoopVar]);
+              }
+         }
+         
       }
    }
+
+   /**
+    * 
+    * @param attributes
+    * @param attributeLoopVar
+    * @return
+    */
+protected String getAttributeName(Attribute[] attributes, int attributeLoopVar) {
+	Attribute attribute = attributes[attributeLoopVar];
+	int attributeNameIndex = attribute.getNameIndex();
+	ConstantPool attributeConstantPool = attribute.getConstantPool();
+	Constant attributeNameConstant = attributeConstantPool.getConstant(attributeNameIndex);
+	String attributeName = attributeNameConstant.toString();
+	return attributeName;
+}
 
    protected int extractLocation(JavaClass javaClass) {
       int loc = javaClass.getClassNameIndex();
@@ -618,21 +636,7 @@ class BCELReader extends Reader {
             classLocation, Identifier.intern(mname), signature.getReturn(), classLocation);
       routineDecl[i] = otherMethod;
    }
-
-   protected void set_method_attribute(int i, String aname, DataInput stream, int n)
-         throws IOException, ClassFormatError, ClassNotFoundException {
-      // look for the Exceptions attribute and modify the appropriate method, if
-      // necessary
-
-      if (aname.equals("Exceptions")) {
-         routineDecl[i].raises = TypeNameVec.make(parseTypeNames()); // @ nowarn Null, Cast,
-                                                                     // IndexTooBig;
-      } else if (aname.equals("Synthetic")) {
-         synthetics.addElement(routineDecl[i]); // @ nowarn ;
-      } else {
-         stream.skipBytes(n);
-      }
-   }
+ 
 
    /* -- private instance variables ----------------------------------------- */
 
@@ -814,13 +818,6 @@ class BCELReader extends Reader {
    // @ spec_public
    private static final TypeNameVec emptyTypeNameVec = TypeNameVec.make();
 
-   /**
-    * A null identifier.
-    */
-   /*
-    * UNUSED //@ invariant nullIdentifier != null; private static final Identifier
-    * nullIdentifier = Identifier.intern("");
-    */
 
    /*******************************************************************************************
     * * Test methods: * *
@@ -829,7 +826,7 @@ class BCELReader extends Reader {
    // @ requires \nonnullelements(args);
    public static void main(String[] args) {
       if (args.length != 1) {
-         System.err.println("BCELAdaptor: <source filename>");
+         System.err.println("BCELReader: <source filename>");
          System.exit(1);
       }
 
@@ -842,7 +839,6 @@ class BCELReader extends Reader {
             PrettyPrint.inst.print(System.out, cu);
 
       } catch (ClassFormatError e) {
-         // TODO Auto-generated catch block
          e.printStackTrace();
       }
 
@@ -861,13 +857,10 @@ class BCELReader extends Reader {
          return convertBCELtoAST();
 
       } catch (ClassFormatError e) {
-         // TODO Auto-generated catch block
          e.printStackTrace();
       } catch (IOException e) {
-         // TODO Auto-generated catch block
          e.printStackTrace();
       } catch (ClassNotFoundException e) {
-         // TODO Auto-generated catch block
          e.printStackTrace();
       }
       return null;
