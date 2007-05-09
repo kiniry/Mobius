@@ -15,7 +15,6 @@ import escjava.translate.VcToString;
 public class Simplifier {
 
     // TODO: make this configurable from the command line
-    private static final int VC_LIMIT = 100000; 
     private static ProverManager prover = new ProverManager();
 
     public static Expr simplify(Expr e) {
@@ -48,25 +47,20 @@ public class Simplifier {
      * @return true only if [e] is valid
      */
     public static boolean runProver(Expr e) {
-        if (Util.size(e, VC_LIMIT) == -1) {
-            System.err.println("RA: VC too big. Skipping.");
-            return false;
-        }
-        
         Properties props = new Properties();
         
         // flag for all provers
-        props.setProperty("timelimit", "30");
+        props.setProperty("timelimit", "60");
         
         // flags for Fx7
-        props.setProperty("max_quant_iters", "500");
-        props.setProperty("max_main_iters", "500");
+        //props.setProperty("max_quant_iters", "500");
+        //props.setProperty("max_main_iters", "500");
         
-        System.err.println("vc_size " + Util.size(e));
+        //System.err.println("vc_size " + Util.size(e));
         TimeUtil.start("prover_time");
         boolean ans = prover.isValid(e, props);
-        System.err.println(ans ? "valid" : "invalid");
-        TimeUtil.stoprep("prover_time");
+        //System.err.println(ans ? "valid" : "invalid");
+        TimeUtil.stop("prover_time");
         return ans;
     }
 

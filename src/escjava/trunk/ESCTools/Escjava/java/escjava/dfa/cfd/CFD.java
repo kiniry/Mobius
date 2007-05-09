@@ -432,7 +432,7 @@ public class CFD  {
         System.err.println("size " + visited.size());
         System.err.println("avg_chain_len " + (1.0 * totalLenChains / chainsCnt));
         
-        /*
+        
         OutputStreamWriter ow = new OutputStreamWriter(System.err);
         try {
             ow.write("\n\n===== dot representation of the graph ====\n"); 
@@ -441,7 +441,7 @@ public class CFD  {
         } catch (IOException e) {
             System.err.println("Can't print to the err output.");
         }
-        */
+        
     }
    
     public boolean isAcyclic() {

@@ -5,11 +5,13 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import javafe.ast.Expr;
 import javafe.ast.ExprVec;
+import javafe.ast.Util;
 import javafe.ast.VariableAccess;
 import javafe.util.Assert;
 import javafe.util.ErrorSet;
@@ -23,6 +25,7 @@ import escjava.dfa.buildcfd.GCtoCFDBuilder;
 import escjava.dfa.cfd.CFD;
 import escjava.dfa.cfd.CodeNode;
 import escjava.dfa.cfd.Node;
+import escjava.dfa.cfd.NodeList;
 import escjava.dfa.cfd.NodeList.Enumeration;
 import escjava.translate.GC;
 import escjava.translate.LabelData;
@@ -124,7 +127,7 @@ public class ReachabilityAnalysis {
     private CFD graph;
     private HashSet graphNodes;
 
-    // strongest postconditions
+    // strongest preconditions
     private Map spOfNode;
     
     
@@ -159,11 +162,17 @@ public class ReachabilityAnalysis {
      */
     private static final int THRESHOLD = 0;
     
+    // Maximum VC size
+    private static final int VC_LIMIT = 100000;
+    
+    // Set when a caution should be issued
+    private boolean vcTooBig;
+    
     
     // These are used to represent the compressed graph of the labels.
     private HashMap/*<Node,Integer>*/ nodeToLabelCache;
     private NodeAndLabel[] labels; // identified later on by indices in this array
-    private Expr[] postconditions; // maps labels to their postconditions
+    private Expr[] preconditions; // maps labels to their preconditions
     private int[] labelState; // unknown, sat, or unsat
     private int[][] labelChildren;
     private int[][] labelParents;
@@ -173,8 +182,8 @@ public class ReachabilityAnalysis {
     
     // used by various DFS-like algorithms
     private boolean[] labelTag; // is thelabel processed
-    private int[] labelsDfs; // dfs order of the labels
-    private int[] invLabelsDfs; // inverse of labelsDfs
+    private int[] labelsSort; // topological sort of the labels
+    private int[] labelsInvSort; // inverse of labelsSort
     private int labelOrder; // used during construction
 
     // Auxiliar information used during the construction of the above
@@ -232,21 +241,21 @@ public class ReachabilityAnalysis {
         return result;
     }
 
-    private void recComputeDfsOrder(int l) {
+    private void recSortLabels(int l) {
         if (labelTag[l]) return;
         labelTag[l] = true;
-        labelsDfs[labelOrder] = l;
-        invLabelsDfs[l] = labelOrder++;
         for (int i = 0; i < labelChildren[l].length; ++i)
-            recComputeDfsOrder(labelChildren[l][i]);
+            recSortLabels(labelChildren[l][i]);
+        labelsSort[labelOrder] = l;
+        labelsInvSort[l] = labelOrder--;
     }
     
-    private void computeDfsOrder() {
-        labelsDfs = new int[labels.length];
-        invLabelsDfs = new int[labels.length];
+    private void sortLabels() {
+        labelsSort = new int[labels.length];
+        labelsInvSort = new int[labels.length];
         labelTag = new boolean[labels.length];
-        labelOrder = 0;
-        recComputeDfsOrder(0);
+        labelOrder = labels.length - 1;
+        recSortLabels(0);
     }
     
     // Adds all nodes reachable from [n] (children) to [graphNodes].
@@ -288,6 +297,7 @@ public class ReachabilityAnalysis {
      * the labeled (i.e., interesting) nodes.
      */
     private void collectNodes() {
+        TimeUtil.start("collect_nodes_time");
         graphNodes = new HashSet();
         nodeToLabelCache = new HashMap/*<Node,Integer>*/();
         labelsTmp = new ArrayList();
@@ -306,7 +316,7 @@ public class ReachabilityAnalysis {
         // Conver ArrayLists to simple arrays. (I wouldn't do this in a later
         // version of Java.)
         labels = (NodeAndLabel[])labelsTmp.toArray(new NodeAndLabel[0]);
-        postconditions = new Expr[labels.length];
+        preconditions = new Expr[labels.length];
         labelParents = new int[labels.length][];
         labelChildren = new int[labels.length][];
         for (int i = 0; i < labels.length; ++i) {
@@ -321,45 +331,69 @@ public class ReachabilityAnalysis {
         
         // Prepare for later
         labelState = new int[labels.length];
-        computeDfsOrder();
+        sortLabels();
         computeDominators();
-        printLabelsAndDominators();
+        //printLabelsAndDominators();
+        TimeUtil.stop("collect_nodes_time");
+    }
+    
+    private void recPropagateUnsat(int x) {
+        if (labelState[x] != UNKNOWN) return;
+        //System.err.println("unsat " + x);
+        labelState[x] = UNSAT;
+        for (int i = 0; i < labelChildren[x].length; ++i) {
+            int j;
+            int c = labelChildren[x][i];
+            for (j = 0; j < labelParents[c].length && labelState[labelParents[c][j]] == UNSAT; ++j);
+            if (j == labelParents[c].length)
+                propagateUnsat(c);
+        }
     }
     
     private void propagateUnsat(int x) {
-        if (labelState[x] != UNKNOWN) return;
-        System.err.println("unsat " + x);
-        labelState[x] = UNSAT;
-        for (int i = 0; i < dominated[x].length; ++i)
-            propagateUnsat(dominated[x][i]);
+        recPropagateUnsat(x);
+        computeDominators();
     }
     
     private void propagateSat(int x) {
         if (labelState[x] != UNKNOWN) return;
-        System.err.println("sat " + x);
+        //System.err.println("sat " + x);
         labelState[x] = SAT;
         propagateSat(dominator[x]);
     }
     
+    private void adjustDominators() {
+        
+    }
+
+    // Ignores UNSAT nodes
     private void computeDominators() {
+        int j;
+        TimeUtil.start("compute_dominators_time");
+        // Initialize the dominator tree
         dominator = new int[labels.length];
         for (int i = 0; i < labels.length; ++i) {
-            if (labelParents[i].length == 0) 
-                dominator[i] = 0;
+            for (j = 0; j < labelParents[i].length && labelState[labelParents[i][j]] == UNSAT; ++j);
+            if (j == labelParents[i].length)
+                dominator[i] = i;
             else 
-                dominator[i] = labelParents[i][0];
+                dominator[i] = labelParents[i][j];
         }
+        // Process nodes in a topological order
         for (int i = 0; i < labels.length; ++i) {
-            for (int j = 0; j < labelParents[i].length; ++j) {
-                int d = labelParents[i][j];
-                while (dominator[i] != d) {
-                    if (invLabelsDfs[dominator[i]] < invLabelsDfs[d])
+            int l = labelsSort[i];
+            for (j = 0; j < labelParents[l].length; ++j) {
+                int d = labelParents[l][j];
+                if (labelState[d] == UNSAT) continue;
+                while (dominator[l] != d) {
+                    if (labelsInvSort[dominator[l]] < labelsInvSort[d])
                         d = dominator[d];
                     else
-                        dominator[i] = dominator[dominator[i]];
+                        dominator[l] = dominator[dominator[l]];
                 }
             }
         }
+        // Set the down links in the dominators tree
         dominated = new int[labels.length][];
         dominatedCnt = new int[labels.length];
         for (int i = 0; i < labels.length; ++i)
@@ -370,6 +404,7 @@ public class ReachabilityAnalysis {
         }
         for (int i = 0; i < labels.length; ++i)
             dominated[dominator[i]][dominatedCnt[dominator[i]]++] = i;
+        TimeUtil.stop("compute_dominators_time");
     }
     
     private void printLabelsAndDominators() {
@@ -496,11 +531,9 @@ public class ReachabilityAnalysis {
     }
     
     private void getUsedVars(NaryExpr e) {
-        //TimeUtil.start("get_used_vars_time");
         seenExprs = new HashSet();
         usedVariables = new HashSet();
         recGetUsedVars(e);
-        //TimeUtil.stoprep("get_used_vars_time");
     }
     
     private NaryExpr dagToTree(NaryExpr dag) {
@@ -522,7 +555,7 @@ public class ReachabilityAnalysis {
             exprs.addElement(GC.equiv(v, def));
         }
         exprs.addElement(ne);
-        TimeUtil.stoprep("dag_to_tree_time");
+        TimeUtil.stop("dag_to_tree_time");
         return (NaryExpr)GC.and(exprs);
     }
 
@@ -546,11 +579,87 @@ public class ReachabilityAnalysis {
         // cache and store if interesting
         spOfNode.put(n, post);
         int idx = nodeToLabelIdx(n);
-        if (idx != -1) postconditions[idx] = post;
+        if (idx != -1) preconditions[idx] = pre;
         return post;
+    }
+    
+    private boolean hasUnsat(boolean[] set, boolean d) {
+        ExprVec conjuncts = ExprVec.make();
+        boolean[] exclude = new boolean[labels.length];
+        for (int i = 0; i < labels.length; ++i) if (set[i]) {
+            int cnt = 0, x = 0;
+            for (int j = 0; j < labelParents[i].length; ++j) {
+                int p = labelParents[i][j];
+                if (labelState[p] == UNSAT) continue;
+                ++cnt; x = p;
+            }
+            if (cnt == 1) exclude[x] = true;
+        }
+        for (int i = 0; i < labels.length; ++i) if (!exclude[i] && set[i])
+            conjuncts.addElement(preconditions[i]);
+        Expr query = GC.and(conjuncts);
+        if (query instanceof NaryExpr)
+            query = dagToTree((NaryExpr)query);
+        if (Util.size(query, VC_LIMIT) == -1) {
+            vcTooBig = true;
+            return d;
+        } else 
+            return Simplifier.isFalse(query);
+    }
+    
+    private boolean searchUnsat(boolean[] set, boolean hu) {
+        int i, j;
+        
+        // eliminate known
+        int cnt = 0, x = 0;
+        for (i = 0; i < labels.length; ++i) {
+            set[i] &= labelState[i] == UNKNOWN;
+            if (set[i]) {
+                ++cnt;
+                x = i;
+            }
+        }
+        if (cnt == 0) return false;
+        
+        // do the query
+        if (hu || hasUnsat(set, cnt > 1)) {
+            if (cnt == 1) propagateUnsat(x);
+            else {
+                // split and recurse
+                boolean[] s1 = new boolean[set.length];
+                boolean[] s2 = set;
+                for (i = j = 0; j < cnt / 2; ++i) if (set[i]) {
+                    ++j;
+                    s1[i] = true;
+                    s2[i] = false;
+                }
+                searchUnsat(s2, !searchUnsat(s1, false));
+            }
+            return true;
+        } else {
+            for (i = 0; i < labels.length; ++i) if (set[i]) 
+                propagateSat(i);
+            return false;
+        }
+    }
+    
+    private void reportAllLabels(Node n) {
+        if (graphNodes.contains(n)) return;
+        graphNodes.add(n);
+        String label = getLabel(n);
+        if (label != null) {
+            NodeAndLabel nl = new NodeAndLabel(n, label);
+            if (nl.loc != Location.NULL)
+                reportUnreachable(nl);
+        }
+        Enumeration children = n.getChildren().elements();
+        while (children.hasMoreElements())
+            reportAllLabels(children.nextElement());
     }
 
     private void internalAnalyze(GuardedCmd gc) {
+        vcTooBig = false;
+        
         // initialize the caches used by the DAG-to-(almost-)tree translation
         dagToVarCache = new HashMap();
         varToTreeCache = new HashMap();
@@ -563,30 +672,46 @@ public class ReachabilityAnalysis {
 
         // DBG
         //System.out.println("Constructed graph: " + graph);
-        graph.printStats();
+        //graph.printStats();
          
         // do DFS
         collectNodes();
         spOfNode = new HashMap();
         Node init = graph.getInitNode();
-        postconditions[0] = init.computeSp(GC.truelit);
-        spOfNode.put(init, postconditions[0]);
+        preconditions[0] = GC.truelit;
+        spOfNode.put(init, preconditions[0]);
         Iterator nodes = graphNodes.iterator();
         while (nodes.hasNext()) spDfs((Node)nodes.next());
         
         // check the interesting nodes and report the possible errors
-        // we transform the dag to tree before calling the prover
-        for (int i = labels.length - 1; i >= 0; --i) if (labelState[i] == UNKNOWN) {
-            if (postconditions[i] instanceof NaryExpr)
-                postconditions[i] = dagToTree((NaryExpr)postconditions[i]);
-            if (Simplifier.isFalse(postconditions[i]))
-                propagateUnsat(i);
-            else
-                propagateSat(i);
+        boolean[] all = new boolean[labels.length];
+        for (int i = 0; i < labels.length; ++i) all[i] = true;
+        searchUnsat(all, false);
+        
+        // report errors
+        for (int i = 0; i < labels.length; ++i) if (labelState[i] == UNSAT) {
+            int j;
+            for (j = 0; j < labelParents[i].length && labelState[labelParents[i][j]] == UNSAT; ++j);
+            if (j < labelParents[i].length) reportUnreachable(labels[i]);
         }
         
-        for (int i = 0; i < labels.length; ++i) if (labelState[i] == UNSAT)
-            reportUnreachable(labels[i]);
+        // get really unreachable code
+        // NOTE: I would rather have the CFD builder put an assume false and
+        // not deal with this. It would be just as fast and nicer.
+        List/*<CFD>*/ unreachable = builder.getUnreachable();
+        Iterator uit = unreachable.iterator();
+        while (uit.hasNext()) {
+            CFD u = (CFD)uit.next();
+            init = u.getInitNode();
+            if (init != null) reportAllLabels(init);
+        }
+        
+        if (vcTooBig) 
+            ErrorSet.caution("The reachability analysis is incomplete because some VCs are too big.");
+        //TimeUtil.total("compute_dominators_time");
+        //TimeUtil.total("prover_time");
+        //TimeUtil.total("dag_to_tree_time");
+        //TimeUtil.total("collect_nodes_time");
     }
     
     private static final String POST_WARN =
@@ -596,7 +721,7 @@ public class ReachabilityAnalysis {
 
     /**
      * Reports errors for unchecked code, unchecked assertions, and unchecked
-     * postconditions. The location is not reported for postconditions.
+     * preconditions. The location is not reported for preconditions.
      * We do not report @unreachable as being unreached. We skip
      * labels with no location information.
      */

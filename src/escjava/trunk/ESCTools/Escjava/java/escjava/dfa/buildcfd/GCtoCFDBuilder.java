@@ -72,9 +72,12 @@ public class GCtoCFDBuilder {
 			cfd.setInitNode(assumeNode);
 
 			// optimize for assume false
-			if (!GC.isFalse(pred)) {
+            // rgrig: please don't. at least, it doesn't help the reachability
+            // analysis. on the contrary.
+			//if (!GC.isFalse(pred)) {
 				cfd.setExitNode(assumeNode);
-			} // otherwise leave the exit node null
+			//} 
+            // otherwise leave the exit node null
 
 			return cfd;
 		}

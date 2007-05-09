@@ -1490,6 +1490,7 @@ public class Options extends javafe.SrcToolOptions {
         	return offset;
         } else if (option.equals("-reachabilityanalysis") || option.equals("-era")) {
             enableReachabilityAnalysis = true;
+            noPeepOptGCAssertFalse = true;
             return offset;
         }
         // Pass on unrecognized options:

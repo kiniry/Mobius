@@ -18,7 +18,7 @@ public class TimeUtil {
         long d = l;
         if (c != null) d += c.longValue();
         lastT.put(s, new Long(l));
-        totalT.put(s, c);
+        totalT.put(s, new Long(d));
     }
     
     static void last(String s) {
