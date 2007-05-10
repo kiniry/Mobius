@@ -289,13 +289,15 @@ public class JmlVisitor extends VisitorArgResult{
 	    boolean interesting;
 		Vector<AAnnotation> annos = new Vector<AAnnotation>();
 		Term inv = null;
-		MethodDecl m = (MethodDecl) ((Properties) o).get("method");
+		
+		RoutineDecl m = (RoutineDecl) ((Properties) o).get("method");
 		for(FormalParaDecl p: m.args.toArray()){
 			 t1 = Expression.rvar(p.id.toString(), Type.typeToSort(p.type));
 			 t2 = Expression.rvar(Expression.old(p.id.toString()), Type.typeToSort(p.type));
 			 assignment = new Set.Assignment((QuantVariableRef) t2, t1);
 			 annos.add(new Set((QuantVariableRef) t2, assignment)); 
 		}
+		
 	    for(Stmt s: x.stmts.toArray()){
 	    	interesting = false;
 	    	//We are interested in Asserts, Assumes and Loop Invariants
