@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -206,6 +207,7 @@ public class ReachabilityAnalysis {
     private static final int UNKNOWN = 0; // the prover was not asked or it didn't know
     private static final int SAT = 1;  // satisfiable, the program can reach the label
     private static final int UNSAT = 2; // unsatifiable, we should warn
+    private static final int TOOBIG = 3; // asking the prover would probably take too long
     
     private String assertLabel(GuardedCmd gc) {
         if (gc.getTag() == TagConstants.ASSERTCMD) {
@@ -286,7 +288,7 @@ public class ReachabilityAnalysis {
         }
     }
     
-    private int[] toIntArray(HashSet/*<Integer>*/ al) {
+    private int[] toIntArray(Collection/*<Integer>*/ al) {
         int[] result = new int[al.size()];
         Iterator it = al.iterator();
         int i = 0;
@@ -366,10 +368,6 @@ public class ReachabilityAnalysis {
         propagateSat(dominator[x]);
     }
     
-    private void adjustDominators() {
-        
-    }
-
     // Ignores UNSAT nodes
     private void computeDominators() {
         int j;
@@ -452,7 +450,7 @@ public class ReachabilityAnalysis {
         seenExprs.add(e);
         for (int i = 0; i < e.exprs.size(); ++i) {
             Expr o = e.exprs.elementAt(i);
-            if (o == null || !(o instanceof NaryExpr)) continue;
+            if (!isOrAnd(o)) continue;
             NaryExpr c = (NaryExpr)o;
             incParentsCnt(c);
             countParents(c);
@@ -468,13 +466,20 @@ public class ReachabilityAnalysis {
         int sz = 1;
         for (int i = 0; i < tree.exprs.size(); ++i) {
             Expr e = tree.exprs.elementAt(i);
-            if (e instanceof NaryExpr) 
+            if (isOrAnd(e)) 
                 sz += getSize((NaryExpr)e);
             else 
                 ++sz;
         }
         treeToSizeCache.put(tree, new Integer(sz));
         return sz;
+    }
+    
+    // Returns whether |e| is a |NaryExpr| with BOOLAND or BOOLOR.
+    private static boolean isOrAnd(Expr e) {
+        if (e == null || !(e instanceof NaryExpr)) return false;
+        int op = ((NaryExpr)e).op;
+        return op == TagConstants.BOOLAND || op == TagConstants.BOOLOR;
     }
     
     /**
@@ -491,16 +496,19 @@ public class ReachabilityAnalysis {
      * It assumes that dagParentsCnt maps |e| and all NaryExpr-essions
      * reachable from |e| to the number of parents they have.
      * 
+     * pre: isOrAnd(dag)
+     * 
      * TODO: review and maybe rewrite
      */
     private NaryExpr recDagToTree(NaryExpr dag) {
+        Assert.notFalse(isOrAnd(dag));
         VariableAccess v = (VariableAccess)dagToVarCache.get(dag);
         if (v != null) return (NaryExpr)varToTreeCache.get(v);
         
         ExprVec ncv = ExprVec.make(); // new children vector
         for (int i = 0; i < dag.exprs.size(); ++i) {
             Expr e = dag.exprs.elementAt(i);
-            if (!(e instanceof NaryExpr)) {
+            if (!isOrAnd(e)) {
                 ncv.addElement(e);
                 continue;
             }
@@ -530,7 +538,7 @@ public class ReachabilityAnalysis {
         seenExprs.add(e);
         for (int i = 0; i < e.exprs.size(); ++i) {
             Expr c = e.exprs.elementAt(i);
-            if (c instanceof NaryExpr) recGetUsedVars((NaryExpr)c);
+            if (isOrAnd(c)) recGetUsedVars((NaryExpr)c);
             else if (c instanceof VariableAccess) {
                 NaryExpr tree = (NaryExpr)varToTreeCache.get(c);
                 if (tree != null) {
@@ -563,11 +571,14 @@ public class ReachabilityAnalysis {
         while (it.hasNext()) {
             VariableAccess v = (VariableAccess)it.next();
             Expr def = (Expr)varToTreeCache.get(v);
-            exprs.addElement(GC.equiv(v, def));
+            //exprs.addElement(GC.equiv(v, def));
+            // implication should be enough because the formulas are monotone
+            exprs.addElement(GC.implies(v, def)); 
         }
         exprs.addElement(ne);
+        NaryExpr result = (NaryExpr)GC.and(exprs);
         TimeUtil.stop("dag_to_tree_time");
-        return (NaryExpr)GC.and(exprs);
+        return result;
     }
 
     // Compute the strongest postcondition (SP) of [n].
@@ -609,8 +620,7 @@ public class ReachabilityAnalysis {
         for (int i = 0; i < labels.length; ++i) if (!exclude[i] && set[i])
             conjuncts.addElement(preconditions[i]);
         Expr query = GC.and(conjuncts);
-        if (query instanceof NaryExpr)
-            query = dagToTree((NaryExpr)query);
+        if (isOrAnd(query)) query = dagToTree((NaryExpr)query);
         if (Util.size(query, VC_LIMIT) == -1) {
             vcTooBig |= !d;
             return d;
@@ -674,6 +684,56 @@ public class ReachabilityAnalysis {
         while (children.hasMoreElements())
             reportAllLabels(children.nextElement());
     }
+    
+    private void checkReachability() {
+        int i, j;
+        
+        // mark nodes that are too big to analyze
+        for (i = 0; i < labels.length; ++i) {
+            if (isOrAnd(preconditions[i])) 
+                preconditions[i] = dagToTree((NaryExpr)preconditions[i]);
+            if (Util.size(preconditions[i], VC_LIMIT) == -1) { 
+                labelState[i] = TOOBIG;
+                vcTooBig = true;
+            }
+        }
+        
+        while (true) {
+            // find the unknown node that has most dominators
+            int[] mostDominators = new int[0];
+            for (i = 0; i < labels.length; ++i) if (labelState[i] == UNKNOWN) {
+                ArrayList/*<Integer>*/ dom = new ArrayList();
+                j = i;
+                dom.add(new Integer(j));
+                do {
+                    j = dominator[j];
+                    if (labelState[j] == UNKNOWN) dom.add(new Integer(j));
+                } while (j != 0);
+                if (dom.size() > mostDominators.length)
+                    mostDominators = toIntArray(dom);
+            }
+            
+            // say you are done if no such node
+            if (mostDominators.length == 0) return;
+            
+            // first see if that node is SAT
+            if (!Simplifier.isFalse(preconditions[mostDominators[0]])) {
+                propagateSat(mostDominators[0]);
+                continue;
+            }
+            
+            // do binary search to see where UNSAT starts
+            int left = 0, right = mostDominators.length;
+            while (left + 1 != right) {
+                int middle = (left + right) / 2; // no overflow danger :)
+                if (Simplifier.isFalse(preconditions[mostDominators[middle]]))
+                    left = middle;
+                else
+                    right = middle;
+            }
+            propagateUnsat(mostDominators[left]);
+        }
+    }
 
     private void internalAnalyze(GuardedCmd gc) {
         vcTooBig = false;
@@ -701,10 +761,14 @@ public class ReachabilityAnalysis {
         Iterator nodes = graphNodes.iterator();
         while (nodes.hasNext()) spDfs((Node)nodes.next());
         
-        // check the interesting nodes and report the possible errors
-        boolean[] all = new boolean[labels.length];
+        // check the interesting (labeled) nodes
+
+        // multiple queries approach
+        /*boolean[] all = new boolean[labels.length];
         for (int i = 0; i < labels.length; ++i) all[i] = true;
-        searchUnsat(all, false);
+        searchUnsat(all, false);*/
+        // single queries approach
+        checkReachability();
         
         // report errors
         for (int i = 0; i < labels.length; ++i) if (labelState[i] == UNSAT) {
@@ -726,6 +790,7 @@ public class ReachabilityAnalysis {
         
         if (vcTooBig) 
             ErrorSet.caution("The reachability analysis is incomplete because some VCs are too big.");
+        
         //TimeUtil.total("compute_dominators_time");
         //TimeUtil.total("prover_time");
         //TimeUtil.total("dag_to_tree_time");

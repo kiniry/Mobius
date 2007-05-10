@@ -15,7 +15,16 @@ import escjava.translate.VcToString;
 public class Simplifier {
 
     // TODO: make this configurable from the command line
-    private static ProverManager prover = new ProverManager();
+    private static int pushedCnt = 0;
+    
+    public static void push(Expr e) {
+        ++pushedCnt;
+        ProverManager.push(e);
+    }
+    
+    public static void popAll() {
+        while (pushedCnt-- != 0) ProverManager.pop();
+    }
 
     public static Expr simplify(Expr e) {
         return (Expr) e.clone();
@@ -58,7 +67,7 @@ public class Simplifier {
         
         //System.err.println("vc_size " + Util.size(e));
         TimeUtil.start("prover_time");
-        boolean ans = prover.isValid(e, props);
+        boolean ans = ProverManager.isValid(e, props);
         //System.err.println(ans ? "valid" : "invalid");
         TimeUtil.stop("prover_time");
         return ans;

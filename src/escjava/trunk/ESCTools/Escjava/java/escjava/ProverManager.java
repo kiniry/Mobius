@@ -340,7 +340,7 @@ public class ProverManager {
   }
   
   // timeout is given in seconds
-  synchronized
+  static synchronized
   public boolean isValid(Expr vc, Properties props)
   {
       if (savedScope != null && status != PUSHED) push(savedScope);
