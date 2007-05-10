@@ -275,8 +275,12 @@ class BCELReader extends Reader {
 			throws ClassFormatError;
 
 	/**
+	 * 
+	 * 
 	 * @param fieldType
 	 * @return
+	 * 
+	 * @ensures \result != null;
 	 */
 	protected javafe.ast.Type readType(Type fieldType);
 
