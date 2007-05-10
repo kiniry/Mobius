@@ -5,38 +5,49 @@ import escjava.sortedProver.Lifter.FnTerm;
 import escjava.sortedProver.Lifter.Term;
 import escjava.sortedProver.NodeBuilder.Sort;
 
+// TODO: add comments
 public class Num {
 	/** the sort that represents integers */
 	public static Sort sortInt = Formula.lf.sortInt;
 	/** the sort that represents real numbers */
 	public static Sort sortReal = Formula.lf.sortReal;
 
+	// TODO: add comments
 	public static Term value(Long l) {	
 		return Formula.lf.mkIntLiteral(l);
 	}
 
+	// TODO: add comments
 	public static Term value(Integer i) {
 		return Formula.lf.mkIntLiteral(i.longValue());
 	}
 
+	// TODO: add comments
 	public static Term value(Byte b) {
 		return Formula.lf.mkIntLiteral(b.longValue());
 	}
+	
+	// TODO: add comments
 	public static Term value(Short s) {
 		return Formula.lf.mkIntLiteral(s.longValue());
 	}
+	
+	// TODO: add comments
 	public static Term value(Float f) {
 		return Formula.lf.mkRealLiteral(f.doubleValue());
 	}
 
+	// TODO: add comments
 	public static Term value(Character c) {
 		return Formula.lf.mkIntLiteral(c.charValue());
 	}
 
+	// TODO: add comments
 	public static Term value(Double d) {		
 		return Formula.lf.mkRealLiteral(d);
 	}
 
+	// TODO: add comments
 	private static Term arith(Term l, Term r, int tag) {
 		if(l.getSort() != r.getSort()&& 
 				(!Num.isNum(r.getSort()) || !Num.isNum(l.getSort())))
@@ -119,7 +130,7 @@ public class Num {
 		return arith(l, r, NodeBuilder.funMOD);
 	}
 
-	
+	// TODO: add comments
 	public static Term lshift(Term l, Term r) {
 		// TODO: understand when to handle 64 bits case
 		if(l.getSort() != r.getSort())
@@ -136,6 +147,7 @@ public class Num {
 		return t;
 	}
 
+	// TODO: add comments
 	public static Term rshift(Term l, Term r) {
 		// TODO: understand when to handle 64 bits case
 		if(l.getSort() != r.getSort())
@@ -152,6 +164,7 @@ public class Num {
 		return t;
 	}
 
+	// TODO: add comments
 	public static Term urshift(Term l, Term r) {
 		// TODO: understand when to handle 64 bits case
 		if(l.getSort() != r.getSort()&& 
@@ -169,10 +182,12 @@ public class Num {
 		return t;
 	}
 
+	// TODO: add comments
 	public static boolean isNum(Sort sort) {
 		return sort == sortInt || sort == sortReal;
 	}
 
+	// TODO: add comments
 	public static Term intToReal(Term r) {
 		return Formula.lf.mkFnTerm(Formula.lf.symIntToReal, new Term [] {r});
 	}

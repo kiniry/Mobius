@@ -108,8 +108,8 @@ public class Type{
 	}
 	
 	/**
-	 * Returns the type of an expression. It returns the type not
-	 * the sort (eg. used for class names not primitive types).
+	 * Returns the type of an expression. It returns the name of the 
+	 * type not the sort (eg. used for class names not primitive types).
 	 * @param expr the expression to get the type from
 	 * @return a term representing a type
 	 * @see #getSort(VarInit)
@@ -119,6 +119,7 @@ public class Type{
 		return translate(FlowInsensitiveChecks.getType(expr)) ;
 	}
 	
+	// TODO: add comments
 	public static Term getType(VarInit expr) {
 		return translateToType(FlowInsensitiveChecks.getType(expr)) ;
 	}
@@ -169,6 +170,7 @@ public class Type{
 		return Formula.lf.typeToSort(t);
 	}
 	
+	// TODO: add comments
 	public static Vector<String> getAllTypes() {
 		Formula.lf.dumpBuilder = Formula.lf.builder;
 		Vector<String> v = new Vector<String>();

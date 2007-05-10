@@ -10,24 +10,39 @@ import escjava.sortedProver.Lifter.Term;
 import escjava.sortedProver.NodeBuilder.Sort;
 import escjava.translate.UniqName;
 
+// TODO: add comments
 public class Expression {
 	
 	/** counter to create anonymous variables */
 	private static int [] varCounters = {0, 0, 0, 0, 0};
+	
+	// TODO: add comments
 	public static String result = "\\result";
 	
+	// TODO: add comments
 	public static String oldPrefix = "\\pre_";
 
+	// TODO: add comments
 	public static String old(String s){
 		return oldPrefix + s;
 	}
 
+	/**
+	 * Build a variable from a string, without any specified sort.
+	 * @param str
+	 * @return
+	 * @deprecated
+	 */
 	public static QuantVariable var(String str) {
 		return Formula.lf.mkQuantVariable(str, Formula.sort);
 	}
+	
+	// TODO: add comments
 	public static QuantVariable var(String name, Sort s) {
 		return Formula.lf.mkQuantVariable(name, s);
 	}
+	
+	// TODO: add comments
 	public static QuantVariable var(GenericVarDecl decl) {
 		return Formula.lf.mkQuantVariable(decl, UniqName.variable(decl));
 	}
@@ -63,24 +78,32 @@ public class Expression {
 		return Formula.lf.mkQuantVariable(name, s);
 	}
 	
+	// TODO: add comments
 	public static QuantVariableRef rvar(Sort s) {
 		return refFromVar(var(s));
 	}
+	
+	// TODO: add comments
 	public static QuantVariableRef rvar(FormalParaDecl arg) {
 		return refFromVar(Formula.lf.mkQuantVariable(arg, UniqName.variable(arg)));
 	}
+	
+	// TODO: add comments
 	public static QuantVariableRef rvar(String str, Sort s) {
 		return refFromVar(var(str, s));
 	}
+	
+	// TODO: add comments
 	public static QuantVariableRef rvar(GenericVarDecl decl) {
 		return refFromVar(var(decl));
 	}	
 
+	// TODO: add comments	
 	public static QuantVariableRef refFromVar(QuantVariable qv) {
 		return Formula.lf.mkQuantVariableRef(qv);
 	}
 	
-	
+	// TODO: add comments
 	public static Term bitor(Term l, Term r) {
 		if(l.getSort() != r.getSort())
 			throw new IllegalArgumentException("The sort of " + l + 
@@ -103,6 +126,8 @@ public class Expression {
 		}
 		return t;
 	}
+	
+	// TODO: add comments
 	public static Term bitxor(Term l, Term r) {
 		if(l.getSort() != r.getSort())
 			throw new IllegalArgumentException("The sort of " + l + 
@@ -125,6 +150,8 @@ public class Expression {
 		}
 		return t;
 	}
+	
+	// TODO: add comments
 	public static Term bitand(Term l, Term r) {
 		if(l.getSort() != r.getSort())
 			throw new IllegalArgumentException("The sort of " + l + 
@@ -150,6 +177,9 @@ public class Expression {
 
 	
 	/**
+	 * Create a symbol. There should be no symbols without a meaning
+	 * attached to it. Therefore it is deprecated and there is no
+	 * replacement to it.
 	 * @deprecated
 	 */
 	public static FnTerm sym(String name, Sort s) {

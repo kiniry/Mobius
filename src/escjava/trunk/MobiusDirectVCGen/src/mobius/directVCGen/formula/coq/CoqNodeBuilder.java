@@ -1,6 +1,5 @@
 package mobius.directVCGen.formula.coq;
 
-import mobius.directVCGen.formula.Formula;
 import escjava.sortedProver.EscNodeBuilder;
 import escjava.sortedProver.NodeBuilder;
 import escjava.sortedProver.Lifter.SortVar;
@@ -419,7 +418,7 @@ public class CoqNodeBuilder extends EscNodeBuilder {
 			return this.buildNot(new CPred(false, "=", args));
 		}
 		if(fn == symTypeLE) {
-			SAny [] realargs = {buildQVarRef(Formula.program.qvar),
+			SAny [] realargs = {new CMap("p"),
 									args[0], args[1]};
 			return new CPred("subclass_name", realargs);
 		}
@@ -497,7 +496,7 @@ public class CoqNodeBuilder extends EscNodeBuilder {
 
 	@Override
 	public SPred buildNewObject(SMap oldh, SAny type, SMap heap, SRef r) {
-		CPred left = new CPred("Heap.new", new STerm[] {oldh, buildQVarRef(Formula.program.qvar), new CType("Heap.LocationObject", new STerm[] {type})});
+		CPred left = new CPred("Heap.new", new STerm[] {oldh, new CMap("p"), new CType("Heap.LocationObject", new STerm[] {type})});
         CPred right = new CPred("Some", new STerm[] {new CPred(false, ",", new STerm[] {getLoc(r), heap})});
     		
 		SPred res = new CPred(false, "=",new STerm[] {left, right});
@@ -541,7 +540,7 @@ public class CoqNodeBuilder extends EscNodeBuilder {
 
 	@Override
 	public SPred buildNewArray(SMap oldh, SAny type, SMap heap, SRef r, SInt len) {
-		CPred left = new CPred("Heap.new", new STerm[] {oldh, buildQVarRef(Formula.program.qvar), new CType("Heap.LocationArray", new STerm[] {len, type})});
+		CPred left = new CPred("Heap.new", new STerm[] {oldh, new CMap("p"), new CType("Heap.LocationArray", new STerm[] {len, type})});
         CPred right = new CPred("Some", new STerm[] {new CPred(false, ",", new STerm[] {getLoc(r), heap})});
     		
 		SPred res = new CPred(false, "=",new STerm[] {left, right});

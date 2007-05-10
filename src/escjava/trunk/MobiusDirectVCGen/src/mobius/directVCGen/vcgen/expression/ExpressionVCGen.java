@@ -2,10 +2,8 @@ package mobius.directVCGen.vcgen.expression;
 
 import java.util.Vector;
 
-import javafe.ast.ArrayInit;
 import javafe.ast.CastExpr;
 import javafe.ast.CondExpr;
-import javafe.ast.Expr;
 import javafe.ast.ExprObjectDesignator;
 import javafe.ast.ExprVec;
 import javafe.ast.FieldAccess;
@@ -220,7 +218,7 @@ public class ExpressionVCGen extends BinaryExpressionVCGen{
 		QuantVariableRef newHeap = Heap.newVar();
 		QuantVariableRef loc = entry.post.var;
 		QuantVariableRef dim;
-		ArrayInit init= narr.init;
+		//ArrayInit init= narr.init;
 		Term arr;
 		Post pre = entry.post;
 		Term type =  Type.translateToType(narr.type);
@@ -229,14 +227,14 @@ public class ExpressionVCGen extends BinaryExpressionVCGen{
 
 		// multi array creation note: it is not working
 		for(int i = narr.dims.size() -1;  i > 0; i --) {
-			Term res;
+			//Term res;
 			dim = Expression.rvar(Num.sortInt);
 			QuantVariableRef idx = Expression.rvar(Num.sortInt);
 			
-			res = Logic.forall(dim, 
+			 Logic.forall(dim, 
 					Logic.implies(Logic.interval0To(dim, idx),
 							Logic.implies(Heap.newArray(Heap.var, type, newHeap, dim,loc), pre.post)));
-			type = Type.arrayof(type);
+			//type = Type.arrayof(type);
 		}
 		dim = Expression.rvar(Num.sortInt);
 		arr = Heap.newArray(Heap.var, type, newHeap, dim, loc);

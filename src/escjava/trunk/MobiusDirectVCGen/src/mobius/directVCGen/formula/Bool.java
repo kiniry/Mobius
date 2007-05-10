@@ -6,9 +6,10 @@ import escjava.sortedProver.Lifter.FnTerm;
 import escjava.sortedProver.Lifter.Term;
 import escjava.sortedProver.NodeBuilder.Sort;
 
+// TODO: add comments
 public class Bool {
 
-
+	// TODO: add comments
 	private static Term binaryOp(Term l, Term r, int tag) {
 		if(l.getSort() != r.getSort() && 
 				(!Num.isNum(r.getSort()) || !Num.isNum(l.getSort())))
@@ -40,6 +41,7 @@ public class Bool {
 		return t;
 	}
 	
+	// TODO: add comments
 	private static Term boolBinaryOp(Term l, Term r, int tag){
 		if(l.getSort() != Bool.sort || r.getSort() != Bool.sort)
 			throw new IllegalArgumentException("The sorts of the arguments should be bool found: " + l.getSort() + 
@@ -49,6 +51,7 @@ public class Bool {
 		return t; 
 	}
 	
+	// TODO: add comments
 	private static Term boolUnaryOp(Term t, int tag) {
 		if(t.getSort() != Bool.sort )
 			throw new IllegalArgumentException("The sorts of the arguments should be bool found: " + t.getSort());
@@ -57,6 +60,7 @@ public class Bool {
 		return res;
 	}
 	
+	// TODO: add comments
 	private static Term numBinaryOp(Term l, Term r, int tag){
 		if(l.getSort() != r.getSort() &&
 				(!Num.isNum(l.getSort()) || !Num.isNum(r.getSort())))
