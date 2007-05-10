@@ -1,8 +1,10 @@
 package b2bpl.translation;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import b2bpl.Main;
 import b2bpl.bpl.ast.BPLBinaryArithmeticExpression;
 import b2bpl.bpl.ast.BPLBinaryLogicalExpression;
 import b2bpl.bpl.ast.BPLBoolLiteral;
@@ -13,7 +15,7 @@ import b2bpl.bpl.ast.BPLExpression;
 import b2bpl.bpl.ast.BPLFunctionApplication;
 import b2bpl.bpl.ast.BPLLogicalNotExpression;
 import b2bpl.bpl.ast.BPLNullLiteral;
-import b2bpl.bpl.ast.BPLOldVariableExpression;
+import b2bpl.bpl.ast.BPLOldExpression;
 import b2bpl.bpl.ast.BPLPartialOrderExpression;
 import b2bpl.bpl.ast.BPLQuantifierExpression;
 import b2bpl.bpl.ast.BPLRelationalExpression;
@@ -63,8 +65,8 @@ public final class CodeGenerator implements ITranslationConstants {
     return new BPLVariableExpression(name);
   }
   
-  public static BPLOldVariableExpression old(String name) {
-    return new BPLOldVariableExpression(name);
+  public static BPLOldExpression old(BPLVariableExpression var) {
+    return new BPLOldExpression(var);
   }
 
   public static BPLExpression fieldLoc(
@@ -461,52 +463,89 @@ public final class CodeGenerator implements ITranslationConstants {
   public static BPLExpression logicalAnd(BPLExpression... operands) {
     // Filter all expressions that are not of type BPLBoolLiteral.TRUE 
     List<BPLExpression> ops = new ArrayList<BPLExpression>();
-    for (BPLExpression expr : operands) {
-      if (expr != BPLBoolLiteral.TRUE) {
-        ops.add(expr);
+    
+    if (Main.getProject().simplifyLogicalExpressions()) {
+      // Simplify logical expression (ignore "true" expressions)
+      for (BPLExpression expr : operands) {
+        if (expr != BPLBoolLiteral.TRUE) {
+          ops.add(expr);
+        }
+        if (expr == BPLBoolLiteral.FALSE) return BPLBoolLiteral.FALSE;
       }
+      
+      if (ops.size() == 0) {
+        return BPLBoolLiteral.TRUE;
+      }
+    } else {
+      ops.addAll(Arrays.asList(operands));
     }
     
-    if (ops.size() == 0) {
-      return BPLBoolLiteral.TRUE;
+    if (ops.size() > 0) {
+      BPLExpression result = ops.get(0);
+      for (int i = 1; i < ops.size(); i++) {
+        result = new BPLBinaryLogicalExpression(
+          BPLBinaryLogicalExpression.Operator.AND,
+          result,
+          ops.get(i));
+      }
+      return result;
     }
-    
-    BPLExpression result = ops.get(0);
-    for (int i = 1; i < ops.size(); i++) {
-      result = new BPLBinaryLogicalExpression(
-        BPLBinaryLogicalExpression.Operator.AND,
-        result,
-        ops.get(i));
-    }
-    return result;
+    return null;
   }
 
   public static BPLExpression logicalOr(BPLExpression... operands) {
     // Filter all expressions that are not of type BPLBoolLiteral.FALSE 
     List<BPLExpression> ops = new ArrayList<BPLExpression>();
-    for (BPLExpression expr : operands) {
-      if (expr != BPLBoolLiteral.FALSE) {
-        ops.add(expr);
+    
+    if (Main.getProject().simplifyLogicalExpressions()) {
+      for (BPLExpression expr : operands) {
+        if (expr != BPLBoolLiteral.FALSE) {
+          ops.add(expr);
+        }
+        if (expr == BPLBoolLiteral.TRUE) return BPLBoolLiteral.TRUE;
       }
+      
+      if (ops.size() == 0) {
+        return BPLBoolLiteral.FALSE;
+      }
+    } else {
+      ops.addAll(Arrays.asList(operands));
     }
     
-    if (ops.size() == 0) {
-      return BPLBoolLiteral.FALSE;
+    if (ops.size() > 0) {
+      BPLExpression result = ops.get(0);
+      for (int i = 1; i < ops.size(); i++) {
+        result = new BPLBinaryLogicalExpression(
+          BPLBinaryLogicalExpression.Operator.OR,
+          result,
+          ops.get(i));
+      }
+      return result;
     }
-    
-    BPLExpression result = ops.get(0);
-    for (int i = 1; i < ops.size(); i++) {
-      result = new BPLBinaryLogicalExpression(
-        BPLBinaryLogicalExpression.Operator.OR,
-        result,
-        ops.get(i));
-    }
-    return result;
+    return null;
   }
 
   public static BPLExpression implies(
       BPLExpression left,
       BPLExpression right) {
+    
+    // Simplify expression if flag it set
+    if (Main.getProject().simplifyLogicalExpressions()) {
+      if (left == BPLBoolLiteral.TRUE) {
+        if (right == BPLBoolLiteral.TRUE) {
+          return BPLBoolLiteral.TRUE;
+        } else if (right == BPLBoolLiteral.FALSE) {
+          return BPLBoolLiteral.FALSE;
+        }
+      } else if (left == BPLBoolLiteral.FALSE) {
+         return BPLBoolLiteral.TRUE;
+      } else {
+        if (right == BPLBoolLiteral.TRUE) {
+          return BPLBoolLiteral.TRUE;
+        }
+      }
+    }
+    
     return new BPLBinaryLogicalExpression(
         BPLBinaryLogicalExpression.Operator.IMPLIES,
         left,

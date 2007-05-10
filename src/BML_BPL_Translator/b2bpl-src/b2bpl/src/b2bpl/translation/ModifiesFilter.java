@@ -196,8 +196,7 @@ public class ModifiesFilter {
 
     /**
      * State variable to keep track of whether we currently are on the LHS of a
-     * field/array access. This is the case if and only if {@code onLhs}
-     * &gt; 0.
+     * field/array access. This is the case if and only if {@code onLhs > 0}.
      */
     private int onLhs = 0;
 

@@ -11,7 +11,6 @@ import b2bpl.bpl.ast.BPLCallCommand;
 import b2bpl.bpl.ast.BPLCommand;
 import b2bpl.bpl.ast.BPLHavocCommand;
 import b2bpl.bpl.ast.BPLOldExpression;
-import b2bpl.bpl.ast.BPLOldVariableExpression;
 import b2bpl.bpl.ast.BPLVariableExpression;
 
 
@@ -130,13 +129,6 @@ public class LoopTargetDetector {
     }
 
     public Object visitVariableExpression(BPLVariableExpression expr) {
-      // Every variable expression reached by this visitor is guaranteed to be
-      // a loop target.
-      loopTargets.add(expr.getIdentifier());
-      return null;
-    }
-    
-    public Object visitOldVariableExpression(BPLOldVariableExpression expr) {
       // Every variable expression reached by this visitor is guaranteed to be
       // a loop target.
       loopTargets.add(expr.getIdentifier());

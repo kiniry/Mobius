@@ -68,7 +68,7 @@ public class MethodSpecificationAttribute extends Attribute {
   }
 
   private static BMLSpecificationCase readSpecificationCase(
-      BMLAttributeReader reader) {
+    BMLAttributeReader reader) {
     BMLPredicate requiresPredicate = reader.readPredicate();
     BMLRequiresClause requires = new BMLRequiresClause(requiresPredicate);
 

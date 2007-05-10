@@ -23,11 +23,16 @@ public class BPLModifiesClause extends BPLSpecificationClause {
     StringBuffer sb = new StringBuffer();
 
     sb.append("modifies ");
-    for (int i = 0; i < variables.length; i++) {
-      if (i > 0) {
-        sb.append(", ");
+    
+    if (variables == null || variables.length == 0) {
+      sb.append("\\nothing");
+    } else {
+      for (int i = 0; i < variables.length; i++) {
+        if (i > 0) {
+          sb.append(", ");
+        }
+        sb.append(variables[i]);
       }
-      sb.append(variables[i]);
     }
     sb.append(';');
 

@@ -178,7 +178,7 @@ import b2bpl.bytecode.bml.ast.BMLExpression;
  * @see MethodTranslator
  * @see ITranslationContext
  *
- * @author Ovidio Mallo
+ * @author Ovidio Mallo, Samuel Willimann
  */
 public class Translator implements ITranslationConstants {
 
@@ -1557,79 +1557,61 @@ public class Translator implements ITranslationConstants {
     {
       // Method calls (exception handling)
       addComment("Exception handling");
-      
+     
       addTypes(RETURN_STATE_TYPE);
       
       String n = quantVarName(NORMAL_RETURN_STATE);
-      String ex = quantVarName(EXCEPTIONAL_RETURN_STATE); 
+      String ex = quantVarName(EXCEPTIONAL_RETURN_STATE);
+      
+      String s = quantVarName("s");
       
       BPLType returnState = new BPLTypeName(RETURN_STATE_TYPE);
       BPLVariable normal = new BPLVariable(n, returnState);
       BPLVariable exceptional = new BPLVariable(ex, returnState);
+      BPLVariable sVar = new BPLVariable(s, returnState);
       addConstants(normal, exceptional);
       
       addFunction(IS_NORMAL_RETURN_STATE_FUNC, returnState, BPLBuiltInType.BOOL);
       addFunction(IS_EXCEPTIONAL_RETURN_STATE_FUNC, returnState, BPLBuiltInType.BOOL);
-      addAxiom(isNormalReturnState(var(n)));
-      addAxiom(isExceptionalReturnState(var(ex)));
+      addAxiom(forall(sVar, isEquiv(notEqual(var(s), var(n)), logicalNot(isNormalReturnState(var(s))))));
+      addAxiom(forall(sVar, isEquiv(notEqual(var(s), var(ex)), logicalNot(isExceptionalReturnState(var(s))))));
     }
     
     {
-      
-      // TODO: temporary axiomatization of Java type system
+      // FIXME[sw]: Temporary partial axiomatization of the Java type system.
+      //            Should later be replaced with either an on-the-fly compilation
+      //            of Java Runtime Libraries (from BML to BoogiePL) or a
+      //            precompiled BoogiePL version.
       declarations.add(axiomatizeHelperProcedure("java.lang.Object..init"));
       declarations.add(axiomatizeHelperProcedure("java.lang.Throwable..init"));
       declarations.add(axiomatizeHelperProcedure("java.lang.Exception..init"));
       declarations.add(axiomatizeHelperProcedure("java.io.PrintStream.println"));
-      
-      /*
-      BPLVariable heap_var = new BPLVariable(HEAP_VAR, new BPLTypeName(HEAP_TYPE));
-      BPLVariable this_var = new BPLVariable("param0", BPLBuiltInType.REF);
-      
-      declarations.add(new BPLProcedure(
-          "java.lang.Object..init",
-          new BPLVariable[] { heap_var, this_var },
-          new BPLVariable[] {
-              new BPLVariable(RETURN_STATE_VAR, new BPLTypeName(RETURN_STATE_TYPE)),
-              new BPLVariable(EXCEPTION_VAR, BPLBuiltInType.REF)
-          },
-          new BPLSpecification(new BPLSpecificationClause[0])));
-      declarations.add(new BPLProcedure(
-          "java.lang.Exception..init",
-          new BPLVariable[] { heap_var, this_var },
-          new BPLVariable[] {
-              new BPLVariable(RETURN_STATE_VAR, new BPLTypeName(RETURN_STATE_TYPE)),
-              new BPLVariable(EXCEPTION_VAR, BPLBuiltInType.REF)
-          },
-          new BPLSpecification(new BPLSpecificationClause[0])));
-      declarations.add(new BPLProcedure(
-          "java.io.PrintStream.println",
-          new BPLVariable[] { heap_var, this_var },
-          new BPLVariable[] {
-              new BPLVariable(RETURN_STATE_VAR, new BPLTypeName(RETURN_STATE_TYPE)),
-              new BPLVariable(EXCEPTION_VAR, BPLBuiltInType.REF)
-          },
-          new BPLSpecification(new BPLSpecificationClause[0])));
-     */
+    }
+    
+    {
+      // Class fields which appear in one or more modifies clauses
+      // SpecificationTranslator translator = SpecificationTranslator.forModifiesClause(HEAP_VAR, parameters);
+      // return translator.translateModifiesStoreRefs(context, project.getSpecificationDesugarer().getModifiesStoreRefs(method));
     }
   }
   
   private BPLProcedure axiomatizeHelperProcedure(String name) {
-    //@deprecated BPLVariable heap_var = new BPLVariable(HEAP_VAR, new BPLTypeName(HEAP_TYPE));
     BPLVariable this_var = new BPLVariable("param0", BPLBuiltInType.REF);
     
     return new BPLProcedure(
         name,
         new BPLVariable[] { this_var },
         new BPLVariable[] {
-            //@deprecated new BPLVariable(RETURN_HEAP_PARAM, new BPLTypeName(HEAP_TYPE)),
             new BPLVariable(RETURN_STATE_VAR, new BPLTypeName(RETURN_STATE_TYPE)),
             new BPLVariable(RETURN_VALUE_VAR, BPLBuiltInType.REF),
             new BPLVariable(EXCEPTION_VAR, BPLBuiltInType.REF)
         },
         new BPLSpecification(new BPLSpecificationClause[] {
-            new BPLEnsuresClause(notEqual(var(RETURN_VALUE_VAR), BPLNullLiteral.NULL)),
-            new BPLEnsuresClause(alive(rval(var(RETURN_VALUE_VAR)), var(HEAP_VAR)))
+            new BPLEnsuresClause(logicalAnd(
+                // postcondition of helper procedure (usually constructor)
+                notEqual(var(RETURN_VALUE_VAR), BPLNullLiteral.NULL),
+                alive(rval(var(RETURN_VALUE_VAR)), var(HEAP_VAR))
+            ))
         })
     );
   }
@@ -1824,8 +1806,7 @@ public class Translator implements ITranslationConstants {
   private void addInvariantDeclaration(JClassType type) {
     // Get the actual invariant predicate as declared in the given class
     // (not including the invariants declared in superclasses).
-    BMLExpression invariant =
-      project.getSpecificationDesugarer().getObjectInvariant(type, true);
+    BMLExpression invariant = project.getSpecificationDesugarer().getObjectInvariant(type, true);
 
     String o = quantVarName("o");
     String h = quantVarName("h");

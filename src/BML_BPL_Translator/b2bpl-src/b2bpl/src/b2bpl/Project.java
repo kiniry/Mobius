@@ -115,6 +115,15 @@ public class Project {
    * @see #getMaxIntConstant()
    */
   private int maxIntConstant = 100000;
+
+  /**
+   * If set to {@code true}, logical expressions will be simplified
+   * while they are being built. For instance, the expression (false || x)
+   * is simplified to the expression x.
+   *
+   * @see #simplifyLogicalExpressions()
+   */
+  private boolean simplifyLogicalExpressions = false;
   
   /**
    * The root directory used to look for the given classes if they are
@@ -185,6 +194,10 @@ public class Project {
         // Set base directory for classes that are not located in the CLASSPATH
         project.baseDirectory = args[i + 1];
         i += 2;
+      } else if ("-sl".equals(args[i])) {
+        // Simplify logical expressions, e.g. (false || x) <==> x
+        project.simplifyLogicalExpressions = true;
+        i++;
       } else {
         if (args[i].endsWith(".class")) {
           args[i] = args[i].substring(0, args[i].lastIndexOf(".class"));
@@ -242,6 +255,10 @@ public class Project {
   
   public String getBaseDirectory() {
     return baseDirectory;
+  }
+  
+  public boolean simplifyLogicalExpressions() {
+    return simplifyLogicalExpressions;
   }
 
   /**

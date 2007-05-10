@@ -48,9 +48,11 @@ import b2bpl.bpl.ast.BPLBoolLiteral;
 import b2bpl.bpl.ast.BPLExpression;
 import b2bpl.bpl.ast.BPLIntLiteral;
 import b2bpl.bpl.ast.BPLLogicalNotExpression;
+import b2bpl.bpl.ast.BPLModifiesClause;
 import b2bpl.bpl.ast.BPLNullLiteral;
 import b2bpl.bpl.ast.BPLUnaryMinusExpression;
 import b2bpl.bpl.ast.BPLVariable;
+import b2bpl.bpl.ast.BPLVariableExpression;
 import b2bpl.bytecode.BCField;
 import b2bpl.bytecode.JArrayType;
 import b2bpl.bytecode.JType;
@@ -73,6 +75,7 @@ import b2bpl.bytecode.bml.ast.BMLInstanceOfExpression;
 import b2bpl.bytecode.bml.ast.BMLIntLiteral;
 import b2bpl.bytecode.bml.ast.BMLLocalVariableExpression;
 import b2bpl.bytecode.bml.ast.BMLLogicalNotExpression;
+import b2bpl.bytecode.bml.ast.BMLNothingStoreRef;
 import b2bpl.bytecode.bml.ast.BMLNullLiteral;
 import b2bpl.bytecode.bml.ast.BMLOldExpression;
 import b2bpl.bytecode.bml.ast.BMLPredicate;
@@ -81,6 +84,7 @@ import b2bpl.bytecode.bml.ast.BMLRelationalExpression;
 import b2bpl.bytecode.bml.ast.BMLResultExpression;
 import b2bpl.bytecode.bml.ast.BMLStackCounterExpression;
 import b2bpl.bytecode.bml.ast.BMLStackElementExpression;
+import b2bpl.bytecode.bml.ast.BMLStoreRef;
 import b2bpl.bytecode.bml.ast.BMLThisExpression;
 import b2bpl.bytecode.bml.ast.BMLTypeOfExpression;
 import b2bpl.bytecode.bml.ast.BMLUnaryMinusExpression;
@@ -266,12 +270,12 @@ public class SpecificationTranslator {
    */
   public static SpecificationTranslator forPostcondition(
       String heap,
-      String oldHeap,
+      /* String oldHeap, */
       String resultOrException,
       String[] parameters) {
     return new SpecificationTranslator(
         heap,
-        oldHeap,
+        old(heap),
         // Extract the potential this object from the parameters.
         (parameters.length == 0) ? null : parameters[0],
         resultOrException,
@@ -336,6 +340,31 @@ public class SpecificationTranslator {
     }
 
     return bplExpr;
+  }
+  
+  public BPLModifiesClause translateModifiesStoreRefs(
+      ITranslationContext context,
+      BMLStoreRef[] refs) {
+    this.context = context;
+    
+    BPLVariableExpression[] vars = null;
+    
+    if (refs.length > 0 && refs[0] instanceof BMLNothingStoreRef) {
+      vars = new BPLVariableExpression[1];
+      vars[0] = var(b2bpl.translation.ITranslationConstants.HEAP_VAR);
+    } else {
+      vars = new BPLVariableExpression[refs.length + 1];
+      vars[0] = var(b2bpl.translation.ITranslationConstants.HEAP_VAR);
+      for (int i = 0; i < refs.length; i++) {
+        vars[i + 1] = new BPLVariableExpression(refs[i].toString());
+      }
+    }
+      
+    return new BPLModifiesClause(vars);    
+  }
+  
+  private static String old(String heap) {
+    return "old(" + heap + ")";
   }
 
   /**

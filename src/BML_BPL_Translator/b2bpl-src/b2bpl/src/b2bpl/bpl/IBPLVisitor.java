@@ -28,7 +28,6 @@ import b2bpl.bpl.ast.BPLLogicalNotExpression;
 import b2bpl.bpl.ast.BPLModifiesClause;
 import b2bpl.bpl.ast.BPLNullLiteral;
 import b2bpl.bpl.ast.BPLOldExpression;
-import b2bpl.bpl.ast.BPLOldVariableExpression;
 import b2bpl.bpl.ast.BPLParameterizedType;
 import b2bpl.bpl.ast.BPLPartialOrderExpression;
 import b2bpl.bpl.ast.BPLProcedure;
@@ -119,7 +118,7 @@ public interface IBPLVisitor<R> {
 
   R visitOldExpression(BPLOldExpression expr);
   
-  R visitOldVariableExpression(BPLOldVariableExpression expr);
+  /* R visitOldVariableExpression(BPLOldVariableExpression expr); */
 
   R visitQuantifierExpression(BPLQuantifierExpression expr);
 

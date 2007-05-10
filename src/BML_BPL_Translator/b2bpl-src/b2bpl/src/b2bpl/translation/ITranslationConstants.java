@@ -49,9 +49,9 @@ public interface ITranslationConstants {
   
   // String THIS_VAR = "this";
   
-  String NORMAL_RETURN_STATE =      "normal";
+  String NORMAL_RETURN_STATE =      VALUE_TYPE_PREFIX + "normal";
   
-  String EXCEPTIONAL_RETURN_STATE = "exceptional";
+  String EXCEPTIONAL_RETURN_STATE = VALUE_TYPE_PREFIX + "exceptional";
 
   String RETURN_STATE_VAR = "rs";
   
@@ -63,7 +63,7 @@ public interface ITranslationConstants {
   
   String RETURN_STATE_PARAM = "retstate";
   
-  String RETURN_VALUE_PARAM = "retvalue";
+  String RESULT_PARAM = "result";
   
   String EXCEPTION_PARAM    = "exception";
 

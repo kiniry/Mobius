@@ -23,4 +23,8 @@ public class BPLOldExpression extends BPLExpression {
   public <R> R accept(IBPLVisitor<R> visitor) {
     return visitor.visitOldExpression(this);
   }
+  
+  public String toString() {
+    return "old(" + expression.toString() + ")";
+  }
 }

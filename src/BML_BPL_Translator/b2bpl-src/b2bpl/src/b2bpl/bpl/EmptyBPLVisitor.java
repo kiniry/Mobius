@@ -28,7 +28,6 @@ import b2bpl.bpl.ast.BPLLogicalNotExpression;
 import b2bpl.bpl.ast.BPLModifiesClause;
 import b2bpl.bpl.ast.BPLNullLiteral;
 import b2bpl.bpl.ast.BPLOldExpression;
-import b2bpl.bpl.ast.BPLOldVariableExpression;
 import b2bpl.bpl.ast.BPLParameterizedType;
 import b2bpl.bpl.ast.BPLPartialOrderExpression;
 import b2bpl.bpl.ast.BPLProcedure;
@@ -245,11 +244,6 @@ public class EmptyBPLVisitor<R> implements IBPLVisitor<R> {
     return null;
   }
   
-  public R visitOldVariableExpression(BPLOldVariableExpression expr) {
-    // do nothing
-    return null;
-  }
-
   public R visitTrigger(BPLTrigger trigger) {
     // do nothing
     return null;

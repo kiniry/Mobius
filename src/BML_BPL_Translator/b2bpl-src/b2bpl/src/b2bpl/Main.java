@@ -20,14 +20,14 @@ import b2bpl.translation.Translator;
 
 public class Main implements ITroubleReporter {
 
-  private final Project project;
+  private static Project project = null;
 
   public Main(String[] args) {
     this(Project.fromCommandLine(args, new PrintWriter(System.out)));
   }
 
   public Main(Project project) {
-    this.project = project;
+    Main.project = project;
   }
 
   public static void main(String[] args) {
@@ -130,5 +130,9 @@ public class Main implements ITroubleReporter {
     if (message.getDescription().getKind() == TroubleDescription.Kind.ERROR) {
       throw new CompilationAbortedException();
     }
+  }
+  
+  public static Project getProject() {
+    return Main.project;
   }
 }

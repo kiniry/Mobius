@@ -21,6 +21,14 @@ import b2bpl.bytecode.bml.ast.BMLStoreRef;
 
 public class StandardDesugarer implements ISpecificationDesugarer {
 
+  /**
+   * Returns the object invariant of a given class type. If includeSupertypes
+   * is set, the invariant will be the conjunction of all its superclasses
+   * (including the base class itself).
+   * @param type base class type
+   * @param includeSupertypes specifies whether supertypes have to be included.
+   * @return BPLExpression object invariant
+   */
   public BMLExpression getObjectInvariant(
       JClassType type,
       boolean includeSupertypes) {
@@ -28,7 +36,14 @@ public class StandardDesugarer implements ISpecificationDesugarer {
     accumObjectInvariants(type, includeSupertypes, accumInvariants);
     return join(BMLBinaryLogicalExpression.Operator.AND, accumInvariants);
   }
-
+  
+  
+  /**
+   * Accumulates all object invariants of a given base class and all its superclasses.
+   * @param type base class type
+   * @param includeSupertypes specifies whether supertypes have to e included.
+   * @param accumInvariants list of accumulated object invariants
+   */
   public void accumObjectInvariants(
       JClassType type,
       boolean includeSupertypes,
@@ -50,6 +65,11 @@ public class StandardDesugarer implements ISpecificationDesugarer {
     }
   }
 
+  
+  /**
+   * Get the precondition of a given method.
+   * @param method method
+   */
   public BMLExpression getPrecondition(BCMethod method) {
     List<BCMethod> overrides = method.getOverrides();
     List<BMLExpression> accumPreconditions = new ArrayList<BMLExpression>();
@@ -70,6 +90,12 @@ public class StandardDesugarer implements ISpecificationDesugarer {
     return join(BMLBinaryLogicalExpression.Operator.OR, accumPreconditions);
   }
 
+  
+  /**
+   * Get storage references which are listed in a given method's modifies clause.
+   * @param method method
+   * @return BMLStoreRef[] storage references listed in the method's modifies clause.
+   */
   public BMLStoreRef[] getModifiesStoreRefs(BCMethod method) {
     List<BCMethod> overrides = method.getOverrides();
     HashSet<BMLStoreRef> accumStoreRefs = new LinkedHashSet<BMLStoreRef>();

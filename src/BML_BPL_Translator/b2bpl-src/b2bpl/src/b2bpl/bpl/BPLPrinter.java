@@ -36,7 +36,6 @@ import b2bpl.bpl.ast.BPLModifiesClause;
 import b2bpl.bpl.ast.BPLNode;
 import b2bpl.bpl.ast.BPLNullLiteral;
 import b2bpl.bpl.ast.BPLOldExpression;
-import b2bpl.bpl.ast.BPLOldVariableExpression;
 import b2bpl.bpl.ast.BPLParameterizedType;
 import b2bpl.bpl.ast.BPLPartialOrderExpression;
 import b2bpl.bpl.ast.BPLProcedure;
@@ -88,6 +87,7 @@ public class BPLPrinter implements IBPLVisitor<Object> {
   }
 
   protected void printList(BPLNode[] nodes) {
+    if (nodes == null) return;
     for (int i = 0; i < nodes.length; i++) {
       if (i > 0) {
         print(", ");
@@ -97,6 +97,7 @@ public class BPLPrinter implements IBPLVisitor<Object> {
   }
 
   protected void printStringList(String[] strings) {
+    if (strings == null) return;
     for (int i = 0; i < strings.length; i++) {
       if (i > 0) {
         print(", ");
@@ -600,12 +601,14 @@ public class BPLPrinter implements IBPLVisitor<Object> {
     return null;
   }
   
+  /*
   public Object visitOldVariableExpression(BPLOldVariableExpression expr) {
-    print("old(");
+    print("\\old(");
     print(expr.getIdentifier());
     print(")");
     return null;
   }
+  */
 
   public Object visitTrigger(BPLTrigger trigger) {
     print("{ ");
