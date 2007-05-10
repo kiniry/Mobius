@@ -961,11 +961,11 @@ public class Lifter extends EscNodeBuilder
     public FnSymbol symDynStore = registerFnSymbol("%dynStore", new Sort[] { sortMap, sortRef, sortRef, sortValue }, sortMap);
     /** symbol to mean a new array has been created */
     public FnSymbol symNewArray = registerFnSymbol("%newArray", new Sort[] { sortMap, sortType, sortMap, sortRef, sortInt}, sortPred);
-    /** symbol for array select */
+    /** symbol for array select (heap -> ref -> int -> value) */
     public FnSymbol symArrSelect = registerFnSymbol("%arrSelect", new Sort[] { sortMap, sortRef, sortInt }, sortValue);
-	/** symbol for array store */
+	/** symbol for array store (heap -> ref -> int -> value -> pred) */
     public FnSymbol symArrStore = registerFnSymbol("%arrStore", new Sort[] { sortMap, sortRef, sortInt, sortValue }, sortMap);
-    /** bicolano special subtyping relation */
+    /** bicolano special subtyping relation (heap -> value -> type -> pred) */
     public FnSymbol symAssignCompat = registerFnSymbol("%assignCompat", new Sort[] { sortMap, sortValue, sortType }, sortPred);
 	
     
