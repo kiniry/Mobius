@@ -1207,6 +1207,7 @@ public class Lifter extends EscNodeBuilder
 		case TagConstants.TYPESIG:
 		case TagConstants.TYPENAME:
 		case TagConstants.TYPECODE:
+		case TagConstants.NULLTYPE:
 		//case TagConstants.TYPE:
 		//case TagConstants.TYPETYPE:
 			return sortRef;
