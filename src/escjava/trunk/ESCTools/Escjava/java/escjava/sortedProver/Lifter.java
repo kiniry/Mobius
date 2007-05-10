@@ -599,7 +599,7 @@ public class Lifter extends EscNodeBuilder
 			}
 			if (fn == symAssignCompat) {
 				return dumpBuilder.buildAssignCompat((SMap)args[0].dump(),  args[1].dumpValue(),
-							args[1].dumpAny());
+							args[2].dumpAny());
 			}
 			
 			if(fn.name.startsWith("%"))
