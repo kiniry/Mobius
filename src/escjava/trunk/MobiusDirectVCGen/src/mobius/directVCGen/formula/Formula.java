@@ -7,10 +7,14 @@ import escjava.sortedProver.Lifter.Term;
 import escjava.sortedProver.NodeBuilder.STerm;
 import escjava.sortedProver.NodeBuilder.Sort;
 
-// TODO: add comments
+/**
+ * This is the library class for generic handling of the formulas.
+ * It is not used to create terms. The sort attached to it
+ * is the sort any...
+ */
 public class Formula {
 	
-	// TODO: add comments
+	/** the current instance of the lifter: used to build the formulas */
 	static Lifter lf = new Lifter(new CoqNodeBuilder());
 	
 	/** 
@@ -25,8 +29,15 @@ public class Formula {
 	 */
 	public static QuantVariable program = Expression.var("p");
 	
+	//TODO: add comments
+	public static Sort sortValue = lf.sortValue;
 	
-	// TODO: add comments
+	/**
+	 * Generate the formulas from a given term using the
+	 * current lifter.
+	 * @param t The terms to translate
+	 * @return the formulas ready to be dumped
+	 */
 	public static STerm generateFormulas(Term t) {
 		lf.dumpBuilder = lf.builder;
 		STerm st = t.dump();
@@ -34,7 +45,12 @@ public class Formula {
 		return st;
 	}
 	
-	// TODO: add comments
+	/**
+	 * Give the array of formulas which represents all the 
+	 * type declarations that were used.
+	 * @param sorts the types to declare
+	 * @return an array of type declarations to print
+	 */
 	public static STerm [] generateTypes(Sort [] sorts) {
 		STerm [] res = new STerm[sorts.length]; 
 		lf.dumpBuilder = lf.builder;
@@ -49,7 +65,7 @@ public class Formula {
 	/**
 	 * Every use of this function should be replaced by a 'proper'
 	 * library call.
-	 * @deprecated
+	 * @deprecated to be used for convenience only
 	 */
     public static Lifter getCurrentLifter() {
 		return lf;

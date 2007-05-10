@@ -65,6 +65,9 @@ public class CoqNodeBuilder extends EscNodeBuilder {
 		public CPred(String rep) {
 			super(false, rep, new STerm[0]);
 		}
+		public CPred(boolean b, String rep, STerm t1, STerm t2) {
+			this(b, rep, new STerm [] {t1, t2});
+		}
 	}
 	public class CMap extends CTerm implements SMap {
 
@@ -217,6 +220,9 @@ public class CoqNodeBuilder extends EscNodeBuilder {
 		
 		public CInt(String rep) {
 			super(false, rep, new STerm[0]);
+		}
+		public CInt(String rep, STerm arg) {
+			this(rep, new STerm[] {arg});
 		}
 	}
 	public class CReal extends CValue implements SReal {
@@ -452,13 +458,13 @@ public class CoqNodeBuilder extends EscNodeBuilder {
 	public SValue buildValueConversion(Sort from, Sort to, SValue val) {
 		if(from == sortValue) {
 			if(to == sortRef) {
-				return new CValue("vRef", new STerm[] {val});
+				return val;
 			}
 			else if(to == sortBool) {
-				return new CValue("vBool", new STerm[] {val});
+				return new CBool("vBool", new STerm[] {val});
 			}
 			else if(to == sortInt) {
-				return new CValue("vInt", new STerm[] {val});
+				return new CInt("vInt", new STerm[] {val});
 			}
 			else if(to == sortReal) {
 				throw new UnsupportedOperationException("We do not support reals right now...");
@@ -505,7 +511,7 @@ public class CoqNodeBuilder extends EscNodeBuilder {
 	@Override
 	public SValue buildSelect(SMap map, SValue idx) {		
 		CRef addr = new CRef("Heap.StaticField", new STerm [] {idx});
-		return new CValue("Heap.get", new STerm[] {map, addr});
+		return new CValue("get", new STerm[] {map, addr});
 	}
 	@Override
 	public SMap buildStore(SMap map, SValue idx, SValue val) {
@@ -516,7 +522,7 @@ public class CoqNodeBuilder extends EscNodeBuilder {
 	@Override
 	public SValue buildDynSelect(SMap heap, SRef obj, SAny field) {
 		CRef addr = new CRef("Heap.DynamicField", new STerm [] {getLoc(obj), field});
-		return new CValue("Heap.get", new STerm[] {heap, addr});
+		return new CValue("get", new STerm[] {heap, addr});
 	}
 
 	@Override
@@ -529,7 +535,7 @@ public class CoqNodeBuilder extends EscNodeBuilder {
 	@Override
 	public SValue buildArrSelect(SMap heap, SRef obj, SInt idx) {
 		CRef addr = new CRef("Heap.ArrayElement", new STerm [] {getLoc(obj), idx});
-		return new CValue("Heap.get", new STerm[] {heap, addr});
+		return new CValue("get", new STerm[] {heap, addr});
 	}
 
 	@Override
@@ -579,7 +585,14 @@ public class CoqNodeBuilder extends EscNodeBuilder {
 
 	@Override
 	public SPred buildIntPred(int intPredTag, SInt arg1, SInt arg2) {
-		// TODO Auto-generated method stub
+		switch (intPredTag) {
+			case NodeBuilder.predLE:
+				return new CPred(false, "<", new CInt("Int.toZ", arg1),
+											new CInt("Int.toZ", arg2));
+			case NodeBuilder.predLT:
+				return new CPred(false, "<=", new CInt("Int.toZ", arg1),
+						new CInt("Int.toZ", arg2));
+		}
 		throw new UnsupportedOperationException();
 	}
 

@@ -22,6 +22,14 @@ public class Expression {
 	// TODO: add comments
 	public static String oldPrefix = "\\pre_";
 
+	// TODO: add comments	
+	public final static QuantVariable length;
+	
+	static {
+		length = var("length", Num.sortInt);
+		Lookup.fieldsToDeclare.add(length);
+	}
+
 	// TODO: add comments
 	public static String old(String s){
 		return oldPrefix + s;

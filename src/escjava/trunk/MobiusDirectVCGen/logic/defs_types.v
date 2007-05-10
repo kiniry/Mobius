@@ -14,13 +14,20 @@ Import Dom.
 Variable heap: Heap.t.
 Import Prog.
 Variable p: Program.
-Definition typeof (heap: Heap.t) (loc: Location) : ClassName :=
-match (Heap.typeof heap loc) with
-| Some c => c
-| None => (javaLang, object)
+
+Definition get (heap: Heap.t) (loc: Heap.AdressingMode)  : value :=
+match (Heap.get heap loc) with
+| Some v => v
+| None => Null
 end.
 Variable this: value.
 Variable undef: Location.
+
+Definition vInt (val: value) : Int.t :=
+match val with 
+| Num (I i) => i
+| _ => Int.const 0
+end.
 
 Definition loc (v: value): Location := 
 match v with 

@@ -2,6 +2,7 @@ package mobius.directVCGen.vcgen.expression;
 
 import java.util.Vector;
 
+import javafe.ast.ArrayRefExpr;
 import javafe.ast.CastExpr;
 import javafe.ast.CondExpr;
 import javafe.ast.ExprObjectDesignator;
@@ -258,6 +259,36 @@ public class ExpressionVCGen extends BinaryExpressionVCGen{
 		
 		
 		return pre;
+	}
+
+	public Post arrayRef(ArrayRefExpr arr, VCEntry entry) {
+		QuantVariableRef var = Expression.rvar(Ref.sort);
+		QuantVariableRef idx = Expression.rvar(Num.sortInt);
+		Term pre = entry.post.post;
+		Term length = Heap.select(Heap.var, var, Expression.length);
+		
+		pre = entry.post.substWith(Heap.selectArray(Heap.var, var, idx, Type.getSort(arr)));
+		Term norm = Logic.implies(Logic.interval0To(length, idx), pre);
+		
+		QuantVariableRef exc = Expression.rvar(Ref.sort);
+		Term tExcp = Logic.forall(exc.qvar, 
+				Logic.implies(Logic.not(Logic.interval0To(length, idx)), 
+				               		StmtVCGen.getExcpPost(Type.javaLangArrayOutOfBoundException(), entry).substWith(exc)));
+		
+		pre = Logic.and(norm, tExcp);
+		entry.post = new Post(idx, pre);
+		pre = getPre(arr.index, entry).post;
+		
+		norm = Logic.implies(Logic.not(Logic.equalsNull(var)), pre);
+		tExcp = Logic.forall(exc.qvar, 
+				Logic.implies(Logic.equalsNull(var), 
+				               		StmtVCGen.getExcpPost(Type.javaLangNullPointerException(), entry).substWith(exc)));
+		
+		pre = Logic.and(norm, tExcp);
+		entry.post = new Post(var, pre);
+		pre = getPre(arr.array, entry).post;
+		
+		return new Post(pre);
 	}
 	
 	

@@ -252,7 +252,7 @@ public class ExpressionVisitor extends ABasicVisitor {
 	}
 	
 	public /*@non_null*/ Object visitArrayRefExpr(/*@non_null*/ ArrayRefExpr x, Object o) {
-		return visitExpr(x, o);
+		return vcg.arrayRef(x, (VCEntry)o);
 	}
 	public /*@non_null*/ Object visitNewArrayExpr(/*@non_null*/ NewArrayExpr x, Object o) {
 		return vcg.newArray(x, (VCEntry) o);

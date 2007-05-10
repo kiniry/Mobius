@@ -32,7 +32,7 @@ public class Logic {
 	
 	// TODO: add comments	
 	private static Term numBinaryOp(Term l, Term r, int tag){
-		if(l.getSort() != r.getSort() &&
+		if(l.getSort() != r.getSort() ||
 				(!Num.isNum(l.getSort()) || !Num.isNum(r.getSort())))
 			throw new IllegalArgumentException("The sort of " + l + 
 					" is different from the sort of " + r + ".");
@@ -355,7 +355,7 @@ public class Logic {
 	 * @return a term representing an index within an interval
 	 */
 	public static Term interval0To(Term dim, QuantVariableRef idx) {
-		if((!dim.getSort().equals(Num.sortInt)) ||(!idx.equals(Num.sortInt)))
+		if((!dim.getSort().equals(Num.sortInt)) ||(!idx.getSort().equals(Num.sortInt)))
 			throw new IllegalArgumentException("The sort " + dim.getSort() + " or " +
 					idx.getSort()+
 					" is invalid! (Hint: should be int...)"); 

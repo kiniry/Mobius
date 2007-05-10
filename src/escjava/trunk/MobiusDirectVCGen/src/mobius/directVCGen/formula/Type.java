@@ -203,6 +203,11 @@ public class Type{
 			return type;	
 		}
 	}
+	
+	// TODO: add comments
+	public static Term javaLangArrayOutOfBoundException() {
+		return translate(Types.getJavaLang("ArrayOutOfBoundException"));
+	}
 
 
 

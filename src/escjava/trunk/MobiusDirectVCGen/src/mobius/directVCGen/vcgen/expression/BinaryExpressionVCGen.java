@@ -377,7 +377,7 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn{
 					               		StmtVCGen.getExcpPost(Type.javaLangNullPointerException(), entry).substWith(exc)));
 			
 			// the normal post
-			Term tNormal = 	entry.post.post.subst(Heap.var, Heap.storeArray(Heap.var, arrVar, rvar, idx));
+			Term tNormal = 	entry.post.post.subst(Heap.var, Heap.storeArray(Heap.var, arrVar,  idx, rvar));
 			tNormal = Logic.implies(Logic.not(Logic.equalsNull(arrVar)), tNormal);
 			Post post;
 			post  = new Post(Logic.and(tNormal, tExcp));
