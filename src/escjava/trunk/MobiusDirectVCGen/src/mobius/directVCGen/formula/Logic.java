@@ -346,4 +346,12 @@ public class Logic {
 		}
 		return res;
 	}
+
+	public static Term interval0To(Term dim, QuantVariableRef idx) {
+		if((!dim.getSort().equals(Num.sortInt)) ||(!idx.equals(Num.sortInt)))
+			throw new IllegalArgumentException("The sort " + dim.getSort() + " or " +
+					idx.getSort()+
+					" is invalid! (Hint: should be int...)"); 
+		return Logic.and(Logic.le(Num.value(0), idx), Logic.lt(idx, dim));
+	}
 }

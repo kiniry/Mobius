@@ -307,9 +307,9 @@ public class JmlExprToFormula {
 	
 	public Object instanceOfExpr(InstanceOfExpr x, Object o) {
 		Term refTerm = (Term) x.expr.accept(this.v, o) ;
-		Term tType = Type.of(Heap.var, refTerm);
+
 		Term sortType = Type.translate(x.type);
-		return Logic.typeLE(tType,sortType);
+		return Type.assignCompat(Heap.var, refTerm,sortType);
 	}
 
 

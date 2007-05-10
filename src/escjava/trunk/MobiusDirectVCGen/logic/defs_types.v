@@ -14,8 +14,11 @@ Import Dom.
 Variable heap: Heap.t.
 Import Prog.
 Variable p: Program.
-Variable iValue: Z -> value.
-Variable typeof : Heap.t -> value -> ClassName.
+Definition typeof (heap: Heap.t) (loc: Location) : ClassName :=
+match (Heap.typeof heap loc) with
+| Some c => c
+| None => (javaLang, object)
+end.
 Variable this: value.
 Variable undef: Location.
 
@@ -28,7 +31,12 @@ Lemma simple_loc : forall r, loc (Ref r) = r.
 intros; simpl; auto.
 Qed.
 
-
+Definition eq_bool (v1: Int.t) (v2: Int.t): bool :=
+  Zeq_bool (Int.toZ v1) (Int.toZ v2).
+Definition le_bool (v1: Int.t) (v2: Int.t): bool :=
+  Zle_bool (Int.toZ v1) (Int.toZ v2).
+Definition lt_bool (v1: Int.t) (v2: Int.t): bool :=
+  Zlt_bool (Int.toZ v1) (Int.toZ v2).
 
 
 

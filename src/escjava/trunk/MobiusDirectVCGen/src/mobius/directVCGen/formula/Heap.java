@@ -16,6 +16,9 @@ public class Heap {
 	public static Term store(QuantVariableRef heap, Term obj, QuantVariable var, Term val) {
 		return Formula.lf.mkFnTerm(Formula.lf.symDynStore, new Term[] {heap, obj, Expression.refFromVar(var), sortToValue(val)});
 	}
+	public static Term storeArray(QuantVariableRef heap, QuantVariableRef var, Term val, Term idx) {
+		return Formula.lf.mkFnTerm(Formula.lf.symArrStore, new Term[] {heap,  var, sortToValue(val), idx});
+	}
 	public static Term select(QuantVariableRef heap, QuantVariable var) {
 		Term select = Formula.lf.mkFnTerm(Formula.lf.symSelect, 
 				new Term[] {heap, Expression.refFromVar(var)});
@@ -46,21 +49,23 @@ public class Heap {
 	}
 
 	public static Term sortToValue(Term t) {
-		if(t.getSort() == Formula.lf.sortBool) {
+		Sort s = t.getSort();
+		s = s.theRealThing();
+		if(s.equals(Formula.lf.sortBool)) {
 			return Formula.lf.mkFnTerm(Formula.lf.symBoolToValue,  new Term [] {t});
 		}
-		else if(t.getSort() == Formula.lf.sortRef) {
+		else if(s.equals(Formula.lf.sortRef)) {
 			return Formula.lf.mkFnTerm(Formula.lf.symRefToValue,  new Term [] {t});
 		}
-		else if(t.getSort() == Formula.lf.sortInt) {
+		else if(s.equals(Formula.lf.sortInt)) {
 			return Formula.lf.mkFnTerm(Formula.lf.symIntToValue,  new Term [] {t});
 		}
-		else if(t.getSort() == Formula.lf.sortReal) {
+		else if(s.equals(Formula.lf.sortReal)) {
 			return Formula.lf.mkFnTerm(Formula.lf.symRealToValue,  new Term [] {t});
 		}
 		else {
 			throw new IllegalArgumentException("Bad type " +
-					"found: " + t.getSort());
+					"found for " + t.getClass() + " " + t + ": " + t.getSort());
 		}
 	}
 	
@@ -85,7 +90,7 @@ public class Heap {
 	public static Term newArray(QuantVariableRef oldheap,  Term type, QuantVariableRef heap, Term dim, QuantVariableRef loc) {
 		if(oldheap == null)
 			throw new NullPointerException();
-		return Formula.lf.mkFnTerm(Formula.lf.symNewArray, new Term[] {oldheap, type, heap, dim, loc});
+		return Formula.lf.mkFnTerm(Formula.lf.symNewArray, new Term[] {oldheap, type, heap, loc, dim});
 
 	}
 	

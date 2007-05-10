@@ -7,7 +7,8 @@ public class ToyExample {
     this.f = 3;
     j = a;
     ((A) j).t(i).f = (((i == 1)? 2: 1) + (A.fs = 0));
-    
+    ToyExample [] te = new ToyExample[3];
+    te[2] = null;
 //    if(i == 0);
 //    while (true) {
 //    	if(i == 0)

@@ -200,8 +200,8 @@ public class StmtVCGen extends ExpressionVisitor {
 			}
 			else if (Type.isSubClassOrEq(p.type,typ)) {
 					Term var = Expression.rvar(Ref.sort);
-					Post typeof = new Post(Logic.typeLE(
-							Type.of(Heap.var, var), 
+					Post typeof = new Post(
+							Type.assignCompat(Heap.var, var, 
 							p.type));
 					res = Post.and(Post.implies(typeof, p.post), 
 							Post.implies(Post.not(typeof), res));
@@ -214,7 +214,7 @@ public class StmtVCGen extends ExpressionVisitor {
 	public /*@non_null*/ Object visitThrowStmt(/*@non_null*/ ThrowStmt x, Object o) {
 		VCEntry vce = (VCEntry)o;
 		vce.post = treatAnnot( vce, annot.getAnnotPost(x));
-		Term typ = Type.getType(x.expr);
+		Term typ = Type.getTypeName(x.expr);
 		vce.post = getExcpPost(typ, vce);
 		vce.post = ((Post)x.expr.accept(exprVisitor, vce));
 		return treatAnnot(vce, annot.getAnnotPre(x));

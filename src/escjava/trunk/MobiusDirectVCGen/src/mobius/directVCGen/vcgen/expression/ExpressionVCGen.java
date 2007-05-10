@@ -5,6 +5,7 @@ import java.util.Vector;
 import javafe.ast.ArrayInit;
 import javafe.ast.CastExpr;
 import javafe.ast.CondExpr;
+import javafe.ast.Expr;
 import javafe.ast.ExprObjectDesignator;
 import javafe.ast.ExprVec;
 import javafe.ast.FieldAccess;
@@ -91,7 +92,7 @@ public class ExpressionVCGen extends BinaryExpressionVCGen{
 		
 		QuantVariableRef r = Expression.rvar(Ref.sort);
 		p = new Post(r,
-			Logic.and(Logic.implies(Logic.typeLE(Type.of(Heap.var, r), 
+			Logic.and(Logic.implies(Type.assignCompat(Heap.var, r, 
 												 Type.translate(x.type)),
 								    p.substWith(Bool.value(true))), 
 				      Logic.implies(Logic.not(Logic.typeLE(Type.of(Heap.var, r), 
@@ -114,7 +115,7 @@ public class ExpressionVCGen extends BinaryExpressionVCGen{
 
 		
 		QuantVariableRef st2 = Expression.rvar(Type.getSort(x.els));
-		Post pelse = new Post(st1, e.post.substWith(st2));
+		Post pelse = new Post(st2, e.post.substWith(st2));
 		e.post = pelse;
 		pelse = getPre(x.els, e);
 		
@@ -128,7 +129,7 @@ public class ExpressionVCGen extends BinaryExpressionVCGen{
 
 	public Post castExpr(CastExpr x, VCEntry e) {
 		Post p = new Post(e.post.var, 
-							Logic.implies(Logic.typeLE(Type.of(Heap.var, e.post.var), Type.translate(x.type)),
+							Logic.implies(Type.assignCompat(Heap.var, e.post.var, Type.translateToType(x.type)),
 										  e.post.post));
 		e.post = p;
 		p = getPre(x.expr, e);
@@ -218,17 +219,45 @@ public class ExpressionVCGen extends BinaryExpressionVCGen{
 	public Post newArray(NewArrayExpr narr, VCEntry entry) {
 		QuantVariableRef newHeap = Heap.newVar();
 		QuantVariableRef loc = entry.post.var;
-		QuantVariableRef dim = Expression.rvar(Num.sortInt);
+		QuantVariableRef dim;
 		ArrayInit init= narr.init;
 		Term arr;
 		Post pre = entry.post;
-		if (init != null) {
-			entry.post = new Post(loc, entry.post.post);
-			pre = getPre(narr.init, entry);
+		Term type =  Type.translateToType(narr.type);
+		Vector<QuantVariableRef> dimVec = new Vector<QuantVariableRef>();
+
+
+		// multi array creation note: it is not working
+		for(int i = narr.dims.size() -1;  i > 0; i --) {
+			Term res;
+			dim = Expression.rvar(Num.sortInt);
+			QuantVariableRef idx = Expression.rvar(Num.sortInt);
+			
+			res = Logic.forall(dim, 
+					Logic.implies(Logic.interval0To(dim, idx),
+							Logic.implies(Heap.newArray(Heap.var, type, newHeap, dim,loc), pre.post)));
+			type = Type.arrayof(type);
 		}
-		// TODO: do it for multi arrays
-		arr = Heap.newArray(Heap.var, Type.translate(narr.type), newHeap, dim,loc);
-		pre = new Post(loc, Logic.implies(arr, pre.post));
+		dim = Expression.rvar(Num.sortInt);
+		arr = Heap.newArray(Heap.var, type, newHeap, dim, loc);
+		pre = new Post(dim, Logic.forall(loc, Logic.forall(newHeap, Logic.implies(arr, pre.post))));
+		dimVec.add(dim);
+
+		
+		// dim handling
+		for(int i = narr.dims.size() -1;  i >= 0; i --) {
+			entry.post = new Post(dimVec.elementAt(i), pre.post);
+			pre = getPre(narr.dims.elementAt(i), entry);
+		}
+		
+		// TODO: handle init expressions.
+//		if (init != null) {
+//			entry.post = new Post(loc, entry.post.post);
+//			pre = getPre(narr.init, entry);
+//		}
+		
+
+		
 		
 		return pre;
 	}

@@ -17,6 +17,16 @@ public class Formula {
 		lf.dumpBuilder = null;
 		return st;
 	}
+	public static STerm [] generateTypes(Sort [] sorts) {
+		STerm [] res = new STerm[sorts.length]; 
+		lf.dumpBuilder = lf.builder;
+		
+		for(int i = 0; i < sorts.length; i++) {
+			res[i] = lf.builder.buildSort(sorts[i]);
+		}
+		lf.dumpBuilder = null;
+		return res;
+	}
 	
 	/**
 	 * Every use of this function should be replaced by a 'proper'

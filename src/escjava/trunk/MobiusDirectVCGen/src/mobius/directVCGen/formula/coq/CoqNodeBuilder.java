@@ -2,6 +2,7 @@ package mobius.directVCGen.formula.coq;
 
 import mobius.directVCGen.formula.Formula;
 import escjava.sortedProver.EscNodeBuilder;
+import escjava.sortedProver.NodeBuilder;
 import escjava.sortedProver.Lifter.SortVar;
 
 /*@ non_null_by_default @*/
@@ -104,6 +105,9 @@ public class CoqNodeBuilder extends EscNodeBuilder {
 		public CType(String rep) {
 			super(false, rep, new STerm[0]);
 		}
+		public CType(String rep, STerm h, STerm loc) {
+			this(rep, new STerm[] {h, loc});
+		}
 	}
 	public class CForall extends CPred {
 		public final QuantVar[] vars;
@@ -155,7 +159,7 @@ public class CoqNodeBuilder extends EscNodeBuilder {
 			return new CAny("Prop");
 		}
 		if(type.equals(sortInt)) {
-			return new CAny("Z");
+			return new CAny("Int.t");
 		}
 		if(type.equals(sortReal)) {
 			return new CAny("Real");
@@ -187,6 +191,9 @@ public class CoqNodeBuilder extends EscNodeBuilder {
 		
 		public CValue(String rep) {
 			super(false, rep, new STerm[0]);
+		}
+		public CValue(String rep, CTerm t) {
+			this(rep, new STerm[]{t});
 		}
 	}
 	public class CBool extends CValue implements SBool {
@@ -314,18 +321,18 @@ public class CoqNodeBuilder extends EscNodeBuilder {
 
 	@Override
 	public SInt buildInt(long n) {
-		return new CInt("" + n);
+		return new CInt("Int.const", new STerm[]{new CInt(""+ n)});
 	}
 
 	@Override
 	public SBool buildIntBoolFun(int tag, SInt arg1, SInt arg2) {
 		switch (tag) {
 			case predEQ:
-				return new CBool("Zeq_bool", new STerm[]{arg1, arg2});
+				return new CBool("eq_bool", new STerm[]{arg1, arg2});
 			case predLT:
-				return new CBool("Zlt_bool", new STerm[]{arg1, arg2});
+				return new CBool("lt_bool", new STerm[]{arg1, arg2});
 			case predLE:
-				return new CBool("Zle_bool", new STerm[]{arg1, arg2});
+				return new CBool("le_bool", new STerm[]{arg1, arg2});
 
 			case predGT:	
 			case predGE:
@@ -426,7 +433,7 @@ public class CoqNodeBuilder extends EscNodeBuilder {
 	public SAny buildFnCall(FnSymbol fn, SAny[] args) {
 		if(fn.equals(symTypeOf)) {
 			if(args.length == 2) {
-				return new CType("typeof", args);
+				return new CType("typeof", args[0], getLoc((SValue)args[1]));
 			}
 		}
 		throw new IllegalArgumentException("Unknown symbol: " + fn);
@@ -466,13 +473,13 @@ public class CoqNodeBuilder extends EscNodeBuilder {
 				throw new IllegalArgumentException("The conversion can only be done from a simple type to a value. Found:" + to);
 			}
 			if(from == sortRef) {
-				return new CRef("rValue", new STerm[] {val});
+				return val;
 			}
 			else if(from == sortBool) {
-				return new CBool("bValue", new STerm[] {val});
+				return new CValue("Num", new CInt("B ", new STerm[] {val}));
 			}
 			else if(from == sortInt) {
-				return new CInt("iValue", new STerm[] {val});
+				return new CValue("Num", new CInt("I ", new STerm[] {val}));
 			}
 			else if(from == sortReal) {
 				throw new UnsupportedOperationException("We do not support reals right now...");
@@ -556,8 +563,12 @@ public class CoqNodeBuilder extends EscNodeBuilder {
 
 	@Override
 	public SInt buildIntFun(int intFunTag, SInt arg1, SInt arg2) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException();
+		switch (intFunTag) {
+		case NodeBuilder.funADD:
+			return new CInt("Int.add", new STerm[] {arg1, arg2});
+		}
+		throw new UnsupportedOperationException("Cannot translate the tag: "
+				+ NodeBuilder.tagsIds[intFunTag]);
 
 	}
 
@@ -578,6 +589,11 @@ public class CoqNodeBuilder extends EscNodeBuilder {
 	public SPred buildXor(SPred arg1, SPred arg2) {
 		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public SPred buildAssignCompat(SMap map, SValue val, SAny type) {
+		return new CPred("assign_compatible", new STerm [] {new CMap("p"), map, val, type});
 	}
 
 	

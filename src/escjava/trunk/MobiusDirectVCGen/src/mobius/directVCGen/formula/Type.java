@@ -1,12 +1,14 @@
 package mobius.directVCGen.formula;
 
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Vector;
 
-import javafe.ast.TypeDecl;
 import javafe.ast.VarInit;
 import javafe.tc.FlowInsensitiveChecks;
 import escjava.sortedProver.Lifter.FnTerm;
+import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
 import escjava.sortedProver.NodeBuilder.Sort;
 import escjava.tc.Types;
@@ -16,10 +18,11 @@ public class Type{
 	/** the sort representing a type */
 	public static Sort sort = Formula.lf.sortType;
 	/** an hash map not to compute twice the types/term correspondance */
-	private static final HashMap<javafe.ast.Type, Term> types = new HashMap<javafe.ast.Type, Term>();
+	private static final HashMap<javafe.ast.Type, QuantVariableRef> types = new HashMap<javafe.ast.Type, QuantVariableRef>();
 	/** a second hashmap to get the orginal type from the given term */
-	private static final HashMap<Term, javafe.ast.Type> revtyp = new HashMap<Term, javafe.ast.Type>();
-	
+	private static final HashMap<QuantVariableRef, javafe.ast.Type> revtyp = new HashMap<QuantVariableRef, javafe.ast.Type>();
+	/** a Set to stock the array types declaration the key is the original type */
+	private static final HashMap<QuantVariableRef, Term> arrays = new HashMap<QuantVariableRef, Term>();
 	
 	/**
 	 * The typeof relation. Takes 2 arguments, a heap and a term.
@@ -45,8 +48,8 @@ public class Type{
 	 * @return a term which has the type {@link Type#sort} and which represents
 	 * the type which is translated
 	 */
-	public static Term translate(javafe.ast.Type type) {
-		Term t = types.get(type);
+	public static QuantVariableRef translate(javafe.ast.Type type) {
+		QuantVariableRef t = types.get(type);
 		if(t != null) {
 			return t;
 		}
@@ -57,13 +60,18 @@ public class Type{
 			return t;	
 		}
 	}
+
+	public static Term translateToType(javafe.ast.Type type) {
+		QuantVariableRef q = translate(type) ;
+		return Expression.rvar("(ReferenceType (ClassType " + q.qvar.name + "))", q.getSort());
+	}
 	
 	/**
 	 * Returns the sort of the given expression.
 	 * @param e the expression to get the sort from
 	 * @return a valid sort as decided by 
 	 * {@link escjava.sortedProver.Lifter#typeToSort(javafe.ast.Type)}
-	 * @see #getType(VarInit)
+	 * @see #getTypeName(VarInit)
 	 * @see #translate(javafe.ast.Type)
 	 */
 	public static Sort getSort(VarInit e) {
@@ -98,10 +106,13 @@ public class Type{
 	 * @see #getSort(VarInit)
 	 * @see #translate(javafe.ast.Type)
 	 */
-	public static Term getType(VarInit expr) {
+	public static Term getTypeName(VarInit expr) {
 		return translate(FlowInsensitiveChecks.getType(expr)) ;
 	}
 	
+	public static Term getType(VarInit expr) {
+		return translateToType(FlowInsensitiveChecks.getType(expr)) ;
+	}
 	/**
 	 * Returns a term representing the class type 
 	 * {@link java.lang.Throwable}.
@@ -157,6 +168,27 @@ public class Type{
 		}
 		Formula.lf.dumpBuilder = null;
 		return v;
+	}
+
+	public static Term arrayof(Term type) {
+		Object t = revtyp.get(type);
+		if(t == null) {
+			throw new IllegalArgumentException("The argument must be an already registred type found: " + type);
+		}
+		else {
+			
+			QuantVariableRef oldType = (QuantVariableRef) type; 
+			if((type = arrays.get(oldType)) != null)
+				return type;
+			String name = oldType.qvar.name + "_ref"; 
+			type = Expression.rvar(name, Type.sort);
+			arrays.put(oldType, type);
+			return type;	
+		}
+	}
+
+	public static Term assignCompat(Term heap, Term val, Term type) {
+		return Formula.lf.mkFnTerm(Formula.lf.symAssignCompat, new Term [] {heap, val, type});
 	}
 
 

@@ -1,5 +1,6 @@
 package mobius.directVCGen.vcgen.expression;
 
+import javafe.ast.ArrayRefExpr;
 import javafe.ast.BinaryExpr;
 import javafe.ast.Expr;
 import javafe.ast.FieldAccess;
@@ -13,11 +14,13 @@ import mobius.directVCGen.formula.Lookup;
 import mobius.directVCGen.formula.Num;
 import mobius.directVCGen.formula.Ref;
 import mobius.directVCGen.formula.Type;
+import mobius.directVCGen.vcgen.stmt.StmtVCGen;
 import mobius.directVCGen.vcgen.struct.Post;
 import mobius.directVCGen.vcgen.struct.VCEntry;
 import escjava.ast.TagConstants;
 import escjava.sortedProver.Lifter.QuantVariable;
 import escjava.sortedProver.Lifter.QuantVariableRef;
+import escjava.sortedProver.Lifter.Term;
 import escjava.sortedProver.NodeBuilder.Sort;
 
 public class BinaryExpressionVCGen extends ABasicExpressionVCGEn{
@@ -312,17 +315,18 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn{
 	public Post assign(BinaryExpr expr, VCEntry entry) {
 		Expr right = expr.right;
 		Expr left = expr.left;
+		QuantVariableRef tmpvar = entry.post.var;
+		
 		if(left instanceof VariableAccess) {
 			VariableAccess va = (VariableAccess) left;
 			QuantVariableRef var = Expression.rvar(va.decl);
-			QuantVariableRef tmpvar = entry.post.var;
 			Post newPost = new Post(tmpvar, entry.post.post.subst(var, tmpvar));
 			entry.post = newPost;
 			Post pre = getPre(right, entry);
 			return pre;
 
 		}
-		else { // left instanceof FieldAccess
+		else if (left instanceof FieldAccess) { 
 			FieldAccess field = (FieldAccess) left;
 			ObjectDesignator od = field.od;
 			QuantVariable f = Expression.var(field.decl);
@@ -336,7 +340,7 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn{
 					QuantVariableRef obj = Expression.rvar(Ref.sort);
 					
 					entry.post = new Post(val, entry.post.post.subst(Heap.var, 
-														 Heap.store(Heap.var, obj, f, val)));
+														 Heap.store(Heap.var, obj, f, val)).subst(tmpvar, val));
 					Post pre = getPre(right, entry);
 					entry.post = new Post(obj, pre.post);
 					return getPre(od, entry);
@@ -349,7 +353,7 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn{
 					//System.out.println(field);
 					Sort s = f.type;
 					QuantVariableRef val = Expression.rvar(s);
-					Post p = new Post(val, entry.post.post.subst(Heap.var, Heap.store(Heap.var, f, val)));
+					Post p = new Post(val, entry.post.post.subst(Heap.var, Heap.store(Heap.var, f, val)).subst(tmpvar, val));
 					entry.post = p;
 					Post pre = getPre(right, entry);
 					entry.post = pre;
@@ -360,6 +364,36 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn{
 				
 			}
 			
+		}
+		else { //(left instanceof ArrayRefExpr){
+			ArrayRefExpr arr = (ArrayRefExpr) left;
+			QuantVariableRef arrVar = Expression.rvar(Ref.sort);
+			// this sort is bad
+			System.out.println(Type.getSort(arr));
+			QuantVariableRef rvar = Expression.rvar(Type.getSort(arr));
+			QuantVariableRef idx = Expression.rvar(Num.sortInt);
+			QuantVariableRef exc = Expression.rvar(Ref.sort);
+			Term tExcp = Logic.forall(exc.qvar, Logic.implies(Logic.equalsNull(arrVar), 
+					               		StmtVCGen.getExcpPost(Type.javaLangNullPointerException(), entry).substWith(exc)));
+			
+			// the normal post
+			Term tNormal = 	entry.post.post.subst(Heap.var, Heap.storeArray(Heap.var, arrVar, rvar, idx));
+			tNormal = Logic.implies(Logic.not(Logic.equalsNull(arrVar)), tNormal);
+			Post post;
+			post  = new Post(Logic.and(tNormal, tExcp));
+			
+			post = new Post(idx, post.post);
+			entry.post = post;
+			post = getPre(arr.index, entry);
+		
+			post = new Post(arrVar, post.post);
+			entry.post = post;
+			post = getPre(arr.array, entry);
+			
+			post = new Post(rvar, post.post);
+			entry.post = post;
+			post = getPre(right, entry);			
+			return post;
 		}
 	}
 
