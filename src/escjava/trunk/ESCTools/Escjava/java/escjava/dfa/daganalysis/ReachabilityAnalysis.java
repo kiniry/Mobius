@@ -1,5 +1,9 @@
 package escjava.dfa.daganalysis;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -333,12 +337,12 @@ public class ReachabilityAnalysis {
         labelState = new int[labels.length];
         sortLabels();
         computeDominators();
-        //printLabelsAndDominators();
+        printLabelsAndDominators();
         TimeUtil.stop("collect_nodes_time");
     }
     
     private void recPropagateUnsat(int x) {
-        if (labelState[x] != UNKNOWN) return;
+        if (labelState[x] == UNSAT) return;
         //System.err.println("unsat " + x);
         labelState[x] = UNSAT;
         for (int i = 0; i < labelChildren[x].length; ++i) {
@@ -346,7 +350,7 @@ public class ReachabilityAnalysis {
             int c = labelChildren[x][i];
             for (j = 0; j < labelParents[c].length && labelState[labelParents[c][j]] == UNSAT; ++j);
             if (j == labelParents[c].length)
-                propagateUnsat(c);
+                recPropagateUnsat(c);
         }
     }
     
@@ -356,7 +360,7 @@ public class ReachabilityAnalysis {
     }
     
     private void propagateSat(int x) {
-        if (labelState[x] != UNKNOWN) return;
+        if (labelState[x] == SAT) return;
         //System.err.println("sat " + x);
         labelState[x] = SAT;
         propagateSat(dominator[x]);
@@ -382,6 +386,7 @@ public class ReachabilityAnalysis {
         // Process nodes in a topological order
         for (int i = 0; i < labels.length; ++i) {
             int l = labelsSort[i];
+            if (labelState[l] == UNSAT) continue;
             for (j = 0; j < labelParents[l].length; ++j) {
                 int d = labelParents[l][j];
                 if (labelState[d] == UNSAT) continue;
@@ -408,13 +413,19 @@ public class ReachabilityAnalysis {
     }
     
     private void printLabelsAndDominators() {
-        System.out.println("digraph x {");
-        for (int i = 0; i < labels.length; ++i) {
-            for (int j = 0; j < labelChildren[i].length; ++j)
-                System.out.println("" + i + "->" + labelChildren[i][j]);
-            System.out.println("" + i + "->" + dominator[i] + "[color=blue]");
+        try {
+            PrintWriter pw = new PrintWriter(new FileOutputStream("tmp.dot"));
+            pw.println("digraph x {");
+            for (int i = 0; i < labels.length; ++i) {
+                for (int j = 0; j < labelChildren[i].length; ++j)
+                    pw.println("" + i + "->" + labelChildren[i][j]);
+                pw.println("" + i + "->" + dominator[i] + "[color=blue]");
+            }
+            pw.println("}");
+            pw.flush();
+        } catch (IOException e) {
+            System.err.println("Can't dump the graph to tmp.dot!");
         }
-        System.out.println("}");
     }
 
     private String getLabel(Node n) {
@@ -601,10 +612,17 @@ public class ReachabilityAnalysis {
         if (query instanceof NaryExpr)
             query = dagToTree((NaryExpr)query);
         if (Util.size(query, VC_LIMIT) == -1) {
-            vcTooBig = true;
+            vcTooBig |= !d;
             return d;
-        } else 
+        } else {
+            /*
+            System.err.print("query");
+            for (int i = 0; i < labels.length; ++i) if (set[i])
+                System.err.print(" " + i);
+            System.err.println();
+            */
             return Simplifier.isFalse(query);
+        }
     }
     
     private boolean searchUnsat(boolean[] set, boolean hu) {
@@ -622,16 +640,16 @@ public class ReachabilityAnalysis {
         if (cnt == 0) return false;
         
         // do the query
-        if (hu || hasUnsat(set, cnt > 1)) {
+        if ((hu && cnt > 1) || hasUnsat(set, cnt > 1)) {
             if (cnt == 1) propagateUnsat(x);
             else {
                 // split and recurse
                 boolean[] s1 = new boolean[set.length];
                 boolean[] s2 = set;
-                for (i = j = 0; j < cnt / 2; ++i) if (set[i]) {
+                for (i = j = 0; j < cnt / 2; ++i) if (set[labelsSort[i]]) {
                     ++j;
-                    s1[i] = true;
-                    s2[i] = false;
+                    s1[labelsSort[i]] = true;
+                    s2[labelsSort[i]] = false;
                 }
                 searchUnsat(s2, !searchUnsat(s1, false));
             }
