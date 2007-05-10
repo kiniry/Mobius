@@ -97,7 +97,7 @@ BEGIN
         deriv_expr_MP(mp)(assertion, sMP1, v, tau)(n1)
           IMPLIES sMP1 = tau) IMPLIES
       (FORALL (v : Val, tau : APState) :
-        deriv_expr_AP(ap)(assertion, sAP1, v, tau)(n2) 
+        deriv_expr_AP(ap)(assertion, sAP1, v, tau)(n2)
           IMPLIES sAP1 = tau) IMPLIES
       check_assertion(mp)(assertion, sMP1, sMP2)(n1)(deriv_expr_MP) IMPLIES
       check_assertion(ap)(assertion, sAP1, sAP2)(n2)(deriv_expr_AP) IMPLIES

@@ -6,7 +6,7 @@ BEGIN
   IMPORTING WellFormedMVA[CP, string],
             Semantics
 
-%  EXPORTING transaction_protocol
+  EXPORTING transaction_protocol
 
   % Control points
   no_trans, in_trans : CP
@@ -39,44 +39,14 @@ BEGIN
   vdsP : set[ProgVarDecl] = emptyset
 
   % Guards
-  % Guards must be defined only for the declared variables
-  make_Guard(vdsA : finite_set[MVAVarDecl], vdsP : finite_set[ProgVarDecl])
-            (p : pred[[(wf_Store(vdsA)), (wf_PSt(vdsP))]]) : Guard =
-    LAMBDA (stA : (wf_Store(vdsA)), stP : (wf_PSt(vdsP))) : p(stA, stP)
-
-  make_Guard(a : MVA)(p : pred[[Store, PSt]]) : Guard =
-    make_Guard(vdsA(a), vdsP(a))(p)
-
-  make_TRUE_Guard(vdsA : finite_set[MVAVarDecl], 
-                  vdsP : finite_set[ProgVarDecl]) : Guard =
-    make_Guard(vdsA, vdsP)
-              (LAMBDA (stA : (wf_Store(vdsA)), stP : (wf_PSt(vdsP))) : TRUE)
-
-  make_TRUE_Guard(a : MVA) : Guard =
-    make_TRUE_Guard(vdsA(a), vdsP(a))
-
-  % TODO: How do I prove this !?
-  make_Guard_yield_wf_Guard : LEMMA
-    FORALL (a : MVA)
-           (p : pred[[(wf_Store(vdsA)), (wf_PSt(vdsP))]]) :
-      wf_Guard(a)(make_Guard(vdsA, vdsP)(p))
-
-  AUTO_REWRITE make_Guard_yield_wf_Guard
-
   T_is_one : Guard = 
-    make_Guard(vdsA, vdsP)
-              (LAMBDA (stA : (wf_Store(vdsA)), stP : (wf_PSt(vdsP))) : 
-                 val2int(stA("T")) = 1)
+    LAMBDA (stA : Store, stP : PSt) : val2int(stA("T")) = 1
 
   T_gt_one : Guard = 
-    make_Guard(vdsA, vdsP)
-              (LAMBDA (stA : (wf_Store(vdsA)), stP : (wf_PSt(vdsP))) : 
-                 val2int(stA("T")) > 1)
+    LAMBDA (stA : Store, stP : PSt) : val2int(stA("T")) > 1
 
   TRUE_guard : Guard = 
-    make_Guard(vdsA, vdsP)
-              (LAMBDA (stA : (wf_Store(vdsA)), stP : (wf_PSt(vdsP))) : TRUE)
-
+    LAMBDA (stA : Store, stP : PSt) : TRUE
 
   % Transitions
   t1 : Transition = (# scp := no_trans,
@@ -131,10 +101,16 @@ BEGIN
        ts := ts
     #)
 
-  % TODO : I have problem proving that guards are well formed
-  % To prove that actions are well formed we need to define 
-  % var_names for expressions
-  transaction_protocol_is_well_formed : LEMMA
+  % well-formedness proofs
+  wf_inc_T : LEMMA wf_Action(transaction_protocol)((: inc_T :)) % :-)
+
+  wf_dec_T : LEMMA wf_Action(transaction_protocol)((: dec_T :)) % :-)
+
+  wf_T_gt_one : LEMMA wf_Guard(transaction_protocol)(T_gt_one) % :-)
+
+  wf_T_is_one : LEMMA wf_Guard(transaction_protocol)(T_is_one) % :-)
+
+  transaction_protocol_is_well_formed : LEMMA % :-)
     wf_MVA(transaction_protocol)
 
 END TransactionProtocol

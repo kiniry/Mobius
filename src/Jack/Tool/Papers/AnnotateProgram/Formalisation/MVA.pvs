@@ -5,6 +5,7 @@ BEGIN
   ExitNormal : ExitNormal?
   ExitExceptional : ExitExceptional?
 
+
 END EventType
 
 
@@ -88,7 +89,6 @@ WellFormedMVA[CP, Name : TYPE+] : THEORY
 BEGIN
 
   IMPORTING MVA[CP, Name],
-            func_props,               % imports domain_set
             WellFormedProgram[Name]   % imports var_names(e : Expr) : set[Name]
 
   % Functions to get a set of names from a set of variable declarations
@@ -99,17 +99,11 @@ BEGIN
     {n : Name | EXISTS (vp : ProgVarDecl) : vds(vp) AND name(vp) = n}
 
 
-  % NOTE: We may also require Int?(f(n)) OR Bool?(f(n)) but we don't care
-  % about type checking now. Same for wf_PSt (using fvs(f)(n))
-  % TODO: Maybe it is better to have just one version
   wf_Store(vds : finite_set[MVAVarDecl])(st : Store) : boolean =
     FORALL (n : Name) :
       var_names(vds)(n) IFF NOT Bottom?(st(n))
 
   wf_Store(a : MVA)(f : Store) : boolean =
-    wf_Store(vdsA(a))(f)
-
-  wf_Store(f : Store, a : MVA) : boolean =
     wf_Store(vdsA(a))(f)
 
   % NOTE: Recall that we assume that variables in PSt are fields
@@ -120,28 +114,19 @@ BEGIN
   wf_PSt(a : MVA)(f : PSt) : boolean =
     wf_PSt(vdsP(a))(f)
 
-  wf_PSt(f : PSt, a : MVA) : boolean =
-    wf_PSt(vdsP(a))(f)
-
-  % TODO: It may be necessary (maybe not) to ensure that the initial value 
-  % conforms to the declared type (we need to define conform).
   wf_vdsA(vds : set[MVAVarDecl]) : boolean =
     FORALL (vd1, vd2 : MVAVarDecl) : vds(vd1) IMPLIES vds(vd2) IMPLIES
       name(vd1) = name(vd2) IMPLIES vd1 = vd2
 
-  % TODO: Same as above
   wf_vdsP(vds : set[ProgVarDecl]) : boolean =
     FORALL (vd1, vd2 : ProgVarDecl) : vds(vd1) IMPLIES vds(vd2) IMPLIES
       name(vd1) = name(vd2) IMPLIES vd1 = vd2
 
-  % A guard is well formed if its domain states are defined for all variables
-  % vdsA or vdsP
-  wf_Guard(a : MVA)(p : Guard) : boolean =
-    wf_Store(proj_1(domain_set(p)), a) AND
-    wf_PSt(proj_2(domain_set(p)), a)
-
-  wf_Guard(p : Guard, a : MVA) : boolean =
-    wf_Guard(a)(p)
+  wf_Guard(a : MVA)(g : Guard) : boolean =
+    FORALL (sA : Store, sP : PSt, n : Name, v : Val) :
+      (NOT var_names(vdsA(a))(n) AND NOT var_names(vdsP(a))(n)) IMPLIES
+        g(sA, sP) = g(sA WITH [n |-> v], sP) AND
+        g(sA, sP) = g(sA, sP WITH [fvs := fvs(sP) WITH [n |-> v]])
 
   wf_Action(a : MVA)(l : Action) : boolean =
     FORALL (c : OneAction) :
@@ -149,9 +134,6 @@ BEGIN
         var_names(vdsA(a))(target(c)) AND
         subset?(var_names(source(c)), 
                 union(var_names(vdsA(a)), var_names(vdsP(a))))
-
-  wf_Action(l : Action, a : MVA) : boolean =
-    wf_Action(a)(l)
 
   % Rules that every MVA must follow:
   % The initial control point is in the set of control points of the automaton
@@ -172,16 +154,16 @@ BEGIN
         cps(a)(scp(t)) AND
         cps(a)(tcp(t)) AND
         evs(a)(event(t)) AND
-        wf_Guard(guard(t), a) AND
-        wf_Action(action(t), a)
+        wf_Guard(a)(guard(t)) AND
+        wf_Action(a)(action(t))
 
 
   deterministic(a : (wf_MVA)) : boolean =
     FORALL (t1, t2 : Transition, stA : Store, stP : PSt) :
       ts(a)(t1) IMPLIES
       ts(a)(t2) IMPLIES
-      wf_Store(stA, a) IMPLIES
-      wf_PSt(stP, a) IMPLIES
+      wf_Store(a)(stA) IMPLIES
+      wf_PSt(a)(stP) IMPLIES
       scp(t2) = scp(t1) IMPLIES
       event(t2) = event(t1) IMPLIES
       guard(t1)(stA, stP) IMPLIES
@@ -192,8 +174,8 @@ BEGIN
     FORALL (q : CP, e : Event, stA : Store, stP : PSt) :
       cps(a)(q) IMPLIES
       evs(a)(e) IMPLIES
-      wf_Store(stA, a) IMPLIES
-      wf_PSt(stP, a) IMPLIES
+      wf_Store(a)(stA) IMPLIES
+      wf_PSt(a)(stP) IMPLIES
         EXISTS (t : Transition) : ts(a)(t) AND
                                   scp(t) = q AND
                                   event(t) = e AND
@@ -232,6 +214,7 @@ BEGIN
        stA : Store
     #]
 
+  % TODO: Give a definition that does not use choose (use lists)
   get_MVAVarDecl(n : Name, a : (wf_MVA)) : lift[MVAVarDecl] =
     LET vds = {vd : MVAVarDecl | vdsA(a)(vd) AND name(vd) = n}  IN
       IF empty?(vds) 
@@ -283,13 +266,13 @@ BEGIN
 
   wf_AState(s : AState, a : MVA) : boolean =
     cps(a)(cp(s)) AND
-    wf_Store(stA(s), a)
+    wf_Store(a)(stA(s))
 
   wf_AState(a : MVA)(s : AState) : boolean =
     wf_AState(s, a)
 
   wf_PEvent(pe : PEvent, a : MVA) : boolean =
-    evs(a)(event(pe)) AND wf_PSt(stP(pe), a)
+    evs(a)(event(pe)) AND wf_PSt(a)(stP(pe))
 
   wf_PEvent(a : MVA)(pe : PEvent) : boolean =
     wf_PEvent(pe, a)
@@ -307,8 +290,9 @@ BEGIN
       #)
 
 
-  %  Well formed lemmas
+  %  Well-formed lemmas
 
+  % TODO: prove but first change the definition of get_MVAVarDecl
   wf_initial_MVA_state: LEMMA
     FORALL (a: MVA) :
       wf_MVA(a) IMPLIES wf_AState(initial_MVA_state(a), a)
@@ -316,12 +300,12 @@ BEGIN
   % TODO: prove (needs the definition of eval for Expressions)
   execute_action_yields_wf_state: LEMMA
     FORALL (a : MVA, stA : Store, l : Action) :
-      wf_Store(stA, a) IMPLIES
-        wf_Store(execute_actions(stA, l), a)
+      wf_Store(a)(stA) IMPLIES
+        wf_Store(a)(execute_actions(stA, l))
 
   step_yields_wf_state : THEOREM % :-)
     FORALL (a : (total), s : (wf_AState(a)), pe : (wf_PEvent(a))) :
-      wf_AState(step(a)(s, pe), a) 
+      wf_AState(a)(step(a)(s, pe))
 
 
 END MVASemantics
@@ -344,7 +328,7 @@ BEGIN
   % with source control point cp and event e. The sets of variable declarations
   % are needed to make sure that the guard is defined in for those variables.
   build_guard(a : MVA)(cp : CP, e : Event) : Guard =
-   LAMBDA (stA : (wf_Store(a)), stP : (wf_PSt(a))) :
+   LAMBDA (stA : Store, stP : PSt) :
      FORALL (p : Guard) : all_guards(a)(cp, e)(p) IMPLIES NOT p(stA, stP)
 
   % Makes ts(a) complete with respect cps and evs(a)
@@ -353,8 +337,7 @@ BEGIN
                             guard(t) = build_guard(a)(scp(t), event(t)) AND
                             action(t) = skip AND tcp(t) = halted},
           {t : Transition | scp(t) = halted AND evs(a)(event(t)) AND
-                            guard(t) = (LAMBDA (stA : (wf_Store(a)),
-                                                stP : (wf_PSt(a))) : TRUE)
+                            guard(t) = (LAMBDA (stA : Store, stP : PSt) : TRUE)
                             AND action(t) = skip AND tcp(t) = halted})
 
 
@@ -368,8 +351,11 @@ BEGIN
             ts := union(ts(a), complete_trans(a))]
 
 
-  % TODO: prove
-  complete_MVA_yields_wf_MVA : LEMMA
+  build_guard_yields_wf_guard : LEMMA % :-)
+    FORALL (a : MVA, cp : CP, e : Event ) :
+      wf_MVA(a) IMPLIES wf_Guard(a)(build_guard(a)(cp, e))
+
+  complete_MVA_yields_wf_MVA : LEMMA % :-)
     FORALL (a : (complete_MVA_pre)) :
       wf_MVA(complete_MVA(a))
 
