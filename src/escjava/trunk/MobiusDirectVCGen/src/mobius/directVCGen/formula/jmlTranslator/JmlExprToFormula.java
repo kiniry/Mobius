@@ -309,7 +309,7 @@ public class JmlExprToFormula {
 		Term refTerm = (Term) x.expr.accept(this.v, o) ;
 
 		Term sortType = Type.translate(x.type);
-		return Type.assignCompat(Heap.var, refTerm,sortType);
+		return Logic.assignCompat(Heap.var, refTerm,sortType);
 	}
 
 

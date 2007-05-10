@@ -1,8 +1,6 @@
 package mobius.directVCGen.formula;
 
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.Vector;
 
 import javafe.ast.VarInit;
@@ -14,6 +12,13 @@ import escjava.sortedProver.NodeBuilder.Sort;
 import escjava.tc.Types;
 import escjava.translate.UniqName;
 
+/**
+ * This class is made to create terms to use with types.
+ * <p>
+ * The type <code>javafe.ast.Type</code> should <em>not</em>
+ * appear as an import anywhere else but in this  (actually this is not even
+ * an import here). If it is the case, it is an architecture error.	
+ */
 public class Type{
 	/** the sort representing a type */
 	public static Sort sort = Formula.lf.sortType;
@@ -40,13 +45,10 @@ public class Type{
 	}
 	
 	/**
-	 * Translate a type to a term.
-	 * The type <code>javafe.ast.Type</code> should <em>not</em>
-	 * appear as an import anywhere else but here (actually this is not even
-	 * an import here). If it is the case, it is an architecture error.
+	 * Translate a type to a term which represents the name of the type.
 	 * @param type the type to translate
 	 * @return a term which has the type {@link Type#sort} and which represents
-	 * the type which is translated
+	 * the name of the type which is translated
 	 */
 	public static QuantVariableRef translate(javafe.ast.Type type) {
 		QuantVariableRef t = types.get(type);
@@ -61,6 +63,13 @@ public class Type{
 		}
 	}
 
+	/**
+	 * Translate a type to a term which is a type in the target
+	 * representation language.
+	 * @param type the type to translate
+	 * @returna term which has the type {@link Type#sort} and which represents
+	 * the type which is translated
+	 */
 	public static Term translateToType(javafe.ast.Type type) {
 		QuantVariableRef q = translate(type) ;
 		return Expression.rvar("(ReferenceType (ClassType " + q.qvar.name + "))", q.getSort());
@@ -170,6 +179,12 @@ public class Type{
 		return v;
 	}
 
+	
+	/**
+	 * This construct is to use with multi-arrays. Right now
+	 * since multi-arrays are not handled it is not used.
+	 * @deprecated
+	 */
 	public static Term arrayof(Term type) {
 		Object t = revtyp.get(type);
 		if(t == null) {
@@ -187,9 +202,7 @@ public class Type{
 		}
 	}
 
-	public static Term assignCompat(Term heap, Term val, Term type) {
-		return Formula.lf.mkFnTerm(Formula.lf.symAssignCompat, new Term [] {heap, val, type});
-	}
+
 
 
 }

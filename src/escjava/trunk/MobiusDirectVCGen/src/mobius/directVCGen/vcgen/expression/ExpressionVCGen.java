@@ -92,7 +92,7 @@ public class ExpressionVCGen extends BinaryExpressionVCGen{
 		
 		QuantVariableRef r = Expression.rvar(Ref.sort);
 		p = new Post(r,
-			Logic.and(Logic.implies(Type.assignCompat(Heap.var, r, 
+			Logic.and(Logic.implies(Logic.assignCompat(Heap.var, r, 
 												 Type.translate(x.type)),
 								    p.substWith(Bool.value(true))), 
 				      Logic.implies(Logic.not(Logic.typeLE(Type.of(Heap.var, r), 
@@ -129,7 +129,7 @@ public class ExpressionVCGen extends BinaryExpressionVCGen{
 
 	public Post castExpr(CastExpr x, VCEntry e) {
 		Post p = new Post(e.post.var, 
-							Logic.implies(Type.assignCompat(Heap.var, e.post.var, Type.translateToType(x.type)),
+							Logic.implies(Logic.assignCompat(Heap.var, e.post.var, Type.translateToType(x.type)),
 										  e.post.post));
 		e.post = p;
 		p = getPre(x.expr, e);

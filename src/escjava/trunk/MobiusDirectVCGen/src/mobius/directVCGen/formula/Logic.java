@@ -10,8 +10,11 @@ import escjava.sortedProver.Lifter.Term;
 import escjava.sortedProver.NodeBuilder.PredSymbol;
 import escjava.sortedProver.NodeBuilder.Sort;
 
+
+// TODO: add comments
 public class Logic {
 	
+	// TODO: add comments
 	private static Term logicBinaryOp(Term f1, Term f2, PredSymbol sym){
 		if((f1.getSort() != sort || f2.getSort() != sort))
 			throw new IllegalArgumentException("Bad type. Expecting predicates, " +
@@ -19,6 +22,7 @@ public class Logic {
 		return Formula.lf.mkFnTerm(sym, new Term[]{f1, f2});
 	}
 	
+	// TODO: add comments
 	private static Term logicUnaryOp(Term f, PredSymbol sym){
 		if(f.getSort() != sort)
 			throw new IllegalArgumentException("Bad type. Expecting predicate, " +
@@ -26,6 +30,7 @@ public class Logic {
 		return Formula.lf.mkFnTerm(sym, new Term []{f});
 	}
 	
+	// TODO: add comments	
 	private static Term numBinaryOp(Term l, Term r, int tag){
 		if(l.getSort() != r.getSort() &&
 				(!Num.isNum(l.getSort()) || !Num.isNum(r.getSort())))
@@ -259,9 +264,7 @@ public class Logic {
 		return Formula.lf.mkQuantTerm(false, v, f, null, null);
 	}	
 	
-	public static FnTerm typeLE(Term t1, Term t2) {
-		return Formula.lf.mkFnTerm(Formula.lf.symTypeLE, new Term[] {t1, t2});
-	}
+
 	
 	/**
 	 * Returns a boolean le expression.
@@ -303,32 +306,20 @@ public class Logic {
 		return numBinaryOp(l,r,NodeBuilder.predGT);
 	}
 	
-//	/**
-//	 * Main for testing purpose.
-//	 * @param args ignored
-//	 */
-//	public static void main(String [] args) {
-//		QuantVariable [] vars = { Expression.var("v1", Logic.sort),
-//								  Expression.var("v2", Bool.sort) };
-//		
-//		QuantVariableRef rv1 = Expression.refFromVar(vars[0]);
-//		QuantVariableRef rv2 = Expression.refFromVar(vars[1]);
-//		Term formula = 
-//			 Logic.forall(vars, Logic.implies(rv1, rv2));
-//		System.out.println(formula);
-//		System.out.println(formula.subst(rv2,
-//				Logic.implies(Logic.boolToProp(rv2), 
-//						Logic.False())));
-//		System.out.println(Logic.and(Logic.True(), Logic.False()));
-//	}
 
+	/**
+	 * Returns a predicate which is the test of the equality to zero
+	 * of the specified term.
+	 * @param t the term to equal to zero
+	 * @return a newly created predicate of the form (t == 0)
+	 */
 	public static Term equalsZero(Term t) {
 		Term res = null;
 		if(t.getSort() == Num.sortInt) {
-			t = equals(t, Num.value(new Integer(0)));
+			res = equals(t, Num.value(new Integer(0)));
 		}
 		else if (t.getSort() == Num.sortReal) {
-			t = equals(t, Num.value(new Float(0)));
+			res = equals(t, Num.value(new Float(0)));
 		}
 		else {
 			throw new IllegalArgumentException("The sort " + t.getSort() + " is invalid!"); 
@@ -336,6 +327,14 @@ public class Logic {
 		return res;
 	}
 	
+	/**
+	 * Returns a predicate that equals the given parameter to 
+	 * <code>null</code>. It returns something of the form
+	 * <code>t == null</code>.
+	 * @param t the parameter to equals to <code>null</code>
+	 * @return the predicate that equals <code>t</code> to 
+	 * <code>null</code>
+	 */
 	public static Term equalsNull(Term t) {
 		Term res = null;
 		if (t.getSort() == Ref.sort) {
@@ -347,11 +346,68 @@ public class Logic {
 		return res;
 	}
 
+	/**
+	 * Builds the term that represents the interval:
+	 * <code>0 &le; idx /\ idx &lt; dim</code>. It is
+	 * mainly used for array building.
+	 * @param dim the max dimension
+	 * @param idx the index that is within the interval
+	 * @return a term representing an index within an interval
+	 */
 	public static Term interval0To(Term dim, QuantVariableRef idx) {
 		if((!dim.getSort().equals(Num.sortInt)) ||(!idx.equals(Num.sortInt)))
 			throw new IllegalArgumentException("The sort " + dim.getSort() + " or " +
 					idx.getSort()+
 					" is invalid! (Hint: should be int...)"); 
 		return Logic.and(Logic.le(Num.value(0), idx), Logic.lt(idx, dim));
+	}
+	
+	/**
+	 * Builds a term that represents a subtype relation
+	 * @param t1 the first type
+	 * @param t2 the second type to compare
+	 * @return a predicate that represents a subtype relation
+	 */
+	public static FnTerm typeLE(Term t1, Term t2) {
+		if(!t1.getSort().equals(Type.sort) || !t2.getSort().equals(Type.sort)) {
+			throw new IllegalArgumentException("The given sorts were bad... it should be " +
+					"types, found " + t1.getSort() + " and " + t2.getSort());
+		}
+		return Formula.lf.mkFnTerm(Formula.lf.symTypeLE, new Term[] {t1, t2});
+	}
+	
+	/**
+	 * Create the predicate that tells if a value is compatible with a specific type.
+	 * @param heap the current heap
+	 * @param val the value to check
+	 * @param type the type to check
+	 * @return the newly formed predicate
+	 */
+	public static Term assignCompat(Term heap, Term val, Term type) {
+		if(heap.getSort() != Heap.sort)
+			throw new IllegalArgumentException("Type of the first param should be heap (" + Heap.sort + "), found: " + heap.getSort());
+		if(type.getSort() != Type.sort)
+			throw new IllegalArgumentException("Type of the second param should be ref (" + Type.sort + "), found: " + type.getSort());
+
+		return Formula.lf.mkFnTerm(Formula.lf.symAssignCompat, new Term [] {heap, val, type});
+	}
+	
+	/**
+	 * Main for testing purpose.
+	 * @param args ignored
+	 */
+	public static void main(String [] args) {
+		QuantVariable [] vars = { Expression.var("v1", Logic.sort),
+								  Expression.var("v2", Bool.sort) };
+		
+		QuantVariableRef rv1 = Expression.refFromVar(vars[0]);
+		QuantVariableRef rv2 = Expression.refFromVar(vars[1]);
+		Term formula = 
+			 Logic.forall(vars, Logic.implies(rv1, rv2));
+		System.out.println(formula);
+		System.out.println(formula.subst(rv2,
+				Logic.implies(Logic.boolToProp(rv2), 
+						Logic.False())));
+		System.out.println(Logic.and(Logic.True(), Logic.False()));
 	}
 }

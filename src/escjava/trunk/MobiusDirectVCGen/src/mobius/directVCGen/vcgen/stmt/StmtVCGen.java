@@ -201,7 +201,7 @@ public class StmtVCGen extends ExpressionVisitor {
 			else if (Type.isSubClassOrEq(p.type,typ)) {
 					Term var = Expression.rvar(Ref.sort);
 					Post typeof = new Post(
-							Type.assignCompat(Heap.var, var, 
+							Logic.assignCompat(Heap.var, var, 
 							p.type));
 					res = Post.and(Post.implies(typeof, p.post), 
 							Post.implies(Post.not(typeof), res));
