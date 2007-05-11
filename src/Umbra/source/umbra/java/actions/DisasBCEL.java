@@ -2,7 +2,7 @@
  * Created on 2005-04-21
  *
  */
-package umbra.actions;
+package umbra.java.actions;
 
 import java.io.IOException;
 

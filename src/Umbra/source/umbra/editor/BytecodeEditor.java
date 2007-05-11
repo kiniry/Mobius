@@ -202,19 +202,23 @@ public class BytecodeEditor extends TextEditor {
 	 * and 4096 characters for method code.
 	 * 
 	 * @param path			The relative path of the input file
-	 * @param commentTab	Table of comments to be inserted
-	 * @param interlineTab 	Table of comments between instructions to be also inserted
+	 * @param comments	Table of comments to be inserted
+	 * @param interlineComments 	Table of comments between instructions to be also inserted
 	 * @throws ClassNotFoundException
 	 * @throws CoreException
 	 * @throws IOException
 	 */
-	public void refreshBytecode(IPath path, String[] commentTab, String[] interlineTab) throws ClassNotFoundException, CoreException, IOException {
+	public void refreshBytecode(IPath path, 
+			                    String[] comments, 
+			                    String[] interlineComments) 
+	           throws ClassNotFoundException, CoreException, IOException {
 		String pathName = getPath(path).toOSString(); 	
 		FileEditorInput input = (FileEditorInput)getEditorInput();
 		IFile file = input.getFile();
 		
 		// Get class name along with package name
-		String clname = path.lastSegment().substring(0, path.lastSegment().lastIndexOf("."));
+		String clname = path.lastSegment().substring(0, 
+				                           path.lastSegment().lastIndexOf("."));
 		String tmp = path.removeFirstSegments(1).toOSString();
 		clname = tmp.substring(0, tmp.lastIndexOf("."));
 		System.out.println("clname = " + clname);

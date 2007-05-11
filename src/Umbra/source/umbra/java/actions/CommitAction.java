@@ -1,4 +1,4 @@
-package umbra.actions;
+package umbra.java.actions;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspaceRoot;

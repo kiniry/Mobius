@@ -44,7 +44,8 @@ public class BytecodeController {
 	 */
 	private Hashtable comments, interline;
 	/**
-	 * TODO
+	 * Keeps track of modified methods.
+	 * TODO is that true?
 	 */
 	private boolean[] modified;
 

@@ -33,8 +33,8 @@ public class HistoryAction implements IEditorActionDelegate {
 	private IEditorPart editor;
 	
 	/**
-	 * The method sets the editor for which the history item should be
-	 * added.
+	 * The method sets the .btc file editor for which the history item 
+	 * should be added.
 	 * 
 	 * @param action currently ignored
 	 * @param targetEditor the editor to clear history for.

@@ -42,6 +42,8 @@ public class BytecodeRebuildAction extends Action {
 	 */
 	public void setActiveEditor(IEditorPart targetEditor) {
 		editor = targetEditor;
+		System.out.println(editor.getTitle());
+		System.out.println(this.toString());
 	}
 	
 	/**

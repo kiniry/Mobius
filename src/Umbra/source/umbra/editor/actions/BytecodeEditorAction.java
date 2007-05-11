@@ -86,5 +86,7 @@ public class BytecodeEditorAction extends Action {
 	 */
 	public void setActiveEditor(IEditorPart part) {
 		activeEditor = part;
+		System.out.println(part.getTitle());
+	System.out.println(this.toString());
 	}
 }

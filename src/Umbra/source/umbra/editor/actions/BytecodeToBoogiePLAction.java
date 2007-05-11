@@ -54,7 +54,11 @@ public class BytecodeToBoogiePLAction implements IEditorActionDelegate, IUmbraCo
 		BytecodeRebuildAction rbc = new BytecodeRebuildAction(null);
 		
 		/* FIXME inserted in order to refresh Bytecode view */
+		//TODO it does not work - it triggers an exception
+		/*
 		IPath active = ((FileEditorInput)editor.getEditorInput()).getFile().getFullPath();
+		IFile file = ((FileEditorInput)editor.getEditorInput()).getFile();
+		IPath active = file.getFullPath();
 		
 		String fname = active.toOSString();		
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
@@ -72,7 +76,8 @@ public class BytecodeToBoogiePLAction implements IEditorActionDelegate, IUmbraCo
 			input = new FileEditorInput(bytecodeFile);
 			JavaClass jc = bcEditor.getJavaClass();
 			Composition.startDisas();
-			page.closeEditor(bcEditor, true);
+			//TODO why closing, it triggers exception
+			//page.closeEditor(bcEditor, true);
 			bcEditor = (BytecodeEditor)page.openEditor(input, BYTECODE_EDITOR_CLASS, true);			
 			bcEditor.setRelation((AbstractDecoratedTextEditor)editor, jc);
 			Composition.stopDisas();
@@ -82,7 +87,7 @@ public class BytecodeToBoogiePLAction implements IEditorActionDelegate, IUmbraCo
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
+		} */
 	}
 
 	/**

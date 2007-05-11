@@ -1,4 +1,4 @@
-package umbra.actions;
+package umbra.java.actions;
 
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;

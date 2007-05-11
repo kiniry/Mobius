@@ -7,7 +7,7 @@
 			<accessrule kind="accessible" pattern="org/eclipse/ui/texteditor/AbstractDecoratedTextEditor"/>
 		</accessrules>
 	</classpathentry>
-	<classpathentry kind="lib" path="libs/org.apache.bcel_5.1.0/bcel.jar"/>
+	<classpathentry kind="lib" path="libs/org.apache.bcel_5.1.0/bcel.jar" sourcepath="libs/bcel-5.1-src.zip"/>
 	<classpathentry kind="lib" path="b2bpl.jar"/>
 	<classpathentry kind="lib" path="libs/bmllib.jar"/>
 	<classpathentry kind="output" path="bin"/>

@@ -23,7 +23,7 @@ import umbra.editor.BytecodeEditorContributor;
  * This action is equal to generating bytecode again from the
  * Java code after saving binary file.
  * 
- * @author Wojtek WÄ…s 
+ * @author Wojtek W±s 
  */
 public class BytecodeRefreshAction extends Action {
 
@@ -59,6 +59,7 @@ public class BytecodeRefreshAction extends Action {
 	 */
 	public void setActiveEditor(IEditorPart targetEditor) {
 		editor = targetEditor;
+		if (!editor.isDirty()) setEnabled(false);
 	}
 
 	/**
@@ -66,11 +67,17 @@ public class BytecodeRefreshAction extends Action {
 	 * creates new input from the JavaClass structure in BCEL. 
 	 * Finally replaces content of the Editor window with
 	 * the newly generated input.
+	 * 
+	 * TO powinno dzia³aæ tak, ¿e po zmianie, reformatowane
+	 * jest wszystko zgodnie ze standardem 
+	 * 
+	 * po przejsciu do javy refresh sie robi disabled
 	 */
 	public void run() {
 		editor.doSave(null);
-		IPath active = ((FileEditorInput)editor.getEditorInput()).getFile().getFullPath();
+		try {
 		IFile file = ((FileEditorInput)editor.getEditorInput()).getFile();
+		IPath active = file.getFullPath();
 		try {
 			String[] commentTab = bytecodeContribution.getCommentTab();
 			String[] interlineTab = bytecodeContribution.getInterlineTab();
@@ -79,7 +86,8 @@ public class BytecodeRefreshAction extends Action {
 				System.out.println("" + i + ". " + interlineTab[i]);
 				System.err.println("" + i + ". " + interlineTab[i]);
 			}
-			((BytecodeEditor)editor).refreshBytecode(active, commentTab, interlineTab);
+			((BytecodeEditor)editor).refreshBytecode(active, commentTab, 
+					                                 interlineTab);
 			FileEditorInput input = new FileEditorInput(file);
 			boolean[] modified = bytecodeContribution.getModified();
 			bytecodeContribution.setModTable(modified);
@@ -90,6 +98,9 @@ public class BytecodeRefreshAction extends Action {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
+		} } catch (RuntimeException re) {
+			re.printStackTrace();
+			throw re;
 		}
 		contributor.synchrEnable();
 	}

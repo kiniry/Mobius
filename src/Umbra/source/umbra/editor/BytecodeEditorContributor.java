@@ -18,6 +18,7 @@ import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
@@ -42,10 +43,15 @@ import umbra.editor.actions.BytecodeSynchrAction;
  * synchronization of cursor's positions from Bytecode to Java code,
  * color changing and checking syntax correctness. 
  * 
- * @author Wojtek WÄ…s
+ * @author Wojtek W±s
  */
 public class BytecodeEditorContributor extends EditorActionBarContributor {
 
+	/**
+	 * TODO
+	 */
+	private static BytecodeEditorContributor currentEditorContributor = null;
+	
 	/**
 	 * TODO
 	 */
@@ -90,6 +96,7 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
 		super();
 		int mod = Composition.getMod();
 		bytecodeContribution = BytecodeContribution.newItem();
+		bytecodeContribution.addEditorContributor(this);
 		actionPlus = new BytecodeEditorAction(this, 1, mod);
 		actionMinus = new BytecodeEditorAction(this, 
 				                               IColorValues.models.length -2,
@@ -246,6 +253,14 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
 	private void controlPrint(JavaClass jc, int i) {
 		Method meth = jc.getMethods()[i];
 		System.out.println(meth.getCode().toString());
+	}
+
+	/**
+	 * TODO
+	 * @return
+	 */
+	public BytecodeRefreshAction getRefreshAction() {
+		return refreshAction;
 	}
 
 }

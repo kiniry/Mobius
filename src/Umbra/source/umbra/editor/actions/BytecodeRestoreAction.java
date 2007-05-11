@@ -131,5 +131,8 @@ public class BytecodeRestoreAction extends Action {
 	 */
 	public void setActiveEditor(IEditorPart part) {
 		editor = part;
+		System.out.println(editor.getTitle());
+		System.out.println(this.toString());
+
 	}
 }

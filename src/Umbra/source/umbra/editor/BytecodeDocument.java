@@ -23,6 +23,7 @@ import org.eclipse.ui.texteditor.AbstractDecoratedTextEditor;
  * @author Tomasz Batkiewicz, Wojciech W±s
  */
 public class BytecodeDocument extends Document {
+	
 	/**
 	 * TODO
 	 */
@@ -309,7 +310,7 @@ public class BytecodeDocument extends Document {
 	}
 	
 	/**
-	 * Gives specified line of current bytecode.
+	 * Gives specified line of the current bytecode.
 	 * 
 	 * @param n	index of line in bytecode editor (starting from 0).
 	 * Must be non-negative and less than number of lines in bytecode editor.
@@ -317,7 +318,6 @@ public class BytecodeDocument extends Document {
 	 * @throws BadLocationException	occurs when parameter n isn't a valid line number.
 	 */
 	private String LineAt(int n) throws BadLocationException
-	// n-ta linia dokumentu d
 	{
 		return get(getLineOffset(n), getLineLength(n));
 	}

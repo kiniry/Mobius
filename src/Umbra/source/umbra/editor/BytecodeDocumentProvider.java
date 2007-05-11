@@ -74,6 +74,7 @@ public class BytecodeDocumentProvider extends FileDocumentProvider {
 		document.setJavaClass(jc);
 		document.setClassGen(cg);
 		document.setRelatedEditor(editor);
+		BytecodeContribution.inUse().addListener(document);
 	}
 	
 }

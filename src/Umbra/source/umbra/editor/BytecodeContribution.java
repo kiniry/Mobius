@@ -23,7 +23,7 @@ import umbra.instructions.BytecodeController;
 /**
  * TODO
  * 
- * @author Wojtek WÄ…s
+ * @author Wojtek W±s
  */
 public class BytecodeContribution extends ControlContribution { 
 	
@@ -63,6 +63,10 @@ public class BytecodeContribution extends ControlContribution {
 	 * TODO
 	 */
 	private boolean[] modified;
+	/**
+	 * TODO
+	 */
+	private BytecodeEditorContributor editorContributor;
 	
 	/**
 	 * TODO
@@ -77,6 +81,7 @@ public class BytecodeContribution extends ControlContribution {
 		}
 		bcc.checkAllLines(0, doc.getNumberOfLines() - 2);
 		ready = true;
+		editorContributor.getRefreshAction().setEnabled(true);
 		return;
 	}
 	
@@ -185,9 +190,9 @@ public class BytecodeContribution extends ControlContribution {
 		composite.setData(this);
 
 		labelText = new Label(composite, SWT.NONE);
-		labelText.setSize(120, 15);
-		labelText.setFont(new Font(null, "Arial", 8, 1));
-		labelText.setForeground(new Color(null, new RGB(255, 255, 0)));
+		labelText.setSize(220, 15);
+		//labelText.setFont(new Font(null, "Times", 8, 1));
+		//labelText.setForeground(new Color(null, new RGB(255, 255, 0)));
 		return composite;
 	}
 	
@@ -195,16 +200,18 @@ public class BytecodeContribution extends ControlContribution {
 	 * TODO
 	 */
 	private void displayCorrect() {
-		labelText.setBackground(new Color(null, new RGB(0, 128, 0)));
+		//labelText.setBackground(new Color(null, new RGB(0, 128, 0)));
 		labelText.setText("Correct");
+		System.out.println("Correct");
 	}
 	
 	/**
 	 * TODO
 	 */
 	private void displayError(int line) {
-		labelText.setBackground(new Color(null, new RGB(255, 128, 0)));
+		//labelText.setBackground(new Color(null, new RGB(255, 128, 0)));
 		labelText.setText("Error detected: " + line);
+		System.out.println("Error detected: " + line);
 	}
 
 	/**
@@ -256,5 +263,13 @@ public class BytecodeContribution extends ControlContribution {
 	 */
 	public String[] getInterlineTab() {
 		return bcc.getInterline();
+	}
+
+	/**
+	 * TODO
+	 * @param contributor
+	 */
+	public void addEditorContributor(BytecodeEditorContributor contributor) {
+		editorContributor = contributor;
 	}
 }

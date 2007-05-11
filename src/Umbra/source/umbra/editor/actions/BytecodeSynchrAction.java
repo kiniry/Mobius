@@ -32,6 +32,9 @@ public class BytecodeSynchrAction extends Action {
 	 */
 	public void setActiveEditor(IEditorPart targetEditor) {
 		editor = (AbstractTextEditor)targetEditor;
+		System.out.println(editor.getTitle());
+		System.out.println(this.toString());
+
 	}
 
 	/**
