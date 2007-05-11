@@ -18,6 +18,7 @@ import escjava.ast.TagConstants;
 import escjava.sortedProver.Lifter.QuantVariable;
 import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
+import escjava.translate.UniqName;
 import escjava.sortedProver.NodeBuilder.Sort;
 import javafe.ast.BinaryExpr;
 import javafe.ast.BlockStmt;
@@ -366,7 +367,7 @@ public class JmlExprToFormula {
 	public Object variableAccess(VariableAccess x, Object o) {
 		 Boolean oldProp = (Boolean) ((Properties) o).get("old");
 		 Boolean predProp = (Boolean) ((Properties)o).get("pred");
-		 String id = (String) x.id.toString();
+		 String id = UniqName.variable(x.decl);
 		 Term res = null;
 		 if(oldProp.booleanValue()) id = Expression.old(id); 
 		 
@@ -384,7 +385,7 @@ public class JmlExprToFormula {
 		 Boolean oldProp = (Boolean) ((Properties) o).get("old");
 		 Boolean predProp = (Boolean) ((Properties)o).get("pred");
 		 
-		 String id = (String) x.id.toString();
+		 String id = UniqName.variable(x);
 		 if(oldProp.booleanValue()) id = Expression.old(id); 
 		 
 		 Term res = Expression.rvar(id, Type.typeToSort(x.type));
