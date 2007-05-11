@@ -65,13 +65,15 @@ public class CodeNode extends Node {
     
     //@ assignable \nothing;
     private String getCodeString() {
+        String r = null;
         if (PrettyPrint.inst != null && PrettyPrint.inst instanceof EscPrettyPrint) {
             ByteArrayOutputStream bs = new ByteArrayOutputStream();
             ((EscPrettyPrint) PrettyPrint.inst).print(bs, 0, this.code);
-            return bs.toString();
+            r = bs.toString();
 
         } else
-            return this.code.toString();
+            return r = code.toString();
+        return r.replace('"', ' ').replace('|', ' ');
     }
     
      void printToDot(/*@ non_null @*/Writer dot, boolean bold) throws IOException {

@@ -168,7 +168,7 @@ public class ReachabilityAnalysis {
     private static final int THRESHOLD = 0;
     
     // Maximum VC size
-    private static final int VC_LIMIT = 100000;
+    private static final int VC_LIMIT = 200000;
     
     // Set when a caution should be issued
     private boolean vcTooBig;
@@ -195,8 +195,9 @@ public class ReachabilityAnalysis {
     // NOTE: in a sane programming language I would just use these but
     //       I just hate casting and (un)boxing stuff all over the place.
     private ArrayList/*<NodeAndLabel>*/ labelsTmp;
-    private ArrayList/*<HashSet<Integer>>*/ labelParentsTmp;
-    private ArrayList/*<HashSet<Integer>>*/ labelChildrenTmp;
+    private ArrayList/*<ArrayList<Integer>>*/ labelParentsTmp;
+    private ArrayList/*<ArrayList<Integer>>*/ labelChildrenTmp;
+    private HashMap/*<HashSet<Integer>>*/ collectNodesCache;
     
     
     // NOTE that automatic provers are incomplete and sometimes they will
@@ -242,8 +243,8 @@ public class ReachabilityAnalysis {
             }
         }
         nodeToLabelCache.put(n, new Integer(result));
-        labelParentsTmp.add(new HashSet());
-        labelChildrenTmp.add(new HashSet());
+        labelParentsTmp.add(new ArrayList());
+        labelChildrenTmp.add(new ArrayList());
         return result;
     }
 
@@ -267,20 +268,27 @@ public class ReachabilityAnalysis {
     // Adds all nodes reachable from [n] (children) to [graphNodes].
     // Also collects the interesting nodes.
     private void recCollectNodes(Node n, int labeledParent) {
-        int thisLabel = nodeToLabelIdx(n);
-        if (thisLabel != -1) {
-            if (graphNodes.contains(n)) return;
-            labeledParent = thisLabel;
+        // return if already called with these parameters
+        HashSet/*<Integer>*/ seenParents = (HashSet)collectNodesCache.get(n);
+        if (seenParents == null) {
+            seenParents = new HashSet();
+            collectNodesCache.put(n, seenParents);
         }
+        if (seenParents.contains(new Integer(labeledParent))) return;
+        seenParents.add(new Integer(labeledParent));
+        
+        // do stuff
+        int thisLabel = nodeToLabelIdx(n);
+        if (thisLabel != -1) labeledParent = thisLabel;
         graphNodes.add(n);
-        HashSet/*<Integer>*/ children = (HashSet)labelChildrenTmp.get(labeledParent);
+        ArrayList/*<Integer>*/ children = (ArrayList)labelChildrenTmp.get(labeledParent);
         
         Enumeration c = n.getChildren().elements();
         while (c.hasMoreElements()) {
             Node child = c.nextElement();
             int childLabel = nodeToLabelIdx(child);
             if (childLabel != -1) {
-                HashSet/*<Integer>*/ parents = (HashSet)labelParentsTmp.get(childLabel);
+                ArrayList/*<Integer>*/ parents = (ArrayList)labelParentsTmp.get(childLabel);
                 parents.add(new Integer(labeledParent));
                 children.add(new Integer(childLabel));
             }
@@ -304,6 +312,7 @@ public class ReachabilityAnalysis {
      */
     private void collectNodes() {
         TimeUtil.start("collect_nodes_time");
+        collectNodesCache = new HashMap();
         graphNodes = new HashSet();
         nodeToLabelCache = new HashMap/*<Node,Integer>*/();
         labelsTmp = new ArrayList();
@@ -315,8 +324,8 @@ public class ReachabilityAnalysis {
             new NodeAndLabel(init) : new NodeAndLabel(init, label);
         labelsTmp.add(nl);
         nodeToLabelCache.put(init, new Integer(0));
-        labelParentsTmp.add(new HashSet());
-        labelChildrenTmp.add(new HashSet());
+        labelParentsTmp.add(new ArrayList());
+        labelChildrenTmp.add(new ArrayList());
         recCollectNodes(init, 0);
         
         // Conver ArrayLists to simple arrays. (I wouldn't do this in a later
@@ -326,8 +335,8 @@ public class ReachabilityAnalysis {
         labelParents = new int[labels.length][];
         labelChildren = new int[labels.length][];
         for (int i = 0; i < labels.length; ++i) {
-            labelParents[i] = toIntArray((HashSet)labelParentsTmp.get(i));
-            labelChildren[i] = toIntArray((HashSet)labelChildrenTmp.get(i));
+            labelParents[i] = toIntArray((Collection)labelParentsTmp.get(i));
+            labelChildren[i] = toIntArray((Collection)labelChildrenTmp.get(i));
         }
         
         // These are not needed anymore, don't waste memory
@@ -732,6 +741,8 @@ public class ReachabilityAnalysis {
                     right = middle;
             }
             propagateUnsat(mostDominators[left]);
+            if (right < mostDominators.length)
+                propagateSat(mostDominators[right]);
         }
     }
 

@@ -520,7 +520,7 @@ public class Options extends javafe.SrcToolOptions {
 
     public int startLine = -1; // starting line # for processing
 
-    public int vclimit = 500000;
+    public int vclimit = 400000;
 
     public boolean checkSpecs = false;
 
