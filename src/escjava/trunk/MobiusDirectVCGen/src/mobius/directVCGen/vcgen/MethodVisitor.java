@@ -38,9 +38,10 @@ public class MethodVisitor extends DirectVCGen {
 	public static MethodVisitor treatMethod(File basedir, File classDir, MethodDecl x) {
 		
 		MethodVisitor mv = new MethodVisitor(basedir, new File(classDir, "" + x.id), x);
-		
-		x.body.accept(mv);
-		mv.dump();
+		if(x.body != null) {
+			x.body.accept(mv);
+			mv.dump();
+		}
 		return mv;
 	}
 	
@@ -95,11 +96,21 @@ public class MethodVisitor extends DirectVCGen {
 			QuantVariable qv = Expression.var(dec);
 			qvs[i] = qv;
 		}
-		po = Logic.forall(qvs, po);
+		//po = Logic.forall(qvs, po);
 		//System.out.println(po);
 		
 		vcs.add(po);
 		vcs.addAll (dvcg.vcs);
+		addVarDecl(qvs);
+	}
+	
+	public void addVarDecl(QuantVariable[] qvs) {
+		Vector<Term> oldvcs = vcs;
+		vcs = new Vector<Term>();
+		for (Term t: oldvcs) {
+			vcs.add(Logic.forall(qvs, t));
+		}
+		
 	}
 	
 	/*

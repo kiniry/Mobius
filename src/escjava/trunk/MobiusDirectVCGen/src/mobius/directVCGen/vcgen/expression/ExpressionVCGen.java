@@ -2,6 +2,7 @@ package mobius.directVCGen.vcgen.expression;
 
 import java.util.Vector;
 
+import javafe.ast.ArrayInit;
 import javafe.ast.ArrayRefExpr;
 import javafe.ast.CastExpr;
 import javafe.ast.CondExpr;
@@ -15,6 +16,8 @@ import javafe.ast.MethodInvocation;
 import javafe.ast.NewArrayExpr;
 import javafe.ast.NewInstanceExpr;
 import javafe.ast.ObjectDesignator;
+import javafe.ast.VarInit;
+import javafe.ast.VarInitVec;
 import mobius.directVCGen.formula.Bool;
 import mobius.directVCGen.formula.Expression;
 import mobius.directVCGen.formula.Heap;
@@ -223,6 +226,22 @@ public class ExpressionVCGen extends BinaryExpressionVCGen{
 		Term arr;
 		Post pre = entry.post;
 		Term type =  Type.translateToType(narr.type);
+		
+		// init expressions.
+		if (narr.init != null) {
+			ArrayInit init = narr.init;
+			VarInitVec vec = init.elems;
+			for(int i = vec.size() - 1; i >= 0; i--) {
+				VarInit vi = vec.elementAt(i);
+				QuantVariableRef qvr = Expression.rvar(Type.getSort(vi));
+				Term store = Heap.storeArray(Heap.var, loc, Num.value(i), qvr);
+				entry.post = new Post(qvr, entry.post.post.subst(Heap.var, store));
+				entry.post = getPre(vi, entry);
+			}
+			
+		}
+		
+		
 		Vector<QuantVariableRef> dimVec = new Vector<QuantVariableRef>();
 
 
@@ -248,15 +267,6 @@ public class ExpressionVCGen extends BinaryExpressionVCGen{
 			entry.post = new Post(dimVec.elementAt(i), pre.post);
 			pre = getPre(narr.dims.elementAt(i), entry);
 		}
-		
-		// TODO: handle init expressions.
-//		if (init != null) {
-//			entry.post = new Post(loc, entry.post.post);
-//			pre = getPre(narr.init, entry);
-//		}
-		
-
-		
 		
 		return pre;
 	}

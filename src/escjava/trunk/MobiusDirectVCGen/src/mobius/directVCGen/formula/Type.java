@@ -85,7 +85,8 @@ public class Type{
 	 */
 	public static Sort getSort(VarInit e) {
 		javafe.ast.Type t = FlowInsensitiveChecks.getType(e);
-		return Formula.lf.typeToSort(t);
+		Sort s = Formula.lf.typeToSort(t);
+		return s;
 	}
 	
 

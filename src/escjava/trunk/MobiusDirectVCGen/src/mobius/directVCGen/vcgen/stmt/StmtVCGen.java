@@ -47,6 +47,7 @@ import mobius.directVCGen.vcgen.expression.ExpressionVisitor;
 import mobius.directVCGen.vcgen.struct.ExcpPost;
 import mobius.directVCGen.vcgen.struct.Post;
 import mobius.directVCGen.vcgen.struct.VCEntry;
+import escjava.ast.ExprStmtPragma;
 import escjava.sortedProver.Lifter.QuantVariable;
 import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
@@ -57,12 +58,14 @@ import escjava.sortedProver.Lifter.Term;
  */
 public class StmtVCGen extends ExpressionVisitor {
 	/** the side conditions that were generated */
-	public final Vector<Term> vcs = new Vector<Term>();
+	public Vector<Term> vcs = new Vector<Term>();
 	/** the list of variables declarations */
 	public final Vector<Term> vardecl = new Vector<Term>();
 	/** the visitor to visit expressions */
 	public final ExpressionVisitor exprVisitor = new ExpressionVisitor();
 	public final AnnotationDecoration annot = AnnotationDecoration.inst;
+	
+	
 	
 	/**
 	 * The method to treat the annotations
@@ -120,7 +123,7 @@ public class StmtVCGen extends ExpressionVisitor {
 		throw new IllegalArgumentException("Not yet implememented");
 	}
 	
-	public Object illegalStmt(Stmt x, Object o){
+	public Object illegalStmt(ASTNode x, Object o){
 		throw new IllegalArgumentException("Illegal Statement");
 	}
 	
@@ -382,9 +385,21 @@ public class StmtVCGen extends ExpressionVisitor {
 			// the quantification is preemptive
 			vce.post = new Post(Logic.forall(qv, vce.post.post));
 		}
+		// we must anyway declare it for every vc:
+		addVarDecl(qv);
 		return treatAnnot(vce, annot.getAnnotPre(x));
 	}
 	
+	public void addVarDecl(QuantVariable qv) {
+		Vector<Term> oldvcs = vcs;
+		vcs = new Vector<Term>();
+		for (Term t: oldvcs) {
+			vcs.add(Logic.forall(qv, t));
+		}
+		
+	}
+
+
 	// already treated in the try clause
 	public /*@non_null*/ Object visitCatchClause(/*@non_null*/ CatchClause x, Object o) {
 		return visitASTNode(x, o);
@@ -403,7 +418,46 @@ public class StmtVCGen extends ExpressionVisitor {
 
 	
 	public /*@non_null*/ Object visitForStmt(/*@non_null*/ ForStmt x, Object o) {
-		return visitStmt(x, o);
+		
+		VCEntry vce = (VCEntry)o;
+		vce.post = treatAnnot( vce, annot.getAnnotPost(x));
+		Term inv = annot.getInvariant(x);
+		Term post = vce.post.post;
+		Post pinv = new Post(inv);
+		VCEntry vceBody = mkEntryWhile(vce, pinv);
+		for(int i = x.forUpdate.size() -1; i >= 0; i --) {
+			vceBody.post = (Post) x.forUpdate.elementAt(i).accept(this, vceBody);
+		}
+		Post bodypre;
+		if (x.body instanceof BlockStmt)
+			bodypre = visitInnerBlockStmt((BlockStmt)x.body, vceBody);
+		else 
+			bodypre = (Post) x.body.accept(this, vceBody);
+		
+		QuantVariableRef v = Expression.rvar(Bool.sort);
+		vce.post = new Post(v,
+				Logic.and(Logic.implies(Logic.boolToProp(v), bodypre.post),
+						Logic.implies(Logic.not(Logic.boolToProp(v)), post)));
+		// the only field that can be modified in a VCentry is post 
+		Term aux = ((Post) x.test.accept(exprVisitor, vce)).post;
+		Term vc = Logic.implies(inv, aux);
+		// we add the for declared variables
+		for(int i = x.forInit.size() -1; i >= 0; i --) {
+			Stmt s =  (Stmt) x.forInit.elementAt(i);
+			if(s instanceof VarDeclStmt) {
+				VarDeclStmt decl = (VarDeclStmt) s;
+				QuantVariable qv = Expression.var(decl.decl);
+				vc = Logic.forall(qv, vc);
+			}
+		}
+		vcs.add(vc);
+		
+		vce.post = pinv;
+		for(int i = x.forInit.size() -1; i >= 0; i --) {
+			Stmt s =  (Stmt) x.forInit.elementAt(i);
+			vce.post = (Post)s.accept(this, vce);
+		}
+		return treatAnnot(vce, annot.getAnnotPre(x));
 	}
 
 	
@@ -417,13 +471,17 @@ public class StmtVCGen extends ExpressionVisitor {
 	}
 
 	public /*@non_null*/ Object visitStmtPragma(/*@non_null*/ StmtPragma x, Object o) {
-		return illegalStmt(x, o);
+		// just ignore it return illegalStmt(x, o);
+		return ((VCEntry) o).post;
 	}
 
 	public /*@non_null*/ Object visitSynchronizeStmt(/*@non_null*/ SynchronizeStmt x, Object o) {
 		return illegalStmt(x, o);
 	}
-	
+	@Override
+	public Object visitExprStmtPragma(ExprStmtPragma x, Object o) {
+		return ((VCEntry) o).post;
+	}
 
 
 }	

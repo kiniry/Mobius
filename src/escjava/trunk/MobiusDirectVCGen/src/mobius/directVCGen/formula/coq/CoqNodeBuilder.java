@@ -592,8 +592,11 @@ public class CoqNodeBuilder extends EscNodeBuilder {
 			case NodeBuilder.predLT:
 				return new CPred(false, "<=", new CInt("Int.toZ", arg1),
 						new CInt("Int.toZ", arg2));
+			case NodeBuilder.predEQ:
+				return new CPred(false, "=", new CInt("Int.toZ", arg1),
+						new CInt("Int.toZ", arg2));
 		}
-		throw new UnsupportedOperationException();
+		throw new UnsupportedOperationException(NodeBuilder.tagsIds[intPredTag]);
 	}
 
 	

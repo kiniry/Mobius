@@ -167,7 +167,7 @@ public class Main extends escjava.Main {
 		System.out.println("[" + timeUsed(startTime) + "]\n");
 		
 		long midTime = currentTime();
-		sig.getCompilationUnit().accept(new JmlVisitor(),null);
+		//sig.getCompilationUnit().accept(new JmlVisitor(),null);
 		System.out.println("[" + timeUsed(midTime) + "]\n");
 		long endTime = currentTime();
 		sig.getCompilationUnit().accept(new DirectVCGen(basedir));
