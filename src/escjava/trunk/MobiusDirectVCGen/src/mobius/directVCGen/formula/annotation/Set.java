@@ -1,8 +1,5 @@
 package mobius.directVCGen.formula.annotation;
 
-import java.util.Vector;
-
-
 import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
 

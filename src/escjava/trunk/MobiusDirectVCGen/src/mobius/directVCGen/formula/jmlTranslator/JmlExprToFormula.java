@@ -1,40 +1,28 @@
 package mobius.directVCGen.formula.jmlTranslator;
 
-import mobius.directVCGen.formula.*;
-import mobius.directVCGen.formula.annotation.AAnnotation;
-import mobius.directVCGen.formula.annotation.AnnotationDecoration;
-import mobius.directVCGen.formula.annotation.Assume;
-import mobius.directVCGen.formula.annotation.Cut;
-import mobius.directVCGen.formula.annotation.Set;
-
 import java.util.Properties;
-import java.util.Vector;
 
-import escjava.ast.ExprStmtPragma;
+import javafe.ast.BinaryExpr;
+import javafe.ast.FieldAccess;
+import javafe.ast.GenericVarDecl;
+import javafe.ast.InstanceOfExpr;
+import javafe.ast.LiteralExpr;
+import javafe.ast.ThisExpr;
+import javafe.ast.VariableAccess;
+import mobius.directVCGen.formula.Bool;
+import mobius.directVCGen.formula.Expression;
+import mobius.directVCGen.formula.Heap;
+import mobius.directVCGen.formula.Logic;
+import mobius.directVCGen.formula.Num;
+import mobius.directVCGen.formula.Ref;
+import mobius.directVCGen.formula.Type;
 import escjava.ast.NaryExpr;
 import escjava.ast.ResExpr;
-import escjava.ast.SetStmtPragma;
 import escjava.ast.TagConstants;
 import escjava.sortedProver.Lifter.QuantVariable;
 import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
 import escjava.translate.UniqName;
-import escjava.sortedProver.NodeBuilder.Sort;
-import javafe.ast.BinaryExpr;
-import javafe.ast.BlockStmt;
-import javafe.ast.DoStmt;
-import javafe.ast.FieldAccess;
-import javafe.ast.ForStmt;
-import javafe.ast.FormalParaDecl;
-import javafe.ast.GenericVarDecl;
-import javafe.ast.InstanceOfExpr;
-import javafe.ast.LiteralExpr;
-import javafe.ast.ModifierPragma;
-import javafe.ast.Stmt;
-import javafe.ast.ThisExpr;
-import javafe.ast.VarDeclStmt;
-import javafe.ast.VariableAccess;
-import javafe.ast.WhileStmt;
 
 public class JmlExprToFormula {
 
@@ -369,12 +357,13 @@ public class JmlExprToFormula {
 		 Boolean predProp = (Boolean) ((Properties)o).get("pred");
 		 String id = UniqName.variable(x.decl);
 		 Term res = null;
-		 if(oldProp.booleanValue()) id = Expression.old(id); 
+		 if(oldProp.booleanValue()) 
+			 id = Expression.old(id); 
 		 
 		 if (x.decl != null && x.decl.type != null){
 			 res = Expression.rvar(id, Type.typeToSort(x.decl.type));
 		 } else {
-			 res = Expression.rvar(id, Type.typeToSort((javafe.ast.Type) x.getDecorations()[1]));
+			 res = Expression.rvar(id, Type.getSort(x));
 		 }
 		 if (predProp.booleanValue() && res.getSort() == Bool.sort)
 			 res = Logic.boolToProp(res);
@@ -385,10 +374,13 @@ public class JmlExprToFormula {
 		 Boolean oldProp = (Boolean) ((Properties) o).get("old");
 		 Boolean predProp = (Boolean) ((Properties)o).get("pred");
 		 
-		 String id = UniqName.variable(x);
-		 if(oldProp.booleanValue()) id = Expression.old(id); 
-		 
-		 Term res = Expression.rvar(id, Type.typeToSort(x.type));
+		 Term res;
+		 if(oldProp.booleanValue()) {
+			 res = Expression.old(x);
+		 }
+		 else { 
+			 res = Expression.rvar(x);
+		 }
 		 if (predProp.booleanValue() && res.getSort() == Bool.sort)
 			 res = Logic.boolToProp(res);
 		 return res;
@@ -401,12 +393,14 @@ public class JmlExprToFormula {
 		 QuantVariable var = null;
 		 QuantVariableRef heap = Heap.var;
 		 if(oldProp.booleanValue()) heap = Heap.varPre;
-		 String idVar = (String) x.id.toString(); 		 
-		 if (x.decl != null && x.decl.type != null){
-			 var = Expression.var(idVar, Type.typeToSort(x.decl.type));
-		 } else {
-			 var = Expression.var(idVar, Type.typeToSort((javafe.ast.Type) x.getDecorations()[1]));
-		 }		 
+		 
+		 String idVar = UniqName.variable(x.decl);
+//		 if (x.decl != null && x.decl.type != null){
+//			 var = Expression.var(idVar, Type.typeToSort(x.decl.type));
+//		 } else {
+		 // jgc: I think this is enough 
+		 var = Expression.var(idVar, Type.getSort(x));
+//		 }		 
 		 return Heap.select(heap, obj, var);
 	}
 

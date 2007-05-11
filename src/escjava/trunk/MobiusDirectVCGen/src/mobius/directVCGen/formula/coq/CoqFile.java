@@ -8,11 +8,9 @@ import java.util.Set;
 import java.util.Vector;
 
 import mobius.directVCGen.formula.Formula;
-
 import escjava.sortedProver.Lifter.QuantVariable;
 import escjava.sortedProver.NodeBuilder.FnSymbol;
 import escjava.sortedProver.NodeBuilder.STerm;
-import escjava.sortedProver.NodeBuilder.Sort;
 
 public class CoqFile {
 	PrintStream out;
@@ -57,12 +55,12 @@ public class CoqFile {
 		out.println();
 		for(FnSymbol sym : symToDeclare) {
 			out.print("Variable " + sym.name + ": ");
-
-			for(Sort s: sym.argumentTypes) {
-				String str = Formula.getCurrentLifter().builder.buildSort(s).toString();
+			STerm [] terms = Formula.generateTypes(sym.argumentTypes);
+			for(STerm t: terms) {
+				String str = t.toString();
 				out.print(str + " -> ");
 			}
-			out.println(Formula.getCurrentLifter().builder.buildSort(sym.retType) + ".");
+			out.println(Formula.generateType(sym.retType) + ".");
 		}
 		out.println();
 

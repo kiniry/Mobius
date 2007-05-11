@@ -53,14 +53,19 @@ public class Formula {
 	 */
 	public static STerm [] generateTypes(Sort [] sorts) {
 		STerm [] res = new STerm[sorts.length]; 
-		lf.dumpBuilder = lf.builder;
-		
 		for(int i = 0; i < sorts.length; i++) {
-			res[i] = lf.builder.buildSort(sorts[i]);
+			res[i] = generateType(sorts[i]);
 		}
+		return res;
+	}
+	
+	public static STerm generateType(Sort sort) {
+		lf.dumpBuilder = lf.builder;
+		STerm res = lf.builder.buildSort(sort);
 		lf.dumpBuilder = null;
 		return res;
 	}
+	
 	
 	/**
 	 * Every use of this function should be replaced by a 'proper'
@@ -71,5 +76,4 @@ public class Formula {
 		return lf;
 	}
 
-	
 }

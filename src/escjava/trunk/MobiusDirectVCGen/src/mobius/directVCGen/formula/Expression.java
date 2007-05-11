@@ -34,7 +34,9 @@ public class Expression {
 	public static String old(String s){
 		return oldPrefix + s;
 	}
-
+	public static QuantVariableRef old(GenericVarDecl e){
+		return null;//oldPrefix + s;
+	}
 	/**
 	 * Build a variable from a string, without any specified sort.
 	 * @param str
