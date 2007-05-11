@@ -19,6 +19,7 @@ import javafe.ast.DoStmt;
 import javafe.ast.FieldAccess;
 import javafe.ast.ForStmt;
 import javafe.ast.FormalParaDecl;
+import javafe.ast.IfStmt;
 import javafe.ast.InstanceOfExpr;
 import javafe.ast.LiteralExpr;
 import javafe.ast.LocalVarDecl;
@@ -27,6 +28,7 @@ import javafe.ast.ModifierPragma;
 import javafe.ast.RoutineDecl;
 import javafe.ast.Stmt;
 import javafe.ast.ThisExpr;
+import javafe.ast.TryCatchStmt;
 import javafe.ast.VarDeclStmt;
 import javafe.ast.VariableAccess;
 import javafe.ast.WhileStmt;
@@ -96,6 +98,7 @@ public class JmlVisitor extends VisitorArgResult{
 		p = new Properties();
 		p.put("pred", new Boolean(true));
 		p.put("old", new Boolean(false));
+		p.put("interesting", new Boolean(false));
 		translator = new JmlExprToFormula(this);
 	}
 	
@@ -132,12 +135,14 @@ public class JmlVisitor extends VisitorArgResult{
 	public /*@non_null*/ Object visitMethodDecl(/*@non_null*/ MethodDecl x, Object o) {
 		((Properties) o).put("result", Expression.rvar(Expression.result,Type.typeToSort(x.returnType)));
 		((Properties) o).put("method", x);
+		((Properties) o).put("routinebegin", new Boolean(true));
 		return visitRoutineDecl(x, o);
 	}
 	
 	@Override
 	public /*@non_null*/ Object visitConstructorDecl(/*@non_null*/ ConstructorDecl x, Object o) {
 		((Properties) o).put("method", x);
+		((Properties) o).put("routinebegin", new Boolean(true));
 		return visitRoutineDecl(x, o);
 	}
 	
@@ -154,18 +159,27 @@ public class JmlVisitor extends VisitorArgResult{
 	
 	@Override
 	 public /*@non_null*/ Object visitLiteralExpr(/*@non_null*/ LiteralExpr x, Object o) {
-		return translator.literal(x,o);
+		if (((Boolean) ((Properties) o).get("interesting")).booleanValue())
+			return translator.literal(x,o);
+		else
+			return null;
 	}
 	 
 	 
 	 @Override
 	 public /*@non_null*/ Object visitVariableAccess(/*@non_null*/ VariableAccess x, Object o) {		 
-		 return translator.variableAccess(x,o);
+		if (((Boolean) ((Properties) o).get("interesting")).booleanValue())
+			return translator.variableAccess(x,o);
+		else 
+			return null;
 	}
 	 
 	 @Override
 	 public /*@non_null*/ Object visitFieldAccess(/*@non_null*/ FieldAccess x, Object o) {		 
-		 return translator.fieldAccess(x,o);
+		if (((Boolean) ((Properties) o).get("interesting")).booleanValue())
+			return translator.fieldAccess(x,o);
+		else
+			return null;
 	}
 	 
 	 @Override
@@ -176,21 +190,30 @@ public class JmlVisitor extends VisitorArgResult{
 	 
 	 @Override
 	 public /*@non_null*/ Object visitNaryExpr(/*@non_null*/ NaryExpr x, Object o) {
-		 if (x.op== TagConstants.PRE) {
-			 return translator.naryExpr(x,o);
-		 } else {
-			 return visitGCExpr(x, o);
-		 }
+		if (((Boolean) ((Properties) o).get("interesting")).booleanValue()){
+			 if (x.op== TagConstants.PRE) {
+				 return translator.naryExpr(x,o);
+			 } else {
+				 return visitGCExpr(x, o);
+			 }
+		} else
+			return null;
 	}
 	 
 	 @Override
 	 public /*@non_null*/ Object visitInstanceOfExpr(/*@non_null*/ InstanceOfExpr x, Object o) {
-		return translator.instanceOfExpr(x, o);
+		if (((Boolean) ((Properties) o).get("interesting")).booleanValue())
+			return translator.instanceOfExpr(x, o);
+		else
+			return null;
 	 }
 	 
 	 @Override
 	 public Object  visitThisExpr(ThisExpr x, Object o) {
-		 return translator.thisLiteral(x,o);
+		if (((Boolean) ((Properties) o).get("interesting")).booleanValue())
+			return translator.thisLiteral(x,o);
+		else
+			return null;
 	 }
 	 
 	
@@ -265,6 +288,7 @@ public class JmlVisitor extends VisitorArgResult{
 
 	@Override
 	public Object visitExprModifierPragma(ExprModifierPragma x, Object o) {
+		((Properties) o).put("interesting", new Boolean(true));
 		RoutineDecl rd = (RoutineDecl)((Properties) o).get("method");
 		QuantVariableRef result = (QuantVariableRef)((Properties) o).get("result");
 		Term t = (Term)visitASTNode(x, o);
@@ -290,19 +314,25 @@ public class JmlVisitor extends VisitorArgResult{
 		Vector<AAnnotation> annos = new Vector<AAnnotation>();
 		Term inv = null;
 		
-		RoutineDecl m = (RoutineDecl) ((Properties) o).get("method");
-		for(FormalParaDecl p: m.args.toArray()){
-			 t1 = Expression.rvar(p.id.toString(), Type.typeToSort(p.type));
-			 t2 = Expression.rvar(Expression.old(p.id.toString()), Type.typeToSort(p.type));
-			 assignment = new Set.Assignment((QuantVariableRef) t2, t1);
-			 annos.add(new Set((QuantVariableRef) t2, assignment)); 
+		//Save arguments values in prestate as ghosts.
+		if (((Boolean)((Properties) o).get("routinebegin")).booleanValue()){
+			((Properties) o).put("routinebegin", new Boolean(false));
+			RoutineDecl m = (RoutineDecl) ((Properties) o).get("method");
+			for(FormalParaDecl p: m.args.toArray()){
+				 t1 = Expression.rvar(p.id.toString(), Type.typeToSort(p.type));
+				 t2 = Expression.rvar(Expression.old(p.id.toString()), Type.typeToSort(p.type));
+				 assignment = new Set.Assignment((QuantVariableRef) t2, t1);
+				 annos.add(new Set((QuantVariableRef) t2, assignment)); 
+			}
 		}
 		
+		//
 	    for(Stmt s: x.stmts.toArray()){
 	    	interesting = false;
 	    	//We are interested in Asserts, Assumes and Loop Invariants
 	    	if (s instanceof ExprStmtPragma){
 	    		interesting = true; 
+	    		((Properties) o).put("interesting", new Boolean(true));
 	    		t = (Term)s.accept(this, o);
 	    		switch (s.getTag()){
 	    		case TagConstants.ASSERT:
@@ -328,6 +358,7 @@ public class JmlVisitor extends VisitorArgResult{
 	    			}
 	    		}
 	    		if (interesting){
+	    			((Properties) o).put("interesting", new Boolean(true));
 	    			t = (Term)s.accept(this, o);
 	    			Set ghostVar = new Set();
 	    			ghostVar.declaration = (QuantVariableRef) t;
@@ -338,6 +369,7 @@ public class JmlVisitor extends VisitorArgResult{
 	    	//Also set statements should be processed
 	    	if (s instanceof SetStmtPragma) {
 	    		interesting = true;
+	    		((Properties) o).put("interesting", new Boolean(true));
 	    		assignment = (Set.Assignment)s.accept(this, o);
 	    		set = new Set();
 	    		set.assignment = assignment;
@@ -347,16 +379,27 @@ public class JmlVisitor extends VisitorArgResult{
 	    	if (interesting){
     			x.stmts.removeElement(s);
 	    	} else {
+	    		((Properties) o).put("interesting", new Boolean(false));
 	    		if (!annos.isEmpty()){
 	    			AnnotationDecoration.inst.setAnnotPre(s, annos);
 	    			annos.clear();
 	    		}
 	    		if (inv != null){
-	    			if (s instanceof WhileStmt || s instanceof ForStmt || s instanceof DoStmt){
+	    			if (s instanceof WhileStmt || 
+	    					s instanceof ForStmt || 
+	    					s instanceof DoStmt){
 	    				AnnotationDecoration.inst.setInvariant(s, inv);
 	    				inv = null;
 	    			}
-	    		}
+	    		}	
+	    		if (s instanceof WhileStmt || 
+    					s instanceof ForStmt || 
+    					s instanceof DoStmt || 
+    					s instanceof BlockStmt || 
+    					s instanceof TryCatchStmt ||
+    					s instanceof IfStmt){
+    				s.accept(this,o);
+    			}	
 	    	}
 	    }
 		return null;
@@ -522,7 +565,10 @@ public class JmlVisitor extends VisitorArgResult{
 
 	@Override
 	public Object visitResExpr(ResExpr x, Object o) {
-		return translator.resultLiteral(x,o);
+		if (((Boolean) ((Properties) o).get("interesting")).booleanValue())
+			return translator.resultLiteral(x,o);
+		else
+			return null;
 	}
 
 	@Override
@@ -590,84 +636,86 @@ public class JmlVisitor extends VisitorArgResult{
 	
 	@Override
 	public Object visitBinaryExpr(BinaryExpr expr, Object o){
+		if (((Boolean) ((Properties) o).get("interesting")).booleanValue()){
+			switch(expr.op) {
+			case TagConstants.EQ: 
+				return translator.eq(expr, o);
+			case TagConstants.OR: 
+				return translator.or(expr, o);
+			case TagConstants.AND: 
+				return translator.and(expr, o);
+			case TagConstants.NE:
+				return translator.ne(expr, o);
+			case TagConstants.GE: 
+				return translator.ge(expr, o);
+			case TagConstants.GT: 
+				return translator.gt(expr, o);
+			case TagConstants.LE: 
+				return translator.le(expr, o);
+			case TagConstants.LT:  
+				return translator.lt(expr, o);
+			case TagConstants.BITOR: 
+				return translator.bitor(expr, o);
+			case TagConstants.BITXOR: 
+				return translator.bitxor(expr, o);
+			case TagConstants.BITAND: 
+				return translator.bitand(expr, o);
+			case TagConstants.LSHIFT:
+				return translator.lshift(expr, o);
+			case TagConstants.RSHIFT: 
+				return translator.rshift(expr, o);
+			case TagConstants.URSHIFT:
+				return translator.urshift(expr, o);
+			case TagConstants.ADD: 
+				return translator.add(expr, o);
+			case TagConstants.SUB: 
+				return translator.sub(expr, o);
+			case TagConstants.DIV: 
+				return translator.div(expr, o);
+			case TagConstants.MOD: 
+				return translator.mod(expr, o);
+			case TagConstants.STAR: 
+				return translator.star(expr, o);
+			case TagConstants.ASSIGN:
+				return translator.assign(expr, o);
+			case TagConstants.ASGMUL: 
+				return translator.asgmul(expr, o);
+			case TagConstants.ASGDIV: 
+				return translator.asgdiv(expr, o);
+			case TagConstants.ASGREM: 
+				return translator.asgrem(expr, o);
+			case TagConstants.ASGADD: 
+				return translator.asgadd(expr, o);
+			case TagConstants.ASGSUB: 
+				return translator.asgsub(expr, o);
+			case TagConstants.ASGLSHIFT: 
+				return translator.asglshift(expr, o);
+			case TagConstants.ASGRSHIFT: 
+				return translator.asgrshift(expr, o);
+			case TagConstants.ASGURSHIFT: 
+				return translator.asgurshif(expr, o);
+			case TagConstants.ASGBITAND: 
+				return translator.asgbitand(expr, o);
+		// jml specific operators 
+			case TagConstants.IMPLIES: 
+				return translator.implies(expr, o);
+			case TagConstants.EXPLIES:
+				return translator.explies(expr, o);
+			case TagConstants.IFF: // equivalence (equality)
+				return translator.iff(expr, o);
+			case TagConstants.NIFF:    // discrepance (xor)
+				return translator.niff(expr, o);
+			case TagConstants.SUBTYPE: 
+				return translator.subtype(expr, o);
+			case TagConstants.DOTDOT: 
+				return translator.dotdot(expr, o);
 	
-		switch(expr.op) {
-		case TagConstants.EQ: 
-			return translator.eq(expr, o);
-		case TagConstants.OR: 
-			return translator.or(expr, o);
-		case TagConstants.AND: 
-			return translator.and(expr, o);
-		case TagConstants.NE:
-			return translator.ne(expr, o);
-		case TagConstants.GE: 
-			return translator.ge(expr, o);
-		case TagConstants.GT: 
-			return translator.gt(expr, o);
-		case TagConstants.LE: 
-			return translator.le(expr, o);
-		case TagConstants.LT:  
-			return translator.lt(expr, o);
-		case TagConstants.BITOR: 
-			return translator.bitor(expr, o);
-		case TagConstants.BITXOR: 
-			return translator.bitxor(expr, o);
-		case TagConstants.BITAND: 
-			return translator.bitand(expr, o);
-		case TagConstants.LSHIFT:
-			return translator.lshift(expr, o);
-		case TagConstants.RSHIFT: 
-			return translator.rshift(expr, o);
-		case TagConstants.URSHIFT:
-			return translator.urshift(expr, o);
-		case TagConstants.ADD: 
-			return translator.add(expr, o);
-		case TagConstants.SUB: 
-			return translator.sub(expr, o);
-		case TagConstants.DIV: 
-			return translator.div(expr, o);
-		case TagConstants.MOD: 
-			return translator.mod(expr, o);
-		case TagConstants.STAR: 
-			return translator.star(expr, o);
-		case TagConstants.ASSIGN:
-			return translator.assign(expr, o);
-		case TagConstants.ASGMUL: 
-			return translator.asgmul(expr, o);
-		case TagConstants.ASGDIV: 
-			return translator.asgdiv(expr, o);
-		case TagConstants.ASGREM: 
-			return translator.asgrem(expr, o);
-		case TagConstants.ASGADD: 
-			return translator.asgadd(expr, o);
-		case TagConstants.ASGSUB: 
-			return translator.asgsub(expr, o);
-		case TagConstants.ASGLSHIFT: 
-			return translator.asglshift(expr, o);
-		case TagConstants.ASGRSHIFT: 
-			return translator.asgrshift(expr, o);
-		case TagConstants.ASGURSHIFT: 
-			return translator.asgurshif(expr, o);
-		case TagConstants.ASGBITAND: 
-			return translator.asgbitand(expr, o);
-	// jml specific operators 
-		case TagConstants.IMPLIES: 
-			return translator.implies(expr, o);
-		case TagConstants.EXPLIES:
-			return translator.explies(expr, o);
-		case TagConstants.IFF: // equivalence (equality)
-			return translator.iff(expr, o);
-		case TagConstants.NIFF:    // discrepance (xor)
-			return translator.niff(expr, o);
-		case TagConstants.SUBTYPE: 
-			return translator.subtype(expr, o);
-		case TagConstants.DOTDOT: 
-			return translator.dotdot(expr, o);
-
-		default:
-			throw new IllegalArgumentException("Unknown construct :" +
-					TagConstants.toString(expr.op) +" " +  expr);
-		}		
+			default:
+				throw new IllegalArgumentException("Unknown construct :" +
+						TagConstants.toString(expr.op) +" " +  expr);
+			}	
+		} else
+			return null;
 	}
 
 }
