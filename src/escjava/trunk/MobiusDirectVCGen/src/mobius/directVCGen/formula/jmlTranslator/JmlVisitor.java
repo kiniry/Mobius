@@ -319,8 +319,8 @@ public class JmlVisitor extends VisitorArgResult{
 			((Properties) o).put("routinebegin", new Boolean(false));
 			RoutineDecl m = (RoutineDecl) ((Properties) o).get("method");
 			for(FormalParaDecl p: m.args.toArray()){
-				 t1 = Expression.rvar(p.id.toString(), Type.typeToSort(p.type));
-				 t2 = Expression.rvar(Expression.old(p.id.toString()), Type.typeToSort(p.type));
+				 t1 = Expression.rvar(p);
+				 t2 = Expression.old(p);
 				 assignment = new Set.Assignment((QuantVariableRef) t2, t1);
 				 annos.add(new Set((QuantVariableRef) t2, assignment)); 
 			}
@@ -408,7 +408,7 @@ public class JmlVisitor extends VisitorArgResult{
 	@Override
 	public /*@non_null*/ Object visitVarDeclStmt(/*@non_null*/ VarDeclStmt x, Object o) {
 		//It's only called if we have a ghost variable declaration
-		return Expression.rvar(x.decl.id.toString(),Type.typeToSort(x.decl.type));
+		return Expression.rvar(x.decl);
 	}	
 	
 	@Override

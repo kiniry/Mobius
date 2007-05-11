@@ -35,8 +35,9 @@ public class Expression {
 		return oldPrefix + s;
 	}
 	public static QuantVariableRef old(GenericVarDecl e){
-		return null;//oldPrefix + s;
+		return refFromVar(Formula.lf.mkQuantVariable(e, old(UniqName.variable(e))));
 	}
+
 	/**
 	 * Build a variable from a string, without any specified sort.
 	 * @param str
