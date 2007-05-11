@@ -18,6 +18,7 @@ import escjava.ast.TagConstants;
 import escjava.sortedProver.Lifter.QuantVariable;
 import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
+import escjava.sortedProver.NodeBuilder.Sort;
 import javafe.ast.BinaryExpr;
 import javafe.ast.BlockStmt;
 import javafe.ast.DoStmt;
@@ -365,11 +366,15 @@ public class JmlExprToFormula {
 	public Object variableAccess(VariableAccess x, Object o) {
 		 Boolean oldProp = (Boolean) ((Properties) o).get("old");
 		 Boolean predProp = (Boolean) ((Properties)o).get("pred");
-		 
 		 String id = (String) x.id.toString();
+		 Term res = null;
 		 if(oldProp.booleanValue()) id = Expression.old(id); 
 		 
-		 Term res = Expression.rvar(id, Type.typeToSort((javafe.ast.Type) x.getDecorations()[1]));
+		 if (x.decl != null && x.decl.type != null){
+			 res = Expression.rvar(id, Type.typeToSort(x.decl.type));
+		 } else {
+			 res = Expression.rvar(id, Type.typeToSort((javafe.ast.Type) x.getDecorations()[1]));
+		 }
 		 if (predProp.booleanValue() && res.getSort() == Bool.sort)
 			 res = Logic.boolToProp(res);
 		 return res;
@@ -392,10 +397,15 @@ public class JmlExprToFormula {
 		 Boolean oldProp = (Boolean) ((Properties) o).get("old");
 		 //Boolean predProp = (Boolean) ((Properties)o).get("pred");
 		 Term obj = (Term) x.od.accept(v, o);
+		 QuantVariable var = null;
 		 QuantVariableRef heap = Heap.var;
 		 if(oldProp.booleanValue()) heap = Heap.varPre;
-		 String idVar = (String) x.id.toString(); 
-		 QuantVariable var = Expression.var(idVar, Type.typeToSort((javafe.ast.Type) x.getDecorations()[1]));
+		 String idVar = (String) x.id.toString(); 		 
+		 if (x.decl != null && x.decl.type != null){
+			 var = Expression.var(idVar, Type.typeToSort(x.decl.type));
+		 } else {
+			 var = Expression.var(idVar, Type.typeToSort((javafe.ast.Type) x.getDecorations()[1]));
+		 }		 
 		 return Heap.select(heap, obj, var);
 	}
 
