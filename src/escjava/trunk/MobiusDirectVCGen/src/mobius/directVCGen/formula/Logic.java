@@ -60,6 +60,8 @@ public class Logic {
 		return t;
 	}
 	
+	
+	
 	/** the sort to represent the predicates */
 	public static Sort sort = Formula.lf.sortPred;
 
@@ -103,6 +105,28 @@ public class Logic {
 	 */
 	public static Term and(Term f1, Term f2) {
 		return logicBinaryOp(f1,f2, Formula.lf.symAnd);
+	}
+	
+
+	// TODO: add comments
+	public static Term safe_and(Term f1, Term f2) {
+		if (f1.getSort().equals(Bool.sort)) {
+			f1 = Logic.boolToProp(f1);
+		}
+		if (f2.getSort().equals(Bool.sort)) {
+			f2 = Logic.boolToProp(f1);
+		}
+		return and(f1, f2);
+	}
+	// TODO: add comments
+	public static Term safe_implies(Term f1, Term f2) {
+		if (f1.getSort().equals(Bool.sort)) {
+			f1 = Logic.boolToProp(f1);
+		}
+		if (f2.getSort().equals(Bool.sort)) {
+			f2 = Logic.boolToProp(f1);
+		}
+		return implies(f1, f2);
 	}
 	
 	/**
@@ -293,7 +317,8 @@ public class Logic {
 	 * @return The and expression a FnTerm with tag {@link NodeBuilder#predLE}
 	 */
 	public static Term ge(Term l, Term r) {		
-		return numBinaryOp(l,r,NodeBuilder.predGE);
+		//return numBinaryOp(l,r,NodeBuilder.predGE);
+		return numBinaryOp(r,l,NodeBuilder.predLT);
 	}
 	
 	/**
@@ -303,7 +328,8 @@ public class Logic {
 	 * @return The and expression a FnTerm with tag {@link NodeBuilder#predLE}
 	 */
 	public static Term gt(Term l, Term r) {		
-		return numBinaryOp(l,r,NodeBuilder.predGT);
+		//return numBinaryOp(l,r,NodeBuilder.predGT);
+		return numBinaryOp(r,l,NodeBuilder.predLE);
 	}
 	
 

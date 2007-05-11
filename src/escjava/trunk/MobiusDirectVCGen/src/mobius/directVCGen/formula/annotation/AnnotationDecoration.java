@@ -122,15 +122,13 @@ public class AnnotationDecoration extends ASTDecoration {
 	/**
 	 * Retrieve the invariant associated with the node
 	 * @param n the node to decorate
-	 * @return the invariant the node is decorated with
+	 * @return the invariant the node is decorated with, or true
 	 */
 	@SuppressWarnings("unchecked")
 	public Term getInvariant(ASTNode n) {
-		// jgc: while no proper annotations are made - returns Logic.True...
-//		Annotation v =  getAnnot(n);
-//		if (v == null)
-//			return null;
-//		return v.inv;
-		return Logic.True();
+		Annotation v =  getAnnot(n);
+		if (v == null)
+			return Logic.True();
+		return v.inv;
 	}
 }

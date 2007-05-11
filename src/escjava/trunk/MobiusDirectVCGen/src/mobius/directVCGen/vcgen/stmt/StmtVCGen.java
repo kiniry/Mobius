@@ -48,6 +48,7 @@ import mobius.directVCGen.vcgen.struct.ExcpPost;
 import mobius.directVCGen.vcgen.struct.Post;
 import mobius.directVCGen.vcgen.struct.VCEntry;
 import escjava.ast.ExprStmtPragma;
+import escjava.ast.SetStmtPragma;
 import escjava.sortedProver.Lifter.QuantVariable;
 import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
@@ -63,6 +64,7 @@ public class StmtVCGen extends ExpressionVisitor {
 	public final Vector<Term> vardecl = new Vector<Term>();
 	/** the visitor to visit expressions */
 	public final ExpressionVisitor exprVisitor = new ExpressionVisitor();
+	
 	public final AnnotationDecoration annot = AnnotationDecoration.inst;
 	
 	
@@ -74,7 +76,44 @@ public class StmtVCGen extends ExpressionVisitor {
 	 * @return a postcondition computed from the annotation
 	 */
 	public Post treatAnnot(VCEntry vce, Vector<AAnnotation> annot) {
-		return vce.post;
+		if(annot == null)
+			return vce.post;
+		Term post = vce.post.post;
+		int len = annot.size();
+		for(int i = len -1; i >= 0; i--) {
+			AAnnotation aa =  annot.elementAt(i);		
+			switch(aa.getID()) {
+				case AAnnotation.annotAssert:
+					vcs.add(Logic.safe_implies(aa.formula, post));
+					post = aa.formula;
+					break;
+				case AAnnotation.annotCut:
+					post = Logic.safe_and(aa.formula, Logic.safe_implies(aa.formula, post));
+					break;
+				case AAnnotation.annotAssume:
+					post = Logic.safe_implies(aa.formula, post);
+					break;
+				case AAnnotation.annotSet: {
+					mobius.directVCGen.formula.annotation.Set s = (mobius.directVCGen.formula.annotation.Set) aa;
+					if(s.assignment != null) {
+						post.subst(s.assignment.var, s.assignment.expr);
+					}
+					else if(s.declaration != null) {
+						if(s.assignment == null) {
+							post = Logic.forall(s.declaration.qvar, post);
+						}						
+						addVarDecl(s.declaration.qvar);
+					}
+					break;
+				}
+				
+				case AAnnotation.undef:
+				default:
+					throw new UnsupportedOperationException(aa.toString());
+			}
+		}
+		
+		return new Post(post);
 	}
 	
 	public /*@non_null*/ Object visitAssertStmt(/*@non_null*/ AssertStmt x, Object o) {
@@ -390,7 +429,7 @@ public class StmtVCGen extends ExpressionVisitor {
 		return treatAnnot(vce, annot.getAnnotPre(x));
 	}
 	
-	public void addVarDecl(QuantVariable qv) {
+	private void addVarDecl(QuantVariable qv) {
 		Vector<Term> oldvcs = vcs;
 		vcs = new Vector<Term>();
 		for (Term t: oldvcs) {
@@ -483,5 +522,9 @@ public class StmtVCGen extends ExpressionVisitor {
 		return ((VCEntry) o).post;
 	}
 
+	@Override
+	public Object visitSetStmtPragma(SetStmtPragma x, Object o) {
+		return ((VCEntry) o).post;
+	}
 
 }	
