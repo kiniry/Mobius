@@ -611,8 +611,8 @@ class BCELReader extends Reader {
 
       case TagConstants.ARRAYTYPE:
       case TagConstants.NULLTYPE:
-         String fieldClassName = field.getClass().getName();
-         astType = DescriptorParser.parseClass(fieldClassName);
+         String typeSignature = field.getType().getSignature();
+         astType = DescriptorParser.parseField(typeSignature);
          break;
 
       // Primitive types
