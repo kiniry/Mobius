@@ -154,7 +154,7 @@ fix-perms:	.perms-fixed
 		   -name "README*" -or \
 		   -name "*.txt" -or \
 		   -name "*.zip" \) \
-		-exec chmod 644 {} \; &&\
+		-exec chmod 644 {} \; ;\
 		find $(ESCTOOLS_ROOT) -type f \
 		\( -name "*.sh" -or \
 		   -name "*.pl" -or \
@@ -172,7 +172,7 @@ fix-perms:	.perms-fixed
 		   -name "*_tags" -or \
 		   -name "Simplify-1.5*" -or \
 		   -name "insert_ensures" \) \
-		-exec chmod 755 {} \; &&\
+		-exec chmod 755 {} \; ;\
 		touch .perms-fixed; \
 	fi
 
