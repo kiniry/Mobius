@@ -190,7 +190,7 @@ public class ExpressionVisitor extends ABasicVisitor {
 	
 	public /*@non_null*/ Object visitThisExpr(/*@non_null*/ ThisExpr x, Object o) {
 		VCEntry vce = (VCEntry) o;
-		return new Post(vce.post.substWith(Ref.varthis));// variable particuliere
+		return new Post(vce.post.substWith(Ref.varThis));// variable particuliere
 	}
 	
 	public /*@non_null*/ Object visitParenExpr(/*@non_null*/ ParenExpr x, Object o) {

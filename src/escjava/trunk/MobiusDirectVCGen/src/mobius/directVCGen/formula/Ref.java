@@ -6,10 +6,11 @@ import escjava.sortedProver.NodeBuilder.Sort;
 
 // TODO: add comments
 public class Ref {
-	// TODO: add comments
+	/** the sort that represents references */
 	public static Sort sort = Formula.lf.sortRef;
+
 	// TODO: add comments
-	public static QuantVariableRef varthis = Expression.refFromVar(Expression.var("this", Ref.sort));
+	public static QuantVariableRef varThis = Expression.rvar(Expression.var("this", Ref.sort));
 	
 	// TODO: add comments
 	public static Term Null() {

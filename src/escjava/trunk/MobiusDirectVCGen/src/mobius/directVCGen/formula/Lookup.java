@@ -50,7 +50,7 @@ public class Lookup {
 		Term [] args = new Term [arity];
 		if(incThis) {
 			s [0] = Ref.sort;
-			args[0] = Ref.varthis;
+			args[0] = Ref.varThis;
 		}
 		FormalParaDeclVec v = m.args;
 		for(int i = 0; i < v.size(); i ++) {

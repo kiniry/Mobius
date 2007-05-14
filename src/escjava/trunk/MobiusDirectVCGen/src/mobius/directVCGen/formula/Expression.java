@@ -1,6 +1,5 @@
 package mobius.directVCGen.formula;
 
-import javafe.ast.FormalParaDecl;
 import javafe.ast.GenericVarDecl;
 import escjava.ast.TagConstants;
 import escjava.sortedProver.Lifter.FnTerm;
@@ -14,15 +13,15 @@ import escjava.translate.UniqName;
 public class Expression {
 	
 	/** counter to create anonymous variables */
-	private static int [] varCounters = {0, 0, 0, 0, 0};
+	private final static int [] varCounters = {0, 0, 0, 0, 0};
 	
-	// TODO: add comments
-	public static String result = "\\result";
+	/** the name of the result variable (<code>\result</code>) */
+	public final static String result = "\\result";
 	
-	// TODO: add comments
-	public static String oldPrefix = "\\pre_";
+	/** the prefix used to mark variables as old (<code>\pre_</code>) */
+	public final static String oldPrefix = "\\pre_";
 
-	// TODO: add comments	
+	/** the special field which represents the length of an array */
 	public final static QuantVariable length;
 	
 	static {
@@ -30,30 +29,80 @@ public class Expression {
 		Lookup.fieldsToDeclare.add(length);
 	}
 
-	// TODO: add comments
-	public static String old(String s){
-		return oldPrefix + s;
-	}
-	public static QuantVariableRef old(GenericVarDecl e){
-		return refFromVar(Formula.lf.mkQuantVariable(e, old(UniqName.variable(e))));
+	/**
+	 * This method is used to <i>make old</i> the given name.
+	 * It should not be used outside this library as it is a helper
+	 * method for all the other old methods:
+	 * <ul>
+	 * <li> {@link #old(GenericVarDecl)}, </li>
+	 * <li> {@link #old(QuantVariable)} and </li>
+	 * <li> {@link #old(QuantVariableRef)} </li>
+	 * </ul>
+	 * @param name the name to make old
+	 * @return the oldified name
+	 */
+	private static String old(String name){
+		return oldPrefix + name;
 	}
 
 	/**
-	 * Build a variable from a string, without any specified sort.
-	 * @param str
-	 * @return
-	 * @deprecated
+	 * Creates an old version of the given variable.
+	 * @param decl The variable to convert to an old version
+	 * of it.
+	 * @return the <i>oldified</i> version of the variable
 	 */
-	public static QuantVariable var(String str) {
-		return Formula.lf.mkQuantVariable(str, Formula.sort);
+	public static QuantVariableRef old(GenericVarDecl decl){
+		return rvar(Formula.lf.mkQuantVariable(decl, old(UniqName.variable(decl))));
 	}
 	
-	// TODO: add comments
+	/**
+	 * Turn a quant variable to an old quant variable.
+	 * @param qv The quant variable to make old. 
+	 * @return The <i>oldified</i> version of the variable
+	 */
+	public static QuantVariable old(QuantVariable qv){
+		return var(old(qv.name), qv.type);
+	}
+	
+	/**
+	 * Turn a quant variable ref to an old quant variable.
+	 * @param qv The quant variable ref to make old. 
+	 * @return The <i>oldified</i> version of the variable
+	 * @param qvr
+	 */
+	public static QuantVariableRef old(QuantVariableRef qvr){
+		return rvar(old(qvr.qvar));
+	}
+	
+	
+	/**
+	 * Build a variable from a string, without any specified sort.
+	 * It is here for development/testing purpose only, therefore
+	 * it is marked as deprecated.
+	 * @param str the name of the variable
+	 * @return a variable of the sort any ({@link Formula#sort})
+	 * @deprecated use another method instead, like {@link #var(Sort)}
+	 * or {@link #var(String, Sort)}
+	 */
+	public static QuantVariable var(String str) {
+		return var(str, Formula.sort);
+	}
+	
+	/**
+	 * Creates a quantified variable from its name and its type.
+	 * @param name a name for the variable
+	 * @param s the sort of the variable
+	 * @return a variable with the given name and sort
+	 */
 	public static QuantVariable var(String name, Sort s) {
 		return Formula.lf.mkQuantVariable(name, s);
 	}
 	
-	// TODO: add comments
+	/**
+	 * Creates a variable from a generic variable declaration definition.
+	 * @param decl the declaration to turn into a quantified variable
+	 * @return a quant variable corresponding to the given declaration
+	 */
 	public static QuantVariable var(GenericVarDecl decl) {
 		return Formula.lf.mkQuantVariable(decl, UniqName.variable(decl));
 	}
@@ -91,26 +140,22 @@ public class Expression {
 	
 	// TODO: add comments
 	public static QuantVariableRef rvar(Sort s) {
-		return refFromVar(var(s));
+		return rvar(var(s));
 	}
 	
 	// TODO: add comments
-	public static QuantVariableRef rvar(FormalParaDecl arg) {
-		return refFromVar(Formula.lf.mkQuantVariable(arg, UniqName.variable(arg)));
+	public static QuantVariableRef rvar(GenericVarDecl arg) {
+		return rvar(var(arg));
 	}
 	
 	// TODO: add comments
 	public static QuantVariableRef rvar(String str, Sort s) {
-		return refFromVar(var(str, s));
+		return rvar(var(str, s));
 	}
 	
-	// TODO: add comments
-	public static QuantVariableRef rvar(GenericVarDecl decl) {
-		return refFromVar(var(decl));
-	}	
 
 	// TODO: add comments	
-	public static QuantVariableRef refFromVar(QuantVariable qv) {
+	public static QuantVariableRef rvar(QuantVariable qv) {
 		return Formula.lf.mkQuantVariableRef(qv);
 	}
 	

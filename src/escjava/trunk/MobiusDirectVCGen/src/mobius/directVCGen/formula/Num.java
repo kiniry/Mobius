@@ -184,7 +184,7 @@ public class Num {
 
 	// TODO: add comments
 	public static boolean isNum(Sort sort) {
-		return sort == sortInt || sort == sortReal;
+		return sort.equals(sortInt) || sort.equals(sortReal);
 	}
 
 	// TODO: add comments

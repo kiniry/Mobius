@@ -10,7 +10,8 @@ import escjava.sortedProver.NodeBuilder.Sort;
 /**
  * This is the library class for generic handling of the formulas.
  * It is not used to create terms. The sort attached to it
- * is the sort any...
+ * is the sort any... But it should not be used (yes - it is
+ * marked as deprecated).
  */
 public class Formula {
 	
@@ -29,7 +30,7 @@ public class Formula {
 	 */
 	public static QuantVariable program = Expression.var("p");
 	
-	//TODO: add comments
+	/** the sort used to represent a value */
 	public static Sort sortValue = lf.sortValue;
 	
 	/**
@@ -59,6 +60,11 @@ public class Formula {
 		return res;
 	}
 	
+	/**
+	 * Translate the given sort to a fully valid formula.
+	 * @param sort the sort to translate
+	 * @return a term representing the type
+	 */
 	public static STerm generateType(Sort sort) {
 		lf.dumpBuilder = lf.builder;
 		STerm res = lf.builder.buildSort(sort);

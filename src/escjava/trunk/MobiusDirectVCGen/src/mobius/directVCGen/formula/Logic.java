@@ -426,8 +426,8 @@ public class Logic {
 		QuantVariable [] vars = { Expression.var("v1", Logic.sort),
 								  Expression.var("v2", Bool.sort) };
 		
-		QuantVariableRef rv1 = Expression.refFromVar(vars[0]);
-		QuantVariableRef rv2 = Expression.refFromVar(vars[1]);
+		QuantVariableRef rv1 = Expression.rvar(vars[0]);
+		QuantVariableRef rv2 = Expression.rvar(vars[1]);
 		Term formula = 
 			 Logic.forall(vars, Logic.implies(rv1, rv2));
 		System.out.println(formula);

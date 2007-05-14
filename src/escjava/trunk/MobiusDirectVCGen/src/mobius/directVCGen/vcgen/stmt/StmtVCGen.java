@@ -416,7 +416,7 @@ public class StmtVCGen extends ExpressionVisitor {
 		QuantVariable qv = Expression.var(x.decl);
 		if(init != null) {
 			// the init value replaces the quantification
-			QuantVariableRef qvr = Expression.refFromVar(qv);
+			QuantVariableRef qvr = Expression.rvar(qv);
 			vce.post = new Post(qvr, vce.post.post);
 			vce.post = (Post)init.accept(this, vce);
 		}

@@ -68,12 +68,12 @@ public class ExpressionVCGen extends BinaryExpressionVCGen{
 		
 		// first: the exceptional post
 		QuantVariableRef exc = Expression.rvar(Ref.sort);
-		Term tExcp = Logic.forall(exc.qvar, Logic.implies(excpPost.substWith(exc).subst(Ref.varthis, newThis), 
+		Term tExcp = Logic.forall(exc.qvar, Logic.implies(excpPost.substWith(exc).subst(Ref.varThis, newThis), 
 				               		StmtVCGen.getExcpPost(Type.javaLangThrowable(), entry).substWith(exc)));
 		// the normal post
 		QuantVariableRef res = entry.post.var;		
 		Term tNormal = normalPost.substWith(res);
-		tNormal = Logic.forall(res, Logic.implies(tNormal, entry.post.substWith(res)).subst(Ref.varthis, newThis));
+		tNormal = Logic.forall(res, Logic.implies(tNormal, entry.post.substWith(res)).subst(Ref.varThis, newThis));
 
 		entry.post = new Post(Logic.and(pre, Logic.implies(pre, Logic.and(tNormal, tExcp))));
 		Vector<QuantVariableRef> v = mkArguments(mi);
@@ -178,12 +178,12 @@ public class ExpressionVCGen extends BinaryExpressionVCGen{
 		
 		// first: the exceptional post
 		QuantVariableRef exc = Expression.rvar(Ref.sort);
-		Term tExcp = Logic.forall(exc.qvar, Logic.implies(excpPost.substWith(exc).subst(Ref.varthis, newThis), 
+		Term tExcp = Logic.forall(exc.qvar, Logic.implies(excpPost.substWith(exc).subst(Ref.varThis, newThis), 
 				               		StmtVCGen.getExcpPost(Type.javaLangThrowable(), entry).substWith(exc)));
 		// the normal post
 		QuantVariableRef res = entry.post.var;		
 		Term tNormal = normalPost.substWith(res);
-		tNormal = Logic.forall(res, Logic.implies(tNormal, entry.post.substWith(res)).subst(Ref.varthis, newThis));
+		tNormal = Logic.forall(res, Logic.implies(tNormal, entry.post.substWith(res)).subst(Ref.varThis, newThis));
 
 		entry.post = new Post(Logic.and(pre, Logic.implies(pre, Logic.and(tNormal, tExcp))));
 		

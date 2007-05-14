@@ -411,6 +411,6 @@ public class JmlExprToFormula {
 
 	public Object thisLiteral(ThisExpr x, Object o) {
 		// TODO Auto-generated method stub
-		return Ref.varthis;
+		return Ref.varThis;
 	}
 }
