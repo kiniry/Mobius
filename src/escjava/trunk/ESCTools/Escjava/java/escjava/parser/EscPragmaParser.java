@@ -1401,14 +1401,7 @@ public class EscPragmaParser extends Parse
         case TagConstants.NON_NULL_BY_DEFAULT: // incomplete (chalin/kiniry)
         case TagConstants.NULLABLE_BY_DEFAULT: // incomplete (chalin/kiniry)
         case TagConstants.OBS_PURE: // incomplete (chalin/kiniry)
-	//alx: commented out not to interfere with dw
-        //case TagConstants.PEER: // parsed but not typechecked - Universe type annotation (cjbooms)
-	//alx-end
         case TagConstants.PURE:
-        //alx: commented out not to interfere with dw
-        //case TagConstants.READONLY: // parsed but not typechecked - Universe type annotation (cjbooms)
-        //case TagConstants.REP: // parsed but not typechecked - Universe type annotation (cjbooms)
-	//alx-end
         case TagConstants.SPEC_BIGINT_MATH:
         case TagConstants.SPEC_JAVA_MATH:
         case TagConstants.SPEC_PROTECTED: // SC HPT AAST 3, SUPPORT COMPLETE (cok)
