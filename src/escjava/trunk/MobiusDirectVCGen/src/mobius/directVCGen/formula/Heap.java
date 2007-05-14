@@ -65,8 +65,25 @@ public class Heap {
 		return valueToSort(select, var.type);
 	}
 	
-	// TODO: add comments
+	/**
+	 * The select for an element of an array.
+	 * @param heap the heap on which to do the select
+	 * @param var the array
+	 * @param idx the index of the element to retrieve
+	 * @param type the type of the element to retrieve
+	 * @return the construct well instanciated
+	 */
 	public static Term selectArray(Term heap, Term var, Term idx, Sort type) {
+		if(!heap.getSort().equals(Heap.sort)) {
+			throw new IllegalArgumentException("The heap argument should be of sort heap, found: " + heap.getSort());
+		}
+		if(!var.getSort().equals(Ref.sort)) {
+			throw new IllegalArgumentException("The var argument should be of sort reference, found: " + var.getSort());
+		}
+		
+		if(!idx.getSort().equals(Num.sortInt)) {
+			throw new IllegalArgumentException("The idx argument should be of sort int, found: " + idx.getSort());
+		}
 		Term select = Formula.lf.mkFnTerm(Formula.lf.symArrSelect, new Term[] {heap, var, idx});
 		return valueToSort(select, type);
 	}

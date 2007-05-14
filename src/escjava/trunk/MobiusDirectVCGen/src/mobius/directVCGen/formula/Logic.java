@@ -11,10 +11,22 @@ import escjava.sortedProver.NodeBuilder.PredSymbol;
 import escjava.sortedProver.NodeBuilder.Sort;
 
 
-// TODO: add comments
+/**
+ * The library to represents all the formulas that are predicates.
+ * The safe formulas are more bullet proofs than the normal ones 
+ * (they basically give less warnings and do more things). They should
+ * be used seldomly.
+ */
 public class Logic {
 	
-	// TODO: add comments
+	/**
+	 * Build a predicate term from two predicate terms.
+	 * @param f1 the left hand side part of the predicate
+	 * @param f2 the right hand side part of the predicate
+	 * @param sym the symbol associated, which gives its meaning to
+	 * the predicate
+	 * @return a well formed binary op
+	 */
 	private static Term logicBinaryOp(Term f1, Term f2, PredSymbol sym){
 		if((f1.getSort() != sort || f2.getSort() != sort))
 			throw new IllegalArgumentException("Bad type. Expecting predicates, " +
@@ -22,7 +34,12 @@ public class Logic {
 		return Formula.lf.mkFnTerm(sym, new Term[]{f1, f2});
 	}
 	
-	// TODO: add comments
+	/**
+	 * Build a unary predicate. 
+	 * @param f the term to wrap in the predicate
+	 * @param sym the symbol which gives its meaning to the predicate
+	 * @return a well formed unary op
+	 */
 	private static Term logicUnaryOp(Term f, PredSymbol sym){
 		if(f.getSort() != sort)
 			throw new IllegalArgumentException("Bad type. Expecting predicate, " +
@@ -30,7 +47,13 @@ public class Logic {
 		return Formula.lf.mkFnTerm(sym, new Term []{f});
 	}
 	
-	// TODO: add comments	
+	/**
+	 * Creates binary operation terms over numerical elements.
+	 * @param l the left hand side element of the binary
+	 * @param r the right hand side element of the binary
+	 * @param tag the tag defining the operation
+	 * @return a new numerical term
+	 */	
 	private static Term numBinaryOp(Term l, Term r, int tag){
 		if(l.getSort() != r.getSort() ||
 				(!Num.isNum(l.getSort()) || !Num.isNum(r.getSort())))
@@ -108,26 +131,49 @@ public class Logic {
 	}
 	
 
-	// TODO: add comments
-	public static Term safe_and(Term f1, Term f2) {
-		if (f1.getSort().equals(Bool.sort)) {
-			f1 = Logic.boolToProp(f1);
+	/**
+	 * All the methods in this library are 'safe':
+	 * no exception is thrown if the terms given to the methods
+	 * are boolean instead of pred, even better they are converted 
+	 * to pred.
+	 */
+	public final static class safe {
+		/**
+		 * Create a And in the prop territory, from 2 booleans or
+		 * 2 properties. The 2 arguments should not have different types.
+		 * @see Logic#and(Term, Term)
+		 * @param f1 The first argument of the and, of type Prop
+		 * @param f2 The second argument of the and, of type Prop
+		 * @return a newly created and connector
+		 */
+		public static Term and(Term f1, Term f2) {
+			if (f1.getSort().equals(Bool.sort)) {
+				f1 = Logic.boolToProp(f1);
+			}
+			if (f2.getSort().equals(Bool.sort)) {
+				f2 = Logic.boolToProp(f1);
+			}
+			return and(f1, f2);
 		}
-		if (f2.getSort().equals(Bool.sort)) {
-			f2 = Logic.boolToProp(f1);
+		
+		/**
+		 * Create an object representing a logical implies.
+		 * @see Logic#implies(Term, Term)
+		 * @param f1 the first element of the implies
+		 * @param f2 the second element of the implies
+		 * @return a nicely created implies
+		 */
+		public static Term implies(Term f1, Term f2) {
+			if (f1.getSort().equals(Bool.sort)) {
+				f1 = Logic.boolToProp(f1);
+			}
+			if (f2.getSort().equals(Bool.sort)) {
+				f2 = Logic.boolToProp(f1);
+			}
+			return implies(f1, f2);
 		}
-		return and(f1, f2);
 	}
-	// TODO: add comments
-	public static Term safe_implies(Term f1, Term f2) {
-		if (f1.getSort().equals(Bool.sort)) {
-			f1 = Logic.boolToProp(f1);
-		}
-		if (f2.getSort().equals(Bool.sort)) {
-			f2 = Logic.boolToProp(f1);
-		}
-		return implies(f1, f2);
-	}
+	
 	
 	/**
 	 * Create an object representing an Or.

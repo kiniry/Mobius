@@ -19,9 +19,11 @@ public abstract class AAnnotation {
 	 */
 	public Term formula;
 	
+	// TODO: add comments
 	public AAnnotation(){
 	}
 	
+	// TODO: add comments
 	public AAnnotation(Term t){
 		this.formula = t;
 	}
