@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/EscJava2_1.0.6.jar" id="EscJava2" version="1.0.6">
+   <description url="http://sort.ucd.ie/www/escjava-eclipse/updates">
+      The ESC/Java2 plugin update site.
+   </description>
+   <feature url="features/eu.mobius.escjava2_1.0.8.jar" id="eu.mobius.escjava2" version="1.0.8">
       <category name="EscJava2"/>
    </feature>
    <category-def name="EscJava2" label="EscJava2">
