@@ -7,3 +7,7 @@ Things to do when I (or we) will have time:
 
 - Make the Coq back-end type properly everything
 	see: select, store, MSelect, MStore are badly constructed.
+	
+- Change the ant file when bug 
+   http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=5101868
+  is fixed.
