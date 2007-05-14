@@ -10,18 +10,31 @@ import escjava.sortedProver.NodeBuilder.STerm;
  * @author J. Charles
  */
 class CAny extends CTerm implements SAny {
-	// TODO: add comments
+	/**
+	 * Creates an object of type SAny
+	 * @param pref whether or not the symbol should be shown as a prefix
+	 * @param rep the symbol associated to this node
+	 * @param args the children of the node
+	 */
 	protected CAny(boolean pref, String rep, STerm [] args) {
 		super(pref, rep, args);
 	}
 	
-	// TODO: add comments
+	/**
+	 * Creates an object of type SAny, with its symbol
+	 * as a prefix.
+	 * @param rep the symbol
+	 * @param args the argurments of the symbol
+	 */
 	protected CAny(String rep, STerm [] args) {
-		super(true, rep, args);
+		this(true, rep, args);
 	}
 	
-	// TODO: add comments
+	/**
+	 * Creates an object containing only the specfied symbol.
+	 * @param rep the symbol to attach to the node
+	 */
 	protected CAny(String rep) {
-		super(false, rep, new STerm[0]);
+		this(false, rep, new STerm[0]);
 	}
 }

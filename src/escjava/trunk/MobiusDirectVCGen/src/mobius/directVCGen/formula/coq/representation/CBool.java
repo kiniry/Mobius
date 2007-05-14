@@ -12,11 +12,11 @@ public class CBool extends CValue implements SBool {
 	
 	// TODO: add comments
 	public CBool(String rep, STerm [] args) {
-		super(true, rep, args);
+		this(true, rep, args);
 	}
 	
 	// TODO: add comments
 	public CBool(String rep) {
-		super(false, rep, new STerm[0]);
+		this(false, rep, new STerm[0]);
 	}
 }
