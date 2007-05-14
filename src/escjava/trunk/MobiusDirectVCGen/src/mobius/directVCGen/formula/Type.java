@@ -3,6 +3,7 @@ package mobius.directVCGen.formula;
 import java.util.HashMap;
 import java.util.Vector;
 
+import javafe.ast.MethodDecl;
 import javafe.ast.VarInit;
 import javafe.tc.FlowInsensitiveChecks;
 import escjava.sortedProver.Lifter.FnTerm;
@@ -208,6 +209,11 @@ public class Type{
 	// TODO: add comments
 	public static Term javaLangArrayOutOfBoundException() {
 		return translate(Types.getJavaLang("ArrayOutOfBoundException"));
+	}
+
+	// TODO: add comments
+	public static Sort getReturnType(MethodDecl x) {
+		return Formula.lf.typeToSort(x.returnType);
 	}
 
 

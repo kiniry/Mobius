@@ -355,15 +355,12 @@ public class JmlExprToFormula {
 	public Object variableAccess(VariableAccess x, Object o) {
 		 Boolean oldProp = (Boolean) ((Properties) o).get("old");
 		 Boolean predProp = (Boolean) ((Properties)o).get("pred");
-		 String id = UniqName.variable(x.decl);
 		 Term res = null;
-		 if(oldProp.booleanValue()) 
-			 id = Expression.old(id); 
-		 
-		 if (x.decl != null && x.decl.type != null){
-			 res = Expression.rvar(id, Type.typeToSort(x.decl.type));
-		 } else {
-			 res = Expression.rvar(id, Type.getSort(x));
+		 if(oldProp.booleanValue()) { 
+			 res = Expression.old(x.decl);// x.decl cannot be null
+		 }
+		 else {
+			 res = Expression.rvar(x.decl);
 		 }
 		 if (predProp.booleanValue() && res.getSort() == Bool.sort)
 			 res = Logic.boolToProp(res);
