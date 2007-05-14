@@ -244,12 +244,12 @@ public class EscjavaUtils {
 	
 	/**
 	 * This method checks to see if the given Java project has 
-	 * the JML specs linked into it.  If not, then a JmlSpecs
+	 * the JML specs linked into it.  If not, then a jmlspecs
 	 * project containing the JML system and model specs is 
 	 * created, if it does not already exist.  Finally, the
-	 * JmlSpecs project is added to the classpath of the given
+	 * jmlspecs project is added to the classpath of the given
 	 * project.
-	 * @param javaProject  The project add the JML specs to
+	 * @param javaProject the project to which we wish to add the jmlspecs project.
 	 */
 	public static void installDefaultSpecs(IJavaProject javaProject) {
 		String location = null;
@@ -259,9 +259,9 @@ public class EscjavaUtils {
 			// If not, find the specs in the plugin
 			location = findSpecs();
 			// Create (if it does not exist) a project and link the specs into it
-			installSpecsAsProject("JmlSpecs","jmlSpecs",location);
+			installSpecsAsProject("jmlspecs","jmlspecs",location);
 			// Put the new project on the argument project's classpath
-			installSpecsUsingProject(javaProject,"JmlSpecs");
+			installSpecsUsingProject(javaProject,"jmlspecs");
 			return;
 		} catch (Exception e) {
 			Log.errorlog("Failed to install default specs",e);
@@ -269,7 +269,7 @@ public class EscjavaUtils {
 		// Try installing as a source folder
 		if (location == null) return;
 		try {
-			installSpecsAsSrcFolder(javaProject,"jmlSpecs",location);
+			installSpecsAsSrcFolder(javaProject,"jmlspecs",location);
 		} catch (Exception e) {
 			Log.errorlog("Failed to install default specs as a source folder",e);
 		}
