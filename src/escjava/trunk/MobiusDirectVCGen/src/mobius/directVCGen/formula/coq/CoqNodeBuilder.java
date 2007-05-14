@@ -1,5 +1,16 @@
 package mobius.directVCGen.formula.coq;
 
+import mobius.directVCGen.formula.coq.representation.CAny;
+import mobius.directVCGen.formula.coq.representation.CBool;
+import mobius.directVCGen.formula.coq.representation.CExists;
+import mobius.directVCGen.formula.coq.representation.CForall;
+import mobius.directVCGen.formula.coq.representation.CInt;
+import mobius.directVCGen.formula.coq.representation.CMap;
+import mobius.directVCGen.formula.coq.representation.CPred;
+import mobius.directVCGen.formula.coq.representation.CReal;
+import mobius.directVCGen.formula.coq.representation.CRef;
+import mobius.directVCGen.formula.coq.representation.CType;
+import mobius.directVCGen.formula.coq.representation.CValue;
 import escjava.sortedProver.EscNodeBuilder;
 import escjava.sortedProver.NodeBuilder;
 import escjava.sortedProver.Lifter.SortVar;
@@ -8,200 +19,24 @@ import escjava.sortedProver.Lifter.SortVar;
 /*@ non_null_by_default @*/
 public class CoqNodeBuilder extends EscNodeBuilder {
 	// TODO: add comments
-	/*@ non_null_by_default @*/
-	public static class CTerm implements STerm, SAny {
-		
-		// TODO: add comments
-		private String rep;
-		
-		/** tells if the notation is a prefix notation */
-		private final boolean prefix;
-		
-		// TODO: add comments
-		protected final STerm [] args;
-		
-		// TODO: add comments
-		public CTerm (boolean prefix, String rep, STerm [] args) {
-			this.prefix = prefix;
-			this.rep = rep;
-			this.args = args;
-		}
-		
-		/*
-		 * (non-Javadoc)
-		 * @see java.lang.Object#toString()
-		 */
-		public String toString() {
-			String res = "";
-			if (args.length == 0) {
-				return rep;
-			} 
-			else if(args.length == 1) {
-				if(prefix) {
-					res = "(" + rep + " " + args[0] + ")";
-				}
-				else {
-					res = "(" + args[0] + " " + rep + ")";
-				}
-			}
-			else {
-				if ((!prefix) && (args.length == 2)) {
-					
-						res = "(" + args[0] + " " + rep + " " + args[1] + ")";
-				}
-				else {
-					res = "(" + rep;
-					for (STerm t: args) {
-						res += " " + t;
-					}
-					res += ")";
-				}
-			}
-			return res;
-		}
-		
-		// TODO: add comments
-		public boolean isSubSortOf(Sort s) {
-			throw new UnsupportedOperationException("This operation is not used it seems...");
-		}
+	public static String normalize(String name) {
+		if(name.startsWith("#"))
+			name = name.substring(1);
+		name = name.replace(':', '_');
+		name = name.replace('.', '_');
+		name = name.replace('\\', '_');
+		return name;
+	}
+	// TODO: add comments
+	public static SRef getLoc(SValue r) {
+		return new CRef("loc", new STerm[] {r});
 	}
 	
-	// TODO: add comments
-	public class CPred extends CTerm implements SPred {
-		// TODO: add comments
-		public CPred(boolean pref, String rep, STerm [] args) {
-			super(pref, rep, args);
-		}
-		
-		// TODO: add comments
-		public CPred(String rep, STerm [] args) {
-			super(true, rep, args);
-		}
-		
-		// TODO: add comments
-		public CPred(String rep) {
-			super(false, rep, new STerm[0]);
-		}
-		
-		// TODO: add comments
-		public CPred(boolean b, String rep, STerm t1, STerm t2) {
-			this(b, rep, new STerm [] {t1, t2});
-		}
-	}
 	
-	// TODO: add comments
-	public class CMap extends CTerm implements SMap {
-		// TODO: add comments
-		public CMap(boolean pref, String rep, STerm [] args) {
-			super(pref, rep, args);
-		}
-		// TODO: add comments
-		public CMap(String rep, STerm [] args) {
-			super(true, rep, args);
-		}
-		
-		// TODO: add comments
-		public CMap(String rep) {
-			super(false, rep, new STerm[0]);
-		}
-	}
-	
-	// TODO: add comments
-	public class CAny extends CTerm implements SMap {
-		// TODO: add comments
-		public CAny(boolean pref, String rep, STerm [] args) {
-			super(pref, rep, args);
-		}
-		
-		// TODO: add comments
-		public CAny(String rep, STerm [] args) {
-			super(true, rep, args);
-		}
-		
-		// TODO: add comments
-		public CAny(String rep) {
-			super(false, rep, new STerm[0]);
-		}
-	}
-	
-	// TODO: add comments
-	public class CType extends CTerm implements SAny {
-		// TODO: add comments
-		public CType(boolean pref, String rep, STerm [] args) {
-			super(pref, rep, args);
-		}
-		
-		// TODO: add comments
-		public CType(String rep, STerm [] args) {
-			super(true, rep, args);
-		}
-		
-		// TODO: add comments
-		public CType(String rep) {
-			super(false, rep, new STerm[0]);
-		}
-		
-		// TODO: add comments
-		public CType(String rep, STerm h, STerm loc) {
-			this(rep, new STerm[] {h, loc});
-		}
-	}
-	
-	// TODO: add comments
-	public class CForall extends CPred {
-		// TODO: add comments
-		public final QuantVar[] vars;
-		// TODO: add comments
-		public CForall(QuantVar[] vars, STerm body) {
-			super(false, "forall", new STerm[]{body});
-			this.vars = vars;
-		}
-		
-		/*
-		 * (non-Javadoc)
-		 * @see mobius.directVCGen.formula.coq.CoqNodeBuilder.CTerm#toString()
-		 */
-		public String toString() {
-			String res  = "(forall";
-			for(QuantVar v: vars) {
-				res += " (" + normalize(v.name) + ":" + buildSort(v.type) + ")";
-			}
-			res += ", " + args[0] + ")";
-			return res;
-		}
-
-	}
-	
-	// TODO: add comments
-	public static QuantVar[] removeFirst(QuantVar[] vars) {
-		QuantVar[] res = new QuantVar [vars.length - 1];
-		for(int i = 1; i < vars.length; i++) {
-			res[i -1] = vars[i];
-		}
-		return res;
-	}
-	
-	// TODO: add comments
-	public class CExists extends CForall {
-		// TODO: add comments
-		public CExists(QuantVar[] vars, STerm body) {
-			super(new QuantVar[] {vars[0]}, buildExists(removeFirst(vars), (SPred)body));
-		}
-		
-		/*
-		 * (non-Javadoc)
-		 * @see mobius.directVCGen.formula.coq.CoqNodeBuilder.CForall#toString()
-		 */
-		public String toString() {
-			String res  = "(exists";
-			res +=  normalize(vars[0].name) + ":" + buildSort(vars[0].type);
-			res += ", " + args[0] + ")";
-			return res;
-		}
-
-	}
-
-	// TODO: add comments
+	/*
+	 * (non-Javadoc)
+	 * @see escjava.sortedProver.NodeBuilder#buildSort(escjava.sortedProver.NodeBuilder.Sort)
+	 */
 	public SAny buildSort(Sort type) {
 		if(type instanceof SortVar) {
 			type = type.theRealThing();
@@ -226,106 +61,6 @@ public class CoqNodeBuilder extends EscNodeBuilder {
 		}
 		else {
 			return new CAny("value");
-		}
-	}
-	
-	// TODO: add comments
-	public class CValue extends CTerm implements SValue {
-		// TODO: add comments
-		public CValue(boolean pref, String rep, STerm [] args) {
-			super(pref, rep, args);
-		}
-		
-		// TODO: add comments
-		public CValue(String rep, STerm [] args) {
-			super(true, rep, args);
-		}
-		
-		// TODO: add comments
-		public CValue(String rep) {
-			super(false, rep, new STerm[0]);
-		}
-		
-		// TODO: add comments
-		public CValue(String rep, CTerm t) {
-			this(rep, new STerm[]{t});
-		}
-	}
-	
-	// TODO: add comments
-	public class CBool extends CValue implements SBool {
-		// TODO: add comments
-		public CBool(boolean pref, String rep, STerm [] args) {
-			super(pref, rep, args);
-		}
-		
-		// TODO: add comments
-		public CBool(String rep, STerm [] args) {
-			super(true, rep, args);
-		}
-		
-		// TODO: add comments
-		public CBool(String rep) {
-			super(false, rep, new STerm[0]);
-		}
-	}
-	
-	// TODO: add comments
-	public class CInt extends CValue implements SInt {
-		// TODO: add comments
-		public CInt(boolean pref, String rep, STerm [] args) {
-			super(pref, rep, args);
-		}
-		
-		// TODO: add comments
-		public CInt(String rep, STerm [] args) {
-			super(true, rep, args);
-		}
-		
-		// TODO: add comments
-		public CInt(String rep) {
-			super(false, rep, new STerm[0]);
-		}
-		
-		// TODO: add comments
-		public CInt(String rep, STerm arg) {
-			this(rep, new STerm[] {arg});
-		}
-	}
-	
-	// TODO: add comments
-	public class CReal extends CValue implements SReal {
-		// TODO: add comments
-		public CReal(boolean pref, String rep, STerm [] args) {
-			super(pref, rep, args);
-		}
-		
-		// TODO: add comments
-		public CReal(String rep, STerm [] args) {
-			super(true, rep, args);
-		}
-		
-		// TODO: add comments
-		public CReal(String rep) {
-			super(false, rep, new STerm[0]);
-		}
-	}
-	
-	// TODO: add comments
-	public class CRef extends CValue implements SRef {
-		// TODO: add comments
-		public CRef(boolean pref, String rep, STerm [] args) {
-			super(pref, rep, args);
-		}
-		
-		// TODO: add comments
-		public CRef(String rep, STerm [] args) {
-			super(true, rep, args);
-		}
-		
-		// TODO: add comments
-		public CRef(String rep) {
-			super(false, rep, new STerm[0]);
 		}
 	}
 	
@@ -376,7 +111,7 @@ public class CoqNodeBuilder extends EscNodeBuilder {
 	
 	@Override
 	public SPred buildForAll(QuantVar[] vars, SPred body, STerm[][] pats, STerm[] nopats) {
-		return new CForall(vars, body);
+		return new CForall(this, vars, body);
 	}
 	
 	/*
@@ -416,15 +151,7 @@ public class CoqNodeBuilder extends EscNodeBuilder {
 			throw new IllegalArgumentException("Unknown Type: " + s.getClass() + " " + sortRef.getClass());
 	}
 
-	// TODO: add comments
-	public static String normalize(String name) {
-		if(name.startsWith("#"))
-			name = name.substring(1);
-		name = name.replace(':', '_');
-		name = name.replace('.', '_');
-		name = name.replace('\\', '_');
-		return name;
-	}
+
 
 	/*
 	 * (non-Javadoc)
@@ -486,7 +213,7 @@ public class CoqNodeBuilder extends EscNodeBuilder {
 	public SPred buildExists(QuantVar[] vars, SPred body) {
 		if(vars.length == 0)
 			return body;
-		return new CExists(vars, body);
+		return new CExists(this, vars, body);
 	}
 
 	/*
@@ -671,10 +398,7 @@ public class CoqNodeBuilder extends EscNodeBuilder {
 		}
 	}
 
-	// TODO: add comments
-	private SRef getLoc(SValue r) {
-		return new CRef("loc", new STerm[] {r});
-	}
+	
 
 	/*
 	 * (non-Javadoc)
