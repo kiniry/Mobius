@@ -22,7 +22,6 @@ import escjava.ast.TagConstants;
 import escjava.sortedProver.Lifter.QuantVariable;
 import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
-import escjava.translate.UniqName;
 
 public class JmlExprToFormula {
 
@@ -391,13 +390,7 @@ public class JmlExprToFormula {
 		 QuantVariableRef heap = Heap.var;
 		 if(oldProp.booleanValue()) heap = Heap.varPre;
 		 
-		 String idVar = UniqName.variable(x.decl);
-//		 if (x.decl != null && x.decl.type != null){
-//			 var = Expression.var(idVar, Type.typeToSort(x.decl.type));
-//		 } else {
-		 // jgc: I think this is enough 
-		 var = Expression.var(idVar, Type.getSort(x));
-//		 }		 
+		 var = Expression.var(x.decl);
 		 return Heap.select(heap, obj, var);
 	}
 

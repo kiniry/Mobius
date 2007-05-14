@@ -30,9 +30,9 @@ public class Lookup {
 		int arity = m.args.size();
 		boolean incThis = false;
 		
-		Sort returnType = Ref.sort;  
+		//Sort returnType = Ref.sort;  
 		if(m instanceof MethodDecl) {
-			returnType = Type.getReturnType((MethodDecl) m);
+			//returnType = Type.getReturnType((MethodDecl) m);
 			if((m.getModifiers() & Modifiers.ACC_STATIC) == 0) {
 				arity ++;
 				incThis = true;
@@ -60,7 +60,9 @@ public class Lookup {
 			
 		}
 		if(hasResult) {
-			args[args.length - 1] = Expression.rvar(Expression.result, returnType);
+			//m instance of MethodDecl
+			MethodDecl dec = (MethodDecl) m;
+			args[args.length - 1] = Expression.rvar(Expression.getResultVar(dec));
 			s[s.length - 1] = args[args.length - 1].getSort();
 		}
 		if(m instanceof ConstructorDecl) {
@@ -92,7 +94,8 @@ public class Lookup {
 		return new Post(buildStdCond (m, "_norm", true)); 
 	}
 	public static Post normalPostcondition(MethodDecl m){
-		return new Post(Expression.rvar(Expression.result, Type.getReturnType(m)),buildStdCond (m, "_norm", true)); 
+		// FIXME: the variable is not what I would expect
+		return new Post(Expression.rvar(Expression.getResultVar(m)),buildStdCond (m, "_norm", true)); 
 	}
 	/**
 	 * Returns a vector of   FOL Term representations of the exceptional postconditions of method m.
@@ -100,7 +103,8 @@ public class Lookup {
 	 * @param m the method of interest
 	 */
 	public static Post exceptionalPostcondition(RoutineDecl m){
-		return new Post(Expression.rvar(Expression.result, Ref.sort),buildStdCond (m, "_excp", false)); 
+		// FIXME: the variable is not what I would expect
+		return new Post(Expression.rvar(Ref.sort),buildStdCond (m, "_excp", false)); 
 	}
 	
 	public static Term invariant(ClassDecl c){

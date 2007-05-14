@@ -133,7 +133,7 @@ public class JmlVisitor extends VisitorArgResult{
 	
 	@Override
 	public /*@non_null*/ Object visitMethodDecl(/*@non_null*/ MethodDecl x, Object o) {
-		((Properties) o).put("result", Expression.rvar(Expression.result,Type.getReturnType(x)));
+		((Properties) o).put("result", Expression.rvar(Expression.getResultVar(x)));
 		((Properties) o).put("method", x);
 		((Properties) o).put("routinebegin", new Boolean(true));
 		return visitRoutineDecl(x, o);

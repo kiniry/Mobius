@@ -1,6 +1,7 @@
 package mobius.directVCGen.formula;
 
 import javafe.ast.GenericVarDecl;
+import javafe.ast.MethodDecl;
 import escjava.ast.TagConstants;
 import escjava.sortedProver.Lifter.FnTerm;
 import escjava.sortedProver.Lifter.QuantVariable;
@@ -9,14 +10,19 @@ import escjava.sortedProver.Lifter.Term;
 import escjava.sortedProver.NodeBuilder.Sort;
 import escjava.translate.UniqName;
 
-// TODO: add comments
+/**
+ * The library file used to represent expressions.
+ * The main functions in this libraries are the one to 
+ * handle variables, reference on variables, and old versions
+ * of variables.
+ */
 public class Expression {
 	
 	/** counter to create anonymous variables */
 	private final static int [] varCounters = {0, 0, 0, 0, 0};
 	
 	/** the name of the result variable (<code>\result</code>) */
-	public final static String result = "\\result";
+	private final static String result = "\\result";
 	
 	/** the prefix used to mark variables as old (<code>\pre_</code>) */
 	public final static String oldPrefix = "\\pre_";
@@ -82,7 +88,6 @@ public class Expression {
 	 * @param str the name of the variable
 	 * @return a variable of the sort any ({@link Formula#sort})
 	 * @deprecated use another method instead, like {@link #var(Sort)}
-	 * or {@link #var(String, Sort)}
 	 */
 	public static QuantVariable var(String str) {
 		return var(str, Formula.sort);
@@ -138,97 +143,114 @@ public class Expression {
 		return Formula.lf.mkQuantVariable(name, s);
 	}
 	
-	// TODO: add comments
+	/**
+	 * Create an anonymous variable, as a QuantVarRef.
+	 * It is based on the method {@link #var(Sort)}.
+	 * @param s the sort the variable will be of
+	 * @return a newly created variable, whose name should
+	 * not collide with already existing ones
+	 */
 	public static QuantVariableRef rvar(Sort s) {
 		return rvar(var(s));
 	}
 	
-	// TODO: add comments
+	/**
+	 * Returns the reference over a variable corresponding
+	 * to the given variable declaration.
+	 * @see #var(GenericVarDecl)
+	 * @param arg the variable to translate
+	 * @return a variable reference corresponding to the declaration
+	 */
 	public static QuantVariableRef rvar(GenericVarDecl arg) {
 		return rvar(var(arg));
 	}
 	
-	// TODO: add comments
-	public static QuantVariableRef rvar(String str, Sort s) {
-		return rvar(var(str, s));
+	/**
+	 * Returns a reference over a variable which has the given
+	 * name and sort.
+	 * @see #var(String, Sort)
+	 * @param name the name of the variable
+	 * @param s the sort of the variable
+	 * @return a reference over a variable
+	 */
+	public static QuantVariableRef rvar(String name, Sort s) {
+		return rvar(var(name, s));
 	}
 	
 
-	// TODO: add comments	
+	/**
+	 * Returns the reference corresponding to the given variable.
+	 * @param qv the quant variable to get a reference from
+	 * @return a reference over the given variable
+	 */	
 	public static QuantVariableRef rvar(QuantVariable qv) {
 		return Formula.lf.mkQuantVariableRef(qv);
 	}
 	
-	// TODO: add comments
+	/**
+	 * The method to build a term which has its return type 
+	 * the same as its argument. 
+	 * @see #bitand(Term, Term)
+	 * @see #bitor(Term, Term)
+	 * @see #bitxor(Term, Term)
+	 * 
+	 * @param l the left side argument
+	 * @param r the right side argument
+	 * @param tag the tag which gives its meaning to the node 
+	 * @return a newly built term
+	 */
+	private static Term binaryOp(Term l, Term r, int tag) {
+		if(l.getSort() != r.getSort())
+			throw new IllegalArgumentException("The sort of " + l + 
+					" is different from the sort of " + r + ".");
+		FnTerm t = null;
+		if(l.getSort() == Bool.sort) {
+			t = Formula.lf.mkFnTerm(Formula.lf.symBoolFn, new Term[] {l, r});
+		}
+		else if (l.getSort() == Num.sortInt) {
+			t = Formula.lf.mkFnTerm(Formula.lf.symIntFn, new Term[] {l, r});
+		}
+		else if (l.getSort() == Num.sortReal) {
+			t = Formula.lf.mkFnTerm(Formula.lf.symRealFn, new Term[] {l, r});
+		}
+		else {
+			throw new IllegalArgumentException("The sort " + l.getSort() + " is invalid!"); 
+		}
+		t.tag = tag;
+		return t;
+	}
+	
+	/**
+	 * Represents a bitwise or. It can be of type bool,
+	 * integer or real.
+	 * @param l the left side of the operand
+	 * @param r the right side
+	 * @return a term representing a bitwise or
+	 */
 	public static Term bitor(Term l, Term r) {
-		if(l.getSort() != r.getSort())
-			throw new IllegalArgumentException("The sort of " + l + 
-					" is different from the sort of " + r + ".");
-		FnTerm t = null;
-		if(l.getSort() == Bool.sort) {
-			t = Formula.lf.mkFnTerm(Formula.lf.symBoolFn, new Term[] {l, r});
-			t.tag = TagConstants.BITOR;
-		}
-		else if (l.getSort() == Num.sortInt) {
-			t = Formula.lf.mkFnTerm(Formula.lf.symIntFn, new Term[] {l, r});
-			t.tag = TagConstants.BITOR;
-		}
-		else if (l.getSort() == Num.sortReal) {
-			t = Formula.lf.mkFnTerm(Formula.lf.symRealFn, new Term[] {l, r});
-			t.tag = TagConstants.BITOR;
-		}
-		else {
-			throw new IllegalArgumentException("The sort " + l.getSort() + " is invalid!"); 
-		}
-		return t;
+		return binaryOp(l, r, TagConstants.BITOR);
 	}
 	
-	// TODO: add comments
+	/**
+	 * Represents a bitwise xor. It can be of type bool,
+	 * integer or real.
+	 * @param l the left side of the operand
+	 * @param r the right side
+	 * @return a term representing a bitwise xor
+	 */
 	public static Term bitxor(Term l, Term r) {
-		if(l.getSort() != r.getSort())
-			throw new IllegalArgumentException("The sort of " + l + 
-					" is different from the sort of " + r + ".");
-		FnTerm t = null;
-		if(l.getSort() == Bool.sort) {
-			t = Formula.lf.mkFnTerm(Formula.lf.symBoolFn, new Term[] {l, r});
-			t.tag = TagConstants.BITXOR;
-		}
-		else if (l.getSort() == Num.sortInt) {
-			t = Formula.lf.mkFnTerm(Formula.lf.symIntFn, new Term[] {l, r});
-			t.tag = TagConstants.BITXOR;
-		}
-		else if (l.getSort() == Num.sortReal) {
-			t = Formula.lf.mkFnTerm(Formula.lf.symRealFn, new Term[] {l, r});
-			t.tag = TagConstants.BITXOR;
-		}
-		else {
-			throw new IllegalArgumentException("The sort " + l.getSort() + " is invalid!"); 
-		}
-		return t;
+		return binaryOp(l, r, TagConstants.BITXOR);
 	}
 	
-	// TODO: add comments
+	/**
+	 * Represents a bitwise and. It can be of type bool,
+	 * integer or real.
+	 * @param l the left side of the operand
+	 * @param r the right side
+	 * @return a term representing a bitwise and
+	 */
 	public static Term bitand(Term l, Term r) {
-		if(l.getSort() != r.getSort())
-			throw new IllegalArgumentException("The sort of " + l + 
-					" is different from the sort of " + r + ".");
-		FnTerm t = null;
-		if(l.getSort() == Bool.sort) {
-			t = Formula.lf.mkFnTerm(Formula.lf.symBoolFn, new Term[] {l, r});
-			t.tag = TagConstants.BITAND;
-		}
-		else if (l.getSort() == Num.sortInt) {
-			t = Formula.lf.mkFnTerm(Formula.lf.symIntFn, new Term[] {l, r});
-			t.tag = TagConstants.BITAND;
-		}
-		else if (l.getSort() == Num.sortReal) {
-			t = Formula.lf.mkFnTerm(Formula.lf.symRealFn, new Term[] {l, r});
-			t.tag = TagConstants.BITAND;
-		}
-		else {
-			throw new IllegalArgumentException("The sort " + l.getSort() + " is invalid!"); 
-		}
-		return t;
+		return binaryOp(l, r, TagConstants.BITAND);
 	}
 
 	
@@ -241,6 +263,26 @@ public class Expression {
 	public static FnTerm sym(String name, Sort s) {
 		return Formula.lf.symbolRef (name, s);
 	}
+	
+	/**
+	 * Return a variable representing a result, with its type
+	 * corresponding to the return type of the given method
+	 * @param meth the methode to which the result belong
+	 * @return a variable representing the result of the method
+	 */
+	public static QuantVariable getResultVar(MethodDecl meth) {
+		return var(Expression.result, Type.getReturnType(meth));
+	}
 
+	/**
+	 * Return a reference to a variable representing a result, 
+	 * with its type corresponding to the return type of the 
+	 * given method.
+	 * @param meth the methode to which the result belong
+	 * @return a variable ref representing the result of the method
+	 */
+	public static QuantVariableRef getResultRVar(MethodDecl x) {
+		return rvar(Expression.result, Type.getReturnType(x));
+	}
 	
 }

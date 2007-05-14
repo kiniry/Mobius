@@ -8,12 +8,12 @@ import escjava.sortedProver.NodeBuilder.Sort;
 // TODO: add comments
 public class Heap {
 	/** the sort that represents the type of a heap */
-	public static Sort sort = Formula.lf.sortMap;
+	public final static Sort sort = Formula.lf.sortMap;
 	
 	// TODO: add comments
-	public static QuantVariableRef var = Expression.rvar("heap", sort);
+	public final static QuantVariableRef var = Expression.rvar("heap", sort);
 	// TODO: add comments
-	public static QuantVariableRef varPre = Expression.old(var);
+	public final static QuantVariableRef varPre = Expression.old(var);
 	
 	// TODO: add comments
 	public static Term store(QuantVariableRef heap, QuantVariable var, Term val) {
@@ -65,6 +65,7 @@ public class Heap {
 		return valueToSort(select, var.type);
 	}
 	
+	// TODO: add comments
 	public static Term selectArray(Term heap, Term var, Term idx, Sort type) {
 		Term select = Formula.lf.mkFnTerm(Formula.lf.symArrSelect, new Term[] {heap, var, idx});
 		return valueToSort(select, type);
