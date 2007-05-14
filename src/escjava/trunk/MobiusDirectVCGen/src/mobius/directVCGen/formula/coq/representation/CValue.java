@@ -6,7 +6,7 @@ package mobius.directVCGen.formula.coq.representation;
 import escjava.sortedProver.NodeBuilder.STerm;
 import escjava.sortedProver.NodeBuilder.SValue;
 
-public class CValue extends CTerm implements SValue {
+public class CValue extends CAny implements SValue {
 	// TODO: add comments
 	public CValue(boolean pref, String rep, STerm [] args) {
 		super(pref, rep, args);

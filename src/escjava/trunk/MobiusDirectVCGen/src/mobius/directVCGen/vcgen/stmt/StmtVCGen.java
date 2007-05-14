@@ -71,7 +71,7 @@ public class StmtVCGen extends ExpressionVisitor {
 	
 	/**
 	 * The method to treat the annotations
-	 * @param post the current post condition 
+	 * @param vce the current post condition 
 	 * @param annot the annotation to treat
 	 * @return a postcondition computed from the annotation
 	 */

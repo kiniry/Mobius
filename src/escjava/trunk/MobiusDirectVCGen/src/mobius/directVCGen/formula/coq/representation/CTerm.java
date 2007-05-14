@@ -1,24 +1,32 @@
-/**
- * 
- */
+
 package mobius.directVCGen.formula.coq.representation;
 
-import escjava.sortedProver.NodeBuilder.SAny;
 import escjava.sortedProver.NodeBuilder.STerm;
 import escjava.sortedProver.NodeBuilder.Sort;
 
-public class CTerm implements STerm, SAny {
+/**
+ * This class is used to represent terms.
+ * @author J. Charles
+ */
+public class CTerm implements STerm {
 	
-	// TODO: add comments
-	private String rep;
+	/** the symbol or name associated with the node */
+	private final String rep;
 	
 	/** tells if the notation is a prefix notation */
 	private final boolean prefix;
 	
-	// TODO: add comments
+	/** the array containing all the children of the term */
 	protected final STerm [] args;
 	
-	// TODO: add comments
+
+	/**
+	 * 
+	 * @param prefix if the symbol of the term should be a prefix
+	 * or not
+	 * @param rep the symbol of the term
+	 * @param args the children of the term
+	 */
 	public CTerm (boolean prefix, String rep, STerm [] args) {
 		this.prefix = prefix;
 		this.rep = rep;
@@ -58,7 +66,11 @@ public class CTerm implements STerm, SAny {
 		return res;
 	}
 	
-	// TODO: add comments
+	/**
+	 * This operation is unsupported. 
+	 * It makes no sense to have it.
+	 * @throws  UnsupportedOperationException
+	 */
 	public boolean isSubSortOf(Sort s) {
 		throw new UnsupportedOperationException("This operation is not used it seems...");
 	}

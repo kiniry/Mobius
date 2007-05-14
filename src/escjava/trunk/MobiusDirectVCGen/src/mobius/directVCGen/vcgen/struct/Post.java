@@ -57,7 +57,7 @@ public class Post {
 	 * first. The result is of this form 
 	 * <code>{p1.var, (p1.post /\ p2.post[p2.var \ p1.var])}</code>.
 	 * The and used is the one presented in the 
-	 * {@link Logic#and(Term, Term)} method.
+	 * {@link mobius.directVCGen.formula.Logic#and(Term, Term)} method.
 	 * @param p1 the left part of the <code>and</code>
 	 * @param p2 the right part of the <code>and</code>
 	 * @return a new Post object with the properties mentionned above or p1 or p2
@@ -83,7 +83,7 @@ public class Post {
 	/**
 	 * Adds a not to the post inside the argument. It returns a post of the
 	 * form <code>{p1.var, not(p1.post)}</code>. It uses the method
-	 * {@link Logic#not(Term)} to do the job.
+	 * {@link Logic#not(Term, Term)} to do the job.
 	 * @param p1 the term to negate
 	 * @return a new post
 	 */

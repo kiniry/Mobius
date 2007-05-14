@@ -1,11 +1,9 @@
-/**
- * 
- */
 package mobius.directVCGen.formula.coq.representation;
 
 import escjava.sortedProver.NodeBuilder.SBool;
 import escjava.sortedProver.NodeBuilder.STerm;
 
+// TODO: add comments
 public class CBool extends CValue implements SBool {
 	// TODO: add comments
 	public CBool(boolean pref, String rep, STerm [] args) {

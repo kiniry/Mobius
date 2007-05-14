@@ -69,7 +69,8 @@ public class MethodVisitor extends DirectVCGen {
 	/**
 	 * The internal constructor should not be called from outside
 	 * (IMHO it makes no sense).
-	 * @param file 
+	 * @param configdir
+	 * @param basedir 
 	 * @param x the method to treat
 	 */
 	private MethodVisitor(File configdir, File basedir,  MethodDecl x) {

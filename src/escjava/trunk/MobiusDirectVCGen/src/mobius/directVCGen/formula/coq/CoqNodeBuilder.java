@@ -1,6 +1,5 @@
 package mobius.directVCGen.formula.coq;
 
-import mobius.directVCGen.formula.coq.representation.CAny;
 import mobius.directVCGen.formula.coq.representation.CBool;
 import mobius.directVCGen.formula.coq.representation.CExists;
 import mobius.directVCGen.formula.coq.representation.CForall;
@@ -15,10 +14,20 @@ import escjava.sortedProver.EscNodeBuilder;
 import escjava.sortedProver.NodeBuilder;
 import escjava.sortedProver.Lifter.SortVar;
 
-// TODO: add comments
+/**
+ * The back-end for Coq. Works with bicolano. It does not 
+ * work with ESC/Java2 right now because it uses the bicolano
+ * memory model which ESC/Java2 doesn't.
+ * @author J. Charles
+ */
 /*@ non_null_by_default @*/
 public class CoqNodeBuilder extends EscNodeBuilder {
-	// TODO: add comments
+	/**
+	 * Normalize the symbols ... remove from the string
+	 * the characters Coq would not like to see
+	 * @param name the string to modify
+	 * @return the modified string
+	 */
 	public static String normalize(String name) {
 		if(name.startsWith("#"))
 			name = name.substring(1);
@@ -27,7 +36,13 @@ public class CoqNodeBuilder extends EscNodeBuilder {
 		name = name.replace('\\', '_');
 		return name;
 	}
-	// TODO: add comments
+	
+	
+	/**
+	 * Return the symbol to get a location out of a value
+	 * @param r the value to convert
+	 * @return a location term
+	 */
 	public static SRef getLoc(SValue r) {
 		return new CRef("loc", new STerm[] {r});
 	}
@@ -42,25 +57,25 @@ public class CoqNodeBuilder extends EscNodeBuilder {
 			type = type.theRealThing();
 		}
 		if(type.equals(sortPred)) {
-			return new CAny("Prop");
+			return new CType("Prop");
 		}
 		if(type.equals(sortInt)) {
-			return new CAny("Int.t");
+			return new CType("Int.t");
 		}
 		if(type.equals(sortReal)) {
-			return new CAny("Real");
+			return new CType("Real");
 		}
 		if(type.equals(sortRef)) {
-			return new CAny("value");
+			return new CType("value");
 		}
 		if(type.equals(sortBool)) {
-			return new CAny("bool");
+			return new CType("bool");
 		}
 		if(type.equals(sortMap)) {
-			return new CAny("Heap.t");
+			return new CType("Heap.t");
 		}
 		else {
-			return new CAny("value");
+			return new CType("value");
 		}
 	}
 	
@@ -138,14 +153,14 @@ public class CoqNodeBuilder extends EscNodeBuilder {
 		else if (s.equals(sortReal)) {
 			return new CReal(name);
 		}
-		else if (s.equals(sortPred)) {
-			return new CPred(name);
-		}
 		else if (s.equals(sortMap)) {
 			return new CMap(name);
 		}
 		else if (s.equals(sortAny)) {
-			return new CAny(name);
+			throw new IllegalArgumentException("The type of " + v + "should not be any, it should be known!");
+		}
+		else if (s.equals(sortPred)) {
+			throw new IllegalArgumentException("The type should not be pred!");
 		}
 		else
 			throw new IllegalArgumentException("Unknown Type: " + s.getClass() + " " + sortRef.getClass());
@@ -494,7 +509,6 @@ public class CoqNodeBuilder extends EscNodeBuilder {
 	 */
 	@Override
 	public SAny buildConstantRef(FnSymbol c) {
-		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException();
 	}
 
@@ -504,9 +518,7 @@ public class CoqNodeBuilder extends EscNodeBuilder {
 	 */
 	@Override
 	public SPred buildIff(SPred arg1, SPred arg2) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException();
-		
+		return new CPred(false, "<->", new STerm [] {arg1, arg2});
 	}
 
 	/*

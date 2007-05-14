@@ -68,7 +68,7 @@ public class Type{
 	 * Translate a type to a term which is a type in the target
 	 * representation language.
 	 * @param type the type to translate
-	 * @returna term which has the type {@link Type#sort} and which represents
+	 * @return term which has the type {@link Type#sort} and which represents
 	 * the type which is translated
 	 */
 	public static Term translateToType(javafe.ast.Type type) {

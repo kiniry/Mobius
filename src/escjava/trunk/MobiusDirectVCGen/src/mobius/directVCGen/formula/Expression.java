@@ -72,9 +72,9 @@ public class Expression {
 	
 	/**
 	 * Turn a quant variable ref to an old quant variable.
-	 * @param qv The quant variable ref to make old. 
+	 * @param qvr The quant variable ref to make old. 
 	 * @return The <i>oldified</i> version of the variable
-	 * @param qvr
+
 	 */
 	public static QuantVariableRef old(QuantVariableRef qvr){
 		return rvar(old(qvr.qvar));
@@ -281,8 +281,8 @@ public class Expression {
 	 * @param meth the methode to which the result belong
 	 * @return a variable ref representing the result of the method
 	 */
-	public static QuantVariableRef getResultRVar(MethodDecl x) {
-		return rvar(Expression.result, Type.getReturnType(x));
+	public static QuantVariableRef getResultRVar(MethodDecl meth) {
+		return rvar(Expression.result, Type.getReturnType(meth));
 	}
 	
 }
