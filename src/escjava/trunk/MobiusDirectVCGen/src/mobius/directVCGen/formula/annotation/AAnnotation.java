@@ -2,6 +2,10 @@ package mobius.directVCGen.formula.annotation;
 
 import escjava.sortedProver.Lifter.Term;
 
+/**
+ * The abstact class that is the mother of all annotations.
+ * Every annotations should subclass this class.
+ */
 public abstract class AAnnotation {
 	/** an undefined id */
 	public static final int undef = 0;
@@ -17,13 +21,20 @@ public abstract class AAnnotation {
 	/**
 	 * FOL-Term that represents the annotation at that point
 	 */
-	public Term formula;
+	public final Term formula;
 	
-	// TODO: add comments
-	public AAnnotation(){
+	/**
+	 * Default constructor
+	 */
+	protected AAnnotation(){
+		this.formula = null;
 	}
 	
-	// TODO: add comments
+	/**
+	 * Construct the annotation around the given term.
+	 * @param t the term which is the formula contained in 
+	 * the annotation
+	 */
 	public AAnnotation(Term t){
 		this.formula = t;
 	}
