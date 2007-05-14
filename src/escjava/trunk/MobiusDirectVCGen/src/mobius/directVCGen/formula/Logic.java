@@ -153,7 +153,7 @@ public class Logic {
 			if (f2.getSort().equals(Bool.sort)) {
 				f2 = Logic.boolToProp(f1);
 			}
-			return and(f1, f2);
+			return Logic.and(f1, f2);
 		}
 		
 		/**
@@ -170,7 +170,7 @@ public class Logic {
 			if (f2.getSort().equals(Bool.sort)) {
 				f2 = Logic.boolToProp(f1);
 			}
-			return implies(f1, f2);
+			return Logic.implies(f1, f2);
 		}
 	}
 	

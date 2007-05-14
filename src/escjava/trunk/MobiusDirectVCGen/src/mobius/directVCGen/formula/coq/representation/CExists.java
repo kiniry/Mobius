@@ -7,13 +7,30 @@ import escjava.sortedProver.NodeBuilder.STerm;
 
 // TODO: add comments
 public class CExists extends CForall {
+	// TODO: add comments
 	private CoqNodeBuilder builder;
+	
 	// TODO: add comments
 	public CExists(CoqNodeBuilder builder, QuantVar[] vars, STerm body) {
-		super(builder, new QuantVar[] {vars[0]}, builder.buildExists(removeFirst(vars), (SPred)body));
+		super(builder, new QuantVar[] {vars[0]}, buildExists(builder, vars, (SPred)body, 1));
 		this.builder = builder;
 	}
 	
+	// TODO: add comments
+	private CExists(CoqNodeBuilder builder, QuantVar[] vars, STerm body, int idx) {
+		super(builder, new QuantVar[] {vars[idx]}, 
+				buildExists(builder, vars, (SPred)body, idx + 1));
+		this.builder = builder;
+	}
+	
+	// TODO: add comments
+	private static STerm buildExists(CoqNodeBuilder builder, QuantVar[] vars, SPred pred, int idx) {
+		if (idx == vars.length)
+			return pred;
+		else {
+			return new CExists(builder, vars, pred, idx + 1);
+		}
+	}
 	/*
 	 * (non-Javadoc)
 	 * @see mobius.directVCGen.formula.coq.CoqNodeBuilder.CForall#toString()
@@ -24,12 +41,5 @@ public class CExists extends CForall {
 		res += ", " + args[0] + ")";
 		return res;
 	}
-	//TODO: add comments
-	public static QuantVar[] removeFirst(QuantVar[] vars) {
-		QuantVar[] res = new QuantVar [vars.length - 1];
-		for(int i = 1; i < vars.length; i++) {
-			res[i -1] = vars[i];
-		}
-		return res;
-	}
+
 }
