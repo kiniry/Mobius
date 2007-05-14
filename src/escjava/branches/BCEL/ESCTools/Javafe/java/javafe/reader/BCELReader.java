@@ -45,6 +45,7 @@ import org.apache.bcel.classfile.ClassFormatException;
 import org.apache.bcel.classfile.ClassParser;
 import org.apache.bcel.classfile.Constant;
 import org.apache.bcel.classfile.ConstantPool;
+import org.apache.bcel.classfile.ExceptionTable;
 import org.apache.bcel.classfile.Field;
 import org.apache.bcel.classfile.InnerClass;
 import org.apache.bcel.classfile.InnerClasses;
@@ -323,13 +324,21 @@ class BCELReader extends Reader {
          Attribute[] attributes = method.getAttributes();
          for (int attributeLoopVar = 0; attributeLoopVar < attributes.length; attributeLoopVar++) {
 
-            // Get attribute Name
-            String attributeName = getAttributeName(attributes, attributeLoopVar);
+            // Get attribute name tag
+            byte attributeTag = getAttributeTag(attributes, attributeLoopVar);
 
-            if (attributeName.equals("Exceptions")) {
-               routineDecl[attributeLoopVar].raises = TypeNameVec.make(parseTypeNames());
-            } else if (attributeName.equals("Synthetic")) {
-               synthetics.addElement(routineDecl[attributeLoopVar]);
+            switch (attributeTag) {
+
+            case Constants.ATTR_EXCEPTIONS:
+               ExceptionTable exceptionTable = (ExceptionTable) attributes[attributeLoopVar];
+
+               routineDecl[loopVar].raises = TypeNameVec
+                     .make(readExceptionTypeNames(exceptionTable.getExceptionNames()));
+               break;
+
+            case Constants.ATTR_SYNTHETIC:
+               synthetics.addElement(routineDecl[loopVar]);
+               break;
             }
          }
       }
@@ -337,19 +346,15 @@ class BCELReader extends Reader {
    }
 
    /**
-    * Get the name of an attribute
+    * Get the tag of an attribute
     * 
     * @param attributes
     * @param attributeLoopVar
     * @return
     */
-   protected String getAttributeName(Attribute[] attributes, int attributeLoopVar) {
+   protected byte getAttributeTag(Attribute[] attributes, int attributeLoopVar) {
       Attribute attribute = attributes[attributeLoopVar];
-      int attributeNameIndex = attribute.getNameIndex();
-      ConstantPool attributeConstantPool = attribute.getConstantPool();
-      Constant attributeNameConstant = attributeConstantPool.getConstant(attributeNameIndex);
-      String attributeName = attributeNameConstant.toString();
-      return attributeName;
+      return attribute.getTag();
    }
 
    protected int extractLocation(JavaClass javaClass) {
@@ -436,34 +441,34 @@ class BCELReader extends Reader {
       for (int loopVar = 0; loopVar < classAttributes.length; loopVar++) {
 
          // Get attribute Name
-         String attributeName = getAttributeName(classAttributes, loopVar);
+         byte attributeTag = getAttributeTag(classAttributes, loopVar);
 
-         if (attributeName.equals("Synthetic")) {
+         if (attributeTag == Constants.ATTR_SYNTHETIC) {
             syntheticClass = true;
-         } else if (attributeName.equals("InnerClasses")) {
+         } else if (attributeTag == Constants.ATTR_INNER_CLASSES) {
 
             InnerClasses innerClassesAttribute = (InnerClasses) classAttributes[loopVar];
             InnerClass[] innerClasses = innerClassesAttribute.getInnerClasses();
 
             for (int j = 0; j < innerClasses.length; j++) {
                InnerClass innerClass = innerClasses[j];
-               int innerClassIndex = innerClass.getInnerClassIndex();
-               int outerClassIndex = innerClass.getOuterClassIndex();
+               
+               // Get inner class name
                int innerNameIndex = innerClass.getInnerNameIndex();
-
-               // We've found a member that needs to be parsed...
-               if (!(rawConstants[innerNameIndex] instanceof String)) {
-                  throw new ClassFormatError("bad constant reference");
+               Constant innerClassNameConstant = constantPool.getConstant(innerNameIndex);
+               String innerClassName = innerClassNameConstant.toString();
+               int index = innerClassName.lastIndexOf("/");
+               String innerClassFileName;
+               
+               if (index > 0) {
+               innerClassFileName = innerClassName.substring(index + 1) + ".class";
+                
+               } else {
+                  innerClassFileName = innerClassName + ".class";
                }
                
-               String nm = (String) rawConstants[innerClassIndex];
-               int i = nm.lastIndexOf("/");
-               String icfn = (i < 0 ? nm : nm.substring(i + 1)) + ".class";
-               GenericFile icf = inputFile.getSibling(icfn);
-               if (icf == null) {
-                  throw new IOException(icfn + ": inner class not found");
-               }
-               addInnerClass(icf);
+               // Parse the inner class
+               addInnerClass(innerClassFileName);
 
             }
          }
@@ -473,33 +478,33 @@ class BCELReader extends Reader {
    /**
     * Add the inner class to the abstract syntax tree, unless synthetic
     * 
-    * @param icf
+    * @param icfn
     * @throws ClassNotFoundException
     * @throws ClassFormatError
     */
-   protected void addInnerClass(GenericFile icf) throws ClassNotFoundException,
-         ClassFormatError {
+   protected void addInnerClass(String icfn) throws ClassNotFoundException, ClassFormatError {
 
-      BCELReader innerClassReader = readInnerClass(icf, true);
-      TypeDecl typeDecl = innerClassReader.getTypeDecl();
-      boolean syntheticClassFlag = !innerClassReader.isSyntheticClass();
+      BCELReader innerClassReader = readInnerClass(icfn, true);
+      TypeDecl innerClassTypeDecl = innerClassReader.getTypeDecl();
+      boolean innerClassIsNotSynthetic = !innerClassReader.isSyntheticClass();
 
       // Add non-synthetic classes
-      if (syntheticClassFlag) {
-         classMembers.addElement(typeDecl);
+      if (innerClassIsNotSynthetic) {
+         classMembers.addElement(innerClassTypeDecl);
       }
    }
 
    /**
     * Recursively read details of inner class
     * 
-    * @param innerClassFile
+    * @param icfn
     * @param avoidSpec
     * @return
     */
-   protected BCELReader readInnerClass(GenericFile innerClassFile, boolean avoidSpec) {
+   protected BCELReader readInnerClass(String icfn, boolean avoidSpec) {
       BCELReader parser = new BCELReader();
-      CompilationUnit cu = parser.read(innerClassFile, avoidSpec);
+      GenericFile target = new NormalGenericFile(icfn);
+      CompilationUnit cu = parser.read(target, avoidSpec);
       return parser;
    }
 
@@ -592,11 +597,11 @@ class BCELReader extends Reader {
       case Constants.T_ARRAY:
          typeTag = TagConstants.ARRAYTYPE;
          break;
-         
+
       case Constants.T_FLOAT:
          typeTag = TagConstants.FLOATTYPE;
          break;
-         
+
       case Constants.T_SHORT:
          typeTag = TagConstants.SHORTTYPE;
          break;
@@ -735,34 +740,25 @@ class BCELReader extends Reader {
    /* -- private instance methods ------------------------------------------- */
 
    /**
-    * Parse a sequence of type names from BCEL
+    * Parse a sequence of exception type names
     * 
+    * @param exceptionNames
     * @return an array of type names
     * @throws ClassNotFoundException
     */
-   // @ requires stream != null;
-   // @ ensures \nonnullelements(\result);
-   // @ ensures \typeof(\result)==\type(TypeName[]);
-   private TypeName[] parseTypeNames() throws ClassFormatError, ClassNotFoundException {
-      JavaClass[] interfaces = javaClass.getInterfaces();
-      int numberOfInterfaces = interfaces.length;
-      TypeName[] names = new TypeName[numberOfInterfaces];
+   protected TypeName[] readExceptionTypeNames(String[] exceptionNames)
+         throws ClassFormatError, ClassNotFoundException {
 
-      for (int loopVar = 0; loopVar < numberOfInterfaces; loopVar++) {
-         int nameIndex = interfaces[loopVar].getClassNameIndex();
+      int numberOfExceptionsThrown = exceptionNames.length;
+      TypeName[] exceptionTypeNames = new TypeName[numberOfExceptionsThrown];
 
-         if (nameIndex >= constants.length)
-            throw new ClassFormatError("unknown constant");
+      for (int loopVar = 0; loopVar < numberOfExceptionsThrown; loopVar++) {
 
-         Object constant = constants[nameIndex];
-
-         if (!(constant instanceof TypeName))
-            throw new ClassFormatError("not a class constant");
-
-         names[loopVar] = (TypeName) constant;
+         String exceptionClassName = exceptionNames[loopVar];
+         exceptionTypeNames[loopVar] = DescriptorParser.parseClass(exceptionClassName);
       }
 
-      return names;
+      return exceptionTypeNames;
    }
 
    /**
@@ -897,16 +893,29 @@ class BCELReader extends Reader {
       this.javaClass = classParser.parse();
    }
 
+   /*
+    * Begin test
+    */
+
    class InnerTestClass {
 
+      int star() {
+         return classLocation;
+
+      }
    }
 
    {
       int i;
+      byte bear;
    }
 
    static {
    }
+
+   /*
+    * End of test
+    */
 
    public boolean isSyntheticClass() {
       return syntheticClass;
