@@ -32,7 +32,7 @@ public class Lookup {
 		
 		Sort returnType = Ref.sort;  
 		if(m instanceof MethodDecl) {
-			returnType = Type.typeToSort(((MethodDecl) m).returnType);
+			returnType = Type.getReturnType((MethodDecl) m);
 			if((m.getModifiers() & Modifiers.ACC_STATIC) == 0) {
 				arity ++;
 				incThis = true;
@@ -92,7 +92,7 @@ public class Lookup {
 		return new Post(buildStdCond (m, "_norm", true)); 
 	}
 	public static Post normalPostcondition(MethodDecl m){
-		return new Post(Expression.rvar(Expression.result, Type.typeToSort(m.returnType)),buildStdCond (m, "_norm", true)); 
+		return new Post(Expression.rvar(Expression.result, Type.getReturnType(m)),buildStdCond (m, "_norm", true)); 
 	}
 	/**
 	 * Returns a vector of   FOL Term representations of the exceptional postconditions of method m.
