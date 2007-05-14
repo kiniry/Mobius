@@ -159,7 +159,8 @@ public class JmlVisitor extends VisitorArgResult{
 	
 	@Override
 	 public /*@non_null*/ Object visitLiteralExpr(/*@non_null*/ LiteralExpr x, Object o) {
-		if (((Boolean) ((Properties) o).get("interesting")).booleanValue())
+		Properties prop = (Properties) o;
+		if (((Boolean) prop.get("interesting")).booleanValue())
 			return translator.literal(x,o);
 		else
 			return null;
@@ -581,7 +582,7 @@ public class JmlVisitor extends VisitorArgResult{
 	public Object visitSetStmtPragma(SetStmtPragma x, Object o) {
 		Set.Assignment res = new Set.Assignment();
 		res.var = (QuantVariableRef) x.target.accept(this, o);
-		res.expr = (Term) x.value.accept(this,0);
+		res.expr = (Term) x.value.accept(this,o);
 		return res;
 	}
 
