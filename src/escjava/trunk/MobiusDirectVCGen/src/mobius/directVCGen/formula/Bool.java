@@ -6,42 +6,39 @@ import escjava.sortedProver.Lifter.FnTerm;
 import escjava.sortedProver.Lifter.Term;
 import escjava.sortedProver.NodeBuilder.Sort;
 
-// TODO: add comments
+/**
+ * This class is used to create the formulas of boolean type.
+ */
 public class Bool {
 
-	// TODO: add comments
+	/**
+	 * Creates a binary term of the type bool. The type
+	 * of the term can be bool or numerical. Typically it is
+	 * used to generate {@link #equals(Term, Term)} or 
+	 * {@link #notEquals(Term, Term)} terms.
+	 * @param l the left part of the term
+	 * @param r the right part of the term
+	 * @param tag the tag representing the symbol associated 
+	 * with the leaf
+	 * @return a well formed and well typed term
+	 */
 	private static Term binaryOp(Term l, Term r, int tag) {
-		if(l.getSort() != r.getSort() && 
-				(!Num.isNum(r.getSort()) || !Num.isNum(l.getSort())))
-			throw new IllegalArgumentException("The sort of " + l + 
-					" is different from the sort of " + r + ".");
-		FnTerm t = null;
-		if(l.getSort() == Bool.sort) {
-			t = Formula.lf.mkFnTerm(Formula.lf.symBoolFn, new Term[] {l, r});
-		}
-		else if (l.getSort() == Num.sortReal) {
-			if(r.getSort() == Num.sortInt) {
-				r = Num.intToReal(r);
-			}
-			t = Formula.lf.mkFnTerm(Formula.lf.symRealBoolFn, new Term[] {l, r});
-		}
-		else if (l.getSort() == Num.sortInt) {
-			if(r.getSort() == Num.sortReal) {
-				l = Num.intToReal(l);
-				t = Formula.lf.mkFnTerm(Formula.lf.symRealBoolFn, new Term[] {l, r});
-			}
-			else {
-				t = Formula.lf.mkFnTerm(Formula.lf.symIntBoolFn, new Term[] {l, r});
-			}
+		if(l.getSort().equals(Bool.sort)) {
+			return boolBinaryOp(l, r, tag);
 		}
 		else {
-			throw new IllegalArgumentException("The sort " + l.getSort() + " is invalid!"); 
+			return numBinaryOp(l, r, tag);
 		}
-		t.tag = tag;
-		return t;
 	}
 	
-	// TODO: add comments
+	/**
+	 * Creates a binary term of type bool, over bool terms.
+	 * It type-checks everything.
+	 * @param l the left-side element of the term
+	 * @param r the right-side element of the term
+	 * @param tag the tag associated with the term
+	 * @return a well-formed term well-typed et al
+	 */
 	private static Term boolBinaryOp(Term l, Term r, int tag){
 		if(l.getSort() != Bool.sort || r.getSort() != Bool.sort)
 			throw new IllegalArgumentException("The sorts of the arguments should be bool found: " + l.getSort() + 
@@ -51,7 +48,14 @@ public class Bool {
 		return t; 
 	}
 	
-	// TODO: add comments
+	/**
+	 * Used to create a term of a unary boolean op. 
+	 * For instance it is used in the case of the boolean
+	 * negation.
+	 * @param t the term which to apply the specified operator
+	 * @param tag the tag of the operator
+	 * @return a well formed and well typed term
+	 */
 	private static Term boolUnaryOp(Term t, int tag) {
 		if(t.getSort() != Bool.sort )
 			throw new IllegalArgumentException("The sorts of the arguments should be bool found: " + t.getSort());
@@ -60,7 +64,15 @@ public class Bool {
 		return res;
 	}
 	
-	// TODO: add comments
+	/**
+	 * Build a term representing a binary boolean formula over numbers. 
+	 * It type-checks the parameters and does the necessary promotions.
+	 * @param l The left leaf
+	 * @param r The right leaf of the term
+	 * @param tag the tag representing the symbol associated with
+	 * the term
+	 * @return a well-formed and well-typed term
+	 */
 	private static Term numBinaryOp(Term l, Term r, int tag){
 		if(l.getSort() != r.getSort() &&
 				(!Num.isNum(l.getSort()) || !Num.isNum(r.getSort())))
