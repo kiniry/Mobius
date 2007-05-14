@@ -412,11 +412,6 @@ public class TagConstants extends GeneratedTags
     public static final int PEER = ALSO_REQUIRES + 1;
     public static final int READONLY = PEER + 1;
     public static final int REP = READONLY + 1;
-    /*
-    public static final int PEER = ALSO_REQUIRES + 1;
-    public static final int READONLY = PEER + 1;
-    public static final int REP = READONLY + 1;
-    */
     //alx-end
 
     // Chalin-Kiniry experimental keywords for nullness, purity, and whatnot
