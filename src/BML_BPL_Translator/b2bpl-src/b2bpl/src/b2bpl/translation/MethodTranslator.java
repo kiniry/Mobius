@@ -59,6 +59,8 @@ import static b2bpl.translation.CodeGenerator.typ;
 import static b2bpl.translation.CodeGenerator.type;
 import static b2bpl.translation.CodeGenerator.var;
 
+import java.io.FileOutputStream;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -69,6 +71,7 @@ import java.util.Set;
 
 import b2bpl.Main;
 import b2bpl.Project;
+import b2bpl.bpl.BPLPrinter;
 import b2bpl.bpl.ast.BPLAssertCommand;
 import b2bpl.bpl.ast.BPLAssignmentCommand;
 import b2bpl.bpl.ast.BPLAssumeCommand;
@@ -487,44 +490,48 @@ public class MethodTranslator implements ITranslationConstants {
     List<BPLRequiresClause> requiresClauses = new ArrayList<BPLRequiresClause>();
     JType[] params = method.getRealParameterTypes();
 
-    // If we have a this object, then it is not null.
-    boolean hasThisParameter = !method.isStatic() && !method.isConstructor();
-    
+    // If we have a this object, then it is must not be null.
+    boolean hasThisParameter = !(method.isStatic() || method.isConstructor());
     if (hasThisParameter) {
-      requiresClauses.add(new BPLRequiresClause(notEqual(
-          var(thisVar()),
-          BPLNullLiteral.NULL
-      )));
-      requiresClauses.add(new BPLRequiresClause(alive(
+      requiresClauses.add(new BPLRequiresClause(logicalAnd(
+        alive(
           rval(var(thisVar())),
           var(HEAP_VAR)
-      )));
-      requiresClauses.add(new BPLRequiresClause(isOfType(
+        ),
+        isOfType(
           rval(var(thisVar())),
           typeRef(params[0])
+        ),
+        notEqual(
+          var(thisVar()),
+          BPLNullLiteral.NULL
+        )
       )));
     }
 
     // For every method parameter, we do the following:
-    // - assume its type is a subtype of the static type
-    // - assume the parameter's value is alive
-    // - assign the parameter to the corresponding local variable in the stack
-    // frame
+    //   - assume its type is a subtype of the static type
+    //   - assume the parameter's value is alive
+    //   - assign the parameter to the corresponding local variable in the stack frame
     for (int i = (hasThisParameter ? 1 : 0); i < params.length; i++) {
       BPLExpression typeRef = typeRef(params[i]);
       if (params[i].isBaseType()) {
         // Base type: There is no need to assume aliveness of base types.
         requiresClauses.add(new BPLRequiresClause(isOfType(
-            ival(var(paramVar(i))),
-            typeRef)));
+          ival(var(paramVar(i))),
+          typeRef)));
       } else {
         if (!method.isConstructor()) {
-        requiresClauses.add(new BPLRequiresClause(alive(
-            rval(var(paramVar(i))),
-            var(HEAP_VAR))));
-        requiresClauses.add(new BPLRequiresClause(isOfType(
-            rval(var(paramVar(i))),
-            typeRef)));
+          requiresClauses.add(new BPLRequiresClause(logicalAnd(
+            alive(
+              rval(var(paramVar(i))),
+              var(HEAP_VAR)
+            ),
+            isOfType(
+              rval(var(paramVar(i))),
+              typeRef
+            )
+          )));
         }
       }
       // addAssignment(var(localVar(i, params[i])), var(paramVar(i)));
@@ -623,10 +630,6 @@ public class MethodTranslator implements ITranslationConstants {
 
     List<BPLEnsuresClause> ensuresClauses = new ArrayList<BPLEnsuresClause>();
 
-    // TODO
-    // ensures (forall v: Value    :: alive(v, old(heap)) ==> alive(v, heap));
-    // ensures (forall l: Location :: l != fieldLoc(param0, Account.balance) ==> get(heap, l) == get(old(heap), l));
-
     // Prepare precondition (for only the preconditions implies the postcondition)
     BPLExpression P = translatePrecondition(
         method,
@@ -639,19 +642,6 @@ public class MethodTranslator implements ITranslationConstants {
         RESULT_VAR,
         getInParameters()
     );
-    /* 
-    BPLExpression Q = logicalAnd(
-        translateMethodFrame(
-            method,
-            getInParameters()
-        ),
-        translatePostcondition(
-            method,
-            / * HEAP_VAR, * /
-            RESULT_VAR,
-            getInParameters()
-        )
-    ); */
 
     BPLExpression FC = translateMethodFrame(
         method,
@@ -660,7 +650,7 @@ public class MethodTranslator implements ITranslationConstants {
     
     // If no method specifications are provided,
     // establish default frame condition
-    if (FC == null) {
+    if (FC == BPLBoolLiteral.TRUE) {
       String r = quantVarName("r");
       BPLVariable ref = new BPLVariable(r, BPLBuiltInType.REF);
       FC = forall(
@@ -677,7 +667,7 @@ public class MethodTranslator implements ITranslationConstants {
           )
       );
     }
-   
+     
     boolean provideReturnValue = !method.isVoid() || method.isConstructor();
 
     // Ensure normal postcondition
@@ -711,12 +701,21 @@ public class MethodTranslator implements ITranslationConstants {
     }
 
     // Add postcondition for normal method termination
-    ensuresClauses.add(new BPLEnsuresClause(
-        implies(
-            P,
-            implies(condition, logicalAnd(q, FC))
-        )
-    ));
+    if (method.getExceptionTypes().length > 0) {
+      ensuresClauses.add(new BPLEnsuresClause(
+          implies(
+              P,
+              implies(condition, logicalAnd(q, FC))
+          )
+      ));
+    } else{
+      ensuresClauses.add(new BPLEnsuresClause(
+          implies(
+              P,
+              logicalAnd(q, FC)
+          )
+      ));
+    }
 
     // Handle the different exceptional terminations of the method.
     JClassType[] exceptions = method.getExceptionTypes();
@@ -1036,6 +1035,7 @@ public class MethodTranslator implements ITranslationConstants {
       if (method.getReturnType().isReferenceType() || method.isConstructor()) {
         addAssume(notEqual(topElem, BPLNullLiteral.NULL));
         addAssume(alive(rval(topElem), var(HEAP_VAR)));
+        addAssume(isOfType(rval(topElem), typeRef(retType)));
       } else {
         addAssume(alive(ival(topElem), var(HEAP_VAR)));
       }
