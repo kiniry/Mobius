@@ -3,42 +3,39 @@
 
 // Program organization
 Program = Declaration! decl, Program tail;
-Declaration :> TypeDecl, ConstantDecl, Function, Axiom, VariableDecl, 
+Declaration :> TypeDecls, ConstantDecls, Function, Axiom, VariableDecls, 
                Procedure, Implementation;
 
 // Types and constants
-Type :> PrimitiveType, Identifier, ArrayType, MatrixType, GenericType;
-ArrayType = Type! indexType, Type! elemType;
-MatrixType = Type! rowType, Type! colType, Type! elemType;
-PrimitiveType = enum(Literal: BOOL, INT, REF, NAME, ANY) val;
+Type :> PrimitiveType, UserType, ArrayType, MatrixType, GenericType, DepType;
+ArrayType = Type! rowType, Type! colType, Type! elemType;
+PrimitiveType = enum(Ptype: BOOL, INT, REF, NAME, ANY) val;
 GenericType = Type! param, Type! type;
-TypeDecl = String! name;
+DepType = Type! type, Expr! pred;
+TypeDecls = String! name, TypeDecls tail;
 ConstantDecl = String! id, Type! type;
+UserType = String! name;
 
-// Uninterpreted functions, axioms, and global variables
-Function = String! name, Parameters args, Parameters results;
-Parameters = VariableDecl! parameter, Parameters tail;
+// Signatures are used to represent uninterpreted functions
+Signature = String! name, VariableDecls args, VariableDecls results;
 Axiom = Expr! expr;
-VariableDecl = String name, Type! type; // split the case where name is mandatory?
 
 // Procedures and implementations
-Procedure = Function! signature, Specification spec, Body body;
+Procedure = Signature! signature, Specification spec, Body body;
 Specification = enum(SpecType: REQUIRES, MODIFIES, ENSURES) type,
                 Expr! expr, Specification tail;
-Implementation = Function! signature, Body! body;
-Body = LocalDecls vars, Block! block;
-LocalDecls = VariableDecl! decl, LocalDecls tail;
-Block = String! name, Commands cmds, BlockEnd! end;
+Implementation = Signature! signature, Body! body;
+Body = VariableDecls vars, Blocks blocks;
+Blocks = String! name, Commands cmds, BlockEnd! end, Blocks tail;
 BlockEnd = enum(BlockType: GOTO, RETURN) type, Identifiers dest;
 
 // Commands
 Commands = Command! cmd, Commands tail;
 Command :> AssignmentCmd, AssertAssumeCmd, HavocCmd, CallCmd;
-AssignmentCmd = String! lhs, Index idx, Expr! rhs;
+AssignmentCmd = Expr! lhs, Expr! rhs; // TODO: define exactly what lhs can be
 AssertAssumeCmd = enum(CmdType: ASSERT, ASSUME) type, Expr! expr;
 HavocCmd = String! name;
 CallCmd = String! function, Identifiers results, Exprs args;
-Index = Expr! a, Expr b;
 
 // Expressions
 Expr :> BinaryOp, UnaryOp, Atom;
@@ -46,7 +43,7 @@ BinaryOp = enum(Op: PLUS, MINUS, MUL, DIV, MOD, EQ, NEQ, LT, LE,
                     GE, GT, SUBTYPE, EQUIV, IMPLIES, AND, OR) op,
            Expr! left, Expr! right;
 UnaryOp = enum(Op: MINUS, NOT) op, Expr! e;
-Atom :> AtomLit, AtomNum, AtomId, AtomFun, AtomOld, AtomCast, AtomQuant;
+Atom :> AtomLit, AtomNum, AtomId, AtomFun, AtomOld, AtomCast, AtomQuant, AtomIdx;
 AtomLit = enum(AtomType: FALSE, TRUE, NULL) val;
 AtomNum = int val;
 AtomId = String! id;
@@ -54,12 +51,14 @@ AtomFun = String! function, Exprs args;
 AtomOld = Expr! e;
 AtomCast = Expr! e, Type! type;
 AtomQuant = enum(QuantType: EXISTS, FORALL) quant, VariableDecls! vars, Expr! e;
+AtomIdx = Atom! atom, Index! idx;
+Index = Expr! a, Expr b;
 
 // Some simple lists
 Identifiers = String! name, Identifiers tail;
 Exprs = Expr! expr, Exprs tail;
-VariableDecls = VariableDecl! decl, VariableDecls tail;
+VariableDecls = String name, Type! type, VariableDecls tail;
 
-// Extra invariants
-Specification: type==Type.MODIFIES ==> \typeof(expr)==Identifier
+// TODO: the invariants
+Specification: type==Type.MODIFIES ==> \typeof(expr)==AtomId
 
