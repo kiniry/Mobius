@@ -25,7 +25,6 @@ import org.eclipse.ui.texteditor.AbstractDecoratedTextEditor;
 import umbra.IUmbraConstants;
 import umbra.UmbraHelper;
 import umbra.editor.BytecodeEditor;
-import umbra.editor.Composition;
 import b2bpl.Main;
 import b2bpl.Project;
 
@@ -51,7 +50,7 @@ public class BytecodeToBoogiePLAction implements IEditorActionDelegate, IUmbraCo
 	public void setActiveEditor(IAction action, IEditorPart targetEditor) {
 		editor = targetEditor;
 		
-		BytecodeRebuildAction rbc = new BytecodeRebuildAction(null);
+		//BytecodeRebuildAction rbc = new BytecodeRebuildAction(null);
 		
 		/* FIXME inserted in order to refresh Bytecode view */
 		//TODO it does not work - it triggers an exception
@@ -130,7 +129,7 @@ public class BytecodeToBoogiePLAction implements IEditorActionDelegate, IUmbraCo
 					                 substring(projectPath.length() + 1 ).
 					                 replace('\\', '.');
 			
-			List<String> args = new ArrayList<String>();	
+			List args = new ArrayList();	
 			args.add("-basedir"); args.add(projectPath);
 			args.add("-o"); args.add(boogiePLPath);
 			args.add(javaPath);

@@ -5,7 +5,7 @@ import org.apache.bcel.generic.ClassGen;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentPartitioner;
-import org.eclipse.jface.text.rules.DefaultPartitioner;
+import org.eclipse.jface.text.rules.FastPartitioner;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.editors.text.FileDocumentProvider;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditor;
@@ -21,11 +21,6 @@ import umbra.editor.parsing.BytecodePartitionScanner;
  */
 public class BytecodeDocumentProvider extends FileDocumentProvider {
 
-	/**
-	 * TODO
-	 */
-	private BytecodeContribution contribution;
-	
 	/**
 	 * TODO
 	 */
@@ -45,7 +40,7 @@ public class BytecodeDocumentProvider extends FileDocumentProvider {
 				setupDocument(element, document);
 			}
 			IDocumentPartitioner partitioner =
-				new DefaultPartitioner(
+				new FastPartitioner(
 					new BytecodePartitionScanner(),
 					new String[] {
 						BytecodePartitionScanner.TAG,

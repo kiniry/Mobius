@@ -42,7 +42,7 @@ public class FieldInstruction extends StringInstruction {
 		String s;
 		s = extractPoint(line);
 		String[] s2 = IBytecodeStrings.field;
-		int j,y;
+		int j;
 		for (j = 0; j < s2.length; j++) {
 			if ((s.indexOf(s2[j]) > 0) && (s.indexOf(s2[j]) < s.indexOf(":") + 2)) {
 				

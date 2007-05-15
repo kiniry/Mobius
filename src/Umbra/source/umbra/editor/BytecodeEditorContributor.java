@@ -9,7 +9,7 @@ package umbra.editor;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.apache.bcel.classfile.*;
+import org.apache.bcel.classfile.JavaClass;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
@@ -18,13 +18,11 @@ import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorActionBarContributor;
-
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditor;
 import org.eclipse.ui.texteditor.AbstractTextEditor;
 
@@ -47,11 +45,6 @@ import umbra.editor.actions.BytecodeSynchrAction;
  */
 public class BytecodeEditorContributor extends EditorActionBarContributor {
 
-	/**
-	 * TODO
-	 */
-	private static BytecodeEditorContributor currentEditorContributor = null;
-	
 	/**
 	 * TODO
 	 */
@@ -106,7 +99,7 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
 		combineAction = new BytecodeCombineAction(this, bytecodeContribution);
 		restoreAction = new BytecodeRestoreAction(this, bytecodeContribution);
 		synchrAction = new BytecodeSynchrAction();
-		URL installURL = UmbraPlugin.getDefault().getDescriptor().getInstallURL();
+		URL installURL = UmbraPlugin.getDefault().getBundle().getEntry("/");
 		ImageDescriptor iconRight = ImageDescriptor.createFromURL(new URL(installURL, "icons/change_color_backward.gif"));
 		ImageDescriptor iconLeft = ImageDescriptor.createFromURL(new URL(installURL, "icons/change_color_forward.gif"));
 		ImageDescriptor refreshIcon = ImageDescriptor.createFromURL(new URL(installURL, "icons/refresh.gif"));
@@ -248,12 +241,12 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
 		synchrAction.setEnabled(true);
 	}
 	/**
-	 * TODO
-	 */
-	private void controlPrint(JavaClass jc, int i) {
+	 * debugging helper
+	 *
+	/*private void controlPrint(JavaClass jc, int i) {
 		Method meth = jc.getMethods()[i];
 		System.out.println(meth.getCode().toString());
-	}
+	}*/
 
 	/**
 	 * TODO

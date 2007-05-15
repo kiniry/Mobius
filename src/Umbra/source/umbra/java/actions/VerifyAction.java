@@ -16,13 +16,7 @@ public class VerifyAction implements IEditorActionDelegate {
 	/**
 	 * TODO
 	 */
-	private IEditorPart editor;
-
-	/**
-	 * TODO
-	 */
 	public void setActiveEditor(IAction action, IEditorPart targetEditor) {
-		editor = targetEditor;
 	}
 
 	/**

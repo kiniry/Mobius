@@ -5,7 +5,7 @@ import org.apache.bcel.generic.ClassGen;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentPartitioner;
-import org.eclipse.jface.text.rules.DefaultPartitioner;
+import org.eclipse.jface.text.rules.FastPartitioner;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.editors.text.FileDocumentProvider;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditor;
@@ -20,11 +20,6 @@ import org.eclipse.ui.texteditor.AbstractDecoratedTextEditor;
  */
 public class BoogiePLDocumentProvider extends FileDocumentProvider {
 
-	/**
-	 * TODO
-	 */
-	private BoogiePLContribution contribution;
-	
 	/**
 	 * TODO
 	 */
@@ -44,7 +39,7 @@ public class BoogiePLDocumentProvider extends FileDocumentProvider {
 				setupDocument(element, document);
 			}
 			IDocumentPartitioner partitioner =
-				new DefaultPartitioner(
+				new FastPartitioner(
 					new BoogiePLPartitionScanner(),
 					new String[] {
 						BoogiePLPartitionScanner.TAG,

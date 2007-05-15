@@ -50,7 +50,6 @@ public class IncInstruction extends NumInstruction {
 		String[] s2 = IBytecodeStrings.incc;
 		int j;
 		int y;
-		int okok;
 		System.out.print(s);
 		if (s.indexOf("%") < s.indexOf(":") + 1) {
 			System.out.print("hej1");
@@ -70,7 +69,6 @@ public class IncInstruction extends NumInstruction {
 							else {return false;}
 						}
 						}
-				int a,b;
 			      int counter = 0;
 			      boolean lastisdig = false;
 				  for (y = ((line.indexOf(s2[j])) + (s2[j].length()) + 1);y < line.length(); y++){

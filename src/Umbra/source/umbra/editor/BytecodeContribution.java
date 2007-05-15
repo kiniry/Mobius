@@ -10,9 +10,6 @@ import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentListener;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -30,19 +27,11 @@ public class BytecodeContribution extends ControlContribution {
 	/**
 	 * TODO
 	 */
-	private int num = 0;
-	/**
-	 * TODO
-	 */
 	private boolean needNew = true;
 	/**
 	 * TODO
 	 */
-	private IEditorPart activeEditor;
-	/**
-	 * TODO
-	 */
-	private Label labelNum, labelOff, labelText;
+	private Label labelText;
 	/**
 	 * TODO
 	 */
@@ -226,7 +215,6 @@ public class BytecodeContribution extends ControlContribution {
 	 * @param editor
 	 */
 	public void setActiveEditor(IEditorPart editor) {
-		activeEditor = editor;
 	}
 	
 	/**

@@ -109,7 +109,7 @@ public abstract class InstructionLineController extends BytecodeLineController {
 	/**
 	 * TODO
 	 */
-	private void controlPrint(BytecodeLineController line) {
+	/*private void controlPrint(BytecodeLineController line) {
 		System.out.println("Init: next line");
 		if (line == null) System.out.println("Null");
 		else {
@@ -120,7 +120,7 @@ public abstract class InstructionLineController extends BytecodeLineController {
 			if (nih == null) System.out.println("Null handle");
 			else System.out.println(nih.getPosition());
 		}
-	}
+	}*/
 	
 	/**
 	 * TODO
@@ -296,7 +296,6 @@ public abstract class InstructionLineController extends BytecodeLineController {
 	 */
 	private static String typ(String line) {
 		String s = "";
-		char ch;
 		boolean b;
 		line = line + "|";
 		for (int i = 0; i < line.length();) {

@@ -130,9 +130,9 @@ public class LdcInstruction extends OtherInstruction {
 				}
 				
 //				//if there are two numbers or one
-				int a,b,c,d,e;
-				int f,g,h,l;
-				f = 0; g = 0;h = 0;l = 0;
+				int c,d,e;
+				int f,g,l;
+				f = 0; g = 0;l = 0;
 				e = line.lastIndexOf("(");
 				d = line.indexOf(s2[j]) + s2[j].length();
 				for (c = d; c < e; c++)

@@ -2,11 +2,10 @@ package umbra.editor.actions;
 
 import java.io.IOException;
 
-import org.apache.bcel.classfile.*;
+import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.generic.ClassGen;
 import org.apache.bcel.util.ClassPath;
 import org.apache.bcel.util.SyntheticRepository;
-import org.eclipse.core.internal.resources.Workspace;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
@@ -14,25 +13,20 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.jdt.core.IClasspathAttribute;
-import org.eclipse.jdt.core.IClasspathContainer;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.jdt.internal.core.JavaProject;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.internal.Workbench;
 import org.eclipse.ui.part.FileEditorInput;
 
 import umbra.UmbraHelper;
 import umbra.editor.BytecodeContribution;
 import umbra.editor.BytecodeEditor;
 import umbra.editor.BytecodeEditorContributor;
-import umbra.editor.actions.BytecodeRebuildAction;
 
 /**
  * This is an action associated with a bytecode editor (an 

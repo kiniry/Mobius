@@ -13,7 +13,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.apache.bcel.classfile.JavaClass;
-import org.apache.bcel.classfile.Method;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -34,6 +33,7 @@ import org.eclipse.ui.part.EditorActionBarContributor;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditor;
 import org.eclipse.ui.texteditor.AbstractTextEditor;
+import org.osgi.framework.Bundle;
 
 import umbra.UmbraPlugin;
 import umbra.editor.Composition;
@@ -55,10 +55,6 @@ public class BoogiePLEditorContributor extends EditorActionBarContributor {
 	 * TODO
 	 */
 	private BoogiePLVerifyAction verifyAction;
-	/**
-	 * TODO
-	 */
-	private boolean needRefresh = false;
 	/**
 	 * TODO
 	 */
@@ -134,13 +130,7 @@ public class BoogiePLEditorContributor extends EditorActionBarContributor {
 		/**
 		 * TODO
 		 */
-		private IEditorPart editor;
-		
-		/**
-		 * TODO
-		 */
 		public void setActiveEditor(IEditorPart targetEditor) {
-			editor = targetEditor;
 		}
 		
 		/**
@@ -197,7 +187,9 @@ public class BoogiePLEditorContributor extends EditorActionBarContributor {
 		super();
 		mod = Composition.getMod();
 		verifyAction = new BoogiePLVerifyAction();
-		ImageDescriptor verifyIcon = ImageDescriptor.createFromURL(new URL(UmbraPlugin.getDefault().getDescriptor().getInstallURL(), "icons/convert_to_boogiepl.gif"));
+		Bundle bundle = UmbraPlugin.getDefault().getBundle();
+		URL installURL = bundle.getEntry("/");
+		ImageDescriptor verifyIcon = ImageDescriptor.createFromURL(new URL(installURL, "icons/convert_to_boogiepl.gif"));
 		verifyAction.setImageDescriptor(verifyIcon);
 		boogiePLContribution = BoogiePLContribution.newItem();
 		verifyAction.setToolTipText("Verify with Boogie");
@@ -292,9 +284,10 @@ public class BoogiePLEditorContributor extends EditorActionBarContributor {
 	/**
 	 * TODO
 	 */
+	/*
 	private void controlPrint(JavaClass jc, int i) {
 		Method meth = jc.getMethods()[i];
 		System.out.println(meth.getCode().toString());
-	}
+	}*/
 
 }

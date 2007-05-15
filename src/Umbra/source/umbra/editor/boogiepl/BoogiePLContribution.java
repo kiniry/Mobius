@@ -30,10 +30,6 @@ public class BoogiePLContribution extends ControlContribution {
 	/**
 	 * TODO
 	 */
-	private int num = 0;
-	/**
-	 * TODO
-	 */
 	private boolean needNew = true;
 	/**
 	 * TODO
@@ -42,7 +38,7 @@ public class BoogiePLContribution extends ControlContribution {
 	/**
 	 * TODO
 	 */
-	private Label labelNum, labelOff, labelText;
+	private Label labelText;
 	/**
 	 * TODO
 	 */
@@ -55,15 +51,6 @@ public class BoogiePLContribution extends ControlContribution {
 	 * TODO
 	 */
 	private boolean ready = false;
-	/**
-	 * TODO
-	 */
-	private boolean modTable = false;
-	/**
-	 * TODO
-	 */
-	private boolean[] modified;
-	
 	/**
 	 * TODO
 	 */
@@ -124,11 +111,14 @@ public class BoogiePLContribution extends ControlContribution {
 		 * @see org.eclipse.jface.text.IDocumentListener#documentChanged(org.eclipse.jface.text.DocumentEvent)
 		 */
 		public void documentChanged(DocumentEvent event) {
-			int start = 0, stop = 0;
+			//int start = 0, stop = 0;
 			try {
-				start = event.fDocument.getLineOfOffset(event.getOffset());
+				//start = 
+				event.fDocument.getLineOfOffset(event.getOffset());
 				int len = event.getText().length();
-				stop = event.fDocument.getLineOfOffset(event.getOffset() + len);
+				//stop = 
+				event.fDocument.getLineOfOffset(event.getOffset() + len);
+				
 			} catch (BadLocationException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -227,6 +217,13 @@ public class BoogiePLContribution extends ControlContribution {
 	}
 	
 	/**
+	 * @param editor
+	 */
+	public IEditorPart getActiveEditor() {
+		return activeEditor;
+	}
+	
+	/**
 	 * TODO
 	 */
 	public void reinit() {
@@ -244,8 +241,6 @@ public class BoogiePLContribution extends ControlContribution {
 	 * TODO
 	 */
 	public void setModTable(boolean[] modified) {
-		this.modified = modified;
-		modTable = true;
 	}
 
 	/**

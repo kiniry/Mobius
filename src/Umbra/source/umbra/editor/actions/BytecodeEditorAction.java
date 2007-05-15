@@ -23,10 +23,6 @@ public class BytecodeEditorAction extends Action {
 	/**
 	 * TODO
 	 */
-	private Shell shell;
-	/**
-	 * TODO
-	 */
 	private IEditorPart activeEditor;
 	/**
 	 * TODO
@@ -60,7 +56,6 @@ public class BytecodeEditorAction extends Action {
 	 * TODO
 	 */
 	public void setShell(Shell shell) {
-		this.shell = shell;
 	}
 	
 	/**

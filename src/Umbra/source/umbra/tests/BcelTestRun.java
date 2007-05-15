@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import org.apache.bcel.Repository;
 import org.apache.bcel.classfile.Constant;
-import org.apache.bcel.classfile.ConstantPool;
 import org.apache.bcel.classfile.ConstantString;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Method;
@@ -13,10 +12,7 @@ import org.apache.bcel.generic.ConstantPoolGen;
 import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.InstructionHandle;
 import org.apache.bcel.generic.InstructionList;
-import org.apache.bcel.generic.LDC;
 import org.apache.bcel.generic.MethodGen;
-import org.apache.bcel.generic.TargetLostException;
-import org.eclipse.jface.text.Document;
 
 /**
  * TODO write description
@@ -41,7 +37,6 @@ public class BcelTestRun {
 			for (InstructionHandle pos = start; pos != end; pos = pos.getNext()) {
 				Instruction ins = pos.getInstruction();
 				if (ins.getName() == "ldc") {
-						Constant[] cpk1 = jc.getConstantPool().getConstantPool();
 						System.out.println(cpg.getSize());
 						cpg.addString("CompDiff");
 						Constant con = cpg.getConstant(35);
@@ -54,9 +49,9 @@ public class BcelTestRun {
 			cg.setConstantPool(cpg);
 			cg.update();
 			jc.setConstantPool(jc.getConstantPool());
-			for (InstructionHandle pos = start; pos != end; pos = pos.getNext()) {
+			/* for (InstructionHandle pos = start; pos != end; pos = pos.getNext()) {
 				Instruction ins = pos.getInstruction();
-			}
+			}*/
 		}
 		return cg.getJavaClass();
 	}

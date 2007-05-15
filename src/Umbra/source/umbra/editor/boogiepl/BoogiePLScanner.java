@@ -1,20 +1,8 @@
 package umbra.editor.boogiepl;
 
-import org.eclipse.jface.text.rules.EndOfLineRule;
-import org.eclipse.jface.text.rules.IRule;
-import org.eclipse.jface.text.rules.IToken;
-import org.eclipse.jface.text.rules.NumberRule;
 import org.eclipse.jface.text.rules.RuleBasedScanner;
-import org.eclipse.jface.text.rules.SingleLineRule;
-import org.eclipse.jface.text.rules.WhitespaceRule;
-import org.eclipse.jface.text.rules.WordRule;
 
 import umbra.editor.ColorManager;
-import umbra.editor.boogiepl.IBoogiePLStrings;
-import umbra.editor.IColorValues;
-import umbra.editor.parsing.SpecialNumberRule;
-// import umbra.editor.SpecialWordDetector;
-import umbra.editor.parsing.TokenGetter;
 
 
 /**

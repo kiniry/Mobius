@@ -11,9 +11,6 @@ import org.eclipse.jface.text.rules.WordRule;
 
 import umbra.editor.ColorManager;
 import umbra.editor.IColorValues;
-import umbra.editor.parsing.BytecodeWhitespaceDetector;
-import umbra.editor.parsing.BytecodeWordDetector;
-import umbra.editor.parsing.SpecialWordDetector;
 
 
 /**
@@ -46,7 +43,7 @@ public class BytecodeScanner extends RuleBasedScanner {
 			insrule.addWord(IBytecodeStrings.code[i], tokens[IColorValues.LINE]);
 		}
 		
-		WordRule keyrule = new WordRule(new SpecialWordDetector(), tokens[IColorValues.KEY]);
+		//WordRule keyrule = new WordRule(new SpecialWordDetector(), tokens[IColorValues.KEY]);
 		
 		IRule[] rules = new IRule[9];
 		rules[0] = new EndOfLineRule("//", tokens[IColorValues.COMMENT]);

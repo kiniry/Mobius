@@ -1,20 +1,11 @@
 package umbra.editor;
 
 import java.io.ByteArrayInputStream;
-import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
 import org.apache.bcel.classfile.JavaClass;
-import org.apache.bcel.classfile.Method;
-import org.apache.bcel.classfile.Unknown;
 import org.apache.bcel.generic.ClassGen;
-import org.apache.bcel.generic.ConstantPoolGen;
-import org.apache.bcel.generic.Instruction;
-import org.apache.bcel.generic.InstructionHandle;
-import org.apache.bcel.generic.InstructionList;
-import org.apache.bcel.generic.LocalVariableGen;
-import org.apache.bcel.generic.MethodGen;
 import org.apache.bcel.util.ClassPath;
 import org.apache.bcel.util.SyntheticRepository;
 import org.eclipse.core.resources.IFile;
@@ -28,11 +19,10 @@ import org.eclipse.ui.editors.text.TextEditor;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditor;
 
-import annot.bcclass.BCClass;
-import annot.bcio.ReadAttributeException;
-
 import umbra.UmbraHelper;
 import umbra.history.IHistory;
+import annot.bcclass.BCClass;
+import annot.bcio.ReadAttributeException;
 
 /**
  * This is the main class defining the Bytecode Editor
@@ -431,8 +421,8 @@ public class BytecodeEditor extends TextEditor {
 	}
 	
 	/**
-	 * TODO
-	 */
+	 * debugging helper
+	 *
 	private void controlPrint(JavaClass jc) {
 		System.out.println();
 		System.out.println("Control print of instruction list:");
@@ -457,6 +447,6 @@ public class BytecodeEditor extends TextEditor {
 				else System.out.println(" prev: " + ih[i].getPrev().getPosition());
 			}
 		}
-	}
+	}*/
 				
 }
