@@ -542,7 +542,6 @@ public class CoqNodeBuilder extends EscNodeBuilder {
 	 */
 	@Override
 	public SInt buildIntFun(int intFunTag, SInt arg1) {
-		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException();
 	}
 
@@ -572,7 +571,6 @@ public class CoqNodeBuilder extends EscNodeBuilder {
 	 */
 	@Override
 	public SPred buildXor(SPred arg1, SPred arg2) {
-		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException();
 	}
 

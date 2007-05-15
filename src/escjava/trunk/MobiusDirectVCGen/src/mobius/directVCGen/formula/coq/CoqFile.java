@@ -12,24 +12,41 @@ import escjava.sortedProver.Lifter.QuantVariable;
 import escjava.sortedProver.NodeBuilder.FnSymbol;
 import escjava.sortedProver.NodeBuilder.STerm;
 
-// TODO: add comments
+/**
+ * This class is used to print the proof obligations to a file Coq
+ * would be able to handle. The path to bicolano is needed for 
+ * everything to work.
+ * @author J. Charles
+ */
 public class CoqFile {
-	// TODO: add comments
-	PrintStream out;
-	// TODO: add comments
-	String base;
-	// TODO: add comments
+	/** the stream to print to the target file */
+	private PrintStream out;
+	
+	/** the name of the directory which contains bicolano's library files */
+	private String base;
+	
+	/** the suffix used for the Coq files */
 	public static final String suffix = ".v";
 	
 	
-	// TODO: add comments
+	/**
+	 * Construct an object used to print a proof obligation in a file.
+	 * @param configDir the library directory
+	 * @param baseDir the directory where the generated file should be put 
+	 * @param name the preferred name the file should have
+	 * @throws FileNotFoundException if opening the file fails
+	 */
 	public CoqFile(File configDir, File baseDir, String name) throws FileNotFoundException {
 		out = new PrintStream(new FileOutputStream(new File(baseDir, 
 					name + suffix)));
 		base = configDir.toString();
 	}
 	
-	// TODO: add comments
+	/**
+	 * Write the proof obligation represented by the
+	 * given term.
+	 * @param term the formula representing the proof obligation
+	 */
 	public void writeProof(STerm term) {
 		out.println("Lemma l:\n" + term + ".");
 		out.println("Proof.");
@@ -44,7 +61,13 @@ public class CoqFile {
 		out.close();
 	}
 
-	// TODO: add comments
+	/**
+	 * Write the definitions for coq: basically it writes class
+	 * definitions; fields to declare; and special magickal symbols.
+	 * @param symToDeclare Special relation symbols to declare
+	 * @param fieldsToDeclare the fields to declare
+	 * @param classNames the class names to declare
+	 */
 	public void writeDefs(Vector<FnSymbol> symToDeclare, Set<QuantVariable> fieldsToDeclare, Vector<String> classNames) {
 		out.println("Add LoadPath \"" + base + "\".\n" +
 			    "Add LoadPath \"" + base + File.separator + "Formalisation\".\n" +
