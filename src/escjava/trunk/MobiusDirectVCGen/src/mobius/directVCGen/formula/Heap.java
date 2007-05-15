@@ -5,27 +5,52 @@ import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
 import escjava.sortedProver.NodeBuilder.Sort;
 
-// TODO: add comments
+/**
+ * This library contains most of the methods to do heap manipulation / 
+ * heap access <i>etc.</i>. It notably contains the heap variable.
+ */
 public class Heap {
 	/** the sort that represents the type of a heap */
 	public final static Sort sort = Formula.lf.sortMap;
 	
-	// TODO: add comments
+	/** the variable representing the heap */
 	public final static QuantVariableRef var = Expression.rvar("heap", sort);
-	// TODO: add comments
+
+	/** the variable representing the heap in the prestate */
 	public final static QuantVariableRef varPre = Expression.old(var);
 	
-	// TODO: add comments
+	/**
+	 * Creates a formula that represents a store upon a static variable.
+	 * @param heap the current heap
+	 * @param var the static field where to do the store
+	 * @param val the value to store
+	 * @return the new heap, after the store 
+	 */
 	public static Term store(QuantVariableRef heap, QuantVariable var, Term val) {
 		return Formula.lf.mkFnTerm(Formula.lf.symStore, new Term[] {heap, Expression.rvar(var), sortToValue(val)});
 	}
 	
-	// TODO: add comments
+	/**
+	 * Creates a formula that represents a store upon an instance field.
+	 * @param heap the heap on which to do the store
+	 * @param obj the instance object to which belong the field
+	 * @param var the name of the field to store
+	 * @param val the value to store in the field
+	 * @return a newly formed heap, after the store
+	 */
 	public static Term store(QuantVariableRef heap, Term obj, QuantVariable var, Term val) {
 		return Formula.lf.mkFnTerm(Formula.lf.symDynStore, new Term[] {heap, obj, Expression.rvar(var), sortToValue(val)});
 	}
+
 	
-	// TODO: add comments
+	/**
+	 * Creates a formula that represents a store to an array.
+	 * @param heap the current heap
+	 * @param var the variable that represents the array
+	 * @param idx the index to which to store the value
+	 * @param val the value to store
+	 * @return the newly formed heap
+	 */
 	public static Term storeArray(QuantVariableRef heap, Term var, Term idx, Term val) {
 		if(!heap.getSort().equals(Heap.sort)) {
 			throw new IllegalArgumentException("The heap argument should be of sort heap, found: " + heap.getSort());

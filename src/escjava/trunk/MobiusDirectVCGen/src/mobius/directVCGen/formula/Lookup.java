@@ -21,10 +21,10 @@ import javafe.ast.RoutineDecl;
 
 // TODO: add comments
 public class Lookup {
-	// TODO: add comments
+	/** list of symbols to declare */
 	public static Vector<FnSymbol> symToDeclare = new Vector<FnSymbol>();
 	
-	// TODO: add comments
+	/** the list of fields to declare */
 	public static HashSet<QuantVariable> fieldsToDeclare = new HashSet<QuantVariable>();
 	
 	// TODO: add comments
@@ -33,7 +33,15 @@ public class Lookup {
 	// TODO: add comments
 	public static HashMap<RoutineDecl, Post> postconditions = new HashMap<RoutineDecl, Post>();
 	
-	// TODO: add comments
+	/**
+	 * Build a condition which is made of a custom predicate with the method's argument 
+	 * applied to it.
+	 * It's used for testing purpose only.
+	 * @param m the method to get a predicate out of
+	 * @param name the name of the method
+	 * @param hasResult whether or not it has a result
+	 * @return a term built around the rules stated above
+	 */
 	public static Term buildStdCond (RoutineDecl m, String name, boolean hasResult) {
 		int arity = m.args.size();
 		boolean incThis = false;
@@ -103,7 +111,6 @@ public class Lookup {
 	
 	// TODO: add comments
 	public static Post normalPostcondition(MethodDecl m){
-		// FIXME: the variable is not what I would expect
 		return new Post(Expression.rvar(Expression.getResultVar(m)),buildStdCond (m, "_norm", true)); 
 	}
 	/**
@@ -112,7 +119,6 @@ public class Lookup {
 	 * @param m the method of interest
 	 */
 	public static Post exceptionalPostcondition(RoutineDecl m){
-		// FIXME: the variable is not what I would expect
 		return new Post(Expression.rvar(Ref.sort),buildStdCond (m, "_excp", false)); 
 	}
 	

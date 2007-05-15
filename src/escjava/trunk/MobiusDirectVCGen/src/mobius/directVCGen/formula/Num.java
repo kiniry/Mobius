@@ -5,49 +5,88 @@ import escjava.sortedProver.Lifter.FnTerm;
 import escjava.sortedProver.Lifter.Term;
 import escjava.sortedProver.NodeBuilder.Sort;
 
-// TODO: add comments
+/**
+ * This library contains all the operations using integers and reals
+ * returning an integer or a real.
+ */
 public class Num {
 	/** the sort that represents integers */
 	public static Sort sortInt = Formula.lf.sortInt;
 	/** the sort that represents real numbers */
 	public static Sort sortReal = Formula.lf.sortReal;
 
-	// TODO: add comments
+	/**
+	 * Build a term that represents the given value.
+	 * @param l the numerical constant to translate to a term
+	 * @return a newly formed term representing the given constant
+	 */
 	public static Term value(Long l) {	
 		return Formula.lf.mkIntLiteral(l);
 	}
 
-	// TODO: add comments
+	/**
+	 * Build a term that represents the given value.
+	 * @param i the numerical constant to translate to a term
+	 * @return a newly formed term representing the given constant
+	 */
 	public static Term value(Integer i) {
 		return Formula.lf.mkIntLiteral(i.longValue());
 	}
 
-	// TODO: add comments
+	/**
+	 * Build a term that represents the given value.
+	 * @param b the numerical constant to translate to a term
+	 * @return a newly formed term representing the given constant
+	 */
 	public static Term value(Byte b) {
 		return Formula.lf.mkIntLiteral(b.longValue());
 	}
 	
-	// TODO: add comments
+	/**
+	 * Build a term that represents the given value.
+	 * @param s the numerical constant to translate to a term
+	 * @return a newly formed term representing the given constant
+	 */
 	public static Term value(Short s) {
 		return Formula.lf.mkIntLiteral(s.longValue());
 	}
 	
-	// TODO: add comments
+	/**
+	 * Build a term that represents the given value.
+	 * @param f the numerical constant to translate to a term
+	 * @return a newly formed term representing the given constant
+	 */
 	public static Term value(Float f) {
 		return Formula.lf.mkRealLiteral(f.doubleValue());
 	}
 
-	// TODO: add comments
+	/**
+	 * Build a term that represents the given value.
+	 * @param c the numerical constant to translate to a term
+	 * @return a newly formed term representing the given constant
+	 */
 	public static Term value(Character c) {
 		return Formula.lf.mkIntLiteral(c.charValue());
 	}
 
-	// TODO: add comments
+	/**
+	 * Build a term that represents the given value.
+	 * @param d the numerical constant to translate to a term
+	 * @return a newly formed term representing the given constant
+	 */
 	public static Term value(Double d) {		
 		return Formula.lf.mkRealLiteral(d);
 	}
 
-	// TODO: add comments
+	/**
+	 * Build an arithmetic operation from the given terms.
+	 * It is tipically a binary op. It does all the necessary conversions
+	 * to real if needed.
+	 * @param l the left element of the op
+	 * @param r the right element of the op
+	 * @param tag a valid tag (see {@link NodeBuilder#tagsIds})
+	 * @return a valid term of a numerical operation
+	 */
 	private static Term arith(Term l, Term r, int tag) {
 		if(l.getSort() != r.getSort()&& 
 				(!Num.isNum(r.getSort()) || !Num.isNum(l.getSort())))
@@ -130,9 +169,15 @@ public class Num {
 		return arith(l, r, NodeBuilder.funMOD);
 	}
 
-	// TODO: add comments
+	/**
+	 * Build a term representing a left shift over 32 bits.
+	 * 
+	 * @param l the left side element of the shift
+	 * @param r the right side element of the shift
+	 * @return a well formed term of sort Int
+	 */
 	public static Term lshift(Term l, Term r) {
-		// TODO: understand when to handle 64 bits case
+		// 64 bits case is ignored at the moment 
 		if(l.getSort() != r.getSort())
 			throw new IllegalArgumentException("The sort of " + l + 
 					" is different from the sort of " + r + ".");
@@ -147,9 +192,15 @@ public class Num {
 		return t;
 	}
 
-	// TODO: add comments
+	/**
+	 * Build a term representing a right shift over 32 bits.
+	 * 
+	 * @param l the left side element of the shift
+	 * @param r the right side element of the shift
+	 * @return a well formed term of sort Int
+	 */
 	public static Term rshift(Term l, Term r) {
-		// TODO: understand when to handle 64 bits case
+		// 64 bits case is ignored at the moment
 		if(l.getSort() != r.getSort())
 			throw new IllegalArgumentException("The sort of " + l + 
 					" is different from the sort of " + r + ".");
@@ -164,9 +215,15 @@ public class Num {
 		return t;
 	}
 
-	// TODO: add comments
+	/**
+	 * Build a term representing an unsigned right shift over 32 bits.
+	 * 
+	 * @param l the left side element of the shift
+	 * @param r the right side element of the shift
+	 * @return a well formed term of sort Int
+	 */
 	public static Term urshift(Term l, Term r) {
-		// TODO: understand when to handle 64 bits case
+		// 64 bits case is ignored at the moment
 		if(l.getSort() != r.getSort()&& 
 				(!Num.isNum(r.getSort()) || !Num.isNum(l.getSort())))
 			throw new IllegalArgumentException("The sort of " + l + 
@@ -182,12 +239,20 @@ public class Num {
 		return t;
 	}
 
-	// TODO: add comments
+	/**
+	 * Tell whether or not the given sort is a numerical sort.
+	 * @param sort a valid sort... not <code>null</code>
+	 * @return true if sort equals {@link #sortInt} or {@link #sortReal}
+	 */
 	public static boolean isNum(Sort sort) {
 		return sort.equals(sortInt) || sort.equals(sortReal);
 	}
 
-	// TODO: add comments
+	/**
+	 * Build a formula that does the conversion from int to real.
+	 * @param r the term of sort integer to convert
+	 * @return a term of sort real
+	 */
 	public static Term intToReal(Term r) {
 		return Formula.lf.mkFnTerm(Formula.lf.symIntToReal, new Term [] {r});
 	}

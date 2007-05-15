@@ -121,7 +121,13 @@ public class Type{
 		return translate(FlowInsensitiveChecks.getType(expr)) ;
 	}
 	
-	// TODO: add comments
+	/**
+	 * Return the type of an expression. It is not solely the name of the
+	 * type it is also surrounded by conversions things.
+	 * @param expr the expression to get the type of
+	 * @return a valid type
+	 * @see #translateToType(javafe.ast.Type)
+	 */
 	public static Term getType(VarInit expr) {
 		return translateToType(FlowInsensitiveChecks.getType(expr)) ;
 	}
@@ -172,7 +178,11 @@ public class Type{
 		return Formula.lf.typeToSort(t);
 	}
 	
-	// TODO: add comments
+	/**
+	 * Returns a list of all the types that need to be declared (mostly these are
+	 * the class names).
+	 * @return A printable version of the types name. It uses the builder to do so.
+	 */
 	public static Vector<String> getAllTypes() {
 		Formula.lf.dumpBuilder = Formula.lf.builder;
 		Vector<String> v = new Vector<String>();
@@ -206,12 +216,22 @@ public class Type{
 		}
 	}
 	
-	// TODO: add comments
+	/**
+	 * Returns a term representing the class type 
+	 * {@link java.lang.ArrayOutOfBoundException}.
+	 * @see #javaLangThrowable()
+	 * @see #javaLangNullPointerException()
+	 * @see #getJavaLang(String)* 
+	 */
 	public static Term javaLangArrayOutOfBoundException() {
 		return translate(Types.getJavaLang("ArrayOutOfBoundException"));
 	}
 
-	// TODO: add comments
+	/**
+	 * Returns the return type of a given method.
+	 * @param x the method to get the retun type
+	 * @return the sort which is the return type of the method
+	 */
 	public static Sort getReturnType(MethodDecl x) {
 		return Formula.lf.typeToSort(x.returnType);
 	}

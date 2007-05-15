@@ -167,9 +167,9 @@ public class Bool {
 	}
 
 	/**
-	 * Returns a boolean le expression.
+	 * Returns a boolean lesser or equal expression.
 	 * @param l The left element of the expression
-	 * @param r The right expression of the expression
+	 * @param r The right element of the expression
 	 * @return The and expression a FnTerm with tag {@link NodeBuilder#predLE}
 	 */
 	public static Term le(Term l, Term r) {
@@ -177,7 +177,7 @@ public class Bool {
 	}
 
 	/**
-	 * Returns a boolean lt expression.
+	 * Returns a boolean lesser than expression.
 	 * @param l The left element of the expression
 	 * @param r The right expression of the expression
 	 * @return The and expression a FnTerm with tag {@link NodeBuilder#predLE}
@@ -187,7 +187,7 @@ public class Bool {
 	}
 
 	/**
-	 * Returns a boolean ge expression.
+	 * Returns a boolean greater or equal expression.
 	 * @param l The left element of the expression
 	 * @param r The right expression of the expression
 	 * @return The and expression a FnTerm with tag {@link NodeBuilder#predLE}
@@ -197,7 +197,7 @@ public class Bool {
 	}
 	
 	/**
-	 * Returns a boolean gt expression.
+	 * Returns a boolean greater than expression.
 	 * @param l The left element of the expression
 	 * @param r The right expression of the expression
 	 * @return The and expression a FnTerm with tag {@link NodeBuilder#predLE}
