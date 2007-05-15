@@ -30,6 +30,8 @@ public class ModifiesSet implements BCAttribute {
 	}
 	
 	public String printCode(BMLConfig conf) {
+		if (modifiesExpression.length <= 0)
+			return "?";
 		String code = "";
 		for (int i=0; i<modifiesExpression.length; i++)
 			if (modifiesExpression[i] != null)

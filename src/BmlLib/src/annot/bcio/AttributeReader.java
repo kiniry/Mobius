@@ -61,11 +61,17 @@ public class AttributeReader {
 	private static int pos;
 	private static BCClass clazz;
 	private static BCLocalVariable[] localVariables;
+	public static int bytes_read = 1;
+	public static int bytes_total = 1;
+	public static boolean ok;
 	public static final int ERROR_READING_OUT_OF_ARR = -1;
 
 	public static BCAttribute readAttribute(Unknown privateAttr,
 			BCClass _clazz, BCLocalVariable[] _localVariables) 
 				throws ReadAttributeException {
+		int alen = privateAttr.getLength();
+		ok = true;
+		bytes_total += alen;
 		clazz = _clazz;
 		/* constantPool = _clazz.getConstantPool(); */
 		localVariables = _localVariables;
@@ -94,6 +100,7 @@ public class AttributeReader {
 		if (name.equals(BCAttribute.SECOND_CONSTANT_POOL)) {
 			return readSecondConstantPool(privateAttr.getBytes());
 		}
+		System.out.println("Unknown attribute: " + name + ", skipping " + alen + " bytes.");
 		return null;
 	}
 
@@ -124,6 +131,7 @@ public class AttributeReader {
 //	
 	private static SecondConstantPool readSecondConstantPool(byte[] bytes) throws ReadAttributeException {
 		try {
+			bytes_read += bytes.length; // XXX unchecked
 			return new SecondConstantPool(new DataInputStream(new ByteArrayInputStream(bytes)));
 		} catch (IOException e) {
 			System.out.println("error in reading cp2");
@@ -194,7 +202,6 @@ public class AttributeReader {
 
 	private static LoopSpecification readLoopSpecification(byte[] bytes)
 			throws ReadAttributeException {
-
 		pos = 0;
 		int attribute_length = bytes.length;
 		int attributes_count = readAttributeCount(bytes);
@@ -467,7 +474,8 @@ public class AttributeReader {
 					clazz);
 			return modArray;
 		}
-		return null;
+		System.out.println("Unknown nodify expression");
+		return new UnknownModifies();
 	}
 
 	private static SpecArray readSpecArray(byte[] bytes)
@@ -491,7 +499,8 @@ public class AttributeReader {
 //			return new UnknownArray();
 			return AllArrayElem.ALLARRAYELEM;
 		}
-		return null;
+		System.out.println("Unknown spec arr");
+		return new UnknownArray();
 	}
 
 	/**
@@ -536,6 +545,10 @@ public class AttributeReader {
 ////	}
 
 	private static int readAttributeCount(byte[] bytes) {
+		if (!ok) {
+			System.out.println("        skipping attributes");
+			return 0;
+		}
 		int attribute_count = readShort(bytes);
 		return attribute_count;
 	}
@@ -545,12 +558,14 @@ public class AttributeReader {
 				| ((bytes[pos + 1] & 0xff) << 16)
 				| ((bytes[pos + 2] & 0xff) << 8) | (bytes[pos + 3] & 0xff);
 		pos = pos + 4;
+		bytes_read += 4;
 		return integer;
 	}
 
 	private static int readShort(byte[] bytes) {
 		int _short = ((bytes[pos] & 0xff) << 8) | (bytes[pos + 1] & 0xff);
 		pos = pos + 2;
+		bytes_read += 2;
 		return _short;
 	}
 
@@ -567,6 +582,7 @@ public class AttributeReader {
 		}
 		int _byte = bytes[pos] & 0xff;
 		pos = pos + 1;
+		bytes_read++;
 		return _byte;
 	}
 
@@ -583,6 +599,8 @@ public class AttributeReader {
 //
 	private static Expression readExpression(byte[] bytes)
 			throws ReadAttributeException {
+		if (!ok)
+			return new UnknownFormula("...");
 		int _byte = readByte(bytes);
 //		System.out.print(printByte(_byte) + ":");
 		if (_byte == Code.PLUS) { // ARithmetic
@@ -783,16 +801,18 @@ public class AttributeReader {
 			// the index of the local variable
 			int ind = readShort(bytes);
 			if (localVariables.length <= ind) {
-				throw new ArrayIndexOutOfBoundsException();
+				System.out.println("        ERROR: lvar index ("+ind+") out of bounds ("+localVariables.length+")");
+				return new UnknownFormula("lvar index out of bounds!");
+//				throw new ArrayIndexOutOfBoundsException();
 			}
 			Expression lVarAccess = localVariables[ind];
 			return lVarAccess;
-//		} else if (_byte == Code.OLD_LOCAL_VARIABLE) {
-//			// the index of the local variable
-//			int ind = readShort(bytes);
-//			Expression lVarAccess = localVariables[ind];
-//			Expression oldValue = new OLD(lVarAccess);
-//			return oldValue;
+		} else if (_byte == Code.OLD_LOCAL_VARIABLE) {
+			// the index of the local variable
+			int ind = readShort(bytes);
+			Expression lVarAccess = localVariables[ind];
+			Expression oldValue = new OLD(lVarAccess);
+			return oldValue;
 		} else if (_byte == Code.ARRAYLENGTH) {
 			ArrayLengthConstant length = ArrayLengthConstant.ARRAYLENGTHCONSTANT;
 			return length;
@@ -901,7 +921,7 @@ public class AttributeReader {
 					PredicateSymbol.LESSEQ);
 			return predicate;
 		} else if (_byte == Code.EQ) {
-			System.out.println("niesprawdzone -- EQ");
+			System.out.println("        niesprawdzone -- EQ");
 			Expression expr1 = readExpression(bytes);
 			// here we substitute the appearing formulas in equality relation
 			// as the JVM do not support the boolean type, in place of the true
@@ -1043,7 +1063,7 @@ public class AttributeReader {
 			return forallFormula;
 		}
 		System.out.println("ERROR: Unknown Code - " + printByte(_byte));
-		return null;
+		return new UnknownFormula("0x"+printByte(_byte));
 	}
 //
 //	/*	*//**

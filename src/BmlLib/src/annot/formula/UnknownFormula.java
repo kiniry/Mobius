@@ -2,6 +2,7 @@ package annot.formula;
 
 import annot.bcclass.BMLConfig;
 import annot.bcexpression.Expression;
+import annot.bcio.AttributeReader;
 
 // atrapa Formula
 public class UnknownFormula extends Formula {
@@ -13,6 +14,7 @@ public class UnknownFormula extends Formula {
 	}
 	
 	public UnknownFormula(String opis) {
+		AttributeReader.ok = false;
 		this.opis = opis;
 	}
 	

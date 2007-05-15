@@ -42,7 +42,8 @@ public class SpecificationCase {
 			code += "modifies" + modifies.printCode(conf) + "\n";
 		if (postcondition.getPostcondition() != Predicate0Ar.TRUE)
 			code += " *  \\ensures " + postcondition.printCode(conf) + "\n";
-		code += exsures.printCode(conf);
+		if (exsures != null)
+			code += exsures.printCode(conf);
 		return code;
 	}
 	
