@@ -14,7 +14,7 @@ END func_props
 set2list[X: TYPE]: THEORY
 BEGIN
 
-  S: VAR finite_set[X]
+  S : VAR finite_set[X]
 
   set2list(S): RECURSIVE list[X] =
     IF empty?(S)
@@ -28,6 +28,6 @@ BEGIN
   %CONVERSION set2list
 
   set_list_set: LEMMA 
-    FORALL S: list2set(set2list(S)) = S
+    FORALL (s : finite_set[X]) : list2set(set2list(s)) = s
 
 END set2list

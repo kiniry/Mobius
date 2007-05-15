@@ -366,8 +366,9 @@ BEGIN
         n = 0,
       CondExpr(c, t, e) :
         EXISTS (tau : FullState, v1 : Val, m1, m2 : nat) :
-          n = m1 + m2 AND
+          n = m1 + m2 + 1 AND
           deriv_expr(p)(c, sigma1, v1, tau)(m1)(deriv_stmt_rec(m1)) AND
+          Bool?(v1) AND
           deriv_expr(p)(IF b(v1) THEN t ELSE e ENDIF,
                            tau, v, sigma2)(m2)(deriv_stmt_rec(m2)),
       %TODO: update the values of "this" and initialize the local vars
@@ -375,7 +376,7 @@ BEGIN
         EXISTS (m1, m2, m3, m4, m5, m6 : nat)
                (tau1, tau2, tau3, tau4, tau5, tau6, tau7, tau8 : FullState)
                (a, pv, old_val_arg : Val)(md : Method)(inv : BoolExpr) :
-          n = m1 + m2 + m3 + m4 + m5 + m6 + 1 AND
+          n = m1 + m2 + m3 + m4 + m5 + m6 + 2 AND
           % evaluate the receiver object
           deriv_expr(p)(e, sigma1, a, tau1)(m1)(deriv_stmt_rec(m1)) AND
           % evaluate the parameter
@@ -435,7 +436,6 @@ BEGIN
             (c : Stmt, sigma1, sigma2 : FullState)
             (n : nat) : RECURSIVE bool =
     LET 
-      % THINK : maybe we should say k : bellow(n+1) to allow k being n
       deriv_stmt_rec =
         LAMBDA (k : below(n))(p : FullProgram)
                (s : Stmt, sigma1, sigma2 : FullState)(m : below(k)) :
@@ -447,18 +447,20 @@ BEGIN
           deriv_expr(p)(c, sigma1, v, sigma2)(m)(deriv_stmt_rec(m))
     IN
     IF up?(ex(pstate(sigma1)))
-    % sigma1 is an exceptional state
-    % exceptions are simply propagated
+    % sigma1 is an exceptional state, exceptions are simply propagated
     THEN sigma1 = sigma2 AND n = 0
     ELSE % sigma1 is a normal state
     CASES c OF
       CaseJML(l) :
+         % TODO: This generates TCCs that can not be proved!
+        n > 0 AND
         execute_CaseJML(p, l, sigma1, sigma2, n,
-                        deriv_stmt_rec(n), deriv_expr_rec(n)),
+                        deriv_stmt_rec(n - 1), deriv_expr_rec(n - 1)),
       IfThenElse(e, c1, c2) :
         EXISTS (tau : FullState, v : Val, m1, m2 : nat) :
-          n = m1 + m2 AND
+          n = m1 + m2 + 1 AND
           deriv_expr(p)(e, sigma1, v, tau)(m1)(deriv_stmt_rec(m1)) AND
+          Bool?(v) AND
           deriv_stmt(p)(IF b(v) THEN c1 ELSE c2 ENDIF, tau, sigma2)(m2),
       Sequence(c1, c2) :
          EXISTS(m1, m2 : nat)(tau : FullState) :
@@ -466,9 +468,11 @@ BEGIN
            deriv_stmt(p)(c1, sigma1, tau)(m1) AND
            deriv_stmt(p)(c2, tau, sigma2)(m2),
       Set(vn, e) :
+         % TODO: This generates TCCs that can not be proved!
+         % I am not sure but it seems that the TCC is missing some information
          n > 0 AND
          execute_set(p, vn, e, sigma1, sigma2, n, 
-                     deriv_stmt_rec(n), deriv_expr_rec(n)),
+                     deriv_stmt_rec(n - 1), deriv_expr_rec(n - 1)),
       Skip : sigma1 = sigma2 AND n = 0,
       StmtExpr(e) :
          n > 0 AND
@@ -480,7 +484,7 @@ BEGIN
                                     s WITH [ex := up(Throwable)],
                                   sigma1),
       TryCatch(c1, c2, c3) :
-        EXISTS(m1, m2, m3 : nat)(tau1, tau2, tau3 : FullState) :
+        EXISTS (m1, m2, m3 : nat)(tau1, tau2, tau3 : FullState) :
           n = m1 + m2 + m3 + 1 AND
           deriv_stmt(p)(c1, sigma1, tau1)(m1) AND
           deriv_stmt(p)(IF up?(ex(pstate(tau1))) THEN c2 ELSE Skip ENDIF,

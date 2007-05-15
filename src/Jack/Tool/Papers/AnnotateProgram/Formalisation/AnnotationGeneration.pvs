@@ -4,9 +4,10 @@ BEGIN
   IMPORTING WellFormedMonitoredProgram[CP, string],
             set2list
 
-  mp : VAR MonitoredProgram
-  a : VAR MVA
+  mp : VAR (wf_MP)
+  a : VAR (wf_MVA)
 
+  % TODO: These definitions generates TCCs that can not be proved!
   unique : (injective?[CP, nat])
 
   name_of : (injective?[CP, string])
@@ -32,19 +33,7 @@ BEGIN
     ENDCASES
   MEASURE length(l)
 
-  upd_vars(t : Transition) : Stmt =
-    Sequence(Set("cp", NExpr(NumVarEval(name_of(tcp(t))))), 
-             ann_action(action(t)))
-
   IMPORTING MonitoredProgramSemantics[CP, string]
-
-%   ann_guard_actions(mp)(ts : finite_set[Transition]) : list[[Expr, Stmt]] =
-%     set2list({x : [Expr, Stmt] | EXISTS (t : Transition) : ts(t) AND
-%                            (FORALL (stA : (wf_Store(mva(mp))), 
-%                                     stP : (wf_PSt(mva(mp)))) :
-%                               eval(proj_1(x))((# ex := bottom, st := stP #)) =
-%                               guard(t)(stA, stP)) AND
-%                             proj_2(x) = upd_vars(t)})
 
   ann_guard_actions(mp)(ts : finite_set[Transition]) : list[[Expr, Stmt]] =
     set2list({x : [Expr, Stmt] | EXISTS (t : Transition) :
@@ -53,8 +42,10 @@ BEGIN
               (sMP1, sMP2 : MPState, v : Val, n : nat) :
         pstate(sMP1) = (# ex := bottom, st := stP #) IMPLIES
         deriv_expr(mp)(proj_1(x), sMP1, v, sMP2)(n) IMPLIES
+        Bool?(v) IMPLIES 
           b(v) = guard(t)(stA, stP)) AND
-      proj_2(x) = upd_vars(t)})
+      proj_2(x) = Sequence(Set("cp", NExpr(NumVarEval(name_of(tcp(t))))), 
+                           ann_action(action(t)))})
 
   ann_trans_cp(mp)(q : CP, ts : finite_set[Transition]) : [Expr, Stmt] =
     (BExpr(Eq(NumVarEval("cp"), NumVarEval(name_of(q)))),
@@ -62,9 +53,10 @@ BEGIN
 
   % Generates annotations to update the control point and the variables when an
   % event occurs
-  ann_event(mp)(ts: set[Transition]): Stmt =
+  ann_event(mp)(ts : set[Transition]): Stmt =
     CaseJML(set2list({c : [Expr, Stmt] | EXISTS (q : CP) : 
               cps(mva(mp))(q) AND
+              nonempty?({t: Transition | ts(t) AND scp(t) = q}) AND
               c = ann_trans_cp(mp)(q,
                                   {t: Transition | ts(t) AND scp(t) = q})}))
 
@@ -74,16 +66,13 @@ BEGIN
   filter_event(a)(et : EventType)(m : string) : finite_set[Transition] =
     {t : Transition | ts(a)(t) AND etype(event(t)) = et AND mname(event(t)) = m}
 
-  % THINK: what happes if the program already had a pre_set?
-  % Either we should say in ann_program_pre that all methods have Skip as x_set
-  % or we should use a Seq here (but the proof will be harder)
   ann_method(mp)(m : Method) : Method =
     LET ann_event_type = LAMBDA (et : EventType) : 
                            ann_event(mp)(filter_event(mva(mp))(et)(name(m)))
     IN
-    m WITH [pre_set  := ann_event_type(Entry),
-            post_set := ann_event_type(ExitNormal),
-            exc_set  := ann_event_type(ExitExceptional)]
+    m WITH [pre_set  := Sequence(pre_set(m), ann_event_type(Entry)),
+            post_set := Sequence(post_set(m), ann_event_type(ExitNormal)),
+            exc_set  := Sequence(exc_set(m), ann_event_type(ExitExceptional))]
 
 
   ann_methods(mp)(ms : finite_set[Method]) : finite_set[Method] =
@@ -121,7 +110,7 @@ BEGIN
         vdsA(a)(vd) IMPLIES NOT EXISTS (gd : GhostVarDecl) :
           ghost_vars(c)(gd) AND name(gd) = name(vd))
 
-  ann_program(mp) : Program = 
+  ann_program(mp : (ann_program_pre)) : Program = 
     LET p = program(mp) IN
     (# classes := {c : Class | EXISTS (c1 : Class) : 
                      classes(p)(c1) AND c = ann_class(mp)(c1)} #)
@@ -250,7 +239,6 @@ BEGIN
       ann_program_pre(mp) IMPLIES
       assertions_have_no_side_effect(mp) IMPLIES
         assertions_have_no_side_effect(ann_program(mp))
-
 
   ann_program_defines_MVA_vars : LEMMA
     FORALL (mp : MonitoredProgram, ap : Program) :

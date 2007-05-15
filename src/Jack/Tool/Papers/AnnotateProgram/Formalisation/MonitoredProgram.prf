@@ -1,72 +1,69 @@
-(MonitoredProgram)
+(MonitoredProgram
+ (IMP_MVA_TCC1 0
+  (IMP_MVA_TCC1-1 nil 3388137887 nil ("" (existence-tcc) nil nil) nil
+   nil nil nil nil nil))
+ (IMP_MVA_TCC2 0
+  (IMP_MVA_TCC2-1 nil 3388137887 nil ("" (existence-tcc) nil nil) nil
+   nil nil nil nil nil)))
 (WellFormedMonitoredProgram)
 (MonitoredProgramSemantics
  (update_state_MP_TCC1 0
   (update_state_MP_TCC1-1 nil 3387174104 nil ("" (subtype-tcc) nil nil)
-   nil nil nil nil nil nil))
+   unchecked nil nil nil nil nil))
  (execute_set_MP_TCC1 0
   (execute_set_MP_TCC1-1 nil 3387174104 nil ("" (subtype-tcc) nil nil)
-   nil nil nil nil nil nil))
+   unchecked nil nil nil nil nil))
  (execute_set_MP_TCC2 0
   (execute_set_MP_TCC2-1 nil 3387174104 nil ("" (subtype-tcc) nil nil)
-   nil nil nil nil nil nil))
+   unchecked nil nil nil nil nil))
  (on_method_MVA_TCC1 0
   (on_method_MVA_TCC1-1 nil 3387174104 nil ("" (subtype-tcc) nil nil)
-   nil nil nil nil nil nil))
+   unfinished nil nil nil nil nil))
  (on_method_MVA_TCC2 0
   (on_method_MVA_TCC2-1 nil 3387174104 nil ("" (subtype-tcc) nil nil)
-   nil nil nil nil nil nil))
+   unfinished nil nil nil nil nil))
  (on_method_MVA_TCC3 0
   (on_method_MVA_TCC3-1 nil 3387174104 nil ("" (subtype-tcc) nil nil)
-   nil nil nil nil nil nil))
+   unfinished nil nil nil nil nil))
  (on_method_entry_MP_TCC1 0
   (on_method_entry_MP_TCC1-1 nil 3387174104 nil
-   ("" (subtype-tcc) nil nil) nil nil nil nil nil nil))
+   ("" (subtype-tcc) nil nil) unchecked nil nil nil nil nil))
  (on_method_entry_MP_TCC2 0
   (on_method_entry_MP_TCC2-1 nil 3387174104 nil
-   ("" (subtype-tcc) nil nil) nil nil nil nil nil nil))
+   ("" (subtype-tcc) nil nil) unchecked nil nil nil nil nil))
  (on_method_entry_MP_TCC3 0
   (on_method_entry_MP_TCC3-1 nil 3387174104 nil
-   ("" (subtype-tcc) nil nil) nil nil nil nil nil nil))
+   ("" (subtype-tcc) nil nil) unchecked nil nil nil nil nil))
  (on_method_entry_MP_TCC4 0
   (on_method_entry_MP_TCC4-1 nil 3387174104 nil
-   ("" (subtype-tcc) nil nil) nil nil nil nil nil nil))
- (on_method_entry_MP_TCC5 0
-  (on_method_entry_MP_TCC5-1 nil 3387174104 nil
-   ("" (subtype-tcc) nil nil) nil nil nil nil nil nil))
+   ("" (subtype-tcc) nil nil) unchecked nil nil nil nil nil))
  (on_method_exit_normal_MP_TCC1 0
   (on_method_exit_normal_MP_TCC1-1 nil 3387174104 nil
-   ("" (subtype-tcc) nil nil) nil nil nil nil nil nil))
+   ("" (subtype-tcc) nil nil) unchecked nil nil nil nil nil))
  (on_method_exit_normal_MP_TCC2 0
   (on_method_exit_normal_MP_TCC2-1 nil 3387174104 nil
-   ("" (subtype-tcc) nil nil) nil nil nil nil nil nil))
+   ("" (subtype-tcc) nil nil) unchecked nil nil nil nil nil))
  (on_method_exit_normal_MP_TCC3 0
   (on_method_exit_normal_MP_TCC3-1 nil 3387174104 nil
-   ("" (subtype-tcc) nil nil) nil nil nil nil nil nil))
+   ("" (subtype-tcc) nil nil) unchecked nil nil nil nil nil))
  (on_method_exit_normal_MP_TCC4 0
   (on_method_exit_normal_MP_TCC4-1 nil 3387174104 nil
-   ("" (subtype-tcc) nil nil) nil nil nil nil nil nil))
- (on_method_exit_normal_MP_TCC5 0
-  (on_method_exit_normal_MP_TCC5-1 nil 3387174104 nil
-   ("" (subtype-tcc) nil nil) nil nil nil nil nil nil))
+   ("" (subtype-tcc) nil nil) unchecked nil nil nil nil nil))
  (on_method_exit_exceptional_MP_TCC1 0
   (on_method_exit_exceptional_MP_TCC1-1 nil 3387174104 nil
-   ("" (subtype-tcc) nil nil) nil nil nil nil nil nil))
+   ("" (subtype-tcc) nil nil) unchecked nil nil nil nil nil))
  (on_method_exit_exceptional_MP_TCC2 0
   (on_method_exit_exceptional_MP_TCC2-1 nil 3387174104 nil
-   ("" (subtype-tcc) nil nil) nil nil nil nil nil nil))
+   ("" (subtype-tcc) nil nil) unchecked nil nil nil nil nil))
  (on_method_exit_exceptional_MP_TCC3 0
   (on_method_exit_exceptional_MP_TCC3-1 nil 3387174104 nil
-   ("" (subtype-tcc) nil nil) nil nil nil nil nil nil))
- (on_method_exit_exceptional_MP_TCC4 0
-  (on_method_exit_exceptional_MP_TCC4-1 nil 3387174104 nil
-   ("" (subtype-tcc) nil nil) nil nil nil nil nil nil))
+   ("" (subtype-tcc) nil nil) unchecked nil nil nil nil nil))
  (initial_MP_state_TCC1 0
   (initial_MP_state_TCC1-1 nil 3387174104 nil
-   ("" (subtype-tcc) nil nil) nil nil nil nil nil nil))
+   ("" (subtype-tcc) nil nil) unfinished nil nil nil nil nil))
  (initial_MP_state_TCC2 0
   (initial_MP_state_TCC2-1 nil 3387174104 nil
-   ("" (subtype-tcc) nil nil) nil nil nil nil nil nil))
+   ("" (subtype-tcc) nil nil) unfinished nil nil nil nil nil))
  (wf_update_state_MP 0
   (wf_update_state_MP-1 nil 3387174104 3387174599
    ("" (skosimp)
@@ -97,7 +94,7 @@
         nil))
       nil))
     nil)
-   proved
+   unfinished
    ((wf_state const-decl "boolean" MonitoredProgramSemantics nil)
     (wf_state const-decl "boolean" State nil)
     (is_local const-decl "boolean" SemanticsCommon nil)
@@ -121,13 +118,82 @@
     (wf_AState const-decl "boolean" MVASemantics nil)
     (update_state_MP const-decl "(update_FullState_type)"
      MonitoredProgramSemantics nil)
-    (wf_Store const-decl "boolean" WellFormedMVA nil)
-    (wf_Store const-decl "boolean" WellFormedMVA nil)
-    (var_names const-decl "set[Name]" WellFormedMVA nil)
     (CP formal-nonempty-type-decl nil MonitoredProgramSemantics nil)
     (Name formal-nonempty-type-decl nil MonitoredProgramSemantics nil)
     (Val type-decl nil Val_adt nil) (JType type-decl nil JType_adt nil)
     (MVAVarDecl type-eq-decl nil MVA nil)
     (wf_AState const-decl "boolean" MVASemantics nil))
-   495076 3940 t shostak)))
+   495076 3940 t shostak))
+ (wf_state_implies_wf_PSt 0
+  (wf_state_implies_wf_PSt-1 nil 3388136206 3388138745
+   ("" (skosimp)
+    (("" (expand* "wf_MP" "wf_PSt")
+      (("" (flatten)
+        (("" (skolem!)
+          (("" (flatten)
+            (("" (expand* "wf_PSt" "var_names")
+              (("" (skosimp)
+                (("" (skolem!)
+                  (("" (flatten)
+                    (("" (inst?)
+                      (("" (assert)
+                        (("" (skolem!)
+                          (("" (flatten)
+                            (("" (expand "wf_state")
+                              ((""
+                                (inst -8 "n!1")
+                                ((""
+                                  (flatten)
+                                  ((""
+                                    (hide -7 -8 -10 -11)
+                                    ((""
+                                      (expand*
+                                       "is_declared_as_field"
+                                       "is_field")
+                                      ((""
+                                        (inst?)
+                                        (("" (assert) nil nil))
+                                        nil))
+                                      nil))
+                                    nil))
+                                  nil))
+                                nil))
+                              nil))
+                            nil))
+                          nil))
+                        nil))
+                      nil))
+                    nil))
+                  nil))
+                nil))
+              nil))
+            nil))
+          nil))
+        nil))
+      nil))
+    nil)
+   proved
+   ((wf_PSt const-decl "boolean" WellFormedMVA nil)
+    (wf_MP const-decl "boolean" WellFormedMonitoredProgram nil)
+    (var_names const-decl "set[Name]" WellFormedMVA nil)
+    (wf_PSt const-decl "boolean" WellFormedMVA nil)
+    (JType type-decl nil JType_adt nil)
+    (Name formal-nonempty-type-decl nil MonitoredProgramSemantics nil)
+    (CP formal-nonempty-type-decl nil MonitoredProgramSemantics nil)
+    (ProgVarDecl type-eq-decl nil MVA nil)
+    (wf_state const-decl "boolean" State nil)
+    (is_field const-decl "boolean" State nil)
+    (is_declared_as_field const-decl "boolean" WellFormedProgram nil)
+    (Class type-eq-decl nil Program nil)
+    (lift type-decl nil lift_adt nil)
+    (Method type-eq-decl nil Program nil)
+    (LocalVarDecl type-eq-decl nil Program nil)
+    (Stmt type-decl nil Stmt_adt nil)
+    (ArgDecl type-eq-decl nil Program nil)
+    (Expr type-decl nil Expr_adt nil)
+    (GhostVarDecl type-eq-decl nil Program nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (FieldDecl type-eq-decl nil Program nil)
+    (Val type-decl nil Val_adt nil))
+   849092 1120 t shostak)))
 

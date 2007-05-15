@@ -1,0 +1,43 @@
+AnnGenerationLemmas[CP : TYPE+] : THEORY
+BEGIN
+
+  IMPORTING Equivalence[CP]
+
+
+  % I can not prove this without having an explicit way of translating
+  % a guard into an expression
+  guard_to_expr_exists : AXIOM
+    FORALL (mp : MonitoredProgram, t : Transition) :
+      ts(mva(mp))(t) IMPLIES
+      nonempty?({e: Expr |
+                  FORALL (stA: (wf_Store[CP, string](mva(mp))),
+                          stP: (wf_PSt[CP, string](mva(mp))))
+                         (sMP1, sMP2: MPState, v: Val, n: nat):
+                    pstate(sMP1) = (# ex := bottom, st := stP #) IMPLIES
+                    deriv_expr(mp)(e, sMP1, v, sMP2)(n) IMPLIES 
+                    Bool?(v) IMPLIES b(v) = guard(t)(stA, stP)})
+
+  ann_guard_actions_not_empty : LEMMA % :-)
+    FORALL (mp : MonitoredProgram, ts : finite_set[Transition], 
+            q : CP, e : Event) :
+      wf_MP(mp) IMPLIES
+      NOT empty?(ts) IMPLIES
+      ts = {t : Transition | ts(mva(mp))(t) AND scp(t) = q AND event(t) = e}
+      IMPLIES
+        NOT null?(ann_guard_actions(mp)(ts))
+
+
+  MP_modeled_preserved_by_ann_event : LEMMA
+    FORALL (mp : MonitoredProgram, ap : Program)
+           (sMP1, sMP2 : MPState, sAP1, sAP2 : APState)
+           (c : Class, m1 : Method, n : nat)
+           (ts : set[Transition], et : EventType) :
+      related_states(mp, ap)(sMP1, sAP1) IMPLIES
+      astate(sMP2) = on_method_MVA(et)(mp, m1, sMP1) IMPLIES
+      NOT up?(ex(pstate(sAP1))) IMPLIES
+      ts = filter_event(mva(mp))(et)(name(m1)) IMPLIES
+      deriv_stmt(ap)(ann_event(mp)(ts), sAP1, sAP2)(n) IMPLIES
+        MVA_modeled?(astate(sMP2), sAP2)
+ 
+
+END AnnGenerationLemmas

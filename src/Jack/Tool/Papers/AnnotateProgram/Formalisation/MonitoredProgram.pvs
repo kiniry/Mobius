@@ -216,5 +216,10 @@ BEGIN
       deriv_stmt(mp)(c, sigma1, sigma2)(n) IMPLIES
         wf_state(mp)(sigma2)
 
+  wf_state_implies_wf_PSt : LEMMA % :->
+    FORALL (mp : MonitoredProgram, s : MPState) :
+      wf_MP(mp) IMPLIES
+      wf_state(program(mp))(pstate(s)) IMPLIES
+        wf_PSt(mva(mp))(st(pstate(s)))
 
 END MonitoredProgramSemantics

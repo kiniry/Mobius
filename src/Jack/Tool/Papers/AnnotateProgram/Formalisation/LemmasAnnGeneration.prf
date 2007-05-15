@@ -1,0 +1,544 @@
+(AnnGenerationLemmas
+ (guard_to_expr_exists 0
+  (guard_to_expr_exists-1 nil 3387889632 3387889644
+   ("" (postpone) nil nil) unchecked nil 11882 20 t shostak))
+ (ann_guard_actions_not_empty 0
+  (ann_guard_actions_not_empty-1 nil 3387878573 3387890701
+   ("" (skosimp)
+    ((""
+      (expand* "wf_MP" "ann_guard_actions" "complete" "wf_MVA" "total")
+      (("" (flatten)
+        (("" (expand "set2list")
+          (("" (lift-if)
+            (("" (assert)
+              (("" (prop)
+                (("" (expand* "empty?" "member")
+                  (("" (hide -2 -3 -4 -5 -7 -8 -9 -11 -12 1)
+                    (("" (skolem 1 "t")
+                      (("" (inst? -2)
+                        (("" (replace -5 -4)
+                          (("" (ground)
+                            ((""
+                              (name "e"
+                                    "choose({e : Expr[string] | (FORALL (stA: (wf_Store(mva(mp!1))),
+                                stP: (wf_PSt(mva(mp!1))))
+                               (sMP1, sMP2: MPState[CP, string], v: Val, n: nat):
+                          pstate(sMP1) = (# ex := bottom, st := stP #) IMPLIES
+                           deriv_expr(mp!1)(e, sMP1, v, sMP2)(n) IMPLIES
+                            Bool?(v) IMPLIES b(v) = guard(t)(stA, stP))})")
+                              (("1"
+                                (inst -7 "(e, upd_vars(t))")
+                                (("1"
+                                  (inst 1 "t")
+                                  (("1"
+                                    (split)
+                                    (("1"
+                                      (replace -9 1)
+                                      (("1"
+                                        (beta)
+                                        (("1" (propax) nil nil))
+                                        nil))
+                                      nil)
+                                     ("2"
+                                      (skosimp*)
+                                      (("2"
+                                        (typepred "e")
+                                        (("2"
+                                          (inst
+                                           -1
+                                           "stA!1"
+                                           "stP!1"
+                                           "sMP1!1"
+                                           "sMP2!1"
+                                           "v!1"
+                                           "n!1")
+                                          (("2" (assert) nil nil))
+                                          nil))
+                                        nil))
+                                      nil))
+                                    nil))
+                                  nil))
+                                nil)
+                               ("2"
+                                (use "guard_to_expr_exists")
+                                (("2" (assert) nil nil))
+                                nil))
+                              nil))
+                            nil))
+                          nil))
+                        nil))
+                      nil))
+                    nil))
+                  nil))
+                nil))
+              nil))
+            nil))
+          nil))
+        nil))
+      nil))
+    nil)
+   unfinished
+   ((ann_guard_actions const-decl "list[[Expr, Stmt]]" AnnotateProgram
+     nil)
+    (wf_MVA const-decl "boolean" WellFormedMVA nil)
+    (total const-decl "boolean" WellFormedMVA nil)
+    (complete const-decl "boolean" WellFormedMVA nil)
+    (wf_MP const-decl "boolean" WellFormedMonitoredProgram nil)
+    (set2list def-decl "list[X]" set2list nil)
+    (member const-decl "bool" sets nil)
+    (empty? const-decl "bool" sets nil)
+    (b adt-accessor-decl "[(Bool?) -> bool]" Val_adt nil)
+    (Bool? adt-recognizer-decl "[Val -> boolean]" Val_adt nil)
+    (deriv_expr const-decl "bool" Semantics nil)
+    (on_method_exit_exceptional_MP const-decl "(on_method_exit_type)"
+     MonitoredProgramSemantics nil)
+    (on_method_exit_normal_MP const-decl "(on_method_exit_type)"
+     MonitoredProgramSemantics nil)
+    (on_method_exit_type const-decl "bool" SemanticsTypes nil)
+    (on_method_entry_MP const-decl "(on_method_entry_type)"
+     MonitoredProgramSemantics nil)
+    (on_method_entry_type const-decl "bool" SemanticsTypes nil)
+    (Method type-eq-decl nil Program nil)
+    (LocalVarDecl type-eq-decl nil Program nil)
+    (ArgDecl type-eq-decl nil Program nil)
+    (execute_CaseJML const-decl "(execute_CaseJML_type)"
+     SemanticsCommon nil)
+    (execute_CaseJML_type const-decl "bool" SemanticsTypes nil)
+    (list type-decl nil list_adt nil)
+    (execute_set_MP const-decl "(execute_set_type)"
+     MonitoredProgramSemantics nil)
+    (execute_set_type const-decl "bool" SemanticsTypes nil)
+    (below type-eq-decl nil naturalnumbers nil)
+    (+ const-decl "[numfield, numfield -> numfield]" number_fields nil)
+    (numfield nonempty-type-eq-decl nil number_fields nil)
+    (< const-decl "bool" reals nil) (Stmt type-decl nil Stmt_adt nil)
+    (update_state_MP const-decl "(update_FullState_type)"
+     MonitoredProgramSemantics nil)
+    (update_FullState_type const-decl "bool" SemanticsTypes nil)
+    (bottom adt-constructor-decl "(bottom?)" lift_adt nil)
+    (bottom? adt-recognizer-decl "[lift -> boolean]" lift_adt nil)
+    (lift type-decl nil lift_adt nil)
+    (Excpt type-decl nil Excpt_adt nil)
+    (IMPLIES const-decl "[bool, bool -> bool]" booleans nil)
+    (>= const-decl "bool" reals nil)
+    (int nonempty-type-eq-decl nil integers nil)
+    (integer_pred const-decl "[rational -> boolean]" integers nil)
+    (rational nonempty-type-from-decl nil rationals nil)
+    (rational_pred const-decl "[real -> boolean]" rationals nil)
+    (real nonempty-type-from-decl nil reals nil)
+    (real_pred const-decl "[number_field -> boolean]" reals nil)
+    (number_field nonempty-type-from-decl nil number_fields nil)
+    (number_field_pred const-decl "[number -> boolean]" number_fields
+     nil)
+    (number nonempty-type-decl nil numbers nil)
+    (MPState type-eq-decl nil MonitoredProgramSemantics nil)
+    (PState type-eq-decl nil State nil)
+    (AState type-eq-decl nil MVASemantics nil)
+    (PSt type-eq-decl nil State nil)
+    (MonitoredProgram type-eq-decl nil MonitoredProgram nil)
+    (Program type-eq-decl nil Program nil)
+    (MVA type-eq-decl nil MVA nil)
+    (ProgVarDecl type-eq-decl nil MVA nil)
+    (MVAVarDecl type-eq-decl nil MVA nil)
+    (JType type-decl nil JType_adt nil)
+    (EventType type-decl nil EventType_adt nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (Store type-eq-decl nil State nil) (Val type-decl nil Val_adt nil)
+    (choose const-decl "(p)" sets nil)
+    (nonempty? const-decl "bool" sets nil)
+    (set type-eq-decl nil sets nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (= const-decl "[T, T -> boolean]" equalities nil)
+    (Expr type-decl nil Expr_adt nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (guard_to_expr_exists formula-decl nil AnnGenerationLemmas nil)
+    (Transition type-eq-decl nil MVA nil)
+    (Guard type-eq-decl nil MVA nil) (Event type-eq-decl nil MVA nil)
+    (Action type-eq-decl nil MVA nil)
+    (string type-eq-decl nil strings nil)
+    (char type-eq-decl nil strings nil)
+    (char? adt-recognizer-decl "[character -> boolean]" character_adt
+     nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (character type-decl nil character_adt nil)
+    (below type-eq-decl nil nat_types nil)
+    (nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (CP formal-nonempty-type-decl nil AnnGenerationLemmas nil))
+   76800 1840 t shostak))
+ (MP_modeled_preserved_by_ann_event_TCC1 0
+  (MP_modeled_preserved_by_ann_event_TCC1-1 nil 3387890776 nil
+   ("" (subtype-tcc) nil nil) unchecked nil nil nil nil nil))
+ (MP_modeled_preserved_by_ann_event_TCC2 0
+  (MP_modeled_preserved_by_ann_event_TCC2-1 nil 3388218848 nil
+   ("" (subtype-tcc) nil nil) nil nil nil nil nil nil))
+ (MP_modeled_preserved_by_ann_event 0
+  (MP_modeled_preserved_by_ann_event-1 nil 3387890818 3388222905
+   ("" (skosimp*)
+    ((""
+      (expand* "ann_event" "related_states" "on_method_MVA"
+       "MP_modeled" "deriv_stmt")
+      (("" (flatten)
+        (("" (assert)
+          (("" (flatten)
+            (("" (lift-if)
+              (("" (expand "execute_CaseJML")
+                (("" (split)
+                  (("1" (lift-if)
+                    (("1" (split)
+                      (("1" (flatten)
+                        (("1" (expand "set2list")
+                          (("1" (assert) nil nil)) nil))
+                        nil)
+                       ("2" (flatten)
+                        (("2" (expand* "step" "deriv_stmt")
+                          (("2" (skosimp)
+                            (("2"
+                              (name "t1"
+                                    "choose(LAMBDA (t: Transition[CP, string]):
+                                                 ts(mva(mp!1))(t) AND
+                                                  scp(t) = cp(astate(sMP1!1)) AND
+                                                   event(t) =
+                                                    (# etype := et!1, mname := name(m1!1) #)
+                                                    AND
+                                                    guard(t)
+                                                        (stA(astate(sMP1!1)),
+                                                         st(pstate(sMP1!1))))")
+                              (("1"
+                                (replace -1)
+                                (("1"
+                                  (expand "choose")
+                                  (("1"
+                                    (use "epsilon_ax[Transition]")
+                                    (("1"
+                                      (replace -2 -1)
+                                      (("1"
+                                        (prop)
+                                        (("1"
+                                          (hide -5 -6 -10 -19)
+                                          (("1"
+                                            (name "q1" "scp(t1)")
+                                            (("1"
+                                              (case
+                                               "FORALL (q: CP): is_finite({t: Transition | ts!1(t) AND scp(t) = q})")
+                                              (("1"
+                                                (name
+                                                 "C1"
+                                                 "{c : [Expr, Stmt] | EXISTS (q : CP):
+                                       cps(mva(mp!1))(q) AND
+                                       nonempty?({t: Transition | ts!1(t) AND scp(t) = q}) AND
+                                       c = ann_trans_cp(mp!1)(q, {t : Transition | ts!1(t) AND scp(t) = q})}")
+                                                (("1"
+                                                  (replace -1)
+                                                  (("1"
+                                                    (case
+                                                     "C1(ann_trans_cp(mp!1)(q1, {t : Transition | ts!1(t) AND scp(t) = q1}))")
+                                                    (("1"
+                                                      (name
+                                                       "c1"
+                                                       "ann_trans_cp(mp!1)(q1, {t: Transition | ts!1(t) AND scp(t) = q1})")
+                                                      (("1"
+                                                        (case
+                                                         "deriv_expr(ap!1)(PROJ_1(c1), sAP1!1, v!1, tau!1)(m1!2)
+                (LAMBDA (p: Program[string])
+                        (s: Stmt[string], sigma1, sigma2: APState[string])
+                        (m: below(m1!2)):
+                   deriv_stmt(p)(s, sigma1, sigma2)(m))
+              IMPLIES tau!1 = sAP1!1 AND v!1 = Bool(TRUE)")
+                                                        (("1"
+                                                          (postpone)
+                                                          nil
+                                                          nil)
+                                                         ("2"
+                                                          (postpone)
+                                                          nil
+                                                          nil))
+                                                        nil))
+                                                      nil)
+                                                     ("2"
+                                                      (case
+                                                       "C1 = {c: [Expr, Stmt] | EXISTS (q: CP):
+                                           cps(mva(mp!1))(q) AND
+                                           nonempty?({t: Transition | ts!1(t) AND scp(t) = q}) AND
+                                           c = ann_trans_cp(mp!1)(q, {t: Transition | ts!1(t) AND scp(t) = q})}")
+                                                      (("1"
+                                                        (replace -1 1)
+                                                        (("1"
+                                                          (assert)
+                                                          (("1"
+                                                            (inst
+                                                             1
+                                                             "q1")
+                                                            (("1"
+                                                              (split)
+                                                              (("1"
+                                                                (expand*
+                                                                 "ann_program_pre"
+                                                                 "wf_MP"
+                                                                 "complete"
+                                                                 "wf_MVA")
+                                                                (("1"
+                                                                  (flatten)
+                                                                  (("1"
+                                                                    (inst
+                                                                     -18
+                                                                     "t1")
+                                                                    (("1"
+                                                                      (assert)
+                                                                      nil
+                                                                      nil))
+                                                                    nil))
+                                                                  nil))
+                                                                nil)
+                                                               ("2"
+                                                                (expand*
+                                                                 "nonempty?"
+                                                                 "empty?"
+                                                                 "member"
+                                                                 "filter_event")
+                                                                (("2"
+                                                                  (inst
+                                                                   -1
+                                                                   "t1")
+                                                                  (("2"
+                                                                    (assert)
+                                                                    (("2"
+                                                                      (replace
+                                                                       -19
+                                                                       1)
+                                                                      (("2"
+                                                                        (assert)
+                                                                        nil
+                                                                        nil))
+                                                                      nil))
+                                                                    nil))
+                                                                  nil))
+                                                                nil))
+                                                              nil))
+                                                            nil))
+                                                          nil))
+                                                        nil)
+                                                       ("2"
+                                                        (assert)
+                                                        nil
+                                                        nil))
+                                                      nil)
+                                                     ("3"
+                                                      (expand
+                                                       "ann_program_pre")
+                                                      (("3"
+                                                        (flatten)
+                                                        nil
+                                                        nil))
+                                                      nil)
+                                                     ("4"
+                                                      (inst?)
+                                                      nil
+                                                      nil))
+                                                    nil))
+                                                  nil)
+                                                 ("2"
+                                                  (expand
+                                                   "ann_program_pre")
+                                                  (("2"
+                                                    (skosimp)
+                                                    nil
+                                                    nil))
+                                                  nil)
+                                                 ("3"
+                                                  (skosimp)
+                                                  (("3"
+                                                    (inst?)
+                                                    nil
+                                                    nil))
+                                                  nil))
+                                                nil)
+                                               ("2"
+                                                (hide-all-but (-16 1))
+                                                (("2"
+                                                  (lemma
+                                                   "finite_subset[Transition]")
+                                                  (("2"
+                                                    (skolem!)
+                                                    (("2"
+                                                      (inst
+                                                       -1
+                                                       "ts(mva(mp!1))"
+                                                       "{t: Transition | ts!1(t) AND scp(t) = q!1}")
+                                                      (("2"
+                                                        (assert)
+                                                        (("2"
+                                                          (expand*
+                                                           "subset?"
+                                                           "member"
+                                                           "filter_event")
+                                                          (("2"
+                                                            (skosimp)
+                                                            (("2"
+                                                              (replace
+                                                               -3
+                                                               -1)
+                                                              (("2"
+                                                                (assert)
+                                                                (("2"
+                                                                  (flatten)
+                                                                  nil
+                                                                  nil))
+                                                                nil))
+                                                              nil))
+                                                            nil))
+                                                          nil))
+                                                        nil))
+                                                      nil))
+                                                    nil))
+                                                  nil))
+                                                nil))
+                                              nil))
+                                            nil))
+                                          nil)
+                                         ("2"
+                                          (inst 1 "t1")
+                                          (("2" (assert) nil nil))
+                                          nil))
+                                        nil))
+                                      nil))
+                                    nil))
+                                  nil))
+                                nil)
+                               ("2"
+                                (hide-all-but (-6 -8 -10 1))
+                                (("2"
+                                  (use "wf_state_implies_wf_PSt")
+                                  (("2"
+                                    (expand "ann_program_pre")
+                                    (("2"
+                                      (expand "wf_state" -4)
+                                      (("2"
+                                        (flatten)
+                                        (("2"
+                                          (assert)
+                                          (("2"
+                                            (expand*
+                                             "wf_MP"
+                                             "complete"
+                                             "wf_MVA"
+                                             "total"
+                                             "wf_AState"
+                                             "nonempty?"
+                                             "empty?"
+                                             "member")
+                                            (("2"
+                                              (flatten)
+                                              (("2"
+                                                (inst
+                                                 -12
+                                                 "cp(astate(sMP1!1))"
+                                                 "(# etype := et!1, mname := name(m1!1) #)"
+                                                 "stA(astate(sMP1!1))"
+                                                 "st(pstate(sMP1!1))")
+                                                (("2"
+                                                  (assert)
+                                                  (("2"
+                                                    (skolem!)
+                                                    (("2"
+                                                      (inst? -2)
+                                                      nil
+                                                      nil))
+                                                    nil))
+                                                  nil))
+                                                nil))
+                                              nil))
+                                            nil))
+                                          nil))
+                                        nil))
+                                      nil))
+                                    nil))
+                                  nil))
+                                nil))
+                              nil))
+                            nil))
+                          nil))
+                        nil))
+                      nil))
+                    nil)
+                   ("2" (case "empty?(ts!1)")
+                    (("1" (lift-if)
+                      (("1" (assert)
+                        (("1" (prop)
+                          (("1" (hide-all-but (-2 1))
+                            (("1"
+                              (expand* "set2list" "empty?" "nonempty?"
+                               "member")
+                              (("1"
+                                (lift-if)
+                                (("1"
+                                  (assert)
+                                  (("1"
+                                    (prop)
+                                    (("1"
+                                      (skosimp*)
+                                      (("1"
+                                        (expand* "empty?" "member")
+                                        (("1"
+                                          (skosimp)
+                                          (("1" (inst?) nil nil))
+                                          nil))
+                                        nil))
+                                      nil))
+                                    nil))
+                                  nil))
+                                nil))
+                              nil))
+                            nil))
+                          nil))
+                        nil))
+                      nil)
+                     ("2" (expand* "empty?" "member")
+                      (("2" (skolem!)
+                        (("2" (assert)
+                          (("2" (hide-all-but (-1 -2 -3 -8))
+                            (("2"
+                              (expand* "ann_program_pre" "wf_MP"
+                               "complete" "wf_MVA" "filter_event")
+                              (("2"
+                                (flatten)
+                                (("2"
+                                  (inst -7 "x!1")
+                                  (("2"
+                                    (replace -15 -1)
+                                    (("2"
+                                      (ground)
+                                      (("2"
+                                        (flatten)
+                                        (("2"
+                                          (case
+                                           "event(x!1) = (# etype := et!1, mname := name(m1!1) #)")
+                                          (("1"
+                                            (replace -1 -4)
+                                            (("1" (propax) nil nil))
+                                            nil)
+                                           ("2"
+                                            (apply-extensionality)
+                                            nil
+                                            nil))
+                                          nil))
+                                        nil))
+                                      nil))
+                                    nil))
+                                  nil))
+                                nil))
+                              nil))
+                            nil))
+                          nil))
+                        nil))
+                      nil))
+                    nil))
+                  nil))
+                nil))
+              nil))
+            nil))
+          nil))
+        nil))
+      nil))
+    nil)
+   unfinished nil 4055089 7600 t shostak)))
+

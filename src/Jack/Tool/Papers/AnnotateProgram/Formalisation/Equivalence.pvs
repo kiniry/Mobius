@@ -49,6 +49,7 @@ BEGIN
     FORALL (sMP : MPState, sAP : APState) :
       MP_modeled?(sMP, sAP) IMPLIES ex(pstate(sMP)) = ex(pstate(sAP))
 
+  % TODO: delete this rename update2, move the proof and update the references
   MP_modeled_preserved_by_update : LEMMA  % :-)
     FORALL (mp : MonitoredProgram, ap : Program)
            (sMP : MPState, sAP : APState)(vn : string, v : Val) :
@@ -83,8 +84,36 @@ BEGIN
       related_states(mp, ap)(sMP, sAP) IMPLIES
         eval(b)(pstate(sMP)) = eval(b)(pstate(sAP))
 
-  % THINK: I must say that the two v's are the same, but how do I get that?
-  MP_modeled_preverved_by_assertion_checking : LEMMA
+
+
+  MP_modeled_preserved_by_ann_event : LEMMA
+    FORALL (mp : MonitoredProgram, ap : Program)
+           (sMP1, sMP2 : MPState, sAP1, sAP2 : APState)
+           (c : Class, m1 : Method, n : nat)
+           (ts : set[Transition], et : EventType) :
+      related_states(mp, ap)(sMP1, sAP1) IMPLIES
+      classes(program(mp))(c) IMPLIES
+      methods(c)(m1) IMPLIES
+      astate(sMP2) = on_method_MVA(et)(mp, m1, sMP1) IMPLIES
+      NOT up?(ex(pstate(sAP1))) IMPLIES
+      (FORALL (t : Transition) :
+         ts(t) AND etype(event(t)) = et AND mname(event(t)) = name(m1)) IMPLIES
+      deriv_stmt(ap)(ann_event(mp)(ts), sAP1, sAP2)(n) IMPLIES
+        MVA_modeled?(astate(sMP2), sAP2)
+ 
+  % TODO: prove! (it may be hard/imposible)
+  wf_ann_program_evals_expr_to_same_value : LEMMA
+    FORALL (mp : MonitoredProgram, ap : Program)
+           (sMP1, sMP2 : MPState, sAP1, sAP2 : APState)
+           (e : Expr)(v1, v2 : Val, n1, n2 : nat) :
+      related_states(mp, ap)(sMP1, sAP1) IMPLIES
+      subset?(var_names(e), var_names(program(mp))) IMPLIES
+      deriv_expr(mp)(e, sMP1, v1, sMP2)(n1) IMPLIES
+      deriv_expr(ap)(e, sAP1, v2, sAP2)(n2) IMPLIES
+        v1 = v2
+
+  % THINK: How do I get that v1 = v2 !?
+  MP_modeled_preserved_by_assertion_checking : LEMMA % :-)
     FORALL (mp : MonitoredProgram, ap : Program)
            (sMP1, sMP2 : MPState, sAP1, sAP2 : APState, 
             assertion : Expr, n1, n2 : nat,
@@ -93,12 +122,11 @@ BEGIN
             deriv_expr_AP : [Program -> [Expr, APState, Val, APState ->
                                         [below(n2 + 1) -> bool]]]) :
       related_states(mp, ap)(sMP1, sAP1) IMPLIES
-      (FORALL (v : Val, tau : MPState) :
-        deriv_expr_MP(mp)(assertion, sMP1, v, tau)(n1)
-          IMPLIES sMP1 = tau) IMPLIES
-      (FORALL (v : Val, tau : APState) :
-        deriv_expr_AP(ap)(assertion, sAP1, v, tau)(n2)
-          IMPLIES sAP1 = tau) IMPLIES
+      NOT up?(ex(pstate(sMP1))) IMPLIES
+      (FORALL (v1, v2 : Val, tau1 : MPState, tau2 : APState) :
+        (deriv_expr_MP(mp)(assertion, sMP1, v1, tau1)(n1) IMPLIES sMP1 = tau1) AND
+        (deriv_expr_AP(ap)(assertion, sAP1, v1, tau2)(n2) IMPLIES sAP1 = tau2) AND
+        v1 = v2) IMPLIES
       check_assertion(mp)(assertion, sMP1, sMP2)(n1)(deriv_expr_MP) IMPLIES
       check_assertion(ap)(assertion, sAP1, sAP2)(n2)(deriv_expr_AP) IMPLIES
         MP_modeled?(sMP2, sAP2)
@@ -152,8 +180,9 @@ BEGIN
 
   initial_states_are_equivalent : LEMMA
     FORALL (mp : MonitoredProgram) :
-      MP_modeled?(initial_MP_state(mp),
-                  initial_AP_state(ann_program(mp)))
+      ann_program_pre[CP](mp) IMPLIES
+        MP_modeled?(initial_MP_state(mp),
+                    initial_AP_state(ann_program(mp)))
 
   deriv_expr_maintains_equivalence : THEOREM
     FORALL (mp : MonitoredProgram, ap : Program)

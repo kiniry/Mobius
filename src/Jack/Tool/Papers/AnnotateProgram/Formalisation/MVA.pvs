@@ -107,9 +107,11 @@ BEGIN
     wf_Store(vdsA(a))(f)
 
   % NOTE: Recall that we assume that variables in PSt are fields
+  %       Variables in PSt are a subset of the program variables, if we
+  %       require them to be equal then we can use an IFF
   wf_PSt(vds : finite_set[ProgVarDecl])(st : PSt) : boolean =
     FORALL (n : Name) :
-      var_names(vds)(n) IFF NOT Bottom?(fvs(st)(n))
+      var_names(vds)(n) IMPLIES NOT Bottom?(fvs(st)(n))
 
   wf_PSt(a : MVA)(f : PSt) : boolean =
     wf_PSt(vdsP(a))(f)
@@ -264,18 +266,12 @@ BEGIN
 
   %  Well formed states
 
-  wf_AState(s : AState, a : MVA) : boolean =
+  wf_AState(a : MVA)(s : AState) : boolean =
     cps(a)(cp(s)) AND
     wf_Store(a)(stA(s))
 
-  wf_AState(a : MVA)(s : AState) : boolean =
-    wf_AState(s, a)
-
-  wf_PEvent(pe : PEvent, a : MVA) : boolean =
-    evs(a)(event(pe)) AND wf_PSt(a)(stP(pe))
-
   wf_PEvent(a : MVA)(pe : PEvent) : boolean =
-    wf_PEvent(pe, a)
+    evs(a)(event(pe)) AND wf_PSt(a)(stP(pe))
 
 
   % Single judgement for a MVA
@@ -295,7 +291,7 @@ BEGIN
   % TODO: prove but first change the definition of get_MVAVarDecl
   wf_initial_MVA_state: LEMMA
     FORALL (a: MVA) :
-      wf_MVA(a) IMPLIES wf_AState(initial_MVA_state(a), a)
+      wf_MVA(a) IMPLIES wf_AState(a)(initial_MVA_state(a))
 
   % TODO: prove (needs the definition of eval for Expressions)
   execute_action_yields_wf_state: LEMMA
