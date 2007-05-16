@@ -3,48 +3,63 @@ grammar Fb;
 @header {package freeboogie.parser; import freeboogie.ast.*;}
 @lexer::header {package freeboogie.parser;}
 
-program returns [Program v]:
-  decl+ EOF
+program returns [Declaration v]:
+  declarations EOF { $v=$declarations.v; }
 ;
 
-decl: type_decl|constant|function|axiom|variable|procedure|implementation;
-
-type_decl returns [TypeDecls v]:
-  'type' type_decl_tail { $v=$type_decl_tail.v; }
+declarations returns [Declaration v]:
+                                                { $v=null; }
+  | 'type' d=type_decl_tail                     { $v=$d.v; }
+  | 'const' d=const_decl_tail                   { $v=$d.v; }
+  | 'function' d=function_decl_tail             { $v=$d.v; }
+  | 'axiom' d=axiom_tail                        { $v=$d.v; }
+  | 'var' d=global_decl_tail                    { $v=$d.v; }
+  | 'procedure' d=procedure_decl_tail           { $v=$d.v; }
+  | 'implementation' d=implementation_decl_tail { $v=$d.v; }
 ;
 
-type_decl_tail returns [TypeDecls v]:
-    ';'
-  | ID ','? t=type_decl_tail { $v=new TypeDecls($ID.text,$t.v); }
+type_decl_tail returns [Declaration v]:
+    ID (
+    (';' t1=declarations {$v=new TypeDecl($ID.text,$t1.v);})
+  | (',' t2=type_decl_tail { $v=new TypeDecl($ID.text,$t2.v); }))
 ;
 
-constant:	'const' id_type_list ';';
-
-function returns [Signature v]:
-  'function' ID '(' (a=opt_id_type_list)? ')' 
-  'returns' '(' (b=opt_id_type_list)? ')' ';'  // TODO: enforce only one result
-    { $v=new Signature($ID.text,$a.v,$b.v); }
+const_decl_tail returns [Declaration v]:
+    ID ':' type (
+    (';' t1=declarations    { $v=new ConstDecl($ID.text,$type.v,$t1.v); })
+  | (',' t2=const_decl_tail { $v=new ConstDecl($ID.text,$type.v,$t2.v); }))
 ;
 
-axiom returns [Axiom v]:
-  'axiom' expr ';' { $v=new Axiom($expr.v); }
+function_decl_tail returns [Declaration v]:
+  signature ';' declarations
+    { $v=new Function($signature.v,$declarations.v); }
 ;
 
-variable returns [VariableDecls v]:
-  'var' id_type_list ';'
-    { $v=$id_type_list.v; }
+axiom_tail returns [Declaration v]:
+  expr ';' declarations { $v=new Axiom($expr.v,$declarations.v); }
 ;
 
-procedure returns [Procedure v]:
-  'procedure' signature ';'? spec_list body?
-    { $v=new Procedure($signature.v,$spec_list.v,$body.v); }
+global_decl_tail returns [Declaration v]:
+    ID ':' type (
+    (';' t1=declarations     { $v=new VariableDecl($ID.text,$type.v,$t1.v); })
+  | (',' t2=global_decl_tail { $v=new VariableDecl($ID.text,$type.v,$t2.v); }))
+;
+
+procedure_decl_tail returns [Declaration v]:
+  signature ';'? spec_list body? t=declarations
+    { $v=new Procedure($signature.v,$spec_list.v,$body.v,$t.v); }
 ;
 	
-signature returns [Signature v]:
-  ID '(' (a=id_type_list)? ')' ('returns' '(' (b=id_type_list)? ')')?
-    { $v = new Signature($ID.text,$a.v,$b.v); }
+// TODO: check that the signature has names?
+implementation_decl_tail returns [Declaration v]:
+  signature body t=declarations
+    { $v = new Implementation($signature.v,$body.v,$t.v); }
 ;
 
+signature returns [Signature v]:
+  ID '(' (a=opt_id_type_list)? ')' ('returns' '(' (b=opt_id_type_list)? ')')?
+    { $v = new Signature($ID.text,$a.v,$b.v); }
+;
 
 // TODO: Add 'free' in the abstract grammar, perhaps as a boolean.
 spec_list returns [Specification v]:
@@ -61,11 +76,6 @@ modifies_tail returns [Specification v]:
     ';' spec_list { $v = $spec_list.v; }
   | h=atom_id ','? t=modifies_tail
       { $v=new Specification(Specification.SpecType.MODIFIES,$h.v,$t.v); }
-;
-	
-implementation returns [Implementation v]:
-  'implementation' signature body
-    { $v = new Implementation($signature.v, $body.v); }
 ;
 	
 body returns [Body v]:
@@ -105,7 +115,6 @@ index returns [Index v]:
   '[' a=expr (',' b=expr)? ']' { $v = new Index($a.v, $b.v); }
 ;
 
-
 /* BEGIN expression grammar.
 
    See http://www.engr.mun.ca/~theo/Misc/exp_parsing.htm
@@ -127,7 +136,6 @@ index returns [Index v]:
    Typechecking takes care of booleans added to integers 
    and the like.
  */
-
 
 // TODO: Check what kind of associativity these rules give.
 // (I believe it is left)
@@ -219,7 +227,7 @@ atom_id returns [AtomId v]:
     ID      { $v = new AtomId($ID.text); }
 ;
 
-/* END of the expression grammar */
+// END of the expression grammar 
 	
 quant_op returns [AtomQuant.QuantType v]:
     'forall' { $v = AtomQuant.QuantType.FORALL; }
@@ -231,7 +239,7 @@ triggers:
 ;
 
 
-/* BEGIN list rules */
+// BEGIN list rules 
 	
 expr_list returns [Exprs v]:
   h=expr (',' t=expr_list)? { $v = new Exprs($h.v, $t.v); }
@@ -241,27 +249,27 @@ id_list	returns [Identifiers v]:
     ID (',' r=id_list)? { $v=new Identifiers($ID.text,$r.v); }
 ;
 
-id_type_list returns [VariableDecls v]:
-  hi=ID ':' ht=type (',' t=id_type_list)? 
-    { $v = new VariableDecls($hi.text, $ht.v, $t.v); }
+opt_id_type_list returns [Declaration v]:
+  (hi=ID ':')? ht=type (',' t=opt_id_type_list)? 
+    { $v = new VariableDecl(($hi==null)?null:$hi.text, $ht.v, $t.v); }
 ;
 
-var_id_type_list returns [VariableDecls v]:
+id_type_list returns [Declaration v]:
+  hi=ID ':' ht=type (',' t=id_type_list)? 
+    { $v = new VariableDecl($hi.text, $ht.v, $t.v); }
+;
+
+var_id_type_list returns [Declaration v]:
     ';' { $v = null; }
   | hi=ID ':' ht=type (','|';' 'var')? t=var_id_type_list
-      { $v = new VariableDecls($hi.text, $ht.v, $t.v); }
-;
-
-opt_id_type_list returns [VariableDecls v]:
-  (hi=ID ':')? ht=type (',' t=opt_id_type_list)? 
-    { $v = new VariableDecls(($hi==null)?null:$hi.text, $ht.v, $t.v); }
+      { $v = new VariableDecl($hi.text, $ht.v, $t.v); }
 ;
 
 command_list returns [Commands v]:
   h=command (t=command_list)? { $v=new Commands($h.v,$t.v); }
 ;
 	
-/* END list rules */
+// END list rules 
 
 
 simple_type returns [Type v]:
@@ -284,7 +292,6 @@ type returns [Type v]:
     }
 ;
 	
-
 ID:
   ('a'..'z'|'A'..'Z'|'\''|'~'|'#'|'$'|'.'|'?'|'_'|'^') 
   ('a'..'z'|'A'..'Z'|'\''|'~'|'#'|'$'|'.'|'?'|'_'|'^'|'`'|'0'..'9')*

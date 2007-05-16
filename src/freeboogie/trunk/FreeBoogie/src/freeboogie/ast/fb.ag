@@ -1,10 +1,23 @@
 // This is the abstract grammar for FreeBoogie used to generate
 // the AST. See also the template (*.tpl) files.
 
-// Program organization
-Program = Declaration! decl, Program tail;
-Declaration :> TypeDecls, ConstantDecls, Function, Axiom, VariableDecls, 
-               Procedure, Implementation;
+// TODO: there is some repetition here (the tail). Make the
+// code generator smarter
+
+// The program is a (functional) list of (global) declarations
+Declaration :> TypeDecl, ConstDecl, Function, Axiom, 
+               VariableDecl, Procedure, Implementation;
+
+TypeDecl =     String! name, Declaration tail;
+ConstDecl=     String! id, Type! type, Declaration tail;
+Function =     Signature! sig, Declaration tail;
+Axiom =        Expr! expr, Declaration tail;
+VariableDecl = String! name, Type! type, Declaration tail;
+Procedure =    Signature! signature, Specification spec, Body body,
+               Declaration tail;
+Implementation = Signature! signature, Body! body,
+                 Declaration tail;
+
 
 // Types and constants
 Type :> PrimitiveType, UserType, ArrayType, MatrixType, GenericType, DepType;
@@ -12,20 +25,15 @@ ArrayType = Type! rowType, Type! colType, Type! elemType;
 PrimitiveType = enum(Ptype: BOOL, INT, REF, NAME, ANY) val;
 GenericType = Type! param, Type! type;
 DepType = Type! type, Expr! pred;
-TypeDecls = String! name, TypeDecls tail;
-ConstantDecl = String! id, Type! type;
 UserType = String! name;
 
 // Signatures are used to represent uninterpreted functions
-Signature = String! name, VariableDecls args, VariableDecls results;
-Axiom = Expr! expr;
+Signature = String! name, Declaration args, Declaration results;
 
 // Procedures and implementations
-Procedure = Signature! signature, Specification spec, Body body;
 Specification = enum(SpecType: REQUIRES, MODIFIES, ENSURES) type,
                 Expr! expr, Specification tail;
-Implementation = Signature! signature, Body! body;
-Body = VariableDecls vars, Blocks blocks;
+Body = Declaration vars, Blocks blocks;
 Blocks = String! name, Commands cmds, BlockEnd! end, Blocks tail;
 BlockEnd = enum(BlockType: GOTO, RETURN) type, Identifiers dest;
 
@@ -50,14 +58,13 @@ AtomId = String! id;
 AtomFun = String! function, Exprs args;
 AtomOld = Expr! e;
 AtomCast = Expr! e, Type! type;
-AtomQuant = enum(QuantType: EXISTS, FORALL) quant, VariableDecls! vars, Expr! e;
+AtomQuant = enum(QuantType: EXISTS, FORALL) quant, Declaration! vars, Expr! e;
 AtomIdx = Atom! atom, Index! idx;
 Index = Expr! a, Expr b;
 
 // Some simple lists
 Identifiers = String! name, Identifiers tail;
 Exprs = Expr! expr, Exprs tail;
-VariableDecls = String name, Type! type, VariableDecls tail;
 
 // TODO: the invariants
 Specification: type==Type.MODIFIES ==> \typeof(expr)==AtomId
