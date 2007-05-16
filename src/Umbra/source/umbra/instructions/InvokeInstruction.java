@@ -15,10 +15,10 @@ import umbra.editor.parsing.IBytecodeStrings;
 /**
  * This class is related to some subset of instructions 
  * depending on parameters. It redefines some crucial while 
- * handling with single instruction methods(correctness, getting handle).
+ * handling with single instruction methods (correctness, getting handle).
  * Instructions of this kind are used to call other methods.
  * 
- * @author Jaros�aw Paszek
+ * @author Jarosław Paszek
  */
 public class InvokeInstruction extends StringInstruction {
 
@@ -98,13 +98,13 @@ public class InvokeInstruction extends StringInstruction {
 	if (!correct())
 		return null;
 	
-	if (name == "invokespecial") {
+	if (name.compareTo("invokespecial")==0) {
 		return new INVOKESPECIAL(index);
 	}
-	if (name == "invokestatic") {
+	if (name.compareTo("invokestatic")==0) {
 		return new INVOKESTATIC(index);
 	}
-	if (name == "invokevirtual") {
+	if (name.compareTo("invokevirtual")==0) {
 		return new INVOKEVIRTUAL(index);
 	}
  

@@ -119,37 +119,36 @@ public class StackInstruction extends NumInstruction {
 			return null;
 		index = getInd();
 		
-		if (name == "aload") {
+		if (name.compareTo("aload")==0) {
 			return new ALOAD(index);
 		}
-		if (name == "astore") {
+		if (name.compareTo("astore")==0) {
 			return new ASTORE(index);
 		}
-		if (name == "dload") {
+		if (name.compareTo("dload")==0) {
 			return new DLOAD(index);
 		}
-		if (name == "dstore") {
+		if (name.compareTo("dstore")==0) {
 			return new DSTORE(index);
 		}
-		if (name == "fload") {
+		if (name.compareTo("fload")==0) {
 			return new FLOAD(index);
 		}
-		if (name == "fstore") {
+		if (name.compareTo("fstore")==0) {
 			return new FSTORE(index);
 		}
-		if (name == "iload") {
+		if (name.compareTo("iload")==0) {
 			return new ILOAD(index);
 		}
-		if (name == "istore") {
+		if (name.compareTo("istore")==0) {
 			return new ISTORE(index);
 		}
-		if (name == "lload") {
+		if (name.compareTo("lload")==0) {
 			return new LLOAD(index);
 		}
-		if (name == "lstore") {
+		if (name.compareTo("lstore")==0) {
 			return new LSTORE(index);
 		}
-
 		
 		return null;
 		

@@ -20,9 +20,10 @@ import org.apache.bcel.generic.MethodGen;
 public abstract class BytecodeLineController {
 
 	/**
-	 * TODO
+	 * The string representation of the bytecode line number.
 	 */
 	protected String line;
+	
 	/**
 	 * TODO
 	 */
@@ -30,6 +31,8 @@ public abstract class BytecodeLineController {
 
 	/**
 	 * TODO
+	 * 
+	 * @param l the string representation of the line number.
 	 */
 	public BytecodeLineController(String l) {
 		super();
@@ -39,7 +42,10 @@ public abstract class BytecodeLineController {
 	/**
 	 * TODO
 	 */
-	public boolean addHandle(InstructionHandle ih, InstructionList il, MethodGen mg, int i) {
+	public boolean addHandle(InstructionHandle ih, 
+			                 InstructionList il, 
+			                 MethodGen mg, 
+			                 int i) {
 		index = i;
 		return false;
 	}
@@ -108,10 +114,14 @@ public abstract class BytecodeLineController {
 	}
 	
 	/**
-	 * TODO
+	 * This method strips off all the whitespace characters
+	 * in the given string
+	 * 
+	 * @param the string to strip the whitespace from
+	 * @result the string with the whitespace stripped off
 	 */
 	//&*zmiana nazwy! usuwam z podklas!
-	protected String extractPoint(String l) {
+	public static String extractPoint(String l) {
 		String s;
 		s = "";
 		int ii = 0;

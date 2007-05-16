@@ -109,64 +109,64 @@ public class JumpInstruction extends NumInstruction {
 		
 		if (!correct())
 			return null;
-		if (name == "goto") {
+		if (name.compareTo("goto")==0) {
 			return new GOTO(ih);
 		}
-		if (name == "goto_w") {
+		if (name.compareTo("goto_w")==0) {
 			return new GOTO_W(ih);
 		}
-		if (name == "if_acmpeq") {
+		if (name.compareTo("if_acmpeq")==0) {
 			return new IF_ACMPEQ(ih);
 		}
-		if (name == "if_acmpne") {
+		if (name.compareTo("if_acmpne")==0) {
 			return new IF_ACMPNE(ih);
 		}
-		if (name == "if_icmpeq") {
+		if (name.compareTo("if_icmpeq")==0) {
 			return new IF_ICMPEQ(ih);
 		}
-		if (name == "if_icmpge") {
+		if (name.compareTo("if_icmpge")==0) {
 			return new IF_ICMPGE(ih);
 		}
-		if (name == "if_icmpgt") {
+		if (name.compareTo("if_icmpgt")==0) {
 			return new IF_ICMPGT(ih);
 		}
-		if (name == "if_icmple") {
+		if (name.compareTo("if_icmple")==0) {
 			return new IF_ICMPLE(ih);
 		}
-		if (name == "if_icmplt") {
+		if (name.compareTo("if_icmplt")==0) {
 			return new IF_ICMPLT(ih);
 		}
-		if (name == "if_icmpne") {
+		if (name.compareTo("if_icmpne")==0) {
 			return new IF_ICMPNE(ih);
 		}
-		if (name == "ifeq") {
+		if (name.compareTo("ifeq")==0) {
 			return new IFEQ(ih);
 		}
-		if (name == "ifge") {
+		if (name.compareTo("ifge")==0) {
 			return new IFGE(ih);
 		}
-		if (name == "ifgt") {
+		if (name.compareTo("ifgt")==0) {
 			return new IFGT(ih);
 		}
-		if (name == "ifle") {
+		if (name.compareTo("ifle")==0) {
 			return new IFLE(ih);
 		}
-		if (name == "iflt") {
+		if (name.compareTo("iflt")==0) {
 			return new IFLT(ih);
 		} 
-		if (name == "ifne") {
+		if (name.compareTo("ifne")==0) {
 			return new IFNE(ih);
 		}
-		if (name == "ifnonnull") {
+		if (name.compareTo("ifnonnull")==0) {
 			return new IFNONNULL(ih);
 		}
-		if (name == "ifnull") {
+		if (name.compareTo("ifnull")==0) {
 			return new IFNULL(ih);
 		}
-		if (name == "jsr") {
+		if (name.compareTo("jsr")==0) {
 			return new JSR(ih);
 		}
-		if (name == "jsr_w") {
+		if (name.compareTo("jsr_w")==0) {
 			return new JSR_W(ih);
 		}
 		return null;

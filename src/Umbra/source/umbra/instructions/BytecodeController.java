@@ -18,6 +18,7 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 
 import umbra.editor.BytecodeDocument;
+import umbra.editor.parsing.BytecodeWhitespaceDetector;
 import umbra.editor.parsing.IBytecodeStrings;
 
 /**
@@ -31,18 +32,38 @@ import umbra.editor.parsing.IBytecodeStrings;
  * modified (in case of combining changes) and what comments
  * are added to Bytecode
  * 
- * @author Wojciech W�s, Tomek Batkiewicz i Jaros�aw Paszek
+ * @author Wojciech Wąs, Tomek Batkiewicz i Jarosław Paszek
  */
 public class BytecodeController {
 	
 	/**
-	 * TODO
+	 * The list of all the lines in the editor. These lines
+	 * are parsed as objects the classes being subclasses of
+	 * {@ref BytecodeLineController}.
 	 */
-	private LinkedList all, instructions, incorrect;
+	private LinkedList all;
+	
+	/**
+	 * The list of all the lines in the editor which contain codes of 
+	 * instructions. These are represented as objects the classes of which
+	 * are subclasses of {@ref InstructionLineController}.
+	 */
+	private LinkedList instructions;
+	
+	/**
+	 * The list of all the lines which were detected to be incorrect.
+	 */
+	private LinkedList incorrect;
+	
 	/**
 	 * TODO
 	 */
-	private Hashtable comments, interline;
+	private Hashtable comments;
+	
+	/**
+	 * TODO
+	 */
+	private Hashtable interline;
 	/**
 	 * Keeps track of modified methods.
 	 * TODO is that true?
@@ -62,7 +83,8 @@ public class BytecodeController {
 	}
 
 	/**
-	 * TODO
+	 * This method prints out to the standard output the
+	 * list of all the instructions in the controller.
 	 */
 	public void showInstructionList()
 	{
@@ -72,24 +94,25 @@ public class BytecodeController {
 	}
 
 	/**
-	 * TODO
+	 * This method prints out to the standard output the
+	 * list of all the incorrect instructions in the controller.
 	 */
 	public void showAllIncorrectLines()
 	{   
 	    System.out.println("" + incorrect.size() + " incorrects:");
 		for (int i = 0; i < incorrect.size(); i++) {
-			System.out.println(" " + ((BytecodeLineController)(incorrect.get(i))).line);
-		    //czemu zaczyna sie od 9
+			System.out.println(" " + 
+					     ((BytecodeLineController)(incorrect.get(i))).line);
 		}
 	}
 	
 	/**
-	 * Initialization of all Bytecode structures related to
+	 * Initialization of all the bytecode structures related to
 	 * the document; it uses BCEL structures linked to the
 	 * document  
 	 * 
-	 * @param Bytecode document with linked appropriate BCEL
-	 * 	structures
+	 * @param doc the bytecode document with the corresponding BCEL
+	 * 	structures linked into it
 	 * @throws BadLocationException
 	 */
 	public void init(IDocument doc) throws BadLocationException {
@@ -134,7 +157,9 @@ public class BytecodeController {
 			}
 			else if (comment != null) partComment.concat("\n" + comment);
 		}
-		int methodNum = ((BytecodeLineController)instructions.getLast()).getIndex() + 1;
+		//TODO current crude fix
+		int methodNum = 100;//((BytecodeLineController)instructions.getLast()).
+		                                                      //getIndex() + 1;
 		modified = new boolean[methodNum];
 		for (int i = 0; i < modified.length; i++) modified[i] = false;
 	}
@@ -145,13 +170,16 @@ public class BytecodeController {
 	public void removeIncorrects(int start, int stop) {
 		for (int i = start; i <= stop; i++) {
 			BytecodeLineController line = (BytecodeLineController)all.get(i); 
-			if (incorrect.contains(line)) incorrect.remove(line);
+			if (incorrect.contains(line)) {
+				incorrect.remove(line);
+			}
 		}
+		showAllIncorrectLines();
 	}
 	
 	/**
 	 * Detects which kind of modification (adding lines, removing lines or both) 
-	 * has been made and preforms appropriate action to Bytecode structures  
+	 * has been made and preforms appropriate action to the bytecode structures  
 	 * 
 	 * @param doc		Bytecode document that modification has
 	 * 		been made to
@@ -160,10 +188,12 @@ public class BytecodeController {
 	 * @param start		New-version number of the first modified line
 	 * @param stop		New-version number of the last modified line
 	 */
-	public void addAllLines(IDocument doc, int startRem, int stopRem, int start, int stop)
+	public void addAllLines(IDocument doc, 
+			                int startRem, int stopRem, int start, int stop)
 	{
 		ClassGen cg = ((BytecodeDocument)doc).getClassGen();
-		for (int i = Math.min(startRem, start), j = i; (i <= stopRem || j <= stop) && i < all.size(); i++, j++) {
+		for (int i = Math.min(startRem, start), j = i; 
+		     (i <= stopRem || j <= stop) && i < all.size(); i++, j++) {
 			BytecodeLineController oldlc = (BytecodeLineController)all.get(j);
 			BytecodeLineController nextLine = null;
 			int off = getInstructionOff(j);
@@ -237,9 +267,10 @@ public class BytecodeController {
 	{
 		boolean ok = true;
 		for (int i = start; i <= stop; i++) {
-			if (!((BytecodeLineController)(all.get(i))).correct()) {
+			BytecodeLineController line = (BytecodeLineController)(all.get(i));
+			if (!line.correct()) {
 				ok = false;
-					incorrect.addLast(all.get(i));
+				incorrect.addLast(all.get(i));
 			}
 		};
 		return ok;
@@ -259,16 +290,21 @@ public class BytecodeController {
 		int i;
 		boolean ok;
 		int j;
-		String l = removeColonFromLine(line);
+		String l = removeWhiteSpace(removeColonFromLine(line));
 		if (l.length() == 0)
 			return new EmptyLineController(line);
 		
 		//kod - tylko zaczynajace sie Code reszte przy poprawnosci
-		if (l.startsWith("Code") || (l.startsWith("LocalVariable")) || (l.startsWith("LineNumber")) || (l.startsWith("Attribute")) )
-			return new CodeLineController(line);
+		if (l.startsWith("Code") || 
+		   (l.startsWith("LocalVariable")) || 
+		   (l.startsWith("LineNumber")) || 
+		   (l.startsWith("Attribute")) )
+			  return new CodeLineController(line);
 		
 		//wyjatki throw Exception from nie znam reguly
-		if ((l.startsWith("throws")) || (l.startsWith("Exception")) || (l.startsWith("From")))
+		if ((l.startsWith("throws")) || 
+			(l.startsWith("Exception")) || 
+			(l.startsWith("From")))
 			return new ThrowsLineController(line);
 		
 		//naglowki - public static void private
@@ -277,7 +313,8 @@ public class BytecodeController {
 			(l.startsWith("void")) || (l.startsWith("private")) || 
 			(l.startsWith("int")) || (l.startsWith("char")) || 
 			(l.startsWith("protected")) || (l.startsWith("boolean")) || 
-			(l.startsWith("String")) || (l.startsWith("byte")))
+			(l.startsWith("String")) || (l.startsWith("byte")) ||
+			(l.startsWith("package")) || (l.startsWith("class")))
 			return new HeaderLineController(line);
 		
 		//instrukcje liczba i : 
@@ -316,37 +353,48 @@ public class BytecodeController {
 				//wazna jest kolejnosc bo aload_0 przed aload
 				// i ty tworzenie inshan !!!!!!!!!
 				for (j = 0; j < s1.length; j++) {
-					if (subline.equalsIgnoreCase(s1[j])) return new SingleInstruction(line, s1[j]);
+					if (subline.equalsIgnoreCase(s1[j])) 
+						return new SingleInstruction(line, s1[j]);
 				}
 				for (j = 0; j < s2.length; j++) {
-					if (subline.equalsIgnoreCase(s2[j])) return new PushInstruction(line, s2[j]);
+					if (subline.equalsIgnoreCase(s2[j])) 
+						return new PushInstruction(line, s2[j]);
 				}
 				for (j = 0; j < s3.length; j++) {
-					if (subline.equalsIgnoreCase(s3[j])) return new JumpInstruction(line, s3[j]);
+					if (subline.equalsIgnoreCase(s3[j])) 
+						return new JumpInstruction(line, s3[j]);
 				}
 				for (j = 0; j < s4.length; j++) {
-					if (subline.equalsIgnoreCase(s4[j])) return new IncInstruction(line, s4[j]);
+					if (subline.equalsIgnoreCase(s4[j])) 
+						return new IncInstruction(line, s4[j]);
 				}
 				for (j = 0; j < s5.length; j++) {
-					if (subline.equalsIgnoreCase(s5[j])) return new StackInstruction(line, s5[j]);
+					if (subline.equalsIgnoreCase(s5[j])) 
+						return new StackInstruction(line, s5[j]);
 				}
 				for (j = 0; j < s6.length; j++) {
-					if (subline.equalsIgnoreCase(s6[j])) return new ArrayInstruction(line, s6[j]);
+					if (subline.equalsIgnoreCase(s6[j])) 
+						return new ArrayInstruction(line, s6[j]);
 				}
 				for (j = 0; j < s7.length; j++) {
-					if (subline.equalsIgnoreCase(s7[j])) return new NewInstruction(line, s7[j]);
+					if (subline.equalsIgnoreCase(s7[j])) 
+						return new NewInstruction(line, s7[j]);
 				}
 				for (j = 0; j < s8.length; j++) {
-					if (subline.equalsIgnoreCase(s8[j])) return new FieldInstruction(line, s8[j]);
+					if (subline.equalsIgnoreCase(s8[j])) 
+						return new FieldInstruction(line, s8[j]);
 				}
 				for (j = 0; j < s9.length; j++) {
-					if (subline.equalsIgnoreCase(s9[j])) return new InvokeInstruction(line, s9[j]);
+					if (subline.equalsIgnoreCase(s9[j])) 
+						return new InvokeInstruction(line, s9[j]);
 				}
 				for (j = 0; j < s10.length; j++) {
-					if (subline.equalsIgnoreCase(s10[j])) return new LdcInstruction(line, s10[j]);
+					if (subline.equalsIgnoreCase(s10[j])) 
+						return new LdcInstruction(line, s10[j]);
 				}
 				for (j = 0; j < s11.length; j++) {
-					if (subline.equalsIgnoreCase(s11[j])) return new UnknownInstruction(line, s11[j]);
+					if (subline.equalsIgnoreCase(s11[j])) 
+						return new UnknownInstruction(line, s11[j]);
 				}
 			}   
 		}	
@@ -357,6 +405,32 @@ public class BytecodeController {
 		//		return new InstructionLineController(line);
 		//}
 		return new UnknownLineController(line);
+	}
+
+	/**
+	 * This method strips off the whitespace characters both at the beginning
+	 * and at the end of the given string.
+	 * 
+	 * @param string to strip off the whitespace
+	 * @return the string with no whitespace
+	 */
+	private String removeWhiteSpace(/*@ non_null @*/ String string) {
+		BytecodeWhitespaceDetector wd = new BytecodeWhitespaceDetector();
+		int i=0;
+		boolean ok = true;
+		while (ok && i<string.length() && string.length()>0) {
+			if (!wd.isWhitespace(string.charAt(i))) ok=false;
+			i++;
+		};
+		if (ok) return "";
+		int j=string.length()-1;
+		ok=true;
+		while (ok && j>=0) {
+			if (!wd.isWhitespace(string.charAt(j))) ok=false;
+			j--;
+		};
+		if (ok) return "";
+		return string.substring(i-1, j+1);
 	}
 
 	/**
@@ -379,7 +453,10 @@ public class BytecodeController {
 	}
 	
 	/**
-	 * TODO
+	 * This method strips off the starting numbers, then the colon
+	 * character (":") and then the whitespace characters.
+	 * 
+	 * @param l the string to strip the initial characters from
 	 */
 	protected String removeColonFromLine(String l) {
 		int i = 0;
@@ -393,10 +470,12 @@ public class BytecodeController {
 	}
 	
 	/**
-	 * Checks if the given line is commented and extract the comment 
+	 * Checks if the given line contains a single line comment
+	 * and extracts the comment string. In case there is no
+	 * comment in the line, it returns <code>null</code>. 
 	 * 
-	 * @param line	Given line contents
-	 * @return		Comment or an empty string
+	 * @param line	the line to check for comments
+	 * @return		comment or null
 	 */
 	private String extractCommentFromLine(String line) {
 		int i = line.indexOf("//");
@@ -407,7 +486,7 @@ public class BytecodeController {
 	}
 	
 	/**
-	 * @return true if there is no incorrect line within whole document
+	 * @return true if there is no incorrect line within the whole document
 	 */
 	public boolean allCorrect() {
 		return incorrect.isEmpty();

@@ -10,7 +10,9 @@ import org.eclipse.jface.text.rules.IWhitespaceDetector;
 public class BytecodeWhitespaceDetector implements IWhitespaceDetector {
 
 	/**
-	 * TODO
+	 * This method defines which characters are whitespace characters
+	 * 
+	 * @param c the character to determine if it is whitespace
 	 */
 	public boolean isWhitespace(char c) {
 		return (c == ' ' || c == '\t' || c == '\n' || c == '\r');

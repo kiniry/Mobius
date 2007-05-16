@@ -186,20 +186,20 @@ public class BoogiePLContribution extends ControlContribution {
 	}
 	
 	/**
-	 * TODO
-	 */
+	 * used for debugging purposes
+	 *
 	private void displayCorrect() {
 		labelText.setBackground(new Color(null, new RGB(0, 128, 0)));
 		labelText.setText("Correct");
-	}
+	} */
 	
 	/**
-	 * TODO
-	 */
+	 * used for debugging purposes
+	 *
 	private void displayError(int line) {
 		labelText.setBackground(new Color(null, new RGB(255, 128, 0)));
 		labelText.setText("Error detected: " + line);
-	}
+	}*/
 
 	/**
 	 * TODO

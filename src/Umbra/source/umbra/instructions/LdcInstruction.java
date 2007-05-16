@@ -69,13 +69,13 @@ public class LdcInstruction extends OtherInstruction {
 	if (!correct())
 		return null;
 	index = getInd();
-	if (name == "ldc") {
+	if (name.compareTo("ldc")==0) {
 		return new LDC(index);
 	}
-	if (name == "ldc_w") {
+	if (name.compareTo("ldc_w")==0) {
 		return new LDC_W(index);
 	}
-	if (name == "ldc2_w") {
+	if (name.compareTo("ldc2_w")==0) {
 		return new LDC2_W(index);
 	}
 	return null;

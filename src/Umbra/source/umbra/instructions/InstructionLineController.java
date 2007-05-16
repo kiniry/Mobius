@@ -20,7 +20,7 @@ import org.apache.bcel.generic.TargetLostException;
  * This class defines a structure that describes a single Bytecode
  * instruction and contains related BCEL structures
  * 
- * @author Wojciech W�s, Tomek Batkiewicz
+ * @author Wojciech Wąs, Tomek Batkiewicz
  */
 public abstract class InstructionLineController extends BytecodeLineController {
 
@@ -42,7 +42,12 @@ public abstract class InstructionLineController extends BytecodeLineController {
 	protected String name; 
 	
 	/**
-	 * TODO
+	 * The constructon creates the controler which 
+	 * binds the instruction mnemonic with the line
+	 * number of the instruction.
+	 * 
+	 * @param l the string representation of the line number
+	 * @param n the mnemonic name of the instruction
 	 */
 	public InstructionLineController(String l, String n) {
 		super(l);

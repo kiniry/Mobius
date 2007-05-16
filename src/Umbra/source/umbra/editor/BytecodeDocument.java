@@ -20,7 +20,7 @@ import org.eclipse.ui.texteditor.AbstractDecoratedTextEditor;
  * This class is related to document structure of bytecode
  * file and supplies it with synchronization tools (in both directions).
  * 
- * @author Tomasz Batkiewicz, Wojciech W±s
+ * @author Tomasz Batkiewicz, Wojciech WÄ…s
  */
 public class BytecodeDocument extends Document {
 	

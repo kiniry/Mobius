@@ -17,7 +17,7 @@ import umbra.editor.parsing.BytecodePartitionScanner;
  * This class has been modificated with relation to the generated automatically
  * to allow adding listener that is responsible for error checking
  * 
- * @author Wojciech W�s
+ * @author Wojciech Wąs
  */
 public class BytecodeDocumentProvider extends FileDocumentProvider {
 

@@ -18,9 +18,10 @@ import org.eclipse.ui.IEditorPart;
 import umbra.instructions.BytecodeController;
 
 /**
- * TODO
+ * This class represents a change performed in a bytecode editor.
+ * TODO more detailed description is needed
  * 
- * @author Wojtek W±s
+ * @author Wojtek Was
  */
 public class BytecodeContribution extends ControlContribution { 
 	
@@ -128,6 +129,7 @@ public class BytecodeContribution extends ControlContribution {
 			bcc.addAllLines(event.fDocument, startRem, stopRem, start, stop);
 			startRem = -1;
 			stopRem = -1;
+			bcc.removeIncorrects(start, stop);
 			bcc.checkAllLines(start, stop);
 			if (!bcc.allCorrect()) 
 				displayError(bcc.getFirstError());
@@ -186,16 +188,19 @@ public class BytecodeContribution extends ControlContribution {
 	}
 	
 	/**
-	 * TODO
+	 * This method displays in the status label the information
+	 * that something is correct.
 	 */
 	private void displayCorrect() {
-		//labelText.setBackground(new Color(null, new RGB(0, 128, 0)));
 		labelText.setText("Correct");
 		System.out.println("Correct");
 	}
 	
 	/**
-	 * TODO
+	 * This method displays in the status label the information
+	 * about an error in the indicated line.
+	 * 
+	 * @param line the number of the line with the error
 	 */
 	private void displayError(int line) {
 		//labelText.setBackground(new Color(null, new RGB(255, 128, 0)));

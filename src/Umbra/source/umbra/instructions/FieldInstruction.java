@@ -16,10 +16,10 @@ import umbra.editor.parsing.IBytecodeStrings;
 /**
  * This class is related to some subset of instructions 
  * depending on parameters. It redefines some crucial while 
- * handling with single instruction methods(correctness, getting handle).
+ * handling with single instruction methods (correctness, getting handle).
  * This subset is similar to ordinary Java subset.
  * 
- * @author Jaros�aw Paszek
+ * @author Jarosław Paszek
  */
 public class FieldInstruction extends StringInstruction {
 
@@ -101,16 +101,16 @@ public class FieldInstruction extends StringInstruction {
 
 	boolean isOK = correct();
 	if (isOK) {
-	if (name == "getfield") {
+	if (name.compareTo("getfield")==0) {
 		return new GETFIELD(index);
 	}
-	if (name == "getstatic") {
+	if (name.compareTo("getstatic")==0) {
 		return new GETSTATIC(index);
 	}
-	if (name == "putfield") {
+	if (name.compareTo("putfield")==0) {
 		return new PUTFIELD(index);
 	}
-	if (name == "putstatic") {
+	if (name.compareTo("putstatic")==0) {
 		return new PUTSTATIC(index);
 	}
 	}

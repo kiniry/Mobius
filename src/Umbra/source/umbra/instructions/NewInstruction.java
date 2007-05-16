@@ -110,16 +110,16 @@ public class NewInstruction extends StringInstruction {
 	index = getInd();
 
 	
-	if (name == "anewarray") {
+	if (name.compareTo("anewarray")==0) {
 		return new ANEWARRAY(index);
 	}
-	if (name == "checkcast") {
+	if (name.compareTo("checkcast")==0) {
 		return new CHECKCAST(index);
 	}
-	if (name == "instanceof") {
+	if (name.compareTo("instanceof")==0) {
 		return new INSTANCEOF(index);
 	}
-	if (name == "new") {
+	if (name.compareTo("new")==0) {
 		return new NEW(index);
 	}
  

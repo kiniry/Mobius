@@ -36,7 +36,7 @@ import umbra.editor.BytecodeEditorContributor;
  * made to different methods. In case a modification happens in the 
  * same method, the bytecode modification is privileged.
  * 
- * @author Wojtek W±s  
+ * @author Wojtek WÄ…s  
  */
 public class BytecodeCombineAction extends Action {
 
@@ -104,8 +104,9 @@ public class BytecodeCombineAction extends Action {
 			fileTo.delete(true, null);
 			fileFrom.copy(pathTo, true, null);
 		} catch (CoreException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			MessageDialog.openWarning(editor.getSite().getShell(), 
+					"Bytecode", "Cannot regenerate the bytecode file");
+			return;
 		}
 		updateMethods(file, path, lastSegment);
 		contributor.synchrEnable();

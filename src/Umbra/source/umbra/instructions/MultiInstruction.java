@@ -14,7 +14,12 @@ package umbra.instructions;
 public class MultiInstruction extends InstructionLineController {
 
 	/**
-	 * TODO
+	 * This creates an instance of an instruction
+	 * named as <code>n</code> at the line number
+	 * <code>l</code>
+	 * 
+	 * @param l the line number of the instruction
+	 * @param n the mnemonic name of the instruction
 	 */
 	public MultiInstruction(String l, String n) {
 		super(l, n);

@@ -36,12 +36,13 @@ import umbra.editor.actions.BytecodeSynchrAction;
 
 
 /**
- * This is managing class that provides the editor with a set of
- * actions: rebuild, refresh, combine, restore from history,
- * synchronization of cursor's positions from Bytecode to Java code,
- * color changing and checking syntax correctness. 
+ * This is managing class that adds actions to workbench menus and toolbars 
+ * for a bytecode editor. They appear when the editor is active. These actions 
+ * are in particular: rebuild, refresh, combine, restore from history, 
+ * synchronize the position of the cursor between the bytecode and the Java 
+ * code, color change and check of the syntax correctness. 
  * 
- * @author Wojtek W±s
+ * @author Wojtek WÄ…s
  */
 public class BytecodeEditorContributor extends EditorActionBarContributor {
 
@@ -67,7 +68,8 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
 	 */
 	private BytecodeRebuildAction rebuildAction;
 	/**
-	 * TODO
+	 * The action to combine the modifications from the source code editor
+	 * and from the bytecode editor.
 	 */
 	private BytecodeCombineAction combineAction;
 	/**
@@ -100,13 +102,20 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
 		restoreAction = new BytecodeRestoreAction(this, bytecodeContribution);
 		synchrAction = new BytecodeSynchrAction();
 		URL installURL = UmbraPlugin.getDefault().getBundle().getEntry("/");
-		ImageDescriptor iconRight = ImageDescriptor.createFromURL(new URL(installURL, "icons/change_color_backward.gif"));
-		ImageDescriptor iconLeft = ImageDescriptor.createFromURL(new URL(installURL, "icons/change_color_forward.gif"));
-		ImageDescriptor refreshIcon = ImageDescriptor.createFromURL(new URL(installURL, "icons/refresh.gif"));
-		ImageDescriptor rebuildIcon = ImageDescriptor.createFromURL(new URL(installURL, "icons/rebuild_bytecode.gif"));
-		ImageDescriptor combineIcon = ImageDescriptor.createFromURL(new URL(installURL, "icons/combine.gif"));
-		ImageDescriptor restoreIcon = ImageDescriptor.createFromURL(new URL(installURL, "icons/restoreH.gif"));
-		ImageDescriptor synchrIcon = ImageDescriptor.createFromURL(new URL(installURL, "icons/synchronize.gif"));
+		ImageDescriptor iconRight = ImageDescriptor.
+		  createFromURL(new URL(installURL, "icons/change_color_backward.gif"));
+		ImageDescriptor iconLeft = ImageDescriptor.
+		  createFromURL(new URL(installURL, "icons/change_color_forward.gif"));
+		ImageDescriptor refreshIcon = ImageDescriptor.
+		  createFromURL(new URL(installURL, "icons/refresh.gif"));
+		ImageDescriptor rebuildIcon = ImageDescriptor.
+		  createFromURL(new URL(installURL, "icons/rebuild_bytecode.gif"));
+		ImageDescriptor combineIcon = ImageDescriptor.
+		  createFromURL(new URL(installURL, "icons/combine.gif"));
+		ImageDescriptor restoreIcon = ImageDescriptor.
+		  createFromURL(new URL(installURL, "icons/restoreH.gif"));
+		ImageDescriptor synchrIcon = ImageDescriptor.
+		  createFromURL(new URL(installURL, "icons/synchronize.gif"));
 		actionPlus.setImageDescriptor(iconRight);
 		actionMinus.setImageDescriptor(iconLeft);
 		refreshAction.setImageDescriptor(refreshIcon);
@@ -228,18 +237,19 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
 	}
 	
 	/**
-	 * TODO
+	 * This method disables the synchronisation action in the editor. 
 	 */
 	public void synchrDisable() {
 		synchrAction.setEnabled(false);
 	}
 
 	/**
-	 * TODO
+	 * This method enables the synchronisation action in the editor.
 	 */
 	public void synchrEnable() {
 		synchrAction.setEnabled(true);
 	}
+	
 	/**
 	 * debugging helper
 	 *
@@ -249,7 +259,9 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
 	}*/
 
 	/**
+	 * This returns the action ???
 	 * TODO
+	 * 
 	 * @return
 	 */
 	public BytecodeRefreshAction getRefreshAction() {

@@ -12,40 +12,50 @@ import umbra.editor.parsing.IBytecodeStrings;
 
 
 /**
- * This class is related to some subset of instructions 
+ * This class is a superclass for a subset of instructions 
  * depending on parameters. It redefines some crucial while 
  * handling with single instruction methods(correctness, getting handle).
  * There is only one array instruction used to create new
  * array of a particular type.
+ * TODO
  * 
- * @author Jaros�aw Paszek
+ * @author Jarosław Paszek
  */
 public class ArrayInstruction extends StringInstruction {
 
 	/**
-	 * TODO
+	 * The names of base bytecode types relevant for
+	 * array instructions. It correspond to the types
+	 * in the array {@ref types}.
 	 */
-	private final String names[] =
+	private static final String names[] =
 	{"VOID", "BOOLEAN","INT", "SHORT", "BYTE", "LONG",
 		"DOUBLE", "FLOAT", "CHAR"};
 
 	/**
-	 * TODO
+	 * The types of the bytecode types relevant for
+	 * array instructions. It correspond to the types
+	 * in the array {@ref names}.
 	 */
-	private final Type types[] =
+	private static final Type types[] =
 	{Type.VOID, Type.BOOLEAN, Type.INT, Type.SHORT,
 			Type.BYTE, Type.LONG, Type.DOUBLE,
 			Type.FLOAT, Type.CHAR};
 	
 	/**
-	 * TODO
+	 * The number of types relevant to the array
+	 * instructions. It is correlated with the arrays
+	 * <code>names</code> and <code>types</code>
 	 */
-	private final int typeCount = types.length;
+	private static final int typeCount = types.length;
 
 	/**
-	 * TODO
+	 * This method returns the type that corresponds to
+	 * the given name
+	 * 
+	 * @param the string for which the type
 	 */
-	private Type getType(String insName) {
+	private static Type getType(String insName) {
 		for (int i = 0; i < typeCount; i++) {
 			if ((names[i].startsWith(insName)) && (insName.startsWith(names[i])))
 				return types[i];
@@ -75,7 +85,7 @@ public class ArrayInstruction extends StringInstruction {
 		//&*
 		boolean isOK = correct();
 		if (isOK) {
-		if (name == "newarray")
+		if (name.compareTo("newarray")==0)
 			return new NEWARRAY(r);
 		}
 		//System.out.println("   Failed!");

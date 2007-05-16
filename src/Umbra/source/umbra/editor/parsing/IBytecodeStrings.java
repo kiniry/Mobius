@@ -125,7 +125,7 @@ public interface IBytecodeStrings {
 	 * TODO
 	 */
 	public static String[] javaKeywords = new String[] {"public", "protected", "private", "static", "void", "int", "long", "short", "char", "byte", "boolean",
-			"class", "interface", "extends", "implements"};
+			"class", "interface", "extends", "implements", "package"};
 	
 	/**
 	 * TODO

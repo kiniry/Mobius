@@ -176,7 +176,7 @@ public class IncInstruction extends NumInstruction {
 		int index2 = 0;
 		index2 = getInd2();
 		
-		if (name == "iinc") {
+		if (name.compareTo("iinc")==0) {
 			return new IINC(index1, index2);
 		}
 		

@@ -99,10 +99,10 @@ public class PushInstruction extends NumInstruction {
 		byte b = 0;
 		b = (byte)index;
 		
-		if (name == "bipush") {
+		if (name.compareTo("bipush")==0) {
 			return new BIPUSH(b);
 		}
-		if (name == "sipush") {
+		if (name.compareTo("sipush")==0) {
 			return new SIPUSH(b);
 		}
 		

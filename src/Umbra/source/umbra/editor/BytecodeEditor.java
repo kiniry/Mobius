@@ -42,33 +42,42 @@ public class BytecodeEditor extends TextEditor {
 	 * TODO
 	 */
 	private ColorManager colorManager;
+	
 	/**
 	 * TODO
 	 */
 	private int mod;
+	
 	/**
 	 * TODO
 	 */
 	private boolean updated = true;
+	
 	/**
 	 * TODO
 	 */
 	private AbstractDecoratedTextEditor relatedEditor;
+	
 	/**
 	 * TODO
 	 */
 	private JavaClass javaClass;
+	
 	/**
 	 * TODO
 	 */
 	private ClassGen classGen;
+	
 	/**
-	 * TODO
+	 * This field contains the number of history items. This
+	 * field contains -1 when there are no active history
+	 * snapshots (i.e. the history is clear).
 	 */
 	private int historyNum = -1;
 	
 	/**
 	 * A constructor with no Bytecode-related specificity
+	 * TODO
 	 */
 	public BytecodeEditor() {
 		super();
@@ -270,7 +279,6 @@ public class BytecodeEditor extends TextEditor {
 			stream.close();
 			
 		} catch (ReadAttributeException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		
