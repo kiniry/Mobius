@@ -49,48 +49,37 @@ public class ExpressionVisitor extends ABasicVisitor {
 		VCEntry post = (VCEntry) o;
 		switch(expr.op) {
 			case TagConstants.EQ:
-				return vcg.equals(expr, post);
 			case TagConstants.OR:
-				return vcg.or(expr, post);
 			case TagConstants.AND:
-				return vcg.and(expr, post);
 			case TagConstants.NE:
-				return vcg.ne(expr, post);
 			case TagConstants.GE:
-				return vcg.ge(expr, post);
 			case TagConstants.GT:
-				return vcg.gt(expr, post);
 			case TagConstants.LE:
-				return vcg.le(expr, post);
 			case TagConstants.LT:
-				return vcg.lt(expr, post);
 			case TagConstants.BITOR:
-				return vcg.bitor(expr, post);
 			case TagConstants.BITXOR:
-				return vcg.bitxor(expr, post);
 			case TagConstants.BITAND:
-				return vcg.bitand(expr, post);
 			case TagConstants.LSHIFT:
-				return vcg.lshift(expr, post);
 			case TagConstants.RSHIFT:
-				return vcg.rshift(expr, post);
 			case TagConstants.URSHIFT:
-				return vcg.urshift(expr, post);
 			case TagConstants.ADD:
-				return vcg.add(expr, post);
 			case TagConstants.SUB:
-				return vcg.sub(expr, post);
-			case TagConstants.DIV:
-				return vcg.div(expr, post);
-			case TagConstants.MOD:
-				return vcg.mod(expr, post);
 			case TagConstants.STAR:
-				return vcg.star(expr, post);
+				return vcg.stdBinExpression(expr.op, expr.left, expr.right, post);
+			
+
+			case TagConstants.DIV:
+			case TagConstants.MOD:
+				return vcg.stdBinExpression(expr.op, expr.left, expr.right, post);
+
+
 			case TagConstants.ASSIGN:
 				return vcg.assign(expr, post);
 			case TagConstants.ASGMUL:
-				// TODO: finish all these operators
 			case TagConstants.ASGDIV:
+				return vcg.assignSpecial(expr, post);
+				// TODO: finish all these operators
+
 			case TagConstants.ASGREM:
 			case TagConstants.ASGADD:
 			case TagConstants.ASGSUB:

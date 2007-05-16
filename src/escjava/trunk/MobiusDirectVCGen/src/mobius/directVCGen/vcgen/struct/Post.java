@@ -36,6 +36,10 @@ public class Post {
 		this(null, post);
 	}
 	
+	public Post(QuantVariableRef val, Post post) {
+		this(val, post.post);
+	}
+
 	/**
 	 * Substitute the current variable ({@link #var}) with the logical formula given
 	 * as an argument.
