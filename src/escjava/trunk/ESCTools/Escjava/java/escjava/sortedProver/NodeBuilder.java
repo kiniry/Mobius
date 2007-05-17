@@ -247,6 +247,17 @@ public abstract class NodeBuilder
 		return registerMapSort(mapFrom, mapTo, sortMap);
 	}
 	
+	/**
+	 * All the symbols are scoped by the push/isValid calls. All symbols
+	 * registered prior to push/isValid call, are assumed to be used only
+	 * by the formula passed there, and possibly by stuff further up the
+	 * stack. In other words, they become invalid after pop or the end of
+	 * isValid call respectively.
+	 * 
+	 * @param name
+	 * @param args
+	 * @return
+	 */
 	//@ requires \nonnullelements(args);
 	public PredSymbol registerPredSymbol(String name, Sort[] args)
 	{

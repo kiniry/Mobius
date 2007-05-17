@@ -58,6 +58,7 @@ public class Lifter extends EscNodeBuilder
 	int pass;
 	int methodNo = 0;
 	final int lastPass = 3;
+	private Hashtable baseFnTranslations = new Hashtable();
     
     /**
      * Print a warning message. Originally the messages went to
@@ -101,14 +102,19 @@ public class Lifter extends EscNodeBuilder
 		terms = (Term[])backPred.axioms.toArray(terms);
 		Term axioms = new FnTerm(giantBoolConective(TagConstants.BOOLAND, terms.length), terms);
 		
-		SAny[] dist = new SAny[backPred.distinct.size()];
+		SPred and1 = doConvert(axioms);
+		
 		dumpBuilder = builder;
+		SAny[] dist = new SAny[backPred.distinct.size()];
 		for (int i = 0; i < dist.length; ++i)
 			dist[i] = ((Term)backPred.distinct.get(i)).dumpAny();
 		dumpBuilder = null;
 		
-		SPred and1 = doConvert(axioms);
 		SPred and2 = builder.buildDistinct(dist);
+		
+		baseFnTranslations = fnTranslations;
+		fnTranslations = new Hashtable();
+		
 		newMethod();
 		return builder.buildAnd(new SPred[] { and1, and2 });
 	}
@@ -1055,7 +1061,7 @@ public class Lifter extends EscNodeBuilder
 		dumpBuilder = builder;
 		stringConstants.clear();
 		distinctSymbols.clear();
-        fnTranslations.clear();
+        fnTranslations = (Hashtable)baseFnTranslations.clone();
 		
 		root.enforceLabelSense(-1);
 		SPred res = root.dumpPred();
@@ -1810,7 +1816,7 @@ public class Lifter extends EscNodeBuilder
 	// jgc: made it public but this is the WRONG way. a new build method (simpler) should be
 	//  added instead
 	public /*@ nullable @*/EscNodeBuilder dumpBuilder;
-	final Hashtable fnTranslations = new Hashtable();
+	Hashtable fnTranslations = new Hashtable();
 	final ArrayList stringConstants = new ArrayList();
 	final ArrayList distinctSymbols = new ArrayList();
 	
