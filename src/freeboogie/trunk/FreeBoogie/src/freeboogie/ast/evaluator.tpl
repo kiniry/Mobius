@@ -3,6 +3,9 @@ a value. As a convenience, the object is also deconstructed
 in the class. The original object is sent nevertheless because
 we may want to use it.
 
+TODO: Consider having a base class for this which is parametrized
+by the return type for each type of node.
+
 \file{Evaluator.java}
 /** 
   Public domain. 
@@ -10,13 +13,20 @@ we may want to use it.
 */
 package freeboogie.ast;
 
-public abstract class Evaluator<R> {
+/**
+  Use as a base class when you want to compute a value of type
+  {@code R} for each node. An example is the typechecker.
+ */
+public class Evaluator<R> {
 \normal_classes{
-  public abstract R eval(\ClassName \className, 
+  public R eval(\ClassName \className, 
     \members[,]{
       \if_primitive{\if_enum{\ClassName.}{}\Membertype}{\MemberType}
       \memberName
     }
-  );
+  ) {
+    \children{\memberName.eval(this);}
+    return null;
+  }
 }
 }

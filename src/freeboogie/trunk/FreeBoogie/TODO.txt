@@ -1,0 +1,7 @@
+ 6 keep track of locations in AST nodes
+12 pretty printer
+ 8 sanity checks (name for parameters in implementations, lhs is l-value, etc.)
+ 8 name resolution --- symbol table
+16 typechecker
+12 constant folding ??
+OBS At this point the visiting infrastructure should sort of work.

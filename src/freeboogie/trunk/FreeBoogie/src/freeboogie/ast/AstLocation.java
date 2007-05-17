@@ -8,13 +8,20 @@ package freeboogie.ast;
  * @author rgrig 
  * @author reviewed by TODO
  */
-public class Location {
+public class AstLocation {
   private String file;
   private int line, column;
-
-  /** Creates an `unknown' location. */
-  public Location() {
+  
+  private static AstLocation unknown = new AstLocation();
+  private AstLocation() {
     file = null;
+  }
+  
+  /** Singleton unknown location.
+   * @return the unknown location 
+   */
+  public static AstLocation unknown() {
+    return unknown;
   }
   
   /** Creates a location from position info.
@@ -25,15 +32,10 @@ public class Location {
    */
   //@ requires file != null ==> line_ > 0;
   //@ requires file != null ==> column_ > 0;
-  public Location(String file_, int line_, int column_) {
+  public AstLocation(String file_, int line_, int column_) {
     file = file_;
     line = line_;
     column = column_;
-  }
-  
-  /** @return Returns whether this is a known file position. */
-  public boolean isKnown() {
-    return file != null;
   }
   
   /** @return Returns the column. */
@@ -50,25 +52,10 @@ public class Location {
   public int getLine() {
     return line;
   }
-  
 
-  /**
-   * Illustrates usage.
-   * @param args Unused.
-   */
-  public static void main(String[] args) {
-    Location unknown = new Location();
-    assert !unknown.isKnown();
-    unknown = new Location(null, 1, -1);
-    assert !unknown.isKnown();
-    
-    String file = "bau";
-    int line = 28743;
-    int col = 912374; 
-    Location known = new Location(file, line, col);
-    assert known.isKnown();
-    assert file.equals(known.getFile());
-    assert line == known.getLine();
-    assert col == known.getColumn();
+  @Override
+  public String toString() {
+    if (this == unknown) return "?";
+    return (file == null ? "" : file + ":") + line + ":" + column;
   }
 }

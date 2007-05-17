@@ -18,11 +18,18 @@ public class \ClassName extends \BaseName {
 }
 \primitives{  private final \Membertype \memberName;
 }
-
+  // === Constructors ===
   public \ClassName(\members[, ]{\if_primitive{\Membertype}{\MemberType} \memberName}) {
+    this.location = AstLocation.unknown();
 \members{    this.\memberName = \memberName; \if_nonnull{assert \memberName != null;}{}
 }  }
 
+  public \ClassName(\members[, ]{\if_primitive{\Membertype}{\MemberType} \memberName}, AstLocation location) {
+    this(\members[,]{\memberName});
+    this.location = location;
+  }
+
+  // === Accessors ===
 \members{
   public \if_primitive{\Membertype}{\MemberType} get\MemberName() { return \memberName; }}
 

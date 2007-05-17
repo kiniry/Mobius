@@ -47,43 +47,52 @@ are no setter methods.
 </p>
 
 <pre>
-// Program organization
-Program = Declaration! decl, Program tail;
-Declaration :> TypeDecl, ConstantDecl, Function, Axiom, VariableDecl, 
-               Procedure, Implementation;
+// This is the abstract grammar for FreeBoogie used to generate
+// the AST. See also the template (*.tpl) files.
+
+// TODO: there is some repetition here (the tail). Make the
+// code generator smarter
+
+// The program is a (functional) list of (global) declarations
+Declaration :> TypeDecl, ConstDecl, Function, Axiom, 
+               VariableDecl, Procedure, Implementation;
+
+TypeDecl =     String! name, Declaration tail;
+ConstDecl=     String! id, Type! type, Declaration tail;
+Function =     Signature! sig, Declaration tail;
+Axiom =        Expr! expr, Declaration tail;
+VariableDecl = String! name, Type! type, Declaration tail;
+Procedure =    Signature! signature, Specification spec, Body body,
+               Declaration tail;
+Implementation = Signature! signature, Body! body,
+                 Declaration tail;
+
 
 // Types and constants
-Type :> PrimitiveType, Identifier, ArrayType, MatrixType;
-ArrayType = Type! indexType, Type! elemType;
-MatrixType = Type! rowType, Type! colType, Type! elemType;
-PrimitiveType = enum(Literal: BOOL, INT, REF, NAME, ANY) val;
-TypeDecl = String! name;
-ConstantDecl = String! id, Type! type;
+Type :> PrimitiveType, UserType, ArrayType, MatrixType, GenericType, DepType;
+ArrayType = Type! rowType, Type! colType, Type! elemType;
+PrimitiveType = enum(Ptype: BOOL, INT, REF, NAME, ANY) val;
+GenericType = Type! param, Type! type;
+DepType = Type! type, Expr! pred;
+UserType = String! name;
 
-// Uninterpreted functions, axioms, and global variables
-Function = String! name, Parameters args, Parameters results;
-Parameters = VariableDecl! parameter, Parameters tail;
-Axiom = Expr! expr;
-VariableDecl = String name, Type! type; // split the case were name is mandatory?
+// Signatures are used to represent uninterpreted functions
+Signature = String! name, Declaration args, Declaration results;
 
 // Procedures and implementations
-Procedure = Function! signature, Specification spec, Body body;
-Specification = enum(Type: REQUIRES, MODIFIES, ENSURES) type,
-                Expr! expr, Specification tail;
-Implementation = Function! signature, Body! body;
-Body = LocalDecls vars, Block! block;
-LocalDecls = VariableDecl! decl, LocalDecls tail;
-Block = String! name, Commands cmds, BlockEnd! end;
-BlockEnd = enum(Type: GOTO, RETURN) type, Identifiers dest;
+Specification = enum(SpecType: REQUIRES, MODIFIES, ENSURES) type,
+                Expr! expr, boolean free, Specification tail;
+Body = Declaration vars, Blocks blocks;
+Blocks = String! name, Commands cmds, BlockEnd! end, Blocks tail;
+BlockEnd = enum(BlockType: GOTO, RETURN) type, Identifiers dest;
 
 // Commands
 Commands = Command! cmd, Commands tail;
 Command :> AssignmentCmd, AssertAssumeCmd, HavocCmd, CallCmd;
-AssignmentCmd = String! lhs, Index idx, Expr! rhs;
-AssertAssumeCmd = enum(Type: ASSERT, ASSUME) type, Expr! expr;
+AssignmentCmd = Expr! lhs, Expr! rhs; // TODO: define exactly what lhs can be
+AssertAssumeCmd = enum(CmdType: ASSERT, ASSUME) type, Expr! expr;
 HavocCmd = String! name;
 CallCmd = String! function, Identifiers results, Exprs args;
-Index = Expr! a, Expr b;
 
 // Expressions
 Expr :> BinaryOp, UnaryOp, Atom;
@@ -91,22 +100,23 @@ BinaryOp = enum(Op: PLUS, MINUS, MUL, DIV, MOD, EQ, NEQ, LT, LE,
                     GE, GT, SUBTYPE, EQUIV, IMPLIES, AND, OR) op,
            Expr! left, Expr! right;
 UnaryOp = enum(Op: MINUS, NOT) op, Expr! e;
-Atom :> AtomLit, AtomNum, AtomId, AtomFun, AtomOld, AtomCast, AtomQuant;
-AtomLit = enum(Type: FALSE, TRUE, NULL) val;
+Atom :> AtomLit, AtomNum, AtomId, AtomFun, AtomOld, AtomCast, AtomQuant, AtomIdx;
+AtomLit = enum(AtomType: FALSE, TRUE, NULL) val;
 AtomNum = int val;
 AtomId = String! id;
 AtomFun = String! function, Exprs args;
 AtomOld = Expr! e;
 AtomCast = Expr! e, Type! type;
-AtomQuant = enum(Type: EXISTS, FORALL) quant, VariableDecls! vars, Expr! e;
+AtomQuant = enum(QuantType: EXISTS, FORALL) quant, Declaration! vars, Expr! e;
+AtomIdx = Atom! atom, Index! idx;
+Index = Expr! a, Expr b;
 
 // Some simple lists
 Identifiers = String! name, Identifiers tail;
 Exprs = Expr! expr, Exprs tail;
-VariableDecls = VariableDecl! decl, VariableDecls tail;
 
-// Extra invariants
-Specification: type==Type.MODIFIES ==> \typeof(expr)==Identifier
+// TODO: the invariants
+Specification: type==Type.MODIFIES ==> \typeof(expr)==AtomId
 </pre>
 
 <p>The invariants specified for classes are delimited by the end of the

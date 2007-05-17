@@ -32,9 +32,9 @@ Signature = String! name, Declaration args, Declaration results;
 
 // Procedures and implementations
 Specification = enum(SpecType: REQUIRES, MODIFIES, ENSURES) type,
-                Expr! expr, Specification tail;
-Body = Declaration vars, Blocks blocks;
-Blocks = String! name, Commands cmds, BlockEnd! end, Blocks tail;
+                Expr! expr, boolean free, Specification tail;
+Body = Declaration vars, Block blocks;
+Block = String! name, Commands cmds, BlockEnd! end, Block tail;
 BlockEnd = enum(BlockType: GOTO, RETURN) type, Identifiers dest;
 
 // Commands
