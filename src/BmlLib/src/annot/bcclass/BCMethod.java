@@ -9,6 +9,8 @@ import org.apache.bcel.classfile.LineNumberTable;
 import org.apache.bcel.classfile.Unknown;
 import org.apache.bcel.generic.*;
 
+import annot.bcclass.attributes.Assert;
+import annot.bcclass.attributes.AssertTable;
 import annot.bcclass.attributes.BCAttribute;
 import annot.bcclass.attributes.LoopSpecification;
 import annot.bcclass.attributes.MethodSpecification;
@@ -28,7 +30,7 @@ public class BCMethod extends AccessFlags {
 //	private ControlFlowGraph trace;
 	private String name;
 //	// specification
-//	private AssertTable assertTable;
+	private AssertTable assertTable;
 //	private SETTable setTable;
 	private LoopSpecification loopSpecification;
 //	private BlockSpecification blockSpecification;
@@ -81,14 +83,20 @@ public class BCMethod extends AccessFlags {
 			String[] lines_in = bcode.split("\n");
 			bcode = "";
 			SingleLoopSpecification[] ls = new SingleLoopSpecification[0];
+			Assert[] as = new Assert[0];
 			if (loopSpecification != null)
 				ls = loopSpecification.getLoopSpecifications();
+			if (assertTable != null)
+				as = assertTable.getAsserts();
 			for (int l=0; l<lines_in.length; l++) {
 				String line = lines_in[l];
 				int pc = Integer.parseInt(line.substring(0, line.indexOf(":")));
 				for (int s=0; s<ls.length; s++)
 					if (ls[s].getLoopIndex() == pc)
 						bcode += ls[s].printCode(conf);
+				for (int a=0; a<as.length; a++)
+					if (as[a].getPosition() == pc)
+						bcode += as[a].printCode(conf);
 				bcode += line + "\n";
 			}
 			return code + bcode;
@@ -369,8 +377,8 @@ public class BCMethod extends AccessFlags {
 //						methodSpecification
 //								.setReturnBoolConstraints(resultBoolConstraints);
 //					}
-//				} else if (bcAttribute instanceof AssertTable) {
-//					assertTable = (AssertTable) bcAttribute;
+				} else if (bcAttribute instanceof AssertTable) {
+					assertTable = (AssertTable) bcAttribute;
 //				} else if (bcAttribute instanceof SETTable) {
 //					setTable = (SETTable) bcAttribute;
 				} else if (bcAttribute instanceof LoopSpecification) {

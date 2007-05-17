@@ -9,6 +9,8 @@ import org.apache.bcel.classfile.ConstantPool;
 import org.apache.bcel.classfile.Unknown;
 
 import annot.bcclass.BCClass;
+import annot.bcclass.attributes.Assert;
+import annot.bcclass.attributes.AssertTable;
 import annot.bcclass.attributes.BCAttribute;
 import annot.bcclass.attributes.Exsures;
 import annot.bcclass.attributes.ExsuresTable;
@@ -76,9 +78,15 @@ public class AttributeReader {
 		/* constantPool = _clazz.getConstantPool(); */
 		localVariables = _localVariables;
 		String name = privateAttr.getName();
-//		if (name.equals(BCAttribute.ASSERT)) {
-//			return readAssertTable(privateAttr.getBytes());
-//		}
+		if (name.equals(BCAttribute.ASSERT)) {
+			return readAssertTable(privateAttr.getBytes());
+		}
+		if (name.equals(BCAttribute.SET))
+			try {
+				throw new Exception("SET attribute found!");
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 //		if (name.equals(BCAttribute.SET)) {
 //			return readSetTable(privateAttr.getBytes());
 //		}
@@ -299,54 +307,54 @@ public class AttributeReader {
 //
 //	// /////////////////////end : set table
 //	// /////////////////////////////////////////////////
-//
-//	// //////////////////// start : assert table
-//	// /////////////////////////////////////////////////
-//	private static AssertTable readAssertTable(byte[] bytes)
-//			throws ReadAttributeException {
-//		pos = 0;
-//		int attribute_length = bytes.length;
-//		int attributes_count = readAttributeCount(bytes);
-//		if (attribute_length <= 0) {
-//			return null;
-//		}
-//		if (attributes_count == 0) {
-//			return null;
-//		}
-//		Assert[] asserts = new Assert[attributes_count];
-//		for (int i = 0; i < attributes_count; i++) {
-//			if (pos >= attribute_length) {
-//				throw new ReadAttributeException(
-//						"uncorrect Assert  attribute attribute_length "
-//								+ attribute_length
-//								+ " <  actual length of attribute ");
-//			}
-//			asserts[i] = readAssert(bytes);
-//		}
-//		AssertTable assertTable = new AssertTable(asserts);
-//		return assertTable;
-//	}
-//
-//	/**
-//	 * @param pos -
-//	 *            the position from which starts the assert object
-//	 * @param bytes
-//	 *            -the array from which the assert object is read
-//	 * @param assert -
-//	 *            an object that should be initialised by the method
-//	 * @return the leftmost index into the byte array bytes that is not read by
-//	 *         the method
-//	 */
-//	private static Assert readAssert(byte[] bytes)
-//			throws ReadAttributeException {
-//		int pcIndex = readShort(bytes);
-//		Formula formula = (Formula) readExpression(bytes);
-//		return new Assert(formula, pcIndex);
-//	}
-//
-//	// //////////////////// end : assert table
-//	// /////////////////////////////////////////////////
-//
+
+	// //////////////////// start : assert table
+	// /////////////////////////////////////////////////
+	private static AssertTable readAssertTable(byte[] bytes)
+			throws ReadAttributeException {
+		pos = 0;
+		int attribute_length = bytes.length;
+		int attributes_count = readAttributeCount(bytes);
+		if (attribute_length <= 0) {
+			return null;
+		}
+		if (attributes_count == 0) {
+			return null;
+		}
+		Assert[] asserts = new Assert[attributes_count];
+		for (int i = 0; i < attributes_count; i++) {
+			if (pos >= attribute_length) {
+				throw new ReadAttributeException(
+						"uncorrect Assert  attribute attribute_length "
+								+ attribute_length
+								+ " <  actual length of attribute ");
+			}
+			asserts[i] = readAssert(bytes);
+		}
+		AssertTable assertTable = new AssertTable(asserts);
+		return assertTable;
+	}
+
+	/**
+	 * @param pos -
+	 *            the position from which starts the assert object
+	 * @param bytes
+	 *            -the array from which the assert object is read
+	 * @param assert -
+	 *            an object that should be initialised by the method
+	 * @return the leftmost index into the byte array bytes that is not read by
+	 *         the method
+	 */
+	private static Assert readAssert(byte[] bytes)
+			throws ReadAttributeException {
+		int pcIndex = readShort(bytes);
+		Formula formula = (Formula) readExpression(bytes);
+		return new Assert(formula, pcIndex);
+	}
+
+	// //////////////////// end : assert table
+	// /////////////////////////////////////////////////
+
 //	// //////////////// start : method specification
 //	// /////////////////////////////////////////////////
 //
@@ -800,9 +808,11 @@ public class AttributeReader {
 		} else if (_byte == Code.LOCAL_VARIABLE) {
 			// the index of the local variable
 			int ind = readShort(bytes);
-			if (localVariables.length <= ind) {
-				System.out.println("        ERROR: lvar index ("+ind+") out of bounds ("+localVariables.length+")");
-				return new UnknownFormula("lvar index out of bounds!");
+			if (localVariables.length <= ind) {		// TODO add ghost field case
+				System.out.println("        ERROR: lvar index ("+ind+") out of bounds ("+localVariables.length+") or ghost field");
+				Formula f = new UnknownFormula("lvar index out of bounds!");
+				ok = true;
+				return f;
 //				throw new ArrayIndexOutOfBoundsException();
 			}
 			Expression lVarAccess = localVariables[ind];
