@@ -5,5 +5,5 @@ CP=$HERE/classes
 for lib in `ls $HERE/lib/*.jar`; do
   CP=$CP:$lib
 done
-java -cp $CP $*
+java -ea -cp $CP $*
 

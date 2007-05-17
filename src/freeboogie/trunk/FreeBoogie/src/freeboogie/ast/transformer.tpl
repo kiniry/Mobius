@@ -56,3 +56,14 @@ public class Transformer extends Evaluator<Ast> {
   }
 }
 }
+
+\file{visitor.skeleton}
+// You can copy and paste the text below when you define a visitor that
+// needs to override most functions on the base class.
+
+\normal_classes{  @Override
+  public void see(\ClassName \className, \members[, ]{\if_primitive{\if_enum{\ClassName.}{}\Membertype}{\MemberType} \memberName}) {
+    assert false; // TODO: Implement.
+  }
+
+}

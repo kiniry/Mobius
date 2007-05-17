@@ -90,8 +90,8 @@ body returns [Body v]:
 ;
 
 block_list returns [Block v]:
-  ID ':' (command_list)? block_end (block_list)?
-    { $v=new Block($ID.text,$command_list.v,$block_end.v,$block_list.v,tokLoc($ID));}
+  ID ':' (command_list)? block_end (t=block_list)?
+    { $v=new Block($ID.text,$command_list.v,$block_end.v,$t.v,tokLoc($ID));}
 ;
 
 block_end returns [BlockEnd v]:
@@ -182,8 +182,8 @@ expr_f returns [Expr v]:
         else $v=new AtomIdx($atom.v,$index.v,$atom.v.loc());
       }
   | '(' expr ')' {$v=$expr.v;}
-  | t='-' expr_f   {$v=new UnaryOp(UnaryOp.Op.MINUS,$expr_f.v,tokLoc($t));}
-  | t='!' expr_f   {$v=new UnaryOp(UnaryOp.Op.NOT,$expr_f.v,tokLoc($t));}
+  | t='-' a=expr_f   {$v=new UnaryOp(UnaryOp.Op.MINUS,$a.v,tokLoc($t));}
+  | t='!' a=expr_f   {$v=new UnaryOp(UnaryOp.Op.NOT,$a.v,tokLoc($t));}
 ;
 
 and_or_op returns [BinaryOp.Op v]:

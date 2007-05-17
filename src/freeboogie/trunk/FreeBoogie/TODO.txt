@@ -1,5 +1,4 @@
- 6 keep track of locations in AST nodes
-12 pretty printer
+ 2 check pretty printer
  8 sanity checks (name for parameters in implementations, lhs is l-value, etc.)
  8 name resolution --- symbol table
 16 typechecker
