@@ -22,7 +22,7 @@ export TESTSOURCEDIRECTORY = ${JAVAFE_ROOT}/test
 export CAN_CLASSDIRECTORY = ${call canonicalize,${CLASSDIRECTORY}}
 
 ## This one is needed in submakes that don't define their own classpath
-export CLASSPATH = $(call canonicalize,${CLASSDIRECTORY}:${UTILS_CLASSFILES})
+export CLASSPATH = $(call canonicalize,${CLASSDIRECTORY}:${UTILS_CLASSFILES}:${BCEL_LIB})
 
 ##############################################################################
 
@@ -65,7 +65,7 @@ compile: ${CLASSDIRECTORY} source ${CLASSESSTAMP}
 
 ## Compiles all out of date java files
 ${CLASSESSTAMP}: ${SOURCEFILES}
-	${JAVAC} ${JAVAC_FLAGS} -classpath $(call canonicalize,${CLASSDIRECTORY}:${SOURCEDIRECTORY}:${UTILS_CLASSFILES}) \
+	${JAVAC} ${JAVAC_FLAGS} -classpath $(call canonicalize,${CLASSDIRECTORY}:${SOURCEDIRECTORY}:${UTILS_CLASSFILES}:${BCEL_LIB}) \
 	  -d ${CAN_CLASSDIRECTORY} $?
 	touch ${CLASSESSTAMP}
 
@@ -75,7 +75,7 @@ compileall: ${CLASSDIRECTORY} source javafeall
 ## Compiles all java files, whether out of date or not
 javafeall:
 	( cd java; \
-	${JAVAC} ${JAVAC_FLAGS} -classpath $(call canonicalize,${CLASSDIRECTORY}:${SOURCEDIRECTORY}:${UTILS_CLASSFILES}) \
+	${JAVAC} ${JAVAC_FLAGS} -classpath $(call canonicalize,${CLASSDIRECTORY}:${SOURCEDIRECTORY}:${UTILS_CLASSFILES}:${BCEL_LIB}) \
 	  -d ${CAN_CLASSDIRECTORY} \
 	  `find javafe -name "*.java"` \
 	  `find tohtml -name "*.java"` )

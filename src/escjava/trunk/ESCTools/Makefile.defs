@@ -1,6 +1,6 @@
 # -*- mode: makefile; -*-
 
-## This file is part of the 2003/2004 revision of ESC/Java2
+## This file is part of the 2003-2004,2007 revision of ESC/Java2
 ## author: David Cok - 1 May 2003
 ## author: Joe Kiniry
 ##
@@ -173,6 +173,7 @@ export DOCS_STYLESHEET = ${ESCTOOLS_ROOT}/docs/escjava.css
 ## Definitions for Utils
 export UTILS_SOURCE_DIR = ${ESCTOOLS_ROOT}/Utils
 export UTILS_CLASSFILES = ${ESCTOOLS_ROOT}/Utils
+export BCEL_LIB = ${ESCTOOLS_ROOT}/Utils/bcel-5.2.jar
 
 ## Pertinent definitions for Javafe
 export JAVAFE_ROOT = ${ESCTOOLS_ROOT}/Javafe
@@ -181,7 +182,7 @@ export JAVAFE_CLASSFILES = ${JAVAFE_ROOT}/classfiles
 export JAVAFE_CLASSFILES4RAC = ${JAVAFE_ROOT}/classfiles4rac
 
 # This is the path needed to run Javafe (only used for testing)
-export JAVAFE_CLASSPATH = ${JAVAFE_CLASSFILES}:${UTILS_CLASSFILES}
+export JAVAFE_CLASSPATH = ${JAVAFE_CLASSFILES}:${UTILS_CLASSFILES}:${BCEL_LIB}
 
 ## Pertinent things for Escjava
 export ESCJAVA_ROOT = ${ESCTOOLS_ROOT}/Escjava
@@ -194,7 +195,7 @@ export MOCHA_LIB = ${JAR_FILES}/mochalib.jar
 
 ## This is the path needed to *run* Escjava.
 export ESC_CLASSPATH = \
-	${JAVAFE_CLASSFILES}:${ESCJAVA_CLASSFILES}:${ESCTOOLS_ROOT}/Utils:${MOCHA_LIB}
+	${JAVAFE_CLASSFILES}:${ESCJAVA_CLASSFILES}:${ESCTOOLS_ROOT}/Utils:${MOCHA_LIB}:${BCEL_LIB}
 export ESCJAVA_CLASSPATH=$(ESC_CLASSPATH)
 
 ## The front-end for Escjava that should be used for testing.
@@ -298,6 +299,9 @@ export PACKAGE_LIST = \
 export JUNIT_LIB ?= ${ESCTOOLS_ROOT}/Utils/junit.jar
 export JUNIT_SOURCEPATH ?= /usr/local/Java/junit/src
 
+# Byte Code Engineering Library
+export BCEL_LIB = ${ESCTOOLS_ROOT}/Utils/bcel-5.2.jar
+
 ## XML-RPC
 export XMLRPC_LIB ?= $(ESCTOOLS_ROOT)/Escjava/xmlrpc-1.2-b1-modified.jar
 
@@ -312,16 +316,16 @@ export ANT_SOURCEPATH ?= /usr/local/Java/jakarta-ant/src
 
 ## This contains items needed for compiling/running JUnit tests, but
 ## not for compiling or running the tools themselves.
-export JUNIT_UTILS_PATH = ${ESCTOOLS_ROOT}/Utils:${JUNIT_LIB}:${ANT_LIB}
+export JUNIT_UTILS_PATH = ${ESCTOOLS_ROOT}/Utils:${JUNIT_LIB}:${ANT_LIB};${BCEL_LIB}
 
 ################################################################################
 ## The classpath needed to build all of ESC/Java2.
 
 ## This is the path needed to build Javafe
-export JAVAFE_BUILD_CLASSPATH = ${JAVAFE_CLASSFILES}:${UTILS_CLASSFILES}
+export JAVAFE_BUILD_CLASSPATH = ${JAVAFE_CLASSFILES}:${UTILS_CLASSFILES}:${BCEL_LIB}
 
 ## This is the path needed to build Escjava
-export ESCJAVA_BUILD_CLASSPATH = ${ESCJAVA_CLASSPATH}:${JUNIT_LIB}:${ANT_LIB}:${XMLRPC_LIB}
+export ESCJAVA_BUILD_CLASSPATH = ${ESCJAVA_CLASSPATH}:${JUNIT_LIB}:${ANT_LIB}:${XMLRPC_LIB}:${BCEL_LIB}
 
 ##########################################################################
 ##########################################################################

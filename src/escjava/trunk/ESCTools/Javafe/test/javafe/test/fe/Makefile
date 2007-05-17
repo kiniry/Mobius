@@ -1,5 +1,6 @@
 # $Id$
 # Copyright 2000, 2001, Compaq Computer Corporation
+# Copyright 2007, University College Dublin
 
 TOP = ../../../../..
 include ${TOP}/Makefile.defs
@@ -27,9 +28,9 @@ else
 endif
 
 export TOOLCMD = ${JAVA} $(DEBUGGER_FLAGS) \
-	-mx40m -classpath ${CAN_CLASSDIRECTORY} javafe.test.Print ${JBIN}
+	-mx40m -classpath ${CAN_CLASSDIRECTORY} javafe.test.Print ${JBIN} ${BCEL_LIB}
 export TOOLCMD = ${JAVA} \
-	-mx40m -classpath ${CAN_CLASSDIRECTORY} javafe.test.Print ${JBIN}
+	-mx40m -classpath ${CAN_CLASSDIRECTORY} javafe.test.Print ${JBIN} ${BCEL_LIB}
 export TOOLARGS = -noprint -typecheck -quiet -testMode
 export TOOL = ${TOOLCMD} ${TOOLARGS}
 

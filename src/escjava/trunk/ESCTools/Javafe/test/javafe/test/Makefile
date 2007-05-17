@@ -58,17 +58,17 @@ typecheckJDK14:
 typecheckJavafe:
 	@echo "===== type checking the Javafe package ====="
 	@cd ${ESCTOOLS_ROOT}/Javafe/java && \
-		for d in ast parser tc util filespace reader decsrc genericfile ; do \
+		for d in ast parser tc util filespace reader genericfile ; do \
 		echo -n "$${d}	" ;\
 		echo `find javafe/$${d} -name '*.java'` | xargs -n 300 \
-			${JAVA} -classpath ../classfiles${EXTRA_CP} javafe.test.Print \
-			-classpath "${call canonicalize,.:../../Utils${EXTRA_CP}}" \
+			${JAVA} -classpath ../classfiles${EXTRA_CP}:${BCEL_LIB} javafe.test.Print \
+			-classpath "${call canonicalize,.:../../Utils${EXTRA_CP}:${BCEL_LIB}}" \
 			-typecheck -noprint  ;\
 		done 
 	@echo -n "javafe/.	"
 	@cd ${ESCTOOLS_ROOT}/Javafe/java && \
-		${JAVA} -classpath ../classfiles${EXTRA_CP} javafe.test.Print \
-		-classpath "${call canonicalize,.:../../Utils${EXTRA_CP}}" \
+		${JAVA} -classpath ../classfiles${EXTRA_CP}:${BCEL_LIB} javafe.test.Print \
+		-classpath "${call canonicalize,.:../../Utils${EXTRA_CP}:${BCEL_LIB}}" \
 		-typecheck -noprint  javafe/*.java ;\
 
 

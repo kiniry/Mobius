@@ -31,9 +31,15 @@
 			<arguments>
 			</arguments>
 		</buildCommand>
+		<buildCommand>
+			<name>escjava.plugin.autocheckEscjavaBuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
 	</buildSpec>
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 		<nature>edu.ksu.cis.projects.jmleclipse.checker.autoCheckJMLNature</nature>
+		<nature>escjava.plugin.autocheckEscjavaNature</nature>
 	</natures>
 </projectDescription>

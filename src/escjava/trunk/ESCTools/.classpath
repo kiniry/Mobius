@@ -7,8 +7,10 @@
 	<classpathentry including="junitutils/*.java" kind="src" path="Utils"/>
 	<classpathentry excluding="jtools/jcheck/**" kind="src" path="Javafe/java"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="Utils/junit.jar"/>
-	<classpathentry kind="lib" path="Utils/ant.jar"/>
-	<classpathentry kind="lib" path="Escjava/xmlrpc-1.2-b1-modified.jar"/>
+	<classpathentry exported="true" kind="lib" path="Utils/junit.jar"/>
+	<classpathentry exported="true" kind="lib" path="Utils/ant.jar"/>
+	<classpathentry exported="true" kind="lib" path="Escjava/xmlrpc-1.2-b1-modified.jar"/>
+	<classpathentry exported="true" kind="lib" path="Utils/bcel-5.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="jmlspecs.jar"/>
 	<classpathentry kind="output" path="classfiles"/>
 </classpath>
