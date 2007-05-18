@@ -36,7 +36,9 @@ import org.eclipse.ui.texteditor.AbstractTextEditor;
 import org.osgi.framework.Bundle;
 
 import umbra.UmbraPlugin;
+import umbra.editor.BytecodeEditor;
 import umbra.editor.Composition;
+import umbra.editor.IColorValues;
 
 
 /**
@@ -51,12 +53,14 @@ public class BoogiePLEditorContributor extends EditorActionBarContributor {
 	 * TODO
 	 */
 	private BoogiePLContribution boogiePLContribution;
+	
 	/**
 	 * TODO
 	 */
 	private BoogiePLVerifyAction verifyAction;
+	
 	/**
-	 * TODO
+	 * The current colouring style, see {@link IColorValues}
 	 */
 	private int mod;
 	

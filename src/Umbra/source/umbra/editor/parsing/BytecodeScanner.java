@@ -14,7 +14,7 @@ import umbra.editor.IColorValues;
 
 
 /**
- * This class is responsible for coloring all text in Bytecode
+ * This class is responsible for coloring all text in a bytecode
  * editor window according to some special 9 rules.
  * Colors are chosen as a token array with a particular style (param 'mod').
  * 
@@ -23,24 +23,32 @@ import umbra.editor.IColorValues;
 public class BytecodeScanner extends RuleBasedScanner {
 	
 	/**
-	 * TODO
+	 * This method TODO
+	 * 
+	 * @param manager the color manager related to the current bytecode
+	 *        editor
+	 * @param mod the number of the current coloring style
 	 */
 	public BytecodeScanner(ColorManager manager, int mod) {
 
 		IToken[] tokens = TokenGetter.getTokenTab(manager, mod); 
 				
-		WordRule insrule = new WordRule(new BytecodeWordDetector(), tokens[IColorValues.DEFAULT]);
+		WordRule insrule = new WordRule(new BytecodeWordDetector(), 
+				                        tokens[IColorValues.DEFAULT]);
 		for (int i = 0; i < IBytecodeStrings.instructions.length; i++) {
-			insrule.addWord(IBytecodeStrings.instructions[i], tokens[IColorValues.BTC_INSTR]);
+			insrule.addWord(IBytecodeStrings.instructions[i], 
+					        tokens[IColorValues.BTC_INSTR]);
 		}
 		
 		
 		for (int i = 0; i < IBytecodeStrings.linewords.length; i++) {
-			insrule.addWord(IBytecodeStrings.linewords[i], tokens[IColorValues.LINE]);
+			insrule.addWord(IBytecodeStrings.linewords[i], 
+					        tokens[IColorValues.LINE]);
 		}
 		
 		for (int i = 0; i < IBytecodeStrings.code.length; i++) {
-			insrule.addWord(IBytecodeStrings.code[i], tokens[IColorValues.LINE]);
+			insrule.addWord(IBytecodeStrings.code[i], 
+					        tokens[IColorValues.LINE]);
 		}
 		
 		//WordRule keyrule = new WordRule(new SpecialWordDetector(), tokens[IColorValues.KEY]);
@@ -48,8 +56,10 @@ public class BytecodeScanner extends RuleBasedScanner {
 		IRule[] rules = new IRule[9];
 		rules[0] = new EndOfLineRule("//", tokens[IColorValues.COMMENT]);
 		rules[1] = insrule;
-		rules[2] = new SpecialNumberRule('\n', ':', tokens[IColorValues.POSITION]);
-		rules[3] = new SpecialNumberRule('#', tokens[IColorValues.HASH]);
+		rules[2] = new SpecialNumberRule('\n', ':', 
+				                         tokens[IColorValues.POSITION]);
+		rules[3] = new SpecialNumberRule('#', 
+				                         tokens[IColorValues.HASH]);
 		rules[4] = new SpecialNumberRule('%', tokens[IColorValues.ATTR]);
 		rules[5] = new SpecialNumberRule('(', ')', tokens[IColorValues.SQUARE]);
 		//rules[6] = keyrule;

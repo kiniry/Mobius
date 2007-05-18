@@ -23,6 +23,8 @@ public class BytecodeDocumentProvider extends FileDocumentProvider {
 
 	/**
 	 * TODO
+	 * 
+	 * @return
 	 */
 	protected IDocument createEmptyDocument() {
 		return new BytecodeDocument();
@@ -32,6 +34,9 @@ public class BytecodeDocumentProvider extends FileDocumentProvider {
 	 * The method used to create Document structure when
 	 * the editor is initialized. An additional listener is installed.
 	 * It is related to contribution class that allow displaying control label.
+	 * 
+	 * @param TODO
+	 * @throws TODO
 	 */
 	protected IDocument createDocument(Object element) throws CoreException {
 		if (element instanceof IEditorInput) {
@@ -64,10 +69,11 @@ public class BytecodeDocumentProvider extends FileDocumentProvider {
 	 * @param cg		class generator in BCEL
 	 * @param input		input file
 	 */
-	public void setRelation(AbstractDecoratedTextEditor editor, JavaClass jc, ClassGen cg, IEditorInput input) {
+	public void setRelation(AbstractDecoratedTextEditor editor, 
+			                BytecodeEditor bEditor, 
+			                IEditorInput input) {
 		BytecodeDocument document = (BytecodeDocument)getDocument(input);
-		document.setJavaClass(jc);
-		document.setClassGen(cg);
+		document.setEditor(bEditor);
 		document.setRelatedEditor(editor);
 		BytecodeContribution.inUse().addListener(document);
 	}

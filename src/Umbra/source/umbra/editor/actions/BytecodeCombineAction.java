@@ -54,6 +54,7 @@ public class BytecodeCombineAction extends Action {
 	 * TODO should be the same as in contributor
 	 */
 	private BytecodeContribution bytecodeContribution;
+	//@ invariant contributor.bytecodeContribution==bytecodeContribution;
 	
 	/**
 	 * TODO
@@ -139,12 +140,20 @@ public class BytecodeCombineAction extends Action {
 			JavaClass oldJc = ((BytecodeEditor)editor).getJavaClass();
 			ClassGen cg = updateModifiedMethods(oldJc, jc);
 			jc = cg.getJavaClass();
-			String fullName = ((BytecodeEditor)editor).getPath(path).toOSString();
-			System.out.println("ALA: "+ fullName + "\\" + lastSegment);
-			jc.dump(fullName + "\\" + lastSegment);
+			String fullName = ((BytecodeEditor)editor).getPath(path).
+			                                           toOSString();
+			jc.dump(fullName + UmbraHelper.getFileSeparator() + lastSegment);
+			MessageDialog.openWarning(editor.getSite().getShell(), 
+					"Bytecode", "A "+fullName + UmbraHelper.getFileSeparator() + lastSegment);
 			((BytecodeEditor)editor).refreshBytecode(path, null, null);
+			MessageDialog.openWarning(editor.getSite().getShell(), 
+					"Bytecode", "B");
 			IEditorInput input = new FileEditorInput(file);
+			MessageDialog.openWarning(editor.getSite().getShell(), 
+					"Bytecode", "C");
 			contributor.refreshEditor(editor, input);
+			MessageDialog.openWarning(editor.getSite().getShell(), 
+					"Bytecode", "D");
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -171,8 +180,8 @@ public class BytecodeCombineAction extends Action {
 	 */
 	private String getClassPath() throws JavaModelException {
 		String res = "";
-		String classPathSeparator = System.getProperty("path.separator");
-		String fileSeparator = System.getProperty("file.separator");
+		String classPathSeparator = UmbraHelper.getClassPathSeparator();
+		String fileSeparator = UmbraHelper.getFileSeparator();
 		IFile file = ((FileEditorInput)editor.getEditorInput()).getFile();
 		String projectName = file.getFullPath().segment(0);
 		IWorkspaceRoot myWorkspaceRoot = ResourcesPlugin.getWorkspace().getRoot();

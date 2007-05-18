@@ -22,33 +22,40 @@ import umbra.editor.parsing.TokenGetter;
  * changing the coloring styles ('mod' parameter).  
  */
 public class BytecodeConfiguration extends SourceViewerConfiguration {
+	
 	/**
 	 * TODO
 	 */
 	private BytecodeDoubleClickStrategy doubleClickStrategy;
+	
 	/**
 	 * TODO
 	 */
 	private BytecodeTagScanner tagScanner;
+    //@ invariant tagScanner.colorManager == colorManager;
+	
 	/**
 	 * TODO
 	 */
 	private BytecodeScanner scanner;
+	//@ invariant scanner.colorManager == colorManager;
+	
 	/**
-	 * TODO
+	 * The object which manages the allocation of the colours.
 	 */
 	private ColorManager colorManager;
+	
 	/**
-	 * TODO
+	 * The current colouring style, see {@link IColorValues}
 	 */
 	private int mod;
 	
 	/**
 	 * TODO
 	 */
-	public BytecodeConfiguration(ColorManager colorManager, int mod) {
-		this.colorManager = colorManager;
-		this.mod = mod;
+	public BytecodeConfiguration() {
+		mod = Composition.getMod();
+		colorManager = new ColorManager();
 	}
 
 	/**
@@ -122,6 +129,10 @@ public class BytecodeConfiguration extends SourceViewerConfiguration {
 		reconciler.setRepairer(ndr2, BytecodePartitionScanner.THROWS);
 
 		return reconciler;
+	}
+
+	public void disposeColor() {
+		colorManager.dispose();
 	}
 	
 }

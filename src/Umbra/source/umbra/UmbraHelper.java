@@ -54,4 +54,27 @@ public class UmbraHelper {
 			return string;
 		}
 	}
+	
+	/**
+	 * This is a convenience method to obtain the classpath
+	 * separator relevant to the current operating system. 
+	 *  
+	 * @return the string that separates the classpath entries 
+	 */
+	public static String getClassPathSeparator() {
+		return System.getProperty("path.separator");
+	}
+
+	/**
+	 * This is a convenience method to obtain the separator 
+	 * that separates subsequent direcotry and file entries
+	 * in a path to a resource. This value is relevant to the current 
+	 * operating system. 
+	 *  
+	 * @return the string that separates the file path entries 
+	 */
+	public static String getFileSeparator() {
+		return System.getProperty("file.separator");
+	}
+	
 }

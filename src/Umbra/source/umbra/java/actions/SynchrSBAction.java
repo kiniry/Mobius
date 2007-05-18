@@ -27,7 +27,7 @@ import umbra.editor.BytecodeEditor;
  * form source code to bytecode. It is available with the standard
  * Java editor.
  * 
- * @author Wojtek W±s
+ * @author Wojtek WÄ…s
  * @see DocumentProvider
  */
 public class SynchrSBAction implements IEditorActionDelegate {

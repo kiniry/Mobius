@@ -81,6 +81,7 @@ public class DisasBCEL implements IEditorActionDelegate, IUmbraConstants {
 				Composition.startDisas();
 				page.closeEditor(bcEditor, true);
 				bcEditor = (BytecodeEditor)page.openEditor(input, BYTECODE_EDITOR_CLASS, true);
+				page.bringToTop(bcEditor);
 				bcEditor.setRelation((AbstractDecoratedTextEditor)editor, jc);
 				Composition.stopDisas();
 			} catch (CoreException e) {

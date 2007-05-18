@@ -8,6 +8,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PartInitException;
 
+import umbra.editor.BytecodeEditor;
 import umbra.editor.BytecodeEditorContributor;
 import umbra.editor.Composition;
 import umbra.editor.IColorValues;
@@ -17,7 +18,7 @@ import umbra.editor.IColorValues;
  *  in two instances: one changes colors clockwise and the other 
  *  counter-clockwise.
  *  
- *  @author Wojtek W±s  
+ *  @author Wojtek WÄ…s  
  */
 public class BytecodeEditorAction extends Action {
 	/**
@@ -30,7 +31,7 @@ public class BytecodeEditorAction extends Action {
 	private int change;
 	
 	/**
-	 * TODO
+	 * The current colouring style, see {@link IColorValues}
 	 */
 	private int mod;
 	
@@ -81,6 +82,7 @@ public class BytecodeEditorAction extends Action {
 	 */
 	public void setActiveEditor(IEditorPart part) {
 		activeEditor = part;
+		mod = Composition.getMod();
 		System.out.println(part.getTitle());
 	System.out.println(this.toString());
 	}

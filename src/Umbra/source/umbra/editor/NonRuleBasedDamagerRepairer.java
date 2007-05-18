@@ -10,7 +10,6 @@ import org.eclipse.jface.text.TextAttribute;
 import org.eclipse.jface.text.TextPresentation;
 import org.eclipse.jface.text.presentation.IPresentationDamager;
 import org.eclipse.jface.text.presentation.IPresentationRepairer;
-import org.eclipse.jface.util.Assert;
 import org.eclipse.swt.custom.StyleRange;
 
 
@@ -20,17 +19,23 @@ import org.eclipse.swt.custom.StyleRange;
 public class NonRuleBasedDamagerRepairer
 	implements IPresentationDamager, IPresentationRepairer {
 
-	/** The document this object works on */
+	/** 
+	 * The document this object works on 
+	 */
 	protected IDocument fDocument;
-	/** The default text attribute if non is returned as data by the current token */
+	
+	/** 
+	 * The default text attribute 
+	 * if non is returned as data by the current token 
+	 */
 	protected TextAttribute fDefaultTextAttribute;
 	
 	/**
 	 * Constructor for NonRuleBasedDamagerRepairer.
 	 */
-	public NonRuleBasedDamagerRepairer(TextAttribute defaultTextAttribute) {
-		Assert.isNotNull(defaultTextAttribute);
-
+	public NonRuleBasedDamagerRepairer(
+			  /*@ non_null @*/ TextAttribute defaultTextAttribute) {
+		System.err.println("NonRuleBasedDamagerRepairer");
 		fDefaultTextAttribute = defaultTextAttribute;
 	}
 

@@ -25,55 +25,61 @@ import org.eclipse.ui.texteditor.AbstractDecoratedTextEditor;
 public class BytecodeDocument extends Document {
 	
 	/**
-	 * TODO
+	 * The Java source code editor for the source code file associated with
+	 * the current bytecode document.
 	 */
 	private AbstractDecoratedTextEditor fRelatedEditor;
-	/**
-	 * TODO
-	 */
-	private JavaClass fJavaClass;
-	/**
-	 * TODO
-	 */
-	private ClassGen classGen;
 	
 	/**
-	 * TODO
+	 * The representation of the Java class the content of which
+	 * we edint in the current document. The corresponding 
+	 * class generator object is in the {@link #classGen} 
+	 * field.
+	 */
+	private JavaClass fJavaClass;
+	//@ invariant bytecodeEditor.javaClass == fJavaClass;
+	
+	/**
+	 * The object to build Java classes. It is associated
+	 * with the {@link #fJavaClass} field.
+	 */
+	private ClassGen classGen;
+	//@ invariant bytecodeEditor.javaClass == fJavaClass;
+	
+	/**
+	 * The bytecode editor that manipulates the current document.
+	 */
+	private BytecodeEditor bytecodeEditor;
+	
+	/**
+	 * The Java source code editor of the source code file associated 
+	 * with the current bytecode document.
+	 * 
+	 * @param editor updates the Java source code editor associated with the
+	 * current bytecode document.
 	 */
 	public void setRelatedEditor(AbstractDecoratedTextEditor editor) {
 		fRelatedEditor = editor;
 	}
 	
 	/**
-	 * TODO
+	 * @return the Java source code editor associated with the
+	 * current bytecode document.
 	 */
 	public AbstractDecoratedTextEditor getRelatedEditor() {
 		return fRelatedEditor;
 	}
 	
 	/**
-	 * TODO
-	 */
-	public void setJavaClass(JavaClass jc) {
-		fJavaClass = jc;
-	}
-	
-	/**
-	 * TODO
+	 * The current representation of the Java class associated with
+	 * the document.
 	 */
 	public JavaClass getJavaClass() {
 		return fJavaClass;
 	}
 	
 	/**
-	 * TODO
-	 */
-	public void setClassGen(ClassGen cg) {
-		classGen = cg;
-	}
-	
-	/**
-	 * TODO
+	 * @return the current generator of the Java class file 
 	 */
 	public ClassGen getClassGen() {
 		return classGen;
@@ -320,6 +326,19 @@ public class BytecodeDocument extends Document {
 	private String LineAt(int n) throws BadLocationException
 	{
 		return get(getLineOffset(n), getLineLength(n));
+	}
+
+	/**
+	 * This method updates the bytecode editor associated with the
+	 * current document. Additionally, it updates the fields that
+	 * represent the bytecode of the document.
+	 * 
+	 * @param editor the bytecode editor 
+	 */
+	public void setEditor(BytecodeEditor editor) {
+		bytecodeEditor = editor;
+		classGen = bytecodeEditor.getClassGen();
+		fJavaClass = bytecodeEditor.getJavaClass();
 	}
 
 }

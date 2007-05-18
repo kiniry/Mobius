@@ -39,32 +39,27 @@ import annot.bcio.ReadAttributeException;
 public class BytecodeEditor extends TextEditor {
 	
 	/**
-	 * TODO
-	 */
-	private ColorManager colorManager;
-	
-	/**
-	 * TODO
-	 */
-	private int mod;
-	
-	/**
-	 * TODO
+	 * TODO Probably should be removed.
+	 * 
 	 */
 	private boolean updated = true;
 	
 	/**
-	 * TODO
+	 * The Java source code editor that corresponds to the current
+	 * bytecode editor.
 	 */
 	private AbstractDecoratedTextEditor relatedEditor;
 	
 	/**
-	 * TODO
+	 * The BCEL structure which represents the bytecode the content of the
+	 * current editor has been generated from. They also serve to modify
+	 * the bytecode.
 	 */
 	private JavaClass javaClass;
 	
 	/**
-	 * TODO
+	 * The BCEL structure to generate the bytecode file corresponding
+	 * to the {@link #javaClass}.
 	 */
 	private ClassGen classGen;
 	
@@ -74,38 +69,45 @@ public class BytecodeEditor extends TextEditor {
 	 * snapshots (i.e. the history is clear).
 	 */
 	private int historyNum = -1;
+
+	/**
+	 * The bytecode editor configuration manager associated with the current
+	 * editor.
+	 */
+	private BytecodeConfiguration bconfig;
 	
 	/**
-	 * A constructor with no Bytecode-related specificity
-	 * TODO
+	 * This constructor creates the class and initialises the default
+	 * color manager.
 	 */
 	public BytecodeEditor() {
 		super();
-		mod = Composition.getMod();
-		colorManager = new ColorManager();
-		setSourceViewerConfiguration(new BytecodeConfiguration(colorManager, mod));
+		bconfig = new BytecodeConfiguration();
+		setSourceViewerConfiguration(bconfig);
 		setDocumentProvider(new BytecodeDocumentProvider());
 	}
 	
 	/**
-	 * Default function used while closing editor
+	 * Default function used while closing the current editor.
 	 */
 	public void dispose() {
-		colorManager.dispose();
+		bconfig.disposeColor();
 		super.dispose();
 	}
 	
 	/**
-	 * TODO
+	 * TODO Probably should be removed
 	 */
 	public boolean isUpdated() {
+		System.out.println(" isUpdated isUpdated isUpdated isUpdated");
 		return updated;
 	}
 	
 	/**
-	 * TODO
+	 * TODO Probably should be removed
 	 */
 	public void leave() {
+		System.out.println(" leave leave leave leave");
 		updated = false;
 	}
 	
@@ -129,7 +131,7 @@ public class BytecodeEditor extends TextEditor {
 	 * that makes realtion to BCEL structures
 	 * 
 	 * @param editor	Java code editor with intended relation
-	 * 					(used especially during synchronization)
+	 * 					(used in particular during synchronization)
 	 * @param jc		BCEL structures that Bytecode has been
 	 * 					generated from and may be modificated with
 	 */
@@ -137,7 +139,8 @@ public class BytecodeEditor extends TextEditor {
 		relatedEditor = editor;
 		javaClass = jc;
 		classGen = new ClassGen(jc);
-		((BytecodeDocumentProvider)getDocumentProvider()).setRelation(editor, jc, classGen, getEditorInput());
+		((BytecodeDocumentProvider)getDocumentProvider()).
+		                setRelation(editor, this, getEditorInput());
 	}
 	
 	/**
@@ -220,10 +223,8 @@ public class BytecodeEditor extends TextEditor {
 				                           path.lastSegment().lastIndexOf("."));
 		String tmp = path.removeFirstSegments(1).toOSString();
 		clname = tmp.substring(0, tmp.lastIndexOf("."));
-		System.out.println("clname = " + clname);
 		
 		ClassPath cp = new ClassPath(pathName);
-		System.out.println("pathName = " + pathName);
 		SyntheticRepository strin = SyntheticRepository.getInstance(cp);
 		JavaClass jc = strin.loadClass(clname);
 		strin.removeClass(jc);
@@ -426,6 +427,10 @@ public class BytecodeEditor extends TextEditor {
 	 */
 	public void clearHistory() {
 		historyNum = -1;
+	}
+
+	public ClassGen getClassGen() {
+		return classGen;
 	}
 	
 	/**

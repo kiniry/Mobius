@@ -19,8 +19,10 @@ import org.eclipse.ui.editors.text.TextEditor;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditor;
 
+import umbra.editor.BytecodeEditor;
 import umbra.editor.ColorManager;
 import umbra.editor.Composition;
+import umbra.editor.IColorValues;
 import umbra.history.IHistory;
 import annot.bcclass.BCClass;
 import annot.bcio.ReadAttributeException;
@@ -40,11 +42,11 @@ import annot.bcio.ReadAttributeException;
 public class BoogiePLEditor extends TextEditor {
 	
 	/**
-	 * TODO
+	 * The object which menages the allocation of the system colours.
 	 */
 	private ColorManager colorManager;
 	/**
-	 * TODO
+	 * The current colouring style, see {@link IColorValues}
 	 */
 	private int mod;
 	/**
@@ -71,7 +73,7 @@ public class BoogiePLEditor extends TextEditor {
 	/**
 	 * A constructor with no BoogiePL-related specificity
 	 */
-	public BoogiePLEditor() {
+	public BoogiePLEditor(BytecodeEditor editor) {
 		super();
 		mod = Composition.getMod();
 		colorManager = new ColorManager();

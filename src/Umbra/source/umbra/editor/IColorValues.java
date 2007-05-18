@@ -84,6 +84,8 @@ public interface IColorValues {
 	
 	/**
 	 * TODO
+	 * The current colouring style is an index to the first coordinate
+	 * of the array
 	 */
 	static int[][] models = new int[][] {
 		new int[] {0, 0, 255, 0,

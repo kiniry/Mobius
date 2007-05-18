@@ -50,19 +50,23 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
 	 * TODO
 	 */
 	private BytecodeContribution bytecodeContribution;
+	
 	/**
 	 * The action to change the color mode to the next one.
 	 */
 	private BytecodeEditorAction actionPlus;
+	
 	/**
 	 * The action to change the color mode to the previous one.
 	 */
 	private BytecodeEditorAction actionMinus;
+	
 	/**
 	 * The action to refresh 
 	 * TODO
 	 */
 	private BytecodeRefreshAction refreshAction;
+	
 	/**
 	 * TODO
 	 */
@@ -209,8 +213,8 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
 	
 	/**
 	 * Saves all settings of the current editor (selection positions, 
-	 * contributions, JavaClass structure, related editor). Then closes the editor
-	 * and opens a new one with the same settings and given input. 
+	 * contributions, JavaClass structure, related editor). Then closes the 
+	 * editor and opens a new one with the same settings and given input. 
 	 * 
 	 * @param editor		current editor to be closed
 	 * @param input			input file to be displayed in new editor
@@ -221,16 +225,19 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
 		ITextSelection selection = (ITextSelection)((AbstractTextEditor)editor).getSelectionProvider().getSelection();
 		int off = selection.getOffset();
 		int len = selection.getLength();
-		AbstractDecoratedTextEditor related = ((BytecodeEditor)editor).getRelatedEditor();
+		AbstractDecoratedTextEditor related = ((BytecodeEditor)editor).
+		                                                  getRelatedEditor();
 		JavaClass jc = ((BytecodeEditor)editor).getJavaClass();
 		boolean proper = (related != null);
 		bytecodeContribution.survive();
 		if (proper) Composition.startDisas();
 		page.closeEditor(editor, true);
-		IEditorPart newEditor = page.openEditor(input, "umbra.BytecodeEditor", true);
+		IEditorPart newEditor = page.openEditor(input, 
+				                                "umbra.BytecodeEditor", true);
 		((BytecodeEditor) newEditor).setRelation(related, jc);
 		ISelection ns = new TextSelection(off, len);
-		ISelectionProvider sp = ((AbstractTextEditor)newEditor).getSelectionProvider();
+		ISelectionProvider sp = ((AbstractTextEditor)newEditor).
+		                                            getSelectionProvider();
 		sp.setSelection(ns);
 		bytecodeContribution.reinit();
 		if (proper) Composition.stopDisas();

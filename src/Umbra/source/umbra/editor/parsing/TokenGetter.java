@@ -51,9 +51,17 @@ public class TokenGetter {
 	
 	/**
 	 * TODO
+	 * 
+	 * @param manager
+	 * @param mod
+	 * @param i
 	 */
-	static public NonRuleBasedDamagerRepairer getRepairer(ColorManager manager, int mod, int i) {
-		return new NonRuleBasedDamagerRepairer(getTextAttribute(manager, mod, i));
+	static public NonRuleBasedDamagerRepairer getRepairer(
+			          ColorManager manager, 
+			          int mod, 
+			          int i) {
+		return new NonRuleBasedDamagerRepairer(getTextAttribute(manager, 
+				                                                mod, i));
 	}
 	
 	/**
@@ -62,9 +70,14 @@ public class TokenGetter {
 	 * @param i			Position in array of color values
 	 * @return			Particular color as an attribute 					
 	 */
-	private static TextAttribute getTextAttribute(ColorManager manager, int mod, int i) {
-		return new TextAttribute(manager.getColor(new RGB(IColorValues.models[mod][CN * i], 
-				IColorValues.models[mod][(CN * i) + 1], IColorValues.models[mod][(CN * i) + 2])), 
-				null, IColorValues.models[mod][(CN * i) + 3]);
+	private static TextAttribute getTextAttribute(ColorManager manager, 
+			                                      int mod, 
+			                                      int i) {
+		return new TextAttribute(manager.getColor(
+				         new RGB(IColorValues.models[mod][CN * i], 
+				         IColorValues.models[mod][(CN * i) + 1], 
+				         IColorValues.models[mod][(CN * i) + 2])), 
+				         null, 
+				         IColorValues.models[mod][(CN * i) + 3]);
 	}			
 }

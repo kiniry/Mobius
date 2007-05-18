@@ -5,27 +5,30 @@
 package umbra.editor;
 
 /**
- * This class keeps the value of current coloring style
- * that is obtained after each refreshing.
+ * This class is a static container that keeps the value of current coloring 
+ * style that is obtained after each refreshing (which takes place when
+ * a bytecode document is created too).
  * 
  * @author Wojtek Wąs
  */
 public class Composition {
 	
 	/**
-	 * TODO
+	 * The current value of the colouring style.
 	 */
-	static int mod = 1;
+	static private int mod = 1;
+	
 	/**
 	 * TODO
 	 */
-	static boolean disas = false;
+	static private boolean disas = false;
 	
 	/**
 	 * @return if called during disassembling - the current
 	 * coloring style value;
 	 * otherwise - it means that bytecode editor is open
-	 * with no relation to the source, therefore it is colored grey. 
+	 * with no relation to the source, therefore it is colored grey.
+	 * TODO really? 
 	 */
 	static public int getMod() {
 		if (!disas) return IColorValues.models.length -1;
@@ -33,14 +36,14 @@ public class Composition {
 	}
 	
 	/**
-	 * TODO
+	 * This method sets the current initial colouring style.
 	 */
 	static public void setMod(int i) {
 		mod = i;
 	}
 		
 	/**
-	 * TODO
+	 * TODO strange???
 	 */
 	static public void startDisas() {
 		disas = true;

@@ -34,12 +34,13 @@ public class BoogiePLConfiguration extends SourceViewerConfiguration {
 	 * TODO
 	 */
 	private BoogiePLScanner scanner;
+	
 	/**
-	 * TODO
+	 * The object which menages the allocation of the colours.
 	 */
 	private ColorManager colorManager;
 	/**
-	 * TODO
+	 * The current colouring style, see {@link IColorValues}
 	 */
 	private int mod;
 	
