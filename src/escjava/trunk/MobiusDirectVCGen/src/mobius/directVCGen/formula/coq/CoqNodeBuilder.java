@@ -328,16 +328,45 @@ public class CoqNodeBuilder extends EscNodeBuilder {
 	 */
 	@Override
 	public SPred buildPredCall(PredSymbol fn, SAny[] args) {
-		if(fn == symRefEQ) {
+		
+
+		if (fn == symRefEQ) {
 			return new CPred(false, "=", args);
 		}
-		if(fn == symRefNE) {
+		else if (fn == symRefNE) {
 			return this.buildNot(new CPred(false, "=", args));
 		}
-		if(fn == symTypeLE) {
+		else if (fn == 	symTypeEQ) {
+			throw new IllegalArgumentException("Unimplemented symbol: " + fn);
+		}
+		else if (fn == symTypeNE) {
+			throw new IllegalArgumentException("Unimplemented symbol: " + fn);
+		}
+		else if (fn == symTypeLE) {
 			SAny [] realargs = {new CMap("p"),
 									args[0], args[1]};
 			return new CPred("subclass_name", realargs);
+		}
+		else if (fn == symAllocLT) {
+			return new CPred("allocLT", args);
+		}
+		else if (fn == symAllocLE) {
+			return new CPred("allocLE", args);
+		}
+		else if (fn == symLockLT) {
+			return new CPred("lockLT", args);
+		}
+		else if (fn == symLockLE) {
+			return new CPred("lockLE", args);
+		}
+		else if (fn == symIs) {
+			throw new IllegalArgumentException("Unimplemented symbol: " + fn);
+		}
+		else if (fn == symCast) {
+			throw new IllegalArgumentException("Unimplemented symbol: " + fn);
+		}
+		else if (fn == symIsAllocated) {
+			return new CPred("isAllocated", args);
 		}
 		else {
 			return new CPred(fn.name, args);
@@ -528,8 +557,16 @@ public class CoqNodeBuilder extends EscNodeBuilder {
 	@Override
 	public SInt buildIntFun(int intFunTag, SInt arg1, SInt arg2) {
 		switch (intFunTag) {
-		case NodeBuilder.funADD:
-			return new CInt("Int.add", new STerm[] {arg1, arg2});
+			case NodeBuilder.funADD:
+				return new CInt("Int.add", new STerm[] {arg1, arg2});
+			case NodeBuilder.funSUB:
+				return new CInt("Int.sub", new STerm[] {arg1, arg2});
+			case NodeBuilder.funMUL:
+				return new CInt("Int.mul", new STerm[] {arg1, arg2});
+			case NodeBuilder.funDIV:
+				return new CInt("Int.div", new STerm[] {arg1, arg2});
+			case NodeBuilder.funMOD:
+				return new CInt("Int.mod", new STerm[] {arg1, arg2});
 		}
 		throw new UnsupportedOperationException("Cannot translate the tag: "
 				+ NodeBuilder.tagsIds[intFunTag]);

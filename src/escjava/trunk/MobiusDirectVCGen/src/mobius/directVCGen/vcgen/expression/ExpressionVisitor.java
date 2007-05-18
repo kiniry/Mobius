@@ -77,9 +77,6 @@ public class ExpressionVisitor extends ABasicVisitor {
 				return vcg.assign(expr, post);
 			case TagConstants.ASGMUL:
 			case TagConstants.ASGDIV:
-				return vcg.assignSpecial(expr, post);
-				// TODO: finish all these operators
-
 			case TagConstants.ASGREM:
 			case TagConstants.ASGADD:
 			case TagConstants.ASGSUB:
@@ -87,7 +84,9 @@ public class ExpressionVisitor extends ABasicVisitor {
 			case TagConstants.ASGRSHIFT:
 			case TagConstants.ASGURSHIFT:
 			case TagConstants.ASGBITAND:
-				return post.post;
+			case TagConstants.ASGBITOR:
+			case TagConstants.ASGBITXOR:
+				return vcg.assignSpecial(expr, post);
 			
 			// jml specific operators
 			case TagConstants.IMPLIES:

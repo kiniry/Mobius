@@ -163,7 +163,7 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn{
 					pre = getPre(od, entry);
 					entry.post = new Post(val, pre.post);
 					
-
+					break;
 				}
 				case TagConstants.SUPEROBJECTDESIGNATOR:
 					// TODO: the case for super
@@ -171,12 +171,12 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn{
 					// cannot be null
 					
 					pre = new Post(f, entry.post.post.subst(Heap.var, Heap.store(Heap.var, f.qvar, val)));
-					entry.post = pre;
-					pre = getPre(od, entry);
+					//entry.post = pre;
+					//pre = getPre(od, entry);
 					pre = new Post(val, pre.post);
 					entry.post = pre;
 
-
+					break;
 				}
 				default: 
 					throw new IllegalArgumentException("Unknown object designator type ! " + od);
@@ -233,6 +233,36 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn{
 			case TagConstants.ASGDIV:
 				pre = excpBinExpression(TagConstants.DIV, left, right, post);
 				break;
+			case TagConstants.ASGREM:
+				pre = excpBinExpression(TagConstants.MOD, left, right, post);
+				break;
+			case TagConstants.ASGADD:
+				pre = excpBinExpression(TagConstants.ADD, left, right, post);
+				break;
+			case TagConstants.ASGSUB:
+				pre = excpBinExpression(TagConstants.SUB, left, right, post);
+				break;
+			case TagConstants.ASGLSHIFT:
+				pre = excpBinExpression(TagConstants.LSHIFT, left, right, post);
+				break;
+			case TagConstants.ASGRSHIFT:
+				pre = excpBinExpression(TagConstants.RSHIFT, left, right, post);
+				break;
+			case TagConstants.ASGURSHIFT:
+				pre = excpBinExpression(TagConstants.URSHIFT, left, right, post);
+				break;
+			case TagConstants.ASGBITAND:
+				pre = excpBinExpression(TagConstants.BITAND, left, right, post);
+				break;
+			case TagConstants.ASGBITOR:
+				pre = excpBinExpression(TagConstants.BITOR, left, right, post);
+				break;
+			case TagConstants.ASGBITXOR:
+				pre = excpBinExpression(TagConstants.BITXOR, left, right, post);
+				break;
+			default:
+				throw new IllegalArgumentException("Unmanaged construct :" +
+						TagConstants.toString(expr.op) +" " +  expr);
 		}
 		return pre;
 	}

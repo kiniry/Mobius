@@ -12,6 +12,7 @@ import javafe.ast.FormalParaDeclVec;
 import javafe.ast.MethodDecl;
 import mobius.directVCGen.formula.Expression;
 import mobius.directVCGen.formula.Formula;
+import mobius.directVCGen.formula.Heap;
 import mobius.directVCGen.formula.Logic;
 import mobius.directVCGen.formula.Lookup;
 import mobius.directVCGen.formula.Type;
@@ -91,12 +92,14 @@ public class MethodVisitor extends DirectVCGen {
 		Post pre = (Post)x.accept(dvcg, post);
 		Term po = Logic.implies(Lookup.precondition(meth), pre.post);
 		FormalParaDeclVec vec = meth.args;
-		QuantVariable[] qvs = new QuantVariable[vec.size()];
+		
+		QuantVariable[] qvs = new QuantVariable[vec.size() + 1];
 		for(int i = 0; i < vec.size(); i++) {
 			FormalParaDecl dec = vec.elementAt(i);
 			QuantVariable qv = Expression.var(dec);
 			qvs[i] = qv;
 		}
+		qvs [qvs.length - 1] = Heap.varPre.qvar;
 		//po = Logic.forall(qvs, po);
 		//System.out.println(po);
 		
