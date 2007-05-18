@@ -12,6 +12,7 @@ by the return type for each type of node.
   This file is generated from evaluator.tpl. Do not edit.
 */
 package freeboogie.ast;
+import java.math.BigInteger;
 
 /**
   Use as a base class when you want to compute a value of type

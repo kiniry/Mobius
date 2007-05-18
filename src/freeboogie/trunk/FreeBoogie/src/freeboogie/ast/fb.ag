@@ -53,16 +53,18 @@ BinaryOp = enum(Op: PLUS, MINUS, MUL, DIV, MOD, EQ, NEQ, LT, LE,
 UnaryOp = enum(Op: MINUS, NOT) op, Expr! e;
 Atom :> AtomLit, AtomNum, AtomId, AtomFun, AtomOld, AtomCast, AtomQuant, AtomIdx;
 AtomLit = enum(AtomType: FALSE, TRUE, NULL) val;
-AtomNum = int val;
+AtomNum = BigInteger val;
 AtomId = String! id;
 AtomFun = String! function, Exprs args;
 AtomOld = Expr! e;
 AtomCast = Expr! e, Type! type;
-AtomQuant = enum(QuantType: EXISTS, FORALL) quant, Declaration! vars, Expr! e;
+AtomQuant = enum(QuantType: EXISTS, FORALL) quant, Declaration! vars,
+            Trigger trig, Expr! e;
 AtomIdx = Atom! atom, Index! idx;
 Index = Expr! a, Expr b;
 
 // Some simple lists
+Trigger = Identifiers labels, Exprs! exprs, Trigger tail;
 Identifiers = String! name, Identifiers tail;
 Exprs = Expr! expr, Exprs tail;
 

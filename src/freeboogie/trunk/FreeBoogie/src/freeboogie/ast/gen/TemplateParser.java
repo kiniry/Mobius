@@ -512,8 +512,9 @@ public class TemplateParser {
           case UPPER_CASE:
             if (!first) res.append('_');
             res.append(Character.toUpperCase(c));
+            break;
           default:
-            assert false;
+            Err.fatal("Don't know which case to use for " + id);
           }
         } else {
           // the rest of letters

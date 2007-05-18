@@ -1,7 +1,13 @@
 grammar Fb;
 
-@header {package freeboogie.parser; import freeboogie.ast.*;}
-@lexer::header {package freeboogie.parser;}
+@header {
+  package freeboogie.parser; 
+  import freeboogie.ast.*; 
+  import java.math.BigInteger;
+}
+@lexer::header {
+  package freeboogie.parser;
+}
 
 @parser::members {
   public String fileName = null; // the file being processed
@@ -57,7 +63,6 @@ procedure_decl_tail returns [Declaration v]:
     { $v=new Procedure($s.v,$spec_list.v,$body.v,$t.v,$s.v.loc()); }
 ;
 	
-// TODO: check that the signature has names?
 implementation_decl_tail returns [Declaration v]:
   s=signature body t=declarations
     { $v = new Implementation($s.v,$body.v,$t.v,$s.v.loc()); }
@@ -136,15 +141,13 @@ index returns [Index v]:
      *, /, %
 
    <==> is associative
+   ==> is right associative
    Others are left associative.
-   (TODO: shouldn't ==> be right associative?)
    The unary operators are ! and -.
    Typechecking takes care of booleans added to integers 
    and the like.
  */
 
-// TODO: Check what kind of associativity these rules give.
-// (I believe it is left)
 expr returns [Expr v]:
   l=expr_a {$v=$l.v;} 
     (t='<==>' r=expr_a {$v=new BinaryOp(BinaryOp.Op.EQUIV,$v,$r.v,tokLoc($t));})*
@@ -152,7 +155,7 @@ expr returns [Expr v]:
 
 expr_a returns [Expr v]: 
   l=expr_b {$v=$l.v;} 
-    (t='==>' r=expr_b {$v=new BinaryOp(BinaryOp.Op.IMPLIES,$v,$r.v,tokLoc($t));})*
+    (t='==>' r=expr_a {$v=new BinaryOp(BinaryOp.Op.IMPLIES,$v,$r.v,tokLoc($t));})?
 ;
 
 // TODO: these does not keep track of location quite correctly
@@ -216,9 +219,7 @@ atom returns [Atom v]:
     t='false' { $v = new AtomLit(AtomLit.AtomType.FALSE,tokLoc($t)); }
   | t='true'  { $v = new AtomLit(AtomLit.AtomType.TRUE,tokLoc($t)); }
   | t='null'  { $v = new AtomLit(AtomLit.AtomType.NULL,tokLoc($t)); }
-
-  // TODO: What type of integers do I need for boogie? Maybe BigInteger?
-  | t=INT     { $v = new AtomNum(Integer.parseInt($INT.text),tokLoc($t)); }
+  | t=INT     { $v = new AtomNum(new BigInteger($INT.text),tokLoc($t)); }
   | atom_id   { $v = $atom_id.v; }
   |	t=ID '(' (expr_list?) ')'
               { $v = new AtomFun($ID.text, $expr_list.v,tokLoc($t)); }
@@ -226,10 +227,8 @@ atom returns [Atom v]:
               { $v = new AtomOld($expr.v,tokLoc($t)); }
   | t='cast' '(' expr ',' type ')'
               { $v = new AtomCast($expr.v, $type.v,tokLoc($t)); }
-
-  // TODO: the triggers are ignored now
-  | t='(' quant_op id_type_list '::' triggers expr ')'
-              { $v = new AtomQuant($quant_op.v, $id_type_list.v, $expr.v,tokLoc($t)); }
+  | t='(' a=quant_op b=id_type_list '::' c=triggers d=expr ')'
+              { $v = new AtomQuant($a.v,$b.v,$c.v,$d.v,tokLoc($t)); }
 ;
 
 atom_id returns [AtomId v]:
@@ -243,8 +242,11 @@ quant_op returns [AtomQuant.QuantType v]:
   | 'exists' { $v = AtomQuant.QuantType.EXISTS; }
 ;
 
-triggers:
-  ('{' ':nopats'? expr_list '}')*
+// TODO: Is the comma separated syntax correct?
+triggers returns [Trigger v]:
+    { $v=null; }
+  | a='{' (':' b=id_list)? c=expr_list '}' d=triggers
+      { $v=new Trigger($b.v,$c.v,$d.v,tokLoc($a)); }
 ;
 
 

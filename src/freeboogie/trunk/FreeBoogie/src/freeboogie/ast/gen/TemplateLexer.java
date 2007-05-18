@@ -108,6 +108,7 @@ public class TemplateLexer extends PeekStream<TemplateToken> {
     idCases.put("\\VALUE_NAME", TemplateToken.Case.UPPER_CASE);
     idCases.put("\\Valuename", TemplateToken.Case.ORIGINAL_CASE);
     
+    
     oneCharTokens.put('[', TemplateToken.Type.LB);
     oneCharTokens.put(']', TemplateToken.Type.RB);
     oneCharTokens.put('{', TemplateToken.Type.LC);
@@ -172,7 +173,6 @@ public class TemplateLexer extends PeekStream<TemplateToken> {
         lastChar = stream.next();
         type = macros.get(sb.toString());
         idCase = idCases.get(sb.toString());
-        assert idCase != null;
       }
     } else {
       // read in plain text

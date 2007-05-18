@@ -1,6 +1,9 @@
- 2 check pretty printer
- 8 sanity checks (name for parameters in implementations, lhs is l-value, etc.)
  8 name resolution --- symbol table
+ 6 normalize -> fold procedure and implementations
 16 typechecker
 12 constant folding ??
+ 1 remove extra files (build.xml)
+ 3 sometimes not everything is rebuilt, why?
 OBS At this point the visiting infrastructure should sort of work.
+
+Commit message:

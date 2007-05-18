@@ -7,6 +7,7 @@ here implement path-compression.
   This file was generated from transformer.tpl. Do not edit.
  */
 package freeboogie.ast;
+import java.math.BigInteger;
 
 /**
   Intended to be used as a base class by visitors that either only inspect
@@ -35,7 +36,9 @@ public class Transformer extends Evaluator<Ast> {
     \members{
       \if_primitive{\if_enum{\ClassName.}{}\Membertype}{\MemberType}
       new\MemberName = 
-        \if_primitive{\memberName}{(\MemberType)\memberName.eval(this)};
+        \if_primitive{\memberName}{
+          \memberName == null ? null :(\MemberType)\memberName.eval(this)
+        };
       \if_primitive{}{sameChildren &= new\MemberName == \memberName;}
     }
     if (!sameChildren) 

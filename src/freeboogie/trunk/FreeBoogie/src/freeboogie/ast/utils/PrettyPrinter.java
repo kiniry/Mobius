@@ -4,6 +4,7 @@ package freeboogie.ast.utils;
 
 import java.io.PrintWriter;
 import java.io.Writer;
+import java.math.BigInteger;
 import java.util.HashMap;
 
 import freeboogie.ast.*;
@@ -27,6 +28,7 @@ public class PrettyPrinter extends Transformer {
   private int indentLevel;
   
   private int skipVar; // if >0 then skip "var "
+  private boolean idsAsTags; // print id lists as ":x:y:z" if true, else as "x,y,z"
   
   // ready made strings to be printed for enums
   private static final HashMap<AssertAssumeCmd.CmdType,String> cmdRep 
@@ -93,6 +95,7 @@ public class PrettyPrinter extends Transformer {
     writer = w;
     indentLevel = 0;
     skipVar = 0;
+    idsAsTags = false;
   }
   
   /** Send a newline to the writer. */
@@ -167,7 +170,7 @@ public class PrettyPrinter extends Transformer {
   }
 
   @Override
-  public void see(AtomNum atomNum, int val) {
+  public void see(AtomNum atomNum, BigInteger val) {
     writer.print(val);
   }
 
@@ -179,12 +182,13 @@ public class PrettyPrinter extends Transformer {
   }
 
   @Override
-  public void see(AtomQuant atomQuant, AtomQuant.QuantType quant, Declaration vars, Expr e) {
+  public void see(AtomQuant atomQuant, AtomQuant.QuantType quant, Declaration vars, Trigger trig, Expr e) {
     ++skipVar;
     writer.print('(');
     writer.print(quantRep.get(quant));
     vars.eval(this);
     writer.print(" :: ");
+    if (trig != null) trig.eval(this);
     e.eval(this);
     writer.print(')');
     --skipVar;
@@ -310,9 +314,10 @@ public class PrettyPrinter extends Transformer {
 
   @Override
   public void see(Identifiers identifiers, String name, Identifiers tail) {
+    if (idsAsTags) writer.print(':');
     writer.print(name);
     if (tail != null) {
-      writer.print(", ");
+      if (!idsAsTags) writer.print(", ");
       tail.eval(this);
     }
   }
@@ -346,6 +351,7 @@ public class PrettyPrinter extends Transformer {
   public void see(Procedure procedure, Signature sig, Specification spec, Body body, Declaration tail) {
     writer.print("procedure ");
     sig.eval(this);
+    if (body == null) writer.print(';');
     if (spec != null) {
       ++indentLevel; nl();
       spec.eval(this);
@@ -362,9 +368,12 @@ public class PrettyPrinter extends Transformer {
     writer.print(name);
     writer.print('(');
     if (args != null) args.eval(this);
-    writer.print(") returns (");
-    if (results != null) results.eval(this);
     writer.print(')');
+    if (results != null) {
+      writer.print(" returns (");
+      results.eval(this);
+      writer.print(')');
+    }
     --skipVar;
   }
 
@@ -374,6 +383,7 @@ public class PrettyPrinter extends Transformer {
     writer.print(specRep.get(type));
     expr.eval(this);
     writer.print(';'); nl();
+    if (tail != null) tail.eval(this);
   }
 
   @Override
@@ -412,6 +422,20 @@ public class PrettyPrinter extends Transformer {
     if (tail != null) tail.eval(this);
   }
   
+  @Override
+  public void see(Trigger trigger, Identifiers labels, Exprs exprs, Trigger tail) {
+    writer.print('{');
+    if (labels != null) {
+      assert !idsAsTags; // no nesting
+      idsAsTags = true;
+      labels.eval(this);
+      idsAsTags = false;
+    }
+    if (exprs != null) exprs.eval(this);
+    writer.print("} ");
+    if (tail != null) tail.eval(this);
+  }
+
   
   /**
    * @param args
