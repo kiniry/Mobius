@@ -8,7 +8,7 @@ package freeboogie.ast;
  * @author rgrig 
  * @author reviewed by TODO
  */
-public class AstLocation {
+public class AstLocation implements Comparable<AstLocation> {
   private String file;
   private int line, column;
   
@@ -57,5 +57,25 @@ public class AstLocation {
   public String toString() {
     if (this == unknown) return "?";
     return (file == null ? "" : file + ":") + line + ":" + column;
+  }
+
+  /* @see java.lang.Comparable#compareTo(java.lang.Object) */
+  @Override
+  public int compareTo(AstLocation o) {
+    if (this == unknown ^ o == unknown)
+      if (this == unknown) return -1; else return +1;
+    if (file != o.file) {
+      if (file == null) return -1;
+      if (o.file == null) return +1;
+      return file.compareTo(o.file);
+    }
+    if (line != o.line) return line - o.line;
+    return column - o.column;
+  }
+  
+  @Override
+  public boolean equals(Object o) {
+    if (!(o instanceof AstLocation)) return false;
+    return compareTo((AstLocation)o) == 0;
   }
 }

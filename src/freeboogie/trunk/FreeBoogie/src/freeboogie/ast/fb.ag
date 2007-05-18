@@ -15,8 +15,7 @@ Axiom =        Expr! expr, Declaration tail;
 VariableDecl = String name, Type! type, Declaration tail;
 Procedure =    Signature! sig, Specification spec, Body body,
                Declaration tail;
-Implementation = Signature! sig, Body! body,
-                 Declaration tail;
+Implementation = Signature! sig, Body! body, Declaration tail;
 
 
 // Types and constants
@@ -42,8 +41,8 @@ Commands = Command! cmd, Commands tail;
 Command :> AssignmentCmd, AssertAssumeCmd, HavocCmd, CallCmd;
 AssignmentCmd = Expr! lhs, Expr! rhs; // TODO: define exactly what lhs can be
 AssertAssumeCmd = enum(CmdType: ASSERT, ASSUME) type, Expr! expr;
-HavocCmd = String! name;
-CallCmd = String! function, Identifiers results, Exprs args;
+HavocCmd = AtomId! id;
+CallCmd = String! procedure, Identifiers results, Exprs args;
 
 // Expressions
 Expr :> BinaryOp, UnaryOp, Atom;
@@ -64,8 +63,8 @@ AtomIdx = Atom! atom, Index! idx;
 Index = Expr! a, Expr b;
 
 // Some simple lists
-Trigger = Identifiers labels, Exprs! exprs, Trigger tail;
-Identifiers = String! name, Identifiers tail;
+Trigger = String label, Exprs! exprs, Trigger tail;
+Identifiers = AtomId! id, Identifiers tail;
 Exprs = Expr! expr, Exprs tail;
 
 // TODO: the invariants

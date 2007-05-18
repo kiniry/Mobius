@@ -28,7 +28,6 @@ public class PrettyPrinter extends Transformer {
   private int indentLevel;
   
   private int skipVar; // if >0 then skip "var "
-  private boolean idsAsTags; // print id lists as ":x:y:z" if true, else as "x,y,z"
   
   // ready made strings to be printed for enums
   private static final HashMap<AssertAssumeCmd.CmdType,String> cmdRep 
@@ -95,7 +94,6 @@ public class PrettyPrinter extends Transformer {
     writer = w;
     indentLevel = 0;
     skipVar = 0;
-    idsAsTags = false;
   }
   
   /** Send a newline to the writer. */
@@ -306,18 +304,17 @@ public class PrettyPrinter extends Transformer {
   }
 
   @Override
-  public void see(HavocCmd havocCmd, String name) {
+  public void see(HavocCmd havocCmd, AtomId id) {
     writer.print("havoc ");
-    writer.print(name);
+    writer.print(id);
     writer.print(';'); nl();
   }
 
   @Override
-  public void see(Identifiers identifiers, String name, Identifiers tail) {
-    if (idsAsTags) writer.print(':');
-    writer.print(name);
+  public void see(Identifiers identifiers, AtomId id, Identifiers tail) {
+    id.eval(this);
     if (tail != null) {
-      if (!idsAsTags) writer.print(", ");
+      writer.print(", ");
       tail.eval(this);
     }
   }
@@ -423,13 +420,12 @@ public class PrettyPrinter extends Transformer {
   }
   
   @Override
-  public void see(Trigger trigger, Identifiers labels, Exprs exprs, Trigger tail) {
+  public void see(Trigger trigger, String label, Exprs exprs, Trigger tail) {
     writer.print('{');
-    if (labels != null) {
-      assert !idsAsTags; // no nesting
-      idsAsTags = true;
-      labels.eval(this);
-      idsAsTags = false;
+    if (label != null) {
+      writer.print(':');
+      writer.print(label);
+      writer.print(' ');
     }
     if (exprs != null) exprs.eval(this);
     writer.print("} ");

@@ -116,8 +116,8 @@ command	returns [Command v]:
       { $v=new AssertAssumeCmd(AssertAssumeCmd.CmdType.ASSERT,$expr.v,tokLoc($t)); }
   | t='assume' expr ';'
       { $v=new AssertAssumeCmd(AssertAssumeCmd.CmdType.ASSUME,$expr.v,tokLoc($t)); }
-  | t='havoc' ID ';'
-      {$v=new HavocCmd($ID.text,tokLoc($t));}
+  | t='havoc' atom_id ';'
+      {$v=new HavocCmd($atom_id.v,tokLoc($t));}
   | t='call' (l=id_list ':=')? ID '(' (r=expr_list)? ')' ';'
       {$v=new CallCmd($ID.text,$l.v,$r.v,tokLoc($t));}
 ;
@@ -242,11 +242,10 @@ quant_op returns [AtomQuant.QuantType v]:
   | 'exists' { $v = AtomQuant.QuantType.EXISTS; }
 ;
 
-// TODO: Is the comma separated syntax correct?
 triggers returns [Trigger v]:
     { $v=null; }
-  | a='{' (':' b=id_list)? c=expr_list '}' d=triggers
-      { $v=new Trigger($b.v,$c.v,$d.v,tokLoc($a)); }
+  | a='{' (':' ID)? c=expr_list '}' d=triggers
+      { $v=new Trigger($ID==null?null:$ID.text,$c.v,$d.v,tokLoc($a)); }
 ;
 
 
@@ -257,7 +256,7 @@ expr_list returns [Exprs v]:
 ;
 
 id_list	returns [Identifiers v]:	
-    ID (',' r=id_list)? { $v=new Identifiers($ID.text,$r.v,tokLoc($ID)); }
+    a=atom_id (',' r=id_list)? { $v=new Identifiers($a.v,$r.v,$a.v.loc()); }
 ;
 
 opt_id_type_list returns [Declaration v]:
