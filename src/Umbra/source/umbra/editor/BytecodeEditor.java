@@ -39,12 +39,6 @@ import annot.bcio.ReadAttributeException;
 public class BytecodeEditor extends TextEditor {
 	
 	/**
-	 * TODO Probably should be removed.
-	 * 
-	 */
-	private boolean updated = true;
-	
-	/**
 	 * The Java source code editor that corresponds to the current
 	 * bytecode editor.
 	 */
@@ -94,23 +88,7 @@ public class BytecodeEditor extends TextEditor {
 		bconfig.disposeColor();
 		super.dispose();
 	}
-	
-	/**
-	 * TODO Probably should be removed
-	 */
-	public boolean isUpdated() {
-		System.out.println(" isUpdated isUpdated isUpdated isUpdated");
-		return updated;
-	}
-	
-	/**
-	 * TODO Probably should be removed
-	 */
-	public void leave() {
-		System.out.println(" leave leave leave leave");
-		updated = false;
-	}
-	
+		
 	/**
 	 * @return Java code editor that Bytecode has been generated from
 	 */
@@ -174,8 +152,8 @@ public class BytecodeEditor extends TextEditor {
 		}
 		try {
 			JavaClass jc = classGen.getJavaClass();
-			String path3 = getPath(active).append(lastSegment).toOSString(); 
-			System.out.println("Path3: " + path3);
+			String path3 = getPath(active).append(lastSegment).toOSString();
+			//TODO something should be added here to parse the .btc files
 			jc.dump(path3);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -429,8 +407,22 @@ public class BytecodeEditor extends TextEditor {
 		historyNum = -1;
 	}
 
+	/**
+	 * @return the object which generates the class file
+	 */
 	public ClassGen getClassGen() {
 		return classGen;
+	}
+	
+	/**
+	 * This method sets the internal BCEL structures which contain the
+	 * information oabout the Java class.
+	 * 
+	 * @param jc the Java class representation
+	 */
+	public void setJavaClass(JavaClass jc) {
+		javaClass = jc;
+		classGen = new ClassGen(jc);
 	}
 	
 	/**

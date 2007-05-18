@@ -140,12 +140,14 @@ public class BytecodeCombineAction extends Action {
 			JavaClass oldJc = ((BytecodeEditor)editor).getJavaClass();
 			ClassGen cg = updateModifiedMethods(oldJc, jc);
 			jc = cg.getJavaClass();
-			String fullName = ((BytecodeEditor)editor).getPath(path).
-			                                           toOSString();
-			jc.dump(fullName + UmbraHelper.getFileSeparator() + lastSegment);
+			System.err.println(jc.toString());
+			BytecodeEditor bcEditor = ((BytecodeEditor)editor);
+			String fullName = bcEditor.getPath(path).toOSString();
+			jc.dump("/home/alx/ala.class");//fullName + UmbraHelper.getFileSeparator() + lastSegment);
+			bcEditor.setJavaClass(jc);
 			MessageDialog.openWarning(editor.getSite().getShell(), 
 					"Bytecode", "A "+fullName + UmbraHelper.getFileSeparator() + lastSegment);
-			((BytecodeEditor)editor).refreshBytecode(path, null, null);
+			bcEditor.refreshBytecode(path, null, null);
 			MessageDialog.openWarning(editor.getSite().getShell(), 
 					"Bytecode", "B");
 			IEditorInput input = new FileEditorInput(file);
@@ -243,7 +245,6 @@ public class BytecodeCombineAction extends Action {
 		int meths = cg.getMethods().length;
 		boolean[] modified;
 		try {
-			System.out.println(bytecodeContribution.toString());
 			modified = bytecodeContribution.getModified();
 		} catch (NullPointerException e) {
 			MessageDialog.openWarning(editor.getSite().getShell(), 
@@ -252,8 +253,10 @@ public class BytecodeCombineAction extends Action {
 			throw e;
 		}
 		for (int i = 0; i < modified.length && i < oldMeths && i < meths; i++) {
-			if (modified[i]) cg.setMethodAt(oldCg.getMethodAt(i), i);
-			System.out.println("" + i + (modified[i] ? " yes" : " no"));
+			if (modified[i]) {
+				cg.setMethodAt(oldCg.getMethodAt(i), i);
+				System.out.println(oldCg.getMethodAt(i).getCode().toString(true));
+			}
 		}
 		return cg;
 	}
