@@ -128,7 +128,7 @@ public class AufliaProver extends SortedProver
 	    		f.write("\n");
 	    	}
 	    	
-	    	String form = formulaToString(formula); 
+	    	String form = formulaToString(nodeBuilder.buildNot(formula)); 
 			String e = nodeBuilder.extrafuns.toString();
 			nodeBuilder.extrafuns = new StringBuffer();
 	    	f.write(e);
