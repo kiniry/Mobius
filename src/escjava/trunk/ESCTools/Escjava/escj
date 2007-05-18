@@ -110,6 +110,12 @@ if [ -z "$ESCJ_SIMPLIFY_DIR" ]; then
     fi
 fi
 
+############ Setting BCEL_LIB, if necessary
+
+if [ -z "$BCEL_LIB" ]; then
+     BCEL_LIB=${ESCTOOLS_ROOT}/Utils/bcel-5.2.jar
+fi
+
 ############ Setting SIMPLIFY
 
 if [ -z "$SIMPLIFY" ]; then
@@ -204,7 +210,7 @@ XMLRPC_LIB=${ESCTOOLS_RELEASE}/xmlrpc.jar
 ## release
 if [ -z "$ESC_CLASSPATH" ]; then
     if [ -n "$ESCTOOLS_RELEASE" ]; then
-	ESC_CLASSPATH=${ESCTOOLS_RELEASE}/esctools2.jar:${XMLRPC_LIB}:
+	ESC_CLASSPATH=${ESCTOOLS_RELEASE}/esctools2.jar:${XMLRPC_LIB}:${BCEL_LIB}
     else
 	ESC_CLASSPATH=${ESCTOOLS_ROOT}/Escjava/classfiles:${ESCTOOLS_ROOT}/Javafe/classfiles:${ESCTOOLS_ROOT}/Utils:${XMLRPC_LIB}:${BCEL_LIB}
     fi
