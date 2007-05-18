@@ -1,6 +1,7 @@
 Thu May 17 22:53:41 IST 2007	<michal.moskal@gmail.com>
 
-	First sketch of AUFLIA SMT logic printer. It prints *something*, but it does not seem to be correct.
+	First sketch of AUFLIA SMT logic printer. It prints *something*, but it 
+	does not seem to be correct.
 
 	AufliaProver.java 1.1
 	AufliaPrelude.java 1.1
@@ -8,7 +9,8 @@ Thu May 17 22:53:41 IST 2007	<michal.moskal@gmail.com>
 
 Thu May 17 22:52:55 IST 2007	<michal.moskal@gmail.com>
 
-	More reasonable handling of symbol scopes. Double registration of a symbol within a scope shall no longer happen
+	More reasonable handling of symbol scopes. Double registration of a symbol 
+	within a scope shall no longer happen
 
 	NodeBuilder.java 1.16
 	Lifter.java 1.41
@@ -17,7 +19,8 @@ Thu May 17 16:58:53 IST 2007	<dermot.cochran@ucd.ie>
 
 	Adding support for Java 1.5 bytecode, but not yet for Java 1.5 sourcecode  
 	(1) javafe.reader.BinReader now calls javafe.reader.BCELReader 
-	(2) The makefiles have been updated to include bcel-5.2.jar in the classpath
+	(2) The makefiles have been updated to include bcel-5.2.jar in the 
+	    classpath
 
 	Makefile 1.40
 	Makefile 1.32
@@ -299,8 +302,8 @@ Fri Apr 27 17:07:25 IST 2007	<michal.moskal@gmail.com>
 
 Fri Apr 27 16:51:28 IST 2007	<radugrigore@gmail.com>
 
-	1. ProverManager.isValid (Michal) 2. started working on imrpoving the speed 
-	   of the reachability analysis
+	1. ProverManager.isValid (Michal) 
+	2. started working on imrpoving the speed of the reachability analysis
 
 	ReachabilityAnalysis.java 1.3
 	CFD.java 1.4
@@ -854,51 +857,6 @@ Wed Mar 21 10:53:11 GMT 2007	<radugrigore@gmail.com>
 	run 1.1
 	C.java 1.1
 	Account.java 1.2
-	good.out 1.1
-	good.err 1.1
-	run 1.1
-	C.java 1.1
-	run 1.1
-	good.out 1.1
-	good.err 1.1
-	C.java 1.1
-	good.out 1.2
-	C.java 1.2
-	run 1.1
-	good.out 1.1
-	good.err 1.1
-	C.java 1.1
-	good.err 1.1
-	run 1.1
-	good.out 1.1
-	C.java 1.1
-	good.out 1.2
-	good.out 1.2
-	C.java 1.2
-	good.out 1.1
-	good.err 1.1
-	run 1.1
-	C.java 1.1
-	run 1.1
-	good.out 1.1
-	good.err 1.1
-	C.java 1.1
-	good.out 1.2
-	run 1.1
-	C.java 1.1
-	good.out 1.2
-	good.out 1.1
-	good.err 1.1
-	good.out 1.2
-	C.java 1.2
-	good.out 1.3
-	good.out 1.2
-	good.out 1.2
-	good.out 1.2
-	good.out 1.2
-	good.out 1.2
-	good.out 1.2
-	good.out 1.2
 
 Wed Mar 21 10:48:53 GMT 2007	<radugrigore@gmail.com>
 
@@ -1218,7 +1176,9 @@ Mon Dec 18 03:34:51 GMT 2006	<chalin@cs.concordia.ca>
 
 Mon Dec 18 03:07:01 GMT 2006	<chalin@cs.concordia.ca>
 
-	Added TestSystem1.java to the skip list because we have effectively disabled the ability for in, out and err to be nullable.  As explained in the System spec file, we reap more benefits in that way.
+	Added TestSystem1.java to the skip list because we have effectively
+	disabled the ability for in, out and err to be nullable.  As explained 
+	in the System spec file, we reap more benefits in that way.
 
 	skip 1.12
 
@@ -1230,7 +1190,16 @@ Mon Dec 18 03:05:58 GMT 2006	<chalin@cs.concordia.ca>
 
 Mon Dec 18 03:05:05 GMT 2006	<chalin@cs.concordia.ca>
 
-	Added nullity modifiers.  Since allowNullStreams = false and is declared as final, this means that in, out and err are effectively non-null.  The only way to allow them to be nullable is to modify this specification (or make a copy of it) and change the value of allowNullStreams.  Since changing the nullity requires changing the spec, and since some tools can do more if in, out and err are explicitly declared non-null, we are going one step further and annotating in, out and err as non_null.  If ever you change allowNullStreams to be true, then you will need to change the annotations of in, out and err to be nullable.
+	Added nullity modifiers.  Since allowNullStreams = false and is 
+	declared as final, this means that in, out and err are effectively 
+	non-null.  The only way to allow them to be nullable is to modify 
+	this specification (or make a copy of it) and change the value of 
+	allowNullStreams.  Since changing the nullity requires changing the 
+	spec, and since some tools can do more if in, out and err are 
+	explicitly declared non-null, we are going one step further and 
+	annotating in, out and err as non_null.  If ever you change 
+	allowNullStreams to be true, then you will need to change the 
+	annotations of in, out and err to be nullable.
 
 	System.spec 1.11
 
