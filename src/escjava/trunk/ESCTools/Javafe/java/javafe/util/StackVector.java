@@ -159,6 +159,8 @@ public final class StackVector
 	return elements[currentStackBottom + i];
     }		//@ nowarn Post;		// (thinks could be null)
 
+    //@ requires 0<=i && i+currentStackBottom<elementCount;
+    //@ requires o == null ||  (\typeof(o) <: elementType);
     public void setElementAt(Object o, int i)
 		/*throws ArrayIndexOutOfBoundsException*/ {
 	checkBounds(i);
@@ -172,7 +174,7 @@ public final class StackVector
      * ensure that a null element does not stay in the top Vector. <p>
      */
     //@ requires x==null || \typeof(x) <: elementType;
-    //@ modifies elementCount, elements;
+    //@ modifies elementCount, elements, elements[elementCount];
     //@ ensures elementCount == \old(elementCount)+1;
     //@ ensures elementCount>0 && elements[elementCount-1]==x;
     private void addElementInternal(Object x) {
@@ -194,12 +196,11 @@ public final class StackVector
      */
     //@ requires x != null;
     //@ requires \typeof(x) <: elementType;
-    //@ modifies elementCount, elements;
+    //@ modifies elementCount, elements, elements[*];
     /*@ ensures (elementCount - currentStackBottom) ==
 	        (\old(elementCount) - currentStackBottom) + 1; */
     public final void addElement(/*@ non_null */ Object x) {
 	Assert.precondition(x != null);
-
 	addElementInternal(x);
     }
 
@@ -213,7 +214,7 @@ public final class StackVector
 
 
     /** Zero the top Vector. */
-    //@ modifies elementCount;
+    //@ modifies elementCount, elements[*];
     //@ ensures elementCount == currentStackBottom;
     public final void removeAllElements() {
 	for (int i = currentStackBottom; i < elementCount; i++)
@@ -280,7 +281,7 @@ public final class StackVector
      * Push a zero-length Vector.
      *
      */
-    //@ modifies vectorCount, currentStackBottom, elementCount, elements;
+    //@ modifies vectorCount, currentStackBottom, elementCount, elements, elements[*];
     //@ ensures vectorCount == \old(vectorCount)+1;
     //@ ensures currentStackBottom == elementCount;
     public void push() {
@@ -325,7 +326,7 @@ public final class StackVector
      * Precondition: there are at least two vectors on our stack.<p>
      */
     //@ requires vectorCount>=2;
-    //@ modifies vectorCount, elementCount;
+    //@ modifies vectorCount, elementCount, elements[*];
     //@ ensures vectorCount == \old(vectorCount)-1;
     //@ modifies currentStackBottom;
     public void merge() {
