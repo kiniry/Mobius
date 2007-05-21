@@ -30,7 +30,7 @@ public class Main {
    * @throws RecognitionException 
    */
   public static void main(String[] args) throws IOException, RecognitionException {
-    SymbolTableBuilder stb = new SymbolTableBuilder();
+    TypeChecker tc = new TypeChecker();
     for (int i = 0; i < args.length; ++i) {
       try {
         System.out.println("=== " + args[i] + " ===" );
@@ -41,7 +41,7 @@ public class Main {
         Declaration d = parser.program();
         if (d != null) {
           // non-empty file
-          stb.process(d);
+          tc.process(d);
         }
       } catch (FileNotFoundException e) {
         Err.error("I couldn't read from " + args[i] + ". Nevermind.");

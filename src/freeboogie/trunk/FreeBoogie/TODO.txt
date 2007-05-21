@@ -1,6 +1,5 @@
- 8 name resolution --- symbol table
  6 connect procedures to implementations
-16 typechecker
+ 8 typechecker
 10 construct flow graph
  1 remove extra files (build.xml)
  3 sometimes not everything is rebuilt, why?
@@ -12,3 +11,5 @@ Details not to forget:
  * do i really want to recompute all when the ast is changed?
 
 Commit message:
+1. resolve (type) names that appear in variable declaration types
+2. hack to not warn about undeclared type names under arrays, to support generics

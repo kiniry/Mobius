@@ -10,6 +10,8 @@ import freeboogie.util.Err;
 
 /**
  * Constructs a {@code SymbolTable} from an AST.
+ * 
+ * NOTE: generic types in boogie are a hack so I'll treat them as such.
  *
  * @author rgrig 
  * @author reviewed by TODO
@@ -24,6 +26,14 @@ public class SymbolTableBuilder extends Transformer {
   
   private boolean errors;
   
+  /*
+   * HACK to support `generic' types: Do not warn if we are under
+   * an array because it might be a `type variable'. The typechecker
+   * should enforce that things make sense a bit later on. 
+   */
+  // the number of ArrayType nodes above the current node 
+  private int arrayCnt;
+  
   /**
    * Builds a symbol table. Reports name clashes (because it
    * uses {@code GlobalsCollector}. Reports undeclared variables.
@@ -35,6 +45,7 @@ public class SymbolTableBuilder extends Transformer {
     localScopes = new LinkedList<HashMap<String, VariableDecl>>();
     symbolTable = new SymbolTable();
     gc = new GlobalsCollector();
+    arrayCnt = 0;
     boolean e = gc.process(ast);
     ast.eval(this);
     return errors || e;
@@ -52,7 +63,7 @@ public class SymbolTableBuilder extends Transformer {
   
   // reports an error at location l if d s null
   private <T> T check(T d, String s, AstLocation l) {
-    if (d != null) return d;
+    if (d != null || arrayCnt > 0) return d;
     Err.error("" + l + ": Undeclared identifier " + s + ".");
     errors = true;
     return null;
@@ -102,6 +113,7 @@ public class SymbolTableBuilder extends Transformer {
       // we are in a local scope
       scope.put(name, variableDecl);
     }
+    type.eval(this);
     if (tail != null) tail.eval(this);
   }
   
@@ -142,5 +154,14 @@ public class SymbolTableBuilder extends Transformer {
   public void see(BlockEnd blockEnd, BlockEnd.BlockType type, Identifiers dest) {
     // do nothing
   }
+  
+  // === remember if we are below an ArrayType ===
+  @Override
+  public void see(ArrayType arrayType, Type rowType, Type colType, Type elemType) {
+    ++arrayCnt;
+    super.see(arrayType, rowType, colType, elemType);
+    --arrayCnt;
+  }
 
+  
 }

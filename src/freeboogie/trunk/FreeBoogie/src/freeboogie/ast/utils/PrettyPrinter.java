@@ -2,12 +2,55 @@
 
 package freeboogie.ast.utils;
 
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
 import java.math.BigInteger;
 import java.util.HashMap;
 
-import freeboogie.ast.*;
+import freeboogie.ast.ArrayType;
+import freeboogie.ast.AssertAssumeCmd;
+import freeboogie.ast.AssignmentCmd;
+import freeboogie.ast.Atom;
+import freeboogie.ast.AtomCast;
+import freeboogie.ast.AtomFun;
+import freeboogie.ast.AtomId;
+import freeboogie.ast.AtomIdx;
+import freeboogie.ast.AtomLit;
+import freeboogie.ast.AtomNum;
+import freeboogie.ast.AtomOld;
+import freeboogie.ast.AtomQuant;
+import freeboogie.ast.Axiom;
+import freeboogie.ast.BinaryOp;
+import freeboogie.ast.Block;
+import freeboogie.ast.BlockEnd;
+import freeboogie.ast.Body;
+import freeboogie.ast.CallCmd;
+import freeboogie.ast.Command;
+import freeboogie.ast.Commands;
+import freeboogie.ast.ConstDecl;
+import freeboogie.ast.Declaration;
+import freeboogie.ast.DepType;
+import freeboogie.ast.Expr;
+import freeboogie.ast.Exprs;
+import freeboogie.ast.Function;
+import freeboogie.ast.GenericType;
+import freeboogie.ast.HavocCmd;
+import freeboogie.ast.Identifiers;
+import freeboogie.ast.Implementation;
+import freeboogie.ast.Index;
+import freeboogie.ast.PrimitiveType;
+import freeboogie.ast.Procedure;
+import freeboogie.ast.Signature;
+import freeboogie.ast.Specification;
+import freeboogie.ast.Transformer;
+import freeboogie.ast.Trigger;
+import freeboogie.ast.Type;
+import freeboogie.ast.TypeDecl;
+import freeboogie.ast.UnaryOp;
+import freeboogie.ast.UserType;
+import freeboogie.ast.VariableDecl;
+import freeboogie.util.Err;
 
 /**
  * Prints AST nodes in a readable (and parseable) way.
@@ -19,7 +62,7 @@ import freeboogie.ast.*;
 public class PrettyPrinter extends Transformer {
   private static final int indent = 2; // indentation spaces
   
-  private PrintWriter writer; // where the output is sent
+  private Writer writer; // where the output is sent
   
   /**
    * The nesting level:
@@ -89,71 +132,82 @@ public class PrettyPrinter extends Transformer {
    * Initialize the pretty printer with a writer.
    * @param w the writer
    */
-  public PrettyPrinter(PrintWriter w) {
+  public PrettyPrinter(Writer w) {
     assert w != null;
     writer = w;
     indentLevel = 0;
     skipVar = 0;
   }
   
+  /** Swallow exceptions. */
+  private void say(String s) {
+    try {
+      writer.write(s);
+    } catch (IOException e) {
+      Err.help("Can't pretty print. Nevermind.");
+    }
+  }
+  
   /** Send a newline to the writer. */
   private void nl() {
-    writer.println();
-    for (int i = indent * indentLevel; i > 0; --i)
-      writer.print(' ');
+    say("\n"); // TODO: handle Windows?
+    for (int i = indent * indentLevel; i > 0; --i) say(" ");
+  }
+  
+  /** End command. */
+  private void semi() {
+    say(";"); nl();
   }
   
   // === the visiting methods ===
   
   @Override
   public void see(ArrayType arrayType, Type rowType, Type colType, Type elemType) {
-    writer.print('[');
+    say("[");
     rowType.eval(this);
     if (colType != null) {
-      writer.print(", ");
+      say(", ");
       colType.eval(this);
     }
-    writer.print(']');
+    say("]");
     elemType.eval(this);
   }
 
   @Override
   public void see(AssertAssumeCmd assertAssumeCmd, AssertAssumeCmd.CmdType type, Expr expr) {
-    writer.print(cmdRep.get(type));
+    say(cmdRep.get(type));
     expr.eval(this);
-    writer.print(';');
-    nl();
+    semi();
   }
 
   @Override
   public void see(AssignmentCmd assignmentCmd, Expr lhs, Expr rhs) {
     lhs.eval(this);
-    writer.print(" := ");
+    say(" := ");
     rhs.eval(this);
-    writer.print(';');
-    nl();
+    semi();
   }
 
   @Override
   public void see(AtomCast atomCast, Expr e, Type type) {
-    writer.print("cast(");
+    say("cast(");
     e.eval(this);
-    writer.print(", ");
+    say(", ");
     type.eval(this);
-    writer.print(')');
+    say(")");
   }
 
   @Override
   public void see(AtomFun atomFun, String function, Exprs args) {
-    writer.print(function);
-    writer.print('(');
+    say(function);
+    say("(");
     if (args != null) args.eval(this);
-    writer.print(')');
+    say(")");
   }
 
   @Override
   public void see(AtomId atomId, String id) {
-    writer.print(id);
+    say(id);
   }
 
   @Override
@@ -164,56 +218,55 @@ public class PrettyPrinter extends Transformer {
 
   @Override
   public void see(AtomLit atomLit, AtomLit.AtomType val) {
-    writer.print(atomRep.get(val));
+    say(atomRep.get(val));
   }
 
   @Override
   public void see(AtomNum atomNum, BigInteger val) {
-    writer.print(val);
+    say(val.toString());
   }
 
   @Override
   public void see(AtomOld atomOld, Expr e) {
-    writer.print("old(");
+    say("old(");
     e.eval(this);
-    writer.print(')');
+    say(")");
   }
 
   @Override
   public void see(AtomQuant atomQuant, AtomQuant.QuantType quant, Declaration vars, Trigger trig, Expr e) {
     ++skipVar;
-    writer.print('(');
-    writer.print(quantRep.get(quant));
+    say("(");
+    say(quantRep.get(quant));
     vars.eval(this);
-    writer.print(" :: ");
+    say(" :: ");
     if (trig != null) trig.eval(this);
     e.eval(this);
-    writer.print(')');
+    say(")");
     --skipVar;
   }
 
   @Override
   public void see(Axiom axiom, Expr expr, Declaration tail) {
-    writer.print("axiom ");
+    say("axiom ");
     expr.eval(this);
-    writer.print(';');
-    nl();
+    semi();
     if (tail != null) tail.eval(this);
   }
 
   @Override
   public void see(BinaryOp binaryOp, BinaryOp.Op op, Expr left, Expr right) {
-    writer.print('(');
+    say("(");
     left.eval(this);
-    writer.print(binRep.get(op));
+    say(binRep.get(op));
     right.eval(this);
-    writer.print(')');
+    say(")");
   }
 
   @Override
   public void see(Block block, String name, Commands cmds, BlockEnd end, Block tail) {
-    writer.print(name);
-    writer.print(':');
+    say(name);
+    say(":");
     ++indentLevel; nl();
     if (cmds != null) cmds.eval(this);
     end.eval(this);
@@ -223,34 +276,33 @@ public class PrettyPrinter extends Transformer {
 
   @Override
   public void see(BlockEnd blockEnd, BlockEnd.BlockType type, Identifiers dest) {
-    writer.print(bendRep.get(type));
+    say(bendRep.get(type));
     if (dest != null) dest.eval(this);
-    writer.print(';');
-    nl();
+    semi();
   }
 
   @Override
   public void see(Body body, Declaration vars, Block blocks) {
-    writer.print(" {");
+    say(" {");
     ++indentLevel; nl();
     if (vars != null) vars.eval(this);
     if (blocks != null) blocks.eval(this);
     --indentLevel; nl();
-    writer.print("}");
+    say("}");
     nl();
   }
 
   @Override
   public void see(CallCmd callCmd, String function, Identifiers results, Exprs args) {
-    writer.print("call ");
+    say("call ");
     if (results != null) {
       results.eval(this);
-      writer.print(" := ");
+      say(" := ");
     }
-    writer.print(function);
-    writer.print('(');
+    say(function);
+    say("(");
     if (args != null) args.eval(this);
-    writer.print(");");
+    say(");");
     nl();
   }
 
@@ -262,19 +314,18 @@ public class PrettyPrinter extends Transformer {
 
   @Override
   public void see(ConstDecl constDecl, String id, Type type, Declaration tail) {
-    writer.print("const ");
-    writer.print(id);
-    writer.print(" : ");
+    say("const ");
+    say(id);
+    say(" : ");
     type.eval(this);
-    writer.print(';');
-    nl();
+    semi();
     if (tail != null) tail.eval(this);
   }
 
   @Override
   public void see(DepType depType, Type type, Expr pred) {
     type.eval(this);
-    writer.print(" where ");
+    say(" where ");
     pred.eval(this);
   }
 
@@ -282,46 +333,46 @@ public class PrettyPrinter extends Transformer {
   public void see(Exprs exprs, Expr expr, Exprs tail) {
     expr.eval(this);
     if (tail != null) {
-      writer.print(", ");
+      say(", ");
       tail.eval(this);
     }
   }
 
   @Override
   public void see(Function function, Signature sig, Declaration tail) {
-    writer.print("function ");
+    say("function ");
     sig.eval(this);
-    writer.print(';'); nl();
+    semi();
     if (tail != null) tail.eval(this);
   }
 
   @Override
   public void see(GenericType genericType, Type param, Type type) {
-    writer.print('<');
+    say("<");
     param.eval(this);
-    writer.print('>');
+    say(">");
     type.eval(this);
   }
 
   @Override
   public void see(HavocCmd havocCmd, AtomId id) {
-    writer.print("havoc ");
-    writer.print(id);
-    writer.print(';'); nl();
+    say("havoc ");
+    id.eval(this);
+    semi();
   }
 
   @Override
   public void see(Identifiers identifiers, AtomId id, Identifiers tail) {
     id.eval(this);
     if (tail != null) {
-      writer.print(", ");
+      say(", ");
       tail.eval(this);
     }
   }
 
   @Override
   public void see(Implementation implementation, Signature sig, Body body, Declaration tail) {
-    writer.print("implementation ");
+    say("implementation ");
     sig.eval(this);
     body.eval(this);
     nl();
@@ -330,25 +381,25 @@ public class PrettyPrinter extends Transformer {
 
   @Override
   public void see(Index index, Expr a, Expr b) {
-    writer.print('[');
+    say("[");
     a.eval(this);
     if (b != null) {
-      writer.print(", ");
+      say(", ");
       b.eval(this);
     }
-    writer.print(']');
+    say("]");
   }
 
   @Override
   public void see(PrimitiveType primitiveType, PrimitiveType.Ptype ptype) {
-    writer.print(typeRep.get(ptype));
+    say(typeRep.get(ptype));
   }
 
   @Override
   public void see(Procedure procedure, Signature sig, Specification spec, Body body, Declaration tail) {
-    writer.print("procedure ");
+    say("procedure ");
     sig.eval(this);
-    if (body == null) writer.print(';');
+    if (body == null) say(";");
     if (spec != null) {
       ++indentLevel; nl();
       spec.eval(this);
@@ -362,73 +413,70 @@ public class PrettyPrinter extends Transformer {
   @Override
   public void see(Signature signature, String name, Declaration args, Declaration results) {
     ++skipVar;
-    writer.print(name);
-    writer.print('(');
+    say(name);
+    say("(");
     if (args != null) args.eval(this);
-    writer.print(')');
+    say(")");
     if (results != null) {
-      writer.print(" returns (");
+      say(" returns (");
       results.eval(this);
-      writer.print(')');
+      say(")");
     }
     --skipVar;
   }
 
   @Override
   public void see(Specification specification, Specification.SpecType type, Expr expr, boolean free, Specification tail) {
-    if (free) writer.print("free ");
-    writer.print(specRep.get(type));
+    if (free) say("free ");
+    say(specRep.get(type));
     expr.eval(this);
-    writer.print(';'); nl();
+    semi();
     if (tail != null) tail.eval(this);
   }
 
   @Override
   public void see(TypeDecl typeDecl, String name, Declaration tail) {
-    writer.print("type ");
-    writer.print(name);
-    writer.print(';');
-    nl();
+    say("type ");
+    say(name);
+    semi();
     tail.eval(this);
   }
 
   @Override
   public void see(UnaryOp unaryOp, UnaryOp.Op op, Expr e) {
-    writer.print(unRep.get(op));
+    say(unRep.get(op));
     e.eval(this);
   }
 
   @Override
   public void see(UserType userType, String name) {
-    writer.print(name);
+    say(name);
   }
 
   @Override
   public void see(VariableDecl variableDecl, String name, Type type, Declaration tail) {
-    if (skipVar==0) writer.print("var ");
+    if (skipVar==0) say("var ");
     if (name != null) {
-      writer.print(name);
-      writer.print(" : ");
+      say(name);
+      say(" : ");
     }
     type.eval(this);
     if (skipVar>0) {
-      if (tail != null) writer.print(", ");
-    } else {
-      writer.print(';'); nl();
-    }
+      if (tail != null) say(", ");
+    } else semi();
     if (tail != null) tail.eval(this);
   }
   
   @Override
   public void see(Trigger trigger, String label, Exprs exprs, Trigger tail) {
-    writer.print('{');
+    say("{");
     if (label != null) {
-      writer.print(':');
-      writer.print(label);
-      writer.print(' ');
+      say(":");
+      say(label);
+      say(" ");
     }
     if (exprs != null) exprs.eval(this);
-    writer.print("} ");
+    say("} ");
     if (tail != null) tail.eval(this);
   }
 

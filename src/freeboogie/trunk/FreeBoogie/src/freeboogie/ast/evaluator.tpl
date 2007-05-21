@@ -26,7 +26,7 @@ public class Evaluator<R> {
       \memberName
     }
   ) {
-    \children{\memberName.eval(this);}
+    \children{if (\memberName != null) \memberName.eval(this);}
     return null;
   }
 }

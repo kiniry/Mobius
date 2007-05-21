@@ -19,7 +19,7 @@ Implementation = Signature! sig, Body! body, Declaration tail;
 
 
 // Types and constants
-Type :> PrimitiveType, UserType, ArrayType, MatrixType, GenericType, DepType;
+Type :> PrimitiveType, UserType, ArrayType, GenericType, DepType;
 ArrayType = Type! rowType, Type colType, Type! elemType;
 PrimitiveType = enum(Ptype: BOOL, INT, REF, NAME, ANY) ptype;
 GenericType = Type! param, Type! type;
