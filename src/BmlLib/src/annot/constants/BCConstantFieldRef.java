@@ -1,6 +1,7 @@
 package annot.constants;
 
 import annot.bcclass.BCConstantPool;
+import annot.bcclass.BMLConfig;
 import annot.bcexpression.javatype.JavaType;
 
 //import jml2b.IJml2bConfiguration;
@@ -48,9 +49,12 @@ public class BCConstantFieldRef extends BCConstantRef {
             String _name, JavaType _type, BCConstantPool pool) {
         super(_cpIndex, _CONSTANT_classref_index, _name, pool);
         type = _type;
-
     }
 
+    public String printCode1(BMLConfig conf) {
+    	return name;
+    }
+    
 //    public BCField getBCField(IJml2bConfiguration config) {
 //        /* BCConstantPool cp = getConstantPool(); */
 //    	

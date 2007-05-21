@@ -35,7 +35,7 @@ public class ModifiesSet implements BCAttribute {
 		String code = "";
 		for (int i=0; i<modifiesExpression.length; i++)
 			if (modifiesExpression[i] != null)
-				code += ((i==0) ? "" : ", ") + modifiesExpression[i].printCode(conf);
+				code += ((i==0) ? "" : ", ") + modifiesExpression[i].printLine(conf);
 		return code;
 	}
 	

@@ -34,7 +34,7 @@ public class ArrayElemFromTo extends SpecArray {
 //		return this;
 //	}*/
 
-	public String printCode(BMLConfig conf) {
+	public String printCode1(BMLConfig conf) {
 		Expression[] exprs =  getSubExpressions();
 		return exprs[0].printCode(conf) + " .. "+ exprs[1].printCode(conf);
 	}

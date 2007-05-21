@@ -38,7 +38,7 @@ public class OLD extends JMLExpression {
 //		return this;
 //	}
 
-	public String printCode(BMLConfig conf) {
+	public String printCode1(BMLConfig conf) {
 		Expression expr = getSubExpressions()[0];
 		String s = "old(" + expr.printCode(conf) + ")";
 		return s;

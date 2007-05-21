@@ -59,8 +59,10 @@ public class Variable extends Expression {
 //	}
 //
 
-	public String printCode(BMLConfig conf) {
-		return "VAR("+id+")";
+	public String printCode1(BMLConfig conf) {
+		final String var_names = "abcdefghijklmnopqrstuvwxyz";
+		return ""+var_names.charAt(id);
+//		return "VAR("+id+")";
 	}
 	
 	/*

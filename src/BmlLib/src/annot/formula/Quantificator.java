@@ -53,7 +53,7 @@ public class Quantificator extends Expression {
 //		return true;
 //	}
 	
-	public String printCode(BMLConfig conf) {
+	public String printCode1(BMLConfig conf) {
 		/*	if (domain == null) {*/
 			String s = "(" + quantifier ;
 			for (int i = 0; i < boundVar.length; i++ ) {

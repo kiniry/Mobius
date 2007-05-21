@@ -42,6 +42,9 @@ public class Assert {
 	}
 	
 	public String printCode (BMLConfig conf) {
-		return "/* assert " + assertFormula.printCode(conf) + "*/\n";
+		String code = "/* assert " + assertFormula.printLine(conf, 7);
+		if (code.lastIndexOf("\n") >= 0)
+			code += "\n";
+		return code + " */\n";
 	}
 }

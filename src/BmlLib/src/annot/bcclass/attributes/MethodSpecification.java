@@ -25,7 +25,7 @@ public class MethodSpecification implements BCAttribute{
 		String code = "/*\n";
 		if (precondition != null)
 			if (precondition != Predicate0Ar.TRUE)
-				code += " *  requires " + precondition.printCode(conf) + "\n";
+				code += " *  requires " + precondition.printLine(conf, 11) + "\n";
 		for (int i=0; i < specificationCases.length; i++)
 			code += specificationCases[i].printCode(conf);
 		return code + " */\n";

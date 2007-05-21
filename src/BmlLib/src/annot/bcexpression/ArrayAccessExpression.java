@@ -61,7 +61,7 @@ public class ArrayAccessExpression extends Expression {
 //		return array;
 //	}
 
-	public String printCode(BMLConfig conf) {
+	public String printCode1(BMLConfig conf) {
 		String s ;
 		Expression[] subExpr = getSubExpressions();
 		s =  subExpr[0].printCode(conf) + "[" + subExpr[1].printCode(conf) + "]";

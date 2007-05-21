@@ -457,7 +457,7 @@ public class ArithmeticExpression extends Expression {
 //		this.arithmetic_op = arithmetic_op;
 //	}
 
-	public String printCode(BMLConfig conf) {
+	public String printCode1(BMLConfig conf) {
 		String op = "";
 		if (arithmetic_op == ExpressionConstants.ADD) {
 			op = " + ";

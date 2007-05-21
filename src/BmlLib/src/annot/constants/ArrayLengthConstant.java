@@ -1,9 +1,15 @@
 package annot.constants;
 
+import annot.bcclass.BMLConfig;
+
 public class ArrayLengthConstant  extends BCConstantFieldRef {
 	public static final ArrayLengthConstant ARRAYLENGTHCONSTANT = new ArrayLengthConstant();
 		
 	private ArrayLengthConstant() {
+	}
+	
+	public String printCode(BMLConfig conf) {
+		return "_length";
 	}
 	
 	public String toString() {

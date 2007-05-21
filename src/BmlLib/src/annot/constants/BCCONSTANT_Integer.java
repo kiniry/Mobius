@@ -1,5 +1,6 @@
 package annot.constants;
 
+import annot.bcclass.BMLConfig;
 import annot.bcexpression.Expression;
 import annot.bcexpression.NumberLiteral;
 //import bytecode_wp.bcexpression.NumberLiteral;
@@ -12,6 +13,10 @@ public class BCCONSTANT_Integer extends BCCONSTANT_LITERAL  {
 		int_constant = new NumberLiteral(_constant);
 	}
 
+	public String printCode1(BMLConfig conf) {
+		return ""+int_constant;
+	}
+	
 	public String toString() {
 		return "INT:	" + int_constant;
 	}

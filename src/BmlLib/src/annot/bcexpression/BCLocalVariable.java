@@ -111,8 +111,9 @@ public class BCLocalVariable extends Expression {
 //		return this;
 //	}
 
-	public String printCode(BMLConfig conf) {
-		return "lv("+getIndex()+")";
+	public String printCode1(BMLConfig conf) {
+		return conf.currMethod.getLocalVariableTable().getLocalVariableTable()[getIndex()].getName();
+//		return "lv("+getIndex()+")";
 	}
 	
 	/* (non-Javadoc)

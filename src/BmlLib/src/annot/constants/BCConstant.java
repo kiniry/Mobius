@@ -1,5 +1,6 @@
 package annot.constants;
 
+import annot.bcclass.BMLConfig;
 import annot.bcexpression.Expression;
 
 public class BCConstant extends Expression {
@@ -15,9 +16,13 @@ public class BCConstant extends Expression {
 		return cpIndex;
 	}
 
+	public String printCode1(BMLConfig conf) {
+		System.out.println("Unknown constant #"+cpIndex);
+		return "#" + cpIndex;
+	}
+	
 	public String toString() {
 		return "#" + cpIndex;
-//		return "_" + cpIndex;
 	}
 	
 //	public byte getTag() {

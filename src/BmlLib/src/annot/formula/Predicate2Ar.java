@@ -213,7 +213,7 @@ public class Predicate2Ar extends Predicate {
 //		return this;
 //	}
 
-	public String printCode(BMLConfig conf) {
+	public String printCode1(BMLConfig conf) {
 		String op = "";
 		if (getPredicateSymbol() == PredicateSymbol.NOTEQ) {
 			op = " =/= ";

@@ -460,7 +460,7 @@ public class ModifiesArray extends ModifiesExpression {
 //		return f;
 //	}
 
-	public String printCode(BMLConfig conf) {
+	public String printCode1(BMLConfig conf) {
 		String s = getModifies().printCode(conf) + " [" + getSpecArray().printCode(conf) + "]";
 		return s;
 	}

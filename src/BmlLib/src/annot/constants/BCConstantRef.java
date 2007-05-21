@@ -14,7 +14,7 @@ import annot.bcclass.BCConstantPool;
 public class BCConstantRef extends BCConstant {
 //	//private int classIndex;
 	private int CONSTANT_class_Index;
-	private String name;
+	protected String name;
 //	private boolean initIsStatic = false; 
 //	private boolean isStatic;
 	private BCConstantPool cPool;

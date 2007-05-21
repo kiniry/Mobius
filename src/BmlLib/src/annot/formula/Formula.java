@@ -375,7 +375,7 @@ public class Formula extends Expression {
 		return _copy;
 	}
 
-	public String printCode(BMLConfig conf) {
+	public String printCode1(BMLConfig conf) {
 		String con = "";
 		if (connector == Connector.AND) {
 			con = " && ";

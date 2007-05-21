@@ -178,12 +178,14 @@ public class FieldAccess extends Expression {
 //		return with;
 //	}
 
-	public String printCode(BMLConfig conf) {
+	public String printCode1(BMLConfig conf) {
 		if (getSubExpressions().length == 1) {
 			return getSubExpressions()[0].printCode(conf);
 		} else {
-			return getSubExpressions()[1].printCode(conf)
-				+ "-->" + getSubExpressions()[0].printCode(conf);
+			String str = getSubExpressions()[1].printCode(conf) + "-->";
+			if (str.startsWith("this"))
+				str = "";
+			return str + getSubExpressions()[0].printCode(conf);
 		}
 	}
 	

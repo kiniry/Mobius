@@ -13,7 +13,7 @@ public class SingleIndex extends SpecArray {
 		return getSubExpressions()[0];
 	}
 	
-	public String printCode(BMLConfig conf) {
+	public String printCode1(BMLConfig conf) {
 		String s = "" + getSubExpressions()[0].printCode(conf);   
 		return s;
 	}

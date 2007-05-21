@@ -22,7 +22,7 @@ public class Postcondition {
 	}
 	
 	public String printCode(BMLConfig conf) {
-		return postcondition.printCode(conf);
+		return postcondition.printLine(conf, 20);
 	}
 	
 	protected void setSpecificationCase(SpecificationCase _specCase) {

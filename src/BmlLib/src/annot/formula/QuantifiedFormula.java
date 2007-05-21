@@ -53,7 +53,7 @@ public class QuantifiedFormula extends Formula {
 //		return _copy;
 //	}
 
-	public String printCode(BMLConfig conf) {
+	public String printCode1(BMLConfig conf) {
 		Formula subformula = (Formula) getSubExpressions()[0];
 		String s = "";
 		for (int i = 0; i < quantificators.length; i++) {

@@ -1,5 +1,7 @@
 package annot.bcexpression;
 
+import annot.bcclass.BMLConfig;
+
 //import bytecode_wp.bcexpression.javatype.JavaType;
 
 public class StringLiteral extends Expression {
@@ -9,6 +11,10 @@ public class StringLiteral extends Expression {
 		literal = _literal;
 	}
 
+	public String printCode1(BMLConfig conf) {
+		return literal;
+	}
+	
 //	/* (non-Javadoc)
 //	 * @see bcexpression.Expression#getType()
 //	 */

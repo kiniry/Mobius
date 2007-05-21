@@ -73,6 +73,7 @@ public class BCMethod extends AccessFlags {
 
 	public String printCode(BMLConfig conf) {
 		try {
+			conf.currMethod = bcelMethod.getMethod();
 			String code = "";
 			if (methodSpecification != null)
 				code += methodSpecification.printCode(conf);

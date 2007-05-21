@@ -37,9 +37,9 @@ public class SpecificationCase {
 		String code = "";
 		code += " *  {| \n";
 		if (precondition != Predicate0Ar.TRUE)
-			code += " *    requires " + precondition.printCode(conf) + "\n";
+			code += " *    requires " + precondition.printLine(conf, 13) + "\n";
 		if (modifies.getModifiesExpressions()[0].printCode(conf) != "\\everything")
-			code += "  modifies" + modifies.printCode(conf) + "\n";
+			code += " *    modifies " + modifies.printCode(conf) + "\n";
 		if (postcondition.getPostcondition() != Predicate0Ar.TRUE)
 			code += " *    ensures " + postcondition.printCode(conf) + "\n";
 		if (exsures != null)

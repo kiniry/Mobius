@@ -108,7 +108,55 @@ public abstract class Expression {
 	
 //	public abstract printCode(BMLConfig conf);
 	
+	public String controlPrint() {
+		String str = this.getClass().getName();
+		str = str.substring(str.lastIndexOf(".")+1);
+		int length = 0;
+		if (subExpressions != null)
+			length = subExpressions.length;
+		if (length > 0)
+			str += "(";
+		for (int i=0; i<length; i++) {
+			if (i > 0)
+				str += ", ";
+			str += subExpressions[i].controlPrint();
+		}
+		if (length > 0)
+			str += ")";
+		return str;
+	}
+	
+	static int line_pos = 0;
+	
+	public String printLine(BMLConfig conf) {
+		return printLine(conf, 0);
+	}
+	
+	public String printLine(BMLConfig conf, int usedc) {
+		line_pos = usedc;
+		return printCode(conf);
+	}
+	
 	public String printCode(BMLConfig conf) {
+		if (conf.goControlPrint) {
+			return controlPrint();
+		} else {
+			int old_pos = line_pos;
+			String code = printCode1(conf);
+			if (code.lastIndexOf("\n") >= 0)
+				old_pos = -code.lastIndexOf("\n");
+			if ((code.length() < 20) && (old_pos + code.length() > 80)) {
+				line_pos = old_pos = 0;
+				code = "\n *      " + printCode1(conf);
+			}
+			line_pos = old_pos + code.length();
+			return code;
+		}
+	}
+	
+	public String printCode1(BMLConfig conf) {
+		System.out.print("in "+this.getClass().getName());
+		System.out.println("\tWARNING: replace old method name toString() with printCode1(BMLConf)");
 		return toString();
 	}
 //

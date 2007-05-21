@@ -80,7 +80,7 @@ public class ModifiesDOT extends ModifiesExpression {
 //	}
 
 	 
-	public String printCode(BMLConfig conf) {
+	public String printCode1(BMLConfig conf) {
 		String s = getModifies().printCode(conf)  + "( " + getSubExpressions()[1].printCode(conf)  + ")"; 
 		return s;
 	}

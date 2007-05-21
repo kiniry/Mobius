@@ -21,10 +21,11 @@ public class SingleLoopSpecification {
 
 	public String printCode(BMLConfig conf) {
 		String code = "/* ("+pcIndex+")\n";
-		code += " *  loop_invariant " + invariant.printCode(conf) + "\n";
-		code += " *  loop_modifies " + modifies.printCode(conf) + "\n";
-		if (!"1".equals(decreases.printCode(conf))) // TODO zrób cos z tym
-			code += " *  decreases " + decreases.printCode(conf) + "\n";
+		code += " *   loop_invariant " + invariant.printLine(conf, 17) + "\n";
+		code += " *   loop_modifies " + modifies.printCode(conf) + "\n";
+		String dec = decreases.printLine(conf, 12);
+		if (!"1".equals(dec)) // TODO zrób cos z tym
+			code += " *   decreases " + dec + "\n";
 		return code + " */\n";
 	}
 	

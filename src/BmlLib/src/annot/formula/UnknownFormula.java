@@ -31,7 +31,7 @@ public class UnknownFormula extends Formula {
 		return "?";
 	}
 	
-	public String printCode(BMLConfig conf) {
+	public String printCode1(BMLConfig conf) {
 		return toString();
 	}
 

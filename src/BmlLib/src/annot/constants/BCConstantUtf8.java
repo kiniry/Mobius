@@ -1,5 +1,6 @@
 package annot.constants;
 
+import annot.bcclass.BMLConfig;
 import annot.bcexpression.Expression;
 import annot.bcexpression.StringLiteral;
 
@@ -15,6 +16,10 @@ public class BCConstantUtf8 extends BCCONSTANT_LITERAL{
 		constant_string = _s;
 	}
 
+	public String printCode1(BMLConfig conf) {
+		return constant_string.printCode(conf);
+	}
+	
 	public String toString() {
 		return "Utf8:	" + constant_string;
 	}

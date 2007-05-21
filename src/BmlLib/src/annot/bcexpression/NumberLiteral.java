@@ -46,7 +46,7 @@ public class NumberLiteral extends ArithmeticExpression {
 //		return literal;
 //	}
 
-	public String printCode(BMLConfig conf) {
+	public String printCode1(BMLConfig conf) {
 		return "" + literal;
 	}
 	

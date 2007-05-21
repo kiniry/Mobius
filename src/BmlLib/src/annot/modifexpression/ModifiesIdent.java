@@ -28,7 +28,7 @@ public class ModifiesIdent extends ModifiesExpression {
 //		return null;
 //	}
 	
-	public String printCode(BMLConfig conf) {
+	public String printCode1(BMLConfig conf) {
 		return "modifiesIdent " + getSubExpressions()[0].printCode(conf);
 	}
 }
