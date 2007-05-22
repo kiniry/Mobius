@@ -59,7 +59,7 @@ public class Simplifier {
         Properties props = new Properties();
         
         // flag for all provers
-        props.setProperty("timelimit", "60");
+        props.setProperty("TimeLimit", "60");
         
         // flags for Fx7
         //props.setProperty("max_quant_iters", "500");

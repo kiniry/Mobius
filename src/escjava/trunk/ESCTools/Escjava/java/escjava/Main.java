@@ -1085,9 +1085,13 @@ public class Main extends javafe.SrcTool
     // scope can be null
     public int doProving(Expr vc, RoutineDecl r, Set directTargets,
 			 FindContributors scope) {
-	try {
+	try {		
+		String simpleName = TypeCheck.inst.getRoutineName(r).intern();
+        String fullName = TypeCheck.inst.getSig(r.parent).toString() + "." + simpleName +
+            javafe.tc.TypeCheck.getSignature(r);
+        fullName = removeSpaces(fullName).intern();
 
-	    Enumeration results = ProverManager.prove(vc,scope);
+	    Enumeration results = ProverManager.prove(vc,scope, fullName);
 
 	    //$$
 	    if( ProverManager.useSimplify || ProverManager.useSorted) {

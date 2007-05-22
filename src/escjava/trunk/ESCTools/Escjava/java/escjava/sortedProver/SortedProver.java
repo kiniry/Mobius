@@ -128,6 +128,10 @@ public abstract class SortedProver
     /**
      * Check the validity of the given formula given the current theory,
      * its axioms, and the current set of assumptions.
+     * 
+     * The standard property names:
+     *   TimeLimit -- time limit in seconds
+     *   ProblemName -- human readable name of the problem (package.class.methodname(signature)) 
      *
      * @param formula the formula to check.
      * @param callback the callbacks that will be called during the search

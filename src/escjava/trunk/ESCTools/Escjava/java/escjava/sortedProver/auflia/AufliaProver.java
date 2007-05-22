@@ -2,6 +2,7 @@ package escjava.sortedProver.auflia;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -147,10 +148,33 @@ public class AufliaProver extends SortedProver
 	public SortedProverResponse isValid(SPred formula, SortedProverCallback callback, Properties properties)
 	{
 		setProverResourceFlags(properties);
-    	count++;	    
-	    String filename = "formula-" + count + ".smt";
+    	count++;
+    	String methodName = properties.getProperty("ProblemName");
+    	StringBuffer fileBuf = new StringBuffer("vcs/");
+    	boolean afterParen = false;
+    	for (int i = 0; i < methodName.length(); ++i) {
+    		char c = methodName.charAt(i);
+    		switch (c) {
+    		case '.': if (! afterParen) c = '/'; break;
+    		case '(': afterParen = true; c = '_'; break;
+    		case ',': break;
+    		default:
+    			if (! ((c >= 'a' && c <= 'z') ||
+    					(c >= 'A' && c <= 'Z') ||
+    					(c >= '0' && c <= '9'))) 
+    				c = '_';
+    			break;
+    		}
+    		fileBuf.append(c);
+    	}
+    	String filename = fileBuf.toString();    	
+    	while (filename.charAt(filename.length () - 1) == '_')
+    		filename = filename.substring(0, filename.length() - 1);
+    	String dirname = filename.substring(0, filename.lastIndexOf('/'));
+    	(new File(dirname)).mkdirs();
+    	filename += ".smt";
 	    saveQuery(filename, formula);	    
-	    ErrorSet.caution("wrote formula to: " + filename + ", not proving anything!");
+	    ErrorSet.caution("wrote formula to: " + filename + ", not proving anything! "); 
     	return new SortedProverResponse(SortedProverResponse.YES);
 	}
 

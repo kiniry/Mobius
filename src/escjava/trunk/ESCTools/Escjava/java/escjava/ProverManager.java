@@ -240,7 +240,9 @@ public class ProverManager {
   // scope can be null
   //? ensures \result != null;
   synchronized
-  static public /*@ non_null */ Enumeration prove(/*@ non_null */ Expr vc, /*@ nullable */ FindContributors scope) {
+  static public /*@ non_null */ Enumeration prove(/*@ non_null */ Expr vc, 
+		  									      /*@ nullable */ FindContributors scope, 
+		  									      /*@ non_null */ String problemName) {
    
     if (useSimplify || useSorted) { 
       if (scope == null) {
@@ -258,7 +260,6 @@ public class ProverManager {
       if (listener != null) listener.stateChanged(2);
       try {
     	  if (useSorted) {
-    		      		  
     		  final ArrayList responses = new ArrayList();
     		  SortedProverCallback cb = new SortedProverCallback() {
     			  public void processResponse(SortedProverResponse resp)
@@ -275,7 +276,10 @@ public class ProverManager {
     			  }
     		  };
     		  
-    		  SortedProverResponse resp = liftAndProve(vc, cb, new Properties());
+    		  Properties props = new Properties();
+    		  props.setProperty("ProblemName", problemName);
+    		  
+    		  SortedProverResponse resp = liftAndProve(vc, cb, props);
     		  
               if (resp.getTag() == SortedProverResponse.FAIL)
             	  died();
@@ -339,7 +343,6 @@ public class ProverManager {
 	  return resp;
   }
   
-  // timeout is given in seconds
   static synchronized
   public boolean isValid(Expr vc, Properties props)
   {
