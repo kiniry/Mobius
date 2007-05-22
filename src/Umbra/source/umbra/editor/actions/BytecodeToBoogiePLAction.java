@@ -94,7 +94,6 @@ public class BytecodeToBoogiePLAction implements IEditorActionDelegate,
 			List<String> args = new ArrayList<String>();	
 			args.add("-basedir"); args.add(projectPath);
 			args.add("-o"); args.add(boogiePLPath);
-			args.add(javaPath);
 			
 			// TODO include all files of the current project
 			IPath path = file.getLocation().removeLastSegments(1);
