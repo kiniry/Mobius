@@ -317,6 +317,10 @@ public class BytecodeController {
 			(l.startsWith("package")) || (l.startsWith("class")))
 			return new HeaderLineController(line);
 		
+		if ((l.startsWith("*")) || (l.startsWith("/*"))) 
+			return new AnnotationLineController(line);
+				
+		
 		//instrukcje liczba i : 
 		// a potem w zaleznosci od rodzaju
 		
