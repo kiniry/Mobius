@@ -49,42 +49,6 @@ public class BytecodeToBoogiePLAction implements IEditorActionDelegate,
 	 */
 	public void setActiveEditor(IAction action, IEditorPart targetEditor) {
 		editor = targetEditor;
-
-		// BytecodeRebuildAction rbc = new BytecodeRebuildAction(null);
-
-		/* FIXME inserted in order to refresh Bytecode view */
-		// TODO it does not work - it triggers an exception
-		/*
-		 * IPath active =
-		 * ((FileEditorInput)editor.getEditorInput()).getFile().getFullPath();
-		 * IFile file = ((FileEditorInput)editor.getEditorInput()).getFile();
-		 * IPath active = file.getFullPath();
-		 * 
-		 * String fname = active.toOSString(); IWorkspace workspace =
-		 * ResourcesPlugin.getWorkspace();
-		 * 
-		 * IFile javaFile = workspace.getRoot().getFile(new
-		 * Path(UmbraHelper.replaceLast(fname, UmbraHelper.BYTECODE_EXTENSION,
-		 * UmbraHelper.JAVA_EXTENSION)));
-		 * 
-		 * IFile bytecodeFile = workspace.getRoot().getFile(new Path(fname));
-		 * 
-		 * FileEditorInput input = new FileEditorInput(bytecodeFile); try {
-		 * IWorkbenchPage page = editor.getEditorSite().getPage();
-		 * 
-		 * BytecodeEditor bcEditor = (BytecodeEditor)page.openEditor(input,
-		 * BYTECODE_EDITOR_CLASS, true);
-		 * bcEditor.refreshBytecode(javaFile.getFullPath(), null, null); input =
-		 * new FileEditorInput(bytecodeFile); JavaClass jc =
-		 * bcEditor.getJavaClass(); Composition.startDisas(); //TODO why
-		 * closing, it triggers exception //page.closeEditor(bcEditor, true);
-		 * bcEditor = (BytecodeEditor)page.openEditor(input,
-		 * BYTECODE_EDITOR_CLASS, true);
-		 * bcEditor.setRelation((AbstractDecoratedTextEditor)editor, jc);
-		 * Composition.stopDisas(); } catch (CoreException e) {
-		 * e.printStackTrace(); } catch (ClassNotFoundException e) {
-		 * e.printStackTrace(); } catch (IOException e) { e.printStackTrace(); }
-		 */
 	}
 
 	/**
@@ -127,12 +91,12 @@ public class BytecodeToBoogiePLAction implements IEditorActionDelegate,
 					                 substring(projectPath.length() + 1 ).
 					                 replace('\\', '.');
 			
-			List args = new ArrayList();	
+			List<String> args = new ArrayList<String>();	
 			args.add("-basedir"); args.add(projectPath);
 			args.add("-o"); args.add(boogiePLPath);
 			args.add(javaPath);
 			
-      // TODO include all files of the current project
+			// TODO include all files of the current project
 			IPath path = file.getLocation().removeLastSegments(1);
 			System.out.println("Looking for other classes in " + path.toOSString());
 			for (String a : getClassesInDirectory(path.toFile())) {
@@ -143,8 +107,7 @@ public class BytecodeToBoogiePLAction implements IEditorActionDelegate,
 
 			String[] argsArray = (String[])args.toArray(new String[args.size()]);
 			
-			// MessageDialog.openError(editor.getSite().getShell(), "Bytecode",
-			// "B");
+			// MessageDialog.openError(editor.getSite().getShell(), "Bytecode", "B");
 			
 			try {
 				PrintWriter messageWriter = new PrintWriter(new FileOutputStream(boogiePLPath));
@@ -166,10 +129,6 @@ public class BytecodeToBoogiePLAction implements IEditorActionDelegate,
 		if (dir.isDirectory()) {
 			String[] children = dir.list();
 			return children;
-			/*
-			 * for (int i=0; i<children.length; i++) { visitAllDirsAndFiles(new
-			 * File(dir, children[i])); }
-			 */
 		}
 		return null;
 	}
@@ -210,7 +169,6 @@ public class BytecodeToBoogiePLAction implements IEditorActionDelegate,
 	/**
 	 * Currently, does nothing.
 	 */
-	public void selectionChanged(IAction action, ISelection selection) {
-	}
+	public void selectionChanged(IAction action, ISelection selection) { }
 
 }
