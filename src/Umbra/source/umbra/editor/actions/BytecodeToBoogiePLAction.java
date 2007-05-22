@@ -1,5 +1,6 @@
 package umbra.editor.actions;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -29,16 +30,15 @@ import b2bpl.Main;
 import b2bpl.Project;
 
 /**
- * This action is used to convert Java Bytecode into BoogiePL.
- * The following JAR packages are required:
- *   - b2bpl.jar
- *   - asm.jar
+ * This action is used to convert Java Bytecode into BoogiePL. The following JAR
+ * packages are required: - b2bpl.jar - asm.jar
  * 
  * @author Samuel Willimann
- *
+ * 
  */
-public class BytecodeToBoogiePLAction implements IEditorActionDelegate, IUmbraConstants {
-	
+public class BytecodeToBoogiePLAction implements IEditorActionDelegate,
+		IUmbraConstants {
+
 	/**
 	 * TODO
 	 */
@@ -49,44 +49,42 @@ public class BytecodeToBoogiePLAction implements IEditorActionDelegate, IUmbraCo
 	 */
 	public void setActiveEditor(IAction action, IEditorPart targetEditor) {
 		editor = targetEditor;
-		
-		//BytecodeRebuildAction rbc = new BytecodeRebuildAction(null);
-		
+
+		// BytecodeRebuildAction rbc = new BytecodeRebuildAction(null);
+
 		/* FIXME inserted in order to refresh Bytecode view */
-		//TODO it does not work - it triggers an exception
+		// TODO it does not work - it triggers an exception
 		/*
-		IPath active = ((FileEditorInput)editor.getEditorInput()).getFile().getFullPath();
-		IFile file = ((FileEditorInput)editor.getEditorInput()).getFile();
-		IPath active = file.getFullPath();
-		
-		String fname = active.toOSString();		
-		IWorkspace workspace = ResourcesPlugin.getWorkspace();
-
-		IFile javaFile = workspace.getRoot().getFile(new Path(UmbraHelper.replaceLast(fname, UmbraHelper.BYTECODE_EXTENSION, UmbraHelper.JAVA_EXTENSION)));
-		
-		IFile bytecodeFile = workspace.getRoot().getFile(new Path(fname));
-		
-		FileEditorInput input = new FileEditorInput(bytecodeFile);
-		try {
-			IWorkbenchPage page = editor.getEditorSite().getPage();
-
-			BytecodeEditor bcEditor = (BytecodeEditor)page.openEditor(input, BYTECODE_EDITOR_CLASS, true);
-			bcEditor.refreshBytecode(javaFile.getFullPath(), null, null);
-			input = new FileEditorInput(bytecodeFile);
-			JavaClass jc = bcEditor.getJavaClass();
-			Composition.startDisas();
-			//TODO why closing, it triggers exception
-			//page.closeEditor(bcEditor, true);
-			bcEditor = (BytecodeEditor)page.openEditor(input, BYTECODE_EDITOR_CLASS, true);			
-			bcEditor.setRelation((AbstractDecoratedTextEditor)editor, jc);
-			Composition.stopDisas();
-		} catch (CoreException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} */
+		 * IPath active =
+		 * ((FileEditorInput)editor.getEditorInput()).getFile().getFullPath();
+		 * IFile file = ((FileEditorInput)editor.getEditorInput()).getFile();
+		 * IPath active = file.getFullPath();
+		 * 
+		 * String fname = active.toOSString(); IWorkspace workspace =
+		 * ResourcesPlugin.getWorkspace();
+		 * 
+		 * IFile javaFile = workspace.getRoot().getFile(new
+		 * Path(UmbraHelper.replaceLast(fname, UmbraHelper.BYTECODE_EXTENSION,
+		 * UmbraHelper.JAVA_EXTENSION)));
+		 * 
+		 * IFile bytecodeFile = workspace.getRoot().getFile(new Path(fname));
+		 * 
+		 * FileEditorInput input = new FileEditorInput(bytecodeFile); try {
+		 * IWorkbenchPage page = editor.getEditorSite().getPage();
+		 * 
+		 * BytecodeEditor bcEditor = (BytecodeEditor)page.openEditor(input,
+		 * BYTECODE_EDITOR_CLASS, true);
+		 * bcEditor.refreshBytecode(javaFile.getFullPath(), null, null); input =
+		 * new FileEditorInput(bytecodeFile); JavaClass jc =
+		 * bcEditor.getJavaClass(); Composition.startDisas(); //TODO why
+		 * closing, it triggers exception //page.closeEditor(bcEditor, true);
+		 * bcEditor = (BytecodeEditor)page.openEditor(input,
+		 * BYTECODE_EDITOR_CLASS, true);
+		 * bcEditor.setRelation((AbstractDecoratedTextEditor)editor, jc);
+		 * Composition.stopDisas(); } catch (CoreException e) {
+		 * e.printStackTrace(); } catch (ClassNotFoundException e) {
+		 * e.printStackTrace(); } catch (IOException e) { e.printStackTrace(); }
+		 */
 	}
 
 	/**
@@ -106,17 +104,17 @@ public class BytecodeToBoogiePLAction implements IEditorActionDelegate, IUmbraCo
 				                                      B2BPL_MESSAGE_TITLE,
 				                                      INVALID_EXTENSION.replace(SUBSTITUTE, UmbraHelper.BYTECODE_EXTENSION));
 		else {
-			//replaceClass(active);
+			// replaceClass(active);
 
 		
-			//editor.doSave(null);
-			//IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-			//IProject project = root.getProject("selectedProject name");
-			//String entirePath = p.getLocation().toOSString(); 
+			// editor.doSave(null);
+			// IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+			// IProject project = root.getProject("selectedProject name");
+			// String entirePath = p.getLocation().toOSString();
 			
 			IFile file = ((FileEditorInput)editor.getEditorInput()).getFile();
 			
-			//String location = root.getLocation().toString();
+			// String location = root.getLocation().toString();
 	
 			String projectPath = file.getProject().getLocation().toOSString();
 			String bytecodePath = file.getLocation().toOSString();
@@ -125,7 +123,7 @@ public class BytecodeToBoogiePLAction implements IEditorActionDelegate, IUmbraCo
 					                     UmbraHelper.BOOGIEPL_EXTENSION);
 			String javaPath     = UmbraHelper.replaceLast(bytecodePath,
 					                     UmbraHelper.BYTECODE_EXTENSION, 
-					                     "" /*.class" */).
+					                     "" /* .class" */).
 					                 substring(projectPath.length() + 1 ).
 					                 replace('\\', '.');
 			
@@ -134,9 +132,19 @@ public class BytecodeToBoogiePLAction implements IEditorActionDelegate, IUmbraCo
 			args.add("-o"); args.add(boogiePLPath);
 			args.add(javaPath);
 			
+      // TODO include all files of the current project
+			IPath path = file.getLocation().removeLastSegments(1);
+			System.out.println("Looking for other classes in " + path.toOSString());
+			for (String a : getClassesInDirectory(path.toFile())) {
+				if (a.endsWith(".class")) {
+					args.add(javaPath.substring(0, javaPath.lastIndexOf(".")) + "." + a.substring(0, a.lastIndexOf(".")));
+				}
+			}
+
 			String[] argsArray = (String[])args.toArray(new String[args.size()]);
 			
-			// MessageDialog.openError(editor.getSite().getShell(), "Bytecode", "B");
+			// MessageDialog.openError(editor.getSite().getShell(), "Bytecode",
+			// "B");
 			
 			try {
 				PrintWriter messageWriter = new PrintWriter(new FileOutputStream(boogiePLPath));
@@ -147,11 +155,23 @@ public class BytecodeToBoogiePLAction implements IEditorActionDelegate, IUmbraCo
 				System.out.println(ioex.toString());
 			}
 			
-			//-------------- Load .bpl file in editor
+			// -------------- Load .bpl file in editor
 			// TODO: Create BoogiePL Editor
 			
 			loadBPLFile(active, lind);
 		}
+	}
+
+	private String[] getClassesInDirectory(File dir) {
+		if (dir.isDirectory()) {
+			String[] children = dir.list();
+			return children;
+			/*
+			 * for (int i=0; i<children.length; i++) { visitAllDirsAndFiles(new
+			 * File(dir, children[i])); }
+			 */
+		}
+		return null;
 	}
 
 	/**
@@ -169,13 +189,15 @@ public class BytecodeToBoogiePLAction implements IEditorActionDelegate, IUmbraCo
 		FileEditorInput input = new FileEditorInput(file);
 		try {
 			IWorkbenchPage page = editor.getEditorSite().getPage();
-			BytecodeEditor bplEditor = (BytecodeEditor)page.openEditor(input, BOOGIEPL_EDITOR_CLASS, true);
+			BytecodeEditor bplEditor = (BytecodeEditor) page.openEditor(input,
+					BOOGIEPL_EDITOR_CLASS, true);
 			bplEditor.refreshBytecode(active, null, null);
 			input = new FileEditorInput(file);
 			JavaClass jc = bplEditor.getJavaClass();
 			page.closeEditor(bplEditor, true);
-			bplEditor = (BytecodeEditor)page.openEditor(input, BOOGIEPL_EDITOR_CLASS, true);
-			bplEditor.setRelation((AbstractDecoratedTextEditor)editor, jc);
+			bplEditor = (BytecodeEditor) page.openEditor(input,
+					BOOGIEPL_EDITOR_CLASS, true);
+			bplEditor.setRelation((AbstractDecoratedTextEditor) editor, jc);
 		} catch (CoreException e) {
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {

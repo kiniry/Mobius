@@ -176,7 +176,7 @@ public class BoogiePLEditorContributor extends EditorActionBarContributor {
 	        }
 	        catch (IOException e) {
 	            e.printStackTrace();
-	            System.exit(-1);
+	            // System.exit(-1);
 	        }
 		}
 	}
