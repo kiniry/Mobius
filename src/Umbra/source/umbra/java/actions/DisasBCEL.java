@@ -62,7 +62,7 @@ public class DisasBCEL implements IEditorActionDelegate, IUmbraConstants {
 		if (lind == -1) {
 			MessageDialog.openInformation(editor.getSite().getShell(), 
 					                      DISAS_MESSAGE_TITLE, 
-					                      INVALID_EXTENSION.replace(SUBSTITUTE, UmbraHelper.JAVA_EXTENSION));
+					                      INVALID_EXTENSION.replaceAll(SUBSTITUTE, UmbraHelper.JAVA_EXTENSION));
 		} else {
 			//replaceClass(active);
 			String fname = UmbraHelper.replaceLast(active.toOSString(), 

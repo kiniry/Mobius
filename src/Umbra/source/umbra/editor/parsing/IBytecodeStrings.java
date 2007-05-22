@@ -118,7 +118,7 @@ public interface IBytecodeStrings {
 			"lconst", "nop", "ret"};
 	
 	
-	
+	public static String[] BMLKeywords = new String[] {"requires", "ensures", "exsures"};
 	
 	
 	/**

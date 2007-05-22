@@ -40,6 +40,10 @@ public class BytecodeScanner extends RuleBasedScanner {
 					        tokens[IColorValues.BTC_INSTR]);
 		}
 		
+		for (int i = 0; i < IBytecodeStrings.BMLKeywords.length; i++) {
+			insrule.addWord(IBytecodeStrings.BMLKeywords[i], 
+					        tokens[IColorValues.ANNOTKEY]);
+		}
 		
 		for (int i = 0; i < IBytecodeStrings.linewords.length; i++) {
 			insrule.addWord(IBytecodeStrings.linewords[i], 
@@ -53,7 +57,7 @@ public class BytecodeScanner extends RuleBasedScanner {
 		
 		//WordRule keyrule = new WordRule(new SpecialWordDetector(), tokens[IColorValues.KEY]);
 		
-		IRule[] rules = new IRule[9];
+		IRule[] rules = new IRule[11];
 		rules[0] = new EndOfLineRule("//", tokens[IColorValues.COMMENT]);
 		rules[1] = insrule;
 		rules[2] = new SpecialNumberRule('\n', ':', 
@@ -66,6 +70,8 @@ public class BytecodeScanner extends RuleBasedScanner {
 		rules[6] = new SingleLineRule("{", "}", tokens[IColorValues.SQUARE]);
 		rules[7] = new NumberRule(tokens[IColorValues.NUMBER]);
 		rules[8] = new WhitespaceRule(new BytecodeWhitespaceDetector());
+		rules[9] = new EndOfLineRule("*", tokens[IColorValues.ANNOT]);
+		rules[10] = new EndOfLineRule("/*", tokens[IColorValues.ANNOT]);
 
 		setRules(rules);
 	}

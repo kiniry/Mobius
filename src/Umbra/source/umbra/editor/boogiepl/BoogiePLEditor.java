@@ -205,7 +205,7 @@ public class BoogiePLEditor extends TextEditor {
 		
 		// String clname = path.lastSegment().substring(0, path.lastSegment().lastIndexOf("."));
 		String projectPath =  file.getProject().getLocation().toOSString();
-		String clname     = file.getLocation().toOSString().replace(".bpl", "" /*.class" */).substring(projectPath.length() + 1 );
+		String clname     = file.getLocation().toOSString().replaceAll(".bpl", "" /*.class" */).substring(projectPath.length() + 1 );
 		
 		
 		ClassPath cp = new ClassPath(pathName);

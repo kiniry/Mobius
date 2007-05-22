@@ -11,26 +11,21 @@ package umbra.editor;
  * @author Wojtek Wąs
  */
 public interface IColorValues {
-	/**
-	 * TODO
-	 */
-	static int PARTS = 16;
 	
 	/**
-	 * TODO
+	 * The color of strings
 	 */
 	static int STRING = 0;
 	/**
-	 * TODO
+	 * The color of comments (starting with //)
 	 */
-	static int COMMENT = 14;//1;
+	static int COMMENT = 1;
 	/**
-	 * TODO
-	 * 
+	 * The color of unparsed text in bytecode (e.g. names of called methods)
 	 */
 	static int DEFAULT = 2;
 	/**
-	 * TODO
+	 * The color of piece of bytecode recognized to be an error (not used)
 	 */
 	static int ERROR = 3;
 	/**
@@ -38,49 +33,62 @@ public interface IColorValues {
 	 */
 	static int HEADER = 4;
 	/**
-	 * TODO
+	 * not used (but not to delete)
 	 */
 	static int TAG = 5;
 	/**
-	 * TODO
+	 * not used (but not to delete)
 	 */
 	static int CLASS = 6;
 	/**
-	 * TODO
+	 * The color of bytecode instructions
 	 */
 	static int BTC_INSTR = 7;
 	/**
-	 * TODO
+	 * The color of the word: <init>
 	 */
 	static int KEY = 8;
 	/**
-	 * TODO
+	 * The color of bytecode keywords: "Attribute(s)", "LineNumber", etc. 
 	 */
 	static int LINE = 9;
 	/**
-	 * TODO
+	 * not used (but not to delete)
 	 */
 	static int THROWS = 10;
 	/**
-	 * TODO
+	 * The color of numbers in bytecode that are surrounded by '( )'
 	 */
 	static int SQUARE = 11;
 	/**
-	 * TODO
+	 * The color of numbers appearing in bytecode except from cases listed below
 	 */
 	static int NUMBER = 12;
 	/**
-	 * TODO
+	 * The color of line number at the beginning of a line
 	 */
 	static int POSITION = 13;
 	/**
-	 * TODO
+	 * The color of number arguments that are used with '#'
 	 */
 	static int HASH = 14;
 	/**
-	 * TODO
+	 * The color of number arguments that are used with '%'
 	 */
 	static int ATTR = 15;
+	/**
+	 * The color of BML annotations
+	 */
+	static int ANNOT = 16;
+	/**
+	 * The color of keywords in BML annotations
+	 */
+	static int ANNOTKEY = 17;
+	/**
+	 * Number of constants defined above
+	 */
+	static int PARTS = 18;
+	
 	
 	/**
 	 * TODO
@@ -93,49 +101,56 @@ public interface IColorValues {
 		           0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 
 		           0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 
 		           0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-		           0, 0, 0, 2, 0, 0, 0, 2},
+		           0, 0, 0, 2, 0, 0, 0, 2,
+		           0, 0, 0, 2, 0, 0, 0, 3},
 		new int[] {0, 255, 0, 0, 
 		           128, 128, 128, 2, 0, 0, 0, 0, 255, 0, 0, 0, 
 		           0, 0, 0, 1, 0, 0, 128, 0, 0, 0, 128, 0, 
 		           255, 160, 0, 3, 0, 0, 255, 1, 0, 192, 128, 0, 0, 192, 128, 0,
 		           0, 128, 64, 0, 255, 224, 0, 1, 255, 224, 0, 1,
-		           224, 255, 0, 3, 224, 0, 255, 3},
+		           224, 255, 0, 3, 224, 0, 255, 3,
+		           255, 153, 204, 0, 153, 255, 153, 1},
 		new int[] {0, 0, 255, 0, 
 		           255, 128, 255, 2, 64, 0, 64, 0, 255, 64, 0, 1, 
 		           192, 0, 192, 1, 128, 0, 128, 0, 128, 0, 128, 0, 
 		           128, 0, 255, 1, 128, 0, 128, 0, 128, 0, 192, 0,  192, 0, 192, 0, 
 		           192, 0, 192, 0, 128, 0, 128, 1, 128, 0, 128, 1, 
-		           255, 0, 255, 1, 255, 0, 255, 1},
+		           255, 0, 255, 1, 255, 0, 255, 1,
+		           255, 128, 255, 2, 255, 0, 255, 3},
 		new int[] {128, 128, 0, 0, 
 		           192, 192, 192, 0, 128, 128, 128, 0, 255, 0, 0, 1, 
 		           64, 64, 64, 1, 128, 128, 128, 0, 128, 128, 128, 0,  
 		           64, 64, 64, 1, 128, 128, 128, 1, 128, 128, 128, 1, 64, 64, 64, 1,  
 		           255, 192, 128, 1, 0, 192, 0, 1, 0, 192, 0, 1, 
-		           192, 192, 0, 1, 192, 192, 0, 1},
+		           192, 192, 0, 1, 192, 192, 0, 1,
+		           192, 192, 192, 2, 192, 192, 192, 3},
 		new int[] {0, 255, 255, 0, 
 		           128, 128, 128, 0, 0, 0, 0, 0, 255, 0, 0, 2, 
 		           0, 0, 0, 0, 0, 128, 128, 0, 0, 128, 128, 0, 
 		           0, 128, 128, 0, 0, 128, 128, 0, 0, 0, 0, 0, 0, 0, 0, 0,  
 		           0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		           0, 0, 0, 0, 0, 0, 0, 0,
 		           0, 0, 0, 0, 0, 0, 0, 0},
 		new int[] {0, 0, 255, 0,
 		           0, 128, 0, 0, 0, 0, 0, 0, 255, 0, 0, 0, 
 		           128, 0, 64, 1, 0, 64, 128, 0, 0, 64, 128, 0, 
 		           64, 0, 64, 1, 64, 0, 64, 1, 128, 0, 128, 0, 128, 0, 64, 1, 
 		           0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-		           0, 0, 0, 0, 0, 0, 0, 0},
+		           0, 0, 0, 0, 0, 0, 0, 0,
+		           0, 128, 0, 0, 0, 128, 0, 1},
 		new int[] {64, 255, 96, 0,
 		           160, 0, 128, 1, 192, 64, 255, 2, 96, 160, 0, 3,
 		           128, 192, 64, 0, 255, 96, 160, 1, 0, 128, 192, 2,
 		           192, 128, 0, 3, 160, 96, 255, 0, 64, 192, 128, 1,
 		           0, 160, 96, 2, 255, 64, 192, 3, 128, 0, 160, 0,
-		           96, 255, 64, 1, 64, 255, 96, 2, 160, 0, 128, 3},
+		           96, 255, 64, 1, 64, 255, 96, 2, 160, 0, 128, 3,
+		           192, 64, 255, 0, 96, 160, 0, 1},
 		new int[] {128, 128, 128, 0,
 		           128, 128, 128, 0, 128, 128, 128, 0, 128, 128, 128, 0,
 		           128, 128, 128, 0, 128, 128, 128, 0, 128, 128, 128, 0,
 		           128, 128, 128, 0, 128, 128, 128, 0, 128, 128, 128, 0,
 		           128, 128, 128, 0, 128, 128, 128, 0, 128, 128, 128, 0,
-		           128, 128, 128, 0, 128, 128, 128, 0, 128, 128, 128, 0}
-	};
-		
+		           128, 128, 128, 0, 128, 128, 128, 0, 128, 128, 128, 0,
+		           128, 128, 128, 0, 128, 128, 128, 0}
+	};		
 }

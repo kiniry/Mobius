@@ -35,15 +35,16 @@ public class BytecodePartitionScanner extends RuleBasedPartitionScanner {
 		IToken head = new Token(HEAD);
 		IToken tag = new Token(TAG);
 
-		IPredicateRule[] rules = new IPredicateRule[7];
+		IPredicateRule[] rules = new IPredicateRule[8];
 
 		rules[0] = new MultiLineRule("<!--", "-->", head);
 		rules[1] = new TagRule(tag);
-		rules[2] = new EndOfLineRule("public", head);
-		rules[3] = new EndOfLineRule("private", head);
-		rules[4] = new EndOfLineRule("protected", head);
-		rules[5] = new EndOfLineRule("}", head);
-		rules[6] = new EndOfLineRule("throws", thr);
+		rules[2] = new EndOfLineRule("class", head);
+		rules[3] = new EndOfLineRule("public", head);
+		rules[4] = new EndOfLineRule("private", head);
+		rules[5] = new EndOfLineRule("protected", head);
+		rules[6] = new EndOfLineRule("}", head);
+		rules[7] = new EndOfLineRule("throws", thr);
 
 		setPredicateRules(rules);
 	}
