@@ -137,10 +137,16 @@ public class AufliaNodeBuilder extends EscNodeBuilder
 		
 		StringBuffer sb = new StringBuffer();
 		if (s.charAt(0) == '|')
-			s = s.substring(1, s.length() - 2);
+			s = s.substring(1, s.length() - 1);
 		int start = 0;
+		if (s.charAt(0) == '?') {  }
 		switch (s.charAt(0)) {
-		case '?': sb.append('?'); start++; break;
+		case '?': 
+			sb.append('?'); 
+			start++;
+			if (!isLetter(s.charAt(start)))
+				sb.append("a'");
+			break;
 		case '<':
 		case '>':
 		case '=':
@@ -158,7 +164,7 @@ public class AufliaNodeBuilder extends EscNodeBuilder
 		
 		for (int i = start; i < s.length(); ++i) {
 			char c = s.charAt(i);
-			if (isLetter(c) || (c >= '0' && c <= '9') || c == '\'' || c == '.')
+			if (isLetter(c) || (c >= '0' && c <= '9') || c == '.')
 				sb.append(c);
 			else
 				sb.append('_');			
@@ -207,8 +213,9 @@ public class AufliaNodeBuilder extends EscNodeBuilder
 		else if (fn == symRefEQ || fn == symTypeEQ) 
 			return sx("=", args);
 		
-		if (fn == symAllocLT || fn == symAllocLE || fn == symTypeLE || fn == symArrayFresh ||
-				fn == symIsAllocated)
+		//if (fn == symAllocLT || fn == symAllocLE || fn == symTypeLE || fn == symArrayFresh ||
+			//	fn == symIsAllocated)
+		if (fn.retType == sortPred)
 			return sx(fn.name, args);
 			
 		return sx("=", sx(fn.name, args), trueConst);
@@ -217,8 +224,9 @@ public class AufliaNodeBuilder extends EscNodeBuilder
 	public PredSymbol registerPredSymbol(String name, Sort[] args, int tag)
 	{
 		earlyInit();
-		if (! AufliaPrelude.predefined.contains(name)) {
-			extrafuns.append(":extrapreds (( ").append(encodeName(name));
+		String ename = encodeName(name);
+		if (! AufliaPrelude.predefined.contains(ename)) {
+			extrafuns.append(":extrapreds (( ").append(ename);
 			for (int i = 0; i < args.length; ++i)
 				extrafuns.append(" Int");
 			extrafuns.append(" ))\n");
@@ -230,8 +238,14 @@ public class AufliaNodeBuilder extends EscNodeBuilder
 	public FnSymbol registerFnSymbol(String name, Sort[] args, Sort ret_type, int tag)
 	{
 		earlyInit();
-		if (! AufliaPrelude.predefined.contains(name)) {
-			extrafuns.append(":extrafuns (( ").append(encodeName(name));
+		String ename = encodeName(name);
+		if (! AufliaPrelude.predefined.contains(ename)) {
+			/*
+			if (name.indexOf("intern") >= 0) {
+				int x = 0;
+				x++;
+			}*/
+			extrafuns.append(":extrafuns (( ").append(ename);
 			for (int i = 0; i < args.length + 1; ++i)
 				extrafuns.append(" Int");
 			extrafuns.append(" ))\n");
@@ -383,7 +397,7 @@ public class AufliaNodeBuilder extends EscNodeBuilder
 		case funSUB: sym = "floatingSUB"; break;
 		case funMUL: sym = "floatingMUL"; break;
 		case funDIV: sym = "floatingDiv"; break;
-		case funMOD: sym = "floatingMod"; break;
+		case funMOD: sym = "floatingMOD"; break;
 		default: Assert.fail(""); sym = null;
 		}
 		

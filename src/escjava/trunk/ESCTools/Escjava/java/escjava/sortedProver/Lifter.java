@@ -90,6 +90,8 @@ public class Lifter extends EscNodeBuilder
 	public Lifter(EscNodeBuilder b)
 	{
 		builder = b;
+		// these symbols sometimes occur by-name:
+		saveBgSymbol(symInterned);
 	} 
 	
 	public SPred generateBackPred(FindContributors scope)
@@ -1149,6 +1151,12 @@ public class Lifter extends EscNodeBuilder
 	
 	public FnTerm symbolRef(String name) {
 		return symbolRef(name, null);
+	}
+	
+	void saveBgSymbol(FnSymbol s)
+	{
+		String nameHt = s.name + "." + s.argumentTypes.length;
+		bgSymbolTypes.put(nameHt, s);
 	}
 	
 	public FnSymbol getFnSymbol(String name, int arity)

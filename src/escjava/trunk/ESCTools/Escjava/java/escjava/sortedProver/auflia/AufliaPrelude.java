@@ -36,19 +36,21 @@ public class AufliaPrelude
 	":extrafuns (( classDown Int Int Int )) \n" +
 	":extrafuns (( classLiteral Int Int )) \n" +
 	":extrafuns (( CONCVARSYM Int Int )) \n" +
-	":extrafuns (( divides Int Int Int )) \n" +
 	":extrafuns (( eClosedTime Int Int )) \n" +
 	":extrafuns (( elems  Int )) \n" +
 	":extrafuns (( elemtype Int Int )) \n" +
 	":extrafuns (( F_0.0  Int )) \n" +
 	":extrafuns (( fClosedTime Int Int )) \n" +
-	":extrafuns (( floatingADD Int Int Int )) \n" +
 	":extrafuns (( floatingEQ Int Int Int )) \n" +
 	":extrafuns (( floatingGE Int Int Int )) \n" +
 	":extrafuns (( floatingGT Int Int Int )) \n" +
 	":extrafuns (( floatingLE Int Int Int )) \n" +
 	":extrafuns (( floatingLT Int Int Int )) \n" +
 	":extrafuns (( floatingMOD Int Int Int )) \n" +
+	":extrafuns (( floatingDiv Int Int Int )) \n" +
+	":extrafuns (( floatingMUL Int Int Int )) \n" +
+	":extrafuns (( floatingADD Int Int Int )) \n" +
+	":extrafuns (( floatingSUB Int Int Int )) \n" +
 	":extrafuns (( floatingNEG Int Int )) \n" +
 	":extrafuns (( floatingNE Int Int Int )) \n" +
 	":extrafuns (( integralAnd Int Int Int )) \n" +
@@ -66,8 +68,8 @@ public class AufliaPrelude
 	":extrafuns (( intFirst  Int )) \n" +
 	":extrafuns (( intLast  Int )) \n" +
 	":extrafuns (( intShiftL Int Int Int )) \n" +
-	":extrafuns (( is Int Int Int )) \n" +
-	":extrafuns (( isNewArray Int Int )) \n" +
+	":extrapreds (( is Int Int )) \n" +
+	":extrapreds (( isNewArray Int )) \n" +
 	":extrafuns (( LE Int Int Int )) \n" +
 	":extrafuns (( longFirst  Int )) \n" +
 	":extrafuns (( longLast  Int )) \n" +
@@ -225,7 +227,7 @@ public class AufliaPrelude
 	"  (forall (?t Int) \n" +
 	"   (and \n" +
 	"    (not (= (classLiteral ?t) null)) \n" +
-	"    (= Smt.true (is (classLiteral ?t) T_java.lang.Class)) \n" +
+	"    (is (classLiteral ?t) T_java.lang.Class) \n" +
 	"    (isAllocated (classLiteral ?t) alloc)) \n" +
 	"   :pat {(classLiteral ?t)}) \n" +
 	":assumption \n" +
@@ -291,7 +293,7 @@ public class AufliaPrelude
 	"  (forall (?a Int) (?b Int) (?i Int) (?j Int) \n" +
 	"   (iff (= (next ?a ?i) (next ?b ?j)) (and (= ?a ?b) (= ?i ?j))) \n" +
 	"   :pat {(next ?a ?i) (next ?b ?j)}) \n" +
-	":assumption \n" +
+	":assumption \n" +	
 	"  (forall (?x Int) (?y Int) (?a Int) (?b Int) \n" +
 	"   (iff (= (stringCat ?x ?y ?a) (stringCat ?x ?y ?b)) (= ?a ?b)) \n" +
 	"   :pat {(stringCat ?x ?y ?a) (stringCat ?x ?y ?b)}) \n" +
@@ -312,7 +314,7 @@ public class AufliaPrelude
 	"   :pat {(intern_ ?i ?k) (intern_ ?ii ?kk)}) \n" +
 	":assumption \n" +
 	"  (forall (?s Int) \n" +
-	"   (= Smt.true (is (ite (interned_ ?s) Smt.true Smt.false) T_boolean)) \n" +
+	"   (is (ite (interned_ ?s) Smt.true Smt.false) T_boolean) \n" +
 	"   :pat {(interned_ ?s)}) \n" +
 	":assumption \n" +
 	"  (forall (?i Int) (?k Int) \n" +
@@ -365,7 +367,7 @@ public class AufliaPrelude
 	"   :pat {(integralDiv ?i ?j)}) \n" +
 	":assumption \n" +
 	"  (forall (?s Int) \n" +
-	"   (implies (= Smt.true (isNewArray ?s)) (subtypes (typeof ?s) arrayType)) \n" +
+	"   (implies (isNewArray ?s) (subtypes (typeof ?s) arrayType)) \n" +
 	"   :pat {(isNewArray ?s)}) \n" +
 	":assumption \n" +
 	"  (forall (?t Int) \n" +
@@ -415,7 +417,7 @@ public class AufliaPrelude
 	"   :pat {(arrayFresh ?a ?a0 ?b0 ?e (arrayShapeMore ?n ?s) ?T ?v)}) \n" +
 	":assumption \n" +
 	"  (forall (?a Int) \n" +
-	"   (and (<= 0 (arrayLength ?a)) (= Smt.true (is (arrayLength ?a) T_int))) \n" +
+	"   (and (<= 0 (arrayLength ?a)) (is (arrayLength ?a) T_int)) \n" +
 	"   :pat {(arrayLength ?a)}) \n" +
 	":assumption \n" +
 	"  (forall (?x Int) \n" +
@@ -454,19 +456,19 @@ public class AufliaPrelude
 	"   (iff (isAllocated ?x ?a0) (< (vAllocTime ?x) ?a0))) \n" +
 	":assumption \n" +
 	"  (forall (?e Int) (?a Int) (?i Int) \n" +
-	"   (= Smt.true (is (select1 (select1 (asElems ?e) ?a) ?i) (elemtype (typeof ?a)))) \n" +
+	"   (is (select1 (select1 (asElems ?e) ?a) ?i) (elemtype (typeof ?a))) \n" +
 	"   :pat {(select1 (select1 (asElems ?e) ?a) ?i)}) \n" +
 	":assumption \n" +
 	"  (forall (?f Int) (?t Int) (?x Int) \n" +
-	"   (= Smt.true (is (select1 (asField ?f ?t) ?x) ?t)) \n" +
+	"   (is (select1 (asField ?f ?t) ?x) ?t) \n" +
 	"   :pat {(select1 (asField ?f ?t) ?x)}) \n" +
 	":assumption \n" +
 	"  (forall (?x Int) (?t Int) \n" +
-	"   (implies (subtypes ?t T_java.lang.Object) (iff (= Smt.true (is ?x ?t)) (or (= ?x null) (subtypes (typeof ?x) ?t)))) \n" +
+	"   (implies (subtypes ?t T_java.lang.Object) (iff (is ?x ?t) (or (= ?x null) (subtypes (typeof ?x) ?t)))) \n" +
 	"   :pat {(subtypes ?t T_java.lang.Object) (is ?x ?t)}) \n" +
 	":assumption \n" +
 	"  (forall (?x Int) \n" +
-	"   (iff (= Smt.true (is ?x T_void)) (= (typeof ?x) T_void)) \n" +
+	"   (iff (is ?x T_void) (= (typeof ?x) T_void)) \n" +
 	"   :pat {(typeof ?x)}) \n" +
 	":assumption (= T_bigint T_long) \n" +
 	":assumption (< intLast longLast) \n" +
@@ -475,32 +477,32 @@ public class AufliaPrelude
 	":assumption (< longFirst intFirst) \n" +
 	":assumption \n" +
 	"  (forall (?x Int) \n" +
-	"   (iff (= Smt.true (is ?x T_long)) (and (<= longFirst ?x) (<= ?x longLast))) \n" +
+	"   (iff (is ?x T_long) (and (<= longFirst ?x) (<= ?x longLast))) \n" +
 	"   :pat {(is ?x T_long)}) \n" +
 	":assumption \n" +
 	"  (forall (?x Int) \n" +
-	"   (iff (= Smt.true (is ?x T_int)) (and (<= intFirst ?x) (<= ?x intLast))) \n" +
+	"   (iff (is ?x T_int) (and (<= intFirst ?x) (<= ?x intLast))) \n" +
 	"   :pat {(is ?x T_int)}) \n" +
 	":assumption \n" +
 	"  (forall (?x Int) \n" +
-	"   (iff (= Smt.true (is ?x T_short)) (and (<= (~ 32768) ?x) (<= ?x 32767))) \n" +
+	"   (iff (is ?x T_short) (and (<= (~ 32768) ?x) (<= ?x 32767))) \n" +
 	"   :pat {(is ?x T_short)}) \n" +
 	":assumption \n" +
 	"  (forall (?x Int) \n" +
-	"   (iff (= Smt.true (is ?x T_byte)) (and (<= (~ 128) ?x) (<= ?x 127))) \n" +
+	"   (iff (is ?x T_byte) (and (<= (~ 128) ?x) (<= ?x 127))) \n" +
 	"   :pat {(is ?x T_byte)}) \n" +
 	":assumption \n" +
 	"  (forall (?x Int) \n" +
-	"   (iff (= Smt.true (is ?x T_char)) (and (<= 0 ?x) (<= ?x 65535))) \n" +
+	"   (iff (is ?x T_char) (and (<= 0 ?x) (<= ?x 65535))) \n" +
 	"   :pat {(is ?x T_char)}) \n" +
 	":assumption (distinct bool_false Smt.true) \n" +
 	":assumption \n" +
 	"  (forall (?x Int) (?t Int) \n" +
-	"   (implies (= Smt.true (is ?x ?t)) (= (cast ?x ?t) ?x)) \n" +
+	"   (implies (is ?x ?t) (= (cast ?x ?t) ?x)) \n" +
 	"   :pat {(cast ?x ?t)}) \n" +
 	":assumption \n" +
 	"  (forall (?x Int) (?t Int) \n" +
-	"   (= Smt.true (is (cast ?x ?t) ?t)) \n" +
+	"   (is (cast ?x ?t) ?t) \n" +
 	"   :pat {(cast ?x ?t)}) \n" +
 	":assumption \n" +
 	"  (forall (?t0 Int) (?t1 Int) \n" +
@@ -638,7 +640,7 @@ public class AufliaPrelude
 		"alloc", "array_", "arrayLength", "arrayMake", "arrayParent",
 		"arrayPosition", "arrayShapeMore", "arrayShapeOne", "arrayType",
 		"asChild", "asElems", "asField", "asLockSet", "bool_false", "cast",
-		"classDown", "classLiteral", "CONCVARSYM", "divides", "eClosedTime",
+		"classDown", "classLiteral", "CONCVARSYM", "eClosedTime",
 		"elems", "elemtype", "F_0.0", "fClosedTime", "floatingADD", "floatingEQ",
 		"floatingGE", "floatingGT", "floatingLE", "floatingLT", "floatingMOD",
 		"floatingNEG", "floatingNE", "integralAnd", "integralDiv", "integralEQ",
