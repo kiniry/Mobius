@@ -8,4 +8,6 @@ ag_tmplt.2
 ag_tmplt.3
 ag_tmplt.4
 parser
+tc.errors
+tc.ok
 

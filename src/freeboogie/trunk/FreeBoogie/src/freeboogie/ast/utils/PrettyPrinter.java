@@ -8,48 +8,7 @@ import java.io.Writer;
 import java.math.BigInteger;
 import java.util.HashMap;
 
-import freeboogie.ast.ArrayType;
-import freeboogie.ast.AssertAssumeCmd;
-import freeboogie.ast.AssignmentCmd;
-import freeboogie.ast.Atom;
-import freeboogie.ast.AtomCast;
-import freeboogie.ast.AtomFun;
-import freeboogie.ast.AtomId;
-import freeboogie.ast.AtomIdx;
-import freeboogie.ast.AtomLit;
-import freeboogie.ast.AtomNum;
-import freeboogie.ast.AtomOld;
-import freeboogie.ast.AtomQuant;
-import freeboogie.ast.Axiom;
-import freeboogie.ast.BinaryOp;
-import freeboogie.ast.Block;
-import freeboogie.ast.BlockEnd;
-import freeboogie.ast.Body;
-import freeboogie.ast.CallCmd;
-import freeboogie.ast.Command;
-import freeboogie.ast.Commands;
-import freeboogie.ast.ConstDecl;
-import freeboogie.ast.Declaration;
-import freeboogie.ast.DepType;
-import freeboogie.ast.Expr;
-import freeboogie.ast.Exprs;
-import freeboogie.ast.Function;
-import freeboogie.ast.GenericType;
-import freeboogie.ast.HavocCmd;
-import freeboogie.ast.Identifiers;
-import freeboogie.ast.Implementation;
-import freeboogie.ast.Index;
-import freeboogie.ast.PrimitiveType;
-import freeboogie.ast.Procedure;
-import freeboogie.ast.Signature;
-import freeboogie.ast.Specification;
-import freeboogie.ast.Transformer;
-import freeboogie.ast.Trigger;
-import freeboogie.ast.Type;
-import freeboogie.ast.TypeDecl;
-import freeboogie.ast.UnaryOp;
-import freeboogie.ast.UserType;
-import freeboogie.ast.VariableDecl;
+import freeboogie.ast.*;
 import freeboogie.util.Err;
 
 /**
@@ -432,6 +391,15 @@ public class PrettyPrinter extends Transformer {
     expr.eval(this);
     semi();
     if (tail != null) tail.eval(this);
+  }
+
+  @Override
+  public void see(TupleType tupleType, Type type, TupleType tail) {
+    type.eval(this);
+    if (tail != null) {
+      say(", ");
+      tail.eval(this);
+    }
   }
 
   @Override

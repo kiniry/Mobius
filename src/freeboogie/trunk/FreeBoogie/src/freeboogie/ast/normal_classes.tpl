@@ -27,6 +27,7 @@ public class \ClassName extends \BaseName {
 
   public \ClassName(\members[, ]{\if_primitive{\Membertype}{\MemberType} \memberName}, AstLocation location) {
     this(\members[,]{\memberName});
+    assert location != null;
     this.location = location;
   }
 

@@ -19,12 +19,19 @@ Implementation = Signature! sig, Body! body, Declaration tail;
 
 
 // Types and constants
-Type :> PrimitiveType, UserType, ArrayType, GenericType, DepType;
+Type :> PrimitiveType, UserType, ArrayType, GenericType, DepType, TupleType;
 ArrayType = Type! rowType, Type colType, Type! elemType;
 PrimitiveType = enum(Ptype: BOOL, INT, REF, NAME, ANY) ptype;
 GenericType = Type! param, Type! type;
 DepType = Type! type, Expr! pred;
 UserType = String! name;
+TupleType = Type! type, TupleType tail;
+  // Not constructed during parsing.
+  // In BoogiePL equal(TupleType(t,null), t).
+  // The alternative is to put tails on all types but that looked
+  // much more invasive that this solution which affects only one
+  // place in the typechecker (roughly) in an ugly way.
+  
 
 // Signatures are used to represent uninterpreted functions
 Signature = String! name, Declaration args, Declaration results;
@@ -45,7 +52,7 @@ HavocCmd = AtomId! id;
 CallCmd = String! procedure, Identifiers results, Exprs args;
 
 // Expressions
-Expr :> BinaryOp, UnaryOp, Atom;
+Expr :> BinaryOp, UnaryOp, Atom, Exprs;
 BinaryOp = enum(Op: PLUS, MINUS, MUL, DIV, MOD, EQ, NEQ, LT, LE,
                     GE, GT, SUBTYPE, EQUIV, IMPLIES, AND, OR) op,
            Expr! left, Expr! right;

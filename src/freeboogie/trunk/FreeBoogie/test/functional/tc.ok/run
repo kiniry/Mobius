@@ -1,0 +1,3 @@
+#!/bin/bash
+ulimit -t 10
+fbrun freeboogie.tc.Main *.bpl

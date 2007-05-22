@@ -3,6 +3,7 @@
 package freeboogie.tc;
 
 import java.io.StringWriter;
+import java.math.BigInteger;
 import java.util.HashMap;
 
 import freeboogie.ast.*;
@@ -21,6 +22,11 @@ public class TypeChecker extends Evaluator<Type> {
   
   // used for primitive types
   private PrimitiveType boolType, intType, refType, nameType, anyType;
+  
+  // used to signal an error in a subexpression.
+  // the content is the same as for anyType but it's a different reference
+  //  (unique while typechecking)
+  private PrimitiveType errType;
   
   private SymbolTable st;
   
@@ -53,6 +59,7 @@ public class TypeChecker extends Evaluator<Type> {
     refType = new PrimitiveType(PrimitiveType.Ptype.REF);
     nameType = new PrimitiveType(PrimitiveType.Ptype.NAME);
     anyType = new PrimitiveType(PrimitiveType.Ptype.ANY);
+    errType = new PrimitiveType(PrimitiveType.Ptype.ANY);
     
     typeOf = new UsageToDefMap<Expr, Type>();
     typeVar = new HashMap<String, Type>();
@@ -70,10 +77,32 @@ public class TypeChecker extends Evaluator<Type> {
   
   // === helper methods ===
   
+  // report an error and set the errors flag
+  // TODO: perhaps do some smarter formating
+  private void report(AstLocation l, String s) {
+    Err.error("" + l + ": " + s + ".");
+    errors = true;
+  }
+  
+  // assumes |d| is a list of |VariableDecl|
+  // gives a TupleType with the types in that list
+  private TupleType tupleTypeOfDecl(Declaration d) {
+    if (d == null) return null;
+    assert d instanceof VariableDecl;
+    VariableDecl vd = (VariableDecl)d;
+    return new TupleType(vd.getType(), tupleTypeOfDecl(vd.getTail()));
+  }
+  
   // TODO: don't forget to check that the where expressions are booleans
   // strip DepType since only the prover can handle the where clauses
-  private Type stripDep(Type t) {
-    while (t instanceof DepType) t = ((DepType)t).getType();
+  // transform one element tuples into the types they contain
+  private Type strip(Type t) {
+    if (t instanceof DepType)
+      return strip(((DepType)t).getType());
+    else if (t instanceof TupleType) {
+      TupleType tt = (TupleType)t;
+      if (tt.getTail() == null) return strip(tt.getType());
+    }
     return t;
   }
   
@@ -134,7 +163,13 @@ public class TypeChecker extends Evaluator<Type> {
   // returns (a <: b)
   private boolean sub(Type a, Type b) {
     if (a == b) return true; // the common case
-    if (a == null || b == null) return true; // don't trickle up errors
+    if (a == errType || b == errType) return true; // don't trickle up errors
+    
+    // an empty tuple is only the same with an empty tuple
+    if (a == null ^ b == null) return false;
+    
+    // get rid of where clauses and make tuples with one element non-tuples
+    a = strip(a); b = strip(b);
     
     // check if b is ANY
     if (b instanceof PrimitiveType) {
@@ -150,6 +185,12 @@ public class TypeChecker extends Evaluator<Type> {
       GenericType sb = (GenericType)b;
       if (typeVarName(sb.getParam()) != null && sub(a, sb.getType()))
         return unify(sb.getParam(), anyType);
+    }
+    
+    // allow <x>T to be used where T is expected
+    if (a instanceof GenericType && !(b instanceof GenericType)) {
+      GenericType sa = (GenericType)a;
+      if (sub(sa.getType(), b)) return true;
     }
     
     // the main check
@@ -179,6 +220,11 @@ public class TypeChecker extends Evaluator<Type> {
       if (!sub(sa.getParam(), sb.getParam()) || !sub(sb.getParam(), sa.getParam()))
         return false;
       return sub(sa.getType(), sb.getType());
+    } else if (a instanceof TupleType) {
+      if (!(b instanceof TupleType)) return false;
+      TupleType sa = (TupleType)a;
+      TupleType sb = (TupleType)b;
+      return sub(sa.getType(), sb.getType()) && sub(sa.getTail(), sb.getTail());
     } else {
       Err.help("type = " + a);
       assert false;
@@ -189,10 +235,14 @@ public class TypeChecker extends Evaluator<Type> {
   
   // pretty print a type
   private String typeToString(Type t) {
+    if (t == null) return "()";
     StringWriter sw = new StringWriter();
     PrettyPrinter pp = new PrettyPrinter(sw);
     t.eval(pp);
-    return sw.toString();
+    if (t instanceof TupleType)
+      return "(" + sw + ")";
+    else 
+      return sw.toString();
   }
   
   /**
@@ -201,9 +251,8 @@ public class TypeChecker extends Evaluator<Type> {
    */
   private void check(Type a, Type b, AstLocation l) {
     if (sub(a, b)) return;
-    Err.error("" + l + ": Used type " + typeToString(a) 
-      + " when expecting " + typeToString(b) + ".");
-    errors = true;
+    report(l, "Found type " + typeToString(a) 
+      + " instead of " + typeToString(b));
   }
   
   /**
@@ -212,15 +261,14 @@ public class TypeChecker extends Evaluator<Type> {
    */
   private void checkExact(Type a, Type b, AstLocation l) {
     if (sub(a, b) && sub(b, a)) return;
-    Err.error("" + l + ": Types should be the same: " 
-      + typeToString(a) + " and " + typeToString(b) + ".");
-    errors = true;
+    report(l, "Types should be the same: "
+      + typeToString(a) + " and " + typeToString(b));
   }
   
   // === visiting operators ===
   @Override
-  public Type eval(UnaryOp unaryOp, UnaryOp.Op op, Expr e) {
-    Type t = stripDep(e.eval(this));
+  public PrimitiveType eval(UnaryOp unaryOp, UnaryOp.Op op, Expr e) {
+    Type t = strip(e.eval(this));
     switch (op) {
     case MINUS:
       check(t, intType, e.loc());
@@ -237,9 +285,9 @@ public class TypeChecker extends Evaluator<Type> {
   }
 
   @Override
-  public Type eval(BinaryOp binaryOp, BinaryOp.Op op, Expr left, Expr right) {
-    Type l = stripDep(left.eval(this));
-    Type r = stripDep(left.eval(this));
+  public PrimitiveType eval(BinaryOp binaryOp, BinaryOp.Op op, Expr left, Expr right) {
+    Type l = strip(left.eval(this));
+    Type r = strip(right.eval(this));
     switch (op) {
     case PLUS:
     case MINUS:
@@ -282,7 +330,7 @@ public class TypeChecker extends Evaluator<Type> {
       return boolType;
     default:
       assert false;
-      return null; // dumb compiler
+      return errType; // dumb compiler
     }
   }
   
@@ -290,10 +338,10 @@ public class TypeChecker extends Evaluator<Type> {
   @Override
   public Type eval(AtomId atomId, String id) {
     Declaration d = st.ids.def(atomId);
-    Type t = null;
+    Type t = errType;
     if (d == null)
       // HACK for `generics'
-      t = new UserType(id, null);
+      t = new UserType(id);
     else {
       if (d instanceof VariableDecl)
         t = ((VariableDecl)d).getType();
@@ -307,26 +355,68 @@ public class TypeChecker extends Evaluator<Type> {
   }
 
   @Override
+  public PrimitiveType eval(AtomNum atomNum, BigInteger val) {
+    typeOf.put(atomNum, intType);
+    return intType;
+  }
+
+  @Override
+  public PrimitiveType eval(AtomLit atomLit, AtomLit.AtomType val) {
+    switch (val) {
+    case TRUE:
+    case FALSE:
+      typeOf.put(atomLit, boolType);
+      return boolType;
+    case NULL:
+      typeOf.put(atomLit, refType);
+      return refType;
+    default:
+      assert false;
+      return errType; // dumb compiler 
+    }
+  }
+
+  @Override
+  public Type eval(AtomOld atomOld, Expr e) {
+    Type t = e.eval(this);
+    typeOf.put(atomOld, t);
+    return t;
+  }
+
+  @Override
+  public PrimitiveType eval(AtomQuant atomQuant, AtomQuant.QuantType quant, Declaration vars, Trigger trig, Expr e) {
+    Type t = e.eval(this);
+    check(t, boolType, e.loc());
+    typeOf.put(atomQuant, boolType);
+    return boolType;
+  }
+
+  @Override
   public Type eval(AtomFun atomFun, String function, Exprs args) {
     Function d = st.funcs.def(atomFun);
     Signature sig = d.getSig();
-    // TODO: I must have a list of types as a type!
-    assert false; // TODO: Implement.
-    return null;
+    Declaration fargs = sig.getArgs();
+    
+    Type at = strip(args == null? null : (TupleType)args.eval(this));
+    Type fat = strip(tupleTypeOfDecl(fargs));
+    
+    check(at, fat, args == null? atomFun.loc() : args.loc());
+    Type rt = strip(tupleTypeOfDecl(sig.getResults()));
+    typeOf.put(atomFun, rt);
+    return rt;
   }
-
 
   @Override
   public Type eval(AtomCast atomCast, Expr e, Type type) {
-    // TODO: should I make some casts fail?
     e.eval(this);
+    typeOf.put(atomCast, type);
     return type;
   }
 
   @Override
   public Type eval(AtomIdx atomIdx, Atom atom, Index idx) {
-    Type t = stripDep(atom.eval(this));
-    if (t == null) return null; // don't repeat error messages
+    Type t = strip(atom.eval(this));
+    if (t == errType) return errType;
     if (!(t instanceof ArrayType)) {
       Err.error("" + atom.loc() + ": Must be an array.");
       errors = true;
@@ -350,29 +440,111 @@ public class TypeChecker extends Evaluator<Type> {
     }
     
     // look at indexing types
-    check(stripDep(idx.getA().eval(this)), stripDep(at.getRowType()), idx.getA().loc());
+    check(idx.getA().eval(this), at.getRowType(), idx.getA().loc());
     if (idx.getB() != null)
-      check(stripDep(idx.getB().eval(this)), stripDep(at.getColType()), idx.getB().loc());
+      check(idx.getB().eval(this), at.getColType(), idx.getB().loc());
 
     // get the result type in case it was a type variable
     if (resultTypeVar != null) {
       et = typeVar.get(freshTypeVar);
+      if (et == null) {
+        report(atomIdx.loc(), "Can't deduce array type");
+        et = errType;
+      }
       typeVar.remove(freshTypeVar);
     }
-    
-    
-    // TODO: report error when et == null? seems right but the benchmarks
-    // are full of these errors.
-    //if (et == null) {
-    //  Err.error("" + atomIdx.loc() + ": Unable to deduce type of array element.");
-    //  errors = true;
-    //}
     
     typeOf.put(atomIdx, et);
     return et;
   }
-
   
-  // === visiting functions ===
+  // === visit commands ===
+  @Override
+  public Type eval(AssignmentCmd assignmentCmd, Expr lhs, Expr rhs) {
+    Type lt = strip(lhs.eval(this));
+    Type rt = strip(rhs.eval(this));
+    check(rt, lt, assignmentCmd.loc());
+    return null;
+  }
 
+  @Override
+  public Type eval(AssertAssumeCmd assertAssumeCmd, AssertAssumeCmd.CmdType type, Expr expr) {
+    Type t = expr.eval(this);
+    check(t, boolType, assertAssumeCmd.loc());
+    return null;
+  }
+
+  @Override
+  public Type eval(CallCmd callCmd, String procedure, Identifiers results, Exprs args) {
+    Procedure p = st.procs.def(callCmd);
+    Signature sig = p.getSig();
+    Declaration fargs = sig.getArgs();
+    
+    // check the actual arguments against the formal ones
+    Type at = strip(args == null? null : args.eval(this));
+    Type fat = strip(tupleTypeOfDecl(fargs));
+    check(at, fat, (args == null? callCmd.loc() : args.loc()));
+    
+    // check the assignment of the results
+    Type lt = strip(results == null? null : results.eval(this));
+    Type rt = strip(tupleTypeOfDecl(sig.getResults()));
+    check(rt, lt, callCmd.loc());
+    
+    return null;
+  }
+  
+  // === visit dependent types ===
+  @Override
+  public DepType eval(DepType depType, Type type, Expr pred) {
+    Type t = pred.eval(this);
+    check(t, boolType, pred.loc());
+    return null;
+  }
+  
+  // === visit Exprs and Identifiers to make TupleType-s ===
+  @Override
+  public TupleType eval(Exprs exprs, Expr expr, Exprs tail) {
+    Type t = expr.eval(this);
+    assert t != null; // shouldn't have nested tuples
+    TupleType tt = tail == null? null : (TupleType)tail.eval(this);
+    TupleType rt = new TupleType(t, tt);
+    typeOf.put(exprs, rt);
+    return rt;
+  }
+
+  @Override
+  public TupleType eval(Identifiers identifiers, AtomId id, Identifiers tail) {
+    Type t = id.eval(this);
+    TupleType tt = tail == null? null : (TupleType)tail.eval(this);
+    TupleType rt = new TupleType(t, tt);
+    // TODO: put this in typeOf?
+    return rt;
+  }
+  
+  // === visit various things that must have boolean params ===
+  @Override
+  public Type eval(Axiom axiom, Expr expr, Declaration tail) {
+    Type t = expr.eval(this);
+    check(t, boolType, expr.loc());
+    if (tail != null) tail.eval(this);
+    return null;
+  }
+
+  @Override
+  public Type eval(Specification specification, Specification.SpecType type, Expr expr, boolean free, Specification tail) {
+    Type t = null;
+    switch (type) {
+    case REQUIRES:
+    case ENSURES:
+      t = expr.eval(this);
+      check(t, boolType, expr.loc());
+    case MODIFIES:
+      break;
+    default:
+      assert false;
+      return errType; // dumb compiler
+    }
+    if (tail != null) tail.eval(this);
+    return null;
+  }
 }

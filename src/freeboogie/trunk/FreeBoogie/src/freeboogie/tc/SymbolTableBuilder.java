@@ -26,6 +26,9 @@ public class SymbolTableBuilder extends Transformer {
   
   private boolean errors;
   
+  // for modifies spec we ignore the arguments
+  private boolean lookInLocalScopes;
+  
   /*
    * HACK to support `generic' types: Do not warn if we are under
    * an array because it might be a `type variable'. The typechecker
@@ -46,6 +49,7 @@ public class SymbolTableBuilder extends Transformer {
     symbolTable = new SymbolTable();
     gc = new GlobalsCollector();
     arrayCnt = 0;
+    lookInLocalScopes = true;
     boolean e = gc.process(ast);
     ast.eval(this);
     return errors || e;
@@ -71,9 +75,11 @@ public class SymbolTableBuilder extends Transformer {
   
   // the return might by ConstDecl or VariableDecl
   private Declaration lookup(String s, AstLocation l) {
-    for (HashMap<String, VariableDecl> scope : localScopes) {
-      VariableDecl d = scope.get(s);
-      if (d != null) return d;
+    if (lookInLocalScopes) {
+      for (HashMap<String, VariableDecl> scope : localScopes) {
+        VariableDecl d = scope.get(s);
+        if (d != null) return d;
+      }
     }
     return check(gc.idDef(s), s, l);
   }
@@ -111,7 +117,12 @@ public class SymbolTableBuilder extends Transformer {
     HashMap<String, VariableDecl> scope = localScopes.peekFirst();
     if (scope != null) {
       // we are in a local scope
-      scope.put(name, variableDecl);
+      VariableDecl old = scope.get(name);
+      if (old != null) {
+        Err.error("" + variableDecl.loc() + ": Variable already defined.");
+        errors = true;
+      } else 
+        scope.put(name, variableDecl);
     }
     type.eval(this);
     if (tail != null) tail.eval(this);
@@ -154,6 +165,20 @@ public class SymbolTableBuilder extends Transformer {
   public void see(BlockEnd blockEnd, BlockEnd.BlockType type, Identifiers dest) {
     // do nothing
   }
+  
+  // === remember if we are below a modifies spec ===
+  
+  @Override
+  public void see(Specification specification, Specification.SpecType type, Expr expr, boolean free, Specification tail) {
+    if (type == Specification.SpecType.MODIFIES) {
+      assert lookInLocalScopes; // no nesting
+      lookInLocalScopes = false;
+    }
+    expr.eval(this);
+    lookInLocalScopes = true;
+    if (tail != null) tail.eval(this);
+  }
+  
   
   // === remember if we are below an ArrayType ===
   @Override

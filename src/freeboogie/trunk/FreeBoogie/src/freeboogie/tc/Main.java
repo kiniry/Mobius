@@ -40,7 +40,7 @@ public class Main {
         parser.fileName = args[i];
         Declaration d = parser.program();
         if (d != null) {
-          // non-empty file
+          // parsing was OK
           tc.process(d);
         }
       } catch (FileNotFoundException e) {
