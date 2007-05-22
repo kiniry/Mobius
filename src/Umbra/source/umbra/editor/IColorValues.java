@@ -33,13 +33,9 @@ public interface IColorValues {
 	 */
 	static int HEADER = 4;
 	/**
-	 * not used (but not to delete)
+	 * TODO
 	 */
 	static int TAG = 5;
-	/**
-	 * not used (but not to delete)
-	 */
-	static int CLASS = 6;
 	/**
 	 * The color of bytecode instructions
 	 */
