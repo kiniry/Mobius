@@ -81,7 +81,7 @@ public interface IColorValues {
 	 */
 	static int ANNOTKEY = 17;
 	/**
-	 * Number of constants defined above
+	 * Number of defined color constants
 	 */
 	static int PARTS = 18;
 	
