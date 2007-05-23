@@ -113,7 +113,7 @@ fi
 ############ Setting BCEL_LIB, if necessary
 
 if [ -z "$BCEL_LIB" ]; then
-     BCEL_LIB=${ESCTOOLS_ROOT}/Utils/bcel-5.2.jar
+     BCEL_LIB=${ESCTOOLS_ROOT}/Utils/BCEL/bcel-5.2/bcel-5.2.jar
 fi
 
 ############ Setting SIMPLIFY
