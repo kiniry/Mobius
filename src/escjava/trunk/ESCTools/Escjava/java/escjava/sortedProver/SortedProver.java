@@ -1,5 +1,6 @@
 package escjava.sortedProver;
 
+import java.io.File;
 import java.util.Properties;
 
 import javafe.ast.CastExpr;
@@ -197,4 +198,42 @@ public abstract class SortedProver
     		return null;
     	}		
     }
+    
+	
+    /**
+     * Encode the ProblemName from properties, which is supposed to be
+     * in the 'package.subpackage.class.method(arg1,arg2)' format, into
+     * a vcs/package/subpackage/class/method_arg1_arg2.
+     * 
+     * Also create the directories as needed.
+     * 
+     * @param properties
+     * @return
+     */
+	public static String encodeProblemName(Properties properties)
+	{
+    	String methodName = properties.getProperty("ProblemName");
+    	StringBuffer fileBuf = new StringBuffer("vcs/");
+    	boolean afterParen = false;
+    	for (int i = 0; i < methodName.length(); ++i) {
+    		char c = methodName.charAt(i);
+    		switch (c) {
+    		case '.': if (! afterParen) c = '/'; break;
+    		case '(': afterParen = true; c = '_'; break;
+    		default:
+    			if (! ((c >= 'a' && c <= 'z') ||
+    					(c >= 'A' && c <= 'Z') ||
+    					(c >= '0' && c <= '9'))) 
+    				c = '_';
+    			break;
+    		}
+    		fileBuf.append(c);
+    	}
+    	String filename = fileBuf.toString();    	
+    	while (filename.charAt(filename.length () - 1) == '_')
+    		filename = filename.substring(0, filename.length() - 1);
+    	String dirname = filename.substring(0, filename.lastIndexOf('/'));
+    	(new File(dirname)).mkdirs();
+    	return filename;		
+	}
 }
