@@ -173,7 +173,9 @@ export DOCS_STYLESHEET = ${ESCTOOLS_ROOT}/docs/escjava.css
 ## Definitions for Utils
 export UTILS_SOURCE_DIR = ${ESCTOOLS_ROOT}/Utils
 export UTILS_CLASSFILES = ${ESCTOOLS_ROOT}/Utils
-export BCEL_LIB = ${ESCTOOLS_ROOT}/Utils/bcel-5.2.jar
+
+## Byte Code Engineering Library
+export BCEL_LIB ?= ${ESCTOOLS_ROOT}/Utils/BCEL/bcel-5.2/bcel-5.2.jar
 
 ## Pertinent definitions for Javafe
 export JAVAFE_ROOT = ${ESCTOOLS_ROOT}/Javafe
@@ -298,9 +300,6 @@ export PACKAGE_LIST = \
 ## in your environment.
 export JUNIT_LIB ?= ${ESCTOOLS_ROOT}/Utils/junit.jar
 export JUNIT_SOURCEPATH ?= /usr/local/Java/junit/src
-
-# Byte Code Engineering Library
-export BCEL_LIB = ${ESCTOOLS_ROOT}/Utils/bcel-5.2.jar
 
 ## XML-RPC
 export XMLRPC_LIB ?= $(ESCTOOLS_ROOT)/Escjava/xmlrpc-1.2-b1-modified.jar
