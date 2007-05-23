@@ -38,6 +38,8 @@ import java.io.IOException;
     |
     |	set_class_attribute*
     </pre>
+    
+    @deprecated Use BCELReader for Java 1.5 and later versions
 */
 public abstract class ClassFileParser implements ClassFileConstants {
     //**** methods to be overridden ****

@@ -25,6 +25,8 @@ import javafe.genericfile.GenericFile;
  * Parses the contents of a class file into an AST for the purpose of
  * type checking.  Ignores components of the class file that have no
  * relevance to type checking (e.g. method bodies).
+ * 
+ * @deprecated Use BCELReader for Java 1.5 and later versions
  */
 
 class ASTClassFileParser extends ClassFileParser
