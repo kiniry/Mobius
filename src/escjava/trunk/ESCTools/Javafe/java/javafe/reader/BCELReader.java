@@ -1,3 +1,4 @@
+// $Id$
 /* Copyright 2007, Systems Research Group, University College Dublin, Ireland */
 
 /**
@@ -66,6 +67,7 @@ import org.apache.bcel.generic.Type;
  * checking (e.g. method bodies).
  */
 
+// @ refines "BCELReader.spec";
 class BCELReader extends Reader {
 
 	/**
@@ -126,7 +128,7 @@ class BCELReader extends Reader {
 	 * Vector of methods and fields with Synthetic attributes. Use this to weed
 	 * out synthetic while constructing TypeDecl.
 	 */
-	protected /* @ non_null */Vector synthetics = new Vector();
+	protected/* @ non_null */Vector synthetics = new Vector();
 
 	/**
 	 * Flag indicating whether the class being parsed has the synthetic
@@ -134,16 +136,23 @@ class BCELReader extends Reader {
 	 */
 	private boolean syntheticClass = false;
 
+	/**
+	 * 
+	 */
 	protected boolean includeBodies;
 
+	/**
+	 * 
+	 */
 	protected boolean omitPrivateFields = true;
 
-	protected TypeDecl typeDecl;
-
 	/**
-	 * Default constructor - does nothing
+	 * Default constructor - initialises some instance varaibles
 	 */
 	public BCELReader() {
+		syntheticClass = false;
+		synthetics = new Vector();
+		omitPrivateFields = true;
 	}
 
 	/**
@@ -181,47 +190,45 @@ class BCELReader extends Reader {
 	 * @return An abstract syntax tree of a compilation unit.
 	 * @throws ClassNotFoundException
 	 * @throws IOException
-	 * @throws ClassFormatError
-	 * @throws CloneNotSupportedException
-	 * @throws ClassFormatError
 	 */
+	// @ requires javaClass != null
+	// @ ensures \result != null
 	protected CompilationUnit getCompilationUnit()
-			throws ClassNotFoundException, ClassFormatError, IOException {
+			throws ClassNotFoundException, IOException {
 
+		// Make the type declaration
 		constantPool = javaClass.getConstantPool();
 		classNameIndex = javaClass.getClassNameIndex();
-		set_this_class();
-
+		setClassLocation(classLocation);
 		readClassAttributes();
-		int superclassNameIndex = javaClass.getSuperclassNameIndex();
-		set_super_class(superclassNameIndex);
-
+		setSuperClassName();
 		Name pkgName = Name.make(javaClass.getPackageName(), classLocation);
-		
-		// Set the type declartaion field
-		setTypeDecl();
+		TypeDecl typeDecl = makeTypeDecl();
 
-		// Return
+		// Make the compilation unit
 		TypeDeclVec types = TypeDeclVec.make(new TypeDecl[] { typeDecl });
 		TypeDeclElemVec emptyTypeDeclElemVec = TypeDeclElemVec.make();
 		ImportDeclVec emptyImportDeclVec = ImportDeclVec.make();
 		CompilationUnit result = CompilationUnit.make(pkgName, null,
 				emptyImportDeclVec, types, classLocation, emptyTypeDeclElemVec);
+
 		return result;
 	}
 
 	/**
-	 * Set the type declaration field
+	 * Construct the type declaration
 	 * 
 	 * @throws ClassNotFoundException
 	 * @throws ClassFormatError
 	 */
-	protected void setTypeDecl() throws ClassNotFoundException,
-			ClassFormatError {
-		
+	// @requires javaClass != null
+	// @ensures typeDecl.isBinary()
+	protected TypeDecl makeTypeDecl() throws ClassNotFoundException {
+
 		JavaClass[] interfaces = javaClass.getInterfaces();
-		TypeNameVec interfaceVec = TypeNameVec.make(interfaces.length);
-		set_num_interfaces(interfaces.length);
+		int numberOfInterfaces = interfaces.length;
+		TypeNameVec interfaceVec = TypeNameVec.make(numberOfInterfaces);
+		typeNames = new TypeName[numberOfInterfaces];
 
 		Method[] methods = javaClass.getMethods();
 		readMethods(methods);
@@ -240,7 +247,8 @@ class BCELReader extends Reader {
 
 		// The synchronized bit for classes is used for other purposes
 		int modifiers = javaClass.getModifiers() & ~Constants.ACC_SYNCHRONIZED;
-		
+
+		TypeDecl typeDecl;
 		// @ assume classIdentifier != null;
 		if ((javaClass.isInterface())) {
 			typeDecl = (TypeDecl) InterfaceDecl.make(modifiers, null,
@@ -255,17 +263,17 @@ class BCELReader extends Reader {
 		typeDecl.specOnly = true;
 
 		removeExtraArg(typeDecl);
-
+		return typeDecl;
 	}
 
 	/**
-	 * Read fields from BCEL into AST
+	 * Read field declaration
 	 * 
 	 * @param fields
-	 * @return
-	 * @throws ClassFormatError
+	 *            Array of fields in BCEL
+	 * @return Field declation
 	 */
-	protected FieldDecl[] getFieldDecl(Field[] fields) throws ClassFormatError {
+	protected FieldDecl[] getFieldDecl(Field[] fields) {
 		int numberOfFieldsInClass = fields.length;
 		FieldDecl[] fieldDecl = new FieldDecl[numberOfFieldsInClass];
 
@@ -286,12 +294,11 @@ class BCELReader extends Reader {
 	/**
 	 * Add class methods to abstract syntax tree
 	 * 
-	 * @param methods
-	 * @throws ClassFormatError
+	 * @param Array
+	 *            of methods in BCEL
 	 * @throws ClassNotFoundException
 	 */
-	protected void readMethods(Method[] methods) throws ClassFormatError,
-			ClassNotFoundException {
+	protected void readMethods(Method[] methods) throws ClassNotFoundException {
 		int numberOfMethodsInClass = methods.length;
 		routineDecl = new RoutineDecl[numberOfMethodsInClass];
 		for (int loopVar = 0; loopVar < numberOfMethodsInClass; loopVar++) {
@@ -300,13 +307,15 @@ class BCELReader extends Reader {
 			String nameOfMethod = method.getName();
 			String signature = method.getSignature();
 			int methodModifiers = method.getModifiers();
-			set_method(loopVar, nameOfMethod, signature, methodModifiers);
+			makeRoutineDecl(loopVar, nameOfMethod, signature, methodModifiers);
+
+			RoutineDecl routineDeclElement = routineDecl[loopVar];
 
 			// put in a dummy body
 			if (includeBodies) {
-				routineDecl[loopVar].body = // @ nowarn Null, IndexTooBig;
+				routineDeclElement.body = // @ nowarn Null, IndexTooBig;
 				BlockStmt.make(StmtVec.make(), classLocation, classLocation);
-				routineDecl[loopVar].locOpenBrace = classLocation;
+				routineDeclElement.locOpenBrace = classLocation;
 			}
 
 			// Set method attributes
@@ -322,16 +331,17 @@ class BCELReader extends Reader {
 				case Constants.ATTR_EXCEPTIONS:
 					ExceptionTable exceptionTable = (ExceptionTable) attributes[attributeLoopVar];
 
-					routineDecl[loopVar].raises = TypeNameVec
+					routineDeclElement.raises = TypeNameVec
 							.make(readExceptionTypeNames(exceptionTable
 									.getExceptionNames()));
 					break;
 
 				case Constants.ATTR_SYNTHETIC:
-					synthetics.addElement(routineDecl[loopVar]);
+					synthetics.addElement(routineDeclElement);
 					break;
 				}
 			}
+			routineDecl[loopVar] = routineDeclElement;
 		}
 
 	}
@@ -402,10 +412,9 @@ class BCELReader extends Reader {
 	 * Read the class attributes
 	 * 
 	 * @throws IOException
-	 * @throws ClassFormatError
 	 * @throws ClassNotFoundException
 	 */
-	protected void readClassAttributes() throws IOException, ClassFormatError,
+	protected void readClassAttributes() throws IOException,
 			ClassNotFoundException {
 
 		Attribute[] classAttributes = javaClass.getAttributes();
@@ -438,11 +447,11 @@ class BCELReader extends Reader {
 	 * Add the inner class to the abstract syntax tree, unless synthetic
 	 * 
 	 * @param innerClass
+	 *            BCEL representation of the inner class
 	 * @throws ClassNotFoundException
-	 * @throws ClassFormatError
 	 */
 	protected void addInnerClass(InnerClass innerClass)
-			throws ClassNotFoundException, ClassFormatError {
+			throws ClassNotFoundException {
 
 		// Get inner class name
 		int innerNameIndex = innerClass.getInnerNameIndex();
@@ -450,26 +459,30 @@ class BCELReader extends Reader {
 		int innerClassIndex = innerClass.getInnerClassIndex();
 		int outerClassIndex = innerClass.getOuterClassIndex();
 
-		Constant innerClassNameConstant = constantPool
-				.getConstant(innerNameIndex);
-		String innerClassName = constantPool
-				.constantToString(innerClassNameConstant);
-
+		// Check that this inner class is enclosed by the class being parsed
 		if (outerClassIndex == LOCAL_CLASS_INDEX) {
+
+			Constant innerClassNameConstant = constantPool
+					.getConstant(innerNameIndex);
+			String innerClassName = constantPool
+					.constantToString(innerClassNameConstant);
 
 			String outerClassFullName = javaClass.getClassName();
 			int subStringIndex = 1 + outerClassFullName.lastIndexOf('.');
 
 			String outerClassName = outerClassFullName
 					.substring(subStringIndex);
-			String innerClassNamePath = outerClassName + "$" + innerClassName
-					+ ".class";
+			StringBuffer classNameBuffer = new StringBuffer (outerClassName);
+			classNameBuffer.append("$");
+			classNameBuffer.append(innerClassName);
+			classNameBuffer.append(".class");
+			String innerClassNamePath = classNameBuffer.toString();
 
 			GenericFile sibling = genericFile.getSibling(innerClassNamePath);
 			BCELReader innerClassReader = readInnerClass(sibling, true,
 					innerClassIndex);
 
-			TypeDecl innerClassTypeDecl = innerClassReader.getTypeDecl();
+			TypeDecl innerClassTypeDecl = innerClassReader.makeTypeDecl();
 			boolean innerClassIsNotSynthetic = !innerClassReader
 					.isSyntheticClass();
 
@@ -497,15 +510,17 @@ class BCELReader extends Reader {
 	}
 
 	/**
-	 * Set class name
+	 * Set class location
+	 * 
+	 * @param locationIndex
+	 *            Location index for the class
 	 * 
 	 * @requires cindex >= 0;
-	 * @throws ClassFormatError
 	 */
-	protected void set_this_class() throws ClassFormatError {
+	protected void setClassLocation(int locationIndex) {
 		// record the class type and synthesize a location for the class binary
 
-		Name className = Name.make(javaClass.getClassName(), 1);
+		Name className = Name.make(javaClass.getClassName(), locationIndex);
 
 		Name qualifier = getNameQualifier(className);
 		Identifier terminal = getNameTerminal(className);
@@ -518,22 +533,13 @@ class BCELReader extends Reader {
 	/**
 	 * Set super class name
 	 * 
-	 * @param cindex
-	 * @throws ClassFormatError
 	 */
-	protected void set_super_class(int cindex) throws ClassFormatError {
+	protected void setSuperClassName() {
 
 		String superClassName = javaClass.getSuperclassName();
 
-		Name name = Name.make(superClassName, 1);
+		Name name = Name.make(superClassName, classLocation);
 		super_class = TypeName.make(name);
-	}
-
-	/**
-	 * Call back from ClassFileParser.
-	 */
-	protected void set_num_interfaces(int n) throws ClassFormatError {
-		typeNames = new TypeName[n];
 	}
 
 	/**
@@ -622,39 +628,39 @@ class BCELReader extends Reader {
 		return typeName;
 	}
 
-	protected void set_num_methods(int n) throws ClassFormatError {
-		routineDecl = new RoutineDecl[n];
-	}
-
 	/**
-	 * Parse a method
+	 * Make a method or constructor declaration
 	 * 
-	 * @param i
-	 * @param mname
-	 * @param sig
-	 * @param mod
-	 * @throws ClassFormatError
+	 * @param loopIndex
+	 *            Position of the method in the array
+	 * @param methodName
+	 *            Name of the method
+	 * @param methodSignature
+	 *            Signature of the method
+	 * @param modifiers
+	 *            Attributes of the method
 	 */
-	protected void set_method(int i, String mname, String sig, int mod)
-			throws ClassFormatError {
-		MethodSignature signature = DescriptorParser.parseMethod(sig);
+	protected void makeRoutineDecl(int loopIndex, String methodName,
+			String methodSignature, int modifiers) {
+		MethodSignature signature = DescriptorParser
+				.parseMethod(methodSignature);
 		FormalParaDeclVec formalVec = FormalParaDeclVec
 				.make(makeFormals(signature));
 		BlockStmt body = null;
 
-		if (mname.equals("<init>")) {
-			RoutineDecl constructor = (RoutineDecl) ConstructorDecl.make(mod,
-					null, null, formalVec, emptyTypeNameVec, body,
+		if (methodName.equals("<init>")) {
+			RoutineDecl constructor = (RoutineDecl) ConstructorDecl.make(
+					modifiers, null, null, formalVec, emptyTypeNameVec, body,
 					Location.NULL, classLocation, classLocation, classLocation);
-			routineDecl[i] = constructor;
+			routineDecl[loopIndex] = constructor;
 		} else {
 
-			RoutineDecl otherMethod = (RoutineDecl) MethodDecl.make(mod, null,
-					null, formalVec, emptyTypeNameVec, body, Location.NULL,
-					classLocation, classLocation, classLocation, Identifier
-							.intern(mname), signature.getReturn(),
+			RoutineDecl otherMethod = (RoutineDecl) MethodDecl.make(modifiers,
+					null, null, formalVec, emptyTypeNameVec, body,
+					Location.NULL, classLocation, classLocation, classLocation,
+					Identifier.intern(methodName), signature.getReturn(),
 					classLocation);
-			routineDecl[i] = otherMethod;
+			routineDecl[loopIndex] = otherMethod;
 		}
 	}
 
@@ -667,8 +673,7 @@ class BCELReader extends Reader {
 	 */
 	// @ private invariant constants != null;
 	// @ private invariant \typeof(constants) == \type(Object[]);
-//	protected Object[] constants;
-
+	// protected Object[] constants;
 	/**
 	 * The constant pool of the class being parsed. This array contains the
 	 * constants as they came out of the parser (versus translated by
@@ -677,8 +682,7 @@ class BCELReader extends Reader {
 	// @ private invariant rawConstants != null;
 	// @ private invariant \typeof(rawConstants) == \type(Object[]);
 	// @ private invariant constants.length == rawConstants.length;
-//	protected Object[] rawConstants;
-
+	// protected Object[] rawConstants;
 	/**
 	 * The type name of the superclass of the class being parsed. Initialized by
 	 * set_super_class.
@@ -715,17 +719,16 @@ class BCELReader extends Reader {
 	// @ spec_public
 	protected Identifier classIdentifier;
 
-	/* -- private instance methods ------------------------------------------- */
-
 	/**
 	 * Parse a sequence of exception type names
 	 * 
 	 * @param exceptionNames
+	 *            Array of exception name strings
 	 * @return an array of type names
 	 * @throws ClassNotFoundException
 	 */
 	protected TypeName[] readExceptionTypeNames(String[] exceptionNames)
-			throws ClassFormatError, ClassNotFoundException {
+			throws ClassNotFoundException {
 
 		int numberOfExceptionsThrown = exceptionNames.length;
 		TypeName[] exceptionTypeNames = new TypeName[numberOfExceptionsThrown];
@@ -733,8 +736,9 @@ class BCELReader extends Reader {
 		for (int loopVar = 0; loopVar < numberOfExceptionsThrown; loopVar++) {
 
 			String exceptionClassName = exceptionNames[loopVar];
-			exceptionTypeNames[loopVar] = DescriptorParser
-					.parseClass(exceptionClassName);
+			TypeName exceptionTypeName = DescriptorParser
+								.parseClass(exceptionClassName);
+			exceptionTypeNames[loopVar] = exceptionTypeName;
 		}
 
 		return exceptionTypeNames;
@@ -754,16 +758,18 @@ class BCELReader extends Reader {
 		int length = signature.countParameters();
 		FormalParaDecl[] formals = new FormalParaDecl[length];
 
-		for (int i = 0; i < length; i++) {
-			Identifier id = Identifier.intern("arg" + i);
-			formals[i] = FormalParaDecl.make(0, null, id, signature
-					.parameterAt(i), classLocation);
+		for (int loopIndex = 0; loopIndex < length; loopIndex++) {
+			StringBuffer identifierStringBuffer = new StringBuffer("arg");
+			identifierStringBuffer.append(loopIndex);
+			Identifier id = Identifier.intern(identifierStringBuffer.toString());
+			formals[loopIndex] = FormalParaDecl.make(0, null, id, signature
+					.parameterAt(loopIndex), classLocation);
 		}
 
 		return formals;
 	}
 
-	/* -- private class methods ---------------------------------------------- */
+	/* -- class methods ---------------------------------------------- */
 
 	/**
 	 * Return the package qualifier of a given name.
@@ -792,7 +798,7 @@ class BCELReader extends Reader {
 		return name.identifierAt(name.size() - 1);
 	}
 
-	/* -- private class variables -------------------------------------------- */
+	/* -- class variables -------------------------------------------- */
 
 	/**
 	 * An empty type name vector.
@@ -873,6 +879,7 @@ class BCELReader extends Reader {
 		InputStream inputStream = target.getInputStream();
 		String localName = target.getLocalName();
 		ClassParser classParser = new ClassParser(inputStream, localName);
+
 		this.javaClass = classParser.parse();
 	}
 
@@ -882,13 +889,6 @@ class BCELReader extends Reader {
 	 */
 	public boolean isSyntheticClass() {
 		return syntheticClass;
-	}
-
-	/**
-	 * @return the typeDecl
-	 */
-	protected TypeDecl getTypeDecl() {
-		return typeDecl;
 	}
 
 }
