@@ -65,6 +65,14 @@ BEGIN
   is_ghost(vn : Name, sigma : MPState) : boolean =
     NOT Bottom?(gvs(sigma)(vn))
 
+  lookup(vn : Name, sigma : MPState) : Val =
+    IF is_local(vn, pstate(sigma))
+    THEN lookup_local(vn, pstate(sigma))
+    ELSIF is_field(vn, pstate(sigma))
+    THEN lookup_field(vn, pstate(sigma))
+    ELSE gvs(sigma)(vn)
+    ENDIF
+
   wf_state(mp : MonitoredProgram)(sigma : MPState) : boolean =
     wf_AState(mva(mp))(astate(sigma)) AND
     wf_state(program(mp))(pstate(sigma)) AND
@@ -160,6 +168,7 @@ BEGIN
   IMPORTING Semantics[Name, MonitoredProgram, MPState, 
                       LAMBDA (mp : MonitoredProgram) : program(mp),
                       LAMBDA (s : MPState) : pstate(s),
+                      lookup,
                       update_state_MP,
                       execute_set_MP,
                       execute_CaseJML,
@@ -183,6 +192,16 @@ BEGIN
                       (s2 : MPState)(n : nat) : boolean =
     run_FullProgram(mp)(main, arg)(initial_MP_state(mp), s2)(n)
 
+
+  % The evaluation of expression in actions must be side-effect free
+  eval_action_axiom : AXIOM
+    FORALL (mp : MonitoredProgram, e : Expr, v : Val,
+            s : MPState, sMVA : AState, stP : PSt) :
+      s = (# astate := sMVA, 
+             pstate := (# ex := bottom, st := stP #),
+             gvs := stA(sMVA) #) IMPLIES
+      eval(e)(stA(sMVA), stP) = v IMPLIES
+        EXISTS (n : nat) : deriv_expr(mp)(e, s, v, s)(n)
 
   % Well-formedness properties
 

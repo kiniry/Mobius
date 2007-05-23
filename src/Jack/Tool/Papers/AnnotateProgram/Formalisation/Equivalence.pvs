@@ -76,13 +76,13 @@ BEGIN
     FORALL (mp : MonitoredProgram, ap : Program)
            (sMP : MPState, sAP : APState)(n : NumExpr) :
       related_states(mp, ap)(sMP, sAP) IMPLIES
-        eval(n)(pstate(sMP)) = eval(n)(pstate(sAP))
+        eval(n)(sMP) = eval(n)(sAP)
 
   MP_modeled_implies_same_bool_eval : LEMMA % :-)
     FORALL (mp : MonitoredProgram, ap : Program)
            (sMP : MPState, sAP : APState)(b : BoolExpr) :
       related_states(mp, ap)(sMP, sAP) IMPLIES
-        eval(b)(pstate(sMP)) = eval(b)(pstate(sAP))
+        eval(b)(sMP) = eval(b)(sAP)
 
 
 

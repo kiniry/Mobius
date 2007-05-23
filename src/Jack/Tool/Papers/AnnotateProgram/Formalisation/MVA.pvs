@@ -106,9 +106,9 @@ BEGIN
   wf_Store(a : MVA)(f : Store) : boolean =
     wf_Store(vdsA(a))(f)
 
-  % NOTE: Recall that we assume that variables in PSt are fields
-  %       Variables in PSt are a subset of the program variables, if we
-  %       require them to be equal then we can use an IFF
+  % NOTE: Recall that we assume that variables in PSt are fields.
+  % Variables in PSt are a subset of the program variables, if we require them
+  % to be equal then we can use an IFF
   wf_PSt(vds : finite_set[ProgVarDecl])(st : PSt) : boolean =
     FORALL (n : Name) :
       var_names(vds)(n) IMPLIES NOT Bottom?(fvs(st)(n))
@@ -251,15 +251,20 @@ BEGIN
       ELSE st(m)
       ENDIF
 
-  % TODO: define!
-  eval(e : Expr)(st : Store) : Val
+  % NOTE: eval is defined axiomatically, see eval_action_axiom in 
+  % MonitoredProgramSemantics. Since we only consider the PSt of the state of
+  % the program, actions can not talk about existing ghost variables in the
+  % monitored program, but that is fine since we assumed that we can talk
+  % only about fields (but it could be extended to handle ghosts as well).
+  eval(e : Expr)(stA : Store, stP : PSt) : Val
 
   % type checking problem, because program expressions cannot be evaluated
-  execute_actions(stA : Store, l : Action) : RECURSIVE Store =
+  execute_actions(l : Action)(stA : Store, stP : PSt) : RECURSIVE Store =
     IF null?(l)
     THEN stA
-    ELSE execute_actions(update(stA)(target(car(l)))
-                                    (eval(source(car(l)))(stA)), cdr(l))
+    ELSE execute_actions(cdr(l))(update(stA)(target(car(l)))
+                                            (eval(source(car(l)))(stA, stP)),
+                                 stP)
     ENDIF
   MEASURE length(l)
 
@@ -282,7 +287,7 @@ BEGIN
                        event(t) = event(pe) AND
                        guard(t)(stA(s), stP(pe))) IN
       (# cp := tcp(t),
-         stA := execute_actions(stA(s), action(t))
+         stA := execute_actions(action(t))(stA(s), stP(pe))
       #)
 
 
@@ -293,11 +298,20 @@ BEGIN
     FORALL (a: MVA) :
       wf_MVA(a) IMPLIES wf_AState(a)(initial_MVA_state(a))
 
-  % TODO: prove (needs the definition of eval for Expressions)
-  execute_action_yields_wf_state: LEMMA
-    FORALL (a : MVA, stA : Store, l : Action) :
+  % The evaluation of actions must return a defined value (thus it can not
+  % return a state with an exception)
+  eval_yields_not_bottom : AXIOM
+    FORALL (a : MVA, e : Expr, stA : Store, stP : PSt) :
       wf_Store(a)(stA) IMPLIES
-        wf_Store(a)(execute_actions(stA, l))
+      wf_PSt(a)(stP) IMPLIES
+        NOT Bottom?(eval(e)(stA, stP))
+
+  execute_action_yields_wf_state : LEMMA % :-)
+    FORALL (a : MVA, l : Action, stA : Store, stP : PSt) :
+      wf_Store(a)(stA) IMPLIES
+      wf_PSt(a)(stP) IMPLIES
+      wf_Action(a)(l) IMPLIES
+        wf_Store(a)(execute_actions(l)(stA, stP))
 
   step_yields_wf_state : THEOREM % :-)
     FORALL (a : (total), s : (wf_AState(a)), pe : (wf_PEvent(a))) :

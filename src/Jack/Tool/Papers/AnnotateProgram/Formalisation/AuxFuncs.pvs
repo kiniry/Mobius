@@ -1,33 +1,84 @@
-func_props[X, Y : TYPE] : THEORY
+set2list[T : TYPE] : THEORY
 BEGIN
 
-  f : VAR [X -> Y]
-
-  % Returns the domain set of a function 
-  % (the function domain defined in the prelude returns a TYPE)
-  domain_set(f) : X =
-    {x : X | EXISTS (y : Y) : f(x) = y}
-
-END func_props
-
-
-set2list[X: TYPE]: THEORY
-BEGIN
-
-  S : VAR finite_set[X]
-
-  set2list(S): RECURSIVE list[X] =
-    IF empty?(S)
+  set2list(s : finite_set[T]) : RECURSIVE list[T] =
+    IF empty?(s)
     THEN null
-    ELSE LET x = choose(S), Ss = remove(x, S) IN
-      cons(x, set2list(Ss))
+    ELSE LET x = choose(s), xs = remove(x, s) IN
+      cons(x, set2list(xs))
     ENDIF
     MEASURE
-      Card(S)
+      Card(s)
 
   %CONVERSION set2list
 
-  set_list_set: LEMMA 
-    FORALL (s : finite_set[X]) : list2set(set2list(s)) = s
+  excluded_middle : LEMMA % :-)
+    FORALL (b : boolean) : b OR NOT b
+
+  incredibly_stupid_property : LEMMA % :-)
+    FORALL (s : set[T], y : T) :
+      {x : T | x = y OR NOT x = y} = {x : T | TRUE}
+
+  % proved using incredibly_stupid_property, NOT USED
+  stupid_property_of_choose : LEMMA % :-)
+    FORALL (s : (nonempty?[T])) :
+      {x : T | x = choose(s) OR NOT x = choose(s)} = {x : T | TRUE}
+
+  epsilon_membership : LEMMA % :-) (USED)
+    FORALL (s : (nonempty?[T])) : s(epsilon(s))
+
+  % NOT USED
+  add_remove_choose_equivalence : LEMMA % :-)
+    FORALL (s : (nonempty?[T])) :
+      add(choose(s), remove(choose(s), s)) = s
+
+  % NOT USED
+  add_remove_equivalence : LEMMA % :-)
+    FORALL (s : set[T], x : T) :
+      s(x) IMPLIES add(x, remove(x, s)) = s
+
+  % TODO: prove!
+  not_in_s_implies_not_in_set2list : LEMMA
+    FORALL (s : set[T], x : T) :
+      NOT s(x) IMPLIES NOT member(x, set2list(s))
+
+  % TODO: prove!
+  not_removed_set2list : LEMMA
+    FORALL (s : set[T], x, y : T) :
+      s(x) IMPLIES 
+      NOT x = y IMPLIES
+        member(x, set2list(remove(y, s)))
+
+  set2list_same_elements : LEMMA
+    FORALL (s : finite_set[T], x : T) :
+      member(x, s) IFF member(x, set2list(s))
+
+  remove_list2set_set2list : LEMMA
+    FORALL (s : finite_set[T], x : T) :
+      list2set(set2list(remove(x, s))) = remove(x, list2set(set2list(s)))
+
+  set_list_set: LEMMA
+    FORALL (s : finite_set[T]) : list2set(set2list(s)) = s
+
 
 END set2list
+
+
+listfuncs[T : TYPE] : THEORY
+BEGIN
+
+  before(a, b : T, l : list[T]) : RECURSIVE boolean =
+    CASES l OF
+      null : FALSE,
+      cons(x, xs) : IF x = b  % NOT before(a, a, xs)
+                    THEN FALSE
+                    ELSIF x = a
+                    THEN TRUE
+                    ELSE before(a, b, xs)
+                    ENDIF
+    ENDCASES
+    MEASURE
+      length(l)
+
+
+END listfuncs

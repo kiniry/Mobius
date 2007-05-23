@@ -113,6 +113,7 @@ BEGIN
 
   % Well formed states properties
 
+  % Why do I need this?
   wf_state_vars_local_or_field : LEMMA
     FORALL (p : Program, s : PState, vn : Name) :
       wf_state(p)(s) IMPLIES
@@ -132,7 +133,7 @@ BEGIN
         classes(p)(down(get_class(p)(tgt, s)))
 
   % NOTE: This is not accurate, we shoul say something about tgt, for instance
-  %       that it is not an int, besides not all addresses are objects.
+  % that it is not an int, besides not all addresses are objects.
   get_class_definedness : AXIOM
     FORALL (p : Program, s : PState, tgt : Val) :
       wf_state(p)(s) IMPLIES
@@ -162,19 +163,20 @@ BEGIN
 END State
 
 
-Evaluation[Name : TYPE+] : THEORY
+Evaluation[Name : TYPE+, 
+           FullState : TYPE,
+           (IMPORTING State) pstate : [FullState -> PState[Name]],
+           lookup : [Name, FullState -> Val]] : THEORY
 BEGIN
 
   IMPORTING State[Name],
             SizeFunctions[Name]
 
-  % I'm evaluating division by 0 to 0, I do not want to care about 
-  % modeling that exception here
-  % the result is floored (this should actually be analysed, sometimes floor, 
-  % sometimes ceil)
-
-  % also, looking up a non-existing variable just returns 0
-  eval(n : NumExpr)(sigma : PState) : RECURSIVE int =
+  % NOTE: I'm evaluating division by 0 to 0, I do not want to care about 
+  % modeling that exception here. The result is floored (this should actually
+  % be analysed, sometimes floor, sometimes ceil).
+  % Also, looking up a non-existing variable just returns 0
+  eval(n : NumExpr)(sigma : FullState) : RECURSIVE int =
     CASES n OF
       Int(i) : i,
       Plus(n1, n2) : eval(n1)(sigma) + eval(n2)(sigma),
@@ -188,7 +190,7 @@ BEGIN
     ENDCASES
   MEASURE size(n)
 
-  eval(b : BoolExpr)(sigma : PState) : RECURSIVE bool =
+  eval(b : BoolExpr)(sigma : FullState) : RECURSIVE bool =
     CASES b OF
       TT : TRUE,
       FF : FALSE,
@@ -282,6 +284,7 @@ Semantics[Name : TYPE+,
           (IMPORTING Program) program : [FullProgram -> Program[Name]],
           (IMPORTING State) pstate : [FullState -> PState[Name]],
           (IMPORTING SemanticsTypes[Name, FullProgram, FullState, pstate])
+          lookup : [Name, FullState -> Val], 
           update_FullState : (update_FullState_type),
           execute_set : (execute_set_type),
           execute_CaseJML : (execute_CaseJML_type),
@@ -290,7 +293,7 @@ Semantics[Name : TYPE+,
           on_method_exit_exceptional : (on_method_exit_type)] : THEORY
 BEGIN
 
-  IMPORTING Evaluation[Name]
+  IMPORTING Evaluation[Name, FullState, pstate, lookup]
 
   default_value(t : JType) : Val =
     CASES t OF
@@ -362,7 +365,7 @@ BEGIN
       BExpr(b) :
         sigma1 = sigma2 AND 
         NOT Bottom?(v) AND
-        v = Bool(eval(b)(pstate(sigma1))) AND
+        v = Bool(eval(b)(sigma1)) AND
         n = 0,
       CondExpr(c, t, e) :
         EXISTS (tau : FullState, v1 : Val, m1, m2 : nat) :
@@ -417,7 +420,7 @@ BEGIN
       NExpr(n) :
         sigma1 = sigma2 AND
         NOT Bottom?(v) AND
-        v = Int(eval(n)(pstate(sigma1))) AND
+        v = Int(eval(n)(sigma1)) AND
         n = 0,
       RExpr(r) :
         sigma1 = sigma2 AND
@@ -689,7 +692,7 @@ BEGIN
                                      [below(n + 1) -> bool]]]) :
       s1 = s2
 
-  IMPORTING Semantics[Name, Program, PState, id, id,
+  IMPORTING Semantics[Name, Program, PState, id, id, lookup,
                       LAMBDA (upd : [PState -> PState], s : PState) : upd(s),
                       execute_set, execute_CaseJML,
                       on_method_x, on_method_x, on_method_x]
@@ -711,6 +714,14 @@ BEGIN
 
   is_ghost(vn : Name, sigma : APState) : boolean =
     NOT Bottom?(gvs(sigma)(vn))
+
+  lookup(vn : Name, sigma : APState) : Val =
+    IF is_local(vn, pstate(sigma))
+    THEN lookup_local(vn, pstate(sigma))
+    ELSIF is_field(vn, pstate(sigma))
+    THEN lookup_field(vn, pstate(sigma))
+    ELSE gvs(sigma)(vn)
+    ENDIF
 
   wf_state(p : Program)(sigma : APState) : boolean =
     wf_state(p)(pstate(sigma)) AND
@@ -788,6 +799,7 @@ BEGIN
 
   IMPORTING Semantics[Name, Program, APState, id,
                       LAMBDA (s : APState) : pstate(s),
+                      lookup,
                       update_state_AP,
                       execute_set_AP,
                       execute_CaseJML,
@@ -811,7 +823,23 @@ BEGIN
     run_FullProgram(p)(main, arg)(initial_AP_state(p), s2)(n)
 
 
+  % This is just stmt_determ_step adapted for AP to avoid having to give all the
+  % theory parameters to use stmt_determ_step in proofs
+  stmt_determ_step_AP : LEMMA % :-)
+    FORALL (p : Program, n1, n2 : nat, c : Stmt, sigma : APState,
+            sigma1, sigma2 : APState) :
+        deriv_stmt(p)(c, sigma, sigma1)(n1) AND
+        deriv_stmt(p)(c, sigma, sigma2)(n2) IMPLIES
+          sigma1 = sigma2 AND n1 = n2
+
   % Well-formedness properties
+
+  % TODO: prove!
+  wf_state_ghost_not_local_or_field : LEMMA
+    FORALL (p : Program, s : APState, vn : Name) :
+      wf_state(p)(s) IMPLIES
+      is_ghost(vn, s) IMPLIES 
+        NOT is_local(vn, s) AND NOT is_field(vn, s)
 
   wf_update_state_AP : LEMMA % :-)
     FORALL (p : Program, s1, s2 : APState, 
@@ -824,10 +852,12 @@ BEGIN
         (is_ghost(vn, s1) IFF is_ghost(vn, s2))) IMPLIES
         wf_state(p)(s2)
 
+  % TODO: prove!
   wf_initial_AP_state : LEMMA
     FORALL (p : Program) :
       wf_Program(p) IMPLIES wf_state(p)(initial_AP_state(p))
 
+  % TODO: prove!
   deriv_expr_yields_wf_state_AP : LEMMA
     FORALL (p : Program, e : Expr, v : Val)
            (sigma1, sigma2 : APState, n : nat) :
@@ -836,6 +866,7 @@ BEGIN
       deriv_expr(p)(e, sigma1, v, sigma2)(n) IMPLIES
         wf_state(p)(sigma2)
 
+  % TODO: prove!
   deriv_stmt_yields_wf_state_AP : LEMMA
     FORALL (p : Program, c : Stmt, sigma1, sigma2 : APState, n : nat) :
       wf_Program(p) IMPLIES

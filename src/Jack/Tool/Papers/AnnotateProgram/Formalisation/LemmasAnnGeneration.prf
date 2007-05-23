@@ -1,4 +1,355 @@
 (AnnGenerationLemmas
+ (non_interference_of_set_stmt 0
+  (non_interference_of_set_stmt-1 nil 3388833511 3388840800
+   ("" (skosimp*)
+    (("" (expand* "deriv_stmt" "execute_set_AP")
+      (("" (assert)
+        (("" (prop)
+          (("" (skosimp)
+            (("" (expand "deriv_expr" -5)
+              (("" (inst? -5)
+                (("1" (assert)
+                  (("1" (lift-if) (("1" (assert) nil nil)) nil)) nil)
+                 ("2" (assert) nil nil))
+                nil))
+              nil))
+            nil))
+          nil))
+        nil))
+      nil))
+    nil)
+   unchecked
+   ((real_ge_is_total_order name-judgement "(total_order?[real])"
+     real_props nil)
+    (int_minus_int_is_int application-judgement "int" integers nil)
+    (nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (int nonempty-type-eq-decl nil integers nil)
+    (integer_pred const-decl "[rational -> boolean]" integers nil)
+    (rational nonempty-type-from-decl nil rationals nil)
+    (rational_pred const-decl "[real -> boolean]" rationals nil)
+    (- const-decl "[numfield, numfield -> numfield]" number_fields nil)
+    (numfield nonempty-type-eq-decl nil number_fields nil)
+    (>= const-decl "bool" reals nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (real nonempty-type-from-decl nil reals nil)
+    (real_pred const-decl "[number_field -> boolean]" reals nil)
+    (number_field nonempty-type-from-decl nil number_fields nil)
+    (number_field_pred const-decl "[number -> boolean]" number_fields
+     nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (number nonempty-type-decl nil numbers nil)
+    (below type-eq-decl nil nat_types nil)
+    (character type-decl nil character_adt nil)
+    (char? adt-recognizer-decl "[character -> boolean]" character_adt
+     nil)
+    (char type-eq-decl nil strings nil)
+    (string type-eq-decl nil strings nil)
+    (Store type-eq-decl nil State nil)
+    (PState type-eq-decl nil State nil)
+    (APState type-eq-decl nil AnnotatedProgramSemantics nil)
+    (Val type-decl nil Val_adt nil)
+    (real_gt_is_strict_total_order name-judgement
+     "(strict_total_order?[real])" real_props nil)
+    (deriv_expr const-decl "bool" Semantics nil)
+    (deriv_stmt def-decl "bool" Semantics nil)
+    (execute_set_AP const-decl "(execute_set_type)"
+     AnnotatedProgramSemantics nil))
+   421157 1180 t shostak))
+ (list_to_sequence_TCC1 0
+  (list_to_sequence_TCC1-1 nil 3388833469 3388844562
+   ("" (skosimp)
+    (("" (replace -1 1)
+      (("" (expand "length" 1 2) (("" (assert) nil nil)) nil)) nil))
+    nil)
+   unchecked
+   ((posint_plus_nnint_is_posint application-judgement "posint"
+     integers nil)
+    (real_lt_is_strict_total_order name-judgement
+     "(strict_total_order?[real])" real_props nil)
+    (length def-decl "nat" list_props nil))
+   388917 190 t nil))
+ (sequence_of_sets_TCC1 0
+  (sequence_of_sets_TCC1-1 nil 3388844095 3388844628
+   ("" (skosimp) (("" (expand "<<") (("" (assert) nil nil)) nil)) nil)
+   unchecked ((<< adt-def-decl "(well_founded?[Stmt])" Stmt_adt nil))
+   57054 100 t nil))
+ (sequence_to_list_TCC1 0
+  (sequence_to_list_TCC1-1 nil 3388845040 nil
+   ("" (well-founded-tcc) nil nil) nil nil nil nil nil nil))
+ (sequence_to_list_TCC2 0
+  (sequence_to_list_TCC2-1 nil 3388845040 nil
+   ("" (subtype-tcc) nil nil) nil nil nil nil nil nil))
+ (sequence_to_list_TCC3 0
+  (sequence_to_list_TCC3-1 nil 3388845040 nil
+   ("" (subtype-tcc) nil nil) nil nil nil nil nil nil))
+ (sequence_to_list_TCC4 0
+  (sequence_to_list_TCC4-1 nil 3388845040 nil
+   ("" (termination-tcc) nil nil) nil nil nil nil nil nil))
+ (non_interference_of_set_stmt_sequence 0
+  (non_interference_of_set_stmt_sequence-1 nil 3388841162 3388842744
+   ("" (induct "sets")
+    (("1" (skosimp*)
+      (("1" (expand* "deriv_stmt" "list_to_sequence")
+        (("1" (assert) nil nil)) nil))
+      nil)
+     ("2" (skosimp*)
+      (("2" (expand "list_to_sequence" -3)
+        (("2" (expand "deriv_stmt" -3)
+          (("2" (assert)
+            (("2" (prop)
+              (("2" (skosimp*)
+                (("2" (inst-cp -5 "cons1_var!1")
+                  (("2" (expand "member" -6)
+                    (("2" (flatten)
+                      (("2" (use "non_interference_of_set_stmt")
+                        (("2" (ground)
+                          (("2"
+                            (inst -5 "p!1" "tau!1" "s2!1" "m2!1"
+                             "vn!1")
+                            (("2" (assert)
+                              (("2"
+                                (skosimp*)
+                                (("2"
+                                  (inst -6 "c!1")
+                                  (("2"
+                                    (expand "member" -6)
+                                    (("2" (assert) nil nil))
+                                    nil))
+                                  nil))
+                                nil))
+                              nil))
+                            nil))
+                          nil))
+                        nil))
+                      nil))
+                    nil))
+                  nil))
+                nil))
+              nil))
+            nil))
+          nil))
+        nil))
+      nil))
+    nil)
+   unchecked
+   ((posint_plus_nnint_is_posint application-judgement "posint"
+     integers nil)
+    (non_interference_of_set_stmt formula-decl nil AnnGenerationLemmas
+     nil)
+    (list_induction formula-decl nil list_adt nil)
+    (nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (below type-eq-decl nil nat_types nil)
+    (character type-decl nil character_adt nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (char? adt-recognizer-decl "[character -> boolean]" character_adt
+     nil)
+    (char type-eq-decl nil strings nil)
+    (string type-eq-decl nil strings nil)
+    (Stmt type-decl nil Stmt_adt nil)
+    (list_to_sequence def-decl "Stmt" AnnGenerationLemmas nil)
+    (deriv_stmt def-decl "bool" Semantics nil)
+    (source adt-accessor-decl "[(Set?) -> Expr[Name]]" Stmt_adt nil)
+    (deriv_expr const-decl "bool" Semantics nil)
+    (on_method_exit_exceptional_AP const-decl "(on_method_exit_type)"
+     AnnotatedProgramSemantics nil)
+    (on_method_exit_normal_AP const-decl "(on_method_exit_type)"
+     AnnotatedProgramSemantics nil)
+    (on_method_exit_type const-decl "bool" SemanticsTypes nil)
+    (on_method_entry_AP const-decl "(on_method_entry_type)"
+     AnnotatedProgramSemantics nil)
+    (on_method_entry_type const-decl "bool" SemanticsTypes nil)
+    (execute_CaseJML const-decl "(execute_CaseJML_type)"
+     SemanticsCommon nil)
+    (execute_CaseJML_type const-decl "bool" SemanticsTypes nil)
+    (execute_set_AP const-decl "(execute_set_type)"
+     AnnotatedProgramSemantics nil)
+    (execute_set_type const-decl "bool" SemanticsTypes nil)
+    (below type-eq-decl nil naturalnumbers nil)
+    (+ const-decl "[numfield, numfield -> numfield]" number_fields nil)
+    (numfield nonempty-type-eq-decl nil number_fields nil)
+    (< const-decl "bool" reals nil)
+    (update_state_AP const-decl "(update_FullState_type)"
+     AnnotatedProgramSemantics nil)
+    (update_FullState_type const-decl "bool" SemanticsTypes nil)
+    (PSt type-eq-decl nil State nil)
+    (Excpt type-decl nil Excpt_adt nil)
+    (lookup const-decl "Val" AnnotatedProgramSemantics nil)
+    (id const-decl "(bijective?[T, T])" identity nil)
+    (bijective? const-decl "bool" functions nil)
+    (target adt-accessor-decl "[(Set?) -> Name]" Stmt_adt nil)
+    (= const-decl "[T, T -> boolean]" equalities nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (Set? adt-recognizer-decl "[Stmt -> boolean]" Stmt_adt nil)
+    (AND const-decl "[bool, bool -> bool]" booleans nil)
+    (member def-decl "bool" list_props nil)
+    (IMPLIES const-decl "[bool, bool -> bool]" booleans nil)
+    (>= const-decl "bool" reals nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (int nonempty-type-eq-decl nil integers nil)
+    (integer_pred const-decl "[rational -> boolean]" integers nil)
+    (rational nonempty-type-from-decl nil rationals nil)
+    (rational_pred const-decl "[real -> boolean]" rationals nil)
+    (real nonempty-type-from-decl nil reals nil)
+    (real_pred const-decl "[number_field -> boolean]" reals nil)
+    (number_field nonempty-type-from-decl nil number_fields nil)
+    (number_field_pred const-decl "[number -> boolean]" number_fields
+     nil)
+    (number nonempty-type-decl nil numbers nil)
+    (APState type-eq-decl nil AnnotatedProgramSemantics nil)
+    (PState type-eq-decl nil State nil)
+    (Store type-eq-decl nil State nil)
+    (Program type-eq-decl nil Program nil)
+    (Class type-eq-decl nil Program nil)
+    (lift type-decl nil lift_adt nil)
+    (Method type-eq-decl nil Program nil)
+    (LocalVarDecl type-eq-decl nil Program nil)
+    (ArgDecl type-eq-decl nil Program nil)
+    (Expr type-decl nil Expr_adt nil)
+    (GhostVarDecl type-eq-decl nil Program nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (FieldDecl type-eq-decl nil Program nil)
+    (JType type-decl nil JType_adt nil) (Val type-decl nil Val_adt nil)
+    (list type-decl nil list_adt nil))
+   143740 1660 t shostak))
+ (ann_action_correcteness 0
+  (ann_action_correcteness-1 nil 3388829493 3388847219
+   ("" (skosimp*)
+    (("" (expand* "related_states" "update_vars" "deriv_stmt")
+      (("" (assert)
+        (("" (skosimp*)
+          (("" (expand "MVA_modeled?")
+            (("" (split)
+              (("1" (expand "deriv_stmt" -8)
+                (("1" (expand "execute_set_AP")
+                  (("1" (flatten)
+                    (("1" (skosimp*)
+                      (("1" (lift-if)
+                        (("1" (expand "deriv_expr" -9)
+                          (("1" (flatten)
+                            (("1" (replace -9)
+                              (("1"
+                                (assert)
+                                (("1"
+                                  (lemma
+                                   "non_interference_of_set_stmt_sequence")
+                                  (("1"
+                                    (inst
+                                     -1
+                                     "ap!1"
+                                     "sequence_to_list(ann_action(action(t!1)))"
+                                     "tau!1"
+                                     "sAP2!1"
+                                     "m2!1"
+                                     "\"cp\"")
+                                    (("1"
+                                      (split)
+                                      (("1"
+                                        (replace -7 1)
+                                        (("1"
+                                          (assert)
+                                          (("1"
+                                            (expand "eval" -11)
+                                            (("1"
+                                              (expand "cp2val")
+                                              (("1"
+                                                (case
+                                                 "Int(unique(tcp(t!1))) = gvs(tau!2 WITH [gvs := gvs(tau!2) WITH [(\"cp\") := v!1]])(\"cp\")")
+                                                (("1" (assert) nil nil)
+                                                 ("2"
+                                                  (expand*
+                                                   "MP_modeled?"
+                                                   "MVA_modeled?")
+                                                  (("2"
+                                                    (flatten)
+                                                    (("2"
+                                                      (beta)
+                                                      (("2"
+                                                        (replace -13 1)
+                                                        (("2"
+                                                          (use
+                                                           "ann_program_defines_MVA_vars")
+                                                          (("2"
+                                                            (assert)
+                                                            (("2"
+                                                              (flatten)
+                                                              (("2"
+                                                                (use
+                                                                 "wf_state_ghost_not_local_or_field")
+                                                                (("2"
+                                                                  (assert)
+                                                                  (("2"
+                                                                    (inst
+                                                                     -3
+                                                                     "tcp(t!1)")
+                                                                    (("2"
+                                                                      (split
+                                                                       -3)
+                                                                      (("1"
+                                                                        (expand
+                                                                         "lookup"
+                                                                         1)
+                                                                        (("1"
+                                                                          (lemma
+                                                                           "wf_state_ghost_not_local_or_field")
+                                                                          (("1"
+                                                                            (inst
+                                                                             -1
+                                                                             "ap!1"
+                                                                             "tau!2"
+                                                                             "name_of(tcp(t!1))")
+                                                                            (("1"
+                                                                              (assert)
+                                                                              (("1"
+                                                                                (postpone)
+                                                                                nil
+                                                                                nil))
+                                                                              nil))
+                                                                            nil))
+                                                                          nil))
+                                                                        nil)
+                                                                       ("2"
+                                                                        (postpone)
+                                                                        nil
+                                                                        nil))
+                                                                      nil))
+                                                                    nil))
+                                                                  nil))
+                                                                nil))
+                                                              nil))
+                                                            nil))
+                                                          nil))
+                                                        nil))
+                                                      nil))
+                                                    nil))
+                                                  nil))
+                                                nil))
+                                              nil))
+                                            nil))
+                                          nil))
+                                        nil)
+                                       ("2" (postpone) nil nil)
+                                       ("3" (postpone) nil nil))
+                                      nil)
+                                     ("2" (postpone) nil nil))
+                                    nil))
+                                  nil))
+                                nil))
+                              nil))
+                            nil))
+                          nil))
+                        nil))
+                      nil))
+                    nil))
+                  nil))
+                nil)
+               ("2" (postpone) nil nil) ("3" (postpone) nil nil))
+              nil))
+            nil))
+          nil))
+        nil))
+      nil))
+    nil)
+   unfinished nil 2043369 3980 t shostak))
  (guard_to_expr_exists 0
   (guard_to_expr_exists-1 nil 3387889632 3387889644
    ("" (postpone) nil nil) unchecked nil 11882 20 t shostak))
@@ -84,7 +435,7 @@
     (total const-decl "boolean" WellFormedMVA nil)
     (complete const-decl "boolean" WellFormedMVA nil)
     (wf_MP const-decl "boolean" WellFormedMonitoredProgram nil)
-    (set2list def-decl "list[X]" set2list nil)
+    (set2list def-decl "list[T]" set2list nil)
     (member const-decl "bool" sets nil)
     (empty? const-decl "bool" sets nil)
     (b adt-accessor-decl "[(Bool?) -> bool]" Val_adt nil)
@@ -165,14 +516,793 @@
     (nat nonempty-type-eq-decl nil naturalnumbers nil)
     (CP formal-nonempty-type-decl nil AnnGenerationLemmas nil))
    76800 1840 t shostak))
+ (CaseJML_exclusive_branches_semantics 0
+  (CaseJML_exclusive_branches_semantics-1 nil 3388316430 3388407794
+   ("" (induct "bs")
+    (("1" (expand "member") (("1" (propax) nil nil)) nil)
+     ("2" (skosimp*)
+      (("2" (expand "deriv_stmt" -7)
+        (("2" (assert)
+          (("2" (expand "execute_CaseJML")
+            (("2" (expand "deriv_stmt" -7)
+              (("2" (skosimp*)
+                (("2" (lift-if)
+                  (("2" (expand "member" -3)
+                    (("2" (split)
+                      (("1" (hide -2 -5)
+                        (("1" (replace -1)
+                          (("1" (expand "deriv_expr" -3)
+                            (("1" (inst? -3)
+                              (("1"
+                                (assert)
+                                (("1"
+                                  (flatten)
+                                  (("1"
+                                    (replace -4 -9)
+                                    (("1"
+                                      (assert)
+                                      (("1"
+                                        (replace -3)
+                                        (("1"
+                                          (lemma "stmt_determ_step_AP")
+                                          (("1"
+                                            (inst
+                                             -1
+                                             "p!1"
+                                             "n1!1"
+                                             "m2!1"
+                                             "PROJ_2(cons1_var!1)"
+                                             "tau!2"
+                                             "tau!1"
+                                             "s2!1")
+                                            (("1" (assert) nil nil))
+                                            nil))
+                                          nil))
+                                        nil))
+                                      nil))
+                                    nil))
+                                  nil))
+                                nil)
+                               ("2" (assert) nil nil))
+                              nil))
+                            nil))
+                          nil))
+                        nil)
+                       ("2" (case "cons1_var!1 = b1!1")
+                        (("1" (replace -1)
+                          (("1" (hide -3 -4 -6 -10)
+                            (("1" (inst -3 "tau!2" "v!1" "m1!1")
+                              (("1"
+                                (expand "deriv_expr" -3)
+                                (("1"
+                                  (assert)
+                                  (("1"
+                                    (flatten)
+                                    (("1"
+                                      (replace -4 -8)
+                                      (("1"
+                                        (replace -3)
+                                        (("1"
+                                          (assert)
+                                          (("1"
+                                            (lemma
+                                             "stmt_determ_step_AP")
+                                            (("1"
+                                              (inst
+                                               -1
+                                               "p!1"
+                                               "n1!1"
+                                               "m2!1"
+                                               "PROJ_2(b1!1)"
+                                               "tau!2"
+                                               "tau!1"
+                                               "s2!1")
+                                              (("1" (assert) nil nil))
+                                              nil))
+                                            nil))
+                                          nil))
+                                        nil))
+                                      nil))
+                                    nil))
+                                  nil))
+                                nil)
+                               ("2" (assert) nil nil))
+                              nil))
+                            nil))
+                          nil)
+                         ("2"
+                          (inst-cp -5 "cons1_var!1" "tau!2" "v!1"
+                           "m1!1")
+                          (("1" (expand "deriv_expr" -6)
+                            (("1" (expand "member" -6)
+                              (("1"
+                                (assert)
+                                (("1"
+                                  (flatten)
+                                  (("1"
+                                    (replace -7 -12)
+                                    (("1"
+                                      (replace -6)
+                                      (("1"
+                                        (inst
+                                         -2
+                                         "p!1"
+                                         "tau!2"
+                                         "s2!1"
+                                         "tau!1"
+                                         "n1!1"
+                                         "m2!1"
+                                         "b1!1")
+                                        (("1"
+                                          (assert)
+                                          (("1"
+                                            (split -2)
+                                            (("1" (propax) nil nil)
+                                             ("2"
+                                              (skosimp)
+                                              (("2"
+                                                (inst? -6)
+                                                (("2"
+                                                  (expand "member" -6)
+                                                  (("2"
+                                                    (assert)
+                                                    nil
+                                                    nil))
+                                                  nil))
+                                                nil))
+                                              nil)
+                                             ("3"
+                                              (skosimp)
+                                              (("3"
+                                                (inst? -4)
+                                                (("3"
+                                                  (assert)
+                                                  nil
+                                                  nil))
+                                                nil))
+                                              nil)
+                                             ("4"
+                                              (assert)
+                                              (("4"
+                                                (expand
+                                                 "deriv_stmt"
+                                                 -11)
+                                                (("4"
+                                                  (propax)
+                                                  nil
+                                                  nil))
+                                                nil))
+                                              nil))
+                                            nil))
+                                          nil))
+                                        nil))
+                                      nil))
+                                    nil))
+                                  nil))
+                                nil))
+                              nil))
+                            nil)
+                           ("2" (assert) nil nil))
+                          nil))
+                        nil))
+                      nil))
+                    nil))
+                  nil))
+                nil))
+              nil))
+            nil))
+          nil))
+        nil))
+      nil))
+    nil)
+   unfinished
+   ((real_gt_is_strict_total_order name-judgement
+     "(strict_total_order?[real])" real_props nil)
+    (posint_plus_nnint_is_posint application-judgement "posint"
+     integers nil)
+    (real_lt_is_strict_total_order name-judgement
+     "(strict_total_order?[real])" real_props nil)
+    (stmt_determ_step_AP formula-decl nil AnnotatedProgramSemantics
+     nil)
+    (int_minus_int_is_int application-judgement "int" integers nil)
+    (list_induction formula-decl nil list_adt nil)
+    (nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (below type-eq-decl nil nat_types nil)
+    (character type-decl nil character_adt nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (char? adt-recognizer-decl "[character -> boolean]" character_adt
+     nil)
+    (char type-eq-decl nil strings nil)
+    (string type-eq-decl nil strings nil)
+    (Expr type-decl nil Expr_adt nil) (Stmt type-decl nil Stmt_adt nil)
+    (CaseJML adt-constructor-decl "[list[[Expr, Stmt]] -> (CaseJML?)]"
+     Stmt_adt nil)
+    (CaseJML? adt-recognizer-decl "[Stmt -> boolean]" Stmt_adt nil)
+    (deriv_stmt def-decl "bool" Semantics nil)
+    (FALSE const-decl "bool" booleans nil)
+    (TRUE const-decl "bool" booleans nil)
+    (Bool adt-constructor-decl "[bool -> (Bool?)]" Val_adt nil)
+    (Bool? adt-recognizer-decl "[Val -> boolean]" Val_adt nil)
+    (= const-decl "[T, T -> boolean]" equalities nil)
+    (AND const-decl "[bool, bool -> bool]" booleans nil)
+    (deriv_expr const-decl "bool" Semantics nil)
+    (on_method_exit_exceptional_AP const-decl "(on_method_exit_type)"
+     AnnotatedProgramSemantics nil)
+    (on_method_exit_normal_AP const-decl "(on_method_exit_type)"
+     AnnotatedProgramSemantics nil)
+    (on_method_exit_type const-decl "bool" SemanticsTypes nil)
+    (on_method_entry_AP const-decl "(on_method_entry_type)"
+     AnnotatedProgramSemantics nil)
+    (on_method_entry_type const-decl "bool" SemanticsTypes nil)
+    (execute_CaseJML const-decl "(execute_CaseJML_type)"
+     SemanticsCommon nil)
+    (execute_CaseJML_type const-decl "bool" SemanticsTypes nil)
+    (execute_set_AP const-decl "(execute_set_type)"
+     AnnotatedProgramSemantics nil)
+    (execute_set_type const-decl "bool" SemanticsTypes nil)
+    (+ const-decl "[numfield, numfield -> numfield]" number_fields nil)
+    (numfield nonempty-type-eq-decl nil number_fields nil)
+    (update_state_AP const-decl "(update_FullState_type)"
+     AnnotatedProgramSemantics nil)
+    (update_FullState_type const-decl "bool" SemanticsTypes nil)
+    (PSt type-eq-decl nil State nil)
+    (lookup const-decl "Val" AnnotatedProgramSemantics nil)
+    (id const-decl "(bijective?[T, T])" identity nil)
+    (bijective? const-decl "bool" functions nil)
+    (below type-eq-decl nil naturalnumbers nil)
+    (< const-decl "bool" reals nil)
+    (member def-decl "bool" list_props nil)
+    (> const-decl "bool" reals nil)
+    (up? adt-recognizer-decl "[lift -> boolean]" lift_adt nil)
+    (Excpt type-decl nil Excpt_adt nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (IMPLIES const-decl "[bool, bool -> bool]" booleans nil)
+    (>= const-decl "bool" reals nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (int nonempty-type-eq-decl nil integers nil)
+    (integer_pred const-decl "[rational -> boolean]" integers nil)
+    (rational nonempty-type-from-decl nil rationals nil)
+    (rational_pred const-decl "[real -> boolean]" rationals nil)
+    (real nonempty-type-from-decl nil reals nil)
+    (real_pred const-decl "[number_field -> boolean]" reals nil)
+    (number_field nonempty-type-from-decl nil number_fields nil)
+    (number_field_pred const-decl "[number -> boolean]" number_fields
+     nil)
+    (number nonempty-type-decl nil numbers nil)
+    (APState type-eq-decl nil AnnotatedProgramSemantics nil)
+    (PState type-eq-decl nil State nil)
+    (Store type-eq-decl nil State nil)
+    (Program type-eq-decl nil Program nil)
+    (Class type-eq-decl nil Program nil)
+    (lift type-decl nil lift_adt nil)
+    (Method type-eq-decl nil Program nil)
+    (LocalVarDecl type-eq-decl nil Program nil)
+    (ArgDecl type-eq-decl nil Program nil)
+    (GhostVarDecl type-eq-decl nil Program nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (FieldDecl type-eq-decl nil Program nil)
+    (JType type-decl nil JType_adt nil) (Val type-decl nil Val_adt nil)
+    (list type-decl nil list_adt nil))
+   1323750 2800 t shostak))
+ (CaseJML_evalueates_true_stmt 0
+  (CaseJML_evalueates_true_stmt-2 nil 3388589593 3388589602
+   ("" (induct "bs")
+    (("1" (expand "member") (("1" (propax) nil nil)) nil)
+     ("2" (skosimp*)
+      (("2" (assert)
+        (("2" (expand "member" -3)
+          (("2" (split -3)
+            (("1" (replace -1)
+              (("1" (hide -1 -2 -5)
+                (("1" (expand "deriv_stmt" -3)
+                  (("1" (expand "execute_CaseJML")
+                    (("1" (expand "deriv_stmt" -3)
+                      (("1" (skosimp*)
+                        (("1" (lift-if)
+                          (("1" (inst -2 "tau!1" "v!1" "m1!1")
+                            (("1" (expand "deriv_expr" -2)
+                              (("1"
+                                (assert)
+                                (("1"
+                                  (flatten)
+                                  (("1"
+                                    (replace -3 -7)
+                                    (("1"
+                                      (assert)
+                                      (("1"
+                                        (replace -2)
+                                        (("1" (inst?) nil nil))
+                                        nil))
+                                      nil))
+                                    nil))
+                                  nil))
+                                nil))
+                              nil)
+                             ("2" (assert) nil nil))
+                            nil))
+                          nil))
+                        nil))
+                      nil))
+                    nil))
+                  nil))
+                nil))
+              nil)
+             ("2" (expand "deriv_stmt" -6)
+              (("2" (expand "execute_CaseJML")
+                (("2" (expand "deriv_stmt" -6)
+                  (("2" (skosimp*)
+                    (("2" (lift-if)
+                      (("2"
+                        (inst -2 "p!1" "tau!1" "s2!1" "m2!1" "b1!1")
+                        (("2" (assert)
+                          (("2" (case "b1!1 = cons1_var!1")
+                            (("1" (replace -1)
+                              (("1"
+                                (expand "deriv_expr" -5)
+                                (("1"
+                                  (inst? -5)
+                                  (("1"
+                                    (assert)
+                                    (("1"
+                                      (flatten)
+                                      (("1"
+                                        (replace -6 -11)
+                                        (("1"
+                                          (replace -5)
+                                          (("1"
+                                            (assert)
+                                            (("1"
+                                              (inst 2 "s2!1" "m2!1")
+                                              nil
+                                              nil))
+                                            nil))
+                                          nil))
+                                        nil))
+                                      nil))
+                                    nil))
+                                  nil))
+                                nil))
+                              nil)
+                             ("2"
+                              (inst -5 "cons1_var!1" "tau!1" "v!1"
+                               "m1!1")
+                              (("2"
+                                (expand "member" -5)
+                                (("2"
+                                  (expand "before" -5)
+                                  (("2"
+                                    (assert)
+                                    (("2"
+                                      (expand "deriv_expr" -5)
+                                      (("2"
+                                        (flatten)
+                                        (("2"
+                                          (replace -6 -10)
+                                          (("2"
+                                            (replace -5)
+                                            (("2"
+                                              (assert)
+                                              (("2"
+                                                (split -2)
+                                                (("1" (propax) nil nil)
+                                                 ("2" (propax) nil nil)
+                                                 ("3"
+                                                  (reveal -1)
+                                                  (("3"
+                                                    (skosimp)
+                                                    (("3"
+                                                      (inst
+                                                       -1
+                                                       "b2!1"
+                                                       "tau!2"
+                                                       "v!2"
+                                                       "m2!2")
+                                                      (("3"
+                                                        (assert)
+                                                        (("3"
+                                                          (expand
+                                                           "member"
+                                                           -1)
+                                                          (("3"
+                                                            (expand
+                                                             "before"
+                                                             -1)
+                                                            (("3"
+                                                              (replace
+                                                               -8
+                                                               -1)
+                                                              (("3"
+                                                                (propax)
+                                                                nil
+                                                                nil))
+                                                              nil))
+                                                            nil))
+                                                          nil))
+                                                        nil))
+                                                      nil))
+                                                    nil))
+                                                  nil)
+                                                 ("4"
+                                                  (skosimp)
+                                                  (("4"
+                                                    (inst?)
+                                                    (("4"
+                                                      (assert)
+                                                      nil
+                                                      nil))
+                                                    nil))
+                                                  nil)
+                                                 ("5"
+                                                  (expand
+                                                   "deriv_stmt"
+                                                   -9)
+                                                  (("5"
+                                                    (flatten)
+                                                    nil
+                                                    nil))
+                                                  nil))
+                                                nil))
+                                              nil))
+                                            nil))
+                                          nil))
+                                        nil))
+                                      nil))
+                                    nil))
+                                  nil))
+                                nil))
+                              nil))
+                            nil))
+                          nil))
+                        nil))
+                      nil))
+                    nil))
+                  nil))
+                nil))
+              nil))
+            nil))
+          nil))
+        nil))
+      nil))
+    nil)
+   unfinished
+   ((list type-decl nil list_adt nil) (Val type-decl nil Val_adt nil)
+    (JType type-decl nil JType_adt nil)
+    (FieldDecl type-eq-decl nil Program nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (GhostVarDecl type-eq-decl nil Program nil)
+    (ArgDecl type-eq-decl nil Program nil)
+    (LocalVarDecl type-eq-decl nil Program nil)
+    (Method type-eq-decl nil Program nil)
+    (lift type-decl nil lift_adt nil)
+    (Class type-eq-decl nil Program nil)
+    (Program type-eq-decl nil Program nil)
+    (Store type-eq-decl nil State nil)
+    (PState type-eq-decl nil State nil)
+    (APState type-eq-decl nil AnnotatedProgramSemantics nil)
+    (number nonempty-type-decl nil numbers nil)
+    (number_field_pred const-decl "[number -> boolean]" number_fields
+     nil)
+    (number_field nonempty-type-from-decl nil number_fields nil)
+    (real_pred const-decl "[number_field -> boolean]" reals nil)
+    (real nonempty-type-from-decl nil reals nil)
+    (rational_pred const-decl "[real -> boolean]" rationals nil)
+    (rational nonempty-type-from-decl nil rationals nil)
+    (integer_pred const-decl "[rational -> boolean]" integers nil)
+    (int nonempty-type-eq-decl nil integers nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (>= const-decl "bool" reals nil)
+    (IMPLIES const-decl "[bool, bool -> bool]" booleans nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (Excpt type-decl nil Excpt_adt nil)
+    (up? adt-recognizer-decl "[lift -> boolean]" lift_adt nil)
+    (> const-decl "bool" reals nil)
+    (member def-decl "bool" list_props nil)
+    (< const-decl "bool" reals nil)
+    (below type-eq-decl nil naturalnumbers nil)
+    (bijective? const-decl "bool" functions nil)
+    (id const-decl "(bijective?[T, T])" identity nil)
+    (lookup const-decl "Val" AnnotatedProgramSemantics nil)
+    (PSt type-eq-decl nil State nil)
+    (update_FullState_type const-decl "bool" SemanticsTypes nil)
+    (update_state_AP const-decl "(update_FullState_type)"
+     AnnotatedProgramSemantics nil)
+    (numfield nonempty-type-eq-decl nil number_fields nil)
+    (+ const-decl "[numfield, numfield -> numfield]" number_fields nil)
+    (execute_set_type const-decl "bool" SemanticsTypes nil)
+    (execute_set_AP const-decl "(execute_set_type)"
+     AnnotatedProgramSemantics nil)
+    (execute_CaseJML_type const-decl "bool" SemanticsTypes nil)
+    (execute_CaseJML const-decl "(execute_CaseJML_type)"
+     SemanticsCommon nil)
+    (on_method_entry_type const-decl "bool" SemanticsTypes nil)
+    (on_method_entry_AP const-decl "(on_method_entry_type)"
+     AnnotatedProgramSemantics nil)
+    (on_method_exit_type const-decl "bool" SemanticsTypes nil)
+    (on_method_exit_normal_AP const-decl "(on_method_exit_type)"
+     AnnotatedProgramSemantics nil)
+    (on_method_exit_exceptional_AP const-decl "(on_method_exit_type)"
+     AnnotatedProgramSemantics nil)
+    (deriv_expr const-decl "bool" Semantics nil)
+    (AND const-decl "[bool, bool -> bool]" booleans nil)
+    (= const-decl "[T, T -> boolean]" equalities nil)
+    (Bool? adt-recognizer-decl "[Val -> boolean]" Val_adt nil)
+    (Bool adt-constructor-decl "[bool -> (Bool?)]" Val_adt nil)
+    (TRUE const-decl "bool" booleans nil)
+    (before def-decl "boolean" listfuncs nil)
+    (FALSE const-decl "bool" booleans nil)
+    (deriv_stmt def-decl "bool" Semantics nil)
+    (CaseJML? adt-recognizer-decl "[Stmt -> boolean]" Stmt_adt nil)
+    (CaseJML adt-constructor-decl "[list[[Expr, Stmt]] -> (CaseJML?)]"
+     Stmt_adt nil)
+    (Stmt type-decl nil Stmt_adt nil) (Expr type-decl nil Expr_adt nil)
+    (string type-eq-decl nil strings nil)
+    (char type-eq-decl nil strings nil)
+    (char? adt-recognizer-decl "[character -> boolean]" character_adt
+     nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (character type-decl nil character_adt nil)
+    (below type-eq-decl nil nat_types nil)
+    (nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (list_induction formula-decl nil list_adt nil)
+    (real_gt_is_strict_total_order name-judgement
+     "(strict_total_order?[real])" real_props nil)
+    (int_minus_int_is_int application-judgement "int" integers nil)
+    (real_lt_is_strict_total_order name-judgement
+     "(strict_total_order?[real])" real_props nil)
+    (posint_plus_nnint_is_posint application-judgement "posint"
+     integers nil))
+   7240 2360 t nil)
+  (CaseJML_evalueates_true_stmt-1 nil 3388582601 3388582611
+   ("" (induct "bs")
+    (("1" (expand "member") (("1" (propax) nil nil)) nil)
+     ("2" (skosimp*)
+      (("2" (assert)
+        (("2" (expand "member" -3)
+          (("2" (split -3)
+            (("1" (replace -1)
+              (("1" (hide -1 -2 -5)
+                (("1" (expand "deriv_stmt" -3)
+                  (("1" (expand "execute_CaseJML")
+                    (("1" (expand "deriv_stmt" -3)
+                      (("1" (skosimp*)
+                        (("1" (lift-if)
+                          (("1" (inst -2 "s1!1" "tau!1" "v!1" "m1!1")
+                            (("1" (expand "deriv_expr" -2)
+                              (("1"
+                                (assert)
+                                (("1"
+                                  (replace -2 -6)
+                                  (("1"
+                                    (assert)
+                                    (("1" (inst?) nil nil))
+                                    nil))
+                                  nil))
+                                nil))
+                              nil)
+                             ("2" (assert) nil nil))
+                            nil))
+                          nil))
+                        nil))
+                      nil))
+                    nil))
+                  nil))
+                nil))
+              nil)
+             ("2" (expand "deriv_stmt" -6)
+              (("2" (expand "execute_CaseJML")
+                (("2" (expand "deriv_stmt" -6)
+                  (("2" (skosimp*)
+                    (("2" (lift-if)
+                      (("2"
+                        (inst -2 "p!1" "tau!1" "s2!1" "m2!1" "b1!1")
+                        (("2" (assert)
+                          (("2" (case "b1!1 = cons1_var!1")
+                            (("1" (replace -1)
+                              (("1"
+                                (expand "deriv_expr" -5)
+                                (("1"
+                                  (inst? -5)
+                                  (("1"
+                                    (assert)
+                                    (("1"
+                                      (replace -5 -10)
+                                      (("1"
+                                        (assert)
+                                        (("1"
+                                          (inst
+                                           2
+                                           "tau!1"
+                                           "s2!1"
+                                           "m2!1")
+                                          nil
+                                          nil))
+                                        nil))
+                                      nil))
+                                    nil))
+                                  nil))
+                                nil))
+                              nil)
+                             ("2"
+                              (inst -5 "cons1_var!1" "s1!1" "tau!1"
+                               "v!1" "m1!1")
+                              (("2"
+                                (expand "member" -5)
+                                (("2"
+                                  (expand "before" -5)
+                                  (("2"
+                                    (assert)
+                                    (("2"
+                                      (expand "deriv_expr" -5)
+                                      (("2"
+                                        (flatten)
+                                        (("2"
+                                          (replace -5 -9)
+                                          (("2"
+                                            (assert)
+                                            (("2"
+                                              (split -2)
+                                              (("1" (propax) nil nil)
+                                               ("2" (propax) nil nil)
+                                               ("3"
+                                                (reveal -1)
+                                                (("3"
+                                                  (skosimp)
+                                                  (("3"
+                                                    (inst? -1)
+                                                    (("3"
+                                                      (expand
+                                                       "member"
+                                                       -1)
+                                                      (("3"
+                                                        (expand
+                                                         "before"
+                                                         -1)
+                                                        (("3"
+                                                          (assert)
+                                                          nil
+                                                          nil))
+                                                        nil))
+                                                      nil))
+                                                    nil))
+                                                  nil))
+                                                nil)
+                                               ("4"
+                                                (skosimp)
+                                                (("4"
+                                                  (inst?)
+                                                  (("4"
+                                                    (assert)
+                                                    nil
+                                                    nil))
+                                                  nil))
+                                                nil)
+                                               ("5"
+                                                (expand
+                                                 "deriv_stmt"
+                                                 -8)
+                                                (("5"
+                                                  (flatten)
+                                                  nil
+                                                  nil))
+                                                nil))
+                                              nil))
+                                            nil))
+                                          nil))
+                                        nil))
+                                      nil))
+                                    nil))
+                                  nil))
+                                nil))
+                              nil))
+                            nil))
+                          nil))
+                        nil))
+                      nil))
+                    nil))
+                  nil))
+                nil))
+              nil))
+            nil))
+          nil))
+        nil))
+      nil))
+    nil)
+   unchecked
+   ((list type-decl nil list_adt nil) (Val type-decl nil Val_adt nil)
+    (JType type-decl nil JType_adt nil)
+    (FieldDecl type-eq-decl nil Program nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (GhostVarDecl type-eq-decl nil Program nil)
+    (ArgDecl type-eq-decl nil Program nil)
+    (LocalVarDecl type-eq-decl nil Program nil)
+    (Method type-eq-decl nil Program nil)
+    (lift type-decl nil lift_adt nil)
+    (Class type-eq-decl nil Program nil)
+    (Program type-eq-decl nil Program nil)
+    (Store type-eq-decl nil State nil)
+    (PState type-eq-decl nil State nil)
+    (APState type-eq-decl nil AnnotatedProgramSemantics nil)
+    (number nonempty-type-decl nil numbers nil)
+    (number_field_pred const-decl "[number -> boolean]" number_fields
+     nil)
+    (number_field nonempty-type-from-decl nil number_fields nil)
+    (real_pred const-decl "[number_field -> boolean]" reals nil)
+    (real nonempty-type-from-decl nil reals nil)
+    (rational_pred const-decl "[real -> boolean]" rationals nil)
+    (rational nonempty-type-from-decl nil rationals nil)
+    (integer_pred const-decl "[rational -> boolean]" integers nil)
+    (int nonempty-type-eq-decl nil integers nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (>= const-decl "bool" reals nil)
+    (IMPLIES const-decl "[bool, bool -> bool]" booleans nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (Excpt type-decl nil Excpt_adt nil)
+    (up? adt-recognizer-decl "[lift -> boolean]" lift_adt nil)
+    (> const-decl "bool" reals nil)
+    (member def-decl "bool" list_props nil)
+    (< const-decl "bool" reals nil)
+    (below type-eq-decl nil naturalnumbers nil)
+    (bijective? const-decl "bool" functions nil)
+    (id const-decl "(bijective?[T, T])" identity nil)
+    (lookup const-decl "Val" AnnotatedProgramSemantics nil)
+    (PSt type-eq-decl nil State nil)
+    (update_FullState_type const-decl "bool" SemanticsTypes nil)
+    (update_state_AP const-decl "(update_FullState_type)"
+     AnnotatedProgramSemantics nil)
+    (numfield nonempty-type-eq-decl nil number_fields nil)
+    (+ const-decl "[numfield, numfield -> numfield]" number_fields nil)
+    (execute_set_type const-decl "bool" SemanticsTypes nil)
+    (execute_set_AP const-decl "(execute_set_type)"
+     AnnotatedProgramSemantics nil)
+    (execute_CaseJML_type const-decl "bool" SemanticsTypes nil)
+    (execute_CaseJML const-decl "(execute_CaseJML_type)"
+     SemanticsCommon nil)
+    (on_method_entry_type const-decl "bool" SemanticsTypes nil)
+    (on_method_entry_AP const-decl "(on_method_entry_type)"
+     AnnotatedProgramSemantics nil)
+    (on_method_exit_type const-decl "bool" SemanticsTypes nil)
+    (on_method_exit_normal_AP const-decl "(on_method_exit_type)"
+     AnnotatedProgramSemantics nil)
+    (on_method_exit_exceptional_AP const-decl "(on_method_exit_type)"
+     AnnotatedProgramSemantics nil)
+    (deriv_expr const-decl "bool" Semantics nil)
+    (= const-decl "[T, T -> boolean]" equalities nil)
+    (Bool? adt-recognizer-decl "[Val -> boolean]" Val_adt nil)
+    (Bool adt-constructor-decl "[bool -> (Bool?)]" Val_adt nil)
+    (TRUE const-decl "bool" booleans nil)
+    (before def-decl "boolean" listfuncs nil)
+    (AND const-decl "[bool, bool -> bool]" booleans nil)
+    (FALSE const-decl "bool" booleans nil)
+    (deriv_stmt def-decl "bool" Semantics nil)
+    (CaseJML? adt-recognizer-decl "[Stmt -> boolean]" Stmt_adt nil)
+    (CaseJML adt-constructor-decl "[list[[Expr, Stmt]] -> (CaseJML?)]"
+     Stmt_adt nil)
+    (Stmt type-decl nil Stmt_adt nil) (Expr type-decl nil Expr_adt nil)
+    (string type-eq-decl nil strings nil)
+    (char type-eq-decl nil strings nil)
+    (char? adt-recognizer-decl "[character -> boolean]" character_adt
+     nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (character type-decl nil character_adt nil)
+    (below type-eq-decl nil nat_types nil)
+    (nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (list_induction formula-decl nil list_adt nil)
+    (real_gt_is_strict_total_order name-judgement
+     "(strict_total_order?[real])" real_props nil)
+    (int_minus_int_is_int application-judgement "int" integers nil)
+    (real_lt_is_strict_total_order name-judgement
+     "(strict_total_order?[real])" real_props nil)
+    (posint_plus_nnint_is_posint application-judgement "posint"
+     integers nil))
+   7775 2270 t nil))
  (MP_modeled_preserved_by_ann_event_TCC1 0
   (MP_modeled_preserved_by_ann_event_TCC1-1 nil 3387890776 nil
    ("" (subtype-tcc) nil nil) unchecked nil nil nil nil nil))
  (MP_modeled_preserved_by_ann_event_TCC2 0
   (MP_modeled_preserved_by_ann_event_TCC2-1 nil 3388218848 nil
-   ("" (subtype-tcc) nil nil) nil nil nil nil nil nil))
+   ("" (subtype-tcc) nil nil) unchecked nil nil nil nil nil))
  (MP_modeled_preserved_by_ann_event 0
-  (MP_modeled_preserved_by_ann_event-1 nil 3387890818 3388222905
+  (MP_modeled_preserved_by_ann_event-1 nil 3387890818 3388750034
    ("" (skosimp*)
     ((""
       (expand* "ann_event" "related_states" "on_method_MVA"
@@ -234,23 +1364,355 @@
                                                      "C1(ann_trans_cp(mp!1)(q1, {t : Transition | ts!1(t) AND scp(t) = q1}))")
                                                     (("1"
                                                       (name
-                                                       "c1"
+                                                       "brT"
                                                        "ann_trans_cp(mp!1)(q1, {t: Transition | ts!1(t) AND scp(t) = q1})")
                                                       (("1"
                                                         (case
-                                                         "deriv_expr(ap!1)(PROJ_1(c1), sAP1!1, v!1, tau!1)(m1!2)
-                (LAMBDA (p: Program[string])
-                        (s: Stmt[string], sigma1, sigma2: APState[string])
-                        (m: below(m1!2)):
-                   deriv_stmt(p)(s, sigma1, sigma2)(m))
-              IMPLIES tau!1 = sAP1!1 AND v!1 = Bool(TRUE)")
+                                                         "EXISTS (tau : APState, n : nat): deriv_stmt(ap!1)(PROJ_2(brT), sAP1!1, tau)(n)")
                                                         (("1"
-                                                          (postpone)
-                                                          nil
+                                                          (skolem!)
+                                                          (("1"
+                                                            (lemma
+                                                             "CaseJML_exclusive_branches_semantics")
+                                                            (("1"
+                                                              (inst
+                                                               -1
+                                                               "ap!1"
+                                                               "set2list(C1)"
+                                                               "sAP1!1"
+                                                               "sAP2!1"
+                                                               "tau!2"
+                                                               "n!2"
+                                                               "n!1"
+                                                               "brT")
+                                                              (("1"
+                                                                (reveal
+                                                                 -3
+                                                                 -4)
+                                                                (("1"
+                                                                  (assert)
+                                                                  (("1"
+                                                                    (split
+                                                                     -3)
+                                                                    (("1"
+                                                                      (rewrite
+                                                                       -1)
+                                                                      (("1"
+                                                                        (hide
+                                                                         -1
+                                                                         -5
+                                                                         -6
+                                                                         -13
+                                                                         -14
+                                                                         -15
+                                                                         -16
+                                                                         1)
+                                                                        (("1"
+                                                                          (case
+                                                                           "deriv_stmt(ap!1)(PROJ_2(ann_trans_cp(mp!1)(q1, {t: Transition | ts!1(t) AND scp(t) = q1})),
+                              sAP1!1, tau!2)(n!2)")
+                                                                          (("1"
+                                                                            (hide
+                                                                             -3
+                                                                             -4)
+                                                                            (("1"
+                                                                              (expand*
+                                                                               "deriv_stmt"
+                                                                               "execute_CaseJML"
+                                                                               "ann_trans_cp")
+                                                                              (("1"
+                                                                                (flatten)
+                                                                                (("1"
+                                                                                  (lemma
+                                                                                   "ann_guard_actions_not_empty")
+                                                                                  (("1"
+                                                                                    (inst
+                                                                                     -1
+                                                                                     "mp!1"
+                                                                                     "({t: Transition | ts!1(t) AND scp(t) = q1})"
+                                                                                     "q1"
+                                                                                     "(# etype := et!1, mname := name(m1!1) #)")
+                                                                                    (("1"
+                                                                                      (split
+                                                                                       -1)
+                                                                                      (("1"
+                                                                                        (assert)
+                                                                                        (("1"
+                                                                                          (expand
+                                                                                           "deriv_stmt")
+                                                                                          (("1"
+                                                                                            (skosimp*)
+                                                                                            (("1"
+                                                                                              (expand
+                                                                                               "ann_guard_actions")
+                                                                                              (("1"
+                                                                                                (name
+                                                                                                 "C2"
+                                                                                                 "{x: [Expr, Stmt] | EXISTS (t_1: Transition):
+  (ts!1(t_1) AND scp(t_1) = q1) AND
+  (FORALL (stA: (wf_Store(mva(mp!1))), stP: (wf_PSt(mva(mp!1))))
+          (sMP1, sMP2: MPState, v: Val, n: nat):
+    pstate(sMP1) = (# ex := bottom, st := stP #) IMPLIES
+    deriv_expr(mp!1)(PROJ_1(x), sMP1, v, sMP2)(n) IMPLIES
+    Bool?(v) IMPLIES
+      b(v) = guard(t_1)(stA, stP)) AND
+      PROJ_2(x) = Sequence(Set (\"cp\", NExpr(NumVarEval(name_of(tcp(t_1))))),
+                           ann_action(action(t_1)))}")
+                                                                                                (("1"
+                                                                                                  (replace
+                                                                                                   -1)
+                                                                                                  (("1"
+                                                                                                    (lemma
+                                                                                                     "guard_to_expr_exists")
+                                                                                                    (("1"
+                                                                                                      (inst
+                                                                                                       -1
+                                                                                                       "mp!1"
+                                                                                                       "t1")
+                                                                                                      (("1"
+                                                                                                        (assert)
+                                                                                                        (("1"
+                                                                                                          (expand*
+                                                                                                           "nonempty?"
+                                                                                                           "empty?"
+                                                                                                           "member")
+                                                                                                          (("1"
+                                                                                                            (skosimp)
+                                                                                                            (("1"
+                                                                                                              (postpone)
+                                                                                                              nil
+                                                                                                              nil))
+                                                                                                            nil))
+                                                                                                          nil))
+                                                                                                        nil))
+                                                                                                      nil))
+                                                                                                    nil))
+                                                                                                  nil))
+                                                                                                nil))
+                                                                                              nil))
+                                                                                            nil))
+                                                                                          nil))
+                                                                                        nil)
+                                                                                       ("2"
+                                                                                        (replace
+                                                                                         -16
+                                                                                         1)
+                                                                                        (("2"
+                                                                                          (expand
+                                                                                           "filter_event")
+                                                                                          (("2"
+                                                                                            (apply-extensionality)
+                                                                                            (("2"
+                                                                                              (hide-all-but
+                                                                                               1)
+                                                                                              (("2"
+                                                                                                (grind)
+                                                                                                (("2"
+                                                                                                  (apply-extensionality)
+                                                                                                  nil
+                                                                                                  nil))
+                                                                                                nil))
+                                                                                              nil))
+                                                                                            nil))
+                                                                                          nil))
+                                                                                        nil)
+                                                                                       ("3"
+                                                                                        (expand*
+                                                                                         "empty?"
+                                                                                         "member")
+                                                                                        (("3"
+                                                                                          (inst
+                                                                                           -1
+                                                                                           "t1")
+                                                                                          (("3"
+                                                                                            (assert)
+                                                                                            (("3"
+                                                                                              (replace
+                                                                                               -16
+                                                                                               1)
+                                                                                              (("3"
+                                                                                                (expand
+                                                                                                 "filter_event")
+                                                                                                (("3"
+                                                                                                  (propax)
+                                                                                                  nil
+                                                                                                  nil))
+                                                                                                nil))
+                                                                                              nil))
+                                                                                            nil))
+                                                                                          nil))
+                                                                                        nil)
+                                                                                       ("4"
+                                                                                        (expand
+                                                                                         "ann_program_pre")
+                                                                                        (("4"
+                                                                                          (flatten)
+                                                                                          nil
+                                                                                          nil))
+                                                                                        nil))
+                                                                                      nil)
+                                                                                     ("2"
+                                                                                      (inst
+                                                                                       -4
+                                                                                       "q1")
+                                                                                      nil
+                                                                                      nil))
+                                                                                    nil))
+                                                                                  nil))
+                                                                                nil))
+                                                                              nil))
+                                                                            nil)
+                                                                           ("2"
+                                                                            (assert)
+                                                                            nil
+                                                                            nil))
+                                                                          nil))
+                                                                        nil))
+                                                                      nil)
+                                                                     ("2"
+                                                                      (expand
+                                                                       "deriv_stmt"
+                                                                       1)
+                                                                      (("2"
+                                                                        (expand
+                                                                         "execute_CaseJML")
+                                                                        (("2"
+                                                                          (expand
+                                                                           "deriv_stmt"
+                                                                           1)
+                                                                          (("2"
+                                                                            (inst?)
+                                                                            (("2"
+                                                                              (inst
+                                                                               1
+                                                                               "m2!1")
+                                                                              (("2"
+                                                                                (assert)
+                                                                                nil
+                                                                                nil))
+                                                                              nil))
+                                                                            nil))
+                                                                          nil))
+                                                                        nil))
+                                                                      nil)
+                                                                     ("3"
+                                                                      (skosimp)
+                                                                      (("3"
+                                                                        (postpone)
+                                                                        nil
+                                                                        nil))
+                                                                      nil)
+                                                                     ("4"
+                                                                      (skosimp)
+                                                                      (("4"
+                                                                        (postpone)
+                                                                        nil
+                                                                        nil))
+                                                                      nil)
+                                                                     ("5"
+                                                                      (replace
+                                                                       -4
+                                                                       -5)
+                                                                      (("5"
+                                                                        (lemma
+                                                                         "set2list_same_elements[[Expr, Stmt]]")
+                                                                        (("5"
+                                                                          (inst
+                                                                           -1
+                                                                           "C1"
+                                                                           "brT")
+                                                                          (("5"
+                                                                            (flatten)
+                                                                            (("5"
+                                                                              (expand
+                                                                               "member"
+                                                                               -1
+                                                                               1)
+                                                                              (("5"
+                                                                                (propax)
+                                                                                nil
+                                                                                nil))
+                                                                              nil))
+                                                                            nil))
+                                                                          nil))
+                                                                        nil))
+                                                                      nil))
+                                                                    nil))
+                                                                  nil))
+                                                                nil))
+                                                              nil))
+                                                            nil))
                                                           nil)
                                                          ("2"
-                                                          (postpone)
-                                                          nil
+                                                          (lemma
+                                                           "CaseJML_evalueates_true_stmt")
+                                                          (("2"
+                                                            (inst
+                                                             -1
+                                                             "ap!1"
+                                                             "set2list(C1)"
+                                                             "sAP1!1"
+                                                             "sAP2!1"
+                                                             "n!1"
+                                                             "brT")
+                                                            (("2"
+                                                              (reveal
+                                                               -4)
+                                                              (("2"
+                                                                (assert)
+                                                                (("2"
+                                                                  (split
+                                                                   -2)
+                                                                  (("1"
+                                                                    (propax)
+                                                                    nil
+                                                                    nil)
+                                                                   ("2"
+                                                                    (expand
+                                                                     "deriv_stmt"
+                                                                     1)
+                                                                    (("2"
+                                                                      (expand
+                                                                       "execute_CaseJML")
+                                                                      (("2"
+                                                                        (expand
+                                                                         "deriv_stmt"
+                                                                         1)
+                                                                        (("2"
+                                                                          (reveal
+                                                                           -3)
+                                                                          (("2"
+                                                                            (inst
+                                                                             1
+                                                                             "tau!1"
+                                                                             "v!1"
+                                                                             "m1!2"
+                                                                             "m2!1")
+                                                                            (("2"
+                                                                              (assert)
+                                                                              nil
+                                                                              nil))
+                                                                            nil))
+                                                                          nil))
+                                                                        nil))
+                                                                      nil))
+                                                                    nil)
+                                                                   ("3"
+                                                                    (postpone)
+                                                                    nil
+                                                                    nil)
+                                                                   ("4"
+                                                                    (postpone)
+                                                                    nil
+                                                                    nil)
+                                                                   ("5"
+                                                                    (postpone)
+                                                                    nil
+                                                                    nil))
+                                                                  nil))
+                                                                nil))
+                                                              nil))
+                                                            nil))
                                                           nil))
                                                         nil))
                                                       nil)
@@ -540,5 +2002,5 @@
         nil))
       nil))
     nil)
-   unfinished nil 4055089 7600 t shostak)))
+   unfinished nil 19355222 13330 t shostak)))
 

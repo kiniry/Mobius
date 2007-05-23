@@ -33,6 +33,10 @@ BEGIN
     ENDCASES
   MEASURE length(l)
 
+  update_vars(t : Transition) : Stmt =
+    Sequence(Set("cp", NExpr(NumVarEval(name_of(tcp(t))))), 
+                       ann_action(action(t)))
+
   IMPORTING MonitoredProgramSemantics[CP, string]
 
   ann_guard_actions(mp)(ts : finite_set[Transition]) : list[[Expr, Stmt]] =
@@ -44,8 +48,7 @@ BEGIN
         deriv_expr(mp)(proj_1(x), sMP1, v, sMP2)(n) IMPLIES
         Bool?(v) IMPLIES 
           b(v) = guard(t)(stA, stP)) AND
-      proj_2(x) = Sequence(Set("cp", NExpr(NumVarEval(name_of(tcp(t))))), 
-                           ann_action(action(t)))})
+      proj_2(x) = update_vars(t)})
 
   ann_trans_cp(mp)(q : CP, ts : finite_set[Transition]) : [Expr, Stmt] =
     (BExpr(Eq(NumVarEval("cp"), NumVarEval(name_of(q)))),
@@ -133,36 +136,6 @@ BEGIN
       ann_program_pre(mp) IMPLIES
         wf_Program(ann_program(mp))
 
-  % NOT USED
-  ann_program_preserves_structure : LEMMA % :-)
-    FORALL (mp : (ann_program_pre), c : Class) :
-      classes(program(mp))(c) IMPLIES
-      IF name(c) = class_name(mva(mp)) THEN
-        LET c1 = ann_class(mp)(c) IN
-        name(c) = name(c1) AND
-        FORALL (m : Method) :
-        LET m1 = ann_method(mp)(m) IN
-          methods(c)(m) IMPLIES
-            classes(ann_program(mp))(c1) AND
-            methods(c1)(m1) AND
-            name(m1) = name(m) AND
-            body(m1) = body(m) AND
-            pre(m1) = pre(m) AND
-            post(m1) = post(m) AND
-            lvars(m1) = lvars(m) AND
-            res(m1) = res(m) AND
-            res_type(m1) = res_type(m)
-      ELSE
-        classes(ann_program(mp))(c)
-      ENDIF
-
-  % NOT USED
-  wf_class_ann_program : LEMMA
-    FORALL (mp : MonitoredProgram, c : Class) :
-      ann_program_pre(mp) IMPLIES
-      classes(ann_program(mp))(c) IMPLIES
-        wf_Class(c)
-
   ann_program_preserves_var_decls : LEMMA
     FORALL (mp : MonitoredProgram)(vn : string) :
       ann_program_pre(mp) IMPLIES
@@ -186,7 +159,8 @@ BEGIN
       wf_state(mp)(sMP) IMPLIES
       wf_state(ann_program(mp))(sAP) IMPLIES
         (is_field(vn, pstate(sMP)) IFF is_field(vn, pstate(sAP))) AND
-        (is_local(vn, pstate(sMP)) IFF is_local(vn, pstate(sAP)))
+        (is_local(vn, pstate(sMP)) IFF is_local(vn, pstate(sAP))) AND
+        (is_ghost(vn, sMP) IFF is_ghost(vn, sAP))
 
   % THINK: I won't be able to prove this, maybe taken as axiom of get_class
   get_class_ann_program : LEMMA
@@ -241,6 +215,17 @@ BEGIN
         assertions_have_no_side_effect(ann_program(mp))
 
   ann_program_defines_MVA_vars : LEMMA
+    FORALL (mp : MonitoredProgram, ap : Program, s : APState) :
+      ann_program_pre(mp) IMPLIES
+      ap = ann_program(mp) IMPLIES
+      wf_state(ap)(s) IMPLIES
+        is_ghost("cp", s) AND
+        (FORALL (q : CP) :
+          cps(mva(mp))(q) IMPLIES is_ghost(name_of(q), s)) AND
+        (FORALL (v : MVAVarDecl) :
+          vdsA(mva(mp))(v) IMPLIES is_ghost(name(v), s))
+
+  ann_program_defines_MVA_vars2 : LEMMA
     FORALL (mp : MonitoredProgram, ap : Program) :
       ann_program_pre(mp) IMPLIES
       ap = ann_program(mp) IMPLIES

@@ -1,11 +1,70 @@
 AnnGenerationLemmas[CP : TYPE+] : THEORY
 BEGIN
 
-  IMPORTING Equivalence[CP]
+  IMPORTING Equivalence[CP],
+            listfuncs
 
+  non_interference_of_set_stmt : LEMMA % :-)
+    FORALL (p : Program, c : Stmt, s1, s2 : APState, n : nat, vn : string) :
+      Set?(c) IMPLIES
+      NOT target(c) = vn IMPLIES
+      (FORALL (tau1, tau2 : APState, v : Val, n2 : nat) :
+        (deriv_expr(p)(source(c), tau1, v, tau2)(n2) IMPLIES tau1 = tau2))
+      IMPLIES
+      deriv_stmt(p)(c, s1, s2)(n) IMPLIES
+        gvs(s1)(vn) = gvs(s2)(vn)
 
-  % I can not prove this without having an explicit way of translating
-  % a guard into an expression
+  list_to_sequence(l : list[Stmt]) : RECURSIVE Stmt =
+    CASES l OF
+      null : Skip,
+      cons(x, xs) : Sequence(x, list_to_sequence(xs))
+    ENDCASES
+    MEASURE length(l)
+
+  sequence_of_sets(c : Stmt) : RECURSIVE boolean =
+    Skip?(c) OR Sequence?(c) AND Set?(s1(c)) AND sequence_of_sets(s2(c))
+    MEASURE c BY <<
+
+  sequence_to_list(c : (sequence_of_sets)) : RECURSIVE list[Stmt] =
+    IF Skip?(c) THEN null
+    ELSE cons(s1(c), sequence_to_list(s2(c)))
+    ENDIF
+    MEASURE c BY <<
+
+  list_to_sequence_inverse : LEMMA
+    FORALL (c : (sequence_of_sets)) :
+      list_to_sequence(sequence_to_list(c)) = c
+
+  non_interference_of_set_stmt_sequence : LEMMA % :-)
+    FORALL (p : Program, sets : list[Stmt], s1, s2 : APState, 
+            n : nat, vn : string) :
+      (FORALL (c : Stmt) : 
+        member(c, sets) IMPLIES 
+          Set?(c) AND
+          NOT target(c) = vn AND
+          (FORALL (tau1, tau2 : APState, v : Val, n2 : nat) :
+            (deriv_expr(p)(source(c), tau1, v, tau2)(n2) IMPLIES tau1 = tau2)))
+      IMPLIES
+      deriv_stmt(p)(list_to_sequence(sets), s1, s2)(n) IMPLIES
+        gvs(s1)(vn) = gvs(s2)(vn)
+
+  ann_action_correcteness : LEMMA
+    FORALL (mp : MonitoredProgram, ap : Program, t : Transition)
+           (sMVA : AState, sMP : MPState, sAP1, sAP2 : APState)
+           (n : nat) :
+      related_states(mp, ap)(sMP, sAP1) IMPLIES
+%      ts(mva(mp))(t) IMPLIES
+      sMVA = (# cp := tcp(t),
+                stA := execute_actions(action(t))(stA(astate(sMP)), 
+                                                  st(pstate(sMP)))
+             #) IMPLIES
+      NOT up?(ex(pstate(sAP1))) IMPLIES
+      deriv_stmt(ap)(update_vars(t), sAP1, sAP2)(n) IMPLIES
+        MVA_modeled?(sMVA, sAP2)      
+
+  % This can not be proved without having an explicit way of translating a
+  % guard into an expression. Here is where the assumption that guards can be
+  % translated into Java expressions
   guard_to_expr_exists : AXIOM
     FORALL (mp : MonitoredProgram, t : Transition) :
       ts(mva(mp))(t) IMPLIES
@@ -18,7 +77,7 @@ BEGIN
                     Bool?(v) IMPLIES b(v) = guard(t)(stA, stP)})
 
   ann_guard_actions_not_empty : LEMMA % :-)
-    FORALL (mp : MonitoredProgram, ts : finite_set[Transition], 
+    FORALL (mp : MonitoredProgram, ts : finite_set[Transition],
             q : CP, e : Event) :
       wf_MP(mp) IMPLIES
       NOT empty?(ts) IMPLIES
@@ -26,12 +85,47 @@ BEGIN
       IMPLIES
         NOT null?(ann_guard_actions(mp)(ts))
 
+  CaseJML_exclusive_branches_semantics : LEMMA % :-)
+    FORALL (p : Program, bs : list[[Expr, Stmt]], s1, s2, tau : APState,
+            n1, n : nat, b1 : [Expr, Stmt]) :
+      NOT up?(ex(pstate(s1))) IMPLIES
+      n > 0 IMPLIES
+      member(b1, bs) IMPLIES
+      (FORALL (tau : APState, v : Val, m1 : below(n)) :
+        (deriv_expr(p)(PROJ_1(b1), s1, v, tau)(m1) IMPLIES
+          s1 = tau AND v = Bool(TRUE))) IMPLIES
+      (FORALL (b2 : [Expr, Stmt], tau : APState, v : Val, m2 : below(n)) :
+        member(b2, bs) IMPLIES
+        NOT b1 = b2 IMPLIES
+        (deriv_expr(p)(PROJ_1(b2), s1, v, tau)(m2) IMPLIES
+          s1 = tau AND v = Bool(FALSE))) IMPLIES
+        deriv_stmt(p)(PROJ_2(b1), s1, tau)(n1) IMPLIES
+        deriv_stmt(p)(CaseJML(bs), s1, s2)(n) IMPLIES
+          s2 = tau
+
+  CaseJML_evalueates_true_stmt : LEMMA % :-)
+    FORALL (p : Program, bs : list[[Expr, Stmt]], s1, s2 : APState, n : nat,
+            b1 : [Expr, Stmt]) :
+      NOT up?(ex(pstate(s1))) IMPLIES
+      n > 0 IMPLIES
+      member(b1, bs) IMPLIES
+      (FORALL (tau : APState, v : Val, m1 : below(n)) :
+        (deriv_expr(p)(PROJ_1(b1), s1, v, tau)(m1) IMPLIES
+          s1 = tau AND v = Bool(TRUE))) IMPLIES
+      (FORALL (b2 : [Expr, Stmt], tau : APState, v : Val, m2 : below(n)) :
+        member(b2, bs) IMPLIES
+        before(b2, b1, bs) IMPLIES
+        (deriv_expr(p)(PROJ_1(b2), s1, v, tau)(m2) IMPLIES
+          NOT up?(ex(pstate(tau))) AND
+          s1 = tau AND v = Bool(FALSE))) IMPLIES
+      deriv_stmt(p)(CaseJML(bs), s1, s2)(n) IMPLIES
+        EXISTS (tau : APState, n1 : nat) : 
+          deriv_stmt(p)(PROJ_2(b1), s1, tau)(n1)
 
   MP_modeled_preserved_by_ann_event : LEMMA
-    FORALL (mp : MonitoredProgram, ap : Program)
+    FORALL (mp : MonitoredProgram, ap : Program, m1 : Method)
            (sMP1, sMP2 : MPState, sAP1, sAP2 : APState)
-           (c : Class, m1 : Method, n : nat)
-           (ts : set[Transition], et : EventType) :
+           (n : nat, ts : set[Transition], et : EventType) :
       related_states(mp, ap)(sMP1, sAP1) IMPLIES
       astate(sMP2) = on_method_MVA(et)(mp, m1, sMP1) IMPLIES
       NOT up?(ex(pstate(sAP1))) IMPLIES

@@ -99,7 +99,6 @@ BEGIN
 
   Assign(target : Name, source : Expr) : Assign?
   BExpr(b : BoolExpr) : BExpr?
-  % We don't need CondExpr anymore
   CondExpr(test : Expr, then_expr : Expr, else_expr : Expr) : CondExpr?
   MethodCall(tgt : Expr, name : Name, arg : Expr) : MethodCall?
   NExpr(n : NumExpr) : NExpr?
@@ -122,7 +121,6 @@ BEGIN
   Skip : Skip?
   StmtExpr(expr : Expr) : StmtExpr?
   Throw : Throw?
-  % optional catch and finally modelled by lifting types
   TryCatch(try : Stmt, catch : Stmt, finally : Stmt) : TryCatch?
   While(test : Expr, body : Stmt) : While?
 
@@ -204,7 +202,7 @@ BEGIN
 
   This, Super : Name
 
-  %NOTE: it is not correct to have Val in programs because they belong to the
+  % NOTE: it is not correct to have Val in programs because they belong to the
   % semantic domain, however, we do so to simplify the definition of the initial
   % state (otherwise we would have to define an order of initialization).
   GhostVarDecl : TYPE = [# jtype : JType, 
