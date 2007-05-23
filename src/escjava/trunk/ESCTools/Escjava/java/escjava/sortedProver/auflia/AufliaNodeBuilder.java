@@ -261,14 +261,23 @@ public class AufliaNodeBuilder extends EscNodeBuilder
 	public SPred buildOr(SPred[] args) { return sx("or", args); }
 	public SPred buildNot(SPred arg) { return sx("not", arg); }
 	
+	Hashtable labelMap = new Hashtable();
+	
 	public SPred buildLabel(boolean positive, String name, SPred pred)
 	{
-		name = (positive ? "ErrVarPos_" : "ErrVarNeg_") + name;
-		if (!funsDefined.contains(name)) {
-			extrafuns.append(":extrapreds (( ").append(encodeName(name)).append(" ))\n");
-			funsDefined.add(name);
+		String evname = (positive ? "ErrVarPos_" : "ErrVarNeg_") + name;
+		String ename = encodeName(evname);
+		labelMap.put(ename, name);
+		if (!labelMap.containsKey(ename)) {
+			extrafuns.append(":extrapreds (( ").append(ename).append(" ))\n");
+			funsDefined.add(evname);
 		}
-		return sx(positive ? "and" : "or", sx(name), pred);
+		return sx(positive ? "and" : "or", sx(evname), pred);
+	}
+	
+	public String errVarToLabel(String name)
+	{
+		return (String)labelMap.get(name);
 	}
 
 

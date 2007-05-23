@@ -38,7 +38,7 @@ public class AufliaProver extends SortedProver
 {
 	protected Properties currentProperties = new Properties(); 
 	
-	AufliaNodeBuilder nodeBuilder = new AufliaNodeBuilder();
+	protected AufliaNodeBuilder nodeBuilder = new AufliaNodeBuilder();
 	int pushHeight;
 	BackPred backPred = new BackPred();
 	
@@ -147,7 +147,7 @@ public class AufliaProver extends SortedProver
 	public SortedProverResponse isValid(SPred formula, SortedProverCallback callback, Properties properties)
 	{
 		setProverResourceFlags(properties);
-		String filename = encodeProblemName(properties); 
+		String filename = encodeProblemName(properties) + ".smt"; 
 	    saveQuery(filename, formula);	    
 	    ErrorSet.caution("wrote formula to: " + filename + ", not proving anything! "); 
     	return new SortedProverResponse(SortedProverResponse.YES);
