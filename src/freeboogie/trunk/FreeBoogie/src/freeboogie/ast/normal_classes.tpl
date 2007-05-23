@@ -9,7 +9,7 @@ This template generates java classes for the normal classes.
 package freeboogie.ast;
 import java.math.BigInteger; // for AtomNum
 
-public class \ClassName extends \BaseName {
+public final class \ClassName extends \BaseName {
 \enums{  public enum \EnumName {\values[, ]{
     \VALUE_NAME}
   }}
@@ -19,16 +19,25 @@ public class \ClassName extends \BaseName {
 }
 \primitives{  private final \Membertype \memberName;
 }
-  // === Constructors ===
-  public \ClassName(\members[, ]{\if_primitive{\Membertype}{\MemberType} \memberName}) {
+
+  // === Constructors and Factories ===
+  private \ClassName(\members[, ]{\if_primitive{\Membertype}{\MemberType} \memberName}) {
     this.location = AstLocation.unknown();
 \members{    this.\memberName = \memberName; \if_nonnull{assert \memberName != null;}{}
 }  }
 
-  public \ClassName(\members[, ]{\if_primitive{\Membertype}{\MemberType} \memberName}, AstLocation location) {
+  private \ClassName(\members[, ]{\if_primitive{\Membertype}{\MemberType} \memberName}, AstLocation location) {
     this(\members[,]{\memberName});
     assert location != null;
     this.location = location;
+  }
+  
+  public static \ClassName mk(\members[, ]{\if_primitive{\Membertype}{\MemberType} \memberName}) {
+    return new \ClassName(\members[, ]{\memberName});
+  }
+
+  public static \ClassName mk(\members[, ]{\if_primitive{\Membertype}{\MemberType} \memberName}, AstLocation location) {
+    return new \ClassName(\members[, ]{\memberName}, location);
   }
 
   // === Accessors ===

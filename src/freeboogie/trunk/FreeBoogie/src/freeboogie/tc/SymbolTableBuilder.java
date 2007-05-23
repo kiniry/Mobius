@@ -63,6 +63,14 @@ public class SymbolTableBuilder extends Transformer {
     return symbolTable;
   }
   
+  /**
+   * Returns the globals collector, which can be used to resolve global names.
+   * @return the globals collector
+   */
+  public GlobalsCollector getGC() {
+    return gc;
+  }
+  
   // === helpers ===
   
   // reports an error at location l if d s null
@@ -115,7 +123,7 @@ public class SymbolTableBuilder extends Transformer {
   @Override
   public void see(VariableDecl variableDecl, String name, Type type, Declaration tail) {
     HashMap<String, VariableDecl> scope = localScopes.peekFirst();
-    if (scope != null) {
+    if (scope != null && name != null) {
       // we are in a local scope
       VariableDecl old = scope.get(name);
       if (old != null) {
@@ -130,12 +138,11 @@ public class SymbolTableBuilder extends Transformer {
   
   // === keep track of local scopes ===
   @Override
-  public void see(Procedure procedure, Signature sig, Specification spec, Body body, Declaration tail) {
+  public void see(Procedure procedure, Signature sig, Specification spec, Declaration tail) {
     HashMap<String, VariableDecl> newScope = new HashMap<String, VariableDecl>();
     localScopes.addFirst(newScope);
     sig.eval(this);
     if (spec != null) spec.eval(this);
-    if (body != null) body.eval(this);
     localScopes.removeFirst();
     if (tail != null) tail.eval(this);
   }

@@ -355,16 +355,15 @@ public class PrettyPrinter extends Transformer {
   }
 
   @Override
-  public void see(Procedure procedure, Signature sig, Specification spec, Body body, Declaration tail) {
+  public void see(Procedure procedure, Signature sig, Specification spec, Declaration tail) {
     say("procedure ");
     sig.eval(this);
-    if (body == null) say(";");
+    say(";");
     if (spec != null) {
       ++indentLevel; nl();
       spec.eval(this);
       --indentLevel; nl();
     }
-    if (body != null) body.eval(this);
     nl();
     if (tail != null) tail.eval(this);
   }
@@ -446,14 +445,6 @@ public class PrettyPrinter extends Transformer {
     if (exprs != null) exprs.eval(this);
     say("} ");
     if (tail != null) tail.eval(this);
-  }
-
-  
-  /**
-   * @param args
-   */
-  public static void main(String[] args) {
-    // TODO: Tests.
   }
 
 }

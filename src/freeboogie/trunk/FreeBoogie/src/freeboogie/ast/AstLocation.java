@@ -59,8 +59,7 @@ public class AstLocation implements Comparable<AstLocation> {
     return (file == null ? "" : file + ":") + line + ":" + column;
   }
 
-  /* @see java.lang.Comparable#compareTo(java.lang.Object) */
-  @Override
+  // the Comparable<T> interface
   public int compareTo(AstLocation o) {
     if (this == unknown ^ o == unknown)
       if (this == unknown) return -1; else return +1;

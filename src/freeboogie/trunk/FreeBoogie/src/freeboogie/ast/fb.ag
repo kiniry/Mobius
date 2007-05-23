@@ -13,15 +13,14 @@ ConstDecl=     String! id, Type! type, Declaration tail;
 Function =     Signature! sig, Declaration tail;
 Axiom =        Expr! expr, Declaration tail;
 VariableDecl = String name, Type! type, Declaration tail;
-Procedure =    Signature! sig, Specification spec, Body body,
-               Declaration tail;
+Procedure =    Signature! sig, Specification spec, Declaration tail;
 Implementation = Signature! sig, Body! body, Declaration tail;
 
 
 // Types and constants
 Type :> PrimitiveType, UserType, ArrayType, GenericType, DepType, TupleType;
 ArrayType = Type! rowType, Type colType, Type! elemType;
-PrimitiveType = enum(Ptype: BOOL, INT, REF, NAME, ANY) ptype;
+PrimitiveType = enum(Ptype: BOOL, INT, REF, NAME, ANY, ERROR) ptype;
 GenericType = Type! param, Type! type;
 DepType = Type! type, Expr! pred;
 UserType = String! name;

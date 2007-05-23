@@ -42,7 +42,7 @@ public class Transformer extends Evaluator<Ast> {
       \if_primitive{}{sameChildren &= new\MemberName == \memberName;}
     }
     if (!sameChildren) 
-      result\ClassName = new \ClassName(\members[,]{new\MemberName});
+      result\ClassName = \ClassName.mk(\members[,]{new\MemberName});
   }
   
   @Override

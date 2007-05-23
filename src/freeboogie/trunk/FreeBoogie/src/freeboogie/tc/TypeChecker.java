@@ -8,6 +8,7 @@ import java.util.HashMap;
 
 import freeboogie.ast.*;
 import freeboogie.ast.utils.PrettyPrinter;
+import freeboogie.util.Closure;
 import freeboogie.util.Err;
 
 /**
@@ -30,12 +31,19 @@ public class TypeChecker extends Evaluator<Type> {
   
   private SymbolTable st;
   
+  private GlobalsCollector gc;
+  
   // where there any type errors?
   private boolean errors;
   
-  // TODO: should I make all type ref-comparable here?
   // maps expressions to their types
-  private UsageToDefMap<Expr, Type> typeOf;
+  private HashMap<Expr, Type> typeOf;
+  
+  // maps implementations to procedures
+  private UsageToDefMap<Implementation, Procedure> implProc;
+  
+  // maps implementation params to procedure params
+  private UsageToDefMap<VariableDecl, VariableDecl> paramMap;
 
   // Maps type variables to the real types.
   // Gets set by the |check| functions.
@@ -46,7 +54,7 @@ public class TypeChecker extends Evaluator<Type> {
   private static final String TYPE_VAR_PREFIX = " tv";
     // contains space so that it can't come from parsing
   
-  // === main entry point(s) ===
+  // === public interface ===
 
   /**
    * Typechecks an AST.
@@ -54,25 +62,58 @@ public class TypeChecker extends Evaluator<Type> {
    * @return whether there were any errors while typechecking (or in earlier phases) 
    */
   public boolean process(Declaration ast) {
-    boolType = new PrimitiveType(PrimitiveType.Ptype.BOOL);
-    intType = new PrimitiveType(PrimitiveType.Ptype.INT);
-    refType = new PrimitiveType(PrimitiveType.Ptype.REF);
-    nameType = new PrimitiveType(PrimitiveType.Ptype.NAME);
-    anyType = new PrimitiveType(PrimitiveType.Ptype.ANY);
-    errType = new PrimitiveType(PrimitiveType.Ptype.ANY);
+    boolType = PrimitiveType.mk(PrimitiveType.Ptype.BOOL);
+    intType = PrimitiveType.mk(PrimitiveType.Ptype.INT);
+    refType = PrimitiveType.mk(PrimitiveType.Ptype.REF);
+    nameType = PrimitiveType.mk(PrimitiveType.Ptype.NAME);
+    anyType = PrimitiveType.mk(PrimitiveType.Ptype.ANY);
+    errType = PrimitiveType.mk(PrimitiveType.Ptype.ERROR);
     
-    typeOf = new UsageToDefMap<Expr, Type>();
+    typeOf = new HashMap<Expr, Type>();
     typeVar = new HashMap<String, Type>();
     
     errors = false;
     typeVarCnt = 0;
+
+    // build symbol table
     SymbolTableBuilder stb = new SymbolTableBuilder();
-    boolean nameErrors = stb.process(ast);
-    if (!nameErrors) {
-      st = stb.getST();
-      ast.eval(this);
-    }
-    return nameErrors || errors;
+    if (stb.process(ast)) return true;
+    st = stb.getST();
+    gc = stb.getGC();
+    
+    // check implementations
+    ImplementationChecker ic = new ImplementationChecker();
+    if (ic.process(ast, gc)) return true;
+    implProc = ic.getImplProc();
+    paramMap = ic.getParamMap();
+
+    // do the typecheck
+    ast.eval(this);
+    return errors;
+  }
+  
+  /**
+   * Returns the map of expressions to types.
+   * @return the map of expressions to types.
+   */
+  public HashMap<Expr, Type> getTypes() {
+    return typeOf;
+  }
+  
+  /**
+   * Returns the map from implementations to procedures.
+   * @return the map from implementations to procedures
+   */
+  public UsageToDefMap<Implementation, Procedure> getImplProc() {
+    return implProc;
+  }
+  
+  /**
+   * Returns the map from implementation parameters to procedure parameters.
+   * @return the map from implementation parameters to procedure parameters
+   */
+  public UsageToDefMap<VariableDecl, VariableDecl> getParamMap() {
+    return paramMap;
   }
   
   // === helper methods ===
@@ -90,7 +131,7 @@ public class TypeChecker extends Evaluator<Type> {
     if (d == null) return null;
     assert d instanceof VariableDecl;
     VariableDecl vd = (VariableDecl)d;
-    return new TupleType(vd.getType(), tupleTypeOfDecl(vd.getTail()));
+    return TupleType.mk(vd.getType(), tupleTypeOfDecl(vd.getTail()));
   }
   
   // TODO: don't forget to check that the where expressions are booleans
@@ -110,18 +151,18 @@ public class TypeChecker extends Evaluator<Type> {
   private Type subst(Type t, String a, String b) {
     if (t instanceof UserType) {
       UserType tt = (UserType)t;
-      if (tt.getName().equals(a)) return new UserType(b, tt.loc());
+      if (tt.getName().equals(a)) return UserType.mk(b, tt.loc());
       return t;
     } else if (t instanceof ArrayType) {
       ArrayType tt = (ArrayType)t;
-      return new ArrayType(
+      return ArrayType.mk(
         subst(tt.getRowType(), a, b),
         subst(tt.getColType(), a, b),
         subst(tt.getElemType(), a, b),
         tt.loc());
     } else if (t instanceof GenericType) {
       GenericType tt = (GenericType)t;
-      return new GenericType(
+      return GenericType.mk(
         subst(tt.getParam(), a, b),
         subst(tt.getType(), a, b),
         tt.loc());
@@ -160,16 +201,49 @@ public class TypeChecker extends Evaluator<Type> {
     return true;
   }
   
+  private boolean sub(PrimitiveType a, PrimitiveType b) {
+    return a.getPtype() == b.getPtype();
+  }
+  
+  private boolean sub(ArrayType a, ArrayType b) {
+    if (!sub(b.getRowType(), a.getRowType())) return false;
+    if (a.getColType()==null ^ b.getColType() == null) return false;
+    else if (a.getColType() != null)
+      if (!sub(b.getColType(), a.getColType())) return false;
+    return sub(a.getElemType(), b.getElemType());
+  }
+  
+  // TODO: Is this OK?
+  private boolean sub(UserType a, UserType b) {
+    return a.getName().equals(b.getName());
+  }
+  
+  private boolean sub(GenericType a, GenericType b) {
+    if (!sub(a.getParam(), b.getParam()) || !sub(b.getParam(), a.getParam()))
+      return false;
+    return sub(a.getType(), b.getType());
+  }
+  
+  private boolean sub(TupleType a, TupleType b) {
+    if (!sub(a.getType(), b.getType())) return false;
+    TupleType ta = a.getTail();
+    TupleType tb = b.getTail();
+    if (ta == tb) return true;
+    if (ta == null ^ tb == null) return false;
+    return sub(ta, tb);
+  }
+
   // returns (a <: b)
   private boolean sub(Type a, Type b) {
+    // get rid of where clauses and make tuples with one element non-tuples
+    a = strip(a); b = strip(b);
+    
     if (a == b) return true; // the common case
     if (a == errType || b == errType) return true; // don't trickle up errors
     
     // an empty tuple is only the same with an empty tuple
     if (a == null ^ b == null) return false;
     
-    // get rid of where clauses and make tuples with one element non-tuples
-    a = strip(a); b = strip(b);
     
     // check if b is ANY
     if (b instanceof PrimitiveType) {
@@ -194,55 +268,18 @@ public class TypeChecker extends Evaluator<Type> {
     }
     
     // the main check
-    if (a instanceof PrimitiveType) {
-      if (!(b instanceof PrimitiveType)) return false;
-      PrimitiveType sa = (PrimitiveType)a;
-      PrimitiveType sb = (PrimitiveType)b;
-      return sa.getPtype() == sb.getPtype();
-    } else if (a instanceof ArrayType) {
-      if (!(b instanceof ArrayType)) return false;
-      ArrayType sa = (ArrayType)a;
-      ArrayType sb = (ArrayType)b;
-      if (!sub(sb.getRowType(), sa.getRowType())) return false;
-      if ((sa.getColType()==null) != (sb.getColType()==null)) return false;
-      else if (sa.getColType() != null)
-        if (!sub(sb.getColType(), sa.getColType())) return false;
-      return sub(sa.getElemType(), sb.getElemType());
-    } else if (a instanceof UserType) {
-      if (!(b instanceof UserType)) return false;
-      UserType sa = (UserType)a;
-      UserType sb = (UserType)b;
-      return sa.getName().equals(sb.getName()); // TODO: is names OK here?
-    } else if (a instanceof GenericType) {
-      if (!(b instanceof GenericType)) return false;
-      GenericType sa = (GenericType)a;
-      GenericType sb = (GenericType)b;
-      if (!sub(sa.getParam(), sb.getParam()) || !sub(sb.getParam(), sa.getParam()))
-        return false;
-      return sub(sa.getType(), sb.getType());
-    } else if (a instanceof TupleType) {
-      if (!(b instanceof TupleType)) return false;
-      TupleType sa = (TupleType)a;
-      TupleType sb = (TupleType)b;
-      return sub(sa.getType(), sb.getType()) && sub(sa.getTail(), sb.getTail());
-    } else {
-      Err.help("type = " + a);
-      assert false;
-    }
-      
-    return false;
-  }
-  
-  // pretty print a type
-  private String typeToString(Type t) {
-    if (t == null) return "()";
-    StringWriter sw = new StringWriter();
-    PrettyPrinter pp = new PrettyPrinter(sw);
-    t.eval(pp);
-    if (t instanceof TupleType)
-      return "(" + sw + ")";
-    else 
-      return sw.toString();
+    if (a instanceof PrimitiveType && b instanceof PrimitiveType)
+      return sub((PrimitiveType)a, (PrimitiveType)b);
+    else if (a instanceof ArrayType && b instanceof ArrayType)
+      return sub((ArrayType)a, (ArrayType)b);
+    else if (a instanceof UserType && b instanceof UserType) 
+      return sub((UserType)a, (UserType)b);
+    else if (a instanceof GenericType && b instanceof GenericType)
+      return sub((GenericType)a, (GenericType)b);
+    else if (a instanceof TupleType && b instanceof TupleType)
+      return sub((TupleType)a, (TupleType)b);
+    else
+      return false;
   }
   
   /**
@@ -251,8 +288,8 @@ public class TypeChecker extends Evaluator<Type> {
    */
   private void check(Type a, Type b, AstLocation l) {
     if (sub(a, b)) return;
-    report(l, "Found type " + typeToString(a) 
-      + " instead of " + typeToString(b));
+    report(l, "Found type " + TypeUtils.typeToString(a) 
+      + " instead of " + TypeUtils.typeToString(b));
   }
   
   /**
@@ -260,9 +297,9 @@ public class TypeChecker extends Evaluator<Type> {
    * They must be exactly the same.
    */
   private void checkExact(Type a, Type b, AstLocation l) {
-    if (sub(a, b) && sub(b, a)) return;
-    report(l, "Types should be the same: "
-      + typeToString(a) + " and " + typeToString(b));
+    if (sub(a, b) || sub(b, a)) return;
+    report(l, "Unrelated types: "
+      + TypeUtils.typeToString(a) + " and " + TypeUtils.typeToString(b));
   }
   
   // === visiting operators ===
@@ -341,7 +378,7 @@ public class TypeChecker extends Evaluator<Type> {
     Type t = errType;
     if (d == null)
       // HACK for `generics'
-      t = new UserType(id);
+      t = UserType.mk(id);
     else {
       if (d instanceof VariableDecl)
         t = ((VariableDecl)d).getType();
@@ -507,7 +544,7 @@ public class TypeChecker extends Evaluator<Type> {
     Type t = expr.eval(this);
     assert t != null; // shouldn't have nested tuples
     TupleType tt = tail == null? null : (TupleType)tail.eval(this);
-    TupleType rt = new TupleType(t, tt);
+    TupleType rt = TupleType.mk(t, tt);
     typeOf.put(exprs, rt);
     return rt;
   }
@@ -516,7 +553,7 @@ public class TypeChecker extends Evaluator<Type> {
   public TupleType eval(Identifiers identifiers, AtomId id, Identifiers tail) {
     Type t = id.eval(this);
     TupleType tt = tail == null? null : (TupleType)tail.eval(this);
-    TupleType rt = new TupleType(t, tt);
+    TupleType rt = TupleType.mk(t, tt);
     // TODO: put this in typeOf?
     return rt;
   }

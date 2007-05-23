@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
+import freeboogie.util.Closure;
+
 /**
  * Used to map usage of a name to the deinition of that name.
  * Unlike a simple hash it allows quick retrieval of all usages
@@ -52,12 +54,11 @@ public class UsageToDefMap<U, D> {
      return defToUsage.get(d);
    }
    
-  
-  /**
-   * @param args
-   */
-  public static void main(String[] args) {
-     // TODO Auto-generated method stub
-  }
-
+   public void iterUsage(Closure<U> f) {
+     for (U k : usageToDef.keySet()) f.go(k);
+   }
+   
+   public void iterDef(Closure<D> f) {
+     for (D v : defToUsage.keySet()) f.go(v);
+   }
 }

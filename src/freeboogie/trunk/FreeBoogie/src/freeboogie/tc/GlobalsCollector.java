@@ -180,7 +180,7 @@ public class GlobalsCollector extends Transformer {
   }
 
   @Override
-  public void see(Procedure procedure, Signature sig, Specification spec, Body body, Declaration tail) {
+  public void see(Procedure procedure, Signature sig, Specification spec, Declaration tail) {
     addProcDef(sig.getName(), procedure);
     if (tail != null) tail.eval(this);
   }
