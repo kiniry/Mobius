@@ -67,7 +67,6 @@ import org.apache.bcel.generic.Type;
  * checking (e.g. method bodies).
  */
 
-// @ refines "BCELReader.spec";
 class BCELReader extends Reader {
 
 	/**
