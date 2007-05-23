@@ -1,3 +1,97 @@
+Wed May 23 10:41:18 IST 2007	<dermot.cochran@ucd.ie>
+
+	Modified location of BCEL jar file
+
+	Makefile.defs 1.73
+
+Wed May 23 10:39:55 IST 2007	<dermot.cochran@ucd.ie>
+
+	Modified location of BCEL jar file.
+
+	escj 1.48
+
+Wed May 23 10:38:51 IST 2007	<dermot.cochran@ucd.ie>
+
+	BCELReader now passes most of the automated tests; but some of the Javafe 
+	tests still have difficulty with the BCEL jar file.
+
+	BCELReader.spec 1.4
+	BCELReader.java 1.5
+
+Tue May 22 20:24:41 IST 2007	<michal.moskal@gmail.com>
+
+	Pass the name of the problem to the sorted prover using properties 
+	mechanism. Standarize capitalization of properties. Make AufliaProver dump 
+	to files with meaningful names.
+
+	Simplifier.java 1.7
+	AufliaProver.java 1.3
+	SortedProver.java 1.7
+	ProverManager.java 1.27
+	Main.java 1.106
+
+Tue May 22 18:13:41 IST 2007	<michal.moskal@gmail.com>
+
+	The output seems to actually be syntax correct SMT at this point.
+
+	AufliaPrelude.java 1.2
+	AufliaNodeBuilder.java 1.2
+	Lifter.java 1.42
+
+Mon May 21 15:48:52 IST 2007	<mikolas.janota@gmail.com>
+
+
+	Minor fixes to the specs (modifies and requires clauses).
+
+	StackVector.java 1.12
+
+Fri May 18 17:26:36 IST 2007	<dermot.cochran@ucd.ie>
+
+	Minor updates to the change log.
+
+	ChangeLog 1.55
+
+Fri May 18 17:25:56 IST 2007	<dermot.cochran@ucd.ie>
+
+	Include BCEL in the classpath for EscJava
+
+	escj 1.47
+
+Fri May 18 17:25:27 IST 2007	<dermot.cochran@ucd.ie>
+
+	Allow ESCJava2 to run with a Java 1.5 VM.
+
+	Main.java 1.105
+
+Fri May 18 17:23:10 IST 2007	<dermot.cochran@ucd.ie>
+
+	Updated release notes for next beta release, but anticipate that there will 
+	be some last minute changes.
+
+	RELEASE_NOTES.txt 1.19
+
+Fri May 18 17:14:05 IST 2007	<dermot.cochran@ucd.ie>
+
+	Changed BinReader to only use BCELReader when running a Java 1.5.  This 
+	should allow people to continue using the old BinReader with Java 1.4.
+
+	BinReader.java 1.11
+
+Fri May 18 15:57:10 IST 2007	<michal.moskal@gmail.com>
+
+	Ha! That's why it didn't work: forgot to negate the formula before sending 
+	to AUFLIA.
+
+	AufliaProver.java 1.2
+
+Fri May 18 13:19:19 IST 2007	<dermot.cochran@ucd.ie>
+
+	Updated change log for next beta release.  This will need to be further 
+	updated for any last minute commits to the repository.
+
+	ChangeLog 1.54
+
+
 Thu May 17 22:53:41 IST 2007	<michal.moskal@gmail.com>
 
 	First sketch of AUFLIA SMT logic printer. It prints *something*, but it 
