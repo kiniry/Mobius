@@ -165,7 +165,7 @@ public class Options {
 	 */
 	static final protected AbstractPreference.ChoiceOption source = new AbstractPreference.ChoiceOption(
 			(PLUGINID + "source"),
-			new String[]{"1.3","1.4"},
+			new String[]{"1.3","1.4","1.5"},
 			1,
 			"Java source version",
 			"The version of Java that is supported [JML --source option]");
