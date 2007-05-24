@@ -27,6 +27,9 @@ public class Err {
     /** Report all problems. */
     ERROR,
     
+    /** Report a minor problem. */
+    WARNING,
+    
     /** Give hints of what should be done to fix the problem. */
     HELP
   }
@@ -44,11 +47,21 @@ public class Err {
   }
   
   /**
+   * Displays a warning.
+   * @param w the warning
+   */
+  public static void warning(String w) {
+    if (verboseLevel.compareTo(Level.WARNING) >= 0)
+      System.err.println(w);
+  }
+  
+  /**
    * Displays an error message.
    * @param e the error message
    */
   public static void error(String e) {
-    System.err.println(e);
+    if (verboseLevel.compareTo(Level.ERROR) >= 0)
+      System.err.println(e);
   }
   
   /**

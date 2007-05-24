@@ -4,14 +4,17 @@
 === call-proc-in-expr.bpl ===
 === cmp-bool-int.bpl ===
 === deduce-array-type.bpl ===
+=== dep-in-impl.bpl ===
 === ensures-bool.bpl ===
 === ensures-local.bpl ===
 === global-shadowing2.bpl ===
 === global-shadowing3.bpl ===
 === global-shadowing.bpl ===
 === havoc.bpl ===
+=== impl-proc-mismatch.bpl ===
 === index2.bpl ===
 === int-any-thing.bpl ===
+=== missing-block.bpl ===
 === modifes-local.bpl ===
 === modifes-undef.bpl ===
 === plus-on-bool.bpl ===

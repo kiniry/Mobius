@@ -14,6 +14,8 @@ import freeboogie.util.Err;
 /**
  * Typechecks an AST. Errors are reported using the class {@code Err}.
  * It maps expressions to types.
+ * 
+ * It also acts more-or-less as a Facade for the whole package.
  *
  * @author rgrig 
  * @author reviewed by TODO
@@ -32,6 +34,8 @@ public class TypeChecker extends Evaluator<Type> {
   private SymbolTable st;
   
   private GlobalsCollector gc;
+  
+  private BlockFlowGraphs flowGraphs;
   
   // where there any type errors?
   private boolean errors;
@@ -86,10 +90,23 @@ public class TypeChecker extends Evaluator<Type> {
     if (ic.process(ast, gc)) return true;
     implProc = ic.getImplProc();
     paramMap = ic.getParamMap();
+    
+    // check blocks
+    flowGraphs = new BlockFlowGraphs();
+    if (flowGraphs.process(ast)) return true;
 
     // do the typecheck
     ast.eval(this);
     return errors;
+  }
+
+  /**
+   * Returns the flow graph of {@code impl}.
+   * @param impl the implementation whose flow graph is requested
+   * @return the flow graph of {@code impl}
+   */
+  public SimpleGraph<Block> getFlowGraph(Implementation impl) {
+    return flowGraphs.getFlowGraph(impl);
   }
   
   /**

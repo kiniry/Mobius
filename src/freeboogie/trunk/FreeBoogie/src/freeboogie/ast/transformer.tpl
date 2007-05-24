@@ -1,6 +1,3 @@
-A transformer takes a tree and generates another. The methods
-here implement path-compression. 
-
 \file{Transformer.java}
 /**
   Public domain.
@@ -41,8 +38,10 @@ public class Transformer extends Evaluator<Ast> {
         };
       \if_primitive{}{sameChildren &= new\MemberName == \memberName;}
     }
-    if (!sameChildren) 
-      result\ClassName = \ClassName.mk(\members[,]{new\MemberName});
+
+    // TODO: explain why this works and a stack is not needed, in case it works :)
+    result\ClassName = sameChildren? 
+      \className : \ClassName.mk(\members[,]{new\MemberName});
   }
   
   @Override

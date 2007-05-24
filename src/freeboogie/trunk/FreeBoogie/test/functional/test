@@ -76,9 +76,9 @@ for t in $TESTS; do
     fi
     
     # Check if results match the expected ones.
-    diff $GOOD_OUT out > diff.out 2> /dev/null
+    diff -u $GOOD_OUT out > diff.out 2> /dev/null
     OUT_WRONG=`echo $?`
-    diff $GOOD_ERR err > diff.err 2> /dev/null
+    diff -u $GOOD_ERR err > diff.err 2> /dev/null
     ERR_WRONG=`echo $?`
 
     if (( $OUT_WRONG || $ERR_WRONG )); then
@@ -110,3 +110,4 @@ if (( ! $QUIET )); then
 fi
 if [[ ! -z $FAILED ]]; then exit 1; fi
 exit 0
+

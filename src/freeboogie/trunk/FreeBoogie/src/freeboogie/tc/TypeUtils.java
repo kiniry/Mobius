@@ -42,10 +42,41 @@ public class TypeUtils {
     if (a == null ^ b == null) return false;
     return eq(a.getType(), b.getType()) && eq(a.getTail(), b.getTail());
   }
+
+  /**
+   * Recursively strip all dependent types from {@code a}.
+   * @param a the type to strip of predicates
+   * @return the type {@code a} striped of predicates
+   */
+  public static Type stripDep(Type a) {
+    if (a instanceof ArrayType) {
+      ArrayType sa = (ArrayType)a;
+      return ArrayType.mk(stripDep(sa.getRowType()), 
+        stripDep(sa.getColType()), stripDep(sa.getElemType()));
+    } else if (a instanceof GenericType) {
+      GenericType sa = (GenericType)a;
+      return GenericType.mk(stripDep(sa.getParam()), stripDep(sa.getType()));
+    } else if (a instanceof TupleType) {
+      TupleType sa = (TupleType)a;
+      return TupleType.mk(stripDep(sa.getType()), (TupleType)stripDep(sa.getTail()));
+    } else if (a instanceof DepType) return stripDep(((DepType)a).getType());
+    else return a;
+  }
   
-  private static Type strip(Type a) {
-    if (a instanceof DepType) return strip(((DepType)a).getType());
-    return a;
+  private static Declaration stripDep(Declaration a) {
+    if (!(a instanceof VariableDecl)) return a;
+    VariableDecl va = (VariableDecl)a;
+    return VariableDecl.mk(va.getName(), stripDep(va.getType()), stripDep(va.getTail()), va.loc());
+  }
+
+  /**
+   * Returns a signature that looks like {@code s} but has all predicates
+   * of dependent types removed.
+   * @param s the signature to strip
+   * @return the signature {@code s} without dependent types
+   */
+  public static Signature stripDep(Signature s) {
+    return Signature.mk(s.getName(), stripDep(s.getArgs()), stripDep(s.getResults()), s.loc());
   }
   
   /**
@@ -56,7 +87,6 @@ public class TypeUtils {
    * @return whether the two types are structurally equal
    */
   public static boolean eq(Type a, Type b) {
-    a = strip(a); b = strip(b);
     if (a == b) return true;
     if (a == null ^ b == null) return false;
     if (a instanceof ArrayType && b instanceof ArrayType)

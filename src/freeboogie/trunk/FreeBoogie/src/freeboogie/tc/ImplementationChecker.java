@@ -84,7 +84,7 @@ public class ImplementationChecker extends Transformer {
     
     VariableDecl va = (VariableDecl)a;
     VariableDecl vb = (VariableDecl)b;
-    if (!TypeUtils.eq(va.getType(), vb.getType())) {
+    if (!TypeUtils.eq(TypeUtils.stripDep(va.getType()), TypeUtils.stripDep(vb.getType()))) {
       report(va.loc(), "Type should be " + TypeUtils.typeToString(vb.getType()));
       return;
     }

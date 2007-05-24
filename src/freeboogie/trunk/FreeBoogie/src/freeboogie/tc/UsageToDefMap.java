@@ -54,10 +54,18 @@ public class UsageToDefMap<U, D> {
      return defToUsage.get(d);
    }
    
+   /**
+    * Iterate over usages.
+    * @param f the function to be applied to each usage
+    */
    public void iterUsage(Closure<U> f) {
      for (U k : usageToDef.keySet()) f.go(k);
    }
    
+   /**
+    * Iterate over definitions.
+    * @param f the function to be applied to each definition
+    */
    public void iterDef(Closure<D> f) {
      for (D v : defToUsage.keySet()) f.go(v);
    }

@@ -3,6 +3,7 @@ grammar Fb;
 @header {
   package freeboogie.parser; 
   import freeboogie.ast.*; 
+  import freeboogie.tc.TypeUtils;
   import java.math.BigInteger;
 }
 @lexer::header {
@@ -74,7 +75,7 @@ procedure_decl_tail returns [Declaration v]:
     { if(ok) {
         Declaration proc_tail = $t.v;
         if ($body.v != null)
-          proc_tail = Implementation.mk($s.v,$body.v,proc_tail,astLoc($s.v));
+          proc_tail = Implementation.mk(TypeUtils.stripDep($s.v),$body.v,proc_tail,astLoc($s.v));
         $v=Procedure.mk($s.v,$spec_list.v,proc_tail,astLoc($s.v)); 
     }}
 ;
