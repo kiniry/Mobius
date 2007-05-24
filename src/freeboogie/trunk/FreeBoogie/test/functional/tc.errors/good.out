@@ -7,9 +7,9 @@
 === dep-in-impl.bpl ===
 === ensures-bool.bpl ===
 === ensures-local.bpl ===
+=== global-shadowing.bpl ===
 === global-shadowing2.bpl ===
 === global-shadowing3.bpl ===
-=== global-shadowing.bpl ===
 === havoc.bpl ===
 === impl-proc-mismatch.bpl ===
 === index2.bpl ===
@@ -27,8 +27,8 @@
 === s2.bpl ===
 === s3.bpl ===
 === s4.bpl ===
-=== shadowing2.bpl ===
 === shadowing.bpl ===
+=== shadowing2.bpl ===
 === small.bpl ===
 === syntax1.bpl ===
 === syntax2.bpl ===

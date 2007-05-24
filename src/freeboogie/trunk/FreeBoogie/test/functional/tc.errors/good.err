@@ -7,9 +7,9 @@ deduce-array-type.bpl:5:7: Can't deduce array type.
 dep-in-impl.bpl:5:21: Dependent type in implementation signature.
 ensures-bool.bpl:8:15: Found type int instead of bool.
 ensures-local.bpl:6:11: Undeclared identifier a.
+global-shadowing.bpl:4:5: Identifier f was already defined.
 global-shadowing2.bpl:6:10: Identifier a was already defined.
 global-shadowing3.bpl:6:11: Identifier a was already defined.
-global-shadowing.bpl:4:5: Identifier f was already defined.
 havoc.bpl:9:11: Undeclared identifier a.
 impl-proc-mismatch.bpl:1:16: Implementation-Procedure parameter count mismatch.
 index2.bpl:9:5: Found type ref instead of int.
@@ -29,12 +29,12 @@ s2.bpl:6:9: Found type any instead of int.
 s2.bpl:6:22: Unrelated types: bool and int.
 s3.bpl:5:9: Found type ref instead of int.
 s4.bpl:5:9: Found type ref instead of int.
+shadowing.bpl:8:7: Variable already defined.
+shadowing.bpl:9:7: Variable already defined.
 shadowing2.bpl:6:36: Variable already defined.
 shadowing2.bpl:6:36: Variable already defined.
 shadowing2.bpl:8:7: Variable already defined.
 shadowing2.bpl:9:7: Variable already defined.
-shadowing.bpl:8:7: Variable already defined.
-shadowing.bpl:9:7: Variable already defined.
 small.bpl:6:9: Found type any instead of int.
 small.bpl:6:22: Unrelated types: bool and int.
 line 12:0 no viable alternative at input '}'
