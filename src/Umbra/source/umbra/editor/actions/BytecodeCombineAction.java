@@ -46,12 +46,13 @@ public class BytecodeCombineAction extends Action {
 	private IEditorPart editor;
 	
 	/**
-	 * TODO
+	 * The manager that initialises all the actions within the
+	 * bytecode plugin.
 	 */
 	private BytecodeEditorContributor contributor;
 
 	/**
-	 * TODO should be the same as in contributor
+	 * TODO should be the same as in contributor 
 	 */
 	private BytecodeContribution bytecodeContribution;
 	//@ invariant contributor.bytecodeContribution==bytecodeContribution;
@@ -143,7 +144,7 @@ public class BytecodeCombineAction extends Action {
 			System.err.println(jc.toString());
 			BytecodeEditor bcEditor = ((BytecodeEditor)editor);
 			String fullName = bcEditor.getPath(path).toOSString();
-			jc.dump("/home/alx/ala.class");//fullName + UmbraHelper.getFileSeparator() + lastSegment);
+			jc.dump(fullName + UmbraHelper.getFileSeparator() + lastSegment);
 			bcEditor.setJavaClass(jc);
 			MessageDialog.openWarning(editor.getSite().getShell(), 
 					"Bytecode", "A "+fullName + UmbraHelper.getFileSeparator() + lastSegment);

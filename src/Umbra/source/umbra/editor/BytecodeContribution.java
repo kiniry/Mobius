@@ -49,10 +49,12 @@ public class BytecodeContribution extends ControlContribution {
 	 * TODO
 	 */
 	private boolean modTable = false;
+	
 	/**
 	 * TODO
 	 */
 	private boolean[] modified;
+	
 	/**
 	 * TODO
 	 */

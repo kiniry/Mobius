@@ -136,8 +136,8 @@ public abstract class BytecodeLineController {
 	/**
 	 * This method is used to check some basic condition of 
 	 * correctness. For non-instruction line this is the only 
-	 * checking. If it returns true the line is regarded 
-	 * to be correct.
+	 * checking. It is usually redefined in the subclasses so that 
+	 * if it returns true the line is regarded to be correct.
 	 * 
 	 * @return	true if the instruction is correct
 	 * @see		InstructionLineController#correct()

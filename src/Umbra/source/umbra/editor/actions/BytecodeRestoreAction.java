@@ -28,18 +28,18 @@ import umbra.editor.BytecodeEditorContributor;
  * kept in history as a file with bt1, bt2, etc. extension 
  */
 public class BytecodeRestoreAction extends Action {
+	
 	/**
-	 * TODO
-	 */
-	private Shell shell;
-	/**
-	 * TODO
+	 * The current bytecode editor for which the action takes place.
 	 */
 	private IEditorPart editor;
+	
 	/**
-	 * TODO
+	 * The manager that initialises all the actions within the
+	 * bytecode plugin.
 	 */
 	private BytecodeEditorContributor contributor;
+	
 	/**
 	 * TODO should be the same as in contributor
 	 */
@@ -57,14 +57,7 @@ public class BytecodeRestoreAction extends Action {
 		this.contributor = contributor;
 		this.bytecodeContribution = bytecodeContribution;
 	}
-	
-	/**
-	 * TODO
-	 */
-	public void setShell(Shell shell) {
-		this.shell = shell;
-	}
-	
+
 	/**
 	 * An input dialog to insert number of version is shown.
 	 * Then the binary source file is replaced with the 
@@ -85,7 +78,9 @@ public class BytecodeRestoreAction extends Action {
 				                   ext);
 		IFile fileFrom = root.getFile(new Path(fnameFrom));
 		if (!fileFrom.exists()) {
-			MessageDialog.openInformation(shell, "Restore bytecode", "The file " + fnameFrom + " does not exist");
+			Shell shell = editor.getSite().getShell();
+			MessageDialog.openInformation(shell, "Restore bytecode", 
+					"The file " + fnameFrom + " does not exist");
 			return;
 		}	
 		try {
@@ -125,14 +120,12 @@ public class BytecodeRestoreAction extends Action {
 	}
 	
 	/**
-	 * TODO
+	 * This method sets the bytecode editor for which the
+	 * restore action will be executed.
 	 * 
-	 * @param part
+	 * @param part the bytecode editor for which the action will be executed
 	 */
 	public void setActiveEditor(IEditorPart part) {
 		editor = part;
-		System.out.println(editor.getTitle());
-		System.out.println(this.toString());
-
 	}
 }

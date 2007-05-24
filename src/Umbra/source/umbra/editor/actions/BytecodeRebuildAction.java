@@ -28,22 +28,25 @@ import umbra.editor.BytecodeEditorContributor;
 public class BytecodeRebuildAction extends Action {
 	
 	/**
-	 * TODO
+	 * The current bytecode editor for which the action takes place.
 	 */
 	private IEditorPart editor;
 	
 	/**
-	 * TODO
+	 * The manager that initialises all the actions within the
+	 * bytecode plugin.
 	 */	
 	private BytecodeEditorContributor contributor;
 	
 	/**
-	 * TODO
+	 * This method sets the bytecode editor for which the
+	 * rebuild action will be executed.
+	 * 
+	 * @param targetEditor the bytecode editor for which the action will be 
+	 *        executed
 	 */
 	public void setActiveEditor(IEditorPart targetEditor) {
 		editor = targetEditor;
-		System.out.println(editor.getTitle());
-		System.out.println(this.toString());
 	}
 	
 	/**

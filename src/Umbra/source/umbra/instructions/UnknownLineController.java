@@ -12,11 +12,13 @@ package umbra.instructions;
 public class UnknownLineController extends BytecodeLineController {
 
 	/**
-	 * TODO
+	 * This constructor only remembers the line with the
+	 * unrecognized content
+	 * 
+	 * @param l the line with the unrecognized content
 	 */
 	public UnknownLineController(String l) {
 		super(l);
 	}
 
-	//correct z nadklasy => false
 }

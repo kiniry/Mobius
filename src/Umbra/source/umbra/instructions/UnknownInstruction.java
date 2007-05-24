@@ -15,7 +15,11 @@ public class UnknownInstruction extends InstructionLineController {
 	
 	
 	/**
-	 * TODO
+	 * This constructor remembers only the content of the line
+	 * and the form of the mnemonic.
+	 * 
+	 * @param l the line with the unknown mnemonic
+	 * @param n the unknown mnemonic 
 	 */
 	public UnknownInstruction(String l, String n) {
 		super(l, n);
@@ -23,10 +27,9 @@ public class UnknownInstruction extends InstructionLineController {
 	/**
 	 * Instruction out of classification must be obviously incorrect.
 	 * 
-	 * @see		InstructionLineController#correct()
+	 * @see	InstructionLineController#correct()
 	 */
-	public boolean correct()
-	{
+	public boolean correct() {
 		return false;
 	}
 }

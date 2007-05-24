@@ -157,15 +157,18 @@ public class BytecodeController {
 			}
 			else if (comment != null) partComment.concat("\n" + comment);
 		}
-		//TODO current crude fix
-		int methodNum = 100;//((BytecodeLineController)instructions.getLast()).
-		                                                      //getIndex() + 1;
+
+		int methodNum = ((BytecodeLineController)instructions.getLast()).
+		                                                      getIndex() + 1;
 		modified = new boolean[methodNum];
 		for (int i = 0; i < modified.length; i++) modified[i] = false;
 	}
 
 	/**
 	 * TODO
+	 * 
+	 * @param start
+	 * @param stop
 	 */
 	public void removeIncorrects(int start, int stop) {
 		for (int i = start; i <= stop; i++) {
@@ -277,7 +280,7 @@ public class BytecodeController {
 	}
 	
 	/**
-	 * Chooses one of line types that mathes the given line
+	 * Chooses one of line types that matches the given line
 	 * contents
 	 * 
 	 * @param line	String contents of inserted or modified line 
@@ -314,7 +317,8 @@ public class BytecodeController {
 			(l.startsWith("int")) || (l.startsWith("char")) || 
 			(l.startsWith("protected")) || (l.startsWith("boolean")) || 
 			(l.startsWith("String")) || (l.startsWith("byte")) ||
-			(l.startsWith("package")) || (l.startsWith("class")))
+			(l.startsWith("package")) || (l.startsWith("class")) ||
+			(l.startsWith("}")))
 			return new HeaderLineController(line);
 		
 		if ((l.startsWith("*")) || (l.startsWith("/*"))) 
@@ -434,7 +438,7 @@ public class BytecodeController {
 			j--;
 		};
 		if (ok) return "";
-		return string.substring(i-1, j+1);
+		return string.substring(i-1, j+2);
 	}
 
 	/**

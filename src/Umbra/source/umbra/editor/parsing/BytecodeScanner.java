@@ -24,6 +24,8 @@ public class BytecodeScanner extends RuleBasedScanner {
 	
 	/**
 	 * This method TODO
+	 * sets the scanning rules
+	 *
 	 * 
 	 * @param manager the color manager related to the current bytecode
 	 *        editor

@@ -23,12 +23,12 @@ import umbra.editor.BytecodeEditorContributor;
  * This action is equal to generating bytecode again from the
  * Java code after saving binary file.
  * 
- * @author Wojtek W±s 
+ * @author Wojtek WÄ…s 
  */
 public class BytecodeRefreshAction extends Action {
 
 	/**
-	 * TODO
+	 * The current bytecode editor for which the action takes place.
 	 */
 	private IEditorPart editor;
 	
@@ -38,7 +38,8 @@ public class BytecodeRefreshAction extends Action {
 	private BytecodeContribution bytecodeContribution;
 
 	/**
-	 * TODO should be the same as in BytecodeEditorContributor
+	 * The manager that initialises all the actions within the
+	 * bytecode plugin.
 	 */
 	private BytecodeEditorContributor contributor;
 	
@@ -55,7 +56,11 @@ public class BytecodeRefreshAction extends Action {
 	}
 
 	/**
-	 * TODO
+	 * This method sets the bytecode editor for which the
+	 * refresh action will be executed.
+	 * 
+	 * @param targetEditor the bytecode editor for which the action will be 
+	 *                     executed
 	 */
 	public void setActiveEditor(IEditorPart targetEditor) {
 		editor = targetEditor;
@@ -68,7 +73,7 @@ public class BytecodeRefreshAction extends Action {
 	 * Finally replaces content of the Editor window with
 	 * the newly generated input.
 	 * 
-	 * TO powinno dzia³aæ tak, ¿e po zmianie, reformatowane
+	 * TO powinno dziaï¿½aï¿½ tak, ï¿½e po zmianie, reformatowane
 	 * jest wszystko zgodnie ze standardem 
 	 * 
 	 * po przejsciu do javy refresh sie robi disabled

@@ -40,7 +40,7 @@ public class BytecodeToBoogiePLAction implements IEditorActionDelegate,
 		IUmbraConstants {
 
 	/**
-	 * TODO
+	 * The current bytecode editor for which the action takes place.
 	 */
 	private IEditorPart editor;
 

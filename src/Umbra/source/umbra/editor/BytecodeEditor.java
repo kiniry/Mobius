@@ -153,7 +153,6 @@ public class BytecodeEditor extends TextEditor {
 		try {
 			JavaClass jc = classGen.getJavaClass();
 			String path3 = getPath(active).append(lastSegment).toOSString();
-			//TODO something should be added here to parse the .btc files
 			jc.dump(path3);
 		} catch (IOException e) {
 			e.printStackTrace();

@@ -41,7 +41,9 @@ public class BytecodeDocumentProvider extends FileDocumentProvider {
 	protected IDocument createDocument(Object element) throws CoreException {
 		if (element instanceof IEditorInput) {
 			IDocument document= createEmptyDocument();
-			if (setDocumentContent(document, (IEditorInput) element, getEncoding(element))) {
+			if (setDocumentContent(document, 
+					               (IEditorInput) element, 
+					               getEncoding(element))) {
 				setupDocument(element, document);
 			}
 			IDocumentPartitioner partitioner =
@@ -53,12 +55,14 @@ public class BytecodeDocumentProvider extends FileDocumentProvider {
 						BytecodePartitionScanner.THROWS});
 			partitioner.connect(document);
 			document.setDocumentPartitioner(partitioner);
-			//contribution = BytecodeContribution.inUse();
-			//contribution.addListener(document);
+			BytecodeContribution contribution = BytecodeContribution.inUse();
+			contribution.addListener(document);
 			return document;
 		}
 		return null;
 	}
+	
+	
 
 	/**
 	 * This method sets relation to Bytecode structures that

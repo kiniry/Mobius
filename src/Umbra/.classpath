@@ -5,6 +5,7 @@
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins">
 		<accessrules>
 			<accessrule kind="accessible" pattern="org/eclipse/ui/texteditor/AbstractDecoratedTextEditor"/>
+			<accessrule kind="accessible" pattern="org/eclipse/ui/IFileEditorInput"/>
 		</accessrules>
 	</classpathentry>
 	<classpathentry kind="lib" path="libs/org.apache.bcel_5.1.0/bcel.jar" sourcepath="libs/bcel-5.1-src.zip"/>

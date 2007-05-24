@@ -24,7 +24,8 @@ import umbra.editor.parsing.TokenGetter;
 public class BytecodeConfiguration extends SourceViewerConfiguration {
 	
 	/**
-	 * TODO
+	 * This object handles the operation to synchronise a bytecode editor
+	 * point with the corresponding statement in the Java source code.
 	 */
 	private BytecodeDoubleClickStrategy doubleClickStrategy;
 	
@@ -42,6 +43,7 @@ public class BytecodeConfiguration extends SourceViewerConfiguration {
 	
 	/**
 	 * The object which manages the allocation of the colours.
+	 * It is shared by all the objects that handle the colouring.
 	 */
 	private ColorManager colorManager;
 	
