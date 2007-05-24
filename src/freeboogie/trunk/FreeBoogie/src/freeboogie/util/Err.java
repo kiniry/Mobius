@@ -34,8 +34,23 @@ public class Err {
     HELP
   }
   
+  // TODO: can this be nicer?
+  private static final Level[] levels = {
+    Level.BATCH, Level.FATAL, Level.ERROR, Level.WARNING, Level.HELP
+  };
+  
   /** The current verbosity level. */ 
   public static Level verboseLevel = Level.HELP;
+  
+  /**
+   * Set the verbosity using a number.
+   * @param v the numeric verbosity level
+   */
+  public static void setVerbosity(int v) {
+    if (v < 0 || v >= levels.length)
+      fatal("Incorrect verbosity level.");
+    verboseLevel = levels[v];
+  }
   
   /**
    * Displays a help message.

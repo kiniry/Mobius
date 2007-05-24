@@ -2,11 +2,13 @@
 
 package freeboogie.tc;
 
+import java.util.Map;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
 import freeboogie.util.Closure;
+import freeboogie.util.Pair;
 
 /**
  * Represents a graph of objects of type {@code N}. The implementation
@@ -73,7 +75,16 @@ public class SimpleGraph<N> {
    * Execute {@code f} on all nodes, in a random order.
    * @param f the function to execute on all nodes
    */
-  public void iter(Closure<N> f) {
+  public void iterNode(Closure<N> f) {
     for (N n : parents.keySet()) f.go(n);
+  }
+  
+  /**
+   * Execute {@code f} on all edges, in a random order.
+   * @param f the function to execute on all nodes
+   */
+  public void iterEdge(Closure<Pair<N,N>> f) {
+    for (Map.Entry<N, HashSet<N>> a : parents.entrySet())
+      for (N b : a.getValue()) f.go(new Pair<N,N>(b, a.getKey()));
   }
 }

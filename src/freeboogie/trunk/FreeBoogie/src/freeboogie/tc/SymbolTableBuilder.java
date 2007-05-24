@@ -12,6 +12,7 @@ import freeboogie.util.Err;
  * Constructs a {@code SymbolTable} from an AST.
  * 
  * NOTE: generic types in boogie are a hack so I'll treat them as such.
+ * TODO: `see' all definitions
  *
  * @author rgrig 
  * @author reviewed by TODO
@@ -139,6 +140,7 @@ public class SymbolTableBuilder extends Transformer {
   // === keep track of local scopes ===
   @Override
   public void see(Procedure procedure, Signature sig, Specification spec, Declaration tail) {
+    symbolTable.procs.seenDef(procedure);
     HashMap<String, VariableDecl> newScope = new HashMap<String, VariableDecl>();
     localScopes.addFirst(newScope);
     sig.eval(this);

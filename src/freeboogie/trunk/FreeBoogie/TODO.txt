@@ -1,3 +1,4 @@
+ 5 command line interface
  1 remove extra files (from build.xml)
  3 sometimes not everything is rebuilt by "ant", why?
  6 simple interface to parse from strings

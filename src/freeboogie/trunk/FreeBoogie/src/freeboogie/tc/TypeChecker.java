@@ -133,6 +133,14 @@ public class TypeChecker extends Evaluator<Type> {
     return paramMap;
   }
   
+  /**
+   * Returns the symbol table.
+   * @return the symbol table
+   */
+  public SymbolTable getST() {
+    return st;
+  }
+  
   // === helper methods ===
   
   // report an error and set the errors flag

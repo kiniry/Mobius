@@ -22,6 +22,15 @@ public class UsageToDefMap<U, D> {
    private HashMap<U, D> usageToDef = new HashMap<U, D>();
    private HashMap<D, HashSet<U>> defToUsage = new HashMap<D, HashSet<U>>();
    
+   private HashSet<U> getUsages(D d) {
+     HashSet<U> u = defToUsage.get(d);
+     if (u == null) {
+       u = new HashSet<U>();
+       defToUsage.put(d, u);
+     }
+     return u;
+   }
+   
    /**
     * Connect usage {@code u} to the definition {@code d}.
     * @param u the usage
@@ -29,10 +38,17 @@ public class UsageToDefMap<U, D> {
     */
    public void put(U u, D d) {
      usageToDef.put(u, d);
-     HashSet<U> usages = defToUsage.get(d);
-     if (usages == null) usages = new HashSet<U>();
+     HashSet<U> usages = getUsages(d);
      usages.add(u);
      defToUsage.put(d, usages);
+   }
+   
+   /**
+    * Add {@code d} as a definition, if not already.
+    * @param d the definition
+    */
+   public void seenDef(D d) {
+     getUsages(d);
    }
    
    /**
@@ -55,11 +71,19 @@ public class UsageToDefMap<U, D> {
    }
    
    /**
+    * Returns the number of definitions
+    * @return the number of definitions
+    */
+   public int defCnt() {
+     return defToUsage.size();
+   }
+   
+   /**
     * Iterate over usages.
     * @param f the function to be applied to each usage
     */
    public void iterUsage(Closure<U> f) {
-     for (U k : usageToDef.keySet()) f.go(k);
+     for (U k : usageToDef.keySet()) if (k != null) f.go(k);
    }
    
    /**
@@ -67,6 +91,6 @@ public class UsageToDefMap<U, D> {
     * @param f the function to be applied to each definition
     */
    public void iterDef(Closure<D> f) {
-     for (D v : defToUsage.keySet()) f.go(v);
+     for (D v : defToUsage.keySet()) if (v != null) f.go(v);
    }
 }
