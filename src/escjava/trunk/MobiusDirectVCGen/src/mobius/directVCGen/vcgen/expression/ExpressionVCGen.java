@@ -326,15 +326,24 @@ public class ExpressionVCGen extends BinaryExpressionVCGen{
 	}
 
 	public Post postfixInc(UnaryExpr expr, VCEntry entry) {
-		// TODO Auto-generated method stub
 		Post oldp = entry.post;
-		QuantVariableRef var = Expression.rvar(oldp.var.getSort()); 
-		
-		return null;
+		QuantVariableRef var = Expression.rvar(oldp.var.getSort());
+		entry.post = new Post(var, oldp.post);
+		Post newpost = assign(expr.expr, entry);
+		entry.post = new Post(var, newpost.substWith(Num.inc(newpost.var)));
+		newpost = getPre(expr.expr, entry);
+		entry.post = new Post(oldp.var, newpost);
+		return getPre(expr.expr, entry);
 	}
-	public Post postfixDec(UnaryExpr expr, VCEntry post) {
-		// TODO Auto-generated method stub
-		return null;
+	public Post postfixDec(UnaryExpr expr, VCEntry entry) {
+		Post oldp = entry.post;
+		QuantVariableRef var = Expression.rvar(oldp.var.getSort());
+		entry.post = new Post(var, oldp.post);
+		Post newpost = assign(expr.expr, entry);
+		entry.post = new Post(var, newpost.substWith(Num.dec(newpost.var)));
+		newpost = getPre(expr.expr, entry);
+		entry.post = new Post(oldp.var, newpost);
+		return getPre(expr.expr, entry);
 	}
 
 
