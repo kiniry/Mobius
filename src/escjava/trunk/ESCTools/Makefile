@@ -595,7 +595,7 @@ binary-release: build jars alldocs cleanup
 #	cp $(JML2_SPECS_JAR) ${RELTEMP}
 # 	Copy other miscellaneous files
 	${MAKE} clean-norel-noreltemp
-	${MAKE} -C Utils/junitutils build
+	${MAKE} -C Utils build
 	cp ${ESCJAVA_ROOT}/escj ${RELTEMP}
 	cp ${ESCJAVA_ROOT}/escj.bat ${RELTEMP}
 	cp ${ESCJAVA_ROOT}/escjava2.exe ${RELTEMP}
