@@ -45,7 +45,7 @@ BEGIN
   % TODO: prove!
   not_removed_set2list : LEMMA
     FORALL (s : set[T], x, y : T) :
-      s(x) IMPLIES 
+      s(x) IMPLIES
       NOT x = y IMPLIES
         member(x, set2list(remove(y, s)))
 

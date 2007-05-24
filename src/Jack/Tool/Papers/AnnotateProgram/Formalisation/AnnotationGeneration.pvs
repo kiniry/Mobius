@@ -46,7 +46,7 @@ BEGIN
               (sMP1, sMP2 : MPState, v : Val, n : nat) :
         pstate(sMP1) = (# ex := bottom, st := stP #) IMPLIES
         deriv_expr(mp)(proj_1(x), sMP1, v, sMP2)(n) IMPLIES
-        Bool?(v) IMPLIES 
+        Bool?(v) IMPLIES
           b(v) = guard(t)(stA, stP)) AND
       proj_2(x) = update_vars(t)})
 

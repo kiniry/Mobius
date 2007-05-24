@@ -18,7 +18,7 @@
         nil))
       nil))
     nil)
-   unchecked
+   untried
    ((real_ge_is_total_order name-judgement "(total_order?[real])"
      real_props nil)
     (int_minus_int_is_int application-judgement "int" integers nil)
@@ -75,16 +75,68 @@
    57054 100 t nil))
  (sequence_to_list_TCC1 0
   (sequence_to_list_TCC1-1 nil 3388845040 nil
-   ("" (well-founded-tcc) nil nil) nil nil nil nil nil nil))
+   ("" (well-founded-tcc) nil nil) unchecked nil nil nil nil nil))
  (sequence_to_list_TCC2 0
   (sequence_to_list_TCC2-1 nil 3388845040 nil
-   ("" (subtype-tcc) nil nil) nil nil nil nil nil nil))
+   ("" (subtype-tcc) nil nil) unchecked nil nil nil nil nil))
  (sequence_to_list_TCC3 0
   (sequence_to_list_TCC3-1 nil 3388845040 nil
-   ("" (subtype-tcc) nil nil) nil nil nil nil nil nil))
+   ("" (subtype-tcc) nil nil) unchecked nil nil nil nil nil))
  (sequence_to_list_TCC4 0
   (sequence_to_list_TCC4-1 nil 3388845040 nil
-   ("" (termination-tcc) nil nil) nil nil nil nil nil nil))
+   ("" (termination-tcc) nil nil) unchecked nil nil nil nil nil))
+ (list_to_sequence_inverse 0
+  (list_to_sequence_inverse-1 nil 3388899731 3388984307
+   ("" (induct "c")
+    (("1" (typepred "c!1") (("1" (propax) nil nil)) nil)
+     ("2" (skosimp*)
+      (("2" (expand "sequence_of_sets" -2) (("2" (propax) nil nil))
+        nil))
+      nil)
+     ("3" (skosimp)
+      (("3" (expand "sequence_of_sets" -3) (("3" (propax) nil nil))
+        nil))
+      nil)
+     ("4" (skosimp)
+      (("4" (expand "list_to_sequence" 1)
+        (("4" (expand "sequence_to_list" 1)
+          (("4" (expand "sequence_of_sets" -3) (("4" (ground) nil nil))
+            nil))
+          nil))
+        nil))
+      nil)
+     ("5" (skosimp)
+      (("5" (expand "sequence_of_sets" -1) (("5" (propax) nil nil))
+        nil))
+      nil)
+     ("6" (expand "sequence_of_sets")
+      (("6" (expand* "list_to_sequence" "sequence_to_list") nil nil))
+      nil)
+     ("7" (expand "sequence_of_sets") (("7" (propax) nil nil)) nil)
+     ("8" (expand "sequence_of_sets") (("8" (propax) nil nil)) nil)
+     ("9" (expand "sequence_of_sets") (("9" (propax) nil nil)) nil)
+     ("10" (expand "sequence_of_sets") (("10" (propax) nil nil)) nil))
+    nil)
+   untried
+   ((Stmt type-decl nil Stmt_adt nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (IMPLIES const-decl "[bool, bool -> bool]" booleans nil)
+    (sequence_of_sets def-decl "boolean" AnnGenerationLemmas nil)
+    (= const-decl "[T, T -> boolean]" equalities nil)
+    (list type-decl nil list_adt nil)
+    (list_to_sequence def-decl "Stmt" AnnGenerationLemmas nil)
+    (sequence_to_list def-decl "list[Stmt]" AnnGenerationLemmas nil)
+    (string type-eq-decl nil strings nil)
+    (char type-eq-decl nil strings nil)
+    (char? adt-recognizer-decl "[character -> boolean]" character_adt
+     nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (character type-decl nil character_adt nil)
+    (below type-eq-decl nil nat_types nil)
+    (nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (Stmt_induction formula-decl nil Stmt_adt nil)
+    (NOT const-decl "[bool -> bool]" booleans nil))
+   217437 580 t shostak))
  (non_interference_of_set_stmt_sequence 0
   (non_interference_of_set_stmt_sequence-1 nil 3388841162 3388842744
    ("" (induct "sets")
@@ -131,7 +183,7 @@
         nil))
       nil))
     nil)
-   unchecked
+   untried
    ((posint_plus_nnint_is_posint application-judgement "posint"
      integers nil)
     (non_interference_of_set_stmt formula-decl nil AnnGenerationLemmas
@@ -150,14 +202,14 @@
     (deriv_stmt def-decl "bool" Semantics nil)
     (source adt-accessor-decl "[(Set?) -> Expr[Name]]" Stmt_adt nil)
     (deriv_expr const-decl "bool" Semantics nil)
-    (on_method_exit_exceptional_AP const-decl "(on_method_exit_type)"
+    (on_method_exit_exceptional_AP const-decl "(on_method_event_type)"
      AnnotatedProgramSemantics nil)
-    (on_method_exit_normal_AP const-decl "(on_method_exit_type)"
+    (on_method_exit_normal_AP const-decl "(on_method_event_type)"
      AnnotatedProgramSemantics nil)
-    (on_method_exit_type const-decl "bool" SemanticsTypes nil)
-    (on_method_entry_AP const-decl "(on_method_entry_type)"
+    nil
+    (on_method_entry_AP const-decl "(on_method_event_type)"
      AnnotatedProgramSemantics nil)
-    (on_method_entry_type const-decl "bool" SemanticsTypes nil)
+    nil
     (execute_CaseJML const-decl "(execute_CaseJML_type)"
      SemanticsCommon nil)
     (execute_CaseJML_type const-decl "bool" SemanticsTypes nil)
@@ -212,144 +264,37 @@
     (list type-decl nil list_adt nil))
    143740 1660 t shostak))
  (ann_action_correcteness 0
-  (ann_action_correcteness-1 nil 3388829493 3388847219
+  (ann_action_correcteness-1 nil 3388829493 3389016744
    ("" (skosimp*)
-    (("" (expand* "related_states" "update_vars" "deriv_stmt")
+    (("" (expand* "MP_modeled?" "update_vars" "deriv_stmt")
       (("" (assert)
         (("" (skosimp*)
-          (("" (expand "MVA_modeled?")
-            (("" (split)
-              (("1" (expand "deriv_stmt" -8)
-                (("1" (expand "execute_set_AP")
-                  (("1" (flatten)
-                    (("1" (skosimp*)
-                      (("1" (lift-if)
-                        (("1" (expand "deriv_expr" -9)
-                          (("1" (flatten)
-                            (("1" (replace -9)
-                              (("1"
-                                (assert)
-                                (("1"
-                                  (lemma
-                                   "non_interference_of_set_stmt_sequence")
-                                  (("1"
-                                    (inst
-                                     -1
-                                     "ap!1"
-                                     "sequence_to_list(ann_action(action(t!1)))"
-                                     "tau!1"
-                                     "sAP2!1"
-                                     "m2!1"
-                                     "\"cp\"")
-                                    (("1"
-                                      (split)
-                                      (("1"
-                                        (replace -7 1)
-                                        (("1"
-                                          (assert)
-                                          (("1"
-                                            (expand "eval" -11)
-                                            (("1"
-                                              (expand "cp2val")
-                                              (("1"
-                                                (case
-                                                 "Int(unique(tcp(t!1))) = gvs(tau!2 WITH [gvs := gvs(tau!2) WITH [(\"cp\") := v!1]])(\"cp\")")
-                                                (("1" (assert) nil nil)
-                                                 ("2"
-                                                  (expand*
-                                                   "MP_modeled?"
-                                                   "MVA_modeled?")
-                                                  (("2"
-                                                    (flatten)
-                                                    (("2"
-                                                      (beta)
-                                                      (("2"
-                                                        (replace -13 1)
-                                                        (("2"
-                                                          (use
-                                                           "ann_program_defines_MVA_vars")
-                                                          (("2"
-                                                            (assert)
-                                                            (("2"
-                                                              (flatten)
-                                                              (("2"
-                                                                (use
-                                                                 "wf_state_ghost_not_local_or_field")
-                                                                (("2"
-                                                                  (assert)
-                                                                  (("2"
-                                                                    (inst
-                                                                     -3
-                                                                     "tcp(t!1)")
-                                                                    (("2"
-                                                                      (split
-                                                                       -3)
-                                                                      (("1"
-                                                                        (expand
-                                                                         "lookup"
-                                                                         1)
-                                                                        (("1"
-                                                                          (lemma
-                                                                           "wf_state_ghost_not_local_or_field")
-                                                                          (("1"
-                                                                            (inst
-                                                                             -1
-                                                                             "ap!1"
-                                                                             "tau!2"
-                                                                             "name_of(tcp(t!1))")
-                                                                            (("1"
-                                                                              (assert)
-                                                                              (("1"
-                                                                                (postpone)
-                                                                                nil
-                                                                                nil))
-                                                                              nil))
-                                                                            nil))
-                                                                          nil))
-                                                                        nil)
-                                                                       ("2"
-                                                                        (postpone)
-                                                                        nil
-                                                                        nil))
-                                                                      nil))
-                                                                    nil))
-                                                                  nil))
-                                                                nil))
-                                                              nil))
-                                                            nil))
-                                                          nil))
-                                                        nil))
-                                                      nil))
-                                                    nil))
-                                                  nil))
-                                                nil))
-                                              nil))
-                                            nil))
-                                          nil))
-                                        nil)
-                                       ("2" (postpone) nil nil)
-                                       ("3" (postpone) nil nil))
-                                      nil)
-                                     ("2" (postpone) nil nil))
-                                    nil))
-                                  nil))
-                                nil))
-                              nil))
-                            nil))
-                          nil))
-                        nil))
-                      nil))
+          (("" (lemma "non_interference_of_set_stmt_sequence")
+            ((""
+              (inst -1 "ap!1"
+               "sequence_to_list(ann_action(action(t!1)))" "tau!1"
+               "sAP2!1" "m2!1" "\"cp\"")
+              (("1" (split)
+                (("1" (postpone) nil nil)
+                 ("2" (use "list_to_sequence_inverse")
+                  (("2" (replace -1 1) (("2" (propax) nil nil)) nil))
+                  nil)
+                 ("3" (skosimp*)
+                  (("3" (split)
+                    (("1" (expand "member" -1)
+                      (("1" (postpone) nil nil)) nil)
+                     ("2" (postpone) nil nil) ("3" (postpone) nil nil))
                     nil))
                   nil))
                 nil)
-               ("2" (postpone) nil nil) ("3" (postpone) nil nil))
+               ("2" (postpone) nil nil))
               nil))
             nil))
           nil))
         nil))
       nil))
     nil)
-   unfinished nil 2043369 3980 t shostak))
+   unfinished nil 2534855 1630 t shostak))
  (guard_to_expr_exists 0
   (guard_to_expr_exists-1 nil 3387889632 3387889644
    ("" (postpone) nil nil) unchecked nil 11882 20 t shostak))
@@ -428,7 +373,7 @@
         nil))
       nil))
     nil)
-   unfinished
+   untried
    ((ann_guard_actions const-decl "list[[Expr, Stmt]]" AnnotateProgram
      nil)
     (wf_MVA const-decl "boolean" WellFormedMVA nil)
@@ -441,15 +386,14 @@
     (b adt-accessor-decl "[(Bool?) -> bool]" Val_adt nil)
     (Bool? adt-recognizer-decl "[Val -> boolean]" Val_adt nil)
     (deriv_expr const-decl "bool" Semantics nil)
-    (on_method_exit_exceptional_MP const-decl "(on_method_exit_type)"
+    (on_method_exit_exceptional_MP const-decl "(on_method_event_type)"
      MonitoredProgramSemantics nil)
-    (on_method_exit_normal_MP const-decl "(on_method_exit_type)"
+    (on_method_exit_normal_MP const-decl "(on_method_event_type)"
      MonitoredProgramSemantics nil)
-    (on_method_exit_type const-decl "bool" SemanticsTypes nil)
-    (on_method_entry_MP const-decl "(on_method_entry_type)"
+    nil
+    (on_method_entry_MP const-decl "(on_method_event_type)"
      MonitoredProgramSemantics nil)
-    (on_method_entry_type const-decl "bool" SemanticsTypes nil)
-    (Method type-eq-decl nil Program nil)
+    nil (Method type-eq-decl nil Program nil)
     (LocalVarDecl type-eq-decl nil Program nil)
     (ArgDecl type-eq-decl nil Program nil)
     (execute_CaseJML const-decl "(execute_CaseJML_type)"
@@ -695,7 +639,7 @@
         nil))
       nil))
     nil)
-   unfinished
+   untried
    ((real_gt_is_strict_total_order name-judgement
      "(strict_total_order?[real])" real_props nil)
     (posint_plus_nnint_is_posint application-judgement "posint"
@@ -726,14 +670,14 @@
     (= const-decl "[T, T -> boolean]" equalities nil)
     (AND const-decl "[bool, bool -> bool]" booleans nil)
     (deriv_expr const-decl "bool" Semantics nil)
-    (on_method_exit_exceptional_AP const-decl "(on_method_exit_type)"
+    (on_method_exit_exceptional_AP const-decl "(on_method_event_type)"
      AnnotatedProgramSemantics nil)
-    (on_method_exit_normal_AP const-decl "(on_method_exit_type)"
+    (on_method_exit_normal_AP const-decl "(on_method_event_type)"
      AnnotatedProgramSemantics nil)
-    (on_method_exit_type const-decl "bool" SemanticsTypes nil)
-    (on_method_entry_AP const-decl "(on_method_entry_type)"
+    nil
+    (on_method_entry_AP const-decl "(on_method_event_type)"
      AnnotatedProgramSemantics nil)
-    (on_method_entry_type const-decl "bool" SemanticsTypes nil)
+    nil
     (execute_CaseJML const-decl "(execute_CaseJML_type)"
      SemanticsCommon nil)
     (execute_CaseJML_type const-decl "bool" SemanticsTypes nil)
@@ -964,7 +908,7 @@
         nil))
       nil))
     nil)
-   unfinished
+   untried
    ((list type-decl nil list_adt nil) (Val type-decl nil Val_adt nil)
     (JType type-decl nil JType_adt nil)
     (FieldDecl type-eq-decl nil Program nil)
@@ -1014,13 +958,13 @@
     (execute_CaseJML_type const-decl "bool" SemanticsTypes nil)
     (execute_CaseJML const-decl "(execute_CaseJML_type)"
      SemanticsCommon nil)
-    (on_method_entry_type const-decl "bool" SemanticsTypes nil)
-    (on_method_entry_AP const-decl "(on_method_entry_type)"
+    nil
+    (on_method_entry_AP const-decl "(on_method_event_type)"
      AnnotatedProgramSemantics nil)
-    (on_method_exit_type const-decl "bool" SemanticsTypes nil)
-    (on_method_exit_normal_AP const-decl "(on_method_exit_type)"
+    nil
+    (on_method_exit_normal_AP const-decl "(on_method_event_type)"
      AnnotatedProgramSemantics nil)
-    (on_method_exit_exceptional_AP const-decl "(on_method_exit_type)"
+    (on_method_exit_exceptional_AP const-decl "(on_method_event_type)"
      AnnotatedProgramSemantics nil)
     (deriv_expr const-decl "bool" Semantics nil)
     (AND const-decl "[bool, bool -> bool]" booleans nil)
@@ -1257,13 +1201,13 @@
     (execute_CaseJML_type const-decl "bool" SemanticsTypes nil)
     (execute_CaseJML const-decl "(execute_CaseJML_type)"
      SemanticsCommon nil)
-    (on_method_entry_type const-decl "bool" SemanticsTypes nil)
-    (on_method_entry_AP const-decl "(on_method_entry_type)"
+    nil
+    (on_method_entry_AP const-decl "(on_method_event_type)"
      AnnotatedProgramSemantics nil)
-    (on_method_exit_type const-decl "bool" SemanticsTypes nil)
-    (on_method_exit_normal_AP const-decl "(on_method_exit_type)"
+    nil
+    (on_method_exit_normal_AP const-decl "(on_method_event_type)"
      AnnotatedProgramSemantics nil)
-    (on_method_exit_exceptional_AP const-decl "(on_method_exit_type)"
+    (on_method_exit_exceptional_AP const-decl "(on_method_event_type)"
      AnnotatedProgramSemantics nil)
     (deriv_expr const-decl "bool" Semantics nil)
     (= const-decl "[T, T -> boolean]" equalities nil)
@@ -1301,6 +1245,9 @@
  (MP_modeled_preserved_by_ann_event_TCC2 0
   (MP_modeled_preserved_by_ann_event_TCC2-1 nil 3388218848 nil
    ("" (subtype-tcc) nil nil) unchecked nil nil nil nil nil))
+ (MP_modeled_preserved_by_ann_event_TCC3 0
+  (MP_modeled_preserved_by_ann_event_TCC3-1 nil 3389014204 nil
+   ("" (subtype-tcc) nil nil) nil nil nil nil nil nil))
  (MP_modeled_preserved_by_ann_event 0
   (MP_modeled_preserved_by_ann_event-1 nil 3387890818 3388750034
    ("" (skosimp*)
@@ -2002,5 +1949,5 @@
         nil))
       nil))
     nil)
-   unfinished nil 19355222 13330 t shostak)))
+   untried nil 19355222 13330 t shostak)))
 

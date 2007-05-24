@@ -2,84 +2,242 @@
 (Val)
 (State
  (lookup_mthd_axiom_TCC1 0
-  (lookup_mthd_axiom_TCC1-1 nil 3387861241 nil
-   ("" (subtype-tcc) nil nil) unchecked nil nil nil nil nil))
+  (lookup_mthd_axiom_TCC1-1 nil 3387861241 3388985963
+   ("" (skosimp)
+    (("" (use "get_class_definedness") (("" (assert) nil nil)) nil))
+    nil)
+   proved
+   ((get_class_definedness formula-decl nil State nil)
+    (PState type-eq-decl nil State nil)
+    (PSt type-eq-decl nil State nil)
+    (Excpt type-decl nil Excpt_adt nil)
+    (Program type-eq-decl nil Program nil)
+    (Class type-eq-decl nil Program nil)
+    (lift type-decl nil lift_adt nil)
+    (Method type-eq-decl nil Program nil)
+    (LocalVarDecl type-eq-decl nil Program nil)
+    (Stmt type-decl nil Stmt_adt nil)
+    (ArgDecl type-eq-decl nil Program nil)
+    (Expr type-decl nil Expr_adt nil)
+    (GhostVarDecl type-eq-decl nil Program nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (FieldDecl type-eq-decl nil Program nil)
+    (Name formal-nonempty-type-decl nil State nil)
+    (JType type-decl nil JType_adt nil)
+    (Val type-decl nil Val_adt nil))
+   158 60 t nil))
  (lookup_inv_axiom_TCC1 0
-  (lookup_inv_axiom_TCC1-1 nil 3387861241 nil
-   ("" (subtype-tcc) nil nil) unchecked nil nil nil nil nil)))
+  (lookup_inv_axiom_TCC1-1 nil 3387861241 3388985963
+   ("" (skosimp)
+    (("" (use "get_class_definedness") (("" (assert) nil nil)) nil))
+    nil)
+   proved
+   ((get_class_definedness formula-decl nil State nil)
+    (PState type-eq-decl nil State nil)
+    (PSt type-eq-decl nil State nil)
+    (Excpt type-decl nil Excpt_adt nil)
+    (Program type-eq-decl nil Program nil)
+    (Class type-eq-decl nil Program nil)
+    (lift type-decl nil lift_adt nil)
+    (Method type-eq-decl nil Program nil)
+    (LocalVarDecl type-eq-decl nil Program nil)
+    (Stmt type-decl nil Stmt_adt nil)
+    (ArgDecl type-eq-decl nil Program nil)
+    (Expr type-decl nil Expr_adt nil)
+    (GhostVarDecl type-eq-decl nil Program nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (FieldDecl type-eq-decl nil Program nil)
+    (Name formal-nonempty-type-decl nil State nil)
+    (JType type-decl nil JType_adt nil)
+    (Val type-decl nil Val_adt nil))
+   31 30 t nil)))
 (Evaluation
  (eval_TCC1 0
-  (eval_TCC1-1 nil 3371189456 3371189465 ("" (termination-tcc) nil nil)
-   unchecked nil 796 600 nil nil))
+  (eval_TCC1-1 nil 3371189456 3388985963 ("" (termination-tcc) nil nil)
+   proved
+   ((real_lt_is_strict_total_order name-judgement
+     "(strict_total_order?[real])" real_props nil)
+    (reduce_nat adt-def-decl "[NumExpr -> nat]" NumExpr_adt nil)
+    (Name formal-nonempty-type-decl nil Evaluation nil)
+    (size const-decl "nat" SizeFunctions nil)
+    (posint_plus_nnint_is_posint application-judgement "posint"
+     integers nil))
+   522 410 nil nil))
  (eval_TCC2 0
-  (eval_TCC2-1 nil 3371189456 3371189466 ("" (termination-tcc) nil nil)
-   unchecked nil 569 490 nil nil))
+  (eval_TCC2-1 nil 3371189456 3388985964 ("" (termination-tcc) nil nil)
+   proved
+   ((real_lt_is_strict_total_order name-judgement
+     "(strict_total_order?[real])" real_props nil)
+    (reduce_nat adt-def-decl "[NumExpr -> nat]" NumExpr_adt nil)
+    (Name formal-nonempty-type-decl nil Evaluation nil)
+    (size const-decl "nat" SizeFunctions nil)
+    (posint_plus_nnint_is_posint application-judgement "posint"
+     integers nil))
+   480 360 nil nil))
  (eval_TCC3 0
-  (eval_TCC3-1 nil 3371189456 3371189466 ("" (termination-tcc) nil nil)
-   unchecked nil 552 470 nil nil))
+  (eval_TCC3-1 nil 3371189456 3388985964 ("" (termination-tcc) nil nil)
+   proved
+   ((real_lt_is_strict_total_order name-judgement
+     "(strict_total_order?[real])" real_props nil)
+    (reduce_nat adt-def-decl "[NumExpr -> nat]" NumExpr_adt nil)
+    (Name formal-nonempty-type-decl nil Evaluation nil)
+    (size const-decl "nat" SizeFunctions nil)
+    (posint_plus_nnint_is_posint application-judgement "posint"
+     integers nil))
+   477 370 nil nil))
  (eval_TCC4 0
-  (eval_TCC4-1 nil 3371189456 3371189467 ("" (termination-tcc) nil nil)
-   unchecked nil 531 470 nil nil))
+  (eval_TCC4-1 nil 3371189456 3388985965 ("" (termination-tcc) nil nil)
+   proved
+   ((real_lt_is_strict_total_order name-judgement
+     "(strict_total_order?[real])" real_props nil)
+    (reduce_nat adt-def-decl "[NumExpr -> nat]" NumExpr_adt nil)
+    (Name formal-nonempty-type-decl nil Evaluation nil)
+    (size const-decl "nat" SizeFunctions nil)
+    (posint_plus_nnint_is_posint application-judgement "posint"
+     integers nil))
+   479 390 nil nil))
  (eval_TCC5 0
-  (eval_TCC5-1 nil 3371189456 3371189467 ("" (termination-tcc) nil nil)
-   unchecked nil 529 470 nil nil))
+  (eval_TCC5-1 nil 3371189456 3388985965 ("" (termination-tcc) nil nil)
+   proved
+   ((real_lt_is_strict_total_order name-judgement
+     "(strict_total_order?[real])" real_props nil)
+    (reduce_nat adt-def-decl "[NumExpr -> nat]" NumExpr_adt nil)
+    (Name formal-nonempty-type-decl nil Evaluation nil)
+    (size const-decl "nat" SizeFunctions nil)
+    (posint_plus_nnint_is_posint application-judgement "posint"
+     integers nil))
+   469 370 nil nil))
  (eval_TCC6 0
-  (eval_TCC6-1 nil 3371189456 3371189468 ("" (termination-tcc) nil nil)
-   unchecked nil 535 470 nil nil))
+  (eval_TCC6-1 nil 3371189456 3388985965 ("" (termination-tcc) nil nil)
+   proved
+   ((real_lt_is_strict_total_order name-judgement
+     "(strict_total_order?[real])" real_props nil)
+    (reduce_nat adt-def-decl "[NumExpr -> nat]" NumExpr_adt nil)
+    (Name formal-nonempty-type-decl nil Evaluation nil)
+    (size const-decl "nat" SizeFunctions nil)
+    (posint_plus_nnint_is_posint application-judgement "posint"
+     integers nil))
+   459 370 nil nil))
  (eval_TCC7 0
-  (eval_TCC7-1 nil 3371189456 3371189468 ("" (termination-tcc) nil nil)
-   unchecked nil 541 480 nil nil))
+  (eval_TCC7-1 nil 3371189456 3388985966 ("" (termination-tcc) nil nil)
+   proved
+   ((real_lt_is_strict_total_order name-judgement
+     "(strict_total_order?[real])" real_props nil)
+    (reduce_nat adt-def-decl "[NumExpr -> nat]" NumExpr_adt nil)
+    (Name formal-nonempty-type-decl nil Evaluation nil)
+    (size const-decl "nat" SizeFunctions nil)
+    (posint_plus_nnint_is_posint application-judgement "posint"
+     integers nil))
+   470 360 nil nil))
  (eval_TCC8 0
-  (eval_TCC8-1 nil 3371189456 3371189469 ("" (termination-tcc) nil nil)
-   unchecked nil 575 490 nil nil))
+  (eval_TCC8-1 nil 3371189456 3388985966 ("" (termination-tcc) nil nil)
+   proved
+   ((real_lt_is_strict_total_order name-judgement
+     "(strict_total_order?[real])" real_props nil)
+    (reduce_nat adt-def-decl "[NumExpr -> nat]" NumExpr_adt nil)
+    (Name formal-nonempty-type-decl nil Evaluation nil)
+    (size const-decl "nat" SizeFunctions nil)
+    (posint_plus_nnint_is_posint application-judgement "posint"
+     integers nil))
+   495 420 nil nil))
  (eval_TCC9 0
-  (eval_TCC9-1 nil 3371189456 3371189469 ("" (subtype-tcc) nil nil)
-   unchecked ((/= const-decl "boolean" notequal nil)) 149 90 nil nil))
+  (eval_TCC9-1 nil 3371189456 3388985967 ("" (subtype-tcc) nil nil)
+   proved ((/= const-decl "boolean" notequal nil)) 178 100 nil nil))
  (eval_TCC10 0
-  (eval_TCC10-1 nil 3371189456 3371189471
-   ("" (termination-tcc) nil nil) unchecked nil 2392 2120 nil nil))
+  (eval_TCC10-1 nil 3371189456 3388985970
+   ("" (termination-tcc) nil nil) proved
+   ((real_lt_is_strict_total_order name-judgement
+     "(strict_total_order?[real])" real_props nil)
+    (reduce_nat adt-def-decl "[BoolExpr -> nat]" BoolExpr_adt nil)
+    (Name formal-nonempty-type-decl nil Evaluation nil)
+    (size const-decl "nat" SizeFunctions nil)
+    (size const-decl "nat" SizeFunctions nil)
+    (posint_plus_nnint_is_posint application-judgement "posint"
+     integers nil))
+   3050 2700 nil nil))
  (eval_TCC11 0
-  (eval_TCC11-1 nil 3371189456 3371189474
-   ("" (termination-tcc) nil nil) unchecked nil 2538 2280 nil nil))
+  (eval_TCC11-1 nil 3371189456 3388985973
+   ("" (termination-tcc) nil nil) proved
+   ((real_lt_is_strict_total_order name-judgement
+     "(strict_total_order?[real])" real_props nil)
+    (reduce_nat adt-def-decl "[BoolExpr -> nat]" BoolExpr_adt nil)
+    (Name formal-nonempty-type-decl nil Evaluation nil)
+    (size const-decl "nat" SizeFunctions nil)
+    (size const-decl "nat" SizeFunctions nil)
+    (posint_plus_nnint_is_posint application-judgement "posint"
+     integers nil))
+   3409 2970 nil nil))
  (eval_TCC12 0
-  (eval_TCC12-1 nil 3371189456 3371189477
-   ("" (termination-tcc) nil nil) unchecked nil 2586 2300 nil nil))
+  (eval_TCC12-1 nil 3371189456 3388985977
+   ("" (termination-tcc) nil nil) proved
+   ((real_lt_is_strict_total_order name-judgement
+     "(strict_total_order?[real])" real_props nil)
+    (reduce_nat adt-def-decl "[BoolExpr -> nat]" BoolExpr_adt nil)
+    (Name formal-nonempty-type-decl nil Evaluation nil)
+    (size const-decl "nat" SizeFunctions nil)
+    (size const-decl "nat" SizeFunctions nil)
+    (posint_plus_nnint_is_posint application-judgement "posint"
+     integers nil))
+   3425 3030 nil nil))
  (eval_TCC13 0
-  (eval_TCC13-1 nil 3371189456 3371189479
-   ("" (termination-tcc) nil nil) unchecked nil 2468 2190 nil nil))
+  (eval_TCC13-1 nil 3371189456 3388985980
+   ("" (termination-tcc) nil nil) proved
+   ((real_lt_is_strict_total_order name-judgement
+     "(strict_total_order?[real])" real_props nil)
+    (reduce_nat adt-def-decl "[BoolExpr -> nat]" BoolExpr_adt nil)
+    (Name formal-nonempty-type-decl nil Evaluation nil)
+    (size const-decl "nat" SizeFunctions nil)
+    (size const-decl "nat" SizeFunctions nil)
+    (posint_plus_nnint_is_posint application-judgement "posint"
+     integers nil))
+   3400 2940 nil nil))
  (eval_TCC14 0
-  (eval_TCC14-1 nil 3371189456 3371189482
-   ("" (termination-tcc) nil nil) unchecked nil 2574 2300 nil nil)))
-(SemanticsTypes)
+  (eval_TCC14-1 nil 3371189456 3388985983
+   ("" (termination-tcc) nil nil) proved
+   ((real_lt_is_strict_total_order name-judgement
+     "(strict_total_order?[real])" real_props nil)
+    (reduce_nat adt-def-decl "[BoolExpr -> nat]" BoolExpr_adt nil)
+    (Name formal-nonempty-type-decl nil Evaluation nil)
+    (size const-decl "nat" SizeFunctions nil)
+    (size const-decl "nat" SizeFunctions nil)
+    (posint_plus_nnint_is_posint application-judgement "posint"
+     integers nil))
+   3403 3010 nil nil)))
+(SemanticsTypes
+ (execute_set_type_TCC1 0
+  (execute_set_type_TCC1-1 nil 3388911891 3388985983
+   ("" (subtype-tcc) nil nil) proved nil 22 20 nil nil))
+ (on_method_exit_type_TCC1 0
+  (on_method_exit_type_TCC1-1 nil 3388983324 3388985984
+   ("" (subtype-tcc) nil nil) unfinished nil 135 60 nil nil)))
 (Semantics
  (initial_Program_state_TCC1 0
-  (initial_Program_state_TCC1-1 nil 3385977479 3387864746
-   ("" (skosimp) (("" (assert) nil nil)) nil) unfinished nil 22336 20 t
-   nil))
+  (initial_Program_state_TCC1-1 nil 3385977479 3388985984
+   ("" (skosimp) (("" (assert) nil nil)) nil) proved nil 22 30 t nil))
  (initial_Program_state_TCC2 0
-  (initial_Program_state_TCC2-1 nil 3385977479 3387864771
-   ("" (skosimp) (("" (assert) nil nil)) nil) unfinished nil 15354 30 t
-   nil))
+  (initial_Program_state_TCC2-1 nil 3385977479 3388985984
+   ("" (skosimp) (("" (assert) nil nil)) nil) proved nil 24 20 t nil))
  (deriv_expr_TCC1 0
-  (deriv_expr_TCC1-1 nil 3371191509 3387864907
-   ("" (skosimp) (("" (assert) nil nil)) nil) unchecked
+  (deriv_expr_TCC1-1 nil 3371191509 3388985984
+   ("" (skosimp) (("" (assert) nil nil)) nil) proved
    ((real_lt_is_strict_total_order name-judgement
      "(strict_total_order?[real])" real_props nil))
-   16666 40 t nil))
+   115 40 t nil))
  (deriv_expr_TCC2 0
-  (deriv_expr_TCC2-1 nil 3371191509 3387864966
-   ("" (skosimp*) (("" (assert) nil nil)) nil) unchecked
+  (deriv_expr_TCC2-1 nil 3371191509 3388985984
+   ("" (skosimp*) (("" (assert) nil nil)) nil) proved
    ((int_minus_int_is_int application-judgement "int" integers nil)
     (real_ge_is_total_order name-judgement "(total_order?[real])"
      real_props nil)
     (real_gt_is_strict_total_order name-judgement
      "(strict_total_order?[real])" real_props nil))
-   33127 230 t nil))
+   216 130 t nil))
  (deriv_expr_TCC3 0
-  (deriv_expr_TCC3-1 nil 3371191509 3372770409
-   ("" (subtype-tcc) nil nil) unchecked
+  (deriv_expr_TCC3-1 nil 3371191509 3388985984
+   ("" (subtype-tcc) nil nil) proved
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
     (number nonempty-type-decl nil numbers nil)
     (number_field_pred const-decl "[number -> boolean]" number_fields
      nil)
@@ -91,16 +249,22 @@
     (rational nonempty-type-from-decl nil rationals nil)
     (integer_pred const-decl "[rational -> boolean]" integers nil)
     (int nonempty-type-eq-decl nil integers nil)
-    (nat nonempty-type-eq-decl nil naturalnumbers nil))
-   217 150 nil nil))
+    (nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (real_ge_is_total_order name-judgement "(total_order?[real])"
+     real_props nil)
+    (real_gt_is_strict_total_order name-judgement
+     "(strict_total_order?[real])" real_props nil)
+    (int_minus_int_is_int application-judgement "int" integers nil))
+   458 310 nil nil))
  (deriv_expr_TCC4 0
-  (deriv_expr_TCC4-1 nil 3371191509 3372770409
-   ("" (termination-tcc) nil nil) unchecked nil 54 30 nil nil))
+  (deriv_expr_TCC4-1 nil 3371191509 3388985984
+   ("" (termination-tcc) nil nil) proved nil 58 50 nil nil))
  (deriv_expr_TCC5 0
-  (deriv_expr_TCC5-1 nil 3371191509 3372770409
-   ("" (subtype-tcc) nil nil) unchecked
+  (deriv_expr_TCC5-1 nil 3371191509 3388985985
+   ("" (subtype-tcc) nil nil) proved
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
     (number nonempty-type-decl nil numbers nil)
     (number_field_pred const-decl "[number -> boolean]" number_fields
      nil)
@@ -112,13 +276,20 @@
     (rational nonempty-type-from-decl nil rationals nil)
     (integer_pred const-decl "[rational -> boolean]" integers nil)
     (int nonempty-type-eq-decl nil integers nil)
-    (nat nonempty-type-eq-decl nil naturalnumbers nil))
-   260 190 nil nil))
+    (nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (real_lt_is_strict_total_order name-judgement
+     "(strict_total_order?[real])" real_props nil)
+    (real_ge_is_total_order name-judgement "(total_order?[real])"
+     real_props nil)
+    (posint_plus_nnint_is_posint application-judgement "posint"
+     integers nil))
+   537 380 nil nil))
  (deriv_expr_TCC6 0
-  (deriv_expr_TCC6-1 nil 3371191509 3372770410
-   ("" (subtype-tcc) nil nil) unchecked
+  (deriv_expr_TCC6-1 nil 3371191509 3388985986
+   ("" (subtype-tcc) nil nil) proved
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
     (number nonempty-type-decl nil numbers nil)
     (number_field_pred const-decl "[number -> boolean]" number_fields
      nil)
@@ -130,86 +301,49 @@
     (rational nonempty-type-from-decl nil rationals nil)
     (integer_pred const-decl "[rational -> boolean]" integers nil)
     (int nonempty-type-eq-decl nil integers nil)
-    (nat nonempty-type-eq-decl nil naturalnumbers nil))
-   258 180 nil nil))
+    (nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (real_lt_is_strict_total_order name-judgement
+     "(strict_total_order?[real])" real_props nil)
+    (real_ge_is_total_order name-judgement "(total_order?[real])"
+     real_props nil)
+    (posint_plus_nnint_is_posint application-judgement "posint"
+     integers nil))
+   713 500 nil nil))
  (deriv_expr_TCC7 0
-  (deriv_expr_TCC7-1 nil 3371191509 3372770410
-   ("" (termination-tcc) nil nil) unchecked nil 281 250 nil nil))
+  (deriv_expr_TCC7-1 nil 3371191509 3388985987
+   ("" (termination-tcc) nil nil) proved
+   ((boolean nonempty-type-decl nil booleans nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (number nonempty-type-decl nil numbers nil)
+    (number_field_pred const-decl "[number -> boolean]" number_fields
+     nil)
+    (number_field nonempty-type-from-decl nil number_fields nil)
+    (real_pred const-decl "[number_field -> boolean]" reals nil)
+    (real nonempty-type-from-decl nil reals nil)
+    (>= const-decl "bool" reals nil)
+    (rational_pred const-decl "[real -> boolean]" rationals nil)
+    (rational nonempty-type-from-decl nil rationals nil)
+    (integer_pred const-decl "[rational -> boolean]" integers nil)
+    (int nonempty-type-eq-decl nil integers nil)
+    (nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (real_lt_is_strict_total_order name-judgement
+     "(strict_total_order?[real])" real_props nil)
+    (real_gt_is_strict_total_order name-judgement
+     "(strict_total_order?[real])" real_props nil)
+    (real_ge_is_total_order name-judgement "(total_order?[real])"
+     real_props nil)
+    (posint_plus_nnint_is_posint application-judgement "posint"
+     integers nil))
+   962 650 nil nil))
  (deriv_expr_TCC8 0
-  (deriv_expr_TCC8-1 nil 3371191509 3387864164
+  (deriv_expr_TCC8-1 nil 3371191509 3388985987
    ("" (skosimp*) (("" (replace -4 2) (("" (assert) nil nil)) nil))
     nil)
-   unchecked
-   ((nnint_plus_posint_is_posint application-judgement "posint"
-     integers nil)
-    (nnint_plus_nnint_is_nnint application-judgement "nonneg_int"
-     integers nil)
-    (posint_plus_nnint_is_posint application-judgement "posint"
-     integers nil)
-    (real_lt_is_strict_total_order name-judgement
-     "(strict_total_order?[real])" real_props nil))
-   34221 390 t nil))
- (deriv_expr_TCC9 0
-  (deriv_expr_TCC9-1 nil 3371191509 3372770410
-   ("" (subtype-tcc) nil nil) unchecked
-   ((boolean nonempty-type-decl nil booleans nil)
-    (bool nonempty-type-eq-decl nil booleans nil)
-    (number nonempty-type-decl nil numbers nil)
-    (number_field_pred const-decl "[number -> boolean]" number_fields
-     nil)
-    (number_field nonempty-type-from-decl nil number_fields nil)
-    (real_pred const-decl "[number_field -> boolean]" reals nil)
-    (real nonempty-type-from-decl nil reals nil)
-    (>= const-decl "bool" reals nil)
-    (rational_pred const-decl "[real -> boolean]" rationals nil)
-    (rational nonempty-type-from-decl nil rationals nil)
-    (integer_pred const-decl "[rational -> boolean]" integers nil)
-    (int nonempty-type-eq-decl nil integers nil)
-    (nat nonempty-type-eq-decl nil naturalnumbers nil))
-   267 190 nil nil))
- (deriv_expr_TCC10 0
-  (deriv_expr_TCC10-1 nil 3371191509 3372770411
-   ("" (termination-tcc) nil nil) unchecked nil 231 210 nil nil))
- (deriv_expr_TCC11 0
-  (deriv_expr_TCC11-1 nil 3371191509 3372770411
-   ("" (subtype-tcc) nil nil) unchecked
-   ((boolean nonempty-type-decl nil booleans nil)
-    (bool nonempty-type-eq-decl nil booleans nil)
-    (number nonempty-type-decl nil numbers nil)
-    (number_field_pred const-decl "[number -> boolean]" number_fields
-     nil)
-    (number_field nonempty-type-from-decl nil number_fields nil)
-    (real_pred const-decl "[number_field -> boolean]" reals nil)
-    (real nonempty-type-from-decl nil reals nil)
-    (>= const-decl "bool" reals nil)
-    (rational_pred const-decl "[real -> boolean]" rationals nil)
-    (rational nonempty-type-from-decl nil rationals nil)
-    (integer_pred const-decl "[rational -> boolean]" integers nil)
-    (int nonempty-type-eq-decl nil integers nil)
-    (nat nonempty-type-eq-decl nil naturalnumbers nil))
-   683 560 nil nil))
- (deriv_expr_TCC12 0
-  (deriv_expr_TCC12-1 nil 3371191509 3372770412
-   ("" (subtype-tcc) nil nil) unchecked
-   ((boolean nonempty-type-decl nil booleans nil)
-    (bool nonempty-type-eq-decl nil booleans nil)
-    (number nonempty-type-decl nil numbers nil)
-    (number_field_pred const-decl "[number -> boolean]" number_fields
-     nil)
-    (number_field nonempty-type-from-decl nil number_fields nil)
-    (real_pred const-decl "[number_field -> boolean]" reals nil)
-    (real nonempty-type-from-decl nil reals nil)
-    (>= const-decl "bool" reals nil)
-    (rational_pred const-decl "[real -> boolean]" rationals nil)
-    (rational nonempty-type-from-decl nil rationals nil)
-    (integer_pred const-decl "[rational -> boolean]" integers nil)
-    (int nonempty-type-eq-decl nil integers nil)
-    (nat nonempty-type-eq-decl nil naturalnumbers nil))
-   748 600 nil nil))
- (deriv_expr_TCC13 0
-  (deriv_expr_TCC13-1 nil 3371191509 3387864256
-   ("" (skosimp*) (("" (assert) nil nil)) nil) unchecked
+   proved
    ((real_lt_is_strict_total_order name-judgement
+     "(strict_total_order?[real])" real_props nil)
+    (real_gt_is_strict_total_order name-judgement
      "(strict_total_order?[real])" real_props nil)
     (posint_plus_nnint_is_posint application-judgement "posint"
      integers nil)
@@ -217,24 +351,175 @@
      integers nil)
     (nnint_plus_posint_is_posint application-judgement "posint"
      integers nil))
-   26202 600 t nil))
+   519 370 t nil))
+ (deriv_expr_TCC9 0
+  (deriv_expr_TCC9-1 nil 3371191509 3388985988
+   ("" (subtype-tcc) nil nil) proved
+   ((boolean nonempty-type-decl nil booleans nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (number nonempty-type-decl nil numbers nil)
+    (number_field_pred const-decl "[number -> boolean]" number_fields
+     nil)
+    (number_field nonempty-type-from-decl nil number_fields nil)
+    (real_pred const-decl "[number_field -> boolean]" reals nil)
+    (real nonempty-type-from-decl nil reals nil)
+    (>= const-decl "bool" reals nil)
+    (rational_pred const-decl "[real -> boolean]" rationals nil)
+    (rational nonempty-type-from-decl nil rationals nil)
+    (integer_pred const-decl "[rational -> boolean]" integers nil)
+    (int nonempty-type-eq-decl nil integers nil)
+    (nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (real_ge_is_total_order name-judgement "(total_order?[real])"
+     real_props nil)
+    (real_gt_is_strict_total_order name-judgement
+     "(strict_total_order?[real])" real_props nil)
+    (real_lt_is_strict_total_order name-judgement
+     "(strict_total_order?[real])" real_props nil)
+    (posint_plus_nnint_is_posint application-judgement "posint"
+     integers nil))
+   1270 960 nil nil))
+ (deriv_expr_TCC10 0
+  (deriv_expr_TCC10-1 nil 3371191509 3388985990
+   ("" (termination-tcc) nil nil) proved
+   ((boolean nonempty-type-decl nil booleans nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (number nonempty-type-decl nil numbers nil)
+    (number_field_pred const-decl "[number -> boolean]" number_fields
+     nil)
+    (number_field nonempty-type-from-decl nil number_fields nil)
+    (real_pred const-decl "[number_field -> boolean]" reals nil)
+    (real nonempty-type-from-decl nil reals nil)
+    (>= const-decl "bool" reals nil)
+    (rational_pred const-decl "[real -> boolean]" rationals nil)
+    (rational nonempty-type-from-decl nil rationals nil)
+    (integer_pred const-decl "[rational -> boolean]" integers nil)
+    (int nonempty-type-eq-decl nil integers nil)
+    (nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (real_ge_is_total_order name-judgement "(total_order?[real])"
+     real_props nil)
+    (real_gt_is_strict_total_order name-judgement
+     "(strict_total_order?[real])" real_props nil)
+    (real_lt_is_strict_total_order name-judgement
+     "(strict_total_order?[real])" real_props nil)
+    (Name formal-nonempty-type-decl nil Semantics nil)
+    (lookup_local const-decl "Val" State nil)
+    (posint_plus_nnint_is_posint application-judgement "posint"
+     integers nil))
+   1703 1270 nil nil))
+ (deriv_expr_TCC11 0
+  (deriv_expr_TCC11-1 nil 3371191509 3388985992
+   ("" (subtype-tcc) nil nil) proved
+   ((boolean nonempty-type-decl nil booleans nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (number nonempty-type-decl nil numbers nil)
+    (number_field_pred const-decl "[number -> boolean]" number_fields
+     nil)
+    (number_field nonempty-type-from-decl nil number_fields nil)
+    (real_pred const-decl "[number_field -> boolean]" reals nil)
+    (real nonempty-type-from-decl nil reals nil)
+    (>= const-decl "bool" reals nil)
+    (rational_pred const-decl "[real -> boolean]" rationals nil)
+    (rational nonempty-type-from-decl nil rationals nil)
+    (integer_pred const-decl "[rational -> boolean]" integers nil)
+    (int nonempty-type-eq-decl nil integers nil)
+    (nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (real_ge_is_total_order name-judgement "(total_order?[real])"
+     real_props nil)
+    (real_gt_is_strict_total_order name-judgement
+     "(strict_total_order?[real])" real_props nil)
+    (real_lt_is_strict_total_order name-judgement
+     "(strict_total_order?[real])" real_props nil)
+    (Name formal-nonempty-type-decl nil Semantics nil)
+    (lookup_local const-decl "Val" State nil)
+    (posint_plus_nnint_is_posint application-judgement "posint"
+     integers nil))
+   1807 1310 nil nil))
+ (deriv_expr_TCC12 0
+  (deriv_expr_TCC12-1 nil 3371191509 3388985994
+   ("" (subtype-tcc) nil nil) proved
+   ((boolean nonempty-type-decl nil booleans nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (number nonempty-type-decl nil numbers nil)
+    (number_field_pred const-decl "[number -> boolean]" number_fields
+     nil)
+    (number_field nonempty-type-from-decl nil number_fields nil)
+    (real_pred const-decl "[number_field -> boolean]" reals nil)
+    (real nonempty-type-from-decl nil reals nil)
+    (>= const-decl "bool" reals nil)
+    (rational_pred const-decl "[real -> boolean]" rationals nil)
+    (rational nonempty-type-from-decl nil rationals nil)
+    (integer_pred const-decl "[rational -> boolean]" integers nil)
+    (int nonempty-type-eq-decl nil integers nil)
+    (nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (real_ge_is_total_order name-judgement "(total_order?[real])"
+     real_props nil)
+    (real_gt_is_strict_total_order name-judgement
+     "(strict_total_order?[real])" real_props nil)
+    (int_minus_int_is_int application-judgement "int" integers nil)
+    (Name formal-nonempty-type-decl nil Semantics nil)
+    (lookup_local const-decl "Val" State nil)
+    (posint_plus_nnint_is_posint application-judgement "posint"
+     integers nil))
+   1956 1560 nil nil))
+ (deriv_expr_TCC13 0
+  (deriv_expr_TCC13-1 nil 3371191509 3388985995
+   ("" (skosimp*) (("" (assert) nil nil)) nil) proved
+   ((int_minus_int_is_int application-judgement "int" integers nil)
+    (real_ge_is_total_order name-judgement "(total_order?[real])"
+     real_props nil)
+    (real_gt_is_strict_total_order name-judgement
+     "(strict_total_order?[real])" real_props nil)
+    (posint_plus_nnint_is_posint application-judgement "posint"
+     integers nil)
+    (nnint_plus_nnint_is_nnint application-judgement "nonneg_int"
+     integers nil)
+    (nnint_plus_posint_is_posint application-judgement "posint"
+     integers nil))
+   681 450 t nil))
  (deriv_stmt_TCC1 0
-  (deriv_stmt_TCC1-1 nil 3371191509 3387867981
-   ("" (skosimp*) (("" (assert) nil nil)) nil) unchecked
+  (deriv_stmt_TCC1-1 nil 3371191509 3388985995
+   ("" (skosimp*) (("" (assert) nil nil)) nil) proved
    ((int_minus_int_is_int application-judgement "int" integers nil)
     (real_ge_is_total_order name-judgement "(total_order?[real])"
      real_props nil)
     (real_gt_is_strict_total_order name-judgement
      "(strict_total_order?[real])" real_props nil))
-   16397 130 t nil))
+   196 130 t nil))
  (deriv_stmt_TCC2 0
-  (deriv_stmt_TCC2-1 nil 3371191509 3372770419
-   ("" (termination-tcc) nil nil) unchecked nil 32 30 nil nil))
+  (deriv_stmt_TCC2-1 nil 3371191509 3388985996
+   ("" (termination-tcc) nil nil) proved
+   ((boolean nonempty-type-decl nil booleans nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (number nonempty-type-decl nil numbers nil)
+    (number_field_pred const-decl "[number -> boolean]" number_fields
+     nil)
+    (number_field nonempty-type-from-decl nil number_fields nil)
+    (real_pred const-decl "[number_field -> boolean]" reals nil)
+    (real nonempty-type-from-decl nil reals nil)
+    (>= const-decl "bool" reals nil)
+    (rational_pred const-decl "[real -> boolean]" rationals nil)
+    (rational nonempty-type-from-decl nil rationals nil)
+    (integer_pred const-decl "[rational -> boolean]" integers nil)
+    (int nonempty-type-eq-decl nil integers nil)
+    (nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (real_lt_is_strict_total_order name-judgement
+     "(strict_total_order?[real])" real_props nil)
+    (real_ge_is_total_order name-judgement "(total_order?[real])"
+     real_props nil)
+    (posint_plus_nnint_is_posint application-judgement "posint"
+     integers nil))
+   1047 780 nil nil))
  (deriv_stmt_TCC3 0
-  (deriv_stmt_TCC3-1 nil 3371191509 3372770419
-   ("" (termination-tcc) nil nil) unchecked
+  (deriv_stmt_TCC3-1 nil 3371191509 3388985997
+   ("" (termination-tcc) nil nil) proved
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
     (number nonempty-type-decl nil numbers nil)
     (number_field_pred const-decl "[number -> boolean]" number_fields
      nil)
@@ -246,13 +531,21 @@
     (rational nonempty-type-from-decl nil rationals nil)
     (integer_pred const-decl "[rational -> boolean]" integers nil)
     (int nonempty-type-eq-decl nil integers nil)
-    (nat nonempty-type-eq-decl nil naturalnumbers nil))
-   442 370 nil nil))
+    (nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (deriv_expr def-decl "bool" Semantics nil)
+    (real_lt_is_strict_total_order name-judgement
+     "(strict_total_order?[real])" real_props nil)
+    (real_ge_is_total_order name-judgement "(total_order?[real])"
+     real_props nil)
+    (posint_plus_nnint_is_posint application-judgement "posint"
+     integers nil))
+   1323 1000 nil nil))
  (deriv_stmt_TCC4 0
-  (deriv_stmt_TCC4-1 nil 3371191509 3372770420
-   ("" (termination-tcc) nil nil) unchecked
+  (deriv_stmt_TCC4-1 nil 3371191509 3388985998
+   ("" (termination-tcc) nil nil) proved
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
     (number nonempty-type-decl nil numbers nil)
     (number_field_pred const-decl "[number -> boolean]" number_fields
      nil)
@@ -264,13 +557,20 @@
     (rational nonempty-type-from-decl nil rationals nil)
     (integer_pred const-decl "[rational -> boolean]" integers nil)
     (int nonempty-type-eq-decl nil integers nil)
-    (nat nonempty-type-eq-decl nil naturalnumbers nil))
-   468 400 nil nil))
+    (nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (real_lt_is_strict_total_order name-judgement
+     "(strict_total_order?[real])" real_props nil)
+    (real_ge_is_total_order name-judgement "(total_order?[real])"
+     real_props nil)
+    (posint_plus_nnint_is_posint application-judgement "posint"
+     integers nil))
+   988 740 nil nil))
  (deriv_stmt_TCC5 0
-  (deriv_stmt_TCC5-1 nil 3371191509 3372770420
-   ("" (subtype-tcc) nil nil) unchecked
+  (deriv_stmt_TCC5-1 nil 3371191509 3388985999
+   ("" (subtype-tcc) nil nil) proved
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
     (number nonempty-type-decl nil numbers nil)
     (number_field_pred const-decl "[number -> boolean]" number_fields
      nil)
@@ -282,13 +582,20 @@
     (rational nonempty-type-from-decl nil rationals nil)
     (integer_pred const-decl "[rational -> boolean]" integers nil)
     (int nonempty-type-eq-decl nil integers nil)
-    (nat nonempty-type-eq-decl nil naturalnumbers nil))
-   207 160 nil nil))
+    (nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (real_lt_is_strict_total_order name-judgement
+     "(strict_total_order?[real])" real_props nil)
+    (real_ge_is_total_order name-judgement "(total_order?[real])"
+     real_props nil)
+    (posint_plus_nnint_is_posint application-judgement "posint"
+     integers nil))
+   736 520 nil nil))
  (deriv_stmt_TCC6 0
-  (deriv_stmt_TCC6-1 nil 3371191509 3372770420
-   ("" (subtype-tcc) nil nil) unchecked
+  (deriv_stmt_TCC6-1 nil 3371191509 3388986000
+   ("" (subtype-tcc) nil nil) proved
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
     (number nonempty-type-decl nil numbers nil)
     (number_field_pred const-decl "[number -> boolean]" number_fields
      nil)
@@ -300,13 +607,19 @@
     (rational nonempty-type-from-decl nil rationals nil)
     (integer_pred const-decl "[rational -> boolean]" integers nil)
     (int nonempty-type-eq-decl nil integers nil)
-    (nat nonempty-type-eq-decl nil naturalnumbers nil))
-   226 160 nil nil))
+    (nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (real_ge_is_total_order name-judgement "(total_order?[real])"
+     real_props nil)
+    (real_gt_is_strict_total_order name-judgement
+     "(strict_total_order?[real])" real_props nil)
+    (int_minus_int_is_int application-judgement "int" integers nil))
+   554 390 nil nil))
  (deriv_stmt_TCC7 0
-  (deriv_stmt_TCC7-1 nil 3371191509 3372770421
-   ("" (subtype-tcc) nil nil) unchecked
+  (deriv_stmt_TCC7-1 nil 3371191509 3388986000
+   ("" (subtype-tcc) nil nil) proved
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
     (number nonempty-type-decl nil numbers nil)
     (number_field_pred const-decl "[number -> boolean]" number_fields
      nil)
@@ -318,13 +631,19 @@
     (rational nonempty-type-from-decl nil rationals nil)
     (integer_pred const-decl "[rational -> boolean]" integers nil)
     (int nonempty-type-eq-decl nil integers nil)
-    (nat nonempty-type-eq-decl nil naturalnumbers nil))
-   194 150 nil nil))
+    (nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (real_ge_is_total_order name-judgement "(total_order?[real])"
+     real_props nil)
+    (real_gt_is_strict_total_order name-judgement
+     "(strict_total_order?[real])" real_props nil)
+    (int_minus_int_is_int application-judgement "int" integers nil))
+   479 380 nil nil))
  (deriv_stmt_TCC8 0
-  (deriv_stmt_TCC8-1 nil 3371191509 3372770421
-   ("" (subtype-tcc) nil nil) unchecked
+  (deriv_stmt_TCC8-1 nil 3371191509 3388986001
+   ("" (subtype-tcc) nil nil) proved
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
     (number nonempty-type-decl nil numbers nil)
     (number_field_pred const-decl "[number -> boolean]" number_fields
      nil)
@@ -336,13 +655,19 @@
     (rational nonempty-type-from-decl nil rationals nil)
     (integer_pred const-decl "[rational -> boolean]" integers nil)
     (int nonempty-type-eq-decl nil integers nil)
-    (nat nonempty-type-eq-decl nil naturalnumbers nil))
-   189 150 nil nil))
+    (nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (real_ge_is_total_order name-judgement "(total_order?[real])"
+     real_props nil)
+    (real_gt_is_strict_total_order name-judgement
+     "(strict_total_order?[real])" real_props nil)
+    (int_minus_int_is_int application-judgement "int" integers nil))
+   534 380 nil nil))
  (deriv_stmt_TCC9 0
-  (deriv_stmt_TCC9-1 nil 3371191509 3372770421
-   ("" (termination-tcc) nil nil) unchecked
+  (deriv_stmt_TCC9-1 nil 3371191509 3388986002
+   ("" (termination-tcc) nil nil) proved
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
     (number nonempty-type-decl nil numbers nil)
     (number_field_pred const-decl "[number -> boolean]" number_fields
      nil)
@@ -354,13 +679,20 @@
     (rational nonempty-type-from-decl nil rationals nil)
     (integer_pred const-decl "[rational -> boolean]" integers nil)
     (int nonempty-type-eq-decl nil integers nil)
-    (nat nonempty-type-eq-decl nil naturalnumbers nil))
-   518 420 nil nil))
+    (nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (real_lt_is_strict_total_order name-judgement
+     "(strict_total_order?[real])" real_props nil)
+    (real_ge_is_total_order name-judgement "(total_order?[real])"
+     real_props nil)
+    (posint_plus_nnint_is_posint application-judgement "posint"
+     integers nil))
+   1203 800 nil nil))
  (deriv_stmt_TCC10 0
-  (deriv_stmt_TCC10-1 nil 3371191509 3372770422
-   ("" (termination-tcc) nil nil) unchecked
+  (deriv_stmt_TCC10-1 nil 3371191509 3388986003
+   ("" (termination-tcc) nil nil) proved
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
     (number nonempty-type-decl nil numbers nil)
     (number_field_pred const-decl "[number -> boolean]" number_fields
      nil)
@@ -372,13 +704,20 @@
     (rational nonempty-type-from-decl nil rationals nil)
     (integer_pred const-decl "[rational -> boolean]" integers nil)
     (int nonempty-type-eq-decl nil integers nil)
-    (nat nonempty-type-eq-decl nil naturalnumbers nil))
-   509 430 nil nil))
+    (nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (real_lt_is_strict_total_order name-judgement
+     "(strict_total_order?[real])" real_props nil)
+    (real_ge_is_total_order name-judgement "(total_order?[real])"
+     real_props nil)
+    (posint_plus_nnint_is_posint application-judgement "posint"
+     integers nil))
+   1088 830 nil nil))
  (deriv_stmt_TCC11 0
-  (deriv_stmt_TCC11-1 nil 3371191509 3372770422
-   ("" (termination-tcc) nil nil) unchecked
+  (deriv_stmt_TCC11-1 nil 3371191509 3388986004
+   ("" (termination-tcc) nil nil) proved
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
     (number nonempty-type-decl nil numbers nil)
     (number_field_pred const-decl "[number -> boolean]" number_fields
      nil)
@@ -390,13 +729,20 @@
     (rational nonempty-type-from-decl nil rationals nil)
     (integer_pred const-decl "[rational -> boolean]" integers nil)
     (int nonempty-type-eq-decl nil integers nil)
-    (nat nonempty-type-eq-decl nil naturalnumbers nil))
-   547 450 nil nil))
+    (nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (real_ge_is_total_order name-judgement "(total_order?[real])"
+     real_props nil)
+    (real_lt_is_strict_total_order name-judgement
+     "(strict_total_order?[real])" real_props nil)
+    (posint_plus_nnint_is_posint application-judgement "posint"
+     integers nil))
+   1172 870 nil nil))
  (deriv_stmt_TCC12 0
-  (deriv_stmt_TCC12-1 nil 3371191509 3372770423
-   ("" (subtype-tcc) nil nil) unchecked
+  (deriv_stmt_TCC12-1 nil 3371191509 3388986005
+   ("" (subtype-tcc) nil nil) proved
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
     (number nonempty-type-decl nil numbers nil)
     (number_field_pred const-decl "[number -> boolean]" number_fields
      nil)
@@ -408,26 +754,19 @@
     (rational nonempty-type-from-decl nil rationals nil)
     (integer_pred const-decl "[rational -> boolean]" integers nil)
     (int nonempty-type-eq-decl nil integers nil)
-    (nat nonempty-type-eq-decl nil naturalnumbers nil))
-   213 150 nil nil))
+    (nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (real_ge_is_total_order name-judgement "(total_order?[real])"
+     real_props nil)
+    (real_gt_is_strict_total_order name-judgement
+     "(strict_total_order?[real])" real_props nil)
+    (int_minus_int_is_int application-judgement "int" integers nil))
+   554 380 nil nil))
  (deriv_stmt_TCC13 0
-  (deriv_stmt_TCC13-1 nil 3371191509 3372770423
-   ("" (termination-tcc) nil nil) unchecked nil 32 30 nil nil))
- (deriv_stmt_TCC14 0
-  (deriv_stmt_TCC14-1 nil 3385977479 nil ("" (termination-tcc) nil nil)
-   unfinished nil nil nil nil nil))
- (deriv_stmt_TCC15 0
-  (deriv_stmt_TCC15-1 nil 3385977479 nil ("" (termination-tcc) nil nil)
-   unfinished nil nil nil nil nil))
- (deriv_stmt_TCC16 0
-  (deriv_stmt_TCC16-1 nil 3385977479 nil ("" (termination-tcc) nil nil)
-   unfinished nil nil nil nil nil))
- (deriv_stmt_TCC17 0
-  (deriv_stmt_TCC17-1 nil 3385977479 nil ("" (subtype-tcc) nil nil)
-   unfinished nil nil nil nil nil))
+  (deriv_stmt_TCC13-1 nil 3371191509 3388986005
+   ("" (termination-tcc) nil nil) proved nil 431 370 nil nil))
  (expr_determ_step 0
   (expr_determ_step-3 "adapted proof for the new semantics" 3385988510
-   3385988510
+   3388986011
    ("" (assert)
     (("" (skosimp)
       ((""
@@ -611,7 +950,7 @@
         nil))
       nil))
     nil)
-   unfinished nil 7208774 13050 t shostak)
+   unfinished nil 5800 4200 t shostak)
   (expr_determ_step-2 nil 3382347845 3382347916
    ("" (assert)
     (("" (skosimp)
@@ -2021,7 +2360,7 @@
     (wf_nat formula-decl nil naturalnumbers nil))
    9788 4901 t shostak))
  (expr_determ_step2 0
-  (expr_determ_step2-1 nil 3387107674 3387107760
+  (expr_determ_step2-1 nil 3387107674 3388986012
    ("" (skosimp*)
     (("" (expand "deriv_expr")
       (("" (use "expr_determ_step")
@@ -2036,7 +2375,7 @@
         nil))
       nil))
     nil)
-   untried
+   proved
    ((deriv_expr const-decl "bool" Semantics nil)
     (Val type-decl nil Val_adt nil)
     (FullState formal-type-decl nil Semantics nil)
@@ -2058,9 +2397,9 @@
     (>= const-decl "bool" reals nil)
     (nat nonempty-type-eq-decl nil naturalnumbers nil)
     (expr_determ_step formula-decl nil Semantics nil))
-   85945 1830 t shostak))
+   1259 1030 t shostak))
  (stmt_determ_step 0
-  (stmt_determ_step-1 nil 3371194190 3382347193
+  (stmt_determ_step-1 nil 3371194190 3388986013
    ("" (skosimp)
     ((""
       (lemma
@@ -2615,9 +2954,9 @@
     (boolean nonempty-type-decl nil booleans nil)
     (number nonempty-type-decl nil numbers nil)
     (wf_induction formula-decl nil wf_induction nil))
-   2323 2284 t shostak))
+   357 270 t shostak))
  (expr_determ 0
-  (expr_determ-1 nil 3371191515 3382347220
+  (expr_determ-1 nil 3371191515 3388986015
    ("" (skosimp*)
     (("" (use "expr_determ_step")
       (("" (assert)
@@ -2665,9 +3004,9 @@
     (lift type-decl nil lift_adt nil)
     (finite_set type-eq-decl nil finite_sets nil)
     (list type-decl nil list_adt nil))
-   1362 1360 t shostak))
+   2735 2180 t shostak))
  (stmt_determ 0
-  (stmt_determ-1 nil 3371193973 3382347243
+  (stmt_determ-1 nil 3371193973 3388986018
    ("" (skosimp*)
     (("" (use "stmt_determ_step")
       (("" (expand "derives")
@@ -2677,163 +3016,586 @@
         nil))
       nil))
     nil)
-   unfinished
-   ((number nonempty-type-decl nil numbers nil)
-    (boolean nonempty-type-decl nil booleans nil)
+   proved
+   ((stmt_determ_step formula-decl nil Semantics nil)
+    (FullState formal-type-decl nil Semantics nil)
+    (FullProgram formal-type-decl nil Semantics nil)
+    (Name formal-nonempty-type-decl nil Semantics nil)
+    (Stmt type-decl nil Stmt_adt nil)
+    (nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (>= const-decl "bool" reals nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (int nonempty-type-eq-decl nil integers nil)
+    (integer_pred const-decl "[rational -> boolean]" integers nil)
+    (rational nonempty-type-from-decl nil rationals nil)
+    (rational_pred const-decl "[real -> boolean]" rationals nil)
+    (real nonempty-type-from-decl nil reals nil)
+    (real_pred const-decl "[number_field -> boolean]" reals nil)
+    (number_field nonempty-type-from-decl nil number_fields nil)
     (number_field_pred const-decl "[number -> boolean]" number_fields
      nil)
-    (number_field nonempty-type-from-decl nil number_fields nil)
-    (real_pred const-decl "[number_field -> boolean]" reals nil)
-    (real nonempty-type-from-decl nil reals nil)
-    (rational_pred const-decl "[real -> boolean]" rationals nil)
-    (rational nonempty-type-from-decl nil rationals nil)
-    (integer_pred const-decl "[rational -> boolean]" integers nil)
-    (int nonempty-type-eq-decl nil integers nil)
-    (bool nonempty-type-eq-decl nil booleans nil)
-    (>= const-decl "bool" reals nil)
-    (nat nonempty-type-eq-decl nil naturalnumbers nil)
-    (lift type-decl nil lift_adt nil)
-    (finite_set type-eq-decl nil finite_sets nil)
-    (list type-decl nil list_adt nil))
-   1274 1270 t shostak)))
+    (boolean nonempty-type-decl nil booleans nil)
+    (number nonempty-type-decl nil numbers nil)
+    (derives const-decl "bool" Semantics nil))
+   2490 2130 t shostak)))
 (SemanticsCommon
  (check_assertion_TCC1 0
-  (check_assertion_TCC1-1 nil 3385977476 nil ("" (subtype-tcc) nil nil)
-   unfinished nil nil nil nil nil))
+  (check_assertion_TCC1-1 nil 3385977476 3388986018
+   ("" (subtype-tcc) nil nil) proved nil 20 20 nil nil))
  (execute_CaseJML_TCC1 0
-  (execute_CaseJML_TCC1-1 nil 3385977476 nil ("" (subtype-tcc) nil nil)
-   unfinished nil nil nil nil nil))
+  (execute_CaseJML_TCC1-1 nil 3385977476 3388986018
+   ("" (skosimp*) (("" (assert) nil nil)) nil) proved
+   ((int_minus_int_is_int application-judgement "int" integers nil)
+    (real_ge_is_total_order name-judgement "(total_order?[real])"
+     real_props nil)
+    (real_gt_is_strict_total_order name-judgement
+     "(strict_total_order?[real])" real_props nil))
+   49 40 t nil))
  (execute_CaseJML_TCC2 0
-  (execute_CaseJML_TCC2-1 nil 3385977476 nil ("" (subtype-tcc) nil nil)
-   unfinished nil nil nil nil nil))
- (IMP_State_TCC1 0
-  (IMP_State_TCC1-1 nil 3385977476 nil ("" (existence-tcc) nil nil)
-   unfinished nil nil nil nil nil)))
+  (execute_CaseJML_TCC2-1 nil 3385977476 3388986018
+   ("" (expand "execute_CaseJML_type")
+    (("" (skosimp) (("" (lift-if) (("" (assert) nil nil)) nil)) nil))
+    nil)
+   proved
+   ((int_minus_int_is_int application-judgement "int" integers nil)
+    (execute_CaseJML_type const-decl "bool" SemanticsTypes nil))
+   174 80 t nil)))
 (ProgramSemantics
  (execute_set_TCC1 0
-  (execute_set_TCC1-1 nil 3385977480 nil ("" (subtype-tcc) nil nil)
-   unfinished nil nil nil nil nil))
+  (execute_set_TCC1-1 nil 3385977480 3388986018
+   ("" (subtype-tcc) nil nil) proved
+   ((posnat nonempty-type-eq-decl nil integers nil)
+    (nonneg_int nonempty-type-eq-decl nil integers nil)
+    (>= const-decl "bool" reals nil)
+    (int nonempty-type-eq-decl nil integers nil)
+    (integer_pred const-decl "[rational -> boolean]" integers nil)
+    (rational nonempty-type-from-decl nil rationals nil)
+    (rational_pred const-decl "[real -> boolean]" rationals nil)
+    (> const-decl "bool" reals nil)
+    (real nonempty-type-from-decl nil reals nil)
+    (real_pred const-decl "[number_field -> boolean]" reals nil)
+    (number_field nonempty-type-from-decl nil number_fields nil)
+    (number_field_pred const-decl "[number -> boolean]" number_fields
+     nil)
+    (number nonempty-type-decl nil numbers nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (id const-decl "(bijective?[T, T])" identity nil)
+    (bijective? const-decl "bool" functions nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (PState type-eq-decl nil State nil)
+    (PSt type-eq-decl nil State nil)
+    (Excpt type-decl nil Excpt_adt nil)
+    (Program type-eq-decl nil Program nil)
+    (Class type-eq-decl nil Program nil)
+    (lift type-decl nil lift_adt nil)
+    (Method type-eq-decl nil Program nil)
+    (LocalVarDecl type-eq-decl nil Program nil)
+    (Stmt type-decl nil Stmt_adt nil)
+    (ArgDecl type-eq-decl nil Program nil)
+    (Expr type-decl nil Expr_adt nil)
+    (GhostVarDecl type-eq-decl nil Program nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (FieldDecl type-eq-decl nil Program nil)
+    (JType type-decl nil JType_adt nil) (Val type-decl nil Val_adt nil)
+    (Name formal-nonempty-type-decl nil ProgramSemantics nil)
+    (execute_set_type const-decl "bool" SemanticsTypes nil))
+   186 100 nil nil))
  (execute_CaseJML_TCC1 0
-  (execute_CaseJML_TCC1-1 nil 3385977480 nil ("" (subtype-tcc) nil nil)
-   unfinished nil nil nil nil nil))
+  (execute_CaseJML_TCC1-1 nil 3385977480 3388986018
+   ("" (subtype-tcc) nil nil) proved
+   ((posnat nonempty-type-eq-decl nil integers nil)
+    (nonneg_int nonempty-type-eq-decl nil integers nil)
+    (>= const-decl "bool" reals nil)
+    (int nonempty-type-eq-decl nil integers nil)
+    (integer_pred const-decl "[rational -> boolean]" integers nil)
+    (rational nonempty-type-from-decl nil rationals nil)
+    (rational_pred const-decl "[real -> boolean]" rationals nil)
+    (> const-decl "bool" reals nil)
+    (real nonempty-type-from-decl nil reals nil)
+    (real_pred const-decl "[number_field -> boolean]" reals nil)
+    (number_field nonempty-type-from-decl nil number_fields nil)
+    (number_field_pred const-decl "[number -> boolean]" number_fields
+     nil)
+    (number nonempty-type-decl nil numbers nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (id const-decl "(bijective?[T, T])" identity nil)
+    (bijective? const-decl "bool" functions nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (PState type-eq-decl nil State nil)
+    (PSt type-eq-decl nil State nil)
+    (Excpt type-decl nil Excpt_adt nil)
+    (Program type-eq-decl nil Program nil)
+    (Class type-eq-decl nil Program nil)
+    (lift type-decl nil lift_adt nil)
+    (Method type-eq-decl nil Program nil)
+    (LocalVarDecl type-eq-decl nil Program nil)
+    (Stmt type-decl nil Stmt_adt nil)
+    (ArgDecl type-eq-decl nil Program nil)
+    (Expr type-decl nil Expr_adt nil)
+    (GhostVarDecl type-eq-decl nil Program nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (FieldDecl type-eq-decl nil Program nil)
+    (JType type-decl nil JType_adt nil) (Val type-decl nil Val_adt nil)
+    (Name formal-nonempty-type-decl nil ProgramSemantics nil)
+    (execute_CaseJML_type const-decl "bool" SemanticsTypes nil))
+   193 90 nil nil))
  (on_method_x_TCC1 0
-  (on_method_x_TCC1-1 nil 3385977480 nil ("" (subtype-tcc) nil nil)
-   unfinished nil nil nil nil nil))
+  (on_method_x_TCC1-1 nil 3385977480 3388986019
+   ("" (subtype-tcc) nil nil) unfinished
+   ((nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (int nonempty-type-eq-decl nil integers nil)
+    (integer_pred const-decl "[rational -> boolean]" integers nil)
+    (rational nonempty-type-from-decl nil rationals nil)
+    (rational_pred const-decl "[real -> boolean]" rationals nil)
+    (>= const-decl "bool" reals nil)
+    (real nonempty-type-from-decl nil reals nil)
+    (real_pred const-decl "[number_field -> boolean]" reals nil)
+    (number_field nonempty-type-from-decl nil number_fields nil)
+    (number_field_pred const-decl "[number -> boolean]" number_fields
+     nil)
+    (number nonempty-type-decl nil numbers nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (id const-decl "(bijective?[T, T])" identity nil)
+    (bijective? const-decl "bool" functions nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (PState type-eq-decl nil State nil)
+    (PSt type-eq-decl nil State nil)
+    (Excpt type-decl nil Excpt_adt nil)
+    (Program type-eq-decl nil Program nil)
+    (Class type-eq-decl nil Program nil)
+    (lift type-decl nil lift_adt nil)
+    (Method type-eq-decl nil Program nil)
+    (LocalVarDecl type-eq-decl nil Program nil)
+    (Stmt type-decl nil Stmt_adt nil)
+    (ArgDecl type-eq-decl nil Program nil)
+    (Expr type-decl nil Expr_adt nil)
+    (GhostVarDecl type-eq-decl nil Program nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (FieldDecl type-eq-decl nil Program nil)
+    (JType type-decl nil JType_adt nil) (Val type-decl nil Val_adt nil)
+    (Name formal-nonempty-type-decl nil ProgramSemantics nil)
+    (on_method_entry_type const-decl "bool" SemanticsTypes nil))
+   262 170 nil nil))
+ (on_method_x_TCC2 0
+  (on_method_x_TCC2-1 nil 3388983330 3388986019
+   ("" (subtype-tcc) nil nil) proved
+   ((nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (int nonempty-type-eq-decl nil integers nil)
+    (integer_pred const-decl "[rational -> boolean]" integers nil)
+    (rational nonempty-type-from-decl nil rationals nil)
+    (rational_pred const-decl "[real -> boolean]" rationals nil)
+    (>= const-decl "bool" reals nil)
+    (real nonempty-type-from-decl nil reals nil)
+    (real_pred const-decl "[number_field -> boolean]" reals nil)
+    (number_field nonempty-type-from-decl nil number_fields nil)
+    (number_field_pred const-decl "[number -> boolean]" number_fields
+     nil)
+    (number nonempty-type-decl nil numbers nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (id const-decl "(bijective?[T, T])" identity nil)
+    (bijective? const-decl "bool" functions nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (PState type-eq-decl nil State nil)
+    (PSt type-eq-decl nil State nil)
+    (Excpt type-decl nil Excpt_adt nil)
+    (Program type-eq-decl nil Program nil)
+    (Class type-eq-decl nil Program nil)
+    (lift type-decl nil lift_adt nil)
+    (Method type-eq-decl nil Program nil)
+    (LocalVarDecl type-eq-decl nil Program nil)
+    (Stmt type-decl nil Stmt_adt nil)
+    (ArgDecl type-eq-decl nil Program nil)
+    (Expr type-decl nil Expr_adt nil)
+    (GhostVarDecl type-eq-decl nil Program nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (FieldDecl type-eq-decl nil Program nil)
+    (JType type-decl nil JType_adt nil) (Val type-decl nil Val_adt nil)
+    (Name formal-nonempty-type-decl nil ProgramSemantics nil)
+    (on_method_entry_type const-decl "bool" SemanticsTypes nil))
+   212 100 nil nil))
  (IMP_Semantics_TCC1 0
-  (IMP_Semantics_TCC1-1 nil 3385977480 nil ("" (subtype-tcc) nil nil)
-   unfinished nil nil nil nil nil))
+  (IMP_Semantics_TCC1-1 nil 3385977480 3388986019
+   ("" (subtype-tcc) nil nil) proved
+   ((id const-decl "(bijective?[T, T])" identity nil)
+    (bijective? const-decl "bool" functions nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (PState type-eq-decl nil State nil)
+    (PSt type-eq-decl nil State nil)
+    (Excpt type-decl nil Excpt_adt nil)
+    (Program type-eq-decl nil Program nil)
+    (Class type-eq-decl nil Program nil)
+    (lift type-decl nil lift_adt nil)
+    (Method type-eq-decl nil Program nil)
+    (LocalVarDecl type-eq-decl nil Program nil)
+    (Stmt type-decl nil Stmt_adt nil)
+    (ArgDecl type-eq-decl nil Program nil)
+    (Expr type-decl nil Expr_adt nil)
+    (GhostVarDecl type-eq-decl nil Program nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (FieldDecl type-eq-decl nil Program nil)
+    (JType type-decl nil JType_adt nil) (Val type-decl nil Val_adt nil)
+    (Name formal-nonempty-type-decl nil ProgramSemantics nil)
+    (update_FullState_type const-decl "bool" SemanticsTypes nil))
+   62 50 nil nil))
  (IMP_Semantics_TCC2 0
-  (IMP_Semantics_TCC2-1 nil 3385977480 nil ("" (subtype-tcc) nil nil)
-   unfinished nil nil nil nil nil)))
+  (IMP_Semantics_TCC2-1 nil 3385977480 3388986019
+   ("" (subtype-tcc) nil nil) unfinished
+   ((nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (int nonempty-type-eq-decl nil integers nil)
+    (integer_pred const-decl "[rational -> boolean]" integers nil)
+    (rational nonempty-type-from-decl nil rationals nil)
+    (rational_pred const-decl "[real -> boolean]" rationals nil)
+    (>= const-decl "bool" reals nil)
+    (real nonempty-type-from-decl nil reals nil)
+    (real_pred const-decl "[number_field -> boolean]" reals nil)
+    (number_field nonempty-type-from-decl nil number_fields nil)
+    (number_field_pred const-decl "[number -> boolean]" number_fields
+     nil)
+    (number nonempty-type-decl nil numbers nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (on_method_x const-decl "(on_method_entry_type)" ProgramSemantics
+     nil)
+    (id const-decl "(bijective?[T, T])" identity nil)
+    (bijective? const-decl "bool" functions nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (PState type-eq-decl nil State nil)
+    (PSt type-eq-decl nil State nil)
+    (Excpt type-decl nil Excpt_adt nil)
+    (Program type-eq-decl nil Program nil)
+    (Class type-eq-decl nil Program nil)
+    (lift type-decl nil lift_adt nil)
+    (Method type-eq-decl nil Program nil)
+    (LocalVarDecl type-eq-decl nil Program nil)
+    (Stmt type-decl nil Stmt_adt nil)
+    (ArgDecl type-eq-decl nil Program nil)
+    (Expr type-decl nil Expr_adt nil)
+    (GhostVarDecl type-eq-decl nil Program nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (FieldDecl type-eq-decl nil Program nil)
+    (JType type-decl nil JType_adt nil) (Val type-decl nil Val_adt nil)
+    (Name formal-nonempty-type-decl nil ProgramSemantics nil)
+    (on_method_exit_type const-decl "bool" SemanticsTypes nil))
+   447 240 nil nil)))
 (AnnotatedProgramSemantics
  (update_state_AP_TCC1 0
-  (update_state_AP_TCC1-1 nil 3387107674 nil ("" (subtype-tcc) nil nil)
-   unchecked nil nil nil nil nil))
- (execute_set_AP_TCC1 0
-  (execute_set_AP_TCC1-1 nil 3387107674 nil ("" (subtype-tcc) nil nil)
-   unchecked nil nil nil nil nil))
- (execute_set_AP_TCC2 0
-  (execute_set_AP_TCC2-1 nil 3387107674 nil ("" (subtype-tcc) nil nil)
-   unchecked nil nil nil nil nil))
- (on_method_entry_AP_TCC1 0
-  (on_method_entry_AP_TCC1-1 nil 3387107674 nil
-   ("" (subtype-tcc) nil nil) unchecked nil nil nil nil nil))
- (on_method_entry_AP_TCC2 0
-  (on_method_entry_AP_TCC2-1 nil 3387107674 nil
-   ("" (subtype-tcc) nil nil) unchecked nil nil nil nil nil))
- (on_method_entry_AP_TCC3 0
-  (on_method_entry_AP_TCC3-1 nil 3387107674 nil
-   ("" (subtype-tcc) nil nil) unchecked nil nil nil nil nil))
- (on_method_entry_AP_TCC4 0
-  (on_method_entry_AP_TCC4-1 nil 3387107674 nil
-   ("" (subtype-tcc) nil nil) unchecked nil nil nil nil nil))
- (on_method_exit_normal_AP_TCC1 0
-  (on_method_exit_normal_AP_TCC1-1 nil 3387107674 nil
-   ("" (subtype-tcc) nil nil) unchecked nil nil nil nil nil))
- (on_method_exit_normal_AP_TCC2 0
-  (on_method_exit_normal_AP_TCC2-1 nil 3387107674 nil
-   ("" (subtype-tcc) nil nil) unchecked nil nil nil nil nil))
- (on_method_exit_normal_AP_TCC3 0
-  (on_method_exit_normal_AP_TCC3-1 nil 3387107674 nil
-   ("" (subtype-tcc) nil nil) unchecked nil nil nil nil nil))
- (on_method_exit_normal_AP_TCC4 0
-  (on_method_exit_normal_AP_TCC4-1 nil 3387107674 nil
-   ("" (subtype-tcc) nil nil) unchecked nil nil nil nil nil))
- (on_method_exit_exceptional_AP_TCC1 0
-  (on_method_exit_exceptional_AP_TCC1-1 nil 3387107674 nil
-   ("" (subtype-tcc) nil nil) unchecked nil nil nil nil nil))
- (on_method_exit_exceptional_AP_TCC2 0
-  (on_method_exit_exceptional_AP_TCC2-1 nil 3387107674 nil
-   ("" (subtype-tcc) nil nil) unchecked nil nil nil nil nil))
- (on_method_exit_exceptional_AP_TCC3 0
-  (on_method_exit_exceptional_AP_TCC3-1 nil 3387107674 nil
-   ("" (subtype-tcc) nil nil) unchecked nil nil nil nil nil))
- (initial_AP_state_TCC1 0
-  (initial_AP_state_TCC1-1 nil 3385977481 nil
-   ("" (subtype-tcc) nil nil) unfinished nil nil nil nil nil))
- (stmt_determ_step 0
-  (stmt_determ_step-1 nil 3388404101 3388404183
-   ("" (use "stmt_determ_step") nil nil) proved
-   ((stmt_determ_step formula-decl nil Semantics nil)
-    (Name formal-nonempty-type-decl nil AnnotatedProgramSemantics nil)
-    (Val type-decl nil Val_adt nil) (JType type-decl nil JType_adt nil)
-    (FieldDecl type-eq-decl nil Program nil)
-    (finite_set type-eq-decl nil finite_sets nil)
-    (GhostVarDecl type-eq-decl nil Program nil)
-    (Expr type-decl nil Expr_adt nil)
-    (ArgDecl type-eq-decl nil Program nil)
-    (Stmt type-decl nil Stmt_adt nil)
-    (LocalVarDecl type-eq-decl nil Program nil)
-    (Method type-eq-decl nil Program nil)
-    (lift type-decl nil lift_adt nil)
-    (Class type-eq-decl nil Program nil)
-    (Program type-eq-decl nil Program nil)
-    (Store type-eq-decl nil State nil)
+  (update_state_AP_TCC1-1 nil 3387107674 3388918947
+   ("" (subtype-tcc) nil nil) unchecked
+   ((APState type-eq-decl nil AnnotatedProgramSemantics nil)
     (PState type-eq-decl nil State nil)
-    (APState type-eq-decl nil AnnotatedProgramSemantics nil)
-    (boolean nonempty-type-decl nil booleans nil)
+    (Store type-eq-decl nil State nil)
+    (Program type-eq-decl nil Program nil)
+    (Class type-eq-decl nil Program nil)
+    (lift type-decl nil lift_adt nil)
+    (Method type-eq-decl nil Program nil)
+    (LocalVarDecl type-eq-decl nil Program nil)
+    (Stmt type-decl nil Stmt_adt nil)
+    (ArgDecl type-eq-decl nil Program nil)
+    (Expr type-decl nil Expr_adt nil)
+    (GhostVarDecl type-eq-decl nil Program nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (FieldDecl type-eq-decl nil Program nil)
+    (JType type-decl nil JType_adt nil) (Val type-decl nil Val_adt nil)
+    (Name formal-nonempty-type-decl nil AnnotatedProgramSemantics nil)
+    (update_FullState_type const-decl "bool" SemanticsTypes nil))
+   122 50 nil nil))
+ (execute_set_AP_TCC1 0
+  (execute_set_AP_TCC1-1 nil 3387107674 3388918947
+   ("" (subtype-tcc) nil nil) unchecked
+   ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
-    (bijective? const-decl "bool" functions nil)
-    (id const-decl "(bijective?[T, T])" identity nil)
-    (lookup const-decl "Val" AnnotatedProgramSemantics nil)
-    (Excpt type-decl nil Excpt_adt nil)
-    (PSt type-eq-decl nil State nil)
-    (update_FullState_type const-decl "bool" SemanticsTypes nil)
-    (update_state_AP const-decl "(update_FullState_type)"
-     AnnotatedProgramSemantics nil)
-    (nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
     (number nonempty-type-decl nil numbers nil)
     (number_field_pred const-decl "[number -> boolean]" number_fields
      nil)
     (number_field nonempty-type-from-decl nil number_fields nil)
     (real_pred const-decl "[number_field -> boolean]" reals nil)
     (real nonempty-type-from-decl nil reals nil)
+    (> const-decl "bool" reals nil)
     (rational_pred const-decl "[real -> boolean]" rationals nil)
     (rational nonempty-type-from-decl nil rationals nil)
     (integer_pred const-decl "[rational -> boolean]" integers nil)
     (int nonempty-type-eq-decl nil integers nil)
-    (>= const-decl "bool" reals nil) (< const-decl "bool" reals nil)
-    (numfield nonempty-type-eq-decl nil number_fields nil)
-    (+ const-decl "[numfield, numfield -> numfield]" number_fields nil)
-    (below type-eq-decl nil naturalnumbers nil)
+    (>= const-decl "bool" reals nil)
+    (nonneg_int nonempty-type-eq-decl nil integers nil)
+    (posnat nonempty-type-eq-decl nil integers nil)
+    (int_minus_int_is_int application-judgement "int" integers nil)
+    (real_ge_is_total_order name-judgement "(total_order?[real])"
+     real_props nil)
+    (real_gt_is_strict_total_order name-judgement
+     "(strict_total_order?[real])" real_props nil))
+   53 50 nil nil))
+ (execute_set_AP_TCC2 0
+  (execute_set_AP_TCC2-1 nil 3387107674 3388986686
+   ("" (expand "execute_set_type")
+    (("" (skosimp*) (("" (assert) nil nil)) nil)) nil)
+   proved
+   ((real_gt_is_strict_total_order name-judgement
+     "(strict_total_order?[real])" real_props nil)
     (execute_set_type const-decl "bool" SemanticsTypes nil)
-    (execute_set_AP const-decl "(execute_set_type)"
+    (int_minus_int_is_int application-judgement "int" integers nil))
+   16716 100 t nil))
+ (on_method_entry_AP_TCC1 0
+  (on_method_entry_AP_TCC1-1 nil 3387107674 3388918948
+   ("" (subtype-tcc) nil nil) unfinished nil 498 410 nil nil))
+ (on_method_entry_AP_TCC2 0
+  (on_method_entry_AP_TCC2-1 nil 3387107674 3388918948
+   ("" (subtype-tcc) nil nil) unfinished nil 327 230 nil nil))
+ (on_method_entry_AP_TCC3 0
+  (on_method_entry_AP_TCC3-1 nil 3387107674 3388918949
+   ("" (subtype-tcc) nil nil) unchecked
+   ((nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (int nonempty-type-eq-decl nil integers nil)
+    (integer_pred const-decl "[rational -> boolean]" integers nil)
+    (rational nonempty-type-from-decl nil rationals nil)
+    (rational_pred const-decl "[real -> boolean]" rationals nil)
+    (>= const-decl "bool" reals nil)
+    (real nonempty-type-from-decl nil reals nil)
+    (real_pred const-decl "[number_field -> boolean]" reals nil)
+    (number_field nonempty-type-from-decl nil number_fields nil)
+    (number_field_pred const-decl "[number -> boolean]" number_fields
+     nil)
+    (number nonempty-type-decl nil numbers nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (posint_plus_nnint_is_posint application-judgement "posint"
+     integers nil)
+    (real_lt_is_strict_total_order name-judgement
+     "(strict_total_order?[real])" real_props nil)
+    (real_ge_is_total_order name-judgement "(total_order?[real])"
+     real_props nil)
+    (update_state_AP const-decl "(update_FullState_type)"
      AnnotatedProgramSemantics nil)
-    (list type-decl nil list_adt nil)
-    (execute_CaseJML_type const-decl "bool" SemanticsTypes nil)
-    (execute_CaseJML const-decl "(execute_CaseJML_type)"
-     SemanticsCommon nil)
+    (update_FullState_type const-decl "bool" SemanticsTypes nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (PSt type-eq-decl nil State nil)
+    (Excpt type-decl nil Excpt_adt nil)
+    (APState type-eq-decl nil AnnotatedProgramSemantics nil)
+    (PState type-eq-decl nil State nil)
+    (Store type-eq-decl nil State nil)
+    (Program type-eq-decl nil Program nil)
+    (Class type-eq-decl nil Program nil)
+    (lift type-decl nil lift_adt nil)
+    (Method type-eq-decl nil Program nil)
+    (LocalVarDecl type-eq-decl nil Program nil)
+    (Stmt type-decl nil Stmt_adt nil)
+    (ArgDecl type-eq-decl nil Program nil)
+    (Expr type-decl nil Expr_adt nil)
+    (GhostVarDecl type-eq-decl nil Program nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (FieldDecl type-eq-decl nil Program nil)
+    (JType type-decl nil JType_adt nil) (Val type-decl nil Val_adt nil)
+    (Name formal-nonempty-type-decl nil AnnotatedProgramSemantics nil)
+    (check_assertion const-decl "boolean" SemanticsCommon nil)
+    (nnint_plus_nnint_is_nnint application-judgement "nonneg_int"
+     integers nil))
+   978 820 nil nil))
+ (on_method_entry_AP_TCC4 0
+  (on_method_entry_AP_TCC4-1 nil 3387107674 3388918950
+   ("" (subtype-tcc) nil nil) unchecked
+   ((nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (int nonempty-type-eq-decl nil integers nil)
+    (integer_pred const-decl "[rational -> boolean]" integers nil)
+    (rational nonempty-type-from-decl nil rationals nil)
+    (rational_pred const-decl "[real -> boolean]" rationals nil)
+    (>= const-decl "bool" reals nil)
+    (real nonempty-type-from-decl nil reals nil)
+    (real_pred const-decl "[number_field -> boolean]" reals nil)
+    (number_field nonempty-type-from-decl nil number_fields nil)
+    (number_field_pred const-decl "[number -> boolean]" number_fields
+     nil)
+    (number nonempty-type-decl nil numbers nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (update_state_AP const-decl "(update_FullState_type)"
+     AnnotatedProgramSemantics nil)
+    (update_FullState_type const-decl "bool" SemanticsTypes nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (PSt type-eq-decl nil State nil)
+    (Excpt type-decl nil Excpt_adt nil)
+    (APState type-eq-decl nil AnnotatedProgramSemantics nil)
+    (PState type-eq-decl nil State nil)
+    (Store type-eq-decl nil State nil)
+    (Program type-eq-decl nil Program nil)
+    (Class type-eq-decl nil Program nil)
+    (lift type-decl nil lift_adt nil)
+    (Method type-eq-decl nil Program nil)
+    (LocalVarDecl type-eq-decl nil Program nil)
+    (Stmt type-decl nil Stmt_adt nil)
+    (ArgDecl type-eq-decl nil Program nil)
+    (Expr type-decl nil Expr_adt nil)
+    (GhostVarDecl type-eq-decl nil Program nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (FieldDecl type-eq-decl nil Program nil)
+    (JType type-decl nil JType_adt nil) (Val type-decl nil Val_adt nil)
+    (Name formal-nonempty-type-decl nil AnnotatedProgramSemantics nil)
+    (check_assertion const-decl "boolean" SemanticsCommon nil)
     (on_method_entry_type const-decl "bool" SemanticsTypes nil)
-    (on_method_entry_AP const-decl "(on_method_entry_type)"
+    (nnint_plus_nnint_is_nnint application-judgement "nonneg_int"
+     integers nil))
+   644 490 nil nil))
+ (on_method_exit_normal_AP_TCC1 0
+  (on_method_exit_normal_AP_TCC1-1 nil 3387107674 3388918951
+   ("" (subtype-tcc) nil nil) unchecked
+   ((boolean nonempty-type-decl nil booleans nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (number nonempty-type-decl nil numbers nil)
+    (number_field_pred const-decl "[number -> boolean]" number_fields
+     nil)
+    (number_field nonempty-type-from-decl nil number_fields nil)
+    (real_pred const-decl "[number_field -> boolean]" reals nil)
+    (real nonempty-type-from-decl nil reals nil)
+    (>= const-decl "bool" reals nil)
+    (rational_pred const-decl "[real -> boolean]" rationals nil)
+    (rational nonempty-type-from-decl nil rationals nil)
+    (integer_pred const-decl "[rational -> boolean]" integers nil)
+    (int nonempty-type-eq-decl nil integers nil)
+    (nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (real_ge_is_total_order name-judgement "(total_order?[real])"
+     real_props nil)
+    (real_lt_is_strict_total_order name-judgement
+     "(strict_total_order?[real])" real_props nil)
+    (posint_plus_nnint_is_posint application-judgement "posint"
+     integers nil)
+    (nnint_plus_nnint_is_nnint application-judgement "nonneg_int"
+     integers nil))
+   250 240 nil nil))
+ (on_method_exit_normal_AP_TCC2 0
+  (on_method_exit_normal_AP_TCC2-1 nil 3387107674 3388918951
+   ("" (subtype-tcc) nil nil) unfinished nil 597 470 nil nil))
+ (on_method_exit_normal_AP_TCC3 0
+  (on_method_exit_normal_AP_TCC3-1 nil 3387107674 3388918952
+   ("" (subtype-tcc) nil nil) unfinished nil 340 260 nil nil))
+ (on_method_exit_normal_AP_TCC4 0
+  (on_method_exit_normal_AP_TCC4-1 nil 3387107674 3388918953
+   ("" (subtype-tcc) nil nil) unchecked
+   ((nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (int nonempty-type-eq-decl nil integers nil)
+    (integer_pred const-decl "[rational -> boolean]" integers nil)
+    (rational nonempty-type-from-decl nil rationals nil)
+    (rational_pred const-decl "[real -> boolean]" rationals nil)
+    (>= const-decl "bool" reals nil)
+    (real nonempty-type-from-decl nil reals nil)
+    (real_pred const-decl "[number_field -> boolean]" reals nil)
+    (number_field nonempty-type-from-decl nil number_fields nil)
+    (number_field_pred const-decl "[number -> boolean]" number_fields
+     nil)
+    (number nonempty-type-decl nil numbers nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (update_state_AP const-decl "(update_FullState_type)"
      AnnotatedProgramSemantics nil)
+    (update_FullState_type const-decl "bool" SemanticsTypes nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (PSt type-eq-decl nil State nil)
+    (Excpt type-decl nil Excpt_adt nil)
+    (APState type-eq-decl nil AnnotatedProgramSemantics nil)
+    (PState type-eq-decl nil State nil)
+    (Store type-eq-decl nil State nil)
+    (Program type-eq-decl nil Program nil)
+    (Class type-eq-decl nil Program nil)
+    (lift type-decl nil lift_adt nil)
+    (Method type-eq-decl nil Program nil)
+    (LocalVarDecl type-eq-decl nil Program nil)
+    (Stmt type-decl nil Stmt_adt nil)
+    (ArgDecl type-eq-decl nil Program nil)
+    (Expr type-decl nil Expr_adt nil)
+    (GhostVarDecl type-eq-decl nil Program nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (FieldDecl type-eq-decl nil Program nil)
+    (JType type-decl nil JType_adt nil) (Val type-decl nil Val_adt nil)
+    (Name formal-nonempty-type-decl nil AnnotatedProgramSemantics nil)
+    (check_assertion const-decl "boolean" SemanticsCommon nil)
     (on_method_exit_type const-decl "bool" SemanticsTypes nil)
-    (on_method_exit_normal_AP const-decl "(on_method_exit_type)"
+    (nnint_plus_nnint_is_nnint application-judgement "nonneg_int"
+     integers nil))
+   1077 830 nil nil))
+ (on_method_exit_exceptional_AP_TCC1 0
+  (on_method_exit_exceptional_AP_TCC1-1 nil 3387107674 3388918954
+   ("" (subtype-tcc) nil nil) unfinished
+   ((boolean nonempty-type-decl nil booleans nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (number nonempty-type-decl nil numbers nil)
+    (number_field_pred const-decl "[number -> boolean]" number_fields
+     nil)
+    (number_field nonempty-type-from-decl nil number_fields nil)
+    (real_pred const-decl "[number_field -> boolean]" reals nil)
+    (real nonempty-type-from-decl nil reals nil)
+    (>= const-decl "bool" reals nil)
+    (rational_pred const-decl "[real -> boolean]" rationals nil)
+    (rational nonempty-type-from-decl nil rationals nil)
+    (integer_pred const-decl "[rational -> boolean]" integers nil)
+    (int nonempty-type-eq-decl nil integers nil)
+    (nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (real_ge_is_total_order name-judgement "(total_order?[real])"
+     real_props nil)
+    (nnint_plus_nnint_is_nnint application-judgement "nonneg_int"
+     integers nil)
+    (real_lt_is_strict_total_order name-judgement
+     "(strict_total_order?[real])" real_props nil)
+    (posint_plus_nnint_is_posint application-judgement "posint"
+     integers nil))
+   191 180 nil nil))
+ (on_method_exit_exceptional_AP_TCC2 0
+  (on_method_exit_exceptional_AP_TCC2-1 nil 3387107674 3388918955
+   ("" (subtype-tcc) nil nil) unfinished nil 495 360 nil nil))
+ (on_method_exit_exceptional_AP_TCC3 0
+  (on_method_exit_exceptional_AP_TCC3-1 nil 3387107674 3388918955
+   ("" (subtype-tcc) nil nil) unchecked
+   ((nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (int nonempty-type-eq-decl nil integers nil)
+    (integer_pred const-decl "[rational -> boolean]" integers nil)
+    (rational nonempty-type-from-decl nil rationals nil)
+    (rational_pred const-decl "[real -> boolean]" rationals nil)
+    (>= const-decl "bool" reals nil)
+    (real nonempty-type-from-decl nil reals nil)
+    (real_pred const-decl "[number_field -> boolean]" reals nil)
+    (number_field nonempty-type-from-decl nil number_fields nil)
+    (number_field_pred const-decl "[number -> boolean]" number_fields
+     nil)
+    (number nonempty-type-decl nil numbers nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (update_state_AP const-decl "(update_FullState_type)"
      AnnotatedProgramSemantics nil)
-    (on_method_exit_exceptional_AP const-decl "(on_method_exit_type)"
-     AnnotatedProgramSemantics nil))
-   4397 20 t shostak))
+    (update_FullState_type const-decl "bool" SemanticsTypes nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (PSt type-eq-decl nil State nil)
+    (Excpt type-decl nil Excpt_adt nil)
+    (APState type-eq-decl nil AnnotatedProgramSemantics nil)
+    (PState type-eq-decl nil State nil)
+    (Store type-eq-decl nil State nil)
+    (Program type-eq-decl nil Program nil)
+    (Class type-eq-decl nil Program nil)
+    (lift type-decl nil lift_adt nil)
+    (Method type-eq-decl nil Program nil)
+    (LocalVarDecl type-eq-decl nil Program nil)
+    (Stmt type-decl nil Stmt_adt nil)
+    (ArgDecl type-eq-decl nil Program nil)
+    (Expr type-decl nil Expr_adt nil)
+    (GhostVarDecl type-eq-decl nil Program nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (FieldDecl type-eq-decl nil Program nil)
+    (JType type-decl nil JType_adt nil) (Val type-decl nil Val_adt nil)
+    (Name formal-nonempty-type-decl nil AnnotatedProgramSemantics nil)
+    (check_assertion const-decl "boolean" SemanticsCommon nil)
+    (on_method_exit_type const-decl "bool" SemanticsTypes nil))
+   252 180 nil nil))
+ (initial_AP_state_TCC1 0
+  (initial_AP_state_TCC1-1 nil 3385977481 3388918955
+   ("" (subtype-tcc) nil nil) unchecked nil 46 50 nil nil))
+ (stmt_determ_step_AP 0
+  (stmt_determ_step_AP-1 nil 3388913620 3388918955
+   ("" (postpone) nil nil) unfinished nil 7 0 t shostak))
  (wf_update_state_AP 0
-  (wf_update_state_AP-1 nil 3387169852 3387173821
+  (wf_update_state_AP-1 nil 3387169852 3388918960
    ("" (skosimp*)
     (("" (expand "wf_state")
       (("" (prop)
@@ -2854,15 +3616,39 @@
         nil))
       nil))
     nil)
-   unfinished
+   unchecked
    ((wf_state const-decl "boolean" AnnotatedProgramSemantics nil)
     (wf_state const-decl "boolean" State nil)
+    (is_declared_as_ghost const-decl "boolean" WellFormedProgram nil)
+    (is_ghost const-decl "boolean" AnnotatedProgramSemantics nil)
     (is_field const-decl "boolean" State nil)
-    (update_state_AP const-decl "(update_FullState_type)"
-     AnnotatedProgramSemantics nil)
     (is_declared_as_local const-decl "boolean" WellFormedProgram nil)
     (is_local const-decl "boolean" State nil)
     (is_declared_as_field const-decl "boolean" WellFormedProgram nil)
+    (is_local const-decl "boolean" SemanticsCommon nil)
+    (is_field const-decl "boolean" SemanticsCommon nil)
+    (Val type-decl nil Val_adt nil) (JType type-decl nil JType_adt nil)
+    (FieldDecl type-eq-decl nil Program nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (GhostVarDecl type-eq-decl nil Program nil)
+    (Expr type-decl nil Expr_adt nil)
+    (ArgDecl type-eq-decl nil Program nil)
+    (Stmt type-decl nil Stmt_adt nil)
+    (LocalVarDecl type-eq-decl nil Program nil)
+    (Method type-eq-decl nil Program nil)
+    (lift type-decl nil lift_adt nil)
+    (Class type-eq-decl nil Program nil)
+    (Program type-eq-decl nil Program nil)
+    (Store type-eq-decl nil State nil)
+    (PState type-eq-decl nil State nil)
+    (APState type-eq-decl nil AnnotatedProgramSemantics nil)
+    (Excpt type-decl nil Excpt_adt nil)
+    (PSt type-eq-decl nil State nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (update_FullState_type const-decl "bool" SemanticsTypes nil)
+    (update_state_AP const-decl "(update_FullState_type)"
+     AnnotatedProgramSemantics nil)
     (Name formal-nonempty-type-decl nil AnnotatedProgramSemantics nil))
-   329259 2420 t shostak)))
+   4722 4400 t shostak)))
 

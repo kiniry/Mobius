@@ -225,7 +225,7 @@ BEGIN
       ENDIF
 
   % Initial state of a MVA
-  initial_MVA_state(a : (wf_MVA)) : AState =
+  initial_MVA_state(a : MVA) : AState =
     (# cp := init_cp(a),
        stA := LAMBDA (n: Name) :
          LET vd = get_MVAVarDecl(n, a) IN
@@ -259,10 +259,10 @@ BEGIN
   eval(e : Expr)(stA : Store, stP : PSt) : Val
 
   % type checking problem, because program expressions cannot be evaluated
-  execute_actions(l : Action)(stA : Store, stP : PSt) : RECURSIVE Store =
+  execute_action(l : Action)(stA : Store, stP : PSt) : RECURSIVE Store =
     IF null?(l)
     THEN stA
-    ELSE execute_actions(cdr(l))(update(stA)(target(car(l)))
+    ELSE execute_action(cdr(l))(update(stA)(target(car(l)))
                                             (eval(source(car(l)))(stA, stP)),
                                  stP)
     ENDIF
@@ -287,7 +287,7 @@ BEGIN
                        event(t) = event(pe) AND
                        guard(t)(stA(s), stP(pe))) IN
       (# cp := tcp(t),
-         stA := execute_actions(action(t))(stA(s), stP(pe))
+         stA := execute_action(action(t))(stA(s), stP(pe))
       #)
 
 
@@ -311,7 +311,7 @@ BEGIN
       wf_Store(a)(stA) IMPLIES
       wf_PSt(a)(stP) IMPLIES
       wf_Action(a)(l) IMPLIES
-        wf_Store(a)(execute_actions(l)(stA, stP))
+        wf_Store(a)(execute_action(l)(stA, stP))
 
   step_yields_wf_state : THEOREM % :-)
     FORALL (a : (total), s : (wf_AState(a)), pe : (wf_PEvent(a))) :

@@ -143,6 +143,7 @@ BEGIN
 
   lookup_mthd_axiom : AXIOM
     FORALL (p : Program, s : PState, m : Method, mn : Name, tgt : Val) :
+      wf_state(p)(s) IMPLIES
       up?(lookup_mthd(p, tgt, mn)) IMPLIES
       m = down(lookup_mthd(p, tgt, mn)) IMPLIES
         LET c = down(get_class(p)(tgt, s)) IN
@@ -223,56 +224,38 @@ BEGIN
       FORALL (s1, s2 : FullState, upd : [PState[Name] -> PState[Name]]) :
         f(upd, s1) = s2 IMPLIES pstate(s2) = upd(pstate(s1))
 
+  deriv_expr_rec_type(n : nat) : TYPE = [k : upto(n) -> [FullProgram ->
+    [Expr, FullState, Val, FullState -> [below(k) -> bool]]]]
+
+  deriv_stmt_rec_type(n : nat) : TYPE = [k : upto(n) -> [FullProgram ->
+    [Stmt, FullState, FullState -> [below(k) -> bool]]]]
+
   execute_set_type
     (f : [FullProgram, Name, Expr, FullState, FullState, n : nat,
-     [FullProgram -> [Stmt, FullState, FullState -> [below(n + 1) -> bool]]],
-     [FullProgram -> [Expr, FullState, Val, FullState -> [below(n+1) -> bool]]]
-       -> bool]) : bool =
-    FORALL (p : FullProgram, vn : Name, e : Expr, s1, s2 : FullState, n : nat,
-            ds : [FullProgram -> [Stmt, FullState, FullState ->
-              [below(n + 1) -> bool]]],
-            de : [FullProgram -> [Expr, FullState, Val, FullState ->
-              [below(n + 1) -> bool]]]) :
+     deriv_stmt_rec_type(n), deriv_expr_rec_type(n) -> bool]) : bool =
+    FORALL (p : FullProgram, vn : Name, e : Expr, s1, s2 : FullState, 
+            n : nat, ds : deriv_stmt_rec_type(n), de : deriv_expr_rec_type(n)) :
       f(p, vn, e, s1, s2, n, ds, de) IMPLIES pstate(s2) = pstate(s1)
 
   execute_CaseJML_type
     (f : [FullProgram, list[[Expr, Stmt]], FullState, FullState, n : nat,
-     [FullProgram -> [Stmt, FullState, FullState -> [below(n + 1) -> bool]]],
-     [FullProgram -> [Expr, FullState, Val, FullState -> [below(n+1) -> bool]]]
-       -> bool]) : bool =
+     deriv_stmt_rec_type(n), deriv_expr_rec_type(n) -> bool]) : bool =
     FORALL (p : FullProgram, branches : list[[Expr, Stmt]], s1, s2 : FullState,
-            n : nat,
-            ds : [FullProgram -> [Stmt, FullState, FullState ->
-              [below(n + 1) -> bool]]],
-            de : [FullProgram -> [Expr, FullState, Val, FullState ->
-              [below(n + 1) -> bool]]]) :
+            n : nat, ds : deriv_stmt_rec_type(n), de : deriv_expr_rec_type(n)) :
       f(p, branches, s1, s2, n, ds, de) IMPLIES pstate(s2) = pstate(s1)
 
-  on_method_entry_type
+  on_method_event_type
     (f : [FullProgram, Method[Name], Val, FullState, FullState, n : nat,
-     [FullProgram -> [Stmt, FullState, FullState -> [below(n + 1) -> bool]]],
-     [FullProgram -> [Expr, FullState, Val, FullState -> [below(n+1) -> bool]]]
-       -> bool]) : bool =
+     deriv_stmt_rec_type(n), deriv_expr_rec_type(n) -> bool]) : bool =
     FORALL (p : FullProgram, md : Method[Name], a : Val, s1, s2 : FullState,
-            n : nat,
-            ds : [FullProgram -> [Stmt, FullState, FullState ->
-              [below(n + 1) -> bool]]],
-            de : [FullProgram -> [Expr, FullState, Val, FullState ->
-              [below(n + 1) -> bool]]]) :
+            n : nat, ds : deriv_stmt_rec_type(n), de : deriv_expr_rec_type(n)) :
       f(p, md, a, s1, s2, n, ds, de) IMPLIES st(pstate(s1)) = st(pstate(s2))
 
-  on_method_exit_type
-    (f : [FullProgram, Method[Name], Val, FullState, FullState, n : nat,
-     [FullProgram -> [Stmt, FullState, FullState -> [below(n + 1) -> bool]]],
-     [FullProgram -> [Expr, FullState, Val, FullState -> [below(n+1) -> bool]]]
-       -> bool]) : bool =
-    FORALL (p : FullProgram, md : Method[Name], a : Val, s1, s2 : FullState,
-            n : nat,
-            ds : [FullProgram -> [Stmt, FullState, FullState ->
-              [below(n + 1) -> bool]]],
-            de : [FullProgram -> [Expr, FullState, Val, FullState ->
-              [below(n + 1) -> bool]]]) :
-      f(p, md, a, s1, s2, n, ds, de) IMPLIES st(pstate(s1)) = st(pstate(s2))
+  deriv_expr_type(n : nat) : TYPE = [FullProgram -> 
+    [Expr, FullState, Val, FullState -> [below(n) -> bool]]]
+
+  deriv_stmt_type(n : nat) : TYPE = [FullProgram -> 
+    [Stmt, FullState, FullState -> [below(n) -> bool]]]
 
 
 END SemanticsTypes
@@ -288,9 +271,9 @@ Semantics[Name : TYPE+,
           update_FullState : (update_FullState_type),
           execute_set : (execute_set_type),
           execute_CaseJML : (execute_CaseJML_type),
-          on_method_entry : (on_method_entry_type),
-          on_method_exit_normal : (on_method_exit_type),
-          on_method_exit_exceptional : (on_method_exit_type)] : THEORY
+          on_method_entry : (on_method_event_type),
+          on_method_exit_normal : (on_method_event_type),
+          on_method_exit_exceptional : (on_method_event_type)] : THEORY
 BEGIN
 
   IMPORTING Evaluation[Name, FullState, pstate, lookup]
@@ -331,59 +314,66 @@ BEGIN
   % result may be meaningless)
   deriv_expr(p : FullProgram)
             (c : Expr, sigma1 : FullState, v : Val, sigma2 : FullState)
-            (n : nat)
-            (deriv_stmt : [FullProgram -> [Stmt, FullState, FullState ->
-                                          [below(n) -> bool]]])
-            : RECURSIVE bool =
+            (n : nat)(deriv_stmt : deriv_stmt_type(n)) : RECURSIVE bool =
     LET 
       deriv_stmt_rec =
-        LAMBDA (k : below(n))(p : FullProgram)
+        LAMBDA (k : upto(n))(p : FullProgram)
                (s : Stmt, sigma1, sigma2 : FullState)
                (m : below(k)) : 
           deriv_stmt(p)(s, sigma1, sigma2)(m),
       deriv_expr_rec =
-        LAMBDA (k : below(n))(p : FullProgram)
+        LAMBDA (k : upto(n))(p : FullProgram)
+               (c : Expr, sigma1 : FullState, v : Val, sigma2 : FullState)
+               (m : below(k)) : 
+          deriv_expr(p)(c, sigma1, v, sigma2)(m)(deriv_stmt_rec(m)),
+      deriv_stmt_bounded =
+        LAMBDA (m : upto(n))(k : upto(m))(p : FullProgram)
+               (s : Stmt, sigma1, sigma2 : FullState)
+               (m : below(k)) : 
+          deriv_stmt(p)(s, sigma1, sigma2)(m),
+      deriv_expr_bounded =
+        LAMBDA (m : upto(n))(k : upto(m))(p : FullProgram)
                (c : Expr, sigma1 : FullState, v : Val, sigma2 : FullState)
                (m : below(k)) : 
           deriv_expr(p)(c, sigma1, v, sigma2)(m)(deriv_stmt_rec(m))
     IN
     IF up?(ex(pstate(sigma1)))
-    % sigma1 is an exceptional state
-    % exceptions are simply propagated
+    % sigma1 is an exceptional state, exceptions are simply propagated
     THEN sigma1 = sigma2 AND v = Bottom AND n = 0
     ELSE % sigma1 is a normal state
     CASES c OF
       Assign(vn, e) :
         NOT Bottom?(v) AND
         n > 0 AND
-        (EXISTS (tau : FullState) : 
-           deriv_expr(p)(e, sigma1, v, tau)(n - 1)(deriv_stmt_rec(n - 1)) AND
+        (EXISTS (tau : FullState) :
+           deriv_expr_rec(n)(p)(e, sigma1, v, tau)(n - 1) AND
            sigma2 = (IF up?(ex(pstate(tau)))
                      THEN tau
                      ELSE update_FullState(update(vn, v), tau)
                      ENDIF)),
       BExpr(b) :
-        sigma1 = sigma2 AND 
+        sigma1 = sigma2 AND
         NOT Bottom?(v) AND
         v = Bool(eval(b)(sigma1)) AND
         n = 0,
       CondExpr(c, t, e) :
         EXISTS (tau : FullState, v1 : Val, m1, m2 : nat) :
           n = m1 + m2 + 1 AND
-          deriv_expr(p)(c, sigma1, v1, tau)(m1)(deriv_stmt_rec(m1)) AND
+          deriv_expr_rec(n)(p)(c, sigma1, v1, tau)(m1) AND
           Bool?(v1) AND
-          deriv_expr(p)(IF b(v1) THEN t ELSE e ENDIF,
-                           tau, v, sigma2)(m2)(deriv_stmt_rec(m2)),
+          deriv_expr_rec(n)(p)(IF b(v1) THEN t ELSE e ENDIF, 
+                               tau, v, sigma2)(m2),
       %TODO: update the values of "this" and initialize the local vars
       MethodCall(e, mn, pr) :
         EXISTS (m1, m2, m3, m4, m5, m6 : nat)
                (tau1, tau2, tau3, tau4, tau5, tau6, tau7, tau8 : FullState)
                (a, pv, old_val_arg : Val)(md : Method)(inv : BoolExpr) :
-          n = m1 + m2 + m3 + m4 + m5 + m6 + 2 AND
+          m6 > 0 AND
+          n = m1 + m2 + m3 + m4 + m5 + m6 + 1 AND
           % evaluate the receiver object
-          deriv_expr(p)(e, sigma1, a, tau1)(m1)(deriv_stmt_rec(m1)) AND
+          deriv_expr_rec(n)(p)(e, sigma1, a, tau1)(m1) AND
           % evaluate the parameter
-          deriv_expr(p)(pr, tau1, pv, tau2)(m2)(deriv_stmt_rec(m2)) AND
+          deriv_expr_rec(n)(p)(pr, tau1, pv, tau2)(m2) AND
           % see if the receiver is null (and there were no previous exceptions)
           (tau3 = (IF bottom?(ex(pstate(tau2))) AND Null?(a)
                    THEN update_FullState(LAMBDA (s : PState) : s WITH 
@@ -396,8 +386,8 @@ BEGIN
           ELSE FALSE
           ENDIF AND
           % actions taken at the entry of the method
-          on_method_entry(p, md, a, tau3, tau4, m3, deriv_stmt_rec(m3+1),
-            deriv_expr_rec(m3+1)) AND
+          on_method_entry(p, md, a, tau3, tau4, m3,
+                          deriv_stmt_bounded(m3), deriv_expr_bounded(m3)) AND
           % give a name the value of the local variable before the call,
           % just for convenience (we don't lose the previous state)
           old_val_arg = lookup_local(name(arg(md)), pstate(tau4)) AND
@@ -406,13 +396,13 @@ BEGIN
           % execute the body
           deriv_stmt(p)(body(md), tau5, tau6)(m4) AND
           % evaluate the result
-          deriv_expr(p)(res(md), tau6, v, tau7)(m5)(deriv_stmt_rec(m5)) AND
+          deriv_expr_rec(n)(p)(res(md), tau6, v, tau7)(m5) AND
           % actions taken at the exit of the method
           IF bottom?(ex(pstate(tau7)))
           THEN on_method_exit_normal(p, md, a, tau7, tau8, m6, 
-                                     deriv_stmt_rec(m6+1), deriv_expr_rec(m6+1))
+                                     deriv_stmt_bounded(m6), deriv_expr_bounded(m6))
           ELSE on_method_exit_exceptional(p, md, a, tau7, tau8, m6,
-                                     deriv_stmt_rec(m6+1), deriv_expr_rec(m6+1))
+                                          deriv_stmt_bounded(m6), deriv_expr_bounded(m6))
           ENDIF AND
           % restore the value of the argument
           sigma2 = update_FullState(update_local(name(arg(md)), old_val_arg),
@@ -440,13 +430,13 @@ BEGIN
             (n : nat) : RECURSIVE bool =
     LET 
       deriv_stmt_rec =
-        LAMBDA (k : below(n))(p : FullProgram)
+        LAMBDA (k : upto(n))(p : FullProgram)
                (s : Stmt, sigma1, sigma2 : FullState)(m : below(k)) :
           deriv_stmt(p)(s, sigma1, sigma2)(m),
       deriv_expr_rec =
-        LAMBDA (k : below(n))(p : FullProgram)
+        LAMBDA (k : upto(n))(p : FullProgram)
                (c : Expr, sigma1 : FullState, v : Val, sigma2 : FullState)
-               (m : below(k)) : 
+               (m : below(k)) :
           deriv_expr(p)(c, sigma1, v, sigma2)(m)(deriv_stmt_rec(m))
     IN
     IF up?(ex(pstate(sigma1)))
@@ -455,14 +445,13 @@ BEGIN
     ELSE % sigma1 is a normal state
     CASES c OF
       CaseJML(l) :
-         % TODO: This generates TCCs that can not be proved!
         n > 0 AND
         execute_CaseJML(p, l, sigma1, sigma2, n,
-                        deriv_stmt_rec(n - 1), deriv_expr_rec(n - 1)),
+                        deriv_stmt_rec, deriv_expr_rec),
       IfThenElse(e, c1, c2) :
         EXISTS (tau : FullState, v : Val, m1, m2 : nat) :
           n = m1 + m2 + 1 AND
-          deriv_expr(p)(e, sigma1, v, tau)(m1)(deriv_stmt_rec(m1)) AND
+          deriv_expr_rec(n)(p)(e, sigma1, v, tau)(m1) AND
           Bool?(v) AND
           deriv_stmt(p)(IF b(v) THEN c1 ELSE c2 ENDIF, tau, sigma2)(m2),
       Sequence(c1, c2) :
@@ -471,16 +460,14 @@ BEGIN
            deriv_stmt(p)(c1, sigma1, tau)(m1) AND
            deriv_stmt(p)(c2, tau, sigma2)(m2),
       Set(vn, e) :
-         % TODO: This generates TCCs that can not be proved!
-         % I am not sure but it seems that the TCC is missing some information
          n > 0 AND
-         execute_set(p, vn, e, sigma1, sigma2, n, 
-                     deriv_stmt_rec(n - 1), deriv_expr_rec(n - 1)),
+         execute_set(p, vn, e, sigma1, sigma2, n,
+                     deriv_stmt_rec, deriv_expr_rec),
       Skip : sigma1 = sigma2 AND n = 0,
       StmtExpr(e) :
          n > 0 AND
          EXISTS (v : Val) :
-           deriv_expr(p)(e, sigma1, v, sigma2)(n - 1)(deriv_stmt_rec(n - 1)),
+           deriv_expr_rec(n)(p)(e, sigma1, v, sigma2)(n - 1),
       Throw: 
         n = 0 AND
         sigma2 = update_FullState(LAMBDA (s : PState) : 
@@ -492,10 +479,10 @@ BEGIN
           deriv_stmt(p)(c1, sigma1, tau1)(m1) AND
           deriv_stmt(p)(IF up?(ex(pstate(tau1))) THEN c2 ELSE Skip ENDIF,
                              update_FullState(LAMBDA (s : PState) : 
-                                              s WITH [ex := bottom], tau1),
+                                                s WITH [ex := bottom], tau1),
                              tau2)(m2) AND
           deriv_stmt(p)(c3, update_FullState(LAMBDA (s : PState) : 
-                                                  s WITH [ex := bottom], tau2),
+                                               s WITH [ex := bottom], tau2),
                         tau3)(m3) AND
           sigma2 = update_FullState(LAMBDA (s : PState) :
                                       IF up?(ex(pstate(tau2)))
@@ -611,7 +598,7 @@ BEGIN
 END Semantics
 
 
-SemanticsCommon[Name : TYPE,
+SemanticsCommon[Name : TYPE+,
                 FullProgram, FullState : TYPE,
                 (IMPORTING State[Name]) pstate : [FullState -> PState],
                 (IMPORTING SemanticsTypes[Name, FullProgram, FullState, pstate])
@@ -626,10 +613,10 @@ BEGIN
 
   check_assertion(p : FullProgram)
                  (e : Expr, s1, s2 : FullState)(n : nat)
-                 (deriv_expr : [FullProgram -> [Expr, FullState, Val, FullState ->
-                                           [below(n + 1) -> bool]]]) : boolean =
+                 (deriv_expr : deriv_expr_type(n)) : boolean =
+    n > 0 AND
     EXISTS (tau1 : FullState, v : Val) :
-      deriv_expr(p)(e, s1, v, tau1)(n) AND
+      deriv_expr(p)(e, s1, v, tau1)(n-1) AND
       s2 = IF Bool?(v) THEN
              IF b(v)
              THEN tau1
@@ -641,17 +628,16 @@ BEGIN
 
   execute_CaseJML : (execute_CaseJML_type) =
     LAMBDA (p : FullProgram, branches : list[[Expr, Stmt]], s1, s2 : FullState,
-            n : nat,
-            deriv_stmt : [FullProgram -> [Stmt, FullState, FullState ->
-                                         [below(n + 1) -> bool]]],
-            deriv_expr : [FullProgram -> [Expr, FullState, Val, FullState ->
-                                         [below(n + 1) -> bool]]]) :
+            n : nat, 
+            deriv_stmt_rec : deriv_stmt_rec_type(n),
+            deriv_expr_rec : deriv_expr_rec_type(n)) :
       CASES branches OF
-        null : s1 = s2 AND n = 0,
-        cons(x, xs) : deriv_stmt(p)(IfThenElse(proj_1(x), proj_2(x), 
-                                               CaseJML(xs)),
-                                    s1, s2)(n - 1)
-                       AND n > 0
+        null : n = 0 AND s1 = s2,
+        cons(x, xs) : n > 0 AND 
+                      deriv_stmt_rec(n)(p)(IfThenElse(proj_1(x), proj_2(x),
+                                                      CaseJML(xs)),
+                                           s1, s2)(n-1) AND
+                      pstate(s1) = pstate(s2)
       ENDCASES
 
 
@@ -668,34 +654,26 @@ BEGIN
 
   execute_set : (execute_set_type) =
     LAMBDA (p : Program, vn : Name, e : Expr, s1, s2 : PState, n : nat,
-            deriv_stmt : [Program -> [Stmt, PState, PState ->
-                                     [below(n + 1) -> bool]]],
-            deriv_expr : [Program -> [Expr, PState, Val, PState ->
-                                     [below(n + 1) -> bool]]]) :
+            deriv_stmt_rec : deriv_stmt_rec_type(n),
+            deriv_expr_rec : deriv_expr_rec_type(n)) :
       s1 = s2
 
   execute_CaseJML : (execute_CaseJML_type) =
-    LAMBDA (p : Program, branches : list[[Expr, Stmt]], s1, s2 : PState,
-            n : nat,
-            deriv_stmt : [Program -> [Stmt, PState, PState ->
-                                     [below(n + 1) -> bool]]],
-            deriv_expr : [Program -> [Expr, PState, Val, PState ->
-                                     [below(n + 1) -> bool]]]) :
+    LAMBDA (p : Program, bs : list[[Expr, Stmt]], s1, s2 : PState,  n : nat,
+            deriv_stmt_rec : deriv_stmt_rec_type(n),
+            deriv_expr_rec : deriv_expr_rec_type(n)) :
       s1 = s2
 
-  on_method_x : (on_method_entry_type) =
-    LAMBDA (p : Program, md : Method, a : Val, s1, s2 : PState,
-            n : nat,
-            deriv_stmt : [Program -> [Stmt, PState, PState ->
-                                     [below(n + 1) -> bool]]],
-            deriv_expr : [Program -> [Expr, PState, Val, PState ->
-                                     [below(n + 1) -> bool]]]) :
+  on_method_event : (on_method_event_type) =
+    LAMBDA (p : Program, md : Method, a : Val, s1, s2 : PState, n : nat,
+            deriv_stmt : deriv_stmt_rec_type(n),
+            deriv_expr : deriv_expr_rec_type(n)) :
       s1 = s2
 
   IMPORTING Semantics[Name, Program, PState, id, id, lookup,
                       LAMBDA (upd : [PState -> PState], s : PState) : upd(s),
                       execute_set, execute_CaseJML,
-                      on_method_x, on_method_x, on_method_x]
+                      on_method_event, on_method_event, on_method_event]
 
   run_program(p : Program)(main : Method, arg : int)(s2 : PState)
              (n : nat) : boolean =
@@ -742,58 +720,52 @@ BEGIN
 
   execute_set_AP : (execute_set_type) =
     LAMBDA (p : Program, vn : Name, e : Expr, s1, s2 : APState, n : nat,
-            deriv_stmt : [Program -> [Stmt, APState, APState ->
-                                     [below(n + 1) -> bool]]],
-            deriv_expr : [Program -> [Expr, APState, Val, APState ->
-                                     [below(n + 1) -> bool]]]) :
+            deriv_stmt_rec : deriv_stmt_rec_type(n),
+            deriv_expr_rec : deriv_expr_rec_type(n)) :
       EXISTS (tau : APState, v : Val) :
-        deriv_expr(p)(e, s1, v, tau)(n - 1) AND
+        n > 0 AND
+        deriv_expr_rec(n)(p)(e, s1, v, tau)(n-1) AND
         s2 = IF up?(ex(pstate(tau)))
              THEN tau
              ELSE tau WITH [gvs := gvs(tau) WITH [vn := v]]
-             ENDIF
+             ENDIF AND
+        pstate(s1) = pstate(s2)
 
-  on_method_entry_AP : (on_method_entry_type) =
+  on_method_entry_AP : (on_method_event_type) =
     LAMBDA (p : Program, md : Method, a : Val, s1, s2 : APState, n : nat,
-            deriv_stmt : [Program -> [Stmt, APState, APState ->
-                                     [below(n + 1) -> bool]]],
-            deriv_expr : [Program -> [Expr, APState, Val, APState ->
-                                     [below(n + 1) -> bool]]]) :
+            deriv_stmt_rec : deriv_stmt_rec_type(n),
+            deriv_expr_rec : deriv_expr_rec_type(n)) :
     EXISTS (m1, m2, m3 : nat, tau1, tau2 : APState, inv : Expr) :
-      n = m1 + m2 + m3 AND
+      n = m1 + m2 + m3 + 1 AND
       inv = lookup_inv(p, a) AND
-      check_assertion(p)(inv, s1, tau1)(m1)(deriv_expr) AND
-      check_assertion(p)(pre(md), tau1, tau2)(m2)(deriv_expr) AND
-      deriv_stmt(p)(pre_set(md), tau2, s2)(m3) AND
+      check_assertion(p)(inv, s1, tau1)(m1)(deriv_expr_rec(m1)) AND
+      check_assertion(p)(pre(md), tau1, tau2)(m2)(deriv_expr_rec(m2)) AND
+      deriv_stmt_rec(n)(p)(pre_set(md), tau2, s2)(m3) AND
       st(pstate(s1)) = st(pstate(s2))
 
-  on_method_exit_normal_AP : (on_method_exit_type) =
+  on_method_exit_normal_AP : (on_method_event_type) =
     LAMBDA (p : Program, md : Method, a : Val, s1, s2 : APState, n : nat,
-            deriv_stmt : [Program -> [Stmt, APState, APState ->
-                                     [below(n + 1) -> bool]]],
-            deriv_expr : [Program -> [Expr, APState, Val, APState ->
-                                     [below(n + 1) -> bool]]]) :
+            deriv_stmt_rec : deriv_stmt_rec_type(n),
+            deriv_expr_rec : deriv_expr_rec_type(n)) :
     EXISTS (m1, m2, m3 : nat, tau1, tau2 : APState, inv : Expr) :
-      n = m1 + m2 + m3 AND
-      deriv_stmt(p)(post_set(md), s1, tau1)(m1) AND
-      check_assertion(p)(post(md), tau1, tau2)(m1)(deriv_expr) AND
+      n = m1 + m2 + m3 + 1 AND
+      deriv_stmt_rec(n)(p)(post_set(md), s1, tau1)(m1) AND
+      check_assertion(p)(post(md), tau1, tau2)(m2)(deriv_expr_rec(m2)) AND
       inv = lookup_inv(p, a) AND
-      check_assertion(p)(inv, tau2, s2)(m2)(deriv_expr) AND
+      check_assertion(p)(inv, tau2, s2)(m3)(deriv_expr_rec(m3)) AND
       st(pstate(s1)) = st(pstate(s2))
 
   % If there was an exception, there is no need to chech the postcondition
   % (JML has an exceptional postcondition but we are not modelling it)
-  on_method_exit_exceptional_AP : (on_method_exit_type) =
+  on_method_exit_exceptional_AP : (on_method_event_type) =
     LAMBDA (p : Program, md : Method, a : Val, s1, s2 : APState, n : nat,
-            deriv_stmt : [Program -> [Stmt, APState, APState ->
-                                     [below(n + 1) -> bool]]],
-            deriv_expr : [Program -> [Expr, APState, Val, APState ->
-                                     [below(n + 1) -> bool]]]) :
+            deriv_stmt_rec : deriv_stmt_rec_type(n),
+            deriv_expr_rec : deriv_expr_rec_type(n)) :
     EXISTS (m1, m2 : nat, tau1, tau2 : APState, inv : Expr) :
-      n = m1 + m2 AND
-      deriv_stmt(p)(exc_set(md), s1, tau1)(m1) AND
+      n = m1 + m2 + 1 AND
+      deriv_stmt_rec(n)(p)(exc_set(md), s1, tau1)(m1) AND
       inv = lookup_inv(p, a) AND
-      check_assertion(p)(inv, tau1, s2)(m2)(deriv_expr) AND
+      check_assertion(p)(inv, tau1, s2)(m2)(deriv_expr_rec(m2)) AND
       st(pstate(s1)) = st(pstate(s2))
 
 

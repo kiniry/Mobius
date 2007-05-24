@@ -21,12 +21,10 @@ BEGIN
             WellFormedProgram[Name]
 
   
-  % NOTE: We restrict to the case where the automaton monitors at least one of
-  % classes of the program.
-  % Notice that the program does not need to have ghost variables modelling the
-  % automata
+  % NOTE: We restrict ourselves to the case where the automaton monitors at least
+  % one of the classes of the program.
   % Requirements:
-  % Variables in vdsP must be fields
+  % Variables in vdsP must be fields in the program
   % Every method mentioned in the events must be in the class
   wf_MP(MP : MonitoredProgram) : boolean =
     LET a = mva(MP), p = program(MP) IN
@@ -94,21 +92,21 @@ BEGIN
   % Instantiation of its semantics
 
   execute_set_MP : (execute_set_type) =
-    LAMBDA (mp : MonitoredProgram, vn : Name, e : Expr, s1, s2 : MPState,
+    LAMBDA (mp : MonitoredProgram, vn : Name, e : Expr, s1, s2 : MPState, 
             n : nat,
-            deriv_stmt : [MonitoredProgram -> [Stmt, MPState, MPState ->
-                                              [below(n + 1) -> bool]]],
-            deriv_expr : [MonitoredProgram -> [Expr, MPState, Val, MPState ->
-                                              [below(n + 1) -> bool]]]) :
+            deriv_stmt_rec : deriv_stmt_rec_type(n),
+            deriv_expr_rec : deriv_expr_rec_type(n)) :
+      n > 0 AND
       EXISTS (tau : MPState, v : Val) :
-        deriv_expr(mp)(e, s1, v, tau)(n - 1) AND
+        deriv_expr_rec(n)(mp)(e, s1, v, tau)(n - 1) AND
         s2 = IF up?(ex(pstate(tau)))
              THEN tau
              ELSE tau WITH [gvs := gvs(tau) WITH [vn := v]]
-             ENDIF
+             ENDIF AND
+        pstate(s1) = pstate(s2)
 
   on_method_MVA(etype : EventType)
-               (mp : MonitoredProgram, md : Method, s : MPState) : AState =
+               (mp : (wf_MP), md : Method, s : (wf_state(mp))) : AState =
     IF (evs(mva(mp)))((# etype := etype, mname := name(md) #))
     THEN step(mva(mp))(astate(s), (# stP := st(pstate(s)),
                                      event := (# etype := etype,
@@ -117,51 +115,51 @@ BEGIN
     ELSE astate(s)
     ENDIF
 
-  on_method_entry_MP : (on_method_entry_type) =
+  on_method_entry_MP : (on_method_event_type) =
     LAMBDA (mp : MonitoredProgram, md : Method, a : Val, s1, s2 : MPState,
             n : nat,
-            deriv_stmt : [MonitoredProgram -> [Stmt, MPState, MPState ->
-                                     [below(n + 1) -> bool]]],
-            deriv_expr : [MonitoredProgram -> [Expr, MPState, Val, MPState ->
-                                     [below(n + 1) -> bool]]]) :
+            deriv_stmt_rec : deriv_stmt_rec_type(n),
+            deriv_expr_rec : deriv_expr_rec_type(n)) :
+    wf_MP(mp) AND
+    wf_state(mp)(s1) AND
     astate(s2) = on_method_MVA(Entry)(mp, md, s1)  AND
     EXISTS (m1, m2, m3 : nat, tau1, tau2 : MPState, inv : Expr) :
-      n = m1 + m2 + m3 AND
+      n = m1 + m2 + m3 + 1 AND
       inv = lookup_inv(program(mp), a) AND
-      check_assertion(mp)(inv, s1, tau1)(m1)(deriv_expr) AND
-      check_assertion(mp)(pre(md), tau1, tau2)(m2)(deriv_expr) AND
-      deriv_stmt(mp)(pre_set(md), tau2, s2)(m3) AND
+      check_assertion(mp)(inv, s1, tau1)(m1)(deriv_expr_rec(m1)) AND
+      check_assertion(mp)(pre(md), tau1, tau2)(m2)(deriv_expr_rec(m2)) AND
+      deriv_stmt_rec(n)(mp)(pre_set(md), tau2, s2)(m3) AND
       st(pstate(s1)) = st(pstate(s2))
       
-  on_method_exit_normal_MP : (on_method_exit_type) =
+  on_method_exit_normal_MP : (on_method_event_type) =
     LAMBDA (mp : MonitoredProgram, md : Method, a : Val, s1, s2 : MPState,
             n : nat,
-            deriv_stmt : [MonitoredProgram -> [Stmt, MPState, MPState ->
-                                     [below(n + 1) -> bool]]],
-            deriv_expr : [MonitoredProgram -> [Expr, MPState, Val, MPState ->
-                                     [below(n + 1) -> bool]]]) :
+            deriv_stmt_rec : deriv_stmt_rec_type(n),
+            deriv_expr_rec : deriv_expr_rec_type(n)) :
+    wf_MP(mp) AND
+    wf_state(mp)(s1) AND
     astate(s2) = on_method_MVA(ExitNormal)(mp, md, s1)  AND
     EXISTS (m1, m2, m3 : nat, tau1, tau2 : MPState, inv : Expr) :
-      n = m1 + m2 + m3 AND
-      deriv_stmt(mp)(post_set(md), s1, tau1)(m1) AND
-      check_assertion(mp)(post(md), tau1, tau2)(m1)(deriv_expr) AND
+      n = m1 + m2 + m3 + 1 AND
+      deriv_stmt_rec(n)(mp)(post_set(md), s1, tau1)(m1) AND
+      check_assertion(mp)(post(md), tau1, tau2)(m2)(deriv_expr_rec(m2)) AND
       inv = lookup_inv(program(mp), a) AND
-      check_assertion(mp)(inv, tau2, s2)(m2)(deriv_expr) AND
+      check_assertion(mp)(inv, tau2, s2)(m3)(deriv_expr_rec(m3)) AND
       st(pstate(s1)) = st(pstate(s2))
 
-  on_method_exit_exceptional_MP : (on_method_exit_type) =
+  on_method_exit_exceptional_MP : (on_method_event_type) =
     LAMBDA (mp : MonitoredProgram, md : Method, a : Val, s1, s2 : MPState,
             n : nat,
-            deriv_stmt : [MonitoredProgram -> [Stmt, MPState, MPState ->
-                                     [below(n + 1) -> bool]]],
-            deriv_expr : [MonitoredProgram -> [Expr, MPState, Val, MPState ->
-                                     [below(n + 1) -> bool]]]) :
+            deriv_stmt_rec : deriv_stmt_rec_type(n),
+            deriv_expr_rec : deriv_expr_rec_type(n)) :
+    wf_MP(mp) AND
+    wf_state(mp)(s1) AND
     astate(s2) = on_method_MVA(ExitExceptional)(mp, md, s1)  AND
     EXISTS (m1, m2 : nat, tau1, tau2 : MPState, inv : Expr) :
-      n = m1 + m2 AND
-      deriv_stmt(mp)(exc_set(md), s1, tau1)(m1) AND
+      n = m1 + m2 + 1 AND
+      deriv_stmt_rec(n)(mp)(exc_set(md), s1, tau1)(m1) AND
       inv = lookup_inv(program(mp), a) AND
-      check_assertion(mp)(inv, tau1, s2)(m2)(deriv_expr) AND
+      check_assertion(mp)(inv, tau1, s2)(m2)(deriv_expr_rec(m2)) AND
       st(pstate(s1)) = st(pstate(s2))
 
 

@@ -1,8 +1,43 @@
 AnnGenerationLemmas[CP : TYPE+] : THEORY
 BEGIN
 
-  IMPORTING Equivalence[CP],
+%    IMPORTING Equivalence[CP],
+%              listfuncs
+
+  IMPORTING MVASemantics[CP, string],
+            AnnotatedProgramSemantics[string],
+            MonitoredProgramSemantics[CP, string],
+            AnnotateProgram[CP],
+            AnnotateProgramProperties[CP, string],
             listfuncs
+
+%  cp2val(q : CP) : Val = Int(unique(q))
+
+  % Says if an MVA state is modeled by a state of an annotated program
+  MVA_modeled?(a : MVA)(sA : AState, sAP : APState) : boolean =
+    (Int(unique(cp(sA))) = gvs(sAP)("cp")) AND
+    (FORALL (q : CP) : cps(a)(q) IMPLIES
+      Int(unique(q)) = gvs(sAP)(name_of(q))) AND
+    (FORALL (n : string) : NOT Bottom?(stA(sA)(n)) IMPLIES
+      stA(sA)(n) = gvs(sAP)(n)) AND
+    (cp(sA) = halted IMPLIES
+      up?(ex(pstate(sAP))) AND down(ex(pstate(sAP))) = JMLExc)
+
+  % Says if sAP is a "super state" of sMP
+  Program_modeled?(sMP : MPState, sAP : APState) : boolean =
+    pstate(sMP) = pstate(sAP) AND
+    FORALL (n : string) : NOT Bottom?(gvs(sMP)(n)) IMPLIES
+      gvs(sMP)(n) = gvs(sAP)(n)
+
+  % Says if an state of a MP is correctly modeled by a state of an AP
+  MP_modeled?(mp : MonitoredProgram, ap : Program)
+             (sMP : MPState, sAP : APState) : boolean =
+    ann_program_pre(mp) AND
+    ap = ann_program(mp) AND
+    wf_state(mp)(sMP) AND
+    wf_state(ap)(sAP) AND
+    MVA_modeled?(mva(mp))(astate(sMP), sAP) AND
+    Program_modeled?(sMP, sAP)
 
   non_interference_of_set_stmt : LEMMA % :-)
     FORALL (p : Program, c : Stmt, s1, s2 : APState, n : nat, vn : string) :
@@ -31,7 +66,7 @@ BEGIN
     ENDIF
     MEASURE c BY <<
 
-  list_to_sequence_inverse : LEMMA
+  list_to_sequence_inverse : LEMMA % :-)
     FORALL (c : (sequence_of_sets)) :
       list_to_sequence(sequence_to_list(c)) = c
 
@@ -52,15 +87,15 @@ BEGIN
     FORALL (mp : MonitoredProgram, ap : Program, t : Transition)
            (sMVA : AState, sMP : MPState, sAP1, sAP2 : APState)
            (n : nat) :
-      related_states(mp, ap)(sMP, sAP1) IMPLIES
-%      ts(mva(mp))(t) IMPLIES
+      MP_modeled?(mp, ap)(sMP, sAP1) IMPLIES
+      ts(mva(mp))(t) IMPLIES
       sMVA = (# cp := tcp(t),
-                stA := execute_actions(action(t))(stA(astate(sMP)), 
-                                                  st(pstate(sMP)))
+                stA := execute_action(action(t))(stA(astate(sMP)), 
+                                                 st(pstate(sMP)))
              #) IMPLIES
       NOT up?(ex(pstate(sAP1))) IMPLIES
       deriv_stmt(ap)(update_vars(t), sAP1, sAP2)(n) IMPLIES
-        MVA_modeled?(sMVA, sAP2)      
+        MVA_modeled?(mva(mp))(sMVA, sAP2)
 
   % This can not be proved without having an explicit way of translating a
   % guard into an expression. Here is where the assumption that guards can be
@@ -126,12 +161,12 @@ BEGIN
     FORALL (mp : MonitoredProgram, ap : Program, m1 : Method)
            (sMP1, sMP2 : MPState, sAP1, sAP2 : APState)
            (n : nat, ts : set[Transition], et : EventType) :
-      related_states(mp, ap)(sMP1, sAP1) IMPLIES
+      MP_modeled?(mp, ap)(sMP1, sAP1) IMPLIES
       astate(sMP2) = on_method_MVA(et)(mp, m1, sMP1) IMPLIES
       NOT up?(ex(pstate(sAP1))) IMPLIES
       ts = filter_event(mva(mp))(et)(name(m1)) IMPLIES
       deriv_stmt(ap)(ann_event(mp)(ts), sAP1, sAP2)(n) IMPLIES
-        MVA_modeled?(astate(sMP2), sAP2)
+        MVA_modeled?(mva(mp))(astate(sMP2), sAP2)
  
 
 END AnnGenerationLemmas
