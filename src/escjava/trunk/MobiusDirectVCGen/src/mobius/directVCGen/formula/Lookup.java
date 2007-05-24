@@ -27,11 +27,18 @@ public class Lookup {
 	/** the list of fields to declare */
 	public static HashSet<QuantVariable> fieldsToDeclare = new HashSet<QuantVariable>();
 	
-	// TODO: add comments
+	/** map containing RoutineDecl as keys and Terms (the precondition) as value **/
 	public static HashMap<RoutineDecl, Term> preconditions = new HashMap<RoutineDecl, Term>();
 
-	// TODO: add comments
+	/** map containing RoutineDecl as keys and Terms (the postcondition) as value **/
 	public static HashMap<RoutineDecl, Post> postconditions = new HashMap<RoutineDecl, Post>();
+	
+	/** map containing RoutineDecl as keys and Terms (the exceptional postcondition) as value **/
+	public static HashMap<RoutineDecl, Post> exceptionalPostconditions = new HashMap<RoutineDecl, Post>();
+	
+	/** map containing ClassDecl as keys and Terms (the invariant) as value **/
+	public static HashMap<ClassDecl, Term> invariants = new HashMap<ClassDecl, Term>();
+
 	
 	/**
 	 * Build a condition which is made of a custom predicate with the method's argument 
@@ -122,9 +129,9 @@ public class Lookup {
 		return new Post(Expression.rvar(Ref.sort),buildStdCond (m, "_excp", false)); 
 	}
 	
-	// TODO: add comments
-	public static Term invariant(ClassDecl c){
-		return Logic.True();
-	}
+//	// TODO: add comments
+//	public static Term invariant(ClassDecl c){
+//		return Logic.True();
+//	}
 	
 }
