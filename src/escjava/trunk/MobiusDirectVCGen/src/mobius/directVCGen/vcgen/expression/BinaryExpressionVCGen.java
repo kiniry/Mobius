@@ -166,7 +166,8 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn{
 					break;
 				}
 				case TagConstants.SUPEROBJECTDESIGNATOR:
-					// TODO: the case for super
+					// I believe strongly (gasp) that super is not useful as it is 
+					// contained in the field signature...
 				case TagConstants.TYPEOBJECTDESIGNATOR: {
 					// cannot be null
 					
@@ -237,28 +238,28 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn{
 				pre = excpBinExpression(TagConstants.MOD, left, right, post);
 				break;
 			case TagConstants.ASGADD:
-				pre = excpBinExpression(TagConstants.ADD, left, right, post);
+				pre = stdBinExpression(TagConstants.ADD, left, right, post);
 				break;
 			case TagConstants.ASGSUB:
-				pre = excpBinExpression(TagConstants.SUB, left, right, post);
+				pre = stdBinExpression(TagConstants.SUB, left, right, post);
 				break;
 			case TagConstants.ASGLSHIFT:
-				pre = excpBinExpression(TagConstants.LSHIFT, left, right, post);
+				pre = stdBinExpression(TagConstants.LSHIFT, left, right, post);
 				break;
 			case TagConstants.ASGRSHIFT:
-				pre = excpBinExpression(TagConstants.RSHIFT, left, right, post);
+				pre = stdBinExpression(TagConstants.RSHIFT, left, right, post);
 				break;
 			case TagConstants.ASGURSHIFT:
-				pre = excpBinExpression(TagConstants.URSHIFT, left, right, post);
+				pre = stdBinExpression(TagConstants.URSHIFT, left, right, post);
 				break;
 			case TagConstants.ASGBITAND:
-				pre = excpBinExpression(TagConstants.BITAND, left, right, post);
+				pre = stdBinExpression(TagConstants.BITAND, left, right, post);
 				break;
 			case TagConstants.ASGBITOR:
-				pre = excpBinExpression(TagConstants.BITOR, left, right, post);
+				pre = stdBinExpression(TagConstants.BITOR, left, right, post);
 				break;
 			case TagConstants.ASGBITXOR:
-				pre = excpBinExpression(TagConstants.BITXOR, left, right, post);
+				pre = stdBinExpression(TagConstants.BITXOR, left, right, post);
 				break;
 			default:
 				throw new IllegalArgumentException("Unmanaged construct :" +

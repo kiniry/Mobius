@@ -152,23 +152,23 @@ public class ExpressionVisitor extends ABasicVisitor {
 		// TODO: do the unary expressions
 		VCEntry post = (VCEntry) o;
 		switch(expr.op) {
-			case TagConstants.POSTFIXINC:
-				//return vcGenPostfixInc(expr, post);
-			case TagConstants.INC:
-				//return vcGenInc(expr, post);
-			case TagConstants.POSTFIXDEC:
-				//return vcGenPostfixDec(expr, post);
-			case TagConstants.DEC:
-				//return vcGenDec(expr, post);
-				return post.post;
-			case TagConstants.BITNOT:
 			case TagConstants.UNARYADD:
+				// for the unary add we do nothing
+				return post.post;	
+			case TagConstants.POSTFIXINC:
+				return vcg.postfixInc(expr, post);
+			case TagConstants.INC:
+				return vcg.inc(expr, post);
+			case TagConstants.POSTFIXDEC:
+				return vcg.postfixDec(expr, post);
+			case TagConstants.DEC:
+				return vcg.dec(expr, post);
+			case TagConstants.BITNOT:
+				return vcg.bitNot(expr, post);
 			case TagConstants.UNARYSUB:
+				return vcg.unarySub(expr, post);
 			case TagConstants.NOT:
-			
-
-				throw new IllegalArgumentException("Unmanaged construct :" +
-						TagConstants.toString(expr.op) +" " +  expr);
+				return vcg.not(expr, post);
 			default:
 				throw new IllegalArgumentException("Unknown construct :" +
 						TagConstants.toString(expr.op) +" " +  expr);
@@ -181,8 +181,10 @@ public class ExpressionVisitor extends ABasicVisitor {
 		return new Post(vce.post.substWith(Ref.varThis));// variable particuliere
 	}
 	
+	/**
+	 * We just get what is contained inside the paren expression
+	 */
 	public /*@non_null*/ Object visitParenExpr(/*@non_null*/ ParenExpr x, Object o) {
-		// TODO: Check if a Paren Expr is as dumb as that
 		return vcg.getPre(x.expr, (VCEntry) o);
 	}
 	
@@ -235,8 +237,10 @@ public class ExpressionVisitor extends ABasicVisitor {
 		return illegalExpr(x, o);
 	}
 
-	public /*@non_null*/ Object visitArrayInit(/*@non_null*/ ArrayInit x, Object o) {
-		return illegalExpr(x, o);
+	public /*@non_null*/ Object visitArrayInit(/*@non_null*/ ArrayInit init, Object o) {
+		return vcg.arrayInit(init, (VCEntry) o);
+		
+		
 	}
 	
 	public /*@non_null*/ Object visitArrayRefExpr(/*@non_null*/ ArrayRefExpr x, Object o) {

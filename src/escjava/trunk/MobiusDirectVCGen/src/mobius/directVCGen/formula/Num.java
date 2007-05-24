@@ -256,4 +256,55 @@ public class Num {
 	public static Term intToReal(Term r) {
 		return Formula.lf.mkFnTerm(Formula.lf.symIntToReal, new Term [] {r});
 	}
+
+	/**
+	 * Build a formula that represents a unary sub operation (it negates
+	 * the given term...).
+	 * @param t the term to add a minus sign around.
+	 * @return An Integer term or a real term
+	 */
+	public static Term sub(Term t) {
+		if(t.getSort().equals(sortInt)) {
+			return Formula.lf.mkFnTerm(Formula.lf.symIntegralNeg, new Term [] {t});
+		}
+		else if(t.getSort().equals(sortReal)) {
+			return Formula.lf.mkFnTerm(Formula.lf.symFloatingNeg, new Term [] {t});
+			
+		}
+		else {
+			throw new IllegalArgumentException("The sort " + t.getSort() + " is invalid!"); 
+		}
+		
+	}
+	
+	/**
+	 * Build a formula that represents a bit not operation.
+	 * @param t the term to do a bitnot with around.
+	 * @return An Integer term or a real term
+	 */
+	public static Term bitnot(Term t) {
+		if(t.getSort().equals(sortInt)) {
+			FnTerm f = Formula.lf.mkFnTerm(Formula.lf.symIntFn, new Term [] {t});
+			f.tag = NodeBuilder.funNEG;
+			return f;
+			
+		}
+		else if(t.getSort().equals(sortReal)) {
+			FnTerm f = Formula.lf.mkFnTerm(Formula.lf.symRealFn, new Term [] {t});
+			f.tag = NodeBuilder.funNEG;
+			return f;
+		}
+		else {
+			throw new IllegalArgumentException("The sort " + t.getSort() + " is invalid!"); 
+		}
+		
+	}
+
+	public static Term inc(Term t) {
+		return Num.add(t, Num.value(1));
+	}
+	
+	public static Term dec(Term t) {
+		return Num.sub(t, Num.value(1));
+	}
 }

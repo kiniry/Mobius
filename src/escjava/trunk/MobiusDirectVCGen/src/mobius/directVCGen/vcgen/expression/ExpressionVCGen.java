@@ -16,6 +16,7 @@ import javafe.ast.MethodInvocation;
 import javafe.ast.NewArrayExpr;
 import javafe.ast.NewInstanceExpr;
 import javafe.ast.ObjectDesignator;
+import javafe.ast.UnaryExpr;
 import javafe.ast.VarInit;
 import javafe.ast.VarInitVec;
 import mobius.directVCGen.formula.Bool;
@@ -155,7 +156,8 @@ public class ExpressionVCGen extends BinaryExpressionVCGen{
 
 			}
 			case TagConstants.SUPEROBJECTDESIGNATOR:
-				// TODO: the case for super
+				// I believe strongly (gasp) that super is not useful as it is 
+				// contained in the method/field signature...
 			case TagConstants.TYPEOBJECTDESIGNATOR: {
 				// cannot be null
 				//System.out.println(field);
@@ -229,16 +231,8 @@ public class ExpressionVCGen extends BinaryExpressionVCGen{
 		
 		// init expressions.
 		if (narr.init != null) {
-			ArrayInit init = narr.init;
-			VarInitVec vec = init.elems;
-			for(int i = vec.size() - 1; i >= 0; i--) {
-				VarInit vi = vec.elementAt(i);
-				QuantVariableRef qvr = Expression.rvar(Type.getSort(vi));
-				Term store = Heap.storeArray(Heap.var, loc, Num.value(i), qvr);
-				entry.post = new Post(qvr, entry.post.post.subst(Heap.var, store));
-				entry.post = getPre(vi, entry);
-			}
-			
+			entry.post = new Post(loc, entry.post);
+			entry.post = getPre(narr.init, entry);
 		}
 		
 		
@@ -301,7 +295,61 @@ public class ExpressionVCGen extends BinaryExpressionVCGen{
 		return new Post(pre);
 	}
 
+	public Post arrayInit(ArrayInit init, VCEntry entry) {
+		VarInitVec vec = init.elems;
+		QuantVariableRef loc = entry.post.var;
+		for(int i = vec.size() - 1; i >= 0; i--) {
+			VarInit vi = vec.elementAt(i);
+			QuantVariableRef qvr = Expression.rvar(Type.getSort(vi));
+			Term store = Heap.storeArray(Heap.var, loc, Num.value(i), qvr);
+			entry.post = new Post(qvr, entry.post.post.subst(Heap.var, store));
+			entry.post = getPre(vi, entry);
+		}
+		return entry.post;
+	}
 
+
+
+	public Post bitNot(UnaryExpr expr, VCEntry post) {
+		post.post = new Post(post.post.var, post.post.substWith(Num.bitnot(post.post.var)));	
+		return getPre(expr.expr, post);
+	}
+
+	public Post unarySub(UnaryExpr expr, VCEntry post) {
+		post.post = new Post(post.post.var, post.post.substWith(Num.sub(post.post.var)));	
+		return getPre(expr.expr, post);
+	}
+
+	public Post not(UnaryExpr expr, VCEntry post) {
+		post.post = new Post(post.post.var, post.post.substWith(Bool.not(post.post.var)));	
+		return getPre(expr.expr, post);
+	}
+
+	public Post postfixInc(UnaryExpr expr, VCEntry entry) {
+		// TODO Auto-generated method stub
+		Post oldp = entry.post;
+		QuantVariableRef var = Expression.rvar(oldp.var.getSort()); 
+		
+		return null;
+	}
+	public Post postfixDec(UnaryExpr expr, VCEntry post) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	public Post inc(UnaryExpr expr, VCEntry entry) {
+		Post oldp = entry.post;
+		entry.post = new Post (oldp.var, oldp.substWith(Num.inc(oldp.var)));
+		return getPre(expr.expr, entry);
+	}
+
+
+	public Post dec(UnaryExpr expr, VCEntry entry) {
+		Post oldp = entry.post;
+		entry.post = new Post (oldp.var, oldp.substWith(Num.dec(oldp.var)));
+		return getPre(expr.expr, entry);
+	}
 	
 	
 }

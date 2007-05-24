@@ -9,6 +9,7 @@ import java.util.Set;
 import java.util.Vector;
 
 import javafe.ast.ASTNode;
+import javafe.ast.ArrayInit;
 import javafe.ast.AssertStmt;
 import javafe.ast.BlockStmt;
 import javafe.ast.BreakStmt;
@@ -419,6 +420,11 @@ public class StmtVCGen extends ExpressionVisitor {
 			QuantVariableRef qvr = Expression.rvar(qv);
 			vce.post = new Post(qvr, vce.post.post);
 			vce.post = (Post)init.accept(this, vce);
+			if(init instanceof ArrayInit) {
+				// FIXME should add the array new too
+				vce.post = new Post(Logic.forall(qv, vce.post.post));
+			}
+
 		}
 		else {
 			// the quantification is preemptive
