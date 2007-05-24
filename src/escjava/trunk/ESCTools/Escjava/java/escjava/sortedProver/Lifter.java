@@ -934,6 +934,11 @@ public class Lifter extends EscNodeBuilder
 	public FnSymbol symRealFn = registerFnSymbol("%real-fn", new Sort[] { sortReal, sortReal }, sortReal);
 	public FnSymbol symBoolFn = registerFnSymbol("%bool-fn", new Sort[] { sortBool, sortBool }, sortBool);
 	public FnSymbol symBoolUnaryFn = registerFnSymbol("%bool-unary-fn", new Sort[] { sortBool}, sortBool);
+	
+	/** 
+	 * the unary sub symbol for integrals, for Reals it is called Floating 
+	 * @see #symFloatingNeg
+	 */
 	public FnSymbol symIntegralNeg = registerFnSymbol("%integralNeg", new Sort[] { sortInt }, sortInt, TagConstants.INTEGRALNEG);
     public FnSymbol symFloatingNeg = registerFnSymbol("%floatingNeg", new Sort[] { sortReal }, sortReal, TagConstants.FLOATINGNEG);    
 	public FnSymbol symSelect = registerFnSymbol("%select", new Sort[] { sortMap, sortValue }, sortValue, TagConstants.SELECT);
