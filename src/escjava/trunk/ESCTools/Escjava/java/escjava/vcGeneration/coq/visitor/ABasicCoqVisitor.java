@@ -43,14 +43,14 @@ public abstract class ABasicCoqVisitor extends TVisitor{
      */
     public void genericFun(/*@ non_null @*/ String s, TFunction n){
 
-    	out.appendI("("+ s+" ");
+    	out.appendI(s+" ");
     	int i =0;
     	for(; i < n.sons.size(); i++) {
     		n.getChildAt(i).accept(tcv);
     		if(i != n.sons.size() - 1)
     			out.appendN(" ");
     	}
-    	out.appendN(")");
+
 
     	if((n.getChildAt(--i)) instanceof TName || (n.getChildAt(--i)) instanceof TLiteral)
     		out.reduceIwNl();

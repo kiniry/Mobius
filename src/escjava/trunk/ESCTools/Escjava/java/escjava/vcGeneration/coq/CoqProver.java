@@ -1,7 +1,6 @@
 package escjava.vcGeneration.coq;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -16,7 +15,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javafe.ast.Expr;
-import javafe.util.ErrorSet;
 import escjava.Main;
 import escjava.translate.GC;
 import escjava.translate.InitialState;
@@ -82,7 +80,8 @@ public class CoqProver extends ProverType {
 	 * @return an instance of the class {@link TCoqVisitor}.
 	 */
     public TVisitor visitor(Writer out) {
-        return new TCoqVisitor(out, this);
+        //return new SimpleVisitor(out, this);
+    	return new TCoqVisitor(out, this);
     }
 
     /**
@@ -122,42 +121,42 @@ public class CoqProver extends ProverType {
     	}
     	Prelude p = new Prelude(new File(coqProofDir, PRELUDE_PATH));
     	try {
-    		p.generate();
-    		String className = proofName.substring(3, proofName.lastIndexOf("_"));
+			p.generate();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+    	String className = proofName.substring(3, proofName.lastIndexOf("_"));
+    	className = className.substring(0, className.lastIndexOf("_"));
+    	if(className.charAt(className.length() - 1) == '_') {
+    		// _constructor_ case
     		className = className.substring(0, className.lastIndexOf("_"));
-    		if(className.charAt(className.length() - 1) == '_') {
-    			// _constructor_ case
-    			className = className.substring(0, className.lastIndexOf("_"));
-    			className = className.substring(0, className.lastIndexOf("_"));
-    		}
     		className = className.substring(0, className.lastIndexOf("_"));
-    		String methodName = proofName.substring(4 + className.length());
-    		int ind = methodName.lastIndexOf('_', methodName.lastIndexOf('_') - 1);
-    		methodName = methodName.substring(0, ind) + "." + methodName.substring(ind +1);
-    		System.out.println(className);
-    		File coqCurrentClassDir = new File(coqProofDir, className);
-    		coqCurrentClassDir.mkdir();
-    		File coqCurrentProofDir = new File(coqCurrentClassDir, methodName);
-    		coqCurrentProofDir.mkdir();
-    		if (!(term instanceof TRoot)) {
-    			TDisplay.err("For coq pretty printer, the node should be a root node!" + 
-    					term.getClass());
-    			return;
-    		}
-    		TRoot root = (TRoot) term;
-    		
-    		Iterator iter = root.sons.iterator();
-    		int size = root.sons.size();
-    		int count = 1;
-    		while(iter.hasNext()) {
-    			File proof = new File(coqCurrentProofDir, "goal" + ppNumber(count, size) + ".v");
-    			term = (TNode) iter.next();
-    			String script = getProofScript(proof);
-    			writeProofObligation(proofName, proof, term, script);
-    			count++;
-    		}
-    	} catch (IOException e) {
-    		ErrorSet.fatal("internal error: " + e.getMessage());
+    	}
+    	className = className.substring(0, className.lastIndexOf("_"));
+    	String methodName = proofName.substring(4 + className.length());
+    	int ind = methodName.lastIndexOf('_', methodName.lastIndexOf('_') - 1);
+    	methodName = methodName.substring(0, ind) + "." + methodName.substring(ind +1);
+    	System.out.println(className);
+    	File coqCurrentClassDir = new File(coqProofDir, className);
+    	coqCurrentClassDir.mkdir();
+    	File coqCurrentProofDir = new File(coqCurrentClassDir, methodName);
+    	coqCurrentProofDir.mkdir();
+    	if (!(term instanceof TRoot)) {
+    		TDisplay.err("For coq pretty printer, the node should be a root node!" + 
+    				term.getClass());
+    		return;
+    	}
+    	TRoot root = (TRoot) term;
+    	
+    	Iterator iter = root.sons.iterator();
+    	int size = root.sons.size();
+    	int count = 1;
+    	while(iter.hasNext()) {
+    		File proof = new File(coqCurrentProofDir, "goal" + ppNumber(count, size) + ".v");
+    		term = (TNode) iter.next();
+    		String script = getProofScript(proof);
+    		writeProofObligation(proofName, proof, term, script);
+        	count++;
     	}
     }
 
@@ -198,23 +197,27 @@ public class CoqProver extends ProverType {
      * @throws IOException if there is a problem reading the proof
      * file
      */
-	private String getProofScript(File proof) throws IOException {
+	private String getProofScript(File proof) {
 		if(proof.exists()) {
-			
-			LineNumberReader lnr = new LineNumberReader(new FileReader(proof));
-			String red;
-			while((red = lnr.readLine()) != null) {
-				if(red.startsWith("Proof with autosc")) {
-					String res = "";
-					while(((red = lnr.readLine()) != null)
-							&& !red.startsWith("Qed.")) {
-						res += red + "\n";
+			try {
+				LineNumberReader lnr = new LineNumberReader(new FileReader(proof));
+				String red;
+				while((red = lnr.readLine()) != null) {
+					if(red.startsWith("Proof with autosc")) {
+						String res = "";
+						while(((red = lnr.readLine()) != null)
+								&& !red.startsWith("Qed.")) {
+							res += red + "\n";
+						}
+						lnr.close();
+						return res;
 					}
-					lnr.close();
-					return res;
 				}
+				lnr.close();
 			}
-			lnr.close();
+			catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 		return DEFAULT_PROOFSCRIPT;
 	}
@@ -228,18 +231,23 @@ public class CoqProver extends ProverType {
 	 * @param proofScript the proof script to put inside of the proof obligation
 	 * @throws IOException if there is an error while writing the file
 	 */
-	private void writeProofObligation(String proofName, File proof, TNode term, String proofScript) throws IOException {
-		Writer out = new FileWriter(proof);
-		out.write("Load \"coq_proofs" + File.separator + PRELUDE_PATH + "\".\n");
-		generatePureMethodsDeclarations(out);
-		out.write("Lemma " + proofName + " : \n");
-		out.write("forall ");
-		generateDeclarations(out, term);
-		out.write(" ,\n");
-		generateTerm(out, term);
-		out.write(".\n");
-		out.write("Proof with autosc.\n"+ proofScript + "Qed.\n");
-		out.close();
+	private void writeProofObligation(String proofName, File proof, TNode term, String proofScript) {
+		try {
+			Writer out = new FileWriter(proof);
+			out.write("Load \"coq_proofs" + File.separator + PRELUDE_PATH + "\".\n");
+			generatePureMethodsDeclarations(out);
+			out.write("Lemma " + proofName + " : \n");
+			out.write("forall ");
+			generateDeclarations(out, term);
+			out.write(" ,\n");
+			generateTerm(out, term);
+			out.write(".\n");
+			out.write("Proof with autosc.\n"+ proofScript + "Qed.\n");
+			out.close();
+		} 
+		catch (IOException e) {
+			
+		}
 	}
 
     
@@ -623,13 +631,15 @@ public class CoqProver extends ProverType {
             // only writes variables with a known type ;)
             if (viTemp.type != null) {
             	try {
-                    s.write("(");
-                    s.write(viTemp.getVariableInfo() + " : "
-                            + viTemp.type.getTypeInfo());
-                    s.write(")");
-        		} catch (IOException e) {
-        			ErrorSet.fatal("internal error: " + e.getMessage());
-        		}
+            		s.write("(");
+            		s.write(viTemp.getVariableInfo() + " : "
+            				+ viTemp.type.getTypeInfo());
+            		s.write(")");
+            	}
+            	catch (IOException e) {
+            		e.printStackTrace();
+            	}
+
             } 
             else {
             	TDisplay.err("I won't write the variable " + viTemp.getVariableInfo() +" because I've got no idea of its type.");
