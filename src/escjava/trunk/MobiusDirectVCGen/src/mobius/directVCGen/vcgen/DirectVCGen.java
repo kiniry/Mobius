@@ -29,7 +29,7 @@ public class DirectVCGen extends Visitor {
 	public void visitClassDecl(/*@non_null*/ ClassDecl x) {
 
 		System.out.println("Treating class: " + x.id);
-		classDir = new File(basedir, "" + x.id);
+		classDir = new File(basedir,  ""+ x.id );
 		classDir.mkdirs();
 		visitTypeDecl(x);
 	}

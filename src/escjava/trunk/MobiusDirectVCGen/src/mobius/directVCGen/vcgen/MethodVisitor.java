@@ -38,7 +38,7 @@ public class MethodVisitor extends DirectVCGen {
 	
 	public static MethodVisitor treatMethod(File basedir, File classDir, MethodDecl x) {
 		
-		MethodVisitor mv = new MethodVisitor(basedir, new File(classDir, "" + x.id), x);
+		MethodVisitor mv = new MethodVisitor(basedir, new File(classDir, "" + getMethodPrettyName(x)), x);
 		if(x.body != null) {
 			x.body.accept(mv);
 			mv.dump();
@@ -147,15 +147,19 @@ public class MethodVisitor extends DirectVCGen {
 	 * @return a pretty printed version of the method name
 	 */
 	// TODO: do it in a better way, use the right method from escjava
-	// TODO: move it to another file
 	public static String methodPrettyPrint(MethodDecl md) {
 		String res = 
-			md.parent.id + "." + md.id + "(";
+			md.parent.id + "." + getMethodPrettyName(md);
+		return res;
+	}
+	public static String getMethodPrettyName(MethodDecl md) {
+		String res = 
+			md.id + "(";
 		FormalParaDeclVec fdv = md.args;
 		int m = fdv.size() -1;
 		for (int i = 0; i < m; i++) {
 			FormalParaDecl d = fdv.elementAt(i);
-			res += d.type + ", ";
+			res += Types.printName(d.type) + ", ";
 		}
 		if(m >= 0) {
 			FormalParaDecl d = fdv.elementAt(m);
@@ -165,6 +169,5 @@ public class MethodVisitor extends DirectVCGen {
 		res += ")";
 		return res;
 	}
-	
 
 } 

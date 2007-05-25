@@ -1,7 +1,9 @@
+import java.util.LinkedList;
+
 
 public class ToyExample {
 	int f;
-	public ToyExample f(ToyExample a) {
+	public ToyExample f(ToyExample a, LinkedList l) {
 	    int i = 1;
 	    ToyExample j = new ToyExample();
 	    this.f = 3;

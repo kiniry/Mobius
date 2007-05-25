@@ -24,6 +24,7 @@ import escjava.translate.NoWarn;
 public class Main extends escjava.Main {
 	public static PrintStream out;
 	public static File basedir;
+	public static File pkgsdir;
 	public static File bicodir;
 	/**
 	 * The main entry point.
@@ -161,8 +162,17 @@ public class Main extends escjava.Main {
 		int errorCount = ErrorSet.errors;
 		
 		long startTime = currentTime();
+		// preparation: type checking + package dir creation
 		TypeSig sig = TypeCheck.inst.getSig(td);
 		sig.typecheck();
+		String [] pkgs = sig.getPackageName().split("\\.");		
+		pkgsdir = basedir;
+		for (int i = 0; i < pkgs.length; i++) {
+			pkgsdir = new File(pkgsdir, pkgs[i]);
+		}
+		pkgsdir.mkdirs();
+		
+		
 		processTD_stage1(td, sig, errorCount);
 		System.out.println("[" + timeUsed(startTime) + "]\n");
 		
@@ -170,7 +180,9 @@ public class Main extends escjava.Main {
 		sig.getCompilationUnit().accept(new JmlVisitor(),null);
 		System.out.println("[" + timeUsed(midTime) + "]\n");
 		long endTime = currentTime();
-		sig.getCompilationUnit().accept(new DirectVCGen(basedir));
+
+		
+		sig.getCompilationUnit().accept(new DirectVCGen(pkgsdir));
 	    System.out.println("[" + timeUsed(endTime) + "]\n");
 
 	    return false;
@@ -190,7 +202,7 @@ public class Main extends escjava.Main {
 		p.setDel(new EscPrettyPrint(p, new StandardPrettyPrint(p)));
 		OutputStream out;
 		try {
-			out = new FileOutputStream(new File(basedir, sig.toString() + ".typ"));
+			out = new FileOutputStream(new File(pkgsdir, sig.simpleName + ".typ"));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 			return false;
