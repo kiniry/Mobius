@@ -131,18 +131,21 @@ public class JmlVisitor extends VisitorArgResult{
 		return visitTypeDecl(x, p);
 	}
 	
+	public /*@non_null*/ Object visitRoutineDecl(/*@non_null*/ RoutineDecl x, Object o) {
+		((Properties) o).put("method", x);
+		((Properties) o).put("routinebegin", new Boolean(true));
+		Lookup.exceptionalPostconditions.put(x, new Post(Expression.rvar(Ref.sort),Logic.True()));
+		return visitASTNode(x, o);
+	}
+	
 	@Override
 	public /*@non_null*/ Object visitMethodDecl(/*@non_null*/ MethodDecl x, Object o) {
 		((Properties) o).put("result", Expression.rvar(Expression.getResultVar(x)));
-		((Properties) o).put("method", x);
-		((Properties) o).put("routinebegin", new Boolean(true));
 		return visitRoutineDecl(x, o);
 	}
 	
 	@Override
 	public /*@non_null*/ Object visitConstructorDecl(/*@non_null*/ ConstructorDecl x, Object o) {
-		((Properties) o).put("method", x);
-		((Properties) o).put("routinebegin", new Boolean(true));
 		return visitRoutineDecl(x, o);
 	}
 	
@@ -301,6 +304,28 @@ public class JmlVisitor extends VisitorArgResult{
 			Lookup.postconditions.put(rd, new Post(result, t));
 			break;
 		}
+		return null;
+	}
+	
+	@Override
+	public Object visitVarExprModifierPragma(VarExprModifierPragma x, Object o) {
+		((Properties) o).put("interesting", new Boolean(true));
+		
+		RoutineDecl currentRoutine = (RoutineDecl)((Properties) o).get("method");
+		Post allExPosts = Lookup.exceptionalPostconditions.get(currentRoutine);
+		QuantVariableRef commonExceptionVar = allExPosts.var;
+		
+		Term typeOfException = Type.translate(x.arg.type);
+		QuantVariableRef newExceptionVar = Expression.rvar(x.arg);
+		
+		Term newExPost = (Term)x.expr.accept(this, o);
+		newExPost = newExPost.subst(newExceptionVar, commonExceptionVar);
+		Term  guard = Logic.assignCompat(Heap.var, commonExceptionVar,typeOfException);
+		Term result = Logic.implies(guard, newExPost);
+		allExPosts.post = Logic.and(allExPosts.post, result);
+		Lookup.exceptionalPostconditions.put(currentRoutine, allExPosts);
+		
+		
 		return null;
 	}
 
@@ -620,12 +645,6 @@ public class JmlVisitor extends VisitorArgResult{
 	public Object visitVarDeclModifierPragma(VarDeclModifierPragma x, Object o) {
 		// TODO Auto-generated method stub
 		return null;
-	}
-
-	@Override
-	public Object visitVarExprModifierPragma(VarExprModifierPragma x, Object o) {
-		// TODO Auto-generated method stub
-		return visitASTNode(x, o); 
 	}
 
 	@Override
