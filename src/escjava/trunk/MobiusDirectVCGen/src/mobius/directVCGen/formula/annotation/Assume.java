@@ -2,7 +2,11 @@ package mobius.directVCGen.formula.annotation;
 
 import escjava.sortedProver.Lifter.Term;
 
-// TODO: add comments
+/**
+ * Represents an assume; 
+ * for instance like <code>assume t</code>
+ * which is translated in the vcs as: <code>t -> post</code>.
+ */
 public class Assume extends AAnnotation {
 
 	/*
@@ -14,7 +18,11 @@ public class Assume extends AAnnotation {
 		return annotAssume;
 	}
 
-	// TODO: add comments
+	/**
+	 * Construct an assume statement around the given term.
+	 * @param t the term which is the formula contained in 
+	 * the assume
+	 */
 	public Assume(Term t){
 		super(t);
 	}

@@ -26,12 +26,17 @@ public class Set extends AAnnotation {
 		return annotSet;
 	}
 	
-	// TODO: add comments
+	/**
+	 * Default constructor
+	 */
 	public Set(){
-		super();
 	}
 	
-	// TODO: add comments
+	/**
+	 * Build a new set from a variable and its assignment
+	 * @param decl the variable to assign
+	 * @param assign the JML assignment associated to this construct
+	 */
 	public Set(QuantVariableRef decl, Assignment assign){
 		this.declaration= decl;
 		this.assignment = assign;

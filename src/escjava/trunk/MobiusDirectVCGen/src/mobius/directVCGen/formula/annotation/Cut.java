@@ -2,7 +2,11 @@ package mobius.directVCGen.formula.annotation;
 
 import escjava.sortedProver.Lifter.Term;
 
-// TODO: add comments
+/**
+ * Represents a cut; 
+ * for instance like <code>cut t</code>
+ * which is translated in the vcs as: <code>t /\ (t -> post)</code>.
+ */
 public class Cut extends AAnnotation {
 
 	/*
@@ -14,7 +18,11 @@ public class Cut extends AAnnotation {
 		return annotCut;
 	}
 
-	// TODO: add comments
+	/**
+	 * Construct an cut statement around the given term.
+	 * @param t the term which is the formula contained in 
+	 * the cut
+	 */
 	public Cut(Term t){
 		super(t);
 	}

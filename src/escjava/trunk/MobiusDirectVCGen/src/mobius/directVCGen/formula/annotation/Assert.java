@@ -5,7 +5,7 @@ import escjava.sortedProver.Lifter.Term;
 /**
  * Represents an assert; 
  * for instance like <code>assert t</code>
- * which is translated in the vcs as: t, <code>t -> post</code>.
+ * which is translated in the vcs as:  <code>t</code>, <code>t -> post</code>.
  */
 public class Assert extends AAnnotation {
 

@@ -109,14 +109,17 @@ public class Lookup {
 	}
 
 	/**
-	 * Returns the FOL Term representation of the normal postcondition of method m.
+	 * Returns the FOL Term representation of the normal postcondition of routine m.
 	 * @param m the method of interest
 	 */
 	public static Post normalPostcondition(RoutineDecl m){
 		return new Post(buildStdCond (m, "_norm", true)); 
 	}
 	
-	// TODO: add comments
+	/**
+	 * Returns the FOL Term representation of the normal postcondition of method m.
+	 * @param m the method of interest
+	 */
 	public static Post normalPostcondition(MethodDecl m){
 		return new Post(Expression.rvar(Expression.getResultVar(m)),buildStdCond (m, "_norm", true)); 
 	}
@@ -128,10 +131,5 @@ public class Lookup {
 	public static Post exceptionalPostcondition(RoutineDecl m){
 		return new Post(Expression.rvar(Ref.sort),buildStdCond (m, "_excp", false)); 
 	}
-	
-//	// TODO: add comments
-//	public static Term invariant(ClassDecl c){
-//		return Logic.True();
-//	}
 	
 }
