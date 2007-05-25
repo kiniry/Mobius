@@ -182,7 +182,7 @@ public class Main extends escjava.Main {
 		long endTime = currentTime();
 
 		
-		sig.getCompilationUnit().accept(new DirectVCGen(pkgsdir));
+		sig.getCompilationUnit().accept(new DirectVCGen(basedir, pkgsdir));
 	    System.out.println("[" + timeUsed(endTime) + "]\n");
 
 	    return false;

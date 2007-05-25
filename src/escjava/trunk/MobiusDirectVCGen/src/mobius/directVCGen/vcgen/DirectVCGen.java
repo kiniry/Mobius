@@ -4,6 +4,7 @@ import java.io.File;
 
 import javafe.ast.ASTNode;
 import javafe.ast.ClassDecl;
+import javafe.ast.ConstructorDecl;
 import javafe.ast.MethodDecl;
 import javafe.ast.Visitor;
 
@@ -16,9 +17,11 @@ import javafe.ast.Visitor;
 public class DirectVCGen extends Visitor {
 
 	private final File basedir;
+	private final File pkgsdir;
 	private File classDir;
 	
-	public DirectVCGen(File basedir) {
+	public DirectVCGen(File basedir, File pkgsdir) {
+		this.pkgsdir = pkgsdir;
 		this.basedir = basedir;
 	}
 
@@ -29,7 +32,7 @@ public class DirectVCGen extends Visitor {
 	public void visitClassDecl(/*@non_null*/ ClassDecl x) {
 
 		System.out.println("Treating class: " + x.id);
-		classDir = new File(basedir,  ""+ x.id );
+		classDir = new File(pkgsdir,  ""+ x.id );
 		classDir.mkdirs();
 		visitTypeDecl(x);
 	}
@@ -40,6 +43,11 @@ public class DirectVCGen extends Visitor {
 	 */
 	public void visitMethodDecl(/*@non_null*/ MethodDecl x) {	
 		MethodVisitor mv = MethodVisitor.treatMethod(basedir, classDir, x);
+		System.out.println(mv);
+	}
+	
+	public void visitConstructorDecl(/*@non_null*/ ConstructorDecl x) {	
+		MethodVisitor mv = MethodVisitor.treatConstructor(basedir, classDir, x);
 		System.out.println(mv);
 	}
 	/*
@@ -58,7 +66,7 @@ public class DirectVCGen extends Visitor {
 	}
 	
 	public File getBaseDir() {
-		return basedir;
+		return pkgsdir;
 	}
 	
 }

@@ -19,7 +19,10 @@ import javafe.ast.ConstructorInvocation;
 import javafe.ast.ContinueStmt;
 import javafe.ast.DoStmt;
 import javafe.ast.EvalStmt;
+import javafe.ast.ExprVec;
 import javafe.ast.ForStmt;
+import javafe.ast.FormalParaDecl;
+import javafe.ast.FormalParaDeclVec;
 import javafe.ast.Identifier;
 import javafe.ast.IfStmt;
 import javafe.ast.LabelStmt;
@@ -40,10 +43,12 @@ import mobius.directVCGen.formula.Bool;
 import mobius.directVCGen.formula.Expression;
 import mobius.directVCGen.formula.Heap;
 import mobius.directVCGen.formula.Logic;
+import mobius.directVCGen.formula.Lookup;
 import mobius.directVCGen.formula.Ref;
 import mobius.directVCGen.formula.Type;
 import mobius.directVCGen.formula.annotation.AAnnotation;
 import mobius.directVCGen.formula.annotation.AnnotationDecoration;
+import mobius.directVCGen.vcgen.expression.ExpressionVCGen;
 import mobius.directVCGen.vcgen.expression.ExpressionVisitor;
 import mobius.directVCGen.vcgen.struct.ExcpPost;
 import mobius.directVCGen.vcgen.struct.Post;
@@ -454,8 +459,42 @@ public class StmtVCGen extends ExpressionVisitor {
 	
 	
 
-	public /*@non_null*/ Object visitConstructorInvocation(/*@non_null*/ ConstructorInvocation x, Object o) {
-		return visitStmt(x, o);
+	public /*@non_null*/ Object visitConstructorInvocation(/*@non_null*/ ConstructorInvocation ci, Object o) {
+		VCEntry entry = (VCEntry)o;
+		Post normalPost = Lookup.normalPostcondition(ci.decl);
+		Post excpPost = Lookup.exceptionalPostcondition(ci.decl);
+		Term pre = Lookup.precondition(ci.decl);
+		QuantVariableRef newThis = Expression.rvar(Ref.sort);
+		
+		// first: the exceptional post
+		QuantVariableRef exc = Expression.rvar(Ref.sort);
+		Term tExcp = Logic.forall(exc.qvar, Logic.implies(excpPost.substWith(exc).subst(Ref.varThis, newThis), 
+				               		StmtVCGen.getExcpPost(Type.javaLangThrowable(), entry).substWith(exc)));
+		// the normal post
+		//QuantVariableRef res = entry.post.var;		
+		Term tNormal = normalPost.post;
+		tNormal = Logic.implies(tNormal, entry.post.post).subst(Ref.varThis, newThis);
+
+		entry.post = new Post(Logic.and(pre, Logic.implies(pre, Logic.and(tNormal, tExcp))));
+		Vector<QuantVariableRef> v = mkArguments(ci);
+		ExprVec ev = ci.args;
+		for (int i = ev.size() - 1; i >= 0; i--) {
+			entry.post = new Post(v.elementAt(i), entry.post.post);
+			entry.post = (Post) ev.elementAt(i).accept(this, entry);
+		}
+		entry.post = new Post(newThis, entry.post.post);
+		return entry.post;
+	}
+	
+
+	public static Vector<QuantVariableRef> mkArguments(ConstructorInvocation mi) {
+		Vector<QuantVariableRef> v = new Vector<QuantVariableRef>();
+		FormalParaDeclVec fpdvec = mi.decl.args;
+		FormalParaDecl[] args = fpdvec.toArray();
+		for (FormalParaDecl fpd: args) {
+			v.add(Expression.rvar(fpd));
+		}
+		return v;
 	}
 	public /*@non_null*/ Object visitDoStmt(/*@non_null*/ DoStmt x, Object o) {
 		return visitStmt(x, o);

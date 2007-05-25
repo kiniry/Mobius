@@ -78,7 +78,7 @@ public class CoqFile {
 		        "Add LoadPath \"" + base + File.separator + "Formalisation" +
 			   							   File.separator + "Library" + 
 			   							   File.separator + "Map" + "\".\n");
-		out.println("Load \"defs_types.v\".\n");
+		out.println("Load \""+ base + File.separator + "defs_types.v\".\n");
 		for(String name: classNames) {
 			out.println("Variable " + name + ": ClassName.");
 		}

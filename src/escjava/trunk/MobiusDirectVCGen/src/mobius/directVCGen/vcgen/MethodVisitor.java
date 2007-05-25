@@ -7,9 +7,12 @@ import java.io.PrintStream;
 import java.util.Vector;
 
 import javafe.ast.BlockStmt;
+import javafe.ast.ConstructorDecl;
 import javafe.ast.FormalParaDecl;
 import javafe.ast.FormalParaDeclVec;
+import javafe.ast.Identifier;
 import javafe.ast.MethodDecl;
+import javafe.ast.RoutineDecl;
 import mobius.directVCGen.formula.Expression;
 import mobius.directVCGen.formula.Formula;
 import mobius.directVCGen.formula.Heap;
@@ -31,7 +34,7 @@ import escjava.tc.Types;
  */
 public class MethodVisitor extends DirectVCGen {
 	/** the name of the method associated with this object */
-	private MethodDecl meth;
+	private RoutineDecl meth;
 	/** the vcs that have been calculated */
 	private Vector<Term> vcs = new Vector<Term>();
 	private File configdir;
@@ -45,7 +48,15 @@ public class MethodVisitor extends DirectVCGen {
 		}
 		return mv;
 	}
-	
+	public static MethodVisitor treatConstructor(File basedir, File classDir, ConstructorDecl x) {
+		
+		MethodVisitor mv = new MethodVisitor(basedir, new File(classDir, "" + getMethodPrettyName(x)), x);
+		if(x.body != null) {
+			x.body.accept(mv);
+			mv.dump();
+		}
+		return mv;
+	}
 	private void dump() {
 		int num = 1;
 		String rawsuffix = ".raw";
@@ -74,8 +85,8 @@ public class MethodVisitor extends DirectVCGen {
 	 * @param basedir 
 	 * @param x the method to treat
 	 */
-	private MethodVisitor(File configdir, File basedir,  MethodDecl x) {
-		super(basedir);
+	private MethodVisitor(File configdir, File basedir,  RoutineDecl x) {
+		super(basedir, basedir);
 		this.configdir = configdir;
 		basedir.mkdirs();
 		meth = x;
@@ -147,10 +158,24 @@ public class MethodVisitor extends DirectVCGen {
 	 * @return a pretty printed version of the method name
 	 */
 	// TODO: do it in a better way, use the right method from escjava
-	public static String methodPrettyPrint(MethodDecl md) {
+	public static String methodPrettyPrint(RoutineDecl md) {
+		String prettyname = null;
+		if(md instanceof ConstructorDecl) {
+			prettyname = getMethodPrettyName((ConstructorDecl)md);
+		}
+		else if(md instanceof MethodDecl) {
+			prettyname = getMethodPrettyName((MethodDecl)md);
+		}
+		else {
+			prettyname = getMethodPrettyName(md);
+		}
 		String res = 
-			md.parent.id + "." + getMethodPrettyName(md);
+			md.parent.id + "." + prettyname;
 		return res;
+	}
+	public static String getMethodPrettyName(RoutineDecl md) {
+		throw new IllegalArgumentException(md + " should be either a constructor or " +
+				"a method!");
 	}
 	public static String getMethodPrettyName(MethodDecl md) {
 		String res = 
@@ -169,5 +194,21 @@ public class MethodVisitor extends DirectVCGen {
 		res += ")";
 		return res;
 	}
-
+	public static String getMethodPrettyName(ConstructorDecl md) {
+		String res = 
+			md.parent.id + "(";
+		FormalParaDeclVec fdv = md.args;
+		int m = fdv.size() -1;
+		for (int i = 0; i < m; i++) {
+			FormalParaDecl d = fdv.elementAt(i);
+			res += Types.printName(d.type) + ", ";
+		}
+		if(m >= 0) {
+			FormalParaDecl d = fdv.elementAt(m);
+			res += Types.printName(d.type);
+		}
+		
+		res += ")";
+		return res;
+	}
 } 
