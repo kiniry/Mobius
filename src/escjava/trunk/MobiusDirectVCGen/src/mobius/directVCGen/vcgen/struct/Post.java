@@ -15,7 +15,7 @@ public class Post {
 	public final QuantVariableRef var;
 	
 	/** the current postcondition */
-	public final Term post;	
+	public Term post;	
 	
 	/**
 	 * Construct a postcondition from a variable and a logical formula.
