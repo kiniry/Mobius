@@ -36,7 +36,6 @@ import org.eclipse.ui.texteditor.AbstractTextEditor;
 import org.osgi.framework.Bundle;
 
 import umbra.UmbraPlugin;
-import umbra.editor.BytecodeEditor;
 import umbra.editor.Composition;
 import umbra.editor.IColorValues;
 

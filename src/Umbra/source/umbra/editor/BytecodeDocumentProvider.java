@@ -1,7 +1,5 @@
 package umbra.editor;
 
-import org.apache.bcel.classfile.JavaClass;
-import org.apache.bcel.generic.ClassGen;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentPartitioner;

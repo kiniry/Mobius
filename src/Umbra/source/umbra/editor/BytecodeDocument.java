@@ -4,27 +4,23 @@
  */
 package umbra.editor;
 
-import java.io.InputStream;
-
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Method;
 import org.apache.bcel.generic.ClassGen;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditor;
-import org.eclipse.ui.IFileEditorInput;
 
 /**
  * This class is related to document structure of bytecode
  * file and supplies it with synchronization tools (in both directions).
+ * It also contains the relation with the .class file
+ * TODO
  * 
  * @author Tomasz Batkiewicz, Wojciech Wąs
  */

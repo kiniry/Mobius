@@ -21,6 +21,12 @@ public class BytecodeTagScanner extends RuleBasedScanner {
 
 	/**
 	 * TODO
+	 * 
+	 * @param manager the color manager related to the current bytecode
+	 *        editor, it must be the same as in the current
+	 *        {@ref BytecodeConfiguration} object 
+	 * @param mod the number of the current coloring style, it must be the 
+     *        same as in the current {@ref BytecodeConfiguration} object
 	 */
 	public BytecodeTagScanner(ColorManager manager, int mod) {
 		

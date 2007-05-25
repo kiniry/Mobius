@@ -21,7 +21,7 @@ import umbra.instructions.BytecodeController;
  * This class represents a change performed in a bytecode editor.
  * TODO more detailed description is needed
  * 
- * @author Wojtek Was
+ * @author Wojtek Wąs
  */
 public class BytecodeContribution extends ControlContribution { 
 	
@@ -29,18 +29,22 @@ public class BytecodeContribution extends ControlContribution {
 	 * TODO
 	 */
 	private boolean needNew = true;
+	
 	/**
 	 * TODO
 	 */
 	private Label labelText;
+	
 	/**
 	 * TODO
 	 */
 	private static BytecodeContribution inUse;
+	
 	/**
 	 * TODO
 	 */
-	private BytecodeController bcc;	
+	private BytecodeController bcc;
+	
 	/**
 	 * TODO
 	 */
@@ -56,15 +60,20 @@ public class BytecodeContribution extends ControlContribution {
 	private boolean[] modified;
 	
 	/**
-	 * TODO
+	 * The manager that initialises all the actions within the
+	 * bytecode plugin.
 	 */
 	private BytecodeEditorContributor editorContributor;
 	
 	/**
-	 * TODO
+	 * This method initialises the internal structures of the bytecode
+	 * contribution. In particular it initialises the object that
+	 * manages the BCEL operations and enables the relevant actions
+	 * in the Umbra plugin bytecode contributor.
+	 * 
+	 * TODO what's modTable
 	 */
-	private void init(IDocument doc) throws BadLocationException
-	{
+	private void init(IDocument doc) {
 		bcc = new BytecodeController();
 		bcc.init(doc);
 		if (modTable) {
@@ -74,65 +83,69 @@ public class BytecodeContribution extends ControlContribution {
 		bcc.checkAllLines(0, doc.getNumberOfLines() - 2);
 		ready = true;
 		editorContributor.getRefreshAction().setEnabled(true);
-		return;
 	}
 	
 	/**
-	 * TODO
+	 * This is a listener class that receives all the events that
+	 * change the content of the current bytecode document.
 	 */
 	public class BytecodeListener implements IDocumentListener {
 		
 		/**
-		 * TODO
-		 */
-		int startRem = -1, stopRem = -1;
-		
-		/**
-		 * TODO
+		 * The current constructor does nothing.
 		 */
 		public BytecodeListener() {
 		}
 
-		/* (non-Javadoc)
+		/**
+		 * This method handles the event of the change in the current 
+		 * bytecode document. This method is called before the textual
+		 * change is made. This method initialises the BytecodeContribution
+		 * object in case it has not been initialised yet. 
+		 * 
+		 * @param event the event that triggers the change, it should be
+		 * the same as in {@ref #documentChanged(DocumentEvent)}
+		 * 
 		 * @see org.eclipse.jface.text.IDocumentListener#documentAboutToBeChanged(org.eclipse.jface.text.DocumentEvent)
 		 */
 		public void documentAboutToBeChanged(DocumentEvent event) {
-			if (!ready)
-				try {
-					init(event.fDocument);
-				} catch (BadLocationException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			try {
-				startRem = event.fDocument.getLineOfOffset(event.getOffset());
-				int len = event.fLength;
-				stopRem = event.fDocument.getLineOfOffset(event.getOffset() + len);
-				bcc.removeIncorrects(startRem, stopRem);
-			} catch (BadLocationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			if (!ready) 
+				init(event.fDocument); //this marks ready as true
+			System.out.println("documentAbout");
 		}
 
-		/* (non-Javadoc)
+		/**
+		 * This method handles the event of the change in the current 
+		 * bytecode document. This method is called after the textual
+		 * change is made. This method removes all the incorrect and
+		 * correct lines in the range that has been deleted and adds 
+		 * all the lines in the range that has been added. Then it
+		 * checks if there are errors in the resulting text and
+		 * displays the information on the error.
+		 * 
+		 * @param event the event that triggers the change, it should be
+		 * the same as in {@ref #documentAboutToBeChanged(DocumentEvent)}
+		 * 
 		 * @see org.eclipse.jface.text.IDocumentListener#documentChanged(org.eclipse.jface.text.DocumentEvent)
 		 */
 		public void documentChanged(DocumentEvent event) {
-			int start = 0, stop = 0;
+			int stop = 0;
+			int startRem =0, stopRem = 0;
 			try {
-				start = event.fDocument.getLineOfOffset(event.getOffset());
-				int len = event.getText().length();
-				stop = event.fDocument.getLineOfOffset(event.getOffset() + len);
+				startRem = event.fDocument.getLineOfOffset(event.getOffset());
+				int insertedLen = event.getText().length();
+				int replacedLen = event.fLength;
+				stop = event.fDocument.getLineOfOffset(event.getOffset() + 
+						insertedLen);
+				stopRem = event.fDocument.getLineOfOffset(event.getOffset() + 
+						replacedLen);
 			} catch (BadLocationException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			bcc.addAllLines(event.fDocument, startRem, stopRem, start, stop);
-			startRem = -1;
-			stopRem = -1;
-			bcc.removeIncorrects(start, stop);
-			bcc.checkAllLines(start, stop);
+			bcc.removeIncorrects(startRem, stopRem);
+			bcc.addAllLines(event.fDocument, startRem, stopRem, startRem, stop);
+			bcc.checkAllLines(startRem, stop);
 			if (!bcc.allCorrect()) 
 				displayError(bcc.getFirstError());
 			else displayCorrect();
@@ -205,9 +218,7 @@ public class BytecodeContribution extends ControlContribution {
 	 * @param line the number of the line with the error
 	 */
 	private void displayError(int line) {
-		//labelText.setBackground(new Color(null, new RGB(255, 128, 0)));
 		labelText.setText("Error detected: " + line);
-		System.out.println("Error detected: " + line);
 	}
 
 	/**

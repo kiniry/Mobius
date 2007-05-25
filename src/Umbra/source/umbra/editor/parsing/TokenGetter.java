@@ -26,8 +26,11 @@ public class TokenGetter {
 	static int CN = 4;
 	
 	/**
-	 * @param manager	Color manager related to the editor
-	 * @param mod		Number of current coloring style
+	 * @param manager the color manager related to the current bytecode
+	 *        editor, it must be the same as in the current 
+	 *        {@ref BytecodeConfiguration} object
+	 * @param mod the number of the current coloring style, it must be the 
+	 *        same as in the current {@ref BytecodeConfiguration} object
 	 * @param i			Position in array of color values
 	 * @return			Color value as a token
 	 */
@@ -36,8 +39,11 @@ public class TokenGetter {
 	}
 	
 	/**
-	 * @param manager	Color manager related to the editor
-	 * @param mod		Number of current coloring style
+	 * @param manager the color manager related to the current bytecode
+	 *        editor, it must be the same as in the current 
+	 *        {@ref BytecodeConfiguration} object
+	 * @param mod the number of the current coloring style, it must be the 
+	 *        same as in the current {@ref BytecodeConfiguration} object
 	 * @return			Array of tokens for each color value
 	 * 					(for each window element to be coloured)
 	 */
@@ -52,9 +58,12 @@ public class TokenGetter {
 	/**
 	 * TODO
 	 * 
-	 * @param manager
-	 * @param mod
-	 * @param i
+	 * @param manager manager the color manager related to the current bytecode
+	 *        editor, it must be the same as in the current
+	 *        {@ref BytecodeConfiguration} object
+	 * @param mod the number of the current coloring style, it must be the 
+	 *        same as in the current {@ref BytecodeConfiguration} object
+	 * @param i particular color as an attribute 
 	 */
 	static public NonRuleBasedDamagerRepairer getRepairer(
 			          ColorManager manager, 
@@ -65,8 +74,13 @@ public class TokenGetter {
 	}
 	
 	/**
-	 * @param manager	Color manager related to the editor
-	 * @param mod		Number of current coloring style
+	 * TODO
+	 * 
+	 * @param manager the color manager related to the current bytecode
+	 *        editor, it must be the same as in the current 
+	 *        {@ref BytecodeConfiguration} object
+	 * @param mod the number of the current coloring style, it must be the 
+	 *        same as in the current {@ref BytecodeConfiguration} object
 	 * @param i			Position in array of color values
 	 * @return			Particular color as an attribute 					
 	 */

@@ -14,8 +14,10 @@ import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.InstructionHandle;
 import org.apache.bcel.generic.InstructionList;
 import org.apache.bcel.generic.MethodGen;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.swt.widgets.Shell;
 
 import umbra.editor.BytecodeDocument;
 import umbra.editor.parsing.BytecodeWhitespaceDetector;
@@ -37,8 +39,8 @@ import umbra.editor.parsing.IBytecodeStrings;
 public class BytecodeController {
 	
 	/**
-	 * The list of all the lines in the editor. These lines
-	 * are parsed as objects the classes being subclasses of
+	 * The list of all the lines in the current bytecode editor. These lines
+	 * are stored as objects the classes of which are subclasses of
 	 * {@ref BytecodeLineController}.
 	 */
 	private LinkedList all;
@@ -100,6 +102,7 @@ public class BytecodeController {
 	public void showAllIncorrectLines()
 	{   
 	    System.out.println("" + incorrect.size() + " incorrects:");
+	    System.out.flush();
 		for (int i = 0; i < incorrect.size(); i++) {
 			System.out.println(" " + 
 					     ((BytecodeLineController)(incorrect.get(i))).line);
@@ -111,11 +114,12 @@ public class BytecodeController {
 	 * the document; it uses BCEL structures linked to the
 	 * document  
 	 * 
+	 * TODO
+	 * 
 	 * @param doc the bytecode document with the corresponding BCEL
 	 * 	structures linked into it
-	 * @throws BadLocationException
 	 */
-	public void init(IDocument doc) throws BadLocationException {
+	public void init(IDocument doc) {
 		ClassGen cg = ((BytecodeDocument)doc).getClassGen();
 		ConstantPoolGen cpg = cg.getConstantPool();
 		Method[] methods = cg.getMethods();
@@ -135,7 +139,13 @@ public class BytecodeController {
 				metEnd = false;
 				i++;
 			}
-			String line = doc.get(doc.getLineOffset(j), doc.getLineLength(j));
+			String line = "";
+			try {
+				line = doc.get(doc.getLineOffset(j), doc.getLineLength(j));
+			} catch (BadLocationException e) {
+				MessageDialog.openInformation(new Shell(), "Bytecode", 
+						"The current document has no positions for line "+j);
+			}
 			String lineName = removeCommentFromLine(line);
 			String comment = extractCommentFromLine(line);
 			BytecodeLineController lc = getType(lineName);
@@ -165,10 +175,12 @@ public class BytecodeController {
 	}
 
 	/**
-	 * TODO
+	 * The method removes from the collection of the incorrect lines
+	 * all the lines which are between <code>start</code> and
+	 * <code>stop</code>.
 	 * 
-	 * @param start
-	 * @param stop
+	 * @param start the first line which is checked for removing
+	 * @param stop the last line which is checked for removing
 	 */
 	public void removeIncorrects(int start, int stop) {
 		for (int i = start; i <= stop; i++) {
@@ -177,7 +189,6 @@ public class BytecodeController {
 				incorrect.remove(line);
 			}
 		}
-		showAllIncorrectLines();
 	}
 	
 	/**
@@ -196,7 +207,8 @@ public class BytecodeController {
 	{
 		ClassGen cg = ((BytecodeDocument)doc).getClassGen();
 		for (int i = Math.min(startRem, start), j = i; 
-		     (i <= stopRem || j <= stop) && i < all.size(); i++, j++) {
+		       (i <= stopRem || j <= stop) && i < all.size(); 
+		       i++, j++) {
 			BytecodeLineController oldlc = (BytecodeLineController)all.get(j);
 			BytecodeLineController nextLine = null;
 			int off = getInstructionOff(j);
@@ -212,38 +224,8 @@ public class BytecodeController {
 		    //TODO poprawnie: 1 enter przed wpisaniem 2 wpisac przed ta przed ktora checmy wstawic i enter; zle inaczej: enter przed i potem wpisac
 			else nextLine = (BytecodeLineController)instructions.get(off + 1);
 			modified[nextLine.getIndex()] = true;
-			if (j >= start && j <= stop) {
-				try {
-					String line = doc.get(doc.getLineOffset(j), doc.getLineLength(j));
-					//%%
-					String lineName = removeCommentFromLine(line);
-					String comment = extractCommentFromLine(line);
-					BytecodeLineController lc = getType(lineName);
-					lc.setIndex(((BytecodeLineController)all.get(j - 1)).getIndex());
-					if (comment != null) comments.put(lc, comment);
-					Instruction ins = lc.getInstruction();
-					//System.out.println("Before target");
-					if (ins != null) {
-						//System.out.println(ins.getName());
-						lc.setTarget(nextLine.getList(), ins);
-					}
-					else {
-						if (comment != null) interline.put(nextLine, comment);
-					}
-					//System.out.println("After target");
-					if (i >= startRem && i <= stopRem) {
-						lc.update(oldlc, nextLine, cg, ins, metEnd, theLast, instructions, off);
-						all.set(j, lc);	
-					}
-					else {
-						if (oldlc.getHandle() == null) lc.initHandle(nextLine, cg, ins, metEnd, instructions, off);
-						else lc.initHandle(oldlc, cg, ins, metEnd, instructions, off);
-						all.add(j, lc);
-						i--;
-					}
-				} catch (BadLocationException e) {
-					e.printStackTrace();
-				}
+			if (start <= j  && j <= stop) {
+				i = addInstructions(doc, startRem, stopRem, i, j, oldlc, nextLine, theLast, metEnd);
 			}
 			else {
 				if (i >= startRem && i <= stopRem) {
@@ -255,6 +237,64 @@ public class BytecodeController {
 		}
 		controlPrint(1);
 		return;
+	}
+
+	/**
+	 * TODO
+	 * 
+	 * @param doc
+	 * @param startRem
+	 * @param stopRem
+	 * @param i
+	 * @param j
+	 * @param oldlc
+	 * @param nextLine
+	 * @param theLast
+	 * @param metEnd
+	 * @return
+	 */
+	private int addInstructions(IDocument doc, int startRem, int stopRem, 
+			                    int i, int j, 
+			                    BytecodeLineController oldlc, 
+			                    BytecodeLineController nextLine, 
+			                    boolean theLast, boolean metEnd) {
+		ClassGen cg = ((BytecodeDocument)doc).getClassGen();
+		int off = getInstructionOff(j);
+		try {
+			String line = doc.get(doc.getLineOffset(j), doc.getLineLength(j));
+			//%%
+			String lineName = removeCommentFromLine(line);
+			String comment = extractCommentFromLine(line);
+			BytecodeLineController lc = getType(lineName);
+			lc.setIndex(((BytecodeLineController)all.get(j - 1)).getIndex());
+			if (comment != null) comments.put(lc, comment);
+			Instruction ins = lc.getInstruction();
+			//System.out.println("Before target");
+			if (ins != null) {
+				//System.out.println(ins.getName());
+				lc.setTarget(nextLine.getList(), ins);
+			}
+			else {
+				if (comment != null) interline.put(nextLine, comment);
+			}
+			//System.out.println("After target");
+			if (i >= startRem && i <= stopRem) {
+				lc.update(oldlc, nextLine, cg, ins, metEnd, theLast, 
+						  instructions, off);
+				all.set(j, lc);	
+			}
+			else {
+				if (oldlc.getHandle() == null) 
+					lc.initHandle(nextLine, cg, ins, metEnd, instructions, off);
+				else 
+					lc.initHandle(oldlc, cg, ins, metEnd, instructions, off);
+				all.add(j, lc);
+				i--;
+			}
+		} catch (BadLocationException e) {
+			e.printStackTrace();
+		}
+		return i;
 	}
 
 	/**
@@ -442,7 +482,7 @@ public class BytecodeController {
 	}
 
 	/**
-	 * Removes One-line comment from line of bytecode.
+	 * Removes an one-line comment from line of bytecode.
 	 * 
 	 * @param l	line of bytecode
 	 * @return	bytecode line l without one-line comment and ending whitespaces 
