@@ -7,11 +7,8 @@ import java.io.PrintStream;
 import java.util.Vector;
 
 import javafe.ast.BlockStmt;
-import javafe.ast.ConstructorDecl;
 import javafe.ast.FormalParaDecl;
 import javafe.ast.FormalParaDeclVec;
-import javafe.ast.Identifier;
-import javafe.ast.MethodDecl;
 import javafe.ast.RoutineDecl;
 import mobius.directVCGen.formula.Expression;
 import mobius.directVCGen.formula.Formula;
@@ -37,26 +34,29 @@ public class MethodVisitor extends DirectVCGen {
 	private RoutineDecl meth;
 	/** the vcs that have been calculated */
 	private Vector<Term> vcs = new Vector<Term>();
-	private File configdir;
 	
-	public static MethodVisitor treatMethod(File basedir, File classDir, MethodDecl x) {
-		
-		MethodVisitor mv = new MethodVisitor(basedir, new File(classDir, "" + getMethodPrettyName(x)), x);
-		if(x.body != null) {
-			x.body.accept(mv);
+
+	/**
+	 * 
+	 * @param basedir the base directory (the one of the library files)
+	 * @param classDir the directory of the class
+	 * @param rd the routine to inspect
+	 * @return the properly configured method visitor
+	 */
+	public static MethodVisitor treatRoutine(File basedir, File classDir, RoutineDecl rd) {
+		MethodVisitor mv = new MethodVisitor(basedir, new File(classDir, "" + getRoutinePrettyName(rd)), rd);
+		if(rd.body != null) {
+			rd.body.accept(mv);
 			mv.dump();
 		}
 		return mv;
 	}
-	public static MethodVisitor treatConstructor(File basedir, File classDir, ConstructorDecl x) {
-		
-		MethodVisitor mv = new MethodVisitor(basedir, new File(classDir, "" + getMethodPrettyName(x)), x);
-		if(x.body != null) {
-			x.body.accept(mv);
-			mv.dump();
-		}
-		return mv;
-	}
+	
+	
+	
+	/**
+	 * Dump the proof obligations to the raw file and to prover specific files.
+	 */
 	private void dump() {
 		int num = 1;
 		String rawsuffix = ".raw";
@@ -64,10 +64,10 @@ public class MethodVisitor extends DirectVCGen {
 		for(Term t: vcs) {
 			String name = "goal" + num++;
 			try {
-				PrintStream fos = new PrintStream(new FileOutputStream(new File(getBaseDir(), name + rawsuffix)));
+				PrintStream fos = new PrintStream(new FileOutputStream(new File(getPkgsDir(), name + rawsuffix)));
 				fos.println(t);
 				fos.close();
-				CoqFile cf = new CoqFile(configdir, getBaseDir(), name);
+				CoqFile cf = new CoqFile(getBaseDir(), getPkgsDir(), name);
 				cf.writeDefs(Lookup.symToDeclare, Lookup.fieldsToDeclare, Type.getAllTypes());
 				cf.writeProof(Formula.generateFormulas(t));
 				
@@ -81,15 +81,14 @@ public class MethodVisitor extends DirectVCGen {
 	/**
 	 * The internal constructor should not be called from outside
 	 * (IMHO it makes no sense).
-	 * @param configdir
-	 * @param basedir 
-	 * @param x the method to treat
+	 * @param basedir the directory of the library files
+	 * @param methoddir the directory of the method
+	 * @param rd the method to treat
 	 */
-	private MethodVisitor(File configdir, File basedir,  RoutineDecl x) {
-		super(basedir, basedir);
-		this.configdir = configdir;
-		basedir.mkdirs();
-		meth = x;
+	private MethodVisitor(File basedir, File methoddir,  RoutineDecl rd) {
+		super(basedir, methoddir);
+		methoddir.mkdirs();
+		meth = rd;
 	}
 
 	/*
@@ -119,6 +118,10 @@ public class MethodVisitor extends DirectVCGen {
 		addVarDecl(qvs);
 	}
 	
+	/**
+	 * Add the given variables to all the current vcs.
+	 * @param qvs the variables to quantify over the vcs
+	 */
 	public void addVarDecl(QuantVariable[] qvs) {
 		Vector<Term> oldvcs = vcs;
 		vcs = new Vector<Term>();
@@ -157,47 +160,23 @@ public class MethodVisitor extends DirectVCGen {
 	 * @param md the method to treat
 	 * @return a pretty printed version of the method name
 	 */
-	// TODO: do it in a better way, use the right method from escjava
 	public static String methodPrettyPrint(RoutineDecl md) {
-		String prettyname = null;
-		if(md instanceof ConstructorDecl) {
-			prettyname = getMethodPrettyName((ConstructorDecl)md);
-		}
-		else if(md instanceof MethodDecl) {
-			prettyname = getMethodPrettyName((MethodDecl)md);
-		}
-		else {
-			prettyname = getMethodPrettyName(md);
-		}
+		String prettyname = getRoutinePrettyName(md);
 		String res = 
 			md.parent.id + "." + prettyname;
 		return res;
 	}
-	public static String getMethodPrettyName(RoutineDecl md) {
-		throw new IllegalArgumentException(md + " should be either a constructor or " +
-				"a method!");
-	}
-	public static String getMethodPrettyName(MethodDecl md) {
+	
+	
+	/**
+	 * Return the signature of a routine.
+	 * @param rd the routine to get the signature of
+	 * @return a string representing the signature of the routine
+	 */
+	public static String getRoutinePrettyName(RoutineDecl rd) {
 		String res = 
-			md.id + "(";
-		FormalParaDeclVec fdv = md.args;
-		int m = fdv.size() -1;
-		for (int i = 0; i < m; i++) {
-			FormalParaDecl d = fdv.elementAt(i);
-			res += Types.printName(d.type) + ", ";
-		}
-		if(m >= 0) {
-			FormalParaDecl d = fdv.elementAt(m);
-			res += Types.printName(d.type);
-		}
-		
-		res += ")";
-		return res;
-	}
-	public static String getMethodPrettyName(ConstructorDecl md) {
-		String res = 
-			md.parent.id + "(";
-		FormalParaDeclVec fdv = md.args;
+			rd.id() + "(";
+		FormalParaDeclVec fdv = rd.args;
 		int m = fdv.size() -1;
 		for (int i = 0; i < m; i++) {
 			FormalParaDecl d = fdv.elementAt(i);
