@@ -133,12 +133,27 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn{
 		return pre;
 	}
 
+	/**
+	 * Do the weakest precondition calculus of the assign statement.
+	 * @param expr the assign statement
+	 * @param entry the post condition
+	 * @return thw precondition of the assign statement
+	 */
 	public Post assign(BinaryExpr expr, VCEntry entry) {
 		Post pre = assign(expr.left, entry);
 		pre = getPre(expr.right, entry);
 		return pre;
 	}
 	
+	/**
+	 * Do the wp for an assign statement. 
+	 * The left element is given as a parameter,
+	 * the right element of the assign (the 'value') is the 
+	 * variable contained in <code>entry.post.var</code>.
+	 * @param left the variable or field to assign
+	 * @param entry the current postcondition
+	 * @return a postcondition containing the proper assignment wp.
+	 */
 	public Post assign(Expr left, VCEntry entry) {
 		QuantVariableRef val = entry.post.var;
 		Post pre;
@@ -219,7 +234,12 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn{
 		return pre;
 	}
 
-	
+	/**
+	 * Do the wp of an assignement followed by an operation 
+	 * @param expr
+	 * @param post
+	 * @return
+	 */
 	public Post assignSpecial(BinaryExpr expr, VCEntry post) {
 		Expr right = expr.right;
 		Expr left = expr.left;

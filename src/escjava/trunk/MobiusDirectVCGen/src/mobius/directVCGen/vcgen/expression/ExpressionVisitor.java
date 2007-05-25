@@ -149,7 +149,6 @@ public class ExpressionVisitor extends ABasicVisitor {
 	}
 
 	public Object visitUnaryExpr(UnaryExpr expr, Object o) {
-		// TODO: do the unary expressions
 		VCEntry post = (VCEntry) o;
 		switch(expr.op) {
 			case TagConstants.UNARYADD:
