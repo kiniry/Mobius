@@ -321,7 +321,7 @@ public class JmlVisitor extends VisitorArgResult{
 		Term newExPost = (Term)x.expr.accept(this, o);
 		newExPost = newExPost.subst(newExceptionVar, commonExceptionVar);
 		Term  guard = Logic.assignCompat(Heap.var, commonExceptionVar,typeOfException);
-		Term result = Logic.implies(guard, newExPost);
+		Term result = Logic.safe.implies(guard, newExPost);
 		allExPosts.post = Logic.and(allExPosts.post, result);
 		Lookup.exceptionalPostconditions.put(currentRoutine, allExPosts);
 		
