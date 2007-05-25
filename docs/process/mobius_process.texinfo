@@ -1,0 +1,677 @@
+\input texinfo   @c -*-texinfo-*-
+@c %**start of header
+
+@setfilename mobius_process.info
+@settitle The Mobius Software Engineering Process
+@c Other commands that globally affect the document formatting: 
+@c synindex, footnotestyle
+@afourwide
+@paragraphindent 0
+@c firstparagraphindent 0
+@c %**end of header
+@c =============================================================================
+
+@c =============================================================================
+@c Definitions of new indices for this document
+
+@c Examples below are from Escjava2-Extending.texinfo.
+
+@c =============================================================================
+@c Functions are indexed using the built-in @findex
+@c Predicates are indexed using @pindex
+@c @defcodeindex p
+@c Constants are indexed using @kindex
+@c @defcodeindex k
+
+@c Map predicates (pindex) and constants (kindex) the function index.
+
+@c @syncodeindex p fn
+@c @syncodeindex k fn
+
+@c =============================================================================
+
+@c =============================================================================
+@c %**summary and copyright
+
+Initial version written Joseph Kiniry in Summer 2006.
+
+Current author and editor: Joseph Kiniry.
+
+This document describes the Mobius Software Engineering Process, a kind
+of ``recipe'' for writing well-designed, well-documented, high-quality,
+component-based software for the Mobius Platform.  A set of case studies
+in application of the process are also included for pedagogical and
+expository purposes.
+
+This is edition
+@include svnrevision
+
+This document is a work in progress.  Suggestions, input, and new
+co-authors are always welcome.
+
+@copying
+``The Mobius Software Engineering Process'' is licensed under the
+Creative Commons Attribution-NonCommercial-ShareAlike 2.0 license.  See
+@uref{http://creativecommons.org/licenses/by-nc-sa/2.0/}
+
+Copyright @copyright{} 2006 Joseph R. Kiniry and University College
+Dublin.
+
+@quotation
+You are free:
+@itemize
+@item
+to copy, distribute, display, and perform the work
+@item
+to make derivative works
+@end itemize
+
+Under the following conditions:
+@itemize
+@item
+Attribution. You must give the original author credit.
+@item
+Noncommercial. You may not use this work for commercial purposes.
+@item
+Share Alike. If you alter, transform, or build upon this work, you may
+distribute the resulting work only under a license identical to this
+one.
+@end itemize
+
+For any reuse or distribution, you must make clear to others the license
+terms of this work.
+
+Any of these conditions can be waived if you get permission from the
+author.
+
+Your fair use and other rights are in no way affected by the above.
+
+This is a human-readable summary of the Legal Code.
+
+See @uref{http://creativecommons.org/licenses/by-nc-sa/2.0/legalcode}
+@end quotation
+
+@end copying
+
+@c %**end of summary and copyright
+@c =============================================================================
+
+@c =============================================================================
+@c %**title, contents, and copyright
+
+@titlepage
+@title The Mobius Software Engineering Process
+@subtitle August 2006
+@subtitle This document describes the Mobius Software Engineering Process.
+@author Joseph R. Kiniry <kiniry@@ucd.ie>
+
+@c The following two commands start the copyright page.
+@page
+@vskip 0pt plus 1filll
+@insertcopying
+
+@c To be published by the KindSoftware Research Group, School of
+@c Computer Science and Informatics, University College Dublin as
+@c technical report TBD
+@c See @uref{http://secure.ucd.ie/}
+@end titlepage
+
+@c metadata used in HTML
+@documentdescription
+Mobius, Process, Requirements, Overview, Dictionary, Design,
+Architecture, BON, EBON, Business Object Notation, Unit Testing, jUnit,
+Wiki, ESC/Java, ESC/Java2, Java Modeling Language, JML, Extended Static
+Checking, Extended Static Checker, Design by Contract, Java,
+Verification, BISL, Kiniry
+@end documentdescription
+
+@c Output the table of contents at the beginning.
+@contents
+
+@c %**end of title, contents, and copyright
+@c =============================================================================
+
+@c =============================================================================
+@c %**top node and master menu
+
+@c We recommend including the copying permissions here as well as the
+@c segments above.
+@ifnottex
+@node Top, Introduction, (dir), (dir)
+@top The Mobius Software Engineering Process
+
+@insertcopying
+@end ifnottex
+
+This document describes the Mobius Software Engineering Process, a kind
+of ``recipe'' for writing well-designed, well-documented, high-quality,
+component-based software for the Mobius Platform.  A set of case studies
+in application of the process are also included for pedagogical and
+expository purposes.
+
+@menu
+* Introduction::                An introduction to this document.
+* A Mobius Process ``Quick-Start''::  For those already familiar with software processes.
+* Stages of the Mobius Process::  Detailed descriptions of each stage in the process.
+* Ongoing Project Management::  How to manage artifacts in the Mobius process over time.
+* Case Studies in Applying the Mobius Process::  Example use of the process for a number of components.
+* Copying::                     Your rights and freedoms.
+* Index::                       Complete index.
+@end menu
+
+@c %**end top node and master menu
+@c =============================================================================
+
+@c =============================================================================
+@c %**body
+
+@c =============================================================================
+@node Introduction, A Mobius Process ``Quick-Start'', Top, Top
+@chapter Introduction
+
+@cindex introduction
+
+This document describes the Mobius Software Engineering Process, a kind
+of ``recipe'' for writing well-designed, well-documented, high-quality,
+component-based software for the Mobius Platform.  A set of case studies
+in application of the process are also included for pedagogical and
+expository purposes.
+
+The case studies discussed were chosen because they: (a) focus on actual
+components in the Mobius Program Verification Environment (PVE), (b)
+were relatively small and self-contained examples, and (c) they are
+either components developed from scratch or are components that are
+adopted from other Open Source projects, thus show how to apply the
+process to both new and existing code bases.
+
+@menu
+* Specification Languages::     A summary of the specification languages used in this process.
+* Relationship to the BON Process::  How this process relates to its parent process.
+@end menu
+
+@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@node Specification Languages, Relationship to the BON Process, Introduction, Introduction
+@section Specification Languages
+
+@cindex specification languages
+
+We describe Mobius framework and component architectures using two
+specification languages: the Extended Business Object Notation (EBON)
+and the Java Modeling Language (JML).
+
+@c TODO: explain why BON vs. UML
+@c TODO: refinement in a nutshell
+@c TODO: testing and refinements: connection between scenarios and events and testing
+@c TODO: documentation and refinement
+@c TODO: formal literate programming
+@c TODO: documentation and specification artifacts
+
+@menu
+* BON and EBON::                The (Extended) Business Object Notation.
+* JML::                         The Java Modeling Language.
+@end menu
+
+@c -----------------------------------------------------------------------------
+@node BON and EBON, JML, Specification Languages, Specification Languages
+@subsection BON and EBON
+
+@cindex BON
+@cindex EBON
+@cindex Business Object Notation
+@cindex Extended Business Object Notation
+
+An extention of the specification language BON (``Business Object
+Notation'') called EBON (``Extended...'') is used for the first several
+levels of specification (high-to-medium level).  
+
+BON is a specification language developed by Kim Walden and Jean-Marc
+Nerson and is documented in the book ``Seamless Object-Oriented Software
+Construction,'' freely available from @uref{http://www.bon-method.com/}.
+EBON enriches BON using domain-specific annotations called ``semantic
+properties,'' as described the KindSoftware Coding Standard available
+from @uref{http://secure.ucd.ie/}) and, soon, in the Mobius Coding
+Standard available from @uref{http://mobius.inria.fr/}.
+
+@c TODO: Fix accent in Kim's name.
+
+EBON is a simple enough specification language that most, if not all, of
+the specifications herein will be comprehensible to the reader who knows
+nothing at all of BON.
+
+@c -----------------------------------------------------------------------------
+@node JML,  , BON and EBON, Specification Languages
+@subsection JML
+
+@c TODO: quick overview of JML
+@c TODO: how we use JML: docs, specs, jmlrac, escjava2, jmljunit
+@c TODO: relationship to EBON specifications: refinement from EBON to JML
+
+@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@node Relationship to the BON Process,  , Specification Languages, Introduction
+@section Relationship to the BON Process
+
+@cindex BON process
+@cindex BON process, relationship to
+
+@c TODO: how does this process differ?
+@c TODO: focus on verification
+
+@c =============================================================================
+@node A Mobius Process ``Quick-Start'', Stages of the Mobius Process, Introduction, Top
+@chapter A Mobius Process ``Quick-Start''
+
+@cindex Mobius process ``quick-start''
+@cindex quick-start guide
+@cindex process overview
+
+@c =============================================================================
+@node Stages of the Mobius Process, Ongoing Project Management, A Mobius Process ``Quick-Start'', Top
+@chapter Stages of the Mobius Process
+
+@cindex stages of the Mobius process
+@cindex stages
+
+@menu
+* High-level Review::           
+* Natural Language Documentation::  
+* Architecture Description::    
+* Dictionary::                  
+* Requirements::                
+* Overview::                    
+* EBON Design Description::     
+* Detailed Design Description::  
+* Java Modeling Language Specifications::  
+* Specification-driven Unit Tests::  
+* Scenario-driven Unit Tests::  
+@end menu
+
+@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@node High-level Review, Natural Language Documentation, Stages of the Mobius Process, Stages of the Mobius Process
+@section High-level Review
+
+@cindex high-level code review
+@cindex code review
+
+@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@node Natural Language Documentation, Architecture Description, High-level Review, Stages of the Mobius Process
+@section Natural Language Documentation
+
+@cindex natural language documentation
+@cindex English documentation
+@cindex documentation
+
+@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@node Architecture Description, Dictionary, Natural Language Documentation, Stages of the Mobius Process
+@section Architecture Description
+
+@cindex architecture description
+@cindex informal charts
+@cindex class charts
+@cindex classes
+@cindex class
+@cindex indexing
+@cindex clusters
+@cindex cluster
+@cindex inheritance relations
+@cindex relations
+
+@menu
+* Static Model::                
+* Dynamic Model::               
+* Scenarios::                   
+* Object Creation::             
+@end menu
+
+@c -----------------------------------------------------------------------------
+@node Static Model, Dynamic Model, Architecture Description, Architecture Description
+@subsection Static Model
+
+@c -----------------------------------------------------------------------------
+@node Dynamic Model, Scenarios, Static Model, Architecture Description
+@subsection Dynamic Model
+
+@c -----------------------------------------------------------------------------
+@node Scenarios, Object Creation, Dynamic Model, Architecture Description
+@subsection Scenarios
+
+@menu
+* Scenario Charts::             
+* Object Scenarios::            
+@end menu
+
+@node Scenario Charts, Object Scenarios, Scenarios, Scenarios
+@subsubsection Scenario Charts
+
+@node Object Scenarios,  , Scenario Charts, Scenarios
+@subsubsection Object Scenarios
+
+@c -----------------------------------------------------------------------------
+@node Object Creation,  , Scenarios, Architecture Description
+@subsection Object Creation
+
+@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@node Dictionary, Requirements, Architecture Description, Stages of the Mobius Process
+@section Dictionary
+
+@cindex project dictionary
+@cindex dictionary
+@cindex class dictionary
+@cindex project nomenclature
+@cindex nomenclature
+
+@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@node Requirements, Overview, Dictionary, Stages of the Mobius Process
+@section Requirements
+
+@cindex requirements
+
+@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@node Overview, EBON Design Description, Requirements, Stages of the Mobius Process
+@section Overview
+
+@cindex project overview
+@cindex overview
+
+@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@node EBON Design Description, Detailed Design Description, Overview, Stages of the Mobius Process
+@section EBON Design Description
+
+@cindex design description
+@cindex design
+@cindex static model
+@cindex static architecture
+@cindex class interfaces
+@cindex event charts
+@cindex relations
+@cindex client relations
+
+@menu
+* Static Architecture::         
+* Class Interfaces::            
+@end menu
+
+@c -----------------------------------------------------------------------------
+@node Static Architecture, Class Interfaces, EBON Design Description, EBON Design Description
+@subsection Static Architecture
+
+@c -----------------------------------------------------------------------------
+@node Class Interfaces,  , Static Architecture, EBON Design Description
+@subsection Class Interfaces
+
+@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@node Detailed Design Description, Java Modeling Language Specifications, EBON Design Description, Stages of the Mobius Process
+@section Detailed Design Description
+
+@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@node Java Modeling Language Specifications, Specification-driven Unit Tests, Detailed Design Description, Stages of the Mobius Process
+@section Java Modeling Language Specifications
+
+@cindex Java Modeling Language specifications
+@cindex JML specifications
+
+@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@node Specification-driven Unit Tests, Scenario-driven Unit Tests, Java Modeling Language Specifications, Stages of the Mobius Process
+@section Specification-driven-driven Unit Tests
+
+@cindex specification-driven unit tests
+@cindex unit tests, specification-driven
+@cindex method-level unit tests
+@cindex unit tests, method-level
+
+@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@node Scenario-driven Unit Tests,  , Specification-driven Unit Tests, Stages of the Mobius Process
+@section Scenario-driven Unit Tests
+
+@cindex scenario-driven unit tests
+@cindex unit tests, scenario-driven
+@cindex unit tests, class-level
+@cindex unit tests, component-level
+@cindex unit tests, system-level
+@cindex unit tests
+
+@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@node Ongoing Project Management, Case Studies in Applying the Mobius Process, Stages of the Mobius Process, Top
+@chapter Ongoing Project Management
+
+@cindex ongoing project management
+@cindex project management
+@cindex management
+
+@menu
+* Risk Assessment::             
+* Schedule::                    
+@end menu
+
+@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@node Risk Assessment, Schedule, Ongoing Project Management, Ongoing Project Management
+@section Risk Assessment
+
+@cindex risk assessment
+@cindex risk
+
+@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@node Schedule,  , Risk Assessment, Ongoing Project Management
+@section Schedule
+
+@cindex schedule
+
+@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@node Case Studies in Applying the Mobius Process, Copying, Ongoing Project Management, Top
+@chapter Case Studies in Applying the Mobius Process
+
+@cindex case study
+@cindex case studies
+@cindex Mobius process case studies
+
+@menu
+* The JML Eclipse Plugin::      
+* The ESC/Java2 Eclipse Plugin::  
+@end menu
+
+@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@node The JML Eclipse Plugin, The ESC/Java2 Eclipse Plugin, Case Studies in Applying the Mobius Process, Case Studies in Applying the Mobius Process
+@section The JML Eclipse Plugin
+
+@cindex JML Eclipse plugin
+@cindex Eclipse plugin, JML
+
+The JML Eclipse plugin is just that: a plugin for the Eclipse IDE that
+``wraps'' several JML tools in one convenient integrated interface.  It
+was originally designed and written by Edwin Rodriguez who is a PhD
+students in the SAnToS Group at Kansas State University.
+
+@c TODO: add accent to Edwin's name
+@c TODO: double-check SAnToS capitalization
+@c TODO: add Santos URL
+@c TODO: add JML Eclipse URL
+
+JML Eclipse is meant to provide two core, customizable features.  First,
+the plugin must automatically syntax highlight and typecheck JML
+specifications in a manner that is natural and well-integrated with
+Eclipse's complementary capabilities for Java.  Second, the plugin must
+permit the developer to manually execute the various core JML tools as
+needed.  As usual with Eclipse plugins, customization of these features
+must be accomplished via the Eclipse preferences subsystem.
+
+@menu
+* JML Eclipse Historical Context::  
+* JML Eclipse First Impressions::  
+* JML Eclipse High-level Review::  
+* JML Eclipse Natural Language Documentation::  
+@end menu
+
+@c -----------------------------------------------------------------------------
+@node JML Eclipse Historical Context, JML Eclipse First Impressions, The JML Eclipse Plugin, The JML Eclipse Plugin
+@subsection JML Eclipse Historical Context
+
+@cindex Historical Context, JML Eclipse
+
+@c developed at KSU
+@c case study in learning about JDT
+@c limitations of extensibility of JDT leadsto ugly architectural decisions
+@c leadsto lack of updates for new versions of Eclipse
+
+@c -----------------------------------------------------------------------------
+@node JML Eclipse First Impressions, JML Eclipse High-level Review, JML Eclipse Historical Context, The JML Eclipse Plugin
+@subsection JML Eclipse First Impressions
+
+@cindex First Impressions, JML Eclipse
+
+The CVS repository for JML Eclipse is located at KSU's CVS server and
+managed by their GForge.  I checked out the full repository with the
+assistance of Edwin during my visit to KSU in the last two weeks of
+July.
+
+@c TODO: add link to cvs.projects.cis.ksu.edu
+
+The repository is a bit of a mess because it contains:
+@itemize
+@item
+the source code for the JML Eclipse plugin,
+@item
+a snapshot of the source code of part of the JDT shipped with some
+subsubversion of Eclipse 3.0, and
+@item
+some placeholder directories that were meant to contain the design and
+code for a new version of JML Eclipse, built from scratch by Edwin,
+taking into account everything he learned during the implementation of
+the original version of the tool.
+@end itemize
+
+In particular:
+@itemize
+@item
+The directory/module @file{JMLEclipse-UI} is empty.
+@item
+The directory @file{JMLEclipse-core} contains an Eclipse project that
+was meant to contain the new plugin code, but which never got started.
+@item
+The directory @file{jmleclipse-checker} contains an Eclipse project for
+the plugin.  Included in the project is the plugin source code, user
+documentation, and supplementary artifacts like icons and XML-based
+plugin descriptors.
+@item
+The directory @file{jmleclipse-docs} contains a Powerpoint presentation
+summarizing the JML Eclipse plugin.
+@c TODO: check contents of flier, explain where/when it was used, and if
+@c it is out-of-date or not.
+@item
+The directory @file{jmleclipse-enhanced-feature} contains a
+@file{feature.xml} file that (re-)specifies the core JDT UI plugin that
+helps the JML Eclipse checker plugin realize JML syntax highlighting and
+typechecking.  This file stipulates the Eclipse JDT UI plugin's
+features, the Eclipse plugins on which the that Eclipse plugin depends,
+and some metadata about the plugin (e.g., its version number, license,
+etc.).  This feature specification is thus a (possibly slightly
+modified) version of the @file{feature.xml} found in the Eclipse source
+tree for the @code{org.eclipse.jdt.ui} plugin.
+@item
+The directory @file{jmleclipse-feature} contains a @file{feature.xml}
+that specifies a set of plugins that enable the use of JML in Eclipse.
+In particular, it includes the checker and the JML specifications and
+their dependencies (e.g., core, UI, JDT, and other Eclipse components).
+@item
+The directory @file{jmleclipse-site} contains the @file{site.xml} file
+that is used by Eclipse to identify plugins/features.
+@item
+The directory @file{org.eclipse.jdt.ui-jmlpatch} contains modified
+Eclipse 3.0 JDT classes for integrating the JML typechecker into the
+JDT.
+@end itemize
+
+Each plugin contains versioning info (e.g., 0.1.1) and license (all of
+this work is GPL2 licensed).
+
+@c -----------------------------------------------------------------------------
+@node JML Eclipse High-level Review, JML Eclipse Natural Language Documentation, JML Eclipse First Impressions, The JML Eclipse Plugin
+@subsection JML Eclipse High-level Review
+
+@cindex High-level Review, JML Eclipse
+
+The system diagram for the JML Eclipse plug-in is as follows, given the
+above overview.  
+
+Note that this overview does not specify the existing @emph{physical}
+structure, but instead specifies its @emph{conceptual} structure.  The
+conceptual structure often motivates the physical, and once this type of
+review is completed, the repository will be reorganized.
+
+@include jml_eclipse/JML_Eclipse_System_Chart.texinfo
+
+Here is the same EBON chart, using the EBON text format.
+
+@c .............................................................................
+@float Chart,fig:JML_Eclipse_System_Chart.bon
+
+@example
+@include jml_eclipse/JML_Eclipse_System_Chart.bon
+@end example
+
+@caption{The JML Eclipse System, BON Text}
+@end float
+@c .............................................................................
+
+These four subsystems are summarized as follows using cluster charts.
+
+@include jml_eclipse/JML_Eclipse_Documentation_Cluster_Chart.texinfo
+
+@include jml_eclipse/JML_Eclipse_Checker_Facade_Cluster_Chart.texinfo
+
+@include jml_eclipse/JML_Eclipse_JML_JDT_Cluster_Chart.texinfo
+
+@include jml_eclipse/JML_Eclipse_Website_Cluster_Chart.texinfo
+
+@c -----------------------------------------------------------------------------
+@node JML Eclipse Natural Language Documentation,  , JML Eclipse High-level Review, The JML Eclipse Plugin
+@subsection JML Eclipse Natural Language Documentation
+
+@cindex Natural Language Documentation, JML Eclipse
+
+@c license
+@c jml.html
+@c overview.html
+@c javadoc
+@c jml
+
+@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@node The ESC/Java2 Eclipse Plugin,  , The JML Eclipse Plugin, Case Studies in Applying the Mobius Process
+@section The ESC/Java2 Eclipse Plugin
+
+@cindex ESC/Java2 Eclipse plugin
+@cindex Eclipse plugin, ESC/Java2
+
+@c @c =============================================================================
+@c @node Specifications
+@c @unnumbered List of Charts
+@c @listoffloats Chart
+
+@c @unnumbered List of Diagrams
+@c @listoffloats Diagram
+
+@c @unnumbered List of Interface Specifications
+@c @listoffloats Interface
+
+@c =============================================================================
+@node Copying, Index, Case Studies in Applying the Mobius Process, Top
+@appendix Copying
+
+@cindex Copying
+
+@insertcopying
+
+@c %**end of body
+@c =============================================================================
+
+@c =============================================================================
+@c %**end of document
+
+@node Index,  , Copying, Top
+@unnumbered Index
+
+@printindex cp
+
+@bye
+
+@c Local Variables:
+@c auto-fill-function: nil
+@c End:

@@ -1,0 +1,21 @@
+cluster_chart DOCUMENTATION
+indexing
+  author: "Joseph Kiniry";
+  keywords: "JML Eclipse documentation", "documentation", "docs";
+explanation
+  "The programmer and user documentation for the JML Eclipse plugin."
+cluster USER_DOCUMENTATION
+description
+  "TBD"
+cluster PAPERS
+description
+  "TBD"
+cluster PRESENTATIONS
+description
+  "TBD"
+cluster PROGRAMMER_DOCUMENTATION
+description
+  "TBD"
+end
+
+

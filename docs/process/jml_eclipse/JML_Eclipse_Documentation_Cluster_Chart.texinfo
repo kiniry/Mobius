@@ -1,0 +1,36 @@
+@c .............................................................................
+@float Chart,fig:JML_Eclipse_Documentation_Cluster_Chart
+
+@multitable @columnfractions .15 .70 .15
+@item @b{CLUSTER}
+@tab DOCUMENTATION
+@tab @b{Part:} 1/1
+@end multitable
+@multitable @columnfractions .50 .50
+@item @b{PURPOSE}
+
+The programmer and user documentation for the JML Eclipse plugin.
+@tab
+@b{INDEXING}
+
+@b{author:} Joseph Kiniry
+
+@b{keywords:} JML Eclipse documentation, documentation, docs
+@end multitable
+@multitable @columnfractions .4 .6
+@item @b{Class/(Cluster)}
+@tab
+@b{Description}
+@item (USER_DOCUMENTATION)
+@tab TBD
+@item (PAPERS)
+@tab TBD
+@item (PRESENTATIONS)
+@tab TBD
+@item (PROGRAMMER_DOCUMENTATION)
+@tab TBD
+@end multitable
+
+@caption{JML Eclipse Documentation}
+@end float
+@c .............................................................................

@@ -1,0 +1,34 @@
+@c .............................................................................
+@float Chart,fig:JML_Eclipse_Website_Cluster_Chart
+
+@multitable @columnfractions .15 .70 .15
+@item @b{CLUSTER}
+@tab CHECKER_FACADE
+@tab @b{Part:} 1/1
+@end multitable
+@multitable @columnfractions .50 .50
+@item @b{PURPOSE}
+
+The website supporting this system.
+@tab
+@b{INDEXING}
+
+@b{author:} Joseph Kiniry
+
+@b{keywords:} JML Eclipse website
+@end multitable
+@multitable @columnfractions .33 .66
+@item @b{Class/(Cluster)}
+@tab
+@b{Description}
+@item (PUBLIC_WEBSITE)
+@tab TBD
+@item (PRIVATE_WEBSITE)
+@tab TBD
+@item (REMOTE_UPDATE)
+@tab TBD
+@end multitable
+
+@caption{JML Eclipse Website}
+@end float
+@c .............................................................................

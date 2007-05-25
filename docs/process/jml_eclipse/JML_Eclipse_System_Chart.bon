@@ -1,0 +1,21 @@
+system_chart JML_ECLIPSE
+indexing
+  author: "Joseph Kiniry";
+  keywords: "JML Eclipse", "JML Eclipse plugin", "JML", "Eclipse", "Java";
+explanation
+  "A plugin that interfaces the core JML tools to the Eclipse Java \
+   development environment."
+cluster CHECKER_FACADE
+description
+  "An interface between the JML tools code and the Eclipse front-end."
+cluster DOCUMENTATION
+description
+  "The programmer and user documentation for the JML Eclipse plugin."
+cluster JML_JDT
+description
+  "A modified version of the Eclipse JDT to support integration of JML \
+   support."
+cluster WEBSITE
+description
+  "The website supporting this system."
+end

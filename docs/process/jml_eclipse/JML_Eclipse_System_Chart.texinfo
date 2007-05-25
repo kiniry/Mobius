@@ -1,0 +1,37 @@
+@c .............................................................................
+@float Chart,fig:JML_Eclipse_System_Chart
+
+@multitable @columnfractions .15 .70 .15
+@item @b{SYSTEM}
+@tab JML_ECLIPSE
+@tab @b{Part:} 1/1
+@end multitable
+@multitable @columnfractions .50 .50
+@item @b{PURPOSE}
+
+A plugin that interfaces the core JML tools to the Eclipse Java
+development environment.
+@tab
+@b{INDEXING}
+
+@b{author:} Joseph Kiniry
+
+@b{keywords:} JML Eclipse, JML Eclipse plugin, JML, Eclipse, Java
+@end multitable
+@multitable @columnfractions .4 .6
+@item @b{Cluster}
+@tab
+@b{Description}
+@item CHECKER_FACADE
+@tab An interface between the JML tools code and the Eclipse front-end.
+@item DOCUMENTATION
+@tab The programmer and user documentation for the JML Eclipse plugin.
+@item JML_JDT
+@tab A modified version of the Eclipse JDT to support integration of JML support.
+@item WEBSITE
+@tab The website supporting this system.
+@end multitable
+
+@caption{The JML Eclipse System}
+@end float
+@c .............................................................................
