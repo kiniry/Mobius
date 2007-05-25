@@ -42,7 +42,7 @@ public class Main extends escjava.Main {
 		for(int i = 2; i < args.length; escargs[i - 2] = args[i++]);
 		
 		// Configuring base dir
-		basedir = new File(args[0], "proofs" + File.separator);
+		basedir = new File(args[0], "vcs" + File.separator);
 		System.out.println("Output dir is set to: " + basedir);
 		System.out.print("Making the directories if they don't exist... ");
 		if(!basedir.exists()) {
