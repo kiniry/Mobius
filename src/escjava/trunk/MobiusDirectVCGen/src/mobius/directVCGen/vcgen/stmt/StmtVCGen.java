@@ -121,16 +121,28 @@ public class StmtVCGen extends ExpressionVisitor {
 		return new Post(post);
 	}
 	
+	
 	public /*@non_null*/ Object visitAssertStmt(/*@non_null*/ AssertStmt x, Object o) {
-		return illegalStmt(x, o);
+		// TODO: understand the difference 'tween x.pred and x.IfStmt
+		VCEntry entry = (VCEntry) o;
+		Post post = treatAnnot(entry, annot.getAnnotPost(x));
+		QuantVariableRef b  = Expression.rvar(Bool.sort);
+		
+		post = new Post(b, Logic.safe.and(b, Logic.safe.implies(b, post.post)));
+		entry.post = post;
+		post = (Post)x.pred.accept(exprVisitor, entry);
+		return treatAnnot( entry, annot.getAnnotPre(x));
 	}
 	
+	// TODO: add comments
 	public VCEntry mkEntryBlock (VCEntry vce) {
 		VCEntry res = new VCEntry(vce);
 		res.brpost = vce.post;
 	    return res;	
 		
 	}
+	
+	// TODO: add comments
 	@Override
 	public /*@non_null*/ Object visitBlockStmt(/*@non_null*/ BlockStmt x, Object o) {		
 		int max = x.childCount();
@@ -147,6 +159,7 @@ public class StmtVCGen extends ExpressionVisitor {
 		return treatAnnot( vce, annot.getAnnotPre(x));
 	}	
 	
+	// TODO: add comments
 	public Post visitInnerBlockStmt (/*@non_null*/ Stmt x, VCEntry vce) {	
 		if(!(x instanceof BlockStmt)) {
 			return (Post)x.accept(this, vce);
@@ -162,15 +175,21 @@ public class StmtVCGen extends ExpressionVisitor {
 		return vce.post;
 	}	
 	
+	/*
+	 * (non-Javadoc)
+	 * @see javafe.ast.VisitorArgResult#visitStmt(javafe.ast.Stmt, java.lang.Object)
+	 */
 	@Override
 	public Object visitStmt(Stmt x, Object o){
 		throw new IllegalArgumentException("Not yet implememented");
 	}
 	
+	// TODO: duplicated code should be removed
 	public Object illegalStmt(ASTNode x, Object o){
 		throw new IllegalArgumentException("Illegal Statement");
 	}
 	
+	// TODO: add comments
 	public VCEntry mkEntryWhile(VCEntry ve, Post inv) {
 		VCEntry res = new VCEntry(ve);
 		res.brpost = ve.post;
@@ -179,6 +198,7 @@ public class StmtVCGen extends ExpressionVisitor {
 		return res;	
 	}
 
+	// TODO: add comments
 	public /*@non_null*/ Object visitWhileStmt(/*@non_null*/ WhileStmt x, Object o) {
 		VCEntry vce = (VCEntry)o;
 		vce.post = treatAnnot( vce, annot.getAnnotPost(x));
@@ -204,7 +224,7 @@ public class StmtVCGen extends ExpressionVisitor {
 		return treatAnnot(vce, annot.getAnnotPre(x));
 	}
 
-
+	// TODO: add comments
 	public /*@non_null*/ Object visitEvalStmt(/*@non_null*/ EvalStmt x, Object o) {
 		VCEntry vce = (VCEntry) o;
 		vce.post = treatAnnot( vce, annot.getAnnotPost(x));
@@ -215,6 +235,7 @@ public class StmtVCGen extends ExpressionVisitor {
 		return treatAnnot(vce, annot.getAnnotPre(x));
 	}
 
+	// TODO: add comments
 	public /*@non_null*/ Object visitReturnStmt(/*@non_null*/ ReturnStmt x, Object o) {
 		// Goog to ensure that x.annotPost == Null
 		// and so remove this line
@@ -237,6 +258,7 @@ public class StmtVCGen extends ExpressionVisitor {
 		
 	}
 	
+	// TODO: add comments
 	public static Post getExcpPost(Term typ, VCEntry vce) {
 		Iterator iter = vce.lexcpost.iterator();
 		Post res = vce.excpost;
@@ -257,7 +279,7 @@ public class StmtVCGen extends ExpressionVisitor {
 		return res;
 	}
 	
-
+	// TODO: add comments
 	public /*@non_null*/ Object visitThrowStmt(/*@non_null*/ ThrowStmt x, Object o) {
 		VCEntry vce = (VCEntry)o;
 		vce.post = treatAnnot( vce, annot.getAnnotPost(x));
@@ -267,17 +289,21 @@ public class StmtVCGen extends ExpressionVisitor {
 		return treatAnnot(vce, annot.getAnnotPre(x));
 	}
 	
+	// TODO: add comments
 	public Post getBreakPost(Identifier label,VCEntry vce) {
 		if (label == null) return vce.brpost; 
 		return vce.lbrpost.get(label);
 	}
 	
+	// TODO: add comments
 	public /*@non_null*/ Object visitBreakStmt(/*@non_null*/ BreakStmt x, Object o) {
 		VCEntry vce = (VCEntry) o;
+		// there should be no annot post since it is a control flow exit sttment
 		vce.post = getBreakPost(x.label, vce);
 		return treatAnnot(vce, annot.getAnnotPre(x));
 	}
 	
+	// TODO: add comments
 	public Post getContinuePost(Identifier label,VCEntry vce) {
 		if (label == null) {
 			if(vce.contpost == null)
@@ -287,12 +313,15 @@ public class StmtVCGen extends ExpressionVisitor {
 		return vce.lcontpost.get(label);
 	}
 	
+	// TODO: add comments
 	public /*@non_null*/ Object visitContinueStmt(/*@non_null*/ ContinueStmt x, Object o) {
 		VCEntry vce = (VCEntry) o;
+		
 		vce.post = getContinuePost(x.label, vce);
 		return treatAnnot(vce, annot.getAnnotPre(x));
 	}
 	
+	// TODO: add comments
 	public VCEntry mkEntryLoopLabel(Identifier label, VCEntry ve, Post continu) {
 		VCEntry res = new VCEntry(ve);
 		res.brpost = ve.post;
@@ -302,6 +331,7 @@ public class StmtVCGen extends ExpressionVisitor {
 		return res;	
 	}
 	
+	// TODO: add comments
 	public /*@non_null*/ Object visitLabelStmt(/*@non_null*/ LabelStmt x, Object o) {
 		Stmt s = x.stmt;
 		VCEntry vce = (VCEntry)o;
@@ -313,6 +343,7 @@ public class StmtVCGen extends ExpressionVisitor {
 		return treatAnnot(vce, annot.getAnnotPre(x));
 	}
 	
+	// TODO: add comments
 	public /*@non_null*/ Object visitIfStmt(/*@non_null*/ IfStmt x, Object o) {
 		VCEntry vce = (VCEntry) o;
 		Post postBranch = treatAnnot(vce, annot.getAnnotPost(x));
@@ -331,12 +362,14 @@ public class StmtVCGen extends ExpressionVisitor {
 		return treatAnnot(vce, annot.getAnnotPre(x));
 	}
 		
+	// TODO: add comments
 	public /*@non_null*/ Object visitSkipStmt(/*@non_null*/ SkipStmt x, Object o) {
 		VCEntry vce = (VCEntry) o;
 		vce.post = treatAnnot(vce, annot.getAnnotPost(x));
 		return treatAnnot(vce, annot.getAnnotPre(x));
 	}
 		
+	// TODO: add comments
 	public /*@non_null*/ Object visitTryFinallyStmt(/*@non_null*/ TryFinallyStmt x, Object o) {
 		VCEntry vce = (VCEntry) o;
 		vce.post = treatAnnot(vce, annot.getAnnotPost(x));
@@ -388,6 +421,7 @@ public class StmtVCGen extends ExpressionVisitor {
 		return treatAnnot(vce, annot.getAnnotPre(x));
 	}
 
+	// TODO: add comments
 	public /*@non_null*/ Object visitTryCatchStmt(/*@non_null*/ TryCatchStmt x, Object o) {
 		VCEntry vce = (VCEntry) o;
 		vce.post = treatAnnot(vce, annot.getAnnotPost(x));
@@ -413,7 +447,7 @@ public class StmtVCGen extends ExpressionVisitor {
 		return treatAnnot(vce, annot.getAnnotPre(x));
 	}
 
-
+	// TODO: add comments
 	public /*@non_null*/ Object visitVarDeclStmt(/*@non_null*/ VarDeclStmt x, Object o) {
 		VCEntry vce = (VCEntry) o;
 		vce.post = treatAnnot(vce, annot.getAnnotPost(x));
@@ -439,6 +473,11 @@ public class StmtVCGen extends ExpressionVisitor {
 		return treatAnnot(vce, annot.getAnnotPre(x));
 	}
 	
+	/**
+	 * Add the variable to the list of the declared variables.
+	 * The variable is added to each vcs.
+	 * @param qv the variable to declare
+	 */
 	private void addVarDecl(QuantVariable qv) {
 		Vector<Term> oldvcs = vcs;
 		vcs = new Vector<Term>();
@@ -449,6 +488,7 @@ public class StmtVCGen extends ExpressionVisitor {
 	}
 
 
+	// TODO: add comments
 	// already treated in the try clause
 	public /*@non_null*/ Object visitCatchClause(/*@non_null*/ CatchClause x, Object o) {
 		return visitASTNode(x, o);
@@ -457,7 +497,7 @@ public class StmtVCGen extends ExpressionVisitor {
 
 	
 	
-
+	// TODO: add comments
 	public /*@non_null*/ Object visitConstructorInvocation(/*@non_null*/ ConstructorInvocation ci, Object o) {
 		VCEntry entry = (VCEntry)o;
 		Post normalPost = Lookup.normalPostcondition(ci.decl);
@@ -485,7 +525,7 @@ public class StmtVCGen extends ExpressionVisitor {
 		return entry.post;
 	}
 	
-
+	// TODO: add comments
 	public static Vector<QuantVariableRef> mkArguments(ConstructorInvocation mi) {
 		Vector<QuantVariableRef> v = new Vector<QuantVariableRef>();
 		FormalParaDeclVec fpdvec = mi.decl.args;
@@ -495,6 +535,10 @@ public class StmtVCGen extends ExpressionVisitor {
 		}
 		return v;
 	}
+	/**
+	 * @see
+	 */
+	@Override
 	public /*@non_null*/ Object visitDoStmt(/*@non_null*/ DoStmt x, Object o) {
 		return visitStmt(x, o);
 	}

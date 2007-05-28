@@ -1,6 +1,5 @@
 package mobius.directVCGen.vcgen.expression;
 
-import javafe.ast.ASTNode;
 import javafe.ast.AmbiguousMethodInvocation;
 import javafe.ast.AmbiguousVariableAccess;
 import javafe.ast.ArrayInit;
@@ -33,14 +32,16 @@ import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
 
 public class ExpressionVisitor extends ABasicVisitor {
-	ExpressionVCGen vcg;
+	private final ExpressionVCGen vcg;
+	
+	/**
+	 * The default constructor.
+	 */
 	public ExpressionVisitor() {
 		vcg = new ExpressionVCGen(this);
 	}
 	
-	public static Object illegalExpr(ASTNode x, Object o){
-		throw new IllegalArgumentException("Illegal Expression");
-	}
+
 	
 	
 	public Object visitBinaryExpr(BinaryExpr expr, Object o) {
@@ -104,7 +105,7 @@ public class ExpressionVisitor extends ABasicVisitor {
 	}
 	
 
-
+	// TODO: add comments
 	public Object visitLiteralExpr(LiteralExpr expr,  Object o) {
 		VCEntry vce = (VCEntry) o;
 		Post result = vce.post;
@@ -148,6 +149,10 @@ public class ExpressionVisitor extends ABasicVisitor {
 		return new Post(result.var, term);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see javafe.ast.VisitorArgResult#visitUnaryExpr(javafe.ast.UnaryExpr, java.lang.Object)
+	 */
 	public Object visitUnaryExpr(UnaryExpr expr, Object o) {
 		VCEntry post = (VCEntry) o;
 		switch(expr.op) {
@@ -174,7 +179,10 @@ public class ExpressionVisitor extends ABasicVisitor {
 		}
 	}
 	
-	
+	/*
+	 * (non-Javadoc)
+	 * @see javafe.ast.VisitorArgResult#visitThisExpr(javafe.ast.ThisExpr, java.lang.Object)
+	 */
 	public /*@non_null*/ Object visitThisExpr(/*@non_null*/ ThisExpr x, Object o) {
 		VCEntry vce = (VCEntry) o;
 		return new Post(vce.post.substWith(Ref.varThis));// variable particuliere
@@ -218,9 +226,6 @@ public class ExpressionVisitor extends ABasicVisitor {
 	
 	public /*@non_null*/ Object visitFieldAccess(/*@non_null*/ FieldAccess x, Object o) {
 		return vcg.fieldAccess(x, (VCEntry) o);
-
-
-		
 	}
 
 	public /*@non_null*/ Object visitNewInstanceExpr(/*@non_null*/ NewInstanceExpr x, Object o) {
@@ -237,9 +242,7 @@ public class ExpressionVisitor extends ABasicVisitor {
 	}
 
 	public /*@non_null*/ Object visitArrayInit(/*@non_null*/ ArrayInit init, Object o) {
-		return vcg.arrayInit(init, (VCEntry) o);
-		
-		
+		return vcg.arrayInit(init, (VCEntry) o);	
 	}
 	
 	public /*@non_null*/ Object visitArrayRefExpr(/*@non_null*/ ArrayRefExpr x, Object o) {
@@ -253,6 +256,7 @@ public class ExpressionVisitor extends ABasicVisitor {
 	public /*@non_null*/ Object visitAmbiguousVariableAccess(/*@non_null*/ AmbiguousVariableAccess x, Object o) {
 	    return visitExpr(x, o);
 	}
+	
 	public /*@non_null*/ Object visitAmbiguousMethodInvocation(/*@non_null*/ AmbiguousMethodInvocation x, Object o) {
 	    return visitExpr(x, o);
 	}

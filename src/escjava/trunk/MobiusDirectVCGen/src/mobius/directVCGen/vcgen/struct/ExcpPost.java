@@ -1,6 +1,4 @@
-/**
- * 
- */
+
 package mobius.directVCGen.vcgen.struct;
 
 import escjava.sortedProver.Lifter.Term;
