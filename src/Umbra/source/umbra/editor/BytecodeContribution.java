@@ -31,7 +31,7 @@ public class BytecodeContribution extends ControlContribution {
 	private boolean needNew = true;
 	
 	/**
-	 * TODO
+	 * Text of the status label: "Correct", "Error in line ..." etc.
 	 */
 	private Label labelText;
 	
