@@ -1,9 +1,6 @@
 AnnGenerationLemmas[CP : TYPE+] : THEORY
 BEGIN
 
-%    IMPORTING Equivalence[CP],
-%              listfuncs
-
   IMPORTING MVASemantics[CP, string],
             AnnotatedProgramSemantics[string],
             MonitoredProgramSemantics[CP, string],
@@ -11,11 +8,9 @@ BEGIN
             AnnotateProgramProperties[CP, string],
             listfuncs
 
-%  cp2val(q : CP) : Val = Int(unique(q))
-
   % Says if an MVA state is modeled by a state of an annotated program
   MVA_modeled?(a : MVA)(sA : AState, sAP : APState) : boolean =
-    (Int(unique(cp(sA))) = gvs(sAP)("cp")) AND
+    (Int(unique(cp(sA))) = gvs(sAP)(cp)) AND
     (FORALL (q : CP) : cps(a)(q) IMPLIES
       Int(unique(q)) = gvs(sAP)(name_of(q))) AND
     (FORALL (n : string) : NOT Bottom?(stA(sA)(n)) IMPLIES
@@ -23,7 +18,7 @@ BEGIN
     (cp(sA) = halted IMPLIES
       up?(ex(pstate(sAP))) AND down(ex(pstate(sAP))) = JMLExc)
 
-  % Says if sAP is a "super state" of sMP
+  % Says if sAP is a super state of sMP
   Program_modeled?(sMP : MPState, sAP : APState) : boolean =
     pstate(sMP) = pstate(sAP) AND
     FORALL (n : string) : NOT Bottom?(gvs(sMP)(n)) IMPLIES
@@ -41,54 +36,45 @@ BEGIN
 
   non_interference_of_set_stmt : LEMMA % :-)
     FORALL (p : Program, c : Stmt, s1, s2 : APState, n : nat, vn : string) :
-      Set?(c) IMPLIES
+      Set?(c) AND
       NOT target(c) = vn IMPLIES
       (FORALL (tau1, tau2 : APState, v : Val, n2 : nat) :
-        (deriv_expr(p)(source(c), tau1, v, tau2)(n2) IMPLIES tau1 = tau2))
+        deriv_expr(p)(source(c), tau1, v, tau2)(n2) IMPLIES tau1 = tau2)
       IMPLIES
       deriv_stmt(p)(c, s1, s2)(n) IMPLIES
         gvs(s1)(vn) = gvs(s2)(vn)
-
-  list_to_sequence(l : list[Stmt]) : RECURSIVE Stmt =
-    CASES l OF
-      null : Skip,
-      cons(x, xs) : Sequence(x, list_to_sequence(xs))
-    ENDCASES
-    MEASURE length(l)
 
   sequence_of_sets(c : Stmt) : RECURSIVE boolean =
     Skip?(c) OR Sequence?(c) AND Set?(s1(c)) AND sequence_of_sets(s2(c))
     MEASURE c BY <<
 
-  sequence_to_list(c : (sequence_of_sets)) : RECURSIVE list[Stmt] =
-    IF Skip?(c) THEN null
-    ELSE cons(s1(c), sequence_to_list(s2(c)))
-    ENDIF
-    MEASURE c BY <<
-
-  list_to_sequence_inverse : LEMMA % :-)
-    FORALL (c : (sequence_of_sets)) :
-      list_to_sequence(sequence_to_list(c)) = c
+  ann_action_is_sequence_of_sets : LEMMA % :-)
+    FORALL (a : Action) :
+      sequence_of_sets(ann_action(a))
 
   non_interference_of_set_stmt_sequence : LEMMA % :-)
-    FORALL (p : Program, sets : list[Stmt], s1, s2 : APState, 
+    FORALL (p : Program, sets : (sequence_of_sets), s1, s2 : APState, 
             n : nat, vn : string) :
-      (FORALL (c : Stmt) : 
-        member(c, sets) IMPLIES 
-          Set?(c) AND
-          NOT target(c) = vn AND
-          (FORALL (tau1, tau2 : APState, v : Val, n2 : nat) :
-            (deriv_expr(p)(source(c), tau1, v, tau2)(n2) IMPLIES tau1 = tau2)))
-      IMPLIES
-      deriv_stmt(p)(list_to_sequence(sets), s1, s2)(n) IMPLIES
-        gvs(s1)(vn) = gvs(s2)(vn)
+      (FORALL (c : Stmt) :
+        c << sets IMPLIES
+          Skip(c) OR
+          (Set?(c) IMPLIES
+            NOT target(c) = vn AND
+            FORALL (tau1, tau2 : APState, v : Val, n2 : nat) :
+              deriv_expr(p)(source(c), tau1, v, tau2)(n2) IMPLIES tau1 = tau2))
+        IMPLIES
+        deriv_stmt(p)(sets, s1, s2)(n) IMPLIES
+          gvs(s1)(vn) = gvs(s2)(vn)
 
   ann_action_correcteness : LEMMA
-    FORALL (mp : MonitoredProgram, ap : Program, t : Transition)
-           (sMVA : AState, sMP : MPState, sAP1, sAP2 : APState)
-           (n : nat) :
+    FORALL (mp : MonitoredProgram, ap : Program, 
+            t : Transition, c : Class, m : Method,
+            sMVA : AState, sMP : MPState, sAP1, sAP2 : APState,  n : nat) :
+      assertions_have_no_side_effect(ap) IMPLIES
       MP_modeled?(mp, ap)(sMP, sAP1) IMPLIES
       ts(mva(mp))(t) IMPLIES
+      classes(program(mp))(c) IMPLIES
+      name(c) = class_name(mva(mp)) IMPLIES
       sMVA = (# cp := tcp(t),
                 stA := execute_action(action(t))(stA(astate(sMP)), 
                                                  st(pstate(sMP)))

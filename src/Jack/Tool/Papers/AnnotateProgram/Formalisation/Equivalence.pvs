@@ -11,7 +11,7 @@ BEGIN
 
   % Says if an MVA state is modeled by a state of an annotated program
   MVA_modeled?(sA : AState, sAP : APState) : boolean =
-    (cp2val(cp(sA)) = gvs(sAP)("cp")) AND
+    (cp2val(cp(sA)) = gvs(sAP)(cp)) AND
     (FORALL (n : string) : NOT Bottom?(stA(sA)(n)) IMPLIES
       stA(sA)(n) = gvs(sAP)(n)) AND
     (cp(sA) = halted IMPLIES

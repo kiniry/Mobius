@@ -24,7 +24,7 @@ BEGIN
   Bool(b : bool) : Bool?
   Null : Null?
   RefType(a : int) : RefType?
-  Unit : Unit?        % dummy value returned to void functions
+  Unit : Unit?        % dummy value returned by void functions
   Bottom : Bottom?    % undefined value
 
 
@@ -92,9 +92,9 @@ BEGIN
     ENDIF
 
   val2int(v : Val) : int = 
-    IF Int?(v) 
-    THEN i(v) 
-    ELSE 0 
+    IF Int?(v)
+    THEN i(v)
+    ELSE 0
     ENDIF
 
   val2bool(v : Val) : bool =
@@ -170,8 +170,7 @@ Evaluation[Name : TYPE+,
            lookup : [Name, FullState -> Val]] : THEORY
 BEGIN
 
-  IMPORTING State[Name],
-            SizeFunctions[Name]
+  IMPORTING State[Name]
 
   % NOTE: I'm evaluating division by 0 to 0, I do not want to care about 
   % modeling that exception here. The result is floored (this should actually
@@ -189,7 +188,7 @@ BEGIN
                     ENDIF,
       NumVarEval(vn) : val2int(lookup(vn, sigma))
     ENDCASES
-  MEASURE size(n)
+  MEASURE n BY <<
 
   eval(b : BoolExpr)(sigma : FullState) : RECURSIVE bool =
     CASES b OF
@@ -206,7 +205,7 @@ BEGIN
       Ge(b1, b2) : eval(b1)(sigma) >= eval(b2)(sigma),
       BoolVarEval(vn) : val2bool(lookup(vn, sigma))
     ENDCASES
-  MEASURE size(b)
+  MEASURE b BY <<
 
 
 END Evaluation
@@ -326,13 +325,13 @@ BEGIN
                (c : Expr, sigma1 : FullState, v : Val, sigma2 : FullState)
                (m : below(k)) : 
           deriv_expr(p)(c, sigma1, v, sigma2)(m)(deriv_stmt_rec(m)),
-      deriv_stmt_bounded =
-        LAMBDA (m : upto(n))(k : upto(m))(p : FullProgram)
+      bounded_deriv_stmt_rec =
+        LAMBDA (i : upto(n))(k : upto(i))(p : FullProgram)
                (s : Stmt, sigma1, sigma2 : FullState)
                (m : below(k)) : 
           deriv_stmt(p)(s, sigma1, sigma2)(m),
-      deriv_expr_bounded =
-        LAMBDA (m : upto(n))(k : upto(m))(p : FullProgram)
+      bounded_deriv_expr_rec =
+        LAMBDA (i : upto(n))(k : upto(i))(p : FullProgram)
                (c : Expr, sigma1 : FullState, v : Val, sigma2 : FullState)
                (m : below(k)) : 
           deriv_expr(p)(c, sigma1, v, sigma2)(m)(deriv_stmt_rec(m))
@@ -364,6 +363,7 @@ BEGIN
           deriv_expr_rec(n)(p)(IF b(v1) THEN t ELSE e ENDIF, 
                                tau, v, sigma2)(m2),
       %TODO: update the values of "this" and initialize the local vars
+      %      if the return type is void then return Unit or Bottom
       MethodCall(e, mn, pr) :
         EXISTS (m1, m2, m3, m4, m5, m6 : nat)
                (tau1, tau2, tau3, tau4, tau5, tau6, tau7, tau8 : FullState)
@@ -387,7 +387,8 @@ BEGIN
           ENDIF AND
           % actions taken at the entry of the method
           on_method_entry(p, md, a, tau3, tau4, m3,
-                          deriv_stmt_bounded(m3), deriv_expr_bounded(m3)) AND
+                          bounded_deriv_stmt_rec(m3), 
+                          bounded_deriv_expr_rec(m3)) AND
           % give a name the value of the local variable before the call,
           % just for convenience (we don't lose the previous state)
           old_val_arg = lookup_local(name(arg(md)), pstate(tau4)) AND
@@ -400,9 +401,11 @@ BEGIN
           % actions taken at the exit of the method
           IF bottom?(ex(pstate(tau7)))
           THEN on_method_exit_normal(p, md, a, tau7, tau8, m6, 
-                                     deriv_stmt_bounded(m6), deriv_expr_bounded(m6))
+                                     bounded_deriv_stmt_rec(m6), 
+                                     bounded_deriv_expr_rec(m6))
           ELSE on_method_exit_exceptional(p, md, a, tau7, tau8, m6,
-                                          deriv_stmt_bounded(m6), deriv_expr_bounded(m6))
+                                          bounded_deriv_stmt_rec(m6), 
+                                          bounded_deriv_expr_rec(m6))
           ENDIF AND
           % restore the value of the argument
           sigma2 = update_FullState(update_local(name(arg(md)), old_val_arg),
@@ -574,6 +577,9 @@ BEGIN
           sigma1 = sigma2
 
 
+  % The following expression (that appear only in annotations) should have no
+  % side-effects: invariants, preconditions, postconditions, source expression
+  % of a set statement.
   assertions_have_no_side_effect(p : FullProgram) : boolean =
     FORALL (c : Class) :
       classes(program(p))(c) IMPLIES
@@ -584,7 +590,12 @@ BEGIN
               (FORALL (s1, s2 : FullState, v : Val, n : nat) :
                 deriv_expr(p)(pre(m), s1, v, s2)(n) IMPLIES s1 = s2) AND
               (FORALL (s1, s2 : FullState, v : Val, n : nat) :
-               deriv_expr(p)(post(m), s1, v, s2)(n) IMPLIES s1 = s2)
+                deriv_expr(p)(post(m), s1, v, s2)(n) IMPLIES s1 = s2) AND
+              (FORALL (s : Stmt) :
+                s << body(m) IMPLIES
+                Set?(s) IMPLIES
+                  FORALL (s1, s2 : FullState, v : Val, n : nat) :
+                    deriv_expr(p)(source(s), s1, v, s2)(n) IMPLIES s1 = s2)
 
   run_FullProgram(p : FullProgram)(main : Method, arg : int)
                  (s1, s2 : FullState)(n : nat) : boolean =

@@ -128,68 +128,6 @@ BEGIN
 END Stmt
 
 
-SizeFunctions[Name : TYPE+] : THEORY
-BEGIN
-
-  IMPORTING Expr[Name],
-            Stmt[Name]
-
-  size(n : NumExpr) : nat = 
-    reduce_nat(LAMBDA(x : int) : 0, 
-               LAMBDA(n1, n2 : nat) : n1 + n2 + 1,
-               LAMBDA(n1, n2 : nat) : n1 + n2 + 1,
-               LAMBDA(n1, n2 : nat) : n1 + n2 + 1,
-               LAMBDA(n1, n2 : nat) : n1 + n2 + 1,
-               LAMBDA(vn : Name) : 0)(n)
-
-  size(b : BoolExpr) : nat =
-    reduce_nat(0, 
-               0,
-               LAMBDA(n : nat) : 1 + n,
-               LAMBDA(n1, n2 : nat) : n1 + n2 + 1,
-               LAMBDA(n1, n2 : nat) : n1 + n2 + 1,
-               LAMBDA(n1, n2 : NumExpr) : size(n1) + size(n2) + 1,
-               LAMBDA(n1, n2 : NumExpr) : size(n1) + size(n2) + 1,
-               LAMBDA(n1, n2 : NumExpr) : size(n1) + size(n2) + 1,
-               LAMBDA(n1, n2 : NumExpr) : size(n1) + size(n2) + 1,
-               LAMBDA(n1, n2 : NumExpr) : size(n1) + size(n2) + 1,
-               LAMBDA(n1, n2 : NumExpr) : size(n1) + size(n2) + 1,
-               LAMBDA(vn : Name) : 0)(b)
-
-  size(r : RefExpr) : nat = 1
-
-  sum(l : list[nat]) : RECURSIVE nat =
-    CASES l OF
-      null : 0,
-      cons(n, l) : n + sum(l)
-    ENDCASES
-  MEASURE length(l)
-
-  size(e : Expr) : nat =
-    reduce_nat(LAMBDA(e : Name, n : nat) : n + 1,                  % Assign
-               LAMBDA(b : BoolExpr) : size(b),                     % BExpr
-               LAMBDA(n1, n2, n3 : nat) : n1 + n2 + n3 + 1,        % CondExpr
-               LAMBDA(n1 : nat, e : Name, n2 : nat) : n1 + n2 + 1, % MethodCall
-               LAMBDA(n : NumExpr) : size(n),                      % NExpr
-               LAMBDA(r : RefExpr) : size(r))(e)                   % RExpr
- 
-  size(s : Stmt) : nat = 
-    reduce_nat(LAMBDA(l : list[[Expr, nat]]) : 
-                 sum(map(LAMBDA (c : [Expr, nat]) :
-                   size(proj_1(c)) + proj_2(c), l)),               % CaseJML
-               LAMBDA(e : Expr, n1, n2 : nat) : size(e) + n1 + n2 +1, % If
-               LAMBDA(n1, n2 : nat) : n1 + n2 + 1,                 % Sequence
-               LAMBDA(e : Name, e : Expr) : size(e) + 1,           % Set
-               0,                                                  % Skip
-               LAMBDA(e : Expr) : size(e) + 1,                     % StmtExpr
-               0,                                                  % Throw
-               LAMBDA(n1, n2, n3 : nat) : n1 + n2 + n3 + 1,        % TryCatch
-               LAMBDA(e : Expr, n : nat) : size(e) + n + 1)(s)     % While
-
-               
-END SizeFunctions
-
-
 Program[Name : TYPE+] : THEORY
 BEGIN
   

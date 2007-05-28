@@ -12,12 +12,25 @@ BEGIN
 
   name_of : (injective?[CP, string])
 
+  cp : string
+
+  halted : string = name_of(halted)
+
+  % The generated ghost variables must have differnt names
+  disjoint_model_vars : AXIOM
+    FORALL (a : MVA, q : CP, vd : MVAVarDecl) :
+      cps(a)(q) IMPLIES
+      vdsA(a)(vd) IMPLIES
+        NOT name_of(q) = cp AND
+        NOT name(vd) = cp AND
+        NOT name_of(q) = name(vd)
+
 
   % Ghost variable declarations
 
   new_gvds(mp) : finite_set[GhostVarDecl] =
    {gd : GhostVarDecl | jtype(gd) = IntType AND
-     (name(gd) = "cp" AND init_val(gd) = Int(unique(init_cp(mva(mp))))) OR
+     (name(gd) = cp AND init_val(gd) = Int(unique(init_cp(mva(mp))))) OR
      ((EXISTS (q : (cps(mva(mp)))) : name(gd) = name_of(q) AND 
                                      init_val(gd) = Int(unique(q))) OR
       (EXISTS (v : (vdsA(mva(mp)))) : name(gd) = name(v) AND
@@ -34,7 +47,7 @@ BEGIN
   MEASURE length(l)
 
   update_vars(t : Transition) : Stmt =
-    Sequence(Set("cp", NExpr(NumVarEval(name_of(tcp(t))))), 
+    Sequence(Set(cp, NExpr(NumVarEval(name_of(tcp(t))))), 
                        ann_action(action(t)))
 
   IMPORTING MonitoredProgramSemantics[CP, string]
@@ -51,7 +64,7 @@ BEGIN
       proj_2(x) = update_vars(t)})
 
   ann_trans_cp(mp)(q : CP, ts : finite_set[Transition]) : [Expr, Stmt] =
-    (BExpr(Eq(NumVarEval("cp"), NumVarEval(name_of(q)))),
+    (BExpr(Eq(NumVarEval(cp), NumVarEval(name_of(q)))),
      CaseJML(ann_guard_actions(mp)(ts)))
 
   % Generates annotations to update the control point and the variables when an
@@ -86,8 +99,8 @@ BEGIN
 
   ann_class(mp)(c : Class) : Class =
     IF name(c) = class_name(mva(mp))
-    THEN c WITH [inv := BExpr(Conj(b(inv(c)), Neq(NumVarEval("cp"), 
-                                                  NumVarEval("halted")))),
+    THEN c WITH [inv := BExpr(Conj(b(inv(c)), Neq(NumVarEval(cp), 
+                                                  NumVarEval(halted)))),
                  ghost_vars := union(ghost_vars(c),
                                      new_gvds(mp)),
                  methods := ann_methods(mp)(methods(c))]
@@ -97,16 +110,16 @@ BEGIN
 
   % Program annotation
 
-  % NOTE: The case where there is no class c in p such that 
-  % name(c) = class_name(a) is trivial, thus to simplify proofs we restrict
-  % ourselves cases where such a class exists
+  % NOTE: The case where there is no monitored class is trivial, thus to 
+  % simplify proofs we restrict ourselves to the case where such a class exists.
+  % We require that the ghost variable that we add are not already defined.
   ann_program_pre(mp : MonitoredProgram): boolean =
     LET a = mva(mp), p = program(mp) IN
     wf_MP(mp) AND
     EXISTS (c: Class):
       classes(p)(c) AND name(c) = class_name(a) AND
       (NOT EXISTS (gv : GhostVarDecl) :
-        ghost_vars(c)(gv) AND name(gv) = "cp") AND
+        ghost_vars(c)(gv) AND name(gv) = cp) AND
       (FORALL (q : (cps(a))) : NOT EXISTS (gd : GhostVarDecl) :
           ghost_vars(c)(gd) AND name(gd) = name_of(q)) AND
       (FORALL (vd : MVAVarDecl) :
@@ -219,7 +232,7 @@ BEGIN
       ann_program_pre(mp) IMPLIES
       ap = ann_program(mp) IMPLIES
       wf_state(ap)(s) IMPLIES
-        is_ghost("cp", s) AND
+        is_ghost(cp, s) AND
         (FORALL (q : CP) :
           cps(mva(mp))(q) IMPLIES is_ghost(name_of(q), s)) AND
         (FORALL (v : MVAVarDecl) :
@@ -229,7 +242,7 @@ BEGIN
     FORALL (mp : MonitoredProgram, ap : Program) :
       ann_program_pre(mp) IMPLIES
       ap = ann_program(mp) IMPLIES
-        up?(get_GhostVarDecl("cp", ap)) AND
+        up?(get_GhostVarDecl(cp, ap)) AND
         (FORALL (q : CP) :
           cps(mva(mp))(q) IMPLIES up?(get_GhostVarDecl(name_of(q), ap))) AND
         (FORALL (v : MVAVarDecl) :
