@@ -10,7 +10,7 @@ support for interactive verification using the Coq proof
 assistant~\cite{Coq04}.
 
 This section first discusses the special features of JACK's Coq plugin
-that support interactive verification, then the special Coq editor
+that supports interactive verification, then the special Coq editor
 integrated in Eclipse. Finally it presents JACK's specific annotation
 keyword for interactive verification: the \native keyword.
 
@@ -53,7 +53,7 @@ One of the key points in interactive verification is the level of
 difficulty to manipulate the proof assistant in order to construct a
 proof.  To help the user build proof scripts that are both intuitive
 to read and to make, we have used the tactic mechanism of
-Coq~\cite{DEL-00-LTAC}.  As JACK generates proof obligations for
+Coq~\cite{DEL-00-LTAC}.  As JACK originally generates proof obligations for
 automatic verification, numerous hypotheses are added to help the
 automatic theorem prover. For interactive verification these
 hypotheses are usually useless (and annoying). Therefore we have
@@ -163,7 +163,7 @@ proof obligations and to add automation to proof scripts.
 /*@ requires (tab!=null) && list.equals(IntList.toList(tab))
     assignable tab[0 .. (tab.length -1)], list;
     ensures list.equals(IntList.toList(tab)) &&
-             list.isSorted() && list.isInjection();
+             list.isSorted() && list.isInjection(\old(list));
  @*/
 public void sort() {if(tab.length > 0) sort(0, tab.length -1);}\end{verbatim}}
 \caption{Specification of method \texttt{sort} with \native construct}

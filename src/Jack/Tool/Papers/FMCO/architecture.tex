@@ -2,7 +2,7 @@
 \section{General Architecture of JACK}\label{SecArchitecture}
 
 This section describes the general architecture of JACK, and how it
-aims at a high-level of precision.  The next section then discusses
+aims at a high level of precision.  The next section then discusses
 how JACK has been made accessible to application developers by
 integration within the IDE Eclipse, and the development of the special
 JACK perspective, For the development of the JACK architecture, the
@@ -25,7 +25,10 @@ based on the classical wp-calculus developed by
 Dijkstra~\cite{Dijkstra75}, but adapted to Java by extending it with
 side-effects, exceptions and other abrupt termination constructs
 (\emph{cf.}\
-\emph{e.g.},~\cite{Jacobs04}). This direct wp-calculus has the advantage
+\emph{e.g.},~\cite{Jacobs04}).
+For method invocations we use their specifications, since we want
+the verification to be modular.
+This direct wp-calculus has the advantage
 that it is easy to generate proof obligations for each path through a
 method, and then to connect the proof obligation with the path through
 the method that gave rise to this particular proof obligation (to

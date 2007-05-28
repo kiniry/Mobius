@@ -95,11 +95,11 @@ addition, the specification-specific JML keywords are also available.
 \begin{figure}[t]
 {\small
 \begin{verbatim}
-requires this.#14 != null && 0 <= lv(1) && lv(1) < length(this.#14) &&
-         0 <= lv(2) && lv(2) < length(this.#14) && true
-assignable #14.this[lv(2)],#14.this[lv(1)]
-ensures this.#14[lv(1)] == \old(this).\old(#14)[\old(lv(2))] && 
-        this.#14[lv(2)] == \old(this).\old(#14)[\old(lv(1))]
+requires this.#14 != null && 0 <= lv[1] && lv[1] < length(this.#14) &&
+         0 <= lv[2] && lv[2] < length(this.#14) && true
+assignable this.#14.[lv[2]],this.#14[lv[1]]
+ensures this.#14[lv[1]] == \old(this).\old(#14)[\old(lv[2])] && 
+        this.#14[lv[2]] == \old(this).\old(#14)[\old(lv[1])]
  0 aload_0
  1 getfield #14 
  4 iload_1
@@ -129,7 +129,11 @@ the BML version of the JML specification of method
 \codeHook{swap} in Figure~\ref{FigJMLSpec}. 
 Notice that the field \codeHook{tab} has been assigned the number 14
 in the constant pool, and that it is always explicitly qualified with
-\codeHook{lv[0]} (denoting \codeHook{this}). The method's parameters
+\codeHook{this} in the specification. In the bytecode the
+variable \codeHook{this} is stored in \codeHook{lv[0]}  (thus can be accessed
+by \verb+aload_0+)
+% follow by a \verb+getfield #14+.
+The method's parameters
 \texttt{i} and \texttt{j} are now denoted by the expressions
 \texttt{lv[1]} and \texttt{lv[2]}, respectively. Notice further that
 the BML specification directly corresponds to the original JML
@@ -167,9 +171,11 @@ Figure~\ref{FigAttributes} presents the format of the ghost field
 attribute. This should be understood as follows: the name of the
 attribute is given as an index into the (second) constant pool. This
 constant pool entry will be representing a string
-\texttt{"Ghost\_Field"}. Next we have the length of the attribute,
-which should be 2 + 6*\textbf{fields\_count} (the number of fields
-stored in the list). The \textbf{fields} table stores all ghost
+\texttt{"Ghost\_Field"}. Next we have the length of the attribute
+and the number of fields stored in the attribute.
+%,which should be 2 + 6*\textbf{fields\_count} (the number of fields
+%stored in the list). 
+The \textbf{fields} table stores all ghost
 fields. For each field we store its access flag (\emph{e.g.},
 \texttt{public} or
 \texttt{private}), and its name and descriptor index, both
@@ -193,7 +199,7 @@ u4  attribute\_length;\\
 u2  fields\_count;\\
 \{\begin{tabular}[t]{l} 
     u2 access\_flags; \\  
-    u name\_index;\\
+    u2 name\_index;\\
     u2 descriptor\_index;\\
   \end{tabular}\\
 \} fields[fields\_count]; \} \\
@@ -304,8 +310,8 @@ source code level proofs to bytecode level proofs). This is in
 particular important for the proof carrying code
 scenario~\cite{Necula97}, where the code producer develops a proof at
 source code level, and then ships bytecode level application and
-specification, because modulo the necessary re-namings, he can then
-ship his proofs directly, and the code client can verify these using a
+specification. Modulo the necessary re-namings, the proofs can be shipped 
+directly, and the code client can verify these using a
 verification condition generator at bytecode level.
 
 

@@ -34,7 +34,7 @@ public class QuickSort {
     @ ensures (\forall int i, j; 0 <= i && i <= (tab.length - 1) ==> 
     @                            0 <= j && j <= (tab.length - 1) ==>
     @                            i < j ==> tab[i] <= tab[j]) &&
-    @         (\forall int i; 0 <= i && i <= (tab.length - 1); 
+    @         (\forall int i; 0 <= i && i <= (tab.length - 1) ==> 
     @             (\exists int j; 0 <= j && j <= (tab.length - 1) && 
     @                             \old(tab[j]) == tab[i])); */
   public void sort() {if(tab.length > 0) sort(0, tab.length -1);}

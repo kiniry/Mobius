@@ -22,7 +22,8 @@ the software deployed on the device. %This is in particular important
 %for TPD, where post-issuance corrections are
 %expensive due to their particular deployment process and their mass
 %production. 
-This paper describes JACK (the Java Applet Correctness Kit), a tool
+\setcounter{footnote}{0}
+This paper describes JACK\footnote{see \url{http://www-sop.inria.fr/everest/soft/Jack/jack.html} for download instructions.} (the Java Applet Correctness Kit), a tool
 that can be used to improve the quality of applications for TPD. Such
 devices typically implement the Java Virtual Machine (or one of its
 variations)\footnote{The standard Java set-up for TPD is the Connected
@@ -50,7 +51,7 @@ specification language,
 of verification: at runtime, using
 \texttt{jmlc}, or statically. Several tools provide
 static verification of JML-annotated programs, adopting different
-compromises between soundness and automation (Section~\ref{SecConcl}
+compromises between soundness, completeness and automation (Section~\ref{SecConcl}
 provides an overview of related work).  JACK implements a weakest
 precondition calculus, that automatically generates proof obligations
 that can be discharged both by automatic and interactive theorem
@@ -98,7 +99,7 @@ TPD.
 
 \paragraph{Application Scenarios}
 JACK provides different kinds of support for the application
-developer, ranging from the the automatic verification of common
+developer, ranging from the automatic verification of common
 security properties to the interactive verification of complex
 functional specifications.
 
@@ -106,7 +107,7 @@ To support the automatic verification of high-level security
 properties, JACK provides an algorithm to automatically generate
 annotations encoding such properties, and to weave and propagate these
 in the application. These annotations give rise to proof obligations,
-whose discharge (typically automatically) guarantees adherence to the
+whose discharge (typically automatic) guarantees adherence to the
 security policy. Since JACK also provides support for the verification
 of bytecode, and allows to compile source code level JML annotations
 into bytecode level specifications (written in the Bytecode Modeling

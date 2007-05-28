@@ -24,9 +24,10 @@ check and generate proof obligations), call an automatic prover on all
 the generated proof obligations (either Simplify or a special
 Coq tactic), or change to the special JACK perspective.  
 
-Checking the JML specification is not done automatically, while
-editing the file (as is done for Java); instead the user has to launch
-this action explicitly. At the time this interface was developed,
+Checking the JML specification is not done in a background mode, while
+editing the file (as is done for the type checking of Java);
+instead the user has to launch this action explicitly. 
+At the time this interface was developed,
 adding such automatic checks required too many changes to the
 internals of Eclipse, which were not default available. However, in
 the mean time such a feature has been developed within the JMLEclipse
