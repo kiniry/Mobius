@@ -55,7 +55,12 @@ public class BytecodeContribution extends ControlContribution {
 	private boolean modTable = false;
 	
 	/**
-	 * TODO
+	 * This array keeps track of which methods in the class edited by the
+	 * bytecode editor are modified. It contains <code>true</code> on i-th
+	 * position when the i-th method is modified. 
+	 * 
+	 * TODO it's not completely true, the modified in bcc is the actual
+	 * point
 	 */
 	private boolean[] modified;
 	
@@ -111,7 +116,6 @@ public class BytecodeContribution extends ControlContribution {
 		public void documentAboutToBeChanged(DocumentEvent event) {
 			if (!ready) 
 				init(event.fDocument); //this marks ready as true
-			System.out.println("documentAbout");
 		}
 
 		/**

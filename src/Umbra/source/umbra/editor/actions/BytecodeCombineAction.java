@@ -141,7 +141,6 @@ public class BytecodeCombineAction extends Action {
 			JavaClass oldJc = ((BytecodeEditor)editor).getJavaClass();
 			ClassGen cg = updateModifiedMethods(oldJc, jc);
 			jc = cg.getJavaClass();
-			System.err.println(jc.toString());
 			BytecodeEditor bcEditor = ((BytecodeEditor)editor);
 			String fullName = bcEditor.getPath(path).toOSString();
 			jc.dump(fullName + UmbraHelper.getFileSeparator() + lastSegment);

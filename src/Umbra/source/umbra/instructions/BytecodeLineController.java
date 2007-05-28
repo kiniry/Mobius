@@ -15,6 +15,11 @@ import org.apache.bcel.generic.MethodGen;
  * useful when the line is modified or BCEL structure is created.
  * Most details are implemented in subclasses.
  * 
+ * Methods of this class should operate on the {@ref ClassGen}
+ * object which is located in the {@ref BytecodeDocument} object
+ * that describes the state of the bytecode editor which contains
+ * the line that corresponds to an object of the current class.
+ * 
  * @author Tomek Batkiewicz
  */
 public abstract class BytecodeLineController {
@@ -25,7 +30,11 @@ public abstract class BytecodeLineController {
 	protected String line;
 	
 	/**
-	 * TODO
+	 * The number of the method that contains the current line.
+	 * This is an index in the {@ref ClassGen} object in the 
+	 * {@ref BytecodeDocument} object
+     * that describes the state of the bytecode editor which contains
+     * the line that corresponds to the current object.
 	 */
 	protected int index;
 
@@ -40,7 +49,20 @@ public abstract class BytecodeLineController {
 	}
 	
 	/**
-	 * TODO
+	 * The method adds the link between the Umbra representation of 
+	 * instructions to their representation in BCEL. In case the
+	 * line does not correspond to an instruction we only register
+	 * the number of the method the line is associated with.
+	 * 
+	 * @param ih the BCEL instruction handle that corresponds to the 
+	 *           instruction associated with the current object
+	 * @param il the list of instructions in the current method
+	 * @param mg the object which represents the method of the current
+	 *        instruction in the BCEL representation of the current class
+	 *        in the bytecode editor
+	 * @param i method number in the current class
+	 * @return true when the current line corresponds to an instruction, false
+	 *         otherwise
 	 */
 	public boolean addHandle(InstructionHandle ih, 
 			                 InstructionList il, 
@@ -63,8 +85,12 @@ public abstract class BytecodeLineController {
 		return null;
 	}
 	
+
 	/**
 	 * TODO
+	 * 
+	 * @param il
+	 * @param ins
 	 */
 	public void setTarget(InstructionList il, Instruction ins) {
 		
@@ -72,12 +98,34 @@ public abstract class BytecodeLineController {
 	
 	/**
 	 * TODO
+	 * 
+	 * @param nextLine
+	 * @param cg a {@ref ClassGen} object in the {@ref BytecodeDocument} object
+     *           that describes the state of the bytecode editor which contains
+     *           the line that corresponds to the current object. 
+	 * @param ins
+	 * @param metEnd
+	 * @param instructions
+	 * @param off
 	 */
-	public void initHandle(BytecodeLineController nextLine, ClassGen cg, Instruction ins, boolean metEnd, LinkedList instructions, int off) {	
+	public void initHandle(BytecodeLineController nextLine, ClassGen cg, 
+			Instruction ins, boolean metEnd, 
+			LinkedList instructions, int off) {	
 	}
 	
 	/**
 	 * TODO
+	 * 
+	 * @param oldLine
+	 * @param nextLine
+	 * @param cg a {@ref ClassGen} object in the {@ref BytecodeDocument} object
+     *           that describes the state of the bytecode editor which contains
+     *           the line that corresponds to the current object. 
+	 * @param ins
+	 * @param metEnd
+	 * @param theLast
+	 * @param instructions
+	 * @param off
 	 */
 	public void update(BytecodeLineController oldLine, 
 			           BytecodeLineController nextLine, 
@@ -85,13 +133,15 @@ public abstract class BytecodeLineController {
 			           Instruction ins, 
 			           boolean metEnd, boolean theLast, 
 			           LinkedList instructions, int off) {
-		if (oldLine.getHandle() != null) {
+		if (oldLine.getHandle() != null) { //in case this was an instruction before
 			oldLine.dispose(nextLine, cg, theLast, instructions, off);
 		}
 	}
-	
+
 	/**
 	 * TODO
+	 * 
+	 * @return
 	 */
 	public InstructionHandle getHandle() {
 		return null;
@@ -99,6 +149,8 @@ public abstract class BytecodeLineController {
 	
 	/**
 	 * TODO
+	 * 
+	 * @return
 	 */
 	public InstructionList getList() {
 		return null;
@@ -106,6 +158,8 @@ public abstract class BytecodeLineController {
 	
 	/**
 	 * TODO
+	 * 
+	 * @return
 	 */
 	public MethodGen getMethod() {
 		return null;
@@ -113,6 +167,8 @@ public abstract class BytecodeLineController {
 	
 	/**
 	 * TODO
+	 * 
+	 * @return
 	 */
 	public int getIndex() {
 		return index;
@@ -132,20 +188,32 @@ public abstract class BytecodeLineController {
 	public boolean correct()	{
 		return false;
 	}
-	
+
 	/**
 	 * TODO
+	 * 
+	 * @param nextLine
+	 * @param cg a {@ref ClassGen} object in the {@ref BytecodeDocument} object
+     *           that describes the state of the bytecode editor which contains
+     *           the line that corresponds to the current object. 
+	 * @param theLast
+	 * @param instructions an array with instruction representations. These 
+	 * are represented as objects the classes of which are subclasses of 
+	 * {@ref InstructionLineController}.
+	 * @param off
 	 */
 	public void dispose(BytecodeLineController nextLine, 
 			            ClassGen cg, 
 			            boolean theLast, 
 			            LinkedList instructions, int off) {
-		
+		System.out.println("dispose(BytecodeLineController)"+ ((InstructionLineController) (instructions.get(off))).getHandle().getInstruction().getName());
 	}
 
-	/**
-	 * TODO
-	 */
+    /**
+     * TODO
+     * 
+     * @param index2
+     */
 	public void setIndex(int index2) {
 		this.index = index2;		
 	}

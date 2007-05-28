@@ -139,7 +139,7 @@ public class BytecodeEditor extends TextEditor {
 				                    UmbraHelper.CLASS_EXTENSION);
 		String lastSegment = active.lastSegment().replaceFirst(
 				                    UmbraHelper.BYTECODE_EXTENSION, 
-				                    UmbraHelper.BYTECODE_EXTENSION);
+				                    UmbraHelper.CLASS_EXTENSION);
 		String fnameTo = active.removeLastSegments(1).append("_" + lastSegment).toOSString();
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot(); 
 		IFile fileFrom = root.getFile(new Path(fnameFrom));

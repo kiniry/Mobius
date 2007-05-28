@@ -15,7 +15,6 @@ import org.apache.bcel.generic.InstructionTargeter;
 import org.apache.bcel.generic.MethodGen;
 import org.apache.bcel.generic.TargetLostException;
 
-
 /**
  * This class defines a structure that describes a single Bytecode
  * instruction and contains related BCEL structures
@@ -25,19 +24,25 @@ import org.apache.bcel.generic.TargetLostException;
 public abstract class InstructionLineController extends BytecodeLineController {
 
 	/**
-	 * TODO
+	 * The list of instructions in the method in which the current instruction
+	 * occurs.
 	 */
 	protected InstructionList il;
+	
 	/**
-	 * TODO
+	 * A BCEL handle to the current instruction representation in BCEL
+	 * format.
 	 */
 	protected InstructionHandle ih;
+	
 	/**
-	 * TODO
+	 * A BCEL object that represents the method in which the current instruction
+	 * is located.
 	 */
 	protected MethodGen mg;
+	
 	/**
-	 * TODO
+	 * The mnemonic name of the current instruction.
 	 */
 	protected String name; 
 	
@@ -56,9 +61,24 @@ public abstract class InstructionLineController extends BytecodeLineController {
 	}
 	
 	/**
-	 * TODO
+	 * The method adds the link between the Umbra representation of 
+	 * instructions to their representation in BCEL.
+	 * 
+	 * @param ih the BCEL instruction handle that corresponds to the 
+	 *           instruction associated with the current object
+	 * @param il the list of instructions in the current method
+	 * @param mg the object which represents the method of the current
+	 *        instruction in the BCEL representation of the current class
+	 *        in the bytecode editor
+	 * @param i method number in the current class
+	 * @return always true as the subclasses of the current class correspond to
+	 *         instructions
 	 */
-	public boolean addHandle(InstructionHandle ih, InstructionList il, MethodGen mg, int i) {
+	public boolean addHandle(InstructionHandle ih, 
+			                 InstructionList il, 
+			                 MethodGen mg, int i) {
+		System.out.println("InstructionLineController#addHandle name="+name);
+		System.out.println("il="+il.toString());
 		this.ih = ih;
 		this.il = il;
 		this.mg = mg;
@@ -82,7 +102,9 @@ public abstract class InstructionLineController extends BytecodeLineController {
 	 * 		is added
 	 * @param off			an offset in this array
 	 */
-	public void initHandle(BytecodeLineController nextLine, ClassGen cg, Instruction ins, boolean metEnd, LinkedList instructions, int off) {
+	public void initHandle(BytecodeLineController nextLine, 
+			               ClassGen cg, Instruction ins, 
+			               boolean metEnd, LinkedList instructions, int off) {
 //		controlPrint(nextLine);
 		InstructionHandle next = nextLine.getHandle();
 		if (next != null) {
@@ -99,10 +121,12 @@ public abstract class InstructionLineController extends BytecodeLineController {
 				if (ins instanceof BranchInstruction){
 					if (((BranchInstruction)ins).getTarget() == null)
 						System.out.println("null target");
-					else System.out.println(((BranchInstruction)ins).getTarget().getPosition());
+					else 
+						System.out.println(((BranchInstruction)ins).
+								             getTarget().getPosition());
 					ih = newList.insert(next, (BranchInstruction) ins);
-				}
-				else ih = newList.insert(next, ins);
+				} else 
+					ih = newList.insert(next, ins);
 			}
 			il = newList;
 			this.mg = mg;
@@ -112,26 +136,43 @@ public abstract class InstructionLineController extends BytecodeLineController {
 	}
 	
 	/**
-	 * TODO
+	 * The debugging method that prints out to the standard output the
+	 * information on the line given in the parameter. It prints out:
+	 * + the name of the instruction,
+	 * + the position of the instruction handle  
+	 * 
+	 *  @param line the line for which the information is printed out
 	 */
-	/*private void controlPrint(BytecodeLineController line) {
+	public static void controlPrint(BytecodeLineController line) {
 		System.out.println("Init: next line");
-		if (line == null) System.out.println("Null");
+		if (line == null) 
+			System.out.println("Null");
 		else {
 			Instruction ins = line.getInstruction();
-			if (ins == null) System.out.println("Null instruction");
-			else System.out.println(ins.getName());
+			if (ins == null) 
+				System.out.println("Null instruction");
+			else 
+				System.out.println(ins.getName());
 			InstructionHandle nih = line.getHandle();
-			if (nih == null) System.out.println("Null handle");
-			else System.out.println(nih.getPosition());
+			if (nih == null) 
+				System.out.println("Null handle");
+			else 
+				System.out.println(nih.getPosition());
 		}
-	}*/
+	}
 	
 	/**
-	 * TODO
+	 * This is a debugging helper method which prints out to the standard
+	 * output the contents of the given BCEL instruction list.
+	 * 
+	 * @param the isntruction list to print out 
 	 */
-	private void printInstructionList(InstructionList il) {
+	public static void printInstructionList(InstructionList il) {
 		InstructionHandle ih = il.getStart();
+		if (ih==null) {
+			System.out.println("start ih==null");
+			return;
+		}
 		System.out.println(ih.getInstruction().getName());
 		do {
 			ih = ih.getNext();
@@ -209,21 +250,22 @@ public abstract class InstructionLineController extends BytecodeLineController {
 	}	
 	
 	/**
-	 * TODO
+	 * @return the BCEL handle to the current instruction.
 	 */
 	public InstructionHandle getHandle() {
 		return ih;
 	}
 	
 	/**
-	 * TODO
+	 * @return the BCEL list of the instructions in the method that contains
+	 * the current instruction.
 	 */
 	public InstructionList getList() {
 		return il;
 	}
 
 	/**
-	 * TODO
+	 * @return the method in which the current instruction is located
 	 */
 	public MethodGen getMethod() {
 		return mg;
@@ -243,30 +285,37 @@ public abstract class InstructionLineController extends BytecodeLineController {
 	}
 	
 	/**
-	 * Removing line from BCEL structures
+	 * This method removes the current instruction line from BCEL structures
 	 * 
-	 * @param nextLine		a line after the removed one; it becomes
-	 * 			a target of any jump instruction directed to the removed one 
-	 * @param cg			class generator from BCEL 
-	 * @param instructions	an array from BytecodeController that the line
-	 * 		is included
-	 * @param off			an offset in this array
+	 * @param nextLine a line after the removed one; it becomes a target of 
+	 *                 any jump instruction directed to the removed one 
+	 * @param cg class generator from BCEL, this should be the same as in the
+	 *           {@ref BytecodeDocument} object for the currently edited
+	 *           bytecode file
+	 * @param instructions an array from {@ref BytecodeController} that 
+	 *                     contains the current line
+	 * @param off an offset in the <code>instructions</code> array which 
+	 *            points to the instruction to be removed 
 	 */
-	public void dispose(BytecodeLineController nextLine, ClassGen cg, boolean theLast, LinkedList instructions, int off)
+	public void dispose(BytecodeLineController nextLine, 
+			            ClassGen cg, 
+			            boolean theLast, 
+			            LinkedList instructions, 
+			            int off)
 	{
+		InstructionHandle me = getHandle();
 		InstructionHandle next = nextLine.getHandle();
+		System.out.println("InstructionLineController#dispose   name="+name);
+		InstructionTargeter[] tgters = ih.getTargeters();
+		if (tgters!=null)
+			for (int i=0; i<tgters.length;i++) {
+				tgters[i].updateTarget(me, next);
+			}
 		try {
 			il.delete(ih);
-		} catch (TargetLostException e) {
-		    InstructionHandle[] targets = e.getTargets();
-		    for(int i = 0; i < targets.length; i++) {
-		      InstructionTargeter[] targeters = targets[i].getTargeters();
-		      for(int j = 0; j < targeters.length; j++) {
-		         targeters[j].updateTarget(targets[i], next);
-		      }
-		    }
-		}
+		} catch (TargetLostException e) {};
 		ih = null;
+		mg.setInstructionList(il);
 		updateMethod(cg);
 		System.out.println("I am here");
 		instructions.remove(off);
@@ -275,19 +324,20 @@ public abstract class InstructionLineController extends BytecodeLineController {
 	}
 
 	/**
-	 * TODO
+	 * A list of characters that should be left intact by the method 
+	 * {@ref #typ(String)}.
 	 */
-	// dodane 7.27.19
-	final static String sp = ":-#%()<>;|";
+	private final static String sp = ":-#%()<>;|";
+	
 	/**
-	 * TODO
+	 * The length of the {@ref sp} constant.
 	 */
-	final static int ileSp = sp.length();
+	private final static int howManySp = sp.length();
 	
 	/**
 	 * Replaces some words in a string with single characters.
-	 * Each of the letter in returned word means that in original line there was
-	 * the same character (if it belongs to string {@link #sp sp}) or
+	 * Each of the letters in the returned word means that in original line 
+	 * there was the same character (if it belongs to string {@link #sp sp}) or
 	 * a corresponding word listed below (otherwise):
 	 * <ul>
 	 * <li> C means a string within double quotes
@@ -305,7 +355,7 @@ public abstract class InstructionLineController extends BytecodeLineController {
 		line = line + "|";
 		for (int i = 0; i < line.length();) {
 			b = false;
-			for (int j = 0; j < ileSp; j++)
+			for (int j = 0; j < howManySp; j++)
 				if (sp.charAt(j) == line.charAt(i)) {
 					s = s + line.charAt(i);
 					i++;
@@ -390,6 +440,4 @@ public abstract class InstructionLineController extends BytecodeLineController {
 		boolean b = compare(typ(line), "?D:?WX" + typ + "|");
 		return b;
 	}
-	// koniec
-	
 }

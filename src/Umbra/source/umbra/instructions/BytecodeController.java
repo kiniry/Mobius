@@ -66,6 +66,7 @@ public class BytecodeController {
 	 * TODO
 	 */
 	private Hashtable interline;
+	
 	/**
 	 * Keeps track of modified methods.
 	 * TODO is that true?
@@ -85,7 +86,7 @@ public class BytecodeController {
 	}
 
 	/**
-	 * This method prints out to the standard output the
+	 * This is a debugging method. It prints out to the standard output the
 	 * list of all the instructions in the controller.
 	 */
 	public void showInstructionList()
@@ -111,10 +112,10 @@ public class BytecodeController {
 	
 	/**
 	 * Initialization of all the bytecode structures related to
-	 * the document; it uses BCEL structures linked to the
-	 * document  
-	 * 
-	 * TODO
+	 * the document; it uses BCEL objects associated with the
+	 * document and based on them it generates the Umbra line
+	 * structures (subclasses of the {@ref BytecodeLineController})
+	 * together with the links to the BCEL objects 
 	 * 
 	 * @param doc the bytecode document with the corresponding BCEL
 	 * 	structures linked into it
@@ -129,11 +130,14 @@ public class BytecodeController {
 		InstructionList il = null;
 		InstructionHandle ih = null;
 		InstructionHandle end = null;
-		int ic = 0;
+		int ic = 0; // counts lines with instructions
+		// i - iterates over methods
+		// j - iterates over lines in the document
 		for (int i = 0, j = 0; j < doc.getNumberOfLines() - 1; j++) {
 			if (metEnd && i < methods.length) {
 				mg = new MethodGen(methods[i], cg.getClassName(), cpg);
 				il = mg.getInstructionList();
+				System.out.println("method number["+i+"]"+mg.getName()+"il="+il.toString());
 				ih = il.getStart();
 				end = il.getEnd();
 				metEnd = false;
@@ -150,22 +154,21 @@ public class BytecodeController {
 			String comment = extractCommentFromLine(line);
 			BytecodeLineController lc = getType(lineName);
 			all.add(j, lc);
-			if (lc.addHandle(ih, il, mg, i - 1)) {
+			if (lc.addHandle(ih, il, mg, i - 1)) { //this is an instruction line
 				instructions.add(ic, lc);
 				if (comment != null) comments.put(lc, comment);
 				if (partComment.compareTo("") != 0) {
 					interline.put(lc, partComment);
 					partComment = "";
-				}
-				ic++;
+				}	
 				if (ih == end) {
 					metEnd = true;
-				}
-				else {
+				} else {
 					ih = ih.getNext();
 				}
-			}
-			else if (comment != null) partComment.concat("\n" + comment);
+				ic++;
+			} else //this is non-instruction line in the editor 
+				if (comment != null) partComment.concat("\n" + comment);
 		}
 
 		int methodNum = ((BytecodeLineController)instructions.getLast()).
@@ -192,11 +195,12 @@ public class BytecodeController {
 	}
 	
 	/**
-	 * Detects which kind of modification (adding lines, removing lines or both) 
-	 * has been made and preforms appropriate action to the bytecode structures  
+	 * The method detects which kind of modification (adding lines, 
+	 * removing lines or both) has been made and preforms appropriate action 
+	 * to the bytecode structures of the given bytecode document.  
 	 * 
-	 * @param doc		Bytecode document that modification has
-	 * 		been made to
+	 * @param doc a bytecode document in which the modification have
+	 *            been made to
 	 * @param startRem	Old-version number of the first modified line
 	 * @param stopRem	Old-version number of the last modified line
 	 * @param start		New-version number of the first modified line
@@ -206,6 +210,8 @@ public class BytecodeController {
 			                int startRem, int stopRem, int start, int stop)
 	{
 		ClassGen cg = ((BytecodeDocument)doc).getClassGen();
+		// i - index in the removed lines
+		// j - index in the inserted lines
 		for (int i = Math.min(startRem, start), j = i; 
 		       (i <= stopRem || j <= stop) && i < all.size(); 
 		       i++, j++) {
@@ -213,22 +219,24 @@ public class BytecodeController {
 			BytecodeLineController nextLine = null;
 			int off = getInstructionOff(j);
 			boolean theLast = false;
-			boolean metEnd = (isEnd(j)) && (oldlc.getIndex() == ((InstructionLineController)instructions.get(off)).getIndex());
+			boolean metEnd = (isEnd(j)) && 
+			                 (oldlc.getIndex() == 
+				              ((InstructionLineController)instructions.
+				            		                   get(off)).getIndex());
 			if (metEnd){
 				if (isFirst(j)) {
 					theLast = true;
 					nextLine = (BytecodeLineController)instructions.get(off);
 				}
-				else nextLine = (BytecodeLineController)instructions.get(off - 1);
-			}
-		    //TODO poprawnie: 1 enter przed wpisaniem 2 wpisac przed ta przed ktora checmy wstawic i enter; zle inaczej: enter przed i potem wpisac
-			else nextLine = (BytecodeLineController)instructions.get(off + 1);
+				else nextLine = (BytecodeLineController)instructions.get(off-1);
+			} else //TODO poprawnie: 1 enter przed wpisaniem 2 wpisac przed ta przed ktora checmy wstawic i enter; zle inaczej: enter przed i potem wpisac 
+				nextLine = (BytecodeLineController)instructions.get(off + 1);			
 			modified[nextLine.getIndex()] = true;
-			if (start <= j  && j <= stop) {
-				i = addInstructions(doc, startRem, stopRem, i, j, oldlc, nextLine, theLast, metEnd);
-			}
-			else {
-				if (i >= startRem && i <= stopRem) {
+			if (start <= j && j <= stop) { //we are in the area of inserted lines
+				i = addInstructions(doc, startRem, stopRem, i, j, oldlc, 
+						            nextLine, theLast, metEnd);
+			} else { // we are beyond the area of the inserted instructions
+				if (startRem <= i && i <= stopRem) {
 					oldlc.dispose(nextLine, cg, theLast, instructions, off);
 					all.remove(oldlc);
 					j--;
@@ -242,15 +250,16 @@ public class BytecodeController {
 	/**
 	 * TODO
 	 * 
-	 * @param doc
-	 * @param startRem
-	 * @param stopRem
+	 * @param doc bytecode document for which the changes are analysed 
+	 * @param startRem the beginning of the removed area
+	 * @param stopRem the end of the removed area
 	 * @param i
 	 * @param j
 	 * @param oldlc
 	 * @param nextLine
 	 * @param theLast
-	 * @param metEnd
+	 * @param metEnd true when <code>j</code> is the last instruction in a
+	 *               method 
 	 * @return
 	 */
 	private int addInstructions(IDocument doc, int startRem, int stopRem, 
@@ -269,9 +278,7 @@ public class BytecodeController {
 			lc.setIndex(((BytecodeLineController)all.get(j - 1)).getIndex());
 			if (comment != null) comments.put(lc, comment);
 			Instruction ins = lc.getInstruction();
-			//System.out.println("Before target");
 			if (ins != null) {
-				//System.out.println(ins.getName());
 				lc.setTarget(nextLine.getList(), ins);
 			}
 			else {
@@ -518,7 +525,7 @@ public class BytecodeController {
 	}
 	
 	/**
-	 * Checks if the given line contains a single line comment
+	 * The method checks if the given line contains a single line comment
 	 * and extracts the comment string. In case there is no
 	 * comment in the line, it returns <code>null</code>. 
 	 * 
@@ -549,10 +556,10 @@ public class BytecodeController {
 	}
 	
 	/**
-	 * Finds index in the instruction array that is linked with
+	 * The method finds index in the instruction array that is linked with
 	 * the position in the line array
 	 * 
-	 * @param lineNum	Line number (including all lines in a document)
+	 * @param lineNum line number (including all lines in a document)
 	 * @return	Instruction offset (including only instruction lines)
 	 * 	or -1 if the line is not an instruction
 	 */
@@ -566,16 +573,19 @@ public class BytecodeController {
 	}
 	
 	/**
-	 * @param lineNum Numebr of line (including all lines)
-	 * @return true if the line is the last instruction in a method
-	 * 	or is a non-istruction one located after 
+	 * @param lineNum numebr of line (including all lines in the textual
+	 *        representation)
+	 * @return true if the <code>lineNum</code> is a number of an instruction
+	 *         in <code>instructions</code> array that is the last instruction 
+	 *         in a method or is a non-istruction one located after the method
 	 */
 	private boolean isEnd(int lineNum) {
 		int off = getInstructionOff(lineNum);
 		if (off + 1 >= instructions.size()) return true;
 		if (off == -1) return false;
 		int index1 = ((BytecodeLineController)instructions.get(off)).getIndex();
-		int index2 = ((BytecodeLineController)instructions.get(off + 1)).getIndex();
+		int index2 = ((BytecodeLineController)instructions.get(off + 1)).
+		               getIndex();
 		return (index1 != index2);
 	}
 	

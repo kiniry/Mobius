@@ -35,7 +35,6 @@ public class NonRuleBasedDamagerRepairer
 	 */
 	public NonRuleBasedDamagerRepairer(
 			  /*@ non_null @*/ TextAttribute defaultTextAttribute) {
-		System.err.println("NonRuleBasedDamagerRepairer");
 		fDefaultTextAttribute = defaultTextAttribute;
 	}
 
