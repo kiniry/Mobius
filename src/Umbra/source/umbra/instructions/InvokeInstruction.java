@@ -9,6 +9,7 @@ import org.apache.bcel.generic.INVOKESTATIC;
 import org.apache.bcel.generic.INVOKEVIRTUAL;
 import org.apache.bcel.generic.Instruction;
 
+import umbra.UmbraHelper;
 import umbra.editor.parsing.IBytecodeStrings;
 
 
@@ -41,7 +42,7 @@ public class InvokeInstruction extends StringInstruction {
 	public boolean correct()
 	{
 		String s;
-		s = extractPoint(line);
+		s = UmbraHelper.stripAllWhitespace(line);
 		String[] s2 = IBytecodeStrings.invoke;
 		int j;
 		for (j = 0; j < s2.length; j++) {

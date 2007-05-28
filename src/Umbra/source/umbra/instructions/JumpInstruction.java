@@ -5,6 +5,7 @@ package umbra.instructions;
 
 import org.apache.bcel.generic.*;
 
+import umbra.UmbraHelper;
 import umbra.editor.parsing.IBytecodeStrings;
 
 
@@ -39,7 +40,7 @@ public class JumpInstruction extends NumInstruction {
 	public boolean correct()
 	{
 		String s;
-		s = extractPoint(line);
+		s = UmbraHelper.stripAllWhitespace(line);
 		String[] s2 = IBytecodeStrings.jump;
 		int j;
 		int y;

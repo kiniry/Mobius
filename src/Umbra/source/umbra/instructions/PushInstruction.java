@@ -6,6 +6,7 @@ package umbra.instructions;
 
 import org.apache.bcel.generic.*;
 
+import umbra.UmbraHelper;
 import umbra.editor.parsing.IBytecodeStrings;
 
 /**
@@ -35,7 +36,7 @@ public class PushInstruction extends NumInstruction {
 	public boolean correct()
 	{
 		String s;
-		s = extractPoint(line);
+		s = UmbraHelper.stripAllWhitespace(line);
 		String[] s2 = IBytecodeStrings.push;
 		int j;
 		int y;
@@ -68,7 +69,7 @@ public class PushInstruction extends NumInstruction {
 		int liczba;
 		
 		String line1;
-		line1 = extractPoint(line);
+		line1 = UmbraHelper.stripAllWhitespace(line);
 		
 		isd = true;	
 		// zakladam ze poprawnosc jest juz wyzej

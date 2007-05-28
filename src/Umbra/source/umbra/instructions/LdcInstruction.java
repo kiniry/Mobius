@@ -9,6 +9,7 @@ import org.apache.bcel.generic.LDC;
 import org.apache.bcel.generic.LDC2_W;
 import org.apache.bcel.generic.LDC_W;
 
+import umbra.UmbraHelper;
 import umbra.editor.parsing.IBytecodeStrings;
 
 
@@ -93,7 +94,7 @@ public class LdcInstruction extends OtherInstruction {
 	public boolean correct()
 	{
 		String s,str;
-		s = extractPoint(line);
+		s = UmbraHelper.stripAllWhitespace(line);
 		String[] s2 = IBytecodeStrings.ldc;
 		int j,y,okok,okokok;
 		for (j = 0; j < s2.length; j++) {

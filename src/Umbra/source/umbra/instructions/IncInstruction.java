@@ -6,6 +6,7 @@ package umbra.instructions;
 import org.apache.bcel.generic.IINC;
 import org.apache.bcel.generic.Instruction;
 
+import umbra.UmbraHelper;
 import umbra.editor.parsing.IBytecodeStrings;
 
 
@@ -46,7 +47,7 @@ public class IncInstruction extends NumInstruction {
 	public boolean correct0()
 	{
 		String s;
-		s = extractPoint(line);
+		s = UmbraHelper.stripAllWhitespace(line);
 		String[] s2 = IBytecodeStrings.incc;
 		int j;
 		int y;

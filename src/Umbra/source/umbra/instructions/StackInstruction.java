@@ -16,6 +16,7 @@ import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.LLOAD;
 import org.apache.bcel.generic.LSTORE;
 
+import umbra.UmbraHelper;
 import umbra.editor.parsing.IBytecodeStrings;
 
 
@@ -46,7 +47,7 @@ public class StackInstruction extends NumInstruction {
 	public boolean correct()
 	{
 		String s;
-		s = extractPoint(line);
+		s = UmbraHelper.stripAllWhitespace(line);
 		String[] s2 = IBytecodeStrings.stack;
 		int j;
 		int y;

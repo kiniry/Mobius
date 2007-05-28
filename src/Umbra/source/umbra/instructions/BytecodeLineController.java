@@ -118,25 +118,7 @@ public abstract class BytecodeLineController {
 		return index;
 	}
 	
-	/**
-	 * This method strips off all the whitespace characters
-	 * in the given string
-	 * 
-	 * @param the string to strip the whitespace from
-	 * @result the string with the whitespace stripped off
-	 */
-	//&*zmiana nazwy! usuwam z podklas!
-	public static String extractPoint(String l) {
-		String s;
-		s = "";
-		int ii = 0;
-		int jj = l.length();
-		for (ii = 0; ii < jj; ii++)
-			if (!(Character.isWhitespace(l.charAt(ii)))) {
-				s += l.charAt(ii);
-			}
-		return s;	
-	}
+
 	
 	/**
 	 * This method is used to check some basic condition of 

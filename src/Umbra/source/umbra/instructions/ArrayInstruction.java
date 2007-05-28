@@ -7,6 +7,7 @@ import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.NEWARRAY;
 import org.apache.bcel.generic.Type;
 
+import umbra.UmbraHelper;
 import umbra.editor.parsing.IBytecodeStrings;
 
 
@@ -102,7 +103,7 @@ public class ArrayInstruction extends StringInstruction {
 	public boolean correct()
 	{
 		String s;
-		s = extractPoint(line);
+		s = UmbraHelper.stripAllWhitespace(line);
 		String[] s2 = IBytecodeStrings.array;
 		int j,y;
 		for (j = 0; j < s2.length; j++) {

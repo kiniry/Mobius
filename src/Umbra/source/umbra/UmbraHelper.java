@@ -45,10 +45,12 @@ public class UmbraHelper {
 	 * @param newSuffix the new suffix
 	 * @return the string with replaced suffix
 	 */
-	public static String replaceLast(String string, String oldSuffix, String newSuffix) {
+	public static String replaceLast(String string, String oldSuffix, 
+			                         String newSuffix) {
 		if (string.endsWith(oldSuffix)) {
 			// Return string with new suffix
-			return string.substring(0, string.lastIndexOf(oldSuffix)).concat(newSuffix);
+			return string.substring(0, string.lastIndexOf(oldSuffix)).
+			                                  concat(newSuffix);
 		} else {
 			// Given suffix does not occur
 			return string;
@@ -77,4 +79,22 @@ public class UmbraHelper {
 		return System.getProperty("file.separator");
 	}
 	
+	/**
+	 * This method strips off all the whitespace characters
+	 * in the given string
+	 * 
+	 * @param the string to strip the whitespace from
+	 * @result the string with the whitespace stripped off
+	 */
+	public static String stripAllWhitespace(String l) {
+		String s;
+		s = "";
+		int ii = 0;
+		int jj = l.length();
+		for (ii = 0; ii < jj; ii++)
+			if (!(Character.isWhitespace(l.charAt(ii)))) {
+				s += l.charAt(ii);
+			}
+		return s;	
+	}
 }

@@ -10,6 +10,7 @@ import org.apache.bcel.generic.INSTANCEOF;
 import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.NEW;
 
+import umbra.UmbraHelper;
 import umbra.editor.parsing.IBytecodeStrings;
 
 /**
@@ -43,7 +44,7 @@ public class NewInstruction extends StringInstruction {
 	public boolean correct()
 	{
 		String s;
-		s = extractPoint(line);
+		s = UmbraHelper.stripAllWhitespace(line);
 		String[] s2 = IBytecodeStrings.anew;
 		int j,y;
 		for (j = 0; j < s2.length; j++) {

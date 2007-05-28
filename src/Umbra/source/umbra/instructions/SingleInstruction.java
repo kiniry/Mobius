@@ -6,6 +6,7 @@ package umbra.instructions;
 
 import org.apache.bcel.generic.*;
 
+import umbra.UmbraHelper;
 import umbra.editor.parsing.IBytecodeStrings;
 
 
@@ -165,7 +166,7 @@ public class SingleInstruction extends InstructionLineController {
 	public boolean correct()
 	{
 		String s;
-		s = extractPoint(line);
+		s = UmbraHelper.stripAllWhitespace(line);
 		String[] s2 = IBytecodeStrings.single;
 		int j;
 		for (j = 0; j < s2.length; j++) {
