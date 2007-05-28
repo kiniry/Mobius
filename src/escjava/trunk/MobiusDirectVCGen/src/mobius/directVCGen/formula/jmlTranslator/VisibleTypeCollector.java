@@ -1,5 +1,7 @@
 package mobius.directVCGen.formula.jmlTranslator;
 
+
+
 import mobius.directVCGen.formula.*;
 import mobius.directVCGen.formula.annotation.AAnnotation;
 import mobius.directVCGen.formula.annotation.AnnotationDecoration;
@@ -8,6 +10,7 @@ import mobius.directVCGen.formula.annotation.Cut;
 import mobius.directVCGen.formula.annotation.Set;
 import mobius.directVCGen.vcgen.struct.Post;
 
+import java.util.HashSet;
 import java.util.Properties;
 import java.util.Vector;
 import javafe.ast.ASTNode;
@@ -16,19 +19,23 @@ import javafe.ast.BlockStmt;
 import javafe.ast.ClassDecl;
 import javafe.ast.ConstructorDecl;
 import javafe.ast.DoStmt;
+import javafe.ast.Expr;
 import javafe.ast.FieldAccess;
 import javafe.ast.ForStmt;
 import javafe.ast.FormalParaDecl;
 import javafe.ast.IfStmt;
 import javafe.ast.InstanceOfExpr;
+import javafe.ast.JavafePrimitiveType;
 import javafe.ast.LiteralExpr;
 import javafe.ast.LocalVarDecl;
 import javafe.ast.MethodDecl;
 import javafe.ast.ModifierPragma;
+import javafe.ast.PrimitiveType;
 import javafe.ast.RoutineDecl;
 import javafe.ast.Stmt;
 import javafe.ast.ThisExpr;
 import javafe.ast.TryCatchStmt;
+import javafe.ast.UnaryExpr;
 import javafe.ast.VarDeclStmt;
 import javafe.ast.VariableAccess;
 import javafe.ast.WhileStmt;
@@ -88,18 +95,13 @@ import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
 
 
-public class JmlVisitor extends VisitorArgResult{
 
-	JmlExprToFormula translator;
-	Properties p;
+public class VisibleTypeCollector extends VisitorArgResult {
+
+	java.util.Set<String> typeSet;
 	
-	
-	public JmlVisitor(){
-		p = new Properties();
-		p.put("pred", new Boolean(true));
-		p.put("old", new Boolean(false));
-		p.put("interesting", new Boolean(false));
-		translator = new JmlExprToFormula(this);
+	public VisibleTypeCollector(){
+		typeSet = new HashSet<String>();
 	}
 	
 	@Override
@@ -110,38 +112,28 @@ public class JmlVisitor extends VisitorArgResult{
 			Object child = x.childAt(i);
 			if(child instanceof ASTNode) {
 				o = ((ASTNode) child).accept(this, prop);
-				if (o != null)
-				{
-					if (!o.equals(child))
-					{
-						System.out.println( o.toString());
-						//System.out.println( o.toString() + " " + x.getClass().getName());
-						
-					}
-				}
 			}
-			
 		}
 		return o;
 	}
 	
 	@Override
 	public /*@non_null*/ Object visitClassDecl(/*@non_null*/ ClassDecl x, Object o) {
-		//Use default properties to start with.
-		return visitTypeDecl(x, p);
+		//should never be called
+		return visitTypeDecl(x, o);
 	}
 	
+
 	public /*@non_null*/ Object visitRoutineDecl(/*@non_null*/ RoutineDecl x, Object o) {
-		//x.accept(new VisibleTypeCollector(),o); // Visible Type Collector
-		((Properties) o).put("method", x);
-		((Properties) o).put("routinebegin", new Boolean(true));
-		Lookup.exceptionalPostconditions.put(x, new Post(Expression.rvar(Ref.sort),Logic.True()));
-		return visitASTNode(x, o);
+		typeSet.add(x.parent.id.toString()); //add own class type into set
+		((Properties) o).put("assign", new Boolean(false));
+		visitASTNode(x, o); //return value not needfull
+		((Properties) o).put("visibleTypeSet", typeSet); //put set into properties once for each routine
+		return null;
 	}
 	
 	@Override
 	public /*@non_null*/ Object visitMethodDecl(/*@non_null*/ MethodDecl x, Object o) {
-		((Properties) o).put("result", Expression.rvar(Expression.getResultVar(x)));
 		return visitRoutineDecl(x, o);
 	}
 	
@@ -152,7 +144,7 @@ public class JmlVisitor extends VisitorArgResult{
 	
 	@Override
 	public /*@non_null*/ Object visitFormalParaDecl(/*@non_null*/ FormalParaDecl x, Object o) {
-		return translator.genericVarDecl(x,o);
+		return null;
 	}
 	
 	@Override
@@ -163,61 +155,53 @@ public class JmlVisitor extends VisitorArgResult{
 	
 	@Override
 	 public /*@non_null*/ Object visitLiteralExpr(/*@non_null*/ LiteralExpr x, Object o) {
-		Properties prop = (Properties) o;
-		if (((Boolean) prop.get("interesting")).booleanValue())
-			return translator.literal(x,o);
-		else
 			return null;
 	}
 	 
 	 
 	 @Override
+	 //nur argumente mit lokalen vars. die lokalen vars sind fieldaccess
 	 public /*@non_null*/ Object visitVariableAccess(/*@non_null*/ VariableAccess x, Object o) {		 
-		if (((Boolean) ((Properties) o).get("interesting")).booleanValue())
-			return translator.variableAccess(x,o);
-		else 
+		 if (((Boolean) ((Properties) o).get("assign")).booleanValue())
+		 {
+			 javafe.ast.Type type = (javafe.ast.Type) x.getDecorations()[1]; //javafetypes global def. als fetypes
+			 if (!(type instanceof PrimitiveType)) //sonst alle nehmen? was ist mit errortypes?
+			 {
+				 typeSet.add(type.toString());
+			 }
+			//alle primitivetypes nicht nehmen oder nur JavafePrimitivetype????
+		 }
 			return null;
 	}
 	 
 	 @Override
 	 public /*@non_null*/ Object visitFieldAccess(/*@non_null*/ FieldAccess x, Object o) {		 
-		if (((Boolean) ((Properties) o).get("interesting")).booleanValue())
-			return translator.fieldAccess(x,o);
-		else
+		 	
+		 	javafe.ast.Type type = (javafe.ast.Type) x.od.type();
+			if (!(type instanceof PrimitiveType)&&(((Boolean) ((Properties) o).get("assign")).booleanValue()))
+			{
+				typeSet.add(type.toString());
+			}
+			
+			((Properties) o).put("assign", new Boolean(false));
+		 	((Expr)x.od.childAt(0)).accept(this,o);
+		 	
 			return null;
 	}
 	 
-	 @Override
-	 public /*@non_null*/ Object visitLocalVarDecl(/*@non_null*/ LocalVarDecl x, Object o) {
-		 //TODO: do something meaningfull.
-		 return null;
-	 }
-	 
+		 
 	 @Override
 	 public /*@non_null*/ Object visitNaryExpr(/*@non_null*/ NaryExpr x, Object o) {
-		if (((Boolean) ((Properties) o).get("interesting")).booleanValue()){
-			 if (x.op== TagConstants.PRE) {
-				 return translator.naryExpr(x,o);
-			 } else {
-				 return visitGCExpr(x, o);
-			 }
-		} else
 			return null;
 	}
 	 
 	 @Override
 	 public /*@non_null*/ Object visitInstanceOfExpr(/*@non_null*/ InstanceOfExpr x, Object o) {
-		if (((Boolean) ((Properties) o).get("interesting")).booleanValue())
-			return translator.instanceOfExpr(x, o);
-		else
 			return null;
 	 }
 	 
 	 @Override
 	 public Object  visitThisExpr(ThisExpr x, Object o) {
-		if (((Boolean) ((Properties) o).get("interesting")).booleanValue())
-			return translator.thisLiteral(x,o);
-		else
 			return null;
 	 }
 	 
@@ -293,151 +277,9 @@ public class JmlVisitor extends VisitorArgResult{
 
 	@Override
 	public Object visitExprModifierPragma(ExprModifierPragma x, Object o) {
-		((Properties) o).put("interesting", new Boolean(true));
-		RoutineDecl rd = (RoutineDecl)((Properties) o).get("method");
-		QuantVariableRef result = (QuantVariableRef)((Properties) o).get("result");
-		Term t = (Term)visitASTNode(x, o);
-		switch (x.getTag()){
-		case TagConstants.REQUIRES:
-			Lookup.preconditions.put(rd, t);
-			break;
-		case TagConstants.ENSURES:
-			Lookup.postconditions.put(rd, new Post(result, t));
-			break;
-		}
 		return null;
 	}
-	
-	@Override
-	public Object visitVarExprModifierPragma(VarExprModifierPragma x, Object o) {
-		((Properties) o).put("interesting", new Boolean(true));
 		
-		RoutineDecl currentRoutine = (RoutineDecl)((Properties) o).get("method");
-		Post allExPosts = Lookup.exceptionalPostconditions.get(currentRoutine);
-		QuantVariableRef commonExceptionVar = allExPosts.var;
-		
-		Term typeOfException = Type.translate(x.arg.type);
-		QuantVariableRef newExceptionVar = Expression.rvar(x.arg);
-		
-		Term newExPost = (Term)x.expr.accept(this, o);
-		newExPost = newExPost.subst(newExceptionVar, commonExceptionVar);
-		Term  guard = Logic.assignCompat(Heap.var, commonExceptionVar,typeOfException);
-		Term result = Logic.safe.implies(guard, newExPost);
-		allExPosts.post = Logic.and(allExPosts.post, result);
-		Lookup.exceptionalPostconditions.put(currentRoutine, allExPosts);
-		
-		
-		return null;
-	}
-
-	@Override
-    public /*@non_null*/ Object visitBlockStmt(/*@non_null*/ BlockStmt x, Object o) {
-	    Term t=null;
-	    Term t1=null;
-	    Term t2=null;
-		Set  set=null;
-		Set.Assignment assignment=null;
-	    boolean interesting;
-		Vector<AAnnotation> annos = new Vector<AAnnotation>();
-		Term inv = null;
-		
-		//Save arguments values in prestate as ghosts.
-		if (((Boolean)((Properties) o).get("routinebegin")).booleanValue()){
-			((Properties) o).put("routinebegin", new Boolean(false));
-			RoutineDecl m = (RoutineDecl) ((Properties) o).get("method");
-			for(FormalParaDecl p: m.args.toArray()){
-				 t1 = Expression.rvar(p);
-				 t2 = Expression.old(p);
-				 assignment = new Set.Assignment((QuantVariableRef) t2, t1);
-				 annos.add(new Set((QuantVariableRef) t2, assignment)); 
-			}
-		}
-		
-		//
-	    for(Stmt s: x.stmts.toArray()){
-	    	interesting = false;
-	    	//We are interested in Asserts, Assumes and Loop Invariants
-	    	if (s instanceof ExprStmtPragma){
-	    		interesting = true; 
-	    		((Properties) o).put("interesting", new Boolean(true));
-	    		t = (Term)s.accept(this, o);
-	    		switch (s.getTag()){
-	    		case TagConstants.ASSERT:
-	    			annos.add(new Cut(t));
-	    			break;
-	    		case TagConstants.ASSUME:
-	    			annos.add(new Assume(t));
-	    			break;
-	    		case TagConstants.LOOP_INVARIANT:
-	    		case TagConstants.MAINTAINING:
-	    			inv = t;
-	    			break;
-	    		}
-	    	} else
-	    	
-	    	//We are also interested in ghost var declarations
-	    	if (s instanceof VarDeclStmt){
-	    		
-	    		for (ModifierPragma p: ((VarDeclStmt) s).decl.pmodifiers.toArray()){
-	    			if (p.getTag() == TagConstants.GHOST) {
-	    				interesting = true;
-	    				break;
-	    			}
-	    		}
-	    		if (interesting){
-	    			((Properties) o).put("interesting", new Boolean(true));
-	    			t = (Term)s.accept(this, o);
-	    			Set ghostVar = new Set();
-	    			ghostVar.declaration = (QuantVariableRef) t;
-	    			annos.add(ghostVar);
-	    		}
-	    	} else
-	    	
-	    	//Also set statements should be processed
-	    	if (s instanceof SetStmtPragma) {
-	    		interesting = true;
-	    		((Properties) o).put("interesting", new Boolean(true));
-	    		assignment = (Set.Assignment)s.accept(this, o);
-	    		set = new Set();
-	    		set.assignment = assignment;
-	    		annos.add(set);
-	    	}
-	    	
-	    	if (interesting){
-    			x.stmts.removeElement(s);
-	    	} else {
-	    		((Properties) o).put("interesting", new Boolean(false));
-	    		if (!annos.isEmpty()){
-	    			AnnotationDecoration.inst.setAnnotPre(s, annos);
-	    			annos.clear();
-	    		}
-	    		if (inv != null){
-	    			if (s instanceof WhileStmt || 
-	    					s instanceof ForStmt || 
-	    					s instanceof DoStmt){
-	    				AnnotationDecoration.inst.setInvariant(s, inv);
-	    				inv = null;
-	    			}
-	    		}	
-	    		if (s instanceof WhileStmt || 
-    					s instanceof ForStmt || 
-    					s instanceof DoStmt || 
-    					s instanceof BlockStmt || 
-    					s instanceof TryCatchStmt ||
-    					s instanceof IfStmt){
-    				s.accept(this,o);
-    			}	
-	    	}
-	    }
-		return null;
-    }	
-
-	@Override
-	public /*@non_null*/ Object visitVarDeclStmt(/*@non_null*/ VarDeclStmt x, Object o) {
-		//It's only called if we have a ghost variable declaration
-		return Expression.rvar(x.decl);
-	}	
-	
 	@Override
 	public Object visitExprStmtPragma(ExprStmtPragma x, Object o) {
 		// TODO Auto-generated method stub
@@ -532,7 +374,7 @@ public class JmlVisitor extends VisitorArgResult{
 	public Object visitModifiesGroupPragma(ModifiesGroupPragma x, Object o) {
 		// TODO Auto-generated method stub
 		//return null;
-		return visitASTNode(x, o);
+		return null; //visitASTNode(x, o);
 	}
 
 	@Override
@@ -592,9 +434,6 @@ public class JmlVisitor extends VisitorArgResult{
 
 	@Override
 	public Object visitResExpr(ResExpr x, Object o) {
-		if (((Boolean) ((Properties) o).get("interesting")).booleanValue())
-			return translator.resultLiteral(x,o);
-		else
 			return null;
 	}
 
@@ -606,10 +445,7 @@ public class JmlVisitor extends VisitorArgResult{
 
 	@Override
 	public Object visitSetStmtPragma(SetStmtPragma x, Object o) {
-		Set.Assignment res = new Set.Assignment();
-		res.var = (QuantVariableRef) x.target.accept(this, o);
-		res.expr = (Term) x.value.accept(this,o);
-		return res;
+		return null;
 	}
 
 	@Override
@@ -638,7 +474,6 @@ public class JmlVisitor extends VisitorArgResult{
 
 	@Override
 	public Object visitStillDeferredDeclPragma(StillDeferredDeclPragma x, Object o) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -649,94 +484,49 @@ public class JmlVisitor extends VisitorArgResult{
 	}
 
 	@Override
+	public Object visitVarExprModifierPragma(VarExprModifierPragma x, Object o) {
+		// TODO Auto-generated method stub
+		return null;//visitASTNode(x, o); 
+	}
+
+	@Override
 	public Object visitWildRefExpr(WildRefExpr x, Object o) {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
+	
 	
 	@Override
+	/**
+	 * TagConstants.ASSIGN = 75
+	 * TagConstants.ASGMUL = 76
+	 * TagConstants.ASGDIV = 77
+	 * TagConstants.ASGREM = 78
+	 * TagConstants.ASGADD = 79
+	 * TagConstants.ASGSUB = 80		
+	 * TagConstants.ASGLSHIFT = 81
+	 * TagConstants.ASGRSHIFT = 82			
+     * TagConstants.ASGURSHIFT = 83
+	 * TagConstants.ASGBITAND = 84
+	 * --> Relevant operation in range [75..84]
+	 */
 	public Object visitBinaryExpr(BinaryExpr expr, Object o){
-		if (((Boolean) ((Properties) o).get("interesting")).booleanValue()){
-			switch(expr.op) {
-			case TagConstants.EQ: 
-				return translator.eq(expr, o);
-			case TagConstants.OR: 
-				return translator.or(expr, o);
-			case TagConstants.AND: 
-				return translator.and(expr, o);
-			case TagConstants.NE:
-				return translator.ne(expr, o);
-			case TagConstants.GE: 
-				return translator.ge(expr, o);
-			case TagConstants.GT: 
-				return translator.gt(expr, o);
-			case TagConstants.LE: 
-				return translator.le(expr, o);
-			case TagConstants.LT:  
-				return translator.lt(expr, o);
-			case TagConstants.BITOR: 
-				return translator.bitor(expr, o);
-			case TagConstants.BITXOR: 
-				return translator.bitxor(expr, o);
-			case TagConstants.BITAND: 
-				return translator.bitand(expr, o);
-			case TagConstants.LSHIFT:
-				return translator.lshift(expr, o);
-			case TagConstants.RSHIFT: 
-				return translator.rshift(expr, o);
-			case TagConstants.URSHIFT:
-				return translator.urshift(expr, o);
-			case TagConstants.ADD: 
-				return translator.add(expr, o);
-			case TagConstants.SUB: 
-				return translator.sub(expr, o);
-			case TagConstants.DIV: 
-				return translator.div(expr, o);
-			case TagConstants.MOD: 
-				return translator.mod(expr, o);
-			case TagConstants.STAR: 
-				return translator.star(expr, o);
-			case TagConstants.ASSIGN:
-				return translator.assign(expr, o);
-			case TagConstants.ASGMUL: 
-				return translator.asgmul(expr, o);
-			case TagConstants.ASGDIV: 
-				return translator.asgdiv(expr, o);
-			case TagConstants.ASGREM: 
-				return translator.asgrem(expr, o);
-			case TagConstants.ASGADD: 
-				return translator.asgadd(expr, o);
-			case TagConstants.ASGSUB: 
-				return translator.asgsub(expr, o);
-			case TagConstants.ASGLSHIFT: 
-				return translator.asglshift(expr, o);
-			case TagConstants.ASGRSHIFT: 
-				return translator.asgrshift(expr, o);
-			case TagConstants.ASGURSHIFT: 
-				return translator.asgurshif(expr, o);
-			case TagConstants.ASGBITAND: 
-				return translator.asgbitand(expr, o);
-		// jml specific operators 
-			case TagConstants.IMPLIES: 
-				return translator.implies(expr, o);
-			case TagConstants.EXPLIES:
-				return translator.explies(expr, o);
-			case TagConstants.IFF: // equivalence (equality)
-				return translator.iff(expr, o);
-			case TagConstants.NIFF:    // discrepance (xor)
-				return translator.niff(expr, o);
-			case TagConstants.SUBTYPE: 
-				return translator.subtype(expr, o);
-			case TagConstants.DOTDOT: 
-				return translator.dotdot(expr, o);
-	
-			default:
-				throw new IllegalArgumentException("Unknown construct :" +
-						TagConstants.toString(expr.op) +" " +  expr);
-			}	
-		} else
+		if ((expr.op >= 75) && (expr.op <= 84))
+		{
+			((Properties) o).put("assign", new Boolean(false));
+			expr.right.accept(this, o); 
+			((Properties) o).put("assign", new Boolean(true));
+			expr.left.accept(this,o); 
 			return null;
+		}
+		else
+		return visitExpr(expr, o); //for all other operations	
 	}
+	
+	@Override
+	public /*@non_null*/ Object visitUnaryExpr(/*@non_null*/ UnaryExpr x, Object o) {
+		((Properties) o).put("assign", new Boolean(true));
+	    return visitExpr(x, o);
+	  }
 
 }
