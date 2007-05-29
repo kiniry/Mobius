@@ -106,7 +106,8 @@ public class ParseUtil
 	TagConstants.SYNCHRONIZED, TagConstants.VOLATILE,
 	TagConstants.TRANSIENT, TagConstants.NATIVE, 
 	-1, // Don't consider 'interface' to be a modifier
-	TagConstants.ABSTRACT, TagConstants.STRICT
+	TagConstants.ABSTRACT, TagConstants.STRICT,
+	-1,-1,-1,-1
     };
 
 
