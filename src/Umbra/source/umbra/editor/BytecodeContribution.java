@@ -103,6 +103,12 @@ public class BytecodeContribution extends ControlContribution {
 		}
 
 		/**
+		 * Data passed from documentAboutToBeChanged to documentChanged
+		 */
+		private DocumentEvent current_event;
+		private int endLine;
+		
+		/**
 		 * This method handles the event of the change in the current 
 		 * bytecode document. This method is called before the textual
 		 * change is made. This method initialises the BytecodeContribution
@@ -116,6 +122,16 @@ public class BytecodeContribution extends ControlContribution {
 		public void documentAboutToBeChanged(DocumentEvent event) {
 			if (!ready) 
 				init(event.fDocument); //this marks ready as true
+			current_event = event;
+			
+			try {
+				endLine = event.fDocument.getLineOfOffset(
+							event.getOffset() + event.getLength());
+			} catch (BadLocationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			 
 		}
 
 		/**
@@ -138,11 +154,13 @@ public class BytecodeContribution extends ControlContribution {
 			try {
 				startRem = event.fDocument.getLineOfOffset(event.getOffset());
 				int insertedLen = event.getText().length();
-				int replacedLen = event.fLength;
 				stop = event.fDocument.getLineOfOffset(event.getOffset() + 
 						insertedLen);
-				stopRem = event.fDocument.getLineOfOffset(event.getOffset() + 
-						replacedLen);
+				if (event == current_event) {
+					stopRem = endLine;
+				} else {
+					throw new RuntimeException("documentChanged event does not match documentAboutToBeChanged event");
+				}
 			} catch (BadLocationException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
