@@ -203,16 +203,18 @@ public class BytecodeController {
 	 *            been made to
 	 * @param startRem	Old-version number of the first modified line
 	 * @param stopRem	Old-version number of the last modified line
-	 * @param start		New-version number of the first modified line
 	 * @param stop		New-version number of the last modified line
 	 */
 	public void addAllLines(IDocument doc, 
-			                int startRem, int stopRem, int start, int stop)
+			                int startRem, int stopRem, int stop)
 	{
 		ClassGen cg = ((BytecodeDocument)doc).getClassGen();
+		System.out.println("startRem="+startRem);
+		System.out.println("stopRem="+stopRem);
+		System.out.println("stop="+stop);
 		// i - index in the removed lines
 		// j - index in the inserted lines
-		for (int i = Math.min(startRem, start), j = i; 
+		for (int i = startRem, j = startRem; 
 		       (i <= stopRem || j <= stop) && i < all.size(); 
 		       i++, j++) {
 			BytecodeLineController oldlc = (BytecodeLineController)all.get(j);
@@ -232,7 +234,7 @@ public class BytecodeController {
 			} else //TODO poprawnie: 1 enter przed wpisaniem 2 wpisac przed ta przed ktora checmy wstawic i enter; zle inaczej: enter przed i potem wpisac 
 				nextLine = (BytecodeLineController)instructions.get(off + 1);			
 			modified[nextLine.getIndex()] = true;
-			if (start <= j && j <= stop) { //we are in the area of inserted lines
+			if (startRem <= j && j <= stop) { //we are in the area of inserted lines
 				i = addInstructions(doc, startRem, stopRem, i, j, oldlc, 
 						            nextLine, theLast, metEnd);
 			} else { // we are beyond the area of the inserted instructions

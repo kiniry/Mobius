@@ -52,7 +52,7 @@ public class BytecodeDocument extends Document {
 	 * The bytecode editor that manipulates the current document.
 	 */
 	private BytecodeEditor bytecodeEditor;
-	
+
 	/**
 	 * The Java source code editor of the source code file associated 
 	 * with the current bytecode document.
@@ -343,4 +343,11 @@ public class BytecodeDocument extends Document {
 		fJavaClass = bytecodeEditor.getJavaClass();
 	}
 
+	/**
+	 * @return <code>true</code> when the document change listener has already 
+	 * been added to the document
+	 */
+	public boolean isListenerAdded() {
+		return !getDocumentListeners().isEmpty();
+	}
 }

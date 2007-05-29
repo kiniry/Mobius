@@ -22,7 +22,7 @@ public class BytecodeDocumentProvider extends FileDocumentProvider {
 	/**
 	 * TODO
 	 * 
-	 * @return
+	 * @return a fresh {@ref BytecodeDocument} object with no content
 	 */
 	protected IDocument createEmptyDocument() {
 		return new BytecodeDocument();

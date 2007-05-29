@@ -69,6 +69,7 @@ public class BytecodeContribution extends ControlContribution {
 	 * bytecode plugin.
 	 */
 	private BytecodeEditorContributor editorContributor;
+
 	
 	/**
 	 * This method initialises the internal structures of the bytecode
@@ -95,7 +96,7 @@ public class BytecodeContribution extends ControlContribution {
 	 * change the content of the current bytecode document.
 	 */
 	public class BytecodeListener implements IDocumentListener {
-		
+				
 		/**
 		 * The current constructor does nothing.
 		 */
@@ -123,6 +124,12 @@ public class BytecodeContribution extends ControlContribution {
 		public void documentAboutToBeChanged(DocumentEvent event) {
 			if (!ready) 
 				init(event.fDocument); //this marks ready as true
+			System.out.println("documentAboutToBeChanged "+event.getText());
+			System.out.println("documentAboutToBeChanged "+event.getModificationStamp());
+			System.out.println("documentAboutToBeChanged "+event.getOffset());
+			System.out.println("documentAboutToBeChanged "+event.getLength());
+			System.out.println("documentAboutToBeChanged "+event.getDocument().hashCode());
+			System.out.flush();
 			current_event = event;
 			
 			try {
@@ -132,7 +139,6 @@ public class BytecodeContribution extends ControlContribution {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			 
 		}
 
 		/**
@@ -150,6 +156,8 @@ public class BytecodeContribution extends ControlContribution {
 		 * @see org.eclipse.jface.text.IDocumentListener#documentChanged(org.eclipse.jface.text.DocumentEvent)
 		 */
 		public void documentChanged(DocumentEvent event) {
+			System.out.println("documentChanged "+event.getText());
+			System.out.flush();
 			int stop = 0;
 			int startRem =0, stopRem = 0;
 			try {
@@ -168,7 +176,7 @@ public class BytecodeContribution extends ControlContribution {
 				e.printStackTrace();
 			}
 			bcc.removeIncorrects(startRem, stopRem);
-			bcc.addAllLines(event.fDocument, startRem, stopRem, startRem, stop);
+			bcc.addAllLines(event.fDocument, startRem, stopRem, stop);
 			bcc.checkAllLines(startRem, stop);
 			if (!bcc.allCorrect()) 
 				displayError(bcc.getFirstError());
@@ -249,8 +257,12 @@ public class BytecodeContribution extends ControlContribution {
 	 * TODO
 	 */
 	public void addListener(IDocument document) {
-		BytecodeListener listener = new BytecodeListener();
-		document.addDocumentListener(listener);
+		System.out.println("addListener");
+		BytecodeDocument doc = (BytecodeDocument) document;
+		if (doc.isListenerAdded()) {
+			BytecodeListener listener = new BytecodeListener();
+			document.addDocumentListener(listener);
+		}
 	}
 
 	/**
