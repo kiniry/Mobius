@@ -103,9 +103,10 @@ public class BytecodeContribution extends ControlContribution {
 		}
 
 		/**
-		 * Data passed from documentAboutToBeChanged to documentChanged
+		 * Data passed from documentAboutToBeChanged to documentChanged.
+		 * Should be null if no event is currently being processed.
 		 */
-		private DocumentEvent current_event;
+		private DocumentEvent current_event = null;
 		private int endLine;
 		
 		/**
@@ -161,6 +162,7 @@ public class BytecodeContribution extends ControlContribution {
 				} else {
 					throw new RuntimeException("documentChanged event does not match documentAboutToBeChanged event");
 				}
+				current_event = null;
 			} catch (BadLocationException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
