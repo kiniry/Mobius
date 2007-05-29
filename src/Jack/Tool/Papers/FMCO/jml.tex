@@ -36,13 +36,13 @@ public class QuickSort {
     @                            i < j ==> tab[i] <= tab[j]) &&
     @         (\forall int i; 0 <= i && i <= (tab.length - 1) ==> 
     @             (\exists int j; 0 <= j && j <= (tab.length - 1) && 
-    @                             \old(tab[j]) == tab[i])); */
+    @                             \old(tab[j]) == tab[i])); @*/
   public void sort() {if(tab.length > 0) sort(0, tab.length -1);}
 
   /*@ requires (tab != null) && (0 <= i) && (i < tab.length) && 
     @          (0 <= j) && (j < tab.length);
     @ assignable tab[i], tab[j];
-    @ ensures tab[i] == \old(tab[j]) && (tab[j] == \old(tab[i])); */
+    @ ensures tab[i] == \old(tab[j]) && (tab[j] == \old(tab[i])); @*/
   public void swap(int i, int j) { ... }
 
   private void sort(int lo, int hi) { ... }
