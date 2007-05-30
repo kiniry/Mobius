@@ -69,7 +69,7 @@ public class StmtVCGen extends ExpressionVisitor {
 	public final Vector<Term> vardecl = new Vector<Term>();
 	/** the visitor to visit expressions */
 	public final ExpressionVisitor exprVisitor = new ExpressionVisitor();
-	
+	/** the decorator that add the annotations or read the annotations from a node */
 	public final AnnotationDecoration annot = AnnotationDecoration.inst;
 	
 	
@@ -184,10 +184,7 @@ public class StmtVCGen extends ExpressionVisitor {
 		throw new IllegalArgumentException("Not yet implememented");
 	}
 	
-	// TODO: duplicated code should be removed
-	public Object illegalStmt(ASTNode x, Object o){
-		throw new IllegalArgumentException("Illegal Statement");
-	}
+
 	
 	// TODO: add comments
 	public VCEntry mkEntryWhile(VCEntry ve, Post inv) {
@@ -289,8 +286,14 @@ public class StmtVCGen extends ExpressionVisitor {
 		return treatAnnot(vce, annot.getAnnotPre(x));
 	}
 	
-	// TODO: add comments
-	public Post getBreakPost(Identifier label,VCEntry vce) {
+	/**
+	 * Return the break postcondition corresponding to the
+	 * given label.
+	 * @param label a valid label or null if no label was specified.
+	 * @param vce the entry where the postcondition for the labels was stocked
+	 * @return a valid post condition or null if the label was not found
+	 */
+	public static Post getBreakPost(Identifier label,VCEntry vce) {
 		if (label == null) return vce.brpost; 
 		return vce.lbrpost.get(label);
 	}
@@ -303,8 +306,13 @@ public class StmtVCGen extends ExpressionVisitor {
 		return treatAnnot(vce, annot.getAnnotPre(x));
 	}
 	
-	// TODO: add comments
-	public Post getContinuePost(Identifier label,VCEntry vce) {
+	/**
+	 * Return the continue postcondition corresponding to the given label,
+	 * @param label a valid label or null
+	 * @param vce the entry containing <em>all</em> the postconditions
+	 * @return the postcondition corresponding to the label or null.
+	 */
+	public static Post getContinuePost(Identifier label,VCEntry vce) {
 		if (label == null) {
 			if(vce.contpost == null)
 				throw new NullPointerException();
@@ -535,13 +543,6 @@ public class StmtVCGen extends ExpressionVisitor {
 		}
 		return v;
 	}
-	/**
-	 * @see
-	 */
-	@Override
-	public /*@non_null*/ Object visitDoStmt(/*@non_null*/ DoStmt x, Object o) {
-		return visitStmt(x, o);
-	}
 
 	
 	public /*@non_null*/ Object visitForStmt(/*@non_null*/ ForStmt x, Object o) {
@@ -589,6 +590,15 @@ public class StmtVCGen extends ExpressionVisitor {
 
 	
 	//pas implementer
+	
+	/**
+	 * right now, it is ignored
+	 */
+	@Override
+	public /*@non_null*/ Object visitDoStmt(/*@non_null*/ DoStmt x, Object o) {
+		return visitStmt(x, o);
+	}
+	
 	public /*@non_null*/ Object visitSwitchStmt(/*@non_null*/ SwitchStmt x, Object o) {
 		return visitStmt(x, o);
 	}	

@@ -70,6 +70,11 @@ public abstract class ABasicVisitor extends VisitorArgResult{
 		throw new IllegalArgumentException("Illegal Expression");
 	}
 	
+	public Object illegalStmt(ASTNode x, Object o){
+		throw new IllegalArgumentException("Illegal Statement");
+	}
+	
+	
 	/*
 	 * (non-Javadoc)
 	 * @see javafe.ast.VisitorArgResult#visitASTNode(javafe.ast.ASTNode, java.lang.Object)
