@@ -43,7 +43,7 @@ public class BytecodeDocumentProvider extends FileDocumentProvider {
 					               (IEditorInput) element, 
 					               getEncoding(element))) {
 				setupDocument(element, document);
-			}
+			}/*
 			IDocumentPartitioner partitioner =
 				new FastPartitioner(
 					new BytecodePartitionScanner(),
@@ -52,7 +52,7 @@ public class BytecodeDocumentProvider extends FileDocumentProvider {
 						BytecodePartitionScanner.HEAD,
 						BytecodePartitionScanner.THROWS});
 			partitioner.connect(document);
-			document.setDocumentPartitioner(partitioner);
+			document.setDocumentPartitioner(partitioner);*/
 			BytecodeContribution contribution = BytecodeContribution.inUse();
 			contribution.addListener(document);
 			return document;
