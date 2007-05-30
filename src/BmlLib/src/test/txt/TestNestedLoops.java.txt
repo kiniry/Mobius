@@ -1,0 +1,25 @@
+package test;
+
+public class TestNestedLoops {
+
+	int Mem = 0;
+	//@ requires Mem >=0 && Mem +   3*(2+ 5*3)<= 70 ;
+	//@ ensures Mem <= \old(Mem) + 3*(2+ 5*3);
+	public void m() {
+		int i = 0;
+		Mem = Mem + 2;
+		//@ loop_modifies Mem,i;
+		//@ loop_invariant Mem<=Mem + i*( 2 + 5*3) && i<=3 && i >= 0;   
+		while (i < 3) {
+			i= i+1;
+			Mem = Mem +2;
+			int j = 0;
+			//@ loop_modifies Mem,j;
+			//@ loop_invariant Mem<= Mem + (i-1)*(2 +5*3 ) + 2 + j*3 && j<=5 && j >= 0;
+			while (j < 5) {
+				Mem = Mem + 3;
+				j=j+1;
+			}
+		} 
+	}	
+}
