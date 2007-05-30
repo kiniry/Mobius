@@ -280,7 +280,7 @@ javadoc: build
 	cp $(JAVAFE_ROOT)/doc/javadoc/images/*.gif $(JAVADOC_GEN_DIR)/images
 	$(JAVADOC) -sourcepath \
 	  $(call canonicalize,$(SOURCEPATH):$(JUNIT_SOURCEPATH)) \
-	  -classpath $(call canonicalize,${CLASSPATH}:${JUNIT_LIB}:${ANT_LIB}:${XMLRPC_LIB}) \
+	  -classpath $(call canonicalize,${CLASSPATH}:${JUNIT_LIB}:${ANT_LIB}:${XMLRPC_LIB}:${BCEL_LIB}) \
 	  -overview docs/overview.html \
 	  -header $(COPYRIGHT) \
 	  -footer $(COPYRIGHT) \
@@ -306,7 +306,7 @@ jmldoc: build
 	cp $(JAVAFE_ROOT)/doc/javadoc/images/*.gif $(JMLDOC_GEN_DIR)/images
 	$(JMLDOC) -sourcepath \
 	  $(call canonicalize,$(SOURCEPATH):$(SPECS):$(JUNIT_SOURCEPATH)) \
-	  -classpath "$(call canonicalize,${ESC_CLASSPATH}:${JUNIT_LIB}:${ANT_LIB}:${XMLRPC_LIB}:)${CLASSPATH}" \
+	  -classpath "$(call canonicalize,${ESC_CLASSPATH}:${JUNIT_LIB}:${ANT_LIB}:${BCEL_LIB}:${XMLRPC_LIB}:)${CLASSPATH}" \
 	  -overview docs/overview.html \
 	  -header $(COPYRIGHT) \
 	  -footer $(COPYRIGHT) \
@@ -766,7 +766,7 @@ check_specs: build
 	  ((i=i+1)); \
 	done
 	@echo "}" >> SpecTest.java
-	CLASSPATH=$(call canonicalize,${CLASSPATH}:${JUNIT_LIB}:${ANT_LIB}); $(ESCJAVA) \
+	CLASSPATH=$(call canonicalize,${CLASSPATH}:${JUNIT_LIB}:${ANT_LIB}:${BCEL_LIB}); $(ESCJAVA) \
 	  SpecTest.java
 	rm -f .specs SpecTest.java
 

@@ -28,9 +28,9 @@ else
 endif
 
 export TOOLCMD = ${JAVA} $(DEBUGGER_FLAGS) \
-	-mx40m -classpath ${CAN_CLASSDIRECTORY} javafe.test.Print ${JBIN} ${BCEL_LIB}
+	-mx40m -classpath ${CAN_CLASSDIRECTORY}:${BCEL_LIB} javafe.test.Print ${JBIN}
 export TOOLCMD = ${JAVA} \
-	-mx40m -classpath ${CAN_CLASSDIRECTORY} javafe.test.Print ${JBIN} ${BCEL_LIB}
+	-mx40m -classpath ${CAN_CLASSDIRECTORY}:${BCEL_LIB} javafe.test.Print ${JBIN}
 export TOOLARGS = -noprint -typecheck -quiet -testMode
 export TOOL = ${TOOLCMD} ${TOOLARGS}
 
@@ -50,6 +50,7 @@ separate_tests:
 	@echo Performing tests with
 	@echo "    TOOL: ${TOOL}"
 	@echo "    CLASSPATH: ${CLASSPATH}"
+	@echo "    JAVAFE_CLASSPATH: ${JAVAFE_CLASSPATH}"
 	@echo SKIPPING tests: `grep -v '^#' skip`
 ifndef ALLTESTS
 	@echo tests NOT INCLUDED - ALLTESTS not defined: ` grep -v '^#' skipunlessall`
