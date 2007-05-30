@@ -5,7 +5,7 @@ This section describes the general architecture of JACK, and how it
 aims at a high level of precision.  The next section then discusses
 how JACK has been made accessible to application developers by
 integration within the IDE Eclipse, and the development of the special
-JACK perspective, For the development of the JACK architecture, the
+JACK perspective. For the development of the JACK architecture, the
 main design principles were the following:
 \begin{itemize}
 \item integration within a widely-used IDE, so that developers do not
@@ -26,20 +26,20 @@ Dijkstra~\cite{Dijkstra75}, but adapted to Java by extending it with
 side-effects, exceptions and other abrupt termination constructs
 (\emph{cf.}\
 \emph{e.g.},~\cite{Jacobs04}).
-For method invocations we use their specifications, since we want
-the verification to be modular.
-This direct wp-calculus has the advantage
-that it is easy to generate proof obligations for each path through a
-method, and then to connect the proof obligation with the path through
-the method that gave rise to this particular proof obligation (to
-achieve this, also some program flow information is associated to each
-proof obligation). This connection makes the understanding of the
-generated proof obligations easier. Another advantage of this approach
-is that the algorithms for annotation generation as described below in
-Section~\ref{SecAnnotGen} could make direct use of the weakest
-precondition infrastructure. A drawback of this approach is that the
-size of the generated proof obligation may be exponential in the size
-of the code fragment being checked~\cite{FlanaganS01}.
+Method invocations are abstracted by their specifications, since we
+want verification to be modular.  This direct wp-calculus has the
+advantage that it is easy to generate proof obligations for each path
+through a method, and then to connect the proof obligation with the
+path through the method that gave rise to this particular proof
+obligation (to achieve this, also some program flow information is
+associated to each proof obligation). This connection makes the
+understanding of the generated proof obligations easier. Another
+advantage of this approach is that the algorithms for annotation
+generation as described below in Section~\ref{SecAnnotGen} could make
+direct use of the weakest precondition infrastructure. A drawback of
+this approach is that the size of the generated proof obligation may
+be exponential in the size of the code fragment being
+checked~\cite{FlanaganS01}.
 
 
 %\marginpar{MH: Please check what I say here! Should we say something about
@@ -63,7 +63,7 @@ through a method that have to be considered.
 JACK generates its proof obligations in an abstract formula language,
 representing first-order logic formulae. It is straightforward to
 translate the abstract formulae into a proof obligation for a
-particular prover. Adding a new prover as a plugin to the tool is
+particular prover. Adding a new prover as a plug-in to the tool is
 simple: one develops a background theory formalising Java's type
 system and memory model, and one defines how the abstract formulae are
 translated into concrete proof obligations for this particular

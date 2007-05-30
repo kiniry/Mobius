@@ -75,7 +75,7 @@ that they are generated \emph{automatically}. % can help significantly to
 % reduce the
 %burden of annotation writing.
 
-The annotation generation can be further improved by applying a simple
+The annotation generation could be further improved by applying a simple
 analysis on the generated annotations. Often it is the case that the
 preconditions that are generated for the fields of the class are the
 same for (almost) all methods. In that case, this condition is likely
@@ -176,12 +176,12 @@ Similar annotations are generated for \texttt{commitTransaction} and
 \texttt{abort\-Trans\-action} (\cite{PavlovaBBHL04} also
 describes the generated core-annotations for the other
 properties). After propagation, these annotations are sufficient to
-check for the absence of nested transaction.  To understand why
+check for the absence of nested transactions.  To understand why
 propagation is necessary, suppose we are checking the \textbf{No
 nested transactions} property for an application, containing the
 following fragment (where
 \texttt{m} does not call any other methods, and does not contain any
-set annotations).
+set-annotations).
 
 \begin{verbatim}
 void m() { ... // some internal computations
@@ -223,23 +223,22 @@ to~\cite{PavlovaBBHL04}.
 To illustrate the effectiveness of our approach, we tested our method
 on several industrial smart card applications, including the so-called
 Demoney case study, developed as a research prototype by Trusted
-Logic\footnote{See {\tt http://www.trusted-logic.fr}.}, and the PACAP
-case study\footnote{See {\tt
-http://www.gemplus.com/smart/rd/publications}.}, % /case-study
-developed by Gemplus. Both examples have been explicitly developed as
-test cases for different formal techniques, illustrating the different
-issues involved when writing smart card applications. We used the
-core-annotations as presented above, and propagated these throughout
-the applications.  For both applications we found that they contained
-no nested transactions, and that they did not contain attempts to
-verify pin codes within transactions. However, in the PACAP
-application we found transactions containing uncaught exceptions. All
-proof obligations generated \emph{w.r.t.}~these properties are trivial
-and can be discharged immediately. However, to emphasise the
-usefulness of having a tool for generating annotations: we encountered
-cases where a single transaction gave rise to twenty-three annotations
-in five different classes. When writing these annotations manually, it
-is all too easy to forget some.
+Logic\footnote{See {\tt http://www.trusted-logic.com}.}, and the PACAP
+case study~\cite{BieberCGLWZ00}, developed by Gemplus. Both examples
+have been explicitly developed as test cases for different formal
+techniques, illustrating the different issues involved when writing
+smart card applications. We used the core-annotations as presented
+above, and propagated these throughout the applications.  For both
+applications we found that they contained no nested transactions, and
+that they did not contain attempts to verify pin codes within
+transactions. However, in the PACAP application we found transactions
+containing uncaught exceptions. All proof obligations generated
+\emph{w.r.t.}~these properties are trivial and can be discharged
+immediately. However, to emphasise the usefulness of having a tool for
+generating annotations: we encountered cases where a single
+transaction gave rise to twenty-three annotations in five different
+classes. When writing these annotations manually, it is all too easy
+to forget some.
 
 
 

@@ -23,7 +23,7 @@ the software deployed on the device. %This is in particular important
 %expensive due to their particular deployment process and their mass
 %production. 
 \setcounter{footnote}{0}
-This paper describes JACK\footnote{see \url{http://www-sop.inria.fr/everest/soft/Jack/jack.html} for download instructions.} (the Java Applet Correctness Kit), a tool
+This paper describes JACK\footnote{See \url{http://www-sop.inria.fr/everest/soft/Jack/jack.html} for download instructions.} (the Java Applet Correctness Kit), a tool
 that can be used to improve the quality of applications for TPD. Such
 devices typically implement the Java Virtual Machine (or one of its
 variations)\footnote{The standard Java set-up for TPD is the Connected
@@ -67,10 +67,10 @@ and the LOOP tool~\cite{BergJ01} on an electronic purse smart card
 application~\cite{final:Form.Met} had sufficiently demonstrated that
 verification of JML annotations could help to increase the quality of
 smart card applications. However, the existing tools where either not
-precise enough, or they were too cumbersome to use to expose
-application developers to them. The JACK tool was designed to overcome
-these problems, in particular via the integration of JACK within the
-IDE Eclipse\footnote{See \texttt{http://www.eclipse.org}.}, and the
+precise enough, or too cumbersome to use to expose application
+developers to them. The JACK tool was designed to overcome these
+problems, in particular via the integration of JACK within the IDE
+Eclipse\footnote{See \texttt{http://www.eclipse.org}.}, and the
 development of a special JACK perspective.
 
 In 2003, the tool has been transfered to the Everest project at INRIA
@@ -128,17 +128,17 @@ whole process is automatic.
 However, as JACK is a general-purpose tool, it can be also be used to
 verify complex functional-behaviour specifications. For this, it
 provides advanced support for specification development and
-interactive verification. First of all, because of the tight
-integration with Eclipse, the developer does not have to change tools
-to validate the application. A special JACK view is provided, that
-allows to inspect the generated proof obligations in different views
-(in a Java-like syntax, or in the language of the prover). Moreover,
-syntax colouring of the original source code allows to see to which
-parts of the application and specification the proof obligation
-relates. Second, JACK can generate ``obvious'' annotations that are
-easy to forget, in particular preconditions that are sufficient to
-avoid runtime exceptions. This overcomes one of the major drawbacks of
-using JML-like annotations for specifications, namely that writing
+interactive verification. Because of the tight integration with
+Eclipse, the developer does not have to change tools to validate the
+application. A special JACK view is provided, that allows to inspect
+the generated proof obligations in different views (in a Java-like
+syntax, or in the language of the prover). Moreover, syntax colouring
+of the original source code allows to see to which parts of the
+application and specification the proof obligation relates. Further,
+JACK can generate ``obvious'' annotations that are easy to forget, in
+particular preconditions that are sufficient to avoid runtime
+exceptions. This helps to overcome one of the major drawbacks of using
+JML-like annotations for specifications, namely that writing
 annotations is labour-intensive and error-prone. Finally, to support
 interactive verification, several advanced Coq tactics have been
 developed, and a Coq editor has been integrated into Eclipse. In
@@ -163,11 +163,11 @@ verification. Finally, Section~\ref{SecConcl} concludes and discusses
 how this work will be continued.
 
 Parts of the results described in this paper have been published
-elsewhere (\cite{BurdyRL03} describes the general architecture of
-JACK, \cite{PavlovaBBHL04} the annotation generation algorithm
-for security policies, \cite{BurdyP06} the framework for the
-verification of bytecode, and \cite{Charles06} the native
-construct). However, this is the first time a complete overview of
-JACK and its main features are given in a single paper.
+elsewhere: \cite{BurdyRL03} describes the general architecture of
+JACK, \cite{PavlovaBBHL04} the annotation generation algorithm for
+security policies, \cite{BurdyP06} the framework for the verification
+of bytecode, and \cite{Charles06} the native construct. However, this
+is the first time a complete overview of JACK and its main features
+are given in a single paper.
 
 

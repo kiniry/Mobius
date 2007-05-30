@@ -13,20 +13,19 @@ correctness of such an application, one needs support to verify
 bytecode directly.
 
 This section describes the different parts in the bytecode
-subcomponent of JACK. First of all, we present a specification
-language tailored to bytecode, and we specify how these specifications
-can be encoded in the class file format. Our specification language,
-called BML for Bytecode Modeling Language~\cite{BurdyHP07}, is the
-bytecode cousin of JML. Second, we define and implement a compiler
-from JML to BML specifications. Such a compiler is in particular
-useful in a proof carrying code scenario, where the application
-developer can verify the application at (the more intuitive) source
-code level, and then compile both the application and the
-specification to bytecode level. Finally, we also define a
-verification condition generator for bytecode applications annotated
-with BML, implementing a wp-calculus for bytecode. This allows to
-generate the proof obligations for a bytecode application to satisfy
-its BML specification.
+subcomponent of JACK. First, we present a specification language
+tailored to bytecode, and we specify how these specifications can be
+encoded in the class file format. Our specification language, called
+BML for Bytecode Modeling Language~\cite{BurdyHP07}, is the bytecode
+cousin of JML. Second, we define and implement a compiler from JML to
+BML specifications. Such a compiler is in particular useful in a proof
+carrying code scenario, where the application developer can verify the
+application at (the more intuitive) source code level, and then
+compile both the application and the specification to bytecode
+level. Finally, we also define a verification condition generator for
+bytecode applications annotated with BML, implementing a wp-calculus
+for bytecode. This allows to generate the proof obligations for a
+bytecode application to satisfy its BML specification.
 
 \subsection{A Specification Language for Bytecode: BML}
 
@@ -130,18 +129,16 @@ the BML version of the JML specification of method
 Notice that the field \codeHook{tab} has been assigned the number 14
 in the constant pool, and that it is always explicitly qualified with
 \codeHook{this} in the specification. In the bytecode the
-variable \codeHook{this} is stored in \codeHook{lv[0]}  (thus can be accessed
-by \verb+aload_0+)
-% follow by a \verb+getfield #14+.
-The method's parameters
-\texttt{i} and \texttt{j} are now denoted by the expressions
-\texttt{lv[1]} and \texttt{lv[2]}, respectively. Notice further that
+variable \codeHook{this} is stored in \codeHook{lv[0]} (thus it can be
+accessed by \verb+aload_0+).  The method's parameters \texttt{i} and
+\texttt{j} are denoted by the expressions \texttt{lv[1]} and 
+\texttt{lv[2]}, respectively. Notice further that 
 the BML specification directly corresponds to the original JML
 specification.
 
 
  
-\subsection{Encoding of BML Specifications in the Class File Format}
+\subsection{Encoding BML Specifications in the Class File Format}
 
 To store BML specifications together with the bytecode it specifies,
 we encode them in the class file format. The Java Virtual Machine
@@ -184,7 +181,7 @@ representing the (unqualified) name of the variable, the latter is a
 field descriptor, containing \emph{e.g.}, type information.  The tags
 \textbf{u2} and \textbf{u4} specifies the size of the attribute, 2 and
 4 bytes, respectively. The format of the other attributes is
-specified in a similar way (see~\cite{Pavlova07} for more details).
+specified in a similar way (see~\cite{Pavlova:phd} for more details).
 
 
 

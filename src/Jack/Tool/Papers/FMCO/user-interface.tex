@@ -62,7 +62,7 @@ they are generated for a specific theorem prover).
 %julien: at my desk it makes things bugs....
 % \epsfig{file=screen1.ps,angle=270,width=\textwidth}
 % the following work better (for me, with the makefile)
-\epsfig{file=screen1, width=\textwidth}
+\epsfig{file=screen1bis, width=\textwidth}
 \caption{JACK's proof obligation inspection perspective}\label{FigJackPerspective}
 \end{figure}
 
@@ -79,26 +79,31 @@ they are generated for a specific theorem prover).
 %\end{itemize}
 
 Figure~\ref{FigJackPerspective} shows the inspection of a proof
-obligation for the method \texttt{sort} in the QuickSort example of
-Figure~\ref{FigJMLSpec}. The left upper windows allows one to browse
-the proof obligations for the current class. Proven obligations are
-ticked, the others are marked with a cross. The right window shows the
-original source code, where the path through the code that corresponds
-to the current proof obligation is coloured, together with the
-relevant part of the method specification. Different colours are used
-to indicate different cases, \emph{i.e.}, to distinguish normal from
-exceptional execution, and to mark that extra information, such as a
-method specification, or the result of a conditional expression, is
-available.  The bottom window shows the proof obligation: the left
-half contains the hypotheses, marked with letters indicating their
-origin, \emph{e.g.}, a hypothesis marked R originates from the
-method's requires clause, while a hypothesis marked L is derived from
-local declarations within the method. The right half of the window
-shows the actual goal that has to be proven. The window name
-highlights once again that this proof obligation originates from the
-postcondition. Finally, notice that the proof obligation is here
-displayed in Java syntax, but that buttons are available to change to
-Coq, Simplify or PVS syntax.
+obligation for the method \texttt{sort} in the \texttt{QuickSort}
+example of Figure~\ref{FigJMLSpec}. The left upper windows allows one
+to browse the proof obligations for the current class. Proven
+obligations are ticked, the others are marked with a cross. The right
+window shows the original source code, where the path through the code
+that corresponds to the current proof obligation is coloured, together
+with the relevant part of the method specification. Different colours
+are used to indicate different cases, \emph{i.e.}, to distinguish
+normal from exceptional execution, and to mark that extra information,
+such as a method specification, or the result of a conditional
+expression, is available. For example, in
+Figure~\ref{FigJackPerspective} one sees the specification of the
+private \texttt{sort} method in a pop-up box, used in the public
+\texttt{sort} method.
+
+The bottom window shows the proof obligation: the left half contains
+the hypotheses, marked with letters indicating their origin,
+\emph{e.g.}, a hypothesis marked R originates from the method's
+requires clause, while a hypothesis marked L is derived from local
+declarations within the method. The right half of the window shows the
+actual goal that has to be proven. The window name highlights once
+again that this proof obligation originates from the
+postcondition. Finally, notice that the proof obligation is displayed
+in Java syntax, but buttons are available to change to Coq, Simplify
+or PVS syntax.
 
 %\marginpar{MH: Say something about 'manual check' option for proof
 %obligations}

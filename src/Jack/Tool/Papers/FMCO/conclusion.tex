@@ -23,14 +23,14 @@ underlying theorem prover).
 
 The JACK tool has been used for several small to medium-scale case
 studies. First of all, we have shown how BML annotations can be used
-to guarantee resource policies related to memory consumptions on
+to guarantee resource policies related to memory consumption of
 bytecode applications~\cite{BarthePS05}. In addition, we have also
 shown how the verification of exception-freeness at bytecode level can
 be used to reduce the footprint of Java-to-native compilation
 schemes. Executable code typically contains run-time checks to decide
-whether an exception should be thrown. But if it can be proven statically
-that the exception \emph{never} will be thrown, there is no need for
-the executable code to contain the run-time
+whether an exception should be thrown. But if it can be proven
+statically that the exception \emph{never} will be thrown, there is no
+need for the executable code to contain the run-time
 checks~\cite{DBLP:conf/cardis/CourbotPGV06}.
 
 
@@ -62,8 +62,7 @@ JML-annotated Java code, but JACK distinguishes itself from these
 tools by the features described in this paper. We briefly describe the
 most relevant other tools. ESC/Java~\cite{CokK04} is probably the most
 used tool. It also aims at a high level of automation, but makes an
-explicit trade-off between automation and
-soundness. 
+explicit trade-off between soundness, completeness and automation.
 The Jive tool~\cite{MeyerP00} uses a Hoare-logic for program
 verification, requiring much more user interaction. The Key
 tool~\cite{BeckertHS07} uses a dynamic logic approach, where program
@@ -81,7 +80,7 @@ specifications as part of the annotations, and use these in the
 verification. This resembles the \native construct, however, the
 \native construct directly allows one to use the full expressiveness
 of the logic of the underlying prover, and to directly reuse any
-(library) results already proven about the datatypes. Moreover, the
+(library) results already proven about the data types. Moreover, the
 use of the native construct allows one to keep on using a Java-like
 syntax in the annotations.
 
