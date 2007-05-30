@@ -183,7 +183,7 @@ public class FieldAccess extends Expression {
 			return getSubExpressions()[0].printCode(conf);
 		} else {
 			String str = getSubExpressions()[1].printCode(conf) + "-->";
-			if (str.startsWith("this"))
+			if (str.contains("this"))
 				str = "";
 			return str + getSubExpressions()[0].printCode(conf);
 		}

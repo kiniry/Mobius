@@ -62,6 +62,24 @@ public class ArithmeticExpression extends Expression {
 //		return e; //new ArithmeticExpression(e, _op);
 //*/	}
 //
+	private void SetPriority() {
+		switch (arithmetic_op) {
+		case ExpressionConstants.ADD: priority = 4; break;
+		case ExpressionConstants.BITWISEAND: priority = 8; break;
+		case ExpressionConstants.BITWISEOR: priority = 10; break;
+		case ExpressionConstants.BITWISEXOR: priority = 9; break;
+		case ExpressionConstants.DIV: priority = 3; break;
+		case ExpressionConstants.MULT: priority = 3; break;
+		case ExpressionConstants.NEG: priority = 4; break;
+		case ExpressionConstants.NOP: priority = 0; break; //?
+		case ExpressionConstants.REM: priority = 3; break;
+		case ExpressionConstants.SHL: priority = 5; break;
+		case ExpressionConstants.SHR: priority = 5; break;
+		case ExpressionConstants.SUB: priority = 4; break;
+		case ExpressionConstants.USHR: priority = 5; break; // co to jest?
+		}
+	}
+	
 	public ArithmeticExpression() {
 	}
 
@@ -69,6 +87,7 @@ public class ArithmeticExpression extends Expression {
 			byte _arithmetic_op) {
 		super(new Expression[] { _subExpr1, _subExpr2 });
 		arithmetic_op = _arithmetic_op;
+		SetPriority();
 	}
 
 	/**
@@ -82,6 +101,7 @@ public class ArithmeticExpression extends Expression {
 	private ArithmeticExpression(Expression _subExpr, byte _arithmetic_op) {
 		arithmetic_op = _arithmetic_op;
 		setSubExpressions(new Expression[] { _subExpr });
+		SetPriority();
 	}
 //
 //	/**
@@ -485,7 +505,7 @@ public class ArithmeticExpression extends Expression {
 		if (getSubExpressions().length == 1) {
 			return op + subExpr[0].printCode(conf);
 		} else {
-			return "(" + subExpr[0].printCode(conf) + op + subExpr[1].printCode(conf) + ")";
+			return subExpr[0].printCode(conf) + op + subExpr[1].printCode(conf);
 		}
 	}
 

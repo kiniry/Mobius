@@ -6,7 +6,6 @@ import annot.bcexpression.Expression;
 
 public class ModifiesDOT extends ModifiesExpression {
 
-
 	public ModifiesDOT(ModifiesExpression modifiesIdent, Expression expr, BCClass _clazz) {
 		super(modifiesIdent, expr, _clazz);
 	}
@@ -81,7 +80,9 @@ public class ModifiesDOT extends ModifiesExpression {
 
 	 
 	public String printCode1(BMLConfig conf) {
-		String s = getModifies().printCode(conf)  + "( " + getSubExpressions()[1].printCode(conf)  + ")"; 
-		return s;
+//		String s = getModifies().printCode(conf)  + "( " + getSubExpressions()[1].printCode(conf)  + ")";
+		if (getSubExpressions()[1].printCode(conf).equals("this"))
+			return getModifies().printCode(conf);
+		return getSubExpressions()[1].printCode(conf)+"."+getModifies().printCode(conf);
 	}
 }

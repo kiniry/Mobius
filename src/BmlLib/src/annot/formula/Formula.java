@@ -12,6 +12,16 @@ public class Formula extends Expression {
 	private byte connector;
 	public static final boolean SIMPLIFY = true;
 
+	private void setPriority() {
+		switch (connector) {
+		case Connector.AND: priority = 11; break;
+		case Connector.OR: priority = 12; break;
+		case Connector.NOT: priority = 2; break;
+		case Connector.EQUIV: priority = 13; break; //?
+		case Connector.IMPLIES: priority = 13; break; //?
+		}
+	}
+	
 	protected Formula() {
 	}
 
@@ -22,16 +32,19 @@ public class Formula extends Expression {
 	protected Formula(Expression[] _f, byte _conn) {
 		super(_f);
 		setConnector(_conn);
+		setPriority();
 	}
 
 	protected Formula(Expression _f, byte _conn) {
 		super(_f);
 		setConnector(_conn);
+		setPriority();
 	}
 
 	protected Formula(Expression _left, Expression _right, byte _conn) {
 		super(_left, _right);
 		setConnector(_conn);
+		setPriority();
 	}
 
 	// constructor used by subclass Predicate

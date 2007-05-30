@@ -14,6 +14,25 @@ public class Predicate2Ar extends Predicate {
 		super(_term1, _term2, _predicateSymbol);
 	}
 
+	private void setPriority() {
+		byte ps = getPredicateSymbol();
+		switch (ps) {
+		case PredicateSymbol.EQ: priority = 7; break;
+		case PredicateSymbol.NOTEQ: priority = 7; break;
+		case PredicateSymbol.GRT: priority = 6; break;
+		case PredicateSymbol.GRT_uscmp: priority = 6; break;
+		case PredicateSymbol.GRTEQ: priority = 6; break;
+		case PredicateSymbol.GRTEQ_uscmp: priority = 6; break;
+		case PredicateSymbol.LESS: priority = 6; break;
+		case PredicateSymbol.LESS_uscmp: priority = 6; break;
+		case PredicateSymbol.LESSEQ: priority = 6; break;
+		case PredicateSymbol.LESSEQ_uscmp: priority = 6; break;
+		case PredicateSymbol.INSTANCEOF: priority = 2; break;
+		case PredicateSymbol.ODD: priority = 0; break; //?
+		case PredicateSymbol.SUBTYPE: priority = 0; break; //?
+		}
+	}
+	
 	public Expression getLeftExpr() {
 		return getSubExpressions()[0];
 	}

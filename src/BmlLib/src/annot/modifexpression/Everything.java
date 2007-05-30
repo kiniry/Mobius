@@ -1,5 +1,6 @@
 package annot.modifexpression;
  
+import annot.bcclass.BMLConfig;
 import annot.bcexpression.Expression;
 
 /**
@@ -24,7 +25,11 @@ public class Everything  extends ModifiesExpression {
 		return "\\everything";
 	}
 
-//	/* (non-Javadoc)
+	public String printCode(BMLConfig conf) {
+		return "\\everything";
+	}
+
+	//	/* (non-Javadoc)
 //	 * @see bcexpression.Expression#copy()
 //	 */
 //	public Expression copy() {

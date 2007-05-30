@@ -5,6 +5,9 @@ import annot.bcexpression.jml.RESULT;
 
 public abstract class Expression {
 	private Expression[] subExpressions;
+	protected byte priority;
+	
+	public static final byte MAX_PRI = 100; // max priority
 	
 //	public static final Counter COUNTER = Counter.getCounter();
 //
@@ -56,23 +59,27 @@ public abstract class Expression {
 	public static final RESULT _RESULT = RESULT.getResult();
 	
 	protected Expression() {
+		priority = 0;
 	}
 	
 	public Expression(Expression _subExpr) {
 		subExpressions = new Expression[1];
 		subExpressions[0] = _subExpr;
+		priority = 0;
 	}
 
 	public Expression(Expression _subExpr1, Expression _subExpr2) {
 		subExpressions = new Expression[2];
 		subExpressions[0] = _subExpr1;
 		subExpressions[1] = _subExpr2;
+		priority = 0;
 	}
 
 	public Expression(Expression[] _subExprs) {
 		if (_subExprs != null) {
 			subExpressions = _subExprs;
 		}
+		priority = 0;
 	}
 	
 
@@ -101,63 +108,125 @@ public abstract class Expression {
 //	
 //	public abstract String toString();
 	
+	// abstract
 	public String toString() {
 		System.out.println("ERROR: called removed method toString().");
 		throw new NullPointerException();
 	}
 	
-//	public abstract printCode(BMLConfig conf);
-	
-	public String controlPrint() {
+	/**
+	 * Prints expression in debug (raw) mode
+	 * 
+	 * @param conf - see {@link BMLConfig}
+	 * @return string representation of expression
+	 */
+	public String controlPrint(BMLConfig conf) {
 		String str = this.getClass().getName();
 		str = str.substring(str.lastIndexOf(".")+1);
 		int length = 0;
 		if (subExpressions != null)
 			length = subExpressions.length;
+		String w = conf.wciecie;
+		conf.wciecie = w + "   ";
 		if (length > 0)
 			str += "(";
 		for (int i=0; i<length; i++) {
 			if (i > 0)
 				str += ", ";
-			str += subExpressions[i].controlPrint();
+			str += "\n" + conf.wciecie + subExpressions[i].controlPrint(conf);
 		}
 		if (length > 0)
 			str += ")";
+		conf.wciecie = w;
 		return str;
 	}
 	
+	// position in current line, for line breaking
 	static int line_pos = 0;
 	
+	/**
+	 * Prints expression as a whole attribute
+	 * 
+	 * @param conf - see {@link BMLConfig}
+	 * @return string representation of expression
+	 */ 
 	public String printLine(BMLConfig conf) {
 		return printLine(conf, 0);
 	}
 	
+	/**
+	 * Prints expression as a whole attribute
+	 * 
+	 * @param conf - see {@link BMLConfig}
+	 * @param usedc - # characters displayed in current line
+	 * before this expression
+	 * @return string representation of expression
+	 */ 
 	public String printLine(BMLConfig conf, int usedc) {
 		line_pos = usedc;
+		conf.root_pri = MAX_PRI;
+		conf.wciecie = "    ";
 		return printCode(conf);
 	}
+
+	/**
+	 * Adds parenthness to root of the expression.
+	 * 
+	 * @param conf - see {@link BMLConfig}
+	 * @return string representation of expression, before
+	 * line breaking in the root
+	 */
+	private String printCode2(BMLConfig conf) {
+		int rp = conf.root_pri;
+		conf.root_pri = priority;
+		String str = printCode1(conf);
+		if (priority > rp)
+			str = "(" + str + ")";
+		conf.root_pri = rp;
+		return str;
+	}
 	
+	/**
+	 * Prints expression as a string. This method should
+	 * be called in attributes and subclasses to get
+	 * full string representation.
+	 * 
+	 * @param conf - see {@link BMLConfig}
+	 * @return string representation of expression, according
+	 * to current configuration and environment (conf)
+	 */
 	public String printCode(BMLConfig conf) {
 		if (conf.goControlPrint) {
-			return controlPrint();
+			conf.goControlPrint = false;
+			String str = printCode(conf);
+			conf.goControlPrint = true;
+			return str + "\n" + controlPrint(conf);
 		} else {
 			int old_pos = line_pos;
-			String code = printCode1(conf);
+			String code = printCode2(conf);
 			if (code.lastIndexOf("\n") >= 0)
 				old_pos = -code.lastIndexOf("\n");
 			if ((code.length() < 20) && (old_pos + code.length() > 80)) {
 				line_pos = old_pos = 0;
-				code = "\n *      " + printCode1(conf);
+				code = "\n *      " + printCode2(conf);
 			}
 			line_pos = old_pos + code.length();
 			return code;
 		}
 	}
 	
+	/**
+	 * This method should be implemented in subclasses to
+	 * return it basic string representation (without parenthness
+	 * and line-breaking).
+	 * 
+	 * @param conf - see {@link BMLConfig}
+	 * @return debug (raw), ugly representation of expression
+	 */
 	public String printCode1(BMLConfig conf) {
 		System.out.print("in "+this.getClass().getName());
 		System.out.println("\tWARNING: replace old method name toString() with printCode1(BMLConf)");
-		return toString();
+		return controlPrint(conf);
 	}
 //
 //	

@@ -16,13 +16,14 @@ public class Quantificator extends Expression {
 	public Quantificator(String _quantifier, Expression[] _boundVar) {
 		quantifier = _quantifier;
 		setBoundVars(_boundVar);
+		priority = 0; //?
 	}
 
 	public Quantificator(
 		String _quantifier,
 		Expression _boundVar) {
 		this(_quantifier,  new Expression[]{_boundVar});
-		
+		priority = 0; //?
 	}
 
 //	public void dump() {
@@ -55,12 +56,11 @@ public class Quantificator extends Expression {
 	
 	public String printCode1(BMLConfig conf) {
 		/*	if (domain == null) {*/
-			String s = "(" + quantifier ;
+			String s = quantifier ;
 			for (int i = 0; i < boundVar.length; i++ ) {
 				 s = s + "  " + boundVar[i].printCode(conf);
 			}
-			s = s + "  )";
-			return s;
+			return s + ": ";
 			/*return  "(" + quantifier + "  " + boundVar +  "."+ domain.toString() + ")";*/
 		}
 
