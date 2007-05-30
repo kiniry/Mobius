@@ -255,8 +255,8 @@ BEGIN
     reduce[Name, set[Name]](
       LAMBDA (branches : list[[Expr, set[Name]]]) :                 % CaseJML
         Union({ns : Name | EXISTS (x : [Expr, set[Name]]) :
-               member(x, branches) AND  ns = var_names(proj_1(x)) OR
-               ns = proj_2(x)}),
+               member(x, branches) AND  var_names(proj_1(x))(ns) OR
+               proj_2(x)(ns)}),
       LAMBDA (b : Expr, s1, s2 : set[Name]) :                       % IfThenElse
         union(var_names(b), union(s1, s2)),
       LAMBDA (s1, s2 : set[Name]) : union(s1, s2),                  % Sequence
