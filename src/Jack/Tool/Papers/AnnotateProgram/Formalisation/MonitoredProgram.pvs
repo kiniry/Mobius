@@ -1,35 +1,21 @@
 MonitoredProgram[CP, Name : TYPE+] : THEORY
 BEGIN
 
-  IMPORTING Program[Name],
-            MVA[CP, Name]
+  IMPORTING WellFormedMVA[CP, Name],
+            WellFormedProgram[Name]
 
   MonitoredProgram : TYPE =
     [# mva : MVA[CP, Name],
        program : Program[Name]
     #]
 
-
-END MonitoredProgram
-
-
-WellFormedMonitoredProgram[CP, Name : TYPE+] : THEORY
-BEGIN
-
-  IMPORTING MonitoredProgram[CP, Name],
-            WellFormedMVA[CP, Name],
-            WellFormedProgram[Name]
-
-  
   % NOTE: We restrict ourselves to the case where the automaton monitors at least
   % one of the classes of the program.
   % Requirements:
   % Variables in vdsP must be fields in the program
   % Every method mentioned in the events must be in the class
-  wf_MP(MP : MonitoredProgram) : boolean =
-    LET a = mva(MP), p = program(MP) IN
-    complete(a) AND
-    wf_Program(p) AND
+  compatible(mp : MonitoredProgram) : boolean =  
+    LET a = mva(mp), p = program(mp) IN
     EXISTS (c : Class) :
       classes(p)(c) AND 
       name(c) = class_name(a) AND
@@ -41,8 +27,14 @@ BEGIN
         mname(ev) = n IMPLIES
           EXISTS (m : Method) : methods(c)(m) AND name(m) = n)
 
+  % Syntactic constraints on MPs
+  wf_MP(mp : MonitoredProgram) : boolean =
+    wf_MVA(mva(mp)) AND
+    wf_Program(program(mp)) AND
+    compatible(mp)
 
-END WellFormedMonitoredProgram
+
+END MonitoredProgram
 
 
 % The semantics of MonitoredPrograms assumes that the program is annotated, thus
@@ -50,7 +42,7 @@ END WellFormedMonitoredProgram
 MonitoredProgramSemantics[CP, Name : TYPE+] : THEORY
 BEGIN
 
-  IMPORTING WellFormedMonitoredProgram[CP, Name],
+  IMPORTING MonitoredProgram[CP, Name],
             MVASemantics[CP, Name]
 
   % Monitored Program State
@@ -122,6 +114,8 @@ BEGIN
             deriv_expr_rec : deriv_expr_rec_type(n)) :
     wf_MP(mp) AND
     wf_state(mp)(s1) AND
+    % This will block the MP if the MVA reaches halted
+    NOT cp(astate(s1)) = halted AND
     astate(s2) = on_method_MVA(Entry)(mp, md, s1)  AND
     EXISTS (m1, m2, m3 : nat, tau1, tau2 : MPState, inv : Expr) :
       n = m1 + m2 + m3 + 1 AND
@@ -191,15 +185,49 @@ BEGIN
     run_FullProgram(mp)(main, arg)(initial_MP_state(mp), s2)(n)
 
 
-  % The evaluation of expression in actions must be side-effect free
-  eval_action_axiom : AXIOM
-    FORALL (mp : MonitoredProgram, e : Expr, v : Val,
-            s : MPState, sMVA : AState, stP : PSt) :
-      s = (# astate := sMVA, 
+  % It is possible to translate every guard of the MVA into an expression that
+  % evaluates to the same result. Note that if the guard holds then evaluation
+  % of the expression can not result in an exception (v would be Bottom).
+  % Furthermore, the evaluation must have no side-effects.
+  guard_to_expression_behavior(mp : MonitoredProgram) : boolean =
+    FORALL (g : Guard, s : MPState, sMVA : AState, stP : PSt) :
+      (EXISTS (t : Transition) :
+        ts(mva(mp))(t) AND guard(t) = g) IMPLIES
+      wf_MP(mp) IMPLIES
+      wf_state(mp)(s) IMPLIES
+      s = (# astate := sMVA,
+             pstate := (# ex := bottom, st := stP #),
+             gvs := stA(sMVA) #) IMPLIES
+        EXISTS (e : Expr, v : Val, n : nat) : 
+          guard_to_expression(mva(mp))(g) = e IMPLIES
+          BExpr?(e) AND
+          deriv_expr(mp)(e, s, v, s)(n) AND
+          g(stA(sMVA), stP) IFF v = Bool(TRUE)
+
+  % It is possible to evaluate expression appearing in actions (they terminate) 
+  % and they are side-effect-free. Note that by the way actions are defined, the
+  % evaluation may end in an exception.
+  % NOTE: Since the variables of the program that are used by the automaton can
+  % not be ghost, we can replace the gvs store with the one of the MVA instead
+  % of merging them.
+  eval_action_behavior(mp : MonitoredProgram) : boolean =
+    FORALL (e : Expr, v : Val, s : MPState, sMVA : AState, stP : PSt) :
+      wf_MP(mp) IMPLIES
+      wf_state(mp)(s) IMPLIES
+      s = (# astate := sMVA,
              pstate := (# ex := bottom, st := stP #),
              gvs := stA(sMVA) #) IMPLIES
       eval(e)(stA(sMVA), stP) = v IMPLIES
         EXISTS (n : nat) : deriv_expr(mp)(e, s, v, s)(n)
+
+  well_behaved_MVA(mp : MonitoredProgram) : boolean =
+    guard_to_expression_behavior(mp) AND
+    eval_action_behavior(mp)
+
+  well_behaved_MP(mp : MonitoredProgram) : boolean =
+    well_behaved_Program(mp) AND
+    well_behaved_MVA(mp)
+
 
   % Well-formedness properties
 

@@ -1,10 +1,10 @@
 AnnotateProgram[CP : TYPE+] : THEORY
 BEGIN
 
-  IMPORTING WellFormedMonitoredProgram[CP, string],
+  IMPORTING MonitoredProgramSemantics[CP, string],
             set2list
 
-  mp : VAR (wf_MP)
+  mp : VAR {mp : MonitoredProgram | wf_MP(mp) AND well_typed_Program(mp)}
   a : VAR (wf_MVA)
 
   % TODO: These definitions generates TCCs that can not be proved!
@@ -15,15 +15,6 @@ BEGIN
   cp : string
 
   halted : string = name_of(halted)
-
-  % The generated ghost variables must have differnt names
-  disjoint_model_vars : AXIOM
-    FORALL (a : MVA, q : CP, vd : MVAVarDecl) :
-      cps(a)(q) IMPLIES
-      vdsA(a)(vd) IMPLIES
-        NOT name_of(q) = cp AND
-        NOT name(vd) = cp AND
-        NOT name_of(q) = name(vd)
 
 
   % Ghost variable declarations
@@ -50,18 +41,9 @@ BEGIN
     Sequence(Set(cp, NExpr(NumVarEval(name_of(tcp(t))))), 
                        ann_action(action(t)))
 
-  IMPORTING MonitoredProgramSemantics[CP, string]
-
   ann_guard_actions(mp)(ts : finite_set[Transition]) : list[[Expr, Stmt]] =
     set2list({x : [Expr, Stmt] | EXISTS (t : Transition) :
-      ts(t) AND
-      (FORALL (stA : (wf_Store(mva(mp))), stP : (wf_PSt(mva(mp))))
-              (sMP1, sMP2 : MPState, v : Val, n : nat) :
-        pstate(sMP1) = (# ex := bottom, st := stP #) IMPLIES
-        deriv_expr(mp)(proj_1(x), sMP1, v, sMP2)(n) IMPLIES
-        Bool?(v) IMPLIES
-          b(v) = guard(t)(stA, stP)) AND
-      proj_2(x) = update_vars(t)})
+      ts(t) AND x = (guard_to_expression(mva(mp))(guard(t)), update_vars(t))})
 
   ann_trans_cp(mp)(q : CP, ts : finite_set[Transition]) : [Expr, Stmt] =
     (BExpr(Eq(NumVarEval(cp), NumVarEval(name_of(q)))),
@@ -98,7 +80,7 @@ BEGIN
   % Class annotation
 
   ann_class(mp)(c : Class) : Class =
-    IF name(c) = class_name(mva(mp))
+    IF classes(program(mp))(c) AND name(c) = class_name(mva(mp))
     THEN c WITH [inv := BExpr(Conj(b(inv(c)), Neq(NumVarEval(cp), 
                                                   NumVarEval(halted)))),
                  ghost_vars := union(ghost_vars(c),
@@ -110,26 +92,42 @@ BEGIN
 
   % Program annotation
 
-  % NOTE: The case where there is no monitored class is trivial, thus to 
+  % The generated ghost variables must have differnt names
+  disjoint_model_vars(a : MVA) : boolean =
+    FORALL (q : CP, vd : MVAVarDecl) :
+      cps(a)(q) IMPLIES
+      vdsA(a)(vd) IMPLIES
+        NOT name_of(q) = cp AND
+        NOT name(vd) = cp AND
+        NOT name_of(q) = name(vd)
+
+  % The ghost variables we add should not be already defined
+  % NOTE: The case where there is no monitored class is trivial, thus to
   % simplify proofs we restrict ourselves to the case where such a class exists.
-  % We require that the ghost variable that we add are not already defined.
-  ann_program_pre(mp : MonitoredProgram): boolean =
+  not_clashing_model_vars(mp : MonitoredProgram) : boolean =
     LET a = mva(mp), p = program(mp) IN
-    wf_MP(mp) AND
-    EXISTS (c: Class):
+    EXISTS (c: Class) :
       classes(p)(c) AND name(c) = class_name(a) AND
-      (NOT EXISTS (gv : GhostVarDecl) :
-        ghost_vars(c)(gv) AND name(gv) = cp) AND
-      (FORALL (q : (cps(a))) : NOT EXISTS (gd : GhostVarDecl) :
-          ghost_vars(c)(gd) AND name(gd) = name_of(q)) AND
-      (FORALL (vd : MVAVarDecl) :
-        vdsA(a)(vd) IMPLIES NOT EXISTS (gd : GhostVarDecl) :
-          ghost_vars(c)(gd) AND name(gd) = name(vd))
+      (FORALL (gv : GhostVarDecl) :
+        ghost_vars(c)(gv) IMPLIES NOT name(gv) = cp) AND
+      (FORALL (q : CP, gd : GhostVarDecl) :
+        cps(a)(q) IMPLIES ghost_vars(c)(gd) IMPLIES 
+          NOT name(gd) = name_of(q)) AND
+      (FORALL (vd : MVAVarDecl, gd : GhostVarDecl) :
+        vdsA(a)(vd) IMPLIES ghost_vars(c)(gd) IMPLIES
+          NOT name(gd) = name(vd))
+
+  ann_program_pre(mp : MonitoredProgram) : boolean =
+    wf_MP(mp) AND
+    complete(mva(mp)) AND
+    well_typed_Program(mp) AND
+    disjoint_model_vars(mva(mp)) AND
+    not_clashing_model_vars(mp)
 
   ann_program(mp : (ann_program_pre)) : Program = 
-    LET p = program(mp) IN
     (# classes := {c : Class | EXISTS (c1 : Class) : 
-                     classes(p)(c1) AND c = ann_class(mp)(c1)} #)
+                                 classes(program(mp))(c1) AND 
+                                 c = ann_class(mp)(c1)} #)
 
 
 END AnnotateProgram
@@ -224,8 +222,8 @@ BEGIN
   ann_program_preserves_side_effect_freedom : LEMMA
     FORALL (mp : MonitoredProgram) :
       ann_program_pre(mp) IMPLIES
-      assertions_have_no_side_effect(mp) IMPLIES
-        assertions_have_no_side_effect(ann_program(mp))
+      assertions_have_no_side_effects(mp) IMPLIES
+        assertions_have_no_side_effects(ann_program(mp))
 
   ann_program_defines_MVA_vars : LEMMA
     FORALL (mp : MonitoredProgram, ap : Program, s : APState) :

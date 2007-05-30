@@ -160,6 +160,14 @@ BEGIN
         wf_Action(a)(action(t))
 
 
+END WellFormedMVA
+
+
+MVASemantics[CP, Name : TYPE+] : THEORY
+BEGIN
+
+  IMPORTING WellFormedMVA[CP, Name]
+
   deterministic(a : (wf_MVA)) : boolean =
     FORALL (t1, t2 : Transition, stA : Store, stP : PSt) :
       ts(a)(t1) IMPLIES
@@ -200,14 +208,6 @@ BEGIN
 
   AUTO_REWRITE- complete, total, deterministic
 
-
-END WellFormedMVA
-
-
-MVASemantics[CP, Name : TYPE+] : THEORY
-BEGIN
-
-  IMPORTING WellFormedMVA[CP, Name]
 
   % The state of a MVA is composed by its currrent control point and values for
   % its variables
@@ -251,11 +251,15 @@ BEGIN
       ELSE st(m)
       ENDIF
 
-  % NOTE: eval is defined axiomatically, see eval_action_axiom in 
+  % guard_to_expression is implicitly defined by guard_to_expression_behavior
+  % in MonitoredProgramSemantics.
+  guard_to_expression(a : MVA)(g : Guard) : Expr
+
+  % NOTE: eval is implicitly defined by eval_action_behavior in 
   % MonitoredProgramSemantics. Since we only consider the PSt of the state of
   % the program, actions can not talk about existing ghost variables in the
-  % monitored program, but that is fine since we assumed that we can talk
-  % only about fields (but it could be extended to handle ghosts as well).
+  % monitored program, but that is fine since we assumed that they are fields
+  % (although it could be extended to handle ghosts as well).
   eval(e : Expr)(stA : Store, stP : PSt) : Val
 
   % type checking problem, because program expressions cannot be evaluated
@@ -324,7 +328,7 @@ END MVASemantics
 MVACompletion[CP, Name : TYPE+] : THEORY
 BEGIN
 
-  IMPORTING WellFormedMVA[CP, Name],
+  IMPORTING MVASemantics[CP, Name],
             EpsilonProps, 
             MVAFiniteProps
 

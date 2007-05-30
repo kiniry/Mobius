@@ -577,25 +577,38 @@ BEGIN
           sigma1 = sigma2
 
 
+  % We name only the type constraints needed for the proofs.
+  well_typed_Program(p : FullProgram) : boolean =
+    FORALL (c : Class) :
+      classes(program(p))(c) IMPLIES
+        BExpr?(inv(c))
+
+  set_subterm(s : Stmt, m : Method) : boolean =
+    s << pre_set(m) OR s << post_set(m) OR s << exc_set(m)
+
   % The following expression (that appear only in annotations) should have no
   % side-effects: invariants, preconditions, postconditions, source expression
   % of a set statement.
-  assertions_have_no_side_effect(p : FullProgram) : boolean =
+  assertions_have_no_side_effects(p : FullProgram) : boolean =
     FORALL (c : Class) :
       classes(program(p))(c) IMPLIES
-          (FORALL (s1, s2 : FullState, v : Val, n : nat) :
-            deriv_expr(p)(inv(c), s1, v, s2)(n) IMPLIES s1 = s2) AND
-          FORALL (m : Method) :
-            methods(c)(m) IMPLIES
-              (FORALL (s1, s2 : FullState, v : Val, n : nat) :
-                deriv_expr(p)(pre(m), s1, v, s2)(n) IMPLIES s1 = s2) AND
-              (FORALL (s1, s2 : FullState, v : Val, n : nat) :
-                deriv_expr(p)(post(m), s1, v, s2)(n) IMPLIES s1 = s2) AND
-              (FORALL (s : Stmt) :
-                s << body(m) IMPLIES
-                Set?(s) IMPLIES
-                  FORALL (s1, s2 : FullState, v : Val, n : nat) :
-                    deriv_expr(p)(source(s), s1, v, s2)(n) IMPLIES s1 = s2)
+        (FORALL (s1, s2 : FullState, v : Val, n : nat) :
+          deriv_expr(p)(inv(c), s1, v, s2)(n) IMPLIES s1 = s2) AND
+        FORALL (m : Method) :
+          methods(c)(m) IMPLIES
+            (FORALL (s1, s2 : FullState, v : Val, n : nat) :
+              deriv_expr(p)(pre(m), s1, v, s2)(n) IMPLIES s1 = s2) AND
+            (FORALL (s1, s2 : FullState, v : Val, n : nat) :
+              deriv_expr(p)(post(m), s1, v, s2)(n) IMPLIES s1 = s2) AND
+            (FORALL (s : Stmt) :
+              set_subterm(s, m) IMPLIES
+              Set?(s) IMPLIES
+                FORALL (s1, s2 : FullState, v : Val, n : nat) :
+                  deriv_expr(p)(source(s), s1, v, s2)(n) IMPLIES s1 = s2)
+
+  well_behaved_Program(p : FullProgram) : boolean =
+    assertions_have_no_side_effects(p)
+
 
   run_FullProgram(p : FullProgram)(main : Method, arg : int)
                  (s1, s2 : FullState)(n : nat) : boolean =
@@ -692,170 +705,3 @@ BEGIN
 
 
 END ProgramSemantics
-
-
-AnnotatedProgramSemantics[Name : TYPE+] : THEORY
-BEGIN
-
-  IMPORTING State[Name]
-
-  APState : TYPE = [# gvs : Store, pstate : PState #]
-
-  is_ghost(vn : Name, sigma : APState) : boolean =
-    NOT Bottom?(gvs(sigma)(vn))
-
-  lookup(vn : Name, sigma : APState) : Val =
-    IF is_local(vn, pstate(sigma))
-    THEN lookup_local(vn, pstate(sigma))
-    ELSIF is_field(vn, pstate(sigma))
-    THEN lookup_field(vn, pstate(sigma))
-    ELSE gvs(sigma)(vn)
-    ENDIF
-
-  wf_state(p : Program)(sigma : APState) : boolean =
-    wf_state(p)(pstate(sigma)) AND
-    FORALL (vn : Name) :
-      is_ghost(vn, sigma) IFF is_declared_as_ghost(p)(vn)
-
-
-  IMPORTING SemanticsTypes[Name, Program, APState,
-                           LAMBDA (s : APState) : pstate(s)]
-
-  update_state_AP : (update_FullState_type) =
-    LAMBDA (upd : [PState -> PState], s : APState) : 
-      s WITH [pstate := upd(pstate(s))]
-
-  IMPORTING SemanticsCommon[Name, Program, APState,
-                            LAMBDA (s : APState) : pstate(s),
-                            update_state_AP]
-
-  execute_set_AP : (execute_set_type) =
-    LAMBDA (p : Program, vn : Name, e : Expr, s1, s2 : APState, n : nat,
-            deriv_stmt_rec : deriv_stmt_rec_type(n),
-            deriv_expr_rec : deriv_expr_rec_type(n)) :
-      EXISTS (tau : APState, v : Val) :
-        n > 0 AND
-        deriv_expr_rec(n)(p)(e, s1, v, tau)(n-1) AND
-        s2 = IF up?(ex(pstate(tau)))
-             THEN tau
-             ELSE tau WITH [gvs := gvs(tau) WITH [vn := v]]
-             ENDIF AND
-        pstate(s1) = pstate(s2)
-
-  on_method_entry_AP : (on_method_event_type) =
-    LAMBDA (p : Program, md : Method, a : Val, s1, s2 : APState, n : nat,
-            deriv_stmt_rec : deriv_stmt_rec_type(n),
-            deriv_expr_rec : deriv_expr_rec_type(n)) :
-    EXISTS (m1, m2, m3 : nat, tau1, tau2 : APState, inv : Expr) :
-      n = m1 + m2 + m3 + 1 AND
-      inv = lookup_inv(p, a) AND
-      check_assertion(p)(inv, s1, tau1)(m1)(deriv_expr_rec(m1)) AND
-      check_assertion(p)(pre(md), tau1, tau2)(m2)(deriv_expr_rec(m2)) AND
-      deriv_stmt_rec(n)(p)(pre_set(md), tau2, s2)(m3) AND
-      st(pstate(s1)) = st(pstate(s2))
-
-  on_method_exit_normal_AP : (on_method_event_type) =
-    LAMBDA (p : Program, md : Method, a : Val, s1, s2 : APState, n : nat,
-            deriv_stmt_rec : deriv_stmt_rec_type(n),
-            deriv_expr_rec : deriv_expr_rec_type(n)) :
-    EXISTS (m1, m2, m3 : nat, tau1, tau2 : APState, inv : Expr) :
-      n = m1 + m2 + m3 + 1 AND
-      deriv_stmt_rec(n)(p)(post_set(md), s1, tau1)(m1) AND
-      check_assertion(p)(post(md), tau1, tau2)(m2)(deriv_expr_rec(m2)) AND
-      inv = lookup_inv(p, a) AND
-      check_assertion(p)(inv, tau2, s2)(m3)(deriv_expr_rec(m3)) AND
-      st(pstate(s1)) = st(pstate(s2))
-
-  % If there was an exception, there is no need to chech the postcondition
-  % (JML has an exceptional postcondition but we are not modelling it)
-  on_method_exit_exceptional_AP : (on_method_event_type) =
-    LAMBDA (p : Program, md : Method, a : Val, s1, s2 : APState, n : nat,
-            deriv_stmt_rec : deriv_stmt_rec_type(n),
-            deriv_expr_rec : deriv_expr_rec_type(n)) :
-    EXISTS (m1, m2 : nat, tau1, tau2 : APState, inv : Expr) :
-      n = m1 + m2 + 1 AND
-      deriv_stmt_rec(n)(p)(exc_set(md), s1, tau1)(m1) AND
-      inv = lookup_inv(p, a) AND
-      check_assertion(p)(inv, tau1, s2)(m2)(deriv_expr_rec(m2)) AND
-      st(pstate(s1)) = st(pstate(s2))
-
-
-  IMPORTING Semantics[Name, Program, APState, id,
-                      LAMBDA (s : APState) : pstate(s),
-                      lookup,
-                      update_state_AP,
-                      execute_set_AP,
-                      execute_CaseJML,
-                      on_method_entry_AP,
-                      on_method_exit_normal_AP,
-                      on_method_exit_exceptional_AP]
-
-
-  initial_AP_state(p : Program) : APState =
-    (# pstate := initial_Program_state(p),
-       gvs := LAMBDA (n : Name) :
-         LET gd = get_GhostVarDecl(n, p) IN
-         IF bottom?(gd)
-         THEN Bottom
-         ELSE init_val(down(gd))
-         ENDIF
-    #)
-
-  run_annotated_program(p : Program)(main : Method, arg : int)
-                       (s2 : APState)(n : nat) : boolean =
-    run_FullProgram(p)(main, arg)(initial_AP_state(p), s2)(n)
-
-
-  % This is just stmt_determ_step adapted for AP to avoid having to give all the
-  % theory parameters to use stmt_determ_step in proofs
-  stmt_determ_step_AP : LEMMA % :-)
-    FORALL (p : Program, n1, n2 : nat, c : Stmt, sigma : APState,
-            sigma1, sigma2 : APState) :
-        deriv_stmt(p)(c, sigma, sigma1)(n1) AND
-        deriv_stmt(p)(c, sigma, sigma2)(n2) IMPLIES
-          sigma1 = sigma2 AND n1 = n2
-
-  % Well-formedness properties
-
-  % TODO: prove!
-  wf_state_ghost_not_local_or_field : LEMMA
-    FORALL (p : Program, s : APState, vn : Name) :
-      wf_state(p)(s) IMPLIES
-      is_ghost(vn, s) IMPLIES 
-        NOT is_local(vn, s) AND NOT is_field(vn, s)
-
-  wf_update_state_AP : LEMMA % :-)
-    FORALL (p : Program, s1, s2 : APState, 
-            upd : [PState[Name] -> PState[Name]]) :
-      wf_state(p)(s1) IMPLIES
-      update_state_AP(upd, s1) = s2 IMPLIES
-      (FORALL (vn : Name) :
-        (is_field(vn, s1) IFF is_field(vn, s2)) AND
-        (is_local(vn, s1) IFF is_local(vn, s2)) AND
-        (is_ghost(vn, s1) IFF is_ghost(vn, s2))) IMPLIES
-        wf_state(p)(s2)
-
-  % TODO: prove!
-  wf_initial_AP_state : LEMMA
-    FORALL (p : Program) :
-      wf_Program(p) IMPLIES wf_state(p)(initial_AP_state(p))
-
-  % TODO: prove!
-  deriv_expr_yields_wf_state_AP : LEMMA
-    FORALL (p : Program, e : Expr, v : Val)
-           (sigma1, sigma2 : APState, n : nat) :
-      wf_Program(p) IMPLIES
-      wf_state(p)(sigma1) IMPLIES
-      deriv_expr(p)(e, sigma1, v, sigma2)(n) IMPLIES
-        wf_state(p)(sigma2)
-
-  % TODO: prove!
-  deriv_stmt_yields_wf_state_AP : LEMMA
-    FORALL (p : Program, c : Stmt, sigma1, sigma2 : APState, n : nat) :
-      wf_Program(p) IMPLIES
-      wf_state(p)(sigma1) IMPLIES
-      deriv_stmt(p)(c, sigma1, sigma2)(n) IMPLIES
-        wf_state(p)(sigma2)
-
-
-END AnnotatedProgramSemantics

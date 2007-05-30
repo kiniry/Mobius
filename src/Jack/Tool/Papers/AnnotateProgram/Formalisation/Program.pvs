@@ -208,66 +208,20 @@ BEGIN
 
   IMPORTING Program[Name]
 
-  % Used variable names
-  % NOTE: we can't say that the result is a finite set because the statement
-  % may not be well formed. If we defined wf_Stmt then we can say that
-  % wf_Stmt(c) IMPLIES is_finite?(var_names(c))
-
   var_names(ne : NumExpr) : set[Name] =
-    reduce[Name, set[Name]](
-      LAMBDA (i : int) : emptyset,
-      LAMBDA (ns1, ns2 : set[Name]) : union(ns1, ns2),
-      LAMBDA (ns1, ns2 : set[Name]) : union(ns1, ns2),
-      LAMBDA (ns1, ns2 : set[Name]) : union(ns1, ns2),
-      LAMBDA (ns1, ns2 : set[Name]) : union(ns1, ns2),
-      LAMBDA (n : Name) : singleton(n))(ne)
+    {n : Name | some(LAMBDA (m : Name) : m = n)(ne)}
 
   var_names(be : BoolExpr) : set[Name] =
-    reduce[Name, set[Name]](
-      emptyset,
-      emptyset,
-      id,
-      LAMBDA (ns1, ns2 : set[Name]) : union(ns1, ns2),
-      LAMBDA (ns1, ns2 : set[Name]) : union(ns1, ns2),
-      LAMBDA (ne1, ne2 : NumExpr) : union(var_names(ne1), var_names(ne2)),
-      LAMBDA (ne1, ne2 : NumExpr) : union(var_names(ne1), var_names(ne2)),
-      LAMBDA (ne1, ne2 : NumExpr) : union(var_names(ne1), var_names(ne2)),
-      LAMBDA (ne1, ne2 : NumExpr) : union(var_names(ne1), var_names(ne2)),
-      LAMBDA (ne1, ne2 : NumExpr) : union(var_names(ne1), var_names(ne2)),
-      LAMBDA (ne1, ne2 : NumExpr) : union(var_names(ne1), var_names(ne2)),
-      LAMBDA (n : Name) : singleton(n))(be)
+    {n : Name | some(LAMBDA (m : Name) : m = n)(be)}
 
-  var_names(re : RefExpr) : set[Name] = 
-    reduce[Name, set[Name]](
-      emptyset,                                                     % Null
-      LAMBDA (n : Name) : singleton(n))(re)                         % RefVarEval
+  var_names(re : RefExpr) : set[Name] =
+    {n : Name | some(LAMBDA (m : Name) : m = n)(re)}
 
   var_names(e : Expr) : set[Name] =
-    reduce[Name, set[Name]](
-      LAMBDA (t : Name, s : set[Name]) : add(t, s),                 % Assign
-      LAMBDA (b : BoolExpr) : var_names(b),                         % BExpr
-      LAMBDA (s1, s2, s3 : set[Name]) : union(s1, union(s2, s3)),   % CondExpr
-      LAMBDA (e : set[Name], m : Name, a : set[Name]) : union(e, a),% MethodCall
-      LAMBDA (ne : NumExpr) : var_names(ne),                        % NExpr
-      LAMBDA (re : RefExpr) : var_names(re))(e)                     % RExpr
+    {n : Name | some(LAMBDA (m : Name) : m = n)(e)}
 
   var_names(s : Stmt) : set[Name] =
-    reduce[Name, set[Name]](
-      LAMBDA (branches : list[[Expr, set[Name]]]) :                 % CaseJML
-        Union({ns : Name | EXISTS (x : [Expr, set[Name]]) :
-               member(x, branches) AND  var_names(proj_1(x))(ns) OR
-               proj_2(x)(ns)}),
-      LAMBDA (b : Expr, s1, s2 : set[Name]) :                       % IfThenElse
-        union(var_names(b), union(s1, s2)),
-      LAMBDA (s1, s2 : set[Name]) : union(s1, s2),                  % Sequence
-      LAMBDA (target : Name, source : Expr[Name]) :                 % Set
-        add(target, var_names(source)),
-      emptyset,                                                     % Skip
-      LAMBDA (expr : Expr) : var_names(expr),                       % StmtExpr
-      emptyset,                                                     % Throw
-      LAMBDA (t, c, f : set[Name]) : union(t, union(c, f)),         % TryCatch
-      LAMBDA (b : Expr, ns : set[Name]) :                           % While
-        union(var_names(b), ns))(s)
+    {n : Name | some(LAMBDA (m : Name) : m = n)(s)}
 
   var_names(m : Method) : set[Name] =
     Union({ns : set[Name] | ns = var_names(pre(m)) OR ns = var_names(post(m)) OR
@@ -310,6 +264,7 @@ BEGIN
 
   wf_Class(c : Class) : boolean
 
+  % Syntactic constraints of programs (only the ones needed by the proofs)
   wf_Program(p : Program) : boolean
 
   AUTO_REWRITE- wf_Program, var_names

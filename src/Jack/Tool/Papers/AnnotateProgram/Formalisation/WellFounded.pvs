@@ -11,3 +11,16 @@ BEGIN
                                               ord2(PROJ_2(x), PROJ_2(y)))
 
 END WF
+
+
+WFProperties[T : TYPE+] : THEORY
+BEGIN
+
+  < : VAR pred[[T, T]]
+
+  % NOT USED
+  wf_founded_is_not_reflexive : LEMMA
+    well_founded?(<) IMPLIES NOT reflexive?(<)
+
+
+END WFProperties
