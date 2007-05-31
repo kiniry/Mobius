@@ -288,7 +288,7 @@ ${AST_DIR}/%Vec.java: ${VECTEMPLATE}
 
 
 # This also generates all the .java files implied by "hierarchy.j".
-${AST_DIR}/GeneratedTags.java: ${ASTGEN} ${AST_DIR}/hierarchy.j
+${AST_DIR}/GeneratedTags.java ${AST_DIR}/AnOverview.java: ${ASTGEN} ${AST_DIR}/hierarchy.j
 	@(cd ${AST_DIR}; ${ASTGEN} < hierarchy.j; \
 		grep -v "//@" AnOverview.java > AnOverview.tmp; \
 		mv AnOverview.tmp AnOverview.java; \
