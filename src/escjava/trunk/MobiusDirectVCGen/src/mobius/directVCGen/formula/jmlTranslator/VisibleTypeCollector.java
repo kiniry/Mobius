@@ -93,15 +93,16 @@ import escjava.ast.VisitorArgResult;
 import escjava.ast.WildRefExpr;
 import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
+import javafe.ast.Type;
 
 
 
 public class VisibleTypeCollector extends VisitorArgResult {
 
-	java.util.Set<String> typeSet;
+	java.util.Set<Type> typeSet;
 	
 	public VisibleTypeCollector(){
-		typeSet = new HashSet<String>();
+		typeSet = new HashSet<Type>();
 	}
 	
 	@Override
@@ -125,7 +126,7 @@ public class VisibleTypeCollector extends VisitorArgResult {
 	
 
 	public /*@non_null*/ Object visitRoutineDecl(/*@non_null*/ RoutineDecl x, Object o) {
-		typeSet.add(x.parent.id.toString()); //add own class type into set
+		typeSet.add((Type) x.parent.getDecorations()[3]); // add own class type into set
 		((Properties) o).put("assign", new Boolean(false));
 		visitASTNode(x, o); //return value not needfull
 		((Properties) o).put("visibleTypeSet", typeSet); //put set into properties once for each routine
@@ -167,7 +168,7 @@ public class VisibleTypeCollector extends VisitorArgResult {
 			 javafe.ast.Type type = (javafe.ast.Type) x.getDecorations()[1]; //javafetypes global def. als fetypes
 			 if (!(type instanceof PrimitiveType)) //sonst alle nehmen? was ist mit errortypes?
 			 {
-				 typeSet.add(type.toString());
+				 typeSet.add(type);
 			 }
 			//alle primitivetypes nicht nehmen oder nur JavafePrimitivetype????
 		 }
@@ -180,7 +181,7 @@ public class VisibleTypeCollector extends VisitorArgResult {
 		 	javafe.ast.Type type = (javafe.ast.Type) x.od.type();
 			if (!(type instanceof PrimitiveType)&&(((Boolean) ((Properties) o).get("assign")).booleanValue()))
 			{
-				typeSet.add(type.toString());
+				typeSet.add(type);
 			}
 			
 			((Properties) o).put("assign", new Boolean(false));
@@ -216,8 +217,7 @@ public class VisibleTypeCollector extends VisitorArgResult {
 	@Override
 	public Object visitCondExprModifierPragma(CondExprModifierPragma x, Object o) {
 		// TODO Auto-generated method stub
-		//return null;
-		return visitASTNode(x, o);
+		return null;
 	}
 
 	@Override
@@ -354,7 +354,7 @@ public class VisibleTypeCollector extends VisitorArgResult {
 
 	@Override
 	public Object visitModelMethodDeclPragma(ModelMethodDeclPragma x, Object o) {
-		// TODO Auto-generated method stub
+		// TODO Auto-genign=erated method stub
 		return null;
 	}
 
@@ -508,10 +508,18 @@ public class VisibleTypeCollector extends VisitorArgResult {
 	 * TagConstants.ASGRSHIFT = 82			
      * TagConstants.ASGURSHIFT = 83
 	 * TagConstants.ASGBITAND = 84
-	 * --> Relevant operation in range [75..84]
 	 */
 	public Object visitBinaryExpr(BinaryExpr expr, Object o){
-		if ((expr.op >= 75) && (expr.op <= 84))
+		if ((expr.op == TagConstants.ASSIGN) | 
+			(expr.op == TagConstants.ASGMUL) |
+			(expr.op == TagConstants.ASGDIV) | 
+			(expr.op == TagConstants.ASGREM) |
+			(expr.op == TagConstants.ASGADD) | 
+			(expr.op == TagConstants.ASGSUB) |
+			(expr.op == TagConstants.ASGLSHIFT) | 
+			(expr.op == TagConstants.ASGRSHIFT) |
+			(expr.op == TagConstants.ASGURSHIFT) | 
+			(expr.op == TagConstants.ASGBITAND))
 		{
 			((Properties) o).put("assign", new Boolean(false));
 			expr.right.accept(this, o); 
