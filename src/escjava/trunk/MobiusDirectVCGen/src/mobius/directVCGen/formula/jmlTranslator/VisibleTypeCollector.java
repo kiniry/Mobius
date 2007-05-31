@@ -128,7 +128,7 @@ public class VisibleTypeCollector extends VisitorArgResult {
 	public /*@non_null*/ Object visitRoutineDecl(/*@non_null*/ RoutineDecl x, Object o) {
 		typeSet.add((Type) x.parent.getDecorations()[3]); // add own class type into set
 		((Properties) o).put("assign", new Boolean(false));
-		visitASTNode(x, o); //return value not needfull
+		visitASTNode(x, o); 
 		((Properties) o).put("visibleTypeSet", typeSet); //put set into properties once for each routine
 		return null;
 	}
@@ -161,16 +161,14 @@ public class VisibleTypeCollector extends VisitorArgResult {
 	 
 	 
 	 @Override
-	 //nur argumente mit lokalen vars. die lokalen vars sind fieldaccess
 	 public /*@non_null*/ Object visitVariableAccess(/*@non_null*/ VariableAccess x, Object o) {		 
 		 if (((Boolean) ((Properties) o).get("assign")).booleanValue())
 		 {
-			 javafe.ast.Type type = (javafe.ast.Type) x.getDecorations()[1]; //javafetypes global def. als fetypes
-			 if (!(type instanceof PrimitiveType)) //sonst alle nehmen? was ist mit errortypes?
+			 javafe.ast.Type type = (javafe.ast.Type) x.getDecorations()[1];
+			 if (!(type instanceof PrimitiveType)) 
 			 {
 				 typeSet.add(type);
 			 }
-			//alle primitivetypes nicht nehmen oder nur JavafePrimitivetype????
 		 }
 			return null;
 	}
@@ -497,18 +495,6 @@ public class VisibleTypeCollector extends VisitorArgResult {
 	
 	
 	@Override
-	/**
-	 * TagConstants.ASSIGN = 75
-	 * TagConstants.ASGMUL = 76
-	 * TagConstants.ASGDIV = 77
-	 * TagConstants.ASGREM = 78
-	 * TagConstants.ASGADD = 79
-	 * TagConstants.ASGSUB = 80		
-	 * TagConstants.ASGLSHIFT = 81
-	 * TagConstants.ASGRSHIFT = 82			
-     * TagConstants.ASGURSHIFT = 83
-	 * TagConstants.ASGBITAND = 84
-	 */
 	public Object visitBinaryExpr(BinaryExpr expr, Object o){
 		if ((expr.op == TagConstants.ASSIGN) | 
 			(expr.op == TagConstants.ASGMUL) |
@@ -528,7 +514,7 @@ public class VisibleTypeCollector extends VisitorArgResult {
 			return null;
 		}
 		else
-		return visitExpr(expr, o); //for all other operations	
+		return visitExpr(expr, o);
 	}
 	
 	@Override
