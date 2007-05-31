@@ -261,6 +261,7 @@ public abstract class FrontEndTool extends Tool
     @*/
   public final int run(String[] args) {
     int r = handleOptions(args);
+    virtualMachineVersionCheck();
     if (r != -1)
       return r;
 
@@ -293,6 +294,19 @@ public abstract class FrontEndTool extends Tool
     else {
       return okExitCode;
     }
+  }
+
+  /** Cache the fact that we already checked and warned the user. */
+  private static boolean checkedAboutVM = false;
+  /**
+   * Check that we are running in the proper version of the Java VM.
+   * The Java front-end works in all VM versions, thus the method body
+   * here at this time is just a skip.
+   */
+  protected void virtualMachineVersionCheck() {
+    if (checkedAboutVM)
+      return;
+    checkedAboutVM = true;
   }
 
   /**

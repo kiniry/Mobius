@@ -172,6 +172,7 @@ public class Main extends javafe.SrcTool
     
     private static Main instance = null;
     public static Main getInstance() { return instance; }
+
     /**
      * Start up an instance of this tool using command-line arguments
      * <code>args</code>. <p>
@@ -181,26 +182,26 @@ public class Main extends javafe.SrcTool
      */
     //@ requires \nonnullelements(args);
     public static void main(/*@ non_null @*/ String[] args) {
-    	
-	int exitcode = compile(args);
-	if (exitcode != 0) System.exit(exitcode);
+
+      int exitcode = compile(args);
+      if (exitcode != 0) System.exit(exitcode);
     }
 
     public Main() {
-	// resets any static variables left from a previous instantiation
-	clear(true);
+      // resets any static variables left from a previous instantiation
+      clear(true);
     }
 
     boolean keepProver = false;
 
     public void clear(boolean complete) {
-        // restore ordinary checking of assertions
-        super.clear(complete);
-	if (complete) NoWarn.init();
-        gctranslator = new Translate();
-        if (!keepProver) ProverManager.kill();
-        // Disallow the -avoidSpec option:
-        javafe.SrcToolOptions.allowAvoidSpec = false; 
+      // restore ordinary checking of assertions
+      super.clear(complete);
+      if (complete) NoWarn.init();
+      gctranslator = new Translate();
+      if (!keepProver) ProverManager.kill();
+      // Disallow the -avoidSpec option:
+      javafe.SrcToolOptions.allowAvoidSpec = false; 
     }
 
     /**
@@ -316,16 +317,6 @@ public class Main extends javafe.SrcTool
 		+	java.io.File.pathSeparator
 		+	compositeSourcePath;
 	}
-    }
-
-    public void preload() {
-	// Check to see that we are using a legitimate Java VM version.
-	// ESC/Java2 does not support Java 1.5 at this time.
-	//if (System.getProperty("java.version").indexOf("1.5") != -1) {
-	    //ErrorSet.fatal("Java 1.5 source, bytecode, and VMs are not supported at this time.\nPlease use a Java 1.4 VM and only process source code and bytecode from\nJava versions prior to 1.5.");
-	    //return;
-	//}
-	super.preload();
     }
 
     /**
@@ -1415,6 +1406,29 @@ public class Main extends javafe.SrcTool
 
 
     // Misc. Utility routines
+
+    protected void virtualMachineVersionCheck() {
+      super.virtualMachineVersionCheck();
+      // Check to see that we are using a legitimate Java VM version.
+      // ESC/Java2 does not fully support Java 1.5 at this time.
+      // In particular, there are bugs wrt handling nested (anonymous) 
+      // classes from 1.5 bytecode.  See bug#574 for more information.
+
+      final String java_VM_version = System.getProperty("java.specification.version");
+      // Implementation of bug#575.
+      // Issue a warning while in verbose mode about this problem with Java 1.5.
+      if (java_VM_version.indexOf("1.5") != -1 &&
+          javafe.util.Info.on)
+        ErrorSet.caution("Java 1.5 source parsing is not supported at all.\n" +
+                         "Java 1.5 bytecode and VMs are partially supported at this time.\n" +
+                         "Please use at least a Java 1.4 VM and only process Java 1.4 (or earlier) source code\n" +
+                         "and Java 1.5 (or earlier) bytecode.");
+      
+      // Issue a warning if we are running in a Java 1.6 or later VM.
+      if (java_VM_version.indexOf("1.6") != -1 &&
+          javafe.util.Info.on)
+        ErrorSet.caution("Java 1.6 or later VMs are not fully supported at this time.");
+    }
 
     private static String removeSpaces(/*@ non_null */ String s) {
         while (true) {
