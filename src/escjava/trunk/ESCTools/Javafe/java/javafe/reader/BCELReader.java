@@ -53,6 +53,7 @@ import org.apache.bcel.classfile.Attribute;
 import org.apache.bcel.classfile.ClassFormatException;
 import org.apache.bcel.classfile.ClassParser;
 import org.apache.bcel.classfile.Constant;
+import org.apache.bcel.classfile.ConstantClass;
 import org.apache.bcel.classfile.ConstantDouble;
 import org.apache.bcel.classfile.ConstantFloat;
 import org.apache.bcel.classfile.ConstantInteger;
@@ -231,7 +232,8 @@ class BCELReader extends Reader {
 	protected TypeDecl makeTypeDecl() throws ClassNotFoundException {
 
 		constantPool = javaClass.getConstantPool();
-		classNameIndex = javaClass.getClassNameIndex();
+		// N.B. This gets the class index not the class name index
+		classIndex = javaClass.getClassNameIndex(); 
 		setClassLocation(classLocation);
 		readClassAttributes();
 		setSuperClassName();
@@ -277,6 +279,8 @@ class BCELReader extends Reader {
 					super_class);
 		}
 		typeDecl.specOnly = true;
+		
+		removeExtraArg(typeDecl);
 
 		return typeDecl;
 	}
@@ -522,7 +526,7 @@ class BCELReader extends Reader {
 		int outerClassIndex = innerClass.getOuterClassIndex();
 
 		// Check that this inner class is enclosed by the class being parsed
-		if (outerClassIndex == this.classNameIndex) {
+		if (outerClassIndex == this.classIndex) {
 
 			Constant innerClassNameConstant = constantPool
 					.getConstant(innerNameIndex);
@@ -545,13 +549,11 @@ class BCELReader extends Reader {
 						innerClassIndex);
 
 				TypeDecl innerClassTypeDecl = innerClassReader.makeTypeDecl();
-				removeExtraArg(innerClassTypeDecl);
-
-				boolean innerClassIsNotSynthetic = !innerClassReader
-						.isSyntheticClass();
-
-				// Add non-synthetic classes
-				if (innerClassIsNotSynthetic) {
+				
+				// Set access modifier flags for inner class
+				innerClassTypeDecl.modifiers = innerClass.getInnerAccessFlags();
+				
+				if (!innerClassReader.isSyntheticClass()) {
 					classMembers.addElement(innerClassTypeDecl);
 				}
 			}
@@ -931,7 +933,7 @@ class BCELReader extends Reader {
 
 	protected ConstantPool constantPool;
 
-	protected int classNameIndex;
+	protected int classIndex;
 
 	protected GenericFile genericFile;
 
