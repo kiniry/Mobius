@@ -327,7 +327,7 @@ public class ExpressionVCGen extends BinaryExpressionVCGen{
 
 	public Post postfixInc(UnaryExpr expr, VCEntry entry) {
 		Post oldp = entry.post;
-		QuantVariableRef var = Expression.rvar(oldp.var.getSort());
+		QuantVariableRef var = Expression.rvar(Type.getSort(expr));
 		entry.post = new Post(var, oldp.post);
 		Post newpost = assign(expr.expr, entry);
 		entry.post = new Post(var, newpost.substWith(Num.inc(newpost.var)));
@@ -337,7 +337,7 @@ public class ExpressionVCGen extends BinaryExpressionVCGen{
 	}
 	public Post postfixDec(UnaryExpr expr, VCEntry entry) {
 		Post oldp = entry.post;
-		QuantVariableRef var = Expression.rvar(oldp.var.getSort());
+		QuantVariableRef var = Expression.rvar(Type.getSort(expr));
 		entry.post = new Post(var, oldp.post);
 		Post newpost = assign(expr.expr, entry);
 		entry.post = new Post(var, newpost.substWith(Num.dec(newpost.var)));

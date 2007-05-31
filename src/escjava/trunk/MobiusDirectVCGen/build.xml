@@ -2,11 +2,19 @@
 <project default="everything">
 	<property name="escjava_classes" value="../ESCTools/classfiles"/>
 	<property name="jml_dir" value="/home/jcharles/src/JML"/>
+	
+	<property name="jmlc_dest" value="jmlc_classes"/>
 	<property name="mobius_sources" value="src"/>
 	<property name="samples_sources" value="samples"/>
 	<property name="mobius_classes" value="classes"/>
 	<property name="libs_dir" value="libs"/>
 	
+	
+	<path id="class_files">
+	    <fileset dir="${mobius_classes}">
+	      <include name="**/*.class"/>
+	    </fileset>
+	</path>
 	<!-- Pre-built jars necessary for compiling, testing, etc. -->
 	<path id="libraries">
 	    <fileset dir="${libs_dir}">
@@ -47,14 +55,20 @@
 			          classpathref="jml_classpath">
 		 	<arg value="../"/>  
 		 	<arg value="../logic/bicolano.jar"/>  
-		 	<arg value="ToyExample"/>  
+		 	<arg value="Bill"/>  
 		 </java>
 	</target>
 	
 	
 	
 	  <!-- JML targets. -->
-
+	<pathconvert pathsep=" " property="source_files">
+	      <path>
+	      	<fileset dir="${mobius_sources}">
+	      		    		      <include name="**/*.java"/>
+	        </fileset>
+	      </path>
+	  </pathconvert>
 	  <!-- JML typechecking -->
 	  <target name="jml" depends="jml_mobius">
 	    <description>
@@ -75,8 +89,9 @@
 	      <arg value="--purity"/>
 	      <arg value="--multijava"/>
 	      <arg line="--source '1.5'"/>
+	      <arg value="-G"/>
 	      <arg line="--sourcepath '${mobius_source}'"/>
-	      <arg line="mobius"/>
+	      <arg line="${source_files}"/>
 	    </java>
 	  </target>
 
@@ -89,19 +104,18 @@
 
 	  <target name="jmlc_mobius" depends="compile_mobius">
 	    <description>
-	      Compiles JML annotated Javafe files with runtime assertion checks.
+	      Compiles JML annotated DirectVCGen files with runtime assertion checks.
 	    </description>
 	    <java classname="org.jmlspecs.jmlrac.Main"
 	          fork="true"
 	          classpathref="jml_classpath">
 	      <jvmarg value="-Xmx128m"/>
-	      <arg line="--destination ${jmlc_dir}"/>
+	      <arg line="--destination ${jmlc_dest}"/>
 	      <arg value="--recursive"/>
-	      <arg value="--quiet"/>
-	      <arg value="--purity"/>
-	      <arg value="--multijava"/>
-	      <arg line="--sourcepath '${mobius_source}'"/>
-	      <arg line="mobius"/>
+	      <arg value="--verbose"/>
+	      <arg value="-G"/>
+	      <arg line="--sourcepath ${mobius_source}"/>
+	      <arg line="${source_files}"/>
 	    </java>
 	  </target>
 	
@@ -112,15 +126,14 @@
 	    <tstamp/>
 	    <mkdir dir="${mobius_classes}"/>
 	  	<mkdir dir="${mobius_sources}"/>
-	    <mkdir dir="${escjava_classes_dir}"/>
-	    <mkdir dir="${jmlc_dir}"/>
-	    <mkdir dir="${javadoc_dir}"/>
+	    <mkdir dir="${escjava_classes}"/>
+	  	<mkdir dir="${jmlc_dest}"/>
 	  </target>
 
 	<target name="compile_mobius" depends="clean_mobius,
 	                                         initialize">
 	    <description>
-	      Compile all Javafe source code.
+	      Compile all mobius source code.
 	    </description>
 	    <javac srcdir="${mobius_sources}"
 	           destdir="${mobius_classes}"
