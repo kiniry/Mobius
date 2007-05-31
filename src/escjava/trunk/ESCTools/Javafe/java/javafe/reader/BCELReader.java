@@ -71,6 +71,12 @@ import org.apache.bcel.classfile.Method;
 import org.apache.bcel.generic.Type;
 
 /**
+ * -------------------------------------------------------------------------
+ * BCELReader
+ * -------------------------------------------------------------------------
+ */
+
+/**
  * Parses the contents of a class file into an AST for the purpose of type
  * checking. Ignores components of the class file that have no relevance to type
  * checking (e.g. method bodies).
@@ -244,11 +250,20 @@ class BCELReader extends Reader {
 			pkgName = Name.make(packageName, classLocation);
 		}
 
+		// Read interface names
 		JavaClass[] interfaces = javaClass.getInterfaces();
 		int numberOfInterfaces = interfaces.length;
-		TypeNameVec interfaceVec = TypeNameVec.make(numberOfInterfaces);
-//		typeNames = new TypeName[numberOfInterfaces];
-
+		TypeName[] interfaceTypeNames = new TypeName[interfaces.length];
+	
+		for (int interfaceLoopVar = 0; interfaceLoopVar < numberOfInterfaces; interfaceLoopVar++) {
+			JavaClass interfaceInst = interfaces[interfaceLoopVar];
+			String interfaceName = interfaceInst.getClassName();
+			interfaceTypeNames[interfaceLoopVar] = getCompoundTypeName(interfaceName);
+		}
+		
+		TypeNameVec interfaceVector =
+		    TypeNameVec.make(interfaceTypeNames);
+		
 		Method[] methods = javaClass.getMethods();
 		readMethods(methods);
 
@@ -270,13 +285,13 @@ class BCELReader extends Reader {
 
 		TypeDecl typeDecl;
 		// @ assume classIdentifier != null;
-		if ((javaClass.isInterface())) {
+		if (javaClass.isInterface()) {
 			typeDecl = (TypeDecl) InterfaceDecl.make(accessModifiers, null,
-					classIdentifier, interfaceVec, null, elementVec,
+					classIdentifier, interfaceVector, null, elementVec,
 					classLocation, classLocation, classLocation, classLocation);
 		} else {
 			typeDecl = (TypeDecl) ClassDecl.make(accessModifiers, null,
-					classIdentifier, interfaceVec, null, elementVec,
+					classIdentifier, interfaceVector, null, elementVec,
 					classLocation, classLocation, classLocation, classLocation,
 					super_class);
 		}
@@ -972,7 +987,6 @@ class BCELReader extends Reader {
 	 */
 	public CompilationUnit read(GenericFile target, boolean avoidSpec) {
 
-		this.includeBodies = avoidSpec;
 		this.classLocation = Location.createWholeFileLoc(target);
 		this.genericFile = target;
 
