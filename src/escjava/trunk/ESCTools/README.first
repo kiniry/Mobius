@@ -61,9 +61,7 @@ date are "ESC/Java2 User's Manual", "ESC/Java Implementation Notes"
 and "JML Reference Manual"; the latter has an appendix on ESC/Java.
 
 The new "ESC/Java2 User's Manual" is found in the file
-ESCTools/docs/ESCJAVA-UsersManual.html in the source release.  It is
-currently in HTML format, but we have plans on moving to Texinfo like
-the other main JML documents.
+ESCTools/docs/Escjava2-UsersManual.pdf in the source release.
 
 The "ESC/Java Implementation Notes" are a running summary of the work
 that has gone on to make ESC/Java2, based upon the semi-open sourced
@@ -148,7 +146,8 @@ in this README file.
 
 To obtain access to the CVS distribution, you will need:
 - a sufficiently current version of CVS
-- development tools and a VM for Java 1.4 *NOT* Java 1.5
+- development tools and a VM for Java 1.4 or Java 1.5 (this release has not 
+  been not tested with the Java 1.6 VM)
 - a working version of SSH, in order to securely transfer files to and
   from the CVS repository
 - Building it will require other UNIX tools: e.g. flex, cc, diff,
@@ -207,7 +206,7 @@ e) If you want to avoid using your password on every CVS transaction,
 
 SETTING UP YOUR ENVIRONMENT FOR BUILDING AND RUNNING ESC/Java2
 
-Development has taken place on Linux (Redhat 8/9), MacOSX (10.2 and
+Development has taken place on Linux (Redhat 8/9), MacOSX (10.3 and
 later), and Windows XP.  The build environment uses GNU make.
 Developers use both bash and tcsh as working shells.
 
@@ -448,8 +447,8 @@ The $ESCTOOLS_ROOT directory contains a number of major subsystems:
            information on building Simplify, see below.)
 	Escjava - the Extended Static Checker
 	Calvin - NOT YET WORKING
-	Rcc - NOT YET WORKING
-	Houdini - NOT YET WORKING
+	Rcc - the Race Condition Checker (maintained by Radu Grigore)
+	Houdini - the Annoctation Generator (updated by Arnout Engelen)
 
 The make targets above can be executed in each of the subsystem
 directories.  This avoids running make over all of the subsystems just
