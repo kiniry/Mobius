@@ -71,22 +71,16 @@ import org.apache.bcel.classfile.Method;
 import org.apache.bcel.generic.Type;
 
 /**
- * -------------------------------------------------------------------------
- * BCELReader
- * -------------------------------------------------------------------------
- */
-
-/**
  * Parses the contents of a class file into an AST for the purpose of type
  * checking. Ignores components of the class file that have no relevance to type
  * checking (e.g. method bodies).
+ * 
+ * @author Dermot Cochran
  */
 
 class BCELReader extends Reader {
 
-	/**
-	 * The package name of the class being parsed.
-	 */
+	/** The package name of the class being parsed. */
 	public Name classPackage;
 
 	/**
@@ -107,8 +101,8 @@ class BCELReader extends Reader {
 	 * attribute, or is a static method decl for an interface.
 	 */
 	protected void addNonSyntheticDecls(
-	/* @ non_null */TypeDeclElemVec typeDeclElemVec,
-	/* @ non_null */TypeDeclElem[] typeDeclElems) {
+	/*@ non_null */ TypeDeclElemVec typeDeclElemVec,
+	/*@ non_null */ TypeDeclElem[] typeDeclElems) {
 		for (int i = 0; i < typeDeclElems.length; i++) {
 			if (synthetics.contains(typeDeclElems[i])) { // @ nowarn;
 				continue;
@@ -135,7 +129,7 @@ class BCELReader extends Reader {
 	 * Vector of methods and fields with Synthetic attributes. Use this to weed
 	 * out synthetic while constructing TypeDecl.
 	 */
-	protected/* @ non_null */Vector synthetics;
+	protected /*@ non_null */ Vector synthetics;
 
 	/**
 	 * Flag indicating whether the class being parsed has the synthetic
@@ -144,15 +138,23 @@ class BCELReader extends Reader {
 	private boolean syntheticClass;
 
 	/**
-	 * 
+	 * Flag indicates that class bodies are currently being parsed, otherwise 
+   * only the type interface is parsed.
 	 */
 	protected boolean includeBodies;
 
 	/**
-	 * 
+	 * A flag indicating that parsed type declaration should ignore/omit 
+   * private class fields.
 	 */
 	protected boolean omitPrivateFields;
 
+  /**
+   * The package name of the class being parsed from bytecode.
+   * @review kiniry/cochran Why are there two fields that look like they 
+   * are/mean the same thing, pkgName and classPackage?
+   * @todo Remove one of these fields.
+   */
 	private Name pkgName;
 
 	/**
@@ -203,8 +205,8 @@ class BCELReader extends Reader {
 	 * @throws ClassNotFoundException
 	 * @throws IOException
 	 */
-	// @ requires javaClass != null
-	// @ ensures \result != null
+	//@ requires javaClass != null
+	//@ ensures \result != null
 	protected CompilationUnit getCompilationUnit()
 			throws ClassNotFoundException, IOException {
 
@@ -245,7 +247,7 @@ class BCELReader extends Reader {
 		JavaClass[] interfaces = javaClass.getInterfaces();
 		int numberOfInterfaces = interfaces.length;
 		TypeNameVec interfaceVec = TypeNameVec.make(numberOfInterfaces);
-		typeNames = new TypeName[numberOfInterfaces];
+//		typeNames = new TypeName[numberOfInterfaces];
 
 		Method[] methods = javaClass.getMethods();
 		readMethods(methods);
@@ -603,7 +605,7 @@ class BCELReader extends Reader {
 	protected void setClassLocation(int locationIndex) {
 		// record the class type and synthesize a location for the class binary
 
-		// remove teh name of the enclosing class
+		// remove the name of the enclosing class
 		String classNameString = javaClass.getClassName();
 		int subStringIndex = 1 + classNameString.lastIndexOf('$');
 
@@ -770,30 +772,30 @@ class BCELReader extends Reader {
 	 * The type names of the interfaces implemented by the class being parsed.
 	 * Initialized by set_num_interfaces. Elements initialized by set_interface.
 	 */
-	// @ private invariant interfaces != null;
-	// @ private invariant \typeof(interfaces) == \type(TypeName[]);
+	//@ private invariant interfaces != null;
+	//@ private invariant \typeof(interfaces) == \type(TypeName[]);
 	protected TypeName[] typeNames;
 
 	/**
 	 * The class members of the class being parsed. Intialized by set_field,
 	 * set_method, and set_class_attributes.
 	 */
-	// @ invariant classMembers != null;
+	//@ invariant classMembers != null;
 	protected TypeDeclElemVec classMembers = TypeDeclElemVec.make(0);
 
 	/**
 	 * The methods and constructors of the class being parsed. Initialized by
 	 * set_num_methods. Elements initialized by set_method.
 	 */
-	// @ invariant routines != null;
-	// @ invariant \typeof(routines) == \type(RoutineDecl[]);
-	// @ spec_public
+	//@ invariant routines != null;
+	//@ invariant \typeof(routines) == \type(RoutineDecl[]);
+	//@ spec_public
 	protected RoutineDecl[] routineDecl;
 
 	/**
 	 * The identifier of the class being parsed. Initialized by set_this_class.
 	 */
-	// @ spec_public
+	//@ spec_public
 	protected Identifier classIdentifier;
 
 	/**
@@ -874,9 +876,9 @@ class BCELReader extends Reader {
 	 *            the method signature to make the formal parameters from
 	 * @return the formal parameters
 	 */
-	// @ requires signature != null;
-	// @ ensures \nonnullelements(\result);
-	// @ ensures \typeof(\result) == \type(FormalParaDecl[]);
+	//@ requires signature != null;
+	//@ ensures \nonnullelements(\result);
+	//@ ensures \typeof(\result) == \type(FormalParaDecl[]);
 	protected FormalParaDecl[] makeFormals(MethodSignature signature) {
 		int length = signature.countParameters();
 		FormalParaDecl[] formals = new FormalParaDecl[length];
@@ -902,7 +904,7 @@ class BCELReader extends Reader {
 	 *            the name to return the package qualifier of
 	 * @return the package qualifier of name
 	 */
-	// @ requires name != null;
+	//@ requires name != null;
 	protected static Name getNameQualifier(Name name) {
 		int size = name.size();
 
@@ -917,7 +919,7 @@ class BCELReader extends Reader {
 	 *            the name to return the terminal identifier of
 	 * @return the terminal identifier of name
 	 */
-	// @ requires name != null;
+	//@ requires name != null;
 	protected static Identifier getNameTerminal(Name name) {
 		return name.identifierAt(name.size() - 1);
 	}
@@ -927,8 +929,8 @@ class BCELReader extends Reader {
 	/**
 	 * An empty type name vector.
 	 */
-	// @ invariant emptyTypeNameVec != null;
-	// @ spec_public
+	//@ invariant emptyTypeNameVec != null;
+	//@ spec_public
 	protected static final TypeNameVec emptyTypeNameVec = TypeNameVec.make();
 
 	protected ConstantPool constantPool;
@@ -942,7 +944,7 @@ class BCELReader extends Reader {
 	 * 
 	 * @param args
 	 */
-	// @ requires \nonnullelements(args);
+	//@ requires \nonnullelements(args);
 	public static void main(String[] args) {
 		if (args.length < 1) {
 			System.err.println("BCELReader: <source filename>");
@@ -1010,8 +1012,8 @@ class BCELReader extends Reader {
 		this.javaClass = classParser.parse();
 	}
 
-	// @ ensures \result == syntheticClass
-	// @ modifies \nothing
+	//@ ensures \result == syntheticClass
+	//@ modifies \nothing
 	public boolean isSyntheticClass() {
 		return syntheticClass;
 	}
