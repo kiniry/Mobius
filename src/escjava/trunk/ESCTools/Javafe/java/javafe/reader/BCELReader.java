@@ -211,8 +211,8 @@ class BCELReader extends Reader {
 	 * @throws ClassNotFoundException
 	 * @throws IOException
 	 */
-	//@ requires javaClass != null
-	//@ ensures \result != null
+	//@ requires javaClass != null;
+	//@ ensures \result != null;
 	protected CompilationUnit getCompilationUnit()
 			throws ClassNotFoundException, IOException {
 
@@ -697,6 +697,9 @@ class BCELReader extends Reader {
 		case Constants.T_SHORT:
 			typeTag = TagConstants.SHORTTYPE;
 			break;
+			
+		case Constants.T_CHAR:
+			typeTag = TagConstants.CHARTYPE;
 
 		// Non primitive types
 		default:
@@ -1026,8 +1029,8 @@ class BCELReader extends Reader {
 		this.javaClass = classParser.parse();
 	}
 
-	//@ ensures \result == syntheticClass
-	//@ modifies \nothing
+	//@ ensures \result == syntheticClass;
+	//@ modifies \nothing;
 	public boolean isSyntheticClass() {
 		return syntheticClass;
 	}
