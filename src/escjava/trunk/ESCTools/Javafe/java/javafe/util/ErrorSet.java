@@ -138,10 +138,8 @@ public class ErrorSet
   //@ ensures gag ==> \not_modified(System.out.output);
   //@ ensures FrontEndTool.options.noCautions ==> \not_modified(System.out.output);
   public static void caution(String msg) {
-    if (FrontEndTool.options.noCautions) {
-
+    if (FrontEndTool.options.noCautions)
       return;
-    }
     cautions++;
     report(CAUTION, msg);
   }
