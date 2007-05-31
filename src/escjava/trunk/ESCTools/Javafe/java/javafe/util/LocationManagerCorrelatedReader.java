@@ -195,7 +195,7 @@ public abstract class LocationManagerCorrelatedReader
   protected static LocationManagerCorrelatedReader getCorrStreamAt(int i) {
     try {
       LocationManagerCorrelatedReader c =
-		(LocationManagerCorrelatedReader)allCorrStreams.elementAt(i);
+        (LocationManagerCorrelatedReader)allCorrStreams.elementAt(i);
 
       return c;
     } catch (ArrayIndexOutOfBoundsException e) {
