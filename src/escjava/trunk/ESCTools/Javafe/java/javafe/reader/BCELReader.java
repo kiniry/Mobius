@@ -354,35 +354,35 @@ class BCELReader extends Reader {
 			tag = TagConstants.INTLIT;
 			ConstantInteger constantInteger = (ConstantInteger) constantPool
 					.getConstant(constantValueIndex);
-			literal = Integer.valueOf(constantInteger.getBytes());
+			literal = new Integer(constantInteger.getBytes());
 			break;
 
 		case TagConstants.LONGTYPE:
 			tag = TagConstants.LONGLIT;
 			ConstantLong constantLong = (ConstantLong) constantPool
 					.getConstant(constantValueIndex);
-			literal = Long.valueOf(constantLong.getBytes());
+			literal = new Long(constantLong.getBytes());
 			break;
 
 		case TagConstants.CHARTYPE:
 			tag = TagConstants.CHARLIT;
 			ConstantInteger constantForChar = (ConstantInteger) constantPool
 					.getConstant(constantValueIndex);
-			literal = Integer.valueOf(constantForChar.getBytes());
+			literal = new Integer(constantForChar.getBytes());
 			break;
 
 		case TagConstants.FLOATTYPE:
 			tag = TagConstants.FLOATLIT;
 			ConstantFloat constantFloat = (ConstantFloat) constantPool
 					.getConstant(constantValueIndex);
-			literal = Float.valueOf(constantFloat.getBytes());
+			literal = new Float(constantFloat.getBytes());
 			break;
 
 		case TagConstants.DOUBLETYPE:
 			tag = TagConstants.DOUBLELIT;
 			ConstantDouble constantDouble = (ConstantDouble) constantPool
 					.getConstant(constantValueIndex);
-			literal = Double.valueOf(constantDouble.getBytes());
+			literal = new Double(constantDouble.getBytes());
 			break;
 
 		default:
@@ -393,7 +393,7 @@ class BCELReader extends Reader {
 			ConstantUtf8 constantUtf8 = (ConstantUtf8) constantPool
 					.getConstant(constantStringIndex);
 
-			literal = (String.valueOf(constantUtf8.getBytes()));
+			literal = String.valueOf(constantUtf8.getBytes());
 			break;
 		}
 
