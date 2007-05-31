@@ -21,7 +21,7 @@
 @sp 1
 
 
-@center November 2005
+@center May 2007
 
 @sp 2
 
@@ -55,7 +55,8 @@ F.3.1 [@i{Logics and Meanings of Programs}]
 @sp 1
 
 Copyright @copyright{} 2003-2004 David R. Cok
-Copyright @copyright{} 2005 Joseph R. Kiniry
+Copyright @copyright{} 2005-2006 Joseph R. Kiniry
+Copyright @copyright{} 2007 Systems Research Group, University College Dublin
 
 
 @sp 4
@@ -332,8 +333,7 @@ Incompatibilities
 * Extensions::                  
 
 Major features of Java not implemented in ESC/Java2
-
-* Java 1.5::                    
+              
 * anonymous and block-level classes::  
 * serialization::               
 * most multi-threading considerations::  

@@ -3,7 +3,9 @@ verion 2.0b1 "Mobius PVE Internal Release" (30 May 2007)
 
 New features include:
 
-o ESC/Java2 now tries to use BCEL 5.2 to parse Java 1.5 bytecode.
+o ESC/Java2 now tries to use BCEL 5.2 to parse Java 1.5 bytecode, with some
+  limitations e.g. nested classes within nested classes, which will cause some
+  of the unit tests to fail.
    
 o The reachability analysis can now be used by saying "-era" (or the
   longer "-reachabilityanalysis") on the command line.

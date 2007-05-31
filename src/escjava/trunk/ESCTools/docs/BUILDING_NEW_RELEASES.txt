@@ -1,6 +1,8 @@
+o Synchronize all workspaces
 o Update ChangeLog
-o Full build and alltests.
+o Full build and alltests. 'make build alltests'
 o Update release-files/RELEASE_NOTES.txt
+o Resynchronize
 o Release builds (binary and source).
   ESC_VERSION=2.0bX ESC_RELEASE_DATE=`date "+%d-%m-%y"` make releases
 or
