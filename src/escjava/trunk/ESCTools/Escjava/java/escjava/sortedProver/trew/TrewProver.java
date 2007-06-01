@@ -16,9 +16,9 @@ import escjava.sortedProver.auflia.AufliaProver;
 
 public class TrewProver extends AufliaProver
 {
-	Process trew;
+	private Process trew;
 
-	String readShortLine()
+	private String readShortLine()
 	{
 		String line =readLine();
 		if (line.length() > 100)
@@ -26,7 +26,7 @@ public class TrewProver extends AufliaProver
 		return line;
 	}
 	
-	String readLine()
+	private String readLine()
 	{
 		try {
 			InputStream s, out = trew.getInputStream(), err = trew.getErrorStream();
@@ -68,10 +68,19 @@ public class TrewProver extends AufliaProver
 		String filename = encodeProblemName(properties);
 		filename += ".smt";
 		
-		if (! (new File(filename + ".rw")).canRead()) {
-			 ErrorSet.error("proof file for " + filename + " not found");
-			 return new SortedProverResponse(SortedProverResponse.FAIL);
+		String resp = checkProof(formula, filename);
+		if (resp != null) {
+			ErrorSet.error(resp);
+			return new SortedProverResponse(SortedProverResponse.FAIL);
+		} else {
+			return new SortedProverResponse(SortedProverResponse.YES);			
 		}
+	}
+
+	protected String checkProof(SPred formula, String filename)
+	{
+		if (! (new File(filename + ".rw")).canRead())
+			return "proof file for " + filename + " not found";	
 		
 		saveQuery(filename, formula);
 		
@@ -101,11 +110,9 @@ public class TrewProver extends AufliaProver
 			
 		
 		if (exit == 0) {
-			return new SortedProverResponse(SortedProverResponse.YES);
+			return null;
 		} else {
-			ErrorSet.error("trew verify failed:\n" + buf);
-			return new SortedProverResponse(SortedProverResponse.FAIL);
+			return "trew verify failed:\n" + buf;
 		}
-		
 	}
 }

@@ -20,12 +20,13 @@ import escjava.sortedProver.NodeBuilder.SPred;
 import escjava.sortedProver.auflia.AufliaProver;
 import escjava.sortedProver.fx7.Fx7NodeBuilder;
 import escjava.sortedProver.simplify.SimplifyNodeBuilder.Sx;
+import escjava.sortedProver.trew.TrewProver;
 
-public class Fx7pgProver extends AufliaProver
+public class Fx7pgProver extends TrewProver
 {
-	Process fx7;	
+	private Process fx7;	
 
-	String readLine()
+	private String readLine()
 	{
 		try {
 			InputStream s = fx7.getInputStream();
@@ -59,7 +60,7 @@ public class Fx7pgProver extends AufliaProver
 	static final int ERROR = 3;
 	static final int EOF = 4;
 	
-	int severity(String msg)
+	private int severity(String msg)
 	{
 		if (msg.startsWith("TEMP:") || msg.startsWith("INFO:") || msg.startsWith("GRIND:"))
 			return INFO;
@@ -73,7 +74,7 @@ public class Fx7pgProver extends AufliaProver
 			return ERROR;
 	}
 	
-	String readLine(int severity)
+	private String readLine(int severity)
 	{
 		String l;
 		
@@ -92,6 +93,15 @@ public class Fx7pgProver extends AufliaProver
 		
 		String filename = encodeProblemName(properties);
 		filename += ".smt";
+		
+		String trewResp = super.checkProof(formula, filename);
+		//TODO disable reporting
+		if (trewResp == null) {
+			ErrorSet.report("found preexisting valid proof for " + filename);
+			return new SortedProverResponse(SortedProverResponse.YES);
+		} else {
+			ErrorSet.report("trew resp: " + trewResp);
+		}
 		
 		Enumeration e = propsNow.keys();
 		String opts = "-o:ProofLogging=1,ProofFile=" + filename + ".rw";
@@ -137,8 +147,18 @@ public class Fx7pgProver extends AufliaProver
 				return new SortedProverResponse(SortedProverResponse.YES);
 			} else if (ans.startsWith("ANSWER: TIMEOUT")) {
 				return new SortedProverResponse(SortedProverResponse.TIMEOUT);
-			} else {	    		    	
-				ErrorSet.fatal("got some evil response from fx7: " + ans);
+			} else {
+				StringBuffer buf = new StringBuffer(ans + "\n");
+				int i;
+				for (i = 0; i < 100; ++i) {
+					String line = readLine();
+					if (line.equals("EOF")) break;
+					if (line.length() > 100)
+						line = line.substring(0,80) + "...";
+					buf.append(line).append('\n');
+				}
+				if (i >= 100) buf.append("[...]\n");
+				ErrorSet.error("got some evil response from fx7: " + buf);
 				return new SortedProverResponse(SortedProverResponse.FAIL);
 			}
 		} finally {
