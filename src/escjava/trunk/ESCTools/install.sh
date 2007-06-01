@@ -56,6 +56,9 @@ chmod +x `find . -name rtestall`
 chmod +x `find . -name rtest`
 chmod +x `find . -name make_tags`
 chmod +x `find . -name insert_ensures`
+chmod +x `find . -name clean.sh`
+chmod +x `find . -name "*.sh"`
+chmod +x `find . -name "*.pl"`
 
 (cd Escjava/release/master/bin; mv Simplify-1.5.4.exe.win Simplify-1.5.4.exe)
 
