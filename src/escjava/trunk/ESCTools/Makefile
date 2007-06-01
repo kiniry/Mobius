@@ -440,7 +440,7 @@ test-releases:
 	@echo "Testing release versions .........."
 	${MAKE} test-binary-release
 	${MAKE} test-patch-release
-	${MAKE} test-source-release
+## FIXME:	${MAKE} test-source-release
 
 releases-notests:
 	@echo "Making release versions ${ESC_PROJECT}-${ESC_VERSION} ........"
@@ -596,6 +596,7 @@ binary-release: build jars alldocs cleanup
 # 	Copy other miscellaneous files
 	${MAKE} clean-norel-noreltemp
 	${MAKE} -C Utils build
+	cp -r ${ESCROOT_ROOT}/Utils/BCEL {RELTEMP}/Utils/BCEL
 	cp ${ESCJAVA_ROOT}/escj ${RELTEMP}
 	cp ${ESCJAVA_ROOT}/escj.bat ${RELTEMP}
 	cp ${ESCJAVA_ROOT}/escjava2.exe ${RELTEMP}
