@@ -1451,10 +1451,14 @@ public class Lifter extends EscNodeBuilder
 					unify(fn.retType, typeToSort(md.returnType), "mdr");									
 				} else if (sym instanceof ConstructorDecl) {
 					ConstructorDecl md = (ConstructorDecl)sym;
-					int off = arity - md.args.size(); 
-					Assert.notFalse(off <= 2);
+					int off = arity - md.args.size();
+					// the first argument can be 'state'
+					// then we can have up to two 'alloc'
+					Assert.notFalse(off <= 3);
 					for (int i = 0; i < arity; ++i) {
 						Sort s = sortTime;
+						if (off == 3 && i == 0)
+							s = sortRef;
 						if (i >= off)
 							s = typeToSort(md.args.elementAt(i - off).type);
 						unify(fn.argumentTypes[i], s, "cda");
@@ -1497,7 +1501,7 @@ public class Lifter extends EscNodeBuilder
 			// string, boolean or Java.lang.Object
 			
 			PrimitiveType m = (PrimitiveType) n;
-			String s = javafe.ast.TagConstants.toString(m.getTag());
+			String s = escjava.ast.TagConstants.toString(m.getTag());
 			return symbolRef(s, sortType);
 			
 		} else if (n instanceof QuantifiedExpr) {
