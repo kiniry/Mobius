@@ -26,4 +26,4 @@
 # or
 #DEFAULT (echo ""; id; echo %{sVv}; date; cat) >> $CVSROOT/CVSROOT/commitlog
 #ALL chgrp -R escjava /cvsroot/escjava
-ALL /var/www/gforge/cronjobs/cvs-cron/syncmail %{sVv} escjava-commits@secure.ucd.ie
+ALL /var/www/gforge/cronjobs/cvs-cron/syncmail -u %{sVv} escjava-commits@secure.ucd.ie
