@@ -53,6 +53,7 @@ public class Fx7Prover extends SortedProver
 		Enumeration e = properties.keys();
 		while (e.hasMoreElements()) {
 			String key = (String)e.nextElement();
+			if (key.equals("ProblemName")) continue;
 			send("(PRAGMA " + key + " " + properties.getProperty(key) + ")\n");			
 		}
 		return ok;
