@@ -112,8 +112,6 @@ public class Fx7pgProver extends TrewProver
 			opts += "," + key + "=" + properties.getProperty(key);
 		}
 		
-		saveQuery(filename, formula);
-		
 		String args[] = new String[] { "fx7", "-mechanical", "-t:60", opts, filename};
 		
 		try {			
