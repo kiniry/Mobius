@@ -1,6 +1,8 @@
 package escjava.sortedProver.auflia;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -28,11 +30,42 @@ public class AufliaNodeBuilder extends EscNodeBuilder
 		private static final int LIMIT = 100;
 		public final String head;
 		public final Sx[] args;
+		public final int size;
+		public final int depth;
 		
 		public Sx(String name, Sx[] args)
 		{
-			this.head = name;
+			this.head = name.equals("_array") ? "array_" : name;
 			this.args = args;
+			int depth = 0;
+			int size = name.length() + 1;
+			for (int i = 0; i < args.length; ++i) {
+				if (args[i].depth > depth) depth = args[i].depth;
+				size += args[i].size + 1;
+			}
+			depth++;
+			this.depth = depth;
+			this.size = size;
+			if (name.equals("and") || name.equals("or"))
+				Arrays.sort(args, new Comparator() {
+					public int compare(Object a, Object b) {
+						return ((Sx)a).compareTo((Sx)b);
+					}
+				});
+		}
+		
+		public int compareTo(Sx other)
+		{
+			if (this == other) return 0;
+			if (this.depth != other.depth) return this.depth - other.depth;
+			if (this.size != other.size) return this.size - other.size;
+			if (this.args.length != other.args.length) return this.args.length - other.args.length;
+			if (!this.head.equals(other.head)) this.head.compareTo(other.head);
+			for (int i = 0; i < args.length; ++i) {
+				int res = args[i].compareTo(other.args[i]);
+				if (res != 0) return res;
+			}
+			return 0;
 		}
 
 		public boolean isSubSortOf(Sort s)
@@ -97,8 +130,8 @@ public class AufliaNodeBuilder extends EscNodeBuilder
 	
 	protected Sx sx(String name, STerm[] args)
 	{
-		if (args instanceof Sx[])
-			return new Sx(name, (Sx[])args);
+		//if (args instanceof Sx[])
+		//	return new Sx(name, (Sx[])args);
 		
 		Sx[] temp = new Sx[args.length];
 		for (int i = 0; i < args.length; ++i)
