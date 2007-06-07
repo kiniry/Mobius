@@ -69,6 +69,11 @@ public class BytecodeEditor extends TextEditor {
 	 * editor.
 	 */
 	private BytecodeConfiguration bconfig;
+
+	/**
+	 * Bytecode document edited by the editor.
+	 */
+	private BytecodeDocument currentDocument;
 	
 	/**
 	 * This constructor creates the class and initialises the default
@@ -422,6 +427,20 @@ public class BytecodeEditor extends TextEditor {
 	public void setJavaClass(JavaClass jc) {
 		javaClass = jc;
 		classGen = new ClassGen(jc);
+	}
+
+	/**
+	 * @param document document to associate with the current editor
+	 */
+	public void setDocument(BytecodeDocument document) {
+		currentDocument = document;
+	}
+	
+	/**
+	 * @return the currently edited document
+	 */
+	public BytecodeDocument getDocument() {
+		return currentDocument;
 	}
 	
 	/**

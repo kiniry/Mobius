@@ -12,13 +12,15 @@ import org.eclipse.jface.text.IDocumentListener;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Label;
+import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorPart;
 
 import umbra.instructions.BytecodeController;
 
 /**
- * This class represents a change performed in a bytecode editor.
+ * This class represents a GUI  
+ * 
+ * change performed in a bytecode editor.
  * TODO more detailed description is needed
  * 
  * @author Wojtek Wąs
@@ -29,11 +31,6 @@ public class BytecodeContribution extends ControlContribution {
 	 * TODO
 	 */
 	private boolean needNew = true;
-	
-	/**
-	 * Text of the status label: "Correct", "Error in line ..." etc.
-	 */
-	private Label labelText;
 	
 	/**
 	 * TODO
@@ -108,6 +105,10 @@ public class BytecodeContribution extends ControlContribution {
 		 * Should be null if no event is currently being processed.
 		 */
 		private DocumentEvent current_event = null;
+		
+		/**
+		 * TODO
+		 */
 		private int endLine;
 		
 		/**
@@ -179,8 +180,8 @@ public class BytecodeContribution extends ControlContribution {
 			bcc.addAllLines(event.fDocument, startRem, stopRem, stop);
 			bcc.checkAllLines(startRem, stop);
 			if (!bcc.allCorrect()) 
-				displayError(bcc.getFirstError());
-			else displayCorrect();
+				displayError(event.fDocument, bcc.getFirstError());
+			else displayCorrect(event.fDocument);
 		}
 		
 	}
@@ -221,36 +222,38 @@ public class BytecodeContribution extends ControlContribution {
 	}
 	
 	/**
-	 * TODO
+	 * Creates the GUI control associated with the bytecode editor
 	 */
 	protected Control createControl(Composite parent) {
 		Composite composite = new Composite(parent, SWT.BORDER);
 		composite.setData(this);
 
-		labelText = new Label(composite, SWT.NONE);
-		labelText.setSize(220, 15);
-		//labelText.setFont(new Font(null, "Times", 8, 1));
-		//labelText.setForeground(new Color(null, new RGB(255, 255, 0)));
 		return composite;
 	}
 	
 	/**
-	 * This method displays in the status label the information
+	 * This method displays in the status line the information
 	 * that something is correct.
+	 * 
+	 * @param document the status line is extracted from 
 	 */
-	private void displayCorrect() {
-		labelText.setText("Correct");
-		System.out.println("Correct");
+	private void displayCorrect(IDocument document) {
+		BytecodeEditor editor = ((BytecodeDocument)document).getEditor();
+		IActionBars bars = editor.getEditorSite().getActionBars();
+		bars.getStatusLineManager().setMessage("Correct");
 	}
 	
 	/**
-	 * This method displays in the status label the information
+	 * This method displays in the status line the information
 	 * about an error in the indicated line.
 	 * 
+	 * @param document the status line is extracted from
 	 * @param line the number of the line with the error
 	 */
-	private void displayError(int line) {
-		labelText.setText("Error detected: " + line);
+	private void displayError(IDocument document, int line) {
+		BytecodeEditor editor = ((BytecodeDocument)document).getEditor();
+		IActionBars bars = editor.getEditorSite().getActionBars();
+		bars.getStatusLineManager().setMessage("Error detected: " + line);
 	}
 
 	/**

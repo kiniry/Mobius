@@ -339,8 +339,16 @@ public class BytecodeDocument extends Document {
 	 */
 	public void setEditor(BytecodeEditor editor) {
 		bytecodeEditor = editor;
+		editor.setDocument(this);
 		classGen = bytecodeEditor.getClassGen();
 		fJavaClass = bytecodeEditor.getJavaClass();
+	}
+	
+	/**
+	 * @return the editor for the current bytecode document
+	 */
+	public BytecodeEditor getEditor() {
+		return bytecodeEditor;
 	}
 
 	/**
