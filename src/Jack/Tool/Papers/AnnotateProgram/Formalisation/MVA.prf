@@ -3,7 +3,7 @@
 (WellFormedMVA)
 (MVASemantics
  (get_MVAVarDecl_TCC1 0
-  (get_MVAVarDecl_TCC1-1 nil 3383053727 3390027613
+  (get_MVAVarDecl_TCC1-1 nil 3383053727 3390278942
    ("" (subtype-tcc) nil nil) proved
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
@@ -23,9 +23,9 @@
     (member const-decl "bool" sets nil)
     (empty? const-decl "bool" sets nil)
     (nonempty? const-decl "bool" sets nil))
-   389 270 nil nil))
+   434 350 nil nil))
  (initial_MVA_state_TCC1 0
-  (initial_MVA_state_TCC1-1 nil 3383053727 3390027613
+  (initial_MVA_state_TCC1-1 nil 3383053727 3390278943
    ("" (subtype-tcc) nil nil) proved
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
@@ -49,66 +49,97 @@
     (wf_Guard const-decl "boolean" WellFormedMVA nil)
     (disjoint? const-decl "bool" sets nil)
     (intersection const-decl "set" sets nil)
-    (var_names const-decl "set[Name]" WellFormedMVA nil)
-    (var_names const-decl "set[Name]" WellFormedMVA nil)
+    (var_names const-decl "finite_set[Name]" WellFormedProgram nil)
+    (var_names const-decl "finite_set[Name]" WellFormedProgram nil)
+    (restrict const-decl "R" restrict nil)
     (wf_vdsP const-decl "boolean" WellFormedMVA nil)
     (wf_vdsA const-decl "boolean" WellFormedMVA nil)
     (member const-decl "bool" sets nil)
     (empty? const-decl "bool" sets nil))
-   552 330 nil nil))
+   452 360 nil nil))
  (execute_action_TCC1 0
-  (execute_action_TCC1-1 nil 3389011015 3390027613
-   ("" (subtype-tcc) nil nil) proved nil 31 40 nil nil))
+  (execute_action_TCC1-1 nil 3389011015 3390278943
+   ("" (subtype-tcc) nil nil) proved nil 31 20 nil nil))
  (execute_action_TCC2 0
-  (execute_action_TCC2-1 nil 3389011015 3390027614
+  (execute_action_TCC2-1 nil 3389011015 3390278943
    ("" (termination-tcc) nil nil) proved
-   ((length def-decl "nat" list_props nil)) 313 200 nil nil))
+   ((length def-decl "nat" list_props nil)) 230 180 nil nil))
  (step_TCC1 0
-  (step_TCC1-2 nil 3383053820 3390027617
-   ("" (skolem-typepred)
-    ((""
-      (expand* "nonempty?" "empty?" "member" "total" "wf_AState"
-       "wf_PEvent")
-      (("" (expand* "wf_AState" "wf_PEvent")
-        (("" (prop)
-          (("" (inst -2 "cp(x!1)" "event(p!1)" "stA(x!1)" "stP(p!1)")
-            (("" (split -2)
-              (("1" (skolem!) (("1" (inst?) nil nil)) nil)
-               ("2" (propax) nil nil) ("3" (propax) nil nil)
-               ("4" (propax) nil nil) ("5" (propax) nil nil))
+  (step_TCC1-2 nil 3383053820 3390279311
+   ("" (skosimp*)
+    (("" (typepred "a!1")
+      (("" (expand "total")
+        (("" (typepred "s!1")
+          (("" (expand "wf_MVA")
+            (("" (flatten)
+              (("" (expand "wf_AState")
+                (("" (flatten)
+                  ((""
+                    (inst -8 "cp(s!1)" "event(pe!1)" "stA(s!1)"
+                     "stP(pe!1)")
+                    (("" (assert)
+                      (("" (typepred "pe!1")
+                        (("" (expand "wf_PEvent")
+                          (("" (flatten)
+                            (("" (assert)
+                              ((""
+                                (skosimp*)
+                                ((""
+                                  (rewrite "nonempty_exists")
+                                  ((""
+                                    (inst 1 "t!1")
+                                    (("" (assert) nil nil))
+                                    nil))
+                                  nil))
+                                nil))
+                              nil))
+                            nil))
+                          nil))
+                        nil))
+                      nil))
+                    nil))
+                  nil))
+                nil))
               nil))
             nil))
           nil))
         nil))
       nil))
     nil)
-   unfinished
-   ((boolean nonempty-type-decl nil booleans nil)
-    (bool nonempty-type-eq-decl nil booleans nil)
-    (NOT const-decl "[bool -> bool]" booleans nil)
-    (Name formal-nonempty-type-decl nil MVASemantics nil)
-    (CP formal-nonempty-type-decl nil MVASemantics nil)
-    (finite_set type-eq-decl nil finite_sets nil)
-    (EventType type-decl nil EventType_adt nil)
-    (Event type-eq-decl nil MVA nil) (Action type-eq-decl nil MVA nil)
-    (Guard type-eq-decl nil MVA nil)
-    (Transition type-eq-decl nil MVA nil)
-    (Val type-decl nil Val_adt nil) (JType type-decl nil JType_adt nil)
-    (MVAVarDecl type-eq-decl nil MVA nil)
-    (ProgVarDecl type-eq-decl nil MVA nil)
-    (MVA type-eq-decl nil MVA nil)
+   proved
+   ((total const-decl "boolean" MVASemantics nil)
     (wf_MVA const-decl "boolean" WellFormedMVA nil)
+    (MVA type-eq-decl nil MVA nil)
+    (ProgVarDecl type-eq-decl nil MVA nil)
+    (MVAVarDecl type-eq-decl nil MVA nil)
+    (JType type-decl nil JType_adt nil) (Val type-decl nil Val_adt nil)
+    (Transition type-eq-decl nil MVA nil)
+    (Guard type-eq-decl nil MVA nil) (Action type-eq-decl nil MVA nil)
+    (Event type-eq-decl nil MVA nil)
+    (EventType type-decl nil EventType_adt nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (CP formal-nonempty-type-decl nil MVASemantics nil)
+    (Name formal-nonempty-type-decl nil MVASemantics nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (wf_AState const-decl "boolean" MVASemantics nil)
     (AState type-eq-decl nil MVASemantics nil)
-    (PSt type-eq-decl nil State nil)
+    (Store type-eq-decl nil State nil)
+    (nonempty_exists formula-decl nil sets_lemmas nil)
+    (set type-eq-decl nil sets nil)
+    (AND const-decl "[bool, bool -> bool]" booleans nil)
+    (= const-decl "[T, T -> boolean]" equalities nil)
+    (a!1 skolem-const-decl "(total)" MVASemantics nil)
+    (t!1 skolem-const-decl "Transition[CP, Name]" MVASemantics nil)
+    (s!1 skolem-const-decl "(wf_AState(a!1))" MVASemantics nil)
+    (pe!1 skolem-const-decl "(wf_PEvent(a!1))" MVASemantics nil)
+    (wf_PEvent const-decl "boolean" MVASemantics nil)
     (PEvent type-eq-decl nil MVASemantics nil)
-    (nonempty? const-decl "bool" sets nil)
-    (member const-decl "bool" sets nil)
-    (empty? const-decl "bool" sets nil))
-   3122 80 nil nil)
-  (step_TCC1-1 nil 3383053727 nil ("" (subtype-tcc) nil nil) nil nil
-   nil nil nil nil))
+    (PSt type-eq-decl nil State nil))
+   260367 3100 t nil))
  (wf_initial_MVA_state 0
-  (wf_initial_MVA_state-1 nil 3387787557 3390028600
+  (wf_initial_MVA_state-1 nil 3387787557 3390279445
    ("" (skosimp*)
     (("" (expand* "wf_AState" "initial_MVA_state" "wf_MVA")
       (("" (flatten)
@@ -184,12 +215,12 @@
         nil))
       nil))
     nil)
-   unfinished nil 874234 17530 t shostak))
+   unfinished nil 84145 1200 t shostak))
  (eval_yields_not_bottom 0
   (eval_yields_not_bottom-1 nil 3389011192 3389011218
    ("" (postpone) nil nil) unchecked nil 26400 10 t shostak))
  (execute_action_yields_wf_state 0
-  (execute_action_yields_wf_state-2 nil 3389011040 3390027617
+  (execute_action_yields_wf_state-2 nil 3389011040 3390278945
    ("" (induct "l")
     (("1" (skosimp)
       (("1" (expand "execute_action") (("1" (propax) nil nil)) nil))
@@ -268,7 +299,7 @@
     (Action type-eq-decl nil MVA nil)
     (boolean nonempty-type-decl nil booleans nil)
     (list type-decl nil list_adt nil))
-   541 310 t nil)
+   449 300 t nil)
   (execute_action_yields_wf_state-1 nil 3388233631 3388236856
    ("" (induct "l")
     (("1" (skosimp)
@@ -351,74 +382,75 @@
     (list type-decl nil list_adt nil))
    903854 830 t shostak))
  (step_yields_wf_state 0
-  (step_yields_wf_state-1 nil 3383053751 3390027618
+  (step_yields_wf_state-1 nil 3383053751 3390278945
    ("" (skolem-typepred)
     (("" (expand* "wf_AState" "wf_PEvent" "step")
-      (("" (expand* "wf_AState" "wf_PEvent")
-        (("" (use "step_TCC1")
-          (("" (prop)
+      ((""
+        (name "t1" "choose(LAMBDA (t: Transition):
+                                      ts(a!1)(t) AND
+                                      scp(t) = cp(s!1) AND
+                                      event(t) = event(pe!1) AND
+                                      guard(t)(stA(s!1), stP(pe!1)))")
+        (("1" (replace -1)
+          (("1" (assert)
             (("1" (expand "wf_MVA")
               (("1" (flatten -2)
                 (("1" (inst?)
-                  (("1" (prop)
-                    (("1" (hide-all-but (-1 1))
-                      (("1"
-                        (name "t1" "choose(LAMBDA (t: Transition):
-                             ts(a!1)(t) AND
-                             scp(t) = cp(x!1) AND
-                             event(t) = event(p!1) AND
-                             guard(t)(stA(x!1), stP(p!1)))")
-                        (("1" (replace -1) (("1" (assert) nil nil))
-                          nil)
-                         ("2" (propax) nil nil))
+                  (("1" (assert)
+                    (("1" (flatten)
+                      (("1" (assert)
+                        (("1" (use "execute_action_yields_wf_state")
+                          (("1" (assert) nil nil)) nil))
                         nil))
                       nil))
                     nil))
                   nil))
                 nil))
-              nil)
-             ("2" (use "execute_action_yields_wf_state")
-              (("2" (split -1)
-                (("1" (propax) nil nil) ("2" (propax) nil nil)) nil))
               nil))
             nil))
-          nil))
+          nil)
+         ("2" (use "step_TCC1") nil nil))
         nil))
       nil))
     nil)
-   unfinished
-   ((boolean nonempty-type-decl nil booleans nil)
-    (bool nonempty-type-eq-decl nil booleans nil)
-    (NOT const-decl "[bool -> bool]" booleans nil)
-    (Name formal-nonempty-type-decl nil MVASemantics nil)
-    (CP formal-nonempty-type-decl nil MVASemantics nil)
-    (finite_set type-eq-decl nil finite_sets nil)
-    (EventType type-decl nil EventType_adt nil)
-    (Event type-eq-decl nil MVA nil) (Action type-eq-decl nil MVA nil)
-    (Guard type-eq-decl nil MVA nil)
-    (Transition type-eq-decl nil MVA nil)
-    (Val type-decl nil Val_adt nil) (JType type-decl nil JType_adt nil)
-    (MVAVarDecl type-eq-decl nil MVA nil)
-    (ProgVarDecl type-eq-decl nil MVA nil)
-    (MVA type-eq-decl nil MVA nil)
-    (wf_MVA const-decl "boolean" WellFormedMVA nil)
-    (AState type-eq-decl nil MVASemantics nil)
-    (PSt type-eq-decl nil State nil)
-    (PEvent type-eq-decl nil MVASemantics nil)
-    (choose const-decl "(p)" sets nil) (set type-eq-decl nil sets nil)
-    (nonempty? const-decl "bool" sets nil)
-    (AND const-decl "[bool, bool -> bool]" booleans nil)
-    (= const-decl "[T, T -> boolean]" equalities nil)
+   proved
+   ((step const-decl "AState" MVASemantics nil)
+    (step_TCC1 subtype-tcc nil MVASemantics nil)
+    (execute_action_yields_wf_state formula-decl nil MVASemantics nil)
     (Expr type-decl nil Expr_adt nil)
     (OneAction type-eq-decl nil MVA nil)
     (list type-decl nil list_adt nil)
-    (execute_action_yields_wf_state formula-decl nil MVASemantics nil)
-    (step_TCC1 subtype-tcc nil MVASemantics nil)
-    (step const-decl "AState" MVASemantics nil))
-   225 150 t nil)))
+    (= const-decl "[T, T -> boolean]" equalities nil)
+    (set type-eq-decl nil sets nil)
+    (nonempty? const-decl "bool" sets nil)
+    (choose const-decl "(p)" sets nil)
+    (AND const-decl "[bool, bool -> bool]" booleans nil)
+    (wf_PEvent const-decl "boolean" MVASemantics nil)
+    (PEvent type-eq-decl nil MVASemantics nil)
+    (PSt type-eq-decl nil State nil)
+    (wf_AState const-decl "boolean" MVASemantics nil)
+    (AState type-eq-decl nil MVASemantics nil)
+    (Store type-eq-decl nil State nil)
+    (total const-decl "boolean" MVASemantics nil)
+    (wf_MVA const-decl "boolean" WellFormedMVA nil)
+    (MVA type-eq-decl nil MVA nil)
+    (ProgVarDecl type-eq-decl nil MVA nil)
+    (MVAVarDecl type-eq-decl nil MVA nil)
+    (JType type-decl nil JType_adt nil) (Val type-decl nil Val_adt nil)
+    (Transition type-eq-decl nil MVA nil)
+    (Guard type-eq-decl nil MVA nil) (Action type-eq-decl nil MVA nil)
+    (Event type-eq-decl nil MVA nil)
+    (EventType type-decl nil EventType_adt nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (CP formal-nonempty-type-decl nil MVASemantics nil)
+    (Name formal-nonempty-type-decl nil MVASemantics nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (boolean nonempty-type-decl nil booleans nil))
+   298 260 t nil)))
 (MVACompletion
  (all_guards_TCC1 0
-  (all_guards_TCC1-1 nil 3382264515 3390027618
+  (all_guards_TCC1-1 nil 3382264515 3390278945
    ("" (skolem-typepred)
     (("" (use "all_guards_finite[CP, Name]")
       (("" (lemma "all_guards_subset[CP, Name]")
@@ -454,16 +486,188 @@
     (a!1 skolem-const-decl "MVA[CP, Name]" MVACompletion nil)
     (= const-decl "[T, T -> boolean]" equalities nil)
     (all_guards_subset formula-decl nil MVAFiniteProps nil))
-   202 120 t nil))
+   139 120 t nil))
  (complete_trans_TCC1 0
-  (complete_trans_TCC1-3 nil 3382265153 3390027618 ("" (skip) nil nil)
-   unfinished nil 6 10 nil nil)
+  (complete_trans_TCC1-3 nil 3382265153 3390278947
+   ("" (skosimp*)
+    (("" (use "finite_union[Transition[CP, Name]]")
+      (("1" (hide 2)
+        (("1" (typepred "evs(a!1)")
+          (("1" (expand "is_finite")
+            (("1" (skosimp*)
+              (("1"
+                (inst 1 "N!1" "LAMBDA(t1 : ({t: Transition[CP, Name] |
+                       scp(t) = halted[CP, Name] AND evs(a!1)(event(t))
+                   AND guard(t) =
+                        (LAMBDA (stA: Store[Name], stP: PSt[Name]): TRUE)
+                   AND action(t) = skip[CP, Name]
+                   AND tcp(t) = halted[CP, Name]})) : f!1(event(t1))")
+                (("1" (expand "injective?")
+                  (("1" (skosimp*)
+                    (("1" (apply-extensionality :hide? t)
+                      (("1" (inst -1 "event(x1!1)" "event(x2!1)")
+                        (("1" (assert) nil nil)) nil))
+                      nil))
+                    nil))
+                  nil))
+                nil))
+              nil))
+            nil))
+          nil))
+        nil)
+       ("2" (hide 2)
+        (("2" (typepred "cps(a!1)")
+          (("2" (typepred "evs(a!1)")
+            (("2" (expand "is_finite")
+              (("2" (skosimp*)
+                (("2" (case "N!1 = 0")
+                  (("1"
+                    (inst 1 "N!2"
+                     "LAMBDA(t : ({t: Transition[CP, Name] |
+                          cps(a!1)(scp(t)) AND evs(a!1)(event(t))
+                      AND guard(t) = build_guard(a!1)(scp(t), event(t))
+                      AND action(t) = skip[CP, Name]
+                      AND tcp(t) = halted[CP, Name]})) : f!2(scp(t))")
+                    (("1" (expand "injective?")
+                      (("1" (skosimp*)
+                        (("1" (typepred "f!1(x2!1`event)")
+                          (("1" (assert) nil nil)) nil))
+                        nil))
+                      nil))
+                    nil)
+                   ("2"
+                    (inst 2 "N!1 + N!1 * N!2"
+                     "LAMBDA(t : ({t: Transition[CP, Name] |
+                              cps(a!1)(scp(t)) AND evs(a!1)(event(t))
+                          AND guard(t) = build_guard(a!1)(scp(t), event(t))
+                          AND action(t) = skip[CP, Name]
+                          AND tcp(t) = halted[CP, Name]})) : f!1(event(t)) + N!1 * f!2(scp(t))")
+                    (("1" (expand "injective?")
+                      (("1" (skosimp*)
+                        (("1"
+                          (use "unique_quotient"
+                               ("b"
+                                "N!1"
+                                "q1"
+                                "f!2(scp(x1!1))"
+                                "q2"
+                                "f!2(scp(x2!1))"
+                                "r1"
+                                "f!1(event(x1!1))"
+                                "r2"
+                                "f!1(event(x2!1))"))
+                          (("1" (assert)
+                            (("1" (inst -2 "event(x1!1)" "event(x2!1)")
+                              (("1"
+                                (inst -3 "scp(x1!1)" "scp(x2!1)")
+                                (("1"
+                                  (assert)
+                                  (("1"
+                                    (apply-extensionality 2 :hide? t)
+                                    nil
+                                    nil))
+                                  nil))
+                                nil))
+                              nil))
+                            nil)
+                           ("2" (assert) nil nil))
+                          nil))
+                        nil))
+                      nil)
+                     ("2" (skosimp*)
+                      (("2" (typepred "f!1(event(t!1))")
+                        (("2" (typepred "f!2(scp(t!1))")
+                          (("2" (use "lt_plus_lt1")
+                            (("2" (split -1)
+                              (("1" (propax) nil nil)
+                               ("2" (assert) nil nil)
+                               ("3"
+                                (use "both_sides_times_pos_lt2")
+                                (("1" (assert) nil nil)
+                                 ("2" (assert) nil nil))
+                                nil))
+                              nil))
+                            nil))
+                          nil))
+                        nil))
+                      nil))
+                    nil))
+                  nil))
+                nil))
+              nil))
+            nil))
+          nil))
+        nil))
+      nil))
+    nil)
+   proved
+   ((finite_union judgement-tcc nil finite_sets nil)
+    (CP formal-nonempty-type-decl nil MVACompletion nil)
+    (Name formal-nonempty-type-decl nil MVACompletion nil)
+    (Action type-eq-decl nil MVA nil) (Event type-eq-decl nil MVA nil)
+    (Guard type-eq-decl nil MVA nil)
+    (Transition type-eq-decl nil MVA nil)
+    (a!1 skolem-const-decl "MVA[CP, Name]" MVACompletion nil)
+    (TRUE const-decl "bool" booleans nil)
+    (halted const-decl "CP" MVA nil) (skip const-decl "Action" MVA nil)
+    (list type-decl nil list_adt nil)
+    (OneAction type-eq-decl nil MVA nil)
+    (Expr type-decl nil Expr_adt nil)
+    (build_guard const-decl "Guard" MVACompletion nil)
+    (= const-decl "[T, T -> boolean]" equalities nil)
+    (PSt type-eq-decl nil State nil) (Store type-eq-decl nil State nil)
+    (MVA type-eq-decl nil MVA nil)
+    (ProgVarDecl type-eq-decl nil MVA nil)
+    (MVAVarDecl type-eq-decl nil MVA nil)
+    (JType type-decl nil JType_adt nil) (Val type-decl nil Val_adt nil)
+    (EventType type-decl nil EventType_adt nil)
+    (AND const-decl "[bool, bool -> bool]" booleans nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (is_finite const-decl "bool" finite_sets nil)
+    (set type-eq-decl nil sets nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (injective? const-decl "bool" functions nil)
+    (below type-eq-decl nil nat_types nil)
+    (< const-decl "bool" reals nil)
+    (nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (>= const-decl "bool" reals nil)
+    (int nonempty-type-eq-decl nil integers nil)
+    (integer_pred const-decl "[rational -> boolean]" integers nil)
+    (rational nonempty-type-from-decl nil rationals nil)
+    (rational_pred const-decl "[real -> boolean]" rationals nil)
+    (real nonempty-type-from-decl nil reals nil)
+    (real_pred const-decl "[number_field -> boolean]" reals nil)
+    (number_field nonempty-type-from-decl nil number_fields nil)
+    (number_field_pred const-decl "[number -> boolean]" number_fields
+     nil)
+    (number nonempty-type-decl nil numbers nil)
+    (posreal nonempty-type-eq-decl nil real_types nil)
+    (nonneg_real nonempty-type-eq-decl nil real_types nil)
+    (both_sides_times_pos_lt2 formula-decl nil real_props nil)
+    (lt_plus_lt1 formula-decl nil real_props nil)
+    (mod nonempty-type-eq-decl nil euclidean_division nil)
+    (posnat nonempty-type-eq-decl nil integers nil)
+    (> const-decl "bool" reals nil)
+    (nonneg_int nonempty-type-eq-decl nil integers nil)
+    (unique_quotient formula-decl nil euclidean_division nil)
+    (numfield nonempty-type-eq-decl nil number_fields nil)
+    (+ const-decl "[numfield, numfield -> numfield]" number_fields nil)
+    (N!1 skolem-const-decl "nat" MVACompletion nil)
+    (f!1 skolem-const-decl "[(evs(a!1)) -> below[N!1]]" MVACompletion
+     nil)
+    (* const-decl "[numfield, numfield -> numfield]" number_fields nil)
+    (N!2 skolem-const-decl "nat" MVACompletion nil)
+    (f!2 skolem-const-decl "[(cps(a!1)) -> below[N!2]]" MVACompletion
+     nil))
+   1936 1690 t nil)
   (complete_trans_TCC1-2 nil 3382265133 nil ("" (skip) nil nil)
    unchecked nil nil nil nil nil)
   (complete_trans_TCC1-1 nil 3382264515 3382264991
    ("" (subtype-tcc) nil nil) unfinished nil 32426 31994 nil nil))
  (build_guard_yields_wf_guard 0
-  (build_guard_yields_wf_guard-1 nil 3387785549 3390027622
+  (build_guard_yields_wf_guard-1 nil 3387785549 3390278951
    ("" (skosimp)
     (("" (expand* "wf_Guard" "wf_MVA" "build_guard" "all_guards")
       (("" (flatten)
@@ -489,9 +693,10 @@
     (CP formal-nonempty-type-decl nil MVACompletion nil)
     (wf_vdsA const-decl "boolean" WellFormedMVA nil)
     (wf_vdsP const-decl "boolean" WellFormedMVA nil)
-    (var_names const-decl "set[Name]" WellFormedMVA nil)
+    (restrict const-decl "R" restrict nil)
+    (var_names const-decl "finite_set[Name]" WellFormedProgram nil)
     (member const-decl "bool" sets nil)
-    (var_names const-decl "set[Name]" WellFormedMVA nil)
+    (var_names const-decl "finite_set[Name]" WellFormedProgram nil)
     (intersection const-decl "set" sets nil)
     (empty? const-decl "bool" sets nil)
     (disjoint? const-decl "bool" sets nil)
@@ -499,9 +704,9 @@
     (union const-decl "set" sets nil)
     (subset? const-decl "bool" sets nil)
     (wf_Action const-decl "boolean" WellFormedMVA nil))
-   4529 3490 t shostak))
+   3914 3470 t shostak))
  (complete_MVA_yields_wf_MVA 0
-  (complete_MVA_yields_wf_MVA-1 nil 3387108138 3390027625
+  (complete_MVA_yields_wf_MVA-1 nil 3387108138 3390278953
    ("" (skolem-typepred)
     (("" (expand "wf_MVA")
       (("" (prop)
@@ -543,9 +748,10 @@
    ((skip const-decl "Action" MVA nil)
     (complete_trans const-decl "finite_set[Transition]" MVACompletion
      nil)
-    (var_names const-decl "set[Name]" WellFormedMVA nil)
+    (restrict const-decl "R" restrict nil)
+    (var_names const-decl "finite_set[Name]" WellFormedProgram nil)
     (var_names const-decl "set[Name]" WellFormedProgram nil)
-    (var_names const-decl "set[Name]" WellFormedMVA nil)
+    (var_names const-decl "finite_set[Name]" WellFormedProgram nil)
     (subset? const-decl "bool" sets nil)
     (wf_Action const-decl "boolean" WellFormedMVA nil)
     (intersection const-decl "set" sets nil)
@@ -578,14 +784,14 @@
     (NOT const-decl "[bool -> bool]" booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (boolean nonempty-type-decl nil booleans nil))
-   2138 1700 t shostak))
+   1751 1580 t shostak))
  (complete_MVA_has_trap_state_TCC1 0
-  (complete_MVA_has_trap_state_TCC1-1 nil 3382264515 3390027625
+  (complete_MVA_has_trap_state_TCC1-1 nil 3382264515 3390278953
    ("" (use "complete_MVA_yields_wf_MVA") nil nil) proved
    ((complete_MVA_yields_wf_MVA formula-decl nil MVACompletion nil)) 7
    10 t nil))
  (complete_MVA_has_trap_state 0
-  (complete_MVA_has_trap_state-2 nil 3383048645 3390027625
+  (complete_MVA_has_trap_state-2 nil 3383048645 3390278953
    ("" (skolem-typepred)
     (("" (expand* "trap_state" "complete_MVA")
       (("" (skosimp)
@@ -623,7 +829,7 @@
     (NOT const-decl "[bool -> bool]" booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (boolean nonempty-type-decl nil booleans nil))
-   198 110 t nil)
+   152 120 t nil)
   (complete_MVA_has_trap_state-1 nil 3382270875 3382270880
    ("" (skolem-typepred)
     (("" (expand* "trap_state" "complete_MVA")
@@ -647,7 +853,7 @@
     (member const-decl "bool" sets nil))
    295 42 t nil))
  (complete_MVA_is_deterministic 0
-  (complete_MVA_is_deterministic-2 nil 3383048795 3390027635
+  (complete_MVA_is_deterministic-2 nil 3383048795 3390278962
    ("" (expand "deterministic")
     (("" (skolem-typepred)
       (("" (skosimp)
@@ -748,8 +954,9 @@
     (skip const-decl "Action" MVA nil)
     (wf_vdsA const-decl "boolean" WellFormedMVA nil)
     (wf_vdsP const-decl "boolean" WellFormedMVA nil)
-    (var_names const-decl "set[Name]" WellFormedMVA nil)
-    (var_names const-decl "set[Name]" WellFormedMVA nil)
+    (restrict const-decl "R" restrict nil)
+    (var_names const-decl "finite_set[Name]" WellFormedProgram nil)
+    (var_names const-decl "finite_set[Name]" WellFormedProgram nil)
     (intersection const-decl "set" sets nil)
     (empty? const-decl "bool" sets nil)
     (disjoint? const-decl "bool" sets nil)
@@ -762,7 +969,7 @@
     (wf_PSt const-decl "boolean" WellFormedMVA nil)
     (wf_Store const-decl "boolean" WellFormedMVA nil)
     (deterministic const-decl "boolean" MVASemantics nil))
-   10167 8250 t nil)
+   9286 8580 t nil)
   (complete_MVA_is_deterministic-1 nil 3382270657 3382270846
    ("" (skolem-typepred)
     (("" (expand* "deterministic" "complete_MVA")
@@ -846,7 +1053,7 @@
     nil)
    untried nil 18669 3635 t nil))
  (complete_MVA_is_total 0
-  (complete_MVA_is_total-2 nil 3383048587 3390027639
+  (complete_MVA_is_total-2 nil 3383048587 3390280055
    ("" (skolem-typepred)
     (("" (expand "total")
       (("" (skosimp)
@@ -865,12 +1072,30 @@
                  "(# scp := halted, event := e!1, guard := (LAMBDA (stA: (wf_Store(vdsA(a!1))) , stP: (wf_PSt(vdsP(a!1)))): TRUE), action := skip, tcp := halted #)")
                 (("1" (expand* "wf_MVA" "complete_MVA_pre")
                   (("1" (flatten)
-                    (("1" (hide-all-but (-1 -6 -8 -9 -10 -11 2 3))
-                      (("1" (grind)
-                        (("1" (expand "extend")
-                          (("1" (apply-extensionality 3) nil nil)) nil)
-                         ("2" (expand "extend")
-                          (("2" (apply-extensionality 4) nil nil))
+                    (("1" (replace -1)
+                      (("1" (assert)
+                        (("1" (split 3)
+                          (("1" (expand "union")
+                            (("1" (expand "member")
+                              (("1"
+                                (expand "complete_trans")
+                                (("1"
+                                  (expand "complete_MVA")
+                                  (("1"
+                                    (expand "union")
+                                    (("1"
+                                      (flatten)
+                                      (("1"
+                                        (expand "member")
+                                        (("1" (postpone) nil nil))
+                                        nil))
+                                      nil))
+                                    nil))
+                                  nil))
+                                nil))
+                              nil))
+                            nil)
+                           ("2" (grind) nil nil))
                           nil))
                         nil))
                       nil))
@@ -896,7 +1121,7 @@
       nil))
     nil)
    unfinished
-   (nil (complete_MVA const-decl "MVA" MVACompletion nil)
+   ((complete_MVA const-decl "MVA" MVACompletion nil)
     (halted const-decl "CP" MVA nil)
     (IF const-decl "[boolean, T, T -> T]" if_def nil)
     (null adt-constructor-decl "(null?)" list_adt nil)
@@ -947,7 +1172,7 @@
     (NOT const-decl "[bool -> bool]" booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (boolean nonempty-type-decl nil booleans nil))
-   3524 2750 t nil)
+   590619 18200 t nil)
   (complete_MVA_is_total-1 nil 3382265612 3382270601
    ("" (skolem-typepred)
     (("" (expand "total")
@@ -981,7 +1206,7 @@
     nil)
    untried nil 46487 3476 t nil))
  (complete_MVA_is_complete 0
-  (complete_MVA_is_complete-1 nil 3382265489 3390027639
+  (complete_MVA_is_complete-1 nil 3382265489 3390278966
    ("" (skolem-typepred)
     (("" (expand "complete")
       (("" (split)
@@ -1023,5 +1248,5 @@
     (NOT const-decl "[bool -> bool]" booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (boolean nonempty-type-decl nil booleans nil))
-   274 100 t nil)))
+   140 110 t nil)))
 
