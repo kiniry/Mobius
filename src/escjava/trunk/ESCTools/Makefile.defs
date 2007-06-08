@@ -185,6 +185,7 @@ export JAVAFE_CLASSFILES4RAC = ${JAVAFE_ROOT}/classfiles4rac
 
 # This is the path needed to run Javafe (only used for testing)
 export JAVAFE_CLASSPATH = ${JAVAFE_CLASSFILES}:${UTILS_CLASSFILES}:${BCEL_LIB}
+export JAVAFE_CLASSPATH_CAN = ${call canonicalize,${JAVAFE_CLASSPATH}}
 
 ## Pertinent things for Escjava
 export ESCJAVA_ROOT = ${ESCTOOLS_ROOT}/Escjava

@@ -5,9 +5,6 @@
 TOP = ../../../../..
 include ${TOP}/Makefile.defs
 
-## Conditionally defined here, just in case it is not defined in the environment
-export JAVA ?= java
-
 ## When the Makefile is run from JAVAFE_ROOT, this variable is set and exported.
 ## It is conditionally defined here so that the tests in this directory can
 ## be run via this Makefile directly.  The definition here must be the same as
@@ -16,7 +13,7 @@ export CLASSDIRECTORY ?= ${JAVAFE_ROOT}/classfiles
 export CAN_CLASSDIRECTORY ?= ${call canonicalize,${CLASSDIRECTORY}}
 
 ## Define, use CLASSPATH so it can be overridden during release testing
-export CLASSPATH ?= $(call canonicalize,${CLASSDIRECTORY})
+export CLASSPATH = $(call canonicalize,${CLASSDIRECTORY}:${BCEL_LIB})
 
 ## These define the executable and the options used to run the tests.  The
 ## -classpath option is tacked on in the do% target below since it is 
@@ -28,9 +25,9 @@ else
 endif
 
 export TOOLCMD = ${JAVA} $(DEBUGGER_FLAGS) \
-	-mx40m -classpath ${CAN_CLASSDIRECTORY}:${BCEL_LIB} javafe.test.Print ${JBIN}
+	-mx40m -classpath ${CLASSPATH} javafe.test.Print ${JBIN}
 export TOOLCMD = ${JAVA} \
-	-mx40m -classpath ${CAN_CLASSDIRECTORY}:${BCEL_LIB} javafe.test.Print ${JBIN}
+	-mx40m -classpath ${CLASSPATH} javafe.test.Print ${JBIN}
 export TOOLARGS = -noprint -typecheck -quiet -testMode
 export TOOL = ${TOOLCMD} ${TOOLARGS}
 
@@ -50,16 +47,15 @@ separate_tests:
 	@echo Performing tests with
 	@echo "    TOOL: ${TOOL}"
 	@echo "    CLASSPATH: ${CLASSPATH}"
-	@echo "    JAVAFE_CLASSPATH: ${JAVAFE_CLASSPATH}"
+	@echo "    JAVAFE_CLASSPATH: ${JAVAFE_CLASSPATH_CAN}"
 	@echo SKIPPING tests: `grep -v '^#' skip`
 ifndef ALLTESTS
 	@echo tests NOT INCLUDED - ALLTESTS not defined: ` grep -v '^#' skipunlessall`
 endif
-	@export JAVAFE_CLASSPATH_CAN="${call canonicalize,${JAVAFE_CLASSPATH}}";\
-		for t in ${FILELIST} ; do \
-			echo -n '.' ; \
-			${MAKE} --no-print-directory do$$t ; \
-		done
+	@for t in ${FILELIST} ; do \
+		echo -n '.' ; \
+		${MAKE} --no-print-directory do$$t ; \
+	done
 	@echo " "
 
 ifdef COMSPEC

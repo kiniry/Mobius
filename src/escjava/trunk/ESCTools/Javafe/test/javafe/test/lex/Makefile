@@ -3,8 +3,6 @@
 
 JAVA ?= java
 
-JAVAFE_CLASSPATH_CAN ?= ${JAVAFE_CLASSPATH}
-
 clean:
 	rm -rf *.class test*.out
 
