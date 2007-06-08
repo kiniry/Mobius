@@ -84,13 +84,13 @@ public class SimpleVisitor extends ABasicCoqVisitor {
 		this.tcv = this;
 	}
 	
-	//@ ensures vc == vc ++ [[s]] ++ 
+	// FIXME @ ensures vc == vc ++ [[s]] ++ 
     public void genericFun(/*@ non_null @*/ String s, TFunction n) {
     	out.appendI(s+" ");
-    	//@ list args <- sons
+    	// FIXME @ list args <- sons
     	int i =0;
     	
-    	/*@ loop_invariant 
+    	/* FIXME @ loop_invariant 
     	  @		\forall int i i in n.sons
     	  @ 			vc ++
     	  @*/
@@ -106,7 +106,7 @@ public class SimpleVisitor extends ABasicCoqVisitor {
     	else
     		out.reduceI();    
     }
-	//@ ensures vc == vc ++ (allocLE interp(arg1), interp(arg2))
+	// FIXME @ ensures vc == vc ++ (allocLE interp(arg1), interp(arg2))
 	public void visitTAllocLE(TAllocLE n) {
 		genericFun("allocLE", n);
 	}
