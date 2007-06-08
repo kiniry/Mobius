@@ -13,8 +13,8 @@ END EventType
 MVA[CP, Name : TYPE+] : THEORY
 BEGIN
 
-  IMPORTING JType, 
-            Expr[Name], 
+  IMPORTING JType,
+            Expr[Name],
             Val,
             ValProp
   
@@ -214,7 +214,6 @@ BEGIN
        stA : Store
     #]
 
-  % TODO: Give a definition that does not use choose (use lists)
   get_MVAVarDecl(n : Name, a : (wf_MVA)) : lift[MVAVarDecl] =
     LET vds = {vd : MVAVarDecl | vdsA(a)(vd) AND name(vd) = n}  IN
       IF empty?(vds) 

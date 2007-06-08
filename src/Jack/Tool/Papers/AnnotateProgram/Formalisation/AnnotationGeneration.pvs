@@ -153,16 +153,22 @@ END AnnotateProgram
 AnnotateProgramProperties[CP, Name : TYPE+] : THEORY
 BEGIN
 
+  ASSUMING
+    CP_is_enumerable : ASSUMPTION
+      EXISTS (f : [CP -> nat]) : injective?(f)
+  ENDASSUMING
+
   IMPORTING AnnotateProgram[CP],
             AnnotatedProgramSemantics[string],
             MonitoredProgramSemantics[CP, string]
 
-  % TODO: prove!
+  % PROVE
   ann_program_yields_wf_program : LEMMA
     FORALL (mp : MonitoredProgram) :
       ann_program_pre(mp) IMPLIES
         wf_Program(ann_program(mp))
 
+  % NOT USED 
   ann_program_preserves_var_decls : LEMMA
     FORALL (mp : MonitoredProgram)(vn : string) :
       ann_program_pre(mp) IMPLIES
@@ -175,7 +181,14 @@ BEGIN
         (var_names(getLocalDecls(program(mp)))(vn) IFF
          var_names(getLocalDecls(ann_program(mp)))(vn))
 
-  % TODO: prove!
+  % PROVE
+  ann_program_preserves_wf_state : LEMMA  
+    FORALL (mp : MonitoredProgram, s : PState) :
+      ann_program_pre(mp) IMPLIES
+      wf_state(program(mp))(s) IMPLIES
+        wf_state(ann_program(mp))(s)
+
+  % PROVE
   ann_program_preserves_state_vars : LEMMA
     FORALL (mp : MonitoredProgram)(vn : string)
            (sMP : MPState, sAP : APState) :
@@ -222,6 +235,7 @@ BEGIN
     FORALL (mp : MonitoredProgram, s : PState, 
             m1, m2 : Method, mn : string, tgt : Val) :
       ann_program_pre(mp) IMPLIES
+      wf_state(program(mp))(s) IMPLIES
       up?(lookup_mthd(program(mp), tgt, mn)) IMPLIES
       up?(lookup_mthd(ann_program(mp), tgt, mn)) IMPLIES
       m1 = down(lookup_mthd(program(mp), tgt, mn)) IMPLIES
@@ -232,13 +246,15 @@ BEGIN
         ELSE m2 = m1
         ENDIF
 
-  % TODO: prove!
+  % PROVE
   ann_program_preserves_side_effect_freedom : LEMMA
     FORALL (mp : MonitoredProgram) :
       ann_program_pre(mp) IMPLIES
       assertions_have_no_side_effects(mp) IMPLIES
         assertions_have_no_side_effects(ann_program(mp))
 
+  % FIX: I need the assumption that the init_val op the vars of the MVA are
+  % defined.
   ann_program_defines_MVA_vars2 : LEMMA % :-)
     FORALL (mp : MonitoredProgram, ap : Program) :
       ann_program_pre(mp) IMPLIES
@@ -255,6 +271,9 @@ BEGIN
             EXISTS (gd : FieldDecl) :
               ghost_vars(c)(gd) AND name(gd) = name(v))
 
+  % FIX: the definition of is_ghost has changed
+  % Note that ann_program_defines_MVA_vars2 was only used to prove this lemma
+  % if I prove it without using it then I can delete it
   ann_program_defines_MVA_vars : LEMMA % :-)
     FORALL (mp : MonitoredProgram, ap : Program, s : APState) :
       ann_program_pre(mp) IMPLIES
