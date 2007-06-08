@@ -71,7 +71,7 @@ public /*@ pure @*/ final
     public static final byte CURRENCY_SYMBOL;
     public static final byte MODIFIER_SYMBOL;
     public static final byte OTHER_SYMBOL;
-    static final char CHAR_ERROR;
+    
     public static final byte DIRECTIONALITY_UNDEFINED;
     public static final byte DIRECTIONALITY_LEFT_TO_RIGHT;
     public static final byte DIRECTIONALITY_RIGHT_TO_LEFT;
