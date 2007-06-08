@@ -15,12 +15,13 @@ BEGIN
 
   IMPORTING JType, 
             Expr[Name], 
-            Val
+            Val,
+            ValProp
   
   MVAVarDecl : TYPE =
     [# name : Name,
        jtype : JType,
-       init_val : Val
+       init_val : (defined?)
     #]
 
   ProgVarDecl : TYPE =
@@ -299,8 +300,7 @@ BEGIN
 
   %  Well-formed lemmas
 
-  % TODO: missing assumption that initval not Bottom
-  wf_initial_MVA_state: LEMMA
+  wf_initial_MVA_state: LEMMA % :-)
     FORALL (a: MVA) :
       wf_MVA(a) IMPLIES wf_AState(a)(initial_MVA_state(a))
 
@@ -334,8 +334,7 @@ MVACompletion[CP, Name : TYPE+] : THEORY
 BEGIN
 
   IMPORTING MVASemantics[CP, Name],
-            EpsilonProps, 
-            MVAFiniteProps
+            EpsilonProps
 
   % Returns the set of guards from transitions with cp as source control
   % point and e as event

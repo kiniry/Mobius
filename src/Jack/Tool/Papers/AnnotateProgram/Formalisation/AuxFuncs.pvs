@@ -37,28 +37,30 @@ BEGIN
     FORALL (s : set[T], x : T) :
       s(x) IMPLIES add(x, remove(x, s)) = s
 
-  % TODO: prove!
-  not_in_s_implies_not_in_set2list : LEMMA
-    FORALL (s : set[T], x : T) :
+  IMPORTING FiniteSetInduction[T]
+
+  set2list_same_elements : LEMMA % :-)
+    FORALL (s : finite_set[T], x : T) :
+      member(x, s) IFF member(x, set2list(s))
+
+  not_in_s_implies_not_in_set2list : LEMMA % :-)
+    FORALL (s : finite_set[T], x : T) :
       NOT s(x) IMPLIES NOT member(x, set2list(s))
 
-  % TODO: prove!
-  not_removed_set2list : LEMMA
-    FORALL (s : set[T], x, y : T) :
+
+  not_removed_set2list : LEMMA % :-)
+    FORALL (s : finite_set[T], x, y : T) :
       s(x) IMPLIES
       NOT x = y IMPLIES
         member(x, set2list(remove(y, s)))
 
-  set2list_same_elements : LEMMA
-    FORALL (s : finite_set[T], x : T) :
-      member(x, s) IFF member(x, set2list(s))
+  set_list_set: LEMMA % :-)
+    FORALL (s : finite_set[T]) : list2set(set2list(s)) = s
 
-  remove_list2set_set2list : LEMMA
+
+  remove_list2set_set2list : LEMMA % :-)
     FORALL (s : finite_set[T], x : T) :
       list2set(set2list(remove(x, s))) = remove(x, list2set(set2list(s)))
-
-  set_list_set: LEMMA
-    FORALL (s : finite_set[T]) : list2set(set2list(s)) = s
 
 
 END set2list
@@ -93,3 +95,27 @@ BEGIN
       xs = null OR EXISTS (y : T, ys : list[T]) : xs = cons(y, ys)
 
 END listfuncs
+
+FunProp : THEORY
+BEGIN
+
+  nat2string(n : nat) : RECURSIVE list[char] =
+    IF n = 0
+    THEN null
+    ELSE cons(char(0), nat2string(n - 1))
+    ENDIF
+  MEASURE n
+
+
+  nat2string_injective : LEMMA % :-)
+    injective?(nat2string)
+
+  list2finseq_injective : LEMMA % :-)
+    injective?[list[char], string](list2finseq)
+
+
+  nat2string_injective_function_exists : LEMMA % :-)
+    EXISTS (f : [nat -> string]) : injective?(f)
+
+
+END FunProp

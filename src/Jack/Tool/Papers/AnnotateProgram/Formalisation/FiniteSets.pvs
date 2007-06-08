@@ -27,44 +27,28 @@ BEGIN
 END EpsilonProps
 
 
-% Lemmas needed to prove the TCCS in MVACompletion
-MVAFiniteProps[CP, Name : TYPE+] : THEORY
+FiniteSetProp [T, U : TYPE] : THEORY
 BEGIN
 
-  IMPORTING MVA[CP, Name], 
-            EpsilonProps
+  s : VAR finite_set[T]
 
-  % Lemmas to prove all_guards_TCC1 from MVA_Completion
-  get_t_from_gs(ts: finite_set[Transition],
-                gs: {p: Guard[CP, Name] | EXISTS (t: Transition[CP, Name]): ts(t)
-                                                  AND t`guard = p}): Transition =
-    choose({t: Transition | ts(t) AND gs(t`guard)})
+  finite_set_restrict : LEMMA % :-)
+    FORALL(f : [U -> T], P : [U -> bool]) :
+      injective?(f) IMPLIES
+        is_finite({u : U |s(f(u)) AND P(u)})
 
-  all_guards_finite: LEMMA % :-)
-    FORALL (ts: finite_set[Transition[CP, Name]]):
-      is_finite({p: Guard[CP, Name] | EXISTS (t: Transition[CP, Name]):
-        ts(t) AND t`guard = p})
-
-  all_guards_subset: LEMMA % :-)
-    FORALL (cp: CP, e: Event[CP, Name], ts: finite_set[Transition[CP, Name]]):
-      subset?(gs, all_guards)
-      WHERE
-        gs = {p: Guard[CP, Name] | EXISTS (t: Transition[CP, Name]):
-              ts(t) AND t`scp = cp AND t`event = e AND t`guard = p},
-        all_guards = {p: Guard[CP, Name] | EXISTS (t: Transition[CP, Name]):
-                      ts(t) AND t`guard = p}
-
-  % TODO: The TCC has changed!
-  % Lemma to prove complete_trans_TCC1 from MVA_Completion
-  complete_trans_TCC1_subset2_is_finite: LEMMA % :-)
-     FORALL (es: finite_set[Event[CP, Name]]):
-       is_finite({t: Transition[CP, Name] |
-                    scp(t) = halted[CP, Name] AND
-                    es(event(t)) AND
-                    guard(t) =
-                      (LAMBDA (stA: Store[Name], stP: PSt[Name]): TRUE) AND
-                    action(t) = skip[CP, Name] AND
-                    tcp(t) = halted[CP, Name]})
+END FiniteSetProp
 
 
-END MVAFiniteProps
+FiniteSetInduction [T : TYPE] : THEORY
+BEGIN
+
+  IMPORTING WF_Card[T]
+
+  finite_set_induction : LEMMA % :-)
+    FORALL(p : [finite_set[T] -> bool]) :
+      p(emptyset[T]) IMPLIES
+      (FORALL(x : finite_set[T], t : T) : p(x) IMPLIES p(add(t, x))) IMPLIES
+      (FORALL(x : finite_set[T]) : p(x))
+
+END FiniteSetInduction

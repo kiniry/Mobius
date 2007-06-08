@@ -24,3 +24,14 @@ BEGIN
 
 
 END WFProperties
+
+WF_Card [T : TYPE] : THEORY
+BEGIN
+
+  wf_card : LEMMA
+    well_founded?[finite_set[T]]
+      (LAMBDA(x, y : finite_set[T]) : card[T](x) < card[T](y))
+  
+END WF_Card
+
+
