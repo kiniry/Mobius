@@ -123,13 +123,13 @@ BEGIN
     LET a = mva(mp), p = program(mp) IN
     FORALL (c : Class) :
       classes(p)(c) IMPLIES
-        (FORALL (gv : GhostVarDecl) :
+        (FORALL (gv : FieldDecl) :
           ghost_vars(c)(gv) IMPLIES
             NOT name(gv) = cp) AND
-        (FORALL (q : CP, gd : GhostVarDecl) :
+        (FORALL (q : CP, gd : FieldDecl) :
           cps(a)(q) IMPLIES ghost_vars(c)(gd) IMPLIES 
             NOT name(gd) = name_of(q)) AND
-        (FORALL (vd : MVAVarDecl, gd : GhostVarDecl) :
+        (FORALL (vd : MVAVarDecl, gd : FieldDecl) :
           vdsA(a)(vd) IMPLIES ghost_vars(c)(gd) IMPLIES
             NOT name(gd) = name(vd))
 
@@ -246,13 +246,13 @@ BEGIN
         EXISTS (c : Class) :
           classes(ap)(c) AND 
           name(c) = class_name(mva(mp)) AND
-          (EXISTS (gd : GhostVarDecl) :  
+          (EXISTS (gd : FieldDecl) :  
             ghost_vars(c)(gd) AND name(gd) = cp) AND
           (FORALL (q : CP) : cps(mva(mp))(q) IMPLIES
-            EXISTS (gd : GhostVarDecl) :
+            EXISTS (gd : FieldDecl) :
               ghost_vars(c)(gd) AND name(gd) = name_of(q)) AND
           (FORALL (v : MVAVarDecl) : vdsA(mva(mp))(v) IMPLIES
-            EXISTS (gd : GhostVarDecl) :
+            EXISTS (gd : FieldDecl) :
               ghost_vars(c)(gd) AND name(gd) = name(v))
 
   ann_program_defines_MVA_vars : LEMMA % :-)
