@@ -316,7 +316,7 @@ export ANT_SOURCEPATH ?= /usr/local/Java/jakarta-ant/src
 
 ## This contains items needed for compiling/running JUnit tests, but
 ## not for compiling or running the tools themselves.
-export JUNIT_UTILS_PATH = ${ESCTOOLS_ROOT}/Utils:${JUNIT_LIB}:${ANT_LIB};${BCEL_LIB}
+export JUNIT_UTILS_PATH = ${ESCTOOLS_ROOT}/Utils:${JUNIT_LIB}:${ANT_LIB}:${BCEL_LIB}
 
 ################################################################################
 ## The classpath needed to build all of ESC/Java2.
