@@ -1,15 +1,8 @@
-(MonitoredProgram
- (IMP_Program_TCC1 0
-  (IMP_Program_TCC1-1 nil 3389012361 nil ("" (existence-tcc) nil nil)
-   nil nil nil nil nil nil))
- (IMP_MVA_TCC1 0
-  (IMP_MVA_TCC1-1 nil 3389012361 nil ("" (existence-tcc) nil nil) nil
-   nil nil nil nil nil)))
-(WellFormedMonitoredProgram)
+(MonitoredProgram)
 (MonitoredProgramSemantics
  (update_state_MP_TCC1 0
   (update_state_MP_TCC1-1 nil 3387174104 3389012373
-   ("" (subtype-tcc) nil nil) proved
+   ("" (subtype-tcc) nil nil) unchecked
    ((MPState type-eq-decl nil MonitoredProgramSemantics nil)
     (PState type-eq-decl nil State nil)
     (Store type-eq-decl nil State nil)
@@ -23,7 +16,7 @@
    191 60 nil nil))
  (execute_set_MP_TCC1 0
   (execute_set_MP_TCC1-1 nil 3387174104 3389012373
-   ("" (subtype-tcc) nil nil) proved
+   ("" (subtype-tcc) nil nil) unchecked
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
@@ -47,10 +40,10 @@
    72 70 nil nil))
  (execute_set_MP_TCC2 0
   (execute_set_MP_TCC2-1 nil 3387174104 3389012373
-   ("" (subtype-tcc) nil nil) proved nil 29 20 nil nil))
+   ("" (subtype-tcc) nil nil) unchecked nil 29 20 nil nil))
  (execute_set_MP_TCC3 0
   (execute_set_MP_TCC3-1 nil 3389010748 3389012373
-   ("" (subtype-tcc) nil nil) proved
+   ("" (subtype-tcc) nil nil) unchecked
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
@@ -84,9 +77,8 @@
     (("" (typepred "s!1")
       (("" (expand "wf_state") (("" (flatten) nil nil)) nil)) nil))
     nil)
-   proved
-   ((wf_MP const-decl "boolean" WellFormedMonitoredProgram nil)
-    (wf_state const-decl "boolean" MonitoredProgramSemantics nil)
+   unchecked
+   ((wf_state const-decl "boolean" MonitoredProgramSemantics nil)
     (MPState type-eq-decl nil MonitoredProgramSemantics nil)
     (PState type-eq-decl nil State nil)
     (Store type-eq-decl nil State nil)
@@ -102,14 +94,13 @@
    136 40 t nil))
  (on_method_MVA_TCC2 0
   (on_method_MVA_TCC2-1 nil 3387174104 3389012378
-   ("" (subtype-tcc) nil nil) proved
+   ("" (subtype-tcc) nil nil) unchecked
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
     (MVA type-eq-decl nil MVA nil)
     (Program type-eq-decl nil Program nil)
     (MonitoredProgram type-eq-decl nil MonitoredProgram nil)
-    (wf_MP const-decl "boolean" WellFormedMonitoredProgram nil)
     (AState type-eq-decl nil MVASemantics nil)
     (Store type-eq-decl nil State nil)
     (PState type-eq-decl nil State nil)
@@ -139,14 +130,8 @@
     (is_declared_as_field const-decl "boolean" WellFormedProgram nil)
     (is_field const-decl "boolean" State nil)
     (wf_AState const-decl "boolean" MVASemantics nil)
-    (wf_Store const-decl "boolean" WellFormedMVA nil)
-    (wf_Store const-decl "boolean" WellFormedMVA nil)
-    (var_names const-decl "set[Name]" WellFormedMVA nil)
     (Name formal-nonempty-type-decl nil MonitoredProgramSemantics nil)
     (CP formal-nonempty-type-decl nil MonitoredProgramSemantics nil)
-    (var_names const-decl "set[Name]" WellFormedMVA nil)
-    (wf_PSt const-decl "boolean" WellFormedMVA nil)
-    (wf_PSt const-decl "boolean" WellFormedMVA nil)
     (wf_PEvent const-decl "boolean" MVASemantics nil))
    5263 4410 nil nil))
  (on_method_MVA_TCC3 0
@@ -157,24 +142,22 @@
         (("" (expand "complete") (("" (prop) nil nil)) nil)) nil))
       nil))
     nil)
-   proved
-   ((wf_MP const-decl "boolean" WellFormedMonitoredProgram nil)
-    (MonitoredProgram type-eq-decl nil MonitoredProgram nil)
+   unchecked
+   ((MonitoredProgram type-eq-decl nil MonitoredProgram nil)
     (Program type-eq-decl nil Program nil)
     (MVA type-eq-decl nil MVA nil)
     (Name formal-nonempty-type-decl nil MonitoredProgramSemantics nil)
     (CP formal-nonempty-type-decl nil MonitoredProgramSemantics nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
-    (boolean nonempty-type-decl nil booleans nil)
-    (complete const-decl "boolean" WellFormedMVA nil))
+    (boolean nonempty-type-decl nil booleans nil))
    202362 150 t nil))
  (on_method_entry_MP_TCC1 0
   (on_method_entry_MP_TCC1-1 nil 3387174104 nil
    ("" (subtype-tcc) nil nil) unchecked nil nil nil nil nil))
  (on_method_entry_MP_TCC2 0
   (on_method_entry_MP_TCC2-1 nil 3387174104 nil
-   ("" (subtype-tcc) nil nil) unfinished nil nil nil nil nil))
+   ("" (subtype-tcc) nil nil) unchecked nil nil nil nil nil))
  (on_method_entry_MP_TCC3 0
   (on_method_entry_MP_TCC3-1 nil 3387174104 nil
    ("" (subtype-tcc) nil nil) unchecked nil nil nil nil nil))
@@ -183,7 +166,7 @@
    ("" (subtype-tcc) nil nil) unchecked nil nil nil nil nil))
  (on_method_entry_MP_TCC5 0
   (on_method_entry_MP_TCC5-1 nil 3389010748 nil
-   ("" (subtype-tcc) nil nil) unfinished nil nil nil nil nil))
+   ("" (subtype-tcc) nil nil) unchecked nil nil nil nil nil))
  (on_method_exit_normal_MP_TCC1 0
   (on_method_exit_normal_MP_TCC1-1 nil 3387174104 nil
    ("" (subtype-tcc) nil nil) unchecked nil nil nil nil nil))
@@ -199,7 +182,7 @@
  (on_method_exit_normal_MP_TCC5 0
   (on_method_exit_normal_MP_TCC5-1 nil 3389010748 3389012901
    ("" (expand "on_method_event_type") (("" (skosimp*) nil nil)) nil)
-   proved
+   unchecked
    ((on_method_event_type const-decl "bool" SemanticsTypes nil)
     (posint_plus_nnint_is_posint application-judgement "posint"
      integers nil))
@@ -215,10 +198,10 @@
    ("" (subtype-tcc) nil nil) unchecked nil nil nil nil nil))
  (on_method_exit_exceptional_MP_TCC4 0
   (on_method_exit_exceptional_MP_TCC4-1 nil 3389010748 nil
-   ("" (subtype-tcc) nil nil) unfinished nil nil nil nil nil))
+   ("" (subtype-tcc) nil nil) unchecked nil nil nil nil nil))
  (initial_MP_state_TCC1 0
   (initial_MP_state_TCC1-1 nil 3387174104 nil
-   ("" (subtype-tcc) nil nil) unfinished nil nil nil nil nil))
+   ("" (subtype-tcc) nil nil) unchecked nil nil nil nil nil))
  (initial_MP_state_TCC2 0
   (initial_MP_state_TCC2-1 nil 3387174104 nil
    ("" (subtype-tcc) nil nil) unchecked nil nil nil nil nil))
@@ -252,7 +235,7 @@
         nil))
       nil))
     nil)
-   unchecked
+   unfinished
    ((wf_state const-decl "boolean" MonitoredProgramSemantics nil)
     (wf_state const-decl "boolean" State nil)
     (is_local const-decl "boolean" SemanticsCommon nil)
@@ -282,6 +265,112 @@
     (MVAVarDecl type-eq-decl nil MVA nil)
     (wf_AState const-decl "boolean" MVASemantics nil))
    495076 3940 t shostak))
+ (wf_initial_MP_state 0
+  (wf_initial_MP_state-1 nil 3390055553 3390075560
+   ("" (skosimp*)
+    (("" (expand "wf_MP")
+      (("" (flatten)
+        (("" (expand "initial_MP_state")
+          (("" (expand "wf_state")
+            (("" (split 1)
+              (("1" (expand "wf_AState")
+                (("1" (expand "initial_MVA_state")
+                  (("1" (expand "wf_MVA")
+                    (("1" (flatten)
+                      (("1" (assert)
+                        (("1" (expand "wf_Store")
+                          (("1" (expand "wf_Store")
+                            (("1" (skosimp*)
+                              (("1"
+                                (expand "get_MVAVarDecl")
+                                (("1"
+                                  (lift-if)
+                                  (("1"
+                                    (assert)
+                                    (("1"
+                                      (expand "var_names" 1)
+                                      (("1"
+                                        (split 1)
+                                        (("1"
+                                          (skosimp*)
+                                          (("1" (grind) nil nil))
+                                          nil)
+                                         ("2"
+                                          (skosimp*)
+                                          (("2"
+                                            (expand "wf_vdsA")
+                                            (("2"
+                                              (split 2)
+                                              (("1"
+                                                (skosimp*)
+                                                (("1"
+                                                  (inst
+                                                   -5
+                                                   "va!1"
+                                                   "choose({vd: MVAVarDecl[CP, Name] |
+                                        vdsA(mva(mp!1))(vd) AND name(vd) = n!1})")
+                                                  (("1"
+                                                    (assert)
+                                                    (("1"
+                                                      (replace
+
+                                                       -5
+                                                       :dir
+
+                                                       rl)
+                                                      (("1"
+                                                        (postpone)
+                                                        nil
+                                                        nil))
+                                                      nil))
+                                                    nil)
+                                                   ("2"
+                                                    (grind)
+                                                    nil
+                                                    nil))
+                                                  nil))
+                                                nil)
+                                               ("2"
+                                                (skosimp*)
+                                                (("2"
+                                                  (inst?)
+                                                  (("1"
+                                                    (assert)
+                                                    nil
+                                                    nil)
+                                                   ("2"
+                                                    (grind)
+                                                    nil
+                                                    nil))
+                                                  nil))
+                                                nil))
+                                              nil))
+                                            nil))
+                                          nil))
+                                        nil))
+                                      nil))
+                                    nil))
+                                  nil))
+                                nil))
+                              nil))
+                            nil))
+                          nil))
+                        nil))
+                      nil))
+                    nil))
+                  nil))
+                nil)
+               ("2" (use "wf_initial_Program_state")
+                (("2" (assert) nil nil)) nil)
+               ("3" (expand "is_ghost") (("3" (postpone) nil nil))
+                nil))
+              nil))
+            nil))
+          nil))
+        nil))
+      nil))
+    nil)
+   unfinished nil 246683 10250 t shostak))
  (wf_state_implies_wf_PSt 0
   (wf_state_implies_wf_PSt-1 nil 3388136206 3388138745
    ("" (skosimp)
@@ -330,9 +419,8 @@
         nil))
       nil))
     nil)
-   unchecked
-   ((wf_MP const-decl "boolean" WellFormedMonitoredProgram nil)
-    (JType type-decl nil JType_adt nil)
+   unfinished
+   ((JType type-decl nil JType_adt nil)
     (Name formal-nonempty-type-decl nil MonitoredProgramSemantics nil)
     (CP formal-nonempty-type-decl nil MonitoredProgramSemantics nil)
     (ProgVarDecl type-eq-decl nil MVA nil)

@@ -1,0 +1,23 @@
+FunProp : THEORY
+BEGIN
+
+  nat2string(n : nat) : RECURSIVE list[char] =
+    IF n = 0
+    THEN null
+    ELSE cons(char(0), nat2string(n - 1))
+    ENDIF
+  MEASURE n
+
+
+  nat2string_injective : LEMMA % :-)
+    injective?(nat2string)
+
+  list2finseq_injective : LEMMA % :-)
+    injective?[list[char], string](list2finseq)
+
+
+  nat2string_injective_function_exists : LEMMA % :-)
+    EXISTS (f : [nat -> string]) : injective?(f)
+
+
+END FunProp

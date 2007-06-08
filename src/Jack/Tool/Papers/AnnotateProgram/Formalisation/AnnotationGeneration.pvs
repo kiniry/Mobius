@@ -10,6 +10,8 @@ BEGIN
   % TODO: These definitions generates TCCs that can not be proved!
   unique : (injective?[CP, nat])
 
+  IMPORTING FunProp
+
   name_of : (injective?[CP, string])
 
   cp : string
@@ -23,8 +25,10 @@ BEGIN
    {gd : GhostVarDecl | jtype(gd) = IntType AND
      (name(gd) = cp AND init_val(gd) = Int(unique(init_cp(mva(mp))))) OR
      ((EXISTS (q : (cps(mva(mp)))) : name(gd) = name_of(q) AND 
+                                     jtype(gd) = IntType AND
                                      init_val(gd) = Int(unique(q))) OR
       (EXISTS (v : (vdsA(mva(mp)))) : name(gd) = name(v) AND
+                                      jtype(gd) = jtype(v) AND
                                       init_val(gd) = init_val(v)))}
 
 
@@ -51,7 +55,7 @@ BEGIN
 
   % Generates annotations to update the control point and the variables when an
   % event occurs
-  ann_event(mp)(ts : set[Transition]): Stmt =
+  ann_event(mp)(ts : finite_set[Transition]): Stmt =
     CaseJML(set2list({c : [Expr, Stmt] | EXISTS (q : CP) : 
               cps(mva(mp))(q) AND
               nonempty?({t: Transition | ts(t) AND scp(t) = q}) AND
@@ -104,7 +108,7 @@ BEGIN
   % The ghost variables we add should not be already defined
   % NOTE: The case where there is no monitored class is trivial, thus to
   % simplify proofs we restrict ourselves to the case where such a class exists.
-  not_clashing_model_vars(mp : MonitoredProgram) : boolean =
+  not_clashing_model_vars(mp : (wf_MP)) : boolean =
     LET a = mva(mp), p = program(mp) IN
     EXISTS (c: Class) :
       classes(p)(c) AND name(c) = class_name(a) AND
@@ -213,7 +217,8 @@ BEGIN
       up?(lookup_mthd(ann_program(mp), tgt, mn)) IMPLIES
       m1 = down(lookup_mthd(program(mp), tgt, mn)) IMPLIES
       m2 = down(lookup_mthd(ann_program(mp), tgt, mn)) IMPLIES
-        IF name(down(get_class(program(mp))(tgt, s))) = class_name(mva(mp))
+        IF up?(get_class(program(mp))(tgt, s)) AND
+           name(down(get_class(program(mp))(tgt, s))) = class_name(mva(mp))
         THEN m2 = ann_method(mp)(m1)
         ELSE m2 = m1
         ENDIF

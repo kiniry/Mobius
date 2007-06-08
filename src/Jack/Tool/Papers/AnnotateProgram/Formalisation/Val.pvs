@@ -1,0 +1,27 @@
+% NOTE: Bottom is used to model the partiality of Store. We may define Store as
+% Store(ns : set[Name]) : TYPE [{n : Name | ns(n)} -> Val], but then the names
+% for which it is defined will be in the type. That would be inconvenient,
+% specially for programs, which have three stores (and the values for which lvs
+% is defined change over time).
+% Do not confuse Bottom (a Val) with bottom, a constructor of the lift datatype
+Val : DATATYPE 
+BEGIN
+
+  Int(i : int) : Int?
+  Bool(b : bool) : Bool?
+  Null : Null?
+  RefType(a : int) : RefType?
+  Unit : Unit?        % dummy value returned by void functions
+  Bottom : Bottom?    % undefined value
+
+END Val
+
+ValProp : THEORY
+BEGIN
+
+  IMPORTING Val
+
+  defined?(v : Val) : boolean = NOT Bottom?(v)
+
+END ValProp
+

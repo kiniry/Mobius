@@ -19,7 +19,7 @@ BEGIN
   wf_state(p : Program)(sigma : APState) : boolean =
     wf_state(p)(pstate(sigma)) AND
     FORALL (vn : Name) :
-      is_ghost(vn, sigma) IFF is_declared_as_ghost(p)(vn)
+      is_ghost(vn, sigma) IFF var_names(getGhostDecls(p))(vn)
 
 
   IMPORTING SemanticsTypes[Name, Program, APState,
@@ -113,7 +113,7 @@ BEGIN
   % The following are adapted versions for AP to avoid having to give all the 
   % theory parameters to uniquely identify them
 
-  stmt_determ_step_AP : LEMMA
+  stmt_determ_step_AP : LEMMA % :-)
     FORALL (p : Program, n1, n2 : nat, c : Stmt, sigma : APState,
             sigma1, sigma2 : APState) :
         deriv_stmt(p)(c, sigma, sigma1)(n1) AND
@@ -130,9 +130,11 @@ BEGIN
   wf_state_ghost_not_local_or_field : LEMMA
     FORALL (p : Program, s : APState, vn : Name) :
       wf_state(p)(s) IMPLIES
+      wf_Program(p) IMPLIES
       is_ghost(vn, s) IMPLIES 
         NOT is_local(vn, s) AND NOT is_field(vn, s)
 
+  % MH: think about rephrasing
   wf_update_state_AP : LEMMA % :-)
     FORALL (p : Program, s1, s2 : APState, 
             upd : [PState[Name] -> PState[Name]]) :
@@ -154,6 +156,10 @@ BEGIN
     FORALL (p : Program, e : Expr, v : Val)
            (sigma1, sigma2 : APState, n : nat) :
       wf_Program(p) IMPLIES
+      (FORALL (c : Stmt)(tau1, tau2 : APState)(m : below(n)) :
+          wf_state(p)(tau1) IMPLIES
+          deriv_stmt(p)(c, tau1, tau2)(m) IMPLIES
+            wf_state(p)(tau2)) IMPLIES
       wf_state(p)(sigma1) IMPLIES
       deriv_expr(p)(e, sigma1, v, sigma2)(n) IMPLIES
         wf_state(p)(sigma2)

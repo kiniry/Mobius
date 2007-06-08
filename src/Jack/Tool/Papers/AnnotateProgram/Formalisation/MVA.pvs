@@ -225,7 +225,7 @@ BEGIN
       ENDIF
 
   % Initial state of a MVA
-  initial_MVA_state(a : MVA) : AState =
+  initial_MVA_state(a : (wf_MVA)) : AState =
     (# cp := init_cp(a),
        stA := LAMBDA (n: Name) :
          LET vd = get_MVAVarDecl(n, a) IN
@@ -297,7 +297,7 @@ BEGIN
 
   %  Well-formed lemmas
 
-  % TODO: prove but first change the definition of get_MVAVarDecl
+  % TODO: missing assumption that initval not Bottom
   wf_initial_MVA_state: LEMMA
     FORALL (a: MVA) :
       wf_MVA(a) IMPLIES wf_AState(a)(initial_MVA_state(a))

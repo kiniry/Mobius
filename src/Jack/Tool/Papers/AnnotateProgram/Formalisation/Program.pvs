@@ -13,9 +13,13 @@
 % Local variables are declared at the beginning of the body (like in Pascal)
 % We do not model inheritance and static overloading of methods (their names can
 %   be "mangled", .i.e the contain the information to disambiguate then
+
+
 % We have a store for the whole program, thus fields and ghost vars names
 %   contain the class name they belong to. Local vars and formal args contain
 %   also their method names
+% MH: This does not make sense to me
+
 % No static fields nor static methods
 % No return instruction. Methods have a result component that is an expression
 %   whose value is the value to be returned
@@ -133,6 +137,7 @@ BEGIN
   
   IMPORTING JType,
             Val,
+            ValProp,
             Stmt[Name],
             Expr[Name]
   
@@ -143,22 +148,15 @@ BEGIN
   % NOTE: it is not correct to have Val in programs because they belong to the
   % semantic domain, however, we do so to simplify the definition of the initial
   % state (otherwise we would have to define an order of initialization).
-  GhostVarDecl : TYPE = [# jtype : JType, 
-                           name : Name,
-                           init_val : Val #]
-
   FieldDecl : TYPE = [# jtype : JType,
                         name : Name,
-                        init_val : Val #]
-
-  ArgDecl : TYPE = [# jtype : JType,
-                      name : Name #]
+                        init_val : (defined?) #]
 
   LocalVarDecl : TYPE = [# jtype : JType,
                            name : Name #]
 
   Method : TYPE = [# name : Name,
-                     arg : ArgDecl,
+                     arg : LocalVarDecl,
                      pre : Expr,
                      post : Expr,
                      lvars : finite_set[LocalVarDecl],
@@ -172,30 +170,61 @@ BEGIN
   Class : TYPE = [# name : Name,
                     super_class : lift[Name],
                     inv : Expr,
-                    ghost_vars : finite_set[GhostVarDecl],
+                    ghost_vars : finite_set[FieldDecl],
                     fields : finite_set[FieldDecl],
                     methods : finite_set[Method] #]
 
   Program : TYPE = [# classes : finite_set[Class] #]
 
+  getFieldDecls(p : Program) : finite_set[FieldDecl] =
+     {f : FieldDecl | EXISTS (c : Class) : classes(p)(c) AND 
+                                           fields(c)(f)}
 
-%  get_FieldDecls_Class(n : Name, c : Class) : list[FieldDecl] = 
-%    set2list(fields(c))
+  getLocalDecls(p : Program) : finite_set[LocalVarDecl] =
+     {l : LocalVarDecl | EXISTS (c : Class, m : Method) : 
+                         classes(p)(c) AND 
+                         methods(c)(m) AND
+                         (lvars(m)(l) OR l = arg(m))}
 
-%  get_FieldDecls(n : Name, classes : list[Class]) : RECURSIVE list[FieldDecl] =
-%     CASES classes OF
-%       null : null,
-%       cons(c, cs) : append(get_FieldsDecls_Class(c), get_FieldsDecls(cs))
-%     ENDCASES
-%     MEASURE length(classes(cs))
-%    concat(map(get_FieldsDecls_Class)(classes))
+  getGhostDecls(p : Program) : finite_set[FieldDecl] =
+     {g : FieldDecl | EXISTS (c : Class, m : Method) : 
+                         classes(p)(c) AND 
+                         ghost_vars(c)(g)}
 
-  get_FieldDecl(n : Name, p : Program) : lift[FieldDecl]
 
-  get_LocalVarDecl(n : Name, p : Program) : lift[FieldDecl]
 
-  get_GhostVarDecl(n : Name, p : Program) : lift[FieldDecl]
+  get_FieldDecl(n : Name, p : Program) : lift[FieldDecl] =
+    LET ng = {f : FieldDecl | getFieldDecls(p)(f) AND name(f) = n}
+    IN
+    IF nonempty?(ng)
+    THEN up(choose(ng))
+    ELSE bottom
+    ENDIF
 
+  get_LocalDecl(n : Name, p : Program) : lift[LocalVarDecl] =
+    LET ng = {l : LocalVarDecl | getLocalDecls(p)(l) AND name(l) = n}
+    IN
+    IF nonempty?(ng)
+    THEN up(choose(ng))
+    ELSE bottom
+    ENDIF
+
+  get_GhostDecl(n : Name, p : Program) : lift[FieldDecl] =
+    LET ng = {g : FieldDecl | getGhostDecls(p)(g) AND name(g) = n}
+    IN
+    IF nonempty?(ng)
+    THEN up(choose(ng))
+    ELSE bottom
+    ENDIF
+
+%  is_field(n : Name, p : Program) : boolean =
+%    up?(get_FieldDecl(n, p))
+
+%  is_local(n : Name, p : Program) : boolean =
+%    up?(get_LocalDecl(n, p))
+
+%  is_ghost(n : Name, p : Program) : boolean =
+%    up?(get_GhostDecl(n, p))
 
 END Program
 
@@ -237,30 +266,13 @@ BEGIN
       classes(p)(c) AND ns = var_names(c)})
 
 
-  is_declared_as_field(p : Program)(vn : Name) : boolean =
-    EXISTS (c : Class, fd : FieldDecl) :
-      classes(p)(c) AND fields(c)(fd) AND name(fd) = vn
-
-  is_declared_as_ghost(p : Program)(vn : Name) : boolean =
-    EXISTS (c : Class, gd : GhostVarDecl) :
-      classes(p)(c) AND fields(c)(gd) AND name(gd) = vn
-
-  is_declared_as_arg(p : Program)(vn : Name) : boolean =
-    EXISTS (ad : ArgDecl, c : Class, m : Method) :
-      classes(p)(c) AND methods(c)(m) AND arg(m)(ad) AND name(ad) = vn
-
-  is_declared_as_local(p : Program)(vn : Name) : boolean =
-    EXISTS (c : Class, m : Method, ld : LocalVarDecl) :
-      classes(p)(c) AND methods(c)(m) AND lvars(m)(ld) AND name(ld) = vn
+  var_names(fs : finite_set[FieldDecl]) : finite_set[Name] =
+    {n : Name |EXISTS (f : FieldDecl) : fs(f) AND name(f) = n}
 
 
-  % Names of classes are unique within a program
-  unique_class_names(p : Program) : boolean =
-    FORALL (c1, c2 : Class) :
-      classes(p)(c1) AND 
-      classes(p)(c2) AND 
-      name(c1) = name(c2) IMPLIES
-        c1 = c2
+  var_names(ls : finite_set[LocalVarDecl]) : finite_set[Name] =
+    {n : Name |EXISTS (l : LocalVarDecl) : ls(l) AND name(l) = n}
+
 
   wf_Class(c : Class) : boolean
 
@@ -271,6 +283,7 @@ BEGIN
 
   % Properties needed of well-formed programs
 
+  % Names of classes are unique within a program
   wf_program_has_unique_class_names : LEMMA
     FORALL (p : Program, c1, c2 : Class) :
       wf_Program(p) IMPLIES
@@ -293,5 +306,14 @@ BEGIN
       name(m1) = name(m2) IMPLIES
         m1 = m2
 
+  wf_program_variables_disjoint : LEMMA
+     FORALL(p : Program) :
+       wf_Program(p) IMPLIES
+       LET fname = var_names(getFieldDecls(p)),
+           lname = var_names(getLocalDecls(p)),
+           gname = var_names(getGhostDecls(p)) IN
+       disjoint?(fname, lname) AND
+       disjoint?(lname, gname) AND
+       disjoint?(fname, gname)       
 
 END WellFormedProgram
