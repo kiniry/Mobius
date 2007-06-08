@@ -19,7 +19,7 @@ BEGIN
   < : VAR pred[[T, T]]
 
   % NOT USED
-  wf_founded_is_not_reflexive : LEMMA
+  wf_founded_is_not_reflexive : LEMMA % :-)
     well_founded?(<) IMPLIES NOT reflexive?(<)
 
 

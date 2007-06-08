@@ -14,12 +14,6 @@
 % We do not model inheritance and static overloading of methods (their names can
 %   be "mangled", .i.e the contain the information to disambiguate then
 
-
-% We have a store for the whole program, thus fields and ghost vars names
-%   contain the class name they belong to. Local vars and formal args contain
-%   also their method names
-% MH: This does not make sense to me
-
 % No static fields nor static methods
 % No return instruction. Methods have a result component that is an expression
 %   whose value is the value to be returned
@@ -192,17 +186,24 @@ BEGIN
                          ghost_vars(c)(g)}
 
 
+  % TODO: one definition should be enough
+  % maybe change update_stack to get a program instead of a set of local vars
+  get_LocalVarDecl(n : Name, lvds : set[LocalVarDecl]) : lift[LocalVarDecl] =
+    IF EXISTS (lv : LocalVarDecl) : lvds(lv) AND name(lv) = n
+    THEN up(choose({lv : LocalVarDecl | lvds(lv) AND name(lv) = n}))
+    ELSE bottom
+    ENDIF
 
-  get_FieldDecl(n : Name, p : Program) : lift[FieldDecl] =
-    LET ng = {f : FieldDecl | getFieldDecls(p)(f) AND name(f) = n}
+  get_LocalDecl(n : Name, p : Program) : lift[LocalVarDecl] =
+    LET ng = {l : LocalVarDecl | getLocalDecls(p)(l) AND name(l) = n}
     IN
     IF nonempty?(ng)
     THEN up(choose(ng))
     ELSE bottom
     ENDIF
 
-  get_LocalDecl(n : Name, p : Program) : lift[LocalVarDecl] =
-    LET ng = {l : LocalVarDecl | getLocalDecls(p)(l) AND name(l) = n}
+  get_FieldDecl(n : Name, p : Program) : lift[FieldDecl] =
+    LET ng = {f : FieldDecl | getFieldDecls(p)(f) AND name(f) = n}
     IN
     IF nonempty?(ng)
     THEN up(choose(ng))
@@ -217,14 +218,6 @@ BEGIN
     ELSE bottom
     ENDIF
 
-%  is_field(n : Name, p : Program) : boolean =
-%    up?(get_FieldDecl(n, p))
-
-%  is_local(n : Name, p : Program) : boolean =
-%    up?(get_LocalDecl(n, p))
-
-%  is_ghost(n : Name, p : Program) : boolean =
-%    up?(get_GhostDecl(n, p))
 
 END Program
 
@@ -265,10 +258,8 @@ BEGIN
     Union({ns : set[Name] | EXISTS (c : Class) :
       classes(p)(c) AND ns = var_names(c)})
 
-
   var_names(fs : finite_set[FieldDecl]) : finite_set[Name] =
     {n : Name |EXISTS (f : FieldDecl) : fs(f) AND name(f) = n}
-
 
   var_names(ls : finite_set[LocalVarDecl]) : finite_set[Name] =
     {n : Name |EXISTS (l : LocalVarDecl) : ls(l) AND name(l) = n}
@@ -306,6 +297,19 @@ BEGIN
       name(m1) = name(m2) IMPLIES
         m1 = m2
 
+  % TODO: This lemma is included in the following. 
+  % Change ann_action_correctness and delete it
+  wf_program_has_unique_ghost_var_decl : LEMMA
+     FORALL (p : Program, c1, c2 : Class, gv1, gv2 : FieldDecl) :
+       wf_Program(p) IMPLIES
+       classes(p)(c1) IMPLIES
+       classes(p)(c2) IMPLIES
+       ghost_vars(c1)(gv1) IMPLIES
+       ghost_vars(c2)(gv2) IMPLIES
+         NOT name(gv1) = name(gv2)
+
+  % Because we model the heap as a flat Store here we need to require that
+  % variables have a unique name within the program.
   wf_program_variables_disjoint : LEMMA
      FORALL(p : Program) :
        wf_Program(p) IMPLIES
@@ -314,6 +318,7 @@ BEGIN
            gname = var_names(getGhostDecls(p)) IN
        disjoint?(fname, lname) AND
        disjoint?(lname, gname) AND
-       disjoint?(fname, gname)       
+       disjoint?(fname, gname)
+
 
 END WellFormedProgram

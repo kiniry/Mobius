@@ -14,6 +14,7 @@ BEGIN
   Unit : Unit?        % dummy value returned by void functions
   Bottom : Bottom?    % undefined value
 
+
 END Val
 
 ValProp : THEORY
@@ -22,6 +23,7 @@ BEGIN
   IMPORTING Val
 
   defined?(v : Val) : boolean = NOT Bottom?(v)
+
 
 END ValProp
 

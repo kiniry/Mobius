@@ -1,6 +1,11 @@
 AnnotateProgram[CP : TYPE+] : THEORY
 BEGIN
 
+  ASSUMING
+    CP_is_enumerable : ASSUMPTION
+      EXISTS (f : [CP -> nat]) : injective?(f)
+  ENDASSUMING
+
   IMPORTING MonitoredProgramSemantics[CP, string],
             set2list
 
@@ -98,28 +103,35 @@ BEGIN
 
   % The generated ghost variables must have differnt names
   disjoint_model_vars(a : MVA) : boolean =
-    FORALL (q : CP, vd : MVAVarDecl) :
+    (FORALL (vd : MVAVarDecl) :
+      vdsA(a)(vd) IMPLIES
+        NOT name(vd) = cp) AND
+    (FORALL (q : CP) :
+      cps(a)(q) IMPLIES
+        NOT name_of(q) = cp) AND
+    (FORALL (q : CP, vd : MVAVarDecl) :
       cps(a)(q) IMPLIES
       vdsA(a)(vd) IMPLIES
-        NOT name_of(q) = cp AND
-        NOT name(vd) = cp AND
-        NOT name_of(q) = name(vd)
+        NOT name_of(q) = name(vd))
 
-  % The ghost variables we add should not be already defined
+  % The ghost variables we add should not be already defined in the program.
+  % (This is because we a flat heap, otherwise we could require them just not
+  % to be defined in the monitored class).
   % NOTE: The case where there is no monitored class is trivial, thus to
   % simplify proofs we restrict ourselves to the case where such a class exists.
   not_clashing_model_vars(mp : (wf_MP)) : boolean =
     LET a = mva(mp), p = program(mp) IN
-    EXISTS (c: Class) :
-      classes(p)(c) AND name(c) = class_name(a) AND
-      (FORALL (gv : FieldDecl) :
-        ghost_vars(c)(gv) IMPLIES NOT name(gv) = cp) AND
-      (FORALL (q : CP, gd : FieldDecl) :
-        cps(a)(q) IMPLIES ghost_vars(c)(gd) IMPLIES 
-          NOT name(gd) = name_of(q)) AND
-      (FORALL (vd : MVAVarDecl, gd : FieldDecl) :
-        vdsA(a)(vd) IMPLIES ghost_vars(c)(gd) IMPLIES
-          NOT name(gd) = name(vd))
+    FORALL (c : Class) :
+      classes(p)(c) IMPLIES
+        (FORALL (gv : GhostVarDecl) :
+          ghost_vars(c)(gv) IMPLIES
+            NOT name(gv) = cp) AND
+        (FORALL (q : CP, gd : GhostVarDecl) :
+          cps(a)(q) IMPLIES ghost_vars(c)(gd) IMPLIES 
+            NOT name(gd) = name_of(q)) AND
+        (FORALL (vd : MVAVarDecl, gd : GhostVarDecl) :
+          vdsA(a)(vd) IMPLIES ghost_vars(c)(gd) IMPLIES
+            NOT name(gd) = name(vd))
 
   ann_program_pre(mp : MonitoredProgram) : boolean =
     wf_MP(mp) AND
@@ -227,7 +239,23 @@ BEGIN
       assertions_have_no_side_effects(mp) IMPLIES
         assertions_have_no_side_effects(ann_program(mp))
 
-  ann_program_defines_MVA_vars : LEMMA
+  ann_program_defines_MVA_vars2 : LEMMA % :-)
+    FORALL (mp : MonitoredProgram, ap : Program) :
+      ann_program_pre(mp) IMPLIES
+      ap = ann_program(mp) IMPLIES
+        EXISTS (c : Class) :
+          classes(ap)(c) AND 
+          name(c) = class_name(mva(mp)) AND
+          (EXISTS (gd : GhostVarDecl) :  
+            ghost_vars(c)(gd) AND name(gd) = cp) AND
+          (FORALL (q : CP) : cps(mva(mp))(q) IMPLIES
+            EXISTS (gd : GhostVarDecl) :
+              ghost_vars(c)(gd) AND name(gd) = name_of(q)) AND
+          (FORALL (v : MVAVarDecl) : vdsA(mva(mp))(v) IMPLIES
+            EXISTS (gd : GhostVarDecl) :
+              ghost_vars(c)(gd) AND name(gd) = name(v))
+
+  ann_program_defines_MVA_vars : LEMMA % :-)
     FORALL (mp : MonitoredProgram, ap : Program, s : APState) :
       ann_program_pre(mp) IMPLIES
       ap = ann_program(mp) IMPLIES
@@ -237,16 +265,6 @@ BEGIN
           cps(mva(mp))(q) IMPLIES is_ghost(name_of(q), s)) AND
         (FORALL (v : MVAVarDecl) :
           vdsA(mva(mp))(v) IMPLIES is_ghost(name(v), s))
-
-  ann_program_defines_MVA_vars2 : LEMMA
-    FORALL (mp : MonitoredProgram, ap : Program) :
-      ann_program_pre(mp) IMPLIES
-      ap = ann_program(mp) IMPLIES
-        up?(get_GhostDecl(cp, ap)) AND
-        (FORALL (q : CP) :
-          cps(mva(mp))(q) IMPLIES up?(get_GhostDecl(name_of(q), ap))) AND
-        (FORALL (v : MVAVarDecl) :
-          vdsA(mva(mp))(v) IMPLIES up?(get_GhostDecl(name(v), ap)))
 
 
 END AnnotateProgramProperties

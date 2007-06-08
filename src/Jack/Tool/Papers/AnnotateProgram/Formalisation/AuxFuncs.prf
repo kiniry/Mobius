@@ -7,7 +7,7 @@
    unfinished nil nil nil nil nil))
  (excluded_middle 0
   (excluded_middle-1 nil 3388476043 3388476054
-   ("" (assert) (("" (skosimp) nil nil)) nil) unchecked nil 11154 10 t
+   ("" (assert) (("" (skosimp) nil nil)) nil) untried nil 11154 10 t
    shostak))
  (incredibly_stupid_property 0
   (incredibly_stupid_property-1 nil 3388464953 3388476102
@@ -15,7 +15,7 @@
     (("" (apply-extensionality) (("" (use "excluded_middle") nil nil))
       nil))
     nil)
-   unchecked
+   untried
    ((excluded_middle formula-decl nil set2list nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (OR const-decl "[bool, bool -> bool]" booleans nil)
@@ -35,7 +35,7 @@
         nil))
       nil))
     nil)
-   unchecked
+   untried
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
@@ -48,7 +48,7 @@
    42072 30 t shostak))
  (epsilon_membership_TCC1 0
   (epsilon_membership_TCC1-1 nil 3388477959 nil
-   ("" (existence-tcc) nil nil) unfinished nil nil nil nil nil))
+   ("" (existence-tcc) nil nil) unchecked nil nil nil nil nil))
  (epsilon_membership 0
   (epsilon_membership-1 nil 3388477963 3388480021
    ("" (skolem-typepred)
@@ -59,7 +59,7 @@
         nil))
       nil))
     nil)
-   unchecked
+   untried
    ((epsilon_ax formula-decl nil epsilons nil)
     (pred type-eq-decl nil defined_types nil)
     (empty? const-decl "bool" sets nil)
@@ -94,7 +94,7 @@
         nil))
       nil))
     nil)
-   unchecked
+   untried
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
@@ -129,7 +129,7 @@
         nil))
       nil))
     nil)
-   unchecked
+   untried
    ((remove const-decl "set" sets nil)
     (add const-decl "(nonempty?)" sets nil)
     (bool nonempty-type-eq-decl nil booleans nil)
@@ -143,19 +143,19 @@
    186231 70 t shostak))
  (not_in_s_implies_not_in_set2list_TCC1 0
   (not_in_s_implies_not_in_set2list_TCC1-1 nil 3388485439 nil
-   ("" (subtype-tcc) nil nil) nil nil nil nil nil nil))
+   ("" (subtype-tcc) nil nil) unchecked nil nil nil nil nil))
  (not_in_s_implies_not_in_set2list 0
   (not_in_s_implies_not_in_set2list-1 nil 3388486051 3388486133
-   ("" (skosimp) (("" (postpone) nil nil)) nil) unfinished nil 81931 40
-   t shostak))
+   ("" (skosimp) (("" (postpone) nil nil)) nil) untried nil 81931 40 t
+   shostak))
  (not_removed_set2list_TCC1 0
   (not_removed_set2list_TCC1-1 nil 3388485439 nil
-   ("" (subtype-tcc) nil nil) nil nil nil nil nil nil))
+   ("" (subtype-tcc) nil nil) unchecked nil nil nil nil nil))
  (not_removed_set2list 0
   (not_removed_set2list-1 nil 3388485440 3388486372
    ("" (skosimp) (("" (expand "remove") (("" (postpone) nil nil)) nil))
     nil)
-   unfinished nil 205371 50 t shostak))
+   untried nil 205371 50 t shostak))
  (set2list_same_elements 0
   (set2list_same_elements-1 nil 3388429899 3388485859
    ("" (skosimp)
@@ -210,12 +210,11 @@
         nil))
       nil))
     nil)
-   proved
+   untried
    ((= const-decl "[T, T -> boolean]" equalities nil)
     (remove const-decl "set" sets nil)
     (not_in_s_implies_not_in_set2list formula-decl nil set2list nil)
     (epsilon_membership formula-decl nil set2list nil)
-    (s!1 skolem-const-decl "finite_set[T]" set2list nil)
     (set2list def-decl "list[T]" set2list nil)
     (member def-decl "bool" list_props nil)
     (member const-decl "bool" sets nil)
@@ -242,7 +241,7 @@
         nil))
       nil))
     nil)
-   unfinished nil 170992 380 t shostak))
+   untried nil 170992 380 t shostak))
  (set_list_set 0
   (set_list_set-1 nil 3387877130 3388473254
    ("" (skosimp)
@@ -268,9 +267,172 @@
         nil))
       nil))
     nil)
-   unfinished nil 552110 90 t shostak)))
+   untried nil 552110 90 t shostak)))
 (listfuncs
  (before_TCC1 0
   (before_TCC1-1 nil 3388429891 nil ("" (termination-tcc) nil nil)
-   unfinished nil nil nil nil nil)))
+   unchecked nil nil nil nil nil))
+ (every_is_forall 0
+  (every_is_forall-1 nil 3389528321 3389529776
+   ("" (induct "l")
+    (("1" (expand* "every" "member") nil nil)
+     ("2" (skosimp*)
+      (("2" (expand* "every" "member")
+        (("2" (inst?)
+          (("2" (lift-if)
+            (("2" (assert)
+              (("2" (split 1)
+                (("1" (flatten)
+                  (("1" (skosimp)
+                    (("1" (assert)
+                      (("1" (split)
+                        (("1" (expand "member")
+                          (("1" (assert) nil nil)) nil)
+                         ("2" (flatten)
+                          (("2" (expand "every" -4)
+                            (("2" (ground)
+                              (("2"
+                                (inst - "x!1")
+                                (("2"
+                                  (assert)
+                                  (("2"
+                                    (expand "member" -4)
+                                    (("2" (propax) nil nil))
+                                    nil))
+                                  nil))
+                                nil))
+                              nil))
+                            nil))
+                          nil))
+                        nil))
+                      nil))
+                    nil))
+                  nil)
+                 ("2" (flatten)
+                  (("2" (inst-cp -1 "cons1_var!1")
+                    (("2" (assert)
+                      (("2" (split)
+                        (("1" (expand* "every" "member")
+                          (("1" (assert) nil nil)) nil)
+                         ("2" (flatten)
+                          (("2" (expand "every" 2)
+                            (("2" (assert)
+                              (("2"
+                                (split -2)
+                                (("1" (propax) nil nil)
+                                 ("2"
+                                  (skosimp)
+                                  (("2"
+                                    (inst? -3)
+                                    (("2"
+                                      (assert)
+                                      (("2"
+                                        (expand "member" 3)
+                                        (("2" (propax) nil nil))
+                                        nil))
+                                      nil))
+                                    nil))
+                                  nil))
+                                nil))
+                              nil))
+                            nil))
+                          nil))
+                        nil))
+                      nil))
+                    nil))
+                  nil))
+                nil))
+              nil))
+            nil))
+          nil))
+        nil))
+      nil))
+    nil)
+   unfinished
+   ((list_induction formula-decl nil list_adt nil)
+    (T formal-type-decl nil listfuncs nil)
+    (member def-decl "bool" list_props nil)
+    (IMPLIES const-decl "[bool, bool -> bool]" booleans nil)
+    (PRED type-eq-decl nil defined_types nil)
+    (IFF const-decl "[bool, bool -> bool]" booleans nil)
+    (pred type-eq-decl nil defined_types nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (list type-decl nil list_adt nil))
+   1454986 2160 t shostak))
+ (some_is_exists 0
+  (some_is_exists-1 nil 3389590159 3389591550
+   ("" (induct "l")
+    (("1" (expand* "some" "member") nil nil)
+     ("2" (skosimp*)
+      (("2" (inst?)
+        (("2" (expand "some" 1)
+          (("2" (expand "member" 1)
+            (("2" (flatten)
+              (("2" (split +)
+                (("1" (flatten)
+                  (("1" (split)
+                    (("1" (inst?) nil nil)
+                     ("2" (assert)
+                      (("2" (skolem!)
+                        (("2" (inst?) (("2" (ground) nil nil)) nil))
+                        nil))
+                      nil))
+                    nil))
+                  nil)
+                 ("2" (flatten)
+                  (("2" (skolem!)
+                    (("2" (flatten)
+                      (("2" (split)
+                        (("1" (replace -1 -2) (("1" (propax) nil nil))
+                          nil)
+                         ("2" (hide -3)
+                          (("2" (assert)
+                            (("2" (inst?) (("2" (prop) nil nil)) nil))
+                            nil))
+                          nil))
+                        nil))
+                      nil))
+                    nil))
+                  nil))
+                nil))
+              nil))
+            nil))
+          nil))
+        nil))
+      nil))
+    nil)
+   unchecked
+   ((list_induction formula-decl nil list_adt nil)
+    (T formal-type-decl nil listfuncs nil)
+    (member def-decl "bool" list_props nil)
+    (AND const-decl "[bool, bool -> bool]" booleans nil) nil
+    (PRED type-eq-decl nil defined_types nil)
+    (IFF const-decl "[bool, bool -> bool]" booleans nil)
+    (pred type-eq-decl nil defined_types nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (list type-decl nil list_adt nil))
+   1390888 380 t shostak))
+ (list_is_null_or_cons 0
+  (list_is_null_or_cons-1 nil 3389598819 3389599277
+   ("" (skolem-typepred)
+    (("" (use "list_inclusive[T]")
+      (("" (ground)
+        (("" (inst 2 "car(xs!1)" "cdr(xs!1)")
+          (("" (apply-extensionality 2) nil nil)) nil))
+        nil))
+      nil))
+    nil)
+   proved
+   ((list_inclusive formula-decl nil list_adt nil)
+    (T formal-type-decl nil listfuncs nil)
+    (list type-decl nil list_adt nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (cons? adt-recognizer-decl "[list -> boolean]" list_adt nil)
+    (car adt-accessor-decl "[(cons?) -> T]" list_adt nil)
+    (cdr adt-accessor-decl "[(cons?) -> list]" list_adt nil)
+    (list_cons_extensionality formula-decl nil list_adt nil)
+    (cons adt-constructor-decl "[[T, list] -> (cons?)]" list_adt nil))
+   458283 60 t shostak)))
 

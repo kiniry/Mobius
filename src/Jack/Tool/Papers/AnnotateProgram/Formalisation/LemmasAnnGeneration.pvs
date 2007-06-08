@@ -1,57 +1,72 @@
 AnnGenerationLemmas[CP : TYPE+] : THEORY
 BEGIN
 
-  IMPORTING APSemanticsProperties[string],
-            MonitoredProgramSemantics[CP, string],
-            AnnotateProgramProperties[CP, string],
-            listfuncs,
-            WFProperties
+  ASSUMING
+    CP_is_enumerable : ASSUMPTION
+      EXISTS (f : [CP -> nat]) : injective?(f)
+  ENDASSUMING
 
-  % Says if an MVA state is modeled by a state of an annotated program
-  MVA_modeled?(a : MVA)(sA : AState, sAP : APState) : boolean =
-    (Int(unique(cp(sA))) = gvs(sAP)(cp)) AND
-    (FORALL (q : CP) : cps(a)(q) IMPLIES
-      Int(unique(q)) = gvs(sAP)(name_of(q))) AND
-    (FORALL (n : string) : NOT Bottom?(stA(sA)(n)) IMPLIES
-      stA(sA)(n) = gvs(sAP)(n))
-
-  halted_implies_JMLExc(sA : AState, sAP : APState) : boolean =
-    cp(sA) = halted IMPLIES
-      up?(ex(pstate(sAP))) AND down(ex(pstate(sAP))) = JMLExc
-
-  % Says if sAP is a super state of sMP
-  Program_modeled?(sMP : MPState, sAP : APState) : boolean =
-    pstate(sMP) = pstate(sAP) AND
-    FORALL (n : string) : NOT Bottom?(gvs(sMP)(n)) IMPLIES
-      gvs(sMP)(n) = gvs(sAP)(n)
-
-  % Says if an state of a MP is correctly modeled by a state of an AP
-  MP_modeled?(mp : MonitoredProgram, ap : Program)
-             (sMP : MPState, sAP : APState) : boolean =
-    ann_program_pre(mp) AND
-    ap = ann_program(mp) AND
-    wf_state(mp)(sMP) AND
-    wf_state(ap)(sAP) AND
-    MVA_modeled?(mva(mp))(astate(sMP), sAP) AND
-    halted_implies_JMLExc(astate(sMP), sAP) AND
-    Program_modeled?(sMP, sAP)
-
-  specification_requirements(mp : MonitoredProgram) : boolean =
-    wf_MP(mp) AND
-    complete(mva(mp)) AND
-    well_typed_Program(mp) AND
-    ann_program_pre(mp) AND
-    well_behaved_MP(mp)
+  IMPORTING Equivalence[CP],
+            listfuncs
 
 
-  ann_action_is_sequence_of_sets : LEMMA % :-)
-    FORALL (a : Action) :
-      sequence_of_sets(ann_action(a))
+  exists_MVAVarDecl : LEMMA % :-)
+    FORALL (mp : MonitoredProgram, s : MPState, n : string) :
+      wf_state(mp)(s) IMPLIES
+      NOT Bottom?(stA(astate(s))(n)) IMPLIES
+        EXISTS (va : MVAVarDecl) : vdsA(mva(mp))(va) AND name(va) = n
 
-  % PROVE: One case left (CaseJML with every and some)
-  stmt_subterm_is_transitive : LEMMA
+  execute_action_correctness : LEMMA
+    FORALL (mp : MonitoredProgram, ap : Program, c : Class, m : Method,
+            a : Action, vn : string, n : nat, 
+            sMVA : AState, sMP : MPState, sAP1, sAP2 : APState) :
+      specification_requirements(mp) IMPLIES
+      related_states(mp, ap)(sMP, sAP1) IMPLIES
+      classes(ap)(c) IMPLIES
+      methods(c)(m) IMPLIES
+      set_subterm_AP(ann_action(a), m) IMPLIES
+      wf_Action(mva(mp))(a) IMPLIES
+      deriv_stmt(ap)(ann_action(a), sAP1, sAP2)(n) IMPLIES
+      stA(sMVA) = execute_action(a)(stA(astate(sMP)), st(pstate(sMP))) IMPLIES
+      NOT up?(ex(pstate(sAP1))) IMPLIES
+      NOT Bottom?(stA(astate(sMP))(vn)) IMPLIES
+        stA(sMVA)(vn) = gvs(sAP2)(vn)
+
+  stmt_subterm_is_transitive : LEMMA % :-)
     FORALL (c1, c2, c3 : Stmt) :
       c1 << c2 AND c2 << c3 IMPLIES c1 << c3
+
+  sub_set_stmt(c : Stmt, a : Action) : RECURSIVE boolean =
+    CASES a OF
+      null : FALSE,
+      cons(x, xs) : c = Set(target(x), source(x)) OR sub_set_stmt(c, xs)
+    ENDCASES
+    MEASURE length(a)
+
+  sub_set_stmt_ann_action_is_subterm : LEMMA % :-)
+    FORALL (c : Stmt, a : Action) :
+      sub_set_stmt(c, a) IMPLIES c << ann_action(a)
+
+  non_interference_of_sets_in_ann_actions : LEMMA % :-)
+    FORALL (p : Program, a : Action, s1, s2 : APState,
+            n : nat, vn : string) :
+      (FORALL (c : Stmt) :
+        sub_set_stmt(c, a) IMPLIES
+        Set?(c) IMPLIES
+          NOT target(c) = vn AND
+          FORALL (tau1, tau2 : APState, v : Val, n2 : nat) :
+            deriv_expr(p)(source(c), tau1, v, tau2)(n2) IMPLIES tau1 = tau2)
+      IMPLIES
+      deriv_stmt(p)(ann_action(a), s1, s2)(n) IMPLIES
+        gvs(s1)(vn) = gvs(s2)(vn)
+
+  ann_action_sets_mva_vars : LEMMA % :-)
+    FORALL (vn : string, c : Stmt, a : MVA, l : Action) :
+      wf_Action(a)(l) IMPLIES
+      Set?(c) IMPLIES
+      sub_set_stmt(c, l) IMPLIES
+      vn = target(c) IMPLIES
+        var_names(vdsA(a))(vn)
 
   sequence_of_sets_have_no_side_effects : LEMMA % :-)
     FORALL (p : Program, a : Class, m : Method, c  : Stmt, t : Transition) :
@@ -65,18 +80,15 @@ BEGIN
           FORALL (tau1, tau2 : APState, v : Val, n2 : nat) :
             deriv_expr(p)(source(c), tau1, v, tau2)(n2) IMPLIES tau1 = tau2)
 
-%   ann_action_sets_mva_vars : LEMMA
-%     FORALL (vn : Name, c : Stmt, a : MVA, t : Transition) :
-%       wf_MVA(a) IMPLIES
-%       ts(a)(t) IMPLIES
-%       c << ann_action(action(t)) IMPLIES
-
-  ann_action_correcteness : LEMMA
+  % TODO Adapt the proof:
+  % execute_action_correctness has changed
+  % related_states now includes specification_requirements
+  update_vars_correctness : LEMMA % :-)
     FORALL (mp : MonitoredProgram, ap : Program,
             a : Class, m : Method, t : Transition,  n : nat,
             sMVA : AState, sMP : MPState, sAP1, sAP2 : APState) :
-      specification_requirements(mp) IMPLIES
-      MP_modeled?(mp, ap)(sMP, sAP1) IMPLIES
+%      specification_requirements(mp) IMPLIES
+      related_states(mp, ap)(sMP, sAP1) IMPLIES
       classes(ap)(a) IMPLIES
       methods(a)(m) IMPLIES
       set_subterm_AP(update_vars(t), m) IMPLIES
@@ -112,16 +124,17 @@ BEGIN
       IMPLIES
         NOT null?(ann_guard_actions(mp)(ts))
 
+  % Rename to ann_event_correctness
   MP_modeled_preserved_by_ann_event : LEMMA
     FORALL (mp : MonitoredProgram, ap : Program, m1 : Method)
            (sMP1, sMP2 : MPState, sAP1, sAP2 : APState)
            (n : nat, ts : set[Transition], et : EventType) :
-      MP_modeled?(mp, ap)(sMP1, sAP1) IMPLIES
+      related_states(mp, ap)(sMP1, sAP1) IMPLIES
       astate(sMP2) = on_method_MVA(et)(mp, m1, sMP1) IMPLIES
       NOT up?(ex(pstate(sAP1))) IMPLIES
       ts = filter_event(mva(mp))(et)(name(m1)) IMPLIES
       deriv_stmt(ap)(ann_event(mp)(ts), sAP1, sAP2)(n) IMPLIES
         MVA_modeled?(mva(mp))(astate(sMP2), sAP2)
- 
 
+ 
 END AnnGenerationLemmas

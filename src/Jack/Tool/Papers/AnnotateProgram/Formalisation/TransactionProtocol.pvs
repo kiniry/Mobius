@@ -6,7 +6,7 @@ BEGIN
   IMPORTING WellFormedMVA[CP, string],
             Semantics
 
-  EXPORTING transaction_protocol
+%  EXPORTING transaction_protocol
 
   % Control points
   no_trans, in_trans : CP

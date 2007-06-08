@@ -1,65 +1,118 @@
 Equivalence[CP : TYPE+] : THEORY
 BEGIN
 
+  ASSUMING
+    CP_is_enumerable : ASSUMPTION
+      EXISTS (f : [CP -> nat]) : injective?(f)
+  ENDASSUMING
+
   IMPORTING MVASemantics[CP, string],
             AnnotatedProgramSemantics[string],
             MonitoredProgramSemantics[CP, string],
             AnnotateProgram[CP],
             AnnotateProgramProperties[CP, string]
 
-  cp2val(q : CP) : Val = Int(unique(q))
-
-  % Says if an MVA state is modeled by a state of an annotated program
-  MVA_modeled?(sA : AState, sAP : APState) : boolean =
-    (cp2val(cp(sA)) = gvs(sAP)(cp)) AND
+  % A state of a MVA, sA, is modeled by a state of an AP, sAP, if:
+  % .The value of cp in sAP is equal to the mapping from cp to integers
+  % .Variables that model the control points remain constant
+  % .Variables in MVA have the same value the respective ghost vars in the AP
+  MVA_modeled?(a : MVA)(sA : AState, sAP : APState) : boolean =
+    (Int(unique(cp(sA))) = gvs(sAP)(cp)) AND
+    (FORALL (q : CP) : cps(a)(q) IMPLIES
+      Int(unique(q)) = gvs(sAP)(name_of(q))) AND
     (FORALL (n : string) : NOT Bottom?(stA(sA)(n)) IMPLIES
-      stA(sA)(n) = gvs(sAP)(n)) AND
-    (cp(sA) = halted IMPLIES
-      up?(ex(pstate(sAP))) AND down(ex(pstate(sAP))) = JMLExc)
+      stA(sA)(n) = gvs(sAP)(n))
 
-  % Says if sAP is a "super state" of sMP
+  halted_implies_JMLExc(sA : AState, sAP : APState) : boolean =
+    cp(sA) = halted IMPLIES
+      up?(ex(pstate(sAP))) AND down(ex(pstate(sAP))) = JMLExc
+
+  % Says if sAP is a super state of sMP
   Program_modeled?(sMP : MPState, sAP : APState) : boolean =
     pstate(sMP) = pstate(sAP) AND
     FORALL (n : string) : NOT Bottom?(gvs(sMP)(n)) IMPLIES
       gvs(sMP)(n) = gvs(sAP)(n)
 
   % Says if an state of a MP is correctly modeled by a state of an AP
-  MP_modeled?(sMP : MPState, sAP : APState) : boolean =
-    MVA_modeled?(astate(sMP), sAP) AND 
+  MP_modeled?(mp : MonitoredProgram)(sMP : MPState, sAP : APState) : boolean =
+    MVA_modeled?(mva(mp))(astate(sMP), sAP) AND
     Program_modeled?(sMP, sAP)
+
+
+  % It is possible to translate every guard of the MVA into an expression that
+  % evaluates to the same result. Note that if the guard holds then evaluation
+  % of the expression can not result in an exception (v would be Bottom).
+  % Furthermore, the evaluation must have no side-effects.
+  guard_to_expression_behavior(mp : MonitoredProgram) : boolean =
+    FORALL (g : Guard, s : MPState, sMVA : AState, stP : PSt) :
+      (EXISTS (t : Transition) :
+        ts(mva(mp))(t) AND guard(t) = g) IMPLIES
+      wf_MP(mp) IMPLIES
+      wf_state(mp)(s) IMPLIES
+      s = (# astate := sMVA,
+             pstate := (# ex := bottom, st := stP #),
+             gvs := stA(sMVA) #) IMPLIES
+        EXISTS (e : Expr, v : Val, n : nat) : 
+          guard_to_expression(mva(mp))(g) = e IMPLIES
+          BExpr?(e) AND
+          deriv_expr(mp)(e, s, v, s)(n) AND
+          g(stA(sMVA), stP) IFF v = Bool(TRUE)
+
+  % It is possible to evaluate expression appearing in actions (they terminate) 
+  % and they are side-effect-free. Note that the evaluation of the expresion can
+  % not throw an exception (if it starts in a non-exceptional state).
+  eval_action_behavior(mp : MonitoredProgram) : boolean =
+    LET ap = ann_program(mp) IN
+    FORALL (e : Expr, v : Val, sAP : APState, sMVA : AState, stP : PSt) :
+      wf_MP(mp) IMPLIES
+      wf_state(ap)(sAP) IMPLIES
+      pstate(sAP) = (# ex := bottom, st := stP #) IMPLIES
+      (FORALL (vn : string) : NOT Bottom?(stA(sMVA)(vn))
+        IMPLIES stA(sMVA)(vn) = gvs(sAP)(vn)) IMPLIES
+        eval(e)(stA(sMVA), stP) = v IFF
+        EXISTS (n : nat) : deriv_expr(ap)(e, sAP, v, sAP)(n)
+
+  well_behaved_MVA(mp : MonitoredProgram) : boolean =
+    guard_to_expression_behavior(mp) AND
+    eval_action_behavior(mp)
+
+  well_behaved_MP(mp : MonitoredProgram) : boolean =
+    well_behaved_Program(mp) AND
+    well_behaved_MVA(mp)
+
+  specification_requirements(mp : MonitoredProgram) : boolean =
+    wf_MP(mp) AND
+    complete(mva(mp)) AND
+    well_typed_Program(mp) AND
+    ann_program_pre(mp) AND
+    well_behaved_MP(mp)
 
   related_states(mp : MonitoredProgram, ap : Program)
                 (sMP : MPState, sAP : APState) : boolean =
-    ann_program_pre(mp) AND
+    specification_requirements(mp) AND
     ap = ann_program(mp) AND
     wf_state(mp)(sMP) AND
     wf_state(ap)(sAP) AND
-    MP_modeled?(sMP, sAP)
-
-  related_states_implies_wf_mp_and_ap : LEMMA % :-)
-    FORALL (mp : MonitoredProgram, ap : Program)
-           (sMP : MPState, sAP : APState) :
-      related_states(mp, ap)(sMP, sAP) IMPLIES
-        wf_MP(mp) AND wf_Program(ap)
+    MP_modeled?(mp)(sMP, sAP)
 
 
   % Properties about MP_modeled?
 
   MP_modeled_implies_same_exception : LEMMA % :-)
-    FORALL (sMP : MPState, sAP : APState) :
-      MP_modeled?(sMP, sAP) IMPLIES ex(pstate(sMP)) = ex(pstate(sAP))
+    FORALL (mp : MonitoredProgram)(sMP : MPState, sAP : APState) :
+      MP_modeled?(mp)(sMP, sAP) IMPLIES ex(pstate(sMP)) = ex(pstate(sAP))
 
   % TODO: delete this rename update2, move the proof and update the references
   MP_modeled_preserved_by_update : LEMMA  % :-)
     FORALL (mp : MonitoredProgram, ap : Program)
            (sMP : MPState, sAP : APState)(vn : string, v : Val) :
       related_states(mp, ap)(sMP, sAP) IMPLIES
-        MP_modeled?(update_state_MP(update(vn, v), sMP),
-                    update_state_AP(update(vn, v), sAP))
+        MP_modeled?(mp)(update_state_MP(update(vn, v), sMP),
+                        update_state_AP(update(vn, v), sAP))
 
   MP_modeled_implies_cp_not_halted : LEMMA % :-)
     FORALL (mp : MonitoredProgram, sMP : MPState, sAP : APState) :
-      MP_modeled?(sMP, sAP) IMPLIES
+      MP_modeled?(mp)(sMP, sAP) IMPLIES
       NOT up?(ex(pstate(sAP))) IMPLIES
         NOT cp(astate(sMP)) = halted
 
@@ -69,8 +122,8 @@ BEGIN
            (sMP : MPState, sAP : APState)(upd : [PState -> PState]) :
       related_states(mp, ap)(sMP, sAP) IMPLIES
       NOT up?(ex(pstate(sAP))) IMPLIES
-        MP_modeled?(update_state_MP(upd, sMP),
-                    update_state_AP(upd, sAP))
+        MP_modeled?(mp)(update_state_MP(upd, sMP),
+                        update_state_AP(upd, sAP))
 
   MP_modeled_implies_same_num_eval : LEMMA % :-)
     FORALL (mp : MonitoredProgram, ap : Program)
@@ -84,105 +137,62 @@ BEGIN
       related_states(mp, ap)(sMP, sAP) IMPLIES
         eval(b)(sMP) = eval(b)(sAP)
 
-
-
-  MP_modeled_preserved_by_ann_event : LEMMA
-    FORALL (mp : MonitoredProgram, ap : Program)
-           (sMP1, sMP2 : MPState, sAP1, sAP2 : APState)
-           (c : Class, m1 : Method, n : nat)
-           (ts : set[Transition], et : EventType) :
-      related_states(mp, ap)(sMP1, sAP1) IMPLIES
-      classes(program(mp))(c) IMPLIES
-      methods(c)(m1) IMPLIES
-      astate(sMP2) = on_method_MVA(et)(mp, m1, sMP1) IMPLIES
-      NOT up?(ex(pstate(sAP1))) IMPLIES
-      (FORALL (t : Transition) :
-         ts(t) AND etype(event(t)) = et AND mname(event(t)) = name(m1)) IMPLIES
-      deriv_stmt(ap)(ann_event(mp)(ts), sAP1, sAP2)(n) IMPLIES
-        MVA_modeled?(astate(sMP2), sAP2)
  
-  % TODO: prove! (it may be hard/imposible)
-  wf_ann_program_evals_expr_to_same_value : LEMMA
-    FORALL (mp : MonitoredProgram, ap : Program)
-           (sMP1, sMP2 : MPState, sAP1, sAP2 : APState)
-           (e : Expr)(v1, v2 : Val, n1, n2 : nat) :
-      related_states(mp, ap)(sMP1, sAP1) IMPLIES
-      subset?(var_names(e), var_names(program(mp))) IMPLIES
-      deriv_expr(mp)(e, sMP1, v1, sMP2)(n1) IMPLIES
-      deriv_expr(ap)(e, sAP1, v2, sAP2)(n2) IMPLIES
-        v1 = v2
-
-  % THINK: How do I get that v1 = v2 !?
-  MP_modeled_preserved_by_assertion_checking : LEMMA % :-)
+  % TODO: To get that v1 = v2, I need to do an induction over the lenght of the
+  % derivation
+  MP_modeled_preserved_by_assertion_checking : LEMMA
     FORALL (mp : MonitoredProgram, ap : Program)
            (sMP1, sMP2 : MPState, sAP1, sAP2 : APState, 
-            assertion : Expr, n1, n2 : nat,
-            deriv_expr_MP : [MonitoredProgram -> [Expr, MPState, Val, MPState ->
-                                                 [below(n1 + 1) -> bool]]],
-            deriv_expr_AP : [Program -> [Expr, APState, Val, APState ->
-                                        [below(n2 + 1) -> bool]]]) :
+            assertion : Expr, n1, n2 : nat) :
       related_states(mp, ap)(sMP1, sAP1) IMPLIES
       NOT up?(ex(pstate(sMP1))) IMPLIES
       (FORALL (v1, v2 : Val, tau1 : MPState, tau2 : APState) :
-        (deriv_expr_MP(mp)(assertion, sMP1, v1, tau1)(n1) IMPLIES sMP1 = tau1) AND
-        (deriv_expr_AP(ap)(assertion, sAP1, v1, tau2)(n2) IMPLIES sAP1 = tau2) AND
+        (deriv_expr_rec_MP(n1)(mp)(assertion, sMP1, v1, tau1)(n1 - 1) 
+          IMPLIES sMP1 = tau1) AND
+        (deriv_expr_rec_AP(n2)(ap)(assertion, sAP1, v1, tau2)(n2 - 1)
+          IMPLIES sAP1 = tau2) AND
         v1 = v2) IMPLIES
-      check_assertion(mp)(assertion, sMP1, sMP2)(n1)(deriv_expr_MP) IMPLIES
-      check_assertion(ap)(assertion, sAP1, sAP2)(n2)(deriv_expr_AP) IMPLIES
-        MP_modeled?(sMP2, sAP2)
+      check_assertion(mp)(assertion, sMP1, sMP2)(n1)(deriv_expr_rec_MP(n1))
+      IMPLIES
+      check_assertion(ap)(assertion, sAP1, sAP2)(n2)(deriv_expr_rec_AP(n2))
+      IMPLIES
+        MP_modeled?(mp)(sMP2, sAP2)
 
   % THINK: The invariant (retrieved by lookup_inv) in the annotated class should
   % include the added check cp != halted
   on_method_entry_for_ann_method_equivalence  : LEMMA
     FORALL (mp : MonitoredProgram, ap : Program)
            (sMP1, sMP2 : MPState, sAP1, sAP2 : APState, c : Class, 
-            m1, m2 : Method, a : Val, n1, n2 : nat,
-            deriv_stmt_MP : [MonitoredProgram -> [Stmt, MPState, MPState ->
-                                                 [below(n1 + 1) -> bool]]],
-            deriv_expr_MP : [MonitoredProgram -> [Expr, MPState, Val, MPState ->
-                                                 [below(n1 + 1) -> bool]]],
-            deriv_stmt_AP : [Program -> [Stmt, APState, APState ->
-                                        [below(n2 + 1) -> bool]]],
-            deriv_expr_AP : [Program -> [Expr, APState, Val, APState ->
-                                        [below(n2 + 1) -> bool]]]) :
+            m1, m2 : Method, a : Val, n1, n2 : nat) :
       related_states(mp, ap)(sMP1, sAP1) IMPLIES
-      assertions_have_no_side_effect(mp) IMPLIES
       classes(program(mp))(c) IMPLIES
       methods(c)(m1) IMPLIES
       m2 = ann_method(mp)(m1) IMPLIES
-      on_method_entry_MP(mp, m1, a, sMP1, sMP2, n1, deriv_stmt_MP, 
-                         deriv_expr_MP) IMPLIES
-      on_method_entry_AP(ap, m2, a, sAP1, sAP2, n2, deriv_stmt_AP, 
-                         deriv_expr_AP) IMPLIES
-        MP_modeled?(sMP2, sAP2)
+      on_method_entry_MP(mp, m1, a, sMP1, sMP2, n1, bounded_deriv_stmt_rec_MP(n1),
+                         bounded_deriv_expr_rec_MP(n1)) IMPLIES
+      on_method_entry_AP(ap, m2, a, sAP1, sAP2, n2, bounded_deriv_stmt_rec_AP(n2),
+                         bounded_deriv_expr_rec_AP(n2)) IMPLIES
+        MP_modeled?(mp)(sMP2, sAP2)
 
   on_method_entry_for_same_method_equivalence  : LEMMA
     FORALL (mp : MonitoredProgram, ap : Program)
            (sMP1, sMP2 : MPState, sAP1, sAP2 : APState, m : Method,
-            a : Val, n1, n2 : nat,
-            deriv_stmt_MP : [MonitoredProgram -> [Stmt, MPState, MPState ->
-                                                 [below(n1 + 1) -> bool]]],
-            deriv_expr_MP : [MonitoredProgram -> [Expr, MPState, Val, MPState ->
-                                                 [below(n1 + 1) -> bool]]],
-            deriv_stmt_AP : [Program -> [Stmt, APState, APState ->
-                                        [below(n2 + 1) -> bool]]],
-            deriv_expr_AP : [Program -> [Expr, APState, Val, APState ->
-                                        [below(n2 + 1) -> bool]]]) :
+            a : Val, n1, n2 : nat) :
       related_states(mp, ap)(sMP1, sAP1) IMPLIES
-      on_method_entry_MP(mp, m, a, sMP1, sMP2, n1, deriv_stmt_MP, 
-                         deriv_expr_MP) IMPLIES
-      on_method_entry_AP(ap, m, a, sAP1, sAP2, n2, deriv_stmt_AP, 
-                         deriv_expr_AP) IMPLIES
-      MP_modeled?(sMP2, sAP2)
+      on_method_entry_MP(mp, m, a, sMP1, sMP2, n1, bounded_deriv_stmt_rec_MP(n1),
+                         bounded_deriv_expr_rec_MP(n1)) IMPLIES
+      on_method_entry_AP(ap, m, a, sAP1, sAP2, n2, bounded_deriv_stmt_rec_AP(n2),
+                         bounded_deriv_expr_rec_AP(n2)) IMPLIES
+        MP_modeled?(mp)(sMP2, sAP2)
 
 
   % Main lemmas used in the proof of the correcteness_of_ann_program
 
   initial_states_are_equivalent : LEMMA
     FORALL (mp : MonitoredProgram) :
-      ann_program_pre[CP](mp) IMPLIES
-        MP_modeled?(initial_MP_state(mp),
-                    initial_AP_state(ann_program(mp)))
+      ann_program_pre(mp) IMPLIES
+        MP_modeled?(mp)(initial_MP_state(mp),
+                        initial_AP_state(ann_program(mp)))
 
   deriv_expr_maintains_equivalence : THEOREM
     FORALL (mp : MonitoredProgram, ap : Program)
@@ -193,7 +203,7 @@ BEGIN
       deriv_expr(mp)(e, sMP1, v1, sMP2)(n1) IMPLIES
       deriv_expr(ap)(e, sAP1, v2, sAP2)(n2) IMPLIES
         v1 = v2 AND
-        MP_modeled?(sMP2, sAP2)
+        MP_modeled?(mp)(sMP2, sAP2)
 
   deriv_stmt_maintains_equivalence : THEOREM
     FORALL (mp : MonitoredProgram, ap : Program)(n1, n2 : nat)(c : Stmt)
@@ -201,17 +211,17 @@ BEGIN
       related_states(mp, ap)(sMP1, sAP1) IMPLIES
       deriv_stmt(mp)(c, sMP1, sMP2)(n1) IMPLIES
       deriv_stmt(ap)(c, sAP1, sAP2)(n2) IMPLIES
-        MP_modeled?(sMP2, sAP2)
+        MP_modeled?(mp)(sMP2, sAP2)
 
 
   % The main result
   correcteness_of_ann_program : THEOREM % :-)
     FORALL (mp : MonitoredProgram)(main : Method, arg : int)
            (sMP : MPState, sAP : APState)(n, m : nat) :
-      ann_program_pre(mp) IMPLIES
+      specification_requirements(mp) IMPLIES
       run_monitored_program(mp)(main, arg)(sMP)(n) IMPLIES
       run_annotated_program(ann_program(mp))(main, arg)(sAP)(m) IMPLIES
-        MP_modeled?(sMP, sAP)
+        MP_modeled?(mp)(sMP, sAP)
 
 
 END Equivalence

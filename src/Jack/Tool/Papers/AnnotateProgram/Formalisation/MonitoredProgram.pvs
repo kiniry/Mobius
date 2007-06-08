@@ -168,6 +168,28 @@ BEGIN
                       on_method_exit_normal_MP,
                       on_method_exit_exceptional_MP]
 
+  deriv_expr_rec_MP(n : nat) : deriv_expr_type(n) =
+    LAMBDA (p : MonitoredProgram)
+           (e : Expr, sigma1 : MPState, v : Val,  sigma2 : MPState)
+           (k : below(n)) :
+      deriv_expr(p)(e, sigma1, v, sigma2)(k)
+
+  deriv_stmt_rec_MP(n : nat) : deriv_stmt_type(n) =
+    LAMBDA (p : MonitoredProgram)
+           (c : Stmt, sigma1, sigma2 : MPState)(k : below(n)) :
+      deriv_stmt(p)(c, sigma1, sigma2)(k)
+
+  bounded_deriv_expr_rec_MP(i : nat) : deriv_expr_rec_type(i) =
+    LAMBDA (n : below(i))(p : MonitoredProgram)
+           (e : Expr, sigma1 : MPState, v : Val,  sigma2 : MPState)
+           (k : below(n)) :
+      deriv_expr_rec_MP(n)(p)(e, sigma1, v, sigma2)(k)
+
+  bounded_deriv_stmt_rec_MP(i : nat) : deriv_stmt_rec_type(i) =
+    LAMBDA (n : below(i))(p : MonitoredProgram)
+           (c : Stmt, sigma1, sigma2 : MPState)(k : below(n)) :
+      deriv_stmt_rec_MP(n)(p)(c, sigma1, sigma2)(k)
+
 
   initial_MP_state(mp : MonitoredProgram) : MPState =
     (# astate := initial_MVA_state(mva(mp)),
@@ -183,50 +205,6 @@ BEGIN
   run_monitored_program(mp : MonitoredProgram)(main : Method, arg : int)
                       (s2 : MPState)(n : nat) : boolean =
     run_FullProgram(mp)(main, arg)(initial_MP_state(mp), s2)(n)
-
-
-  % It is possible to translate every guard of the MVA into an expression that
-  % evaluates to the same result. Note that if the guard holds then evaluation
-  % of the expression can not result in an exception (v would be Bottom).
-  % Furthermore, the evaluation must have no side-effects.
-  guard_to_expression_behavior(mp : MonitoredProgram) : boolean =
-    FORALL (g : Guard, s : MPState, sMVA : AState, stP : PSt) :
-      (EXISTS (t : Transition) :
-        ts(mva(mp))(t) AND guard(t) = g) IMPLIES
-      wf_MP(mp) IMPLIES
-      wf_state(mp)(s) IMPLIES
-      s = (# astate := sMVA,
-             pstate := (# ex := bottom, st := stP #),
-             gvs := stA(sMVA) #) IMPLIES
-        EXISTS (e : Expr, v : Val, n : nat) : 
-          guard_to_expression(mva(mp))(g) = e IMPLIES
-          BExpr?(e) AND
-          deriv_expr(mp)(e, s, v, s)(n) AND
-          g(stA(sMVA), stP) IFF v = Bool(TRUE)
-
-  % It is possible to evaluate expression appearing in actions (they terminate) 
-  % and they are side-effect-free. Note that by the way actions are defined, the
-  % evaluation may end in an exception.
-  % NOTE: Since the variables of the program that are used by the automaton can
-  % not be ghost, we can replace the gvs store with the one of the MVA instead
-  % of merging them.
-  eval_action_behavior(mp : MonitoredProgram) : boolean =
-    FORALL (e : Expr, v : Val, s : MPState, sMVA : AState, stP : PSt) :
-      wf_MP(mp) IMPLIES
-      wf_state(mp)(s) IMPLIES
-      s = (# astate := sMVA,
-             pstate := (# ex := bottom, st := stP #),
-             gvs := stA(sMVA) #) IMPLIES
-      eval(e)(stA(sMVA), stP) = v IMPLIES
-        EXISTS (n : nat) : deriv_expr(mp)(e, s, v, s)(n)
-
-  well_behaved_MVA(mp : MonitoredProgram) : boolean =
-    guard_to_expression_behavior(mp) AND
-    eval_action_behavior(mp)
-
-  well_behaved_MP(mp : MonitoredProgram) : boolean =
-    well_behaved_Program(mp) AND
-    well_behaved_MVA(mp)
 
 
   % Well-formedness properties

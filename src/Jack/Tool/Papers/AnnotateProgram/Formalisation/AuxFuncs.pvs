@@ -80,5 +80,16 @@ BEGIN
     MEASURE
       length(l)
 
+  every_is_forall : LEMMA % :-)
+    FORALL (p : pred[T], l : list[T]) : 
+      every(p)(l) IFF FORALL (x : T) : member(x, l) IMPLIES p(x)
+
+  some_is_exists : LEMMA % :-)
+    FORALL (p : pred[T], l : list[T]) : 
+      some(p)(l) IFF EXISTS (x : T) : member(x, l) AND p(x)
+
+  list_is_null_or_cons : LEMMA % :-)
+    FORALL (xs : list[T]) :
+      xs = null OR EXISTS (y : T, ys : list[T]) : xs = cons(y, ys)
 
 END listfuncs

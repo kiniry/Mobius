@@ -270,12 +270,11 @@
         nil))
       nil))
     nil)
-   proved
+   unfinished
    ((eval const-decl "Val" MVASemantics nil)
     (update const-decl "Store" MVASemantics nil)
     (member def-decl "bool" list_props nil)
     (eval_yields_not_bottom formula-decl nil MVASemantics nil)
-    (wf_Store const-decl "boolean" WellFormedMVA nil)
     (list_induction formula-decl nil list_adt nil)
     (Name formal-nonempty-type-decl nil MVASemantics nil)
     (Expr type-decl nil Expr_adt nil)
@@ -283,8 +282,6 @@
     (OneAction type-eq-decl nil MVA nil)
     (execute_action def-decl "Store" MVASemantics nil)
     (wf_Action const-decl "boolean" WellFormedMVA nil)
-    (wf_PSt const-decl "boolean" WellFormedMVA nil)
-    (wf_Store const-decl "boolean" WellFormedMVA nil)
     (IMPLIES const-decl "[bool, bool -> bool]" booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (PSt type-eq-decl nil State nil) (Store type-eq-decl nil State nil)

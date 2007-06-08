@@ -132,14 +132,11 @@ BEGIN
 
   wf_Action(a : MVA)(l : Action) : boolean =
     FORALL (c : OneAction) :
-      member(c, l) IMPLIES
-        var_names(vdsA(a))(target(c)) AND
-        subset?(var_names(source(c)), 
-                union(var_names(vdsA(a)), var_names(vdsP(a))))
+      member(c, l) IMPLIES var_names(vdsA(a))(target(c))
 
   % Rules that every MVA must follow:
   % The initial control point is in the set of control points of the automaton
-  % The set vdsA and vdsP are "well formed"
+  % The sets vdsA and vdsP are "well formed"
   % The name of the variables in vdsA and vdsP are distinct
   % The source and target of every transition is in the set of control points
   % The event of every transition is in the set of events
@@ -251,6 +248,12 @@ BEGIN
       ELSE st(m)
       ENDIF
 
+  update_yields_wf_Store : LEMMA % :-)
+    FORALL (a : MVA, st : Store, n : Name, v : Val) :
+      wf_Store(a)(st) IMPLIES
+      (Bottom?(st(n)) IFF Bottom?(v)) IMPLIES
+        wf_Store(a)(update(st)(n)(v))
+
   % guard_to_expression is implicitly defined by guard_to_expression_behavior
   % in MonitoredProgramSemantics.
   guard_to_expression(a : MVA)(g : Guard) : Expr
@@ -303,7 +306,10 @@ BEGIN
       wf_MVA(a) IMPLIES wf_AState(a)(initial_MVA_state(a))
 
   % The evaluation of actions must return a defined value (thus it can not
-  % return a state with an exception)
+  % return a state with an exception). 
+  % Note that this is required by well_behaved_MVA, but for simplicity we
+  % ask it here (otherwise we have to move execute_action_yields_wf_state
+  % to MonitoredProgramSemantics).
   eval_yields_not_bottom : AXIOM
     FORALL (a : MVA, e : Expr, stA : Store, stP : PSt) :
       wf_Store(a)(stA) IMPLIES

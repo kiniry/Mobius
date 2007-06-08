@@ -94,6 +94,28 @@ BEGIN
                       on_method_exit_normal_AP,
                       on_method_exit_exceptional_AP]
 
+  deriv_expr_rec_AP(n : nat) : deriv_expr_type(n) =
+    LAMBDA (p : Program)
+           (e : Expr, sigma1 : APState, v : Val,  sigma2 : APState)
+           (k : below(n)) :
+      deriv_expr(p)(e, sigma1, v, sigma2)(k)
+
+  deriv_stmt_rec_AP(n : nat) : deriv_stmt_type(n) =
+    LAMBDA (p : Program)
+           (c : Stmt, sigma1, sigma2 : APState)(k : below(n)) :
+      deriv_stmt(p)(c, sigma1, sigma2)(k)
+
+  bounded_deriv_expr_rec_AP(i : nat) : deriv_expr_rec_type(i) =
+    LAMBDA (n : below(i))(p : Program)
+           (e : Expr, sigma1 : APState, v : Val,  sigma2 : APState)
+           (k : below(n)) :
+      deriv_expr_rec_AP(n)(p)(e, sigma1, v, sigma2)(k)
+
+  bounded_deriv_stmt_rec_AP(i : nat) : deriv_stmt_rec_type(i) =
+    LAMBDA (n : below(i))(p : Program)
+           (c : Stmt, sigma1, sigma2 : APState)(k : below(n)) :
+      deriv_stmt_rec_AP(n)(p)(c, sigma1, sigma2)(k)
+
 
   initial_AP_state(p : Program) : APState =
     (# pstate := initial_Program_state(p),
@@ -191,24 +213,6 @@ BEGIN
       IMPLIES
       deriv_stmt(p)(c, s1, s2)(n) IMPLIES
         gvs(s1)(vn) = gvs(s2)(vn)
-
-  sequence_of_sets(c : Stmt) : RECURSIVE boolean =
-    Skip?(c) OR Sequence?(c) AND Set?(s1(c)) AND sequence_of_sets(s2(c))
-    MEASURE c BY <<
-
-  non_interference_of_set_stmt_sequence : LEMMA % :-)
-    FORALL (p : Program, sets : (sequence_of_sets), s1, s2 : APState, 
-            n : nat, vn : Name) :
-      (FORALL (c : Stmt) :
-        c << sets IMPLIES
-          Skip?(c) OR
-          (Set?(c) IMPLIES
-            NOT target(c) = vn AND
-            FORALL (tau1, tau2 : APState, v : Val, n2 : nat) :
-              deriv_expr(p)(source(c), tau1, v, tau2)(n2) IMPLIES tau1 = tau2))
-        IMPLIES
-        deriv_stmt(p)(sets, s1, s2)(n) IMPLIES
-          gvs(s1)(vn) = gvs(s2)(vn)
 
   CaseJML_exclusive_branches_semantics : LEMMA % :-)
     FORALL (p : Program, bs : list[[Expr, Stmt]], s1, s2, tau : APState,

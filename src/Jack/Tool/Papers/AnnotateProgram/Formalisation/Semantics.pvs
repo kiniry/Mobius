@@ -19,12 +19,11 @@ BEGIN
             Val,
             ValProp
 
+  % A store a mapping from names to values. Partial mappings are represented
+  % using the value Bottom.
   Store : TYPE = [Name -> Val]
 
-  % Field, ghost and local variables
-  % fvs, gvs and lvs are partial functions from name to values
-  % Values are integers
-  % If it supposed to be a boolean, <= 0 = False, > 0 = True
+  % Field and local variables.
   PSt : TYPE = [# fvs, lvs : Store #]
 
   PState : TYPE = [# ex : lift[Excpt],
@@ -34,9 +33,6 @@ BEGIN
     (# ex := bottom, st := p #)
 
   CONVERSION lift_PSt
-
-  % So far, I'm not modelling that the sets are disjoint
-  % This would imply adding a test to update, that vn is in the domain
 
   is_local(vn : Name, sigma : PState) : boolean =
     defined?(lvs(st(sigma))(vn))
@@ -72,7 +68,7 @@ BEGIN
     ELSE update_field(vn, v)(sigma)
     ENDIF
 
-  val2int(v : Val) : int = 
+  val2int(v : Val) : int =
     IF Int?(v)
     THEN i(v)
     ELSE 0
@@ -95,8 +91,6 @@ BEGIN
 
   % MH: Follows from wf_Program now 
   % MH: To discuss, need for this or not?
-
-  % Why do I need this?
   wf_state_vars_local_or_field : LEMMA % :-)
     FORALL (p : Program, s : PState, vn : Name) :
       wf_state(p)(s) IMPLIES
@@ -202,43 +196,41 @@ BEGIN
 
   IMPORTING Program[Name]
 
+  deriv_expr_type(n : nat) : TYPE = 
+    [FullProgram -> [Expr, FullState, Val, FullState -> [below(n) -> bool]]]
+
+  deriv_stmt_type(n : nat) : TYPE = 
+    [FullProgram -> [Stmt, FullState, FullState -> [below(n) -> bool]]]
+
+  deriv_expr_rec_type(n : nat) : TYPE = [k : upto(n) -> deriv_expr_type(k)]
+
+  deriv_stmt_rec_type(n : nat) : TYPE = [k : upto(n) -> deriv_stmt_type(k)]
+
   update_FullState_type
-    (f : [[PState[Name] -> PState[Name]], FullState -> FullState]) : bool =
+    (f : [[PState[Name] -> PState[Name]], FullState -> FullState]) : boolean =
       FORALL (s1, s2 : FullState, upd : [PState[Name] -> PState[Name]]) :
         f(upd, s1) = s2 IMPLIES pstate(s2) = upd(pstate(s1))
 
-  deriv_expr_rec_type(n : nat) : TYPE = [k : upto(n) -> [FullProgram ->
-    [Expr, FullState, Val, FullState -> [below(k) -> bool]]]]
-
-  deriv_stmt_rec_type(n : nat) : TYPE = [k : upto(n) -> [FullProgram ->
-    [Stmt, FullState, FullState -> [below(k) -> bool]]]]
-
   execute_set_type
     (f : [FullProgram, Name, Expr, FullState, FullState, n : nat,
-     deriv_stmt_rec_type(n), deriv_expr_rec_type(n) -> bool]) : bool =
-    FORALL (p : FullProgram, vn : Name, e : Expr, s1, s2 : FullState, 
+     deriv_stmt_rec_type(n), deriv_expr_rec_type(n) -> boolean]) : boolean =
+    FORALL (p : FullProgram, vn : Name, e : Expr, s1, s2 : FullState,
             n : nat, ds : deriv_stmt_rec_type(n), de : deriv_expr_rec_type(n)) :
       f(p, vn, e, s1, s2, n, ds, de) IMPLIES pstate(s2) = pstate(s1)
 
   execute_CaseJML_type
     (f : [FullProgram, list[[Expr, Stmt]], FullState, FullState, n : nat,
-     deriv_stmt_rec_type(n), deriv_expr_rec_type(n) -> bool]) : bool =
+     deriv_stmt_rec_type(n), deriv_expr_rec_type(n) -> boolean]) : boolean =
     FORALL (p : FullProgram, branches : list[[Expr, Stmt]], s1, s2 : FullState,
             n : nat, ds : deriv_stmt_rec_type(n), de : deriv_expr_rec_type(n)) :
       f(p, branches, s1, s2, n, ds, de) IMPLIES pstate(s2) = pstate(s1)
 
   on_method_event_type
     (f : [FullProgram, Method[Name], Val, FullState, FullState, n : nat,
-     deriv_stmt_rec_type(n), deriv_expr_rec_type(n) -> bool]) : bool =
+     deriv_stmt_rec_type(n), deriv_expr_rec_type(n) -> boolean]) : boolean =
     FORALL (p : FullProgram, md : Method[Name], a : Val, s1, s2 : FullState,
             n : nat, ds : deriv_stmt_rec_type(n), de : deriv_expr_rec_type(n)) :
       f(p, md, a, s1, s2, n, ds, de) IMPLIES st(pstate(s1)) = st(pstate(s2))
-
-  deriv_expr_type(n : nat) : TYPE = [FullProgram -> 
-    [Expr, FullState, Val, FullState -> [below(n) -> bool]]]
-
-  deriv_stmt_type(n : nat) : TYPE = [FullProgram -> 
-    [Stmt, FullState, FullState -> [below(n) -> bool]]]
 
 
 END SemanticsTypes
@@ -291,10 +283,23 @@ BEGIN
     FORALL (p : FullProgram) :
       wf_Program(program(p)) IMPLIES wf_state(program(p))(initial_Program_state(p))
 
+  update_stack(this_val : Val, param_name : Name, param_val : Val, 
+               lvds : set[LocalVarDecl], s : FullState) : FullState =
+    LET update_state(sP : PState) =
+      sP WITH [st := st(sP) 
+           WITH [lvs := LAMBDA (n : Name) :
+             LET lv = get_LocalVarDecl(n, lvds) IN
+             IF n = This
+             THEN this_val
+             ELSIF n = param_name
+             THEN param_val
+             ELSIF up?(lv)
+             THEN default_value(jtype(down(lv)))
+             ELSE lvs(st(sP))(n)
+             ENDIF]]
+    IN
+      update_FullState(update_state, s)
 
-  % THINK: Should we say in each case NOT Bottom?(v)?. Recall that sematincs
-  % should be defined even for not well-formed programs (in which case the
-  % result may be meaningless)
   deriv_expr(p : FullProgram)
             (c : Expr, sigma1 : FullState, v : Val, sigma2 : FullState)
             (n : nat)(deriv_stmt : deriv_stmt_type(n)) : RECURSIVE bool =
@@ -302,22 +307,22 @@ BEGIN
       deriv_stmt_rec =
         LAMBDA (k : upto(n))(p : FullProgram)
                (s : Stmt, sigma1, sigma2 : FullState)
-               (m : below(k)) : 
+               (m : below(k)) :
           deriv_stmt(p)(s, sigma1, sigma2)(m),
       deriv_expr_rec =
         LAMBDA (k : upto(n))(p : FullProgram)
                (c : Expr, sigma1 : FullState, v : Val, sigma2 : FullState)
-               (m : below(k)) : 
+               (m : below(k)) :
           deriv_expr(p)(c, sigma1, v, sigma2)(m)(deriv_stmt_rec(m)),
       bounded_deriv_stmt_rec =
         LAMBDA (i : upto(n))(k : upto(i))(p : FullProgram)
                (s : Stmt, sigma1, sigma2 : FullState)
-               (m : below(k)) : 
+               (m : below(k)) :
           deriv_stmt(p)(s, sigma1, sigma2)(m),
       bounded_deriv_expr_rec =
         LAMBDA (i : upto(n))(k : upto(i))(p : FullProgram)
                (c : Expr, sigma1 : FullState, v : Val, sigma2 : FullState)
-               (m : below(k)) : 
+               (m : below(k)) :
           deriv_expr(p)(c, sigma1, v, sigma2)(m)(deriv_stmt_rec(m))
     IN
     IF up?(ex(pstate(sigma1)))
@@ -326,7 +331,6 @@ BEGIN
     ELSE % sigma1 is a normal state
     CASES c OF
       Assign(vn, e) :
-        NOT Bottom?(v) AND
         n > 0 AND
         (EXISTS (tau : FullState) :
            deriv_expr_rec(n)(p)(e, sigma1, v, tau)(n - 1) AND
@@ -335,10 +339,8 @@ BEGIN
                      ELSE update_FullState(update(vn, v), tau)
                      ENDIF)),
       BExpr(b) :
-        sigma1 = sigma2 AND
-        NOT Bottom?(v) AND
-        v = Bool(eval(b)(sigma1)) AND
-        n = 0,
+        sigma1 = sigma2 AND n = 0 AND
+        v = Bool(eval(b)(sigma1)),
       CondExpr(c, t, e) :
         EXISTS (tau : FullState, v1 : Val, m1, m2 : nat) :
           n = m1 + m2 + 1 AND
@@ -346,42 +348,41 @@ BEGIN
           Bool?(v1) AND
           deriv_expr_rec(n)(p)(IF b(v1) THEN t ELSE e ENDIF, 
                                tau, v, sigma2)(m2),
-      %TODO: update the values of "this" and initialize the local vars
-      %      if the return type is void then return Unit or Bottom
       MethodCall(e, mn, pr) :
         EXISTS (m1, m2, m3, m4, m5, m6 : nat)
                (tau1, tau2, tau3, tau4, tau5, tau6, tau7, tau8 : FullState)
                (a, pv, old_val_arg : Val)(md : Method)(inv : BoolExpr) :
-          m6 > 0 AND
           n = m1 + m2 + m3 + m4 + m5 + m6 + 1 AND
           % evaluate the receiver object
           deriv_expr_rec(n)(p)(e, sigma1, a, tau1)(m1) AND
           % evaluate the parameter
           deriv_expr_rec(n)(p)(pr, tau1, pv, tau2)(m2) AND
           % see if the receiver is null (and there were no previous exceptions)
-          (tau3 = (IF bottom?(ex(pstate(tau2))) AND Null?(a)
-                   THEN update_FullState(LAMBDA (s : PState) : s WITH 
-                                           [ex := up(NullPointer)], tau2)
-                   ELSE tau2
-                   ENDIF)) AND
+          tau3 = IF bottom?(ex(pstate(tau2))) AND Null?(a)
+                 THEN update_FullState(LAMBDA (s : PState) : s WITH 
+                                         [ex := up(NullPointer)], tau2)
+                 ELSE tau2
+                 ENDIF AND
           % lookup method definition
           IF up?(lookup_mthd(program(p), a, mn))
           THEN md = down(lookup_mthd(program(p), a, mn))
-          ELSE FALSE
+          ELSE FALSE % should not happen in a wf_Program
           ENDIF AND
           % actions taken at the entry of the method
           on_method_entry(p, md, a, tau3, tau4, m3,
-                          bounded_deriv_stmt_rec(m3), 
+                          bounded_deriv_stmt_rec(m3),
                           bounded_deriv_expr_rec(m3)) AND
-          % give a name the value of the local variable before the call,
-          % just for convenience (we don't lose the previous state)
+          % give a name the value of the argument before the call,
           old_val_arg = lookup_local(name(arg(md)), pstate(tau4)) AND
-          % update the value of the argument
-          tau5 = update_FullState(update_local(name(arg(md)), pv), tau4) AND
+          % update the value of this, the argument and initialize the local vars
+          tau5 = update_stack(a, name(arg(md)), pv, lvars(md), tau4) AND
           % execute the body
           deriv_stmt(p)(body(md), tau5, tau6)(m4) AND
           % evaluate the result
-          deriv_expr_rec(n)(p)(res(md), tau6, v, tau7)(m5) AND
+          IF Void?(res_type(md))
+          THEN tau7 = tau6 AND v = Unit
+          ELSE deriv_expr_rec(n)(p)(res(md), tau6, v, tau7)(m5)
+          ENDIF AND
           % actions taken at the exit of the method
           IF bottom?(ex(pstate(tau7)))
           THEN on_method_exit_normal(p, md, a, tau7, tau8, m6, 
@@ -395,18 +396,14 @@ BEGIN
           sigma2 = update_FullState(update_local(name(arg(md)), old_val_arg),
                                     tau8),
       NExpr(n) :
-        sigma1 = sigma2 AND
-        NOT Bottom?(v) AND
-        v = Int(eval(n)(sigma1)) AND
-        n = 0,
+        sigma1 = sigma2 AND n = 0 AND
+        v = Int(eval(n)(sigma1)),
       RExpr(r) :
-        sigma1 = sigma2 AND
-        NOT Bottom?(v) AND
+        sigma1 = sigma2 AND n = 0 AND
         v = CASES r OF
               Null : Null,
               RefVarEval(vn) : RefType(get_address(vn))
-            ENDCASES AND
-        n = 0
+            ENDCASES
     ENDCASES
     ENDIF
   MEASURE n
