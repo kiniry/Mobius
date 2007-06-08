@@ -6,14 +6,600 @@
 (Stmt)
 (Program
  (getFieldDecls_TCC1 0
-  (getFieldDecls_TCC1-1 nil 3390200268 3390200630
-   ("" (subtype-tcc) nil nil) unfinished nil 167185 1620 t nil))
+  (getFieldDecls_TCC1-1 nil 3390200268 3390301843
+   ("" (skosimp*)
+    (("" (use "finite_set_induction[Class]")
+      ((""
+        (inst -1
+         "LAMBDA(C : finite_set[Class]) : is_finite[FieldDecl]({f : FieldDecl | EXISTS (c : Class) : C(c) AND fields(c)(f)})")
+        (("" (split -1)
+          (("1" (inst -1 "classes(p!1)") nil nil)
+           ("2" (hide 2)
+            (("2" (skosimp*)
+              (("2"
+                (case-replace " ({f: FieldDecl |
+              EXISTS (c: Class): add(t!1, x!1)(c) AND fields(c)(f)}) = union({f : FieldDecl | fields(t!1)(f)}, {f : FieldDecl | EXISTS (c : Class) : x!1(c) AND fields(c)(f)})")
+                (("1" (hide -1)
+                  (("1" (use "finite_union[FieldDecl]")
+                    (("1" (hide -1 2)
+                      (("1" (typepred "fields(t!1)")
+                        (("1"
+                          (case-replace
+                           "fields(t!1) = {f : FieldDecl | fields(t!1)(f)}")
+                          (("1" (assert) nil nil)
+                           ("2" (apply-extensionality :hide? t) nil
+                            nil))
+                          nil))
+                        nil))
+                      nil))
+                    nil))
+                  nil)
+                 ("2" (apply-extensionality :hide? t)
+                  (("2" (hide -1 2)
+                    (("2" (expand "union")
+                      (("2" (expand "add")
+                        (("2" (expand "member")
+                          (("2" (iff)
+                            (("2" (prop)
+                              (("1"
+                                (skosimp*)
+                                (("1"
+                                  (split -1)
+                                  (("1" (assert) nil nil)
+                                   ("2"
+                                    (inst?)
+                                    (("2" (assert) nil nil))
+                                    nil))
+                                  nil))
+                                nil)
+                               ("2" (inst?) nil nil)
+                               ("3"
+                                (skosimp*)
+                                (("3"
+                                  (inst?)
+                                  (("3" (assert) nil nil))
+                                  nil))
+                                nil))
+                              nil))
+                            nil))
+                          nil))
+                        nil))
+                      nil))
+                    nil))
+                  nil))
+                nil))
+              nil))
+            nil)
+           ("3" (hide 2)
+            (("3" (expand "emptyset")
+              (("3"
+                (case-replace
+                 "{f : FieldDecl | FALSE} = emptyset[FieldDecl]")
+                (("1" (use "finite_emptyset[FieldDecl]") nil nil)
+                 ("2" (apply-extensionality :hide? t)
+                  (("2" (grind) nil nil)) nil))
+                nil))
+              nil))
+            nil))
+          nil))
+        nil))
+      nil))
+    nil)
+   unchecked
+   ((finite_set_induction formula-decl nil FiniteSetInduction nil)
+    (Val type-decl nil Val_adt nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (defined? const-decl "boolean" ValProp nil)
+    (JType type-decl nil JType_adt nil)
+    (Name formal-nonempty-type-decl nil Program nil)
+    (FieldDecl type-eq-decl nil Program nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (Expr type-decl nil Expr_adt nil)
+    (LocalVarDecl type-eq-decl nil Program nil)
+    (Stmt type-decl nil Stmt_adt nil)
+    (Method type-eq-decl nil Program nil)
+    (lift type-decl nil lift_adt nil)
+    (Class type-eq-decl nil Program nil)
+    (Program type-eq-decl nil Program nil)
+    (member const-decl "bool" sets nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (finite_union judgement-tcc nil finite_sets nil)
+    (union const-decl "set" sets nil)
+    (add const-decl "(nonempty?)" sets nil)
+    (nonempty? const-decl "bool" sets nil)
+    (= const-decl "[T, T -> boolean]" equalities nil)
+    (emptyset const-decl "set" sets nil)
+    (finite_emptyset judgement-tcc nil finite_sets nil)
+    (FALSE const-decl "bool" booleans nil)
+    (AND const-decl "[bool, bool -> bool]" booleans nil)
+    (is_finite const-decl "bool" finite_sets nil)
+    (set type-eq-decl nil sets nil)
+    (bool nonempty-type-eq-decl nil booleans nil))
+   468612 8610 t nil))
  (getLocalDecls_TCC1 0
+  (getLocalDecls_TCC1-2 nil 3390301871 3390302904
+   ("" (skosimp*)
+    (("" (use "finite_set_induction[Class]")
+      ((""
+        (inst -1
+         "LAMBDA(C : finite_set[Class]) : is_finite[LocalVarDecl]({l : LocalVarDecl | EXISTS (c : Class, m : Method) : C(c) AND methods(c)(m) AND (lvars(m)(l) OR l = arg(m))})")
+        (("" (split -1)
+          (("1" (inst -1 "classes(p!1)") nil nil)
+           ("2" (hide 2)
+            (("2" (skosimp*)
+              (("2"
+                (case-replace " {l: LocalVarDecl |
+              EXISTS (c: Class, m: Method):
+                add(t!1, x!1)(c) AND
+                 methods(c)(m) AND (lvars(m)(l) OR l = arg(m))} = union({l : LocalVarDecl | EXISTS (m : Method) : methods(t!1)(m) AND (lvars(m)(l) OR l = arg(m))}, {l : LocalVarDecl |
+              EXISTS (c: Class, m: Method):
+                x!1(c) AND methods(c)(m) AND (lvars(m)(l) OR l = arg(m))})"
+                 :hide? t)
+                (("1" (use "finite_union[LocalVarDecl]")
+                  (("1" (hide -1 2)
+                    (("1" (use "finite_set_induction[Method]")
+                      (("1"
+                        (inst -1
+                         "LAMBDA(M : finite_set[Method]) : is_finite[LocalVarDecl]({l: LocalVarDecl |EXISTS(m : Method) : M(m) AND (lvars(m)(l) OR l = arg(m))})")
+                        (("1" (split -1)
+                          (("1" (inst?) nil nil)
+                           ("2" (hide 2)
+                            (("2" (skosimp*)
+                              (("2"
+                                (case-replace
+                                 "{l: LocalVarDecl |
+              EXISTS (m: Method):
+                add(t!2, x!2)(m) AND (lvars(m)(l) OR l = arg(m))} = union(lvars(t!2), union(singleton(arg(t!2)), {l : LocalVarDecl | EXISTS (m: Method): x!2(m) AND (lvars(m)(l) OR l = arg(m))}))"
+                                 :hide?
+                                 t)
+                                (("1"
+                                  (use "finite_union[LocalVarDecl]")
+                                  (("1"
+                                    (use "finite_union[LocalVarDecl]")
+                                    nil
+                                    nil))
+                                  nil)
+                                 ("2"
+                                  (hide -1 2)
+                                  (("2"
+                                    (apply-extensionality :hide? t)
+                                    (("2"
+                                      (expand "union")
+                                      (("2"
+                                        (expand "add")
+                                        (("2"
+                                          (expand "singleton")
+                                          (("2"
+                                            (expand "member")
+                                            (("2"
+                                              (iff)
+                                              (("2"
+                                                (prop)
+                                                (("1"
+                                                  (skosimp*)
+                                                  (("1"
+                                                    (inst?)
+                                                    (("1"
+                                                      (split -1)
+                                                      (("1"
+                                                        (assert)
+                                                        nil
+                                                        nil)
+                                                       ("2"
+                                                        (assert)
+                                                        nil
+                                                        nil))
+                                                      nil))
+                                                    nil))
+                                                  nil)
+                                                 ("2"
+                                                  (inst?)
+                                                  (("2"
+                                                    (assert)
+                                                    nil
+                                                    nil))
+                                                  nil)
+                                                 ("3"
+                                                  (inst?)
+                                                  (("3"
+                                                    (assert)
+                                                    nil
+                                                    nil))
+                                                  nil)
+                                                 ("4"
+                                                  (skosimp*)
+                                                  (("4"
+                                                    (inst?)
+                                                    (("4"
+                                                      (assert)
+                                                      nil
+                                                      nil))
+                                                    nil))
+                                                  nil))
+                                                nil))
+                                              nil))
+                                            nil))
+                                          nil))
+                                        nil))
+                                      nil))
+                                    nil))
+                                  nil))
+                                nil))
+                              nil))
+                            nil)
+                           ("3" (hide 2)
+                            (("3" (expand "emptyset")
+                              (("3"
+                                (case-replace
+                                 "{f : LocalVarDecl | FALSE} = emptyset[LocalVarDecl]")
+                                (("1"
+                                  (use "finite_emptyset[LocalVarDecl]")
+                                  nil
+                                  nil)
+                                 ("2"
+                                  (apply-extensionality :hide? t)
+                                  (("2" (grind) nil nil))
+                                  nil))
+                                nil))
+                              nil))
+                            nil))
+                          nil))
+                        nil))
+                      nil))
+                    nil))
+                  nil)
+                 ("2" (apply-extensionality :hide? t)
+                  (("2" (hide -1 2)
+                    (("2" (expand "union")
+                      (("2" (expand "add")
+                        (("2" (expand "member")
+                          (("2" (iff)
+                            (("2" (prop)
+                              (("1"
+                                (skosimp*)
+                                (("1"
+                                  (split -1)
+                                  (("1"
+                                    (inst?)
+                                    (("1" (assert) nil nil))
+                                    nil)
+                                   ("2"
+                                    (inst? 2)
+                                    (("2" (assert) nil nil))
+                                    nil))
+                                  nil))
+                                nil)
+                               ("2"
+                                (skosimp*)
+                                (("2"
+                                  (inst?)
+                                  (("2" (assert) nil nil))
+                                  nil))
+                                nil)
+                               ("3"
+                                (skosimp*)
+                                (("3"
+                                  (inst?)
+                                  (("3" (assert) nil nil))
+                                  nil))
+                                nil))
+                              nil))
+                            nil))
+                          nil))
+                        nil))
+                      nil))
+                    nil))
+                  nil))
+                nil))
+              nil))
+            nil)
+           ("3" (hide 2)
+            (("3" (expand "emptyset")
+              (("3"
+                (case-replace
+                 "{f : LocalVarDecl | FALSE} = emptyset[LocalVarDecl]")
+                (("1" (use "finite_emptyset[LocalVarDecl]") nil nil)
+                 ("2" (apply-extensionality :hide? t)
+                  (("2" (grind) nil nil)) nil))
+                nil))
+              nil))
+            nil))
+          nil))
+        nil))
+      nil))
+    nil)
+   proved
+   ((bool nonempty-type-eq-decl nil booleans nil)
+    (set type-eq-decl nil sets nil)
+    (is_finite const-decl "bool" finite_sets nil)
+    (AND const-decl "[bool, bool -> bool]" booleans nil)
+    (OR const-decl "[bool, bool -> bool]" booleans nil)
+    (= const-decl "[T, T -> boolean]" equalities nil)
+    (nonempty? const-decl "bool" sets nil)
+    (add const-decl "(nonempty?)" sets nil)
+    (union const-decl "set" sets nil)
+    (FALSE const-decl "bool" booleans nil)
+    (finite_emptyset judgement-tcc nil finite_sets nil)
+    (emptyset const-decl "set" sets nil)
+    (singleton? const-decl "bool" sets nil)
+    (singleton const-decl "(singleton?)" sets nil)
+    (x!2 skolem-const-decl "finite_set[Method]" Program nil)
+    (t!2 skolem-const-decl "Method" Program nil)
+    (member const-decl "bool" sets nil)
+    (x!1 skolem-const-decl "finite_set[Class]" Program nil)
+    (t!1 skolem-const-decl "Class" Program nil)
+    (finite_union judgement-tcc nil finite_sets nil)
+    (Program type-eq-decl nil Program nil)
+    (Class type-eq-decl nil Program nil)
+    (lift type-decl nil lift_adt nil)
+    (Method type-eq-decl nil Program nil)
+    (Stmt type-decl nil Stmt_adt nil)
+    (LocalVarDecl type-eq-decl nil Program nil)
+    (Expr type-decl nil Expr_adt nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (FieldDecl type-eq-decl nil Program nil)
+    (Name formal-nonempty-type-decl nil Program nil)
+    (JType type-decl nil JType_adt nil)
+    (defined? const-decl "boolean" ValProp nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (Val type-decl nil Val_adt nil)
+    (finite_set_induction formula-decl nil FiniteSetInduction nil))
+   290039 6480 t nil)
   (getLocalDecls_TCC1-1 nil 3390200268 3390200397
    ("" (subtype-tcc) nil nil) unfinished nil 202 90 nil nil))
  (getGhostDecls_TCC1 0
+  (getGhostDecls_TCC1-3 "no" 3390301962 3390302015
+   ("" (skosimp*)
+    (("" (use "finite_set_induction[Class]")
+      ((""
+        (inst -1
+         "LAMBDA(C : finite_set[Class]) : is_finite[FieldDecl]({f : FieldDecl | EXISTS (c : Class) : C(c) AND ghost_vars(c)(f)})")
+        (("" (split -1)
+          (("1" (inst -1 "classes(p!1)") nil nil)
+           ("2" (hide 2)
+            (("2" (skosimp*)
+              (("2"
+                (case-replace " ({f: FieldDecl |
+                  EXISTS (c: Class): add(t!1, x!1)(c) AND ghost_vars(c)(f)}) = union({f : FieldDecl | ghost_vars(t!1)(f)}, {f : FieldDecl | EXISTS (c : Class) : x!1(c) AND ghost_vars(c)(f)})")
+                (("1" (hide -1)
+                  (("1" (use "finite_union[FieldDecl]")
+                    (("1" (hide -1 2)
+                      (("1" (typepred "ghost_vars(t!1)")
+                        (("1"
+                          (case-replace
+                           "ghost_vars(t!1) = {f : FieldDecl | ghost_vars(t!1)(f)}")
+                          (("1" (assert) nil nil)
+                           ("2" (apply-extensionality :hide? t) nil
+                            nil))
+                          nil))
+                        nil))
+                      nil))
+                    nil))
+                  nil)
+                 ("2" (apply-extensionality :hide? t)
+                  (("2" (hide -1 2)
+                    (("2" (expand "union")
+                      (("2" (expand "add")
+                        (("2" (expand "member")
+                          (("2" (iff)
+                            (("2" (prop)
+                              (("1"
+                                (skosimp*)
+                                (("1"
+                                  (split -1)
+                                  (("1" (assert) nil nil)
+                                   ("2"
+                                    (inst?)
+                                    (("2" (assert) nil nil))
+                                    nil))
+                                  nil))
+                                nil)
+                               ("2" (inst?) nil nil)
+                               ("3"
+                                (skosimp*)
+                                (("3"
+                                  (inst?)
+                                  (("3" (assert) nil nil))
+                                  nil))
+                                nil))
+                              nil))
+                            nil))
+                          nil))
+                        nil))
+                      nil))
+                    nil))
+                  nil))
+                nil))
+              nil))
+            nil)
+           ("3" (hide 2)
+            (("3" (expand "emptyset")
+              (("3"
+                (case-replace
+                 "{f : FieldDecl | FALSE} = emptyset[FieldDecl]")
+                (("1" (use "finite_emptyset[FieldDecl]") nil nil)
+                 ("2" (apply-extensionality :hide? t)
+                  (("2" (grind) nil nil)) nil))
+                nil))
+              nil))
+            nil))
+          nil))
+        nil))
+      nil))
+    nil)
+   unchecked
+   ((bool nonempty-type-eq-decl nil booleans nil)
+    (set type-eq-decl nil sets nil)
+    (is_finite const-decl "bool" finite_sets nil)
+    (AND const-decl "[bool, bool -> bool]" booleans nil)
+    (FALSE const-decl "bool" booleans nil)
+    (finite_emptyset judgement-tcc nil finite_sets nil)
+    (emptyset const-decl "set" sets nil)
+    (= const-decl "[T, T -> boolean]" equalities nil)
+    (nonempty? const-decl "bool" sets nil)
+    (add const-decl "(nonempty?)" sets nil)
+    (union const-decl "set" sets nil)
+    (finite_union judgement-tcc nil finite_sets nil) nil nil
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (member const-decl "bool" sets nil)
+    (Program type-eq-decl nil Program nil)
+    (Class type-eq-decl nil Program nil)
+    (lift type-decl nil lift_adt nil)
+    (Method type-eq-decl nil Program nil)
+    (Stmt type-decl nil Stmt_adt nil)
+    (LocalVarDecl type-eq-decl nil Program nil)
+    (Expr type-decl nil Expr_adt nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (FieldDecl type-eq-decl nil Program nil)
+    (Name formal-nonempty-type-decl nil Program nil)
+    (JType type-decl nil JType_adt nil)
+    (defined? const-decl "boolean" ValProp nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (Val type-decl nil Val_adt nil)
+    (finite_set_induction formula-decl nil FiniteSetInduction nil))
+   2156 300 t nil)
+  (o "no" 3390301931 3390301931
+   ("" (skosimp*)
+    (("" (use "finite_set_induction[Class]")
+      ((""
+        (inst -1
+         "LAMBDA(C : finite_set[Class]) : is_finite[FieldDecl]({f : FieldDecl | EXISTS (c : Class) : C(c) AND ghost_vars(c)(f)})")
+        (("" (split -1)
+          (("1" (inst -1 "classes(p!1)") (("1" (postpone) nil nil))
+            nil)
+           ("2" (hide 2)
+            (("2" (skosimp*)
+              (("2"
+                (case-replace " ({f: FieldDecl |
+                  EXISTS (c: Class): add(t!1, x!1)(c) AND ghost_vars(c)(f)}) = union({f : FieldDecl | ghost_vars(t!1)(f)}, {f : FieldDecl | EXISTS (c : Class) : x!1(c) AND ghost_vars(c)(f)})")
+                (("1" (hide -1)
+                  (("1" (use "finite_union[FieldDecl]")
+                    (("1" (hide -1 2)
+                      (("1" (typepred "ghost_vars(t!1)")
+                        (("1"
+                          (case-replace
+                           "ghost_vars(t!1) = {f : FieldDecl | ghost_vars(t!1)(f)}")
+                          (("1" (assert) nil nil)
+                           ("2" (apply-extensionality :hide? t) nil
+                            nil))
+                          nil))
+                        nil))
+                      nil))
+                    nil))
+                  nil)
+                 ("2" (apply-extensionality :hide? t)
+                  (("2" (hide -1 2)
+                    (("2" (expand "union")
+                      (("2" (expand "add")
+                        (("2" (expand "member")
+                          (("2" (iff)
+                            (("2" (prop)
+                              (("1"
+                                (skosimp*)
+                                (("1"
+                                  (split -1)
+                                  (("1" (assert) nil nil)
+                                   ("2"
+                                    (inst?)
+                                    (("2" (assert) nil nil))
+                                    nil))
+                                  nil))
+                                nil)
+                               ("2" (inst?) nil nil)
+                               ("3"
+                                (skosimp*)
+                                (("3"
+                                  (inst?)
+                                  (("3" (assert) nil nil))
+                                  nil))
+                                nil))
+                              nil))
+                            nil))
+                          nil))
+                        nil))
+                      nil))
+                    nil))
+                  nil))
+                nil))
+              nil))
+            nil)
+           ("3" (hide 2)
+            (("3" (expand "emptyset")
+              (("3"
+                (case-replace
+                 "{f : FieldDecl | FALSE} = emptyset[FieldDecl]")
+                (("1" (use "finite_emptyset[FieldDecl]") nil nil)
+                 ("2" (apply-extensionality :hide? t)
+                  (("2" (grind) nil nil)) nil))
+                nil))
+              nil))
+            nil))
+          nil))
+        nil))
+      nil))
+    nil)
+   unfinished nil 25919 390 t shostak)
+  (getGhostDecls_TCC1-2 nil 3390301905 nil
+   ("" (skosimp*)
+    (("" (use "finite_set_induction[Class]")
+      ((""
+        (inst -1
+         "LAMBDA(C : finite_set[Class]) : is_finite[FieldDecl]({f : FieldDecl | EXISTS (c : Class) : C(c) AND ghost_vars(c)(f)})")
+        (("" (split -1)
+          (("1" (inst -1 "classes(p!1)") nil)
+           ("2" (hide 2)
+            (("2" (skosimp*)
+              (("2"
+                (case-replace " ({f: FieldDecl |
+                  EXISTS (c: Class): add(t!1, x!1)(c) AND ghost_vars(c)(f)}) = union({f : FieldDecl | ghost_vars(t!1)(f)}, {f : FieldDecl | EXISTS (c : Class) : x!1(c) AND ghost_vars(c)(f)})")
+                (("1" (hide -1)
+                  (("1" (use "finite_union[FieldDecl]")
+                    (("1" (hide -1 2)
+                      (("1" (typepred "ghost_vars(t!1)")
+                        (("1"
+                          (case-replace
+                           "ghost_vars(t!1) = {f : FieldDecl | ghost_vars(t!1)(f)}")
+                          (("1" (assert) nil)
+                           ("2" (apply-extensionality :hide? t)
+                            nil)))))))))))
+                 ("2" (apply-extensionality :hide? t)
+                  (("2" (hide -1 2)
+                    (("2" (expand "union")
+                      (("2" (expand "add")
+                        (("2" (expand "member")
+                          (("2" (iff)
+                            (("2" (prop)
+                              (("1"
+                                (skosimp*)
+                                (("1"
+                                  (split -1)
+                                  (("1" (assert) nil)
+                                   ("2"
+                                    (inst?)
+                                    (("2" (assert) nil)))))))
+                               ("2" (inst?) nil)
+                               ("3"
+                                (skosimp*)
+                                (("3"
+                                  (inst?)
+                                  (("3"
+                                    (assert)
+                                    nil)))))))))))))))))))))))))
+           ("3" (hide 2)
+            (("3" (expand "emptyset")
+              (("3"
+                (case-replace
+                 "{f : FieldDecl | FALSE} = emptyset[FieldDecl]")
+                (("1" (use "finite_emptyset[FieldDecl]") nil)
+                 ("2" (apply-extensionality :hide? t)
+                  (("2" (grind) nil))))))))))))))))
+    nil)
+   unchecked nil nil nil nil nil)
   (getGhostDecls_TCC1-1 nil 3390200268 3390200397
-   ("" (subtype-tcc) nil nil) unfinished nil 89 90 nil nil)))
+   ("" (subtype-tcc) nil nil) unfinished nil 89 90 nil nil))
+ (get_LocalVarDecl_TCC1 0
+  (get_LocalVarDecl_TCC1-1 nil 3390301359 nil
+   ("" (subtype-tcc) nil nil) unfinished nil nil nil nil nil)))
 (WellFormedProgram
  (var_names_TCC1 0
   (var_names_TCC1-1 nil 3390200393 3390201317
@@ -59,7 +645,7 @@
         nil))
       nil))
     nil)
-   proved
+   unchecked
    ((finite_set type-eq-decl nil finite_sets nil)
     (is_finite const-decl "bool" finite_sets nil)
     (set type-eq-decl nil sets nil)
@@ -70,13 +656,6 @@
     (bool nonempty-type-eq-decl nil booleans nil)
     (boolean nonempty-type-decl nil booleans nil)
     (injective? const-decl "bool" functions nil)
-    (x1!1 skolem-const-decl
-     "({n: Name | EXISTS (f: FieldDecl[Name]): fs!1(f) AND name(f) = n})"
-     WellFormedProgram nil)
-    (x2!1 skolem-const-decl
-     "({n: Name | EXISTS (f: FieldDecl[Name]): fs!1(f) AND name(f) = n})"
-     WellFormedProgram nil)
-    (f!2 skolem-const-decl "FieldDecl[Name]" WellFormedProgram nil)
     (nonempty_exists formula-decl nil sets_lemmas nil)
     (choose const-decl "(p)" sets nil)
     (below type-eq-decl nil nat_types nil)
@@ -94,8 +673,6 @@
      nil)
     (number nonempty-type-decl nil numbers nil)
     (AND const-decl "[bool, bool -> bool]" booleans nil)
-    (fs!1 skolem-const-decl "finite_set[FieldDecl[Name]]"
-     WellFormedProgram nil)
     (= const-decl "[T, T -> boolean]" equalities nil)
     (nonempty? const-decl "bool" sets nil))
    232237 5570 t nil))
@@ -143,11 +720,9 @@
         nil))
       nil))
     nil)
-   proved
+   unchecked
    ((nonempty? const-decl "bool" sets nil)
     (= const-decl "[T, T -> boolean]" equalities nil)
-    (ls!1 skolem-const-decl "finite_set[LocalVarDecl[Name]]"
-     WellFormedProgram nil)
     (AND const-decl "[bool, bool -> bool]" booleans nil)
     (number nonempty-type-decl nil numbers nil)
     (number_field_pred const-decl "[number -> boolean]" number_fields
@@ -165,13 +740,6 @@
     (below type-eq-decl nil nat_types nil)
     (choose const-decl "(p)" sets nil)
     (nonempty_exists formula-decl nil sets_lemmas nil)
-    (l!1 skolem-const-decl "LocalVarDecl[Name]" WellFormedProgram nil)
-    (x2!1 skolem-const-decl
-     "({n: Name | EXISTS (l: LocalVarDecl[Name]): ls!1(l) AND name(l) = n})"
-     WellFormedProgram nil)
-    (x1!1 skolem-const-decl
-     "({n: Name | EXISTS (l: LocalVarDecl[Name]): ls!1(l) AND name(l) = n})"
-     WellFormedProgram nil)
     (injective? const-decl "bool" functions nil)
     (boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)

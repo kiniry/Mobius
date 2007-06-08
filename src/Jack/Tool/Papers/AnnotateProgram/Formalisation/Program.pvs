@@ -134,6 +134,7 @@ BEGIN
             ValProp,
             Stmt[Name],
             Expr[Name]
+
   
   main : Name
 
@@ -168,6 +169,10 @@ BEGIN
                     fields : finite_set[FieldDecl],
                     methods : finite_set[Method] #]
 
+  IMPORTING FiniteSetInduction[Class],
+            FiniteSetInduction[Method]
+
+
   Program : TYPE = [# classes : finite_set[Class] #]
 
   getFieldDecls(p : Program) : finite_set[FieldDecl] =
@@ -181,9 +186,7 @@ BEGIN
                          (lvars(m)(l) OR l = arg(m))}
 
   getGhostDecls(p : Program) : finite_set[FieldDecl] =
-     {g : FieldDecl | EXISTS (c : Class, m : Method) : 
-                         classes(p)(c) AND 
-                         ghost_vars(c)(g)}
+     {g : FieldDecl | EXISTS (c : Class) :  classes(p)(c) AND ghost_vars(c)(g)}
 
 
   % TODO: one definition should be enough
