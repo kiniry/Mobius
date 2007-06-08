@@ -21,8 +21,8 @@ BEGIN
 
   % Ghost variable declarations
 
-  new_gvds(mp) : finite_set[GhostVarDecl] =
-   {gd : GhostVarDecl | jtype(gd) = IntType AND
+  new_gvds(mp) : finite_set[FieldDecl] =
+   {gd : FieldDecl | jtype(gd) = IntType AND
      (name(gd) = cp AND init_val(gd) = Int(unique(init_cp(mva(mp))))) OR
      ((EXISTS (q : (cps(mva(mp)))) : name(gd) = name_of(q) AND 
                                      jtype(gd) = IntType AND
@@ -112,12 +112,12 @@ BEGIN
     LET a = mva(mp), p = program(mp) IN
     EXISTS (c: Class) :
       classes(p)(c) AND name(c) = class_name(a) AND
-      (FORALL (gv : GhostVarDecl) :
+      (FORALL (gv : FieldDecl) :
         ghost_vars(c)(gv) IMPLIES NOT name(gv) = cp) AND
-      (FORALL (q : CP, gd : GhostVarDecl) :
+      (FORALL (q : CP, gd : FieldDecl) :
         cps(a)(q) IMPLIES ghost_vars(c)(gd) IMPLIES 
           NOT name(gd) = name_of(q)) AND
-      (FORALL (vd : MVAVarDecl, gd : GhostVarDecl) :
+      (FORALL (vd : MVAVarDecl, gd : FieldDecl) :
         vdsA(a)(vd) IMPLIES ghost_vars(c)(gd) IMPLIES
           NOT name(gd) = name(vd))
 
@@ -154,17 +154,14 @@ BEGIN
   ann_program_preserves_var_decls : LEMMA
     FORALL (mp : MonitoredProgram)(vn : string) :
       ann_program_pre(mp) IMPLIES
-        (is_declared_as_field(program(mp))(vn) IFF
-         is_declared_as_field(ann_program(mp))(vn))
+        (var_names(getFieldDecls(program(mp)))(vn) IFF
+         var_names(getFieldDecls(ann_program(mp)))(vn))
         AND
-        (is_declared_as_ghost(program(mp))(vn) IMPLIES
-         is_declared_as_ghost(ann_program(mp))(vn))
+        (var_names(getGhostDecls(program(mp)))(vn) IMPLIES
+         var_names(getGhostDecls(ann_program(mp)))(vn))
         AND
-        (is_declared_as_arg(program(mp))(vn) IFF
-         is_declared_as_arg(ann_program(mp))(vn))
-        AND
-        (is_declared_as_local(program(mp))(vn) IFF
-         is_declared_as_local(ann_program(mp))(vn))
+        (var_names(getLocalDecls(program(mp)))(vn) IFF
+         var_names(getLocalDecls(ann_program(mp)))(vn))
 
   % TODO: prove!
   ann_program_preserves_state_vars : LEMMA
@@ -245,11 +242,11 @@ BEGIN
     FORALL (mp : MonitoredProgram, ap : Program) :
       ann_program_pre(mp) IMPLIES
       ap = ann_program(mp) IMPLIES
-        up?(get_GhostVarDecl(cp, ap)) AND
+        up?(get_GhostDecl(cp, ap)) AND
         (FORALL (q : CP) :
-          cps(mva(mp))(q) IMPLIES up?(get_GhostVarDecl(name_of(q), ap))) AND
+          cps(mva(mp))(q) IMPLIES up?(get_GhostDecl(name_of(q), ap))) AND
         (FORALL (v : MVAVarDecl) :
-          vdsA(mva(mp))(v) IMPLIES up?(get_GhostVarDecl(name(v), ap)))
+          vdsA(mva(mp))(v) IMPLIES up?(get_GhostDecl(name(v), ap)))
 
 
 END AnnotateProgramProperties

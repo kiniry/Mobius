@@ -98,7 +98,7 @@ BEGIN
   initial_AP_state(p : Program) : APState =
     (# pstate := initial_Program_state(p),
        gvs := LAMBDA (n : Name) :
-         LET gd = get_GhostVarDecl(n, p) IN
+         LET gd = get_GhostDecl(n, p) IN
          IF bottom?(gd)
          THEN Bottom
          ELSE init_val(down(gd))

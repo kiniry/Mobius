@@ -381,7 +381,7 @@ BEGIN
     FORALL (a : (complete_MVA_pre)) :
       deterministic(complete_MVA(a))
 
-  complete_MVA_is_total : LEMMA % :-)
+  complete_MVA_is_total : LEMMA % :-?
     FORALL (a : (complete_MVA_pre)) :
       total(complete_MVA(a))
 

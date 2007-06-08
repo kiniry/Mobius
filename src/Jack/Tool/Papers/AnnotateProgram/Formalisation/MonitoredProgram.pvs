@@ -67,7 +67,7 @@ BEGIN
     wf_AState(mva(mp))(astate(sigma)) AND
     wf_state(program(mp))(pstate(sigma)) AND
     FORALL (vn : Name) :
-      is_ghost(vn, sigma) IFF is_declared_as_ghost(program(mp))(vn)
+      is_ghost(vn, sigma) IFF var_names(getGhostDecls(program(mp)))(vn)
 
 
   IMPORTING SemanticsTypes[Name, MonitoredProgram, MPState, 
@@ -173,7 +173,7 @@ BEGIN
     (# astate := initial_MVA_state(mva(mp)),
        pstate := initial_Program_state(mp),
        gvs := LAMBDA (n : Name) :
-         LET gd = get_GhostVarDecl(n, program(mp)) IN
+         LET gd = get_GhostDecl(n, program(mp)) IN
          IF bottom?(gd)
          THEN Bottom
          ELSE init_val(down(gd))
