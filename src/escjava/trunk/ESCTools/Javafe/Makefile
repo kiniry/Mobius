@@ -146,7 +146,7 @@ JAVAFETESTTARGETS = \
 runtest: javafe_test
 	${MAKE} -C test/javafe/parser/test runtest
 	${MAKE} -C java/javafe/util runtest
-	${MAKE} -C test/javafe/test JAVAFE_CLASSPATH_CAN="${call canonicalize,${JAVAFE_CLASSPATH}}" runtest
+	${MAKE} -C test/javafe/test runtest
 
 ## Runs basic tests, plus some (but not all) that are long
 extensive_tests: javafe_test runtest
