@@ -789,7 +789,7 @@ public class DefGCmd
   {
     Throwable t=new Throwable();
     StackTraceElement [] stes=t.getStackTrace();
-    if (stes!=null || stes.length!=0) {
+    if (stes != null && stes.length != 0) {
       return("GK-Trace : " + stes[1]);
     }
     return("GK-Trace : NA");
