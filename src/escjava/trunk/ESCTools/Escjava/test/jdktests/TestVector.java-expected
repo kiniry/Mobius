@@ -1,15 +1,3 @@
-==================================================================
-Executing:
-/System/Library/Frameworks/JavaVM.framework/Versions/1.4.2/Home/bin/java -ea
-  -Dsimplify=ESCTOOLSROOT/Escjava/release/master/bin/Simplify-1.5.4.macosx
-  -classpath ESCTOOLSROOT/Javafe/classfiles:/Users/mikolas/SandBoxes/ESCTools/Escjava/classfiles:/Users/mikolas/SandBoxes/ESCTools/Utils:/Users/mikolas/SandBoxes/ESCTools/jars/mochalib.jar:/Users/mikolas/java/JavaBDD/javabdd-1.0b2.jar:
-   escjava.Main
-  
-  -classpath /sw/share/java/javacc/javacc.jar:/sw/share/java/junit/junit.jar:.:/Users/mikolas/bin/eclipse/plugins/org.junit_3.8.1/junit.jar
-  -specs ESCTOOLSROOT/specs
-  -nowarn Deadlock
-  -quiet -nowarn Deadlock -specs ESCTOOLSROOT/specs -classpath :/Users/mikolas/SandBoxes/ESCTools/Utils:/Users/mikolas/SandBoxes/ESCTools/Utils/junit.jar:/Users/mikolas/SandBoxes/ESCTools/Utils/ant.jar:. -classpath :/Users/mikolas/SandBoxes/ESCTools/Utils:/Users/mikolas/SandBoxes/ESCTools/Utils/junit.jar:/Users/mikolas/SandBoxes/ESCTools/Utils/ant.jar:. -specs /Users/mikolas/SandBoxes/ESCTools/specs TestVector.java
-==================================================================
 TestVector.java:7: Warning: Possible assertion failure (Assert)
         //@ assert false; // TEST FOR CONSISTENCY 1
             ^
