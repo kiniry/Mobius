@@ -83,6 +83,8 @@ BEGIN
   % TODO Adapt the proof:
   % execute_action_correctness has changed
   % related_states now includes specification_requirements
+  % use wf_program_variables_disjoint instead of 
+  % wf_program_has_unique_ghost_var_decl
   update_vars_correctness : LEMMA % :-)
     FORALL (mp : MonitoredProgram, ap : Program,
             a : Class, m : Method, t : Transition,  n : nat,

@@ -255,17 +255,16 @@ BEGIN
         wf_Store(a)(update(st)(n)(v))
 
   % guard_to_expression is implicitly defined by guard_to_expression_behavior
-  % in MonitoredProgramSemantics.
+  % in Equivalence.
   guard_to_expression(a : MVA)(g : Guard) : Expr
 
-  % NOTE: eval is implicitly defined by eval_action_behavior in 
-  % MonitoredProgramSemantics. Since we only consider the PSt of the state of
-  % the program, actions can not talk about existing ghost variables in the
-  % monitored program, but that is fine since we assumed that they are fields
-  % (although it could be extended to handle ghosts as well).
+  % NOTE: eval is implicitly defined by eval_action_behavior in Equivalence.
+  % Since we only consider the PSt of the state of the program, actions can not
+  % talk about existing ghost variables in the monitored program, but that is 
+  % fine since we assumed that they are fields (although it could be extended to
+  %  handle ghosts as well).
   eval(e : Expr)(stA : Store, stP : PSt) : Val
 
-  % type checking problem, because program expressions cannot be evaluated
   execute_action(l : Action)(stA : Store, stP : PSt) : RECURSIVE Store =
     IF null?(l)
     THEN stA
@@ -387,7 +386,7 @@ BEGIN
     FORALL (a : (complete_MVA_pre)) :
       deterministic(complete_MVA(a))
 
-  complete_MVA_is_total : LEMMA % :-?
+  complete_MVA_is_total : LEMMA % :-)
     FORALL (a : (complete_MVA_pre)) :
       total(complete_MVA(a))
 
