@@ -7,7 +7,7 @@ public abstract class Expression {
 	private Expression[] subExpressions;
 	protected byte priority;
 	
-	public static final byte MAX_PRI = 100; // max priority
+	public static final byte MAX_PRI = 18; // max priority
 	
 //	public static final Counter COUNTER = Counter.getCounter();
 //
@@ -166,6 +166,7 @@ public abstract class Expression {
 		line_pos = usedc;
 		conf.root_pri = MAX_PRI;
 		conf.wciecie = "    ";
+		conf.expr_depth = 0;
 		return printCode(conf);
 	}
 
@@ -179,9 +180,22 @@ public abstract class Expression {
 	private String printCode2(BMLConfig conf) {
 		int rp = conf.root_pri;
 		conf.root_pri = priority;
+		conf.expr_depth++;
 		String str = printCode1(conf);
-		if (priority > rp)
-			str = "(" + str + ")";
+		conf.expr_depth--;
+		if (priority > rp) {
+			String str2 = "";
+			for (int i=0; i<str.length(); i++) {
+				char ch = str.charAt(i);
+				if ((ch == ' ') || (ch == '\n') || (ch == '*')) {
+					str2 += ch;
+				} else {
+					str2 += "(" + str.substring(i, str.length()) + ")";
+					break;
+				}
+			}
+			str = str2;
+		}
 		conf.root_pri = rp;
 		return str;
 	}

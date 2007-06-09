@@ -16,6 +16,7 @@ public class ArrayAccessExpression extends Expression {
 	 */
 	public ArrayAccessExpression(Expression  _array, Expression _arrIndex  ) {
 		super(new Expression[]{_array, _arrIndex});
+		priority = 1;
 	}
 
 //	public Expression loopModifArrayAtState(int instrIndex, Expression expr ) {

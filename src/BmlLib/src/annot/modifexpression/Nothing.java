@@ -1,5 +1,6 @@
 package annot.modifexpression;
 
+import annot.bcclass.BMLConfig;
 import annot.bcexpression.Expression;
 
 public class Nothing extends ModifiesExpression {
@@ -7,7 +8,7 @@ public class Nothing extends ModifiesExpression {
 	
 	private Nothing() {}
 	
-	public String toString() {
+	public String printCode(BMLConfig conf) {
 		return "\\nothing";
 	}
 

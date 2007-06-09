@@ -70,13 +70,13 @@ public class ArithmeticExpression extends Expression {
 		case ExpressionConstants.BITWISEXOR: priority = 9; break;
 		case ExpressionConstants.DIV: priority = 3; break;
 		case ExpressionConstants.MULT: priority = 3; break;
-		case ExpressionConstants.NEG: priority = 4; break;
+		case ExpressionConstants.NEG: priority = 2; break;
 		case ExpressionConstants.NOP: priority = 0; break; //?
 		case ExpressionConstants.REM: priority = 3; break;
 		case ExpressionConstants.SHL: priority = 5; break;
 		case ExpressionConstants.SHR: priority = 5; break;
 		case ExpressionConstants.SUB: priority = 4; break;
-		case ExpressionConstants.USHR: priority = 5; break; // co to jest?
+		case ExpressionConstants.USHR: priority = 5; break;
 		}
 	}
 	

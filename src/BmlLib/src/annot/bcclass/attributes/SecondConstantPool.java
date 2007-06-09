@@ -1,6 +1,7 @@
 package annot.bcclass.attributes;
 
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 
 import org.apache.bcel.Constants;
@@ -102,7 +103,6 @@ public class SecondConstantPool implements BCAttribute {
 	    throws IOException, ClassFormatException
 	  {
 	    byte b = file.readByte(); // Read tag byte
-	    System.out.println("Constant: " + b);
 
 	    switch(b) {
 	    case Constants.CONSTANT_Class:              return ConstantClass(file);
@@ -140,6 +140,9 @@ public class SecondConstantPool implements BCAttribute {
 	     */
 	    for(int i=0; i < constant_pool_count; i++) {
 	      constant_pool[i] = readConstant(file);
+//	      DataOutputStream dos = new DataOutputStream(System.out);
+//	      constant_pool[i].dump(dos);
+	      System.out.println("   "+constant_pool[i].toString());
 
 	      /* Quote from the JVM specification:
 	       * "All eight byte constants take up two spots in the constant pool.

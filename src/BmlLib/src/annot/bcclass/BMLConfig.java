@@ -28,6 +28,10 @@ public class BMLConfig {
 	// line of expression (sequence of spaces)
 	public String wciecie;
 	
+	// depth of currrently displayed expression
+	// in expression tree
+	public int expr_depth;
+	
 	public BMLConfig(BCConstantPool cp) {
 		this.cp = cp;
 	}

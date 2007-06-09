@@ -25,6 +25,7 @@ public class FieldAccess extends Expression {
 	 */
 	public FieldAccess(Expression _constantFieldRef, Expression _obj_ref) {
 		super(_constantFieldRef, _obj_ref);
+		priority = 1;
 	}
 
 	/**
@@ -35,6 +36,7 @@ public class FieldAccess extends Expression {
 	 */
 	public FieldAccess(Expression _constantFieldRef) {
 		super(_constantFieldRef);
+		priority = 1;
 	}
 
 //	/*

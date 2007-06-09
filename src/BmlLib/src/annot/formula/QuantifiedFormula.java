@@ -12,13 +12,13 @@ public class QuantifiedFormula extends Formula {
 	public QuantifiedFormula(Formula _formula, Quantificator _q) {
 		super(_formula);
 		quantificators = new Quantificator[] { _q };
-		priority = 16; //?
+		priority = 17; //?
 	}
 
 	public QuantifiedFormula(Formula _formula, Quantificator[] _q) {
 		super(_formula);
 		quantificators = _q;
-		priority = 16; //?
+		priority = 17; //?
 	}
 
 //	/**

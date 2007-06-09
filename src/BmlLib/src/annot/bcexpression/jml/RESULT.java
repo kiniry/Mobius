@@ -1,5 +1,6 @@
 package annot.bcexpression.jml;
 
+import annot.bcclass.BMLConfig;
 import annot.bcexpression.Expression;
 
 public class RESULT extends JMLExpression {
@@ -52,7 +53,7 @@ public class RESULT extends JMLExpression {
 	/* (non-Javadoc)
 	 * @see bcexpression.Expression#toString()
 	 */
-	public String toString() {	
+	public String printCode1(BMLConfig conf) {
 		return "result";
 	}
 

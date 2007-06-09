@@ -1,5 +1,7 @@
 package annot.bcexpression;
 
+import annot.bcclass.BMLConfig;
+
 //import bytecode_wp.bcexpression.javatype.JavaType;
 
 public class NULL extends Expression {
@@ -31,7 +33,7 @@ public class NULL extends Expression {
 	/* (non-Javadoc)
 	 * @see bcexpression.Expression#toString()
 	 */
-	public String toString() {
+	public String printCode(BMLConfig conf) {
 		return "NULL";
 	}
 

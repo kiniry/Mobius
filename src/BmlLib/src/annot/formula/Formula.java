@@ -17,8 +17,8 @@ public class Formula extends Expression {
 		case Connector.AND: priority = 11; break;
 		case Connector.OR: priority = 12; break;
 		case Connector.NOT: priority = 2; break;
-		case Connector.EQUIV: priority = 13; break; //?
-		case Connector.IMPLIES: priority = 13; break; //?
+		case Connector.EQUIV: priority = 14; break;
+		case Connector.IMPLIES: priority = 13; break;
 		}
 	}
 	

@@ -140,7 +140,10 @@ public class AttributeReader {
 	private static SecondConstantPool readSecondConstantPool(byte[] bytes) throws ReadAttributeException {
 		try {
 			bytes_read += bytes.length; // XXX unchecked
-			return new SecondConstantPool(new DataInputStream(new ByteArrayInputStream(bytes)));
+			System.out.println("Reading second constant pool...");
+			SecondConstantPool scp = new SecondConstantPool(new DataInputStream(new ByteArrayInputStream(bytes)));
+			System.out.println("...done");
+			return scp;
 		} catch (IOException e) {
 			System.out.println("error in reading cp2");
 			return null;

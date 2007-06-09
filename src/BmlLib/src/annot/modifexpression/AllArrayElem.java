@@ -1,4 +1,6 @@
 package annot.modifexpression;
+
+import annot.bcclass.BMLConfig;
  
 /**
  * Deprecated - this expression when found ibn the specification will be  
@@ -25,7 +27,7 @@ public class AllArrayElem  extends SpecArray {
 	/* (non-Javadoc)
 	 * @see bcexpression.Expression#toString()
 	 */
-	public String toString() {
+	public String printCode(BMLConfig conf) {
 		return "*";
 	}
 }

@@ -27,9 +27,9 @@ public class Predicate2Ar extends Predicate {
 		case PredicateSymbol.LESS_uscmp: priority = 6; break;
 		case PredicateSymbol.LESSEQ: priority = 6; break;
 		case PredicateSymbol.LESSEQ_uscmp: priority = 6; break;
-		case PredicateSymbol.INSTANCEOF: priority = 2; break;
-		case PredicateSymbol.ODD: priority = 0; break; //?
-		case PredicateSymbol.SUBTYPE: priority = 0; break; //?
+		case PredicateSymbol.INSTANCEOF: priority = 6; break;
+		case PredicateSymbol.ODD: priority = 6; break; // co to jest?
+		case PredicateSymbol.SUBTYPE: priority = 1; break; //?
 		}
 	}
 	

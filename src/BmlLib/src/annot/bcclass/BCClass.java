@@ -143,7 +143,7 @@ public class BCClass {
 				BCAttribute bcAttribute = AttributeReader.readAttribute(
 						privateAttr, this, new BCLocalVariable[] { new BCLocalVariable(0) });
 				if (bcAttribute instanceof SecondConstantPool) {
-					System.out.println("Second constant pool detected.");
+//					System.out.println("Second constant pool detected.");
 					constantPool.add(cp,(SecondConstantPool) bcAttribute);
 				} else if (bcAttribute instanceof ClassInvariant) {
 					System.out.println("Class invariant detected.");
