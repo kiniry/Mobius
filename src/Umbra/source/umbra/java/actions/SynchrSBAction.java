@@ -28,94 +28,94 @@ import umbra.editor.BytecodeEditor;
  * This class defines an action of synchronization positions
  * form source code to bytecode. It is available with the standard
  * Java editor.
- * 
+ *
  * @author Wojtek Wąs
  * @see DocumentProvider
  */
 public class SynchrSBAction implements IEditorActionDelegate {
-	
-	/**
-	 * The editor of the Java source code.
-	 */
-	private CompilationUnitEditor editor;
-	
-	/**
-	 * The method sets the internal editor attribute.
-	 */
-	public void setActiveEditor(IAction action, IEditorPart targetEditor) {
-		editor = (CompilationUnitEditor)targetEditor;
-	}
 
-	/**
-	 * This method handles the action of the syncronisation between the
-	 * source code and the bytecode i.e. it takes the selection in
-	 * the source code and shows the corresponding selection in the
-	 * bytecode.  
-	 * 
-	 * @param action the action that triggered the operation
-	 */
-	public void run(IAction action) {
-		ITextSelection selection = (ITextSelection)editor.
-		                                getSelectionProvider().getSelection();
-		int off = selection.getOffset();
-		IPath active = ((FileEditorInput)editor.getEditorInput()).
-		                                        getFile().getFullPath();	
-		int lind = active.toOSString().lastIndexOf(UmbraHelper.JAVA_EXTENSION);
-		if (lind == -1) {
-			MessageDialog.openError(editor.getSite().getShell(), 
-					                "Bytecode", 
-					                "This is not a \""+
-					                UmbraHelper.JAVA_EXTENSION+
-					                "\" file");
-			return;
-		}
-		String fname = UmbraHelper.replaceLast(active.toOSString(),
-									UmbraHelper.JAVA_EXTENSION,
-									UmbraHelper.BYTECODE_EXTENSION);
-		IWorkspace workspace = ResourcesPlugin.getWorkspace();
-		IFile filel = ((FileEditorInput)editor.getEditorInput()).
-        				getFile();
-		IFile file = null;
-		try {
-			file = UmbraHelper.getClassFileName(filel, editor);
-			if (!file.exists()) {
-				MessageDialog.openError(editor.getSite().getShell(), 
-						                "Bytecode", 
-						                "File " + fname + " not found");
-				return;
-			}
-		} catch (JavaModelException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-			return;
-		} 
-		FileEditorInput input = new FileEditorInput(file);
-		try {
-			BytecodeEditor bcEditor = (BytecodeEditor)editor.getSite().
-			                                       getPage().
-			                                       openEditor(input, 
-			                                    		"umbra.BytecodeEditor", 
-			                                    		true);
-			if (bcEditor.isSaveOnCloseNeeded()) {
-				MessageDialog.openWarning(editor.getSite().getShell(), 
-						                  "Bytecode", 
-						                  "The Bytecode editor needs being "+
-						                  "refreshed!");
-				return;
-			}
-			BytecodeDocument bDoc = ((BytecodeDocument)bcEditor.
-					                            getDocumentProvider().
-					                            getDocument(input));
-			bDoc.synchronizeSB(off, bcEditor);
-		} catch (PartInitException e) {
-			e.printStackTrace();
-		}
-	}
+  /**
+   * The editor of the Java source code.
+   */
+  private CompilationUnitEditor editor;
 
-	/**
-	 * Currently, does nothing.
-	 */
-	public void selectionChanged(IAction action, ISelection selection) {
-	}
+  /**
+   * The method sets the internal editor attribute.
+   */
+  public void setActiveEditor(IAction action, IEditorPart targetEditor) {
+    editor = (CompilationUnitEditor)targetEditor;
+  }
+
+  /**
+   * This method handles the action of the syncronisation between the
+   * source code and the bytecode i.e. it takes the selection in
+   * the source code and shows the corresponding selection in the
+   * bytecode.
+   *
+   * @param action the action that triggered the operation
+   */
+  public void run(IAction action) {
+    ITextSelection selection = (ITextSelection)editor.
+                    getSelectionProvider().getSelection();
+    int off = selection.getOffset();
+    IPath active = ((FileEditorInput)editor.getEditorInput()).
+                        getFile().getFullPath();
+    int lind = active.toOSString().lastIndexOf(UmbraHelper.JAVA_EXTENSION);
+    if (lind == -1) {
+      MessageDialog.openError(editor.getSite().getShell(),
+                  "Bytecode",
+                  "This is not a \""+
+                  UmbraHelper.JAVA_EXTENSION+
+                  "\" file");
+      return;
+    }
+    String fname = UmbraHelper.replaceLast(active.toOSString(),
+                  UmbraHelper.JAVA_EXTENSION,
+                  UmbraHelper.BYTECODE_EXTENSION);
+    IWorkspace workspace = ResourcesPlugin.getWorkspace();
+    IFile filel = ((FileEditorInput)editor.getEditorInput()).
+            getFile();
+    IFile file = null;
+    try {
+      file = UmbraHelper.getClassFileName(filel, editor);
+      if (!file.exists()) {
+        MessageDialog.openError(editor.getSite().getShell(),
+                    "Bytecode",
+                    "File " + fname + " not found");
+        return;
+      }
+    } catch (JavaModelException e1) {
+      // TODO Auto-generated catch block
+      e1.printStackTrace();
+      return;
+    }
+    FileEditorInput input = new FileEditorInput(file);
+    try {
+      BytecodeEditor bcEditor = (BytecodeEditor)editor.getSite().
+                           getPage().
+                           openEditor(input,
+                            "umbra.BytecodeEditor",
+                            true);
+      if (bcEditor.isSaveOnCloseNeeded()) {
+        MessageDialog.openWarning(editor.getSite().getShell(),
+                      "Bytecode",
+                      "The Bytecode editor needs being "+
+                      "refreshed!");
+        return;
+      }
+      BytecodeDocument bDoc = ((BytecodeDocument)bcEditor.
+                        getDocumentProvider().
+                        getDocument(input));
+      bDoc.synchronizeSB(off, bcEditor);
+    } catch (PartInitException e) {
+      e.printStackTrace();
+    }
+  }
+
+  /**
+   * Currently, does nothing.
+   */
+  public void selectionChanged(IAction action, ISelection selection) {
+  }
 
 }

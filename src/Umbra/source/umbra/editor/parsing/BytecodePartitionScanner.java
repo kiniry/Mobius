@@ -7,45 +7,45 @@ import org.eclipse.jface.text.rules.*;
  */
 
 public class BytecodePartitionScanner extends RuleBasedPartitionScanner {
-	
-	/**
-	 * TODO
-	 */
-	public final static String DEFAULT = "__xml_default";
-	/**
-	 * TODO
-	 */
-	public final static String HEAD = "__xml_head";
-	/**
-	 * TODO
-	 */
-	public final static String THROWS = "__xml_thr";
-	/**
-	 * TODO
-	 */
-	public final static String TAG = "__xml_tag";
 
-	/**
-	 * TODO
-	 *
-	 */
-	public BytecodePartitionScanner() {
+  /**
+   * TODO
+   */
+  public final static String DEFAULT = "__xml_default";
+  /**
+   * TODO
+   */
+  public final static String HEAD = "__xml_head";
+  /**
+   * TODO
+   */
+  public final static String THROWS = "__xml_thr";
+  /**
+   * TODO
+   */
+  public final static String TAG = "__xml_tag";
 
-		IToken thr = new Token(THROWS);
-		IToken head = new Token(HEAD);
-		IToken tag = new Token(TAG);
+  /**
+   * TODO
+   *
+   */
+  public BytecodePartitionScanner() {
 
-		IPredicateRule[] rules = new IPredicateRule[8];
+    IToken thr = new Token(THROWS);
+    IToken head = new Token(HEAD);
+    IToken tag = new Token(TAG);
 
-		rules[0] = new MultiLineRule("<!--", "-->", head);
-		rules[1] = new TagRule(tag);
-		rules[2] = new EndOfLineRule("class", head);
-		rules[3] = new EndOfLineRule("public", head);
-		rules[4] = new EndOfLineRule("private", head);
-		rules[5] = new EndOfLineRule("protected", head);
-		rules[6] = new EndOfLineRule("}", head);
-		rules[7] = new EndOfLineRule("throws", thr);
+    IPredicateRule[] rules = new IPredicateRule[8];
 
-		setPredicateRules(rules);
-	}
+    rules[0] = new MultiLineRule("<!--", "-->", head);
+    rules[1] = new TagRule(tag);
+    rules[2] = new EndOfLineRule("class", head);
+    rules[3] = new EndOfLineRule("public", head);
+    rules[4] = new EndOfLineRule("private", head);
+    rules[5] = new EndOfLineRule("protected", head);
+    rules[6] = new EndOfLineRule("}", head);
+    rules[7] = new EndOfLineRule("throws", thr);
+
+    setPredicateRules(rules);
+  }
 }

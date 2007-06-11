@@ -15,44 +15,42 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.FileEditorInput;
 
 /**
- * TODO 
- * 
+ * TODO
+ *
  * @author Wojtek Wąs
  */
 public class InstalInfoAction implements IEditorActionDelegate {
 
-	/**
-	 * TODO
-	 */
-	private IEditorPart editor;
-	
-	/**
-	 * TODO
-	 */
-	public void setActiveEditor(IAction action, IEditorPart targetEditor) {
-		editor = targetEditor;
-	}
+  /**
+   * TODO
+   */
+  private IEditorPart editor;
 
-	/**
-	 * TODO
-	 */
-	public void run(IAction action) {
+  /**
+   * TODO
+   */
+  public void setActiveEditor(IAction action, IEditorPart targetEditor) {
+    editor = targetEditor;
+  }
 
-		IWorkspace workspace = ResourcesPlugin.getWorkspace();
-		IFile file = workspace.getRoot().getFile(new Path("\\Info\\info.txt"));
-		FileEditorInput input = new FileEditorInput(file); 
-		try {
-			editor.getEditorSite().getPage().openEditor(input, "org.eclipse.ui.DefaultTextEditor");
-		} catch (PartInitException e) {
-			e.printStackTrace();
-		}
-	}
+  /**
+   * TODO
+   */
+  public void run(IAction action) {
 
-	/**
-	 * TODO
-	 */
-	public void selectionChanged(IAction action, ISelection selection) {
-	
-	}
+    IWorkspace workspace = ResourcesPlugin.getWorkspace();
+    IFile file = workspace.getRoot().getFile(new Path("\\Info\\info.txt"));
+    FileEditorInput input = new FileEditorInput(file);
+    try {
+      editor.getEditorSite().getPage().openEditor(input, "org.eclipse.ui.DefaultTextEditor");
+    } catch (PartInitException e) {
+      e.printStackTrace();
+    }
+  }
 
+  /**
+   * TODO
+   */
+  public void selectionChanged(IAction action, ISelection selection) {
+  }
 }

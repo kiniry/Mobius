@@ -11,27 +11,27 @@ import umbra.editor.ColorManager;
  */
 public class BoogiePLTagScanner extends RuleBasedScanner {
 
-	/**
-	 * TODO
-	 */
-	public BoogiePLTagScanner(ColorManager manager, int mod) {
-		/*
-		IToken[] tokens = TokenGetter.getTokenTab(manager, mod);
-		
-		WordRule linerule = new WordRule(new SpecialWordDetector()); 
-			linerule.addWord("<init>", tokens[IColorValues.KEY]);
+  /**
+   * TODO
+   */
+  public BoogiePLTagScanner(ColorManager manager, int mod) {
+    /*
+    IToken[] tokens = TokenGetter.getTokenTab(manager, mod);
 
-		IRule[] rules = new IRule[4];
+    WordRule linerule = new WordRule(new SpecialWordDetector());
+      linerule.addWord("<init>", tokens[IColorValues.KEY]);
 
-		// Add rule for double quotes
-		rules[0] = new SingleLineRule("\"", "\"", tokens[IColorValues.STRING], '\\');
-		// Add a rule for single quotes
-		rules[1] = new SingleLineRule("'", "'", tokens[IColorValues.STRING], '\\');
-		// Add generic whitespace rule.
-		rules[2] = linerule;
-		rules[3] = new WhitespaceRule(new BoogiePLWhitespaceDetector());
+    IRule[] rules = new IRule[4];
 
-		setRules(rules);
-		*/
-	}
+    // Add rule for double quotes
+    rules[0] = new SingleLineRule("\"", "\"", tokens[IColorValues.STRING], '\\');
+    // Add a rule for single quotes
+    rules[1] = new SingleLineRule("'", "'", tokens[IColorValues.STRING], '\\');
+    // Add generic whitespace rule.
+    rules[2] = linerule;
+    rules[3] = new WhitespaceRule(new BoogiePLWhitespaceDetector());
+
+    setRules(rules);
+    */
+  }
 }

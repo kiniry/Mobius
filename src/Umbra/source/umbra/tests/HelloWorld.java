@@ -14,18 +14,18 @@ package umbra.tests;
 
 public class HelloWorld {
 
-	public static void main(String[] args) {
-		String a = "ala";
-		String b = "makota";
-		String c = "";
-		String d = "ala";
-		int i1 = a.compareTo(b);
-		int i2 = a.compareTo(c);
-		int i3 = a.compareTo(d);
-		int i4 = b.compareTo(a);
-		int i5 = c.compareTo(a);
-		int i6 = c.compareTo("");
-		System.out.println("" + i1 + " " + i2 + " " + i3 + " " + i4 + " " + i5 + " " + i6 + " ");
-		
-	}
+  public static void main(String[] args) {
+    String a = "Alice";
+    String b = "has a cat";
+    String c = "";
+    String d = "Alice";
+    int i1 = a.compareTo(b);
+    int i2 = a.compareTo(c);
+    int i3 = a.compareTo(d);
+    int i4 = b.compareTo(a);
+    int i5 = c.compareTo(a);
+    int i6 = c.compareTo("");
+    System.out.println("" + i1 + " " + i2 + " " + i3 + " " + i4 + " " + i5 + " " + i6 + " ");
+
+  }
 }

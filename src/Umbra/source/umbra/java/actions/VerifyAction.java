@@ -7,37 +7,36 @@ import org.eclipse.ui.IEditorPart;
 
 /**
  * The action is used to convert Java Bytecode into BoogiePL.
- * 
+ *
  * @author Samuel Willimann
  *
  */
 public class VerifyAction implements IEditorActionDelegate {
-	
-	/**
-	 * TODO
-	 */
-	public void setActiveEditor(IAction action, IEditorPart targetEditor) {
-	}
 
-	/**
-	 * TODO
-	 */
-	public void run(IAction action) {
-		
-		// TODO convert Bytecode to BoogiePL
-		
-		
-		// TODO Run Boogie on the generated BoogiePL program
-		
-		return;
-	}
+  /**
+   * TODO
+   */
+  public void setActiveEditor(IAction action, IEditorPart targetEditor) {
+  }
 
-	/**
-	 * TODO
-	 */
-	public void selectionChanged(IAction action, ISelection selection) {
-		// TODO Auto-generated method stub
+  /**
+   * TODO
+   */
+  public void run(IAction action) {
 
-	}
+    // TODO convert Bytecode to BoogiePL
 
+
+    // TODO Run Boogie on the generated BoogiePL program
+
+    return;
+  }
+
+  /**
+   * TODO
+   */
+  public void selectionChanged(IAction action, ISelection selection) {
+    // TODO Auto-generated method stub
+
+  }
 }

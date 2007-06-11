@@ -14,104 +14,102 @@ import umbra.editor.parsing.IBytecodeStrings;
 
 
 /**
- * This class is related to some subset of instructions 
- * depending on parameters. It redefines some crucial while 
+ * This class is related to some subset of instructions
+ * depending on parameters. It redefines some crucial while
  * handling with single instruction methods (correctness, getting handle).
  * Instructions of this kind are used to call other methods.
- * 
+ *
  * @author Jarosław Paszek
  */
 public class InvokeInstruction extends StringInstruction {
 
-	
-	/**
-	 * TODO
-	 */
-	public InvokeInstruction(String l, String n) {
-		super(l, n);
-	}
-	
-	
-	/**
-	 * Invoke instruction line is correct if its parameter 
-	 * contains class name at the beginning and a number in ()
-	 * at the end.
-	 * 
-	 *@see InstructionLineController#correct() 
-	 */
-	public boolean correct()
-	{
-		String s;
-		s = UmbraHelper.stripAllWhitespace(line);
-		String[] s2 = IBytecodeStrings.invoke;
-		int j;
-		for (j = 0; j < s2.length; j++) {
-			if ((s.indexOf(s2[j]) > 0) && (s.indexOf(s2[j]) < s.indexOf(":") + 2)) 
-				
-				if (s.lastIndexOf("(") < 2) return false;
-				if (s.lastIndexOf(")") < 2) return false;
-				int m,n,o;
-				m = line.lastIndexOf("(");
-				n = line.lastIndexOf(")");
-				if (m + 1 >= n) {return false;}
-				for (o = m + 1; o < n; o++) 
-					{ if (!(Character.isDigit(line.charAt(o))))
-						{return false;}
-					}
-				return true;
-		}
-		return false;
-	}
-	
-	/**
-	 * TODO
-	 */
-	private int getInd() {
-		boolean isd;
-		String licznik = "0123456789";
-		int liczba;
-		if (line.lastIndexOf("(") >= line.lastIndexOf(")")){
-		} else {
-		isd = true;	
-		for (int i = line.lastIndexOf("(") + 1;i < line.lastIndexOf(")");i++) {
-			if (!Character.isDigit(line.charAt(i))){
-				isd = false;
-			}
-		}
-		if (isd){
-			liczba = 0;
-			for (int i = line.lastIndexOf("(") + 1;i < line.lastIndexOf(")");i++) {
-				liczba = 10*liczba + licznik.indexOf(line.substring(i,i+1));
-			}
-			return liczba;
-		}
-		}
-		return 0;
-	}
-	
-	/**
-	 * @see BytecodeLineController#getInstruction()
-	 */
-	public Instruction getInstruction() {
-	int index;
-	index = getInd();
-	
-	if (!correct())
-		return null;
-	
-	if (name.compareTo("invokespecial")==0) {
-		return new INVOKESPECIAL(index);
-	}
-	if (name.compareTo("invokestatic")==0) {
-		return new INVOKESTATIC(index);
-	}
-	if (name.compareTo("invokevirtual")==0) {
-		return new INVOKEVIRTUAL(index);
-	}
- 
-	return null;
-	
-	}
-	
-	
+
+  /**
+   * TODO
+   */
+  public InvokeInstruction(String l, String n) {
+    super(l, n);
+  }
+
+
+  /**
+   * Invoke instruction line is correct if its parameter
+   * contains class name at the beginning and a number in ()
+   * at the end.
+   *
+   *@see InstructionLineController#correct()
+   */
+  public boolean correct()
+  {
+    String s;
+    s = UmbraHelper.stripAllWhitespace(line);
+    String[] s2 = IBytecodeStrings.invoke;
+    int j;
+    for (j = 0; j < s2.length; j++) {
+      if ((s.indexOf(s2[j]) > 0) && (s.indexOf(s2[j]) < s.indexOf(":") + 2))
+
+        if (s.lastIndexOf("(") < 2) return false;
+        if (s.lastIndexOf(")") < 2) return false;
+        int m,n,o;
+        m = line.lastIndexOf("(");
+        n = line.lastIndexOf(")");
+        if (m + 1 >= n) {return false;}
+        for (o = m + 1; o < n; o++)
+          { if (!(Character.isDigit(line.charAt(o))))
+            {return false;}
+          }
+        return true;
+    }
+    return false;
+  }
+
+  /**
+   * TODO
+   */
+  private int getInd() {
+    boolean isd;
+    String licznik = "0123456789";
+    int liczba;
+    if (line.lastIndexOf("(") >= line.lastIndexOf(")")){
+    } else {
+    isd = true;
+    for (int i = line.lastIndexOf("(") + 1;i < line.lastIndexOf(")");i++) {
+      if (!Character.isDigit(line.charAt(i))){
+        isd = false;
+      }
+    }
+    if (isd){
+      liczba = 0;
+      for (int i = line.lastIndexOf("(") + 1;i < line.lastIndexOf(")");i++) {
+        liczba = 10*liczba + licznik.indexOf(line.substring(i,i+1));
+      }
+      return liczba;
+    }
+    }
+    return 0;
+  }
+
+  /**
+   * @see BytecodeLineController#getInstruction()
+   */
+  public Instruction getInstruction() {
+  int index;
+  index = getInd();
+
+  if (!correct())
+    return null;
+
+  if (name.compareTo("invokespecial")==0) {
+    return new INVOKESPECIAL(index);
+  }
+  if (name.compareTo("invokestatic")==0) {
+    return new INVOKESTATIC(index);
+  }
+  if (name.compareTo("invokevirtual")==0) {
+    return new INVOKEVIRTUAL(index);
+  }
+
+  return null;
+
+  }
 }

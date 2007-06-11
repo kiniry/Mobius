@@ -13,119 +13,119 @@ import umbra.editor.parsing.IBytecodeStrings;
 
 
 /**
- * This class is a superclass for a subset of instructions 
- * depending on parameters. It redefines some crucial while 
+ * This class is a superclass for a subset of instructions
+ * depending on parameters. It redefines some crucial while
  * handling with single instruction methods(correctness, getting handle).
  * There is only one array instruction used to create new
  * array of a particular type.
  * TODO
- * 
+ *
  * @author Jarosław Paszek
  */
 public class ArrayInstruction extends StringInstruction {
 
-	/**
-	 * The names of base bytecode types relevant for
-	 * array instructions. It correspond to the types
-	 * in the array {@ref types}.
-	 */
-	private static final String names[] =
-	{"VOID", "BOOLEAN","INT", "SHORT", "BYTE", "LONG",
-		"DOUBLE", "FLOAT", "CHAR"};
+  /**
+   * The names of base bytecode types relevant for
+   * array instructions. It correspond to the types
+   * in the array {@ref types}.
+   */
+  private static final String names[] =
+  {"VOID", "BOOLEAN","INT", "SHORT", "BYTE", "LONG",
+    "DOUBLE", "FLOAT", "CHAR"};
 
-	/**
-	 * The types of the bytecode types relevant for
-	 * array instructions. It correspond to the types
-	 * in the array {@ref names}.
-	 */
-	private static final Type types[] =
-	{Type.VOID, Type.BOOLEAN, Type.INT, Type.SHORT,
-			Type.BYTE, Type.LONG, Type.DOUBLE,
-			Type.FLOAT, Type.CHAR};
-	
-	/**
-	 * The number of types relevant to the array
-	 * instructions. It is correlated with the arrays
-	 * <code>names</code> and <code>types</code>
-	 */
-	private static final int typeCount = types.length;
+  /**
+   * The types of the bytecode types relevant for
+   * array instructions. It correspond to the types
+   * in the array {@ref names}.
+   */
+  private static final Type types[] =
+  {Type.VOID, Type.BOOLEAN, Type.INT, Type.SHORT,
+      Type.BYTE, Type.LONG, Type.DOUBLE,
+      Type.FLOAT, Type.CHAR};
 
-	/**
-	 * This method returns the type that corresponds to
-	 * the given name
-	 * 
-	 * @param the string for which the type
-	 */
-	private static Type getType(String insName) {
-		for (int i = 0; i < typeCount; i++) {
-			if ((names[i].startsWith(insName)) && (insName.startsWith(names[i])))
-				return types[i];
-		};
-		return null;
-	}
-		
-	/**
-	 * TODO
-	 */
-	public ArrayInstruction(String l, String n) {
-		super(l, n);
-	}
+  /**
+   * The number of types relevant to the array
+   * instructions. It is correlated with the arrays
+   * <code>names</code> and <code>types</code>
+   */
+  private static final int typeCount = types.length;
 
-	/**
-	 * @see BytecodeLineController#getInstruction()
-	 */
-	public Instruction getInstruction() {
-		//System.out.println("ArrayInstruction->getInstruction...");
-		String insType = line.substring(line.indexOf("<") + 1, line.indexOf(">"));
-		insType = insType.toUpperCase();
-		if (getType(insType) == null) {
-			//System.out.println("   Wrong instruction argument!");
-			return null;
-		}
-		byte r = getType(insType).getType();
-		//&*
-		boolean isOK = correct();
-		if (isOK) {
-		if (name.compareTo("newarray")==0)
-			return new NEWARRAY(r);
-		}
-		//System.out.println("   Failed!");
-		return null;
-	}
+  /**
+   * This method returns the type that corresponds to
+   * the given name
+   *
+   * @param the string for which the type
+   */
+  private static Type getType(String insName) {
+    for (int i = 0; i < typeCount; i++) {
+      if ((names[i].startsWith(insName)) && (insName.startsWith(names[i])))
+        return types[i];
+    };
+    return null;
+  }
 
-	
-	/**
-	 * Array instruction line is correct if it has 
-	 * one parameter that is class (or non-classed type) name.
-	 * 
-	 *@see InstructionLineController#correct() 
-	 */
-	public boolean correct()
-	{
-		String s;
-		s = UmbraHelper.stripAllWhitespace(line);
-		String[] s2 = IBytecodeStrings.array;
-		int j,y;
-		for (j = 0; j < s2.length; j++) {
-			if ((s.indexOf(s2[j]) > 0) && (s.indexOf(s2[j]) < s.indexOf(":") + 2)) {
-				//System.out.println(s);
-				//System.out.println("array " + s);
-				if (s.indexOf("<") < 2) return false;
-				if (s.indexOf(">") < 2) return false;
-				// zmienione 7.26.15
-				String insType = s.substring(s.indexOf("<") + 1, s.indexOf(">"));
-				insType = insType.toUpperCase();
-				if (getType(insType) == null) {
-					System.out.println("E04");
-					return false;
-				}
-				
-				for (y = (s.indexOf("<") + 1); y < s.indexOf(">"); y++)
-		           {if (!(Character.isDefined(s.charAt(y)))) return false;}
-				return true;
-			}
-		}
-			
-		return false;
-	}
+  /**
+   * TODO
+   */
+  public ArrayInstruction(String l, String n) {
+    super(l, n);
+  }
+
+  /**
+   * @see BytecodeLineController#getInstruction()
+   */
+  public Instruction getInstruction() {
+    //System.out.println("ArrayInstruction->getInstruction...");
+    String insType = line.substring(line.indexOf("<") + 1, line.indexOf(">"));
+    insType = insType.toUpperCase();
+    if (getType(insType) == null) {
+      //System.out.println("   Wrong instruction argument!");
+      return null;
+    }
+    byte r = getType(insType).getType();
+    //&*
+    boolean isOK = correct();
+    if (isOK) {
+    if (name.compareTo("newarray")==0)
+      return new NEWARRAY(r);
+    }
+    //System.out.println("   Failed!");
+    return null;
+  }
+
+
+  /**
+   * Array instruction line is correct if it has
+   * one parameter that is class (or non-classed type) name.
+   *
+   *@see InstructionLineController#correct()
+   */
+  public boolean correct()
+  {
+    String s;
+    s = UmbraHelper.stripAllWhitespace(line);
+    String[] s2 = IBytecodeStrings.array;
+    int j,y;
+    for (j = 0; j < s2.length; j++) {
+      if ((s.indexOf(s2[j]) > 0) && (s.indexOf(s2[j]) < s.indexOf(":") + 2)) {
+        //System.out.println(s);
+        //System.out.println("array " + s);
+        if (s.indexOf("<") < 2) return false;
+        if (s.indexOf(">") < 2) return false;
+        // zmienione 7.26.15
+        String insType = s.substring(s.indexOf("<") + 1, s.indexOf(">"));
+        insType = insType.toUpperCase();
+        if (getType(insType) == null) {
+          System.out.println("E04");
+          return false;
+        }
+
+        for (y = (s.indexOf("<") + 1); y < s.indexOf(">"); y++)
+           {if (!(Character.isDefined(s.charAt(y)))) return false;}
+        return true;
+      }
+    }
+
+    return false;
+  }
 }

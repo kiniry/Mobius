@@ -19,110 +19,109 @@ import umbra.editor.parsing.TokenGetter;
  * double click strategy and color versions. It has been generated
  * automatically and some changes has been made, for example
  * involving special ways of colouring and possibility of
- * changing the coloring styles ('mod' parameter).  
+ * changing the coloring styles ('mod' parameter).
  */
 public class BoogiePLConfiguration extends SourceViewerConfiguration {
-	/**
-	 * TODO
-	 */
-	private BoogiePLDoubleClickStrategy doubleClickStrategy;
-	/**
-	 * TODO
-	 */
-	private BoogiePLTagScanner tagScanner;
-	/**
-	 * TODO
-	 */
-	private BoogiePLScanner scanner;
-	
-	/**
-	 * The object which menages the allocation of the colours.
-	 */
-	private ColorManager colorManager;
-	/**
-	 * The current colouring style, see {@link IColorValues}
-	 */
-	private int mod;
-	
-	/**
-	 * TODO
-	 */
-	public BoogiePLConfiguration(ColorManager colorManager, int mod) {
-		this.colorManager = colorManager;
-		this.mod = mod;
-	}
+  /**
+   * TODO
+   */
+  private BoogiePLDoubleClickStrategy doubleClickStrategy;
+  /**
+   * TODO
+   */
+  private BoogiePLTagScanner tagScanner;
+  /**
+   * TODO
+   */
+  private BoogiePLScanner scanner;
 
-	/**
-	 * TODO
-	 */
-	public String[] getConfiguredContentTypes(ISourceViewer sourceViewer) {
-		return new String[] {
-			IDocument.DEFAULT_CONTENT_TYPE,
-			BoogiePLPartitionScanner.HEAD,
-			BoogiePLPartitionScanner.TAG };
-	}
-	
-	/**
-	 * TODO
-	 */
-	public ITextDoubleClickStrategy getDoubleClickStrategy(
-		ISourceViewer sourceViewer,
-		String contentType) {
-		if (doubleClickStrategy == null)
-			doubleClickStrategy = new BoogiePLDoubleClickStrategy();
-		return doubleClickStrategy;
-	}
+  /**
+   * The object which menages the allocation of the colours.
+   */
+  private ColorManager colorManager;
+  /**
+   * The current colouring style, see {@link IColorValues}
+   */
+  private int mod;
 
-	/**
-	 * TODO
-	 */
-	protected BoogiePLScanner getBoogiePLScanner() {
-		if (scanner == null) {
-			scanner = new BoogiePLScanner(colorManager, mod);
-			scanner.setDefaultReturnToken(
-				TokenGetter.getToken(colorManager, mod, IColorValues.DEFAULT));
-		}
-		return scanner;
-	}
-	
-	/**
-	 * TODO
-	 */
-	protected BoogiePLTagScanner getBoogiePLTagScanner() {
-		if (tagScanner == null) {
-			tagScanner = new BoogiePLTagScanner(colorManager, mod);
-			tagScanner.setDefaultReturnToken(
-				TokenGetter.getToken(colorManager, mod, IColorValues.TAG));
-		}
-		return tagScanner;
-	}
+  /**
+   * TODO
+   */
+  public BoogiePLConfiguration(ColorManager colorManager, int mod) {
+    this.colorManager = colorManager;
+    this.mod = mod;
+  }
 
-	/**
-	 * TODO
-	 */
-	public IPresentationReconciler getPresentationReconciler(ISourceViewer sourceViewer) {
-		PresentationReconciler reconciler = new PresentationReconciler();
+  /**
+   * TODO
+   */
+  public String[] getConfiguredContentTypes(ISourceViewer sourceViewer) {
+    return new String[] {
+      IDocument.DEFAULT_CONTENT_TYPE,
+      BoogiePLPartitionScanner.HEAD,
+      BoogiePLPartitionScanner.TAG };
+  }
 
-		DefaultDamagerRepairer dr =
-			new DefaultDamagerRepairer(getBoogiePLTagScanner());
-		reconciler.setDamager(dr, BoogiePLPartitionScanner.TAG);
-		reconciler.setRepairer(dr, BoogiePLPartitionScanner.TAG);
+  /**
+   * TODO
+   */
+  public ITextDoubleClickStrategy getDoubleClickStrategy(
+    ISourceViewer sourceViewer,
+    String contentType) {
+    if (doubleClickStrategy == null)
+      doubleClickStrategy = new BoogiePLDoubleClickStrategy();
+    return doubleClickStrategy;
+  }
 
-		dr = new DefaultDamagerRepairer(getBoogiePLScanner());
-		reconciler.setDamager(dr, IDocument.DEFAULT_CONTENT_TYPE);
-		reconciler.setRepairer(dr, IDocument.DEFAULT_CONTENT_TYPE);
+  /**
+   * TODO
+   */
+  protected BoogiePLScanner getBoogiePLScanner() {
+    if (scanner == null) {
+      scanner = new BoogiePLScanner(colorManager, mod);
+      scanner.setDefaultReturnToken(
+        TokenGetter.getToken(colorManager, mod, IColorValues.DEFAULT));
+    }
+    return scanner;
+  }
 
-		NonRuleBasedDamagerRepairer ndr =
-			TokenGetter.getRepairer(colorManager, mod, IColorValues.HEADER);
-		reconciler.setDamager(ndr, BoogiePLPartitionScanner.HEAD);
-		reconciler.setRepairer(ndr, BoogiePLPartitionScanner.HEAD);
-		
-		NonRuleBasedDamagerRepairer ndr2 =
-			TokenGetter.getRepairer(colorManager, mod, IColorValues.THROWS);
-		reconciler.setDamager(ndr2, BoogiePLPartitionScanner.THROWS);
-		reconciler.setRepairer(ndr2, BoogiePLPartitionScanner.THROWS);
+  /**
+   * TODO
+   */
+  protected BoogiePLTagScanner getBoogiePLTagScanner() {
+    if (tagScanner == null) {
+      tagScanner = new BoogiePLTagScanner(colorManager, mod);
+      tagScanner.setDefaultReturnToken(
+        TokenGetter.getToken(colorManager, mod, IColorValues.TAG));
+    }
+    return tagScanner;
+  }
 
-		return reconciler;
-	}
-	
+  /**
+   * TODO
+   */
+  public IPresentationReconciler getPresentationReconciler(ISourceViewer sourceViewer) {
+    PresentationReconciler reconciler = new PresentationReconciler();
+
+    DefaultDamagerRepairer dr =
+      new DefaultDamagerRepairer(getBoogiePLTagScanner());
+    reconciler.setDamager(dr, BoogiePLPartitionScanner.TAG);
+    reconciler.setRepairer(dr, BoogiePLPartitionScanner.TAG);
+
+    dr = new DefaultDamagerRepairer(getBoogiePLScanner());
+    reconciler.setDamager(dr, IDocument.DEFAULT_CONTENT_TYPE);
+    reconciler.setRepairer(dr, IDocument.DEFAULT_CONTENT_TYPE);
+
+    NonRuleBasedDamagerRepairer ndr =
+      TokenGetter.getRepairer(colorManager, mod, IColorValues.HEADER);
+    reconciler.setDamager(ndr, BoogiePLPartitionScanner.HEAD);
+    reconciler.setRepairer(ndr, BoogiePLPartitionScanner.HEAD);
+
+    NonRuleBasedDamagerRepairer ndr2 =
+      TokenGetter.getRepairer(colorManager, mod, IColorValues.THROWS);
+    reconciler.setDamager(ndr2, BoogiePLPartitionScanner.THROWS);
+    reconciler.setRepairer(ndr2, BoogiePLPartitionScanner.THROWS);
+
+    return reconciler;
+  }
 }

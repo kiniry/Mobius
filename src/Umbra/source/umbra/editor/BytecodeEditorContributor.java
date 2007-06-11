@@ -38,255 +38,254 @@ import umbra.editor.actions.BytecodeSynchrAction;
 
 
 /**
- * This is managing class that adds actions to workbench menus and toolbars 
- * for a bytecode editor. They appear when the editor is active. These actions 
- * are in particular: rebuild, refresh, combine, restore from history, 
- * synchronize the position of the cursor between the bytecode and the Java 
- * code, color change and check of the syntax correctness. 
- * 
+ * This is managing class that adds actions to workbench menus and toolbars
+ * for a bytecode editor. They appear when the editor is active. These actions
+ * are in particular: rebuild, refresh, combine, restore from history,
+ * synchronize the position of the cursor between the bytecode and the Java
+ * code, color change and check of the syntax correctness.
+ *
  * @author Wojtek Wąs
  */
 public class BytecodeEditorContributor extends EditorActionBarContributor {
 
-	/**
-	 * TODO
-	 */
-	private BytecodeContribution bytecodeContribution;
-	
-	/**
-	 * The action to change the color mode to the next one.
-	 */
-	private BytecodeEditorAction actionPlus;
-	
-	/**
-	 * The action to change the color mode to the previous one.
-	 */
-	private BytecodeEditorAction actionMinus;
-	
-	/**
-	 * The action to refresh the content of the current bytecode editor.
-	 */
-	private BytecodeRefreshAction refreshAction;
-	
-	/**
-	 * TODO
-	 */
-	private BytecodeRebuildAction rebuildAction;
-	
-	/**
-	 * The action to combine the modifications from the source code editor
-	 * and from the bytecode editor.
-	 */
-	private BytecodeCombineAction combineAction;
-	
-	/**
-	 * The action to restore one of the history snapshots that
-	 * were stored before.
-	 */
-	private BytecodeRestoreAction restoreAction;
-	
-	/**
-	 * The action to synchronize the position in the bytecode file with
-	 * the corresponding position in the source code file.
-	 */
-	private BytecodeSynchrAction synchrAction;
-		
-	/**
-	 * The constructor is executed when the editor is started.
-	 * It includes creating all actions and provide them with their icons.
-	 * 
-	 * @throws MalformedURLException
-	 */
-	public BytecodeEditorContributor() {
-		super();
-		final int mod = Composition.getMod();
-		bytecodeContribution = BytecodeContribution.newItem();
-		bytecodeContribution.addEditorContributor(this);
-		actionPlus = new BytecodeEditorAction(this, 1, mod);
-		actionMinus = new BytecodeEditorAction(this, 
-				                               IColorValues.MODELS.length -2,			                               
-				                               mod);
-		refreshAction = new BytecodeRefreshAction(this, bytecodeContribution);
-		rebuildAction = new BytecodeRebuildAction(this);
-		combineAction = new BytecodeCombineAction(this, bytecodeContribution);
-		restoreAction = new BytecodeRestoreAction(this, bytecodeContribution);
-		synchrAction = new BytecodeSynchrAction();
-		URL installURL = UmbraPlugin.getDefault().getBundle().getEntry("/");
-		try {
-			ImageDescriptor iconRight;
-			ImageDescriptor iconLeft;
-			ImageDescriptor refreshIcon;
-			ImageDescriptor rebuildIcon;
-			ImageDescriptor combineIcon;
-			ImageDescriptor restoreIcon;
-			ImageDescriptor synchrIcon;
-			iconRight = ImageDescriptor.
-			  createFromURL(new URL(installURL, "icons/change_color_backward.gif"));
-			iconLeft = ImageDescriptor.
-			  createFromURL(new URL(installURL, "icons/change_color_forward.gif"));
-			refreshIcon = ImageDescriptor.
-		      createFromURL(new URL(installURL, "icons/refresh.gif"));
-			rebuildIcon = ImageDescriptor.
-		      createFromURL(new URL(installURL, "icons/rebuild_bytecode.gif"));
-			combineIcon = ImageDescriptor.
-		      createFromURL(new URL(installURL, "icons/combine.gif"));
-			restoreIcon = ImageDescriptor.
-		      createFromURL(new URL(installURL, "icons/restoreH.gif"));
-			synchrIcon = ImageDescriptor.
-		      createFromURL(new URL(installURL, "icons/synchronize.gif"));
-			actionPlus.setImageDescriptor(iconRight);
-			actionMinus.setImageDescriptor(iconLeft);
-			refreshAction.setImageDescriptor(refreshIcon);
-			rebuildAction.setImageDescriptor(rebuildIcon);
-			combineAction.setImageDescriptor(combineIcon);
-			restoreAction.setImageDescriptor(restoreIcon);
-			synchrAction.setImageDescriptor(synchrIcon);
+  /**
+   * TODO
+   */
+  private BytecodeContribution bytecodeContribution;
 
-		} catch (MalformedURLException e) {
-			MessageDialog.openError(new Shell(), 
-	                "Bytecode", 
-	                "Improper bytecode icon on eclipse GUI reference ("+
-	                e.getMessage()+")");
-		}
-		actionPlus.setToolTipText("Change color");
-		actionMinus.setToolTipText("Change color");
-		refreshAction.setToolTipText("Refresh");
-		rebuildAction.setToolTipText("Rebuild");
-		combineAction.setToolTipText("Combine");
-		restoreAction.setToolTipText("Restore");
-		synchrAction.setToolTipText("Synchronize");
-	}
-	
-	/**
-	 * New buttons for the actions are added to the toolbar.
-	 */
-	public void contributeToToolBar(IToolBarManager toolBarManager) {
-		// Run super.
-		super.contributeToToolBar(toolBarManager);
-		// Test status line.
-		toolBarManager.add(bytecodeContribution);
-		toolBarManager.add(actionPlus);
-		toolBarManager.add(actionMinus);
-		toolBarManager.add(refreshAction);
-		toolBarManager.add(rebuildAction);
-		toolBarManager.add(combineAction);
-		toolBarManager.add(restoreAction);
-		toolBarManager.add(synchrAction);
-	}
-	
-	/**
-	 * New items for the actions are added to the menu.
-	 * 
-	 * @param menuManager TODO
-	 */
-	public void contributeToMenu(IMenuManager menuManager) {
-		// Run super.
-		super.contributeToMenu(menuManager);
-		MenuManager bytecodeMenu = new MenuManager("Editor"); //$NON-NLS-1$
-		menuManager.insertAfter("additions", bytecodeMenu); //$NON-NLS-1$
-		bytecodeMenu.add(actionPlus);
-		bytecodeMenu.add(actionMinus);
-		bytecodeMenu.add(refreshAction);
-		bytecodeMenu.add(rebuildAction);
-		bytecodeMenu.add(combineAction);
-		bytecodeMenu.add(restoreAction);
-		bytecodeMenu.add(synchrAction);
-	}
-	
-	/**
-	 * The current editor window is set as an attribute
-	 * (also for each action)
-	 * 
-	 * @param editor	the current editor window
-	 */
-	public void setActiveEditor(IEditorPart editor) {
-		super.setActiveEditor(editor);
-		bytecodeContribution.setActiveEditor(editor);
-		actionPlus.setActiveEditor(editor);
-		actionMinus.setActiveEditor(editor);
-		refreshAction.setActiveEditor(editor);
-		rebuildAction.setActiveEditor(editor);
-		combineAction.setActiveEditor(editor);
-		restoreAction.setActiveEditor(editor);
-		synchrAction.setActiveEditor(editor);
-	}
-	
-	/**
-	 * The same as {@ref #refreshEditor(IEditorPart, IEditorInput)}, but
-	 * the input is obtained from the current editor window.
-	 * 
-	 * @see #refreshEditor(IEditorPart, IEditorInput)
-	 * @throws PartInitException if the new editor could not be created or 
-	 *                           initialized
-	 */
-	public void refreshEditor(IEditorPart editor) throws PartInitException {
-		IEditorInput input = editor.getEditorInput();
-		refreshEditor(editor, input);
-	}
-	
-	/**
-	 * Saves all settings of the current editor (selection positions, 
-	 * contributions, JavaClass structure, related editor). Then closes the 
-	 * editor and opens a new one with the same settings and given input. 
-	 * 
-	 * @param editor		current editor to be closed
-	 * @param input			input file to be displayed in new editor
-	 * @throws PartInitException if the new editor could not be created or 
-	 *                           initialized
-	 */
-	public void refreshEditor(IEditorPart editor, IEditorInput input) 
-	               throws PartInitException {
-		IWorkbenchPage page = editor.getEditorSite().getPage();
-		ITextSelection selection = (ITextSelection)((AbstractTextEditor)editor).getSelectionProvider().getSelection();
-		int off = selection.getOffset();
-		int len = selection.getLength();
-		AbstractDecoratedTextEditor related = ((BytecodeEditor)editor).
-		                                                  getRelatedEditor();
-		JavaClass jc = ((BytecodeEditor)editor).getJavaClass();
-		boolean proper = (related != null);
-		bytecodeContribution.survive();
-		if (proper) Composition.startDisas();
-		page.closeEditor(editor, true);
-		IEditorPart newEditor = page.openEditor(input, 
-				                                "umbra.BytecodeEditor", true);
-		((BytecodeEditor) newEditor).setRelation(related, jc);
-		ISelection ns = new TextSelection(off, len);
-		ISelectionProvider sp = ((AbstractTextEditor)newEditor).
-		                                            getSelectionProvider();
-		sp.setSelection(ns);
-		bytecodeContribution.reinit();
-		if (proper) Composition.stopDisas();
-	}
-	
-	/**
-	 * This method disables the synchronisation action in the editor. 
-	 */
-	public void synchrDisable() {
-		synchrAction.setEnabled(false);
-	}
+  /**
+   * The action to change the color mode to the next one.
+   */
+  private BytecodeEditorAction actionPlus;
 
-	/**
-	 * This method enables the synchronisation action in the editor.
-	 */
-	public void synchrEnable() {
-		synchrAction.setEnabled(true);
-	}
-	
-	/**
-	 * debugging helper
-	 *
-	/*private void controlPrint(JavaClass jc, int i) {
-		Method meth = jc.getMethods()[i];
-		System.out.println(meth.getCode().toString());
-	}*/
+  /**
+   * The action to change the color mode to the previous one.
+   */
+  private BytecodeEditorAction actionMinus;
 
-	/**
-	 * This returns the action ?that executes the refresh action.
-	 * 
-	 * @return
-	 */
-	public BytecodeRefreshAction getRefreshAction() {
-		return refreshAction;
-	}
+  /**
+   * The action to refresh the content of the current bytecode editor.
+   */
+  private BytecodeRefreshAction refreshAction;
 
+  /**
+   * TODO
+   */
+  private BytecodeRebuildAction rebuildAction;
+
+  /**
+   * The action to combine the modifications from the source code editor
+   * and from the bytecode editor.
+   */
+  private BytecodeCombineAction combineAction;
+
+  /**
+   * The action to restore one of the history snapshots that
+   * were stored before.
+   */
+  private BytecodeRestoreAction restoreAction;
+
+  /**
+   * The action to synchronize the position in the bytecode file with
+   * the corresponding position in the source code file.
+   */
+  private BytecodeSynchrAction synchrAction;
+
+  /**
+   * The constructor is executed when the editor is started.
+   * It includes creating all actions and provide them with their icons.
+   *
+   * @throws MalformedURLException
+   */
+  public BytecodeEditorContributor() {
+    super();
+    final int mod = Composition.getMod();
+    bytecodeContribution = BytecodeContribution.newItem();
+    bytecodeContribution.addEditorContributor(this);
+    actionPlus = new BytecodeEditorAction(this, 1, mod);
+    actionMinus = new BytecodeEditorAction(this,
+                         IColorValues.MODELS.length -2,
+                         mod);
+    refreshAction = new BytecodeRefreshAction(this, bytecodeContribution);
+    rebuildAction = new BytecodeRebuildAction(this);
+    combineAction = new BytecodeCombineAction(this, bytecodeContribution);
+    restoreAction = new BytecodeRestoreAction(this, bytecodeContribution);
+    synchrAction = new BytecodeSynchrAction();
+    URL installURL = UmbraPlugin.getDefault().getBundle().getEntry("/");
+    try {
+      ImageDescriptor iconRight;
+      ImageDescriptor iconLeft;
+      ImageDescriptor refreshIcon;
+      ImageDescriptor rebuildIcon;
+      ImageDescriptor combineIcon;
+      ImageDescriptor restoreIcon;
+      ImageDescriptor synchrIcon;
+      iconRight = ImageDescriptor.
+        createFromURL(new URL(installURL, "icons/change_color_backward.gif"));
+      iconLeft = ImageDescriptor.
+        createFromURL(new URL(installURL, "icons/change_color_forward.gif"));
+      refreshIcon = ImageDescriptor.
+        createFromURL(new URL(installURL, "icons/refresh.gif"));
+      rebuildIcon = ImageDescriptor.
+        createFromURL(new URL(installURL, "icons/rebuild_bytecode.gif"));
+      combineIcon = ImageDescriptor.
+        createFromURL(new URL(installURL, "icons/combine.gif"));
+      restoreIcon = ImageDescriptor.
+        createFromURL(new URL(installURL, "icons/restoreH.gif"));
+      synchrIcon = ImageDescriptor.
+        createFromURL(new URL(installURL, "icons/synchronize.gif"));
+      actionPlus.setImageDescriptor(iconRight);
+      actionMinus.setImageDescriptor(iconLeft);
+      refreshAction.setImageDescriptor(refreshIcon);
+      rebuildAction.setImageDescriptor(rebuildIcon);
+      combineAction.setImageDescriptor(combineIcon);
+      restoreAction.setImageDescriptor(restoreIcon);
+      synchrAction.setImageDescriptor(synchrIcon);
+
+    } catch (MalformedURLException e) {
+      MessageDialog.openError(new Shell(),
+          "Bytecode",
+          "Improper bytecode icon on eclipse GUI reference ("+
+          e.getMessage()+")");
+    }
+    actionPlus.setToolTipText("Change color");
+    actionMinus.setToolTipText("Change color");
+    refreshAction.setToolTipText("Refresh");
+    rebuildAction.setToolTipText("Rebuild");
+    combineAction.setToolTipText("Combine");
+    restoreAction.setToolTipText("Restore");
+    synchrAction.setToolTipText("Synchronize");
+  }
+
+  /**
+   * New buttons for the actions are added to the toolbar.
+   */
+  public void contributeToToolBar(IToolBarManager toolBarManager) {
+    // Run super.
+    super.contributeToToolBar(toolBarManager);
+    // Test status line.
+    toolBarManager.add(bytecodeContribution);
+    toolBarManager.add(actionPlus);
+    toolBarManager.add(actionMinus);
+    toolBarManager.add(refreshAction);
+    toolBarManager.add(rebuildAction);
+    toolBarManager.add(combineAction);
+    toolBarManager.add(restoreAction);
+    toolBarManager.add(synchrAction);
+  }
+
+  /**
+   * New items for the actions are added to the menu.
+   *
+   * @param menuManager TODO
+   */
+  public void contributeToMenu(IMenuManager menuManager) {
+    // Run super.
+    super.contributeToMenu(menuManager);
+    MenuManager bytecodeMenu = new MenuManager("Editor"); //$NON-NLS-1$
+    menuManager.insertAfter("additions", bytecodeMenu); //$NON-NLS-1$
+    bytecodeMenu.add(actionPlus);
+    bytecodeMenu.add(actionMinus);
+    bytecodeMenu.add(refreshAction);
+    bytecodeMenu.add(rebuildAction);
+    bytecodeMenu.add(combineAction);
+    bytecodeMenu.add(restoreAction);
+    bytecodeMenu.add(synchrAction);
+  }
+
+  /**
+   * The current editor window is set as an attribute
+   * (also for each action)
+   *
+   * @param editor  the current editor window
+   */
+  public void setActiveEditor(IEditorPart editor) {
+    super.setActiveEditor(editor);
+    bytecodeContribution.setActiveEditor(editor);
+    actionPlus.setActiveEditor(editor);
+    actionMinus.setActiveEditor(editor);
+    refreshAction.setActiveEditor(editor);
+    rebuildAction.setActiveEditor(editor);
+    combineAction.setActiveEditor(editor);
+    restoreAction.setActiveEditor(editor);
+    synchrAction.setActiveEditor(editor);
+  }
+
+  /**
+   * The same as {@ref #refreshEditor(IEditorPart, IEditorInput)}, but
+   * the input is obtained from the current editor window.
+   *
+   * @see #refreshEditor(IEditorPart, IEditorInput)
+   * @throws PartInitException if the new editor could not be created or
+   *               initialized
+   */
+  public void refreshEditor(IEditorPart editor) throws PartInitException {
+    IEditorInput input = editor.getEditorInput();
+    refreshEditor(editor, input);
+  }
+
+  /**
+   * Saves all settings of the current editor (selection positions,
+   * contributions, JavaClass structure, related editor). Then closes the
+   * editor and opens a new one with the same settings and given input.
+   *
+   * @param editor    current editor to be closed
+   * @param input      input file to be displayed in new editor
+   * @throws PartInitException if the new editor could not be created or
+   *               initialized
+   */
+  public void refreshEditor(IEditorPart editor, IEditorInput input)
+           throws PartInitException {
+    IWorkbenchPage page = editor.getEditorSite().getPage();
+    ITextSelection selection = (ITextSelection)((AbstractTextEditor)editor).getSelectionProvider().getSelection();
+    int off = selection.getOffset();
+    int len = selection.getLength();
+    AbstractDecoratedTextEditor related = ((BytecodeEditor)editor).
+                              getRelatedEditor();
+    JavaClass jc = ((BytecodeEditor)editor).getJavaClass();
+    boolean proper = (related != null);
+    bytecodeContribution.survive();
+    if (proper) Composition.startDisas();
+    page.closeEditor(editor, true);
+    IEditorPart newEditor = page.openEditor(input,
+                        "umbra.BytecodeEditor", true);
+    ((BytecodeEditor) newEditor).setRelation(related, jc);
+    ISelection ns = new TextSelection(off, len);
+    ISelectionProvider sp = ((AbstractTextEditor)newEditor).
+                          getSelectionProvider();
+    sp.setSelection(ns);
+    bytecodeContribution.reinit();
+    if (proper) Composition.stopDisas();
+  }
+
+  /**
+   * This method disables the synchronisation action in the editor.
+   */
+  public void synchrDisable() {
+    synchrAction.setEnabled(false);
+  }
+
+  /**
+   * This method enables the synchronisation action in the editor.
+   */
+  public void synchrEnable() {
+    synchrAction.setEnabled(true);
+  }
+
+  /**
+   * debugging helper
+   *
+  /*private void controlPrint(JavaClass jc, int i) {
+    Method meth = jc.getMethods()[i];
+    System.out.println(meth.getCode().toString());
+  }*/
+
+  /**
+   * This returns the action ?that executes the refresh action.
+   *
+   * @return
+   */
+  public BytecodeRefreshAction getRefreshAction() {
+    return refreshAction;
+  }
 }

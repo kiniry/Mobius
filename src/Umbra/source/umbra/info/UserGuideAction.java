@@ -21,52 +21,52 @@ import umbra.UmbraPlugin;
 /**
  * The class implements the behaviour in case the User Guide button
  * is pressed.
- * 
+ *
  * @author Wojtek W±s
  */
 public class UserGuideAction implements IEditorActionDelegate {
 
-	/**
-	 * The method sets the editor associated with the action.
-	 */
-	public void setActiveEditor(IAction action, IEditorPart targetEditor) {
-	}
+  /**
+   * The method sets the editor associated with the action.
+   */
+  public void setActiveEditor(IAction action, IEditorPart targetEditor) {
+  }
 
-	/**
-	 * The method shows the content of the file with the guiding 
-	 * instructions.
-	 */
-	public void run(IAction action) {
+  /**
+   * The method shows the content of the file with the guiding
+   * instructions.
+   */
+  public void run(IAction action) {
 
-		UmbraPlugin plugin = UmbraPlugin.getDefault();
-		IWorkbenchBrowserSupport bs = PlatformUI.getWorkbench().
-		                                         getBrowserSupport();
-		IWebBrowser wb;
-		try {
-			wb = bs.createBrowser("Umbra Guide");
-		} catch (PartInitException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return;
-		}
-		
-		URL url = FileLocator.find(plugin.getBundle(), 
-				                   new Path("Info/guide.txt"), 
-				                   null);
-		try {
-			wb.openURL(url);
-		} catch (PartInitException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+    UmbraPlugin plugin = UmbraPlugin.getDefault();
+    IWorkbenchBrowserSupport bs = PlatformUI.getWorkbench().
+                         getBrowserSupport();
+    IWebBrowser wb;
+    try {
+      wb = bs.createBrowser("Umbra Guide");
+    } catch (PartInitException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+      return;
+    }
+
+    URL url = FileLocator.find(plugin.getBundle(),
+                   new Path("Info/guide.txt"),
+                   null);
+    try {
+      wb.openURL(url);
+    } catch (PartInitException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+  }
 
 
-	/**
-	 * Currently, does nothing.
-	 */
-	public void selectionChanged(IAction action, ISelection selection) {
+  /**
+   * Currently, does nothing.
+   */
+  public void selectionChanged(IAction action, ISelection selection) {
 
-	}
+  }
 
 }

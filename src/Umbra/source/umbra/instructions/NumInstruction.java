@@ -5,20 +5,19 @@
 package umbra.instructions;
 
 /**
- * This is abstract class for all instructions with a number as a 
+ * This is abstract class for all instructions with a number as a
  * parameter.
- * 
+ *
  * @author Jarosław Paszek
  *
  */
 public class NumInstruction extends MultiInstruction {
 
-	
-	/**
-	 * TODO
-	 */
-	public NumInstruction(String l, String n) {
-		super(l, n);
-	}
 
+  /**
+   * TODO
+   */
+  public NumInstruction(String l, String n) {
+    super(l, n);
+  }
 }

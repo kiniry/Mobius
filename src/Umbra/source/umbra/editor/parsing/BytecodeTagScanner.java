@@ -19,32 +19,32 @@ import umbra.editor.parsing.SpecialWordDetector;
  */
 public class BytecodeTagScanner extends RuleBasedScanner {
 
-	/**
-	 * TODO
-	 * 
-	 * @param manager the color manager related to the current bytecode
-	 *        editor, it must be the same as in the current
-	 *        {@ref BytecodeConfiguration} object 
-	 * @param mod the number of the current coloring style, it must be the 
-     *        same as in the current {@ref BytecodeConfiguration} object
-	 */
-	public BytecodeTagScanner(ColorManager manager, int mod) {
-		
-		IToken[] tokens = TokenGetter.getTokenTab(manager, mod);
-		
-		WordRule linerule = new WordRule(new SpecialWordDetector()); 
-			linerule.addWord("<init>", tokens[IColorValues.KEY]);
+  /**
+   * TODO
+   *
+   * @param manager the color manager related to the current bytecode
+   *    editor, it must be the same as in the current
+   *    {@ref BytecodeConfiguration} object
+   * @param mod the number of the current coloring style, it must be the
+   *    same as in the current {@ref BytecodeConfiguration} object
+   */
+  public BytecodeTagScanner(ColorManager manager, int mod) {
 
-		IRule[] rules = new IRule[4];
+    IToken[] tokens = TokenGetter.getTokenTab(manager, mod);
 
-		// Add rule for double quotes
-		rules[0] = new SingleLineRule("\"", "\"", tokens[IColorValues.STRING], '\\');
-		// Add a rule for single quotes
-		rules[1] = new SingleLineRule("'", "'", tokens[IColorValues.STRING], '\\');
-		// Add generic whitespace rule.
-		rules[2] = linerule;
-		rules[3] = new WhitespaceRule(new BytecodeWhitespaceDetector());
+    WordRule linerule = new WordRule(new SpecialWordDetector());
+      linerule.addWord("<init>", tokens[IColorValues.KEY]);
 
-		setRules(rules);
-	}
+    IRule[] rules = new IRule[4];
+
+    // Add rule for double quotes
+    rules[0] = new SingleLineRule("\"", "\"", tokens[IColorValues.STRING], '\\');
+    // Add a rule for single quotes
+    rules[1] = new SingleLineRule("'", "'", tokens[IColorValues.STRING], '\\');
+    // Add generic whitespace rule.
+    rules[2] = linerule;
+    rules[3] = new WhitespaceRule(new BytecodeWhitespaceDetector());
+
+    setRules(rules);
+  }
 }

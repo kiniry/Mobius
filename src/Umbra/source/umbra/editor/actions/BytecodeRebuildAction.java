@@ -26,79 +26,79 @@ import umbra.editor.BytecodeEditorContributor;
  * binary file are restored) and generating bytecode from this.
  */
 public class BytecodeRebuildAction extends Action {
-	
-	/**
-	 * The current bytecode editor for which the action takes place.
-	 */
-	private IEditorPart editor;
-	
-	/**
-	 * The manager that initialises all the actions within the
-	 * bytecode plugin.
-	 */	
-	private BytecodeEditorContributor contributor;
-	
-	/**
-	 * This method sets the bytecode editor for which the
-	 * rebuild action will be executed.
-	 * 
-	 * @param targetEditor the bytecode editor for which the action will be 
-	 *        executed
-	 */
-	public void setActiveEditor(final IEditorPart targetEditor) {
-		editor = targetEditor;
-	}
-	
-	/**
-	 * TODO
-	 * 
-	 * @param contributor the 
-	 */
-	public BytecodeRebuildAction(
-			final BytecodeEditorContributor contributor) {
-		super("Rebuild");
-		this.contributor = contributor;
-	}
-	
-	/**
-	 * '_' file is chosen and rewritten into ordinary binary
-	 * file. The modificated binaries are removed, input is
-	 * updated and the editor window appropriately restored.
-	 * 
-	 */
-	public void run() {
-		IFile file = ((FileEditorInput)editor.getEditorInput()).getFile();
-		IPath active = file.getFullPath();
-		String fnameTo = active.toOSString().replaceFirst(
-				                  UmbraHelper.BYTECODE_EXTENSION, 
-				                  UmbraHelper.CLASS_EXTENSION);
-		String lastSegment = active.lastSegment().replaceFirst(
-				                  UmbraHelper.BYTECODE_EXTENSION,
-				                  UmbraHelper.CLASS_EXTENSION);
-		String fnameFrom = active.removeLastSegments(1).append("_" + lastSegment).toOSString();
-		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot(); 
-		IFile fileFrom = root.getFile(new Path(fnameFrom));
-		IPath pathTo = new Path(fnameTo);
-		IFile fileTo = root.getFile(pathTo);
-		if (fileFrom.exists()) {
-			try {
-				fileTo.delete(true, null);
-				fileFrom.copy(pathTo, true, null);
-			} catch (CoreException e) {
-				e.printStackTrace();
-			}
-		}
-		try {
-			((BytecodeEditor)editor).refreshBytecode(active, null, null);
-			IEditorInput input = new FileEditorInput(file);
-			contributor.refreshEditor(editor, input);
-		} catch (ClassNotFoundException e1) {
-			e1.printStackTrace();
-		} catch (CoreException e1) {
-			e1.printStackTrace();
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
-		contributor.synchrEnable();
-	}
+
+  /**
+   * The current bytecode editor for which the action takes place.
+   */
+  private IEditorPart editor;
+
+  /**
+   * The manager that initialises all the actions within the
+   * bytecode plugin.
+   */
+  private BytecodeEditorContributor contributor;
+
+  /**
+   * This method sets the bytecode editor for which the
+   * rebuild action will be executed.
+   *
+   * @param targetEditor the bytecode editor for which the action will be
+   *    executed
+   */
+  public void setActiveEditor(final IEditorPart targetEditor) {
+    editor = targetEditor;
+  }
+
+  /**
+   * TODO
+   *
+   * @param contributor the
+   */
+  public BytecodeRebuildAction(
+      final BytecodeEditorContributor contributor) {
+    super("Rebuild");
+    this.contributor = contributor;
+  }
+
+  /**
+   * '_' file is chosen and rewritten into ordinary binary
+   * file. The modificated binaries are removed, input is
+   * updated and the editor window appropriately restored.
+   *
+   */
+  public void run() {
+    IFile file = ((FileEditorInput)editor.getEditorInput()).getFile();
+    IPath active = file.getFullPath();
+    String fnameTo = active.toOSString().replaceFirst(
+                  UmbraHelper.BYTECODE_EXTENSION,
+                  UmbraHelper.CLASS_EXTENSION);
+    String lastSegment = active.lastSegment().replaceFirst(
+                  UmbraHelper.BYTECODE_EXTENSION,
+                  UmbraHelper.CLASS_EXTENSION);
+    String fnameFrom = active.removeLastSegments(1).append("_" + lastSegment).toOSString();
+    IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+    IFile fileFrom = root.getFile(new Path(fnameFrom));
+    IPath pathTo = new Path(fnameTo);
+    IFile fileTo = root.getFile(pathTo);
+    if (fileFrom.exists()) {
+      try {
+        fileTo.delete(true, null);
+        fileFrom.copy(pathTo, true, null);
+      } catch (CoreException e) {
+        e.printStackTrace();
+      }
+    }
+    try {
+      ((BytecodeEditor)editor).refreshBytecode(active, null, null);
+      IEditorInput input = new FileEditorInput(file);
+      contributor.refreshEditor(editor, input);
+    } catch (ClassNotFoundException e1) {
+      e1.printStackTrace();
+    } catch (CoreException e1) {
+      e1.printStackTrace();
+    } catch (IOException e1) {
+      e1.printStackTrace();
+    }
+    contributor.synchrEnable();
+  }
 }
