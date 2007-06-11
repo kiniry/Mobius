@@ -17,10 +17,11 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditor;
 
 /**
- * This class is related to document structure of bytecode
- * file and supplies it with synchronization tools (in both directions).
- * It also contains the relation with the .class file
- * TODO
+ * This class is an abstract model of a bytecode document.
+ * It mainly handles the synchronization between a bytecode file and a
+ * Java source code file (in both directions).
+ * 
+ * FIXME more detailed description
  * 
  * @author Tomasz Batkiewicz, Wojciech Wąs
  */

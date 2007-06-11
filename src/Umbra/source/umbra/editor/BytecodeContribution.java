@@ -257,10 +257,13 @@ public class BytecodeContribution extends ControlContribution {
 	}
 
 	/**
-	 * TODO
+	 * This method adds to the document in the parameter a listener
+	 * which keeps track of all the document modifications.
+	 * 
+	 * @param document the modifications of which will be notified
+	 * by the listener
 	 */
 	public void addListener(IDocument document) {
-		System.out.println("addListener");
 		BytecodeDocument doc = (BytecodeDocument) document;
 		if (doc.isListenerAdded()) {
 			BytecodeListener listener = new BytecodeListener();
@@ -282,7 +285,8 @@ public class BytecodeContribution extends ControlContribution {
 	}
 	
 	/**
-	 * TODO
+	 * @return boolean array, an entry is <code>true</code> whenever
+	 * the corresponding method is modified by the bytecode editor
 	 */
 	public boolean[] getModified() {
 		return bcc.getModified();

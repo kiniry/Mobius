@@ -44,6 +44,7 @@ public class BytecodeEditor extends TextEditor {
 	 */
 	private AbstractDecoratedTextEditor relatedEditor;
 	
+	
 	/**
 	 * The BCEL structure which represents the bytecode the content of the
 	 * current editor has been generated from. They also serve to modify
