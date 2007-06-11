@@ -23,7 +23,6 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditor;
 
-import umbra.IUmbraConstants;
 import umbra.UmbraHelper;
 import umbra.editor.BytecodeEditor;
 import b2bpl.Main;
@@ -36,8 +35,7 @@ import b2bpl.Project;
  * @author Samuel Willimann
  * 
  */
-public class BytecodeToBoogiePLAction implements IEditorActionDelegate,
-		IUmbraConstants {
+public class BytecodeToBoogiePLAction implements IEditorActionDelegate {
 
 	/**
 	 * The current bytecode editor for which the action takes place.
@@ -47,7 +45,8 @@ public class BytecodeToBoogiePLAction implements IEditorActionDelegate,
 	/**
 	 * TODO
 	 */
-	public void setActiveEditor(IAction action, IEditorPart targetEditor) {
+	public void setActiveEditor(final IAction action, 
+			                    final IEditorPart targetEditor) {
 		editor = targetEditor;
 	}
 
@@ -56,18 +55,21 @@ public class BytecodeToBoogiePLAction implements IEditorActionDelegate,
 	 */
 	public void run(IAction action) {
 
-		IPath active = ((FileEditorInput)editor.getEditorInput()).getFile().getFullPath();
+		final IPath active = ((FileEditorInput)editor.getEditorInput()).
+		                                              getFile().getFullPath();
 		if (editor.isSaveOnCloseNeeded()) {
 			MessageDialog.openWarning(editor.getSite().getShell(),
-					                  B2BPL_MESSAGE_TITLE,
-					                  B2BPL_SAVE_BYTECODE_FIRST);
+					                  UmbraHelper.B2BPL_MESSAGE_TITLE,
+					                  UmbraHelper.B2BPL_SAVE_BYTECODE_FIRST);
 			return;
 		}
-		int lind = active.toOSString().lastIndexOf(UmbraHelper.BYTECODE_EXTENSION);
-		if (lind == -1) MessageDialog.openInformation(editor.getSite().getShell(), 
-				                                      B2BPL_MESSAGE_TITLE,
-				                                      INVALID_EXTENSION.replace(SUBSTITUTE, UmbraHelper.BYTECODE_EXTENSION));
-		else {
+		final int lind = active.toOSString().lastIndexOf(UmbraHelper.BYTECODE_EXTENSION);
+		if (lind == -1) {
+			MessageDialog.openInformation(editor.getSite().getShell(), 
+				                    UmbraHelper.B2BPL_MESSAGE_TITLE,
+				                    UmbraHelper.INVALID_EXTENSION.replace(UmbraHelper.SUBSTITUTE, 
+				                    		 UmbraHelper.BYTECODE_EXTENSION));
+		} else {
 			// replaceClass(active);
 
 		
@@ -76,13 +78,13 @@ public class BytecodeToBoogiePLAction implements IEditorActionDelegate,
 			// IProject project = root.getProject("selectedProject name");
 			// String entirePath = p.getLocation().toOSString();
 			
-			IFile file = ((FileEditorInput)editor.getEditorInput()).getFile();
+			final IFile file = ((FileEditorInput)editor.getEditorInput()).getFile();
 			
 			// String location = root.getLocation().toString();
 	
-			String projectPath = file.getProject().getLocation().toOSString();
-			String bytecodePath = file.getLocation().toOSString();
-			String boogiePLPath = UmbraHelper.replaceLast(bytecodePath,
+			final String projectPath = file.getProject().getLocation().toOSString();
+			final String bytecodePath = file.getLocation().toOSString();
+			final String boogiePLPath = UmbraHelper.replaceLast(bytecodePath,
 					                     UmbraHelper.BYTECODE_EXTENSION, 
 					                     UmbraHelper.BOOGIEPL_EXTENSION);
 			String javaPath     = UmbraHelper.replaceLast(bytecodePath,
@@ -100,7 +102,7 @@ public class BytecodeToBoogiePLAction implements IEditorActionDelegate,
 			System.out.println("Looking for other classes in " + path.toOSString());
 			for (String a : getClassesInDirectory(path.toFile())) {
 				if (a.endsWith(".class")) {
-					args.add(javaPath.substring(0, javaPath.lastIndexOf(".")) + "." + a.substring(0, a.lastIndexOf(".")));
+					args.add(javaPath.substring(0, javaPath.lastIndexOf('.')) + "." + a.substring(0, a.lastIndexOf('.')));
 				}
 			}
 
@@ -110,8 +112,8 @@ public class BytecodeToBoogiePLAction implements IEditorActionDelegate,
 			
 			try {
 				PrintWriter messageWriter = new PrintWriter(new FileOutputStream(boogiePLPath));
-				Project p = Project.fromCommandLine(argsArray, messageWriter);
-				Main main = new Main(p);
+				Project proj = Project.fromCommandLine(argsArray, messageWriter);
+				Main main = new Main(proj);
 				main.compile();
 			} catch (IOException ioex) {
 				System.out.println(ioex.toString());
@@ -148,13 +150,13 @@ public class BytecodeToBoogiePLAction implements IEditorActionDelegate,
 		try {
 			IWorkbenchPage page = editor.getEditorSite().getPage();
 			BytecodeEditor bplEditor = (BytecodeEditor) page.openEditor(input,
-					BOOGIEPL_EDITOR_CLASS, true);
+					UmbraHelper.BOOGIEPL_EDITOR_CLASS, true);
 			bplEditor.refreshBytecode(active, null, null);
 			input = new FileEditorInput(file);
 			JavaClass jc = bplEditor.getJavaClass();
 			page.closeEditor(bplEditor, true);
 			bplEditor = (BytecodeEditor) page.openEditor(input,
-					BOOGIEPL_EDITOR_CLASS, true);
+					UmbraHelper.BOOGIEPL_EDITOR_CLASS, true);
 			bplEditor.setRelation((AbstractDecoratedTextEditor) editor, jc);
 		} catch (CoreException e) {
 			e.printStackTrace();

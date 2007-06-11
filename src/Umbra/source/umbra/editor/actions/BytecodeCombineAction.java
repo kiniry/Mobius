@@ -218,10 +218,11 @@ public class BytecodeCombineAction extends Action {
 				add = "";
 				break;
 			}
-			if (res.length()>0)
+			if (res.length()>0) {
 				res+=classPathSeparator+add;
-			else
+			} else {
 				res+=add;
+			}
 		}
 		return res;
 	}
@@ -238,7 +239,8 @@ public class BytecodeCombineAction extends Action {
 	 * @param jc the class for to which the modifications are added
 	 * @return the class representation with added modifications
 	 */
-	private ClassGen updateModifiedMethods(JavaClass oldJc, JavaClass jc) {
+	private ClassGen updateModifiedMethods(final JavaClass oldJc, 
+			                               final JavaClass jc) {
 		ClassGen oldCg = new ClassGen(oldJc);
 		ClassGen cg = new ClassGen(jc);
 		int oldMeths = oldCg.getMethods().length;

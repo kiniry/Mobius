@@ -70,8 +70,8 @@ public class BytecodeEditorAction extends Action {
 	 * and refreshes the editor window. 
 	 */
 	public void run() {
-		if (mod == IColorValues.models.length - 1) return;
-		mod = (mod + change) % (IColorValues.models.length - 1);
+		if (mod == IColorValues.MODELS.length - 1) return;
+		mod = (mod + change) % (IColorValues.MODELS.length - 1);
 		Composition.setMod(mod);
 		if (activeEditor != null){
 			try {

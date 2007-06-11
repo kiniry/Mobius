@@ -108,7 +108,8 @@ public class BytecodeConfiguration extends SourceViewerConfiguration {
 	/**
 	 * TODO
 	 */
-	public IPresentationReconciler getPresentationReconciler(ISourceViewer sourceViewer) {
+	public IPresentationReconciler getPresentationReconciler(
+			             ISourceViewer sourceViewer) {
 		PresentationReconciler reconciler = new PresentationReconciler();
 
 		DefaultDamagerRepairer dr =
@@ -133,6 +134,10 @@ public class BytecodeConfiguration extends SourceViewerConfiguration {
 		return reconciler;
 	}
 
+	/**
+	 * TODO
+	 *
+	 */
 	public void disposeColor() {
 		colorManager.dispose();
 	}

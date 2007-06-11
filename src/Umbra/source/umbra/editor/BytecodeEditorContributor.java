@@ -99,12 +99,12 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
 	 */
 	public BytecodeEditorContributor() {
 		super();
-		int mod = Composition.getMod();
+		final int mod = Composition.getMod();
 		bytecodeContribution = BytecodeContribution.newItem();
 		bytecodeContribution.addEditorContributor(this);
 		actionPlus = new BytecodeEditorAction(this, 1, mod);
 		actionMinus = new BytecodeEditorAction(this, 
-				                               IColorValues.models.length -2,
+				                               IColorValues.MODELS.length -2,			                               
 				                               mod);
 		refreshAction = new BytecodeRefreshAction(this, bytecodeContribution);
 		rebuildAction = new BytecodeRebuildAction(this);

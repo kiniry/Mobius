@@ -88,10 +88,10 @@ public class TokenGetter {
 			                                      int mod, 
 			                                      int i) {
 		return new TextAttribute(manager.getColor(
-				         new RGB(IColorValues.models[mod][CN * i], 
-				         IColorValues.models[mod][(CN * i) + 1], 
-				         IColorValues.models[mod][(CN * i) + 2])), 
+				         new RGB(IColorValues.MODELS[mod][CN * i], 
+				         IColorValues.MODELS[mod][(CN * i) + 1], 
+				         IColorValues.MODELS[mod][(CN * i) + 2])), 
 				         null, 
-				         IColorValues.models[mod][(CN * i) + 3]);
+				         IColorValues.MODELS[mod][(CN * i) + 3]);
 	}			
 }

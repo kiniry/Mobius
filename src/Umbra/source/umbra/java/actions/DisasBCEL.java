@@ -10,23 +10,16 @@ import org.apache.bcel.classfile.JavaClass;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.jdt.core.IClassFile;
-import org.eclipse.jdt.core.dom.CompilationUnit;
-import org.eclipse.jdt.internal.compiler.env.ICompilationUnit;
-import org.eclipse.jdt.internal.core.JavaElement;
 import org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IEditorActionDelegate;
-import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditor;
 
-import umbra.IUmbraConstants;
 import umbra.UmbraHelper;
 import umbra.editor.BytecodeEditor;
 import umbra.editor.Composition;
@@ -39,7 +32,7 @@ import umbra.editor.Composition;
  * @author BYTECODE team
  */
 
-public class DisasBCEL implements IEditorActionDelegate, IUmbraConstants {
+public class DisasBCEL implements IEditorActionDelegate {
 		
 	/**
 	 * The editor of a Java file for which the bytecode file is
@@ -59,16 +52,16 @@ public class DisasBCEL implements IEditorActionDelegate, IUmbraConstants {
 				getEditorInput()).getFile().getFullPath();
 		if (editor.isSaveOnCloseNeeded()) {
 			MessageDialog.openWarning(editor.getSite().getShell(), 
-					                  DISAS_MESSAGE_TITLE, 
-					                  DISAS_SAVE_BYTECODE_FIRST);
+					                  UmbraHelper.DISAS_MESSAGE_TITLE, 
+					                  UmbraHelper.DISAS_SAVE_BYTECODE_FIRST);
 			return;
 		}
 		int lind = active.toOSString().lastIndexOf(UmbraHelper.JAVA_EXTENSION);
 		if (lind == -1) {
 			MessageDialog.openInformation(editor.getSite().getShell(), 
-					                      DISAS_MESSAGE_TITLE, 
-					                      INVALID_EXTENSION.
-					                      replaceAll(SUBSTITUTE, 
+					                      UmbraHelper.DISAS_MESSAGE_TITLE, 
+					                      UmbraHelper.INVALID_EXTENSION.
+					                      replaceAll(UmbraHelper.SUBSTITUTE, 
 					                    		     UmbraHelper.JAVA_EXTENSION));
 		} else {
 			try {
@@ -78,14 +71,14 @@ public class DisasBCEL implements IEditorActionDelegate, IUmbraConstants {
 				FileEditorInput input = new FileEditorInput(file);
 				IWorkbenchPage page = editor.getEditorSite().getPage();
 				BytecodeEditor bcEditor = (BytecodeEditor)page.openEditor(input, 
-						                           BYTECODE_EDITOR_CLASS, true);
+						                           UmbraHelper.BYTECODE_EDITOR_CLASS, true);
 				bcEditor.refreshBytecode(active, null, null);
 				input = new FileEditorInput(file);
 				JavaClass jc = bcEditor.getJavaClass();
 				Composition.startDisas();
 				page.closeEditor(bcEditor, true);
 				bcEditor = (BytecodeEditor)page.openEditor(input, 
-						                          BYTECODE_EDITOR_CLASS, true);
+						                          UmbraHelper.BYTECODE_EDITOR_CLASS, true);
 				page.bringToTop(bcEditor);
 				bcEditor.setRelation((AbstractDecoratedTextEditor)editor, jc);
 				Composition.stopDisas();

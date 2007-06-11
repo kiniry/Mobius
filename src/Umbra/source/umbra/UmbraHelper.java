@@ -140,4 +140,45 @@ public class UmbraHelper {
 		               getFile(Path.fromPortableString(fname));
 		return file;
 	}
+
+	/**
+	 * TODO
+	 */
+	public final static String SUBSTITUTE = "{1}";
+	/**
+	 * TODO
+	 */
+	public final static String DISAS_MESSAGE_TITLE =
+	    "Disassemble Bytecode";
+	/**
+	 * TODO
+	 */
+	public final static String B2BPL_MESSAGE_TITLE =
+	    "Bytecode To BoogiePL";
+	/**
+	 * TODO
+	 * 
+	 */
+	public final static String DISAS_SAVE_BYTECODE_FIRST =
+	    "You must save the Bytecode before you can disassemble it.";
+	/**
+	 * TODO
+	 */
+	public final static String B2BPL_SAVE_BYTECODE_FIRST =
+	    "You must save the Bytecode before you can translate it into BoogiePL.";
+	/**
+	 * TODO
+	 */
+	public final static String INVALID_EXTENSION =
+	    "This is not a \"" + SUBSTITUTE + "\" file.";
+	/**
+	 * TODO
+	 */
+	public final static String BYTECODE_EDITOR_CLASS =
+	    "umbra.BytecodeEditor";
+	/**
+	 * TODO
+	 */
+	public final static String BOOGIEPL_EDITOR_CLASS =
+	    "umbra.BoogiePLEditor";
 }

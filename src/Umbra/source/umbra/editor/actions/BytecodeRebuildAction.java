@@ -45,15 +45,17 @@ public class BytecodeRebuildAction extends Action {
 	 * @param targetEditor the bytecode editor for which the action will be 
 	 *        executed
 	 */
-	public void setActiveEditor(IEditorPart targetEditor) {
+	public void setActiveEditor(final IEditorPart targetEditor) {
 		editor = targetEditor;
 	}
 	
 	/**
 	 * TODO
-	 * @param contributor 
+	 * 
+	 * @param contributor the 
 	 */
-	public BytecodeRebuildAction(BytecodeEditorContributor contributor) {
+	public BytecodeRebuildAction(
+			final BytecodeEditorContributor contributor) {
 		super("Rebuild");
 		this.contributor = contributor;
 	}
