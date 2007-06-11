@@ -8,15 +8,19 @@ import java.io.IOException;
 
 import org.apache.bcel.classfile.JavaClass;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
+import org.eclipse.jdt.core.IClassFile;
+import org.eclipse.jdt.core.dom.CompilationUnit;
+import org.eclipse.jdt.internal.compiler.env.ICompilationUnit;
+import org.eclipse.jdt.internal.core.JavaElement;
+import org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IEditorActionDelegate;
+import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.part.FileEditorInput;
@@ -41,7 +45,7 @@ public class DisasBCEL implements IEditorActionDelegate, IUmbraConstants {
 	 * The editor of a Java file for which the bytecode file is
 	 * generated.
 	 */
-	private IEditorPart editor;
+	private CompilationUnitEditor editor;
 
 	/**
 	 * Finds JavaClass structure related to the current Java
@@ -51,7 +55,8 @@ public class DisasBCEL implements IEditorActionDelegate, IUmbraConstants {
 	 * @param see the IActionDelegate.run(IAction)
 	 */
 	public void run(IAction action) {
-		IPath active = ((FileEditorInput)editor.getEditorInput()).getFile().getFullPath();
+		IPath active = ((FileEditorInput)editor.
+				getEditorInput()).getFile().getFullPath();
 		if (editor.isSaveOnCloseNeeded()) {
 			MessageDialog.openWarning(editor.getSite().getShell(), 
 					                  DISAS_MESSAGE_TITLE, 
@@ -62,25 +67,25 @@ public class DisasBCEL implements IEditorActionDelegate, IUmbraConstants {
 		if (lind == -1) {
 			MessageDialog.openInformation(editor.getSite().getShell(), 
 					                      DISAS_MESSAGE_TITLE, 
-					                      INVALID_EXTENSION.replaceAll(SUBSTITUTE, UmbraHelper.JAVA_EXTENSION));
+					                      INVALID_EXTENSION.
+					                      replaceAll(SUBSTITUTE, 
+					                    		     UmbraHelper.JAVA_EXTENSION));
 		} else {
-			//replaceClass(active);
-			String fname = UmbraHelper.replaceLast(active.toOSString(), 
-					                               UmbraHelper.JAVA_EXTENSION,
-					                               UmbraHelper.BYTECODE_EXTENSION); 
-			IWorkspace workspace = ResourcesPlugin.getWorkspace();
-			IFile file = workspace.getRoot().getFile(new Path(fname));
-			FileEditorInput input = new FileEditorInput(file);
 			try {
+				IFile filel = ((FileEditorInput)editor.getEditorInput()).
+				                                       getFile();
+				IFile file = UmbraHelper.getClassFileName(filel, editor);
+				FileEditorInput input = new FileEditorInput(file);
 				IWorkbenchPage page = editor.getEditorSite().getPage();
-				//BytecodeEditor bcEditor = (BytecodeEditor)page.openEditor(input, "org.eclipse.jdt.ui.CompilationUnitEditor", true);
-				BytecodeEditor bcEditor = (BytecodeEditor)page.openEditor(input, BYTECODE_EDITOR_CLASS, true);
+				BytecodeEditor bcEditor = (BytecodeEditor)page.openEditor(input, 
+						                           BYTECODE_EDITOR_CLASS, true);
 				bcEditor.refreshBytecode(active, null, null);
 				input = new FileEditorInput(file);
 				JavaClass jc = bcEditor.getJavaClass();
 				Composition.startDisas();
 				page.closeEditor(bcEditor, true);
-				bcEditor = (BytecodeEditor)page.openEditor(input, BYTECODE_EDITOR_CLASS, true);
+				bcEditor = (BytecodeEditor)page.openEditor(input, 
+						                          BYTECODE_EDITOR_CLASS, true);
 				page.bringToTop(bcEditor);
 				bcEditor.setRelation((AbstractDecoratedTextEditor)editor, jc);
 				Composition.stopDisas();
@@ -95,29 +100,6 @@ public class DisasBCEL implements IEditorActionDelegate, IUmbraConstants {
 	}
 	
 	/**
-	 * T ODO
-	 * /
-	private void replaceClass(IPath active) {
-		String fnameFrom = active.toOSString().replaceFirst(JAVA_EXTENSION, 
-				                                            CLASS_EXTENSION);
-		String lastSegment = active.lastSegment().replaceFirst(JAVA_EXTENSION, 
-				                                               CLASS_EXTENSION);
-		String fnameTo = active.removeLastSegments(1).
-		                        append("_" + lastSegment).toOSString();
-		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot(); 
-		IFile fileFrom = root.getFile(new Path(fnameFrom));
-		IPath pathTo = new Path(fnameTo);
-		IFile fileTo = root.getFile(pathTo);
-		try {
-			fileTo.delete(true, null);
-			fileFrom.copy(pathTo, true, null);
-		} catch (CoreException e) {
-			e.printStackTrace();
-		}
-	}
-	*/
-
-	/**
 	 * Currently, does nothing.
 	 */
 	public void selectionChanged(IAction action, ISelection selection) {
@@ -127,7 +109,7 @@ public class DisasBCEL implements IEditorActionDelegate, IUmbraConstants {
 	 * It sets the editor with the Java source code.
 	 */
 	public void setActiveEditor(IAction action, IEditorPart targetEditor) {
-		editor = targetEditor;
+		editor = (CompilationUnitEditor)targetEditor;
 	}
 
 }

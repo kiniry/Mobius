@@ -8,6 +8,8 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.ITextSelection;
@@ -35,13 +37,13 @@ public class SynchrSBAction implements IEditorActionDelegate {
 	/**
 	 * The editor of the Java source code.
 	 */
-	private AbstractTextEditor editor;
+	private CompilationUnitEditor editor;
 	
 	/**
 	 * The method sets the internal editor attribute.
 	 */
 	public void setActiveEditor(IAction action, IEditorPart targetEditor) {
-		editor = (AbstractTextEditor)targetEditor;
+		editor = (CompilationUnitEditor)targetEditor;
 	}
 
 	/**
@@ -71,11 +73,20 @@ public class SynchrSBAction implements IEditorActionDelegate {
 									UmbraHelper.JAVA_EXTENSION,
 									UmbraHelper.BYTECODE_EXTENSION);
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
-		IFile file = workspace.getRoot().getFile(new Path(fname));
-		if (!file.exists()) {
-			MessageDialog.openError(editor.getSite().getShell(), 
-					                "Bytecode", 
-					                "File " + fname + " not found");
+		IFile filel = ((FileEditorInput)editor.getEditorInput()).
+        				getFile();
+		IFile file = null;
+		try {
+			file = UmbraHelper.getClassFileName(filel, editor);
+			if (!file.exists()) {
+				MessageDialog.openError(editor.getSite().getShell(), 
+						                "Bytecode", 
+						                "File " + fname + " not found");
+				return;
+			}
+		} catch (JavaModelException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 			return;
 		} 
 		FileEditorInput input = new FileEditorInput(file);

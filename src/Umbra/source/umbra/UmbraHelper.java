@@ -3,6 +3,18 @@
  */
 package umbra;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor;
+import org.eclipse.ui.part.FileEditorInput;
+
 /**
  * This is just container for common operations used in the
  * application.
@@ -96,5 +108,36 @@ public class UmbraHelper {
 				s += l.charAt(ii);
 			}
 		return s;	
+	}
+
+	/**
+	 * This method gives the proper classfile file for a given
+	 * Java file.
+	 * 
+	 * XXX Isn't there an eclipse method to do this task?
+	 * 
+	 * @param filel Java source code file for which we try to find the
+	 *              class file
+	 * @param editor in which the .java file is edited
+	 * @return 
+	 * @throws JavaModelException in case the project in which the editor
+	 * 
+	 */
+	public static IFile getClassFileName(IFile filel, 
+			                              CompilationUnitEditor editor) 
+	                                  throws JavaModelException {
+		IProject project = ((FileEditorInput)editor.
+				getEditorInput()).getFile().getProject();
+		IJavaProject jproject = JavaCore.create(project);
+		IPath outputloc = jproject.getOutputLocation();
+		String newloc = outputloc.append(filel.getFullPath().
+				          removeFirstSegments(1)).toPortableString();
+		String fname = replaceLast(newloc, 
+				JAVA_EXTENSION,
+				CLASS_EXTENSION); 
+		IWorkspace workspace = ResourcesPlugin.getWorkspace();
+		IFile file = workspace.getRoot().
+		               getFile(Path.fromPortableString(fname));
+		return file;
 	}
 }
