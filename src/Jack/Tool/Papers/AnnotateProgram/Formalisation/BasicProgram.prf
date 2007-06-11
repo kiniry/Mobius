@@ -1,0 +1,216 @@
+(ProgramSemantics
+ (execute_set_TCC1 0
+  (execute_set_TCC1-1 nil 3385977480 3390110818
+   ("" (subtype-tcc) nil nil) unchecked
+   ((nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (int nonempty-type-eq-decl nil integers nil)
+    (integer_pred const-decl "[rational -> boolean]" integers nil)
+    (rational nonempty-type-from-decl nil rationals nil)
+    (rational_pred const-decl "[real -> boolean]" rationals nil)
+    (>= const-decl "bool" reals nil)
+    (real nonempty-type-from-decl nil reals nil)
+    (real_pred const-decl "[number_field -> boolean]" reals nil)
+    (number_field nonempty-type-from-decl nil number_fields nil)
+    (number_field_pred const-decl "[number -> boolean]" number_fields
+     nil)
+    (number nonempty-type-decl nil numbers nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (id const-decl "(bijective?[T, T])" identity nil)
+    (bijective? const-decl "bool" functions nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (PState type-eq-decl nil State nil)
+    (PSt type-eq-decl nil State nil)
+    (Excpt type-decl nil Excpt_adt nil)
+    (Program type-eq-decl nil Program nil)
+    (Class type-eq-decl nil Program nil)
+    (lift type-decl nil lift_adt nil)
+    (Method type-eq-decl nil Program nil)
+    (LocalVarDecl type-eq-decl nil Program nil)
+    (Stmt type-decl nil Stmt_adt nil) (Expr type-decl nil Expr_adt nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (FieldDecl type-eq-decl nil Program nil)
+    (JType type-decl nil JType_adt nil) (Val type-decl nil Val_adt nil)
+    (Name formal-nonempty-type-decl nil ProgramSemantics nil)
+    (execute_set_type const-decl "boolean" SemanticsTypes nil))
+   95 60 nil nil))
+ (execute_CaseJML_TCC1 0
+  (execute_CaseJML_TCC1-1 nil 3385977480 3390110819
+   ("" (subtype-tcc) nil nil) unchecked
+   ((nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (int nonempty-type-eq-decl nil integers nil)
+    (integer_pred const-decl "[rational -> boolean]" integers nil)
+    (rational nonempty-type-from-decl nil rationals nil)
+    (rational_pred const-decl "[real -> boolean]" rationals nil)
+    (>= const-decl "bool" reals nil)
+    (real nonempty-type-from-decl nil reals nil)
+    (real_pred const-decl "[number_field -> boolean]" reals nil)
+    (number_field nonempty-type-from-decl nil number_fields nil)
+    (number_field_pred const-decl "[number -> boolean]" number_fields
+     nil)
+    (number nonempty-type-decl nil numbers nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (id const-decl "(bijective?[T, T])" identity nil)
+    (bijective? const-decl "bool" functions nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (PState type-eq-decl nil State nil)
+    (PSt type-eq-decl nil State nil)
+    (Excpt type-decl nil Excpt_adt nil)
+    (Program type-eq-decl nil Program nil)
+    (Class type-eq-decl nil Program nil)
+    (lift type-decl nil lift_adt nil)
+    (Method type-eq-decl nil Program nil)
+    (LocalVarDecl type-eq-decl nil Program nil)
+    (Stmt type-decl nil Stmt_adt nil) (Expr type-decl nil Expr_adt nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (FieldDecl type-eq-decl nil Program nil)
+    (JType type-decl nil JType_adt nil) (Val type-decl nil Val_adt nil)
+    (Name formal-nonempty-type-decl nil ProgramSemantics nil)
+    (execute_CaseJML_type const-decl "boolean" SemanticsTypes nil))
+   126 60 nil nil))
+ (on_method_event_TCC1 0
+  (on_method_event_TCC1-1 nil 3390110778 3390110819
+   ("" (subtype-tcc) nil nil) unchecked
+   ((nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (int nonempty-type-eq-decl nil integers nil)
+    (integer_pred const-decl "[rational -> boolean]" integers nil)
+    (rational nonempty-type-from-decl nil rationals nil)
+    (rational_pred const-decl "[real -> boolean]" rationals nil)
+    (>= const-decl "bool" reals nil)
+    (real nonempty-type-from-decl nil reals nil)
+    (real_pred const-decl "[number_field -> boolean]" reals nil)
+    (number_field nonempty-type-from-decl nil number_fields nil)
+    (number_field_pred const-decl "[number -> boolean]" number_fields
+     nil)
+    (number nonempty-type-decl nil numbers nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (id const-decl "(bijective?[T, T])" identity nil)
+    (bijective? const-decl "bool" functions nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (PState type-eq-decl nil State nil)
+    (PSt type-eq-decl nil State nil)
+    (Excpt type-decl nil Excpt_adt nil)
+    (Program type-eq-decl nil Program nil)
+    (Class type-eq-decl nil Program nil)
+    (lift type-decl nil lift_adt nil)
+    (Method type-eq-decl nil Program nil)
+    (LocalVarDecl type-eq-decl nil Program nil)
+    (Stmt type-decl nil Stmt_adt nil) (Expr type-decl nil Expr_adt nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (FieldDecl type-eq-decl nil Program nil)
+    (JType type-decl nil JType_adt nil) (Val type-decl nil Val_adt nil)
+    (Name formal-nonempty-type-decl nil ProgramSemantics nil)
+    (on_method_event_type const-decl "boolean" SemanticsTypes nil))
+   96 50 nil nil))
+ (IMP_Semantics_TCC1 0
+  (IMP_Semantics_TCC1-1 nil 3385977480 3390110819
+   ("" (subtype-tcc) nil nil) unchecked
+   ((id const-decl "(bijective?[T, T])" identity nil)
+    (bijective? const-decl "bool" functions nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (PState type-eq-decl nil State nil)
+    (PSt type-eq-decl nil State nil)
+    (Excpt type-decl nil Excpt_adt nil)
+    (Program type-eq-decl nil Program nil)
+    (Class type-eq-decl nil Program nil)
+    (lift type-decl nil lift_adt nil)
+    (Method type-eq-decl nil Program nil)
+    (LocalVarDecl type-eq-decl nil Program nil)
+    (Stmt type-decl nil Stmt_adt nil) (Expr type-decl nil Expr_adt nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (FieldDecl type-eq-decl nil Program nil)
+    (JType type-decl nil JType_adt nil) (Val type-decl nil Val_adt nil)
+    (Name formal-nonempty-type-decl nil ProgramSemantics nil)
+    (update_FullState_type const-decl "boolean" SemanticsTypes nil))
+   21 30 nil nil))
+ (initial_Program_state_TCC1 0
+  (initial_Program_state_TCC1-1 nil 3390557962 nil
+   ("" (subtype-tcc) nil nil) nil nil nil nil nil nil))
+ (initial_Program_state_TCC2 0
+  (initial_Program_state_TCC2-1 nil 3390557962 nil
+   ("" (subtype-tcc) nil nil) nil nil nil nil nil nil))
+ (wf_initial_Program_state 0
+  (wf_initial_Program_state-1 nil 3390557971 nil
+   ("" (skosimp*)
+    (("" (expand "initial_Program_state")
+      (("" (expand "wf_state")
+        (("" (skosimp*)
+          (("" (expand "is_field")
+            (("" (expand "is_local")
+              (("" (expand "defined?")
+                (("" (expand "var_names")
+                  (("" (expand "get_FieldDecl")
+                    (("" (expand "get_LocalDecl")
+                      (("" (split 1)
+                        (("1" (lift-if)
+                          (("1" (assert)
+                            (("1" (split 1)
+                              (("1"
+                                (skosimp*)
+                                (("1"
+                                  (rewrite "nonempty_exists")
+                                  (("1"
+                                    (skosimp*)
+                                    (("1"
+                                      (typepred "x!1")
+                                      (("1"
+                                        (inst?)
+                                        (("1" (assert) nil)))))))))))
+                               ("2" (propax) nil)))))))
+                         ("2" (skosimp*)
+                          (("2" (lift-if)
+                            (("2" (assert)
+                              (("2"
+                                (split 1)
+                                (("1" (propax) nil)
+                                 ("2"
+                                  (rewrite "nonempty_exists")
+                                  (("2" (inst?) nil)))))))))))
+                         ("3" (lift-if)
+                          (("3" (assert)
+                            (("3" (expand "default_value")
+                              (("3"
+                                (lift-if)
+                                (("3"
+                                  (assert)
+                                  (("3"
+                                    (split 1)
+                                    (("1"
+                                      (skosimp*)
+                                      (("1"
+                                        (rewrite "nonempty_exists")
+                                        (("1"
+                                          (skosimp*)
+                                          (("1"
+                                            (typepred "x!1")
+                                            (("1"
+                                              (inst?)
+                                              (("1"
+                                                (assert)
+                                                nil)))))))))))
+                                     ("2" (propax) nil)))))))))))))
+                         ("4" (lift-if)
+                          (("4" (assert)
+                            (("4" (expand "default_value")
+                              (("4"
+                                (lift-if)
+                                (("4"
+                                  (assert)
+                                  (("4"
+                                    (split 1)
+                                    (("1" (propax) nil)
+                                     ("2"
+                                      (skosimp*)
+                                      (("2"
+                                        (rewrite "nonempty_exists")
+                                        (("2"
+                                          (inst?)
+                                          (("2"
+                                            (assert)
+                                            nil))))))))))))))))))))))))))))))))))))))))
+    nil)
+   unchecked nil nil nil nil nil)))
+

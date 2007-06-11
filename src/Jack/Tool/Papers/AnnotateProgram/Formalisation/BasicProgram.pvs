@@ -1,0 +1,59 @@
+% Semantics of Java programs without annotations. This theory is not used 
+% elsewhere, it is provided as an example of the instatiation of the semantics
+ProgramSemantics[Name : TYPE+] : THEORY
+BEGIN
+
+  IMPORTING State[Name],
+            SemanticsTypes[Name, Program, PState, id]
+
+  execute_set : (execute_set_type) =
+    LAMBDA (p : Program, vn : Name, e : Expr, s1, s2 : PState, n : nat,
+            deriv_stmt_rec : deriv_stmt_rec_type(n),
+            deriv_expr_rec : deriv_expr_rec_type(n)) :
+      s1 = s2
+
+  execute_CaseJML : (execute_CaseJML_type) =
+    LAMBDA (p : Program, bs : list[[Expr, Stmt]], s1, s2 : PState,  n : nat,
+            deriv_stmt_rec : deriv_stmt_rec_type(n),
+            deriv_expr_rec : deriv_expr_rec_type(n)) :
+      s1 = s2
+
+  on_method_event : (on_method_event_type) =
+    LAMBDA (p : Program, md : Method, a : Val, s1, s2 : PState, n : nat,
+            deriv_stmt : deriv_stmt_rec_type(n),
+            deriv_expr : deriv_expr_rec_type(n)) :
+      s1 = s2
+
+  IMPORTING Semantics[Name, Program, PState, id, id, lookup,
+                      LAMBDA (upd : [PState -> PState], s : PState) : upd(s),
+                      execute_set, execute_CaseJML,
+                      on_method_event, on_method_event, on_method_event]
+
+  initial_Program_state(p : Program) : PState =
+    (# ex := bottom,
+       st :=
+         (# fvs := LAMBDA (n : Name) :
+              LET fd = get_FieldDecl(n, p) IN
+              IF bottom?(fd)
+              THEN Bottom
+              ELSE init_val(down(fd))
+              ENDIF,
+            lvs := LAMBDA (n : Name) :
+              LET ld = get_LocalDecl(n, p) IN
+              IF bottom?(ld)
+              THEN Bottom
+              ELSE default_value(jtype(down(ld)))
+              ENDIF
+         #)
+    #)
+
+  wf_initial_Program_state : LEMMA % :-)
+    FORALL (p : Program) :
+      wf_Program(p) IMPLIES wf_state(p)(initial_Program_state(p))
+
+  run_program(p : Program)(main : Method, arg : int)(s2 : PState)
+             (n : nat) : boolean =
+    run_FullProgram(p)(main, arg)(initial_Program_state(p), s2)(n)
+
+
+END ProgramSemantics
