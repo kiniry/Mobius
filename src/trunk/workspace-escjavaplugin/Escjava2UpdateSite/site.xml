@@ -4,4 +4,5 @@
       The ESC/Java2 plugin update site.
    </description>
    <feature url="features/EscJava2_2.0.2.jar" id="EscJava2" version="2.0.2"/>
+   <feature url="features/SimplifyFeature_1.5.5.jar" id="SimplifyFeature" version="1.5.5"/>
 </site>
