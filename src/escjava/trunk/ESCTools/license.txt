@@ -1,9 +1,5 @@
 Copyright (c) 2006-2007 EU Mobius IST-15905 and others
 
-The license applies unless otherwise indicated in this document or elsewhere, 
-for example in the source code.  Individual copyright holders are identified
-ins ource code and other documentation in this release.
-
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
@@ -27,7 +23,7 @@ http://www.opensource.org/licenses/mit-license.php
 -------------------------------------------------------------------------------
 
 The original verion of ESC/Java was derived from the Java Programming Toolkit
-Source Release from HP labs at:
+Source Release from HP labs.
 
 http://www.hpl.hp.com/downloads/crl/jtk/index.html
 http://www.hpl.hp.com/downloads/crl/jtk/agreement.html
