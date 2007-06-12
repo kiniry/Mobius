@@ -1,13 +1,9 @@
-% Section 3.1 Abstract Syntax of Program
-
-% Simplifications:
+% Simplifications in the modeling of (the syntax of) programs:
 % Just sequential programs
-% We don't model types and interfaces
+% We don't model arrays and interfaces
 % Methods have just one parameter
-% No arrays
-% Initial values for fields are Val, not Expr. This is because otherwise we have
-%   to define an order to evaluate those expressions and avoid recursive 
-%   initializations
+% Initial values for fields are Val, not Expr. This is to avoid defining an
+%   order of evaluation of those expressions.
 % Only two types of exceptions: Throwable and NullPointer. We also model JML 
 %   exceptions
 % Local variables are declared at the beginning of the body (like in Pascal)
@@ -18,8 +14,8 @@
 % No return instruction. Methods have a result component that is an expression
 %   whose value is the value to be returned
 
-% Our additions
-% CaseJML: allows to do a case distiction on the value of a ghost var
+% Our additions:
+% CaseJML: allows to do a case distiction on the value of a ghost variable
 % Methods have a pre_set, post_set and exc_set clause
 
 
@@ -36,8 +32,8 @@ BEGIN
 END JType
 
 
-% Numerical expressions
-% They are parameterized with a variable name to handle the case of variable evaluation
+% Numerical expressions. They are parameterized with a variable name to handle
+%  the case of variable evaluation.
 NumExpr[Name : TYPE+] : DATATYPE
 BEGIN
 
@@ -126,6 +122,7 @@ BEGIN
 END Stmt
 
 
+% Syntax of programs
 Program[Name : TYPE+] : THEORY
 BEGIN
   
@@ -140,7 +137,7 @@ BEGIN
 
   This, Super : Name
 
-  % NOTE: it is not correct to have Val in programs because they belong to the
+  % NOTE: It is not correct to have Val in programs because they belong to the
   % semantic domain, however, we do so to simplify the definition of the initial
   % state (otherwise we would have to define an order of initialization).
   FieldDecl : TYPE = [# jtype : JType,
@@ -174,6 +171,16 @@ BEGIN
 
 
   Program : TYPE = [# classes : finite_set[Class] #]
+
+
+END Program
+
+
+% Functions that manipulate programs
+ProgramFunctions[Name : TYPE+] : THEORY
+BEGIN
+
+  IMPORTING Program[Name]
 
   getFieldDecls(p : Program) : finite_set[FieldDecl] =
      {f : FieldDecl | EXISTS (c : Class) : classes(p)(c) AND 
@@ -222,16 +229,19 @@ BEGIN
     ENDIF
 
 
-END Program
+  % Functions whose existence we assume. See the requirement for these
+  % functions in the WellFormedProgram
+
+  get_class(p : Program)(tgt : Val) : lift[Class]
+
+  lookup_mthd(p : Program, tgt : Val, mn : Name) : lift[Method]
+
+  % If it can't find an invariant in tgt it just returns TRUE
+  lookup_inv(p : Program, tgt : Val) : Expr
 
 
-% Program requirements (see the assumptions at the beginning of the file)
-% NOTE: Since the declarations are sets we can avoid some duplicate tests.
-% We include only the requirements needed for the proofs
-WellFormedProgram[Name : TYPE+] : THEORY
-BEGIN
-
-  IMPORTING Program[Name]
+  set_subterm(s : Stmt, m : Method) : boolean =
+    s << pre_set(m) OR s << post_set(m) OR s << exc_set(m)
 
   var_names(ne : NumExpr) : set[Name] =
     {n : Name | some(LAMBDA (m : Name) : m = n)(ne)}
@@ -268,14 +278,57 @@ BEGIN
     {n : Name |EXISTS (l : LocalVarDecl) : ls(l) AND name(l) = n}
 
 
+END ProgramFunctions
+
+
+% Program requirements (see the assumptions at the beginning of the file)
+% We include only the requirements needed for the proofs
+% NOTE: Since the declarations are sets we can avoid some duplicate tests.
+WellFormedProgram[Name : TYPE+] : THEORY
+BEGIN
+
+  IMPORTING Program[Name],
+            ProgramFunctions[Name]
+
   wf_Class(c : Class) : boolean
 
   % Syntactic constraints of programs (only the ones needed by the proofs)
   wf_Program(p : Program) : boolean
 
-  AUTO_REWRITE- wf_Program, var_names
+%  AUTO_REWRITE- wf_Program
+
+  % We name only the type constraints needed for the proofs.
+  well_typed_Program(p : Program) : boolean =
+    FORALL (c : Class) :
+      classes(p)(c) IMPLIES
+        BExpr?(inv(c))
 
   % Properties needed of well-formed programs
+
+  % NOTE: This is not accurate, we shoul say something about tgt, for instance
+  % that it is not an int, besides not all addresses are objects.
+  get_class_behavior : LEMMA
+    FORALL (p : Program, tgt : Val) :
+      wf_Program(p) IMPLIES
+        up?(get_class(p)(tgt)) AND
+        classes(p)(down(get_class(p)(tgt)))
+
+  lookup_mthd_behavior : LEMMA
+    FORALL (p : Program, m : Method, mn : Name, tgt : Val) :
+      wf_Program(p) IMPLIES
+      up?(lookup_mthd(p, tgt, mn)) IMPLIES
+      m = down(lookup_mthd(p, tgt, mn)) IMPLIES
+        LET c = down(get_class(p)(tgt)) IN
+        up?(get_class(p)(tgt)) AND
+        classes(p)(c) AND
+        methods(c)(m) AND
+        name(m) = mn
+
+  lookup_inv_behavior : LEMMA
+    FORALL (p : Program, tgt : Val) :
+      wf_Program(p) IMPLIES
+        lookup_inv(p, tgt) = inv(down(get_class(p)(tgt)))
+
 
   % Names of classes are unique within a program
   wf_program_has_unique_class_names : LEMMA

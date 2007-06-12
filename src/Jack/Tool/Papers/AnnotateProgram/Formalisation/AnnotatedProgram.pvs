@@ -1,7 +1,8 @@
 AnnotatedProgramSemantics[Name : TYPE+] : THEORY
 BEGIN
 
-  IMPORTING State[Name]
+  IMPORTING State[Name],
+            ProgramInitialState[Name]
 
   APState : TYPE = [# gvs : Store, pstate : PState #]
 
@@ -117,21 +118,6 @@ BEGIN
       deriv_stmt_rec_AP(n)(p)(c, sigma1, sigma2)(k)
 
 
-  initial_AP_state(p : Program) : APState =
-    (# pstate := initial_Program_state(p),
-       gvs := LAMBDA (n : Name) :
-         LET gd = get_GhostDecl(n, p) IN
-         IF bottom?(gd)
-         THEN Bottom
-         ELSE init_val(down(gd))
-         ENDIF
-    #)
-
-  run_annotated_program(p : Program)(main : Method, arg : int)
-                       (s2 : APState)(n : nat) : boolean =
-    run_FullProgram(p)(main, arg)(initial_AP_state(p), s2)(n)
-
-
   % The following are adapted versions for AP to avoid having to give all the 
   % theory parameters to uniquely identify them
 
@@ -144,6 +130,20 @@ BEGIN
 
   set_subterm_AP(s : Stmt, m : Method) : boolean =
     set_subterm(s, m)
+
+  initial_AP_state(p : Program) : APState =
+    (# pstate := initial_Program_state(p),
+       gvs := LAMBDA (n : Name) :
+         LET gd = get_GhostDecl(n, p) IN
+         IF bottom?(gd)
+         THEN Bottom
+         ELSE init_val(down(gd))
+         ENDIF
+    #)
+
+  run_annotated_program(p : Program)(main : Method, arg : int)
+                       (final : APState)(n : nat) : boolean =
+    run_FullProgram(p)(main, arg)(initial_AP_state(p), final)(n)
 
 
   % Well-formedness properties

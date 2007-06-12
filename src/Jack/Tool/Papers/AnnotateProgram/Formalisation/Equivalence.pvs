@@ -83,7 +83,7 @@ BEGIN
   specification_requirements(mp : MonitoredProgram) : boolean =
     wf_MP(mp) AND
     complete(mva(mp)) AND
-    well_typed_Program(mp) AND
+    well_typed_Program(program(mp)) AND
     ann_program_pre(mp) AND
     well_behaved_MP(mp)
 

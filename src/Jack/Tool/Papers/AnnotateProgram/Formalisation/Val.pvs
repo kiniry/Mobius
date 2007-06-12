@@ -17,12 +17,21 @@ BEGIN
 
 END Val
 
+
 ValProp : THEORY
 BEGIN
 
-  IMPORTING Val
+  IMPORTING Val, JType
 
   defined?(v : Val) : boolean = NOT Bottom?(v)
+
+  default_value(t : JType) : (defined?) =
+    CASES t OF
+      IntType : Int(0),
+      BoolType : Bool(FALSE),
+      Void : Unit,
+      RefType : Null
+    ENDCASES
 
 
 END ValProp

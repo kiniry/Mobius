@@ -9,7 +9,8 @@ BEGIN
   IMPORTING MonitoredProgramSemantics[CP, string],
             set2list
 
-  mp : VAR {mp : MonitoredProgram | wf_MP(mp) AND well_typed_Program(mp)}
+  mp : VAR {mp : MonitoredProgram | wf_MP(mp) AND 
+                                    well_typed_Program(program(mp))}
   a : VAR (wf_MVA)
 
   % TODO: These definitions generates TCCs that can not be proved!
@@ -136,7 +137,7 @@ BEGIN
   ann_program_pre(mp : MonitoredProgram) : boolean =
     wf_MP(mp) AND
     complete(mva(mp)) AND
-    well_typed_Program(mp) AND
+    well_typed_Program(program(mp)) AND
     disjoint_model_vars(mva(mp)) AND
     not_clashing_model_vars(mp)
 
@@ -203,10 +204,11 @@ BEGIN
   get_class_ann_program : LEMMA
     FORALL (mp : MonitoredProgram, c1, c2 : Class, s : PState, tgt : Val) :
       ann_program_pre(mp) IMPLIES
-      up?(get_class(program(mp))(tgt, s)) IMPLIES
-      up?(get_class(ann_program(mp))(tgt, s)) IMPLIES
-      c1 = down(get_class(program(mp))(tgt, s)) IMPLIES
-      c2 = down(get_class(ann_program(mp))(tgt, s)) IMPLIES
+% Now I this can be obtained by wf_program
+%      up?(get_class(program(mp))(tgt)) IMPLIES
+%      up?(get_class(ann_program(mp))(tgt)) IMPLIES
+      c1 = down(get_class(program(mp))(tgt)) IMPLIES
+      c2 = down(get_class(ann_program(mp))(tgt)) IMPLIES
         name(c1) = name(c2)
 
   same_class_name_ann_class_implies_same_class : LEMMA % :-)
@@ -231,30 +233,27 @@ BEGIN
       name(m1) = name(m2) IMPLIES
         m2 = ann_method(mp)(m1)
 
+  % FIX PROOF
   lookup_mthd_ann_program : LEMMA % :-)
-    FORALL (mp : MonitoredProgram, s : PState, 
-            m1, m2 : Method, mn : string, tgt : Val) :
+    FORALL (mp : MonitoredProgram, m1, m2 : Method, mn : string, tgt : Val) :
       ann_program_pre(mp) IMPLIES
-      wf_state(program(mp))(s) IMPLIES
       up?(lookup_mthd(program(mp), tgt, mn)) IMPLIES
       up?(lookup_mthd(ann_program(mp), tgt, mn)) IMPLIES
       m1 = down(lookup_mthd(program(mp), tgt, mn)) IMPLIES
       m2 = down(lookup_mthd(ann_program(mp), tgt, mn)) IMPLIES
-        IF up?(get_class(program(mp))(tgt, s)) AND
-           name(down(get_class(program(mp))(tgt, s))) = class_name(mva(mp))
+        IF up?(get_class(program(mp))(tgt)) AND
+           name(down(get_class(program(mp))(tgt))) = class_name(mva(mp))
         THEN m2 = ann_method(mp)(m1)
         ELSE m2 = m1
         ENDIF
 
   % PROVE
-  ann_program_preserves_side_effect_freedom : LEMMA
+  ann_program_preserves_well_bahaved_Program : LEMMA
     FORALL (mp : MonitoredProgram) :
       ann_program_pre(mp) IMPLIES
-      assertions_have_no_side_effects(mp) IMPLIES
-        assertions_have_no_side_effects(ann_program(mp))
+      well_behaved_Program(mp) IMPLIES
+        well_behaved_Program(ann_program(mp))
 
-  % FIX: I need the assumption that the init_val op the vars of the MVA are
-  % defined.
   ann_program_defines_MVA_vars2 : LEMMA % :-)
     FORALL (mp : MonitoredProgram, ap : Program) :
       ann_program_pre(mp) IMPLIES

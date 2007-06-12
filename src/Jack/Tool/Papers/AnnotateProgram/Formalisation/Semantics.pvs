@@ -1,5 +1,3 @@
-% Operational semantics, section 3.2
-
 Excpt : DATATYPE
 BEGIN
 
@@ -19,7 +17,7 @@ BEGIN
             Val,
             ValProp
 
-  % A store a mapping from names to values. Partial mappings are represented
+  % A store is a mapping from names to values. Partial mappings are represented
   % using the value Bottom.
   Store : TYPE = [Name -> Val]
 
@@ -89,54 +87,12 @@ BEGIN
 
   % Well formed states properties
 
-  % MH: Follows from wf_Program now 
-  % MH: To discuss, need for this or not?
   wf_state_vars_local_or_field : LEMMA % :-)
     FORALL (p : Program, s : PState, vn : Name) :
       wf_state(p)(s) IMPLIES
       wf_Program(p) IMPLIES
         ((is_field(vn, s) IMPLIES NOT is_local(vn, s)) AND
          (is_local(vn, s) IMPLIES NOT is_field(vn, s)))
-
-
-  % Functions whose existence we assume
-
-  get_address(vn : Name) : int
-
-  get_class(p : Program)(tgt : Val, s : PState) : lift[Class]
-
-  get_class_axiom : AXIOM
-    FORALL (p : Program, s : PState, tgt : Val) :
-      up?(get_class(p)(tgt, s)) IMPLIES
-        classes(p)(down(get_class(p)(tgt, s)))
-
-  % NOTE: This is not accurate, we shoul say something about tgt, for instance
-  % that it is not an int, besides not all addresses are objects.
-  get_class_definedness : AXIOM
-    FORALL (p : Program, s : PState, tgt : Val) :
-      wf_state(p)(s) IMPLIES
-        up?(get_class(p)(tgt, s))
-
-  lookup_mthd(p : Program, tgt : Val, mn : Name) : lift[Method]
-
-  lookup_mthd_axiom : AXIOM
-    FORALL (p : Program, s : PState, m : Method, mn : Name, tgt : Val) :
-      wf_state(p)(s) IMPLIES
-      up?(lookup_mthd(p, tgt, mn)) IMPLIES
-      m = down(lookup_mthd(p, tgt, mn)) IMPLIES
-        LET c = down(get_class(p)(tgt, s)) IN
-        up?(get_class(p)(tgt, s)) AND
-        classes(p)(c) AND
-        methods(c)(m) AND
-        name(m) = mn
-
-  % If it can't find an invariant in tgt it just returns TRUE
-  lookup_inv(p : Program, tgt : Val) : Expr
-
-  lookup_inv_axiom : AXIOM
-    FORALL (p : Program, tgt : Val, s : PState) :
-      wf_state(p)(s) IMPLIES
-        lookup_inv(p, tgt) = inv(down(get_class(p)(tgt, s)))
 
 
 END State
@@ -184,6 +140,15 @@ BEGIN
       BoolVarEval(vn) : val2bool(lookup(vn, sigma))
     ENDCASES
   MEASURE b BY <<
+
+  % Function whose existence we assume
+  get_address(vn : Name)(sigma : FullState) : int
+
+  eval(r : RefExpr)(sigma : FullState) : Val =
+    IF Null?(r) 
+    THEN Null
+    ELSE RefType(get_address(varname(r))(sigma))
+    ENDIF
 
 
 END Evaluation
@@ -252,14 +217,6 @@ Semantics[Name : TYPE+,
 BEGIN
 
   IMPORTING Evaluation[Name, FullState, pstate, lookup]
-
-  default_value(t : JType) : (defined?) =
-    CASES t OF
-      IntType : Int(0),
-      BoolType : Bool(FALSE),
-      Void : Unit,
-      RefType : Null
-    ENDCASES
 
   update_stack(this_val : Val, param_name : Name, param_val : Val, 
                lvds : set[LocalVarDecl], s : FullState) : FullState =
@@ -378,10 +335,7 @@ BEGIN
         v = Int(eval(n)(sigma1)),
       RExpr(r) :
         sigma1 = sigma2 AND n = 0 AND
-        v = CASES r OF
-              Null : Null,
-              RefVarEval(vn) : RefType(get_address(vn))
-            ENDCASES
+        v = eval(r)(sigma1)
     ENDCASES
     ENDIF
   MEASURE n
@@ -534,20 +488,10 @@ BEGIN
           sigma1 = sigma2
 
 
-
-  % We name only the type constraints needed for the proofs.
-  well_typed_Program(p : FullProgram) : boolean =
-    FORALL (c : Class) :
-      classes(program(p))(c) IMPLIES
-        BExpr?(inv(c))
-
-  set_subterm(s : Stmt, m : Method) : boolean =
-    s << pre_set(m) OR s << post_set(m) OR s << exc_set(m)
-
   % The following expression (that appear only in annotations) should have no
   % side-effects: invariants, preconditions, postconditions, source expression
   % of a set statement.
-  assertions_have_no_side_effects(p : FullProgram) : boolean =
+  well_behaved_Program(p : FullProgram) : boolean =
     FORALL (c : Class) :
       classes(program(p))(c) IMPLIES
         (FORALL (s1, s2 : FullState, v : Val, n : nat) :
@@ -564,17 +508,14 @@ BEGIN
                 FORALL (s1, s2 : FullState, v : Val, n : nat) :
                   deriv_expr(p)(source(s), s1, v, s2)(n) IMPLIES s1 = s2)
 
-  well_behaved_Program(p : FullProgram) : boolean =
-    assertions_have_no_side_effects(p)
-
 
   run_FullProgram(p : FullProgram)(main : Method, arg : int)
-                 (s1, s2 : FullState)(n : nat) : boolean =
+                 (initial, final : FullState)(n : nat) : boolean =
     LET c  = StmtExpr(MethodCall(RExpr(RefVarEval(This)),
                                  name(main),
                                  NExpr(Int(arg))))
     IN
-      deriv_stmt(p)(c, s1, s2)(n)
+      deriv_stmt(p)(c, initial, final)(n)
 
 
 END Semantics
@@ -700,7 +641,10 @@ ENDASSUMING
 END SemanticsProofs
 
 
-
+% This a compilation of functions that work with any instantiation of Semantics
+% (that is for both MonitoredPrograms and AnnotatedPrograms with their 
+% respective states). Note that we don't have access to the ghost variables
+% here, so we can not put things like execute_set here.
 SemanticsCommon[Name : TYPE+,
                 FullProgram, FullState : TYPE,
                 (IMPORTING State[Name]) pstate : [FullState -> PState],

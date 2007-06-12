@@ -43,7 +43,8 @@ MonitoredProgramSemantics[CP, Name : TYPE+] : THEORY
 BEGIN
 
   IMPORTING MonitoredProgram[CP, Name],
-            MVASemantics[CP, Name]
+            MVASemantics[CP, Name],
+            ProgramInitialState[Name]
 
   % Monitored Program State
   MPState : TYPE =
@@ -193,7 +194,7 @@ BEGIN
 
   initial_MP_state(mp : MonitoredProgram) : MPState =
     (# astate := initial_MVA_state(mva(mp)),
-       pstate := initial_Program_state(mp),
+       pstate := initial_Program_state(program(mp)),
        gvs := LAMBDA (n : Name) :
          LET gd = get_GhostDecl(n, program(mp)) IN
          IF bottom?(gd)
@@ -203,8 +204,8 @@ BEGIN
     #)
 
   run_monitored_program(mp : MonitoredProgram)(main : Method, arg : int)
-                      (s2 : MPState)(n : nat) : boolean =
-    run_FullProgram(mp)(main, arg)(initial_MP_state(mp), s2)(n)
+                      (final : MPState)(n : nat) : boolean =
+    run_FullProgram(mp)(main, arg)(initial_MP_state(mp), final)(n)
 
 
   % Well-formedness properties
