@@ -4,7 +4,7 @@ Bundle-Name: Esctools Library Plug-in
 Bundle-SymbolicName: escjava.esctools
 Bundle-Version: 2.0.2
 Bundle-Localization: plugin
-Bundle-Vendor: David R. Cok and the MOBIUS Project
+Bundle-Vendor: David R. Cok and the EU FP-7 MOBIUS IST-15905 project
 Import-Package: org.osgi.framework;version="1.3.0"
 Eclipse-LazyStart: true
 Bundle-ClassPath: esctools2.jar
