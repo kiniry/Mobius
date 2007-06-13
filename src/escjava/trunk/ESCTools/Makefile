@@ -455,6 +455,7 @@ source-release: cleanup alldocs
 	mkdir -p ${RELDIR}
 	rm -rf ${RELTEMP}
 	mkdir -p ${RELTEMP}
+	cp license.txt ${RELTEMP}
 	${MAKE} jars
 #	Now copy in all specs, new and old
 	rm -rf ${RELTEMP}/specs
@@ -563,6 +564,7 @@ binary-release: build jars alldocs cleanup
 	mkdir -p ${RELDIR}
 	rm -rf ${RELTEMP}
 	mkdir -p ${RELTEMP}
+	cp license.txt ${RELTEMP}
 	${MAKE} jars
 #	Now copy in all specs, new and old
 	rm -rf ${RELTEMP}/specs
