@@ -141,10 +141,11 @@ when used it can change the behaviour of the JVM at the type access step.
 \btab
 public as\=pect SecurityManager \{\+\\
 
-Set<String> s = new HashSet();
-pointcut(Object o) : target(o) && !within(SecurityManager) && call(public * funName(..)) {
-    if(s.contains)
-}
+Set$<$String$>$ s = new HashSet();
+pointcut(Object o) : target(o) \&\& !within(SecurityManager) \&\& call(public * funName(..)) \{
+    if(!s.contains(o.signature)) \{
+    \}
+\}
   
 \etab
 \caption{An Aspect implementation of the invasive SecurityManager}
