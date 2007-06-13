@@ -788,7 +788,7 @@ class BCELReader extends Reader {
 	 * The class members of the class being parsed. Intialized by set_field,
 	 * set_method, and set_class_attributes.
 	 */
-	protected TypeDeclElemVec /*@non_null*/ classMembers = TypeDeclElemVec.make(0);
+	protected /*@ non_null*/ TypeDeclElemVec classMembers = TypeDeclElemVec.make(0);
 
 	/**
 	 * The methods and constructors of the class being parsed. Initialized by
@@ -796,7 +796,7 @@ class BCELReader extends Reader {
 	 */
 	//@ invariant \typeof(routineDecl) == \type(RoutineDecl[]);
 	//@ spec_public
-	protected /*@non_null*/ RoutineDecl[] routineDecl;
+	protected /*@ non_null*/ RoutineDecl[] routineDecl;
 
 	/**
 	 * The identifier of the class being parsed. Initialized by set_this_class.
@@ -849,7 +849,7 @@ class BCELReader extends Reader {
 		int count = tokenizer.countTokens();
 		javafe.util.Assert.notFalse(count > 0); //@ nowarn Pre;
 
-		Identifier[] /*@non_null*/ identifiers = new Identifier[count];
+		/*@ non_null */ Identifier[] identifiers = new Identifier[count];
 		int[] locations1 = new int[count];
 		int[] locations2 = new int[count - 1];
 
@@ -883,7 +883,7 @@ class BCELReader extends Reader {
 	 */
 	//@ ensures \nonnullelements(\result);
 	//@ ensures \typeof(\result) == \type(FormalParaDecl[]);
-	protected FormalParaDecl[] makeFormals(MethodSignature /*@non_null*/ signature) {
+	protected FormalParaDecl[] makeFormals(/*@ non_null */MethodSignature  signature) {
 		int length = signature.countParameters();
 		FormalParaDecl[] formals = new FormalParaDecl[length];
 
@@ -908,7 +908,7 @@ class BCELReader extends Reader {
 	 *            the name to return the package qualifier of
 	 * @return the package qualifier of name
 	 */
-	protected static Name getNameQualifier(Name /*@non_null*/ name) {
+	protected static Name getNameQualifier(/*@ non_null @*/ Name   name) {
 		int size = name.size();
 
 		return size > 1 ? name.prefix(size - 1) : null;
@@ -922,7 +922,7 @@ class BCELReader extends Reader {
 	 *            the name to return the terminal identifier of
 	 * @return the terminal identifier of name
 	 */
-	protected static Identifier getNameTerminal(Name /*@non_null*/ name) {
+	protected static Identifier getNameTerminal(/*@ non_null @*/ Name   name) {
 		return name.identifierAt(name.size() - 1);
 	}
 

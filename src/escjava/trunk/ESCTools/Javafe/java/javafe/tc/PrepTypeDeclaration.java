@@ -50,10 +50,7 @@ public class PrepTypeDeclaration {
 	 * declaration, and infers the members of the declaration. Sets the
 	 * "methods" and "fields" fields of the TypeSig appropriately.
 	 */
-
-	//@ ensures sig.fields != null;
-	//@ ensures sig.methods != null;
-	public void prepTypeSignature(/*@ non_null @ */TypeSig sig) {
+	public void prepTypeSignature(/*@ non_null @*/TypeSig sig) {
 
 		TypeDecl decl = sig.getTypeDecl();
 
@@ -81,10 +78,8 @@ public class PrepTypeDeclaration {
 		numFields = -1;
 	}
 
-	protected void prepDo(TypeSig sig, TypeDecl decl) {
-		//@ assert decl != null;
-		//@ assume (decl instanceof ClassDecl) || (decl instanceof
-		// InterfaceDecl);
+	protected void prepDo(TypeSig sig, /*@ non_null @*/ TypeDecl decl) {
+		//@ assume (decl instanceof ClassDecl) || (decl instanceof InterfaceDecl);
 		if (decl instanceof ClassDecl)
 			visitClassDecl((ClassDecl) decl, sig);
 		else
@@ -172,7 +167,7 @@ public class PrepTypeDeclaration {
 
 	//@ invariant overridesDecoration.decorationType == \type(Set);
 	//@ spec_public
-	private static/*@ non_null @ */ASTDecoration overridesDecoration = new ASTDecoration(
+	private static/*@ non_null @*/ASTDecoration overridesDecoration = new ASTDecoration(
 			"overridesDecoration");
 
 	// ----------------------------------------------------------------------
@@ -180,20 +175,20 @@ public class PrepTypeDeclaration {
 	// Stacks up the members of the type
 	//@ invariant fieldSeq.elementType == \type(FieldDecl);
 	//@ invariant fieldSeq.owner == this;
-	protected/*@ non_null @ */StackVector fieldSeq = new StackVector();
+	protected/*@ non_null @*/StackVector fieldSeq = new StackVector();
 
 	//@ invariant hiddenfieldSeq.elementType == \type(FieldDecl);
 	//@ invariant hiddenfieldSeq.owner == this;
-	protected/*@ non_null @ */StackVector hiddenfieldSeq = new StackVector();
+	protected/*@ non_null @*/StackVector hiddenfieldSeq = new StackVector();
 
 	// "invariant" <elements>.hasParent
 	//@ invariant methodSeq.elementType == \type(MethodDecl);
 	//@ invariant methodSeq.owner == this;
-	protected/*@ non_null @ */StackVector methodSeq = new StackVector();
+	protected/*@ non_null @*/StackVector methodSeq = new StackVector();
 
 	//@ invariant constructorSeq.elementType == \type(ConstructorDecl);
 	//@ invariant constructorSeq.owner == this;
-	protected/* @ non_null @ */StackVector constructorSeq = new StackVector();
+	protected/* @ non_null @*/StackVector constructorSeq = new StackVector();
 
 	private int numFields = -1;
 
@@ -294,8 +289,8 @@ public class PrepTypeDeclaration {
 	 * isClass should be true iff the TypeDecl is a ClassDecl.
 	 * <p>
 	 */
-	public void checkTypeModifiers(/*@ non_null @ */TypeDecl decl,
-	/*@ non_null @ */TypeSig currentSig, boolean isClass) {
+	public void checkTypeModifiers(/*@ non_null @*/TypeDecl decl,
+	/*@ non_null @*/TypeSig currentSig, boolean isClass) {
 		/*
 		 * Check abstract modifier:
 		 * 
@@ -478,8 +473,8 @@ public class PrepTypeDeclaration {
 	 */
 
 	// @ requires e.hasParent;
-	protected void visitTypeDeclElem(/*@ non_null @ */TypeDeclElem e,
-	/*@ non_null @ */TypeSig currentSig, boolean abstractMethodsOK,
+	protected void visitTypeDeclElem(/*@ non_null @*/TypeDeclElem e,
+	/*@ non_null @*/TypeSig currentSig, boolean abstractMethodsOK,
 			boolean inFinalClass, boolean inInterface) {
 
 		if (e instanceof FieldDecl)
@@ -939,8 +934,8 @@ public class PrepTypeDeclaration {
 	 * <p>
 	 */
 	//@ requires loc != Location.NULL;
-	public void checkSuperTypeAccessible(/* @ non_null @ */TypeSig currentSig,
-	/*@ non_null @ */TypeSig supertype, int loc) {
+	public void checkSuperTypeAccessible(/* @ non_null @*/TypeSig currentSig,
+	/*@ non_null @*/TypeSig supertype, int loc) {
 		/*
 		 * FIXME - this error is commented out because it incorrectly disallows
 		 * using a protected nested class of a public supertype that is not in
@@ -1009,13 +1004,13 @@ public class PrepTypeDeclaration {
 
 	//@ ensures \result != null;
 	public javafe.tc.TypeSig processTypeNameAnnotations(
-	/*@ non_null @ */TypeName tn,
-	/*@ non_null @ */javafe.tc.TypeSig sig, Env env) {
+	/*@ non_null @*/TypeName tn,
+	/*@ non_null @*/javafe.tc.TypeSig sig, Env env) {
 		return sig;
 	}
 
 	//@ ensures \result != null;
-	protected EnvForTypeSig getEnvForCurrentSig(/* @ non_null @ */TypeSig sig,
+	protected EnvForTypeSig getEnvForCurrentSig(/* @ non_null @*/TypeSig sig,
 			boolean isStatic) {
 		return sig.getEnv(isStatic);
 	}
