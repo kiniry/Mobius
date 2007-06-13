@@ -76,7 +76,7 @@ public class BoogiePLEditor extends TextEditor {
   public BoogiePLEditor(BytecodeEditor editor) {
     super();
     mod = Composition.getMod();
-    colorManager = new ColorManager();
+    colorManager = ColorManager.getColorManager();
     setSourceViewerConfiguration(new BoogiePLConfiguration(colorManager, mod));
     setDocumentProvider(new BoogiePLDocumentProvider());
   }

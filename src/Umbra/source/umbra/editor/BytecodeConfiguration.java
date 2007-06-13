@@ -21,8 +21,8 @@ import umbra.editor.parsing.TokenGetter;
  * involving special ways of colouring and possibility of
  * changing the coloring styles ('mod' parameter).
  *
- * @author alx
- * @version 0.01
+ * @author BYTECODE Team (contact alx@mimuw.edu.pl)
+ * @version a-01
  */
 public class BytecodeConfiguration extends SourceViewerConfiguration {
 
@@ -60,7 +60,7 @@ public class BytecodeConfiguration extends SourceViewerConfiguration {
    */
   public BytecodeConfiguration() {
     mod = Composition.getMod();
-    colorManager = new ColorManager();
+    colorManager = ColorManager.getColorManager();
   }
 
   /**

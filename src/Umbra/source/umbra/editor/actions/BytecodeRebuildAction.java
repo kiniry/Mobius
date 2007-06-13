@@ -24,6 +24,9 @@ import umbra.editor.BytecodeEditorContributor;
  * All changes made to bytecode are cancelled then.
  * This action is equall to saving Java source file (such that
  * binary file are restored) and generating bytecode from this.
+ *
+ * @author BYTECODE Team (contact alx@mimuw.edu.pl)
+ * @version a-01
  */
 public class BytecodeRebuildAction extends Action {
 

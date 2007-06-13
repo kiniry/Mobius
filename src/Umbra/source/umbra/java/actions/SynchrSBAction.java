@@ -39,7 +39,7 @@ public class SynchrSBAction implements IEditorActionDelegate {
   private CompilationUnitEditor my_editor;
 
   /**
-   * The method sets the internal editor attribute.
+   * The method sets the internal Java source code editor attribute.
    *
    * @param an_action the action which triggered the change of the editor
    * @param a_java_editor the new Java source code editor to be associated with

@@ -26,6 +26,9 @@ import umbra.editor.BytecodeEditorContributor;
  * This class defines action of restoring bytecode from
  * history. Current verion is replaced with one of these
  * kept in history as a file with bt1, bt2, etc. extension
+ *
+ * @author BYTECODE Team (contact alx@mimuw.edu.pl)
+ * @version a-01
  */
 public class BytecodeRestoreAction extends Action {
 

@@ -33,7 +33,7 @@ import b2bpl.Project;
  * packages are required: - b2bpl.jar - asm.jar
  *
  * @author Samuel Willimann
- *
+ * @version a-01
  */
 public class BytecodeToBoogiePLAction implements IEditorActionDelegate {
 

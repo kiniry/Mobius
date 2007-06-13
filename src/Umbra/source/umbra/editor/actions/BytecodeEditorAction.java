@@ -17,7 +17,8 @@ import umbra.editor.IColorValues;
  *  instances of the class are used - one increases the coloring
  *  style mode and the other decreased the mode.
  *
- *  @author Wojtek Wąs
+ *  @author Wojtek Wąs (ww209224@students.mimuw.edu.pl)
+ *  @version a-01
  */
 public class BytecodeEditorAction extends Action {
   /**

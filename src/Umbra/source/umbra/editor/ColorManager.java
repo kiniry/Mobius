@@ -9,26 +9,52 @@ import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 
 /**
- * This object menages the allocation and deallocation of the system
+ * This object manages the allocation and deallocation of the system
  * colors that are used in the colouring in the bytecode editors.
  *
- * @author Generated automatically
+ * @author BYTECODE Team (contact alx@mimuw.edu.pl)
+ * @version a-01
  */
+public final class ColorManager {
 
-public class ColorManager {
+  /**
+   * The one and only <code>ColorManager</code> object in the Umbra
+   * plugin.
+   */
+  private static ColorManager manager;
 
   /**
    * This is a collection that remembers the values of all the already
    * allocated colours. This allows to reuse already allocated colours.
    */
-  private Map fColorTable = new HashMap(10);
+  private Map my_color_table = new HashMap(10);
+
+  /**
+   * The private constructor to prevent creating objects otherwise
+   * than through the static factory method.
+   */
+  private ColorManager() {
+  }
+
+  /**
+   * The static factory which returns the one and only
+   * <code>ColorManager</code> object in the running Umbra plugin.
+   *
+   * @return the only color manager
+   */
+  public static ColorManager getColorManager() {
+    if (manager == null) {
+      manager = new ColorManager();
+    }
+    return manager;
+  }
 
   /**
    * This method disposes of the operating system resources associated with
    * the colors in the bytecode editor.
    */
   public void dispose() {
-    Iterator e = fColorTable.values().iterator();
+    final Iterator e = my_color_table.values().iterator();
     while (e.hasNext())
        ((Color) e.next()).dispose();
   }
@@ -38,14 +64,14 @@ public class ColorManager {
    * value and in that case returns it. In case the value has not been
    * allocated yet, it allocates that from the system display.
    *
-   * @param rgb the value of the colour to allocate
+   * @param a_rgb the value of the colour to allocate
    * @return the color object for the given RGB value
    */
-  public Color getColor(RGB rgb) {
-    Color color = (Color) fColorTable.get(rgb);
+  public Color getColor(final RGB a_rgb) {
+    Color color = (Color) my_color_table.get(a_rgb);
     if (color == null) {
-      color = new Color(Display.getCurrent(), rgb);
-      fColorTable.put(rgb, color);
+      color = new Color(Display.getCurrent(), a_rgb);
+      my_color_table.put(a_rgb, color);
     }
     return color;
   }

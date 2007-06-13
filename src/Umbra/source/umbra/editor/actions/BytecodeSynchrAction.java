@@ -10,8 +10,9 @@ import umbra.editor.BytecodeDocument;
  * This class defines action of synchronization bytecode
  * position with appropriate point in source code.
  *
- * @author Wojtek Wąs
  * @see BytecodeDocument
+ * @author Wojtek Wąs (ww209224@students.mimuw.edu.pl)
+ * @version a-01
  */
 public class BytecodeSynchrAction extends Action {
 
