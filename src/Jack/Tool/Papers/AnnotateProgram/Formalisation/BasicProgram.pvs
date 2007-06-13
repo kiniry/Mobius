@@ -70,4 +70,10 @@ BEGIN
     run_FullProgram(p)(main, arg)(initial_Program_state(p), s2)(n)
 
 
+  % MH: Missing is a proof that this semantics preserves wf_state 
+  % wf_state should actually be defined in this file
+  % 
+  % We could one day also import SemanticsProofs to prove that all
+  % instantiations are indeed deterministic.
+
 END ProgramSemantics
