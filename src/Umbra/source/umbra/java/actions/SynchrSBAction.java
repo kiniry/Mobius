@@ -4,10 +4,7 @@
 package umbra.java.actions;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor;
 import org.eclipse.jface.action.IAction;
@@ -18,8 +15,8 @@ import org.eclipse.ui.IEditorActionDelegate;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.FileEditorInput;
-import org.eclipse.ui.texteditor.AbstractTextEditor;
 
+import umbra.UmbraException;
 import umbra.UmbraHelper;
 import umbra.editor.BytecodeDocument;
 import umbra.editor.BytecodeEditor;
@@ -29,21 +26,28 @@ import umbra.editor.BytecodeEditor;
  * form source code to bytecode. It is available with the standard
  * Java editor.
  *
- * @author Wojtek Wąs
  * @see DocumentProvider
+ *
+ * @author Wojtek Wąs (ww209224@students.mimuw.edu.pl)
+ * @version a-01
  */
 public class SynchrSBAction implements IEditorActionDelegate {
 
   /**
    * The editor of the Java source code.
    */
-  private CompilationUnitEditor editor;
+  private CompilationUnitEditor my_editor;
 
   /**
    * The method sets the internal editor attribute.
+   *
+   * @param an_action the action which triggered the change of the editor
+   * @param a_java_editor the new Java source code editor to be associated with
+   * the action
    */
-  public void setActiveEditor(IAction action, IEditorPart targetEditor) {
-    editor = (CompilationUnitEditor)targetEditor;
+  public final void setActiveEditor(final IAction an_action,
+                                    final IEditorPart a_java_editor) {
+    my_editor = (CompilationUnitEditor)a_java_editor;
   }
 
   /**
@@ -52,58 +56,41 @@ public class SynchrSBAction implements IEditorActionDelegate {
    * the source code and shows the corresponding selection in the
    * bytecode.
    *
-   * @param action the action that triggered the operation
+   * @param an_action the action that triggered the operation
    */
-  public void run(IAction action) {
-    ITextSelection selection = (ITextSelection)editor.
+  public final void run(final IAction an_action) {
+    final ITextSelection selection = (ITextSelection)my_editor.
                     getSelectionProvider().getSelection();
-    int off = selection.getOffset();
-    IPath active = ((FileEditorInput)editor.getEditorInput()).
+    final int off = selection.getOffset();
+    final IPath active = ((FileEditorInput)my_editor.getEditorInput()).
                         getFile().getFullPath();
-    int lind = active.toOSString().lastIndexOf(UmbraHelper.JAVA_EXTENSION);
+    final int lind = active.toOSString().lastIndexOf(UmbraHelper.JAVA_EXTENSION);
     if (lind == -1) {
-      MessageDialog.openError(editor.getSite().getShell(),
-                  "Bytecode",
-                  "This is not a \""+
-                  UmbraHelper.JAVA_EXTENSION+
-                  "\" file");
+      MessageDialog.openError(my_editor.getSite().getShell(),
+                  "Bytecode", "This is not a \"" +
+                  UmbraHelper.JAVA_EXTENSION + "\" file");
       return;
     }
-    String fname = UmbraHelper.replaceLast(active.toOSString(),
-                  UmbraHelper.JAVA_EXTENSION,
-                  UmbraHelper.BYTECODE_EXTENSION);
-    IWorkspace workspace = ResourcesPlugin.getWorkspace();
-    IFile filel = ((FileEditorInput)editor.getEditorInput()).
-            getFile();
-    IFile file = null;
+    IFile file;
     try {
-      file = UmbraHelper.getClassFileName(filel, editor);
-      if (!file.exists()) {
-        MessageDialog.openError(editor.getSite().getShell(),
-                    "Bytecode",
-                    "File " + fname + " not found");
-        return;
-      }
-    } catch (JavaModelException e1) {
-      // TODO Auto-generated catch block
-      e1.printStackTrace();
+      file = getClassFileForJavaFile(active);
+    } catch (UmbraException e1) {
       return;
     }
-    FileEditorInput input = new FileEditorInput(file);
+    final FileEditorInput input = new FileEditorInput(file);
     try {
-      BytecodeEditor bcEditor = (BytecodeEditor)editor.getSite().
-                           getPage().
-                           openEditor(input,
+      final BytecodeEditor bcEditor = (BytecodeEditor)my_editor.getSite().
+                           getPage().openEditor(input,
                             "umbra.BytecodeEditor",
                             true);
       if (bcEditor.isSaveOnCloseNeeded()) {
-        MessageDialog.openWarning(editor.getSite().getShell(),
+        MessageDialog.openWarning(my_editor.getSite().getShell(),
                       "Bytecode",
-                      "The Bytecode editor needs being "+
+                      "The Bytecode editor needs being " +
                       "refreshed!");
         return;
       }
-      BytecodeDocument bDoc = ((BytecodeDocument)bcEditor.
+      final BytecodeDocument bDoc = ((BytecodeDocument)bcEditor.
                         getDocumentProvider().
                         getDocument(input));
       bDoc.synchronizeSB(off, bcEditor);
@@ -113,9 +100,50 @@ public class SynchrSBAction implements IEditorActionDelegate {
   }
 
   /**
-   * Currently, does nothing.
+   * This method gives the <code>IFile</code> with the bytecode that
+   * corresponds to the file pointed out by the parameter
+   * <code>a_java_path</code>. The method actually adds up the local error
+   * handling code to an invocation of {@ref UmbraHelper.getClassFileName}.
+   *
+   * @param a_java_path a path for a file with a Java source code
+   * @return the corresponding bytecode file
+   * @throws UmbraException in case the file does not exist or
    */
-  public void selectionChanged(IAction action, ISelection selection) {
+  private IFile getClassFileForJavaFile(final IPath a_java_path)
+    throws UmbraException {
+    final String fname = UmbraHelper.replaceLast(a_java_path.toOSString(),
+                  UmbraHelper.JAVA_EXTENSION, UmbraHelper.CLASS_EXTENSION);
+    final IFile filel = ((FileEditorInput)my_editor.getEditorInput()).
+            getFile();
+    IFile file = null;
+    try {
+      file = UmbraHelper.getClassFileName(filel, my_editor);
+      if (!file.exists()) {
+        MessageDialog.openError(my_editor.getSite().getShell(),
+                    "Bytecode",
+                    "File " + fname + " not found");
+        throw new UmbraException();
+      }
+    } catch (JavaModelException e1) {
+      MessageDialog.openError(my_editor.getSite().getShell(),
+                              "Bytecode",
+                              "The current project has no classfile output " +
+                              "location configured.");
+      throw new UmbraException();
+    }
+    return file;
+  }
+
+  /**
+   * Currently, does nothing.
+   *
+   * @param an_action see {@ref IActionDelegate#selectionChanged(IAction,
+   *                       ISelection)}
+   * @param a_selection see {@ref IActionDelegate#selectionChanged(IAction,
+   *                       ISelection)}
+   */
+  public void selectionChanged(final IAction an_action,
+                               final ISelection a_selection) {
   }
 
 }

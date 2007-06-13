@@ -14,13 +14,11 @@ import org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.ui.IActionDelegate;
 import org.eclipse.ui.IEditorActionDelegate;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.FileEditorInput;
-import org.eclipse.ui.texteditor.AbstractDecoratedTextEditor;
 
 import umbra.UmbraHelper;
 import umbra.editor.BytecodeEditor;
@@ -78,7 +76,7 @@ public class DisasBCEL implements IEditorActionDelegate {
                            UmbraHelper.BYTECODE_EDITOR_CLASS, true);
       bc_editor.refreshBytecode(active, null, null);
       input = new FileEditorInput(file);
-      final JavaClass jc = bc_editor.getJavaClass();
+      final JavaClass jc = bc_editor.getMy_javaClass();
       page.closeEditor(bc_editor, true);
       openEditorAndDisassemble(page, input, jc);
     } catch (CoreException e) {
@@ -108,7 +106,7 @@ public class DisasBCEL implements IEditorActionDelegate {
     final BytecodeEditor a_beditor = (BytecodeEditor)a_page.openEditor(an_input,
                         UmbraHelper.BYTECODE_EDITOR_CLASS, true);
     a_page.bringToTop(a_beditor);
-    a_beditor.setRelation((AbstractDecoratedTextEditor)my_editor, a_jclass);
+    a_beditor.setRelation(my_editor, a_jclass);
     Composition.stopDisas();
   }
 

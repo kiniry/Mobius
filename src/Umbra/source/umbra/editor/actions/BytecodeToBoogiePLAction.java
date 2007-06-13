@@ -147,24 +147,28 @@ public class BytecodeToBoogiePLAction implements IEditorActionDelegate {
     IWorkspace workspace = ResourcesPlugin.getWorkspace();
     file = workspace.getRoot().getFile(new Path(fname));
     FileEditorInput input = new FileEditorInput(file);
-    try {
+    /*  FIXME not sure if it makes sense
+     * try {
+      
+      
       IWorkbenchPage page = editor.getEditorSite().getPage();
-      BytecodeEditor bplEditor = (BytecodeEditor) page.openEditor(input,
+      BoogiePLEditor bplEditor = (BytecodeEditor) page.openEditor(input,
           UmbraHelper.BOOGIEPL_EDITOR_CLASS, true);
       bplEditor.refreshBytecode(active, null, null);
       input = new FileEditorInput(file);
-      JavaClass jc = bplEditor.getJavaClass();
+      JavaClass jc = bplEditor.getMy_javaClass();
       page.closeEditor(bplEditor, true);
       bplEditor = (BytecodeEditor) page.openEditor(input,
           UmbraHelper.BOOGIEPL_EDITOR_CLASS, true);
-      bplEditor.setRelation((AbstractDecoratedTextEditor) editor, jc);
+      bplEditor.setRelation(editor, jc);
+      
     } catch (CoreException e) {
       e.printStackTrace();
     } catch (ClassNotFoundException e) {
       e.printStackTrace();
     } catch (IOException e) {
       e.printStackTrace();
-    }
+    }*/
   }
 
   /**

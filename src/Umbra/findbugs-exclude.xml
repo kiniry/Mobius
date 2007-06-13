@@ -1,0 +1,6 @@
+<FindBugsFilter>
+    <Match>
+      <Class name="umbra.UmbraPlugin" />
+      <Method name="UmbraPlugin()" />
+    </Match>
+</FindBugsFilter>

@@ -203,8 +203,8 @@ public final class UmbraHelper {
    *        class file
    * @param an_editor in which the .java file is edited
    * @return the IFile for the corresponding .class file
-   * @throws JavaModelException in case the project in which the editor
-   *
+   * @throws JavaModelException in case the project in which the editor operates
+   *                            has no classfile output location set
    */
   public static IFile getClassFileName(final IFile a_java_file,
                      final CompilationUnitEditor an_editor)

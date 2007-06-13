@@ -21,7 +21,7 @@ import umbra.UmbraPlugin;
  * After running it the rebuild action will create a Bytecode related
  * to the commited version.
  *
- * @author Wojciech Wąs (wojtekwas@poczta.onet.pl)
+ * @author Wojciech Wąs (ww209224@students.mimuw.edu.pl)
  * @version a-01
  */
 public class CommitAction implements IEditorActionDelegate {

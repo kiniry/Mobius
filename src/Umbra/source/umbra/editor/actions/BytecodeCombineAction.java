@@ -36,7 +36,7 @@ import umbra.editor.BytecodeEditorContributor;
  * made to different methods. In case a modification happens in the
  * same method, the bytecode modification is privileged.
  *
- * @author Wojtek Wąs (wojtekwas@poczta.onet.pl)
+ * @author Wojtek Wąs (ww209224@students.mimuw.edu.pl)
  * @version a-01
  */
 public class BytecodeCombineAction extends Action {
@@ -141,13 +141,13 @@ public class BytecodeCombineAction extends Action {
       try {
         JavaClass jc = strin.loadClass(clname);
         strin.removeClass(jc);
-        final JavaClass oldJc = ((BytecodeEditor)my_editor).getJavaClass();
+        final JavaClass oldJc = ((BytecodeEditor)my_editor).getMy_javaClass();
         final ClassGen cg = updateModifiedMethods(oldJc, jc);
         jc = cg.getJavaClass();
         final BytecodeEditor bcEditor = ((BytecodeEditor)my_editor);
         final String fullName = bcEditor.getPath(a_path).toOSString();
         jc.dump(fullName + UmbraHelper.getFileSeparator() + the_lastSegment);
-        bcEditor.setJavaClass(jc);
+        bcEditor.setMy_javaClass(jc);
         MessageDialog.openWarning(my_editor.getSite().getShell(),
           "Bytecode", "A " + fullName + UmbraHelper.getFileSeparator() + 
                              the_lastSegment);

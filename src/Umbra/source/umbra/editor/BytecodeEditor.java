@@ -15,6 +15,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor;
 import org.eclipse.ui.editors.text.TextEditor;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditor;
@@ -33,7 +34,8 @@ import annot.bcio.ReadAttributeException;
  * such as JavaClass to obtain particular instructions
  * and ClassGen to allow changes in BCEL.
  *
- * @author BYTECODE team
+ * @author BYTECODE team (contact alx@mimuw.edu.pl)
+ * @version a-01
  */
 
 public class BytecodeEditor extends TextEditor {
@@ -42,7 +44,7 @@ public class BytecodeEditor extends TextEditor {
    * The Java source code editor that corresponds to the current
    * bytecode editor.
    */
-  private AbstractDecoratedTextEditor relatedEditor;
+  private CompilationUnitEditor my_related_editor;
 
 
   /**
@@ -50,13 +52,13 @@ public class BytecodeEditor extends TextEditor {
    * current editor has been generated from. They also serve to modify
    * the bytecode.
    */
-  private JavaClass javaClass;
+  private JavaClass my_javaClass;
 
   /**
    * The BCEL structure to generate the bytecode file corresponding
-   * to the {@link #javaClass}.
+   * to the {@link #my_javaClass}.
    */
-  private ClassGen classGen;
+  private ClassGen my_classGen;
 
   /**
    * This field contains the number of history items. This
@@ -90,7 +92,7 @@ public class BytecodeEditor extends TextEditor {
   /**
    * Default function used while closing the current editor.
    */
-  public void dispose() {
+  public final void dispose() {
     bconfig.disposeColor();
     super.dispose();
   }
@@ -98,31 +100,32 @@ public class BytecodeEditor extends TextEditor {
   /**
    * @return Java code editor that Bytecode has been generated from
    */
-  public AbstractDecoratedTextEditor getRelatedEditor() {
-    return relatedEditor;
+  public final CompilationUnitEditor getRelatedEditor() {
+    return my_related_editor;
   }
 
   /**
    * @return BCEL structure related to Bytecode
    * that allows obtaining its particular instructions
    */
-  public JavaClass getJavaClass() {
-    return javaClass;
+  public final JavaClass getMy_javaClass() {
+    return my_javaClass;
   }
 
   /**
    * This is a function executed directly after initialization
-   * that makes realtion to BCEL structures
+   * and it arranges the relation between the editor and BCEL structures.
    *
    * @param editor  Java code editor with intended relation
    *           (used in particular during synchronization)
    * @param jc    BCEL structures that Bytecode has been
    *           generated from and may be modificated with
    */
-  public void setRelation(AbstractDecoratedTextEditor editor, JavaClass jc) {
-    relatedEditor = editor;
-    javaClass = jc;
-    classGen = new ClassGen(jc);
+  public final void setRelation(final CompilationUnitEditor editor,
+                                final JavaClass jc) {
+    my_related_editor = editor;
+    my_javaClass = jc;
+    my_classGen = new ClassGen(jc);
     ((BytecodeDocumentProvider)getDocumentProvider()).
             setRelation(editor, this, getEditorInput());
   }
@@ -137,28 +140,28 @@ public class BytecodeEditor extends TextEditor {
    * not existed such yet, the binary file is simply rewritten, otherwise
    * it is saved unchanged).
    */
-  public void doSave(IProgressMonitor progressMonitor) {
+  public final void doSave(final IProgressMonitor progressMonitor) {
     super.doSave(progressMonitor);
-    IPath active = ((FileEditorInput)getEditorInput()).getFile().getFullPath();
-    String fnameFrom = active.toOSString().replaceFirst(
+    final IPath active = ((FileEditorInput)getEditorInput()).getFile().getFullPath();
+    final String fnameFrom = active.toOSString().replaceFirst(
                   UmbraHelper.BYTECODE_EXTENSION,
                   UmbraHelper.CLASS_EXTENSION);
-    String lastSegment = active.lastSegment().replaceFirst(
+    final String lastSegment = active.lastSegment().replaceFirst(
                   UmbraHelper.BYTECODE_EXTENSION,
                   UmbraHelper.CLASS_EXTENSION);
-    String fnameTo = active.removeLastSegments(1).append("_" + lastSegment).toOSString();
-    IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-    IFile fileFrom = root.getFile(new Path(fnameFrom));
-    IPath pathTo = new Path(fnameTo);
-    IFile fileTo = root.getFile(pathTo);
+    final String fnameTo = active.removeLastSegments(1).append("_" + lastSegment).toOSString();
+    final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+    final IFile fileFrom = root.getFile(new Path(fnameFrom));
+    final IPath pathTo = new Path(fnameTo);
+    final IFile fileTo = root.getFile(pathTo);
     try {
       if (!fileTo.exists()) fileFrom.copy(pathTo, true, null);
     } catch (CoreException e1) {
       e1.printStackTrace();
     }
     try {
-      JavaClass jc = classGen.getJavaClass();
-      String path3 = getPath(active).append(lastSegment).toOSString();
+      final JavaClass jc = my_classGen.getJavaClass();
+      final String path3 = getPath(active).append(lastSegment).toOSString();
       jc.dump(path3);
     } catch (IOException e) {
       e.printStackTrace();
@@ -171,7 +174,7 @@ public class BytecodeEditor extends TextEditor {
    * @param path    relative path
    * @return      absolute path
    */
-  public IPath getPath(IPath path) {
+  public final IPath getPath(final IPath path) {
     return ResourcesPlugin.getWorkspace().getRoot().getFolder(path).getProject().getLocation();
   }
 
@@ -193,23 +196,23 @@ public class BytecodeEditor extends TextEditor {
    * @throws CoreException
    * @throws IOException
    */
-  public void refreshBytecode(IPath path,
-                String[] comments,
-                String[] interlineComments)
+  public final void refreshBytecode(final IPath path,
+                final String[] comments,
+                final String[] interlineComments)
          throws ClassNotFoundException, CoreException, IOException {
-    String pathName = getPath(path).toOSString();
-    FileEditorInput input = (FileEditorInput)getEditorInput();
-    IFile file = input.getFile();
+    final String pathName = getPath(path).toOSString();
+    final FileEditorInput input = (FileEditorInput)getEditorInput();
+    final IFile file = input.getFile();
 
     // Get class name along with package name
     String clname = path.lastSegment().substring(0,
                        path.lastSegment().lastIndexOf("."));
-    String tmp = path.removeFirstSegments(1).toOSString();
+    final String tmp = path.removeFirstSegments(1).toOSString();
     clname = tmp.substring(0, tmp.lastIndexOf("."));
 
-    ClassPath cp = new ClassPath(pathName);
-    SyntheticRepository strin = SyntheticRepository.getInstance(cp);
-    JavaClass jc = strin.loadClass(clname);
+    final ClassPath cp = new ClassPath(pathName);
+    final SyntheticRepository strin = SyntheticRepository.getInstance(cp);
+    final JavaClass jc = strin.loadClass(clname);
     strin.removeClass(jc);
     //controlPrint(jc);
 //    ClassGen cg = new ClassGen(jc);
@@ -224,7 +227,7 @@ public class BytecodeEditor extends TextEditor {
     BCClass bcc;
     try {
       bcc = new BCClass(jc);
-      char[] bccode = bcc.printCode().toCharArray();
+      final char[] bccode = bcc.printCode().toCharArray();
 //      for(int i = 0; i < methods.length; i++) {
 //        try {
 //          namesLen[i] = methods[i].toString().getBytes().length;
@@ -240,7 +243,7 @@ public class BytecodeEditor extends TextEditor {
 //        }
 //      }
 
-      byte[] contents = new byte[bccode.length];
+      final byte[] contents = new byte[bccode.length];
       for(int i = 0; i < bccode.length; i++) {
         contents[i] = (byte) bccode[i];
 //        for(int j = 0; j < namesLen[i]; j++, k++) {
@@ -254,7 +257,7 @@ public class BytecodeEditor extends TextEditor {
 //        contents[k] = '\n';
 //        k++;
       }
-      InputStream stream = new ByteArrayInputStream(contents);
+      final InputStream stream = new ByteArrayInputStream(contents);
       if (file.exists()) {
         file.setContents(stream, true, true, null);
       } else {
@@ -266,7 +269,7 @@ public class BytecodeEditor extends TextEditor {
       e1.printStackTrace();
     }
 
-    javaClass = jc;
+    my_javaClass = jc;
   }
 
 //  private BCLocalVariable[] createLocalVariables(MethodGen m, ConstantPoolGen cpGen) {
@@ -398,7 +401,7 @@ public class BytecodeEditor extends TextEditor {
    *
    * @return Current number of versions; -1 if limit has been reached
    */
-  public int newHistory() {
+  public final int newHistory() {
     if (historyNum == IHistory.maxHistory) return -1;
     historyNum++;
     return historyNum;
@@ -408,15 +411,15 @@ public class BytecodeEditor extends TextEditor {
    * Updating number of historical versions
    * when all of them are removed.
    */
-  public void clearHistory() {
+  public final void clearHistory() {
     historyNum = -1;
   }
 
   /**
    * @return the object which generates the class file
    */
-  public ClassGen getClassGen() {
-    return classGen;
+  public final ClassGen getMy_classGen() {
+    return my_classGen;
   }
 
   /**
@@ -425,22 +428,22 @@ public class BytecodeEditor extends TextEditor {
    *
    * @param jc the Java class representation
    */
-  public void setJavaClass(JavaClass jc) {
-    javaClass = jc;
-    classGen = new ClassGen(jc);
+  public final void setMy_javaClass(final JavaClass jc) {
+    my_javaClass = jc;
+    my_classGen = new ClassGen(jc);
   }
 
   /**
    * @param document document to associate with the current editor
    */
-  public void setDocument(BytecodeDocument document) {
+  public final void setDocument(final BytecodeDocument document) {
     currentDocument = document;
   }
 
   /**
    * @return the currently edited document
    */
-  public BytecodeDocument getDocument() {
+  public final BytecodeDocument getDocument() {
     return currentDocument;
   }
 

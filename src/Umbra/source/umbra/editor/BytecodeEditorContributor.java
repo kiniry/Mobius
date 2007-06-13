@@ -10,6 +10,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.apache.bcel.classfile.JavaClass;
+import org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
@@ -240,9 +241,8 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
     ITextSelection selection = (ITextSelection)((AbstractTextEditor)editor).getSelectionProvider().getSelection();
     int off = selection.getOffset();
     int len = selection.getLength();
-    AbstractDecoratedTextEditor related = ((BytecodeEditor)editor).
-                              getRelatedEditor();
-    JavaClass jc = ((BytecodeEditor)editor).getJavaClass();
+    CompilationUnitEditor related = ((BytecodeEditor)editor).getRelatedEditor();
+    JavaClass jc = ((BytecodeEditor)editor).getMy_javaClass();
     boolean proper = (related != null);
     bytecodeContribution.survive();
     if (proper) Composition.startDisas();
