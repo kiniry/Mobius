@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="EscJava2"
+      id="mobius.EscJava2"
       label="EscJava2"
       version="2.0.2"
       provider-name="David R. Cok and EU MOBIUS IST-15905 Project">
