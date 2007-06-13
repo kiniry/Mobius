@@ -1,0 +1,173 @@
+% This is LLNCS.DEM the demonstration file of
+% the LaTeX macro package from Springer-Verlag
+% for Lecture Notes in Computer Science,
+% version 2.3 for LaTeX2e
+%
+\documentclass[draft]{llncs}
+%
+\usepackage{makeidx}  % allows for indexgeneration
+\usepackage[inline, nomargin]{fixme}
+\usepackage{listings}
+\usepackage{float}
+%
+\begin{document}
+
+\newcommand{\rarrow}{$\rightarrow$}
+\newcommand{\conj}{$\wedge$}
+\newcommand{\disjonc}{$\vee$}
+\newcommand{\s}{\,}
+\newcommand{\btab}{\begin{tt}\begin{tabbing}}
+\newcommand{\etab}{\end{tabbing}\end{tt}}
+%
+\frontmatter          % for the preliminaries
+%
+
+\mainmatter              % start of the contributions
+%
+\title{Taking into account Java's Security Manager for static verification}
+%
+\titlerunning{Taking in account Java's Security Manager}  % abbreviated title (for running head)
+%                                     also used for the TOC unless
+%                                     \toctitle is used
+%
+\author{Julien Charles \and C\'esar Kunz}
+%
+\authorrunning{Julien Charles and C\'esar Kunz}   % abbreviated author list (for running head)
+%
+%%%% list of authors for the TOC (use if author list has to be modified)
+\tocauthor{Julien Charles, C\'esar Kunz}
+%
+\institute{INRIA Sophia-Antipolis\\
+\email{\{julien.charles, cesar.kunz\}@inria.fr}}
+
+\maketitle              % typeset the title of the contribution
+
+\begin{abstract}
+The Security Manager is an important system component in the Java Virtual Machine (JVM). It forbids access
+to some specific methods depending on a given security policy. It modifies both the behavior of 
+the Java system libraries and of the JVM, for it throws exceptions in case of security policy 
+violation.  The difficulty for the verification of a environment containing it 
+lies in the fact that its use mixes library calls (easy to specify) as well as
+direct VM calls (hard to take in account because they modifies directly the Java semantic of the execution). 
+Moreover its use  could be modelled solely as a JVM level component, which would make the
+use of this component more homogenous as well as the application of its security policies it applies 
+more trustable.
+
+In this article we use a JVM-level modelisation of a SecurityManager seen as an Aspect component, 
+and we define a verification framework to verify statically programs that takes in account the presence 
+of this component. 
+\end{abstract}
+%
+\section{Introduction}
+Java is a language commonly used on small device, and more specifically on Trusted Personnal Devices, devices
+of heterogenous nature like cellphones or JavaCards. Thus the verification of the different components Java
+platform is made of is crucial; and even more so taking in account their specific caracteristic which would
+change the general behaviour of a JVM. Verification of specific components is scattered through litterature: 
+there has been verifications of Bytecode Verifiers, as well as Access Contoller. As far as our knowledge goes
+though, the SecurityManager of the Virtual Machine has never been taken into account for
+the verification of a Java program, especially for the checks it does on the Virtual Machine level.
+
+The main goal of this paper is to verify an implementation of a Security Manager, and especially to use 
+this verification as a mean to specify more precisely the behaviour of Java Virtual Machine in order to
+verify more accurately Java programs.
+
+\subsection{The Security Manager}
+The Security Manager applies the security policies on two levels. First on the library level, each time a
+writing or reading operation is called for instance a call to the Security Manager is made and if the
+caller has not respected a given security policy, a SecurityException is thrown, several other operations
+of the same type are handled. Second on the Virtual Machine level, each time a class is loaded, it checks on
+a meta level with the use of the ClassLoader (which for this paper will be considered as a part of the
+JVM) if the currently inspected class has the right to access a specified type from an outside package.
+The second set of property is hard to take in account for a program verification, because it changes the 
+behavior of type resolution which is done to the program.
+A practical way to model these changes  would be to consider the Security Manager as an Aspect which
+would weave at the cutting points representing type resolution.
+\begin{figure}
+\btab
+pa\=ckage a;\\
+public class Main \{\+\\
+  st\=atic \{\+\\
+    Sy\=stem.setSecurityManager(new SecurityManager() \{\+\\
+      pu\=blic void checkPackageAccess(String target) \{\+\\
+        super.checkPackageAccess(target);\\
+        if\=(target.equals("b"))\\
+          \>throw new SecurityException("That is true");\\
+      \}\});\-\-\\
+  \}\\
+ \\
+  public static void main(String[] args) \{\+\\
+    System.out.println("Nextline will throw an exception");\\
+    b.A a = new b.A();\-\\
+  \}\-\\
+\}
+\etab
+The output of the program:
+\btab
+Next line will throw an exception\\
+Excepti\=on in thread "main" java.lang.SecurityException: That is true\+\\
+	at a.b.Main\$1.checkPackageAccess(Main.java:9)\\
+	\dots
+\etab
+\caption{An intrusive Security Manager}
+\end{figure}
+\subsection{Verification of Aspects}
+Aspect Oriented Programming (AOP) is a recent paradigm that offers modularity though it is ortogonal to 
+the usual Object Oriented Programming paradigm. AOP enables to weave code directly into a program
+thus changing the behaviour of given constructs. Two new notions have been introduced through AOP:
+\begin{itemize}
+\item the concept of cutting points, points in the program where code could be inserted, and
+\item advice, the code to be inserted at the specified cutting point.
+\end{itemize}
+Adding Aspect code to a program most of the time doesn't change its general behaviour, and in these case
+the modular properties of the program are kept.
+There is a classification of aspects into three groups: speculative, regulative or invasive \fixme{quote the 
+article}.
+
+Speculative and regulative Aspects enables modularity. 
+\fixme{talk about model checking, JML verification + Cesar work}
+
+
+In this paper we will restrict to the Aspects that can easily represent a Security Manager, the invasive
+ones. This focus removes all the modularity that was aimed at in the other verification framework
+mentionned above,
+because it's the specific case where the Aspects have effects and likely break the original behaviour of
+the program.
+
+\subsection{A Security Manager modeled as Aspects}
+Modeling the Security Manager as an invasive Aspect is quite natural: as we have seen in the above example 
+when used it can change the behaviour of the JVM at the type access step. 
+%
+\begin{figure}
+\btab
+public as\=pect SecurityManager \{\+\\
+
+Set<String> s = new HashSet();
+pointcut(Object o) : target(o) && !within(SecurityManager) && call(public * funName(..)) {
+    if(s.contains)
+}
+  
+\etab
+\caption{An Aspect implementation of the invasive SecurityManager}
+\end{figure}
+\section{The verification framework}
+\subsection{Intro/related work}
+\subsection{Definition of the weakest precondition calculus}
+\subsection{Proof of Correctness}
+%
+\section{Verifying a security manager}
+\subsection{Intro/Definition/related work: sys component verif}
+\subsection{An aspect modelisation}
+\subsection{An instanciation example}
+\section{Conclusion}
+\subsection{Future work: reflexivity anyone?}
+\subsection{Configurable PCC}
+%
+% ---- Bibliography ----
+%
+\begin{thebibliography}{}
+%
+
+
+\end{thebibliography}
+
+\end{document}
