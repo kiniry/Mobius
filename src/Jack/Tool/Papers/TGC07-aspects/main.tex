@@ -89,7 +89,6 @@ public class Main \{\+\\
   st\=atic \{\+\\
     Sy\=stem.setSecurityManager(new SecurityManager() \{\+\\
       pu\=blic void checkPackageAccess(String target) \{\+\\
-        super.checkPackageAccess(target);\\
         if\=(target.equals("b"))\\
           \>throw new SecurityException("That is true");\\
       \}\});\-\-\\
@@ -108,7 +107,7 @@ Excepti\=on in thread "main" java.lang.SecurityException: That is true\+\\
 	at a.b.Main\$1.checkPackageAccess(Main.java:9)\\
 	\dots
 \etab
-\caption{An intrusive Security Manager}
+\caption{An invasive Security Manager}
 \end{figure}
 \subsection{Verification of Aspects}
 Aspect Oriented Programming (AOP) is a recent paradigm that offers modularity though it is ortogonal to 
@@ -135,16 +134,23 @@ the program.
 
 \subsection{A Security Manager modeled as Aspects}
 Modeling the Security Manager as an invasive Aspect is quite natural: as we have seen in the above example 
-when used it can change the behaviour of the JVM at the type access step. 
+when used it can change the behaviour of the JVM at the type access step. The type is checked only on the
+first call, and
 %
 \begin{figure}
 \btab
-public as\=pect SecurityManager \{\+\\
+pu\=blic aspect SecurityManager \{\+\\
 
-Set$<$String$>$ s = new HashSet();
-pointcut(Object o) : target(o) \&\& !within(SecurityManager) \&\& call(public * funName(..)) \{
-    if(!s.contains(o.signature)) \{
-    \}
+Set$<$String$>$ s = new HashSet$<$String$>$();\\
+po\=intcut(Object o) : \=target(o) \&\& !within(SecurityManager)\+ \\
+           \>\&\& call(public * funName(..)) \{\\
+    String pkg = o.getClass().getPackage();\\
+    if\=(!s.contains(pkg)) \{\+\\     
+       s.add(pkg);\\
+       if\=(pkg.equals("b"))\\
+           \>throw new SecurityException("That is true");\\\-\\ 
+    \}\-\\
+\}\-\\
 \}
   
 \etab
@@ -152,7 +158,22 @@ pointcut(Object o) : target(o) \&\& !within(SecurityManager) \&\& call(public * 
 \end{figure}
 \section{The verification framework}
 \subsection{Intro/related work}
-\subsection{Definition of the weakest precondition calculus}
+\subsection{Definition of the basic weakest precondition calculus used on the Advices}
+
+The base weakest precondition calculus is a standard one. Here we define it
+for the instructions: 
+static_call();
+dyn_call();
+var_decl
+if(){
+}
+static { }
+{ }
+String_lit
+throw
+
+\subsection{Definition of the compilation of the Aspects to a predicate transformer}
+\subsection{Definition of the weakest precondition calculus on the programs}
 \subsection{Proof of Correctness}
 %
 \section{Verifying a security manager}
