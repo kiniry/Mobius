@@ -93,7 +93,7 @@ class BCELReader extends Reader {
 	 * A dummy location representing the class being parsed. Initialized by
 	 * constructor.
 	 */
-	// @ invariant classLocation != Location.NULL;
+	//@ invariant classLocation != Location.NULL;
 	public int classLocation;
 
 	/**
@@ -110,7 +110,7 @@ class BCELReader extends Reader {
 	/*@ non_null */ TypeDeclElemVec typeDeclElemVec,
 	/*@ non_null */ TypeDeclElem[] typeDeclElems) {
 		for (int i = 0; i < typeDeclElems.length; i++) {
-			if (synthetics.contains(typeDeclElems[i])) { // @ nowarn;
+			if (synthetics.contains(typeDeclElems[i])) { //@ nowarn;
 				continue;
 			}
 			if ((javaClass.isInterface())
@@ -127,7 +127,7 @@ class BCELReader extends Reader {
 					continue;
 				}
 			}
-			typeDeclElemVec.addElement(typeDeclElems[i]); // @ nowarn Pre;
+			typeDeclElemVec.addElement(typeDeclElems[i]); //@ nowarn Pre;
 		}
 	}
 
@@ -154,14 +154,6 @@ class BCELReader extends Reader {
    * private class fields.
 	 */
 	protected boolean omitPrivateFields;
-
-  /**
-   * The package name of the class being parsed from bytecode.
-   * @review kiniry/cochran Why are there two fields that look like they 
-   * are/mean the same thing, pkgName and classPackage?
-   * @todo Remove one of these fields.
-   */
-	private Name pkgName;
 
 	/**
 	 * Default constructor - initialises some instance variables
@@ -211,8 +203,6 @@ class BCELReader extends Reader {
 	 * @throws ClassNotFoundException
 	 * @throws IOException
 	 */
-	//@ requires javaClass != null;
-	//@ ensures \result != null;
 	protected CompilationUnit getCompilationUnit()
 			throws ClassNotFoundException, IOException {
 
@@ -223,7 +213,7 @@ class BCELReader extends Reader {
 		TypeDeclVec types = TypeDeclVec.make(new TypeDecl[] { typeDecl });
 		TypeDeclElemVec emptyTypeDeclElemVec = TypeDeclElemVec.make();
 		ImportDeclVec emptyImportDeclVec = ImportDeclVec.make();
-		CompilationUnit result = CompilationUnit.make(pkgName, null,
+		CompilationUnit result = CompilationUnit.make(classPackage, null,
 				emptyImportDeclVec, types, classLocation, emptyTypeDeclElemVec);
 
 		return result;
@@ -235,7 +225,6 @@ class BCELReader extends Reader {
 	 * @throws ClassNotFoundException
 	 * @throws ClassFormatError
 	 */
-	// @requires javaClass != null
 	// @ensures typeDecl.isBinary()
 	protected TypeDecl makeTypeDecl() throws ClassNotFoundException {
 
@@ -247,7 +236,7 @@ class BCELReader extends Reader {
 		setSuperClassName();
 		String packageName = javaClass.getPackageName();
 		if (packageName.length() > 0) {
-			pkgName = Name.make(packageName, classLocation);
+			classPackage = Name.make(packageName, classLocation);
 		}
 
 		// Read interface names
@@ -284,7 +273,6 @@ class BCELReader extends Reader {
 				& ~Constants.ACC_SYNCHRONIZED;
 
 		TypeDecl typeDecl;
-		// @ assume classIdentifier != null;
 		if (javaClass.isInterface()) {
 			typeDecl = (TypeDecl) InterfaceDecl.make(accessModifiers, null,
 					classIdentifier, interfaceVector, null, elementVec,
@@ -353,7 +341,8 @@ class BCELReader extends Reader {
 	 * 
 	 * @param fieldTypeTag
 	 * @param constantValue
-	 * @return
+	 * 
+	 * @return A literal expression for the field identifier
 	 */
 	protected LiteralExpr readFieldInitializer(int fieldTypeTag,
 			ConstantValue constantValue) {
@@ -444,7 +433,7 @@ class BCELReader extends Reader {
 
 			// put in a dummy body
 			if (includeBodies) {
-				routineDeclElement.body = // @ nowarn Null, IndexTooBig;
+				routineDeclElement.body = //@ nowarn Null, IndexTooBig;
 				BlockStmt.make(StmtVec.make(), classLocation, classLocation);
 				routineDeclElement.locOpenBrace = classLocation;
 			}
@@ -579,14 +568,16 @@ class BCELReader extends Reader {
 	}
 
 	/**
+	 * Construct the filename for the inner class
 	 * 
-	 * @param innerClassName
-	 * @param outerClassName
-	 * @return
+	 * @param innerClassName The name of the inner class
+	 * @param outerClassPathName The path name of the outer class
+	 * 
+	 * @return The filename of the inner class
 	 */
 	protected String makeInnerClassFileName(String innerClassName,
-			String outerClassName) {
-		StringBuffer classNameBuffer = new StringBuffer(outerClassName);
+			String outerClassPathName) {
+		StringBuffer classNameBuffer = new StringBuffer(outerClassPathName);
 		classNameBuffer.append("$");
 		classNameBuffer.append(innerClassName);
 		classNameBuffer.append(".class");
@@ -600,7 +591,8 @@ class BCELReader extends Reader {
 	 * @param sibling
 	 * @param avoidSpec
 	 * @param innerClassIndex
-	 * @return
+	 * 
+	 * @return A reader for the inner class
 	 */
 	protected BCELReader readInnerClass(GenericFile sibling, boolean avoidSpec,
 			int innerClassIndex) {
@@ -790,25 +782,21 @@ class BCELReader extends Reader {
 	 * The type names of the interfaces implemented by the class being parsed.
 	 * Initialized by set_num_interfaces. Elements initialized by set_interface.
 	 */
-	//@ private invariant interfaces != null;
-	//@ private invariant \typeof(interfaces) == \type(TypeName[]);
 	protected TypeName[] typeNames;
 
 	/**
 	 * The class members of the class being parsed. Intialized by set_field,
 	 * set_method, and set_class_attributes.
 	 */
-	//@ invariant classMembers != null;
-	protected TypeDeclElemVec classMembers = TypeDeclElemVec.make(0);
+	protected TypeDeclElemVec /*@non_null*/ classMembers = TypeDeclElemVec.make(0);
 
 	/**
 	 * The methods and constructors of the class being parsed. Initialized by
 	 * set_num_methods. Elements initialized by set_method.
 	 */
-	//@ invariant routines != null;
-	//@ invariant \typeof(routines) == \type(RoutineDecl[]);
+	//@ invariant \typeof(routineDecl) == \type(RoutineDecl[]);
 	//@ spec_public
-	protected RoutineDecl[] routineDecl;
+	protected /*@non_null*/ RoutineDecl[] routineDecl;
 
 	/**
 	 * The identifier of the class being parsed. Initialized by set_this_class.
@@ -859,27 +847,26 @@ class BCELReader extends Reader {
 				".$");
 
 		int count = tokenizer.countTokens();
-		javafe.util.Assert.notFalse(count > 0); // @ nowarn Pre;
+		javafe.util.Assert.notFalse(count > 0); //@ nowarn Pre;
 
-		Identifier[] identifiers = new Identifier[count];
+		Identifier[] /*@non_null*/ identifiers = new Identifier[count];
 		int[] locations1 = new int[count];
 		int[] locations2 = new int[count - 1];
 
 		for (int loopVar = 0; tokenizer.hasMoreTokens(); loopVar++) {
 			identifiers[loopVar] = Identifier.intern(tokenizer.nextToken());
-			// @ assert identifiers[i] != null;
 			locations1[loopVar] = classLocation;
 
 			if (loopVar < count - 1)
 				locations2[loopVar] = classLocation;
 		}
-		// @ assume \nonnullelements(identifiers);
+		//@ assume \nonnullelements(identifiers);
 		/*
-		 * @ assume (\forall int i; (0<=i && i<locations1.length) ==>
+		 *@ assume (\forall int i; (0<=i && i<locations1.length) ==>
 		 * locations1[i] != Location.NULL);
 		 */
 		/*
-		 * @ assume (\forall int i; (0<=i && i<locations2.length) ==>
+		 *@ assume (\forall int i; (0<=i && i<locations2.length) ==>
 		 * locations2[i] != Location.NULL);
 		 */
 
@@ -894,10 +881,9 @@ class BCELReader extends Reader {
 	 *            the method signature to make the formal parameters from
 	 * @return the formal parameters
 	 */
-	//@ requires signature != null;
 	//@ ensures \nonnullelements(\result);
 	//@ ensures \typeof(\result) == \type(FormalParaDecl[]);
-	protected FormalParaDecl[] makeFormals(MethodSignature signature) {
+	protected FormalParaDecl[] makeFormals(MethodSignature /*@non_null*/ signature) {
 		int length = signature.countParameters();
 		FormalParaDecl[] formals = new FormalParaDecl[length];
 
@@ -922,8 +908,7 @@ class BCELReader extends Reader {
 	 *            the name to return the package qualifier of
 	 * @return the package qualifier of name
 	 */
-	//@ requires name != null;
-	protected static Name getNameQualifier(Name name) {
+	protected static Name getNameQualifier(Name /*@non_null*/ name) {
 		int size = name.size();
 
 		return size > 1 ? name.prefix(size - 1) : null;
@@ -937,8 +922,7 @@ class BCELReader extends Reader {
 	 *            the name to return the terminal identifier of
 	 * @return the terminal identifier of name
 	 */
-	//@ requires name != null;
-	protected static Identifier getNameTerminal(Name name) {
+	protected static Identifier getNameTerminal(Name /*@non_null*/ name) {
 		return name.identifierAt(name.size() - 1);
 	}
 
@@ -947,9 +931,8 @@ class BCELReader extends Reader {
 	/**
 	 * An empty type name vector.
 	 */
-	//@ invariant emptyTypeNameVec != null;
 	//@ spec_public
-	protected static final TypeNameVec emptyTypeNameVec = TypeNameVec.make();
+	protected static final /*@non_null*/ TypeNameVec emptyTypeNameVec = TypeNameVec.make();
 
 	protected ConstantPool constantPool;
 
