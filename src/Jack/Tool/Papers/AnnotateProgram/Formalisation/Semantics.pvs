@@ -433,59 +433,6 @@ BEGIN
       deriv_stmt(p)(s, sigma1, sigma2)(n)
 
 
-  IMPORTING WF[nat, nat] % used in the proofs
-
-
-  deterministic(n : nat)(de : deriv_expr_type(n)) : boolean =
-    FORALL(p : FullProgram)(e : Expr)(v1, v2 : Val)
-          (s, s1, s2 : FullState)(m1, m2 : below(n)) :
-      de(p)(e, s, v1, s1)(m1) IMPLIES
-      de(p)(e, s, v2, s2)(m2) IMPLIES
-      v1 = v2 AND s1 = s2 AND m1 = m2
-
-  deterministic(n : nat)(ds : deriv_stmt_type(n)) : boolean =
-    FORALL(p : FullProgram)(c : Stmt)
-          (s, s1, s2 : FullState)(m1, m2 : below(n)) :
-      ds(p)(c, s, s1)(m1) IMPLIES
-      ds(p)(c, s, s2)(m2) IMPLIES
-      s1 = s2 AND m1 = m2
-
-  % TODO: adapt the proofs
-
-  expr_determ_step : LEMMA
-    FORALL (p : FullProgram)(n1, n2 : nat)(e : Expr)
-           (v1, v2 : Val, sigma, sigma1, sigma2 : FullState) :
-        (FORALL (c : Stmt)(sigma, sigma1, sigma2 : FullState)
-                (m1 : below(n1), m2 : below(n2)) :
-          deriv_stmt(p)(c, sigma, sigma1)(m1) AND
-          deriv_stmt(p)(c, sigma, sigma2)(m2) IMPLIES
-            sigma1 = sigma2 AND m1 = m2)
-        IMPLIES
-          deriv_expr(p)(e, sigma, v1, sigma1)(n1) AND
-          deriv_expr(p)(e, sigma, v2, sigma2)(n2) IMPLIES
-            v1 = v2 AND sigma1 = sigma2 AND n1 = n2
-
-
-  stmt_determ_step : LEMMA
-    FORALL (p : FullProgram)(n1, n2 : nat)(c : Stmt)(sigma : FullState) :
-      FORALL (sigma1, sigma2 : FullState) :
-        deriv_stmt(p)(c, sigma, sigma1)(n1) AND
-        deriv_stmt(p)(c, sigma, sigma2)(n2) IMPLIES
-          sigma1 = sigma2 AND n1 = n2
-  
-  expr_determ : LEMMA
-    FORALL (p : FullProgram)(sigma : FullState)(e : Expr) :
-      FORALL (v1, v2 : Val, sigma1, sigma2 : FullState) :
-        derives(p)(e, sigma)(v1, sigma1) AND
-        derives(p)(e, sigma)(v2, sigma2) IMPLIES
-          v1 = v2 AND sigma1 = sigma2
-
-  stmt_determ : LEMMA
-    FORALL (p : FullProgram)(sigma : FullState)(c : Stmt) :
-      FORALL (sigma1, sigma2 : FullState) :
-        derives(p)(c, sigma)(sigma1) AND
-        derives(p)(c, sigma)(sigma2) IMPLIES
-          sigma1 = sigma2
 
 
   % The following expression (that appear only in annotations) should have no
@@ -599,7 +546,50 @@ ASSUMING
       on_method_exit_exceptional(p, m, v, s, s2, n2, ds2, de2) IMPLIES
         s1 = s2 AND n1 = n2
 
+
+  execute_CaseJML_deterministic : ASSUMPTION
+    FORALL (p : FullProgram, branches : list[[Expr, Stmt]], 
+            s, s1, s2 : FullState,
+            n1, n2 : nat, 
+            ds1 : deriv_stmt_rec_type(n1), de1 : deriv_expr_rec_type(n1),
+            ds2 : deriv_stmt_rec_type(n2), de2 : deriv_expr_rec_type(n2)) :
+        (FORALL (c : Stmt)(sigma, sigma1, sigma2 : FullState)
+                (m1 : below(n1), m2 : below(n2)) :
+          ds1(n1)(p)(c, sigma, sigma1)(m1) AND
+          ds2(n2)(p)(c, sigma, sigma2)(m2) IMPLIES
+            sigma1 = sigma2 AND m1 = m2) IMPLIES
+        (FORALL (c : Expr)(v1, v2 : Val)(sigma, sigma1, sigma2 : FullState)
+                (m1 : below(n1), m2 : below(n2)) :
+          de1(n1)(p)(c, sigma, v1, sigma1)(m1) AND
+          de2(n2)(p)(c, sigma, v2, sigma2)(m2) IMPLIES
+            v1 = v2 AND sigma1 = sigma2 AND m1 = m2) IMPLIES
+         execute_CaseJML(p, branches, s, s1, n1, ds1, de1) IMPLIES 
+         execute_CaseJML(p, branches, s, s2, n2, ds2, de2) IMPLIES 
+           s1 = s2 AND n1 = n2
+
+  execute_set_deterministic : ASSUMPTION
+    FORALL (p : FullProgram, vn : Name, e : Expr, s, s1, s2 : FullState,
+            n1, n2 : nat, 
+            ds1 : deriv_stmt_rec_type(n1), de1 : deriv_expr_rec_type(n1),
+            ds2 : deriv_stmt_rec_type(n2), de2 : deriv_expr_rec_type(n2)) :
+        (FORALL (c : Stmt)(sigma, sigma1, sigma2 : FullState)
+                (m1 : below(n1), m2 : below(n2)) :
+          ds1(n1)(p)(c, sigma, sigma1)(m1) AND
+          ds2(n2)(p)(c, sigma, sigma2)(m2) IMPLIES
+            sigma1 = sigma2 AND m1 = m2) IMPLIES
+        (FORALL (c : Expr)(v1, v2 : Val)(sigma, sigma1, sigma2 : FullState)
+                (m1 : below(n1), m2 : below(n2)) :
+          de1(n1)(p)(c, sigma, v1, sigma1)(m1) AND
+          de2(n2)(p)(c, sigma, v2, sigma2)(m2) IMPLIES
+            v1 = v2 AND sigma1 = sigma2 AND m1 = m2) IMPLIES
+      execute_set(p, vn, e, s, s1, n1, ds1, de1) IMPLIES
+      execute_set(p, vn, e, s, s2, n2, ds2, de2) IMPLIES
+        s1 = s2 AND n1 = n2
+
 ENDASSUMING
+
+
+  IMPORTING WF[nat, nat] % used in the proofs
 
 
   expr_determ_step : LEMMA % :-)
@@ -616,21 +606,21 @@ ENDASSUMING
 
 
 
-  stmt_determ_step : LEMMA
+  stmt_determ_step : LEMMA % :-)
     FORALL (p : FullProgram)(n1, n2 : nat)(c : Stmt)(sigma : FullState) :
       FORALL (sigma1, sigma2 : FullState) :
         deriv_stmt(p)(c, sigma, sigma1)(n1) AND
         deriv_stmt(p)(c, sigma, sigma2)(n2) IMPLIES
           sigma1 = sigma2 AND n1 = n2
   
-  expr_determ : LEMMA
+  expr_determ : LEMMA % :-)
     FORALL (p : FullProgram)(sigma : FullState)(e : Expr) :
       FORALL (v1, v2 : Val, sigma1, sigma2 : FullState) :
         derives(p)(e, sigma)(v1, sigma1) AND
         derives(p)(e, sigma)(v2, sigma2) IMPLIES
           v1 = v2 AND sigma1 = sigma2
 
-  stmt_determ : LEMMA
+  stmt_determ : LEMMA % :-)
     FORALL (p : FullProgram)(sigma : FullState)(c : Stmt) :
       FORALL (sigma1, sigma2 : FullState) :
         derives(p)(c, sigma)(sigma1) AND
