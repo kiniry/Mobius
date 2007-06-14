@@ -1,83 +1,13 @@
 (AnnotatedProgramSemantics
- (update_state_AP_TCC1 0
-  (update_state_AP_TCC1-1 nil 3389427978 3390125014
-   ("" (subtype-tcc) nil nil) unchecked
-   ((APState type-eq-decl nil AnnotatedProgramSemantics nil)
-    (PState type-eq-decl nil State nil)
-    (Store type-eq-decl nil State nil)
-    (Program type-eq-decl nil Program nil)
-    (Class type-eq-decl nil Program nil)
-    (lift type-decl nil lift_adt nil)
-    (Method type-eq-decl nil Program nil)
-    (LocalVarDecl type-eq-decl nil Program nil)
-    (Stmt type-decl nil Stmt_adt nil)
-    (ArgDecl type-eq-decl nil Program nil)
-    (Expr type-decl nil Expr_adt nil)
-    (GhostVarDecl type-eq-decl nil Program nil)
-    (finite_set type-eq-decl nil finite_sets nil)
-    (FieldDecl type-eq-decl nil Program nil)
-    (JType type-decl nil JType_adt nil) (Val type-decl nil Val_adt nil)
-    (Name formal-nonempty-type-decl nil AnnotatedProgramSemantics nil)
-    (update_FullState_type const-decl "bool" SemanticsTypes nil))
-   82 40 nil nil))
- (execute_set_AP_TCC1 0
-  (execute_set_AP_TCC1-1 nil 3389427978 3390125014
-   ("" (subtype-tcc) nil nil) unchecked
-   ((boolean nonempty-type-decl nil booleans nil)
-    (bool nonempty-type-eq-decl nil booleans nil)
-    (NOT const-decl "[bool -> bool]" booleans nil)
-    (number nonempty-type-decl nil numbers nil)
-    (number_field_pred const-decl "[number -> boolean]" number_fields
-     nil)
-    (number_field nonempty-type-from-decl nil number_fields nil)
-    (real_pred const-decl "[number_field -> boolean]" reals nil)
-    (real nonempty-type-from-decl nil reals nil)
-    (>= const-decl "bool" reals nil)
-    (rational_pred const-decl "[real -> boolean]" rationals nil)
-    (rational nonempty-type-from-decl nil rationals nil)
-    (integer_pred const-decl "[rational -> boolean]" integers nil)
-    (int nonempty-type-eq-decl nil integers nil)
-    (nat nonempty-type-eq-decl nil naturalnumbers nil))
-   91 40 nil nil))
- (execute_set_AP_TCC2 0
-  (execute_set_AP_TCC2-1 nil 3389427978 3390125014
-   ("" (subtype-tcc) nil nil) unchecked nil 13 10 nil nil))
- (execute_set_AP_TCC3 0
-  (execute_set_AP_TCC3-1 nil 3389427978 3390125014
-   ("" (subtype-tcc) nil nil) unchecked
-   ((nat nonempty-type-eq-decl nil naturalnumbers nil)
-    (int nonempty-type-eq-decl nil integers nil)
-    (integer_pred const-decl "[rational -> boolean]" integers nil)
-    (rational nonempty-type-from-decl nil rationals nil)
-    (rational_pred const-decl "[real -> boolean]" rationals nil)
-    (>= const-decl "bool" reals nil)
-    (real nonempty-type-from-decl nil reals nil)
-    (real_pred const-decl "[number_field -> boolean]" reals nil)
-    (number_field nonempty-type-from-decl nil number_fields nil)
-    (number_field_pred const-decl "[number -> boolean]" number_fields
-     nil)
-    (number nonempty-type-decl nil numbers nil)
-    (NOT const-decl "[bool -> bool]" booleans nil)
-    (bool nonempty-type-eq-decl nil booleans nil)
-    (boolean nonempty-type-decl nil booleans nil)
-    (APState type-eq-decl nil AnnotatedProgramSemantics nil)
-    (PState type-eq-decl nil State nil)
-    (Store type-eq-decl nil State nil)
-    (Program type-eq-decl nil Program nil)
-    (Class type-eq-decl nil Program nil)
-    (lift type-decl nil lift_adt nil)
-    (Method type-eq-decl nil Program nil)
-    (LocalVarDecl type-eq-decl nil Program nil)
-    (Stmt type-decl nil Stmt_adt nil)
-    (ArgDecl type-eq-decl nil Program nil)
-    (Expr type-decl nil Expr_adt nil)
-    (GhostVarDecl type-eq-decl nil Program nil)
-    (finite_set type-eq-decl nil finite_sets nil)
-    (FieldDecl type-eq-decl nil Program nil)
-    (JType type-decl nil JType_adt nil) (Val type-decl nil Val_adt nil)
-    (Name formal-nonempty-type-decl nil AnnotatedProgramSemantics nil)
-    (execute_set_type const-decl "bool" SemanticsTypes nil))
-   196 90 nil nil))
+ (update_PState_TCC1 0
+  (update_PState_TCC1-1 nil 3390796236 nil ("" (subtype-tcc) nil nil)
+   nil nil nil nil nil nil))
+ (update_GhostVars_TCC1 0
+  (update_GhostVars_TCC1-1 nil 3390796236 nil
+   ("" (subtype-tcc) nil nil) nil nil nil nil nil nil))
+ (initial_AP_state_TCC1 0
+  (initial_AP_state_TCC1-1 nil 3389427978 3390125018
+   ("" (subtype-tcc) nil nil) unchecked nil 59 30 nil nil))
  (on_method_entry_AP_TCC1 0
   (on_method_entry_AP_TCC1-1 nil 3389427978 3390125015
    ("" (subtype-tcc) nil nil) unchecked
@@ -97,385 +27,53 @@
     (int nonempty-type-eq-decl nil integers nil)
     (nat nonempty-type-eq-decl nil naturalnumbers nil))
    257 160 nil nil))
- (on_method_entry_AP_TCC2 0
-  (on_method_entry_AP_TCC2-1 nil 3389427978 3390125015
-   ("" (subtype-tcc) nil nil) unchecked
-   ((nat nonempty-type-eq-decl nil naturalnumbers nil)
-    (int nonempty-type-eq-decl nil integers nil)
-    (integer_pred const-decl "[rational -> boolean]" integers nil)
-    (rational nonempty-type-from-decl nil rationals nil)
-    (rational_pred const-decl "[real -> boolean]" rationals nil)
-    (>= const-decl "bool" reals nil)
-    (real nonempty-type-from-decl nil reals nil)
-    (real_pred const-decl "[number_field -> boolean]" reals nil)
-    (number_field nonempty-type-from-decl nil number_fields nil)
-    (number_field_pred const-decl "[number -> boolean]" number_fields
-     nil)
-    (number nonempty-type-decl nil numbers nil)
-    (NOT const-decl "[bool -> bool]" booleans nil)
-    (update_state_AP const-decl "(update_FullState_type)"
-     AnnotatedProgramSemantics nil)
-    (update_FullState_type const-decl "bool" SemanticsTypes nil)
-    (bool nonempty-type-eq-decl nil booleans nil)
-    (boolean nonempty-type-decl nil booleans nil)
-    (PSt type-eq-decl nil State nil)
-    (Excpt type-decl nil Excpt_adt nil)
-    (APState type-eq-decl nil AnnotatedProgramSemantics nil)
-    (PState type-eq-decl nil State nil)
-    (Store type-eq-decl nil State nil)
-    (Program type-eq-decl nil Program nil)
-    (Class type-eq-decl nil Program nil)
-    (lift type-decl nil lift_adt nil)
-    (Method type-eq-decl nil Program nil)
-    (LocalVarDecl type-eq-decl nil Program nil)
-    (Stmt type-decl nil Stmt_adt nil)
-    (ArgDecl type-eq-decl nil Program nil)
-    (Expr type-decl nil Expr_adt nil)
-    (GhostVarDecl type-eq-decl nil Program nil)
-    (finite_set type-eq-decl nil finite_sets nil)
-    (FieldDecl type-eq-decl nil Program nil)
-    (JType type-decl nil JType_adt nil) (Val type-decl nil Val_adt nil)
-    (Name formal-nonempty-type-decl nil AnnotatedProgramSemantics nil)
-    (check_assertion const-decl "boolean" SemanticsCommon nil))
-   297 220 nil nil))
- (on_method_entry_AP_TCC3 0
-  (on_method_entry_AP_TCC3-1 nil 3389427978 3390125015
-   ("" (subtype-tcc) nil nil) unchecked
-   ((nat nonempty-type-eq-decl nil naturalnumbers nil)
-    (int nonempty-type-eq-decl nil integers nil)
-    (integer_pred const-decl "[rational -> boolean]" integers nil)
-    (rational nonempty-type-from-decl nil rationals nil)
-    (rational_pred const-decl "[real -> boolean]" rationals nil)
-    (>= const-decl "bool" reals nil)
-    (real nonempty-type-from-decl nil reals nil)
-    (real_pred const-decl "[number_field -> boolean]" reals nil)
-    (number_field nonempty-type-from-decl nil number_fields nil)
-    (number_field_pred const-decl "[number -> boolean]" number_fields
-     nil)
-    (number nonempty-type-decl nil numbers nil)
-    (NOT const-decl "[bool -> bool]" booleans nil)
-    (update_state_AP const-decl "(update_FullState_type)"
-     AnnotatedProgramSemantics nil)
-    (update_FullState_type const-decl "bool" SemanticsTypes nil)
-    (bool nonempty-type-eq-decl nil booleans nil)
-    (boolean nonempty-type-decl nil booleans nil)
-    (PSt type-eq-decl nil State nil)
-    (Excpt type-decl nil Excpt_adt nil)
-    (APState type-eq-decl nil AnnotatedProgramSemantics nil)
-    (PState type-eq-decl nil State nil)
-    (Store type-eq-decl nil State nil)
-    (Program type-eq-decl nil Program nil)
-    (Class type-eq-decl nil Program nil)
-    (lift type-decl nil lift_adt nil)
-    (Method type-eq-decl nil Program nil)
-    (LocalVarDecl type-eq-decl nil Program nil)
-    (Stmt type-decl nil Stmt_adt nil)
-    (ArgDecl type-eq-decl nil Program nil)
-    (Expr type-decl nil Expr_adt nil)
-    (GhostVarDecl type-eq-decl nil Program nil)
-    (finite_set type-eq-decl nil finite_sets nil)
-    (FieldDecl type-eq-decl nil Program nil)
-    (JType type-decl nil JType_adt nil) (Val type-decl nil Val_adt nil)
-    (Name formal-nonempty-type-decl nil AnnotatedProgramSemantics nil)
-    (check_assertion const-decl "boolean" SemanticsCommon nil))
-   357 240 nil nil))
- (on_method_entry_AP_TCC4 0
-  (on_method_entry_AP_TCC4-1 nil 3389427978 3390125015
-   ("" (subtype-tcc) nil nil) unchecked
-   ((update_state_AP const-decl "(update_FullState_type)"
-     AnnotatedProgramSemantics nil)
-    (update_FullState_type const-decl "bool" SemanticsTypes nil)
-    (bool nonempty-type-eq-decl nil booleans nil)
-    (boolean nonempty-type-decl nil booleans nil)
-    (PSt type-eq-decl nil State nil)
-    (Excpt type-decl nil Excpt_adt nil)
-    (APState type-eq-decl nil AnnotatedProgramSemantics nil)
-    (PState type-eq-decl nil State nil)
-    (Store type-eq-decl nil State nil)
-    (Program type-eq-decl nil Program nil)
-    (Class type-eq-decl nil Program nil)
-    (lift type-decl nil lift_adt nil)
-    (Method type-eq-decl nil Program nil)
-    (LocalVarDecl type-eq-decl nil Program nil)
-    (Stmt type-decl nil Stmt_adt nil)
-    (ArgDecl type-eq-decl nil Program nil)
-    (Expr type-decl nil Expr_adt nil)
-    (GhostVarDecl type-eq-decl nil Program nil)
-    (finite_set type-eq-decl nil finite_sets nil)
-    (FieldDecl type-eq-decl nil Program nil)
-    (JType type-decl nil JType_adt nil) (Val type-decl nil Val_adt nil)
-    (Name formal-nonempty-type-decl nil AnnotatedProgramSemantics nil)
-    (check_assertion const-decl "boolean" SemanticsCommon nil))
-   180 160 nil nil))
- (on_method_entry_AP_TCC5 0
-  (on_method_entry_AP_TCC5-1 nil 3389427978 3390125016
-   ("" (subtype-tcc) nil nil) unchecked
-   ((nat nonempty-type-eq-decl nil naturalnumbers nil)
-    (int nonempty-type-eq-decl nil integers nil)
-    (integer_pred const-decl "[rational -> boolean]" integers nil)
-    (rational nonempty-type-from-decl nil rationals nil)
-    (rational_pred const-decl "[real -> boolean]" rationals nil)
-    (>= const-decl "bool" reals nil)
-    (real nonempty-type-from-decl nil reals nil)
-    (real_pred const-decl "[number_field -> boolean]" reals nil)
-    (number_field nonempty-type-from-decl nil number_fields nil)
-    (number_field_pred const-decl "[number -> boolean]" number_fields
-     nil)
-    (number nonempty-type-decl nil numbers nil)
-    (NOT const-decl "[bool -> bool]" booleans nil)
-    (update_state_AP const-decl "(update_FullState_type)"
-     AnnotatedProgramSemantics nil)
-    (update_FullState_type const-decl "bool" SemanticsTypes nil)
-    (bool nonempty-type-eq-decl nil booleans nil)
-    (boolean nonempty-type-decl nil booleans nil)
-    (PSt type-eq-decl nil State nil)
-    (Excpt type-decl nil Excpt_adt nil)
-    (APState type-eq-decl nil AnnotatedProgramSemantics nil)
-    (PState type-eq-decl nil State nil)
-    (Store type-eq-decl nil State nil)
-    (Program type-eq-decl nil Program nil)
-    (Class type-eq-decl nil Program nil)
-    (lift type-decl nil lift_adt nil)
-    (Method type-eq-decl nil Program nil)
-    (LocalVarDecl type-eq-decl nil Program nil)
-    (Stmt type-decl nil Stmt_adt nil)
-    (ArgDecl type-eq-decl nil Program nil)
-    (Expr type-decl nil Expr_adt nil)
-    (GhostVarDecl type-eq-decl nil Program nil)
-    (finite_set type-eq-decl nil finite_sets nil)
-    (FieldDecl type-eq-decl nil Program nil)
-    (JType type-decl nil JType_adt nil) (Val type-decl nil Val_adt nil)
-    (Name formal-nonempty-type-decl nil AnnotatedProgramSemantics nil)
-    (check_assertion const-decl "boolean" SemanticsCommon nil)
-    (on_method_event_type const-decl "bool" SemanticsTypes nil))
-   353 230 nil nil))
- (on_method_exit_normal_AP_TCC1 0
-  (on_method_exit_normal_AP_TCC1-1 nil 3389427978 3390125016
-   ("" (subtype-tcc) nil nil) unchecked
-   ((boolean nonempty-type-decl nil booleans nil)
-    (bool nonempty-type-eq-decl nil booleans nil)
-    (NOT const-decl "[bool -> bool]" booleans nil)
-    (number nonempty-type-decl nil numbers nil)
-    (number_field_pred const-decl "[number -> boolean]" number_fields
-     nil)
-    (number_field nonempty-type-from-decl nil number_fields nil)
-    (real_pred const-decl "[number_field -> boolean]" reals nil)
-    (real nonempty-type-from-decl nil reals nil)
-    (>= const-decl "bool" reals nil)
-    (rational_pred const-decl "[real -> boolean]" rationals nil)
-    (rational nonempty-type-from-decl nil rationals nil)
-    (integer_pred const-decl "[rational -> boolean]" integers nil)
-    (int nonempty-type-eq-decl nil integers nil)
-    (nat nonempty-type-eq-decl nil naturalnumbers nil))
-   185 160 nil nil))
- (on_method_exit_normal_AP_TCC2 0
-  (on_method_exit_normal_AP_TCC2-1 nil 3389427978 3390125016
-   ("" (subtype-tcc) nil nil) unchecked nil 110 110 nil nil))
- (on_method_exit_normal_AP_TCC3 0
-  (on_method_exit_normal_AP_TCC3-1 nil 3389427978 3390125016
-   ("" (subtype-tcc) nil nil) unchecked
-   ((boolean nonempty-type-decl nil booleans nil)
-    (bool nonempty-type-eq-decl nil booleans nil)
-    (NOT const-decl "[bool -> bool]" booleans nil)
-    (number nonempty-type-decl nil numbers nil)
-    (number_field_pred const-decl "[number -> boolean]" number_fields
-     nil)
-    (number_field nonempty-type-from-decl nil number_fields nil)
-    (real_pred const-decl "[number_field -> boolean]" reals nil)
-    (real nonempty-type-from-decl nil reals nil)
-    (>= const-decl "bool" reals nil)
-    (rational_pred const-decl "[real -> boolean]" rationals nil)
-    (rational nonempty-type-from-decl nil rationals nil)
-    (integer_pred const-decl "[rational -> boolean]" integers nil)
-    (int nonempty-type-eq-decl nil integers nil)
-    (nat nonempty-type-eq-decl nil naturalnumbers nil))
-   238 170 nil nil))
- (on_method_exit_normal_AP_TCC4 0
-  (on_method_exit_normal_AP_TCC4-1 nil 3389427978 3390125017
-   ("" (subtype-tcc) nil nil) unchecked
-   ((nat nonempty-type-eq-decl nil naturalnumbers nil)
-    (int nonempty-type-eq-decl nil integers nil)
-    (integer_pred const-decl "[rational -> boolean]" integers nil)
-    (rational nonempty-type-from-decl nil rationals nil)
-    (rational_pred const-decl "[real -> boolean]" rationals nil)
-    (>= const-decl "bool" reals nil)
-    (real nonempty-type-from-decl nil reals nil)
-    (real_pred const-decl "[number_field -> boolean]" reals nil)
-    (number_field nonempty-type-from-decl nil number_fields nil)
-    (number_field_pred const-decl "[number -> boolean]" number_fields
-     nil)
-    (number nonempty-type-decl nil numbers nil)
-    (NOT const-decl "[bool -> bool]" booleans nil)
-    (update_state_AP const-decl "(update_FullState_type)"
-     AnnotatedProgramSemantics nil)
-    (update_FullState_type const-decl "bool" SemanticsTypes nil)
-    (bool nonempty-type-eq-decl nil booleans nil)
-    (boolean nonempty-type-decl nil booleans nil)
-    (PSt type-eq-decl nil State nil)
-    (Excpt type-decl nil Excpt_adt nil)
-    (APState type-eq-decl nil AnnotatedProgramSemantics nil)
-    (PState type-eq-decl nil State nil)
-    (Store type-eq-decl nil State nil)
-    (Program type-eq-decl nil Program nil)
-    (Class type-eq-decl nil Program nil)
-    (lift type-decl nil lift_adt nil)
-    (Method type-eq-decl nil Program nil)
-    (LocalVarDecl type-eq-decl nil Program nil)
-    (Stmt type-decl nil Stmt_adt nil)
-    (ArgDecl type-eq-decl nil Program nil)
-    (Expr type-decl nil Expr_adt nil)
-    (GhostVarDecl type-eq-decl nil Program nil)
-    (finite_set type-eq-decl nil finite_sets nil)
-    (FieldDecl type-eq-decl nil Program nil)
-    (JType type-decl nil JType_adt nil) (Val type-decl nil Val_adt nil)
-    (Name formal-nonempty-type-decl nil AnnotatedProgramSemantics nil)
-    (check_assertion const-decl "boolean" SemanticsCommon nil))
-   336 240 nil nil))
- (on_method_exit_normal_AP_TCC5 0
-  (on_method_exit_normal_AP_TCC5-1 nil 3389427978 3390125017
-   ("" (subtype-tcc) nil nil) unchecked
-   ((nat nonempty-type-eq-decl nil naturalnumbers nil)
-    (int nonempty-type-eq-decl nil integers nil)
-    (integer_pred const-decl "[rational -> boolean]" integers nil)
-    (rational nonempty-type-from-decl nil rationals nil)
-    (rational_pred const-decl "[real -> boolean]" rationals nil)
-    (>= const-decl "bool" reals nil)
-    (real nonempty-type-from-decl nil reals nil)
-    (real_pred const-decl "[number_field -> boolean]" reals nil)
-    (number_field nonempty-type-from-decl nil number_fields nil)
-    (number_field_pred const-decl "[number -> boolean]" number_fields
-     nil)
-    (number nonempty-type-decl nil numbers nil)
-    (NOT const-decl "[bool -> bool]" booleans nil)
-    (update_state_AP const-decl "(update_FullState_type)"
-     AnnotatedProgramSemantics nil)
-    (update_FullState_type const-decl "bool" SemanticsTypes nil)
-    (bool nonempty-type-eq-decl nil booleans nil)
-    (boolean nonempty-type-decl nil booleans nil)
-    (PSt type-eq-decl nil State nil)
-    (Excpt type-decl nil Excpt_adt nil)
-    (APState type-eq-decl nil AnnotatedProgramSemantics nil)
-    (PState type-eq-decl nil State nil)
-    (Store type-eq-decl nil State nil)
-    (Program type-eq-decl nil Program nil)
-    (Class type-eq-decl nil Program nil)
-    (lift type-decl nil lift_adt nil)
-    (Method type-eq-decl nil Program nil)
-    (LocalVarDecl type-eq-decl nil Program nil)
-    (Stmt type-decl nil Stmt_adt nil)
-    (ArgDecl type-eq-decl nil Program nil)
-    (Expr type-decl nil Expr_adt nil)
-    (GhostVarDecl type-eq-decl nil Program nil)
-    (finite_set type-eq-decl nil finite_sets nil)
-    (FieldDecl type-eq-decl nil Program nil)
-    (JType type-decl nil JType_adt nil) (Val type-decl nil Val_adt nil)
-    (Name formal-nonempty-type-decl nil AnnotatedProgramSemantics nil)
-    (check_assertion const-decl "boolean" SemanticsCommon nil)
-    (on_method_event_type const-decl "bool" SemanticsTypes nil))
-   351 250 nil nil))
- (on_method_exit_exceptional_AP_TCC1 0
-  (on_method_exit_exceptional_AP_TCC1-1 nil 3389427978 3390125017
-   ("" (subtype-tcc) nil nil) unchecked
-   ((boolean nonempty-type-decl nil booleans nil)
-    (bool nonempty-type-eq-decl nil booleans nil)
-    (NOT const-decl "[bool -> bool]" booleans nil)
-    (number nonempty-type-decl nil numbers nil)
-    (number_field_pred const-decl "[number -> boolean]" number_fields
-     nil)
-    (number_field nonempty-type-from-decl nil number_fields nil)
-    (real_pred const-decl "[number_field -> boolean]" reals nil)
-    (real nonempty-type-from-decl nil reals nil)
-    (>= const-decl "bool" reals nil)
-    (rational_pred const-decl "[real -> boolean]" rationals nil)
-    (rational nonempty-type-from-decl nil rationals nil)
-    (integer_pred const-decl "[rational -> boolean]" integers nil)
-    (int nonempty-type-eq-decl nil integers nil)
-    (nat nonempty-type-eq-decl nil naturalnumbers nil))
-   171 140 nil nil))
- (on_method_exit_exceptional_AP_TCC2 0
-  (on_method_exit_exceptional_AP_TCC2-1 nil 3389427978 3390125017
-   ("" (subtype-tcc) nil nil) unchecked nil 105 110 nil nil))
- (on_method_exit_exceptional_AP_TCC3 0
-  (on_method_exit_exceptional_AP_TCC3-1 nil 3389427978 3390125018
-   ("" (subtype-tcc) nil nil) unchecked
-   ((boolean nonempty-type-decl nil booleans nil)
-    (bool nonempty-type-eq-decl nil booleans nil)
-    (NOT const-decl "[bool -> bool]" booleans nil)
-    (number nonempty-type-decl nil numbers nil)
-    (number_field_pred const-decl "[number -> boolean]" number_fields
-     nil)
-    (number_field nonempty-type-from-decl nil number_fields nil)
-    (real_pred const-decl "[number_field -> boolean]" reals nil)
-    (real nonempty-type-from-decl nil reals nil)
-    (>= const-decl "bool" reals nil)
-    (rational_pred const-decl "[real -> boolean]" rationals nil)
-    (rational nonempty-type-from-decl nil rationals nil)
-    (integer_pred const-decl "[rational -> boolean]" integers nil)
-    (int nonempty-type-eq-decl nil integers nil)
-    (nat nonempty-type-eq-decl nil naturalnumbers nil))
-   224 140 nil nil))
- (on_method_exit_exceptional_AP_TCC4 0
-  (on_method_exit_exceptional_AP_TCC4-1 nil 3389427978 3390125018
-   ("" (subtype-tcc) nil nil) unchecked
-   ((nat nonempty-type-eq-decl nil naturalnumbers nil)
-    (int nonempty-type-eq-decl nil integers nil)
-    (integer_pred const-decl "[rational -> boolean]" integers nil)
-    (rational nonempty-type-from-decl nil rationals nil)
-    (rational_pred const-decl "[real -> boolean]" rationals nil)
-    (>= const-decl "bool" reals nil)
-    (real nonempty-type-from-decl nil reals nil)
-    (real_pred const-decl "[number_field -> boolean]" reals nil)
-    (number_field nonempty-type-from-decl nil number_fields nil)
-    (number_field_pred const-decl "[number -> boolean]" number_fields
-     nil)
-    (number nonempty-type-decl nil numbers nil)
-    (NOT const-decl "[bool -> bool]" booleans nil)
-    (update_state_AP const-decl "(update_FullState_type)"
-     AnnotatedProgramSemantics nil)
-    (update_FullState_type const-decl "bool" SemanticsTypes nil)
-    (bool nonempty-type-eq-decl nil booleans nil)
-    (boolean nonempty-type-decl nil booleans nil)
-    (PSt type-eq-decl nil State nil)
-    (Excpt type-decl nil Excpt_adt nil)
-    (APState type-eq-decl nil AnnotatedProgramSemantics nil)
-    (PState type-eq-decl nil State nil)
-    (Store type-eq-decl nil State nil)
-    (Program type-eq-decl nil Program nil)
-    (Class type-eq-decl nil Program nil)
-    (lift type-decl nil lift_adt nil)
-    (Method type-eq-decl nil Program nil)
-    (LocalVarDecl type-eq-decl nil Program nil)
-    (Stmt type-decl nil Stmt_adt nil)
-    (ArgDecl type-eq-decl nil Program nil)
-    (Expr type-decl nil Expr_adt nil)
-    (GhostVarDecl type-eq-decl nil Program nil)
-    (finite_set type-eq-decl nil finite_sets nil)
-    (FieldDecl type-eq-decl nil Program nil)
-    (JType type-decl nil JType_adt nil) (Val type-decl nil Val_adt nil)
-    (Name formal-nonempty-type-decl nil AnnotatedProgramSemantics nil)
-    (check_assertion const-decl "boolean" SemanticsCommon nil)
-    (on_method_event_type const-decl "bool" SemanticsTypes nil))
-   292 210 nil nil))
- (initial_AP_state_TCC1 0
-  (initial_AP_state_TCC1-1 nil 3389427978 3390125018
-   ("" (subtype-tcc) nil nil) unchecked nil 59 30 nil nil))
+ (IMP_SemanticsProofs_TCC1 0
+  (IMP_SemanticsProofs_TCC1-1 nil 3390796236 3390796441
+   ("" (skosimp*)
+    (("" (expand "on_method_entry")
+      (("" (skosimp*)
+        (("" (expand "check_assertion")
+          (("" (skosimp*)
+            (("" (replace -4 :dir rl)
+              (("" (replace -14)
+                ((""
+                  (inst-cp -2 "inv!1" "v!2" "v!4" "s!1" "tau1!3"
+                   "tau1!5" "m1!1" "m1!2" "m1!1 - 1" "m1!2 - 1")
+                  (("1" (assert)
+                    (("1" (flatten) (("1" (postpone) nil nil)) nil))
+                    nil)
+                   ("2" (postpone) nil nil) ("3" (postpone) nil nil))
+                  nil))
+                nil))
+              nil))
+            nil))
+          nil))
+        nil))
+      nil))
+    nil)
+   unfinished nil 193358 2830 t nil))
+ (IMP_SemanticsProofs_TCC2 0
+  (IMP_SemanticsProofs_TCC2-1 nil 3390796236 nil
+   ("" (assuming-tcc) nil nil) nil nil nil nil nil nil))
+ (IMP_SemanticsProofs_TCC3 0
+  (IMP_SemanticsProofs_TCC3-1 nil 3390796236 nil
+   ("" (assuming-tcc) nil nil) nil nil nil nil nil nil))
+ (IMP_SemanticsProofs_TCC4 0
+  (IMP_SemanticsProofs_TCC4-1 nil 3390796236 nil
+   ("" (assuming-tcc) nil nil) nil nil nil nil nil nil))
+ (IMP_SemanticsProofs_TCC5 0
+  (IMP_SemanticsProofs_TCC5-1 nil 3390796236 nil
+   ("" (assuming-tcc) nil nil) nil nil nil nil nil nil))
  (stmt_determ_step_AP 0
   (stmt_determ_step_AP-1 nil 3390125303 3390125328
    ("" (use "stmt_determ_step") nil nil) unchecked
-   ((on_method_exit_exceptional_AP const-decl "(on_method_event_type)"
-     AnnotatedProgramSemantics nil)
-    (on_method_exit_normal_AP const-decl "(on_method_event_type)"
-     AnnotatedProgramSemantics nil)
+   (nil nil
     (on_method_entry_AP const-decl "(on_method_event_type)"
      AnnotatedProgramSemantics nil)
-    (on_method_event_type const-decl "bool" SemanticsTypes nil)
-    (execute_CaseJML const-decl "(execute_CaseJML_type)"
-     SemanticsCommon nil)
-    (execute_CaseJML_type const-decl "bool" SemanticsTypes nil)
-    (list type-decl nil list_adt nil)
-    (execute_set_AP const-decl "(execute_set_type)"
-     AnnotatedProgramSemantics nil)
-    (execute_set_type const-decl "bool" SemanticsTypes nil)
+    (on_method_event_type const-decl "boolean" SemanticsTypes nil) nil
+    (execute_CaseJML_type const-decl "boolean" SemanticsTypes nil)
+    (list type-decl nil list_adt nil) nil
+    (execute_set_type const-decl "boolean" SemanticsTypes nil)
     (deriv_expr_rec_type type-eq-decl nil SemanticsTypes nil)
     (deriv_stmt_rec_type type-eq-decl nil SemanticsTypes nil)
     (below type-eq-decl nil naturalnumbers nil)
@@ -492,13 +90,9 @@
      nil)
     (number nonempty-type-decl nil numbers nil)
     (upto nonempty-type-eq-decl nil naturalnumbers nil)
-    (nat nonempty-type-eq-decl nil naturalnumbers nil)
-    (update_state_AP const-decl "(update_FullState_type)"
-     AnnotatedProgramSemantics nil)
-    (update_FullState_type const-decl "bool" SemanticsTypes nil)
+    (nat nonempty-type-eq-decl nil naturalnumbers nil) nil nil
     (PSt type-eq-decl nil State nil)
-    (Excpt type-decl nil Excpt_adt nil)
-    (lookup const-decl "Val" AnnotatedProgramSemantics nil)
+    (Excpt type-decl nil Excpt_adt nil) nil
     (id const-decl "(bijective?[T, T])" identity nil)
     (bijective? const-decl "bool" functions nil)
     (bool nonempty-type-eq-decl nil booleans nil)
@@ -511,15 +105,13 @@
     (lift type-decl nil lift_adt nil)
     (Method type-eq-decl nil Program nil)
     (LocalVarDecl type-eq-decl nil Program nil)
-    (Stmt type-decl nil Stmt_adt nil)
-    (ArgDecl type-eq-decl nil Program nil)
-    (Expr type-decl nil Expr_adt nil)
-    (GhostVarDecl type-eq-decl nil Program nil)
+    (Stmt type-decl nil Stmt_adt nil) nil
+    (Expr type-decl nil Expr_adt nil) nil
     (finite_set type-eq-decl nil finite_sets nil)
     (FieldDecl type-eq-decl nil Program nil)
     (JType type-decl nil JType_adt nil) (Val type-decl nil Val_adt nil)
     (Name formal-nonempty-type-decl nil AnnotatedProgramSemantics nil)
-    (stmt_determ_step formula-decl nil Semantics nil))
+    nil)
    24836 630 t shostak))
  (wf_state_ghost_not_local_or_field 0
   (wf_state_ghost_not_local_or_field-1 nil 3390125110 3390125240
@@ -542,63 +134,6 @@
       nil))
     nil)
    unfinished nil 130455 2250 t shostak))
- (wf_update_state_AP 0
-  (wf_update_state_AP-1 nil 3389428015 3390125019
-   ("" (skosimp*)
-    (("" (expand "wf_state")
-      (("" (prop)
-        (("1" (expand "wf_state")
-          (("1" (hide -3)
-            (("1" (skolem!)
-              (("1" (inst?) (("1" (inst?) (("1" (grind) nil nil)) nil))
-                nil))
-              nil))
-            nil))
-          nil)
-         ("2" (skolem!)
-          (("2" (inst?)
-            (("2" (inst?) (("2" (flatten) (("2" (grind) nil nil)) nil))
-              nil))
-            nil))
-          nil))
-        nil))
-      nil))
-    nil)
-   unchecked
-   ((wf_state const-decl "boolean" AnnotatedProgramSemantics nil)
-    (wf_state const-decl "boolean" State nil)
-    (is_declared_as_ghost const-decl "boolean" WellFormedProgram nil)
-    (is_ghost const-decl "boolean" AnnotatedProgramSemantics nil)
-    (is_field const-decl "boolean" State nil)
-    (is_declared_as_local const-decl "boolean" WellFormedProgram nil)
-    (is_local const-decl "boolean" State nil)
-    (is_declared_as_field const-decl "boolean" WellFormedProgram nil)
-    (is_local const-decl "boolean" SemanticsCommon nil)
-    (is_field const-decl "boolean" SemanticsCommon nil)
-    (Val type-decl nil Val_adt nil) (JType type-decl nil JType_adt nil)
-    (FieldDecl type-eq-decl nil Program nil)
-    (finite_set type-eq-decl nil finite_sets nil)
-    (GhostVarDecl type-eq-decl nil Program nil)
-    (Expr type-decl nil Expr_adt nil)
-    (ArgDecl type-eq-decl nil Program nil)
-    (Stmt type-decl nil Stmt_adt nil)
-    (LocalVarDecl type-eq-decl nil Program nil)
-    (Method type-eq-decl nil Program nil)
-    (lift type-decl nil lift_adt nil)
-    (Class type-eq-decl nil Program nil)
-    (Program type-eq-decl nil Program nil)
-    (Store type-eq-decl nil State nil)
-    (PState type-eq-decl nil State nil)
-    (APState type-eq-decl nil AnnotatedProgramSemantics nil)
-    (Excpt type-decl nil Excpt_adt nil)
-    (PSt type-eq-decl nil State nil)
-    (boolean nonempty-type-decl nil booleans nil)
-    (bool nonempty-type-eq-decl nil booleans nil)
-    (update_FullState_type const-decl "bool" SemanticsTypes nil)
-    (update_state_AP const-decl "(update_FullState_type)"
-     AnnotatedProgramSemantics nil)
-    (Name formal-nonempty-type-decl nil AnnotatedProgramSemantics nil))
-   1002 730 t nil))
  (wf_initial_AP_state 0
   (wf_initial_AP_state-1 nil 3390075578 3390125019
    ("" (skosimp*)
@@ -772,9 +307,7 @@
       nil))
     nil)
    unchecked
-   ((execute_set_AP const-decl "(execute_set_type)"
-     AnnotatedProgramSemantics nil)
-    (deriv_stmt def-decl "bool" Semantics nil)
+   (nil (deriv_stmt def-decl "bool" Semantics nil)
     (deriv_expr const-decl "bool" Semantics nil)
     (Val type-decl nil Val_adt nil)
     (APState type-eq-decl nil AnnotatedProgramSemantics nil)
@@ -796,176 +329,8 @@
     (rational nonempty-type-from-decl nil rationals nil)
     (integer_pred const-decl "[rational -> boolean]" integers nil)
     (int nonempty-type-eq-decl nil integers nil)
-    (nat nonempty-type-eq-decl nil naturalnumbers nil) nil)
+    (nat nonempty-type-eq-decl nil naturalnumbers nil))
    370 280 nil nil))
- (sequence_of_sets_TCC1 0
-  (sequence_of_sets_TCC1-1 nil 3389426763 3390125020
-   ("" (termination-tcc) nil nil) unchecked
-   ((<< adt-def-decl "(well_founded?[Stmt])" Stmt_adt nil)
-    (Name formal-nonempty-type-decl nil APSemanticsProperties nil))
-   148 100 nil nil))
- (non_interference_of_set_stmt_sequence 0
-  (non_interference_of_set_stmt_sequence-1 nil 3389426768 3390125021
-   ("" (induct "sets")
-    (("1" (typepred "sets!1") (("1" (propax) nil nil)) nil)
-     ("2" (skosimp*)
-      (("2" (expand "sequence_of_sets" -2) (("2" (propax) nil nil))
-        nil))
-      nil)
-     ("3" (skosimp*)
-      (("3" (expand "sequence_of_sets" -3) (("3" (propax) nil nil))
-        nil))
-      nil)
-     ("4" (skosimp*)
-      (("4" (expand "sequence_of_sets" -3)
-        (("4" (flatten)
-          (("4" (expand "deriv_stmt" -6)
-            (("4" (assert)
-              (("4" (split -6)
-                (("1" (propax) nil nil)
-                 ("2" (skosimp*)
-                  (("2" (use "non_interference_of_set_stmt")
-                    (("2" (assert)
-                      (("2" (inst-cp -9 "Sequence1_var!1")
-                        (("2" (expand "<<" -10)
-                          (("2" (hide -5)
-                            (("2" (ground)
-                              (("2"
-                                (inst
-                                 -5
-                                 "p!1"
-                                 "tau!1"
-                                 "s2!1"
-                                 "m2!1"
-                                 "vn!1")
-                                (("2"
-                                  (assert)
-                                  (("2"
-                                    (skosimp*)
-                                    (("2"
-                                      (inst? -9)
-                                      (("2"
-                                        (expand "<<" -9)
-                                        (("2" (assert) nil nil))
-                                        nil))
-                                      nil))
-                                    nil))
-                                  nil))
-                                nil))
-                              nil))
-                            nil))
-                          nil))
-                        nil))
-                      nil))
-                    nil))
-                  nil))
-                nil))
-              nil))
-            nil))
-          nil))
-        nil))
-      nil)
-     ("5" (skosimp*)
-      (("5" (expand "sequence_of_sets" -1) (("5" (propax) nil nil))
-        nil))
-      nil)
-     ("6" (skosimp*)
-      (("6" (expand "deriv_stmt" -3) (("6" (assert) nil nil)) nil))
-      nil)
-     ("7" (skosimp*)
-      (("7" (expand "sequence_of_sets" -1) (("7" (propax) nil nil))
-        nil))
-      nil)
-     ("8" (skosimp*)
-      (("8" (expand "sequence_of_sets" -1) (("8" (propax) nil nil))
-        nil))
-      nil)
-     ("9" (skosimp*)
-      (("9" (expand "sequence_of_sets" -4) (("9" (propax) nil nil))
-        nil))
-      nil)
-     ("10" (skosimp*)
-      (("10" (expand "sequence_of_sets" -2) (("10" (propax) nil nil))
-        nil))
-      nil))
-    nil)
-   unchecked
-   ((non_interference_of_set_stmt formula-decl nil
-     APSemanticsProperties nil)
-    (Stmt_induction formula-decl nil Stmt_adt nil)
-    (Name formal-nonempty-type-decl nil APSemanticsProperties nil)
-    (deriv_stmt def-decl "bool" Semantics nil)
-    (source adt-accessor-decl "[(Set?) -> Expr[Name]]" Stmt_adt nil)
-    (deriv_expr const-decl "bool" Semantics nil)
-    (on_method_exit_exceptional_AP const-decl "(on_method_event_type)"
-     AnnotatedProgramSemantics nil)
-    (on_method_exit_normal_AP const-decl "(on_method_event_type)"
-     AnnotatedProgramSemantics nil)
-    (on_method_entry_AP const-decl "(on_method_event_type)"
-     AnnotatedProgramSemantics nil)
-    (on_method_event_type const-decl "bool" SemanticsTypes nil)
-    (execute_CaseJML const-decl "(execute_CaseJML_type)"
-     SemanticsCommon nil)
-    (execute_CaseJML_type const-decl "bool" SemanticsTypes nil)
-    (list type-decl nil list_adt nil)
-    (execute_set_AP const-decl "(execute_set_type)"
-     AnnotatedProgramSemantics nil)
-    (execute_set_type const-decl "bool" SemanticsTypes nil)
-    (deriv_expr_rec_type type-eq-decl nil SemanticsTypes nil)
-    (deriv_stmt_rec_type type-eq-decl nil SemanticsTypes nil)
-    (below type-eq-decl nil naturalnumbers nil)
-    (<= const-decl "bool" reals nil) (< const-decl "bool" reals nil)
-    (upto nonempty-type-eq-decl nil naturalnumbers nil)
-    (update_state_AP const-decl "(update_FullState_type)"
-     AnnotatedProgramSemantics nil)
-    (update_FullState_type const-decl "bool" SemanticsTypes nil)
-    (PSt type-eq-decl nil State nil)
-    (Excpt type-decl nil Excpt_adt nil)
-    (lookup const-decl "Val" AnnotatedProgramSemantics nil)
-    (id const-decl "(bijective?[T, T])" identity nil)
-    (bijective? const-decl "bool" functions nil)
-    (target adt-accessor-decl "[(Set?) -> Name]" Stmt_adt nil)
-    (= const-decl "[T, T -> boolean]" equalities nil)
-    (NOT const-decl "[bool -> bool]" booleans nil)
-    (AND const-decl "[bool, bool -> bool]" booleans nil)
-    (Set? adt-recognizer-decl "[Stmt -> boolean]" Stmt_adt nil)
-    (Skip? adt-recognizer-decl "[Stmt -> boolean]" Stmt_adt nil)
-    (OR const-decl "[bool, bool -> bool]" booleans nil)
-    (<< adt-def-decl "(well_founded?[Stmt])" Stmt_adt nil)
-    (well_founded? const-decl "bool" orders nil)
-    (pred type-eq-decl nil defined_types nil)
-    (nat nonempty-type-eq-decl nil naturalnumbers nil)
-    (>= const-decl "bool" reals nil)
-    (int nonempty-type-eq-decl nil integers nil)
-    (integer_pred const-decl "[rational -> boolean]" integers nil)
-    (rational nonempty-type-from-decl nil rationals nil)
-    (rational_pred const-decl "[real -> boolean]" rationals nil)
-    (real nonempty-type-from-decl nil reals nil)
-    (real_pred const-decl "[number_field -> boolean]" reals nil)
-    (number_field nonempty-type-from-decl nil number_fields nil)
-    (number_field_pred const-decl "[number -> boolean]" number_fields
-     nil)
-    (number nonempty-type-decl nil numbers nil)
-    (APState type-eq-decl nil AnnotatedProgramSemantics nil)
-    (PState type-eq-decl nil State nil)
-    (Store type-eq-decl nil State nil)
-    (Program type-eq-decl nil Program nil)
-    (Class type-eq-decl nil Program nil)
-    (lift type-decl nil lift_adt nil)
-    (Method type-eq-decl nil Program nil)
-    (LocalVarDecl type-eq-decl nil Program nil)
-    (ArgDecl type-eq-decl nil Program nil)
-    (Expr type-decl nil Expr_adt nil)
-    (GhostVarDecl type-eq-decl nil Program nil)
-    (finite_set type-eq-decl nil finite_sets nil)
-    (FieldDecl type-eq-decl nil Program nil)
-    (JType type-decl nil JType_adt nil) (Val type-decl nil Val_adt nil)
-    (sequence_of_sets def-decl "boolean" APSemanticsProperties nil)
-    (IMPLIES const-decl "[bool, bool -> bool]" booleans nil)
-    (bool nonempty-type-eq-decl nil booleans nil)
-    (boolean nonempty-type-decl nil booleans nil)
-    (Stmt type-decl nil Stmt_adt nil))
-   1238 800 t nil))
  (CaseJML_exclusive_branches_semantics 0
   (CaseJML_exclusive_branches_semantics-1 nil 3389427193 3390125024
    ("" (induct "bs")
@@ -1146,8 +511,7 @@
       nil))
     nil)
    unchecked
-   (nil nil
-    (stmt_determ_step_AP formula-decl nil AnnotatedProgramSemantics
+   ((stmt_determ_step_AP formula-decl nil AnnotatedProgramSemantics
      nil)
     (list_induction formula-decl nil list_adt nil)
     (Name formal-nonempty-type-decl nil APSemanticsProperties nil)
@@ -1162,29 +526,17 @@
     (Bool? adt-recognizer-decl "[Val -> boolean]" Val_adt nil)
     (= const-decl "[T, T -> boolean]" equalities nil)
     (AND const-decl "[bool, bool -> bool]" booleans nil)
-    (deriv_expr const-decl "bool" Semantics nil)
-    (on_method_exit_exceptional_AP const-decl "(on_method_event_type)"
-     AnnotatedProgramSemantics nil)
-    (on_method_exit_normal_AP const-decl "(on_method_event_type)"
-     AnnotatedProgramSemantics nil)
+    (deriv_expr const-decl "bool" Semantics nil) nil nil
     (on_method_entry_AP const-decl "(on_method_event_type)"
      AnnotatedProgramSemantics nil)
-    (on_method_event_type const-decl "bool" SemanticsTypes nil)
-    (execute_CaseJML const-decl "(execute_CaseJML_type)"
-     SemanticsCommon nil)
-    (execute_CaseJML_type const-decl "bool" SemanticsTypes nil)
-    (execute_set_AP const-decl "(execute_set_type)"
-     AnnotatedProgramSemantics nil)
-    (execute_set_type const-decl "bool" SemanticsTypes nil)
+    (on_method_event_type const-decl "boolean" SemanticsTypes nil) nil
+    (execute_CaseJML_type const-decl "boolean" SemanticsTypes nil) nil
+    (execute_set_type const-decl "boolean" SemanticsTypes nil)
     (deriv_expr_rec_type type-eq-decl nil SemanticsTypes nil)
     (deriv_stmt_rec_type type-eq-decl nil SemanticsTypes nil)
     (<= const-decl "bool" reals nil)
-    (upto nonempty-type-eq-decl nil naturalnumbers nil)
-    (update_state_AP const-decl "(update_FullState_type)"
-     AnnotatedProgramSemantics nil)
-    (update_FullState_type const-decl "bool" SemanticsTypes nil)
-    (PSt type-eq-decl nil State nil)
-    (lookup const-decl "Val" AnnotatedProgramSemantics nil)
+    (upto nonempty-type-eq-decl nil naturalnumbers nil) nil nil
+    (PSt type-eq-decl nil State nil) nil
     (id const-decl "(bijective?[T, T])" identity nil)
     (bijective? const-decl "bool" functions nil)
     (below type-eq-decl nil naturalnumbers nil)
@@ -1215,9 +567,7 @@
     (Class type-eq-decl nil Program nil)
     (lift type-decl nil lift_adt nil)
     (Method type-eq-decl nil Program nil)
-    (LocalVarDecl type-eq-decl nil Program nil)
-    (ArgDecl type-eq-decl nil Program nil)
-    (GhostVarDecl type-eq-decl nil Program nil)
+    (LocalVarDecl type-eq-decl nil Program nil) nil nil
     (finite_set type-eq-decl nil finite_sets nil)
     (FieldDecl type-eq-decl nil Program nil)
     (JType type-decl nil JType_adt nil) (Val type-decl nil Val_adt nil)
@@ -1406,7 +756,7 @@
       nil))
     nil)
    unchecked
-   (nil nil (list_induction formula-decl nil list_adt nil)
+   ((list_induction formula-decl nil list_adt nil)
     (Name formal-nonempty-type-decl nil APSemanticsProperties nil)
     (Expr type-decl nil Expr_adt nil) (Stmt type-decl nil Stmt_adt nil)
     (CaseJML adt-constructor-decl "[list[[Expr, Stmt]] -> (CaseJML?)]"
@@ -1420,29 +770,17 @@
     (Bool? adt-recognizer-decl "[Val -> boolean]" Val_adt nil)
     (= const-decl "[T, T -> boolean]" equalities nil)
     (AND const-decl "[bool, bool -> bool]" booleans nil)
-    (deriv_expr const-decl "bool" Semantics nil)
-    (on_method_exit_exceptional_AP const-decl "(on_method_event_type)"
-     AnnotatedProgramSemantics nil)
-    (on_method_exit_normal_AP const-decl "(on_method_event_type)"
-     AnnotatedProgramSemantics nil)
+    (deriv_expr const-decl "bool" Semantics nil) nil nil
     (on_method_entry_AP const-decl "(on_method_event_type)"
      AnnotatedProgramSemantics nil)
-    (on_method_event_type const-decl "bool" SemanticsTypes nil)
-    (execute_CaseJML const-decl "(execute_CaseJML_type)"
-     SemanticsCommon nil)
-    (execute_CaseJML_type const-decl "bool" SemanticsTypes nil)
-    (execute_set_AP const-decl "(execute_set_type)"
-     AnnotatedProgramSemantics nil)
-    (execute_set_type const-decl "bool" SemanticsTypes nil)
+    (on_method_event_type const-decl "boolean" SemanticsTypes nil) nil
+    (execute_CaseJML_type const-decl "boolean" SemanticsTypes nil) nil
+    (execute_set_type const-decl "boolean" SemanticsTypes nil)
     (deriv_expr_rec_type type-eq-decl nil SemanticsTypes nil)
     (deriv_stmt_rec_type type-eq-decl nil SemanticsTypes nil)
     (<= const-decl "bool" reals nil)
-    (upto nonempty-type-eq-decl nil naturalnumbers nil)
-    (update_state_AP const-decl "(update_FullState_type)"
-     AnnotatedProgramSemantics nil)
-    (update_FullState_type const-decl "bool" SemanticsTypes nil)
-    (PSt type-eq-decl nil State nil)
-    (lookup const-decl "Val" AnnotatedProgramSemantics nil)
+    (upto nonempty-type-eq-decl nil naturalnumbers nil) nil nil
+    (PSt type-eq-decl nil State nil) nil
     (id const-decl "(bijective?[T, T])" identity nil)
     (bijective? const-decl "bool" functions nil)
     (below type-eq-decl nil naturalnumbers nil)
@@ -1473,9 +811,7 @@
     (Class type-eq-decl nil Program nil)
     (lift type-decl nil lift_adt nil)
     (Method type-eq-decl nil Program nil)
-    (LocalVarDecl type-eq-decl nil Program nil)
-    (ArgDecl type-eq-decl nil Program nil)
-    (GhostVarDecl type-eq-decl nil Program nil)
+    (LocalVarDecl type-eq-decl nil Program nil) nil nil
     (finite_set type-eq-decl nil finite_sets nil)
     (FieldDecl type-eq-decl nil Program nil)
     (JType type-decl nil JType_adt nil) (Val type-decl nil Val_adt nil)

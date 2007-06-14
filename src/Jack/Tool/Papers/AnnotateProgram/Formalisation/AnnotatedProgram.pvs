@@ -60,6 +60,18 @@ BEGIN
             deriv_expr_rec : deriv_expr_rec_type(n)) :
     on_method_entry(p, md, a, s1, s2, n, deriv_stmt_rec, deriv_expr_rec)
 
+
+  IMPORTING SemanticsProofs[Name, Program, APState, id,
+                      LAMBDA (s : APState) : pstate(s),
+                      LAMBDA (s : APState) : gvs(s),
+                      lookup,
+                      update_PState,
+                      execute_set,
+                      execute_CaseJML,
+                      on_method_entry,
+                      on_method_exit_normal,
+                      on_method_exit_exceptional]
+
   stmt_determ_step_AP : LEMMA % :-)
     FORALL (p : Program, n1, n2 : nat, c : Stmt, sigma : APState,
             sigma1, sigma2 : APState) :
