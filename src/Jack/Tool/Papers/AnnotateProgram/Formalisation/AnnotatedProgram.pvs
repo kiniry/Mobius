@@ -6,8 +6,8 @@ BEGIN
   APState : TYPE = [# gvs : Store, pstate : PState #]
 
   IMPORTING SemanticsTypes[Name, Program, APState,
-                           LAMBDA (s : APState) : pstate(s),
-                           LAMBDA (s : APState) : gvs(s)]
+                           LAMBDA (s : APState) : pstate(s)],
+            SemanticsJMLTypes[Name, APState, LAMBDA (s : APState) : gvs(s)]
 
   update_PState : (update_PState_type) =
     LAMBDA (s : APState, pst : PState) : s WITH [pstate := pst]
@@ -17,12 +17,12 @@ BEGIN
 
   IMPORTING SemanticsJML[Name, Program, APState, id,
                          LAMBDA (s : APState) : pstate(s),
-                         LAMBDA (s : APState) : gvs(s),
                          update_PState,
+                         LAMBDA (s : APState) : gvs(s),
                          update_GhostVars],
             Semantics[Name, Program, APState, id,
                       LAMBDA (s : APState) : pstate(s),
-                      LAMBDA (s : APState) : gvs(s),
+                      lookup,
                       update_PState,
                       execute_set,
                       execute_CaseJML,
@@ -62,7 +62,6 @@ BEGIN
 
   IMPORTING SemanticsProofs[Name, Program, APState, id,
                       LAMBDA (s : APState) : pstate(s),
-                      LAMBDA (s : APState) : gvs(s),
                       lookup,
                       update_PState,
                       execute_set,

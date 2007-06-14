@@ -53,14 +53,8 @@ BEGIN
     #]
 
   IMPORTING SemanticsTypes[Name, MonitoredProgram, MPState, 
-                           LAMBDA (s : MPState) : pstate(s),
-                           LAMBDA (s : MPState) : gvs(s)]
-
-  wf_state(mp : MonitoredProgram)(sigma : MPState) : boolean =
-    wf_AState(mva(mp))(astate(sigma)) AND
-    wf_state(program(mp))(pstate(sigma)) AND
-    FORALL (vn : Name) :
-      is_ghost(vn, sigma) IFF var_names(getGhostDecls(program(mp)))(vn)
+                           LAMBDA (s : MPState) : pstate(s)],
+            SemanticsJMLTypes[Name, MPState, LAMBDA (s : MPState) : gvs(s)]
 
   update_PState : (update_PState_type) =
     LAMBDA (s : MPState, pst : PState) : s WITH [pstate := pst]
@@ -71,9 +65,15 @@ BEGIN
   IMPORTING SemanticsJML[Name, MonitoredProgram, MPState,
                          LAMBDA (mp : MonitoredProgram) : program(mp),
                          LAMBDA (s : MPState) : pstate(s),
-                         LAMBDA (s : MPState) : gvs(s),
                          update_PState,
+                         LAMBDA (s : MPState) : gvs(s),
                          update_GhostVars]
+
+  wf_state(mp : MonitoredProgram)(sigma : MPState) : boolean =
+    wf_AState(mva(mp))(astate(sigma)) AND
+    wf_state(program(mp))(pstate(sigma)) AND
+    FORALL (vn : Name) :
+      is_ghost(vn, sigma) IFF var_names(getGhostDecls(program(mp)))(vn)
 
   % Instantiation of its semantics
 
@@ -116,7 +116,7 @@ BEGIN
   IMPORTING Semantics[Name, MonitoredProgram, MPState, 
                       LAMBDA (mp : MonitoredProgram) : program(mp),
                       LAMBDA (s : MPState) : pstate(s),
-                      LAMBDA (s : MPState) : gvs(s),
+                      lookup,
                       update_PState,
                       execute_set,
                       execute_CaseJML,

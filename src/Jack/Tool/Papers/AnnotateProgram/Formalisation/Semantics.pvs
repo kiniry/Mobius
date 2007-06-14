@@ -56,8 +56,7 @@ END Evaluation
 
 SemanticsTypes[Name : TYPE+,
                FullProgram, FullState : TYPE,
-               (IMPORTING State[Name]) pstate : [FullState -> PState],
-               gvs : [FullState -> Store]] : THEORY
+               (IMPORTING State[Name]) pstate : [FullState -> PState]] : THEORY
 BEGIN
 
   IMPORTING Program[Name]
@@ -75,10 +74,6 @@ BEGIN
   update_PState_type(f : [FullState, PState -> FullState]) : boolean =
     FORALL (s1, s2 : FullState, pst : PState) :
       f(s1, pst) = s2 IMPLIES pstate(s2) = pst
-
-  update_GhostVars_type(f : [FullState, Store -> FullState]) : boolean =
-    FORALL (s1, s2 : FullState, gvs : Store) :
-      f(s1, gvs) = s2 IMPLIES gvs(s2) = gvs
 
   execute_set_type
     (f : [FullProgram, Name, Expr, FullState, FullState, n : nat,
@@ -102,19 +97,24 @@ BEGIN
             n : nat, ds : deriv_stmt_rec_type(n), de : deriv_expr_rec_type(n)) :
       f(p, md, a, s1, s2, n, ds, de) IMPLIES st(pstate(s1)) = st(pstate(s2))
 
-  is_ghost(vn : Name, sigma : FullState) : boolean =
-    NOT Bottom?(gvs(sigma)(vn))
-
-  lookup(vn : Name, sigma : FullState) : Val =
-    IF is_local(vn, pstate(sigma))
-    THEN lookup_local(vn, pstate(sigma))
-    ELSIF is_field(vn, pstate(sigma))
-    THEN lookup_field(vn, pstate(sigma))
-    ELSE gvs(sigma)(vn)
-    ENDIF
-
 
 END SemanticsTypes
+
+
+
+SemanticsJMLTypes[Name : TYPE+,
+                  FullState : TYPE,
+                  (IMPORTING State[Name]) gvs : [FullState -> Store]] : THEORY
+BEGIN
+
+  IMPORTING Program[Name]
+
+  update_GhostVars_type(f : [FullState, Store -> FullState]) : boolean =
+    FORALL (s1, s2 : FullState, gvs : Store) :
+      f(s1, gvs) = s2 IMPLIES gvs(s2) = gvs
+
+
+END SemanticsJMLTypes
 
 
 Semantics[Name : TYPE+,
@@ -122,8 +122,8 @@ Semantics[Name : TYPE+,
           FullState : TYPE,
           (IMPORTING Program) program : [FullProgram -> Program[Name]],
           (IMPORTING State) pstate : [FullState -> PState[Name]],
-          gvs : [FullState -> Store[Name]],
-          (IMPORTING SemanticsTypes[Name, FullProgram, FullState, pstate, gvs])
+          lookup : [Name, FullState -> Val],
+          (IMPORTING SemanticsTypes[Name, FullProgram, FullState, pstate])
           update_PState : (update_PState_type),
           execute_set : (execute_set_type),
           execute_CaseJML : (execute_CaseJML_type),
@@ -423,9 +423,8 @@ SemanticsProofs[Name : TYPE+,
           FullState : TYPE,
           (IMPORTING Program) program : [FullProgram -> Program[Name]],
           (IMPORTING State) pstate : [FullState -> PState[Name]],
-          gvs : [FullState -> Store[Name]],
-          (IMPORTING SemanticsTypes[Name, FullProgram, FullState, pstate, gvs])
-          lookup : [Name, FullState -> Val], 
+          lookup : [Name, FullState -> Val],
+          (IMPORTING SemanticsTypes[Name, FullProgram, FullState, pstate])
           update_PState : (update_PState_type),
           execute_set : (execute_set_type),
           execute_CaseJML : (execute_CaseJML_type),
@@ -435,8 +434,8 @@ SemanticsProofs[Name : TYPE+,
 BEGIN
 ASSUMING
 
-    IMPORTING Semantics[Name, FullProgram, FullState, program, pstate, gvs,
-              update_PState, execute_set, execute_CaseJML,
+    IMPORTING Semantics[Name, FullProgram, FullState, program, pstate,
+              lookup, update_PState, execute_set, execute_CaseJML,
               on_method_entry, on_method_exit_normal,
               on_method_exit_exceptional]
 
@@ -608,11 +607,23 @@ SemanticsJML[Name : TYPE+,
                 FullProgram, FullState : TYPE,
                 (IMPORTING Program) program : [FullProgram -> Program[Name]],
                 (IMPORTING State[Name]) pstate : [FullState -> PState],
-                gvs : [FullState -> Store[Name]],
-                (IMPORTING SemanticsTypes[Name, FullProgram, FullState, pstate, gvs])
+                (IMPORTING SemanticsTypes[Name, FullProgram, FullState, pstate])
                 update_PState : (update_PState_type),
+                gvs : [FullState -> Store[Name]],
+                (IMPORTING SemanticsJMLTypes[Name, FullState, gvs])
                 update_GhostVars : (update_GhostVars_type)] : THEORY
 BEGIN
+
+  is_ghost(vn : Name, sigma : FullState) : boolean =
+    NOT Bottom?(gvs(sigma)(vn))
+
+  lookup(vn : Name, sigma : FullState) : Val =
+    IF is_local(vn, pstate(sigma))
+    THEN lookup_local(vn, pstate(sigma))
+    ELSIF is_field(vn, pstate(sigma))
+    THEN lookup_field(vn, pstate(sigma))
+    ELSE gvs(sigma)(vn)
+    ENDIF
 
   execute_set : (execute_set_type) =
     LAMBDA (p : FullProgram, vn : Name, e : Expr, s1, s2 : FullState, n : nat,

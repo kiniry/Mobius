@@ -117,8 +117,7 @@ BEGIN
   % In a program without annotations, the ghost variables will never be accessed
   % so it doesn't matter what we provide as gvs.
   IMPORTING State[Name],
-            SemanticsTypes[Name, Program, PState, id, 
-                           LAMBDA (s : PState)(n : Name) : Bottom]
+            SemanticsTypes[Name, Program, PState, id]
 
   execute_set : (execute_set_type) =
     LAMBDA (p : Program, vn : Name, e : Expr, s1, s2 : PState, n : nat,
@@ -137,9 +136,8 @@ BEGIN
             deriv_expr : deriv_expr_rec_type(n)) :
       s1 = s2
 
-  IMPORTING Semantics[Name, Program, PState, id, id, 
-                      LAMBDA (s : PState)(n : Name) : Bottom,
-                      LAMBDA (s : PState, pst : PState) : pst,
+  IMPORTING Semantics[Name, Program, PState, id, id, lookup,
+                      LAMBDA (s : PState, pst : PState) : pst, %proj_2 ?
                       execute_set, execute_CaseJML,
                       on_method_event, on_method_event, on_method_event]
 
