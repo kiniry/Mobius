@@ -26,7 +26,9 @@ import javafe.ast.FormalParaDeclVec;
 import javafe.ast.Identifier;
 import javafe.ast.IfStmt;
 import javafe.ast.LabelStmt;
+import javafe.ast.MethodDecl;
 import javafe.ast.ReturnStmt;
+import javafe.ast.RoutineDecl;
 import javafe.ast.SkipStmt;
 import javafe.ast.Stmt;
 import javafe.ast.StmtPragma;
@@ -71,22 +73,28 @@ public class StmtVCGen extends ExpressionVisitor {
 	public final ExpressionVisitor exprVisitor = new ExpressionVisitor();
 	/** the decorator that add the annotations or read the annotations from a node */
 	public final AnnotationDecoration annot = AnnotationDecoration.inst;
+  private final RoutineDecl meth;
 	
 	
 	
-	/**
+	public StmtVCGen(RoutineDecl meth) {
+    this.meth =meth;
+  }
+
+
+  /**
 	 * The method to treat the annotations
 	 * @param vce the current post condition 
 	 * @param annot the annotation to treat
 	 * @return a postcondition computed from the annotation
 	 */
-	public Post treatAnnot(VCEntry vce, Vector<AAnnotation> annot) {
+	public Post treatAnnot(VCEntry vce, List<AAnnotation> annot) {
 		if(annot == null)
 			return vce.post;
 		Term post = vce.post.post;
 		int len = annot.size();
 		for(int i = len -1; i >= 0; i--) {
-			AAnnotation aa =  annot.elementAt(i);		
+			AAnnotation aa =  annot.get(i);		
 			switch(aa.getID()) {
 				case AAnnotation.annotAssert:
 					vcs.add(Logic.safe.implies(aa.formula, post));
@@ -239,6 +247,13 @@ public class StmtVCGen extends ExpressionVisitor {
 		assert (annot.getAnnotPost(x) == null); // if the method type is not void there should 
 									  // also be the variable \result
 		VCEntry vce = (VCEntry) o;
+    if(meth instanceof MethodDecl) {
+      vce.post = new Post(Expression.getResultRVar((MethodDecl)meth), Lookup.normalPostcondition(meth));
+    }
+    else {
+      vce.post = Lookup.normalPostcondition(meth);
+  
+    }
 		vce.post = (Post) x.expr.accept(exprVisitor, vce);
 		return treatAnnot(vce, annot.getAnnotPre(x));
 	}	

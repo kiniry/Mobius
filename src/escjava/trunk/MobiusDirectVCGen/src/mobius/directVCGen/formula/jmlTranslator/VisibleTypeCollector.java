@@ -2,43 +2,25 @@ package mobius.directVCGen.formula.jmlTranslator;
 
 
 
-import mobius.directVCGen.formula.*;
-import mobius.directVCGen.formula.annotation.AAnnotation;
-import mobius.directVCGen.formula.annotation.AnnotationDecoration;
-import mobius.directVCGen.formula.annotation.Assume;
-import mobius.directVCGen.formula.annotation.Cut;
-import mobius.directVCGen.formula.annotation.Set;
-import mobius.directVCGen.vcgen.struct.Post;
-
 import java.util.HashSet;
 import java.util.Properties;
-import java.util.Vector;
+
 import javafe.ast.ASTNode;
 import javafe.ast.BinaryExpr;
-import javafe.ast.BlockStmt;
 import javafe.ast.ClassDecl;
 import javafe.ast.ConstructorDecl;
-import javafe.ast.DoStmt;
 import javafe.ast.Expr;
 import javafe.ast.FieldAccess;
-import javafe.ast.ForStmt;
 import javafe.ast.FormalParaDecl;
-import javafe.ast.IfStmt;
 import javafe.ast.InstanceOfExpr;
-import javafe.ast.JavafePrimitiveType;
 import javafe.ast.LiteralExpr;
-import javafe.ast.LocalVarDecl;
 import javafe.ast.MethodDecl;
-import javafe.ast.ModifierPragma;
 import javafe.ast.PrimitiveType;
 import javafe.ast.RoutineDecl;
-import javafe.ast.Stmt;
 import javafe.ast.ThisExpr;
-import javafe.ast.TryCatchStmt;
+import javafe.ast.Type;
 import javafe.ast.UnaryExpr;
-import javafe.ast.VarDeclStmt;
 import javafe.ast.VariableAccess;
-import javafe.ast.WhileStmt;
 import escjava.ast.AnOverview;
 import escjava.ast.ArrayRangeRefExpr;
 import escjava.ast.CondExprModifierPragma;
@@ -91,9 +73,6 @@ import escjava.ast.VarDeclModifierPragma;
 import escjava.ast.VarExprModifierPragma;
 import escjava.ast.VisitorArgResult;
 import escjava.ast.WildRefExpr;
-import escjava.sortedProver.Lifter.QuantVariableRef;
-import escjava.sortedProver.Lifter.Term;
-import javafe.ast.Type;
 
 
 

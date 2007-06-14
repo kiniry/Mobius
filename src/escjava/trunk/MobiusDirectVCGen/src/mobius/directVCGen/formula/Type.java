@@ -221,7 +221,7 @@ public class Type{
 	 * {@link java.lang.ArrayOutOfBoundException}.
 	 * @see #javaLangThrowable()
 	 * @see #javaLangNullPointerException()
-	 * @see #getJavaLang(String)* 
+	 * @see #getJavaLang(String) 
 	 */
 	public static Term javaLangArrayOutOfBoundException() {
 		return translate(Types.getJavaLang("ArrayOutOfBoundException"));

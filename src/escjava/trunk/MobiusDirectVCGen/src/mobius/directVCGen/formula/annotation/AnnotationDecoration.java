@@ -1,5 +1,6 @@
 package mobius.directVCGen.formula.annotation;
 
+import java.util.List;
 import java.util.Vector;
 
 import mobius.directVCGen.formula.Logic;
@@ -45,7 +46,7 @@ public class AnnotationDecoration extends ASTDecoration {
 	 * @return an annotation or <code>null</code> if the 
 	 * node has not been decorated
 	 */
-	public Vector<AAnnotation> getAnnotPre(ASTNode n) {
+	public List<AAnnotation> getAnnotPre(final ASTNode n) {
 		Annotation v = getAnnot(n);
 		if(v == null)
 			return null;
@@ -55,12 +56,12 @@ public class AnnotationDecoration extends ASTDecoration {
 	
 	/**
 	 * Retrieve the annotation being after the given instruction.
-	 * @param n the node from which to fetch the annotation
+	 * @param node the node from which to fetch the annotation
 	 * @return an annotation or <code>null</code> if the node 
 	 * has not been decorated
 	 */
-	public Vector<AAnnotation> getAnnotPost(ASTNode n) {
-		Annotation v = getAnnot(n);
+	public List<AAnnotation> getAnnotPost(final ASTNode node) {
+		Annotation v = getAnnot(node);
 		if(v == null)
 			return null;
 		else 

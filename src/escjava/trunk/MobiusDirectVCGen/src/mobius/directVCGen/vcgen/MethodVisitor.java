@@ -98,7 +98,7 @@ public class MethodVisitor extends DirectVCGen {
 	public void visitBlockStmt(/*@non_null*/ BlockStmt x) {
 		VCEntry post = new VCEntry(Lookup.normalPostcondition(meth),
 								   Lookup.exceptionalPostcondition(meth));
-		StmtVCGen dvcg = new StmtVCGen();
+		StmtVCGen dvcg = new StmtVCGen(meth);
 		Post pre = (Post)x.accept(dvcg, post);
 		Term po = Logic.implies(Lookup.precondition(meth), pre.post);
 		FormalParaDeclVec vec = meth.args;

@@ -238,7 +238,7 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn{
 	 * Do the wp of an assignement followed by an operation 
 	 * @param expr
 	 * @param post
-	 * @return
+	 * @return the corresponding postcondition
 	 */
 	public Post assignSpecial(BinaryExpr expr, VCEntry post) {
 		Expr right = expr.right;

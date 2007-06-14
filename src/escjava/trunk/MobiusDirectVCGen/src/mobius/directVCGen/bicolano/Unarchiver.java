@@ -15,7 +15,7 @@ import java.util.jar.JarFile;
 /**
  * A class to inflat bicolano as well as the static preludes from
  * a jar file.
- * @author J. Charles
+ * @author J. Charles (julien.charles@inria.fr)
  */
 public class Unarchiver {
 	/** the directory in the archive of bicolano: /Formalisation/Bicolano */
@@ -159,6 +159,5 @@ public class Unarchiver {
 		public Iterator<JarEntry> iterator() {
 			return this;
 		}
-		
-	};
+  }
 }

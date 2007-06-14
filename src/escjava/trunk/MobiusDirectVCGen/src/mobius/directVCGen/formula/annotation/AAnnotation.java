@@ -27,16 +27,16 @@ public abstract class AAnnotation {
 	 * Default constructor
 	 */
 	protected AAnnotation(){
-		this.formula = null;
+		formula = null;
 	}
 	
 	/**
 	 * Construct the annotation around the given term.
-	 * @param t the term which is the formula contained in 
+	 * @param term the term which is the formula contained in 
 	 * the annotation
 	 */
-	public AAnnotation(Term t){
-		this.formula = t;
+	public AAnnotation(Term term){
+		formula = term;
 	}
 	
 	/**

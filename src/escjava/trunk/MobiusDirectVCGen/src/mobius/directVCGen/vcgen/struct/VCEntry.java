@@ -3,6 +3,7 @@ package mobius.directVCGen.vcgen.struct;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javafe.ast.Identifier;
 
@@ -12,22 +13,22 @@ import javafe.ast.Identifier;
  */
 public class VCEntry {
 	/** the postcondition of the method */
-	public Post post;
+	public transient Post post;
 	
 	/** the exceptional postcondition for the method */
-	public final Post excpost;
+	public transient final Post excpost;
 	/** the list of excp post condition; used for the try...catch constructs */
-	public final List<ExcpPost> lexcpost = new ArrayList<ExcpPost>();
+	public transient final List<ExcpPost> lexcpost = new ArrayList<ExcpPost>();
 	
 	/** the postcondition for the break, if there is no label */
-	public Post brpost;
+	public transient Post brpost;
 	/** the list of postconditions for breaks in case of labels */
-	public final HashMap<Identifier, Post> lbrpost = new HashMap<Identifier, Post>(); 
+	public transient final Map<Identifier, Post> lbrpost = new HashMap<Identifier, Post>(); 
 	
 	/** the postcondition of continue if there is no label */
-	public Post contpost;	
+	public  transient Post contpost;	
 	/** the list of postconditions of the continue if there are labels attached to loops */
-	public final HashMap<Identifier, Post> lcontpost = new HashMap<Identifier, Post>(); 
+	public transient final Map<Identifier, Post> lcontpost = new HashMap<Identifier, Post>(); 
 
 	
 	/**
@@ -72,7 +73,7 @@ public class VCEntry {
 	 * and fill them with the elements of the object being copied.
 	 * @param ve the object to copy
 	 */
-	public VCEntry(VCEntry ve) {
+	public VCEntry(VCEntry ve) {// N OPMD
 		post = ve.post;
 		brpost = ve.brpost;
 		contpost = ve.contpost;
@@ -82,11 +83,13 @@ public class VCEntry {
 		lcontpost.putAll(ve.lcontpost);
 	}
 	
+
+	
 	/**
 	 * Uses the constructor {@link #VCEntry(VCEntry)} to construct a clone
 	 * of the current object.
 	 */
-	public Object clone() {
+	public Object clone() {	// N OPMD
 		return new VCEntry(this);
 	}
 }
