@@ -23,10 +23,10 @@
 JType : DATATYPE
 BEGIN
 
-  IntType : IntType?      % Integers
-  BoolType : BoolType?    % Booleans
-  Void : Void?            % Void
-  RefType : RefType?      % References
+  IntType : IntType?            % Integers
+  BoolType : BoolType?          % Booleans
+  Void : Void?                  % Void
+  RefType : RefType?            % References
 
 
 END JType
@@ -137,14 +137,9 @@ END Stmt
 Program[Name : TYPE+] : THEORY
 BEGIN
   
-  IMPORTING JType,
-            Val,
-            ValProp,
+  IMPORTING ValProp[Name],
             Stmt[Name],
             Expr[Name]
-
-  
-  main : Name
 
   This, Super : Name
 
@@ -177,6 +172,7 @@ BEGIN
                     fields : finite_set[FieldDecl],
                     methods : finite_set[Method] #]
 
+  % AT: What is this for?
   IMPORTING FiniteSetInduction[Class],
             FiniteSetInduction[Method]
 
@@ -232,15 +228,33 @@ BEGIN
     ENDIF
 
 
-  % Functions whose existence we assume. See the requirement for these
-  % functions in the WellFormedProgram
+  class_names(p : Program) : finite_set[Name] =
+    {n : Name | EXISTS (c : Class) : classes(p)(c) AND name(c) = n}
 
-  get_class(p : Program)(tgt : Val) : lift[Class]
+  method_names(p : Program, c : Class) : finite_set[Name] =
+    {n : Name | EXISTS (m : Method) : classes(p)(c) AND methods(c)(m) AND 
+                                      name(m) = n}
 
-  lookup_mthd(p : Program, tgt : Val, mn : Name) : lift[Method]
+  get_class(p : Program)(tgt : Val) : lift[Class] =
+    IF Reference?(tgt) AND class_names(p)(class_name(tgt))
+    THEN up(choose({c : Class | classes(p)(c) AND name(c) = class_name(tgt)}))
+    ELSE bottom
+    ENDIF
+
+  lookup_mthd(p : Program, tgt : Val, mn : Name) : lift[Method] =
+    LET gc = get_class(p)(tgt) IN
+    IF up?(gc) AND method_names(p, down(gc))(mn)
+    THEN up(choose({m : Method | classes(p)(down(gc)) AND methods(down(gc))(m)
+                                 AND name(m) = mn}))
+    ELSE bottom
+    ENDIF
 
   % If it can't find an invariant in tgt it just returns TRUE
-  lookup_inv(p : Program, tgt : Val) : Expr
+  lookup_inv(p : Program, tgt : Val) : Expr =
+    IF up?(get_class(p)(tgt))
+    THEN inv(down(get_class(p)(tgt)))
+    ELSE BExpr(TT)
+    ENDIF
 
 
   set_subterm(s : Stmt, m : Method) : boolean =
@@ -284,56 +298,22 @@ BEGIN
 END ProgramFunctions
 
 
-% Program requirements (see the assumptions at the beginning of the file)
-% We include only the requirements needed for the proofs
+% Program's syntax requirements.
+% We include only the requirements needed for the proofs.
 % NOTE: Since the declarations are sets we can avoid some duplicate tests.
 WellFormedProgram[Name : TYPE+] : THEORY
 BEGIN
 
-  IMPORTING Program[Name],
-            ProgramFunctions[Name]
+  IMPORTING ProgramFunctions[Name]
 
   wf_Class(c : Class) : boolean
 
-  % Syntactic constraints of programs (only the ones needed by the proofs)
   wf_Program(p : Program) : boolean
 
 %  AUTO_REWRITE- wf_Program
 
-  % We name only the type constraints needed for the proofs.
-  well_typed_Program(p : Program) : boolean =
-    FORALL (c : Class) :
-      classes(p)(c) IMPLIES
-        BExpr?(inv(c))
-
   % Properties needed of well-formed programs
 
-  % NOTE: This is not accurate, we shoul say something about tgt, for instance
-  % that it is not an int, besides not all addresses are objects.
-  get_class_behavior : LEMMA
-    FORALL (p : Program, tgt : Val) :
-      wf_Program(p) IMPLIES
-        up?(get_class(p)(tgt)) AND
-        classes(p)(down(get_class(p)(tgt)))
-
-  lookup_mthd_behavior : LEMMA
-    FORALL (p : Program, m : Method, mn : Name, tgt : Val) :
-      wf_Program(p) IMPLIES
-      up?(lookup_mthd(p, tgt, mn)) IMPLIES
-      m = down(lookup_mthd(p, tgt, mn)) IMPLIES
-        LET c = down(get_class(p)(tgt)) IN
-        up?(get_class(p)(tgt)) AND
-        classes(p)(c) AND
-        methods(c)(m) AND
-        name(m) = mn
-
-  lookup_inv_behavior : LEMMA
-    FORALL (p : Program, tgt : Val) :
-      wf_Program(p) IMPLIES
-        lookup_inv(p, tgt) = inv(down(get_class(p)(tgt)))
-
-
-  % Names of classes are unique within a program
   wf_program_has_unique_class_names : LEMMA
     FORALL (p : Program, c1, c2 : Class) :
       wf_Program(p) IMPLIES
@@ -381,3 +361,25 @@ BEGIN
 
 
 END WellFormedProgram
+
+
+% We name only the type constraints needed for the proofs.
+WellTypedProgram[Name : TYPE+] : THEORY
+BEGIN
+
+  IMPORTING WellFormedProgram[Name]
+
+  invariants_are_booleans(p : Program) : boolean =
+    FORALL (c : Class) :
+      classes(p)(c) IMPLIES
+        BExpr?(inv(c))
+
+  %method_names(p, down(get_class(p)(tgt)))(mn)
+
+  % See also get_dynamic_type_name_correctness in Evaluation (Semantics.pvs)
+  well_typed_Program(p : Program) : boolean =
+    wf_Program(p) AND
+    invariants_are_booleans(p)
+
+
+END WellTypedProgram

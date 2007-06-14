@@ -143,18 +143,6 @@ BEGIN
 
   % Well-formedness properties
 
-  % TODO: Revise this lemma
-%   wf_update_state_MP : LEMMA % :-)
-%     FORALL (mp : MonitoredProgram, s1, s2 : MPState, 
-%             upd : [PState[Name] -> PState[Name]]) :
-%       wf_state(mp)(s1) IMPLIES
-%       update_state_MP(upd, s1) = s2 IMPLIES
-%       (FORALL (vn : Name) :
-%         (is_field(vn, pstate(s1)) IFF is_field(vn, pstate(s2))) AND
-%         (is_local(vn, pstate(s1)) IFF is_local(vn, pstate(s2))) AND
-%         (is_ghost(vn, s1) IFF is_ghost(vn, s2))) IMPLIES
-%         wf_state(mp)(s2)
-
   wf_initial_MP_state : LEMMA
     FORALL (mp : MonitoredProgram) :
       wf_MP(mp) IMPLIES wf_state(mp)(initial_MP_state(mp))

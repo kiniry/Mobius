@@ -90,24 +90,11 @@ BEGIN
       is_ghost(vn, s) IMPLIES 
         NOT is_local(vn, pstate(s)) AND NOT is_field(vn, pstate(s))
 
-  % TODO: Revise this lemma
-  % MH: think about rephrasing
-%   wf_update_state_AP : LEMMA % :-)
-%     FORALL (p : Program, s1, s2 : APState, 
-%             upd : [PState[Name] -> PState[Name]]) :
-%       wf_state(p)(s1) IMPLIES
-%       update_state_AP(upd, s1) = s2 IMPLIES
-%       (FORALL (vn : Name) :
-%         (is_field(vn, pstate(s1)) IFF is_field(vn, pstate(s2))) AND
-%         (is_local(vn, pstate(s1)) IFF is_local(vn, pstate(s2))) AND
-%         (is_ghost(vn, s1) IFF is_ghost(vn, s2))) IMPLIES
-%         wf_state(p)(s2)
-
    wf_update_PState : LEMMA % :-)
      FORALL (p : Program, s1, s2 : APState, 
              upd : [PState[Name] -> PState[Name]]) :
        wf_state(p)(s1) IMPLIES
-       update_PState(s1, upd) = s2 IMPLIES
+%       update_PState(s1, upd) = s2 IMPLIES
          wf_state(p)(s2)
 
   wf_initial_AP_state : LEMMA % :-)

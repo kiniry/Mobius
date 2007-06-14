@@ -13,10 +13,8 @@ END EventType
 MVA[CP, Name : TYPE+] : THEORY
 BEGIN
 
-  IMPORTING JType,
-            Expr[Name],
-            Val,
-            ValProp
+  IMPORTING Expr[Name],
+            ValProp[Name]
   
   MVAVarDecl : TYPE =
     [# name : Name,

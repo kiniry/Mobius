@@ -4,24 +4,25 @@
 % specially for programs, which have three stores (and the values for which lvs
 % is defined change over time).
 % Do not confuse Bottom (a Val) with bottom, a constructor of the lift datatype
-Val : DATATYPE 
+Val[Name : TYPE+] : DATATYPE 
 BEGIN
 
-  Int(i : int) : Int?
   Bool(b : bool) : Bool?
-  Null : Null?
-  RefType(a : int) : RefType?
-  Unit : Unit?        % dummy value returned by void functions
   Bottom : Bottom?    % undefined value
+  Int(i : int) : Int?
+  Null : Null?
+  % a is the memory address and class_name is the dynamic type of the object
+  Reference(a : int, class_name : Name) : Reference?
+  Unit : Unit?        % dummy value returned by void functions
 
 
 END Val
 
 
-ValProp : THEORY
+ValProp[Name : TYPE+] : THEORY
 BEGIN
 
-  IMPORTING Val, JType
+  IMPORTING Val[Name], JType
 
   defined?(v : Val) : boolean = NOT Bottom?(v)
 

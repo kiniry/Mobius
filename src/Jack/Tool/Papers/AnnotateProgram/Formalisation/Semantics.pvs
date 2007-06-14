@@ -1,6 +1,6 @@
 Evaluation[Name : TYPE+, 
            FullState : TYPE,
-           (IMPORTING State) pstate : [FullState -> PState[Name]],
+           (IMPORTING State[Name]) pstate : [FullState -> PState],
            lookup : [Name, FullState -> Val]] : THEORY
 BEGIN
 
@@ -41,13 +41,24 @@ BEGIN
     ENDCASES
   MEASURE b BY <<
 
-  % Function whose existence we assume
-  get_address(vn : Name)(sigma : FullState) : int
+  % Functions whose existence we assume
+  get_address(vn : Name, sigma : FullState) : int
+
+  get_dynamic_type_name(vn : Name, sigma : FullState) : Name
+
+  IMPORTING WellTypedProgram[Name]
+
+  get_dynamic_type_name_correctness : AXIOM
+    FORALL (p : Program, vn : Name, sigma : FullState) :
+      well_typed_Program(p) IMPLIES 
+        class_names(p)(get_dynamic_type_name(vn, sigma))
+
 
   eval(r : RefExpr)(sigma : FullState) : Val =
     IF Null?(r) 
     THEN Null
-    ELSE RefType(get_address(varname(r))(sigma))
+    ELSE Reference(get_address(varname(r), sigma), 
+                   get_dynamic_type_name(varname(r), sigma))
     ENDIF
 
 
@@ -120,8 +131,8 @@ END SemanticsJMLTypes
 Semantics[Name : TYPE+,
           FullProgram : TYPE,
           FullState : TYPE,
-          (IMPORTING Program) program : [FullProgram -> Program[Name]],
-          (IMPORTING State) pstate : [FullState -> PState[Name]],
+          (IMPORTING Program[Name]) program : [FullProgram -> Program],
+          (IMPORTING State[Name]) pstate : [FullState -> PState],
           lookup : [Name, FullState -> Val],
           (IMPORTING SemanticsTypes[Name, FullProgram, FullState, pstate])
           update_PState : (update_PState_type),
@@ -421,8 +432,8 @@ END Semantics
 SemanticsProofs[Name : TYPE+,
           FullProgram : TYPE,
           FullState : TYPE,
-          (IMPORTING Program) program : [FullProgram -> Program[Name]],
-          (IMPORTING State) pstate : [FullState -> PState[Name]],
+          (IMPORTING Program[Name]) program : [FullProgram -> Program],
+          (IMPORTING State[Name]) pstate : [FullState -> PState],
           lookup : [Name, FullState -> Val],
           (IMPORTING SemanticsTypes[Name, FullProgram, FullState, pstate])
           update_PState : (update_PState_type),
@@ -439,6 +450,7 @@ ASSUMING
               on_method_entry, on_method_exit_normal,
               on_method_exit_exceptional]
 
+    % AT: Don't you think that this looks better?
     on_method_entry_deterministic_test : ASSUMPTION
       FORALL (p : FullProgram, m : Method[Name], v : Val, 
               s, s1, s2 : FullState, n1, n2 : nat) 
@@ -597,6 +609,21 @@ ENDASSUMING
         derives(p)(c, sigma)(sigma1) AND
         derives(p)(c, sigma)(sigma2) IMPLIES
           sigma1 = sigma2
+
+  % AT: I need this one
+  deriv_expr_bottom_implies_exception : LEMMA
+    FORALL (p : FullProgram)(e : Expr)
+           (sigma1, sigma2 : FullState, v : Val, n : nat) :
+      deriv_expr(p)(e, sigma1, v, sigma2)(n) IMPLIES
+      Bottom?(v) IMPLIES
+        up?(ex(pstate(sigma2)))
+
+  deriv_expr_exception_implies_bottom : LEMMA
+    FORALL (p : FullProgram)(e : Expr)
+           (sigma1, sigma2 : FullState, v : Val, n : nat) :
+      deriv_expr(p)(e, sigma1, v, sigma2)(n) IMPLIES
+      up?(ex(pstate(sigma2))) IMPLIES
+        Bottom?(v) IMPLIES
 
 
 END SemanticsProofs

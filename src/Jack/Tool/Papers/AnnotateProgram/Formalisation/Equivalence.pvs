@@ -23,6 +23,7 @@ BEGIN
     (FORALL (n : string) : NOT Bottom?(stA(sA)(n)) IMPLIES
       stA(sA)(n) = gvs(sAP)(n))
 
+  % Not used now
   halted_implies_JMLExc(sA : AState, sAP : APState) : boolean =
     cp(sA) = halted IMPLIES
       up?(ex(pstate(sAP))) AND down(ex(pstate(sAP))) = JMLExc
@@ -102,29 +103,19 @@ BEGIN
     FORALL (mp : MonitoredProgram)(sMP : MPState, sAP : APState) :
       MP_modeled?(mp)(sMP, sAP) IMPLIES ex(pstate(sMP)) = ex(pstate(sAP))
 
-  % TODO: delete this rename update2, move the proof and update the references
-  MP_modeled_preserved_by_update : LEMMA  % :-)
-    FORALL (mp : MonitoredProgram, ap : Program)
-           (sMP : MPState, sAP : APState)(vn : string, v : Val) :
-      related_states(mp, ap)(sMP, sAP) IMPLIES
-        MP_modeled?(mp)(update_PState(sMP, update(vn, v)(pstate(sMP))),
-                        update_PState(sAP, update(vn, v)(pstate(sAP))))
-
   MP_modeled_implies_cp_not_halted : LEMMA % :-)
     FORALL (mp : MonitoredProgram, sMP : MPState, sAP : APState) :
       MP_modeled?(mp)(sMP, sAP) IMPLIES
       NOT up?(ex(pstate(sAP))) IMPLIES
         NOT cp(astate(sMP)) = halted
  
-  % TODO: Rephrase this lemma
   % If cp(astate(sMP)) = halted, upd must leave the JML exception in sAP
-  MP_modeled_preserved_by_update2 : LEMMA % :-)
+  MP_modeled_preserved_by_update : LEMMA % :-)
     FORALL (mp : MonitoredProgram, ap : Program)
-           (sMP : MPState, sAP : APState)(upd : [PState -> PState]) :
+           (sMP : MPState, sAP : APState)(pst : PState) :
       related_states(mp, ap)(sMP, sAP) IMPLIES
       NOT up?(ex(pstate(sAP))) IMPLIES
-        MP_modeled?(mp)(update_PState(sMP, upd(pstate(sMP))),
-                        update_PState(sAP, upd(pstate(sAP))))
+        MP_modeled?(mp)(update_PState(sMP, pst), update_PState(sAP, pst))
 
   MP_modeled_implies_same_num_eval : LEMMA % :-)
     FORALL (mp : MonitoredProgram, ap : Program)
@@ -203,8 +194,7 @@ BEGIN
       related_states(mp, ap)(sMP1, sAP1) IMPLIES
       deriv_expr(mp)(e, sMP1, v1, sMP2)(n1) IMPLIES
       deriv_expr(ap)(e, sAP1, v2, sAP2)(n2) IMPLIES
-        v1 = v2 AND
-        MP_modeled?(mp)(sMP2, sAP2)
+        v1 = v2 AND MP_modeled?(mp)(sMP2, sAP2)
 
   deriv_stmt_maintains_equivalence : THEOREM
     FORALL (mp : MonitoredProgram, ap : Program)(n1, n2 : nat)(c : Stmt)

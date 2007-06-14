@@ -111,6 +111,7 @@ BEGIN
       wf_Program(p) IMPLIES
         wf_state(p)(update(vn, v)(s))
 
+
 END State
 
 
@@ -119,8 +120,6 @@ END State
 ProgramSemantics[Name : TYPE+] : THEORY
 BEGIN
 
-  % In a program without annotations, the ghost variables will never be accessed
-  % so it doesn't matter what we provide as gvs.
   IMPORTING State[Name],
             SemanticsTypes[Name, Program, PState, id]
 
