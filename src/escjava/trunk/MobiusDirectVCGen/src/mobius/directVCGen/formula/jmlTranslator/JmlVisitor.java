@@ -84,6 +84,7 @@ import escjava.ast.VarDeclModifierPragma;
 import escjava.ast.VarExprModifierPragma;
 import escjava.ast.VisitorArgResult;
 import escjava.ast.WildRefExpr;
+import escjava.sortedProver.Lifter.QuantVariable;
 import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
 
