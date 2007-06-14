@@ -1,6 +1,11 @@
 package mobius.directVCGen.formula;
 
 
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Properties;
+import java.util.Set;
+
 import escjava.sortedProver.NodeBuilder;
 import escjava.sortedProver.Lifter.FnTerm;
 import escjava.sortedProver.Lifter.QuantTerm;
@@ -364,7 +369,8 @@ public class Logic {
 	 */
 	public static Term ge(Term l, Term r) {		
 		//return numBinaryOp(l,r,NodeBuilder.predGE);
-		return numBinaryOp(r,l,NodeBuilder.predLT);
+		//return numBinaryOp(r,l,NodeBuilder.predLT);
+		return numBinaryOp(r,l,NodeBuilder.predLE);
 	}
 	
 	/**
@@ -375,7 +381,8 @@ public class Logic {
 	 */
 	public static Term gt(Term l, Term r) {		
 		//return numBinaryOp(l,r,NodeBuilder.predGT);
-		return numBinaryOp(r,l,NodeBuilder.predLE);
+		//return numBinaryOp(r,l,NodeBuilder.predLE);
+		return numBinaryOp(r,l,NodeBuilder.predLT);
 	}
 	
 
@@ -463,6 +470,53 @@ public class Logic {
 
 		return Formula.lf.mkFnTerm(Formula.lf.symAssignCompat, new Term [] {heap, val, type});
 	}
+	
+
+	public static Term inv(Term x, Term t) {
+		return Formula.lf.mkFnTerm(Formula.lf.symInv, new Term[]{x, t});
+	}
+	
+	
+	public static Term isAllocated(Term heap, Term val) {
+		if(heap.getSort() != Heap.sort)
+			throw new IllegalArgumentException("Type of the first param should be heap (" + Heap.sort + "), found: " + heap.getSort());
+		return Formula.lf.mkFnTerm(Formula.lf.symIsAllocated, new Term [] {heap, val});
+	}
+	
+	
+	public static Term andInv(Term t1, Term t2){
+		return Formula.lf.mkFnTerm(Formula.lf.symAnd, new Term[]{t1, t2});
+	}
+	
+	public static Term orInv(Term t1, Term t2){
+		return Formula.lf.mkFnTerm(Formula.lf.symOr, new Term[] {t1, t2});
+	}
+	
+	
+	public static Term eqInv(Term t1, Term t2){
+		return Formula.lf.mkFnTerm(Formula.lf.symRefEQ, new Term[]{t1, t2});
+	}
+	
+	
+	public static Term isVisibleIn(Term var, Object o) {
+		Term t1 = null;
+		Term t2 = null;
+		Set typeSet = (HashSet) ((Properties)o).get("visibleTypeSet");
+	    Iterator iter = typeSet.iterator();
+	    
+	    while (iter.hasNext()) {
+	    	javafe.ast.Type type = (javafe.ast.Type) iter.next();
+	    	QuantVariableRef typeTerm = Type.translate(type);
+	    	t1 = Logic.eqInv(var,typeTerm);
+	    	if (t2 == null)
+	    		t2 = t1;
+	    	else
+	    		t2 = Logic.orInv(t2,t1);
+	    }
+	    return t2;
+	}
+	
+	
 	
 	/**
 	 * Main for testing purpose.

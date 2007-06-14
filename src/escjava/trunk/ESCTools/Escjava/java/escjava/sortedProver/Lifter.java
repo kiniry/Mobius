@@ -934,6 +934,9 @@ public class Lifter extends EscNodeBuilder
 	public FnSymbol symRealFn = registerFnSymbol("%real-fn", new Sort[] { sortReal, sortReal }, sortReal);
 	public FnSymbol symBoolFn = registerFnSymbol("%bool-fn", new Sort[] { sortBool, sortBool }, sortBool);
 	public FnSymbol symBoolUnaryFn = registerFnSymbol("%bool-unary-fn", new Sort[] { sortBool}, sortBool);
+	public PredSymbol symInv = registerPredSymbol("%inv", new Sort[]{sortRef, sortRef});
+	public PredSymbol symIsAllocated = registerPredSymbol("%isAllocated", new Sort[] { sortMap, sortValue});
+	
 	
 	/** 
 	 * the unary sub symbol for integrals, for Reals it is called Floating 

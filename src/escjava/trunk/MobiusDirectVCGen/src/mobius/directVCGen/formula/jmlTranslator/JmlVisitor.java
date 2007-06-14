@@ -114,9 +114,7 @@ public class JmlVisitor extends VisitorArgResult{
 				{
 					if (!o.equals(child))
 					{
-						System.out.println( o.toString());
-						//System.out.println( o.toString() + " " + x.getClass().getName());
-						
+						System.out.println( o.toString());						
 					}
 				}
 			}
@@ -132,10 +130,13 @@ public class JmlVisitor extends VisitorArgResult{
 	}
 	
 	public /*@non_null*/ Object visitRoutineDecl(/*@non_null*/ RoutineDecl x, Object o) {
-		//x.accept(new VisibleTypeCollector(),o); // Visible Type Collector
+		x.accept(new VisibleTypeCollector(),o); // Visible Type Collector
 		((Properties) o).put("method", x);
+		((Properties) o).put("firstPost", new Boolean(true)); // invariante wird nur einmal zu Lookup.postcond angehängt
 		((Properties) o).put("routinebegin", new Boolean(true));
-		Lookup.exceptionalPostconditions.put(x, new Post(Expression.rvar(Ref.sort),Logic.True()));
+		QuantVariableRef result = (QuantVariableRef)((Properties) o).get("result");
+		Lookup.postconditions.put(x, new Post(result,Logic.True()));
+		Lookup.exceptionalPostconditions.put(x, new Post(result, Logic.True()));
 		return visitASTNode(x, o);
 	}
 	
@@ -295,14 +296,25 @@ public class JmlVisitor extends VisitorArgResult{
 	public Object visitExprModifierPragma(ExprModifierPragma x, Object o) {
 		((Properties) o).put("interesting", new Boolean(true));
 		RoutineDecl rd = (RoutineDecl)((Properties) o).get("method");
-		QuantVariableRef result = (QuantVariableRef)((Properties) o).get("result");
 		Term t = (Term)visitASTNode(x, o);
 		switch (x.getTag()){
 		case TagConstants.REQUIRES:
+			if (rd  instanceof MethodDecl) { 
+				Term invToPre = (Term) invToPreconditions(o);
+				t = Logic.andInv(t, invToPre);
+			}
 			Lookup.preconditions.put(rd, t);
 			break;
 		case TagConstants.ENSURES:
-			Lookup.postconditions.put(rd, new Post(result, t));
+			Post allPosts = Lookup.postconditions.get(rd);
+			allPosts.post = Logic.andInv(allPosts.post, t);
+			if (((Boolean) ((Properties) o).get("firstPost")).booleanValue())
+			{
+				Term invToPost = (Term) invToPostconditions(o);
+				allPosts.post = Logic.andInv(allPosts.post, invToPost);
+				((Properties) o).put("firstPost", new Boolean(false));
+			}
+			Lookup.postconditions.put(rd, allPosts);
 			break;
 		}
 		return null;
@@ -738,5 +750,40 @@ public class JmlVisitor extends VisitorArgResult{
 		} else
 			return null;
 	}
+	
+	
+	public Object invToPreconditions(Object o)
+	{
+		QuantVariableRef x = Expression.rvar(Ref.sort);
+		QuantVariableRef type = Expression.rvar(Type.sort);
+		QuantVariable[] vars = {x.qvar,type.qvar};
+		Term invTerm = Logic.inv(x, type);
+		Term typeOfTerm = Logic.assignCompat(Heap.var, x, type);
+		Term allocTerm = Logic.isAllocated(Heap.var, x);
+		Term andTerm = Logic.andInv(allocTerm, typeOfTerm);
+		Term implTerm = Logic.implies(andTerm, invTerm);
+		Term forAllTerm = Logic.forall(vars, implTerm);
+		return forAllTerm;
+	}
+		
+	
+
+	public Object invToPostconditions(Object o)
+	{ 
+		QuantVariableRef x = Expression.rvar(Ref.sort);
+		QuantVariableRef type = Expression.rvar(Type.sort);
+		QuantVariable[] vars = {x.qvar,type.qvar}; 
+		Term invTerm = Logic.inv(x, type);
+		Term typeOfTerm = Logic.assignCompat(Heap.var , x, type);
+		Term allocTerm = Logic.isAllocated(Heap.var, x);
+		Term visibleTerm = Logic.isVisibleIn(type, o);
+		Term andTerm = Logic.andInv(allocTerm, typeOfTerm);
+		andTerm = Logic.andInv(andTerm, visibleTerm);
+		Term implTerm = Logic.implies(andTerm, invTerm);
+		Term forAllTerm = Logic.forall(vars, implTerm);
+		return forAllTerm;
+	}
+
+	
 
 }
