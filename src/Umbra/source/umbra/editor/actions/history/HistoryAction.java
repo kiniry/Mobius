@@ -1,7 +1,7 @@
 /*
  * Created on 2005-09-06
  */
-package umbra.history;
+package umbra.editor.actions.history;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspaceRoot;
@@ -23,7 +23,7 @@ import umbra.editor.BytecodeEditor;
  * This class defines an action that adds current bytecode snapshot
  * to the history stack.
  *
- * @author Wojtek W±s
+ * @author Wojtek Wï¿½s
  */
 public class HistoryAction implements IEditorActionDelegate {
 

@@ -19,11 +19,10 @@ import org.eclipse.ui.editors.text.TextEditor;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditor;
 
+import umbra.UmbraHelper;
 import umbra.editor.BytecodeEditor;
 import umbra.editor.ColorManager;
 import umbra.editor.Composition;
-import umbra.editor.IColorValues;
-import umbra.history.IHistory;
 import annot.bcclass.BCClass;
 import annot.bcio.ReadAttributeException;
 
@@ -403,7 +402,7 @@ public class BoogiePLEditor extends TextEditor {
    * -1 if limit has been reached
    */
   public int newHistory() {
-    if (historyNum == IHistory.maxHistory) return -1;
+    if (historyNum == UmbraHelper.MAX_HISTORY) return -1;
     historyNum++;
     return historyNum;
   }

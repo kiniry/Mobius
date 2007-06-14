@@ -1,7 +1,7 @@
 /*
  * Created on 2005-09-06
  */
-package umbra.info;
+package umbra.editor.actions.info;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspace;

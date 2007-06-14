@@ -1,7 +1,7 @@
 /*
  * Created on 2005-09-06
  */
-package umbra.info;
+package umbra.editor.actions.info;
 
 import java.net.URL;
 
@@ -22,7 +22,7 @@ import umbra.UmbraPlugin;
  * The class implements the behaviour in case the User Guide button
  * is pressed.
  *
- * @author Wojtek W±s
+ * @author Wojtek Wï¿½s
  */
 public class UserGuideAction implements IEditorActionDelegate {
 

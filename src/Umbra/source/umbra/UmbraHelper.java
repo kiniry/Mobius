@@ -31,6 +31,10 @@ public final class UmbraHelper {
    */
   public static final String SUBSTITUTE = "{1}";
 
+  /**
+   * The maximal number of history snapshots.
+   */
+  public static final int MAX_HISTORY = 2;
 
   /* *********************************************************************
    * FILE EXTENSIONS

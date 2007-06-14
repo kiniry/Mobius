@@ -18,10 +18,8 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor;
 import org.eclipse.ui.editors.text.TextEditor;
 import org.eclipse.ui.part.FileEditorInput;
-import org.eclipse.ui.texteditor.AbstractDecoratedTextEditor;
 
 import umbra.UmbraHelper;
-import umbra.history.IHistory;
 import annot.bcclass.BCClass;
 import annot.bcio.ReadAttributeException;
 
@@ -402,7 +400,7 @@ public class BytecodeEditor extends TextEditor {
    * @return Current number of versions; -1 if limit has been reached
    */
   public final int newHistory() {
-    if (historyNum == IHistory.maxHistory) return -1;
+    if (historyNum == UmbraHelper.MAX_HISTORY) return -1;
     historyNum++;
     return historyNum;
   }
