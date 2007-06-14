@@ -18,6 +18,8 @@
 \newcommand{\s}{\,}
 \newcommand{\btab}{\begin{tt}\begin{tabbing}}
 \newcommand{\etab}{\end{tabbing}\end{tt}}
+\newcommand{\bcode}{\begin{tt}\begin{small}\begin{tabbing}}
+\newcommand{\ecode}{\end{tabbing}\end{small}\end{tt}}
 %
 \frontmatter          % for the preliminaries
 %
@@ -83,7 +85,7 @@ behavior of type resolution which is done to the program.
 A practical way to model these changes  would be to consider the Security Manager as an Aspect which
 would weave at the cutting points representing type resolution.
 \begin{figure}
-\btab
+\bcode
 pa\=ckage a;\\
 public class Main \{\+\\
   st\=atic \{\+\\
@@ -99,14 +101,14 @@ public class Main \{\+\\
     b.A a = new b.A();\-\\
   \}\-\\
 \}
-\etab
+\ecode
 The output of the program:
-\btab
+\bcode
 Next line will throw an exception\\
 Excepti\=on in thread "main" java.lang.SecurityException: That is true\+\\
 	at a.b.Main\$1.checkPackageAccess(Main.java:9)\\
 	\dots
-\etab
+\ecode
 \caption{An invasive Security Manager}
 \end{figure}
 \subsection{Verification of Aspects}
@@ -138,7 +140,7 @@ when used it can change the behaviour of the JVM at the type access step. The ty
 first call, and
 %
 \begin{figure}
-\btab
+\bcode
 pu\=blic aspect SecurityManager \{\+\\
 
 Set$<$String$>$ s = new HashSet$<$String$>$();\\
@@ -153,26 +155,80 @@ po\=intcut(Object o) : \=target(o) \&\& !within(SecurityManager)\+ \\
 \}\-\\
 \}
   
-\etab
+\ecode
 \caption{An Aspect implementation of the invasive SecurityManager}
 \end{figure}
 \section{The verification framework}
-\subsection{Intro/related work}
-\subsection{Definition of the basic weakest precondition calculus used on the Advices}
+The verification framework we are building in this paper is an adaptation of static
+verification based on weakest precondition calculus for aspects. Here we will consider
+the SecurityManager as an invasive aspect, so we must have a weakest precondition made
+for taking into account Aspects, that what this section is about.
+
+A first approach that was to mind was compiling the Cutting point together with
+the aspect as a predicate transformer. This approach is bad because recursive 
+Aspects won't be computable with this simple technique.
+Instead we choose an approach similar to Kunz's Aspects Hoare logic but les modular because of the nature
+of the SecurityManager which is purely invasive. To make the infringement into the real 
+world more palpable, we also chose a weakest precondition calculus that would be easy to
+implement as part of the tool Jack or the more recent MobiusDirectVCGen.
+
+The annotation language we will choose to use is similar to JML and moreover to Pipa (the extension
+of JML for Aspects), but for our case study we will limit ourselves to that JML-level 0 or 'Pipa-level 0'
+if sucha beast exists. So basically no concern about behavioural specifications, but rather we will use
+the precondition (requires), framecondition (assignable) and postcondition with the same semantic that 
+was specified in Pipa. This semantic bring differences, especially on the level of ensures of 
+JML methods specifications. We advocate that JML's semantic is not expressive enough and the latter one
+should be used uniformly for the postcondition specifications in our verification framework.
+
+Our approach is not modular in essence: they are made out of three steps.
+First all the advices have to be {\it compiled}: the weakest precondition calculus
+will be parametized with their definition.
+After, the program will be verified using this parametized weakest precondition Calculus.
+
+\subsection{Definition of the predicate transformer compilation}
 
 The base weakest precondition calculus is a standard one. Here we define it
 for the instructions: 
-static_call();
-dyn_call();
-var_decl
-if(){
+\begin{figure}
+\begin{small}\begin{verbatim}
+static\_call();
+dyn\_call();
+var\_decl
+if(b){
 }
+else {
+}
+while (b) {
+}
+return v
 static { }
 { }
 String_lit
 throw
+\end{verbatim}
+\end{small}
+\caption{The base language}
+\end{figure}
+The aspect are compiled into a list of predicate transformer.
+The predicate transformers associated with an advice is similar to the weakest precondition
+clause toward an invasive method call i.e. a method call that would be able to modify local variables
+as well as the other program variables.
 
-\subsection{Definition of the compilation of the Aspects to a predicate transformer}
+One of the amusing fact about this approach is that the weakest precondition calculus is parametized by a new 
+semantic which is given by the aspects.
+
+General form of the final wp rule:
+\bcode
+
+wp\_weaver \= (stmt, (stmt ==> pt) :: aspects, post) = \\
+\>wp\_weaver (stmt, aspects, (pt post))\\
+wp\_weaver (stmt, nil, post) =  post\\
+
+wp (stmt1; stmt2, post) = \\
+\> wp\_\=weaver(stmt1; stmt2, befores, \\
+ \>\>      wp(stmt1, wp(stmt2, wp\_weaver(stmt1; stmt2, afters, post))\\
+\ecode
+where befores, arounds and afters are the compiled predicate
 \subsection{Definition of the weakest precondition calculus on the programs}
 \subsection{Proof of Correctness}
 %
