@@ -70,7 +70,7 @@ BEGIN
 
   sequence_of_sets_have_no_side_effects : LEMMA % :-)
     FORALL (p : Program, a : Class, m : Method, c  : Stmt, t : Transition) :
-      assertions_have_no_side_effects(p) IMPLIES
+      well_behaved_Program(p) IMPLIES
       classes(p)(a) IMPLIES
       methods(a)(m) IMPLIES
       set_subterm_AP(update_vars(t), m) IMPLIES

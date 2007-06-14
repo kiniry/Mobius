@@ -107,23 +107,24 @@ BEGIN
     FORALL (mp : MonitoredProgram, ap : Program)
            (sMP : MPState, sAP : APState)(vn : string, v : Val) :
       related_states(mp, ap)(sMP, sAP) IMPLIES
-        MP_modeled?(mp)(update_state_MP(update(vn, v), sMP),
-                        update_state_AP(update(vn, v), sAP))
+        MP_modeled?(mp)(update_PState(sMP, update(vn, v)(pstate(sMP))),
+                        update_PState(sAP, update(vn, v)(pstate(sAP))))
 
   MP_modeled_implies_cp_not_halted : LEMMA % :-)
     FORALL (mp : MonitoredProgram, sMP : MPState, sAP : APState) :
       MP_modeled?(mp)(sMP, sAP) IMPLIES
       NOT up?(ex(pstate(sAP))) IMPLIES
         NOT cp(astate(sMP)) = halted
-
-  % NOTE: If cp(astate(sMP)) = halted, upd must leave the JML exception in sAP
+ 
+  % TODO: Rephrase this lemma
+  % If cp(astate(sMP)) = halted, upd must leave the JML exception in sAP
   MP_modeled_preserved_by_update2 : LEMMA % :-)
     FORALL (mp : MonitoredProgram, ap : Program)
            (sMP : MPState, sAP : APState)(upd : [PState -> PState]) :
       related_states(mp, ap)(sMP, sAP) IMPLIES
       NOT up?(ex(pstate(sAP))) IMPLIES
-        MP_modeled?(mp)(update_state_MP(upd, sMP),
-                        update_state_AP(upd, sAP))
+        MP_modeled?(mp)(update_PState(sMP, upd(pstate(sMP))),
+                        update_PState(sAP, upd(pstate(sAP))))
 
   MP_modeled_implies_same_num_eval : LEMMA % :-)
     FORALL (mp : MonitoredProgram, ap : Program)
@@ -147,14 +148,14 @@ BEGIN
       related_states(mp, ap)(sMP1, sAP1) IMPLIES
       NOT up?(ex(pstate(sMP1))) IMPLIES
       (FORALL (v1, v2 : Val, tau1 : MPState, tau2 : APState) :
-        (deriv_expr_rec_MP(n1)(mp)(assertion, sMP1, v1, tau1)(n1 - 1) 
+        (deriv_expr_rec(n1)(mp)(assertion, sMP1, v1, tau1)(n1 - 1) 
           IMPLIES sMP1 = tau1) AND
-        (deriv_expr_rec_AP(n2)(ap)(assertion, sAP1, v1, tau2)(n2 - 1)
+        (deriv_expr_rec(n2)(ap)(assertion, sAP1, v1, tau2)(n2 - 1)
           IMPLIES sAP1 = tau2) AND
         v1 = v2) IMPLIES
-      check_assertion(mp)(assertion, sMP1, sMP2)(n1)(deriv_expr_rec_MP(n1))
+      check_assertion(mp)(assertion, sMP1, sMP2)(n1)(deriv_expr_rec(n1))
       IMPLIES
-      check_assertion(ap)(assertion, sAP1, sAP2)(n2)(deriv_expr_rec_AP(n2))
+      check_assertion(ap)(assertion, sAP1, sAP2)(n2)(deriv_expr_rec(n2))
       IMPLIES
         MP_modeled?(mp)(sMP2, sAP2)
 
@@ -168,10 +169,10 @@ BEGIN
       classes(program(mp))(c) IMPLIES
       methods(c)(m1) IMPLIES
       m2 = ann_method(mp)(m1) IMPLIES
-      on_method_entry_MP(mp, m1, a, sMP1, sMP2, n1, bounded_deriv_stmt_rec_MP(n1),
-                         bounded_deriv_expr_rec_MP(n1)) IMPLIES
-      on_method_entry_AP(ap, m2, a, sAP1, sAP2, n2, bounded_deriv_stmt_rec_AP(n2),
-                         bounded_deriv_expr_rec_AP(n2)) IMPLIES
+      on_method_entry_MP(mp, m1, a, sMP1, sMP2, n1, bounded_deriv_stmt_rec(n1),
+                         bounded_deriv_expr_rec(n1)) IMPLIES
+      on_method_entry_AP(ap, m2, a, sAP1, sAP2, n2, bounded_deriv_stmt_rec(n2),
+                         bounded_deriv_expr_rec(n2)) IMPLIES
         MP_modeled?(mp)(sMP2, sAP2)
 
   on_method_entry_for_same_method_equivalence  : LEMMA
@@ -179,10 +180,10 @@ BEGIN
            (sMP1, sMP2 : MPState, sAP1, sAP2 : APState, m : Method,
             a : Val, n1, n2 : nat) :
       related_states(mp, ap)(sMP1, sAP1) IMPLIES
-      on_method_entry_MP(mp, m, a, sMP1, sMP2, n1, bounded_deriv_stmt_rec_MP(n1),
-                         bounded_deriv_expr_rec_MP(n1)) IMPLIES
-      on_method_entry_AP(ap, m, a, sAP1, sAP2, n2, bounded_deriv_stmt_rec_AP(n2),
-                         bounded_deriv_expr_rec_AP(n2)) IMPLIES
+      on_method_entry_MP(mp, m, a, sMP1, sMP2, n1, bounded_deriv_stmt_rec(n1),
+                         bounded_deriv_expr_rec(n1)) IMPLIES
+      on_method_entry_AP(ap, m, a, sAP1, sAP2, n2, bounded_deriv_stmt_rec(n2),
+                         bounded_deriv_expr_rec(n2)) IMPLIES
         MP_modeled?(mp)(sMP2, sAP2)
 
 

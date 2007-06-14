@@ -53,16 +53,9 @@ BEGIN
        gvs : Store
     #]
 
-  is_ghost(vn : Name, sigma : MPState) : boolean =
-    NOT Bottom?(gvs(sigma)(vn))
-
-  lookup(vn : Name, sigma : MPState) : Val =
-    IF is_local(vn, pstate(sigma))
-    THEN lookup_local(vn, pstate(sigma))
-    ELSIF is_field(vn, pstate(sigma))
-    THEN lookup_field(vn, pstate(sigma))
-    ELSE gvs(sigma)(vn)
-    ENDIF
+  IMPORTING SemanticsTypes[Name, MonitoredProgram, MPState, 
+                           LAMBDA (s : MPState) : pstate(s),
+                           LAMBDA (s : MPState) : gvs(s)]
 
   wf_state(mp : MonitoredProgram)(sigma : MPState) : boolean =
     wf_AState(mva(mp))(astate(sigma)) AND
@@ -70,33 +63,20 @@ BEGIN
     FORALL (vn : Name) :
       is_ghost(vn, sigma) IFF var_names(getGhostDecls(program(mp)))(vn)
 
+  update_PState : (update_PState_type) =
+    LAMBDA (s : MPState, pst : PState) : s WITH [pstate := pst]
 
-  IMPORTING SemanticsTypes[Name, MonitoredProgram, MPState, 
-                           LAMBDA (s : MPState) : pstate(s)]
+  update_GhostVars : (update_GhostVars_type) =
+    LAMBDA (s : MPState, st : Store) : s WITH [gvs := st]
 
-  update_state_MP : (update_FullState_type) =
-    LAMBDA (upd : [PState -> PState], s : MPState) :
-      s WITH [pstate := upd(pstate(s))]
-
-  IMPORTING SemanticsCommon[Name, MonitoredProgram, MPState, 
-                            LAMBDA (s : MPState) : pstate(s),
-                            update_state_MP]
+  IMPORTING SemanticsJML[Name, MonitoredProgram, MPState,
+                         LAMBDA (mp : MonitoredProgram) : program(mp),
+                         LAMBDA (s : MPState) : pstate(s),
+                         LAMBDA (s : MPState) : gvs(s),
+                         update_PState,
+                         update_GhostVars]
 
   % Instantiation of its semantics
-
-  execute_set_MP : (execute_set_type) =
-    LAMBDA (mp : MonitoredProgram, vn : Name, e : Expr, s1, s2 : MPState, 
-            n : nat,
-            deriv_stmt_rec : deriv_stmt_rec_type(n),
-            deriv_expr_rec : deriv_expr_rec_type(n)) :
-      n > 0 AND
-      EXISTS (tau : MPState, v : Val) :
-        deriv_expr_rec(n)(mp)(e, s1, v, tau)(n - 1) AND
-        s2 = IF up?(ex(pstate(tau)))
-             THEN tau
-             ELSE tau WITH [gvs := gvs(tau) WITH [vn := v]]
-             ENDIF AND
-        pstate(s1) = pstate(s2)
 
   on_method_MVA(etype : EventType)
                (mp : (wf_MP), md : Method, s : (wf_state(mp))) : AState =
@@ -113,83 +93,37 @@ BEGIN
             n : nat,
             deriv_stmt_rec : deriv_stmt_rec_type(n),
             deriv_expr_rec : deriv_expr_rec_type(n)) :
-    wf_MP(mp) AND
-    wf_state(mp)(s1) AND
-    % This will block the MP if the MVA reaches halted
     NOT cp(astate(s1)) = halted AND
     astate(s2) = on_method_MVA(Entry)(mp, md, s1)  AND
-    EXISTS (m1, m2, m3 : nat, tau1, tau2 : MPState, inv : Expr) :
-      n = m1 + m2 + m3 + 1 AND
-      inv = lookup_inv(program(mp), a) AND
-      check_assertion(mp)(inv, s1, tau1)(m1)(deriv_expr_rec(m1)) AND
-      check_assertion(mp)(pre(md), tau1, tau2)(m2)(deriv_expr_rec(m2)) AND
-      deriv_stmt_rec(n)(mp)(pre_set(md), tau2, s2)(m3) AND
-      st(pstate(s1)) = st(pstate(s2))
-      
+    on_method_entry(mp, md, a, s1, s2, n, deriv_stmt_rec, deriv_expr_rec)
+
   on_method_exit_normal_MP : (on_method_event_type) =
     LAMBDA (mp : MonitoredProgram, md : Method, a : Val, s1, s2 : MPState,
             n : nat,
             deriv_stmt_rec : deriv_stmt_rec_type(n),
             deriv_expr_rec : deriv_expr_rec_type(n)) :
-    wf_MP(mp) AND
-    wf_state(mp)(s1) AND
     astate(s2) = on_method_MVA(ExitNormal)(mp, md, s1)  AND
-    EXISTS (m1, m2, m3 : nat, tau1, tau2 : MPState, inv : Expr) :
-      n = m1 + m2 + m3 + 1 AND
-      deriv_stmt_rec(n)(mp)(post_set(md), s1, tau1)(m1) AND
-      check_assertion(mp)(post(md), tau1, tau2)(m2)(deriv_expr_rec(m2)) AND
-      inv = lookup_inv(program(mp), a) AND
-      check_assertion(mp)(inv, tau2, s2)(m3)(deriv_expr_rec(m3)) AND
-      st(pstate(s1)) = st(pstate(s2))
+    on_method_exit_normal(mp, md, a, s1, s2, n, deriv_stmt_rec, deriv_expr_rec)
 
   on_method_exit_exceptional_MP : (on_method_event_type) =
     LAMBDA (mp : MonitoredProgram, md : Method, a : Val, s1, s2 : MPState,
             n : nat,
             deriv_stmt_rec : deriv_stmt_rec_type(n),
             deriv_expr_rec : deriv_expr_rec_type(n)) :
-    wf_MP(mp) AND
-    wf_state(mp)(s1) AND
     astate(s2) = on_method_MVA(ExitExceptional)(mp, md, s1)  AND
-    EXISTS (m1, m2 : nat, tau1, tau2 : MPState, inv : Expr) :
-      n = m1 + m2 + 1 AND
-      deriv_stmt_rec(n)(mp)(exc_set(md), s1, tau1)(m1) AND
-      inv = lookup_inv(program(mp), a) AND
-      check_assertion(mp)(inv, tau1, s2)(m2)(deriv_expr_rec(m2)) AND
-      st(pstate(s1)) = st(pstate(s2))
-
+    on_method_exit_exceptional(mp, md, a, s1, s2, n, 
+                               deriv_stmt_rec, deriv_expr_rec)
 
   IMPORTING Semantics[Name, MonitoredProgram, MPState, 
                       LAMBDA (mp : MonitoredProgram) : program(mp),
                       LAMBDA (s : MPState) : pstate(s),
-                      lookup,
-                      update_state_MP,
-                      execute_set_MP,
+                      LAMBDA (s : MPState) : gvs(s),
+                      update_PState,
+                      execute_set,
                       execute_CaseJML,
                       on_method_entry_MP,
                       on_method_exit_normal_MP,
                       on_method_exit_exceptional_MP]
-
-  deriv_expr_rec_MP(n : nat) : deriv_expr_type(n) =
-    LAMBDA (p : MonitoredProgram)
-           (e : Expr, sigma1 : MPState, v : Val,  sigma2 : MPState)
-           (k : below(n)) :
-      deriv_expr(p)(e, sigma1, v, sigma2)(k)
-
-  deriv_stmt_rec_MP(n : nat) : deriv_stmt_type(n) =
-    LAMBDA (p : MonitoredProgram)
-           (c : Stmt, sigma1, sigma2 : MPState)(k : below(n)) :
-      deriv_stmt(p)(c, sigma1, sigma2)(k)
-
-  bounded_deriv_expr_rec_MP(i : nat) : deriv_expr_rec_type(i) =
-    LAMBDA (n : below(i))(p : MonitoredProgram)
-           (e : Expr, sigma1 : MPState, v : Val,  sigma2 : MPState)
-           (k : below(n)) :
-      deriv_expr_rec_MP(n)(p)(e, sigma1, v, sigma2)(k)
-
-  bounded_deriv_stmt_rec_MP(i : nat) : deriv_stmt_rec_type(i) =
-    LAMBDA (n : below(i))(p : MonitoredProgram)
-           (c : Stmt, sigma1, sigma2 : MPState)(k : below(n)) :
-      deriv_stmt_rec_MP(n)(p)(c, sigma1, sigma2)(k)
 
 
   initial_MP_state(mp : MonitoredProgram) : MPState =
@@ -210,16 +144,17 @@ BEGIN
 
   % Well-formedness properties
 
-  wf_update_state_MP : LEMMA % :-)
-    FORALL (mp : MonitoredProgram, s1, s2 : MPState, 
-            upd : [PState[Name] -> PState[Name]]) :
-      wf_state(mp)(s1) IMPLIES
-      update_state_MP(upd, s1) = s2 IMPLIES
-      (FORALL (vn : Name) :
-        (is_field(vn, s1) IFF is_field(vn, s2)) AND
-        (is_local(vn, s1) IFF is_local(vn, s2)) AND
-        (is_ghost(vn, s1) IFF is_ghost(vn, s2))) IMPLIES
-        wf_state(mp)(s2)
+  % TODO: Revise this lemma
+%   wf_update_state_MP : LEMMA % :-)
+%     FORALL (mp : MonitoredProgram, s1, s2 : MPState, 
+%             upd : [PState[Name] -> PState[Name]]) :
+%       wf_state(mp)(s1) IMPLIES
+%       update_state_MP(upd, s1) = s2 IMPLIES
+%       (FORALL (vn : Name) :
+%         (is_field(vn, pstate(s1)) IFF is_field(vn, pstate(s2))) AND
+%         (is_local(vn, pstate(s1)) IFF is_local(vn, pstate(s2))) AND
+%         (is_ghost(vn, s1) IFF is_ghost(vn, s2))) IMPLIES
+%         wf_state(mp)(s2)
 
   wf_initial_MP_state : LEMMA
     FORALL (mp : MonitoredProgram) :
@@ -245,5 +180,6 @@ BEGIN
       wf_MP(mp) IMPLIES
       wf_state(program(mp))(pstate(s)) IMPLIES
         wf_PSt(mva(mp))(st(pstate(s)))
+
 
 END MonitoredProgramSemantics

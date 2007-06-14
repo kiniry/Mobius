@@ -1,6 +1,7 @@
 % NOTE: It is better to decouple the initial state of a program from the 
 % semantics of programs without annotations to avoid importing the other
-% instantiation and then having to disambiaguate which instantiation we refer to
+% instantiation and then having to disambiaguate which instantiation we refer 
+% to when we use deriv_expr for programs.
 ProgramInitialState[Name : TYPE+] : THEORY
 BEGIN
 
@@ -38,9 +39,12 @@ END ProgramInitialState
 ProgramSemantics[Name : TYPE+] : THEORY
 BEGIN
 
+  % In a program without annotations, the ghost variables will never be accessed
+  % so it doesn't matter what we provide as gvs.
   IMPORTING State[Name],
             ProgramInitialState,
-            SemanticsTypes[Name, Program, PState, id]
+            SemanticsTypes[Name, Program, PState, id, 
+                           LAMBDA (s : PState)(n : Name) : Bottom]
 
   execute_set : (execute_set_type) =
     LAMBDA (p : Program, vn : Name, e : Expr, s1, s2 : PState, n : nat,
@@ -50,8 +54,7 @@ BEGIN
 
   execute_CaseJML : (execute_CaseJML_type) =
     LAMBDA (p : Program, bs : list[[Expr, Stmt]], s1, s2 : PState,  n : nat,
-            deriv_stmt_rec : deriv_stmt_rec_type(n),
-            deriv_expr_rec : deriv_expr_rec_type(n)) :
+            deriv_stmt_rec : deriv_stmt_rec_type(n)) :
       s1 = s2
 
   on_method_event : (on_method_event_type) =
@@ -60,8 +63,9 @@ BEGIN
             deriv_expr : deriv_expr_rec_type(n)) :
       s1 = s2
 
-  IMPORTING Semantics[Name, Program, PState, id, id, lookup,
-                      LAMBDA (upd : [PState -> PState], s : PState) : upd(s),
+  IMPORTING Semantics[Name, Program, PState, id, id, 
+                      LAMBDA (s : PState)(n : Name) : Bottom, lookup, 
+                      LAMBDA (s : PState, pst : PState) : pst,
                       execute_set, execute_CaseJML,
                       on_method_event, on_method_event, on_method_event]
 
