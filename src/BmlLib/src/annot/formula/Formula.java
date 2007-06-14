@@ -388,6 +388,23 @@ public class Formula extends Expression {
 		return _copy;
 	}
 
+	public String printRoot(BMLConfig conf) {
+		switch (connector) {
+		case Connector.AND:
+			return "&&";
+		case Connector.OR:
+			return "||";
+		case Connector.NOT:
+			return "!";
+		case Connector.EQUIV:
+			return "<==>";
+		case Connector.IMPLIES:
+			return "==>";
+		default:
+			return "?";
+		}
+	}
+	
 	public String printCode1(BMLConfig conf) {
 		String con = "";
 		if (connector == Connector.AND) {
@@ -400,15 +417,14 @@ public class Formula extends Expression {
 			con = " ==> ";
 		}
 		if (connector == Connector.NOT) {
-			con = " ! ";
+			con = "!";
 		}
 		if (connector == Connector.EQUIV) {
 			con = " <==> ";
 		}
 		Expression[] subformulas = getSubExpressions();
 		if (subformulas.length == 1) {
-			// XXX czy "!" nie powinien byæ przed nawiasem?
-			return "(" + con + subformulas[0].printCode(conf) + ")";
+			return con + subformulas[0].printCode(conf);
 		} else {
 			String s = "" + subformulas[0].printCode(conf);
 			for (int i = 1; i < subformulas.length; i++) {

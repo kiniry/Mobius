@@ -499,7 +499,7 @@ public class ArithmeticExpression extends Expression {
 		}
 		Expression[] subExpr = getSubExpressions();
 		if (getSubExpressions() == null) {
-			System.out.println("E R R O R ! ! !");
+			System.err.println("E R R O R ! ! !");
 //			return " ERR ";
 		}
 		if (getSubExpressions().length == 1) {

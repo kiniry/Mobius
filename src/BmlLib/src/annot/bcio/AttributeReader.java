@@ -145,7 +145,7 @@ public class AttributeReader {
 			System.out.println("...done");
 			return scp;
 		} catch (IOException e) {
-			System.out.println("error in reading cp2");
+			System.err.println("error in reading cp2");
 			return null;
 		}
 	}

@@ -25,7 +25,7 @@ public class ExsuresTable implements BCAttribute {
 		String code = "";
 		for (int i=0; i<excPostcondition.length; i++)
 			if (excPostcondition[i].getPostcondition() != Predicate0Ar.FALSE)
-				code += " *  \\exsures " + excPostcondition[i].printCode(conf) + "\n";
+				code += " *  exsures " + excPostcondition[i].printCode(conf) + "\n";
 		return code;
 	}
 	

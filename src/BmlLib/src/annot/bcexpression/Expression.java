@@ -110,8 +110,20 @@ public abstract class Expression {
 	
 	// abstract
 	public String toString() {
-		System.out.println("ERROR: called removed method toString().");
+		System.err.println("ERROR: called removed method toString().");
 		throw new NullPointerException();
+	}
+	
+	/**
+	 * In debug mode (conf.goControlPrint == true),
+	 * prints root symbol for this exrpessions.
+	 * Should be redefined in some frequently used subclasses.
+	 * 
+	 * @param conf - see {@link BMLConfig}
+	 * @return string representation of root of the expression.
+	 */
+	public String printRoot(BMLConfig conf) {
+		return "";
 	}
 	
 	/**
@@ -129,7 +141,7 @@ public abstract class Expression {
 		String w = conf.wciecie;
 		conf.wciecie = w + "   ";
 		if (length > 0)
-			str += "(";
+			str += "(" + printRoot(conf) + ", " + priority;
 		for (int i=0; i<length; i++) {
 			if (i > 0)
 				str += ", ";
@@ -142,7 +154,7 @@ public abstract class Expression {
 	}
 	
 	// position in current line, for line breaking
-	static int line_pos = 0;
+	// static int line_pos = 0; moved to BMLConfig
 	
 	/**
 	 * Prints expression as a whole attribute
@@ -163,7 +175,7 @@ public abstract class Expression {
 	 * @return string representation of expression
 	 */ 
 	public String printLine(BMLConfig conf, int usedc) {
-		line_pos = usedc;
+		conf.line_pos = usedc;
 		conf.root_pri = MAX_PRI;
 		conf.wciecie = "    ";
 		conf.expr_depth = 0;
@@ -180,9 +192,16 @@ public abstract class Expression {
 	private String printCode2(BMLConfig conf) {
 		int rp = conf.root_pri;
 		conf.root_pri = priority;
-		conf.expr_depth++;
-		String str = printCode1(conf);
-		conf.expr_depth--;
+		String str = "";
+		if (rp != priority) {
+			conf.expr_depth++;
+//			str += "{";
+		}
+		str += printCode1(conf);
+		if (rp != priority) {
+			conf.expr_depth--;
+//			str += "}";
+		}
 		if (priority > rp) {
 			String str2 = "";
 			for (int i=0; i<str.length(); i++) {
@@ -216,15 +235,15 @@ public abstract class Expression {
 			conf.goControlPrint = true;
 			return str + "\n" + controlPrint(conf);
 		} else {
-			int old_pos = line_pos;
+			int old_pos = conf.line_pos;
 			String code = printCode2(conf);
 			if (code.lastIndexOf("\n") >= 0)
 				old_pos = -code.lastIndexOf("\n");
 			if ((code.length() < 20) && (old_pos + code.length() > 80)) {
-				line_pos = old_pos = 0;
+				conf.line_pos = old_pos = 0;
 				code = "\n *      " + printCode2(conf);
 			}
-			line_pos = old_pos + code.length();
+			conf.line_pos = old_pos + code.length();
 			return code;
 		}
 	}

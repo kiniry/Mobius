@@ -10,6 +10,7 @@ public class OLD extends JMLExpression {
 
 	public OLD(Expression _left) {
 		super(_left);
+		priority = -1; // always needs parenthness around its argument
 	}
 
 	/* (non-Javadoc)
@@ -40,7 +41,7 @@ public class OLD extends JMLExpression {
 
 	public String printCode1(BMLConfig conf) {
 		Expression expr = getSubExpressions()[0];
-		String s = "old(" + expr.printCode(conf) + ")";
+		String s = "old" + expr.printCode(conf);
 		return s;
 	}
 

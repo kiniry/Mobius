@@ -58,7 +58,7 @@ public class Quantificator extends Expression {
 		/*	if (domain == null) {*/
 			String s = quantifier ;
 			for (int i = 0; i < boundVar.length; i++ ) {
-				 s = s + "  " + boundVar[i].printCode(conf);
+				 s = s + " " + boundVar[i].printCode(conf);
 			}
 			return s + "; ";
 			/*return  "(" + quantifier + "  " + boundVar +  "."+ domain.toString() + ")";*/

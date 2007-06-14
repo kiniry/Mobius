@@ -12,6 +12,7 @@ public class Predicate2Ar extends Predicate {
 	public Predicate2Ar(Expression _term1, Expression _term2,
 			byte _predicateSymbol) {
 		super(_term1, _term2, _predicateSymbol);
+		setPriority();
 	}
 
 	private void setPriority() {
@@ -30,8 +31,31 @@ public class Predicate2Ar extends Predicate {
 		case PredicateSymbol.INSTANCEOF: priority = 6; break;
 		case PredicateSymbol.ODD: priority = 6; break; // co to jest?
 		case PredicateSymbol.SUBTYPE: priority = 1; break; //?
+		default:
+			System.err.println("ERROR (Predicate2Ar.setPriority: unknown predicate symbol");
 		}
 	}
+	
+	public String printRoot(BMLConfig conf) {
+		byte ps = getPredicateSymbol();
+		switch (ps) {
+		case PredicateSymbol.EQ: return "==";
+		case PredicateSymbol.NOTEQ: return "!=";
+		case PredicateSymbol.GRT: return ">";
+		case PredicateSymbol.GRT_uscmp: return ">_cmp";
+		case PredicateSymbol.GRTEQ: return ">=";
+		case PredicateSymbol.GRTEQ_uscmp: return ">=_cmp";
+		case PredicateSymbol.LESS: return "<";
+		case PredicateSymbol.LESS_uscmp: return "<_cmp";
+		case PredicateSymbol.LESSEQ: return "<=";
+		case PredicateSymbol.LESSEQ_uscmp: return "<=_cmp";
+		case PredicateSymbol.INSTANCEOF: return "instanceof";
+		case PredicateSymbol.ODD: return "odd";
+		case PredicateSymbol.SUBTYPE: return "subtype";
+		default: return "?";
+		}
+	}
+
 	
 	public Expression getLeftExpr() {
 		return getSubExpressions()[0];

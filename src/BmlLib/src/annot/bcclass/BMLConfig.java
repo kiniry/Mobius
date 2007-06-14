@@ -28,6 +28,10 @@ public class BMLConfig {
 	// line of expression (sequence of spaces)
 	public String wciecie;
 	
+	// position in current line (for expression.printCode*(),
+	// line breaking)
+	public int line_pos;
+	
 	// depth of currrently displayed expression
 	// in expression tree
 	public int expr_depth;
