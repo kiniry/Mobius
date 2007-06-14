@@ -105,6 +105,11 @@ BEGIN
         ((is_field(vn, s) IMPLIES NOT is_local(vn, s)) AND
          (is_local(vn, s) IMPLIES NOT is_field(vn, s)))
 
+  wf_state_update : LEMMA
+    FORALL(p : Program, s : PState, vn : Name, v : (defined?)) :
+      wf_state(p)(s) IMPLIES
+      wf_Program(p) IMPLIES
+        wf_state(p)(update(vn, v)(s))
 
 END State
 

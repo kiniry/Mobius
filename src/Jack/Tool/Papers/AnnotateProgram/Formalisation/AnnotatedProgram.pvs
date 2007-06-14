@@ -83,8 +83,7 @@ BEGIN
 
   % Well-formedness properties
 
-  % TODO: prove!
-  wf_state_ghost_not_local_or_field : LEMMA
+  wf_state_ghost_not_local_or_field : LEMMA % :-)
     FORALL (p : Program, s : APState, vn : Name) :
       wf_state(p)(s) IMPLIES
       wf_Program(p) IMPLIES
@@ -104,8 +103,14 @@ BEGIN
 %         (is_ghost(vn, s1) IFF is_ghost(vn, s2))) IMPLIES
 %         wf_state(p)(s2)
 
-  % TODO: prove!
-  wf_initial_AP_state : LEMMA
+   wf_update_PState : LEMMA % :-)
+     FORALL (p : Program, s1, s2 : APState, 
+             upd : [PState[Name] -> PState[Name]]) :
+       wf_state(p)(s1) IMPLIES
+       update_PState(s1, upd) = s2 IMPLIES
+         wf_state(p)(s2)
+
+  wf_initial_AP_state : LEMMA % :-)
     FORALL (p : Program) :
       wf_Program(p) IMPLIES wf_state(p)(initial_AP_state(p))
 
