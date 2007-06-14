@@ -13,6 +13,7 @@ import escjava.sortedProver.SortedProverCallback;
 import escjava.sortedProver.SortedProverResponse;
 import escjava.sortedProver.NodeBuilder.SPred;
 import escjava.sortedProver.auflia.AufliaProver;
+import escjava.Main;
 
 public class TrewProver extends AufliaProver
 {
@@ -79,14 +80,14 @@ public class TrewProver extends AufliaProver
 
 	protected String checkProof(SPred formula, String filename)
 	{
+		saveQuery(filename, formula);
+		
 		if (! (new File(filename + ".rw")).canRead())
 			return "proof file for " + filename + " not found";	
 		
-		saveQuery(filename, formula);
-		
-		String args[] = new String[] { "trew", "-t", "prelude.rw", "-q", filename, 
+		String args[] = new String[] { "trew", "-t", "prelude.rw", "-q", filename, "-p",
 								       filename + ".rw" };
-		
+		long time = Main.currentTime();	
 		try {			
 			trew = Runtime.getRuntime().exec(args,null);
 		} catch (IOException x) {
@@ -107,6 +108,8 @@ public class TrewProver extends AufliaProver
 		try {
 			exit =trew.waitFor(); 
 		} catch (InterruptedException e) { }
+
+		System.out.println("proof checking time: " + Main.timeUsed(time));
 			
 		
 		if (exit == 0) {
