@@ -1,46 +1,4 @@
 (Excpt)
-(State
- (IMP_WellFormedProgram_TCC1 0
-  (IMP_WellFormedProgram_TCC1-1 nil 3390732271 3390734855
-   ("" (existence-tcc) nil nil) unfinished nil 46 20 nil nil))
- (wf_state_vars_local_or_field 0
-  (wf_state_vars_local_or_field-1 nil 3390110934 3390732283
-   ("" (skosimp*)
-    (("" (use "wf_program_variables_disjoint") (("" (grind) nil nil))
-      nil))
-    nil)
-   proved
-   ((wf_program_variables_disjoint formula-decl nil WellFormedProgram
-     nil)
-    (Name formal-nonempty-type-decl nil State nil)
-    (Program type-eq-decl nil Program nil)
-    (Class type-eq-decl nil Program nil)
-    (lift type-decl nil lift_adt nil)
-    (Method type-eq-decl nil Program nil)
-    (Stmt type-decl nil Stmt_adt nil)
-    (LocalVarDecl type-eq-decl nil Program nil)
-    (Expr type-decl nil Expr_adt nil)
-    (finite_set type-eq-decl nil finite_sets nil)
-    (FieldDecl type-eq-decl nil Program nil)
-    (JType type-decl nil JType_adt nil)
-    (defined? const-decl "boolean" ValProp nil)
-    (boolean nonempty-type-decl nil booleans nil)
-    (Val type-decl nil Val_adt nil) (member const-decl "bool" sets nil)
-    (getLocalDecls const-decl "finite_set[LocalVarDecl]"
-     ProgramFunctions nil)
-    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
-    (intersection const-decl "set" sets nil)
-    (empty? const-decl "bool" sets nil)
-    (disjoint? const-decl "bool" sets nil)
-    (getGhostDecls const-decl "finite_set[FieldDecl]" ProgramFunctions
-     nil)
-    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
-    (getFieldDecls const-decl "finite_set[FieldDecl]" ProgramFunctions
-     nil)
-    (is_field const-decl "boolean" State nil)
-    (is_local const-decl "boolean" State nil)
-    (wf_state const-decl "boolean" State nil))
-   2322 920 t shostak)))
 (Evaluation
  (eval_TCC1 0
   (eval_TCC1-1 nil 3371189456 3390732283 ("" (termination-tcc) nil nil)

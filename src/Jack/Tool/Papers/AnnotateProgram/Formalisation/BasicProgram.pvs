@@ -1,12 +1,72 @@
-% NOTE: It is better to decouple the initial state of a program from the 
-% semantics of programs without annotations to avoid importing the other
-% instantiation and then having to disambiaguate which instantiation we refer 
-% to when we use deriv_expr for programs.
-ProgramInitialState[Name : TYPE+] : THEORY
+State[Name : TYPE+] : THEORY
 BEGIN
 
-  IMPORTING State[Name],
+  IMPORTING Excpt,
+            WellFormedProgram[Name],
+            Val,
             ValProp
+
+  % A store is a mapping from names to values. Partial mappings are represented
+  % using the value Bottom.
+  Store : TYPE = [Name -> Val]
+
+  % Field and local variables.
+  PSt : TYPE = [# fvs, lvs : Store #]
+
+  PState : TYPE = [# ex : lift[Excpt],
+                     st : PSt #]
+
+  lift_PSt(p : PSt) : PState =
+    (# ex := bottom, st := p #)
+
+  CONVERSION lift_PSt
+
+  is_local(vn : Name, sigma : PState) : boolean =
+    defined?(lvs(st(sigma))(vn))
+
+  is_field(vn : Name, sigma : PState) : boolean =
+    defined?(fvs(st(sigma))(vn))
+
+  lookup_local(vn : Name, sigma : PState) : Val =
+    lvs(st(sigma))(vn)
+
+  lookup_field(vn : Name, sigma : PState) : Val =
+    fvs(st(sigma))(vn)
+
+  update_local(vn : Name, v : Val)(sigma : PState) : PState =
+    (# ex := ex(sigma),
+       st := (# fvs := fvs(st(sigma)),
+                lvs := lvs(st(sigma)) WITH [vn := v] #) #)
+
+  update_field(vn : Name, v : Val)(sigma : PState) : PState =
+    (# ex := ex(sigma),
+       st := (# fvs := fvs(st(sigma)) WITH [vn := v],
+                lvs := lvs(st(sigma)) #) #)
+
+  lookup(vn : Name, sigma : PState) : Val =
+    IF is_local(vn, sigma)
+    THEN lookup_local(vn, sigma)
+    ELSE lookup_field(vn, sigma)
+    ENDIF
+
+  update(vn : Name, v : Val)(sigma : PState) : PState =
+    IF is_local(vn, sigma)
+    THEN update_local(vn, v)(sigma)
+    ELSE update_field(vn, v)(sigma)
+    ENDIF
+
+  val2int(v : Val) : int =
+    IF Int?(v)
+    THEN i(v)
+    ELSE 0
+    ENDIF
+
+  val2bool(v : Val) : bool =
+    IF Bool?(v)
+    THEN b(v)
+    ELSE FALSE
+    ENDIF
+
 
   initial_Program_state(p : Program) : PState =
     (# ex := bottom,
@@ -26,12 +86,27 @@ BEGIN
          #)
     #)
 
+  % Well formed state definition
+  wf_state(p : Program)(s : PState) : boolean =
+    FORALL (vn : Name) :
+      (is_field(vn, s) IFF var_names(getFieldDecls(p))(vn)) AND
+      (is_local(vn, s) IFF var_names(getLocalDecls(p))(vn))
+
+  % Well formed state properties
+
   wf_initial_Program_state : LEMMA % :-)
     FORALL (p : Program) :
       wf_Program(p) IMPLIES wf_state(p)(initial_Program_state(p))
 
+  wf_state_vars_local_or_field : LEMMA % :-)
+    FORALL (p : Program, s : PState, vn : Name) :
+      wf_state(p)(s) IMPLIES
+      wf_Program(p) IMPLIES
+        ((is_field(vn, s) IMPLIES NOT is_local(vn, s)) AND
+         (is_local(vn, s) IMPLIES NOT is_field(vn, s)))
 
-END ProgramInitialState
+
+END State
 
 
 % Semantics of Java programs without annotations. This theory is not used
@@ -42,7 +117,6 @@ BEGIN
   % In a program without annotations, the ghost variables will never be accessed
   % so it doesn't matter what we provide as gvs.
   IMPORTING State[Name],
-            ProgramInitialState,
             SemanticsTypes[Name, Program, PState, id, 
                            LAMBDA (s : PState)(n : Name) : Bottom]
 
@@ -64,7 +138,7 @@ BEGIN
       s1 = s2
 
   IMPORTING Semantics[Name, Program, PState, id, id, 
-                      LAMBDA (s : PState)(n : Name) : Bottom, lookup, 
+                      LAMBDA (s : PState)(n : Name) : Bottom,
                       LAMBDA (s : PState, pst : PState) : pst,
                       execute_set, execute_CaseJML,
                       on_method_event, on_method_event, on_method_event]

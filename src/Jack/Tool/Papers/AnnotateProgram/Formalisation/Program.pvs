@@ -32,6 +32,17 @@ BEGIN
 END JType
 
 
+Excpt : DATATYPE
+BEGIN
+
+  Throwable : Throwable?
+  NullPointer : NullPointer?
+  JMLExc : JMLExc?
+
+
+END Excpt
+
+
 % Numerical expressions. They are parameterized with a variable name to handle
 %  the case of variable evaluation.
 NumExpr[Name : TYPE+] : DATATYPE
@@ -176,7 +187,7 @@ BEGIN
 END Program
 
 
-% Functions that manipulate programs
+% Functions that manipulate programs or program parts
 ProgramFunctions[Name : TYPE+] : THEORY
 BEGIN
 
@@ -195,14 +206,6 @@ BEGIN
   getGhostDecls(p : Program) : finite_set[FieldDecl] =
      {g : FieldDecl | EXISTS (c : Class) :  classes(p)(c) AND ghost_vars(c)(g)}
 
-
-  % TODO: one definition should be enough
-  % maybe change update_stack to get a program instead of a set of local vars
-  get_LocalVarDecl(n : Name, lvds : set[LocalVarDecl]) : lift[LocalVarDecl] =
-    IF EXISTS (lv : LocalVarDecl) : lvds(lv) AND name(lv) = n
-    THEN up(choose({lv : LocalVarDecl | lvds(lv) AND name(lv) = n}))
-    ELSE bottom
-    ENDIF
 
   get_LocalDecl(n : Name, p : Program) : lift[LocalVarDecl] =
     LET ng = {l : LocalVarDecl | getLocalDecls(p)(l) AND name(l) = n}

@@ -43,8 +43,7 @@ MonitoredProgramSemantics[CP, Name : TYPE+] : THEORY
 BEGIN
 
   IMPORTING MonitoredProgram[CP, Name],
-            MVASemantics[CP, Name],
-            ProgramInitialState[Name]
+            MVASemantics[CP, Name]
 
   % Monitored Program State
   MPState : TYPE =

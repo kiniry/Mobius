@@ -1,8 +1,7 @@
 AnnotatedProgramSemantics[Name : TYPE+] : THEORY
 BEGIN
 
-  IMPORTING State[Name],
-            ProgramInitialState[Name]
+  IMPORTING State[Name]
 
   APState : TYPE = [# gvs : Store, pstate : PState #]
 

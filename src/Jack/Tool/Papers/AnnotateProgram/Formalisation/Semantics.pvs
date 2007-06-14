@@ -1,103 +1,3 @@
-Excpt : DATATYPE
-BEGIN
-
-  Throwable : Throwable?
-  NullPointer : NullPointer?
-  JMLExc : JMLExc?
-
-
-END Excpt
-
-
-State[Name : TYPE+] : THEORY
-BEGIN
-
-  IMPORTING Excpt,
-            WellFormedProgram[Name],
-            Val,
-            ValProp
-
-  % A store is a mapping from names to values. Partial mappings are represented
-  % using the value Bottom.
-  Store : TYPE = [Name -> Val]
-
-  % Field and local variables.
-  PSt : TYPE = [# fvs, lvs : Store #]
-
-  PState : TYPE = [# ex : lift[Excpt],
-                     st : PSt #]
-
-  lift_PSt(p : PSt) : PState =
-    (# ex := bottom, st := p #)
-
-  CONVERSION lift_PSt
-
-  is_local(vn : Name, sigma : PState) : boolean =
-    defined?(lvs(st(sigma))(vn))
-
-  is_field(vn : Name, sigma : PState) : boolean =
-    defined?(fvs(st(sigma))(vn))
-
-  lookup_local(vn : Name, sigma : PState) : Val =
-    lvs(st(sigma))(vn)
-
-  lookup_field(vn : Name, sigma : PState) : Val =
-    fvs(st(sigma))(vn)
-
-  update_local(vn : Name, v : Val)(sigma : PState) : PState =
-    (# ex := ex(sigma),
-       st := (# fvs := fvs(st(sigma)),
-                lvs := lvs(st(sigma)) WITH [vn := v] #) #)
-
-  update_field(vn : Name, v : Val)(sigma : PState) : PState =
-    (# ex := ex(sigma),
-       st := (# fvs := fvs(st(sigma)) WITH [vn := v],
-                lvs := lvs(st(sigma)) #) #)
-
-  lookup(vn : Name, sigma : PState) : Val =
-    IF is_local(vn, sigma)
-    THEN lookup_local(vn, sigma)
-    ELSE lookup_field(vn, sigma)
-    ENDIF
-
-  update(vn : Name, v : Val)(sigma : PState) : PState =
-    IF is_local(vn, sigma)
-    THEN update_local(vn, v)(sigma)
-    ELSE update_field(vn, v)(sigma)
-    ENDIF
-
-  val2int(v : Val) : int =
-    IF Int?(v)
-    THEN i(v)
-    ELSE 0
-    ENDIF
-
-  val2bool(v : Val) : bool =
-    IF Bool?(v)
-    THEN b(v)
-    ELSE FALSE
-    ENDIF
-
-
-  % Well formed states definition
-  wf_state(p : Program)(s : PState) : boolean =
-    FORALL (vn : Name) :
-      (is_field(vn, s) IFF var_names(getFieldDecls(p))(vn)) AND
-      (is_local(vn, s) IFF var_names(getLocalDecls(p))(vn))
-
-  % Well formed states properties
-
-  wf_state_vars_local_or_field : LEMMA % :-)
-    FORALL (p : Program, s : PState, vn : Name) :
-      wf_state(p)(s) IMPLIES
-      wf_Program(p) IMPLIES
-        ((is_field(vn, s) IMPLIES NOT is_local(vn, s)) AND
-         (is_local(vn, s) IMPLIES NOT is_field(vn, s)))
-
-
-END State
-
-
 Evaluation[Name : TYPE+, 
            FullState : TYPE,
            (IMPORTING State) pstate : [FullState -> PState[Name]],
@@ -234,23 +134,21 @@ BEGIN
 
   IMPORTING Evaluation[Name, FullState, pstate, lookup]
 
-  % TODO: adapt (see Marieke's comment)
-  update_stack(this_val : Val, param_name : Name, param_val : Val, 
-               lvds : set[LocalVarDecl], s : FullState) : FullState %=
-%     LET update_state(sP : PState) =
-%       sP WITH [st := st(sP) 
-%            WITH [lvs := LAMBDA (n : Name) :
-%              LET lv = get_LocalVarDecl(n, lvds) IN
-%              IF n = This
-%              THEN this_val
-%              ELSIF n = param_name
-%              THEN param_val
-%              ELSIF up?(lv)
-%              THEN default_value(jtype(down(lv)))
-%              ELSE lvs(st(sP))(n)
-%              ENDIF]]
-%     IN
-%       update_FullState(update_state, s)
+  update_stack(this_val : Val, arg : LocalVarDecl, param_val : Val,
+               lvds : finite_set[LocalVarDecl], s : FullState) : FullState =
+    LET new_pstate =
+      pstate(s) WITH [st := st(pstate(s))
+                  WITH [lvs := LAMBDA(n : Name) :
+                    IF n = This
+                    THEN this_val
+                    ELSIF n = name(arg)
+                    THEN param_val
+                    ELSIF var_names(lvds)(n)
+                    THEN default_value(jtype(choose({l : LocalVarDecl | 
+                                                     name(l) = n AND lvds(l)})))
+                    ELSE lvs(st(pstate(s)))(n)
+                    ENDIF]]
+    IN update_PState(s, new_pstate)
 
 
   deriv_expr(p : FullProgram)
@@ -328,7 +226,7 @@ BEGIN
           % give a name the value of the argument before the call,
           old_val_arg = lookup_local(name(arg(md)), pstate(tau4)) AND
           % update the value of this, the argument and initialize the local vars
-          tau5 = update_stack(a, name(arg(md)), pv, lvars(md), tau4) AND
+          tau5 = update_stack(a, arg(md), pv, lvars(md), tau4) AND
           % execute the body
           deriv_stmt(p)(body(md), tau5, tau6)(m4) AND
           % evaluate the result
@@ -447,16 +345,33 @@ BEGIN
 
   % MH: should this not be n : upto(i)
   bounded_deriv_expr_rec(i : nat) : deriv_expr_rec_type(i) =
-    LAMBDA (n : below(i))(p : FullProgram)
+    LAMBDA (n : upto(i))(p : FullProgram)
            (e : Expr, sigma1 : FullState, v : Val,  sigma2 : FullState)
            (k : below(n)) :
       deriv_expr_rec(n)(p)(e, sigma1, v, sigma2)(k)
 
   bounded_deriv_stmt_rec(i : nat) : deriv_stmt_rec_type(i) =
-    LAMBDA (n : below(i))(p : FullProgram)
+    LAMBDA (n : upto(i))(p : FullProgram)
            (c : Stmt, sigma1, sigma2 : FullState)(k : below(n)) :
       deriv_stmt_rec(n)(p)(c, sigma1, sigma2)(k)
 
+  deriv_stmt_determ(p : FullProgram, n1, n2 : nat, 
+                    ds1 : deriv_stmt_rec_type(n1),
+                    ds2 : deriv_stmt_rec_type(n2)) : boolean =
+    FORALL (c : Stmt)(sigma, sigma1, sigma2 : FullState)
+           (m1 : below(n1), m2 : below(n2)) :
+      ds1(n1)(p)(c, sigma, sigma1)(m1) AND
+      ds2(n2)(p)(c, sigma, sigma2)(m2) IMPLIES
+        sigma1 = sigma2 AND m1 = m2
+
+  deriv_expr_determ(p : FullProgram, n1, n2 : nat, 
+                    de1 : deriv_expr_rec_type(n1),
+                    de2 : deriv_expr_rec_type(n2)) : boolean =
+    FORALL (c : Expr)(v1, v2 : Val)(sigma, sigma1, sigma2 : FullState)
+           (m1 : below(n1), m2 : below(n2)) :
+      de1(n1)(p)(c, sigma, v1, sigma1)(m1) AND
+      de2(n2)(p)(c, sigma, v2, sigma2)(m2) IMPLIES
+        v1 = v2 AND sigma1 = sigma2 AND m1 = m2
 
   derives(p : FullProgram)
          (e : Expr, sigma1 : FullState)(v : Val, sigma2 : FullState) : bool =
@@ -502,7 +417,7 @@ BEGIN
 END Semantics
 
 
-% Properties about Semantics
+% Properties about Semantics (mainly determinism)
 SemanticsProofs[Name : TYPE+,
           FullProgram : TYPE,
           FullState : TYPE,
@@ -524,6 +439,17 @@ ASSUMING
               update_PState, execute_set, execute_CaseJML,
               on_method_entry, on_method_exit_normal,
               on_method_exit_exceptional]
+
+    on_method_entry_deterministic_test : ASSUMPTION
+      FORALL (p : FullProgram, m : Method[Name], v : Val, 
+              s, s1, s2 : FullState, n1, n2 : nat) 
+             (ds1 : deriv_stmt_rec_type(n1), de1 : deriv_expr_rec_type(n1),
+              ds2 : deriv_stmt_rec_type(n2), de2 : deriv_expr_rec_type(n2)) :
+        deriv_stmt_determ(p, n1, n2, ds1, ds2) IMPLIES
+        deriv_expr_determ(p, n1, n2, de1, de2) IMPLIES
+        on_method_entry(p, m, v, s, s1, n1, ds1, de1) IMPLIES
+        on_method_entry(p, m, v, s, s2, n2, ds2, de2) IMPLIES
+          s1 = s2 AND n1 = n2
 
     on_method_entry_deterministic : ASSUMPTION
       FORALL (p : FullProgram, m : Method[Name], v : Val, 
@@ -588,7 +514,7 @@ ASSUMING
       on_method_exit_exceptional(p, m, v, s, s2, n2, ds2, de2) IMPLIES
         s1 = s2 AND n1 = n2
 
-
+  % AT: Changed to suit the new type of execute_JML (removed de)
   execute_CaseJML_deterministic : ASSUMPTION
     FORALL (p : FullProgram, branches : list[[Expr, Stmt]], 
             s, s1, s2 : FullState,
