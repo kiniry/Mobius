@@ -105,7 +105,7 @@ public abstract class EscjavaAction implements IObjectActionDelegate,
 	 * @param msg  The message to show
 	 */
 	protected void showMessage(String msg) {
-		Utils.showMessageInUI(window.getShell(),"Esc/Java2 Operation",msg);
+		Utils.showMessageInUI(window.getShell(),"ESC/Java2 Operation",msg);
 	}
 
 	/* (non-Javadoc)

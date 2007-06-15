@@ -57,7 +57,7 @@
 	   
    <extension
          id="autocheckEscjavaBuilder"
-         name="Esc/Java2 Autocheck Builder"
+         name="ESC/Java2 Autocheck Builder"
          point="org.eclipse.core.resources.builders">
       <builder>
          <run
@@ -70,11 +70,11 @@
 <!-- This extension adds the preference page -->
    <extension
          id="escjava.plugin.preferencesPage"
-         name="EscJava Preferences"
+         name="ESCJava Preferences"
          point="org.eclipse.ui.preferencePages">
       <page 
          id="escjava.plugin.preferences.EscJava" 
-         name="Esc/Java2" 
+         name="ESC/Java2" 
          class="escjava.plugin.PreferencePage"
          category="org.eclipse.jdt.ui.preferences.JavaBasePreferencePage"> 
       </page>
@@ -116,7 +116,7 @@
 <!-- The attribute is used to associate additional information with the marker -->  
    <extension
          id="escjavaWarningMarker"
-         name="Esc/Java2 Warning"
+         name="ESC/Java2 Warning"
          point="org.eclipse.core.resources.markers">
       <super
             type="org.eclipse.jdt.core.problem">

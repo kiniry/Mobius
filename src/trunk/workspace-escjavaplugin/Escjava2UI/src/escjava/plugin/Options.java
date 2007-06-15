@@ -20,7 +20,6 @@ import pluginlib.Utils;
 public class Options {
 	/** A copy of the plugin's id */
 	final private static String PLUGINID = EscjavaPlugin.PLUGINID + ".";
-	final private static String SIMPLIFY_PLUGINID = "mobius.simplify.";
 	
 	/** The option button corresponding to Eclipse logging. */
 	static public AbstractPreference.BooleanOption logging = new AbstractPreference.BooleanOption(
@@ -77,7 +76,7 @@ public class Options {
 			"External Simplify executable to use",
 			"The static checker needs a version of the Simplify executable for" + Utils.eol +
 			"this platform; it must be obtained indepenedently from either the" + Utils.eol +
-			"Esc/Java2 website or the Compaq/SRC website");
+			"Mobius website or the HP Labs website");
 	/**
 	 * The option button corresponding to the Quiet option,
 	 * but in the reverse sense.
@@ -85,7 +84,7 @@ public class Options {
 	static final public AbstractPreference.BooleanOption quiet = new AbstractPreference.BooleanOption(
 			(PLUGINID + "quiet"),
 			true,
-			"Disable Esc/Java informational messages",
+			"Disable ESC/Java informational messages",
 			"Turns off progress and timing messages (in the Console windows) [JML --Quiet option]");
 
 	/**
