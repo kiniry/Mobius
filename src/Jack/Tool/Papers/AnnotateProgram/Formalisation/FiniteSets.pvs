@@ -2,9 +2,6 @@
 FiniteSetProps[X, Y : TYPE] : THEORY
 BEGIN
 
-  get_y_from_x(P: pred[[X, Y]], x: {x: X | EXISTS (y: Y) : P(x, y)}): Y = 
-    choose({y: Y | P(x, y)})
-
   subset_prop: LEMMA % :-)
     FORALL (P: pred[[X, Y]]):
       is_finite(P) IMPLIES

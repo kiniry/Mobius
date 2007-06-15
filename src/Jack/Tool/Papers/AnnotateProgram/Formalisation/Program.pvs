@@ -172,11 +172,6 @@ BEGIN
                     fields : finite_set[FieldDecl],
                     methods : finite_set[Method] #]
 
-  % AT: What is this for?
-  IMPORTING FiniteSetInduction[Class],
-            FiniteSetInduction[Method]
-
-
   Program : TYPE = [# classes : finite_set[Class] #]
 
 
@@ -187,41 +182,40 @@ END Program
 ProgramFunctions[Name : TYPE+] : THEORY
 BEGIN
 
-  IMPORTING Program[Name]
+  IMPORTING Program[Name],  
+            FiniteSetInduction[Class], %% Used for proving TCCs
+            FiniteSetInduction[Method]
 
   getFieldDecls(p : Program) : finite_set[FieldDecl] =
-     {f : FieldDecl | EXISTS (c : Class) : classes(p)(c) AND 
-                                           fields(c)(f)}
+    {f : FieldDecl | EXISTS (c : Class) : classes(p)(c) AND 
+                                          fields(c)(f)}
 
   getLocalDecls(p : Program) : finite_set[LocalVarDecl] =
-     {l : LocalVarDecl | EXISTS (c : Class, m : Method) : 
-                         classes(p)(c) AND 
-                         methods(c)(m) AND
-                         (lvars(m)(l) OR l = arg(m))}
+    {l : LocalVarDecl | EXISTS (c : Class, m : Method) : 
+                        classes(p)(c) AND 
+                        methods(c)(m) AND
+                        (lvars(m)(l) OR l = arg(m))}
 
   getGhostDecls(p : Program) : finite_set[FieldDecl] =
-     {g : FieldDecl | EXISTS (c : Class) :  classes(p)(c) AND ghost_vars(c)(g)}
+    {g : FieldDecl | EXISTS (c : Class) :  classes(p)(c) AND ghost_vars(c)(g)}
 
 
   get_LocalDecl(n : Name, p : Program) : lift[LocalVarDecl] =
-    LET ng = {l : LocalVarDecl | getLocalDecls(p)(l) AND name(l) = n}
-    IN
+    LET ng = {l : LocalVarDecl | getLocalDecls(p)(l) AND name(l) = n} IN
     IF nonempty?(ng)
     THEN up(choose(ng))
     ELSE bottom
     ENDIF
 
   get_FieldDecl(n : Name, p : Program) : lift[FieldDecl] =
-    LET ng = {f : FieldDecl | getFieldDecls(p)(f) AND name(f) = n}
-    IN
+    LET ng = {f : FieldDecl | getFieldDecls(p)(f) AND name(f) = n} IN
     IF nonempty?(ng)
     THEN up(choose(ng))
     ELSE bottom
     ENDIF
 
   get_GhostDecl(n : Name, p : Program) : lift[FieldDecl] =
-    LET ng = {g : FieldDecl | getGhostDecls(p)(g) AND name(g) = n}
-    IN
+    LET ng = {g : FieldDecl | getGhostDecls(p)(g) AND name(g) = n} IN
     IF nonempty?(ng)
     THEN up(choose(ng))
     ELSE bottom

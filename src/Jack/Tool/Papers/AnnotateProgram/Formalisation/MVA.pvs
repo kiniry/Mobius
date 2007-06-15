@@ -246,7 +246,7 @@ BEGIN
       ELSE st(m)
       ENDIF
 
-  update_yields_wf_Store : LEMMA % :-)
+  update_yields_wf_Store : LEMMA % :->
     FORALL (a : MVA, st : Store, n : Name, v : Val) :
       wf_Store(a)(st) IMPLIES
       (Bottom?(st(n)) IFF Bottom?(v)) IMPLIES

@@ -463,10 +463,10 @@ ASSUMING
           s1 = s2 AND n1 = n2
 
     on_method_entry_deterministic : ASSUMPTION
-      FORALL (p : FullProgram, m : Method[Name], v : Val, 
-              s, s1, s2 : FullState, n1, n2 : nat) 
+      FORALL (p : FullProgram, m : Method[Name], v : Val,
+              s, s1, s2 : FullState, n1, n2 : nat)
              (ds1 : deriv_stmt_rec_type(n1), de1 : deriv_expr_rec_type(n1),
-              ds2 : deriv_stmt_rec_type(n2), de2 : deriv_expr_rec_type(n2)) : 
+              ds2 : deriv_stmt_rec_type(n2), de2 : deriv_expr_rec_type(n2)) :
         (FORALL (c : Stmt)(sigma, sigma1, sigma2 : FullState)
                 (k1 : upto(n1), k2 : upto(n2))
                 (m1 : below(k1), m2 : below(k2)) :
@@ -484,7 +484,7 @@ ASSUMING
         s1 = s2 AND n1 = n2
 
     on_method_exit_normal_deterministic : ASSUMPTION
-      FORALL (p : FullProgram, m : Method[Name], v : Val, 
+      FORALL (p : FullProgram, m : Method[Name], v : Val,
               s, s1, s2 : FullState, n1, n2 : nat,
               ds1 : deriv_stmt_rec_type(n1), de1 : deriv_expr_rec_type(n1),
               ds2 : deriv_stmt_rec_type(n2), de2 : deriv_expr_rec_type(n2)) : 
@@ -623,7 +623,7 @@ ENDASSUMING
            (sigma1, sigma2 : FullState, v : Val, n : nat) :
       deriv_expr(p)(e, sigma1, v, sigma2)(n) IMPLIES
       up?(ex(pstate(sigma2))) IMPLIES
-        Bottom?(v) IMPLIES
+        Bottom?(v)
 
 
 END SemanticsProofs

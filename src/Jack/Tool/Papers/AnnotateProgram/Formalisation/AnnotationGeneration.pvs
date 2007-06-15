@@ -200,13 +200,11 @@ BEGIN
         (is_local(vn, pstate(sMP)) IFF is_local(vn, pstate(sAP))) AND
         (is_ghost(vn, sMP) IFF is_ghost(vn, sAP))
 
-  % THINK: I won't be able to prove this, maybe taken as axiom of get_class
   get_class_ann_program : LEMMA
     FORALL (mp : MonitoredProgram, c1, c2 : Class, s : PState, tgt : Val) :
       ann_program_pre(mp) IMPLIES
-% Now I this can be obtained by wf_program
-%      up?(get_class(program(mp))(tgt)) IMPLIES
-%      up?(get_class(ann_program(mp))(tgt)) IMPLIES
+      up?(get_class(program(mp))(tgt)) IMPLIES
+      up?(get_class(ann_program(mp))(tgt)) IMPLIES
       c1 = down(get_class(program(mp))(tgt)) IMPLIES
       c2 = down(get_class(ann_program(mp))(tgt)) IMPLIES
         name(c1) = name(c2)

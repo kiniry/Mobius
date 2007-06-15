@@ -3,74 +3,105 @@
   (get_y_from_x_TCC1-1 nil 3383049701 nil ("" (subtype-tcc) nil nil)
    unchecked nil nil nil nil nil))
  (subset_prop 0
-  (subset_prop-1 nil 3383049728 3383049866
+  (subset_prop-1 nil 3383049728 3390895702
    ("" (skosimp)
     (("" (expand "is_finite")
       (("" (skolem!)
         ((""
           (inst + "N!1"
-           "LAMBDA (x: {x: X | EXISTS (y: Y): P!1(x, y)}): f!1(x, get_y_from_x(P!1, x))")
-          (("1" (expand* "get_y_from_x" "injective?")
+           "LAMBDA (x: {x: X | EXISTS (y: Y): P!1(x, y)}): f!1(x, choose({y: Y | P!1(x, y)}))")
+          (("1" (expand "injective?")
             (("1" (skosimp)
               (("1" (inst?)
                 (("1" (assert) nil nil)
-                 ("2" (delete 2 -1)
-                  (("2" (typepred "x2!1")
-                    (("2" (skolem!)
-                      (("2" (expand* "nonempty?" "empty?" "member")
-                        (("2" (inst?) nil nil)) nil))
-                      nil))
+                 ("2" (typepred "x2!1")
+                  (("2" (skolem!)
+                    (("2" (rewrite "nonempty_exists")
+                      (("2" (inst?) nil nil)) nil))
                     nil))
                   nil)
-                 ("3" (delete 2 -1)
-                  (("3" (typepred "x1!1")
-                    (("3" (skolem!)
-                      (("3" (expand* "nonempty?" "empty?" "member")
-                        (("3" (inst?) nil nil)) nil))
-                      nil))
+                 ("3" (typepred "x1!1")
+                  (("3" (skolem!)
+                    (("3" (rewrite "nonempty_exists")
+                      (("3" (inst?) nil nil)) nil))
                     nil))
                   nil))
                 nil))
               nil))
             nil)
            ("2" (skolem!)
-            (("2" (expand "get_y_from_x") (("2" (assert) nil nil))
+            (("2" (name "y!1" "choose({y: Y | P!1(x!1, y)})")
+              (("1" (expand "choose")
+                (("1" (use "epsilon_ax[Y]")
+                  (("1" (assert) nil nil)
+                   ("2" (typepred "x!1")
+                    (("2" (inst?)
+                      (("2" (skolem!) (("2" (inst?) nil nil)) nil))
+                      nil))
+                    nil))
+                  nil))
+                nil)
+               ("2" (typepred "x!1")
+                (("2" (rewrite "nonempty_exists")
+                  (("2" (skolem!) (("2" (inst?) nil nil)) nil)) nil))
+                nil))
+              nil))
+            nil)
+           ("3" (skolem!)
+            (("3" (typepred "x!1")
+              (("3" (rewrite "nonempty_exists")
+                (("3" (skolem!) (("3" (inst?) nil nil)) nil)) nil))
               nil))
             nil))
           nil))
         nil))
       nil))
     nil)
-   untried
-   ((injective? const-decl "bool" functions nil)
+   proved
+   ((is_finite const-decl "bool" finite_sets nil)
+    (nonempty? const-decl "bool" sets nil)
     (set type-eq-decl nil sets nil)
-    (nonempty? const-decl "bool" sets nil) nil nil
+    (P!1 skolem-const-decl "pred[[X, Y]]" FiniteSetProps nil)
+    (pred type-eq-decl nil defined_types nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (Y formal-type-decl nil FiniteSetProps nil)
+    (X formal-type-decl nil FiniteSetProps nil)
     (choose const-decl "(p)" sets nil)
-    (NOT const-decl "[bool -> bool]" booleans nil)
-    (empty? const-decl "bool" sets nil)
-    (member const-decl "bool" sets nil)
-    (below type-eq-decl nil nat_types nil)
-    (< const-decl "bool" reals nil)
-    (nat nonempty-type-eq-decl nil naturalnumbers nil)
-    (>= const-decl "bool" reals nil)
-    (int nonempty-type-eq-decl nil integers nil)
-    (integer_pred const-decl "[rational -> boolean]" integers nil)
-    (rational nonempty-type-from-decl nil rationals nil)
-    (rational_pred const-decl "[real -> boolean]" rationals nil)
-    (real nonempty-type-from-decl nil reals nil)
-    (real_pred const-decl "[number_field -> boolean]" reals nil)
-    (number_field nonempty-type-from-decl nil number_fields nil)
+    (number nonempty-type-decl nil numbers nil)
     (number_field_pred const-decl "[number -> boolean]" number_fields
      nil)
-    (number nonempty-type-decl nil numbers nil)
-    (X formal-type-decl nil FiniteSetProps nil)
-    (Y formal-type-decl nil FiniteSetProps nil)
-    (boolean nonempty-type-decl nil booleans nil)
-    (bool nonempty-type-eq-decl nil booleans nil)
-    (pred type-eq-decl nil defined_types nil) nil
-    (get_y_from_x const-decl "Y" FiniteSetProps nil)
-    (is_finite const-decl "bool" finite_sets nil))
-   244 150 t nil)))
+    (number_field nonempty-type-from-decl nil number_fields nil)
+    (real_pred const-decl "[number_field -> boolean]" reals nil)
+    (real nonempty-type-from-decl nil reals nil)
+    (rational_pred const-decl "[real -> boolean]" rationals nil)
+    (rational nonempty-type-from-decl nil rationals nil)
+    (integer_pred const-decl "[rational -> boolean]" integers nil)
+    (int nonempty-type-eq-decl nil integers nil)
+    (>= const-decl "bool" reals nil)
+    (nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (< const-decl "bool" reals nil)
+    (below type-eq-decl nil nat_types nil)
+    (y!1 skolem-const-decl "Y" FiniteSetProps nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (nonempty_exists formula-decl nil sets_lemmas nil)
+    (y!1 skolem-const-decl "Y" FiniteSetProps nil)
+    (x2!1 skolem-const-decl "({x: X | EXISTS (y: Y): P!1(x, y)})"
+     FiniteSetProps nil)
+    (x1!1 skolem-const-decl "({x: X | EXISTS (y: Y): P!1(x, y)})"
+     FiniteSetProps nil)
+    (injective? const-decl "bool" functions nil)
+    (= const-decl "[T, T -> boolean]" equalities nil)
+    (TRUE const-decl "bool" booleans nil)
+    (epsilon_ax formula-decl nil epsilons nil)
+    (epsilon const-decl "T" epsilons nil)
+    (y!1 skolem-const-decl "Y" FiniteSetProps nil)
+    (x!1 skolem-const-decl "{x: X | EXISTS (y: Y): P!1(x, y)}"
+     FiniteSetProps nil)
+    (x!1 skolem-const-decl "{x: X | EXISTS (y: Y): P!1(x, y)}"
+     FiniteSetProps nil)
+    (y!1 skolem-const-decl "Y" FiniteSetProps nil))
+   713843 480 t nil)))
 (EpsilonProps
  (epsilon_singleton 0
   (epsilon_singleton-1 nil 3383050062 3383050067
@@ -96,481 +127,14 @@
    2785 30 t nil))
  (choose_singleton?_TCC1 0
   (choose_singleton?_TCC1-1 nil 3384083790 nil
-   ("" (subtype-tcc) nil nil) nil nil nil nil nil nil))
+   ("" (subtype-tcc) nil nil) unchecked nil nil nil nil nil))
  (choose_singleton? 0
   (choose_singleton?-1 nil 3384083791 3384083832
    ("" (skosimp)
     (("" (expand* "choose" "the" "singleton" "member") nil nil)) nil)
-   proved
+   unfinished
    ((choose const-decl "(p)" sets nil) (the const-decl "(p)" sets nil))
    40327 20 t shostak)))
-(MVAFiniteProps
- (get_t_from_gs_TCC1 0
-  (get_t_from_gs_TCC1-1 nil 3383051006 nil ("" (subtype-tcc) nil nil)
-   unchecked nil nil nil nil nil))
- (all_guards_finite 0
-  (all_guards_finite-2 nil 3383051076 3383051086
-   ("" (skolem-typepred)
-    (("" (expand "is_finite")
-      (("" (skolem!)
-        ((""
-          (inst + "N!1"
-           "LAMBDA (gs: {p: Guard[CP, Name] | EXISTS (t: Transition[CP, Name]): ts!1(t) AND t`guard = p}): f!1(get_t_from_gs(ts!1, gs))")
-          (("1" (expand* "get_t_from_gs" "injective?")
-            (("1" (skosimp)
-              (("1" (inst?)
-                (("1" (assert)
-                  (("1" (expand "singleton")
-                    (("1" (apply-extensionality 1) nil nil)) nil))
-                  nil)
-                 ("2" (delete -1 2)
-                  (("2" (typepred "x2!1")
-                    (("2" (skolem!)
-                      (("2" (expand* "nonempty?" "empty?" "member")
-                        (("2" (inst?)
-                          (("2" (expand "singleton")
-                            (("2" (propax) nil nil)) nil))
-                          nil))
-                        nil))
-                      nil))
-                    nil))
-                  nil)
-                 ("3" (typepred "x1!1")
-                  (("3" (delete -2 2)
-                    (("3" (skolem!)
-                      (("3" (expand* "nonempty?" "empty?" "member")
-                        (("3" (inst?)
-                          (("3" (expand "singleton")
-                            (("3" (propax) nil nil)) nil))
-                          nil))
-                        nil))
-                      nil))
-                    nil))
-                  nil))
-                nil))
-              nil))
-            nil)
-           ("2" (skolem!)
-            (("2" (expand "get_t_from_gs") (("2" (propax) nil nil))
-              nil))
-            nil))
-          nil))
-        nil))
-      nil))
-    nil)
-   unfinished
-   ((boolean nonempty-type-decl nil booleans nil)
-    (bool nonempty-type-eq-decl nil booleans nil)
-    (NOT const-decl "[bool -> bool]" booleans nil)
-    (CP formal-nonempty-type-decl nil MVAFiniteProps nil)
-    (Name formal-nonempty-type-decl nil MVAFiniteProps nil)
-    (Action type-eq-decl nil MVA nil) (Event type-eq-decl nil MVA nil)
-    (Guard type-eq-decl nil MVA nil)
-    (Transition type-eq-decl nil MVA nil)
-    (set type-eq-decl nil sets nil)
-    (is_finite const-decl "bool" finite_sets nil)
-    (finite_set type-eq-decl nil finite_sets nil)
-    (injective? const-decl "bool" functions nil)
-    (nonempty? const-decl "bool" sets nil)
-    (singleton? const-decl "bool" sets nil)
-    (singleton const-decl "(singleton?)" sets nil)
-    (choose const-decl "(p)" sets nil)
-    (empty? const-decl "bool" sets nil)
-    (member const-decl "bool" sets nil)
-    (below type-eq-decl nil nat_types nil)
-    (< const-decl "bool" reals nil)
-    (nat nonempty-type-eq-decl nil naturalnumbers nil)
-    (>= const-decl "bool" reals nil)
-    (int nonempty-type-eq-decl nil integers nil)
-    (integer_pred const-decl "[rational -> boolean]" integers nil)
-    (rational nonempty-type-from-decl nil rationals nil)
-    (rational_pred const-decl "[real -> boolean]" rationals nil)
-    (real nonempty-type-from-decl nil reals nil)
-    (real_pred const-decl "[number_field -> boolean]" reals nil)
-    (number_field nonempty-type-from-decl nil number_fields nil)
-    (number_field_pred const-decl "[number -> boolean]" number_fields
-     nil)
-    (number nonempty-type-decl nil numbers nil)
-    (Val type-decl nil Val_adt nil) nil
-    (PSt type-eq-decl nil State nil)
-    (AND const-decl "[bool, bool -> bool]" booleans nil)
-    (= const-decl "[T, T -> boolean]" equalities nil)
-    (get_t_from_gs const-decl "Transition" MVAFiniteProps nil))
-   8053 250 t nil)
-  (all_guards_finite-1 nil 3383051027 3383051055
-   ("" (skosimp)
-    (("" (expand "subset?")
-      (("" (skosimp)
-        (("" (expand "member")
-          (("" (skolem!)
-            (("" (inst?)
-              (("" (flatten)
-                (("" (split)
-                  (("1" (propax) nil) ("2" (propax) nil))))))))))))))))
-    nil)
-   unfinished nil 25719 20 t nil))
- (all_guards_subset 0
-  (all_guards_subset-1 nil 3383051119 3383051413
-   ("" (skosimp)
-    (("" (expand "subset?")
-      (("" (skosimp)
-        (("" (expand "member")
-          (("" (skolem!)
-            (("" (inst?)
-              (("" (flatten)
-                (("" (split)
-                  (("1" (propax) nil nil) ("2" (propax) nil nil)) nil))
-                nil))
-              nil))
-            nil))
-          nil))
-        nil))
-      nil))
-    nil)
-   unfinished
-   ((Transition type-eq-decl nil MVA nil)
-    (Guard type-eq-decl nil MVA nil) (Event type-eq-decl nil MVA nil)
-    (Action type-eq-decl nil MVA nil)
-    (Name formal-nonempty-type-decl nil MVAFiniteProps nil)
-    (CP formal-nonempty-type-decl nil MVAFiniteProps nil)
-    (member const-decl "bool" sets nil)
-    (subset? const-decl "bool" sets nil))
-   196 40 t nil))
- (complete_trans_TCC1_subset2_is_finite 0
-  (complete_trans_TCC1_subset2_is_finite-1 nil 3383051923 3383051933
-   ("" (skolem-typepred)
-    (("" (expand "is_finite")
-      (("" (skolem!)
-        ((""
-          (auto-rewrite "nonempty?" "empty?" "member" "choose"
-                        "singleton")
-          ((""
-            (inst + "N!1+1" "LAMBDA (ts: ({t: Transition[CP, Name] | 
-     scp(t) = halted[CP, Name] AND es!1(event(t)) AND 
-     guard(t) = (LAMBDA (stA: Store[CP, Name], stP: PSt[Name]): TRUE) AND
-     action(t) = skip[CP, Name] AND tcp(t) = halted[CP, Name]})):
-       IF empty?(ts) THEN N!1
-       ELSE f!1(event(choose(ts)))
-       ENDIF")
-            (("1" (expand* "injective?" "singleton")
-              (("1" (skosimp)
-                (("1" (lift-if -2)
-                  (("1" (split -2)
-                    (("1" (flatten)
-                      (("1" (lift-if -2)
-                        (("1" (split -2)
-                          (("1" (expand* "empty?" "member")
-                            (("1" (inst?) (("1" (inst?) nil nil)) nil))
-                            nil)
-                           ("2" (flatten)
-                            (("2" (expand* "empty?" "member")
-                              (("2"
-                                (inst? -2)
-                                (("2"
-                                  (skolem!)
-                                  (("2"
-                                    (assert)
-                                    (("2" (grind) nil nil))
-                                    nil))
-                                  nil))
-                                nil))
-                              nil))
-                            nil))
-                          nil))
-                        nil))
-                      nil)
-                     ("2" (assert)
-                      (("2"
-                        (case "epsilon({y: ({t: Transition[CP, Name] |
-        scp(t) = halted[CP, Name] AND es!1(event(t)) AND 
-        guard(t) = (LAMBDA (stA: Store[CP, Name], stP: PSt[Name]): TRUE) AND
-        action(t) = skip[CP, Name] AND tcp(t) = halted[CP, Name]}) | y = x1!1}) = x1!1")
-                        (("1" (replace -1 -2)
-                          (("1"
-                            (case "epsilon({y_1: ({t: Transition[CP, Name] | 
-          scp(t) = halted[CP, Name] AND es!1(event(t)) AND 
-          guard(t) = (LAMBDA (stA: Store[CP, Name], stP: PSt[Name]): TRUE) AND
-          action(t) = skip[CP, Name] AND tcp(t) = halted[CP, Name]}) | y_1 = x2!1}) = x2!1")
-                            (("1" (replace -1 -3)
-                              (("1"
-                                (delete -1 -2)
-                                (("1"
-                                  (flatten)
-                                  (("1"
-                                    (skolem!)
-                                    (("1"
-                                      (lift-if -2)
-                                      (("1"
-                                        (split -2)
-                                        (("1"
-                                          (flatten)
-                                          (("1"
-                                            (inst? -1)
-                                            (("1"
-                                              (instantiate
-                                               -3
-                                               ("event(x1!1)"
-                                                "event(x2!1)"))
-                                              (("1" (assert) nil nil))
-                                              nil))
-                                            nil))
-                                          nil)
-                                         ("2"
-                                          (flatten)
-                                          (("2"
-                                            (skolem!)
-                                            (("2"
-                                              (instantiate
-                                               -4
-                                               ("event(x1!1)"
-                                                "event(x2!1)"))
-                                              (("2"
-                                                (split -4)
-                                                (("1"
-                                                  (decompose-equality
-                                                   1)
-                                                  nil
-                                                  nil)
-                                                 ("2"
-                                                  (propax)
-                                                  nil
-                                                  nil))
-                                                nil))
-                                              nil))
-                                            nil))
-                                          nil))
-                                        nil))
-                                      nil))
-                                    nil))
-                                  nil))
-                                nil))
-                              nil)
-                             ("2" (hide-all-but 1)
-                              (("2"
-                                (lemma
-                                 "epsilon_singleton[({t: Transition[CP, Name] |
-             scp(t) = halted[CP, Name] AND es!1(event(t)) AND
-             guard(t) = (LAMBDA (stA: Store[CP, Name], stP: PSt[Name]): TRUE) AND
-             action(t) = skip[CP, Name] AND tcp(t) = halted[CP, Name]})]")
-                                (("2"
-                                  (inst?)
-                                  (("2"
-                                    (expand "singleton")
-                                    (("2" (propax) nil nil))
-                                    nil))
-                                  nil))
-                                nil))
-                              nil))
-                            nil))
-                          nil)
-                         ("2" (hide-all-but 1)
-                          (("2"
-                            (lemma
-                             "epsilon_singleton[({t: Transition[CP, Name] | 
-           scp(t) = halted[CP, Name] AND es!1(event(t)) AND 
-           guard(t) = (LAMBDA (stA: Store[CP, Name], stP: PSt[Name]): TRUE) and
-           action(t) = skip[CP, Name] AND tcp(t) = halted[CP, Name]})]")
-                            (("2" (inst?)
-                              (("2"
-                                (expand "singleton")
-                                (("2" (propax) nil nil))
-                                nil))
-                              nil))
-                            nil))
-                          nil)
-                         ("3" (inst?) nil nil))
-                        nil))
-                      nil))
-                    nil))
-                  nil))
-                nil))
-              nil)
-             ("2" (skosimp)
-              (("2" (skolem!) (("2" (assert) nil nil)) nil)) nil)
-             ("3" (skosimp) (("3" (assert) nil nil)) nil))
-            nil))
-          nil))
-        nil))
-      nil))
-    nil)
-   unfinished
-   ((boolean nonempty-type-decl nil booleans nil)
-    (bool nonempty-type-eq-decl nil booleans nil)
-    (NOT const-decl "[bool -> bool]" booleans nil)
-    (EventType type-decl nil EventType_adt nil)
-    (Name formal-nonempty-type-decl nil MVAFiniteProps nil)
-    (CP formal-nonempty-type-decl nil MVAFiniteProps nil)
-    (Event type-eq-decl nil MVA nil) (set type-eq-decl nil sets nil)
-    (is_finite const-decl "bool" finite_sets nil)
-    (finite_set type-eq-decl nil finite_sets nil)
-    (nonempty_singleton_finite application-judgement
-     "non_empty_finite_set" finite_sets nil)
-    (nnint_plus_posint_is_posint application-judgement "posint"
-     integers nil)
-    (singleton const-decl "(singleton?)" sets nil)
-    (singleton? const-decl "bool" sets nil)
-    (epsilon const-decl "T" epsilons nil)
-    (pred type-eq-decl nil defined_types nil)
-    (IMPLIES const-decl "[bool, bool -> bool]" booleans nil)
-    (skip const-decl "Action" MVA nil)
-    (list type-decl nil list_adt nil)
-    (OneAction type-eq-decl nil MVA nil)
-    (Expr type-decl nil Expr_adt nil)
-    (TRUE const-decl "bool" booleans nil)
-    (PSt type-eq-decl nil State nil) nil
-    (Val type-decl nil Val_adt nil) (halted const-decl "CP" MVA nil)
-    (= const-decl "[T, T -> boolean]" equalities nil)
-    (AND const-decl "[bool, bool -> bool]" booleans nil)
-    (Transition type-eq-decl nil MVA nil)
-    (Guard type-eq-decl nil MVA nil) (Action type-eq-decl nil MVA nil)
-    (+ const-decl "[numfield, numfield -> numfield]" number_fields nil)
-    (numfield nonempty-type-eq-decl nil number_fields nil)
-    (below type-eq-decl nil nat_types nil)
-    (nat nonempty-type-eq-decl nil naturalnumbers nil)
-    (>= const-decl "bool" reals nil)
-    (int nonempty-type-eq-decl nil integers nil)
-    (integer_pred const-decl "[rational -> boolean]" integers nil)
-    (rational nonempty-type-from-decl nil rationals nil)
-    (rational_pred const-decl "[real -> boolean]" rationals nil)
-    (< const-decl "bool" reals nil)
-    (real nonempty-type-from-decl nil reals nil)
-    (real_pred const-decl "[number_field -> boolean]" reals nil)
-    (number_field nonempty-type-from-decl nil number_fields nil)
-    (number_field_pred const-decl "[number -> boolean]" number_fields
-     nil)
-    (number nonempty-type-decl nil numbers nil)
-    (member const-decl "bool" sets nil)
-    (IF const-decl "[boolean, T, T -> T]" if_def nil)
-    (empty? const-decl "bool" sets nil)
-    (nonempty? const-decl "bool" sets nil)
-    (choose const-decl "(p)" sets nil)
-    (epsilon_singleton formula-decl nil EpsilonProps nil)
-    (injective? const-decl "bool" functions nil)
-    (real_lt_is_strict_total_order name-judgement
-     "(strict_total_order?[real])" real_props nil)
-    (posint_plus_nnint_is_posint application-judgement "posint"
-     integers nil))
-   6517 1070 nil nil)))
-(WF_Card
- (wf_card 0
-  (wf_card-1 nil 3378631808 3383472927
-   ("" (expand "well_founded?")
-    (("" (skosimp*)
-      ((""
-        (case "EXISTS (z : finite_set[T]) : p!1(z) AND card[T](z) < card[T](y!1)")
-        (("1" (skosimp*)
-          (("1"
-            (name "S"
-                  "{n : nat | EXISTS (z : finite_set[T]) : card[T](z) = n AND p!1(z) AND n < card[T](y!1)}")
-            (("1"
-              (case "EXISTS (z : finite_set[T]) : p!1(z) AND card[T](z) = min(S)")
-              (("1" (skosimp*)
-                (("1" (inst 1 "z!2")
-                  (("1" (skosimp*)
-                    (("1" (replace -3 :dir rl)
-                      (("1" (assert)
-                        (("1" (replace -2)
-                          (("1"
-                            (typepred "min({n: nat |
-              EXISTS (z: finite_set[T]):
-                card[T](z) = n AND p!1(z) AND n < card[T](y!1)})")
-                            (("1" (skosimp*)
-                              (("1"
-                                (inst -4 "card[T](x!1)")
-                                (("1"
-                                  (assert)
-                                  (("1"
-                                    (inst 1 "x!1")
-                                    (("1" (assert) nil nil))
-                                    nil))
-                                  nil))
-                                nil))
-                              nil)
-                             ("2" (rewrite "nonempty_exists")
-                              (("2"
-                                (inst 1 "card[T](z!1)")
-                                (("2" (inst 1 "z!1") nil nil))
-                                nil))
-                              nil))
-                            nil))
-                          nil))
-                        nil))
-                      nil))
-                    nil))
-                  nil))
-                nil)
-               ("2" (typepred "min(S)")
-                (("1" (replace -3 :dir rl)
-                  (("1" (assert)
-                    (("1" (skosimp*)
-                      (("1" (inst 1 "z!2") (("1" (assert) nil nil))
-                        nil))
-                      nil))
-                    nil))
-                  nil)
-                 ("2" (replace -1 :dir rl)
-                  (("2" (rewrite "nonempty_exists")
-                    (("2" (inst 1 "card[T](z!1)")
-                      (("2" (inst 1 "z!1") (("2" (assert) nil nil))
-                        nil))
-                      nil))
-                    nil))
-                  nil))
-                nil)
-               ("3" (skosimp*)
-                (("3" (replace -2 :dir rl)
-                  (("3" (rewrite "nonempty_exists")
-                    (("3" (inst 1 "card[T](z!1)")
-                      (("3" (inst 1 "z!1") (("3" (assert) nil nil))
-                        nil))
-                      nil))
-                    nil))
-                  nil))
-                nil))
-              nil))
-            nil))
-          nil)
-         ("2" (inst 2 "y!1")
-          (("2" (skosimp*)
-            (("2" (inst 1 "x!1") (("2" (assert) nil nil)) nil)) nil))
-          nil))
-        nil))
-      nil))
-    nil)
-   unfinished
-   ((min const-decl "{a | S(a) AND (FORALL x: S(x) IMPLIES a <= x)}"
-         min_nat nil)
-    (<= const-decl "bool" reals nil)
-    (IMPLIES const-decl "[bool, bool -> bool]" booleans nil)
-    (nonempty? const-decl "bool" sets nil) nil nil
-    (nonempty_exists formula-decl nil sets_lemmas nil) nil
-    (NOT const-decl "[bool -> bool]" booleans nil) nil
-    (T formal-type-decl nil WF_Card nil)
-    (boolean nonempty-type-decl nil booleans nil)
-    (bool nonempty-type-eq-decl nil booleans nil)
-    (set type-eq-decl nil sets nil)
-    (is_finite const-decl "bool" finite_sets nil)
-    (finite_set type-eq-decl nil finite_sets nil)
-    (AND const-decl "[bool, bool -> bool]" booleans nil)
-    (pred type-eq-decl nil defined_types nil)
-    (number nonempty-type-decl nil numbers nil)
-    (number_field_pred const-decl "[number -> boolean]" number_fields
-     nil)
-    (number_field nonempty-type-from-decl nil number_fields nil)
-    (real_pred const-decl "[number_field -> boolean]" reals nil)
-    (real nonempty-type-from-decl nil reals nil)
-    (< const-decl "bool" reals nil)
-    (rational_pred const-decl "[real -> boolean]" rationals nil)
-    (rational nonempty-type-from-decl nil rationals nil)
-    (integer_pred const-decl "[rational -> boolean]" integers nil)
-    (int nonempty-type-eq-decl nil integers nil)
-    (>= const-decl "bool" reals nil)
-    (nat nonempty-type-eq-decl nil naturalnumbers nil)
-    (= const-decl "[T, T -> boolean]" equalities nil)
-    (Card const-decl "nat" finite_sets nil)
-    (card const-decl "{n: nat | n = Card(S)}" finite_sets nil)
-    (well_founded? const-decl "bool" orders nil))
-   827 630 t shostak)))
 (FiniteSetProp
  (finite_set_restrict 0
   (finite_set_restrict-1 nil 3381829584 3383472927
@@ -688,7 +252,7 @@
        ("2" (use "wf_card") nil nil))
       nil))
     nil)
-   proved
+   unfinished
    ((wf_card formula-decl nil WF_Card nil)
     (nonempty? const-decl "bool" sets nil)
     (member const-decl "bool" sets nil)
@@ -696,8 +260,7 @@
     (add const-decl "(nonempty?)" sets nil)
     (card_remove formula-decl nil finite_sets nil)
     (remove const-decl "set" sets nil)
-    (choose const-decl "(p)" sets nil)
-    (x!2 skolem-const-decl "finite_set[T]" FiniteSetInduction nil)
+    (choose const-decl "(p)" sets nil) nil
     (empty? const-decl "bool" sets nil)
     (FALSE const-decl "bool" booleans nil)
     (emptyset const-decl "set" sets nil)
@@ -727,5 +290,4 @@
     (well_founded? const-decl "bool" orders nil)
     (pred type-eq-decl nil defined_types nil))
    6409 630 t shostak)))
-
 
