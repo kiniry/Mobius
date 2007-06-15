@@ -7,38 +7,37 @@ import escjava.sortedProver.NodeBuilder.STerm;
 
 /**
  * This class represents the forall construct.
- * @author J. Charles
+ * @author J. Charles (julien.charles@inria.fr)
  */
 public class CForall extends CPred {
-	/** a builder to help pretty print*/
-	private final CoqNodeBuilder builder;
+  /** a builder to help pretty print. */
+  private final CoqNodeBuilder fBuilder;
 
-	/** the array of variables to quantify */
-	public final QuantVar[] vars;
+  /** the array of variables to quantify. */
+  public final QuantVar[] fVars;
 
-	/**
-	 * Constructs a forall.
-	 * @param builder the builder to pretty print the variables
-	 * @param vars the variable list
-	 * @param body the body of the forall
-	 */
-	public CForall(CoqNodeBuilder builder, QuantVar[] vars, STerm body) {
-		super(false, "forall", new STerm[]{body});
-		this.builder = builder;
-		this.vars = vars;
-	}
-	
-	/*
-	 * (non-Javadoc)
-	 * @see mobius.directVCGen.formula.coq.CoqNodeBuilder.CTerm#toString()
-	 */
-	public String toString() {
-		String res  = "(forall";
-		for(QuantVar v: vars) {
-			res += " (" + CoqNodeBuilder.normalize(v.name) + ":" + this.builder.buildSort(v.type) + ")";
-		}
-		res += ", " + args[0] + ")";
-		return res;
-	}
-
+  /**
+   * Constructs a forall.
+   * @param builder the builder to pretty print the variables
+   * @param vars the variable list
+   * @param body the body of the forall
+   */
+  public CForall(final CoqNodeBuilder builder, final QuantVar[] vars, final STerm body) {
+    super(false, "forall", new STerm[]{body});
+    this.fBuilder = builder;
+    this.fVars = vars;
+  }
+  
+  /*
+   * (non-Javadoc)
+   * @see mobius.directVCGen.formula.coq.CoqNodeBuilder.CTerm#toString()
+   */
+  public String toString() {
+    String res  = "(forall";
+    for (QuantVar v: fVars) {
+      res += " (" + CoqNodeBuilder.normalize(v.name) + ":" + this.fBuilder.buildSort(v.type) + ")";
+    }
+    res += ", " + fArgs[0] + ")";
+    return res;
+  }
 }
