@@ -121,8 +121,10 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
       ImageDescriptor combineIcon;
       ImageDescriptor restoreIcon;
       ImageDescriptor synchrIcon;
+      URL url = new URL(installURL, "icons/change_color_backward.gif");
+      System.out.println(url.toExternalForm());
       iconRight = ImageDescriptor.
-        createFromURL(new URL(installURL, "icons/change_color_backward.gif"));
+        createFromURL(url);
       iconLeft = ImageDescriptor.
         createFromURL(new URL(installURL, "icons/change_color_forward.gif"));
       refreshIcon = ImageDescriptor.
@@ -203,8 +205,8 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
   public void setActiveEditor(IEditorPart editor) {
     super.setActiveEditor(editor);
     bytecodeContribution.setActiveEditor(editor);
-    actionPlus.setActiveEditor(editor);
-    actionMinus.setActiveEditor(editor);
+    actionPlus.setMy_active_editor(editor);
+    actionMinus.setMy_active_editor(editor);
     refreshAction.setActiveEditor(editor);
     rebuildAction.setActiveEditor(editor);
     combineAction.setActiveEditor(editor);

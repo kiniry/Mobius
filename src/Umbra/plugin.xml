@@ -48,7 +48,7 @@
                class="umbra.java.actions.CommitAction"
                icon="icons/commit.gif"
                id="umbra.commit"
-               label="&amp;Commit Changes in Bytecode"
+               label="Commit Cha&amp;nges in Bytecode"
                menubarPath="umbra.bytecodeMenu/showGroup"
                style="push"
                toolbarPath="showGroup"/>
@@ -113,5 +113,31 @@
                menubarPath="umbra.bytecodeMenu/helpGroup"
                id="umbra.userGuide"/>
       </editorContribution>
+   </extension>
+<!-- ============================================== -->
+<!-- Define the main book                           -->
+<!-- ============================================== -->
+   <extension
+         point="org.eclipse.help.toc">
+      <toc
+            category="main"
+            file="help/index.xml"
+            primary="true">
+      </toc>
+   </extension>
+<!-- =============================================== -->
+<!-- Link the sections into the book                 -->
+<!-- =============================================== -->
+   <extension
+         point="org.eclipse.help.toc">
+      <toc
+            file="help/toc_user_guide.xml">
+      </toc>
+      <toc
+            file="help/toc_programmers_guide.xml">
+      </toc>
+      <toc
+            file="help/toc_reference.xml">
+      </toc>
    </extension>
 </plugin>

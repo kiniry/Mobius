@@ -51,7 +51,7 @@ public final class UmbraHelper {
   public static final String CLASS_EXTENSION    = ".class";
 
   /**
-   * The file extension for the files with the bytecode representation.
+   * The file extension for the files with the Umbra bytecode representation.
    */
   public static final String BYTECODE_EXTENSION   = ".btc";
 

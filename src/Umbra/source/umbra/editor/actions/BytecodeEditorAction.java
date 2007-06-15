@@ -13,7 +13,7 @@ import umbra.editor.Composition;
 import umbra.editor.IColorValues;
 
 /**
- *  This class defines an action of changing coloring style. Two
+ *  This class defines an action of changing the coloring style. Two
  *  instances of the class are used - one increases the coloring
  *  style mode and the other decreased the mode.
  *
@@ -24,45 +24,46 @@ public class BytecodeEditorAction extends Action {
   /**
    * The current bytecode editor for which the action takes place.
    */
-  private IEditorPart activeEditor;
+  private IEditorPart my_active_editor;
 
   /**
    * The number which decides on how the colouring mode
-   * changes (+1 for increasing, -1 for decreasing);
+   * changes (+1 for increasing, -1 for decreasing).
    */
-  private int change;
-  //@ invariant change==1 || change == -1;
+  private int my_colour_delta;
+  //@ invariant my_colour_delta==1 || my_colour_delta == -1;
 
   /**
-   * The current colouring style, see {@link IColorValues}
+   * The current colouring style, see {@link IColorValues}.
    */
-  private int mod;
+  private int my_mod;
 
   /**
    * The manager that initialises all the actions within the
    * bytecode plugin.
    */
-  private BytecodeEditorContributor contributor;
+  private BytecodeEditorContributor my_contributor;
 
+  /*@ requires change==1 || change == -1;
+    @
+    @*/
   /**
    * This constructor creates the action to change the
    * clouring mode.
    *
-   * @param contr TODO
-   * @param change +1 for increasing, -1 for decreasing the colouring
+   * @param a_contr the current manager that initialises actions for
+   *                the bytecode plugin
+   * @param a_change +1 for increasing, -1 for decreasing the colouring
    *    mode
-   * @param the initial colouring mode
+   * @param a_mode the initial colouring mode
    */
-  /*@ requires change==1 || change == -1;
-    @
-    @*/
-  public BytecodeEditorAction(BytecodeEditorContributor contr,
-                int change,
-                int mod) {
+  public BytecodeEditorAction(final BytecodeEditorContributor a_contr,
+                final int a_change,
+                final int a_mode) {
     super("Change color");
-    this.change = change;
-    this.mod = mod;
-    this.contributor=contr;
+    this.my_colour_delta = a_change;
+    this.my_mod = a_mode;
+    this.my_contributor = a_contr;
   }
 
 
@@ -70,16 +71,16 @@ public class BytecodeEditorAction extends Action {
    * This method changes global value related to the coloring style
    * and refreshes the editor window.
    */
-  public void run() {
-    if (mod == IColorValues.MODELS.length - 1) return;
-    mod = (mod + change) % (IColorValues.MODELS.length - 1);
-    Composition.setMod(mod);
-    if (activeEditor != null){
+  public final void run() {
+    if (my_mod == IColorValues.MODELS.length - 1) return;
+    my_mod = (my_mod + my_colour_delta) % (IColorValues.MODELS.length - 1);
+    Composition.setMod(my_mod);
+    if (my_active_editor != null) {
       try {
-        contributor.refreshEditor(activeEditor);
+        my_contributor.refreshEditor(my_active_editor);
       } catch (PartInitException e) {
-        MessageDialog.openWarning(activeEditor.getSite().getShell(),
-            "Bytecode", "Cannot open a new editor after closing "+
+        MessageDialog.openWarning(my_active_editor.getSite().getShell(),
+            "Bytecode", "Cannot open a new editor after closing " +
                   "the old one");
       }
     }
@@ -89,11 +90,11 @@ public class BytecodeEditorAction extends Action {
    * This method sets the bytecode editor for which the
    * action to change the colouring mode will be executed.
    *
-   * @param part the bytecode editor for which the action will be
+   * @param a_part the bytecode editor for which the action will be
    *    executed
    */
-  public void setActiveEditor(IEditorPart part) {
-    activeEditor = part;
-    mod = Composition.getMod();
+  public final void setMy_active_editor(final IEditorPart a_part) {
+    my_active_editor = a_part;
+    my_mod = Composition.getMod();
   }
 }

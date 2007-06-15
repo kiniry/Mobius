@@ -83,8 +83,8 @@ public class ClearHistoryAction implements IEditorActionDelegate {
   }
 
   /**
-   * The method reacts when the selected area changes in the Java
-   * source code editor. Currently, it does nothing.
+   * The method reacts when the selected area changes in the bytecode
+   * editor. Currently, it does nothing.
    *
    * @param an_action the action which triggered the selection change
    * @param a_selection the new selection.

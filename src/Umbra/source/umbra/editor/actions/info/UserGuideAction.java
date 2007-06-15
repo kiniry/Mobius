@@ -15,6 +15,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.browser.IWebBrowser;
 import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
+import org.eclipse.ui.help.IWorkbenchHelpSystem;
 
 import umbra.UmbraPlugin;
 
@@ -38,27 +39,12 @@ public class UserGuideAction implements IEditorActionDelegate {
    */
   public void run(IAction action) {
 
-    UmbraPlugin plugin = UmbraPlugin.getDefault();
-    IWorkbenchBrowserSupport bs = PlatformUI.getWorkbench().
-                         getBrowserSupport();
-    IWebBrowser wb;
-    try {
-      wb = bs.createBrowser("Umbra Guide");
-    } catch (PartInitException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-      return;
-    }
-
-    URL url = FileLocator.find(plugin.getBundle(),
-                   new Path("Info/guide.txt"),
-                   null);
-    try {
-      wb.openURL(url);
-    } catch (PartInitException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
+    
+    IWorkbenchHelpSystem help = PlatformUI.getWorkbench().getHelpSystem();
+    //FIXME open something more specific, note that it is tricky to know the
+    // proper ID to open
+    // it should open Info/guide.txt
+    help.displayHelp();
   }
 
 
