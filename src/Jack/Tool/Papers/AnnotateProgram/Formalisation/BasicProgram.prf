@@ -124,7 +124,7 @@
         nil))
       nil))
     nil)
-   unfinished
+   unchecked
    ((wf_state const-decl "boolean" State nil)
     (is_field const-decl "boolean" State nil)
     (defined? const-decl "boolean" ValProp nil)
@@ -165,7 +165,7 @@
     (("" (use "wf_program_variables_disjoint") (("" (grind) nil nil))
       nil))
     nil)
-   unfinished
+   unchecked
    ((wf_state const-decl "boolean" State nil)
     (is_local const-decl "boolean" State nil)
     (is_field const-decl "boolean" State nil)
@@ -331,7 +331,7 @@
         nil))
       nil))
     nil)
-   proved
+   unchecked
    ((wf_state const-decl "boolean" State nil)
     (update_field const-decl "PState" State nil)
     (update_local const-decl "PState" State nil)
@@ -345,7 +345,39 @@
     (is_field const-decl "boolean" State nil)
     (Name formal-nonempty-type-decl nil State nil)
     (update const-decl "PState" State nil))
-   115651 6210 t shostak)))
+   115651 6210 t shostak))
+ (wf_state_raise 0
+  (wf_state_raise-1 nil 3390908545 3390908549 ("" (grind) nil nil)
+   proved
+   ((defined? const-decl "boolean" ValProp nil)
+    (is_field const-decl "boolean" State nil)
+    (Name formal-nonempty-type-decl nil State nil)
+    (getFieldDecls const-decl "finite_set[FieldDecl]" ProgramFunctions
+     nil)
+    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
+    (is_local const-decl "boolean" State nil)
+    (getLocalDecls const-decl "finite_set[LocalVarDecl]"
+     ProgramFunctions nil)
+    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
+    (wf_state const-decl "boolean" State nil)
+    (raise const-decl "PState" State nil))
+   4122 310 t shostak))
+ (wf_state_catch 0
+  (wf_state_catch-1 nil 3390908555 3390908556 ("" (grind) nil nil)
+   proved
+   ((defined? const-decl "boolean" ValProp nil)
+    (is_field const-decl "boolean" State nil)
+    (Name formal-nonempty-type-decl nil State nil)
+    (getFieldDecls const-decl "finite_set[FieldDecl]" ProgramFunctions
+     nil)
+    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
+    (is_local const-decl "boolean" State nil)
+    (getLocalDecls const-decl "finite_set[LocalVarDecl]"
+     ProgramFunctions nil)
+    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
+    (wf_state const-decl "boolean" State nil)
+    (catch const-decl "PState" State nil))
+   1204 310 t shostak)))
 (ProgramSemantics
  (execute_set_TCC1 0
   (execute_set_TCC1-1 nil 3385977480 3390735662

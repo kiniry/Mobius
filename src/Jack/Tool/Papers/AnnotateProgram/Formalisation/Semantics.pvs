@@ -526,13 +526,11 @@ ASSUMING
       on_method_exit_exceptional(p, m, v, s, s2, n2, ds2, de2) IMPLIES
         s1 = s2 AND n1 = n2
 
-  % AT: Changed to suit the new type of execute_JML (removed de)
   execute_CaseJML_deterministic : ASSUMPTION
     FORALL (p : FullProgram, branches : list[[Expr, Stmt]], 
             s, s1, s2 : FullState,
             n1, n2 : nat, 
-            ds1 : deriv_stmt_rec_type(n1), de1 : deriv_expr_rec_type(n1),
-            ds2 : deriv_stmt_rec_type(n2), de2 : deriv_expr_rec_type(n2)) :
+            ds1 : deriv_stmt_rec_type(n1), ds2 : deriv_stmt_rec_type(n2)) :
         (FORALL (c : Stmt)(sigma, sigma1, sigma2 : FullState)
                 (k1 : upto(n1), k2 : upto(n2))
                 (m1 : below(k1), m2 : below(k2)) :

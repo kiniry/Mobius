@@ -10,7 +10,7 @@ BEGIN
   % using the value Bottom.
   Store : TYPE = [Name -> Val]
 
-  update_store(n : Name, v : (defined?))(s : Store) : Store =
+  update_store(n : Name, v : Val)(s : Store) : Store =
     s WITH [n := v]
 
   % Field and local variables.
@@ -121,6 +121,17 @@ BEGIN
       wf_state(p)(s) IMPLIES
       wf_Program(p) IMPLIES
         wf_state(p)(update(vn, v)(s))
+
+
+  wf_state_raise : LEMMA % :-)
+    FORALL(p : Program, s : PState, exc : Excpt) :
+      wf_state(p)(s) IMPLIES
+        wf_state(p)(raise(exc)(s))
+
+  wf_state_catch : LEMMA % :-)
+    FORALL(p : Program, s : PState) :
+      wf_state(p)(s) IMPLIES
+        wf_state(p)(catch(s))
 
 
 END State

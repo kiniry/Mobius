@@ -1,106 +1,111 @@
 (Evaluation
  (eval_TCC1 0
   (eval_TCC1-1 nil 3371189456 3390732283 ("" (termination-tcc) nil nil)
-   proved
+   unchecked
    ((Name formal-nonempty-type-decl nil Evaluation nil)
     (<< adt-def-decl "(well_founded?[NumExpr])" NumExpr_adt nil))
    121 80 nil nil))
  (eval_TCC2 0
   (eval_TCC2-1 nil 3371189456 3390732283 ("" (termination-tcc) nil nil)
-   proved
+   unchecked
    ((Name formal-nonempty-type-decl nil Evaluation nil)
     (<< adt-def-decl "(well_founded?[NumExpr])" NumExpr_adt nil))
    82 80 nil nil))
  (eval_TCC3 0
   (eval_TCC3-1 nil 3371189456 3390732283 ("" (termination-tcc) nil nil)
-   proved
+   unchecked
    ((Name formal-nonempty-type-decl nil Evaluation nil)
     (<< adt-def-decl "(well_founded?[NumExpr])" NumExpr_adt nil))
    116 90 nil nil))
  (eval_TCC4 0
   (eval_TCC4-1 nil 3371189456 3390732283 ("" (termination-tcc) nil nil)
-   proved
+   unchecked
    ((Name formal-nonempty-type-decl nil Evaluation nil)
     (<< adt-def-decl "(well_founded?[NumExpr])" NumExpr_adt nil))
    118 70 nil nil))
  (eval_TCC5 0
   (eval_TCC5-1 nil 3371189456 3390732283 ("" (termination-tcc) nil nil)
-   proved
+   unchecked
    ((Name formal-nonempty-type-decl nil Evaluation nil)
     (<< adt-def-decl "(well_founded?[NumExpr])" NumExpr_adt nil))
    106 90 nil nil))
  (eval_TCC6 0
   (eval_TCC6-1 nil 3371189456 3390732283 ("" (termination-tcc) nil nil)
-   proved
+   unchecked
    ((Name formal-nonempty-type-decl nil Evaluation nil)
     (<< adt-def-decl "(well_founded?[NumExpr])" NumExpr_adt nil))
    82 80 nil nil))
  (eval_TCC7 0
   (eval_TCC7-1 nil 3371189456 3390732283 ("" (termination-tcc) nil nil)
-   proved
+   unchecked
    ((Name formal-nonempty-type-decl nil Evaluation nil)
     (<< adt-def-decl "(well_founded?[NumExpr])" NumExpr_adt nil))
    105 90 nil nil))
  (eval_TCC8 0
   (eval_TCC8-1 nil 3371189456 3390732283 ("" (termination-tcc) nil nil)
-   proved
+   unchecked
    ((Name formal-nonempty-type-decl nil Evaluation nil)
     (<< adt-def-decl "(well_founded?[NumExpr])" NumExpr_adt nil))
    114 90 nil nil))
  (eval_TCC9 0
   (eval_TCC9-1 nil 3371189456 3390732283 ("" (subtype-tcc) nil nil)
-   proved ((/= const-decl "boolean" notequal nil)) 54 60 nil nil))
+   unchecked ((/= const-decl "boolean" notequal nil)) 54 60 nil nil))
  (eval_TCC10 0
   (eval_TCC10-1 nil 3371189456 3390732284
-   ("" (termination-tcc) nil nil) proved
+   ("" (termination-tcc) nil nil) unchecked
    ((Name formal-nonempty-type-decl nil Evaluation nil)
     (<< adt-def-decl "(well_founded?[BoolExpr])" BoolExpr_adt nil))
    114 90 nil nil))
  (eval_TCC11 0
   (eval_TCC11-1 nil 3371189456 3390732284
-   ("" (termination-tcc) nil nil) proved
+   ("" (termination-tcc) nil nil) unchecked
    ((Name formal-nonempty-type-decl nil Evaluation nil)
     (<< adt-def-decl "(well_founded?[BoolExpr])" BoolExpr_adt nil))
    123 100 nil nil))
  (eval_TCC12 0
   (eval_TCC12-1 nil 3371189456 3390732284
-   ("" (termination-tcc) nil nil) proved
+   ("" (termination-tcc) nil nil) unchecked
    ((Name formal-nonempty-type-decl nil Evaluation nil)
     (<< adt-def-decl "(well_founded?[BoolExpr])" BoolExpr_adt nil))
    95 90 nil nil))
  (eval_TCC13 0
   (eval_TCC13-1 nil 3371189456 3390732284
-   ("" (termination-tcc) nil nil) proved
+   ("" (termination-tcc) nil nil) unchecked
    ((Name formal-nonempty-type-decl nil Evaluation nil)
     (<< adt-def-decl "(well_founded?[BoolExpr])" BoolExpr_adt nil))
    114 90 nil nil))
  (eval_TCC14 0
   (eval_TCC14-1 nil 3371189456 3390732284
-   ("" (termination-tcc) nil nil) proved
+   ("" (termination-tcc) nil nil) unchecked
    ((Name formal-nonempty-type-decl nil Evaluation nil)
     (<< adt-def-decl "(well_founded?[BoolExpr])" BoolExpr_adt nil))
    117 90 nil nil))
  (eval_TCC15 0
   (eval_TCC15-1 nil 3390732272 3390732284 ("" (subtype-tcc) nil nil)
-   proved nil 40 40 nil nil)))
+   unchecked nil 40 40 nil nil)))
 (SemanticsTypes)
+(SemanticsJMLTypes)
 (Semantics
+ (update_stack_TCC1 0
+  (update_stack_TCC1-1 nil 3390908871 nil ("" (subtype-tcc) nil nil)
+   nil nil nil nil nil nil))
  (deriv_expr_TCC1 0
   (deriv_expr_TCC1-1 nil 3371191509 3390734855
-   ("" (skosimp) (("" (assert) nil nil)) nil) proved nil 29 30 t nil))
+   ("" (skosimp) (("" (assert) nil nil)) nil) unchecked nil 29 30 t
+   nil))
  (deriv_expr_TCC2 0
   (deriv_expr_TCC2-1 nil 3371191509 3390734855
-   ("" (skosimp*) (("" (assert) nil nil)) nil) proved nil 100 70 t
+   ("" (skosimp*) (("" (assert) nil nil)) nil) unchecked nil 100 70 t
    nil))
  (deriv_expr_TCC3 0
   (deriv_expr_TCC3-1 nil 3371191509 3390734855
-   ("" (subtype-tcc) nil nil) proved nil 38 40 nil nil))
+   ("" (subtype-tcc) nil nil) unchecked nil 38 40 nil nil))
  (deriv_expr_TCC4 0
   (deriv_expr_TCC4-1 nil 3371191509 3390734855
-   ("" (termination-tcc) nil nil) proved nil 53 50 nil nil))
+   ("" (termination-tcc) nil nil) unchecked nil 53 50 nil nil))
  (deriv_expr_TCC5 0
   (deriv_expr_TCC5-1 nil 3371191509 3390734856
-   ("" (subtype-tcc) nil nil) proved
+   ("" (subtype-tcc) nil nil) unchecked
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
@@ -119,10 +124,10 @@
    556 470 nil nil))
  (deriv_expr_TCC6 0
   (deriv_expr_TCC6-1 nil 3371191509 3390734856
-   ("" (subtype-tcc) nil nil) proved nil 66 60 nil nil))
+   ("" (subtype-tcc) nil nil) unchecked nil 66 60 nil nil))
  (deriv_expr_TCC7 0
   (deriv_expr_TCC7-1 nil 3371191509 3390734857
-   ("" (termination-tcc) nil nil) proved
+   ("" (termination-tcc) nil nil) unchecked
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
@@ -143,10 +148,10 @@
   (deriv_expr_TCC8-1 nil 3371191509 3390734857
    ("" (skosimp*) (("" (replace -4 2) (("" (assert) nil nil)) nil))
     nil)
-   proved nil 607 550 t nil))
+   unchecked nil 607 550 t nil))
  (deriv_expr_TCC9 0
   (deriv_expr_TCC9-1 nil 3371191509 3390734858
-   ("" (subtype-tcc) nil nil) proved
+   ("" (subtype-tcc) nil nil) unchecked
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
@@ -165,7 +170,7 @@
    910 800 nil nil))
  (deriv_expr_TCC10 0
   (deriv_expr_TCC10-1 nil 3371191509 3390734859
-   ("" (termination-tcc) nil nil) proved
+   ("" (termination-tcc) nil nil) unchecked
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
@@ -184,10 +189,10 @@
    1058 880 nil nil))
  (deriv_expr_TCC11 0
   (deriv_expr_TCC11-1 nil 3371191509 3390734860
-   ("" (subtype-tcc) nil nil) proved nil 324 330 nil nil))
+   ("" (subtype-tcc) nil nil) unchecked nil 324 330 nil nil))
  (deriv_expr_TCC12 0
   (deriv_expr_TCC12-1 nil 3371191509 3390734861
-   ("" (subtype-tcc) nil nil) proved
+   ("" (subtype-tcc) nil nil) unchecked
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
@@ -206,11 +211,11 @@
    1150 1010 nil nil))
  (deriv_expr_TCC13 0
   (deriv_expr_TCC13-1 nil 3371191509 3390734862
-   ("" (skosimp*) (("" (assert) nil nil)) nil) proved nil 778 660 t
+   ("" (skosimp*) (("" (assert) nil nil)) nil) unchecked nil 778 660 t
    nil))
  (deriv_expr_TCC14 0
   (deriv_expr_TCC14-1 nil 3390110778 3390734863
-   ("" (subtype-tcc) nil nil) proved
+   ("" (subtype-tcc) nil nil) unchecked
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
@@ -232,7 +237,7 @@
    1790 1570 nil nil))
  (deriv_expr_TCC15 0
   (deriv_expr_TCC15-1 nil 3390110778 3390734865
-   ("" (subtype-tcc) nil nil) proved
+   ("" (subtype-tcc) nil nil) unchecked
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
@@ -254,7 +259,7 @@
    1897 1620 nil nil))
  (deriv_expr_TCC16 0
   (deriv_expr_TCC16-1 nil 3390110778 3390734867
-   ("" (subtype-tcc) nil nil) proved
+   ("" (subtype-tcc) nil nil) unchecked
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
@@ -276,7 +281,7 @@
    1945 1720 nil nil))
  (deriv_expr_TCC17 0
   (deriv_expr_TCC17-1 nil 3390110778 3390734871
-   ("" (subtype-tcc) nil nil) proved
+   ("" (subtype-tcc) nil nil) unchecked
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
@@ -296,16 +301,22 @@
     (lookup_local const-decl "Val" State nil)
     (update_stack const-decl "FullState" Semantics nil))
    3416 1750 nil nil))
+ (deriv_expr_TCC18 0
+  (deriv_expr_TCC18-1 nil 3390908871 nil ("" (subtype-tcc) nil nil) nil
+   nil nil nil nil nil))
+ (deriv_expr_TCC19 0
+  (deriv_expr_TCC19-1 nil 3390908871 nil ("" (subtype-tcc) nil nil) nil
+   nil nil nil nil nil))
  (deriv_stmt_TCC1 0
   (deriv_stmt_TCC1-1 nil 3371191509 3390734871
-   ("" (skosimp*) (("" (assert) nil nil)) nil) proved nil 483 420 t
+   ("" (skosimp*) (("" (assert) nil nil)) nil) unchecked nil 483 420 t
    nil))
  (deriv_stmt_TCC2 0
   (deriv_stmt_TCC2-1 nil 3371191509 3390734872
-   ("" (termination-tcc) nil nil) proved nil 726 660 nil nil))
+   ("" (termination-tcc) nil nil) unchecked nil 726 660 nil nil))
  (deriv_stmt_TCC3 0
   (deriv_stmt_TCC3-1 nil 3371191509 3390734874
-   ("" (termination-tcc) nil nil) proved
+   ("" (termination-tcc) nil nil) unchecked
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
@@ -325,7 +336,7 @@
    2016 1760 nil nil))
  (deriv_stmt_TCC4 0
   (deriv_stmt_TCC4-1 nil 3371191509 3390734875
-   ("" (termination-tcc) nil nil) proved
+   ("" (termination-tcc) nil nil) unchecked
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
@@ -344,7 +355,7 @@
    1226 1030 nil nil))
  (deriv_stmt_TCC5 0
   (deriv_stmt_TCC5-1 nil 3371191509 3390734876
-   ("" (subtype-tcc) nil nil) proved
+   ("" (subtype-tcc) nil nil) unchecked
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
@@ -363,7 +374,7 @@
    782 690 nil nil))
  (deriv_stmt_TCC6 0
   (deriv_stmt_TCC6-1 nil 3371191509 3390734876
-   ("" (subtype-tcc) nil nil) proved
+   ("" (subtype-tcc) nil nil) unchecked
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
@@ -382,10 +393,10 @@
    533 430 nil nil))
  (deriv_stmt_TCC7 0
   (deriv_stmt_TCC7-1 nil 3371191509 3390734877
-   ("" (subtype-tcc) nil nil) proved nil 282 250 nil nil))
+   ("" (subtype-tcc) nil nil) unchecked nil 282 250 nil nil))
  (deriv_stmt_TCC8 0
   (deriv_stmt_TCC8-1 nil 3371191509 3390734878
-   ("" (subtype-tcc) nil nil) proved
+   ("" (subtype-tcc) nil nil) unchecked
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
@@ -404,7 +415,7 @@
    865 710 nil nil))
  (deriv_stmt_TCC9 0
   (deriv_stmt_TCC9-1 nil 3371191509 3390734879
-   ("" (termination-tcc) nil nil) proved
+   ("" (termination-tcc) nil nil) unchecked
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
@@ -423,7 +434,7 @@
    1267 1080 nil nil))
  (deriv_stmt_TCC10 0
   (deriv_stmt_TCC10-1 nil 3371191509 3390734880
-   ("" (termination-tcc) nil nil) proved
+   ("" (termination-tcc) nil nil) unchecked
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
@@ -442,7 +453,7 @@
    1275 1070 nil nil))
  (deriv_stmt_TCC11 0
   (deriv_stmt_TCC11-1 nil 3371191509 3390734881
-   ("" (termination-tcc) nil nil) proved
+   ("" (termination-tcc) nil nil) unchecked
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
@@ -461,17 +472,17 @@
    935 810 nil nil))
  (deriv_stmt_TCC12 0
   (deriv_stmt_TCC12-1 nil 3371191509 3390734881
-   ("" (subtype-tcc) nil nil) proved nil 289 260 nil nil)))
+   ("" (subtype-tcc) nil nil) unchecked nil 289 260 nil nil))
+ (deriv_stmt_determ_TCC1 0
+  (deriv_stmt_determ_TCC1-1 nil 3390908871 nil
+   ("" (subtype-tcc) nil nil) nil nil nil nil nil nil))
+ (deriv_stmt_determ_TCC2 0
+  (deriv_stmt_determ_TCC2-1 nil 3390908871 nil
+   ("" (subtype-tcc) nil nil) nil nil nil nil nil nil))
+ (deriv_expr_determ_TCC1 0
+  (deriv_expr_determ_TCC1-1 nil 3390908871 nil
+   ("" (subtype-tcc) nil nil) nil nil nil nil nil nil)))
 (SemanticsProofs
- (on_method_entry_deterministic_TCC1 0
-  (on_method_entry_deterministic_TCC1-1 nil 3390558040 3390734881
-   ("" (subtype-tcc) nil nil) proved nil 17 10 nil nil))
- (on_method_entry_deterministic_TCC2 0
-  (on_method_entry_deterministic_TCC2-1 nil 3390558040 3390734881
-   ("" (subtype-tcc) nil nil) proved nil 17 20 nil nil))
- (on_method_entry_deterministic_TCC3 0
-  (on_method_entry_deterministic_TCC3-1 nil 3390559422 3390734881
-   ("" (subtype-tcc) nil nil) proved nil 30 30 nil nil))
  (expr_determ_step 0
   (expr_determ_step-2 nil 3390559431 3390735039
    ("" (skosimp)
@@ -2702,7 +2713,7 @@
         nil))
       nil))
     nil)
-   proved
+   unchecked
    ((deriv_expr const-decl "bool" Semantics nil)
     (well_founded?_product formula-decl nil WF nil)
     (wf_nat formula-decl nil naturalnumbers nil)
@@ -2733,7 +2744,6 @@
     (up? adt-recognizer-decl "[lift -> boolean]" lift_adt nil)
     (numfield nonempty-type-eq-decl nil number_fields nil)
     (- const-decl "[numfield, numfield -> numfield]" number_fields nil)
-    (x!1 skolem-const-decl "[nat, nat]" SemanticsProofs nil)
     (Expr_induction formula-decl nil Expr_adt nil)
     (Name formal-nonempty-type-decl nil SemanticsProofs nil)
     (Expr type-decl nil Expr_adt nil) (Val type-decl nil Val_adt nil)
@@ -2751,18 +2761,15 @@
     (lift type-decl nil lift_adt nil)
     (Class type-eq-decl nil Program nil)
     (Program type-eq-decl nil Program nil)
-    (program formal-const-decl "[FullProgram -> Program[Name]]"
+    (program formal-const-decl "[FullProgram -> Program]"
      SemanticsProofs nil)
     (Excpt type-decl nil Excpt_adt nil)
     (PSt type-eq-decl nil State nil)
     (PState type-eq-decl nil State nil)
-    (pstate formal-const-decl "[FullState -> PState[Name]]"
-     SemanticsProofs nil)
+    (pstate formal-const-decl "[FullState -> PState]" SemanticsProofs
+     nil)
     (lookup formal-const-decl "[Name, FullState -> Val]"
             SemanticsProofs nil)
-    (update_FullState_type const-decl "boolean" SemanticsTypes nil)
-    (update_FullState formal-const-decl "(update_FullState_type)"
-     SemanticsProofs nil)
     (upto nonempty-type-eq-decl nil naturalnumbers nil)
     (<= const-decl "bool" reals nil)
     (deriv_stmt_type type-eq-decl nil SemanticsTypes nil)
@@ -3245,7 +3252,7 @@
     nil)
    unfinished nil nil nil nil nil))
  (stmt_determ_step 0
-  (stmt_determ_step-1 nil 3390558061 3390734848
+  (stmt_determ_step-1 nil 3390558061 3390909832
    ("" (skosimp)
     ((""
       (use "wf_induction[[nat, nat], LAMBDA(n1, n2 : [nat, nat]) : proj_1(n1) < proj_1(n2) AND proj_2(n1) < proj_2(n2)]")
@@ -3276,35 +3283,13 @@
                                    "x!1`1"
                                    "x!1`2"
                                    " LAMBDA (k: upto(x!1`1))(p_1: FullProgram)
-                                                                 (s: Stmt[Name], sigma1_1, sigma2_1: FullState)
-                                                                 (m_1: below(k)):
-                                                            deriv_stmt(p_1)(s, sigma1_1, sigma2_1)(m_1)"
-                                   "LAMBDA (k_1: upto(x!1`1))(p_2: FullProgram)
-                                                                 (c_1: Expr[Name], sigma1_2: FullState, v: Val,
-                                                                  sigma2_2: FullState)
-                                                                 (m_2: below(k_1)):
-                                                            deriv_expr(p_2)(c_1, sigma1_2, v, sigma2_2)(m_2)
-                                                                      (LAMBDA (p_1: FullProgram)
-                                                                              (s: Stmt[Name],
-                                                                               sigma1_1, sigma2_1: FullState)
-                                                                              (m_1: below(m_2)):
-                                                                         deriv_stmt
-                                                                         (p_1)(s, sigma1_1, sigma2_1)(m_1))"
+                                                                           (s: Stmt[Name], sigma1_1, sigma2_1: FullState)
+                                                                           (m_1: below(k)):
+                                                                      deriv_stmt(p_1)(s, sigma1_1, sigma2_1)(m_1)"
                                    " LAMBDA (k: upto(x!1`2))(p_1: FullProgram)
-                                                                 (s: Stmt[Name], sigma1_1, sigma2_1: FullState)
-                                                                 (m_1: below(k)):
-                                                            deriv_stmt(p_1)(s, sigma1_1, sigma2_1)(m_1)"
-                                   "LAMBDA (k_1: upto(x!1`2))(p_2: FullProgram)
-                                                                 (c_1: Expr[Name], sigma1_2: FullState, v: Val,
-                                                                  sigma2_2: FullState)
-                                                                 (m_2: below(k_1)):
-                                                            deriv_expr(p_2)(c_1, sigma1_2, v, sigma2_2)(m_2)
-                                                                      (LAMBDA (p_1: FullProgram)
-                                                                              (s: Stmt[Name],
-                                                                               sigma1_1, sigma2_1: FullState)
-                                                                              (m_1: below(m_2)):
-                                                                         deriv_stmt
-                                                                         (p_1)(s, sigma1_1, sigma2_1)(m_1))")
+                                                                           (s: Stmt[Name], sigma1_1, sigma2_1: FullState)
+                                                                           (m_1: below(k)):
+                                                                      deriv_stmt(p_1)(s, sigma1_1, sigma2_1)(m_1)")
                                   (("2"
                                     (assert)
                                     (("2"
@@ -3313,56 +3298,17 @@
                                        ("2"
                                         (skosimp*)
                                         (("2"
-                                          (use "expr_determ_step")
-                                          (("2"
-                                            (expand "deriv_expr" -1)
-                                            (("2"
-                                              (assert)
-                                              (("2"
-                                                (split -1)
-                                                (("1" (propax) nil nil)
-                                                 ("2"
-                                                  (skosimp*)
-                                                  (("2"
-                                                    (inst
-                                                     -9
-                                                     "(m1!2, m2!2)")
-                                                    (("2"
-                                                      (assert)
-                                                      (("2"
-                                                        (inst
-                                                         -9
-                                                         "c!2"
-                                                         "sigma!3"
-                                                         "sigma1!3"
-                                                         "sigma2!3")
-                                                        (("2"
-                                                          (assert)
-                                                          nil
-                                                          nil))
-                                                        nil))
-                                                      nil))
-                                                    nil))
-                                                  nil))
-                                                nil))
-                                              nil))
-                                            nil))
-                                          nil))
-                                        nil)
-                                       ("3"
-                                        (skosimp*)
-                                        (("3"
                                           (inst -7 "(m1!1, m2!1)")
-                                          (("3"
+                                          (("2"
                                             (assert)
-                                            (("3"
+                                            (("2"
                                               (inst
                                                -7
                                                "c!1"
                                                "sigma!2"
                                                "sigma1!2"
                                                "sigma2!2")
-                                              (("3" (assert) nil nil))
+                                              (("2" (assert) nil nil))
                                               nil))
                                             nil))
                                           nil))
@@ -3841,7 +3787,7 @@
                                                         (inst
                                                          -13
                                                          "TryCatch2_var!1"
-                                                         "update_FullState(LAMBDA(s : PState[Name]) : s WITH [ex := bottom], tau1!2)"
+                                                         "update_PState(tau1!2, catch)"
                                                          "tau2!1"
                                                          "tau2!2")
                                                         (("1"
@@ -3853,29 +3799,50 @@
 
                                                                -13)
                                                               (("1"
-                                                                (inst
-                                                                 -12
-                                                                 "(m3!1, m3!2)")
+                                                                (replace
+
+                                                                 -14)
                                                                 (("1"
                                                                   (assert)
                                                                   (("1"
                                                                     (inst
                                                                      -12
-                                                                     "TryCatch3_var!1"
-                                                                     "update_FullState(LAMBDA (s : PState[Name]) : s WITH [ex := bottom], tau2!2)"
-                                                                     "tau3!1"
-                                                                     "tau3!2")
+                                                                     "(m3!1, m3!2)")
                                                                     (("1"
                                                                       (assert)
                                                                       (("1"
-                                                                        (flatten)
+                                                                        (inst
+                                                                         -12
+                                                                         "TryCatch3_var!1"
+                                                                         "update_PState(tau2!2, catch)"
+                                                                         "tau3!1"
+                                                                         "tau3!2")
                                                                         (("1"
-                                                                          (replace
-
-                                                                           -12)
+                                                                          (assert)
                                                                           (("1"
-                                                                            (assert)
-                                                                            nil
+                                                                            (flatten)
+                                                                            (("1"
+                                                                              (replace
+
+                                                                               -12)
+                                                                              (("1"
+                                                                                (replace
+
+                                                                                 -13)
+                                                                                (("1"
+                                                                                  (replace
+
+                                                                                   -6
+                                                                                   :dir
+
+                                                                                   rl)
+                                                                                  (("1"
+                                                                                    (assert)
+                                                                                    nil
+                                                                                    nil))
+                                                                                  nil))
+                                                                                nil))
+                                                                              nil))
                                                                             nil))
                                                                           nil))
                                                                         nil))
@@ -3925,7 +3892,7 @@
                                                                     (inst
                                                                      -13
                                                                      "TryCatch3_var!1"
-                                                                     "update_FullState(LAMBDA (s : PState[Name]) : s WITH [ex := bottom], tau2!2)"
+                                                                     "update_PState(tau2!2, catch)"
                                                                      "tau3!1"
                                                                      "tau3!2")
                                                                     (("2"
@@ -3937,8 +3904,21 @@
 
                                                                            -13)
                                                                           (("2"
-                                                                            (assert)
-                                                                            nil
+                                                                            (replace
+
+                                                                             -14)
+                                                                            (("2"
+                                                                              (replace
+
+                                                                               -6
+                                                                               :dir
+
+                                                                               rl)
+                                                                              (("2"
+                                                                                (assert)
+                                                                                nil
+                                                                                nil))
+                                                                              nil))
                                                                             nil))
                                                                           nil))
                                                                         nil))
@@ -4021,15 +4001,14 @@
     (Stmt_induction formula-decl nil Stmt_adt nil)
     (execute_CaseJML_deterministic formula-decl nil SemanticsProofs
      nil)
-    (deriv_expr const-decl "bool" Semantics nil)
-    (expr_determ_step formula-decl nil SemanticsProofs nil)
-    (deriv_expr def-decl "bool" Semantics nil)
     (up? adt-recognizer-decl "[lift -> boolean]" lift_adt nil)
     (CaseJML? adt-recognizer-decl "[Stmt -> boolean]" Stmt_adt nil)
     (CaseJML adt-constructor-decl "[list[[Expr, Stmt]] -> (CaseJML?)]"
      Stmt_adt nil)
+    (expr_determ_step formula-decl nil SemanticsProofs nil)
     (numfield nonempty-type-eq-decl nil number_fields nil)
     (+ const-decl "[numfield, numfield -> numfield]" number_fields nil)
+    (deriv_expr const-decl "bool" Semantics nil)
     (IfThenElse? adt-recognizer-decl "[Stmt -> boolean]" Stmt_adt nil)
     (IfThenElse adt-constructor-decl
      "[[Expr, Stmt, Stmt] -> (IfThenElse?)]" Stmt_adt nil)
@@ -4038,6 +4017,7 @@
      Stmt_adt nil)
     (Set adt-constructor-decl "[[Name, Expr] -> (Set?)]" Stmt_adt nil)
     (Set? adt-recognizer-decl "[Stmt -> boolean]" Stmt_adt nil)
+    (deriv_expr def-decl "bool" Semantics nil)
     (execute_set_deterministic formula-decl nil SemanticsProofs nil)
     (Skip adt-constructor-decl "(Skip?)" Stmt_adt nil)
     (Skip? adt-recognizer-decl "[Stmt -> boolean]" Stmt_adt nil)
@@ -4047,8 +4027,7 @@
     (- const-decl "[numfield, numfield -> numfield]" number_fields nil)
     (Throw adt-constructor-decl "(Throw?)" Stmt_adt nil)
     (Throw? adt-recognizer-decl "[Stmt -> boolean]" Stmt_adt nil)
-    (bottom adt-constructor-decl "(bottom?)" lift_adt nil)
-    (bottom? adt-recognizer-decl "[lift -> boolean]" lift_adt nil)
+    (catch const-decl "PState" State nil)
     (TryCatch? adt-recognizer-decl "[Stmt -> boolean]" Stmt_adt nil)
     (TryCatch adt-constructor-decl
      "[[Stmt, Stmt, Stmt] -> (TryCatch?)]" Stmt_adt nil)
@@ -4072,17 +4051,17 @@
     (lift type-decl nil lift_adt nil)
     (Class type-eq-decl nil Program nil)
     (Program type-eq-decl nil Program nil)
-    (program formal-const-decl "[FullProgram -> Program[Name]]"
+    (program formal-const-decl "[FullProgram -> Program]"
      SemanticsProofs nil)
     (Excpt type-decl nil Excpt_adt nil)
     (PSt type-eq-decl nil State nil)
     (PState type-eq-decl nil State nil)
-    (pstate formal-const-decl "[FullState -> PState[Name]]"
-     SemanticsProofs nil)
+    (pstate formal-const-decl "[FullState -> PState]" SemanticsProofs
+     nil)
     (lookup formal-const-decl "[Name, FullState -> Val]"
             SemanticsProofs nil)
-    (update_FullState_type const-decl "boolean" SemanticsTypes nil)
-    (update_FullState formal-const-decl "(update_FullState_type)"
+    (update_PState_type const-decl "boolean" SemanticsTypes nil)
+    (update_PState formal-const-decl "(update_PState_type)"
      SemanticsProofs nil)
     (upto nonempty-type-eq-decl nil naturalnumbers nil)
     (<= const-decl "bool" reals nil)
@@ -4126,7 +4105,7 @@
     (wf_induction formula-decl nil wf_induction nil)
     (well_founded? const-decl "bool" orders nil)
     (pred type-eq-decl nil defined_types nil))
-   1554485 28250 t nil))
+   790529 23240 t nil))
  (expr_determ 0
   (expr_determ-1 nil 3390558082 3390735271
    ("" (skosimp*)
@@ -4150,14 +4129,13 @@
         nil))
       nil))
     nil)
-   proved
+   unchecked
    ((expr_determ_step formula-decl nil SemanticsProofs nil)
     (Val type-decl nil Val_adt nil)
     (FullState formal-type-decl nil SemanticsProofs nil)
     (FullProgram formal-type-decl nil SemanticsProofs nil)
     (Name formal-nonempty-type-decl nil SemanticsProofs nil)
     (Expr type-decl nil Expr_adt nil)
-    (derives const-decl "bool" Semantics nil)
     (number nonempty-type-decl nil numbers nil)
     (boolean nonempty-type-decl nil booleans nil)
     (number_field_pred const-decl "[number -> boolean]" number_fields
@@ -4185,7 +4163,7 @@
         (("" (skosimp*)
           (("" (inst?) (("" (inst?) (("" (assert) nil))))))))))))
     nil)
-   proved
+   unchecked
    ((stmt_determ_step formula-decl nil SemanticsProofs nil)
     (FullState formal-type-decl nil SemanticsProofs nil)
     (FullProgram formal-type-decl nil SemanticsProofs nil)
@@ -4204,64 +4182,70 @@
     (number_field_pred const-decl "[number -> boolean]" number_fields
      nil)
     (boolean nonempty-type-decl nil booleans nil)
-    (number nonempty-type-decl nil numbers nil)
-    (derives const-decl "bool" Semantics nil))
+    (number nonempty-type-decl nil numbers nil))
    214 170 nil nil)))
-(SemanticsCommon
- (check_assertion_TCC1 0
-  (check_assertion_TCC1-1 nil 3385977476 3390732509
-   ("" (subtype-tcc) nil nil) proved
-   ((boolean nonempty-type-decl nil booleans nil)
-    (bool nonempty-type-eq-decl nil booleans nil)
-    (NOT const-decl "[bool -> bool]" booleans nil)
-    (number nonempty-type-decl nil numbers nil)
-    (number_field_pred const-decl "[number -> boolean]" number_fields
-     nil)
-    (number_field nonempty-type-from-decl nil number_fields nil)
-    (real_pred const-decl "[number_field -> boolean]" reals nil)
-    (real nonempty-type-from-decl nil reals nil)
-    (>= const-decl "bool" reals nil)
-    (rational_pred const-decl "[real -> boolean]" rationals nil)
-    (rational nonempty-type-from-decl nil rationals nil)
-    (integer_pred const-decl "[rational -> boolean]" integers nil)
-    (int nonempty-type-eq-decl nil integers nil)
-    (nat nonempty-type-eq-decl nil naturalnumbers nil))
-   108 90 nil nil))
+(SemanticsJML
+ (execute_set_TCC1 0
+  (execute_set_TCC1-1 nil 3390908875 nil ("" (subtype-tcc) nil nil) nil
+   nil nil nil nil nil))
+ (execute_set_TCC2 0
+  (execute_set_TCC2-1 nil 3390908875 nil ("" (subtype-tcc) nil nil) nil
+   nil nil nil nil nil))
+ (execute_set_TCC3 0
+  (execute_set_TCC3-1 nil 3390908875 nil ("" (subtype-tcc) nil nil) nil
+   nil nil nil nil nil))
+ (execute_set_TCC4 0
+  (execute_set_TCC4-1 nil 3390908875 nil ("" (subtype-tcc) nil nil) nil
+   nil nil nil nil nil))
  (execute_CaseJML_TCC1 0
-  (execute_CaseJML_TCC1-1 nil 3385977476 3390732509
-   ("" (skosimp*) (("" (assert) nil nil)) nil) proved nil 64 60 t nil))
+  (execute_CaseJML_TCC1-1 nil 3390908875 nil ("" (subtype-tcc) nil nil)
+   nil nil nil nil nil nil))
  (execute_CaseJML_TCC2 0
-  (execute_CaseJML_TCC2-1 nil 3385977476 3390732509
-   ("" (expand "execute_CaseJML_type")
-    (("" (skosimp) (("" (lift-if) (("" (assert) nil nil)) nil)) nil))
-    nil)
-   proved nil 59 30 t nil))
+  (execute_CaseJML_TCC2-1 nil 3390908875 nil ("" (subtype-tcc) nil nil)
+   nil nil nil nil nil nil))
  (execute_CaseJML_TCC3 0
-  (execute_CaseJML_TCC3-1 nil 3390110778 3390732509
-   ("" (subtype-tcc) nil nil) proved
-   ((boolean nonempty-type-decl nil booleans nil)
-    (bool nonempty-type-eq-decl nil booleans nil)
-    (NOT const-decl "[bool -> bool]" booleans nil)
-    (number nonempty-type-decl nil numbers nil)
-    (number_field_pred const-decl "[number -> boolean]" number_fields
-     nil)
-    (number_field nonempty-type-from-decl nil number_fields nil)
-    (real_pred const-decl "[number_field -> boolean]" reals nil)
-    (real nonempty-type-from-decl nil reals nil)
-    (>= const-decl "bool" reals nil)
-    (rational_pred const-decl "[real -> boolean]" rationals nil)
-    (rational nonempty-type-from-decl nil rationals nil)
-    (integer_pred const-decl "[rational -> boolean]" integers nil)
-    (int nonempty-type-eq-decl nil integers nil)
-    (nat nonempty-type-eq-decl nil naturalnumbers nil)
-    (pstate formal-const-decl "[FullState -> PState]" SemanticsCommon
-     nil)
-    (PState type-eq-decl nil State nil)
-    (PSt type-eq-decl nil State nil) (lift type-decl nil lift_adt nil)
-    (Excpt type-decl nil Excpt_adt nil)
-    (FullState formal-type-decl nil SemanticsCommon nil)
-    (FullProgram formal-type-decl nil SemanticsCommon nil)
-    (Name formal-nonempty-type-decl nil SemanticsCommon nil)
-    (execute_CaseJML_type const-decl "boolean" SemanticsTypes nil))
-   189 170 nil nil)))
+  (execute_CaseJML_TCC3-1 nil 3390908875 nil ("" (subtype-tcc) nil nil)
+   nil nil nil nil nil nil))
+ (on_method_entry_TCC1 0
+  (on_method_entry_TCC1-1 nil 3390908875 nil ("" (subtype-tcc) nil nil)
+   nil nil nil nil nil nil))
+ (on_method_entry_TCC2 0
+  (on_method_entry_TCC2-1 nil 3390908875 nil ("" (subtype-tcc) nil nil)
+   nil nil nil nil nil nil))
+ (on_method_entry_TCC3 0
+  (on_method_entry_TCC3-1 nil 3390908875 nil ("" (subtype-tcc) nil nil)
+   nil nil nil nil nil nil))
+ (on_method_entry_TCC4 0
+  (on_method_entry_TCC4-1 nil 3390908875 nil ("" (subtype-tcc) nil nil)
+   nil nil nil nil nil nil))
+ (on_method_entry_TCC5 0
+  (on_method_entry_TCC5-1 nil 3390908875 nil ("" (subtype-tcc) nil nil)
+   nil nil nil nil nil nil))
+ (on_method_exit_normal_TCC1 0
+  (on_method_exit_normal_TCC1-1 nil 3390908875 nil
+   ("" (subtype-tcc) nil nil) nil nil nil nil nil nil))
+ (on_method_exit_normal_TCC2 0
+  (on_method_exit_normal_TCC2-1 nil 3390908875 nil
+   ("" (subtype-tcc) nil nil) nil nil nil nil nil nil))
+ (on_method_exit_normal_TCC3 0
+  (on_method_exit_normal_TCC3-1 nil 3390908875 nil
+   ("" (subtype-tcc) nil nil) nil nil nil nil nil nil))
+ (on_method_exit_normal_TCC4 0
+  (on_method_exit_normal_TCC4-1 nil 3390908875 nil
+   ("" (subtype-tcc) nil nil) nil nil nil nil nil nil))
+ (on_method_exit_normal_TCC5 0
+  (on_method_exit_normal_TCC5-1 nil 3390908875 nil
+   ("" (subtype-tcc) nil nil) nil nil nil nil nil nil))
+ (on_method_exit_exceptional_TCC1 0
+  (on_method_exit_exceptional_TCC1-1 nil 3390908875 nil
+   ("" (subtype-tcc) nil nil) nil nil nil nil nil nil))
+ (on_method_exit_exceptional_TCC2 0
+  (on_method_exit_exceptional_TCC2-1 nil 3390908875 nil
+   ("" (subtype-tcc) nil nil) nil nil nil nil nil nil))
+ (on_method_exit_exceptional_TCC3 0
+  (on_method_exit_exceptional_TCC3-1 nil 3390908875 nil
+   ("" (subtype-tcc) nil nil) nil nil nil nil nil nil))
+ (on_method_exit_exceptional_TCC4 0
+  (on_method_exit_exceptional_TCC4-1 nil 3390908875 nil
+   ("" (subtype-tcc) nil nil) nil nil nil nil nil nil)))
 
