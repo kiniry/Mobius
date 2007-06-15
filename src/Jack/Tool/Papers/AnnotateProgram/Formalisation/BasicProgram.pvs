@@ -10,6 +10,9 @@ BEGIN
   % using the value Bottom.
   Store : TYPE = [Name -> Val]
 
+  update_store(n : Name, v : (defined?))(s : Store) : Store =
+    s WITH [n := v]
+
   % Field and local variables.
   PSt : TYPE = [# fvs, lvs : Store #]
 
@@ -57,6 +60,11 @@ BEGIN
     ELSE sigma
     ENDIF
 
+  raise(exc : Excpt)(sigma : PState) : PState =
+    sigma WITH [ex := up(exc)]
+
+  catch(sigma : PState) : PState =
+    sigma WITH [ex := bottom]
 
   val2int(v : Val) : int =
     IF Int?(v)
@@ -144,7 +152,7 @@ BEGIN
       s1 = s2
 
   IMPORTING Semantics[Name, Program, PState, id, id, lookup,
-                      LAMBDA (s : PState, pst : PState) : pst, %proj_2 ?
+                      LAMBDA(s : PState, upd : [PState -> PState]) : upd(s),
                       execute_set, execute_CaseJML,
                       on_method_event, on_method_event, on_method_event]
 

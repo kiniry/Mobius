@@ -57,10 +57,12 @@ BEGIN
             SemanticsJMLTypes[Name, MPState, LAMBDA (s : MPState) : gvs(s)]
 
   update_PState : (update_PState_type) =
-    LAMBDA (s : MPState, pst : PState) : s WITH [pstate := pst]
+    LAMBDA (s : MPState, upd : [PState -> PState]) : 
+      s WITH [pstate := upd(pstate(s))]
 
   update_GhostVars : (update_GhostVars_type) =
-    LAMBDA (s : MPState, st : Store) : s WITH [gvs := st]
+    LAMBDA (s : MPState, upd : [Store -> Store]) : 
+      s WITH [gvs := upd(gvs(s))]
 
   IMPORTING SemanticsJML[Name, MonitoredProgram, MPState,
                          LAMBDA (mp : MonitoredProgram) : program(mp),

@@ -10,10 +10,12 @@ BEGIN
             SemanticsJMLTypes[Name, APState, LAMBDA (s : APState) : gvs(s)]
 
   update_PState : (update_PState_type) =
-    LAMBDA (s : APState, pst : PState) : s WITH [pstate := pst]
+    LAMBDA (s : APState, upd : [PState -> PState]) : 
+      s WITH [pstate := upd(pstate(s))]
 
   update_GhostVars : (update_GhostVars_type) =
-    LAMBDA (s : APState, st : Store) : s WITH [gvs := st]
+    LAMBDA (s : APState, upd : [Store -> Store]) : 
+      s WITH [gvs := upd(gvs(s))]
 
   IMPORTING SemanticsJML[Name, Program, APState, id,
                          LAMBDA (s : APState) : pstate(s),
@@ -90,7 +92,7 @@ BEGIN
       is_ghost(vn, s) IMPLIES 
         NOT is_local(vn, pstate(s)) AND NOT is_field(vn, pstate(s))
 
-   wf_update_PState : LEMMA % :-)
+   wf_update_PState : LEMMA % 
      FORALL (p : Program, s1, s2 : APState, 
              upd : [PState[Name] -> PState[Name]]) :
        wf_state(p)(s1) IMPLIES

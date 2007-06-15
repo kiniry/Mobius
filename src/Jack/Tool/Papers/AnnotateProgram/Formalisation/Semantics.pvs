@@ -82,9 +82,10 @@ BEGIN
 
   deriv_stmt_rec_type(n : nat) : TYPE = [k : upto(n) -> deriv_stmt_type(k)]
 
-  update_PState_type(f : [FullState, PState -> FullState]) : boolean =
-    FORALL (s1, s2 : FullState, pst : PState) :
-      f(s1, pst) = s2 IMPLIES pstate(s2) = pst
+  update_PState_type(f : [FullState, [PState -> PState] -> FullState]) : 
+    boolean =
+    FORALL (s1, s2 : FullState, upd : [PState -> PState]) :
+      f(s1, upd) = s2 IMPLIES pstate(s2) = upd(pstate(s1))
 
   execute_set_type
     (f : [FullProgram, Name, Expr, FullState, FullState, n : nat,
@@ -120,9 +121,10 @@ BEGIN
 
   IMPORTING Program[Name]
 
-  update_GhostVars_type(f : [FullState, Store -> FullState]) : boolean =
-    FORALL (s1, s2 : FullState, gvs : Store) :
-      f(s1, gvs) = s2 IMPLIES gvs(s2) = gvs
+  update_GhostVars_type(f : [FullState, [Store -> Store] -> FullState]) : 
+    boolean =
+    FORALL (s1, s2 : FullState, gvs : [Store -> Store]) :
+      f(s1, gvs) = s2 IMPLIES gvs(s2) = gvs(s1)
 
 
 END SemanticsJMLTypes
@@ -148,8 +150,9 @@ BEGIN
   update_stack(this_val : Val, arg : LocalVarDecl, param_val : Val,
                lvds : finite_set[LocalVarDecl], s : FullState) : FullState =
     LET new_pstate =
-      pstate(s) WITH [st := st(pstate(s))
-                  WITH [lvs := LAMBDA(n : Name) :
+      LAMBDA(ps : PState) :
+      ps WITH [st := st(ps)
+         WITH [lvs := LAMBDA(n : Name) :
                     IF n = This
                     THEN this_val
                     ELSIF n = name(arg)
@@ -157,7 +160,7 @@ BEGIN
                     ELSIF var_names(lvds)(n)
                     THEN default_value(jtype(choose({l : LocalVarDecl | 
                                                      name(l) = n AND lvds(l)})))
-                    ELSE lvs(st(pstate(s)))(n)
+                    ELSE lvs(st(ps))(n)
                     ENDIF]]
     IN update_PState(s, new_pstate)
 
@@ -198,7 +201,7 @@ BEGIN
            deriv_expr_rec(n)(p)(e, sigma1, v, tau)(n - 1) AND
            sigma2 = (IF up?(ex(pstate(tau)))
                      THEN tau
-                     ELSE update_PState(tau, update(vn, v)(pstate(tau)))
+                     ELSE update_PState(tau, update(vn, v))
                      ENDIF)),
       BExpr(b) :
         sigma1 = sigma2 AND n = 0 AND
@@ -221,8 +224,7 @@ BEGIN
           deriv_expr_rec(n)(p)(pr, tau1, pv, tau2)(m2) AND
           % see if the receiver is null (and there were no previous exceptions)
           tau3 = IF bottom?(ex(pstate(tau2))) AND Null?(a)
-                 THEN update_PState(tau2, 
-                                    pstate(tau2) WITH [ex := up(NullPointer)])
+                 THEN update_PState(tau2,  raise(NullPointer))
                  ELSE tau2
                  ENDIF AND
           % lookup method definition
@@ -255,8 +257,8 @@ BEGIN
                                           bounded_deriv_expr_rec(m6))
           ENDIF AND
           % restore the value of the argument
-          sigma2 = update_PState(tau8, update_local(name(arg(md)),
-                                                    old_val_arg)(pstate(tau8))),
+          sigma2 = update_PState(tau8, 
+                                 update_local(name(arg(md)), old_val_arg)),
       NExpr(n) :
         sigma1 = sigma2 AND n = 0 AND
         v = Int(eval(n)(sigma1)),
@@ -311,22 +313,21 @@ BEGIN
          EXISTS (v : Val) : deriv_expr_rec(n)(p)(e, sigma1, v, sigma2)(n - 1),
       Throw: 
         n = 0 AND
-        sigma2 = update_PState(sigma1, pstate(sigma1) WITH [ex := up(Throwable)]),
+        sigma2 = update_PState(sigma1, raise(Throwable)),
       TryCatch(c1, c2, c3) :
         EXISTS (m1, m2, m3 : nat)(tau1, tau2, tau3 : FullState) :
           n = m1 + m2 + m3 + 1 AND
           deriv_stmt(p)(c1, sigma1, tau1)(m1) AND
           deriv_stmt(p)(IF up?(ex(pstate(tau1))) THEN c2 ELSE Skip ENDIF,
-                        update_PState(tau1, pstate(tau1) WITH [ex := bottom]),
+                        update_PState(tau1, catch),
                         tau2)(m2) AND
           deriv_stmt(p)(c3, 
-                        update_PState(tau2, pstate(tau2) WITH [ex := bottom]),
+                        update_PState(tau2, catch),
                         tau3)(m3) AND
-          sigma2 = update_PState(tau3,
-                                 IF up?(ex(pstate(tau2)))
-                                 THEN pstate(tau3) WITH [ex := ex(pstate(tau2))]
-                                 ELSE pstate(tau3) WITH [ex := ex(pstate(tau3))]
-                                 ENDIF),
+          sigma2 = IF up?(ex(pstate(tau2)))
+                   THEN update_PState(tau3, raise(down(ex(pstate(tau2)))))
+                   ELSE tau3 % update_PState(tau3, raise(down(ex(pstate(tau3)))))
+                   ENDIF,
       While(e, c) :
         n > 0 AND
         deriv_stmt(p)(IfThenElse(e, While(e, c), Skip), sigma1, sigma2)(n - 1)
@@ -538,16 +539,8 @@ ASSUMING
           ds1(k1)(p)(c, sigma, sigma1)(m1) AND
           ds2(k2)(p)(c, sigma, sigma2)(m2) IMPLIES
             sigma1 = sigma2 AND m1 = m2) IMPLIES
-        (FORALL (c : Expr)(v1, v2 : Val)(sigma, sigma1, sigma2 : FullState)
-                (k1 : upto(n1), k2 : upto(n2))
-                (m1 : below(k1), m2 : below(k2)) :
-          de1(k1)(p)(c, sigma, v1, sigma1)(m1) AND
-          de2(k2)(p)(c, sigma, v2, sigma2)(m2) IMPLIES
-            v1 = v2 AND sigma1 = sigma2 AND m1 = m2) IMPLIES
          execute_CaseJML(p, branches, s, s1, n1, ds1) IMPLIES 
          execute_CaseJML(p, branches, s, s2, n2, ds2) IMPLIES 
-%         execute_CaseJML(p, branches, s, s1, n1, ds1, de1) IMPLIES 
-%         execute_CaseJML(p, branches, s, s2, n2, ds2, de2) IMPLIES 
            s1 = s2 AND n1 = n2
 
   execute_set_deterministic : ASSUMPTION
@@ -652,6 +645,7 @@ BEGIN
     ELSE gvs(sigma)(vn)
     ENDIF
 
+
   execute_set : (execute_set_type) =
     LAMBDA (p : FullProgram, vn : Name, e : Expr, s1, s2 : FullState, n : nat,
             deriv_stmt_rec : deriv_stmt_rec_type(n),
@@ -661,7 +655,7 @@ BEGIN
         deriv_expr_rec(n)(p)(e, s1, v, tau)(n - 1) AND
         s2 = IF up?(ex(pstate(tau)))
              THEN tau
-             ELSE update_GhostVars(tau, gvs(tau) WITH [vn := v])
+             ELSE update_GhostVars(tau, update_store(vn, v))
              ENDIF AND
         pstate(s1) = pstate(s2)
 
@@ -688,7 +682,7 @@ BEGIN
       s2 = IF Bool?(v) THEN
              IF b(v)
              THEN tau1
-             ELSE update_PState(tau1, pstate(tau1) WITH [ex := up(JMLExc)])
+             ELSE update_PState(tau1, raise(JMLExc))
              ENDIF
            ELSE tau1 % This won't happen in a well typed program
            ENDIF
