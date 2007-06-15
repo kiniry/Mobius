@@ -38,8 +38,8 @@ public class CoqFile {
    * @param name the preferred name the file should have
    * @throws FileNotFoundException if opening the file fails
    */
-  public CoqFile(final File configDir, final File baseDir, final String name) 
-            throws FileNotFoundException {
+  public CoqFile(final File configDir, final File baseDir, 
+                 final String name) throws FileNotFoundException {
     fOut = new PrintStream(new FileOutputStream(new File(baseDir, 
                               name + suffix)));
     fBase = configDir.toString();

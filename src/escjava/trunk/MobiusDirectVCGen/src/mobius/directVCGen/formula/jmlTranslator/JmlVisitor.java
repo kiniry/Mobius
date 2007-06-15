@@ -91,700 +91,700 @@ import escjava.sortedProver.Lifter.Term;
 
 public class JmlVisitor extends VisitorArgResult{
 
-	JmlExprToFormula translator;
-	Properties p;
-	
-	
-	public JmlVisitor(){
-		p = new Properties();
-		p.put("pred", new Boolean(true));
-		p.put("old", new Boolean(false));
-		p.put("interesting", new Boolean(false));
-		translator = new JmlExprToFormula(this);
-	}
-	
-	@Override
-	public Object visitASTNode(ASTNode x, Object prop) {
-		Object o = null;
-		int max = x.childCount();
-		for(int i = 0; i < max; i++) {
-			Object child = x.childAt(i);
-			if(child instanceof ASTNode) {
-				o = ((ASTNode) child).accept(this, prop);
-				if (o != null)
-				{
-					if (!o.equals(child))
-					{
-						System.out.println( o.toString());						
-					}
-				}
-			}
-			
-		}
-		return o;
-	}
-	
-	@Override
-	public /*@non_null*/ Object visitClassDecl(/*@non_null*/ ClassDecl x, Object o) {
-		//Use default properties to start with.
-		return visitTypeDecl(x, p);
-	}
-	
-	public /*@non_null*/ Object visitRoutineDecl(/*@non_null*/ RoutineDecl x, Object o) {
-		x.accept(new VisibleTypeCollector(),o); // Visible Type Collector
-		((Properties) o).put("method", x);
-		((Properties) o).put("firstPost", new Boolean(true)); // invariante wird nur einmal zu Lookup.postcond angehängt
-		((Properties) o).put("routinebegin", new Boolean(true));
-		QuantVariableRef result = (QuantVariableRef)((Properties) o).get("result");
-		Lookup.postconditions.put(x, new Post(result,Logic.True()));
-		Lookup.exceptionalPostconditions.put(x, new Post(result, Logic.True()));
-		return visitASTNode(x, o);
-	}
-	
-	@Override
-	public /*@non_null*/ Object visitMethodDecl(/*@non_null*/ MethodDecl x, Object o) {
-		((Properties) o).put("result", Expression.rvar(Expression.getResultVar(x)));
-		return visitRoutineDecl(x, o);
-	}
-	
-	@Override
-	public /*@non_null*/ Object visitConstructorDecl(/*@non_null*/ ConstructorDecl x, Object o) {
-		return visitRoutineDecl(x, o);
-	}
-	
-	@Override
-	public /*@non_null*/ Object visitFormalParaDecl(/*@non_null*/ FormalParaDecl x, Object o) {
-		return translator.genericVarDecl(x,o);
-	}
-	
-	@Override
-	public Object visitAnOverview(AnOverview x, Object o) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
-	@Override
-	 public /*@non_null*/ Object visitLiteralExpr(/*@non_null*/ LiteralExpr x, Object o) {
-		Properties prop = (Properties) o;
-		if (((Boolean) prop.get("interesting")).booleanValue())
-			return translator.literal(x,o);
-		else
-			return null;
-	}
-	 
-	 
-	 @Override
-	 public /*@non_null*/ Object visitVariableAccess(/*@non_null*/ VariableAccess x, Object o) {		 
-		if (((Boolean) ((Properties) o).get("interesting")).booleanValue())
-			return translator.variableAccess(x,o);
-		else 
-			return null;
-	}
-	 
-	 @Override
-	 public /*@non_null*/ Object visitFieldAccess(/*@non_null*/ FieldAccess x, Object o) {		 
-		if (((Boolean) ((Properties) o).get("interesting")).booleanValue())
-			return translator.fieldAccess(x,o);
-		else
-			return null;
-	}
-	 
-	 @Override
-	 public /*@non_null*/ Object visitLocalVarDecl(/*@non_null*/ LocalVarDecl x, Object o) {
-		 //TODO: do something meaningfull.
-		 return null;
-	 }
-	 
-	 @Override
-	 public /*@non_null*/ Object visitNaryExpr(/*@non_null*/ NaryExpr x, Object o) {
-		if (((Boolean) ((Properties) o).get("interesting")).booleanValue()){
-			 if (x.op== TagConstants.PRE) {
-				 return translator.naryExpr(x,o);
-			 } else {
-				 return visitGCExpr(x, o);
-			 }
-		} else
-			return null;
-	}
-	 
-	 @Override
-	 public /*@non_null*/ Object visitInstanceOfExpr(/*@non_null*/ InstanceOfExpr x, Object o) {
-		if (((Boolean) ((Properties) o).get("interesting")).booleanValue())
-			return translator.instanceOfExpr(x, o);
-		else
-			return null;
-	 }
-	 
-	 @Override
-	 public Object  visitThisExpr(ThisExpr x, Object o) {
-		if (((Boolean) ((Properties) o).get("interesting")).booleanValue())
-			return translator.thisLiteral(x,o);
-		else
-			return null;
-	 }
-	 
-	
-	 
-	@Override
-	public Object visitArrayRangeRefExpr(ArrayRangeRefExpr x, Object o) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+  JmlExprToFormula translator;
+  Properties p;
 
-	@Override
-	public Object visitCondExprModifierPragma(CondExprModifierPragma x, Object o) {
-		// TODO Auto-generated method stub
-		//return null;
-		return visitASTNode(x, o);
-	}
 
-	@Override
-	public Object visitCondition(Condition x, Object o) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+  public JmlVisitor(){
+    p = new Properties();
+    p.put("pred", new Boolean(true));
+    p.put("old", new Boolean(false));
+    p.put("interesting", new Boolean(false));
+    translator = new JmlExprToFormula(this);
+  }
 
-	@Override
-	public Object visitDecreasesInfo(DecreasesInfo x, Object o) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+  @Override
+  public Object visitASTNode(ASTNode x, Object prop) {
+    Object o = null;
+    int max = x.childCount();
+    for(int i = 0; i < max; i++) {
+      Object child = x.childAt(i);
+      if(child instanceof ASTNode) {
+        o = ((ASTNode) child).accept(this, prop);
+        if (o != null)
+        {
+          if (!o.equals(child))
+          {
+            System.out.println( o.toString());						
+          }
+        }
+      }
 
-	@Override
-	public Object visitDefPred(DefPred x, Object o) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    }
+    return o;
+  }
 
-	@Override
-	public Object visitDefPredApplExpr(DefPredApplExpr x, Object o) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
-	@Override
-	public Object visitDefPredLetExpr(DefPredLetExpr x, Object o) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+  @Override
+  public /*@non_null*/ Object visitClassDecl(/*@non_null*/ ClassDecl x, Object o) {
+    //Use default properties to start with.
+    return visitTypeDecl(x, p);
+  }
 
-	@Override
-	public Object visitDependsPragma(DependsPragma x, Object o) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+  public /*@non_null*/ Object visitRoutineDecl(/*@non_null*/ RoutineDecl x, Object o) {
+    x.accept(new VisibleTypeCollector(),o); // Visible Type Collector
+    ((Properties) o).put("method", x);
+    ((Properties) o).put("firstPost", new Boolean(true)); // invariante wird nur einmal zu Lookup.postcond angehängt
+    ((Properties) o).put("routinebegin", new Boolean(true));
+    QuantVariableRef result = (QuantVariableRef)((Properties) o).get("result");
+    Lookup.postconditions.put(x, new Post(result,Logic.True()));
+    Lookup.exceptionalPostconditions.put(x, new Post(result, Logic.True()));
+    return visitASTNode(x, o);
+  }
 
-	@Override
-	public Object visitEscPrimitiveType(EscPrimitiveType x, Object o) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+  @Override
+  public /*@non_null*/ Object visitMethodDecl(/*@non_null*/ MethodDecl x, Object o) {
+    ((Properties) o).put("result", Expression.rvar(Expression.getResultVar(x)));
+    return visitRoutineDecl(x, o);
+  }
 
-	@Override
-	public Object visitEverythingExpr(EverythingExpr x, Object o) {
-		// TODO Auto-generated method stub
-		//return null;
-		return visitASTNode(x, o);
-	}
+  @Override
+  public /*@non_null*/ Object visitConstructorDecl(/*@non_null*/ ConstructorDecl x, Object o) {
+    return visitRoutineDecl(x, o);
+  }
 
-	@Override
-	public Object visitExprDeclPragma(ExprDeclPragma x, Object o) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+  @Override
+  public /*@non_null*/ Object visitFormalParaDecl(/*@non_null*/ FormalParaDecl x, Object o) {
+    return translator.genericVarDecl(x,o);
+  }
 
-	@Override
-	public Object visitExprModifierPragma(ExprModifierPragma x, Object o) {
-		((Properties) o).put("interesting", new Boolean(true));
-		RoutineDecl rd = (RoutineDecl)((Properties) o).get("method");
-		Term t = (Term)visitASTNode(x, o);
-		switch (x.getTag()){
-		case TagConstants.REQUIRES:
-			if (rd  instanceof MethodDecl) { 
-				Term invToPre = (Term) invToPreconditions(o);
-				t = Logic.andInv(t, invToPre);
-			}
-			Lookup.preconditions.put(rd, t);
-			break;
-		case TagConstants.ENSURES:
-			Post allPosts = Lookup.postconditions.get(rd);
-			allPosts.post = Logic.andInv(allPosts.post, t);
-			if (((Boolean) ((Properties) o).get("firstPost")).booleanValue())
-			{
-				Term invToPost = (Term) invToPostconditions(o);
-				allPosts.post = Logic.andInv(allPosts.post, invToPost);
-				((Properties) o).put("firstPost", new Boolean(false));
-			}
-			Lookup.postconditions.put(rd, allPosts);
-			break;
-		}
-		return null;
-	}
-	
-	@Override
-	public Object visitVarExprModifierPragma(VarExprModifierPragma x, Object o) {
-		((Properties) o).put("interesting", new Boolean(true));
-		
-		RoutineDecl currentRoutine = (RoutineDecl)((Properties) o).get("method");
-		Post allExPosts = Lookup.exceptionalPostconditions.get(currentRoutine);
-		QuantVariableRef commonExceptionVar = allExPosts.var;
-		
-		Term typeOfException = Type.translate(x.arg.type);
-		QuantVariableRef newExceptionVar = Expression.rvar(x.arg);
-		
-		Term newExPost = (Term)x.expr.accept(this, o);
-		newExPost = newExPost.subst(newExceptionVar, commonExceptionVar);
-		Term  guard = Logic.assignCompat(Heap.var, commonExceptionVar,typeOfException);
-		Term result = Logic.safe.implies(guard, newExPost);
-		allExPosts.post = Logic.and(allExPosts.post, result);
-		Lookup.exceptionalPostconditions.put(currentRoutine, allExPosts);
-		
-		
-		return null;
-	}
+  @Override
+  public Object visitAnOverview(AnOverview x, Object o) {
+    // TODO Auto-generated method stub
+    return null;
+  }
 
-	@Override
-    public /*@non_null*/ Object visitBlockStmt(/*@non_null*/ BlockStmt x, Object o) {
-	    Term t=null;
-	    Term t1=null;
-	    Term t2=null;
-		Set  set=null;
-		Set.Assignment assignment=null;
-	    boolean interesting;
-		Vector<AAnnotation> annos = new Vector<AAnnotation>();
-		Term inv = null;
-		
-		//Save arguments values in prestate as ghosts.
-		if (((Boolean)((Properties) o).get("routinebegin")).booleanValue()){
-			((Properties) o).put("routinebegin", new Boolean(false));
-			RoutineDecl m = (RoutineDecl) ((Properties) o).get("method");
-			for(FormalParaDecl p: m.args.toArray()){
-				 t1 = Expression.rvar(p);
-				 t2 = Expression.old(p);
-				 assignment = new Set.Assignment((QuantVariableRef) t2, t1);
-				 annos.add(new Set((QuantVariableRef) t2, assignment)); 
-			}
-		}
-		
-		//
-	    for(Stmt s: x.stmts.toArray()){
-	    	interesting = false;
-	    	//We are interested in Asserts, Assumes and Loop Invariants
-	    	if (s instanceof ExprStmtPragma){
-	    		interesting = true; 
-	    		((Properties) o).put("interesting", new Boolean(true));
-	    		t = (Term)s.accept(this, o);
-	    		switch (s.getTag()){
-	    		case TagConstants.ASSERT:
-	    			annos.add(new Cut(t));
-	    			break;
-	    		case TagConstants.ASSUME:
-	    			annos.add(new Assume(t));
-	    			break;
-	    		case TagConstants.LOOP_INVARIANT:
-	    		case TagConstants.MAINTAINING:
-	    			inv = t;
-	    			break;
-	    		}
-	    	} else
-	    	
-	    	//We are also interested in ghost var declarations
-	    	if (s instanceof VarDeclStmt){
-	    		
-	    		for (ModifierPragma p: ((VarDeclStmt) s).decl.pmodifiers.toArray()){
-	    			if (p.getTag() == TagConstants.GHOST) {
-	    				interesting = true;
-	    				break;
-	    			}
-	    		}
-	    		if (interesting){
-	    			((Properties) o).put("interesting", new Boolean(true));
-	    			t = (Term)s.accept(this, o);
-	    			Set ghostVar = new Set();
-	    			ghostVar.declaration = (QuantVariableRef) t;
-	    			annos.add(ghostVar);
-	    		}
-	    	} else
-	    	
-	    	//Also set statements should be processed
-	    	if (s instanceof SetStmtPragma) {
-	    		interesting = true;
-	    		((Properties) o).put("interesting", new Boolean(true));
-	    		assignment = (Set.Assignment)s.accept(this, o);
-	    		set = new Set();
-	    		set.assignment = assignment;
-	    		annos.add(set);
-	    	}
-	    	
-	    	if (interesting){
-    			x.stmts.removeElement(s);
-	    	} else {
-	    		((Properties) o).put("interesting", new Boolean(false));
-	    		if (!annos.isEmpty()){
-	    			AnnotationDecoration.inst.setAnnotPre(s, annos);
-	    			annos.clear();
-	    		}
-	    		if (inv != null){
-	    			if (s instanceof WhileStmt || 
-	    					s instanceof ForStmt || 
-	    					s instanceof DoStmt){
-	    				AnnotationDecoration.inst.setInvariant(s, inv);
-	    				inv = null;
-	    			}
-	    		}	
-	    		if (s instanceof WhileStmt || 
-    					s instanceof ForStmt || 
-    					s instanceof DoStmt || 
-    					s instanceof BlockStmt || 
-    					s instanceof TryCatchStmt ||
-    					s instanceof IfStmt){
-    				s.accept(this,o);
-    			}	
-	    	}
-	    }
-		return null;
-    }	
+  @Override
+  public /*@non_null*/ Object visitLiteralExpr(/*@non_null*/ LiteralExpr x, Object o) {
+    Properties prop = (Properties) o;
+    if (((Boolean) prop.get("interesting")).booleanValue())
+      return translator.literal(x,o);
+    else
+      return null;
+  }
 
-	@Override
-	public /*@non_null*/ Object visitVarDeclStmt(/*@non_null*/ VarDeclStmt x, Object o) {
-		//It's only called if we have a ghost variable declaration
-		return Expression.rvar(x.decl);
-	}	
-	
-	@Override
-	public Object visitExprStmtPragma(ExprStmtPragma x, Object o) {
-		// TODO Auto-generated method stub
-		return visitASTNode(x, o);
-	}
 
-	@Override
-	public Object visitGCExpr(GCExpr x, Object o) {
-		return visitASTNode(x, o);
-	}
+  @Override
+  public /*@non_null*/ Object visitVariableAccess(/*@non_null*/ VariableAccess x, Object o) {		 
+    if (((Boolean) ((Properties) o).get("interesting")).booleanValue())
+      return translator.variableAccess(x,o);
+    else 
+      return null;
+  }
 
-	@Override
-	public Object visitGhostDeclPragma(GhostDeclPragma x, Object o) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+  @Override
+  public /*@non_null*/ Object visitFieldAccess(/*@non_null*/ FieldAccess x, Object o) {		 
+    if (((Boolean) ((Properties) o).get("interesting")).booleanValue())
+      return translator.fieldAccess(x,o);
+    else
+      return null;
+  }
 
-	@Override
-	public Object visitGuardExpr(GuardExpr x, Object o) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+  @Override
+  public /*@non_null*/ Object visitLocalVarDecl(/*@non_null*/ LocalVarDecl x, Object o) {
+    //TODO: do something meaningfull.
+    return null;
+  }
 
-	@Override
-	public Object visitGuardedCmd(GuardedCmd x, Object o) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+  @Override
+  public /*@non_null*/ Object visitNaryExpr(/*@non_null*/ NaryExpr x, Object o) {
+    if (((Boolean) ((Properties) o).get("interesting")).booleanValue()){
+      if (x.op== TagConstants.PRE) {
+        return translator.naryExpr(x,o);
+      } else {
+        return visitGCExpr(x, o);
+      }
+    } else
+      return null;
+  }
 
-	@Override
-	public Object visitIdExprDeclPragma(IdExprDeclPragma x, Object o) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+  @Override
+  public /*@non_null*/ Object visitInstanceOfExpr(/*@non_null*/ InstanceOfExpr x, Object o) {
+    if (((Boolean) ((Properties) o).get("interesting")).booleanValue())
+      return translator.instanceOfExpr(x, o);
+    else
+      return null;
+  }
 
-	@Override
-	public Object visitIdentifierModifierPragma(IdentifierModifierPragma x, Object o) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+  @Override
+  public Object  visitThisExpr(ThisExpr x, Object o) {
+    if (((Boolean) ((Properties) o).get("interesting")).booleanValue())
+      return translator.thisLiteral(x,o);
+    else
+      return null;
+  }
 
-	@Override
-	public Object visitImportPragma(ImportPragma x, Object o) {
-		// TODO Auto-generated method stub
-		//return null;
-		return visitASTNode(x, o);
-	}
 
-	@Override
-	public Object visitLockSetExpr(LockSetExpr x, Object o) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
-	@Override
-	public Object visitMapsExprModifierPragma(MapsExprModifierPragma x, Object o) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+  @Override
+  public Object visitArrayRangeRefExpr(ArrayRangeRefExpr x, Object o) {
+    // TODO Auto-generated method stub
+    return null;
+  }
 
-	@Override
-	public Object visitModelConstructorDeclPragma(ModelConstructorDeclPragma x, Object o) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+  @Override
+  public Object visitCondExprModifierPragma(CondExprModifierPragma x, Object o) {
+    // TODO Auto-generated method stub
+    //return null;
+    return visitASTNode(x, o);
+  }
 
-	@Override
-	public Object visitModelDeclPragma(ModelDeclPragma x, Object o) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+  @Override
+  public Object visitCondition(Condition x, Object o) {
+    // TODO Auto-generated method stub
+    return null;
+  }
 
-	@Override
-	public Object visitModelMethodDeclPragma(ModelMethodDeclPragma x, Object o) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+  @Override
+  public Object visitDecreasesInfo(DecreasesInfo x, Object o) {
+    // TODO Auto-generated method stub
+    return null;
+  }
 
-	@Override
-	public Object visitModelProgamModifierPragma(ModelProgamModifierPragma x, Object o) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+  @Override
+  public Object visitDefPred(DefPred x, Object o) {
+    // TODO Auto-generated method stub
+    return null;
+  }
 
-	@Override
-	public Object visitModelTypePragma(ModelTypePragma x, Object o) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+  @Override
+  public Object visitDefPredApplExpr(DefPredApplExpr x, Object o) {
+    // TODO Auto-generated method stub
+    return null;
+  }
 
-	@Override
-	public Object visitModifiesGroupPragma(ModifiesGroupPragma x, Object o) {
-		// TODO Auto-generated method stub
-		//return null;
-		return visitASTNode(x, o);
-	}
+  @Override
+  public Object visitDefPredLetExpr(DefPredLetExpr x, Object o) {
+    // TODO Auto-generated method stub
+    return null;
+  }
 
-	@Override
-	public Object visitNamedExprDeclPragma(NamedExprDeclPragma x, Object o) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+  @Override
+  public Object visitDependsPragma(DependsPragma x, Object o) {
+    // TODO Auto-generated method stub
+    return null;
+  }
 
-	@Override
-	public Object visitNestedModifierPragma(NestedModifierPragma x, Object o) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+  @Override
+  public Object visitEscPrimitiveType(EscPrimitiveType x, Object o) {
+    // TODO Auto-generated method stub
+    return null;
+  }
 
-	@Override
-	public Object visitNotModifiedExpr(NotModifiedExpr x, Object o) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+  @Override
+  public Object visitEverythingExpr(EverythingExpr x, Object o) {
+    // TODO Auto-generated method stub
+    //return null;
+    return visitASTNode(x, o);
+  }
 
-	@Override
-	public Object visitNotSpecifiedExpr(NotSpecifiedExpr x, Object o) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+  @Override
+  public Object visitExprDeclPragma(ExprDeclPragma x, Object o) {
+    // TODO Auto-generated method stub
+    return null;
+  }
 
-	@Override
-	public Object visitNothingExpr(NothingExpr x, Object o) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+  @Override
+  public Object visitExprModifierPragma(ExprModifierPragma x, Object o) {
+    ((Properties) o).put("interesting", new Boolean(true));
+    RoutineDecl rd = (RoutineDecl)((Properties) o).get("method");
+    Term t = (Term)visitASTNode(x, o);
+    switch (x.getTag()){
+    case TagConstants.REQUIRES:
+      if (rd  instanceof MethodDecl) { 
+        Term invToPre = (Term) invToPreconditions(o);
+        t = Logic.andInv(t, invToPre);
+      }
+      Lookup.preconditions.put(rd, t);
+      break;
+    case TagConstants.ENSURES:
+      Post allPosts = Lookup.postconditions.get(rd);
+      allPosts.post = Logic.andInv(allPosts.post, t);
+      if (((Boolean) ((Properties) o).get("firstPost")).booleanValue())
+      {
+        Term invToPost = (Term) invToPostconditions(o);
+        allPosts.post = Logic.andInv(allPosts.post, invToPost);
+        ((Properties) o).put("firstPost", new Boolean(false));
+      }
+      Lookup.postconditions.put(rd, allPosts);
+      break;
+    }
+    return null;
+  }
 
-	@Override
-	public Object visitNowarnPragma(NowarnPragma x, Object o) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+  @Override
+  public Object visitVarExprModifierPragma(VarExprModifierPragma x, Object o) {
+    ((Properties) o).put("interesting", new Boolean(true));
 
-	@Override
-	public Object visitParsedSpecs(ParsedSpecs x, Object o) {
-		// TODO Auto-generated method stub
-		//return visitASTNode(x, o); //generates a stack overflow... but should be used
-		return null;
-	}
+    RoutineDecl currentRoutine = (RoutineDecl)((Properties) o).get("method");
+    Post allExPosts = Lookup.exceptionalPostconditions.get(currentRoutine);
+    QuantVariableRef commonExceptionVar = allExPosts.var;
 
-	@Override
-	public Object visitReachModifierPragma(ReachModifierPragma x, Object o) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    Term typeOfException = Type.translate(x.arg.type);
+    QuantVariableRef newExceptionVar = Expression.rvar(x.arg);
 
-	@Override
-	public Object visitRefinePragma(RefinePragma x, Object o) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    Term newExPost = (Term)x.expr.accept(this, o);
+    newExPost = newExPost.subst(newExceptionVar, commonExceptionVar);
+    Term  guard = Logic.assignCompat(Heap.var, commonExceptionVar,typeOfException);
+    Term result = Logic.safe.implies(guard, newExPost);
+    allExPosts.post = Logic.and(allExPosts.post, result);
+    Lookup.exceptionalPostconditions.put(currentRoutine, allExPosts);
 
-	@Override
-	public Object visitResExpr(ResExpr x, Object o) {
-		if (((Boolean) ((Properties) o).get("interesting")).booleanValue())
-			return translator.resultLiteral(x,o);
-		else
-			return null;
-	}
 
-	@Override
-	public Object visitSetCompExpr(SetCompExpr x, Object o) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    return null;
+  }
 
-	@Override
-	public Object visitSetStmtPragma(SetStmtPragma x, Object o) {
-		Set.Assignment res = new Set.Assignment();
-		res.var = (QuantVariableRef) x.target.accept(this, o);
-		res.expr = (Term) x.value.accept(this,o);
-		return res;
-	}
+  @Override
+  public /*@non_null*/ Object visitBlockStmt(/*@non_null*/ BlockStmt x, Object o) {
+    Term t=null;
+    Term t1=null;
+    Term t2=null;
+    Set  set=null;
+    Set.Assignment assignment=null;
+    boolean interesting;
+    Vector<AAnnotation> annos = new Vector<AAnnotation>();
+    Term inv = null;
 
-	@Override
-	public Object visitSimpleModifierPragma(SimpleModifierPragma x, Object o) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    //Save arguments values in prestate as ghosts.
+    if (((Boolean)((Properties) o).get("routinebegin")).booleanValue()){
+      ((Properties) o).put("routinebegin", new Boolean(false));
+      RoutineDecl m = (RoutineDecl) ((Properties) o).get("method");
+      for(FormalParaDecl p: m.args.toArray()){
+        t1 = Expression.rvar(p);
+        t2 = Expression.old(p);
+        assignment = new Set.Assignment((QuantVariableRef) t2, t1);
+        annos.add(new Set((QuantVariableRef) t2, assignment)); 
+      }
+    }
 
-	@Override
-	public Object visitSimpleStmtPragma(SimpleStmtPragma x, Object o) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    //
+    for(Stmt s: x.stmts.toArray()){
+      interesting = false;
+      //We are interested in Asserts, Assumes and Loop Invariants
+      if (s instanceof ExprStmtPragma){
+        interesting = true; 
+        ((Properties) o).put("interesting", new Boolean(true));
+        t = (Term)s.accept(this, o);
+        switch (s.getTag()){
+        case TagConstants.ASSERT:
+          annos.add(new Cut(t));
+          break;
+        case TagConstants.ASSUME:
+          annos.add(new Assume(t));
+          break;
+        case TagConstants.LOOP_INVARIANT:
+        case TagConstants.MAINTAINING:
+          inv = t;
+          break;
+        }
+      } else
 
-	@Override
-	public Object visitSkolemConstantPragma(SkolemConstantPragma x, Object o) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+        //We are also interested in ghost var declarations
+        if (s instanceof VarDeclStmt){
 
-	@Override
-	public Object visitSpec(Spec x, Object o) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+          for (ModifierPragma p: ((VarDeclStmt) s).decl.pmodifiers.toArray()){
+            if (p.getTag() == TagConstants.GHOST) {
+              interesting = true;
+              break;
+            }
+          }
+          if (interesting){
+            ((Properties) o).put("interesting", new Boolean(true));
+            t = (Term)s.accept(this, o);
+            Set ghostVar = new Set();
+            ghostVar.declaration = (QuantVariableRef) t;
+            annos.add(ghostVar);
+          }
+        } else
 
-	@Override
-	public Object visitStillDeferredDeclPragma(StillDeferredDeclPragma x, Object o) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+          //Also set statements should be processed
+          if (s instanceof SetStmtPragma) {
+            interesting = true;
+            ((Properties) o).put("interesting", new Boolean(true));
+            assignment = (Set.Assignment)s.accept(this, o);
+            set = new Set();
+            set.assignment = assignment;
+            annos.add(set);
+          }
 
-	@Override
-	public Object visitVarDeclModifierPragma(VarDeclModifierPragma x, Object o) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+      if (interesting){
+        x.stmts.removeElement(s);
+      } else {
+        ((Properties) o).put("interesting", new Boolean(false));
+        if (!annos.isEmpty()){
+          AnnotationDecoration.inst.setAnnotPre(s, annos);
+          annos.clear();
+        }
+        if (inv != null){
+          if (s instanceof WhileStmt || 
+              s instanceof ForStmt || 
+              s instanceof DoStmt){
+            AnnotationDecoration.inst.setInvariant(s, inv);
+            inv = null;
+          }
+        }	
+        if (s instanceof WhileStmt || 
+            s instanceof ForStmt || 
+            s instanceof DoStmt || 
+            s instanceof BlockStmt || 
+            s instanceof TryCatchStmt ||
+            s instanceof IfStmt){
+          s.accept(this,o);
+        }	
+      }
+    }
+    return null;
+  }	
 
-	@Override
-	public Object visitWildRefExpr(WildRefExpr x, Object o) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+  @Override
+  public /*@non_null*/ Object visitVarDeclStmt(/*@non_null*/ VarDeclStmt x, Object o) {
+    //It's only called if we have a ghost variable declaration
+    return Expression.rvar(x.decl);
+  }	
 
-	
-	@Override
-	public Object visitBinaryExpr(BinaryExpr expr, Object o){
-		if (((Boolean) ((Properties) o).get("interesting")).booleanValue()){
-			switch(expr.op) {
-			case TagConstants.EQ: 
-				return translator.eq(expr, o);
-			case TagConstants.OR: 
-				return translator.or(expr, o);
-			case TagConstants.AND: 
-				return translator.and(expr, o);
-			case TagConstants.NE:
-				return translator.ne(expr, o);
-			case TagConstants.GE: 
-				return translator.ge(expr, o);
-			case TagConstants.GT: 
-				return translator.gt(expr, o);
-			case TagConstants.LE: 
-				return translator.le(expr, o);
-			case TagConstants.LT:  
-				return translator.lt(expr, o);
-			case TagConstants.BITOR: 
-				return translator.bitor(expr, o);
-			case TagConstants.BITXOR: 
-				return translator.bitxor(expr, o);
-			case TagConstants.BITAND: 
-				return translator.bitand(expr, o);
-			case TagConstants.LSHIFT:
-				return translator.lshift(expr, o);
-			case TagConstants.RSHIFT: 
-				return translator.rshift(expr, o);
-			case TagConstants.URSHIFT:
-				return translator.urshift(expr, o);
-			case TagConstants.ADD: 
-				return translator.add(expr, o);
-			case TagConstants.SUB: 
-				return translator.sub(expr, o);
-			case TagConstants.DIV: 
-				return translator.div(expr, o);
-			case TagConstants.MOD: 
-				return translator.mod(expr, o);
-			case TagConstants.STAR: 
-				return translator.star(expr, o);
-			case TagConstants.ASSIGN:
-				return translator.assign(expr, o);
-			case TagConstants.ASGMUL: 
-				return translator.asgmul(expr, o);
-			case TagConstants.ASGDIV: 
-				return translator.asgdiv(expr, o);
-			case TagConstants.ASGREM: 
-				return translator.asgrem(expr, o);
-			case TagConstants.ASGADD: 
-				return translator.asgadd(expr, o);
-			case TagConstants.ASGSUB: 
-				return translator.asgsub(expr, o);
-			case TagConstants.ASGLSHIFT: 
-				return translator.asglshift(expr, o);
-			case TagConstants.ASGRSHIFT: 
-				return translator.asgrshift(expr, o);
-			case TagConstants.ASGURSHIFT: 
-				return translator.asgurshif(expr, o);
-			case TagConstants.ASGBITAND: 
-				return translator.asgbitand(expr, o);
-		// jml specific operators 
-			case TagConstants.IMPLIES: 
-				return translator.implies(expr, o);
-			case TagConstants.EXPLIES:
-				return translator.explies(expr, o);
-			case TagConstants.IFF: // equivalence (equality)
-				return translator.iff(expr, o);
-			case TagConstants.NIFF:    // discrepance (xor)
-				return translator.niff(expr, o);
-			case TagConstants.SUBTYPE: 
-				return translator.subtype(expr, o);
-			case TagConstants.DOTDOT: 
-				return translator.dotdot(expr, o);
-	
-			default:
-				throw new IllegalArgumentException("Unknown construct :" +
-						TagConstants.toString(expr.op) +" " +  expr);
-			}	
-		} else
-			return null;
-	}
-	
-	
-	public Object invToPreconditions(Object o)
-	{
-		QuantVariableRef x = Expression.rvar(Ref.sort);
-		QuantVariableRef type = Expression.rvar(Type.sort);
-		QuantVariable[] vars = {x.qvar,type.qvar};
-		Term invTerm = Logic.inv(x, type);
-		Term typeOfTerm = Logic.assignCompat(Heap.var, x, type);
-		Term allocTerm = Logic.isAllocated(Heap.var, x);
-		Term andTerm = Logic.andInv(allocTerm, typeOfTerm);
-		Term implTerm = Logic.implies(andTerm, invTerm);
-		Term forAllTerm = Logic.forall(vars, implTerm);
-		return forAllTerm;
-	}
-		
-	
+  @Override
+  public Object visitExprStmtPragma(ExprStmtPragma x, Object o) {
+    // TODO Auto-generated method stub
+    return visitASTNode(x, o);
+  }
 
-	public Object invToPostconditions(Object o)
-	{ 
-		QuantVariableRef x = Expression.rvar(Ref.sort);
-		QuantVariableRef type = Expression.rvar(Type.sort);
-		QuantVariable[] vars = {x.qvar,type.qvar}; 
-		Term invTerm = Logic.inv(x, type);
-		Term typeOfTerm = Logic.assignCompat(Heap.var , x, type);
-		Term allocTerm = Logic.isAllocated(Heap.var, x);
-		Term visibleTerm = Logic.isVisibleIn(type, o);
-		Term andTerm = Logic.andInv(allocTerm, typeOfTerm);
-		andTerm = Logic.andInv(andTerm, visibleTerm);
-		Term implTerm = Logic.implies(andTerm, invTerm);
-		Term forAllTerm = Logic.forall(vars, implTerm);
-		return forAllTerm;
-	}
+  @Override
+  public Object visitGCExpr(GCExpr x, Object o) {
+    return visitASTNode(x, o);
+  }
 
-	
+  @Override
+  public Object visitGhostDeclPragma(GhostDeclPragma x, Object o) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public Object visitGuardExpr(GuardExpr x, Object o) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public Object visitGuardedCmd(GuardedCmd x, Object o) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public Object visitIdExprDeclPragma(IdExprDeclPragma x, Object o) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public Object visitIdentifierModifierPragma(IdentifierModifierPragma x, Object o) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public Object visitImportPragma(ImportPragma x, Object o) {
+    // TODO Auto-generated method stub
+    //return null;
+    return visitASTNode(x, o);
+  }
+
+  @Override
+  public Object visitLockSetExpr(LockSetExpr x, Object o) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public Object visitMapsExprModifierPragma(MapsExprModifierPragma x, Object o) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public Object visitModelConstructorDeclPragma(ModelConstructorDeclPragma x, Object o) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public Object visitModelDeclPragma(ModelDeclPragma x, Object o) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public Object visitModelMethodDeclPragma(ModelMethodDeclPragma x, Object o) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public Object visitModelProgamModifierPragma(ModelProgamModifierPragma x, Object o) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public Object visitModelTypePragma(ModelTypePragma x, Object o) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public Object visitModifiesGroupPragma(ModifiesGroupPragma x, Object o) {
+    // TODO Auto-generated method stub
+    //return null;
+    return visitASTNode(x, o);
+  }
+
+  @Override
+  public Object visitNamedExprDeclPragma(NamedExprDeclPragma x, Object o) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public Object visitNestedModifierPragma(NestedModifierPragma x, Object o) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public Object visitNotModifiedExpr(NotModifiedExpr x, Object o) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public Object visitNotSpecifiedExpr(NotSpecifiedExpr x, Object o) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public Object visitNothingExpr(NothingExpr x, Object o) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public Object visitNowarnPragma(NowarnPragma x, Object o) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public Object visitParsedSpecs(ParsedSpecs x, Object o) {
+    // TODO Auto-generated method stub
+    //return visitASTNode(x, o); //generates a stack overflow... but should be used
+    return null;
+  }
+
+  @Override
+  public Object visitReachModifierPragma(ReachModifierPragma x, Object o) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public Object visitRefinePragma(RefinePragma x, Object o) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public Object visitResExpr(ResExpr x, Object o) {
+    if (((Boolean) ((Properties) o).get("interesting")).booleanValue())
+      return translator.resultLiteral(x,o);
+    else
+      return null;
+  }
+
+  @Override
+  public Object visitSetCompExpr(SetCompExpr x, Object o) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public Object visitSetStmtPragma(SetStmtPragma x, Object o) {
+    Set.Assignment res = new Set.Assignment();
+    res.var = (QuantVariableRef) x.target.accept(this, o);
+    res.expr = (Term) x.value.accept(this,o);
+    return res;
+  }
+
+  @Override
+  public Object visitSimpleModifierPragma(SimpleModifierPragma x, Object o) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public Object visitSimpleStmtPragma(SimpleStmtPragma x, Object o) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public Object visitSkolemConstantPragma(SkolemConstantPragma x, Object o) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public Object visitSpec(Spec x, Object o) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public Object visitStillDeferredDeclPragma(StillDeferredDeclPragma x, Object o) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public Object visitVarDeclModifierPragma(VarDeclModifierPragma x, Object o) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public Object visitWildRefExpr(WildRefExpr x, Object o) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+
+  @Override
+  public Object visitBinaryExpr(BinaryExpr expr, Object o){
+    if (((Boolean) ((Properties) o).get("interesting")).booleanValue()){
+      switch(expr.op) {
+      case TagConstants.EQ: 
+        return translator.eq(expr, o);
+      case TagConstants.OR: 
+        return translator.or(expr, o);
+      case TagConstants.AND: 
+        return translator.and(expr, o);
+      case TagConstants.NE:
+        return translator.ne(expr, o);
+      case TagConstants.GE: 
+        return translator.ge(expr, o);
+      case TagConstants.GT: 
+        return translator.gt(expr, o);
+      case TagConstants.LE: 
+        return translator.le(expr, o);
+      case TagConstants.LT:  
+        return translator.lt(expr, o);
+      case TagConstants.BITOR: 
+        return translator.bitor(expr, o);
+      case TagConstants.BITXOR: 
+        return translator.bitxor(expr, o);
+      case TagConstants.BITAND: 
+        return translator.bitand(expr, o);
+      case TagConstants.LSHIFT:
+        return translator.lshift(expr, o);
+      case TagConstants.RSHIFT: 
+        return translator.rshift(expr, o);
+      case TagConstants.URSHIFT:
+        return translator.urshift(expr, o);
+      case TagConstants.ADD: 
+        return translator.add(expr, o);
+      case TagConstants.SUB: 
+        return translator.sub(expr, o);
+      case TagConstants.DIV: 
+        return translator.div(expr, o);
+      case TagConstants.MOD: 
+        return translator.mod(expr, o);
+      case TagConstants.STAR: 
+        return translator.star(expr, o);
+      case TagConstants.ASSIGN:
+        return translator.assign(expr, o);
+      case TagConstants.ASGMUL: 
+        return translator.asgmul(expr, o);
+      case TagConstants.ASGDIV: 
+        return translator.asgdiv(expr, o);
+      case TagConstants.ASGREM: 
+        return translator.asgrem(expr, o);
+      case TagConstants.ASGADD: 
+        return translator.asgadd(expr, o);
+      case TagConstants.ASGSUB: 
+        return translator.asgsub(expr, o);
+      case TagConstants.ASGLSHIFT: 
+        return translator.asglshift(expr, o);
+      case TagConstants.ASGRSHIFT: 
+        return translator.asgrshift(expr, o);
+      case TagConstants.ASGURSHIFT: 
+        return translator.asgurshif(expr, o);
+      case TagConstants.ASGBITAND: 
+        return translator.asgbitand(expr, o);
+        // jml specific operators 
+      case TagConstants.IMPLIES: 
+        return translator.implies(expr, o);
+      case TagConstants.EXPLIES:
+        return translator.explies(expr, o);
+      case TagConstants.IFF: // equivalence (equality)
+        return translator.iff(expr, o);
+      case TagConstants.NIFF:    // discrepance (xor)
+        return translator.niff(expr, o);
+      case TagConstants.SUBTYPE: 
+        return translator.subtype(expr, o);
+      case TagConstants.DOTDOT: 
+        return translator.dotdot(expr, o);
+
+      default:
+        throw new IllegalArgumentException("Unknown construct :" +
+                                           TagConstants.toString(expr.op) +" " +  expr);
+      }	
+    } else
+      return null;
+  }
+
+
+  public Object invToPreconditions(Object o)
+  {
+    QuantVariableRef x = Expression.rvar(Ref.sort);
+    QuantVariableRef type = Expression.rvar(Type.sort);
+    QuantVariable[] vars = {x.qvar,type.qvar};
+    Term invTerm = Logic.inv(x, type);
+    Term typeOfTerm = Logic.assignCompat(Heap.var, x, type);
+    Term allocTerm = Logic.isAllocated(Heap.var, x);
+    Term andTerm = Logic.andInv(allocTerm, typeOfTerm);
+    Term implTerm = Logic.implies(andTerm, invTerm);
+    Term forAllTerm = Logic.forall(vars, implTerm);
+    return forAllTerm;
+  }
+
+
+
+  public Object invToPostconditions(Object o)
+  { 
+    QuantVariableRef x = Expression.rvar(Ref.sort);
+    QuantVariableRef type = Expression.rvar(Type.sort);
+    QuantVariable[] vars = {x.qvar,type.qvar}; 
+    Term invTerm = Logic.inv(x, type);
+    Term typeOfTerm = Logic.assignCompat(Heap.var , x, type);
+    Term allocTerm = Logic.isAllocated(Heap.var, x);
+    Term visibleTerm = Logic.isVisibleIn(type, o);
+    Term andTerm = Logic.andInv(allocTerm, typeOfTerm);
+    andTerm = Logic.andInv(andTerm, visibleTerm);
+    Term implTerm = Logic.implies(andTerm, invTerm);
+    Term forAllTerm = Logic.forall(vars, implTerm);
+    return forAllTerm;
+  }
+
+
 
 }

@@ -8,7 +8,7 @@ public class Set extends AAnnotation {
 
 	/**
 	 * FOL-Terms  containing variable declarations. (Each Term is just a Variable)
-	 * TODO: Could maybe be Vector<SortVar> instead
+	 * TODO: Could maybe be Vector&lt;SortVar&gt; instead
 	 */
 	public QuantVariableRef declaration =null;
 	
