@@ -20,6 +20,7 @@ import pluginlib.Utils;
 public class Options {
 	/** A copy of the plugin's id */
 	final private static String PLUGINID = EscjavaPlugin.PLUGINID + ".";
+	final private static String SIMPLIFY_PLUGINID = "mobius.simplify.";
 	
 	/** The option button corresponding to Eclipse logging. */
 	static public AbstractPreference.BooleanOption logging = new AbstractPreference.BooleanOption(
@@ -54,7 +55,7 @@ public class Options {
 	static final public AbstractPreference.BooleanOption internalSimplify =
 	  new AbstractPreference.BooleanOption(
 	      PLUGINID + "internalSimplify",
-	      true,
+	      false,
 	      "Use Internal Version",
 	      "Use the Simplify executable internal to the plug-in"
 	      );

@@ -1,5 +1,5 @@
 /*
- * This file is part of the Esc/Java2 plugin project. Copyright 2004-2005 David
+ * This file is part of the ESC/Java2 plugin project. Copyright 2004-2005 David
  * R. Cok
  * 
  * Created on Feb 2, 2005
@@ -121,13 +121,13 @@ public class PreferencePage extends pluginlib.PreferencePage {
       Options.source);
 
   /**
-   * This allows the setting of the Esc/Java -ea, -da, -eajava, -eajml options.
+   * This allows the setting of the ESC/Java -ea, -da, -eajava, -eajml options.
    */
   static final public PreferenceWidget.ChoiceWidget assertBehavior = new PreferenceWidget.ChoiceWidget(
       Options.assertBehavior);
 
   /**
-   * An array of the EscJava option widgets.
+   * An array of the ESCJava option widgets.
    */
   static final private PreferenceWidget[] widgets = {
                                                  internalSimplify,
@@ -179,20 +179,20 @@ public class PreferencePage extends pluginlib.PreferencePage {
   private Control addControl(Composite parent) {
     Composite composite0a = new Widgets.VComposite(parent);
     new Label(composite0a, SWT.CENTER)
-        .setText("These options are workspace options that apply to every Esc/Java2-enabled Java project.");
+        .setText("These options are workspace options that apply to every ESC/Java2-enabled Java project.");
     Composite composite0 = new Widgets.HComposite(composite0a, 2);
     Composite composite1 = new Widgets.VComposite(composite0);
     Composite composite2a = new Widgets.VComposite(composite0);
     new Widgets.LabeledSeparator(composite2a,
-        "Static checks performed by Esc/Java2");
+        "Static checks performed by ESC/Java2");
     Composite composite2 = new Widgets.HComposite(composite2a, 2);
     Composite composite3 = new Widgets.VComposite(composite2);
     Composite composite4 = new Widgets.VComposite(composite2);
 
-    new Widgets.LabeledSeparator(composite1, "Options for Esc/Java2-Eclipse");
+    new Widgets.LabeledSeparator(composite1, "Options for ESC/Java2-Eclipse");
     addWidgets(eclipseOptions, composite1);
     new Widgets.LabeledSeparator(composite1,
-        "Options that control Esc/Java2 checking");
+        "Options that control ESC/Java2 checking");
     addWidgets(widgets, composite1);
     
     // FIXME - -quiet, nowarn noredundancy loop loopsafe plainwarning pgc ppvc f

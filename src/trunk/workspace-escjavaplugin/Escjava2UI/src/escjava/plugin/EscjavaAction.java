@@ -372,7 +372,7 @@ public abstract class EscjavaAction implements IObjectActionDelegate,
 				if (!i.hasNext()) {
 					Utils.showMessageInUI(
 							shell,
-							"Escjava Plugin",
+							"ESCJava Plugin",
 							"Nothing to check");
 				}
 				while (i.hasNext()) {
@@ -382,7 +382,7 @@ public abstract class EscjavaAction implements IObjectActionDelegate,
 						String msg = "Cannot check " + e.getClass();
 						Utils.showMessageInUI(
 									shell,
-									"Escjava Plugin",
+									"ESCJava Plugin",
 									msg);
 					}
 				}
@@ -391,7 +391,7 @@ public abstract class EscjavaAction implements IObjectActionDelegate,
 				if (window != null) {
 					Utils.showMessageInUI(
 							shell,
-							"Escjava Plugin - exception",
+							"ESCJava Plugin - exception",
 							e.toString());
 				}			
 			}
@@ -440,7 +440,7 @@ public abstract class EscjavaAction implements IObjectActionDelegate,
 				EscjavaChecker ec = new EscjavaChecker(javaProject);
 				ec.run(filesToCheck);
 			} catch (Exception e) {
-				Log.errorlog("Exception occurred in running EscJava checks: ",e);
+				Log.errorlog("Exception occurred in running ESCJava checks: ",e);
 			}
 		}
 		
@@ -463,7 +463,7 @@ public abstract class EscjavaAction implements IObjectActionDelegate,
 				EscjavaChecker ec = new EscjavaChecker(p.getJavaProject());
 				ec.run(filesToCheck);
 			} catch (Exception e) {
-				Log.errorlog("Exception occurred in running EscJava checks: ",e);
+				Log.errorlog("Exception occurred in running ESCJava checks: ",e);
 			}		
 		}
 		
@@ -484,7 +484,7 @@ public abstract class EscjavaAction implements IObjectActionDelegate,
 				EscjavaChecker ec = new EscjavaChecker(jp);
 				ec.run(list);
 			} catch (Exception e) {
-				Log.errorlog("Exception occurred in running EscJava checks: ",e);
+				Log.errorlog("Exception occurred in running ESCJava checks: ",e);
 			}
 		}
 		

@@ -32,6 +32,8 @@ import pluginlib.Utils;
  */
 public class EscjavaUtils {
 	
+	public static final String SIMPLIFY_PLUGIN_ID = "mobius.simplify";
+
 	/** The ordered list of standard JML suffixes to search for the
 	 *  most refined specification file, omitting prefixed '.'s.
 	 */
@@ -288,7 +290,7 @@ public class EscjavaUtils {
 	  String suffix = getSimplifySuffix(os);
 	  if (suffix == null) return null;
 	  String name = "Simplify-1.5.4." + suffix;
-	  name = Utils.findPluginResource("escjava.simplify",name);
+	  name = Utils.findPluginResource(EscjavaUtils.SIMPLIFY_PLUGIN_ID,name);
 		return name;
 	}
 		
@@ -302,6 +304,7 @@ public class EscjavaUtils {
 		         osname.equals("Mac OS X")) suffix = "macosx";
 		else if (osname.equals("solaris")||
 		         osname.equals("Solaris")) suffix = "solaris";
+		else Log.log("Unexpected OS: " + osname);
 		return suffix;
   }
 	

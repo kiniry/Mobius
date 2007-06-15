@@ -31,7 +31,7 @@ import pluginlib.Utils;
 /**
  * This class provides the hook with eclipse to enable automatic operations
  * upon building. That is, every time the user builds the project (every time
- * the user performs a save if auto-build is enabled) the type Escjava checker
+ * the user performs a save if auto-build is enabled) the type ESCJava checker
  * is run on all the files in the project. This class implements the <em>builders</em>
  * extension point of Eclipse.
  * 
@@ -51,7 +51,7 @@ public class AutoCheckBuilder extends IncrementalProjectBuilder {
 		} catch (CoreException e) {
 			String s = "Exception while cleaning " + getProject().getName();
 			Log.errorlog(s,e);
-			Utils.showMessageInUI(null,"Escjava Checker cleaning",s + ": " + e);
+			Utils.showMessageInUI(null,"ESCJava Checker cleaning",s + ": " + e);
 		}
 	}
 
@@ -65,7 +65,7 @@ public class AutoCheckBuilder extends IncrementalProjectBuilder {
 		// building the project, but instead using Eclipse builders interface to invoke the
 		// type checker, we return 'null' here.
 
-		if (Log.on) Log.log("Escjava Builder starting " + (new Date()).toString());
+		if (Log.on) Log.log("ESCJava Builder starting " + (new Date()).toString());
 		try {
 			EscjavaMarker.clearMarkers(getProject());
 			IJavaProject javaProject = JavaCore.create(getProject());
@@ -77,10 +77,10 @@ public class AutoCheckBuilder extends IncrementalProjectBuilder {
 					new Status(IStatus.ERROR, 
 							EscjavaPlugin.PLUGINID,
 							IStatus.OK, // plug-in specific value
-							"Exception caught during Escjava Checking",
+							"Exception caught during ESCJava Checking",
 							e));
 		} finally {
-			if (Log.on) Log.log("Escjava Builder ending " + (new Date()));
+			if (Log.on) Log.log("ESCJava Builder ending " + (new Date()));
 		}
 		return null;
 	}
