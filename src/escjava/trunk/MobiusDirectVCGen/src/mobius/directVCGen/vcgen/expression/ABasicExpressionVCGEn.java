@@ -18,48 +18,48 @@ import escjava.sortedProver.Lifter.Term;
  * @author J. Charles
  */
 public abstract class ABasicExpressionVCGEn {
-	/** the visitor coupled with this vcgen */
-	private ExpressionVisitor visitor;
-	
-	/**
-	 * The basic constructor which initialize the vcgen with a visitor.
-	 * @param vis the visitor associated with this vcgen
-	 */
-	public ABasicExpressionVCGEn(ExpressionVisitor vis) {
-		visitor = vis;
-		if(visitor == null) {
-			throw new NullPointerException("The visitor cannot be null!");
-		}
-	}
-	
-	/**
-	 * Return the precondition calculated by the vcgen for the given postcondition.
-	 * The sole interest of this methodis to type the loosy-typed visitor pattern :)
-	 * @param x the node to visit
-	 * @param entry the current postcondition associated with the instruction
-	 * @return a precondition calculated by the vc gen
-	 */
-	public Post getPre(ASTNode x, VCEntry entry) {
-		return (Post)x.accept(visitor, entry);
-	}
-	
-	
-	/**
-	 * This method returns a valid new object (with all the necessary properties)
-	 * to use while creating a new exception
-	 * @param type the type of the exception 
-	 * @param post the current post condition
-	 * @return the post condition newly formed 
-	 */
-	public Term getNewExcpPost(Term type, VCEntry post) {
-		Post p = StmtVCGen.getExcpPost(type, post);
-		QuantVariableRef e = Expression.rvar(Ref.sort);
-		QuantVariableRef heap = Heap.newVar();
-		return Logic.forall(e,
-				Logic.forall(heap,
-							Logic.implies(Heap.newObject(Heap.var, type, heap, e),
-						 			p.substWith(e).subst(Heap.var, heap))));
-	}
-	
+  /** the visitor coupled with this vcgen */
+  private ExpressionVisitor visitor;
+
+  /**
+   * The basic constructor which initialize the vcgen with a visitor.
+   * @param vis the visitor associated with this vcgen
+   */
+  public ABasicExpressionVCGEn(ExpressionVisitor vis) {
+    visitor = vis;
+    if(visitor == null) {
+      throw new NullPointerException("The visitor cannot be null!");
+    }
+  }
+
+  /**
+   * Return the precondition calculated by the vcgen for the given postcondition.
+   * The sole interest of this methodis to type the loosy-typed visitor pattern :)
+   * @param x the node to visit
+   * @param entry the current postcondition associated with the instruction
+   * @return a precondition calculated by the vc gen
+   */
+  public Post getPre(ASTNode x, VCEntry entry) {
+    return (Post)x.accept(visitor, entry);
+  }
+
+
+  /**
+   * This method returns a valid new object (with all the necessary properties)
+   * to use while creating a new exception
+   * @param type the type of the exception 
+   * @param post the current post condition
+   * @return the post condition newly formed 
+   */
+  public Term getNewExcpPost(Term type, VCEntry post) {
+    Post p = StmtVCGen.getExcpPost(type, post);
+    QuantVariableRef e = Expression.rvar(Ref.sort);
+    QuantVariableRef heap = Heap.newVar();
+    return Logic.forall(e,
+                        Logic.forall(heap,
+                                     Logic.implies(Heap.newObject(Heap.var, type, heap, e),
+                                                   p.substWith(e).subst(Heap.var, heap))));
+  }
+
 
 }

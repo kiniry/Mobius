@@ -118,7 +118,7 @@ public class Type{
    * @see #translate(javafe.ast.Type)
    */
   public static Term getTypeName(VarInit expr) {
-    return translate(FlowInsensitiveChecks.getType(expr)) ;
+    return translate(FlowInsensitiveChecks.getType(expr));
   }
 
   /**
@@ -129,11 +129,12 @@ public class Type{
    * @see #translateToType(javafe.ast.Type)
    */
   public static Term getType(VarInit expr) {
-    return translateToType(FlowInsensitiveChecks.getType(expr)) ;
+    return translateToType(FlowInsensitiveChecks.getType(expr));
   }
   /**
    * Returns a term representing the class type 
    * {@link java.lang.Throwable}.
+   * @return a {@link java.lang.Throwable} representation
    * @see #javaLangArithmeticException()
    * @see #javaLangNullPointerException()
    * @see #getJavaLang(String)
@@ -168,13 +169,13 @@ public class Type{
    * Returns a term representing the specified type.
    * @deprecated used for convenience only
    */
-  public static Term getJavaLang(String string) {
+  public static Term getJavaLang(final String string) {
     return translate(Types.getJavaLang(string));
   }
   /**
    * @deprecated should not be needed
    */
-  public static Sort typeToSort(javafe.ast.Type t) {
+  public static Sort typeToSort(final javafe.ast.Type t) {
     return Formula.lf.typeToSort(t);
   }
 
