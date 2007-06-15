@@ -359,7 +359,7 @@ BEGIN
        disjoint?(lname, gname) AND
        disjoint?(fname, gname)
 
-
+         
 END WellFormedProgram
 
 

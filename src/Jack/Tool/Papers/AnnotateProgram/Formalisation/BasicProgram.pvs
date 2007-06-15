@@ -52,8 +52,11 @@ BEGIN
   update(vn : Name, v : Val)(sigma : PState) : PState =
     IF is_local(vn, sigma)
     THEN update_local(vn, v)(sigma)
-    ELSE update_field(vn, v)(sigma)
+    ELSIF is_field(vn, sigma)
+    THEN update_field(vn, v)(sigma)
+    ELSE sigma
     ENDIF
+
 
   val2int(v : Val) : int =
     IF Int?(v)
@@ -105,7 +108,7 @@ BEGIN
         ((is_field(vn, s) IMPLIES NOT is_local(vn, s)) AND
          (is_local(vn, s) IMPLIES NOT is_field(vn, s)))
 
-  wf_state_update : LEMMA
+  wf_state_update : LEMMA % :-) 
     FORALL(p : Program, s : PState, vn : Name, v : (defined?)) :
       wf_state(p)(s) IMPLIES
       wf_Program(p) IMPLIES

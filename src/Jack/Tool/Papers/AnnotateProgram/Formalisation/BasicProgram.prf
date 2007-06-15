@@ -199,7 +199,7 @@
      nil))
    6517 3330 nil nil))
  (wf_state_update 0
-  (wf_state_update-1 nil 3390803416 3390818998
+  (wf_state_update-1 nil 3390803416 3390822793
    ("" (skosimp*)
     (("" (expand "update")
       (("" (expand "wf_state")
@@ -264,45 +264,58 @@
               nil))
             nil)
            ("2" (skosimp*)
-            (("2" (expand "update_field")
-              (("2" (expand "is_field")
-                (("2" (expand "is_local")
-                  (("2" (expand "defined?")
-                    (("2" (inst-cp -2 "vn!1")
-                      (("2" (inst -2 "vn!2")
-                        (("2" (flatten)
-                          (("2" (assert)
-                            (("2" (split 1)
+            (("2" (split 2)
+              (("1" (skosimp*)
+                (("1" (inst-cp -2 "vn!1")
+                  (("1" (inst -2 "vn!2")
+                    (("1" (assert)
+                      (("1" (flatten)
+                        (("1" (assert)
+                          (("1" (expand "update_field")
+                            (("1" (expand "is_field")
                               (("1"
-                                (skosimp*)
+                                (expand "is_local")
                                 (("1"
-                                  (assert)
+                                  (expand "defined?")
                                   (("1"
-                                    (case-replace "vn!1 = vn!2")
+                                    (assert)
                                     (("1"
-                                      (typepred "v!1")
-                                      (("1" (postpone) nil nil))
-                                      nil)
-                                     ("2" (assert) nil nil))
+                                      (split 2)
+                                      (("1"
+                                        (skosimp*)
+                                        (("1"
+                                          (assert)
+                                          (("1"
+                                            (case-replace
+                                             "vn!2 = vn!1")
+                                            (("1" (assert) nil nil))
+                                            nil))
+                                          nil))
+                                        nil)
+                                       ("2"
+                                        (skosimp*)
+                                        (("2"
+                                          (assert)
+                                          (("2"
+                                            (case-replace
+                                             "vn!2 = vn!1")
+                                            (("1"
+                                              (assert)
+                                              (("1"
+                                                (typepred "v!1")
+                                                (("1" (grind) nil nil))
+                                                nil))
+                                              nil)
+                                             ("2" (assert) nil nil))
+                                            nil))
+                                          nil))
+                                        nil)
+                                       ("3" (propax) nil nil)
+                                       ("4" (propax) nil nil))
+                                      nil))
                                     nil))
                                   nil))
-                                nil)
-                               ("2"
-                                (skosimp*)
-                                (("2"
-                                  (assert)
-                                  (("2"
-                                    (case-replace "vn!1 = vn!2")
-                                    (("1"
-                                      (assert)
-                                      (("1" (postpone) nil nil))
-                                      nil)
-                                     ("2" (assert) nil nil))
-                                    nil))
-                                  nil))
-                                nil)
-                               ("3" (propax) nil nil)
-                               ("4" (propax) nil nil))
+                                nil))
                               nil))
                             nil))
                           nil))
@@ -310,14 +323,29 @@
                       nil))
                     nil))
                   nil))
-                nil))
+                nil)
+               ("2" (skosimp*) nil nil))
               nil))
             nil))
           nil))
         nil))
       nil))
     nil)
-   unfinished nil 15232548 13860 t shostak)))
+   proved
+   ((wf_state const-decl "boolean" State nil)
+    (update_field const-decl "PState" State nil)
+    (update_local const-decl "PState" State nil)
+    (is_local const-decl "boolean" State nil)
+    (= const-decl "[T, T -> boolean]" equalities nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (Val type-decl nil Val_adt nil)
+    (defined? const-decl "boolean" ValProp nil)
+    (is_field const-decl "boolean" State nil)
+    (Name formal-nonempty-type-decl nil State nil)
+    (update const-decl "PState" State nil))
+   115651 6210 t shostak)))
 (ProgramSemantics
  (execute_set_TCC1 0
   (execute_set_TCC1-1 nil 3385977480 3390735662
