@@ -21,28 +21,28 @@ import org.apache.bcel.generic.MethodGen;
  */
 public class BcelTestRun {
 
-  final static String HWClName = "umbra.test.HelloWorld";
-  final static String HWClNameW = "bin\\umbra\\test\\HelloWorld.class";
+  static final String HWClName = "umbra.test.HelloWorld";
+  static final String HWClNameW = "bin\\umbra\\test\\HelloWorld.class";
 
-  public static JavaClass zmien_jc(JavaClass jc)
+  public static JavaClass zmien_jc(final JavaClass jc)
   {
-    ClassGen cg = new ClassGen(jc);
-    ConstantPoolGen cpg = cg.getConstantPool();
-    Method[] methods = cg.getMethods();
+    final ClassGen cg = new ClassGen(jc);
+    final ConstantPoolGen cpg = cg.getConstantPool();
+    final Method[] methods = cg.getMethods();
     for (int i = 0; i < methods.length; i++) {
-      MethodGen mg = new MethodGen(methods[i], HWClName, cpg);
-      InstructionList il = mg.getInstructionList();
-      InstructionHandle start = il.getStart();
-      InstructionHandle end = il.getEnd();
+      final MethodGen mg = new MethodGen(methods[i], HWClName, cpg);
+      final InstructionList il = mg.getInstructionList();
+      final InstructionHandle start = il.getStart();
+      final InstructionHandle end = il.getEnd();
       for (InstructionHandle pos = start; pos != end; pos = pos.getNext()) {
-        Instruction ins = pos.getInstruction();
-        if (ins.getName() == "ldc") {
+        final Instruction ins = pos.getInstruction();
+        if ("ldc".equals(ins.getName())) {
             System.out.println(cpg.getSize());
             cpg.addString("CompDiff");
-            Constant con = cpg.getConstant(35);
+            final Constant con = cpg.getConstant(35);
             System.out.println("Index " + ((ConstantString)con).getStringIndex());
             cpg.setConstant(23, con);
-            Method mm = mg.getMethod();
+            final Method mm = mg.getMethod();
             methods[i] = mm;
         }
       }
@@ -56,14 +56,14 @@ public class BcelTestRun {
     return cg.getJavaClass();
   }
 
-  public static void wypisz(JavaClass jc)
+  public static void wypisz(final JavaClass jc)
   {
     String bajtkod = "";
-    Method[] methods = jc.getMethods();
-    byte[][] names = new byte[methods.length][256];
-    byte[][] code = new byte[methods.length][4096];
-    int[] namesLen = new int[methods.length];
-    int[] codeLen = new int[methods.length];
+    final Method[] methods = jc.getMethods();
+    final byte[][] names = new byte[methods.length][256];
+    final byte[][] code = new byte[methods.length][4096];
+    final int[] namesLen = new int[methods.length];
+    final int[] codeLen = new int[methods.length];
     for(int i = 0; i < methods.length; i++) {
       try {
         namesLen[i] = methods[i].toString().getBytes().length;
@@ -74,7 +74,7 @@ public class BcelTestRun {
         e.printStackTrace();
       }
     }
-    char[] contents = new char[4096];
+    final char[] contents = new char[4096];
     int k = 0;
     for(int i = 0; i < methods.length; i++) {
       for(int j = 0; j < namesLen[i]; j++, k++) {
@@ -92,22 +92,5 @@ public class BcelTestRun {
     bajtkod = String.copyValueOf(contents, 0, k);
     System.out.println(bajtkod);
 
-  }
-
-  public static void main(String[] args) throws ClassNotFoundException
-  {
-    JavaClass jc = Repository.lookupClass(HWClName);
-    System.out.println("----- przed zmian� -----");
-    wypisz(jc);
-    jc = zmien_jc(jc);
-    System.out.println("-----  po zmianie  -----");
-    wypisz(jc);
-    try {
-      jc.dump(HWClNameW);
-      System.out.println("zapisany ");
-    } catch (IOException e) {
-      System.out.println("jest kiepsko!");
-      e.printStackTrace();
-    }
   }
 }

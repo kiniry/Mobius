@@ -47,7 +47,7 @@ public class BoogiePLConfiguration extends SourceViewerConfiguration {
   /**
    * TODO
    */
-  public BoogiePLConfiguration(ColorManager colorManager, int mod) {
+  public BoogiePLConfiguration(final ColorManager colorManager, final int mod) {
     this.colorManager = colorManager;
     this.mod = mod;
   }
@@ -55,7 +55,7 @@ public class BoogiePLConfiguration extends SourceViewerConfiguration {
   /**
    * TODO
    */
-  public String[] getConfiguredContentTypes(ISourceViewer sourceViewer) {
+  public final String[] getConfiguredContentTypes(final ISourceViewer sourceViewer) {
     return new String[] {
       IDocument.DEFAULT_CONTENT_TYPE,
       BoogiePLPartitionScanner.HEAD,
@@ -65,9 +65,9 @@ public class BoogiePLConfiguration extends SourceViewerConfiguration {
   /**
    * TODO
    */
-  public ITextDoubleClickStrategy getDoubleClickStrategy(
-    ISourceViewer sourceViewer,
-    String contentType) {
+  public final ITextDoubleClickStrategy getDoubleClickStrategy(
+    final ISourceViewer sourceViewer,
+    final String contentType) {
     if (doubleClickStrategy == null)
       doubleClickStrategy = new BoogiePLDoubleClickStrategy();
     return doubleClickStrategy;
@@ -76,7 +76,7 @@ public class BoogiePLConfiguration extends SourceViewerConfiguration {
   /**
    * TODO
    */
-  protected BoogiePLScanner getBoogiePLScanner() {
+  protected final BoogiePLScanner getBoogiePLScanner() {
     if (scanner == null) {
       scanner = new BoogiePLScanner(colorManager, mod);
       scanner.setDefaultReturnToken(
@@ -88,7 +88,7 @@ public class BoogiePLConfiguration extends SourceViewerConfiguration {
   /**
    * TODO
    */
-  protected BoogiePLTagScanner getBoogiePLTagScanner() {
+  protected final BoogiePLTagScanner getBoogiePLTagScanner() {
     if (tagScanner == null) {
       tagScanner = new BoogiePLTagScanner(colorManager, mod);
       tagScanner.setDefaultReturnToken(
@@ -100,8 +100,8 @@ public class BoogiePLConfiguration extends SourceViewerConfiguration {
   /**
    * TODO
    */
-  public IPresentationReconciler getPresentationReconciler(ISourceViewer sourceViewer) {
-    PresentationReconciler reconciler = new PresentationReconciler();
+  public final IPresentationReconciler getPresentationReconciler(final ISourceViewer sourceViewer) {
+    final PresentationReconciler reconciler = new PresentationReconciler();
 
     DefaultDamagerRepairer dr =
       new DefaultDamagerRepairer(getBoogiePLTagScanner());
@@ -112,12 +112,12 @@ public class BoogiePLConfiguration extends SourceViewerConfiguration {
     reconciler.setDamager(dr, IDocument.DEFAULT_CONTENT_TYPE);
     reconciler.setRepairer(dr, IDocument.DEFAULT_CONTENT_TYPE);
 
-    NonRuleBasedDamagerRepairer ndr =
+    final NonRuleBasedDamagerRepairer ndr =
       TokenGetter.getRepairer(colorManager, mod, IColorValues.HEADER);
     reconciler.setDamager(ndr, BoogiePLPartitionScanner.HEAD);
     reconciler.setRepairer(ndr, BoogiePLPartitionScanner.HEAD);
 
-    NonRuleBasedDamagerRepairer ndr2 =
+    final NonRuleBasedDamagerRepairer ndr2 =
       TokenGetter.getRepairer(colorManager, mod, IColorValues.THROWS);
     reconciler.setDamager(ndr2, BoogiePLPartitionScanner.THROWS);
     reconciler.setRepairer(ndr2, BoogiePLPartitionScanner.THROWS);

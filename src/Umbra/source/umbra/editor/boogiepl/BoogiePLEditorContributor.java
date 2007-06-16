@@ -85,7 +85,7 @@ public class BoogiePLEditorContributor extends EditorActionBarContributor {
     /**
      * TODO
      */
-    public void setActiveEditor(IEditorPart targetEditor) {
+    public final void setActiveEditor(final IEditorPart targetEditor) {
       editor = targetEditor;
     }
 
@@ -95,19 +95,19 @@ public class BoogiePLEditorContributor extends EditorActionBarContributor {
      * Finally replaces content of the Editor window with
      * the newly generated input.
      */
-    public void run() {
+    public final void run() {
       editor.doSave(null);
-      IPath active = ((FileEditorInput)editor.getEditorInput()).getFile().getFullPath();
-      IFile file = ((FileEditorInput)editor.getEditorInput()).getFile();
+      final IPath active = ((FileEditorInput)editor.getEditorInput()).getFile().getFullPath();
+      final IFile file = ((FileEditorInput)editor.getEditorInput()).getFile();
       try {
-        String[] commentTab = boogiePLContribution.getCommentTab();
-        String[] interlineTab = boogiePLContribution.getInterlineTab();
+        final String[] commentTab = boogiePLContribution.getCommentTab();
+        final String[] interlineTab = boogiePLContribution.getInterlineTab();
         for (int i = 0; i < interlineTab.length; i++) {
           System.out.println("" + i + ". " + interlineTab[i]);
         }
         ((BoogiePLEditor)editor).refreshBoogiePL(active, commentTab, interlineTab);
-        FileEditorInput input = new FileEditorInput(file);
-        boolean[] modified = boogiePLContribution.getModified();
+        final FileEditorInput input = new FileEditorInput(file);
+        final boolean[] modified = boogiePLContribution.getModified();
         boogiePLContribution.setModTable(modified);
         refreshEditor(editor, input);
       } catch (ClassNotFoundException e) {
@@ -133,7 +133,7 @@ public class BoogiePLEditorContributor extends EditorActionBarContributor {
     /**
      * TODO
      */
-    public void setActiveEditor(IEditorPart targetEditor) {
+    public void setActiveEditor(final IEditorPart targetEditor) {
     }
 
     /**
@@ -149,15 +149,15 @@ public class BoogiePLEditorContributor extends EditorActionBarContributor {
      * updated and the editor window appropriately restored.
      *
      */
-    public void run() {
+    public final void run() {
       // TODO Send BoogiePL code to Boogie
       String s = null;
 
       try {
-        Process p = Runtime.getRuntime().exec("Boogie test.bpl");
+        final Process p = Runtime.getRuntime().exec("Boogie test.bpl");
 
-        BufferedReader stdInput = new BufferedReader(new InputStreamReader(p.getInputStream()));
-        BufferedReader stdError = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+        final BufferedReader stdInput = new BufferedReader(new InputStreamReader(p.getInputStream()));
+        final BufferedReader stdError = new BufferedReader(new InputStreamReader(p.getErrorStream()));
 
         // read the output from the command
         System.out.println("Here is the standard output of the command:\n");
@@ -190,9 +190,9 @@ public class BoogiePLEditorContributor extends EditorActionBarContributor {
     super();
     mod = Composition.getMod();
     verifyAction = new BoogiePLVerifyAction();
-    Bundle bundle = UmbraPlugin.getDefault().getBundle();
-    URL installURL = bundle.getEntry("/");
-    ImageDescriptor verifyIcon = ImageDescriptor.createFromURL(new URL(installURL, "icons/convert_to_boogiepl.gif"));
+    final Bundle bundle = UmbraPlugin.getDefault().getBundle();
+    final URL installURL = bundle.getEntry("/");
+    final ImageDescriptor verifyIcon = ImageDescriptor.createFromURL(new URL(installURL, "icons/convert_to_boogiepl.gif"));
     verifyAction.setImageDescriptor(verifyIcon);
     boogiePLContribution = BoogiePLContribution.newItem();
     verifyAction.setToolTipText("Verify with Boogie");
@@ -201,7 +201,7 @@ public class BoogiePLEditorContributor extends EditorActionBarContributor {
   /**
    * New buttons for the actions are added to the toolbar.
    */
-  public void contributeToToolBar(IToolBarManager toolBarManager) {
+  public final void contributeToToolBar(final IToolBarManager toolBarManager) {
     // Run super.
     super.contributeToToolBar(toolBarManager);
     // Test status line.
@@ -212,10 +212,10 @@ public class BoogiePLEditorContributor extends EditorActionBarContributor {
   /**
    * New items for the actions are added to the menu.
    */
-  public void contributeToMenu(IMenuManager menuManager) {
+  public final void contributeToMenu(final IMenuManager menuManager) {
     // Run super.
     super.contributeToMenu(menuManager);
-    MenuManager bytecodeMenu = new MenuManager("Editor"); //$NON-NLS-1$
+    final MenuManager bytecodeMenu = new MenuManager("Editor"); //$NON-NLS-1$
     menuManager.insertAfter("additions", bytecodeMenu); //$NON-NLS-1$
     bytecodeMenu.add(verifyAction);
   }
@@ -226,7 +226,7 @@ public class BoogiePLEditorContributor extends EditorActionBarContributor {
    *
    * @param editor  the current editor window
    */
-  public void setActiveEditor(IEditorPart editor) {
+  public final void setActiveEditor(final IEditorPart editor) {
     super.setActiveEditor(editor);
     if (editor instanceof BoogiePLEditor) {
       /*if (needRefresh ||
@@ -250,8 +250,8 @@ public class BoogiePLEditorContributor extends EditorActionBarContributor {
    *
    * @see #refreshEditor(IEditorPart, IEditorInput)
    */
-  private void refreshEditor(IEditorPart editor) throws PartInitException {
-    IEditorInput input = editor.getEditorInput();
+  private void refreshEditor(final IEditorPart editor) throws PartInitException {
+    final IEditorInput input = editor.getEditorInput();
     refreshEditor(editor, input);
   }
 
@@ -264,21 +264,21 @@ public class BoogiePLEditorContributor extends EditorActionBarContributor {
    * @param input      input file to be displayed in new editor
    * @throws PartInitException
    */
-  private void refreshEditor(IEditorPart editor, IEditorInput input) throws PartInitException {
-    IWorkbenchPage page = editor.getEditorSite().getPage();
-    ITextSelection selection = (ITextSelection)((AbstractTextEditor)editor).getSelectionProvider().getSelection();
-    int off = selection.getOffset();
-    int len = selection.getLength();
-    AbstractDecoratedTextEditor related = ((BoogiePLEditor)editor).getRelatedEditor();
-    JavaClass jc = ((BoogiePLEditor)editor).getJavaClass();
-    boolean proper = (related != null);
+  private void refreshEditor(final IEditorPart editor, final IEditorInput input) throws PartInitException {
+    final IWorkbenchPage page = editor.getEditorSite().getPage();
+    final ITextSelection selection = (ITextSelection)((AbstractTextEditor)editor).getSelectionProvider().getSelection();
+    final int off = selection.getOffset();
+    final int len = selection.getLength();
+    final AbstractDecoratedTextEditor related = ((BoogiePLEditor)editor).getRelatedEditor();
+    final JavaClass jc = ((BoogiePLEditor)editor).getJavaClass();
+    final boolean proper = (related != null);
     boogiePLContribution.survive();
     if (proper) Composition.startDisas();
     page.closeEditor(editor, true);
-    IEditorPart newEditor = page.openEditor(input, "umbra.BoogiePLEditor", true);
+    final IEditorPart newEditor = page.openEditor(input, "umbra.BoogiePLEditor", true);
     ((BoogiePLEditor) newEditor).setRelation(related, jc);
-    ISelection ns = new TextSelection(off, len);
-    ISelectionProvider sp = ((AbstractTextEditor)newEditor).getSelectionProvider();
+    final ISelection ns = new TextSelection(off, len);
+    final ISelectionProvider sp = ((AbstractTextEditor)newEditor).getSelectionProvider();
     sp.setSelection(ns);
     boogiePLContribution.reinit();
     if (proper) Composition.stopDisas();

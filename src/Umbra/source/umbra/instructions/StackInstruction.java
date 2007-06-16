@@ -34,7 +34,7 @@ public class StackInstruction extends NumInstruction {
   /**
    * TODO
    */
-  public StackInstruction(String l, String n) {
+  public StackInstruction(final String l, final String n) {
     super(l, n);
   }
 
@@ -44,11 +44,11 @@ public class StackInstruction extends NumInstruction {
    *
    *@see InstructionLineController#correct()
    */
-  public boolean correct()
+  public final boolean correct()
   {
     String s;
     s = UmbraHelper.stripAllWhitespace(line);
-    String[] s2 = IBytecodeStrings.stack;
+    final String[] s2 = IBytecodeStrings.stack;
     int j;
     int y;
     if (s.indexOf("%") < s.indexOf(":") + 1)
@@ -87,7 +87,7 @@ public class StackInstruction extends NumInstruction {
    */
   private int getInd() {
     boolean isd;
-    String licznik = "0123456789";
+    final String licznik = "0123456789";
     int liczba;
 
     isd = true;
@@ -113,7 +113,7 @@ public class StackInstruction extends NumInstruction {
    *
    * @see BytecodeLineController#getInstruction()
    */
-  public Instruction getInstruction() {
+  public final Instruction getInstruction() {
     int index = 0;
     //&*
     if (!correct())

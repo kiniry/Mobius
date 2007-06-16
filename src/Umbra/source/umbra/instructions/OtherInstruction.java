@@ -18,7 +18,7 @@ public class OtherInstruction extends MultiInstruction {
   /**
    * TODO
    */
-  public OtherInstruction(String l, String n) {
+  public OtherInstruction(final String l, final String n) {
     super(l, n);
   }
 

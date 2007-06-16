@@ -17,14 +17,14 @@ public class SpecialWordDetector implements IWordDetector {
   /**
    * TODO
    */
-  public boolean isWordStart(char c) {
+  public final boolean isWordStart(final char c) {
     return (Character.isWhitespace(c));
   }
 
   /**
    * TODO
    */
-  public boolean isWordPart(char c) {
+  public final boolean isWordPart(final char c) {
     for (int i = 0; i < IBytecodeStrings.keys.length; i++) {
       if (c == IBytecodeStrings.keys[i]) return true;
     }

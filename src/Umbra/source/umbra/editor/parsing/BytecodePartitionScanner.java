@@ -11,19 +11,19 @@ public class BytecodePartitionScanner extends RuleBasedPartitionScanner {
   /**
    * TODO
    */
-  public final static String DEFAULT = "__xml_default";
+  public static final String DEFAULT = "__xml_default";
   /**
    * TODO
    */
-  public final static String HEAD = "__xml_head";
+  public static final String HEAD = "__xml_head";
   /**
    * TODO
    */
-  public final static String THROWS = "__xml_thr";
+  public static final String THROWS = "__xml_thr";
   /**
    * TODO
    */
-  public final static String TAG = "__xml_tag";
+  public static final String TAG = "__xml_tag";
 
   /**
    * TODO
@@ -31,11 +31,11 @@ public class BytecodePartitionScanner extends RuleBasedPartitionScanner {
    */
   public BytecodePartitionScanner() {
 
-    IToken thr = new Token(THROWS);
-    IToken head = new Token(HEAD);
-    IToken tag = new Token(TAG);
+    final IToken thr = new Token(THROWS);
+    final IToken head = new Token(HEAD);
+    final IToken tag = new Token(TAG);
 
-    IPredicateRule[] rules = new IPredicateRule[8];
+    final IPredicateRule[] rules = new IPredicateRule[8];
 
     rules[0] = new MultiLineRule("<!--", "-->", head);
     rules[1] = new TagRule(tag);

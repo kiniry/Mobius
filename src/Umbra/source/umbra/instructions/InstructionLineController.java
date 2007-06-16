@@ -54,7 +54,7 @@ public abstract class InstructionLineController extends BytecodeLineController {
    * @param l the string representation of the line number
    * @param n the mnemonic name of the instruction
    */
-  public InstructionLineController(String l, String n) {
+  public InstructionLineController(final String l, final String n) {
     super(l);
     name = n;
     // tu moze w podklasach gdzie w podklasach instrukcje sie tworzy odpowiednio
@@ -74,9 +74,9 @@ public abstract class InstructionLineController extends BytecodeLineController {
    * @return always true as the subclasses of the current class correspond to
    *     instructions
    */
-  public boolean addHandle(InstructionHandle ih,
-               InstructionList il,
-               MethodGen mg, int i) {
+  public final boolean addHandle(final InstructionHandle ih,
+               final InstructionList il,
+               final MethodGen mg, final int i) {
     System.out.println("InstructionLineController#addHandle name="+name);
     System.out.println("il="+il.toString());
     this.ih = ih;
@@ -102,14 +102,14 @@ public abstract class InstructionLineController extends BytecodeLineController {
    *     is added
    * @param off      an offset in this array
    */
-  public void initHandle(BytecodeLineController nextLine,
-               ClassGen cg, Instruction ins,
-               boolean metEnd, LinkedList instructions, int off) {
+  public final void initHandle(final BytecodeLineController nextLine,
+               final ClassGen cg, final Instruction ins,
+               final boolean metEnd, final LinkedList instructions, final int off) {
 //    controlPrint(nextLine);
-    InstructionHandle next = nextLine.getHandle();
+    final InstructionHandle next = nextLine.getHandle();
     if (next != null) {
-      InstructionList newList = nextLine.getList();
-      MethodGen mg = nextLine.getMethod();
+      final InstructionList newList = nextLine.getList();
+      final MethodGen mg = nextLine.getMethod();
       //index = nextLine.getIndex();
       if (ins == null) {
         ih = null;
@@ -143,17 +143,17 @@ public abstract class InstructionLineController extends BytecodeLineController {
    *
    *  @param line the line for which the information is printed out
    */
-  public static void controlPrint(BytecodeLineController line) {
+  public static void controlPrint(final BytecodeLineController line) {
     System.out.println("Init: next line");
     if (line == null)
       System.out.println("Null");
     else {
-      Instruction ins = line.getInstruction();
+      final Instruction ins = line.getInstruction();
       if (ins == null)
         System.out.println("Null instruction");
       else
         System.out.println(ins.getName());
-      InstructionHandle nih = line.getHandle();
+      final InstructionHandle nih = line.getHandle();
       if (nih == null)
         System.out.println("Null handle");
       else
@@ -167,7 +167,7 @@ public abstract class InstructionLineController extends BytecodeLineController {
    *
    * @param the isntruction list to print out
    */
-  public static void printInstructionList(InstructionList il) {
+  public static void printInstructionList(final InstructionList il) {
     InstructionHandle ih = il.getStart();
     if (ih==null) {
       System.out.println("start ih==null");
@@ -197,10 +197,10 @@ public abstract class InstructionLineController extends BytecodeLineController {
    *     is included
    * @param off      an offset in this array
    */
-  public void update(BytecodeLineController oldLine,
-      BytecodeLineController nextLine, ClassGen cg,
-      Instruction ins, boolean metEnd, boolean theLast,
-      LinkedList instructions, int off) {
+  public final void update(final BytecodeLineController oldLine,
+      final BytecodeLineController nextLine, final ClassGen cg,
+      final Instruction ins, final boolean metEnd, final boolean theLast,
+      final LinkedList instructions, final int off) {
     System.out.println("oldline="+oldLine.line);
     System.out.println("nextline="+nextLine.line);
     System.out.println("cg="+((cg==null)?"null":"ok"));
@@ -243,8 +243,8 @@ public abstract class InstructionLineController extends BytecodeLineController {
    *
    * @param cg      class generator from BCEL
    */
-  private void updateMethod(ClassGen cg) {
-    Method oldMet = cg.getMethodAt(index);
+  private void updateMethod(final ClassGen cg) {
+    final Method oldMet = cg.getMethodAt(index);
     cg.replaceMethod(oldMet, mg.getMethod());
     //System.out.println(cg.getMethodAt(index).getCode().toString());
   }
@@ -252,7 +252,7 @@ public abstract class InstructionLineController extends BytecodeLineController {
   /**
    * @return the BCEL handle to the current instruction.
    */
-  public InstructionHandle getHandle() {
+  public final InstructionHandle getHandle() {
     return ih;
   }
 
@@ -260,14 +260,14 @@ public abstract class InstructionLineController extends BytecodeLineController {
    * @return the BCEL list of the instructions in the method that contains
    * the current instruction.
    */
-  public InstructionList getList() {
+  public final InstructionList getList() {
     return il;
   }
 
   /**
    * @return the method in which the current instruction is located
    */
-  public MethodGen getMethod() {
+  public final MethodGen getMethod() {
     return mg;
   }
 
@@ -297,24 +297,23 @@ public abstract class InstructionLineController extends BytecodeLineController {
    * @param off an offset in the <code>instructions</code> array which
    *      points to the instruction to be removed
    */
-  public void dispose(BytecodeLineController nextLine,
-            ClassGen cg,
-            boolean theLast,
-            LinkedList instructions,
-            int off)
+  public final void dispose(final BytecodeLineController nextLine,
+            final ClassGen cg,
+            final boolean theLast,
+            final LinkedList instructions,
+            final int off)
   {
-    InstructionHandle me = getHandle();
-    InstructionHandle next = nextLine.getHandle();
+    final InstructionHandle me = getHandle();
+    final InstructionHandle next = nextLine.getHandle();
     System.out.println("InstructionLineController#dispose   name="+name);
-    InstructionTargeter[] tgters = ih.getTargeters();
+    final InstructionTargeter[] tgters = ih.getTargeters();
     if (tgters!=null)
       for (int i=0; i<tgters.length;i++) {
         tgters[i].updateTarget(me, next);
       }
     try {
       il.delete(ih);
-    } catch (TargetLostException e) {};
-    ih = null;
+    } catch (TargetLostException e) {}ih = null;
     mg.setInstructionList(il);
     updateMethod(cg);
     System.out.println("I am here");
@@ -327,12 +326,12 @@ public abstract class InstructionLineController extends BytecodeLineController {
    * A list of characters that should be left intact by the method
    * {@ref #typ(String)}.
    */
-  private final static String sp = ":-#%()<>;|";
+  private static final String sp = ":-#%()<>;|";
 
   /**
    * The length of the {@ref sp} constant.
    */
-  private final static int howManySp = sp.length();
+  private static final int howManySp = sp.length();
 
   /**
    * Replaces some words in a string with single characters.
@@ -408,13 +407,13 @@ public abstract class InstructionLineController extends BytecodeLineController {
    * @return    <code> true </code> if lt is one of strings from typ
    *         <code> false </code> otherwise
    */
-  private static boolean compare(String lt, String typ) {
+  private static boolean compare(final String lt, final String typ) {
     if (lt.equals(typ))
       return true;
     if ((lt.length() == 0) || (typ.length() == 0))
       return false;
     if (typ.startsWith("?{")) {
-      int n = typ.indexOf("}");
+      final int n = typ.indexOf("}");
       if (n > 2)
         if (compare(lt, typ.substring(n+1)))
           return true;
@@ -436,8 +435,8 @@ public abstract class InstructionLineController extends BytecodeLineController {
    * @return    <code> true </code> if line matches pattern
    *         <code> false </code> otherwise
    */
-  public boolean chkcorr(String line, String typ) {
-    boolean b = compare(typ(line), "?D:?WX" + typ + "|");
+  public final boolean chkcorr(final String line, final String typ) {
+    final boolean b = compare(typ(line), "?D:?WX" + typ + "|");
     return b;
   }
 }

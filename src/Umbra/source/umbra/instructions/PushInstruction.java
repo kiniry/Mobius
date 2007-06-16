@@ -23,7 +23,7 @@ public class PushInstruction extends NumInstruction {
   /**
    * TODO
    */
-  public PushInstruction(String l, String n) {
+  public PushInstruction(final String l, final String n) {
     super(l, n);
   }
 
@@ -33,11 +33,11 @@ public class PushInstruction extends NumInstruction {
    *
    *@see InstructionLineController#correct()
    */
-  public boolean correct()
+  public final boolean correct()
   {
     String s;
     s = UmbraHelper.stripAllWhitespace(line);
-    String[] s2 = IBytecodeStrings.push;
+    final String[] s2 = IBytecodeStrings.push;
     int j;
     int y;
     for (j = 0; j < s2.length; j++) {
@@ -65,7 +65,7 @@ public class PushInstruction extends NumInstruction {
    */
   private int getInd() {
     boolean isd;
-    String licznik = "0123456789";
+    final String licznik = "0123456789";
     int liczba;
 
     String line1;
@@ -73,8 +73,8 @@ public class PushInstruction extends NumInstruction {
 
     isd = true;
     // zakladam ze poprawnosc jest juz wyzej
-    int dokad = line1.length();
-    int skad = line1.indexOf(name) + name.length();
+    final int dokad = line1.length();
+    final int skad = line1.indexOf(name) + name.length();
 
     if (isd){
       liczba = 0;
@@ -91,7 +91,7 @@ public class PushInstruction extends NumInstruction {
    *
    * @see BytecodeLineController#getInstruction()
    */
-  public Instruction getInstruction() {
+  public final Instruction getInstruction() {
     int index = 0;
     if (!correct())
       return null;

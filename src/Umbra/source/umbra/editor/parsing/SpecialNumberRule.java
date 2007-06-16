@@ -32,7 +32,7 @@ public class SpecialNumberRule extends NumberRule {
   /**
    * TODO
    */
-  public SpecialNumberRule(char start, char fin, IToken token) {
+  public SpecialNumberRule(final char start, final char fin, final IToken token) {
     super(token);
     this.start = start;
     this.fin = fin;
@@ -42,7 +42,7 @@ public class SpecialNumberRule extends NumberRule {
   /**
    * TODO
    */
-  public SpecialNumberRule(char start, IToken token) {
+  public SpecialNumberRule(final char start, final IToken token) {
     super(token);
     this.start = start;
     isFin = false;
@@ -51,7 +51,7 @@ public class SpecialNumberRule extends NumberRule {
   /**
    * TODO
    */
-  public IToken evaluate(ICharacterScanner scanner) {
+  public final IToken evaluate(final ICharacterScanner scanner) {
     int c= scanner.read();
     if ((char)c == start) {
       if (super.evaluate(scanner) == fToken) {

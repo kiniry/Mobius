@@ -34,7 +34,7 @@ public class TokenGetter {
    * @param i      Position in array of color values
    * @return      Color value as a token
    */
-  static public IToken getToken(ColorManager manager, int mod, int i) {
+  public static IToken getToken(final ColorManager manager, final int mod, final int i) {
     return new Token(getTextAttribute(manager, mod, i));
   }
 
@@ -47,8 +47,8 @@ public class TokenGetter {
    * @return      Array of tokens for each color value
    *           (for each window element to be coloured)
    */
-  static public IToken[] getTokenTab(ColorManager manager, int mod) {
-    IToken[] tokens = new IToken[IColorValues.PARTS];
+  public static IToken[] getTokenTab(final ColorManager manager, final int mod) {
+    final IToken[] tokens = new IToken[IColorValues.PARTS];
     for (int i = 0; i < IColorValues.PARTS; i++) {
       tokens[i] = TokenGetter.getToken(manager, mod, i);
     }
@@ -65,10 +65,10 @@ public class TokenGetter {
    *    same as in the current {@ref BytecodeConfiguration} object
    * @param i particular color as an attribute
    */
-  static public NonRuleBasedDamagerRepairer getRepairer(
-            ColorManager manager,
-            int mod,
-            int i) {
+  public static NonRuleBasedDamagerRepairer getRepairer(
+            final ColorManager manager,
+            final int mod,
+            final int i) {
     return new NonRuleBasedDamagerRepairer(getTextAttribute(manager,
                                 mod, i));
   }
@@ -84,9 +84,9 @@ public class TokenGetter {
    * @param i      Position in array of color values
    * @return      Particular color as an attribute
    */
-  private static TextAttribute getTextAttribute(ColorManager manager,
-                          int mod,
-                          int i) {
+  private static TextAttribute getTextAttribute(final ColorManager manager,
+                          final int mod,
+                          final int i) {
     return new TextAttribute(manager.getColor(
              new RGB(IColorValues.MODELS[mod][CN * i],
              IColorValues.MODELS[mod][(CN * i) + 1],

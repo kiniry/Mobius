@@ -25,7 +25,7 @@ public class IncInstruction extends NumInstruction {
   /**
    * TODO
    */
-  public IncInstruction(String l, String n) {
+  public IncInstruction(final String l, final String n) {
     super(l, n);
   }
 
@@ -37,18 +37,18 @@ public class IncInstruction extends NumInstruction {
    *@see InstructionLineController#correct()
    *@see InstructionLineController#chkcorr(String, String)
    */
-  public boolean correct() {
+  public final boolean correct() {
     return super.chkcorr(line, "W%DW?-D?W");
   }
 
   /**
    * TODO
    */
-  public boolean correct0()
+  public final boolean correct0()
   {
     String s;
     s = UmbraHelper.stripAllWhitespace(line);
-    String[] s2 = IBytecodeStrings.incc;
+    final String[] s2 = IBytecodeStrings.incc;
     int j;
     int y;
     System.out.print(s);
@@ -92,7 +92,7 @@ public class IncInstruction extends NumInstruction {
    */
   private int getInd1() {
     boolean isd;
-    String licznik = "0123456789";
+    final String licznik = "0123456789";
     int liczba = 0;
 
     isd = true;
@@ -118,7 +118,7 @@ public class IncInstruction extends NumInstruction {
    */
   private int getInd2() {
     boolean isd;
-    String licznik = "0123456789";
+    final String licznik = "0123456789";
     int liczba = 0;
 
     isd = true;
@@ -167,7 +167,7 @@ public class IncInstruction extends NumInstruction {
    *
    * @see BytecodeLineController#getInstruction()
    */
-  public Instruction getInstruction() {
+  public final Instruction getInstruction() {
 
     if (!correct())
       return null;

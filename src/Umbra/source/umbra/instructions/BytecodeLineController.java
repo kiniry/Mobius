@@ -43,7 +43,7 @@ public abstract class BytecodeLineController {
    *
    * @param l the string representation of the line number.
    */
-  public BytecodeLineController(String l) {
+  public BytecodeLineController(final String l) {
     super();
     line = l;
   }
@@ -64,10 +64,10 @@ public abstract class BytecodeLineController {
    * @return true when the current line corresponds to an instruction, false
    *     otherwise
    */
-  public boolean addHandle(InstructionHandle ih,
-               InstructionList il,
-               MethodGen mg,
-               int i) {
+  public boolean addHandle(final InstructionHandle ih,
+               final InstructionList il,
+               final MethodGen mg,
+               final int i) {
     index = i;
     return false;
   }
@@ -92,7 +92,7 @@ public abstract class BytecodeLineController {
    * @param il
    * @param ins
    */
-  public void setTarget(InstructionList il, Instruction ins) {
+  public void setTarget(final InstructionList il, final Instruction ins) {
 
   }
 
@@ -108,9 +108,9 @@ public abstract class BytecodeLineController {
    * @param instructions
    * @param off
    */
-  public void initHandle(BytecodeLineController nextLine, ClassGen cg,
-      Instruction ins, boolean metEnd,
-      LinkedList instructions, int off) {
+  public void initHandle(final BytecodeLineController nextLine, final ClassGen cg,
+      final Instruction ins, final boolean metEnd,
+      final LinkedList instructions, final int off) {
   }
 
   /**
@@ -127,12 +127,12 @@ public abstract class BytecodeLineController {
    * @param instructions
    * @param off
    */
-  public void update(BytecodeLineController oldLine,
-             BytecodeLineController nextLine,
-             ClassGen cg,
-             Instruction ins,
-             boolean metEnd, boolean theLast,
-             LinkedList instructions, int off) {
+  public void update(final BytecodeLineController oldLine,
+             final BytecodeLineController nextLine,
+             final ClassGen cg,
+             final Instruction ins,
+             final boolean metEnd, final boolean theLast,
+             final LinkedList instructions, final int off) {
     if (oldLine.getHandle() != null) { //in case this was an instruction before
       oldLine.dispose(nextLine, cg, theLast, instructions, off);
     }
@@ -170,7 +170,7 @@ public abstract class BytecodeLineController {
    *
    * @return
    */
-  public int getIndex() {
+  public final int getIndex() {
     return index;
   }
 
@@ -202,10 +202,10 @@ public abstract class BytecodeLineController {
    * {@ref InstructionLineController}.
    * @param off
    */
-  public void dispose(BytecodeLineController nextLine,
-            ClassGen cg,
-            boolean theLast,
-            LinkedList instructions, int off) {
+  public void dispose(final BytecodeLineController nextLine,
+            final ClassGen cg,
+            final boolean theLast,
+            final LinkedList instructions, final int off) {
     System.out.println("dispose(BytecodeLineController)"+ ((InstructionLineController) (instructions.get(off))).getHandle().getInstruction().getName());
   }
 
@@ -214,7 +214,7 @@ public abstract class BytecodeLineController {
    *
    * @param index2
    */
-  public void setIndex(int index2) {
+  public void setIndex(final int index2) {
     this.index = index2;
   }
 
@@ -224,7 +224,7 @@ public abstract class BytecodeLineController {
    *
    * @return the representation of the line
    */
-  public String getLineContent() {
+  public final String getLineContent() {
     return line;
   }
 }

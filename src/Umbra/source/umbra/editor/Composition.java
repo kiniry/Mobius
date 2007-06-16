@@ -16,12 +16,12 @@ public class Composition {
   /**
    * The current value of the colouring style.
    */
-  static private int mod = 1;
+  private static int mod = 1;
 
   /**
    * TODO
    */
-  static private boolean disas = false;
+  private static boolean disas = false;
 
   /**
    * @return if called during disassembling - the current
@@ -30,7 +30,7 @@ public class Composition {
    * with no relation to the source, therefore it is colored grey.
    * TODO really?
    */
-  static public int getMod() {
+  public static int getMod() {
     if (!disas) return IColorValues.MODELS.length -1;
     return mod;
   }
@@ -38,21 +38,21 @@ public class Composition {
   /**
    * This method sets the current initial colouring style.
    */
-  static public void setMod(int i) {
+  public static void setMod(final int i) {
     mod = i;
   }
 
   /**
    * TODO strange???
    */
-  static public void startDisas() {
+  public static void startDisas() {
     disas = true;
   }
 
   /**
    * TODO
    */
-  static public void stopDisas() {
+  public static void stopDisas() {
     disas = false;
   }
 

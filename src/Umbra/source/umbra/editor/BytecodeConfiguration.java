@@ -66,7 +66,7 @@ public class BytecodeConfiguration extends SourceViewerConfiguration {
   /**
    * TODO
    */
-  public String[] getConfiguredContentTypes(ISourceViewer sourceViewer) {
+  public final String[] getConfiguredContentTypes(final ISourceViewer sourceViewer) {
     return new String[] {
       IDocument.DEFAULT_CONTENT_TYPE,
       BytecodePartitionScanner.HEAD,
@@ -76,9 +76,9 @@ public class BytecodeConfiguration extends SourceViewerConfiguration {
   /**
    * TODO
    */
-  public ITextDoubleClickStrategy getDoubleClickStrategy(
-    ISourceViewer sourceViewer,
-    String contentType) {
+  public final ITextDoubleClickStrategy getDoubleClickStrategy(
+    final ISourceViewer sourceViewer,
+    final String contentType) {
     if (my_dblClickStrategy == null)
       my_dblClickStrategy = new BytecodeDoubleClickStrategy();
     return my_dblClickStrategy;
@@ -101,7 +101,7 @@ public class BytecodeConfiguration extends SourceViewerConfiguration {
   /**
    * TODO
    */
-  protected BytecodeTagScanner getBytecodeTagScanner() {
+  protected final BytecodeTagScanner getBytecodeTagScanner() {
     if (tagScanner == null) {
       tagScanner = new BytecodeTagScanner(colorManager, mod);
       tagScanner.setDefaultReturnToken(
@@ -113,9 +113,9 @@ public class BytecodeConfiguration extends SourceViewerConfiguration {
   /**
    * TODO
    */
-  public IPresentationReconciler getPresentationReconciler(
-             ISourceViewer sourceViewer) {
-    PresentationReconciler reconciler = new PresentationReconciler();
+  public final IPresentationReconciler getPresentationReconciler(
+             final ISourceViewer sourceViewer) {
+    final PresentationReconciler reconciler = new PresentationReconciler();
 
     DefaultDamagerRepairer dr =
       new DefaultDamagerRepairer(getBytecodeTagScanner());

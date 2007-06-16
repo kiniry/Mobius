@@ -23,7 +23,7 @@ public class SingleInstruction extends InstructionLineController {
   /**
    * TODO
    */
-  public SingleInstruction(String l, String n) {
+  public SingleInstruction(final String l, final String n) {
     super(l, n);
   }
 
@@ -32,7 +32,7 @@ public class SingleInstruction extends InstructionLineController {
    *
    * @see BytecodeLineController#getInstruction()
    */
-  public Instruction getInstruction() {
+  public final Instruction getInstruction() {
     //&*
     if (!correct())
       return null;
@@ -163,11 +163,11 @@ public class SingleInstruction extends InstructionLineController {
    *
    *@see InstructionLineController#correct()
    */
-  public boolean correct()
+  public final boolean correct()
   {
     String s;
     s = UmbraHelper.stripAllWhitespace(line);
-    String[] s2 = IBytecodeStrings.single;
+    final String[] s2 = IBytecodeStrings.single;
     int j;
     for (j = 0; j < s2.length; j++) {
       if ((s.indexOf(s2[j]) > 0) && (s.indexOf(s2[j]) < s.indexOf(":") + 2))

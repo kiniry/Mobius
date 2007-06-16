@@ -14,7 +14,7 @@ public interface IBytecodeStrings {
   /**
    * TODO
    */
-  public static String[] instructions = new String[] {"aconst_null", "dadd", "ddiv", "dmul", "dneg", "drem", "dsub",
+  String[] instructions = new String[] {"aconst_null", "dadd", "ddiv", "dmul", "dneg", "drem", "dsub",
       "fadd", "fdiv", "fmul", "fneg", "frem", "fsub", "iadd", "iand", "idiv", "imul", "ineg",
       "ior", "irem", "isub", "iushr", "ixor", "ladd", "land", "ldiv", "lmul", "lneg", "lor",
       "lrem", "lshl", "lshr", "lsub", "lushr", "lxor", "aaload", "aastore", "baload", "bastore",
@@ -40,7 +40,7 @@ public interface IBytecodeStrings {
    * TODO
    * instructions with no arguments required
    */
-  public static String[] single = new String[] {"aconst_null", "dadd", "ddiv", "dmul", "dneg" ,
+  String[] single = new String[] {"aconst_null", "dadd", "ddiv", "dmul", "dneg" ,
       "drem", "dsub", "fadd", "fdiv", "fmul", "fneg", "frem", "fsub", "iadd", "iand",
       "imul", "idiv", "ineg", "ior", "isub", "irem", "iushr", "ixor", "lsub",
       "ladd", "land", "ldiv", "lmul", "lneg", "lor", "lrem", "lshl", "lshr", "lushr", "lxor",
@@ -118,32 +118,32 @@ public interface IBytecodeStrings {
       "lconst", "nop", "ret"};
 
 
-  public static String[] BMLKeywords = new String[] {"requires", "ensures", "exsures"};
+  String[] BMLKeywords = new String[] {"requires", "ensures", "exsures"};
 
 
   /**
    * TODO
    */
-  public static String[] javaKeywords = new String[] {"public", "protected", "private", "static", "void", "int", "long", "short", "char", "byte", "boolean",
+  String[] javaKeywords = new String[] {"public", "protected", "private", "static", "void", "int", "long", "short", "char", "byte", "boolean",
       "class", "interface", "extends", "implements", "package"};
 
   /**
    * TODO
    */
-  public static String[] lines = new String[] {"Line numbers:", "Local variable table:"};
+  String[] lines = new String[] {"Line numbers:", "Local variable table:"};
 
   /**
    * TODO
    */
-  public static String[] linewords = new String[] {"Line", "numbers", "Local", "variable", "table"};
+  String[] linewords = new String[] {"Line", "numbers", "Local", "variable", "table"};
 
   /**
    * TODO
    */
-  public static String[] code = new String[] {"Code", "max_stack", "max_locals", "code_length"};
+  String[] code = new String[] {"Code", "max_stack", "max_locals", "code_length"};
 
   /**
    * TODO
    */
-  public static char[] keys = new char[] {'B', 'C', 'D', 'I', 'S', 'V'};
+  char[] keys = new char[] {'B', 'C', 'D', 'I', 'S', 'V'};
 }

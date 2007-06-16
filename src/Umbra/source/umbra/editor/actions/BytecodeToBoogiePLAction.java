@@ -45,7 +45,7 @@ public class BytecodeToBoogiePLAction implements IEditorActionDelegate {
   /**
    * TODO
    */
-  public void setActiveEditor(final IAction action,
+  public final void setActiveEditor(final IAction action,
                 final IEditorPart targetEditor) {
     editor = targetEditor;
   }
@@ -53,7 +53,7 @@ public class BytecodeToBoogiePLAction implements IEditorActionDelegate {
   /**
    * TODO
    */
-  public void run(IAction action) {
+  public final void run(final IAction action) {
 
     final IPath active = ((FileEditorInput)editor.getEditorInput()).
                             getFile().getFullPath();
@@ -87,18 +87,18 @@ public class BytecodeToBoogiePLAction implements IEditorActionDelegate {
       final String boogiePLPath = UmbraHelper.replaceLast(bytecodePath,
                      UmbraHelper.BYTECODE_EXTENSION,
                      UmbraHelper.BOOGIEPL_EXTENSION);
-      String javaPath   = UmbraHelper.replaceLast(bytecodePath,
+      final String javaPath   = UmbraHelper.replaceLast(bytecodePath,
                      UmbraHelper.BYTECODE_EXTENSION,
                      "" /* .class" */).
                    substring(projectPath.length() + 1 ).
                    replace('\\', '.');
 
-      List<String> args = new ArrayList<String>();
+      final List<String> args = new ArrayList<String>();
       args.add("-basedir"); args.add(projectPath);
       args.add("-o"); args.add(boogiePLPath);
 
       // TODO include all files of the current project
-      IPath path = file.getLocation().removeLastSegments(1);
+      final IPath path = file.getLocation().removeLastSegments(1);
       System.out.println("Looking for other classes in " + path.toOSString());
       for (String a : getClassesInDirectory(path.toFile())) {
         if (a.endsWith(".class")) {
@@ -106,14 +106,14 @@ public class BytecodeToBoogiePLAction implements IEditorActionDelegate {
         }
       }
 
-      String[] argsArray = (String[])args.toArray(new String[args.size()]);
+      final String[] argsArray = (String[])args.toArray(new String[args.size()]);
 
       // MessageDialog.openError(editor.getSite().getShell(), "Bytecode", "B");
 
       try {
-        PrintWriter messageWriter = new PrintWriter(new FileOutputStream(boogiePLPath));
-        Project proj = Project.fromCommandLine(argsArray, messageWriter);
-        Main main = new Main(proj);
+        final PrintWriter messageWriter = new PrintWriter(new FileOutputStream(boogiePLPath));
+        final Project proj = Project.fromCommandLine(argsArray, messageWriter);
+        final Main main = new Main(proj);
         main.compile();
       } catch (IOException ioex) {
         System.out.println(ioex.toString());
@@ -126,9 +126,9 @@ public class BytecodeToBoogiePLAction implements IEditorActionDelegate {
     }
   }
 
-  private String[] getClassesInDirectory(File dir) {
+  private String[] getClassesInDirectory(final File dir) {
     if (dir.isDirectory()) {
-      String[] children = dir.list();
+      final String[] children = dir.list();
       return children;
     }
     return null;
@@ -140,13 +140,13 @@ public class BytecodeToBoogiePLAction implements IEditorActionDelegate {
    * @param active
    * @param lind
    */
-  private void loadBPLFile(IPath active, int lind) {
+  private void loadBPLFile(final IPath active, final int lind) {
     IFile file;
-    String actlind = active.toOSString().substring(0, lind);
-    String fname = actlind + UmbraHelper.BOOGIEPL_EXTENSION;
-    IWorkspace workspace = ResourcesPlugin.getWorkspace();
+    final String actlind = active.toOSString().substring(0, lind);
+    final String fname = actlind + UmbraHelper.BOOGIEPL_EXTENSION;
+    final IWorkspace workspace = ResourcesPlugin.getWorkspace();
     file = workspace.getRoot().getFile(new Path(fname));
-    FileEditorInput input = new FileEditorInput(file);
+    final FileEditorInput input = new FileEditorInput(file);
     /*  FIXME not sure if it makes sense
      * try {
       
@@ -174,6 +174,6 @@ public class BytecodeToBoogiePLAction implements IEditorActionDelegate {
   /**
    * Currently, does nothing.
    */
-  public void selectionChanged(IAction action, ISelection selection) { }
+  public void selectionChanged(final IAction action, final ISelection selection) { }
 
 }

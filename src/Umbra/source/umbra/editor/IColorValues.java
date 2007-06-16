@@ -15,77 +15,77 @@ public interface IColorValues {
   /**
    * The color of strings.
    */
-  static int STRING = 0;
+  int STRING = 0;
   /**
    * The color of comments (starting with //).
    */
-  static int COMMENT = 1;
+  int COMMENT = 1;
   /**
    * The color of unparsed text in bytecode (e.g. names of called methods).
    */
-  static int DEFAULT = 2;
+  int DEFAULT = 2;
   /**
    * The color of piece of bytecode recognized to be an error (not used).
    */
-  static int ERROR = 3;
+  int ERROR = 3;
   /**
    * The color of the method headers (e.g. public int a(int b)).
    */
-  static int HEADER = 4;
+  int HEADER = 4;
 
   /**
    * TODO.
    */
-  static int TAG = 5;
+  int TAG = 5;
   /**
    * The color of bytecode instructions.
    */
-  static int BTC_INSTR = 7;
+  int BTC_INSTR = 7;
   /**
    * The color of the word: &ld;init&ge;.
    */
-  static int KEY = 8;
+  int KEY = 8;
   /**
    * The color of bytecode keywords: "Attribute(s)", "LineNumber", etc.
    */
-  static int LINE = 9;
+  int LINE = 9;
   /**
    * not used (but not to delete).
    */
-  static int THROWS = 10;
+  int THROWS = 10;
   /**
    * The color of numbers in bytecode that are surrounded by '( )'.
    */
-  static int SQUARE = 11;
+  int SQUARE = 11;
   /**
    * The color of numbers appearing in bytecode except from cases listed
    * below.
    */
-  static int NUMBER = 12;
+  int NUMBER = 12;
   /**
    * The color of line number at the beginning of a line.
    */
-  static int POSITION = 13;
+  int POSITION = 13;
   /**
    * The color of number arguments that are used with '#'.
    */
-  static int HASH = 14;
+  int HASH = 14;
   /**
    * The color of number arguments that are used with '%'.
    */
-  static int ATTR = 15;
+  int ATTR = 15;
   /**
    * The color of BML annotations.
    */
-  static int ANNOT = 16;
+  int ANNOT = 16;
   /**
    * The color of keywords in BML annotations.
    */
-  static int ANNOTKEY = 17;
+  int ANNOTKEY = 17;
   /**
    * Number of defined color constants.
    */
-  static int PARTS = 18;
+  int PARTS = 18;
 
 
   /**
@@ -93,7 +93,7 @@ public interface IColorValues {
    * The current colouring style is an index to the first coordinate
    * of the array.
    */
-  static int[][] MODELS = new int[][] {
+  int[][] MODELS = new int[][] {
     new int[] {0, 0, 255, 0,
            0, 0, 0, 2, 0, 0, 0, 0, 255, 0, 0, 0,
            0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1,

@@ -14,7 +14,7 @@ public class BoogiePLTagScanner extends RuleBasedScanner {
   /**
    * TODO
    */
-  public BoogiePLTagScanner(ColorManager manager, int mod) {
+  public BoogiePLTagScanner(final ColorManager manager, final int mod) {
     /*
     IToken[] tokens = TokenGetter.getTokenTab(manager, mod);
 

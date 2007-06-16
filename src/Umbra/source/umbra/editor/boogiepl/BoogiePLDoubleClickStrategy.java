@@ -18,13 +18,13 @@ public class BoogiePLDoubleClickStrategy implements ITextDoubleClickStrategy {
   /**
    * TODO
    */
-  public void doubleClicked(ITextViewer part) {
-    int pos = part.getSelectedRange().x;
+  public final void doubleClicked(final ITextViewer part) {
+    final int pos = part.getSelectedRange().x;
 
     if (pos < 0)
       return;
 
-    BoogiePLDocument bDoc = (BoogiePLDocument)part.getDocument();
+    final BoogiePLDocument bDoc = (BoogiePLDocument)part.getDocument();
     bDoc.synchronizeBS(pos);
   }
 }

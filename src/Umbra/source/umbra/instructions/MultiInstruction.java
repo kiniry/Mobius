@@ -21,7 +21,7 @@ public class MultiInstruction extends InstructionLineController {
    * @param l the line number of the instruction
    * @param n the mnemonic name of the instruction
    */
-  public MultiInstruction(String l, String n) {
+  public MultiInstruction(final String l, final String n) {
     super(l, n);
   }
 

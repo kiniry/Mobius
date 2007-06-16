@@ -15,7 +15,7 @@ public class EmptyLineController extends BytecodeLineController {
   /**
    * TODO
    */
-  public EmptyLineController(String l) {
+  public EmptyLineController(final String l) {
     super(l);
   }
 
@@ -23,7 +23,7 @@ public class EmptyLineController extends BytecodeLineController {
    * @return  true - an empty line is always correct
    * @see BytecodeLineController#correct()
    */
-  public boolean correct()
+  public final boolean correct()
   {
     //sprawdzanie poprawnosci juz przy wyborze typu
     return true;

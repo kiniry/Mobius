@@ -17,7 +17,7 @@ public class ThrowsLineController extends BytecodeLineController {
   /**
    * TODO
    */
-  public ThrowsLineController(String l) {
+  public ThrowsLineController(final String l) {
     super(l);
   }
 
@@ -25,7 +25,7 @@ public class ThrowsLineController extends BytecodeLineController {
   /**
    * TODO
    */
-  public boolean correct()
+  public final boolean correct()
   {
     //tez niezbyt - patrz przy wyborze typu - nie za bardzo wiemy jak wyglada
     return true;

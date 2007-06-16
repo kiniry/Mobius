@@ -34,14 +34,14 @@ public class NonRuleBasedDamagerRepairer
    * Constructor for NonRuleBasedDamagerRepairer.
    */
   public NonRuleBasedDamagerRepairer(
-        /*@ non_null @*/ TextAttribute defaultTextAttribute) {
+        /*@ non_null @*/ final TextAttribute defaultTextAttribute) {
     fDefaultTextAttribute = defaultTextAttribute;
   }
 
   /**
    * @see IPresentationRepairer#setDocument(IDocument)
    */
-  public void setDocument(IDocument document) {
+  public final void setDocument(final IDocument document) {
     fDocument = document;
   }
 
@@ -53,13 +53,13 @@ public class NonRuleBasedDamagerRepairer
    * @return the line end offset for the given offset
    * @exception BadLocationException if offset is invalid in the current document
    */
-  protected int endOfLineOf(int offset) throws BadLocationException {
+  protected final int endOfLineOf(final int offset) throws BadLocationException {
 
     IRegion info = fDocument.getLineInformationOfOffset(offset);
     if (offset <= info.getOffset() + info.getLength())
       return info.getOffset() + info.getLength();
 
-    int line = fDocument.getLineOfOffset(offset);
+    final int line = fDocument.getLineOfOffset(offset);
     try {
       info = fDocument.getLineInformation(line + 1);
       return info.getOffset() + info.getLength();
@@ -71,16 +71,16 @@ public class NonRuleBasedDamagerRepairer
   /**
    * @see IPresentationDamager#getDamageRegion(ITypedRegion, DocumentEvent, boolean)
    */
-  public IRegion getDamageRegion(
-    ITypedRegion partition,
-    DocumentEvent event,
-    boolean documentPartitioningChanged) {
+  public final IRegion getDamageRegion(
+    final ITypedRegion partition,
+    final DocumentEvent event,
+    final boolean documentPartitioningChanged) {
     if (!documentPartitioningChanged) {
       try {
 
-        IRegion info =
+        final IRegion info =
           fDocument.getLineInformationOfOffset(event.getOffset());
-        int start = Math.max(partition.getOffset(), info.getOffset());
+        final int start = Math.max(partition.getOffset(), info.getOffset());
 
         int end =
           event.getOffset()
@@ -111,9 +111,9 @@ public class NonRuleBasedDamagerRepairer
   /**
    * @see IPresentationRepairer#createPresentation(TextPresentation, ITypedRegion)
    */
-  public void createPresentation(
-    TextPresentation presentation,
-    ITypedRegion region) {
+  public final void createPresentation(
+    final TextPresentation presentation,
+    final ITypedRegion region) {
     addRange(
       presentation,
       region.getOffset(),
@@ -129,11 +129,11 @@ public class NonRuleBasedDamagerRepairer
    * @param length the length of the range to be styled
    * @param attr the attribute describing the style of the range to be styled
    */
-  protected void addRange(
-    TextPresentation presentation,
-    int offset,
-    int length,
-    TextAttribute attr) {
+  protected final void addRange(
+    final TextPresentation presentation,
+    final int offset,
+    final int length,
+    final TextAttribute attr) {
     if (attr != null)
       presentation.addStyleRange(
         new StyleRange(

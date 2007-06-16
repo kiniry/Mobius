@@ -48,7 +48,7 @@ public class BytecodeCombineAction extends Action {
 
   /**
    * The manager that initialises all the actions within the
-   * bytecode plugin.
+   * bytecode editor.
    */
   private BytecodeEditorContributor my_contributor;
 
@@ -119,7 +119,7 @@ public class BytecodeCombineAction extends Action {
    * TODO
    *
    * @param a_file
-   * @param a_path
+   * @param a_path a workspace relative path to a Java source code file
    * @param the_lastSegment
    */
   private void updateMethods(final IFile a_file,
@@ -129,37 +129,22 @@ public class BytecodeCombineAction extends Action {
       final String clname = a_path.removeFirstSegments(1).toPortableString().
                replaceFirst(UmbraHelper.BYTECODE_EXTENSION, "");
       ClassPath cp;
-      try {
-        cp = new ClassPath(getClassPath());
-      } catch (JavaModelException e1) {
-        MessageDialog.openWarning(my_editor.getSite().getShell(),
-                     "Bytecode", "Classpath cannot be properly resolved, " +
-                     "empty classpath is used instead");
-        cp = new ClassPath("");
-      }
+      cp = new ClassPath(getClassPath());
       final SyntheticRepository strin = SyntheticRepository.getInstance(cp);
       try {
         JavaClass jc = strin.loadClass(clname);
         strin.removeClass(jc);
-        final JavaClass oldJc = ((BytecodeEditor)my_editor).getMy_javaClass();
+
+        final BytecodeEditor bcEditor = ((BytecodeEditor)my_editor);
+        final JavaClass oldJc = bcEditor.getMy_javaClass();
         final ClassGen cg = updateModifiedMethods(oldJc, jc);
         jc = cg.getJavaClass();
-        final BytecodeEditor bcEditor = ((BytecodeEditor)my_editor);
         final String fullName = bcEditor.getPath(a_path).toOSString();
         jc.dump(fullName + UmbraHelper.getFileSeparator() + the_lastSegment);
         bcEditor.setMy_javaClass(jc);
-        MessageDialog.openWarning(my_editor.getSite().getShell(),
-          "Bytecode", "A " + fullName + UmbraHelper.getFileSeparator() + 
-                             the_lastSegment);
         bcEditor.refreshBytecode(a_path, null, null);
-        MessageDialog.openWarning(my_editor.getSite().getShell(),
-          "Bytecode", "B");
         final IEditorInput input = new FileEditorInput(a_file);
-        MessageDialog.openWarning(my_editor.getSite().getShell(),
-          "Bytecode", "C");
         my_contributor.refreshEditor(my_editor, input);
-        MessageDialog.openWarning(my_editor.getSite().getShell(),
-          "Bytecode", "D");
       } catch (ClassNotFoundException e) {
         // TODO Auto-generated catch block
         e.printStackTrace();
@@ -177,55 +162,78 @@ public class BytecodeCombineAction extends Action {
 
   /**
    * This method generates the classpath for the project in which the current
-   * action takes place.
+   * action takes place. In case the classpath cannot be retrieved an 
+   * appropriate message is shown to the user and the classpath is set to
+   * be the empty string.
    *
    * TODO probably the entry separator should be made OS independent
    *
-   * @return the string representing the claspath
-   * @throws JavaModelException
+   * @return the string representing the classpath
    */
-  private String getClassPath() throws JavaModelException {
-    String res = "";
-    final String classPathSeparator = UmbraHelper.getClassPathSeparator();
-    final String fileSeparator = UmbraHelper.getFileSeparator();
+  private String getClassPath() {
     final IFile file = ((FileEditorInput)my_editor.getEditorInput()).getFile();
     final String projectName = file.getFullPath().segment(0);
     final IWorkspaceRoot myWorkspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
     final IProject project = myWorkspaceRoot.getProject(projectName);
     final IJavaProject jproject = JavaCore.create(project);
     IClasspathEntry[] ent;
-    ent = jproject.getResolvedClasspath(true);
-    for (int i=0; i<ent.length;i++){
+    try {
+      ent = jproject.getResolvedClasspath(true);
+    } catch (JavaModelException e) {
+      MessageDialog.openWarning(my_editor.getSite().getShell(),
+                      "Bytecode", "Classpath cannot be properly resolved, " +
+                      "empty classpath is used instead");
+      return "";
+    }
+    return classPathEntriesToString(projectName, project, ent);
+  }
+
+  /**
+   * TODO
+   *
+   * @param projectName
+   * @param project
+   * @param ent
+   * @return
+   */
+  private String classPathEntriesToString(final String projectName,
+                                          final IProject project,
+                                          final IClasspathEntry[] ent) {
+    final String classPathSeparator = UmbraHelper.getClassPathSeparator();
+    final String fileSeparator = UmbraHelper.getFileSeparator();
+    String res =""; 
+    for (int i = 0; i < ent.length; i++) {
       String add = "";
-      // TODO replace println with the sensible code to realise the functionality
+      // FIXME replace println with the sensible code to realise the
+      //       functionality
       switch (ent[i].getEntryKind()) {
-      case IClasspathEntry.CPE_CONTAINER:
-        System.out.println("CONTAINER: "+ent[i].getPath().
-                            toPortableString());
-        break;
-      case IClasspathEntry.CPE_LIBRARY:
-        add=ent[i].getPath().toPortableString();
-        break;
-      case IClasspathEntry.CPE_PROJECT:
-        System.out.println("PROJECT: "+ent[i].getPath().
-                            toPortableString());
-        break;
-      case IClasspathEntry.CPE_SOURCE:
-        final String ploc = project.getLocation().toPortableString();
-        final String sloc = ent[i].getPath().toPortableString();
-        add=sloc.replaceFirst(fileSeparator+projectName, ploc);
-        break;
-      case IClasspathEntry.CPE_VARIABLE:
-        add = "";
-        break;
-      default:
-        add = "";
-        break;
+        case IClasspathEntry.CPE_CONTAINER:
+          System.out.println("CONTAINER: " + ent[i].getPath().
+                             toPortableString());
+          break;
+        case IClasspathEntry.CPE_LIBRARY:
+          add=ent[i].getPath().toPortableString();
+          break;
+        case IClasspathEntry.CPE_PROJECT:
+          System.out.println("PROJECT: " + ent[i].getPath().
+                             toPortableString());
+          break;
+        case IClasspathEntry.CPE_SOURCE:
+          final String ploc = project.getLocation().toPortableString();
+          final String sloc = ent[i].getPath().toPortableString();
+          add = sloc.replaceFirst(fileSeparator + projectName, ploc);
+          break;
+        case IClasspathEntry.CPE_VARIABLE:
+          add = "";
+          break;
+        default:
+          add = "";
+          break;
       }
       if (res.length()>0) {
-        res+=classPathSeparator+add;
+        res+=classPathSeparator + add;
       } else {
-        res+=add;
+        res += add;
       }
     }
     return res;

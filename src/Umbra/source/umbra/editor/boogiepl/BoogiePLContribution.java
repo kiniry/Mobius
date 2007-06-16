@@ -54,7 +54,7 @@ public class BoogiePLContribution extends ControlContribution {
   /**
    * TODO
    */
-  private void init(IDocument doc) throws BadLocationException
+  private void init(final IDocument doc) throws BadLocationException
   {
     /*
     bcc = new BoogiePLController();
@@ -88,7 +88,7 @@ public class BoogiePLContribution extends ControlContribution {
     /* (non-Javadoc)
      * @see org.eclipse.jface.text.IDocumentListener#documentAboutToBeChanged(org.eclipse.jface.text.DocumentEvent)
      */
-    public void documentAboutToBeChanged(DocumentEvent event) {
+    public final void documentAboutToBeChanged(final DocumentEvent event) {
       if (!ready)
         try {
           init(event.fDocument);
@@ -98,7 +98,7 @@ public class BoogiePLContribution extends ControlContribution {
         }
       try {
         startRem = event.fDocument.getLineOfOffset(event.getOffset());
-        int len = event.fLength;
+        final int len = event.fLength;
         stopRem = event.fDocument.getLineOfOffset(event.getOffset() + len);
         // bcc.removeIncorrects(startRem, stopRem);
       } catch (BadLocationException e) {
@@ -110,12 +110,12 @@ public class BoogiePLContribution extends ControlContribution {
     /* (non-Javadoc)
      * @see org.eclipse.jface.text.IDocumentListener#documentChanged(org.eclipse.jface.text.DocumentEvent)
      */
-    public void documentChanged(DocumentEvent event) {
+    public final void documentChanged(final DocumentEvent event) {
       //int start = 0, stop = 0;
       try {
         //start =
         event.fDocument.getLineOfOffset(event.getOffset());
-        int len = event.getText().length();
+        final int len = event.getText().length();
         //stop =
         event.fDocument.getLineOfOffset(event.getOffset() + len);
 
@@ -167,15 +167,15 @@ public class BoogiePLContribution extends ControlContribution {
   /**
    * TODO
    */
-  public void survive() {
+  public final void survive() {
     needNew = false;
   }
 
   /**
    * TODO
    */
-  protected Control createControl(Composite parent) {
-    Composite composite = new Composite(parent, SWT.BORDER);
+  protected final Control createControl(final Composite parent) {
+    final Composite composite = new Composite(parent, SWT.BORDER);
     composite.setData(this);
 
     labelText = new Label(composite, SWT.NONE);
@@ -204,56 +204,56 @@ public class BoogiePLContribution extends ControlContribution {
   /**
    * TODO
    */
-  public void addListener(IDocument document) {
-    BoogiePLListener listener = new BoogiePLListener();
+  public final void addListener(final IDocument document) {
+    final BoogiePLListener listener = new BoogiePLListener();
     document.addDocumentListener(listener);
   }
 
   /**
    * @param editor
    */
-  public void setActiveEditor(IEditorPart editor) {
+  public final void setActiveEditor(final IEditorPart editor) {
     activeEditor = editor;
   }
 
   /**
    * @param editor
    */
-  public IEditorPart getActiveEditor() {
+  public final IEditorPart getActiveEditor() {
     return activeEditor;
   }
 
   /**
    * TODO
    */
-  public void reinit() {
+  public final void reinit() {
     ready = false;
   }
 
   /**
    * TODO
    */
-  public boolean[] getModified() {
+  public final boolean[] getModified() {
     return null; // return bcc.getModified();
   }
 
   /**
    * TODO
    */
-  public void setModTable(boolean[] modified) {
+  public void setModTable(final boolean[] modified) {
   }
 
   /**
    * TODO
    */
-  public String[] getCommentTab() {
+  public final String[] getCommentTab() {
     return null; // return bcc.getComments();
   }
 
   /**
    * TODO
    */
-  public String[] getInterlineTab() {
+  public final String[] getInterlineTab() {
     return null; // return bcc.getInterline();
   }
 }

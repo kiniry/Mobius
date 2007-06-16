@@ -17,7 +17,7 @@ public class UnknownLineController extends BytecodeLineController {
    *
    * @param l the line with the unrecognized content
    */
-  public UnknownLineController(String l) {
+  public UnknownLineController(final String l) {
     super(l);
   }
 

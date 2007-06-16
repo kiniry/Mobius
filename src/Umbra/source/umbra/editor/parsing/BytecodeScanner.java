@@ -33,11 +33,11 @@ public class BytecodeScanner extends RuleBasedScanner {
    * @param mod the number of the current coloring style, it must be the
    *    same as in the current {@ref BytecodeConfiguration} object
    */
-  public BytecodeScanner(ColorManager manager, int mod) {
+  public BytecodeScanner(final ColorManager manager, final int mod) {
 
-    IToken[] tokens = TokenGetter.getTokenTab(manager, mod);
+    final IToken[] tokens = TokenGetter.getTokenTab(manager, mod);
 
-    WordRule insrule = new WordRule(new BytecodeWordDetector(),
+    final WordRule insrule = new WordRule(new BytecodeWordDetector(),
                     tokens[IColorValues.DEFAULT]);
     for (int i = 0; i < IBytecodeStrings.instructions.length; i++) {
       insrule.addWord(IBytecodeStrings.instructions[i],
@@ -61,7 +61,7 @@ public class BytecodeScanner extends RuleBasedScanner {
 
     //WordRule keyrule = new WordRule(new SpecialWordDetector(), tokens[IColorValues.KEY]);
 
-    IRule[] rules = new IRule[11];
+    final IRule[] rules = new IRule[11];
     rules[0] = new EndOfLineRule("//", tokens[IColorValues.COMMENT]);
     rules[1] = insrule;
     rules[2] = new SpecialNumberRule('\n', ':',

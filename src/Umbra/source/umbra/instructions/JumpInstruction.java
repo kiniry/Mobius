@@ -25,7 +25,7 @@ public class JumpInstruction extends NumInstruction {
   /**
    * TODO
    */
-  public JumpInstruction(String l, String n) {
+  public JumpInstruction(final String l, final String n) {
     super(l, n);
   }
 
@@ -37,11 +37,11 @@ public class JumpInstruction extends NumInstruction {
    *
    *@see InstructionLineController#correct()
    */
-  public boolean correct()
+  public final boolean correct()
   {
     String s;
     s = UmbraHelper.stripAllWhitespace(line);
-    String[] s2 = IBytecodeStrings.jump;
+    final String[] s2 = IBytecodeStrings.jump;
     int j;
     int y;
     if (s.indexOf("#") < s.indexOf(":") + 1) return false;
@@ -78,7 +78,7 @@ public class JumpInstruction extends NumInstruction {
    */
   private int getInd() {
     boolean isd;
-    String counter = "0123456789";
+    final String counter = "0123456789";
     int number;
 
     isd = true;
@@ -103,10 +103,10 @@ public class JumpInstruction extends NumInstruction {
    * TODO
    * @see BytecodeLineController#getInstruction()
    */
-  public Instruction getInstruction() {
+  public final Instruction getInstruction() {
 
 
-    InstructionHandle ih = null;
+    final InstructionHandle ih = null;
 
     if (!correct())
       return null;
@@ -181,7 +181,7 @@ public class JumpInstruction extends NumInstruction {
    * does not exist is not completely solved yet.
    *
    */
-  public void setTarget(InstructionList il, Instruction ins) {
+  public final void setTarget(final InstructionList il, final Instruction ins) {
     int i = 0;
     i = getInd();
     InstructionHandle iha = null;

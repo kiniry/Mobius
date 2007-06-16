@@ -28,14 +28,14 @@ public class BytecodeTagScanner extends RuleBasedScanner {
    * @param mod the number of the current coloring style, it must be the
    *    same as in the current {@ref BytecodeConfiguration} object
    */
-  public BytecodeTagScanner(ColorManager manager, int mod) {
+  public BytecodeTagScanner(final ColorManager manager, final int mod) {
 
-    IToken[] tokens = TokenGetter.getTokenTab(manager, mod);
+    final IToken[] tokens = TokenGetter.getTokenTab(manager, mod);
 
-    WordRule linerule = new WordRule(new SpecialWordDetector());
+    final WordRule linerule = new WordRule(new SpecialWordDetector());
       linerule.addWord("<init>", tokens[IColorValues.KEY]);
 
-    IRule[] rules = new IRule[4];
+    final IRule[] rules = new IRule[4];
 
     // Add rule for double quotes
     rules[0] = new SingleLineRule("\"", "\"", tokens[IColorValues.STRING], '\\');

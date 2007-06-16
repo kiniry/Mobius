@@ -23,7 +23,7 @@ public class BoogiePLDocumentProvider extends FileDocumentProvider {
   /**
    * TODO
    */
-  protected IDocument createEmptyDocument() {
+  protected final IDocument createEmptyDocument() {
     return new BoogiePLDocument();
   }
 
@@ -32,13 +32,13 @@ public class BoogiePLDocumentProvider extends FileDocumentProvider {
    * the editor is initialized. An additional listener is installed.
    * It is related to contribution class that allow displaying control label.
    */
-  protected IDocument createDocument(Object element) throws CoreException {
+  protected final IDocument createDocument(final Object element) throws CoreException {
     if (element instanceof IEditorInput) {
-      IDocument document= createEmptyDocument();
+      final IDocument document= createEmptyDocument();
       if (setDocumentContent(document, (IEditorInput) element, getEncoding(element))) {
         setupDocument(element, document);
       }
-      IDocumentPartitioner partitioner =
+      final IDocumentPartitioner partitioner =
         new FastPartitioner(
           new BoogiePLPartitionScanner(),
           new String[] {
@@ -63,8 +63,8 @@ public class BoogiePLDocumentProvider extends FileDocumentProvider {
    * @param cg    class generator in BCEL
    * @param input    input file
    */
-  public void setRelation(AbstractDecoratedTextEditor editor, JavaClass jc, ClassGen cg, IEditorInput input) {
-    BoogiePLDocument document = (BoogiePLDocument)getDocument(input);
+  public final void setRelation(final AbstractDecoratedTextEditor editor, final JavaClass jc, final ClassGen cg, final IEditorInput input) {
+    final BoogiePLDocument document = (BoogiePLDocument)getDocument(input);
     document.setJavaClass(jc);
     document.setClassGen(cg);
     document.setRelatedEditor(editor);

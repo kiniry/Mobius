@@ -14,7 +14,7 @@ public class BytecodeWhitespaceDetector implements IWhitespaceDetector {
    *
    * @param c the character to determine if it is whitespace
    */
-  public boolean isWhitespace(char c) {
+  public final boolean isWhitespace(final char c) {
     return (c == ' ' || c == '\t' || c == '\n' || c == '\r');
   }
 }

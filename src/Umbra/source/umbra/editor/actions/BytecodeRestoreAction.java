@@ -54,8 +54,8 @@ public class BytecodeRestoreAction extends Action {
    * @param contributor
    * @param bytecodeContribution
    */
-  public BytecodeRestoreAction(BytecodeEditorContributor contributor,
-                 BytecodeContribution bytecodeContribution) {
+  public BytecodeRestoreAction(final BytecodeEditorContributor contributor,
+                 final BytecodeContribution bytecodeContribution) {
     super("Restore");
     this.contributor = contributor;
     this.bytecodeContribution = bytecodeContribution;
@@ -67,21 +67,21 @@ public class BytecodeRestoreAction extends Action {
    * appropriate historical version and new input is
    * generated and put into the editor window.
    */
-  public void run() {
-    String strnum = JOptionPane.showInputDialog("Input version number (0 to 2):", "0");
+  public final void run() {
+    final String strnum = JOptionPane.showInputDialog("Input version number (0 to 2):", "0");
     int num = 0;
-    if (strnum == "1") num = 1;
-    else if (strnum == "2") num = 2;
-    String ext = UmbraHelper.BYTECODE_HISTORY_EXTENSION + num;
-    IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-    IFile file = ((FileEditorInput)editor.getEditorInput()).getFile();
-    IPath active = file.getFullPath();
-    String fnameFrom = active.toOSString().replaceFirst(
+    if ("1".equals(strnum)) num = 1;
+    else if ("2".equals(strnum)) num = 2;
+    final String ext = UmbraHelper.BYTECODE_HISTORY_EXTENSION + num;
+    final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+    final IFile file = ((FileEditorInput)editor.getEditorInput()).getFile();
+    final IPath active = file.getFullPath();
+    final String fnameFrom = active.toOSString().replaceFirst(
                    UmbraHelper.BYTECODE_EXTENSION,
                    ext);
-    IFile fileFrom = root.getFile(new Path(fnameFrom));
+    final IFile fileFrom = root.getFile(new Path(fnameFrom));
     if (!fileFrom.exists()) {
-      Shell shell = editor.getSite().getShell();
+      final Shell shell = editor.getSite().getShell();
       MessageDialog.openInformation(shell, "Restore bytecode",
           "The file " + fnameFrom + " does not exist");
       return;
@@ -92,14 +92,14 @@ public class BytecodeRestoreAction extends Action {
     } catch (CoreException e) {
       e.printStackTrace();
     }
-    String lastSegment = active.lastSegment().replaceFirst(
+    final String lastSegment = active.lastSegment().replaceFirst(
                     UmbraHelper.BYTECODE_EXTENSION,
                     UmbraHelper.CLASS_EXTENSION);
-    String clnameTo = active.removeLastSegments(1).append(lastSegment).toOSString();
-    String clnameFrom = active.removeLastSegments(1).append("_" + num + "_" + lastSegment).toOSString();
-    IFile classFrom = root.getFile(new Path(clnameFrom));
-    IPath clpathTo = new Path(clnameTo);
-    IFile classTo = root.getFile(clpathTo);
+    final String clnameTo = active.removeLastSegments(1).append(lastSegment).toOSString();
+    final String clnameFrom = active.removeLastSegments(1).append("_" + num + "_" + lastSegment).toOSString();
+    final IFile classFrom = root.getFile(new Path(clnameFrom));
+    final IPath clpathTo = new Path(clnameTo);
+    final IFile classTo = root.getFile(clpathTo);
     try {
       classTo.delete(true, null);
       classFrom.copy(clpathTo, true, null);
@@ -108,8 +108,8 @@ public class BytecodeRestoreAction extends Action {
     }
     try {
       ((BytecodeEditor)editor).refreshBytecode(active, null, null);
-      IEditorInput input = new FileEditorInput(file);
-      boolean[] modified = bytecodeContribution.getModified();
+      final IEditorInput input = new FileEditorInput(file);
+      final boolean[] modified = bytecodeContribution.getModified();
       bytecodeContribution.setModTable(modified);
       contributor.refreshEditor(editor, input);
     } catch (ClassNotFoundException e1) {
@@ -128,7 +128,7 @@ public class BytecodeRestoreAction extends Action {
    *
    * @param part the bytecode editor for which the action will be executed
    */
-  public void setActiveEditor(IEditorPart part) {
+  public final void setActiveEditor(final IEditorPart part) {
     editor = part;
   }
 }

@@ -89,7 +89,7 @@ public class BytecodeController {
    * This is a debugging method. It prints out to the standard output the
    * list of all the instructions in the controller.
    */
-  public void showInstructionList()
+  public final void showInstructionList()
   {
     for (int i = 0; i < all.size(); i++) {
       System.out.print(((BytecodeLineController)(all.get(i))).line);
@@ -100,7 +100,7 @@ public class BytecodeController {
    * This method prints out to the standard output the
    * list of all the incorrect instructions in the controller.
    */
-  public void showAllIncorrectLines()
+  public final void showAllIncorrectLines()
   {
     System.out.println("" + incorrect.size() + " incorrects:");
     System.out.flush();
@@ -120,10 +120,10 @@ public class BytecodeController {
    * @param doc the bytecode document with the corresponding BCEL
    *   structures linked into it
    */
-  public void init(IDocument doc) {
-    ClassGen cg = ((BytecodeDocument)doc).getClassGen();
-    ConstantPoolGen cpg = cg.getConstantPool();
-    Method[] methods = cg.getMethods();
+  public final void init(final IDocument doc) {
+    final ClassGen cg = ((BytecodeDocument)doc).getClassGen();
+    final ConstantPoolGen cpg = cg.getConstantPool();
+    final Method[] methods = cg.getMethods();
     String partComment = "";
     boolean metEnd = true;
     MethodGen mg = null;
@@ -150,9 +150,9 @@ public class BytecodeController {
         MessageDialog.openInformation(new Shell(), "Bytecode",
             "The current document has no positions for line "+j);
       }
-      String lineName = removeCommentFromLine(line);
-      String comment = extractCommentFromLine(line);
-      BytecodeLineController lc = getType(lineName);
+      final String lineName = removeCommentFromLine(line);
+      final String comment = extractCommentFromLine(line);
+      final BytecodeLineController lc = getType(lineName);
       all.add(j, lc);
       if (lc.addHandle(ih, il, mg, i - 1)) { //this is an instruction line
         instructions.add(ic, lc);
@@ -171,7 +171,7 @@ public class BytecodeController {
         if (comment != null) partComment.concat("\n" + comment);
     }
 
-    int methodNum = ((BytecodeLineController)instructions.getLast()).
+    final int methodNum = ((BytecodeLineController)instructions.getLast()).
                                 getIndex() + 1;
     modified = new boolean[methodNum];
     for (int i = 0; i < modified.length; i++) modified[i] = false;
@@ -185,9 +185,9 @@ public class BytecodeController {
    * @param start the first line which is checked for removing
    * @param stop the last line which is checked for removing
    */
-  public void removeIncorrects(int start, int stop) {
+  public final void removeIncorrects(final int start, final int stop) {
     for (int i = start; i <= stop; i++) {
-      BytecodeLineController line = (BytecodeLineController)all.get(i);
+      final BytecodeLineController line = (BytecodeLineController)all.get(i);
       if (incorrect.contains(line)) {
         incorrect.remove(line);
       }
@@ -205,10 +205,10 @@ public class BytecodeController {
    * @param stopRem  Old-version number of the last modified line
    * @param stop    New-version number of the last modified line
    */
-  public void addAllLines(IDocument doc,
-              int startRem, int stopRem, int stop)
+  public final void addAllLines(final IDocument doc,
+              final int startRem, final int stopRem, final int stop)
   {
-    ClassGen cg = ((BytecodeDocument)doc).getClassGen();
+    final ClassGen cg = ((BytecodeDocument)doc).getClassGen();
     System.out.println("startRem="+startRem);
     System.out.println("stopRem="+stopRem);
     System.out.println("stop="+stop);
@@ -217,11 +217,11 @@ public class BytecodeController {
     for (int i = startRem, j = startRem;
          (i <= stopRem || j <= stop) && i < all.size();
          i++, j++) {
-      BytecodeLineController oldlc = (BytecodeLineController)all.get(j);
+      final BytecodeLineController oldlc = (BytecodeLineController)all.get(j);
       BytecodeLineController nextLine = null;
-      int off = getInstructionOff(j);
+      final int off = getInstructionOff(j);
       boolean theLast = false;
-      boolean metEnd = (isEnd(j)) &&
+      final boolean metEnd = (isEnd(j)) &&
                (oldlc.getIndex() ==
                 ((InstructionLineController)instructions.
                              get(off)).getIndex());
@@ -264,22 +264,22 @@ public class BytecodeController {
    *         method
    * @return
    */
-  private int addInstructions(IDocument doc, int startRem, int stopRem,
-                int i, int j,
-                BytecodeLineController oldlc,
-                BytecodeLineController nextLine,
-                boolean theLast, boolean metEnd) {
-    ClassGen cg = ((BytecodeDocument)doc).getClassGen();
-    int off = getInstructionOff(j);
+  private int addInstructions(final IDocument doc, final int startRem, final int stopRem,
+                int i, final int j,
+                final BytecodeLineController oldlc,
+                final BytecodeLineController nextLine,
+                final boolean theLast, final boolean metEnd) {
+    final ClassGen cg = ((BytecodeDocument)doc).getClassGen();
+    final int off = getInstructionOff(j);
     try {
-      String line = doc.get(doc.getLineOffset(j), doc.getLineLength(j));
+      final String line = doc.get(doc.getLineOffset(j), doc.getLineLength(j));
       //%%
-      String lineName = removeCommentFromLine(line);
-      String comment = extractCommentFromLine(line);
-      BytecodeLineController lc = getType(lineName);
+      final String lineName = removeCommentFromLine(line);
+      final String comment = extractCommentFromLine(line);
+      final BytecodeLineController lc = getType(lineName);
       lc.setIndex(((BytecodeLineController)all.get(j - 1)).getIndex());
       if (comment != null) comments.put(lc, comment);
-      Instruction ins = lc.getInstruction();
+      final Instruction ins = lc.getInstruction();
       if (ins != null) {
         lc.setTarget(nextLine.getList(), ins);
       }
@@ -315,17 +315,16 @@ public class BytecodeController {
    * @return     true if all lines of the area are correct,
    *   false otherwise
    */
-  public boolean checkAllLines(int start, int stop)
+  public final boolean checkAllLines(final int start, final int stop)
   {
     boolean ok = true;
     for (int i = start; i <= stop; i++) {
-      BytecodeLineController line = (BytecodeLineController)(all.get(i));
+      final BytecodeLineController line = (BytecodeLineController)(all.get(i));
       if (!line.correct()) {
         ok = false;
         incorrect.addLast(all.get(i));
       }
-    };
-    return ok;
+    }return ok;
   }
 
   /**
@@ -337,12 +336,12 @@ public class BytecodeController {
    *     that contents of the given line satisfies
    *     classification conditions (Unknown if it does not for all)
    */
-  private BytecodeLineController getType(String line)
+  private BytecodeLineController getType(final String line)
   {
     int i;
     boolean ok;
     int j;
-    String l = removeWhiteSpace(removeColonFromLine(line));
+    final String l = removeWhiteSpace(removeColonFromLine(line));
     if (l.length() == 0)
       return new EmptyLineController(line);
 
@@ -377,7 +376,7 @@ public class BytecodeController {
     //instrukcje liczba i :
     // a potem w zaleznosci od rodzaju
 
-    int ppos = line.indexOf(":");
+    final int ppos = line.indexOf(":");
     if ( ppos >= 0){ //nie >= czy jest : od 2 pozycji
       //tzn liczy chyba od zerowej czyli sprawdzaczy cyfra przed
       //System.out.println("dwukropek" + ppos + line.charAt(0) + line.charAt(1));
@@ -396,17 +395,17 @@ public class BytecodeController {
         }
       }
       if (ok) {
-        String[] s1 = IBytecodeStrings.single;
-        String[] s2 = IBytecodeStrings.push;
-        String[] s3 = IBytecodeStrings.jump;
-        String[] s4 = IBytecodeStrings.incc;
-        String[] s5 = IBytecodeStrings.stack;
-        String[] s6 = IBytecodeStrings.array;
-        String[] s7 = IBytecodeStrings.anew;
-        String[] s8 = IBytecodeStrings.field;
-        String[] s9 = IBytecodeStrings.invoke;
-        String[] s10 = IBytecodeStrings.ldc;
-        String[] s11 = IBytecodeStrings.unknown;
+        final String[] s1 = IBytecodeStrings.single;
+        final String[] s2 = IBytecodeStrings.push;
+        final String[] s3 = IBytecodeStrings.jump;
+        final String[] s4 = IBytecodeStrings.incc;
+        final String[] s5 = IBytecodeStrings.stack;
+        final String[] s6 = IBytecodeStrings.array;
+        final String[] s7 = IBytecodeStrings.anew;
+        final String[] s8 = IBytecodeStrings.field;
+        final String[] s9 = IBytecodeStrings.invoke;
+        final String[] s10 = IBytecodeStrings.ldc;
+        final String[] s11 = IBytecodeStrings.unknown;
         //wazna jest kolejnosc bo aload_0 przed aload
         // i ty tworzenie inshan !!!!!!!!!
         for (j = 0; j < s1.length; j++) {
@@ -471,22 +470,20 @@ public class BytecodeController {
    * @param string to strip off the whitespace
    * @return the string with no whitespace
    */
-  private String removeWhiteSpace(/*@ non_null @*/ String string) {
-    BytecodeWhitespaceDetector wd = new BytecodeWhitespaceDetector();
+  private String removeWhiteSpace(/*@ non_null @*/ final String string) {
+    final BytecodeWhitespaceDetector wd = new BytecodeWhitespaceDetector();
     int i=0;
     boolean ok = true;
     while (ok && i<string.length() && string.length()>0) {
       if (!wd.isWhitespace(string.charAt(i))) ok=false;
       i++;
-    };
-    if (ok) return "";
+    }if (ok) return "";
     int j=string.length()-1;
     ok=true;
     while (ok && j>=0) {
       if (!wd.isWhitespace(string.charAt(j))) ok=false;
       j--;
-    };
-    if (ok) return "";
+    }if (ok) return "";
     return string.substring(i-1, j+2);
   }
 
@@ -496,11 +493,11 @@ public class BytecodeController {
    * @param l  line of bytecode
    * @return  bytecode line l without one-line comment and ending whitespaces
    */
-  protected String removeCommentFromLine(String l)
+  protected final String removeCommentFromLine(String l)
   {
     int j = l.length() - 1;
 
-    int k = (l.indexOf("//", 0));
+    final int k = (l.indexOf("//", 0));
     if (k != -1)
       j = k - 1;
     while ((j >= 0) && (Character.isWhitespace(l.charAt(j))))
@@ -515,7 +512,7 @@ public class BytecodeController {
    *
    * @param l the string to strip the initial characters from
    */
-  protected String removeColonFromLine(String l) {
+  protected final String removeColonFromLine(final String l) {
     int i = 0;
     while ((i < l.length()) && (Character.isDigit(l.charAt(i))))
       i++;
@@ -534,10 +531,10 @@ public class BytecodeController {
    * @param line  the line to check for comments
    * @return    comment or null
    */
-  private String extractCommentFromLine(String line) {
-    int i = line.indexOf("//");
+  private String extractCommentFromLine(final String line) {
+    final int i = line.indexOf("//");
     if (i == -1) return null;
-    String nl = line.substring(i + 2, line.indexOf("\n"));
+    final String nl = line.substring(i + 2, line.indexOf("\n"));
     System.out.println("//" + nl);
     return nl;
   }
@@ -545,7 +542,7 @@ public class BytecodeController {
   /**
    * @return true if there is no incorrect line within the whole document
    */
-  public boolean allCorrect() {
+  public final boolean allCorrect() {
     return incorrect.isEmpty();
   }
 
@@ -553,7 +550,7 @@ public class BytecodeController {
    * @return Number of a line that the first error occurs
    * (not necessarily: number of the first line that an error occurs)
    */
-  public int getFirstError() {
+  public final int getFirstError() {
     return all.lastIndexOf(incorrect.getFirst());
   }
 
@@ -565,9 +562,9 @@ public class BytecodeController {
    * @return  Instruction offset (including only instruction lines)
    *   or -1 if the line is not an instruction
    */
-  private int getInstructionOff(int lineNum) {
+  private int getInstructionOff(final int lineNum) {
     for (int i = lineNum; i >= 0; i--) {
-      Object line = all.get(i);
+      final Object line = all.get(i);
       if (instructions.contains(line))
         return instructions.indexOf(line);
     }
@@ -581,12 +578,12 @@ public class BytecodeController {
    *     in <code>instructions</code> array that is the last instruction
    *     in a method or is a non-istruction one located after the method
    */
-  private boolean isEnd(int lineNum) {
-    int off = getInstructionOff(lineNum);
+  private boolean isEnd(final int lineNum) {
+    final int off = getInstructionOff(lineNum);
     if (off + 1 >= instructions.size()) return true;
     if (off == -1) return false;
-    int index1 = ((BytecodeLineController)instructions.get(off)).getIndex();
-    int index2 = ((BytecodeLineController)instructions.get(off + 1)).
+    final int index1 = ((BytecodeLineController)instructions.get(off)).getIndex();
+    final int index2 = ((BytecodeLineController)instructions.get(off + 1)).
              getIndex();
     return (index1 != index2);
   }
@@ -595,25 +592,25 @@ public class BytecodeController {
    * @param lineNum Numebr of line (including all lines)
    * @return true if the line is located before the first instruction in a method
    */
-  private boolean isFirst(int lineNum) {
-    int off = getInstructionOff(lineNum);
+  private boolean isFirst(final int lineNum) {
+    final int off = getInstructionOff(lineNum);
     if (off == 0) return true;
-    int index1 = ((BytecodeLineController)instructions.get(off)).getIndex();
-    int index2 = ((BytecodeLineController)instructions.get(off - 1)).getIndex();
+    final int index1 = ((BytecodeLineController)instructions.get(off)).getIndex();
+    final int index2 = ((BytecodeLineController)instructions.get(off - 1)).getIndex();
     return (index1 != index2);
   }
 
   /**
    * TODO
    */
-  public boolean[] getModified() {
+  public final boolean[] getModified() {
     return modified;
   }
 
   /**
    * TODO
    */
-  public void setModified(boolean[] modified) {
+  public final void setModified(final boolean[] modified) {
     this.modified = modified;
   }
 
@@ -622,11 +619,11 @@ public class BytecodeController {
    *
    * @return Array of comments
    */
-  public String[] getComments() {
-    String[] commentTab = new String[instructions.size()];
+  public final String[] getComments() {
+    final String[] commentTab = new String[instructions.size()];
     for (int i = 0; i < instructions.size(); i++) {
-      Object lc = instructions.get(i);
-      String com = (String)comments.get(lc);
+      final Object lc = instructions.get(i);
+      final String com = (String)comments.get(lc);
       commentTab[i] = com;
     }
     return commentTab;
@@ -635,11 +632,11 @@ public class BytecodeController {
   /**
    * TODO
    */
-  public String[] getInterline() {
-    String[] commentTab = new String[instructions.size()];
+  public final String[] getInterline() {
+    final String[] commentTab = new String[instructions.size()];
     for (int i = 0; i < instructions.size(); i++) {
-      Object lc = instructions.get(i);
-      String com = (String)interline.get(lc);
+      final Object lc = instructions.get(i);
+      final String com = (String)interline.get(lc);
       commentTab[i] = com;
     }
     return commentTab;
@@ -648,22 +645,22 @@ public class BytecodeController {
   /**
    * TODO
    */
-  private void controlPrint(int index) {
+  private void controlPrint(final int index) {
     System.out.println();
     System.out.println("Control print of bytecode modification (" + index + "):");
     for (int i = 0; i < instructions.size(); i++) {
-      InstructionLineController line = (InstructionLineController)instructions.get(i);
+      final InstructionLineController line = (InstructionLineController)instructions.get(i);
       if (line == null) {
         System.out.println("" + i + ". null");
         return;
       }
       //if (line.index == index) {
         System.out.println("" + i + ". " + line.name);
-        InstructionHandle ih = line.getHandle();
+        final InstructionHandle ih = line.getHandle();
         if (ih == null) System.out.println("  handle - null");
         else {
           System.out.print("  handle(" + ih.getPosition() + ") ");
-          Instruction ins = ih.getInstruction();
+          final Instruction ins = ih.getInstruction();
           if (ins == null) System.out.print("null instruction");
           else System.out.print(ins.getName());
           if (ih.getNext() == null) System.out.print(" next: null");

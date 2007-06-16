@@ -72,7 +72,7 @@ public class BoogiePLEditor extends TextEditor {
   /**
    * A constructor with no BoogiePL-related specificity
    */
-  public BoogiePLEditor(BytecodeEditor editor) {
+  public BoogiePLEditor(final BytecodeEditor editor) {
     super();
     mod = Composition.getMod();
     colorManager = ColorManager.getColorManager();
@@ -83,7 +83,7 @@ public class BoogiePLEditor extends TextEditor {
   /**
    * Default function used while closing editor
    */
-  public void dispose() {
+  public final void dispose() {
     colorManager.dispose();
     super.dispose();
   }
@@ -91,14 +91,14 @@ public class BoogiePLEditor extends TextEditor {
   /**
    * TODO
    */
-  public boolean isUpdated() {
+  public final boolean isUpdated() {
     return updated;
   }
 
   /**
    * TODO
    */
-  public void leave() {
+  public final void leave() {
     updated = false;
   }
 
@@ -106,7 +106,7 @@ public class BoogiePLEditor extends TextEditor {
    * @return Java code editor
    * that BoogiePL has been generated from
    */
-  public AbstractDecoratedTextEditor getRelatedEditor() {
+  public final AbstractDecoratedTextEditor getRelatedEditor() {
     return relatedEditor;
   }
 
@@ -114,7 +114,7 @@ public class BoogiePLEditor extends TextEditor {
    * @return BCEL structure related to BoogiePL
    * that allows obtaining its particular instructions
    */
-  public JavaClass getJavaClass() {
+  public final JavaClass getJavaClass() {
     return javaClass;
   }
 
@@ -127,7 +127,7 @@ public class BoogiePLEditor extends TextEditor {
    * @param jc    BCEL structures that BoogiePL has been
    *           generated from and may be modificated with
    */
-  public void setRelation(AbstractDecoratedTextEditor editor, JavaClass jc) {
+  public final void setRelation(final AbstractDecoratedTextEditor editor, final JavaClass jc) {
     relatedEditor = editor;
     javaClass = jc;
     classGen = new ClassGen(jc);
@@ -144,24 +144,24 @@ public class BoogiePLEditor extends TextEditor {
    * not existed such yet, the binary file is simply rewritten, otherwise
    * it is saved unchanged).
    */
-  public void doSave(IProgressMonitor progressMonitor) {
+  public final void doSave(final IProgressMonitor progressMonitor) {
     super.doSave(progressMonitor);
-    IPath active = ((FileEditorInput)getEditorInput()).getFile().getFullPath();
-    String fnameFrom = active.toOSString().replaceFirst(".bpl", ".class");
-    String lastSegment = active.lastSegment().replaceFirst(".bpl", ".class");
-    String fnameTo = active.removeLastSegments(1).append("_" + lastSegment).toOSString();
-    IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-    IFile fileFrom = root.getFile(new Path(fnameFrom));
-    IPath pathTo = new Path(fnameTo);
-    IFile fileTo = root.getFile(pathTo);
+    final IPath active = ((FileEditorInput)getEditorInput()).getFile().getFullPath();
+    final String fnameFrom = active.toOSString().replaceFirst(".bpl", ".class");
+    final String lastSegment = active.lastSegment().replaceFirst(".bpl", ".class");
+    final String fnameTo = active.removeLastSegments(1).append("_" + lastSegment).toOSString();
+    final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+    final IFile fileFrom = root.getFile(new Path(fnameFrom));
+    final IPath pathTo = new Path(fnameTo);
+    final IFile fileTo = root.getFile(pathTo);
     try {
       if (!fileTo.exists()) fileFrom.copy(pathTo, true, null);
     } catch (CoreException e1) {
       e1.printStackTrace();
     }
     try {
-      JavaClass jc = classGen.getJavaClass();
-      String path3 = getPath(active).append(lastSegment).toOSString();
+      final JavaClass jc = classGen.getJavaClass();
+      final String path3 = getPath(active).append(lastSegment).toOSString();
       System.out.println("Path3: " + path3);
       jc.dump(path3);
     } catch (IOException e) {
@@ -175,7 +175,7 @@ public class BoogiePLEditor extends TextEditor {
    * @param path    relative path
    * @return      absolute path
    */
-  public IPath getPath(IPath path) {
+  public final IPath getPath(final IPath path) {
     return ResourcesPlugin.getWorkspace().getRoot().getFolder(path).getProject().getLocation();
   }
 
@@ -197,20 +197,20 @@ public class BoogiePLEditor extends TextEditor {
    * @throws CoreException
    * @throws IOException
    */
-  public void refreshBoogiePL(IPath path, String[] commentTab, String[] interlineTab) throws ClassNotFoundException, CoreException, IOException {
-    String pathName = getPath(path).toOSString();
-    FileEditorInput input = (FileEditorInput)getEditorInput();
-    IFile file = input.getFile(); // BoogiePL file (.btc)
+  public final void refreshBoogiePL(final IPath path, final String[] commentTab, final String[] interlineTab) throws ClassNotFoundException, CoreException, IOException {
+    final String pathName = getPath(path).toOSString();
+    final FileEditorInput input = (FileEditorInput)getEditorInput();
+    final IFile file = input.getFile(); // BoogiePL file (.btc)
 
     // String clname = path.lastSegment().substring(0, path.lastSegment().lastIndexOf("."));
-    String projectPath =  file.getProject().getLocation().toOSString();
-    String clname   = file.getLocation().toOSString().replaceAll(".bpl", "" /*.class" */).substring(projectPath.length() + 1 );
+    final String projectPath =  file.getProject().getLocation().toOSString();
+    final String clname   = file.getLocation().toOSString().replaceAll(".bpl", "" /*.class" */).substring(projectPath.length() + 1 );
 
 
-    ClassPath cp = new ClassPath(pathName);
+    final ClassPath cp = new ClassPath(pathName);
     System.out.println("pathName = " + pathName);
-    SyntheticRepository strin = SyntheticRepository.getInstance(cp);
-    JavaClass jc = strin.loadClass(clname);
+    final SyntheticRepository strin = SyntheticRepository.getInstance(cp);
+    final JavaClass jc = strin.loadClass(clname);
     strin.removeClass(jc);
     //controlPrint(jc);
 //    ClassGen cg = new ClassGen(jc);
@@ -225,7 +225,7 @@ public class BoogiePLEditor extends TextEditor {
     BCClass bcc;
     try {
       bcc = new BCClass(jc);
-      char[] bccode = bcc.printCode().toCharArray();
+      final char[] bccode = bcc.printCode().toCharArray();
 //      for(int i = 0; i < methods.length; i++) {
 //        try {
 //          namesLen[i] = methods[i].toString().getBytes().length;
@@ -241,7 +241,7 @@ public class BoogiePLEditor extends TextEditor {
 //        }
 //      }
 
-      byte[] contents = new byte[bccode.length];
+      final byte[] contents = new byte[bccode.length];
       for(int i = 0; i < bccode.length; i++) {
         contents[i] = (byte) bccode[i];
 //        for(int j = 0; j < namesLen[i]; j++, k++) {
@@ -255,7 +255,7 @@ public class BoogiePLEditor extends TextEditor {
 //        contents[k] = '\n';
 //        k++;
       }
-      InputStream stream = new ByteArrayInputStream(contents);
+      final InputStream stream = new ByteArrayInputStream(contents);
       if (file.exists()) {
         file.setContents(stream, true, true, null);
       } else {
@@ -401,7 +401,7 @@ public class BoogiePLEditor extends TextEditor {
    * @return Current number of versions;
    * -1 if limit has been reached
    */
-  public int newHistory() {
+  public final int newHistory() {
     if (historyNum == UmbraHelper.MAX_HISTORY) return -1;
     historyNum++;
     return historyNum;
@@ -412,7 +412,7 @@ public class BoogiePLEditor extends TextEditor {
    * when all of them are removed.
    */
 
-  public void clearHistory() {
+  public final void clearHistory() {
     historyNum = -1;
   }
 

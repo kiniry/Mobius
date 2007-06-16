@@ -16,14 +16,14 @@ public class HeaderLineController extends BytecodeLineController {
   /**
    * TODO
    */
-  public HeaderLineController(String l) {
+  public HeaderLineController(final String l) {
     super(l);
   }
 
   /**
    * TODO
    */
-  public boolean correct()
+  public final boolean correct()
   {
     //niz za bardzo mozna ustalic zaleznosci
     //zbior wyrazow przed innym niektore opcjonalne
@@ -35,7 +35,7 @@ public class HeaderLineController extends BytecodeLineController {
    * the previous line's one increased by one.
    * TODO
    */
-  public void setIndex(int index2) {
+  public final void setIndex(final int index2) {
     this.index = index2 + 1;
   }
 }

@@ -29,7 +29,7 @@ public class ArrayInstruction extends StringInstruction {
    * array instructions. It correspond to the types
    * in the array {@ref types}.
    */
-  private static final String names[] =
+  private static final String[] names =
   {"VOID", "BOOLEAN","INT", "SHORT", "BYTE", "LONG",
     "DOUBLE", "FLOAT", "CHAR"};
 
@@ -38,7 +38,7 @@ public class ArrayInstruction extends StringInstruction {
    * array instructions. It correspond to the types
    * in the array {@ref names}.
    */
-  private static final Type types[] =
+  private static final Type[] types =
   {Type.VOID, Type.BOOLEAN, Type.INT, Type.SHORT,
       Type.BYTE, Type.LONG, Type.DOUBLE,
       Type.FLOAT, Type.CHAR};
@@ -56,25 +56,24 @@ public class ArrayInstruction extends StringInstruction {
    *
    * @param the string for which the type
    */
-  private static Type getType(String insName) {
+  private static Type getType(final String insName) {
     for (int i = 0; i < typeCount; i++) {
       if ((names[i].startsWith(insName)) && (insName.startsWith(names[i])))
         return types[i];
-    };
-    return null;
+    }return null;
   }
 
   /**
    * TODO
    */
-  public ArrayInstruction(String l, String n) {
+  public ArrayInstruction(final String l, final String n) {
     super(l, n);
   }
 
   /**
    * @see BytecodeLineController#getInstruction()
    */
-  public Instruction getInstruction() {
+  public final Instruction getInstruction() {
     //System.out.println("ArrayInstruction->getInstruction...");
     String insType = line.substring(line.indexOf("<") + 1, line.indexOf(">"));
     insType = insType.toUpperCase();
@@ -82,9 +81,9 @@ public class ArrayInstruction extends StringInstruction {
       //System.out.println("   Wrong instruction argument!");
       return null;
     }
-    byte r = getType(insType).getType();
+    final byte r = getType(insType).getType();
     //&*
-    boolean isOK = correct();
+    final boolean isOK = correct();
     if (isOK) {
     if (name.compareTo("newarray")==0)
       return new NEWARRAY(r);
@@ -100,11 +99,11 @@ public class ArrayInstruction extends StringInstruction {
    *
    *@see InstructionLineController#correct()
    */
-  public boolean correct()
+  public final boolean correct()
   {
     String s;
     s = UmbraHelper.stripAllWhitespace(line);
-    String[] s2 = IBytecodeStrings.array;
+    final String[] s2 = IBytecodeStrings.array;
     int j,y;
     for (j = 0; j < s2.length; j++) {
       if ((s.indexOf(s2[j]) > 0) && (s.indexOf(s2[j]) < s.indexOf(":") + 2)) {

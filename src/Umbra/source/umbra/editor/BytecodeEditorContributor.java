@@ -112,7 +112,7 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
     combineAction = new BytecodeCombineAction(this, bytecodeContribution);
     restoreAction = new BytecodeRestoreAction(this, bytecodeContribution);
     synchrAction = new BytecodeSynchrAction();
-    URL installURL = UmbraPlugin.getDefault().getBundle().getEntry("/");
+    final URL installURL = UmbraPlugin.getDefault().getBundle().getEntry("/");
     try {
       ImageDescriptor iconRight;
       ImageDescriptor iconLeft;
@@ -121,7 +121,7 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
       ImageDescriptor combineIcon;
       ImageDescriptor restoreIcon;
       ImageDescriptor synchrIcon;
-      URL url = new URL(installURL, "icons/change_color_backward.gif");
+      final URL url = new URL(installURL, "icons/change_color_backward.gif");
       System.out.println(url.toExternalForm());
       iconRight = ImageDescriptor.
         createFromURL(url);
@@ -163,7 +163,7 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
   /**
    * New buttons for the actions are added to the toolbar.
    */
-  public void contributeToToolBar(IToolBarManager toolBarManager) {
+  public final void contributeToToolBar(final IToolBarManager toolBarManager) {
     // Run super.
     super.contributeToToolBar(toolBarManager);
     // Test status line.
@@ -182,10 +182,10 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
    *
    * @param menuManager TODO
    */
-  public void contributeToMenu(IMenuManager menuManager) {
+  public final void contributeToMenu(final IMenuManager menuManager) {
     // Run super.
     super.contributeToMenu(menuManager);
-    MenuManager bytecodeMenu = new MenuManager("Editor"); //$NON-NLS-1$
+    final MenuManager bytecodeMenu = new MenuManager("Editor"); //$NON-NLS-1$
     menuManager.insertAfter("additions", bytecodeMenu); //$NON-NLS-1$
     bytecodeMenu.add(actionPlus);
     bytecodeMenu.add(actionMinus);
@@ -202,7 +202,7 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
    *
    * @param editor  the current editor window
    */
-  public void setActiveEditor(IEditorPart editor) {
+  public final void setActiveEditor(final IEditorPart editor) {
     super.setActiveEditor(editor);
     bytecodeContribution.setActiveEditor(editor);
     actionPlus.setMy_active_editor(editor);
@@ -222,8 +222,8 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
    * @throws PartInitException if the new editor could not be created or
    *               initialized
    */
-  public void refreshEditor(IEditorPart editor) throws PartInitException {
-    IEditorInput input = editor.getEditorInput();
+  public final void refreshEditor(final IEditorPart editor) throws PartInitException {
+    final IEditorInput input = editor.getEditorInput();
     refreshEditor(editor, input);
   }
 
@@ -232,28 +232,28 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
    * contributions, JavaClass structure, related editor). Then closes the
    * editor and opens a new one with the same settings and given input.
    *
-   * @param editor    current editor to be closed
-   * @param input      input file to be displayed in new editor
+   * @param editor current editor to be closed
+   * @param input input file to be displayed in new editor
    * @throws PartInitException if the new editor could not be created or
-   *               initialized
+   *    initialized
    */
-  public void refreshEditor(IEditorPart editor, IEditorInput input)
+  public final void refreshEditor(final IEditorPart editor, final IEditorInput input)
            throws PartInitException {
-    IWorkbenchPage page = editor.getEditorSite().getPage();
-    ITextSelection selection = (ITextSelection)((AbstractTextEditor)editor).getSelectionProvider().getSelection();
-    int off = selection.getOffset();
-    int len = selection.getLength();
-    CompilationUnitEditor related = ((BytecodeEditor)editor).getRelatedEditor();
-    JavaClass jc = ((BytecodeEditor)editor).getMy_javaClass();
-    boolean proper = (related != null);
+    final IWorkbenchPage page = editor.getEditorSite().getPage();
+    final ITextSelection selection = (ITextSelection)((AbstractTextEditor)editor).getSelectionProvider().getSelection();
+    final int off = selection.getOffset();
+    final int len = selection.getLength();
+    final CompilationUnitEditor related = ((BytecodeEditor)editor).getRelatedEditor();
+    final JavaClass jc = ((BytecodeEditor)editor).getMy_javaClass();
+    final boolean proper = (related != null);
     bytecodeContribution.survive();
     if (proper) Composition.startDisas();
     page.closeEditor(editor, true);
-    IEditorPart newEditor = page.openEditor(input,
+    final IEditorPart newEditor = page.openEditor(input,
                         "umbra.BytecodeEditor", true);
     ((BytecodeEditor) newEditor).setRelation(related, jc);
-    ISelection ns = new TextSelection(off, len);
-    ISelectionProvider sp = ((AbstractTextEditor)newEditor).
+    final ISelection ns = new TextSelection(off, len);
+    final ISelectionProvider sp = ((AbstractTextEditor)newEditor).
                           getSelectionProvider();
     sp.setSelection(ns);
     bytecodeContribution.reinit();
@@ -263,14 +263,14 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
   /**
    * This method disables the synchronisation action in the editor.
    */
-  public void synchrDisable() {
+  public final void synchrDisable() {
     synchrAction.setEnabled(false);
   }
 
   /**
    * This method enables the synchronisation action in the editor.
    */
-  public void synchrEnable() {
+  public final void synchrEnable() {
     synchrAction.setEnabled(true);
   }
 
@@ -287,7 +287,7 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
    *
    * @return
    */
-  public BytecodeRefreshAction getRefreshAction() {
+  public final BytecodeRefreshAction getRefreshAction() {
     return refreshAction;
   }
 }

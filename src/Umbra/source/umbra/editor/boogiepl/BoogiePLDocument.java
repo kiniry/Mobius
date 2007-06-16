@@ -39,42 +39,42 @@ public class BoogiePLDocument extends Document {
   /**
    * TODO
    */
-  public void setRelatedEditor(AbstractDecoratedTextEditor editor) {
+  public final void setRelatedEditor(final AbstractDecoratedTextEditor editor) {
     fRelatedEditor = editor;
   }
 
   /**
    * TODO
    */
-  public AbstractDecoratedTextEditor getRelatedEditor() {
+  public final AbstractDecoratedTextEditor getRelatedEditor() {
     return fRelatedEditor;
   }
 
   /**
    * TODO
    */
-  public void setJavaClass(JavaClass jc) {
+  public final void setJavaClass(final JavaClass jc) {
     fJavaClass = jc;
   }
 
   /**
    * TODO
    */
-  public JavaClass getJavaClass() {
+  public final JavaClass getJavaClass() {
     return fJavaClass;
   }
 
   /**
    * TODO
    */
-  public void setClassGen(ClassGen cg) {
+  public final void setClassGen(final ClassGen cg) {
     classGen = cg;
   }
 
   /**
    * TODO
    */
-  public ClassGen getClassGen() {
+  public final ClassGen getClassGen() {
     return classGen;
   }
 
@@ -88,13 +88,13 @@ public class BoogiePLDocument extends Document {
    * @param pos  index of line in bytecode editor. Lines in related source code
    * editor correspondings to this line will be highlighted.
    */
-  public void synchronizeBS(int pos) {
-    IDocument sDoc = fRelatedEditor.getDocumentProvider().getDocument(fRelatedEditor.getEditorInput());
+  public final void synchronizeBS(final int pos) {
+    final IDocument sDoc = fRelatedEditor.getDocumentProvider().getDocument(fRelatedEditor.getEditorInput());
     try {
-      int line = getLineOfOffset(pos);
-      int syncLine[] = syncBS(sDoc, fJavaClass, line);
-      int syncPos = sDoc.getLineOffset(syncLine[0]);
-      int syncLen = sDoc.getLineOffset(syncLine[1] + 1) - syncPos;
+      final int line = getLineOfOffset(pos);
+      final int[] syncLine = syncBS(sDoc, fJavaClass, line);
+      final int syncPos = sDoc.getLineOffset(syncLine[0]);
+      final int syncLen = sDoc.getLineOffset(syncLine[1] + 1) - syncPos;
       System.out.println("sync("+syncLine[0]+", "+syncLine[1]+")");
       fRelatedEditor.getEditorSite().getPage().activate(fRelatedEditor);
       if (syncLen < 0) MessageDialog.openError(new Shell(), "BoogiePL", "Synchronisation failed");
@@ -118,11 +118,11 @@ public class BoogiePLDocument extends Document {
    * @throws BadLocationException if line parameter is invalid. May occur also
    *         if bytecode in JavaClass jc is out-of-date.
    */
-  private int[] syncBS(IDocument Sdoc, JavaClass jc, int line) throws BadLocationException
+  private int[] syncBS(final IDocument Sdoc, final JavaClass jc, final int line) throws BadLocationException
   // Synchronizacja: Btc --> Src
   {
-    int w[] = new int[2];
-    int maxL = Sdoc.getNumberOfLines() - 1;
+    final int[] w = new int[2];
+    final int maxL = Sdoc.getNumberOfLines() - 1;
     int l_od = 0;
     int l_do = maxL;
     int pos = 0;
@@ -132,7 +132,7 @@ public class BoogiePLDocument extends Document {
     int lnrmax = 0;
     int l, j, pc;
     int endpos = 0;
-    Method[] methods = jc.getMethods();
+    final Method[] methods = jc.getMethods();
     Method m;
     for (int i = 0; i < methods.length; i++) {
       m = methods[i];
@@ -198,13 +198,13 @@ public class BoogiePLDocument extends Document {
    *       editor correspondings to this line will be highlighted.
    * @param editor the source code editor
    */
-  public void synchronizeSB(int pos, IEditorPart editor) {
-    IDocument sDoc = fRelatedEditor.getDocumentProvider().getDocument(fRelatedEditor.getEditorInput());
+  public final void synchronizeSB(final int pos, final IEditorPart editor) {
+    final IDocument sDoc = fRelatedEditor.getDocumentProvider().getDocument(fRelatedEditor.getEditorInput());
     try {
-      int line = sDoc.getLineOfOffset(pos);
-      int syncLine[] = syncSB(sDoc, fJavaClass, line);
-      int syncPos = getLineOffset(syncLine[0]);
-      int syncLen = getLineOffset(syncLine[1] + 1) - syncPos;
+      final int line = sDoc.getLineOfOffset(pos);
+      final int[] syncLine = syncSB(sDoc, fJavaClass, line);
+      final int syncPos = getLineOffset(syncLine[0]);
+      final int syncLen = getLineOffset(syncLine[1] + 1) - syncPos;
       editor.getEditorSite().getPage().activate(editor);
       if (syncLen < 0) MessageDialog.openError(new Shell(), "BoogiePL", "Synchronisation failed");
       else ((AbstractDecoratedTextEditor)editor).getSelectionProvider().setSelection(new TextSelection(syncPos, syncLen));
@@ -227,21 +227,21 @@ public class BoogiePLDocument extends Document {
    * @throws BadLocationException if line parameter is invalid. May occur also
    *         if bytecode in JavaClass jc is out-of-date.
    */
-  private int[] syncSB(IDocument Sdoc, JavaClass jc, int line) throws BadLocationException
+  private int[] syncSB(final IDocument Sdoc, final JavaClass jc, final int line) throws BadLocationException
   // Synchronizacja Src --> Btc
   {
-    int[] result = new int [2];
+    final int[] result = new int [2];
     int j, l, pc, ln;
     int bcln = 0;
     int popln = 0;
-    int maxL = getNumberOfLines() - 1;
+    final int maxL = getNumberOfLines() - 1;
     int l_od = 0;
     int l_do = maxL;
     String SrcLine = Sdoc.get(Sdoc.getLineOffset(line), Sdoc.getLineLength(line)) + "$";
     while ((SrcLine.length() > 1) && (Character.isWhitespace(SrcLine.charAt(0))))
       SrcLine = SrcLine.substring(1, SrcLine.length() - 1);
     String s;
-    Method methods[] = jc.getMethods();
+    final Method[] methods = jc.getMethods();
     Method m;
     for (int i=0; i<methods.length; i++) {
       m = methods[i];
@@ -271,13 +271,11 @@ public class BoogiePLDocument extends Document {
         if (ln == line) {
           l_od = bcln;
           continue;
-        };
-        if ((ln > line) && (l_od == 0)) {
+        }if ((ln > line) && (l_od == 0)) {
           l_od = popln;
           l_do = bcln - 1;
           break;
-        };
-        if ((l_od != 0) && (ln != line)) {
+        }if ((l_od != 0) && (ln != line)) {
           l_do = bcln - 1;
           break;
         }
@@ -293,13 +291,12 @@ public class BoogiePLDocument extends Document {
         }
         l_do = bcln - 1;
         break;
-      };
-      if (j<l)
+      }if (j<l)
         break;
       if ((l_od != 0) && (l_do == maxL)) {
         l_do = l_od;
         break;
-      };
+      }
     }
     if ((l_od == 0) && (l_do == maxL))
       l_od = maxL;
@@ -316,7 +313,7 @@ public class BoogiePLDocument extends Document {
    * @return  n-th line in bytecode editor
    * @throws BadLocationException  occurs when parameter n isn't a valid line number.
    */
-  private String LineAt(int n) throws BadLocationException
+  private String LineAt(final int n) throws BadLocationException
   // n-ta linia dokumentu d
   {
     return get(getLineOffset(n), getLineLength(n));

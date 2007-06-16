@@ -28,7 +28,7 @@ public class LdcInstruction extends OtherInstruction {
   /**
    * TODO
    */
-  public LdcInstruction(String l, String n) {
+  public LdcInstruction(final String l, final String n) {
     super(l, n);
   }
 
@@ -37,7 +37,7 @@ public class LdcInstruction extends OtherInstruction {
    */
   private int getInd() {
     boolean isd;
-    String licznik = "0123456789";
+    final String licznik = "0123456789";
     int liczba;
     if (line.lastIndexOf("(") >= line.lastIndexOf(")")){
       System.out.println("linia jest niepoprawna nic nie tworzy " + line.lastIndexOf("(") + " " + line.lastIndexOf(")"));
@@ -64,7 +64,7 @@ public class LdcInstruction extends OtherInstruction {
    * TODO
    * @see BytecodeLineController#getInstruction()
    */
-  public Instruction getInstruction() {
+  public final Instruction getInstruction() {
   int index;
 
   if (!correct())
@@ -91,11 +91,11 @@ public class LdcInstruction extends OtherInstruction {
    *
    *@see InstructionLineController#correct()
    */
-  public boolean correct()
+  public final boolean correct()
   {
     String s,str;
     s = UmbraHelper.stripAllWhitespace(line);
-    String[] s2 = IBytecodeStrings.ldc;
+    final String[] s2 = IBytecodeStrings.ldc;
     int j,y,okok,okokok;
     for (j = 0; j < s2.length; j++) {
       if ((s.indexOf(s2[j]) > 0) && (s.indexOf(s2[j]) < s.indexOf(":") + 2))

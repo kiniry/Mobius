@@ -48,7 +48,7 @@ public class BytecodeRebuildAction extends Action {
    * @param targetEditor the bytecode editor for which the action will be
    *    executed
    */
-  public void setActiveEditor(final IEditorPart targetEditor) {
+  public final void setActiveEditor(final IEditorPart targetEditor) {
     editor = targetEditor;
   }
 
@@ -69,20 +69,20 @@ public class BytecodeRebuildAction extends Action {
    * updated and the editor window appropriately restored.
    *
    */
-  public void run() {
-    IFile file = ((FileEditorInput)editor.getEditorInput()).getFile();
-    IPath active = file.getFullPath();
-    String fnameTo = active.toOSString().replaceFirst(
+  public final void run() {
+    final IFile file = ((FileEditorInput)editor.getEditorInput()).getFile();
+    final IPath active = file.getFullPath();
+    final String fnameTo = active.toOSString().replaceFirst(
                   UmbraHelper.BYTECODE_EXTENSION,
                   UmbraHelper.CLASS_EXTENSION);
-    String lastSegment = active.lastSegment().replaceFirst(
+    final String lastSegment = active.lastSegment().replaceFirst(
                   UmbraHelper.BYTECODE_EXTENSION,
                   UmbraHelper.CLASS_EXTENSION);
-    String fnameFrom = active.removeLastSegments(1).append("_" + lastSegment).toOSString();
-    IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-    IFile fileFrom = root.getFile(new Path(fnameFrom));
-    IPath pathTo = new Path(fnameTo);
-    IFile fileTo = root.getFile(pathTo);
+    final String fnameFrom = active.removeLastSegments(1).append("_" + lastSegment).toOSString();
+    final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+    final IFile fileFrom = root.getFile(new Path(fnameFrom));
+    final IPath pathTo = new Path(fnameTo);
+    final IFile fileTo = root.getFile(pathTo);
     if (fileFrom.exists()) {
       try {
         fileTo.delete(true, null);
@@ -93,7 +93,7 @@ public class BytecodeRebuildAction extends Action {
     }
     try {
       ((BytecodeEditor)editor).refreshBytecode(active, null, null);
-      IEditorInput input = new FileEditorInput(file);
+      final IEditorInput input = new FileEditorInput(file);
       contributor.refreshEditor(editor, input);
     } catch (ClassNotFoundException e1) {
       e1.printStackTrace();

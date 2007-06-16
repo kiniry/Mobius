@@ -15,14 +15,14 @@ public class AnnotationLineController extends BytecodeLineController {
    *
    * @param l the line with the BML annotations
    */
-  public AnnotationLineController(String l) {
+  public AnnotationLineController(final String l) {
     super(l);
   }
 
   /**
    * @see BytecodeLineController#correct()
    */
-  public boolean correct()
+  public final boolean correct()
   {
     return true;
   }

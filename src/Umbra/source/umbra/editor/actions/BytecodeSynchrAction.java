@@ -35,7 +35,7 @@ public class BytecodeSynchrAction extends Action {
    *
    * @param the bytecode editor for which the action will be executed
    */
-  public void setActiveEditor(IEditorPart targetEditor) {
+  public final void setActiveEditor(final IEditorPart targetEditor) {
     editor = (AbstractTextEditor)targetEditor;
   }
 
@@ -44,11 +44,11 @@ public class BytecodeSynchrAction extends Action {
    * offset of the selection and shows the related Java source
    * code document with the
    */
-  public void run() {
-    ITextSelection selection = (ITextSelection)editor.
+  public final void run() {
+    final ITextSelection selection = (ITextSelection)editor.
                     getSelectionProvider().getSelection();
-    int off = selection.getOffset();
-    BytecodeDocument bDoc = (BytecodeDocument)editor.
+    final int off = selection.getOffset();
+    final BytecodeDocument bDoc = (BytecodeDocument)editor.
                     getDocumentProvider().
                     getDocument(editor.getEditorInput());
     bDoc.synchronizeBS(off);

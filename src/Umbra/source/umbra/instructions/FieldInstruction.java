@@ -27,7 +27,7 @@ public class FieldInstruction extends StringInstruction {
   /**
    * TODO
    */
-  public FieldInstruction(String l, String n) {
+  public FieldInstruction(final String l, final String n) {
     super(l, n);
   }
 
@@ -38,11 +38,11 @@ public class FieldInstruction extends StringInstruction {
    *
    *@see InstructionLineController#correct()
    */
-  public boolean correct()
+  public final boolean correct()
   {
     String s;
     s = UmbraHelper.stripAllWhitespace(line);
-    String[] s2 = IBytecodeStrings.field;
+    final String[] s2 = IBytecodeStrings.field;
     int j;
     for (j = 0; j < s2.length; j++) {
       if ((s.indexOf(s2[j]) > 0) && (s.indexOf(s2[j]) < s.indexOf(":") + 2)) {
@@ -70,7 +70,7 @@ public class FieldInstruction extends StringInstruction {
    */
   private int getInd() {
     boolean isd;
-    String licznik = "0123456789";
+    final String licznik = "0123456789";
     int liczba;
     if (line.lastIndexOf("(") >= line.lastIndexOf(")")){
     } else {
@@ -96,11 +96,11 @@ public class FieldInstruction extends StringInstruction {
    *
    * @see BytecodeLineController#getInstruction()
    */
-  public Instruction getInstruction() {
+  public final Instruction getInstruction() {
   int index;
   index = getInd();
 
-  boolean isOK = correct();
+  final boolean isOK = correct();
   if (isOK) {
   if (name.compareTo("getfield")==0) {
     return new GETFIELD(index);

@@ -16,7 +16,7 @@ public class CodeLineController extends BytecodeLineController {
   /**
    * TODO
    */
-  public CodeLineController(String l) {
+  public CodeLineController(final String l) {
     super(l);
   }
 
@@ -27,7 +27,7 @@ public class CodeLineController extends BytecodeLineController {
   String s;
   s = "";
   int i = 0;
-  int j = line.length();
+  final int j = line.length();
   for (i = 0; i < j; i++)
     if (!(Character.isWhitespace(line.charAt(i)))) {
       s += line.charAt(i);
@@ -44,13 +44,13 @@ public class CodeLineController extends BytecodeLineController {
    *
    * @see BytecodeLineController#correct()
    */
-  public boolean correct()
+  public final boolean correct()
   {   //Code musi byc bo by nie byla ta klasa
     if (this.line.startsWith("Code")) {
     if (!(line.indexOf("(") > 0))
       return false;
 
-    String s = removeWhitespaces();
+    final String s = removeWhitespaces();
     int i = 0;
     //czy jest to co trzeba
     if (!(s.indexOf("max_stack=") > 0))
@@ -112,7 +112,7 @@ public class CodeLineController extends BytecodeLineController {
       return true;
     }
     if (this.line.startsWith("LocalVariable")) {
-      String s = removeWhitespaces();
+      final String s = removeWhitespaces();
       if ((s.indexOf("start_pc=")) > -1) {
         if ((s.indexOf("length=")) > -1) {
           if ((s.indexOf("index=")) > -1) {
@@ -128,7 +128,7 @@ public class CodeLineController extends BytecodeLineController {
       }
     }
     if (this.line.startsWith("Attribute")) {
-      String s = removeWhitespaces();
+      final String s = removeWhitespaces();
       if ((s.indexOf("(s)=")) > -1) {
         return true;
       }

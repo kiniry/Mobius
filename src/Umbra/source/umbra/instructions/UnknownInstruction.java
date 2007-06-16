@@ -21,7 +21,7 @@ public class UnknownInstruction extends InstructionLineController {
    * @param l the line with the unknown mnemonic
    * @param n the unknown mnemonic
    */
-  public UnknownInstruction(String l, String n) {
+  public UnknownInstruction(final String l, final String n) {
     super(l, n);
   }
   /**
@@ -29,7 +29,7 @@ public class UnknownInstruction extends InstructionLineController {
    *
    * @see  InstructionLineController#correct()
    */
-  public boolean correct() {
+  public final boolean correct() {
     return false;
   }
 }

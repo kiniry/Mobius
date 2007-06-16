@@ -17,7 +17,7 @@ public class NumInstruction extends MultiInstruction {
   /**
    * TODO
    */
-  public NumInstruction(String l, String n) {
+  public NumInstruction(final String l, final String n) {
     super(l, n);
   }
 }

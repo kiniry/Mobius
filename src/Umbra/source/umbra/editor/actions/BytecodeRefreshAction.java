@@ -49,8 +49,8 @@ public class BytecodeRefreshAction extends Action {
    * @param contributor
    * @param bytecodeContribution
    */
-  public BytecodeRefreshAction(BytecodeEditorContributor contrib,
-                 BytecodeContribution bytecodeContrib) {
+  public BytecodeRefreshAction(final BytecodeEditorContributor contrib,
+                 final BytecodeContribution bytecodeContrib) {
     super("Refresh");
     bytecodeContribution = bytecodeContrib;
     contributor = contrib;
@@ -63,7 +63,7 @@ public class BytecodeRefreshAction extends Action {
    * @param targetEditor the bytecode editor for which the action will be
    *           executed
    */
-  public void setActiveEditor(IEditorPart targetEditor) {
+  public final void setActiveEditor(final IEditorPart targetEditor) {
     editor = targetEditor;
     if (!editor.isDirty()) setEnabled(false);
   }
@@ -79,18 +79,18 @@ public class BytecodeRefreshAction extends Action {
    *
    * po przejsciu do javy refresh sie robi disabled
    */
-  public void run() {
+  public final void run() {
     editor.doSave(null);
     try {
-    IFile file = ((FileEditorInput)editor.getEditorInput()).getFile();
-    IPath active = file.getFullPath();
+    final IFile file = ((FileEditorInput)editor.getEditorInput()).getFile();
+    final IPath active = file.getFullPath();
     try {
-      String[] commentTab = bytecodeContribution.getCommentTab();
-      String[] interlineTab = bytecodeContribution.getInterlineTab();
+      final String[] commentTab = bytecodeContribution.getCommentTab();
+      final String[] interlineTab = bytecodeContribution.getInterlineTab();
       ((BytecodeEditor)editor).refreshBytecode(active, commentTab,
                            interlineTab);
-      FileEditorInput input = new FileEditorInput(file);
-      boolean[] modified = bytecodeContribution.getModified();
+      final FileEditorInput input = new FileEditorInput(file);
+      final boolean[] modified = bytecodeContribution.getModified();
       bytecodeContribution.setModTable(modified);
       contributor.refreshEditor(editor, input);
     } catch (ClassNotFoundException e) {

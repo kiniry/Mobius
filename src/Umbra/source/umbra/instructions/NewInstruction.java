@@ -29,7 +29,7 @@ public class NewInstruction extends StringInstruction {
   /**
    * TODO
    */
-  public NewInstruction(String l, String n) {
+  public NewInstruction(final String l, final String n) {
     super(l, n);
   }
 
@@ -41,11 +41,11 @@ public class NewInstruction extends StringInstruction {
    *
    *@see InstructionLineController#correct()
    */
-  public boolean correct()
+  public final boolean correct()
   {
     String s;
     s = UmbraHelper.stripAllWhitespace(line);
-    String[] s2 = IBytecodeStrings.anew;
+    final String[] s2 = IBytecodeStrings.anew;
     int j,y;
     for (j = 0; j < s2.length; j++) {
       if ((s.indexOf(s2[j]) > 0) && (s.indexOf(s2[j]) < s.indexOf(":") + 2)) {
@@ -79,7 +79,7 @@ public class NewInstruction extends StringInstruction {
    */
   private int getInd() {
     boolean isd;
-    String licznik = "0123456789";
+    final String licznik = "0123456789";
     int liczba;
     if (line.lastIndexOf("(") >= line.lastIndexOf(")")){
     } else {
@@ -104,7 +104,7 @@ public class NewInstruction extends StringInstruction {
   /**
    * @see BytecodeLineController#getInstruction()
    */
-  public Instruction getInstruction() {
+  public final Instruction getInstruction() {
   int index;
   if (!correct())
     return null;

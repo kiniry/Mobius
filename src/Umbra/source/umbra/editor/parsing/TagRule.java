@@ -15,18 +15,18 @@ public class TagRule extends MultiLineRule {
   /**
    * TODO
    */
-  public TagRule(IToken token) {
+  public TagRule(final IToken token) {
     super("<", ">", token);
   }
 
   /**
    * TODO
    */
-  protected boolean sequenceDetected(
-    ICharacterScanner scanner,
-    char[] sequence,
-    boolean eofAllowed) {
-    int c = scanner.read();
+  protected final boolean sequenceDetected(
+    final ICharacterScanner scanner,
+    final char[] sequence,
+    final boolean eofAllowed) {
+    final int c = scanner.read();
     if (sequence[0] == '<') {
       if (c == '?') {
         // processing instruction - abort
@@ -47,7 +47,7 @@ public class TagRule extends MultiLineRule {
   /**
    * TODO
    */
-  protected IToken doEvaluate(ICharacterScanner scanner, boolean resume) {
+  protected final IToken doEvaluate(final ICharacterScanner scanner, final boolean resume) {
 
     if (resume) {
 

@@ -16,14 +16,14 @@ public class BoogiePLWordDetector implements IWordDetector {
   /**
    * TODO
    */
-  public boolean isWordStart(char c) {
+  public final boolean isWordStart(final char c) {
     return Character.isLetter(c);
   }
 
   /**
    * TODO
    */
-  public boolean isWordPart(char c) {
+  public final boolean isWordPart(final char c) {
     return (Character.isLetterOrDigit(c) || c == '_');
   }
 }

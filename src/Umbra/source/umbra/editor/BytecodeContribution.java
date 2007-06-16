@@ -18,7 +18,7 @@ import org.eclipse.ui.IEditorPart;
 import umbra.instructions.BytecodeController;
 
 /**
- * This class represents a GUI
+ * This class represents the GUI of the bytecode editor.
  *
  * change performed in a bytecode editor.
  * TODO more detailed description is needed
@@ -76,7 +76,7 @@ public class BytecodeContribution extends ControlContribution {
    *
    * TODO what's modTable
    */
-  private void init(IDocument doc) {
+  private void init(final IDocument doc) {
     bcc = new BytecodeController();
     bcc.init(doc);
     if (modTable) {
@@ -122,7 +122,7 @@ public class BytecodeContribution extends ControlContribution {
      *
      * @see org.eclipse.jface.text.IDocumentListener#documentAboutToBeChanged(org.eclipse.jface.text.DocumentEvent)
      */
-    public void documentAboutToBeChanged(DocumentEvent event) {
+    public final void documentAboutToBeChanged(final DocumentEvent event) {
       if (!ready)
         init(event.fDocument); //this marks ready as true
       System.out.println("documentAboutToBeChanged "+event.getText());
@@ -156,14 +156,14 @@ public class BytecodeContribution extends ControlContribution {
      *
      * @see org.eclipse.jface.text.IDocumentListener#documentChanged(org.eclipse.jface.text.DocumentEvent)
      */
-    public void documentChanged(DocumentEvent event) {
+    public final void documentChanged(final DocumentEvent event) {
       System.out.println("documentChanged "+event.getText());
       System.out.flush();
       int stop = 0;
       int startRem =0, stopRem = 0;
       try {
         startRem = event.fDocument.getLineOfOffset(event.getOffset());
-        int insertedLen = event.getText().length();
+        final int insertedLen = event.getText().length();
         stop = event.fDocument.getLineOfOffset(event.getOffset() +
             insertedLen);
         if (event == current_event) {
@@ -217,15 +217,15 @@ public class BytecodeContribution extends ControlContribution {
   /**
    * TODO
    */
-  public void survive() {
+  public final void survive() {
     needNew = false;
   }
 
   /**
    * Creates the GUI control associated with the bytecode editor
    */
-  protected Control createControl(Composite parent) {
-    Composite composite = new Composite(parent, SWT.BORDER);
+  protected final Control createControl(final Composite parent) {
+    final Composite composite = new Composite(parent, SWT.BORDER);
     composite.setData(this);
 
     return composite;
@@ -237,9 +237,9 @@ public class BytecodeContribution extends ControlContribution {
    *
    * @param document the status line is extracted from
    */
-  private void displayCorrect(IDocument document) {
-    BytecodeEditor editor = ((BytecodeDocument)document).getEditor();
-    IActionBars bars = editor.getEditorSite().getActionBars();
+  private void displayCorrect(final IDocument document) {
+    final BytecodeEditor editor = ((BytecodeDocument)document).getEditor();
+    final IActionBars bars = editor.getEditorSite().getActionBars();
     bars.getStatusLineManager().setMessage("Correct");
   }
 
@@ -250,9 +250,9 @@ public class BytecodeContribution extends ControlContribution {
    * @param document the status line is extracted from
    * @param line the number of the line with the error
    */
-  private void displayError(IDocument document, int line) {
-    BytecodeEditor editor = ((BytecodeDocument)document).getEditor();
-    IActionBars bars = editor.getEditorSite().getActionBars();
+  private void displayError(final IDocument document, final int line) {
+    final BytecodeEditor editor = ((BytecodeDocument)document).getEditor();
+    final IActionBars bars = editor.getEditorSite().getActionBars();
     bars.getStatusLineManager().setMessage("Error detected: " + line);
   }
 
@@ -263,10 +263,10 @@ public class BytecodeContribution extends ControlContribution {
    * @param document the modifications of which will be notified
    * by the listener
    */
-  public void addListener(IDocument document) {
-    BytecodeDocument doc = (BytecodeDocument) document;
+  public final void addListener(final IDocument document) {
+    final BytecodeDocument doc = (BytecodeDocument) document;
     if (doc.isListenerAdded()) {
-      BytecodeListener listener = new BytecodeListener();
+      final BytecodeListener listener = new BytecodeListener();
       document.addDocumentListener(listener);
     }
   }
@@ -274,13 +274,13 @@ public class BytecodeContribution extends ControlContribution {
   /**
    * @param editor
    */
-  public void setActiveEditor(IEditorPart editor) {
+  public void setActiveEditor(final IEditorPart editor) {
   }
 
   /**
    * TODO
    */
-  public void reinit() {
+  public final void reinit() {
     ready = false;
   }
 
@@ -288,14 +288,14 @@ public class BytecodeContribution extends ControlContribution {
    * @return boolean array, an entry is <code>true</code> whenever
    * the corresponding method is modified by the bytecode editor
    */
-  public boolean[] getModified() {
+  public final boolean[] getModified() {
     return bcc.getModified();
   }
 
   /**
    * TODO
    */
-  public void setModTable(boolean[] modified) {
+  public final void setModTable(final boolean[] modified) {
     this.modified = modified;
     modTable = true;
   }
@@ -303,14 +303,14 @@ public class BytecodeContribution extends ControlContribution {
   /**
    * TODO
    */
-  public String[] getCommentTab() {
+  public final String[] getCommentTab() {
     return bcc.getComments();
   }
 
   /**
    * TODO
    */
-  public String[] getInterlineTab() {
+  public final String[] getInterlineTab() {
     return bcc.getInterline();
   }
 
@@ -318,7 +318,7 @@ public class BytecodeContribution extends ControlContribution {
    * TODO
    * @param contributor
    */
-  public void addEditorContributor(BytecodeEditorContributor contributor) {
+  public final void addEditorContributor(final BytecodeEditorContributor contributor) {
     editorContributor = contributor;
   }
 }

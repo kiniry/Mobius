@@ -25,7 +25,7 @@ public class BytecodeDocumentProvider extends FileDocumentProvider {
    *
    * @return a fresh {@ref BytecodeDocument} object with no content
    */
-  protected IDocument createEmptyDocument() {
+  protected final IDocument createEmptyDocument() {
     return new BytecodeDocument();
   }
 
@@ -37,9 +37,9 @@ public class BytecodeDocumentProvider extends FileDocumentProvider {
    * @param TODO
    * @throws TODO
    */
-  protected IDocument createDocument(Object element) throws CoreException {
+  protected final IDocument createDocument(final Object element) throws CoreException {
     if (element instanceof IEditorInput) {
-      IDocument document= createEmptyDocument();
+      final IDocument document= createEmptyDocument();
       if (setDocumentContent(document,
                    (IEditorInput) element,
                    getEncoding(element))) {
@@ -54,7 +54,7 @@ public class BytecodeDocumentProvider extends FileDocumentProvider {
             BytecodePartitionScanner.THROWS});
       partitioner.connect(document);
       document.setDocumentPartitioner(partitioner);*/
-      BytecodeContribution contribution = BytecodeContribution.inUse();
+      final BytecodeContribution contribution = BytecodeContribution.inUse();
       contribution.addListener(document);
       return document;
     }
@@ -72,10 +72,10 @@ public class BytecodeDocumentProvider extends FileDocumentProvider {
    * @param cg    class generator in BCEL
    * @param input    input file
    */
-  public void setRelation(AbstractDecoratedTextEditor editor,
-              BytecodeEditor bEditor,
-              IEditorInput input) {
-    BytecodeDocument document = (BytecodeDocument)getDocument(input);
+  public final void setRelation(final AbstractDecoratedTextEditor editor,
+              final BytecodeEditor bEditor,
+              final IEditorInput input) {
+    final BytecodeDocument document = (BytecodeDocument)getDocument(input);
     document.setEditor(bEditor);
     document.setRelatedEditor(editor);
     BytecodeContribution.inUse().addListener(document);

@@ -25,13 +25,13 @@ public class BytecodeDoubleClickStrategy implements ITextDoubleClickStrategy {
    *
    * @param part the selected area of the bytecode document
    */
-  public void doubleClicked(ITextViewer part) {
-    int pos = part.getSelectedRange().x;
+  public final void doubleClicked(final ITextViewer part) {
+    final int pos = part.getSelectedRange().x;
 
     if (pos < 0)
       return;
 
-    BytecodeDocument bDoc = (BytecodeDocument)part.getDocument();
+    final BytecodeDocument bDoc = (BytecodeDocument)part.getDocument();
     bDoc.synchronizeBS(pos);
   }
 }
