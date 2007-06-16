@@ -16,7 +16,9 @@ import umbra.editor.parsing.IBytecodeStrings;
  * handling with single instruction methods(correctness, getting handle).
  * This is only dealing with iinc instruction.
  *
- * @author Jaros�aw Paszek i Tomasz Batkiewicz
+ * @author Jarosław Paszek (jp209217@students.mimuw.edu.pl)
+ * @author Tomasz Batkiewicz (tb209231@students.mimuw.edu.pl)
+ * @version a-01
  */
 public class IncInstruction extends NumInstruction {
 

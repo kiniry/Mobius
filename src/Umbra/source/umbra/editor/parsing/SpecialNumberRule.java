@@ -12,7 +12,8 @@ import org.eclipse.jface.text.rules.Token;
  * Modified NumberRule that allows an additional mark before
  * (or after) the number to be read (used with '#' and '%').
  *
- * @author Wojtek Wąs
+ * @author Wojciech Wąs  (ww209224@students.mimuw.edu.pl)
+ * @version a-01
  */
 public class SpecialNumberRule extends NumberRule {
 

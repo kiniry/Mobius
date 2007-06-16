@@ -20,7 +20,8 @@ import umbra.editor.parsing.IBytecodeStrings;
  * array of a particular type.
  * TODO
  *
- * @author Jarosław Paszek
+ * @author Jarosław Paszek (jp209217@students.mimuw.edu.pl)
+ * @version a-01
  */
 public class ArrayInstruction extends StringInstruction {
 

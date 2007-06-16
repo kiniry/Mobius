@@ -12,7 +12,9 @@ import org.eclipse.swt.widgets.Display;
  * This object manages the allocation and deallocation of the system
  * colors that are used in the colouring in the bytecode editors.
  *
- * @author BYTECODE Team (contact alx@mimuw.edu.pl)
+ * @author Tomasz Batkiewicz (tb209231@students.mimuw.edu.pl)
+ * @author Jarosław Paszek (jp209217@students.mimuw.edu.pl)
+ * @author Wojciech Was (ww209224@students.mimuw.edu.pl)
  * @version a-01
  */
 public final class ColorManager {

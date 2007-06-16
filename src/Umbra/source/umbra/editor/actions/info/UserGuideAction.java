@@ -14,7 +14,8 @@ import org.eclipse.ui.help.IWorkbenchHelpSystem;
  * The class implements the behaviour in case the User Guide button
  * is pressed.
  *
- * @author Wojtek W�s
+ * @author Wojciech Wąs  (ww209224@students.mimuw.edu.pl)
+ * @version a-01
  */
 public class UserGuideAction implements IEditorActionDelegate {
 

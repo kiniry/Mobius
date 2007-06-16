@@ -4,7 +4,9 @@
  */
 package umbra.instructions;
 
-import org.apache.bcel.generic.*;
+import org.apache.bcel.generic.BIPUSH;
+import org.apache.bcel.generic.Instruction;
+import org.apache.bcel.generic.SIPUSH;
 
 import umbra.UmbraHelper;
 import umbra.editor.parsing.IBytecodeStrings;
@@ -15,8 +17,8 @@ import umbra.editor.parsing.IBytecodeStrings;
  * handling with single instruction methods(correctness, getting handle).
  * Here are two instructions resposible for pushing onto the stack.
  *
- * @author Jarosław Paszek
- *
+ * @author Jarosław Paszek (jp209217@students.mimuw.edu.pl)
+ * @version a-01
  */
 public class PushInstruction extends NumInstruction {
 

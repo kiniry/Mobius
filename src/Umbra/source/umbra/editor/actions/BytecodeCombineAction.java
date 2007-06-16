@@ -36,7 +36,7 @@ import umbra.editor.BytecodeEditorContributor;
  * made to different methods. In case a modification happens in the
  * same method, the bytecode modification is privileged.
  *
- * @author Wojtek Wąs (ww209224@students.mimuw.edu.pl)
+ * @author Wojciech Wąs (ww209224@students.mimuw.edu.pl)
  * @version a-01
  */
 public class BytecodeCombineAction extends Action {

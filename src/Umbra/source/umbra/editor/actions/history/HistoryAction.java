@@ -23,7 +23,7 @@ import umbra.editor.BytecodeEditor;
  * This class defines an action that adds current bytecode snapshot
  * to the history stack. The stack is implemented in the file system.
  *
- * @author Wojtek Wąs (ww209224@students.mimuw.edu.pl)
+ * @author Wojciech Wąs (ww209224@students.mimuw.edu.pl)
  * @version a-01
  */
 public class HistoryAction implements IEditorActionDelegate {

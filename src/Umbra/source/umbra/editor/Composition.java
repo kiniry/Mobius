@@ -9,10 +9,17 @@ package umbra.editor;
  * style that is obtained after each refreshing (which takes place when
  * a bytecode document is created too).
  *
- * @author Wojtek Wąs
+ * @author Wojciech Wąs (ww209224@students.mimuw.edu.pl)
+ * @version a-01
  */
-public class Composition {
+public final class Composition {
 
+  /**
+   * TODO
+   */
+  private Composition() {
+  }
+  
   /**
    * The current value of the colouring style.
    */

@@ -23,7 +23,7 @@ import umbra.editor.BytecodeEditorContributor;
  * This action is equal to generating bytecode again from the
  * Java code after saving binary file.
  *
- * @author Wojtek Wąs (ww209224@students.mimuw.edu.pl)
+ * @author Wojciech Wąs (ww209224@students.mimuw.edu.pl)
  * @version a-01
  */
 public class BytecodeRefreshAction extends Action {

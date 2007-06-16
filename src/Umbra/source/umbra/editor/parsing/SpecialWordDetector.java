@@ -8,9 +8,11 @@ import org.eclipse.jface.text.rules.IWordDetector;
 
 
 /**
- * Detector used for finding type symbols in Bytecode (like '(V)')
+ * Detector used for finding type symbols in bytecode (like '(V)').
+ * TODO ???
  *
- * @author Wojtek Wąs
+ * @author Wojciech Wąs  (ww209224@students.mimuw.edu.pl)
+ * @version a-01
  */
 public class SpecialWordDetector implements IWordDetector {
 

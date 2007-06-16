@@ -23,7 +23,9 @@ import org.eclipse.ui.texteditor.AbstractDecoratedTextEditor;
  *
  * FIXME more detailed description
  *
- * @author Tomasz Batkiewicz, Wojciech Wąs
+ * @author Tomasz Batkiewicz (tb209231@students.mimuw.edu.pl)
+ * @author Wojciech Wąs (ww209224@students.mimuw.edu.pl)
+ * @version a-01
  */
 public class BytecodeDocument extends Document {
 

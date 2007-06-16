@@ -13,7 +13,8 @@ import org.eclipse.ui.help.IWorkbenchHelpSystem;
 /**
  * TODO
  *
- * @author Wojtek Wąs
+ * @author Wojciech Wąs (ww209224@students.mimuw.edu.pl)
+ * @version a-01
  */
 public class InstalInfoAction implements IEditorActionDelegate {
 

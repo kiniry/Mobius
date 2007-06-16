@@ -20,7 +20,8 @@ import org.apache.bcel.generic.MethodGen;
  * that describes the state of the bytecode editor which contains
  * the line that corresponds to an object of the current class.
  *
- * @author Tomek Batkiewicz
+ * @author Tomek Batkiewicz (tb209231@students.mimuw.edu.pl)
+ * @version a-01
  */
 public abstract class BytecodeLineController {
 

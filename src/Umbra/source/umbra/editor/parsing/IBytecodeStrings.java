@@ -4,10 +4,12 @@
 package umbra.editor.parsing;
 
 /**
- * Some string arrays used to identify keywords and instruction
- * names in bytecode
+ * String arrays used to identify keywords and instruction
+ * names in bytecode.
  *
- * @author Wojtek Wąs, Jarosław Paszek
+ * @author Wojciech Wąs (ww209224@students.mimuw.edu.pl)
+ * @author Jarosław Paszek (jp209217@students.mimuw.edu.pl)
+ * @version a-01
  */
 public interface IBytecodeStrings {
 

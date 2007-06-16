@@ -9,7 +9,7 @@ package umbra.tests;
 /**
  * TODO write description.
  *
- * @author Wojtek Wąs (ww209224@students.mimuw.edu.pl)
+ * @author Wojciech Wąs (ww209224@students.mimuw.edu.pl)
  * @version a-01
  */
 public final class HelloWorld {

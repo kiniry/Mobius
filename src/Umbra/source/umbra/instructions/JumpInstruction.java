@@ -3,7 +3,30 @@
  */
 package umbra.instructions;
 
-import org.apache.bcel.generic.*;
+import org.apache.bcel.generic.BranchInstruction;
+import org.apache.bcel.generic.GOTO;
+import org.apache.bcel.generic.GOTO_W;
+import org.apache.bcel.generic.IFEQ;
+import org.apache.bcel.generic.IFGE;
+import org.apache.bcel.generic.IFGT;
+import org.apache.bcel.generic.IFLE;
+import org.apache.bcel.generic.IFLT;
+import org.apache.bcel.generic.IFNE;
+import org.apache.bcel.generic.IFNONNULL;
+import org.apache.bcel.generic.IFNULL;
+import org.apache.bcel.generic.IF_ACMPEQ;
+import org.apache.bcel.generic.IF_ACMPNE;
+import org.apache.bcel.generic.IF_ICMPEQ;
+import org.apache.bcel.generic.IF_ICMPGE;
+import org.apache.bcel.generic.IF_ICMPGT;
+import org.apache.bcel.generic.IF_ICMPLE;
+import org.apache.bcel.generic.IF_ICMPLT;
+import org.apache.bcel.generic.IF_ICMPNE;
+import org.apache.bcel.generic.Instruction;
+import org.apache.bcel.generic.InstructionHandle;
+import org.apache.bcel.generic.InstructionList;
+import org.apache.bcel.generic.JSR;
+import org.apache.bcel.generic.JSR_W;
 
 import umbra.UmbraHelper;
 import umbra.editor.parsing.IBytecodeStrings;
@@ -16,7 +39,8 @@ import umbra.editor.parsing.IBytecodeStrings;
  * Instructions of this class are responsible for jumping in code.
  * Their specificity is having target.
  *
- * @author Jarosław Paszek
+ * @author Jarosław Paszek (jp209217@students.mimuw.edu.pl)
+ * @version a-01
  */
 public class JumpInstruction extends NumInstruction {
 

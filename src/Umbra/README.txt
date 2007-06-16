@@ -4,3 +4,7 @@ SOME ECLIPSE PROBLEMS:
 - they can be changed in umbra project properties (select "Properties" from the mouse context menu ;)
   Then: Java Build Path - Libraries - Plug-in Dependencies - (unfold) - Access rules - Edit - Ugh
 - they are stored in the .classpath file
+
+
+BytecodeTagScanner
+TagRule

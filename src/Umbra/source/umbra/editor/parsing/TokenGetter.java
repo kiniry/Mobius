@@ -14,9 +14,11 @@ import umbra.editor.NonRuleBasedDamagerRepairer;
 
 /**
  * This method collects array of colors from IColorValues interface
- * and returns them as a token array
+ * and returns them as a token array.
+ * TODO ???
  *
- * @author Wojtek Wąs
+ * @author Wojciech Wąs (ww209224@students.mimuw.edu.pl)
+ * @version a-01
  */
 public class TokenGetter {
 

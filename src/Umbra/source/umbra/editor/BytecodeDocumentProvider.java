@@ -2,20 +2,17 @@ package umbra.editor;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.IDocumentPartitioner;
-import org.eclipse.jface.text.rules.FastPartitioner;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.editors.text.FileDocumentProvider;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditor;
 
-import umbra.editor.parsing.BytecodePartitionScanner;
-
 
 /**
  * This class has been modificated with relation to the generated automatically
- * to allow adding listener that is responsible for error checking
+ * to allow adding listener that is responsible for error checking.
  *
- * @author Wojciech Wąs
+ * @author Wojciech Wąs (ww209224@students.mimuw.edu.pl)
+ * @version a-01
  */
 public class BytecodeDocumentProvider extends FileDocumentProvider {
 

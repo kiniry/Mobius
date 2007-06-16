@@ -9,7 +9,8 @@ package umbra.instructions;
  * This is a class for a special Bytecode lines at the beginning
  * of the method, not to be edited by a user.
  *
- * @author Tomek Batkiewicz
+ * @author Tomek Batkiewicz (tb209231@students.mimuw.edu.pl)
+ * @version a-01
  */
 public class HeaderLineController extends BytecodeLineController {
 

@@ -34,7 +34,10 @@ import umbra.editor.parsing.IBytecodeStrings;
  * modified (in case of combining changes) and what comments
  * are added to Bytecode
  *
- * @author Wojciech Wąs, Tomek Batkiewicz i Jarosław Paszek
+ * @author Wojciech Wąs (ww209224@students.mimuw.edu.pl)
+ * @author Tomek Batkiewicz (tb209231@students.mimuw.edu.pl)
+ * @author Jarosław Paszek (jp209217@students.mimuw.edu.pl)
+ * @version a-01
  */
 public class BytecodeController {
 

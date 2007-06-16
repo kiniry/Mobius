@@ -17,9 +17,11 @@ import org.apache.bcel.generic.TargetLostException;
 
 /**
  * This class defines a structure that describes a single Bytecode
- * instruction and contains related BCEL structures
+ * instruction and contains related BCEL structures.
  *
- * @author Wojciech Wąs, Tomek Batkiewicz
+ * @author Wojciech Wąs (ww209224@students.mimuw.edu.pl)
+ * @author Tomek Batkiewicz (tb209231@students.mimuw.edu.pl)
+ * @version a-01
  */
 public abstract class InstructionLineController extends BytecodeLineController {
 
@@ -365,8 +367,8 @@ public abstract class InstructionLineController extends BytecodeLineController {
       if (line.charAt(i) == '"') {
         s = s + "C";
         i++;
-        while ((line.charAt(i) != '"')
-          || (line.charAt(i-1) == '\\')) {
+        while ((line.charAt(i) != '"') ||
+               (line.charAt(i - 1) == '\\')) {
             i++;
             if (i >= line.length() - 1)
               break;

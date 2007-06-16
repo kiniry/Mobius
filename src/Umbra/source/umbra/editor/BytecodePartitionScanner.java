@@ -5,10 +5,13 @@ import org.eclipse.jface.text.rules.*;
 import umbra.editor.parsing.TagRule;
 
 /**
- * @author Generated automatically
+ * @author Tomasz Batkiewicz (tb209231@students.mimuw.edu.pl)
+ * @author Jarosław Paszek (jp209217@students.mimuw.edu.pl)
+ * @author Wojciech Was (ww209224@students.mimuw.edu.pl)
+ * @versin a-01
  */
-
 public class BytecodePartitionScanner extends RuleBasedPartitionScanner {
+  
   public static final String DEFAULT = "__xml_default";
   public static final String HEAD = "__xml_head";
   public static final String THROWS = "__xml_thr";

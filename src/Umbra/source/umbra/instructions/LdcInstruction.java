@@ -19,8 +19,8 @@ import umbra.editor.parsing.IBytecodeStrings;
  * handling with single instruction methods(correctness, getting handle).
  * These instruction are dealing with long data.
  *
- * @author Jarosław Paszek
- *
+ * @author Jarosław Paszek (jp209217@students.mimuw.edu.pl)
+ * @version a-01
  */
 public class LdcInstruction extends OtherInstruction {
 

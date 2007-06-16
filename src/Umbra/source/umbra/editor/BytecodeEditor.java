@@ -32,7 +32,9 @@ import annot.bcio.ReadAttributeException;
  * such as JavaClass to obtain particular instructions
  * and ClassGen to allow changes in BCEL.
  *
- * @author BYTECODE team (contact alx@mimuw.edu.pl)
+ * @author Tomasz Batkiewicz (tb209231@students.mimuw.edu.pl)
+ * @author Jarosław Paszek (jp209217@students.mimuw.edu.pl)
+ * @author Wojciech Was (ww209224@students.mimuw.edu.pl)
  * @version a-01
  */
 

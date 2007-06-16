@@ -45,7 +45,8 @@ import umbra.editor.actions.BytecodeSynchrAction;
  * synchronize the position of the cursor between the bytecode and the Java
  * code, color change and check of the syntax correctness.
  *
- * @author Wojtek Wąs
+ * @author Wojciech Wąs (ww209224@students.mimuw.edu.pl)
+ * @version a-01
  */
 public class BytecodeEditorContributor extends EditorActionBarContributor {
 

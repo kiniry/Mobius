@@ -3,7 +3,10 @@ package umbra.editor.parsing;
 import org.eclipse.jface.text.rules.*;
 
 /**
- * @author Generated automatically
+ * @author Tomasz Batkiewicz (tb209231@students.mimuw.edu.pl)
+ * @author Jarosław Paszek (jp209217@students.mimuw.edu.pl)
+ * @author Wojciech Was (ww209224@students.mimuw.edu.pl)
+ * @version a-01
  */
 
 public class BytecodePartitionScanner extends RuleBasedPartitionScanner {

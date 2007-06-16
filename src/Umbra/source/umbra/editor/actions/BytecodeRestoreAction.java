@@ -27,7 +27,9 @@ import umbra.editor.BytecodeEditorContributor;
  * history. Current verion is replaced with one of these
  * kept in history as a file with bt1, bt2, etc. extension
  *
- * @author BYTECODE Team (contact alx@mimuw.edu.pl)
+ * @author Tomasz Batkiewicz (tb209231@students.mimuw.edu.pl)
+ * @author Jarosław Paszek (jp209217@students.mimuw.edu.pl)
+ * @author Wojciech Was (ww209224@students.mimuw.edu.pl)
  * @version a-01
  */
 public class BytecodeRestoreAction extends Action {

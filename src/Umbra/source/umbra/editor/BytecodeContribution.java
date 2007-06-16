@@ -23,7 +23,8 @@ import umbra.instructions.BytecodeController;
  * change performed in a bytecode editor.
  * TODO more detailed description is needed
  *
- * @author Wojtek Wąs
+ * @author Wojciech Wąs  (ww209224@students.mimuw.edu.pl)
+ * @version a-01
  */
 public class BytecodeContribution extends ControlContribution {
 

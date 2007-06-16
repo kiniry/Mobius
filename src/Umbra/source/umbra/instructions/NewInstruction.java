@@ -20,8 +20,8 @@ import umbra.editor.parsing.IBytecodeStrings;
  * This is a set of various instructions with class name
  * as a parameter.
  *
- * @author Jarosław Paszek
- *
+ * @author Jarosław Paszek (jp209217@students.mimuw.edu.pl)
+ * @version a-01
  */
 public class NewInstruction extends StringInstruction {
 

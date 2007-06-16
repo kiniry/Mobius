@@ -2,10 +2,11 @@ package umbra.instructions;
 
 
 /**
- * This is a class that contains some information
+ * This is a class that contains some information.
  * TODO
  *
- * @author Wojciech Wąs
+ * @author Wojciech Wąs (ww209224@students.mimuw.edu.pl)
+ * @version a-01
  */
 public class AnnotationLineController extends BytecodeLineController {
 

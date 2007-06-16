@@ -19,7 +19,8 @@ import umbra.editor.parsing.IBytecodeStrings;
  * handling with single instruction methods (correctness, getting handle).
  * Instructions of this kind are used to call other methods.
  *
- * @author Jarosław Paszek
+ * @author Jarosław Paszek (jp209217@students.mimuw.edu.pl)
+ * @version a-01
  */
 public class InvokeInstruction extends StringInstruction {
 

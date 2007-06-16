@@ -9,7 +9,9 @@ package umbra.instructions;
  * This is a class resposible for all lines which are regarded
  * to be an instruction but unable to classify.
  *
- * @author Tomek Batkiewicz i Jarosław Paszek
+ * @author Tomek Batkiewicz (tb209231@students.mimuw.edu.pl)
+ * @author Jarosław Paszek (jp209217@students.mimuw.edu.pl)
+ * @version a-01
  */
 public class UnknownInstruction extends InstructionLineController {
 

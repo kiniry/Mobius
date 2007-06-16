@@ -9,7 +9,9 @@ package umbra.instructions;
  * the headers or at the end of the method,
  * containing some method data, not to be edited by a user.
  *
- * @author Tomek Batkiewicz i Jarosław Paszek
+ * @author Tomek Batkiewicz (tb209231@students.mimuw.edu.pl)
+ * @author Jarosław Paszek (jp209217@students.mimuw.edu.pl)
+ * @version a-01
  */
 public class CodeLineController extends BytecodeLineController {
 

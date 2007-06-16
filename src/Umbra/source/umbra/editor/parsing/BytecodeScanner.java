@@ -18,7 +18,8 @@ import umbra.editor.IColorValues;
  * editor window according to some special 9 rules.
  * Colors are chosen as a token array with a particular style (param 'mod').
  *
- * @author Wojciech Wąs
+ * @author Wojciech Wąs (ww209224@students.mimuw.edu.pl)
+ * @version a-01
  */
 public class BytecodeScanner extends RuleBasedScanner {
 

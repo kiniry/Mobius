@@ -9,7 +9,9 @@ import org.osgi.framework.BundleContext;
 /**
  * The main plugin class to be used in the desktop.
  *
- * @author UMBRA Team (alx@mimuw.edu.pl)
+ * @author Tomasz Batkiewicz (tb209231@students.mimuw.edu.pl)
+ * @author Jarosław Paszek (jp209217@students.mimuw.edu.pl)
+ * @author Wojciech Was (ww209224@students.mimuw.edu.pl)
  * @version a-01
  */
 public class UmbraPlugin extends AbstractUIPlugin {

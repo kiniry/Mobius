@@ -20,7 +20,8 @@ import umbra.editor.parsing.IBytecodeStrings;
  * handling with single instruction methods (correctness, getting handle).
  * This subset is similar to ordinary Java subset.
  *
- * @author Jarosław Paszek
+ * @author Jarosław Paszek (jp209217@students.mimuw.edu.pl)
+ * @version a-01
  */
 public class FieldInstruction extends StringInstruction {
 

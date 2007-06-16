@@ -11,7 +11,8 @@ import org.eclipse.jface.text.ITextViewer;
  * synchronization action which relates the position clicked within the
  * bytecode editor to the source code in the corresponding Java file editor.
  *
- * @author   Wojciech Wąs
+ * @author   Wojciech Wąs (ww209224@students.mimuw.edu.pl)
+ * @version a-01
  * @see    BytecodeDocument
  */
 public class BytecodeDoubleClickStrategy implements ITextDoubleClickStrategy {
