@@ -83,9 +83,9 @@ public abstract class ABasicVisitor extends VisitorArgResult{
   public Object visitASTNode(ASTNode x, Object o) {
     //System.out.println(x);
     int max = x.childCount();
-    for(int i = 0; i < max; i++) {
+    for (int i = 0; i < max; i++) {
       Object child = x.childAt(i);
-      if(child instanceof ASTNode) {
+      if (child instanceof ASTNode) {
         o = ((ASTNode) child).accept(this, o);
       }
     }

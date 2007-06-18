@@ -12,22 +12,25 @@ import javafe.ast.Identifier;
  * @author J. Charles and B. Grégoire
  */
 public class VCEntry {
-  /** the postcondition of the method */
+  /** the postcondition of the method. */
   public transient Post post;
 
-  /** the exceptional postcondition for the method */
+  /** the exceptional postcondition for the method. */
   public transient final Post excpost;
-  /** the list of excp post condition; used for the try...catch constructs */
+  
+  /** the list of excp post condition; used for the try...catch constructs. */
   public transient final List<ExcpPost> lexcpost = new ArrayList<ExcpPost>();
 
-  /** the postcondition for the break, if there is no label */
+  /** the postcondition for the break, if there is no label. */
   public transient Post brpost;
-  /** the list of postconditions for breaks in case of labels */
+  
+  /** the list of postconditions for breaks in case of labels. */
   public transient final Map<Identifier, Post> lbrpost = new HashMap<Identifier, Post>(); 
 
-  /** the postcondition of continue if there is no label */
-  public  transient Post contpost;	
-  /** the list of postconditions of the continue if there are labels attached to loops */
+  /** the postcondition of continue if there is no label. */
+  public  transient Post contpost;
+  
+  /** the list of postconditions of the continue if there are labels attached to loops. */
   public transient final Map<Identifier, Post> lcontpost = new HashMap<Identifier, Post>(); 
 
 

@@ -46,8 +46,8 @@ public class ExpressionVisitor extends ABasicVisitor {
 
   public Object visitBinaryExpr(BinaryExpr expr, Object o) {
 
-    //System.out.println(TagConstants.toString(expr.op));
-    VCEntry post = (VCEntry) o;
+    //System out.println(TagConstants.toString(expr.op));
+    final VCEntry post = (VCEntry) o;
     switch(expr.op) {
       case TagConstants.EQ:
       case TagConstants.OR:
@@ -107,10 +107,10 @@ public class ExpressionVisitor extends ABasicVisitor {
 
   // TODO: add comments
   public Object visitLiteralExpr(LiteralExpr expr,  Object o) {
-    VCEntry vce = (VCEntry) o;
-    Post result = vce.post;
+    final VCEntry vce = (VCEntry) o;
+    final Post result = vce.post;
     Term term = null;
-    //System.out.println(TagConstants.toString(expr.tag));
+    // System out.println(TagConstants.toString(expr.tag));
     switch (expr.tag) {
       case TagConstants.BOOLEANLIT:
         term = result.substWith(Bool.value((Boolean)expr.value));
@@ -144,7 +144,7 @@ public class ExpressionVisitor extends ABasicVisitor {
         break;
       default:
         throw new IllegalArgumentException("Unknown construct :" +
-                                           TagConstants.toString(expr.tag) +" " +  expr);
+                                           TagConstants.toString(expr.tag) + " " +  expr);
     }
     return new Post(result.var, term);
   }
@@ -154,11 +154,11 @@ public class ExpressionVisitor extends ABasicVisitor {
    * @see javafe.ast.VisitorArgResult#visitUnaryExpr(javafe.ast.UnaryExpr, java.lang.Object)
    */
   public Object visitUnaryExpr(UnaryExpr expr, Object o) {
-    VCEntry post = (VCEntry) o;
+    final VCEntry post = (VCEntry) o;
     switch(expr.op) {
       case TagConstants.UNARYADD:
         // for the unary add we do nothing
-        return post.post;	
+        return post.post;
       case TagConstants.POSTFIXINC:
         return vcg.postfixInc(expr, post);
       case TagConstants.INC:
@@ -219,8 +219,8 @@ public class ExpressionVisitor extends ABasicVisitor {
 
 
   public Object visitVariableAccess(VariableAccess m, Object o) {
-    VCEntry res = (VCEntry) o;
-    QuantVariableRef v = Expression.rvar(m.decl);
+    final VCEntry res = (VCEntry) o;
+    final QuantVariableRef v = Expression.rvar(m.decl);
     return  new Post(res.post.substWith(v));
   }
 

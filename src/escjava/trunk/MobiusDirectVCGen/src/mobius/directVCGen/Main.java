@@ -21,89 +21,121 @@ import escjava.ast.EscPrettyPrint;
 import escjava.tc.TypeCheck;
 import escjava.translate.NoWarn;
 
+/**
+ * The class to launch the MobiusDirectVCGen.
+ * Maybe temporary as it will be in a near future directly included
+ * inside the Mobius tool (hopefully).
+ * @author J. Charles (julien.charles@inria.fr)
+ */
 public class Main extends escjava.Main {
-  public static PrintStream out;
 
-  public static File basedir;
+  /** the main output stream. */
+  private static PrintStream fOut = System.out;
 
-  public static File pkgsdir;
+  /** the basedir where to stock all the generated files. */
+  private final File fBasedir;
 
-  public static File bicodir;
+  /** the directory which represents the package of the currently treated typedecl. */
+  private File fPkgsdir;
+  
+  /**
+   * Create a main object from a base directory.
+   * @param basedir The directory where to stock all the files.
+   */
+  public Main(final File basedir) {
+    fBasedir = basedir;
+  }
 
   /**
    * The main entry point.
-   * @param fArgs ESC/Java styles of fArgs - most of them will be
+   * @param args ESC/Java styles of args - most of them will be
    * ignored anyway -
    */
-  public static void main(/*@ non_null @*/String[] args) {
+  public static void main(final /*@ non_null @*/String[] args) {
     // the first argument is the output dir
     if (args.length < 2) {
-      System.out.println("I need at least 2 arguments the output directory, "
-                         + "and the path to the file bicolano.jar");
+      fOut.println("I need at least 2 arguments the output directory, " + 
+                  "and the path to the file bicolano.jar");
       return;
     }
 
-    String[] escargs = new String[args.length - 2];
-    for (int i = 2; i < args.length; escargs[i - 2] = args[i++])
-      ;
+    final String[] escargs = new String[args.length - 2];
+    for (int i = 2; i < args.length; i++) escargs[i - 2] = args[i];
 
-    // Configuring base dir
-    basedir = new File(args[0], "vcs" + File.separator);
-    System.out.println("Output dir is set to: " + basedir);
-    System.out.print("Making the directories if they don't exist... ");
-    if (!basedir.exists()) {
-      if (!basedir.mkdir()) {
-        System.out.println("\nDid not managed to make the dir... exiting.");
-        return;
-      }
-    }
-    System.out.println("done.");
-
-    // Configuring bicolano and all the preludes
-    bicodir = new File(args[1]);
     try {
-      Unarchiver arc = new Unarchiver(bicodir);
+      final File basedir = configBaseDir(args);
+      
+      // Configuring bicolano and all the preludes
+      final File bicodir = new File(args[1]);
+      final Unarchiver arc = new Unarchiver(bicodir);
       arc.inflat(basedir);
-    } catch (IOException e1) {
+      
+      
+      // Configuring log file
+      final File logfile = new File(basedir, "MobiusDirectVCGen.log");
+      fOut.println("Setting the output to the log file: " + logfile);
+      fOut = (new PrintStream(new FileOutputStream(logfile)));
+      
+      // Launching the beast
+      final int exitcode = compile(basedir, escargs);
+      if (exitcode != 0)
+        System.exit(exitcode); 
+      
+    }
+    catch (IOException e1) {
       e1.printStackTrace();
       return;
     }
-
-    // Configuring log file
-    File logfile = new File(basedir, "MobiusDirectVCGen.log");
-    System.out.println("Setting the output to the log file: " + logfile);
-    out = System.out;
-    try {
-      System.setOut(new PrintStream(new FileOutputStream(logfile)));
-    } catch (FileNotFoundException e) {
-      e.printStackTrace();
-      return;
-    }
-
-    // Launching the beast
-    int exitcode = compile(escargs);
-    if (exitcode != 0)
-      System.exit(exitcode);
   }
 
-  public static int compile(String[] args) {
+  /**
+   * Configure the basic directory to stock all the files.
+   * @param args the arguments given to the main
+   * @return the file representing the directory where to stock the
+   * things
+   * @throws FileNotFoundException if the directory doesn't exist/or cannot
+   * be created
+   */
+  private static File configBaseDir(final String[] args) throws FileNotFoundException {
+    // Configuring base dir
+    final File basedir = new File(args[0], "vcs" + File.separator);
+    fOut.println("Output dir is set to: " + basedir);
+    fOut.print("Making the directories if they don't exist... ");
+    if (!basedir.exists()) {
+      if (!basedir.mkdir()) {
+        throw new FileNotFoundException("\nDid not managed to make the dir... exiting.");
+
+      }
+    }
+    fOut.println("done.");
+    return basedir;
+  }
+
+  /**
+   * Do the main operations; compute the vcs and everything.
+   * @param basedir the directory where to host everything
+   * @param args the current program arguments to parse
+   * @return <code>0</code>  or an error code
+   */
+  public static int compile(final File basedir, final String[] args) {
     try {
-      Main t = new Main();
+      final Main t = new Main(basedir);
       //instance = t;
-      int result = t.run(args);
+      final int result = t.run(args);
       return result;
-    } catch (OutOfMemoryError oom) {
-      Runtime rt = Runtime.getRuntime();
-      long memUsedBytes = rt.totalMemory() - rt.freeMemory();
-      System.out.println("java.lang.OutOfMemoryError (" + memUsedBytes
-                         + " bytes used)");
+    } 
+    catch (OutOfMemoryError oom) {
+      final Runtime rt = Runtime.getRuntime();
+      final long memUsedBytes = rt.totalMemory() - rt.freeMemory();
+      fOut.println("java.lang.OutOfMemoryError (" + memUsedBytes + 
+                  " bytes used)");
       //oom.printStackTrace(System.out);
       return outOfMemoryExitCode;
     }
   }
 
-  /*
-   * Remove the check for the use of a legitimate VM
+  /**
+   * Remove the check for the use of a legitimate VM.
    * (non-Javadoc)
    * @see escjava.Main#preload()
    */
@@ -116,32 +148,33 @@ public class Main extends escjava.Main {
    * outside type that SrcTool is to process.
    *
    * <p> In addition, it calls itself recursively to handle types
-   * nested within outside types.
+   * nested within outside types.</p>
+   * @param td the type declaration to inspect.
    */
   //@ also
   //@ requires td != null;
-  public void handleTD(TypeDecl td) {
+  public void handleTD(final TypeDecl td) {
 
-    long startTime = currentTime();
+    final long startTime = currentTime();
 
-    javafe.tc.TypeSig sig = TypeCheck.inst.getSig(td);
-    out.println("Processing " + sig.toString() + ".");
-    System.out.println("Processing " + sig.toString() + ".");
+    final javafe.tc.TypeSig sig = TypeCheck.inst.getSig(td);
+    fOut.println("Processing " + sig.toString() + ".");
+    fOut.println("Processing " + sig.toString() + ".");
 
     if (Location.toLineNumber(td.getEndLoc()) < options().startLine)
       return;
 
     // Do actual work:
-    boolean aborted = processTD(td);
+    final boolean aborted = processTD(td);
 
     if (!options().quiet)
-      System.out.println("  [" + timeUsed(startTime) + " total]"
-                         + (aborted ? " (aborted)" : ""));
+      fOut.println("  [" + timeUsed(startTime) + " total]" + 
+                  (aborted ? " (aborted)" : ""));
 
     /*
      * Handled any nested types:  [1.1]
      */
-    TypeDecl decl = sig.getTypeDecl();
+    final TypeDecl decl = sig.getTypeDecl();
     for (int i = 0; i < decl.elems.size(); i++) {
       if (decl.elems.elementAt(i) instanceof TypeDecl)
         handleTD((TypeDecl) decl.elems.elementAt(i));
@@ -150,35 +183,37 @@ public class Main extends escjava.Main {
 
   /**
    * Run the stage1 (just type checking and pretty print)
-   * and then runs the VCGen
+   * and then runs the VCGen.
+   * @param td the type declaration to check
+   * @return <code>false</code> don't ask why
    */
   //@ requires td != null;
   //@ requires (* td is not from a binary file. *);
   @SuppressWarnings("unchecked")
-  public boolean processTD(TypeDecl td) {
-    int errorCount = ErrorSet.errors;
+  public boolean processTD(final TypeDecl td) {
+    final int errorCount = ErrorSet.errors;
 
-    long startTime = currentTime();
+    final long startTime = currentTime();
     // preparation: type checking + package dir creation
-    TypeSig sig = TypeCheck.inst.getSig(td);
+    final TypeSig sig = TypeCheck.inst.getSig(td);
     sig.typecheck();
-    String[] pkgs = sig.getPackageName().split("\\.");
-    pkgsdir = basedir;
+    final String[] pkgs = sig.getPackageName().split("\\.");
+    fPkgsdir = fBasedir;
     for (int i = 0; i < pkgs.length; i++) {
-      pkgsdir = new File(pkgsdir, pkgs[i]);
+      fPkgsdir = new File(fPkgsdir, pkgs[i]);
     }
-    pkgsdir.mkdirs();
+    fPkgsdir.mkdirs();
 
-    processTD_stage1(td, sig, errorCount);
-    System.out.println("[" + timeUsed(startTime) + "]\n");
+    processTDstage1(td, sig, errorCount);
+    fOut.println("[" + timeUsed(startTime) + "]\n");
 
-    long midTime = currentTime();
+    final long midTime = currentTime();
     sig.getCompilationUnit().accept(new JmlVisitor(), null);
-    System.out.println("[" + timeUsed(midTime) + "]\n");
-    long endTime = currentTime();
+    fOut.println("[" + timeUsed(midTime) + "]\n");
+    final long endTime = currentTime();
 
-    sig.getCompilationUnit().accept(new DirectVCGen(basedir, pkgsdir));
-    System.out.println("[" + timeUsed(endTime) + "]\n");
+    sig.getCompilationUnit().accept(new DirectVCGen(fBasedir, fPkgsdir));
+    fOut.println("[" + timeUsed(endTime) + "]\n");
 
     return false;
 
@@ -187,22 +222,28 @@ public class Main extends escjava.Main {
   /**
    * Stage 1: Do Java type checking then print Java types if we've been
    * asked to.
+   * 
+   * @param td the type declaration to inspect
+   * @param sig the signature which correspond to the type
+   * @param errorCount basically ignored
+   * @return <code>true</code> if everything went well
    */
-  public boolean processTD_stage1(TypeDecl td, TypeSig sig, int errorCount) {
+  public boolean processTDstage1(final TypeDecl td, final TypeSig sig, final int errorCount) {
 
     NoWarn.typecheckRegisteredNowarns();
 
     // Create a pretty-printer that shows types
-    DelegatingPrettyPrint p = new javafe.tc.TypePrint();
+    final DelegatingPrettyPrint p = new javafe.tc.TypePrint();
     p.setDel(new EscPrettyPrint(p, new StandardPrettyPrint(p)));
     OutputStream out;
     try {
-      out = new FileOutputStream(new File(pkgsdir, sig.simpleName + ".typ"));
-    } catch (FileNotFoundException e) {
+      out = new FileOutputStream(new File(fPkgsdir, sig.simpleName + ".typ"));
+    } 
+    catch (FileNotFoundException e) {
       e.printStackTrace();
       return false;
     }
-    System.out.println("Writing the Source code with types.");
+    fOut.println("Writing the Source code with types.");
     p.print(out, 0, td);
 
     // Turn off extended static checking and abort if any errors
@@ -210,8 +251,8 @@ public class Main extends escjava.Main {
     if (errorCount < ErrorSet.errors) {
       if (stages > 1) {
         stages = 1;
-        ErrorSet.caution("Turning off extended static checking "
-                         + "due to type error(s)");
+        ErrorSet.caution("Turning off extended static checking " + 
+                         "due to type error(s)");
       }
       return false;
     }

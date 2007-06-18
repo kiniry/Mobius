@@ -8,8 +8,17 @@ import escjava.sortedProver.NodeBuilder.Sort;
 
 /**
  * This class is used to create the formulas of boolean type.
+ * @author J. Charles (julien.charles@inria.fr), H. Lehner
  */
-public class Bool {
+public final class Bool {
+  /** the sort representing the booleans. */
+  public static Sort sort = Formula.lf.sortBool;
+  
+  /**
+   * @deprecated
+   */
+  private Bool() { 
+  }
 
   /**
    * Creates a binary term of the type bool. The type
@@ -22,8 +31,8 @@ public class Bool {
    * with the leaf
    * @return a well formed and well typed term
    */
-  private static Term binaryOp(Term l, Term r, int tag) {
-    if(l.getSort().equals(Bool.sort)) {
+  private static Term binaryOp(final Term l, final Term r, final int tag) {
+    if (l.getSort().equals(Bool.sort)) {
       return boolBinaryOp(l, r, tag);
     }
     else {
@@ -39,11 +48,11 @@ public class Bool {
    * @param tag the tag associated with the term
    * @return a well-formed term well-typed et al
    */
-  private static Term boolBinaryOp(Term l, Term r, int tag){
-    if(l.getSort() != Bool.sort || r.getSort() != Bool.sort)
-      throw new IllegalArgumentException("The sorts of the arguments should be bool found: " + l.getSort() + 
-                                         " and " + r + ".");
-    FnTerm t = Formula.lf.mkFnTerm(Formula.lf.symBoolFn, new Term[] {l, r});
+  private static Term boolBinaryOp(final Term l, final Term r, final int tag) {
+    if (l.getSort() != Bool.sort || r.getSort() != Bool.sort)
+      throw new IllegalArgumentException("The sorts of the arguments should " +
+          "be bool found: " + l.getSort() + " and " + r + ".");
+    final FnTerm t = Formula.lf.mkFnTerm(Formula.lf.symBoolFn, new Term[] {l, r});
     t.tag = tag;
     return t; 
   }
@@ -56,10 +65,11 @@ public class Bool {
    * @param tag the tag of the operator
    * @return a well formed and well typed term
    */
-  private static Term boolUnaryOp(Term t, int tag) {
-    if(t.getSort() != Bool.sort )
-      throw new IllegalArgumentException("The sorts of the arguments should be bool found: " + t.getSort());
-    FnTerm res = Formula.lf.mkFnTerm(Formula.lf.symBoolUnaryFn, new Term[] {t});
+  private static Term boolUnaryOp(final Term t, final int tag) {
+    if (t.getSort() != Bool.sort)
+      throw new IllegalArgumentException("The sorts of the arguments should be " +
+          "bool found: " + t.getSort());
+    final FnTerm res = Formula.lf.mkFnTerm(Formula.lf.symBoolUnaryFn, new Term[] {t});
     res.tag = tag;
     return res;
   }
@@ -73,14 +83,14 @@ public class Bool {
    * the term
    * @return a well-formed and well-typed term
    */
-  private static Term numBinaryOp(Term l, Term r, int tag){
-    if(l.getSort() != r.getSort() &&
+  private static Term numBinaryOp(Term l, Term r, final int tag) {
+    if (l.getSort() != r.getSort() &&
         (!Num.isNum(l.getSort()) || !Num.isNum(r.getSort())))
       throw new IllegalArgumentException("The sort of " + l + 
                                          " is different from the sort of " + r + ".");
     FnTerm t = null;
     if (l.getSort() == Num.sortInt) {
-      if(r.getSort() == Num.sortReal) {
+      if (r.getSort() == Num.sortReal) {
         l = Num.intToReal(l);
         t = Formula.lf.mkFnTerm(Formula.lf.symRealBoolFn, new Term[] {l, r});
       }
@@ -102,15 +112,14 @@ public class Bool {
     return t;
   }
 
-  /** the sort representing the booleans */
-  public static Sort sort = Formula.lf.sortBool;
+
 
   /**
    * Returns the term representing the given value b.
    * @param b The boolean value to convert to a term
    * @return a BoolLiteral term
    */
-  public static Term value(Boolean b) {	
+  public static Term value(final Boolean b) {
     return Formula.lf.mkBoolLiteral(b);
   }
 
@@ -119,22 +128,20 @@ public class Bool {
    * @param l The left element of the equality
    * @param r The right element of the equality
    * @return an equality over the terms
-   * @throws IllegalArgumentException if the types of the arguments are bad.
    */
-  public static Term equals(Term l, Term r) {
-    return binaryOp(l,r,NodeBuilder.predEQ);
-  }	
+  public static Term equals(final Term l, final Term r) {
+    return binaryOp(l, r, NodeBuilder.predEQ);
+  }
 
   /**
    * Returns the non equality from the argument type.
    * @param l The left element of the non equality
    * @param r The right element of non equality
    * @return an non equality over the terms
-   * @throws IllegalArgumentException if the types of the arguments are bad.
    */
-  public static Term notEquals(Term l, Term r) {
-    return binaryOp(l,r,NodeBuilder.predNE);
-  }	
+  public static Term notEquals(final Term l, final Term r) {
+    return binaryOp(l, r, NodeBuilder.predNE);
+  }
 
   /**
    * Returns a boolean Or expression.
@@ -143,8 +150,8 @@ public class Bool {
    * @return a term representing a boolean or 
    * a FnTerm with tag {@link TagConstants#BOOLOR}
    */
-  public static Term or(Term l, Term r) {
-    return boolBinaryOp(l,r,TagConstants.BOOLOR);
+  public static Term or(final Term l, final Term r) {
+    return boolBinaryOp(l, r, TagConstants.BOOLOR);
   }
 
   /**
@@ -153,8 +160,8 @@ public class Bool {
    * @param r The right expression of the expression
    * @return The and expression a FnTerm with tag {@link TagConstants#BOOLAND}
    */
-  public static Term and(Term l, Term r) {
-    return boolBinaryOp(l,r,TagConstants.BOOLAND);
+  public static Term and(final Term l, final Term r) {
+    return boolBinaryOp(l, r, TagConstants.BOOLAND);
   }
 
   /**
@@ -162,8 +169,8 @@ public class Bool {
    * @param t the boolean expression to turn to a not
    * @return A Not expression of type FnTerm with tag {@link TagConstants#BOOLNOT}
    */
-  public static Term not(Term t) {
-    return boolUnaryOp(t,TagConstants.BOOLNOT);
+  public static Term not(final Term t) {
+    return boolUnaryOp(t, TagConstants.BOOLNOT);
   }
 
   /**
@@ -172,8 +179,8 @@ public class Bool {
    * @param r The right element of the expression
    * @return The and expression a FnTerm with tag {@link NodeBuilder#predLE}
    */
-  public static Term le(Term l, Term r) {
-    return numBinaryOp(l,r,NodeBuilder.predLE);
+  public static Term le(final Term l, final Term r) {
+    return numBinaryOp(l, r, NodeBuilder.predLE);
   }
 
   /**
@@ -182,8 +189,8 @@ public class Bool {
    * @param r The right expression of the expression
    * @return The and expression a FnTerm with tag {@link NodeBuilder#predLE}
    */
-  public static Term lt(Term l, Term r) {		
-    return numBinaryOp(l,r,NodeBuilder.predLT);
+  public static Term lt(final Term l, final Term r) {
+    return numBinaryOp(l, r, NodeBuilder.predLT);
   }
 
   /**
@@ -192,8 +199,8 @@ public class Bool {
    * @param r The right expression of the expression
    * @return The and expression a FnTerm with tag {@link NodeBuilder#predLE}
    */
-  public static Term ge(Term l, Term r) {		
-    return numBinaryOp(l,r,NodeBuilder.predGE);
+  public static Term ge(final Term l, final Term r) {
+    return numBinaryOp(l, r, NodeBuilder.predGE);
   }
 
   /**
@@ -202,8 +209,8 @@ public class Bool {
    * @param r The right expression of the expression
    * @return The and expression a FnTerm with tag {@link NodeBuilder#predLE}
    */
-  public static Term gt(Term l, Term r) {		
-    return numBinaryOp(l,r,NodeBuilder.predGT);
+  public static Term gt(final Term l, final Term r) {
+    return numBinaryOp(l, r, NodeBuilder.predGT);
   }
 
 
@@ -213,8 +220,8 @@ public class Bool {
    * @param f2 the second element of the implies
    * @return a nicely created implies
    */
-  public static Term implies(Term f1, Term f2) {
-    return boolBinaryOp(f1,f2, TagConstants.BOOLIMPLIES);
+  public static Term implies(final Term f1, final Term f2) {
+    return boolBinaryOp(f1, f2, TagConstants.BOOLIMPLIES);
   }
 
   /**
@@ -223,8 +230,8 @@ public class Bool {
    * @param f2 the second element of the full implies
    * @return a nicely created fullimplies
    */
-  public static Term fullImplies(Term f1, Term f2) {
-    return boolBinaryOp(f1,f2, TagConstants.BOOLEQ);
+  public static Term fullImplies(final Term f1, final Term f2) {
+    return boolBinaryOp(f1, f2, TagConstants.BOOLEQ);
   } 
 
 }
