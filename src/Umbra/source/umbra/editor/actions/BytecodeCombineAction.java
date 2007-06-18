@@ -24,6 +24,7 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.part.FileEditorInput;
 
 import umbra.UmbraHelper;
+import umbra.UmbraPlugin;
 import umbra.editor.BytecodeContribution;
 import umbra.editor.BytecodeEditor;
 import umbra.editor.BytecodeEditorContributor;
@@ -48,21 +49,29 @@ public class BytecodeCombineAction extends Action {
 
   /**
    * The manager that initialises all the actions within the
-   * bytecode editor.
+   * bytecode plugin.
    */
   private BytecodeEditorContributor my_contributor;
 
   /**
-   * TODO should be the same as in my_contributor
+   * The GUI elements contributed to the eclipse GUI by the bytecode
+   * editor. This reference should be the same as in the field
+   * <code>my_contributor</code>.
    */
   private BytecodeContribution my_btcodeCntrbtn;
   //@ invariant my_contributor.bytecodeContribution==my_btcodeCntrbtn;
 
   /**
-   * TODO
+   * This constructor creates the action to combine the bytecode edits with
+   * the source code ones. It registers the name of the action with the text
+   * "Combine" and stores locally the object which creates all the actions
+   * and which contributs the editor GUI elements to the eclipse GUI.
    *
-   * @param a_contributor
-   * @param a_bytecode_contribution
+   * @param a_contributor the manager that initialises all the actions within the
+   * bytecode plugin
+   * @param a_bytecode_contribution the GUI elements contributed to the eclipse
+   * GUI by the bytecode editor. This reference should be the same as in the
+   * parameter <code>a_contributor</code>.
    */
   public BytecodeCombineAction(final BytecodeEditorContributor a_contributor,
                  final BytecodeContribution a_bytecode_contribution) {
@@ -78,7 +87,7 @@ public class BytecodeCombineAction extends Action {
    * checked for bytecode modifications and if one
    * has been made, it is chosen and saved from JavaClass.
    *
-   * TODO
+   * FIXME write more description
    *
    * @see BytecodeRebuildAction
    */
@@ -116,59 +125,56 @@ public class BytecodeCombineAction extends Action {
   }
 
   /**
-   * TODO
+   * This method reads the Java classfile for the original Java code and
+   * replaces all the methods with the ones that were modified in the currently
+   * edited bytecode file. It also does all the error handling.
    *
-   * @param a_file
+   * FIXME this method should also pop up messages in case exceptions
+   *       are thrown
+   *
+   * @param a_file a file edited currently by the bytecode editor
    * @param a_path a workspace relative path to a Java source code file
-   * @param the_lastSegment
+   * @param the_last_segment the strign which represents the last segment of
+   *        the classfile file name corresponding to the file edited by the
+   *        editor
    */
   private void updateMethods(final IFile a_file,
                              final IPath a_path,
-                             final String the_lastSegment) {
-    try {
-      final String clname = a_path.removeFirstSegments(1).toPortableString().
+                             final String the_last_segment) {
+    final String clname = a_path.removeFirstSegments(1).toPortableString().
                replaceFirst(UmbraHelper.BYTECODE_EXTENSION, "");
-      ClassPath cp;
-      cp = new ClassPath(getClassPath());
-      final SyntheticRepository strin = SyntheticRepository.getInstance(cp);
-      try {
-        JavaClass jc = strin.loadClass(clname);
-        strin.removeClass(jc);
-
-        final BytecodeEditor bcEditor = ((BytecodeEditor)my_editor);
-        final JavaClass oldJc = bcEditor.getMy_javaClass();
-        final ClassGen cg = updateModifiedMethods(oldJc, jc);
-        jc = cg.getJavaClass();
-        final String fullName = bcEditor.getPath(a_path).toOSString();
-        jc.dump(fullName + UmbraHelper.getFileSeparator() + the_lastSegment);
-        bcEditor.setMy_javaClass(jc);
-        bcEditor.refreshBytecode(a_path, null, null);
-        final IEditorInput input = new FileEditorInput(a_file);
-        my_contributor.refreshEditor(my_editor, input);
-      } catch (ClassNotFoundException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      } catch (IOException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      } catch (CoreException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      }
-    } catch (RuntimeException re) {
-      re.printStackTrace();
+    ClassPath cp;
+    cp = new ClassPath(getClassPath());
+    final SyntheticRepository strin = SyntheticRepository.getInstance(cp);
+    try {
+      JavaClass jc = strin.loadClass(clname);
+      strin.removeClass(jc);
+      final JavaClass oldJc = ((BytecodeEditor)my_editor).getMy_javaClass();
+      final ClassGen cg = updateModifiedMethods(oldJc, jc);
+      jc = cg.getJavaClass();
+      final BytecodeEditor bcEditor = ((BytecodeEditor)my_editor);
+      final String fullName = bcEditor.getPath(a_path).toOSString();
+      jc.dump(fullName + UmbraHelper.getFileSeparator() + the_last_segment);
+      bcEditor.setMy_javaClass(jc);
+      bcEditor.refreshBytecode(a_path, null, null);
+      final IEditorInput input = new FileEditorInput(a_file);
+      my_contributor.refreshEditor(my_editor, input);
+    } catch (ClassNotFoundException e) {
+      e.printStackTrace();
+    } catch (IOException e) {
+      e.printStackTrace();
+    } catch (CoreException e) {
+      e.printStackTrace();
     }
   }
 
   /**
    * This method generates the classpath for the project in which the current
-   * action takes place. In case the classpath cannot be retrieved an 
+   * action takes place. In case the classpath cannot be retrieved an
    * appropriate message is shown to the user and the classpath is set to
    * be the empty string.
    *
-   * TODO probably the entry separator should be made OS independent
-   *
-   * @return the string representing the classpath
+   * @return the string representing the claspath
    */
   private String getClassPath() {
     final IFile file = ((FileEditorInput)my_editor.getEditorInput()).getFile();
@@ -185,43 +191,47 @@ public class BytecodeCombineAction extends Action {
                       "empty classpath is used instead");
       return "";
     }
-    return classPathEntriesToString(projectName, project, ent);
+    return classPathEntriesToString(ent, project, projectName);
   }
 
   /**
-   * TODO
+   * The method retruns a string representation of a classpath the entries
+   * of which are in the parameter <code>the_entries</code> and which
+   * is associated with the project <code>a_project</code>. The
+   * <code>a_project_name</code> parameter is here for efficiency reasons.
    *
-   * @param projectName
-   * @param project
-   * @param ent
-   * @return
+   * @param the_entries the entries of the classpath
+   * @param a_project the project with the classpath
+   * @param a_project_name the name of the project with the classpath
+   *
+   * @return the string representation of the classpath entries
    */
-  private String classPathEntriesToString(final String projectName,
-                                          final IProject project,
-                                          final IClasspathEntry[] ent) {
+  private String classPathEntriesToString(final IClasspathEntry[] the_entries,
+                                          final IProject a_project,
+                                          final String a_project_name) {
     final String classPathSeparator = UmbraHelper.getClassPathSeparator();
     final String fileSeparator = UmbraHelper.getFileSeparator();
-    String res =""; 
-    for (int i = 0; i < ent.length; i++) {
+    String res = "";
+    for (int i = 0; i < the_entries.length; i++) {
       String add = "";
       // FIXME replace println with the sensible code to realise the
       //       functionality
-      switch (ent[i].getEntryKind()) {
+      switch (the_entries[i].getEntryKind()) {
         case IClasspathEntry.CPE_CONTAINER:
-          System.out.println("CONTAINER: " + ent[i].getPath().
+          UmbraPlugin.messagelog("CONTAINER: " + the_entries[i].getPath().
                              toPortableString());
           break;
         case IClasspathEntry.CPE_LIBRARY:
-          add=ent[i].getPath().toPortableString();
+          add = the_entries[i].getPath().toPortableString();
           break;
         case IClasspathEntry.CPE_PROJECT:
-          System.out.println("PROJECT: " + ent[i].getPath().
+          UmbraPlugin.messagelog("PROJECT: " + the_entries[i].getPath().
                              toPortableString());
           break;
         case IClasspathEntry.CPE_SOURCE:
-          final String ploc = project.getLocation().toPortableString();
-          final String sloc = ent[i].getPath().toPortableString();
-          add = sloc.replaceFirst(fileSeparator + projectName, ploc);
+          final String ploc = a_project.getLocation().toPortableString();
+          final String sloc = the_entries[i].getPath().toPortableString();
+          add = sloc.replaceFirst(fileSeparator + a_project_name, ploc);
           break;
         case IClasspathEntry.CPE_VARIABLE:
           add = "";
@@ -230,8 +240,8 @@ public class BytecodeCombineAction extends Action {
           add = "";
           break;
       }
-      if (res.length()>0) {
-        res+=classPathSeparator + add;
+      if (res.length() > 0) {
+        res += classPathSeparator + add;
       } else {
         res += add;
       }
@@ -247,13 +257,13 @@ public class BytecodeCombineAction extends Action {
    * provided that <code>my_btcodeCntrbtn</code> regards them as
    * modified.
    *
-   * @param an_oldJc the class from which the modifications are acquired
+   * @param an_old_jc the class from which the modifications are acquired
    * @param a_jc the class for to which the modifications are added
    * @return the class representation with added modifications
    */
-  private ClassGen updateModifiedMethods(final JavaClass an_oldJc,
+  private ClassGen updateModifiedMethods(final JavaClass an_old_jc,
                        final JavaClass a_jc) {
-    final ClassGen oldCg = new ClassGen(an_oldJc);
+    final ClassGen oldCg = new ClassGen(an_old_jc);
     final ClassGen cg = new ClassGen(a_jc);
     final int oldMeths = oldCg.getMethods().length;
     final int meths = cg.getMethods().length;
@@ -269,7 +279,7 @@ public class BytecodeCombineAction extends Action {
     for (int i = 0; i < modified.length && i < oldMeths && i < meths; i++) {
       if (modified[i]) {
         cg.setMethodAt(oldCg.getMethodAt(i), i);
-        System.out.println(oldCg.getMethodAt(i).getCode().toString(true));
+        UmbraPlugin.messagelog(oldCg.getMethodAt(i).getCode().toString(true));
       }
     }
     return cg;
@@ -280,9 +290,9 @@ public class BytecodeCombineAction extends Action {
    * the modifications in the source code and in the byte code will
    * be performed.
    *
-   * @param part the editor to combine modifications
+   * @param a_part the editor to combine modifications
    */
-  public final void setActiveEditor(final IEditorPart part) {
-    my_editor = part;
+  public final void setActiveEditor(final IEditorPart a_part) {
+    my_editor = a_part;
   }
 }

@@ -20,7 +20,8 @@ import org.eclipse.ui.texteditor.AbstractDecoratedTextEditor;
  * This class is related to document structure of bytecode
  * file and supplies it with synchronization tools (in both directions).
  *
- * @author Samuel Willimann
+ * @author Samuel Willimann (wsamuel@student.ethz.ch)
+ * @version a-01
  */
 public class BoogiePLDocument extends Document {
   /**
@@ -246,7 +247,7 @@ public class BoogiePLDocument extends Document {
     for (int i=0; i<methods.length; i++) {
       m = methods[i];
       l = m.getLineNumberTable().getLineNumberTable().length;
-      if (SrcLine.startsWith(m.toString()) ) {
+      if (SrcLine.startsWith(m.toString())) {
         while (bcln<maxL) {
           bcln++;
           s = LineAt(bcln);

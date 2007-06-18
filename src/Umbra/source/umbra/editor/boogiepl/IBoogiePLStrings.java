@@ -7,7 +7,8 @@ package umbra.editor.boogiepl;
  * Some string arrays used to identify keywords and instruction
  * names in bytecode
  *
- * @author Samuel Willimann
+ * @author Samuel Willimann (wsamuel@student.ethz.ch)
+ * @version a-01
  */
 public interface IBoogiePLStrings {
 

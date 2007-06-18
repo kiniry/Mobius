@@ -23,7 +23,8 @@ import org.eclipse.ui.IEditorPart;
 /**
  * TODO
  *
- * @author Samuel Willimann
+ * @author Samuel Willimann (wsamuel@student.ethz.ch)
+ * @version a-01
  */
 public class BoogiePLContribution extends ControlContribution {
 

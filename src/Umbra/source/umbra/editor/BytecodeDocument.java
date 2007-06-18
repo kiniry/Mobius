@@ -258,7 +258,7 @@ public class BytecodeDocument extends Document {
     for (int i=0; i<methods.length; i++) {
       m = methods[i];
       l = m.getLineNumberTable().getLineNumberTable().length;
-      if (SrcLine.startsWith(m.toString()) ) {
+      if (SrcLine.startsWith(m.toString())) {
         while (bcln<maxL) {
           bcln++;
           s = LineAt(bcln);

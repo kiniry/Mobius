@@ -35,7 +35,8 @@ import annot.bcio.ReadAttributeException;
  * such as JavaClass to obtain particular instructions
  * and ClassGen to allow changes in BCEL.
  *
- * @author Samuel Willimann
+ * @author Samuel Willimann  (wsamuel@student.ethz.ch)
+ * @version a-01
  */
 
 public class BoogiePLEditor extends TextEditor {
@@ -204,7 +205,7 @@ public class BoogiePLEditor extends TextEditor {
 
     // String clname = path.lastSegment().substring(0, path.lastSegment().lastIndexOf("."));
     final String projectPath =  file.getProject().getLocation().toOSString();
-    final String clname   = file.getLocation().toOSString().replaceAll(".bpl", "" /*.class" */).substring(projectPath.length() + 1 );
+    final String clname   = file.getLocation().toOSString().replaceAll(".bpl", "" /*.class" */).substring(projectPath.length() + 1);
 
 
     final ClassPath cp = new ClassPath(pathName);

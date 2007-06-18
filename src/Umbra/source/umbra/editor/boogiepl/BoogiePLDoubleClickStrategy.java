@@ -10,7 +10,8 @@ import org.eclipse.jface.text.ITextViewer;
  * double clicking in BoogiePL editor window. Synchronization
  * to Java code window is then made.
  *
- * @author   Samuel Willimann
+ * @author   Samuel Willimann  (wsamuel@student.ethz.ch)
+ * @version a-01
  * @see    BoogiePLDocument
  */
 public class BoogiePLDoubleClickStrategy implements ITextDoubleClickStrategy {

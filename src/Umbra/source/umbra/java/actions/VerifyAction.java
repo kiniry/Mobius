@@ -8,7 +8,7 @@ import org.eclipse.ui.IEditorPart;
 /**
  * The action is used to convert Java Bytecode into BoogiePL.
  *
- * @author Samuel Willimann (contact through h@inf.ethz.ch)
+ * @author Samuel Willimann  (wsamuel@student.ethz.ch)
  * @version a-01
  *
  */

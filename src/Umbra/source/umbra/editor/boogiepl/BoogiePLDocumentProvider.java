@@ -16,7 +16,8 @@ import org.eclipse.ui.texteditor.AbstractDecoratedTextEditor;
  * This class has been modificated with relation to the generated automatically
  * to allow adding listener that is responsible for error checking
  *
- * @author Samuel Willimann
+ * @author Samuel Willimann (wsamuel@student.ethz.ch)
+ * @version a-01
  */
 public class BoogiePLDocumentProvider extends FileDocumentProvider {
 

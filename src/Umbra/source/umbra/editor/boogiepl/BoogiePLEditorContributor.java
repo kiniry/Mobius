@@ -44,7 +44,8 @@ import umbra.editor.IColorValues;
  * This is managing class that provides the editor with a set of properties,
  * color changing and checking syntax correctness.
  *
- * @author Samuel Willimann
+ * @author Samuel Willimann  (wsamuel@student.ethz.ch)
+ * @version a-01
  */
 public class BoogiePLEditorContributor extends EditorActionBarContributor {
 

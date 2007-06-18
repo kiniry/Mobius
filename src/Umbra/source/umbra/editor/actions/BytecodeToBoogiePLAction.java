@@ -32,7 +32,7 @@ import b2bpl.Project;
  * This action is used to convert Java Bytecode into BoogiePL. The following JAR
  * packages are required: - b2bpl.jar - asm.jar
  *
- * @author Samuel Willimann
+ * @author Samuel Willimann (wsamuel@student.ethz.ch)
  * @version a-01
  */
 public class BytecodeToBoogiePLAction implements IEditorActionDelegate {
@@ -90,7 +90,7 @@ public class BytecodeToBoogiePLAction implements IEditorActionDelegate {
       final String javaPath   = UmbraHelper.replaceLast(bytecodePath,
                      UmbraHelper.BYTECODE_EXTENSION,
                      "" /* .class" */).
-                   substring(projectPath.length() + 1 ).
+                   substring(projectPath.length() + 1).
                    replace('\\', '.');
 
       final List<String> args = new ArrayList<String>();

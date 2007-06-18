@@ -205,8 +205,8 @@ public abstract class InstructionLineController extends BytecodeLineController {
       final LinkedList instructions, final int off) {
     System.out.println("oldline="+oldLine.line);
     System.out.println("nextline="+nextLine.line);
-    System.out.println("cg="+((cg==null)?"null":"ok"));
-    System.out.println("ins="+((ins==null)?"null":ins.getName()));
+    System.out.println("cg="+((cg==null) ? "null" : "ok"));
+    System.out.println("ins="+((ins==null) ? "null" : ins.getName()));
     System.out.println("MetEnd=" + metEnd);
     System.out.println("theLast=" + theLast);
     System.out.println("off=" + off);
@@ -214,8 +214,8 @@ public abstract class InstructionLineController extends BytecodeLineController {
     il = oldLine.getList();
     ih = oldLine.getHandle();
     index = oldLine.getIndex();
-    System.out.println("ih="+((ih==null)?"null":
-      ((ih.getInstruction()==null)?"null ins":ih.getInstruction().getName())));
+    System.out.println("ih="+((ih==null) ? "null" :
+      ((ih.getInstruction()==null) ? "null ins" : ih.getInstruction().getName())));
     if (il == null) System.out.println("il = null");
     else printInstructionList(il);
     if (ih == null) {
@@ -309,7 +309,7 @@ public abstract class InstructionLineController extends BytecodeLineController {
     final InstructionHandle next = nextLine.getHandle();
     System.out.println("InstructionLineController#dispose   name="+name);
     final InstructionTargeter[] tgters = ih.getTargeters();
-    if (tgters!=null)
+    if (tgters != null)
       for (int i=0; i<tgters.length; i++) {
         tgters[i].updateTarget(me, next);
       }

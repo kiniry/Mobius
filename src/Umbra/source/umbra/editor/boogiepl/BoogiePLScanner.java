@@ -10,7 +10,8 @@ import umbra.editor.ColorManager;
  * editor window according to some special 9 rules.
  * Colors are chosen as a token array with a particular style (param 'mod').
  *
- * @author Samuel Willimann
+ * @author Samuel Willimann (wsamuel@student.ethz.ch)
+ * @version a-01
  */
 public class BoogiePLScanner extends RuleBasedScanner {
 

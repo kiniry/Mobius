@@ -5,7 +5,8 @@ import org.eclipse.jface.text.rules.IWhitespaceDetector;
 /**
  * New definition of whitespace
  *
- * @author Samuel Willimann
+ * @author Samuel Willimann (wsamuel@student.ethz.ch)
+ * @version a-01
  */
 public class BoogiePLWhitespaceDetector implements IWhitespaceDetector {
 

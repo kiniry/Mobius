@@ -89,9 +89,8 @@ public class NonRuleBasedDamagerRepairer
 
         int end =
           event.getOffset()
-            + (event.getText() == null
-              ? event.getLength()
-              : event.getText().length());
+            + (event.getText() == null ? event.getLength() :
+                                         event.getText().length());
 
         if (info.getOffset() <= end
           && end <= info.getOffset() + info.getLength()) {

@@ -352,7 +352,7 @@ public class BytecodeController {
     if (l.startsWith("Code") ||
        (l.startsWith("LocalVariable")) ||
        (l.startsWith("LineNumber")) ||
-       (l.startsWith("Attribute")) )
+       (l.startsWith("Attribute")))
         return new CodeLineController(line);
 
     //wyjatki throw Exception from nie znam reguly
@@ -380,7 +380,7 @@ public class BytecodeController {
     // a potem w zaleznosci od rodzaju
 
     final int ppos = line.indexOf(":");
-    if ( ppos >= 0){ //nie >= czy jest : od 2 pozycji
+    if (ppos >= 0) { //nie >= czy jest : od 2 pozycji
       //tzn liczy chyba od zerowej czyli sprawdzaczy cyfra przed
       //System.out.println("dwukropek" + ppos + line.charAt(0) + line.charAt(1));
       ok = true;

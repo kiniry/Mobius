@@ -18,7 +18,8 @@ import org.eclipse.ui.IEditorPart;
 import umbra.instructions.BytecodeController;
 
 /**
- * This class represents the GUI of the bytecode editor.
+ * This class represents a GUI element that is contributed to the
+ * eclipse GUI by the bytecode editor. 
  *
  * change performed in a bytecode editor.
  * TODO more detailed description is needed

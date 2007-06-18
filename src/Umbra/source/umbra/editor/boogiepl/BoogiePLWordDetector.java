@@ -9,7 +9,8 @@ import org.eclipse.jface.text.rules.IWordDetector;
 /**
  * TODO
  *
- * @author Samuel Willimann
+ * @author Samuel Willimann (wsamuel@student.ethz.ch)
+ * @version a-01
  */
 public class BoogiePLWordDetector implements IWordDetector {
 
