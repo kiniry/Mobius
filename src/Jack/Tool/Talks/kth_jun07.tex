@@ -1,0 +1,1049 @@
+%% -*- coding: iso-8859-1; ispell-local-dictionary: "english"; compile-command: "make" -*-
+\documentclass[table,10pt]{beamer} 
+\usefonttheme{serif}
+
+\usecolortheme{deepblue}
+\usetheme{keepMetalAlive}
+\usepackage[normalem]{ulem}
+\usepackage{alltt}
+\input{definitions}
+
+%\usepackage{colortbl}
+\usepackage{colordvi}
+
+\institute{\ \\ \ \\\includegraphics[scale=0.3,viewport=125 525 400 400]{mobius_logo_only.pdf}\includegraphics[scale=0.2,viewport=900 1000 400 400]{Logo-INRIA-couleur.pdf}}
+\newcommand{\insertpicture}{
+\ifnum\thesection = 0
+\else
+  \ifnum\thesection < 6
+  \includegraphics[scale=0.2]{metapost-figures/pdf/fig-50\thesection.pdf}
+  \else
+  \fi
+\fi
+}
+
+\title{Towards modular verification of concurrent object-oriented programs}
+
+\author{Marieke Huisman\\
+  \hfill\\
+  INRIA Sophia Antipolis\\
+  \hfill\\
+  Joint work with Cl\'ement Hurlin}
+
+\date{}
+
+\begin{document}
+
+\frame{
+  \maketitle
+  \thispagestyle{empty}
+}
+
+\section{Introduction}
+
+\frame{
+The next challenge for program verification: \alert{multi-threading}
+
+\begin{itemize}
+\pause
+\item Easy to make programming mistakes
+\pause
+\item Requires reasoning about interferences between threads
+\pause
+\item Global understanding of system necessary for local reasoning
+\pause
+\item Interleaving semantics (or not?)
+\pause
+\item Imposing programming style (or not?)
+\pause
+  \item Use of design patterns (Doug Lea)
+  \end{itemize}
+}
+
+% \frame{
+
+%   \tableofcontents
+
+% }
+
+\section{Java Memory Model}
+
+\frame{
+\begin{itemize}
+\item Describes legal executions of multithreaded program
+\item New since Java 1.5
+\item Fixes security bug related with final fields
+\item Allows compiler optimisations
+\end{itemize}
+}
+
+\subsection{Unexpected behaviours}
+\frame{
+Consequences for \alert{incorrectly} synchronised programs\\
+(initially: \texttt{x = y = 0}):\medskip\\
+\noindent\begin{tabular}{p{4cm}p{4cm}}
+Thread 1: & Thread 2: \\
+\fbox{
+\parbox{1.2cm}{
+\texttt{x = 1;}\\
+\texttt{j = y;}}
+}
+&
+\fbox{
+\parbox{1.2cm}{
+\texttt{y = 1;}\\
+\texttt{i = x;}}
+}
+\end{tabular}\\
+\bigskip
+\pause
+Possible results of running Thread 1 and 2 in parallel:
+\begin{itemize}
+\item \texttt{i = 1, j = 0}
+\item \texttt{i = 0, j = 1}
+\item \texttt{i = 1, j = 1}
+\pause
+\item \alert{\texttt{i = 0, j = 0}}
+\end{itemize}
+}
+
+\frame{
+Consequences for \alert{incorrectly} synchronised programs\\
+(initially: \texttt{x = y = 0}):\medskip\\
+\noindent\begin{tabular}{p{4cm}p{4cm}}
+Thread 1: & Thread 2: \\
+\fbox{
+\parbox{1.2cm}{
+\texttt{x = 1;}\\
+\texttt{j = y;}}
+}
+&
+\fbox{
+\parbox{1.2cm}{
+\texttt{y = 1;}\\
+\texttt{i = x;}}
+}
+\end{tabular}\\
+\bigskip
+\begin{itemize}
+\item Two statements in the thread are independent, can be swapped
+\item No synchronisation between threads to enforce that one action must
+\Blue{happen before} another action
+\item Thus: \texttt{j = y; y = 1; i = x; x = 1} well-formed execution
+\end{itemize}
+}
+
+\subsection{Data Race Freeness Guarantee}
+\frame{
+\begin{itemize}
+\item Correctly synchronised programs: sequentially consistent
+executions do not  contain data races
+\item For such programs, all executions sequentially consistent
+\item Thus: all behaviours can be described with (fine-grained)
+interleaving semantics
+\item Formalisation of Java Memory Model and DRF Guarantee (with
+Gustavo Petri)
+\item Revival of RCC (Race Condition Checker, Flanagan, Abadi, Freund)
+by Radu Grigore (UCD)
+\end{itemize}
+\
+}
+
+\section{Verification of program behaviour}
+\subsection{Modular verification of sequential programs}
+\frame[containsverbatim]{
+\begin{alltt}
+//@ requires P;
+//@ ensures Q;
+void call(){ ... }
+
+void method(MyObject o){
+  o.call();
+  // (1) }
+\end{alltt}
+Can we rely on \alert{\texttt{Q[o/this]}} at (1)?
+}
+
+\subsection{Atomicity}
+\frame{
+\begin{itemize}
+\item Atomicity: at most one instruction in a method is sensitive to
+interference of other threads
+\item But does not directly consider method specification
+\item Atomicity often conditional property, e.g.:
+\begin{itemize}
+\item Caller holds lock
+\item Parameter protected by lock
+\item Parameter local to thread
+\end{itemize}
+\end{itemize}
+}
+
+\subsection{Invariants}
+\frame{
+\begin{itemize}
+\item Visible state semantics: \alert{all} invariants of \alert{all}
+allocated objects hold in \alert{all} visible states
+\item Concurrent setting: avoid that one thread can (temporarily)
+break an invariant, while another thread relies on it
+\item Adaptation of semantics needed to modularise invariants:
+\begin{itemize}
+\item Identification of relevant invariants 
+\item Rely-guarantee style reasoning
+\item Strong invariants
+\item Locking invariants
+\end{itemize}
+\item Similar issues for constraints
+\end{itemize}
+}
+
+\subsection{Verification of method specifications}
+\frame{
+
+  Difficulties arise from sharing of data:
+  \begin{itemize}
+  \item Read/write or write/write conflicts: data race
+  \item Read of stale value: synchronization issue
+  \item Meaning of shared data in specifications
+  \end{itemize}
+
+  \bigskip
+  \pause
+  
+  Patterns to avoid this problem:
+  \begin{itemize}
+  \item Share only \alert{immutable} data
+  \item \alert{Protect} shared data with locks
+  \item Do \alert{not} share
+  \end{itemize}
+
+}
+
+\subsection{Immutable objects}
+
+\frame[containsverbatim]{
+  \begin{itemize}
+  \item Object cannot change state
+  \item Methods safe because they do not rely on assignable fields
+  \end{itemize}
+}
+
+\frame[containsverbatim]{
+%  \begin{itemize}
+%  \item Object cannot change state.
+%  \item Methods safe because they do not rely on assignable fields.
+%  \end{itemize}
+
+%  \begin{small}
+\begin{alltt}
+class Fraction\{
+  \alert{final} int n;
+  \alert{final} int d;
+
+  public plus(Fraction f)\{
+    return new Fraction(n * f.d + f.n * d, d * f.d); \}
+
+  public boolean equals(Fraction f)\{
+    return n * f.d == d * f.n; \}
+\}
+\end{alltt}
+%  \end{small}
+}
+
+\subsection{Writable objects}
+\frame{
+  Locking is useful to avoid undesired concurrent access to objects:
+  \begin{itemize}
+  \item Via \texttt{synchronized} methods/blocks
+  \item Via objects inheriting from \texttt{java.util.concurrent.Locks.Lock} (since Java 1.5)
+  \end{itemize}
+}
+
+\frame[containsverbatim]{
+%  Locking is useful to avoid undesired concurrent access to objects:
+%  \begin{itemize}
+%  \item Via \texttt{synchronized} methods/blocks.
+%  \item Via objects inheriting from \texttt{java.util.concurrent.Locks.Lock} (since 1.5).
+%  \end{itemize}
+\begin{alltt}
+class Even\{
+  private int n = 0; 
+
+  //@ requires n % 2 == 0;
+  //@ ensures  n % 2 == 0;
+  public \alert{synchronized} int next()\{
+    n++;
+    n++;
+  \}
+\}
+\end{alltt}
+% \hfill \hyperlink{access example}{\beamergotobutton{example}} \hypertarget{even}{}
+}
+
+\frame{
+  Various designs associated to locking:
+  \begin{itemize}
+  \item Fully \texttt{synchronized} objects: all methods \texttt{synchronized}
+  \item For efficiency: synchronization only when necessary (one lock per functionality)
+  \item Read-write lock: one writer or multiple readers
+  \end{itemize}
+
+  \bigskip
+
+}
+
+\frame[containsverbatim]{
+  \begin{small}
+    \begin{alltt}
+class Car\{
+  Wheel w1; \dots; Wheel w4;
+  final Lock lw = new ReentrantLock();
+
+  final Body b;
+  final Lock lb = new ReentrantLock();
+
+  //@ requires lockset.has(lw);
+  public void changeWheel(Wheel new, int n)\{ \dots \}
+
+  public void paint()\{ 
+    lb.lock();
+    \dots
+    lb.unlock();  
+  \}
+\}      
+    \end{alltt}
+  \end{small}
+}
+
+\subsection{Lock free algorithms}
+\frame{
+  \begin{itemize}
+  \item Objects shared, not protected, access different data
+  \item Gains in performance
+  \item But needs proof that threads read and write independent data
+  \item Typical example: fork-join algorithms
+  \end{itemize}
+}
+% \subsection{True-concurrency}
+
+% \frame[containsverbatim]{
+
+%   \begin{itemize}
+%   \item Objects where multiple threads execute simultaneously.    
+%   \end{itemize}
+
+%   \begin{small}
+% \begin{verbatim}
+
+
+
+
+
+
+
+% \end{verbatim}
+%   \end{small}
+% }
+
+% \frame[containsverbatim]{
+
+%   \begin{itemize}
+%   \item Objects where multiple threads execute simultaneously.    
+%   \end{itemize}
+
+%   \begin{small}
+% \begin{verbatim}
+% class DoubleInt{
+%   private int a; 
+%   private int b; 
+
+%   public void initA(int x){ ... }
+%   public void initB(int x){ ... }
+%   public void initAll(int x, int y){ ... }
+% }
+% \end{verbatim}
+%   \end{small}
+% }
+
+\subsection{Thread ownership and transfer}
+
+\frame{
+  \begin{itemize}
+ \item Thread ownership allows to reason about lock-free algorithms
+ \item Single capacity to write data guarantees thread locality
+ \item Spread read-only capacities guarantees data race freeness
+ \item Objects transferred between threads:
+  \begin{itemize}
+  \item upon thread creation
+  \item upon tread finish (via join)
+  \item via shared objects (e.g. containers)
+  \end{itemize}
+  \end{itemize}
+
+}
+
+\frame[containsverbatim]{
+
+%  Objects are transferred between threads:
+%  \begin{itemize}
+%  \item When a thread is created.
+%  \item When a thread dies.
+%  \item Via already shared objects.
+%  \end{itemize}
+
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+%      \begin{small}
+\begin{verbatim}
+public static void main(){
+  DoubleInt a = new DoubleInt();
+
+  Thread t = new MyThread(a);
+  t.start();
+  
+  a.initA(1);
+
+  t.join();
+}
+\end{verbatim}
+ %     \end{small}
+      \end{column}
+      \begin{column}{0.5\textwidth}
+      %  \begin{small}
+\begin{verbatim}
+
+
+
+
+
+
+
+
+
+\end{verbatim}
+   % \end{small}
+      \end{column}
+  \end{columns}
+}
+
+\frame[containsverbatim]{
+
+%  Objects are transferred between threads:
+%  \begin{itemize}
+%  \item When a thread is created.
+%  \item When a thread dies.
+%  \item Via already shared objects.
+%  \end{itemize}
+
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+%      \begin{small}
+\begin{verbatim}
+public static void main(){
+  DoubleInt a = new DoubleInt();
+
+  Thread t = new MyThread(a);
+  t.start();
+  
+  a.initA(1);
+
+  t.join();
+}
+\end{verbatim}
+ %     \end{small}
+      \end{column}
+      \begin{column}{0.5\textwidth}
+  %      \begin{small}
+\begin{verbatim}
+class DoubleInt{
+  private int a; 
+  private int b; 
+
+  public void initA(int x){ ... }
+  public void initB(int x){ ... }
+  public void initAll
+    (int x, int y){ ... }
+}
+\end{verbatim}
+   % \end{small}
+      \end{column}
+  \end{columns}
+}
+
+\section{Annotation System}
+
+\frame{
+ 
+  The different behaviors shown before are expressed by permission system:
+  \begin{itemize}
+  \item Permissions are owned by threads or locks
+  \item Permissions cannot be duplicated arbitrarily
+  \item Permissions are created when objects are created
+  \item Requirements/assumptions about permissions are expressed with pre/postconditions
+  \end{itemize}
+}
+
+\subsection{Immutability}
+\frame[containsverbatim]{
+
+  \begin{small}
+\begin{alltt}
+class Fraction\{
+  final int n;
+  final int d;
+
+  \alert{//@ permission_set (*)p = n : (0,1), d : (0,1);}
+
+  \alert{//@ requires true;}
+  \alert{//@ ensures (*)p;}
+  public Fraction(int n, int d)\{
+    this.n = n;
+    this.d = d; \}
+
+  \alert{//@ requires p, f.p;}
+  \alert{//@ ensures p, f.p;}
+  public boolean equals(Fraction f)\{
+    return n * f.d == d * f.n; \}
+\}
+\end{alltt}
+  \end{small}
+}
+
+%% \subsection{Locking}
+%% \frame[containsverbatim]{
+%%   \begin{small}
+%%     \begin{alltt}
+%% class Car\{
+%%   Wheel w1; \dots; Wheel w4;
+%%   final Lock lw = new ReentrantLock();
+
+%%   final Body b;
+%%   final Lock lb = new ReentrantLock();
+
+%%   //@ permission_set \{lw\} = w1 : (1,0) p, \dots, w4 : (1,0) p;
+%%   //@                \{lb\} = b : (0,1), b : q;
+
+%%   //@ requires \{lw\};
+%%   public void changeWheel(Wheel new, int n)\{ \dots \}
+
+%%   //@ requires true;
+%%   public void paint()\{ 
+%%     lb.lock();
+%%     \dots
+%%     lb.unlock(); \}\}      
+%%     \end{alltt}
+%%   \end{small}
+%% }
+
+\subsection{Lock free algorithms}
+\frame[containsverbatim]{
+
+  \begin{small}
+\begin{alltt}
+class DoubleInt\{
+  private int a; 
+  private int b; 
+
+  \alert{//@ permission_set p = a : (1,0);}
+  \alert{//@                q = b : (1,0);}
+
+  \alert{//@ requires p;}
+  public void initA(int x)\{ \dots \}
+
+  \alert{//@ requires q;}
+  public void initB(int x)\{ \dots \}
+
+  \alert{//@ requires p,q;}
+  public void initAll(int x, int y)\{ \dots \}
+\}
+\end{alltt}
+  \end{small}
+}
+
+\subsection{Permission splitting/combining in action}
+
+\frame[containsverbatim]{
+
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      \begin{small}
+\begin{alltt}
+public static void main()\{
+  DoubleInt a = new DoubleInt();
+    \alert{\(tid \longrightarrow a \longrightarrow p,q\)}
+
+
+
+
+
+
+  
+
+
+
+\}
+\end{alltt}
+      \end{small}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{small}
+\begin{verbatim}
+class DoubleInt{
+  ...
+
+  //@ ensures p,q;
+  public DoubleInt();
+}
+
+class MyThread{
+  final DoubleInt a;
+
+  //@ ensures this.a == a;
+  public MyThread(DoubleInt a){
+    this.a = a;
+  }
+
+  //@ requires a.q;
+  //@ ensures a.q;
+  public run(){
+    a.initB(2);  
+  }
+}
+\end{verbatim}
+      \end{small}
+    \end{column}
+  \end{columns}
+}
+
+\frame[containsverbatim]{
+
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      \begin{small}
+\begin{alltt}
+public static void main()\{
+  DoubleInt a = new DoubleInt();
+    \alert{\(tid \longrightarrow a \longrightarrow p,q\)}
+
+  Thread t = new MyThread(a);
+
+
+
+
+  
+
+
+
+\}
+\end{alltt}
+      \end{small}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{small}
+\begin{verbatim}
+class DoubleInt{
+  ...
+
+  //@ ensures p,q;
+  public DoubleInt();
+}
+
+class MyThread{
+  final DoubleInt a;
+
+  //@ ensures this.a == a;
+  public MyThread(DoubleInt a){
+    this.a = a;
+  }
+
+  //@ requires a.q;
+  //@ ensures a.q;
+  public run(){
+    a.initB(2);  
+  }
+}
+\end{verbatim}
+      \end{small}
+    \end{column}
+  \end{columns}
+}
+
+\frame[containsverbatim]{
+
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      \begin{small}
+\begin{alltt}
+public static void main()\{
+  DoubleInt a = new DoubleInt();
+    \alert{\(tid \longrightarrow a \longrightarrow p,q\)}
+
+  Thread t = new MyThread(a);
+
+  t.start();
+    \alert{\(tid \longrightarrow a \longrightarrow p\)}
+  
+
+
+
+
+\}
+\end{alltt}
+      \end{small}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{small}
+\begin{verbatim}
+class DoubleInt{
+  ...
+
+  //@ ensures p,q;
+  public DoubleInt();
+}
+
+class MyThread{
+  final DoubleInt a;
+
+  //@ ensures this.a == a;
+  public MyThread(DoubleInt a){
+    this.a = a;
+  }
+
+  //@ requires a.q;
+  //@ ensures a.q;
+  public run(){
+    a.initB(2);  
+  }
+}
+\end{verbatim}
+      \end{small}
+    \end{column}
+  \end{columns}
+}
+
+\frame[containsverbatim]{
+
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      \begin{small}
+\begin{alltt}
+public static void main()\{
+  DoubleInt a = new DoubleInt();
+    \alert{\(tid \longrightarrow a \longrightarrow p,q\)}
+
+  Thread t = new MyThread(a);
+
+  t.start();
+    \alert{\(tid \longrightarrow a \longrightarrow p\)}
+  
+  a.initA(1);
+
+  t.join();
+    \alert{\(tid \longrightarrow a \longrightarrow p,q\)}
+\}
+\end{alltt}
+      \end{small}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{small}
+\begin{verbatim}
+class DoubleInt{
+  ...
+
+  //@ ensures p,q;
+  public DoubleInt();
+}
+
+class MyThread{
+  final DoubleInt a;
+
+  //@ ensures this.a == a;
+  public MyThread(DoubleInt a){
+    this.a = a;
+  }
+
+  //@ requires a.q;
+  //@ ensures a.q;
+  public run(){
+    a.initB(2);  
+  }
+}
+\end{verbatim}
+      \end{small}
+    \end{column}
+  \end{columns}
+}
+
+\subsection{Expressing different states}
+\frame{
+  Various states seen in these patterns:
+  \begin{itemize}
+    \item Object not shared and writable by a single thread
+    \item Object shared and immutable
+    \item Object shared and writable
+  \end{itemize}
+
+  \bigskip
+  \pause
+
+  In the annotation system:
+  \begin{itemize}
+  \item Each state expressed by a permission set
+  \item State changes expressed by casting permission sets
+  \item Permission cast allowed when all permissions owned by single thread
+  \item Object can change from unshared to shared state, and vice versa
+  \end{itemize}
+}
+
+\frame[containsverbatim]{
+  \begin{small}
+    \begin{alltt}
+class Matrix \{
+  final int[][] elems;
+
+  \alert{//@ permission_set (2)r = elems : (0,1) (0,1)(0,1);}
+  \alert{//@ permission_set w = elems : (0,1) (0,1)(1,0);}
+
+  \alert{//@ requires w;}
+  public void setValue(int i, int j, int k)\{ 
+    elems[i][j] = k;
+  \}
+
+  \alert{//@ requires r;}
+  public Matrix[] split()\{ \dots \}
+\}
+    \end{alltt}
+  \end{small}
+}
+
+\subsection{Changing state}
+\frame[containsverbatim]{
+  \begin{small}
+    \begin{alltt}
+\alert{//@ requires a.w, b.w;}
+static public void main(Matrix a, Matrix b)\{
+  while(true)\{
+    \alert{//@ loop_invariant a.w, b.w;}
+    
+    askUser(a,b);     // write permission needed
+
+    \alert{//@ ((2)r) a;}
+    \alert{//@ ((2)r) b;}
+
+    FutureTask f = new FutureTask(new Multiplication(a,b));
+    f.start();        // matrices shared in readonly mode
+    
+    f.get();          // permission gathered
+    \alert{//@ (w)a;}
+    \alert{//@ (w)b;}
+  \}
+\}
+    \end{alltt}
+  \end{small}
+}
+
+%% \subsection{Locking}
+%% \frame{
+%%   \begin{itemize}
+%%   \item Previous locking behaviors shown can be expressed in the system.
+%%   \item More interestingly, locking can be combined with permission counting:
+%%     \begin{itemize}
+%%     \item Shared synchronized access.
+%%     \item Unsynchronized local access.
+%%     \end{itemize}
+%%   \end{itemize}
+%% }
+
+%% \frame[containsverbatim]{
+%%   \begin{small}
+%%     \begin{alltt}
+%% class Color \{
+%%   int quantity = 0;
+
+%%   //@ permission_set (2)s = \alert{\{this\}};
+%%   //@ permission_set tl = quantity : (1,0);
+
+%%   //@ \alert{locks \{this\}} = quantity : (1,0);
+
+%%   //@ requires s;
+%%   void use(int q)\{ 
+%%     synchronized(this)\{ \dots \}
+%%   \}
+	
+%%   //@ requires tl;
+%%   void fill(int q)\{ \dots \}
+%% \}      
+%%     \end{alltt}
+%%   \end{small}
+%% }
+
+%% \frame[containsverbatim]{
+%%   \begin{small}
+%%     \begin{alltt}
+%% public static void main()\{
+%%   Color c  = new Color();
+%%   c.fill(10);
+
+%%   //@ c = ((2)s) c;
+
+%%   Painter p1 = new Painter(c); p1.start();
+%%   Painter p2 = new Painter(c); p2.start();
+%%   p1.join();
+%%   p2.join();
+
+%%   //@ c = (tl) c;
+
+%%   c.fill(10);
+%%   \}
+%% \}    \end{alltt}
+%%   \end{small}
+%% }
+
+\subsection{Exploiting capacities}
+
+\frame[containsverbatim]{
+  \begin{alltt}
+/*@ <1,0> @*/ class Quantity\verb|{| 
+  public volatile int i; //@ invariant i >= 0;
+
+  //@ requires initial >= 0;
+  //@ ensures i == initial;
+  public Quantity(int initial)\verb|{| i = initial; \verb|}|
+
+  //@ requires plus >= 0;
+  //@ modifies i;
+  //@ ensures i >= plus;
+  public void add(int plus)\verb|{| i += plus; \verb|}|\verb|}|
+\end{alltt}
+}
+
+\frame[containsverbatim]{
+\begin{alltt}
+/*@ <*,*> @*/ class CommonWarehouse\verb|{|
+  //@ \alert{requires q : (1,0);}
+  //@ \alert{ensures  q : (0,0);}
+  static void lend(Quantity q)\verb|{| ... \verb|}|
+    
+  //@ \alert{requires q : (0,0);}
+  //@ \alert{ensures  q : (1,0);}
+  static void takeBack(Quantity q)\verb|{| ... \verb|}|\verb|}|
+\end{alltt}
+}
+
+\frame[containsverbatim]{
+\begin{alltt}
+
+  //@ requires j >= 0 && k >= 0;
+  //@ ensures \verb|\|result.i >= k;
+  public static Quantity main(int j, int k)\verb|{|
+    Quantity q = new Quantity(j);
+      \alert{\perm{q : (1,0)}    \seqconc{q.i = j}{q.i = j}}
+    CommonWarehouse.lend(q);
+      \alert{\perm{q : (0,0)}    \seqconc{q.i = j}{\(\top\)}}
+    CommonWarehouse.takeBack(q);
+      \alert{\perm{q : (1,0)}    \seqconc{q.i = j}{\(\top\)}}
+    q.add(k);
+      \alert{\perm{q : (1,0)}    \seqconc{q.i \(\geq\) k}{q.i \(\geq\) k}  }
+   return q; 
+  \verb|}|
+\end{alltt}
+}
+
+\section{Conclusions}
+\subsection{Related Work}
+
+\frame{
+
+  \begin{itemize}
+  \item JML's \texttt{monitors\_for}
+  \item Jacobs \etal's work on Spec\# (Leuven)
+  \item Boyland's fractional permission system
+  \item Separation logic (Reynolds \etal)
+  \end{itemize}
+
+}
+
+\subsection{Towards modular verification of concurrent object-oriented programs}
+\frame{
+
+\begin{itemize}
+
+\item Verification of behaviour of programs without data races
+\item Class invariants and history constraints: need for alternatives
+\item Thread ownership allows to express which treads can read or write
+data
+\item Thread ownership can encode a variety of programming patterns
+    \begin{itemize}
+    \item Objects shared as immutable
+    \item Objects shared and protected with locks
+    \item Objects shared, not protected, access to different fields
+    \item Synchronized concurrent access and local unsynchronized access
+    \item Permission splitting/gathering at thread creation/join
+    \end{itemize}
+\item Implementation of runtime checker
+\end{itemize}
+}
+
+\subsection{Future work}
+\frame{
+  \begin{itemize}
+  \item Develop alternatives to invariants and constraints
+  \item Encoding of annotation system in Boogie:
+    \begin{itemize}
+    \item Checks of methods pre/postconditions
+    \item Permission splitting/gathering
+    \end{itemize}
+  \item Verification condition generation based on permission information
+  \end{itemize}
+
+}
+
+%% \section*{Usual patterns}
+%% \subsection*{Locking}
+%\section*{}
+%\frame[containsverbatim]{
+
+%  \begin{columns}
+%    \begin{column}{0.5\textwidth}
+%      \begin{small}
+%\begin{alltt}
+%class Even\{
+%  private int n = 0;
+
+%  //@ requires n % 2 == 0;
+%  //@ ensures  n % 2 == 0;
+%  public \alert{synchronized} int next()\{
+%    n++;
+%    n++;
+%  \}
+%\}
+%\end{alltt}
+%      \end{small}
+%    \end{column}
+%    \begin{column}{0.5\textwidth}
+%      \begin{center}
+%        % cette commande vient de xcolor.sty et il faut passer ``table'' en option à beamer pour l'avoir
+%        \rowcolors[]{1}{chaleurred!40}{chaleurred!10}
+%        \begin{tabular}{c | c} 
+%          thread 1 & thread 2 \\ \hline
+%          read 0 & \\
+%          write 1 &\\
+%          & read 1 \\
+%          & write 2\\
+%          read 2 & read 2 \\
+%          & write 3 \\
+%          write 3 & \\
+%        \end{tabular}
+%      \end{center}
+%    \end{column}
+%  \end{columns}
+  
+%  \bigskip
+
+%  \hfill \hyperlink{even}{\beamergotobutton{back}} \hypertarget{access example}{}
+
+%}
+
+
+
+\end{document}

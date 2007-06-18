@@ -1,0 +1,21 @@
+\usepackage{xspace}
+\newcommand{\eg}{e.g.\xspace}
+\newcommand{\ie}{i.e.\xspace}
+\newcommand{\etc}{etc.\xspace}
+\newcommand{\etal}{et al.\xspace}
+\newcommand{\cf}{cf.\xspace}
+\newcommand{\wrt}{w.r.t.\xspace}
+\def \bsl       {\symbol{92}}
+\def \unsc      {\symbol{95}}
+\newcommand{\one}{\emph{(i)}\xspace}
+\newcommand{\two}{\emph{(ii)}\xspace}
+\newcommand{\three}{\emph{(iii)}\xspace}
+\newcommand{\four}{\emph{(iv)}\xspace}
+
+\newcommand{\hoare}[1]{\(\{\)#1\(\}\)}
+\newcommand{\sequ}[1]{\(\{\)#1\(\}_s\)}
+\newcommand{\conc}[1]{\(\{\)#1\(\}_c\)}
+\newcommand{\seqconc}[2]{\sequ{#1} \(\leadsto\) \conc{#2}}
+\newcommand{\perm}[1]{\([\)#1\(]\)}
+
+\newcommand{\both}[2]{\perm{#1}\quad\hoare{#2}}
