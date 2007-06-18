@@ -11,11 +11,17 @@ BEGIN
 
   update_PState : (update_PState_type) =
     LAMBDA (s : APState, upd : [PState -> PState]) : 
-      s WITH [pstate := upd(pstate(s))]
+      IF up?(ex(pstate(s)))
+      THEN s
+      ELSE s WITH [pstate := upd(pstate(s))]
+      ENDIF
 
   update_GhostVars : (update_GhostVars_type) =
     LAMBDA (s : APState, upd : [Store -> Store]) : 
-      s WITH [gvs := upd(gvs(s))]
+      IF up?(ex(pstate(s)))
+      THEN s
+      ELSE s WITH [gvs := upd(gvs(s))]
+      ENDIF
 
   IMPORTING SemanticsJML[Name, Program, APState, id,
                          LAMBDA (s : APState) : pstate(s),
@@ -32,13 +38,16 @@ BEGIN
                       on_method_exit_normal,
                       on_method_exit_exceptional]
 
-  wf_state(p : Program)(sigma : APState) : boolean =
-    wf_state(p)(pstate(sigma)) AND
+  wf_ghoststate(p : Program)(sigma : APState) : boolean =
     FORALL (vn : Name) :
       is_ghost(vn, sigma) IFF var_names(getGhostDecls(p))(vn)
 
-  initial_AP_state(p : Program) : APState =
-    (# pstate := initial_Program_state(p),
+  wf_state(p : Program)(sigma : APState) : boolean =
+    wf_state(p)(pstate(sigma)) AND
+    wf_ghoststate(p)(sigma)
+
+  initial_AP_state(p : Program)(this_val : Val) : APState =
+    (# pstate := initial_Program_state(p)(this_val),
        gvs := LAMBDA (n : Name) :
          LET gd = get_GhostDecl(n, p) IN
          IF bottom?(gd)
@@ -48,8 +57,8 @@ BEGIN
     #)
 
   run_annotated_program(p : Program)(main : Method, arg : int)
-                       (final : APState)(n : nat) : boolean =
-    run_FullProgram(p)(main, arg)(initial_AP_state(p), final)(n)
+                       (this_val : Val)(final : APState)(n : nat) : boolean =
+    run_FullProgram(p)(main, arg)(initial_AP_state(p)(this_val), final)(n)
 
 
   % The following are adapted versions for AP to avoid having to give all the 
@@ -100,22 +109,24 @@ BEGIN
        (wf_state(p)(pstate(s1)) IMPLIES wf_state(p)(pstate(s2))) IMPLIES
        wf_state(p)(s2)
 
-   wf_update_GhostVars : LEMMA % 
+   wf_update_GhostVars : LEMMA % :-)
      FORALL (p : Program, s1 : APState, 
              upd : [Store -> Store]) :
        wf_state(p)(s1) IMPLIES
        LET s2 = update_GhostVars(s1, upd) IN
+       (wf_ghoststate(p)(s1) IMPLIES wf_ghoststate(p)(s2)) IMPLIES
        wf_state(p)(s2)
 
-  wf_state_update_stack : LEMMA
-    FORALL(p : Program, this_val : Val, arg : LocalVarDecl, param_val : Val,
-           lvds : finite_set[LocalVarDecl], s : APState) : 
+  wf_state_update_stack : LEMMA % :-)
+    FORALL(p : Program, this_val : (defined?), arg : (getLocalDecls(p)), 
+           param_val : (defined?),
+           lvds : finite_set[(getLocalDecls(p))], s : APState) : 
       wf_state(p)(s) IMPLIES
         wf_state(p)(update_stack(this_val, arg, param_val, lvds, s))
 
   wf_initial_AP_state : LEMMA % :-)
-    FORALL (p : Program) :
-      wf_Program(p) IMPLIES wf_state(p)(initial_AP_state(p))
+    FORALL (p : Program)(this_val : (defined?)) :
+      wf_Program(p) IMPLIES wf_state(p)(initial_AP_state(p)(this_val))
 
 
   % TODO: prove!

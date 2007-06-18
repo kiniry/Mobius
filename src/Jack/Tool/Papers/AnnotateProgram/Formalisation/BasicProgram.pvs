@@ -25,7 +25,7 @@ BEGIN
   CONVERSION lift_PSt
 
   is_local(vn : Name, sigma : PState) : boolean =
-    defined?(lvs(st(sigma))(vn))
+    defined?(lvs(st(sigma))(vn)) 
 
   is_field(vn : Name, sigma : PState) : boolean =
     defined?(fvs(st(sigma))(vn))
@@ -89,7 +89,7 @@ BEGIN
     ENDIF
 
 
-  initial_Program_state(p : Program) : PState =
+  initial_Program_state(p : Program)(this_val : Val) : PState =
     (# ex := bottom,
        st :=
          (# fvs := LAMBDA (n : Name) :
@@ -99,10 +99,13 @@ BEGIN
               ELSE init_val(down(fd))
               ENDIF,
             lvs := LAMBDA (n : Name) :
-              LET ld = get_LocalDecl(n, p) IN
+              IF n = This
+              THEN this_val
+              ELSE LET ld = get_LocalDecl(n, p) IN
               IF bottom?(ld)
               THEN Bottom
               ELSE default_value(jtype(down(ld)))
+              ENDIF
               ENDIF
          #)
     #)
@@ -111,13 +114,13 @@ BEGIN
   wf_state(p : Program)(s : PState) : boolean =
     FORALL (vn : Name) :
       (is_field(vn, s) IFF var_names(getFieldDecls(p))(vn)) AND
-      (is_local(vn, s) IFF var_names(getLocalDecls(p))(vn))
+      (is_local(vn, s) IFF (var_names(getLocalDecls(p))(vn) OR vn = This))
 
   % Well formed state properties
 
   wf_initial_Program_state : LEMMA % :-)
-    FORALL (p : Program) :
-      wf_Program(p) IMPLIES wf_state(p)(initial_Program_state(p))
+    FORALL (p : Program)(this_val : (defined?)) :
+      wf_Program(p) IMPLIES wf_state(p)(initial_Program_state(p)(this_val))
 
   wf_state_vars_local_or_field : LEMMA % :-)
     FORALL (p : Program, s : PState, vn : Name) :
@@ -192,9 +195,9 @@ BEGIN
                       execute_set, execute_CaseJML,
                       on_method_event, on_method_event, on_method_event]
 
-  run_program(p : Program)(main : Method, arg : int)(s2 : PState)
-             (n : nat) : boolean =
-    run_FullProgram(p)(main, arg)(initial_Program_state(p), s2)(n)
+  run_program(p : Program)(main : Method, arg : int)(this_val : (defined?))
+             (s2 : PState)(n : nat) : boolean =
+    run_FullProgram(p)(main, arg)(initial_Program_state(p)(this_val), s2)(n)
 
 
   IMPORTING SemanticsProofs[Name, Program, PState, id, id, lookup,

@@ -354,6 +354,12 @@ BEGIN
        disjoint?(lname, gname) AND
        disjoint?(fname, gname)
 
+  wf_program_variables_not_this : LEMMA
+    FORALL(p : Program) : 
+      wf_Program(p) IMPLIES 
+         NOT var_names(getFieldDecls(p))(This) AND
+         NOT var_names(getLocalDecls(p))(This) AND
+         NOT var_names(getGhostDecls(p))(This)
          
 END WellFormedProgram
 
