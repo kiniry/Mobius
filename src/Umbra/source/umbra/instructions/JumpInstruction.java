@@ -71,23 +71,27 @@ public class JumpInstruction extends NumInstruction {
     if (s.indexOf("#") < s.indexOf(":") + 1) return false;
     for (j = 0; j < s2.length; j++) {
       if ((s.indexOf(s2[j]) > 0) && (s.indexOf(s2[j]) < s.indexOf(":") + 2))
-        if (s.indexOf(s2[j]) + (s2[j].length()) + 1 > s.indexOf("#"))
-        { for (y = (s.indexOf("#") + 1); y < s.length(); y++)
-            {if (!(Character.isDigit(s.charAt(y)))) return false;}
+        if (s.indexOf(s2[j]) + (s2[j].length()) + 1 > s.indexOf("#")) {
+          for (y = (s.indexOf("#") + 1); y < s.length(); y++) {
+            if (!(Character.isDigit(s.charAt(y)))) return false;
+          }
         //checking if there are two numbers or one
-        int a,b,d,e,f,g;
+        int a, b, d, e, f, g;
         a = (s.length() - s.indexOf("#"));
         int c = 0;
         e = line.length() - line.indexOf("#");
-        f = 0; g = line.length();
-        for (d = 0; d < e; d++)
-          { if (Character.isDigit(line.charAt(g - d - 1)))
-             {f = 1;}
+        f = 0; 
+        g = line.length();
+        for (d = 0; d < e; d++) { 
+          if (Character.isDigit(line.charAt(g - d - 1))) {
+            f = 1;
+          }
           if (f == 0) {
-            if (Character.isWhitespace(line.charAt(g - d - 1)))
-             {c++;}
+            if (Character.isWhitespace(line.charAt(g - d - 1))) {
+              c++;
+            }
           }
-          }
+        }
 
         b = e - c;
         if (a == b)
@@ -107,7 +111,7 @@ public class JumpInstruction extends NumInstruction {
 
     isd = true;
     int dokad = line.length();
-    for (int i = line.lastIndexOf("#") + 1;i < line.length();i++) {
+    for (int i = line.lastIndexOf("#") + 1; i < line.length(); i++) {
       if (!Character.isDigit(line.charAt(i))){
         dokad = i;
         break;
@@ -115,8 +119,8 @@ public class JumpInstruction extends NumInstruction {
     }
     if (isd){
       number = 0;
-      for (int i = line.lastIndexOf("#") + 1;i < dokad;i++) {
-        number = 10*number + counter.indexOf(line.substring(i,i+1));
+      for (int i = line.lastIndexOf("#") + 1; i < dokad; i++) {
+        number = 10 * number + counter.indexOf(line.substring(i, i + 1));
       }
       return number;
     }

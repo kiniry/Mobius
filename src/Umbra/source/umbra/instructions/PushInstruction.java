@@ -45,16 +45,18 @@ public class PushInstruction extends NumInstruction {
     for (j = 0; j < s2.length; j++) {
       if ((s.indexOf(s2[j]) > 0) && (s.indexOf(s2[j]) < s.indexOf(":") + 2))
         { for (y = ((s.indexOf(s2[j])) + (s2[j].length())); y < s.length(); y++)
-            {if (!(Character.isDigit(s.charAt(y)))) return false;}
+            {if (!(Character.isDigit(s.charAt(y)))) return false;
+            }
           int counter = 0;
           boolean lastisdig = false;
-          for (y = ((line.indexOf(s2[j])) + (s2[j].length()) + 1);y < line.length(); y++){
+          for (y = ((line.indexOf(s2[j])) + (s2[j].length()) + 1); y < line.length(); y++) {
             if (Character.isDigit(line.charAt(y))) {
-              if (!(lastisdig)) {counter++;}
+              if (!(lastisdig)) counter++;
               lastisdig = true;
             } else
               if (Character.isWhitespace(line.charAt(y))) {
-                lastisdig = false;}
+                lastisdig = false;
+              }
           }
           if (counter == 1) return true;
         }
@@ -78,10 +80,10 @@ public class PushInstruction extends NumInstruction {
     final int dokad = line1.length();
     final int skad = line1.indexOf(name) + name.length();
 
-    if (isd){
+    if (isd) {
       liczba = 0;
-      for (int i = skad;i < dokad;i++) {
-        liczba = 10*liczba + licznik.indexOf(line1.substring(i,i+1));
+      for (int i = skad; i < dokad; i++) {
+        liczba = 10 * liczba + licznik.indexOf(line1.substring(i, i + 1));
       }
       return liczba;
     }

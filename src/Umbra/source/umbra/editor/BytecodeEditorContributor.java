@@ -26,7 +26,6 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorActionBarContributor;
-import org.eclipse.ui.texteditor.AbstractDecoratedTextEditor;
 import org.eclipse.ui.texteditor.AbstractTextEditor;
 
 import umbra.UmbraPlugin;
@@ -106,7 +105,7 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
     bytecodeContribution.addEditorContributor(this);
     actionPlus = new BytecodeEditorAction(this, 1, mod);
     actionMinus = new BytecodeEditorAction(this,
-                         IColorValues.MODELS.length -2,
+                         IColorValues.MODELS.length - 2,
                          mod);
     refreshAction = new BytecodeRefreshAction(this, bytecodeContribution);
     rebuildAction = new BytecodeRebuildAction(this);

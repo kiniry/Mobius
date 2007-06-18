@@ -145,11 +145,11 @@ public class BoogiePLDocument extends Document {
           lnrmax = lnr;
         pc = m.getLineNumberTable().getLineNumberTable()[j].getStartPC();
         do {
-          pos = get().indexOf("" + pc + ":", pos+1);
+          pos = get().indexOf("" + pc + ":", pos + 1);
           if (pos == -1) {
             break;
           }
-        } while (getLineOfOffset(pos-1) == getLineOfOffset(pos));
+        } while (getLineOfOffset(pos - 1) == getLineOfOffset(pos));
         // "<pc>:" musi by� znalezione na pocz�tku linii.
         if (pos == -1) {
           if (l_od != 0)

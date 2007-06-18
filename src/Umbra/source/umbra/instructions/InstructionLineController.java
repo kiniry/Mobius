@@ -310,12 +310,13 @@ public abstract class InstructionLineController extends BytecodeLineController {
     System.out.println("InstructionLineController#dispose   name="+name);
     final InstructionTargeter[] tgters = ih.getTargeters();
     if (tgters!=null)
-      for (int i=0; i<tgters.length;i++) {
+      for (int i=0; i<tgters.length; i++) {
         tgters[i].updateTarget(me, next);
       }
     try {
       il.delete(ih);
-    } catch (TargetLostException e) {}ih = null;
+    } catch (TargetLostException e) {}
+    ih = null;
     mg.setInstructionList(il);
     updateMethod(cg);
     System.out.println("I am here");

@@ -62,15 +62,15 @@ public class CodeLineController extends BytecodeLineController {
     if (!(s.indexOf(",code_length=") > 0))
       return false;
     //czy liczby sa poprawne
-    for (i = (s.indexOf("max_stack=") + 10); i < (s.indexOf(",max_locals="));i++) {
+    for (i = (s.indexOf("max_stack=") + 10); i < (s.indexOf(",max_locals=")); i++) {
       if (!(Character.isDigit(s.charAt(i))))
        return false;
     }
-    for (i = (s.indexOf(",max_locals=") + 12); i < (s.indexOf(",code_length="));i++) {
+    for (i = (s.indexOf(",max_locals=") + 12); i < (s.indexOf(",code_length=")); i++) {
       if (!(Character.isDigit(s.charAt(i))))
         return false;
     }
-    for (i = (s.indexOf(",code_length=") + 13); i < (s.indexOf(")"));i++) {
+    for (i = (s.indexOf(",code_length=") + 13); i < (s.indexOf(")")); i++) {
       if (!(Character.isDigit(s.charAt(i))))
         return false;
     }

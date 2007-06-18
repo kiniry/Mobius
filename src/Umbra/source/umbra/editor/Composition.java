@@ -38,7 +38,7 @@ public final class Composition {
    * TODO really?
    */
   public static int getMod() {
-    if (!disas) return IColorValues.MODELS.length -1;
+    if (!disas) return IColorValues.MODELS.length - 1;
     return mod;
   }
 

@@ -11,7 +11,8 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
 
 /**
- * TODO
+ * The class implements the behaviour in case the Install Info button
+ * in the bytecode editor is pressed.
  *
  * @author Wojciech Wąs (ww209224@students.mimuw.edu.pl)
  * @version a-01
@@ -19,33 +20,39 @@ import org.eclipse.ui.help.IWorkbenchHelpSystem;
 public class InstalInfoAction implements IEditorActionDelegate {
 
   /**
-   * TODO
+   * The method sets the editor associated with the action.
+   *
+   * @param an_action ignored
+   * @param a_target_editor ignored
    */
-  private IEditorPart editor;
-
-  /**
-   * TODO
-   */
-  public final void setActiveEditor(final IAction action, final IEditorPart targetEditor) {
-    editor = targetEditor;
+  public final void setActiveEditor(final IAction an_action,
+                                    final IEditorPart a_target_editor) {
   }
 
   /**
-   * TODO
+   * The method shows the content of the install info instructions.
+   * Currently, it only pops up the general help browser.
+   *
+   * FIXME the method should open something more specific, note that it is
+   * tricky to know the proper ID to open it should open something like
+   * Info/info.txt
+   *
+   * @param an_action action that triggered the showing of the instruction
    */
   public final void run(final IAction an_action) {
 
     final IWorkbenchHelpSystem help = PlatformUI.getWorkbench().getHelpSystem();
-    //FIXME open something more specific, note that it is tricky to know the
-    // proper ID to open
-    // it should open Info/info.txt
     help.displayHelp();
   }
 
   /**
-   * TODO
+   * The method reacts when the selected area changes in the bytecode
+   * editor. Currently, it does nothing.
+   *
+   * @param an_action the action which triggered the selection change
+   * @param a_selection the new selection.
    */
-  public void selectionChanged(final IAction action, 
-                               final ISelection selection) {
+  public void selectionChanged(final IAction an_action,
+                               final ISelection a_selection) {
   }
 }

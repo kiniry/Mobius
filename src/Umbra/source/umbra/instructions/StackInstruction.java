@@ -58,20 +58,24 @@ public class StackInstruction extends NumInstruction {
         if (s.indexOf(s2[j]) + (s2[j].length()) + 1 > s.indexOf("%"))
         { for (y = (s.indexOf("%") + 1); y < s.length(); y++)
             {if (!(Character.isDigit(s.charAt(y))))
-              return false;}
-        int a,b,d,e,f,g;
+              return false;
+            }
+        int a, b, d, e, f, g;
         a = (s.length() - s.indexOf("%"));
         int c = 0;
         e = line.length() - line.indexOf("%");
-        f = 0; g = line.length();
-        for (d = 0; d < e; d++)
-          { if (Character.isDigit(line.charAt(g - d - 1)))
-             {f = 1;}
+        f = 0;
+        g = line.length();
+        for (d = 0; d < e; d++) {
+          if (Character.isDigit(line.charAt(g - d - 1))) {
+            f = 1;
+          }
           if (f == 0) {
-            if (Character.isWhitespace(line.charAt(g - d - 1)))
-             {c++;}
+            if (Character.isWhitespace(line.charAt(g - d - 1))) {
+              c++;
+            }
           }
-          }
+        }
 
         b = e - c;
         if (a == b)
@@ -92,16 +96,16 @@ public class StackInstruction extends NumInstruction {
 
     isd = true;
     int dokad = line.length();
-    for (int i = line.lastIndexOf("%") + 1;i < line.length();i++) {
-      if (!Character.isDigit(line.charAt(i))){
+    for (int i = line.lastIndexOf("%") + 1; i < line.length(); i++) {
+      if (!Character.isDigit(line.charAt(i))) {
         dokad = i;
         break;
       }
     }
-    if (isd){
+    if (isd) {
       liczba = 0;
-      for (int i = line.lastIndexOf("%") + 1;i < dokad;i++) {
-        liczba = 10*liczba + licznik.indexOf(line.substring(i,i+1));
+      for (int i = line.lastIndexOf("%") + 1; i < dokad; i++) {
+        liczba = 10 * liczba + licznik.indexOf(line.substring(i, i + 1));
       }
       return liczba;
     }

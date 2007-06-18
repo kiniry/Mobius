@@ -233,7 +233,7 @@ public class BytecodeController {
           theLast = true;
           nextLine = (BytecodeLineController)instructions.get(off);
         }
-        else nextLine = (BytecodeLineController)instructions.get(off-1);
+        else nextLine = (BytecodeLineController)instructions.get(off - 1);
       } else //TODO poprawnie: 1 enter przed wpisaniem 2 wpisac przed ta przed ktora checmy wstawic i enter; zle inaczej: enter przed i potem wpisac
         nextLine = (BytecodeLineController)instructions.get(off + 1);
       modified[nextLine.getIndex()] = true;
@@ -481,13 +481,13 @@ public class BytecodeController {
       if (!wd.isWhitespace(string.charAt(i))) ok=false;
       i++;
     }if (ok) return "";
-    int j=string.length()-1;
+    int j=string.length() - 1;
     ok=true;
     while (ok && j>=0) {
       if (!wd.isWhitespace(string.charAt(j))) ok=false;
       j--;
     }if (ok) return "";
-    return string.substring(i-1, j+2);
+    return string.substring(i - 1, j + 2);
   }
 
   /**

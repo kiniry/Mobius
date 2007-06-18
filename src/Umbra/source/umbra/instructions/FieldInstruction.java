@@ -50,15 +50,16 @@ public class FieldInstruction extends StringInstruction {
 
         if (s.lastIndexOf("(") < 2) return false;
         if (s.lastIndexOf(")") < 2) return false;
-        int m,n,o;
+        int m, n, o;
         m = line.lastIndexOf("(");
         n = line.lastIndexOf(")");
         //System.out.println(m + " " + n + " " + line);
-        if (m + 1 >= n) {return false;}
-        for (o = m + 1; o < n; o++)
-          { if (!(Character.isDigit(line.charAt(o))))
-            {return false;}
+        if (m + 1 >= n) return false;
+        for (o = m + 1; o < n; o++) {
+          if (!(Character.isDigit(line.charAt(o)))) {
+            return false;
           }
+        }
 
         return true;
       }
@@ -76,15 +77,15 @@ public class FieldInstruction extends StringInstruction {
     if (line.lastIndexOf("(") >= line.lastIndexOf(")")){
     } else {
     isd = true;
-    for (int i = line.lastIndexOf("(") + 1;i < line.lastIndexOf(")");i++) {
+    for (int i = line.lastIndexOf("(") + 1; i < line.lastIndexOf(")"); i++) {
       if (!Character.isDigit(line.charAt(i))){
         isd = false;
       }
     }
     if (isd){
       liczba = 0;
-      for (int i = line.lastIndexOf("(") + 1;i < line.lastIndexOf(")");i++) {
-        liczba = 10*liczba + licznik.indexOf(line.substring(i,i+1));
+      for (int i = line.lastIndexOf("(") + 1; i < line.lastIndexOf(")"); i++) {
+        liczba = 10*liczba + licznik.indexOf(line.substring(i, i + 1));
       }
       return liczba;
     }

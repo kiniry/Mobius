@@ -46,28 +46,32 @@ public class NewInstruction extends StringInstruction {
     String s;
     s = UmbraHelper.stripAllWhitespace(line);
     final String[] s2 = IBytecodeStrings.anew;
-    int j,y;
+    int j, y;
     for (j = 0; j < s2.length; j++) {
       if ((s.indexOf(s2[j]) > 0) && (s.indexOf(s2[j]) < s.indexOf(":") + 2)) {
-        //zakladam ze zawsze z (liczba)
+        //zakladam ze zawsze z (number)
         // w <char lub java.costam> wiec tez nie wiadomo co
         if (s.indexOf("<") < 2) return false;
         if (s.indexOf(">") < 2) return false;
         //&*poprawiam
         if (s.lastIndexOf("(") < 2) return false;
         if (s.lastIndexOf(")") < 2) return false;
-        int m,n,o;
+        int m, n, o;
         m = line.lastIndexOf("(");
         n = line.lastIndexOf(")");
-        if (m + 1 >= n) {return false;}
-        for (o = m + 1; o < n; o++)
-          { if (!(Character.isDigit(line.charAt(o))))
-            {return false;}
+        if (m + 1 >= n) {
+          return false;
+        }
+        for (o = m + 1; o < n; o++) {
+          if (!(Character.isDigit(line.charAt(o)))) {
+            return false;
           }
+        }
 
         //to dziala dla wszystkich moze by tak isLetter||.
-        for (y = (s.indexOf("<") + 1); y < s.indexOf(">"); y++)
-           {if (!(Character.isDefined(s.charAt(y)))) return false;}
+        for (y = (s.indexOf("<") + 1); y < s.indexOf(">"); y++) {
+          if (!(Character.isDefined(s.charAt(y)))) return false;
+        }
         return true;
       }
     }
@@ -80,22 +84,22 @@ public class NewInstruction extends StringInstruction {
   private int getInd() {
     boolean isd;
     final String licznik = "0123456789";
-    int liczba;
+    int number;
     if (line.lastIndexOf("(") >= line.lastIndexOf(")")){
     } else {
     isd = true;
-    for (int i = line.lastIndexOf("(") + 1;i < line.lastIndexOf(")");i++) {
+    for (int i = line.lastIndexOf("(") + 1; i < line.lastIndexOf(")"); i++) {
       if (!Character.isDigit(line.charAt(i))){
         //System.out.println("to nie jest cyfra zle ");
         isd = false;
       }
     }
     if (isd){
-      liczba = 0;
-      for (int i = line.lastIndexOf("(") + 1;i < line.lastIndexOf(")");i++) {
-        liczba = 10*liczba + licznik.indexOf(line.substring(i,i+1));
+      number = 0;
+      for (int i = line.lastIndexOf("(") + 1; i < line.lastIndexOf(")"); i++) {
+        number = 10 * number + licznik.indexOf(line.substring(i, i + 1));
       }
-      return liczba;
+      return number;
     }
     }
     return 0;

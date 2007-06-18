@@ -31,7 +31,7 @@ public class ArrayInstruction extends StringInstruction {
    * in the array {@ref types}.
    */
   private static final String[] names =
-  {"VOID", "BOOLEAN","INT", "SHORT", "BYTE", "LONG",
+  {"VOID", "BOOLEAN", "INT", "SHORT", "BYTE", "LONG",
     "DOUBLE", "FLOAT", "CHAR"};
 
   /**
@@ -41,8 +41,8 @@ public class ArrayInstruction extends StringInstruction {
    */
   private static final Type[] types =
   {Type.VOID, Type.BOOLEAN, Type.INT, Type.SHORT,
-      Type.BYTE, Type.LONG, Type.DOUBLE,
-      Type.FLOAT, Type.CHAR};
+   Type.BYTE, Type.LONG, Type.DOUBLE,
+   Type.FLOAT, Type.CHAR};
 
   /**
    * The number of types relevant to the array
@@ -105,7 +105,7 @@ public class ArrayInstruction extends StringInstruction {
     String s;
     s = UmbraHelper.stripAllWhitespace(line);
     final String[] s2 = IBytecodeStrings.array;
-    int j,y;
+    int j, y;
     for (j = 0; j < s2.length; j++) {
       if ((s.indexOf(s2[j]) > 0) && (s.indexOf(s2[j]) < s.indexOf(":") + 2)) {
         //System.out.println(s);
@@ -120,8 +120,9 @@ public class ArrayInstruction extends StringInstruction {
           return false;
         }
 
-        for (y = (s.indexOf("<") + 1); y < s.indexOf(">"); y++)
-           {if (!(Character.isDefined(s.charAt(y)))) return false;}
+        for (y = (s.indexOf("<") + 1); y < s.indexOf(">"); y++) {
+          if (!(Character.isDefined(s.charAt(y)))) return false;
+        }
         return true;
       }
     }

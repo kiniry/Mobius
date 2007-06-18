@@ -67,20 +67,24 @@ public class IncInstruction extends NumInstruction {
             {
             if (!(Character.isDigit(s.charAt(y)))) {
               System.out.print("tu ten minus " + s + " " + line);
-              if (isminus) {return false;}
-              else if (s.charAt(y)== '-' ) {isminus = true;}
-              else {return false;}
+              if (isminus)
+                return false;
+              else if (s.charAt(y) == '-')
+                isminus = true;
+              else
+                return false;
             }
             }
           int counter = 0;
           boolean lastisdig = false;
-          for (y = ((line.indexOf(s2[j])) + (s2[j].length()) + 1);y < line.length(); y++){
+          for (y = ((line.indexOf(s2[j])) + (s2[j].length()) + 1); y < line.length(); y++){
             if (Character.isDigit(line.charAt(y))) {
-              if (!(lastisdig)) {counter++;}
+              if (!(lastisdig)) counter++;
               lastisdig = true;
             } else
               if (Character.isWhitespace(line.charAt(y))) {
-                lastisdig = false;}
+                lastisdig = false;
+              }
           }
           if (counter == 2) return true;
         }
@@ -95,22 +99,22 @@ public class IncInstruction extends NumInstruction {
   private int getInd1() {
     boolean isd;
     final String licznik = "0123456789";
-    int liczba = 0;
+    int number = 0;
 
     isd = true;
     int dokad = line.length();
-    for (int i = line.lastIndexOf("%") + 1;i < line.length();i++) {
-      if (!Character.isDigit(line.charAt(i))){
+    for (int i = line.lastIndexOf("%") + 1; i < line.length(); i++) {
+      if (!Character.isDigit(line.charAt(i))) {
         dokad = i;
         break;
       }
     }
-    if (isd){
-      liczba = 0;
-      for (int i = line.lastIndexOf("%") + 1;i < dokad;i++) {
-        liczba = 10*liczba + licznik.indexOf(line.substring(i,i+1));
+    if (isd) {
+      number = 0;
+      for (int i = line.lastIndexOf("%") + 1; i < dokad; i++) {
+        number = 10 * number + licznik.indexOf(line.substring(i, i + 1));
       }
-      return liczba;
+      return number;
     }
     return 0;
   }
@@ -121,29 +125,29 @@ public class IncInstruction extends NumInstruction {
   private int getInd2() {
     boolean isd;
     final String licznik = "0123456789";
-    int liczba = 0;
+    int number = 0;
 
     isd = true;
     //sets after first number parameter
     int skadskad = line.length();
-    for (int i = line.lastIndexOf("%") + 1;i < line.length();i++) {
-      if (!Character.isDigit(line.charAt(i))){
+    for (int i = line.lastIndexOf("%") + 1; i < line.length(); i++) {
+      if (!Character.isDigit(line.charAt(i))) {
         skadskad = i;
         break;
       }
     }
     //sets the starting point of second number parameter
     int skad = 0;
-    for (int i = skadskad;i < line.length();i++) {
-      if (Character.isDigit(line.charAt(i))){
+    for (int i = skadskad; i < line.length(); i++) {
+      if (Character.isDigit(line.charAt(i))) {
         skad = i;
         break;
       }
     }
     //sets the ending point of second number parameter
     int dokad = line.length();
-    for (int i = skad;i < line.length();i++) {
-      if (!Character.isDigit(line.charAt(i))){
+    for (int i = skad; i < line.length(); i++) {
+      if (!Character.isDigit(line.charAt(i))) {
         dokad = i;
         break;
       }
@@ -151,15 +155,15 @@ public class IncInstruction extends NumInstruction {
 
 
     //always convert to int
-    if (isd){
-      liczba = 0;
-      for (int i = skad;i < dokad;i++) {
-        liczba = 10*liczba + licznik.indexOf(line.substring(i,i+1));
+    if (isd) {
+      number = 0;
+      for (int i = skad; i < dokad; i++) {
+        number = 10 * number + licznik.indexOf(line.substring(i, i + 1));
       }
       if (line.charAt(skad - 1) == '-') {
-        liczba = liczba*(-1);
+        number = number * (-1);
       }
-      return liczba;
+      return number;
     }
     return 0;
   }
@@ -179,11 +183,11 @@ public class IncInstruction extends NumInstruction {
     int index2 = 0;
     index2 = getInd2();
 
-    if (name.compareTo("iinc")==0) {
+    if (name.compareTo("iinc") == 0) {
       return new IINC(index1, index2);
     }
 
     return null;
 
-    }
+  }
 }
