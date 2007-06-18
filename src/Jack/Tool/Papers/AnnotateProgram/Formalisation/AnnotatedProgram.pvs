@@ -55,11 +55,11 @@ BEGIN
   % The following are adapted versions for AP to avoid having to give all the 
   % theory parameters to uniquely identify them
 
-  on_method_entry_AP : (on_method_event_type) =
-    LAMBDA (p : Program, md : Method, a : Val, s1, s2 : APState, n : nat,
-            deriv_stmt_rec : deriv_stmt_rec_type(n),
-            deriv_expr_rec : deriv_expr_rec_type(n)) :
-    on_method_entry(p, md, a, s1, s2, n, deriv_stmt_rec, deriv_expr_rec)
+%  on_method_entry_AP : (on_method_event_type) =
+%    LAMBDA (p : Program, md : Method, a : Val, s1, s2 : APState, n : nat,
+%            deriv_stmt_rec : deriv_stmt_rec_type(n),
+%            deriv_expr_rec : deriv_expr_rec_type(n)) :
+%    on_method_entry(p, md, a, s1, s2, n, deriv_stmt_rec, deriv_expr_rec)
 
 
   IMPORTING SemanticsProofs[Name, Program, APState, id,
@@ -92,16 +92,31 @@ BEGIN
       is_ghost(vn, s) IMPLIES 
         NOT is_local(vn, pstate(s)) AND NOT is_field(vn, pstate(s))
 
-   wf_update_PState : LEMMA % 
-     FORALL (p : Program, s1, s2 : APState, 
+   wf_update_PState : LEMMA % :-)
+     FORALL (p : Program, s1 : APState, 
              upd : [PState[Name] -> PState[Name]]) :
        wf_state(p)(s1) IMPLIES
-%       update_PState(s1, upd) = s2 IMPLIES
-         wf_state(p)(s2)
+       LET s2 = update_PState(s1, upd) IN
+       (wf_state(p)(pstate(s1)) IMPLIES wf_state(p)(pstate(s2))) IMPLIES
+       wf_state(p)(s2)
+
+   wf_update_GhostVars : LEMMA % 
+     FORALL (p : Program, s1 : APState, 
+             upd : [Store -> Store]) :
+       wf_state(p)(s1) IMPLIES
+       LET s2 = update_GhostVars(s1, upd) IN
+       wf_state(p)(s2)
+
+  wf_state_update_stack : LEMMA
+    FORALL(p : Program, this_val : Val, arg : LocalVarDecl, param_val : Val,
+           lvds : finite_set[LocalVarDecl], s : APState) : 
+      wf_state(p)(s) IMPLIES
+        wf_state(p)(update_stack(this_val, arg, param_val, lvds, s))
 
   wf_initial_AP_state : LEMMA % :-)
     FORALL (p : Program) :
       wf_Program(p) IMPLIES wf_state(p)(initial_AP_state(p))
+
 
   % TODO: prove!
   deriv_expr_yields_wf_state_AP : LEMMA

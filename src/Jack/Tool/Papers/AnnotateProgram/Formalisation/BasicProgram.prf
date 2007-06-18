@@ -1,12 +1,54 @@
 (State
+ (update_locals_TCC1 0
+  (update_locals_TCC1-1 nil 3391159723 3391166430
+   ("" (subtype-tcc) nil nil) proved
+   ((boolean nonempty-type-decl nil booleans nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (Name formal-nonempty-type-decl nil State nil)
+    (Val type-decl nil Val_adt nil) (set type-eq-decl nil sets nil)
+    (is_finite const-decl "bool" finite_sets nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (member const-decl "bool" sets nil)
+    (empty? const-decl "bool" sets nil)
+    (nonempty? const-decl "bool" sets nil))
+   57 60 nil nil))
+ (update_locals_TCC2 0
+  (update_locals_TCC2-1 nil 3391159723 3391166476
+   ("" (skosimp*)
+    (("" (rewrite "card_rest") (("" (assert) nil nil)) nil)) nil)
+   proved
+   ((card_rest formula-decl nil finite_sets nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (set type-eq-decl nil sets nil)
+    (is_finite const-decl "bool" finite_sets nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (Name formal-nonempty-type-decl nil State nil)
+    (Val type-decl nil Val_adt nil))
+   9659 420 t nil))
  (initial_Program_state_TCC1 0
-  (initial_Program_state_TCC1-1 nil 3390799294 nil
-   ("" (subtype-tcc) nil nil) unchecked nil nil nil nil nil))
+  (initial_Program_state_TCC1-1 nil 3390799294 3391166430
+   ("" (subtype-tcc) nil nil) proved
+   ((Name formal-nonempty-type-decl nil State nil)
+    (getFieldDecls const-decl "finite_set[FieldDecl]" ProgramFunctions
+     nil)
+    (member const-decl "bool" sets nil)
+    (empty? const-decl "bool" sets nil)
+    (nonempty? const-decl "bool" sets nil))
+   188 150 nil nil))
  (initial_Program_state_TCC2 0
-  (initial_Program_state_TCC2-1 nil 3390799294 nil
-   ("" (subtype-tcc) nil nil) unchecked nil nil nil nil nil))
+  (initial_Program_state_TCC2-1 nil 3390799294 3391166430
+   ("" (subtype-tcc) nil nil) proved
+   ((Name formal-nonempty-type-decl nil State nil)
+    (getLocalDecls const-decl "finite_set[LocalVarDecl]"
+     ProgramFunctions nil)
+    (member const-decl "bool" sets nil)
+    (empty? const-decl "bool" sets nil)
+    (nonempty? const-decl "bool" sets nil))
+   210 160 nil nil))
  (wf_initial_Program_state 0
-  (wf_initial_Program_state-1 nil 3390799316 3390799322
+  (wf_initial_Program_state-1 nil 3390799316 3391166431
    ("" (skosimp*)
     (("" (expand "initial_Program_state")
       (("" (expand "wf_state")
@@ -124,69 +166,271 @@
         nil))
       nil))
     nil)
-   unchecked
-   ((wf_state const-decl "boolean" State nil)
-    (is_field const-decl "boolean" State nil)
-    (defined? const-decl "boolean" ValProp nil)
-    (get_FieldDecl const-decl "lift[FieldDecl]" ProgramFunctions nil)
-    (NOT const-decl "[bool -> bool]" booleans nil)
-    (FieldDecl type-eq-decl nil Program nil)
-    (Name formal-nonempty-type-decl nil State nil)
-    (JType type-decl nil JType_adt nil)
-    (boolean nonempty-type-decl nil booleans nil)
-    (Val type-decl nil Val_adt nil)
-    (= const-decl "[T, T -> boolean]" equalities nil)
-    (getFieldDecls const-decl "finite_set[FieldDecl]" ProgramFunctions
-     nil)
-    (is_finite const-decl "bool" finite_sets nil)
-    (Program type-eq-decl nil Program nil)
-    (Class type-eq-decl nil Program nil)
-    (lift type-decl nil lift_adt nil)
-    (Method type-eq-decl nil Program nil)
-    (Stmt type-decl nil Stmt_adt nil)
-    (LocalVarDecl type-eq-decl nil Program nil)
-    (Expr type-decl nil Expr_adt nil)
-    (finite_set type-eq-decl nil finite_sets nil)
-    (AND const-decl "[bool, bool -> bool]" booleans nil)
-    (set type-eq-decl nil sets nil)
-    (bool nonempty-type-eq-decl nil booleans nil)
-    (nonempty_exists formula-decl nil sets_lemmas nil)
-    (getLocalDecls const-decl "finite_set[LocalVarDecl]"
-     ProgramFunctions nil)
-    (default_value const-decl "(defined?)" ValProp nil)
+   proved
+   ((initial_Program_state const-decl "PState" State nil)
+    (is_local const-decl "boolean" State nil)
+    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
+    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
     (get_LocalDecl const-decl "lift[LocalVarDecl]" ProgramFunctions
      nil)
-    (is_local const-decl "boolean" State nil)
-    (initial_Program_state const-decl "PState" State nil))
-   5092 910 nil nil))
+    (p!1 skolem-const-decl "Program[Name]" State nil)
+    (l!1 skolem-const-decl "LocalVarDecl[Name]" State nil)
+    (vn!1 skolem-const-decl "Name" State nil)
+    (default_value const-decl "(defined?)" ValProp nil)
+    (getLocalDecls const-decl "finite_set[LocalVarDecl]"
+     ProgramFunctions nil)
+    (nonempty_exists formula-decl nil sets_lemmas nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (set type-eq-decl nil sets nil)
+    (AND const-decl "[bool, bool -> bool]" booleans nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (Expr type-decl nil Expr_adt nil)
+    (LocalVarDecl type-eq-decl nil Program nil)
+    (Stmt type-decl nil Stmt_adt nil)
+    (Method type-eq-decl nil Program nil)
+    (lift type-decl nil lift_adt nil)
+    (Class type-eq-decl nil Program nil)
+    (Program type-eq-decl nil Program nil)
+    (is_finite const-decl "bool" finite_sets nil)
+    (getFieldDecls const-decl "finite_set[FieldDecl]" ProgramFunctions
+     nil)
+    (= const-decl "[T, T -> boolean]" equalities nil)
+    (Name formal-nonempty-type-decl nil State nil)
+    (Val type-decl nil Val_adt nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (JType type-decl nil JType_adt nil)
+    (FieldDecl type-eq-decl nil Program nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (get_FieldDecl const-decl "lift[FieldDecl]" ProgramFunctions nil)
+    (defined? const-decl "boolean" ValProp nil)
+    (is_field const-decl "boolean" State nil)
+    (wf_state const-decl "boolean" State nil))
+   515 410 nil nil))
  (wf_state_vars_local_or_field 0
-  (wf_state_vars_local_or_field-1 nil 3390798989 3390798997
+  (wf_state_vars_local_or_field-1 nil 3390798989 3391166432
    ("" (skosimp*)
     (("" (use "wf_program_variables_disjoint") (("" (grind) nil nil))
       nil))
     nil)
-   unchecked
-   ((wf_state const-decl "boolean" State nil)
-    (is_local const-decl "boolean" State nil)
-    (is_field const-decl "boolean" State nil)
-    (getFieldDecls const-decl "finite_set[FieldDecl]" ProgramFunctions
+   proved
+   ((wf_program_variables_disjoint formula-decl nil WellFormedProgram
      nil)
-    (getGhostDecls const-decl "finite_set[FieldDecl]" ProgramFunctions
-     nil)
-    (disjoint? const-decl "bool" sets nil)
-    (empty? const-decl "bool" sets nil)
-    (intersection const-decl "set" sets nil)
+    (Name formal-nonempty-type-decl nil State nil)
+    (Program type-eq-decl nil Program nil)
+    (Class type-eq-decl nil Program nil)
+    (lift type-decl nil lift_adt nil)
+    (Method type-eq-decl nil Program nil)
+    (Stmt type-decl nil Stmt_adt nil)
+    (LocalVarDecl type-eq-decl nil Program nil)
+    (Expr type-decl nil Expr_adt nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (FieldDecl type-eq-decl nil Program nil)
+    (JType type-decl nil JType_adt nil)
+    (defined? const-decl "boolean" ValProp nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (Val type-decl nil Val_adt nil) (member const-decl "bool" sets nil)
     (getLocalDecls const-decl "finite_set[LocalVarDecl]"
      ProgramFunctions nil)
-    (member const-decl "bool" sets nil)
-    (finite_intersection1 application-judgement "finite_set"
-     finite_sets nil)
+    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
+    (intersection const-decl "set" sets nil)
+    (empty? const-decl "bool" sets nil)
+    (disjoint? const-decl "bool" sets nil)
+    (getGhostDecls const-decl "finite_set[FieldDecl]" ProgramFunctions
+     nil)
+    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
+    (getFieldDecls const-decl "finite_set[FieldDecl]" ProgramFunctions
+     nil)
+    (is_field const-decl "boolean" State nil)
+    (is_local const-decl "boolean" State nil)
+    (wf_state const-decl "boolean" State nil))
+   975 930 nil nil))
+ (wf_state_update_local 0
+  (wf_state_update_local-1 nil 3391158897 3391166434
+   ("" (skosimp*)
+    (("" (expand "update_local")
+      (("" (expand "wf_state")
+        (("" (expand "is_field")
+          (("" (expand "is_local")
+            (("" (expand "defined?")
+              (("" (skosimp*)
+                (("" (inst -1 "vn!2")
+                  (("" (flatten)
+                    (("" (assert)
+                      (("" (split 2)
+                        (("1" (propax) nil nil) ("2" (propax) nil nil)
+                         ("3" (skosimp*)
+                          (("3" (case-replace "vn!1 = vn!2")
+                            (("1" (assert) nil nil)
+                             ("2" (assert) nil nil))
+                            nil))
+                          nil)
+                         ("4" (skosimp*)
+                          (("4" (assert)
+                            (("4" (case-replace "vn!1 = vn!2")
+                              (("1"
+                                (assert)
+                                (("1"
+                                  (typepred "v!1")
+                                  (("1" (grind) nil nil))
+                                  nil))
+                                nil)
+                               ("2" (assert) nil nil))
+                              nil))
+                            nil))
+                          nil))
+                        nil))
+                      nil))
+                    nil))
+                  nil))
+                nil))
+              nil))
+            nil))
+          nil))
+        nil))
+      nil))
+    nil)
+   proved
+   ((update_local const-decl "PState" State nil)
+    (is_field const-decl "boolean" State nil)
+    (defined? const-decl "boolean" ValProp nil)
+    (Name formal-nonempty-type-decl nil State nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
     (Val type-decl nil Val_adt nil)
     (boolean nonempty-type-decl nil booleans nil)
+    (= const-decl "[T, T -> boolean]" equalities nil)
+    (is_local const-decl "boolean" State nil)
+    (wf_state const-decl "boolean" State nil))
+   2040 300 t shostak))
+ (wf_state_update_locals 0
+  (wf_state_update_locals-1 nil 3391159739 3391166435
+   (""
+    (use "wf_induction[finite_set[[Name, Val]], (LAMBDA(x, y : finite_set[[Name, Val]]) : card(x) < card(y))]")
+    (("1"
+      (inst -1
+       "LAMBDA (V : finite_set[[Name, Val]]) : FORALL (p: Program, s: PState) :
+
+        wf_state(p)(s) IMPLIES
+         (FORALL (v: [Name, Val]): V(v) IMPLIES
+            is_local(PROJ_1(v), s) AND defined?(PROJ_2(v)))
+          IMPLIES wf_state(p)(update_locals(V)(s))")
+      (("1" (split -1)
+        (("1" (skosimp*) (("1" (inst?) (("1" (assert) nil nil)) nil))
+          nil)
+         ("2" (hide 2)
+          (("2" (skosimp*)
+            (("2" (expand "update_locals" 1)
+              (("2" (split 1)
+                (("1" (skosimp*) nil nil)
+                 ("2" (skosimp*)
+                  (("2" (inst -1 "rest(x!1)")
+                    (("2" (rewrite "card_rest")
+                      (("2" (assert)
+                        (("2" (inst?)
+                          (("2" (assert)
+                            (("2" (split -1)
+                              (("1"
+                                (skosimp*)
+                                (("1"
+                                  (inst-cp -3 "v!1")
+                                  (("1"
+                                    (assert)
+                                    (("1"
+                                      (inst -3 "choose(x!1)")
+                                      (("1"
+                                        (assert)
+                                        (("1"
+                                          (split -4)
+                                          (("1"
+                                            (flatten)
+                                            (("1"
+                                              (assert)
+                                              (("1"
+                                                (expand
+                                                 "update_local"
+                                                 1)
+                                                (("1"
+                                                  (expand "is_local" 1)
+                                                  (("1"
+                                                    (expand "defined?")
+                                                    (("1"
+                                                      (case-replace
+                                                       "choose(x!1)`1 = proj_1(v!1)")
+                                                      (("1"
+                                                        (assert)
+                                                        nil
+                                                        nil)
+                                                       ("2"
+                                                        (assert)
+                                                        (("2"
+                                                          (grind)
+                                                          nil
+                                                          nil))
+                                                        nil))
+                                                      nil))
+                                                    nil))
+                                                  nil))
+                                                nil))
+                                              nil))
+                                            nil)
+                                           ("2" (grind) nil nil))
+                                          nil))
+                                        nil))
+                                      nil))
+                                    nil))
+                                  nil))
+                                nil)
+                               ("2"
+                                (lemma "wf_state_update_local")
+                                (("2"
+                                  (inst
+                                   -1
+                                   "p!1"
+                                   "s!1"
+                                   "proj_1(choose(x!1))"
+                                   "proj_2(choose(x!1))")
+                                  (("1"
+                                    (assert)
+                                    (("1"
+                                      (inst? -3)
+                                      (("1"
+                                        (assert)
+                                        (("1"
+                                          (flatten)
+                                          (("1"
+                                            (assert)
+                                            (("1" (grind) nil nil))
+                                            nil))
+                                          nil))
+                                        nil))
+                                      nil))
+                                    nil)
+                                   ("2"
+                                    (inst?)
+                                    (("2" (assert) nil nil))
+                                    nil))
+                                  nil))
+                                nil))
+                              nil))
+                            nil))
+                          nil))
+                        nil))
+                      nil))
+                    nil))
+                  nil))
+                nil))
+              nil))
+            nil))
+          nil))
+        nil))
+      nil)
+     ("2" (use "wf_card[[Name, Val]]") nil nil))
+    nil)
+   proved
+   ((wf_card formula-decl nil WF_Card nil)
     (defined? const-decl "boolean" ValProp nil)
     (JType type-decl nil JType_adt nil)
     (FieldDecl type-eq-decl nil Program nil)
-    (finite_set type-eq-decl nil finite_sets nil)
     (Expr type-decl nil Expr_adt nil)
     (LocalVarDecl type-eq-decl nil Program nil)
     (Stmt type-decl nil Stmt_adt nil)
@@ -194,12 +438,60 @@
     (lift type-decl nil lift_adt nil)
     (Class type-eq-decl nil Program nil)
     (Program type-eq-decl nil Program nil)
+    (Excpt type-decl nil Excpt_adt nil)
+    (PSt type-eq-decl nil State nil)
+    (PState type-eq-decl nil State nil)
+    (IMPLIES const-decl "[bool, bool -> bool]" booleans nil)
+    (wf_state const-decl "boolean" State nil)
+    (AND const-decl "[bool, bool -> bool]" booleans nil)
+    (is_local const-decl "boolean" State nil)
+    (update_locals def-decl "PState" State nil)
+    (card_rest formula-decl nil finite_sets nil)
+    (choose const-decl "(p)" sets nil)
+    (nonempty? const-decl "bool" sets nil)
+    (update_local const-decl "PState" State nil)
+    (/= const-decl "boolean" notequal nil)
+    (member const-decl "bool" sets nil)
+    (remove const-decl "set" sets nil)
+    (x!1 skolem-const-decl "finite_set[[Name, Val]]" State nil)
+    (is_field const-decl "boolean" State nil)
+    (getFieldDecls const-decl "finite_set[FieldDecl]" ProgramFunctions
+     nil)
+    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
+    (getLocalDecls const-decl "finite_set[LocalVarDecl]"
+     ProgramFunctions nil)
+    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
+    (wf_state_update_local formula-decl nil State nil)
+    (rest const-decl "set" sets nil)
+    (card const-decl "{n: nat | n = Card(S)}" finite_sets nil)
+    (Card const-decl "nat" finite_sets nil)
+    (= const-decl "[T, T -> boolean]" equalities nil)
+    (nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (>= const-decl "bool" reals nil)
+    (int nonempty-type-eq-decl nil integers nil)
+    (integer_pred const-decl "[rational -> boolean]" integers nil)
+    (rational nonempty-type-from-decl nil rationals nil)
+    (rational_pred const-decl "[real -> boolean]" rationals nil)
+    (< const-decl "bool" reals nil)
+    (real nonempty-type-from-decl nil reals nil)
+    (real_pred const-decl "[number_field -> boolean]" reals nil)
+    (number_field nonempty-type-from-decl nil number_fields nil)
+    (number_field_pred const-decl "[number -> boolean]" number_fields
+     nil)
+    (number nonempty-type-decl nil numbers nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (is_finite const-decl "bool" finite_sets nil)
+    (set type-eq-decl nil sets nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (Val type-decl nil Val_adt nil)
     (Name formal-nonempty-type-decl nil State nil)
-    (wf_program_variables_disjoint formula-decl nil WellFormedProgram
-     nil))
-   6517 3330 nil nil))
+    (wf_induction formula-decl nil wf_induction nil)
+    (well_founded? const-decl "bool" orders nil)
+    (pred type-eq-decl nil defined_types nil))
+   747 630 t shostak))
  (wf_state_update 0
-  (wf_state_update-1 nil 3390803416 3390822793
+  (wf_state_update-1 nil 3390803416 3391166435
    ("" (skosimp*)
     (("" (expand "update")
       (("" (expand "wf_state")
@@ -331,23 +623,23 @@
         nil))
       nil))
     nil)
-   unchecked
-   ((wf_state const-decl "boolean" State nil)
-    (update_field const-decl "PState" State nil)
-    (update_local const-decl "PState" State nil)
-    (is_local const-decl "boolean" State nil)
-    (= const-decl "[T, T -> boolean]" equalities nil)
-    (boolean nonempty-type-decl nil booleans nil)
-    (bool nonempty-type-eq-decl nil booleans nil)
-    (NOT const-decl "[bool -> bool]" booleans nil)
-    (Val type-decl nil Val_adt nil)
-    (defined? const-decl "boolean" ValProp nil)
-    (is_field const-decl "boolean" State nil)
+   proved
+   ((update const-decl "PState" State nil)
     (Name formal-nonempty-type-decl nil State nil)
-    (update const-decl "PState" State nil))
-   115651 6210 t shostak))
+    (is_field const-decl "boolean" State nil)
+    (defined? const-decl "boolean" ValProp nil)
+    (Val type-decl nil Val_adt nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (= const-decl "[T, T -> boolean]" equalities nil)
+    (is_local const-decl "boolean" State nil)
+    (update_local const-decl "PState" State nil)
+    (update_field const-decl "PState" State nil)
+    (wf_state const-decl "boolean" State nil))
+   666 590 t shostak))
  (wf_state_raise 0
-  (wf_state_raise-1 nil 3390908545 3390908549 ("" (grind) nil nil)
+  (wf_state_raise-1 nil 3390908545 3391166435 ("" (grind) nil nil)
    proved
    ((defined? const-decl "boolean" ValProp nil)
     (is_field const-decl "boolean" State nil)
@@ -361,9 +653,9 @@
     (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
     (wf_state const-decl "boolean" State nil)
     (raise const-decl "PState" State nil))
-   4122 310 t shostak))
+   214 210 t shostak))
  (wf_state_catch 0
-  (wf_state_catch-1 nil 3390908555 3390908556 ("" (grind) nil nil)
+  (wf_state_catch-1 nil 3390908555 3391166436 ("" (grind) nil nil)
    proved
    ((defined? const-decl "boolean" ValProp nil)
     (is_field const-decl "boolean" State nil)
@@ -377,11 +669,11 @@
     (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
     (wf_state const-decl "boolean" State nil)
     (catch const-decl "PState" State nil))
-   1204 310 t shostak)))
+   245 220 t shostak)))
 (ProgramSemantics
  (execute_set_TCC1 0
-  (execute_set_TCC1-1 nil 3385977480 3390735662
-   ("" (subtype-tcc) nil nil) unchecked
+  (execute_set_TCC1-1 nil 3385977480 3391166436
+   ("" (subtype-tcc) nil nil) proved
    ((nat nonempty-type-eq-decl nil naturalnumbers nil)
     (int nonempty-type-eq-decl nil integers nil)
     (integer_pred const-decl "[rational -> boolean]" integers nil)
@@ -416,10 +708,10 @@
     (Val type-decl nil Val_adt nil)
     (Name formal-nonempty-type-decl nil ProgramSemantics nil)
     (execute_set_type const-decl "boolean" SemanticsTypes nil))
-   264 240 nil nil))
+   178 130 nil nil))
  (execute_CaseJML_TCC1 0
-  (execute_CaseJML_TCC1-1 nil 3385977480 3390735662
-   ("" (subtype-tcc) nil nil) unchecked
+  (execute_CaseJML_TCC1-1 nil 3385977480 3391166436
+   ("" (subtype-tcc) nil nil) proved
    ((nat nonempty-type-eq-decl nil naturalnumbers nil)
     (int nonempty-type-eq-decl nil integers nil)
     (integer_pred const-decl "[rational -> boolean]" integers nil)
@@ -454,10 +746,10 @@
     (Val type-decl nil Val_adt nil)
     (Name formal-nonempty-type-decl nil ProgramSemantics nil)
     (execute_CaseJML_type const-decl "boolean" SemanticsTypes nil))
-   228 150 nil nil))
+   114 110 nil nil))
  (on_method_event_TCC1 0
-  (on_method_event_TCC1-1 nil 3390110778 3390735663
-   ("" (subtype-tcc) nil nil) unchecked
+  (on_method_event_TCC1-1 nil 3390110778 3391166436
+   ("" (subtype-tcc) nil nil) proved
    ((nat nonempty-type-eq-decl nil naturalnumbers nil)
     (int nonempty-type-eq-decl nil integers nil)
     (integer_pred const-decl "[rational -> boolean]" integers nil)
@@ -492,10 +784,10 @@
     (Val type-decl nil Val_adt nil)
     (Name formal-nonempty-type-decl nil ProgramSemantics nil)
     (on_method_event_type const-decl "boolean" SemanticsTypes nil))
-   192 170 nil nil))
+   196 160 nil nil))
  (IMP_Semantics_TCC1 0
-  (IMP_Semantics_TCC1-1 nil 3385977480 3390735663
-   ("" (subtype-tcc) nil nil) unchecked
+  (IMP_Semantics_TCC1-1 nil 3385977480 3391166436
+   ("" (subtype-tcc) nil nil) proved
    ((id const-decl "(bijective?[T, T])" identity nil)
     (bijective? const-decl "bool" functions nil)
     (bool nonempty-type-eq-decl nil booleans nil)
@@ -515,6 +807,125 @@
     (defined? const-decl "boolean" ValProp nil)
     (boolean nonempty-type-decl nil booleans nil)
     (Val type-decl nil Val_adt nil)
-    (Name formal-nonempty-type-decl nil ProgramSemantics nil))
-   82 80 nil nil)))
+    (Name formal-nonempty-type-decl nil ProgramSemantics nil)
+    (update_PState_type const-decl "boolean" SemanticsTypes nil))
+   67 60 nil nil))
+ (IMP_SemanticsProofs_TCC1 0
+  (IMP_SemanticsProofs_TCC1-1 nil 3391158897 3391166437
+   ("" (assuming-tcc) nil nil) proved
+   ((NOT const-decl "[bool -> bool]" booleans nil)
+    (on_method_event const-decl "(on_method_event_type)"
+     ProgramSemantics nil)
+    (on_method_event_type const-decl "boolean" SemanticsTypes nil)
+    (execute_CaseJML const-decl "(execute_CaseJML_type)"
+     ProgramSemantics nil)
+    (execute_CaseJML_type const-decl "boolean" SemanticsTypes nil)
+    (list type-decl nil list_adt nil)
+    (execute_set const-decl "(execute_set_type)" ProgramSemantics nil)
+    (execute_set_type const-decl "boolean" SemanticsTypes nil)
+    (deriv_expr_rec_type type-eq-decl nil SemanticsTypes nil)
+    (deriv_expr_type type-eq-decl nil SemanticsTypes nil)
+    (deriv_stmt_rec_type type-eq-decl nil SemanticsTypes nil)
+    (deriv_stmt_type type-eq-decl nil SemanticsTypes nil)
+    (below type-eq-decl nil naturalnumbers nil)
+    (<= const-decl "bool" reals nil) (< const-decl "bool" reals nil)
+    (>= const-decl "bool" reals nil)
+    (int nonempty-type-eq-decl nil integers nil)
+    (integer_pred const-decl "[rational -> boolean]" integers nil)
+    (rational nonempty-type-from-decl nil rationals nil)
+    (rational_pred const-decl "[real -> boolean]" rationals nil)
+    (real nonempty-type-from-decl nil reals nil)
+    (real_pred const-decl "[number_field -> boolean]" reals nil)
+    (number_field nonempty-type-from-decl nil number_fields nil)
+    (number_field_pred const-decl "[number -> boolean]" number_fields
+     nil)
+    (number nonempty-type-decl nil numbers nil)
+    (upto nonempty-type-eq-decl nil naturalnumbers nil)
+    (nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (lookup const-decl "Val" State nil)
+    (id const-decl "(bijective?[T, T])" identity nil)
+    (bijective? const-decl "bool" functions nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (PState type-eq-decl nil State nil)
+    (PSt type-eq-decl nil State nil)
+    (Excpt type-decl nil Excpt_adt nil)
+    (Program type-eq-decl nil Program nil)
+    (Class type-eq-decl nil Program nil)
+    (lift type-decl nil lift_adt nil)
+    (Method type-eq-decl nil Program nil)
+    (Stmt type-decl nil Stmt_adt nil)
+    (LocalVarDecl type-eq-decl nil Program nil)
+    (Expr type-decl nil Expr_adt nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (FieldDecl type-eq-decl nil Program nil)
+    (JType type-decl nil JType_adt nil)
+    (defined? const-decl "boolean" ValProp nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (Val type-decl nil Val_adt nil)
+    (Name formal-nonempty-type-decl nil ProgramSemantics nil)
+    (deriv_stmt_determ const-decl "boolean" Semantics nil)
+    (deriv_expr_determ const-decl "boolean" Semantics nil))
+   634 580 nil nil))
+ (IMP_SemanticsProofs_TCC2 0
+  (IMP_SemanticsProofs_TCC2-1 nil 3391158897 3391166437
+   ("" (assuming-tcc) nil nil) proved
+   ((boolean nonempty-type-decl nil booleans nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (number nonempty-type-decl nil numbers nil)
+    (number_field_pred const-decl "[number -> boolean]" number_fields
+     nil)
+    (number_field nonempty-type-from-decl nil number_fields nil)
+    (real_pred const-decl "[number_field -> boolean]" reals nil)
+    (real nonempty-type-from-decl nil reals nil)
+    (>= const-decl "bool" reals nil)
+    (rational_pred const-decl "[real -> boolean]" rationals nil)
+    (rational nonempty-type-from-decl nil rationals nil)
+    (integer_pred const-decl "[rational -> boolean]" integers nil)
+    (int nonempty-type-eq-decl nil integers nil)
+    (nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (on_method_event const-decl "(on_method_event_type)"
+     ProgramSemantics nil))
+   369 330 nil nil))
+ (IMP_SemanticsProofs_TCC3 0
+  (IMP_SemanticsProofs_TCC3-1 nil 3391158897 3391166437
+   ("" (assuming-tcc) nil nil) proved
+   ((boolean nonempty-type-decl nil booleans nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (number nonempty-type-decl nil numbers nil)
+    (number_field_pred const-decl "[number -> boolean]" number_fields
+     nil)
+    (number_field nonempty-type-from-decl nil number_fields nil)
+    (real_pred const-decl "[number_field -> boolean]" reals nil)
+    (real nonempty-type-from-decl nil reals nil)
+    (>= const-decl "bool" reals nil)
+    (rational_pred const-decl "[real -> boolean]" rationals nil)
+    (rational nonempty-type-from-decl nil rationals nil)
+    (integer_pred const-decl "[rational -> boolean]" integers nil)
+    (int nonempty-type-eq-decl nil integers nil)
+    (nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (execute_CaseJML const-decl "(execute_CaseJML_type)"
+     ProgramSemantics nil))
+   221 190 nil nil))
+ (IMP_SemanticsProofs_TCC4 0
+  (IMP_SemanticsProofs_TCC4-1 nil 3391158897 3391166438
+   ("" (assuming-tcc) nil nil) proved
+   ((boolean nonempty-type-decl nil booleans nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (number nonempty-type-decl nil numbers nil)
+    (number_field_pred const-decl "[number -> boolean]" number_fields
+     nil)
+    (number_field nonempty-type-from-decl nil number_fields nil)
+    (real_pred const-decl "[number_field -> boolean]" reals nil)
+    (real nonempty-type-from-decl nil reals nil)
+    (>= const-decl "bool" reals nil)
+    (rational_pred const-decl "[real -> boolean]" rationals nil)
+    (rational nonempty-type-from-decl nil rationals nil)
+    (integer_pred const-decl "[rational -> boolean]" integers nil)
+    (int nonempty-type-eq-decl nil integers nil)
+    (nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (execute_set const-decl "(execute_set_type)" ProgramSemantics nil))
+   333 290 nil nil)))
 

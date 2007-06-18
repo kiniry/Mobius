@@ -41,10 +41,20 @@ BEGIN
        st := (# fvs := fvs(st(sigma)),
                 lvs := lvs(st(sigma)) WITH [vn := v] #) #)
 
+  update_locals(V : finite_set[[Name, Val]])(sigma : PState) : 
+               RECURSIVE PState =
+    IF empty?(V)
+    THEN sigma
+    ELSE LET x = choose(V) IN
+         update_locals(rest(V))(update_local(x)(sigma))
+    ENDIF
+  MEASURE card(V)
+
   update_field(vn : Name, v : Val)(sigma : PState) : PState =
     (# ex := ex(sigma),
        st := (# fvs := fvs(st(sigma)) WITH [vn := v],
                 lvs := lvs(st(sigma)) #) #)
+
 
   lookup(vn : Name, sigma : PState) : Val =
     IF is_local(vn, sigma)
@@ -116,10 +126,25 @@ BEGIN
         ((is_field(vn, s) IMPLIES NOT is_local(vn, s)) AND
          (is_local(vn, s) IMPLIES NOT is_field(vn, s)))
 
+  wf_state_update_local : LEMMA % :-)
+    FORALL(p : Program, s : PState, vn : Name, v : (defined?)) :
+      wf_state(p)(s) IMPLIES
+      is_local(vn, s) IMPLIES
+        wf_state(p)(update_local(vn, v)(s))
+
+  IMPORTING FiniteSetInduction[[Name, Val]]
+
+  wf_state_update_locals : LEMMA % :-)
+    FORALL(p : Program, s : PState, V : finite_set[[Name, Val]]) :
+      wf_state(p)(s) IMPLIES
+      (FORALL(v : [Name, Val]) : 
+         V(v) IMPLIES is_local(proj_1(v), s) AND
+                      defined?(proj_2(v))) IMPLIES
+        wf_state(p)(update_locals(V)(s))
+
   wf_state_update : LEMMA % :-) 
     FORALL(p : Program, s : PState, vn : Name, v : (defined?)) :
       wf_state(p)(s) IMPLIES
-      wf_Program(p) IMPLIES
         wf_state(p)(update(vn, v)(s))
 
 
@@ -149,18 +174,18 @@ BEGIN
     LAMBDA (p : Program, vn : Name, e : Expr, s1, s2 : PState, n : nat,
             deriv_stmt_rec : deriv_stmt_rec_type(n),
             deriv_expr_rec : deriv_expr_rec_type(n)) :
-      s1 = s2
+      s1 = s2 AND n = 1
 
   execute_CaseJML : (execute_CaseJML_type) =
     LAMBDA (p : Program, bs : list[[Expr, Stmt]], s1, s2 : PState,  n : nat,
             deriv_stmt_rec : deriv_stmt_rec_type(n)) :
-      s1 = s2
+      s1 = s2 AND n = 1
 
   on_method_event : (on_method_event_type) =
     LAMBDA (p : Program, md : Method, a : Val, s1, s2 : PState, n : nat,
             deriv_stmt : deriv_stmt_rec_type(n),
             deriv_expr : deriv_expr_rec_type(n)) :
-      s1 = s2
+      s1 = s2 AND n = 1
 
   IMPORTING Semantics[Name, Program, PState, id, id, lookup,
                       LAMBDA(s : PState, upd : [PState -> PState]) : upd(s),
@@ -172,10 +197,13 @@ BEGIN
     run_FullProgram(p)(main, arg)(initial_Program_state(p), s2)(n)
 
 
+  IMPORTING SemanticsProofs[Name, Program, PState, id, id, lookup,
+                      LAMBDA(s : PState, upd : [PState -> PState]) : upd(s),
+                      execute_set, execute_CaseJML,
+                      on_method_event, on_method_event, on_method_event]
+
   % MH: Missing is a proof that this semantics preserves wf_state 
   % wf_state should actually be defined in this file
   % 
-  % We could one day also import SemanticsProofs to prove that all
-  % instantiations are indeed deterministic.
 
 END ProgramSemantics
