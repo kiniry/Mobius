@@ -120,7 +120,7 @@ public final class MethodVisitor extends DirectVCGen {
     //System out.println(po);
 
     fVcs.add(po);
-    fVcs.addAll (dvcg.vcs);
+    fVcs.addAll (dvcg.getVcs());
     addVarDecl(qvs);
   }
 

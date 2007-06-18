@@ -56,9 +56,9 @@ public class CoqFile {
     fOut.println("intros; repeat (split; intros).\n\nQed.");
   }
 
-  /*
-   * (non-Javadoc)
-   * @see java.lang.Object#finalize()
+  /**
+   * Close the file that was currently being written.
+   * @throws Throwable an exception in the worst case
    */
   public void finalize() throws Throwable {
     super.finalize();
@@ -84,7 +84,7 @@ public class CoqFile {
                  "Add LoadPath \"" + fBase + File.separator + "Formalisation" +
                  File.separator + "Library" + 
                  File.separator + "Map" + "\".\n");
-    fOut.println("Load \""+ fBase + File.separator + "defs_types.v\".\n");
+    fOut.println("Load \"" + fBase + File.separator + "defs_types.v\".\n");
     for (String name: classNames) {
       fOut.println("Variable " + name + ": ClassName.");
     }

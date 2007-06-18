@@ -15,7 +15,7 @@ public class Post {
   public final QuantVariableRef var;
 
   /** the current postcondition. */
-  public transient Term post;
+  public Term post;
 
   /**
    * Construct a postcondition from a variable and a logical formula.
@@ -32,11 +32,11 @@ public class Post {
    * No variable is associated with it.
    * @param post the logical formula
    */
-  public Post (Term post) {
+  public Post (final Term post) {
     this(null, post);
   }
 
-  public Post(QuantVariableRef val, Post post) {
+  public Post(final QuantVariableRef val, final Post post) {
     this(val, post.post);
   }
 
@@ -46,7 +46,7 @@ public class Post {
    * @param f the formula to substitute the variable with
    * @return a term where the variable has been substituted
    */
-  public Term substWith(Term f) {
+  public Term substWith(final Term f) {
     if (var != null) {
       return post.subst(var, f);
     }
@@ -66,7 +66,7 @@ public class Post {
    * @param p2 the right part of the <code>and</code>
    * @return a new Post object with the properties mentionned above or p1 or p2
    */
-  public static Post and(Post p1, Post p2) {
+  public static Post and(final Post p1, final Post p2) {
     if (p1 == null) return p2;
     if (p2 == null) return p1;
     return new Post(p1.var, 
@@ -77,11 +77,11 @@ public class Post {
    * Nearly the same semantic as the {@link #and(Post, Post)} method.
    * The only difference is that it builds an implies.
    */
-  public static Post implies(Post p1, Post p2) {
+  public static Post implies(final Post p1, final Post p2) {
     if (p1 == null) return p2;
     if (p2 == null) return p1;
     return new Post(p1.var, 
-                    Logic.implies(p1.post, p2.post.subst(p2.var, p1.var)));			
+                    Logic.implies(p1.post, p2.post.subst(p2.var, p1.var)));
   }
 
   /**
@@ -91,17 +91,19 @@ public class Post {
    * @param p1 the term to negate
    * @return a new post
    */
-  public static Post not(Post p1) {
+  public static Post not(final Post p1) {
     if (p1 == null || p1.post == null) {
       throw new IllegalArgumentException("" + p1);
     }
     return new Post(p1.var, 
-                    Logic.not(p1.post));			
+                    Logic.not(p1.post));
   }
 
-  /*
-   * (non-Javadoc)
-   * @see java.lang.Object#toString()
+
+  /**
+   * @return a string of the form
+   * <code>(var: var) (post: post)</code> or
+   * <code>(post: post)</code> if var is missing
    */
   public String toString() {
     if (var != null) {

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
@@ -62,67 +63,71 @@ import escjava.sortedProver.Lifter.Term;
 
 /**
  * This class does the weakest precondition calculus for the statements.
- * @author B. Grégoire, J. Charles
+ * @author B. Grégoire (benjamin.gregoire@inria.fr), 
+ * J. Charles (julien.charles@inria.fr)
  */
 public class StmtVCGen extends ExpressionVisitor {
-  /** the side conditions that were generated */
-  public Vector<Term> vcs = new Vector<Term>();
-  /** the list of variables declarations */
-  public final Vector<Term> vardecl = new Vector<Term>();
-  /** the visitor to visit expressions */
-  public final ExpressionVisitor exprVisitor = new ExpressionVisitor();
-  /** the decorator that add the annotations or read the annotations from a node */
-  public final AnnotationDecoration annot = AnnotationDecoration.inst;
-  private final RoutineDecl meth;
+  /** the side conditions that were generated. */
+  private List<Term> fVcs = new Vector<Term>();
+  
+  /** the visitor to visit expressions. */
+  private final ExpressionVisitor fExprVisitor = new ExpressionVisitor();
+  
+  /** the decorator that add the annotations or read the annotations from a node. */
+  private final AnnotationDecoration fAnnot = AnnotationDecoration.inst;
+  
+  /** the current method or constructor that is being inspected. */
+  private final RoutineDecl fMeth;
 
 
 
-  public StmtVCGen(RoutineDecl meth) {
-    this.meth =meth;
+  public StmtVCGen(final RoutineDecl meth) {
+    fMeth = meth;
   }
 
 
   /**
-   * The method to treat the annotations
+   * The method to treat the annotations.
    * @param vce the current post condition 
    * @param annot the annotation to treat
    * @return a postcondition computed from the annotation
    */
-  public Post treatAnnot(VCEntry vce, List<AAnnotation> annot) {
-    if(annot == null)
+  public Post treatAnnot(final VCEntry vce, final List<AAnnotation> annot) {
+    if (annot == null)
       return vce.post;
     Term post = vce.post.post;
-    int len = annot.size();
-    for(int i = len -1; i >= 0; i--) {
-      AAnnotation aa =  annot.get(i);		
+    final int len = annot.size();
+    for (int i = len - 1; i >= 0; i--) {
+      final AAnnotation aa = annot.get(i);
       switch(aa.getID()) {
-      case AAnnotation.annotAssert:
-        vcs.add(Logic.safe.implies(aa.formula, post));
-        post = aa.formula;
-        break;
-      case AAnnotation.annotCut:
-        post = Logic.safe.and(aa.formula, Logic.safe.implies(aa.formula, post));
-        break;
-      case AAnnotation.annotAssume:
-        post = Logic.safe.implies(aa.formula, post);
-        break;
-      case AAnnotation.annotSet: {
-        mobius.directVCGen.formula.annotation.Set s = (mobius.directVCGen.formula.annotation.Set) aa;
-        if(s.assignment != null) {
-          post.subst(s.assignment.var, s.assignment.expr);
+        case AAnnotation.annotAssert:
+          fVcs.add(Logic.safe.implies(aa.formula, post));
+          post = aa.formula;
+          break;
+        case AAnnotation.annotCut:
+          post = Logic.safe.and(aa.formula, Logic.safe.implies(aa.formula, post));
+          break;
+        case AAnnotation.annotAssume:
+          post = Logic.safe.implies(aa.formula, post);
+          break;
+        case AAnnotation.annotSet: {
+          final mobius.directVCGen.formula.annotation.Set s = 
+            (mobius.directVCGen.formula.annotation.Set) aa;
+          if (s.assignment != null) {
+            post.subst(s.assignment.var, s.assignment.expr);
+          }
+          else if (s.declaration != null) {
+            if (s.assignment == null) {
+              post = Logic.forall(s.declaration.qvar, post);
+            }
+            addVarDecl(s.declaration.qvar);
+          }
+          break;
         }
-        else if(s.declaration != null) {
-          if(s.assignment == null) {
-            post = Logic.forall(s.declaration.qvar, post);
-          }						
-          addVarDecl(s.declaration.qvar);
-        }
-        break;
-      }
-
-      case AAnnotation.undef:
-      default:
-        throw new UnsupportedOperationException(aa.toString());
+  
+        case AAnnotation.undef:
+        default:
+          throw new UnsupportedOperationException(aa.toString());
       }
     }
 
@@ -130,138 +135,148 @@ public class StmtVCGen extends ExpressionVisitor {
   }
 
 
-  public /*@non_null*/ Object visitAssertStmt(/*@non_null*/ AssertStmt x, Object o) {
+  public /*@non_null*/ Object visitAssertStmt(final /*@non_null*/ AssertStmt x, final Object o) {
     // TODO: understand the difference 'tween x.pred and x.IfStmt
-    VCEntry entry = (VCEntry) o;
-    Post post = treatAnnot(entry, annot.getAnnotPost(x));
-    QuantVariableRef b  = Expression.rvar(Bool.sort);
+    final VCEntry entry = (VCEntry) o;
+    Post post = treatAnnot(entry, fAnnot.getAnnotPost(x));
+    final QuantVariableRef b  = Expression.rvar(Bool.sort);
 
     post = new Post(b, Logic.safe.and(b, Logic.safe.implies(b, post.post)));
     entry.post = post;
-    post = (Post)x.pred.accept(exprVisitor, entry);
-    return treatAnnot( entry, annot.getAnnotPre(x));
+    post = (Post)x.pred.accept(fExprVisitor, entry);
+    return treatAnnot(entry, fAnnot.getAnnotPre(x));
   }
 
   // TODO: add comments
-  public VCEntry mkEntryBlock (VCEntry vce) {
-    VCEntry res = new VCEntry(vce);
+  public VCEntry mkEntryBlock (final VCEntry vce) {
+    final VCEntry res = new VCEntry(vce);
     res.brpost = vce.post;
-    return res;	
+    return res;
 
   }
 
   // TODO: add comments
   @Override
-  public /*@non_null*/ Object visitBlockStmt(/*@non_null*/ BlockStmt x, Object o) {		
-    int max = x.childCount();
+  public /*@non_null*/ Object visitBlockStmt(final /*@non_null*/ BlockStmt x, final Object o) {
+    final int max = x.childCount();
     VCEntry vce = (VCEntry) o;
     vce = mkEntryBlock(vce);
-    vce.post = treatAnnot(vce, annot.getAnnotPost(x));
+    vce.post = treatAnnot(vce, fAnnot.getAnnotPost(x));
 
-    for(int i = max - 1; i >= 0; i--) {
-      Object child = x.childAt(i);
-      if(child instanceof ASTNode) {
+    for (int i = max - 1; i >= 0; i--) {
+      final Object child = x.childAt(i);
+      if (child instanceof ASTNode) {
         vce.post = (Post) ((ASTNode) child).accept(this, vce);
       }
     }
-    return treatAnnot( vce, annot.getAnnotPre(x));
-  }	
+    return treatAnnot(vce, fAnnot.getAnnotPre(x));
+  }
 
   // TODO: add comments
-  public Post visitInnerBlockStmt (/*@non_null*/ Stmt x, VCEntry vce) {	
-    if(!(x instanceof BlockStmt)) {
+  public Post visitInnerBlockStmt (final /*@non_null*/ Stmt x, final VCEntry vce) {
+    if (!(x instanceof BlockStmt)) {
       return (Post)x.accept(this, vce);
     }
-    int max = x.childCount();
-    assert (annot.getAnnotPost(x) == null && annot.getAnnotPre(x) == null);
-    for(int i = max - 1; i >= 0; i--) {
-      Object child = x.childAt(i);
-      if(child instanceof ASTNode) {
+    final int max = x.childCount();
+    
+    // checking that the annotations are null
+    List<AAnnotation> tmp = fAnnot.getAnnotPost(x); 
+    assert (tmp == null);
+    tmp = fAnnot.getAnnotPre(x);
+    assert (tmp == null);
+    
+    for (int i = max - 1; i >= 0; i--) {
+      final Object child = x.childAt(i);
+      if (child instanceof ASTNode) {
         vce.post = (Post) ((ASTNode) child).accept(this, vce);
       }
     }
     return vce.post;
-  }	
+  }
 
   /*
    * (non-Javadoc)
    * @see javafe.ast.VisitorArgResult#visitStmt(javafe.ast.Stmt, java.lang.Object)
    */
   @Override
-  public Object visitStmt(Stmt x, Object o){
+  public Object visitStmt(final Stmt x, final Object o) {
     throw new IllegalArgumentException("Not yet implememented");
   }
 
 
 
   // TODO: add comments
-  public VCEntry mkEntryWhile(VCEntry ve, Post inv) {
-    VCEntry res = new VCEntry(ve);
+  public VCEntry mkEntryWhile(final VCEntry ve, final Post inv) {
+    final VCEntry res = new VCEntry(ve);
     res.brpost = ve.post;
     res.post = inv;
     res.contpost = inv;
-    return res;	
+    return res;
   }
 
   // TODO: add comments
-  public /*@non_null*/ Object visitWhileStmt(/*@non_null*/ WhileStmt x, Object o) {
-    VCEntry vce = (VCEntry)o;
-    vce.post = treatAnnot( vce, annot.getAnnotPost(x));
-    Term inv = annot.getInvariant(x);
-    Term post = vce.post.post;
-    Post pinv = new Post(inv);
-    VCEntry vceBody = mkEntryWhile(vce, pinv);
+  public /*@non_null*/ Object visitWhileStmt(final /*@non_null*/ WhileStmt x, final Object o) {
+    final VCEntry vce = (VCEntry)o;
+    vce.post = treatAnnot(vce, fAnnot.getAnnotPost(x));
+    final Term inv = fAnnot.getInvariant(x);
+    final Term post = vce.post.post;
+    final Post pinv = new Post(inv);
+    final VCEntry vceBody = mkEntryWhile(vce, pinv);
     Post bodypre;
     if (x.stmt instanceof BlockStmt)
       bodypre = visitInnerBlockStmt((BlockStmt)x.stmt, vceBody);
     else 
       bodypre = (Post) x.stmt.accept(this, vceBody);
 
-    QuantVariableRef v = Expression.rvar(Bool.sort);
+    final QuantVariableRef v = Expression.rvar(Bool.sort);
     vce.post = new Post(v,
                         Logic.and(Logic.implies(Logic.boolToProp(v), bodypre.post),
                                   Logic.implies(Logic.not(Logic.boolToProp(v)), post)));
     // the only field that can be modified in a VCentry is post 
-    Term aux = ((Post) x.expr.accept(exprVisitor, vce)).post;
-    vcs.add(Logic.implies(inv, aux));
+    final Term aux = ((Post) x.expr.accept(fExprVisitor, vce)).post;
+    fVcs.add(Logic.implies(inv, aux));
 
     vce.post = pinv;
-    return treatAnnot(vce, annot.getAnnotPre(x));
+    return treatAnnot(vce, fAnnot.getAnnotPre(x));
   }
 
   // TODO: add comments
-  public /*@non_null*/ Object visitEvalStmt(/*@non_null*/ EvalStmt x, Object o) {
-    VCEntry vce = (VCEntry) o;
-    vce.post = treatAnnot( vce, annot.getAnnotPost(x));
-    Post p = vce.post;
+  public /*@non_null*/ Object visitEvalStmt(final /*@non_null*/ EvalStmt x, final Object o) {
+    final VCEntry vce = (VCEntry) o;
+    vce.post = treatAnnot(vce, fAnnot.getAnnotPost(x));
+    final Post p = vce.post;
     vce.post = new Post(Expression.rvar(Type.getSort(x.expr)),
                         p.post);
-    vce.post = (Post)x.expr.accept(exprVisitor, vce);
-    return treatAnnot(vce, annot.getAnnotPre(x));
+    vce.post = (Post)x.expr.accept(fExprVisitor, vce);
+    return treatAnnot(vce, fAnnot.getAnnotPre(x));
   }
 
   // TODO: add comments
-  public /*@non_null*/ Object visitReturnStmt(/*@non_null*/ ReturnStmt x, Object o) {
+  public /*@non_null*/ Object visitReturnStmt(final /*@non_null*/ ReturnStmt x, final Object o) {
+    
     // Goog to ensure that x.annotPost == Null
-    // and so remove this line
-    assert (annot.getAnnotPost(x) == null); // if the method type is not void there should 
+    // and so remove this check
+    final List<AAnnotation> tmp = fAnnot.getAnnotPost(x);
+    assert (tmp == null); // if the method type is not void there should 
     // also be the variable \result
-    VCEntry vce = (VCEntry) o;
-    if(meth instanceof MethodDecl) {
-      vce.post = new Post(Expression.getResultRVar((MethodDecl)meth), Lookup.normalPostcondition(meth));
+    
+    final VCEntry vce = (VCEntry) o;
+    if (fMeth instanceof MethodDecl) {
+      vce.post = new Post(Expression.getResultRVar((MethodDecl)fMeth), 
+                          Lookup.normalPostcondition(fMeth));
     }
     else {
-      vce.post = Lookup.normalPostcondition(meth);
+      vce.post = Lookup.normalPostcondition(fMeth);
 
     }
-    vce.post = (Post) x.expr.accept(exprVisitor, vce);
-    return treatAnnot(vce, annot.getAnnotPre(x));
-  }	
+    vce.post = (Post) x.expr.accept(fExprVisitor, vce);
+    return treatAnnot(vce, fAnnot.getAnnotPre(x));
+  }
 
-  public static Post getExcpPostExact(Term typ, VCEntry vce) {
-    Iterator iter = vce.lexcpost.iterator();
-    while(iter.hasNext()) {
-      ExcpPost p = (ExcpPost)iter.next();
+  public static Post getExcpPostExact(final Term typ, final VCEntry vce) {
+    final Iterator iter = vce.lexcpost.iterator();
+    while (iter.hasNext()) {
+      final ExcpPost p = (ExcpPost)iter.next();
       if (Type.isSubClassOrEq(typ, p.type)) {
         return p.post;
       }
@@ -271,34 +286,34 @@ public class StmtVCGen extends ExpressionVisitor {
   }
 
   // TODO: add comments
-  public static Post getExcpPost(Term typ, VCEntry vce) {
-    Iterator iter = vce.lexcpost.iterator();
+  public static Post getExcpPost(final Term typ, final VCEntry vce) {
+    final Iterator iter = vce.lexcpost.iterator();
     Post res = vce.excpost;
-    while(iter.hasNext()) {
-      ExcpPost p = (ExcpPost)iter.next();
+    while (iter.hasNext()) {
+      final ExcpPost p = (ExcpPost)iter.next();
       if (Type.isSubClassOrEq(typ, p.type)) {
         res = p.post;
       }
-      else if (Type.isSubClassOrEq(p.type,typ)) {
-        Term var = Expression.rvar(Ref.sort);
-        Post typeof = new Post(
+      else if (Type.isSubClassOrEq(p.type, typ)) {
+        final Term var = Expression.rvar(Ref.sort);
+        final Post typeof = new Post(
                                Logic.assignCompat(Heap.var, var, 
                                                   p.type));
         res = Post.and(Post.implies(typeof, p.post), 
                        Post.implies(Post.not(typeof), res));
-      }	
+      }
     }
     return res;
   }
 
   // TODO: add comments
-  public /*@non_null*/ Object visitThrowStmt(/*@non_null*/ ThrowStmt x, Object o) {
-    VCEntry vce = (VCEntry)o;
-    vce.post = treatAnnot( vce, annot.getAnnotPost(x));
-    Term typ = Type.getTypeName(x.expr);
+  public /*@non_null*/ Object visitThrowStmt(final /*@non_null*/ ThrowStmt x, final Object o) {
+    final VCEntry vce = (VCEntry)o;
+    vce.post = treatAnnot(vce, fAnnot.getAnnotPost(x));
+    final Term typ = Type.getTypeName(x.expr);
     vce.post = getExcpPost(typ, vce);
-    vce.post = ((Post)x.expr.accept(exprVisitor, vce));
-    return treatAnnot(vce, annot.getAnnotPre(x));
+    vce.post = ((Post)x.expr.accept(fExprVisitor, vce));
+    return treatAnnot(vce, fAnnot.getAnnotPre(x));
   }
 
   /**
@@ -308,28 +323,28 @@ public class StmtVCGen extends ExpressionVisitor {
    * @param vce the entry where the postcondition for the labels was stocked
    * @return a valid post condition or null if the label was not found
    */
-  public static Post getBreakPost(Identifier label,VCEntry vce) {
+  public static Post getBreakPost(final Identifier label, final VCEntry vce) {
     if (label == null) return vce.brpost; 
     return vce.lbrpost.get(label);
   }
 
   // TODO: add comments
-  public /*@non_null*/ Object visitBreakStmt(/*@non_null*/ BreakStmt x, Object o) {
-    VCEntry vce = (VCEntry) o;
+  public /*@non_null*/ Object visitBreakStmt(final /*@non_null*/ BreakStmt x, final Object o) {
+    final VCEntry vce = (VCEntry) o;
     // there should be no annot post since it is a control flow exit sttment
     vce.post = getBreakPost(x.label, vce);
-    return treatAnnot(vce, annot.getAnnotPre(x));
+    return treatAnnot(vce, fAnnot.getAnnotPre(x));
   }
 
   /**
-   * Return the continue postcondition corresponding to the given label,
+   * Return the continue postcondition corresponding to the given label.
    * @param label a valid label or null
    * @param vce the entry containing <em>all</em> the postconditions
    * @return the postcondition corresponding to the label or null.
    */
-  public static Post getContinuePost(Identifier label,VCEntry vce) {
+  public static Post getContinuePost(final Identifier label, final VCEntry vce) {
     if (label == null) {
-      if(vce.contpost == null)
+      if (vce.contpost == null)
         throw new NullPointerException();
       return vce.contpost; 
     }
@@ -337,151 +352,150 @@ public class StmtVCGen extends ExpressionVisitor {
   }
 
   // TODO: add comments
-  public /*@non_null*/ Object visitContinueStmt(/*@non_null*/ ContinueStmt x, Object o) {
-    VCEntry vce = (VCEntry) o;
-
+  public /*@non_null*/ Object visitContinueStmt(final /*@non_null*/ ContinueStmt x, final Object o) {
+    final VCEntry vce = (VCEntry) o;
     vce.post = getContinuePost(x.label, vce);
-    return treatAnnot(vce, annot.getAnnotPre(x));
+    return treatAnnot(vce, fAnnot.getAnnotPre(x));
   }
 
   // TODO: add comments
-  public VCEntry mkEntryLoopLabel(Identifier label, VCEntry ve, Post continu) {
-    VCEntry res = new VCEntry(ve);
+  public VCEntry mkEntryLoopLabel(final Identifier label, final VCEntry ve, final Post continu) {
+    final VCEntry res = new VCEntry(ve);
     res.brpost = ve.post;
     res.contpost = continu;
     res.lbrpost.put(label, ve.post);
     res.lcontpost.put(label, continu);
-    return res;	
+    return res;
   }
 
   // TODO: add comments
-  public /*@non_null*/ Object visitLabelStmt(/*@non_null*/ LabelStmt x, Object o) {
-    Stmt s = x.stmt;
+  public /*@non_null*/ Object visitLabelStmt(final /*@non_null*/ LabelStmt x, final Object o) {
+    final Stmt s = x.stmt;
     VCEntry vce = (VCEntry)o;
-    vce.post = treatAnnot(vce, annot.getAnnotPost(x));
-    if (s instanceof WhileStmt || s instanceof DoStmt || s instanceof ForStmt ) {
-      vce = mkEntryLoopLabel(x.label, vce, new Post(annot.getInvariant(s)));
+    vce.post = treatAnnot(vce, fAnnot.getAnnotPost(x));
+    if (s instanceof WhileStmt || s instanceof DoStmt || s instanceof ForStmt) {
+      vce = mkEntryLoopLabel(x.label, vce, new Post(fAnnot.getInvariant(s)));
     }
-    vce.post = (Post) x.stmt.accept(exprVisitor, vce);
-    return treatAnnot(vce, annot.getAnnotPre(x));
+    vce.post = (Post) x.stmt.accept(fExprVisitor, vce);
+    return treatAnnot(vce, fAnnot.getAnnotPre(x));
   }
 
   // TODO: add comments
-  public /*@non_null*/ Object visitIfStmt(/*@non_null*/ IfStmt x, Object o) {
-    VCEntry vce = (VCEntry) o;
-    Post postBranch = treatAnnot(vce, annot.getAnnotPost(x));
+  public /*@non_null*/ Object visitIfStmt(final /*@non_null*/ IfStmt x, final Object o) {
+    final VCEntry vce = (VCEntry) o;
+    final Post postBranch = treatAnnot(vce, fAnnot.getAnnotPost(x));
     vce.post = postBranch;
-    Post preT = (Post) x.thn.accept(this, vce);
+    final Post preT = (Post) x.thn.accept(this, vce);
     vce.post = postBranch;
-    Post preF = (Post) x.els.accept(this, vce);
+    final Post preF = (Post) x.els.accept(this, vce);
 
-    QuantVariableRef v = Expression.rvar(Bool.sort);
+    final QuantVariableRef v = Expression.rvar(Bool.sort);
 
     vce.post = new Post(v,
                         Logic.and(Logic.implies(Logic.boolToProp(v), preT.post),
                                   Logic.implies(Logic.not(Logic.boolToProp(v)), preF.post)));
 
-    vce.post = (Post) x.accept(exprVisitor, vce);	
-    return treatAnnot(vce, annot.getAnnotPre(x));
+    vce.post = (Post) x.accept(fExprVisitor, vce);
+    return treatAnnot(vce, fAnnot.getAnnotPre(x));
   }
 
   // TODO: add comments
-  public /*@non_null*/ Object visitSkipStmt(/*@non_null*/ SkipStmt x, Object o) {
-    VCEntry vce = (VCEntry) o;
-    vce.post = treatAnnot(vce, annot.getAnnotPost(x));
-    return treatAnnot(vce, annot.getAnnotPre(x));
+  public /*@non_null*/ Object visitSkipStmt(final /*@non_null*/ SkipStmt x, final Object o) {
+    final VCEntry vce = (VCEntry) o;
+    vce.post = treatAnnot(vce, fAnnot.getAnnotPost(x));
+    return treatAnnot(vce, fAnnot.getAnnotPre(x));
   }
 
   // TODO: add comments
-  public /*@non_null*/ Object visitTryFinallyStmt(/*@non_null*/ TryFinallyStmt x, Object o) {
-    VCEntry vce = (VCEntry) o;
-    vce.post = treatAnnot(vce, annot.getAnnotPost(x));
-    Stmt sTry = x.tryClause;
-    Stmt sFinally = x.finallyClause;
-    VCEntry vcetmp = new VCEntry(vce);
-    Post post = visitInnerBlockStmt(sFinally,  vcetmp);
+  public /*@non_null*/ Object visitTryFinallyStmt(final /*@non_null*/ TryFinallyStmt x, final Object o) {
+    final VCEntry vce = (VCEntry) o;
+    vce.post = treatAnnot(vce, fAnnot.getAnnotPost(x));
+    final Stmt sTry = x.tryClause;
+    final Stmt sFinally = x.finallyClause;
+    final VCEntry vcetmp = new VCEntry(vce);
+    final Post post = visitInnerBlockStmt(sFinally,  vcetmp);
 
     // brpost
     vcetmp.post = vce.brpost;
-    Post brpost = (Post) visitInnerBlockStmt(sFinally,  vcetmp);
+    final Post brpost = (Post) visitInnerBlockStmt(sFinally,  vcetmp);
     // lbrpost
-    HashMap<Identifier, Post> lbrpost = new HashMap<Identifier, Post>();
+    final Map<Identifier, Post> lbrpost = new HashMap<Identifier, Post>();
     Set<Identifier> keys = vce.lbrpost.keySet();
-    for(Identifier k : keys) {
+    for (Identifier k: keys) {
       vcetmp.post = vce.lbrpost.get(k);
-      Post p = visitInnerBlockStmt(sFinally,  vcetmp);
+      final Post p = visitInnerBlockStmt(sFinally,  vcetmp);
       lbrpost.put(k, p);
     }
 
     // contpost
     vcetmp.post = vce.contpost;
-    Post contpost = visitInnerBlockStmt(sFinally,  vcetmp);
+    final Post contpost = visitInnerBlockStmt(sFinally,  vcetmp);
     //lcontpost
-    HashMap<Identifier, Post> lcontpost = new HashMap<Identifier, Post>();
+    final Map<Identifier, Post> lcontpost = new HashMap<Identifier, Post>();
     keys = vce.lcontpost.keySet();
-    for(Identifier k : keys) {
+    for (Identifier k : keys) {
       vcetmp.post = vce.lcontpost.get(k);
-      Post p = visitInnerBlockStmt(sFinally,  vcetmp);
+      final Post p = visitInnerBlockStmt(sFinally,  vcetmp);
       lcontpost.put(k, p);
     }
 
     //excpost
     vcetmp.post = vce.excpost;
-    Post excpost = visitInnerBlockStmt(sFinally,  vcetmp);
+    final Post excpost = visitInnerBlockStmt(sFinally,  vcetmp);
     //lexcpost
-    List<ExcpPost> lexcpost = new ArrayList<ExcpPost>();
-    for(ExcpPost exc : vce.lexcpost) {
+    final List<ExcpPost> lexcpost = new ArrayList<ExcpPost>();
+    for (ExcpPost exc: vce.lexcpost) {
       vcetmp.post = exc.post;
-      Post p = visitInnerBlockStmt(sFinally,  vcetmp);
+      final Post p = visitInnerBlockStmt(sFinally,  vcetmp);
       lexcpost.add(new ExcpPost(exc.type, p));
     }
 
-    VCEntry entFinally = new VCEntry(post, excpost, brpost,contpost);
+    final VCEntry entFinally = new VCEntry(post, excpost, brpost, contpost);
     entFinally.lbrpost.putAll(lbrpost);
     entFinally.lcontpost.putAll(lcontpost);
     entFinally.lexcpost.addAll(lexcpost);
-    visitInnerBlockStmt(sTry,entFinally);
-    return treatAnnot(vce, annot.getAnnotPre(x));
+    visitInnerBlockStmt(sTry, entFinally);
+    return treatAnnot(vce, fAnnot.getAnnotPre(x));
   }
 
   // TODO: add comments
-  public /*@non_null*/ Object visitTryCatchStmt(/*@non_null*/ TryCatchStmt x, Object o) {
-    VCEntry vce = (VCEntry) o;
-    vce.post = treatAnnot(vce, annot.getAnnotPost(x));
-    CatchClauseVec ccv= x.catchClauses;
-    CatchClause[] catches = ccv.toArray();
-    LinkedList<ExcpPost> l = new LinkedList<ExcpPost>();
-    Post olpost = vce.post;
-    for(CatchClause c: catches) {
+  public /*@non_null*/ Object visitTryCatchStmt(final /*@non_null*/ TryCatchStmt x, final Object o) {
+    final VCEntry vce = (VCEntry) o;
+    vce.post = treatAnnot(vce, fAnnot.getAnnotPost(x));
+    final CatchClauseVec ccv = x.catchClauses;
+    final CatchClause[] catches = ccv.toArray();
+    final LinkedList<ExcpPost> l = new LinkedList<ExcpPost>();
+    final Post olpost = vce.post;
+    for (CatchClause c: catches) {
       ExcpPost ep;
-      Term t = Type.translate(c.arg.type);
-      QuantVariableRef excp = Expression.rvar(c.arg);
+      final Term t = Type.translate(c.arg.type);
+      final QuantVariableRef excp = Expression.rvar(c.arg);
       vce.post = olpost;
       Post epost = (Post)c.body.accept(this, vce);
       epost = new Post(excp, epost.post);
       ep = new ExcpPost(t, epost);
       l.addLast(ep);
     }
-    VCEntry post = new VCEntry(vce);
+    final VCEntry post = new VCEntry(vce);
     post.lexcpost.clear();
     post.lexcpost.addAll(l);
     post.lexcpost.addAll(vce.lexcpost);
     vce.post = visitInnerBlockStmt(x.tryClause, vce);
-    return treatAnnot(vce, annot.getAnnotPre(x));
+    return treatAnnot(vce, fAnnot.getAnnotPre(x));
   }
 
   // TODO: add comments
-  public /*@non_null*/ Object visitVarDeclStmt(/*@non_null*/ VarDeclStmt x, Object o) {
-    VCEntry vce = (VCEntry) o;
-    vce.post = treatAnnot(vce, annot.getAnnotPost(x));
-    VarInit init = x.decl.init;
-    QuantVariable qv = Expression.var(x.decl);
-    if(init != null) {
+  public /*@non_null*/ Object visitVarDeclStmt(final /*@non_null*/ VarDeclStmt x, final Object o) {
+    final VCEntry vce = (VCEntry) o;
+    vce.post = treatAnnot(vce, fAnnot.getAnnotPost(x));
+    final VarInit init = x.decl.init;
+    final QuantVariable qv = Expression.var(x.decl);
+    if (init != null) {
       // the init value replaces the quantification
-      QuantVariableRef qvr = Expression.rvar(qv);
+      final QuantVariableRef qvr = Expression.rvar(qv);
       vce.post = new Post(qvr, vce.post.post);
       vce.post = (Post)init.accept(this, vce);
-      if(init instanceof ArrayInit) {
+      if (init instanceof ArrayInit) {
         // FIXME should add the array new too
         vce.post = new Post(Logic.forall(qv, vce.post.post));
       }
@@ -493,7 +507,7 @@ public class StmtVCGen extends ExpressionVisitor {
     }
     // we must anyway declare it for every vc:
     addVarDecl(qv);
-    return treatAnnot(vce, annot.getAnnotPre(x));
+    return treatAnnot(vce, fAnnot.getAnnotPre(x));
   }
 
   /**
@@ -501,11 +515,11 @@ public class StmtVCGen extends ExpressionVisitor {
    * The variable is added to each vcs.
    * @param qv the variable to declare
    */
-  private void addVarDecl(QuantVariable qv) {
-    Vector<Term> oldvcs = vcs;
-    vcs = new Vector<Term>();
+  private void addVarDecl(final QuantVariable qv) {
+    final List<Term> oldvcs = fVcs;
+    fVcs = new Vector<Term>();
     for (Term t: oldvcs) {
-      vcs.add(Logic.forall(qv, t));
+      fVcs.add(Logic.forall(qv, t));
     }
 
   }
@@ -513,7 +527,7 @@ public class StmtVCGen extends ExpressionVisitor {
 
   // TODO: add comments
   // already treated in the try clause
-  public /*@non_null*/ Object visitCatchClause(/*@non_null*/ CatchClause x, Object o) {
+  public /*@non_null*/ Object visitCatchClause(final /*@non_null*/ CatchClause x, final Object o) {
     return visitASTNode(x, o);
   }
 
@@ -521,27 +535,30 @@ public class StmtVCGen extends ExpressionVisitor {
 
 
   // TODO: add comments
-  public /*@non_null*/ Object visitConstructorInvocation(/*@non_null*/ ConstructorInvocation ci, Object o) {
-    VCEntry entry = (VCEntry)o;
-    Post normalPost = Lookup.normalPostcondition(ci.decl);
-    Post excpPost = Lookup.exceptionalPostcondition(ci.decl);
-    Term pre = Lookup.precondition(ci.decl);
-    QuantVariableRef newThis = Expression.rvar(Ref.sort);
+  public /*@non_null*/ Object visitConstructorInvocation(final /*@non_null*/ ConstructorInvocation ci, final Object o) {
+    final VCEntry entry = (VCEntry)o;
+    final Post normalPost = Lookup.normalPostcondition(ci.decl);
+    final Post excpPost = Lookup.exceptionalPostcondition(ci.decl);
+    final Term pre = Lookup.precondition(ci.decl);
+    final QuantVariableRef newThis = Expression.rvar(Ref.sort);
 
     // first: the exceptional post
-    QuantVariableRef exc = Expression.rvar(Ref.sort);
-    Term tExcp = Logic.forall(exc.qvar, Logic.implies(excpPost.substWith(exc).subst(Ref.varThis, newThis), 
-                                                      StmtVCGen.getExcpPost(Type.javaLangThrowable(), entry).substWith(exc)));
+    final QuantVariableRef exc = Expression.rvar(Ref.sort);
+    final Term tExcp = Logic.forall(exc.qvar, 
+               Logic.implies(excpPost.substWith(exc).subst(Ref.varThis, 
+                                                           newThis), 
+                             StmtVCGen.getExcpPost(Type.javaLangThrowable(), 
+                                                   entry).substWith(exc)));
     // the normal post
-    //QuantVariableRef res = entry.post.var;		
+    //QuantVariableRef res = entry.post.var;
     Term tNormal = normalPost.post;
     tNormal = Logic.implies(tNormal, entry.post.post).subst(Ref.varThis, newThis);
 
     entry.post = new Post(Logic.and(pre, Logic.implies(pre, Logic.and(tNormal, tExcp))));
-    Vector<QuantVariableRef> v = mkArguments(ci);
-    ExprVec ev = ci.args;
+    final List<QuantVariableRef> v = mkArguments(ci);
+    final ExprVec ev = ci.args;
     for (int i = ev.size() - 1; i >= 0; i--) {
-      entry.post = new Post(v.elementAt(i), entry.post.post);
+      entry.post = new Post(v.get(i), entry.post.post);
       entry.post = (Post) ev.elementAt(i).accept(this, entry);
     }
     entry.post = new Post(newThis, entry.post.post);
@@ -549,10 +566,10 @@ public class StmtVCGen extends ExpressionVisitor {
   }
 
   // TODO: add comments
-  public static Vector<QuantVariableRef> mkArguments(ConstructorInvocation mi) {
-    Vector<QuantVariableRef> v = new Vector<QuantVariableRef>();
-    FormalParaDeclVec fpdvec = mi.decl.args;
-    FormalParaDecl[] args = fpdvec.toArray();
+  public static List<QuantVariableRef> mkArguments(final ConstructorInvocation mi) {
+    final List<QuantVariableRef> v = new Vector<QuantVariableRef>();
+    final FormalParaDeclVec fpdvec = mi.decl.args;
+    final FormalParaDecl[] args = fpdvec.toArray();
     for (FormalParaDecl fpd: args) {
       v.add(Expression.rvar(fpd));
     }
@@ -560,15 +577,15 @@ public class StmtVCGen extends ExpressionVisitor {
   }
 
 
-  public /*@non_null*/ Object visitForStmt(/*@non_null*/ ForStmt x, Object o) {
+  public /*@non_null*/ Object visitForStmt(final /*@non_null*/ ForStmt x, final Object o) {
 
-    VCEntry vce = (VCEntry)o;
-    vce.post = treatAnnot( vce, annot.getAnnotPost(x));
-    Term inv = annot.getInvariant(x);
-    Term post = vce.post.post;
-    Post pinv = new Post(inv);
-    VCEntry vceBody = mkEntryWhile(vce, pinv);
-    for(int i = x.forUpdate.size() -1; i >= 0; i --) {
+    final VCEntry vce = (VCEntry)o;
+    vce.post = treatAnnot(vce, fAnnot.getAnnotPost(x));
+    final Term inv = fAnnot.getInvariant(x);
+    final Term post = vce.post.post;
+    final Post pinv = new Post(inv);
+    final VCEntry vceBody = mkEntryWhile(vce, pinv);
+    for (int i = x.forUpdate.size() - 1; i >= 0; i--) {
       vceBody.post = (Post) x.forUpdate.elementAt(i).accept(this, vceBody);
     }
     Post bodypre;
@@ -577,67 +594,72 @@ public class StmtVCGen extends ExpressionVisitor {
     else 
       bodypre = (Post) x.body.accept(this, vceBody);
 
-    QuantVariableRef v = Expression.rvar(Bool.sort);
+    final QuantVariableRef v = Expression.rvar(Bool.sort);
     vce.post = new Post(v,
                         Logic.and(Logic.implies(Logic.boolToProp(v), bodypre.post),
                                   Logic.implies(Logic.not(Logic.boolToProp(v)), post)));
     // the only field that can be modified in a VCentry is post 
-    Term aux = ((Post) x.test.accept(exprVisitor, vce)).post;
+    final Term aux = ((Post) x.test.accept(fExprVisitor, vce)).post;
     Term vc = Logic.implies(inv, aux);
     // we add the for declared variables
-    for(int i = x.forInit.size() -1; i >= 0; i --) {
-      Stmt s =  (Stmt) x.forInit.elementAt(i);
-      if(s instanceof VarDeclStmt) {
-        VarDeclStmt decl = (VarDeclStmt) s;
-        QuantVariable qv = Expression.var(decl.decl);
+    for (int i = x.forInit.size() - 1; i >= 0; i--) {
+      final Stmt s = (Stmt) x.forInit.elementAt(i);
+      if (s instanceof VarDeclStmt) {
+        final VarDeclStmt decl = (VarDeclStmt) s;
+        final QuantVariable qv = Expression.var(decl.decl);
         vc = Logic.forall(qv, vc);
       }
     }
-    vcs.add(vc);
+    fVcs.add(vc);
 
     vce.post = pinv;
-    for(int i = x.forInit.size() -1; i >= 0; i --) {
-      Stmt s =  (Stmt) x.forInit.elementAt(i);
+    for (int i = x.forInit.size() - 1; i >= 0; i--) {
+      final Stmt s =  (Stmt) x.forInit.elementAt(i);
       vce.post = (Post)s.accept(this, vce);
     }
-    return treatAnnot(vce, annot.getAnnotPre(x));
+    return treatAnnot(vce, fAnnot.getAnnotPre(x));
   }
 
 
   //pas implementer
 
   /**
-   * right now, it is ignored
+   * right now, it is ignored.
    */
   @Override
-  public /*@non_null*/ Object visitDoStmt(/*@non_null*/ DoStmt x, Object o) {
+  public /*@non_null*/ Object visitDoStmt(final /*@non_null*/ DoStmt x, final Object o) {
     return visitStmt(x, o);
   }
 
-  public /*@non_null*/ Object visitSwitchStmt(/*@non_null*/ SwitchStmt x, Object o) {
-    return visitStmt(x, o);
-  }	
-
-  public /*@non_null*/ Object visitSwitchLabel(/*@non_null*/ SwitchLabel x, Object o) {
+  public /*@non_null*/ Object visitSwitchStmt(final /*@non_null*/ SwitchStmt x, final Object o) {
     return visitStmt(x, o);
   }
 
-  public /*@non_null*/ Object visitStmtPragma(/*@non_null*/ StmtPragma x, Object o) {
+  public /*@non_null*/ Object visitSwitchLabel(final /*@non_null*/ SwitchLabel x, final Object o) {
+    return visitStmt(x, o);
+  }
+
+  public /*@non_null*/ Object visitStmtPragma(final /*@non_null*/ StmtPragma x, final Object o) {
     // just ignore it return illegalStmt(x, o);
     return ((VCEntry) o).post;
   }
 
-  public /*@non_null*/ Object visitSynchronizeStmt(/*@non_null*/ SynchronizeStmt x, Object o) {
+  public /*@non_null*/ Object visitSynchronizeStmt(final /*@non_null*/ SynchronizeStmt x, final Object o) {
     return illegalStmt(x, o);
   }
   @Override
-  public Object visitExprStmtPragma(ExprStmtPragma x, Object o) {
+  public Object visitExprStmtPragma(final ExprStmtPragma x, final Object o) {
     return ((VCEntry) o).post;
   }
 
   @Override
-  public Object visitSetStmtPragma(SetStmtPragma x, Object o) {
+  public Object visitSetStmtPragma(final SetStmtPragma x, final Object o) {
     return ((VCEntry) o).post;
   }
 
-}	
+
+  public List<Term> getVcs() {
+    return fVcs;
+  }
+
+}

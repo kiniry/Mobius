@@ -10,11 +10,13 @@ import escjava.sortedProver.NodeBuilder.STerm;
  * @author J. Charles (julien.charles@inria.fr)
  */
 public class CForall extends CPred {
+  /** the array of variables to quantify. */
+  protected final QuantVar[] fVars;
+  
   /** a builder to help pretty print. */
   private final CoqNodeBuilder fBuilder;
 
-  /** the array of variables to quantify. */
-  public final QuantVar[] fVars;
+
 
   /**
    * Constructs a forall.
@@ -28,14 +30,18 @@ public class CForall extends CPred {
     this.fVars = vars;
   }
   
-  /*
-   * (non-Javadoc)
-   * @see mobius.directVCGen.formula.coq.CoqNodeBuilder.CTerm#toString()
+
+  /**
+   * @return a forall understandable by Coq, e.g.:
+   * <code>
+   * (forall (v1: Type1) (v2: Type2)... body)
+   * </code>
    */
   public String toString() {
     String res  = "(forall";
     for (QuantVar v: fVars) {
-      res += " (" + CoqNodeBuilder.normalize(v.name) + ":" + this.fBuilder.buildSort(v.type) + ")";
+      res += " (" + CoqNodeBuilder.normalize(v.name) + ":" + 
+                    this.fBuilder.buildSort(v.type) + ")";
     }
     res += ", " + fArgs[0] + ")";
     return res;

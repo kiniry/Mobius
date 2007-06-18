@@ -55,9 +55,9 @@ import escjava.ast.WildRefExpr;
 /**
  * A visitor that do all the basic handlings.
  * The only implemented method is {@link #visitASTNode(ASTNode, Object)}.
- * @author J. Charles
+ * @author J. Charles (julien.charles@inria.fr)
  */
-public abstract class ABasicVisitor extends VisitorArgResult{
+public abstract class ABasicVisitor extends VisitorArgResult {
 
   /**
    * Throws an exception which significate that we have reached an 
@@ -66,11 +66,11 @@ public abstract class ABasicVisitor extends VisitorArgResult{
    * @param o anything
    * @return nothing; throws a {@link java.lang.IllegalArgumentException}
    */
-  public static Object illegalExpr(ASTNode x, Object o){
+  public static Object illegalExpr(final ASTNode x, final Object o) {
     throw new IllegalArgumentException("Illegal Expression");
   }
 
-  public Object illegalStmt(ASTNode x, Object o){
+  public Object illegalStmt(final ASTNode x, final Object o){
     throw new IllegalArgumentException("Illegal Statement");
   }
 
@@ -80,16 +80,17 @@ public abstract class ABasicVisitor extends VisitorArgResult{
    * @see javafe.ast.VisitorArgResult#visitASTNode(javafe.ast.ASTNode, java.lang.Object)
    */
   @Override
-  public Object visitASTNode(ASTNode x, Object o) {
+  public Object visitASTNode(final ASTNode x, final Object o) {
     //System.out.println(x);
-    int max = x.childCount();
+    final int max = x.childCount();
+    Object res = o;
     for (int i = 0; i < max; i++) {
-      Object child = x.childAt(i);
+      final Object child = x.childAt(i);
       if (child instanceof ASTNode) {
-        o = ((ASTNode) child).accept(this, o);
+        res = ((ASTNode) child).accept(this, o);
       }
     }
-    return o;
+    return res;
   }
 
   /*
@@ -97,7 +98,7 @@ public abstract class ABasicVisitor extends VisitorArgResult{
    * @see escjava.ast.VisitorArgResult#visitAnOverview(escjava.ast.AnOverview, java.lang.Object)
    */
   @Override
-  public Object visitAnOverview(AnOverview x, Object o) {
+  public Object visitAnOverview(final AnOverview x, final Object o) {
     return visitASTNode(x, o);
   }
 
@@ -106,7 +107,7 @@ public abstract class ABasicVisitor extends VisitorArgResult{
    * @see escjava.ast.VisitorArgResult#visitArrayRangeRefExpr(escjava.ast.ArrayRangeRefExpr, java.lang.Object)
    */
   @Override
-  public Object visitArrayRangeRefExpr(ArrayRangeRefExpr x, Object o) {
+  public Object visitArrayRangeRefExpr(final ArrayRangeRefExpr x, final Object o) {
     return visitASTNode(x, o);
   }
 
@@ -115,7 +116,7 @@ public abstract class ABasicVisitor extends VisitorArgResult{
    * @see escjava.ast.VisitorArgResult#visitCondExprModifierPragma(escjava.ast.CondExprModifierPragma, java.lang.Object)
    */
   @Override
-  public Object visitCondExprModifierPragma(CondExprModifierPragma x, Object o) {
+  public Object visitCondExprModifierPragma(final CondExprModifierPragma x, final Object o) {
     return visitASTNode(x, o);
   }
 
@@ -124,7 +125,7 @@ public abstract class ABasicVisitor extends VisitorArgResult{
    * @see escjava.ast.VisitorArgResult#visitCondition(escjava.ast.Condition, java.lang.Object)
    */
   @Override
-  public Object visitCondition(Condition x, Object o) {
+  public Object visitCondition(final Condition x, final Object o) {
     return visitASTNode(x, o);
   }
 

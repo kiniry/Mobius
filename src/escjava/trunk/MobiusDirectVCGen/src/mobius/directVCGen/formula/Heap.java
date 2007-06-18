@@ -8,17 +8,28 @@ import escjava.sortedProver.NodeBuilder.Sort;
 /**
  * This library contains most of the methods to do heap manipulation / 
  * heap access <i>etc.</i>. It notably contains the heap variable.
+ * @author J. Charles (julien.charles@inria.fr), H. Lehner
  */
-public class Heap {
-  /** the sort that represents the type of a heap */
+public final class Heap {
+  /** the sort that represents the type of a heap. */
   public final static Sort sort = Formula.lf.sortMap;
 
-  /** the variable representing the heap */
+  /** the variable representing the heap. */
   public final static QuantVariableRef var = Expression.rvar("heap", sort);
 
-  /** the variable representing the heap in the prestate */
+  /** the variable representing the heap in the prestate. */
   public final static QuantVariableRef varPre = Expression.old(var);
 
+  /** the counter to count the number of instanciation of the heap variable. */
+  private static int heapc;
+  
+  /**
+   * @deprecated
+   */
+  private Heap() {
+    
+  }
+  
   /**
    * Creates a formula that represents a store upon a static variable.
    * @param heap the current heap
@@ -26,8 +37,10 @@ public class Heap {
    * @param val the value to store
    * @return the new heap, after the store 
    */
-  public static Term store(QuantVariableRef heap, QuantVariable var, Term val) {
-    return Formula.lf.mkFnTerm(Formula.lf.symStore, new Term[] {heap, Expression.rvar(var), sortToValue(val)});
+  public static Term store(final QuantVariableRef heap, final QuantVariable var, 
+                           final  Term val) {
+    return Formula.lf.mkFnTerm(Formula.lf.symStore, 
+                               new Term[] {heap, Expression.rvar(var), sortToValue(val)});
   }
 
   /**
@@ -38,8 +51,10 @@ public class Heap {
    * @param val the value to store in the field
    * @return a newly formed heap, after the store
    */
-  public static Term store(QuantVariableRef heap, Term obj, QuantVariable var, Term val) {
-    return Formula.lf.mkFnTerm(Formula.lf.symDynStore, new Term[] {heap, obj, Expression.rvar(var), sortToValue(val)});
+  public static Term store(final QuantVariableRef heap, final Term obj, 
+                           final QuantVariable var, final Term val) {
+    return Formula.lf.mkFnTerm(Formula.lf.symDynStore, 
+                               new Term[] {heap, obj, Expression.rvar(var), sortToValue(val)});
   }
 
 
@@ -51,16 +66,20 @@ public class Heap {
    * @param val the value to store
    * @return the newly formed heap
    */
-  public static Term storeArray(QuantVariableRef heap, Term var, Term idx, Term val) {
-    if(!heap.getSort().equals(Heap.sort)) {
-      throw new IllegalArgumentException("The heap argument should be of sort heap, found: " + heap.getSort());
+  public static Term storeArray(final QuantVariableRef heap, final Term var, 
+                                final Term idx, final Term val) {
+    if (!heap.getSort().equals(Heap.sort)) {
+      throw new IllegalArgumentException("The heap argument should be of sort heap, found: " + 
+                                         heap.getSort());
     }
-    if(!var.getSort().equals(Ref.sort)) {
-      throw new IllegalArgumentException("The var argument should be of sort reference, found: " + var.getSort());
+    if (!var.getSort().equals(Ref.sort)) {
+      throw new IllegalArgumentException("The var argument should be of sort reference, " +
+          "found: " + var.getSort());
     }
 
-    if(!idx.getSort().equals(Num.sortInt)) {
-      throw new IllegalArgumentException("The idx argument should be of sort int, found: " + idx.getSort());
+    if (!idx.getSort().equals(Num.sortInt)) {
+      throw new IllegalArgumentException("The idx argument should be of sort int, found: " + 
+                                         idx.getSort());
     }
     return Formula.lf.mkFnTerm(Formula.lf.symArrStore, new Term[] {heap,  var, idx, sortToValue(val)});
   }
@@ -71,8 +90,8 @@ public class Heap {
    * @param var the name of the field to select
    * @return the term representing the select
    */
-  public static Term select(QuantVariableRef heap, QuantVariable var) {
-    Term select = Formula.lf.mkFnTerm(Formula.lf.symSelect, 
+  public static Term select(final QuantVariableRef heap, final QuantVariable var) {
+    final Term select = Formula.lf.mkFnTerm(Formula.lf.symSelect, 
                                       new Term[] {heap, Expression.rvar(var)});
     return valueToSort(select, var.type);
   }
@@ -84,8 +103,9 @@ public class Heap {
    * @param var the name of the field on which to do the select
    * @return the term representing the select
    */
-  public static Term select(QuantVariableRef heap, Term obj, QuantVariable var) {
-    Term select = Formula.lf.mkFnTerm(Formula.lf.symDynSelect, 
+  public static Term select(final QuantVariableRef heap, final Term obj, 
+                            final QuantVariable var) {
+    final Term select = Formula.lf.mkFnTerm(Formula.lf.symDynSelect, 
                                       new Term[] {heap, obj, Expression.rvar(var)});
     return valueToSort(select, var.type);
   }
@@ -98,18 +118,23 @@ public class Heap {
    * @param type the type of the element to retrieve
    * @return the construct well instanciated
    */
-  public static Term selectArray(Term heap, Term var, Term idx, Sort type) {
-    if(!heap.getSort().equals(Heap.sort)) {
-      throw new IllegalArgumentException("The heap argument should be of sort heap, found: " + heap.getSort());
+  public static Term selectArray(final Term heap, final Term var, 
+                                 final Term idx, final Sort type) {
+    if (!heap.getSort().equals(Heap.sort)) {
+      throw new IllegalArgumentException("The heap argument should be of sort heap, found: " + 
+                                         heap.getSort());
     }
-    if(!var.getSort().equals(Ref.sort)) {
-      throw new IllegalArgumentException("The var argument should be of sort reference, found: " + var.getSort());
+    if (!var.getSort().equals(Ref.sort)) {
+      throw new IllegalArgumentException("The var argument should be of sort reference, " +
+          "found: " + var.getSort());
     }
 
-    if(!idx.getSort().equals(Num.sortInt)) {
-      throw new IllegalArgumentException("The idx argument should be of sort int, found: " + idx.getSort());
+    if (!idx.getSort().equals(Num.sortInt)) {
+      throw new IllegalArgumentException("The idx argument should be of sort int, found: " + 
+                                         idx.getSort());
     }
-    Term select = Formula.lf.mkFnTerm(Formula.lf.symArrSelect, new Term[] {heap, var, idx});
+    final Term select = Formula.lf.mkFnTerm(Formula.lf.symArrSelect, 
+                                            new Term[] {heap, var, idx});
     return valueToSort(select, type);
   }
 
@@ -121,17 +146,17 @@ public class Heap {
    * @param type the type to which to convert the term
    * @return the conversion term
    */
-  private static Term valueToSort(Term t, Sort type) {
-    if(type == Formula.lf.sortBool) {
+  private static Term valueToSort(final Term t, final Sort type) {
+    if (type == Formula.lf.sortBool) {
       return Formula.lf.mkFnTerm(Formula.lf.symValueToBool,  new Term [] {t});
     }
-    else if(type == Formula.lf.sortRef) {
+    else if (type == Formula.lf.sortRef) {
       return Formula.lf.mkFnTerm(Formula.lf.symValueToRef,  new Term [] {t});
     }
-    else if(type == Formula.lf.sortInt) {
+    else if (type == Formula.lf.sortInt) {
       return Formula.lf.mkFnTerm(Formula.lf.symValueToInt,  new Term [] {t});
     }
-    else if(type == Formula.lf.sortReal) {
+    else if (type == Formula.lf.sortReal) {
       return Formula.lf.mkFnTerm(Formula.lf.symValueToReal,  new Term [] {t});
     }
     else {
@@ -145,29 +170,29 @@ public class Heap {
    * @param t the variable to convert to a value
    * @return the converted variable
    */
-  public static Term sortToValue(Term t) {
+  public static Term sortToValue(final Term t) {
     Sort s = t.getSort();
     s = s.theRealThing();
-    if(s.equals(Formula.lf.sortBool)) {
+    if (s.equals(Formula.lf.sortBool)) {
       return Formula.lf.mkFnTerm(Formula.lf.symBoolToValue,  new Term [] {t});
     }
-    else if(s.equals(Formula.lf.sortRef)) {
+    else if (s.equals(Formula.lf.sortRef)) {
       return Formula.lf.mkFnTerm(Formula.lf.symRefToValue,  new Term [] {t});
     }
-    else if(s.equals(Formula.lf.sortInt)) {
+    else if (s.equals(Formula.lf.sortInt)) {
       return Formula.lf.mkFnTerm(Formula.lf.symIntToValue,  new Term [] {t});
     }
-    else if(s.equals(Formula.lf.sortReal)) {
+    else if (s.equals(Formula.lf.sortReal)) {
       return Formula.lf.mkFnTerm(Formula.lf.symRealToValue,  new Term [] {t});
     }
     else {
       throw new IllegalArgumentException("Bad type " +
-                                         "found for " + t.getClass() + " " + t + ": " + t.getSort());
+                                         "found for " + t.getClass() + " " + 
+                                         t + ": " + t.getSort());
     }
   }
 
-  /** the counter to count the number of instanciation of the heap variable */
-  private static int heapc =0;
+
 
   /**
    * Creates and return a new instance of the heap variable.
@@ -187,15 +212,19 @@ public class Heap {
    * @param e the location that has been allocated, represented by a variable
    * @return a predicate representing the creation of a new object
    */
-  public static Term newObject(Term oldheap, Term type, Term heap,  QuantVariableRef e) {
-    if(!oldheap.getSort().equals(Heap.sort)) {
-      throw new IllegalArgumentException("The old heap must be of type heap! Found: " + oldheap.getSort());
+  public static Term newObject(final Term oldheap, final Term type, 
+                               final Term heap,  final QuantVariableRef e) {
+    if (!oldheap.getSort().equals(Heap.sort)) {
+      throw new IllegalArgumentException("The old heap must be of type heap! Found: " + 
+                                         oldheap.getSort());
     }
-    if(!heap.getSort().equals(Heap.sort)) {
-      throw new IllegalArgumentException("The new heap must be of type heap! Found: " + heap.getSort());
+    if (!heap.getSort().equals(Heap.sort)) {
+      throw new IllegalArgumentException("The new heap must be of type heap! Found: " + 
+                                         heap.getSort());
     }
-    if(!type.getSort().equals(Type.sort)) {
-      throw new IllegalArgumentException("The type must be of type type! Found: " + type.getSort());
+    if (!type.getSort().equals(Type.sort)) {
+      throw new IllegalArgumentException("The type must be of type type! Found: " + 
+                                         type.getSort());
     }
 
     return Formula.lf.mkFnTerm(Formula.lf.symNewObj, new Term[] {oldheap, type, heap, e});
@@ -210,20 +239,27 @@ public class Heap {
    * @param loc the new location to allocate
    * @return the predicate representing the creation of an array
    */
-  public static Term newArray(QuantVariableRef oldheap,  Term type, QuantVariableRef heap, Term dim, QuantVariableRef loc) {
-    if(!oldheap.getSort().equals(Heap.sort)) {
-      throw new IllegalArgumentException("The old heap must be of type heap! Found: " + oldheap.getSort());
+  public static Term newArray(final QuantVariableRef oldheap,  final Term type, 
+                              final QuantVariableRef heap, final Term dim, 
+                              final QuantVariableRef loc) {
+    if (!oldheap.getSort().equals(Heap.sort)) {
+      throw new IllegalArgumentException("The old heap must be of type heap! Found: " + 
+                                         oldheap.getSort());
     }
-    if(!heap.getSort().equals(Heap.sort)) {
-      throw new IllegalArgumentException("The new heap must be of type heap! Found: " + heap.getSort());
+    if (!heap.getSort().equals(Heap.sort)) {
+      throw new IllegalArgumentException("The new heap must be of type heap! Found: " + 
+                                         heap.getSort());
     }
-    if(!type.getSort().equals(Type.sort)) {
-      throw new IllegalArgumentException("The type must be of type type! Found: " + type.getSort());
+    if (!type.getSort().equals(Type.sort)) {
+      throw new IllegalArgumentException("The type must be of type type! Found: " + 
+                                         type.getSort());
     }
-    if(!dim.getSort().equals(Num.sortInt)) {
-      throw new IllegalArgumentException("The dimension must be of type integer! Found: " + dim.getSort());
+    if (!dim.getSort().equals(Num.sortInt)) {
+      throw new IllegalArgumentException("The dimension must be of type integer! Found: " + 
+                                         dim.getSort());
     }
-    return Formula.lf.mkFnTerm(Formula.lf.symNewArray, new Term[] {oldheap, type, heap, loc, dim});
+    return Formula.lf.mkFnTerm(Formula.lf.symNewArray, 
+                               new Term[] {oldheap, type, heap, loc, dim});
 
   }
 

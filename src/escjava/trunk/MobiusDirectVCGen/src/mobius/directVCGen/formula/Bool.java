@@ -83,7 +83,9 @@ public final class Bool {
    * the term
    * @return a well-formed and well-typed term
    */
-  private static Term numBinaryOp(Term l, Term r, final int tag) {
+  private static Term numBinaryOp(final Term l, final Term r, final int tag) {
+    Term left = l;
+    Term right = r;
     if (l.getSort() != r.getSort() &&
         (!Num.isNum(l.getSort()) || !Num.isNum(r.getSort())))
       throw new IllegalArgumentException("The sort of " + l + 
@@ -91,19 +93,19 @@ public final class Bool {
     FnTerm t = null;
     if (l.getSort() == Num.sortInt) {
       if (r.getSort() == Num.sortReal) {
-        l = Num.intToReal(l);
-        t = Formula.lf.mkFnTerm(Formula.lf.symRealBoolFn, new Term[] {l, r});
+        left = Num.intToReal(l);
+        t = Formula.lf.mkFnTerm(Formula.lf.symRealBoolFn, new Term[] {left, right});
       }
       else {
-        t = Formula.lf.mkFnTerm(Formula.lf.symIntBoolFn, new Term[] {l, r});
+        t = Formula.lf.mkFnTerm(Formula.lf.symIntBoolFn, new Term[] {left, right});
       }
 
     }
     else if (l.getSort() == Num.sortReal) {
-      if(r.getSort() == Num.sortInt) {
-        r = Num.intToReal(r);
+      if (r.getSort() == Num.sortInt) {
+        right = Num.intToReal(r);
       }
-      t = Formula.lf.mkFnTerm(Formula.lf.symRealBoolFn, new Term[] {l, r});
+      t = Formula.lf.mkFnTerm(Formula.lf.symRealBoolFn, new Term[] {left, right});
     }
     else {
       throw new IllegalArgumentException("The sort " + l.getSort() + " is invalid!"); 

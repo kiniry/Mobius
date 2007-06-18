@@ -8,30 +8,31 @@ import java.util.Map;
 import javafe.ast.Identifier;
 
 /**
- * An entry to represent the environment of the VCGen
- * @author J. Charles and B. Grégoire
+ * An entry to represent the environment of the VCGen.
+ * @author J. Charles (julien.charles@inria.fr),
+ * B. Grégoire (benjamin.gregoire@inria.fr)
  */
 public class VCEntry {
   /** the postcondition of the method. */
-  public transient Post post;
+  public Post post;
 
   /** the exceptional postcondition for the method. */
-  public transient final Post excpost;
+  public final Post excpost;
   
   /** the list of excp post condition; used for the try...catch constructs. */
-  public transient final List<ExcpPost> lexcpost = new ArrayList<ExcpPost>();
+  public final List<ExcpPost> lexcpost = new ArrayList<ExcpPost>();
 
   /** the postcondition for the break, if there is no label. */
-  public transient Post brpost;
+  public Post brpost;
   
   /** the list of postconditions for breaks in case of labels. */
-  public transient final Map<Identifier, Post> lbrpost = new HashMap<Identifier, Post>(); 
+  public final Map<Identifier, Post> lbrpost = new HashMap<Identifier, Post>(); 
 
   /** the postcondition of continue if there is no label. */
-  public  transient Post contpost;
+  public  Post contpost;
   
   /** the list of postconditions of the continue if there are labels attached to loops. */
-  public transient final Map<Identifier, Post> lcontpost = new HashMap<Identifier, Post>(); 
+  public final Map<Identifier, Post> lcontpost = new HashMap<Identifier, Post>(); 
 
 
   /**
@@ -51,7 +52,7 @@ public class VCEntry {
    * @param post the normal postcondition
    * @param excpost the exceptional postcondition
    */
-  public VCEntry(Post post, Post excpost) {
+  public VCEntry(final Post post, final Post excpost) {
     this(post, excpost, null, null);
   }
 
@@ -63,7 +64,7 @@ public class VCEntry {
    * @param brpost the postcondition for a break without any label
    * @param contpost the postcondition for a continue without any label
    */
-  public VCEntry(Post post, Post excpost, Post brpost, Post contpost) {
+  public VCEntry(final Post post, final Post excpost, final Post brpost, final Post contpost) {
     this.post = post;
     this.brpost = brpost;
     this.contpost = contpost;
@@ -76,7 +77,7 @@ public class VCEntry {
    * and fill them with the elements of the object being copied.
    * @param ve the object to copy
    */
-  public VCEntry(VCEntry ve) {// N OPMD
+  public VCEntry(final VCEntry ve) {
     post = ve.post;
     brpost = ve.brpost;
     contpost = ve.contpost;
@@ -91,8 +92,10 @@ public class VCEntry {
   /**
    * Uses the constructor {@link #VCEntry(VCEntry)} to construct a clone
    * of the current object.
+   * @return a clone of the current entry
    */
-  public Object clone() {	// N OPMD
+  @Override
+  public Object clone() {
     return new VCEntry(this);
   }
 }

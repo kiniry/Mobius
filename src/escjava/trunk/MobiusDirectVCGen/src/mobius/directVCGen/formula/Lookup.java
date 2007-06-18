@@ -2,6 +2,7 @@ package mobius.directVCGen.formula;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
@@ -23,8 +24,9 @@ import javafe.ast.RoutineDecl;
 
 //TODO: add comments
 public class Lookup {
+  
   /** list of symbols to declare. */
-  public static Vector<FnSymbol> symToDeclare = new Vector<FnSymbol>();
+  public static List<FnSymbol> symToDeclare = new Vector<FnSymbol>();
 
   /** the list of fields to declare. */
   public static Set<QuantVariable> fieldsToDeclare = new HashSet<QuantVariable>();
@@ -57,41 +59,41 @@ public class Lookup {
     boolean incThis = false;
 
     //Sort returnType = Ref.sort;  
-    if(m instanceof MethodDecl) {
+    if (m instanceof MethodDecl) {
       //returnType = Type.getReturnType((MethodDecl) m);
-      if((m.getModifiers() & Modifiers.ACC_STATIC) == 0) {
-        arity ++;
+      if ((m.getModifiers() & Modifiers.ACC_STATIC) == 0) {
+        arity++;
         incThis = true;
       }
     }
 
-    if((m instanceof ConstructorDecl) ||
+    if ((m instanceof ConstructorDecl) ||
         ((MethodDecl)m).returnType.getTag() == TagConstants.VOIDTYPE) {
       hasResult = false;
     }
-    if(hasResult) {
+    if (hasResult) {
       arity++;
     }
     Sort [] s = new Sort[arity];
     Term [] args = new Term [arity];
-    if(incThis) {
+    if (incThis) {
       s [0] = Ref.sort;
       args[0] = Ref.varThis;
     }
     FormalParaDeclVec v = m.args;
-    for(int i = 0; i < v.size(); i ++) {
+    for (int i = 0; i < v.size(); i++) {
       FormalParaDecl para = v.elementAt(i);
       args[i + 1] = Expression.rvar(para);
-      s[i + 1] = args[i+1].getSort();
+      s[i + 1] = args[i + 1].getSort();
 
     }
-    if(hasResult) {
+    if (hasResult) {
       //m instance of MethodDecl
       MethodDecl dec = (MethodDecl) m;
       args[args.length - 1] = Expression.rvar(Expression.getResultVar(dec));
       s[s.length - 1] = args[args.length - 1].getSort();
     }
-    if(m instanceof ConstructorDecl) {
+    if (m instanceof ConstructorDecl) {
       name = ((ConstructorDecl)m).parent.id + name;
     }
     else {
@@ -107,7 +109,7 @@ public class Lookup {
    * Returns the FOL Term representation of the precondition of method m.
    * @param m the method of interest
    */
-  public static Term precondition(RoutineDecl m){		
+  public static Term precondition(RoutineDecl m){
     return buildStdCond (m, "_pre", false);
   }
 
@@ -124,7 +126,7 @@ public class Lookup {
    * @param m the method of interest
    */
   public static Post normalPostcondition(MethodDecl m){
-    return new Post(Expression.rvar(Expression.getResultVar(m)),buildStdCond (m, "_norm", true)); 
+    return new Post(Expression.rvar(Expression.getResultVar(m)), buildStdCond (m, "_norm", true)); 
   }
   /**
    * Returns a vector of   FOL Term representations of the exceptional postconditions of method m.
@@ -132,7 +134,7 @@ public class Lookup {
    * @param m the method of interest
    */
   public static Post exceptionalPostcondition(RoutineDecl m){
-    return new Post(Expression.rvar(Ref.sort),buildStdCond (m, "_excp", false)); 
+    return new Post(Expression.rvar(Ref.sort), buildStdCond (m, "_excp", false)); 
   }
 
 }

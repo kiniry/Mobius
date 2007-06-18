@@ -15,19 +15,19 @@ import escjava.sortedProver.Lifter.Term;
  * This visitor gives the basic functionnality of the expression vc gen(s).
  * It is made to be subclassed as a vcgen, coupled with an expression visitor. 
  * The sole purpose of this class is to contain standard functions. 
- * @author J. Charles
+ * @author J. Charles (julien.charles@inria.fr)
  */
 public abstract class ABasicExpressionVCGEn {
-  /** the visitor coupled with this vcgen */
-  private ExpressionVisitor visitor;
+  /** the visitor coupled with this vcgen. */
+  private ExpressionVisitor fVisitor;
 
   /**
    * The basic constructor which initialize the vcgen with a visitor.
-   * @param vis the visitor associated with this vcgen
+   * @param visitor the visitor associated with this vcgen
    */
-  public ABasicExpressionVCGEn(ExpressionVisitor vis) {
-    visitor = vis;
-    if(visitor == null) {
+  public ABasicExpressionVCGEn(final ExpressionVisitor visitor) {
+    fVisitor = visitor;
+    if (fVisitor == null) {
       throw new NullPointerException("The visitor cannot be null!");
     }
   }
@@ -39,22 +39,22 @@ public abstract class ABasicExpressionVCGEn {
    * @param entry the current postcondition associated with the instruction
    * @return a precondition calculated by the vc gen
    */
-  public Post getPre(ASTNode x, VCEntry entry) {
-    return (Post)x.accept(visitor, entry);
+  public Post getPre(final ASTNode x, final VCEntry entry) {
+    return (Post)x.accept(fVisitor, entry);
   }
 
 
   /**
    * This method returns a valid new object (with all the necessary properties)
-   * to use while creating a new exception
+   * to use while creating a new exception.
    * @param type the type of the exception 
    * @param post the current post condition
    * @return the post condition newly formed 
    */
-  public Term getNewExcpPost(Term type, VCEntry post) {
-    Post p = StmtVCGen.getExcpPost(type, post);
-    QuantVariableRef e = Expression.rvar(Ref.sort);
-    QuantVariableRef heap = Heap.newVar();
+  public Term getNewExcpPost(final Term type, final VCEntry post) {
+    final Post p = StmtVCGen.getExcpPost(type, post);
+    final QuantVariableRef e = Expression.rvar(Ref.sort);
+    final QuantVariableRef heap = Heap.newVar();
     return Logic.forall(e,
                         Logic.forall(heap,
                                      Logic.implies(Heap.newObject(Heap.var, type, heap, e),

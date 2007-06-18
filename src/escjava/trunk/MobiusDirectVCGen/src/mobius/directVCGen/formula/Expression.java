@@ -15,24 +15,33 @@ import escjava.translate.UniqName;
  * The main functions in this libraries are the one to 
  * handle variables, reference on variables, and old versions
  * of variables.
+ * @author J. Charles (julien.charles@inria.fr), H. Lehner
  */
-public class Expression {
+public final class Expression {
 
-  /** counter to create anonymous variables */
-  private final static int [] varCounters = {0, 0, 0, 0, 0};
+  /** the prefix used to mark variables as old (<code>\pre_</code>). */
+  public static final String oldPrefix = "\\pre_";
 
-  /** the name of the result variable (<code>\result</code>) */
-  private final static String result = "\\result";
+  /** the special field which represents the length of an array. */
+  public static final QuantVariable length;
+  
+  /** counter to create anonymous variables. */
+  private static final int [] varCounters = {0, 0, 0, 0, 0};
 
-  /** the prefix used to mark variables as old (<code>\pre_</code>) */
-  public final static String oldPrefix = "\\pre_";
+  /** the name of the result variable (<code>\result</code>). */
+  private static final String result = "\\result";
 
-  /** the special field which represents the length of an array */
-  public final static QuantVariable length;
+  
 
   static {
     length = var("length", Num.sortInt);
     Lookup.fieldsToDeclare.add(length);
+  }
+  
+  /**
+   * @deprecated
+   */
+  private Expression() {
   }
 
   /**
@@ -47,7 +56,7 @@ public class Expression {
    * @param name the name to make old
    * @return the oldified name
    */
-  private static String old(String name){
+  private static String old(final String name) {
     return oldPrefix + name;
   }
 
@@ -57,7 +66,7 @@ public class Expression {
    * of it.
    * @return the <i>oldified</i> version of the variable
    */
-  public static QuantVariableRef old(GenericVarDecl decl){
+  public static QuantVariableRef old(final GenericVarDecl decl) {
     return rvar(Formula.lf.mkQuantVariable(decl, old(UniqName.variable(decl))));
   }
 
@@ -66,7 +75,7 @@ public class Expression {
    * @param qv The quant variable to make old. 
    * @return The <i>oldified</i> version of the variable
    */
-  public static QuantVariable old(QuantVariable qv){
+  public static QuantVariable old(final QuantVariable qv) {
     return var(old(qv.name), qv.type);
   }
 
@@ -76,7 +85,7 @@ public class Expression {
    * @return The <i>oldified</i> version of the variable
 
    */
-  public static QuantVariableRef old(QuantVariableRef qvr){
+  public static QuantVariableRef old(final QuantVariableRef qvr) {
     return rvar(old(qvr.qvar));
   }
 
@@ -89,7 +98,7 @@ public class Expression {
    * @return a variable of the sort any ({@link Formula#sort})
    * @deprecated use another method instead, like {@link #var(Sort)}
    */
-  public static QuantVariable var(String str) {
+  public static QuantVariable var(final String str) {
     return var(str, Formula.sort);
   }
 
@@ -99,7 +108,7 @@ public class Expression {
    * @param s the sort of the variable
    * @return a variable with the given name and sort
    */
-  public static QuantVariable var(String name, Sort s) {
+  public static QuantVariable var(final String name, final Sort s) {
     return Formula.lf.mkQuantVariable(name, s);
   }
 
@@ -108,7 +117,7 @@ public class Expression {
    * @param decl the declaration to turn into a quantified variable
    * @return a quant variable corresponding to the given declaration
    */
-  public static QuantVariable var(GenericVarDecl decl) {
+  public static QuantVariable var(final GenericVarDecl decl) {
     return Formula.lf.mkQuantVariable(decl, UniqName.variable(decl));
   }
 
@@ -118,26 +127,26 @@ public class Expression {
    * @return a newly created variable with a name that will not interfere
    * with any other. It is <b>Unique</b>!
    */
-  public static QuantVariable var(Sort s) {
+  public static QuantVariable var(final Sort s) {
     String name = "#";
-    if(s == Bool.sort) {
-      name += "b" + varCounters[0] ;
+    if (s == Bool.sort) {
+      name += "b" + varCounters[0];
       varCounters[0]++;
     } 
-    else if(s == Ref.sort) {
-      name += "r" + varCounters[1] ;
+    else if (s == Ref.sort) {
+      name += "r" + varCounters[1];
       varCounters[1]++;
     }
-    else if(s == Num.sortInt) {
-      name += "i" + varCounters[2] ;
+    else if (s == Num.sortInt) {
+      name += "i" + varCounters[2];
       varCounters[2]++;
     }
-    else if(s == Num.sortReal) {
-      name += "f" + varCounters[3] ;
+    else if (s == Num.sortReal) {
+      name += "f" + varCounters[3];
       varCounters[3]++;
     }
     else {
-      name += "x" + varCounters[4] ;
+      name += "x" + varCounters[4];
       varCounters[4]++;
     }
     return Formula.lf.mkQuantVariable(name, s);
@@ -150,7 +159,7 @@ public class Expression {
    * @return a newly created variable, whose name should
    * not collide with already existing ones
    */
-  public static QuantVariableRef rvar(Sort s) {
+  public static QuantVariableRef rvar(final Sort s) {
     return rvar(var(s));
   }
 
@@ -161,7 +170,7 @@ public class Expression {
    * @param arg the variable to translate
    * @return a variable reference corresponding to the declaration
    */
-  public static QuantVariableRef rvar(GenericVarDecl arg) {
+  public static QuantVariableRef rvar(final GenericVarDecl arg) {
     return rvar(var(arg));
   }
 
@@ -173,7 +182,7 @@ public class Expression {
    * @param s the sort of the variable
    * @return a reference over a variable
    */
-  public static QuantVariableRef rvar(String name, Sort s) {
+  public static QuantVariableRef rvar(final String name, final Sort s) {
     return rvar(var(name, s));
   }
 
@@ -182,8 +191,8 @@ public class Expression {
    * Returns the reference corresponding to the given variable.
    * @param qv the quant variable to get a reference from
    * @return a reference over the given variable
-   */	
-  public static QuantVariableRef rvar(QuantVariable qv) {
+   */
+  public static QuantVariableRef rvar(final QuantVariable qv) {
     return Formula.lf.mkQuantVariableRef(qv);
   }
 
@@ -199,12 +208,12 @@ public class Expression {
    * @param tag the tag which gives its meaning to the node 
    * @return a newly built term
    */
-  private static Term binaryOp(Term l, Term r, int tag) {
-    if(l.getSort() != r.getSort())
+  private static Term binaryOp(final Term l, final Term r, final int tag) {
+    if (l.getSort() != r.getSort())
       throw new IllegalArgumentException("The sort of " + l + 
                                          " is different from the sort of " + r + ".");
     FnTerm t = null;
-    if(l.getSort() == Bool.sort) {
+    if (l.getSort() == Bool.sort) {
       t = Formula.lf.mkFnTerm(Formula.lf.symBoolFn, new Term[] {l, r});
     }
     else if (l.getSort() == Num.sortInt) {
@@ -227,7 +236,7 @@ public class Expression {
    * @param r the right side
    * @return a term representing a bitwise or
    */
-  public static Term bitor(Term l, Term r) {
+  public static Term bitor(final Term l, final Term r) {
     return binaryOp(l, r, TagConstants.BITOR);
   }
 
@@ -238,7 +247,7 @@ public class Expression {
    * @param r the right side
    * @return a term representing a bitwise xor
    */
-  public static Term bitxor(Term l, Term r) {
+  public static Term bitxor(final Term l, final Term r) {
     return binaryOp(l, r, TagConstants.BITXOR);
   }
 
@@ -249,7 +258,7 @@ public class Expression {
    * @param r the right side
    * @return a term representing a bitwise and
    */
-  public static Term bitand(Term l, Term r) {
+  public static Term bitand(final Term l, final Term r) {
     return binaryOp(l, r, TagConstants.BITAND);
   }
 
@@ -258,19 +267,22 @@ public class Expression {
    * Create a symbol. There should be no symbols without a meaning
    * attached to it. Therefore it is deprecated and there is no
    * replacement to it.
+   * @param name the name of the symbol
+   * @param s the sort of the symbol
+   * @return a symbol of the specified sort
    * @deprecated
    */
-  public static FnTerm sym(String name, Sort s) {
+  public static FnTerm sym(final String name, final Sort s) {
     return Formula.lf.symbolRef (name, s);
   }
 
   /**
    * Return a variable representing a result, with its type
-   * corresponding to the return type of the given method
+   * corresponding to the return type of the given method.
    * @param meth the methode to which the result belong
    * @return a variable representing the result of the method
    */
-  public static QuantVariable getResultVar(MethodDecl meth) {
+  public static QuantVariable getResultVar(final MethodDecl meth) {
     return var(Expression.result, Type.getReturnType(meth));
   }
 
@@ -281,7 +293,7 @@ public class Expression {
    * @param meth the methode to which the result belong
    * @return a variable ref representing the result of the method
    */
-  public static QuantVariableRef getResultRVar(MethodDecl meth) {
+  public static QuantVariableRef getResultRVar(final MethodDecl meth) {
     return rvar(Expression.result, Type.getReturnType(meth));
   }
 

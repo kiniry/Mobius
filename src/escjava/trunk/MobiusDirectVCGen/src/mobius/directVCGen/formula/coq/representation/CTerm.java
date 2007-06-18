@@ -9,14 +9,16 @@ import escjava.sortedProver.NodeBuilder.Sort;
  */
 public class CTerm implements STerm {
 
+  /** the array containing all the children of the term. */
+  protected final STerm [] fArgs;
+  
   /** the symbol or name associated with the node. */
   private final String fRep;
 
   /** tells if the notation is a fPrefix notation. */
   private final boolean fPrefix;
   
-  /** the array containing all the children of the term. */
-  protected final STerm [] fArgs;
+
 
 
   /**

@@ -14,32 +14,34 @@ import escjava.sortedProver.EscNodeBuilder;
 import escjava.sortedProver.NodeBuilder;
 import escjava.sortedProver.Lifter.SortVar;
 
+/*@ non_null_by_default @*/
 /**
  * The back-end for Coq. Works with bicolano. It does not 
  * work with ESC/Java2 right now because it uses the bicolano
  * memory model which ESC/Java2 doesn't.
- * @author J. Charles
+ * @author J. Charles (julien.charles@inria.fr)
  */
-/*@ non_null_by_default @*/
 public class CoqNodeBuilder extends EscNodeBuilder {
+  
   /**
    * Normalize the symbols ... remove from the string
    * the characters Coq would not like to see
    * @param name the string to modify
    * @return the modified string
    */
-  public static String normalize(String name) {//NOPMD
-    if(name.startsWith("#"))
-      name = name.substring(1);
-    name = name.replace(':', '_');
-    name = name.replace('.', '_');
-    name = name.replace('\\', '_');
-    return name;
+  public static String normalize(final String name) {
+    String resName = name;
+    if (name.startsWith("#"))
+      resName = resName.substring(1);
+    resName = resName.replace(':', '_');
+    resName = resName.replace('.', '_');
+    resName = resName.replace('\\', '_');
+    return resName;
   }
   
   
   /**
-   * Return the symbol to get a location out of a value
+   * Return the symbol to get a location out of a value.
    * @param r the value to convert
    * @return a location term
    */
@@ -52,27 +54,33 @@ public class CoqNodeBuilder extends EscNodeBuilder {
    * (non-Javadoc)
    * @see escjava.sortedProver.NodeBuilder#buildSort(escjava.sortedProver.NodeBuilder.Sort)
    */
-  public SAny buildSort(Sort type) {//NOPMD
+  @Override
+  public SAny buildSort(final Sort type) {
     SAny res;
-    if(type instanceof SortVar) {
-      type = type.theRealThing();
+    Sort realtype;
+    if (type instanceof SortVar) {
+      realtype = type.theRealThing();
     }
-    if(type.equals(sortPred)) {
+    else {
+      realtype = type;
+    }
+    
+    if (realtype.equals(sortPred)) {
       res =  new CType("Prop");
     }
-    else if(type.equals(sortInt)) {
+    else if (realtype.equals(sortInt)) {
       res =  new CType("Int.t");
     }
-    else if(type.equals(sortReal)) {
+    else if (realtype.equals(sortReal)) {
       res = new CType("Real");
     }
-    else if(type.equals(sortRef)) {
+    else if (realtype.equals(sortRef)) {
       res = new CType("value");
     }
-    else if(type.equals(sortBool)) {
+    else if (realtype.equals(sortBool)) {
       res = new CType("bool");
     }
-    else if(type.equals(sortMap)) {
+    else if (realtype.equals(sortMap)) {
       res = new CType("Heap.t");
     }
     else {
@@ -114,7 +122,7 @@ public class CoqNodeBuilder extends EscNodeBuilder {
    */
   @Override
   public SBool buildBool(final boolean b) {
-    return new CBool(b? "true" : "false");
+    return new CBool(b ? "true" : "false");
   }
 
   /*
@@ -127,7 +135,8 @@ public class CoqNodeBuilder extends EscNodeBuilder {
   }
   
   @Override
-  public SPred buildForAll(final QuantVar[] vars, final SPred body, final STerm[][] pats, final STerm[] nopats) {
+  public SPred buildForAll(final QuantVar[] vars, final SPred body, 
+                           final STerm[][] pats, final STerm[] nopats) {
     return new CForall(this, vars, body);
   }
   
@@ -137,9 +146,9 @@ public class CoqNodeBuilder extends EscNodeBuilder {
    */
   @Override
   public SAny buildQVarRef(final QuantVar var) {
-    String name = normalize(var.name);
+    final String name = normalize(var.name);
     Sort s = var.type;
-    if(s instanceof SortVar) {
+    if (s instanceof SortVar) {
       s = s.theRealThing();
     }
     
@@ -160,13 +169,15 @@ public class CoqNodeBuilder extends EscNodeBuilder {
       res = new CMap(name);
     }
     else if (s.equals(sortAny)) {
-      throw new IllegalArgumentException("The type of " + var + "should not be any, it should be known!");
+      throw new IllegalArgumentException("The type of " + var + 
+                                         " should not be any, it should be known!");
     }
     else if (s.equals(sortPred)) {
       throw new IllegalArgumentException("The type should not be pred!");
     }
     else
-      throw new IllegalArgumentException("Unknown Type: " + s.getClass() + " " + sortRef.getClass());
+      throw new IllegalArgumentException("Unknown Type: " + s.getClass() + 
+                                         " " + sortRef.getClass());
     return res;
   }
 
@@ -178,7 +189,7 @@ public class CoqNodeBuilder extends EscNodeBuilder {
    */
   @Override
   public SInt buildInt(final long n) {
-    return new CInt("Int.const", new STerm[]{new CInt(""+ n)});
+    return new CInt("Int.const", new STerm[]{new CInt("" + n)});
   }
 
   /*
@@ -186,7 +197,7 @@ public class CoqNodeBuilder extends EscNodeBuilder {
    * @see escjava.sortedProver.NodeBuilder#buildIntBoolFun(int, escjava.sortedProver.NodeBuilder.SInt, escjava.sortedProver.NodeBuilder.SInt)
    */
   @Override
-  public SBool buildIntBoolFun(int tag, SInt arg1, SInt arg2) {
+  public SBool buildIntBoolFun(final int tag, final SInt arg1, final SInt arg2) {
     switch (tag) {
       case predEQ:
         return new CBool("eq_bool", new STerm[]{arg1, arg2});
@@ -197,8 +208,8 @@ public class CoqNodeBuilder extends EscNodeBuilder {
 
       case predGT:  
       case predGE:
-        throw new UnsupportedOperationException("Constructs gt or ge should"
-            + " be desugared to lt and le...");
+        throw new UnsupportedOperationException("Constructs gt or ge should" + 
+                                                " be desugared to lt and le...");
       default:
         throw new IllegalArgumentException("Unknown tag " + tag);
         
@@ -210,7 +221,7 @@ public class CoqNodeBuilder extends EscNodeBuilder {
    * @see escjava.sortedProver.NodeBuilder#buildIsTrue(escjava.sortedProver.NodeBuilder.SBool)
    */
   @Override
-  public SPred buildIsTrue(SBool val) {
+  public SPred buildIsTrue(final SBool val) {
     return new CPred("Is_true", new STerm[] {val});
   }
 
@@ -219,7 +230,7 @@ public class CoqNodeBuilder extends EscNodeBuilder {
    * @see escjava.sortedProver.NodeBuilder#buildDistinct(escjava.sortedProver.NodeBuilder.SAny[])
    */
   @Override
-  public SPred buildDistinct(SAny[] terms) {
+  public SPred buildDistinct(final SAny[] terms) {
     throw new UnsupportedOperationException("Distinct elements don't mean anything for Coq!");
   }
   
@@ -229,8 +240,8 @@ public class CoqNodeBuilder extends EscNodeBuilder {
    * @see escjava.sortedProver.NodeBuilder#buildExists(escjava.sortedProver.NodeBuilder.QuantVar[], escjava.sortedProver.NodeBuilder.SPred)
    */
   @Override
-  public SPred buildExists(QuantVar[] vars, SPred body) {
-    if(vars.length == 0)
+  public SPred buildExists(final QuantVar[] vars, final SPred body) {
+    if (vars.length == 0)
       return body;
     return new CExists(this, vars, body);
   }
@@ -249,7 +260,7 @@ public class CoqNodeBuilder extends EscNodeBuilder {
    * @see escjava.sortedProver.NodeBuilder#buildITE(escjava.sortedProver.NodeBuilder.SPred, escjava.sortedProver.NodeBuilder.SValue, escjava.sortedProver.NodeBuilder.SValue)
    */
   @Override
-  public SValue buildITE(SPred cond, SValue then_part, SValue else_part) {
+  public SValue buildITE(final SPred cond, final SValue thenPart, final SValue elsePart) {
     // should not appear in this form ... the typing is a bit loosy
     throw new UnsupportedOperationException("I don't like this construct, get rid of it!");
   }
@@ -259,7 +270,7 @@ public class CoqNodeBuilder extends EscNodeBuilder {
    * @see escjava.sortedProver.NodeBuilder#buildNot(escjava.sortedProver.NodeBuilder.SPred)
    */
   @Override
-  public SPred buildNot(SPred arg) {
+  public SPred buildNot(final SPred arg) {
     return new CPred("not", new STerm[] {arg});
   }
   
@@ -277,7 +288,7 @@ public class CoqNodeBuilder extends EscNodeBuilder {
    * @see escjava.sortedProver.NodeBuilder#buildReal(double)
    */
   @Override
-  public SReal buildReal(double f) {
+  public SReal buildReal(final double f) {
     throw new UnsupportedOperationException("Translation of reals is not supported yet!");
   }
 
@@ -286,7 +297,7 @@ public class CoqNodeBuilder extends EscNodeBuilder {
    * @see escjava.sortedProver.NodeBuilder#buildRealBoolFun(int, escjava.sortedProver.NodeBuilder.SReal, escjava.sortedProver.NodeBuilder.SReal)
    */
   @Override
-  public SBool buildRealBoolFun(int realPredTag, SReal arg1, SReal arg2) {
+  public SBool buildRealBoolFun(final int realPredTag, final SReal arg1, final SReal arg2) {
     throw new UnsupportedOperationException("Translation of reals is not supported yet!");
   }
 
@@ -295,7 +306,7 @@ public class CoqNodeBuilder extends EscNodeBuilder {
    * @see escjava.sortedProver.NodeBuilder#buildRealFun(int, escjava.sortedProver.NodeBuilder.SReal, escjava.sortedProver.NodeBuilder.SReal)
    */
   @Override
-  public SReal buildRealFun(int realFunTag, SReal arg1, SReal arg2) {
+  public SReal buildRealFun(final int realFunTag, final SReal arg1, final SReal arg2) {
     throw new UnsupportedOperationException("Translation of reals is not supported yet!");
   }
 
@@ -304,7 +315,7 @@ public class CoqNodeBuilder extends EscNodeBuilder {
    * @see escjava.sortedProver.NodeBuilder#buildRealFun(int, escjava.sortedProver.NodeBuilder.SReal)
    */
   @Override
-  public SReal buildRealFun(int realFunTag, SReal arg1) {
+  public SReal buildRealFun(final int realFunTag, final SReal arg1) {
     throw new UnsupportedOperationException("Translation of reals is not supported yet!");
   }
 
@@ -313,7 +324,7 @@ public class CoqNodeBuilder extends EscNodeBuilder {
    * @see escjava.sortedProver.NodeBuilder#buildRealPred(int, escjava.sortedProver.NodeBuilder.SReal, escjava.sortedProver.NodeBuilder.SReal)
    */
   @Override
-  public SPred buildRealPred(int realPredTag, SReal arg1, SReal arg2) {
+  public SPred buildRealPred(final int realPredTag, final SReal arg1, final SReal arg2) {
     throw new UnsupportedOperationException("Translation of reals is not supported yet!");
   }
 
@@ -322,7 +333,7 @@ public class CoqNodeBuilder extends EscNodeBuilder {
    * @see escjava.sortedProver.NodeBuilder#buildOr(escjava.sortedProver.NodeBuilder.SPred[])
    */
   @Override
-  public SPred buildOr(SPred[] args) {
+  public SPred buildOr(final SPred[] args) {
     return new CPred(false, "\\/", args);
   }
   
@@ -331,7 +342,7 @@ public class CoqNodeBuilder extends EscNodeBuilder {
    * @see escjava.sortedProver.NodeBuilder#buildPredCall(escjava.sortedProver.NodeBuilder.PredSymbol, escjava.sortedProver.NodeBuilder.SAny[])
    */
   @Override
-  public SPred buildPredCall(PredSymbol fn, SAny[] args) {
+  public SPred buildPredCall(final PredSymbol fn, final SAny[] args) {
     
 
     if (fn == symRefEQ) {
@@ -347,8 +358,8 @@ public class CoqNodeBuilder extends EscNodeBuilder {
       throw new IllegalArgumentException("Unimplemented symbol: " + fn);
     }
     else if (fn == symTypeLE) {
-      SAny [] realargs = {new CMap("p"),
-                  args[0], args[1]};
+      final SAny [] realargs = {new CMap("p"),
+                                args[0], args[1]};
       return new CPred("subclass_name", realargs);
     }
     else if (fn == symAllocLT) {
@@ -383,9 +394,9 @@ public class CoqNodeBuilder extends EscNodeBuilder {
    * @see escjava.sortedProver.NodeBuilder#buildFnCall(escjava.sortedProver.NodeBuilder.FnSymbol, escjava.sortedProver.NodeBuilder.SAny[])
    */
   @Override
-  public SAny buildFnCall(FnSymbol fn, SAny[] args) {
-    if(fn.equals(symTypeOf)) {
-      if(args.length == 2) {
+  public SAny buildFnCall(final FnSymbol fn, final SAny[] args) {
+    if (fn.equals(symTypeOf)) {
+      if (args.length == 2) {
         return new CType("typeof", args[0], getLoc((SValue)args[1]));
       }
     }
@@ -397,7 +408,7 @@ public class CoqNodeBuilder extends EscNodeBuilder {
    * @see escjava.sortedProver.NodeBuilder#buildLabel(boolean, java.lang.String, escjava.sortedProver.NodeBuilder.SPred)
    */
   @Override
-  public SPred buildLabel(boolean positive, String name, SPred pred) {
+  public SPred buildLabel(final boolean positive, final String name, final SPred pred) {
     throw new UnsupportedOperationException("Labels have no real meanings for us, right?");
   }
   
@@ -406,42 +417,45 @@ public class CoqNodeBuilder extends EscNodeBuilder {
    * @see escjava.sortedProver.NodeBuilder#buildValueConversion(escjava.sortedProver.NodeBuilder.Sort, escjava.sortedProver.NodeBuilder.Sort, escjava.sortedProver.NodeBuilder.SValue)
    */
   @Override
-  public SValue buildValueConversion(Sort from, Sort to, SValue val) {
-    if(from == sortValue) {
-      if(to == sortRef) {
+  public SValue buildValueConversion(final Sort from, final Sort to, final SValue val) {
+    if (from == sortValue) {
+      if (to == sortRef) {
         return val;
       }
-      else if(to == sortBool) {
+      else if (to == sortBool) {
         return new CBool("vBool", new STerm[] {val});
       }
-      else if(to == sortInt) {
+      else if (to == sortInt) {
         return new CInt("vInt", new STerm[] {val});
       }
-      else if(to == sortReal) {
+      else if (to == sortReal) {
         throw new UnsupportedOperationException("We do not support reals right now...");
       }
       else 
-        throw new IllegalArgumentException("The conversion can only be done from a value to a simple type. Found:" + to);
+        throw new IllegalArgumentException("The conversion can only be done " +
+            "from a value to a simple type. Found:" + to);
       
     }
     else {
       if (to != sortValue) {
-        throw new IllegalArgumentException("The conversion can only be done from a simple type to a value. Found:" + to);
+        throw new IllegalArgumentException("The conversion can only be done " +
+            "from a simple type to a value. Found:" + to);
       }
-      if(from == sortRef) {
+      if (from == sortRef) {
         return val;
       }
-      else if(from == sortBool) {
+      else if (from == sortBool) {
         return new CValue("Num", new CInt("B ", new STerm[] {val}));
       }
-      else if(from == sortInt) {
+      else if (from == sortInt) {
         return new CValue("Num", new CInt("I ", new STerm[] {val}));
       }
-      else if(from == sortReal) {
+      else if (from == sortReal) {
         throw new UnsupportedOperationException("We do not support reals right now...");
       }
       else 
-        throw new IllegalArgumentException("The conversion can only be done from a value to a simple type. Found:" + to);
+        throw new IllegalArgumentException("The conversion can only be done from a value " +
+            "to a simple type. Found:" + to);
       
     }
   }
@@ -453,11 +467,16 @@ public class CoqNodeBuilder extends EscNodeBuilder {
    * @see escjava.sortedProver.NodeBuilder#buildNewObject(escjava.sortedProver.NodeBuilder.SMap, escjava.sortedProver.NodeBuilder.SAny, escjava.sortedProver.NodeBuilder.SMap, escjava.sortedProver.NodeBuilder.SRef)
    */
   @Override
-  public SPred buildNewObject(SMap oldh, SAny type, SMap heap, SRef r) {
-    CPred left = new CPred("Heap.new", new STerm[] {oldh, new CMap("p"), new CType("Heap.LocationObject", new STerm[] {type})});
-        CPred right = new CPred("Some", new STerm[] {new CPred(false, ",", new STerm[] {getLoc(r), heap})});
+  public SPred buildNewObject(final SMap oldh, final SAny type, 
+                              final SMap heap, final SRef r) {
+    final CPred left = new CPred("Heap.new", new STerm[] {oldh, new CMap("p"), 
+                                                          new CType("Heap.LocationObject", 
+                                                                    new STerm[] {type})});
+    final CPred right = new CPred("Some", 
+                                  new STerm[] {new CPred(false, ",", 
+                                                         new STerm[] {getLoc(r), heap})});
         
-    SPred res = new CPred(false, "=",new STerm[] {left, right});
+    final SPred res = new CPred(false, "=", new STerm[] {left, right});
     return res;
   }
   
@@ -466,8 +485,8 @@ public class CoqNodeBuilder extends EscNodeBuilder {
    * @see escjava.sortedProver.NodeBuilder#buildSelect(escjava.sortedProver.NodeBuilder.SMap, escjava.sortedProver.NodeBuilder.SValue)
    */
   @Override
-  public SValue buildSelect(SMap map, SValue idx) {    
-    CRef addr = new CRef("Heap.StaticField", new STerm [] {idx});
+  public SValue buildSelect(final SMap map, final SValue idx) {    
+    final CRef addr = new CRef("Heap.StaticField", new STerm [] {idx});
     return new CValue("get", new STerm[] {map, addr});
   }
   
@@ -476,8 +495,8 @@ public class CoqNodeBuilder extends EscNodeBuilder {
    * @see escjava.sortedProver.NodeBuilder#buildStore(escjava.sortedProver.NodeBuilder.SMap, escjava.sortedProver.NodeBuilder.SValue, escjava.sortedProver.NodeBuilder.SValue)
    */
   @Override
-  public SMap buildStore(SMap map, SValue idx, SValue val) {
-    CRef addr = new CRef("Heap.StaticField", new STerm [] {idx});
+  public SMap buildStore(final SMap map, final SValue idx, final SValue val) {
+    final CRef addr = new CRef("Heap.StaticField", new STerm [] {idx});
     return new CMap("Heap.update", new STerm[] {map, addr, val});
   }
   
@@ -487,8 +506,8 @@ public class CoqNodeBuilder extends EscNodeBuilder {
    * @see escjava.sortedProver.NodeBuilder#buildDynSelect(escjava.sortedProver.NodeBuilder.SMap, escjava.sortedProver.NodeBuilder.SRef, escjava.sortedProver.NodeBuilder.SAny)
    */
   @Override
-  public SValue buildDynSelect(SMap heap, SRef obj, SAny field) {
-    CRef addr = new CRef("Heap.DynamicField", new STerm [] {getLoc(obj), field});
+  public SValue buildDynSelect(final SMap heap, final SRef obj, final SAny field) {
+    final CRef addr = new CRef("Heap.DynamicField", new STerm [] {getLoc(obj), field});
     return new CValue("get", new STerm[] {heap, addr});
   }
 
@@ -497,8 +516,9 @@ public class CoqNodeBuilder extends EscNodeBuilder {
    * @see escjava.sortedProver.NodeBuilder#buildDynStore(escjava.sortedProver.NodeBuilder.SMap, escjava.sortedProver.NodeBuilder.SRef, escjava.sortedProver.NodeBuilder.SAny, escjava.sortedProver.NodeBuilder.SValue)
    */
   @Override
-  public SMap buildDynStore(SMap map, SRef obj, SAny field, SValue val) {
-    CRef addr = new CRef("Heap.DynamicField", new STerm [] {getLoc(obj), field});
+  public SMap buildDynStore(final SMap map, final SRef obj, 
+                            final SAny field, final SValue val) {
+    final CRef addr = new CRef("Heap.DynamicField", new STerm [] {getLoc(obj), field});
     return new CMap("Heap.update", new STerm[] {map, addr, val});
     
   }
@@ -508,8 +528,8 @@ public class CoqNodeBuilder extends EscNodeBuilder {
    * @see escjava.sortedProver.NodeBuilder#buildArrSelect(escjava.sortedProver.NodeBuilder.SMap, escjava.sortedProver.NodeBuilder.SRef, escjava.sortedProver.NodeBuilder.SInt)
    */
   @Override
-  public SValue buildArrSelect(SMap heap, SRef obj, SInt idx) {
-    CRef addr = new CRef("Heap.ArrayElement", new STerm [] {getLoc(obj), idx});
+  public SValue buildArrSelect(final SMap heap, final SRef obj, final SInt idx) {
+    final CRef addr = new CRef("Heap.ArrayElement", new STerm [] {getLoc(obj), idx});
     return new CValue("get", new STerm[] {heap, addr});
   }
 
@@ -518,8 +538,8 @@ public class CoqNodeBuilder extends EscNodeBuilder {
    * @see escjava.sortedProver.NodeBuilder#buildArrStore(escjava.sortedProver.NodeBuilder.SMap, escjava.sortedProver.NodeBuilder.SRef, escjava.sortedProver.NodeBuilder.SInt, escjava.sortedProver.NodeBuilder.SValue)
    */
   @Override
-  public SMap buildArrStore(SMap map, SRef obj, SInt idx, SValue val) {
-    CRef addr = new CRef("Heap.ArrayElement", new STerm [] {getLoc(obj), idx});
+  public SMap buildArrStore(final SMap map, final SRef obj, final SInt idx, final SValue val) {
+    final CRef addr = new CRef("Heap.ArrayElement", new STerm [] {getLoc(obj), idx});
     return new CMap("Heap.update", new STerm[] {map, addr, val});
   }
 
@@ -528,11 +548,16 @@ public class CoqNodeBuilder extends EscNodeBuilder {
    * @see escjava.sortedProver.NodeBuilder#buildNewArray(escjava.sortedProver.NodeBuilder.SMap, escjava.sortedProver.NodeBuilder.SAny, escjava.sortedProver.NodeBuilder.SMap, escjava.sortedProver.NodeBuilder.SRef, escjava.sortedProver.NodeBuilder.SInt)
    */
   @Override
-  public SPred buildNewArray(SMap oldh, SAny type, SMap heap, SRef r, SInt len) {
-    CPred left = new CPred("Heap.new", new STerm[] {oldh, new CMap("p"), new CType("Heap.LocationArray", new STerm[] {len, type})});
-        CPred right = new CPred("Some", new STerm[] {new CPred(false, ",", new STerm[] {getLoc(r), heap})});
+  public SPred buildNewArray(final SMap oldh, final SAny type, 
+                             final SMap heap, final SRef r, final SInt len) {
+    final CPred left = new CPred("Heap.new", new STerm[] {oldh, new CMap("p"), 
+                                                          new CType("Heap.LocationArray", 
+                                                                    new STerm[] {len, type})});
+    final CPred right = new CPred("Some", new STerm[] {new CPred(false, 
+                                                                 ",", 
+                                                          new STerm[] {getLoc(r), heap})});
         
-    SPred res = new CPred(false, "=",new STerm[] {left, right});
+    final SPred res = new CPred(false, "=", new STerm[] {left, right});
     return res;
   }
 
@@ -541,7 +566,7 @@ public class CoqNodeBuilder extends EscNodeBuilder {
    * @see escjava.sortedProver.NodeBuilder#buildConstantRef(escjava.sortedProver.NodeBuilder.FnSymbol)
    */
   @Override
-  public SAny buildConstantRef(FnSymbol c) {
+  public SAny buildConstantRef(final FnSymbol c) {
     throw new UnsupportedOperationException();
   }
 
@@ -550,7 +575,7 @@ public class CoqNodeBuilder extends EscNodeBuilder {
    * @see escjava.sortedProver.NodeBuilder#buildIff(escjava.sortedProver.NodeBuilder.SPred, escjava.sortedProver.NodeBuilder.SPred)
    */
   @Override
-  public SPred buildIff(SPred arg1, SPred arg2) {
+  public SPred buildIff(final SPred arg1, final SPred arg2) {
     return new CPred(false, "<->", new STerm [] {arg1, arg2});
   }
 
@@ -559,21 +584,29 @@ public class CoqNodeBuilder extends EscNodeBuilder {
    * @see escjava.sortedProver.NodeBuilder#buildIntFun(int, escjava.sortedProver.NodeBuilder.SInt, escjava.sortedProver.NodeBuilder.SInt)
    */
   @Override
-  public SInt buildIntFun(int intFunTag, SInt arg1, SInt arg2) {
+  public SInt buildIntFun(final int intFunTag, final SInt arg1, final SInt arg2) {
+    SInt res;
     switch (intFunTag) {
       case NodeBuilder.funADD:
-        return new CInt("Int.add", new STerm[] {arg1, arg2});
+        res = new CInt("Int.add", new STerm[] {arg1, arg2});
+        break;
       case NodeBuilder.funSUB:
-        return new CInt("Int.sub", new STerm[] {arg1, arg2});
+        res = new CInt("Int.sub", new STerm[] {arg1, arg2});
+        break;
       case NodeBuilder.funMUL:
-        return new CInt("Int.mul", new STerm[] {arg1, arg2});
+        res = new CInt("Int.mul", new STerm[] {arg1, arg2});
+        break;
       case NodeBuilder.funDIV:
-        return new CInt("Int.div", new STerm[] {arg1, arg2});
+        res = new CInt("Int.div", new STerm[] {arg1, arg2});
+        break;
       case NodeBuilder.funMOD:
-        return new CInt("Int.mod", new STerm[] {arg1, arg2});
+        res = new CInt("Int.mod", new STerm[] {arg1, arg2});
+        break;
+      default:
+        throw new UnsupportedOperationException("Cannot translate the tag: " + 
+                                                NodeBuilder.tagsIds[intFunTag]);
     }
-    throw new UnsupportedOperationException("Cannot translate the tag: "
-        + NodeBuilder.tagsIds[intFunTag]);
+    return res;
 
   }
 
@@ -582,7 +615,7 @@ public class CoqNodeBuilder extends EscNodeBuilder {
    * @see escjava.sortedProver.NodeBuilder#buildIntFun(int, escjava.sortedProver.NodeBuilder.SInt)
    */
   @Override
-  public SInt buildIntFun(int intFunTag, SInt arg1) {
+  public SInt buildIntFun(final int intFunTag, final SInt arg1) {
     throw new UnsupportedOperationException();
   }
 
@@ -591,19 +624,25 @@ public class CoqNodeBuilder extends EscNodeBuilder {
    * @see escjava.sortedProver.NodeBuilder#buildIntPred(int, escjava.sortedProver.NodeBuilder.SInt, escjava.sortedProver.NodeBuilder.SInt)
    */
   @Override
-  public SPred buildIntPred(int intPredTag, SInt arg1, SInt arg2) {
+  public SPred buildIntPred(final int intPredTag, final SInt arg1, final SInt arg2) {
+    CPred res;
     switch (intPredTag) {
       case NodeBuilder.predLE:
-        return new CPred(false, "<", new CInt("Int.toZ", arg1),
+        res = new CPred(false, "<", new CInt("Int.toZ", arg1),
                       new CInt("Int.toZ", arg2));
+        break;
       case NodeBuilder.predLT:
-        return new CPred(false, "<=", new CInt("Int.toZ", arg1),
+        res = new CPred(false, "<=", new CInt("Int.toZ", arg1),
             new CInt("Int.toZ", arg2));
+        break;
       case NodeBuilder.predEQ:
-        return new CPred(false, "=", new CInt("Int.toZ", arg1),
+        res = new CPred(false, "=", new CInt("Int.toZ", arg1),
             new CInt("Int.toZ", arg2));
+        break;
+      default:
+        throw new UnsupportedOperationException(NodeBuilder.tagsIds[intPredTag]);
     }
-    throw new UnsupportedOperationException(NodeBuilder.tagsIds[intPredTag]);
+    return res;
   }
 
   /*
@@ -611,7 +650,7 @@ public class CoqNodeBuilder extends EscNodeBuilder {
    * @see escjava.sortedProver.NodeBuilder#buildXor(escjava.sortedProver.NodeBuilder.SPred, escjava.sortedProver.NodeBuilder.SPred)
    */
   @Override
-  public SPred buildXor(SPred arg1, SPred arg2) {
+  public SPred buildXor(final SPred arg1, final SPred arg2) {
     throw new UnsupportedOperationException();
   }
 
@@ -620,7 +659,7 @@ public class CoqNodeBuilder extends EscNodeBuilder {
    * @see escjava.sortedProver.NodeBuilder#buildAssignCompat(escjava.sortedProver.NodeBuilder.SMap, escjava.sortedProver.NodeBuilder.SValue, escjava.sortedProver.NodeBuilder.SAny)
    */
   @Override
-  public SPred buildAssignCompat(SMap map, SValue val, SAny type) {
+  public SPred buildAssignCompat(final SMap map, final SValue val, final SAny type) {
     return new CPred("assign_compatible", new STerm [] {new CMap("p"), map, val, type});
   }
 
