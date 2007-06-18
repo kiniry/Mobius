@@ -235,6 +235,7 @@ BEGIN
     ELSE bottom
     ENDIF
 
+  % TODO: See the TCC generated!
   lookup_mthd(p : Program, tgt : Val, mn : Name) : lift[Method] =
     LET gc = get_class(p)(tgt) IN
     IF up?(gc) AND method_names(p, down(gc))(mn)

@@ -16,11 +16,14 @@ BEGIN
       NOT Bottom?(stA(astate(s))(n)) IMPLIES
         EXISTS (va : MVAVarDecl) : vdsA(mva(mp))(va) AND name(va) = n
 
+  sequence_subterm : LEMMA
+    FORALL (c1, c2, c3 : Stmt) :
+      Sequence(c1, c2) << c3 IMPLIES c1 = c3 OR c1 << c3 OR c2 = c3 OR c2 << c3
+
   execute_action_correctness : LEMMA
     FORALL (mp : MonitoredProgram, ap : Program, c : Class, m : Method,
-            a : Action, vn : string, n : nat, 
+            a : Action, vn : string, n : nat,
             sMVA : AState, sMP : MPState, sAP1, sAP2 : APState) :
-      specification_requirements(mp) IMPLIES
       related_states(mp, ap)(sMP, sAP1) IMPLIES
       classes(ap)(c) IMPLIES
       methods(c)(m) IMPLIES

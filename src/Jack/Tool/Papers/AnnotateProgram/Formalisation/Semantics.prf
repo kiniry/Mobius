@@ -87,8 +87,31 @@
 (SemanticsJMLTypes)
 (Semantics
  (update_stack_TCC1 0
-  (update_stack_TCC1-1 nil 3390908871 nil ("" (subtype-tcc) nil nil)
-   nil nil nil nil nil nil))
+  (update_stack_TCC1-1 nil 3390908871 3390913610
+   ("" (skosimp)
+    (("" (rewrite "nonempty_exists")
+      (("" (expand "var_names")
+        (("" (skolem!) (("" (inst?) nil nil)) nil)) nil))
+      nil))
+    nil)
+   proved
+   ((var_names const-decl "finite_set[Name]" ProgramFunctions nil)
+    (lvds!1 skolem-const-decl "finite_set[LocalVarDecl[Name]]"
+     Semantics nil)
+    (l!1 skolem-const-decl "LocalVarDecl[Name]" Semantics nil)
+    (n!1 skolem-const-decl "Name" Semantics nil)
+    (LocalVarDecl type-eq-decl nil Program nil)
+    (Name formal-nonempty-type-decl nil Semantics nil)
+    (JType type-decl nil JType_adt nil)
+    (= const-decl "[T, T -> boolean]" equalities nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (is_finite const-decl "bool" finite_sets nil)
+    (AND const-decl "[bool, bool -> bool]" booleans nil)
+    (set type-eq-decl nil sets nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (nonempty_exists formula-decl nil sets_lemmas nil))
+   7612 170 t nil))
  (deriv_expr_TCC1 0
   (deriv_expr_TCC1-1 nil 3371191509 3390734855
    ("" (skosimp) (("" (assert) nil nil)) nil) unchecked nil 29 30 t
@@ -301,12 +324,6 @@
     (lookup_local const-decl "Val" State nil)
     (update_stack const-decl "FullState" Semantics nil))
    3416 1750 nil nil))
- (deriv_expr_TCC18 0
-  (deriv_expr_TCC18-1 nil 3390908871 nil ("" (subtype-tcc) nil nil) nil
-   nil nil nil nil nil))
- (deriv_expr_TCC19 0
-  (deriv_expr_TCC19-1 nil 3390908871 nil ("" (subtype-tcc) nil nil) nil
-   nil nil nil nil nil))
  (deriv_stmt_TCC1 0
   (deriv_stmt_TCC1-1 nil 3371191509 3390734871
    ("" (skosimp*) (("" (assert) nil nil)) nil) unchecked nil 483 420 t
@@ -475,13 +492,13 @@
    ("" (subtype-tcc) nil nil) unchecked nil 289 260 nil nil))
  (deriv_stmt_determ_TCC1 0
   (deriv_stmt_determ_TCC1-1 nil 3390908871 nil
-   ("" (subtype-tcc) nil nil) nil nil nil nil nil nil))
+   ("" (subtype-tcc) nil nil) unfinished nil nil nil nil nil))
  (deriv_stmt_determ_TCC2 0
   (deriv_stmt_determ_TCC2-1 nil 3390908871 nil
-   ("" (subtype-tcc) nil nil) nil nil nil nil nil nil))
+   ("" (subtype-tcc) nil nil) unfinished nil nil nil nil nil))
  (deriv_expr_determ_TCC1 0
   (deriv_expr_determ_TCC1-1 nil 3390908871 nil
-   ("" (subtype-tcc) nil nil) nil nil nil nil nil nil)))
+   ("" (subtype-tcc) nil nil) unfinished nil nil nil nil nil)))
 (SemanticsProofs
  (expr_determ_step 0
   (expr_determ_step-2 nil 3390559431 3390735039
@@ -820,15 +837,12 @@
                                                                   (assert)
                                                                   (("1"
                                                                     (replace
-
                                                                      -1)
                                                                     (("1"
                                                                       (replace
-
                                                                        -2)
                                                                       (("1"
                                                                         (replace
-
                                                                          -3)
                                                                         (("1"
                                                                           (lift-if
@@ -842,14 +856,11 @@
                                                                                 (assert)
                                                                                 (("1"
                                                                                   (replace
-
                                                                                    -3
                                                                                    :dir
-
                                                                                    rl)
                                                                                   (("1"
                                                                                     (replace
-
                                                                                      -25)
                                                                                     (("1"
                                                                                       (split
@@ -860,14 +871,11 @@
                                                                                           (assert)
                                                                                           (("1"
                                                                                             (replace
-
                                                                                              -2
                                                                                              :dir
-
                                                                                              rl)
                                                                                             (("1"
                                                                                               (replace
-
                                                                                                -27)
                                                                                               (("1"
                                                                                                 (lemma
@@ -922,33 +930,25 @@
                                                                                                         (flatten)
                                                                                                         (("1"
                                                                                                           (replace
-
                                                                                                            -1)
                                                                                                           (("1"
                                                                                                             (replace
-
                                                                                                              -2)
                                                                                                             (("1"
                                                                                                               (replace
-
                                                                                                                -19
                                                                                                                :dir
-
                                                                                                                rl)
                                                                                                               (("1"
                                                                                                                 (replace
-
                                                                                                                  -31)
                                                                                                                 (("1"
                                                                                                                   (replace
-
                                                                                                                    -20
                                                                                                                    :dir
-
                                                                                                                    rl)
                                                                                                                   (("1"
                                                                                                                     (replace
-
                                                                                                                      -32)
                                                                                                                     (("1"
                                                                                                                       (inst-cp
@@ -967,11 +967,9 @@
                                                                                                                             (assert)
                                                                                                                             (("1"
                                                                                                                               (replace
-
                                                                                                                                -15)
                                                                                                                               (("1"
                                                                                                                                 (replace
-
                                                                                                                                  -16)
                                                                                                                                 (("1"
                                                                                                                                   (split
@@ -984,14 +982,11 @@
                                                                                                                                         (flatten)
                                                                                                                                         (("1"
                                                                                                                                           (replace
-
                                                                                                                                            -2
                                                                                                                                            :dir
-
                                                                                                                                            rl)
                                                                                                                                           (("1"
                                                                                                                                             (replace
-
                                                                                                                                              -38)
                                                                                                                                             (("1"
                                                                                                                                               (split
@@ -1053,11 +1048,9 @@
                                                                                                                                                             (flatten)
                                                                                                                                                             (("1"
                                                                                                                                                               (replace
-
                                                                                                                                                                -1)
                                                                                                                                                               (("1"
                                                                                                                                                                 (replace
-
                                                                                                                                                                  -2)
                                                                                                                                                                 (("1"
                                                                                                                                                                   (assert)
@@ -1304,15 +1297,12 @@
                                                                                                                                                   (flatten)
                                                                                                                                                   (("1"
                                                                                                                                                     (replace
-
                                                                                                                                                      -1)
                                                                                                                                                     (("1"
                                                                                                                                                       (replace
-
                                                                                                                                                        -2)
                                                                                                                                                       (("1"
                                                                                                                                                         (replace
-
                                                                                                                                                          -3)
                                                                                                                                                         (("1"
                                                                                                                                                           (assert)
@@ -1733,11 +1723,9 @@
                                                                                         (assert)
                                                                                         (("2"
                                                                                           (replace
-
                                                                                            -1)
                                                                                           (("2"
                                                                                             (replace
-
                                                                                              -2)
                                                                                             (("2"
                                                                                               (split
@@ -1746,16 +1734,13 @@
                                                                                                 (flatten)
                                                                                                 (("1"
                                                                                                   (replace
-
                                                                                                    -2
                                                                                                    :dir
-
                                                                                                    rl)
                                                                                                   (("1"
                                                                                                     (assert)
                                                                                                     (("1"
                                                                                                       (replace
-
                                                                                                        -25)
                                                                                                       (("1"
                                                                                                         (lemma
@@ -1810,33 +1795,25 @@
                                                                                                                 (flatten)
                                                                                                                 (("1"
                                                                                                                   (replace
-
                                                                                                                    -1)
                                                                                                                   (("1"
                                                                                                                     (replace
-
                                                                                                                      -2)
                                                                                                                     (("1"
                                                                                                                       (replace
-
                                                                                                                        -19
                                                                                                                        :dir
-
                                                                                                                        rl)
                                                                                                                       (("1"
                                                                                                                         (replace
-
                                                                                                                          -30)
                                                                                                                         (("1"
                                                                                                                           (replace
-
                                                                                                                            -18
                                                                                                                            :dir
-
                                                                                                                            rl)
                                                                                                                           (("1"
                                                                                                                             (replace
-
                                                                                                                              -29)
                                                                                                                             (("1"
                                                                                                                               (inst-cp
@@ -1855,11 +1832,9 @@
                                                                                                                                     (assert)
                                                                                                                                     (("1"
                                                                                                                                       (replace
-
                                                                                                                                        -14)
                                                                                                                                       (("1"
                                                                                                                                         (replace
-
                                                                                                                                          -15)
                                                                                                                                         (("1"
                                                                                                                                           (split
@@ -1872,14 +1847,11 @@
                                                                                                                                                 (flatten)
                                                                                                                                                 (("1"
                                                                                                                                                   (replace
-
                                                                                                                                                    -2
                                                                                                                                                    :dir
-
                                                                                                                                                    rl)
                                                                                                                                                   (("1"
                                                                                                                                                     (replace
-
                                                                                                                                                      -37)
                                                                                                                                                     (("1"
                                                                                                                                                       (split
@@ -2182,15 +2154,12 @@
                                                                                                                                                           (flatten)
                                                                                                                                                           (("1"
                                                                                                                                                             (replace
-
                                                                                                                                                              -1)
                                                                                                                                                             (("1"
                                                                                                                                                               (replace
-
                                                                                                                                                                -2)
                                                                                                                                                               (("1"
                                                                                                                                                                 (replace
-
                                                                                                                                                                  -3)
                                                                                                                                                                 (("1"
                                                                                                                                                                   (assert)
@@ -2713,7 +2682,7 @@
         nil))
       nil))
     nil)
-   unchecked
+   unfinished
    ((deriv_expr const-decl "bool" Semantics nil)
     (well_founded?_product formula-decl nil WF nil)
     (wf_nat formula-decl nil naturalnumbers nil)
@@ -3078,11 +3047,9 @@
                                                             (assert)
                                                             (("1"
                                                               (replace
-
                                                                -1)
                                                               (("1"
                                                                 (replace
-
                                                                  -2)
                                                                 (("1"
                                                                   (lift-if
@@ -3096,14 +3063,11 @@
                                                                         (assert)
                                                                         (("1"
                                                                           (replace
-
                                                                            -3
                                                                            :dir
-
                                                                            rl)
                                                                           (("1"
                                                                             (replace
-
                                                                              -25)
                                                                             (("1"
                                                                               (split
@@ -3114,14 +3078,11 @@
                                                                                   (assert)
                                                                                   (("1"
                                                                                     (replace
-
                                                                                      -2
                                                                                      :dir
-
                                                                                      rl)
                                                                                     (("1"
                                                                                       (replace
-
                                                                                        -27)
                                                                                       (("1"
                                                                                         (comment
@@ -3131,29 +3092,22 @@
                                                                                            "tau4!1 = tau4!2")
                                                                                           (("1"
                                                                                             (replace
-
                                                                                              -1)
                                                                                             (("1"
                                                                                               (replace
-
                                                                                                -18
                                                                                                :dir
-
                                                                                                rl)
                                                                                               (("1"
                                                                                                 (replace
-
                                                                                                  -30)
                                                                                                 (("1"
                                                                                                   (replace
-
                                                                                                    -19
                                                                                                    :dir
-
                                                                                                    rl)
                                                                                                   (("1"
                                                                                                     (replace
-
                                                                                                      -31)
                                                                                                     (("1"
                                                                                                       (inst
@@ -3172,7 +3126,6 @@
                                                                                                             (assert)
                                                                                                             (("1"
                                                                                                               (replace
-
                                                                                                                -13)
                                                                                                               (("1"
                                                                                                                 (split
@@ -3185,14 +3138,11 @@
                                                                                                                       (flatten)
                                                                                                                       (("1"
                                                                                                                         (replace
-
                                                                                                                          -2
                                                                                                                          :dir
-
                                                                                                                          rl)
                                                                                                                         (("1"
                                                                                                                           (replace
-
                                                                                                                            -36)
                                                                                                                           (("1"
                                                                                                                             (split
@@ -3209,14 +3159,11 @@
                                                                                                                                      "tau8!1 = tau8!2")
                                                                                                                                     (("1"
                                                                                                                                       (replace
-
                                                                                                                                        -1)
                                                                                                                                       (("1"
                                                                                                                                         (replace
-
                                                                                                                                          -28
                                                                                                                                          :dir
-
                                                                                                                                          rl)
                                                                                                                                         (("1"
                                                                                                                                           (assert)
@@ -3796,11 +3743,9 @@
                                                             (flatten)
                                                             (("1"
                                                               (replace
-
                                                                -13)
                                                               (("1"
                                                                 (replace
-
                                                                  -14)
                                                                 (("1"
                                                                   (assert)
@@ -3823,18 +3768,14 @@
                                                                             (flatten)
                                                                             (("1"
                                                                               (replace
-
                                                                                -12)
                                                                               (("1"
                                                                                 (replace
-
                                                                                  -13)
                                                                                 (("1"
                                                                                   (replace
-
                                                                                    -6
                                                                                    :dir
-
                                                                                    rl)
                                                                                   (("1"
                                                                                     (assert)
@@ -3876,11 +3817,9 @@
                                                           (assert)
                                                           (("2"
                                                             (replace
-
                                                              -1)
                                                             (("2"
                                                               (replace
-
                                                                -9)
                                                               (("2"
                                                                 (inst
@@ -3901,18 +3840,14 @@
                                                                         (flatten)
                                                                         (("2"
                                                                           (replace
-
                                                                            -13)
                                                                           (("2"
                                                                             (replace
-
                                                                              -14)
                                                                             (("2"
                                                                               (replace
-
                                                                                -6
                                                                                :dir
-
                                                                                rl)
                                                                               (("2"
                                                                                 (assert)
@@ -3995,7 +3930,7 @@
         nil))
       nil))
     nil)
-   proved
+   unfinished
    ((well_founded?_product formula-decl nil WF nil)
     (wf_nat formula-decl nil naturalnumbers nil)
     (Stmt_induction formula-decl nil Stmt_adt nil)
@@ -4031,7 +3966,6 @@
     (TryCatch? adt-recognizer-decl "[Stmt -> boolean]" Stmt_adt nil)
     (TryCatch adt-constructor-decl
      "[[Stmt, Stmt, Stmt] -> (TryCatch?)]" Stmt_adt nil)
-    (x!1 skolem-const-decl "[nat, nat]" SemanticsProofs nil)
     (While? adt-recognizer-decl "[Stmt -> boolean]" Stmt_adt nil)
     (While adt-constructor-decl "[[Expr, Stmt] -> (While?)]" Stmt_adt
      nil)
@@ -4129,7 +4063,7 @@
         nil))
       nil))
     nil)
-   unchecked
+   unfinished
    ((expr_determ_step formula-decl nil SemanticsProofs nil)
     (Val type-decl nil Val_adt nil)
     (FullState formal-type-decl nil SemanticsProofs nil)
@@ -4163,7 +4097,7 @@
         (("" (skosimp*)
           (("" (inst?) (("" (inst?) (("" (assert) nil))))))))))))
     nil)
-   unchecked
+   unfinished
    ((stmt_determ_step formula-decl nil SemanticsProofs nil)
     (FullState formal-type-decl nil SemanticsProofs nil)
     (FullProgram formal-type-decl nil SemanticsProofs nil)
@@ -4186,66 +4120,63 @@
    214 170 nil nil)))
 (SemanticsJML
  (execute_set_TCC1 0
-  (execute_set_TCC1-1 nil 3390908875 nil ("" (subtype-tcc) nil nil) nil
-   nil nil nil nil nil))
+  (execute_set_TCC1-1 nil 3390908875 nil ("" (subtype-tcc) nil nil)
+   unfinished nil nil nil nil nil))
  (execute_set_TCC2 0
-  (execute_set_TCC2-1 nil 3390908875 nil ("" (subtype-tcc) nil nil) nil
-   nil nil nil nil nil))
+  (execute_set_TCC2-1 nil 3390908875 nil ("" (subtype-tcc) nil nil)
+   unfinished nil nil nil nil nil))
  (execute_set_TCC3 0
-  (execute_set_TCC3-1 nil 3390908875 nil ("" (subtype-tcc) nil nil) nil
-   nil nil nil nil nil))
- (execute_set_TCC4 0
-  (execute_set_TCC4-1 nil 3390908875 nil ("" (subtype-tcc) nil nil) nil
-   nil nil nil nil nil))
+  (execute_set_TCC3-1 nil 3390908875 nil ("" (subtype-tcc) nil nil)
+   unfinished nil nil nil nil nil))
  (execute_CaseJML_TCC1 0
   (execute_CaseJML_TCC1-1 nil 3390908875 nil ("" (subtype-tcc) nil nil)
-   nil nil nil nil nil nil))
+   unfinished nil nil nil nil nil))
  (execute_CaseJML_TCC2 0
   (execute_CaseJML_TCC2-1 nil 3390908875 nil ("" (subtype-tcc) nil nil)
-   nil nil nil nil nil nil))
+   unfinished nil nil nil nil nil))
  (execute_CaseJML_TCC3 0
   (execute_CaseJML_TCC3-1 nil 3390908875 nil ("" (subtype-tcc) nil nil)
-   nil nil nil nil nil nil))
+   unfinished nil nil nil nil nil))
  (on_method_entry_TCC1 0
   (on_method_entry_TCC1-1 nil 3390908875 nil ("" (subtype-tcc) nil nil)
-   nil nil nil nil nil nil))
+   unfinished nil nil nil nil nil))
  (on_method_entry_TCC2 0
   (on_method_entry_TCC2-1 nil 3390908875 nil ("" (subtype-tcc) nil nil)
-   nil nil nil nil nil nil))
+   unfinished nil nil nil nil nil))
  (on_method_entry_TCC3 0
   (on_method_entry_TCC3-1 nil 3390908875 nil ("" (subtype-tcc) nil nil)
-   nil nil nil nil nil nil))
+   unfinished nil nil nil nil nil))
  (on_method_entry_TCC4 0
   (on_method_entry_TCC4-1 nil 3390908875 nil ("" (subtype-tcc) nil nil)
-   nil nil nil nil nil nil))
+   unfinished nil nil nil nil nil))
  (on_method_entry_TCC5 0
   (on_method_entry_TCC5-1 nil 3390908875 nil ("" (subtype-tcc) nil nil)
-   nil nil nil nil nil nil))
+   unfinished nil nil nil nil nil))
  (on_method_exit_normal_TCC1 0
   (on_method_exit_normal_TCC1-1 nil 3390908875 nil
-   ("" (subtype-tcc) nil nil) nil nil nil nil nil nil))
+   ("" (subtype-tcc) nil nil) unfinished nil nil nil nil nil))
  (on_method_exit_normal_TCC2 0
   (on_method_exit_normal_TCC2-1 nil 3390908875 nil
-   ("" (subtype-tcc) nil nil) nil nil nil nil nil nil))
+   ("" (subtype-tcc) nil nil) unfinished nil nil nil nil nil))
  (on_method_exit_normal_TCC3 0
   (on_method_exit_normal_TCC3-1 nil 3390908875 nil
-   ("" (subtype-tcc) nil nil) nil nil nil nil nil nil))
+   ("" (subtype-tcc) nil nil) unfinished nil nil nil nil nil))
  (on_method_exit_normal_TCC4 0
   (on_method_exit_normal_TCC4-1 nil 3390908875 nil
-   ("" (subtype-tcc) nil nil) nil nil nil nil nil nil))
+   ("" (subtype-tcc) nil nil) unfinished nil nil nil nil nil))
  (on_method_exit_normal_TCC5 0
   (on_method_exit_normal_TCC5-1 nil 3390908875 nil
-   ("" (subtype-tcc) nil nil) nil nil nil nil nil nil))
+   ("" (subtype-tcc) nil nil) unfinished nil nil nil nil nil))
  (on_method_exit_exceptional_TCC1 0
   (on_method_exit_exceptional_TCC1-1 nil 3390908875 nil
-   ("" (subtype-tcc) nil nil) nil nil nil nil nil nil))
+   ("" (subtype-tcc) nil nil) unfinished nil nil nil nil nil))
  (on_method_exit_exceptional_TCC2 0
   (on_method_exit_exceptional_TCC2-1 nil 3390908875 nil
-   ("" (subtype-tcc) nil nil) nil nil nil nil nil nil))
+   ("" (subtype-tcc) nil nil) unfinished nil nil nil nil nil))
  (on_method_exit_exceptional_TCC3 0
   (on_method_exit_exceptional_TCC3-1 nil 3390908875 nil
-   ("" (subtype-tcc) nil nil) nil nil nil nil nil nil))
+   ("" (subtype-tcc) nil nil) unfinished nil nil nil nil nil))
  (on_method_exit_exceptional_TCC4 0
   (on_method_exit_exceptional_TCC4-1 nil 3390908875 nil
-   ("" (subtype-tcc) nil nil) nil nil nil nil nil nil)))
+   ("" (subtype-tcc) nil nil) unfinished nil nil nil nil nil)))
 

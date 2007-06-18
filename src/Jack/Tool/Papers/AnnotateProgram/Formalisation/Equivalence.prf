@@ -6,7 +6,7 @@
    nil))
  (eval_action_behavior_TCC1 0
   (eval_action_behavior_TCC1-1 nil 3390219476 nil
-   ("" (subtype-tcc) nil nil) unchecked nil nil nil nil nil))
+   ("" (subtype-tcc) nil nil) unfinished nil nil nil nil nil))
  (MP_modeled_implies_same_exception 0
   (MP_modeled_implies_same_exception-1 nil 3386411363 3387017059
    ("" (skosimp)
@@ -47,7 +47,7 @@
         nil))
       nil))
     nil)
-   proved
+   unfinished
    ((related_states const-decl "boolean" Equivalence nil)
     (MVA_modeled? const-decl "boolean" Equivalence nil)
     (Program_modeled? const-decl "boolean" Equivalence nil)
@@ -529,11 +529,61 @@
     (related_states const-decl "boolean" Equivalence nil))
    2591805 52720 t shostak))
  (MP_modeled_preserved_by_assertion_checking_TCC1 0
-  (MP_modeled_preserved_by_assertion_checking_TCC1-1 nil 3387792304 nil
-   ("" (subtype-tcc) nil nil) unchecked nil nil nil nil nil))
+  (MP_modeled_preserved_by_assertion_checking_TCC1-1 nil 3387792304
+   3390912279
+   ("" (skosimp) (("" (typepred "n1!1") (("" (assert) nil nil)) nil))
+    nil)
+   proved
+   ((posnat nonempty-type-eq-decl nil integers nil)
+    (nonneg_int nonempty-type-eq-decl nil integers nil)
+    (>= const-decl "bool" reals nil)
+    (int nonempty-type-eq-decl nil integers nil)
+    (integer_pred const-decl "[rational -> boolean]" integers nil)
+    (rational nonempty-type-from-decl nil rationals nil)
+    (rational_pred const-decl "[real -> boolean]" rationals nil)
+    (> const-decl "bool" reals nil)
+    (real nonempty-type-from-decl nil reals nil)
+    (real_pred const-decl "[number_field -> boolean]" reals nil)
+    (number_field nonempty-type-from-decl nil number_fields nil)
+    (number_field_pred const-decl "[number -> boolean]" number_fields
+     nil)
+    (number nonempty-type-decl nil numbers nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (real_gt_is_strict_total_order name-judgement
+     "(strict_total_order?[real])" real_props nil)
+    (real_ge_is_total_order name-judgement "(total_order?[real])"
+     real_props nil)
+    (int_minus_int_is_int application-judgement "int" integers nil))
+   45823 6330 t nil))
  (MP_modeled_preserved_by_assertion_checking_TCC2 0
-  (MP_modeled_preserved_by_assertion_checking_TCC2-1 nil 3387792304 nil
-   ("" (subtype-tcc) nil nil) unchecked nil nil nil nil nil))
+  (MP_modeled_preserved_by_assertion_checking_TCC2-1 nil 3387792304
+   3390912320
+   ("" (skosimp) (("" (typepred "n2!1") (("" (assert) nil nil)) nil))
+    nil)
+   proved
+   ((posnat nonempty-type-eq-decl nil integers nil)
+    (nonneg_int nonempty-type-eq-decl nil integers nil)
+    (>= const-decl "bool" reals nil)
+    (int nonempty-type-eq-decl nil integers nil)
+    (integer_pred const-decl "[rational -> boolean]" integers nil)
+    (rational nonempty-type-from-decl nil rationals nil)
+    (rational_pred const-decl "[real -> boolean]" rationals nil)
+    (> const-decl "bool" reals nil)
+    (real nonempty-type-from-decl nil reals nil)
+    (real_pred const-decl "[number_field -> boolean]" reals nil)
+    (number_field nonempty-type-from-decl nil number_fields nil)
+    (number_field_pred const-decl "[number -> boolean]" number_fields
+     nil)
+    (number nonempty-type-decl nil numbers nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (real_gt_is_strict_total_order name-judgement
+     "(strict_total_order?[real])" real_props nil)
+    (int_minus_int_is_int application-judgement "int" integers nil))
+   32136 90 t nil))
  (MP_modeled_preserved_by_assertion_checking 0
   (MP_modeled_preserved_by_assertion_checking-1 nil 3387792310
    3387793899
@@ -596,12 +646,22 @@
     (up? adt-recognizer-decl "[lift -> boolean]" lift_adt nil)
     (up adt-constructor-decl "[T -> (up?)]" lift_adt nil)
     (JMLExc? adt-recognizer-decl "[Excpt -> boolean]" Excpt_adt nil)
-    (JMLExc adt-constructor-decl "(JMLExc?)" Excpt_adt nil) nil
+    (JMLExc adt-constructor-decl "(JMLExc?)" Excpt_adt nil)
     (related_states const-decl "boolean" Equivalence nil))
    177704 1900 t nil))
  (on_method_entry_for_ann_method_equivalence_TCC1 0
-  (on_method_entry_for_ann_method_equivalence_TCC1-1 nil 3390219476 nil
-   ("" (subtype-tcc) nil nil) unchecked nil nil nil nil nil))
+  (on_method_entry_for_ann_method_equivalence_TCC1-1 nil 3390219476
+   3390912168
+   ("" (skosimp)
+    (("" (expand "related_states")
+      (("" (expand "specification_requirements") (("" (prop) nil nil))
+        nil))
+      nil))
+    nil)
+   unchecked
+   ((related_states const-decl "boolean" Equivalence nil)
+    (specification_requirements const-decl "boolean" Equivalence nil))
+   67857 6710 t nil))
  (on_method_entry_for_ann_method_equivalence 0
   (on_method_entry_for_ann_method_equivalence-1 nil 3387599066
    3387794977

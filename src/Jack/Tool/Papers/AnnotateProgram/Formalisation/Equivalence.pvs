@@ -59,19 +59,20 @@ BEGIN
           deriv_expr(mp)(e, s, v, s)(n) AND
           g(stA(sMVA), stP) IFF v = Bool(TRUE)
 
+  % TODO: This generates an unprovable TC!! 
+  %   it doesn't consider the  hypothesis ann_program_pre(mp).
   % It is possible to evaluate expression appearing in actions (they terminate) 
   % and they are side-effect-free. Note that the evaluation of the expresion can
   % not throw an exception (if it starts in a non-exceptional state).
   eval_action_behavior(mp : MonitoredProgram) : boolean =
-    LET ap = ann_program(mp) IN
-    FORALL (e : Expr, v : Val, sAP : APState, sMVA : AState, stP : PSt) :
-      wf_MP(mp) IMPLIES
-      wf_state(ap)(sAP) IMPLIES
-      pstate(sAP) = (# ex := bottom, st := stP #) IMPLIES
+    FORALL (e : Expr, v : Val, sAP : APState, sMVA : AState) :
+      ann_program_pre(mp) IMPLIES
+      wf_state(ann_program(mp))(sAP) IMPLIES
+      NOT up?(ex(pstate(sAP))) IMPLIES
       (FORALL (vn : string) : NOT Bottom?(stA(sMVA)(vn))
         IMPLIES stA(sMVA)(vn) = gvs(sAP)(vn)) IMPLIES
-        eval(e)(stA(sMVA), stP) = v IFF
-        EXISTS (n : nat) : deriv_expr(ap)(e, sAP, v, sAP)(n)
+        eval(e)(stA(sMVA), st(pstate(sAP))) = v IFF
+        EXISTS (n : nat) : deriv_expr(ann_program(mp))(e, sAP, v, sAP)(n)
 
   well_behaved_MVA(mp : MonitoredProgram) : boolean =
     guard_to_expression_behavior(mp) AND
@@ -112,10 +113,10 @@ BEGIN
   % If cp(astate(sMP)) = halted, upd must leave the JML exception in sAP
   MP_modeled_preserved_by_update : LEMMA % :-)
     FORALL (mp : MonitoredProgram, ap : Program)
-           (sMP : MPState, sAP : APState)(pst : PState) :
+           (sMP : MPState, sAP : APState)(upd : [PState -> PState]) :
       related_states(mp, ap)(sMP, sAP) IMPLIES
       NOT up?(ex(pstate(sAP))) IMPLIES
-        MP_modeled?(mp)(update_PState(sMP, pst), update_PState(sAP, pst))
+        MP_modeled?(mp)(update_PState(sMP, upd), update_PState(sAP, upd))
 
   MP_modeled_implies_same_num_eval : LEMMA % :-)
     FORALL (mp : MonitoredProgram, ap : Program)
@@ -135,7 +136,7 @@ BEGIN
   MP_modeled_preserved_by_assertion_checking : LEMMA
     FORALL (mp : MonitoredProgram, ap : Program)
            (sMP1, sMP2 : MPState, sAP1, sAP2 : APState, 
-            assertion : Expr, n1, n2 : nat) :
+            assertion : Expr, n1, n2 : posnat) :
       related_states(mp, ap)(sMP1, sAP1) IMPLIES
       NOT up?(ex(pstate(sMP1))) IMPLIES
       (FORALL (v1, v2 : Val, tau1 : MPState, tau2 : APState) :
@@ -155,7 +156,7 @@ BEGIN
   on_method_entry_for_ann_method_equivalence  : LEMMA
     FORALL (mp : MonitoredProgram, ap : Program)
            (sMP1, sMP2 : MPState, sAP1, sAP2 : APState, c : Class, 
-            m1, m2 : Method, a : Val, n1, n2 : nat) :
+            m1, m2 : Method, a : Val, n1, n2 : posnat) :
       related_states(mp, ap)(sMP1, sAP1) IMPLIES
       classes(program(mp))(c) IMPLIES
       methods(c)(m1) IMPLIES

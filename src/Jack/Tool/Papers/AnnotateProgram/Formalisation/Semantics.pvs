@@ -82,7 +82,7 @@ BEGIN
 
   deriv_stmt_rec_type(n : nat) : TYPE = [k : upto(n) -> deriv_stmt_type(k)]
 
-  update_PState_type(f : [FullState, [PState -> PState] -> FullState]) : 
+  update_PState_type(f : [FullState, [PState -> PState] -> FullState]) :
     boolean =
     FORALL (s1, s2 : FullState, upd : [PState -> PState]) :
       f(s1, upd) = s2 IMPLIES pstate(s2) = upd(pstate(s1))
@@ -113,7 +113,6 @@ BEGIN
 END SemanticsTypes
 
 
-
 SemanticsJMLTypes[Name : TYPE+,
                   FullState : TYPE,
                   (IMPORTING State[Name]) gvs : [FullState -> Store]] : THEORY
@@ -121,7 +120,7 @@ BEGIN
 
   IMPORTING Program[Name]
 
-  update_GhostVars_type(f : [FullState, [Store -> Store] -> FullState]) : 
+  update_GhostVars_type(f : [FullState, [Store -> Store] -> FullState]) :
     boolean =
     FORALL (s1, s2 : FullState, gvs : [Store -> Store]) :
       f(s1, gvs) = s2 IMPLIES gvs(s2) = gvs(s1)
@@ -159,7 +158,7 @@ BEGIN
                     THEN param_val
                     ELSIF var_names(lvds)(n)
                     THEN default_value(jtype(choose({l : LocalVarDecl | 
-                                                     name(l) = n AND lvds(l)})))
+                                                     lvds(l) AND name(l) = n})))
                     ELSE lvs(st(ps))(n)
                     ENDIF]]
     IN update_PState(s, new_pstate)
@@ -371,18 +370,20 @@ BEGIN
                     ds1 : deriv_stmt_rec_type(n1),
                     ds2 : deriv_stmt_rec_type(n2)) : boolean =
     FORALL (c : Stmt)(sigma, sigma1, sigma2 : FullState)
+           (k1 : upto(n1), k2 : upto(n2))
            (m1 : below(n1), m2 : below(n2)) :
-      ds1(n1)(p)(c, sigma, sigma1)(m1) AND
-      ds2(n2)(p)(c, sigma, sigma2)(m2) IMPLIES
+      ds1(k1)(p)(c, sigma, sigma1)(m1) AND
+      ds2(k2)(p)(c, sigma, sigma2)(m2) IMPLIES
         sigma1 = sigma2 AND m1 = m2
 
   deriv_expr_determ(p : FullProgram, n1, n2 : nat, 
                     de1 : deriv_expr_rec_type(n1),
                     de2 : deriv_expr_rec_type(n2)) : boolean =
     FORALL (c : Expr)(v1, v2 : Val)(sigma, sigma1, sigma2 : FullState)
+           (k1 : upto(n1), k2 : upto(n2))
            (m1 : below(n1), m2 : below(n2)) :
-      de1(n1)(p)(c, sigma, v1, sigma1)(m1) AND
-      de2(n2)(p)(c, sigma, v2, sigma2)(m2) IMPLIES
+      de1(k1)(p)(c, sigma, v1, sigma1)(m1) AND
+      de2(k2)(p)(c, sigma, v2, sigma2)(m2) IMPLIES
         v1 = v2 AND sigma1 = sigma2 AND m1 = m2
 
   derives(p : FullProgram)
