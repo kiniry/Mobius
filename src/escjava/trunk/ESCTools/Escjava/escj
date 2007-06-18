@@ -116,6 +116,13 @@ if [ -z "$BCEL_LIB" ]; then
      BCEL_LIB=${ESCTOOLS_ROOT}/Utils/BCEL/bcel-5.2/bcel-5.2.jar
 fi
 
+############ Setting XMLRPC_LIB, if necessary
+
+if [ -z "$XMLRPC_LIB" ]; then
+    XMLRPC_LIB=${ESCTOOLS_ROOT}/xmlrpc.jar
+fi
+
+
 ############ Setting SIMPLIFY
 
 if [ -z "$SIMPLIFY" ]; then
@@ -202,8 +209,6 @@ fi
 ## arguments being supplied to the executable
 
 ##########################################################################
-
-XMLRPC_LIB=${ESCTOOLS_RELEASE}/xmlrpc.jar
 
 ## This is the path needed to run escjava
 ## If it is not set, use the path suitable for working in CVS or in the
