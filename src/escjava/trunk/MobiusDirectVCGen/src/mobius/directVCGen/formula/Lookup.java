@@ -2,6 +2,8 @@ package mobius.directVCGen.formula;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.Vector;
 
 import mobius.directVCGen.vcgen.struct.Post;
@@ -21,23 +23,24 @@ import javafe.ast.RoutineDecl;
 
 //TODO: add comments
 public class Lookup {
-  /** list of symbols to declare */
+  /** list of symbols to declare. */
   public static Vector<FnSymbol> symToDeclare = new Vector<FnSymbol>();
 
-  /** the list of fields to declare */
-  public static HashSet<QuantVariable> fieldsToDeclare = new HashSet<QuantVariable>();
+  /** the list of fields to declare. */
+  public static Set<QuantVariable> fieldsToDeclare = new HashSet<QuantVariable>();
 
-  /** map containing RoutineDecl as keys and Terms (the precondition) as value **/
-  public static HashMap<RoutineDecl, Term> preconditions = new HashMap<RoutineDecl, Term>();
+  /** map containing RoutineDecl as keys and Terms (the precondition) as value. **/
+  public static Map<RoutineDecl, Term> preconditions = new HashMap<RoutineDecl, Term>();
 
-  /** map containing RoutineDecl as keys and Terms (the postcondition) as value **/
-  public static HashMap<RoutineDecl, Post> postconditions = new HashMap<RoutineDecl, Post>();
+  /** map containing RoutineDecl as keys and Terms (the postcondition) as value. **/
+  public static Map<RoutineDecl, Post> postconditions = new HashMap<RoutineDecl, Post>();
 
-  /** map containing RoutineDecl as keys and Terms (the exceptional postcondition) as value **/
-  public static HashMap<RoutineDecl, Post> exceptionalPostconditions = new HashMap<RoutineDecl, Post>();
+  /** map containing RoutineDecl as keys and Terms (the exceptional postcondition) as value. */
+  public static Map<RoutineDecl, Post> exceptionalPostconditions = 
+    new HashMap<RoutineDecl, Post>();
 
-  /** map containing ClassDecl as keys and Terms (the invariant) as value **/
-  public static HashMap<ClassDecl, Term> invariants = new HashMap<ClassDecl, Term>();
+  /** map containing ClassDecl as keys and Terms (the invariant) as value. **/
+  public static Map<ClassDecl, Term> invariants = new HashMap<ClassDecl, Term>();
 
 
   /**

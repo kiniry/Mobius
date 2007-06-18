@@ -8,19 +8,26 @@ import escjava.sortedProver.NodeBuilder.Sort;
 /**
  * This library contains all the operations using integers and reals
  * returning an integer or a real.
+ * @author J. Charles (julien.charles@inria.fr), H. Lehner
  */
-public class Num {
-  /** the sort that represents integers */
+public final class Num {
+  /** the sort that represents integers. */
   public static Sort sortInt = Formula.lf.sortInt;
-  /** the sort that represents real numbers */
+  /** the sort that represents real numbers. */
   public static Sort sortReal = Formula.lf.sortReal;
 
+  /**
+   * @deprecated
+   */
+  private Num() {
+    
+  }
   /**
    * Build a term that represents the given value.
    * @param l the numerical constant to translate to a term
    * @return a newly formed term representing the given constant
    */
-  public static Term value(Long l) {	
+  public static Term value(final Long l) {
     return Formula.lf.mkIntLiteral(l);
   }
 
@@ -29,7 +36,7 @@ public class Num {
    * @param i the numerical constant to translate to a term
    * @return a newly formed term representing the given constant
    */
-  public static Term value(Integer i) {
+  public static Term value(final Integer i) {
     return Formula.lf.mkIntLiteral(i.longValue());
   }
 
@@ -38,7 +45,7 @@ public class Num {
    * @param b the numerical constant to translate to a term
    * @return a newly formed term representing the given constant
    */
-  public static Term value(Byte b) {
+  public static Term value(final Byte b) {
     return Formula.lf.mkIntLiteral(b.longValue());
   }
 
@@ -47,7 +54,7 @@ public class Num {
    * @param s the numerical constant to translate to a term
    * @return a newly formed term representing the given constant
    */
-  public static Term value(Short s) {
+  public static Term value(final Short s) {
     return Formula.lf.mkIntLiteral(s.longValue());
   }
 
@@ -56,7 +63,7 @@ public class Num {
    * @param f the numerical constant to translate to a term
    * @return a newly formed term representing the given constant
    */
-  public static Term value(Float f) {
+  public static Term value(final Float f) {
     return Formula.lf.mkRealLiteral(f.doubleValue());
   }
 
@@ -65,7 +72,7 @@ public class Num {
    * @param c the numerical constant to translate to a term
    * @return a newly formed term representing the given constant
    */
-  public static Term value(Character c) {
+  public static Term value(final Character c) {
     return Formula.lf.mkIntLiteral(c.charValue());
   }
 
@@ -74,7 +81,7 @@ public class Num {
    * @param d the numerical constant to translate to a term
    * @return a newly formed term representing the given constant
    */
-  public static Term value(Double d) {		
+  public static Term value(final Double d) {
     return Formula.lf.mkRealLiteral(d);
   }
 
@@ -87,26 +94,28 @@ public class Num {
    * @param tag a valid tag (see {@link NodeBuilder#tagsIds})
    * @return a valid term of a numerical operation
    */
-  private static Term arith(Term l, Term r, int tag) {
-    if(l.getSort() != r.getSort()&& 
+  private static Term arith(final Term l, final Term r, final int tag) {
+    Term left = l;
+    Term right = r;
+    if (l.getSort() != r.getSort() && 
         (!Num.isNum(r.getSort()) || !Num.isNum(l.getSort())))
       throw new IllegalArgumentException("The sort of " + l + 
                                          " is different from the sort of " + r + ".");
     FnTerm t = null;
-    if(l.getSort() != r.getSort()) {
-      if(l.getSort() == Num.sortInt) {
-        l = Num.intToReal(l);
+    if (l.getSort() != r.getSort()) {
+      if (l.getSort() == Num.sortInt) {
+        left = Num.intToReal(l);
       }
       else {
-        r = Num.intToReal(r);
+        right = Num.intToReal(r);
       }
     }
     if (l.getSort() == Num.sortInt) {
-      t = Formula.lf.mkFnTerm(Formula.lf.symIntFn, new Term[] {l, r});
+      t = Formula.lf.mkFnTerm(Formula.lf.symIntFn, new Term[] {left, right});
       t.tag = tag;
     }
     else if (l.getSort() == Num.sortReal) {
-      t = Formula.lf.mkFnTerm(Formula.lf.symRealFn, new Term[] {l, r});
+      t = Formula.lf.mkFnTerm(Formula.lf.symRealFn, new Term[] {left, right});
       t.tag = tag;
     }
     else {
@@ -124,7 +133,7 @@ public class Num {
    * @param r the right parameter of the addition
    * @return the newly created object
    */
-  public static Term add(Term l, Term r) {
+  public static Term add(final Term l, final Term r) {
     return arith(l, r, NodeBuilder.funADD);
   }
 
@@ -134,7 +143,7 @@ public class Num {
    * @param r the right parameter of the subtraction
    * @return the newly created object
    */
-  public static Term sub(Term l, Term r) {
+  public static Term sub(final Term l, final Term r) {
     return arith(l, r, NodeBuilder.funSUB);
 
   }
@@ -145,7 +154,7 @@ public class Num {
    * @param r the right parameter of the division
    * @return the newly created object
    */
-  public static Term div(Term l, Term r) {
+  public static Term div(final Term l, final Term r) {
     return arith(l, r, NodeBuilder.funDIV);
   }
 
@@ -155,7 +164,7 @@ public class Num {
    * @param r the right parameter of the multiplication
    * @return the newly created object
    */
-  public static Term mul(Term l, Term r) {
+  public static Term mul(final Term l, final Term r) {
     return arith(l, r, NodeBuilder.funMUL);
   }
 
@@ -165,7 +174,7 @@ public class Num {
    * @param r the right parameter of the modulo
    * @return the newly created object
    */
-  public static Term mod(Term l, Term r) {
+  public static Term mod(final Term l, final Term r) {
     return arith(l, r, NodeBuilder.funMOD);
   }
 
@@ -176,9 +185,9 @@ public class Num {
    * @param r the right side element of the shift
    * @return a well formed term of sort Int
    */
-  public static Term lshift(Term l, Term r) {
+  public static Term lshift(final Term l, final Term r) {
     // 64 bits case is ignored at the moment 
-    if(l.getSort() != r.getSort())
+    if (l.getSort() != r.getSort())
       throw new IllegalArgumentException("The sort of " + l + 
                                          " is different from the sort of " + r + ".");
     FnTerm t = null;
@@ -199,9 +208,9 @@ public class Num {
    * @param r the right side element of the shift
    * @return a well formed term of sort Int
    */
-  public static Term rshift(Term l, Term r) {
+  public static Term rshift(final Term l, final Term r) {
     // 64 bits case is ignored at the moment
-    if(l.getSort() != r.getSort())
+    if (l.getSort() != r.getSort())
       throw new IllegalArgumentException("The sort of " + l + 
                                          " is different from the sort of " + r + ".");
     FnTerm t = null;
@@ -222,9 +231,9 @@ public class Num {
    * @param r the right side element of the shift
    * @return a well formed term of sort Int
    */
-  public static Term urshift(Term l, Term r) {
+  public static Term urshift(final Term l, final Term r) {
     // 64 bits case is ignored at the moment
-    if(l.getSort() != r.getSort()&& 
+    if (l.getSort() != r.getSort() && 
         (!Num.isNum(r.getSort()) || !Num.isNum(l.getSort())))
       throw new IllegalArgumentException("The sort of " + l + 
                                          " is different from the sort of " + r + ".");
@@ -244,7 +253,7 @@ public class Num {
    * @param sort a valid sort... not <code>null</code>
    * @return true if sort equals {@link #sortInt} or {@link #sortReal}
    */
-  public static boolean isNum(Sort sort) {
+  public static boolean isNum(final Sort sort) {
     return sort.equals(sortInt) || sort.equals(sortReal);
   }
 
@@ -253,7 +262,7 @@ public class Num {
    * @param r the term of sort integer to convert
    * @return a term of sort real
    */
-  public static Term intToReal(Term r) {
+  public static Term intToReal(final Term r) {
     return Formula.lf.mkFnTerm(Formula.lf.symIntToReal, new Term [] {r});
   }
 
@@ -263,11 +272,11 @@ public class Num {
    * @param t the term to add a minus sign around.
    * @return An Integer term or a real term
    */
-  public static Term sub(Term t) {
-    if(t.getSort().equals(sortInt)) {
+  public static Term sub(final Term t) {
+    if (t.getSort().equals(sortInt)) {
       return Formula.lf.mkFnTerm(Formula.lf.symIntegralNeg, new Term [] {t});
     }
-    else if(t.getSort().equals(sortReal)) {
+    else if (t.getSort().equals(sortReal)) {
       return Formula.lf.mkFnTerm(Formula.lf.symFloatingNeg, new Term [] {t});
 
     }
@@ -282,15 +291,15 @@ public class Num {
    * @param t the term to do a bitnot with around.
    * @return An Integer term or a real term
    */
-  public static Term bitnot(Term t) {
-    if(t.getSort().equals(sortInt)) {
-      FnTerm f = Formula.lf.mkFnTerm(Formula.lf.symIntFn, new Term [] {t});
+  public static Term bitnot(final Term t) {
+    if (t.getSort().equals(sortInt)) {
+      final FnTerm f = Formula.lf.mkFnTerm(Formula.lf.symIntFn, new Term [] {t});
       f.tag = NodeBuilder.funNEG;
       return f;
 
     }
-    else if(t.getSort().equals(sortReal)) {
-      FnTerm f = Formula.lf.mkFnTerm(Formula.lf.symRealFn, new Term [] {t});
+    else if (t.getSort().equals(sortReal)) {
+      final FnTerm f = Formula.lf.mkFnTerm(Formula.lf.symRealFn, new Term [] {t});
       f.tag = NodeBuilder.funNEG;
       return f;
     }
@@ -300,11 +309,11 @@ public class Num {
 
   }
 
-  public static Term inc(Term t) {
+  public static Term inc(final Term t) {
     return Num.add(t, Num.value(1));
   }
 
-  public static Term dec(Term t) {
+  public static Term dec(final Term t) {
     return Num.sub(t, Num.value(1));
   }
 }
