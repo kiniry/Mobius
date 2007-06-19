@@ -180,4 +180,17 @@ inversion rule.
 apply (H s s).
 trivial.
 Qed. 
- 
+
+Lemma derivStandardRule: 
+forall  ( inv post : assertion) exp stmt,  
+(forall s1 s2,  (forall p, inv p s1 -> ( inv p s2 /\ eval_expr s2 exp = 0 ) ) -> post s1 s2 ) ->
+( RULE  stmt  (fun s1 s2 => forall p, eval_expr s1 exp <>  0 -> inv p s1 -> inv p s2 ) ) ->
+let invv :=  (fun s1 s2 =>  forall p, eval_expr s1 exp <>  0 -> inv p s1 -> inv p s2 ) in
+let postt := (fun s1 s2 => forall p, inv p s1 -> inv p s2  ) in 
+(forall s p t ,   eval_expr s exp <>  0 -> invv s  p -> postt p  t -> postt s  t )  /\
+(forall s , eval_expr s exp = 0  -> postt s  s   ) /\
+RULE  stmt  invv .
+Proof.
+simpl;subst;auto;intros.
+Qed.
+

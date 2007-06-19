@@ -174,9 +174,7 @@ apply (  WhileRule    ( transformPost Gspec  ) (transform Body stmt)
              exists sg2 : gState, post1 s1 sg1 ev s2 sg2 ) 
              
              e 
-           (fun s1  ev  s2 =>
-             forall sg1 : gState,
-             exists sg2 : gState,  post1 s1 sg1 ev s2 sg2   )
+          
 ).
 
 

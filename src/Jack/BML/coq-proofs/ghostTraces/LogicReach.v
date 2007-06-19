@@ -29,7 +29,7 @@ Inductive RULER (MS : methPost) (MI : methInv ) :  stmt -> assertion -> Prop :=
 	
     RULER MS MI (If e stmtT stmtF) post 
 
- | WhileRuleR : forall   (st : stmt ) ( post post1   : assertion) e ( inv : assertion)   ,
+ | WhileRuleR : forall   (st : stmt ) ( post post1   : assertion) e    inv,
      (forall s1 s2 event, post1 s1 event s2   ->  post s1 event s2 ) ->
      (forall s , eval_expr s e = 0  -> post1 s nil s   ) ->  
      RULER MS MI st post1     -> 
@@ -84,7 +84,7 @@ assumption.
 assumption.
 
 (* WHILE *)
-eapply ( WhileRuleR MS MI st post2 post0  e inv  ).
+eapply ( WhileRuleR MS MI st post2 post0  e  inv ).
 intros;simpl;auto.
 assumption.
 assumption.

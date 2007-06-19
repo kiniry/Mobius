@@ -28,11 +28,11 @@ Inductive RULET (MS : methPost) :  stmt -> assertion -> Prop :=
     RULET MS stmtF   post2   ->
     RULET MS (If e stmtT stmtF) post 
 
- | WhileRule : forall   (st : stmt ) ( post post1  : assertion) e ( inv : assertion)   ,
+ | WhileRule : forall   (st : stmt ) ( post post1  : assertion) e   ,
      (forall s1 s2 event, post1 s1 event s2  /\   eval_expr s2 e = 0-> post s1 event s2 ) ->
-     ( forall s p t  event1 event2,   eval_expr s e <>  0 -> inv s event1 p -> post1 p event2 t -> post1 s (app event1 event2) t ) -> 
+     ( forall s p t  event1 event2,   eval_expr s e <>  0 -> post1 s event1 p -> post1 p event2 t -> post1 s (app event1 event2) t ) -> 
      (forall s , eval_expr s e = 0  -> post1 s nil s   ) ->
-     RULET MS st  inv  ->
+     RULET MS st  post1  ->
      RULET MS  (While e st) post  
 
  |  SeqRule: forall  (stmt1 stmt2: stmt ) ( post1  post2  post: assertion), 
@@ -85,7 +85,7 @@ intros.
 apply conseq.
 apply H1.
 assumption.
-apply ( WhileRule MS st post2 post0 e inv  ).  
+apply ( WhileRule MS st post2 post0 e ).  
 assumption.
 assumption.
 assumption.
@@ -173,7 +173,7 @@ assumption.
 apply (H2 s1  s3  (eventsI ++ eventsC) ). 
 assert (H100 := IHexec2 (fun s1 events s2 => post1 s1 events s2 /\ eval_expr s2 e = 0 ) ).
 assert ( RULET MS (While e stmt) (fun s1 events s2 => post1 s1 events s2 /\ eval_expr s2 e = 0 ) ).
-apply ( WhileRule MS stmt  (fun s1  events s2 => post1 s1  events s2 /\ eval_expr s2 e = 0 )  post1 e inv ).
+apply ( WhileRule MS stmt  (fun s1  events s2 => post1 s1  events s2 /\ eval_expr s2 e = 0 )  post1 e  ).
 
 
 intros.
@@ -188,7 +188,7 @@ destruct H102.
 split.
 apply ( H3 s1 s2 s3).
 assumption.
-apply (IHexec1 inv H6).
+apply (IHexec1 post1 H6).
 assumption.
 assumption.
 

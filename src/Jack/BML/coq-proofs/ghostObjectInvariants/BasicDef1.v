@@ -1,10 +1,13 @@
 Require Import ZArith.
 Require Import Bool.
 Require Import BoolEq.
-
-Require Import Coq.Arith.Bool_nat.
 Open Scope Z_scope.
+(*normal variables*)
+(*Definition var := Z.*)
 
+Variable methodNames : Set.
+
+Variable  event :  Set.
 (* program variables  *)
 Definition var := Set.
 Parameter var_dec: forall x y : var, {x = y} + {x <> y}.
@@ -13,10 +16,19 @@ Definition eq_var : var -> var -> bool :=   (fun x y => if (var_dec x y) then tr
 
 (* ghost variables *)
 Definition gVar := Set.
-Parameter gVar_dec: forall x y : gVar, {x = y} + {x <> y}.
-Definition eq_gVar : gVar -> gVar -> bool := (fun x y => if ( gVar_dec x y) then true else false).
+Parameter gVar_dec: forall x y : var, {x = y} + {x <> y}.
+Definition eq_gVar : gVar -> gVar -> bool := (fun x y => if (var_dec x y) then true else false).
 (**************************)
+(*
+Definition var := Z.
+ 
+Definition eq_var x y := Zeq_bool x y.
 
+(*ghost variables*)
+Definition gVar := Z.
+
+Definition eq_gVar x y := Zeq_bool x y.
+*)
 
 Definition value := Z.
 
@@ -28,7 +40,7 @@ Definition update (s:state) (x:var) (v:value) :=
  fun y => if eq_var x y then v else s y.
 
 Definition gUpdate(s: gState ) ( x: gVar) (v:value) := 
- fun y => if ( eq_gVar  x  y  ) then v else s y.
+ fun y => if eq_var x y then v else s y.
 
 (* Definition of expression *)
 
@@ -39,11 +51,10 @@ Inductive binop: Set :=
  | Oadd  : binop
  | Osub  : binop
  | Omul  : binop
- | Odiv  : binop
+ | Odiv  :  binop
  | Oand  : binop
  | Oor   : binop
  | Ole   : binop
- | Oge  : binop
  | Oeq   : binop.
 
 Inductive expr : Type :=
@@ -79,15 +90,11 @@ Definition eval_binop op v1 v2 :=
  | Oand  => val_of_bool (andb (bool_of_val v1) (bool_of_val v2))
  | Oor   => val_of_bool (orb (bool_of_val v1) (bool_of_val v2))
  | Ole   => val_of_bool (Zle_bool v1 v2)
- | Oge   => val_of_bool (Zge_bool v1 v2)
  | Oeq   => val_of_bool (Zeq_bool v1 v2)
  end.
 
-
-
-
 (* Semantique of expression *)
-Fixpoint eval_expr (s:state) (e:expr) {struct e} : Z :=
+Fixpoint eval_expr (s:state) (e:expr) {struct e} : value :=
  match e with
  | Econst n        => n
  | Evar x          => s x  
@@ -96,7 +103,7 @@ Fixpoint eval_expr (s:state) (e:expr) {struct e} : Z :=
  end.
 
 (* Semantique of expression *)
-Fixpoint gEval_expr (s:state)(gs: gState) (e:gExpr) {struct e} : Z :=
+Fixpoint gEval_expr (s:state)(gs: gState) (e:gExpr) {struct e} : value :=
  match e with
  | gEconst n   => n
  | gEvar x       => s x  

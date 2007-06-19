@@ -26,14 +26,14 @@ Inductive RULERG (MS : GmethPost) (MI : GmethInv ) :  Gstmt -> Gassertion -> Pro
 	
     RULERG MS MI (GIf e stmtT stmtF) post 
 
- | WhileRuleRG : forall   (st : Gstmt ) ( post post1   : Gassertion) e ( inv : Gassertion)   ,
+ | WhileRuleRG : forall   (st : Gstmt ) ( post post1   : Gassertion) e inv,
      (forall s1 s2 g1 g2 event, post1 s1 g1 event s2 g2   ->  post s1 g1  event s2 g2) ->
 
      (* ( forall s p t  event1 event2,   eval_expr s e <>  0 -> inv s event1 p -> post1 p event2 t -> post1 s (app event1 event2) t ) ->   *)
      (forall s g, eval_expr s e = 0  -> post1 s g nil s g   ) ->  
      RULERG MS MI st post1     -> 
      RULETG MS st  inv  ->
-     (forall  s1 s2 s3 g1 g2 g3 e1 e2,  ( inv s1 g1 e1 s2 g2  -> eval_expr s1 e <>  0 -> post1 s2 g2  e2 s3 g3 -> post1 s1 g1 (app e1 e2) s3 g3) )->
+     (forall  s1 s2 s3 g1 g2 g3 e1 e2,  (inv s1 g1 e1 s2 g2  -> eval_expr s1 e <>  0 -> post1 s2 g2  e2 s3 g3 -> post1 s1 g1 (app e1 e2) s3 g3) )->
      RULERG MS  MI  (GWhile e st) post  
 
 
