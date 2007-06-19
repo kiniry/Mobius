@@ -15,31 +15,31 @@ public interface IBoogiePLStrings {
   /**
    * TODO
    */
-  String[] instructions = new String[] { "assume", "assert", ":=", "goto", "return", "call",
-                             "procedure", "implementation", "returns", "int", "ref"};
+  String[] instructions = new String[] {"assume", "assert", ":=", "goto", "return", "call",
+                             "procedure", "implementation", "returns", "int", "ref" };
 
   /**
    * TODO
    */
-  String[] jump = new String[] { "goto", "return" };
+  String[] jump = new String[] {"goto", "return" };
 
   /**
    * TODO
    */
-  String[] call = new String[] { "call" };
+  String[] call = new String[] {"call" };
 
   /**
    * TODO
    */
-  String[] unary = new String[] { "assume", "assert" };
+  String[] unary = new String[] {"assume", "assert" };
 
   /**
    * TODO
    */
-  String[] binary = new String[] { ":=" };
+  String[] binary = new String[] {":=" };
 
   /**
    * TODO
    */
-  String[] boogiePLKeywords = new String[] { "procedure", "implementation", "returns", "int", "ref" };
+  String[] boogiePLKeywords = new String[] {"procedure", "implementation", "returns", "int", "ref" };
 }

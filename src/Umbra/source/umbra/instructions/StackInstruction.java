@@ -55,31 +55,31 @@ public class StackInstruction extends NumInstruction {
       return false;
     for (j = 0; j < s2.length; j++) {
       if ((s.indexOf(s2[j]) > 0) && (s.indexOf(s2[j]) < s.indexOf(":") + 2))
-        if (s.indexOf(s2[j]) + (s2[j].length()) + 1 > s.indexOf("%"))
-        { for (y = (s.indexOf("%") + 1); y < s.length(); y++)
-            {if (!(Character.isDigit(s.charAt(y))))
+        if (s.indexOf(s2[j]) + (s2[j].length()) + 1 > s.indexOf("%")) {
+          for (y = (s.indexOf("%") + 1); y < s.length(); y++) {
+            if (!(Character.isDigit(s.charAt(y))))
               return false;
-            }
-        int a, b, d, e, f, g;
-        a = (s.length() - s.indexOf("%"));
-        int c = 0;
-        e = line.length() - line.indexOf("%");
-        f = 0;
-        g = line.length();
-        for (d = 0; d < e; d++) {
-          if (Character.isDigit(line.charAt(g - d - 1))) {
-            f = 1;
           }
-          if (f == 0) {
-            if (Character.isWhitespace(line.charAt(g - d - 1))) {
-              c++;
+          int a, b, d, e, f, g;
+          a = (s.length() - s.indexOf("%"));
+          int c = 0;
+          e = line.length() - line.indexOf("%");
+          f = 0;
+          g = line.length();
+          for (d = 0; d < e; d++) {
+            if (Character.isDigit(line.charAt(g - d - 1))) {
+              f = 1;
+            }
+            if (f == 0) {
+              if (Character.isWhitespace(line.charAt(g - d - 1))) {
+                c++;
+              }
             }
           }
-        }
 
-        b = e - c;
-        if (a == b)
-          return true;
+          b = e - c;
+          if (a == b)
+            return true;
         }
     }
     return false;
@@ -124,38 +124,38 @@ public class StackInstruction extends NumInstruction {
       return null;
     index = getInd();
 
-    if (name.compareTo("aload")==0) {
+    if (name.compareTo("aload") == 0) {
       return new ALOAD(index);
     }
-    if (name.compareTo("astore")==0) {
+    if (name.compareTo("astore") == 0) {
       return new ASTORE(index);
     }
-    if (name.compareTo("dload")==0) {
+    if (name.compareTo("dload") == 0) {
       return new DLOAD(index);
     }
-    if (name.compareTo("dstore")==0) {
+    if (name.compareTo("dstore") == 0) {
       return new DSTORE(index);
     }
-    if (name.compareTo("fload")==0) {
+    if (name.compareTo("fload") == 0) {
       return new FLOAD(index);
     }
-    if (name.compareTo("fstore")==0) {
+    if (name.compareTo("fstore") == 0) {
       return new FSTORE(index);
     }
-    if (name.compareTo("iload")==0) {
+    if (name.compareTo("iload") == 0) {
       return new ILOAD(index);
     }
-    if (name.compareTo("istore")==0) {
+    if (name.compareTo("istore") == 0) {
       return new ISTORE(index);
     }
-    if (name.compareTo("lload")==0) {
+    if (name.compareTo("lload") == 0) {
       return new LLOAD(index);
     }
-    if (name.compareTo("lstore")==0) {
+    if (name.compareTo("lstore") == 0) {
       return new LSTORE(index);
     }
 
     return null;
 
-    }
+  }
 }

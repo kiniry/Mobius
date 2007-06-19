@@ -100,15 +100,11 @@ public class BytecodeCombineAction extends Action {
     }
     final IFile file = ((FileEditorInput)my_editor.getEditorInput()).getFile();
     final IPath path = file.getFullPath();
+    final String fnameTo = UmbraHelper.getSavedClassFileNameForBTC(path);
+    final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
     final String fnameFrom = path.toOSString().replaceFirst(
                   UmbraHelper.BYTECODE_EXTENSION,
-                  UmbraHelper.CLASS_EXTENSION);
-    final String lastSegment = path.lastSegment().replaceFirst(
-                  UmbraHelper.BYTECODE_EXTENSION,
-                  UmbraHelper.CLASS_EXTENSION);
-    final String fnameTo = path.removeLastSegments(1).append("_" + lastSegment).
-                          toOSString();
-    final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+                  UmbraHelper.CLASS_EXTENSION);    
     final IFile fileFrom = root.getFile(new Path(fnameFrom));
     final IPath pathTo = new Path(fnameTo);
     final IFile fileTo = root.getFile(pathTo);
@@ -120,6 +116,9 @@ public class BytecodeCombineAction extends Action {
           "Bytecode", "Cannot regenerate the bytecode file");
       return;
     }
+    final String lastSegment = path.lastSegment().replaceFirst(
+                  UmbraHelper.BYTECODE_EXTENSION,
+                  UmbraHelper.CLASS_EXTENSION);
     updateMethods(file, path, lastSegment);
     my_contributor.synchrEnable();
   }

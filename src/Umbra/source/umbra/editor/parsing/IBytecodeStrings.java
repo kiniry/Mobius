@@ -135,7 +135,7 @@ public interface IBytecodeStrings {
    * TODO
    */
   // nie bo nie bylo
-  public static String[] unknown = new String[] { "breakpoint", "d2f", "d2i", "d2l", "f2d", "f2i", "f2l",
+  public static String[] unknown = new String[] {"breakpoint", "d2f", "d2i", "d2l", "f2d", "f2i", "f2l",
     "i2b", "i2c", "i2d", "i2f", "i2l", "i2s", "l2d", "l2f", "l2i", "multilinewarray",
     "dcmpg", "dcmpl", "dconst", "fcmpg", "fcmpl", "fconst", "iconst", "impdep1", "impdep2",
     "lconst", "nop", "ret"};

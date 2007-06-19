@@ -150,7 +150,7 @@ public class BoogiePLEditor extends TextEditor {
     final IPath active = ((FileEditorInput)getEditorInput()).getFile().getFullPath();
     final String fnameFrom = active.toOSString().replaceFirst(".bpl", ".class");
     final String lastSegment = active.lastSegment().replaceFirst(".bpl", ".class");
-    final String fnameTo = active.removeLastSegments(1).append("_" + lastSegment).toOSString();
+    final String fnameTo = UmbraHelper.getSavedClassFileNameForBPL(active);
     final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
     final IFile fileFrom = root.getFile(new Path(fnameFrom));
     final IPath pathTo = new Path(fnameTo);

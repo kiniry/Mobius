@@ -18,12 +18,10 @@ import umbra.editor.BytecodeEditor;
 import umbra.editor.BytecodeEditorContributor;
 
 /**
- * This class defines action of restoring the previous version
- * of binary file (remembered with the name exteneded with '_')
- * and then generating bytecode directly from it.
- * All changes made to bytecode are cancelled then.
- * This action is equall to saving Java source file (such that
- * binary file are restored) and generating bytecode from this.
+ * This class defines action of restoring the original version
+ * of a classfile (it is saved with the name prefixed with '_')
+ * and then generating bytecode (.btc) directly from it.
+ * In this way, all the changes made up to now are removed.
  *
  * @author Tomasz Batkiewicz (tb209231@students.mimuw.edu.pl)
  * @author Jarosław Paszek (jp209217@students.mimuw.edu.pl)
@@ -35,52 +33,53 @@ public class BytecodeRebuildAction extends Action {
   /**
    * The current bytecode editor for which the action takes place.
    */
-  private IEditorPart editor;
+  private IEditorPart my_editor;
 
   /**
    * The manager that initialises all the actions within the
    * bytecode plugin.
    */
-  private BytecodeEditorContributor contributor;
+  private BytecodeEditorContributor my_contributor;
+
+  /**
+   * This constructor creates the action to restore the original contents
+   * of the classfile. It registers the name of the action with the text
+   * "Rebuild" and stores locally the object which creates all the actions
+   * and which contributs the editor GUI elements to the eclipse GUI.
+   *
+   * @param a_contributor the manager that initialises all the actions within
+   * the bytecode plugin
+   */
+  public BytecodeRebuildAction(final BytecodeEditorContributor a_contributor) {
+    super("Rebuild");
+    this.my_contributor = a_contributor;
+  }
 
   /**
    * This method sets the bytecode editor for which the
    * rebuild action will be executed.
    *
-   * @param targetEditor the bytecode editor for which the action will be
+   * @param a_target_editor the bytecode editor for which the action will be
    *    executed
    */
-  public final void setActiveEditor(final IEditorPart targetEditor) {
-    editor = targetEditor;
+  public final void setActiveEditor(final IEditorPart a_target_editor) {
+    my_editor = a_target_editor;
   }
 
   /**
-   * TODO
-   *
-   * @param contributor the
-   */
-  public BytecodeRebuildAction(
-      final BytecodeEditorContributor contributor) {
-    super("Rebuild");
-    this.contributor = contributor;
-  }
-
-  /**
-   * '_' file is chosen and rewritten into ordinary binary
-   * file. The modificated binaries are removed, input is
-   * updated and the editor window appropriately restored.
+   * This method restores a saved copy of the original .class file that resulted
+   * from the Java source file (it is stored under the name of the classfile
+   * prefixed with '_'). The classfile with our modifications is removed, and
+   * the editor input is updated together with the editor window.
    *
    */
   public final void run() {
-    final IFile file = ((FileEditorInput)editor.getEditorInput()).getFile();
+    final IFile file = ((FileEditorInput)my_editor.getEditorInput()).getFile();
     final IPath active = file.getFullPath();
-    final String fnameTo = active.toOSString().replaceFirst(
+    final String fnameTo = active.toPortableString().replaceFirst(
                   UmbraHelper.BYTECODE_EXTENSION,
                   UmbraHelper.CLASS_EXTENSION);
-    final String lastSegment = active.lastSegment().replaceFirst(
-                  UmbraHelper.BYTECODE_EXTENSION,
-                  UmbraHelper.CLASS_EXTENSION);
-    final String fnameFrom = active.removeLastSegments(1).append("_" + lastSegment).toOSString();
+    final String fnameFrom = UmbraHelper.getSavedClassFileNameForBTC(active);
     final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
     final IFile fileFrom = root.getFile(new Path(fnameFrom));
     final IPath pathTo = new Path(fnameTo);
@@ -94,9 +93,9 @@ public class BytecodeRebuildAction extends Action {
       }
     }
     try {
-      ((BytecodeEditor)editor).refreshBytecode(active, null, null);
+      ((BytecodeEditor)my_editor).refreshBytecode(active, null, null);
       final IEditorInput input = new FileEditorInput(file);
-      contributor.refreshEditor(editor, input);
+      my_contributor.refreshEditor(my_editor, input);
     } catch (ClassNotFoundException e1) {
       e1.printStackTrace();
     } catch (CoreException e1) {
@@ -104,6 +103,6 @@ public class BytecodeRebuildAction extends Action {
     } catch (IOException e1) {
       e1.printStackTrace();
     }
-    contributor.synchrEnable();
+    my_contributor.synchrEnable();
   }
 }

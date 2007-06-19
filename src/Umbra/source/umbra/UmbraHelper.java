@@ -227,4 +227,69 @@ public final class UmbraHelper {
              getFile(Path.fromPortableString(fname));
     return file;
   }
+
+  /**
+   * This method returns for a given path to a .btc file a name of the
+   * classfile that was saved in order to keep the original copy of the
+   * classfile generated from the Java source code file. No check is made that
+   * the path indeed has the extension.
+   *
+   * @param a_path a path to a .btc file
+   * @return corresponding name of the file with the saved version of the
+   * original bytecode
+   */
+  public static String getSavedClassFileNameForBTC(final IPath a_path) {
+    return getSavedClassFileNameForPrefix(a_path, BYTECODE_EXTENSION);
+  }
+
+  /**
+   * This method returns for a given path to a .bpl file a name of the
+   * classfile that was saved in order to keep the original copy of the
+   * classfile generated from the Java source code file. No check is made that
+   * the path indeed has the extension.
+   *
+   * @param a_path a path to a .bpl file
+   * @return corresponding name of the file with the saved version of the
+   * original bytecode
+   */
+  public static String getSavedClassFileNameForBPL(final IPath a_path) {
+    return getSavedClassFileNameForPrefix(a_path, BOOGIEPL_EXTENSION);
+  }
+
+  /**
+   * This method returns for a given path to a file with the extension
+   * <code>an_extension</code> a name of the classfile that was saved in order
+   * to keep the original copy of the classfile generated from the Java source
+   * code file. No check is made that the path indeed has the extension.
+   *
+   * @param a_path a path to a file
+   * @param an_extension the extension for which the orignal bytecode file
+   * name is returned
+   * @return corresponding name of the file with the saved version of the
+   * original bytecode
+   */
+  public static String getSavedClassFileNameForPrefix(final IPath a_path,
+                                                  final String an_extension) {
+    final String lastSegment = replaceLast(a_path.lastSegment(),
+                                           an_extension,
+                                           CLASS_EXTENSION);
+    final String fnameTo = a_path.removeLastSegments(1).
+                                  append("_" + lastSegment).toPortableString();
+    return fnameTo;
+
+  }
+
+  /**
+   * This method returns for a given path to a .class file a name of the
+   * classfile that was saved in order to keep the original copy of the
+   * classfile generated from the Java source code file. No check is made that
+   * the path indeed has the extension.
+   *
+   * @param a_path a path to a .class file
+   * @return corresponding name of the file with the saved version of the
+   * original bytecode
+   */
+  public static String getSavedClassFileNameForClass(IPath a_path) {
+    return getSavedClassFileNameForPrefix(a_path, CLASS_EXTENSION);
+  }
 }

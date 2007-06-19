@@ -43,10 +43,10 @@ public class PushInstruction extends NumInstruction {
     int j;
     int y;
     for (j = 0; j < s2.length; j++) {
-      if ((s.indexOf(s2[j]) > 0) && (s.indexOf(s2[j]) < s.indexOf(":") + 2))
-        { for (y = ((s.indexOf(s2[j])) + (s2[j].length())); y < s.length(); y++)
-            {if (!(Character.isDigit(s.charAt(y)))) return false;
-            }
+      if ((s.indexOf(s2[j]) > 0) && (s.indexOf(s2[j]) < s.indexOf(":") + 2)) {
+        for (y = ((s.indexOf(s2[j])) + (s2[j].length())); y < s.length(); y++) {
+          if (!(Character.isDigit(s.charAt(y)))) return false;
+        }
           int counter = 0;
           boolean lastisdig = false;
           for (y = ((line.indexOf(s2[j])) + (s2[j].length()) + 1); y < line.length(); y++) {

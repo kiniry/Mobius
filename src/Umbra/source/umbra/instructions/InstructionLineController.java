@@ -315,7 +315,8 @@ public abstract class InstructionLineController extends BytecodeLineController {
       }
     try {
       il.delete(ih);
-    } catch (TargetLostException e) {}
+    } catch (TargetLostException e) {
+    }
     ih = null;
     mg.setInstructionList(il);
     updateMethod(cg);

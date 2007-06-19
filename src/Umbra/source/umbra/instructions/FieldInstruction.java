@@ -74,21 +74,20 @@ public class FieldInstruction extends StringInstruction {
     boolean isd;
     final String licznik = "0123456789";
     int liczba;
-    if (line.lastIndexOf("(") >= line.lastIndexOf(")")){
-    } else {
-    isd = true;
-    for (int i = line.lastIndexOf("(") + 1; i < line.lastIndexOf(")"); i++) {
-      if (!Character.isDigit(line.charAt(i))){
-        isd = false;
-      }
-    }
-    if (isd){
-      liczba = 0;
+    if (line.lastIndexOf("(") < line.lastIndexOf(")")) {
+      isd = true;
       for (int i = line.lastIndexOf("(") + 1; i < line.lastIndexOf(")"); i++) {
-        liczba = 10*liczba + licznik.indexOf(line.substring(i, i + 1));
+        if (!Character.isDigit(line.charAt(i))) {
+          isd = false;
+        }
       }
-      return liczba;
-    }
+      if (isd) {
+        liczba = 0;
+        for (int i = line.lastIndexOf("(") + 1; i < line.lastIndexOf(")"); i++) {
+          liczba = 10 * liczba + licznik.indexOf(line.substring(i, i + 1));
+        }
+        return liczba;
+      }
     }
     return 0;
   }

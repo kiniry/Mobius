@@ -228,12 +228,11 @@ public class BytecodeController {
                (oldlc.getIndex() ==
                 ((InstructionLineController)instructions.
                              get(off)).getIndex());
-      if (metEnd){
+      if (metEnd) {
         if (isFirst(j)) {
           theLast = true;
           nextLine = (BytecodeLineController)instructions.get(off);
-        }
-        else nextLine = (BytecodeLineController)instructions.get(off - 1);
+        } else nextLine = (BytecodeLineController)instructions.get(off - 1);
       } else //TODO poprawnie: 1 enter przed wpisaniem 2 wpisac przed ta przed ktora checmy wstawic i enter; zle inaczej: enter przed i potem wpisac
         nextLine = (BytecodeLineController)instructions.get(off + 1);
       modified[nextLine.getIndex()] = true;

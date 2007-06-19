@@ -47,9 +47,14 @@ public class BytecodeEditorAction extends Action {
   /*@ requires change==1 || change == -1;
     @
     @*/
+
   /**
    * This constructor creates the action to change the
-   * clouring mode.
+   * clouring mode. It registers the name of the action with the text
+   * "Change color" and stores locally the object which creates all the actions
+   * and which contributs the editor GUI elements to the eclipse GUI, and
+   * the information on the color change direction (+/-1), and the current
+   * colouring mode value.
    *
    * @param a_contr the current manager that initialises actions for
    *                the bytecode plugin

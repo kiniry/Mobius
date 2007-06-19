@@ -58,9 +58,7 @@ public class CommitAction implements IEditorActionDelegate {
     try {
       final IFile cfile = UmbraHelper.getClassFileName(file, my_editor);
       final IPath cpath = cfile.getFullPath();
-      final String lastSegment = cpath.lastSegment();
-      final String fnameFrom = cpath.removeLastSegments(1).
-                    append("_" + lastSegment).toPortableString();
+      final String fnameFrom = UmbraHelper.getSavedClassFileNameForClass(cpath);
       final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
       final IFile fileFrom = root.getFile(new Path(fnameFrom));
       fileFrom.delete(true, null);

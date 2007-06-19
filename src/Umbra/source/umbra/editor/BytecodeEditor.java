@@ -140,17 +140,14 @@ public class BytecodeEditor extends TextEditor {
    * not existed such yet, the binary file is simply rewritten, otherwise
    * it is saved unchanged).
    */
-  public final void doSave(final IProgressMonitor progressMonitor) {
-    super.doSave(progressMonitor);
+  public final void doSave(final IProgressMonitor a_progress_monitor) {
+    super.doSave(a_progress_monitor);
     final IPath active = ((FileEditorInput)getEditorInput()).getFile().getFullPath();
-    final String fnameFrom = active.toOSString().replaceFirst(
-                  UmbraHelper.BYTECODE_EXTENSION,
-                  UmbraHelper.CLASS_EXTENSION);
-    final String lastSegment = active.lastSegment().replaceFirst(
-                  UmbraHelper.BYTECODE_EXTENSION,
-                  UmbraHelper.CLASS_EXTENSION);
-    final String fnameTo = active.removeLastSegments(1).append("_" + lastSegment).toOSString();
+    final String fnameTo = UmbraHelper.getSavedClassFileNameForBTC(active);
     final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+    final String fnameFrom = active.toOSString().replaceFirst(
+                UmbraHelper.BYTECODE_EXTENSION,
+                UmbraHelper.CLASS_EXTENSION);
     final IFile fileFrom = root.getFile(new Path(fnameFrom));
     final IPath pathTo = new Path(fnameTo);
     final IFile fileTo = root.getFile(pathTo);
@@ -161,6 +158,9 @@ public class BytecodeEditor extends TextEditor {
     }
     try {
       final JavaClass jc = my_classGen.getJavaClass();
+      final String lastSegment = active.lastSegment().replaceFirst(
+                  UmbraHelper.BYTECODE_EXTENSION,
+                  UmbraHelper.CLASS_EXTENSION);
       final String path3 = getPath(active).append(lastSegment).toOSString();
       jc.dump(path3);
     } catch (IOException e) {
