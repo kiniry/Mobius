@@ -5,7 +5,7 @@ BEGIN
     IF empty?(s)
     THEN null
     ELSE LET x = choose(s), xs = remove(x, s) IN
-      cons(x, set2list(xs))
+         cons(x, set2list(xs))
     ENDIF
     MEASURE
       Card(s)

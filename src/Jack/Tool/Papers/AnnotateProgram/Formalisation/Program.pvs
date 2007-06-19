@@ -360,6 +360,7 @@ BEGIN
          NOT var_names(getFieldDecls(p))(This) AND
          NOT var_names(getLocalDecls(p))(This) AND
          NOT var_names(getGhostDecls(p))(This)
+
          
 END WellFormedProgram
 

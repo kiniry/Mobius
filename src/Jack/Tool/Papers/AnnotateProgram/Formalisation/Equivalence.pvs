@@ -182,10 +182,10 @@ BEGIN
   % Main lemmas used in the proof of the correcteness_of_ann_program
 
   initial_states_are_equivalent : LEMMA
-    FORALL (mp : MonitoredProgram) :
+    FORALL (mp : MonitoredProgram)(this_val : (defined?)) :
       ann_program_pre(mp) IMPLIES
-        MP_modeled?(mp)(initial_MP_state(mp),
-                        initial_AP_state(ann_program(mp)))
+        MP_modeled?(mp)(initial_MP_state(mp)(this_val),
+                        initial_AP_state(ann_program(mp))(this_val))
 
   deriv_expr_maintains_equivalence : THEOREM
     FORALL (mp : MonitoredProgram, ap : Program)
@@ -209,10 +209,12 @@ BEGIN
   % The main result
   correcteness_of_ann_program : THEOREM % :-)
     FORALL (mp : MonitoredProgram)(main : Method, arg : int)
+           (root_object : (defined?))
            (sMP : MPState, sAP : APState)(n, m : nat) :
       specification_requirements(mp) IMPLIES
-      run_monitored_program(mp)(main, arg)(sMP)(n) IMPLIES
-      run_annotated_program(ann_program(mp))(main, arg)(sAP)(m) IMPLIES
+      run_monitored_program(mp)(main, arg)(root_object)(sMP)(n) IMPLIES
+      run_annotated_program(ann_program(mp))(main, arg)(root_object)(sAP)(m)
+      IMPLIES
         MP_modeled?(mp)(sMP, sAP)
 
 

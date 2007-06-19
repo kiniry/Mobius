@@ -153,9 +153,9 @@ BEGIN
     LET new_pstate =
       (update_local(This, this_val)) o
         (update_local(name(arg), param_val)) o
-           (update_locals({x : [Name, Val] |EXISTS (l : LocalVarDecl) :
+           (update_locals({x : [Name, Val] | EXISTS (l : LocalVarDecl) :
                                lvds(l) AND name(l) = proj_1(x) AND
-                               default_value(jtype(l)) = proj_2(x)})) 
+                               default_value(jtype(l)) = proj_2(x)}))
     IN update_PState(s, new_pstate)
 
 
@@ -250,9 +250,8 @@ BEGIN
                                           bounded_deriv_stmt_rec(m6),
                                           bounded_deriv_expr_rec(m6))
           ENDIF AND
-          % check whether evaluation of subexpressions was exceptional
-          % if so, return bottom value, otherwise return value returned by
-          % method body
+          % check whether evaluation of subexpressions was exceptional if so, 
+          % return bottom value, otherwise return value returned by method body
           IF up?(ex(pstate(tau8)))
           THEN v = Bottom
           ELSE v = w
@@ -553,19 +552,6 @@ ASSUMING
         s1 = s2 AND n1 = n2
 
 
-    % AT: Don't you think that this looks better?
-    on_method_entry_deterministic_test : ASSUMPTION
-      FORALL (p : FullProgram, m : Method[Name], v : Val, 
-              s, s1, s2 : FullState, n1, n2 : nat) 
-             (ds1 : deriv_stmt_rec_type(n1), de1 : deriv_expr_rec_type(n1),
-              ds2 : deriv_stmt_rec_type(n2), de2 : deriv_expr_rec_type(n2)) :
-        deriv_stmt_determ(p, n1, n2, ds1, ds2) IMPLIES
-        deriv_expr_determ(p, n1, n2, de1, de2) IMPLIES
-        on_method_entry(p, m, v, s, s1, n1, ds1, de1) IMPLIES
-        on_method_entry(p, m, v, s, s2, n2, ds2, de2) IMPLIES
-          s1 = s2 AND n1 = n2
-
-
 ENDASSUMING
 
 
@@ -612,20 +598,19 @@ ENDASSUMING
       Bottom?(v) = up?(ex(pstate(sigma2)))
 
 
-
 END SemanticsProofs
 
 
 % Functions related to the semantics of JML needed to instantiate Semantics.
 SemanticsJML[Name : TYPE+,
-                FullProgram, FullState : TYPE,
-                (IMPORTING Program) program : [FullProgram -> Program[Name]],
-                (IMPORTING State[Name]) pstate : [FullState -> PState],
-                (IMPORTING SemanticsTypes[Name, FullProgram, FullState, pstate])
-                update_PState : (update_PState_type),
-                gvs : [FullState -> Store[Name]],
-                (IMPORTING SemanticsJMLTypes[Name, FullState, gvs])
-                update_GhostVars : (update_GhostVars_type)] : THEORY
+             FullProgram, FullState : TYPE,
+             (IMPORTING Program) program : [FullProgram -> Program[Name]],
+             (IMPORTING State[Name]) pstate : [FullState -> PState],
+             (IMPORTING SemanticsTypes[Name, FullProgram, FullState, pstate])
+             update_PState : (update_PState_type),
+             gvs : [FullState -> Store[Name]],
+             (IMPORTING SemanticsJMLTypes[Name, FullState, gvs])
+             update_GhostVars : (update_GhostVars_type)] : THEORY
 BEGIN
 
   is_ghost(vn : Name, sigma : FullState) : boolean =

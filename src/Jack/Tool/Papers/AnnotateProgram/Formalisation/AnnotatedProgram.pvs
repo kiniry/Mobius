@@ -64,11 +64,11 @@ BEGIN
   % The following are adapted versions for AP to avoid having to give all the 
   % theory parameters to uniquely identify them
 
-%  on_method_entry_AP : (on_method_event_type) =
-%    LAMBDA (p : Program, md : Method, a : Val, s1, s2 : APState, n : nat,
-%            deriv_stmt_rec : deriv_stmt_rec_type(n),
-%            deriv_expr_rec : deriv_expr_rec_type(n)) :
-%    on_method_entry(p, md, a, s1, s2, n, deriv_stmt_rec, deriv_expr_rec)
+ on_method_entry_AP : (on_method_event_type) =
+   LAMBDA (p : Program, md : Method, a : Val, s1, s2 : APState, n : nat,
+           deriv_stmt_rec : deriv_stmt_rec_type(n),
+           deriv_expr_rec : deriv_expr_rec_type(n)) :
+   on_method_entry(p, md, a, s1, s2, n, deriv_stmt_rec, deriv_expr_rec)
 
 
   IMPORTING SemanticsProofs[Name, Program, APState, id,

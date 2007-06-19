@@ -127,9 +127,9 @@ BEGIN
                       on_method_exit_exceptional_MP]
 
 
-  initial_MP_state(mp : MonitoredProgram) : MPState =
+  initial_MP_state(mp : MonitoredProgram)(this_val : Val) : MPState =
     (# astate := initial_MVA_state(mva(mp)),
-       pstate := initial_Program_state(program(mp)),
+       pstate := initial_Program_state(program(mp))(this_val),
        gvs := LAMBDA (n : Name) :
          LET gd = get_GhostDecl(n, program(mp)) IN
          IF bottom?(gd)
@@ -139,15 +139,15 @@ BEGIN
     #)
 
   run_monitored_program(mp : MonitoredProgram)(main : Method, arg : int)
-                      (final : MPState)(n : nat) : boolean =
-    run_FullProgram(mp)(main, arg)(initial_MP_state(mp), final)(n)
+                       (this_val : Val)(final : MPState)(n : nat) : boolean =
+    run_FullProgram(mp)(main, arg)(initial_MP_state(mp)(this_val), final)(n)
 
 
   % Well-formedness properties
 
   wf_initial_MP_state : LEMMA
-    FORALL (mp : MonitoredProgram) :
-      wf_MP(mp) IMPLIES wf_state(mp)(initial_MP_state(mp))
+    FORALL (mp : MonitoredProgram)(this_val : (defined?)) :
+      wf_MP(mp) IMPLIES wf_state(mp)(initial_MP_state(mp)(this_val))
 
   deriv_expr_yields_wf_state_MP : LEMMA
     FORALL (mp : MonitoredProgram, e : Expr, v : Val)
