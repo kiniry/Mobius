@@ -14,22 +14,22 @@ import javafe.ast.Identifier;
  */
 public class VCEntry {
   /** the postcondition of the method. */
-  public Post post;
+  public Post fPost;
 
   /** the exceptional postcondition for the method. */
-  public final Post excpost;
+  public final Post fExcPost;
   
   /** the list of excp post condition; used for the try...catch constructs. */
   public final List<ExcpPost> lexcpost = new ArrayList<ExcpPost>();
 
   /** the postcondition for the break, if there is no label. */
-  public Post brpost;
+  public Post fBrPost;
   
   /** the list of postconditions for breaks in case of labels. */
   public final Map<Identifier, Post> lbrpost = new HashMap<Identifier, Post>(); 
 
   /** the postcondition of continue if there is no label. */
-  public  Post contpost;
+  public  Post fContPost;
   
   /** the list of postconditions of the continue if there are labels attached to loops. */
   public final Map<Identifier, Post> lcontpost = new HashMap<Identifier, Post>(); 
@@ -65,10 +65,10 @@ public class VCEntry {
    * @param contpost the postcondition for a continue without any label
    */
   public VCEntry(final Post post, final Post excpost, final Post brpost, final Post contpost) {
-    this.post = post;
-    this.brpost = brpost;
-    this.contpost = contpost;
-    this.excpost =  excpost;
+    this.fPost = post;
+    this.fBrPost = brpost;
+    this.fContPost = contpost;
+    this.fExcPost =  excpost;
   }
 
   /**
@@ -78,10 +78,10 @@ public class VCEntry {
    * @param ve the object to copy
    */
   public VCEntry(final VCEntry ve) {
-    post = ve.post;
-    brpost = ve.brpost;
-    contpost = ve.contpost;
-    excpost = ve.excpost;
+    fPost = ve.fPost;
+    fBrPost = ve.fBrPost;
+    fContPost = ve.fContPost;
+    fExcPost = ve.fExcPost;
     lexcpost.addAll(ve.lexcpost);
     lbrpost.putAll(ve.lbrpost);
     lcontpost.putAll(ve.lcontpost);

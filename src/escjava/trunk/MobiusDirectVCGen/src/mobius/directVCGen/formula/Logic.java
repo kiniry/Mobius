@@ -499,16 +499,16 @@ public final class Logic {
   }
 
 
-  public static Term andInv(final Term t1, final Term t2){
+  public static Term andInv(final Term t1, final Term t2) {
     return Formula.lf.mkFnTerm(Formula.lf.symAnd, new Term[]{t1, t2});
   }
 
-  public static Term orInv(final Term t1, final Term t2){
+  public static Term orInv(final Term t1, final Term t2) {
     return Formula.lf.mkFnTerm(Formula.lf.symOr, new Term[] {t1, t2});
   }
 
 
-  public static Term eqInv(final Term t1, final Term t2){
+  public static Term eqInv(final Term t1, final Term t2) {
     return Formula.lf.mkFnTerm(Formula.lf.symRefEQ, new Term[]{t1, t2});
   }
 

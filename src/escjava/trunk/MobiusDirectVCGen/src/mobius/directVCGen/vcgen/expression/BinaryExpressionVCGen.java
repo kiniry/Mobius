@@ -23,6 +23,10 @@ import escjava.sortedProver.Lifter.Term;
 
 public class BinaryExpressionVCGen extends ABasicExpressionVCGEn {
 
+  /**
+   * Construct an expression vcgen; with an associated visitor attached to it.
+   * @param vis the visitor of expression attached to the vcgen
+   */
   public BinaryExpressionVCGen(final ExpressionVisitor vis) {
     super(vis);
   }
@@ -93,11 +97,11 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn {
                                            left + " " + right);
 
     }
-    final Post rPost = new Post(rvar, post.post.substWith(formula));
-    post.post = rPost;
+    final Post rPost = new Post(rvar, post.fPost.substWith(formula));
+    post.fPost = rPost;
     Post pre = getPre(right, post);
-    final Post lPost = new Post(lvar, pre.post);
-    post.post = lPost;
+    final Post lPost = new Post(lvar, pre);
+    post.fPost = lPost;
     pre = getPre(left, post);
     return pre;
   }
@@ -121,16 +125,18 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn {
                                            TagConstants.toString(tag) +
                                            " " +  left + " " + right);
     }
-    Post rPost = new Post(rvar, Logic.and(
-                                          Logic.implies(Logic.not(Logic.equals(rvar, Num.value(0))), 
-                                                        post.post.substWith(formula)),
-                                                        Logic.implies(Logic.equals(rvar, Num.value(0)),
-                                                                      getNewExcpPost(Type.javaLangArithmeticException(), post))));
+    final Post rPost = new Post(rvar, 
+                          Logic.and(Logic.implies(Logic.not(Logic.equals(rvar, 
+                                                                         Num.value(0))), 
+                                                  post.fPost.substWith(formula)),
+                                    Logic.implies(Logic.equals(rvar, Num.value(0)),
+                                            getNewExcpPost(Type.javaLangArithmeticException(), 
+                                                           post))));
 
-    post.post = rPost;
+    post.fPost = rPost;
     Post pre = getPre(right, post);
-    final Post lPost = new Post(lvar, pre.post);
-    post.post = lPost;
+    final Post lPost = new Post(lvar, pre);
+    post.fPost = lPost;
     pre = getPre(left, post);
     return pre;
   }
@@ -157,12 +163,12 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn {
    * @return a postcondition containing the proper assignment wp.
    */
   public Post assign(final Expr left, final VCEntry entry) {
-    final QuantVariableRef val = entry.post.var;
+    final QuantVariableRef val = entry.fPost.fVar;
     Post pre;
     if (left instanceof VariableAccess) {
       final VariableAccess va = (VariableAccess) left;
       final QuantVariableRef var = Expression.rvar(va.decl);
-      pre = new Post(val, entry.post.post.subst(var, val));
+      pre = new Post(val, entry.fPost.subst(var, val));
     }
     else if (left instanceof FieldAccess) { 
       final FieldAccess field = (FieldAccess) left;
@@ -175,10 +181,10 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn {
   
           final QuantVariableRef obj = Expression.rvar(Ref.sort);
   
-          entry.post = new Post(obj, entry.post.post.subst(Heap.var, 
-                                                           Heap.store(Heap.var, obj, f.qvar, val)));
+          entry.fPost = new Post(obj, entry.fPost.subst(Heap.var, 
+                                                        Heap.store(Heap.var, obj, f.qvar, val)));
           pre = getPre(od, entry);
-          entry.post = new Post(val, pre.post);
+          entry.fPost = new Post(val, pre);
           break;
         }
         case TagConstants.SUPEROBJECTDESIGNATOR:
@@ -187,11 +193,11 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn {
         case TagConstants.TYPEOBJECTDESIGNATOR: {
           // cannot be null
   
-          pre = new Post(f, entry.post.post.subst(Heap.var, Heap.store(Heap.var, f.qvar, val)));
+          pre = new Post(f, entry.fPost.subst(Heap.var, Heap.store(Heap.var, f.qvar, val)));
           //entry.post = pre;
           //pre = getPre(od, entry);
-          pre = new Post(val, pre.post);
-          entry.post = pre;
+          pre = new Post(val, pre);
+          entry.fPost = pre;
   
           break;
         }
@@ -215,22 +221,22 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn {
                                                     entry).substWith(exc)));
 
       // the normal post
-      Term tNormal = entry.post.post.subst(Heap.var, 
+      Term tNormal = entry.fPost.subst(Heap.var, 
                                            Heap.storeArray(Heap.var, arrVar,  idx, val));
       tNormal = Logic.implies(Logic.not(Logic.equalsNull(arrVar)), tNormal);
       Post post;
       post  = new Post(Logic.and(tNormal, tExcp));
 
-      post = new Post(idx, post.post);
-      entry.post = post;
+      post = new Post(idx, post);
+      entry.fPost = post;
       post = getPre(arr.index, entry);
 
-      post = new Post(arrVar, post.post);
-      entry.post = post;
+      post = new Post(arrVar, post);
+      entry.fPost = post;
       post = getPre(arr.array, entry);
 
-      pre = new Post(val, post.post);
-      entry.post = pre;
+      pre = new Post(val, post);
+      entry.fPost = pre;
 
     }
 
@@ -247,10 +253,10 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn {
   public Post assignSpecial(final BinaryExpr expr, final VCEntry post) {
     final Expr right = expr.right;
     final Expr left = expr.left;
-    final QuantVariableRef val = post.post.var;
+    final QuantVariableRef val = post.fPost.fVar;
     Post pre = assign(left, post);
     pre = new Post(val, pre);
-    post.post = pre;
+    post.fPost = pre;
     switch (expr.op) {
       case TagConstants.ASGMUL:
         pre = stdBinExpression(TagConstants.STAR, left, right, post);

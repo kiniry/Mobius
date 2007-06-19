@@ -115,7 +115,7 @@ public class JmlVisitor extends VisitorArgResult{
         {
           if (!o.equals(child))
           {
-            System.out.println( o.toString());						
+            System.out.println(o);
           }
         }
       }
@@ -308,11 +308,12 @@ public class JmlVisitor extends VisitorArgResult{
       break;
     case TagConstants.ENSURES:
       Post allPosts = Lookup.postconditions.get(rd);
-      allPosts.post = Logic.andInv(allPosts.post, t);
+      // FIXME jgc: I don't know if fVar should be needed here; needs a review
+      allPosts = new Post(allPosts.fVar, Logic.andInv(allPosts.getPost(), t));
       if (((Boolean) ((Properties) o).get("firstPost")).booleanValue())
       {
         Term invToPost = (Term) invToPostconditions(o);
-        allPosts.post = Logic.andInv(allPosts.post, invToPost);
+        allPosts = new Post(allPosts.fVar, Logic.andInv(allPosts.getPost(), invToPost));
         ((Properties) o).put("firstPost", new Boolean(false));
       }
       Lookup.postconditions.put(rd, allPosts);
@@ -327,7 +328,7 @@ public class JmlVisitor extends VisitorArgResult{
 
     RoutineDecl currentRoutine = (RoutineDecl)((Properties) o).get("method");
     Post allExPosts = Lookup.exceptionalPostconditions.get(currentRoutine);
-    QuantVariableRef commonExceptionVar = allExPosts.var;
+    QuantVariableRef commonExceptionVar = allExPosts.fVar;
 
     Term typeOfException = Type.translate(x.arg.type);
     QuantVariableRef newExceptionVar = Expression.rvar(x.arg);
@@ -336,7 +337,7 @@ public class JmlVisitor extends VisitorArgResult{
     newExPost = newExPost.subst(newExceptionVar, commonExceptionVar);
     Term  guard = Logic.assignCompat(Heap.var, commonExceptionVar,typeOfException);
     Term result = Logic.safe.implies(guard, newExPost);
-    allExPosts.post = Logic.and(allExPosts.post, result);
+    allExPosts = new Post(allExPosts.fVar, Logic.and(allExPosts.getPost(), result));
     Lookup.exceptionalPostconditions.put(currentRoutine, allExPosts);
 
 

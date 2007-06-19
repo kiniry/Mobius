@@ -44,7 +44,7 @@ public class ExpressionVisitor extends ABasicVisitor {
 
 
 
-
+  @Override
   public Object visitBinaryExpr(final BinaryExpr expr, final Object o) {
 
     //System out.println(TagConstants.toString(expr.op));
@@ -107,9 +107,10 @@ public class ExpressionVisitor extends ABasicVisitor {
 
 
   // TODO: add comments
-  public Object visitLiteralExpr(LiteralExpr expr,  Object o) {
+  @Override
+  public Object visitLiteralExpr(final LiteralExpr expr,  final Object o) {
     final VCEntry vce = (VCEntry) o;
-    final Post result = vce.post;
+    final Post result = vce.fPost;
     Term term = null;
     // System out.println(TagConstants.toString(expr.tag));
     switch (expr.tag) {
@@ -147,19 +148,20 @@ public class ExpressionVisitor extends ABasicVisitor {
         throw new IllegalArgumentException("Unknown construct :" +
                                            TagConstants.toString(expr.tag) + " " +  expr);
     }
-    return new Post(result.var, term);
+    return new Post(result.fVar, term);
   }
 
   /*
    * (non-Javadoc)
    * @see javafe.ast.VisitorArgResult#visitUnaryExpr(javafe.ast.UnaryExpr, java.lang.Object)
    */
-  public Object visitUnaryExpr(UnaryExpr expr, Object o) {
+  @Override
+  public Object visitUnaryExpr(final UnaryExpr expr, final Object o) {
     final VCEntry post = (VCEntry) o;
     switch(expr.op) {
       case TagConstants.UNARYADD:
         // for the unary add we do nothing
-        return post.post;
+        return post.fPost;
       case TagConstants.POSTFIXINC:
         return fVcg.postfixInc(expr, post);
       case TagConstants.INC:
@@ -184,81 +186,108 @@ public class ExpressionVisitor extends ABasicVisitor {
    * (non-Javadoc)
    * @see javafe.ast.VisitorArgResult#visitThisExpr(javafe.ast.ThisExpr, java.lang.Object)
    */
-  public /*@non_null*/ Object visitThisExpr(/*@non_null*/ ThisExpr x, Object o) {
-    VCEntry vce = (VCEntry) o;
-    return new Post(vce.post.substWith(Ref.varThis)); // variable particuliere
+  @Override
+  public /*@non_null*/ Object visitThisExpr(final /*@non_null*/ ThisExpr x, final Object o) {
+    final VCEntry vce = (VCEntry) o;
+    return new Post(vce.fPost.substWith(Ref.varThis)); // variable particuliere
   }
 
   /**
    * We just get what is contained inside the paren expression.
    */
-  public /*@non_null*/ Object visitParenExpr(/*@non_null*/ ParenExpr x, Object o) {
+  @Override
+  public /*@non_null*/ Object visitParenExpr(final /*@non_null*/ ParenExpr x, final Object o) {
     return fVcg.getPre(x.expr, (VCEntry) o);
   }
 
-  public /*@non_null*/ Object visitMethodInvocation(/*@non_null*/ MethodInvocation x, Object o) {
+  @Override
+  public /*@non_null*/ Object visitMethodInvocation(final /*@non_null*/ MethodInvocation x, 
+                                                    final Object o) {
     return fVcg.methodInvocation(x, (VCEntry) o);
   }
 
-  public /*@non_null*/ Object visitExpr(/*@non_null*/ Expr x, Object o) {
+  @Override
+  public /*@non_null*/ Object visitExpr(final /*@non_null*/ Expr x, final Object o) {
     throw new IllegalArgumentException("Illegal expr!!!!");
   }
-
-  public /*@non_null*/ Object visitInstanceOfExpr(/*@non_null*/ InstanceOfExpr x, Object o) {
+  
+  @Override
+  public /*@non_null*/ Object visitInstanceOfExpr(final /*@non_null*/ InstanceOfExpr x, 
+                                                  final Object o) {
     return fVcg.instanceOf(x, (VCEntry) o);
   }
-
-  public /*@non_null*/ Object visitCondExpr(/*@non_null*/ CondExpr x, Object o) {
+  
+  @Override
+  public /*@non_null*/ Object visitCondExpr(final /*@non_null*/ CondExpr x, final Object o) {
     return fVcg.condExpr(x, (VCEntry) o);
   }
 
-
-  public /*@non_null*/ Object visitCastExpr(/*@non_null*/ CastExpr x, Object o) {
+  @Override
+  public /*@non_null*/ Object visitCastExpr(final /*@non_null*/ CastExpr x, final Object o) {
     return fVcg.castExpr(x, (VCEntry) o);
   }
 
 
-
-  public Object visitVariableAccess(VariableAccess m, Object o) {
+  @Override
+  public Object visitVariableAccess(final VariableAccess m, final Object o) {
     final VCEntry res = (VCEntry) o;
     final QuantVariableRef v = Expression.rvar(m.decl);
-    return  new Post(res.post.substWith(v));
+    return  new Post(res.fPost.substWith(v));
   }
 
-  public /*@non_null*/ Object visitFieldAccess(/*@non_null*/ FieldAccess x, Object o) {
+  @Override
+  public /*@non_null*/ Object visitFieldAccess(final /*@non_null*/ FieldAccess x, 
+                                               final Object o) {
     return fVcg.fieldAccess(x, (VCEntry) o);
   }
 
-  public /*@non_null*/ Object visitNewInstanceExpr(/*@non_null*/ NewInstanceExpr x, Object o) {
+  @Override
+  public /*@non_null*/ Object visitNewInstanceExpr(final /*@non_null*/ NewInstanceExpr x, 
+                                                   final Object o) {
     return fVcg.newInstance(x, (VCEntry) o);
   }
-  public /*@non_null*/ Object visitObjectDesignator(/*@non_null*/ ObjectDesignator od, Object vce) {
+  
+  @Override
+  public /*@non_null*/ Object visitObjectDesignator(final /*@non_null*/ ObjectDesignator od, 
+                                                    final Object vce) {
     return fVcg.objectDesignator(od, (VCEntry) vce);
   }
 
 
-
-  public /*@non_null*/ Object visitVarInit(/*@non_null*/ VarInit x, Object o) {
+  @Override
+  public /*@non_null*/ Object visitVarInit(final /*@non_null*/ VarInit x, final Object o) {
     return illegalExpr(x, o);
   }
 
-  public /*@non_null*/ Object visitArrayInit(/*@non_null*/ ArrayInit init, Object o) {
+  @Override
+  public /*@non_null*/ Object visitArrayInit(final /*@non_null*/ ArrayInit init, 
+                                             final Object o) {
     return fVcg.arrayInit(init, (VCEntry) o);
   }
 
-  public /*@non_null*/ Object visitArrayRefExpr(/*@non_null*/ ArrayRefExpr x, Object o) {
+  @Override
+  public /*@non_null*/ Object visitArrayRefExpr(final /*@non_null*/ ArrayRefExpr x, 
+                                                final Object o) {
     return fVcg.arrayRef(x, (VCEntry)o);
   }
-  public /*@non_null*/ Object visitNewArrayExpr(/*@non_null*/ NewArrayExpr x, Object o) {
+  
+  @Override
+  public /*@non_null*/ Object visitNewArrayExpr(final /*@non_null*/ NewArrayExpr x, 
+                                                final Object o) {
     return fVcg.newArray(x, (VCEntry) o);
   }
 
-
-  public /*@non_null*/ Object visitAmbiguousVariableAccess(/*@non_null*/ AmbiguousVariableAccess x, Object o) {
+  @Override
+  public /*@non_null*/ Object visitAmbiguousVariableAccess(final /*@non_null*/ 
+                                                           AmbiguousVariableAccess x, 
+                                                           final Object o) {
     return visitExpr(x, o);
   }
 
-  public /*@non_null*/ Object visitAmbiguousMethodInvocation(/*@non_null*/ AmbiguousMethodInvocation x, Object o) {
+  @Override
+  public /*@non_null*/ Object visitAmbiguousMethodInvocation(final /*@non_null*/ 
+                                                             AmbiguousMethodInvocation x, 
+                                                             final Object o) {
     return visitExpr(x, o);
   }
 

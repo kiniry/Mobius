@@ -70,7 +70,7 @@ public abstract class ABasicVisitor extends VisitorArgResult {
     throw new IllegalArgumentException("Illegal Expression");
   }
 
-  public Object illegalStmt(final ASTNode x, final Object o){
+  public Object illegalStmt(final ASTNode x, final Object o) {
     throw new IllegalArgumentException("Illegal Statement");
   }
 
@@ -134,7 +134,7 @@ public abstract class ABasicVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitDecreasesInfo(escjava.ast.DecreasesInfo, java.lang.Object)
    */
   @Override
-  public Object visitDecreasesInfo(DecreasesInfo x, Object o) {
+  public Object visitDecreasesInfo(final DecreasesInfo x, final Object o) {
     return visitASTNode(x, o);
   }
 
@@ -143,7 +143,7 @@ public abstract class ABasicVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitDefPred(escjava.ast.DefPred, java.lang.Object)
    */
   @Override
-  public Object visitDefPred(DefPred x, Object o) {
+  public Object visitDefPred(final DefPred x, final Object o) {
     return visitASTNode(x, o);
   }
 
@@ -152,7 +152,7 @@ public abstract class ABasicVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitDefPredApplExpr(escjava.ast.DefPredApplExpr, java.lang.Object)
    */
   @Override
-  public Object visitDefPredApplExpr(DefPredApplExpr x, Object o) {
+  public Object visitDefPredApplExpr(final DefPredApplExpr x, final Object o) {
     return visitASTNode(x, o);
   }
 
@@ -161,7 +161,7 @@ public abstract class ABasicVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitDefPredLetExpr(escjava.ast.DefPredLetExpr, java.lang.Object)
    */
   @Override
-  public Object visitDefPredLetExpr(DefPredLetExpr x, Object o) {
+  public Object visitDefPredLetExpr(final DefPredLetExpr x, final Object o) {
     return visitASTNode(x, o);
   }
 
@@ -170,7 +170,7 @@ public abstract class ABasicVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitDependsPragma(escjava.ast.DependsPragma, java.lang.Object)
    */
   @Override
-  public Object visitDependsPragma(DependsPragma x, Object o) {
+  public Object visitDependsPragma(final DependsPragma x, final Object o) {
     return visitASTNode(x, o);
   }
 
@@ -179,7 +179,7 @@ public abstract class ABasicVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitEscPrimitiveType(escjava.ast.EscPrimitiveType, java.lang.Object)
    */
   @Override
-  public Object visitEscPrimitiveType(EscPrimitiveType x, Object o) {
+  public Object visitEscPrimitiveType(final EscPrimitiveType x, final Object o) {
     return visitASTNode(x, o);
   }
 
@@ -188,7 +188,7 @@ public abstract class ABasicVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitEverythingExpr(escjava.ast.EverythingExpr, java.lang.Object)
    */
   @Override
-  public Object visitEverythingExpr(EverythingExpr x, Object o) {
+  public Object visitEverythingExpr(final EverythingExpr x, final Object o) {
     return visitASTNode(x, o);
   }
 
@@ -197,7 +197,7 @@ public abstract class ABasicVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitExprDeclPragma(escjava.ast.ExprDeclPragma, java.lang.Object)
    */
   @Override
-  public Object visitExprDeclPragma(ExprDeclPragma x, Object o) {
+  public Object visitExprDeclPragma(final ExprDeclPragma x, final Object o) {
     return visitASTNode(x, o);
   }
 
@@ -206,7 +206,7 @@ public abstract class ABasicVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitExprModifierPragma(escjava.ast.ExprModifierPragma, java.lang.Object)
    */
   @Override
-  public Object visitExprModifierPragma(ExprModifierPragma x, Object o) {
+  public Object visitExprModifierPragma(final ExprModifierPragma x, final Object o) {
     return visitASTNode(x, o);
   }
 
@@ -215,7 +215,7 @@ public abstract class ABasicVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitExprStmtPragma(escjava.ast.ExprStmtPragma, java.lang.Object)
    */
   @Override
-  public Object visitExprStmtPragma(ExprStmtPragma x, Object o) {
+  public Object visitExprStmtPragma(final ExprStmtPragma x, final Object o) {
     return visitASTNode(x, o);
   }
 
@@ -224,7 +224,7 @@ public abstract class ABasicVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitGCExpr(escjava.ast.GCExpr, java.lang.Object)
    */
   @Override
-  public Object visitGCExpr(GCExpr x, Object o) {
+  public Object visitGCExpr(final GCExpr x, final Object o) {
     return visitASTNode(x, o);
   }
 
@@ -233,7 +233,7 @@ public abstract class ABasicVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitGhostDeclPragma(escjava.ast.GhostDeclPragma, java.lang.Object)
    */
   @Override
-  public Object visitGhostDeclPragma(GhostDeclPragma x, Object o) {
+  public Object visitGhostDeclPragma(final GhostDeclPragma x, final Object o) {
     return visitASTNode(x, o);
   }
 
@@ -242,7 +242,7 @@ public abstract class ABasicVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitGuardExpr(escjava.ast.GuardExpr, java.lang.Object)
    */
   @Override
-  public Object visitGuardExpr(GuardExpr x, Object o) {
+  public Object visitGuardExpr(final GuardExpr x, final Object o) {
     return visitASTNode(x, o);
   }
 
@@ -251,7 +251,7 @@ public abstract class ABasicVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitGuardedCmd(escjava.ast.GuardedCmd, java.lang.Object)
    */
   @Override
-  public Object visitGuardedCmd(GuardedCmd x, Object o) {
+  public Object visitGuardedCmd(final GuardedCmd x, final Object o) {
     return visitASTNode(x, o);
   }
 
@@ -260,7 +260,7 @@ public abstract class ABasicVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitIdExprDeclPragma(escjava.ast.IdExprDeclPragma, java.lang.Object)
    */
   @Override
-  public Object visitIdExprDeclPragma(IdExprDeclPragma x, Object o) {
+  public Object visitIdExprDeclPragma(final IdExprDeclPragma x, final Object o) {
     return visitASTNode(x, o);
   }
 
@@ -269,7 +269,8 @@ public abstract class ABasicVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitIdentifierModifierPragma(escjava.ast.IdentifierModifierPragma, java.lang.Object)
    */
   @Override
-  public Object visitIdentifierModifierPragma(IdentifierModifierPragma x, Object o) {
+  public Object visitIdentifierModifierPragma(final IdentifierModifierPragma x, 
+                                              final Object o) {
     return visitASTNode(x, o);
   }
 
@@ -278,7 +279,7 @@ public abstract class ABasicVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitImportPragma(escjava.ast.ImportPragma, java.lang.Object)
    */
   @Override
-  public Object visitImportPragma(ImportPragma x, Object o) {
+  public Object visitImportPragma(final ImportPragma x, final Object o) {
     return visitASTNode(x, o);
   }
 
@@ -287,7 +288,7 @@ public abstract class ABasicVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitLockSetExpr(escjava.ast.LockSetExpr, java.lang.Object)
    */
   @Override
-  public Object visitLockSetExpr(LockSetExpr x, Object o) {
+  public Object visitLockSetExpr(final LockSetExpr x, final Object o) {
     return visitASTNode(x, o);
   }
 
@@ -296,7 +297,7 @@ public abstract class ABasicVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitMapsExprModifierPragma(escjava.ast.MapsExprModifierPragma, java.lang.Object)
    */
   @Override
-  public Object visitMapsExprModifierPragma(MapsExprModifierPragma x, Object o) {
+  public Object visitMapsExprModifierPragma(final MapsExprModifierPragma x, final Object o) {
     return visitASTNode(x, o);
   }
 
@@ -305,7 +306,8 @@ public abstract class ABasicVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitModelConstructorDeclPragma(escjava.ast.ModelConstructorDeclPragma, java.lang.Object)
    */
   @Override
-  public Object visitModelConstructorDeclPragma(ModelConstructorDeclPragma x, Object o) {
+  public Object visitModelConstructorDeclPragma(final ModelConstructorDeclPragma x, 
+                                                final Object o) {
     return visitASTNode(x, o);
   }
 
@@ -314,7 +316,7 @@ public abstract class ABasicVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitModelDeclPragma(escjava.ast.ModelDeclPragma, java.lang.Object)
    */
   @Override
-  public Object visitModelDeclPragma(ModelDeclPragma x, Object o) {
+  public Object visitModelDeclPragma(final ModelDeclPragma x, final Object o) {
     return visitASTNode(x, o);
   }
 
@@ -323,7 +325,7 @@ public abstract class ABasicVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitModelMethodDeclPragma(escjava.ast.ModelMethodDeclPragma, java.lang.Object)
    */
   @Override
-  public Object visitModelMethodDeclPragma(ModelMethodDeclPragma x, Object o) {
+  public Object visitModelMethodDeclPragma(final ModelMethodDeclPragma x, final Object o) {
     return visitASTNode(x, o);
   }
 
@@ -332,7 +334,7 @@ public abstract class ABasicVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitModelProgamModifierPragma(escjava.ast.ModelProgamModifierPragma, java.lang.Object)
    */
   @Override
-  public Object visitModelProgamModifierPragma(ModelProgamModifierPragma x, Object o) {
+  public Object visitModelProgamModifierPragma(final ModelProgamModifierPragma x, final Object o) {
     return visitASTNode(x, o);
   }
 
@@ -341,7 +343,7 @@ public abstract class ABasicVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitModelTypePragma(escjava.ast.ModelTypePragma, java.lang.Object)
    */
   @Override
-  public Object visitModelTypePragma(ModelTypePragma x, Object o) {
+  public Object visitModelTypePragma(final ModelTypePragma x, final Object o) {
     return visitASTNode(x, o);
   }
 
@@ -350,7 +352,7 @@ public abstract class ABasicVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitModifiesGroupPragma(escjava.ast.ModifiesGroupPragma, java.lang.Object)
    */
   @Override
-  public Object visitModifiesGroupPragma(ModifiesGroupPragma x, Object o) {
+  public Object visitModifiesGroupPragma(final ModifiesGroupPragma x, final Object o) {
     return visitASTNode(x, o);
   }
 
@@ -359,7 +361,7 @@ public abstract class ABasicVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitNamedExprDeclPragma(escjava.ast.NamedExprDeclPragma, java.lang.Object)
    */
   @Override
-  public Object visitNamedExprDeclPragma(NamedExprDeclPragma x, Object o) {
+  public Object visitNamedExprDeclPragma(final NamedExprDeclPragma x, final Object o) {
     return visitASTNode(x, o);
   }
 
@@ -368,7 +370,7 @@ public abstract class ABasicVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitNestedModifierPragma(escjava.ast.NestedModifierPragma, java.lang.Object)
    */
   @Override
-  public Object visitNestedModifierPragma(NestedModifierPragma x, Object o) {
+  public Object visitNestedModifierPragma(final NestedModifierPragma x, final Object o) {
     return visitASTNode(x, o);
   }
 
@@ -377,7 +379,7 @@ public abstract class ABasicVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitNotModifiedExpr(escjava.ast.NotModifiedExpr, java.lang.Object)
    */
   @Override
-  public Object visitNotModifiedExpr(NotModifiedExpr x, Object o) {
+  public Object visitNotModifiedExpr(final NotModifiedExpr x, final Object o) {
     return visitASTNode(x, o);
   }
 
@@ -386,7 +388,7 @@ public abstract class ABasicVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitNotSpecifiedExpr(escjava.ast.NotSpecifiedExpr, java.lang.Object)
    */
   @Override
-  public Object visitNotSpecifiedExpr(NotSpecifiedExpr x, Object o) {
+  public Object visitNotSpecifiedExpr(final NotSpecifiedExpr x, final Object o) {
     return visitASTNode(x, o);
   }
 
@@ -395,7 +397,7 @@ public abstract class ABasicVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitNothingExpr(escjava.ast.NothingExpr, java.lang.Object)
    */
   @Override
-  public Object visitNothingExpr(NothingExpr x, Object o) {
+  public Object visitNothingExpr(final NothingExpr x, final Object o) {
     return visitASTNode(x, o);
   }
 
@@ -404,7 +406,7 @@ public abstract class ABasicVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitNowarnPragma(escjava.ast.NowarnPragma, java.lang.Object)
    */
   @Override
-  public Object visitNowarnPragma(NowarnPragma x, Object o) {
+  public Object visitNowarnPragma(final NowarnPragma x, final Object o) {
     return visitASTNode(x, o);
   }
 
@@ -413,7 +415,7 @@ public abstract class ABasicVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitParsedSpecs(escjava.ast.ParsedSpecs, java.lang.Object)
    */
   @Override
-  public Object visitParsedSpecs(ParsedSpecs x, Object o) {
+  public Object visitParsedSpecs(final ParsedSpecs x, final Object o) {
     return visitASTNode(x, o);
   }
 
@@ -422,7 +424,7 @@ public abstract class ABasicVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitReachModifierPragma(escjava.ast.ReachModifierPragma, java.lang.Object)
    */
   @Override
-  public Object visitReachModifierPragma(ReachModifierPragma x, Object o) {
+  public Object visitReachModifierPragma(final ReachModifierPragma x, final Object o) {
     return visitASTNode(x, o);
   }
 
@@ -431,7 +433,7 @@ public abstract class ABasicVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitRefinePragma(escjava.ast.RefinePragma, java.lang.Object)
    */
   @Override
-  public Object visitRefinePragma(RefinePragma x, Object o) {
+  public Object visitRefinePragma(final RefinePragma x, final Object o) {
     return visitASTNode(x, o);
   }
 
@@ -440,7 +442,7 @@ public abstract class ABasicVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitResExpr(escjava.ast.ResExpr, java.lang.Object)
    */
   @Override
-  public Object visitResExpr(ResExpr x, Object o) {
+  public Object visitResExpr(final ResExpr x, final Object o) {
     return visitASTNode(x, o);
   }
 
@@ -449,7 +451,7 @@ public abstract class ABasicVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitSetCompExpr(escjava.ast.SetCompExpr, java.lang.Object)
    */
   @Override
-  public Object visitSetCompExpr(SetCompExpr x, Object o) {
+  public Object visitSetCompExpr(final SetCompExpr x, final Object o) {
     return visitASTNode(x, o);
   }
 
@@ -458,7 +460,7 @@ public abstract class ABasicVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitSetStmtPragma(escjava.ast.SetStmtPragma, java.lang.Object)
    */
   @Override
-  public Object visitSetStmtPragma(SetStmtPragma x, Object o) {
+  public Object visitSetStmtPragma(final SetStmtPragma x, final Object o) {
     return visitASTNode(x, o);
   }
 
@@ -467,7 +469,7 @@ public abstract class ABasicVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitSimpleModifierPragma(escjava.ast.SimpleModifierPragma, java.lang.Object)
    */
   @Override
-  public Object visitSimpleModifierPragma(SimpleModifierPragma x, Object o) {
+  public Object visitSimpleModifierPragma(final SimpleModifierPragma x, final Object o) {
     return visitASTNode(x, o);
   }
 
@@ -476,7 +478,7 @@ public abstract class ABasicVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitSimpleStmtPragma(escjava.ast.SimpleStmtPragma, java.lang.Object)
    */
   @Override
-  public Object visitSimpleStmtPragma(SimpleStmtPragma x, Object o) {
+  public Object visitSimpleStmtPragma(final SimpleStmtPragma x, final Object o) {
     return visitASTNode(x, o);
   }
 
@@ -485,7 +487,7 @@ public abstract class ABasicVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitSkolemConstantPragma(escjava.ast.SkolemConstantPragma, java.lang.Object)
    */
   @Override
-  public Object visitSkolemConstantPragma(SkolemConstantPragma x, Object o) {
+  public Object visitSkolemConstantPragma(final SkolemConstantPragma x, final Object o) {
     return visitASTNode(x, o);
   }
 
@@ -494,7 +496,7 @@ public abstract class ABasicVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitSpec(escjava.ast.Spec, java.lang.Object)
    */
   @Override
-  public Object visitSpec(Spec x, Object o) {
+  public Object visitSpec(final Spec x, final Object o) {
     return visitASTNode(x, o);
   }
 
@@ -503,7 +505,7 @@ public abstract class ABasicVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitStillDeferredDeclPragma(escjava.ast.StillDeferredDeclPragma, java.lang.Object)
    */
   @Override
-  public Object visitStillDeferredDeclPragma(StillDeferredDeclPragma x, Object o) {
+  public Object visitStillDeferredDeclPragma(final StillDeferredDeclPragma x, final Object o) {
     return visitASTNode(x, o);
   }
 
@@ -512,7 +514,7 @@ public abstract class ABasicVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitVarDeclModifierPragma(escjava.ast.VarDeclModifierPragma, java.lang.Object)
    */
   @Override
-  public Object visitVarDeclModifierPragma(VarDeclModifierPragma x, Object o) {
+  public Object visitVarDeclModifierPragma(final VarDeclModifierPragma x, final Object o) {
     return visitASTNode(x, o);
   }
 
@@ -521,7 +523,7 @@ public abstract class ABasicVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitVarExprModifierPragma(escjava.ast.VarExprModifierPragma, java.lang.Object)
    */
   @Override
-  public Object visitVarExprModifierPragma(VarExprModifierPragma x, Object o) {
+  public Object visitVarExprModifierPragma(final VarExprModifierPragma x, final Object o) {
     return visitASTNode(x, o);
   }
 
@@ -530,7 +532,7 @@ public abstract class ABasicVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitWildRefExpr(escjava.ast.WildRefExpr, java.lang.Object)
    */
   @Override
-  public Object visitWildRefExpr(WildRefExpr x, Object o) {
+  public Object visitWildRefExpr(final WildRefExpr x, final Object o) {
     return visitASTNode(x, o);
   }
 }

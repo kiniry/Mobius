@@ -12,19 +12,19 @@ import escjava.sortedProver.Lifter.Term;
  */
 public class Post {
   /** the temporary variable; used mainly in the vcGen of expressions. */
-  public final QuantVariableRef var;
+  public final QuantVariableRef fVar;
 
   /** the current postcondition. */
-  public Term post;
+  private Term fPost;
 
   /**
    * Construct a postcondition from a variable and a logical formula.
-   * @param var the current substitution variable
-   * @param post the logical formula
+   * @param v the current substitution variable
+   * @param p the logical formula
    */
-  public Post (final QuantVariableRef var, final Term post) {
-    this.var = var;
-    this.post = post;
+  public Post (final QuantVariableRef v, final Term p) {
+    this.fVar = v;
+    this.fPost = p;
   }
 
   /**
@@ -36,21 +36,40 @@ public class Post {
     this(null, post);
   }
 
-  public Post(final QuantVariableRef val, final Post post) {
-    this(val, post.post);
+  /**
+   * Construct a postcondition from a variable and a postcondition.
+   * @param var the variable to be replaced
+   * @param post the predicate being postcondition
+   */
+  public Post(final QuantVariableRef var, final Post post) {
+    this(var, post.fPost);
   }
 
   /**
-   * Substitute the current variable ({@link #var}) with the logical formula given
+   * Substitute the current variable ({@link #fVar}) with the logical formula given
    * as an argument.
    * @param f the formula to substitute the variable with
    * @return a term where the variable has been substituted
    */
   public Term substWith(final Term f) {
-    if (var != null) {
-      return post.subst(var, f);
+    if (fVar != null) {
+      return fPost.subst(fVar, f);
     }
-    return post;
+    return fPost;
+  }
+  
+  /**
+   * Substitute the current variable ({@link #fVar}) with the logical formula given
+   * as an argument.
+   * @param v a variable or an expression to substitute
+   * @param f the formula to substitute the variable with
+   * @return a term where the variable has been substituted
+   */
+  public Term subst(final Term v, final Term f) {
+    if ((v != null) && (f != null)) {
+      return fPost.subst(v, f);
+    }
+    return fPost;
   }
 
   /**
@@ -69,19 +88,22 @@ public class Post {
   public static Post and(final Post p1, final Post p2) {
     if (p1 == null) return p2;
     if (p2 == null) return p1;
-    return new Post(p1.var, 
-                    Logic.and(p1.post, p2.post.subst(p2.var, p1.var)));
+    return new Post(p1.fVar, 
+                    Logic.and(p1.fPost, p2.fPost.subst(p2.fVar, p1.fVar)));
   }
 
   /**
    * Nearly the same semantic as the {@link #and(Post, Post)} method.
    * The only difference is that it builds an implies.
+   * @param p1 the left part of the <code>implies</code>
+   * @param p2 the right part of the <code>implies</code>
+   * @return a new Post object with the properties mentionned above or p1 or p2
    */
   public static Post implies(final Post p1, final Post p2) {
     if (p1 == null) return p2;
     if (p2 == null) return p1;
-    return new Post(p1.var, 
-                    Logic.implies(p1.post, p2.post.subst(p2.var, p1.var)));
+    return new Post(p1.fVar, 
+                    Logic.implies(p1.fPost, p2.fPost.subst(p2.fVar, p1.fVar)));
   }
 
   /**
@@ -92,11 +114,11 @@ public class Post {
    * @return a new post
    */
   public static Post not(final Post p1) {
-    if (p1 == null || p1.post == null) {
+    if (p1 == null || p1.fPost == null) {
       throw new IllegalArgumentException("" + p1);
     }
-    return new Post(p1.var, 
-                    Logic.not(p1.post));
+    return new Post(p1.fVar, 
+                    Logic.not(p1.fPost));
   }
 
 
@@ -106,9 +128,16 @@ public class Post {
    * <code>(post: post)</code> if var is missing
    */
   public String toString() {
-    if (var != null) {
-      return "(var:" + var  + ") (post: " + post + ")";
+    if (fVar != null) {
+      return "(var:" + fVar  + ") (post: " + fPost + ")";
     }
-    return  "(post: " + post + ")";
+    return  "(post: " + fPost + ")";
+  }
+  
+  /**
+   * @return the current postcondition
+   */
+  public Term getPost() {
+    return fPost;
   }
 }

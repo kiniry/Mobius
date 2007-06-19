@@ -54,7 +54,7 @@ public class Lookup {
    * @param hasResult whether or not it has a result
    * @return a term built around the rules stated above
    */
-  public static Term buildStdCond (RoutineDecl m, String name, boolean hasResult) {
+  public static Term buildStdCond (final RoutineDecl m, String name, boolean hasResult) {
     int arity = m.args.size();
     boolean incThis = false;
 
@@ -74,22 +74,22 @@ public class Lookup {
     if (hasResult) {
       arity++;
     }
-    Sort [] s = new Sort[arity];
-    Term [] args = new Term [arity];
+    final Sort [] s = new Sort[arity];
+    final Term [] args = new Term [arity];
     if (incThis) {
       s [0] = Ref.sort;
       args[0] = Ref.varThis;
     }
-    FormalParaDeclVec v = m.args;
+    final FormalParaDeclVec v = m.args;
     for (int i = 0; i < v.size(); i++) {
-      FormalParaDecl para = v.elementAt(i);
+      final FormalParaDecl para = v.elementAt(i);
       args[i + 1] = Expression.rvar(para);
       s[i + 1] = args[i + 1].getSort();
 
     }
     if (hasResult) {
       //m instance of MethodDecl
-      MethodDecl dec = (MethodDecl) m;
+      final MethodDecl dec = (MethodDecl) m;
       args[args.length - 1] = Expression.rvar(Expression.getResultVar(dec));
       s[s.length - 1] = args[args.length - 1].getSort();
     }
@@ -97,9 +97,9 @@ public class Lookup {
       name = ((ConstructorDecl)m).parent.id + name;
     }
     else {
-      name = ((MethodDecl)m).id+ name;
+      name = ((MethodDecl)m).id + name;
     }
-    FnSymbol sym = Formula.lf.registerPredSymbol(name, s);
+    final FnSymbol sym = Formula.lf.registerPredSymbol(name, s);
     symToDeclare.add(sym);
 
     return Formula.lf.mkFnTerm(sym, args);
@@ -109,7 +109,7 @@ public class Lookup {
    * Returns the FOL Term representation of the precondition of method m.
    * @param m the method of interest
    */
-  public static Term precondition(RoutineDecl m){
+  public static Term precondition(final RoutineDecl m) {
     return buildStdCond (m, "_pre", false);
   }
 
@@ -117,7 +117,7 @@ public class Lookup {
    * Returns the FOL Term representation of the normal postcondition of routine m.
    * @param m the method of interest
    */
-  public static Post normalPostcondition(RoutineDecl m){
+  public static Post normalPostcondition(final RoutineDecl m) {
     return new Post(buildStdCond (m, "_norm", true)); 
   }
 
@@ -125,15 +125,16 @@ public class Lookup {
    * Returns the FOL Term representation of the normal postcondition of method m.
    * @param m the method of interest
    */
-  public static Post normalPostcondition(MethodDecl m){
+  public static Post normalPostcondition(final MethodDecl m) {
     return new Post(Expression.rvar(Expression.getResultVar(m)), buildStdCond (m, "_norm", true)); 
   }
   /**
-   * Returns a vector of   FOL Term representations of the exceptional postconditions of method m.
+   * Returns a vector of FOL Term representations of the exceptional 
+   * postconditions of method m.
    * The exceptional postcondition will always look like this: Sort => Term
    * @param m the method of interest
    */
-  public static Post exceptionalPostcondition(RoutineDecl m){
+  public static Post exceptionalPostcondition(final RoutineDecl m) {
     return new Post(Expression.rvar(Ref.sort), buildStdCond (m, "_excp", false)); 
   }
 
