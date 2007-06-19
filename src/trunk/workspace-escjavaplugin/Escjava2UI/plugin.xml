@@ -218,16 +218,16 @@
                definitionId="escjava.plugin.commands.GoToDeclaration">
          </action>         
          <action
-               label="Clear Esc/Java2 Markers"
-               tooltip="Clears any Esc/Java2 markers in the selected object"
+               label="Clear ESC/Java2 Markers"
+               tooltip="Clears any ESC/Java2 markers in the selected object"
                class="escjava.plugin.EscjavaAction$Clear"
                menubarPath="JMLMenu/EscjavaGroup"
                id="escjava.plugin.ClearMarkerAction"
                definitionId="escjava.plugin.commands.ClearMarkers">
          </action>
          <action
-               label="Esc/Java2"
-               tooltip="Runs Esc/Java2 static checks"
+               label="ESC/Java2"
+               tooltip="Runs ESC/Java2 static checks"
                class="escjava.plugin.EscjavaAction$Check"
                menubarPath="JMLMenu/EscjavaGroup"
                id="escjava.plugin.EscjavaAction.Check"
@@ -258,16 +258,16 @@
                <separator name="JMLSetupSubmenu"/>
          </menu>           
          <action
-               label="Disable Esc/Java Nature, remove Builder in SELECTED projects"
-               tooltip="Removes the Esc/Java Nature from the project and the Esc/Java Builder from the Incremental builder"
+               label="Disable ESC/Java Nature, remove Builder in SELECTED projects"
+               tooltip="Removes the ESC/Java Nature from the project and the ESC/Java Builder from the Incremental builder"
                class="escjava.plugin.EscjavaAction$DisableEscjava"
                menubarPath="JMLMenu/JMLSetup/JMLSetupSubmenu"
                id="escjava.plugin.EscjavaAction.DisableEscjava"
 			   definitionId="escjava.plugin.commands.DisableEscjava">
          </action> 
          <action
-               label="Enable Esc/Java Nature, add Builder in SELECTED projects"
-               tooltip="Adds the Esc/Java Nature to the project and the Esc/Java Builder to the Incremental builder"
+               label="Enable ESC/Java Nature, add Builder in SELECTED projects"
+               tooltip="Adds the ESC/Java Nature to the project and the ESC/Java Builder to the Incremental builder"
                class="escjava.plugin.EscjavaAction$EnableEscjava"
                menubarPath="JMLMenu/JMLSetup/JMLSetupSubmenu"
                id="escjava.plugin.EscjavaAction.EnableJML"
@@ -333,8 +333,8 @@
   <extension
 	point="org.eclipse.ui.commands">
       <category
-            name="Esc/Java2"
-            description="Esc/Java related commands"
+            name="ESC/Java2"
+            description="ESC/Java related commands"
             id="escjava.plugin.EscjavaCommandCategory">
       </category>
 <!--      <command
@@ -350,26 +350,26 @@
             id="escjava.plugin.commands.DisableESC">
       </command>   -->
       <command
-            name="Install Esc/Java2"
-            description="Installs Esc/Java2 nature and builder on the selected projects"
+            name="Install ESC/Java2"
+            description="Installs ESC/Java2 nature and builder on the selected projects"
             categoryId="escjava.plugin.EscjavaCommandCategory"
             id="escjava.plugin.commands.EnableEscjava">
       </command>
       <command
-            name="Remove Esc/Java2"
-            description="Removes Esc/Java2 nature and builder from the given project"
+            name="Remove ESC/Java2"
+            description="Removes ESC/Java2 nature and builder from the given project"
             categoryId="escjava.plugin.EscjavaCommandCategory"
             id="escjava.plugin.commands.DisableEscjava">
       </command>
       <command
-            name="Check Esc/Java2"
-            description="Performs Esc/Java2 checks on selected Java elements"
+            name="Check ESC/Java2"
+            description="Performs ESC/Java2 checks on selected Java elements"
             categoryId="escjava.plugin.EscjavaCommandCategory"
             id="escjava.plugin.commands.CheckEscjava">
       </command>
       <command
-            name="Clear Esc/Java2 Markers"
-            description="Clears all Esc/Java2 Markers on selected objects"
+            name="Clear ESC/Java2 Markers"
+            description="Clears all ESC/Java2 Markers on selected objects"
             categoryId="escjava.plugin.EscjavaCommandCategory"
             id="escjava.plugin.commands.ClearMarkers">
       </command>

@@ -51,7 +51,7 @@ public class AutoCheckBuilder extends IncrementalProjectBuilder {
 		} catch (CoreException e) {
 			String s = "Exception while cleaning " + getProject().getName();
 			Log.errorlog(s,e);
-			Utils.showMessageInUI(null,"ESCJava Checker cleaning",s + ": " + e);
+			Utils.showMessageInUI(null,"ESC/Java2 Checker cleaning",s + ": " + e);
 		}
 	}
 
@@ -65,7 +65,7 @@ public class AutoCheckBuilder extends IncrementalProjectBuilder {
 		// building the project, but instead using Eclipse builders interface to invoke the
 		// type checker, we return 'null' here.
 
-		if (Log.on) Log.log("ESCJava Builder starting " + (new Date()).toString());
+		if (Log.on) Log.log("ESC/Java2 Builder starting " + (new Date()).toString());
 		try {
 			EscjavaMarker.clearMarkers(getProject());
 			IJavaProject javaProject = JavaCore.create(getProject());
@@ -77,10 +77,10 @@ public class AutoCheckBuilder extends IncrementalProjectBuilder {
 					new Status(IStatus.ERROR, 
 							EscjavaPlugin.PLUGINID,
 							IStatus.OK, // plug-in specific value
-							"Exception caught during ESCJava Checking",
+							"Exception caught during ESC/Java2 Checking",
 							e));
 		} finally {
-			if (Log.on) Log.log("ESCJava Builder ending " + (new Date()));
+			if (Log.on) Log.log("ESC/Java2 Builder ending " + (new Date()));
 		}
 		return null;
 	}

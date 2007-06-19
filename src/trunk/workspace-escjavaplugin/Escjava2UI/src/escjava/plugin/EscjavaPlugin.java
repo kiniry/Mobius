@@ -27,6 +27,7 @@ import pluginlib.Utils;
  */
 public class EscjavaPlugin extends AbstractUIPlugin {
 
+	public static final String ESC_TOOL_NAME = "ESC/Java2";
 	/**
 	 * This is the list of listeners that have registered to this plugin.
 	 */
@@ -72,7 +73,7 @@ public class EscjavaPlugin extends AbstractUIPlugin {
 	//@ modifies Log.log, Log.log.content
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
-		Log.createLog("ESC/Java",this);
+		Log.createLog(EscjavaPlugin.ESC_TOOL_NAME,this);
     AbstractPreference.preferenceStore = getPlugin().getPreferenceStore();
 		AbstractPreference.addListener(
 				new AbstractPreference.Listener() {
@@ -84,7 +85,7 @@ public class EscjavaPlugin extends AbstractUIPlugin {
 					}
 				});
 		AbstractPreference.notifyListeners();
-		if (Log.on) Log.log("EscJava plugin is starting");
+		if (Log.on) Log.log(ESC_TOOL_NAME + " plugin is starting");
 
 		// FIXME this does not work
 		// Add the file associations
@@ -106,7 +107,7 @@ public class EscjavaPlugin extends AbstractUIPlugin {
 	//@ modifies Log.log.content;
 	public void stop(BundleContext context) throws Exception {
 		removeEscjavaListener(escjava.plugin.EscjavaUtils.markerCreator);
-		if (Log.on) Log.log("EscJava plugin is stopping");
+		if (Log.on) Log.log(ESC_TOOL_NAME + " plugin is stopping");
 		super.stop(context);
 	}
 
@@ -131,8 +132,8 @@ public class EscjavaPlugin extends AbstractUIPlugin {
 		boolean b = Utils.addNature(project,ESCJAVA_AUTOCHECK_NATURE);
 
 		if (Log.on) {
-			if (!b) Log.log("EscJava Nature is already present - " + project.getName());
-			else    Log.log("Escjava Nature added - " + project.getName());
+			if (!b) Log.log(ESC_TOOL_NAME + " Nature is already present - " + project.getName());
+			else    Log.log(ESC_TOOL_NAME + " Nature added - " + project.getName());
 		}
 	}
 	
@@ -150,8 +151,8 @@ public class EscjavaPlugin extends AbstractUIPlugin {
 		
 		boolean b = Utils.removeNature(project,ESCJAVA_AUTOCHECK_NATURE);
 		if (Log.on) {
-			if (!b) Log.log("Escjava Nature is not present - " + project.getName());
-			else    Log.log("Escjava Nature was removed - " + project.getName());
+			if (!b) Log.log(ESC_TOOL_NAME + " Nature is not present - " + project.getName());
+			else    Log.log(ESC_TOOL_NAME + " Nature was removed - " + project.getName());
 		}
 	}
 
