@@ -75,7 +75,6 @@ import b2bpl.bytecode.bml.ast.BMLInstanceOfExpression;
 import b2bpl.bytecode.bml.ast.BMLIntLiteral;
 import b2bpl.bytecode.bml.ast.BMLLocalVariableExpression;
 import b2bpl.bytecode.bml.ast.BMLLogicalNotExpression;
-import b2bpl.bytecode.bml.ast.BMLNothingStoreRef;
 import b2bpl.bytecode.bml.ast.BMLNullLiteral;
 import b2bpl.bytecode.bml.ast.BMLOldExpression;
 import b2bpl.bytecode.bml.ast.BMLPredicate;
@@ -88,7 +87,6 @@ import b2bpl.bytecode.bml.ast.BMLStoreRef;
 import b2bpl.bytecode.bml.ast.BMLThisExpression;
 import b2bpl.bytecode.bml.ast.BMLTypeOfExpression;
 import b2bpl.bytecode.bml.ast.BMLUnaryMinusExpression;
-
 
 /**
  * A translator for BML specifications.
@@ -108,7 +106,7 @@ import b2bpl.bytecode.bml.ast.BMLUnaryMinusExpression;
  * provided for constructing translators for the different contexts.
  * </p>
  *
- * @author Ovidio Mallo
+ * @author Ovidio Mallo, Samuel Willimann
  */
 public class SpecificationTranslator {
 
@@ -346,9 +344,14 @@ public class SpecificationTranslator {
       ITranslationContext context,
       BMLStoreRef[] refs) {
     this.context = context;
+   
+    BPLVariableExpression[] vars = new BPLVariableExpression[] { var(b2bpl.translation.ITranslationConstants.HEAP_VAR) };
     
+    /* We initially intended to include all modified field in the "modifies" clause.
+     * However, we abandoned this idea and went for the approach where the logic
+     * is handled by postconditions alone.
+     * TODO: REMOVE 
     BPLVariableExpression[] vars = null;
-    
     if (refs.length > 0 && refs[0] instanceof BMLNothingStoreRef) {
       vars = new BPLVariableExpression[1];
       vars[0] = var(b2bpl.translation.ITranslationConstants.HEAP_VAR);
@@ -359,6 +362,7 @@ public class SpecificationTranslator {
         vars[i + 1] = new BPLVariableExpression(refs[i].toString());
       }
     }
+    */
       
     return new BPLModifiesClause(vars);    
   }

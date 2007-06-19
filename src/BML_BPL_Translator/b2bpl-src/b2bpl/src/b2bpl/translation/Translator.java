@@ -57,6 +57,7 @@ import static b2bpl.translation.CodeGenerator.notEqual;
 import static b2bpl.translation.CodeGenerator.nullLiteral;
 import static b2bpl.translation.CodeGenerator.obj;
 import static b2bpl.translation.CodeGenerator.objectAlloc;
+import static b2bpl.translation.CodeGenerator.old;
 import static b2bpl.translation.CodeGenerator.quantVarName;
 import static b2bpl.translation.CodeGenerator.rval;
 import static b2bpl.translation.CodeGenerator.sub;
@@ -1582,10 +1583,10 @@ public class Translator implements ITranslationConstants {
       //            Should later be replaced with either an on-the-fly compilation
       //            of Java Runtime Libraries (from BML to BoogiePL) or a
       //            precompiled BoogiePL version.
-      declarations.add(axiomatizeHelperProcedure("java.lang.Object..init"));
-      declarations.add(axiomatizeHelperProcedure("java.lang.Throwable..init"));
-      declarations.add(axiomatizeHelperProcedure("java.lang.Exception..init"));
-      declarations.add(axiomatizeHelperProcedure("java.io.PrintStream.println"));
+      declarations.add(axiomatizeHelperProcedure("java.lang.Object..init", "$java.lang.Object"));
+      declarations.add(axiomatizeHelperProcedure("java.lang.Throwable..init", "$java.lang.Throwable"));
+      declarations.add(axiomatizeHelperProcedure("java.lang.Exception..init", "$java.lang.Exception"));
+      declarations.add(axiomatizeHelperProcedure("java.io.PrintStream.println", null));
     }
     
     {
@@ -1595,8 +1596,16 @@ public class Translator implements ITranslationConstants {
     }
   }
   
-  private BPLProcedure axiomatizeHelperProcedure(String name) {
+  private BPLProcedure axiomatizeHelperProcedure(String name, String type) {
+    String l = quantVarName("l");
+    String o = quantVarName("o");
+    String T = quantVarName("T");
+    BPLVariable lVar = new BPLVariable(l, new BPLTypeName(LOCATION_TYPE));
+    BPLVariable oVar = new BPLVariable(o, BPLBuiltInType.REF);
+    BPLVariable tVar = new BPLVariable(T, BPLBuiltInType.NAME);
     BPLVariable this_var = new BPLVariable("param0", BPLBuiltInType.REF);
+    
+    boolean hasReturnType = (type != null);
     
     return new BPLProcedure(
         name,
@@ -1606,12 +1615,50 @@ public class Translator implements ITranslationConstants {
             new BPLVariable(RETURN_VALUE_VAR, BPLBuiltInType.REF),
             new BPLVariable(EXCEPTION_VAR, BPLBuiltInType.REF)
         },
+                
         new BPLSpecification(new BPLSpecificationClause[] {
+
+            hasReturnType ?
+            
             new BPLEnsuresClause(logicalAnd(
                 // postcondition of helper procedure (usually constructor)
                 notEqual(var(RETURN_VALUE_VAR), BPLNullLiteral.NULL),
-                alive(rval(var(RETURN_VALUE_VAR)), var(HEAP_VAR))
+                alive(rval(var(RETURN_VALUE_VAR)), var(HEAP_VAR)),
+                isOfType(rval(var(RETURN_VALUE_VAR)), var(type)),
+                forall(lVar, logicalAnd(
+                    implies(
+                        alive(rval(obj(var(l))), old(var(HEAP_VAR))),
+                        alive(rval(obj(var(l))), var(HEAP_VAR))
+                    ),
+                    isEqual(
+                        get(var(HEAP_VAR), var(l)),
+                        get(old(var(HEAP_VAR)), var(l))
+                    )
+                ))
             ))
+            
+            :
+              
+            new BPLEnsuresClause(
+                // postcondition of helper procedure (usually constructor)
+                forall(lVar, logicalAnd(
+                    implies(
+                        alive(rval(obj(var(l))), old(var(HEAP_VAR))),
+                        alive(rval(obj(var(l))), var(HEAP_VAR))
+                    ),
+                    isEqual(
+                        get(var(HEAP_VAR), var(l)),
+                        get(old(var(HEAP_VAR)), var(l))
+                    )
+                ))
+            )
+              
+            ,
+            
+            new BPLEnsuresClause(
+                forall(oVar, tVar, inv(var(T), var(o), var(HEAP_VAR)))
+            )
+            
         })
     );
   }

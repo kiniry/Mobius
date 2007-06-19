@@ -1,6 +1,8 @@
 package b2bpl.bytecode;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import b2bpl.bytecode.analysis.ControlFlowGraph;
 import b2bpl.bytecode.bml.ast.BMLAssertStatement;
@@ -37,6 +39,8 @@ public class BCMethod extends BCMember {
   private ExceptionHandler[] exceptionHandlers;
 
   private ControlFlowGraph cfg;
+  
+  private Set<String> modifiedTypes = new HashSet<String>();
 
   public BCMethod(
       int accessModifiers,
@@ -246,4 +250,35 @@ public class BCMethod extends BCMember {
 
     return sb.toString();
   }
+  
+  
+  /**
+   * If a class field of a given JType t is being modified in this method,
+   * it will appear in this collection.
+   * @return List of all modified types
+   */
+  public String[] getModifiedTypes() {
+    return modifiedTypes.toArray(new String[modifiedTypes.size()]);
+  }
+  
+  /**
+   * Checks whether there are class fields of a given JType t which
+   * are being modified in this methd.
+   * @param t JType of the class field
+   * @return {@code True}, if there is a class field of the given type which is modified in this method.
+   */
+  public boolean isModifiedType(String t) {
+    return modifiedTypes.contains(t);
+  }
+  
+  /**
+   * Adds a new JType object to the collection of modifies types, indicating
+   * that there is a class field in this method's owner class of JType t
+   * with is being modified in this method.
+   * @param t JType object
+   */
+  public void addModifiedType(String t) {
+    modifiedTypes.add(t);
+  }
+  
 }

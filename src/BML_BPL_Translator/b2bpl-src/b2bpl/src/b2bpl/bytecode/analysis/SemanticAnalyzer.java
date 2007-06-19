@@ -88,8 +88,7 @@ public class SemanticAnalyzer {
 
   private final ITroubleReporter troubleReporter;
 
-  private HashMap<String, MethodNode> asmMethods =
-    new HashMap<String, MethodNode>();
+  private HashMap<String, MethodNode> asmMethods = new HashMap<String, MethodNode>();
 
   public SemanticAnalyzer(Project project, ITroubleReporter troubleReporter) {
     this.project = project;
