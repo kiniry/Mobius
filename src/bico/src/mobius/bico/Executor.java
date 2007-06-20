@@ -1,4 +1,4 @@
-package bico;
+package mobius.bico;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -8,6 +8,8 @@ import java.security.Permission;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import mobius.bico.MethodHandler.MethodNotFoundException;
 
 import org.apache.bcel.Constants;
 import org.apache.bcel.classfile.Code;
@@ -77,7 +79,6 @@ import org.apache.bcel.util.ClassPath;
 import org.apache.bcel.util.Repository;
 import org.apache.bcel.util.SyntheticRepository;
 
-import bico.MethodHandler.MethodNotFoundException;
 
 /**
  * The main entry point to bico.
@@ -147,8 +148,7 @@ public class Executor extends Object {
    * of the array, as in a {@link #main(String[])} method. Mainly initialize
    * all the private variables from <code>Executor</code>
    * 
-   * @param args
-   *            The argument given to <tt>bico</tt>
+   * @param args The argument given to <tt>bico</tt>
    */
   public Executor(final String[] args) {
 
@@ -380,13 +380,15 @@ public class Executor extends Object {
     }
     if (pn.length() == 0) {
       pn = "EmptyPackageName";
-    } else {
+    } 
+    else {
       char[] pna = pn.toCharArray();
       int j = 0;
       for (int i = 0; i < pna.length; i++) {
         if (pna[i] == '.') {
           pna[j] = Character.toUpperCase(pna[++i]);
-        } else {
+        } 
+        else {
           pna[j] = pna[i];
         }
         j++;
@@ -402,7 +404,8 @@ public class Executor extends Object {
       String str = "Definition interfaceName : InterfaceName := " + "("
       + pn + ", " + (current_class++) + "%positive).";
       writeln(fOut, 2, str);
-    } else {
+    } 
+    else {
       treatedClasses.add(moduleName + ".class");
       String str = "Definition className : ClassName := " + "(" + pn
       + ", " + (current_class++) + "%positive).";
@@ -518,7 +521,8 @@ public class Executor extends Object {
     String[] inames = jc.getInterfaceNames();
     if (inames.length == 0) {
       writeln(fOut, 3, "nil");
-    } else {
+    } 
+    else {
       String str = "(";
       for (int i = 0; i < inames.length; i++) {
         str = str.concat(coqify(inames[i]) + ".interfaceName ::");
@@ -547,7 +551,8 @@ public class Executor extends Object {
     if (imeth.length == 0) {
       // System.out.println(" nil");
       writeln(fOut, 3, is.getNoMethods());
-    } else {
+    } 
+    else {
       String str2 = "(";
       for (int i = 0; i < imeth.length - 1; i++) {
 

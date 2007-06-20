@@ -1,4 +1,4 @@
-package bico;
+package mobius.bico;
 
 public interface TypesInCoq {
   

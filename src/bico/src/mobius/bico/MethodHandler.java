@@ -1,4 +1,4 @@
-package bico;
+package mobius.bico;
 
 import java.util.ArrayList;
 import java.util.Iterator;
