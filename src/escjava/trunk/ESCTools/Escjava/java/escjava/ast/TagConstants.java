@@ -1029,7 +1029,7 @@ public class TagConstants extends GeneratedTags
         Identifier.intern("also_requires"),
 
         // Universe type annotations (cjbooms)
- 	Identifier.intern("\\peer"),
+ 	      Identifier.intern("\\peer"),
         Identifier.intern("\\readonly"),
         Identifier.intern("\\rep"),
 
