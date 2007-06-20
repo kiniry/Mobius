@@ -17,7 +17,6 @@ import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
@@ -40,26 +39,7 @@ import umbra.editor.BytecodeEditorContributor;
  * @author Wojciech Wąs (ww209224@students.mimuw.edu.pl)
  * @version a-01
  */
-public class BytecodeCombineAction extends Action {
-
-  /**
-   * The current bytecode editor for which the action takes place.
-   */
-  private IEditorPart my_editor;
-
-  /**
-   * The manager that initialises all the actions within the
-   * bytecode plugin.
-   */
-  private BytecodeEditorContributor my_contributor;
-
-  /**
-   * The GUI elements contributed to the eclipse GUI by the bytecode
-   * editor. This reference should be the same as in the field
-   * <code>my_contributor</code>.
-   */
-  private BytecodeContribution my_btcodeCntrbtn;
-  //@ invariant my_contributor.bytecodeContribution==my_btcodeCntrbtn;
+public class BytecodeCombineAction extends BytecodeEditorAction {
 
   /**
    * This constructor creates the action to combine the bytecode edits with
@@ -75,9 +55,7 @@ public class BytecodeCombineAction extends Action {
    */
   public BytecodeCombineAction(final BytecodeEditorContributor a_contributor,
                  final BytecodeContribution a_bytecode_contribution) {
-    super("Combine");
-    this.my_contributor = a_contributor;
-    this.my_btcodeCntrbtn = a_bytecode_contribution;
+    super("Combine", a_contributor, a_bytecode_contribution);
   }
 
   /**
@@ -92,6 +70,7 @@ public class BytecodeCombineAction extends Action {
    * @see BytecodeRebuildAction
    */
   public final void run() {
+    final IEditorPart my_editor = getEditor();
     final IEditorPart related = ((BytecodeEditor)my_editor).getRelatedEditor();
     if (related.isSaveOnCloseNeeded()) {
       MessageDialog.openWarning(my_editor.getSite().getShell(),
@@ -104,7 +83,7 @@ public class BytecodeCombineAction extends Action {
     final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
     final String fnameFrom = path.toOSString().replaceFirst(
                   UmbraHelper.BYTECODE_EXTENSION,
-                  UmbraHelper.CLASS_EXTENSION);    
+                  UmbraHelper.CLASS_EXTENSION);
     final IFile fileFrom = root.getFile(new Path(fnameFrom));
     final IPath pathTo = new Path(fnameTo);
     final IFile fileTo = root.getFile(pathTo);
@@ -120,7 +99,7 @@ public class BytecodeCombineAction extends Action {
                   UmbraHelper.BYTECODE_EXTENSION,
                   UmbraHelper.CLASS_EXTENSION);
     updateMethods(file, path, lastSegment);
-    my_contributor.synchrEnable();
+    getContributor().synchrEnable();
   }
 
   /**
@@ -146,18 +125,18 @@ public class BytecodeCombineAction extends Action {
     cp = new ClassPath(getClassPath());
     final SyntheticRepository strin = SyntheticRepository.getInstance(cp);
     try {
+      final BytecodeEditor my_editor = (BytecodeEditor)getEditor();
       JavaClass jc = strin.loadClass(clname);
       strin.removeClass(jc);
-      final JavaClass oldJc = ((BytecodeEditor)my_editor).getMy_javaClass();
+      final JavaClass oldJc = my_editor.getMy_javaClass();
       final ClassGen cg = updateModifiedMethods(oldJc, jc);
       jc = cg.getJavaClass();
-      final BytecodeEditor bcEditor = ((BytecodeEditor)my_editor);
-      final String fullName = bcEditor.getPath(a_path).toOSString();
+      final String fullName = my_editor.getPath(a_path).toOSString();
       jc.dump(fullName + UmbraHelper.getFileSeparator() + the_last_segment);
-      bcEditor.setMy_javaClass(jc);
-      bcEditor.refreshBytecode(a_path, null, null);
+      my_editor.setMy_javaClass(jc);
+      my_editor.refreshBytecode(a_path, null, null);
       final IEditorInput input = new FileEditorInput(a_file);
-      my_contributor.refreshEditor(my_editor, input);
+      getContributor().refreshEditor(my_editor, input);
     } catch (ClassNotFoundException e) {
       e.printStackTrace();
     } catch (IOException e) {
@@ -176,6 +155,7 @@ public class BytecodeCombineAction extends Action {
    * @return the string representing the claspath
    */
   private String getClassPath() {
+    final IEditorPart my_editor = getEditor();
     final IFile file = ((FileEditorInput)my_editor.getEditorInput()).getFile();
     final String projectName = file.getFullPath().segment(0);
     final IWorkspaceRoot myWorkspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
@@ -268,9 +248,9 @@ public class BytecodeCombineAction extends Action {
     final int meths = cg.getMethods().length;
     boolean[] modified;
     try {
-      modified = my_btcodeCntrbtn.getModified();
+      modified = getContribution().getModified();
     } catch (NullPointerException e) {
-      MessageDialog.openWarning(my_editor.getSite().getShell(),
+      MessageDialog.openWarning(getEditor().getSite().getShell(),
           "Bytecode", "Nothing has been modified");
 
       throw e;
@@ -284,14 +264,4 @@ public class BytecodeCombineAction extends Action {
     return cg;
   }
 
-  /**
-   * The method sets the editor for which the operation to combine
-   * the modifications in the source code and in the byte code will
-   * be performed.
-   *
-   * @param a_part the editor to combine modifications
-   */
-  public final void setActiveEditor(final IEditorPart a_part) {
-    my_editor = a_part;
-  }
 }

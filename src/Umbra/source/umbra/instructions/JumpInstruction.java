@@ -112,12 +112,12 @@ public class JumpInstruction extends NumInstruction {
     isd = true;
     int dokad = line.length();
     for (int i = line.lastIndexOf("#") + 1; i < line.length(); i++) {
-      if (!Character.isDigit(line.charAt(i))){
+      if (!Character.isDigit(line.charAt(i))) {
         dokad = i;
         break;
       }
     }
-    if (isd){
+    if (isd) {
       number = 0;
       for (int i = line.lastIndexOf("#") + 1; i < dokad; i++) {
         number = 10 * number + counter.indexOf(line.substring(i, i + 1));
@@ -138,58 +138,58 @@ public class JumpInstruction extends NumInstruction {
 
     if (!correct())
       return null;
-    if (name.compareTo("goto")==0) {
+    if (name.compareTo("goto") == 0) {
       return new GOTO(ih);
     }
-    if (name.compareTo("goto_w")==0) {
+    if (name.compareTo("goto_w") == 0) {
       return new GOTO_W(ih);
     }
-    if (name.compareTo("if_acmpeq")==0) {
+    if (name.compareTo("if_acmpeq") == 0) {
       return new IF_ACMPEQ(ih);
     }
-    if (name.compareTo("if_acmpne")==0) {
+    if (name.compareTo("if_acmpne") == 0) {
       return new IF_ACMPNE(ih);
     }
-    if (name.compareTo("if_icmpeq")==0) {
+    if (name.compareTo("if_icmpeq") == 0) {
       return new IF_ICMPEQ(ih);
     }
-    if (name.compareTo("if_icmpge")==0) {
+    if (name.compareTo("if_icmpge") == 0) {
       return new IF_ICMPGE(ih);
     }
-    if (name.compareTo("if_icmpgt")==0) {
+    if (name.compareTo("if_icmpgt") == 0) {
       return new IF_ICMPGT(ih);
     }
-    if (name.compareTo("if_icmple")==0) {
+    if (name.compareTo("if_icmple") == 0) {
       return new IF_ICMPLE(ih);
     }
-    if (name.compareTo("if_icmplt")==0) {
+    if (name.compareTo("if_icmplt") == 0) {
       return new IF_ICMPLT(ih);
     }
-    if (name.compareTo("if_icmpne")==0) {
+    if (name.compareTo("if_icmpne") == 0) {
       return new IF_ICMPNE(ih);
     }
-    if (name.compareTo("ifeq")==0) {
+    if (name.compareTo("ifeq") == 0) {
       return new IFEQ(ih);
     }
-    if (name.compareTo("ifge")==0) {
+    if (name.compareTo("ifge") == 0) {
       return new IFGE(ih);
     }
-    if (name.compareTo("ifgt")==0) {
+    if (name.compareTo("ifgt") == 0) {
       return new IFGT(ih);
     }
-    if (name.compareTo("ifle")==0) {
+    if (name.compareTo("ifle") == 0) {
       return new IFLE(ih);
     }
-    if (name.compareTo("iflt")==0) {
+    if (name.compareTo("iflt") == 0) {
       return new IFLT(ih);
     }
-    if (name.compareTo("ifne")==0) {
+    if (name.compareTo("ifne") == 0) {
       return new IFNE(ih);
     }
-    if (name.compareTo("ifnonnull")==0) {
+    if (name.compareTo("ifnonnull") == 0) {
       return new IFNONNULL(ih);
     }
-    if (name.compareTo("ifnull")==0) {
+    if (name.compareTo("ifnull") == 0) {
       return new IFNULL(ih);
     }
     if (name.compareTo("jsr")==0) {

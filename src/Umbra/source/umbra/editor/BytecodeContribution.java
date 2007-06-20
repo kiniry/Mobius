@@ -303,7 +303,9 @@ public class BytecodeContribution extends ControlContribution {
   }
 
   /**
-   * TODO
+   * @return a {@ref String} table which represents bytecode comments
+   * associated with subsequent lines of the bytecode file associated with
+   * the current editor
    */
   public final String[] getCommentTab() {
     return bcc.getComments();

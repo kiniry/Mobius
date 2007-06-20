@@ -77,7 +77,8 @@ public class IncInstruction extends NumInstruction {
             }
           int counter = 0;
           boolean lastisdig = false;
-          for (y = ((line.indexOf(s2[j])) + (s2[j].length()) + 1); y < line.length(); y++){
+          for (y = ((line.indexOf(s2[j])) + (s2[j].length()) + 1); 
+               y < line.length(); y++) {
             if (Character.isDigit(line.charAt(y))) {
               if (!(lastisdig)) counter++;
               lastisdig = true;

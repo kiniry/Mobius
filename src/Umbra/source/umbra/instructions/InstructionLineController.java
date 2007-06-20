@@ -120,7 +120,7 @@ public abstract class InstructionLineController extends BytecodeLineController {
         ih = newList.append(ins);
       }
       else {
-        if (ins instanceof BranchInstruction){
+        if (ins instanceof BranchInstruction) {
           if (((BranchInstruction)ins).getTarget() == null)
             System.out.println("null target");
           else

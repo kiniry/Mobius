@@ -20,7 +20,7 @@ import umbra.editor.IColorValues;
  *  @author Wojciech Wąs (ww209224@students.mimuw.edu.pl)
  *  @version a-01
  */
-public class BytecodeEditorAction extends Action {
+public class BytecodeColorAction extends Action {
   /**
    * The current bytecode editor for which the action takes place.
    */
@@ -62,7 +62,7 @@ public class BytecodeEditorAction extends Action {
    *    mode
    * @param a_mode the initial colouring mode
    */
-  public BytecodeEditorAction(final BytecodeEditorContributor a_contr,
+  public BytecodeColorAction(final BytecodeEditorContributor a_contr,
                 final int a_change,
                 final int a_mode) {
     super("Change color");
@@ -98,7 +98,7 @@ public class BytecodeEditorAction extends Action {
    * @param a_part the bytecode editor for which the action will be
    *    executed
    */
-  public final void setMy_active_editor(final IEditorPart a_part) {
+  public final void setActiveEditor(final IEditorPart a_part) {
     my_active_editor = a_part;
     my_mod = Composition.getMod();
   }

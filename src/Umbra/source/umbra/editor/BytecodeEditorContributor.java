@@ -30,7 +30,7 @@ import org.eclipse.ui.texteditor.AbstractTextEditor;
 
 import umbra.UmbraPlugin;
 import umbra.editor.actions.BytecodeCombineAction;
-import umbra.editor.actions.BytecodeEditorAction;
+import umbra.editor.actions.BytecodeColorAction;
 import umbra.editor.actions.BytecodeRebuildAction;
 import umbra.editor.actions.BytecodeRefreshAction;
 import umbra.editor.actions.BytecodeRestoreAction;
@@ -57,12 +57,12 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
   /**
    * The action to change the color mode to the next one.
    */
-  private BytecodeEditorAction actionPlus;
+  private BytecodeColorAction actionPlus;
 
   /**
    * The action to change the color mode to the previous one.
    */
-  private BytecodeEditorAction actionMinus;
+  private BytecodeColorAction actionMinus;
 
   /**
    * The action to refresh the content of the current bytecode editor.
@@ -103,8 +103,8 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
     final int mod = Composition.getMod();
     bytecodeContribution = BytecodeContribution.newItem();
     bytecodeContribution.addEditorContributor(this);
-    actionPlus = new BytecodeEditorAction(this, 1, mod);
-    actionMinus = new BytecodeEditorAction(this,
+    actionPlus = new BytecodeColorAction(this, 1, mod);
+    actionMinus = new BytecodeColorAction(this,
                          IColorValues.MODELS.length - 2,
                          mod);
     refreshAction = new BytecodeRefreshAction(this, bytecodeContribution);
@@ -205,8 +205,8 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
   public final void setActiveEditor(final IEditorPart editor) {
     super.setActiveEditor(editor);
     bytecodeContribution.setActiveEditor(editor);
-    actionPlus.setMy_active_editor(editor);
-    actionMinus.setMy_active_editor(editor);
+    actionPlus.setActiveEditor(editor);
+    actionMinus.setActiveEditor(editor);
     refreshAction.setActiveEditor(editor);
     rebuildAction.setActiveEditor(editor);
     combineAction.setActiveEditor(editor);
@@ -237,8 +237,9 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
    * @throws PartInitException if the new editor could not be created or
    *    initialized
    */
-  public final void refreshEditor(final IEditorPart editor, final IEditorInput input)
-           throws PartInitException {
+  public final void refreshEditor(final IEditorPart editor,
+                                  final IEditorInput input)
+    throws PartInitException {
     final IWorkbenchPage page = editor.getEditorSite().getPage();
     final ITextSelection selection = (ITextSelection)((AbstractTextEditor)editor).getSelectionProvider().getSelection();
     final int off = selection.getOffset();

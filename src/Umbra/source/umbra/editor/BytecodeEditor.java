@@ -244,7 +244,7 @@ public class BytecodeEditor extends TextEditor {
 //      }
 
       final byte[] contents = new byte[bccode.length];
-      for(int i = 0; i < bccode.length; i++) {
+      for (int i = 0; i < bccode.length; i++) {
         contents[i] = (byte) bccode[i];
 //        for(int j = 0; j < namesLen[i]; j++, k++) {
 //          contents[k] = names[i][j];

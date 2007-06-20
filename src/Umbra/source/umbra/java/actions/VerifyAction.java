@@ -58,5 +58,6 @@ public class VerifyAction implements IEditorActionDelegate {
    */
   public void selectionChanged(final IAction an_action,
                                final ISelection a_selection) {
+    //Currently, does nothing.
   }
 }

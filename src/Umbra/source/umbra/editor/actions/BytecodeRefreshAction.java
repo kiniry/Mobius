@@ -8,7 +8,6 @@ import java.io.IOException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.jface.action.Action;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.part.FileEditorInput;
 
@@ -26,83 +25,68 @@ import umbra.editor.BytecodeEditorContributor;
  * @author Wojciech Wąs (ww209224@students.mimuw.edu.pl)
  * @version a-01
  */
-public class BytecodeRefreshAction extends Action {
+public class BytecodeRefreshAction extends BytecodeEditorAction {
 
   /**
-   * The current bytecode editor for which the action takes place.
+   * This constructor creates the action to refresh the bytecode editor.
+   * It registers the name of the action with the text "Refresh" and stores
+   * locally the object which creates all the actions and which contributs
+   * the editor GUI elements to the eclipse GUI.
+   *
+   * @param a_contributor the manager that initialises all the actions within
+   * the bytecode plugin
+   * @param a_bytecode_contribution the GUI elements contributed to the eclipse
+   * GUI by the bytecode editor. This reference should be the same as in the
+   * parameter <code>a_contributor</code>.
    */
-  private IEditorPart editor;
-
-  /**
-   * TODO should be the same as in BytecodeEditorContributor
-   */
-  private BytecodeContribution bytecodeContribution;
-
-  /**
-   * The manager that initialises all the actions within the
-   * bytecode plugin.
-   */
-  private BytecodeEditorContributor contributor;
-
-  /**
-   * TODO
-   * @param contributor
-   * @param bytecodeContribution
-   */
-  public BytecodeRefreshAction(final BytecodeEditorContributor contrib,
-                 final BytecodeContribution bytecodeContrib) {
-    super("Refresh");
-    bytecodeContribution = bytecodeContrib;
-    contributor = contrib;
+  public BytecodeRefreshAction(final BytecodeEditorContributor a_contributor,
+                 final BytecodeContribution a_bytecode_contribution) {
+    super("Refresh", a_contributor, a_bytecode_contribution);
   }
 
   /**
-   * This method sets the bytecode editor for which the
-   * refresh action will be executed.
+   * This method sets the bytecode editor for which the refresh action will
+   * be executed.
    *
-   * @param targetEditor the bytecode editor for which the action will be
+   * @param a_target_editor the bytecode editor for which the action will be
    *           executed
    */
-  public final void setActiveEditor(final IEditorPart targetEditor) {
-    editor = targetEditor;
-    if (!editor.isDirty()) setEnabled(false);
+  public final void setActiveEditor(final IEditorPart a_target_editor) {
+    super.setActiveEditor(a_target_editor);
+    if (!getEditor().isDirty()) setEnabled(false);
   }
 
   /**
-   * This method firstly saves the editor and then
-   * creates new input from the JavaClass structure in BCEL.
-   * Finally replaces content of the Editor window with
-   * the newly generated input.
-   *
-   * TO powinno dzia�a� tak, �e po zmianie, reformatowane
-   * jest wszystko zgodnie ze standardem
-   *
-   * po przejsciu do javy refresh sie robi disabled
+   * This method saves the editor content in the file associated with it
+   * and then creates new input from the JavaClass structure in BCEL.
+   * Finally replaces content of the editor window with the newly generated
+   * input. The general idea is that the current modifications are stored
+   * in a file and then retrieved back to the editor to obtain a nicely
+   * formatted presentation of the code.
    */
   public final void run() {
-    editor.doSave(null);
-    try {
-    final IFile file = ((FileEditorInput)editor.getEditorInput()).getFile();
+    final IEditorPart my_editor = getEditor();
+    final BytecodeContribution my_btcodeCntrbtn = getContribution();
+    final BytecodeEditorContributor my_contributor = getContributor();
+    my_editor.doSave(null);
+    final IFile file = ((FileEditorInput)my_editor.getEditorInput()).getFile();
     final IPath active = file.getFullPath();
     try {
-      final String[] commentTab = bytecodeContribution.getCommentTab();
-      final String[] interlineTab = bytecodeContribution.getInterlineTab();
-      ((BytecodeEditor)editor).refreshBytecode(active, commentTab,
+      final String[] commentTab = my_btcodeCntrbtn.getCommentTab();
+      final String[] interlineTab = my_btcodeCntrbtn.getInterlineTab();
+      ((BytecodeEditor)my_editor).refreshBytecode(active, commentTab,
                            interlineTab);
       final FileEditorInput input = new FileEditorInput(file);
-      final boolean[] modified = bytecodeContribution.getModified();
-      bytecodeContribution.setModTable(modified);
-      contributor.refreshEditor(editor, input);
+      final boolean[] modified = my_btcodeCntrbtn.getModified();
+      my_btcodeCntrbtn.setModTable(modified);
+      my_contributor.refreshEditor(my_editor, input);
     } catch (ClassNotFoundException e) {
       e.printStackTrace();
     } catch (CoreException e) {
       e.printStackTrace();
     } catch (IOException e) {
       e.printStackTrace();
-    } } catch (RuntimeException re) {
-      re.printStackTrace();
-      throw re;
     }
-    contributor.synchrEnable();
+    my_contributor.synchrEnable();
   }
 }
