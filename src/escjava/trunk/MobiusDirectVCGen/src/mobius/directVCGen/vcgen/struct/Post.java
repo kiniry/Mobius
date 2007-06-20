@@ -2,6 +2,7 @@
 package mobius.directVCGen.vcgen.struct;
 
 import mobius.directVCGen.formula.Logic;
+import escjava.sortedProver.Lifter.QuantVariable;
 import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
 
@@ -12,19 +13,19 @@ import escjava.sortedProver.Lifter.Term;
  */
 public class Post {
   /** the temporary variable; used mainly in the vcGen of expressions. */
-  public final QuantVariableRef fVar;
+  private final QuantVariableRef fVar;
 
   /** the current postcondition. */
-  private Term fPost;
+  private final Term fPost;
 
   /**
    * Construct a postcondition from a variable and a logical formula.
-   * @param v the current substitution variable
-   * @param p the logical formula
+   * @param var the current substitution variable
+   * @param post the logical formula
    */
-  public Post (final QuantVariableRef v, final Term p) {
-    this.fVar = v;
-    this.fPost = p;
+  public Post (final QuantVariableRef var, final Term post) {
+    fVar = var;
+    fPost = post;
   }
 
   /**
@@ -89,7 +90,7 @@ public class Post {
     if (p1 == null) return p2;
     if (p2 == null) return p1;
     return new Post(p1.fVar, 
-                    Logic.and(p1.fPost, p2.fPost.subst(p2.fVar, p1.fVar)));
+                    Logic.and(p1.fPost, p2.subst(p2.fVar, p1.fVar)));
   }
 
   /**
@@ -103,9 +104,20 @@ public class Post {
     if (p1 == null) return p2;
     if (p2 == null) return p1;
     return new Post(p1.fVar, 
-                    Logic.implies(p1.fPost, p2.fPost.subst(p2.fVar, p1.fVar)));
+                    Logic.implies(p1.fPost, p2.subst(p2.fVar, p1.fVar)));
   }
-
+  /**
+   * Nearly the same semantic as the {@link #implies(Post, Post)} method.
+   * @param p1 the left part of the <code>implies</code>
+   * @param p2 the right part of the <code>implies</code>
+   * @return a Term object with the properties mentionned above or p1 or p2
+   */
+  public static Term implies(final Term p1, final Post p2) {
+    if (p1 == null) return p2.fPost;
+    if (p2 == null) return p1;
+    return Logic.implies(p1, p2.fPost);
+  }
+  
   /**
    * Adds a not to the post inside the argument. It returns a post of the
    * form <code>{p1.var, not(p1.post)}</code>. It uses the method
@@ -136,8 +148,23 @@ public class Post {
   
   /**
    * @return the current postcondition
+   * @deprecated use {@link #implies(Post, Post)}, {@link #and(Post, Post)}
+   * or {@link #not(Post)} instead
    */
   public Term getPost() {
     return fPost;
+  }
+  
+  /**
+   * @return the parameter variable
+   */
+  public QuantVariableRef getRVar() {
+    return fVar;
+  }
+  /**
+   * @return the parameter variable
+   */
+  public QuantVariable getVar() {
+    return fVar.qvar;
   }
 }

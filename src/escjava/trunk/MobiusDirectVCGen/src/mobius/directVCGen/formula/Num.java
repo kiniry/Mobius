@@ -98,9 +98,10 @@ public final class Num {
     Term left = l;
     Term right = r;
     if (l.getSort() != r.getSort() && 
-        (!Num.isNum(r.getSort()) || !Num.isNum(l.getSort())))
+        (!Num.isNum(r.getSort()) || !Num.isNum(l.getSort()))) {
       throw new IllegalArgumentException("The sort of " + l + 
                                          " is different from the sort of " + r + ".");
+    }
     FnTerm t = null;
     if (l.getSort() != r.getSort()) {
       if (l.getSort() == Num.sortInt) {
@@ -187,9 +188,10 @@ public final class Num {
    */
   public static Term lshift(final Term l, final Term r) {
     // 64 bits case is ignored at the moment 
-    if (l.getSort() != r.getSort())
+    if (l.getSort() != r.getSort()) {
       throw new IllegalArgumentException("The sort of " + l + 
                                          " is different from the sort of " + r + ".");
+    }
     FnTerm t = null;
     if (l.getSort() == Num.sortInt) {
       t = Formula.lf.mkFnTerm(Formula.lf.symIntFn, new Term[] {l, r});
@@ -210,9 +212,10 @@ public final class Num {
    */
   public static Term rshift(final Term l, final Term r) {
     // 64 bits case is ignored at the moment
-    if (l.getSort() != r.getSort())
+    if (l.getSort() != r.getSort()) {
       throw new IllegalArgumentException("The sort of " + l + 
                                          " is different from the sort of " + r + ".");
+    }
     FnTerm t = null;
     if (l.getSort() == Num.sortInt) {
       t = Formula.lf.mkFnTerm(Formula.lf.symIntFn, new Term[] {l, r});
@@ -234,9 +237,10 @@ public final class Num {
   public static Term urshift(final Term l, final Term r) {
     // 64 bits case is ignored at the moment
     if (l.getSort() != r.getSort() && 
-        (!Num.isNum(r.getSort()) || !Num.isNum(l.getSort())))
+        (!Num.isNum(r.getSort()) || !Num.isNum(l.getSort()))) {
       throw new IllegalArgumentException("The sort of " + l + 
                                          " is different from the sort of " + r + ".");
+    }
     FnTerm t = null;
     if (l.getSort() == Num.sortInt) {
       t = Formula.lf.mkFnTerm(Formula.lf.symIntFn, new Term[] {l, r});
@@ -308,11 +312,20 @@ public final class Num {
     }
 
   }
-
+  /**
+   * Build a formula that represents the increment of 1 of the given term.
+   * @param t the term to increment
+   * @return a formula that represents the incrementation of the given term
+   */
   public static Term inc(final Term t) {
     return Num.add(t, Num.value(1));
   }
-
+  
+  /**
+   * Build a formula that represents the decrement of 1 of the given term.
+   * @param t the term to decrement
+   * @return a formula that represents the decrementation of the given term
+   */
   public static Term dec(final Term t) {
     return Num.sub(t, Num.value(1));
   }

@@ -10,7 +10,7 @@ import escjava.sortedProver.NodeBuilder.Sort;
 public class CTerm implements STerm {
 
   /** the array containing all the children of the term. */
-  protected final STerm [] fArgs;
+  final STerm [] fArgs;
   
   /** the symbol or name associated with the node. */
   private final String fRep;
@@ -29,14 +29,14 @@ public class CTerm implements STerm {
    * @param args the children of the term
    */
   public CTerm (final boolean prefix, final String rep, final STerm [] args) {
-    this.fPrefix = prefix;
-    this.fRep = rep;
-    this.fArgs = args;
+    fPrefix = prefix;
+    fRep = rep;
+    fArgs = args;
   }
 
-  /*
-   * (non-Javadoc)
-   * @see java.lang.Object#toString()
+  /**
+   * A well parenthized version of the Coq expression.
+   * @return the pretty printed version of the term. 
    */
   public String toString() {
     String res = "";

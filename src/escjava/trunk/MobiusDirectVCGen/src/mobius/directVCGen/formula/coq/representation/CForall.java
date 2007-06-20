@@ -11,7 +11,7 @@ import escjava.sortedProver.NodeBuilder.STerm;
  */
 public class CForall extends CPred {
   /** the array of variables to quantify. */
-  protected final QuantVar[] fVars;
+  final QuantVar[] fVars;
   
   /** a builder to help pretty print. */
   private final CoqNodeBuilder fBuilder;

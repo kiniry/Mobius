@@ -126,7 +126,8 @@ public class Lookup {
    * @param m the method of interest
    */
   public static Post normalPostcondition(final MethodDecl m) {
-    return new Post(Expression.rvar(Expression.getResultVar(m)), buildStdCond (m, "_norm", true)); 
+    return new Post(Expression.rvar(Expression.getResultVar(m)), 
+                    buildStdCond (m, "_norm", true)); 
   }
   /**
    * Returns a vector of FOL Term representations of the exceptional 

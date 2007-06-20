@@ -106,7 +106,7 @@ public final class MethodVisitor extends DirectVCGen {
                                Lookup.exceptionalPostcondition(fMeth));
     final StmtVCGen dvcg = new StmtVCGen(fMeth);
     final Post pre = (Post)x.accept(dvcg, post);
-    final Term po = Logic.implies(Lookup.precondition(fMeth), pre.getPost());
+    final Term po = Post.implies(Lookup.precondition(fMeth), pre);
     final FormalParaDeclVec vec = fMeth.args;
 
     final QuantVariable[] qvs = new QuantVariable[vec.size() + 1];

@@ -8,26 +8,27 @@ import escjava.sortedProver.Lifter.Term;
  * which is translated in the vcs as:  <code>t</code>, <code>t -> post</code>.
  */
 public class Assert extends AAnnotation {
+  /**
+   * Constructor that takes one argument, the term contained in the
+   * assert.
+   * @param t the term of the assert, should not be <code>null</code>
+   */
+  public Assert(final Term t) {
+    super(t);
+    if (t == null) {
+      throw new NullPointerException();
+    }
+  }
+  
+  /*
+   * (non-Javadoc)
+   * @see mobius.directVCGen.formula.annotation.AAnnotation#getID()
+   */
+  @Override
+  public int getID() {
+    return annotAssert;
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * @see mobius.directVCGen.formula.annotation.AAnnotation#getID()
-	 */
-	@Override
-	public int getID() {
-		return annotAssert;
-	}
 
-	/**
-	 * Constructor that takes one argument, the term contained in the
-	 * assert.
-	 * @param t the term of the assert, should not be <code>null</code>
-	 */
-	public Assert(Term t){
-		super(t);
-		if(t == null) {
-			throw new NullPointerException();
-		}
-	}
-	
+
 }

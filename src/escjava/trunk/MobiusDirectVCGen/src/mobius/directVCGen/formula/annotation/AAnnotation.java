@@ -26,7 +26,7 @@ public abstract class AAnnotation {
   /**
    * Default constructor.
    */
-  protected AAnnotation(){
+  protected AAnnotation() {
     formula = null;
   }
 
@@ -35,7 +35,7 @@ public abstract class AAnnotation {
    * @param term the term which is the formula contained in 
    * the annotation
    */
-  public AAnnotation(Term term){
+  public AAnnotation(final Term term) {
     formula = term;
   }
 

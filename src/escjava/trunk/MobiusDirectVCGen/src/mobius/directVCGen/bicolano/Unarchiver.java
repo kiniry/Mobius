@@ -76,42 +76,59 @@ public class Unarchiver {
 
     for (JarEntry entry: iter) {
       final String name = entry.getName(); 
-      if (name.startsWith("META-INF"))
+      if (name.startsWith("META-INF")) // we skip meta-inf
         continue;
 
-      final File f = new File(basedir, entry.getName());
       if (name.startsWith("Formalisation")) {
+        // making missing directory
+        final File f = new File(basedir, entry.getName());
         f.getParentFile().mkdirs();
 
       }
       if (name.startsWith("defs_")) {
         // special case for prelude file
-        final PrintStream out = new PrintStream(new FileOutputStream(f));
-        final LineNumberReader in = new LineNumberReader(new InputStreamReader(
-                                               bico.getInputStream(entry)));
-        // we skip the first three lines
-        in.readLine(); in.readLine(); in.readLine();
-        // and we replace them by system dependent lines
-        out.println("Add LoadPath \"" + basedir.getAbsolutePath() + 
-                    File.separator + bicodir + "\".");
-        out.println("Add LoadPath \"" + basedir.getAbsolutePath() + 
-                    File.separator + libdir + "\".");
-        out.println("Add LoadPath \"" + basedir.getAbsolutePath() + 
-                    File.separator + libmapdir + "\".");
-        String str;
-        while ((str = in.readLine()) != null) {
-          out.println(str);
-        }
-        out.close();
-        in.close();
+        inflatPrelude(basedir, bico, entry);
         continue;
       }
-      final FileOutputStream out = (new FileOutputStream(f));
-      final InputStream in = bico.getInputStream(entry);
-      copy(in, out);
-      out.close();
-      in.close();
+      else {
+        final File f = new File(basedir, entry.getName());
+        final FileOutputStream out = (new FileOutputStream(f));
+        final InputStream in = bico.getInputStream(entry);
+        copy(in, out);
+        out.close();
+        in.close();
+      }
     }
+  }
+
+  /**
+   * Inflat the prelude which has been found in the JarFile.
+   * @param basedir the directory where everything is inflated
+   * @param bico the jar file containing bicolano
+   * @param entry the current entry of the prelude file
+   * @throws IOException in case of a missing file or writing error
+   */
+  private void inflatPrelude(final File basedir, final JarFile bico, 
+                             final JarEntry entry) throws IOException {
+    final File f = new File(basedir, entry.getName());
+    final PrintStream out = new PrintStream(new FileOutputStream(f));
+    final LineNumberReader in = new LineNumberReader(new InputStreamReader(
+                                           bico.getInputStream(entry)));
+    // we skip the first three lines
+    in.readLine(); in.readLine(); in.readLine();
+    // and we replace them by system dependent lines
+    out.println("Add LoadPath \"" + basedir.getAbsolutePath() + 
+                File.separator + bicodir + "\".");
+    out.println("Add LoadPath \"" + basedir.getAbsolutePath() + 
+                File.separator + libdir + "\".");
+    out.println("Add LoadPath \"" + basedir.getAbsolutePath() + 
+                File.separator + libmapdir + "\".");
+    String str;
+    while ((str = in.readLine()) != null) {
+      out.println(str);
+    }
+    out.close();
+    in.close();
   }
 
   /**
@@ -134,34 +151,30 @@ public class Unarchiver {
       this.fEnum = enu;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.util.Iterator#hasNext()
+    /**
+     * @return tells if there is an available element in the iterator
      */
     public boolean hasNext() {
       return fEnum.hasMoreElements();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.util.Iterator#next()
+    /**
+     * @return returns the next element of the iterator
      */
     public JarEntry next() {
       return fEnum.nextElement();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.util.Iterator#remove()
+    /**
+     * Unsupported op.
      */
     public void remove() {
       throw new UnsupportedOperationException();
 
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.lang.Iterable#iterator()
+    /**
+     * @return an iterator on the entries
      */
     public Iterator<JarEntry> iterator() {
       return this;

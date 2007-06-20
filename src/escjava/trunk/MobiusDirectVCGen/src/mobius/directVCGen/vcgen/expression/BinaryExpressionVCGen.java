@@ -163,7 +163,7 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn {
    * @return a postcondition containing the proper assignment wp.
    */
   public Post assign(final Expr left, final VCEntry entry) {
-    final QuantVariableRef val = entry.fPost.fVar;
+    final QuantVariableRef val = entry.fPost.getRVar();
     Post pre;
     if (left instanceof VariableAccess) {
       final VariableAccess va = (VariableAccess) left;
@@ -182,7 +182,8 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn {
           final QuantVariableRef obj = Expression.rvar(Ref.sort);
   
           entry.fPost = new Post(obj, entry.fPost.subst(Heap.var, 
-                                                        Heap.store(Heap.var, obj, f.qvar, val)));
+                                                        Heap.store(Heap.var, 
+                                                                   obj, f.qvar, val)));
           pre = getPre(od, entry);
           entry.fPost = new Post(val, pre);
           break;
@@ -253,7 +254,7 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn {
   public Post assignSpecial(final BinaryExpr expr, final VCEntry post) {
     final Expr right = expr.right;
     final Expr left = expr.left;
-    final QuantVariableRef val = post.fPost.fVar;
+    final QuantVariableRef val = post.fPost.getRVar();
     Post pre = assign(left, post);
     pre = new Post(val, pre);
     post.fPost = pre;

@@ -74,7 +74,7 @@ public class ExpressionVCGen extends BinaryExpressionVCGen {
     final Term tExcp = Logic.forall(exc.qvar, Logic.implies(excpPost.substWith(exc).subst(Ref.varThis, newThis), 
                                                       StmtVCGen.getExcpPost(Type.javaLangThrowable(), entry).substWith(exc)));
     // the normal post
-    final QuantVariableRef res = entry.fPost.fVar;
+    final QuantVariableRef res = entry.fPost.getRVar();
     Term tNormal = normalPost.substWith(res);
     tNormal = Logic.forall(res, Logic.implies(tNormal, entry.fPost.substWith(res)).subst(Ref.varThis, newThis));
 
@@ -132,9 +132,9 @@ public class ExpressionVCGen extends BinaryExpressionVCGen {
   }
 
   public Post castExpr(final CastExpr x, final VCEntry e) {
-    Post p = new Post(e.fPost.fVar, 
+    Post p = new Post(e.fPost.getRVar(), 
                       Logic.implies(Logic.assignCompat(Heap.var, 
-                                                       e.fPost.fVar,
+                                                       e.fPost.getRVar(),
                                                        Type.translateToType(x.type)),
                                     e.fPost.getPost()));
     e.fPost = p;
@@ -150,11 +150,13 @@ public class ExpressionVCGen extends BinaryExpressionVCGen {
         final ExprObjectDesignator eod = (ExprObjectDesignator) od;
         //QuantVariable f = Expression.var(field.decl);
         //Sort s = f.type;
-        final QuantVariableRef obj = entry.fPost.fVar;
-        entry.fPost = new Post(obj, Logic.and(
-                                             Logic.implies(Logic.not(Logic.equalsNull(obj)), entry.fPost.getPost()), 
-                                             Logic.implies(Logic.equalsNull(obj), getNewExcpPost(Type.javaLangNullPointerException(), entry))
-        ));
+        final QuantVariableRef obj = entry.fPost.getRVar();
+        entry.fPost = new Post(obj, 
+                               Logic.and(Logic.implies(Logic.not(Logic.equalsNull(obj)), 
+                                                       entry.fPost.getPost()), 
+                                             Logic.implies(Logic.equalsNull(obj), 
+                                         getNewExcpPost(Type.javaLangNullPointerException(), 
+                                                        entry))));
         return getPre(eod.expr, entry);
   
       }
@@ -179,16 +181,21 @@ public class ExpressionVCGen extends BinaryExpressionVCGen {
     final Post normalPost = Lookup.normalPostcondition(ni.decl);
     final Post excpPost = Lookup.exceptionalPostcondition(ni.decl);
     final Term pre = Lookup.precondition(ni.decl);
-    final QuantVariableRef newThis = entry.fPost.fVar;
+    final QuantVariableRef newThis = entry.fPost.getRVar();
 
     // first: the exceptional post
     final QuantVariableRef exc = Expression.rvar(Ref.sort);
-    Term tExcp = Logic.forall(exc.qvar, Logic.implies(excpPost.substWith(exc).subst(Ref.varThis, newThis), 
-                                                      StmtVCGen.getExcpPost(Type.javaLangThrowable(), entry).substWith(exc)));
+    final Term tExcp = Logic.forall(exc.qvar, Logic.implies(excpPost.substWith(
+                                                                 exc).subst(Ref.varThis, 
+                                                                            newThis), 
+                                           StmtVCGen.getExcpPost(Type.javaLangThrowable(), 
+                                                                entry).substWith(exc)));
     // the normal post
-    final QuantVariableRef res = entry.fPost.fVar;
+    final QuantVariableRef res = entry.fPost.getRVar();
     Term tNormal = normalPost.substWith(res);
-    tNormal = Logic.forall(res, Logic.implies(tNormal, entry.fPost.substWith(res)).subst(Ref.varThis, newThis));
+    tNormal = Logic.forall(res, Logic.implies(tNormal, 
+                                              entry.fPost.substWith(res)).subst(Ref.varThis, 
+                                                                                newThis));
 
     entry.fPost = new Post(Logic.and(pre, Logic.implies(pre, Logic.and(tNormal, tExcp))));
 
@@ -229,7 +236,7 @@ public class ExpressionVCGen extends BinaryExpressionVCGen {
 
   public Post newArray(final NewArrayExpr narr, final VCEntry entry) {
     final QuantVariableRef newHeap = Heap.newVar();
-    final QuantVariableRef loc = entry.fPost.fVar;
+    final QuantVariableRef loc = entry.fPost.getRVar();
     QuantVariableRef dim;
     //ArrayInit init= narr.init;
     Term arr;
@@ -314,7 +321,7 @@ public class ExpressionVCGen extends BinaryExpressionVCGen {
 
   public Post arrayInit(final ArrayInit init, final VCEntry entry) {
     final VarInitVec vec = init.elems;
-    final QuantVariableRef loc = entry.fPost.fVar;
+    final QuantVariableRef loc = entry.fPost.getRVar();
     for (int i = vec.size() - 1; i >= 0; i--) {
       final VarInit vi = vec.elementAt(i);
       final QuantVariableRef qvr = Expression.rvar(Type.getSort(vi));
@@ -328,17 +335,20 @@ public class ExpressionVCGen extends BinaryExpressionVCGen {
 
 
   public Post bitNot(final UnaryExpr expr, final VCEntry post) {
-    post.fPost = new Post(post.fPost.fVar, post.fPost.substWith(Num.bitnot(post.fPost.fVar)));
+    post.fPost = new Post(post.fPost.getRVar(), 
+                          post.fPost.substWith(Num.bitnot(post.fPost.getRVar())));
     return getPre(expr.expr, post);
   }
 
   public Post unarySub(final UnaryExpr expr, final VCEntry post) {
-    post.fPost = new Post(post.fPost.fVar, post.fPost.substWith(Num.sub(post.fPost.fVar)));
+    post.fPost = new Post(post.fPost.getRVar(), 
+                          post.fPost.substWith(Num.sub(post.fPost.getRVar())));
     return getPre(expr.expr, post);
   }
 
   public Post not(final UnaryExpr expr, final VCEntry post) {
-    post.fPost = new Post(post.fPost.fVar, post.fPost.substWith(Bool.not(post.fPost.fVar)));
+    post.fPost = new Post(post.fPost.getRVar(), 
+                          post.fPost.substWith(Bool.not(post.fPost.getRVar())));
     return getPre(expr.expr, post);
   }
 
@@ -347,9 +357,9 @@ public class ExpressionVCGen extends BinaryExpressionVCGen {
     final QuantVariableRef var = Expression.rvar(Type.getSort(expr));
     entry.fPost = new Post(var, oldp);
     Post newpost = assign(expr.expr, entry);
-    entry.fPost = new Post(var, newpost.substWith(Num.inc(newpost.fVar)));
+    entry.fPost = new Post(var, newpost.substWith(Num.inc(newpost.getRVar())));
     newpost = getPre(expr.expr, entry);
-    entry.fPost = new Post(oldp.fVar, newpost);
+    entry.fPost = new Post(oldp.getRVar(), newpost);
     return getPre(expr.expr, entry);
   }
   public Post postfixDec(final UnaryExpr expr, final VCEntry entry) {
@@ -357,23 +367,23 @@ public class ExpressionVCGen extends BinaryExpressionVCGen {
     final QuantVariableRef var = Expression.rvar(Type.getSort(expr));
     entry.fPost = new Post(var, oldp);
     Post newpost = assign(expr.expr, entry);
-    entry.fPost = new Post(var, newpost.substWith(Num.dec(newpost.fVar)));
+    entry.fPost = new Post(var, newpost.substWith(Num.dec(newpost.getRVar())));
     newpost = getPre(expr.expr, entry);
-    entry.fPost = new Post(oldp.fVar, newpost);
+    entry.fPost = new Post(oldp.getRVar(), newpost);
     return getPre(expr.expr, entry);
   }
 
 
   public Post inc(final UnaryExpr expr, final VCEntry entry) {
     final Post oldp = entry.fPost;
-    entry.fPost = new Post (oldp.fVar, oldp.substWith(Num.inc(oldp.fVar)));
+    entry.fPost = new Post (oldp.getRVar(), oldp.substWith(Num.inc(oldp.getRVar())));
     return getPre(expr.expr, entry);
   }
 
 
   public Post dec(final UnaryExpr expr, final VCEntry entry) {
     final Post oldp = entry.fPost;
-    entry.fPost = new Post (oldp.fVar, oldp.substWith(Num.dec(oldp.fVar)));
+    entry.fPost = new Post (oldp.getRVar(), oldp.substWith(Num.dec(oldp.getRVar())));
     return getPre(expr.expr, entry);
   }
 

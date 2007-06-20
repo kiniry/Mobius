@@ -148,7 +148,7 @@ public class ExpressionVisitor extends ABasicVisitor {
         throw new IllegalArgumentException("Unknown construct :" +
                                            TagConstants.toString(expr.tag) + " " +  expr);
     }
-    return new Post(result.fVar, term);
+    return new Post(result.getRVar(), term);
   }
 
   /*

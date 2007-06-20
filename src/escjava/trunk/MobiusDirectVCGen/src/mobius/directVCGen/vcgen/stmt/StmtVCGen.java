@@ -403,7 +403,8 @@ public class StmtVCGen extends ExpressionVisitor {
 
     vce.fPost = new Post(v,
                         Logic.and(Logic.implies(Logic.boolToProp(v), preT.getPost()),
-                                  Logic.implies(Logic.not(Logic.boolToProp(v)), preF.getPost())));
+                                  Logic.implies(Logic.not(Logic.boolToProp(v)), 
+                                                preF.getPost())));
 
     vce.fPost = (Post) x.accept(fExprVisitor, vce);
     return treatAnnot(vce, fAnnot.getAnnotPre(x));

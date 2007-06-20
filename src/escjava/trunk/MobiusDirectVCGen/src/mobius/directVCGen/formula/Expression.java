@@ -27,7 +27,17 @@ public final class Expression {
   
   /** counter to create anonymous variables. */
   private static final int [] varCounters = {0, 0, 0, 0, 0};
-
+  /** index to get the counter of bool anonymous variables. */
+  private static final int BOOL = 0;
+  /** index to get the counter of reference anonymous variables. */
+  private static final int REF = 1;
+  /** index to get the counter of integer anonymous variables. */
+  private static final int INT = 2;
+  /** index to get the counter of real anonymous variables. */
+  private static final int REAL = 3;
+  /** index to get the counter of unknown type variables. */
+  private static final int ANY = 4;
+  
   /** the name of the result variable (<code>\result</code>). */
   private static final String result = "\\result";
 
@@ -130,24 +140,24 @@ public final class Expression {
   public static QuantVariable var(final Sort s) {
     String name = "#";
     if (s == Bool.sort) {
-      name += "b" + varCounters[0];
-      varCounters[0]++;
+      name += "b" + varCounters[BOOL];
+      varCounters[BOOL]++;
     } 
     else if (s == Ref.sort) {
-      name += "r" + varCounters[1];
-      varCounters[1]++;
+      name += "r" + varCounters[REF];
+      varCounters[REF]++;
     }
     else if (s == Num.sortInt) {
-      name += "i" + varCounters[2];
-      varCounters[2]++;
+      name += "i" + varCounters[INT];
+      varCounters[INT]++;
     }
     else if (s == Num.sortReal) {
-      name += "f" + varCounters[3];
-      varCounters[3]++;
+      name += "f" + varCounters[REAL];
+      varCounters[REAL]++;
     }
     else {
-      name += "x" + varCounters[4];
-      varCounters[4]++;
+      name += "x" + varCounters[ANY];
+      varCounters[ANY]++;
     }
     return Formula.lf.mkQuantVariable(name, s);
   }

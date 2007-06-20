@@ -73,24 +73,25 @@ import escjava.ast.VarDeclModifierPragma;
 import escjava.ast.VarExprModifierPragma;
 import escjava.ast.VisitorArgResult;
 import escjava.ast.WildRefExpr;
+import escjava.tc.FlowInsensitiveChecks;
 
 
 
 public class VisibleTypeCollector extends VisitorArgResult {
 
-  java.util.Set<Type> typeSet;
+  private java.util.Set<Type> fTypeSet;
 
-  public VisibleTypeCollector(){
-    typeSet = new HashSet<Type>();
+  public VisibleTypeCollector() {
+    fTypeSet = new HashSet<Type>();
   }
 
   @Override
-  public Object visitASTNode(ASTNode x, Object prop) {
+  public Object visitASTNode(final ASTNode x, final Object prop) {
     Object o = null;
-    int max = x.childCount();
-    for(int i = 0; i < max; i++) {
-      Object child = x.childAt(i);
-      if(child instanceof ASTNode) {
+    final int max = x.childCount();
+    for (int i = 0; i < max; i++) {
+      final Object child = x.childAt(i);
+      if (child instanceof ASTNode) {
         o = ((ASTNode) child).accept(this, prop);
       }
     }
@@ -98,22 +99,27 @@ public class VisibleTypeCollector extends VisitorArgResult {
   }
 
   @Override
-  public /*@non_null*/ Object visitClassDecl(/*@non_null*/ ClassDecl x, Object o) {
+  public /*@non_null*/ Object visitClassDecl(final /*@non_null*/ ClassDecl x, final Object o) {
     //should never be called
     return visitTypeDecl(x, o);
   }
 
-
-  public /*@non_null*/ Object visitRoutineDecl(/*@non_null*/ RoutineDecl x, Object o) {
-    typeSet.add((Type) x.parent.getDecorations()[3]); // add own class type into set
+  @Override
+  public /*@non_null*/ Object visitRoutineDecl(final /*@non_null*/ RoutineDecl x, 
+                                               final Object o) {
+    fTypeSet.add((Type) x.parent.getDecorations()[3]);
+    // FIXME should be replaced by the proper call to FlowInsensitiveChecks
+    // add own class type into set 
     ((Properties) o).put("assign", new Boolean(false));
     visitASTNode(x, o); 
-    ((Properties) o).put("visibleTypeSet", typeSet); //put set into properties once for each routine
+    ((Properties) o).put("visibleTypeSet", fTypeSet); 
+               //put set into properties once for each routine
     return null;
   }
 
   @Override
-  public /*@non_null*/ Object visitMethodDecl(/*@non_null*/ MethodDecl x, Object o) {
+  public /*@non_null*/ Object visitMethodDecl(final /*@non_null*/ MethodDecl x, 
+                                              final Object o) {
     return visitRoutineDecl(x, o);
   }
 
@@ -140,29 +146,29 @@ public class VisibleTypeCollector extends VisitorArgResult {
 
 
   @Override
-  public /*@non_null*/ Object visitVariableAccess(/*@non_null*/ VariableAccess x, Object o) {		 
-    if (((Boolean) ((Properties) o).get("assign")).booleanValue())
-    {
-      javafe.ast.Type type = (javafe.ast.Type) x.getDecorations()[1];
-      if (!(type instanceof PrimitiveType)) 
-      {
-        typeSet.add(type);
+  public /*@non_null*/ Object visitVariableAccess(final /*@non_null*/ VariableAccess x, 
+                                                  final Object o) {
+    if (((Boolean) ((Properties) o).get("assign")).booleanValue()) {
+      final javafe.ast.Type type = FlowInsensitiveChecks.getType(x);
+      if (!(type instanceof PrimitiveType)) {
+        fTypeSet.add(type);
       }
     }
     return null;
   }
 
   @Override
-  public /*@non_null*/ Object visitFieldAccess(/*@non_null*/ FieldAccess x, Object o) {		 
+  public /*@non_null*/ Object visitFieldAccess(final /*@non_null*/ FieldAccess x, 
+                                               final Object o) {
 
-    javafe.ast.Type type = (javafe.ast.Type) x.od.type();
-    if (!(type instanceof PrimitiveType)&&(((Boolean) ((Properties) o).get("assign")).booleanValue()))
-    {
-      typeSet.add(type);
+    final javafe.ast.Type type = (javafe.ast.Type) x.od.type();
+    if (!(type instanceof PrimitiveType) &&
+        (((Boolean) ((Properties) o).get("assign")).booleanValue())) {
+      fTypeSet.add(type);
     }
 
     ((Properties) o).put("assign", new Boolean(false));
-    ((Expr)x.od.childAt(0)).accept(this,o);
+    ((Expr)x.od.childAt(0)).accept(this, o);
 
     return null;
   }
@@ -463,7 +469,7 @@ public class VisibleTypeCollector extends VisitorArgResult {
   @Override
   public Object visitVarExprModifierPragma(VarExprModifierPragma x, Object o) {
     // TODO Auto-generated method stub
-    return null;//visitASTNode(x, o); 
+    return null; //visitASTNode(x, o); 
   }
 
   @Override
@@ -474,7 +480,7 @@ public class VisibleTypeCollector extends VisitorArgResult {
 
 
   @Override
-  public Object visitBinaryExpr(BinaryExpr expr, Object o){
+  public Object visitBinaryExpr(final BinaryExpr expr, final Object o) {
     if ((expr.op == TagConstants.ASSIGN) | 
         (expr.op == TagConstants.ASGMUL) |
         (expr.op == TagConstants.ASGDIV) | 
@@ -484,20 +490,20 @@ public class VisibleTypeCollector extends VisitorArgResult {
         (expr.op == TagConstants.ASGLSHIFT) | 
         (expr.op == TagConstants.ASGRSHIFT) |
         (expr.op == TagConstants.ASGURSHIFT) | 
-        (expr.op == TagConstants.ASGBITAND))
-    {
+        (expr.op == TagConstants.ASGBITAND)) {
       ((Properties) o).put("assign", new Boolean(false));
       expr.right.accept(this, o); 
       ((Properties) o).put("assign", new Boolean(true));
-      expr.left.accept(this,o); 
+      expr.left.accept(this, o);
       return null;
     }
-    else
+    else {
       return visitExpr(expr, o);
+    }
   }
 
   @Override
-  public /*@non_null*/ Object visitUnaryExpr(/*@non_null*/ UnaryExpr x, Object o) {
+  public /*@non_null*/ Object visitUnaryExpr(final /*@non_null*/ UnaryExpr x, final Object o) {
     ((Properties) o).put("assign", new Boolean(true));
     return visitExpr(x, o);
   }
