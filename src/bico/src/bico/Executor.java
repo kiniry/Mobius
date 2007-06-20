@@ -268,7 +268,7 @@ public class Executor extends Object {
   }
 
   /**
-   * Handle one class read from disk
+   * Handle one class read from disk.
    * 
    * @param strin
    *            is the repository where the class will be store for any
@@ -278,7 +278,7 @@ public class Executor extends Object {
   private void handleDiskClass(String clname, String pathname,
                                Repository strin) throws ClassNotFoundException, IOException,
                                MethodNotFoundException {
-    ClassPath cp = new ClassPath(pathname);
+    final ClassPath cp = new ClassPath(pathname);
     handleClass(clname, cp, strin);
 
   }
@@ -441,7 +441,8 @@ public class Executor extends Object {
       writeln(fOut, 2,
       "Definition interface : Interface := INTERFACE.Build_t");
       writeln(fOut, 3, "interfaceName");
-    } else {
+    } 
+    else {
       writeln(fOut, 2, "Definition class : Class := CLASS.Build_t");
       writeln(fOut, 3, "className");
     }
@@ -449,7 +450,8 @@ public class Executor extends Object {
       String superClassName = coqify(jc.getSuperclassName());
       if (superClassName == null) {
         writeln(fOut, 3, "None");
-      } else {
+      } 
+      else {
         writeln(fOut, 3, "(Some " + superClassName + ".className)");
       }
     }
@@ -468,7 +470,8 @@ public class Executor extends Object {
     // fields
     if (ifield.length == 0) {
       writeln(fOut, 3, is.getNoFields());
-    } else {
+    } 
+    else {
       String str2 = "(";
       for (int i = 0; i < ifield.length - 1; i++) {
         str2 += is.fieldsCons(coqify(ifield[i].getName()) + "Field");
@@ -503,7 +506,7 @@ public class Executor extends Object {
   }
 
   /**
-   * write the method body
+   * Write the method body.
    * 
    * @param strin
    *            is the repository where information on classes can be found
@@ -543,7 +546,8 @@ public class Executor extends Object {
         // special case for the last instruction
         writeln(fOut, 3, is.instructionsEnd(doInstruction(pos,
                                                          listins[listins.length - 1], cpg, strin), pos));
-      } else {
+      } 
+      else {
         writeln(fOut, 3, is.getNoInstructions());
       }
 
@@ -557,19 +561,18 @@ public class Executor extends Object {
         CodeException[] etab = code.getExceptionTable();
         if (etab != null && etab.length > 0) {
           handlers = true;
-          str = "Definition " + name
-          + "Handlers : list ExceptionHandler := ";
+          str = "Definition " + name + "Handlers : list ExceptionHandler := ";
           writeln(fOut, 2, str);
           for (int i = 0; i < etab.length; i++) {
             str = "(EXCEPTIONHANDLER.Build_t ";
             int catchType = etab[i].getCatchType();
             if (catchType == 0) {
               str += "None ";
-            } else {
+            }
+            else {
               str += "(Some ";
-              String exName = method.getConstantPool()
-              .getConstantString(catchType,
-                                 Constants.CONSTANT_Class);
+              final String exName = method.getConstantPool().getConstantString(catchType,
+                                                                  Constants.CONSTANT_Class);
               str += coqify(exName);
               str += ".className) ";
             }
@@ -585,8 +588,7 @@ public class Executor extends Object {
       }
 
       // body
-      str = "Definition " + name
-      + "Body : BytecodeMethod := BYTECODEMETHOD.Build_t";
+      str = "Definition " + name + "Body : BytecodeMethod := BYTECODEMETHOD.Build_t";
       // System.out.println(str);
       writeln(fOut, 2, str);
       is.printExtraBodyField(fOut);
@@ -621,11 +623,14 @@ public class Executor extends Object {
     writeln(fOut, 3, "" + method.isNative());
     if (method.isPrivate()) {
       str = "Private";
-    } else if (method.isProtected()) {
+    } 
+    else if (method.isProtected()) {
       str = "Protected";
-    } else if (method.isPublic()) {
+    } 
+    else if (method.isPublic()) {
       str = "Public";
-    } else {
+    } 
+    else {
       // String attr="0x"+Integer.toHexString(method.getAccessFlags());
       // System.out.println("Unknown modifier of method "+name+" :
       // "+attr);
@@ -638,13 +643,13 @@ public class Executor extends Object {
   }
 
   /**
-   * write the file preable
+   * Write the file preable.
    */
   private void doBeginning() throws IOException {
     writeln(fOut, 0, is.getBeginning());
 
     for (int i = 0; i < speciallibs.length; i++) {
-      String str = is.requireLib(coqify(speciallibs[i]));
+      final String str = is.requireLib(coqify(speciallibs[i]));
       writeln(fOut, 0, str);
       // out.newLine();
     }
