@@ -6,12 +6,14 @@ By the end of the tutorial attendees will:
    and how it relates to other work on formal verification.
 
 1. Be able to read and write JML specifications
-   using specifications that do and do not mention model features.
+   using specifications that do and do not mention model features,
+   and know standard techniques for various common specification situations.
 
 2. Be able to use the RAC, jmlunit, and ESC/Java2,
-   and explain what each is good for.
+   and explain what each is good for, and use them to find bugs.
 
-3. Be able to explain the semantics of the most important JML features.
+3. Be able to explain the semantics of the most important JML features,
+   and avoid common traps and pitfalls.
 
 4. Know where to go for further information and help.
 
