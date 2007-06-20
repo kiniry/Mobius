@@ -1,6 +1,7 @@
 package bico;
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.PrintStream;
 
 public interface ImplemSpecifics {
 
@@ -14,7 +15,7 @@ public interface ImplemSpecifics {
   public String interfaceType();
   public String interfaceCons(String name);
   public String interfaceEnd();
-  public void printExtraBodyField(BufferedWriter out) throws IOException;
+  public void printExtraBodyField(PrintStream out);
   public String getNoMethods();
   public String methodsCons(String string);
   public String methodsEnd(String string);

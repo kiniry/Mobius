@@ -1,5 +1,6 @@
 package bico;
 import java.io.BufferedWriter;
+import java.io.PrintStream;
 
 public class ListImplemSpecif implements ImplemSpecifics {
 
@@ -46,7 +47,7 @@ public class ListImplemSpecif implements ImplemSpecifics {
   public String interfaceEmpty() {
     return "nil";
   }
-  public void printExtraBodyField(BufferedWriter out) {
+  public void printExtraBodyField(PrintStream out) {
 
   }
   public String instructionsType() {

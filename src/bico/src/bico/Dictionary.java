@@ -1,6 +1,7 @@
 package bico;
 
 import java.io.IOException;
+import java.io.PrintStream;
 import java.io.Writer;
 
 
@@ -76,5 +77,5 @@ public interface Dictionary {
   void addMethod(String javaName, int coqPackageName,
                         int coqClassName, int coqMethodName);
 
-  void write(Writer out) throws IOException;
+  void write(PrintStream out) throws IOException;
 }

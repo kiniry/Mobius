@@ -1,5 +1,6 @@
 package bico;
 
+import java.io.PrintStream;
 import java.io.Writer;
 
 import java.util.HashMap;
@@ -162,34 +163,34 @@ public class CamlDictionary implements Dictionary {
     return 0;
   }
 
-  public void write(Writer out) throws java.io.IOException {
-    out.write("include TranslatorDef\n\n");
+  public void write(PrintStream out) throws java.io.IOException {
+    out.print("include TranslatorDef\n\n");
 
     Iterator<Map.Entry<String, Singleton>> itpn = pn.entrySet().iterator();
     while (itpn.hasNext()) {
       Map.Entry<String, Singleton> e = itpn.next();
-      out.write("let pn= DicoPN.add " + e.getValue() + " \""
+      out.print("let pn= DicoPN.add " + e.getValue() + " \""
                 + e.getKey().replaceAll("\"", "\\\"") + "\" pn\n");
     }
 
     Iterator<Map.Entry<String, Couple>> itcn = cn.entrySet().iterator();
     while (itcn.hasNext()) {
       Map.Entry<String, Couple> e = itcn.next();
-      out.write("let cn= DicoCN.add " + e.getValue() + " \""
+      out.print("let cn= DicoCN.add " + e.getValue() + " \""
                 + e.getKey().replaceAll("\"", "\\\"") + "\" cn\n");
     }
 
     Iterator<Map.Entry<String, Triplet>> itfn = fn.entrySet().iterator();
     while (itfn.hasNext()) {
       Map.Entry<String, Triplet> e = itfn.next();
-      out.write("let fn= DicoFN.add " + e.getValue() + " \""
+      out.print("let fn= DicoFN.add " + e.getValue() + " \""
                 + e.getKey().replaceAll("\"", "\\\"") + "\" fn\n");
     }
 
     Iterator<Map.Entry<String, Triplet>> itmn = mn.entrySet().iterator();
     while (itmn.hasNext()) {
       Map.Entry<String, Triplet> e = itmn.next();
-      out.write("let mn= DicoMN.add (" + e.getValue() + ") \""
+      out.print("let mn= DicoMN.add (" + e.getValue() + ") \""
                 + e.getKey().replaceAll("\"", "\\\"") + "\" mn\n");
     }
   }

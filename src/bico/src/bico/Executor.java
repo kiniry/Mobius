@@ -1,9 +1,9 @@
 package bico;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.security.Permission;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -15,7 +15,64 @@ import org.apache.bcel.classfile.CodeException;
 import org.apache.bcel.classfile.Field;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Method;
-import org.apache.bcel.generic.*;
+import org.apache.bcel.generic.ACONST_NULL;
+import org.apache.bcel.generic.ANEWARRAY;
+import org.apache.bcel.generic.ARRAYLENGTH;
+import org.apache.bcel.generic.ATHROW;
+import org.apache.bcel.generic.ArithmeticInstruction;
+import org.apache.bcel.generic.ArrayInstruction;
+import org.apache.bcel.generic.ArrayType;
+import org.apache.bcel.generic.BIPUSH;
+import org.apache.bcel.generic.BREAKPOINT;
+import org.apache.bcel.generic.BasicType;
+import org.apache.bcel.generic.BranchInstruction;
+import org.apache.bcel.generic.CHECKCAST;
+import org.apache.bcel.generic.CPInstruction;
+import org.apache.bcel.generic.ClassGen;
+import org.apache.bcel.generic.ConstantPoolGen;
+import org.apache.bcel.generic.ConversionInstruction;
+import org.apache.bcel.generic.DCMPG;
+import org.apache.bcel.generic.DCMPL;
+import org.apache.bcel.generic.DCONST;
+import org.apache.bcel.generic.FCMPG;
+import org.apache.bcel.generic.FCMPL;
+import org.apache.bcel.generic.FCONST;
+import org.apache.bcel.generic.FieldInstruction;
+import org.apache.bcel.generic.FieldOrMethod;
+import org.apache.bcel.generic.GOTO;
+import org.apache.bcel.generic.GOTO_W;
+import org.apache.bcel.generic.ICONST;
+import org.apache.bcel.generic.IINC;
+import org.apache.bcel.generic.IMPDEP1;
+import org.apache.bcel.generic.IMPDEP2;
+import org.apache.bcel.generic.INSTANCEOF;
+import org.apache.bcel.generic.IfInstruction;
+import org.apache.bcel.generic.Instruction;
+import org.apache.bcel.generic.InstructionList;
+import org.apache.bcel.generic.InvokeInstruction;
+import org.apache.bcel.generic.JsrInstruction;
+import org.apache.bcel.generic.LCMP;
+import org.apache.bcel.generic.LCONST;
+import org.apache.bcel.generic.LDC;
+import org.apache.bcel.generic.LDC2_W;
+import org.apache.bcel.generic.LocalVariableInstruction;
+import org.apache.bcel.generic.MONITORENTER;
+import org.apache.bcel.generic.MONITOREXIT;
+import org.apache.bcel.generic.MULTIANEWARRAY;
+import org.apache.bcel.generic.MethodGen;
+import org.apache.bcel.generic.NEW;
+import org.apache.bcel.generic.NEWARRAY;
+import org.apache.bcel.generic.NOP;
+import org.apache.bcel.generic.ObjectType;
+import org.apache.bcel.generic.RET;
+import org.apache.bcel.generic.ReferenceType;
+import org.apache.bcel.generic.ReturnInstruction;
+import org.apache.bcel.generic.SIPUSH;
+import org.apache.bcel.generic.Select;
+import org.apache.bcel.generic.StackConsumer;
+import org.apache.bcel.generic.StackInstruction;
+import org.apache.bcel.generic.StackProducer;
+import org.apache.bcel.generic.Type;
 import org.apache.bcel.util.ClassPath;
 import org.apache.bcel.util.Repository;
 import org.apache.bcel.util.SyntheticRepository;
@@ -53,7 +110,7 @@ public class Executor extends Object {
   private File fFileName;
 
   /** the output file. */
-  private BufferedWriter fOut;
+  private PrintStream fOut;
 
   /** classes to be parsed from standard library. */
   private List<String> otherlibs;
@@ -168,8 +225,9 @@ public class Executor extends Object {
    *             if libraries file specified in {@link #otherlibs} cannot be
    *             found
    * @throws MethodNotFoundException
+   * @throws IOException 
    */
-  public void start() throws IOException, ClassNotFoundException, MethodNotFoundException {
+  public void start() throws ClassNotFoundException, MethodNotFoundException, IOException {
 
     // creating file for output
     if (fFileName.exists()) {
@@ -177,8 +235,8 @@ public class Executor extends Object {
       System.err.println("previous file is being overwritten...");
     }
     fFileName.createNewFile();
-    final FileWriter fwr = new FileWriter(fFileName);
-    fOut = new BufferedWriter(fwr);
+    final FileOutputStream fwr = new FileOutputStream(fFileName);
+    fOut = new PrintStream(fwr);
 
     // write prelude ;)
     doBeginning();
@@ -218,13 +276,15 @@ public class Executor extends Object {
     
     final File dicoFile = new File(fFileName.getParent(), "dico.ml");
     dicoFile.createNewFile();
-    fOut = new BufferedWriter(new FileWriter(dicoFile));
+    fOut = new PrintStream(new FileOutputStream(dicoFile));
     dico.write(fOut);
     fOut.close();
   }
 
   /**
    * Bico main entry point.
+   * @param args the program arguments
+   * @throws IOException if the is an error while creating the files
    */
   public static void main(final String[] args) throws IOException {
     System.out.println(WELCOME_MSG);
@@ -263,7 +323,7 @@ public class Executor extends Object {
    * @throws MethodNotFoundException
    */
   private void handleLibraryClass(String libname, Repository strin)
-  throws ClassNotFoundException, IOException, MethodNotFoundException {
+  throws ClassNotFoundException, MethodNotFoundException {
     handleClass(libname, ClassPath.SYSTEM_CLASS_PATH, strin);
   }
 
@@ -276,7 +336,7 @@ public class Executor extends Object {
    * @throws MethodNotFoundException
    */
   private void handleDiskClass(String clname, String pathname,
-                               Repository strin) throws ClassNotFoundException, IOException,
+                               Repository strin) throws ClassNotFoundException,
                                MethodNotFoundException {
     final ClassPath cp = new ClassPath(pathname);
     handleClass(clname, cp, strin);
@@ -284,7 +344,7 @@ public class Executor extends Object {
   }
 
   private void handleClass(String clname, ClassPath cp, Repository strin)
-  throws ClassNotFoundException, IOException, MethodNotFoundException {
+  throws ClassNotFoundException, MethodNotFoundException {
     JavaClass jc = SyntheticRepository.getInstance(cp).loadClass(clname);
     strin.storeClass(jc);
     ClassGen cg = new ClassGen(jc);
@@ -294,7 +354,7 @@ public class Executor extends Object {
   }
 
   /**
-   * Real handling of one class in jc
+   * Real handling of one class in jc.
    * 
    * @param strin
    *            is the repository where information on classes can be found
@@ -302,7 +362,7 @@ public class Executor extends Object {
    * @throws ClassNotFoundException
    */
   private void doClass(JavaClass jc, ClassGen cg, ConstantPoolGen cpg,
-                       Repository strin) throws IOException, MethodNotFoundException,
+                       Repository strin) throws MethodNotFoundException,
                        ClassNotFoundException {
 
     Method[] methods = cg.getMethods();
@@ -310,7 +370,7 @@ public class Executor extends Object {
     String moduleName = coqify(jc.getClassName());
     System.out.println("  --> Module " + moduleName + ".");
     writeln(fOut, 1, "Module " + moduleName + ".");
-    fOut.newLine();
+    fOut.println();
 
     String pn = jc.getPackageName();
     int packageName = dico.getCoqPackageName(jc.getPackageName());
@@ -349,7 +409,7 @@ public class Executor extends Object {
       writeln(fOut, 2, str);
     }
 
-    fOut.newLine();
+    fOut.println();
 
     // fields
     Field[] ifield = jc.getFields();
@@ -373,7 +433,7 @@ public class Executor extends Object {
         strf = convertType(ifield[i].getType(), strin);
         writeln(fOut, 3, strf);
         writeln(fOut, 2, ".");
-        fOut.newLine();
+        fOut.println();
         strf = "Definition ";
         strf += coqify(ifield[i].getName());
         strf += "FieldSignature : FieldSignature := (className, "
@@ -411,7 +471,7 @@ public class Executor extends Object {
         strf = "FIELD.UNDEF";
         writeln(fOut, 3, strf);
         writeln(fOut, 2, ".");
-        fOut.newLine();
+        fOut.println();
       }
     }
 
@@ -430,13 +490,13 @@ public class Executor extends Object {
     }
 
     doClassDefinition(jc, ifield);
-    fOut.newLine();
+    fOut.println();
     writeln(fOut, 1, "End " + coqify(jc.getClassName()) + ".");
-    fOut.newLine();
+    fOut.println();
   }
 
   private void doClassDefinition(JavaClass jc, Field[] ifield)
-  throws IOException, MethodNotFoundException {
+  throws MethodNotFoundException {
     if (jc.isInterface()) {
       writeln(fOut, 2,
       "Definition interface : Interface := INTERFACE.Build_t");
@@ -514,8 +574,8 @@ public class Executor extends Object {
    * @throws ClassNotFoundException
    */
   private void doMethodInstructions(Method method, MethodGen mg,
-                                    ConstantPoolGen cpg, Repository strin) throws IOException,
-                                    MethodNotFoundException, ClassNotFoundException {
+                                    ConstantPoolGen cpg, Repository strin) 
+    throws MethodNotFoundException, ClassNotFoundException {
 
     // LocalVariableGen[] aa = mg.getLocalVariables();
     // // aa[i].toString();
@@ -552,7 +612,7 @@ public class Executor extends Object {
       }
 
       writeln(fOut, 2, ".");
-      fOut.newLine();
+      fOut.println();
 
       // exception handlers
       Code code = method.getCode();
@@ -583,7 +643,7 @@ public class Executor extends Object {
           }
           writeln(fOut, 3, "nil");
           writeln(fOut, 2, ".");
-          fOut.newLine();
+          fOut.println();
         }
       }
 
@@ -604,7 +664,7 @@ public class Executor extends Object {
       writeln(fOut, 3, "" + mg.getMaxLocals());
       writeln(fOut, 3, "" + mg.getMaxStack());
       writeln(fOut, 2, ".");
-      fOut.newLine();
+      fOut.println();
     }
 
     // method
@@ -639,13 +699,13 @@ public class Executor extends Object {
     writeln(fOut, 3, str);
     // System.out.println();System.out.println();
     writeln(fOut, 2, ".");
-    fOut.newLine();
+    fOut.println();
   }
 
   /**
    * Write the file preable.
    */
-  private void doBeginning() throws IOException {
+  private void doBeginning() {
     writeln(fOut, 0, is.getBeginning());
 
     for (int i = 0; i < speciallibs.length; i++) {
@@ -670,56 +730,59 @@ public class Executor extends Object {
 
 
     writeln(fOut, 0, "Import P.");
-    fOut.newLine();
+    fOut.println();
     writeln(fOut, 0, "Module TheProgram.");
-    fOut.newLine();
+    fOut.println();
 
   }
 
   /**
-   * write the file ending
+   * Write the file ending.
    */
-  private void doEnding() throws IOException {
+  private void doEnding() {
 
-    // all classes
-    {
-      String str = "Definition AllClasses : " + is.classType() + " := ";
-      Iterator iter = treatedClasses.iterator();
-      while (iter.hasNext()) {
-        str += is.classCons(iter.next().toString());
-      }
-      for (int i = 0; i < speciallibs.length; i++) {
-        str += is.classCons(coqify(speciallibs[i]) + ".class");
-      }
-      str += " " + is.classEnd() + ".";
-      writeln(fOut, 1, str);
-    }
-
-    fOut.newLine();
-
-    // all interfaces
-    {
-      String str = "Definition AllInterfaces : " + is.interfaceType()
-      + " := ";
-      Iterator iter = treatedInterfaces.iterator();
-      while (iter.hasNext()) {
-        str += is.interfaceCons(iter.next().toString());
-      }
-      str += " " + is.interfaceEnd() + ".";
-      writeln(fOut, 1, str);
-    }
-    fOut.newLine();
+    defineClassAndInterface();
+    
+    // the program definition
     writeln(fOut, 1, "Definition program : Program := PROG.Build_t");
     writeln(fOut, 2, "AllClasses");
     writeln(fOut, 2, "AllInterfaces");
     writeln(fOut, 1, ".");
-    fOut.newLine();
+    fOut.println();
     writeln(fOut, 0, "End TheProgram.");
-    fOut.newLine();
+    fOut.println();
   }
 
   /**
-   * write the method signature
+   * Define all classes and interfaces.
+   * @throws IOException
+   */
+  private void defineClassAndInterface() {
+    // all classes
+    String str = "Definition AllClasses : " + is.classType() + " := ";
+    for (String clss: treatedClasses) {
+      str += is.classCons(clss);
+    }
+    for (int i = 0; i < speciallibs.length; i++) {
+      str += is.classCons(coqify(speciallibs[i]) + ".class");
+    }
+    str += " " + is.classEnd() + ".";
+    writeln(fOut, 1, str);
+    fOut.println();
+
+
+    // all interfaces
+    str = "Definition AllInterfaces : " + is.interfaceType() + " := ";
+    for (String interf: treatedInterfaces) {
+      str += is.interfaceCons(interf);
+    }
+    str += " " + is.interfaceEnd() + ".";
+    writeln(fOut, 1, str);
+    fOut.println();
+  }
+
+  /**
+   * write the method signature.
    * 
    * @param jc
    *            the JavaClass to which belongs the method
@@ -732,8 +795,8 @@ public class Executor extends Object {
    * @throws ClassNotFoundException
    */
   private void doMethodSignature(JavaClass jc, Method method, MethodGen mg,
-                                 BufferedWriter out, int coqMethodName, Repository strin)
-  throws IOException, ClassNotFoundException, MethodNotFoundException {
+                                 PrintStream out, int coqMethodName, Repository strin)
+  throws ClassNotFoundException, MethodNotFoundException {
     // InstructionList il = mg.getInstructionList();
     // InstructionHandle ih[] = il.getInstructionHandles();
     // signature
@@ -765,7 +828,7 @@ public class Executor extends Object {
     str = "Definition " + name + "Signature : MethodSignature := " + "("
     + clName + ", " + name + "ShortSignature).\n";
     writeln(out, 2, str);
-    out.newLine();
+    fOut.println();
   }
 
   /**
@@ -1010,73 +1073,75 @@ public class Executor extends Object {
 
   private static int tab = 2;
 
-  static void writeln(BufferedWriter out, int tabs, String s)
-  throws IOException {
-    StringBuffer str = new StringBuffer();
+  static void writeln(PrintStream out, int tabs, String s) {
+    final StringBuffer str = new StringBuffer();
     for (int i = 0; i < tabs * tab; i++) {
       str.append(' ');
     }
     str.append(s);
-    out.write(str.toString());
-    out.newLine();
+    out.println(str.toString());
   }
 
   /**
+   * @param t the type to convert
    * @return Coq value of t of type primitiveType
    */
-  private static String convertPrimitiveType(BasicType t) {
-    if (t == Type.BOOLEAN || t == Type.BYTE || t == Type.SHORT
-        || t == Type.INT) {
+  private static String convertPrimitiveType(final BasicType t) {
+    if (t == Type.BOOLEAN || t == Type.BYTE || t == Type.SHORT || t == Type.INT) {
       return (t.toString().toUpperCase());
-    } else {
+    } 
+    else {
       Unhandled("BasicType", t);
       return ("INT (* " + t.toString() + " *)");
     }
   }
 
   /**
-   * @param strin
-   *            is the repository where information on classes can be found
+   * @param type the type to convert
+   * @param repos is the repository where information on classes can be found
    * @return Coq value of t of type refType
    * @throws ClassNotFoundException
    */
-  private static String convertReferenceType(ReferenceType t, Repository strin)
-  throws ClassNotFoundException {
-    if (t instanceof ArrayType) {
-      return "(ArrayType "
-      + convertType(((ArrayType) t).getElementType(), strin)
-      + ")";
-    } else if (t instanceof ObjectType) {
-      ObjectType ot = (ObjectType) t;
+  private static String convertReferenceType(final ReferenceType type, 
+                                  final Repository repos) throws ClassNotFoundException {
+    String convertedType;
+    if (type instanceof ArrayType) {
+      convertedType = "(ArrayType " + 
+             convertType(((ArrayType) type).getElementType(), repos) + ")";
+    } 
+    else if (type instanceof ObjectType) {
+      final ObjectType ot = (ObjectType) type;
       try {
         if (ot.referencesClassExact()) {
-          return "(ClassType " + coqify(ot.getClassName())
-          + ".className)";
-        } else if (ot.referencesInterfaceExact()) {
+          convertedType = "(ClassType " + coqify(ot.getClassName()) + ".className)";
+        } 
+        else if (ot.referencesInterfaceExact()) {
           // TODO: adjust to the structure of "interface" modules
-          return "(InterfaceType " + coqify(ot.getClassName())
-          + ".interfaceName)";
-        } else {
-          Unhandled("ObjectType", t);
-          return "(ObjectType javaLangObject (* " + t.toString()
-          + " *) )";
+          convertedType = "(InterfaceType " + coqify(ot.getClassName()) + ".interfaceName)";
+        } 
+        else {
+          Unhandled("ObjectType", type);
+          convertedType = "(ObjectType javaLangObject (* " + type.toString() + " *) )";
         }
-      } catch (ClassNotFoundException e) {
-        JavaClass jc = strin.findClass(ot.getClassName());
+      } 
+      catch (ClassNotFoundException e) {
+        final JavaClass jc = repos.findClass(ot.getClassName());
         if (jc != null) {
-          if (jc.isClass())
-            return "(ClassType " + coqify(ot.getClassName())
-            + ".className)";
-          else if (jc.isInterface())
-            return "(InterfaceType " + coqify(ot.getClassName())
-            + ".interfaceName)";
+          if (jc.isClass()) {
+            return "(ClassType " + coqify(ot.getClassName()) + ".className)";
+          }
+          else if (jc.isInterface()) {
+            return "(InterfaceType " + coqify(ot.getClassName()) + ".interfaceName)";
+          }
         }
         throw e;
       }
-    } else {
-      Unhandled("ReferenceType", t);
-      return "(ObjectType javaLangObject (* " + t.toString() + " *) )";
+    } 
+    else {
+      Unhandled("ReferenceType", type);
+      convertedType = "(ObjectType javaLangObject (* " + type.toString() + " *) )";
     }
+    return convertedType;
   }
 
   /**
@@ -1085,7 +1150,7 @@ public class Executor extends Object {
    * @return Coq value of t of type type
    * @throws ClassNotFoundException
    */
-  private static String convertType(Type t, Repository strin)
+  private static String convertType(final Type t, final Repository strin)
   throws ClassNotFoundException {
     if (t instanceof BasicType) {
       return "(PrimitiveType " + convertPrimitiveType((BasicType) t)
@@ -1101,7 +1166,7 @@ public class Executor extends Object {
   }
 
   /**
-   * Handles type or void
+   * Handles type or void.
    * 
    * @param strin
    *            is the repository where information on classes can be found
@@ -1117,13 +1182,15 @@ public class Executor extends Object {
   }
 
   /**
-   * for instructions not handled by Bicolano
+   * for instructions not handled by Bicolano.
    */
   private static String Unhandled(Instruction ins) {
     return Unhandled("Instruction", ins);
   }
 
-  // variant with some more information about instruction kind
+  /**
+   * variant with some more information about instruction kind.
+   */ 
   private static String Unhandled(String instruction, Instruction ins) {
     String name = ins.getName();
     System.err.println("Unhandled " + instruction + ": " + name);
@@ -1136,7 +1203,7 @@ public class Executor extends Object {
 
   /**
    * for instructions which should not exist - this is probably an error in
-   * Bico
+   * Bico.
    */
   private static String Unknown(String instruction, Instruction ins) {
     String name = ins.getName();
@@ -1145,7 +1212,7 @@ public class Executor extends Object {
   }
 
   /**
-   * for instruction which are not implemented (yet) in Bico
+   * for instruction which are not implemented (yet) in Bico.
    */
   private static String Unimplemented(String instruction, Instruction ins) {
     String name = ins.getName();
@@ -1161,13 +1228,14 @@ public class Executor extends Object {
   private static String printZ(int index) {
     if (index < 0) {
       return "(" + index + ")%Z";
-    } else {
+    } 
+    else {
       return String.valueOf(index) + "%Z";
     }
   }
 
   /**
-   * for printing offsets
+   * for printing offsets.
    * 
    * @return i%Z or (-i)%Z
    */

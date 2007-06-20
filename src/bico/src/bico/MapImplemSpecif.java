@@ -1,6 +1,6 @@
 package bico;
-import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.PrintStream;
 
 public class MapImplemSpecif implements ImplemSpecifics {
 
@@ -66,7 +66,7 @@ public class MapImplemSpecif implements ImplemSpecifics {
     methodsParen = "";
     return res;
   }
-  public void printExtraBodyField(BufferedWriter out) throws IOException {
+  public void printExtraBodyField(PrintStream out) {
     Executor.writeln(out,3,"0%N");
   }
   public String instructionsType() {
