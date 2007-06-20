@@ -2,4 +2,4 @@ TODO:
 
 - Handle module dependencies
 - test more the overriding of methods / name clash
-- use bcel-5.2 in umbra as well as in bico
+- add some comments :)
