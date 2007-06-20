@@ -44,9 +44,10 @@ public final class Logic {
    * @return a well formed binary op
    */
   private static Term logicBinaryOp(final Term f1, final Term f2, final PredSymbol sym) {
-    if ((f1.getSort() != sort || f2.getSort() != sort))
+    if ((f1.getSort() != sort || f2.getSort() != sort)) {
       throw new IllegalArgumentException("Bad type. Expecting predicates, " +
                                          "found: " + f1.getSort() + " and " + f2.getSort());
+    }
     return Formula.lf.mkFnTerm(sym, new Term[]{f1, f2});
   }
 
@@ -57,9 +58,10 @@ public final class Logic {
    * @return a well formed unary op
    */
   private static Term logicUnaryOp(final Term f, final PredSymbol sym) {
-    if (f.getSort() != sort)
+    if (f.getSort() != sort) {
       throw new IllegalArgumentException("Bad type. Expecting predicate, " +
                                          "found: " + f.getSort());
+    }
     return Formula.lf.mkFnTerm(sym, new Term []{f});
   }
 
@@ -74,9 +76,10 @@ public final class Logic {
     Term left = l;
     Term right = r;
     if (l.getSort() != r.getSort() ||
-        (!Num.isNum(l.getSort()) || !Num.isNum(r.getSort())))
+        (!Num.isNum(l.getSort()) || !Num.isNum(r.getSort()))) {
       throw new IllegalArgumentException("The sort of " + l + 
                                          " is different from the sort of " + r + ".");
+    }
     FnTerm t = null;
     if (l.getSort() == Num.sortInt) {
       if (r.getSort() == Num.sortReal) {
@@ -122,13 +125,16 @@ public final class Logic {
    * @return the BoolProp conversion object
    */
   public static Term boolToProp(final Term e) {
-    if (e.getSort() == Bool.sort)
+    if (e.getSort() == Bool.sort) {
       return Formula.lf.mkFnTerm(Formula.lf.symIsTrue, new Term[] {e});
-    else if (e.getSort() == Logic.sort)
+    }
+    else if (e.getSort() == Logic.sort) {
       return e;
-    else 
+    }
+    else {
       throw new IllegalArgumentException("Bad type when creating BoolProp, " +
                                          "found: " + e.getSort());
+    }
   }
 
   /**
@@ -159,14 +165,15 @@ public final class Logic {
      * @param f2 The second argument of the and, of type Prop
      * @return a newly created and connector
      */
-    public static Term and(Term f1, Term f2) {
+    public static Term and(final Term f1, final Term f2) {
+      Term left = f1, right = f2;
       if (f1.getSort().equals(Bool.sort)) {
-        f1 = Logic.boolToProp(f1);
+        left = Logic.boolToProp(f1);
       }
       if (f2.getSort().equals(Bool.sort)) {
-        f2 = Logic.boolToProp(f1);
+        right = Logic.boolToProp(f1);
       }
-      return Logic.and(f1, f2);
+      return Logic.and(left, right);
     }
 
     /**
@@ -176,14 +183,15 @@ public final class Logic {
      * @param f2 the second element of the implies
      * @return a nicely created implies
      */
-    public static Term implies(Term f1, Term f2) {
+    public static Term implies(final Term f1, final Term f2) {
+      Term left = f1, right = f2;
       if (f1.getSort().equals(Bool.sort)) {
-        f1 = Logic.boolToProp(f1);
+        left = Logic.boolToProp(f1);
       }
       if (f2.getSort().equals(Bool.sort)) {
-        f2 = Logic.boolToProp(f1);
+        right = Logic.boolToProp(f1);
       }
-      return Logic.implies(f1, f2);
+      return Logic.implies(left, right);
     }
   }
 
@@ -220,9 +228,10 @@ public final class Logic {
     Term right = r;
     
     if (l.getSort() != r.getSort() && 
-        (!Num.isNum(r.getSort()) || !Num.isNum(l.getSort())))
+        (!Num.isNum(r.getSort()) || !Num.isNum(l.getSort()))) {
       throw new IllegalArgumentException("Different types when creating equals, " +
                                          "found: " + l.getSort() + " and " + r.getSort());
+    }
     FnTerm t = null;
     if (l.getSort() == Bool.sort) {
       t = Formula.lf.mkFnTerm(Formula.lf.symBoolPred, new Term[] {left, right});
@@ -283,10 +292,10 @@ public final class Logic {
    */
   public static QuantTerm forall(final QuantVariable v, final Term f) {
 
-    if (f.getSort() != sort)
+    if (f.getSort() != sort) {
       throw new IllegalArgumentException("Bad type when creating forall, " +
                                          "found: " + f.getSort());
-
+    }
     return Formula.lf.mkQuantTerm(true, new QuantVariable [] {v}, f, null, null);
   }
 
@@ -298,10 +307,10 @@ public final class Logic {
    */
   public static QuantTerm forall(final QuantVariableRef v, final Term f) {
 
-    if (f.getSort() != sort)
+    if (f.getSort() != sort) {
       throw new IllegalArgumentException("Bad type when creating forall, " +
                                          "found: " + f.getSort());
-
+    }
     return Formula.lf.mkQuantTerm(true, new QuantVariable [] {v.qvar}, f, null, null);
   }
 
@@ -313,9 +322,10 @@ public final class Logic {
    */
   public static QuantTerm forall(final QuantVariable[] v, final Term f) {
 
-    if (f.getSort() != sort)
+    if (f.getSort() != sort) {
       throw new IllegalArgumentException("Bad type when creating forall, " +
                                          "found: " + f.getSort());
+    }
 
     return Formula.lf.mkQuantTerm(true, v, f, null, null);
   }
@@ -328,9 +338,10 @@ public final class Logic {
    */
   public static QuantTerm exists(final QuantVariable v, final Term f) {
 
-    if (f.getSort() != sort)
+    if (f.getSort() != sort) {
       throw new IllegalArgumentException("Bad type when creating exists, " +
                                          "found: " + f.getSort());
+    }
 
     return Formula.lf.mkQuantTerm(false, new QuantVariable [] {v}, f, null, null);
   }
@@ -343,9 +354,10 @@ public final class Logic {
    */
   public static QuantTerm exists(final QuantVariable[] v, final Term f) {
 
-    if (f.getSort() != sort)
+    if (f.getSort() != sort) {
       throw new IllegalArgumentException("Bad type when creating exists, " +
                                          "found: " + f.getSort());
+    }
 
     return Formula.lf.mkQuantTerm(false, v, f, null, null);
   }
@@ -445,10 +457,12 @@ public final class Logic {
    * @return a term representing an index within an interval
    */
   public static Term interval0To(final Term dim, final QuantVariableRef idx) {
-    if ((!dim.getSort().equals(Num.sortInt)) || (!idx.getSort().equals(Num.sortInt)))
+    if ((!dim.getSort().equals(Num.sortInt)) || 
+        (!idx.getSort().equals(Num.sortInt))) {
       throw new IllegalArgumentException("The sort " + dim.getSort() + " or " +
                                          idx.getSort() +
-                                         " is invalid! (Hint: should be int...)"); 
+                                         " is invalid! (Hint: should be int...)");
+    }
     return Logic.and(Logic.le(Num.value(0), idx), Logic.lt(idx, dim));
   }
 
@@ -475,12 +489,14 @@ public final class Logic {
    * @return the newly formed predicate
    */
   public static Term assignCompat(final Term heap, final Term val, final Term type) {
-    if (heap.getSort() != Heap.sort)
+    if (heap.getSort() != Heap.sort) {
       throw new IllegalArgumentException("Type of the first param should be heap (" + 
                                          Heap.sort + "), found: " + heap.getSort());
-    if (type.getSort() != Type.sort)
+    }
+    if (type.getSort() != Type.sort) {
       throw new IllegalArgumentException("Type of the second param should be ref (" + 
                                          Type.sort + "), found: " + type.getSort());
+    }
 
     return Formula.lf.mkFnTerm(Formula.lf.symAssignCompat, new Term [] {heap, val, type});
   }
@@ -492,22 +508,23 @@ public final class Logic {
 
 
   public static Term isAllocated(final Term heap, final Term val) {
-    if (heap.getSort() != Heap.sort)
+    if (heap.getSort() != Heap.sort) {
       throw new IllegalArgumentException("Type of the first param should be heap (" + 
                                          Heap.sort + "), found: " + heap.getSort());
+    }
     return Formula.lf.mkFnTerm(Formula.lf.symIsAllocated, new Term [] {heap, val});
   }
 
 
-  public static Term andInv(final Term t1, final Term t2) {
-    return Formula.lf.mkFnTerm(Formula.lf.symAnd, new Term[]{t1, t2});
-  }
-
-  public static Term orInv(final Term t1, final Term t2) {
-    return Formula.lf.mkFnTerm(Formula.lf.symOr, new Term[] {t1, t2});
-  }
 
 
+
+  /**
+   * @deprecated
+   * @param t1
+   * @param t2
+   * @return
+   */
   public static Term eqInv(final Term t1, final Term t2) {
     return Formula.lf.mkFnTerm(Formula.lf.symRefEQ, new Term[]{t1, t2});
   }
@@ -523,10 +540,12 @@ public final class Logic {
       final javafe.ast.Type type = (javafe.ast.Type) iter.next();
       final QuantVariableRef typeTerm = Type.translate(type);
       t1 = Logic.eqInv(var, typeTerm);
-      if (t2 == null)
+      if (t2 == null) {
         t2 = t1;
-      else
-        t2 = Logic.orInv(t2, t1);
+      }
+      else {
+        t2 = Logic.or(t2, t1);
+      }
     }
     return t2;
   }

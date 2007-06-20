@@ -1,5 +1,6 @@
 package mobius.directVCGen.formula;
 
+import escjava.sortedProver.Lifter.FnTerm;
 import escjava.sortedProver.Lifter.QuantVariable;
 import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
@@ -37,7 +38,7 @@ public final class Heap {
    * @param val the value to store
    * @return the new heap, after the store 
    */
-  public static Term store(final QuantVariableRef heap, final QuantVariable var, 
+  public static Term store(final QuantVariableRef heap, final QuantVariable var,
                            final  Term val) {
     return Formula.lf.mkFnTerm(Formula.lf.symStore, 
                                new Term[] {heap, Expression.rvar(var), sortToValue(val)});
@@ -81,7 +82,9 @@ public final class Heap {
       throw new IllegalArgumentException("The idx argument should be of sort int, found: " + 
                                          idx.getSort());
     }
-    return Formula.lf.mkFnTerm(Formula.lf.symArrStore, new Term[] {heap,  var, idx, sortToValue(val)});
+    return Formula.lf.mkFnTerm(Formula.lf.symArrStore, new Term[] {heap,  var, 
+                                                                   idx, 
+                                                                   sortToValue(val)});
   }
 
   /**
@@ -147,22 +150,24 @@ public final class Heap {
    * @return the conversion term
    */
   private static Term valueToSort(final Term t, final Sort type) {
+    FnTerm res;
     if (type == Formula.lf.sortBool) {
-      return Formula.lf.mkFnTerm(Formula.lf.symValueToBool,  new Term [] {t});
+      res = Formula.lf.mkFnTerm(Formula.lf.symValueToBool,  new Term [] {t});
     }
     else if (type == Formula.lf.sortRef) {
-      return Formula.lf.mkFnTerm(Formula.lf.symValueToRef,  new Term [] {t});
+      res = Formula.lf.mkFnTerm(Formula.lf.symValueToRef,  new Term [] {t});
     }
     else if (type == Formula.lf.sortInt) {
-      return Formula.lf.mkFnTerm(Formula.lf.symValueToInt,  new Term [] {t});
+      res = Formula.lf.mkFnTerm(Formula.lf.symValueToInt,  new Term [] {t});
     }
     else if (type == Formula.lf.sortReal) {
-      return Formula.lf.mkFnTerm(Formula.lf.symValueToReal,  new Term [] {t});
+      res = Formula.lf.mkFnTerm(Formula.lf.symValueToReal,  new Term [] {t});
     }
     else {
       throw new IllegalArgumentException("Bad type " +
                                          "found: " + type);
     }
+    return res;
   }
 
   /**
@@ -173,23 +178,25 @@ public final class Heap {
   public static Term sortToValue(final Term t) {
     Sort s = t.getSort();
     s = s.theRealThing();
+    FnTerm res;
     if (s.equals(Formula.lf.sortBool)) {
-      return Formula.lf.mkFnTerm(Formula.lf.symBoolToValue,  new Term [] {t});
+      res = Formula.lf.mkFnTerm(Formula.lf.symBoolToValue,  new Term [] {t});
     }
     else if (s.equals(Formula.lf.sortRef)) {
-      return Formula.lf.mkFnTerm(Formula.lf.symRefToValue,  new Term [] {t});
+      res = Formula.lf.mkFnTerm(Formula.lf.symRefToValue,  new Term [] {t});
     }
     else if (s.equals(Formula.lf.sortInt)) {
-      return Formula.lf.mkFnTerm(Formula.lf.symIntToValue,  new Term [] {t});
+      res = Formula.lf.mkFnTerm(Formula.lf.symIntToValue,  new Term [] {t});
     }
     else if (s.equals(Formula.lf.sortReal)) {
-      return Formula.lf.mkFnTerm(Formula.lf.symRealToValue,  new Term [] {t});
+      res = Formula.lf.mkFnTerm(Formula.lf.symRealToValue,  new Term [] {t});
     }
     else {
       throw new IllegalArgumentException("Bad type " +
                                          "found for " + t.getClass() + " " + 
                                          t + ": " + t.getSort());
     }
+    return res;
   }
 
 

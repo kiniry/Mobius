@@ -1,6 +1,11 @@
 package mobius.directVCGen.formula.jmlTranslator;
 
-import mobius.directVCGen.formula.*;
+import mobius.directVCGen.formula.Expression;
+import mobius.directVCGen.formula.Heap;
+import mobius.directVCGen.formula.Logic;
+import mobius.directVCGen.formula.Lookup;
+import mobius.directVCGen.formula.Ref;
+import mobius.directVCGen.formula.Type;
 import mobius.directVCGen.formula.annotation.AAnnotation;
 import mobius.directVCGen.formula.annotation.AnnotationDecoration;
 import mobius.directVCGen.formula.annotation.Assume;
@@ -91,30 +96,28 @@ import escjava.sortedProver.Lifter.Term;
 
 public class JmlVisitor extends VisitorArgResult{
 
-  JmlExprToFormula translator;
-  Properties p;
+  private JmlExprToFormula fTranslator;
+  private Properties p;
 
 
-  public JmlVisitor(){
+  public JmlVisitor() {
     p = new Properties();
     p.put("pred", new Boolean(true));
     p.put("old", new Boolean(false));
     p.put("interesting", new Boolean(false));
-    translator = new JmlExprToFormula(this);
+    fTranslator = new JmlExprToFormula(this);
   }
 
   @Override
-  public Object visitASTNode(ASTNode x, Object prop) {
+  public Object visitASTNode(final ASTNode x, final Object prop) {
     Object o = null;
-    int max = x.childCount();
-    for(int i = 0; i < max; i++) {
-      Object child = x.childAt(i);
-      if(child instanceof ASTNode) {
+    final int max = x.childCount();
+    for (int i = 0; i < max; i++) {
+      final Object child = x.childAt(i);
+      if (child instanceof ASTNode) {
         o = ((ASTNode) child).accept(this, prop);
-        if (o != null)
-        {
-          if (!o.equals(child))
-          {
+        if (o != null) {
+          if (!o.equals(child)) {
             System.out.println(o);
           }
         }
@@ -136,7 +139,7 @@ public class JmlVisitor extends VisitorArgResult{
     ((Properties) o).put("firstPost", new Boolean(true)); // invariante wird nur einmal zu Lookup.postcond angehängt
     ((Properties) o).put("routinebegin", new Boolean(true));
     QuantVariableRef result = (QuantVariableRef)((Properties) o).get("result");
-    Lookup.postconditions.put(x, new Post(result,Logic.True()));
+    Lookup.postconditions.put(x, new Post(result, Logic.True()));
     Lookup.exceptionalPostconditions.put(x, new Post(result, Logic.True()));
     return visitASTNode(x, o);
   }
@@ -154,7 +157,7 @@ public class JmlVisitor extends VisitorArgResult{
 
   @Override
   public /*@non_null*/ Object visitFormalParaDecl(/*@non_null*/ FormalParaDecl x, Object o) {
-    return translator.genericVarDecl(x,o);
+    return fTranslator.genericVarDecl(x,o);
   }
 
   @Override
@@ -164,19 +167,22 @@ public class JmlVisitor extends VisitorArgResult{
   }
 
   @Override
-  public /*@non_null*/ Object visitLiteralExpr(/*@non_null*/ LiteralExpr x, Object o) {
-    Properties prop = (Properties) o;
-    if (((Boolean) prop.get("interesting")).booleanValue())
-      return translator.literal(x,o);
-    else
+  public /*@non_null*/ Object visitLiteralExpr(final /*@non_null*/ LiteralExpr x,
+                                               final Object o) {
+    final Properties prop = (Properties) o;
+    if (((Boolean) prop.get("interesting")).booleanValue()) {
+      return fTranslator.literal(x, o);
+    }
+    else {
       return null;
+    }
   }
 
 
   @Override
   public /*@non_null*/ Object visitVariableAccess(/*@non_null*/ VariableAccess x, Object o) {		 
     if (((Boolean) ((Properties) o).get("interesting")).booleanValue())
-      return translator.variableAccess(x,o);
+      return fTranslator.variableAccess(x,o);
     else 
       return null;
   }
@@ -184,7 +190,7 @@ public class JmlVisitor extends VisitorArgResult{
   @Override
   public /*@non_null*/ Object visitFieldAccess(/*@non_null*/ FieldAccess x, Object o) {		 
     if (((Boolean) ((Properties) o).get("interesting")).booleanValue())
-      return translator.fieldAccess(x,o);
+      return fTranslator.fieldAccess(x,o);
     else
       return null;
   }
@@ -199,7 +205,7 @@ public class JmlVisitor extends VisitorArgResult{
   public /*@non_null*/ Object visitNaryExpr(/*@non_null*/ NaryExpr x, Object o) {
     if (((Boolean) ((Properties) o).get("interesting")).booleanValue()){
       if (x.op== TagConstants.PRE) {
-        return translator.naryExpr(x,o);
+        return fTranslator.naryExpr(x,o);
       } else {
         return visitGCExpr(x, o);
       }
@@ -210,7 +216,7 @@ public class JmlVisitor extends VisitorArgResult{
   @Override
   public /*@non_null*/ Object visitInstanceOfExpr(/*@non_null*/ InstanceOfExpr x, Object o) {
     if (((Boolean) ((Properties) o).get("interesting")).booleanValue())
-      return translator.instanceOfExpr(x, o);
+      return fTranslator.instanceOfExpr(x, o);
     else
       return null;
   }
@@ -218,7 +224,7 @@ public class JmlVisitor extends VisitorArgResult{
   @Override
   public Object  visitThisExpr(ThisExpr x, Object o) {
     if (((Boolean) ((Properties) o).get("interesting")).booleanValue())
-      return translator.thisLiteral(x,o);
+      return fTranslator.thisLiteral(x,o);
     else
       return null;
   }
@@ -299,25 +305,24 @@ public class JmlVisitor extends VisitorArgResult{
     RoutineDecl rd = (RoutineDecl)((Properties) o).get("method");
     Term t = (Term)visitASTNode(x, o);
     switch (x.getTag()){
-    case TagConstants.REQUIRES:
-      if (rd  instanceof MethodDecl) { 
-        Term invToPre = (Term) invToPreconditions(o);
-        t = Logic.andInv(t, invToPre);
-      }
-      Lookup.preconditions.put(rd, t);
-      break;
-    case TagConstants.ENSURES:
-      Post allPosts = Lookup.postconditions.get(rd);
-      // FIXME jgc: I don't know if fVar should be needed here; needs a review
-      allPosts = new Post(allPosts.getRVar(), Logic.andInv(allPosts.getPost(), t));
-      if (((Boolean) ((Properties) o).get("firstPost")).booleanValue())
-      {
-        Term invToPost = (Term) invToPostconditions(o);
-        allPosts = new Post(allPosts.getRVar(), Logic.andInv(allPosts.getPost(), invToPost));
-        ((Properties) o).put("firstPost", new Boolean(false));
-      }
-      Lookup.postconditions.put(rd, allPosts);
-      break;
+      case TagConstants.REQUIRES:
+        if (rd  instanceof MethodDecl) { 
+          final Term invToPre = (Term) invToPreconditions(o);
+          t = Logic.and(t, invToPre);
+        }
+        Lookup.preconditions.put(rd, t);
+        break;
+      case TagConstants.ENSURES:
+        Post allPosts = Lookup.postconditions.get(rd);
+        // FIXME jgc: I don't know if fVar should be needed here; needs a review
+        allPosts = new Post(allPosts.getRVar(), Logic.and(allPosts.getPost(), t));
+        if (((Boolean) ((Properties) o).get("firstPost")).booleanValue()) {
+          final Term invToPost = (Term) invToPostconditions(o);
+          allPosts = new Post(allPosts.getRVar(), Logic.and(allPosts.getPost(), invToPost));
+          ((Properties) o).put("firstPost", new Boolean(false));
+        }
+        Lookup.postconditions.put(rd, allPosts);
+        break;
     }
     return null;
   }
@@ -607,7 +612,7 @@ public class JmlVisitor extends VisitorArgResult{
   @Override
   public Object visitResExpr(ResExpr x, Object o) {
     if (((Boolean) ((Properties) o).get("interesting")).booleanValue())
-      return translator.resultLiteral(x,o);
+      return fTranslator.resultLiteral(x,o);
     else
       return null;
   }
@@ -619,10 +624,10 @@ public class JmlVisitor extends VisitorArgResult{
   }
 
   @Override
-  public Object visitSetStmtPragma(SetStmtPragma x, Object o) {
-    Set.Assignment res = new Set.Assignment();
+  public Object visitSetStmtPragma(final SetStmtPragma x, final Object o) {
+    final Set.Assignment res = new Set.Assignment();
     res.var = (QuantVariableRef) x.target.accept(this, o);
-    res.expr = (Term) x.value.accept(this,o);
+    res.expr = (Term) x.value.accept(this, o);
     return res;
   }
 
@@ -670,99 +675,101 @@ public class JmlVisitor extends VisitorArgResult{
 
 
   @Override
-  public Object visitBinaryExpr(BinaryExpr expr, Object o){
-    if (((Boolean) ((Properties) o).get("interesting")).booleanValue()){
+  public Object visitBinaryExpr(final BinaryExpr expr, final Object o) {
+    if (((Boolean) ((Properties) o).get("interesting")).booleanValue()) {
       switch(expr.op) {
-      case TagConstants.EQ: 
-        return translator.eq(expr, o);
-      case TagConstants.OR: 
-        return translator.or(expr, o);
-      case TagConstants.AND: 
-        return translator.and(expr, o);
-      case TagConstants.NE:
-        return translator.ne(expr, o);
-      case TagConstants.GE: 
-        return translator.ge(expr, o);
-      case TagConstants.GT: 
-        return translator.gt(expr, o);
-      case TagConstants.LE: 
-        return translator.le(expr, o);
-      case TagConstants.LT:  
-        return translator.lt(expr, o);
-      case TagConstants.BITOR: 
-        return translator.bitor(expr, o);
-      case TagConstants.BITXOR: 
-        return translator.bitxor(expr, o);
-      case TagConstants.BITAND: 
-        return translator.bitand(expr, o);
-      case TagConstants.LSHIFT:
-        return translator.lshift(expr, o);
-      case TagConstants.RSHIFT: 
-        return translator.rshift(expr, o);
-      case TagConstants.URSHIFT:
-        return translator.urshift(expr, o);
-      case TagConstants.ADD: 
-        return translator.add(expr, o);
-      case TagConstants.SUB: 
-        return translator.sub(expr, o);
-      case TagConstants.DIV: 
-        return translator.div(expr, o);
-      case TagConstants.MOD: 
-        return translator.mod(expr, o);
-      case TagConstants.STAR: 
-        return translator.star(expr, o);
-      case TagConstants.ASSIGN:
-        return translator.assign(expr, o);
-      case TagConstants.ASGMUL: 
-        return translator.asgmul(expr, o);
-      case TagConstants.ASGDIV: 
-        return translator.asgdiv(expr, o);
-      case TagConstants.ASGREM: 
-        return translator.asgrem(expr, o);
-      case TagConstants.ASGADD: 
-        return translator.asgadd(expr, o);
-      case TagConstants.ASGSUB: 
-        return translator.asgsub(expr, o);
-      case TagConstants.ASGLSHIFT: 
-        return translator.asglshift(expr, o);
-      case TagConstants.ASGRSHIFT: 
-        return translator.asgrshift(expr, o);
-      case TagConstants.ASGURSHIFT: 
-        return translator.asgurshif(expr, o);
-      case TagConstants.ASGBITAND: 
-        return translator.asgbitand(expr, o);
-        // jml specific operators 
-      case TagConstants.IMPLIES: 
-        return translator.implies(expr, o);
-      case TagConstants.EXPLIES:
-        return translator.explies(expr, o);
-      case TagConstants.IFF: // equivalence (equality)
-        return translator.iff(expr, o);
-      case TagConstants.NIFF:    // discrepance (xor)
-        return translator.niff(expr, o);
-      case TagConstants.SUBTYPE: 
-        return translator.subtype(expr, o);
-      case TagConstants.DOTDOT: 
-        return translator.dotdot(expr, o);
-
-      default:
-        throw new IllegalArgumentException("Unknown construct :" +
-                                           TagConstants.toString(expr.op) +" " +  expr);
-      }	
-    } else
+        case TagConstants.EQ: 
+          return fTranslator.eq(expr, o);
+        case TagConstants.OR: 
+          return fTranslator.or(expr, o);
+        case TagConstants.AND: 
+          return fTranslator.and(expr, o);
+        case TagConstants.NE:
+          return fTranslator.ne(expr, o);
+        case TagConstants.GE: 
+          return fTranslator.ge(expr, o);
+        case TagConstants.GT: 
+          return fTranslator.gt(expr, o);
+        case TagConstants.LE: 
+          return fTranslator.le(expr, o);
+        case TagConstants.LT:  
+          return fTranslator.lt(expr, o);
+        case TagConstants.BITOR: 
+          return fTranslator.bitor(expr, o);
+        case TagConstants.BITXOR: 
+          return fTranslator.bitxor(expr, o);
+        case TagConstants.BITAND: 
+          return fTranslator.bitand(expr, o);
+        case TagConstants.LSHIFT:
+          return fTranslator.lshift(expr, o);
+        case TagConstants.RSHIFT: 
+          return fTranslator.rshift(expr, o);
+        case TagConstants.URSHIFT:
+          return fTranslator.urshift(expr, o);
+        case TagConstants.ADD: 
+          return fTranslator.add(expr, o);
+        case TagConstants.SUB: 
+          return fTranslator.sub(expr, o);
+        case TagConstants.DIV: 
+          return fTranslator.div(expr, o);
+        case TagConstants.MOD: 
+          return fTranslator.mod(expr, o);
+        case TagConstants.STAR: 
+          return fTranslator.star(expr, o);
+        case TagConstants.ASSIGN:
+          return fTranslator.assign(expr, o);
+        case TagConstants.ASGMUL: 
+          return fTranslator.asgmul(expr, o);
+        case TagConstants.ASGDIV: 
+          return fTranslator.asgdiv(expr, o);
+        case TagConstants.ASGREM: 
+          return fTranslator.asgrem(expr, o);
+        case TagConstants.ASGADD: 
+          return fTranslator.asgadd(expr, o);
+        case TagConstants.ASGSUB: 
+          return fTranslator.asgsub(expr, o);
+        case TagConstants.ASGLSHIFT: 
+          return fTranslator.asglshift(expr, o);
+        case TagConstants.ASGRSHIFT: 
+          return fTranslator.asgrshift(expr, o);
+        case TagConstants.ASGURSHIFT: 
+          return fTranslator.asgurshif(expr, o);
+        case TagConstants.ASGBITAND: 
+          return fTranslator.asgbitand(expr, o);
+          // jml specific operators 
+        case TagConstants.IMPLIES: 
+          return fTranslator.implies(expr, o);
+        case TagConstants.EXPLIES:
+          return fTranslator.explies(expr, o);
+        case TagConstants.IFF: // equivalence (equality)
+          return fTranslator.iff(expr, o);
+        case TagConstants.NIFF:    // discrepance (xor)
+          return fTranslator.niff(expr, o);
+        case TagConstants.SUBTYPE: 
+          return fTranslator.subtype(expr, o);
+        case TagConstants.DOTDOT: 
+          return fTranslator.dotdot(expr, o);
+  
+        default:
+          throw new IllegalArgumentException("Unknown construct :" +
+                                             TagConstants.toString(expr.op) +
+                                             " " +  expr);
+      }
+    } 
+    else {
       return null;
+    }
   }
 
 
-  public Object invToPreconditions(Object o)
-  {
+  public Object invToPreconditions(Object o) {
     QuantVariableRef x = Expression.rvar(Ref.sort);
     QuantVariableRef type = Expression.rvar(Type.sort);
     QuantVariable[] vars = {x.qvar,type.qvar};
     Term invTerm = Logic.inv(x, type);
     Term typeOfTerm = Logic.assignCompat(Heap.var, x, type);
     Term allocTerm = Logic.isAllocated(Heap.var, x);
-    Term andTerm = Logic.andInv(allocTerm, typeOfTerm);
+    Term andTerm = Logic.and(allocTerm, typeOfTerm);
     Term implTerm = Logic.implies(andTerm, invTerm);
     Term forAllTerm = Logic.forall(vars, implTerm);
     return forAllTerm;
@@ -770,8 +777,7 @@ public class JmlVisitor extends VisitorArgResult{
 
 
 
-  public Object invToPostconditions(Object o)
-  { 
+  public Object invToPostconditions(Object o) { 
     QuantVariableRef x = Expression.rvar(Ref.sort);
     QuantVariableRef type = Expression.rvar(Type.sort);
     QuantVariable[] vars = {x.qvar,type.qvar}; 
@@ -779,8 +785,8 @@ public class JmlVisitor extends VisitorArgResult{
     Term typeOfTerm = Logic.assignCompat(Heap.var , x, type);
     Term allocTerm = Logic.isAllocated(Heap.var, x);
     Term visibleTerm = Logic.isVisibleIn(type, o);
-    Term andTerm = Logic.andInv(allocTerm, typeOfTerm);
-    andTerm = Logic.andInv(andTerm, visibleTerm);
+    Term andTerm = Logic.and(allocTerm, typeOfTerm);
+    andTerm = Logic.and(andTerm, visibleTerm);
     Term implTerm = Logic.implies(andTerm, invTerm);
     Term forAllTerm = Logic.forall(vars, implTerm);
     return forAllTerm;
