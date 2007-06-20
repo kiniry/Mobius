@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: bico
+Bundle-SymbolicName: bico
+Bundle-Version: 1.0.0
+Bundle-ClassPath: bico.jar,
+ jcharles/runtime-workspace/bcel-5.2/bcel-5.2.jar
+Bundle-Localization: plugin
+Export-Package: bico
