@@ -46,4 +46,3 @@ cleanall: clean
 
 clean:
 	rm -f *.dvi *.ps *.log *.out *~
-
