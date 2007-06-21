@@ -13,3 +13,5 @@ up when it starts, and you have to be running pdflatex on a TeX
 install that has pgf installed.  (Miktex has it, or can if you install
 it, and the Makefile assumes that mpdflatex is the Miktex version of
 pdflatex.) 
+
+$Id$
