@@ -36,6 +36,17 @@ public final class UmbraHelper {
    */
   public static final int MAX_HISTORY = 2;
 
+  /**
+   * The minimal number of history snapshots.
+   */
+  public static final int MIN_HISTORY = 0;
+
+  /**
+   * The default value of the history number, used in case none is given or
+   * in case an invalid number is used.
+   */
+  public static final int DEFAULT_HISTORY = 0;
+
   /* *********************************************************************
    * FILE EXTENSIONS
    */
@@ -210,22 +221,28 @@ public final class UmbraHelper {
    * @throws JavaModelException in case the project in which the editor operates
    *                            has no classfile output location set
    */
-  public static IFile getClassFileName(final IFile a_java_file,
+  public static IFile getClassFileFile(final IFile a_java_file,
                      final CompilationUnitEditor an_editor)
     throws JavaModelException {
-    final IProject project = ((FileEditorInput)an_editor.
-        getEditorInput()).getFile().getProject();
-    final IJavaProject jproject = JavaCore.create(project);
-    final IPath outputloc = jproject.getOutputLocation();
-    final String newloc = outputloc.append(a_java_file.getFullPath().
-              removeFirstSegments(1)).toPortableString();
-    final String fname = replaceLast(newloc,
-        JAVA_EXTENSION,
-        CLASS_EXTENSION);
+    return getClassFileFileFor(a_java_file, an_editor, JAVA_EXTENSION);
+  }
+
+  /**
+   * This method gives the proper .btc file for a given
+   * Java file.
+   *
+   * @param a_file Java source code file for which we try to find the
+   *        .btc file
+   * @param an_editor in which the .java file is edited
+   * @return the IFile for the corresponding .btc file
+   */
+  public static IFile getBTCFileName(final IFile a_file,
+                                     final CompilationUnitEditor an_editor) {
+    final String fname = replaceLast(a_file.getFullPath().
+                                          toPortableString(),
+                               JAVA_EXTENSION, BYTECODE_EXTENSION);
     final IWorkspace workspace = ResourcesPlugin.getWorkspace();
-    final IFile file = workspace.getRoot().
-             getFile(Path.fromPortableString(fname));
-    return file;
+    return workspace.getRoot().getFile(Path.fromPortableString(fname));
   }
 
   /**
@@ -289,7 +306,41 @@ public final class UmbraHelper {
    * @return corresponding name of the file with the saved version of the
    * original bytecode
    */
-  public static String getSavedClassFileNameForClass(IPath a_path) {
+  public static String getSavedClassFileNameForClass(final IPath a_path) {
     return getSavedClassFileNameForPrefix(a_path, CLASS_EXTENSION);
   }
+
+  /**
+   * This method gives the proper classfile file for a given
+   * Java file.
+   *
+   * XXX Isn't there an eclipse method to do this task?
+   *
+   * @param a_java_file Java source code file for which we try to find the
+   *        class file
+   * @param an_editor a Java file editor in which the corresponging Java file
+   * is edited
+   * @param an_extension an extension of the file for which we generate
+   * the .class file name (usually .java or .btc)
+   * @return the IFile for the corresponding .class file
+   * @throws JavaModelException in case the project in which the editor operates
+   *                            has no classfile output location set
+   */
+  public static IFile getClassFileFileFor(final IFile a_java_file,
+                     final CompilationUnitEditor an_editor,
+                     final String an_extension)
+    throws JavaModelException {
+    final IProject project = ((FileEditorInput)an_editor.
+        getEditorInput()).getFile().getProject();
+    final IJavaProject jproject = JavaCore.create(project);
+    final IPath outputloc = jproject.getOutputLocation();
+    final String newloc = outputloc.append(a_java_file.getFullPath().
+              removeFirstSegments(1)).toPortableString();
+    final String fname = replaceLast(newloc, an_extension, CLASS_EXTENSION);
+    final IWorkspace workspace = ResourcesPlugin.getWorkspace();
+    final IFile file = workspace.getRoot().
+             getFile(Path.fromPortableString(fname));
+    return file;
+  }
+
 }

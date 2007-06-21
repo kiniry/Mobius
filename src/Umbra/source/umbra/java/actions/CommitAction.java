@@ -56,7 +56,7 @@ public class CommitAction implements IEditorActionDelegate {
     my_editor.doSave(null);
     final IFile file = ((FileEditorInput)my_editor.getEditorInput()).getFile();
     try {
-      final IFile cfile = UmbraHelper.getClassFileName(file, my_editor);
+      final IFile cfile = UmbraHelper.getClassFileFile(file, my_editor);
       final IPath cpath = cfile.getFullPath();
       final String fnameFrom = UmbraHelper.getSavedClassFileNameForClass(cpath);
       final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();

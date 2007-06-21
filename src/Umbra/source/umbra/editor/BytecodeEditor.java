@@ -32,6 +32,10 @@ import annot.bcio.ReadAttributeException;
  * such as JavaClass to obtain particular instructions
  * and ClassGen to allow changes in BCEL.
  *
+ * The input file for this editor is a .btc file which resides
+ * alongside the corresponding .java file (it is a different place
+ * from the place for .class files). 
+ *
  * @author Tomasz Batkiewicz (tb209231@students.mimuw.edu.pl)
  * @author Jarosław Paszek (jp209217@students.mimuw.edu.pl)
  * @author Wojciech Was (ww209224@students.mimuw.edu.pl)
@@ -189,7 +193,7 @@ public class BytecodeEditor extends TextEditor {
    * There is temporary limit of 256 characters for method name
    * and 4096 characters for method code.
    *
-   * @param path      The relative path of the input file
+   * @param path a relative path of the classfile
    * @param comments  Table of comments to be inserted
    * @param interlineComments   Table of comments between instructions to be also inserted
    * @throws ClassNotFoundException

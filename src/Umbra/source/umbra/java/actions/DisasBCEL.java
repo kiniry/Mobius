@@ -67,15 +67,16 @@ public class DisasBCEL implements IEditorActionDelegate {
                            UmbraHelper.JAVA_EXTENSION));
       return;
     }
-    final IFile filel = ((FileEditorInput)my_editor.getEditorInput()).getFile();
+    final IFile jFile = ((FileEditorInput)my_editor.getEditorInput()).getFile();
     final IWorkbenchPage page = my_editor.getEditorSite().getPage();
     try {
-      final IFile file = UmbraHelper.getClassFileName(filel, my_editor);
-      FileEditorInput input = new FileEditorInput(file);
-      final BytecodeEditor bc_editor = (BytecodeEditor)page.openEditor(input,
-                           UmbraHelper.BYTECODE_EDITOR_CLASS, true);
-      bc_editor.refreshBytecode(active, null, null);
-      input = new FileEditorInput(file);
+      final IFile file = UmbraHelper.getBTCFileName(jFile, my_editor);
+      final FileEditorInput input = new FileEditorInput(file);
+      final BytecodeEditor bc_editor = (BytecodeEditor) (page.openEditor(input,
+                           UmbraHelper.BYTECODE_EDITOR_CLASS, true));
+      bc_editor.refreshBytecode(UmbraHelper.getClassFileFile(jFile, my_editor).
+                                            getProjectRelativePath(),
+                                null, null);
       final JavaClass jc = bc_editor.getMy_javaClass();
       page.closeEditor(bc_editor, true);
       openEditorAndDisassemble(page, input, jc);

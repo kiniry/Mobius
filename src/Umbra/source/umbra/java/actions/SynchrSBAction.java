@@ -117,7 +117,7 @@ public class SynchrSBAction implements IEditorActionDelegate {
             getFile();
     IFile file = null;
     try {
-      file = UmbraHelper.getClassFileName(filel, my_editor);
+      file = UmbraHelper.getClassFileFile(filel, my_editor);
       if (!file.exists()) {
         MessageDialog.openError(my_editor.getSite().getShell(),
                     "Bytecode",

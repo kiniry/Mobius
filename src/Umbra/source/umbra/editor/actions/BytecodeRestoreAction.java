@@ -5,16 +5,16 @@ import java.io.IOException;
 import javax.swing.JOptionPane;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.jface.action.Action;
+import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.part.FileEditorInput;
 
 import umbra.UmbraHelper;
@@ -25,42 +25,30 @@ import umbra.editor.BytecodeEditorContributor;
 /**
  * This class defines action of restoring bytecode from
  * history. Current verion is replaced with one of these
- * kept in history as a file with bt1, bt2, etc. extension
+ * kept in history as a file with bt1, bt2, etc. extensions.
  *
  * @author Tomasz Batkiewicz (tb209231@students.mimuw.edu.pl)
  * @author Jarosław Paszek (jp209217@students.mimuw.edu.pl)
  * @author Wojciech Was (ww209224@students.mimuw.edu.pl)
  * @version a-01
  */
-public class BytecodeRestoreAction extends Action {
+public class BytecodeRestoreAction extends BytecodeEditorAction {
+
 
   /**
-   * The current bytecode editor for which the action takes place.
-   */
-  private IEditorPart editor;
-
-  /**
-   * The manager that initialises all the actions within the
-   * bytecode plugin.
-   */
-  private BytecodeEditorContributor contributor;
-
-  /**
-   * TODO should be the same as in contributor
-   */
-  private BytecodeContribution bytecodeContribution;
-
-  /**
-   * TODO
+   * This constructor creates the action to restore a file stored in the history
+   * of the bytecode editor. It registers the name of the action with the text
+   * "Restore" and stores locally the object which creates all the actions
+   * and which contributs the editor GUI elements to the eclipse GUI.
    *
-   * @param contributor
-   * @param bytecodeContribution
-   */
-  public BytecodeRestoreAction(final BytecodeEditorContributor contributor,
-                 final BytecodeContribution bytecodeContribution) {
-    super("Restore");
-    this.contributor = contributor;
-    this.bytecodeContribution = bytecodeContribution;
+   * @param a_contributor the manager that initialises all the actions within
+   * the bytecode plugin
+   * @param a_btcd_contribution the GUI elements contributed to the eclipse
+   * GUI by the bytecode editor. This reference should be the same as in the
+   * parameter <code>a_contributor</code>.   */
+  public BytecodeRestoreAction(final BytecodeEditorContributor a_contributor,
+                 final BytecodeContribution a_btcd_contribution) {
+    super("Restore", a_contributor, a_btcd_contribution);
   }
 
   /**
@@ -70,35 +58,41 @@ public class BytecodeRestoreAction extends Action {
    * generated and put into the editor window.
    */
   public final void run() {
-    final String strnum = JOptionPane.showInputDialog("Input version number (0 to 2):", "0");
-    int num = 0;
-    if ("1".equals(strnum)) num = 1;
-    else if ("2".equals(strnum)) num = 2;
+    final int num = getHistoryNum();
     final String ext = UmbraHelper.BYTECODE_HISTORY_EXTENSION + num;
     final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-    final IFile file = ((FileEditorInput)editor.getEditorInput()).getFile();
-    final IPath active = file.getFullPath();
-    final String fnameFrom = active.toOSString().replaceFirst(
+    final BytecodeEditor editor = (BytecodeEditor)getEditor();
+    final IFile btcFile = ((FileEditorInput)editor.getEditorInput()).getFile();
+    IFile afile;
+    try {
+      afile = UmbraHelper.getClassFileFileFor(btcFile,
+                                             editor.getRelatedEditor(),
+                                             UmbraHelper.BYTECODE_EXTENSION);
+    } catch (JavaModelException e2) {
+      e2.printStackTrace();
+      afile = replaceBytecodeWithClass(btcFile);
+    }
+    final IPath active = afile.getFullPath();
+    final String history_fname = active.toOSString().replaceFirst(
                    UmbraHelper.BYTECODE_EXTENSION,
                    ext);
-    final IFile fileFrom = root.getFile(new Path(fnameFrom));
-    if (!fileFrom.exists()) {
+    final IFile history_file = root.getFile(new Path(history_fname));
+    if (!history_file.exists()) {
       final Shell shell = editor.getSite().getShell();
       MessageDialog.openInformation(shell, "Restore bytecode",
-          "The file " + fnameFrom + " does not exist");
+          "The file " + history_fname + " does not exist");
       return;
     }
     try {
-      file.delete(true, null);
-      fileFrom.copy(active, true, null);
+      btcFile.delete(true, null);
+      history_file.copy(active, true, null);
     } catch (CoreException e) {
       e.printStackTrace();
     }
-    final String lastSegment = active.lastSegment().replaceFirst(
-                    UmbraHelper.BYTECODE_EXTENSION,
-                    UmbraHelper.CLASS_EXTENSION);
-    final String clnameTo = active.removeLastSegments(1).append(lastSegment).toOSString();
-    final String clnameFrom = active.removeLastSegments(1).append("_" + num + "_" + lastSegment).toOSString();
+    final String clnameTo = afile.getFullPath().toPortableString();
+    final String lastSegment = afile.getFullPath().lastSegment();
+    final String clnameFrom = active.removeLastSegments(1).append("_" +
+                                       num + "_" + lastSegment).toPortableString();
     final IFile classFrom = root.getFile(new Path(clnameFrom));
     final IPath clpathTo = new Path(clnameTo);
     final IFile classTo = root.getFile(clpathTo);
@@ -108,9 +102,11 @@ public class BytecodeRestoreAction extends Action {
     } catch (CoreException e) {
       e.printStackTrace();
     }
+    final BytecodeEditorContributor contributor = getContributor();
     try {
+      final BytecodeContribution bytecodeContribution = getContribution();
       ((BytecodeEditor)editor).refreshBytecode(active, null, null);
-      final IEditorInput input = new FileEditorInput(file);
+      final IEditorInput input = new FileEditorInput(btcFile);
       final boolean[] modified = bytecodeContribution.getModified();
       bytecodeContribution.setModTable(modified);
       contributor.refreshEditor(editor, input);
@@ -125,12 +121,60 @@ public class BytecodeRestoreAction extends Action {
   }
 
   /**
-   * This method sets the bytecode editor for which the
-   * restore action will be executed.
-   *
-   * @param part the bytecode editor for which the action will be executed
+   * TODO
+   * @param btcFile
+   * @return
    */
-  public final void setActiveEditor(final IEditorPart part) {
-    editor = part;
+  private IFile replaceBytecodeWithClass(IFile btcFile) {
+    IPath aPath = btcFile.getFullPath();
+    final String lastSegment = UmbraHelper.replaceLast(aPath.lastSegment(),
+                                        UmbraHelper.BYTECODE_EXTENSION,
+                                        UmbraHelper.CLASS_EXTENSION);
+    final String fname = aPath.removeLastSegments(1).append(lastSegment).toPortableString();
+    final IWorkspace workspace = ResourcesPlugin.getWorkspace();
+    return workspace.getRoot().getFile(Path.fromPortableString(fname));
   }
+
+  /**
+   * This method asks the user to give the history version number. In case
+   * the given value is not a number or is a number outside of the
+   * range {@ref UmbraHelper#MIN_HISTORY}-{@ref UmbraHelper#MAX_HISTORY}
+   * the method asks to confirm the default value
+   * ({@ref UmbraHelper#DEFAULT_HISTORY). The user can refuse to accept the
+   * default and then the procedure repeats.
+   *
+   * @return the history item number given by the user
+   */
+  private int getHistoryNum() {
+    boolean once_more = true;
+    int num = UmbraHelper.DEFAULT_HISTORY;
+    while (once_more) {
+      final String strnum = JOptionPane.showInputDialog("Input version " +
+                               "number (" + UmbraHelper.MIN_HISTORY + " to " +
+                                            UmbraHelper.MAX_HISTORY + "):",
+                               "" + UmbraHelper.DEFAULT_HISTORY);
+      try {
+        num = Integer.parseInt(strnum);
+      } catch (NumberFormatException ne) {
+        num = UmbraHelper.DEFAULT_HISTORY;
+        once_more = !MessageDialog.openQuestion(getEditor().getSite().getShell(),
+                                "Bytecode", "It's not an integer. " +
+                                            "Should we use " +
+                                            num + " instead");
+      }
+      if (num > UmbraHelper.MAX_HISTORY || num < UmbraHelper.MIN_HISTORY) {
+        num = UmbraHelper.DEFAULT_HISTORY;
+        once_more = !MessageDialog.openQuestion(getEditor().getSite().getShell(),
+                                              "Bytecode",
+                                              "It's not in the range " +
+                                              "(" + UmbraHelper.MIN_HISTORY +
+                                              " to " +
+                                                    UmbraHelper.MAX_HISTORY + ")." +
+                                              "Should we use " + UmbraHelper.DEFAULT_HISTORY +
+                                              "?");
+      }
+    }
+    return num;
+  }
+
 }
