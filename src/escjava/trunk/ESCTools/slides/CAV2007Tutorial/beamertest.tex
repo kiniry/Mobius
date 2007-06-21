@@ -1,0 +1,57 @@
+\documentclass{beamer}
+\mode<presentation>{\usetheme{boxes}} 
+
+% fonts
+\usepackage[T1]{fontenc}
+\usepackage{times}
+% Use the luximono package to get a better look for bolded keywords
+\usepackage[scaled=0.81]{luximono}
+
+\usepackage{listings}
+\input{jml-listings}
+\lstset{language=[JML]Java,basicstyle=\ttfamily,commentstyle=\ttfamily,keywordstyle=\bfseries}
+\newcommand{\LSTJMLFILE}[1]{
+\lstinputlisting[basicstyle=\ttfamily]{#1}
+}
+\newcommand{\LSTJMLFILESLICE}[2]{
+\lstinputlisting[gobble=4,\basicstyle=\ttfamily,linerange={#1}]{#2}
+}
+
+\title{A JML Tutorial}
+\author{Gary T. Leavens}
+\AtBeginSection[]
+{
+   \begin{frame}
+       \frametitle{Outline}
+       \tableofcontents[currentsection]
+   \end{frame}
+}
+\AtBeginSubsection[]
+{
+   \begin{frame}
+       \frametitle{Outline}
+       \tableofcontents[currentsection,currentsubsection]
+   \end{frame}
+}
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Use of Listings}
+\begin{lstlisting}
+/*@ requires x > 0; 
+    ensures a.length <= 22; 
+  @*/
+public int foo(float[] a, int x) {
+   if (x > 0) {
+      return 3;
+   }
+}
+\end{lstlisting}
+\end{frame}
+
+\end{document}
