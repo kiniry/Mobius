@@ -1,0 +1,89 @@
+Talk -*- Outline -*-
+
+* Introduction
+** Objectives
+** Everyone's name
+** What they are looking for from JML
+
+* Overview
+** What JML is like
+*** introductory example
+*** tools
+*** How the tools fit together
+** Importance of JML
+*** wide use
+*** papers
+** Related Work
+*** Eiffel
+*** Larch
+*** Spec#
+*** Jass
+*** OCL, Z, ...
+** Where to find more
+
+* Basic Use
+** Lightweight specification of functional behavior
+*** requires/ensures
+*** assignable
+*** invariants
+*** spec_public
+*** basic semantic model (outcomes)
+** Exercises specifying types
+** Basic tool use (demo + exercise)
+*** ESC/Java2
+*** jmlrac
+*** KeY?
+** Tips and Pitfalls
+*** object identity
+*** aliasing
+*** protective specifications
+
+* Abstraction in Specification
+** Motivation
+*** Client view
+*** Other views
+**** Subtypes
+**** private view
+** Privacy considerations
+*** information hiding
+*** allowing verification
+** Frame Axioms and Datagroups
+*** declarations
+*** definitions and semantics
+*** example
+*** exercise
+** Multiple cases
+*** basic case analysis
+*** exceptions
+**** tips
+**** pitfalls
+*** exercise?
+
+* Subtyping
+** The verification problem with subtypes
+*** Behavioral subtyping
+*** Case analysis
+*** Using both case anlysis and behavioral subtyping by casting
+** Specification inheritance
+*** definitions and semantics
+*** exercise
+*** tool use when try to violate
+** Advanced topics
+*** Code contracts
+*** Clyde's stuff?
+
+* ESC/Java
+** What it does (demo)
+** Warnings
+*** what they are
+*** how to interpret messages
+** Connection to Provers
+
+* Concluding
+** Reminder of where to find information
+** Advantages of JML
+** Needs, current work
+** Current Research
+** Collaboration
+*** Future work and needs
+*** How they might interact

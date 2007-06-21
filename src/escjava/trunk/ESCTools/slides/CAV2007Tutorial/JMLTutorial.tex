@@ -1,4 +1,5 @@
 % $Id$
+% -*- latex -*- mode for emacs
 \typein[\MAKEHANDOUTS]{Handouts (y/n)?}
 \if y\MAKEHANDOUTS \documentclass[compress,landscape,handout]{beamer}
 \else \documentclass[compress]{beamer}
@@ -68,13 +69,8 @@ of Functional Behavior for Java}
 
 \date[CAV 2007]{July 3, 2007 / CAV 2007 Tutorial / \href{http://www.jmlspecs.org}{jmlspecs.org}}
 
-\subject{Talks}
-% This is only inserted into the PDF information catalog. Can be left
-% out. 
+\subject{JML} % optional insertion into the PDF information catalog.
 
-% If you have a file called "university-logo-filename.xxx", where xxx
-% is a graphic format that can be processed by latex or pdflatex,
-% resp., then you can add a logo as follows:
 \pgfdeclareimage[height=0.5cm]{jml-logo}{jml-logo-hires}
 \logo{\pgfuseimage{jml-logo}}
 
@@ -87,19 +83,23 @@ of Functional Behavior for Java}
 %  \end{frame}
 %}
 
+\newtheorem*{question}{Question}
+
 \begin{document}
 
 \begin{frame}
   \titlepage
 \end{frame}
 
-\begin{frame}{Outline}
+\part{JML Basics}
+
+\begin{frame}
+\frametitle{Outline of Part 1}
   \tableofcontents
   % You might wish to add the option [pausesections]
 \end{frame}
 
-
-\section{Overview}
+\section{Introduction}
 
 \subsection{Objectives}
 
@@ -121,64 +121,134 @@ You'll be able to:
   \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]
-\frametitle{Use of Listings}
-\begin{lstlisting}
-/*@ requires x > 0; 
-    ensures a.length <= 22; 
-  @*/
-public int foo(float[] a, int x) {
-   if (x > 0) {
-      return 3;
-   }
-}
-\end{lstlisting}
-\end{frame}
-
 \begin{frame}
-\frametitle{What Are Prime Numbers?}
-\begin{definition}
-A \alert{prime number} is a number that has exactly two divisors.
-\end{definition}
-\begin{example}
-\begin{itemize}
-\item 2 is prime (two divisors: 1 and 2).
-\item 3 is prime (two divisors: 1 and 3).
-\item 4 is not prime (\alert{three} divisors: 1, 2, and 4).
-\end{itemize}
-\end{example}
+\frametitle{Introduce Yourself, Please}
+
+\begin{question}
+Who you are?
+\end{question}
+
+\begin{question}
+What do you want to learn about JML?
+\end{question}
 \end{frame}
 
+\section{Overview}
 
-\section*{Summary}
+** What JML is like
+*** introductory example
+*** tools
+*** How the tools fit together
+** Importance of JML
+*** wide use
+*** papers
+** Related Work
+*** Eiffel
+*** Larch
+*** Spec\#
+*** Jass
+*** OCL, Z, ...
+** Where to find more
 
-\begin{frame}{Summary}
+\section[Basics]{Basic Use}
+** Lightweight specification of functional behavior
+*** requires/ensures
+*** assignable
+*** invariants
+*** spec\_public
+*** basic semantic model (outcomes)
+** Exercises specifying types
+** Basic tool use (demo + exercise)
+*** ESC/Java2
+*** jmlrac
+*** KeY?
+** Tips and Pitfalls
+*** object identity
+*** aliasing
+*** protective specifications
 
-  % Keep the summary *very short*.
-  \begin{itemize}
-  \item
-    The \alert{first main message} of your talk in one or two lines.
-  \item
-    The \alert{second main message} of your talk in one or two lines.
-  \item
-    Perhaps a \alert{third message}, but not more than that.
-  \end{itemize}
-  
-  % The following outlook is optional.
-  \vskip0pt plus.5fill
-  \begin{itemize}
-  \item
-    Outlook
-    \begin{itemize}
-    \item
-      Something you haven't solved.
-    \item
-      Something else you haven't solved.
-    \end{itemize}
-  \end{itemize}
-\end{frame}
+\section[Abstraction]{Abstraction in Specification}
+
+** Motivation
+*** Client view
+*** Other views
+**** Subtypes
+**** private view
+** Privacy considerations
+*** information hiding
+*** allowing verification
+** Frame Axioms and Datagroups
+*** declarations
+*** definitions and semantics
+*** example
+*** exercise
+** Multiple cases
+*** basic case analysis
+*** exceptions
+**** tips
+**** pitfalls
+*** exercise?
+
+\part{Advanced JML}
+
+\section{Subtyping}
+** The verification problem with subtypes
+*** Behavioral subtyping
+*** Case analysis
+*** Using both case anlysis and behavioral subtyping by casting
+** Specification inheritance
+*** definitions and semantics
+*** exercise
+*** tool use when try to violate
+** Advanced topics
+*** Code contracts
+*** Clyde's stuff?
+
+\section[ESC]{ESC/Java2}
+** What it does (demo)
+** Warnings
+*** what they are
+*** how to interpret messages
+** Connection to Provers
+
+\section*{Conclusions}
+
+** Reminder of where to find information
+** Advantages of JML
+** Needs, current work
+** Current Research
+** Collaboration
+*** Future work and needs
+*** How they might interact
 
 
 \end{document}
 
 
+% \begin{frame}[fragile]
+% \frametitle{Use of Listings}
+% \begin{lstlisting}
+% /*@ requires x > 0; 
+%     ensures a.length <= 22; 
+%   @*/
+% public int foo(float[] a, int x) {
+%    if (x > 0) {
+%       return 3;
+%    }
+% }
+% \end{lstlisting}
+% \end{frame}
+% 
+% \begin{frame}
+% \frametitle{What Are Prime Numbers?}
+% \begin{definition}
+% A \alert{prime number} is a number that has exactly two divisors.
+% \end{definition}
+% \begin{example}
+% \begin{itemize}
+% \item 2 is prime (two divisors: 1 and 2).
+% \item 3 is prime (two divisors: 1 and 3).
+% \item 4 is not prime (\alert{three} divisors: 1, 2, and 4).
+% \end{itemize}
+% \end{example}
+% \end{frame}
