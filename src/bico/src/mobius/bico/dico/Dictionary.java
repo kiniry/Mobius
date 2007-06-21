@@ -12,6 +12,9 @@ import java.io.PrintStream;
  */
 public interface Dictionary {
 
+  /** determine the span of the 'reserved' class names number default is 20. */
+  int RESERVED_CLASSES = 20;
+
   /**
    * Associate package implementation name coqPackageName to the corresponding
    * java name. It also works if the association has already been done with
@@ -77,4 +80,6 @@ public interface Dictionary {
                         int coqClassName, int coqMethodName);
 
   void write(PrintStream out) throws IOException;
+
+  int getCurrentClass();
 }

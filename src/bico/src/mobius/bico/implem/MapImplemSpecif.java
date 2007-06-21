@@ -95,4 +95,8 @@ public class MapImplemSpecif implements IImplemSpecifics {
   public String getFileName(String pathname) {
     return pathname + "Map";
   }
+  
+  public String toString() {
+    return "Map implementation";
+  }
 }

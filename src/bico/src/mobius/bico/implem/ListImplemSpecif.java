@@ -69,4 +69,7 @@ public class ListImplemSpecif implements IImplemSpecifics {
   public String getFileName(String pathname) {
     return pathname + "List";
   }
+  public String toString() {
+    return "List implementation";
+  }
 }

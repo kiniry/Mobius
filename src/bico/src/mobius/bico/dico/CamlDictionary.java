@@ -1,11 +1,9 @@
 package mobius.bico.dico;
 
 import java.io.PrintStream;
-import java.io.Writer;
-
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Iterator;
+import java.util.Map;
 
 
 /**
@@ -13,6 +11,9 @@ import java.util.Iterator;
  * 
  */
 public class CamlDictionary implements Dictionary {
+  /** current class number. */
+  private int fCurrentClass = RESERVED_CLASSES;
+  
   private class Singleton {
     int i;
 
@@ -118,6 +119,9 @@ public class CamlDictionary implements Dictionary {
    * @see bico.Dictionary#addClass(java.lang.String, int, int)
    */
   public void addClass(String javaName, int coqPackageName, int coqClassName) {
+    if(coqClassName > fCurrentClass) {
+      fCurrentClass = coqClassName;
+    }
     cn.put(javaName, new Couple(coqPackageName, coqClassName));
   }
 
@@ -194,6 +198,10 @@ public class CamlDictionary implements Dictionary {
       out.print("let mn= DicoMN.add (" + e.getValue() + ") \""
                 + e.getKey().replaceAll("\"", "\\\"") + "\" mn\n");
     }
+  }
+
+  public int getCurrentClass() {
+    return fCurrentClass;
   }
 }
 
