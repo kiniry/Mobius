@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
+import mobius.bico.dico.CamlDictionary;
 import mobius.bico.implem.IImplemSpecifics;
 import mobius.bico.implem.ListImplemSpecif;
 import mobius.bico.implem.MapImplemSpecif;
@@ -83,7 +84,7 @@ public class Executor extends ABasicExecutor {
    */
   private Executor() {
     super(SyntheticRepository.getInstance(), new MapImplemSpecif(),
-          new MethodHandler(), null);
+          new MethodHandler(), null, new CamlDictionary());
   }
 
   /**

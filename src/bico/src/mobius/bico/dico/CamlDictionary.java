@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.apache.bcel.classfile.JavaClass;
+
 
 /**
  * @author Laurent.Hubert@irisa.fr
@@ -119,12 +121,29 @@ public class CamlDictionary implements Dictionary {
    * @see bico.Dictionary#addClass(java.lang.String, int, int)
    */
   public void addClass(String javaName, int coqPackageName, int coqClassName) {
-    if(coqClassName > fCurrentClass) {
+    if (coqClassName > fCurrentClass) {
       fCurrentClass = coqClassName;
     }
     cn.put(javaName, new Couple(coqPackageName, coqClassName));
   }
+  public void addClass(JavaClass jc, int coqClassName) {    
+    addClass(jc.getClassName(), getCoqPackageName(jc.getPackageName()), coqClassName);
+  }
+  public int getCurrentClass() {
+    return fCurrentClass;
+  }
 
+  public int getCoqClassName(String javaName) {
+    return cn.get(javaName).i2;
+  }
+  public int getCoqClassName(JavaClass jc) {
+    return getCoqClassName(jc.getClassName());
+  }
+
+  public int getCoqPackageName(JavaClass jc) {
+    Couple c = cn.get(jc.getClassName());
+    return c.i1;
+  }
   /*
    * (non-Javadoc)
    * 
@@ -200,9 +219,8 @@ public class CamlDictionary implements Dictionary {
     }
   }
 
-  public int getCurrentClass() {
-    return fCurrentClass;
-  }
+
+
 }
 
 /* Here is an example of OCaml code that needs to be

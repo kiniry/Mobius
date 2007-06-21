@@ -70,17 +70,13 @@ public class MethodExecutor extends ABasicExecutor {
 
   private ClassGen fClass;
   private ConstantPoolGen fConstantPool;
-  private int fPackageName;
-  private int fClassName;
   
   
-  public MethodExecutor(ABasicExecutor be, ClassGen cg, int packageName, int className) {
+  public MethodExecutor(ABasicExecutor be, ClassGen cg) {
     super(be);
     
     fClass = cg;
     fConstantPool = cg.getConstantPool();
-    fPackageName = packageName;
-    fClassName = className;
   }
   
   public void start() throws ClassNotFoundException {
@@ -92,8 +88,9 @@ public class MethodExecutor extends ABasicExecutor {
       final MethodGen mg = new MethodGen(meth, fClass.getClassName(), 
                                          fConstantPool);
       fDico.addMethod(mg.getClassName() + "." + mg.getName(), 
-                      fPackageName,
-                     fClassName, methodName);
+                      fDico.getCoqPackageName(fClass.getJavaClass()),
+                      fDico.getCoqClassName(fClass.getJavaClass()),
+                      methodName);
       
       doMethodSignature(meth, methodName);
     }

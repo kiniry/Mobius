@@ -8,8 +8,6 @@ public class FieldExecutor extends ABasicExecutor {
   private static final int RESERVED_FIELDS = 1;
 
   private JavaClass jc;
-  private int fPackageName;
-  private int fClassName;
   
   
   /**
@@ -17,12 +15,10 @@ public class FieldExecutor extends ABasicExecutor {
    * @param packageName the index representing the package
    * @param className the number representing the class
    */
-  public FieldExecutor(ABasicExecutor be, JavaClass jc, int packageName, int className) {
+  public FieldExecutor(ABasicExecutor be, JavaClass jc) {
     super(be);
     
     this.jc = jc;
-    fPackageName = packageName;
-    fClassName = className;
   }
   
   /**
@@ -35,7 +31,10 @@ public class FieldExecutor extends ABasicExecutor {
     
     for (Field field : jc.getFields()) {
       fieldIdx++;
-      fDico.addField(field.getName(), fPackageName, fClassName, fieldIdx);
+      fDico.addField(field.getName(), 
+                     fDico.getCoqPackageName(jc), 
+                     fDico.getCoqClassName(jc), 
+                     fieldIdx);
       doFieldSignature(field, fieldIdx);
       doField(field);
 

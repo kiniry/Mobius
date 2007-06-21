@@ -9,11 +9,6 @@ import org.apache.bcel.generic.ClassGen;
 
 public class ClassExecutor extends ABasicExecutor {
   private ClassGen cg;
-  private int packageName;
-
-
-
-
 
 
   /**
@@ -24,7 +19,6 @@ public class ClassExecutor extends ABasicExecutor {
   public ClassExecutor(ABasicExecutor be, ClassGen cg, int pkgName) {
     super(be);
     this.cg = cg;
-    this.packageName = pkgName;
   }
   
   /**
@@ -44,10 +38,10 @@ public class ClassExecutor extends ABasicExecutor {
     
 
     final int className = fDico.getCurrentClass() + 1;
-    fDico.addClass(jc.getClassName(), packageName, className);
+    fDico.addClass(jc, className);
     
     tab++;
-    
+    int packageName = fDico.getCoqPackageName(jc);
     // classname
     if (jc.isInterface()) {
       final String str = "Definition interfaceName : InterfaceName := " + "(" + 
@@ -62,9 +56,9 @@ public class ClassExecutor extends ABasicExecutor {
     }
 
     fOut.println();
-    final FieldExecutor fieldExecutor = new FieldExecutor(this, jc, packageName, className);
+    final FieldExecutor fieldExecutor = new FieldExecutor(this, jc);
     fieldExecutor.start();
-    final MethodExecutor methExecutor = new MethodExecutor(this, cg, packageName, className);
+    final MethodExecutor methExecutor = new MethodExecutor(this, cg);
     methExecutor.start();
 
     doClassDefinition(jc);

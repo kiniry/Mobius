@@ -3,6 +3,8 @@ package mobius.bico.dico;
 import java.io.IOException;
 import java.io.PrintStream;
 
+import org.apache.bcel.classfile.JavaClass;
+
 
 /**
  * The dictonary creates a dictonary that can then be used to translate the
@@ -82,4 +84,9 @@ public interface Dictionary {
   void write(PrintStream out) throws IOException;
 
   int getCurrentClass();
+  int getCoqClassName(String javaName);
+  int getCoqClassName(JavaClass jc);
+  int getCoqPackageName(JavaClass jc);
+  void addClass(JavaClass jc, int coqClassName);
+
 }
