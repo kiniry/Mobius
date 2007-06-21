@@ -169,7 +169,7 @@ Can we rely on \alert{\texttt{Q[o/this]}} at (1)?
 \begin{itemize}
 \item Atomicity: at most one instruction in a method is sensitive to
 interference of other threads
-\item But does not directly consider method specification
+\item However: atomicity does not directly consider method specification
 \item Atomicity often conditional property, e.g.:
 \begin{itemize}
 \item Caller holds lock
@@ -182,7 +182,8 @@ interference of other threads
 \subsection{Invariants}
 \frame{
 \begin{itemize}
-\item Visible state semantics: \alert{all} invariants of \alert{all}
+\item Visible state semantics for sequential programs: \alert{all}
+invariants of \alert{all} 
 allocated objects hold in \alert{all} visible states
 \item Concurrent setting: avoid that one thread can (temporarily)
 break an invariant, while another thread relies on it
@@ -267,8 +268,9 @@ class Fraction\{
 %  \end{itemize}
 \begin{alltt}
 class Even\{
-  private int n = 0; 
+  private /*@ spec_public */ int n = 0; 
 
+  //@ \alert{requires \bsl haslock(this);}
   //@ requires n % 2 == 0;
   //@ ensures  n % 2 == 0;
   public \alert{synchronized} int next()\{
@@ -371,7 +373,7 @@ class Car\{
   \begin{itemize}
  \item Thread ownership allows to reason about lock-free algorithms
  \item Single capacity to write data guarantees thread locality
- \item Spread read-only capacities guarantees data race freeness
+ \item Spreading of read-only capacities preserves data race freeness
  \item Objects transferred between threads:
   \begin{itemize}
   \item upon thread creation
@@ -382,37 +384,35 @@ class Car\{
 
 }
 
-\frame[containsverbatim]{
+%\frame[containsverbatim]{
 
-%  Objects are transferred between threads:
-%  \begin{itemize}
-%  \item When a thread is created.
-%  \item When a thread dies.
-%  \item Via already shared objects.
-%  \end{itemize}
+%%  Objects are transferred between threads:
+%%  \begin{itemize}
+%%  \item When a thread is created.
+%%  \item When a thread dies.
+%%  \item Via already shared objects.
+%%  \end{itemize}
 
-  \begin{columns}
-    \begin{column}{0.5\textwidth}
-%      \begin{small}
-\begin{verbatim}
-public static void main(){
-  DoubleInt a = new DoubleInt();
+%  \begin{columns}
+%    \begin{column}{0.5\textwidth}
+%%      \begin{small}
+%\begin{verbatim}
+%public static void main(){
+%  DoubleInt a = new DoubleInt();
 
-  Thread t = new MyThread(a);
-  t.start();
+%  Thread t = new MyThread(a);
+%  t.start(); 
   
-  a.initA(1);
+%  a.initA(1);
 
-  t.join();
-}
-\end{verbatim}
- %     \end{small}
-      \end{column}
-      \begin{column}{0.5\textwidth}
-      %  \begin{small}
-\begin{verbatim}
-
-
+%  t.join();
+%}
+%\end{verbatim}
+% %     \end{small}
+%      \end{column}
+%      \begin{column}{0.5\textwidth}
+%      %  \begin{small}
+%\begin{verbatim}
 
 
 
@@ -420,11 +420,13 @@ public static void main(){
 
 
 
-\end{verbatim}
-   % \end{small}
-      \end{column}
-  \end{columns}
-}
+
+
+%\end{verbatim}
+%   % \end{small}
+%      \end{column}
+%  \end{columns}
+%}
 
 \frame[containsverbatim]{
 
@@ -443,7 +445,7 @@ public static void main(){
   DoubleInt a = new DoubleInt();
 
   Thread t = new MyThread(a);
-  t.start();
+  t.start(); // initialises B
   
   a.initA(1);
 
@@ -682,6 +684,7 @@ public static void main()\{
 
   t.start();
     \alert{\(tid \longrightarrow a \longrightarrow p\)}
+    {\(t \longrightarrow a \longrightarrow q\)}
   
 
 
@@ -735,6 +738,7 @@ public static void main()\{
 
   t.start();
     \alert{\(tid \longrightarrow a \longrightarrow p\)}
+    \(t \longrightarrow a \longrightarrow q\)
   
   a.initA(1);
 
