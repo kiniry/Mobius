@@ -75,11 +75,11 @@ of Functional Behavior for Java}
 \logo{\pgfuseimage{jml-logo}}
 
 % Delete this, if you do not want the table of contents to pop up at
-% the beginning of each subsection:
-%\AtBeginSubsection[]
+% the beginning of each section:
+%\AtBeginSection[]
 %{
 %  \begin{frame}<beamer>{Outline}
-%    \tableofcontents[currentsection,currentsubsection]
+%    \tableofcontents[currentsection,hideallsubsections]
 %  \end{frame}
 %}
 
@@ -113,7 +113,7 @@ You'll be able to:
 
 \begin{frame}
 \frametitle{Tutorial Outline}
-  \tableofcontents %[pausesections]
+  \tableofcontents[hideallsubsections] %[pausesections]
 \end{frame}
 
 \begin{frame}
@@ -253,20 +253,6 @@ public class ArrayFind {
 \end{document}
 
 
-% \begin{frame}[fragile]
-% \frametitle{Use of Listings}
-% \begin{lstlisting}
-% /*@ requires x > 0; 
-%     ensures a.length <= 22; 
-%   @*/
-% public int foo(float[] a, int x) {
-%    if (x > 0) {
-%       return 3;
-%    }
-% }
-% \end{lstlisting}
-% \end{frame}
-% 
 % \begin{frame}
 % \frametitle{What Are Prime Numbers?}
 % \begin{definition}
