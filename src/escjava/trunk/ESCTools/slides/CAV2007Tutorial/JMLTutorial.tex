@@ -1,6 +1,9 @@
 % $Id$
-\documentclass[compress]{beamer}
-%\documentclass[compress,landscape,handout]{beamer}
+\typein[\MAKEHANDOUTS]{Handouts (y/n)?}
+\if y\MAKEHANDOUTS \documentclass[compress,landscape,handout]{beamer}
+\else \documentclass[compress]{beamer}
+\fi
+%
 \mode<presentation>
 {
   %\usetheme[secheader]{Madrid}
@@ -45,7 +48,9 @@
 of Functional Behavior for Java}
 
 \author[Gary T. Leavens] % (optional, use only with lots of authors)
-{Gary T.~Leavens\inst{1} \and Joseph R.~Kiniry\inst{2} \and Erik Poll\inst{3}}
+{\href{http://www.cs.iastate.edu/~leavens/}{Gary T.~Leavens}\inst{1}
+  \and \href{http://secure.ucd.ie/~kiniry/}{Joseph R.~Kiniry}\inst{2}
+  \and \href{http://www.cs.ru.nl/~erikpoll/}{Erik Poll}\inst{3}}
 \institute[ISU] % (optional, but mostly needed)
 {
   \inst{1}%
@@ -61,7 +66,7 @@ of Functional Behavior for Java}
   Radboud University Nijmegen
 }
 
-\date[CAV 2007]{July 3, 2007 / CAV 2007 Tutorial}
+\date[CAV 2007]{July 3, 2007 / CAV 2007 Tutorial / \href{http://www.jmlspecs.org}{jmlspecs.org}}
 
 \subject{Talks}
 % This is only inserted into the PDF information catalog. Can be left

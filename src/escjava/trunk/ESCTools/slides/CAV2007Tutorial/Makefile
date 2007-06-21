@@ -5,23 +5,31 @@ PSFILES = $(FILES:%=%.ps)
 PDFFILES = $(FILES:%=%.pdf)
 HANDOUTS = $(FILES:%=%.ps4.pdf)
 
-LATEX=latex
-PDFLATEX=pdflatex
+LATEX=echo n | latex
+PDFLATEX=echo n | pdflatex
+# mlatex is the miktex version of latex
+HLATEX=echo y | mlatex
+HPDFLATEX=echo y | mpdflatex
 DVIPS=dvips  
 PSNUP=psnup
 PS2PDF=ps2pdf
 
-all: pdf
+pdf: $(PDFFILES)
+
+handouts: $(HANDOUTS)
 
 both: pdf handouts
 
-pdf: $(PDFFILES)
-
-# handouts doesn't currently work
-# instead, edit the file, switch to the class with handout option.
-handouts: $(HANDOUTS)
-
 ps: $(PSFILES)
+
+%.pdf: %.tex
+	$(PDFLATEX) $<
+	$(PDFLATEX) $<
+
+%.ps4.pdf: %.tex
+	$(HPDFLATEX) $<
+	$(HPDFLATEX) $<
+	mv $(subst .tex,.pdf,$<) $@
 
 %.dvi: %.tex
 	$(LATEX) $<
@@ -30,14 +38,8 @@ ps: $(PSFILES)
 %.ps: %.dvi
 	$(DVIPS) -o $@ $<
 
-%.pdf: %.tex
-	$(PDFLATEX) $<
-
 %.ps4.ps: %.ps
 	$(PSNUP) -2 $< >$<4.ps
-
-%.ps4.pdf: %.ps4.ps
-	$(PS2PDF) $<
 
 cleanall: clean
 	rm -f *.pdf
