@@ -1,5 +1,10 @@
 *~
 *.aux
+*.nav
+*.out
+*.srn
+*.smn
+*.vrb
 *.log
 *.bbl
 *.blg

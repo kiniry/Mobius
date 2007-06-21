@@ -1,0 +1,179 @@
+% $Id$
+\documentclass[compress]{beamer}
+%\documentclass[compress,handout]{beamer}
+\mode<presentation>
+{
+  %\usetheme[secheader]{Madrid}
+  \usetheme{Frankfurt}
+  %\useoutertheme[subsection=false,footline=empty]{miniframes}
+  \usecolortheme{seahorse}
+  \usefonttheme{structurebold}
+  \setbeamercovered{transparent}
+  % or whatever (possibly just delete it)
+}
+\mode<handout>
+{
+   \usepackage{pgfpages}
+   \pgfpagesuselayout{4 on 1}[letter,landscape,border shrink=5mm]
+}
+
+\usepackage[english]{babel}
+\usepackage[latin1]{inputenc}
+
+\usepackage{lmodern}
+\usepackage[T1]{fontenc}
+\usepackage{times}
+%avant, bookman, chancery, charter, euler, helvet, mathtime, mathptm,
+%mathptmx, newcent, palatino, pifont, utopia.
+% Use the luximono package to get a better look for bolded keywords
+\usepackage[scaled=0.95]{luximono}
+
+
+\usepackage{listings}
+\input{jml-listings}
+\lstset{language=[JML]Java,basicstyle=\ttfamily,commentstyle=\ttfamily,keywordstyle=\bfseries}
+\newcommand{\LSTJMLFILE}[1]{
+\lstinputlisting[basicstyle=\ttfamily]{#1}
+}
+\newcommand{\LSTJMLFILESLICE}[2]{
+\lstinputlisting[gobble=4,\basicstyle=\ttfamily,linerange={#1}]{#2}
+}
+
+
+\title[JML Tutorial]{A JML Tutorial}
+\subtitle{Modular Specification and Verification \\
+of Functional Behavior for Java}
+
+\author[Gary T. Leavens] % (optional, use only with lots of authors)
+{Gary T.~Leavens\inst{1} \and Joseph R.~Kiniry\inst{2} \and Erik Poll\inst{3}}
+\institute[ISU] % (optional, but mostly needed)
+{
+  \inst{1}%
+  Department of Computer Science\\
+  Iowa State University (moving to UCF)
+  \and
+  \inst{2}%
+  School of Computer Science and Informatics \\
+  University College Dublin
+  \and
+  \inst{3}%
+  Computing Science Department \\
+  Radboud University Nijmegen
+}
+
+\date[CAV 2007]{July 3, 2007 / CAV 2007 Tutorial}
+
+\subject{Talks}
+% This is only inserted into the PDF information catalog. Can be left
+% out. 
+
+% If you have a file called "university-logo-filename.xxx", where xxx
+% is a graphic format that can be processed by latex or pdflatex,
+% resp., then you can add a logo as follows:
+\pgfdeclareimage[height=0.5cm]{jml-logo}{jml-logo-hires}
+\logo{\pgfuseimage{jml-logo}}
+
+% Delete this, if you do not want the table of contents to pop up at
+% the beginning of each subsection:
+%\AtBeginSubsection[]
+%{
+%  \begin{frame}<beamer>{Outline}
+%    \tableofcontents[currentsection,currentsubsection]
+%  \end{frame}
+%}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}{Outline}
+  \tableofcontents
+  % You might wish to add the option [pausesections]
+\end{frame}
+
+
+\section{Overview}
+
+\subsection{Objectives}
+
+\begin{frame}
+\frametitle{Objectives}
+
+You'll be able to:
+  \begin{itemize}
+  \item
+    Explain JML's goals.
+  \item
+    Read and write JML specifications.
+  \item
+    Use JML tools.
+  \item
+    Explain basic JML semantics.
+  \item
+    Know where to go for help.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Use of Listings}
+\begin{lstlisting}
+/*@ requires x > 0; 
+    ensures a.length <= 22; 
+  @*/
+public int foo(float[] a, int x) {
+   if (x > 0) {
+      return 3;
+   }
+}
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}
+\frametitle{What Are Prime Numbers?}
+\begin{definition}
+A \alert{prime number} is a number that has exactly two divisors.
+\end{definition}
+\begin{example}
+\begin{itemize}
+\item 2 is prime (two divisors: 1 and 2).
+\item 3 is prime (two divisors: 1 and 3).
+\item 4 is not prime (\alert{three} divisors: 1, 2, and 4).
+\end{itemize}
+\end{example}
+\end{frame}
+
+
+\section*{Summary}
+
+\begin{frame}{Summary}
+
+  % Keep the summary *very short*.
+  \begin{itemize}
+  \item
+    The \alert{first main message} of your talk in one or two lines.
+  \item
+    The \alert{second main message} of your talk in one or two lines.
+  \item
+    Perhaps a \alert{third message}, but not more than that.
+  \end{itemize}
+  
+  % The following outlook is optional.
+  \vskip0pt plus.5fill
+  \begin{itemize}
+  \item
+    Outlook
+    \begin{itemize}
+    \item
+      Something you haven't solved.
+    \item
+      Something else you haven't solved.
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+
+\end{document}
+
+
