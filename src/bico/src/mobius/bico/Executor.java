@@ -131,11 +131,11 @@ public class Executor extends Object {
   private PrintStream fOut;
 
   /** classes to be parsed from standard library. */
-  private final List<String> otherlibs = new ArrayList<String>();;
+  private final List<String> fOtherLibs = new ArrayList<String>();
 
   /** classes to be read from hand-made files. */
-  private final String[] speciallibs = {"java.lang.Object", "java.lang.Throwable",
-                                        "java.lang.Exception", "java.lang.String" };
+  private final String[] fSpecialLibs = {"java.lang.Object", "java.lang.Throwable",
+                                         "java.lang.Exception", "java.lang.String" };
 
   /** list of already treated classes. */
   private List<String> fTreatedClasses = new ArrayList<String>();
@@ -143,13 +143,11 @@ public class Executor extends Object {
   /** list of already treated interfaces. */
   private List<String> fTreatedInterfaces = new ArrayList<String>();
 
-  private MethodHandler mh = new MethodHandler();
+  private MethodHandler fMethodHandler = new MethodHandler();
 
-  private Dictionary dico = new CamlDictionary();
+  private Dictionary fDico = new CamlDictionary();
 
 
-
-  
   /** current class number. */
   private int fCurrentClass = RESERVED_CLASSES;
 
@@ -198,14 +196,12 @@ public class Executor extends Object {
         } 
         else {
           // we suppose it's to be found in the class path
-          otherlibs.add(arg);
+          fOtherLibs.add(arg);
         }
       }
     }
 
     initWorkingDir(path);
-
-
   }
   
   
@@ -243,7 +239,7 @@ public class Executor extends Object {
    * @throws IOException
    *             in case of any I/O errors....
    * @throws ClassNotFoundException
-   *             if libraries file specified in {@link #otherlibs} cannot be
+   *             if libraries file specified in {@link #fOtherLibs} cannot be
    *             found
    * @throws MethodNotFoundException
    * @throws IOException 
@@ -280,7 +276,7 @@ public class Executor extends Object {
 
     // handle library classes specified as 'the other libs'
     final Repository repos = SyntheticRepository.getInstance();
-    for (String current: otherlibs) {
+    for (String current: fOtherLibs) {
       System.out.println("Handling: " + current);
       handleLibraryClass(current, repos);
     }
@@ -298,7 +294,7 @@ public class Executor extends Object {
     final File dicoFile = new File(fFileName.getParent(), "dico.ml");
     dicoFile.createNewFile();
     fOut = new PrintStream(new FileOutputStream(dicoFile));
-    dico.write(fOut);
+    fDico.write(fOut);
     fOut.close();
   }
 
@@ -351,23 +347,22 @@ public class Executor extends Object {
 
   /**
    * Handle one class read from disk.
-   * 
-   * @param strin
-   *            is the repository where the class will be store for any
+   * @param clname the current class to handle
+   * @param repos is the repository where the class will be store for any
    *            further access
+   * @throws ClassNotFoundException if the class specified cannot be found
    * @throws MethodNotFoundException
    */
-  private void handleDiskClass(String clname, String pathname,
-                               Repository strin) throws ClassNotFoundException,
-                               MethodNotFoundException {
+  private void handleDiskClass(final String clname, final String pathname,
+                               final Repository repos) throws ClassNotFoundException {
     final ClassPath cp = new ClassPath(pathname);
     System.out.println(cp);
-    handleClass(clname, cp, strin);
+    handleClass(clname, cp, repos);
 
   }
 
   private void handleClass(String clname, ClassPath cp, Repository strin)
-              throws ClassNotFoundException, MethodNotFoundException {
+              throws ClassNotFoundException {
     final JavaClass jc = SyntheticRepository.getInstance(cp).loadClass(clname);
     strin.storeClass(jc);
     final ClassGen cg = new ClassGen(jc);
@@ -380,12 +375,10 @@ public class Executor extends Object {
    * 
    * @param repos
    *            is the repository where information on classes can be found
-   * @throws MethodNotFoundException
    * @throws ClassNotFoundException
    */
   private void doClass(JavaClass jc, ClassGen cg, ConstantPoolGen cpg,
-                       Repository repos) throws MethodNotFoundException,
-                       ClassNotFoundException {
+                       Repository repos) throws ClassNotFoundException {
 
     int tab = 1;
 
@@ -395,15 +388,15 @@ public class Executor extends Object {
     fOut.println();
 
     String pn = jc.getPackageName();
-    int packageName = dico.getCoqPackageName(jc.getPackageName());
+    int packageName = fDico.getCoqPackageName(jc.getPackageName());
     if (packageName == 0) {
       packageName = fCurrentPackage++;
-      dico.addPackage(pn, packageName);
+      fDico.addPackage(pn, packageName);
     }
     pn = Util.getCoqPackageName(pn);
 
     final int className = fCurrentClass;
-    dico.addClass(jc.getClassName(), packageName, className);
+    fDico.addClass(jc.getClassName(), packageName, className);
     
     tab++;
     
@@ -438,20 +431,20 @@ public class Executor extends Object {
   private void doMethods(final JavaClass jc, final ClassGen cg, 
                          final ConstantPoolGen cpg, final Repository strin, 
                          final int packageName, 
-                         final int className) throws ClassNotFoundException, 
-                                                     MethodNotFoundException {
+                         final int className) throws ClassNotFoundException {
     final Method[] methods = cg.getMethods();
-    for (int i = 0; i < methods.length; i++) {
-      final MethodGen mg = new MethodGen(methods[i], cg.getClassName(), cpg);
-      mh.addMethod(mg);
-      final int methodName = RESERVED_METHODS + i;
-      dico.addMethod(mg.getClassName() + "." + mg.getName(), packageName,
+    int methodName = RESERVED_METHODS;
+    for (Method meth: methods) {
+      final MethodGen mg = new MethodGen(meth, cg.getClassName(), cpg);
+      fMethodHandler.addMethod(mg);
+      methodName++;
+      fDico.addMethod(mg.getClassName() + "." + mg.getName(), packageName,
                      className, methodName);
-      doMethodSignature(jc, methods[i], mg, fOut, methodName, strin);
+      doMethodSignature(jc, meth, mg, fOut, methodName, strin);
     }
-    for (int i = 0; i < methods.length; i++) {
-      final MethodGen mg = new MethodGen(methods[i], cg.getClassName(), cpg);
-      doMethodInstructions(methods[i], mg, cpg, strin);
+    for (Method meth: methods) {
+      final MethodGen mg = new MethodGen(meth, cg.getClassName(), cpg);
+      doMethodInstructions(meth, mg, cpg, strin);
     }
   }
 
@@ -473,7 +466,7 @@ public class Executor extends Object {
     
     for (Field field : jc.getFields()) {
       fieldIdx++;
-      dico.addField(field.getName(), packageName, className, fieldIdx);
+      fDico.addField(field.getName(), packageName, className, fieldIdx);
       doFieldSignature(repos, fieldIdx, field);
       doField(field);
 
@@ -543,8 +536,7 @@ public class Executor extends Object {
     Util.writeln(fOut, tab, ".");
   }
 
-  private void doClassDefinition(JavaClass jc, Field[] ifield)
-  throws MethodNotFoundException {
+  private void doClassDefinition(final JavaClass jc, final Field[] ifield) {
     final int tab = 2;
     if (jc.isInterface()) {
       Util.writeln(fOut, tab, "Definition interface : Interface := INTERFACE.Build_t");
@@ -601,7 +593,13 @@ public class Executor extends Object {
       String str2 = "(";
       for (int i = 0; i < imeth.length - 1; i++) {
 
-        str2 += fImplemSpecif.methodsCons(mh.getName(imeth[i]) + "Method");
+        try {
+          str2 += fImplemSpecif.methodsCons(fMethodHandler.getName(imeth[i]) + "Method");
+        } 
+        catch (MethodNotFoundException e) {
+          e.printStackTrace();// cannot happen
+          System.exit(1);
+        }
       }
       str2 += fImplemSpecif.methodsEnd(Util.coqify(imeth[imeth.length - 1].getName()) +
                                        "Method");
@@ -618,21 +616,28 @@ public class Executor extends Object {
   /**
    * Write the method body.
    * 
-   * @param strin
+   * @param repos
    *            is the repository where information on classes can be found
    * @throws MethodNotFoundException
    * @throws ClassNotFoundException
    */
   private void doMethodInstructions(Method method, MethodGen mg,
-                                    ConstantPoolGen cpg, Repository strin) 
-    throws MethodNotFoundException, ClassNotFoundException {
+                                    ConstantPoolGen cpg, Repository repos) 
+    throws ClassNotFoundException {
 
     // LocalVariableGen[] aa = mg.getLocalVariables();
     // // aa[i].toString();
     // System.out.println(aa.length);
     // if (aa.length != 0) {System.out.println(aa[0].toString());}
     final int tab = 2;
-    final String name = mh.getName(mg);
+    String name = "";
+    try {
+      name = fMethodHandler.getName(mg);
+    } 
+    catch (MethodNotFoundException e) {
+      e.printStackTrace(); // cannot happen
+      System.exit(1);
+    }
     String str;
 
     if (!method.isAbstract()) {
@@ -649,14 +654,14 @@ public class Executor extends Object {
         String paren = "";
         for (int i = 0; i < listins.length - 1; i++) {
           paren += ")";
-          str = doInstruction(pos, listins[i], cpg, strin);
+          str = doInstruction(pos, listins[i], cpg, repos);
           final int posPre = pos;
           pos = pos + listins[i].getLength();
           Util.writeln(fOut, tab + 1, fImplemSpecif.instructionsCons(str, posPre, pos));
         }
         // special case for the last instruction
         Util.writeln(fOut, tab + 1, fImplemSpecif.instructionsEnd(doInstruction(pos,
-                                      listins[listins.length - 1], cpg, strin), pos));
+                                      listins[listins.length - 1], cpg, repos), pos));
       } 
       else {
         Util.writeln(fOut, tab + 1, fImplemSpecif.getNoInstructions());
@@ -761,24 +766,24 @@ public class Executor extends Object {
   private void doBeginning() {
     Util.writeln(fOut, 0, fImplemSpecif.getBeginning());
 
-    for (int i = 0; i < speciallibs.length; i++) {
-      final String str = fImplemSpecif.requireLib(Util.coqify(speciallibs[i]));
+    for (int i = 0; i < fSpecialLibs.length; i++) {
+      final String str = fImplemSpecif.requireLib(Util.coqify(fSpecialLibs[i]));
       Util.writeln(fOut, 0, str);
       // out.newLine();
     }
 
-    dico.addPackage("java/lang/", 1);
-    dico.addPackage("", 2);
+    fDico.addPackage("java/lang/", 1);
+    fDico.addPackage("", 2);
 
-    dico.addClass("Object", 1, 1);
-    dico.addClass("Exception", 1, 9);
-    dico.addClass("String", 1, 10);
-    dico.addClass("Throwable", 1, 8);
+    fDico.addClass("Object", 1, 1);
+    fDico.addClass("Exception", 1, 9);
+    fDico.addClass("String", 1, 10);
+    fDico.addClass("Throwable", 1, 8);
 
-    dico.addMethod("Object.<init>", 1, 1, 12);
-    dico.addMethod("Exception.<init>", 1, 9, 10);
-    dico.addMethod("String.<init>", 1, 10, 13);
-    dico.addMethod("Throwable.<init>", 1, 8, 11);
+    fDico.addMethod("Object.<init>", 1, 1, 12);
+    fDico.addMethod("Exception.<init>", 1, 9, 10);
+    fDico.addMethod("String.<init>", 1, 10, 13);
+    fDico.addMethod("Throwable.<init>", 1, 8, 11);
     // TODO complete the list...
 
 
@@ -816,8 +821,8 @@ public class Executor extends Object {
     for (String clss: fTreatedClasses) {
       str += fImplemSpecif.classCons(clss);
     }
-    for (int i = 0; i < speciallibs.length; i++) {
-      str += fImplemSpecif.classCons(Util.coqify(speciallibs[i]) + ".class");
+    for (int i = 0; i < fSpecialLibs.length; i++) {
+      str += fImplemSpecif.classCons(Util.coqify(fSpecialLibs[i]) + ".class");
     }
     str += " " + fImplemSpecif.classEnd() + ".";
     Util.writeln(fOut, 1, str);
@@ -849,12 +854,20 @@ public class Executor extends Object {
    */
   private void doMethodSignature(JavaClass jc, Method method, MethodGen mg,
                                  PrintStream out, int coqMethodName, Repository strin)
-  throws ClassNotFoundException, MethodNotFoundException {
+  throws ClassNotFoundException {
     // InstructionList il = mg.getInstructionList();
     // InstructionHandle ih[] = il.getInstructionHandles();
     // signature
     final int tab = 2;
-    final String name = mh.getName(mg);
+    String name = "";
+    try {
+      name = fMethodHandler.getName(mg);
+    } 
+    catch (MethodNotFoundException e) {
+      e.printStackTrace();
+      System.exit(1); // cannot happen
+      
+    }
     String str = "Definition " + name;
     str += "ShortSignature : ShortMethodSignature := METHODSIGNATURE.Build_t";
     Util.writeln(out, tab, str);
@@ -1040,7 +1053,7 @@ public class Executor extends Object {
         else if (ins instanceof InvokeInstruction) {
           String ms;
           try {
-            ms = className + "." + mh.getName((InvokeInstruction) fom, cpg) + 
+            ms = className + "." + fMethodHandler.getName((InvokeInstruction) fom, cpg) + 
                          "Signature";
           } 
           catch (MethodNotFoundException e) {

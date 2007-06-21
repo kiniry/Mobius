@@ -10,8 +10,16 @@ import org.apache.bcel.generic.InvokeInstruction;
 import org.apache.bcel.generic.MethodGen;
 import org.apache.bcel.generic.Type;
 
+/**
+ * 
+ * @author L. Hubert (lhubert@irisa.fr)
+ */
 public class MethodHandler {
 
+  /**
+   * 
+   * @author L. Hubert (lhubert@irisa.fr)
+   */
   private class MethodType {
     /**
      * name is the "coqified" version of the class name. This name cannot be
@@ -33,18 +41,21 @@ public class MethodHandler {
       this.name = name;
     }
 
-    public boolean equals(Object o) {
-      if (getName() == null || tret == null || targs == null)
+    public boolean equals(final Object o) {
+      if (getName() == null || tret == null || targs == null) {
         return false;
+      }
       if (o instanceof MethodType) {
-        MethodType mt = (MethodType) o;
+        final MethodType mt = (MethodType) o;
         if (!(getName().equals(mt.getName())
             && (targs.length == mt.targs.length) && tret
-            .equals(mt.tret)))
+            .equals(mt.tret))) {
           return false;
+        }
         for (int i = 0; i < targs.length; i++) {
-          if (!targs[i].equals(mt.targs[i]))
+          if (!targs[i].equals(mt.targs[i])) {
             return false;
+          }
         }
         return true;
       }
@@ -61,7 +72,7 @@ public class MethodHandler {
      *            identifies the method (it takes in account it arguments)
      *            and is compatible with coq (has been "coqified").
      */
-    public void setCoqName(String coqName) {
+    public void setCoqName(final String coqName) {
       this.coqName = coqName;
     }
 

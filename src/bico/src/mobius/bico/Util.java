@@ -12,7 +12,9 @@ import org.apache.bcel.generic.Type;
 import org.apache.bcel.util.Repository;
 
 public final class Util {
-
+  /** the size of a tab used in writeln. */
+  static final int TAB = 2;
+  
   /**
    * Replaces all chars not accepted by coq by "_".
    * 
@@ -246,7 +248,6 @@ public final class Util {
     return pn;
   }
 
-  /** the size of a tab used in writeln. */
-  static final int TAB = 2;
+
 
 }
