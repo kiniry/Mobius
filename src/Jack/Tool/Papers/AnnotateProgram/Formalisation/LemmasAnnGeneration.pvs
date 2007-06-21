@@ -16,22 +16,29 @@ BEGIN
       NOT Bottom?(stA(astate(s))(n)) IMPLIES
         EXISTS (va : MVAVarDecl) : vdsA(mva(mp))(va) AND name(va) = n
 
-  sequence_subterm : LEMMA
+  subterm_sequence : LEMMA
     FORALL (c1, c2, c3 : Stmt) :
-      Sequence(c1, c2) << c3 IMPLIES c1 = c3 OR c1 << c3 OR c2 = c3 OR c2 << c3
+      wf_Stmt(c3) IMPLIES
+      subterm(Sequence(c1, c2), c3) IMPLIES 
+        subterm(c1, c3) AND subterm(c2, c3)
+
+  sequence_subterm : LEMMA
+    FORALL (c1, c2 : Stmt, m : Method) :
+      set_subterm(Sequence(c1, c2), m) IMPLIES 
+        set_subterm(c1, m) AND set_subterm(c2, m)
 
   execute_action_correctness : LEMMA
     FORALL (mp : MonitoredProgram, ap : Program, c : Class, m : Method,
             a : Action, vn : string, n : nat,
-            sMVA : AState, sMP : MPState, sAP1, sAP2 : APState) :
+            sMP : MPState, sMVA : AState, sAP1, sAP2 : APState) :
       related_states(mp, ap)(sMP, sAP1) IMPLIES
       classes(ap)(c) IMPLIES
       methods(c)(m) IMPLIES
       set_subterm_AP(ann_action(a), m) IMPLIES
       wf_Action(mva(mp))(a) IMPLIES
+      NOT up?(ex(pstate(sAP1))) IMPLIES
       deriv_stmt(ap)(ann_action(a), sAP1, sAP2)(n) IMPLIES
       stA(sMVA) = execute_action(a)(stA(astate(sMP)), st(pstate(sMP))) IMPLIES
-      NOT up?(ex(pstate(sAP1))) IMPLIES
       NOT Bottom?(stA(astate(sMP))(vn)) IMPLIES
         stA(sMVA)(vn) = gvs(sAP2)(vn)
 
@@ -88,6 +95,7 @@ BEGIN
   % related_states now includes specification_requirements
   % use wf_program_variables_disjoint instead of 
   % wf_program_has_unique_ghost_var_decl
+  % Don't use exists_MVAVarDecl and then delete it
   update_vars_correctness : LEMMA % :-)
     FORALL (mp : MonitoredProgram, ap : Program,
             a : Class, m : Method, t : Transition,  n : nat,

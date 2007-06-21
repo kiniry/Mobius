@@ -13,19 +13,11 @@ END EventType
 MVA[CP, Name : TYPE+] : THEORY
 BEGIN
 
-  IMPORTING Expr[Name],
-            ValProp[Name]
-  
-  MVAVarDecl : TYPE =
-    [# name : Name,
-       jtype : JType,
-       init_val : (defined?)
-    #]
+  IMPORTING Program[Name]
 
-  ProgVarDecl : TYPE =
-    [# name : Name,
-       jtype : JType
-    #]
+  MVAVarDecl : TYPE = FieldDecl
+  
+  ProgVarDecl : TYPE = LocalVarDecl
 
   IMPORTING State[Name]
 
@@ -88,15 +80,7 @@ WellFormedMVA[CP, Name : TYPE+] : THEORY
 BEGIN
 
   IMPORTING MVA[CP, Name],
-            WellFormedProgram[Name]   % imports var_names(e : Expr) : set[Name]
-
-  % Functions to get a set of names from a set of variable declarations
-  var_names(vds : set[MVAVarDecl]) : set[Name] =
-    {n : Name | EXISTS (va : MVAVarDecl) : vds(va) AND name(va) = n}
-
-  var_names(vds : set[ProgVarDecl]) : set[Name] =
-    {n : Name | EXISTS (vp : ProgVarDecl) : vds(vp) AND name(vp) = n}
-
+            ProgramFunctions[Name] % imports var_names
 
   wf_Store(vds : finite_set[MVAVarDecl])(st : Store) : boolean =
     FORALL (n : Name) :

@@ -253,7 +253,7 @@ BEGIN
 
 
   set_subterm(s : Stmt, m : Method) : boolean =
-    s << pre_set(m) OR s << post_set(m) OR s << exc_set(m)
+    subterm(s, pre_set(m)) OR subterm(s, post_set(m)) OR subterm(s, exc_set(m))
 
   var_names(ne : NumExpr) : set[Name] =
     {n : Name | some(LAMBDA (m : Name) : m = n)(ne)}
@@ -301,6 +301,10 @@ BEGIN
 
   IMPORTING ProgramFunctions[Name]
 
+  wf_Stmt(s : Stmt) : boolean
+
+  wf_Method(m : Method) : boolean
+
   wf_Class(c : Class) : boolean
 
   wf_Program(p : Program) : boolean
@@ -308,28 +312,6 @@ BEGIN
 %  AUTO_REWRITE- wf_Program
 
   % Properties needed of well-formed programs
-
-  wf_program_has_unique_class_names : LEMMA
-    FORALL (p : Program, c1, c2 : Class) :
-      wf_Program(p) IMPLIES
-      classes(p)(c1) IMPLIES
-      classes(p)(c2) IMPLIES
-      name(c1) = name(c2) IMPLIES
-        c1 = c2
-
-  wf_program_has_wf_classes : LEMMA
-    FORALL (p : Program, c : Class) :
-      wf_Program(p) IMPLIES
-      classes(p)(c) IMPLIES
-        wf_Class(c)
-
-  wf_class_has_unique_method_names : LEMMA
-    FORALL (c : Class, m1, m2 : Method) :
-      wf_Class(c) IMPLIES
-      methods(c)(m1) IMPLIES
-      methods(c)(m2) IMPLIES
-      name(m1) = name(m2) IMPLIES
-        m1 = m2
 
   % TODO: This lemma is included in the following. 
   % Change ann_action_correctness and delete it
@@ -361,7 +343,64 @@ BEGIN
          NOT var_names(getLocalDecls(p))(This) AND
          NOT var_names(getGhostDecls(p))(This)
 
-         
+  wf_program_has_unique_class_names : LEMMA
+    FORALL (p : Program, c1, c2 : Class) :
+      wf_Program(p) IMPLIES
+      classes(p)(c1) IMPLIES
+      classes(p)(c2) IMPLIES
+      name(c1) = name(c2) IMPLIES
+        c1 = c2
+
+  wf_program_has_wf_classes : LEMMA
+    FORALL (p : Program, c : Class) :
+      wf_Program(p) IMPLIES
+      classes(p)(c) IMPLIES
+        wf_Class(c)
+
+  wf_class_has_unique_method_names : LEMMA
+    FORALL (c : Class, m1, m2 : Method) :
+      wf_Class(c) IMPLIES
+      methods(c)(m1) IMPLIES
+      methods(c)(m2) IMPLIES
+      name(m1) = name(m2) IMPLIES
+        m1 = m2
+
+  wf_class_has_wf_methods : LEMMA
+    FORALL (c : Class, m : Method) :
+      wf_Class(c) IMPLIES
+      methods(c)(m) IMPLIES
+        wf_Method(m)
+
+  wf_method_has_wf_stmt : LEMMA
+    FORALL (m : Method) :
+      wf_Method(m) IMPLIES
+        wf_Stmt(pre_set(m)) AND
+        wf_Stmt(post_set(m)) AND
+        wf_Stmt(exc_set(m)) AND
+        wf_Stmt(body(m))
+
+  wf_Stmt_has_wf_substmt : LEMMA
+    FORALL (c1, c2 : Stmt) :
+      wf_Stmt(c2) IMPLIES
+%      c1 << c2 IMPLIES
+      subterm(c1, c2) IMPLIES
+        wf_Stmt(c1)
+
+  % By requiring subterm not to be reflexive or symmetric we avoid some
+  % infinite statements like c1 = Sequence(c1, c2)
+%   wf_Stmt_implies_finite_subterm : LEMMA
+%     FORALL (c1, c2 : Stmt) :
+%       wf_Stmt(c2) IMPLIES
+%       c1 << c2 IMPLIES
+%         NOT c1 = c2 AND NOT c2 << c1
+
+  wf_Stmt_implies_finite_subterm : LEMMA
+    FORALL (c1, c2 : Stmt) :
+      wf_Stmt(c2) IMPLIES
+      subterm(c1, c2) IMPLIES
+        NOT c1 = c2 AND NOT subterm(c2, c1)
+
+
 END WellFormedProgram
 
 
