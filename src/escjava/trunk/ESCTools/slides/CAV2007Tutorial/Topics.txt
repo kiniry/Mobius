@@ -7,14 +7,14 @@ Talk -*- Outline -*-
 
 * JML Overview
 ** Basics
-*** JML = Java Modeling Language
 *** Goals and Purpose
 *** Sequential Behavior
-** What JML is Like
+** Flavor of JML
 *** Introductory Example (stress viewpoint)
 *** Tools for JML
 *** How Tools Complement each Other
 ** Importance of JML
+*** State of the Art
 *** Large Number of Researchers
 **** Papers
 **** Sharing customers, Reuse syntax, etc.
@@ -26,15 +26,15 @@ Talk -*- Outline -*-
 *** OCL, Z, ...
 ** Where to find more
 
-* Reading and Writing JML
-** Lightweight specification of functional behavior
+* Reading and Writing JML Specifications
+** Lightweight Specification of Functional Behavior
 *** requires and ensures
 *** assignable and pure
 *** invariants
 *** spec_public
 *** Semantics of Specifications
-** Exercises specifying types
-** Basic tool use (demo + exercise)
+** Exercise Specifying a Type
+** Basic Tool Use (demo + exercise)
 *** ESC/Java2
 *** jmlc
 *** KeY (optional)
