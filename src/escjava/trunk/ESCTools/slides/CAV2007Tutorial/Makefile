@@ -17,6 +17,8 @@ both: pdf handouts
 
 pdf: $(PDFFILES)
 
+# handouts doesn't currently work
+# instead, edit the file, switch to the class with handout option.
 handouts: $(HANDOUTS)
 
 ps: $(PSFILES)
