@@ -99,9 +99,9 @@ public class MethodHandler {
       List l = findByName(mt);
       int postfix = l.size();
       if (postfix > 0)
-        mt.setCoqName(Executor.coqify(mt.getName()) + postfix);
+        mt.setCoqName(Util.coqify(mt.getName()) + postfix);
       else
-        mt.setCoqName(Executor.coqify(mt.getName()));
+        mt.setCoqName(Util.coqify(mt.getName()));
       al.add(mt);
     }
   }
@@ -144,8 +144,8 @@ public class MethodHandler {
     ArrayList<MethodType> ret = new ArrayList<MethodType>();
     while (iter.hasNext()) {
       MethodType tmp = (MethodType) iter.next();
-      if (Executor.coqify(tmp.getName()).equals(
-                                                Executor.coqify(mt.getName()))) {
+      if (Util.coqify(tmp.getName()).equals(
+                                                Util.coqify(mt.getName()))) {
         ret.add(tmp);
       }
     }

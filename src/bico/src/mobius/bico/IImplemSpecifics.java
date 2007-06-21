@@ -3,7 +3,7 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.PrintStream;
 
-public interface ImplemSpecifics {
+public interface IImplemSpecifics {
 
   public String classType();
   public String classCons(String name);

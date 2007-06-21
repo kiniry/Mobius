@@ -2,7 +2,7 @@ package mobius.bico;
 import java.io.IOException;
 import java.io.PrintStream;
 
-public class MapImplemSpecif implements ImplemSpecifics {
+public class MapImplemSpecif implements IImplemSpecifics {
 
   public String classType() {
     return "PROG.MapClass.t";
@@ -67,7 +67,7 @@ public class MapImplemSpecif implements ImplemSpecifics {
     return res;
   }
   public void printExtraBodyField(PrintStream out) {
-    Executor.writeln(out,3,"0%N");
+    Util.writeln(out,3,"0%N");
   }
   public String instructionsType() {
     return " MapN.t (Instruction*option PC)";

@@ -2,7 +2,7 @@ package mobius.bico;
 import java.io.BufferedWriter;
 import java.io.PrintStream;
 
-public class ListImplemSpecif implements ImplemSpecifics {
+public class ListImplemSpecif implements IImplemSpecifics {
 
   public String classType() {
     return "list Class";
