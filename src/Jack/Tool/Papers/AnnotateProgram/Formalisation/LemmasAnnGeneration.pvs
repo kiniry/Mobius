@@ -9,32 +9,41 @@ BEGIN
   IMPORTING Equivalence[CP],
             listfuncs
 
+  % Properties of subterms
 
-  exists_MVAVarDecl : LEMMA % :-)
-    FORALL (mp : MonitoredProgram, s : MPState, n : string) :
-      wf_state(mp)(s) IMPLIES
-      NOT Bottom?(stA(astate(s))(n)) IMPLIES
-        EXISTS (va : MVAVarDecl) : vdsA(mva(mp))(va) AND name(va) = n
-
-  subterm_sequence : LEMMA
+  subterm_sequence : LEMMA % :-)
     FORALL (c1, c2, c3 : Stmt) :
-      wf_Stmt(c3) IMPLIES
       subterm(Sequence(c1, c2), c3) IMPLIES 
         subterm(c1, c3) AND subterm(c2, c3)
 
-  sequence_subterm : LEMMA
+  sequence_subterm : LEMMA % :-)
     FORALL (c1, c2 : Stmt, m : Method) :
       set_subterm(Sequence(c1, c2), m) IMPLIES 
         set_subterm(c1, m) AND set_subterm(c2, m)
 
-  execute_action_correctness : LEMMA
+  % NOT USED
+  proper_subterm_implies_subterm : LEMMA % :-)
+    FORALL (c1, c2 : Stmt) :
+      c1 << c2 IMPLIES subterm(c1, c2)
+
+  stmt_subterm_is_transitive : LEMMA % :-)
+    FORALL (c1, c2, c3 : Stmt) :
+      subterm(c1, c2) AND subterm(c2, c3) IMPLIES subterm(c1, c3)
+
+  % NOT USED
+  stmt_proper_subterm_is_transitive : LEMMA % :-)
+    FORALL (c1, c2, c3 : Stmt) :
+      c1 << c2 AND c2 << c3 IMPLIES c1 << c3
+
+
+  execute_action_correctness : LEMMA % :-)
     FORALL (mp : MonitoredProgram, ap : Program, c : Class, m : Method,
             a : Action, vn : string, n : nat,
             sMP : MPState, sMVA : AState, sAP1, sAP2 : APState) :
       related_states(mp, ap)(sMP, sAP1) IMPLIES
       classes(ap)(c) IMPLIES
       methods(c)(m) IMPLIES
-      set_subterm_AP(ann_action(a), m) IMPLIES
+      set_subterm(ann_action(a), m) IMPLIES
       wf_Action(mva(mp))(a) IMPLIES
       NOT up?(ex(pstate(sAP1))) IMPLIES
       deriv_stmt(ap)(ann_action(a), sAP1, sAP2)(n) IMPLIES
@@ -42,26 +51,26 @@ BEGIN
       NOT Bottom?(stA(astate(sMP))(vn)) IMPLIES
         stA(sMVA)(vn) = gvs(sAP2)(vn)
 
-  stmt_subterm_is_transitive : LEMMA % :-)
-    FORALL (c1, c2, c3 : Stmt) :
-      c1 << c2 AND c2 << c3 IMPLIES c1 << c3
-
-  sub_set_stmt(c : Stmt, a : Action) : RECURSIVE boolean =
+  set_stmt_of_ann_action(c : Stmt, a : Action) : RECURSIVE boolean =
     CASES a OF
       null : FALSE,
-      cons(x, xs) : c = Set(target(x), source(x)) OR sub_set_stmt(c, xs)
+      cons(x, xs) : c = Set(target(x), source(x)) OR 
+                    set_stmt_of_ann_action(c, xs)
     ENDCASES
     MEASURE length(a)
 
+  % RENAME to sub_set_stmt_ann_action_is_proper_subterm
+  % FIX sub_set_stmt, <<
   sub_set_stmt_ann_action_is_subterm : LEMMA % :-)
     FORALL (c : Stmt, a : Action) :
-      sub_set_stmt(c, a) IMPLIES c << ann_action(a)
+      set_stmt_of_ann_action(c, a) IMPLIES c << ann_action(a)
 
+  % FIX
   non_interference_of_sets_in_ann_actions : LEMMA % :-)
     FORALL (p : Program, a : Action, s1, s2 : APState,
             n : nat, vn : string) :
       (FORALL (c : Stmt) :
-        sub_set_stmt(c, a) IMPLIES
+        set_stmt_of_ann_action(c, a) IMPLIES
         Set?(c) IMPLIES
           NOT target(c) = vn AND
           FORALL (tau1, tau2 : APState, v : Val, n2 : nat) :
@@ -70,11 +79,12 @@ BEGIN
       deriv_stmt(p)(ann_action(a), s1, s2)(n) IMPLIES
         gvs(s1)(vn) = gvs(s2)(vn)
 
+  % FIX
   ann_action_sets_mva_vars : LEMMA % :-)
     FORALL (vn : string, c : Stmt, a : MVA, l : Action) :
       wf_Action(a)(l) IMPLIES
       Set?(c) IMPLIES
-      sub_set_stmt(c, l) IMPLIES
+      set_stmt_of_ann_action(c, l) IMPLIES
       vn = target(c) IMPLIES
         var_names(vdsA(a))(vn)
 
@@ -83,28 +93,22 @@ BEGIN
       well_behaved_Program(p) IMPLIES
       classes(p)(a) IMPLIES
       methods(a)(m) IMPLIES
-      set_subterm_AP(update_vars(t), m) IMPLIES
-      c << update_vars(t) IMPLIES
+      set_subterm(update_vars(t), m) IMPLIES
+      subterm(c, update_vars(t)) IMPLIES
         Skip?(c) OR
         (Set?(c) IMPLIES
           FORALL (tau1, tau2 : APState, v : Val, n2 : nat) :
             deriv_expr(p)(source(c), tau1, v, tau2)(n2) IMPLIES tau1 = tau2)
 
-  % TODO Adapt the proof:
-  % execute_action_correctness has changed
-  % related_states now includes specification_requirements
-  % use wf_program_variables_disjoint instead of 
-  % wf_program_has_unique_ghost_var_decl
-  % Don't use exists_MVAVarDecl and then delete it
+  % FIX: set_subterm_AP
   update_vars_correctness : LEMMA % :-)
     FORALL (mp : MonitoredProgram, ap : Program,
             a : Class, m : Method, t : Transition,  n : nat,
             sMVA : AState, sMP : MPState, sAP1, sAP2 : APState) :
-%      specification_requirements(mp) IMPLIES
       related_states(mp, ap)(sMP, sAP1) IMPLIES
       classes(ap)(a) IMPLIES
       methods(a)(m) IMPLIES
-      set_subterm_AP(update_vars(t), m) IMPLIES
+      set_subterm(update_vars(t), m) IMPLIES
       ts(mva(mp))(t) IMPLIES
       sMVA = (# cp := tcp(t),
                 stA := execute_action(action(t))(stA(astate(sMP)),
@@ -113,6 +117,7 @@ BEGIN
       NOT up?(ex(pstate(sAP1))) IMPLIES
       deriv_stmt(ap)(update_vars(t), sAP1, sAP2)(n) IMPLIES
         MVA_modeled?(mva(mp))(sMVA, sAP2)
+
 
   % This can not be proved without having an explicit way of translating a
   % guard into an expression. Here is where the assumption that guards can be
@@ -141,8 +146,10 @@ BEGIN
   MP_modeled_preserved_by_ann_event : LEMMA
     FORALL (mp : MonitoredProgram, ap : Program, m1 : Method)
            (sMP1, sMP2 : MPState, sAP1, sAP2 : APState)
-           (n : nat, ts : set[Transition], et : EventType) :
+           (n : nat, ts : finite_set[Transition], et : EventType) :
       related_states(mp, ap)(sMP1, sAP1) IMPLIES
+%      classes(ap)(c) IMPLIES
+%      methods(c)(m1) IMPLIES
       astate(sMP2) = on_method_MVA(et)(mp, m1, sMP1) IMPLIES
       NOT up?(ex(pstate(sAP1))) IMPLIES
       ts = filter_event(mva(mp))(et)(name(m1)) IMPLIES

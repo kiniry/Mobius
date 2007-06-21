@@ -269,8 +269,6 @@ BEGIN
               ghost_vars(c)(gd) AND name(gd) = name(v))
 
   % FIX: the definition of is_ghost has changed
-  % Note that ann_program_defines_MVA_vars2 was only used to prove this lemma
-  % if I prove it without using it then I can delete it
   ann_program_defines_MVA_vars : LEMMA % :-)
     FORALL (mp : MonitoredProgram, ap : Program, s : APState) :
       ann_program_pre(mp) IMPLIES

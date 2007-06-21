@@ -417,14 +417,13 @@ BEGIN
                 FORALL (s1, s2 : FullState, v : Val, n : nat) :
                   deriv_expr(p)(source(s), s1, v, s2)(n) IMPLIES s1 = s2)
 
-
   run_FullProgram(p : FullProgram)(main : Method, arg : int)
-                 (initial, final : FullState)(n : nat) : boolean =
+                 (initial, final : FullState) : boolean =
     LET c  = StmtExpr(MethodCall(RExpr(RefVarEval(This)),
                                  name(main),
                                  NExpr(Int(arg))))
     IN
-      deriv_stmt(p)(c, initial, final)(n)
+      derives(p)(c, initial)(final)
 
 
 END Semantics

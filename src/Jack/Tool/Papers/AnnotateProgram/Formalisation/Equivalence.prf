@@ -533,7 +533,7 @@
    3390912279
    ("" (skosimp) (("" (typepred "n1!1") (("" (assert) nil nil)) nil))
     nil)
-   proved
+   unchecked
    ((posnat nonempty-type-eq-decl nil integers nil)
     (nonneg_int nonempty-type-eq-decl nil integers nil)
     (>= const-decl "bool" reals nil)
@@ -562,7 +562,7 @@
    3390912320
    ("" (skosimp) (("" (typepred "n2!1") (("" (assert) nil nil)) nil))
     nil)
-   proved
+   unchecked
    ((posnat nonempty-type-eq-decl nil integers nil)
     (nonneg_int nonempty-type-eq-decl nil integers nil)
     (>= const-decl "bool" reals nil)
@@ -2206,26 +2206,30 @@
   (deriv_stmt_maintains_equivalence-1 nil 3386674579 3386674587
    ("" (postpone) nil nil) unfinished nil 7597 10 t shostak))
  (correcteness_of_ann_program 0
-  (correctness_of_ann_program-1 "" 3386566650 3387086788
+  (correctness_of_ann_program-1 "" 3386566650 3391430632
    ("" (skosimp*)
     ((""
       (expand* "run_monitored_program" "run_annotated_program"
-       "run_FullProgram")
-      (("" (use "initial_states_are_equivalent")
-        (("" (lemma "deriv_stmt_maintains_equivalence")
-          ((""
-            (inst -1 "mp!1" "ann_program(mp!1)" "n!1" "m!1"
-             "StmtExpr(MethodCall(RExpr(RefVarEval(This)), name(main!1), NExpr(Int(arg!1))))"
-             "initial_MP_state(mp!1)" "sMP!1"
-             "initial_AP_state(ann_program(mp!1))" "sAP!1")
-            (("" (assert)
-              (("" (expand "related_states")
-                (("" (use "wf_initial_MP_state")
-                  (("" (use "wf_initial_AP_state")
-                    (("" (use "ann_program_yields_wf_program")
-                      (("" (assert)
-                        (("" (expand "ann_program_pre")
-                          (("" (flatten) (("" (assert) nil nil)) nil))
+       "run_FullProgram" "derives")
+      (("" (skosimp*)
+        (("" (use "initial_states_are_equivalent")
+          (("" (copy -2)
+            (("" (expand "specification_requirements" -1)
+              (("" (ground)
+                (("" (lemma "deriv_stmt_maintains_equivalence")
+                  ((""
+                    (inst -1 "mp!1" "ann_program(mp!1)" "n!1" "n!2"
+                     "StmtExpr(MethodCall(RExpr(RefVarEval(This)), name(main!1), NExpr(Int(arg!1))))"
+                     "initial_MP_state(mp!1)(root_object!1)" "sMP!1"
+                     "initial_AP_state(ann_program(mp!1))(root_object!1)"
+                     "sAP!1")
+                    (("" (assert)
+                      (("" (expand "related_states")
+                        (("" (use "wf_initial_MP_state")
+                          (("" (use "wf_initial_AP_state")
+                            (("" (use "ann_program_yields_wf_program")
+                              (("" (assert) nil nil)) nil))
+                            nil))
                           nil))
                         nil))
                       nil))
@@ -2238,16 +2242,33 @@
         nil))
       nil))
     nil)
-   unfinished
+   proved
    ((run_annotated_program const-decl "boolean"
      AnnotatedProgramSemantics nil)
+    (derives const-decl "bool" Semantics nil)
     (run_FullProgram const-decl "boolean" Semantics nil)
     (run_monitored_program const-decl "boolean"
      MonitoredProgramSemantics nil)
+    (initial_states_are_equivalent formula-decl nil Equivalence nil)
+    (defined? const-decl "boolean" ValProp nil)
+    (Val type-decl nil Val_adt nil)
+    (MonitoredProgram type-eq-decl nil MonitoredProgram nil)
+    (Program type-eq-decl nil Program nil)
+    (MVA type-eq-decl nil MVA nil)
+    (string type-eq-decl nil strings nil)
+    (char type-eq-decl nil strings nil)
+    (char? adt-recognizer-decl "[character -> boolean]" character_adt
+     nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (character type-decl nil character_adt nil)
+    (below type-eq-decl nil nat_types nil)
+    (nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (CP formal-nonempty-type-decl nil Equivalence nil)
     (deriv_stmt_maintains_equivalence formula-decl nil Equivalence nil)
     (wf_initial_MP_state formula-decl nil MonitoredProgramSemantics
      nil)
-    (ann_program_pre const-decl "boolean" AnnotateProgram nil)
+    (ann_program_yields_wf_program formula-decl nil
+     AnnotateProgramProperties nil)
     (wf_initial_AP_state formula-decl nil AnnotatedProgramSemantics
      nil)
     (related_states const-decl "boolean" Equivalence nil)
@@ -2292,28 +2313,18 @@
      nil)
     (number nonempty-type-decl nil numbers nil)
     (ann_program const-decl "Program" AnnotateProgram nil)
+    (ann_program_pre const-decl "boolean" AnnotateProgram nil)
     (Class type-eq-decl nil Program nil)
     (lift type-decl nil lift_adt nil)
     (Method type-eq-decl nil Program nil)
+    (Stmt type-decl nil Stmt_adt nil)
     (LocalVarDecl type-eq-decl nil Program nil)
-    (Stmt type-decl nil Stmt_adt nil) (Expr type-decl nil Expr_adt nil)
+    (Expr type-decl nil Expr_adt nil)
     (finite_set type-eq-decl nil finite_sets nil)
     (FieldDecl type-eq-decl nil Program nil)
-    (JType type-decl nil JType_adt nil) (Val type-decl nil Val_adt nil)
-    (CP formal-nonempty-type-decl nil Equivalence nil)
-    (nat nonempty-type-eq-decl nil naturalnumbers nil)
-    (below type-eq-decl nil nat_types nil)
-    (character type-decl nil character_adt nil)
-    (boolean nonempty-type-decl nil booleans nil)
-    (char? adt-recognizer-decl "[character -> boolean]" character_adt
-     nil)
-    (char type-eq-decl nil strings nil)
-    (string type-eq-decl nil strings nil)
-    (MVA type-eq-decl nil MVA nil)
-    (Program type-eq-decl nil Program nil)
-    (MonitoredProgram type-eq-decl nil MonitoredProgram nil)
-    (initial_states_are_equivalent formula-decl nil Equivalence nil))
-   535076 1550 t shostak)
+    (JType type-decl nil JType_adt nil)
+    (specification_requirements const-decl "boolean" Equivalence nil))
+   793985 890 t shostak)
   (correcteness_of_ann_program-2 nil 3386566615 nil
    (";;; Proof correcteness_of_ann_program-1 for formula Equivalence.correcteness_of_ann_program"
     (skosimp*)

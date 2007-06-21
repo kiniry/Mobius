@@ -57,8 +57,8 @@ BEGIN
     #)
 
   run_annotated_program(p : Program)(main : Method, arg : int)
-                       (this_val : Val)(final : APState)(n : nat) : boolean =
-    run_FullProgram(p)(main, arg)(initial_AP_state(p)(this_val), final)(n)
+                       (this_val : Val)(final : APState) : boolean =
+    run_FullProgram(p)(main, arg)(initial_AP_state(p)(this_val), final)
 
 
   % The following are adapted versions for AP to avoid having to give all the 
@@ -87,9 +87,6 @@ BEGIN
         deriv_stmt(p)(c, sigma, sigma1)(n1) AND
         deriv_stmt(p)(c, sigma, sigma2)(n2) IMPLIES
           sigma1 = sigma2 AND n1 = n2
-
-  set_subterm_AP(s : Stmt, m : Method) : boolean =
-    set_subterm(s, m)
 
 
   % Well-formedness properties
