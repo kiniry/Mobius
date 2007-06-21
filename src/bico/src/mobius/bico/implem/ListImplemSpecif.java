@@ -1,6 +1,7 @@
-package mobius.bico;
+package mobius.bico.implem;
 import java.io.BufferedWriter;
 import java.io.PrintStream;
+
 
 public class ListImplemSpecif implements IImplemSpecifics {
 

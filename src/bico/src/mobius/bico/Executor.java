@@ -9,6 +9,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mobius.bico.MethodHandler.MethodNotFoundException;
+import mobius.bico.dico.CamlDictionary;
+import mobius.bico.dico.Dictionary;
+import mobius.bico.implem.IImplemSpecifics;
+import mobius.bico.implem.ListImplemSpecif;
+import mobius.bico.implem.MapImplemSpecif;
 
 import org.apache.bcel.Constants;
 import org.apache.bcel.classfile.Code;

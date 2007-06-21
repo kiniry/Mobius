@@ -1,4 +1,4 @@
-package mobius.bico;
+package mobius.bico.dico;
 
 import java.io.PrintStream;
 import java.io.Writer;
@@ -6,6 +6,7 @@ import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Iterator;
+
 
 /**
  * @author Laurent.Hubert@irisa.fr

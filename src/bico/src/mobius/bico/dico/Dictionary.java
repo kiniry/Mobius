@@ -1,4 +1,4 @@
-package mobius.bico;
+package mobius.bico.dico;
 
 import java.io.IOException;
 import java.io.PrintStream;

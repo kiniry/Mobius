@@ -1,6 +1,8 @@
-package mobius.bico;
+package mobius.bico.implem;
 import java.io.IOException;
 import java.io.PrintStream;
+
+import mobius.bico.Util;
 
 public class MapImplemSpecif implements IImplemSpecifics {
 

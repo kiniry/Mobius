@@ -209,7 +209,7 @@ public final class Util {
     }
   }
 
-  static void writeln(PrintStream out, int tabs, String s) {
+  public static void writeln(PrintStream out, int tabs, String s) {
     final StringBuffer str = new StringBuffer();
     for (int i = 0; i < tabs * Util.TAB; i++) {
       str.append(' ');
