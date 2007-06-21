@@ -1,5 +1,5 @@
-This directory contains materials for the tutorial by Gary Leavens
-(with help from Joe Kiniry and Erik Poll) given at CAV 2007.
+This directory contains materials for the tutorial by Gary T. Leavens
+(with help from Joseph R. Kiniry and Erik Poll) given at CAV 2007.
 
 A starting point was the tutorial material in ../ETAPSTutorial/,
 and the various talks and tutorial papers on JML.
