@@ -274,7 +274,7 @@ public class BytecodeDocument extends Document {
         pc = m.getLineNumberTable().getLineNumberTable()[j].getStartPC();
         ln = m.getLineNumberTable().getLineNumberTable()[j].getLineNumber() - 1;
         popln = bcln;
-        while (bcln<maxL) {
+        while (bcln < maxL) {
           bcln++;
           s = LineAt(bcln);
           if (s.startsWith("" + pc + ":"))
@@ -283,11 +283,13 @@ public class BytecodeDocument extends Document {
         if (ln == line) {
           l_od = bcln;
           continue;
-        }if ((ln > line) && (l_od == 0)) {
+        }
+        if ((ln > line) && (l_od == 0)) {
           l_od = popln;
           l_do = bcln - 1;
           break;
-        }if ((l_od != 0) && (ln != line)) {
+        }
+        if ((l_od != 0) && (ln != line)) {
           l_do = bcln - 1;
           break;
         }
@@ -295,7 +297,7 @@ public class BytecodeDocument extends Document {
           break;
       }
       if ((l_od != 0) && (l_do == -1)) {
-        while (bcln<maxL) {
+        while (bcln < maxL) {
           bcln++;
           s = LineAt(bcln);
           if (s.lastIndexOf(":") == -1)
@@ -303,7 +305,8 @@ public class BytecodeDocument extends Document {
         }
         l_do = bcln - 1;
         break;
-      }if (j<l)
+      }
+      if (j < l)
         break;
       if ((l_od != 0) && (l_do == maxL)) {
         l_do = l_od;

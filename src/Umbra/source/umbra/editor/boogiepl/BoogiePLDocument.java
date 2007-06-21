@@ -272,11 +272,11 @@ public class BoogiePLDocument extends Document {
         if (ln == line) {
           l_od = bcln;
           continue;
-        }if ((ln > line) && (l_od == 0)) {
+        } if ((ln > line) && (l_od == 0)) {
           l_od = popln;
           l_do = bcln - 1;
           break;
-        }if ((l_od != 0) && (ln != line)) {
+        } if ((l_od != 0) && (ln != line)) {
           l_do = bcln - 1;
           break;
         }
@@ -292,7 +292,7 @@ public class BoogiePLDocument extends Document {
         }
         l_do = bcln - 1;
         break;
-      }if (j<l)
+      } if (j<l)
         break;
       if ((l_od != 0) && (l_do == maxL)) {
         l_do = l_od;

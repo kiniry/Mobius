@@ -41,7 +41,7 @@ public class BytecodeDocumentProvider extends FileDocumentProvider {
                    (IEditorInput) element,
                    getEncoding(element))) {
         setupDocument(element, document);
-      }/*
+      } /*
       IDocumentPartitioner partitioner =
         new FastPartitioner(
           new BytecodePartitionScanner(),

@@ -61,7 +61,8 @@ public class ArrayInstruction extends StringInstruction {
     for (int i = 0; i < typeCount; i++) {
       if ((names[i].startsWith(insName)) && (insName.startsWith(names[i])))
         return types[i];
-    }return null;
+    }
+    return null;
   }
 
   /**

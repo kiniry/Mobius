@@ -85,22 +85,21 @@ public class NewInstruction extends StringInstruction {
     boolean isd;
     final String licznik = "0123456789";
     int number;
-    if (line.lastIndexOf("(") >= line.lastIndexOf(")")){
-    } else {
-    isd = true;
-    for (int i = line.lastIndexOf("(") + 1; i < line.lastIndexOf(")"); i++) {
-      if (!Character.isDigit(line.charAt(i))){
-        //System.out.println("to nie jest cyfra zle ");
-        isd = false;
-      }
-    }
-    if (isd){
-      number = 0;
+    if (line.lastIndexOf("(") < line.lastIndexOf(")")) {
+      isd = true;
       for (int i = line.lastIndexOf("(") + 1; i < line.lastIndexOf(")"); i++) {
-        number = 10 * number + licznik.indexOf(line.substring(i, i + 1));
+        if (!Character.isDigit(line.charAt(i))) {
+          //System.out.println("to nie jest cyfra zle ");
+          isd = false;
+        }
       }
-      return number;
-    }
+      if (isd) {
+        number = 0;
+        for (int i = line.lastIndexOf("(") + 1; i < line.lastIndexOf(")"); i++) {
+          number = 10 * number + licznik.indexOf(line.substring(i, i + 1));
+        }
+        return number;
+      }
     }
     return 0;
   }

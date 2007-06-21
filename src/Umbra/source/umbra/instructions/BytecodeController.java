@@ -326,7 +326,8 @@ public class BytecodeController {
         ok = false;
         incorrect.addLast(all.get(i));
       }
-    }return ok;
+    }
+    return ok;
   }
 
   /**
@@ -479,13 +480,15 @@ public class BytecodeController {
     while (ok && i<string.length() && string.length()>0) {
       if (!wd.isWhitespace(string.charAt(i))) ok=false;
       i++;
-    }if (ok) return "";
+    }
+    if (ok) return "";
     int j=string.length() - 1;
     ok=true;
     while (ok && j>=0) {
       if (!wd.isWhitespace(string.charAt(j))) ok=false;
       j--;
-    }if (ok) return "";
+    }
+    if (ok) return "";
     return string.substring(i - 1, j + 2);
   }
 
