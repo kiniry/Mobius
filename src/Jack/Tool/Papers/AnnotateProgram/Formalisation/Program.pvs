@@ -252,8 +252,8 @@ BEGIN
     ENDIF
 
 
-  set_subterm(s : Stmt, m : Method) : boolean =
-    subterm(s, pre_set(m)) OR subterm(s, post_set(m)) OR subterm(s, exc_set(m))
+  proper_subterm_set_clause(s : Stmt, m : Method) : boolean =
+    s << pre_set(m) OR s << post_set(m) OR s << exc_set(m)
 
   var_names(ne : NumExpr) : set[Name] =
     {n : Name | some(LAMBDA (m : Name) : m = n)(ne)}

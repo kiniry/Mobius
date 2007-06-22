@@ -11,26 +11,16 @@ BEGIN
 
   % Properties of subterms
 
-  subterm_sequence : LEMMA % :-)
+  proper_subterm_sequence : LEMMA % :-)
     FORALL (c1, c2, c3 : Stmt) :
-      subterm(Sequence(c1, c2), c3) IMPLIES 
-        subterm(c1, c3) AND subterm(c2, c3)
+      Sequence(c1, c2) << c3 IMPLIES 
+        c1 << c3 AND c2 << c3
 
-  sequence_subterm : LEMMA % :-)
+  proper_subterm_set_clause_sequence : LEMMA % :-)
     FORALL (c1, c2 : Stmt, m : Method) :
-      set_subterm(Sequence(c1, c2), m) IMPLIES 
-        set_subterm(c1, m) AND set_subterm(c2, m)
+      proper_subterm_set_clause(Sequence(c1, c2), m) IMPLIES 
+        proper_subterm_set_clause(c1, m) AND proper_subterm_set_clause(c2, m)
 
-  % NOT USED
-  proper_subterm_implies_subterm : LEMMA % :-)
-    FORALL (c1, c2 : Stmt) :
-      c1 << c2 IMPLIES subterm(c1, c2)
-
-  stmt_subterm_is_transitive : LEMMA % :-)
-    FORALL (c1, c2, c3 : Stmt) :
-      subterm(c1, c2) AND subterm(c2, c3) IMPLIES subterm(c1, c3)
-
-  % NOT USED
   stmt_proper_subterm_is_transitive : LEMMA % :-)
     FORALL (c1, c2, c3 : Stmt) :
       c1 << c2 AND c2 << c3 IMPLIES c1 << c3
@@ -43,13 +33,14 @@ BEGIN
       related_states(mp, ap)(sMP, sAP1) IMPLIES
       classes(ap)(c) IMPLIES
       methods(c)(m) IMPLIES
-      set_subterm(ann_action(a), m) IMPLIES
+      proper_subterm_set_clause(ann_action(a), m) IMPLIES
       wf_Action(mva(mp))(a) IMPLIES
       NOT up?(ex(pstate(sAP1))) IMPLIES
       deriv_stmt(ap)(ann_action(a), sAP1, sAP2)(n) IMPLIES
       stA(sMVA) = execute_action(a)(stA(astate(sMP)), st(pstate(sMP))) IMPLIES
       NOT Bottom?(stA(astate(sMP))(vn)) IMPLIES
         stA(sMVA)(vn) = gvs(sAP2)(vn)
+
 
   set_stmt_of_ann_action(c : Stmt, a : Action) : RECURSIVE boolean =
     CASES a OF
@@ -59,13 +50,10 @@ BEGIN
     ENDCASES
     MEASURE length(a)
 
-  % RENAME to sub_set_stmt_ann_action_is_proper_subterm
-  % FIX sub_set_stmt, <<
-  sub_set_stmt_ann_action_is_subterm : LEMMA % :-)
+  set_stmt_of_ann_action_proper_subterm : LEMMA % :-)
     FORALL (c : Stmt, a : Action) :
       set_stmt_of_ann_action(c, a) IMPLIES c << ann_action(a)
 
-  % FIX
   non_interference_of_sets_in_ann_actions : LEMMA % :-)
     FORALL (p : Program, a : Action, s1, s2 : APState,
             n : nat, vn : string) :
@@ -79,7 +67,6 @@ BEGIN
       deriv_stmt(p)(ann_action(a), s1, s2)(n) IMPLIES
         gvs(s1)(vn) = gvs(s2)(vn)
 
-  % FIX
   ann_action_sets_mva_vars : LEMMA % :-)
     FORALL (vn : string, c : Stmt, a : MVA, l : Action) :
       wf_Action(a)(l) IMPLIES
@@ -93,14 +80,13 @@ BEGIN
       well_behaved_Program(p) IMPLIES
       classes(p)(a) IMPLIES
       methods(a)(m) IMPLIES
-      set_subterm(update_vars(t), m) IMPLIES
-      subterm(c, update_vars(t)) IMPLIES
+      proper_subterm_set_clause(update_vars(t), m) IMPLIES
+      c << update_vars(t) IMPLIES
         Skip?(c) OR
         (Set?(c) IMPLIES
           FORALL (tau1, tau2 : APState, v : Val, n2 : nat) :
             deriv_expr(p)(source(c), tau1, v, tau2)(n2) IMPLIES tau1 = tau2)
 
-  % FIX: set_subterm_AP
   update_vars_correctness : LEMMA % :-)
     FORALL (mp : MonitoredProgram, ap : Program,
             a : Class, m : Method, t : Transition,  n : nat,
@@ -108,7 +94,7 @@ BEGIN
       related_states(mp, ap)(sMP, sAP1) IMPLIES
       classes(ap)(a) IMPLIES
       methods(a)(m) IMPLIES
-      set_subterm(update_vars(t), m) IMPLIES
+      proper_subterm_set_clause(update_vars(t), m) IMPLIES
       ts(mva(mp))(t) IMPLIES
       sMVA = (# cp := tcp(t),
                 stA := execute_action(action(t))(stA(astate(sMP)),

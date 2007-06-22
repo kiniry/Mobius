@@ -196,8 +196,8 @@ BEGIN
                       on_method_event, on_method_event, on_method_event]
 
   run_program(p : Program)(main : Method, arg : int)(this_val : (defined?))
-             (s2 : PState)(n : nat) : boolean =
-    run_FullProgram(p)(main, arg)(initial_Program_state(p)(this_val), s2)(n)
+             (s2 : PState) : boolean =
+    run_FullProgram(p)(main, arg)(initial_Program_state(p)(this_val), s2)
 
 
   IMPORTING SemanticsProofs[Name, Program, PState, id, id, lookup,

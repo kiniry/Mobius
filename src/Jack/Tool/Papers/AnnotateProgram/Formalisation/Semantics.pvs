@@ -412,7 +412,7 @@ BEGIN
             (FORALL (s1, s2 : FullState, v : Val, n : nat) :
               deriv_expr(p)(post(m), s1, v, s2)(n) IMPLIES s1 = s2) AND
             (FORALL (s : Stmt) :
-              set_subterm(s, m) IMPLIES
+              proper_subterm_set_clause(s, m) IMPLIES
               Set?(s) IMPLIES
                 FORALL (s1, s2 : FullState, v : Val, n : nat) :
                   deriv_expr(p)(source(s), s1, v, s2)(n) IMPLIES s1 = s2)
