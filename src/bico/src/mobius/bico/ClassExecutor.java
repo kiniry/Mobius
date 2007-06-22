@@ -1,24 +1,41 @@
 package mobius.bico;
 
-import mobius.bico.MethodHandler.MethodNotFoundException;
-
-import org.apache.bcel.classfile.Field;
 import org.apache.bcel.classfile.JavaClass;
-import org.apache.bcel.classfile.Method;
 import org.apache.bcel.generic.ClassGen;
 
-public class ClassExecutor extends ABasicExecutor {
-  private ClassGen cg;
+/**
+ * This class is used in the treatment of a single class
+ * by bico.
+ * 
+ * @author J. Charles (julien.charles@inria.fr), 
+ * P. Czarnik (czarnik@mimuw.edu.pl), 
+ * L. Hubert (laurent.hubert@irisa.fr)
+ */
+class ClassExecutor extends ABasicExecutor {
+  
+  /** the current class which is inspected. */
+  private ClassGen fClass;
+  
+  /** the current tabulation level. */
+  private int fTab = 1;
 
+  /** an executor to generate things concerning methods. */
+  private MethodExecutor fMethExecutor;
+  
+  /** an executor to generate things concerning fields. */
+  private FieldExecutor fFieldExecutor;
 
   /**
-   * @param jc the current class
-   * @param packageName the index representing the package
-   * @param className the number representing the class
+   * Create a class executor in the context of another
+   * executor.
+   * @param be the BasicExecutor to get the initialization from
+   * @param cg the class object to manipulate
    */
-  public ClassExecutor(ABasicExecutor be, ClassGen cg, int pkgName) {
+  public ClassExecutor(final ABasicExecutor be, final ClassGen cg) {
     super(be);
-    this.cg = cg;
+    fClass = cg;
+    fFieldExecutor = new FieldExecutor(this, fClass.getJavaClass());
+    fMethExecutor = new MethodExecutor(this, fClass);
   }
   
   /**
@@ -26,76 +43,97 @@ public class ClassExecutor extends ABasicExecutor {
    * 
    * @throws ClassNotFoundException if a class cannot be resolved
    */
+  @Override
   public void start() throws ClassNotFoundException {
 
-    int tab = 1;
-    final JavaClass jc = cg.getJavaClass();
+    final JavaClass jc = fClass.getJavaClass();
     final String moduleName = Util.coqify(jc.getClassName());
     System.out.println("  --> Module " + moduleName + ".");
-    Util.writeln(fOut, tab, "Module " + moduleName + ".");
-    fOut.println();
-
-    
+    Util.writeln(fOut, fTab, "Module " + moduleName + ".\n");
 
     final int className = fDico.getCurrentClass() + 1;
     fDico.addClass(jc, className);
     
-    tab++;
-    int packageName = fDico.getCoqPackageName(jc);
+    fTab++;
+    
+    doClassNameDefinition();
+ 
+    
+    fFieldExecutor.start();
+    
+    
+    fMethExecutor.start();
+
+    doClassDefinition();
+   
+    fTab--;
+    Util.writeln(fOut, fTab, "End " + moduleName + ".\n");
+
+  }
+
+  /**
+   * Prints the class name definition of the current class.
+   */
+  private void doClassNameDefinition() {
+    final JavaClass jc = fClass.getJavaClass();
+    final int className =  fDico.getCoqClassName(jc);
+    final int packageName = fDico.getCoqPackageName(jc);
     // classname
+    String def;
     if (jc.isInterface()) {
-      final String str = "Definition interfaceName : InterfaceName := " + "(" + 
-                          packageName + ", " + className + "%positive).";
-      Util.writeln(fOut, tab, str);
+      def = "Definition interfaceName : InterfaceName := " + "(" + 
+                          packageName + ", " + className + "%positive).\n";
     } 
     else {
-      final String str = "Definition className : ClassName := " + "(" + 
+      def = "Definition className : ClassName := " + "(" + 
                          packageName + 
-                         ", " + className + "%positive).";
-      Util.writeln(fOut, tab, str);
+                         ", " + className + "%positive).\n";
+      
     }
-
-    fOut.println();
-    final FieldExecutor fieldExecutor = new FieldExecutor(this, jc);
-    fieldExecutor.start();
-    final MethodExecutor methExecutor = new MethodExecutor(this, cg);
-    methExecutor.start();
-
-    doClassDefinition(jc);
-    fOut.println();
-    tab--;
-    Util.writeln(fOut, tab, "End " + Util.coqify(jc.getClassName()) + ".");
-    fOut.println();
+    Util.writeln(fOut, fTab, def);
   }
 
 
-
-
- 
-
-  private void doClassDefinition(final JavaClass jc) {
-    final int tab = 2;
-    
+  /**
+   * Do the proper class definition.
+   */
+  private void doClassDefinition() {
+    final JavaClass jc = fClass.getJavaClass(); 
     if (jc.isInterface()) {
-      Util.writeln(fOut, tab, "Definition interface : Interface := INTERFACE.Build_t");
-      Util.writeln(fOut, tab + 1, "interfaceName");
+      Util.writeln(fOut, fTab, "Definition interface : Interface := INTERFACE.Build_t");
+      Util.writeln(fOut, fTab + 1, "interfaceName");
     } 
     else {
-      Util.writeln(fOut, tab, "Definition class : Class := CLASS.Build_t");
-      Util.writeln(fOut, tab + 1, "className");
-    }
-    if (!jc.isInterface()) {
+      Util.writeln(fOut, fTab, "Definition class : Class := CLASS.Build_t");
+      Util.writeln(fOut, fTab + 1, "className");
       final String superClassName = Util.coqify(jc.getSuperclassName());
       if (superClassName == null) {
-        Util.writeln(fOut, tab + 1, "None");
+        Util.writeln(fOut, fTab + 1, "None");
       } 
       else {
-        Util.writeln(fOut, tab + 1, "(Some " + superClassName + ".className)");
+        Util.writeln(fOut, fTab + 1, "(Some " + superClassName + ".className)");
       }
     }
-    final String[] inames = jc.getInterfaceNames();
+    enumerateInterfaces();
+
+    fFieldExecutor.doEnumeration(fTab);
+
+    fMethExecutor.doEnumeration(fTab);
+
+    Util.writeln(fOut, fTab + 1, "" + jc.isFinal());
+    Util.writeln(fOut, fTab + 1, "" + jc.isPublic());
+    Util.writeln(fOut, fTab + 1, "" + jc.isAbstract());
+    Util.writeln(fOut, fTab, ".\n");
+  }
+
+  /**
+   * Enumerates the interfaces of the class.
+   */
+  private void enumerateInterfaces() {
+    
+    final String[] inames = fClass.getInterfaceNames();
     if (inames.length == 0) {
-      Util.writeln(fOut, tab + 1, "nil");
+      Util.writeln(fOut, fTab + 1, "nil");
     } 
     else {
       String str = "(";
@@ -103,53 +141,11 @@ public class ClassExecutor extends ABasicExecutor {
         str = str.concat(Util.coqify(inames[i]) + ".interfaceName ::");
       }
       str = str.concat("nil)");
-      Util.writeln(fOut, tab + 1, str);
+      Util.writeln(fOut, fTab + 1, str);
     }
-
-    // fields
-    final Field[] ifield = jc.getFields();
-    if (ifield.length == 0) {
-      Util.writeln(fOut, tab + 1, fImplemSpecif.getNoFields());
-    } 
-    else {
-      String str2 = "(";
-      for (int i = 0; i < ifield.length - 1; i++) {
-        str2 += fImplemSpecif.fieldsCons(Util.coqify(ifield[i].getName()) + "Field");
-      }
-      str2 += fImplemSpecif.fieldsEnd(Util.coqify(ifield[ifield.length - 1].getName()) + 
-                                      "Field");
-      str2 += ")";
-      Util.writeln(fOut, tab + 1, str2);
-    }
-
-    // methods
-    final Method[] imeth = jc.getMethods();
-    if (imeth.length == 0) {
-      // System.out.println(" nil");
-      Util.writeln(fOut, tab + 1, fImplemSpecif.getNoMethods());
-    } 
-    else {
-      String str2 = "(";
-      for (int i = 0; i < imeth.length - 1; i++) {
-
-        try {
-          str2 += fImplemSpecif.methodsCons(fMethodHandler.getName(imeth[i]) + "Method");
-        } 
-        catch (MethodNotFoundException e) {
-          e.printStackTrace(); // cannot happen
-          System.exit(1);
-        }
-      }
-      str2 += fImplemSpecif.methodsEnd(Util.coqify(imeth[imeth.length - 1].getName()) +
-                                       "Method");
-      str2 += ")";
-      Util.writeln(fOut, tab + 1, str2);
-    }
-
-    Util.writeln(fOut, tab + 1, "" + jc.isFinal());
-    Util.writeln(fOut, tab + 1, "" + jc.isPublic());
-    Util.writeln(fOut, tab + 1, "" + jc.isAbstract());
-    Util.writeln(fOut, tab, ".");
   }
+
+  
+
 
 }

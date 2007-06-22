@@ -340,7 +340,7 @@ public class Executor extends ABasicExecutor {
       fTreatedClasses.add(moduleName + ".class");
     }
     
-    final ClassExecutor ce = new ClassExecutor(this, cg, packageName);
+    final ClassExecutor ce = new ClassExecutor(this, cg);
     ce.start();
   }
 

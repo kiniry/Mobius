@@ -3,22 +3,25 @@ package mobius.bico;
 import org.apache.bcel.classfile.Field;
 import org.apache.bcel.classfile.JavaClass;
 
-public class FieldExecutor extends ABasicExecutor {
+class FieldExecutor extends ABasicExecutor {
+  
   /** determine the span of the 'reserved' fields names number default is 1. */
   private static final int RESERVED_FIELDS = 1;
-
-  private JavaClass jc;
+  
+  /** the currently treated JavaClass from which the fields are taken. */
+  private JavaClass fJavaClass;
   
   
   /**
+   * Create a field executor in the context of another
+   * executor.
+   * @param be the BasicExecutor to get the initialization from
    * @param jc the current class
-   * @param packageName the index representing the package
-   * @param className the number representing the class
    */
-  public FieldExecutor(ABasicExecutor be, JavaClass jc) {
+  public FieldExecutor(final ABasicExecutor be, final JavaClass jc) {
     super(be);
     
-    this.jc = jc;
+    fJavaClass = jc;
   }
   
   /**
@@ -29,11 +32,11 @@ public class FieldExecutor extends ABasicExecutor {
   public void start() throws ClassNotFoundException {
     int fieldIdx = RESERVED_FIELDS;
     
-    for (Field field : jc.getFields()) {
+    for (Field field : fJavaClass.getFields()) {
       fieldIdx++;
       fDico.addField(field.getName(), 
-                     fDico.getCoqPackageName(jc), 
-                     fDico.getCoqClassName(jc), 
+                     fDico.getCoqPackageName(fJavaClass), 
+                     fDico.getCoqClassName(fJavaClass), 
                      fieldIdx);
       doFieldSignature(field, fieldIdx);
       doField(field);
@@ -41,6 +44,28 @@ public class FieldExecutor extends ABasicExecutor {
       fOut.println();
     }
     
+  }
+  
+  /**
+   * Enumerates in a Coq friendly form all the fields of the class.
+   * @param tab the current tabulation level.
+   */
+  public void doEnumeration(final int tab) {
+    // fields
+    final Field[] ifield = fJavaClass.getFields();
+    if (ifield.length == 0) {
+      Util.writeln(fOut, tab + 1, fImplemSpecif.getNoFields());
+    } 
+    else {
+      String str2 = "(";
+      for (int i = 0; i < ifield.length - 1; i++) {
+        str2 += fImplemSpecif.fieldsCons(Util.coqify(ifield[i].getName()) + "Field");
+      }
+      str2 += fImplemSpecif.fieldsEnd(Util.coqify(ifield[ifield.length - 1].getName()) + 
+                                      "Field");
+      str2 += ")";
+      Util.writeln(fOut, tab + 1, str2);
+    }
   }
 
   /**

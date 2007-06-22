@@ -5,6 +5,7 @@ import mobius.bico.MethodHandler.MethodNotFoundException;
 import org.apache.bcel.Constants;
 import org.apache.bcel.classfile.Code;
 import org.apache.bcel.classfile.CodeException;
+import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Method;
 import org.apache.bcel.generic.ACONST_NULL;
 import org.apache.bcel.generic.ANEWARRAY;
@@ -63,7 +64,7 @@ import org.apache.bcel.generic.StackInstruction;
 import org.apache.bcel.generic.StackProducer;
 import org.apache.bcel.generic.Type;
 
-public class MethodExecutor extends ABasicExecutor {
+class MethodExecutor extends ABasicExecutor {
 
   /** determine the span of the 'reserved' methods names number default is 1. */
   private static final int RESERVED_METHODS = 1;
@@ -96,6 +97,32 @@ public class MethodExecutor extends ABasicExecutor {
     }
     for (Method meth: methods) {
       doMethodInstructions(meth);
+    }
+  }
+  
+  public void doEnumeration(int tab) {
+    final JavaClass jc = fClass.getJavaClass();
+    // methods
+    final Method[] imeth = jc.getMethods();
+    if (imeth.length == 0) {
+      Util.writeln(fOut, tab + 1, fImplemSpecif.getNoMethods());
+    } 
+    else {
+      String str2 = "(";
+      for (int i = 0; i < imeth.length - 1; i++) {
+
+        try {
+          str2 += fImplemSpecif.methodsCons(fMethodHandler.getName(imeth[i]) + "Method");
+        } 
+        catch (MethodNotFoundException e) {
+          e.printStackTrace(); // cannot happen
+          System.exit(1);
+        }
+      }
+      str2 += fImplemSpecif.methodsEnd(Util.coqify(imeth[imeth.length - 1].getName()) +
+                                       "Method");
+      str2 += ")";
+      Util.writeln(fOut, tab + 1, str2);
     }
   }
   /**
