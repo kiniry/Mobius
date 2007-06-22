@@ -35,7 +35,9 @@
 \usepackage{listings}
 \input{jml-listings}
 \lstset{language=[JML]Java,basicstyle=\ttfamily,commentstyle=\ttfamily,
-        keywordstyle=\bfseries,keywordstyle={[2]\bfseries\color{violet!80!black}}
+     %   otherkeywords=[3]{//@,/*@,@*/,//+@,//-@,/*+@,@+*/,/*-@,@-*/,@},
+        keywordstyle=\bfseries,keywordstyle={[2]\bfseries\color{violet!80!black}},
+        keywordstyle={[3]\color{violet!80}}
        }
 
 
@@ -51,18 +53,18 @@ of Functional Behavior for Java}
 {
   \inst{1}%
   Department of Computer Science\\
-  Iowa State University (moving to UCF)
+  \href{http://www.cs.iastate.edu/}{Iowa State University} (moving to \href{http://www.eecs.ucf.edu}{University of Central Florida})
   \and
   \inst{2}%
   School of Computer Science and Informatics \\
-  University College Dublin
+  \href{http://csiweb.ucd.ie/}{University College Dublin}
   \and
   \inst{3}%
   Computing Science Department \\
-  Radboud University Nijmegen
+  \href{http://www.cs.ru.nl/}{Radboud University Nijmegen}
 }
 
-\date[CAV 2007]{July 3, 2007 / CAV 2007 Tutorial / \href{http://www.jmlspecs.org}{jmlspecs.org}}
+\date[CAV 2007]{July 3, 2007 / \href{http://cav2007.org/}{CAV 2007} Tutorial / \href{http://www.jmlspecs.org}{jmlspecs.org}}
 
 \subject{JML} % optional insertion into the PDF information catalog.
 
@@ -168,13 +170,13 @@ Temporal Logic.
 \frametitle{JML's Goals}
 \begin{itemize}
 \item
-Practical, effective for detailed designs
+Practical, effective for detailed designs.
 
 \item
-Existing code
+Existing code.
 
 \item
-Wide range of tools
+Wide range of tools.
 \end{itemize}
 \end{frame}
 
@@ -195,9 +197,16 @@ Invariants
 \end{frame}
 
 \begin{frame}[fragile]
-\frametitle{A JML Specification}
+\frametitle{A First JML Specification}
 \lstinputlisting[linerange={1-12}]{examples/ArrayOps.java}
 \end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Field Specification}
+\lstinputlisting[linerange={1-6}]{examples/ArrayOps.java}
+\lstinputlisting[linerange={7-12},basicstyle=\ttfamily\color{lightgray},keywordstyle={[2]\bfseries\color{lightgray}}]{examples/ArrayOps.java}
+\end{frame}
+
 
 \subsection[Importance]{Importance of JML}
 
