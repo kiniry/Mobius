@@ -23,7 +23,7 @@
 
 \usepackage[english]{babel}
 \usepackage[latin1]{inputenc}
-
+\usepackage{beamerbaseverbatim}
 \usepackage{lmodern}
 \usepackage[T1]{fontenc}
 \usepackage{times}
@@ -32,16 +32,11 @@
 % Use the luximono package to get a better look for bolded keywords
 \usepackage[scaled=0.95]{luximono}
 
-
 \usepackage{listings}
 \input{jml-listings}
-\lstset{language=[JML]Java,basicstyle=\ttfamily,commentstyle=\ttfamily,keywordstyle=\bfseries}
-\newcommand{\LSTJMLFILE}[1]{
-\lstinputlisting[basicstyle=\ttfamily]{#1}
-}
-\newcommand{\LSTJMLFILESLICE}[2]{
-\lstinputlisting[gobble=4,\basicstyle=\ttfamily,linerange={#1}]{#2}
-}
+\lstset{language=[JML]Java,basicstyle=\ttfamily,commentstyle=\ttfamily,
+        keywordstyle=\bfseries,keywordstyle={[2]\bfseries\color{violet!80!black}}
+       }
 
 
 \title[JML Tutorial]{A JML Tutorial}
@@ -201,21 +196,7 @@ Invariants
 
 \begin{frame}[fragile]
 \frametitle{A JML Specification}
-\begin{lstlisting}
-public class ArrayFind {
-
-    /*@ requires ;
-      @*/
-    public static int find(Object[] a, Object x) {
-        for (int i = 0; i < a.length; i++) {
-            if (a[i] == x) {
-                return i;
-            }
-        }
-        return -1;
-    }
-}
-\end{lstlisting}
+\lstinputlisting[linerange={1-12}]{examples/ArrayOps.java}
 \end{frame}
 
 \subsection[Importance]{Importance of JML}
