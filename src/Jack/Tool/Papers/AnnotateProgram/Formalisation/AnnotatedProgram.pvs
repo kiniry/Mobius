@@ -9,19 +9,13 @@ BEGIN
                            LAMBDA (s : APState) : pstate(s)],
             SemanticsJMLTypes[Name, APState, LAMBDA (s : APState) : gvs(s)]
 
-  update_PState : (update_PState_type) =
-    LAMBDA (s : APState, upd : [PState -> PState]) : 
-      IF up?(ex(pstate(s)))
-      THEN s
-      ELSE s WITH [pstate := upd(pstate(s))]
-      ENDIF
+  update_PState : (update_PState_type) = 
+    LAMBDA (s : APState, upd : [PState -> PState]) :     
+      s WITH [pstate := upd(pstate(s))]
 
   update_GhostVars : (update_GhostVars_type) =
-    LAMBDA (s : APState, upd : [Store -> Store]) : 
-      IF up?(ex(pstate(s)))
-      THEN s
-      ELSE s WITH [gvs := upd(gvs(s))]
-      ENDIF
+    LAMBDA (s : APState, upd : [Store -> Store])  : 
+      s WITH [gvs := upd(gvs(s))]
 
   IMPORTING SemanticsJML[Name, Program, APState, id,
                          LAMBDA (s : APState) : pstate(s),
@@ -117,8 +111,9 @@ BEGIN
   wf_state_update_stack : LEMMA % :-)
     FORALL(p : Program, this_val : (defined?), arg : (getLocalDecls(p)), 
            param_val : (defined?),
-           lvds : finite_set[(getLocalDecls(p))], s : APState) : 
+           lvds : finite_set[LocalVarDecl], s : APState) : 
       wf_state(p)(s) IMPLIES
+      (FORALL (l : LocalVarDecl) : lvds(l) IMPLIES getLocalDecls(p)(l)) IMPLIES
         wf_state(p)(update_stack(this_val, arg, param_val, lvds, s))
 
   wf_initial_AP_state : LEMMA % :-)

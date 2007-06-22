@@ -87,7 +87,7 @@
         nil))
       nil))
     nil)
-   proved
+   proved-complete
    ((bool nonempty-type-eq-decl nil booleans nil)
     (set type-eq-decl nil sets nil)
     (is_finite const-decl "bool" finite_sets nil)
@@ -99,9 +99,7 @@
     (nonempty? const-decl "bool" sets nil)
     (add const-decl "(nonempty?)" sets nil)
     (union const-decl "set" sets nil)
-    (finite_union judgement-tcc nil finite_sets nil)
-    (t!1 skolem-const-decl "Class[Name]" ProgramFunctions nil)
-    (x!1 skolem-const-decl "finite_set[Class]" ProgramFunctions nil)
+    (finite_union judgement-tcc nil finite_sets nil) nil nil
     (NOT const-decl "[bool -> bool]" booleans nil)
     (member const-decl "bool" sets nil)
     (Program type-eq-decl nil Program nil)
@@ -207,7 +205,7 @@
      finite_sets nil)
     (Program type-eq-decl nil Program nil)
     (member const-decl "bool" sets nil)
-    (NOT const-decl "[bool -> bool]" booleans nil) nil nil
+    (NOT const-decl "[bool -> bool]" booleans nil)
     (finite_union judgement-tcc nil finite_sets nil)
     (union const-decl "set" sets nil)
     (add const-decl "(nonempty?)" sets nil)
@@ -422,7 +420,7 @@
         nil))
       nil))
     nil)
-   proved
+   proved-complete
    ((finite_set_induction formula-decl nil FiniteSetInduction nil)
     (Name formal-nonempty-type-decl nil ProgramFunctions nil)
     (Val type-decl nil Val_adt nil)
@@ -438,12 +436,8 @@
     (lift type-decl nil lift_adt nil)
     (Class type-eq-decl nil Program nil)
     (Program type-eq-decl nil Program nil)
-    (finite_union judgement-tcc nil finite_sets nil)
-    (t!1 skolem-const-decl "Class[Name]" ProgramFunctions nil)
-    (x!1 skolem-const-decl "finite_set[Class]" ProgramFunctions nil)
-    (member const-decl "bool" sets nil)
-    (x!2 skolem-const-decl "finite_set[Method]" ProgramFunctions nil)
-    (t!2 skolem-const-decl "Method[Name]" ProgramFunctions nil)
+    (finite_union judgement-tcc nil finite_sets nil) nil nil
+    (member const-decl "bool" sets nil) nil nil
     (singleton? const-decl "bool" sets nil)
     (singleton const-decl "(singleton?)" sets nil)
     (emptyset const-decl "set" sets nil)
@@ -517,7 +511,7 @@
                  ("2" (apply-extensionality :hide? t)
                   (("2" (grind) nil))))))))))))))))
     nil)
-   unchecked nil nil nil nil nil)
+   proved-complete nil nil nil nil nil)
   (getGhostDecls_TCC1-2 nil 3390903999 3391148164
    ("" (skosimp*)
     (("" (use "finite_set_induction[Class]")
@@ -607,7 +601,7 @@
     (nonempty? const-decl "bool" sets nil)
     (add const-decl "(nonempty?)" sets nil)
     (union const-decl "set" sets nil)
-    (finite_union judgement-tcc nil finite_sets nil) nil nil
+    (finite_union judgement-tcc nil finite_sets nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
     (member const-decl "bool" sets nil)
     (Program type-eq-decl nil Program nil)
@@ -668,7 +662,7 @@
         nil))
       nil))
     nil)
-   proved
+   proved-complete
    ((Program type-eq-decl nil Program nil)
     (is_finite const-decl "bool" finite_sets nil)
     (set type-eq-decl nil sets nil)
@@ -686,21 +680,9 @@
     (Name formal-nonempty-type-decl nil ProgramFunctions nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
-    (boolean nonempty-type-decl nil booleans nil)
-    (n!1 skolem-const-decl
-     "({n: Name | EXISTS (c: Class[Name]): classes(p!1)(c) AND name(c) = n})"
-     ProgramFunctions nil)
-    (c!1 skolem-const-decl "Class[Name]" ProgramFunctions nil)
-    (injective? const-decl "bool" functions nil)
-    (x1!1 skolem-const-decl
-     "({n: Name | EXISTS (c: Class[Name]): classes(p!1)(c) AND name(c) = n})"
-     ProgramFunctions nil)
-    (x2!1 skolem-const-decl
-     "({n: Name | EXISTS (c: Class[Name]): classes(p!1)(c) AND name(c) = n})"
-     ProgramFunctions nil)
-    (nonempty_exists formula-decl nil sets_lemmas nil)
-    (c!1 skolem-const-decl "Class[Name]" ProgramFunctions nil)
-    (c!1 skolem-const-decl "Class[Name]" ProgramFunctions nil)
+    (boolean nonempty-type-decl nil booleans nil) nil nil
+    (injective? const-decl "bool" functions nil) nil nil
+    (nonempty_exists formula-decl nil sets_lemmas nil) nil nil
     (choose const-decl "(p)" sets nil)
     (below type-eq-decl nil nat_types nil)
     (< const-decl "bool" reals nil)
@@ -716,8 +698,7 @@
     (number_field_pred const-decl "[number -> boolean]" number_fields
      nil)
     (number nonempty-type-decl nil numbers nil)
-    (AND const-decl "[bool, bool -> bool]" booleans nil)
-    (p!1 skolem-const-decl "Program[Name]" ProgramFunctions nil)
+    (AND const-decl "[bool, bool -> bool]" booleans nil) nil
     (= const-decl "[T, T -> boolean]" equalities nil)
     (nonempty? const-decl "bool" sets nil))
    325 270 t nil))
@@ -765,7 +746,7 @@
         nil))
       nil))
     nil)
-   proved
+   proved-complete
    ((Class type-eq-decl nil Program nil)
     (lift type-decl nil lift_adt nil)
     (FieldDecl type-eq-decl nil Program nil)
@@ -782,24 +763,9 @@
     (Name formal-nonempty-type-decl nil ProgramFunctions nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
-    (boolean nonempty-type-decl nil booleans nil)
-    (m!1 skolem-const-decl "Method[Name]" ProgramFunctions nil)
-    (n!1 skolem-const-decl "{n: Name |
-         EXISTS (m: Method):
-           classes(p!1)(c!1) AND methods(c!1)(m) AND name(m) = n}"
-     ProgramFunctions nil)
-    (injective? const-decl "bool" functions nil)
-    (x1!1 skolem-const-decl "({n: Name |
-    EXISTS (m: Method[Name]):
-      classes(p!1)(c!1) AND methods(c!1)(m) AND name(m) = n})"
-     ProgramFunctions nil)
-    (x2!1 skolem-const-decl "({n: Name |
-    EXISTS (m: Method[Name]):
-      classes(p!1)(c!1) AND methods(c!1)(m) AND name(m) = n})"
-     ProgramFunctions nil)
-    (nonempty_exists formula-decl nil sets_lemmas nil)
-    (m!1 skolem-const-decl "Method[Name]" ProgramFunctions nil)
-    (m!1 skolem-const-decl "Method[Name]" ProgramFunctions nil)
+    (boolean nonempty-type-decl nil booleans nil) nil nil
+    (injective? const-decl "bool" functions nil) nil nil
+    (nonempty_exists formula-decl nil sets_lemmas nil) nil nil
     (choose const-decl "(p)" sets nil)
     (below type-eq-decl nil nat_types nil)
     (< const-decl "bool" reals nil)
@@ -816,15 +782,13 @@
      nil)
     (number nonempty-type-decl nil numbers nil)
     (AND const-decl "[bool, bool -> bool]" booleans nil)
-    (Program type-eq-decl nil Program nil)
-    (p!1 skolem-const-decl "Program[Name]" ProgramFunctions nil)
-    (c!1 skolem-const-decl "Class[Name]" ProgramFunctions nil)
+    (Program type-eq-decl nil Program nil) nil nil
     (= const-decl "[T, T -> boolean]" equalities nil)
     (nonempty? const-decl "bool" sets nil))
    361 280 t nil))
  (get_class_TCC1 0
   (get_class_TCC1-1 nil 3390821142 3391148165
-   ("" (subtype-tcc) nil nil) proved
+   ("" (subtype-tcc) nil nil) proved-complete
    ((Name formal-nonempty-type-decl nil ProgramFunctions nil)
     (Val type-decl nil Val_adt nil)
     (boolean nonempty-type-decl nil booleans nil)
@@ -845,7 +809,7 @@
    169 140 nil nil))
  (lookup_mthd_TCC1 0
   (lookup_mthd_TCC1-1 nil 3390821142 3391148165
-   ("" (subtype-tcc) nil nil) proved
+   ("" (subtype-tcc) nil nil) proved-complete
    ((Method type-eq-decl nil Program nil)
     (Expr type-decl nil Expr_adt nil)
     (finite_set type-eq-decl nil finite_sets nil)
@@ -893,11 +857,9 @@
         nil))
       nil))
     nil)
-   proved
+   proved-complete
    ((nonempty? const-decl "bool" sets nil)
-    (= const-decl "[T, T -> boolean]" equalities nil)
-    (fs!1 skolem-const-decl "finite_set[FieldDecl[Name]]"
-     ProgramFunctions nil)
+    (= const-decl "[T, T -> boolean]" equalities nil) nil
     (AND const-decl "[bool, bool -> bool]" booleans nil)
     (number nonempty-type-decl nil numbers nil)
     (number_field_pred const-decl "[number -> boolean]" number_fields
@@ -913,21 +875,9 @@
     (nat nonempty-type-eq-decl nil naturalnumbers nil)
     (< const-decl "bool" reals nil)
     (below type-eq-decl nil nat_types nil)
-    (choose const-decl "(p)" sets nil)
-    (f!2 skolem-const-decl "FieldDecl[Name]" ProgramFunctions nil)
-    (f!2 skolem-const-decl "FieldDecl[Name]" ProgramFunctions nil)
-    (nonempty_exists formula-decl nil sets_lemmas nil)
-    (x2!1 skolem-const-decl
-     "({n: Name | EXISTS (f: FieldDecl[Name]): fs!1(f) AND name(f) = n})"
-     ProgramFunctions nil)
-    (x1!1 skolem-const-decl
-     "({n: Name | EXISTS (f: FieldDecl[Name]): fs!1(f) AND name(f) = n})"
-     ProgramFunctions nil)
-    (injective? const-decl "bool" functions nil)
-    (f!2 skolem-const-decl "FieldDecl[Name]" ProgramFunctions nil)
-    (n!1 skolem-const-decl
-     "({n: Name | EXISTS (f: FieldDecl[Name]): fs!1(f) AND name(f) = n})"
-     ProgramFunctions nil)
+    (choose const-decl "(p)" sets nil) nil nil
+    (nonempty_exists formula-decl nil sets_lemmas nil) nil nil
+    (injective? const-decl "bool" functions nil) nil nil
     (finite_set type-eq-decl nil finite_sets nil)
     (is_finite const-decl "bool" finite_sets nil)
     (set type-eq-decl nil sets nil)
@@ -974,11 +924,9 @@
         nil))
       nil))
     nil)
-   proved
+   proved-complete
    ((nonempty? const-decl "bool" sets nil)
-    (= const-decl "[T, T -> boolean]" equalities nil)
-    (ls!1 skolem-const-decl "finite_set[LocalVarDecl[Name]]"
-     ProgramFunctions nil)
+    (= const-decl "[T, T -> boolean]" equalities nil) nil
     (AND const-decl "[bool, bool -> bool]" booleans nil)
     (number nonempty-type-decl nil numbers nil)
     (number_field_pred const-decl "[number -> boolean]" number_fields
@@ -994,21 +942,9 @@
     (nat nonempty-type-eq-decl nil naturalnumbers nil)
     (< const-decl "bool" reals nil)
     (below type-eq-decl nil nat_types nil)
-    (choose const-decl "(p)" sets nil)
-    (l!1 skolem-const-decl "LocalVarDecl[Name]" ProgramFunctions nil)
-    (l!1 skolem-const-decl "LocalVarDecl[Name]" ProgramFunctions nil)
-    (nonempty_exists formula-decl nil sets_lemmas nil)
-    (x2!1 skolem-const-decl
-     "({n: Name | EXISTS (l: LocalVarDecl[Name]): ls!1(l) AND name(l) = n})"
-     ProgramFunctions nil)
-    (x1!1 skolem-const-decl
-     "({n: Name | EXISTS (l: LocalVarDecl[Name]): ls!1(l) AND name(l) = n})"
-     ProgramFunctions nil)
-    (injective? const-decl "bool" functions nil)
-    (l!1 skolem-const-decl "LocalVarDecl[Name]" ProgramFunctions nil)
-    (n!1 skolem-const-decl
-     "({n: Name | EXISTS (l: LocalVarDecl[Name]): ls!1(l) AND name(l) = n})"
-     ProgramFunctions nil)
+    (choose const-decl "(p)" sets nil) nil nil
+    (nonempty_exists formula-decl nil sets_lemmas nil) nil nil
+    (injective? const-decl "bool" functions nil) nil nil
     (finite_set type-eq-decl nil finite_sets nil)
     (is_finite const-decl "bool" finite_sets nil)
     (set type-eq-decl nil sets nil)
@@ -1021,7 +957,11 @@
    338 250 t nil)))
 (WellFormedProgram
  (wf_program_has_unique_class_names 0
-  (wf_program_has_unique_class_names-1 nil 3390201065 3391148166
-   ("" (postpone) nil nil) unfinished nil 77 70 t shostak)))
+  (wf_program_has_unique_class_names-1 nil 3390201065 3391488660
+   ("" (postpone) nil nil) unfinished nil 93 90 t shostak))
+ (wf_Stmt_implies_finite_subterm 0
+  (wf_Stmt_implies_finite_subterm-1 nil 3391493387 3391493470
+   ("" (expand "subterm") (("" (postpone) nil nil)) nil) unfinished nil
+   82483 6160 t shostak)))
 (WellTypedProgram)
 
