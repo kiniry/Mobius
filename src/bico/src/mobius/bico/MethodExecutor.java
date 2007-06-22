@@ -64,6 +64,13 @@ import org.apache.bcel.generic.StackInstruction;
 import org.apache.bcel.generic.StackProducer;
 import org.apache.bcel.generic.Type;
 
+/**
+ * This class is used in the treatment of methods by bico.
+ * 
+ * @author J. Charles (julien.charles@inria.fr), 
+ * P. Czarnik (czarnik@mimuw.edu.pl), 
+ * L. Hubert (laurent.hubert@irisa.fr)
+ */
 class MethodExecutor extends ABasicExecutor {
 
   /** determine the span of the 'reserved' methods names number default is 1. */

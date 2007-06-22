@@ -1,5 +1,13 @@
 package mobius.bico;
 
+/**
+ * This interface defines constants useful for the translation
+ * of bytecode.
+ * 
+ * @author J. Charles (julien.charles@inria.fr), 
+ * P. Czarnik (czarnik@mimuw.edu.pl), 
+ * L. Hubert (laurent.hubert@irisa.fr)
+ */
 public interface TypesInCoq {
   
   /** instruction types in BCEL the same as in umbra. */

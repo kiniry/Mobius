@@ -3,6 +3,14 @@ package mobius.bico;
 import org.apache.bcel.classfile.Field;
 import org.apache.bcel.classfile.JavaClass;
 
+
+/**
+ * This class is used in the treatment of fields by bico.
+ * 
+ * @author J. Charles (julien.charles@inria.fr), 
+ * P. Czarnik (czarnik@mimuw.edu.pl), 
+ * L. Hubert (laurent.hubert@irisa.fr)
+ */
 class FieldExecutor extends ABasicExecutor {
   
   /** determine the span of the 'reserved' fields names number default is 1. */
