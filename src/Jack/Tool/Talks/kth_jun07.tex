@@ -1,5 +1,5 @@
 %% -*- coding: iso-8859-1; ispell-local-dictionary: "english"; compile-command: "make" -*-
-\documentclass[table,10pt]{beamer} 
+\documentclass[table,10pt,a4]{beamer} 
 \usefonttheme{serif}
 
 \usecolortheme{deepblue}
@@ -139,8 +139,12 @@ Thread 1: & Thread 2: \\
 \item Correctly synchronised programs: sequentially consistent
 executions do not  contain data races
 \item For such programs, all executions sequentially consistent
-\item Thus: all behaviours can be described with (fine-grained)
+\(\Rightarrow\) all behaviours can be described with (fine-grained)
 interleaving semantics
+\item Verification of program behaviour only for correctly
+synchronised programs
+\pause
+\bigskip
 \item Formalisation of Java Memory Model and DRF Guarantee (with
 Gustavo Petri)
 \item Revival of RCC (Race Condition Checker, Flanagan, Abadi, Freund)
@@ -157,9 +161,9 @@ by Radu Grigore (UCD)
 //@ ensures Q;
 void call(){ ... }
 
-void method(MyObject o){
+void method(MyObject o)\{
   o.call();
-  // (1) }
+  // (1) \}
 \end{alltt}
 Can we rely on \alert{\texttt{Q[o/this]}} at (1)?
 }
@@ -270,7 +274,7 @@ class Fraction\{
 class Even\{
   private /*@ spec_public */ int n = 0; 
 
-  //@ \alert{requires \bsl haslock(this);}
+  //@ \alert{requires \bsl\(\)lockset.has(this);}
   //@ requires n % 2 == 0;
   //@ ensures  n % 2 == 0;
   public \alert{synchronized} int next()\{
@@ -304,7 +308,7 @@ class Car\{
   final Body b;
   final Lock lb = new ReentrantLock();
 
-  //@ requires lockset.has(lw);
+  //@ requires \bsl\(\)lockset.has(lw);
   public void changeWheel(Wheel new, int n)\{ \dots \}
 
   public void paint()\{ 
@@ -377,7 +381,7 @@ class Car\{
  \item Objects transferred between threads:
   \begin{itemize}
   \item upon thread creation
-  \item upon tread finish (via join)
+  \item upon tread finish (via \texttt{join})
   \item via shared objects (e.g. containers)
   \end{itemize}
   \end{itemize}
@@ -494,10 +498,10 @@ class Fraction\{
   final int n;
   final int d;
 
-  \alert{//@ permission_set (*)p = n : (0,1), d : (0,1);}
+  \alert{//@ permission_set <*>p = n : (0,1), d : (0,1);}
 
   \alert{//@ requires true;}
-  \alert{//@ ensures (*)p;}
+  \alert{//@ ensures <*>p;}
   public Fraction(int n, int d)\{
     this.n = n;
     this.d = d; \}
@@ -575,6 +579,7 @@ public static void main()\{
     \alert{\(tid \longrightarrow a \longrightarrow p,q\)}
 
 
+ 
 
 
 
@@ -628,6 +633,7 @@ public static void main()\{
     \alert{\(tid \longrightarrow a \longrightarrow p,q\)}
 
   Thread t = new MyThread(a);
+
 
 
 
@@ -805,7 +811,7 @@ class MyThread{
 class Matrix \{
   final int[][] elems;
 
-  \alert{//@ permission_set (2)r = elems : (0,1) (0,1)(0,1);}
+  \alert{//@ permission_set <2>r = elems : (0,1) (0,1)(0,1);}
   \alert{//@ permission_set w = elems : (0,1) (0,1)(1,0);}
 
   \alert{//@ requires w;}
@@ -831,8 +837,8 @@ static public void main(Matrix a, Matrix b)\{
     
     askUser(a,b);     // write permission needed
 
-    \alert{//@ ((2)r) a;}
-    \alert{//@ ((2)r) b;}
+    \alert{//@ (<2>r) a;}
+    \alert{//@ (<2>r) b;}
 
     FutureTask f = new FutureTask(new Multiplication(a,b));
     f.start();        // matrices shared in readonly mode
@@ -908,15 +914,17 @@ static public void main(Matrix a, Matrix b)\{
 \frame[containsverbatim]{
   \begin{alltt}
 /*@ <1,0> @*/ class Quantity\verb|{| 
+  \alert{//@ permission_set w = i : (1, 0);}
+
   public volatile int i; //@ invariant i >= 0;
 
   //@ requires initial >= 0;
-  //@ ensures i == initial;
+  //@ ensures \alert{w} && i == initial;
   public Quantity(int initial)\verb|{| i = initial; \verb|}|
 
-  //@ requires plus >= 0;
+  //@ requires \alert{w} && plus >= 0;
   //@ modifies i;
-  //@ ensures i >= plus;
+  //@ ensures \alert{w} && i >= plus;
   public void add(int plus)\verb|{| i += plus; \verb|}|\verb|}|
 \end{alltt}
 }
@@ -924,12 +932,12 @@ static public void main(Matrix a, Matrix b)\{
 \frame[containsverbatim]{
 \begin{alltt}
 /*@ <*,*> @*/ class CommonWarehouse\verb|{|
-  //@ \alert{requires q : (1,0);}
-  //@ \alert{ensures  q : (0,0);}
+  //@ \alert{requires q.w;}
+  //@ \alert{ensures  true;}
   static void lend(Quantity q)\verb|{| ... \verb|}|
     
-  //@ \alert{requires q : (0,0);}
-  //@ \alert{ensures  q : (1,0);}
+  //@ \alert{requires true;}
+  //@ \alert{ensures  q.w;}
   static void takeBack(Quantity q)\verb|{| ... \verb|}|\verb|}|
 \end{alltt}
 }
@@ -938,16 +946,16 @@ static public void main(Matrix a, Matrix b)\{
 \begin{alltt}
 
   //@ requires j >= 0 && k >= 0;
-  //@ ensures \verb|\|result.i >= k;
+  //@ ensures \verb|\|result.w && \verb|\|result.i >= k;
   public static Quantity main(int j, int k)\verb|{|
     Quantity q = new Quantity(j);
-      \alert{\perm{q : (1,0)}    \seqconc{q.i = j}{q.i = j}}
+      \alert{\perm{q.w}    \seqconc{q.i = j}{q.i = j}}
     CommonWarehouse.lend(q);
-      \alert{\perm{q : (0,0)}    \seqconc{q.i = j}{\(\top\)}}
+      \alert{\perm{\(\top\)}    \seqconc{q.i = j}{\(\top\)}}
     CommonWarehouse.takeBack(q);
-      \alert{\perm{q : (1,0)}    \seqconc{q.i = j}{\(\top\)}}
+      \alert{\perm{q.w}    \seqconc{q.i = j}{\(\top\)}}
     q.add(k);
-      \alert{\perm{q : (1,0)}    \seqconc{q.i \(\geq\) k}{q.i \(\geq\) k}  }
+      \alert{\perm{q.w}    \seqconc{q.i \(\geq\) k}{q.i \(\geq\) k}  }
    return q; 
   \verb|}|
 \end{alltt}
