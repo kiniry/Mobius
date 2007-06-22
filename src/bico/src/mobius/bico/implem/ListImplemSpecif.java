@@ -1,5 +1,4 @@
 package mobius.bico.implem;
-import java.io.BufferedWriter;
 import java.io.PrintStream;
 
 
@@ -8,13 +7,13 @@ public class ListImplemSpecif implements IImplemSpecifics {
   public String classType() {
     return "list Class";
   }
-  public String interfaceCons(String name) {
+  public String interfaceCons(final String name) {
     return name + " :: ";
   }
   public String interfaceEnd() {
     return "nil";
   }
-  public String classCons(String name) {
+  public String classCons(final String name) {
     return name + " :: ";
   }
   public String classEnd() {
@@ -26,20 +25,20 @@ public class ListImplemSpecif implements IImplemSpecifics {
   public String getNoFields() {
     return "nil";
   }
-  public String fieldsCons(String name) {
+  public String fieldsCons(final String name) {
     return name + " :: ";
   }
-  public String fieldsEnd(String name) {
+  public String fieldsEnd(final String name) {
     return name + " :: nil";
   }
 
   public String getNoMethods() {
     return "nil";
   }
-  public String methodsCons(String name) {
+  public String methodsCons(final String name) {
     return name + " :: ";
   }
-  public String methodsEnd(String name) {
+  public String methodsEnd(final String name) {
     return name + " :: nil";
   }
   public String interfaceType() {
@@ -48,7 +47,7 @@ public class ListImplemSpecif implements IImplemSpecifics {
   public String interfaceEmpty() {
     return "nil";
   }
-  public void printExtraBodyField(PrintStream out) {
+  public void printExtraBodyField(final PrintStream out) {
 
   }
   public String instructionsType() {
@@ -57,16 +56,17 @@ public class ListImplemSpecif implements IImplemSpecifics {
   public String getNoInstructions() {
     return "nil";
   }
-  public String instructionsCons(String name, int pos, int pos_next) {
+  public String instructionsCons(final String name, final int pos, 
+                                 final int pos_next) {
     return "(" + pos + "%N, " + name + ") :: ";
   }
-  public String instructionsEnd(String name, int pos) {
+  public String instructionsEnd(final String name, final int pos) {
     return  "(" + pos + "%N, " + name + ") :: nil";
   }
-  public String requireLib(String string) {
+  public String requireLib(final String string) {
     return "Require Import List_" + string + ".";
   }
-  public String getFileName(String pathname) {
+  public String getFileName(final String pathname) {
     return pathname + "List";
   }
   public String toString() {

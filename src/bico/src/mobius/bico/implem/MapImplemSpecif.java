@@ -1,37 +1,41 @@
 package mobius.bico.implem;
-import java.io.IOException;
 import java.io.PrintStream;
 
 import mobius.bico.Util;
 
 public class MapImplemSpecif implements IImplemSpecifics {
-
+  String interfaceParen = "";
+  String instructionsParen = "";
+  String classParen = "";
+  String fieldsParen = "";
+  String methodsParen = "";
+  
   public String classType() {
     return "PROG.MapClass.t";
   }
   public String interfaceType() {
     return "PROG.MapInterface.t";
   }
-  String interfaceParen = "";
-  public String interfaceCons(String name) {
+
+  public String interfaceCons(final String name) {
     interfaceParen += ")";
     return "(mi_cons " + name;
   }
   public String interfaceEnd() {
-    String res = "mi_empty"+ interfaceParen;
+    final String res = "mi_empty" + interfaceParen;
     interfaceParen = "";
     return res;
   }
   public String interfaceEmpty() {
     return "mi_empty";
   }
-  String classParen = "";
-  public String classCons(String name) {
+
+  public String classCons(final String name) {
     classParen += ")";
     return "(mc_cons " + name;
   }
   public String classEnd() {
-    String res = "mc_empty"+ classParen;
+    String res = "mc_empty" + classParen;
     classParen = "";
     return res;
   }
@@ -43,13 +47,13 @@ public class MapImplemSpecif implements IImplemSpecifics {
     return "mf_empty";
   }
 
-  String fieldsParen = "";
-  public String fieldsCons(String name) {
+
+  public String fieldsCons(final String name) {
     fieldsParen += ")";
     return "(mf_cons " + name;
   }
-  public String fieldsEnd(String name) {
-    String res = "(mf_single "+ name + ")" + fieldsParen;
+  public String fieldsEnd(final String name) {
+    final String res = "(mf_single " + name + ")" + fieldsParen;
     fieldsParen = "";
     return res;
   }
@@ -58,19 +62,20 @@ public class MapImplemSpecif implements IImplemSpecifics {
     return "ms_empty";
   }
 
-  String methodsParen = "";
-  public String methodsCons(String name) {
+
+  public String methodsCons(final String name) {
     methodsParen += ")";
     return "(ms_cons " + name;
   }
-  public String methodsEnd(String name) {
-    String res = "(ms_single "+ name + ")" + methodsParen;
+  public String methodsEnd(final String name) {
+    final String res = "(ms_single " + name + ")" + methodsParen;
     methodsParen = "";
     return res;
   }
-  public void printExtraBodyField(PrintStream out) {
-    Util.writeln(out,3,"0%N");
+  public void printExtraBodyField(final PrintStream out) {
+    Util.writeln(out, 3, "0%N");
   }
+  
   public String instructionsType() {
     return " MapN.t (Instruction*option PC)";
   }
@@ -79,20 +84,21 @@ public class MapImplemSpecif implements IImplemSpecifics {
     return "bc_single 0%N Return";
   }
 
-  String instructionsParen = "";
-  public String instructionsCons(String name, int pos, int pos_next) {
+
+  public String instructionsCons(final String name, final int pos, 
+                                 final int pos_next) {
     instructionsParen += ")";
     return "(bc_cons " + pos + "%N " + name + " " + pos_next + "%N ";
   }
-  public String instructionsEnd(String name, int pos) {
-    String res = "(bc_single " + pos + "%N " + name + ")" + instructionsParen;
+  public String instructionsEnd(final String name, final int pos) {
+    final String res = "(bc_single " + pos + "%N " + name + ")" + instructionsParen;
     instructionsParen = "";
     return res;
   }
-  public String requireLib(String string) {
+  public String requireLib(final String string) {
     return "Require Import Map_" + string + ".";
   }
-  public String getFileName(String pathname) {
+  public String getFileName(final String pathname) {
     return pathname + "Map";
   }
   

@@ -80,7 +80,7 @@ class MethodExecutor extends ABasicExecutor {
   private ConstantPoolGen fConstantPool;
   
   
-  public MethodExecutor(ABasicExecutor be, ClassGen cg) {
+  public MethodExecutor(final ABasicExecutor be, final ClassGen cg) {
     super(be);
     
     fClass = cg;
@@ -107,7 +107,7 @@ class MethodExecutor extends ABasicExecutor {
     }
   }
   
-  public void doEnumeration(int tab) {
+  public void doEnumeration(final int tab) {
     final JavaClass jc = fClass.getJavaClass();
     // methods
     final Method[] imeth = jc.getMethods();
@@ -139,8 +139,8 @@ class MethodExecutor extends ABasicExecutor {
    *            the method to add
    * @throws ClassNotFoundException
    */
-  private void doMethodSignature( Method method,
-                                 int coqMethodName) throws ClassNotFoundException {
+  private void doMethodSignature(final Method method,
+                                 final int coqMethodName) throws ClassNotFoundException {
     // InstructionList il = mg.getInstructionList();
     // InstructionHandle ih[] = il.getInstructionHandles();
     // signature
@@ -194,7 +194,7 @@ class MethodExecutor extends ABasicExecutor {
    * @throws MethodNotFoundException
    * @throws ClassNotFoundException
    */
-  private void doMethodInstructions(Method method) 
+  private void doMethodInstructions(final Method method) 
     throws ClassNotFoundException {
     final MethodGen mg = new MethodGen(method, fClass.getClassName(), fConstantPool);
     // LocalVariableGen[] aa = mg.getLocalVariables();
@@ -342,7 +342,7 @@ class MethodExecutor extends ABasicExecutor {
    * @throws ClassNotFoundException
    * @throws MethodNotFoundException
    */
-  private String doInstruction(int pos, Instruction ins) throws ClassNotFoundException {
+  private String doInstruction(final int pos, final Instruction ins) throws ClassNotFoundException {
     String ret;
 
     String name = ins.getName();

@@ -2,7 +2,6 @@ package mobius.bico.dico;
 
 import java.io.PrintStream;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.bcel.classfile.JavaClass;
@@ -15,11 +14,11 @@ import org.apache.bcel.classfile.JavaClass;
 public class CamlDictionary implements Dictionary {
   /** current class number. */
   private int fCurrentClass = RESERVED_CLASSES;
-  
+
   private class Singleton {
     int i;
 
-    Singleton(int i) {
+    Singleton(final int i) {
       this.i = i;
     }
 
@@ -61,18 +60,23 @@ public class CamlDictionary implements Dictionary {
     }
 
     @Override
-    public boolean equals(Object obj) {
-      if (this == obj)
+    public boolean equals(final Object obj) {
+      if (this == obj) {
         return true;
-      if (obj == null)
+      }
+      if (obj == null) {
         return false;
-      if (getClass() != obj.getClass())
+      }
+      if (!(obj instanceof Couple)) {
         return false;
+      }
       final Couple other = (Couple) obj;
-      if (i1 != other.i1)
+      if (i1 != other.i1) {
         return false;
-      if (i2 != other.i2)
+      }
+      if (i2 != other.i2) {
         return false;
+      }
       return true;
     }
   }
@@ -80,7 +84,7 @@ public class CamlDictionary implements Dictionary {
   private class Triplet {
     int i1, i2, i3;
 
-    Triplet(int i1, int i2, int i3) {
+    Triplet(final int i1, final int i2, final int i3) {
       this.i1 = i1;
       this.i2 = i2;
       this.i3 = i3;
@@ -92,20 +96,26 @@ public class CamlDictionary implements Dictionary {
     }
 
     @Override
-    public boolean equals(Object obj) {
-      if (this == obj)
+    public boolean equals(final Object obj) {
+      if (this == obj) {
         return true;
-      if (obj == null)
+      }
+      if (obj == null) {
         return false;
-      if (getClass() != obj.getClass())
+      }
+      if (getClass() != obj.getClass()) {
         return false;
+      }
       final Triplet other = (Triplet) obj;
-      if (i1 != other.i1)
+      if (i1 != other.i1) {
         return false;
-      if (i2 != other.i2)
+      }
+      if (i2 != other.i2) {
         return false;
-      if (i3 != other.i3)
+      }
+      if (i3 != other.i3) {
         return false;
+      }
       return true;
     }
   }
@@ -120,27 +130,29 @@ public class CamlDictionary implements Dictionary {
    * 
    * @see bico.Dictionary#addClass(java.lang.String, int, int)
    */
-  public void addClass(String javaName, int coqPackageName, int coqClassName) {
+  public void addClass(final String javaName, final int coqPackageName, 
+                       final int coqClassName) {
     if (coqClassName > fCurrentClass) {
       fCurrentClass = coqClassName;
     }
     cn.put(javaName, new Couple(coqPackageName, coqClassName));
   }
-  public void addClass(JavaClass jc, int coqClassName) {    
+  public void addClass(final JavaClass jc, 
+                       final int coqClassName) {
     addClass(jc.getClassName(), getCoqPackageName(jc.getPackageName()), coqClassName);
   }
   public int getCurrentClass() {
     return fCurrentClass;
   }
 
-  public int getCoqClassName(String javaName) {
+  public int getCoqClassName(final String javaName) {
     return cn.get(javaName).i2;
   }
-  public int getCoqClassName(JavaClass jc) {
+  public int getCoqClassName(final JavaClass jc) {
     return getCoqClassName(jc.getClassName());
   }
 
-  public int getCoqPackageName(JavaClass jc) {
+  public int getCoqPackageName(final JavaClass jc) {
     Couple c = cn.get(jc.getClassName());
     return c.i1;
   }
@@ -149,8 +161,9 @@ public class CamlDictionary implements Dictionary {
    * 
    * @see bico.Dictionary#addField(java.lang.String, int, int, int)
    */
-  public void addField(String javaName, int coqPackageName, int coqClassName,
-                       int coqFieldName) {
+  public void addField(final String javaName, final int coqPackageName, 
+                       final int coqClassName,
+                       final int coqFieldName) {
     fn.put(javaName,
            new Triplet(coqPackageName, coqClassName, coqFieldName));
   }
@@ -160,8 +173,8 @@ public class CamlDictionary implements Dictionary {
    * 
    * @see bico.Dictionary#addMethod(java.lang.String, int, int, int)
    */
-  public void addMethod(String javaName, int coqPackageName,
-                        int coqClassName, int coqMethodName) {
+  public void addMethod(final String javaName, final int coqPackageName,
+                        final int coqClassName, final int coqMethodName) {
     mn.put(javaName, new Triplet(coqPackageName, coqClassName,
                                  coqMethodName));
   }
@@ -171,7 +184,7 @@ public class CamlDictionary implements Dictionary {
    * 
    * @see bico.Dictionary#addPackage(java.lang.String, int)
    */
-  public void addPackage(String javaName, int coqPackageName) {
+  public void addPackage(final String javaName, final int coqPackageName) {
     pn.put(javaName, new Singleton(coqPackageName));
   }
 
@@ -180,42 +193,35 @@ public class CamlDictionary implements Dictionary {
    * 
    * @see bico.Dictionary#getCoqPackageName(java.lang.String)
    */
-  public int getCoqPackageName(String javaName) {
-    Singleton s = pn.get(javaName);
-    if (s != null)
+  public int getCoqPackageName(final String javaName) {
+    final Singleton s = pn.get(javaName);
+    if (s != null) {
       return s.i;
+    }
     return 0;
   }
 
-  public void write(PrintStream out) throws java.io.IOException {
+  public void write(final PrintStream out) throws java.io.IOException {
     out.print("include TranslatorDef\n\n");
 
-    Iterator<Map.Entry<String, Singleton>> itpn = pn.entrySet().iterator();
-    while (itpn.hasNext()) {
-      Map.Entry<String, Singleton> e = itpn.next();
-      out.print("let pn= DicoPN.add " + e.getValue() + " \""
-                + e.getKey().replaceAll("\"", "\\\"") + "\" pn\n");
+    for (Map.Entry<String, Singleton> e: pn.entrySet()) {
+      out.print("let pn= DicoPN.add " + e.getValue() + " \"" + 
+                e.getKey().replaceAll("\"", "\\\"") + "\" pn\n");
     }
 
-    Iterator<Map.Entry<String, Couple>> itcn = cn.entrySet().iterator();
-    while (itcn.hasNext()) {
-      Map.Entry<String, Couple> e = itcn.next();
-      out.print("let cn= DicoCN.add " + e.getValue() + " \""
-                + e.getKey().replaceAll("\"", "\\\"") + "\" cn\n");
+    for (Map.Entry<String, Couple> e: cn.entrySet()) {
+      out.print("let cn= DicoCN.add " + e.getValue() + " \"" + 
+                e.getKey().replaceAll("\"", "\\\"") + "\" cn\n");
     }
 
-    Iterator<Map.Entry<String, Triplet>> itfn = fn.entrySet().iterator();
-    while (itfn.hasNext()) {
-      Map.Entry<String, Triplet> e = itfn.next();
-      out.print("let fn= DicoFN.add " + e.getValue() + " \""
-                + e.getKey().replaceAll("\"", "\\\"") + "\" fn\n");
+    for (Map.Entry<String, Triplet> e: fn.entrySet()) {
+      out.print("let fn= DicoFN.add " + e.getValue() + " \"" + 
+                e.getKey().replaceAll("\"", "\\\"") + "\" fn\n");
     }
 
-    Iterator<Map.Entry<String, Triplet>> itmn = mn.entrySet().iterator();
-    while (itmn.hasNext()) {
-      Map.Entry<String, Triplet> e = itmn.next();
-      out.print("let mn= DicoMN.add (" + e.getValue() + ") \""
-                + e.getKey().replaceAll("\"", "\\\"") + "\" mn\n");
+    for (Map.Entry<String, Triplet> e: mn.entrySet()) {
+      out.print("let mn= DicoMN.add (" + e.getValue() + ") \"" + 
+                e.getKey().replaceAll("\"", "\\\"") + "\" mn\n");
     }
   }
 
@@ -229,37 +235,37 @@ public class CamlDictionary implements Dictionary {
  * the generated file)
  *****************************************************
     module OrderedInt =
-	struct
-	  type t = int
-	  let compare= Pervasives.compare
-	end
+  struct
+    type t = int
+    let compare= Pervasives.compare
+  end
 
-	module OrderedPair =
-	  functor (M1:Map.OrderedType) ->
-	    functor (M2:Map.OrderedType) ->
-	struct
-	  type t = M1.t * M2.t
-	  let compare = Pervasives.compare
-	end
-	module OrderedClassName = OrderedPair(OrderedInt)(OrderedInt)
-	module OrderedMethodName = OrderedPair (OrderedClassName) (OrderedInt)
-	module OrderedFieldName = OrderedMethodName
+  module OrderedPair =
+    functor (M1:Map.OrderedType) ->
+      functor (M2:Map.OrderedType) ->
+  struct
+    type t = M1.t * M2.t
+    let compare = Pervasives.compare
+  end
+  module OrderedClassName = OrderedPair(OrderedInt)(OrderedInt)
+  module OrderedMethodName = OrderedPair (OrderedClassName) (OrderedInt)
+  module OrderedFieldName = OrderedMethodName
 
-	module DicoInt = Map.Make(OrderedInt)
-	module DicoPN = DicoInt
-	module DicoCN = Map.Make(OrderedClassName)
-	module DicoMN = Map.Make(OrderedMethodName)
-	module DicoFN = Map.Make(OrderedFieldName)
-	module DicoMNPC = Map.Make (OrderedPair (OrderedMethodName) (OrderedInt))
-	module DicoType = Map.Make (OrderedPair (OrderedInt) (OrderedClassName))
+  module DicoInt = Map.Make(OrderedInt)
+  module DicoPN = DicoInt
+  module DicoCN = Map.Make(OrderedClassName)
+  module DicoMN = Map.Make(OrderedMethodName)
+  module DicoFN = Map.Make(OrderedFieldName)
+  module DicoMNPC = Map.Make (OrderedPair (OrderedMethodName) (OrderedInt))
+  module DicoType = Map.Make (OrderedPair (OrderedInt) (OrderedClassName))
 
-	module PN = DicoPN
-	module CN = DicoCN
-	module FN = DicoFN
-	module MN = DicoMN
-	let pn : string PN.t = PN.empty
-	let cn : string CN.t = CN.empty
-	let fn : string FN.t = FN.empty
-	let mn : string MN.t = MN.empty
+  module PN = DicoPN
+  module CN = DicoCN
+  module FN = DicoFN
+  module MN = DicoMN
+  let pn : string PN.t = PN.empty
+  let cn : string CN.t = CN.empty
+  let fn : string FN.t = FN.empty
+  let mn : string MN.t = MN.empty
  *********************************
  */

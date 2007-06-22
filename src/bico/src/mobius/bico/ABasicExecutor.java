@@ -21,8 +21,9 @@ public abstract class ABasicExecutor {
   /** the current bcel repository used. */
   final Repository fRepos;
   
-  public ABasicExecutor(Repository repos, IImplemSpecifics implemSpecif, 
-                        MethodHandler methodHandler, PrintStream out, Dictionary dico) {
+  public ABasicExecutor(final Repository repos, final IImplemSpecifics implemSpecif, 
+                        final MethodHandler methodHandler, final PrintStream out, 
+                        final Dictionary dico) {
     fImplemSpecif = implemSpecif;
     fMethodHandler = methodHandler;
     fRepos = repos;
@@ -30,7 +31,7 @@ public abstract class ABasicExecutor {
     fDico = dico;
   }
   
-  public ABasicExecutor(ABasicExecutor be) {
+  public ABasicExecutor(final ABasicExecutor be) {
     this(be.fRepos, be.fImplemSpecif, be.fMethodHandler, be.fOut, be.fDico);
   }
   

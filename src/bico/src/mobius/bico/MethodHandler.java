@@ -1,7 +1,6 @@
 package mobius.bico;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.bcel.classfile.Method;
@@ -20,40 +19,51 @@ public class MethodHandler {
    * 
    * @author L. Hubert (lhubert@irisa.fr)
    */
-  private class MethodType {
+  private static class MethodType {
     /**
      * name is the "coqified" version of the class name. This name cannot be
      * used to identify a method. Although it is not safe, two methods are
      * considered to be identical when they have the same name, the same
      * arguments and the same return value.
      */
-    private final String name;
+    private final String fName;
 
-    private final Type tret;
+    /** the method return type. */
+    private final Type fReturnType;
 
-    private final Type[] targs;
+    /** the argument types. */
+    private final Type[] fArgsType;
 
-    private String coqName;
+    /** the coq name of the method. */
+    private String fCoqName;
 
-    public MethodType(String name, Type[] targs, Type tret) {
-      this.targs = targs;
-      this.tret = tret;
-      this.name = name;
+    public MethodType(final String name, final Type[] targs, final Type tret) {
+      this.fArgsType = targs;
+      this.fReturnType = tret;
+      this.fName = name;
     }
-
+    
+    /**
+     * Constructor form a method gen.
+     * @param mg the object to abstract
+     */
+    public MethodType(final MethodGen mg) {
+      this.fArgsType = mg.getArgumentTypes();
+      this.fReturnType = mg.getReturnType();
+      this.fName = mg.getName();
+    }
+    
+    
     public boolean equals(final Object o) {
-      if (getName() == null || tret == null || targs == null) {
-        return false;
-      }
       if (o instanceof MethodType) {
         final MethodType mt = (MethodType) o;
-        if (!(getName().equals(mt.getName())
-            && (targs.length == mt.targs.length) && tret
-            .equals(mt.tret))) {
+        if (!(getName().equals(mt.getName()) && 
+            (fArgsType.length == mt.fArgsType.length) && 
+            fReturnType.equals(mt.fReturnType))) {
           return false;
         }
-        for (int i = 0; i < targs.length; i++) {
-          if (!targs[i].equals(mt.targs[i])) {
+        for (int i = 0; i < fArgsType.length; i++) {
+          if (!fArgsType[i].equals(mt.fArgsType[i])) {
             return false;
           }
         }
@@ -61,9 +71,17 @@ public class MethodHandler {
       }
       return false;
     }
+    
+    /**
+     * The hashcode is computed from the toString value.
+     * @return a valid hashcode
+     */
+    public int hashCode() {
+      return toString().hashCode();
+    }
 
     public String toString() {
-      return getName() + " [" + tret + ", " + targs + "]";
+      return getName() + " [" + fReturnType + ", " + fArgsType + "]";
     }
 
     /**
@@ -73,7 +91,7 @@ public class MethodHandler {
      *            and is compatible with coq (has been "coqified").
      */
     public void setCoqName(final String coqName) {
-      this.coqName = coqName;
+      fCoqName = coqName;
     }
 
     /**
@@ -82,93 +100,95 @@ public class MethodHandler {
      *         and is compatible with coq (has been "coqified").
      */
     public String getCoqName() {
-      return coqName;
+      return fCoqName;
     }
 
     /**
      * @return the java name
      */
     public String getName() {
-      return name;
+      return fName;
     }
   }
 
-  public class MethodNotFoundException extends Exception {
+  public static class MethodNotFoundException extends Exception {
     private static final long serialVersionUID = 1L;
 
-    public MethodNotFoundException(MethodType mt) {
+    public MethodNotFoundException(final MethodType mt) {
       super(mt.toString());
     }
   }
 
-  ArrayList<MethodType> al = new ArrayList<MethodType>();
+  /** the list of method types already seen. */
+  private List<MethodType> fMethodList = new ArrayList<MethodType>();
+  
 
-  public void addMethod(MethodGen m) {
-    MethodType mt = new MethodType(m.getName(), m.getArgumentTypes(), m
-                                   .getReturnType());
+  public void addMethod(final MethodGen m) {
+    final MethodType mt = new MethodType(m);
+    
     if (find(mt) == null) {
-      List l = findByName(mt);
-      int postfix = l.size();
-      if (postfix > 0)
+      final List l = findByName(mt);
+      final int postfix = l.size();
+      if (postfix > 0) {
         mt.setCoqName(Util.coqify(mt.getName()) + postfix);
-      else
+      }
+      else {
         mt.setCoqName(Util.coqify(mt.getName()));
-      al.add(mt);
+      }
+      fMethodList.add(mt);
     }
   }
 
-  private String getName(MethodType mt) throws MethodNotFoundException {
-    MethodType mt_old = find(mt);
-    if (mt_old != null)
-      return mt_old.getCoqName();
-    else
+  private String getName(final MethodType mt) throws MethodNotFoundException {
+    final MethodType mtOld = find(mt);
+    if (mtOld != null) {
+      return mtOld.getCoqName();
+    }
+    else {
       throw new MethodNotFoundException(mt);
+    }
   }
 
-  public String getName(MethodGen m) throws MethodNotFoundException {
-    String name = m.getName();
-    Type[] targs = m.getArgumentTypes();
-    Type tret = m.getReturnType();
-    MethodType mt = new MethodType(name, targs, tret);
+  public String getName(final MethodGen m) throws MethodNotFoundException {
+    final String name = m.getName();
+    final Type[] targs = m.getArgumentTypes();
+    final Type tret = m.getReturnType();
+    final MethodType mt = new MethodType(name, targs, tret);
     return getName(mt);
   }
 
-  public String getName(Method met) throws MethodNotFoundException {
-    String name = met.getName();
-    Type[] targs = met.getArgumentTypes();
-    Type tret = met.getReturnType();
-    MethodType mt = new MethodType(name, targs, tret);
+  public String getName(final Method met) throws MethodNotFoundException {
+    final String name = met.getName();
+    final Type[] targs = met.getArgumentTypes();
+    final Type tret = met.getReturnType();
+    final MethodType mt = new MethodType(name, targs, tret);
     return getName(mt);
   }
 
-  public String getName(InvokeInstruction ii, ConstantPoolGen cpg)
-  throws MethodNotFoundException {
-    String name = ii.getMethodName(cpg);
-    Type[] targs = ii.getArgumentTypes(cpg);
-    Type tret = ii.getReturnType(cpg);
-    MethodType mt = new MethodType(name, targs, tret);
+  public String getName(final InvokeInstruction ii, final ConstantPoolGen cpg)
+    throws MethodNotFoundException {
+    final String name = ii.getMethodName(cpg);
+    final Type[] targs = ii.getArgumentTypes(cpg);
+    final Type tret = ii.getReturnType(cpg);
+    final MethodType mt = new MethodType(name, targs, tret);
     return getName(mt);
   }
 
-  private List<MethodType> findByName(MethodType mt) {
-    Iterator iter = al.iterator();
-    ArrayList<MethodType> ret = new ArrayList<MethodType>();
-    while (iter.hasNext()) {
-      MethodType tmp = (MethodType) iter.next();
-      if (Util.coqify(tmp.getName()).equals(
-                                                Util.coqify(mt.getName()))) {
+  private List<MethodType> findByName(final MethodType mt) {
+    final List<MethodType> ret = new ArrayList<MethodType>();
+    for (MethodType tmp: fMethodList) {
+      if (Util.coqify(tmp.getName()).equals(Util.coqify(mt.getName()))) {
         ret.add(tmp);
       }
     }
     return ret;
   }
 
-  private MethodType find(MethodType mt) {
-    Iterator<MethodType> iter = al.iterator();
-    while (iter.hasNext()) {
-      MethodType tmp = iter.next();
-      if (tmp.equals(mt))
+  private MethodType find(final MethodType mt) {
+    for (MethodType tmp: fMethodList) {
+      if (tmp.equals(mt)) {
         return tmp;
+      }
     }
     return null;
   }

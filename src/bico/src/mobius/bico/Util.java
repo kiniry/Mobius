@@ -16,6 +16,13 @@ public final class Util {
   static final int TAB = 2;
   
   /**
+   * @deprecated
+   */
+  private Util() {
+    
+  }
+  
+  /**
    * Replaces all chars not accepted by coq by "_".
    * 
    * @return null only if str == null
@@ -87,21 +94,21 @@ public final class Util {
    * for instructions which should not exist - this is probably an error in
    * Bico.
    */
-  static String unknown(String instruction, Instruction ins) {
-    String name = ins.getName();
+  static String unknown(final String instruction, final  Instruction ins) {
+    final String name = ins.getName();
     System.err.println("Unknown " + instruction + ": " + name);
     return "Nop (* " + name + " *)";
   }
 
-  static void unhandled(String str, Type t) {
+  static void unhandled(final String str, final Type t) {
     System.err.println("Unhandled type (" + str + "): " + t.toString());
   }
 
   /**
    * variant with some more information about instruction kind.
    */ 
-  static String unhandled(String instruction, Instruction ins) {
-    String name = ins.getName();
+  static String unhandled(final String instruction, final Instruction ins) {
+    final String name = ins.getName();
     System.err.println("Unhandled " + instruction + ": " + name);
     return "Nop (* " + name + " *)";
   }
@@ -109,7 +116,7 @@ public final class Util {
   /**
    * for instructions not handled by Bicolano.
    */
-  static String unhandled(Instruction ins) {
+  static String unhandled(final Instruction ins) {
     return unhandled("Instruction", ins);
   }
 
@@ -121,8 +128,8 @@ public final class Util {
    * @return (Some "coq type t") or None
    * @throws ClassNotFoundException
    */
-  static String convertTypeOption(Type t, Repository strin)
-  throws ClassNotFoundException {
+  static String convertTypeOption(final Type t, final Repository strin)
+    throws ClassNotFoundException {
     if (t == Type.VOID || t == null) {
       return "None";
     }
@@ -211,7 +218,8 @@ public final class Util {
     }
   }
 
-  public static void writeln(PrintStream out, int tabs, String s) {
+  public static void writeln(final PrintStream out, final int tabs, 
+                             final String s) {
     final StringBuffer str = new StringBuffer();
     for (int i = 0; i < tabs * Util.TAB; i++) {
       str.append(' ');
