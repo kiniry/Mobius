@@ -1,5 +1,10 @@
 package mobius.bico;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
+
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.generic.ClassGen;
 
@@ -17,7 +22,7 @@ class ClassExecutor extends ABasicExecutor {
   private ClassGen fClass;
   
   /** the current tabulation level. */
-  private int fTab = 1;
+  private int fTab;
 
   /** an executor to generate things concerning methods. */
   private MethodExecutor fMethExecutor;
@@ -25,19 +30,41 @@ class ClassExecutor extends ABasicExecutor {
   /** an executor to generate things concerning fields. */
   private FieldExecutor fFieldExecutor;
 
+  /** the file that will be the output of the executor. */
+  private File fOutputFile;
+
   /**
    * Create a class executor in the context of another
    * executor.
    * @param be the BasicExecutor to get the initialization from
    * @param cg the class object to manipulate
+   * @param workingDir the current working directory
+   * @throws FileNotFoundException if the file cannot be opened
    */
-  public ClassExecutor(final ABasicExecutor be, final ClassGen cg) {
+  public ClassExecutor(final ABasicExecutor be, final ClassGen cg,
+                       final File workingDir) throws FileNotFoundException {
     super(be);
     fClass = cg;
+    fOutputFile = determineFileName(workingDir);
+    fOut = new PrintStream(new FileOutputStream(new File(workingDir, fOutputFile.getPath())));
     fFieldExecutor = new FieldExecutor(this, fClass.getJavaClass());
     fMethExecutor = new MethodExecutor(this, fClass);
+    fTab = 0;
+    
   }
-  
+ 
+  /**
+   * Determine the file name of the output file.
+   * @param workingDir the current working directory
+   * @return a File which
+   */
+  private File determineFileName(final File workingDir) {
+    final JavaClass jc = fClass.getJavaClass(); 
+    final File dir = new File(jc.getPackageName().replace('.', File.separatorChar));
+    new File(workingDir, dir.getPath()).mkdirs();
+    return new File(dir, Util.coqify(jc.getClassName()) + ".v");
+  }
+
   /**
    * Real handling of one class in jc.
    * 
@@ -145,7 +172,13 @@ class ClassExecutor extends ABasicExecutor {
     }
   }
 
-  
+  /**
+   * Return the relative path to the output file.
+   * @return a file which has its relative path valid
+   */
+  public File getOuputFile() {
+    return fOutputFile;
+  }
 
 
 }
