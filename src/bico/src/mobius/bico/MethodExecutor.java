@@ -75,14 +75,20 @@ class MethodExecutor extends ABasicExecutor {
 
   /** determine the span of the 'reserved' methods names number default is 1. */
   private static final int RESERVED_METHODS = 1;
-
+  
+  /** the current class to get the method from. */
   private ClassGen fClass;
+  
+  /** the constant pool corresponding to the class. */
   private ConstantPoolGen fConstantPool;
   
-  
+  /**
+   * The constructor.
+   * @param be the BasicExecutor to get the initialization from
+   * @param cg the current class
+   */
   public MethodExecutor(final ABasicExecutor be, final ClassGen cg) {
     super(be);
-    
     fClass = cg;
     fConstantPool = cg.getConstantPool();
   }
@@ -133,10 +139,9 @@ class MethodExecutor extends ABasicExecutor {
     }
   }
   /**
-   * write the method signature.
+   * Write the method signature.
    * 
-   * @param method
-   *            the method to add
+   * @param method the method to add
    * @throws ClassNotFoundException
    */
   private void doMethodSignature(final Method method,
@@ -177,15 +182,15 @@ class MethodExecutor extends ABasicExecutor {
     final Type t = method.getReturnType();
     Util.writeln(fOut, tab + 1, Util.convertTypeOption(t, fRepos));
     Util.writeln(fOut, tab, ".");
+    
     String clName = "className";
     if (fClass.getJavaClass().isInterface()) {
       clName = "interfaceName";
     }
 
-    str = "Definition " + name + "Signature : MethodSignature := " + "(" + clName + ", " + 
-                         name + "ShortSignature).\n";
-    Util.writeln(fOut, 2, str);
-    fOut.println();
+    str = "Definition " + name + "Signature : MethodSignature := " + 
+                   "(" + clName + ", " + name + "ShortSignature).\n\n";
+    Util.writeln(fOut, tab, str);
   }
   
   

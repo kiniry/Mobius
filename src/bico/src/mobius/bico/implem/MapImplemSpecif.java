@@ -35,7 +35,7 @@ public class MapImplemSpecif implements IImplemSpecifics {
     return "(mc_cons " + name;
   }
   public String classEnd() {
-    String res = "mc_empty" + classParen;
+    final String res = "mc_empty" + classParen;
     classParen = "";
     return res;
   }

@@ -80,6 +80,9 @@ public class MethodHandler {
       return toString().hashCode();
     }
 
+    /**
+     * @return Name [ retType, argType ]
+     */
     public String toString() {
       return getName() + " [" + fReturnType + ", " + fArgsType + "]";
     }
@@ -112,6 +115,7 @@ public class MethodHandler {
   }
 
   public static class MethodNotFoundException extends Exception {
+    /** the serial version. */
     private static final long serialVersionUID = 1L;
 
     public MethodNotFoundException(final MethodType mt) {

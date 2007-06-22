@@ -230,8 +230,15 @@ public class Executor extends ABasicExecutor {
 
     fOut.close(); // closing output file
     
-    final File dicoFile = new File(fFileName.getParent(), "dico.ml");
-    dicoFile.createNewFile();
+    writeDictionnary();
+  }
+
+  /**
+   * Write the dictionnary to a file.
+   * @throws IOException If there is a problem in writing.
+   */
+  private void writeDictionnary() throws IOException {
+    final File dicoFile = new File(fWorkingDir, "dico.ml");
     fOut = new PrintStream(new FileOutputStream(dicoFile));
     fDico.write(fOut);
     fOut.close();
@@ -291,9 +298,10 @@ public class Executor extends ABasicExecutor {
    * Handle one class from library files.
    * @param clname the class to load from the classpath
    * @throws ClassNotFoundException if the specified class cannot be found
-   * @throws IOException 
+   * @throws IOException if the class executor has a writing problem
    */
-  public void handleLibraryClass(final String clname) throws ClassNotFoundException, IOException {
+  public void handleLibraryClass(final String clname) throws ClassNotFoundException, 
+                                                             IOException {
     System.out.println(clname);
     handleClass(clname, ClassPath.SYSTEM_CLASS_PATH);
   }
@@ -303,7 +311,7 @@ public class Executor extends ABasicExecutor {
    * @param clname the current class to handle
    * @param pathname the path where to find the specified class
    * @throws ClassNotFoundException if the class specified cannot be found
-   * @throws IOException 
+   * @throws IOException if the class executor has a writing problem
    */
   public void handleDiskClass(final String clname, 
                                final String pathname) throws ClassNotFoundException, 
@@ -321,7 +329,7 @@ public class Executor extends ABasicExecutor {
    * @param cp the class path where to find the class
    * @throws ClassNotFoundException if the class is unavailable or if there
    * are some type resolution problems 
-   * @throws IOException 
+   * @throws IOException if the class executor has a writing problem
    */
   public void handleClass(final String clname, 
                            final ClassPath cp) throws ClassNotFoundException, IOException {

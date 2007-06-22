@@ -153,7 +153,7 @@ public class CamlDictionary implements Dictionary {
   }
 
   public int getCoqPackageName(final JavaClass jc) {
-    Couple c = cn.get(jc.getClassName());
+    final Couple c = cn.get(jc.getClassName());
     return c.i1;
   }
   /*
