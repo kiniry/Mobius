@@ -34,9 +34,9 @@ Talk -*- Outline -*-
 *** spec_public
 *** Semantics of Specifications
 ** Exercise Specifying a Type
-** Basic Tool Use (demo + exercise)
+** Basic Tool Use (demo + exercise) (Revised Bag example?, or Purse)
 *** ESC/Java2
-*** jmlc
+*** jmlc, jmlunit in Eclipse
 *** KeY (optional)
 ** Tips and Pitfalls
 *** Object Identity (example)
@@ -50,7 +50,7 @@ Talk -*- Outline -*-
 *** Using Both Techniques by Casting
 ** Multiple Specification Cases
 *** Semantics
-*** Use of \same
+*** Use of \same (not in ESC/Java2)
 *** Specifying Exceptional Behavior
 **** tips
 **** pitfalls
@@ -91,13 +91,14 @@ Talk -*- Outline -*-
 *** History Constraints
 *** Ghost Fields
 
-* ESC/Java2
+* ESC/Java2 (See notes)
 ** What it Does (demo)
 ** Warnings
 *** Kinds of Warnings
 *** How to Interpret Messages
 *** Exercise
 ** Multithreading support
+*** Mention RCC?
 ** Connection to Provers
 
 * Conclusions

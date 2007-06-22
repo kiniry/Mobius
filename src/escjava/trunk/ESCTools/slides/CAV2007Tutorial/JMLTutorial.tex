@@ -35,11 +35,9 @@
 \usepackage{listings}
 \input{jml-listings}
 \lstset{language=[JML]Java,basicstyle=\ttfamily,commentstyle=\ttfamily,
-     %   otherkeywords=[3]{//@,/*@,@*/,//+@,//-@,/*+@,@+*/,/*-@,@-*/,@},
-        keywordstyle=\bfseries,keywordstyle={[2]\bfseries\color{violet!80!black}},
-        keywordstyle={[3]\color{violet!80}}
+        keywordstyle=\bfseries,keywordstyle={[2]\bfseries\color{violet!80!black}}
        }
-
+\thicklines
 
 \title[JML Tutorial]{A JML Tutorial}
 \subtitle{Modular Specification and Verification \\
@@ -202,9 +200,24 @@ Invariants
 \end{frame}
 
 \begin{frame}[fragile]
-\frametitle{Field Specification}
-\lstinputlisting[linerange={1-6}]{examples/ArrayOps.java}
-\lstinputlisting[linerange={7-12},basicstyle=\ttfamily\color{lightgray},keywordstyle={[2]\bfseries\color{lightgray}}]{examples/ArrayOps.java}
+\frametitle{Field Specification with \lstinline!spec_public!}
+\lstinputlisting[linerange={1-2},basicstyle=\ttfamily\color{lightgray},keywordstyle={[2]\bfseries\color{lightgray}}]{examples/ArrayOps.java}
+\lstinputlisting[linerange={3-3},frame=single,frameround=tttt,rulecolor=\color{violet},belowskip=0pt]{examples/ArrayOps.java}
+\lstinputlisting[linerange={4-12},basicstyle=\ttfamily\color{lightgray},keywordstyle={[2]\bfseries\color{lightgray}}]{examples/ArrayOps.java}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Object Invariant}
+\lstinputlisting[linerange={1-4},basicstyle=\ttfamily\color{lightgray},keywordstyle={[2]\bfseries\color{lightgray}}]{examples/ArrayOps.java}
+\lstinputlisting[linerange={5-5},frame=single,frameround=tttt,rulecolor=\color{violet},belowskip=0pt]{examples/ArrayOps.java}
+\lstinputlisting[linerange={6-12},basicstyle=\ttfamily\color{lightgray},keywordstyle={[2]\bfseries\color{lightgray}}]{examples/ArrayOps.java}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Method Specification with \lstinline|requires|, \lstinline!ensures!}
+\lstinputlisting[linerange={1-6},basicstyle=\ttfamily\color{lightgray},keywordstyle={[2]\bfseries\color{lightgray}}]{examples/ArrayOps.java}
+\lstinputlisting[linerange={7-10},frame=single,frameround=tttt,rulecolor=\color{violet},belowskip=0pt]{examples/ArrayOps.java}
+\lstinputlisting[linerange={11-12},basicstyle=\ttfamily\color{lightgray},keywordstyle={[2]\bfseries\color{lightgray}}]{examples/ArrayOps.java}
 \end{frame}
 
 
