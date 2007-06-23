@@ -32,12 +32,19 @@ public class BMLConfig {
 	// line breaking)
 	public int line_pos;
 	
+	// unused
+	public int max_line_width;
+	
 	// depth of currrently displayed expression
 	// in expression tree
 	public int expr_depth;
 	
+	public char expr_block_start = '{';
+	public char expr_block_end = '}';
+	
 	public BMLConfig(BCConstantPool cp) {
 		this.cp = cp;
+		max_line_width = 40;
 	}
 	
 	public BCConstantPool getConstantPool() {

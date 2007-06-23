@@ -179,9 +179,70 @@ public abstract class Expression {
 		conf.root_pri = MAX_PRI;
 		conf.wciecie = "    ";
 		conf.expr_depth = 0;
-		return printCode(conf);
+		String str = printCode(conf);
+		return str;
+//		return breakLines(conf, str, usedc);
 	}
 
+	// doesn't work 
+	private String breakLines(BMLConfig conf, String str, int spos) {
+		for (int i=0; i<16; i++)
+			System.out.print("V---------");
+		System.out.println();
+		System.out.println(str);
+		String result = "";
+		int l = str.length();
+		int lvl = 0;
+		int[] d = new int[l];
+		String s = "";
+		String tmp = "";
+		int n = 0;
+		for (int i=0; i<l; i++) {
+			char ch = str.charAt(i);
+			if (ch == conf.expr_block_start) {
+				lvl++;
+			} else if (ch == conf.expr_block_end) {
+				lvl--;
+			} else {
+				d[n] = lvl;
+				s += ch;
+				tmp += lvl;
+				n++;
+			}
+		}
+		System.out.println(s);
+		System.out.println(tmp);
+		l = s.length();
+		int p0 = 0;
+		int p1 = conf.max_line_width;
+		while (p1 < l) {
+			float max = -1;
+			int bestp = -1;
+			for (int i=p0; i<p1; i++) {
+				float v = i-p0;
+				if (d[i] >= d[p1])
+					v = -1;
+				System.out.println(d[i]+"  "+d[p1]);
+				if (v > max) {
+					max = v;
+					bestp = i;
+				}
+			}
+			if (bestp == -1)
+				System.out.println("ERROR!");
+			for (int i=p0; i<bestp; i++)
+				result += s.charAt(i);
+			result += "\n";
+			p0 = bestp;
+			p1 = p0 + conf.max_line_width;
+			System.out.println("------");
+		}
+		for (int i=p0; i<l; i++)
+			result += s.charAt(i);
+		System.out.println(result);
+		return result;
+	}
+	
 	/**
 	 * Adds parenthness to root of the expression.
 	 * 
@@ -193,15 +254,20 @@ public abstract class Expression {
 		int rp = conf.root_pri;
 		conf.root_pri = priority;
 		String str = "";
-		if (rp != priority) {
-			conf.expr_depth++;
-//			str += "{";
-		}
+//		boolean lvlinc = (rp != priority);
+//		if (subExpressions == null) {
+//			lvlinc = false;
+//		} else if (subExpressions.length < 2)
+//				lvlinc = false;
+//		if (lvlinc) {
+//			conf.expr_depth++;
+//			str += conf.expr_block_start;
+//		}
 		str += printCode1(conf);
-		if (rp != priority) {
-			conf.expr_depth--;
-//			str += "}";
-		}
+//		if (lvlinc) {
+//			conf.expr_depth--;
+//			str += conf.expr_block_end;
+//		}
 		if (priority > rp) {
 			String str2 = "";
 			for (int i=0; i<str.length(); i++) {
