@@ -107,7 +107,7 @@ public class BytecodeDocument extends Document {
       final int[] syncLine = syncBS(sDoc, fJavaClass, line);
       final int syncPos = sDoc.getLineOffset(syncLine[0]);
       final int syncLen = sDoc.getLineOffset(syncLine[1] + 1) - syncPos;
-      System.out.println("sync("+syncLine[0]+", "+syncLine[1]+")");
+      System.out.println("sync(" + syncLine[0] + ", " + syncLine[1] + ")");
       fRelatedEditor.getEditorSite().getPage().activate(fRelatedEditor);
       if (syncLen < 0) MessageDialog.openError(new Shell(), "Bytecode", "Synchronisation failed");
       else fRelatedEditor.getSelectionProvider().setSelection(new TextSelection(syncPos, syncLen));
@@ -255,11 +255,11 @@ public class BytecodeDocument extends Document {
     String s;
     final Method[] methods = jc.getMethods();
     Method m;
-    for (int i=0; i<methods.length; i++) {
+    for (int i = 0; i < methods.length; i++) {
       m = methods[i];
       l = m.getLineNumberTable().getLineNumberTable().length;
       if (SrcLine.startsWith(m.toString())) {
-        while (bcln<maxL) {
+        while (bcln < maxL) {
           bcln++;
           s = LineAt(bcln);
           if (s.startsWith("Code"))
@@ -270,7 +270,7 @@ public class BytecodeDocument extends Document {
         break;
       }
       l_do = -1;
-      for (j=0; j<l; j++) {
+      for (j = 0; j < l; j++) {
         pc = m.getLineNumberTable().getLineNumberTable()[j].getStartPC();
         ln = m.getLineNumberTable().getLineNumberTable()[j].getLineNumber() - 1;
         popln = bcln;

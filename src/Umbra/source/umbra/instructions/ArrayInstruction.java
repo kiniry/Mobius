@@ -87,8 +87,8 @@ public class ArrayInstruction extends StringInstruction {
     //&*
     final boolean isOK = correct();
     if (isOK) {
-    if (name.compareTo("newarray")==0)
-      return new NEWARRAY(r);
+      if (name.compareTo("newarray") == 0)
+        return new NEWARRAY(r);
     }
     //System.out.println("   Failed!");
     return null;

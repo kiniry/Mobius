@@ -127,11 +127,11 @@ public class BytecodeContribution extends ControlContribution {
     public final void documentAboutToBeChanged(final DocumentEvent event) {
       if (!ready)
         init(event.fDocument); //this marks ready as true
-      System.out.println("documentAboutToBeChanged "+event.getText());
-      System.out.println("documentAboutToBeChanged "+event.getModificationStamp());
-      System.out.println("documentAboutToBeChanged "+event.getOffset());
-      System.out.println("documentAboutToBeChanged "+event.getLength());
-      System.out.println("documentAboutToBeChanged "+event.getDocument().hashCode());
+      System.out.println("documentAboutToBeChanged " + event.getText());
+      System.out.println("documentAboutToBeChanged " + event.getModificationStamp());
+      System.out.println("documentAboutToBeChanged " + event.getOffset());
+      System.out.println("documentAboutToBeChanged " + event.getLength());
+      System.out.println("documentAboutToBeChanged " + event.getDocument().hashCode());
       System.out.flush();
       current_event = event;
 
@@ -159,10 +159,10 @@ public class BytecodeContribution extends ControlContribution {
      * @see org.eclipse.jface.text.IDocumentListener#documentChanged(org.eclipse.jface.text.DocumentEvent)
      */
     public final void documentChanged(final DocumentEvent event) {
-      System.out.println("documentChanged "+event.getText());
+      System.out.println("documentChanged " + event.getText());
       System.out.flush();
       int stop = 0;
-      int startRem =0, stopRem = 0;
+      int startRem = 0, stopRem = 0;
       try {
         startRem = event.fDocument.getLineOfOffset(event.getOffset());
         final int insertedLen = event.getText().length();

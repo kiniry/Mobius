@@ -53,7 +53,7 @@ public class SpecialNumberRule extends NumberRule {
    * TODO
    */
   public final IToken evaluate(final ICharacterScanner scanner) {
-    int c= scanner.read();
+    int c = scanner.read();
     if ((char)c == start) {
       if (super.evaluate(scanner) == fToken) {
         if (!isFin) return fToken;

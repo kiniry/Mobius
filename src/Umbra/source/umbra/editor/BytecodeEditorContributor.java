@@ -148,8 +148,8 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
     } catch (MalformedURLException e) {
       MessageDialog.openError(new Shell(),
           "Bytecode",
-          "Improper bytecode icon on eclipse GUI reference ("+
-          e.getMessage()+")");
+          "Improper bytecode icon on eclipse GUI reference (" +
+          e.getMessage() + ")");
     }
     actionPlus.setToolTipText("Change color");
     actionMinus.setToolTipText("Change color");

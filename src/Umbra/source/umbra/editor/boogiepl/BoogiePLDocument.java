@@ -96,7 +96,7 @@ public class BoogiePLDocument extends Document {
       final int[] syncLine = syncBS(sDoc, fJavaClass, line);
       final int syncPos = sDoc.getLineOffset(syncLine[0]);
       final int syncLen = sDoc.getLineOffset(syncLine[1] + 1) - syncPos;
-      System.out.println("sync("+syncLine[0]+", "+syncLine[1]+")");
+      System.out.println("sync(" + syncLine[0] + ", " + syncLine[1] + ")");
       fRelatedEditor.getEditorSite().getPage().activate(fRelatedEditor);
       if (syncLen < 0) MessageDialog.openError(new Shell(), "BoogiePL", "Synchronisation failed");
       else fRelatedEditor.getSelectionProvider().setSelection(new TextSelection(syncPos, syncLen));
@@ -244,11 +244,11 @@ public class BoogiePLDocument extends Document {
     String s;
     final Method[] methods = jc.getMethods();
     Method m;
-    for (int i=0; i<methods.length; i++) {
+    for (int i = 0; i < methods.length; i++) {
       m = methods[i];
       l = m.getLineNumberTable().getLineNumberTable().length;
       if (SrcLine.startsWith(m.toString())) {
-        while (bcln<maxL) {
+        while (bcln < maxL) {
           bcln++;
           s = LineAt(bcln);
           if (s.startsWith("Code"))
@@ -259,11 +259,11 @@ public class BoogiePLDocument extends Document {
         break;
       }
       l_do = -1;
-      for (j=0; j<l; j++) {
+      for (j = 0; j < l; j++) {
         pc = m.getLineNumberTable().getLineNumberTable()[j].getStartPC();
         ln = m.getLineNumberTable().getLineNumberTable()[j].getLineNumber() - 1;
         popln = bcln;
-        while (bcln<maxL) {
+        while (bcln < maxL) {
           bcln++;
           s = LineAt(bcln);
           if (s.startsWith("" + pc + ":"))
@@ -272,11 +272,13 @@ public class BoogiePLDocument extends Document {
         if (ln == line) {
           l_od = bcln;
           continue;
-        } if ((ln > line) && (l_od == 0)) {
+        }
+        if ((ln > line) && (l_od == 0)) {
           l_od = popln;
           l_do = bcln - 1;
           break;
-        } if ((l_od != 0) && (ln != line)) {
+        }
+        if ((l_od != 0) && (ln != line)) {
           l_do = bcln - 1;
           break;
         }
@@ -284,7 +286,7 @@ public class BoogiePLDocument extends Document {
           break;
       }
       if ((l_od != 0) && (l_do == -1)) {
-        while (bcln<maxL) {
+        while (bcln < maxL) {
           bcln++;
           s = LineAt(bcln);
           if (s.lastIndexOf(":") == -1)
@@ -292,7 +294,8 @@ public class BoogiePLDocument extends Document {
         }
         l_do = bcln - 1;
         break;
-      } if (j<l)
+      }
+      if (j < l)
         break;
       if ((l_od != 0) && (l_do == maxL)) {
         l_do = l_od;

@@ -24,12 +24,24 @@ import org.apache.bcel.generic.MethodGen;
  */
 public class BcelTestRun {
 
+  /**
+   * TODO
+   */
   static final String HWClName = "umbra.test.HelloWorld";
+  
+  /**
+   * TODO
+   */
   static final String HWClNameW = "bin\\umbra\\test\\HelloWorld.class";
 
-  public static JavaClass zmien_jc(final JavaClass jc)
-  {
-    final ClassGen cg = new ClassGen(jc);
+  /**
+   * TODO
+   *
+   * @param a_java_class
+   * @return
+   */
+  public static JavaClass change_jc(final JavaClass a_java_class) {
+    final ClassGen cg = new ClassGen(a_java_class);
     final ConstantPoolGen cpg = cg.getConstantPool();
     final Method[] methods = cg.getMethods();
     for (int i = 0; i < methods.length; i++) {
@@ -40,18 +52,18 @@ public class BcelTestRun {
       for (InstructionHandle pos = start; pos != end; pos = pos.getNext()) {
         final Instruction ins = pos.getInstruction();
         if ("ldc".equals(ins.getName())) {
-            System.out.println(cpg.getSize());
-            cpg.addString("CompDiff");
-            final Constant con = cpg.getConstant(35);
-            System.out.println("Index " + ((ConstantString)con).getStringIndex());
-            cpg.setConstant(23, con);
-            final Method mm = mg.getMethod();
-            methods[i] = mm;
+          System.out.println(cpg.getSize());
+          cpg.addString("CompDiff");
+          final Constant con = cpg.getConstant(35);
+          System.out.println("Index " + ((ConstantString)con).getStringIndex());
+          cpg.setConstant(23, con);
+          final Method mm = mg.getMethod();
+          methods[i] = mm;
         }
       }
       cg.setConstantPool(cpg);
       cg.update();
-      jc.setConstantPool(jc.getConstantPool());
+      a_java_class.setConstantPool(a_java_class.getConstantPool());
       /* for (InstructionHandle pos = start; pos != end; pos = pos.getNext()) {
         Instruction ins = pos.getInstruction();
       }*/
@@ -59,15 +71,14 @@ public class BcelTestRun {
     return cg.getJavaClass();
   }
 
-  public static void wypisz(final JavaClass jc)
-  {
+  public static void wypisz(final JavaClass jc) {
     String bajtkod = "";
     final Method[] methods = jc.getMethods();
     final byte[][] names = new byte[methods.length][256];
     final byte[][] code = new byte[methods.length][4096];
     final int[] namesLen = new int[methods.length];
     final int[] codeLen = new int[methods.length];
-    for(int i = 0; i < methods.length; i++) {
+    for (int i = 0; i < methods.length; i++) {
       try {
         namesLen[i] = methods[i].toString().getBytes().length;
         names[i] = methods[i].toString().getBytes();

@@ -103,16 +103,16 @@ public class FieldInstruction extends StringInstruction {
 
   final boolean isOK = correct();
   if (isOK) {
-  if (name.compareTo("getfield")==0) {
+  if (name.compareTo("getfield") == 0) {
     return new GETFIELD(index);
   }
-  if (name.compareTo("getstatic")==0) {
+  if (name.compareTo("getstatic") == 0) {
     return new GETSTATIC(index);
   }
-  if (name.compareTo("putfield")==0) {
+  if (name.compareTo("putfield") == 0) {
     return new PUTFIELD(index);
   }
-  if (name.compareTo("putstatic")==0) {
+  if (name.compareTo("putstatic") == 0) {
     return new PUTSTATIC(index);
   }
   }

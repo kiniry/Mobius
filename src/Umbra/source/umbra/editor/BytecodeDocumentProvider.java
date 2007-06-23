@@ -36,7 +36,7 @@ public class BytecodeDocumentProvider extends FileDocumentProvider {
    */
   protected final IDocument createDocument(final Object element) throws CoreException {
     if (element instanceof IEditorInput) {
-      final IDocument document= createEmptyDocument();
+      final IDocument document = createEmptyDocument();
       if (setDocumentContent(document,
                    (IEditorInput) element,
                    getEncoding(element))) {

@@ -140,7 +140,8 @@ public class BytecodeController {
       if (metEnd && i < methods.length) {
         mg = new MethodGen(methods[i], cg.getClassName(), cpg);
         il = mg.getInstructionList();
-        System.out.println("method number["+i+"]"+mg.getName()+"il="+il.toString());
+        System.out.println("method number[" + i + "]" + mg.getName() +
+                           "il=" + il.toString());
         ih = il.getStart();
         end = il.getEnd();
         metEnd = false;
@@ -151,7 +152,7 @@ public class BytecodeController {
         line = doc.get(doc.getLineOffset(j), doc.getLineLength(j));
       } catch (BadLocationException e) {
         MessageDialog.openInformation(new Shell(), "Bytecode",
-            "The current document has no positions for line "+j);
+            "The current document has no positions for line " + j);
       }
       final String lineName = removeCommentFromLine(line);
       final String comment = extractCommentFromLine(line);
@@ -212,9 +213,9 @@ public class BytecodeController {
               final int startRem, final int stopRem, final int stop)
   {
     final ClassGen cg = ((BytecodeDocument)doc).getClassGen();
-    System.out.println("startRem="+startRem);
-    System.out.println("stopRem="+stopRem);
-    System.out.println("stop="+stop);
+    System.out.println("startRem=" + startRem);
+    System.out.println("stopRem=" + stopRem);
+    System.out.println("stop=" + stop);
     // i - index in the removed lines
     // j - index in the inserted lines
     for (int i = startRem, j = startRem;
@@ -284,8 +285,7 @@ public class BytecodeController {
       final Instruction ins = lc.getInstruction();
       if (ins != null) {
         lc.setTarget(nextLine.getList(), ins);
-      }
-      else {
+      } else {
         if (comment != null) interline.put(nextLine, comment);
       }
       //System.out.println("After target");
@@ -293,8 +293,7 @@ public class BytecodeController {
         lc.update(oldlc, nextLine, cg, ins, metEnd, theLast,
               instructions, off);
         all.set(j, lc);
-      }
-      else {
+      } else {
         if (oldlc.getHandle() == null)
           lc.initHandle(nextLine, cg, ins, metEnd, instructions, off);
         else
@@ -475,17 +474,17 @@ public class BytecodeController {
    */
   private String removeWhiteSpace(/*@ non_null @*/ final String string) {
     final BytecodeWhitespaceDetector wd = new BytecodeWhitespaceDetector();
-    int i=0;
+    int i = 0;
     boolean ok = true;
-    while (ok && i<string.length() && string.length()>0) {
-      if (!wd.isWhitespace(string.charAt(i))) ok=false;
+    while (ok && i < string.length() && string.length() > 0) {
+      if (!wd.isWhitespace(string.charAt(i))) ok = false;
       i++;
     }
     if (ok) return "";
-    int j=string.length() - 1;
-    ok=true;
-    while (ok && j>=0) {
-      if (!wd.isWhitespace(string.charAt(j))) ok=false;
+    int j = string.length() - 1;
+    ok = true;
+    while (ok && j >= 0) {
+      if (!wd.isWhitespace(string.charAt(j))) ok = false;
       j--;
     }
     if (ok) return "";
@@ -660,19 +659,19 @@ public class BytecodeController {
         return;
       }
       //if (line.index == index) {
-        System.out.println("" + i + ". " + line.name);
-        final InstructionHandle ih = line.getHandle();
-        if (ih == null) System.out.println("  handle - null");
-        else {
-          System.out.print("  handle(" + ih.getPosition() + ") ");
-          final Instruction ins = ih.getInstruction();
-          if (ins == null) System.out.print("null instruction");
-          else System.out.print(ins.getName());
-          if (ih.getNext() == null) System.out.print(" next: null");
-          else System.out.print(" next: " + ih.getNext().getPosition());
-          if (ih.getPrev() == null) System.out.println(" prev: null");
-          else System.out.println(" prev: " + ih.getPrev().getPosition());
-        }
+      System.out.println("" + i + ". " + line.name);
+      final InstructionHandle ih = line.getHandle();
+      if (ih == null) System.out.println("  handle - null");
+      else {
+        System.out.print("  handle(" + ih.getPosition() + ") ");
+        final Instruction ins = ih.getInstruction();
+        if (ins == null) System.out.print("null instruction");
+        else System.out.print(ins.getName());
+        if (ih.getNext() == null) System.out.print(" next: null");
+        else System.out.print(" next: " + ih.getNext().getPosition());
+        if (ih.getPrev() == null) System.out.println(" prev: null");
+        else System.out.println(" prev: " + ih.getPrev().getPosition());
+      }
       //}
     }
   }

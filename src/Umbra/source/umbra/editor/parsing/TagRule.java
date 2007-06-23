@@ -22,7 +22,7 @@ public class TagRule extends MultiLineRule {
   /**
    * TODO
    */
-  protected final boolean sequenceDetected(
+  protected final boolean sequenceDetected (
     final ICharacterScanner scanner,
     final char[] sequence,
     final boolean eofAllowed) {
@@ -47,7 +47,8 @@ public class TagRule extends MultiLineRule {
   /**
    * TODO
    */
-  protected final IToken doEvaluate(final ICharacterScanner scanner, final boolean resume) {
+  protected final IToken doEvaluate(final ICharacterScanner scanner,
+                                    final boolean resume) {
 
     if (resume) {
 
@@ -56,7 +57,7 @@ public class TagRule extends MultiLineRule {
 
     } else {
 
-      int c= scanner.read();
+      int c = scanner.read();
       if (c == fStartSequence[0]) {
         if (sequenceDetected(scanner, fStartSequence, false)) {
           loop++;
@@ -69,8 +70,7 @@ public class TagRule extends MultiLineRule {
                 loop++;
                 wrong++;
               }
-            }
-            else if (c == fEndSequence[0]) {
+            } else if (c == fEndSequence[0]) {
               if (sequenceDetected(scanner, fEndSequence, false)) {
                 loop--;
                 if (loop == 0) return fToken;

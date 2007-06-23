@@ -79,8 +79,8 @@ public abstract class InstructionLineController extends BytecodeLineController {
   public final boolean addHandle(final InstructionHandle ih,
                final InstructionList il,
                final MethodGen mg, final int i) {
-    System.out.println("InstructionLineController#addHandle name="+name);
-    System.out.println("il="+il.toString());
+    System.out.println("InstructionLineController#addHandle name=" + name);
+    System.out.println("il=" + il.toString());
     this.ih = ih;
     this.il = il;
     this.mg = mg;
@@ -115,11 +115,9 @@ public abstract class InstructionLineController extends BytecodeLineController {
       //index = nextLine.getIndex();
       if (ins == null) {
         ih = null;
-      }
-      else if (metEnd) {
+      } else if (metEnd) {
         ih = newList.append(ins);
-      }
-      else {
+      } else {
         if (ins instanceof BranchInstruction) {
           if (((BranchInstruction)ins).getTarget() == null)
             System.out.println("null target");
@@ -171,7 +169,7 @@ public abstract class InstructionLineController extends BytecodeLineController {
    */
   public static void printInstructionList(final InstructionList il) {
     InstructionHandle ih = il.getStart();
-    if (ih==null) {
+    if (ih == null) {
       System.out.println("start ih==null");
       return;
     }
@@ -203,10 +201,10 @@ public abstract class InstructionLineController extends BytecodeLineController {
       final BytecodeLineController nextLine, final ClassGen cg,
       final Instruction ins, final boolean metEnd, final boolean theLast,
       final LinkedList instructions, final int off) {
-    System.out.println("oldline="+oldLine.line);
-    System.out.println("nextline="+nextLine.line);
-    System.out.println("cg="+((cg==null) ? "null" : "ok"));
-    System.out.println("ins="+((ins==null) ? "null" : ins.getName()));
+    System.out.println("oldline=" + oldLine.line);
+    System.out.println("nextline=" + nextLine.line);
+    System.out.println("cg=" + ((cg == null) ? "null" : "ok"));
+    System.out.println("ins=" + ((ins == null) ? "null" : ins.getName()));
     System.out.println("MetEnd=" + metEnd);
     System.out.println("theLast=" + theLast);
     System.out.println("off=" + off);
@@ -214,26 +212,23 @@ public abstract class InstructionLineController extends BytecodeLineController {
     il = oldLine.getList();
     ih = oldLine.getHandle();
     index = oldLine.getIndex();
-    System.out.println("ih="+((ih==null) ? "null" :
-      ((ih.getInstruction()==null) ? "null ins" : ih.getInstruction().getName())));
+    System.out.println("ih=" + ((ih == null) ? "null" :
+      ((ih.getInstruction() == null) ? "null ins" : ih.getInstruction().getName())));
     if (il == null) System.out.println("il = null");
     else printInstructionList(il);
     if (ih == null) {
       System.out.println("A");
       initHandle(nextLine, cg, ins, metEnd, instructions, off);
-    }
-    else if (ih.getInstruction() == null) {
+    } else if (ih.getInstruction() == null) {
       System.out.println("B");
       initHandle(nextLine, cg, ins, metEnd, instructions, off);
-    }
-    else if (ins != null) {
+    } else if (ins != null) {
       System.out.println("C");
       ih.setInstruction(ins);
       System.out.println();
       updateMethod(cg);
       instructions.set(off, this);
-    }
-    else {
+    } else {
       System.out.println("D");
       dispose(nextLine, cg, theLast, instructions, off);
     }
@@ -307,10 +302,10 @@ public abstract class InstructionLineController extends BytecodeLineController {
   {
     final InstructionHandle me = getHandle();
     final InstructionHandle next = nextLine.getHandle();
-    System.out.println("InstructionLineController#dispose   name="+name);
+    System.out.println("InstructionLineController#dispose   name=" + name);
     final InstructionTargeter[] tgters = ih.getTargeters();
     if (tgters != null)
-      for (int i=0; i<tgters.length; i++) {
+      for (int i = 0; i < tgters.length; i++) {
         tgters[i].updateTarget(me, next);
       }
     try {
@@ -419,14 +414,13 @@ public abstract class InstructionLineController extends BytecodeLineController {
     if (typ.startsWith("?{")) {
       final int n = typ.indexOf("}");
       if (n > 2)
-        if (compare(lt, typ.substring(n+1)))
+        if (compare(lt, typ.substring(n + 1)))
           return true;
-      return compare(lt, typ.substring(2, n) + typ.substring(n+1));
+      return compare(lt, typ.substring(2, n) + typ.substring(n + 1));
     }
     if (typ.startsWith("?"))
-      return (compare(lt, typ.substring(1))
-          || ((typ.length() > 1)
-              && compare(lt, typ.substring(2))));
+      return (compare(lt, typ.substring(1)) ||
+              ((typ.length() > 1) && compare(lt, typ.substring(2))));
     if (lt.charAt(0) != typ.charAt(0))
       return false;
     return compare(lt.substring(1), typ.substring(1));

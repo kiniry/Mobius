@@ -100,13 +100,13 @@ public class InvokeInstruction extends StringInstruction {
   if (!correct())
     return null;
 
-  if (name.compareTo("invokespecial")==0) {
+  if (name.compareTo("invokespecial") == 0) {
     return new INVOKESPECIAL(index);
   }
-  if (name.compareTo("invokestatic")==0) {
+  if (name.compareTo("invokestatic") == 0) {
     return new INVOKESTATIC(index);
   }
-  if (name.compareTo("invokevirtual")==0) {
+  if (name.compareTo("invokevirtual") == 0) {
     return new INVOKEVIRTUAL(index);
   }
 

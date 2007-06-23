@@ -93,7 +93,7 @@ public class BytecodeToBoogiePLAction implements IEditorActionDelegate {
                    substring(projectPath.length() + 1).
                    replace('\\', '.');
 
-      final List<String> args = new ArrayList<String>();
+      final List < String > args = new ArrayList < String > ();
       args.add("-basedir"); args.add(projectPath);
       args.add("-o"); args.add(boogiePLPath);
 

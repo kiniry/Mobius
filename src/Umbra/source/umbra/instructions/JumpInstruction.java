@@ -192,15 +192,14 @@ public class JumpInstruction extends NumInstruction {
     if (name.compareTo("ifnull") == 0) {
       return new IFNULL(ih);
     }
-    if (name.compareTo("jsr")==0) {
+    if (name.compareTo("jsr") == 0) {
       return new JSR(ih);
     }
-    if (name.compareTo("jsr_w")==0) {
+    if (name.compareTo("jsr_w") == 0) {
       return new JSR_W(ih);
     }
     return null;
-
-    }
+  }
 
   /**
    * Jump instruction requires an instruction number of

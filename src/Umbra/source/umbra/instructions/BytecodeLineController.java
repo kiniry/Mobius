@@ -207,7 +207,7 @@ public abstract class BytecodeLineController {
             final ClassGen cg,
             final boolean theLast,
             final LinkedList instructions, final int off) {
-    System.out.println("dispose(BytecodeLineController)"+ ((InstructionLineController) (instructions.get(off))).getHandle().getInstruction().getName());
+    System.out.println("dispose(BytecodeLineController)" + ((InstructionLineController) (instructions.get(off))).getHandle().getInstruction().getName());
   }
 
   /**

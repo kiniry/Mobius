@@ -24,6 +24,59 @@ import umbra.editor.IColorValues;
 public class BytecodeScanner extends RuleBasedScanner {
 
   /**
+   * TODO
+   */
+  private static final int RULE_EOL = 0;
+  
+  /**
+   * TODO
+   */
+  private static final int RULE_INSTRUCTION = 1;
+  
+  /**
+   * TODO
+   */
+  private static final int RULE_SEPARATOR = 2;
+  /**
+   * TODO
+   */
+  private static final int RULE_HASH = 3;
+  /**
+   * TODO
+   */
+  private static final int RULE_PERCENT = 4;
+  /**
+   * TODO
+   */
+  private static final int RULE_PARENTHESES = 5;
+  /**
+   * TODO
+   */
+  private static final int RULE_BRACES = 6;
+  /**
+   * TODO
+   */
+  private static final int RULE_NUMBER = 7;
+  /**
+   * TODO
+   */
+  private static final int RULE_WHITESPACE = 8;
+  /**
+   * TODO
+   */
+  private static final int RULE_STAR = 9;
+  /**
+   * TODO
+   */
+  private static final int RULE_COMMENT = 10;
+
+  /**
+   * TODO
+   */
+  private static final int NUMBER_OF_RULES = 11;
+
+
+  /**
    * This method TODO
    * sets the scanning rules
    *
@@ -62,21 +115,21 @@ public class BytecodeScanner extends RuleBasedScanner {
 
     //WordRule keyrule = new WordRule(new SpecialWordDetector(), tokens[IColorValues.KEY]);
 
-    final IRule[] rules = new IRule[11];
-    rules[0] = new EndOfLineRule("//", tokens[IColorValues.COMMENT]);
-    rules[1] = insrule;
-    rules[2] = new SpecialNumberRule('\n', ':',
+    final IRule[] rules = new IRule[NUMBER_OF_RULES];
+    rules[RULE_EOL] = new EndOfLineRule("//", tokens[IColorValues.COMMENT]);
+    rules[RULE_INSTRUCTION] = insrule;
+    rules[RULE_SEPARATOR] = new SpecialNumberRule('\n', ':',
                      tokens[IColorValues.POSITION]);
-    rules[3] = new SpecialNumberRule('#',
+    rules[RULE_HASH] = new SpecialNumberRule('#',
                      tokens[IColorValues.HASH]);
-    rules[4] = new SpecialNumberRule('%', tokens[IColorValues.ATTR]);
-    rules[5] = new SpecialNumberRule('(', ')', tokens[IColorValues.SQUARE]);
+    rules[RULE_PERCENT] = new SpecialNumberRule('%', tokens[IColorValues.ATTR]);
+    rules[RULE_PARENTHESES] = new SpecialNumberRule('(', ')', tokens[IColorValues.SQUARE]);
     //rules[6] = keyrule;
-    rules[6] = new SingleLineRule("{", "}", tokens[IColorValues.SQUARE]);
-    rules[7] = new NumberRule(tokens[IColorValues.NUMBER]);
-    rules[8] = new WhitespaceRule(new BytecodeWhitespaceDetector());
-    rules[9] = new EndOfLineRule("*", tokens[IColorValues.ANNOT]);
-    rules[10] = new EndOfLineRule("/*", tokens[IColorValues.ANNOT]);
+    rules[RULE_BRACES] = new SingleLineRule("{", "}", tokens[IColorValues.SQUARE]);
+    rules[RULE_NUMBER] = new NumberRule(tokens[IColorValues.NUMBER]);
+    rules[RULE_WHITESPACE] = new WhitespaceRule(new BytecodeWhitespaceDetector());
+    rules[RULE_STAR] = new EndOfLineRule("*", tokens[IColorValues.ANNOT]);
+    rules[RULE_COMMENT] = new EndOfLineRule("/*", tokens[IColorValues.ANNOT]);
 
     setRules(rules);
   }
