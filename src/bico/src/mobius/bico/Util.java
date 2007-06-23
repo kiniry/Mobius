@@ -1,5 +1,6 @@
 package mobius.bico;
 
+import java.io.OutputStream;
 import java.io.PrintStream;
 
 import org.apache.bcel.classfile.JavaClass;
@@ -100,6 +101,11 @@ public final class Util {
     return "Nop (* " + name + " *)";
   }
 
+  /**
+   * Write the error message if an unhandled type is encountered.
+   * @param str the structure which was typed by the given type
+   * @param t the type which was found
+   */
   static void unhandled(final String str, final Type t) {
     System.err.println("Unhandled type (" + str + "): " + t.toString());
   }
@@ -160,7 +166,7 @@ public final class Util {
    * @param type the type to convert
    * @param repos is the repository where information on classes can be found
    * @return Coq value of t of type refType
-   * @throws ClassNotFoundException
+   * @throws ClassNotFoundException if a type cannot have its class resolved
    */
   static String convertReferenceType(final ReferenceType type, 
                                   final Repository repos) throws ClassNotFoundException {
@@ -218,6 +224,13 @@ public final class Util {
     }
   }
 
+  /**
+   * Write a line with a given tabulation.
+   * @param out the output stream where to write
+   * @param tabs the number of tabulation
+   * @param s the string to write
+   * @deprecated use {@link Stream#println(int, String)} instead
+   */
   public static void writeln(final PrintStream out, final int tabs, 
                              final String s) {
     final StringBuffer str = new StringBuffer();
@@ -228,6 +241,35 @@ public final class Util {
     out.println(str.toString());
   }
 
+  /**
+   * A stream to use instead of writeln.
+   * @author J. Charles (julien.charles@inria.fr)
+   */
+  public static class Stream extends PrintStream {
+
+    /**
+     * Create a new stream from an existing one.
+     * @param out an already existing stream
+     */
+    public Stream(final OutputStream out) {
+      super(out);
+    }
+    
+    /**
+     * Write a line with a given tabulation.
+     * @param tab the number of tabulation
+     * @param s the string to write
+     */  
+    public void println(final int tab, final String s) {
+      final StringBuffer str = new StringBuffer();
+      for (int i = 0; i < tab * Util.TAB; i++) {
+        str.append(' ');
+      }
+      str.append(s);
+      println(str.toString());
+    }
+    
+  }
   /**
    * Returns a Coq version of the package name. If the package is a.bc.de
    * it will return  aBcDe

@@ -3,7 +3,6 @@ package mobius.bico;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.PrintStream;
 
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.generic.ClassGen;
@@ -46,7 +45,7 @@ class ClassExecutor extends ABasicExecutor {
     super(be);
     fClass = cg;
     fOutputFile = determineFileName(workingDir);
-    fOut = new PrintStream(new FileOutputStream(new File(workingDir, fOutputFile.getPath())));
+    fOut = new Util.Stream(new FileOutputStream(new File(workingDir, fOutputFile.getPath())));
     fFieldExecutor = new FieldExecutor(this, fClass.getJavaClass());
     fMethExecutor = new MethodExecutor(this, fClass);
     fTab = 0;
@@ -76,7 +75,7 @@ class ClassExecutor extends ABasicExecutor {
     final JavaClass jc = fClass.getJavaClass();
     final String moduleName = Util.coqify(jc.getClassName());
     System.out.println("  --> Module " + moduleName + ".");
-    Util.writeln(fOut, fTab, "Module " + moduleName + ".\n");
+    fOut.println(fTab, "Module " + moduleName + ".\n");
 
     final int className = fDico.getCurrentClass() + 1;
     fDico.addClass(jc, className);
@@ -94,7 +93,7 @@ class ClassExecutor extends ABasicExecutor {
     doClassDefinition();
    
     fTab--;
-    Util.writeln(fOut, fTab, "End " + moduleName + ".\n");
+    fOut.println(fTab, "End " + moduleName + ".\n");
 
   }
 
@@ -117,7 +116,7 @@ class ClassExecutor extends ABasicExecutor {
                          ", " + className + "%positive).\n";
       
     }
-    Util.writeln(fOut, fTab, def);
+    fOut.println(fTab, def);
   }
 
 
@@ -127,18 +126,18 @@ class ClassExecutor extends ABasicExecutor {
   private void doClassDefinition() {
     final JavaClass jc = fClass.getJavaClass(); 
     if (jc.isInterface()) {
-      Util.writeln(fOut, fTab, "Definition interface : Interface := INTERFACE.Build_t");
-      Util.writeln(fOut, fTab + 1, "interfaceName");
+      fOut.println(fTab, "Definition interface : Interface := INTERFACE.Build_t");
+      fOut.println(fTab + 1, "interfaceName");
     } 
     else {
-      Util.writeln(fOut, fTab, "Definition class : Class := CLASS.Build_t");
-      Util.writeln(fOut, fTab + 1, "className");
+      fOut.println(fTab, "Definition class : Class := CLASS.Build_t");
+      fOut.println(fTab + 1, "className");
       final String superClassName = Util.coqify(jc.getSuperclassName());
       if (superClassName == null) {
-        Util.writeln(fOut, fTab + 1, "None");
+        fOut.println(fTab + 1, "None");
       } 
       else {
-        Util.writeln(fOut, fTab + 1, "(Some " + superClassName + ".className)");
+        fOut.println(fTab + 1, "(Some " + superClassName + ".className)");
       }
     }
     enumerateInterfaces();
@@ -147,10 +146,10 @@ class ClassExecutor extends ABasicExecutor {
 
     fMethExecutor.doEnumeration(fTab);
 
-    Util.writeln(fOut, fTab + 1, "" + jc.isFinal());
-    Util.writeln(fOut, fTab + 1, "" + jc.isPublic());
-    Util.writeln(fOut, fTab + 1, "" + jc.isAbstract());
-    Util.writeln(fOut, fTab, ".\n");
+    fOut.println(fTab + 1, "" + jc.isFinal());
+    fOut.println(fTab + 1, "" + jc.isPublic());
+    fOut.println(fTab + 1, "" + jc.isAbstract());
+    fOut.println(fTab, ".\n");
   }
 
   /**
@@ -160,7 +159,7 @@ class ClassExecutor extends ABasicExecutor {
     
     final String[] inames = fClass.getInterfaceNames();
     if (inames.length == 0) {
-      Util.writeln(fOut, fTab + 1, "nil");
+      fOut.println(fTab + 1, "nil");
     } 
     else {
       String str = "(";
@@ -168,7 +167,7 @@ class ClassExecutor extends ABasicExecutor {
         str = str.concat(Util.coqify(inames[i]) + ".interfaceName ::");
       }
       str = str.concat("nil)");
-      Util.writeln(fOut, fTab + 1, str);
+      fOut.println(fTab + 1, str);
     }
   }
 

@@ -1,7 +1,6 @@
 package mobius.bico;
 
 import java.io.IOException;
-import java.io.PrintStream;
 
 import mobius.bico.dico.Dictionary;
 import mobius.bico.implem.IImplemSpecifics;
@@ -26,7 +25,7 @@ public abstract class ABasicExecutor {
   IImplemSpecifics fImplemSpecif;
   
   /** the output file. */
-  PrintStream fOut;
+  Util.Stream fOut;
   
   /** the current bcel repository used. */
   final Repository fRepos;
@@ -40,7 +39,7 @@ public abstract class ABasicExecutor {
    * @param dico the dictionnary associated with the executor
    */
   public ABasicExecutor(final Repository repos, final IImplemSpecifics implemSpecif, 
-                        final MethodHandler methodHandler, final PrintStream out, 
+                        final MethodHandler methodHandler, final Util.Stream out, 
                         final Dictionary dico) {
     fImplemSpecif = implemSpecif;
     fMethodHandler = methodHandler;

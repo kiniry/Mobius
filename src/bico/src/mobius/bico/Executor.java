@@ -3,7 +3,6 @@ package mobius.bico;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.security.Permission;
 import java.util.ArrayList;
 import java.util.List;
@@ -208,7 +207,7 @@ public class Executor extends ABasicExecutor {
     }
     fFileName.createNewFile();
     final FileOutputStream fwr = new FileOutputStream(fFileName);
-    fOut = new PrintStream(fwr);
+    fOut = new Util.Stream(fwr);
 
     // write prelude ;)
     doBeginning();
@@ -240,7 +239,7 @@ public class Executor extends ABasicExecutor {
    */
   private void writeDictionnary() throws IOException {
     final File dicoFile = new File(fWorkingDir, "dico.ml");
-    fOut = new PrintStream(new FileOutputStream(dicoFile));
+    fOut = new Util.Stream(new FileOutputStream(dicoFile));
     fDico.write(fOut);
     fOut.close();
   }
@@ -354,7 +353,7 @@ public class Executor extends ABasicExecutor {
     
     final ClassExecutor ce = new ClassExecutor(this, cg, fWorkingDir);
     ce.start();
-    Util.writeln(fOut, 1, "Load \"" + ce.getOuputFile().getPath() + "\".");
+    fOut.println(1, "Load \"" + ce.getOuputFile().getPath() + "\".");
   }
 
   
@@ -365,20 +364,20 @@ public class Executor extends ABasicExecutor {
    * Write the file preable.
    */
   private void doBeginning() {
-    Util.writeln(fOut, 0, fImplemSpecif.getBeginning());
+    fOut.println(0, fImplemSpecif.getBeginning());
 
     for (int i = 0; i < fSpecialLibs.length; i++) {
       final String str = fImplemSpecif.requireLib(Util.coqify(fSpecialLibs[i]));
-      Util.writeln(fOut, 0, str);
+      fOut.println(0, str);
       // out.newLine();
     }
 
     initDico(fDico);
 
 
-    Util.writeln(fOut, 0, "Import P.");
+    fOut.println(0, "Import P.");
     fOut.println();
-    Util.writeln(fOut, 0, "Module TheProgram.");
+    fOut.println(0, "Module TheProgram.");
     fOut.println();
 
   }
@@ -426,13 +425,11 @@ public class Executor extends ABasicExecutor {
     defineClassAndInterface();
     
     // the program definition
-    Util.writeln(fOut, 1, "Definition program : Program := PROG.Build_t");
-    Util.writeln(fOut, 2, "AllClasses");
-    Util.writeln(fOut, 2, "AllInterfaces");
-    Util.writeln(fOut, 1, ".");
-    fOut.println();
-    Util.writeln(fOut, 0, "End TheProgram.");
-    fOut.println();
+    fOut.println(1, "Definition program : Program := PROG.Build_t");
+    fOut.println(2, "AllClasses");
+    fOut.println(2, "AllInterfaces");
+    fOut.println(1, ".\n");
+    fOut.println(0, "End TheProgram.\n");
   }
 
   /**
@@ -449,7 +446,7 @@ public class Executor extends ABasicExecutor {
       str += fImplemSpecif.classCons(Util.coqify(fSpecialLibs[i]) + ".class");
     }
     str += " " + fImplemSpecif.classEnd() + ".";
-    Util.writeln(fOut, 1, str);
+    fOut.println(1, str);
     fOut.println();
 
 
@@ -459,7 +456,7 @@ public class Executor extends ABasicExecutor {
       str += fImplemSpecif.interfaceCons(interf);
     }
     str += " " + fImplemSpecif.interfaceEnd() + ".";
-    Util.writeln(fOut, 1, str);
+    fOut.println(1, str);
     fOut.println();
   }
 

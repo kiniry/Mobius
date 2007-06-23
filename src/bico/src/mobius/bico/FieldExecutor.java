@@ -62,7 +62,7 @@ class FieldExecutor extends ABasicExecutor {
     // fields
     final Field[] ifield = fJavaClass.getFields();
     if (ifield.length == 0) {
-      Util.writeln(fOut, tab + 1, fImplemSpecif.getNoFields());
+      fOut.println(tab + 1, fImplemSpecif.getNoFields());
     } 
     else {
       String str2 = "(";
@@ -72,7 +72,7 @@ class FieldExecutor extends ABasicExecutor {
       str2 += fImplemSpecif.fieldsEnd(Util.coqify(ifield[ifield.length - 1].getName()) + 
                                       "Field");
       str2 += ")";
-      Util.writeln(fOut, tab + 1, str2);
+      fOut.println(tab + 1, str2);
     }
   }
 
@@ -89,20 +89,20 @@ class FieldExecutor extends ABasicExecutor {
     
     String strf = "Definition " + Util.coqify(field.getName()) +
            "ShortFieldSignature : ShortFieldSignature := FIELDSIGNATURE.Build_t ";
-    Util.writeln(fOut, tab, strf);
+    fOut.println(tab, strf);
     // !!! here positives
     
     strf = "(" + fieldIdx + "%positive)";
-    Util.writeln(fOut, tab + 1, strf);
+    fOut.println(tab + 1, strf);
     // !!! here will be conversion
     strf = Util.convertType(field.getType(), fRepos);
-    Util.writeln(fOut, tab + 1, strf);
-    Util.writeln(fOut, tab, ".");
+    fOut.println(tab + 1, strf);
+    fOut.println(tab, ".");
     fOut.println();
     strf = "Definition " + Util.coqify(field.getName()) +
            "FieldSignature : FieldSignature := (className, " + 
            Util.coqify(field.getName()) + "ShortFieldSignature).\n";
-    Util.writeln(fOut, tab, strf);
+    fOut.println(tab, strf);
   }
 
   /**
@@ -114,12 +114,12 @@ class FieldExecutor extends ABasicExecutor {
     
     String strf = "Definition " + Util.coqify(field.getName()) +
            "Field : Field := FIELD.Build_t";
-    Util.writeln(fOut, tab, strf);
+    fOut.println(tab, strf);
     strf = Util.coqify(field.getName()) + "ShortFieldSignature";
-    Util.writeln(fOut, tab + 1, strf);
+    fOut.println(tab + 1, strf);
     
-    Util.writeln(fOut, tab + 1, "" + field.isFinal());
-    Util.writeln(fOut, tab + 1, "" + field.isStatic());
+    fOut.println(tab + 1, "" + field.isFinal());
+    fOut.println(tab + 1, "" + field.isStatic());
     String visibility = "Package";
     if (field.isPrivate()) {
       visibility = "Private";
@@ -130,10 +130,10 @@ class FieldExecutor extends ABasicExecutor {
     if (field.isPublic()) {
       visibility = "Public";
     }
-    Util.writeln(fOut, tab + 1, visibility);
+    fOut.println(tab + 1, visibility);
     // FIXME current solution
     strf = "FIELD.UNDEF";
-    Util.writeln(fOut, tab + 1, strf);
-    Util.writeln(fOut, tab, ".");
+    fOut.println(tab + 1, strf);
+    fOut.println(tab, ".");
   }
 }
