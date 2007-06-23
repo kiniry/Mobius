@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Vector;
 
 import mobius.bico.dico.CamlDictionary;
+import mobius.bico.dico.Dictionary;
 import mobius.bico.implem.IImplemSpecifics;
 import mobius.bico.implem.ListImplemSpecif;
 import mobius.bico.implem.MapImplemSpecif;
@@ -372,19 +373,7 @@ public class Executor extends ABasicExecutor {
       // out.newLine();
     }
 
-    fDico.addPackage("java/lang/", 1);
-    fDico.addPackage("", 2);
-
-    fDico.addClass("Object", 1, 1);
-    fDico.addClass("Exception", 1, 9);
-    fDico.addClass("String", 1, 10);
-    fDico.addClass("Throwable", 1, 8);
-
-    fDico.addMethod("Object.<init>", 1, 1, 12);
-    fDico.addMethod("Exception.<init>", 1, 9, 10);
-    fDico.addMethod("String.<init>", 1, 10, 13);
-    fDico.addMethod("Throwable.<init>", 1, 8, 11);
-    // TODO complete the list...
+    initDico(fDico);
 
 
     Util.writeln(fOut, 0, "Import P.");
@@ -392,6 +381,41 @@ public class Executor extends ABasicExecutor {
     Util.writeln(fOut, 0, "Module TheProgram.");
     fOut.println();
 
+  }
+
+  /**
+   * Initialize a dictionary with some standard values.
+   * @param dico the dictionary to initialize
+   */
+  public static void initDico(final Dictionary dico) {
+    final int javaLangPkg = 1;
+    final int emptyPkg = 2;
+    
+    final int objClss = 1;
+    final int objMeth = 12;
+    
+    final int thrwClss = 8;
+    final int thrwMeth = 11;
+    
+    final int excpClss = 9;
+    final int excpMeth = 10;
+    
+    final int strClss = 10;
+    final int strMeth = 13;
+    
+    dico.addPackage("java/lang/", javaLangPkg);
+    dico.addPackage("", emptyPkg);
+
+    dico.addClass("Object", javaLangPkg, objClss);
+    dico.addClass("Throwable", javaLangPkg, thrwClss);
+    dico.addClass("Exception", javaLangPkg, excpClss);
+    dico.addClass("String", javaLangPkg, strClss);
+    
+    dico.addMethod("Object.<init>", javaLangPkg, objClss, objMeth);
+    dico.addMethod("Exception.<init>", javaLangPkg, excpClss, excpMeth);
+    dico.addMethod("String.<init>", javaLangPkg, strClss, strMeth);
+    dico.addMethod("Throwable.<init>", javaLangPkg, thrwClss, thrwMeth);
+    // TODO complete the list...
   }
 
   /**

@@ -1,7 +1,5 @@
 package mobius.bico;
 
-import mobius.bico.MethodHandler.MethodNotFoundException;
-
 import org.apache.bcel.Constants;
 import org.apache.bcel.classfile.Code;
 import org.apache.bcel.classfile.CodeException;
@@ -73,8 +71,13 @@ import org.apache.bcel.generic.Type;
  */
 class MethodExecutor extends ABasicExecutor {
 
+  
+  
   /** determine the span of the 'reserved' methods names number default is 1. */
   private static final int RESERVED_METHODS = 1;
+  
+  /** the number of tabs by default. */
+  private final int fTab = 2;
   
   /** the current class to get the method from. */
   private ClassGen fClass;
@@ -93,6 +96,12 @@ class MethodExecutor extends ABasicExecutor {
     fConstantPool = cg.getConstantPool();
   }
   
+  /**
+   * Starts the generation of the method definitions for Coq.
+   * @throws ClassNotFoundException if a class found as a type cannot
+   * be resolved
+   */
+  @Override
   public void start() throws ClassNotFoundException {
     
     final Method[] methods = fClass.getMethods();
@@ -105,14 +114,27 @@ class MethodExecutor extends ABasicExecutor {
                       fDico.getCoqPackageName(fClass.getJavaClass()),
                       fDico.getCoqClassName(fClass.getJavaClass()),
                       methodName);
-      
-      doMethodSignature(meth, methodName);
+      fMethodHandler.addMethod(mg);
+      final String name = fMethodHandler.getName(mg);
+      doMethodSignature(meth, methodName, name);
     }
     for (Method meth: methods) {
-      doMethodInstructions(meth);
+      final MethodGen mg = new MethodGen(meth, fClass.getClassName(), fConstantPool);
+      final String name = fMethodHandler.getName(mg);
+     
+      if (!meth.isAbstract()) {
+        doInstructions(mg, name);
+        final boolean handlers = doExceptionHandlers(meth, name);
+        doBody(mg, name, handlers);
+      }
+      doMethod(meth, name);
     }
   }
   
+  /**
+   * Write all the method names as an enumeration.
+   * @param tab the number of tabs to put
+   */
   public void doEnumeration(final int tab) {
     final JavaClass jc = fClass.getJavaClass();
     // methods
@@ -123,14 +145,8 @@ class MethodExecutor extends ABasicExecutor {
     else {
       String str2 = "(";
       for (int i = 0; i < imeth.length - 1; i++) {
-
-        try {
-          str2 += fImplemSpecif.methodsCons(fMethodHandler.getName(imeth[i]) + "Method");
-        } 
-        catch (MethodNotFoundException e) {
-          e.printStackTrace(); // cannot happen
-          System.exit(1);
-        }
+        str2 += fImplemSpecif.methodsCons(fMethodHandler.getName(imeth[i]) + "Method");
+       
       }
       str2 += fImplemSpecif.methodsEnd(Util.coqify(imeth[imeth.length - 1].getName()) +
                                        "Method");
@@ -138,38 +154,27 @@ class MethodExecutor extends ABasicExecutor {
       Util.writeln(fOut, tab + 1, str2);
     }
   }
+  
   /**
    * Write the method signature.
    * 
    * @param method the method to add
-   * @throws ClassNotFoundException
+   * @param coqMethodName the number representing the method
+   * @param name the name of the method
+   * @throws ClassNotFoundException if a class name cannot be resolved
    */
   private void doMethodSignature(final Method method,
-                                 final int coqMethodName) throws ClassNotFoundException {
-    // InstructionList il = mg.getInstructionList();
-    // InstructionHandle ih[] = il.getInstructionHandles();
-    // signature
+                                 final int coqMethodName, 
+                                 final String name) throws ClassNotFoundException {
     
-    final int tab = 2;
-    final MethodGen mg = new MethodGen(method, fClass.getClassName(), fConstantPool);
-    fMethodHandler.addMethod(mg);
-    String name = "";
-    try {
-      name = fMethodHandler.getName(mg);
-    } 
-    catch (MethodNotFoundException e) {
-      e.printStackTrace();
-      System.exit(1); // cannot happen
-      
-    }
     String str = "Definition " + name;
     str += "ShortSignature : ShortMethodSignature := METHODSIGNATURE.Build_t";
-    Util.writeln(fOut, tab, str);
+    Util.writeln(fOut, fTab, str);
     str = "(" + coqMethodName + "%positive)";
-    Util.writeln(fOut, tab + 1, str);
+    Util.writeln(fOut, fTab + 1, str);
     final Type[] atrr = method.getArgumentTypes();
     if (atrr.length == 0) {
-      Util.writeln(fOut, tab + 1, "nil");
+      Util.writeln(fOut, fTab + 1, "nil");
     } 
     else {
       str = "(";
@@ -177,11 +182,11 @@ class MethodExecutor extends ABasicExecutor {
         str = str.concat(Util.convertType(atrr[i], fRepos) + "::");
       }
       str = str.concat("nil)");
-      Util.writeln(fOut, tab + 1, str);
+      Util.writeln(fOut, fTab + 1, str);
     }
     final Type t = method.getReturnType();
-    Util.writeln(fOut, tab + 1, Util.convertTypeOption(t, fRepos));
-    Util.writeln(fOut, tab, ".");
+    Util.writeln(fOut, fTab + 1, Util.convertTypeOption(t, fRepos));
+    Util.writeln(fOut, fTab, ".");
     
     String clName = "className";
     if (fClass.getJavaClass().isInterface()) {
@@ -190,132 +195,33 @@ class MethodExecutor extends ABasicExecutor {
 
     str = "Definition " + name + "Signature : MethodSignature := " + 
                    "(" + clName + ", " + name + "ShortSignature).\n\n";
-    Util.writeln(fOut, tab, str);
+    Util.writeln(fOut, fTab, str);
   }
   
   
   /**
-   * Write the method body.
-   * @throws MethodNotFoundException
-   * @throws ClassNotFoundException
+   * Write the method definition.
+   * @param method the method to treat
+   * @param name the name of the method
+   * @throws ClassNotFoundException if a class name cannot be resolved
    */
-  private void doMethodInstructions(final Method method) 
-    throws ClassNotFoundException {
-    final MethodGen mg = new MethodGen(method, fClass.getClassName(), fConstantPool);
-    // LocalVariableGen[] aa = mg.getLocalVariables();
-    // // aa[i].toString();
-    // System.out.println(aa.length);
-    // if (aa.length != 0) {System.out.println(aa[0].toString());}
-    final int tab = 2;
-    String name = "";
-    try {
-      name = fMethodHandler.getName(mg);
-    } 
-    catch (MethodNotFoundException e) {
-      e.printStackTrace(); // cannot happen
-      System.exit(1);
-    }
-    String str;
-
-    if (!method.isAbstract()) {
-      // instructions
-      str = "Definition " + name + "Instructions : " + 
-            fImplemSpecif.instructionsType() + " :=";
-
-      // System.out.println(str);
-      Util.writeln(fOut, tab, str);
-      final InstructionList il = mg.getInstructionList();
-      if (il != null) {
-        final Instruction[] listins = il.getInstructions();
-        int pos = 0;
-        String paren = "";
-        for (int i = 0; i < listins.length - 1; i++) {
-          paren += ")";
-          str = doInstruction(pos, listins[i]);
-          final int posPre = pos;
-          pos = pos + listins[i].getLength();
-          Util.writeln(fOut, tab + 1, fImplemSpecif.instructionsCons(str, posPre, pos));
-        }
-        // special case for the last instruction
-        Util.writeln(fOut, tab + 1, fImplemSpecif.instructionsEnd(doInstruction(pos,
-                                      listins[listins.length - 1]), pos));
-      } 
-      else {
-        Util.writeln(fOut, tab + 1, fImplemSpecif.getNoInstructions());
-      }
-
-      Util.writeln(fOut, tab, ".");
-      fOut.println();
-
-      // exception handlers
-      final Code code = method.getCode();
-      boolean handlers = false;
-      if (code != null) {
-        final CodeException[] etab = code.getExceptionTable();
-        if (etab != null && etab.length > 0) {
-          handlers = true;
-          str = "Definition " + name + "Handlers : list ExceptionHandler := ";
-          Util.writeln(fOut, tab, str);
-          for (int i = 0; i < etab.length; i++) {
-            str = "(EXCEPTIONHANDLER.Build_t ";
-            final int catchType = etab[i].getCatchType();
-            if (catchType == 0) {
-              str += "None ";
-            }
-            else {
-              str += "(Some ";
-              final String exName = method.getConstantPool().getConstantString(catchType,
-                                                                  Constants.CONSTANT_Class);
-              str += Util.coqify(exName);
-              str += ".className) ";
-            }
-            str += etab[i].getStartPC() + "%N ";
-            str += etab[i].getEndPC() + "%N ";
-            str += etab[i].getHandlerPC() + "%N)::";
-            Util.writeln(fOut, tab + 1, str);
-          }
-          Util.writeln(fOut, tab + 1, "nil");
-          Util.writeln(fOut, 2, ".");
-          fOut.println();
-        }
-      }
-
-      // body
-      str = "Definition " + name + "Body : BytecodeMethod := BYTECODEMETHOD.Build_t";
-      // System.out.println(str);
-      Util.writeln(fOut, tab, str);
-      fImplemSpecif.printExtraBodyField(fOut);
-
-      Util.writeln(fOut, tab + 1, name + "Instructions");
-      // exception names not handlers now
-      // TODO: Handle handlers for map....
-      if (handlers) {
-        Util.writeln(fOut, tab + 1, name + "Handlers");
-      } 
-      else {
-        Util.writeln(fOut, tab + 1, "nil");
-      }
-      Util.writeln(fOut, tab + 1, "" + mg.getMaxLocals());
-      Util.writeln(fOut, tab + 1, "" + mg.getMaxStack());
-      Util.writeln(fOut, tab, ".");
-      fOut.println();
-    }
-
+  private void doMethod(final Method method, final String name) throws ClassNotFoundException {
+    
     // method
-    str = "Definition " + name + "Method : Method := METHOD.Build_t";
+    String str = "Definition " + name + "Method : Method := METHOD.Build_t";
     // System.out.println(str);
-    Util.writeln(fOut, tab, str);
-    Util.writeln(fOut, tab + 1, name + "ShortSignature");
+    Util.writeln(fOut, fTab, str);
+    Util.writeln(fOut, fTab + 1, name + "ShortSignature");
     if (method.isAbstract()) {
       str = "None";
     } 
     else {
       str = "(Some " + name + "Body)";
     }
-    Util.writeln(fOut, tab + 1, str);
-    Util.writeln(fOut, tab + 1, "" + method.isFinal());
-    Util.writeln(fOut, tab + 1, "" + method.isStatic());
-    Util.writeln(fOut, tab + 1, "" + method.isNative());
+    Util.writeln(fOut, fTab + 1, str);
+    Util.writeln(fOut, fTab + 1, "" + method.isFinal());
+    Util.writeln(fOut, fTab + 1, "" + method.isStatic());
+    Util.writeln(fOut, fTab + 1, "" + method.isNative());
     if (method.isPrivate()) {
       str = "Private";
     } 
@@ -326,28 +232,129 @@ class MethodExecutor extends ABasicExecutor {
       str = "Public";
     } 
     else {
-      // String attr="0x"+Integer.toHexString(method.getAccessFlags());
-      // System.out.println("Unknown modifier of method "+name+" :
-      // "+attr);
       str = "Package"; // " (* "+attr+" *)"
     }
-    Util.writeln(fOut, tab + 1, str);
-    // System.out.println();System.out.println();
-    Util.writeln(fOut, tab, ".");
+    Util.writeln(fOut, fTab + 1, str);
+    Util.writeln(fOut, fTab, ".\n");
     fOut.println();
+  }
+
+  /**
+   * Write the instructions of a method.
+   * @param mg the method.
+   * @param name the name of the method
+   * @throws ClassNotFoundException in case a type cannot be resolved
+   */
+  private void doInstructions(final MethodGen mg, 
+                              final String name) throws ClassNotFoundException {
+    String str = "Definition " + name + "Instructions : " + 
+          fImplemSpecif.instructionsType() + " :=";
+
+    // System.out.println(str);
+    Util.writeln(fOut, fTab, str);
+    final InstructionList il = mg.getInstructionList();
+    if (il != null) {
+      final Instruction[] listins = il.getInstructions();
+      int pos = 0;
+      String paren = "";
+      for (int i = 0; i < listins.length - 1; i++) {
+        paren += ")";
+        str = doInstruction(pos, listins[i]);
+        final int posPre = pos;
+        pos = pos + listins[i].getLength();
+        Util.writeln(fOut, fTab + 1, fImplemSpecif.instructionsCons(str, posPre, pos));
+      }
+      // special case for the last instruction
+      Util.writeln(fOut, fTab + 1, fImplemSpecif.instructionsEnd(doInstruction(pos,
+                                    listins[listins.length - 1]), pos));
+    } 
+    else {
+      Util.writeln(fOut, fTab + 1, fImplemSpecif.getNoInstructions());
+    }
+
+    Util.writeln(fOut, fTab, ".\n");
+  }
+
+  /**
+   * Generate the code for the method body.
+   * @param mg the method concern
+   * @param name the name of the method
+   * @param handlers if it has handlers or not
+   */
+  private void doBody(final MethodGen mg, final String name, final boolean handlers) {
+    String str;
+    // body
+    str = "Definition " + name + "Body : BytecodeMethod := BYTECODEMETHOD.Build_t";
+    // System.out.println(str);
+    Util.writeln(fOut, fTab, str);
+    fImplemSpecif.printExtraBodyField(fOut);
+
+    Util.writeln(fOut, fTab + 1, name + "Instructions");
+    // exception names not handlers now
+    // TODO: Handle handlers for map....
+    if (handlers) {
+      Util.writeln(fOut, fTab + 1, name + "Handlers");
+    } 
+    else {
+      Util.writeln(fOut, fTab + 1, "nil");
+    }
+    Util.writeln(fOut, fTab + 1, "" + mg.getMaxLocals());
+    Util.writeln(fOut, fTab + 1, "" + mg.getMaxStack());
+    Util.writeln(fOut, fTab, ".");
+    fOut.println();
+  }
+
+  /**
+   * Treat the exception handlers.
+   * @param method the method to treat
+   * @param name the name of the method
+   * @return <code>true</code> if there was a handler already present
+   */
+  private boolean doExceptionHandlers(final Method method, final String name) {
+   
+    // exception handlers
+    final Code code = method.getCode();
+    boolean handlers = false;
+    if (code != null) {
+      final CodeException[] etab = code.getExceptionTable();
+      if (etab != null && etab.length > 0) {
+        handlers = true;
+        String str = "Definition " + name + "Handlers : list ExceptionHandler := ";
+        Util.writeln(fOut, fTab, str);
+        for (CodeException codExc: etab) {
+          str = "(EXCEPTIONHANDLER.Build_t ";
+          final int catchType = codExc.getCatchType();
+          if (catchType == 0) {
+            str += "None ";
+          }
+          else {
+            str += "(Some ";
+            final String exName = method.getConstantPool().getConstantString(catchType,
+                                                                Constants.CONSTANT_Class);
+            str += Util.coqify(exName) + ".className) ";
+          }
+          str += codExc.getStartPC() + "%N " + 
+                 codExc.getEndPC() + "%N " + 
+                 codExc.getHandlerPC() + "%N)::";
+          Util.writeln(fOut, fTab + 1, str);
+        }
+        Util.writeln(fOut, fTab + 1, "nil");
+        Util.writeln(fOut, fTab, ".\n");
+      }
+    }
+    return handlers;
   }
   
   
   /**
    * Handles one instruction ins at position pos.
-   * 
-   * @param ins
-   *            instruction to translate
+   * @param pos the position of the instruction
+   * @param ins instruction to translate
    * @return "(ins)" in Coq syntax
-   * @throws ClassNotFoundException
-   * @throws MethodNotFoundException
+   * @throws ClassNotFoundException if a class name cannot be resolved
    */
-  private String doInstruction(final int pos, final Instruction ins) throws ClassNotFoundException {
+  private String doInstruction(final int pos, 
+                               final Instruction ins) throws ClassNotFoundException {
     String ret;
 
     String name = ins.getName();
@@ -481,22 +488,16 @@ class MethodExecutor extends ABasicExecutor {
         final String className = Util.coqify(fom.getReferenceType(fConstantPool).toString());
         // String fmName = coqify(fom.getName(cpg));
         if (ins instanceof FieldInstruction) {
-          final String fs = className + "." + Util.coqify(fom.getName(fConstantPool)) + "FieldSignature";
+          final String fs = className + "." + 
+              Util.coqify(fom.getName(fConstantPool)) + "FieldSignature";
           ret = name + " " + fs;
         } 
         else if (ins instanceof InvokeInstruction) {
           String ms;
-          try {
-            ms = className + "." + fMethodHandler.getName((InvokeInstruction) fom, fConstantPool) + 
-                         "Signature";
-          } 
-          catch (MethodNotFoundException e) {
-            System.err.println("warning : doInstruction: " + 
-                               fom.getReferenceType(fConstantPool).toString() + "." + 
-                               fom.getName(fConstantPool) + " (" + e.getMessage() + ")" +
-                                  " was supposed to be loaded before use...");
-            ms = className + "." + Util.coqify(fom.getName(fConstantPool)) + "Signature";
-          }
+          ms = className + "." + 
+               fMethodHandler.getName((InvokeInstruction) fom, fConstantPool) + 
+               "Signature";
+         
           ret = name + " " + ms;
         } 
         else {
@@ -516,7 +517,9 @@ class MethodExecutor extends ABasicExecutor {
         ret = Util.unhandled(ins);
       } 
       else if (ins instanceof NEW) {
-        ret = name + " " + Util.coqify(((NEW) ins).getType(fConstantPool).toString()) + ".className";
+        ret = name + " " + 
+             Util.coqify(((NEW) ins).getType(fConstantPool).toString()) + 
+               ".className";
         // convertType(type);
       } 
       else {

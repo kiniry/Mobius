@@ -114,14 +114,7 @@ public class MethodHandler {
     }
   }
 
-  public static class MethodNotFoundException extends Exception {
-    /** the serial version. */
-    private static final long serialVersionUID = 1L;
 
-    public MethodNotFoundException(final MethodType mt) {
-      super(mt.toString());
-    }
-  }
 
   /** the list of method types already seen. */
   private List<MethodType> fMethodList = new ArrayList<MethodType>();
@@ -143,17 +136,17 @@ public class MethodHandler {
     }
   }
 
-  private String getName(final MethodType mt) throws MethodNotFoundException {
+  private String getName(final MethodType mt) {
     final MethodType mtOld = find(mt);
     if (mtOld != null) {
       return mtOld.getCoqName();
     }
     else {
-      throw new MethodNotFoundException(mt);
+      return null;
     }
   }
 
-  public String getName(final MethodGen m) throws MethodNotFoundException {
+  public String getName(final MethodGen m) {
     final String name = m.getName();
     final Type[] targs = m.getArgumentTypes();
     final Type tret = m.getReturnType();
@@ -161,7 +154,7 @@ public class MethodHandler {
     return getName(mt);
   }
 
-  public String getName(final Method met) throws MethodNotFoundException {
+  public String getName(final Method met) {
     final String name = met.getName();
     final Type[] targs = met.getArgumentTypes();
     final Type tret = met.getReturnType();
@@ -169,8 +162,7 @@ public class MethodHandler {
     return getName(mt);
   }
 
-  public String getName(final InvokeInstruction ii, final ConstantPoolGen cpg)
-    throws MethodNotFoundException {
+  public String getName(final InvokeInstruction ii, final ConstantPoolGen cpg) {
     final String name = ii.getMethodName(cpg);
     final Type[] targs = ii.getArgumentTypes(cpg);
     final Type tret = ii.getReturnType(cpg);
