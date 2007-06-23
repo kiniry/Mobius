@@ -308,7 +308,7 @@ public class JmlVisitor extends VisitorArgResult{
       case TagConstants.REQUIRES:
         if (rd  instanceof MethodDecl) { 
           final Term invToPre = (Term) invToPreconditions(o);
-          t = Logic.and(t, invToPre);
+          t = Logic.safe.and(t, invToPre);
         }
         Lookup.preconditions.put(rd, t);
         break;

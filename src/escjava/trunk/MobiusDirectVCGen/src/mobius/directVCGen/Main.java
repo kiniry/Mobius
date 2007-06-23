@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
 
+
 import javafe.ast.DelegatingPrettyPrint;
 import javafe.ast.StandardPrettyPrint;
 import javafe.ast.TypeDecl;
@@ -14,6 +15,7 @@ import javafe.tc.OutsideEnv;
 import javafe.tc.TypeSig;
 import javafe.util.ErrorSet;
 import javafe.util.Location;
+import mobius.directVCGen.bicolano.AnnotationCompiler;
 import mobius.directVCGen.bicolano.Unarchiver;
 import mobius.directVCGen.formula.jmlTranslator.JmlVisitor;
 import mobius.directVCGen.vcgen.DirectVCGen;
@@ -60,7 +62,9 @@ public class Main extends escjava.Main {
     }
 
     final String[] escargs = new String[args.length - 2];
-    for (int i = 2; i < args.length; i++) escargs[i - 2] = args[i];
+    for (int i = 2; i < args.length; i++) {
+      escargs[i - 2] = args[i];
+    }
 
     try {
       final File basedir = configBaseDir(args);
@@ -78,8 +82,9 @@ public class Main extends escjava.Main {
       
       // Launching the beast
       final int exitcode = compile(basedir, escargs);
-      if (exitcode != 0)
+      if (exitcode != 0) {
         System.exit(exitcode); 
+      }
       
     }
     catch (IOException e1) {
@@ -161,23 +166,26 @@ public class Main extends escjava.Main {
     fOut.println("Processing " + sig.toString() + ".");
     fOut.println("Processing " + sig.toString() + ".");
 
-    if (Location.toLineNumber(td.getEndLoc()) < options().startLine)
+    if (Location.toLineNumber(td.getEndLoc()) < options().startLine) {
       return;
+    }
 
     // Do actual work:
     final boolean aborted = processTD(td);
 
-    if (!options().quiet)
+    if (!options().quiet) {
       fOut.println("  [" + timeUsed(startTime) + " total]" + 
                   (aborted ? " (aborted)" : ""));
+    }
 
     /*
      * Handled any nested types:  [1.1]
      */
     final TypeDecl decl = sig.getTypeDecl();
     for (int i = 0; i < decl.elems.size(); i++) {
-      if (decl.elems.elementAt(i) instanceof TypeDecl)
+      if (decl.elems.elementAt(i) instanceof TypeDecl) {
         handleTD((TypeDecl) decl.elems.elementAt(i));
+      }
     }
   }
 
@@ -204,21 +212,57 @@ public class Main extends escjava.Main {
     }
     fPkgsdir.mkdirs();
 
-    processTDstage1(td, sig, errorCount);
+    try {
+      processTDstage1(td, sig, errorCount);
+    } 
+    catch (IOException e) {
+      System.err.println("Generation failed.");
+      e.printStackTrace();
+    }
     fOut.println("[" + timeUsed(startTime) + "]\n");
 
     final long midTime = currentTime();
     sig.getCompilationUnit().accept(new JmlVisitor(), null);
     fOut.println("[" + timeUsed(midTime) + "]\n");
-    final long endTime = currentTime();
 
-    sig.getCompilationUnit().accept(new DirectVCGen(fBasedir, fPkgsdir));
-    fOut.println("[" + timeUsed(endTime) + "]\n");
+    doSrcVCGen(sig);
 
+    doBcVCGen(sig); 
     return false;
 
   }
 
+  /**
+   * Generate the bicolano class files as well as their annotations.
+   * Annotations are taken from the annotated source.
+   * @param sig the annotated source
+   */
+  private void doBcVCGen(final TypeSig sig) {
+    // Compile the bytecode version of the file
+    final AnnotationCompiler ac = new AnnotationCompiler(fBasedir, sig.getExternalName(), sig);
+    try {
+      ac.start();
+    } 
+    catch (ClassNotFoundException e) {
+      e.printStackTrace();
+    }
+    catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  /**
+   * Generate the vcs from the annotated source.
+   * @param sig the annotated source
+   */
+  private void doSrcVCGen(final TypeSig sig) {
+    final long endTime = currentTime();
+
+    sig.getCompilationUnit().accept(new DirectVCGen(fBasedir, fPkgsdir));
+    fOut.println("[" + timeUsed(endTime) + "]\n");
+  }
+
+  
   /**
    * Stage 1: Do Java type checking then print Java types if we've been
    * asked to.
@@ -227,35 +271,22 @@ public class Main extends escjava.Main {
    * @param sig the signature which correspond to the type
    * @param errorCount basically ignored
    * @return <code>true</code> if everything went well
+   * @throws IOException if there is a problem while writing or reading
    */
-  public boolean processTDstage1(final TypeDecl td, final TypeSig sig, final int errorCount) {
+  public boolean processTDstage1(final TypeDecl td, final TypeSig sig, 
+                                 final int errorCount) throws IOException {
 
     NoWarn.typecheckRegisteredNowarns();
 
     // Create a pretty-printer that shows types
     final DelegatingPrettyPrint p = new javafe.tc.TypePrint();
     p.setDel(new EscPrettyPrint(p, new StandardPrettyPrint(p)));
-    OutputStream out;
-    try {
-      out = new FileOutputStream(new File(fPkgsdir, sig.simpleName + ".typ"));
-    } 
-    catch (FileNotFoundException e) {
-      e.printStackTrace();
-      return false;
-    }
+    final OutputStream out = new FileOutputStream(new File(fPkgsdir, sig.simpleName + ".typ"));
+    
+    
     fOut.println("Writing the Source code with types.");
     p.print(out, 0, td);
 
-    // Turn off extended static checking and abort if any errors
-    // occured while type checking *this* TypeDecl:
-    if (errorCount < ErrorSet.errors) {
-      if (stages > 1) {
-        stages = 1;
-        ErrorSet.caution("Turning off extended static checking " + 
-                         "due to type error(s)");
-      }
-      return false;
-    }
     return true;
   }
 
