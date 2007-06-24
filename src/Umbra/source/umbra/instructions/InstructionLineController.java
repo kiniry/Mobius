@@ -343,14 +343,14 @@ public abstract class InstructionLineController extends BytecodeLineController {
    * <li> D means a natural number
    * <li> X means any other word
    * </ul>
-   * @param line  processing string
+   * @param a_line  processing string
    * @return    line with each (maximal) word from list above
    * (excluding characters from sp) replaced with corresponding character
    */
-  private static String typ(String line) {
+  private static String typ(String a_line) {
     String s = "";
     boolean b;
-    line = line + "|";
+    final String line = a_line + "|";
     for (int i = 0; i < line.length();) {
       b = false;
       for (int j = 0; j < howManySp; j++)

@@ -20,6 +20,11 @@ import umbra.editor.parsing.SpecialWordDetector;
 public class BytecodeTagScanner extends RuleBasedScanner {
 
   /**
+   * TODO.
+   */
+  private static final int RULES_NUMBER = 4;
+
+  /**
    * TODO
    *
    * @param manager the color manager related to the current bytecode
@@ -33,9 +38,9 @@ public class BytecodeTagScanner extends RuleBasedScanner {
     final IToken[] tokens = TokenGetter.getTokenTab(manager, mod);
 
     final WordRule linerule = new WordRule(new SpecialWordDetector());
-      linerule.addWord("<init>", tokens[IColorValues.KEY]);
+    linerule.addWord("<init>", tokens[IColorValues.KEY]);
 
-    final IRule[] rules = new IRule[4];
+    final IRule[] rules = new IRule[RULES_NUMBER];
 
     // Add rule for double quotes
     rules[0] = new SingleLineRule("\"", "\"", tokens[IColorValues.STRING], '\\');

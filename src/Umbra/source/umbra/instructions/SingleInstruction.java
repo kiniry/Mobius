@@ -104,6 +104,36 @@ import umbra.editor.parsing.IBytecodeStrings;
 public class SingleInstruction extends InstructionLineController {
 
   /**
+   * The constant that with a built-in instruction numeric parameter 0.
+   */
+  private static final int BUILTIN_NUMBER_0 = 0;
+
+  /**
+   * The constant that with a built-in instruction numeric parameter 1.
+   */
+  private static final int BUILTIN_NUMBER_1 = 1;
+
+  /**
+   * The constant that with a built-in instruction numeric parameter 2.
+   */
+  private static final int BUILTIN_NUMBER_2 = 2;
+
+  /**
+   * The constant that with a built-in instruction numeric parameter 3.
+   */
+  private static final int BUILTIN_NUMBER_3 = 3;
+
+  /**
+   * The constant that with a built-in instruction numeric parameter 4.
+   */
+  private static final int BUILTIN_NUMBER_4 = 4;
+
+  /**
+   * The constant that with a built-in instruction numeric parameter 5.
+   */
+  private static final int BUILTIN_NUMBER_5 = 5;
+
+  /**
    * TODO
    */
   public SingleInstruction(final String l, final String n) {
@@ -172,54 +202,55 @@ public class SingleInstruction extends InstructionLineController {
     if (name.compareTo("sastore") == 0) return new SASTORE();
     if (name.compareTo("arraylength") == 0) return new ARRAYLENGTH();
     if (name.compareTo("athrow") == 0) return new ATHROW();
-    if (name.compareTo("iconst_0") == 0) return new ICONST(0);
-    if (name.compareTo("iconst_1") == 0) return new ICONST(1);
-    if (name.compareTo("iconst_2") == 0) return new ICONST(2);
-    if (name.compareTo("iconst_3") == 0) return new ICONST(3);
-    if (name.compareTo("iconst_4") == 0) return new ICONST(4);
-    if (name.compareTo("iconst_5") == 0) return new ICONST(5);
+    if (name.compareTo("iconst_0") == 0) return new ICONST(BUILTIN_NUMBER_0);
+    if (name.compareTo("iconst_1") == 0) return new ICONST(BUILTIN_NUMBER_1);
+    if (name.compareTo("iconst_2") == 0) return new ICONST(BUILTIN_NUMBER_2);
+    if (name.compareTo("iconst_3") == 0) return new ICONST(BUILTIN_NUMBER_3);
+    if (name.compareTo("iconst_4") == 0) return new ICONST(BUILTIN_NUMBER_4);
+    if (name.compareTo("iconst_5") == 0) return new ICONST(BUILTIN_NUMBER_5);
+    // TODO is it really up to 5?
     if (name.compareTo("iconst_m1") == 0) return new ICONST(-1);
     if (name.compareTo("lcmp") == 0) return new LCMP();
-    if (name.compareTo("aload_0") == 0) return new ALOAD(0);
-    if (name.compareTo("aload_1") == 0) return new ALOAD(1);
-    if (name.compareTo("aload_2") == 0) return new ALOAD(2);
-    if (name.compareTo("aload_3") == 0) return new ALOAD(3);
-    if (name.compareTo("astore_0") == 0) return new ASTORE(0);
-    if (name.compareTo("astore_1") == 0) return new ASTORE(1);
-    if (name.compareTo("astore_2") == 0) return new ASTORE(2);
-    if (name.compareTo("astore_3") == 0) return new ASTORE(3);
-    if (name.compareTo("dload_0") == 0) return new DLOAD(0);
-    if (name.compareTo("dload_1") == 0) return new DLOAD(1);
-    if (name.compareTo("dload_2") == 0) return new DLOAD(2);
-    if (name.compareTo("dload_3") == 0) return new DLOAD(3);
-    if (name.compareTo("dstore_0") == 0) return new DSTORE(0);
-    if (name.compareTo("dstore_1") == 0) return new DSTORE(1);
-    if (name.compareTo("dstore_2") == 0) return new DSTORE(2);
-    if (name.compareTo("dstore_3") == 0) return new DSTORE(3);
-    if (name.compareTo("fload_0") == 0) return new FLOAD(0);
-    if (name.compareTo("fload_1") == 0) return new FLOAD(1);
-    if (name.compareTo("fload_2") == 0) return new FLOAD(2);
-    if (name.compareTo("fload_3") == 0) return new FLOAD(3);
-    if (name.compareTo("fstore_0") == 0) return new FSTORE(0);
-    if (name.compareTo("fstore_1") == 0) return new FSTORE(1);
-    if (name.compareTo("fstore_2") == 0) return new FSTORE(2);
-    if (name.compareTo("fstore_3") == 0) return new FSTORE(3);
-    if (name.compareTo("iload_0") == 0) return new ILOAD(0);
-    if (name.compareTo("iload_1") == 0) return new ILOAD(1);
-    if (name.compareTo("iload_2") == 0) return new ILOAD(2);
-    if (name.compareTo("iload_3") == 0) return new ILOAD(3);
-    if (name.compareTo("istore_0") == 0) return new ISTORE(0);
-    if (name.compareTo("istore_1") == 0) return new ISTORE(1);
-    if (name.compareTo("istore_2") == 0) return new ISTORE(2);
-    if (name.compareTo("istore_3") == 0) return new ISTORE(3);
-    if (name.compareTo("lload_0") == 0) return new LLOAD(0);
-    if (name.compareTo("lload_1") == 0) return new LLOAD(1);
-    if (name.compareTo("lload_2") == 0) return new LLOAD(2);
-    if (name.compareTo("lload_3") == 0) return new LLOAD(3);
-    if (name.compareTo("lstore_0") == 0) return new LSTORE(0);
-    if (name.compareTo("lstore_1") == 0) return new LSTORE(1);
-    if (name.compareTo("lstore_2") == 0) return new LSTORE(2);
-    if (name.compareTo("lstore_3") == 0) return new LSTORE(3);
+    if (name.compareTo("aload_0") == 0) return new ALOAD(BUILTIN_NUMBER_0);
+    if (name.compareTo("aload_1") == 0) return new ALOAD(BUILTIN_NUMBER_1);
+    if (name.compareTo("aload_2") == 0) return new ALOAD(BUILTIN_NUMBER_2);
+    if (name.compareTo("aload_3") == 0) return new ALOAD(BUILTIN_NUMBER_3);
+    if (name.compareTo("astore_0") == 0) return new ASTORE(BUILTIN_NUMBER_0);
+    if (name.compareTo("astore_1") == 0) return new ASTORE(BUILTIN_NUMBER_1);
+    if (name.compareTo("astore_2") == 0) return new ASTORE(BUILTIN_NUMBER_2);
+    if (name.compareTo("astore_3") == 0) return new ASTORE(BUILTIN_NUMBER_3);
+    if (name.compareTo("dload_0") == 0) return new DLOAD(BUILTIN_NUMBER_0);
+    if (name.compareTo("dload_1") == 0) return new DLOAD(BUILTIN_NUMBER_1);
+    if (name.compareTo("dload_2") == 0) return new DLOAD(BUILTIN_NUMBER_2);
+    if (name.compareTo("dload_3") == 0) return new DLOAD(BUILTIN_NUMBER_3);
+    if (name.compareTo("dstore_0") == 0) return new DSTORE(BUILTIN_NUMBER_0);
+    if (name.compareTo("dstore_1") == 0) return new DSTORE(BUILTIN_NUMBER_1);
+    if (name.compareTo("dstore_2") == 0) return new DSTORE(BUILTIN_NUMBER_2);
+    if (name.compareTo("dstore_3") == 0) return new DSTORE(BUILTIN_NUMBER_3);
+    if (name.compareTo("fload_0") == 0) return new FLOAD(BUILTIN_NUMBER_0);
+    if (name.compareTo("fload_1") == 0) return new FLOAD(BUILTIN_NUMBER_1);
+    if (name.compareTo("fload_2") == 0) return new FLOAD(BUILTIN_NUMBER_2);
+    if (name.compareTo("fload_3") == 0) return new FLOAD(BUILTIN_NUMBER_3);
+    if (name.compareTo("fstore_0") == 0) return new FSTORE(BUILTIN_NUMBER_0);
+    if (name.compareTo("fstore_1") == 0) return new FSTORE(BUILTIN_NUMBER_1);
+    if (name.compareTo("fstore_2") == 0) return new FSTORE(BUILTIN_NUMBER_2);
+    if (name.compareTo("fstore_3") == 0) return new FSTORE(BUILTIN_NUMBER_3);
+    if (name.compareTo("iload_0") == 0) return new ILOAD(BUILTIN_NUMBER_0);
+    if (name.compareTo("iload_1") == 0) return new ILOAD(BUILTIN_NUMBER_1);
+    if (name.compareTo("iload_2") == 0) return new ILOAD(BUILTIN_NUMBER_2);
+    if (name.compareTo("iload_3") == 0) return new ILOAD(BUILTIN_NUMBER_3);
+    if (name.compareTo("istore_0") == 0) return new ISTORE(BUILTIN_NUMBER_0);
+    if (name.compareTo("istore_1") == 0) return new ISTORE(BUILTIN_NUMBER_1);
+    if (name.compareTo("istore_2") == 0) return new ISTORE(BUILTIN_NUMBER_2);
+    if (name.compareTo("istore_3") == 0) return new ISTORE(BUILTIN_NUMBER_3);
+    if (name.compareTo("lload_0") == 0) return new LLOAD(BUILTIN_NUMBER_0);
+    if (name.compareTo("lload_1") == 0) return new LLOAD(BUILTIN_NUMBER_1);
+    if (name.compareTo("lload_2") == 0) return new LLOAD(BUILTIN_NUMBER_2);
+    if (name.compareTo("lload_3") == 0) return new LLOAD(BUILTIN_NUMBER_3);
+    if (name.compareTo("lstore_0") == 0) return new LSTORE(BUILTIN_NUMBER_0);
+    if (name.compareTo("lstore_1") == 0) return new LSTORE(BUILTIN_NUMBER_1);
+    if (name.compareTo("lstore_2") == 0) return new LSTORE(BUILTIN_NUMBER_2);
+    if (name.compareTo("lstore_3") == 0) return new LSTORE(BUILTIN_NUMBER_3);
     if (name.compareTo("monitorenter") == 0) return new MONITORENTER();
     if (name.compareTo("monitorexit") == 0) return new MONITOREXIT();
     if (name.compareTo("areturn") == 0) return new ARETURN();

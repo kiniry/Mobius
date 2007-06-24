@@ -134,14 +134,14 @@ public class BoogiePLEditorContributor extends EditorActionBarContributor {
     /**
      * TODO
      */
-    public void setActiveEditor(final IEditorPart targetEditor) {
+    public BoogiePLVerifyAction() {
+      super("Verify");
     }
 
     /**
      * TODO
      */
-    public BoogiePLVerifyAction() {
-      super("Verify");
+    public void setActiveEditor(final IEditorPart targetEditor) {
     }
 
     /**

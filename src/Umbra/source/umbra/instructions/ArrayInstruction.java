@@ -52,6 +52,13 @@ public class ArrayInstruction extends StringInstruction {
   private static final int typeCount = types.length;
 
   /**
+   * TODO
+   */
+  public ArrayInstruction(final String l, final String n) {
+    super(l, n);
+  }
+
+  /**
    * This method returns the type that corresponds to
    * the given name
    *
@@ -65,12 +72,6 @@ public class ArrayInstruction extends StringInstruction {
     return null;
   }
 
-  /**
-   * TODO
-   */
-  public ArrayInstruction(final String l, final String n) {
-    super(l, n);
-  }
 
   /**
    * @see BytecodeLineController#getInstruction()

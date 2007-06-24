@@ -23,11 +23,6 @@ import umbra.editor.NonRuleBasedDamagerRepairer;
 public class TokenGetter {
 
   /**
-   * TODO
-   */
-  static int CN = 4;
-
-  /**
    * @param manager the color manager related to the current bytecode
    *    editor, it must be the same as in the current
    *    {@ref BytecodeConfiguration} object
@@ -90,10 +85,14 @@ public class TokenGetter {
                           final int mod,
                           final int i) {
     return new TextAttribute(manager.getColor(
-             new RGB(IColorValues.MODELS[mod][CN * i],
-             IColorValues.MODELS[mod][(CN * i) + 1],
-             IColorValues.MODELS[mod][(CN * i) + 2])),
-             null,
-             IColorValues.MODELS[mod][(CN * i) + 3]);
+             new RGB(IColorValues.MODELS[mod][(IColorValues.CN * i) +
+                                               IColorValues.RED_COMPONENT],
+                     IColorValues.MODELS[mod][(IColorValues.CN * i) +
+                                              IColorValues.GREEN_COMPONENT],
+                     IColorValues.MODELS[mod][(IColorValues.CN * i) +
+                                              IColorValues.BLUE_COMPONENT])),
+                     null,
+                     IColorValues.MODELS[mod][(IColorValues.CN * i) +
+                                              IColorValues.STYLE_COMPONENT]);
   }
 }

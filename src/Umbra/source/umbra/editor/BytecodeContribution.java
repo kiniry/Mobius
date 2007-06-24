@@ -69,6 +69,13 @@ public class BytecodeContribution extends ControlContribution {
    */
   private BytecodeEditorContributor editorContributor;
 
+  /**
+   * TODO
+   */
+  protected BytecodeContribution() {
+    super("Bytecode");
+    inUse = this;
+  }
 
   /**
    * This method initialises the internal structures of the bytecode
@@ -186,14 +193,6 @@ public class BytecodeContribution extends ControlContribution {
       else displayCorrect(event.fDocument);
     }
 
-  }
-
-  /**
-   * TODO
-   */
-  protected BytecodeContribution() {
-    super("Bytecode");
-    inUse = this;
   }
 
   /**

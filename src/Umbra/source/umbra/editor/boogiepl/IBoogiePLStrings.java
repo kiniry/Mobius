@@ -15,8 +15,10 @@ public interface IBoogiePLStrings {
   /**
    * TODO
    */
-  String[] instructions = new String[] {"assume", "assert", ":=", "goto", "return", "call",
-                             "procedure", "implementation", "returns", "int", "ref" };
+  String[] instructions = new String[] {"assume", "assert", ":=",
+                                        "goto", "return", "call",
+                                        "procedure", "implementation",
+                                        "returns", "int", "ref" };
 
   /**
    * TODO

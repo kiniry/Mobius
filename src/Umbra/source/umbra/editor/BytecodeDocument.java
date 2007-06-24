@@ -7,6 +7,7 @@ package umbra.editor;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Method;
 import org.apache.bcel.generic.ClassGen;
+import org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
@@ -33,7 +34,7 @@ public class BytecodeDocument extends Document {
    * The Java source code editor for the source code file associated with
    * the current bytecode document.
    */
-  private AbstractDecoratedTextEditor fRelatedEditor;
+  private CompilationUnitEditor fRelatedEditor;
 
   /**
    * The representation of the Java class the content of which
@@ -64,7 +65,7 @@ public class BytecodeDocument extends Document {
    * current bytecode document.
    */
   public final void setRelatedEditor(final AbstractDecoratedTextEditor editor) {
-    fRelatedEditor = editor;
+    fRelatedEditor = (CompilationUnitEditor)editor;
   }
 
   /**

@@ -90,13 +90,13 @@ public class BcelTestRun {
     }
     final char[] contents = new char[4096];
     int k = 0;
-    for(int i = 0; i < methods.length; i++) {
-      for(int j = 0; j < namesLen[i]; j++, k++) {
+    for (int i = 0; i < methods.length; i++) {
+      for (int j = 0; j < namesLen[i]; j++, k++) {
         contents[k] = (char)names[i][j];
       }
       contents[k] = '\n';
       k++;
-      for(int j = 0; j < codeLen[i]; j++, k++) {
+      for (int j = 0; j < codeLen[i]; j++, k++) {
         contents[k] = (char)code[i][j];
       }
       contents[k] = '\n';

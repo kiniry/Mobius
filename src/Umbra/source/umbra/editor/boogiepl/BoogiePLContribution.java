@@ -52,6 +52,15 @@ public class BoogiePLContribution extends ControlContribution {
    * TODO
    */
   private boolean ready = false;
+
+  /**
+   * TODO
+   */
+  protected BoogiePLContribution() {
+    super("BoogiePL");
+    inUse = this;
+  }
+
   /**
    * TODO
    */
@@ -135,14 +144,6 @@ public class BoogiePLContribution extends ControlContribution {
       */
     }
 
-  }
-
-  /**
-   * TODO
-   */
-  protected BoogiePLContribution() {
-    super("BoogiePL");
-    inUse = this;
   }
 
   /**

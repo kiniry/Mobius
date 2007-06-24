@@ -14,6 +14,32 @@ package umbra.editor;
 public interface IColorValues {
 
   /**
+   * TODO.
+   */
+  int RED_COMPONENT = 0;
+
+  /**
+   * TODO.
+   */
+  int GREEN_COMPONENT = 1;
+
+  /**
+   * TODO.
+   */
+  int BLUE_COMPONENT = 2;
+
+  /**
+   * TODO.
+   */
+  int STYLE_COMPONENT = 0;
+
+  /**
+   * The number of style parameters per slot. Currently, we have paramters
+   * for color components red, green, blue and text style.
+   */
+  int CN = 4;
+
+  /**
    * The color of strings.
    */
   int STRING = 0;
@@ -101,7 +127,7 @@ public interface IColorValues {
                0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,
                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                0, 0, 0, 2, 0, 0, 0, 2,
-                0, 0, 0, 2, 0, 0, 0, 3},
+               0, 0, 0, 2, 0, 0, 0, 3},
     new int[] {0, 255, 0, 0,
                128, 128, 128, 2,
                0, 0, 0, 0,
