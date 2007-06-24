@@ -12,6 +12,12 @@ import org.apache.bcel.generic.ReferenceType;
 import org.apache.bcel.generic.Type;
 import org.apache.bcel.util.Repository;
 
+/**
+ * A class containing some utility methods.
+ * @author J. Charles (julien.charles@inria.fr), 
+ * P. Czarnik (czarnik@mimuw.edu.pl), 
+ * L. Hubert (laurent.hubert@irisa.fr)
+ */
 public final class Util {
   /** the size of a tab used in writeln. */
   static final int TAB = 2;
@@ -25,7 +31,7 @@ public final class Util {
   
   /**
    * Replaces all chars not accepted by coq by "_".
-   * 
+   * @param raw the string to coqify
    * @return null only if str == null
    */
   static String coqify(final String raw) {
@@ -61,7 +67,7 @@ public final class Util {
 
   /**
    * for printing offsets.
-   * 
+   * @param index the offset to print
    * @return i%Z or (-i)%Z
    */
   static String printZ(final Number index) {
@@ -70,7 +76,7 @@ public final class Util {
 
   /**
    * for printing offsets.
-   * 
+   * @param index the offset to print
    * @return i%Z or (-i)%Z
    */
   static String printZ(final int index) {
@@ -83,7 +89,14 @@ public final class Util {
   }
 
   /**
-   * for instruction which are not implemented (yet) in Bico.
+   * For instruction which are not implemented (yet) in Bico.
+   * Prints an error message and returns a translation of the
+   * instruction.
+   * @param instruction a String containing a representation
+   * of the instruction
+   * @param ins the instruction object
+   * @return the name of the instruction, uppercase, tagged as
+   * Unimplemented
    */
   static String unimplemented(final String instruction, final Instruction ins) {
     final String name = ins.getName();
@@ -92,12 +105,15 @@ public final class Util {
   }
 
   /**
-   * for instructions which should not exist - this is probably an error in
+   * For instructions which should not exist - this is probably an error in
    * Bico.
+   * @param str  a string denoting the object
+   * @param ins the instruction to state as unhandled
+   * @return a valid coq structure
    */
-  static String unknown(final String instruction, final  Instruction ins) {
+  static String unknown(final String str, final  Instruction ins) {
     final String name = ins.getName();
-    System.err.println("Unknown " + instruction + ": " + name);
+    System.err.println("Unknown " + str + ": " + name);
     return "Nop (* " + name + " *)";
   }
 
@@ -111,16 +127,21 @@ public final class Util {
   }
 
   /**
-   * variant with some more information about instruction kind.
+   * Variant with some more information about instruction kind.
+   * @param str  a string denoting the object
+   * @param ins the instruction to state as unhandled
+   * @return a valid coq structure
    */ 
-  static String unhandled(final String instruction, final Instruction ins) {
+  static String unhandled(final String str, final Instruction ins) {
     final String name = ins.getName();
-    System.err.println("Unhandled " + instruction + ": " + name);
+    System.err.println("Unhandled " + str + ": " + name);
     return "Nop (* " + name + " *)";
   }
 
   /**
-   * for instructions not handled by Bicolano.
+   * For instructions not handled by Bicolano.
+   * @param ins the instruction to treat.
+   * @return a String saying that the instruction is unhandled
    */
   static String unhandled(final Instruction ins) {
     return unhandled("Instruction", ins);
@@ -128,33 +149,33 @@ public final class Util {
 
   /**
    * Handles type or void.
-   * 
-   * @param strin
-   *            is the repository where information on classes can be found
+   * @param t the type to convert
+   * @param repos is the repository where information on classes can be found
    * @return (Some "coq type t") or None
-   * @throws ClassNotFoundException
+   * @throws ClassNotFoundException if the type couldn't be resolved
    */
-  static String convertTypeOption(final Type t, final Repository strin)
+  static String convertTypeOption(final Type t, final Repository repos)
     throws ClassNotFoundException {
     if (t == Type.VOID || t == null) {
       return "None";
     }
-    return "(Some " + Util.convertType(t, strin) + ")";
+    return "(Some " + Util.convertType(t, repos) + ")";
   }
 
   /**
-   * @param strin
-   *            is the repository where information on classes can be found
+   * Convert a type to a Coq valid type.
+   * @param t the type to convert
+   * @param repos is the repository where information on classes can be found
    * @return Coq value of t of type type
-   * @throws ClassNotFoundException
+   * @throws ClassNotFoundException if the type cannot be resolved
    */
-  static String convertType(final Type t, final Repository strin)
+  static String convertType(final Type t, final Repository repos)
     throws ClassNotFoundException {
     if (t instanceof BasicType) {
       return "(PrimitiveType " + Util.convertPrimitiveType((BasicType) t) + ")";
     } 
     else if (t instanceof ReferenceType) {
-      return "(ReferenceType " + Util.convertReferenceType((ReferenceType) t, strin) + ")";
+      return "(ReferenceType " + Util.convertReferenceType((ReferenceType) t, repos) + ")";
     } 
     else {
       unhandled("Unhandled Type: ", t);
