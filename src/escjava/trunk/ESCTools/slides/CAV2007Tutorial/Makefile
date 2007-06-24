@@ -42,7 +42,7 @@ ps: $(PSFILES)
 	$(PSNUP) -2 $< >$<4.ps
 
 cleanall: clean
-	rm -f *.pdf
+	rm -f JMLTutorial.pdf
 
 clean:
 	rm -f *.dvi *.ps *.log *.out *~

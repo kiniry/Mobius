@@ -23,7 +23,11 @@
 
 \usepackage[english]{babel}
 \usepackage[latin1]{inputenc}
+
+\usepackage{graphicx}
 \usepackage{beamerbaseverbatim}
+
+% fonts
 \usepackage{lmodern}
 \usepackage[T1]{fontenc}
 \usepackage{times}
@@ -32,13 +36,18 @@
 % Use the luximono package to get a better look for bolded keywords
 \usepackage[scaled=0.95]{luximono}
 
+% listings
 \usepackage{listings}
 \input{jml-listings}
 \lstset{language=[JML]Java,basicstyle=\ttfamily,commentstyle=\ttfamily,
         keywordstyle=\bfseries,keywordstyle={[2]\bfseries\color{violet!80!black}}
        }
-\thicklines
 
+% Customizations
+\thicklines
+\newtheorem*{question}{Question}
+
+% -------- frontmatter ---------------
 \title[JML Tutorial]{A JML Tutorial}
 \subtitle{Modular Specification and Verification \\
 of Functional Behavior for Java}
@@ -78,7 +87,6 @@ of Functional Behavior for Java}
 %  \end{frame}
 %}
 
-\newtheorem*{question}{Question}
 
 \begin{document}
 
@@ -197,6 +205,7 @@ Invariants
 \begin{frame}[fragile]
 \frametitle{A First JML Specification}
 \lstinputlisting[linerange={1-12}]{examples/ArrayOps.java}
+\note{Explain notation on subsequent slides.  Stress client view.}
 \end{frame}
 
 \begin{frame}[fragile]
@@ -218,6 +227,16 @@ Invariants
 \lstinputlisting[linerange={1-6},basicstyle=\ttfamily\color{lightgray},keywordstyle={[2]\bfseries\color{lightgray}}]{examples/ArrayOps.java}
 \lstinputlisting[linerange={7-10},frame=single,frameround=tttt,rulecolor=\color{violet},belowskip=0pt]{examples/ArrayOps.java}
 \lstinputlisting[linerange={11-12},basicstyle=\ttfamily\color{lightgray},keywordstyle={[2]\bfseries\color{lightgray}}]{examples/ArrayOps.java}
+\end{frame}
+
+\begin{frame}
+\frametitle{Interface Specification}
+\pgfimage[width=4.3in]{if0}
+\end{frame}
+
+\begin{frame}
+\frametitle{Interface Specification}
+\includegraphics[width=4.3in]{if1}
 \end{frame}
 
 
