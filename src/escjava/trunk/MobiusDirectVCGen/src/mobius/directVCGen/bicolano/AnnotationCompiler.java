@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 
 import javafe.tc.TypeSig;
-
 import mobius.bico.Executor;
 
 
@@ -24,13 +23,10 @@ public class AnnotationCompiler {
    * @param clzz the class to treat
    * @param sig the tree containing the annotations
    */
-  public AnnotationCompiler(final File pkgsdir, final String clzz, TypeSig sig) {
+  public AnnotationCompiler(final File pkgsdir, final String clzz, final TypeSig sig) {
     final String [] args = {pkgsdir.toString() + File.separator + 
                             "Bico", clzz};
-    fExecutor = new Executor(args);
-    
-      
-    
+    fExecutor = new AnnotationExecutor(pkgsdir, args);
   }
 
   /**
