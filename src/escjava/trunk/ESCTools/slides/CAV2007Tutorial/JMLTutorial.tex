@@ -80,13 +80,13 @@ of Functional Behavior for Java}
 
 % Delete this, if you do not want the table of contents to pop up at
 % the beginning of each section:
-%\AtBeginSection[]
-%{
-%  \begin{frame}<beamer>{Outline}
-%    \tableofcontents[currentsection,hideallsubsections]
-%  \end{frame}
-%}
-
+\AtBeginSection[]
+{
+  \begin{frame}<beamer>
+    \frametitle{Outline}
+    \tableofcontents[currentsection,hideallsubsections]
+  \end{frame}
+}
 
 \begin{document}
 
@@ -231,20 +231,167 @@ Invariants
 
 \begin{frame}
 \frametitle{Interface Specification}
-\pgfimage[width=4.3in]{if0}
+\includegraphics[width=4.25in]{if0}
 \end{frame}
 
 \begin{frame}
 \frametitle{Interface Specification}
-\includegraphics[width=4.3in]{if1}
+\includegraphics[width=4.25in]{if1}
 \end{frame}
 
+\begin{frame}
+\frametitle{Like $\ldots$ But for Java and $\ldots$}
+\begin{itemize}
+\item
+\textcolor{blue}{VDM}, but
+\begin{itemize}
+\item
+OO features
+\end{itemize}
+
+\item
+\textcolor{blue}{Eiffel}, but
+\begin{itemize}
+\item
+Features for formal verification
+\end{itemize}
+
+\item
+\textcolor{blue}{Spec\#}, but
+\begin{itemize}
+\item
+Different invariant methodology
+\item
+More features for formal verification
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Unlike OCL and Z}
+
+\begin{itemize}
+\item
+tailored to Java semantics.
+
+\item
+more Java-like syntax.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Many Tools, One Language}
+\includegraphics[width=4.25in]{tools-overview}
+\end{frame}
+
+\begin{frame}
+\frametitle{How Tools Complement Each Other}
+\begin{itemize}
+\item
+Different strengths:
+\begin{itemize}
+\item
+Runtime checking --- real errors.
+
+\item
+Static checking --- better coverage.
+
+\item
+Verification --- guarantees.
+\end{itemize}
+
+\item
+Usual ordering:
+\begin{enumerate}
+\item
+Runtime checker.
+
+\item
+Extended Static Checking (ESC).
+
+\item
+Your verification tool.
+\end{enumerate}
+\end{itemize}
+\end{frame}
 
 \subsection[Importance]{Importance of JML}
 
-\subsection[Related]{Related Work}
+\begin{frame}
+\frametitle{Importance of JML}
+
+\begin{itemize}
+\item
+Many tools.
+
+\item
+State of the art language.
+
+\item
+Large and open research community:
+\begin{itemize}
+\item
+23 groups, worldwide.
+
+\item
+Over 135 papers.
+\end{itemize}
+\end{itemize}
+
+See \href{http://www.jmlspecs.org}{jmlspecs.org}
+\end{frame}
+
+\begin{frame}
+\frametitle{Advantages of Working with JML}
+
+\begin{itemize}
+\item
+Reuse language design.
+
+\item
+Ease communication with researchers.
+
+\item
+Share customers.
+\end{itemize}
+
+Join us!
+\end{frame}
 
 \subsection[Finding More]{Where to Find More}
+
+\begin{frame}
+\frametitle{Where to Find More: \href{http://www.jmlspecs.org}{jmlspecs.org}}
+
+Documents:
+\begin{itemize}
+\item
+Leavens and Cheon, \href{ftp://ftp.cs.iastate.edu/pub/leavens/JML/jmldbc.pdf}{``Design by Contract with JML''}
+
+\item
+Burdy, \emph{et al.\/}, \href{http://dx.doi.org/10.1007/s10009-004-0167-4}{``An overview of JML tools and applications''}
+
+\item
+Leavens, Baker, and Ruby, \href{http://doi.acm.org/10.1145/1127878.1127884}{``Preliminary Design of JML''}
+
+\item
+Leavens, \emph{et al.\/}, \href{http://www.jmlspecs.org/jmlrefman/jmlrefman_toc.html}{``JML Reference Manual''}
+\end{itemize}
+
+Also:
+\begin{itemize}
+\item
+Examples, teaching material.
+
+\item
+Downloads, sourceforge project.
+
+\item
+Links to papers, etc.
+\end{itemize}
+
+\end{frame}
 
 \section[Reading and Writing]{Reading and Writing JML Specifications}
 
