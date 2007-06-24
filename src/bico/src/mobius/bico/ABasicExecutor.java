@@ -2,6 +2,7 @@ package mobius.bico;
 
 import java.io.IOException;
 
+import mobius.bico.Util.Stream;
 import mobius.bico.dico.Dictionary;
 import mobius.bico.implem.IImplemSpecifics;
 
@@ -25,7 +26,7 @@ public abstract class ABasicExecutor {
   IImplemSpecifics fImplemSpecif;
   
   /** the output file. */
-  Util.Stream fOut;
+  Stream fOut;
   
   /** the current bcel repository used. */
   final Repository fRepos;
@@ -64,5 +65,20 @@ public abstract class ABasicExecutor {
    * @throws IOException in case of write problem
    */
   public abstract void start() throws ClassNotFoundException, IOException;
+  
+  /**
+   * Returns the current repository.
+   * @return should not be null
+   */
+  public final Repository getRepository() {
+    return fRepos;
+  }
+  /**
+   * The current output stream of the executor.
+   * @return an output stream
+   */
+  public final Stream getOut() {
+    return fOut;
+  }
   
 }

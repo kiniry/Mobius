@@ -1,6 +1,7 @@
 package mobius.bico;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.security.Permission;
@@ -351,7 +352,7 @@ public class Executor extends ABasicExecutor {
       fTreatedClasses.add(moduleName + ".class");
     }
     
-    final ClassExecutor ce = new ClassExecutor(this, cg, fWorkingDir);
+    final ClassExecutor ce = getClassExecutor(cg);
     ce.start();
     fOut.println(1, "Load \"" + ce.getOuputFile().getPath() + "\".");
   }
@@ -359,6 +360,17 @@ public class Executor extends ABasicExecutor {
   
  
  
+  /**
+   * Returns an instance of a class executor.
+   * This method is there as an extension point.
+   * @param cg the class generator. Represents the current class
+   * to treat.
+   * @return a ClassExecutor instance
+   * @throws FileNotFoundException if a file is missing
+   */
+  public ClassExecutor getClassExecutor(final ClassGen cg) throws FileNotFoundException {
+    return new ClassExecutor(this, cg, fWorkingDir);
+  }
 
   /**
    * Write the file preable.

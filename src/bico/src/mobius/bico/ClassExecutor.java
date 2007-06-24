@@ -15,7 +15,7 @@ import org.apache.bcel.generic.ClassGen;
  * P. Czarnik (czarnik@mimuw.edu.pl), 
  * L. Hubert (laurent.hubert@irisa.fr)
  */
-class ClassExecutor extends ABasicExecutor {
+public class ClassExecutor extends ABasicExecutor {
   
   /** the current class which is inspected. */
   private ClassGen fClass;
@@ -100,7 +100,7 @@ class ClassExecutor extends ABasicExecutor {
   /**
    * Prints the class name definition of the current class.
    */
-  private void doClassNameDefinition() {
+  public void doClassNameDefinition() {
     final JavaClass jc = fClass.getJavaClass();
     final int className =  fDico.getCoqClassName(jc);
     final int packageName = fDico.getCoqPackageName(jc);
@@ -123,7 +123,7 @@ class ClassExecutor extends ABasicExecutor {
   /**
    * Do the proper class definition.
    */
-  private void doClassDefinition() {
+  public void doClassDefinition() {
     final JavaClass jc = fClass.getJavaClass(); 
     if (jc.isInterface()) {
       fOut.println(fTab, "Definition interface : Interface := INTERFACE.Build_t");
