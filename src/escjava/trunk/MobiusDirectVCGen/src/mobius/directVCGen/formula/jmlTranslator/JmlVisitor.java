@@ -94,22 +94,38 @@ import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
 
 
-public class JmlVisitor extends VisitorArgResult{
+/**
+ * @author Claudia Brauchli (claudia@vis.ethz.ch)
+ * @author Hermann Lehner (hermann.lehner@inf.ethz.ch)
+ * 
+ */
+public class JmlVisitor extends VisitorArgResult {
 
+  /**
+   * Reference to JML Expression Translator.
+   */
   private JmlExprToFormula fTranslator;
-  private Properties p;
+  /**
+   * Properties that are passed as argument of the visitor.
+   */
+  private Properties fProperties;
 
-
+  /**
+   * Visitor that translates JML Constructs to FOL by using JmlExprToFormula to
+   * translate expressions.
+   */
   public JmlVisitor() {
-    p = new Properties();
-    p.put("pred", new Boolean(true));
-    p.put("old", new Boolean(false));
-    p.put("interesting", new Boolean(false));
+    fProperties = new Properties();
+    fProperties.put("pred", new Boolean(true));
+    fProperties.put("old", new Boolean(false));
+    fProperties.put("interesting", new Boolean(false));
     fTranslator = new JmlExprToFormula(this);
   }
 
-  @Override
-  public Object visitASTNode(final ASTNode x, final Object prop) {
+  /* (non-Javadoc)
+   * @see javafe.ast.VisitorArgResult#visitASTNode(javafe.ast.ASTNode, java.lang.Object)
+   */
+  public final Object visitASTNode(final ASTNode x, final Object prop) {
     Object o = null;
     final int max = x.childCount();
     for (int i = 0; i < max; i++) {
@@ -127,48 +143,62 @@ public class JmlVisitor extends VisitorArgResult{
     return o;
   }
 
-  @Override
-  public /*@non_null*/ Object visitClassDecl(/*@non_null*/ ClassDecl x, Object o) {
+  /* (non-Javadoc)
+   * @see javafe.ast.VisitorArgResult#visitClassDecl(javafe.ast.ClassDecl, java.lang.Object)
+   */
+  public final Object visitClassDecl(final /*@non_null*/ ClassDecl x, final Object o) {
     //Use default properties to start with.
-    return visitTypeDecl(x, p);
+    return visitTypeDecl(x, fProperties);
   }
 
-  public /*@non_null*/ Object visitRoutineDecl(/*@non_null*/ RoutineDecl x, Object o) {
-    x.accept(new VisibleTypeCollector(),o); // Visible Type Collector
+  /* (non-Javadoc 
+   * @see javafe.ast.VisitorArgResult#visitRoutineDecl(javafe.ast.RoutineDecl, java.lang.Object)
+   */
+  public final Object visitRoutineDecl(final /*@non_null*/ RoutineDecl x, final Object o) {
+    x.accept(new VisibleTypeCollector(), o); // Visible Type Collector
     ((Properties) o).put("method", x);
-    ((Properties) o).put("firstPost", new Boolean(true)); // invariante wird nur einmal zu Lookup.postcond angehängt
+    //  invariante wird nur einmal zu Lookup.postcond angehängt
+    ((Properties) o).put("firstPost", new Boolean(true));
     ((Properties) o).put("routinebegin", new Boolean(true));
-    QuantVariableRef result = (QuantVariableRef)((Properties) o).get("result");
+    final QuantVariableRef result = (QuantVariableRef) ((Properties) o).get("result");
     Lookup.postconditions.put(x, new Post(result, Logic.True()));
     Lookup.exceptionalPostconditions.put(x, new Post(result, Logic.True()));
     return visitASTNode(x, o);
   }
 
-  @Override
-  public /*@non_null*/ Object visitMethodDecl(/*@non_null*/ MethodDecl x, Object o) {
+  /* (non-Javadoc)
+   * @see javafe.ast.VisitorArgResult#visitMethodDecl(javafe.ast.MethodDecl, java.lang.Object)
+   */
+  public final Object visitMethodDecl(final /*@non_null*/ MethodDecl x, final Object o) {
     ((Properties) o).put("result", Expression.rvar(Expression.getResultVar(x)));
     return visitRoutineDecl(x, o);
   }
 
-  @Override
-  public /*@non_null*/ Object visitConstructorDecl(/*@non_null*/ ConstructorDecl x, Object o) {
+  /* (non-Javadoc)
+   * @see javafe.ast.VisitorArgResult#visitConstructorDecl(javafe.ast.ConstructorDecl, java.lang.Object)
+   */
+  public final Object visitConstructorDecl(final /*@non_null*/ ConstructorDecl x, final Object o) {
     return visitRoutineDecl(x, o);
   }
 
-  @Override
-  public /*@non_null*/ Object visitFormalParaDecl(/*@non_null*/ FormalParaDecl x, Object o) {
-    return fTranslator.genericVarDecl(x,o);
+  /* (non-Javadoc)
+   * @see javafe.ast.VisitorArgResult#visitFormalParaDecl(javafe.ast.FormalParaDecl, java.lang.Object)
+   */
+  public final Object visitFormalParaDecl(final /*@non_null*/ FormalParaDecl x, final Object o) {
+    return fTranslator.genericVarDecl(x, o);
   }
 
-  @Override
-  public Object visitAnOverview(AnOverview x, Object o) {
-    // TODO Auto-generated method stub
+  /* (non-Javadoc)
+   * @see escjava.ast.VisitorArgResult#visitAnOverview(escjava.ast.AnOverview, java.lang.Object)
+   */
+  public final Object visitAnOverview(final /*@non_null*/ AnOverview x, final Object o) {
     return null;
   }
 
-  @Override
-  public /*@non_null*/ Object visitLiteralExpr(final /*@non_null*/ LiteralExpr x,
-                                               final Object o) {
+  /* (non-Javadoc)
+   * @see javafe.ast.VisitorArgResult#visitLiteralExpr(javafe.ast.LiteralExpr, java.lang.Object)
+   */
+  public final Object visitLiteralExpr(final /*@non_null*/ LiteralExpr x, final Object o) {
     final Properties prop = (Properties) o;
     if (((Boolean) prop.get("interesting")).booleanValue()) {
       return fTranslator.literal(x, o);
@@ -178,133 +208,176 @@ public class JmlVisitor extends VisitorArgResult{
     }
   }
 
-
-  @Override
-  public /*@non_null*/ Object visitVariableAccess(/*@non_null*/ VariableAccess x, Object o) {		 
-    if (((Boolean) ((Properties) o).get("interesting")).booleanValue())
-      return fTranslator.variableAccess(x,o);
-    else 
+  /* (non-Javadoc)
+   * @see javafe.ast.VisitorArgResult#visitVariableAccess(javafe.ast.VariableAccess, java.lang.Object)
+   */
+  public final Object visitVariableAccess(final /*@non_null*/ VariableAccess x, final Object o) {
+    if (((Boolean) ((Properties) o).get("interesting")).booleanValue()) {
+      return fTranslator.variableAccess(x, o);
+    }
+    else {
       return null;
+    }
   }
 
-  @Override
-  public /*@non_null*/ Object visitFieldAccess(/*@non_null*/ FieldAccess x, Object o) {		 
-    if (((Boolean) ((Properties) o).get("interesting")).booleanValue())
-      return fTranslator.fieldAccess(x,o);
-    else
+  /* (non-Javadoc)
+   * @see javafe.ast.VisitorArgResult#visitFieldAccess(javafe.ast.FieldAccess, java.lang.Object)
+   */
+  public final Object visitFieldAccess(final /*@non_null*/ FieldAccess x, final Object o) {
+    if (((Boolean) ((Properties) o).get("interesting")).booleanValue()) {
+      return fTranslator.fieldAccess(x, o);
+    }
+    else {
       return null;
+    }
   }
 
-  @Override
-  public /*@non_null*/ Object visitLocalVarDecl(/*@non_null*/ LocalVarDecl x, Object o) {
-    //TODO: do something meaningfull.
+  /* (non-Javadoc)
+   * @see javafe.ast.VisitorArgResult#visitLocalVarDecl(javafe.ast.LocalVarDecl, java.lang.Object)
+   */
+  public Object visitLocalVarDecl(final /*@non_null*/ LocalVarDecl x, final Object o) {
     return null;
   }
 
-  @Override
-  public /*@non_null*/ Object visitNaryExpr(/*@non_null*/ NaryExpr x, Object o) {
-    if (((Boolean) ((Properties) o).get("interesting")).booleanValue()){
-      if (x.op== TagConstants.PRE) {
-        return fTranslator.naryExpr(x,o);
-      } else {
+  /* (non-Javadoc)
+   * @see escjava.ast.VisitorArgResult#visitNaryExpr(escjava.ast.NaryExpr, java.lang.Object)
+   */
+  public final Object visitNaryExpr(final /*@non_null*/ NaryExpr x, final Object o) {
+    if (((Boolean) ((Properties) o).get("interesting")).booleanValue()) {
+      if (x.op == TagConstants.PRE) {
+        return fTranslator.naryExpr(x, o);
+      }
+      else {
         return visitGCExpr(x, o);
       }
-    } else
+    }
+    else {
       return null;
+    }
   }
 
-  @Override
-  public /*@non_null*/ Object visitInstanceOfExpr(/*@non_null*/ InstanceOfExpr x, Object o) {
-    if (((Boolean) ((Properties) o).get("interesting")).booleanValue())
+  /* (non-Javadoc)
+   * @see javafe.ast.VisitorArgResult#visitInstanceOfExpr(javafe.ast.InstanceOfExpr, java.lang.Object)
+   */
+  public final Object visitInstanceOfExpr(final /*@non_null*/ InstanceOfExpr x, final Object o) {
+    if (((Boolean) ((Properties) o).get("interesting")).booleanValue()) {
       return fTranslator.instanceOfExpr(x, o);
-    else
+    }
+    else {
       return null;
+    }
   }
 
-  @Override
-  public Object  visitThisExpr(ThisExpr x, Object o) {
-    if (((Boolean) ((Properties) o).get("interesting")).booleanValue())
-      return fTranslator.thisLiteral(x,o);
-    else
+  /* (non-Javadoc)
+   * @see javafe.ast.VisitorArgResult#visitThisExpr(javafe.ast.ThisExpr, java.lang.Object)
+   */
+  public final Object visitThisExpr(final /*@non_null*/ ThisExpr x, final Object o) {
+    if (((Boolean) ((Properties) o).get("interesting")).booleanValue()) {
+      return fTranslator.thisLiteral(x, o);
+    }
+    else {
       return null;
+    }
   }
 
-
-
-  @Override
-  public Object visitArrayRangeRefExpr(ArrayRangeRefExpr x, Object o) {
+  /* (non-Javadoc)
+   * @see escjava.ast.VisitorArgResult#visitArrayRangeRefExpr(escjava.ast.ArrayRangeRefExpr, java.lang.Object)
+   */
+  public final Object visitArrayRangeRefExpr(final /*@non_null*/ ArrayRangeRefExpr x, final Object o) {
     // TODO Auto-generated method stub
     return null;
   }
 
-  @Override
-  public Object visitCondExprModifierPragma(CondExprModifierPragma x, Object o) {
+  /* (non-Javadoc)
+   * @see escjava.ast.VisitorArgResult#visitCondExprModifierPragma(escjava.ast.CondExprModifierPragma, java.lang.Object)
+   */
+  public final Object visitCondExprModifierPragma(final /*@non_null*/ CondExprModifierPragma x, final Object o) {
     // TODO Auto-generated method stub
     //return null;
     return visitASTNode(x, o);
   }
 
-  @Override
-  public Object visitCondition(Condition x, Object o) {
+  /* (non-Javadoc)
+   * @see escjava.ast.VisitorArgResult#visitCondition(escjava.ast.Condition, java.lang.Object)
+   */
+  public final Object visitCondition(final /*@non_null*/ Condition x, final Object o) {
     // TODO Auto-generated method stub
     return null;
   }
 
-  @Override
-  public Object visitDecreasesInfo(DecreasesInfo x, Object o) {
+  /* (non-Javadoc)
+   * @see escjava.ast.VisitorArgResult#visitDecreasesInfo(escjava.ast.DecreasesInfo, java.lang.Object)
+   */
+  public final Object visitDecreasesInfo(final /*@non_null*/ DecreasesInfo x, final Object o) {
     // TODO Auto-generated method stub
     return null;
   }
 
-  @Override
-  public Object visitDefPred(DefPred x, Object o) {
+  /* (non-Javadoc)
+   * @see escjava.ast.VisitorArgResult#visitDefPred(escjava.ast.DefPred, java.lang.Object)
+   */
+  public final Object visitDefPred(final /*@non_null*/ DefPred x, final Object o) {
     // TODO Auto-generated method stub
     return null;
   }
 
-  @Override
-  public Object visitDefPredApplExpr(DefPredApplExpr x, Object o) {
+  /* (non-Javadoc)
+   * @see escjava.ast.VisitorArgResult#visitDefPredApplExpr(escjava.ast.DefPredApplExpr, java.lang.Object)
+   */
+  public final Object visitDefPredApplExpr(final /*@non_null*/ DefPredApplExpr x, final Object o) {
     // TODO Auto-generated method stub
     return null;
   }
 
-  @Override
-  public Object visitDefPredLetExpr(DefPredLetExpr x, Object o) {
+  /* (non-Javadoc)
+   * @see escjava.ast.VisitorArgResult#visitDefPredLetExpr(escjava.ast.DefPredLetExpr, java.lang.Object)
+   */
+  public final Object visitDefPredLetExpr(final /*@non_null*/ DefPredLetExpr x, final Object o) {
     // TODO Auto-generated method stub
     return null;
   }
 
-  @Override
-  public Object visitDependsPragma(DependsPragma x, Object o) {
+  /* (non-Javadoc)
+   * @see escjava.ast.VisitorArgResult#visitDependsPragma(escjava.ast.DependsPragma, java.lang.Object)
+   */
+  public final Object visitDependsPragma(final /*@non_null*/ DependsPragma x, final Object o) {
     // TODO Auto-generated method stub
     return null;
   }
 
-  @Override
-  public Object visitEscPrimitiveType(EscPrimitiveType x, Object o) {
+  /* (non-Javadoc)
+   * @see escjava.ast.VisitorArgResult#visitEscPrimitiveType(escjava.ast.EscPrimitiveType, java.lang.Object)
+   */
+  public final Object visitEscPrimitiveType(final /*@non_null*/ EscPrimitiveType x, final Object o) {
     // TODO Auto-generated method stub
     return null;
   }
 
-  @Override
-  public Object visitEverythingExpr(EverythingExpr x, Object o) {
+  /* (non-Javadoc)
+   * @see escjava.ast.VisitorArgResult#visitEverythingExpr(escjava.ast.EverythingExpr, java.lang.Object)
+   */
+  public final Object visitEverythingExpr(final /*@non_null*/ EverythingExpr x, final Object o) {
     // TODO Auto-generated method stub
     //return null;
     return visitASTNode(x, o);
   }
 
-  @Override
-  public Object visitExprDeclPragma(ExprDeclPragma x, Object o) {
+  /* (non-Javadoc)
+   * @see escjava.ast.VisitorArgResult#visitExprDeclPragma(escjava.ast.ExprDeclPragma, java.lang.Object)
+   */
+  public final Object visitExprDeclPragma(final /*@non_null*/ ExprDeclPragma x, final Object o) {
     // TODO Auto-generated method stub
     return null;
   }
 
-  @Override
-  public Object visitExprModifierPragma(ExprModifierPragma x, Object o) {
+  /* (non-Javadoc)
+   * @see escjava.ast.VisitorArgResult#visitExprModifierPragma(escjava.ast.ExprModifierPragma, java.lang.Object)
+   */
+  public final Object visitExprModifierPragma(final /*@non_null*/ ExprModifierPragma x, final Object o) {
     ((Properties) o).put("interesting", new Boolean(true));
-    RoutineDecl rd = (RoutineDecl)((Properties) o).get("method");
+    final RoutineDecl rd = (RoutineDecl)((Properties) o).get("method");
     Term t = (Term)visitASTNode(x, o);
-    switch (x.getTag()){
+    switch (x.getTag()) {
       case TagConstants.REQUIRES:
         if (rd  instanceof MethodDecl) { 
           final Term invToPre = (Term) invToPreconditions(o);
@@ -323,12 +396,16 @@ public class JmlVisitor extends VisitorArgResult{
         }
         Lookup.postconditions.put(rd, allPosts);
         break;
+      default:
+        break;
     }
     return null;
   }
 
-  @Override
-  public Object visitVarExprModifierPragma(VarExprModifierPragma x, Object o) {
+  /* (non-Javadoc)
+   * @see escjava.ast.VisitorArgResult#visitVarExprModifierPragma(escjava.ast.VarExprModifierPragma, java.lang.Object)
+   */
+  public final Object visitVarExprModifierPragma(final /*@non_null*/ VarExprModifierPragma x, final Object o) {
     ((Properties) o).put("interesting", new Boolean(true));
 
     RoutineDecl currentRoutine = (RoutineDecl)((Properties) o).get("method");
@@ -349,13 +426,15 @@ public class JmlVisitor extends VisitorArgResult{
     return null;
   }
 
-  @Override
-  public /*@non_null*/ Object visitBlockStmt(/*@non_null*/ BlockStmt x, Object o) {
-    Term t=null;
-    Term t1=null;
-    Term t2=null;
-    Set  set=null;
-    Set.Assignment assignment=null;
+  /* (non-Javadoc)
+   * @see javafe.ast.VisitorArgResult#visitBlockStmt(javafe.ast.BlockStmt, java.lang.Object)
+   */
+  public final Object visitBlockStmt(final /*@non_null*/ BlockStmt x, final Object o) {
+    Term t = null;
+    Term t1 = null;
+    Term t2 = null;
+    Set  set = null;
+    Set.Assignment assignment = null;
     boolean interesting;
     Vector<AAnnotation> annos = new Vector<AAnnotation>();
     Term inv = null;
@@ -451,231 +530,335 @@ public class JmlVisitor extends VisitorArgResult{
     return null;
   }	
 
-  @Override
-  public /*@non_null*/ Object visitVarDeclStmt(/*@non_null*/ VarDeclStmt x, Object o) {
+  /* (non-Javadoc)
+   * @see javafe.ast.VisitorArgResult#visitVarDeclStmt(javafe.ast.VarDeclStmt, java.lang.Object)
+   */
+  public final Object visitVarDeclStmt(final /*@non_null*/ VarDeclStmt x, final Object o) {
     //It's only called if we have a ghost variable declaration
     return Expression.rvar(x.decl);
   }	
 
-  @Override
-  public Object visitExprStmtPragma(ExprStmtPragma x, Object o) {
+  /* (non-Javadoc)
+   * @see escjava.ast.VisitorArgResult#visitExprStmtPragma(escjava.ast.ExprStmtPragma, java.lang.Object)
+   */
+  public final Object visitExprStmtPragma(final /*@non_null*/ ExprStmtPragma x, final Object o) {
     // TODO Auto-generated method stub
     return visitASTNode(x, o);
   }
 
-  @Override
-  public Object visitGCExpr(GCExpr x, Object o) {
+  /* (non-Javadoc)
+   * @see escjava.ast.VisitorArgResult#visitGCExpr(escjava.ast.GCExpr, java.lang.Object)
+   */
+  public final Object visitGCExpr(final /*@non_null*/ GCExpr x, final Object o) {
     return visitASTNode(x, o);
   }
 
-  @Override
-  public Object visitGhostDeclPragma(GhostDeclPragma x, Object o) {
+  /* (non-Javadoc)
+   * @see escjava.ast.VisitorArgResult#visitGhostDeclPragma(escjava.ast.GhostDeclPragma, java.lang.Object)
+   */
+  public final Object visitGhostDeclPragma(final /*@non_null*/ GhostDeclPragma x, final Object o) {
     // TODO Auto-generated method stub
     return null;
   }
 
-  @Override
-  public Object visitGuardExpr(GuardExpr x, Object o) {
+  /* (non-Javadoc)
+   * @see escjava.ast.VisitorArgResult#visitGuardExpr(escjava.ast.GuardExpr, java.lang.Object)
+   */
+  public final Object visitGuardExpr(final /*@non_null*/ GuardExpr x, final Object o) {
     // TODO Auto-generated method stub
     return null;
   }
 
-  @Override
-  public Object visitGuardedCmd(GuardedCmd x, Object o) {
+  /* (non-Javadoc)
+   * @see escjava.ast.VisitorArgResult#visitGuardedCmd(escjava.ast.GuardedCmd, java.lang.Object)
+   */
+  public final Object visitGuardedCmd(final /*@non_null*/ GuardedCmd x, final Object o) {
     // TODO Auto-generated method stub
     return null;
   }
 
-  @Override
-  public Object visitIdExprDeclPragma(IdExprDeclPragma x, Object o) {
+  /* (non-Javadoc)
+   * @see escjava.ast.VisitorArgResult#visitIdExprDeclPragma(escjava.ast.IdExprDeclPragma, java.lang.Object)
+   */
+  public final Object visitIdExprDeclPragma(final /*@non_null*/ IdExprDeclPragma x, final Object o) {
     // TODO Auto-generated method stub
     return null;
   }
 
-  @Override
-  public Object visitIdentifierModifierPragma(IdentifierModifierPragma x, Object o) {
+  
+  /* (non-Javadoc)
+   * @see escjava.ast.VisitorArgResult#visitIdentifierModifierPragma(escjava.ast.IdentifierModifierPragma, java.lang.Object)
+   */
+  public final Object visitIdentifierModifierPragma(final /*@non_null*/ IdentifierModifierPragma x, final Object o) {
     // TODO Auto-generated method stub
     return null;
   }
 
-  @Override
-  public Object visitImportPragma(ImportPragma x, Object o) {
+  
+  /* (non-Javadoc)
+   * @see escjava.ast.VisitorArgResult#visitImportPragma(escjava.ast.ImportPragma, java.lang.Object)
+   */
+  public final Object visitImportPragma(final /*@non_null*/ ImportPragma x, final Object o) {
     // TODO Auto-generated method stub
     //return null;
     return visitASTNode(x, o);
   }
 
-  @Override
-  public Object visitLockSetExpr(LockSetExpr x, Object o) {
+  
+  /* (non-Javadoc)
+   * @see escjava.ast.VisitorArgResult#visitLockSetExpr(escjava.ast.LockSetExpr, java.lang.Object)
+   */
+  public final Object visitLockSetExpr(final /*@non_null*/ LockSetExpr x, final Object o) {
     // TODO Auto-generated method stub
     return null;
   }
 
-  @Override
-  public Object visitMapsExprModifierPragma(MapsExprModifierPragma x, Object o) {
+  
+  /* (non-Javadoc)
+   * @see escjava.ast.VisitorArgResult#visitMapsExprModifierPragma(escjava.ast.MapsExprModifierPragma, java.lang.Object)
+   */
+  public final Object visitMapsExprModifierPragma(final /*@non_null*/ MapsExprModifierPragma x, final Object o) {
     // TODO Auto-generated method stub
     return null;
   }
 
-  @Override
-  public Object visitModelConstructorDeclPragma(ModelConstructorDeclPragma x, Object o) {
+  
+  /* (non-Javadoc)
+   * @see escjava.ast.VisitorArgResult#visitModelConstructorDeclPragma(escjava.ast.ModelConstructorDeclPragma, java.lang.Object)
+   */
+  public final Object visitModelConstructorDeclPragma(final /*@non_null*/ ModelConstructorDeclPragma x, final Object o) {
     // TODO Auto-generated method stub
     return null;
   }
 
-  @Override
-  public Object visitModelDeclPragma(ModelDeclPragma x, Object o) {
+  
+  /* (non-Javadoc)
+   * @see escjava.ast.VisitorArgResult#visitModelDeclPragma(escjava.ast.ModelDeclPragma, java.lang.Object)
+   */
+  public final Object visitModelDeclPragma(final /*@non_null*/ ModelDeclPragma x, final Object o) {
     // TODO Auto-generated method stub
     return null;
   }
 
-  @Override
-  public Object visitModelMethodDeclPragma(ModelMethodDeclPragma x, Object o) {
+  
+  /* (non-Javadoc)
+   * @see escjava.ast.VisitorArgResult#visitModelMethodDeclPragma(escjava.ast.ModelMethodDeclPragma, java.lang.Object)
+   */
+  public final Object visitModelMethodDeclPragma(final /*@non_null*/ ModelMethodDeclPragma x, final Object o) {
     // TODO Auto-generated method stub
     return null;
   }
 
-  @Override
-  public Object visitModelProgamModifierPragma(ModelProgamModifierPragma x, Object o) {
+  
+  /* (non-Javadoc)
+   * @see escjava.ast.VisitorArgResult#visitModelProgamModifierPragma(escjava.ast.ModelProgamModifierPragma, java.lang.Object)
+   */
+  public final Object visitModelProgamModifierPragma(final /*@non_null*/ ModelProgamModifierPragma x, final Object o) {
     // TODO Auto-generated method stub
     return null;
   }
 
-  @Override
-  public Object visitModelTypePragma(ModelTypePragma x, Object o) {
+  
+  /* (non-Javadoc)
+   * @see escjava.ast.VisitorArgResult#visitModelTypePragma(escjava.ast.ModelTypePragma, java.lang.Object)
+   */
+  public final Object visitModelTypePragma(final /*@non_null*/ ModelTypePragma x, final Object o) {
     // TODO Auto-generated method stub
     return null;
   }
 
-  @Override
-  public Object visitModifiesGroupPragma(ModifiesGroupPragma x, Object o) {
+  
+  /* (non-Javadoc)
+   * @see escjava.ast.VisitorArgResult#visitModifiesGroupPragma(escjava.ast.ModifiesGroupPragma, java.lang.Object)
+   */
+  public final Object visitModifiesGroupPragma(final /*@non_null*/ ModifiesGroupPragma x, final Object o) {
     // TODO Auto-generated method stub
     //return null;
     return visitASTNode(x, o);
   }
 
-  @Override
-  public Object visitNamedExprDeclPragma(NamedExprDeclPragma x, Object o) {
+  
+  /* (non-Javadoc)
+   * @see escjava.ast.VisitorArgResult#visitNamedExprDeclPragma(escjava.ast.NamedExprDeclPragma, java.lang.Object)
+   */
+  public final Object visitNamedExprDeclPragma(final /*@non_null*/ NamedExprDeclPragma x, final Object o) {
     // TODO Auto-generated method stub
     return null;
   }
 
-  @Override
-  public Object visitNestedModifierPragma(NestedModifierPragma x, Object o) {
+  
+  /* (non-Javadoc)
+   * @see escjava.ast.VisitorArgResult#visitNestedModifierPragma(escjava.ast.NestedModifierPragma, java.lang.Object)
+   */
+  public final Object visitNestedModifierPragma(final /*@non_null*/ NestedModifierPragma x, final Object o) {
     // TODO Auto-generated method stub
     return null;
   }
 
-  @Override
-  public Object visitNotModifiedExpr(NotModifiedExpr x, Object o) {
+  
+  /* (non-Javadoc)
+   * @see escjava.ast.VisitorArgResult#visitNotModifiedExpr(escjava.ast.NotModifiedExpr, java.lang.Object)
+   */
+  public final Object visitNotModifiedExpr(final /*@non_null*/ NotModifiedExpr x, final Object o) {
     // TODO Auto-generated method stub
     return null;
   }
 
-  @Override
-  public Object visitNotSpecifiedExpr(NotSpecifiedExpr x, Object o) {
+  
+  /* (non-Javadoc)
+   * @see escjava.ast.VisitorArgResult#visitNotSpecifiedExpr(escjava.ast.NotSpecifiedExpr, java.lang.Object)
+   */
+  public final Object visitNotSpecifiedExpr(final /*@non_null*/ NotSpecifiedExpr x, final Object o) {
     // TODO Auto-generated method stub
     return null;
   }
 
-  @Override
-  public Object visitNothingExpr(NothingExpr x, Object o) {
+  
+  /* (non-Javadoc)
+   * @see escjava.ast.VisitorArgResult#visitNothingExpr(escjava.ast.NothingExpr, java.lang.Object)
+   */
+  public final Object visitNothingExpr(final /*@non_null*/ NothingExpr x, final Object o) {
     // TODO Auto-generated method stub
     return null;
   }
 
-  @Override
-  public Object visitNowarnPragma(NowarnPragma x, Object o) {
+  
+  /* (non-Javadoc)
+   * @see escjava.ast.VisitorArgResult#visitNowarnPragma(escjava.ast.NowarnPragma, java.lang.Object)
+   */
+  public final Object visitNowarnPragma(final /*@non_null*/ NowarnPragma x, final Object o) {
     // TODO Auto-generated method stub
     return null;
   }
 
-  @Override
-  public Object visitParsedSpecs(ParsedSpecs x, Object o) {
+  
+  /* (non-Javadoc)
+   * @see escjava.ast.VisitorArgResult#visitParsedSpecs(escjava.ast.ParsedSpecs, java.lang.Object)
+   */
+  public final Object visitParsedSpecs(final /*@non_null*/ ParsedSpecs x, final Object o) {
     // TODO Auto-generated method stub
     //return visitASTNode(x, o); //generates a stack overflow... but should be used
     return null;
   }
 
-  @Override
-  public Object visitReachModifierPragma(ReachModifierPragma x, Object o) {
+  
+  /* (non-Javadoc)
+   * @see escjava.ast.VisitorArgResult#visitReachModifierPragma(escjava.ast.ReachModifierPragma, java.lang.Object)
+   */
+  public final Object visitReachModifierPragma(final /*@non_null*/ ReachModifierPragma x, final Object o) {
     // TODO Auto-generated method stub
     return null;
   }
 
-  @Override
-  public Object visitRefinePragma(RefinePragma x, Object o) {
+  
+  /* (non-Javadoc)
+   * @see escjava.ast.VisitorArgResult#visitRefinePragma(escjava.ast.RefinePragma, java.lang.Object)
+   */
+  public final Object visitRefinePragma(final /*@non_null*/ RefinePragma x, final Object o) {
     // TODO Auto-generated method stub
     return null;
   }
 
-  @Override
-  public Object visitResExpr(ResExpr x, Object o) {
+  
+  /* (non-Javadoc)
+   * @see escjava.ast.VisitorArgResult#visitResExpr(escjava.ast.ResExpr, java.lang.Object)
+   */
+  public final Object visitResExpr(final /*@non_null*/ ResExpr x, final Object o) {
     if (((Boolean) ((Properties) o).get("interesting")).booleanValue())
       return fTranslator.resultLiteral(x,o);
     else
       return null;
   }
 
-  @Override
-  public Object visitSetCompExpr(SetCompExpr x, Object o) {
+  
+  /* (non-Javadoc)
+   * @see escjava.ast.VisitorArgResult#visitSetCompExpr(escjava.ast.SetCompExpr, java.lang.Object)
+   */
+  public final Object visitSetCompExpr(final /*@non_null*/ SetCompExpr x, final Object o) {
     // TODO Auto-generated method stub
     return null;
   }
 
-  @Override
-  public Object visitSetStmtPragma(final SetStmtPragma x, final Object o) {
+  
+  /* (non-Javadoc)
+   * @see escjava.ast.VisitorArgResult#visitSetStmtPragma(escjava.ast.SetStmtPragma, java.lang.Object)
+   */
+  public final Object visitSetStmtPragma(final /*@non_null*/ SetStmtPragma x, final Object o) {
     final Set.Assignment res = new Set.Assignment();
     res.var = (QuantVariableRef) x.target.accept(this, o);
     res.expr = (Term) x.value.accept(this, o);
     return res;
   }
 
-  @Override
-  public Object visitSimpleModifierPragma(SimpleModifierPragma x, Object o) {
+  
+  /* (non-Javadoc)
+   * @see escjava.ast.VisitorArgResult#visitSimpleModifierPragma(escjava.ast.SimpleModifierPragma, java.lang.Object)
+   */
+  public final Object visitSimpleModifierPragma(final /*@non_null*/ SimpleModifierPragma x, final Object o) {
     // TODO Auto-generated method stub
     return null;
   }
 
-  @Override
-  public Object visitSimpleStmtPragma(SimpleStmtPragma x, Object o) {
+  
+  /* (non-Javadoc)
+   * @see escjava.ast.VisitorArgResult#visitSimpleStmtPragma(escjava.ast.SimpleStmtPragma, java.lang.Object)
+   */
+  public final Object visitSimpleStmtPragma(final /*@non_null*/ SimpleStmtPragma x, final Object o) {
     // TODO Auto-generated method stub
     return null;
   }
 
-  @Override
-  public Object visitSkolemConstantPragma(SkolemConstantPragma x, Object o) {
+  
+  /* (non-Javadoc)
+   * @see escjava.ast.VisitorArgResult#visitSkolemConstantPragma(escjava.ast.SkolemConstantPragma, java.lang.Object)
+   */
+  public final Object visitSkolemConstantPragma(final /*@non_null*/ SkolemConstantPragma x, final Object o) {
     // TODO Auto-generated method stub
     return null;
   }
 
-  @Override
-  public Object visitSpec(Spec x, Object o) {
+  
+  /* (non-Javadoc)
+   * @see escjava.ast.VisitorArgResult#visitSpec(escjava.ast.Spec, java.lang.Object)
+   */
+  public final Object visitSpec(final /*@non_null*/ Spec x, final Object o) {
     // TODO Auto-generated method stub
     return null;
   }
 
-  @Override
-  public Object visitStillDeferredDeclPragma(StillDeferredDeclPragma x, Object o) {
+  
+  /* (non-Javadoc)
+   * @see escjava.ast.VisitorArgResult#visitStillDeferredDeclPragma(escjava.ast.StillDeferredDeclPragma, java.lang.Object)
+   */
+  public final Object visitStillDeferredDeclPragma(final /*@non_null*/ StillDeferredDeclPragma x, final Object o) {
     // TODO Auto-generated method stub
     return null;
   }
 
-  @Override
-  public Object visitVarDeclModifierPragma(VarDeclModifierPragma x, Object o) {
+  
+  /* (non-Javadoc)
+   * @see escjava.ast.VisitorArgResult#visitVarDeclModifierPragma(escjava.ast.VarDeclModifierPragma, java.lang.Object)
+   */
+  public final Object visitVarDeclModifierPragma(final /*@non_null*/ VarDeclModifierPragma x, final Object o) {
     // TODO Auto-generated method stub
     return null;
   }
 
-  @Override
-  public Object visitWildRefExpr(WildRefExpr x, Object o) {
+  
+  /* (non-Javadoc)
+   * @see escjava.ast.VisitorArgResult#visitWildRefExpr(escjava.ast.WildRefExpr, java.lang.Object)
+   */
+  public final Object visitWildRefExpr(final /*@non_null*/ WildRefExpr x, final Object o) {
     // TODO Auto-generated method stub
     return null;
   }
 
 
-  @Override
-  public Object visitBinaryExpr(final BinaryExpr expr, final Object o) {
+  
+  /* (non-Javadoc)
+   * @see javafe.ast.VisitorArgResult#visitBinaryExpr(javafe.ast.BinaryExpr, java.lang.Object)
+   */
+  public final Object visitBinaryExpr(final /*@non_null*/ BinaryExpr expr, final Object o) {
     if (((Boolean) ((Properties) o).get("interesting")).booleanValue()) {
       switch(expr.op) {
         case TagConstants.EQ: 
@@ -762,33 +945,42 @@ public class JmlVisitor extends VisitorArgResult{
   }
 
 
-  public Object invToPreconditions(Object o) {
-    QuantVariableRef x = Expression.rvar(Ref.sort);
-    QuantVariableRef type = Expression.rvar(Type.sort);
-    QuantVariable[] vars = {x.qvar,type.qvar};
-    Term invTerm = Logic.inv(x, type);
-    Term typeOfTerm = Logic.assignCompat(Heap.var, x, type);
-    Term allocTerm = Logic.isAllocated(Heap.var, x);
-    Term andTerm = Logic.and(allocTerm, typeOfTerm);
-    Term implTerm = Logic.implies(andTerm, invTerm);
-    Term forAllTerm = Logic.forall(vars, implTerm);
+  /**
+   * @param o Properties object also containing all modifiable types.
+   * @return Returns a term that says that all invariants have to hold.
+   */
+  public Object invToPreconditions(final /*@non_null*/ Object o) {
+    final QuantVariableRef x = Expression.rvar(Ref.sort);
+    final QuantVariableRef type = Expression.rvar(Type.sort);
+    final QuantVariable[] vars = {x.qvar, type.qvar};
+    final Term invTerm = Logic.inv(x, type);
+    final Term typeOfTerm = Logic.assignCompat(Heap.var, x, type);
+    final Term allocTerm = Logic.isAllocated(Heap.var, x);
+    final Term andTerm = Logic.and(allocTerm, typeOfTerm);
+    final Term implTerm = Logic.implies(andTerm, invTerm);
+    final Term forAllTerm = Logic.forall(vars, implTerm);
     return forAllTerm;
   }
 
 
 
-  public Object invToPostconditions(Object o) { 
-    QuantVariableRef x = Expression.rvar(Ref.sort);
-    QuantVariableRef type = Expression.rvar(Type.sort);
-    QuantVariable[] vars = {x.qvar,type.qvar}; 
-    Term invTerm = Logic.inv(x, type);
-    Term typeOfTerm = Logic.assignCompat(Heap.var , x, type);
-    Term allocTerm = Logic.isAllocated(Heap.var, x);
-    Term visibleTerm = Logic.isVisibleIn(type, o);
+  /**
+   * @param o Properties object also containing all modifiable types.
+   * @return Returns a Term containing the invariants that have to be checked
+   * at the end of a method.
+   */
+  public Object invToPostconditions(final /*@non_null*/ Object o) { 
+    final QuantVariableRef x = Expression.rvar(Ref.sort);
+    final QuantVariableRef type = Expression.rvar(Type.sort);
+    final QuantVariable[] vars = {x.qvar, type.qvar}; 
+    final Term invTerm = Logic.inv(x, type);
+    final Term typeOfTerm = Logic.assignCompat(Heap.var , x, type);
+    final Term allocTerm = Logic.isAllocated(Heap.var, x);
+    final Term visibleTerm = Logic.isVisibleIn(type, o);
     Term andTerm = Logic.and(allocTerm, typeOfTerm);
     andTerm = Logic.and(andTerm, visibleTerm);
-    Term implTerm = Logic.implies(andTerm, invTerm);
-    Term forAllTerm = Logic.forall(vars, implTerm);
+    final Term implTerm = Logic.implies(andTerm, invTerm);
+    final Term forAllTerm = Logic.forall(vars, implTerm);
     return forAllTerm;
   }
 

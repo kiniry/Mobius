@@ -502,11 +502,21 @@ public final class Logic {
   }
 
 
+  /**
+   * @param x The object for which we want to get the invariant.
+   * @param t The type where the invariant is defined.
+   * @return A Predicate 'inv' representing an invariant of type t for object x.
+   */
   public static Term inv(final Term x, final Term t) {
     return Formula.lf.mkFnTerm(Formula.lf.symInv, new Term[]{x, t});
   }
 
 
+  /**
+   * @param heap Heap for which we want to know whether val is alive.
+   * @param val The object in question.
+   * @return A Term that expresses the predicate isAlloc(heap,val)
+   */
   public static Term isAllocated(final Term heap, final Term val) {
     if (heap.getSort() != Heap.sort) {
       throw new IllegalArgumentException("Type of the first param should be heap (" + 
@@ -515,12 +525,8 @@ public final class Logic {
     return Formula.lf.mkFnTerm(Formula.lf.symIsAllocated, new Term [] {heap, val});
   }
 
-
-
-
-
   /**
-   * @deprecated
+   * @deprecated Use Logic.equals instead.
    * @param t1
    * @param t2
    * @return
@@ -530,6 +536,12 @@ public final class Logic {
   }
 
 
+  /**
+   * @param var The object for which we want to find out whether it could
+   * have been modified by the method.
+   * @param o Parameter object also containing a list of motifiable types.
+   * @return A Term expressing the check described above.
+   */
   public static Term isVisibleIn(final Term var, final Object o) {
     Term t1 = null;
     Term t2 = null;
