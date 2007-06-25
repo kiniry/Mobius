@@ -40,12 +40,15 @@
 \usepackage{listings}
 \input{jml-listings}
 \lstset{language=[JML]Java,basicstyle=\ttfamily,commentstyle=\ttfamily,
-        keywordstyle=\bfseries,keywordstyle={[2]\bfseries\color{violet!80!black}}
+        showstringspaces=false,
+        keywordstyle=\bfseries,
+        keywordstyle={[2]\bfseries\color{violet!80!black}}
        }
 
 % Customizations
 \thicklines
 \newtheorem*{question}{Question}
+\newtheorem*{exercise}{Exercise}
 
 % -------- frontmatter ---------------
 \title[JML Tutorial]{A JML Tutorial}
@@ -151,6 +154,9 @@ Sequential Java.
 
 \item
 Functional behavior.
+
+\item
+Java 1.4.
 \end{itemize}
 \end{block}
 
@@ -167,6 +173,9 @@ Multithreading.
 
 \item
 Temporal Logic.
+
+\item
+Java 1.5 (generics).
 \end{itemize}
 \end{block}
 \end{columns}
@@ -305,13 +314,13 @@ Verification --- guarantees.
 Usual ordering:
 \begin{enumerate}
 \item
-Runtime checker.
+Runtime checker (jmlc and jmlunit).
 
 \item
-Extended Static Checking (ESC).
+Extended Static Checking (ESC/Java2).
 
 \item
-Your verification tool.
+Verification tool (e.g., KeY, JACK, Jive).
 \end{enumerate}
 \end{itemize}
 \end{frame}
@@ -367,16 +376,16 @@ Join us!
 Documents:
 \begin{itemize}
 \item
-Leavens and Cheon, \href{ftp://ftp.cs.iastate.edu/pub/leavens/JML/jmldbc.pdf}{``Design by Contract with JML''}
+\href{ftp://ftp.cs.iastate.edu/pub/leavens/JML/jmldbc.pdf}{``Design by Contract with JML''}
 
 \item
-Burdy, \emph{et al.\/}, \href{http://dx.doi.org/10.1007/s10009-004-0167-4}{``An overview of JML tools and applications''}
+\href{http://dx.doi.org/10.1007/s10009-004-0167-4}{``An overview of JML tools and applications''}
 
 \item
-Leavens, Baker, and Ruby, \href{http://doi.acm.org/10.1145/1127878.1127884}{``Preliminary Design of JML''}
+\href{http://doi.acm.org/10.1145/1127878.1127884}{``Preliminary Design of JML''}
 
 \item
-Leavens, \emph{et al.\/}, \href{http://www.jmlspecs.org/jmlrefman/jmlrefman_toc.html}{``JML Reference Manual''}
+\href{http://www.jmlspecs.org/jmlrefman/jmlrefman_toc.html}{``JML Reference Manual''}
 \end{itemize}
 
 Also:
@@ -539,6 +548,12 @@ Assumed by caller.
 Frame axiom.
 
 \item
+Locations (fields) in pre-state.
+
+\item
+New object fields not covered.
+
+\item
 Sugar for postcondition: ``nothing else assigned''
 
 \item
@@ -582,12 +597,14 @@ Must be implied by:
 \lstinline!assignable! clause,
 
 \item
-\lstinline!invariant!
+\lstinline!invariant!, and
 
 \item
-JML semantics
+JML semantics.
 \end{itemize}
 \end{itemize}
+
+Also \lstinline!requires_redundantly!, etc.
 \end{frame}
 
 \begin{frame}[fragile]
@@ -606,9 +623,9 @@ is equivalent to:
   requires $P$ && $Q$;
 \end{lstlisting}
 
-~
-
 Similarly for \lstinline!ensures!, \lstinline!invariant!.
+
+~
 
 Note: runtime checker gives better errors if separate.
 
@@ -626,12 +643,94 @@ Note: runtime checker gives better errors if separate.
 \lstinline[mathescape=true]!\old($E$)! ~~ = ~~ pre-state value of $E$.
 
 \item
-\lstinline[mathescape=true]!(\forall T x; $E_1$; $E_2$)!
-~~ = ~~ $(\forall x \in T : E_1 \Rightarrow E_2)$
+\lstinline[mathescape=true]!(\forall T x; $P$; $Q$)!
+~~ = ~~ $\bigwedge \{ Q \mid x \in T \wedge P \}$
+
+\item
+\lstinline[mathescape=true]!(\exists T x; $P$; $Q$)!
+~~ = ~~ $\bigvee \{ Q \mid x \in T \wedge P \}$
+
+\item
+\lstinline[mathescape=true]!(\min T x; $P$; $E$)!
+~~ = ~~ $\min \{E \mid x \in T \wedge P \}$
+
+\item
+\lstinline[mathescape=true]!(\sum T x; $P$; $E$)!
+~~ = ~~ $\sum \{E \mid x \in T \wedge P \}$
+
+\item
+\lstinline[mathescape=true]!(\num_of T x; $P$; $Q$)!
+~~ = ~~ $\sum \{1 \mid x \in T \wedge P \wedge Q\}$
+
+\item
+$\ldots$
 \end{itemize}
 \end{frame}
 
 \subsection[Exercise]{Specifying a Type}
+
+\begin{frame}[fragile]
+\frametitle{Steps for Specifying a Type}
+
+\begin{enumerate}
+\item
+Specify data (\lstinline!spec_public! fields).
+
+\item
+Specify an \lstinline!invariant!.
+
+\item
+Specify each method with:
+
+\begin{enumerate}
+\item
+\lstinline!requires!.
+
+\item
+\lstinline!ensures!.
+
+\item
+\lstinline!assignable! or \lstinline!pure!.
+\end{enumerate}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Exercise: Specify BagOfInt}
+
+\begin{exercise}
+Specify the following:
+
+\rm
+\lstinputlisting[language=Java,commentstyle=\itshape]{examples/BagOfInt.jml-refined}
+\end{exercise}
+\end{frame}
+
+\begin{frame}<beamer>[fragile]
+\frametitle{My Solution: BagOfInt's Data}
+
+\lstinputlisting[language={[JML]Java},linerange={2-9}]{examples/BagOfInt.jml}
+\note{Why do we need n?  To allow deletion.}
+\end{frame}
+
+\begin{frame}<beamer>[fragile]
+\frametitle{My Solution: BagOfInt's Constructor}
+
+\lstinputlisting[language={[JML]Java},linerange={11-16}]{examples/BagOfInt.jml}
+\end{frame}
+
+\begin{frame}<beamer>[fragile]
+\frametitle{My Solution: Method occurrences}
+
+\lstinputlisting[language={[JML]Java},linerange={18-23}]{examples/BagOfInt.jml}
+\end{frame}
+
+\begin{frame}<beamer>[fragile]
+\frametitle{My Solution: Method extractMin}
+
+\lstinputlisting[language={[JML]Java},linerange={25-33}]{examples/BagOfInt.jml}
+\end{frame}
+
 
 \subsection[Tool Use]{Basic Tool Use}  % demo + exercise
 

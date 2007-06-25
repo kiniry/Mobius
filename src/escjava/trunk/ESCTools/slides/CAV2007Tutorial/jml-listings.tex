@@ -31,8 +31,9 @@
 \lstdefinelanguage[JML]{Java}[]{Java}%
        {% C++ style comments have to start with a blank!
         comment=[l]{//\ },
-        % And C-style comments must also start with a blank!
-        morecomment=[s]{/*\ }{*/},
+        % And C-style comments must also start with a blank or star!
+        morecomment=[s]{/*\ }{*/},        
+        morecomment=[s]{/**}{*/},
         % sensitive=true, % inherited
         % Add JML keywords as level 1 keywords, so can typeset differently
         classoffset=1,
@@ -48,7 +49,7 @@
          decreasing,decreasing_redundantly,diverges,diverges_redundantly,
          duration,duration_redundantly,ensures,ensures_redundantly,
          example,exceptional_behavior,exceptional_behaviour,
-         exceptional_example,exsures,exsures_redundantly,field,
+         exceptional_example,exsures,exsures_redundantly,extract,field,
          forall,for_example,ghost,helper,hence_by,hence_by_redundantly,
          implies_that,in,in_redundantly,initializer,initially,instance,
          invariant,invariant_redundantly,loop_invariant,
@@ -58,7 +59,7 @@
          modifies_redundantly,monitored,monitors_for,non_null,
          normal_behavior,normal_behaviour,normal_example,nowarn,
          nullable,nullable_by_default,old,or,post,post_redundantly,
-         pre,pre_redundantly,pure,readable,refine,refines,represents,
+         pre,pre_redundantly,pure,readable,refine,refines,refining,represents,
          represents_redundantly,requires,requires_redundantly,
          returns,returns_redundantly,set,signals,signals_only,
          signals_only_redundantly,signals_redundantly,spec_bigint_math,
@@ -69,8 +70,6 @@
         },
         % keywords from the universe type system
         morekeywords={rep,peer,readonly},
-        % keywords added for this paper
-        morekeywords={extract,refining},
         % typeset everything that starts with a backslash as a keyword
         % BUG: this doesn't allow typesetting these keywords differently
         keywordsprefix=\\,
