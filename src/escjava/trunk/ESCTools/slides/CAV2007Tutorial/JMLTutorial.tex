@@ -398,7 +398,136 @@ Links to papers, etc.
 \subsection[Lightweight]{Lightweight Specification of Functional Behavior}
 
 \begin{frame}
-\frametitle{Requires and Ensures}
+\frametitle{Most Important JML Keywords}
+
+Top-level in classes and interfaces:
+\begin{itemize}
+\item
+\lstinline!invariant!
+
+\item
+\lstinline!spec_public!
+\end{itemize}
+
+For methods and constructors:
+\begin{itemize}
+\item
+\lstinline!requires!
+
+\item
+\lstinline!ensures!
+
+\item
+\lstinline!assignable!
+
+\item
+\lstinline!pure!
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Example: BoundedStack}
+
+\begin{example}
+Specify bounded stacks of objects.
+\end{example}
+
+\note{See the file BoundedStack.java}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{BoundedStack's Data and Invariant}
+\lstinputlisting[linerange={1-12}]{examples/BoundedStack.java}
+\note{Explain notation. Stress client view.}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{BoundedStack's Constructor}
+\lstinputlisting[linerange={13-19}]{examples/BoundedStack.java}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{BoundeStack's push Method}
+\lstinputlisting[linerange={21-32}]{examples/BoundedStack.java}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{BoundeStack's pop Method}
+\lstinputlisting[linerange={34-45}]{examples/BoundedStack.java}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{BoundeStack's top Method}
+\lstinputlisting[linerange={47-54}]{examples/BoundedStack.java}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{spec\_public and invariant}
+
+\lstinline!spec_public!
+\begin{itemize}
+\item
+Public visibility.
+
+\item
+Only for specification purposes.
+\end{itemize}
+
+\note{\lstinline!spec_public! actually a syntactic sugar.}
+
+\lstinline!invariant! must be:
+\begin{itemize}
+\item
+True at end of constructor.
+
+\item
+Preserved by each method.
+\end{itemize}
+
+\note{Helper methods are an exception to invariant preservation.}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{requires and ensures}
+
+\lstinline!requires! clause:
+\begin{itemize}
+\item
+Precondition.
+
+\item
+Obligation on callers, after parameter passing.
+
+\item
+Assumed by implementor.
+\end{itemize}
+
+\lstinline!ensures! clause:
+\begin{itemize}
+\item
+Postcondition.
+
+\item
+Obligation on implementor, at return.
+
+\item
+Assumed by caller.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Semantics of Requires and Ensures}
+\includegraphics[width=4.25in]{requires}
+\end{frame}
+
+\begin{frame}
+\frametitle{Semantics of Requires and Ensures}
+\includegraphics[width=4.25in]{ensures}
+\end{frame}
+
+\begin{frame}
+\frametitle{Semantics of Requires and Ensures}
+\includegraphics[width=4.25in]{correctimpl}
 \end{frame}
 
 \subsection[Exercise]{Specifying a Type}
