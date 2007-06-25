@@ -81,4 +81,13 @@ public abstract class ABasicExecutor {
     return fOut;
   }
   
+  /**
+   * Returns the current data structure that
+   * stock Coq method's name.
+   * @return a method handler instance
+   */
+  public final MethodHandler getMethodHandler() {
+    return fMethodHandler;
+  }
+  
 }
