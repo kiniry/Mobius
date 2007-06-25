@@ -22,7 +22,10 @@ import javafe.ast.FormalParaDeclVec;
 import javafe.ast.MethodDecl;
 import javafe.ast.RoutineDecl;
 
-//TODO: add comments
+/**
+ * @author hel
+ *
+ */
 public class Lookup {
   
   /** list of symbols to declare. */
@@ -67,8 +70,8 @@ public class Lookup {
       }
     }
 
-    if ((m instanceof ConstructorDecl) ||
-        ((MethodDecl)m).returnType.getTag() == TagConstants.VOIDTYPE) {
+    if ((m instanceof ConstructorDecl)
+        || ((MethodDecl) m).returnType.getTag() == TagConstants.VOIDTYPE) {
       hasResult = false;
     }
     if (hasResult) {
@@ -94,10 +97,10 @@ public class Lookup {
       s[s.length - 1] = args[args.length - 1].getSort();
     }
     if (m instanceof ConstructorDecl) {
-      name = ((ConstructorDecl)m).parent.id + name;
+      name = ((ConstructorDecl) m).parent.id + name;
     }
     else {
-      name = ((MethodDecl)m).id + name;
+      name = ((MethodDecl) m).id + name;
     }
     final FnSymbol sym = Formula.lf.registerPredSymbol(name, s);
     symToDeclare.add(sym);
@@ -110,7 +113,8 @@ public class Lookup {
    * @param m the method of interest
    */
   public static Term precondition(final RoutineDecl m) {
-    return buildStdCond (m, "_pre", false);
+    //return buildStdCond(m, "_pre", false);
+    return preconditions.get(m);
   }
 
   /**
@@ -118,7 +122,8 @@ public class Lookup {
    * @param m the method of interest
    */
   public static Post normalPostcondition(final RoutineDecl m) {
-    return new Post(buildStdCond (m, "_norm", true)); 
+    //return new Post(buildStdCond (m, "_norm", true)); 
+    return postconditions.get(m);
   }
 
   /**
@@ -126,8 +131,9 @@ public class Lookup {
    * @param m the method of interest
    */
   public static Post normalPostcondition(final MethodDecl m) {
-    return new Post(Expression.rvar(Expression.getResultVar(m)), 
-                    buildStdCond (m, "_norm", true)); 
+    //return new Post(Expression.rvar(Expression.getResultVar(m)), 
+    //                buildStdCond (m, "_norm", true)); 
+    return postconditions.get(m);
   }
   /**
    * Returns a vector of FOL Term representations of the exceptional 
@@ -136,7 +142,8 @@ public class Lookup {
    * @param m the method of interest
    */
   public static Post exceptionalPostcondition(final RoutineDecl m) {
-    return new Post(Expression.rvar(Ref.sort), buildStdCond (m, "_excp", false)); 
+    //return new Post(Expression.rvar(Ref.sort), buildStdCond (m, "_excp", false)); 
+    return exceptionalPostconditions.get(m);
   }
 
 }
