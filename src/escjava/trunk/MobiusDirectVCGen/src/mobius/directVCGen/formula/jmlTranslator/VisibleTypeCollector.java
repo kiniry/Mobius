@@ -1,7 +1,5 @@
 package mobius.directVCGen.formula.jmlTranslator;
 
-
-
 import java.util.HashSet;
 import java.util.Properties;
 
@@ -15,6 +13,7 @@ import javafe.ast.FormalParaDecl;
 import javafe.ast.InstanceOfExpr;
 import javafe.ast.LiteralExpr;
 import javafe.ast.MethodDecl;
+import javafe.ast.OperatorTags;
 import javafe.ast.PrimitiveType;
 import javafe.ast.RoutineDecl;
 import javafe.ast.ThisExpr;
@@ -77,6 +76,12 @@ import escjava.tc.FlowInsensitiveChecks;
 
 
 
+/**
+ * @author Claudia Brauchli
+ * @author Hermann Lehner
+ * @author Julien Charles
+ *
+ */
 public class VisibleTypeCollector extends VisitorArgResult {
 
   private java.util.Set<Type> fTypeSet;
@@ -99,13 +104,13 @@ public class VisibleTypeCollector extends VisitorArgResult {
   }
 
   @Override
-  public /*@non_null*/ Object visitClassDecl(final /*@non_null*/ ClassDecl x, final Object o) {
+  public Object visitClassDecl(final /*@non_null*/ ClassDecl x, final Object o) {
     //should never be called
     return visitTypeDecl(x, o);
   }
 
   @Override
-  public /*@non_null*/ Object visitRoutineDecl(final /*@non_null*/ RoutineDecl x, 
+  public Object visitRoutineDecl(final /*@non_null*/ RoutineDecl x, 
                                                final Object o) {
     fTypeSet.add((Type) x.parent.getDecorations()[3]);
     // FIXME should be replaced by the proper call to FlowInsensitiveChecks
@@ -118,38 +123,38 @@ public class VisibleTypeCollector extends VisitorArgResult {
   }
 
   @Override
-  public /*@non_null*/ Object visitMethodDecl(final /*@non_null*/ MethodDecl x, 
+  public Object visitMethodDecl(final /*@non_null*/ MethodDecl x, 
                                               final Object o) {
     return visitRoutineDecl(x, o);
   }
 
   @Override
-  public /*@non_null*/ Object visitConstructorDecl(/*@non_null*/ ConstructorDecl x, Object o) {
+  public Object visitConstructorDecl(/*@non_null*/ final ConstructorDecl x, final Object o) {
     return visitRoutineDecl(x, o);
   }
 
   @Override
-  public /*@non_null*/ Object visitFormalParaDecl(/*@non_null*/ FormalParaDecl x, Object o) {
+  public Object visitFormalParaDecl(/*@non_null*/ final FormalParaDecl x, final Object o) {
     return null;
   }
 
   @Override
-  public Object visitAnOverview(AnOverview x, Object o) {
-    // TODO Auto-generated method stub
+  public Object visitAnOverview(final AnOverview x, final Object o) {
+    
     return null;
   }
 
   @Override
-  public /*@non_null*/ Object visitLiteralExpr(/*@non_null*/ LiteralExpr x, Object o) {
+  public Object visitLiteralExpr(/*@non_null*/ final LiteralExpr x, final Object o) {
     return null;
   }
 
 
   @Override
-  public /*@non_null*/ Object visitVariableAccess(final /*@non_null*/ VariableAccess x, 
+  public Object visitVariableAccess(final /*@non_null*/ VariableAccess x, 
                                                   final Object o) {
     if (((Boolean) ((Properties) o).get("assign")).booleanValue()) {
-      final javafe.ast.Type type = FlowInsensitiveChecks.getType(x);
+      final javafe.ast.Type type = javafe.tc.FlowInsensitiveChecks.getType(x);
       if (!(type instanceof PrimitiveType)) {
         fTypeSet.add(type);
       }
@@ -158,10 +163,10 @@ public class VisibleTypeCollector extends VisitorArgResult {
   }
 
   @Override
-  public /*@non_null*/ Object visitFieldAccess(final /*@non_null*/ FieldAccess x, 
+  public Object visitFieldAccess(final /*@non_null*/ FieldAccess x, 
                                                final Object o) {
 
-    final javafe.ast.Type type = (javafe.ast.Type) x.od.type();
+    final javafe.ast.Type type = x.od.type();
     if (!(type instanceof PrimitiveType) &&
         (((Boolean) ((Properties) o).get("assign")).booleanValue())) {
       fTypeSet.add(type);
@@ -175,322 +180,321 @@ public class VisibleTypeCollector extends VisitorArgResult {
 
 
   @Override
-  public /*@non_null*/ Object visitNaryExpr(/*@non_null*/ NaryExpr x, Object o) {
+  public Object visitNaryExpr(/*@non_null*/ final NaryExpr x, final Object o) {
     return null;
   }
 
   @Override
-  public /*@non_null*/ Object visitInstanceOfExpr(/*@non_null*/ InstanceOfExpr x, Object o) {
+  public Object visitInstanceOfExpr(/*@non_null*/ final InstanceOfExpr x, final Object o) {
     return null;
   }
 
   @Override
-  public Object  visitThisExpr(ThisExpr x, Object o) {
+  public Object  visitThisExpr(final ThisExpr x, final Object o) {
     return null;
   }
 
 
 
   @Override
-  public Object visitArrayRangeRefExpr(ArrayRangeRefExpr x, Object o) {
-    // TODO Auto-generated method stub
+  public Object visitArrayRangeRefExpr(final ArrayRangeRefExpr x, final Object o) {
+    
     return null;
   }
 
   @Override
-  public Object visitCondExprModifierPragma(CondExprModifierPragma x, Object o) {
-    // TODO Auto-generated method stub
+  public Object visitCondExprModifierPragma(final CondExprModifierPragma x, final Object o) {
+    
     return null;
   }
 
   @Override
-  public Object visitCondition(Condition x, Object o) {
-    // TODO Auto-generated method stub
+  public Object visitCondition(final Condition x, final Object o) {
+    
     return null;
   }
 
   @Override
-  public Object visitDecreasesInfo(DecreasesInfo x, Object o) {
-    // TODO Auto-generated method stub
+  public Object visitDecreasesInfo(final DecreasesInfo x, final Object o) {
+    
     return null;
   }
 
   @Override
-  public Object visitDefPred(DefPred x, Object o) {
-    // TODO Auto-generated method stub
+  public Object visitDefPred(final DefPred x, final Object o) {
+    
     return null;
   }
 
   @Override
-  public Object visitDefPredApplExpr(DefPredApplExpr x, Object o) {
-    // TODO Auto-generated method stub
+  public Object visitDefPredApplExpr(final DefPredApplExpr x, final Object o) {
+    
     return null;
   }
 
   @Override
-  public Object visitDefPredLetExpr(DefPredLetExpr x, Object o) {
-    // TODO Auto-generated method stub
+  public Object visitDefPredLetExpr(final DefPredLetExpr x, final Object o) {
+    
     return null;
   }
 
   @Override
-  public Object visitDependsPragma(DependsPragma x, Object o) {
-    // TODO Auto-generated method stub
+  public Object visitDependsPragma(final DependsPragma x, final Object o) {
+    
     return null;
   }
 
   @Override
-  public Object visitEscPrimitiveType(EscPrimitiveType x, Object o) {
-    // TODO Auto-generated method stub
+  public Object visitEscPrimitiveType(final EscPrimitiveType x, final Object o) {
+    
     return null;
   }
 
   @Override
-  public Object visitEverythingExpr(EverythingExpr x, Object o) {
-    // TODO Auto-generated method stub
+  public Object visitEverythingExpr(final EverythingExpr x, final Object o) {
+    
     //return null;
     return visitASTNode(x, o);
   }
 
   @Override
-  public Object visitExprDeclPragma(ExprDeclPragma x, Object o) {
-    // TODO Auto-generated method stub
+  public Object visitExprDeclPragma(final ExprDeclPragma x, final Object o) {
+    
     return null;
   }
 
   @Override
-  public Object visitExprModifierPragma(ExprModifierPragma x, Object o) {
+  public Object visitExprModifierPragma(final ExprModifierPragma x, final Object o) {
     return null;
   }
 
   @Override
-  public Object visitExprStmtPragma(ExprStmtPragma x, Object o) {
-    // TODO Auto-generated method stub
+  public Object visitExprStmtPragma(final ExprStmtPragma x, final Object o) {
+    
     return visitASTNode(x, o);
   }
 
   @Override
-  public Object visitGCExpr(GCExpr x, Object o) {
+  public Object visitGCExpr(final GCExpr x, final Object o) {
     return visitASTNode(x, o);
   }
 
   @Override
-  public Object visitGhostDeclPragma(GhostDeclPragma x, Object o) {
-    // TODO Auto-generated method stub
+  public Object visitGhostDeclPragma(final GhostDeclPragma x, final Object o) {
+    
     return null;
   }
 
   @Override
-  public Object visitGuardExpr(GuardExpr x, Object o) {
-    // TODO Auto-generated method stub
+  public Object visitGuardExpr(final GuardExpr x, final Object o) {
+    
     return null;
   }
 
   @Override
-  public Object visitGuardedCmd(GuardedCmd x, Object o) {
-    // TODO Auto-generated method stub
+  public Object visitGuardedCmd(final GuardedCmd x, final Object o) {
+    
     return null;
   }
 
   @Override
-  public Object visitIdExprDeclPragma(IdExprDeclPragma x, Object o) {
-    // TODO Auto-generated method stub
+  public Object visitIdExprDeclPragma(final IdExprDeclPragma x, final Object o) {
+    
     return null;
   }
 
   @Override
-  public Object visitIdentifierModifierPragma(IdentifierModifierPragma x, Object o) {
-    // TODO Auto-generated method stub
+  public Object visitIdentifierModifierPragma(final IdentifierModifierPragma x, final Object o) {
+    
     return null;
   }
 
   @Override
-  public Object visitImportPragma(ImportPragma x, Object o) {
-    // TODO Auto-generated method stub
-    //return null;
+  public Object visitImportPragma(final ImportPragma x, final Object o) {
+    
     return visitASTNode(x, o);
   }
 
   @Override
-  public Object visitLockSetExpr(LockSetExpr x, Object o) {
-    // TODO Auto-generated method stub
+  public Object visitLockSetExpr(final LockSetExpr x, final Object o) {
+    
     return null;
   }
 
   @Override
-  public Object visitMapsExprModifierPragma(MapsExprModifierPragma x, Object o) {
-    // TODO Auto-generated method stub
+  public Object visitMapsExprModifierPragma(final MapsExprModifierPragma x, final Object o) {
+    
     return null;
   }
 
   @Override
-  public Object visitModelConstructorDeclPragma(ModelConstructorDeclPragma x, Object o) {
-    // TODO Auto-generated method stub
+  public Object visitModelConstructorDeclPragma(final ModelConstructorDeclPragma x, final Object o) {
+    
     return null;
   }
 
   @Override
-  public Object visitModelDeclPragma(ModelDeclPragma x, Object o) {
-    // TODO Auto-generated method stub
+  public Object visitModelDeclPragma(final ModelDeclPragma x, final Object o) {
+    
     return null;
   }
 
   @Override
-  public Object visitModelMethodDeclPragma(ModelMethodDeclPragma x, Object o) {
-    // TODO Auto-genign=erated method stub
+  public Object visitModelMethodDeclPragma(final ModelMethodDeclPragma x, final Object o) {
+    
     return null;
   }
 
   @Override
-  public Object visitModelProgamModifierPragma(ModelProgamModifierPragma x, Object o) {
-    // TODO Auto-generated method stub
+  public Object visitModelProgamModifierPragma(final ModelProgamModifierPragma x, final Object o) {
+    
     return null;
   }
 
   @Override
-  public Object visitModelTypePragma(ModelTypePragma x, Object o) {
-    // TODO Auto-generated method stub
+  public Object visitModelTypePragma(final ModelTypePragma x, final Object o) {
+    
     return null;
   }
 
   @Override
-  public Object visitModifiesGroupPragma(ModifiesGroupPragma x, Object o) {
-    // TODO Auto-generated method stub
+  public Object visitModifiesGroupPragma(final ModifiesGroupPragma x, final Object o) {
+    //FIXME hel: Claudia, what's up here?
     //return null;
     return null; //visitASTNode(x, o);
   }
 
   @Override
-  public Object visitNamedExprDeclPragma(NamedExprDeclPragma x, Object o) {
-    // TODO Auto-generated method stub
+  public Object visitNamedExprDeclPragma(final NamedExprDeclPragma x, final Object o) {
+    
     return null;
   }
 
   @Override
-  public Object visitNestedModifierPragma(NestedModifierPragma x, Object o) {
-    // TODO Auto-generated method stub
+  public Object visitNestedModifierPragma(final NestedModifierPragma x, final Object o) {
+    
     return null;
   }
 
   @Override
-  public Object visitNotModifiedExpr(NotModifiedExpr x, Object o) {
-    // TODO Auto-generated method stub
+  public Object visitNotModifiedExpr(final NotModifiedExpr x, final Object o) {
+    
     return null;
   }
 
   @Override
-  public Object visitNotSpecifiedExpr(NotSpecifiedExpr x, Object o) {
-    // TODO Auto-generated method stub
+  public Object visitNotSpecifiedExpr(final NotSpecifiedExpr x, final Object o) {
+    
     return null;
   }
 
   @Override
-  public Object visitNothingExpr(NothingExpr x, Object o) {
-    // TODO Auto-generated method stub
+  public Object visitNothingExpr(final NothingExpr x, final Object o) {
+    
     return null;
   }
 
   @Override
-  public Object visitNowarnPragma(NowarnPragma x, Object o) {
-    // TODO Auto-generated method stub
+  public Object visitNowarnPragma(final NowarnPragma x, final Object o) {
+    
     return null;
   }
 
   @Override
-  public Object visitParsedSpecs(ParsedSpecs x, Object o) {
-    // TODO Auto-generated method stub
+  public Object visitParsedSpecs(final ParsedSpecs x, final Object o) {
+    
     //return visitASTNode(x, o); //generates a stack overflow... but should be used
     return null;
   }
 
   @Override
-  public Object visitReachModifierPragma(ReachModifierPragma x, Object o) {
-    // TODO Auto-generated method stub
+  public Object visitReachModifierPragma(final ReachModifierPragma x, final Object o) {
+    
     return null;
   }
 
   @Override
-  public Object visitRefinePragma(RefinePragma x, Object o) {
-    // TODO Auto-generated method stub
+  public Object visitRefinePragma(final RefinePragma x, final Object o) {
+    
     return null;
   }
 
   @Override
-  public Object visitResExpr(ResExpr x, Object o) {
+  public Object visitResExpr(final ResExpr x, final Object o) {
     return null;
   }
 
   @Override
-  public Object visitSetCompExpr(SetCompExpr x, Object o) {
-    // TODO Auto-generated method stub
+  public Object visitSetCompExpr(final SetCompExpr x, final Object o) {
+    
     return null;
   }
 
   @Override
-  public Object visitSetStmtPragma(SetStmtPragma x, Object o) {
+  public Object visitSetStmtPragma(final SetStmtPragma x, final Object o) {
     return null;
   }
 
   @Override
-  public Object visitSimpleModifierPragma(SimpleModifierPragma x, Object o) {
-    // TODO Auto-generated method stub
+  public Object visitSimpleModifierPragma(final SimpleModifierPragma x, final Object o) {
+    
     return null;
   }
 
   @Override
-  public Object visitSimpleStmtPragma(SimpleStmtPragma x, Object o) {
-    // TODO Auto-generated method stub
+  public Object visitSimpleStmtPragma(final SimpleStmtPragma x, final Object o) {
+    
     return null;
   }
 
   @Override
-  public Object visitSkolemConstantPragma(SkolemConstantPragma x, Object o) {
-    // TODO Auto-generated method stub
+  public Object visitSkolemConstantPragma(final SkolemConstantPragma x, final Object o) {
+    
     return null;
   }
 
   @Override
-  public Object visitSpec(Spec x, Object o) {
-    // TODO Auto-generated method stub
+  public Object visitSpec(final Spec x, final Object o) {
+    
     return null;
   }
 
   @Override
-  public Object visitStillDeferredDeclPragma(StillDeferredDeclPragma x, Object o) {
+  public Object visitStillDeferredDeclPragma(final StillDeferredDeclPragma x, final Object o) {
     return null;
   }
 
   @Override
-  public Object visitVarDeclModifierPragma(VarDeclModifierPragma x, Object o) {
-    // TODO Auto-generated method stub
+  public Object visitVarDeclModifierPragma(final VarDeclModifierPragma x, final Object o) {
+    
     return null;
   }
 
   @Override
-  public Object visitVarExprModifierPragma(VarExprModifierPragma x, Object o) {
-    // TODO Auto-generated method stub
+  public Object visitVarExprModifierPragma(final VarExprModifierPragma x, final Object o) {
+    
     return null; //visitASTNode(x, o); 
   }
 
   @Override
-  public Object visitWildRefExpr(WildRefExpr x, Object o) {
-    // TODO Auto-generated method stub
+  public Object visitWildRefExpr(final WildRefExpr x, final Object o) {
+    
     return null;
   }
 
 
   @Override
   public Object visitBinaryExpr(final BinaryExpr expr, final Object o) {
-    if ((expr.op == TagConstants.ASSIGN) | 
-        (expr.op == TagConstants.ASGMUL) |
-        (expr.op == TagConstants.ASGDIV) | 
-        (expr.op == TagConstants.ASGREM) |
-        (expr.op == TagConstants.ASGADD) | 
-        (expr.op == TagConstants.ASGSUB) |
-        (expr.op == TagConstants.ASGLSHIFT) | 
-        (expr.op == TagConstants.ASGRSHIFT) |
-        (expr.op == TagConstants.ASGURSHIFT) | 
-        (expr.op == TagConstants.ASGBITAND)) {
+    if ((expr.op == OperatorTags.ASSIGN) | 
+        (expr.op == OperatorTags.ASGMUL) |
+        (expr.op == OperatorTags.ASGDIV) | 
+        (expr.op == OperatorTags.ASGREM) |
+        (expr.op == OperatorTags.ASGADD) | 
+        (expr.op == OperatorTags.ASGSUB) |
+        (expr.op == OperatorTags.ASGLSHIFT) | 
+        (expr.op == OperatorTags.ASGRSHIFT) |
+        (expr.op == OperatorTags.ASGURSHIFT) | 
+        (expr.op == OperatorTags.ASGBITAND)) {
       ((Properties) o).put("assign", new Boolean(false));
       expr.right.accept(this, o); 
       ((Properties) o).put("assign", new Boolean(true));
@@ -503,7 +507,7 @@ public class VisibleTypeCollector extends VisitorArgResult {
   }
 
   @Override
-  public /*@non_null*/ Object visitUnaryExpr(final /*@non_null*/ UnaryExpr x, final Object o) {
+  public Object visitUnaryExpr(final /*@non_null*/ UnaryExpr x, final Object o) {
     ((Properties) o).put("assign", new Boolean(true));
     return visitExpr(x, o);
   }

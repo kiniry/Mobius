@@ -284,7 +284,6 @@ public class JmlVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitArrayRangeRefExpr(escjava.ast.ArrayRangeRefExpr, java.lang.Object)
    */
   public final Object visitArrayRangeRefExpr(final /*@non_null*/ ArrayRangeRefExpr x, final Object o) {
-    // TODO Auto-generated method stub
     return null;
   }
 
@@ -292,8 +291,6 @@ public class JmlVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitCondExprModifierPragma(escjava.ast.CondExprModifierPragma, java.lang.Object)
    */
   public final Object visitCondExprModifierPragma(final /*@non_null*/ CondExprModifierPragma x, final Object o) {
-    // TODO Auto-generated method stub
-    //return null;
     return visitASTNode(x, o);
   }
 
@@ -301,7 +298,6 @@ public class JmlVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitCondition(escjava.ast.Condition, java.lang.Object)
    */
   public final Object visitCondition(final /*@non_null*/ Condition x, final Object o) {
-    // TODO Auto-generated method stub
     return null;
   }
 
@@ -309,7 +305,6 @@ public class JmlVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitDecreasesInfo(escjava.ast.DecreasesInfo, java.lang.Object)
    */
   public final Object visitDecreasesInfo(final /*@non_null*/ DecreasesInfo x, final Object o) {
-    // TODO Auto-generated method stub
     return null;
   }
 
@@ -317,7 +312,6 @@ public class JmlVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitDefPred(escjava.ast.DefPred, java.lang.Object)
    */
   public final Object visitDefPred(final /*@non_null*/ DefPred x, final Object o) {
-    // TODO Auto-generated method stub
     return null;
   }
 
@@ -325,7 +319,6 @@ public class JmlVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitDefPredApplExpr(escjava.ast.DefPredApplExpr, java.lang.Object)
    */
   public final Object visitDefPredApplExpr(final /*@non_null*/ DefPredApplExpr x, final Object o) {
-    // TODO Auto-generated method stub
     return null;
   }
 
@@ -333,7 +326,6 @@ public class JmlVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitDefPredLetExpr(escjava.ast.DefPredLetExpr, java.lang.Object)
    */
   public final Object visitDefPredLetExpr(final /*@non_null*/ DefPredLetExpr x, final Object o) {
-    // TODO Auto-generated method stub
     return null;
   }
 
@@ -341,7 +333,6 @@ public class JmlVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitDependsPragma(escjava.ast.DependsPragma, java.lang.Object)
    */
   public final Object visitDependsPragma(final /*@non_null*/ DependsPragma x, final Object o) {
-    // TODO Auto-generated method stub
     return null;
   }
 
@@ -349,7 +340,6 @@ public class JmlVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitEscPrimitiveType(escjava.ast.EscPrimitiveType, java.lang.Object)
    */
   public final Object visitEscPrimitiveType(final /*@non_null*/ EscPrimitiveType x, final Object o) {
-    // TODO Auto-generated method stub
     return null;
   }
 
@@ -357,8 +347,6 @@ public class JmlVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitEverythingExpr(escjava.ast.EverythingExpr, java.lang.Object)
    */
   public final Object visitEverythingExpr(final /*@non_null*/ EverythingExpr x, final Object o) {
-    // TODO Auto-generated method stub
-    //return null;
     return visitASTNode(x, o);
   }
 
@@ -366,7 +354,6 @@ public class JmlVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitExprDeclPragma(escjava.ast.ExprDeclPragma, java.lang.Object)
    */
   public final Object visitExprDeclPragma(final /*@non_null*/ ExprDeclPragma x, final Object o) {
-    // TODO Auto-generated method stub
     return null;
   }
 
@@ -408,17 +395,17 @@ public class JmlVisitor extends VisitorArgResult {
   public final Object visitVarExprModifierPragma(final /*@non_null*/ VarExprModifierPragma x, final Object o) {
     ((Properties) o).put("interesting", new Boolean(true));
 
-    RoutineDecl currentRoutine = (RoutineDecl)((Properties) o).get("method");
+    final RoutineDecl currentRoutine = (RoutineDecl) ((Properties) o).get("method");
     Post allExPosts = Lookup.exceptionalPostconditions.get(currentRoutine);
-    QuantVariableRef commonExceptionVar = allExPosts.getRVar();
+    final QuantVariableRef commonExceptionVar = allExPosts.getRVar();
 
-    Term typeOfException = Type.translate(x.arg.type);
-    QuantVariableRef newExceptionVar = Expression.rvar(x.arg);
+    final Term typeOfException = Type.translate(x.arg.type);
+    final QuantVariableRef newExceptionVar = Expression.rvar(x.arg);
 
     Term newExPost = (Term)x.expr.accept(this, o);
     newExPost = newExPost.subst(newExceptionVar, commonExceptionVar);
-    Term  guard = Logic.assignCompat(Heap.var, commonExceptionVar,typeOfException);
-    Term result = Logic.Safe.implies(guard, newExPost);
+    final Term guard = Logic.assignCompat(Heap.var, commonExceptionVar, typeOfException);
+    final Term result = Logic.Safe.implies(guard, newExPost);
     allExPosts = new Post(allExPosts.getRVar(), Logic.and(allExPosts.getPost(), result));
     Lookup.exceptionalPostconditions.put(currentRoutine, allExPosts);
 
@@ -436,14 +423,14 @@ public class JmlVisitor extends VisitorArgResult {
     Set  set = null;
     Set.Assignment assignment = null;
     boolean interesting;
-    Vector<AAnnotation> annos = new Vector<AAnnotation>();
+    final Vector<AAnnotation> annos = new Vector<AAnnotation>();
     Term inv = null;
 
     //Save arguments values in prestate as ghosts.
     if (((Boolean)((Properties) o).get("routinebegin")).booleanValue()){
       ((Properties) o).put("routinebegin", new Boolean(false));
       RoutineDecl m = (RoutineDecl) ((Properties) o).get("method");
-      for(FormalParaDecl p: m.args.toArray()){
+      for (FormalParaDecl p: m.args.toArray()) {
         t1 = Expression.rvar(p);
         t2 = Expression.old(p);
         assignment = new Set.Assignment((QuantVariableRef) t2, t1);
@@ -452,45 +439,49 @@ public class JmlVisitor extends VisitorArgResult {
     }
 
     //
-    for(Stmt s: x.stmts.toArray()){
+    for (Stmt s: x.stmts.toArray()) {
       interesting = false;
       //We are interested in Asserts, Assumes and Loop Invariants
-      if (s instanceof ExprStmtPragma){
+      if (s instanceof ExprStmtPragma) {
         interesting = true; 
         ((Properties) o).put("interesting", new Boolean(true));
         t = (Term)s.accept(this, o);
-        switch (s.getTag()){
-        case TagConstants.ASSERT:
-          annos.add(new Cut(t));
-          break;
-        case TagConstants.ASSUME:
-          annos.add(new Assume(t));
-          break;
-        case TagConstants.LOOP_INVARIANT:
-        case TagConstants.MAINTAINING:
-          inv = t;
-          break;
+        switch (s.getTag()) {
+          case TagConstants.ASSERT:
+            annos.add(new Cut(t));
+            break;
+          case TagConstants.ASSUME:
+            annos.add(new Assume(t));
+            break;
+          case TagConstants.LOOP_INVARIANT:
+          case TagConstants.MAINTAINING:
+            inv = t;
+            break;
+          default:
+            break;
         }
-      } else
+      }
+      else
 
         //We are also interested in ghost var declarations
-        if (s instanceof VarDeclStmt){
+        if (s instanceof VarDeclStmt) {
 
-          for (ModifierPragma p: ((VarDeclStmt) s).decl.pmodifiers.toArray()){
+          for (ModifierPragma p: ((VarDeclStmt) s).decl.pmodifiers.toArray()) {
             if (p.getTag() == TagConstants.GHOST) {
               interesting = true;
               break;
             }
           }
-          if (interesting){
+          if (interesting) {
             ((Properties) o).put("interesting", new Boolean(true));
             t = (Term)s.accept(this, o);
-            Set ghostVar = new Set();
+            final Set ghostVar = new Set();
             ghostVar.declaration = (QuantVariableRef) t;
             annos.add(ghostVar);
           }
-        } else
-
+        }
+        else
+          
           //Also set statements should be processed
           if (s instanceof SetStmtPragma) {
             interesting = true;
@@ -501,34 +492,35 @@ public class JmlVisitor extends VisitorArgResult {
             annos.add(set);
           }
 
-      if (interesting){
+      if (interesting) {
         x.stmts.removeElement(s);
-      } else {
+      } 
+      else {
         ((Properties) o).put("interesting", new Boolean(false));
-        if (!annos.isEmpty()){
+        if (!annos.isEmpty()) {
           AnnotationDecoration.inst.setAnnotPre(s, annos);
           annos.clear();
         }
-        if (inv != null){
+        if (inv != null) {
           if (s instanceof WhileStmt || 
               s instanceof ForStmt || 
-              s instanceof DoStmt){
+              s instanceof DoStmt) {
             AnnotationDecoration.inst.setInvariant(s, inv);
             inv = null;
           }
-        }	
+        }
         if (s instanceof WhileStmt || 
             s instanceof ForStmt || 
             s instanceof DoStmt || 
             s instanceof BlockStmt || 
             s instanceof TryCatchStmt ||
-            s instanceof IfStmt){
-          s.accept(this,o);
-        }	
+            s instanceof IfStmt) {
+          s.accept(this, o);
+        }
       }
     }
     return null;
-  }	
+  }
 
   /* (non-Javadoc)
    * @see javafe.ast.VisitorArgResult#visitVarDeclStmt(javafe.ast.VarDeclStmt, java.lang.Object)
@@ -536,13 +528,12 @@ public class JmlVisitor extends VisitorArgResult {
   public final Object visitVarDeclStmt(final /*@non_null*/ VarDeclStmt x, final Object o) {
     //It's only called if we have a ghost variable declaration
     return Expression.rvar(x.decl);
-  }	
+  }
 
   /* (non-Javadoc)
    * @see escjava.ast.VisitorArgResult#visitExprStmtPragma(escjava.ast.ExprStmtPragma, java.lang.Object)
    */
   public final Object visitExprStmtPragma(final /*@non_null*/ ExprStmtPragma x, final Object o) {
-    // TODO Auto-generated method stub
     return visitASTNode(x, o);
   }
 
@@ -557,7 +548,6 @@ public class JmlVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitGhostDeclPragma(escjava.ast.GhostDeclPragma, java.lang.Object)
    */
   public final Object visitGhostDeclPragma(final /*@non_null*/ GhostDeclPragma x, final Object o) {
-    // TODO Auto-generated method stub
     return null;
   }
 
@@ -565,7 +555,6 @@ public class JmlVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitGuardExpr(escjava.ast.GuardExpr, java.lang.Object)
    */
   public final Object visitGuardExpr(final /*@non_null*/ GuardExpr x, final Object o) {
-    // TODO Auto-generated method stub
     return null;
   }
 
@@ -573,7 +562,6 @@ public class JmlVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitGuardedCmd(escjava.ast.GuardedCmd, java.lang.Object)
    */
   public final Object visitGuardedCmd(final /*@non_null*/ GuardedCmd x, final Object o) {
-    // TODO Auto-generated method stub
     return null;
   }
 
@@ -581,7 +569,6 @@ public class JmlVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitIdExprDeclPragma(escjava.ast.IdExprDeclPragma, java.lang.Object)
    */
   public final Object visitIdExprDeclPragma(final /*@non_null*/ IdExprDeclPragma x, final Object o) {
-    // TODO Auto-generated method stub
     return null;
   }
 
@@ -590,7 +577,6 @@ public class JmlVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitIdentifierModifierPragma(escjava.ast.IdentifierModifierPragma, java.lang.Object)
    */
   public final Object visitIdentifierModifierPragma(final /*@non_null*/ IdentifierModifierPragma x, final Object o) {
-    // TODO Auto-generated method stub
     return null;
   }
 
@@ -599,8 +585,6 @@ public class JmlVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitImportPragma(escjava.ast.ImportPragma, java.lang.Object)
    */
   public final Object visitImportPragma(final /*@non_null*/ ImportPragma x, final Object o) {
-    // TODO Auto-generated method stub
-    //return null;
     return visitASTNode(x, o);
   }
 
@@ -609,7 +593,6 @@ public class JmlVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitLockSetExpr(escjava.ast.LockSetExpr, java.lang.Object)
    */
   public final Object visitLockSetExpr(final /*@non_null*/ LockSetExpr x, final Object o) {
-    // TODO Auto-generated method stub
     return null;
   }
 
@@ -618,7 +601,6 @@ public class JmlVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitMapsExprModifierPragma(escjava.ast.MapsExprModifierPragma, java.lang.Object)
    */
   public final Object visitMapsExprModifierPragma(final /*@non_null*/ MapsExprModifierPragma x, final Object o) {
-    // TODO Auto-generated method stub
     return null;
   }
 
@@ -627,7 +609,6 @@ public class JmlVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitModelConstructorDeclPragma(escjava.ast.ModelConstructorDeclPragma, java.lang.Object)
    */
   public final Object visitModelConstructorDeclPragma(final /*@non_null*/ ModelConstructorDeclPragma x, final Object o) {
-    // TODO Auto-generated method stub
     return null;
   }
 
@@ -636,7 +617,6 @@ public class JmlVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitModelDeclPragma(escjava.ast.ModelDeclPragma, java.lang.Object)
    */
   public final Object visitModelDeclPragma(final /*@non_null*/ ModelDeclPragma x, final Object o) {
-    // TODO Auto-generated method stub
     return null;
   }
 
@@ -645,7 +625,6 @@ public class JmlVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitModelMethodDeclPragma(escjava.ast.ModelMethodDeclPragma, java.lang.Object)
    */
   public final Object visitModelMethodDeclPragma(final /*@non_null*/ ModelMethodDeclPragma x, final Object o) {
-    // TODO Auto-generated method stub
     return null;
   }
 
@@ -654,7 +633,6 @@ public class JmlVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitModelProgamModifierPragma(escjava.ast.ModelProgamModifierPragma, java.lang.Object)
    */
   public final Object visitModelProgamModifierPragma(final /*@non_null*/ ModelProgamModifierPragma x, final Object o) {
-    // TODO Auto-generated method stub
     return null;
   }
 
@@ -663,7 +641,6 @@ public class JmlVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitModelTypePragma(escjava.ast.ModelTypePragma, java.lang.Object)
    */
   public final Object visitModelTypePragma(final /*@non_null*/ ModelTypePragma x, final Object o) {
-    // TODO Auto-generated method stub
     return null;
   }
 
@@ -672,8 +649,6 @@ public class JmlVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitModifiesGroupPragma(escjava.ast.ModifiesGroupPragma, java.lang.Object)
    */
   public final Object visitModifiesGroupPragma(final /*@non_null*/ ModifiesGroupPragma x, final Object o) {
-    // TODO Auto-generated method stub
-    //return null;
     return visitASTNode(x, o);
   }
 
@@ -682,7 +657,6 @@ public class JmlVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitNamedExprDeclPragma(escjava.ast.NamedExprDeclPragma, java.lang.Object)
    */
   public final Object visitNamedExprDeclPragma(final /*@non_null*/ NamedExprDeclPragma x, final Object o) {
-    // TODO Auto-generated method stub
     return null;
   }
 
@@ -691,7 +665,6 @@ public class JmlVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitNestedModifierPragma(escjava.ast.NestedModifierPragma, java.lang.Object)
    */
   public final Object visitNestedModifierPragma(final /*@non_null*/ NestedModifierPragma x, final Object o) {
-    // TODO Auto-generated method stub
     return null;
   }
 
@@ -700,7 +673,6 @@ public class JmlVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitNotModifiedExpr(escjava.ast.NotModifiedExpr, java.lang.Object)
    */
   public final Object visitNotModifiedExpr(final /*@non_null*/ NotModifiedExpr x, final Object o) {
-    // TODO Auto-generated method stub
     return null;
   }
 
@@ -709,7 +681,6 @@ public class JmlVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitNotSpecifiedExpr(escjava.ast.NotSpecifiedExpr, java.lang.Object)
    */
   public final Object visitNotSpecifiedExpr(final /*@non_null*/ NotSpecifiedExpr x, final Object o) {
-    // TODO Auto-generated method stub
     return null;
   }
 
@@ -718,7 +689,6 @@ public class JmlVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitNothingExpr(escjava.ast.NothingExpr, java.lang.Object)
    */
   public final Object visitNothingExpr(final /*@non_null*/ NothingExpr x, final Object o) {
-    // TODO Auto-generated method stub
     return null;
   }
 
@@ -727,7 +697,6 @@ public class JmlVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitNowarnPragma(escjava.ast.NowarnPragma, java.lang.Object)
    */
   public final Object visitNowarnPragma(final /*@non_null*/ NowarnPragma x, final Object o) {
-    // TODO Auto-generated method stub
     return null;
   }
 
@@ -736,7 +705,7 @@ public class JmlVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitParsedSpecs(escjava.ast.ParsedSpecs, java.lang.Object)
    */
   public final Object visitParsedSpecs(final /*@non_null*/ ParsedSpecs x, final Object o) {
-    // TODO Auto-generated method stub
+    //FIXME hel: what's up here?
     //return visitASTNode(x, o); //generates a stack overflow... but should be used
     return null;
   }
@@ -746,7 +715,6 @@ public class JmlVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitReachModifierPragma(escjava.ast.ReachModifierPragma, java.lang.Object)
    */
   public final Object visitReachModifierPragma(final /*@non_null*/ ReachModifierPragma x, final Object o) {
-    // TODO Auto-generated method stub
     return null;
   }
 
@@ -755,7 +723,6 @@ public class JmlVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitRefinePragma(escjava.ast.RefinePragma, java.lang.Object)
    */
   public final Object visitRefinePragma(final /*@non_null*/ RefinePragma x, final Object o) {
-    // TODO Auto-generated method stub
     return null;
   }
 
@@ -764,10 +731,12 @@ public class JmlVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitResExpr(escjava.ast.ResExpr, java.lang.Object)
    */
   public final Object visitResExpr(final /*@non_null*/ ResExpr x, final Object o) {
-    if (((Boolean) ((Properties) o).get("interesting")).booleanValue())
-      return fTranslator.resultLiteral(x,o);
-    else
+    if (((Boolean) ((Properties) o).get("interesting")).booleanValue()) {
+      return fTranslator.resultLiteral(x, o);
+    }
+    else {
       return null;
+    }
   }
 
   
@@ -775,7 +744,6 @@ public class JmlVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitSetCompExpr(escjava.ast.SetCompExpr, java.lang.Object)
    */
   public final Object visitSetCompExpr(final /*@non_null*/ SetCompExpr x, final Object o) {
-    // TODO Auto-generated method stub
     return null;
   }
 
@@ -795,7 +763,6 @@ public class JmlVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitSimpleModifierPragma(escjava.ast.SimpleModifierPragma, java.lang.Object)
    */
   public final Object visitSimpleModifierPragma(final /*@non_null*/ SimpleModifierPragma x, final Object o) {
-    // TODO Auto-generated method stub
     return null;
   }
 
@@ -804,7 +771,6 @@ public class JmlVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitSimpleStmtPragma(escjava.ast.SimpleStmtPragma, java.lang.Object)
    */
   public final Object visitSimpleStmtPragma(final /*@non_null*/ SimpleStmtPragma x, final Object o) {
-    // TODO Auto-generated method stub
     return null;
   }
 
@@ -813,7 +779,6 @@ public class JmlVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitSkolemConstantPragma(escjava.ast.SkolemConstantPragma, java.lang.Object)
    */
   public final Object visitSkolemConstantPragma(final /*@non_null*/ SkolemConstantPragma x, final Object o) {
-    // TODO Auto-generated method stub
     return null;
   }
 
@@ -822,7 +787,6 @@ public class JmlVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitSpec(escjava.ast.Spec, java.lang.Object)
    */
   public final Object visitSpec(final /*@non_null*/ Spec x, final Object o) {
-    // TODO Auto-generated method stub
     return null;
   }
 
@@ -831,7 +795,6 @@ public class JmlVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitStillDeferredDeclPragma(escjava.ast.StillDeferredDeclPragma, java.lang.Object)
    */
   public final Object visitStillDeferredDeclPragma(final /*@non_null*/ StillDeferredDeclPragma x, final Object o) {
-    // TODO Auto-generated method stub
     return null;
   }
 
@@ -840,7 +803,6 @@ public class JmlVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitVarDeclModifierPragma(escjava.ast.VarDeclModifierPragma, java.lang.Object)
    */
   public final Object visitVarDeclModifierPragma(final /*@non_null*/ VarDeclModifierPragma x, final Object o) {
-    // TODO Auto-generated method stub
     return null;
   }
 
@@ -849,10 +811,8 @@ public class JmlVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitWildRefExpr(escjava.ast.WildRefExpr, java.lang.Object)
    */
   public final Object visitWildRefExpr(final /*@non_null*/ WildRefExpr x, final Object o) {
-    // TODO Auto-generated method stub
     return null;
   }
-
 
   
   /* (non-Javadoc)

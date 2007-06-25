@@ -233,53 +233,53 @@ public class JmlExprToFormula {
     return Num.mul(t1, t2);
   }
 
-  public Object assign(BinaryExpr expr, Object o) {
-    // TODO Auto-generated method stub
+  public Object assign(final BinaryExpr expr, final Object o) {
+    
     return null;
   }
 
-  public Object asgmul(BinaryExpr expr, Object o) {
-    // TODO Auto-generated method stub
+  public Object asgmul(final BinaryExpr expr, final Object o) {
+    
     return null;
   }
 
-  public Object asgdiv(BinaryExpr expr, Object o) {
-    // TODO Auto-generated method stub
+  public Object asgdiv(final BinaryExpr expr, final Object o) {
+    
     return null;
   }
 
-  public Object asgrem(BinaryExpr expr, Object o) {
-    // TODO Auto-generated method stub
+  public Object asgrem(final BinaryExpr expr, final Object o) {
+    
     return null;
   }
 
-  public Object asgadd(BinaryExpr expr, Object o) {
-    // TODO Auto-generated method stub
+  public Object asgadd(final BinaryExpr expr, final Object o) {
+    
     return null;
   }
 
-  public Object asgsub(BinaryExpr expr, Object o) {
-    // TODO Auto-generated method stub
+  public Object asgsub(final BinaryExpr expr, final Object o) {
+    
     return null;
   }
 
-  public Object asglshift(BinaryExpr expr, Object o) {
-    // TODO Auto-generated method stub
+  public Object asglshift(final BinaryExpr expr, final Object o) {
+    
     return null;
   }
 
-  public Object asgrshift(BinaryExpr expr, Object o) {
-    // TODO Auto-generated method stub
+  public Object asgrshift(final BinaryExpr expr, final Object o) {
+    
     return null;
   }
 
-  public Object asgurshif(BinaryExpr expr, Object o) {
-    // TODO Auto-generated method stub
+  public Object asgurshif(final BinaryExpr expr, final Object o) {
+    
     return null;
   }
 
-  public Object asgbitand(BinaryExpr expr, Object o) {
-    // TODO Auto-generated method stub
+  public Object asgbitand(final BinaryExpr expr, final Object o) {
+    
     return null;
   }
 
@@ -298,29 +298,29 @@ public class JmlExprToFormula {
     }
   }
 
-  public Object explies(BinaryExpr expr, Object o) {
-    // TODO Auto-generated method stub
+  public Object explies(final BinaryExpr expr, final Object o) {
+    
     return null;
   }
 
 
-  public Object iff(BinaryExpr expr, Object o) {
-    // TODO Auto-generated method stub
+  public Object iff(final BinaryExpr expr, final Object o) {
+    
     return null;
   }
 
-  public Object niff(BinaryExpr expr, Object o) {
-    // TODO Auto-generated method stub
+  public Object niff(final BinaryExpr expr, final Object o) {
+    
     return null;
   }
 
-  public Object subtype(BinaryExpr expr, Object o) {
-    // TODO Auto-generated method stub
+  public Object subtype(final BinaryExpr expr, final Object o) {
+    
     return null;
   }
 
-  public Object dotdot(BinaryExpr expr, Object o) {
-    // TODO Auto-generated method stub
+  public Object dotdot(final BinaryExpr expr, final Object o) {
+    
     return null;
   }
 
@@ -350,25 +350,25 @@ public class JmlExprToFormula {
    */
   public Object literal(final LiteralExpr x, final Object o) {
     switch (x.getTag()) {
-      case TagConstants.BOOLEANLIT: 
+      case javafe.ast.TagConstants.BOOLEANLIT: 
         return Bool.value((Boolean) x.value);
-      case TagConstants.INTLIT:
+      case javafe.ast.TagConstants.INTLIT:
         return Num.value((Integer) x.value);
-      case TagConstants.LONGLIT:
+      case javafe.ast.TagConstants.LONGLIT:
         return Num.value((Long) x.value);
-      case TagConstants.CHARLIT:
+      case javafe.ast.TagConstants.CHARLIT:
         return Num.value((Character) x.value);
-      case TagConstants.FLOATLIT:
+      case javafe.ast.TagConstants.FLOATLIT:
         return Num.value((Float) x.value);
-      case TagConstants.DOUBLELIT:
+      case javafe.ast.TagConstants.DOUBLELIT:
         return Num.value((Double) x.value);
-      case TagConstants.STRINGLIT:
+      case javafe.ast.TagConstants.STRINGLIT:
         break;
-      case TagConstants.NULLLIT:
+      case javafe.ast.TagConstants.NULLLIT:
         return Ref.Null();
-      case TagConstants.BYTELIT:
+      case javafe.ast.TagConstants.BYTELIT:
         return Num.value((Byte) x.value);
-      case TagConstants.SHORTLIT:
+      case javafe.ast.TagConstants.SHORTLIT:
         return Num.value((Short) x.value);
   
       default: 
@@ -394,13 +394,13 @@ public class JmlExprToFormula {
     else {
       res = Expression.rvar(x.decl);
     }
-    if (predProp.booleanValue() && res.getSort() == Bool.sort) {
+    if (predProp.booleanValue() && (res.getSort() == Bool.sort)) {
       res = Logic.boolToProp(res);
     }
     return res;
   }
 
-  public Object genericVarDecl(GenericVarDecl x, Object o) {
+  public Object genericVarDecl(final GenericVarDecl x, final Object o) {
     final Boolean oldProp = (Boolean) ((Properties) o).get("old");
     final Boolean predProp = (Boolean) ((Properties)o).get("pred");
 
@@ -411,7 +411,7 @@ public class JmlExprToFormula {
     else { 
       res = Expression.rvar(x);
     }
-    if (predProp.booleanValue() && res.getSort() == Bool.sort) {
+    if (predProp.booleanValue() && (res.getSort() == Bool.sort)) {
       res = Logic.boolToProp(res);
     }
     return res;
@@ -440,7 +440,7 @@ public class JmlExprToFormula {
   }
 
   public Object thisLiteral(final ThisExpr x, final Object o) {
-    // TODO Auto-generated method stub
+    
     return Ref.varThis;
   }
 }
