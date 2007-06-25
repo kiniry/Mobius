@@ -31,13 +31,13 @@ public class AnnotationDecoration extends ASTDecoration {
    * A data structure to stock the informations inside the AST.
    * @author J. Charles
    */
-  public static class Annotation {
+  private static class Annotation {
     /** the pre annotations of the decorated instruction. */
-    final List<AAnnotation> pre = new Vector<AAnnotation>();
+    final List<AAnnotation> fPre = new Vector<AAnnotation>();
     /** the post annotations of the decorated instruction. */
-    final List<AAnnotation> post = new Vector<AAnnotation>();
+    final List<AAnnotation> fPost = new Vector<AAnnotation>();
     /** the invariant associated with a while instruction. */
-    Term inv;
+    Term fInv;
   }
 
   /**
@@ -48,10 +48,12 @@ public class AnnotationDecoration extends ASTDecoration {
    */
   public List<AAnnotation> getAnnotPre(final ASTNode n) {
     final Annotation v = getAnnot(n);
-    if (v == null)
+    if (v == null) {
       return null;
-    else 
-      return v.pre;
+    }
+    else {
+      return v.fPre;
+    }
   }
 
   /**
@@ -62,10 +64,12 @@ public class AnnotationDecoration extends ASTDecoration {
    */
   public List<AAnnotation> getAnnotPost(final ASTNode node) {
     final Annotation v = getAnnot(node);
-    if (v == null)
+    if (v == null) {
       return null;
-    else 
-      return v.post;
+    }
+    else  {
+      return v.fPost;
+    }
   }
 
   /**
@@ -74,7 +78,7 @@ public class AnnotationDecoration extends ASTDecoration {
    * @return the decoration object
    */
   @SuppressWarnings("unchecked")
-  public Annotation getAnnot(final ASTNode n) {
+  private Annotation getAnnot(final ASTNode n) {
     final Annotation v = (Annotation) super.get(n);
     return v;
   }
@@ -90,8 +94,8 @@ public class AnnotationDecoration extends ASTDecoration {
       res = new Annotation();
       super.set(n, res);
     }
-    res.pre.clear();
-    res.pre.addAll(v);
+    res.fPre.clear();
+    res.fPre.addAll(v);
   }
 
   /**
@@ -105,8 +109,8 @@ public class AnnotationDecoration extends ASTDecoration {
       res = new Annotation();
       super.set(n, res);
     }
-    res.post.clear();
-    res.post.addAll(v);
+    res.fPost.clear();
+    res.fPost.addAll(v);
   }
 
   /**
@@ -120,7 +124,7 @@ public class AnnotationDecoration extends ASTDecoration {
       res = new Annotation();
       super.set(n, res);
     }
-    res.inv = inv;
+    res.fInv = inv;
   }
 
   /**
@@ -131,8 +135,9 @@ public class AnnotationDecoration extends ASTDecoration {
   @SuppressWarnings("unchecked")
   public Term getInvariant(final ASTNode n) {
     final Annotation v =  getAnnot(n);
-    if (v == null)
-      return Logic.True();
-    return v.inv;
+    if (v == null) {
+      return null;
+    }
+    return v.fInv;
   }
 }

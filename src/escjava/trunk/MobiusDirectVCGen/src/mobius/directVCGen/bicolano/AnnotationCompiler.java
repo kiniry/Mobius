@@ -26,7 +26,7 @@ public class AnnotationCompiler {
   public AnnotationCompiler(final File pkgsdir, final String clzz, final TypeSig sig) {
     final String [] args = {pkgsdir.toString() + File.separator + 
                             "Bico", clzz};
-    fExecutor = new AnnotationExecutor(pkgsdir, args);
+    fExecutor = new AnnotationExecutor(pkgsdir, sig, args);
   }
 
   /**

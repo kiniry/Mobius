@@ -3,6 +3,8 @@ package mobius.directVCGen.bicolano;
 import java.io.File;
 import java.io.FileNotFoundException;
 
+import javafe.tc.TypeSig;
+
 import org.apache.bcel.generic.ClassGen;
 
 import mobius.bico.ClassExecutor;
@@ -16,12 +18,14 @@ import mobius.bico.Executor;
 public class AnnotationExecutor extends Executor {
   /** the current working directory. */
   private final File fWorkingDir;
-
+  /** the type sygnature of the currently handled class. */
+  private final TypeSig fSig;
 
   
-  public AnnotationExecutor(File workingDir, String [] args) {
+  public AnnotationExecutor(File workingDir, TypeSig sig, String [] args) {
     super(args);
     fWorkingDir = workingDir; 
+    fSig = sig;
   }
 
   
@@ -34,6 +38,6 @@ public class AnnotationExecutor extends Executor {
    * @throws FileNotFoundException if a file is missing
    */
   public ClassExecutor getClassExecutor(final ClassGen cg) throws FileNotFoundException {
-    return new AnnotationClassExecutor(this, cg, fWorkingDir);
+    return new AnnotationClassExecutor(this, cg, fWorkingDir, fSig);
   }
 }
