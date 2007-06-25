@@ -31,8 +31,9 @@ public class CoqNodeBuilder extends EscNodeBuilder {
    */
   public static String normalize(final String name) {
     String resName = name;
-    if (name.startsWith("#"))
+    if (name.startsWith("#")) {
       resName = resName.substring(1);
+    }
     resName = resName.replace(':', '_');
     resName = resName.replace('.', '_');
     resName = resName.replace('\\', '_');
@@ -175,9 +176,10 @@ public class CoqNodeBuilder extends EscNodeBuilder {
     else if (s.equals(sortPred)) {
       throw new IllegalArgumentException("The type should not be pred!");
     }
-    else
+    else {
       throw new IllegalArgumentException("Unknown Type: " + s.getClass() + 
-                                         " " + sortRef.getClass());
+                                    " " + sortRef.getClass());
+    }
     return res;
   }
 
@@ -431,10 +433,10 @@ public class CoqNodeBuilder extends EscNodeBuilder {
       else if (to == sortReal) {
         throw new UnsupportedOperationException("We do not support reals right now...");
       }
-      else 
+      else {
         throw new IllegalArgumentException("The conversion can only be done " +
             "from a value to a simple type. Found:" + to);
-      
+      }
     }
     else {
       if (to != sortValue) {
@@ -453,9 +455,10 @@ public class CoqNodeBuilder extends EscNodeBuilder {
       else if (from == sortReal) {
         throw new UnsupportedOperationException("We do not support reals right now...");
       }
-      else 
+      else {
         throw new IllegalArgumentException("The conversion can only be done from a value " +
             "to a simple type. Found:" + to);
+      }
       
     }
   }
@@ -661,6 +664,19 @@ public class CoqNodeBuilder extends EscNodeBuilder {
   @Override
   public SPred buildAssignCompat(final SMap map, final SValue val, final SAny type) {
     return new CPred("assign_compatible", new STerm [] {new CMap("p"), map, val, type});
+  }
+
+
+  /**
+   * Should generate something of the form:
+   * \forall x,t : alive(x) & typeof(x)=t -> inv(x,t) .
+   * @param val the ref add infos upon
+   * @param type the type associated to the reference
+   * @return a Coq term ready to be printed
+   */
+  @Override
+  public SPred buildInv(final SValue val, final SAny type) {
+    return new CPred("inv", new STerm [] {val, type});
   }
 
 

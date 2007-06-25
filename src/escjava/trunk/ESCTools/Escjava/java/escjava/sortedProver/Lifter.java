@@ -609,7 +609,9 @@ public class Lifter extends EscNodeBuilder
 				return dumpBuilder.buildAssignCompat((SMap)args[0].dump(),  args[1].dumpValue(),
 							args[2].dumpAny());
 			}
-			
+      if (fn == symInv) {
+        return dumpBuilder.buildInv(args[0].dumpValue(), args[1].dumpAny());
+      }
 			if(fn.name.startsWith("%"))
 				System.out.println(fn.name);
 			Assert.notFalse(! fn.name.startsWith("%"));
@@ -934,8 +936,8 @@ public class Lifter extends EscNodeBuilder
 	public FnSymbol symRealFn = registerFnSymbol("%real-fn", new Sort[] { sortReal, sortReal }, sortReal);
 	public FnSymbol symBoolFn = registerFnSymbol("%bool-fn", new Sort[] { sortBool, sortBool }, sortBool);
 	public FnSymbol symBoolUnaryFn = registerFnSymbol("%bool-unary-fn", new Sort[] { sortBool}, sortBool);
-	public PredSymbol symInv = registerPredSymbol("%inv", new Sort[]{sortRef, sortRef});
 
+  
 	
 	/** 
 	 * the unary sub symbol for integrals, for Reals it is called Floating 
@@ -972,17 +974,19 @@ public class Lifter extends EscNodeBuilder
     public FnSymbol symNewObj = registerFnSymbol("%newObj", new Sort[] { sortMap, sortType, sortMap, sortRef }, sortPred);
     /** symbol for dynamic fields select Map -> Ref -> Name -> Value */
     public FnSymbol symDynSelect = registerFnSymbol("%dynSelect", new Sort[] { sortMap, sortRef, sortRef }, sortValue);
-	/** symbol for dynamic fields store Map -> Ref -> Name -> Value -> Map */
+    /** symbol for dynamic fields store Map -> Ref -> Name -> Value -> Map */
     public FnSymbol symDynStore = registerFnSymbol("%dynStore", new Sort[] { sortMap, sortRef, sortRef, sortValue }, sortMap);
     /** symbol to mean a new array has been created */
     public FnSymbol symNewArray = registerFnSymbol("%newArray", new Sort[] { sortMap, sortType, sortMap, sortRef, sortInt}, sortPred);
     /** symbol for array select (heap -> ref -> int -> value) */
     public FnSymbol symArrSelect = registerFnSymbol("%arrSelect", new Sort[] { sortMap, sortRef, sortInt }, sortValue);
-	/** symbol for array store (heap -> ref -> int -> value -> pred) */
+    /** symbol for array store (heap -> ref -> int -> value -> pred) */
     public FnSymbol symArrStore = registerFnSymbol("%arrStore", new Sort[] { sortMap, sortRef, sortInt, sortValue }, sortMap);
     /** bicolano special subtyping relation (heap -> value -> type -> pred) */
     public FnSymbol symAssignCompat = registerFnSymbol("%assignCompat", new Sort[] { sortMap, sortValue, sortType }, sortPred);
-	
+    /** used for invariants. \forall x,t : alive(x) & typeof(x)=t -> inv(x,t) */
+    public PredSymbol symInv = registerPredSymbol("%inv", new Sort[]{sortRef, sortType});
+
     
     
 	// we just want Sort and the like, don't implement anything	
@@ -1033,6 +1037,7 @@ public class Lifter extends EscNodeBuilder
 	public SValue buildArrSelect(SMap map, SRef obj, SInt idx) {throw new Die(); }
 	public SMap buildArrStore(SMap map, SRef obj, SInt idx, SValue val) {throw new Die(); }
 	public SPred buildAssignCompat(SMap map, SValue val, SAny type) {throw new Die(); }
+  public SPred buildInv(SValue val, SAny type) {throw new Die(); }
 
 	
 	boolean isEarlySort(Sort s, Sort p)
