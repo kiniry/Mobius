@@ -530,6 +530,107 @@ Assumed by caller.
 \includegraphics[width=4.25in]{correctimpl}
 \end{frame}
 
+\begin{frame}[fragile]
+\frametitle{assignable and pure}
+
+\lstinline!assignable!
+\begin{itemize}
+\item
+Frame axiom.
+
+\item
+Sugar for postcondition: ``nothing else assigned''
+
+\item
+Checked statically.
+
+\item
+Synonyms: \lstinline!modifies!, \lstinline!modifiable!
+\end{itemize}
+
+\lstinline!pure!
+\begin{itemize}
+\item
+No side effects.
+
+\item
+Implies \lstinline!assignable \nothing!
+
+\item
+Allows method's use in specifications.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Redundant Clauses}
+
+E.g., \lstinline!ensures_redundantly!
+\begin{itemize}
+\item
+Alerts reader.
+
+\item
+States something to prove.
+
+\item
+Must be implied by:
+\begin{itemize}
+\item
+\lstinline!ensures! clauses,
+
+\item
+\lstinline!assignable! clause,
+
+\item
+\lstinline!invariant!
+
+\item
+JML semantics
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Multiple Clauses}
+
+Semantics:
+
+\begin{lstlisting}[mathescape=true]
+  requires $P$;
+  requires $Q$;
+\end{lstlisting}
+
+is equivalent to:
+
+\begin{lstlisting}[mathescape=true]
+  requires $P$ && $Q$;
+\end{lstlisting}
+
+~
+
+Similarly for \lstinline!ensures!, \lstinline!invariant!.
+
+Note: runtime checker gives better errors if separate.
+
+\note{For assignable, semantics is the union.}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Expression Keywords}
+
+\begin{itemize}
+\item
+\lstinline!\result! ~~ = ~~ method's return value.
+
+\item
+\lstinline[mathescape=true]!\old($E$)! ~~ = ~~ pre-state value of $E$.
+
+\item
+\lstinline[mathescape=true]!(\forall T x; $E_1$; $E_2$)!
+~~ = ~~ $(\forall x \in T : E_1 \Rightarrow E_2)$
+\end{itemize}
+\end{frame}
+
 \subsection[Exercise]{Specifying a Type}
 
 \subsection[Tool Use]{Basic Tool Use}  % demo + exercise

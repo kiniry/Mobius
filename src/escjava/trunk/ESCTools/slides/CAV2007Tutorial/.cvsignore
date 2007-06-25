@@ -13,7 +13,7 @@
 *.lot
 *.toc
 *.dvi
-*.pdf
+JMLTutorial.pdf
 *.zip
 *.emf
 *.wmf
