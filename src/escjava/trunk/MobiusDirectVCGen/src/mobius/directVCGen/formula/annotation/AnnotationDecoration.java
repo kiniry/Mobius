@@ -3,12 +3,9 @@ package mobius.directVCGen.formula.annotation;
 import java.util.List;
 import java.util.Vector;
 
-import mobius.directVCGen.formula.Logic;
-
-import escjava.sortedProver.Lifter.Term;
-
 import javafe.ast.ASTDecoration;
 import javafe.ast.ASTNode;
+import escjava.sortedProver.Lifter.Term;
 
 /**
  * This class is made to decorate the AST give by Javafe with the annotations

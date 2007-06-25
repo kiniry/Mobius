@@ -87,10 +87,14 @@ public class Post {
    * @return a new Post object with the properties mentionned above or p1 or p2
    */
   public static Post and(final Post p1, final Post p2) {
-    if (p1 == null) return p2;
-    if (p2 == null) return p1;
+    if (p1 == null) {
+      return p2;
+    }
+    if (p2 == null) {
+      return p1;
+    }
     return new Post(p1.fVar, 
-                    Logic.and(p1.fPost, p2.subst(p2.fVar, p1.fVar)));
+                    Logic.Safe.and(p1.fPost, p2.subst(p2.fVar, p1.fVar)));
   }
 
   /**
@@ -101,10 +105,14 @@ public class Post {
    * @return a new Post object with the properties mentionned above or p1 or p2
    */
   public static Post implies(final Post p1, final Post p2) {
-    if (p1 == null) return p2;
-    if (p2 == null) return p1;
+    if (p1 == null) {
+      return p2;
+    }
+    if (p2 == null) {
+      return p1;
+    }
     return new Post(p1.fVar, 
-                    Logic.implies(p1.fPost, p2.subst(p2.fVar, p1.fVar)));
+                    Logic.Safe.implies(p1.fPost, p2.subst(p2.fVar, p1.fVar)));
   }
   /**
    * Nearly the same semantic as the {@link #implies(Post, Post)} method.
@@ -113,9 +121,13 @@ public class Post {
    * @return a Term object with the properties mentionned above or p1 or p2
    */
   public static Term implies(final Term p1, final Post p2) {
-    if (p1 == null) return p2.fPost;
-    if (p2 == null) return p1;
-    return Logic.implies(p1, p2.fPost);
+    if (p1 == null) {
+      return p2.fPost;
+    }
+    if (p2 == null) {
+      return p1;
+    }
+    return Logic.Safe.implies(p1, p2.fPost);
   }
   
   /**

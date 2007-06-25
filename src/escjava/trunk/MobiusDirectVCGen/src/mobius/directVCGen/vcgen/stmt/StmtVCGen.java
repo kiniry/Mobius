@@ -101,14 +101,14 @@ public class StmtVCGen extends ExpressionVisitor {
       final AAnnotation aa = annot.get(i);
       switch(aa.getID()) {
         case AAnnotation.annotAssert:
-          fVcs.add(Logic.safe.implies(aa.formula, post));
+          fVcs.add(Logic.Safe.implies(aa.formula, post));
           post = aa.formula;
           break;
         case AAnnotation.annotCut:
-          post = Logic.safe.and(aa.formula, Logic.safe.implies(aa.formula, post));
+          post = Logic.Safe.and(aa.formula, Logic.Safe.implies(aa.formula, post));
           break;
         case AAnnotation.annotAssume:
-          post = Logic.safe.implies(aa.formula, post);
+          post = Logic.Safe.implies(aa.formula, post);
           break;
         case AAnnotation.annotSet: {
           final mobius.directVCGen.formula.annotation.Set s = 
@@ -142,7 +142,7 @@ public class StmtVCGen extends ExpressionVisitor {
     Post post = treatAnnot(entry, fAnnot.getAnnotPost(x));
     final QuantVariableRef b  = Expression.rvar(Bool.sort);
 
-    post = new Post(b, Logic.safe.and(b, Logic.safe.implies(b, post.getPost())));
+    post = new Post(b, Logic.Safe.and(b, Logic.Safe.implies(b, post.getPost())));
     entry.fPost = post;
     post = (Post)x.pred.accept(fExprVisitor, entry);
     return treatAnnot(entry, fAnnot.getAnnotPre(x));

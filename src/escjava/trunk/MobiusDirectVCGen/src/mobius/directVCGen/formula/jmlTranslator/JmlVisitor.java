@@ -308,7 +308,7 @@ public class JmlVisitor extends VisitorArgResult{
       case TagConstants.REQUIRES:
         if (rd  instanceof MethodDecl) { 
           final Term invToPre = (Term) invToPreconditions(o);
-          t = Logic.safe.and(t, invToPre);
+          t = Logic.Safe.and(t, invToPre);
         }
         Lookup.preconditions.put(rd, t);
         break;
@@ -341,7 +341,7 @@ public class JmlVisitor extends VisitorArgResult{
     Term newExPost = (Term)x.expr.accept(this, o);
     newExPost = newExPost.subst(newExceptionVar, commonExceptionVar);
     Term  guard = Logic.assignCompat(Heap.var, commonExceptionVar,typeOfException);
-    Term result = Logic.safe.implies(guard, newExPost);
+    Term result = Logic.Safe.implies(guard, newExPost);
     allExPosts = new Post(allExPosts.getRVar(), Logic.and(allExPosts.getPost(), result));
     Lookup.exceptionalPostconditions.put(currentRoutine, allExPosts);
 

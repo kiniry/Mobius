@@ -15,6 +15,7 @@ import mobius.bico.ClassExecutor;
 import mobius.bico.MethodHandler;
 import mobius.bico.Util.Stream;
 
+
 public class AnnotationClassExecutor extends ClassExecutor {
   /** the current class which is inspected. */
   private ClassGen fClass;
@@ -31,7 +32,7 @@ public class AnnotationClassExecutor extends ClassExecutor {
   public void doClassDefinition() {
     super.doClassDefinition();
     // add the annotations from here
-    Stream out = getOut();
+    final Stream out = getOut();
     
     // first we print 
     final Method[] methods = fClass.getMethods();

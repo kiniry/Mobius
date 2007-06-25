@@ -56,6 +56,7 @@ public class Lookup {
    * @param name the name of the method
    * @param hasResult whether or not it has a result
    * @return a term built around the rules stated above
+   * @deprecated
    */
   public static Term buildStdCond (final RoutineDecl m, String name, boolean hasResult) {
     int arity = m.args.size();
@@ -108,42 +109,59 @@ public class Lookup {
     return Formula.lf.mkFnTerm(sym, args);
 
   }
+  
+  
   /**
    * Returns the FOL Term representation of the precondition of method m.
    * @param m the method of interest
+   * @return the precondition or <code>True</code>
    */
   public static Term precondition(final RoutineDecl m) {
     //return buildStdCond(m, "_pre", false);
-    return preconditions.get(m);
+    Term t = preconditions.get(m);
+    if (t == null) {
+      t = Logic.True();
+    }
+    return t;
   }
 
   /**
    * Returns the FOL Term representation of the normal postcondition of routine m.
    * @param m the method of interest
+   * @return the normal postcondition or <code>True</code>
    */
   public static Post normalPostcondition(final RoutineDecl m) {
     //return new Post(buildStdCond (m, "_norm", true)); 
-    return postconditions.get(m);
+    Post p = postconditions.get(m);
+    if (p == null) {
+      p = new Post(Logic.True());
+    }
+    return p;
   }
 
-  /**
-   * Returns the FOL Term representation of the normal postcondition of method m.
-   * @param m the method of interest
-   */
-  public static Post normalPostcondition(final MethodDecl m) {
-    //return new Post(Expression.rvar(Expression.getResultVar(m)), 
-    //                buildStdCond (m, "_norm", true)); 
-    return postconditions.get(m);
-  }
+//  /**
+//   * Returns the FOL Term representation of the normal postcondition of method m.
+//   * @param m the method of interest
+//   */
+//  public static Post normalPostcondition(final MethodDecl m) {
+//    //return new Post(Expression.rvar(Expression.getResultVar(m)), 
+//    //                buildStdCond (m, "_norm", true)); 
+//    return postconditions.get(m);
+//  }
   /**
    * Returns a vector of FOL Term representations of the exceptional 
    * postconditions of method m.
    * The exceptional postcondition will always look like this: Sort => Term
    * @param m the method of interest
+   * @return the exceptional postcondition or <code>True</code>
    */
   public static Post exceptionalPostcondition(final RoutineDecl m) {
     //return new Post(Expression.rvar(Ref.sort), buildStdCond (m, "_excp", false)); 
-    return exceptionalPostconditions.get(m);
+    Post p = exceptionalPostconditions.get(m);
+    if (p == null) {
+      p = new Post(Logic.True());
+    }
+    return p;
   }
 
 }
