@@ -432,5 +432,7 @@ public class SimplifyNodeBuilder extends EscNodeBuilder
 	public SPred buildAssignCompat(SMap map, SValue val, SAny type) {
 		throw new UnsupportedOperationException();
 	}
-
+  public SPred buildInv(SValue val, SAny type) {
+    throw new UnsupportedOperationException();
+  }
 }
