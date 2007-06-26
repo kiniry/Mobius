@@ -162,7 +162,7 @@ public class JmlVisitor extends VisitorArgResult {
     ((Properties) o).put("routinebegin", new Boolean(true));
     final QuantVariableRef result = (QuantVariableRef) ((Properties) o).get("result");
     Lookup.postconditions.put(x, new Post(result, Logic.True()));
-    Lookup.exceptionalPostconditions.put(x, new Post(result, Logic.True()));
+    Lookup.exceptionalPostconditions.put(x, new Post(Expression.rvar(Ref.sort), Logic.True()));
     return visitASTNode(x, o);
   }
 
