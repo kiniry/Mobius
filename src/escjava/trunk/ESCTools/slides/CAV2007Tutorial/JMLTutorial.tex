@@ -264,6 +264,8 @@ Invariants
 \lstinputlisting[linerange={1-2},basicstyle=\ttfamily\color{lightgray},keywordstyle={[2]\bfseries\color{lightgray}}]{examples/ArrayOps.java}
 \lstinputlisting[linerange={3-3},frame=single,frameround=tttt,rulecolor=\color{violet},belowskip=0pt]{examples/ArrayOps.java}
 \lstinputlisting[linerange={4-12},basicstyle=\ttfamily\color{lightgray},keywordstyle={[2]\bfseries\color{lightgray}}]{examples/ArrayOps.java}
+\note{Note the annotation comments. 
+You can't put a space between /* and the @, otherwise JML doesn't see it.}
 \end{frame}
 
 \begin{frame}[fragile]
@@ -271,6 +273,8 @@ Invariants
 \lstinputlisting[linerange={1-4},basicstyle=\ttfamily\color{lightgray},keywordstyle={[2]\bfseries\color{lightgray}}]{examples/ArrayOps.java}
 \lstinputlisting[linerange={5-5},frame=single,frameround=tttt,rulecolor=\color{violet},belowskip=0pt]{examples/ArrayOps.java}
 \lstinputlisting[linerange={6-12},basicstyle=\ttfamily\color{lightgray},keywordstyle={[2]\bfseries\color{lightgray}}]{examples/ArrayOps.java}
+\note{You can also use //@ to mark annotation comments for JML.
+Again, no space between // and @ allowed.}
 \end{frame}
 
 \begin{frame}[fragile]
@@ -447,6 +451,27 @@ Links to papers, etc.
 \section[Reading and Writing]{Reading and Writing JML Specifications}
 
 \subsection[Lightweight]{Lightweight Specification of Functional Behavior}
+
+\begin{frame}[fragile]
+\frametitle{JML Annotations Comments are not Java Annotations}
+
+JML annotation comments
+\begin{itemize}
+\item
+Line starting with \lstinline!//@!
+
+\item
+Between \lstinline!/*@! and \lstinline!@*/!,
+ignoring \lstinline!@!'s starting lines.
+\end{itemize}
+
+First character must be \lstinline!@!
+
+\lstinline!// @ensures! is \alert{wrong}.
+\note{Java annotations are not in comments.
+We are experimenting with putting JML in Java annotations, but that's
+not standard and doesn't work with any tools.}
+\end{frame}
 
 \begin{frame}
 \frametitle{Most Important JML Keywords}
