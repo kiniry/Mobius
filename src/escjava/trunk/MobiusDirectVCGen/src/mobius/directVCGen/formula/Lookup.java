@@ -21,6 +21,7 @@ import javafe.ast.FormalParaDecl;
 import javafe.ast.FormalParaDeclVec;
 import javafe.ast.MethodDecl;
 import javafe.ast.RoutineDecl;
+import javafe.ast.TypeDecl;
 
 /**
  * @author hel
@@ -45,7 +46,7 @@ public class Lookup {
     new HashMap<RoutineDecl, Post>();
 
   /** map containing ClassDecl as keys and Terms (the invariant) as value. **/
-  public static Map<ClassDecl, Term> invariants = new HashMap<ClassDecl, Term>();
+  public static Map<TypeDecl, Term> invariants = new HashMap<TypeDecl, Term>();
 
 
   /**
