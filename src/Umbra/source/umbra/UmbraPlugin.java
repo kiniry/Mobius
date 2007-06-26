@@ -19,7 +19,7 @@ public class UmbraPlugin extends AbstractUIPlugin {
   /**
    * The standard logging facility for the plugin.
    */
-  private static final PrintStream LOG = System.out;
+  public static final PrintStream LOG = System.out;
 
   /**
    * The shared instance of the plugin.

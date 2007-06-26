@@ -26,15 +26,14 @@ public class CodeLineController extends BytecodeLineController {
    * TODO
    */
   private String removeWhitespaces() {
-  String s;
-  s = "";
-  int i = 0;
-  final int j = line.length();
-  for (i = 0; i < j; i++)
-    if (!(Character.isWhitespace(line.charAt(i)))) {
-      s += line.charAt(i);
-    }
-  return s;
+    String s = "";
+    int i = 0;
+    final int j = line.length();
+    for (i = 0; i < j; i++)
+      if (!(Character.isWhitespace(line.charAt(i)))) {
+        s += line.charAt(i);
+      }
+    return s;
   }
 
   /**
@@ -87,16 +86,12 @@ public class CodeLineController extends BytecodeLineController {
         return false;
       if ((s.indexOf(",code_length")) > (s.indexOf(")")))
         return false;
-      //czy w ogole sa liczby
-      //System.out.println(s);
-      //System.out.println("dupa" + s.indexOf(",code_length"));
-      //System.out.println("blada" + s.indexOf(")"));
-      //System.out.println(s.length());
-      if (((s.indexOf("max_stack=")) + 11) > (s.indexOf(",max_locals=")))
+      //are there numbers at all
+      if (isOneStrictlyAfterAnother(s, "max_stack=", ",max_locals="))
         return false;
-      if (((s.indexOf(",max_locals=")) + 13) > (s.indexOf(",code_length=")))
+      if (isOneStrictlyAfterAnother(s, ",max_locals=", ",code_length="))
         return false;
-      if ((s.indexOf(",code_length=")) + 14 > (s.indexOf(")")))
+      if (isOneStrictlyAfterAnother(s, ",code_length=", ")"))
         return false;
       //czy nawiasy poprawnie tzn jak po ) cos to zle
       if ((s.indexOf(")")) + 1 < (s.length()))
@@ -139,5 +134,19 @@ public class CodeLineController extends BytecodeLineController {
     }
 
     return false;
+  }
+
+  /**
+   * TODO
+   * @param s
+   * @param string
+   * @param string2
+   * @return
+   */
+  private boolean isOneStrictlyAfterAnother(final String s,
+                                            final String string1,
+                                            final String string2) {
+    final int len = string1.length() + 1;
+    return ((s.indexOf(string1)) + len) > (s.indexOf(string2));
   }
 }

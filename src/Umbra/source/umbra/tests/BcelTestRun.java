@@ -14,6 +14,8 @@ import org.apache.bcel.generic.InstructionHandle;
 import org.apache.bcel.generic.InstructionList;
 import org.apache.bcel.generic.MethodGen;
 
+import umbra.UmbraPlugin;
+
 /**
  * TODO write description
  *
@@ -27,8 +29,23 @@ public class BcelTestRun {
   /**
    * TODO
    */
+  private static final int INSTRUCTION_TO_CHANGE_NO = 23;
+
+  /**
+   * TODO
+   */
+  private static final int NO_OF_CHARS = 4096;
+
+  /**
+   * TODO
+   */
+  private static final int NO_OF_LINES = 256;
+
+  /**
+   * TODO
+   */
   static final String HWClName = "umbra.test.HelloWorld";
-  
+
   /**
    * TODO
    */
@@ -45,22 +62,7 @@ public class BcelTestRun {
     final ConstantPoolGen cpg = cg.getConstantPool();
     final Method[] methods = cg.getMethods();
     for (int i = 0; i < methods.length; i++) {
-      final MethodGen mg = new MethodGen(methods[i], HWClName, cpg);
-      final InstructionList il = mg.getInstructionList();
-      final InstructionHandle start = il.getStart();
-      final InstructionHandle end = il.getEnd();
-      for (InstructionHandle pos = start; pos != end; pos = pos.getNext()) {
-        final Instruction ins = pos.getInstruction();
-        if ("ldc".equals(ins.getName())) {
-          System.out.println(cpg.getSize());
-          cpg.addString("CompDiff");
-          final Constant con = cpg.getConstant(35);
-          System.out.println("Index " + ((ConstantString)con).getStringIndex());
-          cpg.setConstant(23, con);
-          final Method mm = mg.getMethod();
-          methods[i] = mm;
-        }
-      }
+      workOnLDCInstructions(cpg, methods, i);
       cg.setConstantPool(cpg);
       cg.update();
       a_java_class.setConstantPool(a_java_class.getConstantPool());
@@ -71,11 +73,42 @@ public class BcelTestRun {
     return cg.getJavaClass();
   }
 
-  public static void wypisz(final JavaClass jc) {
+  /**
+   * TODO
+   * @param cpg
+   * @param methods
+   * @param i
+   */
+  private static void workOnLDCInstructions(final ConstantPoolGen cpg,
+                                            final Method[] methods,
+                                            final int i) {
+    final MethodGen mg = new MethodGen(methods[i], HWClName, cpg);
+    final InstructionList il = mg.getInstructionList();
+    final InstructionHandle start = il.getStart();
+    final InstructionHandle end = il.getEnd();
+    for (InstructionHandle pos = start; pos != end; pos = pos.getNext()) {
+      final Instruction ins = pos.getInstruction();
+      if ("ldc".equals(ins.getName())) {
+        UmbraPlugin.messagelog(Integer.toString(cpg.getSize()));
+        cpg.addString("CompDiff");
+        final Constant con = cpg.getConstant(35);
+        UmbraPlugin.messagelog("Index " + ((ConstantString)con).getStringIndex());
+        cpg.setConstant(INSTRUCTION_TO_CHANGE_NO, con);
+        final Method mm = mg.getMethod();
+        methods[i] = mm;
+      }
+    }
+  }
+
+  /**
+   * TODO
+   * @param a_java_class
+   */
+  public static void wypisz(final JavaClass a_java_class) {
     String bajtkod = "";
-    final Method[] methods = jc.getMethods();
-    final byte[][] names = new byte[methods.length][256];
-    final byte[][] code = new byte[methods.length][4096];
+    final Method[] methods = a_java_class.getMethods();
+    final byte[][] names = new byte[methods.length][NO_OF_LINES];
+    final byte[][] code = new byte[methods.length][NO_OF_CHARS];
     final int[] namesLen = new int[methods.length];
     final int[] codeLen = new int[methods.length];
     for (int i = 0; i < methods.length; i++) {
@@ -88,7 +121,30 @@ public class BcelTestRun {
         e.printStackTrace();
       }
     }
-    final char[] contents = new char[4096];
+    final char[] contents = new char[NO_OF_CHARS];
+    final int k = fillInContents(methods, names, code, namesLen,
+                                 codeLen, contents);
+    bajtkod = String.copyValueOf(contents, 0, k);
+    UmbraPlugin.messagelog(bajtkod);
+
+  }
+
+  /**
+   * TODO
+   * @param methods
+   * @param names
+   * @param code
+   * @param namesLen
+   * @param codeLen
+   * @param contents
+   * @return
+   */
+  private static int fillInContents(final Method[] methods,
+                                    final byte[][] names,
+                                    final byte[][] code,
+                                    final int[] namesLen,
+                                    final int[] codeLen,
+                                    final char[] contents) {
     int k = 0;
     for (int i = 0; i < methods.length; i++) {
       for (int j = 0; j < namesLen[i]; j++, k++) {
@@ -103,8 +159,6 @@ public class BcelTestRun {
       k++;
     }
     contents[k] = '\0';
-    bajtkod = String.copyValueOf(contents, 0, k);
-    System.out.println(bajtkod);
-
+    return k;
   }
 }

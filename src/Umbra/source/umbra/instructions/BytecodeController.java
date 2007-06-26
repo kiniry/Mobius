@@ -19,6 +19,7 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.swt.widgets.Shell;
 
+import umbra.UmbraPlugin;
 import umbra.editor.BytecodeDocument;
 import umbra.editor.parsing.BytecodeWhitespaceDetector;
 import umbra.editor.parsing.IBytecodeStrings;
@@ -95,7 +96,7 @@ public class BytecodeController {
   public final void showInstructionList()
   {
     for (int i = 0; i < all.size(); i++) {
-      System.out.print(((BytecodeLineController)(all.get(i))).line);
+      UmbraPlugin.LOG.print(((BytecodeLineController)(all.get(i))).line);
     }
   }
 
@@ -105,10 +106,10 @@ public class BytecodeController {
    */
   public final void showAllIncorrectLines()
   {
-    System.out.println("" + incorrect.size() + " incorrects:");
-    System.out.flush();
+    UmbraPlugin.messagelog("" + incorrect.size() + " incorrects:");
+    UmbraPlugin.LOG.flush();
     for (int i = 0; i < incorrect.size(); i++) {
-      System.out.println(" " +
+      UmbraPlugin.messagelog(" " +
              ((BytecodeLineController)(incorrect.get(i))).line);
     }
   }
@@ -140,7 +141,7 @@ public class BytecodeController {
       if (metEnd && i < methods.length) {
         mg = new MethodGen(methods[i], cg.getClassName(), cpg);
         il = mg.getInstructionList();
-        System.out.println("method number[" + i + "]" + mg.getName() +
+        UmbraPlugin.messagelog("method number[" + i + "]" + mg.getName() +
                            "il=" + il.toString());
         ih = il.getStart();
         end = il.getEnd();
@@ -213,9 +214,9 @@ public class BytecodeController {
               final int startRem, final int stopRem, final int stop)
   {
     final ClassGen cg = ((BytecodeDocument)doc).getClassGen();
-    System.out.println("startRem=" + startRem);
-    System.out.println("stopRem=" + stopRem);
-    System.out.println("stop=" + stop);
+    UmbraPlugin.messagelog("startRem=" + startRem);
+    UmbraPlugin.messagelog("stopRem=" + stopRem);
+    UmbraPlugin.messagelog("stop=" + stop);
     // i - index in the removed lines
     // j - index in the inserted lines
     for (int i = startRem, j = startRem;
@@ -268,10 +269,11 @@ public class BytecodeController {
    * @return
    */
   private int addInstructions(final IDocument doc, final int startRem, final int stopRem,
-                int i, final int j,
+                final int i, final int j,
                 final BytecodeLineController oldlc,
                 final BytecodeLineController nextLine,
                 final boolean theLast, final boolean metEnd) {
+    int res = i;
     final ClassGen cg = ((BytecodeDocument)doc).getClassGen();
     final int off = getInstructionOff(j);
     try {
@@ -288,8 +290,8 @@ public class BytecodeController {
       } else {
         if (comment != null) interline.put(nextLine, comment);
       }
-      //System.out.println("After target");
-      if (i >= startRem && i <= stopRem) {
+      //UmbraPlugin.messagelog("After target");
+      if (res >= startRem && res <= stopRem) {
         lc.update(oldlc, nextLine, cg, ins, metEnd, theLast,
               instructions, off);
         all.set(j, lc);
@@ -299,12 +301,12 @@ public class BytecodeController {
         else
           lc.initHandle(oldlc, cg, ins, metEnd, instructions, off);
         all.add(j, lc);
-        i--;
+        res--;
       }
     } catch (BadLocationException e) {
       e.printStackTrace();
     }
-    return i;
+    return res;
   }
 
   /**
@@ -381,10 +383,10 @@ public class BytecodeController {
     final int ppos = line.indexOf(":");
     if (ppos >= 0) { //nie >= czy jest : od 2 pozycji
       //tzn liczy chyba od zerowej czyli sprawdzaczy cyfra przed
-      //System.out.println("dwukropek" + ppos + line.charAt(0) + line.charAt(1));
+      //UmbraPlugin.messagelog("dwukropek" + ppos + line.charAt(0) + line.charAt(1));
       ok = true;
       for (i = 0; i < ppos; i++) {
-        //System.out.println("i" + i + line.charAt(i) + line.charAt(1));
+        //UmbraPlugin.messagelog("i" + i + line.charAt(i) + line.charAt(1));
         //sprawdza czy tylko numeryczne przed :
         if  (!(Character.isDigit(line.charAt(i)))) ok = false;
       }
@@ -494,20 +496,20 @@ public class BytecodeController {
   /**
    * Removes an one-line comment from line of bytecode.
    *
-   * @param l  line of bytecode
+   * @param a_line  line of bytecode
    * @return  bytecode line l without one-line comment and ending whitespaces
    */
-  protected final String removeCommentFromLine(String l)
-  {
-    int j = l.length() - 1;
+  protected final String removeCommentFromLine(final String a_line) {
+    String res;
+    int j = a_line.length() - 1;
 
-    final int k = (l.indexOf("//", 0));
+    final int k = (a_line.indexOf("//", 0));
     if (k != -1)
       j = k - 1;
-    while ((j >= 0) && (Character.isWhitespace(l.charAt(j))))
+    while ((j >= 0) && (Character.isWhitespace(a_line.charAt(j))))
       j--;
-    l = l.substring(0, j + 1) + "\n";
-    return l;
+    res = a_line.substring(0, j + 1) + "\n";
+    return res;
   }
 
   /**
@@ -539,7 +541,7 @@ public class BytecodeController {
     final int i = line.indexOf("//");
     if (i == -1) return null;
     final String nl = line.substring(i + 2, line.indexOf("\n"));
-    System.out.println("//" + nl);
+    UmbraPlugin.messagelog("//" + nl);
     return nl;
   }
 
@@ -613,9 +615,10 @@ public class BytecodeController {
 
   /**
    * TODO
+   * @param the_modified
    */
-  public final void setModified(final boolean[] modified) {
-    this.modified = modified;
+  public final void setModified(final boolean[] the_modified) {
+    this.modified = the_modified;
   }
 
   /**
@@ -650,27 +653,27 @@ public class BytecodeController {
    * TODO
    */
   private void controlPrint(final int index) {
-    System.out.println();
-    System.out.println("Control print of bytecode modification (" + index + "):");
+    UmbraPlugin.messagelog("");
+    UmbraPlugin.messagelog("Control print of bytecode modification (" + index + "):");
     for (int i = 0; i < instructions.size(); i++) {
       final InstructionLineController line = (InstructionLineController)instructions.get(i);
       if (line == null) {
-        System.out.println("" + i + ". null");
+        UmbraPlugin.messagelog("" + i + ". null");
         return;
       }
       //if (line.index == index) {
-      System.out.println("" + i + ". " + line.name);
+      UmbraPlugin.messagelog("" + i + ". " + line.name);
       final InstructionHandle ih = line.getHandle();
-      if (ih == null) System.out.println("  handle - null");
+      if (ih == null) UmbraPlugin.messagelog("  handle - null");
       else {
-        System.out.print("  handle(" + ih.getPosition() + ") ");
+        UmbraPlugin.LOG.print("  handle(" + ih.getPosition() + ") ");
         final Instruction ins = ih.getInstruction();
-        if (ins == null) System.out.print("null instruction");
-        else System.out.print(ins.getName());
-        if (ih.getNext() == null) System.out.print(" next: null");
-        else System.out.print(" next: " + ih.getNext().getPosition());
-        if (ih.getPrev() == null) System.out.println(" prev: null");
-        else System.out.println(" prev: " + ih.getPrev().getPosition());
+        if (ins == null) UmbraPlugin.LOG.print("null instruction");
+        else UmbraPlugin.LOG.print(ins.getName());
+        if (ih.getNext() == null) UmbraPlugin.LOG.print(" next: null");
+        else UmbraPlugin.LOG.print(" next: " + ih.getNext().getPosition());
+        if (ih.getPrev() == null) UmbraPlugin.messagelog(" prev: null");
+        else UmbraPlugin.messagelog(" prev: " + ih.getPrev().getPosition());
       }
       //}
     }

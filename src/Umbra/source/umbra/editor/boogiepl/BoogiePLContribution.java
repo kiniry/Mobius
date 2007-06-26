@@ -29,6 +29,31 @@ import org.eclipse.ui.IEditorPart;
 public class BoogiePLContribution extends ControlContribution {
 
   /**
+   * TODO.
+   */
+  private static final RGB WIDGET_FOREGROUND_COLOR = new RGB(255, 255, 0);
+
+  /**
+   * TODO.
+   */
+  private static final int WIDGET_TEXT_STYLE = 1;
+
+  /**
+   * TODO.
+   */
+  private static final int WIDGET_TEXT_HEIGHT = 8;
+
+  /**
+   * TODO.
+   */
+  private static final int WIDGET_HEIGHT = 15;
+
+  /**
+   * TODO.
+   */
+  private static final int WIDGET_WIDTH = 120;
+
+  /**
    * TODO
    */
   private boolean needNew = true;
@@ -175,15 +200,19 @@ public class BoogiePLContribution extends ControlContribution {
 
   /**
    * TODO
+   * @param parent
+   * @return
+   * @see org.eclipse.jface.action.ControlContribution#createControl(org.eclipse.swt.widgets.Composite)
    */
   protected final Control createControl(final Composite parent) {
     final Composite composite = new Composite(parent, SWT.BORDER);
     composite.setData(this);
 
     labelText = new Label(composite, SWT.NONE);
-    labelText.setSize(120, 15);
-    labelText.setFont(new Font(null, "Arial", 8, 1));
-    labelText.setForeground(new Color(null, new RGB(255, 255, 0)));
+    labelText.setSize(WIDGET_WIDTH, WIDGET_HEIGHT);
+    labelText.setFont(new Font(null, "Arial", WIDGET_TEXT_HEIGHT,
+                                              WIDGET_TEXT_STYLE));
+    labelText.setForeground(new Color(null, WIDGET_FOREGROUND_COLOR));
     return composite;
   }
 

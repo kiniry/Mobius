@@ -17,6 +17,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditor;
 
+import umbra.UmbraPlugin;
+
 /**
  * This class is an abstract model of a bytecode document.
  * It mainly handles the synchronization between a bytecode file and a
@@ -108,7 +110,7 @@ public class BytecodeDocument extends Document {
       final int[] syncLine = syncBS(sDoc, fJavaClass, line);
       final int syncPos = sDoc.getLineOffset(syncLine[0]);
       final int syncLen = sDoc.getLineOffset(syncLine[1] + 1) - syncPos;
-      System.out.println("sync(" + syncLine[0] + ", " + syncLine[1] + ")");
+      UmbraPlugin.messagelog("sync(" + syncLine[0] + ", " + syncLine[1] + ")");
       fRelatedEditor.getEditorSite().getPage().activate(fRelatedEditor);
       if (syncLen < 0) MessageDialog.openError(new Shell(), "Bytecode", "Synchronisation failed");
       else fRelatedEditor.getSelectionProvider().setSelection(new TextSelection(syncPos, syncLen));
@@ -167,7 +169,7 @@ public class BytecodeDocument extends Document {
         if (pos == -1) {
           if (l_od != 0)
             l_do = l_od;
-          System.out.println("syncBS: b��d -- nie znaleziono kolejnej pozycji z LineNumberTable!");
+          UmbraPlugin.messagelog("syncBS: b��d -- nie znaleziono kolejnej pozycji z LineNumberTable!");
           break;
         }
         posln = getLineOfOffset(pos);

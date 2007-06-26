@@ -32,25 +32,33 @@ public class SpecialNumberRule extends NumberRule {
 
   /**
    * TODO
+   * @param a_start
+   * @param an_end
+   * @param a_token
    */
-  public SpecialNumberRule(final char start, final char fin, final IToken token) {
-    super(token);
-    this.start = start;
-    this.fin = fin;
+  public SpecialNumberRule(final char a_start,
+                           final char an_end,
+                           final IToken a_token) {
+    super(a_token);
+    this.start = a_start;
+    this.fin = an_end;
     isFin = true;
   }
 
   /**
    * TODO
+   * @param a_start
+   * @param a_token
    */
-  public SpecialNumberRule(final char start, final IToken token) {
-    super(token);
-    this.start = start;
+  public SpecialNumberRule(final char a_start, final IToken a_token) {
+    super(a_token);
+    this.start = a_start;
     isFin = false;
   }
 
   /**
    * TODO
+   * @see org.eclipse.jface.text.rules.NumberRule#evaluate(org.eclipse.jface.text.rules.ICharacterScanner)
    */
   public final IToken evaluate(final ICharacterScanner scanner) {
     int c = scanner.read();

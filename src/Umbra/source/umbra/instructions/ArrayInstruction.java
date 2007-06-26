@@ -8,6 +8,7 @@ import org.apache.bcel.generic.NEWARRAY;
 import org.apache.bcel.generic.Type;
 
 import umbra.UmbraHelper;
+import umbra.UmbraPlugin;
 import umbra.editor.parsing.IBytecodeStrings;
 
 
@@ -77,11 +78,11 @@ public class ArrayInstruction extends StringInstruction {
    * @see BytecodeLineController#getInstruction()
    */
   public final Instruction getInstruction() {
-    //System.out.println("ArrayInstruction->getInstruction...");
+    //UmbraPlugin.messagelog("ArrayInstruction->getInstruction...");
     String insType = line.substring(line.indexOf("<") + 1, line.indexOf(">"));
     insType = insType.toUpperCase();
     if (getType(insType) == null) {
-      //System.out.println("   Wrong instruction argument!");
+      //UmbraPlugin.messagelog("   Wrong instruction argument!");
       return null;
     }
     final byte r = getType(insType).getType();
@@ -91,7 +92,7 @@ public class ArrayInstruction extends StringInstruction {
       if (name.compareTo("newarray") == 0)
         return new NEWARRAY(r);
     }
-    //System.out.println("   Failed!");
+    //UmbraPlugin.messagelog("   Failed!");
     return null;
   }
 
@@ -110,15 +111,15 @@ public class ArrayInstruction extends StringInstruction {
     int j, y;
     for (j = 0; j < s2.length; j++) {
       if ((s.indexOf(s2[j]) > 0) && (s.indexOf(s2[j]) < s.indexOf(":") + 2)) {
-        //System.out.println(s);
-        //System.out.println("array " + s);
+        //UmbraPlugin.messagelog(s);
+        //UmbraPlugin.messagelog("array " + s);
         if (s.indexOf("<") < 2) return false;
         if (s.indexOf(">") < 2) return false;
         // zmienione 7.26.15
         String insType = s.substring(s.indexOf("<") + 1, s.indexOf(">"));
         insType = insType.toUpperCase();
         if (getType(insType) == null) {
-          System.out.println("E04");
+          UmbraPlugin.messagelog("E04");
           return false;
         }
 

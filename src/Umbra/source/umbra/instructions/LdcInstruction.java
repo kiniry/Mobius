@@ -10,6 +10,7 @@ import org.apache.bcel.generic.LDC2_W;
 import org.apache.bcel.generic.LDC_W;
 
 import umbra.UmbraHelper;
+import umbra.UmbraPlugin;
 import umbra.editor.parsing.IBytecodeStrings;
 
 
@@ -40,7 +41,7 @@ public class LdcInstruction extends OtherInstruction {
     final String licznik = "0123456789";
     int number;
     if (line.lastIndexOf("(") >= line.lastIndexOf(")")) {
-      System.out.println("linia jest niepoprawna nic nie tworzy " + line.lastIndexOf("(") + " " + line.lastIndexOf(")"));
+      UmbraPlugin.messagelog("linia jest niepoprawna nic nie tworzy " + line.lastIndexOf("(") + " " + line.lastIndexOf(")"));
     } else {
       isd = true;
       for (int i = line.lastIndexOf("(") + 1; i < line.lastIndexOf(")"); i++) {
@@ -64,22 +65,21 @@ public class LdcInstruction extends OtherInstruction {
    * @see BytecodeLineController#getInstruction()
    */
   public final Instruction getInstruction() {
-  int index;
+    int index;
 
-  if (!correct())
+    if (!correct())
+      return null;
+    index = getInd();
+    if (name.compareTo("ldc") == 0) {
+      return new LDC(index);
+    }
+    if (name.compareTo("ldc_w") == 0) {
+      return new LDC_W(index);
+    }
+    if (name.compareTo("ldc2_w") == 0) {
+      return new LDC2_W(index);
+    }
     return null;
-  index = getInd();
-  if (name.compareTo("ldc") == 0) {
-    return new LDC(index);
-  }
-  if (name.compareTo("ldc_w") == 0) {
-    return new LDC_W(index);
-  }
-  if (name.compareTo("ldc2_w") == 0) {
-    return new LDC2_W(index);
-  }
-  return null;
-
   }
 
   /**

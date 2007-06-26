@@ -122,7 +122,7 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
       ImageDescriptor restoreIcon;
       ImageDescriptor synchrIcon;
       final URL url = new URL(installURL, "icons/change_color_backward.gif");
-      System.out.println(url.toExternalForm());
+      UmbraPlugin.messagelog(url.toExternalForm());
       iconRight = ImageDescriptor.
         createFromURL(url);
       iconLeft = ImageDescriptor.
@@ -280,7 +280,7 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
    *
   /*private void controlPrint(JavaClass jc, int i) {
     Method meth = jc.getMethods()[i];
-    System.out.println(meth.getCode().toString());
+    UmbraPlugin.messagelog(meth.getCode().toString());
   }*/
 
   /**

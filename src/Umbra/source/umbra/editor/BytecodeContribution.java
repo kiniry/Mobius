@@ -15,6 +15,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorPart;
 
+import umbra.UmbraPlugin;
 import umbra.instructions.BytecodeController;
 
 /**
@@ -134,12 +135,12 @@ public class BytecodeContribution extends ControlContribution {
     public final void documentAboutToBeChanged(final DocumentEvent event) {
       if (!ready)
         init(event.fDocument); //this marks ready as true
-      System.out.println("documentAboutToBeChanged " + event.getText());
-      System.out.println("documentAboutToBeChanged " + event.getModificationStamp());
-      System.out.println("documentAboutToBeChanged " + event.getOffset());
-      System.out.println("documentAboutToBeChanged " + event.getLength());
-      System.out.println("documentAboutToBeChanged " + event.getDocument().hashCode());
-      System.out.flush();
+      UmbraPlugin.messagelog("documentAboutToBeChanged " + event.getText());
+      UmbraPlugin.messagelog("documentAboutToBeChanged " + event.getModificationStamp());
+      UmbraPlugin.messagelog("documentAboutToBeChanged " + event.getOffset());
+      UmbraPlugin.messagelog("documentAboutToBeChanged " + event.getLength());
+      UmbraPlugin.messagelog("documentAboutToBeChanged " + event.getDocument().hashCode());
+      UmbraPlugin.LOG.flush();
       current_event = event;
 
       try {
@@ -166,8 +167,8 @@ public class BytecodeContribution extends ControlContribution {
      * @see org.eclipse.jface.text.IDocumentListener#documentChanged(org.eclipse.jface.text.DocumentEvent)
      */
     public final void documentChanged(final DocumentEvent event) {
-      System.out.println("documentChanged " + event.getText());
-      System.out.flush();
+      UmbraPlugin.messagelog("documentChanged " + event.getText());
+      UmbraPlugin.LOG.flush();
       int stop = 0;
       int startRem = 0, stopRem = 0;
       try {
@@ -295,9 +296,10 @@ public class BytecodeContribution extends ControlContribution {
 
   /**
    * TODO
+   * @param the_modified
    */
-  public final void setModTable(final boolean[] modified) {
-    this.modified = modified;
+  public final void setModTable(final boolean[] the_modified) {
+    this.modified = the_modified;
     modTable = true;
   }
 

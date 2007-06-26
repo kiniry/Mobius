@@ -24,6 +24,7 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditor;
 
 import umbra.UmbraHelper;
+import umbra.UmbraPlugin;
 import umbra.editor.BytecodeEditor;
 import b2bpl.Main;
 import b2bpl.Project;
@@ -99,7 +100,7 @@ public class BytecodeToBoogiePLAction implements IEditorActionDelegate {
 
       // TODO include all files of the current project
       final IPath path = file.getLocation().removeLastSegments(1);
-      System.out.println("Looking for other classes in " + path.toOSString());
+      UmbraPlugin.messagelog("Looking for other classes in " + path.toOSString());
       for (String a : getClassesInDirectory(path.toFile())) {
         if (a.endsWith(".class")) {
           args.add(javaPath.substring(0, javaPath.lastIndexOf('.')) + "." + a.substring(0, a.lastIndexOf('.')));
@@ -116,7 +117,7 @@ public class BytecodeToBoogiePLAction implements IEditorActionDelegate {
         final Main main = new Main(proj);
         main.compile();
       } catch (IOException ioex) {
-        System.out.println(ioex.toString());
+        UmbraPlugin.messagelog(ioex.toString());
       }
 
       // -------------- Load .bpl file in editor

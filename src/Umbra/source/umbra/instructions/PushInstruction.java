@@ -47,19 +47,18 @@ public class PushInstruction extends NumInstruction {
         for (y = ((s.indexOf(s2[j])) + (s2[j].length())); y < s.length(); y++) {
           if (!(Character.isDigit(s.charAt(y)))) return false;
         }
-          int counter = 0;
-          boolean lastisdig = false;
-          for (y = ((line.indexOf(s2[j])) + (s2[j].length()) + 1); y < line.length(); y++) {
-            if (Character.isDigit(line.charAt(y))) {
-              if (!(lastisdig)) counter++;
-              lastisdig = true;
-            } else
-              if (Character.isWhitespace(line.charAt(y))) {
-                lastisdig = false;
-              }
+        int counter = 0;
+        boolean lastisdig = false;
+        for (y = ((line.indexOf(s2[j])) + (s2[j].length()) + 1); y < line.length(); y++) {
+          if (Character.isDigit(line.charAt(y))) {
+            if (!(lastisdig)) counter++;
+            lastisdig = true;
+          } else if (Character.isWhitespace(line.charAt(y))) {
+            lastisdig = false;
           }
-          if (counter == 1) return true;
         }
+        if (counter == 1) return true;
+      }
     }
     return false;
   }

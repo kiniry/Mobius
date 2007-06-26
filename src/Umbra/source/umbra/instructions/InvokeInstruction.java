@@ -49,7 +49,7 @@ public class InvokeInstruction extends StringInstruction {
     for (j = 0; j < s2.length; j++) {
       if ((s.indexOf(s2[j]) > 0) && (s.indexOf(s2[j]) < s.indexOf(":") + 2))
 
-        if (s.lastIndexOf("(") < 2) return false;
+        if (s.lastIndexOf("(") < 2) return false; //TODO is it all right
         if (s.lastIndexOf(")") < 2) return false;
         int m, n, o;
         m = line.lastIndexOf("(");

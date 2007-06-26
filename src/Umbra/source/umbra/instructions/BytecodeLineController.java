@@ -10,6 +10,8 @@ import org.apache.bcel.generic.InstructionHandle;
 import org.apache.bcel.generic.InstructionList;
 import org.apache.bcel.generic.MethodGen;
 
+import umbra.UmbraPlugin;
+
 /**
  * This is completely abstract class that contains some information
  * useful when the line is modified or BCEL structure is created.
@@ -207,7 +209,7 @@ public abstract class BytecodeLineController {
             final ClassGen cg,
             final boolean theLast,
             final LinkedList instructions, final int off) {
-    System.out.println("dispose(BytecodeLineController)" + ((InstructionLineController) (instructions.get(off))).getHandle().getInstruction().getName());
+    UmbraPlugin.messagelog("dispose(BytecodeLineController)" + ((InstructionLineController) (instructions.get(off))).getHandle().getInstruction().getName());
   }
 
   /**

@@ -292,15 +292,15 @@ public class BytecodeEditor extends TextEditor {
 //  }
 //
 //  private String addAnnot(Method method, ConstantPoolGen cpg, BCClass bcc, String cn) throws IOException, ReadAttributeException {
-//    //System.out.println(method.getAttributes().length + " annotation(s):");
+//    //UmbraPlugin.messagelog(method.getAttributes().length + " annotation(s):");
 //    if (method.getAttributes().length > 1) {
 //      Unknown att = (Unknown)method.getAttributes()[1];
-////      System.out.println(att.getBytes().length);
-////      System.out.println();
+////      UmbraPlugin.messagelog(att.getBytes().length);
+////      UmbraPlugin.messagelog();
 ////      for (int i = 0; i < att.getBytes().length; i++) {
-////        System.out.print(Integer.toHexString((att.getBytes()[i] + 256) % 256) + " ");
+////        UmbraPlugin.messagelog.print(Integer.toHexString((att.getBytes()[i] + 256) % 256) + " ");
 ////      }
-////      System.out.println();
+////      UmbraPlugin.messagelog();
 //      MethodGen mg = new MethodGen(method, cn, cpg);
 //      BCLocalVariable[] bclv = createLocalVariables(mg, cpg);
 //      return AttributeReader.printAttribute(att, bcc, bclv);
@@ -335,8 +335,8 @@ public class BytecodeEditor extends TextEditor {
 //      }
 //      pos++;
 //    };
-//    //if ((res >= len) || (res < 0)) System.out.println("the end");
-//    //else System.out.println("<" + code.charAt(res) + ">");
+//    //if ((res >= len) || (res < 0)) UmbraPlugin.messagelog("the end");
+//    //else UmbraPlugin.messagelog("<" + code.charAt(res) + ">");
 //    return res;
 //  }
 //
@@ -373,13 +373,13 @@ public class BytecodeEditor extends TextEditor {
 //    if (interlineTab.length != len) return bareCode;
 //    int n = 0;
 //    String newCode = "";
-//    System.out.println("off=" + off);
+//    UmbraPlugin.messagelog("off=" + off);
 //    for(;;) {
 //      int i = nextLineOff(bareCode, 0);
 //      if (i == -1)
 //        i = bareCode.length() - 1;
 //      String line = bareCode.substring(0, i);
-//      System.out.println("line = <<" + line + ">>");
+//      UmbraPlugin.messagelog("line = <<" + line + ">>");
 //      bareCode = bareCode.substring(i, bareCode.length()) + " ";
 //      if (n + off - 1 >= len)
 //        break;
@@ -455,27 +455,27 @@ public class BytecodeEditor extends TextEditor {
    * debugging helper
    *
   private void controlPrint(JavaClass jc) {
-    System.out.println();
-    System.out.println("Control print of instruction list:");
+    UmbraPlugin.messagelog();
+    UmbraPlugin.messagelog("Control print of instruction list:");
     ClassGen cg = new ClassGen(jc);
     ConstantPoolGen cpg = cg.getConstantPool();
     Method[] methods = cg.getMethods();
     MethodGen mg = new MethodGen(methods[1], cg.getClassName(), cpg);
     InstructionList il = mg.getInstructionList();
     InstructionHandle ih[] = il.getInstructionHandles();
-    System.out.println("" + il.getLength() + " " + ih.length);
+    UmbraPlugin.messagelog("" + il.getLength() + " " + ih.length);
     for (int i = 0; i < il.getLength(); i++) {
-      System.out.print("" + i + ". ");
-      if (ih[i] == null) System.out.println("Null");
+      UmbraPlugin.messagelog.print("" + i + ". ");
+      if (ih[i] == null) UmbraPlugin.messagelog("Null");
       else {
-        System.out.println("(" + ih[i].getPosition() + ")");
+        UmbraPlugin.messagelog("(" + ih[i].getPosition() + ")");
         Instruction ins = ih[i].getInstruction();
-        if (ins == null) System.out.println("Null instruction");
-        else System.out.print(ins.getName());
-        if (ih[i].getNext() == null) System.out.print(" next: null");
-        else System.out.print(" next: " + ih[i].getNext().getPosition());
-        if (ih[i].getPrev() == null) System.out.println(" prev: null");
-        else System.out.println(" prev: " + ih[i].getPrev().getPosition());
+        if (ins == null) UmbraPlugin.messagelog("Null instruction");
+        else UmbraPlugin.messagelog.print(ins.getName());
+        if (ih[i].getNext() == null) UmbraPlugin.messagelog.print(" next: null");
+        else UmbraPlugin.messagelog.print(" next: " + ih[i].getNext().getPosition());
+        if (ih[i].getPrev() == null) UmbraPlugin.messagelog(" prev: null");
+        else UmbraPlugin.messagelog(" prev: " + ih[i].getPrev().getPosition());
       }
     }
   }*/

@@ -104,7 +104,7 @@ public class BoogiePLEditorContributor extends EditorActionBarContributor {
         final String[] commentTab = boogiePLContribution.getCommentTab();
         final String[] interlineTab = boogiePLContribution.getInterlineTab();
         for (int i = 0; i < interlineTab.length; i++) {
-          System.out.println("" + i + ". " + interlineTab[i]);
+          UmbraPlugin.messagelog("" + i + ". " + interlineTab[i]);
         }
         ((BoogiePLEditor)editor).refreshBoogiePL(active, commentTab, interlineTab);
         final FileEditorInput input = new FileEditorInput(file);
@@ -161,15 +161,15 @@ public class BoogiePLEditorContributor extends EditorActionBarContributor {
         final BufferedReader stdError = new BufferedReader(new InputStreamReader(p.getErrorStream()));
 
         // read the output from the command
-        System.out.println("Here is the standard output of the command:\n");
+        UmbraPlugin.messagelog("Here is the standard output of the command:\n");
         while ((s = stdInput.readLine()) != null) {
-          System.out.println(s);
+          UmbraPlugin.messagelog(s);
         }
 
         // read any errors from the attempted command
-        System.out.println("Here is the standard error of the command (if any):\n");
+        UmbraPlugin.messagelog("Here is the standard error of the command (if any):\n");
         while ((s = stdError.readLine()) != null) {
-          System.out.println(s);
+          UmbraPlugin.messagelog(s);
         }
 
         System.exit(0);
@@ -290,6 +290,6 @@ public class BoogiePLEditorContributor extends EditorActionBarContributor {
   /*
   private void controlPrint(JavaClass jc, int i) {
     Method meth = jc.getMethods()[i];
-    System.out.println(meth.getCode().toString());
+    UmbraPlugin.messagelog(meth.getCode().toString());
   }*/
 }

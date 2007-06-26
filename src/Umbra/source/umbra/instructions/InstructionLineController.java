@@ -15,6 +15,8 @@ import org.apache.bcel.generic.InstructionTargeter;
 import org.apache.bcel.generic.MethodGen;
 import org.apache.bcel.generic.TargetLostException;
 
+import umbra.UmbraPlugin;
+
 /**
  * This class defines a structure that describes a single Bytecode
  * instruction and contains related BCEL structures.
@@ -66,25 +68,25 @@ public abstract class InstructionLineController extends BytecodeLineController {
    * The method adds the link between the Umbra representation of
    * instructions to their representation in BCEL.
    *
-   * @param ih the BCEL instruction handle that corresponds to the
+   * @param a_handle the BCEL instruction handle that corresponds to the
    *       instruction associated with the current object
-   * @param il the list of instructions in the current method
-   * @param mg the object which represents the method of the current
+   * @param a_list the list of instructions in the current method
+   * @param a_method_gen the object which represents the method of the current
    *    instruction in the BCEL representation of the current class
    *    in the bytecode editor
-   * @param i method number in the current class
+   * @param a_method_num method number in the current class
    * @return always true as the subclasses of the current class correspond to
    *     instructions
    */
-  public final boolean addHandle(final InstructionHandle ih,
-               final InstructionList il,
-               final MethodGen mg, final int i) {
-    System.out.println("InstructionLineController#addHandle name=" + name);
-    System.out.println("il=" + il.toString());
-    this.ih = ih;
-    this.il = il;
-    this.mg = mg;
-    index = i;
+  public final boolean addHandle(final InstructionHandle a_handle,
+               final InstructionList a_list,
+               final MethodGen a_method_gen, final int a_method_num) {
+    UmbraPlugin.messagelog("InstructionLineController#addHandle name=" + name);
+    UmbraPlugin.messagelog("il=" + a_list.toString());
+    this.ih = a_handle;
+    this.il = a_list;
+    this.mg = a_method_gen;
+    index = a_method_num;
     return true;
   }
 
@@ -93,45 +95,46 @@ public abstract class InstructionLineController extends BytecodeLineController {
    * the method and it must be added to BCEL structures,
    * especially new handle is generated
    *
-   * @param nextLine    next line necessary to get handle -
+   * @param a_next_line    next line necessary to get handle -
    *     a new handle is inserted before the next one
-   * @param cg      class generator from BCEL
-   * @param ins      BCEL instruction (to generate handle)
-   * @param metEnd    true if the line is inserted after the
+   * @param a_class_gen      class generator from BCEL
+   * @param an_instruction      BCEL instruction (to generate handle)
+   * @param a_method_end    true if the line is inserted after the
    *     end of the method - then the 'nextLine' is actually the previous
    *     one and the handle is generated with 'append'
-   * @param instructions  an array from BytecodeController that the new line
+   * @param the_instructions  an array from BytecodeController that the new line
    *     is added
-   * @param off      an offset in this array
+   * @param an_offset      an offset in this array
    */
-  public final void initHandle(final BytecodeLineController nextLine,
-               final ClassGen cg, final Instruction ins,
-               final boolean metEnd, final LinkedList instructions, final int off) {
+  public final void initHandle(final BytecodeLineController a_next_line,
+               final ClassGen a_class_gen, final Instruction an_instruction,
+               final boolean a_method_end, final LinkedList the_instructions,
+               final int an_offset) {
 //    controlPrint(nextLine);
-    final InstructionHandle next = nextLine.getHandle();
+    final InstructionHandle next = a_next_line.getHandle();
     if (next != null) {
-      final InstructionList newList = nextLine.getList();
-      final MethodGen mg = nextLine.getMethod();
+      final InstructionList newList = a_next_line.getList();
+      final MethodGen a_mg = a_next_line.getMethod();
       //index = nextLine.getIndex();
-      if (ins == null) {
+      if (an_instruction == null) {
         ih = null;
-      } else if (metEnd) {
-        ih = newList.append(ins);
+      } else if (a_method_end) {
+        ih = newList.append(an_instruction);
       } else {
-        if (ins instanceof BranchInstruction) {
-          if (((BranchInstruction)ins).getTarget() == null)
-            System.out.println("null target");
+        if (an_instruction instanceof BranchInstruction) {
+          if (((BranchInstruction)an_instruction).getTarget() == null)
+            UmbraPlugin.messagelog("null target");
           else
-            System.out.println(((BranchInstruction)ins).
-                       getTarget().getPosition());
-          ih = newList.insert(next, (BranchInstruction) ins);
+            UmbraPlugin.messagelog(Integer.toString(((BranchInstruction)an_instruction).
+                       getTarget().getPosition()));
+          ih = newList.insert(next, (BranchInstruction) an_instruction);
         } else
-          ih = newList.insert(next, ins);
+          ih = newList.insert(next, an_instruction);
       }
       il = newList;
-      this.mg = mg;
-      updateMethod(cg);
-      if (ins != null) instructions.add(off + 1, this);
+      this.mg = a_mg;
+      updateMethod(a_class_gen);
+      if (an_instruction != null) the_instructions.add(an_offset + 1, this);
     }
   }
 
@@ -144,20 +147,20 @@ public abstract class InstructionLineController extends BytecodeLineController {
    *  @param line the line for which the information is printed out
    */
   public static void controlPrint(final BytecodeLineController line) {
-    System.out.println("Init: next line");
+    UmbraPlugin.messagelog("Init: next line");
     if (line == null)
-      System.out.println("Null");
+      UmbraPlugin.messagelog("Null");
     else {
       final Instruction ins = line.getInstruction();
       if (ins == null)
-        System.out.println("Null instruction");
+        UmbraPlugin.messagelog("Null instruction");
       else
-        System.out.println(ins.getName());
+        UmbraPlugin.messagelog(ins.getName());
       final InstructionHandle nih = line.getHandle();
       if (nih == null)
-        System.out.println("Null handle");
+        UmbraPlugin.messagelog("Null handle");
       else
-        System.out.println(nih.getPosition());
+        UmbraPlugin.messagelog(Integer.toString(nih.getPosition()));
     }
   }
 
@@ -170,13 +173,13 @@ public abstract class InstructionLineController extends BytecodeLineController {
   public static void printInstructionList(final InstructionList il) {
     InstructionHandle ih = il.getStart();
     if (ih == null) {
-      System.out.println("start ih==null");
+      UmbraPlugin.messagelog("start ih==null");
       return;
     }
-    System.out.println(ih.getInstruction().getName());
+    UmbraPlugin.messagelog(ih.getInstruction().getName());
     do {
       ih = ih.getNext();
-      System.out.println(ih.getInstruction().getName());
+      UmbraPlugin.messagelog(ih.getInstruction().getName());
     }
     while (ih != il.getEnd());
   }
@@ -201,35 +204,35 @@ public abstract class InstructionLineController extends BytecodeLineController {
       final BytecodeLineController nextLine, final ClassGen cg,
       final Instruction ins, final boolean metEnd, final boolean theLast,
       final LinkedList instructions, final int off) {
-    System.out.println("oldline=" + oldLine.line);
-    System.out.println("nextline=" + nextLine.line);
-    System.out.println("cg=" + ((cg == null) ? "null" : "ok"));
-    System.out.println("ins=" + ((ins == null) ? "null" : ins.getName()));
-    System.out.println("MetEnd=" + metEnd);
-    System.out.println("theLast=" + theLast);
-    System.out.println("off=" + off);
+    UmbraPlugin.messagelog("oldline=" + oldLine.line);
+    UmbraPlugin.messagelog("nextline=" + nextLine.line);
+    UmbraPlugin.messagelog("cg=" + ((cg == null) ? "null" : "ok"));
+    UmbraPlugin.messagelog("ins=" + ((ins == null) ? "null" : ins.getName()));
+    UmbraPlugin.messagelog("MetEnd=" + metEnd);
+    UmbraPlugin.messagelog("theLast=" + theLast);
+    UmbraPlugin.messagelog("off=" + off);
     mg = oldLine.getMethod();
     il = oldLine.getList();
     ih = oldLine.getHandle();
     index = oldLine.getIndex();
-    System.out.println("ih=" + ((ih == null) ? "null" :
+    UmbraPlugin.messagelog("ih=" + ((ih == null) ? "null" :
       ((ih.getInstruction() == null) ? "null ins" : ih.getInstruction().getName())));
-    if (il == null) System.out.println("il = null");
+    if (il == null) UmbraPlugin.messagelog("il = null");
     else printInstructionList(il);
     if (ih == null) {
-      System.out.println("A");
+      UmbraPlugin.messagelog("A");
       initHandle(nextLine, cg, ins, metEnd, instructions, off);
     } else if (ih.getInstruction() == null) {
-      System.out.println("B");
+      UmbraPlugin.messagelog("B");
       initHandle(nextLine, cg, ins, metEnd, instructions, off);
     } else if (ins != null) {
-      System.out.println("C");
+      UmbraPlugin.messagelog("C");
       ih.setInstruction(ins);
-      System.out.println();
+      UmbraPlugin.messagelog("");
       updateMethod(cg);
       instructions.set(off, this);
     } else {
-      System.out.println("D");
+      UmbraPlugin.messagelog("D");
       dispose(nextLine, cg, theLast, instructions, off);
     }
   }
@@ -243,7 +246,7 @@ public abstract class InstructionLineController extends BytecodeLineController {
   private void updateMethod(final ClassGen cg) {
     final Method oldMet = cg.getMethodAt(index);
     cg.replaceMethod(oldMet, mg.getMethod());
-    //System.out.println(cg.getMethodAt(index).getCode().toString());
+    //UmbraPlugin.messagelog(cg.getMethodAt(index).getCode().toString());
   }
 
   /**
@@ -302,7 +305,7 @@ public abstract class InstructionLineController extends BytecodeLineController {
   {
     final InstructionHandle me = getHandle();
     final InstructionHandle next = nextLine.getHandle();
-    System.out.println("InstructionLineController#dispose   name=" + name);
+    UmbraPlugin.messagelog("InstructionLineController#dispose   name=" + name);
     final InstructionTargeter[] tgters = ih.getTargeters();
     if (tgters != null)
       for (int i = 0; i < tgters.length; i++) {
@@ -315,10 +318,10 @@ public abstract class InstructionLineController extends BytecodeLineController {
     ih = null;
     mg.setInstructionList(il);
     updateMethod(cg);
-    System.out.println("I am here");
+    UmbraPlugin.messagelog("I am here");
     instructions.remove(off);
     printInstructionList(il);
-    System.out.println("Done");
+    UmbraPlugin.messagelog("Done");
   }
 
   /**
@@ -366,9 +369,9 @@ public abstract class InstructionLineController extends BytecodeLineController {
         i++;
         while ((line.charAt(i) != '"') ||
                (line.charAt(i - 1) == '\\')) {
-            i++;
-            if (i >= line.length() - 1)
-              break;
+          i++;
+          if (i >= line.length() - 1)
+            break;
         }
         i++;
         continue;

@@ -53,7 +53,7 @@ public class FieldInstruction extends StringInstruction {
         int m, n, o;
         m = line.lastIndexOf("(");
         n = line.lastIndexOf(")");
-        //System.out.println(m + " " + n + " " + line);
+        //UmbraPlugin.messagelog(m + " " + n + " " + line);
         if (m + 1 >= n) return false;
         for (o = m + 1; o < n; o++) {
           if (!(Character.isDigit(line.charAt(o)))) {
@@ -98,25 +98,24 @@ public class FieldInstruction extends StringInstruction {
    * @see BytecodeLineController#getInstruction()
    */
   public final Instruction getInstruction() {
-  int index;
-  index = getInd();
+    int index;
+    index = getInd();
 
-  final boolean isOK = correct();
-  if (isOK) {
-  if (name.compareTo("getfield") == 0) {
-    return new GETFIELD(index);
-  }
-  if (name.compareTo("getstatic") == 0) {
-    return new GETSTATIC(index);
-  }
-  if (name.compareTo("putfield") == 0) {
-    return new PUTFIELD(index);
-  }
-  if (name.compareTo("putstatic") == 0) {
-    return new PUTSTATIC(index);
-  }
-  }
-  return null;
-
+    final boolean isOK = correct();
+    if (isOK) {
+      if (name.compareTo("getfield") == 0) {
+        return new GETFIELD(index);
+      }
+      if (name.compareTo("getstatic") == 0) {
+        return new GETSTATIC(index);
+      }
+      if (name.compareTo("putfield") == 0) {
+        return new PUTFIELD(index);
+      }
+      if (name.compareTo("putstatic") == 0) {
+        return new PUTSTATIC(index);
+      }
+    }
+    return null;
   }
 }

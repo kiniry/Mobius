@@ -22,6 +22,26 @@ public class BytecodeTagScanner extends RuleBasedScanner {
   /**
    * TODO.
    */
+  private static final int DOUBLE_QUOTE_RULE = 0;
+
+  /**
+   * TODO.
+   */
+  private static final int SINGLE_QUOTE_RULE = 1;
+
+  /**
+   * TODO.
+   */
+  private static final int LINE_RULE = 2;
+
+  /**
+   * TODO.
+   */
+  private static final int WHITESPACE_RULE = 3;
+
+  /**
+   * TODO.
+   */
   private static final int RULES_NUMBER = 4;
 
   /**
@@ -43,12 +63,14 @@ public class BytecodeTagScanner extends RuleBasedScanner {
     final IRule[] rules = new IRule[RULES_NUMBER];
 
     // Add rule for double quotes
-    rules[0] = new SingleLineRule("\"", "\"", tokens[IColorValues.STRING], '\\');
+    rules[DOUBLE_QUOTE_RULE] = new SingleLineRule("\"", "\"",
+                                                  tokens[IColorValues.STRING],
+                                                  '\\');
     // Add a rule for single quotes
-    rules[1] = new SingleLineRule("'", "'", tokens[IColorValues.STRING], '\\');
+    rules[SINGLE_QUOTE_RULE] = new SingleLineRule("'", "'", tokens[IColorValues.STRING], '\\');
     // Add generic whitespace rule.
-    rules[2] = linerule;
-    rules[3] = new WhitespaceRule(new BytecodeWhitespaceDetector());
+    rules[LINE_RULE] = linerule;
+    rules[WHITESPACE_RULE] = new WhitespaceRule(new BytecodeWhitespaceDetector());
 
     setRules(rules);
   }

@@ -47,9 +47,10 @@ public class BoogiePLConfiguration extends SourceViewerConfiguration {
   /**
    * TODO
    */
-  public BoogiePLConfiguration(final ColorManager colorManager, final int mod) {
-    this.colorManager = colorManager;
-    this.mod = mod;
+  public BoogiePLConfiguration(final ColorManager the_color_manager,
+                               final int a_mod) {
+    this.colorManager = the_color_manager;
+    this.mod = a_mod;
   }
 
   /**

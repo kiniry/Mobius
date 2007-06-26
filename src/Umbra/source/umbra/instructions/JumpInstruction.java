@@ -29,6 +29,7 @@ import org.apache.bcel.generic.JSR;
 import org.apache.bcel.generic.JSR_W;
 
 import umbra.UmbraHelper;
+import umbra.UmbraPlugin;
 import umbra.editor.parsing.IBytecodeStrings;
 
 
@@ -76,26 +77,26 @@ public class JumpInstruction extends NumInstruction {
             if (!(Character.isDigit(s.charAt(y)))) return false;
           }
         //checking if there are two numbers or one
-        int a, b, d, e, f, g;
-        a = (s.length() - s.indexOf("#"));
-        int c = 0;
-        e = line.length() - line.indexOf("#");
-        f = 0; 
-        g = line.length();
-        for (d = 0; d < e; d++) { 
-          if (Character.isDigit(line.charAt(g - d - 1))) {
-            f = 1;
-          }
-          if (f == 0) {
-            if (Character.isWhitespace(line.charAt(g - d - 1))) {
-              c++;
+          int a, b, d, e, f, g;
+          a = (s.length() - s.indexOf("#"));
+          int c = 0;
+          e = line.length() - line.indexOf("#");
+          f = 0;
+          g = line.length();
+          for (d = 0; d < e; d++) {
+            if (Character.isDigit(line.charAt(g - d - 1))) {
+              f = 1;
+            }
+            if (f == 0) {
+              if (Character.isWhitespace(line.charAt(g - d - 1))) {
+                c++;
+              }
             }
           }
-        }
 
-        b = e - c;
-        if (a == b)
-          return true;
+          b = e - c;
+          if (a == b)
+            return true;
         }
     }
     return false;
@@ -103,6 +104,7 @@ public class JumpInstruction extends NumInstruction {
 
   /**
    * TODO
+   * @return
    */
   private int getInd() {
     boolean isd;
@@ -110,16 +112,16 @@ public class JumpInstruction extends NumInstruction {
     int number;
 
     isd = true;
-    int dokad = line.length();
+    int upto = line.length(); //we seek the first non-digit character after #
     for (int i = line.lastIndexOf("#") + 1; i < line.length(); i++) {
       if (!Character.isDigit(line.charAt(i))) {
-        dokad = i;
+        upto = i;
         break;
       }
     }
-    if (isd) {
+    if (isd) { //TODO is is necessary?
       number = 0;
-      for (int i = line.lastIndexOf("#") + 1; i < dokad; i++) {
+      for (int i = line.lastIndexOf("#") + 1; i < upto; i++) {
         number = 10 * number + counter.indexOf(line.substring(i, i + 1));
       }
       return number;
@@ -207,23 +209,31 @@ public class JumpInstruction extends NumInstruction {
    * for setting such a number. The case that target line
    * does not exist is not completely solved yet.
    *
+   * @param an_ins_list an instruction list with the jump instruction
+   * @param an_ins the jump instruction to set the target for
+   * @see umbra.instructions.BytecodeLineController#setTarget(
+   *                            org.apache.bcel.generic.InstructionList,
+   *                            org.apache.bcel.generic.Instruction)
    */
-  public final void setTarget(final InstructionList il, final Instruction ins) {
+  public final void setTarget(final InstructionList an_ins_list,
+                              final Instruction an_ins) {
     int i = 0;
     i = getInd();
     InstructionHandle iha = null;
     // add parameter to getInstruction
-    iha = il.findHandle(i);
-    //TODO not generalized !-3
-    if (iha == null) iha = il.findHandle(i - 3);
-    System.out.println("i = " + i);
-    if (il == null) System.out.println("null il");
-    else if (iha == null) System.out.println("null iha");
-    else if (iha.getInstruction() == null) System.out.println("null ins (drugie)");
-    else System.out.println(iha.getInstruction().getName());
-    if (ins == null) System.out.println("null ins");
-    else System.out.println(ins.getName());
-    ((BranchInstruction)ins).setTarget(iha);
-    //System.out.println("Just failed");
+    iha = an_ins_list.findHandle(i);
+    //TODO not generalized !-3, this magic number must be replaced with a
+    //better heuristic to deal with the case when the target jump line does
+    //not exist
+    if (iha == null) iha = an_ins_list.findHandle(i - 3);
+    UmbraPlugin.messagelog("i = " + i);
+    if (an_ins_list == null) UmbraPlugin.messagelog("null il");
+    else if (iha == null) UmbraPlugin.messagelog("null iha");
+    else if (iha.getInstruction() == null) UmbraPlugin.messagelog("null ins (drugie)");
+    else UmbraPlugin.messagelog(iha.getInstruction().getName());
+    if (an_ins == null) UmbraPlugin.messagelog("null ins");
+    else UmbraPlugin.messagelog(an_ins.getName());
+    ((BranchInstruction)an_ins).setTarget(iha);
+    //UmbraPlugin.messagelog("Just failed");
   }
 }

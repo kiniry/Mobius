@@ -89,7 +89,7 @@ public class NewInstruction extends StringInstruction {
       isd = true;
       for (int i = line.lastIndexOf("(") + 1; i < line.lastIndexOf(")"); i++) {
         if (!Character.isDigit(line.charAt(i))) {
-          //System.out.println("to nie jest cyfra zle ");
+          //UmbraPlugin.messagelog("to nie jest cyfra zle ");
           isd = false;
         }
       }
@@ -108,26 +108,22 @@ public class NewInstruction extends StringInstruction {
    * @see BytecodeLineController#getInstruction()
    */
   public final Instruction getInstruction() {
-  int index;
-  if (!correct())
+    int index;
+    if (!correct())
+      return null;
+    index = getInd();
+    if (name.compareTo("anewarray") == 0) {
+      return new ANEWARRAY(index);
+    }
+    if (name.compareTo("checkcast") == 0) {
+      return new CHECKCAST(index);
+    }
+    if (name.compareTo("instanceof") == 0) {
+      return new INSTANCEOF(index);
+    }
+    if (name.compareTo("new") == 0) {
+      return new NEW(index);
+    }
     return null;
-  index = getInd();
-
-
-  if (name.compareTo("anewarray") == 0) {
-    return new ANEWARRAY(index);
-  }
-  if (name.compareTo("checkcast") == 0) {
-    return new CHECKCAST(index);
-  }
-  if (name.compareTo("instanceof") == 0) {
-    return new INSTANCEOF(index);
-  }
-  if (name.compareTo("new") == 0) {
-    return new NEW(index);
-  }
-
-  return null;
-
   }
 }

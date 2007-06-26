@@ -7,6 +7,7 @@ import org.apache.bcel.generic.IINC;
 import org.apache.bcel.generic.Instruction;
 
 import umbra.UmbraHelper;
+import umbra.UmbraPlugin;
 import umbra.editor.parsing.IBytecodeStrings;
 
 
@@ -53,9 +54,9 @@ public class IncInstruction extends NumInstruction {
     final String[] s2 = IBytecodeStrings.incc;
     int j;
     int y;
-    System.out.print(s);
+    UmbraPlugin.LOG.print(s);
     if (s.indexOf("%") < s.indexOf(":") + 1) {
-      System.out.print("hej1");
+      UmbraPlugin.LOG.print("hej1");
       return false;
     }
     boolean isminus = false;
@@ -66,7 +67,7 @@ public class IncInstruction extends NumInstruction {
           for (y = (s.indexOf("%") + 1); y < s.length(); y++)
             {
             if (!(Character.isDigit(s.charAt(y)))) {
-              System.out.print("tu ten minus " + s + " " + line);
+              UmbraPlugin.LOG.print("tu ten minus " + s + " " + line);
               if (isminus)
                 return false;
               else if (s.charAt(y) == '-')
