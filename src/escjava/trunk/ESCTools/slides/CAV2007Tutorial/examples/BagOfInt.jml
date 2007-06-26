@@ -1,4 +1,4 @@
-//@ refines "BagOfInt.jml-refined";
+//@ refine "BagOfInt.jml-refined";
 public class BagOfInt {
 
   /** Elements. */

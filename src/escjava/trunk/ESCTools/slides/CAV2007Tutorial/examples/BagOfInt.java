@@ -1,4 +1,4 @@
-//@ refines "BagOfInt.jml";
+//@ refine "BagOfInt.jml";
 class BagOfInt {
 
   private /*@ spec_public @*/ int[] a;

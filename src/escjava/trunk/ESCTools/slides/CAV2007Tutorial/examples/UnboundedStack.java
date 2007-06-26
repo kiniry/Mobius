@@ -1,4 +1,4 @@
-public class BoundedStack {
+public abstract class UnboundedStack {
 
   /*@ public model JMLObjectSequence theStack;
     @ public initially theStack != null
