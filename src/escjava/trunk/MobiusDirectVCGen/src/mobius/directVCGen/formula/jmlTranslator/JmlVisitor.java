@@ -116,9 +116,9 @@ public class JmlVisitor extends VisitorArgResult {
    */
   public JmlVisitor() {
     fProperties = new Properties();
-    fProperties.put("pred", new Boolean(true));
-    fProperties.put("old", new Boolean(false));
-    fProperties.put("interesting", new Boolean(false));
+    fProperties.put("pred", Boolean.TRUE);
+    fProperties.put("old", Boolean.FALSE);
+    fProperties.put("interesting", Boolean.FALSE);
     fTranslator = new JmlExprToFormula(this);
   }
 
@@ -186,13 +186,6 @@ public class JmlVisitor extends VisitorArgResult {
    */
   public final Object visitFormalParaDecl(final /*@non_null*/ FormalParaDecl x, final Object o) {
     return fTranslator.genericVarDecl(x, o);
-  }
-
-  /* (non-Javadoc)
-   * @see escjava.ast.VisitorArgResult#visitAnOverview(escjava.ast.AnOverview, java.lang.Object)
-   */
-  public final Object visitAnOverview(final /*@non_null*/ AnOverview x, final Object o) {
-    return null;
   }
 
   /* (non-Javadoc)
@@ -354,6 +347,9 @@ public class JmlVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitExprDeclPragma(escjava.ast.ExprDeclPragma, java.lang.Object)
    */
   public final Object visitExprDeclPragma(final /*@non_null*/ ExprDeclPragma x, final Object o) {
+    ((Properties) o).put("interesting", Boolean.TRUE);
+    final Term  t = (Term) x.expr.accept(this, o);
+    Lookup.invariants.put(x.parent, t);
     return null;
   }
 
@@ -904,6 +900,12 @@ public class JmlVisitor extends VisitorArgResult {
     }
   }
 
+  /* (non-Javadoc)
+   * @see escjava.ast.VisitorArgResult#visitAnOverview(escjava.ast.AnOverview, java.lang.Object)
+   */
+  public final Object visitAnOverview(final /*@non_null*/ AnOverview x, final Object o) {
+    return null;
+  }  
 
   /**
    * @param o Properties object also containing all modifiable types.

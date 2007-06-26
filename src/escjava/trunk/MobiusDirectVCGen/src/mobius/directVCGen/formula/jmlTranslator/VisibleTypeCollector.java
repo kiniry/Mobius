@@ -77,9 +77,9 @@ import escjava.tc.FlowInsensitiveChecks;
 
 
 /**
- * @author Claudia Brauchli
- * @author Hermann Lehner
- * @author Julien Charles
+ * @author Claudia Brauchli (claudia@vis.ethz.ch)
+ * @author Hermann Lehner (hermann.lehner@inf.ethz.ch)
+ * @author Julien Charles (julien.charles@inria.fr)
  *
  */
 public class VisibleTypeCollector extends VisitorArgResult {
