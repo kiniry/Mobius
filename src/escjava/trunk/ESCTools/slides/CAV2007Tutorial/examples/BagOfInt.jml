@@ -9,10 +9,11 @@ public class BagOfInt {
   //@ public invariant n <= a.length;
 
   /** Initialize to contain input's elements. */
-  //@ also
-  //@ assignable a, n;
-  //@ ensures a == input;
-  //@ ensures n == input.length;
+  /*@ also
+    @ assignable a, n;
+    @ ensures (\forall int i; 0 <= i && i < n;
+    @             a[i] == input[i]);
+    @ ensures n == input.length;   @*/
   public BagOfInt(int[] input);
 
   /** Return the multiplicity of i. */

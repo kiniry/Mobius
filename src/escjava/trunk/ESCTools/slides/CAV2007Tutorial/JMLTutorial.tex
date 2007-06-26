@@ -24,6 +24,7 @@
 \usepackage[english]{babel}
 \usepackage[latin1]{inputenc}
 
+\usepackage{hyperref}
 \usepackage{graphicx}
 \usepackage{beamerbaseverbatim}
 
@@ -326,12 +327,12 @@ More features for formal verification
 
 \begin{itemize}
 \item
-tailored to Java semantics.
+More Java-like syntax.
 
 \item
-more Java-like syntax.
+Tailored to Java semantics.
 \end{itemize}
-
+\note{These make it easier for Java programmers.}
 \end{frame}
 
 \begin{frame}
@@ -413,6 +414,22 @@ Share customers.
 Join us!
 \end{frame}
 
+\begin{frame}
+\frametitle{Opportunities in Working with JML}
+\framesubtitle{Or: What Needs Work}
+
+\begin{itemize}
+\item
+Tool development, maintenance.
+
+\item
+Extensible tool architecture.
+
+\item
+\end{itemize}
+\note{Currently the tools are in a bit of a mess.}
+\end{frame}
+
 \subsection[Finding More]{Where to Find More}
 
 \begin{frame}
@@ -466,12 +483,23 @@ ignoring \lstinline!@!'s starting lines.
 
 First character must be \lstinline!@!
 
-~
-
-\alert{Wrong:~~} \lstinline!// @ensures!
 \note{Java annotations are not in comments.
 We are experimenting with putting JML in Java annotations, but that's
 not standard and doesn't work with any tools.}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{JML Annotations Comments $\neq$ Java Annotations}
+\begin{question}
+What's wrong with the following?
+\rm
+
+\begin{lstlisting}
+// @requires 0 < arr.length;
+// @ensures this.a == arr;
+public void init(Object[] arr)
+\end{lstlisting}
+\end{question}
 \end{frame}
 
 \begin{frame}
@@ -644,7 +672,7 @@ Allows method's use in specifications.
 \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]
+\begin{frame}[fragile,label=redundantly]
 \frametitle{Redundant Clauses}
 
 E.g., \lstinline!ensures_redundantly!
@@ -810,26 +838,26 @@ Specify the following:
 \begin{frame}<beamer>[fragile]
 \frametitle{My Solution: BagOfInt's Data}
 
-\lstinputlisting[language={[JML]Java},linerange={2-9}]{examples/BagOfInt.jml}
+\lstinputlisting[linerange={2-9}]{examples/BagOfInt.jml}
 \note{Why do we need n?  To allow deletion.}
 \end{frame}
 
 \begin{frame}<beamer>[fragile]
 \frametitle{My Solution: BagOfInt's Constructor}
 
-\lstinputlisting[language={[JML]Java},linerange={11-16}]{examples/BagOfInt.jml}
+\lstinputlisting[linerange={11-17}]{examples/BagOfInt.jml}
 \end{frame}
 
 \begin{frame}<beamer>[fragile]
 \frametitle{My Solution: Method occurrences}
 
-\lstinputlisting[language={[JML]Java},linerange={18-23}]{examples/BagOfInt.jml}
+\lstinputlisting[linerange={19-24}]{examples/BagOfInt.jml}
 \end{frame}
 
 \begin{frame}<beamer>[fragile]
 \frametitle{My Solution: Method extractMin}
 
-\lstinputlisting[language={[JML]Java},linerange={25-33}]{examples/BagOfInt.jml}
+\lstinputlisting[linerange={26-34}]{examples/BagOfInt.jml}
 \end{frame}
 
 
@@ -838,18 +866,172 @@ Specify the following:
 \begin{frame}
 \frametitle{Getting the Tools}
 
-One stop shopping:
-\href{http://www.jmlspecs.org/}{jmlspecs.org/download}
-
+Links to all:
 \begin{itemize}
 \item
-ESC/Java2 plugin for Eclipse,
-see \href{http://jmleclipse.projects.cis.ksu.edu}{jmleclipse.projects.cis.ksu.edu}
+\href{http://www.jmlspecs.org/}{jmlspecs.org}'s download page.
+\end{itemize}
+
+
+Individual tools:
+\begin{itemize}
+\item
+Common JML tools
+\href{http://sourceforge.net/projects/jmlspecs/}{http://sourceforge.net/projects/jmlspecs/}
 
 \item
-JML Common tools
-\href{http://www.jmlspecs.org/}{jmlspecs.org/download}
+ESC/Java2 Eclipse plugin \newline
+\href{http://jmleclipse.projects.cis.ksu.edu}{jmleclipse.projects.cis.ksu.edu}
 \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Using jmlc, the Runtime Checker}
+
+\begin{example}
+\begin{verbatim}
+$ jmlc -Q -e BagOfInt.java BagOfIntMain.java
+$ jmlrac BagOfIntMain
+\end{verbatim}
+\end{example}
+\note{This should be a demo, with Emacs or Eclipse.
+We're using CLASSPATH=. because of the use of the unnamed package;
+for other packages, we have to be careful, as with Java.
+Might want to show what happens with javac first.
+}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Writing Tests Using Assert}
+
+\lstinputlisting[linerange={4-17}]{examples/BagOfIntMain.java}
+\note{It's much better to use assert than to try to look at output!
+You can use Java's assert too, but there are advantages to using
+JML's assert, as is done here.
+}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Using jmlc, the Runtime Checker}
+
+{\small
+\begin{verbatim}
+org...JMLInternalExceptionalPostconditionError:
+ by method BagOfInt.occurrences regarding spec...s at
+   File "BagOfInt.jml", line 21, character 14, when
+    'jml$e' is ...ArrayIndexOutOfBoundsException: 6
+   at BagOfInt.main(BagOfInt.java:2120)
+Exception in thread "main" 
+\end{verbatim}
+% $
+}
+\lstinputlisting[linerange={20-24},numbers=left,numberstyle=\small]{examples/BagOfInt.jml}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Using jmlc with jmlunit}
+
+\begin{example}
+CLASSPATH includes:
+\begin{itemize}
+\item
+\texttt{.}
+
+\item
+\texttt{junit.jar} (version 3.8.1)
+
+\item
+\texttt{JML/bin/jml-release.jar}
+\end{itemize}
+
+\begin{verbatim}
+$ jmlunit -i BagOfInt.java
+\end{verbatim}
+% $
+
+Edit \lstinline!BagOfInt_JML_TestData.java!
+
+\begin{verbatim}
+$ javac BagOfInt_JML_Test*.java
+$ jmlc -Q -e BagOfInt.java
+$ jmlrac BagOfInt_JML_Test
+\end{verbatim}
+% $
+\end{example}
+\note{This should be a demo.
+Note you have to compile with jmlc \emph{after} compiling with javac,
+since javac will compile the executable without RAC.  
+Put in data for ints (3, 4, 5, 10),
+arrays {3, 4, 2, 3, 3}, {0, 10, 20, 30, 10},
+and bags with those arrays (case N: return new BagOfInt(...);).
+Might want to show what happens with javac first.
+}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Using jmlc with jmlunit}
+
+{\small
+\begin{verbatim}
+.....F.F.F.F.F.F.F.F.F.F.F.F.F.F........F.F.....
+Time: 0.01
+There were 16 failures:
+1) occurrences:0(BagOfInt_JML_Test$TestOccurrences)
+  junit.framework.AssertionFailedError:
+    Method 'occurrences' applied to
+    Receiver: {3, 4, 2, 3, 3}
+    Argument i: 0
+Caused by: ...JMLExitExceptionalPostconditionError:
+by: method BagOfInt.occurrences regarding spec...s at
+   File "BagOfInt.jml", line 21, character 14, when
+    'jml$e' is ...ArrayIndexOutOfBoundsException: 5
+\end{verbatim}
+% $
+}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Using ESC/Java2}
+
+\begin{example}
+\begin{verbatim}
+$ CLASSPATH=.
+$ export CLASSPATH
+$ escjava2 -nonNullByDefault BagOfInt.java
+\end{verbatim}
+% $
+\end{example}
+\note{This should be a demo, with Emacs or Eclipse.
+To get the Eclipse demo to run on Windows, I had to tell Eclipse about the
+Simplify executable location explicitly in the preferences.
+See Window/Preferences/Java/EscJava2 in the Eclipse menus.
+}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Using ESC/Java2}
+
+{\small
+\begin{verbatim}
+ESC/Java version ESCJava-2.0b1
+    [0.08 s 8340464 bytes]
+
+BagOfInt ...
+  Prover started:0.03 s 15673776 bytes
+    [2.013 s 15188656 bytes]
+
+BagOfInt: BagOfInt(int[]) ...
+---------------------------------------------------
+BagOfInt.java:11: Warning: 
+      Postcondition possibly not established (Post)
+  }
+  ^
+Associated declaration is 
+".\BagOfInt.jml", line 14, col 6:
+    @ ensures (\forall int i; 0 <= i && i < n;
+      ^
+\end{verbatim}
+}
 \end{frame}
 
 \subsection[Tips]{Tips and Pitfalls}

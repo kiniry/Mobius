@@ -2,7 +2,7 @@
 
 # A simple makefile for working with jmlunit
 
-CLASSPATH=.
+CLASSPATH='.;c:\cygwin\usr\local\junit\junit.jar'
 JML = jml -Q -e
 JMLC = jmlc -Q -e
 JMLRAC = jmlrac

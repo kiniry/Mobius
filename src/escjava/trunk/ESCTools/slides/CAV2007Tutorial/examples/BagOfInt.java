@@ -12,7 +12,7 @@ class BagOfInt {
 
   public /*@ pure @*/ int occurrences(int i) {
     int count = 0;
-    for (int j = 0; j < n; j++) {
+    for (int j = n; 0 < j; j--) {
       if (a[j] == i) {
         count++;
       }
@@ -32,5 +32,19 @@ class BagOfInt {
     n--;
     a[mindex] = a[n];
     return m;
+  }
+
+  public String toString() {
+    String res = "{";
+    boolean first = true;
+    for (int i = 0; i < n; i++) {
+      if (first) {
+        res = res + a[i];
+        first = false;
+      } else {
+        res = res + ", " + a[i];
+      }
+    }
+    return res + "}";
   }
 }
