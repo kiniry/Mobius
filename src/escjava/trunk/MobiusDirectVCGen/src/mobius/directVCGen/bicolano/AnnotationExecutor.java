@@ -22,7 +22,16 @@ public class AnnotationExecutor extends Executor {
   private final TypeSig fSig;
 
   
-  public AnnotationExecutor(File workingDir, TypeSig sig, String [] args) {
+  /**
+   * Create the special annotation executor.
+   * @param workingDir the directory where to generate the files
+   * @param sig the type signature which expresses the program
+   * to treat
+   * @param args the 'normal' arguments that should be given
+   * to bico
+   */
+  public AnnotationExecutor(final File workingDir, final TypeSig sig, 
+                            final String [] args) {
     super(args);
     fWorkingDir = workingDir; 
     fSig = sig;

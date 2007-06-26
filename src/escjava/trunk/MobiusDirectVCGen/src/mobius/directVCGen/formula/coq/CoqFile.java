@@ -102,7 +102,10 @@ public class CoqFile {
       }
       fOut.println(Formula.generateType(sym.retType) + ".");
     }
+
     fOut.println();
+    fOut.println("Coercion Int.toZ : Int.t >-> Z.");
+    fOut.println("Open Local Scope Z_scope.");
   }
 
 }

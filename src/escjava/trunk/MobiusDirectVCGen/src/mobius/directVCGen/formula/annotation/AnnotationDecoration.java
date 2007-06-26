@@ -41,32 +41,45 @@ public class AnnotationDecoration extends ASTDecoration {
    * Retrieve the annotation preceding the instruction.
    * @param n the node to retrieve the annotation from
    * @return an annotation or <code>null</code> if the 
-   * node has not been decorated
+   * node has not been decorated or there is no pre annotation
+   *  associated
    */
   public List<AAnnotation> getAnnotPre(final ASTNode n) {
     final Annotation v = getAnnot(n);
+    List<AAnnotation> res;
     if (v == null) {
-      return null;
+      res = null;
+    }
+    else if (v.fPre.size() < 1) {
+      res = null;
     }
     else {
-      return v.fPre;
+      res = v.fPre;
     }
+    return res;
   }
 
   /**
    * Retrieve the annotation being after the given instruction.
    * @param node the node from which to fetch the annotation
    * @return an annotation or <code>null</code> if the node 
-   * has not been decorated
+   * has not been decorated or there is no post annotation
+   *  associated
    */
   public List<AAnnotation> getAnnotPost(final ASTNode node) {
     final Annotation v = getAnnot(node);
+    List<AAnnotation> res;
     if (v == null) {
-      return null;
+      res = null;
     }
-    else  {
-      return v.fPost;
+    else if (v.fPost.size() < 1) {
+      res = null;
     }
+    else {
+      res = v.fPost;
+    }
+    return res;
+
   }
 
   /**

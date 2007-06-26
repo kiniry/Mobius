@@ -5,9 +5,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
+import javafe.ast.ASTNode;
 import javafe.ast.MethodDecl;
 import javafe.ast.VarInit;
 import javafe.tc.FlowInsensitiveChecks;
+import escjava.ast.TagConstants;
 import escjava.sortedProver.Lifter.FnTerm;
 import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
@@ -52,12 +54,14 @@ public final class Type {
    * @return a newly created term representing a typeof construct
    */
   public static FnTerm of(final Term heap, final Term var) {
-    if (heap.getSort() != Heap.sort)
+    if (heap.getSort() != Heap.sort) {
       throw new IllegalArgumentException("Type of the first param should " +
           "be heap (" + Heap.sort + "), found: " + heap.getSort());
-    if (var.getSort() != Ref.sort)
+    }
+    if (var.getSort() != Ref.sort) {
       throw new IllegalArgumentException("Type of the second param should " +
           "be ref (" + Ref.sort + "), found: " + var.getSort());
+    }
 
     return Formula.lf.mkFnTerm(Formula.lf.symTypeOf, new Term[] {heap, var});
   }
@@ -74,7 +78,18 @@ public final class Type {
       return t;
     }
     else {
-      t = Expression.rvar(UniqName.type(type), Type.sort);
+      String name = UniqName.type(type);
+      //if (Types.isReferenceType(type)) {
+        if (Types.toClassTypeSig(type) != null) {
+          name = "(ClassType " + name.substring(2) + ".className)";
+        }
+        else {
+          // gee! it's an interface!
+          name = "(InterfaceType " + name.substring(2) + ".interfaceName)";
+        }
+        name = "(ReferenceType " + name + ")";
+     // }
+      t = Expression.rvar(name, Type.sort);
       types.put(type, t);
       revtyp.put(t, type);
       return t;
@@ -232,8 +247,9 @@ public final class Type {
       Term restyp;
       final QuantVariableRef oldType = (QuantVariableRef) type;
       restyp = arrays.get(oldType);
-      if (restyp != null)
+      if (restyp != null) {
         return restyp;
+      }
       final String name = oldType.qvar.name + "_ref"; 
       restyp = Expression.rvar(name, Type.sort);
       arrays.put(oldType, type);

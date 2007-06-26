@@ -191,7 +191,8 @@ public class CoqNodeBuilder extends EscNodeBuilder {
    */
   @Override
   public SInt buildInt(final long n) {
-    return new CInt("Int.const", new STerm[]{new CInt("" + n)});
+    //return new CInt("Int.const", new STerm[]{new CInt("" + n)});
+    return new CInt("" + n);
   }
 
   /*
@@ -591,16 +592,16 @@ public class CoqNodeBuilder extends EscNodeBuilder {
     SInt res;
     switch (intFunTag) {
       case NodeBuilder.funADD:
-        res = new CInt("Int.add", new STerm[] {arg1, arg2});
+        res = new CInt(false, "+", new STerm[] {arg1, arg2});
         break;
       case NodeBuilder.funSUB:
-        res = new CInt("Int.sub", new STerm[] {arg1, arg2});
+        res = new CInt(false, "-", new STerm[] {arg1, arg2});
         break;
       case NodeBuilder.funMUL:
-        res = new CInt("Int.mul", new STerm[] {arg1, arg2});
+        res = new CInt(false, "*", new STerm[] {arg1, arg2});
         break;
       case NodeBuilder.funDIV:
-        res = new CInt("Int.div", new STerm[] {arg1, arg2});
+        res = new CInt(false, "/", new STerm[] {arg1, arg2});
         break;
       case NodeBuilder.funMOD:
         res = new CInt("Int.mod", new STerm[] {arg1, arg2});
@@ -631,16 +632,16 @@ public class CoqNodeBuilder extends EscNodeBuilder {
     CPred res;
     switch (intPredTag) {
       case NodeBuilder.predLE:
-        res = new CPred(false, "<", new CInt("Int.toZ", arg1),
-                      new CInt("Int.toZ", arg2));
+        res = new CPred(false, "<", arg1,
+                      arg2);
         break;
       case NodeBuilder.predLT:
-        res = new CPred(false, "<=", new CInt("Int.toZ", arg1),
-            new CInt("Int.toZ", arg2));
+        res = new CPred(false, "<=", arg1,
+            arg2);
         break;
       case NodeBuilder.predEQ:
-        res = new CPred(false, "=", new CInt("Int.toZ", arg1),
-            new CInt("Int.toZ", arg2));
+        res = new CPred(false, "=", arg1,
+            arg2);
         break;
       default:
         throw new UnsupportedOperationException(NodeBuilder.tagsIds[intPredTag]);
@@ -663,6 +664,13 @@ public class CoqNodeBuilder extends EscNodeBuilder {
    */
   @Override
   public SPred buildAssignCompat(final SMap map, final SValue val, final SAny type) {
+    String typeStmt = type.toString();
+    if (typeStmt.startsWith("T_")) {
+      typeStmt = typeStmt.substring(2);
+      
+      
+    }
+    
     return new CPred("assign_compatible", new STerm [] {new CMap("p"), map, val, type});
   }
 

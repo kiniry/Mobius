@@ -76,8 +76,9 @@ public class Unarchiver {
 
     for (JarEntry entry: iter) {
       final String name = entry.getName(); 
-      if (name.startsWith("META-INF")) // we skip meta-inf
+      if (name.startsWith("META-INF")) { // we skip meta-inf
         continue;
+      }
 
       if (name.startsWith("Formalisation")) {
         // making missing directory

@@ -119,6 +119,9 @@ public final class Expression {
    * @return a variable with the given name and sort
    */
   public static QuantVariable var(final String name, final Sort s) {
+    if (name.startsWith("T_")) {
+      throw new IllegalArgumentException();
+    }
     return Formula.lf.mkQuantVariable(name, s);
   }
 
@@ -128,6 +131,9 @@ public final class Expression {
    * @return a quant variable corresponding to the given declaration
    */
   public static QuantVariable var(final GenericVarDecl decl) {
+    if (decl.id.toString().startsWith("T_")) {
+      throw new IllegalArgumentException();
+    }
     return Formula.lf.mkQuantVariable(decl, UniqName.variable(decl));
   }
 
