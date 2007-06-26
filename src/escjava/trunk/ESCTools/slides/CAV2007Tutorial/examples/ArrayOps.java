@@ -1,6 +1,6 @@
 public class ArrayOps {
 
-  private /*@ spec_public @*/ Object[] a;
+  private /*@ spec_public non_null @*/ Object[] a;
 
   //@ public invariant 0 < a.length;
 

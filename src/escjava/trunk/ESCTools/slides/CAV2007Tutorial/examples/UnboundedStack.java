@@ -1,3 +1,4 @@
+//@ model import org.jmlspecs.models.*;
 public abstract class UnboundedStack {
 
   /*@ public model JMLObjectSequence theStack;

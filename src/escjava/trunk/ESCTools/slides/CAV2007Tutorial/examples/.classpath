@@ -2,6 +2,6 @@
 <classpath>
 	<classpathentry kind="src" path=""/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="src" path="/jmlspecs"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/JmlSpecs"/>
 	<classpathentry kind="output" path=""/>
 </classpath>
