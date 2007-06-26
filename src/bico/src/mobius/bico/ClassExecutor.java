@@ -108,12 +108,12 @@ public class ClassExecutor extends ABasicExecutor {
     String def;
     if (jc.isInterface()) {
       def = "Definition interfaceName : InterfaceName := " + "(" + 
-                          packageName + ", " + className + "%positive).\n";
+                          packageName + "%positive, " + className + "%positive).\n";
     } 
     else {
       def = "Definition className : ClassName := " + "(" + 
                          packageName + 
-                         ", " + className + "%positive).\n";
+                         "%positive, " + className + "%positive).\n";
       
     }
     fOut.println(fTab, def);
