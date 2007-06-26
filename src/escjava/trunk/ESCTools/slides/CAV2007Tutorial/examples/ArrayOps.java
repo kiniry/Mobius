@@ -11,19 +11,13 @@ public class ArrayOps {
     this.a = arr;
   }
 
-  /*@ requires (\exists int i;
-    @       0 <= i && i < a.length;
-    @       a[i] == old);
-    @ ensures a[\result] == nu
-    @    && \old(a[\result] == old);
+  /*@ requires 0 <= i && i < a.length;
+    @ ensures a[i] == nu
+    @     && \result == \old(a[i]);
     @*/
-  public int replace(Object old, Object nu) {
-    for (int i = 0; i < a.length; i++) {
-      if (a[i] == old) {
-        a[i] == nu;
-        return i;
-      }
-    }
-    return -1;
+  public Object replace(int i, Object nu) {
+    Object old = a[i];
+    a[i] = nu;
+    return old;
   }
 }

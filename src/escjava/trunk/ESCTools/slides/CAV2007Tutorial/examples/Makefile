@@ -7,36 +7,48 @@ JML = jml -Q -e
 JMLC = jmlc -Q -e
 JMLRAC = jmlrac
 JMLUNIT = jmlunit -i
+JAVAC = javac
+ESCJAVA = escjava2 -nonNullByDefault
 
-TYPES = ArrayFind
+TYPES = ArrayOps BagOfInt
 
 all: compile runtests
 
-check:
+check checkall:
 	$(JML) $(addsuffix .java,$(TYPES))
+
+esc ESC: $(addsuffix .esc,$(TYPES))
 
 compile: $(addsuffix .class,$(TYPES))
 
-%.class:	$(addsuffix .java,%)
-		$(JMLC) $<
-
-runtests: ArrayFind_JML_TestData.class ArrayFind_JML_Test.class
+runtests: $(addsuffix _JML_TestData.class,$(TYPES)) \
+          $(addsuffix _JML_Test.class,$(TYPES))
 	$(JMLC) $(addsuffix .java,$(TYPES))
-	$(JMLRAC) ArrayFind_JML_Test
+	for f in $(addsuffix _JML_Test,$(TYPES)); \
+	do \
+		$(JMLRAC) $f; \
+	done
 
-ArrayFind_JML_TestData.class: ArrayFind_JML_TestData.java
-	javac ArrayFind_JML_TestData.java
+%.esc: %.java
+	$(ESCJAVA) $< 
 
-ArrayFind_JML_Test.class: ArrayFind_JML_Test.java 
-	javac ArrayFind_JML_Test.java
+generate: $(addsuffix _JML_TestData.java,$(TYPES)) \
+          $(addsuffix _JML_Test.java,$(TYPES))
 
-generate: ArrayFind_JML_TestData.java ArrayFind_JML_Test.java
+%_JML_TestData.class: %_JML_TestData.java
+	javac $<
 
-ArrayFind_JML_TestData.java: ArrayFind.java 
-	$(JMLUNIT) ArrayFind.java
+%_JML_Test.class: %_JML_Test.java 
+	javac $<
 
-ArrayFind_JML_Test.java: ArrayFind.java Lift.java LiftType.java
-	$(JMLUNIT) ArrayFind.java
+%.class: $(addsuffix .java,%)
+	$(JMLC) $<
+
+%_JML_TestData.java: %.java
+	$(JMLUNIT) $<
+
+%_JML_Test.java: %.java
+	$(JMLUNIT) $<
 
 clean: cleanclasses
 

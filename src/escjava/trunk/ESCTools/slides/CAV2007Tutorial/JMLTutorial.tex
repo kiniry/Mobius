@@ -273,8 +273,7 @@ You can't put a space between /* and the @, otherwise JML doesn't see it.}
 \lstinputlisting[linerange={1-4},basicstyle=\ttfamily\color{lightgray},keywordstyle={[2]\bfseries\color{lightgray}}]{examples/ArrayOps.java}
 \lstinputlisting[linerange={5-5},frame=single,frameround=tttt,rulecolor=\color{violet},belowskip=0pt]{examples/ArrayOps.java}
 \lstinputlisting[linerange={6-12},basicstyle=\ttfamily\color{lightgray},keywordstyle={[2]\bfseries\color{lightgray}}]{examples/ArrayOps.java}
-\note{You can also use //@ to mark annotation comments for JML.
-Again, no space between // and @ allowed.}
+\note{You can also use //@ to mark annotation comments for JML.}
 \end{frame}
 
 \begin{frame}[fragile]
@@ -453,9 +452,9 @@ Links to papers, etc.
 \subsection[Lightweight]{Lightweight Specification of Functional Behavior}
 
 \begin{frame}[fragile]
-\frametitle{JML Annotations Comments are not Java Annotations}
+\frametitle{JML Annotations Comments $\neq$ Java Annotations}
 
-JML annotation comments
+JML annotation comments:
 \begin{itemize}
 \item
 Line starting with \lstinline!//@!
@@ -467,7 +466,9 @@ ignoring \lstinline!@!'s starting lines.
 
 First character must be \lstinline!@!
 
-\lstinline!// @ensures! is \alert{wrong}.
+~
+
+\alert{Wrong:~~} \lstinline!// @ensures!
 \note{Java annotations are not in comments.
 We are experimenting with putting JML in Java annotations, but that's
 not standard and doesn't work with any tools.}
@@ -523,17 +524,17 @@ Specify bounded stacks of objects.
 \end{frame}
 
 \begin{frame}[fragile]
-\frametitle{BoundeStack's push Method}
+\frametitle{BoundedStack's push Method}
 \lstinputlisting[linerange={21-32}]{examples/BoundedStack.java}
 \end{frame}
 
 \begin{frame}[fragile]
-\frametitle{BoundeStack's pop Method}
+\frametitle{BoundedStack's pop Method}
 \lstinputlisting[linerange={34-45}]{examples/BoundedStack.java}
 \end{frame}
 
 \begin{frame}[fragile]
-\frametitle{BoundeStack's top Method}
+\frametitle{BoundedStack's top Method}
 \lstinputlisting[linerange={47-54}]{examples/BoundedStack.java}
 \end{frame}
 
@@ -700,6 +701,32 @@ Note: runtime checker gives better errors if separate.
 \end{frame}
 
 \begin{frame}[fragile]
+\frametitle{Omitted Clauses}
+
+Defaults for omitted clauses:
+\begin{itemize}
+\item
+\lstinline!invariant true;!
+
+\item
+\lstinline!requires true;!
+
+\item
+\lstinline!assignable \everything;!
+
+\item
+\lstinline!ensures true;!
+\end{itemize}
+\note{Strictly speaking, the defaults listed here are a lie.
+  For lightweight specifications the defaults are all
+  \lstinline!\not_specified!.  The listed defaults are
+  actually the defaults for heavyweight specifications
+  (that use the \lstinline!behavior! or \lstinline!normal_behavior! keywords).
+  However, the tools treat them this way.
+}
+\end{frame}
+
+\begin{frame}[fragile]
 \frametitle{Expression Keywords}
 
 \begin{itemize}
@@ -732,34 +759,41 @@ Note: runtime checker gives better errors if separate.
 \item
 $\ldots$
 \end{itemize}
+\note{This is more than we need now, but stress the regular pattern of
+the quantifiers, with a domain and range predicate.
+The listeners of this tutorial will be able to use \lstinline!\num_of! later.
+We use the backslashes to avoid reserving words in expression contexts.
+The \lstinline!\num_of! quantifier actually produces a long, not int, result.
+}
 \end{frame}
 
 \subsection[Exercise]{Specifying a Type}
 
 \begin{frame}[fragile]
-\frametitle{Steps for Specifying a Type}
+\frametitle{Steps for Specifying a Type for Public Clients}
 
 \begin{enumerate}
 \item
 Specify data (\lstinline!spec_public! fields).
 
 \item
-Specify an \lstinline!invariant!.
+Specify a \lstinline!public invariant!.
 
 \item
-Specify each method with:
+Specify each public method using:
 
 \begin{enumerate}
 \item
 \lstinline!requires!.
 
 \item
-\lstinline!ensures!.
+\lstinline!assignable! (or \lstinline!pure!).
 
 \item
-\lstinline!assignable! or \lstinline!pure!.
+\lstinline!ensures!.
 \end{enumerate}
 \end{enumerate}
+\note{The invariant can be omitted if not needed, as can the requires clause.}
 \end{frame}
 
 \begin{frame}[fragile]
@@ -800,6 +834,23 @@ Specify the following:
 
 
 \subsection[Tool Use]{Basic Tool Use}  % demo + exercise
+
+\begin{frame}
+\frametitle{Getting the Tools}
+
+One stop shopping:
+\href{http://www.jmlspecs.org/}{jmlspecs.org/download}
+
+\begin{itemize}
+\item
+ESC/Java2 plugin for Eclipse,
+see \href{http://jmleclipse.projects.cis.ksu.edu}{jmleclipse.projects.cis.ksu.edu}
+
+\item
+JML Common tools
+\href{http://www.jmlspecs.org/}{jmlspecs.org/download}
+\end{itemize}
+\end{frame}
 
 \subsection[Tips]{Tips and Pitfalls}
 
