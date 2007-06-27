@@ -1,4 +1,5 @@
 /* Copyright 2000, 2001, Compaq Computer Corporation */
+// $Id$
 
 /* =========================================================================
  * ASTClassFileParser.java
@@ -43,9 +44,8 @@ class ASTClassFileParser extends ClassFileParser {
    * Initialized by constructor (by way of parse_file).
    */
   // access only readonly by BinReader
-  //@ invariant typeDecl != null;
   //@ invariant typeDecl.specOnly;
-  TypeDecl typeDecl;
+  /*@ spec_protected non_null*/ TypeDecl typeDecl;
 
   /**
    * A dummy location representing the class being parsed.

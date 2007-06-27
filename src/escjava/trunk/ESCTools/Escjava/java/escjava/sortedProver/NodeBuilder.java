@@ -88,7 +88,7 @@ public abstract class NodeBuilder
 			this.id = currentSymbol++;
 			//symbolsById.put(new Integer(id), this);
 		}
-		public boolean equals(Object o) {
+		public boolean equals(/*@nullable*/ Object o) {
 			if(this == o)
 				return true;
 			if(o instanceof Symbol) {
@@ -119,7 +119,7 @@ public abstract class NodeBuilder
 			this.mapTo = mapTo;
 		}
 		
-		public boolean equals(Object o) {
+		public boolean equals(/*@nullable*/ Object o) {
 
 			return super.equals(o);
 		}
@@ -381,7 +381,7 @@ public abstract class NodeBuilder
 	abstract public SInt buildIntFun(int intFunTag, SInt arg1, SInt arg2);
 	
 	//@ requires predFirst <= intPredTag && intPredTag <= predLast;
-	abstract public SBool buildIntBoolFun(int intFunTag, SInt arg1, SInt arg2);
+	abstract public SBool buildIntBoolFun(int intPredTag, SInt arg1, SInt arg2);
 	
 	//@ requires predFirst <= realPredTag && realPredTag <= predLast;
 	abstract public SPred buildRealPred(int realPredTag, SReal arg1, SReal arg2);

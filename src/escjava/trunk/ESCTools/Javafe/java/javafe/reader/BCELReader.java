@@ -141,7 +141,7 @@ class BCELReader extends Reader {
 	 * Flag indicating whether the class being parsed has the synthetic
 	 * attribute.
 	 */
-	private boolean syntheticClass;
+	/*@spec_public*/ private boolean syntheticClass;
 
 	/**
 	 * Flag indicates that class bodies are currently being parsed, otherwise 
@@ -946,7 +946,7 @@ class BCELReader extends Reader {
 	 * @param args
 	 */
 	//@ requires \nonnullelements(args);
-	public static void main(String[] args) {
+	public static void main(/*@non_null*/ String[] args) {
 		if (args.length < 1) {
 			System.err.println("BCELReader: <source filename>");
 			System.exit(1);
@@ -971,7 +971,7 @@ class BCELReader extends Reader {
 	/**
 	 * Read and parse a binary class file
 	 */
-	public CompilationUnit read(GenericFile target, boolean avoidSpec) {
+	public CompilationUnit read(/*@non_null*/ GenericFile target, boolean avoidSpec) {
 
 		this.classLocation = Location.createWholeFileLoc(target);
 		this.genericFile = target;
@@ -1003,7 +1003,7 @@ class BCELReader extends Reader {
 	 * @throws IOException
 	 * @throws ClassFormatException
 	 */
-	protected void readJavaClass(GenericFile target) throws IOException,
+	protected void readJavaClass(/*@non_null*/ GenericFile target) throws IOException,
 			ClassFormatException {
 		InputStream inputStream = target.getInputStream();
 		String localName = target.getLocalName();

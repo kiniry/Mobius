@@ -107,233 +107,233 @@ public class SimpleVisitor extends ABasicCoqVisitor {
     		out.reduceI();    
     }
 	// FIXME @ ensures vc == vc ++ (allocLE interp(arg1), interp(arg2))
-	public void visitTAllocLE(TAllocLE n) {
+	public void visitTAllocLE(/*@non_null*/ TAllocLE n) {
 		genericFun("allocLE", n);
 	}
 
-	public void visitTAllocLT(TAllocLT n) {
+	public void visitTAllocLT(/*@non_null*/ TAllocLT n) {
 		genericFun("allocLT", n);		
 	}
 
-	public void visitTAnyEQ(TAnyEQ n) {
+	public void visitTAnyEQ(/*@non_null*/ TAnyEQ n) {
 		genericFun("anyEQ", n);	
 	}
 
-	public void visitTAnyNE(TAnyNE n) {
+	public void visitTAnyNE(/*@non_null*/ TAnyNE n) {
 		genericFun("anyNE", n);	
 		
 	}
 
-	public void visitTArrayFresh(TArrayFresh n) {
+	public void visitTArrayFresh(/*@non_null*/ TArrayFresh n) {
 		genericFun("arrayFresh", n);
 		
 	}
 
-	public void visitTArrayLength(TArrayLength n) {
+	public void visitTArrayLength(/*@non_null*/ TArrayLength n) {
 		genericFun("arrayLength", n);
 	}
 
-	public void visitTArrayShapeMore(TArrayShapeMore n) {
+	public void visitTArrayShapeMore(/*@non_null*/ TArrayShapeMore n) {
 		genericFun("arrayShapeMore", n);
 	}
 
-	public void visitTArrayShapeOne(TArrayShapeOne n) {
+	public void visitTArrayShapeOne(/*@non_null*/ TArrayShapeOne n) {
 		genericFun("arrayShapeOne", n);
 	}
 
-	public void visitTAsElems(TAsElems n) {
+	public void visitTAsElems(/*@non_null*/ TAsElems n) {
 		genericFun("asElems", n);
 		
 	}
 
-	public void visitTAsField(TAsField n)  {
+	public void visitTAsField(/*@non_null*/ TAsField n)  {
 		genericFun("asField", n);
 	}
 
-	public void visitTAsLockSet(TAsLockSet n) {
+	public void visitTAsLockSet(/*@non_null*/ TAsLockSet n) {
 		genericFun("asLockSet", n);
 	}
 
-	public void visitTBoolAnd(TBoolAnd n) {
+	public void visitTBoolAnd(/*@non_null*/ TBoolAnd n) {
 		genericFun("band", n);
 	}
 
-	public void visitTBoolEQ(TBoolEQ n) {
+	public void visitTBoolEQ(/*@non_null*/ TBoolEQ n) {
 		genericFun("beq", n);
 	}
 
-	public void visitTBoolImplies(TBoolImplies n) {
+	public void visitTBoolImplies(/*@non_null*/ TBoolImplies n) {
 		genericFun("bimplies", n);
 	}
 
-	public void visitTBoolNE(TBoolNE n) {
+	public void visitTBoolNE(/*@non_null*/ TBoolNE n) {
 		genericFun("bne", n);
 	}
 
-	public void visitTBoolNot(TBoolNot n) {
+	public void visitTBoolNot(/*@non_null*/ TBoolNot n) {
 		genericFun("bnot", n);
 		
 	}
 
-	public void visitTBoolOr(TBoolOr n) {
+	public void visitTBoolOr(/*@non_null*/ TBoolOr n) {
 		genericFun("bor", n);
 	}
 
-	public void visitTBoolean(TBoolean n) {
+	public void visitTBoolean(/*@non_null*/ TBoolean n) {
 		out.appendN(""+ n.value);
 	}
 
-	public void visitTCast(TCast n) {
+	public void visitTCast(/*@non_null*/ TCast n) {
 		genericFun("cast", n);
 		
 	}
 
-	public void visitTChar(TChar n) {
+	public void visitTChar(/*@non_null*/ TChar n) {
 		out.appendN(""+ n.value);
 	}
 
-	public void visitTDouble(TDouble n) {
+	public void visitTDouble(/*@non_null*/ TDouble n) {
 		out.appendN(""+ n.value);
 	}
 
-	public void visitTEClosedTime(TEClosedTime n)  {
+	public void visitTEClosedTime(/*@non_null*/ TEClosedTime n)  {
 		genericFun("eClosedTime", n);
 	}
 
-	public void visitTExist(TExist n)  {
+	public void visitTExist(/*@non_null*/ TExist n)  {
 		genericFun("exist ", n);
 	}
 
-	public void visitTFClosedTime(TFClosedTime n)  {
+	public void visitTFClosedTime(/*@non_null*/ TFClosedTime n)  {
 		genericFun("fClosedTime", n);
 	}
 
-	public void visitTFloat(TFloat n)  {
+	public void visitTFloat(/*@non_null*/ TFloat n)  {
 		out.appendN(""+ n.value);		
 	}
 
-	public void visitTFloatAdd(TFloatAdd n)  {
+	public void visitTFloatAdd(/*@non_null*/ TFloatAdd n)  {
 		genericFun("fAdd", n);
 		
 	}
 
-	public void visitTFloatDiv(TFloatDiv n) {
+	public void visitTFloatDiv(/*@non_null*/ TFloatDiv n) {
 		genericFun("fDiv", n);
 		
 	}
 
-	public void visitTFloatEQ(TFloatEQ n) {
+	public void visitTFloatEQ(/*@non_null*/ TFloatEQ n) {
 		genericFun("fEQ", n);	
 	}
 
-	public void visitTFloatGE(TFloatGE n) {
+	public void visitTFloatGE(/*@non_null*/ TFloatGE n) {
 		genericFun("fGE", n);
 	}
 
-	public void visitTFloatGT(TFloatGT n) {
+	public void visitTFloatGT(/*@non_null*/ TFloatGT n) {
 		genericFun("fGT", n);
 	}
 
-	public void visitTFloatLE(TFloatLE n) {
+	public void visitTFloatLE(/*@non_null*/ TFloatLE n) {
 		genericFun("fLE", n);
 	}
 
-	public void visitTFloatLT(TFloatLT n)  {
+	public void visitTFloatLT(/*@non_null*/ TFloatLT n)  {
 		genericFun("fLT", n);
 	}
 
-	public void visitTFloatMod(TFloatMod n)  {
+	public void visitTFloatMod(/*@non_null*/ TFloatMod n)  {
 		genericFun("fMod", n);
 	}
 
-	public void visitTFloatMul(TFloatMul n)  {
+	public void visitTFloatMul(/*@non_null*/ TFloatMul n)  {
 		genericFun("fMul", n);
 	}
 
-	public void visitTFloatNE(TFloatNE n)  {
+	public void visitTFloatNE(/*@non_null*/ TFloatNE n)  {
 		genericFun("fNE", n);
 	}
 
-	public void visitTForAll(TForAll n)  {
+	public void visitTForAll(/*@non_null*/ TForAll n)  {
 		genericFun("bforall", n);
 	}
 
-	public void visitTInt(TInt n)  {
+	public void visitTInt(/*@non_null*/ TInt n)  {
 		out.appendN(""+ n.value);
 	}
 
-	public void visitTIntegralAdd(TIntegralAdd n)  {
+	public void visitTIntegralAdd(/*@non_null*/ TIntegralAdd n)  {
 		genericFun("iAdd", n);
 		
 	}
 
-	public void visitTIntegralDiv(TIntegralDiv n)  {
+	public void visitTIntegralDiv(/*@non_null*/ TIntegralDiv n)  {
 		genericFun("iDiv", n);
 	}
 
-	public void visitTIntegralEQ(TIntegralEQ n)  {
+	public void visitTIntegralEQ(/*@non_null*/ TIntegralEQ n)  {
 		genericFun("iEQ", n);
 	}
 
-	public void visitTIntegralGE(TIntegralGE n)  {
+	public void visitTIntegralGE(/*@non_null*/ TIntegralGE n)  {
 		genericFun("iGE", n);
 	}
 
-	public void visitTIntegralGT(TIntegralGT n)  {
+	public void visitTIntegralGT(/*@non_null*/ TIntegralGT n)  {
 		genericFun("iGT", n);
 	}
 
-	public void visitTIntegralLE(TIntegralLE n)  {
+	public void visitTIntegralLE(/*@non_null*/ TIntegralLE n)  {
 		genericFun("iLE", n);
 	}
 
-	public void visitTIntegralLT(TIntegralLT n)  {
+	public void visitTIntegralLT(/*@non_null*/ TIntegralLT n)  {
 		genericFun("iLT", n);
 	}
 
-	public void visitTIntegralMod(TIntegralMod n)  {
+	public void visitTIntegralMod(/*@non_null*/ TIntegralMod n)  {
 		genericFun("iMod", n);
 	}
 
-	public void visitTIntegralMul(TIntegralMul n)  {
+	public void visitTIntegralMul(/*@non_null*/ TIntegralMul n)  {
 		genericFun("iMul", n);
 		
 	}
 
-	public void visitTIntegralNE(TIntegralNE n)  {
+	public void visitTIntegralNE(/*@non_null*/ TIntegralNE n)  {
 		genericFun("iNE", n);
 		
 	}
 
-	public void visitTIntegralSub(TIntegralSub n)  {
+	public void visitTIntegralSub(/*@non_null*/ TIntegralSub n)  {
 		genericFun("iSub", n);
 	}
 
-	public void visitTIs(TIs n)  {
+	public void visitTIs(/*@non_null*/ TIs n)  {
 		genericFun("is", n);
 	}
 
-	public void visitTIsAllocated(TIsAllocated n)  {
+	public void visitTIsAllocated(/*@non_null*/ TIsAllocated n)  {
 		genericFun("bIsAllocated", n);
 	}
 
-	public void visitTIsNewArray(TIsNewArray n)  {
+	public void visitTIsNewArray(/*@non_null*/ TIsNewArray n)  {
 		genericFun("isNewArray", n);		
 	}
 
-	public void visitTLockLE(TLockLE n)  {
+	public void visitTLockLE(/*@non_null*/ TLockLE n)  {
 		genericFun("lockLE", n);
 	}
 
-	public void visitTLockLT(TLockLT n)  {
+	public void visitTLockLT(/*@non_null*/ TLockLT n)  {
 		genericFun("lockLT", n);
 	}
 
-	public void visitTMethodCall(TMethodCall call)  {
+	public void visitTMethodCall(/*@non_null*/ TMethodCall call)  {
 		genericFun(p.getVariableInfo(call.getName()), call);
 	}
 
-	public void visitTName(TName n)  {
+	public void visitTName(/*@non_null*/ TName n)  {
 		if(TNode._boolean.equals(n.type)){
 			out.appendN("(bvar \"" + n.name + "\")");
 		}
@@ -354,60 +354,60 @@ public class SimpleVisitor extends ABasicCoqVisitor {
 		}
 	}
 
-	public void visitTNull(TNull n)  {
+	public void visitTNull(/*@non_null*/ TNull n)  {
 		out.appendN("null");
 	}
 
-	public void visitTRefEQ(TRefEQ n)  {
+	public void visitTRefEQ(/*@non_null*/ TRefEQ n)  {
 		genericFun("refEQ", n);
 		
 	}
 
-	public void visitTRefNE(TRefNE n)  {
+	public void visitTRefNE(/*@non_null*/ TRefNE n)  {
 		genericFun("refNE", n);
 		
 	}
 
-	public void visitTRoot(TRoot n)  {
+	public void visitTRoot(/*@non_null*/ TRoot n)  {
 		Iterator iter = n.sons.iterator();
     	while(iter.hasNext()) {
     		((TNode)iter.next()).accept(tcv);
     	}
 	}
 
-	public void visitTTypeEQ(TTypeEQ n)  {
+	public void visitTTypeEQ(/*@non_null*/ TTypeEQ n)  {
 		genericFun("typeEQ", n);
 		
 	}
 
-	public void visitTTypeLE(TTypeLE n)  {
+	public void visitTTypeLE(/*@non_null*/ TTypeLE n)  {
 		genericFun("typeLE", n);
 		
 	}
 
-	public void visitTTypeNE(TTypeNE n)  {
+	public void visitTTypeNE(/*@non_null*/ TTypeNE n)  {
 		genericFun("typeNE", n);
 		
 	}
 
-	public void visitTTypeOf(TTypeOf n)  {
+	public void visitTTypeOf(/*@non_null*/ TTypeOf n)  {
 		genericFun("typeof", n);	
 	}
 	
-	public void visitTSum(TSum n) {
+	public void visitTSum(/*@non_null*/ TSum n) {
 		genericFun("sum", n);
 	}
 	
-	public void visitTUnset(TUnset n)  {
+	public void visitTUnset(/*@non_null*/ TUnset n)  {
 		genericFun("unset", n);	
 	}
 
-	public void visitTString(TString n)  {
+	public void visitTString(/*@non_null*/ TString n)  {
 		out.appendN("\""+ n.value +"\"");
 	}
 	
 
-    public void visitTSelect(/*@ non_null @*/ TSelect n) {
+    public void visitTSelect(/*@non_null*/ TSelect n) {
     	String pre = "";
     	if(TNode._integer.equals(((TNode)n.sons.get(1)).type))
     		pre = "arr";
@@ -415,7 +415,7 @@ public class SimpleVisitor extends ABasicCoqVisitor {
     }
     
     
-    public void visitTStore(/*@ non_null @*/ TStore n) {
+    public void visitTStore(/*@non_null*/ TStore n) {
     	String pre = "";
     	TNode index =(TNode)n.sons.get(1);
     	if(TNode._integer.equals(index.type))

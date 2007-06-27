@@ -15,6 +15,7 @@ import escjava.sortedProver.NodeBuilder.SPred;
 import escjava.sortedProver.auflia.AufliaProver;
 import escjava.Main;
 
+/*@ non_null_by_default @*/
 public class TrewProver extends AufliaProver
 {
 	private Process trew;

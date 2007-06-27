@@ -71,7 +71,7 @@ public class OptionsConsistency {
      * @see #set(Option)
      * @return a conflict description if there is a conflict, <code>null</code> otherwise.
      */
-    /*@ pure */public Conflict isConflict(/*@non_null*/Option option) {
+    public Conflict isConflict(/*@non_null*/Option option) {
         Set optionsOn = new LinkedHashSet(); /*@ set optionsOn.elementType = \type(Option); set optionsOn.containsNull = false; */
         // collect options induced by [option]
         collectInduced(option, optionsOn);
@@ -141,7 +141,7 @@ public class OptionsConsistency {
 
     //@ ensures \fresh(\result);
     //@ ensures \result.elementType == \type(Option) & \result.containsNull == false;
-    /*@ pure */ private /*@ non_null */Set collectInduced(/*@ non_null */Option option) {
+    private /*@ non_null */Set collectInduced(/*@ non_null */Option option) {
         Set implied = new LinkedHashSet(); /*@ set implied.elementType = \type(Option); set implied.containsNull = false; */
         collectInduced(option, implied);
         return implied;

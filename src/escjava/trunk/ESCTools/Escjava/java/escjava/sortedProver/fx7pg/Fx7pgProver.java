@@ -22,6 +22,7 @@ import escjava.sortedProver.fx7.Fx7NodeBuilder;
 import escjava.sortedProver.simplify.SimplifyNodeBuilder.Sx;
 import escjava.sortedProver.trew.TrewProver;
 
+/*@ non_null_by_default @*/
 public class Fx7pgProver extends TrewProver
 {
 	private Process fx7;	
