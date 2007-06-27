@@ -123,7 +123,7 @@ public class Lifter extends EscNodeBuilder
 	// end public interface
 	
 	/*@ non_null_by_default @*/
-	public class SortVar extends Sort
+	public class SortVar extends NodeBuilder.Sort
 	{
 		private /*@ nullable @*/Sort ref;
 		
@@ -301,16 +301,19 @@ public class Lifter extends EscNodeBuilder
 		{
 			return dumpBuilder.buildQVarRef(qvar.qvar); 
 		}
-		public boolean equals(Object o) {
+		public boolean equals(/*@nullable*/ Object o) {
 			if(!(o instanceof QuantVariableRef)) {
 				return false;
 			}
-			return o.hashCode() == this.hashCode();
+			// FIXME: [bug #582] equals is declared pure, whereas hashCode 
+			// is not, hence hashCode cannot be called here.
+			// return o.hashCode() == this.hashCode();
+			// Here is an attempt at fixing #582:
+			return qvar.equals(o);
 		}
 		public int hashCode() {
 			return qvar.hashCode();
 		}
-		
 		
 		public Term subst(Term v, Term subst) {
 			if (v.equals(this))
@@ -781,13 +784,20 @@ public class Lifter extends EscNodeBuilder
 			type = s;
 			name = n;
 		}
-		public boolean equals(Object o) {
+		public boolean equals(/*@nullable*/ Object o) {
 			if(o == this)
 				return true;
 			if(!(o instanceof QuantVariable)) {
 				return false;
 			}
-			return this.hashCode() == o.hashCode();
+			// FIXME: [bug #582] equals is declared pure, whereas hashCode 
+			// is not, hence hashCode cannot be called here.
+			// return this.hashCode() == o.hashCode();
+			// 
+			// Here is an attempt at fixing #582:
+			// The comparison was previously based on name.hashCode
+			// so I am assuming that name.equals() is equally valid:
+			return name.equals(o);
 		}
 		
 		public int hashCode() {
@@ -805,6 +815,7 @@ public class Lifter extends EscNodeBuilder
 		v.qvar = new QuantVar(n, v.type);
 		return v; 
 	}
+
 	/*@ non_null_by_default @*/
 	public class LabeledTerm extends Term
 	{
