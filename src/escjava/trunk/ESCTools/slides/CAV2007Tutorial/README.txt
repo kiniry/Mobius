@@ -1,17 +1,25 @@
 This directory contains materials for the tutorial by Gary T. Leavens
 (with help from Joseph R. Kiniry and Erik Poll) given at CAV 2007.
 
+The time available for this was 3 hours, split into two 1.5 hour parts.
+
+The main file is JMLTutorial.tex.
+
 A starting point was the tutorial material in ../ETAPSTutorial/,
 and the various talks and tutorial papers on JML.
 
 See Objectives.txt for the goals of this tutorial.
 
-The time available for this was 3 hours, split into two 1.5 hour parts.
+The powerpoint files that are used to make the various pdf graphics
+included are in new-diagrams.ppt.  They are printed individually to
+the PDF files included in the talk, and this is done using a custom
+page size of 6 inches (wide) by 10 inches (high), although on the
+screen it looks like 10 inches wide by 6 high.
 
 To get the handouts, you have to answer y to the question that comes
-up when it starts, and you have to be running pdflatex on a TeX
-install that has pgf installed.  (Miktex has it, or can if you install
-it, and the Makefile assumes that mpdflatex is the Miktex version of
-pdflatex.) 
+up when running pdflatex on JMLTutorial.tex starts, and you have to be
+running pdflatex on a TeX install that has pgf installed.  (Miktex has
+it, or can if you install it, and the Makefile assumes that mpdflatex
+is the Miktex version of pdflatex.)
 
 $Id$

@@ -4,7 +4,9 @@
 
 CLASSPATH='.;c:\cygwin\usr\local\junit\junit.jar'
 JML = jml -Q -e
-JMLC = jmlc -Q -e
+# flags below are for JML common tools release 5.4, adjusting for the future
+# JMLC = jmlc -Q -e -o
+JMLC = jmlc -Q --universes --neutralContext
 JMLRAC = jmlrac
 JMLUNIT = jmlunit -i
 JAVAC = javac

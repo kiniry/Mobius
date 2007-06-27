@@ -1,5 +1,5 @@
-% $Id$
 % -*- latex -*- mode for emacs
+% $Id$
 \typein[\MAKEHANDOUTS]{Handouts (y/n)?}
 \if y\MAKEHANDOUTS \documentclass[compress,landscape,handout]{beamer}
 \else \documentclass[compress]{beamer}
@@ -671,6 +671,7 @@ Implies \lstinline!assignable \nothing!
 \item
 Allows method's use in specifications.
 \end{itemize}
+\note{Note that pure is a modifier for methods, not a clause.}
 \end{frame}
 
 \begin{frame}[fragile,label=redundantly]
@@ -702,6 +703,10 @@ JML semantics.
 \end{itemize}
 
 Also \lstinline!requires_redundantly!, etc.
+
+\note{There is a flag on jmlc to avoid checking redundant
+specifications, but they are checked by default.
+}
 \end{frame}
 
 \begin{frame}[fragile]
@@ -724,7 +729,7 @@ Similarly for \lstinline!ensures!, \lstinline!invariant!.
 
 ~
 
-Note: runtime checker gives better errors if separate.
+Note: runtime checker gives better errors with multiple clauses.
 
 \note{For assignable, semantics is the union.}
 \end{frame}
@@ -826,7 +831,7 @@ Specify each public method using:
 \end{frame}
 
 \begin{frame}[fragile]
-\frametitle{Exercise: Specify BagOfInt}
+\frametitle{Exercise: Specify BagOfInt (7 minutes)}
 
 \begin{exercise}
 Specify the following:
@@ -891,7 +896,7 @@ ESC/Java2 Eclipse plugin \newline
 
 \begin{example}
 \begin{verbatim}
-$ jmlc -Q -e BagOfInt.java BagOfIntMain.java
+$ jmlc -Q -e -o BagOfInt.java BagOfIntMain.java
 $ jmlrac BagOfIntMain
 \end{verbatim}
 \end{example}
@@ -899,6 +904,11 @@ $ jmlrac BagOfIntMain
 We're using CLASSPATH=. because of the use of the unnamed package;
 for other packages, we have to be careful, as with Java.
 Might want to show what happens with javac first.
+The -Q flag shuts jmlc up somewhat.  The -e flag turns on universes.
+The -o flag changes the the ``neutral context'' semantics, which will
+be part of future release of JML's common tools.
+These flags are valid for JML Common Tools release 5.4.
+There are manual pages for each of the tools.
 }
 \end{frame}
 
@@ -1126,12 +1136,12 @@ o.m();
 \end{frame}
 
 \begin{frame}
-\frametitle{Aliasing in Java}
+\frametitle{Pitfall: Aliasing in Java}
 \includegraphics[width=4.25in]{aliasxy}
 \end{frame}
 
 \begin{frame}
-\frametitle{Object Identity}
+\frametitle{Aliasing and Object Identity}
 \framesubtitle{JML Uses Java's Indirect Model for Objects}
 
 For objects $x$ and $y$, $x$ \texttt{==} $y$ means:
@@ -1152,21 +1162,44 @@ Aliasing caused by:
 Assignment ($x$ \texttt{=} $y$).
 
 \item
-Method calls (passing $y$ to formal $x$).
+Method calls 
+\begin{itemize}
+\item
+Passing field $o.y$ to formal $x$.
+
+\item
+Passing both $x$ and $y$ to different formals.
+
+\item
+Etc.
+\end{itemize}
 \end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]
-\frametitle{Aliasing Pitfalls}
+\frametitle{Pitfall: Aliasing}
 
 \begin{question}
-What's wrong with this?
+What's wrong with this? \uncover<2->{How to fix it?}
 
 \rm
 \lstinputlisting{examples/Counter.java}
 \end{question}
 \note{The postcondition may fail.  ESC/Java shows this.
-How would you fix it?}
+How would you fix it?
+In Java variables of different types can be aliased, 
+due to multiple inheritance of interface types.
+}
+\end{frame}
+
+\begin{frame}<beamer>[fragile]
+\frametitle{Revised Counter to Fix the Problem}
+
+\lstinputlisting{examples/Counter2.java}
+\end{frame}
+
+\begin{frame}
+\frametitle{Pitfall: Undefinedness in Specification Expressions}
 \end{frame}
 
 %\part{Advanced JML}

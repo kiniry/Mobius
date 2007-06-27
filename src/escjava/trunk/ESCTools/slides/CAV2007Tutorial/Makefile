@@ -45,4 +45,4 @@ cleanall: clean
 	rm -f JMLTutorial.pdf
 
 clean:
-	rm -f *.dvi *.ps *.log *.out *~
+	rm -f *.dvi *.ps *.log *.out *.vrb *~
