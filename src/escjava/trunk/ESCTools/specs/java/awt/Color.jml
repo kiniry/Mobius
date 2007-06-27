@@ -40,7 +40,7 @@ public class Color implements Paint, java.io.Serializable {
     public Color(int Param0, boolean Param1);
     public Color(float Param0, float Param1, float Param2);
     public Color(float Param0, float Param1, float Param2, float Param3);
-    public Color(color.ColorSpace Param0, /*@non_null*/ float[] Param1, float Param2);
+    public Color(java.awt.color.ColorSpace Param0, /*@non_null*/ float[] Param1, float Param2);
 
     public int getRed();
     public int getGreen();
@@ -53,7 +53,7 @@ public class Color implements Paint, java.io.Serializable {
 
     public int hashCode();
 
-    public boolean equals(Object o);
+    public boolean equals(/*@nullable*/ Object o);
 
     public /*@non_null*/ String toString();
 
@@ -74,18 +74,18 @@ public class Color implements Paint, java.io.Serializable {
     public /*@non_null*/ float[] getRGBColorComponents(/*@nullable*/ float[] Param0);
     public /*@non_null*/ float[] getComponents(/*@nullable*/ float[] Param0);
     public /*@non_null*/ float[] getColorComponents(/*@nullable*/ float[] Param0);
-    public /*@non_null*/ float[] getComponents(/*@non_null*/ color.ColorSpace Param0, 
+    public /*@non_null*/ float[] getComponents(/*@non_null*/ java.awt.color.ColorSpace Param0, 
 					       /*@non_null*/ float[] Param1);
-    public /*@non_null*/ float[] getColorComponents(/*@non_null*/ color.ColorSpace Param0, 
+    public /*@non_null*/ float[] getColorComponents(/*@non_null*/ java.awt.color.ColorSpace Param0, 
 						    /*@nullable*/ float[] Param1);
 
-    public /*@non_null*/ color.ColorSpace getColorSpace();
+    public /*@non_null*/ java.awt.color.ColorSpace getColorSpace();
 
     public synchronized /*@non_null*/ PaintContext 
-	createContext(/*@non_null*/ image.ColorModel Param0,
+	createContext(/*@non_null*/ java.awt.image.ColorModel Param0,
 		      /*@nullable*/ Rectangle Param1, 
-		      /*@nullable*/ geom.Rectangle2D Param2, 
-		      /*@nullable*/ geom.AffineTransform Param3, 
+		      /*@nullable*/ java.awt.geom.Rectangle2D Param2, 
+		      /*@nullable*/ java.awt.geom.AffineTransform Param3, 
 		      /*@nullable*/ RenderingHints Param4);
 
     public int getTransparency();
