@@ -309,7 +309,7 @@ public class Lifter extends EscNodeBuilder
 			// is not, hence hashCode cannot be called here.
 			// return o.hashCode() == this.hashCode();
 			// Here is an attempt at fixing #582:
-			return qvar.equals(o);
+			return qvar.equals(((QuantVariableRef)o).qvar);
 		}
 		public int hashCode() {
 			return qvar.hashCode();
@@ -797,7 +797,7 @@ public class Lifter extends EscNodeBuilder
 			// Here is an attempt at fixing #582:
 			// The comparison was previously based on name.hashCode
 			// so I am assuming that name.equals() is equally valid:
-			return name.equals(o);
+			return name.equals(((QuantVariable)o).name);
 		}
 		
 		public int hashCode() {
