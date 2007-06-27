@@ -42,7 +42,6 @@ public class AnnotationMethodExecutor extends ABasicExecutor {
   private void doMethodPreAndPostDefinition() {
     final MethodHandler hdl = getMethodHandler();
     final String name = hdl.getName(fMeth);
-    int tab = 1;
     final String nameModule = name + "_annotations";
     final String namePre = "pre";
     final String namePost = "post";
@@ -52,28 +51,34 @@ public class AnnotationMethodExecutor extends ABasicExecutor {
     final String defaultSpecs = "(0%nat,,(" + namePre + ",," + namePost + "))";
 
     final Stream out = getOut();
+    out.incTab();
 //    out.println(tab, "Definition " + namePost + " (s0:InitState) (t:ReturnState) := " +
 //                        " @nil Prop.\n");
-    out.println(tab, "Module " + nameModule + ".");
-    tab++;
-    doMethodPre(tab, namePre);
-    doMethodPost(tab, namePost);
-    out.println(tab, "Definition " + nameAssertion + " := " +
-                AnnotationVisitor.getAssertion(fRout, fMeth) + ".");
-    out.println(tab, "Definition " + nameAssumption + " :=" +
-                  " (@PCM.empty Assumption).");
-    out.println(tab, "Definition " + nameSpec + " :="); 
-    out.println(tab + 1, "(" + defaultSpecs + ",,");
-    out.println(tab + 2, "@PCM.empty (R.Assertion ** nat)). ");
-    tab--;
-    out.println(tab, "End " + nameModule + ".\n\n");
+    out.println("Module " + nameModule + ".");
+    out.incTab();
     
+    doMethodPre(namePre);
+    doMethodPost(namePost);
+    out.println("Definition " + nameAssertion + " := " +
+                AnnotationVisitor.getAssertion(out, fRout, fMeth) + ".");
+    out.println("Definition " + nameAssumption + " :=" +
+                  " (@PCM.empty Assumption).");
+    out.println("Definition " + nameSpec + " :=");
+    out.incTab();
+    out.println("(" + defaultSpecs + ",,");
+    out.incTab();
+    out.println("(assertion,,assumption)). ");
+    out.decTab();
+    out.decTab();
+    out.decTab();
+    out.println("End " + nameModule + ".\n\n");
+    out.decTab();
     
   }
   
-  private void doMethodPre(final int tab, final String namePre) {
+  private void doMethodPre(final String namePre) {
     final Stream out = getOut();
-    out.println(tab, "Definition mk_" + namePre + " := ");
+    out.println("Definition mk_" + namePre + " := ");
     final List<QuantVariableRef> list = mkArguments(fRout, fMeth);
     
     String varsAndType = "";
@@ -85,23 +90,27 @@ public class AnnotationMethodExecutor extends ABasicExecutor {
       varsAndType += " (" + vname + ": " + Formula.generateType(qvr.getSort()) +  ")";
       
     }
-    out.println(tab + 1, "fun " + varsAndType + " => ");
-    out.println(tab + 2, Formula.generateFormulas(Lookup.precondition(fRout)) + ".");
-    out.println(tab, "Definition " + namePre + " (s0:InitState) := ");
-    final String vars = doLetPre(tab + 1);
-    
+    out.incTab();
+    out.println("fun " + varsAndType + " => ");
+    out.incTab();
+    out.println(Formula.generateFormulas(Lookup.precondition(fRout)) + ".");
+    out.decTab();
+    out.decTab();
+    out.println("Definition " + namePre + " (s0:InitState) := ");
+    out.incTab();
+    final String vars = doLetPre();
+    out.incTab();
     //out.println(tab, "   let " + Ref.varThis + " := (do_lvget (fst s0) 0%N)" + " in " +
-    out.println(tab + 2,  "mk_" + namePre +  " " + vars + ".");
-    
+    out.println("mk_" + namePre +  " " + vars + ".");
+    out.decTab();
+    out.decTab();
   }
   
   
-  private void doMethodPost(final int inittab, final String namePost) {
+  private void doMethodPost(final String namePost) {
     final Stream out = getOut();
-    int tab = inittab;
-    
     // definition of the mk method
-    out.println(tab, "Definition mk_" + namePost + " := ");
+    out.println("Definition mk_" + namePost + " := ");
     final List<QuantVariableRef> list = mkOldArguments(fRout, fMeth);
     
     String varsAndType = "";
@@ -121,76 +130,98 @@ public class AnnotationMethodExecutor extends ABasicExecutor {
       
     }
         
-    final Post normalPost = Lookup.normalPostcondition(fRout);
-    final Post excpPost = Lookup.exceptionalPostcondition(fRout);
-    tab++;
-    out.println(tab, "fun " + "(t: ReturnVal) " + varsAndType + " => ");
-    out.println(tab + 1, "match t with");
+    Post normalPost = Lookup.normalPostcondition(fRout);
+    Post excpPost = Lookup.exceptionalPostcondition(fRout);
+    out.incTab();
+    out.println("fun " + "(t: ReturnVal) " + varsAndType + " => ");
+    out.incTab();
+    out.println("match t with");
     final boolean hasRet = !(fMeth.getReturnType().equals(Type.VOID));
     
     if (hasRet) {
-      out.println(tab + 1, "| Normal (Some " + 
+      out.println("| Normal (Some " + 
                                        Formula.generateFormulas(normalPost.getRVar()) + 
                                        ") =>");
     }
     else {
-      out.println(tab + 1, "| Normal None =>");
+      out.println("| Normal None =>");
     }
-    out.println(tab + 2, "" + Formula.generateFormulas(normalPost.getPost()));
+    
+    // momentary fix
+    for (QuantVariableRef qvr: list) {
+      System.out.println();
+      System.out.println(qvr + " " + Expression.old(qvr));
+      
+      normalPost = new Post(normalPost.getRVar(),
+                            normalPost.subst(Expression.old(qvr), qvr));
+      excpPost = new Post(excpPost.getRVar(),
+                            excpPost.subst(Expression.old(qvr), qvr));
+      System.out.println(normalPost);
+    }
+    // end momentary fix 
+    out.incTab();
+    out.println("" + Formula.generateFormulas(normalPost.getPost()));
+    out.decTab();
     if (hasRet) {
-      out.println(tab + 1, "| Normal None => True");
+      out.println("| Normal None => True");
     }
     else {
-      out.println(tab + 1, "| Normal (Some _) => True");
+      out.println("| Normal (Some _) => True");
     }
-    out.println(tab + 1, "| Exception " + 
+    out.println("| Exception " + 
                               Formula.generateFormulas(excpPost.getRVar()) + 
                                        " =>");
-    out.println(tab + 2, "" + Formula.generateFormulas(
+    out.incTab();
+    out.println("" + Formula.generateFormulas(
                                        excpPost.substWith(
                                               Ref.fromLoc(excpPost.getRVar()))));
-    out.println(tab + 1, "end" + ".");
-    tab--;
-
-    // definition of the usable version
-    out.println(tab, "Definition " + namePost + " (s0:InitState) (t:ReturnState) := ");
-    final String vars = doLetPost(tab + 1);
+    out.decTab();
+    out.println("end" + ".");
+    out.decTab();
+    out.decTab();
     
+    // definition of the usable version
+    out.println("Definition " + namePost + " (s0:InitState) (t:ReturnState) := ");
+    out.incTab();
+    final String vars = doLetPost();
+    out.incTab();
     //out.println(tab, "   let " + Ref.varThis + " := (do_lvget (fst s0) 0%N)" + " in " +
-    out.println(tab + 2,  "mk_" + namePost +  " (snd t) " + vars + ".");
+    out.println( "mk_" + namePost +  " (snd t) " + vars + ".");
+    out.decTab();
+    out.decTab();
     
   }
   
-  private String doLetPre(final int tab) {
+  private String doLetPre() {
     final Stream out = getOut();
     String vars = "";
     final String hname = Formula.generateFormulas(Heap.var).toString();
-    out.println(tab, "let " + hname + " := (snd s0) " + " in");
+    out.println("let " + hname + " := (snd s0) " + " in");
     vars += hname;
     int count = 0;
     for (QuantVariableRef qvr: mkArguments(fRout, fMeth)) {
       final String vname = Formula.generateFormulas(qvr).toString();
-      out.println(tab, "let " + vname + " := " +
+      out.println("let " + vname + " := " +
                            "(do_lvget (fst s0) " + count++ + "%N)" + " in ");
       vars += " " + vname;
     }
     return vars;
   }
-  private String doLetPost(final int tab) {
+  private String doLetPost() {
     final Stream out = getOut();
     String vars = "";
     final String olhname = Formula.generateFormulas(Heap.varPre).toString();
-    out.println(tab, "let " + olhname + " := (snd s0) " + " in");
+    out.println("let " + olhname + " := (snd s0) " + " in");
     vars += olhname;
     
     final String hname = Formula.generateFormulas(Heap.var).toString();
-    out.println(tab, "let " + hname + " := (fst t) " + " in");
+    out.println("let " + hname + " := (fst t) " + " in");
     vars += " " + hname;
     
     int count = 0;
     for (QuantVariableRef qvr: mkOldArguments(fRout, fMeth)) {
       final String vname = Formula.generateFormulas(qvr).toString();
-      out.println(tab, "let " + vname + " := " +
+      out.println("let " + vname + " := " +
                            "(do_lvget (fst s0) " + count++ + "%N)" + " in ");
       vars += " " + vname;
     }

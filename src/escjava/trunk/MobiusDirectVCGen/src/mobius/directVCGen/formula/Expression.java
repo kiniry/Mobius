@@ -79,7 +79,8 @@ public final class Expression {
    * @return the <i>oldified</i> version of the variable
    */
   public static QuantVariableRef old(final GenericVarDecl decl) {
-    return rvar(Formula.lf.mkQuantVariable(decl, old(UniqName.variable(decl))));
+    final QuantVariable norm = var(decl);
+    return rvar(old(norm));
   }
 
   /**
