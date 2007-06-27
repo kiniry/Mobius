@@ -8,7 +8,7 @@ JMLC = jmlc -Q -e
 JMLRAC = jmlrac
 JMLUNIT = jmlunit -i
 JAVAC = javac
-ESCJAVA = escjava2 -nonNullByDefault
+ESCJAVA = escjava2 -nonNullByDefault -CounterExample
 
 TYPES = ArrayOps BagOfInt
 

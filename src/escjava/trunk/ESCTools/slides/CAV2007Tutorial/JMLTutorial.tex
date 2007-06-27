@@ -426,6 +426,7 @@ Tool development, maintenance.
 Extensible tool architecture.
 
 \item
+Unification of tools.
 \end{itemize}
 \note{Currently the tools are in a bit of a mess.}
 \end{frame}
@@ -866,7 +867,7 @@ Specify the following:
 \begin{frame}
 \frametitle{Getting the Tools}
 
-Links to all:
+Links to all tools:
 \begin{itemize}
 \item
 \href{http://www.jmlspecs.org/}{jmlspecs.org}'s download page.
@@ -1035,6 +1036,138 @@ Associated declaration is
 \end{frame}
 
 \subsection[Tips]{Tips and Pitfalls}
+
+\begin{frame}
+\frametitle{Assert Statements in JML and Java}
+
+\begin{columns}[t]
+\column{.5\textwidth}
+\begin{block}{JML}
+\begin{itemize}
+\item
+All JML features.
+
+\item
+No side effects.
+\end{itemize}
+\end{block}
+
+\column{.5\textwidth}
+\begin{block}{Java}
+\begin{itemize}
+\item
+Only Java expressions.
+
+\item
+Can have side effects.
+\end{itemize}
+\end{block}
+\end{columns}
+
+~
+
+Tip: Use JML assertions.
+
+\note{JML features include quantifiers, and model fields.}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Assume Statements}
+
+\lstinline!assume! $P$\texttt{;}
+
+\begin{itemize}
+\item
+Claims $P$ is true.
+
+\item
+Checked by the RAC like \lstinline!assert! $P$\texttt{;}
+
+\item
+Assumed by ESC/Java and static tools.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Assume Statements Blame Other}
+
+\begin{lstlisting}[mathescape=true]
+//@ requires $P$;
+//@ ensures $Q$;
+public void m() {
+  $S$
+}
+\end{lstlisting}
+
+similar to:
+
+\begin{lstlisting}[mathescape=true]
+public void m() {
+  //@ assume $P$;
+  $S$
+  //@ assert $Q$;
+}
+\end{lstlisting}
+\note{There are differences in static checkers, such as ESC/Java, and
+  in error messages and exceptions from the RAC, however.
+}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Assume Statements Blame Other}
+
+\begin{lstlisting}[mathescape=true]
+//@ assert $P$;
+o.m();
+//@ assume $Q$;
+\end{lstlisting}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Aliasing in Java}
+\includegraphics[width=4.25in]{aliasxy}
+\end{frame}
+
+\begin{frame}
+\frametitle{Object Identity}
+\framesubtitle{JML Uses Java's Indirect Model for Objects}
+
+For objects $x$ and $y$, $x$ \texttt{==} $y$ means:
+\begin{itemize}
+\item
+$x$ and $y$ have same address.
+
+\item
+$x$ and $y$ are aliased.
+
+\item
+Changing of $x.f$ also changes $y.f$.
+\end{itemize}
+
+Aliasing caused by:
+\begin{itemize}
+\item
+Assignment ($x$ \texttt{=} $y$).
+
+\item
+Method calls (passing $y$ to formal $x$).
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Aliasing Pitfalls}
+
+\begin{question}
+What's wrong with this?
+
+\rm
+\lstinputlisting{examples/Counter.java}
+\end{question}
+\note{The postcondition may fail.  ESC/Java shows this.
+How would you fix it?}
+\end{frame}
 
 %\part{Advanced JML}
 
