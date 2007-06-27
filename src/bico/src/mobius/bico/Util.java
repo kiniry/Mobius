@@ -20,7 +20,7 @@ import org.apache.bcel.util.Repository;
  */
 public final class Util {
   /** the size of a tab used in writeln. */
-  static final int TAB = 2;
+  static final String TAB = "  ";
   
   /**
    * @deprecated
@@ -255,10 +255,7 @@ public final class Util {
   public static void writeln(final PrintStream out, final int tabs, 
                              final String s) {
     final StringBuffer str = new StringBuffer();
-    for (int i = 0; i < tabs * Util.TAB; i++) {
-      str.append(' ');
-    }
-    str.append(s);
+    str.append(TAB);
     out.println(str.toString());
   }
 
@@ -268,6 +265,9 @@ public final class Util {
    */
   public static class Stream extends PrintStream {
 
+    private int fTab;
+    private String fStrTab = "";
+    
     /**
      * Create a new stream from an existing one.
      * @param out an already existing stream
@@ -282,12 +282,33 @@ public final class Util {
      * @param s the string to write
      */  
     public void println(final int tab, final String s) {
+      if (tab < 0) {
+        super.println(s.toString());
+      }
       final StringBuffer str = new StringBuffer();
-      for (int i = 0; i < tab * Util.TAB; i++) {
-        str.append(' ');
+      for (int i = 0; i < tab; i++) {
+        str.append(TAB);
       }
       str.append(s);
-      println(str.toString());
+      super.println(str.toString());
+    }
+    public void println(final String s) {
+      String str = fStrTab + s;
+      str = str.replaceAll("\n", "\n" + fStrTab);
+      super.println(str);
+    }
+    public void incTab() {
+      fTab++;
+      fStrTab += TAB;
+    }
+    public void decTab() {
+      if (fTab > 0) {
+        fTab--;
+        fStrTab  = "";
+        for (int i = 0; i < fTab; i++) {
+          fStrTab += TAB;
+        }
+      }
     }
     
   }

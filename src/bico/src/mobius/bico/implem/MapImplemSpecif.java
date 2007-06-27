@@ -73,7 +73,7 @@ public class MapImplemSpecif implements IImplemSpecifics {
     return res;
   }
   public void printExtraBodyField(final PrintStream out) {
-    Util.writeln(out, 3, "0%N");
+    out.println("0%N");
   }
   
   public String instructionsType() {
