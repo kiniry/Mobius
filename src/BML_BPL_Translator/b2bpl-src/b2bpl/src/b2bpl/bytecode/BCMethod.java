@@ -1,5 +1,6 @@
 package b2bpl.bytecode;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -9,10 +10,12 @@ import b2bpl.bytecode.bml.ast.BMLAssertStatement;
 import b2bpl.bytecode.bml.ast.BMLAssumeStatement;
 import b2bpl.bytecode.bml.ast.BMLLoopSpecification;
 import b2bpl.bytecode.bml.ast.BMLMethodSpecification;
+import b2bpl.bytecode.instructions.Instruction;
+import b2bpl.bytecode.instructions.InvokeInstruction;
 import b2bpl.translation.ITranslationConstants;
 
 
-public class BCMethod extends BCMember {
+public class BCMethod extends BCMember implements IOpCodes {
 
   public static final BCMethod[] EMPTY_ARRAY = new BCMethod[0];
 
@@ -40,7 +43,9 @@ public class BCMethod extends BCMember {
 
   private ControlFlowGraph cfg;
   
-  private Set<String> modifiedTypes = new HashSet<String>();
+  private Set<String> m = new HashSet<String>(); // potentially modified variables
+  private Set<String> a = new HashSet<String>(); // all variables visble to this method
+  private Set<String> p = new HashSet<String>(); // propagated variables from invoked methods
 
   public BCMethod(
       int accessModifiers,
@@ -255,10 +260,32 @@ public class BCMethod extends BCMember {
   /**
    * If a class field of a given JType t is being modified in this method,
    * it will appear in this collection.
-   * @return List of all modified types
+   * @return List of all potentially modified types
    */
-  public String[] getModifiedTypes() {
-    return modifiedTypes.toArray(new String[modifiedTypes.size()]);
+  public String[] getModifiedFields() {
+    return this.m.toArray(new String[this.m.size()]);
+  }
+  
+  /**
+   * If a class field of a given JType t is accessible from within this method,
+   * it will appear in this collection.
+   * @return List of all accessible types
+   */
+  public String[] getModifiableFields() {
+    return this.a.toArray(new String[this.a.size()]);
+  }
+  
+  /**
+   * If a class field of a given JType t is modified by a method called within this method,
+   * it will appear in this collection.
+   * @return List of all propagated types
+   */
+  public String[] getPropagatedFields() {
+    if (!this.fetchedPropagatedFields) {
+      this.p.clear();
+      this.fetchPropagatedFields(this);
+    }
+    return this.p.toArray(new String[this.p.size()]);
   }
   
   /**
@@ -266,10 +293,10 @@ public class BCMethod extends BCMember {
    * are being modified in this methd.
    * @param t JType of the class field
    * @return {@code True}, if there is a class field of the given type which is modified in this method.
-   */
+   * /
   public boolean isModifiedType(String t) {
-    return modifiedTypes.contains(t);
-  }
+    return m.contains(t);
+  } */
   
   /**
    * Adds a new JType object to the collection of modifies types, indicating
@@ -277,8 +304,50 @@ public class BCMethod extends BCMember {
    * with is being modified in this method.
    * @param t JType object
    */
-  public void addModifiedType(String t) {
-    modifiedTypes.add(t);
+  public void addModifiedField(String t) { m.add(t); }
+  
+  /**
+   * Adds a new JType object to the collection of modifiable types, indicating
+   * that there is a class field in this method's owner class of JType t
+   * which is accessible from within this method.
+   * @param t JType object
+   */
+  public void addModifiableField(String t) { a.add(t); }
+  
+  public boolean isModifiedField(String t) { return this.m.contains(t); }
+  
+  public boolean isModifiableField(String t) { return this.a.contains(t); }
+  
+  public boolean isPropagatedField(String t) { return this.a.contains(t); }
+  
+  private boolean fetchedPropagatedFields = false;
+  /**
+   * Automatically retrieves all class fields which are potentially modified
+   * by a method invokation from within this method.
+   *
+   */
+  private void fetchPropagatedFields(BCMethod currentMethod) {
+    if (currentMethod.getInstructions() == null) return;
+    
+    for (InstructionHandle ih : currentMethod.getInstructions()) {
+      Instruction instr = ih.getInstruction();
+      if (instr instanceof InvokeInstruction) {
+        
+        BCMethod method = ((InvokeInstruction)instr).getMethod();
+        this.fetchPropagatedFields(method);
+        
+        for (String mt : method.getModifiedFields()) {
+          currentMethod.p.add(mt);
+        }
+        for (String pt : method.getPropagatedFields()) {
+          currentMethod.p.add(pt);
+        }
+        
+        currentMethod.fetchedPropagatedFields = true;
+        
+      }
+    }
+
   }
   
 }

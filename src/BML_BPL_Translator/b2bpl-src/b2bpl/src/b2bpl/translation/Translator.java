@@ -90,6 +90,7 @@ import b2bpl.bpl.ast.BPLIntLiteral;
 import b2bpl.bpl.ast.BPLNullLiteral;
 import b2bpl.bpl.ast.BPLProcedure;
 import b2bpl.bpl.ast.BPLProgram;
+import b2bpl.bpl.ast.BPLRequiresClause;
 import b2bpl.bpl.ast.BPLSpecification;
 import b2bpl.bpl.ast.BPLSpecificationClause;
 import b2bpl.bpl.ast.BPLType;
@@ -1611,20 +1612,26 @@ public class Translator implements ITranslationConstants {
         name,
         new BPLVariable[] { this_var },
         new BPLVariable[] {
-            new BPLVariable(RETURN_STATE_VAR, new BPLTypeName(RETURN_STATE_TYPE)),
-            new BPLVariable(RETURN_VALUE_VAR, BPLBuiltInType.REF),
-            new BPLVariable(EXCEPTION_VAR, BPLBuiltInType.REF)
+            new BPLVariable(RETURN_STATE_PARAM, new BPLTypeName(RETURN_STATE_TYPE)),
+            new BPLVariable(RESULT_PARAM, BPLBuiltInType.REF),
+            new BPLVariable(EXCEPTION_PARAM, BPLBuiltInType.REF)
         },
                 
         new BPLSpecification(new BPLSpecificationClause[] {
 
+            new BPLRequiresClause(
+              forall(oVar, tVar, inv(var(T), var(o), var(HEAP_VAR)))
+            )
+            
+            ,
+                                                           
             hasReturnType ?
             
             new BPLEnsuresClause(logicalAnd(
                 // postcondition of helper procedure (usually constructor)
-                notEqual(var(RETURN_VALUE_VAR), BPLNullLiteral.NULL),
-                alive(rval(var(RETURN_VALUE_VAR)), var(HEAP_VAR)),
-                isOfType(rval(var(RETURN_VALUE_VAR)), var(type)),
+                notEqual(var(RESULT_PARAM), BPLNullLiteral.NULL),
+                alive(rval(var(RESULT_PARAM)), var(HEAP_VAR)),
+                isInstanceOf(rval(var(RESULT_PARAM)), var(type)),
                 forall(lVar, logicalAnd(
                     implies(
                         alive(rval(obj(var(l))), old(var(HEAP_VAR))),

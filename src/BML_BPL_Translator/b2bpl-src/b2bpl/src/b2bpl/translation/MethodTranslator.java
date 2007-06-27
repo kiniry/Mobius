@@ -571,10 +571,12 @@ public class MethodTranslator implements ITranslationConstants {
 
 
     // Assume the appropriate invariants if it is not a constructor.
-    if (!method.isConstructor()) {
+    if (method.isConstructor()) {
+      requiresClauses.add(new BPLRequiresClause(this.getInvariantUponEnteringConstructor()));
+    } else { 
       // TODO
       // requiresClauses.add(requireAllInvariants(method.isConstructor()));
-      requiresClauses.add(new BPLRequiresClause(this.getInvariantForAllFields()));
+      requiresClauses.add(new BPLRequiresClause(this.getInvariantUponEnteringMethod()));
     }
     
     // Assume the method's effective precondition.
@@ -595,12 +597,20 @@ public class MethodTranslator implements ITranslationConstants {
     return requiresClauses.toArray(new BPLRequiresClause[requiresClauses.size()]);
   }
 
+  /**
+   * Returns an expression containing the preconditional invariant
+   * for a constructor method call.
+   * @return BPLExpression invariant (upon entering constructor)
+   */
+  private BPLExpression getInvariantUponEnteringConstructor() {
+    return BPLBoolLiteral.TRUE;
+  }
   
   /**
-   * Returns an expression stating that all invariants must hold.
-   * @return BPLExpression object invariant
+   * Returns an expression stating that all invariants hold.
+   * @return BPLExpression invariant (upon entering method)
    */
-  private BPLExpression getInvariantForAllFields() {
+  private BPLExpression getInvariantUponEnteringMethod() {
     String o = quantVarName("o");
     BPLVariable oVar = new BPLVariable(o, BPLBuiltInType.REF);
 
@@ -615,7 +625,7 @@ public class MethodTranslator implements ITranslationConstants {
    * their invariant must hold.
    * @return BPLExpression object invariant (only referring to modified class fields)
    */
-  private BPLExpression getInvariantForModifiedFields() {
+  private BPLExpression getInvariantBeforeLeavingMethod() {
     String o = quantVarName("o");
     BPLVariable oVar = new BPLVariable(o, BPLBuiltInType.REF);
 
@@ -623,15 +633,35 @@ public class MethodTranslator implements ITranslationConstants {
     BPLVariable tVar = new BPLVariable(t, BPLBuiltInType.NAME);
     
     BPLExpression notInModVars = BPLBoolLiteral.FALSE;
-    for (String typeName : method.getModifiedTypes()) {
+    for (String typeName : method.getModifiedFields()) {
       notInModVars = logicalOr(notInModVars, isEqual(var(t), var(VALUE_TYPE_PREFIX + typeName)));
+    }
+
+    return forall(oVar, tVar,
+         implies(notInModVars, inv(var(t), var(o), var(HEAP_VAR)))
+//        implies(notInModVars, inv(fieldType(), var(x), var(HEAP_VAR)));
+    );
+  }
+  
+  
+  private BPLExpression getInvariantAfterLeavingMethod() {
+    String o = quantVarName("o");
+    BPLVariable oVar = new BPLVariable(o, BPLBuiltInType.REF);
+
+    String t = quantVarName("T");
+    BPLVariable tVar = new BPLVariable(t, BPLBuiltInType.NAME);
+    
+    BPLExpression notInModVars = BPLBoolLiteral.FALSE;
+    for (String typeName : method.getModifiableFields()) {
+      if (!method.isModifiedField(typeName)) {
+        notInModVars = logicalOr(notInModVars, isEqual(var(t), var(VALUE_TYPE_PREFIX + typeName)));
+      }
     }
 
     return forall(oVar, tVar,
         implies(notInModVars, inv(var(t), var(o), var(HEAP_VAR)))
     );
   }
-  
   /**
    * Returns an expression stating that, for all non-modified class fields,
    * their invariant must hold
@@ -645,7 +675,7 @@ public class MethodTranslator implements ITranslationConstants {
     BPLVariable tVar = new BPLVariable(t, BPLBuiltInType.NAME);
     
     BPLExpression notInModVars = BPLBoolLiteral.TRUE;
-    for (String typeName : method.getModifiedTypes()) {
+    for (String typeName : method.getModifiedFields()) {
       notInModVars = logicalAnd(notInModVars, notEqual(var(t), var(VALUE_TYPE_PREFIX + typeName)));
     }
 
@@ -827,7 +857,7 @@ public class MethodTranslator implements ITranslationConstants {
     
     // Ensure exposed (object) invariants
     // ensuresClauses.add(ensureExposedInvariants(false));
-    ensuresClauses.add(new BPLEnsuresClause(getInvariantForModifiedFields()));
+    ensuresClauses.add(new BPLEnsuresClause(this.getInvariantBeforeLeavingMethod()));
     
     return ensuresClauses.toArray(new BPLEnsuresClause[ensuresClauses.size()]);
   }
@@ -1191,6 +1221,9 @@ public class MethodTranslator implements ITranslationConstants {
     */
   }
 
+  /** 
+   * @deprecated
+   */
   private BPLRequiresClause requireAllInvariants(boolean excludeThisObject) {
     // TODO
     String t = quantVarName("t");
@@ -1564,6 +1597,20 @@ public class MethodTranslator implements ITranslationConstants {
     List<BPLExpression> expr = new ArrayList<BPLExpression>();
     List<BCMethod> overrides = method.getOverrides();
     for (BCMethod override : overrides) {
+      
+      
+      // TODO REMOVE
+      System.out.println("Modified types for " + override.getName());
+      String[] types = override.getModifiedFields();
+      for (String t : types) {
+        System.out.println("  - " + t);
+      }
+      System.out.println("Propagated types for " + override.getName());
+      types = override.getPropagatedFields();
+      for (String t : types) {
+        System.out.println("  - " + t);
+      }
+      
       BMLMethodSpecification spec = override.getSpecification();
       if (spec != null) {
         BMLSpecificationCase[] specCases = spec.getCases();
@@ -2536,7 +2583,9 @@ public class MethodTranslator implements ITranslationConstants {
     private void translateInvokeInstruction(InvokeInstruction insn) {
       BCMethod invokedMethod = insn.getMethod();
       JType[] params = invokedMethod.getRealParameterTypes();
+      
       int first = handle.getFrame().getStackSize() - params.length;
+      int stack = handle.getFrame().getStackSize();
       
       boolean provideReturnValue = !invokedMethod.isVoid() || invokedMethod.isConstructor();
            
@@ -2567,12 +2616,17 @@ public class MethodTranslator implements ITranslationConstants {
       resultVars.add(new BPLVariableExpression(returnStateVar(callStatements)));
 
       /*
-      boolean isConstructor = invokedMethod.isConstructor()
-          || invokedMethod.getQualifiedName().contains(Constants.CONSTRUCTOR_NAME);
+      boolean isConstructor = invokedMethod.isConstructor() || invokedMethod.getQualifiedName().contains(Constants.CONSTRUCTOR_NAME);
       */
       
-      if (provideReturnValue) {
-        resultVars.add(new BPLVariableExpression(returnValueVar(callStatements, retType)));
+      if (!invokedMethod.isVoid()) {
+        // Normal return value
+        resultVars.add(var(refStackVar(stack)));
+        // resultVars.add(new BPLVariableExpression(returnValueVar(callStatements, retType)));
+      } else if (invokedMethod.isConstructor()) {
+        // "Return value" from constructor (initialized "this"-object)
+        resultVars.add(var(refLocalVar(first)));
+        //resultVars.add(new BPLVariableExpression(returnValueVar(callStatements, retType)));
       }
       resultVars.add(new BPLVariableExpression(exceptionVar(callStatements)));
 
@@ -2604,6 +2658,7 @@ public class MethodTranslator implements ITranslationConstants {
       if (method.isConstructor() &&
           invokedMethod.isConstructor() &&
           method.getReturnType() == invokedMethod.getReturnType()) {
+        
         // addAssignment(var(refLocalVar(0)), var(returnValueVar(callStatements, retType)));
         
       }
@@ -3373,11 +3428,9 @@ public class MethodTranslator implements ITranslationConstants {
             addAssignment(
                 var(RETURN_STATE_PARAM),
                 var(EXCEPTIONAL_RETURN_STATE));
-            // Assume that the exception object is of the handler's exception
-            // type.
+            // Assume that the exception object is of the handler's exception type.
             addAssume(isInstanceOf(rval(var(refStackVar(0))), typeRef(type)));
-            // addAssume(isInstanceOf(rval(var(EXCEPTION_PARAM)),
-            // typeRef(type)));
+            // FIXME addAssume(isInstanceOf(rval(var(EXCEPTION_PARAM)), typeRef(type)));
 
             // For any previous exception handler at the current instruction,
             // assume that the type of the exception object is not a subtype
@@ -3391,8 +3444,8 @@ public class MethodTranslator implements ITranslationConstants {
               }
             }
 
-            // addAssignment(var(RETURN_VALUE_PARAM), var(refStackVar(0)));
             addAssignment(var(EXCEPTION_PARAM), var(refStackVar(0)));
+            // FIXME addAssignment(var(RETURN_VALUE_PARAM), var(refStackVar(0)));
 
             endBlock(cfgBlock.getSuccessorEdge(block));
           }
@@ -3403,7 +3456,7 @@ public class MethodTranslator implements ITranslationConstants {
     private void registerModifiedFieldType(String typeName /*BCField field*/) {
       // Check whether the field belongs to the "this" object.
       // If so, add it to the method's internal list of "modified" fields.
-      method.addModifiedType(typeName);
+      method.addModifiedField(typeName);
     }
   }
 }
