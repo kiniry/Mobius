@@ -1240,9 +1240,134 @@ from Peter M\"{u}ller's group (Werner Dietl) at ETH.}
 \lstinputlisting[linerange={17-31}]{examples/SortedInts3.java}
 \end{frame}
 
+\begin{frame}
+\frametitle{Pitfall: Undefined Expressions}
+\begin{question}
+What's wrong with this? How to fix it?
+
+\rm
+\lstinputlisting[linerange={1-10}]{examples/ScreenPoint.java}
+\end{question}
+\note{The array out of bounds error is something that ESC/Java2
+  detects, but only in the code.  Try it.
+}
+\end{frame}
 
 \begin{frame}
-\frametitle{Pitfall: Undefinedness in Specification Expressions}
+\frametitle{Protective Version of ScreenPoint}
+\lstinputlisting[linerange={1-11}]{examples/ScreenPoint2.java}
+\note{See papers by Leavens and Wing on protective interface
+  specifications, and papers by Chalin on the semantics of undefined
+  expressions. 
+}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Writing Protective Specifications}
+
+\begin{itemize}
+\item
+Clauses evaluated left to right.
+
+\item
+Short-circuit operators can prevent evaluation.
+\begin{itemize}
+\item
+$G$ \lstinline!&&! $P$, $G$ \lstinline!||! $P$
+
+\item
+$G$ \lstinline!==>! $P$, $G$ \lstinline!<==! $P$
+\end{itemize}
+
+\item
+Use multiple clauses (equivalent to \lstinline!&&!).
+\end{itemize}
+\note{\lstinline!==>! is implication, and 
+      \lstinline!<==! is reverse implication. 
+}
+\end{frame}
+
+
+\subsection[Spec Cases]{Multiple Specification Cases}
+
+\begin{frame}
+\frametitle{Multiple Specification Cases}
+
+\begin{itemize}
+\item
+For different preconditions.
+
+\item
+May overlap.
+
+\item
+Used to specify exceptions.
+
+\item
+Used with specification inheritance.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Multiple Specification Cases}
+\lstinputlisting{examples/Aging.java}
+\end{frame}
+
+\begin{frame}
+\frametitle{Semantics of Multiple Cases}
+\transdissolve[duration=0.5]
+\includegraphics[width=4.25in]{join-both}
+\end{frame}
+
+\begin{frame}
+\frametitle{Semantics of Multiple Cases}
+\includegraphics[width=4.25in]{join-intersect}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Meaning of 'also'}
+\begin{lstlisting}
+  requires 0 <= a && a <= 150;
+  assignable age;
+  ensures age == a;
+also
+  requires a < 0;
+  assignable \nothing
+  ensures age == \old(age);
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Meaning of `also'}
+\begin{lstlisting}
+  requires 0 <= a && a <= 150;
+  assignable age;
+  ensures age == a;
+also
+  requires a < 0;
+  assignable age;
+  ensures age == \old(age)
+      && \only_assigned(\nothing);
+\end{lstlisting}
+\note{Can only join where the frames are the same.}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Meaning of `also'}
+
+\begin{lstlisting}
+  requires (0 <= a && a <= 150) || a < 0;
+  assignable age;
+  ensures \old(0 <= a && a <= 150)
+       ==> (age == a);
+  ensures \old(a < 0)
+       ==> (age == \old(age)
+            && \only_assigned(\nothing));
+\end{lstlisting}
+\note{The original is easier to read than this desugared version,
+      which is the point of having multiple cases.
+      This last version could of course be simplified a bit.
+}
 \end{frame}
 
 %\part{Advanced JML}
