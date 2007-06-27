@@ -13,7 +13,7 @@ public abstract class EscNodeBuilder extends NodeBuilder
 	final public Sort sortTime = registerSort("time", sortInt);
 	// it seems instances of java.lang.Class are treated as equal to
 	// values of sort type...
-	final public Sort sortType = sortRef; // registerSort("type", sortAny);
+	final public Sort sortType = registerSort("type", sortRef);//= sortRef; // registerSort("type", sortAny);
 	final public Sort sortLock = sortRef; //registerSort("lock", sortRef);
 	final public Sort sortField = sortMap; //registerSort("field", sortMap);
 	
@@ -166,6 +166,7 @@ public abstract class EscNodeBuilder extends NodeBuilder
 		else if (sort == sortReal) return other.sortReal;
 		else if (sort == sortRef) return other.sortRef;
 		else if (sort == sortMap) return other.sortMap;
+    else if (sort == sortType) return other.sortType;
 		ErrorSet.fatal("cannot map " + sort + " from " + this + " to " + other);
 		return null;
 	}
