@@ -5,11 +5,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-import javafe.ast.ASTNode;
 import javafe.ast.MethodDecl;
 import javafe.ast.VarInit;
 import javafe.tc.FlowInsensitiveChecks;
-import escjava.ast.TagConstants;
 import escjava.sortedProver.Lifter.FnTerm;
 import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
@@ -79,16 +77,16 @@ public final class Type {
     }
     else {
       String name = UniqName.type(type);
-      //if (Types.isReferenceType(type)) {
+      if (Types.isReferenceType(type)) {
         if (Types.toClassTypeSig(type) != null) {
           name = "(ClassType " + name.substring(2) + ".className)";
         }
         else {
-          // gee! it's an interface!
+        // gee! it's an interface!
           name = "(InterfaceType " + name.substring(2) + ".interfaceName)";
         }
         name = "(ReferenceType " + name + ")";
-     // }
+      }
       t = Expression.rvar(name, Type.sort);
       types.put(type, t);
       revtyp.put(t, type);

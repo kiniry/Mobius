@@ -39,5 +39,19 @@ public final class Ref {
     return Formula.lf.symbolRef(str);
   }
 
+  public static QuantVariableRef fromLoc(QuantVariableRef var) {
+    String name = var.qvar.name;
+    
+    final Sort s = var.getSort();
+    if (name.startsWith("#")) {
+      name = name.substring(1);
+      name = "#(Ref " + name + ")";
+    }
+    else {
+      name = "(Ref " + name + ")";
+    }
+    return Expression.rvar(name, s);
+  }
+
 
 }

@@ -37,6 +37,7 @@ public class CoqNodeBuilder extends EscNodeBuilder {
     resName = resName.replace(':', '_');
     resName = resName.replace('.', '_');
     resName = resName.replace('\\', '_');
+    resName = resName.replace('?', '.');
     return resName;
   }
   
@@ -84,8 +85,12 @@ public class CoqNodeBuilder extends EscNodeBuilder {
     else if (realtype.equals(sortMap)) {
       res = new CType("Heap.t");
     }
+    else if (realtype.equals(sortType)) {
+      res = new CType("type");
+    }
     else {
       res = new CType("value");
+      throw new IllegalArgumentException();
     }
     return res;
   }
@@ -168,6 +173,9 @@ public class CoqNodeBuilder extends EscNodeBuilder {
     }
     else if (s.equals(sortMap)) {
       res = new CMap(name);
+    }
+    else if (s.equals(sortType)) {
+      res = new CType(name);
     }
     else if (s.equals(sortAny)) {
       throw new IllegalArgumentException("The type of " + var + 

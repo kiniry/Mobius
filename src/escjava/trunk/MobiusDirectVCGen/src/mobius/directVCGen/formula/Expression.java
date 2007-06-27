@@ -1,5 +1,6 @@
 package mobius.directVCGen.formula;
 
+import javafe.ast.FieldDecl;
 import javafe.ast.GenericVarDecl;
 import javafe.ast.MethodDecl;
 import escjava.ast.TagConstants;
@@ -8,6 +9,7 @@ import escjava.sortedProver.Lifter.QuantVariable;
 import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
 import escjava.sortedProver.NodeBuilder.Sort;
+import escjava.tc.Types;
 import escjava.translate.UniqName;
 
 /**
@@ -134,7 +136,15 @@ public final class Expression {
     if (decl.id.toString().startsWith("T_")) {
       throw new IllegalArgumentException();
     }
-    return Formula.lf.mkQuantVariable(decl, UniqName.variable(decl));
+    String name = UniqName.variable(decl);
+    if (decl instanceof FieldDecl) {
+      final FieldDecl field = (FieldDecl) decl;
+      System.out.println(field.parent);
+      System.out.println(decl.id);
+      name = field.parent.id.toString() + "?" + 
+             field.id.toString() + "FieldSignature";
+    }
+    return Formula.lf.mkQuantVariable(decl, name);
   }
 
   /**

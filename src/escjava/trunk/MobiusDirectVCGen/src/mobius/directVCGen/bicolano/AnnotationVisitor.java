@@ -9,6 +9,7 @@ import mobius.directVCGen.vcgen.ABasicVisitor;
 
 import org.apache.bcel.classfile.LineNumber;
 import org.apache.bcel.classfile.LineNumberTable;
+import org.apache.bcel.classfile.LocalVariable;
 import org.apache.bcel.classfile.Method;
 
 import escjava.sortedProver.Lifter.Term;
@@ -58,29 +59,19 @@ public final class AnnotationVisitor extends ABasicVisitor {
 
     }
     if (fAnnot.getInvariant(x) != null) {
-      // let's do a third thing
-      final LineNumberTable lnt = fMet.getCode().getLineNumberTable();
-      final LineNumber [] tab = lnt.getLineNumberTable();
-      final int lineNum = Location.toLineNumber(x.getStartLoc());
-      int oldspan = tab.length;
-      LineNumber min = null;
-      for (LineNumber line: tab) {
-        final int span = (line.getLineNumber() - lineNum);
-        if (span  > 0) {
-          if (span < oldspan) {
-            min = line;
-            oldspan = span;
-          }
-        }
-        
-
+      LocalVariable[] lvt = fMet.getCode().getLocalVariableTable().getLocalVariableTable();
+      for (LocalVariable local: lvt) {
+        System.out.println(local.getName());
       }
-      if (min != null) {
-        final Term t = fAnnot.getInvariant(x);
-        res = "(PCM.update " + res + " " + min.getStartPC() + "%N" +
+      // let's do a third thing
+      final int lineNum = Location.toLineNumber(x.getStartLoc());
+      final LineNumber line = getLineNumberFromLine(lineNum);
+      
+      final Term t = fAnnot.getInvariant(x);
+      res = "(PCM.update " + res + " " + line.getStartPC() + "%N" +
                      " (" + Formula.generateFormulas(t) + ",," +  
                             fMet.getCode().getLength() + "%nat))";
-      }
+     
       System.out.println("inv " +  lineNum +  ": " + 
                          fAnnot.getInvariant(x));
       
@@ -97,6 +88,26 @@ public final class AnnotationVisitor extends ABasicVisitor {
     return res;
   }
   
+  public LineNumber getLineNumberFromLine(int lineNum) {
+    final LineNumberTable lnt = fMet.getCode().getLineNumberTable();
+    final LineNumber [] tab = lnt.getLineNumberTable();
+    if (tab.length == 0) {
+      return null;
+    }
+    LineNumber min = tab[0];
+    int oldspan = min.getLineNumber() - lineNum;
+    
+    for (LineNumber line: tab) {
+      final int span = (line.getLineNumber() - lineNum);
+      if (span  > 0) {
+        if (span < oldspan) {
+          min = line;
+          oldspan = span;
+        }
+      }
+    }
+    return min;
+  }
   
   public static String getAssertion(final RoutineDecl decl, final Method met) {
     return (String) decl.accept(new AnnotationVisitor(met),  

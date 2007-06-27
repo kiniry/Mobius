@@ -35,7 +35,17 @@ public class CType extends CTerm implements SAny {
    * @param rep the symbol attached to this node
    */
   public CType(final String rep) {
-    super(false, rep, new STerm[0]);
+    super(false, checkType(rep), new STerm[0]);
+  }
+
+  private static String checkType(String rep) {
+    String res = rep;
+    
+    res = res.replaceAll("_className\\)\\)", ".className))");
+    
+    res = res.replaceAll("_interfaceName\\)\\)", ".interfaceName))");
+    //res = res.replaceAll("_([a-zA-Z]*)FieldSignature", ".\\1FieldSignature");
+    return res;
   }
 
   /**
