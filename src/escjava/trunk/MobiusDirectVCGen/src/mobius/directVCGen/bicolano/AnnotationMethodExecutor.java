@@ -51,7 +51,6 @@ public class AnnotationMethodExecutor extends ABasicExecutor {
     final String defaultSpecs = "(0%nat,,(" + namePre + ",," + namePost + "))";
 
     final Stream out = getOut();
-    out.incTab();
 //    out.println(tab, "Definition " + namePost + " (s0:InitState) (t:ReturnState) := " +
 //                        " @nil Prop.\n");
     out.println("Module " + nameModule + ".");
@@ -72,7 +71,6 @@ public class AnnotationMethodExecutor extends ABasicExecutor {
     out.decTab();
     out.decTab();
     out.println("End " + nameModule + ".\n\n");
-    out.decTab();
     
   }
   
