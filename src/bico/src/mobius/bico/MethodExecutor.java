@@ -69,7 +69,7 @@ import org.apache.bcel.generic.Type;
  * P. Czarnik (czarnik@mimuw.edu.pl), 
  * L. Hubert (laurent.hubert@irisa.fr)
  */
-class MethodExecutor extends ABasicExecutor {
+class MethodExecutor extends ASignatureExecutor {
 
   
   
@@ -88,7 +88,7 @@ class MethodExecutor extends ABasicExecutor {
    * @param be the BasicExecutor to get the initialization from
    * @param cg the current class
    */
-  public MethodExecutor(final ABasicExecutor be, final ClassGen cg) {
+  public MethodExecutor(final ASignatureExecutor be, final ClassGen cg) {
     super(be);
     fClass = cg;
     fConstantPool = cg.getConstantPool();
@@ -103,19 +103,7 @@ class MethodExecutor extends ABasicExecutor {
   public void start() throws ClassNotFoundException {
     
     final Method[] methods = fClass.getMethods();
-    int methodName = RESERVED_METHODS;
-    for (Method meth: methods) {
-      methodName++;
-      final MethodGen mg = new MethodGen(meth, fClass.getClassName(), 
-                                         fConstantPool);
-      fDico.addMethod(mg.getClassName() + "." + mg.getName(), 
-                      fDico.getCoqPackageName(fClass.getJavaClass()),
-                      fDico.getCoqClassName(fClass.getJavaClass()),
-                      methodName);
-      fMethodHandler.addMethod(mg);
-      final String name = fMethodHandler.getName(mg);
-      doMethodSignature(meth, methodName, name);
-    }
+    
     for (Method meth: methods) {
       final MethodGen mg = new MethodGen(meth, fClass.getClassName(), fConstantPool);
       final String name = fMethodHandler.getName(mg);
@@ -168,13 +156,13 @@ class MethodExecutor extends ABasicExecutor {
     
     String str = "Definition " + name;
     str += "ShortSignature : ShortMethodSignature := METHODSIGNATURE.Build_t";
-    fOut.println(str);
-    fOut.incTab();
+    fOutSig.println(str);
+    fOutSig.incTab();
     str = "(" + coqMethodName + "%positive)";
-    fOut.println(str);
+    fOutSig.println(str);
     final Type[] atrr = method.getArgumentTypes();
     if (atrr.length == 0) {
-      fOut.println("nil");
+      fOutSig.println("nil");
     } 
     else {
       str = "(";
@@ -182,12 +170,12 @@ class MethodExecutor extends ABasicExecutor {
         str = str.concat(Util.convertType(atrr[i], fRepos) + "::");
       }
       str = str.concat("nil)");
-      fOut.println(str);
+      fOutSig.println(str);
     }
     final Type t = method.getReturnType();
-    fOut.println(Util.convertTypeOption(t, fRepos));
-    fOut.decTab();
-    fOut.println(".");
+    fOutSig.println(Util.convertTypeOption(t, fRepos));
+    fOutSig.decTab();
+    fOutSig.println(".");
     
     String clName = "className";
     if (fClass.getJavaClass().isInterface()) {
@@ -196,7 +184,7 @@ class MethodExecutor extends ABasicExecutor {
 
     str = "Definition " + name + "Signature : MethodSignature := " + 
                    "(" + clName + ", " + name + "ShortSignature).\n\n";
-    fOut.println(str);
+    fOutSig.println(str);
   }
   
   
@@ -502,10 +490,10 @@ class MethodExecutor extends ABasicExecutor {
         } 
         else if (ins instanceof InvokeInstruction) {
           String ms;
-          ms = className + "." + 
+          ms = className + "Signature" + "." + 
                fMethodHandler.getName((InvokeInstruction) fom, fConstantPool) + 
                "Signature";
-         
+
           ret = name + " " + ms;
         } 
         else {
@@ -638,5 +626,24 @@ class MethodExecutor extends ABasicExecutor {
     }
     return "(" + ret + ")";
 
+  }
+
+  @Override
+  public void doSignature() throws ClassNotFoundException {
+    final Method[] methods = fClass.getMethods();
+    int methodName = RESERVED_METHODS;
+    for (Method meth: methods) {
+      methodName++;
+      final MethodGen mg = new MethodGen(meth, fClass.getClassName(), 
+                                         fConstantPool);
+      fDico.addMethod(mg.getClassName() + "." + mg.getName(), 
+                      fDico.getCoqPackageName(fClass.getJavaClass()),
+                      fDico.getCoqClassName(fClass.getJavaClass()),
+                      methodName);
+      fMethodHandler.addMethod(mg);
+      final String name = fMethodHandler.getName(mg);
+      doMethodSignature(meth, methodName, name);
+    }
+    
   }
 }

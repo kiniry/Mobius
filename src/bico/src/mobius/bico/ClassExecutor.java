@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 
+import mobius.bico.Util.Stream;
+
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.generic.ClassGen;
 
@@ -15,8 +17,13 @@ import org.apache.bcel.generic.ClassGen;
  * P. Czarnik (czarnik@mimuw.edu.pl), 
  * L. Hubert (laurent.hubert@irisa.fr)
  */
-public class ClassExecutor extends ABasicExecutor {
+public class ClassExecutor extends ASignatureExecutor {
   
+  private static final String libPath = "Add LoadPath \"Formalisation/Library\".\n" + 
+                      "Add LoadPath \"Formalisation/Library/Map\".\n" +
+                      "Add LoadPath \"Formalisation/Bicolano\".\n";
+
+
   /** the current class which is inspected. */
   private ClassGen fClass;
   
@@ -30,6 +37,14 @@ public class ClassExecutor extends ABasicExecutor {
   /** the file that will be the output of the executor. */
   private File fOutputFile;
 
+  private File fTypeFile;
+
+
+  private Stream fOutTyp;
+
+
+  private String fModuleName;
+
   /**
    * Create a class executor in the context of another
    * executor.
@@ -40,18 +55,23 @@ public class ClassExecutor extends ABasicExecutor {
    */
   public ClassExecutor(final ABasicExecutor be, final ClassGen cg,
                        final File workingDir) throws FileNotFoundException {
-    super(be);
+    super(be, workingDir, cg);
     fClass = cg;
     fOutputFile = determineFileName(workingDir);
+    fTypeFile = determineTypeFileName(workingDir);
     fOut = new Util.Stream(new FileOutputStream(new File(workingDir, fOutputFile.getPath())));
+    fOutTyp = new Util.Stream(new FileOutputStream(new File(workingDir, fTypeFile.getPath())));
     fFieldExecutor = new FieldExecutor(this, fClass.getJavaClass());
     fMethExecutor = new MethodExecutor(this, fClass);
+
+    final JavaClass jc = fClass.getJavaClass();
+    fModuleName = Util.coqify(jc.getClassName());
   }
  
   /**
    * Determine the file name of the output file.
    * @param workingDir the current working directory
-   * @return a File which
+   * @return a File which has a path relative
    */
   private File determineFileName(final File workingDir) {
     final JavaClass jc = fClass.getJavaClass(); 
@@ -59,7 +79,18 @@ public class ClassExecutor extends ABasicExecutor {
     new File(workingDir, dir.getPath()).mkdirs();
     return new File(dir, Util.coqify(jc.getClassName()) + ".v");
   }
-
+  
+  /**
+   * Determine the file name of the type file.
+   * @param workingDir the current working directory
+   * @return a File which is a relative path
+   */
+  private File determineTypeFileName(final File workingDir) {
+    final JavaClass jc = fClass.getJavaClass(); 
+    final File dir = new File(jc.getPackageName().replace('.', File.separatorChar));
+    new File(workingDir, dir.getPath()).mkdirs();
+    return new File(dir, Util.coqify(jc.getClassName()) + "_type.v");
+  }
   /**
    * Real handling of one class in jc.
    * 
@@ -68,17 +99,31 @@ public class ClassExecutor extends ABasicExecutor {
   @Override
   public void start() throws ClassNotFoundException {
 
-    final JavaClass jc = fClass.getJavaClass();
-    final String moduleName = Util.coqify(jc.getClassName());
-    System.out.println("  --> Module " + moduleName + ".");
-    fOut.println("Module " + moduleName + ".\n");
-    
+    final JavaClass jc = fClass.getJavaClass(); 
     final int className = fDico.getCurrentClass() + 1;
-    fDico.addClass(jc, className);
+    fDico.addClass(jc, className); 
+    System.out.print("  --> Generating " + fModuleName + "Type: ");    
+    doClassNameDefinition();
+    System.out.println("done.");
+    
+    System.out.print("  --> Generating " + fModuleName + "Signature: ");
+    doSignature();
+    System.out.println("done.");
+    
+    System.out.print("  --> Generating " + fModuleName + ":");
+    
+    fOut.println(libPath);
+    fOut.println("Require Import ImplemProgramWithMap.\n" +
+                    "Import P.\n");
+    fOut.println("Require Import " + fModuleName + "_signature.");
+
+    fOut.println("Module " + fModuleName + ".\n");
+    
+    fOut.println("Import "  + fModuleName + "Signature.");
     
     fOut.incTab();
     
-    doClassNameDefinition();
+    
  
     
     fFieldExecutor.start();
@@ -89,8 +134,31 @@ public class ClassExecutor extends ABasicExecutor {
     doClassDefinition();
    
     fOut.decTab();
-    fOut.println("End " + moduleName + ".\n");
+    fOut.println("End " + fModuleName + ".\n");
+    System.out.println("done.");
 
+  }
+
+  public void doSignature() throws ClassNotFoundException {
+    fOutSig.println(libPath);
+    fOutSig.println("Require Import ImplemProgramWithMap.\n" +
+                    "Import P.\n");
+    fOutSig.println("Require Import " + fModuleName + "_type.");
+    fOutSig.println("Import "  + fModuleName + "Type.\n");
+    
+    fOutSig.println("Module " + fModuleName + "Signature.\n");
+    
+    fOutSig.incTab();
+  
+    fFieldExecutor.doSignature();
+
+    fMethExecutor.doSignature();
+   
+    fOutSig.decTab();
+    fOutSig.println("End " + fModuleName + "Signature.\n");
+
+    // TODO Auto-generated method stub
+    
   }
 
   /**
@@ -100,6 +168,15 @@ public class ClassExecutor extends ABasicExecutor {
     final JavaClass jc = fClass.getJavaClass();
     final int className =  fDico.getCoqClassName(jc);
     final int packageName = fDico.getCoqPackageName(jc);
+
+    
+    fOutTyp.println(libPath);
+    
+    fOutTyp.println("Require Import ImplemProgramWithMap.\n" +
+                    "Import P.\n");
+    fOutTyp.println("Module " + fModuleName + "Type.\n");
+    
+    fOutTyp.incTab();
     // classname
     String def;
     if (jc.isInterface()) {
@@ -112,7 +189,11 @@ public class ClassExecutor extends ABasicExecutor {
                          "%positive, " + className + "%positive).\n";
       
     }
-    fOut.println(def);
+    fOutTyp.println(def);
+
+    fOutTyp.decTab();
+    fOutTyp.println("End " + fModuleName + "Type.\n");
+    
   }
 
 

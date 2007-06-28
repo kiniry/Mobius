@@ -11,7 +11,7 @@ import org.apache.bcel.classfile.JavaClass;
  * P. Czarnik (czarnik@mimuw.edu.pl), 
  * L. Hubert (laurent.hubert@irisa.fr)
  */
-class FieldExecutor extends ABasicExecutor {
+class FieldExecutor extends ASignatureExecutor {
   
   /** determine the span of the 'reserved' fields names number default is 1. */
   private static final int RESERVED_FIELDS = 1;
@@ -26,7 +26,7 @@ class FieldExecutor extends ABasicExecutor {
    * @param be the BasicExecutor to get the initialization from
    * @param jc the current class
    */
-  public FieldExecutor(final ABasicExecutor be, final JavaClass jc) {
+  public FieldExecutor(final ASignatureExecutor be, final JavaClass jc) {
     super(be);
     
     fJavaClass = jc;
@@ -38,17 +38,8 @@ class FieldExecutor extends ABasicExecutor {
    * cannot be resolved
    */
   public void start() throws ClassNotFoundException {
-    int fieldIdx = RESERVED_FIELDS;
-    
     for (Field field : fJavaClass.getFields()) {
-      fieldIdx++;
-      fDico.addField(field.getName(), 
-                     fDico.getCoqPackageName(fJavaClass), 
-                     fDico.getCoqClassName(fJavaClass), 
-                     fieldIdx);
-      doFieldSignature(field, fieldIdx);
       doField(field);
-
       fOut.println();
     }
     
@@ -89,21 +80,21 @@ class FieldExecutor extends ABasicExecutor {
 
     String strf = "Definition " + Util.coqify(field.getName()) +
            "ShortFieldSignature : ShortFieldSignature := FIELDSIGNATURE.Build_t ";
-    fOut.println(strf);
-    fOut.incTab();
+    fOutSig.println(strf);
+    fOutSig.incTab();
     // !!! here positives
     
     strf = "(" + fieldIdx + "%positive)";
-    fOut.println(strf);
+    fOutSig.println(strf);
     // !!! here will be conversion
     strf = Util.convertType(field.getType(), fRepos);
-    fOut.println(strf);
-    fOut.decTab();
-    fOut.println(".\n");
+    fOutSig.println(strf);
+    fOutSig.decTab();
+    fOutSig.println(".\n");
     strf = "Definition " + Util.coqify(field.getName()) +
            "FieldSignature : FieldSignature := (className, " + 
            Util.coqify(field.getName()) + "ShortFieldSignature).\n";
-    fOut.println(strf);
+    fOutSig.println(strf);
   }
 
   /**
@@ -137,5 +128,21 @@ class FieldExecutor extends ABasicExecutor {
     fOut.println(strf);
     fOut.decTab();
     fOut.println(".");
+  }
+
+  @Override
+  public void doSignature() throws ClassNotFoundException {
+    int fieldIdx = RESERVED_FIELDS;
+    
+    for (Field field : fJavaClass.getFields()) {
+      fieldIdx++;
+      fDico.addField(field.getName(), 
+                     fDico.getCoqPackageName(fJavaClass), 
+                     fDico.getCoqClassName(fJavaClass), 
+                     fieldIdx);
+      doFieldSignature(field, fieldIdx);
+    }
+
+    
   }
 }
