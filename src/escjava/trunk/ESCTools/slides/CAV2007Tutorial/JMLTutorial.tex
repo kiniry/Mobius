@@ -7,9 +7,11 @@
 %
 \mode<presentation>
 {
+% overall themes that seem to work for this talk, pick one:
   %\usetheme[secheader]{Madrid}
-  \usetheme{Frankfurt}
-  %\useoutertheme[subsection=false,footline=empty]{miniframes}
+  %\usetheme{Pittsburgh}
+  \usetheme{Copenhagen} % or other similar themes
+%
   \usecolortheme{seahorse}
   \usefonttheme{structurebold}
   \setbeamercovered{transparent}
@@ -60,7 +62,7 @@ of Functional Behavior for Java}
 {\href{http://www.cs.iastate.edu/~leavens/}{Gary T.~Leavens}\inst{1}
   \and \href{http://secure.ucd.ie/~kiniry/}{Joseph R.~Kiniry}\inst{2}
   \and \href{http://www.cs.ru.nl/~erikpoll/}{Erik Poll}\inst{3}}
-\institute[ISU] % (optional, but mostly needed)
+\institute[ISU $\rightarrow$ UCF] % (optional, but mostly needed)
 {
   \inst{1}%
   Department of Computer Science\\
@@ -98,7 +100,7 @@ of Functional Behavior for Java}
   \titlepage
 \end{frame}
 
-\section*{Introduction}
+\section*{Intro.}
 
 \begin{frame}
 \frametitle{Objectives}
@@ -137,7 +139,7 @@ What do you want to learn about JML?
 
 %\part{JML Basics}
 
-\section{JML Overview}
+\section[Overview]{JML Overview}
 
 \subsection[Basics]{Basics}
 
@@ -465,7 +467,7 @@ Links to papers, etc.
 
 \end{frame}
 
-\section[Reading and Writing]{Reading and Writing JML Specifications}
+\section[R/W]{Reading and Writing JML Specifications}
 
 \subsection[Lightweight]{Lightweight Specification of Functional Behavior}
 
@@ -867,7 +869,7 @@ Specify the following:
 \end{frame}
 
 
-\subsection[Tool Use]{Basic Tool Use}  % demo + exercise
+\subsection[Tools]{Basic Tool Use}  % demo + exercise
 
 \begin{frame}
 \frametitle{Getting the Tools}
@@ -1024,9 +1026,6 @@ See Window/Preferences/Java/EscJava2 in the Eclipse menus.
 
 {\small
 \begin{verbatim}
-ESC/Java version ESCJava-2.0b1
-    [0.08 s 8340464 bytes]
-
 BagOfInt ...
   Prover started:0.03 s 15673776 bytes
     [2.013 s 15188656 bytes]
@@ -1045,7 +1044,7 @@ Associated declaration is
 }
 \end{frame}
 
-\subsection{Tips and Pitfalls}
+\subsection[Tips/Pitfalls]{Tips and Pitfalls}
 
 \begin{frame}
 \frametitle{Tip: Use JML Assert Statements}
@@ -1223,19 +1222,19 @@ from Peter M\"{u}ller's group (Werner Dietl) at ETH.}
 \end{frame}
 
 \begin{frame}<beamer>[fragile]
-\frametitle{Revised SortedInts Using Universes (jmlc)}
+\frametitle{Revised Using Universes (jmlc)}
 
-\lstinputlisting[linerange={16-30}]{examples/SortedInts2.java}
+\lstinputlisting[linerange={16-29}]{examples/SortedInts2.java}
 \end{frame}
 
 \begin{frame}<beamer>[fragile]
-\frametitle{Revised SortedInts Using Owner (ESC/Java2)}
+\frametitle{Revised Using Owner (ESC/Java2)}
 
 \lstinputlisting[linerange={1-4}]{examples/SortedInts3.java}
 \end{frame}
 
 \begin{frame}<beamer>[fragile]
-\frametitle{Revised SortedInts Using Owner (ESC/Java2)}
+\frametitle{Revised Using Owner (ESC/Java2)}
 
 \lstinputlisting[linerange={17-31}]{examples/SortedInts3.java}
 \end{frame}
@@ -1310,7 +1309,7 @@ Used with specification inheritance.
 
 \begin{frame}
 \frametitle{Multiple Specification Cases}
-\lstinputlisting{examples/Aging.java}
+\lstinputlisting[linerange={1-14}]{examples/Aging.java}
 \end{frame}
 
 \begin{frame}
@@ -1370,11 +1369,300 @@ also
 }
 \end{frame}
 
+\begin{frame}
+\frametitle{Client's View of Multiple Cases}
+
+Client can verify by:
+\begin{itemize}
+\item
+Picking one spec case.
+\begin{itemize}
+\item
+Assert precondition.
+
+\item
+Assume frame and postcondition.
+\end{itemize}
+
+Picking several cases.
+\begin{itemize}
+\item
+Compute their join.
+
+\item
+Assert joined precondition.
+
+\item
+Assume frame and joined postcondition.
+\end{itemize}
+\end{itemize}
+\note{Conditions must be adapted to the actual parameters by substitution...}
+\end{frame}
+
+\begin{frame}
+\frametitle{Implementor's View of Multiple Cases}
+
+\begin{itemize}
+\item
+Verify each case, or
+
+\item
+Verify their join.
+\end{itemize}
+\note{Assume each precondition and assert each postcondition,
+or assume the disjunction of the preconditions, and verify the
+conjunction of implications.
+}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Background for Specifying Exceptions}
+
+Java Exceptions:
+\begin{itemize}
+\item
+Unchecked (RuntimeException):
+\begin{itemize}
+\item
+Client avoidable (use preconditions).
+
+\item
+Implementation faults (fix them).
+\end{itemize}
+
+\item
+Checked:
+\begin{itemize}
+\item
+Clients can't avoid (efficiently).
+
+\item
+Condition simultaneous with use (permissions).
+
+\item
+Alternative returns (not found, EOF, $\ldots$).
+\end{itemize}
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{When to Specify Exceptions}
+
+Unchecked exceptions:
+\begin{itemize}
+\item
+Don't specify them.
+
+\item
+Just specify the normal cases.
+\end{itemize}
+
+Checked exceptions
+\begin{itemize}
+\item
+Specify them.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{JML Features for Exception Specification}
+
+\begin{itemize}
+\item
+\lstinline!exceptional_behavior! spec cases.
+
+\item
+\lstinline!signals_only! clause.
+
+\item
+\lstinline!signals! clause.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Exceptional Specification Example}
+\lstinputlisting[linerange={1-6}]{examples/Actor.java}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Exceptional Specification Example}
+\lstinputlisting[linerange={8-19}]{examples/Actor.java}
+\end{frame}
+
+\begin{frame}
+\frametitle{Underspecification of Exceptions}
+\begin{question}
+How would you underspecify this?
+\end{question}
+\note{That is, how to write the specification and ignore the
+  exceptional case?
+}
+\end{frame}
+
+\begin{frame}<beamer>
+\frametitle{Underspecification of Exceptions}
+\lstinputlisting[linerange={8-13}]{examples/ActorUnderspecified.java}
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{Behavior Specification Cases}
+
+\lstinline!normal_behavior!, \lstinline!exceptional_behavior!
+\begin{itemize}
+\item
+``Heavyweight''
+
+\item
+Say how method can terminate.
+
+\item
+Maximally permissive/useless defaults.
+\end{itemize}
+
+\lstinline!behavior!
+\begin{itemize}
+\item
+Doesn't specify normal/exceptional.
+
+\item
+Can use to underspecify normal/exceptional.
+\end{itemize}
+\note{Generally, the defaults for boolean clauses are ``true''.
+But for frames (assignable) the default is \lstinline!\everything!,
+as that is most permissive.
+And \lstinline!signals_only! has its standard default (see below).
+}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Lightweight Specification Cases}
+
+\begin{itemize}
+\item
+Don't use a behavior keyword.
+
+\item
+Most defaults technically \lstinline!\not_specified!.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Semantics of signals\_only}
+
+\begin{itemize}
+\item
+\lstinline!signals_only! $T_1, \ldots, T_n$\texttt{;}
+\begin{itemize}
+\item
+Exception thrown to caller must subtype
+one $T_1, \ldots, T_n$.
+\end{itemize}
+
+\item
+Can't use in \lstinline!normal_behavior!
+
+\item
+At most one \lstinline!signals_only! clause per spec case.
+
+\item
+Default for omitted clause
+\begin{itemize}
+\item
+if method declares \lstinline!throws! $T_1, \ldots, T_n$,
+\newline
+then \lstinline!signals_only! $T_1, \ldots, T_n$\texttt{;}.
+
+\item
+else \lstinline!signals_only \nothing;!.
+\end{itemize}
+\end{itemize}
+\note{Assuming $n > 0$.
+  The default only applies to lightweight spec cases and
+  heavyweight exceptional_behavior spec cases.
+}
+\end{frame}
+
+\begin{frame}
+\frametitle{Signals Clause}
+
+\begin{itemize}
+\item
+Specifies, when exception thrown,
+\begin{itemize}
+\item
+State of exception object.
+
+\item
+Other state.
+\end{itemize}
+
+\item
+Not very useful.
+
+\item
+Tip: normally omit.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Pitfalls in Exceptional Specification}
+\begin{itemize}
+\item
+Can't return normally \emph{and\/} throw exception.
+
+\item
+So preconditions shouldn't overlap.
+\end{itemize}
+
+\begin{question}
+What happens if they overlap?
+\end{question}
+\note{The specification will be unsatisfiable (for the overlap).
+      Thanks to Erik Poll for first pointing this out.
+      In many such cases you want to use a single Behavior.
+      See examples/Factor.java for how to do this.
+}
+\end{frame}
+
+\begin{frame}
+\frametitle{Exercise Using Multiple Cases}
+
+\begin{exercise}
+Specify the $3x+1$ or ``hailstone'' function, $h$,
+such that:
+
+\begin{displaymath}
+h(n) = 
+\left\{
+\begin{array}{ll}
+(3 \times n + 1)/2, & \mbox{if $n>0$ is odd} \\
+n / 2,              & \mbox{if $n>0$ is even}
+\end{array}
+\right.
+\end{displaymath}
+
+and $h$ is undefined on negative numbers.
+\end{exercise}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{My Answer}
+\lstinputlisting[linerange={3-11}]{examples/Hailstone.java}
+\note{Explain the nesting of spec cases by conjoining the outer
+  requires onto each inner requires.
+  Why not specify an exception?  It's not under user control.
+}
+\end{frame}
+
+
 %\part{Advanced JML}
 
 \section{Subtyping}
 
-\section[Abstraction]{Abstraction in Specification}
+\section[Abstr.]{Abstraction in Specification}
 
 \section[ESC]{ESC/Java2}
 

@@ -16,8 +16,8 @@ class SortedInts3 {
 
   /*@ requires inp.owner != this;
     @ requires (\forall int i, j; 
-    @      0 <= i && i < j && j < inp.length;
-    @      inp[i] <= inp[j]);
+    @    0 <= i && i < j && j < inp.length;
+    @    inp[i] <= inp[j]);
     @ assignable a;
     @ ensures \fresh(a);
     @ ensures a.length == inp.length;
@@ -25,7 +25,7 @@ class SortedInts3 {
     @      0 <= i && i < inp.length;
     @      a[i] == inp[i]);         @*/
   public SortedInts3(int[] inp) {
-    a = new int[inp.length];
+    a = new int[inp.length]; 
     //@ set a.owner = this;
     for (int i = 0; i < a.length; i++) {
         a[i] = inp[i]; } }
