@@ -245,27 +245,15 @@ public final class Util {
     }
   }
 
-  /**
-   * Write a line with a given tabulation.
-   * @param out the output stream where to write
-   * @param tabs the number of tabulation
-   * @param s the string to write
-   * @deprecated use {@link Stream#println(int, String)} instead
-   */
-  public static void writeln(final PrintStream out, final int tabs, 
-                             final String s) {
-    final StringBuffer str = new StringBuffer();
-    str.append(TAB);
-    out.println(str.toString());
-  }
 
   /**
    * A stream to use instead of writeln.
    * @author J. Charles (julien.charles@inria.fr)
    */
   public static class Stream extends PrintStream {
-
+    /** the number of tabs. */
     private int fTab;
+    /** the tabulations to add. */
     private String fStrTab = "";
     
     /**
@@ -292,15 +280,29 @@ public final class Util {
       str.append(s);
       super.println(str.toString());
     }
+    
+    /**
+     * Print the given string, but putting tabulations
+     * wherever necessary.
+     * @param s the string to print tabbed
+     */
     public void println(final String s) {
       String str = fStrTab + s;
       str = str.replaceAll("\n", "\n" + fStrTab);
       super.println(str);
     }
+    
+    /**
+     * Increments the tabulation.
+     */
     public void incTab() {
       fTab++;
       fStrTab += TAB;
     }
+    
+    /**
+     * Decrements the tabulations.
+     */
     public void decTab() {
       if (fTab > 0) {
         fTab--;

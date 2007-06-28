@@ -76,8 +76,6 @@ class MethodExecutor extends ABasicExecutor {
   /** determine the span of the 'reserved' methods names number default is 1. */
   private static final int RESERVED_METHODS = 1;
   
-  /** the number of tabs by default. */
-  private final int fTab = 2;
   
   /** the current class to get the method from. */
   private ClassGen fClass;
@@ -133,14 +131,14 @@ class MethodExecutor extends ABasicExecutor {
   
   /**
    * Write all the method names as an enumeration.
-   * @param tab the number of tabs to put
    */
-  public void doEnumeration(final int tab) {
+  public void doEnumeration() {
     final JavaClass jc = fClass.getJavaClass();
     // methods
+    fOut.incTab();
     final Method[] imeth = jc.getMethods();
     if (imeth.length == 0) {
-      fOut.println(tab + 1, fImplemSpecif.getNoMethods());
+      fOut.println(fImplemSpecif.getNoMethods());
     } 
     else {
       String str2 = "(";
@@ -151,8 +149,9 @@ class MethodExecutor extends ABasicExecutor {
       str2 += fImplemSpecif.methodsEnd(Util.coqify(imeth[imeth.length - 1].getName()) +
                                        "Method");
       str2 += ")";
-      fOut.println(tab + 1, str2);
+      fOut.println(str2);
     }
+    fOut.decTab();
   }
   
   /**
@@ -169,12 +168,13 @@ class MethodExecutor extends ABasicExecutor {
     
     String str = "Definition " + name;
     str += "ShortSignature : ShortMethodSignature := METHODSIGNATURE.Build_t";
-    fOut.println(fTab, str);
+    fOut.println(str);
+    fOut.incTab();
     str = "(" + coqMethodName + "%positive)";
-    fOut.println(fTab + 1, str);
+    fOut.println(str);
     final Type[] atrr = method.getArgumentTypes();
     if (atrr.length == 0) {
-      fOut.println(fTab + 1, "nil");
+      fOut.println("nil");
     } 
     else {
       str = "(";
@@ -182,11 +182,12 @@ class MethodExecutor extends ABasicExecutor {
         str = str.concat(Util.convertType(atrr[i], fRepos) + "::");
       }
       str = str.concat("nil)");
-      fOut.println(fTab + 1, str);
+      fOut.println(str);
     }
     final Type t = method.getReturnType();
-    fOut.println(fTab + 1, Util.convertTypeOption(t, fRepos));
-    fOut.println(fTab, ".");
+    fOut.println(Util.convertTypeOption(t, fRepos));
+    fOut.decTab();
+    fOut.println(".");
     
     String clName = "className";
     if (fClass.getJavaClass().isInterface()) {
@@ -195,7 +196,7 @@ class MethodExecutor extends ABasicExecutor {
 
     str = "Definition " + name + "Signature : MethodSignature := " + 
                    "(" + clName + ", " + name + "ShortSignature).\n\n";
-    fOut.println(fTab, str);
+    fOut.println(str);
   }
   
   
@@ -210,18 +211,19 @@ class MethodExecutor extends ABasicExecutor {
     // method
     String str = "Definition " + name + "Method : Method := METHOD.Build_t";
     // System.out.println(str);
-    fOut.println(fTab, str);
-    fOut.println(fTab + 1, name + "ShortSignature");
+    fOut.println(str);
+    fOut.incTab();
+    fOut.println(name + "ShortSignature");
     if (method.isAbstract()) {
       str = "None";
     } 
     else {
       str = "(Some " + name + "Body)";
     }
-    fOut.println(fTab + 1, str);
-    fOut.println(fTab + 1, "" + method.isFinal());
-    fOut.println(fTab + 1, "" + method.isStatic());
-    fOut.println(fTab + 1, "" + method.isNative());
+    fOut.println(str);
+    fOut.println("" + method.isFinal());
+    fOut.println("" + method.isStatic());
+    fOut.println("" + method.isNative());
     if (method.isPrivate()) {
       str = "Private";
     } 
@@ -234,8 +236,9 @@ class MethodExecutor extends ABasicExecutor {
     else {
       str = "Package"; // " (* "+attr+" *)"
     }
-    fOut.println(fTab + 1, str);
-    fOut.println(fTab, ".\n");
+    fOut.println(str);
+    fOut.decTab();
+    fOut.println(".\n");
     fOut.println();
   }
 
@@ -251,7 +254,8 @@ class MethodExecutor extends ABasicExecutor {
           fImplemSpecif.instructionsType() + " :=";
 
     // System.out.println(str);
-    fOut.println(fTab, str);
+    fOut.println(str);
+    fOut.incTab();
     final InstructionList il = mg.getInstructionList();
     if (il != null) {
       final Instruction[] listins = il.getInstructions();
@@ -262,17 +266,17 @@ class MethodExecutor extends ABasicExecutor {
         str = doInstruction(pos, listins[i]);
         final int posPre = pos;
         pos = pos + listins[i].getLength();
-        fOut.println(fTab + 1, fImplemSpecif.instructionsCons(str, posPre, pos));
+        fOut.println(fImplemSpecif.instructionsCons(str, posPre, pos));
       }
       // special case for the last instruction
-      fOut.println(fTab + 1, fImplemSpecif.instructionsEnd(doInstruction(pos,
+      fOut.println(fImplemSpecif.instructionsEnd(doInstruction(pos,
                                     listins[listins.length - 1]), pos));
     } 
     else {
-      fOut.println(fTab + 1, fImplemSpecif.getNoInstructions());
+      fOut.println(fImplemSpecif.getNoInstructions());
     }
-
-    fOut.println(fTab, ".\n");
+    fOut.decTab();
+    fOut.println(".\n");
   }
 
   /**
@@ -286,21 +290,23 @@ class MethodExecutor extends ABasicExecutor {
     // body
     str = "Definition " + name + "Body : BytecodeMethod := BYTECODEMETHOD.Build_t";
     // System.out.println(str);
-    fOut.println(fTab, str);
+    fOut.println(str);
+    fOut.incTab();
     fImplemSpecif.printExtraBodyField(fOut);
 
-    fOut.println(fTab + 1, name + "Instructions");
+    fOut.println(name + "Instructions");
     // exception names not handlers now
     // TODO: Handle handlers for map....
     if (handlers) {
-      fOut.println(fTab + 1, name + "Handlers");
+      fOut.println(name + "Handlers");
     } 
     else {
-      fOut.println(fTab + 1, "nil");
+      fOut.println("nil");
     }
-    fOut.println(fTab + 1, "" + mg.getMaxLocals());
-    fOut.println(fTab + 1, "" + mg.getMaxStack());
-    fOut.println(fTab, ".");
+    fOut.println("" + mg.getMaxLocals());
+    fOut.println("" + mg.getMaxStack());
+    fOut.decTab();
+    fOut.println(".");
     fOut.println();
   }
 
@@ -320,7 +326,8 @@ class MethodExecutor extends ABasicExecutor {
       if (etab != null && etab.length > 0) {
         handlers = true;
         String str = "Definition " + name + "Handlers : list ExceptionHandler := ";
-        fOut.println(fTab, str);
+        fOut.println(str);
+        fOut.incTab();
         for (CodeException codExc: etab) {
           str = "(EXCEPTIONHANDLER.Build_t ";
           final int catchType = codExc.getCatchType();
@@ -336,10 +343,11 @@ class MethodExecutor extends ABasicExecutor {
           str += codExc.getStartPC() + "%N " + 
                  codExc.getEndPC() + "%N " + 
                  codExc.getHandlerPC() + "%N)::";
-          fOut.println(fTab + 1, str);
+          fOut.println(str);
         }
-        fOut.println(fTab + 1, "nil");
-        fOut.println(fTab, ".\n");
+        fOut.println("nil");
+        fOut.decTab();
+        fOut.println(".\n");
       }
     }
     return handlers;

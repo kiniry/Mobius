@@ -20,8 +20,6 @@ public class ClassExecutor extends ABasicExecutor {
   /** the current class which is inspected. */
   private ClassGen fClass;
   
-  /** the current tabulation level. */
-  private int fTab;
 
   /** an executor to generate things concerning methods. */
   private MethodExecutor fMethExecutor;
@@ -48,8 +46,6 @@ public class ClassExecutor extends ABasicExecutor {
     fOut = new Util.Stream(new FileOutputStream(new File(workingDir, fOutputFile.getPath())));
     fFieldExecutor = new FieldExecutor(this, fClass.getJavaClass());
     fMethExecutor = new MethodExecutor(this, fClass);
-    fTab = 0;
-    
   }
  
   /**
@@ -75,12 +71,12 @@ public class ClassExecutor extends ABasicExecutor {
     final JavaClass jc = fClass.getJavaClass();
     final String moduleName = Util.coqify(jc.getClassName());
     System.out.println("  --> Module " + moduleName + ".");
-    fOut.println(fTab, "Module " + moduleName + ".\n");
-
+    fOut.println("Module " + moduleName + ".\n");
+    
     final int className = fDico.getCurrentClass() + 1;
     fDico.addClass(jc, className);
     
-    fTab++;
+    fOut.incTab();
     
     doClassNameDefinition();
  
@@ -92,8 +88,8 @@ public class ClassExecutor extends ABasicExecutor {
 
     doClassDefinition();
    
-    fTab--;
-    fOut.println(fTab, "End " + moduleName + ".\n");
+    fOut.decTab();
+    fOut.println("End " + moduleName + ".\n");
 
   }
 
@@ -116,7 +112,7 @@ public class ClassExecutor extends ABasicExecutor {
                          "%positive, " + className + "%positive).\n";
       
     }
-    fOut.println(fTab, def);
+    fOut.println(def);
   }
 
 
@@ -126,40 +122,44 @@ public class ClassExecutor extends ABasicExecutor {
   public void doClassDefinition() {
     final JavaClass jc = fClass.getJavaClass(); 
     if (jc.isInterface()) {
-      fOut.println(fTab, "Definition interface : Interface := INTERFACE.Build_t");
-      fOut.println(fTab + 1, "interfaceName");
+      fOut.println("Definition interface : Interface := INTERFACE.Build_t");
+      fOut.incTab();
+      fOut.println("interfaceName");
     } 
     else {
-      fOut.println(fTab, "Definition class : Class := CLASS.Build_t");
-      fOut.println(fTab + 1, "className");
+      fOut.println("Definition class : Class := CLASS.Build_t");
+      fOut.incTab();
+      fOut.println("className");
       final String superClassName = Util.coqify(jc.getSuperclassName());
       if (superClassName == null) {
-        fOut.println(fTab + 1, "None");
+        fOut.println("None");
       } 
       else {
-        fOut.println(fTab + 1, "(Some " + superClassName + ".className)");
+        fOut.println("(Some " + superClassName + ".className)");
       }
     }
     enumerateInterfaces();
+    fOut.decTab();
+    fFieldExecutor.doEnumeration();
 
-    fFieldExecutor.doEnumeration(fTab);
+    fMethExecutor.doEnumeration();
+    fOut.incTab();
+    fOut.println("" + jc.isFinal());
+    fOut.println("" + jc.isPublic());
+    fOut.println("" + jc.isAbstract());
+    fOut.decTab();
+    fOut.println(".\n");
 
-    fMethExecutor.doEnumeration(fTab);
-
-    fOut.println(fTab + 1, "" + jc.isFinal());
-    fOut.println(fTab + 1, "" + jc.isPublic());
-    fOut.println(fTab + 1, "" + jc.isAbstract());
-    fOut.println(fTab, ".\n");
   }
 
   /**
    * Enumerates the interfaces of the class.
    */
   private void enumerateInterfaces() {
-    
+    fOut.incTab();
     final String[] inames = fClass.getInterfaceNames();
     if (inames.length == 0) {
-      fOut.println(fTab + 1, "nil");
+      fOut.println("nil");
     } 
     else {
       String str = "(";
@@ -167,8 +167,9 @@ public class ClassExecutor extends ABasicExecutor {
         str = str.concat(Util.coqify(inames[i]) + ".interfaceName ::");
       }
       str = str.concat("nil)");
-      fOut.println(fTab + 1, str);
+      fOut.println(str);
     }
+    fOut.decTab();
   }
 
   /**

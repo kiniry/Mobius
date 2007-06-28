@@ -56,13 +56,13 @@ class FieldExecutor extends ABasicExecutor {
   
   /**
    * Enumerates in a Coq friendly form all the fields of the class.
-   * @param tab the current tabulation level.
    */
-  public void doEnumeration(final int tab) {
+  public void doEnumeration() {
     // fields
     final Field[] ifield = fJavaClass.getFields();
+    fOut.incTab();
     if (ifield.length == 0) {
-      fOut.println(tab + 1, fImplemSpecif.getNoFields());
+      fOut.println(fImplemSpecif.getNoFields());
     } 
     else {
       String str2 = "(";
@@ -72,8 +72,9 @@ class FieldExecutor extends ABasicExecutor {
       str2 += fImplemSpecif.fieldsEnd(Util.coqify(ifield[ifield.length - 1].getName()) + 
                                       "Field");
       str2 += ")";
-      fOut.println(tab + 1, str2);
+      fOut.println(str2);
     }
+    fOut.decTab();
   }
 
   /**
@@ -85,24 +86,24 @@ class FieldExecutor extends ABasicExecutor {
    */
   private void doFieldSignature(final Field field, 
                                 final int fieldIdx) throws ClassNotFoundException {
-    final int tab = 2;
-    
+
     String strf = "Definition " + Util.coqify(field.getName()) +
            "ShortFieldSignature : ShortFieldSignature := FIELDSIGNATURE.Build_t ";
-    fOut.println(tab, strf);
+    fOut.println(strf);
+    fOut.incTab();
     // !!! here positives
     
     strf = "(" + fieldIdx + "%positive)";
-    fOut.println(tab + 1, strf);
+    fOut.println(strf);
     // !!! here will be conversion
     strf = Util.convertType(field.getType(), fRepos);
-    fOut.println(tab + 1, strf);
-    fOut.println(tab, ".");
-    fOut.println();
+    fOut.println(strf);
+    fOut.decTab();
+    fOut.println(".\n");
     strf = "Definition " + Util.coqify(field.getName()) +
            "FieldSignature : FieldSignature := (className, " + 
            Util.coqify(field.getName()) + "ShortFieldSignature).\n";
-    fOut.println(tab, strf);
+    fOut.println(strf);
   }
 
   /**
@@ -110,16 +111,16 @@ class FieldExecutor extends ABasicExecutor {
    * @param field the field to compute
    */
   private void doField(final Field field) {
-    final int tab = 2;
     
     String strf = "Definition " + Util.coqify(field.getName()) +
            "Field : Field := FIELD.Build_t";
-    fOut.println(tab, strf);
+    fOut.println(strf);
+    fOut.incTab();
     strf = Util.coqify(field.getName()) + "ShortFieldSignature";
-    fOut.println(tab + 1, strf);
+    fOut.println(strf);
     
-    fOut.println(tab + 1, "" + field.isFinal());
-    fOut.println(tab + 1, "" + field.isStatic());
+    fOut.println("" + field.isFinal());
+    fOut.println("" + field.isStatic());
     String visibility = "Package";
     if (field.isPrivate()) {
       visibility = "Private";
@@ -130,10 +131,11 @@ class FieldExecutor extends ABasicExecutor {
     if (field.isPublic()) {
       visibility = "Public";
     }
-    fOut.println(tab + 1, visibility);
+    fOut.println(visibility);
     // FIXME current solution
     strf = "FIELD.UNDEF";
-    fOut.println(tab + 1, strf);
-    fOut.println(tab, ".");
+    fOut.println(strf);
+    fOut.decTab();
+    fOut.println(".");
   }
 }
