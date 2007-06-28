@@ -49,6 +49,32 @@ Talk -*- Outline -*-
 **** pitfalls
 *** exercise (if Time)
 
+* Abstraction in Specification
+** Motivation and Overview
+** Views of Specifications
+*** Client View
+*** Other Views
+**** Subtypes
+**** Private View
+*** Privacy and Modular Soundness
+**** Information Hiding for Maintenance
+**** Document Obligations for Soundness
+** Data abstration in JML
+*** Model Fields
+*** Represents Clauses
+*** Semantics
+*** Relation to spec_public
+** Frame Axioms and Datagroups
+*** Declarations
+*** Definition and Semantics
+*** Example
+*** Exercise
+** Advanced Data Abstraction
+*** Invariant Methodologies
+*** Helper Methods
+*** History Constraints
+*** Ghost Fields
+
 * Subtyping
 ** Modular Verification Problem
 *** Case Analysis
@@ -65,31 +91,6 @@ Talk -*- Outline -*-
 *** Code Contracts for Super Calls
 *** Modular Subclass Verification (Clyde Ruby)
 *** Use of \same (not in ESC/Java2)
-
-* Abstraction in Specification
-** Motivation
-*** Client View
-*** Other Views
-**** Subtypes
-**** Private View
-** Privacy Considerations
-*** Information Hiding for Maintenance
-*** Document Obligations for Soundness
-** Data abstration in JML
-*** Model Fields
-*** Represents Clauses
-*** Semantics
-*** Relation to spec_public
-** Frame Axioms and Datagroups
-*** Declarations
-*** Definition and Semantics
-*** Example
-*** Exercise
-** Advanced Data Abstraction
-*** Invariant Methodologies
-*** Helper Methods
-*** History Constraints
-*** Ghost Fields
 
 * ESC/Java2 (See notes)
 ** What it Does (demo)

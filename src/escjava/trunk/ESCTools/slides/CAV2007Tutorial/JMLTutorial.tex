@@ -1384,6 +1384,7 @@ Assert precondition.
 Assume frame and postcondition.
 \end{itemize}
 
+\item
 Picking several cases.
 \begin{itemize}
 \item
@@ -1660,9 +1661,190 @@ and $h$ is undefined on negative numbers.
 
 %\part{Advanced JML}
 
-\section{Subtyping}
-
 \section[Abstr.]{Abstraction in Specification}
+
+\subsection[Motivation]{Motivation and Overview}
+
+\begin{frame}
+\frametitle{Abstraction in Specification}
+
+Why use abstraction?
+\begin{itemize}
+\item
+Ease maintainence by information hiding.
+
+\item
+Readability:
+\begin{itemize}
+\item
+Avoid quantifiers.
+
+\item
+Repeated expressions.
+\end{itemize}
+
+\item
+Specify when no fields available \\
+Java \textbf{\texttt{interface}}s.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Features Supporting Abstraction}
+
+\begin{itemize}
+\item
+\lstinline!model! fields and \lstinline!represents! clauses.
+
+\item
+\lstinline!pure model! methods.
+
+\item
+\lstinline!pure! methods.
+
+\item
+\lstinline!protected! invariants, spec cases, etc.
+
+\item
+\lstinline!private! invariants, spec cases, etc.
+\end{itemize}
+\end{frame}
+
+\subsection[Views]{Views of Specifications}
+
+\begin{frame}
+\frametitle{Kinds of Clients}
+\includegraphics[width=4.25in]{visibility-modifiers}
+\note{The public clients are all most specification languages discuss.
+  This and some other parts on visibility and information hiding
+  are from work by Leavens and Mueller presented at ICSE 2007.
+}
+\end{frame}
+
+\begin{frame}
+\frametitle{Views of Specifications}
+\begin{tabular}{ll}
+         & Declarations in $C$ \\
+Modifier & visible to code in: \\
+\hline
+Private          & $C$ \\
+(None = package) & $C$'s package \\
+Protected        & $C$'s subclasses, \\
+                 & $C$'s package \\
+Public           & all
+\end{tabular}
+\note{ESC/Java2 currently ignores visibility.
+But checked by other JML tools.
+}
+\end{frame}
+
+\begin{frame}
+\frametitle{Privacy and Modular Soundness}
+Specifications visible to module $M$:
+\begin{itemize}
+\item
+Can only mention members visible to $M$.
+\begin{itemize}
+\item
+For maintenance.
+
+\item
+For understandability.
+\end{itemize}
+
+\item
+Must contain all of $M$'s obligations.
+\begin{itemize}
+\item
+For sound modular verification.
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Privacy and Modular Soundness}
+\begin{question}
+Can private fields be mentioned in public specifications?
+\end{question}
+
+\pause
+\begin{question}
+Can non-trivial preconditions be hidden from clients?
+\end{question}
+
+\pause
+\begin{question}
+What should a client assume is the precondition of \\
+a method with no visible specification cases?
+\end{question}
+
+\pause
+\begin{question}
+If invariant \emph{Inv} depends on field $f$, \\
+can \emph{Inv} be less visible than $f$?
+\end{question}
+\note{No to 1,2 and 4, as these violate the principles.
+The answer to 3 is ``true''.
+}
+\end{frame}
+
+\subsection[Model]{Data Abstraction with Model Fields}
+
+\begin{frame}[fragile]
+\frametitle{Model Fields for Data Abstraction}
+
+Model fields:
+\begin{itemize}
+\item
+Just for specification.
+
+\item
+Abstraction of Java fields.
+
+\item
+Value from \lstinline!represents!.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Model Field in an Interface}
+\lstinputlisting{examples/Gendered.java}
+\note{We use \lstinline!instance! because by default fields in Java
+  interfaces are static.}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Represents Clauses}
+\lstinputlisting[linerange={1-5,16-19}]{examples/Animal.java}
+\end{frame}
+
+\begin{frame}
+\frametitle{Correctness with Model Fields}
+\includegraphics[width=4.25in]{model-correctness}
+\end{frame}
+
+
+\section[Subtypes]{Subtyping and Specification Inheritance}
+
+\begin{frame}
+\frametitle{Modular Reasoning}
+\begin{itemize}
+\item
+Prove code using specifications of other modules.
+
+\item
+Sound, if each module satisfies specification.
+\end{itemize}
+
+~ 
+
+Scales better than whole-program reasoning.
+\end{frame}
+
+\begin{frame}
+\frametitle{Modular Verification Problem}
+\end{frame}
+
 
 \section[ESC]{ESC/Java2}
 
