@@ -68,12 +68,9 @@ Talk -*- Outline -*-
 *** Declarations
 *** Definition and Semantics
 *** Example
-*** Exercise
 ** Advanced Data Abstraction
 *** Invariant Methodologies
-*** Helper Methods
 *** History Constraints
-*** Ghost Fields
 
 * Subtyping
 ** Modular Verification Problem
@@ -101,6 +98,9 @@ Talk -*- Outline -*-
 ** Multithreading support
 *** Mention RCC?
 ** Connection to Provers
+** Other topics (omit?)
+*** Helper methods
+*** Ghost Fields
 
 * Conclusions
 ** Advantages of JML

@@ -2,25 +2,29 @@ import java.util.*;
 public class Patient extends Person {
   //@ public invariant 0 <= age && age <= 150;
 
-  protected /*@ spec_public rep @*/ List history;
-  /*@ public initially history.size() == 0;
-    @ public invariant (\forall int i; 0 <= i && i < history.size();
-    @                           history.get(i) instanceof rep String);
-    @ public constraint \old(history.size()) <= history.size();
-    @ public constraint (\forall int i; 0 <= i && i < \old(history.size());
-    @                           history.get(i).equals(\old(history.get(i))));
+  protected /*@ spec_public rep @*/ List log;
+  //@ public initially log.size() == 0;
+  /*@ public invariant (\forall int i;
+    @      0 <= i && i < log.size();
+    @      log.get(i) instanceof rep String); @*/
+  /*@ public constraint
+    @      \old(log.size()) <= log.size();
+    @ public constraint (\forall int i; 
+    @      0 <= i && i < \old(log.size());
+    @      log.get(i).equals(\old(log.get(i))));
     @*/
 
   /*@ requires !obs.equals("");
-    @ assignable history.theCollection;
-    @ ensures history.size() == \old(history.size()+1)
-    @      && history.get(\old(history.size()+1)).equals(obs);   @*/
+    @ assignable log.theCollection;
+    @ ensures log.size() == \old(log.size()+1)
+    @      && log.get(\old(log.size()+1)).equals(obs); 
+    @*/
   public void recordVisit(String obs) {
-    history.add(new /*@ rep @*/ String(obs));
+    log.add(new /*@ rep @*/ String(obs));
   }
 
   //@ requires g.equals("female") || g.equals("male");
-  //@ assignable gender, history;
+  //@ assignable gender, log;
   //@ ensures gender.equals(g);
-  public Patient(String g) { super(g); history = new /*@ rep @*/ ArrayList(); }
+  public Patient(String g) { super(g); log = new /*@ rep @*/ ArrayList(); }
 }

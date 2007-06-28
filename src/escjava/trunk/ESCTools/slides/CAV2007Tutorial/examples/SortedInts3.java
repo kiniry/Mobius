@@ -28,5 +28,7 @@ class SortedInts3 {
     a = new int[inp.length]; 
     //@ set a.owner = this;
     for (int i = 0; i < a.length; i++) {
-        a[i] = inp[i]; } }
+        a[i] = inp[i];
+    }
+  }
 }

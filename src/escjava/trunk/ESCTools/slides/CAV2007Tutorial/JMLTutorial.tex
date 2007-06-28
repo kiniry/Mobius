@@ -47,11 +47,58 @@
         keywordstyle=\bfseries,
         keywordstyle={[2]\bfseries\color{violet!80!black}}
        }
+\newcommand{\JMLKW}[1]{\textcolor{violet!80!black}{\textbf{\texttt{#1}}}}
 
 % Customizations
 \thicklines
 \newtheorem*{question}{Question}
 \newtheorem*{exercise}{Exercise}
+
+% Semantics
+\newcommand{\DG}{\textit{DG}}
+\newcommand{\STO}{\ensuremath{\leq}}
+\newcommand{\REDT}{\textcolor{red!80!black}{\ensuremath{T}}}
+\newcommand{\BLUETP}{\textcolor{blue!80!black}{\ensuremath{T'}}}
+
+\newcommand{\spec}{{\textit{spec}}}
+\newcommand{\pre}{{\textit{pre}}}
+\newcommand{\post}{{\textit{post}}}
+\newcommand{\inv}{{\textit{inv}}}
+\newcommand{\hc}{{\textit{hc}}}
+\newcommand{\init}{{\textit{init}}}
+\newcommand{\repr}{{\textit{repr}}}
+
+\newcommand{\added}[1]{{\textit{added}}\_#1}
+\newcommand{\addedspec}{\added{\spec}}
+\newcommand{\addedpre}{\added{\pre}}
+\newcommand{\addedpost}{\added{\post}}
+\newcommand{\addedinv}{\added{\inv}}
+\newcommand{\addedhc}{\added{\hc}}
+\newcommand{\addedinit}{\added{\init}}
+\newcommand{\addedrepr}{\added{\repr}}
+
+\newcommand{\ext}[1]{{\textit{ext}}\_#1}
+\newcommand{\extspec}{\ext{\spec}}
+\newcommand{\extpre}{\ext{\pre}}
+\newcommand{\extpost}{\ext{\post}}
+\newcommand{\extinv}{\ext{\inv}}
+\newcommand{\exthc}{\ext{\hc}}
+\newcommand{\extinit}{\ext{\init}}
+\newcommand{\extrepr}{\ext{\repr}}
+
+\newcommand{\join}{\ensuremath{\sqcup}}
+\newcommand{\bigjoin}{\ensuremath{\bigsqcup}}
+\newcommand{\refines}{\ensuremath{\sqsupseteq}}
+\newcommand{\supers}{\textit{supers}}
+\newcommand{\methods}{\textit{methods}}
+
+\newcommand{\true}{\mbox{\textit{true}}}
+\newcommand{\false}{\mbox{\textit{false}}}
+
+\newcommand{\oa}{\texttt{\textbackslash{\textbf{only\_assigned}}}}
+\newcommand{\At}{\triangleright}
+\newcommand{\Spec}[1]{\textrm{Spec}(#1)}
+\newcommand{\Proves}{\:\: \vdash \:\:}
 
 % -------- frontmatter ---------------
 \title[JML Tutorial]{A JML Tutorial}
@@ -246,13 +293,13 @@ Design patterns.
 \frametitle{Approach}
 \begin{itemize}
 \item
-Hoare-style (Contracts)
+Hoare-style (Contracts).
 
 \item
-Method pre- and postconditions 
+Method pre- and postconditions.
 
 \item
-Invariants
+Invariants.
 \end{itemize}
 \end{frame}
 
@@ -1236,7 +1283,14 @@ from Peter M\"{u}ller's group (Werner Dietl) at ETH.}
 \begin{frame}<beamer>[fragile]
 \frametitle{Revised Using Owner (ESC/Java2)}
 
-\lstinputlisting[linerange={17-31}]{examples/SortedInts3.java}
+\lstinputlisting[linerange={17-27}]{examples/SortedInts3.java}
+\end{frame}
+
+\begin{frame}<beamer>[fragile]
+\frametitle{Revised Using Owner (ESC/Java2)}
+
+\lstinputlisting[linerange={27-33}]{examples/SortedInts3.java}
+\note{Owner is a ghost field, so assigned to by a \lstinline!set! statement.}
 \end{frame}
 
 \begin{frame}
@@ -1780,8 +1834,8 @@ a method with no visible specification cases?
 
 \pause
 \begin{question}
-If invariant \emph{Inv} depends on field $f$, \\
-can \emph{Inv} be less visible than $f$?
+If invariant $\inv$ depends on field $f$, \\
+can $\inv$ be less visible than $f$?
 \end{question}
 \note{No to 1,2 and 4, as these violate the principles.
 The answer to 3 is ``true''.
@@ -1823,8 +1877,273 @@ Value from \lstinline!represents!.
 \includegraphics[width=4.25in]{model-correctness}
 \end{frame}
 
+\begin{frame}[fragile]
+\frametitle{Example of Using Model Fields}
+\begin{question}
+Is Animal's constructor (below) correct?
+\rm
+\lstinputlisting[linerange={2-5,8-14}]{examples/Animal.java}
+\end{question}
+\end{frame}
+
+\begin{frame}
+\frametitle{Datagroups for Assignable Clauses}
+\begin{itemize}
+\item
+Each field is a datagroup.
+
+\item
+Membership by \JMLKW{in} clauses.
+
+\item
+Model field's group contains
+fields used in its \JMLKW{represents}.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Datagroups and Assignable Picture}
+\includegraphics[width=4.25in]{datagroup}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{The Semantics of Assignable}
+
+\lstinline!assignable! $x$, $y$\texttt{;}
+
+~~means:
+
+method only assigns to (concrete) members of 
+$\DG(x) \cup \DG(y)$.
+
+\begin{question}
+What does \lstinline!assignable gender;! mean?
+\end{question}
+\note{We use $\DG(x)$ in this talk as the datagroup of $x$.
+The method only assigns to gen or other members of gender's datagroup.
+}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{In Clauses for Declarations}
+
+\lstinline!private! $T$ $x$\lstinline!; //@ in! $g$\texttt{;}
+
+\begin{itemize}
+\item
+Immediately follows declaration
+
+\item
+Same visibility as declaration.
+\end{itemize}
+
+JML ensures that:
+\begin{itemize}
+\item
+If $f \in \DG(g)$, then $g$ visible where $f$ is.
+
+\item
+If $f$ and $g$ visible,
+can tell if $f \in \DG(g)$.
+\end{itemize}
+\note{The first of these is Leino and Nelson's (2002) Authenticity rule.}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Semantics of \lstinline!spec_public!}
+\lstinputlisting[linerange={7-7}]{examples/Animal.java}
+
+shorthand for:
+
+\begin{lstlisting}
+  //@ public model int age;
+  //@ protected int _age = 0; //@ in age;
+  //@ protected represents age <- _age; 
+\end{lstlisting}
+
+and rewriting Java code to use \lstinline!_age!.
+
+\note{Can use this for changing \lstinline!spec_public! declarations.}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Datagroup Visibility and Reasoning}
+
+\begin{question}
+Can assigning to \lstinline!age! change \lstinline!gender!?
+\end{question}
+\note{No, we can tell they are in distinct datagroups, since we've
+  seen both declarations and they aren't connected.
+  JML makes sure that we can't put age in gender's datagroup later.
+}
+\end{frame}
+
+\subsection[Advanced]{Advanced Data Abstraction}
+
+\begin{frame}[fragile]
+\frametitle{Type-Level Specification Features}
+
+\begin{itemize}
+\item
+fields, \lstinline!in!, \lstinline!represents!
+
+\item
+\lstinline!invariant!
+
+\item
+\lstinline!initially!
+
+\item
+\lstinline!constraint!
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Initially Clauses}
+
+\lstinputlisting[linerange={1-6}]{examples/Patient.java}
+
+\begin{itemize}
+\item
+Hold in constructor post-states.
+
+\item
+Basis for datatype induction.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{History Constraints}
+\lstinputlisting[linerange={1-2}]{examples/Patient.java}
+\lstinputlisting[linerange={5-5}]{examples/Patient.java}
+\lstinputlisting[linerange={10-15}]{examples/Patient.java}
+\end{frame}
+
+\begin{frame}
+\frametitle{History Constraints}
+\begin{itemize}
+\item
+Relate pre-states and post-states.
+
+\item
+Justifies inductive step in datatype induction.
+\end{itemize}
+\end{frame}
 
 \section[Subtypes]{Subtyping and Specification Inheritance}
+
+\subsection[Modularity]{Modular Verification Problem}
+
+\begin{frame}[fragile]
+\frametitle{Supertype Abstraction}
+
+Reasoning about dynamic dispatch:
+
+\lstinputlisting[linerange={16-20}]{examples/Females.java}
+
+Supertype abstraction:
+\begin{itemize}
+\item
+Static type of \lstinline!e! is \lstinline!Gendered!.
+
+\item
+Use specification from \lstinline!Gendered!.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Static Type's Specification}
+
+\lstinputlisting{examples/Gendered.java}
+\end{frame}
+
+\begin{frame}
+\frametitle{Supertype Abstraction in General}
+Use static type's specifications to reason about:
+\begin{itemize}
+\item
+Method calls.
+\item
+Invariants.
+\item
+History constraints.
+\item
+Initially predicates.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Supertype Abstraction}
+\framesubtitle{Client's View}
+
+\begin{lstlisting}[mathescape=true]
+$T$ $o$ = createNewObject();
+//@ assume $o$.$\extinit^T$ && $o$.$\extinv^T$;
+
+/* ... */
+
+//@ assert $o.\extpre^T_m$;
+$o$.$m$();
+//@ assume $o.\extpost^T_m$;
+//@ assume $o.\extinv^T_m$ && $o$.$\exthc^T$;
+\end{lstlisting}
+\note{Here $T$ is the static type of $o$, that's why all the
+  assertions refer to its specification.
+}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{What Happens at Runtime}
+
+Suppose we have
+
+\begin{lstlisting}[mathescape=true]
+public $T$ createNewObject() {
+   return new $T'$();
+}
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Validity of Supertype Abstraction}
+\framesubtitle{Implementation (Subtype) View}
+
+\begin{lstlisting}[mathescape=true]
+$T$ $o$ = createNewObject(); // new $T'$
+//@ assert $o$.$\extinit^{T'}$ && $o$.$\extinv^{T'}$;
+
+/* ... */
+
+//@ assume $o.\extpre^{T'}_m$;
+$o$.$m$();
+//@ assert $o.\extpost^{T'}_m$;
+//@ assert $o.\extinv^{T'}_m$ && $o$.$\exthc^{T'}$;
+\end{lstlisting}
+\note{Here $T$ is the static type of $o$, 
+     but it's dynamic type is $T'$.
+}
+\end{frame}
+
+\begin{frame}
+\frametitle{Behavioral Subtyping}
+\begin{definition}
+Suppose $T' \STO T$.  Then \\
+$T'$ \emph{is a strong behavioral subtype of} $T$
+if and only if:
+
+\begin{itemize}
+\item
+for all instance methods $m$ in $T$
+\end{itemize}
+\end{definition}
+\end{frame}
+
+
+\section[ESC]{ESC/Java2}
+
+\section*{Concl.}
+
+\appendix
 
 \begin{frame}
 \frametitle{Modular Reasoning}
@@ -1841,15 +2160,5 @@ Sound, if each module satisfies specification.
 Scales better than whole-program reasoning.
 \end{frame}
 
-\begin{frame}
-\frametitle{Modular Verification Problem}
-\end{frame}
-
-
-\section[ESC]{ESC/Java2}
-
-\section*{Conclusions}
-
-%\appendix
 
 \end{document}

@@ -10,9 +10,8 @@ public class Animal implements Gendered {
     @       || g.equals("male");
     @ assignable gender;
     @ ensures gender.equals(g);  @*/
-  public Animal(final String g) {
-    gen = g.equals("female");
-  }
+  public Animal(final String g)
+  { gen = g.equals("female"); }
 
   public /*@ pure @*/ boolean isFemale() {
     return gen;
