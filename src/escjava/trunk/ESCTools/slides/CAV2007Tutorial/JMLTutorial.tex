@@ -1109,7 +1109,7 @@ Associated declaration is
 
 \begin{columns}[t]
 \column{.5\textwidth}
-\begin{block}{JML}
+\begin{block}{JML assert statements}
 \begin{itemize}
 \item
 All JML features.
@@ -1120,7 +1120,7 @@ No side effects.
 \end{block}
 
 \column{.5\textwidth}
-\begin{block}{Java}
+\begin{block}{Java assert statements}
 \begin{itemize}
 \item
 Only Java expressions.
@@ -1147,13 +1147,18 @@ Claims $P$ is true.
 Checked by the RAC like \lstinline!assert! $P$\texttt{;}
 
 \item
+Blame other party if false.
+
+\item
 Assumed by ESC/Java and static tools.
 \end{itemize}
-
+\note{There are differences in static checkers, such as ESC/Java, and
+  in error messages and exceptions from the RAC, however.
+}
 \end{frame}
 
 \begin{frame}[fragile]
-\frametitle{Assume Statements Blame Other}
+\frametitle{Assume Statements and Verification}
 
 \begin{lstlisting}[mathescape=true]
 //@ requires $P$;
@@ -1163,7 +1168,7 @@ public void m() {
 }
 \end{lstlisting}
 
-similar to:
+~~generates:
 
 \begin{lstlisting}[mathescape=true]
 public void m() {
@@ -1172,13 +1177,20 @@ public void m() {
   //@ assert $Q$;
 }
 \end{lstlisting}
-\note{There are differences in static checkers, such as ESC/Java, and
-  in error messages and exceptions from the RAC, however.
-}
 \end{frame}
 
 \begin{frame}[fragile]
-\frametitle{Assume Statements Blame Other}
+\frametitle{Assume Statements and Verification}
+
+\begin{lstlisting}[mathescape=true]
+//@ requires $P$;
+//@ ensures $Q$;
+public void m() {
+  $S$
+}
+\end{lstlisting}
+
+~~generates:
 
 \begin{lstlisting}[mathescape=true]
 //@ assert $P$;
@@ -1263,7 +1275,7 @@ due to multiple inheritance of interface types.
 What's wrong with this? \uncover<2->{How to fix it?}
 
 \rm
-\lstinputlisting[linerange={5-7}]{examples/SortedInts.java}
+\lstinputlisting[linerange={4-6}]{examples/SortedInts.java}
 \lstinputlisting[linerange={16-22}]{examples/SortedInts.java}
 \end{question}
 \note{The invariant may not hold on entry to the method, 
@@ -1462,7 +1474,9 @@ Assert joined precondition.
 Assume frame and joined postcondition.
 \end{itemize}
 \end{itemize}
-\note{Conditions must be adapted to the actual parameters by substitution...}
+\note{Conditions must be adapted to the actual parameters by substitution...
+Computing the join is easy if the preconditions are equal.
+}
 \end{frame}
 
 \begin{frame}
@@ -2137,17 +2151,17 @@ Initially predicates.
 \framesubtitle{Client's View}
 
 \begin{lstlisting}[mathescape=true]
-$T$ $o$ = createNewObject();
-//@ assume $o$.$\extinit^T$ && $o$.$\extinv^T$;
+$\REDT$ $o$ = createNewObject();
+//@ assume $o$.$\extinit^{\REDT}$ && $o$.$\extinv^{\REDT}$;
 
 /* ... */
 
-//@ assert $o.\extpre^T_m$;
+//@ assert $o.\extpre^{\REDT}_m$;
 $o$.$m$();
-//@ assume $o.\extpost^T_m$;
-//@ assume $o.\extinv^T_m$ && $o$.$\exthc^T$;
+//@ assume $o.\extpost^{\REDT}_m$;
+//@ assume $o.\extinv^{\REDT}_m$ && $o$.$\exthc^{\REDT}$;
 \end{lstlisting}
-\note{Here $T$ is the static type of $o$, that's why all the
+\note{Here $\REDT$ is the static type of $o$, that's why all the
   assertions refer to its specification.
 }
 \end{frame}
@@ -2158,8 +2172,8 @@ $o$.$m$();
 Suppose we have
 
 \begin{lstlisting}[mathescape=true]
-public $T$ createNewObject() {
-   return new $T'$();
+public $\REDT$ createNewObject() {
+   return new $\BLUETP$();
 }
 \end{lstlisting}
 \end{frame}
@@ -2169,31 +2183,31 @@ public $T$ createNewObject() {
 \framesubtitle{Implementation (Subtype) View}
 
 \begin{lstlisting}[mathescape=true]
-$T$ $o$ = createNewObject(); // new $T'$
-//@ assert $o$.$\extinit^{T'}$ && $o$.$\extinv^{T'}$;
+$\REDT$ $o$ = createNewObject(); // new $\BLUETP$()
+//@ assert $o$.$\extinit^{\BLUETP}$ && $o$.$\extinv^{\BLUETP}$;
 
 /* ... */
 
-//@ assume $o.\extpre^{T'}_m$;
+//@ assume $o.\extpre^{\BLUETP}_m$;
 $o$.$m$();
-//@ assert $o.\extpost^{T'}_m$;
-//@ assert $o.\extinv^{T'}_m$ && $o$.$\exthc^{T'}$;
+//@ assert $o.\extpost^{\BLUETP}_m$;
+//@ assert $o.\extinv^{\BLUETP}_m$ && $o$.$\exthc^{\BLUETP}$;
 \end{lstlisting}
-\note{Here $T$ is the static type of $o$, 
-     but it's dynamic type is $T'$.
+\note{Here $\REDT$ is the static type of $o$, 
+     but it's dynamic type is $\BLUETP$.
 }
 \end{frame}
 
 \begin{frame}
 \frametitle{Behavioral Subtyping}
 \begin{definition}
-Suppose $T' \STO T$.  Then \\
-$T'$ \emph{is a strong behavioral subtype of} $T$
+Suppose $\BLUETP \STO \REDT$.  Then \\
+$\BLUETP$ \emph{is a strong behavioral subtype of} $\REDT$
 if and only if:
 
 \begin{itemize}
 \item
-for all instance methods $m$ in $T$
+for all instance methods $m$ in $\REDT$ [[[...]]]
 \end{itemize}
 \end{definition}
 \end{frame}
