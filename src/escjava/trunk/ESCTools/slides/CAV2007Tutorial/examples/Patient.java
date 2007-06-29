@@ -27,4 +27,15 @@ public class Patient extends Person {
   //@ assignable gender, log;
   //@ ensures gender.equals(g);
   public Patient(String g) { super(g); log = new /*@ rep @*/ ArrayList(); }
+
+  protected /*@ spec_public @*/
+     boolean ageDiscount = false;  //@ in age;
+
+  /*@ also
+    @   requires (0 <= a && a <= 150) || a < 0;
+    @   ensures 65 <= age ==> ageDiscount;  @*/
+  public void setAge(final int a) {
+    super.setAge(a);
+    if (65 <= age) { ageDiscount = true; }
+  }
 }

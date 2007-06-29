@@ -1,8 +1,8 @@
-public interface GenderedEqualsBad extends Gendered {
+public interface GenderedEqualsGood extends Gendered {
   /*@ also
     @   ensures obj instanceof Gendered
     @       ==> (\result
-    @              == gender.equals(
+    @              ==> gender.equals(
     @                   ((Gendered)obj).gender);
     @*/
   public /*@ pure @*/ 

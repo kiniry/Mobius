@@ -57,8 +57,10 @@
 % Semantics
 \newcommand{\DG}{\textit{DG}}
 \newcommand{\STO}{\ensuremath{\leq}}
-\newcommand{\REDT}{\textcolor{red!80!black}{\ensuremath{T}}}
-\newcommand{\BLUETP}{\textcolor{blue!80!black}{\ensuremath{T'}}}
+\newcommand{\RED}[1]{\textcolor{red!80!black}{#1}}
+\newcommand{\BLUE}[1]{\textcolor{blue!80!black}{#1}}
+\newcommand{\REDT}{\RED{\ensuremath{T}}}
+\newcommand{\BLUETP}{\BLUE{\ensuremath{T'}}}
 
 \newcommand{\spec}{{\textit{spec}}}
 \newcommand{\pre}{{\textit{pre}}}
@@ -746,6 +748,21 @@ Allows method's use in specifications.
 \note{Note that pure is a modifier for methods, not a clause.}
 \end{frame}
 
+\begin{frame}[fragile]
+\frametitle{Assignable is a Shorthand}
+\begin{lstlisting}[mathescape=true]
+  assignable gender;
+  ensures gender.equals(g);
+\end{lstlisting}
+
+means
+
+\begin{lstlisting}[mathescape=true]
+  ensures \only_assigned(gender)
+       && gender.equals(g);
+\end{lstlisting}
+\end{frame}
+
 \begin{frame}[fragile,label=redundantly]
 \frametitle{Redundant Clauses}
 
@@ -917,7 +934,10 @@ Specify the following:
 \frametitle{My Solution: BagOfInt's Data}
 
 \lstinputlisting[linerange={2-2,4-9}]{examples/BagOfInt.jml}
-\note{Why do we need n?  To allow deletion.}
+\note{Why do we need n?  To allow deletion.
+Note that we're using the default \lstinline!non_null! for
+\lstinline!a! instaed of making it \lstinline!nullable!.
+}
 \end{frame}
 
 \begin{frame}<beamer>[fragile]
@@ -1394,6 +1414,7 @@ Used to specify exceptions.
 \item
 Used with specification inheritance.
 \end{itemize}
+\note{This idea first appears in Jeannette Wing's 1983 Ph.D. dissertation.}
 \end{frame}
 
 \begin{frame}
@@ -1457,6 +1478,43 @@ also
       This last version could of course be simplified a bit.
 }
 \end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Formal Notation for Method Specification}
+
+\begin{lstlisting}[mathescape=true]
+  public interface $T$ {
+    //@ requires $\pre$;
+    //@ ensures $\post$;
+    void m();
+  }
+\end{lstlisting}
+
+~
+
+$T \At (\pre, \post)$
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Join of Specification Cases, $\join^{S}$}
+\begin{definition}
+If \BLUE{${T' \At (\pre',\post')}$}, \RED{$T \At (\pre, \post)$},
+$S \STO \BLUE{T'}$, $S \STO \RED{T}$, 
+then
+\begin{displaymath}
+\BLUE{(\pre',\post')} \:\join^S\: \RED{(\pre,\post)} = (p,q)
+\end{displaymath}
+where $p = \BLUE{\pre'} \mbox{\texttt{ || }} \RED{\pre}$ \\
+and $q = (\texttt{\textbackslash\textbf{old}(}\BLUE{\pre'}\texttt{)}
+   \mbox{\texttt{ ==> }} \BLUE{\post'})
+\mbox{\texttt{ \&\& }}
+  (\texttt{\textbackslash\textbf{old}(}\RED{\pre}\texttt{)}
+   \mbox{\texttt{ ==> }} \RED{\post})$ \\
+and $S \At (p, q)$.
+\end{definition}
+\end{frame}
+
 
 \begin{frame}
 \frametitle{Client's View of Multiple Cases}
@@ -2085,6 +2143,9 @@ Justifies inductive step in datatype induction.
 \frametitle{Problems}
 \begin{itemize}
 \item
+Duplication of specifications in subtypes.
+
+\item
 Modular verification when use:
 \begin{itemize}
 \item
@@ -2093,12 +2154,231 @@ Subtyping, and
 \item
 Dynamic dispatch.
 \end{itemize}
-
-\item
-Duplication of specifications in subtypes.
 \end{itemize}
 \end{frame}
 
+\subsection[Spec. Inh.]{Specification Inheritance}
+
+\begin{frame}
+\frametitle{Specification Inheritance Approach}
+
+Inherit:
+\begin{itemize}
+\item
+Instance fields.
+
+\item
+Type specifications.
+
+\item
+Instance methods.
+
+\item
+Method specification cases.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Multiple Inheritance Example}
+\includegraphics[width=4.25in]{multiple-inh}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Age and NormalSetAge}
+\begin{lstlisting}
+public interface Age {
+  //@ model instance int age;
+}
+
+public interface NormalSetAge 
+           implements Age {
+  /*@ requires 0 <= a && a <= 150;
+    @ assignable age;
+    @ ensures age == a;   @*/
+  public void setAge(int a);
+}
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{ExceptionalSetAge}
+\begin{lstlisting}
+public interface ExceptionalSetAge
+           implements Age {
+  /*@ requires a < 0;
+    @ assignable \nothing;
+    @ ensures age == \old(age);   @*/
+  public void setAge(int a);
+}
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}
+\frametitle{What About Animal's setAge method?}
+
+\begin{itemize}
+\item
+It's both.
+
+\item
+Should \alert{obey both specifications}.
+\end{itemize}
+\includegraphics[height=2in]{multiple-inh}
+\end{frame}
+
+\begin{frame}
+\frametitle{Effective Specification for Animals}
+\framesubtitle{Inherits All Spec Cases}
+
+\lstinputlisting[linerange={20-27}]{examples/Animal.java}
+\end{frame}
+
+\begin{frame}
+\frametitle{Single Inheritance also}
+
+\begin{question}
+What is the specification of Animal's \texttt{isFemale} method?
+\end{question}
+\note{The one inherited from Gendered.}
+\includegraphics[height=2in]{multiple-inh}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Adding to Specification in Subtype}
+\framesubtitle{Use of `also' Mandatory}
+
+\lstinputlisting[linerange={1-1,31-40}]{examples/Patient.java}
+\end{frame}
+
+\begin{frame}
+\frametitle{Method Specification Inheritance}
+
+\begin{question}
+What is the effective specification of \texttt{Patient}'s
+\texttt{setAge} method?
+\end{question}
+\note{The join of the 3 spec cases shown previously}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Extended Specification of SetAge}
+\lstinputlisting[linerange={20-26}]{examples/Animal.java}
+\lstinputlisting[linerange={34-36}]{examples/Patient.java}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Avoiding Duplication of Preconditions}
+\lstinputlisting[linerange={20-26}]{examples/Animal.java}
+\begin{lstlisting}
+  /*@ also
+    @   requires \same;
+    @   ensures 65 <= age ==> ageDiscount;  @*/
+\end{lstlisting}
+\note{This doesn't yet work in ESC/Java2.}
+\end{frame}
+
+\begin{frame}
+\frametitle{Inheritance of Type Specifications}
+
+Obeyed by all subtypes:
+\begin{itemize}
+\item
+Invariants.
+
+\item
+Initially Clauses.
+
+\item
+History Constraints.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Invariants Obeyed by Subtypes}
+\framesubtitle{Not a Syntactic Sugar}
+\includegraphics[width=4.25in]{invariant-inh}
+\end{frame}
+
+\begin{frame}
+\frametitle{Notation for Describing Inheritance}
+\framesubtitle{$T$'s Added Specification}
+
+Declared in $T$ (without inheritance):
+\begin{center}
+\begin{tabular}{ll}
+$\addedinv^T$ & invariant \\
+$\addedhc^T$ & history constraint\\
+$\addedinit^T$ & initially predicate \\
+$\addedspec^T_m$ & $m$'s specification \\
+\end{tabular}
+\end{center}
+
+Other Notations:
+\begin{displaymath}
+\supers(T) = \{U \mid T \STO U\}
+\end{displaymath}
+\begin{displaymath}
+\methods({\cal T}) = \{m \mid m \mbox{ declared in } T \in {\cal T}\}
+\end{displaymath}
+\end{frame}
+
+\begin{frame}
+\frametitle{Specification Inheritance's Meaning}
+\framesubtitle{Extended Specification of $T$}
+
+\begin{description}
+\item[Methods:]
+for all $m \in \methods(\supers(T))$
+\begin{displaymath}
+\extspec^T_m = \join^T \{\addedspec^U_m \mid U \in \supers(T)\}
+\end{displaymath}
+
+\item[Invariant:]
+\begin{displaymath}
+\extinv^T = \bigwedge \{\addedinv^U \mid U \in \supers(T)\}
+\end{displaymath}
+
+\item[History Constraint:]
+\begin{displaymath}
+\exthc^T = \bigwedge \{\addedhc^U \mid U \in \supers(T)\}
+\end{displaymath}
+
+\item[Initially Predicate:]
+
+\begin{displaymath}
+\extinit^T = \bigwedge \{\addedinit^U \mid U \in \supers(T)\}
+\end{displaymath}
+\end{description}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Invariant Inheritance}
+\lstinputlisting[linerange={1-2}]{examples/FemalePatient.java}
+
+Extended Invariant:
+
+\begin{lstlisting}[mathescape=true]
+  $\addedinv^{\texttt{Gendered}}$ && $\addedinv^{\texttt{Animal}}$
+  && $\addedinv^{\texttt{Patient}}$
+  && $\addedinv^{\texttt{FemalePatient}}$
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Invariant Inheritance}
+\lstinputlisting[linerange={1-2}]{examples/FemalePatient.java}
+
+Extended Invariant:
+
+\begin{lstlisting}[mathescape=true]
+  true && true
+  && 0 <= age && age <= 150
+      && (\forall int i;
+            0 <= i && i < log.size();
+            log.get(i) instanceof rep String)
+  && gender.equals("female")
+\end{lstlisting}
+\end{frame}
 
 \subsection[Modularity]{Modular Verification Problem}
 
@@ -2159,7 +2439,120 @@ Initially predicates.
 \end{frame}
 
 \begin{frame}[fragile]
-\frametitle{Supertype Abstraction}
+\frametitle{Supertype Abstraction Summary}
+
+\begin{lstlisting}[mathescape=true]
+$\REDT$ $o$ = createNewObject();
+//@ assume $o$.$\extinit^{\REDT}$ && $o$.$\extinv^{\REDT}$;
+
+/* ... */
+
+//@ assert $o.\extpre^{\REDT}_m$;
+$o$.$m$();
+//@ assume $o.\extpost^{\REDT}_m$;
+//@ assume $o.\extinv^{\REDT}_m$ && $o$.$\exthc^{\REDT}$;
+\end{lstlisting}
+\note{Here $\REDT$ is the static type of $o$, that's why all the
+  assertions refer to its specification.
+}
+\end{frame}
+
+\begin{frame}
+\frametitle{Reasoning Without Supertype Abstraction}
+
+Case analysis:
+\begin{itemize}
+\item
+Case for each potential dynamic type.
+
+\item
+Can exploit dynamic type's specifications.
+\end{itemize}
+\note{So this isn't modular...}
+\end{frame}
+
+\begin{frame}
+\frametitle{Case Analysis + Supertype Abstraction}
+\begin{itemize}
+\item
+Use \textbf{\texttt{instanceof}} for case analysis.
+
+\item
+Downcast, use supertype abstraction.
+\end{itemize}
+\note{This means you can \emph{always\/} use supertype abstraction.}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Case Analysis + Supertype Abstraction}
+\lstinputlisting[linerange={2-12}]{examples/HeadTest.java}
+\end{frame}
+
+\subsection[Validity]{Supertype Abstraction's Soundness}
+
+\begin{frame}
+\frametitle{Supertype Abstraction's Soundness}
+Valid if:
+\begin{itemize}
+\item
+Invariants etc. hold as needed (in pre-states), and
+
+\item
+Each subtype is a behavioral subtype.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Assumption about Invariants}
+\includegraphics[width=4.25in]{invariant-call1}
+\end{frame}
+
+\begin{frame}
+\frametitle{Assumption about Invariants}
+\transwipe[direction=270]
+\includegraphics[width=4.25in]{invariant-call2}
+\end{frame}
+
+\begin{frame}
+\frametitle{Invariant Methodology}
+Potential Problems:
+\begin{itemize}
+\item
+Representation exposure
+
+\item
+Reentrance
+\end{itemize}
+
+Relevant invariant semantics:
+\begin{itemize}
+\item
+Ownership type system
+
+\item
+Re-establish invariant when call
+\end{itemize}
+
+Guarantees:
+\begin{itemize}
+\item
+Invariant holds at start of method
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Open Problems}
+\begin{itemize}
+\item
+Comparison to similar Spec\# methodology.
+
+\item
+Extension to History Constraints and Initially Predicates.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Validity of Supertype Abstraction}
 \framesubtitle{Client's View}
 
 \begin{lstlisting}[mathescape=true]
@@ -2219,9 +2612,254 @@ if and only if:
 
 \begin{itemize}
 \item
-for all instance methods $m$ in $\REDT$ [[[...]]]
+for all instance methods $m$ in $\REDT$,
+\begin{displaymath}
+\extspec^{\BLUETP}_m \:\sqsupseteq^{\BLUETP}\: \extspec^{\REDT}_m
+\end{displaymath}
+
+\item
+and whenever \textbf{\texttt{this}} has type $\BLUETP$:
+\begin{displaymath}
+\begin{array}{l}
+\extinv^{\BLUETP} \Rightarrow \extinv^{\REDT}, \\
+\exthc^{\BLUETP} \Rightarrow \exthc^{\REDT}\mbox{, and}\\
+\extinit^{\BLUETP} \Rightarrow \extinit^{\REDT}.
+\end{array}
+\end{displaymath}
 \end{itemize}
 \end{definition}
+\end{frame}
+
+\begin{frame}
+\frametitle{Method Specification Refinement}
+\framesubtitle{With respect to $\BLUETP$}
+
+Notation:
+\begin{displaymath}
+\BLUE{(\pre',\post')} \sqsupset^{\BLUETP} \RED{(\pre,\post)}
+\end{displaymath}
+
+Means:
+\begin{itemize}
+\item
+Every correct implementation of $\BLUE{(\pre',\post')}$ satisfies
+$\RED{(\pre,\post)}$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Method Specification Refinement}
+\includegraphics[width=4.25in]{meth-refine1}
+\end{frame}
+
+\begin{frame}
+\frametitle{Method Specification Refinement}
+\transdissolve[duration=0.2]
+\includegraphics[width=4.25in]{meth-refine2}
+\end{frame}
+
+\begin{frame}
+\frametitle{Method Specification Refinement}
+\transdissolve[duration=0.2]
+\includegraphics[width=4.25in]{meth-refine3}
+\end{frame}
+
+\begin{frame}
+\frametitle{Proving Method Refinements}
+\begin{theorem}
+\label{th:refinement}
+Suppose \BLUE{$T' \At (\pre',\post')$} and \RED{$T \At (\pre,\post)$}
+specify $m$.
+
+Then 
+
+\begin{displaymath}
+\BLUE{(\pre',\post')} \refines^{\BLUETP} \RED{(\pre,\post)}
+\end{displaymath}
+
+if and only if:
+
+\begin{displaymath}
+\Spec{{\BLUETP}} \Proves
+ \RED{\pre} \mbox{ \texttt{\&\&} }
+          \mbox{\texttt{(}\textbf{\texttt{this instanceof}} \BLUETP\texttt{)}}
+ \Rightarrow \BLUE{\pre'}
+\end{displaymath}
+
+and
+
+\begin{displaymath}
+\Spec{{\BLUETP}} \Proves
+\begin{array}[t]{l}
+\mbox{\texttt{{\textbackslash}\textbf{old}(}}\RED{\pre}
+   \mbox{ \texttt{\&\&} }
+   \mbox{\texttt{(}\textbf{\texttt{this instanceof}} \BLUETP\texttt{))}} \\
+   \Rightarrow (\BLUE{\post'} \Rightarrow \RED{\post}).
+\end{array}
+\end{displaymath}
+\end{theorem}
+\end{frame}
+
+\begin{frame}
+\frametitle{\JMLKW{also} Makes Refinements}
+
+\begin{theorem}
+Suppose \mbox{\texttt{{\textbackslash}\textbf{old}}}
+is monotonic.
+Suppose $\BLUETP \STO \REDT$, and
+\BLUE{$T' \At (\pre',\post')$} and \RED{$T \At (\pre,\post)$}
+specify $m$.
+
+Then 
+\begin{displaymath}
+(\BLUE{(\pre',\post')} \join^{\BLUETP} \RED{(\pre,\post)}) 
+  \refines^{\BLUETP} \RED{(\pre,\post)}.
+\end{displaymath}
+\end{theorem}
+\note{The proof is direct from the previous theorem.}
+\end{frame}
+
+\begin{frame}
+\frametitle{Semantics of Multiple Cases}
+\transdissolve[duration=0.5]
+\includegraphics[width=4.25in]{join-both}
+\end{frame}
+
+\begin{frame}
+\frametitle{Semantics of Multiple Cases}
+\includegraphics[width=4.25in]{join-intersect}
+\end{frame}
+
+\begin{frame}
+\frametitle{Spec.~Inheritance Forces Behavioral Subtyping}
+\begin{theorem}
+Suppose $\BLUETP \STO \REDT$.
+Then the extended specification of $\BLUETP$
+is a strong behavioral subtype of
+the extended specification of $\REDT$.
+\end{theorem}
+\note{Proof: Use the second theorem above
+      and definition of extended specification.
+}
+\end{frame}
+
+\begin{frame}
+\frametitle{Discussion}
+\framesubtitle{Behavioral Subtyping and Spec.~Inheritance}
+
+In JML:
+\begin{itemize}
+\item
+Every subtype inherits.
+
+\item
+Every subtype is a behavioral subtype.
+\begin{itemize}
+\item
+Not all satisfiable.
+
+\item
+Supertype must allow refinement
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Unsatisfiable Refinements}
+\includegraphics[width=4.25in]{unsatisfiable}
+\end{frame}
+
+\begin{frame}
+\frametitle{Unsatisfiable Refinements}
+\transdissolve[duration=0.5]
+\includegraphics[width=4.25in]{unsatisfiable2}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Binary Method Specification}
+\begin{question}
+What is wrong specifying \lstinline!Gender!'s \lstinline!equals!
+method as follows?
+
+\rm
+\lstinputlisting[linerange={2-9}]{examples/GenderedEqualsBad.java}
+\end{question}
+\end{frame}
+
+\begin{frame}<beamer>
+\frametitle{What's Wrong With It?}
+\begin{itemize}
+\item
+Says that only gender matters.
+
+\item
+Refinements \alert{can't} use other attributes.
+\end{itemize}
+\end{frame}
+
+\begin{frame}<beamer>
+\frametitle{Bad Equals Specification}
+\includegraphics[width=4.25in]{equalsbad1}
+\end{frame}
+
+\begin{frame}<beamer>
+\frametitle{Bad Equals Specification}
+\transdissolve[duration=0.5]
+\includegraphics[width=4.25in]{equalsbad2}
+\end{frame}
+
+\begin{frame}
+\frametitle{Binary Method Specification}
+\begin{question}
+How to fix it?
+
+\rm
+\lstinputlisting[linerange={2-9}]{examples/GenderedEqualsBad.java}
+\end{question}
+\end{frame}
+
+\begin{frame}<beamer>
+\frametitle{Better, Refinable Specification}
+\framesubtitle{Using Underspecification}
+\lstinputlisting[linerange={2-9}]{examples/GenderedEqualsGood.java}
+\note{This says that the gender must be equal.
+But allows refinements to use other attributes.
+}
+\end{frame}
+
+\begin{frame}<beamer>
+\frametitle{Better, Refinable Specification}
+\framesubtitle{Using Underspecification}
+\includegraphics[width=4.25in]{equalsgood}
+\end{frame}
+
+\begin{frame}
+\frametitle{Conclusions About Subtyping}
+\begin{itemize}
+\item
+Supertype abstraction allows modular reasoning.
+
+\item
+Supertype abstraction is valid if:
+\begin{itemize}
+\item
+methodology enforced, and
+
+\item
+subtypes are behavioral subtypes.
+\end{itemize}
+
+\item
+JML's \JMLKW{also} makes refinements.
+
+\item
+Specification inheritance in JML
+forces behavioral subtyping.
+
+\item
+Supertype abstraction 
+automatically valid in JML.
+\end{itemize}
 \end{frame}
 
 
@@ -2229,7 +2867,63 @@ for all instance methods $m$ in $\REDT$ [[[...]]]
 
 \section*{Concl.}
 
+\begin{frame}
+\frametitle{Future Work on JML}
+\begin{itemize}
+\item
+Tools.
+
+\item
+Java 1.5 support.
+
+\item
+Eclipse support.
+
+\item
+Documentation.
+
+\item
+Concurrency support.
+
+\item
+Semantic details.
+
+\item
+Theorem proving tie-ins, Static analysis tie-ins.
+
+\item
+Inference of specifications.
+
+\item
+Tools that give more benefits.
+\end{itemize}
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Acknowldegments}
+Thanks to David Naumann, 
+William Weihl, Krishna Kishore Dhara, 
+Cesare Tinelli, Don Pigiozzi, Barbara Liskov, Jeannette Wing,
+Yoonsik Cheon, Al Baker,  
+Clyde Ruby, Tim Wahls, Patrice Chalin, 
+Curtis Clifton, David Cok, Joseph Kiniry, 
+Rustan Leino, Peter M\"{u}ller, 
+Arnd Poetzsch-Heffter, Erik Poll, and
+the rest of the JML community.
+
+Join us at$\ldots$
+
+\begin{center}
+\href{http://www.jmlspecs.org/}{jmlspecs.org}
+\end{center}
+\end{frame}
+
+
 \appendix
+
+
 
 \begin{frame}
 \frametitle{Modular Reasoning}
@@ -2246,5 +2940,21 @@ Sound, if each module satisfies specification.
 Scales better than whole-program reasoning.
 \end{frame}
 
+\begin{frame}[fragile]
+\frametitle{Supertype Abstraction for Initially}
+Given:
+\lstinputlisting[linerange={2-2,5-6}]{examples/Patient.java}
+
+Verify:
+\begin{lstlisting}
+  Patient p;
+  if (b) { p = new Patient("male"); }
+  else { p = new FemalePatient(); }
+  //@ assert p.log.size() == 0;
+\end{lstlisting}
+\note{This works because the intially clause of Patient also applies
+  to FemalePatient.
+}
+\end{frame}
 
 \end{document}
