@@ -565,6 +565,9 @@ Top-level in classes and interfaces:
 
 \item
 \lstinline!spec_public!
+
+\item
+\lstinline!nullable!
 \end{itemize}
 
 For methods and constructors:
@@ -595,21 +598,21 @@ Specify bounded stacks of objects.
 
 \begin{frame}[fragile]
 \frametitle{BoundedStack's Data and Invariant}
-\lstinputlisting[linerange={1-12}]{examples/BoundedStack.java}
+\lstinputlisting[linerange={1-13}]{examples/BoundedStack.java}
 \note{Explain notation. Stress client view.
-The elems field is non-null (the default) and the elements are allowed
-to be null.
+The elems field is nullable, to allow the elements to be null.
+Without this the JML default is that they are both non-null.
 }
 \end{frame}
 
 \begin{frame}[fragile]
 \frametitle{BoundedStack's Constructor}
-\lstinputlisting[linerange={13-19}]{examples/BoundedStack.java}
+\lstinputlisting[linerange={14-20}]{examples/BoundedStack.java}
 \end{frame}
 
 \begin{frame}[fragile]
 \frametitle{BoundedStack's push Method}
-\lstinputlisting[linerange={21-32}]{examples/BoundedStack.java}
+\lstinputlisting[linerange={22-33}]{examples/BoundedStack.java}
 \note{Talk about the assignable clause and the postcondition
 and how they relate to the code.
 Subexpressions of assignable clause store-ref expressions are
@@ -619,16 +622,16 @@ evaluated in the pre-state.
 
 \begin{frame}[fragile]
 \frametitle{BoundedStack's pop Method}
-\lstinputlisting[linerange={34-45}]{examples/BoundedStack.java}
+\lstinputlisting[linerange={35-46}]{examples/BoundedStack.java}
 \end{frame}
 
 \begin{frame}[fragile]
 \frametitle{BoundedStack's top Method}
-\lstinputlisting[linerange={47-54}]{examples/BoundedStack.java}
+\lstinputlisting[linerange={48-55}]{examples/BoundedStack.java}
 \end{frame}
 
 \begin{frame}[fragile]
-\frametitle{spec\_public and invariant}
+\frametitle{spec\_public, nullable, and invariant}
 
 \lstinline!spec_public!
 \begin{itemize}
@@ -640,6 +643,15 @@ Only for specification purposes.
 \end{itemize}
 
 \note{\lstinline!spec_public! actually a syntactic sugar.}
+
+\lstinline!nullable!
+\begin{itemize}
+\item
+field (and array elements) may be null.
+
+\item
+Default is \lstinline!non_null!.
+\end{itemize}
 
 \lstinline!invariant! must be:
 \begin{itemize}

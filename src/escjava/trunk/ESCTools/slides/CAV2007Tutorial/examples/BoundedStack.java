@@ -1,6 +1,7 @@
 public class BoundedStack {
 
-  private /*@ spec_public nullable @*/ Object[] elems;
+  private /*@ spec_public nullable @*/
+     Object[] elems;
   private /*@ spec_public @*/ int size = 0;
 
   //@ public invariant 0 <= size;
