@@ -5,7 +5,8 @@ public class Actor {
 
   //@ public invariant 0 <= age <= fate;
 
-  /*@   requires age < fate - 1;
+  /*@ public normal_behavior
+    @   requires age < fate - 1;
     @   assignable age;
     @   ensures age == \old(age+1);
     @*/

@@ -1,6 +1,6 @@
 public interface Gendered {
-  //@ model instance String gender;
+  //@ public model instance String gender;
 
   //@ ensures \result == gender.equals("female");
-  /*@ pure @*/ boolean isFemale();
+  public /*@ pure @*/ boolean isFemale();
 }

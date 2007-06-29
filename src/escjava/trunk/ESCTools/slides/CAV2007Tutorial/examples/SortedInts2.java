@@ -1,5 +1,4 @@
 class SortedInts2 {
-
   private /*@ spec_public rep @*/ int[] a;
 
   /*@ public invariant (\forall int i, j; 
@@ -7,6 +6,7 @@ class SortedInts2 {
     @      a[i] <= a[j]);     @*/
 
   /*@ requires 0 < a.length;
+    @ ensures \result == a[0];
     @ ensures (\forall int i, j; 
     @      0 <= i && i < a.length;
     @      \result <= a[i]);     @*/

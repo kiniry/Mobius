@@ -1,5 +1,4 @@
 class SortedInts3 {
-
   private /*@ spec_public @*/ int[] a;
   //@ public invariant a.owner == this;
 
@@ -8,6 +7,7 @@ class SortedInts3 {
     @      a[i] <= a[j]);     @*/
 
   /*@ requires 0 < a.length;
+    @ ensures \result == a[0];
     @ ensures (\forall int i, j; 
     @      0 <= i && i < a.length;
     @      \result <= a[i]);     @*/

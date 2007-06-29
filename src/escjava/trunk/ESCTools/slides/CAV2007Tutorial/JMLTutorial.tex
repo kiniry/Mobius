@@ -253,7 +253,7 @@ Wide range of tools.
 \begin{block}{Handles:}
 \begin{itemize}
 \item
-Inter-module Interfaces.
+Inter-module interfaces.
 
 \item
 Classes and interfaces.
@@ -497,6 +497,9 @@ Documents:
 \href{http://doi.acm.org/10.1145/1127878.1127884}{``Preliminary Design of JML''}
 
 \item
+\href{http://dx.doi.org/10.1007/11901433}{``JML's Rich, Inherited Specifications for Behavioral Subtypes''}
+
+\item
 \href{http://www.jmlspecs.org/jmlrefman/jmlrefman_toc.html}{``JML Reference Manual''}
 \end{itemize}
 
@@ -593,7 +596,10 @@ Specify bounded stacks of objects.
 \begin{frame}[fragile]
 \frametitle{BoundedStack's Data and Invariant}
 \lstinputlisting[linerange={1-12}]{examples/BoundedStack.java}
-\note{Explain notation. Stress client view.}
+\note{Explain notation. Stress client view.
+The elems field is non-null (the default) and the elements are allowed
+to be null.
+}
 \end{frame}
 
 \begin{frame}[fragile]
@@ -604,6 +610,11 @@ Specify bounded stacks of objects.
 \begin{frame}[fragile]
 \frametitle{BoundedStack's push Method}
 \lstinputlisting[linerange={21-32}]{examples/BoundedStack.java}
+\note{Talk about the assignable clause and the postcondition
+and how they relate to the code.
+Subexpressions of assignable clause store-ref expressions are
+evaluated in the pre-state.
+}
 \end{frame}
 
 \begin{frame}[fragile]
@@ -703,7 +714,7 @@ New object fields not covered.
 Sugar for postcondition: ``nothing else assigned''
 
 \item
-Checked statically.
+Mostly checked statically.
 
 \item
 Synonyms: \lstinline!modifies!, \lstinline!modifiable!
@@ -893,26 +904,26 @@ Specify the following:
 \begin{frame}<beamer>[fragile]
 \frametitle{My Solution: BagOfInt's Data}
 
-\lstinputlisting[linerange={2-9}]{examples/BagOfInt.jml}
+\lstinputlisting[linerange={2-2,4-9}]{examples/BagOfInt.jml}
 \note{Why do we need n?  To allow deletion.}
 \end{frame}
 
 \begin{frame}<beamer>[fragile]
 \frametitle{My Solution: BagOfInt's Constructor}
 
-\lstinputlisting[linerange={11-17}]{examples/BagOfInt.jml}
+\lstinputlisting[linerange={11-11,13-17}]{examples/BagOfInt.jml}
 \end{frame}
 
 \begin{frame}<beamer>[fragile]
 \frametitle{My Solution: Method occurrences}
 
-\lstinputlisting[linerange={19-24}]{examples/BagOfInt.jml}
+\lstinputlisting[linerange={19-19,21-24}]{examples/BagOfInt.jml}
 \end{frame}
 
 \begin{frame}<beamer>[fragile]
 \frametitle{My Solution: Method extractMin}
 
-\lstinputlisting[linerange={26-34}]{examples/BagOfInt.jml}
+\lstinputlisting[linerange={26-26,28-34}]{examples/BagOfInt.jml}
 \end{frame}
 
 
@@ -985,7 +996,7 @@ Exception in thread "main"
 \end{verbatim}
 % $
 }
-\lstinputlisting[linerange={20-24},numbers=left,numberstyle=\small]{examples/BagOfInt.jml}
+\lstinputlisting[linerange={21-24},numbers=left,numberstyle=\small]{examples/BagOfInt.jml}
 \end{frame}
 
 \begin{frame}[fragile]
@@ -1363,7 +1374,7 @@ Used with specification inheritance.
 
 \begin{frame}
 \frametitle{Multiple Specification Cases}
-\lstinputlisting[linerange={1-14}]{examples/Aging.java}
+\lstinputlisting[linerange={3-14}]{examples/Aging.java}
 \end{frame}
 
 \begin{frame}
@@ -1558,18 +1569,15 @@ How would you underspecify this?
 
 \begin{frame}<beamer>
 \frametitle{Underspecification of Exceptions}
-\lstinputlisting[linerange={8-13}]{examples/ActorUnderspecified.java}
+\lstinputlisting[linerange={8-14}]{examples/ActorUnderspecified.java}
 \end{frame}
 
 
 \begin{frame}[fragile]
-\frametitle{Behavior Specification Cases}
+\frametitle{Heavyweight Behavior Spec Cases}
 
 \lstinline!normal_behavior!, \lstinline!exceptional_behavior!
 \begin{itemize}
-\item
-``Heavyweight''
-
 \item
 Say how method can terminate.
 
@@ -1705,6 +1713,11 @@ and $h$ is undefined on negative numbers.
 
 \begin{frame}[fragile]
 \frametitle{My Answer}
+\lstinputlisting[linerange={3-11}]{examples/Hailstone2.java}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{My Answer, Using Nesting}
 \lstinputlisting[linerange={3-11}]{examples/Hailstone.java}
 \note{Explain the nesting of spec cases by conjoining the outer
   requires onto each inner requires.
@@ -1886,6 +1899,32 @@ Is Animal's constructor (below) correct?
 \end{question}
 \end{frame}
 
+\begin{frame}<beamer>[fragile]
+\frametitle{Example of Using Model Fields}
+
+Yes!
+
+\lstinputlisting[linerange={2-5,8-14}]{examples/Animal.java}
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Semantics of \lstinline!spec_public!}
+\lstinputlisting[linerange={7-7}]{examples/Animal.java}
+
+shorthand for:
+
+\begin{lstlisting}
+  //@ public model int age;
+  //@ protected int _age = 0; //@ in age;
+  //@ protected represents age <- _age; 
+\end{lstlisting}
+
+and rewriting Java code to use \lstinline!_age!.
+
+\note{Can use this for changing \lstinline!spec_public! declarations.}
+\end{frame}
+
 \begin{frame}
 \frametitle{Datagroups for Assignable Clauses}
 \begin{itemize}
@@ -1950,23 +1989,6 @@ can tell if $f \in \DG(g)$.
 \end{frame}
 
 \begin{frame}[fragile]
-\frametitle{Semantics of \lstinline!spec_public!}
-\lstinputlisting[linerange={7-7}]{examples/Animal.java}
-
-shorthand for:
-
-\begin{lstlisting}
-  //@ public model int age;
-  //@ protected int _age = 0; //@ in age;
-  //@ protected represents age <- _age; 
-\end{lstlisting}
-
-and rewriting Java code to use \lstinline!_age!.
-
-\note{Can use this for changing \lstinline!spec_public! declarations.}
-\end{frame}
-
-\begin{frame}[fragile]
 \frametitle{Datagroup Visibility and Reasoning}
 
 \begin{question}
@@ -2001,8 +2023,6 @@ fields, \lstinline!in!, \lstinline!represents!
 \begin{frame}[fragile]
 \frametitle{Initially Clauses}
 
-\lstinputlisting[linerange={1-6}]{examples/Patient.java}
-
 \begin{itemize}
 \item
 Hold in constructor post-states.
@@ -2010,13 +2030,9 @@ Hold in constructor post-states.
 \item
 Basis for datatype induction.
 \end{itemize}
-\end{frame}
 
-\begin{frame}[fragile]
-\frametitle{History Constraints}
-\lstinputlisting[linerange={1-2}]{examples/Patient.java}
-\lstinputlisting[linerange={5-5}]{examples/Patient.java}
-\lstinputlisting[linerange={10-15}]{examples/Patient.java}
+\lstinputlisting[linerange={1-6}]{examples/Patient.java}
+
 \end{frame}
 
 \begin{frame}
@@ -2030,18 +2046,62 @@ Justifies inductive step in datatype induction.
 \end{itemize}
 \end{frame}
 
+\begin{frame}[fragile]
+\frametitle{History Constraints}
+\lstinputlisting[linerange={1-2}]{examples/Patient.java}
+\lstinputlisting[linerange={5-5}]{examples/Patient.java}
+\lstinputlisting[linerange={10-15}]{examples/Patient.java}
+\end{frame}
+
 \section[Subtypes]{Subtyping and Specification Inheritance}
+
+\begin{frame}
+\frametitle{Problems}
+\begin{itemize}
+\item
+Modular verification when use:
+\begin{itemize}
+\item
+Subtyping, and
+
+\item
+Dynamic dispatch.
+\end{itemize}
+
+\item
+Duplication of specifications in subtypes.
+\end{itemize}
+\end{frame}
+
 
 \subsection[Modularity]{Modular Verification Problem}
 
 \begin{frame}[fragile]
-\frametitle{Supertype Abstraction}
+\frametitle{Modular Verification Problem}
 
 Reasoning about dynamic dispatch:
 
 \lstinputlisting[linerange={16-20}]{examples/Females.java}
 
-Supertype abstraction:
+How to verify?
+\begin{itemize}
+\item
+Avoiding case analysis for all subtypes.
+
+\item
+Reverification when add new subtypes.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Supertype Abstraction}
+
+Use static type's specification.
+
+Example:
+
+\lstinputlisting[linerange={16-20}]{examples/Females.java}
+
 \begin{itemize}
 \item
 Static type of \lstinline!e! is \lstinline!Gendered!.

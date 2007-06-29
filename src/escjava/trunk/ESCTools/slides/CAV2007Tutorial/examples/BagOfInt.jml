@@ -9,23 +9,23 @@ public class BagOfInt {
   //@ public invariant n <= a.length;
 
   /** Initialize to contain input's elements. */
-  /*@ also
-    @ assignable a, n;
+  //@ also
+  /*@ assignable a, n;
+    @ ensures n == input.length;
     @ ensures (\forall int i; 0 <= i && i < n;
-    @             a[i] == input[i]);
-    @ ensures n == input.length;   @*/
+    @             a[i] == input[i]);   @*/
   public BagOfInt(int[] input);
 
   /** Return the multiplicity of i. */
-  /*@ also
-    @ ensures \result
+  //@ also
+  /*@ ensures \result
     @     == (\num_of int j; 0 <= j && j < n;
     @                   a[j] == i);       @*/
   public /*@ pure @*/ int occurrences(int i);
 
   /** Return and delete the minimum element. */
-  /*@ also
-    @ requires 0 < n;
+  //@ also
+  /*@ requires 0 < n;
     @ assignable n, a; 
     @ ensures n == \old(n-1);
     @ ensures \result 
