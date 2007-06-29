@@ -1,11 +1,11 @@
 public class BoundedStack {
 
-  private /*@ spec_public @*/ Object[] elems;
+  private /*@ spec_public nullable @*/ Object[] elems;
   private /*@ spec_public @*/ int size = 0;
 
   //@ public invariant 0 <= size;
-  /*@ public invariant
-    @     (\forall int i; 
+  /*@ public invariant elems != null
+    @   && (\forall int i; 
     @           size <= i && i < elems.length;
     @           elems[i] == null);
     @*/
