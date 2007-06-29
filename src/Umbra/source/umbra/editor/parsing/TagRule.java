@@ -1,6 +1,12 @@
 package umbra.editor.parsing;
 
-import org.eclipse.jface.text.rules.*;
+import org.eclipse.jface.text.rules.ICharacterScanner;
+import org.eclipse.jface.text.rules.IToken;
+import org.eclipse.jface.text.rules.MultiLineRule;
+import org.eclipse.jface.text.rules.Token;
+
+import umbra.UmbraHelper;
+import umbra.UmbraPlugin;
 
 /**
  * TODO
@@ -8,24 +14,40 @@ import org.eclipse.jface.text.rules.*;
 public class TagRule extends MultiLineRule {
 
   /**
-   * TODO
+   * TODO.
    */
-  int loop = 0;
+  private static final int WRONG_BOUND = 100;
+
+  /**
+   * TODO.
+   */
+  private static final int LOOP_BOUND = 100;
 
   /**
    * TODO
    */
-  public TagRule(final IToken token) {
-    super("<", ">", token);
+  int my_loop;
+
+  /**
+   * This constructor creates a {@ref MultiLineRule} the start of which
+   * is "<" and the end of which is ">".
+   *
+   * @param a_token token the token to be returned on success
+   * @see MultiLineRule#MultiLineRule(String, String, IToken)
+   */
+  public TagRule(final IToken a_token) {
+    super("<", ">", a_token);
+    UmbraPlugin.messagelog("TagRule constructor");
   }
 
   /**
    * TODO
+   * @see PatternRule#sequenceDetected(ICharacterScanner, char[], boolean)
    */
-  protected final boolean sequenceDetected (
-    final ICharacterScanner scanner,
-    final char[] sequence,
-    final boolean eofAllowed) {
+  protected final boolean sequenceDetected (final ICharacterScanner scanner,
+                                            final char[] sequence,
+                                            final boolean eofAllowed) {
+    UmbraPlugin.messagelog("TagRule#sequenceDetected: " + new String(sequence));
     final int c = scanner.read();
     if (sequence[0] == '<') {
       if (c == '?') {
@@ -49,7 +71,7 @@ public class TagRule extends MultiLineRule {
    */
   protected final IToken doEvaluate(final ICharacterScanner scanner,
                                     final boolean resume) {
-
+    UmbraPlugin.messagelog("TagRule#doEvaluate: ");
     if (resume) {
 
       if (endSequenceDetected(scanner))
@@ -60,20 +82,20 @@ public class TagRule extends MultiLineRule {
       int c = scanner.read();
       if (c == fStartSequence[0]) {
         if (sequenceDetected(scanner, fStartSequence, false)) {
-          loop++;
+          my_loop++;
           int wrong = 0, i = 0;
-          while (loop > 0 && loop < 100 && wrong < 100) {
+          while (my_loop > 0 && my_loop < LOOP_BOUND && wrong < WRONG_BOUND) {
             c = scanner.read();
             i++;
             if (c == fStartSequence[0]) {
               if (sequenceDetected(scanner, fStartSequence, false)) {
-                loop++;
+                my_loop++;
                 wrong++;
               }
             } else if (c == fEndSequence[0]) {
               if (sequenceDetected(scanner, fEndSequence, false)) {
-                loop--;
-                if (loop == 0) return fToken;
+                my_loop--;
+                if (my_loop == 0) return fToken;
               }
             }
           }

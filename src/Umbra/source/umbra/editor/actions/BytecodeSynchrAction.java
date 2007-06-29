@@ -3,8 +3,8 @@ package umbra.editor.actions;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.texteditor.AbstractTextEditor;
 import umbra.editor.BytecodeDocument;
+import umbra.editor.BytecodeEditor;
 
 /**
  * This class defines action of synchronization bytecode
@@ -19,7 +19,7 @@ public class BytecodeSynchrAction extends Action {
   /**
    * The current bytecode editor for which the action takes place.
    */
-  private AbstractTextEditor editor;
+  private BytecodeEditor my_editor;
 
   /**
    * The constructor of the action. It only registers the name of the
@@ -33,24 +33,26 @@ public class BytecodeSynchrAction extends Action {
    * This method sets the bytecode editor for which the
    * synchronization action will be executed.
    *
-   * @param the bytecode editor for which the action will be executed
+   * @param a_target_editor the bytecode editor for which the action will be
+   *        executed
    */
-  public final void setActiveEditor(final IEditorPart targetEditor) {
-    editor = (AbstractTextEditor)targetEditor;
+  public final void setActiveEditor(final IEditorPart a_target_editor) {
+    my_editor = (BytecodeEditor)a_target_editor;
   }
 
   /**
    * This method consults the current selection, extracts the
    * offset of the selection and shows the related Java source
-   * code document with the
+   * code document with the ???
+   * TODO
    */
   public final void run() {
-    final ITextSelection selection = (ITextSelection)editor.
+    final ITextSelection selection = (ITextSelection)my_editor.
                     getSelectionProvider().getSelection();
     final int off = selection.getOffset();
-    final BytecodeDocument bDoc = (BytecodeDocument)editor.
+    final BytecodeDocument bDoc = (BytecodeDocument)my_editor.
                     getDocumentProvider().
-                    getDocument(editor.getEditorInput());
+                    getDocument(my_editor.getEditorInput());
     bDoc.synchronizeBS(off);
   }
 }

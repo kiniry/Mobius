@@ -122,11 +122,11 @@ public class BytecodeRestoreAction extends BytecodeEditorAction {
 
   /**
    * TODO
-   * @param btcFile
-   * @return
+   * @param a_btc_file TODO
+   * @return TODO.
    */
-  private IFile replaceBytecodeWithClass(IFile btcFile) {
-    IPath aPath = btcFile.getFullPath();
+  private IFile replaceBytecodeWithClass(final IFile a_btc_file) {
+    final IPath aPath = a_btc_file.getFullPath();
     final String lastSegment = UmbraHelper.replaceLast(aPath.lastSegment(),
                                         UmbraHelper.BYTECODE_EXTENSION,
                                         UmbraHelper.CLASS_EXTENSION);

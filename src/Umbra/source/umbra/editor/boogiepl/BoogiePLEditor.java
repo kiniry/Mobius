@@ -15,6 +15,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor;
 import org.eclipse.ui.editors.text.TextEditor;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditor;
@@ -57,7 +58,7 @@ public class BoogiePLEditor extends TextEditor {
   /**
    * TODO
    */
-  private AbstractDecoratedTextEditor relatedEditor;
+  private CompilationUnitEditor relatedEditor;
   /**
    * TODO
    */
@@ -108,7 +109,7 @@ public class BoogiePLEditor extends TextEditor {
    * @return Java code editor
    * that BoogiePL has been generated from
    */
-  public final AbstractDecoratedTextEditor getRelatedEditor() {
+  public final CompilationUnitEditor getRelatedEditor() {
     return relatedEditor;
   }
 
@@ -129,7 +130,7 @@ public class BoogiePLEditor extends TextEditor {
    * @param jc    BCEL structures that BoogiePL has been
    *           generated from and may be modificated with
    */
-  public final void setRelation(final AbstractDecoratedTextEditor editor, final JavaClass jc) {
+  public final void setRelation(final CompilationUnitEditor editor, final JavaClass jc) {
     relatedEditor = editor;
     javaClass = jc;
     classGen = new ClassGen(jc);

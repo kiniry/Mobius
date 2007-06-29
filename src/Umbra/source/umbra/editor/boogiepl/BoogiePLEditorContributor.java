@@ -16,6 +16,7 @@ import org.apache.bcel.classfile.JavaClass;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
@@ -269,7 +270,7 @@ public class BoogiePLEditorContributor extends EditorActionBarContributor {
     final ITextSelection selection = (ITextSelection)((AbstractTextEditor)editor).getSelectionProvider().getSelection();
     final int off = selection.getOffset();
     final int len = selection.getLength();
-    final AbstractDecoratedTextEditor related = ((BoogiePLEditor)editor).getRelatedEditor();
+    final CompilationUnitEditor related = ((BoogiePLEditor)editor).getRelatedEditor();
     final JavaClass jc = ((BoogiePLEditor)editor).getJavaClass();
     final boolean proper = (related != null);
     boogiePLContribution.survive();

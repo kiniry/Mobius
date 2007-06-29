@@ -143,6 +143,9 @@ public class BytecodeEditor extends TextEditor {
    * with '_' at the beginning in case later rebuilding (if there has
    * not existed such yet, the binary file is simply rewritten, otherwise
    * it is saved unchanged).
+   *
+   * @param a_progress_monitor TODO
+   * @see AbstractTextEditor#doSave(IProgressMonitor)
    */
   public final void doSave(final IProgressMonitor a_progress_monitor) {
     super.doSave(a_progress_monitor);

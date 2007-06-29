@@ -1,10 +1,10 @@
 package umbra.editor;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.editors.text.FileDocumentProvider;
-import org.eclipse.ui.texteditor.AbstractDecoratedTextEditor;
 
 
 /**
@@ -63,18 +63,18 @@ public class BytecodeDocumentProvider extends FileDocumentProvider {
   /**
    * This method sets relation to Bytecode structures that
    * come from the main editor class
+   * TODO.
    *
-   * @param editor  Related Java code editor
-   * @param jc    JavaClass structure in BCEL
-   * @param cg    class generator in BCEL
-   * @param input    input file
+   * @param an_editor  Related Java code editor
+   * @param a_bcode_editor TODO
+   * @param an_input    input file
    */
-  public final void setRelation(final AbstractDecoratedTextEditor editor,
-              final BytecodeEditor bEditor,
-              final IEditorInput input) {
-    final BytecodeDocument document = (BytecodeDocument)getDocument(input);
-    document.setEditor(bEditor);
-    document.setRelatedEditor(editor);
+  public final void setRelation(final CompilationUnitEditor an_editor,
+              final BytecodeEditor a_bcode_editor,
+              final IEditorInput an_input) {
+    final BytecodeDocument document = (BytecodeDocument)getDocument(an_input);
+    document.setEditor(a_bcode_editor);
+    document.setRelatedEditor(an_editor);
     BytecodeContribution.inUse().addListener(document);
   }
 }

@@ -191,7 +191,7 @@ public final class UmbraHelper {
 
   /**
    * This method strips off all the whitespace characters
-   * in the given string.
+   * in the given string even inside the string.
    *
    * @param a_strip_me the string to strip the whitespace from
    * @return the string with the whitespace stripped off
@@ -343,4 +343,24 @@ public final class UmbraHelper {
     return file;
   }
 
+  /**
+   * The method finds the first occurrence of the pattern
+   * <code>a_pattern</code> in the string <code>the_data</code> and returns
+   * the index of the first character after the occurrence of the pattern.
+   * In case the pattern does not occur in the data string, the method
+   * returns a negative number.
+   *
+   * @param the_data the string in which we seek the index
+   * @param a_pattern a pattern we look for
+   * @return the index of the first character after the first occurrence of
+   *         the pattern; in case the pattern does not occur - a negative
+   *         number
+   */
+  public static int getIndexAfter(final String the_data,
+                                  final String a_pattern) {
+    if (the_data.contains(a_pattern))
+      return (the_data.indexOf(a_pattern) + a_pattern.length());
+    else
+      return -1;
+  }
 }

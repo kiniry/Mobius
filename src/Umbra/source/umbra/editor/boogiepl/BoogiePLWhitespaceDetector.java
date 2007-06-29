@@ -12,8 +12,11 @@ public class BoogiePLWhitespaceDetector implements IWhitespaceDetector {
 
   /**
    * TODO
+   * @param a_char TODO
+   * @return TODO
    */
-  public final boolean isWhitespace(final char c) {
-    return (c == ' ' || c == '\t' || c == '\n' || c == '\r');
+  public final boolean isWhitespace(final char a_char) {
+    return (a_char == ' ' || a_char == '\t' || a_char == '\n' ||
+            a_char == '\r');
   }
 }

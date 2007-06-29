@@ -54,8 +54,8 @@ public class BcelTestRun {
   /**
    * TODO
    *
-   * @param a_java_class
-   * @return
+   * @param a_java_class TODO
+   * @return TODO
    */
   public static JavaClass change_jc(final JavaClass a_java_class) {
     final ClassGen cg = new ClassGen(a_java_class);
@@ -102,7 +102,7 @@ public class BcelTestRun {
 
   /**
    * TODO
-   * @param a_java_class
+   * @param a_java_class TODO
    */
   public static void wypisz(final JavaClass a_java_class) {
     String bajtkod = "";

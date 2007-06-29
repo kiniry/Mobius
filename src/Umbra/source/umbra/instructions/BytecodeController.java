@@ -121,15 +121,15 @@ public class BytecodeController {
    * structures (subclasses of the {@ref BytecodeLineController})
    * together with the links to the BCEL objects
    *
-   * @param doc the bytecode document with the corresponding BCEL
+   * @param a_doc the bytecode document with the corresponding BCEL
    *   structures linked into it
    */
-  public final void init(final IDocument doc) {
-    final ClassGen cg = ((BytecodeDocument)doc).getClassGen();
+  public final void init(final IDocument a_doc) {
+    final ClassGen cg = ((BytecodeDocument)a_doc).getClassGen();
     final ConstantPoolGen cpg = cg.getConstantPool();
     final Method[] methods = cg.getMethods();
-    String partComment = "";
-    boolean metEnd = true;
+    String part_comment = "";
+    boolean met_end = true;
     MethodGen mg = null;
     InstructionList il = null;
     InstructionHandle ih = null;
@@ -137,20 +137,20 @@ public class BytecodeController {
     int ic = 0; // counts lines with instructions
     // i - iterates over methods
     // j - iterates over lines in the document
-    for (int i = 0, j = 0; j < doc.getNumberOfLines() - 1; j++) {
-      if (metEnd && i < methods.length) {
+    for (int i = 0, j = 0; j < a_doc.getNumberOfLines() - 1; j++) {
+      if (met_end && i < methods.length) {
         mg = new MethodGen(methods[i], cg.getClassName(), cpg);
         il = mg.getInstructionList();
         UmbraPlugin.messagelog("method number[" + i + "]" + mg.getName() +
                            "il=" + il.toString());
         ih = il.getStart();
         end = il.getEnd();
-        metEnd = false;
+        met_end = false;
         i++;
       }
       String line = "";
       try {
-        line = doc.get(doc.getLineOffset(j), doc.getLineLength(j));
+        line = a_doc.get(a_doc.getLineOffset(j), a_doc.getLineLength(j));
       } catch (BadLocationException e) {
         MessageDialog.openInformation(new Shell(), "Bytecode",
             "The current document has no positions for line " + j);
@@ -162,18 +162,18 @@ public class BytecodeController {
       if (lc.addHandle(ih, il, mg, i - 1)) { //this is an instruction line
         instructions.add(ic, lc);
         if (comment != null) comments.put(lc, comment);
-        if (partComment.compareTo("") != 0) {
-          interline.put(lc, partComment);
-          partComment = "";
+        if (part_comment.compareTo("") != 0) {
+          interline.put(lc, part_comment);
+          part_comment = "";
         }
         if (ih == end) {
-          metEnd = true;
+          met_end = true;
         } else {
           ih = ih.getNext();
         }
         ic++;
       } else //this is non-instruction line in the editor
-        if (comment != null) partComment.concat("\n" + comment);
+        if (comment != null) part_comment.concat("\n" + comment);
     }
 
     final int methodNum = ((BytecodeLineController)instructions.getLast()).
@@ -187,11 +187,11 @@ public class BytecodeController {
    * all the lines which are between <code>start</code> and
    * <code>stop</code>.
    *
-   * @param start the first line which is checked for removing
-   * @param stop the last line which is checked for removing
+   * @param a_start the first line which is checked for removing
+   * @param a_stop the last line which is checked for removing
    */
-  public final void removeIncorrects(final int start, final int stop) {
-    for (int i = start; i <= stop; i++) {
+  public final void removeIncorrects(final int a_start, final int a_stop) {
+    for (int i = a_start; i <= a_stop; i++) {
       final BytecodeLineController line = (BytecodeLineController)all.get(i);
       if (incorrect.contains(line)) {
         incorrect.remove(line);
@@ -310,18 +310,19 @@ public class BytecodeController {
   }
 
   /**
-   * Checks whether all lines of selected area are correct
+   * Checks whether all lines of a selected area are correct
    * (they satisfies some given syntax conditions)
    *
-   * @param start  the beginning of the area
-   * @param stop  the end of the area
+   * @param a_start  the beginning of the area
+   * @param an_end  the end of the area
    * @return     true if all lines of the area are correct,
    *   false otherwise
    */
-  public final boolean checkAllLines(final int start, final int stop)
+  public final boolean checkAllLines(final int a_start,
+                                     final int an_end)
   {
     boolean ok = true;
-    for (int i = start; i <= stop; i++) {
+    for (int i = a_start; i <= an_end; i++) {
       final BytecodeLineController line = (BytecodeLineController)(all.get(i));
       if (!line.correct()) {
         ok = false;

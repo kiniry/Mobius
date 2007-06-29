@@ -7,6 +7,7 @@ package umbra.editor.boogiepl;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Method;
 import org.apache.bcel.generic.ClassGen;
+import org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
@@ -29,7 +30,7 @@ public class BoogiePLDocument extends Document {
   /**
    * TODO
    */
-  private AbstractDecoratedTextEditor fRelatedEditor;
+  private CompilationUnitEditor fRelatedEditor;
   /**
    * TODO
    */
@@ -42,14 +43,14 @@ public class BoogiePLDocument extends Document {
   /**
    * TODO
    */
-  public final void setRelatedEditor(final AbstractDecoratedTextEditor editor) {
+  public final void setRelatedEditor(final CompilationUnitEditor editor) {
     fRelatedEditor = editor;
   }
 
   /**
    * TODO
    */
-  public final AbstractDecoratedTextEditor getRelatedEditor() {
+  public final CompilationUnitEditor getRelatedEditor() {
     return fRelatedEditor;
   }
 

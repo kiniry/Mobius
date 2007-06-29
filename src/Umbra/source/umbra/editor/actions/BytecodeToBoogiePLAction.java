@@ -45,16 +45,21 @@ public class BytecodeToBoogiePLAction implements IEditorActionDelegate {
 
   /**
    * TODO
+   * @param an_action TODO
+   * @param a_target_editor TODO
+   * @see IEditorActionDelegate#setActiveEditor(IAction, IEditorPart)
    */
-  public final void setActiveEditor(final IAction action,
-                final IEditorPart targetEditor) {
-    editor = targetEditor;
+  public final void setActiveEditor(final IAction an_action,
+                final IEditorPart a_target_editor) {
+    editor = a_target_editor;
   }
 
   /**
    * TODO
+   * @param an_action TODO
+   * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
    */
-  public final void run(final IAction action) {
+  public final void run(final IAction an_action) {
 
     final IPath active = ((FileEditorInput)editor.getEditorInput()).
                             getFile().getFullPath();
@@ -138,20 +143,18 @@ public class BytecodeToBoogiePLAction implements IEditorActionDelegate {
   /**
    * TODO
    *
-   * @param active
-   * @param lind
+   * @param an_active TODO
+   * @param a_lind TODO
    */
-  private void loadBPLFile(final IPath active, final int lind) {
-    IFile file;
-    final String actlind = active.toOSString().substring(0, lind);
+  private void loadBPLFile(final IPath an_active, final int a_lind) {
+    final String actlind = an_active.toOSString().substring(0, a_lind);
     final String fname = actlind + UmbraHelper.BOOGIEPL_EXTENSION;
     final IWorkspace workspace = ResourcesPlugin.getWorkspace();
-    file = workspace.getRoot().getFile(new Path(fname));
-    final FileEditorInput input = new FileEditorInput(file);
+    IFile file = workspace.getRoot().getFile(new Path(fname));
     /*  FIXME not sure if it makes sense
-     * try {
-      
-      
+     final FileEditorInput input = new FileEditorInput(file);
+     try {
+
       IWorkbenchPage page = editor.getEditorSite().getPage();
       BoogiePLEditor bplEditor = (BytecodeEditor) page.openEditor(input,
           UmbraHelper.BOOGIEPL_EDITOR_CLASS, true);
@@ -162,7 +165,7 @@ public class BytecodeToBoogiePLAction implements IEditorActionDelegate {
       bplEditor = (BytecodeEditor) page.openEditor(input,
           UmbraHelper.BOOGIEPL_EDITOR_CLASS, true);
       bplEditor.setRelation(editor, jc);
-      
+
     } catch (CoreException e) {
       e.printStackTrace();
     } catch (ClassNotFoundException e) {
@@ -174,7 +177,13 @@ public class BytecodeToBoogiePLAction implements IEditorActionDelegate {
 
   /**
    * Currently, does nothing.
+   *
+   * @param an_action TODO
+   * @param a_selection TODO
+   * @see IActionDelegate#selectionChanged(IAction, ISelection)
    */
-  public void selectionChanged(final IAction action, final ISelection selection) { }
+  public void selectionChanged(final IAction an_action,
+                               final ISelection a_selection) {
+  }
 
 }

@@ -50,7 +50,7 @@ public class DisasBCEL implements IEditorActionDelegate {
    * @see IActionDelegate#run(IAction)
    */
   public final void run(final IAction an_action) {
-    final IPath active = ((FileEditorInput)my_editor.getEditorInput()).
+    final IPath active = ((FileEditorInput) (my_editor.getEditorInput())).
                                                      getFile().getFullPath();
     if (my_editor.isSaveOnCloseNeeded()) {
       MessageDialog.openWarning(my_editor.getSite().getShell(),

@@ -100,64 +100,93 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
    */
   public BytecodeEditorContributor() {
     super();
-    final int mod = Composition.getMod();
     bytecodeContribution = BytecodeContribution.newItem();
     bytecodeContribution.addEditorContributor(this);
-    actionPlus = new BytecodeColorAction(this, 1, mod);
-    actionMinus = new BytecodeColorAction(this,
-                         IColorValues.MODELS.length - 2,
-                         mod);
     refreshAction = new BytecodeRefreshAction(this, bytecodeContribution);
     rebuildAction = new BytecodeRebuildAction(this);
     combineAction = new BytecodeCombineAction(this, bytecodeContribution);
     restoreAction = new BytecodeRestoreAction(this, bytecodeContribution);
     synchrAction = new BytecodeSynchrAction();
     final URL installURL = UmbraPlugin.getDefault().getBundle().getEntry("/");
-    try {
-      ImageDescriptor iconRight;
-      ImageDescriptor iconLeft;
-      ImageDescriptor refreshIcon;
-      ImageDescriptor rebuildIcon;
-      ImageDescriptor combineIcon;
-      ImageDescriptor restoreIcon;
-      ImageDescriptor synchrIcon;
-      final URL url = new URL(installURL, "icons/change_color_backward.gif");
-      UmbraPlugin.messagelog(url.toExternalForm());
-      iconRight = ImageDescriptor.
-        createFromURL(url);
-      iconLeft = ImageDescriptor.
-        createFromURL(new URL(installURL, "icons/change_color_forward.gif"));
-      refreshIcon = ImageDescriptor.
-        createFromURL(new URL(installURL, "icons/refresh.gif"));
-      rebuildIcon = ImageDescriptor.
-        createFromURL(new URL(installURL, "icons/rebuild_bytecode.gif"));
-      combineIcon = ImageDescriptor.
-        createFromURL(new URL(installURL, "icons/combine.gif"));
-      restoreIcon = ImageDescriptor.
-        createFromURL(new URL(installURL, "icons/restoreH.gif"));
-      synchrIcon = ImageDescriptor.
-        createFromURL(new URL(installURL, "icons/synchronize.gif"));
-      actionPlus.setImageDescriptor(iconRight);
-      actionMinus.setImageDescriptor(iconLeft);
-      refreshAction.setImageDescriptor(refreshIcon);
-      rebuildAction.setImageDescriptor(rebuildIcon);
-      combineAction.setImageDescriptor(combineIcon);
-      restoreAction.setImageDescriptor(restoreIcon);
-      synchrAction.setImageDescriptor(synchrIcon);
-
-    } catch (MalformedURLException e) {
-      MessageDialog.openError(new Shell(),
-          "Bytecode",
-          "Improper bytecode icon on eclipse GUI reference (" +
-          e.getMessage() + ")");
-    }
-    actionPlus.setToolTipText("Change color");
-    actionMinus.setToolTipText("Change color");
+    assignIcons(installURL);
     refreshAction.setToolTipText("Refresh");
     rebuildAction.setToolTipText("Rebuild");
     combineAction.setToolTipText("Combine");
     restoreAction.setToolTipText("Restore");
     synchrAction.setToolTipText("Synchronize");
+    setupColorActions(installURL, Composition.getMod());
+  }
+
+  /**
+   * This method sets up all the actions which change the colouring style
+   * of the editor.
+   *
+   * @param an_install_url the URL to the location of the Umbra plugin
+   *        installation
+   * @param a_mode the current colouring mode
+   */
+  private void setupColorActions(final URL an_install_url,
+                                 final int a_mode) {
+    actionPlus = new BytecodeColorAction(this, 1, a_mode);
+    // TODO: for some reason the second parameter was
+    //       IColorValues.MODELS.length - 2,
+    actionMinus = new BytecodeColorAction(this, -1, a_mode);
+    ImageDescriptor icon_right;
+    ImageDescriptor icon_left;
+    URL url;
+    try {
+      url = new URL(an_install_url, "icons/change_color_backward.gif");
+      UmbraPlugin.messagelog(url.toExternalForm());
+      icon_right = ImageDescriptor.
+        createFromURL(url);
+      icon_left = ImageDescriptor.
+        createFromURL(new URL(an_install_url, "icons/change_color_forward.gif"));
+      actionPlus.setImageDescriptor(icon_right);
+      actionMinus.setImageDescriptor(icon_left);
+    } catch (MalformedURLException e) {
+      wrongIconMessage(e);
+    }
+    actionPlus.setToolTipText("Change color");
+    actionMinus.setToolTipText("Change color");
+  }
+
+  /**
+   * TODO.
+   * @param an_install_url TODO
+   */
+  private void assignIcons(final URL an_install_url) {
+    try {
+
+      ImageDescriptor refresh_icon;
+      ImageDescriptor rebuild_icon;
+      ImageDescriptor combine_icon;
+      ImageDescriptor restore_icon;
+      ImageDescriptor synchr_icon;
+      refresh_icon = ImageDescriptor.
+        createFromURL(new URL(an_install_url, "icons/refresh.gif"));
+      rebuild_icon = ImageDescriptor.
+        createFromURL(new URL(an_install_url, "icons/rebuild_bytecode.gif"));
+      combine_icon = ImageDescriptor.
+        createFromURL(new URL(an_install_url, "icons/combine.gif"));
+      restore_icon = ImageDescriptor.
+        createFromURL(new URL(an_install_url, "icons/restoreH.gif"));
+      synchr_icon = ImageDescriptor.
+        createFromURL(new URL(an_install_url, "icons/synchronize.gif"));
+      refreshAction.setImageDescriptor(refresh_icon);
+      rebuildAction.setImageDescriptor(rebuild_icon);
+      combineAction.setImageDescriptor(combine_icon);
+      restoreAction.setImageDescriptor(restore_icon);
+      synchrAction.setImageDescriptor(synchr_icon);
+    } catch (MalformedURLException e) {
+      wrongIconMessage(e);
+    }
+  }
+
+  private void wrongIconMessage(MalformedURLException e) {
+    MessageDialog.openError(new Shell(),
+        "Bytecode",
+        "Improper bytecode icon on eclipse GUI reference (" +
+        e.getMessage() + ")");
   }
 
   /**

@@ -46,6 +46,9 @@ public class BoogiePLConfiguration extends SourceViewerConfiguration {
 
   /**
    * TODO
+   *
+   * @param the_color_manager TODO
+   * @param a_mod TODO
    */
   public BoogiePLConfiguration(final ColorManager the_color_manager,
                                final int a_mod) {

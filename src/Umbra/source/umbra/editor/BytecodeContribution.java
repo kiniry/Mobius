@@ -85,15 +85,17 @@ public class BytecodeContribution extends ControlContribution {
    * in the Umbra plugin bytecode contributor.
    *
    * TODO what's modTable
+   * @param a_doc TODO
    */
-  private void init(final IDocument doc) {
+  private void init(final IDocument a_doc) {
     bcc = new BytecodeController();
-    bcc.init(doc);
+    bcc.init(a_doc);
     if (modTable) {
       bcc.setModified(modified);
       modTable = false;
     }
-    bcc.checkAllLines(0, doc.getNumberOfLines() - 2);
+    //TODO why we decrease here by 2?
+    bcc.checkAllLines(0, a_doc.getNumberOfLines() - 2);
     ready = true;
     editorContributor.getRefreshAction().setEnabled(true);
   }

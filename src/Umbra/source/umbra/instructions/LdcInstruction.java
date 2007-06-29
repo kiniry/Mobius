@@ -126,47 +126,47 @@ public class LdcInstruction extends OtherInstruction {
               if (!(s.indexOf("\"") == (s.lastIndexOf("(") - 1))) {
                 if ((s.charAt(s.lastIndexOf("(") - 1)) == str.charAt(1)) {
                   okokok++;
+                }
               }
             }
           }
-        }
 
 //        //if there are two numbers or one
-        int c, d, e;
-        int f, g, l;
-        f = 0;
-        g = 0;
-        l = 0;
-        e = line.lastIndexOf("(");
-        d = line.indexOf(s2[j]) + s2[j].length();
-        for (c = d; c < e; c++) {
+          int c, d, e;
+          int f, g, l;
+          f = 0;
+          g = 0;
           l = 0;
-          if (Character.isDigit(line.charAt(c))) {
-            f = 1;
-          }
-          if (f == 1) {
-            if (!(Character.isDigit(line.charAt(c)))) {
-              if (g == 1) {
-                l = 0;
-              } else {
-                g = 1;
-                l = 1; 
+          e = line.lastIndexOf("(");
+          d = line.indexOf(s2[j]) + s2[j].length();
+          for (c = d; c < e; c++) {
+            l = 0;
+            if (Character.isDigit(line.charAt(c))) {
+              f = 1;
+            }
+            if (f == 1) {
+              if (!(Character.isDigit(line.charAt(c)))) {
+                if (g == 1) {
+                  l = 0;
+                } else {
+                  g = 1;
+                  l = 1;
+                }
               }
             }
-           }
-           if ((l == 0) && (g == 1)) {
-             if  (!(Character.isDigit(line.charAt(c)))) {
-               okok = 1;
-             }
-           }
+            if ((l == 0) && (g == 1)) {
+              if  (!(Character.isDigit(line.charAt(c)))) {
+                okok = 1;
+              }
+            }
           }
 
-        if ((okok == 0) || (okokok > 0)) {
-          for (y = (s.lastIndexOf("(") + 1); y < s.lastIndexOf(")"); y++) {
-            if (!(Character.isDigit(s.charAt(y)))) return false;
+          if ((okok == 0) || (okokok > 0)) {
+            for (y = (s.lastIndexOf("(") + 1); y < s.lastIndexOf(")"); y++) {
+              if (!(Character.isDigit(s.charAt(y)))) return false;
+            }
+            return true;
           }
-          return true;
-        }
 
           return false;
         }

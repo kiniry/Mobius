@@ -33,6 +33,11 @@ import umbra.UmbraPlugin;
 public class BytecodeDocument extends Document {
 
   /**
+   * TODO.
+   */
+  private static final int NO_OF_POSITIONS = 2;
+
+  /**
    * The Java source code editor for the source code file associated with
    * the current bytecode document.
    */
@@ -66,15 +71,15 @@ public class BytecodeDocument extends Document {
    * @param editor updates the Java source code editor associated with the
    * current bytecode document.
    */
-  public final void setRelatedEditor(final AbstractDecoratedTextEditor editor) {
-    fRelatedEditor = (CompilationUnitEditor)editor;
+  public final void setRelatedEditor(final CompilationUnitEditor editor) {
+    fRelatedEditor = editor;
   }
 
   /**
    * @return the Java source code editor associated with the
    * current bytecode document.
    */
-  public final AbstractDecoratedTextEditor getRelatedEditor() {
+  public final CompilationUnitEditor getRelatedEditor() {
     return fRelatedEditor;
   }
 
@@ -124,20 +129,23 @@ public class BytecodeDocument extends Document {
    * bytecode. The bytecode should be refreshed before calling this metod,
    * to update JavaClass structures. Works correctly only inside a method.
    *
-   * @param Sdoc  IDocument with source (java) code
-   * @param jc  JavaClass with current bytecode
-   * @param line  index of line in bytecode editor
-   * @return    array of two ints representing index of first and last line of
+   * @param a_source_doc  IDocument with source (java) code
+   * @param a_java_class  JavaClass with current bytecode
+   * @param a_line_no  index of line in bytecode editor
+   * @return array of 2 ({@ref #NO_OF_POSITIONS}) ints representing index of
+   *         first and last line of
    *         source code (corresponding to given bytecode line),
    *         in related source code editor
    * @throws BadLocationException if line parameter is invalid. May occur also
    *         if bytecode in JavaClass jc is out-of-date.
    */
-  private int[] syncBS(final IDocument Sdoc, final JavaClass jc, final int line) throws BadLocationException
+  private int[] syncBS(final IDocument a_source_doc,
+                       final JavaClass a_java_class,
+                       final int a_line_no) throws BadLocationException
   // Synchronizacja: Btc --> Src
   {
-    final int[] w = new int[2];
-    final int maxL = Sdoc.getNumberOfLines() - 1;
+    final int[] res = new int[NO_OF_POSITIONS];
+    final int maxL = a_source_doc.getNumberOfLines() - 1;
     int l_od = 0;
     int l_do = maxL;
     int pos = 0;
@@ -147,11 +155,11 @@ public class BytecodeDocument extends Document {
     int lnrmax = 0;
     int l, j, pc;
     int endpos = 0;
-    final Method[] methods = jc.getMethods();
+    final Method[] methods = a_java_class.getMethods();
     Method m;
     for (int i = 0; i < methods.length; i++) {
       m = methods[i];
-      pos += 2;
+      pos += 2; //TODO: why we increase here by 2?
       l = m.getLineNumberTable().getLineNumberTable().length;
       for (j = 0; j < l; j++) {
         pop = lnr;
@@ -173,10 +181,10 @@ public class BytecodeDocument extends Document {
           break;
         }
         posln = getLineOfOffset(pos);
-        if (posln == line) {
+        if (posln == a_line_no) {
           l_od = lnr;
         }
-        if (posln > line) {
+        if (posln > a_line_no) {
           l_od = pop;
           l_do = lnrmax - 1;
           if (endpos > 0)
@@ -199,9 +207,9 @@ public class BytecodeDocument extends Document {
       l_do--;
     if (l_od > l_do)  // fixed
       l_do = l_od;
-    w[0] = l_od;
-    w[1] = l_do;
-    return w;
+    res[0] = l_od;
+    res[1] = l_do;
+    return res;
   }
 
   /**
@@ -229,39 +237,43 @@ public class BytecodeDocument extends Document {
   }
 
   /**
-   * Computes the area in current bytecode corresponding to given line of source code.
-   * The bytecode should be refreshed before calling this metod, to update JavaClass
-   * structures. Works correctly only inside a method.
+   * Computes the area in current bytecode corresponding to given line of
+   * source code. The bytecode should be refreshed before calling this metod,
+   * to update JavaClass structures. Works correctly only inside a method.
    *
-   * @param Sdoc  IDocument with source (java) code
-   * @param jc  JavaClass with current bytecode
-   * @param line  index of line in Sdoc
-   * @return    array of two ints representing index of first and last line of
-   *         bytecode (corresponding to given source line),
-   *         in related bytecode editor
+   * @param a_source_doc  IDocument with source (java) code
+   * @param a_java_class  JavaClass with current bytecode
+   * @param a_line_no  index of line in Sdoc
+   * @return array of 2 ({@ref #NO_OF_POSITIONS}) ints representing index of first and
+   *         last line of bytecode (corresponding to given source line), in
+   *         related bytecode editor
    * @throws BadLocationException if line parameter is invalid. May occur also
    *         if bytecode in JavaClass jc is out-of-date.
    */
-  private int[] syncSB(final IDocument Sdoc, final JavaClass jc, final int line) throws BadLocationException
-  // Synchronizacja Src --> Btc
+  private int[] syncSB(final IDocument a_source_doc,
+                       final JavaClass a_java_class,
+                       final int a_line_no) throws BadLocationException
+  // Synchronisation Src --> Btc
   {
-    final int[] result = new int [2];
+    final int[] result = new int [NO_OF_POSITIONS];
     int j, l, pc, ln;
     int bcln = 0;
     int popln = 0;
     final int maxL = getNumberOfLines() - 1;
     int l_od = 0;
     int l_do = maxL;
-    String SrcLine = Sdoc.get(Sdoc.getLineOffset(line), Sdoc.getLineLength(line)) + "$";
-    while ((SrcLine.length() > 1) && (Character.isWhitespace(SrcLine.charAt(0))))
-      SrcLine = SrcLine.substring(1, SrcLine.length() - 1);
+    String a_src_line = a_source_doc.get(a_source_doc.getLineOffset(a_line_no),
+                                      a_source_doc.getLineLength(a_line_no)) +
+                                      "$";
+    while ((a_src_line.length() > 1) && (Character.isWhitespace(a_src_line.charAt(0))))
+      a_src_line = a_src_line.substring(1, a_src_line.length() - 1);
     String s;
-    final Method[] methods = jc.getMethods();
+    final Method[] methods = a_java_class.getMethods();
     Method m;
     for (int i = 0; i < methods.length; i++) {
       m = methods[i];
       l = m.getLineNumberTable().getLineNumberTable().length;
-      if (SrcLine.startsWith(m.toString())) {
+      if (a_src_line.startsWith(m.toString())) {
         while (bcln < maxL) {
           bcln++;
           s = LineAt(bcln);
@@ -283,16 +295,16 @@ public class BytecodeDocument extends Document {
           if (s.startsWith("" + pc + ":"))
             break;
         }
-        if (ln == line) {
+        if (ln == a_line_no) {
           l_od = bcln;
           continue;
         }
-        if ((ln > line) && (l_od == 0)) {
+        if ((ln > a_line_no) && (l_od == 0)) {
           l_od = popln;
           l_do = bcln - 1;
           break;
         }
-        if ((l_od != 0) && (ln != line)) {
+        if ((l_od != 0) && (ln != a_line_no)) {
           l_do = bcln - 1;
           break;
         }

@@ -32,9 +32,9 @@ public class SpecialNumberRule extends NumberRule {
 
   /**
    * TODO
-   * @param a_start
-   * @param an_end
-   * @param a_token
+   * @param a_start TODO
+   * @param an_end TODO
+   * @param a_token TODO
    */
   public SpecialNumberRule(final char a_start,
                            final char an_end,
@@ -47,8 +47,8 @@ public class SpecialNumberRule extends NumberRule {
 
   /**
    * TODO
-   * @param a_start
-   * @param a_token
+   * @param a_start TODO
+   * @param a_token TODO
    */
   public SpecialNumberRule(final char a_start, final IToken a_token) {
     super(a_token);

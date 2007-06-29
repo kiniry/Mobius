@@ -7,7 +7,8 @@ package umbra.editor.boogiepl;
 import org.eclipse.jface.text.rules.IWordDetector;
 
 /**
- * TODO
+ * This class offers an implementation of methods that check if particular
+ * characters can occur in different positions in a word.
  *
  * @author Samuel Willimann (wsamuel@student.ethz.ch)
  * @version a-01
@@ -15,16 +16,25 @@ import org.eclipse.jface.text.rules.IWordDetector;
 public class BoogiePLWordDetector implements IWordDetector {
 
   /**
-   * TODO
+   * This method returns true when the character is a legal character to start
+   * a word. In this case it means it is a letter.
+   *
+   * @param a_char a character to check
+   * @return <code>true</code> when the character can start a word
    */
-  public final boolean isWordStart(final char c) {
-    return Character.isLetter(c);
+  public final boolean isWordStart(final char a_char) {
+    return Character.isLetter(a_char);
   }
 
   /**
-   * TODO
+   * This method returns <code>true</code> when the character is a legal
+   * character in a word. In this case it means it is a letter, a digit or
+   * an underscore ('_').
+   *
+   * @param a_char a character to check
+   * @return <code>true</code> when the character can occur in a word
    */
-  public final boolean isWordPart(final char c) {
-    return (Character.isLetterOrDigit(c) || c == '_');
+  public final boolean isWordPart(final char a_char) {
+    return (Character.isLetterOrDigit(a_char) || a_char == '_');
   }
 }

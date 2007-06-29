@@ -1,41 +1,37 @@
-package umbra.editor.parsing;
+package umbra.editor;
 
-import org.eclipse.jface.text.rules.EndOfLineRule;
-import org.eclipse.jface.text.rules.IPredicateRule;
-import org.eclipse.jface.text.rules.IToken;
-import org.eclipse.jface.text.rules.MultiLineRule;
-import org.eclipse.jface.text.rules.RuleBasedPartitionScanner;
-import org.eclipse.jface.text.rules.Token;
+import org.eclipse.jface.text.rules.*;
+
+import umbra.editor.parsing.TagRule;
 
 /**
- * TODO
- *
  * @author Tomasz Batkiewicz (tb209231@students.mimuw.edu.pl)
  * @author Jarosław Paszek (jp209217@students.mimuw.edu.pl)
  * @author Wojciech Was (ww209224@students.mimuw.edu.pl)
- * @version a-01
+ * @versin a-01
  */
 public class BytecodePartitionScanner extends RuleBasedPartitionScanner {
 
   /**
-   * TODO.
+   * TODO
    */
   public static final String DEFAULT = "__xml_default";
 
   /**
-   * TODO.
+   * TODO
    */
   public static final String HEAD = "__xml_head";
 
   /**
-   * TODO.
+   * TODO
    */
   public static final String THROWS = "__xml_thr";
 
   /**
-   * TODO.
+   * TODO
    */
   public static final String TAG = "__xml_tag";
+
 
   /**
    * TODO.
@@ -77,8 +73,9 @@ public class BytecodePartitionScanner extends RuleBasedPartitionScanner {
    */
   private static final int RULES_NUMBER = 7;
 
+
   /**
-   * TODO.
+   * TODO
    */
   public BytecodePartitionScanner() {
 
@@ -86,27 +83,15 @@ public class BytecodePartitionScanner extends RuleBasedPartitionScanner {
     final IToken head = new Token(HEAD);
     final IToken tag = new Token(TAG);
 
-    setPredicateRulesForMe(thr, head, tag);
-  }
-
-  /**
-   * TODO.
-   * @param a_throws_token TODO
-   * @param a_head_token TODO
-   * @param a_tag_token TODO
-   */
-  private void setPredicateRulesForMe(final IToken a_throws_token,
-                                      final IToken a_head_token,
-                                      final IToken a_tag_token) {
     final IPredicateRule[] rules = new IPredicateRule[RULES_NUMBER];
 
-    rules[COMMENT_RULE] = new MultiLineRule("<!--", "-->", a_head_token);
-    rules[TAG_RULE] = new TagRule(a_tag_token);
-    rules[PUBLIC_RULE] = new EndOfLineRule("public", a_head_token);
-    rules[PRIVATE_RULE] = new EndOfLineRule("private", a_head_token);
-    rules[PROTECTED_RULE] = new EndOfLineRule("protected", a_head_token);
-    rules[BRACE_RULE] = new EndOfLineRule("}", a_head_token);
-    rules[THROWS_RULE] = new EndOfLineRule("throws", a_throws_token);
+    rules[COMMENT_RULE] = new MultiLineRule("<!--", "-->", head);
+    rules[TAG_RULE] = new TagRule(tag);
+    rules[PUBLIC_RULE] = new EndOfLineRule("public", head);
+    rules[PRIVATE_RULE] = new EndOfLineRule("private", head);
+    rules[PROTECTED_RULE] = new EndOfLineRule("protected", head);
+    rules[BRACE_RULE] = new EndOfLineRule("}", head);
+    rules[THROWS_RULE] = new EndOfLineRule("throws", thr);
 
     setPredicateRules(rules);
   }
