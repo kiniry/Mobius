@@ -48,6 +48,7 @@ Talk -*- Outline -*-
 **** tips
 **** pitfalls
 *** exercise (if Time)
+*** Use of \same (not in ESC/Java2)
 
 * Abstraction in Specification
 ** Motivation and Overview
@@ -81,26 +82,23 @@ Talk -*- Outline -*-
 *** Forces Behavioral Subtyping
 *** Definitions and Semantics
 *** Exercise
-*** How Tools React to Bad Subtyping
+*** How Tools React to Bad Subtyping (omitted)
 ** Advanced topics (optional)
-*** Multiple inheritance
-*** Invariants, Subtyping, and Privacy
 *** Code Contracts for Super Calls
 *** Modular Subclass Verification (Clyde Ruby)
-*** Use of \same (not in ESC/Java2)
+
 
 * ESC/Java2 (See notes)
-** What it Does (demo)
 ** Warnings
 *** Kinds of Warnings
 *** How to Interpret Messages
 *** Exercise
-** Multithreading support
-*** Mention RCC?
 ** Connection to Provers
 ** Other topics (omit?)
 *** Helper methods
 *** Ghost Fields
+*** Mention RCC?
+
 
 * Conclusions
 ** Advantages of JML
@@ -112,7 +110,7 @@ Talk -*- Outline -*-
 ** Collaboration
 *** Future Work and Needs
 *** What Collaborations Might Interest You?
-** Website
 ** Acknowledgments
+** Website
 
 $Id$

@@ -448,7 +448,7 @@ Over 135 papers.
 See \href{http://www.jmlspecs.org}{jmlspecs.org}
 \end{frame}
 
-\begin{frame}
+\begin{frame}[label=advantages]
 \frametitle{Advantages of Working with JML}
 
 \begin{itemize}
@@ -465,7 +465,7 @@ Share customers.
 Join us!
 \end{frame}
 
-\begin{frame}
+\begin{frame}[label=opportunities]
 \frametitle{Opportunities in Working with JML}
 \framesubtitle{Or: What Needs Work}
 
@@ -2326,7 +2326,7 @@ Other Notations:
 \frametitle{Specification Inheritance's Meaning}
 \framesubtitle{Extended Specification of $T$}
 
-\begin{description}
+\begin{description}[Constraint:]
 \item[Methods:]
 for all $m \in \methods(\supers(T))$
 \begin{displaymath}
@@ -2334,20 +2334,13 @@ for all $m \in \methods(\supers(T))$
 \end{displaymath}
 
 \item[Invariant:]
-\begin{displaymath}
-\extinv^T = \bigwedge \{\addedinv^U \mid U \in \supers(T)\}
-\end{displaymath}
+$\extinv^T = \bigwedge \{\addedinv^U \mid U \in \supers(T)\}$
 
-\item[History Constraint:]
-\begin{displaymath}
-\exthc^T = \bigwedge \{\addedhc^U \mid U \in \supers(T)\}
-\end{displaymath}
+\item[Constraint:]
+$\exthc^T = \bigwedge \{\addedhc^U \mid U \in \supers(T)\}$
 
-\item[Initially Predicate:]
-
-\begin{displaymath}
-\extinit^T = \bigwedge \{\addedinit^U \mid U \in \supers(T)\}
-\end{displaymath}
+\item[Initially:]
+$\extinit^T = \bigwedge \{\addedinit^U \mid U \in \supers(T)\}$
 \end{description}
 \end{frame}
 
@@ -2865,7 +2858,282 @@ automatically valid in JML.
 
 \section[ESC]{ESC/Java2}
 
-\section*{Concl.}
+\subsection{Warnings}
+
+\begin{frame}
+\frametitle{Kinds of Messages Produced by ESC/Java2}
+
+Cautions or errors, from:
+\begin{itemize}
+\item
+Parsing.
+
+\item
+Type checking.
+\end{itemize}
+
+Warnings, from:
+\begin{itemize}
+\item
+Static checking, with Simplify (or others).
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Where to Put Specifications}
+
+Put specifications in:
+\begin{itemize}
+\item
+A \texttt{.java} file, or
+
+\item
+A \alert{specification file}.
+\begin{itemize}
+\item
+Suffix \texttt{.refines-java}, \texttt{.refines-spec}, or
+\texttt{.refines-jml}.
+
+\item
+No method bodies.
+
+\item
+No field initializers.
+
+\item
+\texttt{Foo.refines-java} starts with:
+\begin{lstlisting}
+//@ refine "Foo.java";
+\end{lstlisting}
+
+\item
+In the CLASSPATH.
+\end{itemize}
+\end{itemize}
+\note{The out of file annotations are especially useful for files not
+  owned by you, such as libraries.
+}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{ESC/Java Checks Modularly}
+
+\begin{example}
+\lstinputlisting{examples/ModularityDemo.java}
+\end{example}
+\note{ESC/Java warns about the array index out of bounds error
+  possible in m().
+Does adding a postcondition on the constructor help?  No.
+What about adding a precondition on m?  No.
+Need to write an invariant.
+}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Modularity Summary}
+
+Properties you want to assume about
+\begin{description}[Method arguments:]
+\item[Fields:]
+use a modifier (\lstinline!non_null!),
+\lstinline!invariant!, or \lstinline!constraint!.
+
+\item[Method arguments:]
+use a modifier (\lstinline!non_null!),
+or \lstinline!requires!.
+
+\item[Method results:]
+use a modifier (\lstinline!pure!, \lstinline!non_null!),
+\lstinline!assignable!, or \lstinline!ensures!.
+\end{description}
+\note{Can use invariants and constraints to specify assumptions about
+  methods also, but only if they apply to all methods.
+}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{When to use \lstinline!assume!}
+\framesubtitle{Assumptions say ``fix me''}
+
+\begin{itemize}
+\item
+Not sure if field or method property.
+
+\item
+You don't want to specify more about:
+\begin{itemize}
+\item
+Domain knowledge.
+
+\item
+Other libraries.
+\end{itemize}
+
+\item
+The prover isn't smart enough.
+\end{itemize}
+
+Best to avoid \lstinline!assume!.
+\note{Think of assume as a temporary ``fixme.''}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Need for Assignable Clauses}
+\lstinputlisting[linerange={32-38}]{examples/ScreenPoint.java}
+\note{Note the problem with the last assert, need frame for moveUp to
+  reason that the change to x is not overwritten by moveUp.
+  So need to have assignable clause for moveUp (or have it be pure).
+}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Assignable Clauses Localize Reasoning}
+\lstinputlisting[linerange={12-16}]{examples/ScreenPoint.java}
+\note{Technically, you also need a similar clause for moreRight, to
+  know that it doesn't distirb the pre-state value of y.
+}
+\end{frame}
+
+\begin{frame}
+\frametitle{Kinds of Warnings}
+
+\alert{\textbf{Exceptions:}}
+\begin{description}[Undeclared:]
+\item[Runtime:]
+Cast, Null, NegSize, IndexTooBig, IndexNegative, ZeroDiv,
+ArrayStore.
+
+\item[Undeclared:] 
+Exception.
+\end{description}
+
+~
+
+\alert{\textbf{Specification violations:}}
+\begin{description}[Non-null:]
+\item[Method:]
+Precondition, Postcondition, Modifies.
+
+\item[Non-null:]
+NonNull, NonNullInit
+
+\item[Loop:]
+LoopInv, DecreasesBound.
+
+\item[Flow:]
+Assert, Reachable.
+
+\item[Class:]
+Invariant, Constraint, Initially.
+\end{description}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Exception Warning Example}
+\lstinputlisting{examples/Ex.java}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Exception Warning Example}
+
+Output:
+\begin{verbatim}
+Ex: m(java.lang.Object) ...
+-----------------------------------
+Ex.java:6: Warning:
+ Possible unexpected exception (Exception)
+  }
+  ^
+Execution trace information:
+  Executed then branch in ..., line 3, col 32.
+  Executed throw in "Ex.java", line 4, col 6.
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Turning Off Warnings}
+
+Preferred:
+\begin{itemize}
+\item
+Declare (e.g., runtime exceptions).
+
+\item
+Specify (e.g, \lstinline!requires!).
+\end{itemize}
+
+Alternatively:
+\begin{itemize}
+\item
+Use \lstinline!nowarn!.
+
+\begin{lstlisting}
+  //@ nowarn Exception;
+\end{lstlisting}
+
+\item
+Use command line options
+(\texttt{-nowarn Exception}).
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Other Kinds of Warnings}
+\framesubtitle{Not Covered Here}
+
+\begin{itemize}
+\item
+Multithreading.
+
+\item
+Ownership.
+\end{itemize}
+\end{frame}
+
+\subsection[Info.]{Counterexamples}
+
+% I think trace information is self-explanatory.
+
+
+
+\subsection[Provers]{Connection to Provers}
+
+\subsection[Other]{Other Topics}
+
+\section[Concl.]{Conclusions}
+
+\againframe<2>{advantages}
+
+\againframe<2>{opportunities}
+
+\begin{frame}
+\frametitle{Current Research on JML}
+
+Semantics and Design Work:
+\begin{itemize}
+\item
+Ownership and invariants (Peter M\"{u}ller, Spec\# folks)
+
+\item
+Multithreading (KSU group, INRIA).
+
+\item
+Frameworks, callbacks (Steve Shaner, David Naumann, me)
+\end{itemize}
+
+Tool Work
+\begin{itemize}
+\item
+Mobius effort (Joe Kiniry and others)
+
+\item
+Annotation Support (Jass group, Kristina Boysen)
+
+\item
+Testing (Mark Utting, Yoonsik Cheon, $ldots$).
+\end{itemize}
+\end{frame}
+
 
 \begin{frame}
 \frametitle{Future Work on JML}
@@ -2897,20 +3165,26 @@ Inference of specifications.
 \item
 Tools that give more benefits.
 \end{itemize}
+\end{frame}
 
+\begin{frame}
+\frametitle{What Are You Interested In?}
+
+\begin{question}
+What kinds of research or collaborations interest you?
+\end{question}
 \end{frame}
 
 
 \begin{frame}
 \frametitle{Acknowldegments}
-Thanks to David Naumann, 
-William Weihl, Krishna Kishore Dhara, 
-Cesare Tinelli, Don Pigiozzi, Barbara Liskov, Jeannette Wing,
-Yoonsik Cheon, Al Baker,  
-Clyde Ruby, Tim Wahls, Patrice Chalin, 
-Curtis Clifton, David Cok, Joseph Kiniry, 
-Rustan Leino, Peter M\"{u}ller, 
-Arnd Poetzsch-Heffter, Erik Poll, and
+Thanks to Joseph Kiniry, Erik Poll, David Cok, David Naumann, 
+Yoonsik Cheon, Curtis Clifton, Clyde Ruby, Patrice Chalin,
+Peter M\"{u}ller, Werner Dietl,
+Arnd Poetzsch-Heffter,
+Rustan Leino, 
+Al Baker, Don Pigozzi,
+and
 the rest of the JML community.
 
 Join us at$\ldots$
