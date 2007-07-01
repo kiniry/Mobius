@@ -1,8 +1,8 @@
 % -*- latex -*- mode for emacs
 % $Id$
 \typein[\MAKEHANDOUTS]{Handouts (y/n)?}
-\if y\MAKEHANDOUTS \documentclass[compress,landscape,handout]{beamer}
-\else \documentclass[compress]{beamer}
+\if y\MAKEHANDOUTS \documentclass[t,compress,landscape,handout]{beamer}
+\else \documentclass[t,compress]{beamer}
 \fi
 %
 \mode<presentation>
@@ -22,6 +22,8 @@
    \usepackage{pgfpages}
    \pgfpagesuselayout{4 on 1}[border shrink=5mm]
 }
+% \setbeameroption{show notes} % to see the notes, supposedly,
+                               % but doesn't work
 
 \usepackage[english]{babel}
 \usepackage[latin1]{inputenc}
@@ -182,6 +184,10 @@ Who you are?
 \end{question}
 
 \begin{question}
+How much do you already know about JML?
+\end{question}
+
+\begin{question}
 What do you want to learn about JML?
 \end{question}
 \end{frame}
@@ -292,7 +298,7 @@ Design patterns.
 \subsection[Flavor]{Flavor of JML}
 
 \begin{frame}
-\frametitle{Approach}
+\frametitle{Basic Approach}
 \begin{itemize}
 \item
 Hoare-style (Contracts).
@@ -420,6 +426,9 @@ Extended Static Checking (ESC/Java2).
 Verification tool (e.g., KeY, JACK, Jive).
 \end{enumerate}
 \end{itemize}
+\note{You might want to use the RAC after ESC/Java2, or concurrently
+  with it.
+}
 \end{frame}
 
 \subsection[Importance]{Importance of JML}
@@ -725,9 +734,6 @@ Locations (fields) in pre-state.
 New object fields not covered.
 
 \item
-Sugar for postcondition: ``nothing else assigned''
-
-\item
 Mostly checked statically.
 
 \item
@@ -824,9 +830,8 @@ Note: runtime checker gives better errors with multiple clauses.
 \end{frame}
 
 \begin{frame}[fragile]
-\frametitle{Omitted Clauses}
+\frametitle{Defaults for Omitted Clauses}
 
-Defaults for omitted clauses:
 \begin{itemize}
 \item
 \lstinline!invariant true;!
@@ -936,7 +941,7 @@ Specify the following:
 \lstinputlisting[linerange={2-2,4-9}]{examples/BagOfInt.jml}
 \note{Why do we need n?  To allow deletion.
 Note that we're using the default \lstinline!non_null! for
-\lstinline!a! instaed of making it \lstinline!nullable!.
+\lstinline!a! instead of making it \lstinline!nullable!.
 }
 \end{frame}
 
@@ -962,6 +967,20 @@ Note that we're using the default \lstinline!non_null! for
 \subsection[Tools]{Basic Tool Use}  % demo + exercise
 
 \begin{frame}
+\frametitle{Goals of the Tools}
+\begin{description}[ESC/Java2:]
+\item[jmlc:]
+Find violations at runtime.
+
+\item[jmlunit:]
+Aid/automate unit testing.
+
+\item[ESC/Java2:]
+Warn about likely runtime exceptions and violations.
+\end{description}
+\end{frame}
+
+\begin{frame}
 \frametitle{Getting the Tools}
 
 Links to all tools:
@@ -975,7 +994,7 @@ Individual tools:
 \begin{itemize}
 \item
 Common JML tools
-\href{http://sourceforge.net/projects/jmlspecs/}{http://sourceforge.net/projects/jmlspecs/}
+\href{http://sourceforge.net/projects/jmlspecs/}{sourceforge.net/projects/jmlspecs/}
 
 \item
 ESC/Java2 Eclipse plugin \newline
@@ -997,7 +1016,7 @@ We're using CLASSPATH=. because of the use of the unnamed package;
 for other packages, we have to be careful, as with Java.
 Might want to show what happens with javac first.
 The -Q flag shuts jmlc up somewhat.  The -e flag turns on universes.
-The -o flag changes the the ``neutral context'' semantics, which will
+The -o flag uses the ``neutral context'' semantics, which will
 be part of future release of JML's common tools.
 These flags are valid for JML Common Tools release 5.4.
 There are manual pages for each of the tools.
@@ -1480,7 +1499,7 @@ also
 \end{frame}
 
 \begin{frame}[fragile]
-\frametitle{Formal Notation for Method Specification}
+\frametitle{Notation for Method Specification in $T$}
 
 \begin{lstlisting}[mathescape=true]
   public interface $T$ {
@@ -1644,7 +1663,8 @@ Specify them.
 \begin{frame}
 \frametitle{Underspecification of Exceptions}
 \begin{question}
-How would you underspecify this?
+How would you specify this, \\
+ignoring the exceptional behavior? 
 \end{question}
 \note{That is, how to write the specification and ignore the
   exceptional case?
@@ -1822,7 +1842,7 @@ and $h$ is undefined on negative numbers.
 Why use abstraction?
 \begin{itemize}
 \item
-Ease maintainence by information hiding.
+Ease maintenance by information hiding.
 
 \item
 Readability:
@@ -1986,7 +2006,7 @@ Is Animal's constructor (below) correct?
 \begin{frame}<beamer>[fragile]
 \frametitle{Example of Using Model Fields}
 
-Yes!
+\alert{Yes!}
 
 \lstinputlisting[linerange={2-5,8-14}]{examples/Animal.java}
 
@@ -2010,10 +2030,10 @@ and rewriting Java code to use \lstinline!_age!.
 \end{frame}
 
 \begin{frame}
-\frametitle{Datagroups for Assignable Clauses}
+\frametitle{Data Groups for Assignable Clauses}
 \begin{itemize}
 \item
-Each field is a datagroup.
+Each field is a data group.
 
 \item
 Membership by \JMLKW{in} clauses.
@@ -2025,7 +2045,7 @@ fields used in its \JMLKW{represents}.
 \end{frame}
 
 \begin{frame}
-\frametitle{Datagroups and Assignable Picture}
+\frametitle{Data Groups and Assignable Picture}
 \includegraphics[width=4.25in]{datagroup}
 \end{frame}
 
@@ -2042,8 +2062,8 @@ $\DG(x) \cup \DG(y)$.
 \begin{question}
 What does \lstinline!assignable gender;! mean?
 \end{question}
-\note{We use $\DG(x)$ in this talk as the datagroup of $x$.
-The method only assigns to gen or other members of gender's datagroup.
+\note{We use $\DG(x)$ in this talk as the data group of $x$.
+The method only assigns to gen or other members of gender's data group.
 }
 \end{frame}
 
@@ -2073,14 +2093,14 @@ can tell if $f \in \DG(g)$.
 \end{frame}
 
 \begin{frame}[fragile]
-\frametitle{Datagroup Visibility and Reasoning}
+\frametitle{Data Group Visibility and Reasoning}
 
 \begin{question}
 Can assigning to \lstinline!age! change \lstinline!gender!?
 \end{question}
-\note{No, we can tell they are in distinct datagroups, since we've
+\note{No, we can tell they are in distinct data groups, since we've
   seen both declarations and they aren't connected.
-  JML makes sure that we can't put age in gender's datagroup later.
+  JML makes sure that we can't put age in gender's data group later.
 }
 \end{frame}
 
@@ -2135,6 +2155,68 @@ Justifies inductive step in datatype induction.
 \lstinputlisting[linerange={1-2}]{examples/Patient.java}
 \lstinputlisting[linerange={5-5}]{examples/Patient.java}
 \lstinputlisting[linerange={10-15}]{examples/Patient.java}
+\end{frame}
+
+\subsection[Other]{Other Topics}
+
+\begin{frame}[fragile]
+\frametitle{Helper Methods and Constructors}
+
+A \lstinline!helper! method or constructor is:
+\begin{itemize}
+\item
+\lstinline!private!
+
+\item
+Exempt from invariants and history constraints.
+\begin{itemize}
+\item
+Cannot assume them.
+
+\item
+Need not establish them.
+\end{itemize}
+\end{itemize}
+
+\note{By default \lstinline!private! methods must preserve invariants
+and history constraints.  Have to label them \lstinline!helper! if
+don't want that.
+}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Ghost fields and Local Variables}
+\begin{itemize}
+\item
+Specification-only data.
+
+\item
+No \lstinline!represents! clause.
+
+\item
+Value from initialization and \lstinline!set! statements.
+
+\item
+Locals useful for loop invariants, termination, etc.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Owner is a Ghost Field}
+
+Declaration:
+
+\begin{lstlisting}
+public class Object {
+  //@ public ghost Object owner = null;
+  /* ... */
+}
+\end{lstlisting}
+
+Assignment:
+\begin{lstlisting}
+  //@ set a.owner = this;
+\end{lstlisting}
 \end{frame}
 
 \section[Subtypes]{Subtyping and Specification Inheritance}
@@ -2223,38 +2305,34 @@ It's both.
 \item
 Should \alert{obey both specifications}.
 \end{itemize}
-\includegraphics[height=2in]{multiple-inh}
+\includegraphics[height=2in]{multiple-inh2}
 \end{frame}
 
-\begin{frame}
-\frametitle{Effective Specification for Animals}
-\framesubtitle{Inherits All Spec Cases}
-
-\lstinputlisting[linerange={20-27}]{examples/Animal.java}
-\end{frame}
-
-\begin{frame}
+\begin{frame}[fragile]
 \frametitle{Single Inheritance also}
-
 \begin{question}
 What is the specification of Animal's \texttt{isFemale} method?
+
+\rm
+\lstinputlisting[linerange={1-1,4-6}]{examples/Gendered.java}
+
+\lstinputlisting[linerange={1-1,15-18,29-29}]{examples/Animal.java}
 \end{question}
 \note{The one inherited from Gendered.}
-\includegraphics[height=2in]{multiple-inh}
 \end{frame}
 
 \begin{frame}[fragile]
 \frametitle{Adding to Specification in Subtype}
 \framesubtitle{Use of `also' Mandatory}
 
-\lstinputlisting[linerange={1-1,31-40}]{examples/Patient.java}
+\lstinputlisting[linerange={1-2,31-40}]{examples/Patient.java}
 \end{frame}
 
 \begin{frame}
 \frametitle{Method Specification Inheritance}
 
 \begin{question}
-What is the effective specification of \texttt{Patient}'s
+What is the extended specification of \texttt{Patient}'s
 \texttt{setAge} method?
 \end{question}
 \note{The join of the 3 spec cases shown previously}
@@ -2276,6 +2354,27 @@ What is the effective specification of \texttt{Patient}'s
 \end{lstlisting}
 \note{This doesn't yet work in ESC/Java2.}
 \end{frame}
+
+\begin{frame}
+\frametitle{Method Specification Inheritance}
+\begin{question}
+In JML, can you override a method \\
+and make its precondition more restrictive?
+\end{question}
+\note{No.  You can only use the same or weaker precondition.  If you
+  think you're strengthening it, you actually are just describing a
+  special case.
+}
+\end{frame}
+
+\begin{frame}<beamer>[fragile]
+\frametitle{No, You Can't Strengthen Preconditions}
+\framesubtitle{Can Point Out Special Cases}
+\lstinputlisting[linerange={2-2}]{examples/Person.refines-jml}
+
+\lstinputlisting[linerange={3-7}]{examples/Person.refines-jml}
+\end{frame}
+
 
 \begin{frame}
 \frametitle{Inheritance of Type Specifications}
@@ -2478,7 +2577,7 @@ Downcast, use supertype abstraction.
 
 \begin{frame}[fragile]
 \frametitle{Case Analysis + Supertype Abstraction}
-\lstinputlisting[linerange={2-12}]{examples/HeadTest.java}
+\lstinputlisting[linerange={2-12}]{examples/Staff.java}
 \end{frame}
 
 \subsection[Validity]{Supertype Abstraction's Soundness}
@@ -2537,14 +2636,14 @@ Invariant holds at start of method
 \frametitle{Open Problems}
 \begin{itemize}
 \item
-Comparison to similar Spec\# methodology.
+Blending with similar Spec\# methodology.
 
 \item
 Extension to History Constraints and Initially Predicates.
 \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]
+\begin{frame}[fragile,label=validity]
 \frametitle{Validity of Supertype Abstraction}
 \framesubtitle{Client's View}
 
@@ -2575,6 +2674,8 @@ public $\REDT$ createNewObject() {
 }
 \end{lstlisting}
 \end{frame}
+
+\againframe<2>{validity}
 
 \begin{frame}[fragile]
 \frametitle{Validity of Supertype Abstraction}
@@ -2852,11 +2953,92 @@ forces behavioral subtyping.
 \item
 Supertype abstraction 
 automatically valid in JML.
+
+\item
+Supertype specifications must be permissive.
 \end{itemize}
 \end{frame}
 
 
 \section[ESC]{ESC/Java2}
+
+\begin{frame}
+\frametitle{What Makes ESC/Java Unique?}
+
+\begin{itemize}
+\item
+Encapsulates automatic theorem prover (Simplify).
+
+\item
+Aims to help programmers.
+\begin{itemize}
+\item
+Not sound.
+
+\item
+Not complete.
+\end{itemize}
+
+\item
+Rigorously modular.
+\end{itemize}
+\note{Modularity helps with scalability.}
+\end{frame}
+
+\begin{frame}
+\frametitle{What Makes ESC/Java2 Different?}
+\begin{itemize}
+\item
+JML syntax and semantics.
+
+\item
+Integrates many more static checkers.
+
+\item
+Multiple logics and provers.
+
+\item
+Eclipse integration.
+\end{itemize}
+\note{ESC/Java2 evolving to ESC/Java3 in Mobius framework.}
+\end{frame}
+
+\begin{frame}
+\frametitle{Stengths of Extended Static Checking}
+\begin{itemize}
+\item
+Push-button automation.
+
+\item
+Tool robustness.
+
+\item
+User feedback with no user specifications.
+
+\item
+Integration with popular IDE (Eclipse).
+
+\item
+Popularity amongst FM community.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{ESC/Java's Main Weaknesses}
+\begin{itemize}
+\item
+False positives and false negatives.
+
+\item
+Tool and documentation problems.
+
+\item
+Need for fairly complete specifications.
+
+\item
+Feedback hard for naive users.
+\end{itemize}
+\end{frame}
 
 \subsection{Warnings}
 
@@ -2990,7 +3172,7 @@ Best to avoid \lstinline!assume!.
 \frametitle{Assignable Clauses Localize Reasoning}
 \lstinputlisting[linerange={12-16}]{examples/ScreenPoint.java}
 \note{Technically, you also need a similar clause for moreRight, to
-  know that it doesn't distirb the pre-state value of y.
+  know that it doesn't disturb the pre-state value of y.
 }
 \end{frame}
 
@@ -3030,7 +3212,9 @@ Invariant, Constraint, Initially.
 
 \begin{frame}[fragile]
 \frametitle{Exception Warning Example}
+\begin{example}
 \lstinputlisting{examples/Ex.java}
+\end{example}
 \end{frame}
 
 \begin{frame}[fragile]
@@ -3094,11 +3278,188 @@ Ownership.
 
 % I think trace information is self-explanatory.
 
+\begin{frame}
+\frametitle{Counterexample Information}
+\begin{itemize}
+\item
+Violations can give counterexample context.
 
+\item
+Explain how warning could happen.
+
+\item
+State what prover ``thinks'' could be true.
+
+\item
+Can be hard to read.
+
+\item
+More details with \texttt{-counterexample} option.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Example for Reading Counterexamples}
+\begin{example}
+\lstinputlisting[linerange={1-11}]{examples/Alias.java}
+\end{example}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Example for Reading Counterexamples}
+\begin{example}
+\lstinputlisting[linerange={13-17}]{examples/Alias.java}
+\end{example}
+\note{Run ESC/Java2 on this, using -counterexample}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Reading ESC/Java2's Feedback}
+\begin{verbatim}
+Alias.java:17: Warning: 
+Possible violation of invariant (Invariant)
+
+Associated declaration is ..., line 7, col 13:
+  /*@ public invariant noneg ==>  ...
+             ^
+Possibly relevant .. from counterexample context:  
+  (vAllocTime(brokenObj) < alloc) ...
+
+Execution trace information:
+    Executed then branch in ..., line 16, col 15.
+
+Counterexample context:
+    (intFirst <= v:14.32) ...
+\end{verbatim}
+\end{frame}
+
+\begin{frame}
+\frametitle{Reading Relevant Items}
+\begin{tabular}{ll}
+Item & Meaning \\
+\hline
+\texttt{brokenObj} & object violating invariant \\
+\texttt{typeof(brokenObj)} & its type \\
+\texttt{brokenObj.(noneg:4.38)} & its \texttt{nonneg} field \\
+\texttt{brokenObj.(a@pre:2.44)} & its \texttt{a} field \\
+\texttt{tmp0!a:15.4} & another object
+\end{tabular}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{State Described By Relevant Items}
+
+\begin{question}
+What does this mean?
+
+\begin{verbatim}
+  typeof(brokenObj) <: T_Alias
+  brokenObj.(noneg:4.38) == @true
+  brokenObj.(noneg:4.38<1>) == @true
+  brokenObj.(a@pre:2.44) == tmp0!a:15.4
+  brokenObj != this
+\end{verbatim}
+\end{question}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Reading Counterexample Context}
+
+Look at:
+\begin{itemize}
+\item
+\lstinline!this!
+
+\item
+\lstinline!brokenObj!
+\end{itemize}
+
+\begin{verbatim}
+    brokenObj.(noneg:4.38<1>) == @true
+    this.(noneg:4.38<1>) == bool$false
+    brokenObj.(a@pre:2.44) == tmp0!a:15.4
+    this.(a@pre:2.44) == tmp0!a:15.4
+    ...
+    this != null
+    brokenObj != this
+    brokenObj != null
+\end{verbatim}
+% $
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Reading Counterexample Context}
+
+\begin{question}
+What does the context tell you?
+\end{question}
+\begin{verbatim}
+    brokenObj.(noneg:4.38<1>) == @true
+    this.(noneg:4.38<1>) == bool$false
+    brokenObj.(a@pre:2.44) == tmp0!a:15.4
+    this.(a@pre:2.44) == tmp0!a:15.4
+    ...
+    this != null
+    brokenObj != this
+    brokenObj != null
+\end{verbatim}
+% $
+\end{frame}
+
+\begin{frame}<beamer>
+\frametitle{It Tells About Aliasing}
+\includegraphics[width=4.25in]{alias-brokenobj}
+\note{In ESC/Java2 currently the fix is to use the owner ghost field,
+  but one could also use the Universe type system, as described
+  previously.
+}
+\end{frame}
 
 \subsection[Provers]{Connection to Provers}
 
-\subsection[Other]{Other Topics}
+\begin{frame}
+\frametitle{ESC/Java as a VC Generator}
+\includegraphics[width=4.25in]{escarch}
+\note{Similar diagram applies to Bogor, which generates models and
+  temporal logic formula and then uses various model checkers.
+}
+\end{frame}
+
+\begin{frame}
+\frametitle{ESC/Java2 and Provers}
+Current release supports:
+\begin{itemize}
+\item
+Fx7 prover.
+
+\item
+Coq.
+\end{itemize}
+
+VC formats:
+\begin{itemize}
+\item
+Simplify.
+
+\item
+SMT-LIB.
+\end{itemize}
+\note{Working on VC generation for PVS.}
+\end{frame}
+
+\begin{frame}
+\frametitle{Other Efforts}
+\begin{itemize}
+\item
+Specification-aware dead code detector.
+
+\item
+Race Condition Checker.
+
+\item
+Houdini (creates specifications).
+\end{itemize}
+\end{frame}
 
 \section[Concl.]{Conclusions}
 
@@ -3177,7 +3538,7 @@ What kinds of research or collaborations interest you?
 
 
 \begin{frame}
-\frametitle{Acknowldegments}
+\frametitle{Acknowledgments}
 Thanks to Joseph Kiniry, Erik Poll, David Cok, David Naumann, 
 Yoonsik Cheon, Curtis Clifton, Clyde Ruby, Patrice Chalin,
 Peter M\"{u}ller, Werner Dietl,
@@ -3226,7 +3587,7 @@ Verify:
   else { p = new FemalePatient(); }
   //@ assert p.log.size() == 0;
 \end{lstlisting}
-\note{This works because the intially clause of Patient also applies
+\note{This works because the initially clause of Patient also applies
   to FemalePatient.
 }
 \end{frame}

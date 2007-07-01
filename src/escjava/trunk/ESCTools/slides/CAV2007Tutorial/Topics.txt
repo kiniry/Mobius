@@ -72,6 +72,9 @@ Talk -*- Outline -*-
 ** Advanced Data Abstraction
 *** Invariant Methodologies
 *** History Constraints
+** Other topics (omit?)
+*** Helper methods
+*** Ghost Fields
 
 * Subtyping
 ** Modular Verification Problem
@@ -87,18 +90,12 @@ Talk -*- Outline -*-
 *** Code Contracts for Super Calls
 *** Modular Subclass Verification (Clyde Ruby)
 
-
 * ESC/Java2 (See notes)
 ** Warnings
 *** Kinds of Warnings
 *** How to Interpret Messages
 *** Exercise
 ** Connection to Provers
-** Other topics (omit?)
-*** Helper methods
-*** Ghost Fields
-*** Mention RCC?
-
 
 * Conclusions
 ** Advantages of JML

@@ -3,7 +3,7 @@ public class Actor {
   private /*@ spec_public @*/ int age;
   private /*@ spec_public @*/ int fate;
 
-  //@ public invariant 0 <= age <= fate;
+  //@ public invariant 0 <= age && age <= fate;
 
   /*@   public normal_behavior
     @     requires age < fate - 1;
@@ -11,7 +11,7 @@ public class Actor {
     @     ensures age == \old(age+1);
     @ also
     @   public exceptional_behavior
-    @     requires a == fate - 1;
+    @     requires age == fate - 1;
     @     assignable age;
     @     signals_only DeathException;
     @*/

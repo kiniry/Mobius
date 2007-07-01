@@ -12,7 +12,14 @@ JMLUNIT = jmlunit -i
 JAVAC = javac
 ESCJAVA = escjava2 -nonNullByDefault -CounterExample
 
-TYPES = ArrayOps BagOfInt
+TYPES = ArrayOps BagOfInt BagOfIntMain \
+        Actor ActorUnderspecified Aging \
+	BoundedStack Counter Counter2 \
+	Gendered Animal Patient FemalePatient Females \
+        Person Staff Doctor Nurse HeadTest \
+	ScreenPoint ScreenPoint2 Hailstone Hailstone2 \
+	Ex Factor SortedInts SortedInts2 SortedInts3 \
+	ModularityDemo
 
 all: compile runtests
 

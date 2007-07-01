@@ -3,7 +3,7 @@ public class Actor {
   private /*@ spec_public @*/ int age;
   private /*@ spec_public @*/ int fate;
 
-  //@ public invariant 0 <= age <= fate;
+  //@ public invariant 0 <= age && age <= fate;
 
   /*@ public normal_behavior
     @   requires age < fate - 1;

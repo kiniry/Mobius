@@ -15,7 +15,7 @@ public class Factor {
     @       (\forall int i; 1 < i && i < n;
     @            n % i != 0);
     @*/
-  public static int[] factors(int n)
+  public /*@ pure @*/static int[] factors(int n)
       throws PrimeException
   { /* a stub */
     return new int[]{1,n};

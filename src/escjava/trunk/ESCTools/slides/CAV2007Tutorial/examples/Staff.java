@@ -1,4 +1,4 @@
-public class HeadTest {
+public abstract class Staff extends Animal {
   /*@ requires p instanceof Doctor
     @       || p instanceof Nurse; @*/
   public boolean isHead(final Staff p) {
@@ -9,5 +9,9 @@ public class HeadTest {
       Nurse nrs = (Nurse) p;
       return nrs.isChief();
     }
+  }
+
+  public Staff(String gender) {
+    super(gender);
   }
 }
