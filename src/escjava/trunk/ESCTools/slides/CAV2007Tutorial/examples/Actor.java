@@ -14,6 +14,8 @@ public class Actor {
     @     requires age == fate - 1;
     @     assignable age;
     @     signals_only DeathException;
+    @     signals (DeathException e)
+    @              age == fate;
     @*/
   public void older()
     throws DeathException

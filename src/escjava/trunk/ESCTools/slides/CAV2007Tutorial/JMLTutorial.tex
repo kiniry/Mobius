@@ -8,9 +8,9 @@
 \mode<presentation>
 {
 % overall themes that seem to work for this talk, pick one:
-  %\usetheme[secheader]{Madrid}
+  \usetheme[secheader]{Madrid}
   %\usetheme{Pittsburgh}
-  \usetheme{Copenhagen} % or other similar themes
+  %\usetheme{Copenhagen} % or other similar themes
 %
   \usecolortheme{seahorse}
   \usefonttheme{structurebold}
@@ -211,7 +211,7 @@ Formal.
 Sequential Java.
 
 \item
-Functional behavior.
+Functional behavior of APIs.
 
 \item
 Java 1.4.
@@ -299,6 +299,7 @@ Design patterns.
 
 \begin{frame}
 \frametitle{Basic Approach}
+\framesubtitle{``Eiffel + Larch for Java''}
 \begin{itemize}
 \item
 Hoare-style (Contracts).
@@ -431,10 +432,10 @@ Verification tool (e.g., KeY, JACK, Jive).
 }
 \end{frame}
 
-\subsection[Importance]{Importance of JML}
+\subsection[Interest]{Interest in JML}
 
 \begin{frame}
-\frametitle{Importance of JML}
+\frametitle{Interest in JML}
 
 \begin{itemize}
 \item
@@ -650,7 +651,7 @@ evaluated in the pre-state.
 Public visibility.
 
 \item
-Only for specification purposes.
+Only public for specification purposes.
 \end{itemize}
 
 \note{\lstinline!spec_public! actually a syntactic sugar.}
@@ -993,11 +994,11 @@ Links to all tools:
 Individual tools:
 \begin{itemize}
 \item
-Common JML tools
+Common JML tools \\
 \href{http://sourceforge.net/projects/jmlspecs/}{sourceforge.net/projects/jmlspecs/}
 
 \item
-ESC/Java2 Eclipse plugin \newline
+ESC/Java2 Eclipse plugin \\
 \href{http://jmleclipse.projects.cis.ksu.edu}{jmleclipse.projects.cis.ksu.edu}
 \end{itemize}
 \end{frame}
@@ -1657,7 +1658,7 @@ Specify them.
 
 \begin{frame}[fragile]
 \frametitle{Exceptional Specification Example}
-\lstinputlisting[linerange={8-19}]{examples/Actor.java}
+\lstinputlisting[linerange={8-21}]{examples/Actor.java}
 \end{frame}
 
 \begin{frame}
@@ -1679,6 +1680,7 @@ ignoring the exceptional behavior?
 
 \begin{frame}[fragile]
 \frametitle{Heavyweight Behavior Spec Cases}
+\framesubtitle{Presumed Complete}
 
 \lstinline!normal_behavior!, \lstinline!exceptional_behavior!
 \begin{itemize}
@@ -1706,6 +1708,7 @@ And \lstinline!signals_only! has its standard default (see below).
 
 \begin{frame}[fragile]
 \frametitle{Lightweight Specification Cases}
+\framesubtitle{Presumed Incomplete}
 
 \begin{itemize}
 \item

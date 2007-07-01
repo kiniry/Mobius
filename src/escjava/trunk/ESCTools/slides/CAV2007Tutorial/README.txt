@@ -22,4 +22,11 @@ running pdflatex on a TeX install that has pgf installed.  (Miktex has
 it, or can if you install it, and the Makefile assumes that mpdflatex
 is the Miktex version of pdflatex.)
 
+Examples are mainly kept in the subdirectory examples/.
+The directory examples_toedit/ contains copies of some files to use
+when starting examples that are to be edited.  This directories
+contents should be copied into examples_worked before the start of the
+show.
+
+
 $Id$
