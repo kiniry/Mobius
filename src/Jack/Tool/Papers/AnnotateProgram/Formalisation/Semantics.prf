@@ -1,93 +1,93 @@
 (Evaluation
  (eval_TCC1 0
-  (eval_TCC1-1 nil 3371189456 3391166485 ("" (termination-tcc) nil nil)
+  (eval_TCC1-1 nil 3371189456 3392364493 ("" (termination-tcc) nil nil)
    proved
    ((Name formal-nonempty-type-decl nil Evaluation nil)
     (<< adt-def-decl "(well_founded?[NumExpr])" NumExpr_adt nil))
-   90 90 nil nil))
+   99 100 nil nil))
  (eval_TCC2 0
-  (eval_TCC2-1 nil 3371189456 3391166485 ("" (termination-tcc) nil nil)
+  (eval_TCC2-1 nil 3371189456 3392364493 ("" (termination-tcc) nil nil)
    proved
    ((Name formal-nonempty-type-decl nil Evaluation nil)
     (<< adt-def-decl "(well_founded?[NumExpr])" NumExpr_adt nil))
-   126 100 nil nil))
+   136 90 nil nil))
  (eval_TCC3 0
-  (eval_TCC3-1 nil 3371189456 3391166485 ("" (termination-tcc) nil nil)
+  (eval_TCC3-1 nil 3371189456 3392364493 ("" (termination-tcc) nil nil)
    proved
    ((Name formal-nonempty-type-decl nil Evaluation nil)
     (<< adt-def-decl "(well_founded?[NumExpr])" NumExpr_adt nil))
-   95 90 nil nil))
+   136 90 nil nil))
  (eval_TCC4 0
-  (eval_TCC4-1 nil 3371189456 3391166485 ("" (termination-tcc) nil nil)
+  (eval_TCC4-1 nil 3371189456 3392364493 ("" (termination-tcc) nil nil)
    proved
    ((Name formal-nonempty-type-decl nil Evaluation nil)
     (<< adt-def-decl "(well_founded?[NumExpr])" NumExpr_adt nil))
-   130 100 nil nil))
+   98 100 nil nil))
  (eval_TCC5 0
-  (eval_TCC5-1 nil 3371189456 3391166485 ("" (termination-tcc) nil nil)
+  (eval_TCC5-1 nil 3371189456 3392364494 ("" (termination-tcc) nil nil)
    proved
    ((Name formal-nonempty-type-decl nil Evaluation nil)
     (<< adt-def-decl "(well_founded?[NumExpr])" NumExpr_adt nil))
-   94 100 nil nil))
+   298 100 nil nil))
  (eval_TCC6 0
-  (eval_TCC6-1 nil 3371189456 3391166485 ("" (termination-tcc) nil nil)
+  (eval_TCC6-1 nil 3371189456 3392364494 ("" (termination-tcc) nil nil)
    proved
    ((Name formal-nonempty-type-decl nil Evaluation nil)
     (<< adt-def-decl "(well_founded?[NumExpr])" NumExpr_adt nil))
-   92 90 nil nil))
+   130 90 nil nil))
  (eval_TCC7 0
-  (eval_TCC7-1 nil 3371189456 3391166485 ("" (termination-tcc) nil nil)
+  (eval_TCC7-1 nil 3371189456 3392364494 ("" (termination-tcc) nil nil)
    proved
    ((Name formal-nonempty-type-decl nil Evaluation nil)
     (<< adt-def-decl "(well_founded?[NumExpr])" NumExpr_adt nil))
-   129 90 nil nil))
+   98 90 nil nil))
  (eval_TCC8 0
-  (eval_TCC8-1 nil 3371189456 3391166485 ("" (termination-tcc) nil nil)
+  (eval_TCC8-1 nil 3371189456 3392364494 ("" (termination-tcc) nil nil)
    proved
    ((Name formal-nonempty-type-decl nil Evaluation nil)
     (<< adt-def-decl "(well_founded?[NumExpr])" NumExpr_adt nil))
-   100 100 nil nil))
+   137 100 nil nil))
  (eval_TCC9 0
-  (eval_TCC9-1 nil 3371189456 3391166485 ("" (subtype-tcc) nil nil)
-   proved ((/= const-decl "boolean" notequal nil)) 98 70 nil nil))
+  (eval_TCC9-1 nil 3371189456 3392364494 ("" (subtype-tcc) nil nil)
+   proved ((/= const-decl "boolean" notequal nil)) 70 70 nil nil))
  (eval_TCC10 0
-  (eval_TCC10-1 nil 3371189456 3391166486
+  (eval_TCC10-1 nil 3371189456 3392364494
    ("" (termination-tcc) nil nil) proved
    ((Name formal-nonempty-type-decl nil Evaluation nil)
     (<< adt-def-decl "(well_founded?[BoolExpr])" BoolExpr_adt nil))
-   94 90 nil nil))
+   137 110 nil nil))
  (eval_TCC11 0
-  (eval_TCC11-1 nil 3371189456 3391166486
+  (eval_TCC11-1 nil 3371189456 3392364494
    ("" (termination-tcc) nil nil) proved
    ((Name formal-nonempty-type-decl nil Evaluation nil)
     (<< adt-def-decl "(well_founded?[BoolExpr])" BoolExpr_adt nil))
-   95 90 nil nil))
+   110 110 nil nil))
  (eval_TCC12 0
-  (eval_TCC12-1 nil 3371189456 3391166486
+  (eval_TCC12-1 nil 3371189456 3392364494
    ("" (termination-tcc) nil nil) proved
    ((Name formal-nonempty-type-decl nil Evaluation nil)
     (<< adt-def-decl "(well_founded?[BoolExpr])" BoolExpr_adt nil))
-   135 100 nil nil))
+   145 110 nil nil))
  (eval_TCC13 0
-  (eval_TCC13-1 nil 3371189456 3391166486
+  (eval_TCC13-1 nil 3371189456 3392364495
    ("" (termination-tcc) nil nil) proved
    ((Name formal-nonempty-type-decl nil Evaluation nil)
     (<< adt-def-decl "(well_founded?[BoolExpr])" BoolExpr_adt nil))
-   95 90 nil nil))
+   140 110 nil nil))
  (eval_TCC14 0
-  (eval_TCC14-1 nil 3371189456 3391166486
+  (eval_TCC14-1 nil 3371189456 3392364495
    ("" (termination-tcc) nil nil) proved
    ((Name formal-nonempty-type-decl nil Evaluation nil)
     (<< adt-def-decl "(well_founded?[BoolExpr])" BoolExpr_adt nil))
-   129 100 nil nil))
+   116 110 nil nil))
  (eval_TCC15 0
-  (eval_TCC15-1 nil 3390732272 3391166486 ("" (subtype-tcc) nil nil)
-   proved nil 52 50 nil nil)))
+  (eval_TCC15-1 nil 3390732272 3392364495 ("" (subtype-tcc) nil nil)
+   proved nil 78 50 nil nil)))
 (SemanticsTypes)
 (SemanticsJMLTypes)
 (Semantics
  (update_stack_TCC1 0
-  (update_stack_TCC1-1 nil 3390908871 3391167339
+  (update_stack_TCC1-1 nil 3390908871 3392364495
    ("" (skosimp*)
     (("" (typepred "lvds!1")
       (("" (expand "is_finite")
@@ -136,7 +136,7 @@
         nil))
       nil))
     nil)
-   unchecked
+   proved
    ((finite_set type-eq-decl nil finite_sets nil)
     (is_finite const-decl "bool" finite_sets nil)
     (set type-eq-decl nil sets nil)
@@ -145,9 +145,26 @@
     (JType type-decl nil JType_adt nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
-    (boolean nonempty-type-decl nil booleans nil) nil nil
+    (boolean nonempty-type-decl nil booleans nil)
+    (l!1 skolem-const-decl "LocalVarDecl[Name]" Semantics nil)
+    (x!1 skolem-const-decl "({x: [Name, Val[Name]] |
+    EXISTS (l: LocalVarDecl[Name]):
+      lvds!1(l) AND
+       name(l) = PROJ_1(x) AND default_value[Name](jtype(l)) = PROJ_2(x)})"
+     Semantics nil)
     (injective? const-decl "bool" functions nil)
-    (nonempty_exists formula-decl nil sets_lemmas nil) nil nil nil
+    (nonempty_exists formula-decl nil sets_lemmas nil)
+    (l!1 skolem-const-decl "LocalVarDecl[Name]" Semantics nil)
+    (x2!1 skolem-const-decl "({x: [Name, Val[Name]] |
+    EXISTS (l: LocalVarDecl[Name]):
+      lvds!1(l) AND
+       name(l) = PROJ_1(x) AND default_value[Name](jtype(l)) = PROJ_2(x)})"
+     Semantics nil)
+    (x1!1 skolem-const-decl "({x: [Name, Val[Name]] |
+    EXISTS (l: LocalVarDecl[Name]):
+      lvds!1(l) AND
+       name(l) = PROJ_1(x) AND default_value[Name](jtype(l)) = PROJ_2(x)})"
+     Semantics nil)
     (choose const-decl "(p)" sets nil)
     (below type-eq-decl nil nat_types nil)
     (< const-decl "bool" reals nil)
@@ -164,29 +181,30 @@
      nil)
     (number nonempty-type-decl nil numbers nil)
     (Val type-decl nil Val_adt nil)
-    (AND const-decl "[bool, bool -> bool]" booleans nil) nil
+    (AND const-decl "[bool, bool -> bool]" booleans nil)
+    (lvds!1 skolem-const-decl "finite_set[LocalVarDecl[Name]]"
+     Semantics nil)
     (= const-decl "[T, T -> boolean]" equalities nil)
     (defined? const-decl "boolean" ValProp nil)
     (default_value const-decl "(defined?)" ValProp nil)
     (nonempty? const-decl "bool" sets nil))
-   421015 8580 t nil))
+   422 320 t nil))
  (deriv_expr_TCC1 0
-  (deriv_expr_TCC1-1 nil 3371191509 3391166486
-   ("" (skosimp) (("" (assert) nil nil)) nil) unchecked nil 85 60 t
-   nil))
+  (deriv_expr_TCC1-1 nil 3371191509 3392364495
+   ("" (skosimp) (("" (assert) nil nil)) nil) proved nil 49 40 t nil))
  (deriv_expr_TCC2 0
-  (deriv_expr_TCC2-1 nil 3371191509 3391166486
-   ("" (skosimp*) (("" (assert) nil nil)) nil) unchecked nil 96 90 t
+  (deriv_expr_TCC2-1 nil 3371191509 3392364495
+   ("" (skosimp*) (("" (assert) nil nil)) nil) proved nil 122 80 t
    nil))
  (deriv_expr_TCC3 0
-  (deriv_expr_TCC3-1 nil 3371191509 3391166486
-   ("" (subtype-tcc) nil nil) unchecked nil 66 60 nil nil))
+  (deriv_expr_TCC3-1 nil 3371191509 3392364495
+   ("" (subtype-tcc) nil nil) proved nil 59 60 nil nil))
  (deriv_expr_TCC4 0
-  (deriv_expr_TCC4-1 nil 3371191509 3391166486
-   ("" (termination-tcc) nil nil) unchecked nil 80 80 nil nil))
+  (deriv_expr_TCC4-1 nil 3371191509 3392364496
+   ("" (termination-tcc) nil nil) proved nil 73 70 nil nil))
  (deriv_expr_TCC5 0
-  (deriv_expr_TCC5-1 nil 3371191509 3391166487
-   ("" (subtype-tcc) nil nil) unchecked
+  (deriv_expr_TCC5-1 nil 3371191509 3392364496
+   ("" (subtype-tcc) nil nil) proved
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
@@ -202,13 +220,13 @@
     (integer_pred const-decl "[rational -> boolean]" integers nil)
     (int nonempty-type-eq-decl nil integers nil)
     (nat nonempty-type-eq-decl nil naturalnumbers nil))
-   564 520 nil nil))
+   679 480 nil nil))
  (deriv_expr_TCC6 0
-  (deriv_expr_TCC6-1 nil 3371191509 3391166487
-   ("" (subtype-tcc) nil nil) unchecked nil 92 90 nil nil))
+  (deriv_expr_TCC6-1 nil 3371191509 3392364496
+   ("" (subtype-tcc) nil nil) proved nil 83 80 nil nil))
  (deriv_expr_TCC7 0
-  (deriv_expr_TCC7-1 nil 3371191509 3391166488
-   ("" (termination-tcc) nil nil) unchecked
+  (deriv_expr_TCC7-1 nil 3371191509 3392364497
+   ("" (termination-tcc) nil nil) proved
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
@@ -224,15 +242,15 @@
     (integer_pred const-decl "[rational -> boolean]" integers nil)
     (int nonempty-type-eq-decl nil integers nil)
     (nat nonempty-type-eq-decl nil naturalnumbers nil))
-   798 740 nil nil))
+   806 720 nil nil))
  (deriv_expr_TCC8 0
-  (deriv_expr_TCC8-1 nil 3371191509 3391166489
+  (deriv_expr_TCC8-1 nil 3371191509 3392364498
    ("" (skosimp*) (("" (replace -4 2) (("" (assert) nil nil)) nil))
     nil)
-   unchecked nil 643 610 t nil))
+   proved nil 603 570 t nil))
  (deriv_expr_TCC9 0
-  (deriv_expr_TCC9-1 nil 3371191509 3391166489
-   ("" (subtype-tcc) nil nil) unchecked
+  (deriv_expr_TCC9-1 nil 3371191509 3392364499
+   ("" (subtype-tcc) nil nil) proved
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
@@ -248,10 +266,10 @@
     (integer_pred const-decl "[rational -> boolean]" integers nil)
     (int nonempty-type-eq-decl nil integers nil)
     (nat nonempty-type-eq-decl nil naturalnumbers nil))
-   918 860 nil nil))
+   923 850 nil nil))
  (deriv_expr_TCC10 0
-  (deriv_expr_TCC10-1 nil 3371191509 3391166490
-   ("" (termination-tcc) nil nil) unchecked
+  (deriv_expr_TCC10-1 nil 3371191509 3392364500
+   ("" (termination-tcc) nil nil) proved
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
@@ -267,13 +285,13 @@
     (integer_pred const-decl "[rational -> boolean]" integers nil)
     (int nonempty-type-eq-decl nil integers nil)
     (nat nonempty-type-eq-decl nil naturalnumbers nil))
-   1026 940 nil nil))
+   1183 920 nil nil))
  (deriv_expr_TCC11 0
-  (deriv_expr_TCC11-1 nil 3371191509 3391166491
-   ("" (subtype-tcc) nil nil) unchecked nil 354 350 nil nil))
+  (deriv_expr_TCC11-1 nil 3371191509 3392364500
+   ("" (subtype-tcc) nil nil) proved nil 343 340 nil nil))
  (deriv_expr_TCC12 0
-  (deriv_expr_TCC12-1 nil 3371191509 3391166492
-   ("" (subtype-tcc) nil nil) unchecked
+  (deriv_expr_TCC12-1 nil 3371191509 3392364501
+   ("" (subtype-tcc) nil nil) proved
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
@@ -289,14 +307,14 @@
     (integer_pred const-decl "[rational -> boolean]" integers nil)
     (int nonempty-type-eq-decl nil integers nil)
     (nat nonempty-type-eq-decl nil naturalnumbers nil))
-   1174 1050 nil nil))
+   1186 1030 nil nil))
  (deriv_expr_TCC13 0
-  (deriv_expr_TCC13-1 nil 3371191509 3391166493
-   ("" (skosimp*) (("" (assert) nil nil)) nil) unchecked nil 755 680 t
+  (deriv_expr_TCC13-1 nil 3371191509 3392364502
+   ("" (skosimp*) (("" (assert) nil nil)) nil) proved nil 804 710 t
    nil))
  (deriv_expr_TCC14 0
-  (deriv_expr_TCC14-1 nil 3390110778 3391166495
-   ("" (subtype-tcc) nil nil) unchecked
+  (deriv_expr_TCC14-1 nil 3390110778 3392364504
+   ("" (subtype-tcc) nil nil) proved
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
@@ -316,11 +334,11 @@
     (class_names const-decl "finite_set[Name]" ProgramFunctions nil)
     (method_names const-decl "finite_set[Name]" ProgramFunctions nil)
     (lookup_local const-decl "Val" State nil)
-    (update_stack const-decl "FullState" Semantics nil))
-   1961 1780 nil nil))
+    (defined? const-decl "boolean" ValProp nil))
+   2189 1820 nil nil))
  (deriv_expr_TCC15 0
-  (deriv_expr_TCC15-1 nil 3390110778 3391166497
-   ("" (subtype-tcc) nil nil) unchecked
+  (deriv_expr_TCC15-1 nil 3390110778 3392364507
+   ("" (subtype-tcc) nil nil) proved
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
@@ -340,11 +358,11 @@
     (class_names const-decl "finite_set[Name]" ProgramFunctions nil)
     (method_names const-decl "finite_set[Name]" ProgramFunctions nil)
     (lookup_local const-decl "Val" State nil)
-    (update_stack const-decl "FullState" Semantics nil))
-   2041 1850 nil nil))
+    (defined? const-decl "boolean" ValProp nil))
+   2191 1860 nil nil))
  (deriv_expr_TCC16 0
-  (deriv_expr_TCC16-1 nil 3390110778 3391166499
-   ("" (subtype-tcc) nil nil) unchecked
+  (deriv_expr_TCC16-1 nil 3390110778 3392364509
+   ("" (subtype-tcc) nil nil) proved
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
@@ -364,11 +382,11 @@
     (class_names const-decl "finite_set[Name]" ProgramFunctions nil)
     (method_names const-decl "finite_set[Name]" ProgramFunctions nil)
     (lookup_local const-decl "Val" State nil)
-    (update_stack const-decl "FullState" Semantics nil))
-   2133 1940 nil nil))
+    (defined? const-decl "boolean" ValProp nil))
+   2310 1940 nil nil))
  (deriv_expr_TCC17 0
-  (deriv_expr_TCC17-1 nil 3390110778 3391166501
-   ("" (subtype-tcc) nil nil) unchecked
+  (deriv_expr_TCC17-1 nil 3390110778 3392364511
+   ("" (subtype-tcc) nil nil) proved
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
@@ -388,18 +406,18 @@
     (class_names const-decl "finite_set[Name]" ProgramFunctions nil)
     (method_names const-decl "finite_set[Name]" ProgramFunctions nil)
     (lookup_local const-decl "Val" State nil)
-    (update_stack const-decl "FullState" Semantics nil))
-   2105 1900 nil nil))
+    (defined? const-decl "boolean" ValProp nil))
+   2263 1880 nil nil))
  (deriv_stmt_TCC1 0
-  (deriv_stmt_TCC1-1 nil 3371191509 3391166502
-   ("" (skosimp*) (("" (assert) nil nil)) nil) unchecked nil 490 450 t
+  (deriv_stmt_TCC1-1 nil 3371191509 3392364512
+   ("" (skosimp*) (("" (assert) nil nil)) nil) proved nil 512 450 t
    nil))
  (deriv_stmt_TCC2 0
-  (deriv_stmt_TCC2-1 nil 3371191509 3391166502
-   ("" (termination-tcc) nil nil) unchecked nil 919 840 nil nil))
+  (deriv_stmt_TCC2-1 nil 3371191509 3392364513
+   ("" (termination-tcc) nil nil) proved nil 886 800 nil nil))
  (deriv_stmt_TCC3 0
-  (deriv_stmt_TCC3-1 nil 3371191509 3391166505
-   ("" (termination-tcc) nil nil) unchecked
+  (deriv_stmt_TCC3-1 nil 3371191509 3392364515
+   ("" (termination-tcc) nil nil) proved
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
@@ -416,10 +434,10 @@
     (int nonempty-type-eq-decl nil integers nil)
     (nat nonempty-type-eq-decl nil naturalnumbers nil)
     (deriv_expr def-decl "bool" Semantics nil))
-   2078 1900 nil nil))
+   2300 1880 nil nil))
  (deriv_stmt_TCC4 0
-  (deriv_stmt_TCC4-1 nil 3371191509 3391166506
-   ("" (termination-tcc) nil nil) unchecked
+  (deriv_stmt_TCC4-1 nil 3371191509 3392364516
+   ("" (termination-tcc) nil nil) proved
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
@@ -435,10 +453,10 @@
     (integer_pred const-decl "[rational -> boolean]" integers nil)
     (int nonempty-type-eq-decl nil integers nil)
     (nat nonempty-type-eq-decl nil naturalnumbers nil))
-   1324 1200 nil nil))
+   1413 1200 nil nil))
  (deriv_stmt_TCC5 0
-  (deriv_stmt_TCC5-1 nil 3371191509 3391166507
-   ("" (subtype-tcc) nil nil) unchecked
+  (deriv_stmt_TCC5-1 nil 3371191509 3392364517
+   ("" (subtype-tcc) nil nil) proved
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
@@ -454,10 +472,10 @@
     (integer_pred const-decl "[rational -> boolean]" integers nil)
     (int nonempty-type-eq-decl nil integers nil)
     (nat nonempty-type-eq-decl nil naturalnumbers nil))
-   984 870 nil nil))
+   1023 840 nil nil))
  (deriv_stmt_TCC6 0
-  (deriv_stmt_TCC6-1 nil 3371191509 3391166508
-   ("" (subtype-tcc) nil nil) unchecked
+  (deriv_stmt_TCC6-1 nil 3371191509 3392364518
+   ("" (subtype-tcc) nil nil) proved
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
@@ -473,13 +491,13 @@
     (integer_pred const-decl "[rational -> boolean]" integers nil)
     (int nonempty-type-eq-decl nil integers nil)
     (nat nonempty-type-eq-decl nil naturalnumbers nil))
-   693 630 nil nil))
+   686 600 nil nil))
  (deriv_stmt_TCC7 0
-  (deriv_stmt_TCC7-1 nil 3371191509 3391166508
-   ("" (subtype-tcc) nil nil) unchecked nil 423 430 nil nil))
+  (deriv_stmt_TCC7-1 nil 3371191509 3392364519
+   ("" (subtype-tcc) nil nil) proved nil 495 440 nil nil))
  (deriv_stmt_TCC8 0
-  (deriv_stmt_TCC8-1 nil 3371191509 3391166509
-   ("" (subtype-tcc) nil nil) unchecked
+  (deriv_stmt_TCC8-1 nil 3371191509 3392364520
+   ("" (subtype-tcc) nil nil) proved
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
@@ -495,10 +513,10 @@
     (integer_pred const-decl "[rational -> boolean]" integers nil)
     (int nonempty-type-eq-decl nil integers nil)
     (nat nonempty-type-eq-decl nil naturalnumbers nil))
-   997 880 nil nil))
+   1029 880 nil nil))
  (deriv_stmt_TCC9 0
-  (deriv_stmt_TCC9-1 nil 3371191509 3391166510
-   ("" (termination-tcc) nil nil) unchecked
+  (deriv_stmt_TCC9-1 nil 3371191509 3392364524
+   ("" (termination-tcc) nil nil) proved
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
@@ -514,10 +532,10 @@
     (integer_pred const-decl "[rational -> boolean]" integers nil)
     (int nonempty-type-eq-decl nil integers nil)
     (nat nonempty-type-eq-decl nil naturalnumbers nil))
-   1406 1260 nil nil))
+   4191 1210 nil nil))
  (deriv_stmt_TCC10 0
-  (deriv_stmt_TCC10-1 nil 3371191509 3391166512
-   ("" (termination-tcc) nil nil) unchecked
+  (deriv_stmt_TCC10-1 nil 3371191509 3392364525
+   ("" (termination-tcc) nil nil) proved
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
@@ -533,10 +551,10 @@
     (integer_pred const-decl "[rational -> boolean]" integers nil)
     (int nonempty-type-eq-decl nil integers nil)
     (nat nonempty-type-eq-decl nil naturalnumbers nil))
-   1392 1270 nil nil))
+   1453 1260 nil nil))
  (deriv_stmt_TCC11 0
-  (deriv_stmt_TCC11-1 nil 3371191509 3391166513
-   ("" (termination-tcc) nil nil) unchecked
+  (deriv_stmt_TCC11-1 nil 3371191509 3392364526
+   ("" (termination-tcc) nil nil) proved
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
@@ -552,13 +570,13 @@
     (integer_pred const-decl "[rational -> boolean]" integers nil)
     (int nonempty-type-eq-decl nil integers nil)
     (nat nonempty-type-eq-decl nil naturalnumbers nil))
-   1072 960 nil nil))
+   1113 950 nil nil))
  (deriv_stmt_TCC12 0
-  (deriv_stmt_TCC12-1 nil 3371191509 3391166513
-   ("" (subtype-tcc) nil nil) unchecked nil 427 430 nil nil)))
+  (deriv_stmt_TCC12-1 nil 3371191509 3392364527
+   ("" (subtype-tcc) nil nil) proved nil 456 410 nil nil)))
 (SemanticsProofs
  (expr_determ_step 0
-  (expr_determ_step-2 nil 3390559431 3391166688
+  (expr_determ_step-2 nil 3390559431 3392364434
    ("" (skosimp)
     (("" (expand "deriv_expr")
       ((""
@@ -2912,109 +2930,110 @@
         nil))
       nil))
     nil)
-   unchecked
-   ((deriv_expr const-decl "bool" Semantics nil)
-    (well_founded?_product formula-decl nil WF nil)
-    (wf_nat formula-decl nil naturalnumbers nil)
-    (RefExpr type-decl nil RefExpr_adt nil)
-    (RExpr? adt-recognizer-decl "[Expr -> boolean]" Expr_adt nil)
-    (RExpr adt-constructor-decl "[RefExpr -> (RExpr?)]" Expr_adt nil)
-    (NumExpr type-decl nil NumExpr_adt nil)
-    (NExpr? adt-recognizer-decl "[Expr -> boolean]" Expr_adt nil)
-    (NExpr adt-constructor-decl "[NumExpr -> (NExpr?)]" Expr_adt nil)
-    (MethodCall adt-constructor-decl
-     "[[Expr, Name, Expr] -> (MethodCall?)]" Expr_adt nil)
-    (MethodCall? adt-recognizer-decl "[Expr -> boolean]" Expr_adt nil)
-    (on_method_exit_normal_deterministic formula-decl nil
-     SemanticsProofs nil)
-    (on_method_exit_exceptional_deterministic formula-decl nil
-     SemanticsProofs nil)
-    (on_method_entry_deterministic formula-decl nil SemanticsProofs
-     nil)
-    (CondExpr adt-constructor-decl
-     "[[Expr, Expr, Expr] -> (CondExpr?)]" Expr_adt nil)
-    (CondExpr? adt-recognizer-decl "[Expr -> boolean]" Expr_adt nil)
-    (BoolExpr type-decl nil BoolExpr_adt nil)
-    (BExpr? adt-recognizer-decl "[Expr -> boolean]" Expr_adt nil)
-    (BExpr adt-constructor-decl "[BoolExpr -> (BExpr?)]" Expr_adt nil)
-    (Assign adt-constructor-decl "[[Name, Expr] -> (Assign?)]" Expr_adt
-     nil)
-    (Assign? adt-recognizer-decl "[Expr -> boolean]" Expr_adt nil)
-    (up? adt-recognizer-decl "[lift -> boolean]" lift_adt nil)
-    (numfield nonempty-type-eq-decl nil number_fields nil)
-    (- const-decl "[numfield, numfield -> numfield]" number_fields nil)
-    nil (Expr_induction formula-decl nil Expr_adt nil)
-    (Name formal-nonempty-type-decl nil SemanticsProofs nil)
-    (Expr type-decl nil Expr_adt nil) (Val type-decl nil Val_adt nil)
-    (FullState formal-type-decl nil SemanticsProofs nil)
-    (IMPLIES const-decl "[bool, bool -> bool]" booleans nil)
-    (Stmt type-decl nil Stmt_adt nil)
-    (below type-eq-decl nil naturalnumbers nil)
-    (FullProgram formal-type-decl nil SemanticsProofs nil)
-    (defined? const-decl "boolean" ValProp nil)
-    (JType type-decl nil JType_adt nil)
-    (FieldDecl type-eq-decl nil Program nil)
-    (finite_set type-eq-decl nil finite_sets nil)
-    (LocalVarDecl type-eq-decl nil Program nil)
-    (Method type-eq-decl nil Program nil)
-    (lift type-decl nil lift_adt nil)
-    (Class type-eq-decl nil Program nil)
-    (Program type-eq-decl nil Program nil)
-    (program formal-const-decl "[FullProgram -> Program]"
-     SemanticsProofs nil)
-    (Excpt type-decl nil Excpt_adt nil)
-    (PSt type-eq-decl nil State nil)
-    (PState type-eq-decl nil State nil)
-    (pstate formal-const-decl "[FullState -> PState]" SemanticsProofs
-     nil)
-    (lookup formal-const-decl "[Name, FullState -> Val]"
-            SemanticsProofs nil)
-    (update_PState_type const-decl "boolean" SemanticsTypes nil)
-    (update_PState formal-const-decl "(update_PState_type)"
-     SemanticsProofs nil)
-    (upto nonempty-type-eq-decl nil naturalnumbers nil)
-    (<= const-decl "bool" reals nil)
-    (deriv_stmt_type type-eq-decl nil SemanticsTypes nil)
-    (deriv_stmt_rec_type type-eq-decl nil SemanticsTypes nil)
-    (deriv_expr_type type-eq-decl nil SemanticsTypes nil)
-    (deriv_expr_rec_type type-eq-decl nil SemanticsTypes nil)
-    (execute_set_type const-decl "boolean" SemanticsTypes nil)
-    (execute_set formal-const-decl "(execute_set_type)" SemanticsProofs
-     nil)
-    (list type-decl nil list_adt nil)
-    (execute_CaseJML_type const-decl "boolean" SemanticsTypes nil)
-    (execute_CaseJML formal-const-decl "(execute_CaseJML_type)"
-     SemanticsProofs nil)
-    (on_method_event_type const-decl "boolean" SemanticsTypes nil)
-    (on_method_entry formal-const-decl "(on_method_event_type)"
-     SemanticsProofs nil)
-    (on_method_exit_normal formal-const-decl "(on_method_event_type)"
-     SemanticsProofs nil)
-    (on_method_exit_exceptional formal-const-decl
-     "(on_method_event_type)" SemanticsProofs nil)
-    (deriv_stmt def-decl "bool" Semantics nil)
-    (= const-decl "[T, T -> boolean]" equalities nil)
-    (deriv_expr def-decl "bool" Semantics nil)
-    (< const-decl "bool" reals nil)
-    (AND const-decl "[bool, bool -> bool]" booleans nil)
-    (nat nonempty-type-eq-decl nil naturalnumbers nil)
-    (>= const-decl "bool" reals nil)
-    (bool nonempty-type-eq-decl nil booleans nil)
-    (int nonempty-type-eq-decl nil integers nil)
-    (integer_pred const-decl "[rational -> boolean]" integers nil)
-    (rational nonempty-type-from-decl nil rationals nil)
-    (rational_pred const-decl "[real -> boolean]" rationals nil)
-    (real nonempty-type-from-decl nil reals nil)
-    (real_pred const-decl "[number_field -> boolean]" reals nil)
-    (number_field nonempty-type-from-decl nil number_fields nil)
+   proved
+   ((pred type-eq-decl nil defined_types nil)
+    (well_founded? const-decl "bool" orders nil)
+    (wf_induction formula-decl nil wf_induction nil)
+    (number nonempty-type-decl nil numbers nil)
+    (boolean nonempty-type-decl nil booleans nil)
     (number_field_pred const-decl "[number -> boolean]" number_fields
      nil)
-    (boolean nonempty-type-decl nil booleans nil)
-    (number nonempty-type-decl nil numbers nil)
-    (wf_induction formula-decl nil wf_induction nil)
-    (well_founded? const-decl "bool" orders nil)
-    (pred type-eq-decl nil defined_types nil))
-   174434 164630 t nil)
+    (number_field nonempty-type-from-decl nil number_fields nil)
+    (real_pred const-decl "[number_field -> boolean]" reals nil)
+    (real nonempty-type-from-decl nil reals nil)
+    (rational_pred const-decl "[real -> boolean]" rationals nil)
+    (rational nonempty-type-from-decl nil rationals nil)
+    (integer_pred const-decl "[rational -> boolean]" integers nil)
+    (int nonempty-type-eq-decl nil integers nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (>= const-decl "bool" reals nil)
+    (nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (AND const-decl "[bool, bool -> bool]" booleans nil)
+    (< const-decl "bool" reals nil)
+    (deriv_expr def-decl "bool" Semantics nil)
+    (= const-decl "[T, T -> boolean]" equalities nil)
+    (deriv_stmt def-decl "bool" Semantics nil)
+    (on_method_exit_exceptional formal-const-decl
+     "(on_method_event_type)" SemanticsProofs nil)
+    (on_method_exit_normal formal-const-decl "(on_method_event_type)"
+     SemanticsProofs nil)
+    (on_method_entry formal-const-decl "(on_method_event_type)"
+     SemanticsProofs nil)
+    (on_method_event_type const-decl "boolean" SemanticsTypes nil)
+    (execute_CaseJML formal-const-decl "(execute_CaseJML_type)"
+     SemanticsProofs nil)
+    (execute_CaseJML_type const-decl "boolean" SemanticsTypes nil)
+    (list type-decl nil list_adt nil)
+    (execute_set formal-const-decl "(execute_set_type)" SemanticsProofs
+     nil)
+    (execute_set_type const-decl "boolean" SemanticsTypes nil)
+    (deriv_expr_rec_type type-eq-decl nil SemanticsTypes nil)
+    (deriv_expr_type type-eq-decl nil SemanticsTypes nil)
+    (deriv_stmt_rec_type type-eq-decl nil SemanticsTypes nil)
+    (deriv_stmt_type type-eq-decl nil SemanticsTypes nil)
+    (<= const-decl "bool" reals nil)
+    (upto nonempty-type-eq-decl nil naturalnumbers nil)
+    (update_PState formal-const-decl "(update_PState_type)"
+     SemanticsProofs nil)
+    (update_PState_type const-decl "boolean" SemanticsTypes nil)
+    (lookup formal-const-decl "[Name, FullState -> Val]"
+            SemanticsProofs nil)
+    (pstate formal-const-decl "[FullState -> PState]" SemanticsProofs
+     nil)
+    (PState type-eq-decl nil State nil)
+    (PSt type-eq-decl nil State nil)
+    (Excpt type-decl nil Excpt_adt nil)
+    (program formal-const-decl "[FullProgram -> Program]"
+     SemanticsProofs nil)
+    (Program type-eq-decl nil Program nil)
+    (Class type-eq-decl nil Program nil)
+    (lift type-decl nil lift_adt nil)
+    (Method type-eq-decl nil Program nil)
+    (LocalVarDecl type-eq-decl nil Program nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (FieldDecl type-eq-decl nil Program nil)
+    (JType type-decl nil JType_adt nil)
+    (defined? const-decl "boolean" ValProp nil)
+    (FullProgram formal-type-decl nil SemanticsProofs nil)
+    (below type-eq-decl nil naturalnumbers nil)
+    (Stmt type-decl nil Stmt_adt nil)
+    (IMPLIES const-decl "[bool, bool -> bool]" booleans nil)
+    (FullState formal-type-decl nil SemanticsProofs nil)
+    (Val type-decl nil Val_adt nil) (Expr type-decl nil Expr_adt nil)
+    (Name formal-nonempty-type-decl nil SemanticsProofs nil)
+    (Expr_induction formula-decl nil Expr_adt nil)
+    (x!1 skolem-const-decl "[nat, nat]" SemanticsProofs nil)
+    (- const-decl "[numfield, numfield -> numfield]" number_fields nil)
+    (numfield nonempty-type-eq-decl nil number_fields nil)
+    (up? adt-recognizer-decl "[lift -> boolean]" lift_adt nil)
+    (Assign? adt-recognizer-decl "[Expr -> boolean]" Expr_adt nil)
+    (Assign adt-constructor-decl "[[Name, Expr] -> (Assign?)]" Expr_adt
+     nil)
+    (BExpr adt-constructor-decl "[BoolExpr -> (BExpr?)]" Expr_adt nil)
+    (BExpr? adt-recognizer-decl "[Expr -> boolean]" Expr_adt nil)
+    (BoolExpr type-decl nil BoolExpr_adt nil)
+    (CondExpr? adt-recognizer-decl "[Expr -> boolean]" Expr_adt nil)
+    (CondExpr adt-constructor-decl
+     "[[Expr, Expr, Expr] -> (CondExpr?)]" Expr_adt nil)
+    (on_method_entry_deterministic formula-decl nil SemanticsProofs
+     nil)
+    (on_method_exit_exceptional_deterministic formula-decl nil
+     SemanticsProofs nil)
+    (on_method_exit_normal_deterministic formula-decl nil
+     SemanticsProofs nil)
+    (MethodCall? adt-recognizer-decl "[Expr -> boolean]" Expr_adt nil)
+    (MethodCall adt-constructor-decl
+     "[[Expr, Name, Expr] -> (MethodCall?)]" Expr_adt nil)
+    (NExpr adt-constructor-decl "[NumExpr -> (NExpr?)]" Expr_adt nil)
+    (NExpr? adt-recognizer-decl "[Expr -> boolean]" Expr_adt nil)
+    (NumExpr type-decl nil NumExpr_adt nil)
+    (RExpr adt-constructor-decl "[RefExpr -> (RExpr?)]" Expr_adt nil)
+    (RExpr? adt-recognizer-decl "[Expr -> boolean]" Expr_adt nil)
+    (RefExpr type-decl nil RefExpr_adt nil)
+    (wf_nat formula-decl nil naturalnumbers nil)
+    (well_founded?_product formula-decl nil WF nil)
+    (deriv_expr const-decl "bool" Semantics nil))
+   475429 228180 t nil)
   (expr_determ_step-1 nil 3390558045 nil
    ("" (skosimp)
     (("" (expand "deriv_expr")
@@ -3454,7 +3473,7 @@
     nil)
    unfinished nil nil nil nil nil))
  (stmt_determ_step 0
-  (stmt_determ_step-1 nil 3390558061 3391166704
+  (stmt_determ_step-1 nil 3390558061 3392364544
    ("" (skosimp)
     ((""
       (use "wf_induction[[nat, nat], LAMBDA(n1, n2 : [nat, nat]) : proj_1(n1) < proj_1(n2) AND proj_2(n1) < proj_2(n2)]")
@@ -4197,7 +4216,7 @@
         nil))
       nil))
     nil)
-   unchecked
+   proved
    ((pred type-eq-decl nil defined_types nil)
     (well_founded? const-decl "bool" orders nil)
     (wf_induction formula-decl nil wf_induction nil)
@@ -4270,7 +4289,8 @@
     (Name formal-nonempty-type-decl nil SemanticsProofs nil)
     (While adt-constructor-decl "[[Expr, Stmt] -> (While?)]" Stmt_adt
      nil)
-    (While? adt-recognizer-decl "[Stmt -> boolean]" Stmt_adt nil) nil
+    (While? adt-recognizer-decl "[Stmt -> boolean]" Stmt_adt nil)
+    (x!1 skolem-const-decl "[nat, nat]" SemanticsProofs nil)
     (TryCatch adt-constructor-decl
      "[[Stmt, Stmt, Stmt] -> (TryCatch?)]" Stmt_adt nil)
     (TryCatch? adt-recognizer-decl "[Stmt -> boolean]" Stmt_adt nil)
@@ -4306,9 +4326,9 @@
     (Stmt_induction formula-decl nil Stmt_adt nil)
     (wf_nat formula-decl nil naturalnumbers nil)
     (well_founded?_product formula-decl nil WF nil))
-   15988 11810 t nil))
+   16961 11820 t nil))
  (expr_determ 0
-  (expr_determ-1 nil 3390558082 3391166704
+  (expr_determ-1 nil 3390558082 3392364544
    ("" (skosimp*)
     (("" (use "expr_determ_step")
       (("" (assert)
@@ -4330,13 +4350,14 @@
         nil))
       nil))
     nil)
-   unchecked
+   proved
    ((expr_determ_step formula-decl nil SemanticsProofs nil)
     (Val type-decl nil Val_adt nil)
     (Name formal-nonempty-type-decl nil SemanticsProofs nil)
     (FullState formal-type-decl nil SemanticsProofs nil)
     (FullProgram formal-type-decl nil SemanticsProofs nil)
-    (Expr type-decl nil Expr_adt nil) nil
+    (Expr type-decl nil Expr_adt nil)
+    (derives const-decl "bool" Semantics nil)
     (number nonempty-type-decl nil numbers nil)
     (boolean nonempty-type-decl nil booleans nil)
     (number_field_pred const-decl "[number -> boolean]" number_fields
@@ -4355,16 +4376,16 @@
     (< const-decl "bool" reals nil)
     (below type-eq-decl nil naturalnumbers nil)
     (Stmt type-decl nil Stmt_adt nil))
-   535 440 t nil))
+   504 400 t nil))
  (stmt_determ 0
-  (stmt_determ-1 nil 3390558094 3391166705
+  (stmt_determ-1 nil 3390558094 3392364545
    ("" (skosimp*)
     (("" (use "stmt_determ_step")
       (("" (expand "derives")
         (("" (skosimp*)
           (("" (inst?) (("" (inst?) (("" (assert) nil))))))))))))
     nil)
-   unchecked
+   proved
    ((stmt_determ_step formula-decl nil SemanticsProofs nil)
     (FullState formal-type-decl nil SemanticsProofs nil)
     (FullProgram formal-type-decl nil SemanticsProofs nil)
@@ -4383,10 +4404,11 @@
     (number_field_pred const-decl "[number -> boolean]" number_fields
      nil)
     (boolean nonempty-type-decl nil booleans nil)
-    (number nonempty-type-decl nil numbers nil) nil)
-   243 200 nil nil))
+    (number nonempty-type-decl nil numbers nil)
+    (derives const-decl "bool" Semantics nil))
+   257 180 nil nil))
  (deriv_expr_bottom_iff_exception_step 0
-  (deriv_expr_bottom_iff_exception_step-1 nil 3391148989 3391167709
+  (deriv_expr_bottom_iff_exception_step-1 nil 3391148989 3392364557
    ("" (skosimp)
     (("" (expand "deriv_expr")
       (("" (use "wf_induction[nat, <]")
@@ -4696,111 +4718,207 @@
       nil))
     nil)
    proved
-   ((pred type-eq-decl nil defined_types nil)
-    (well_founded? const-decl "bool" orders nil)
-    (wf_induction formula-decl nil wf_induction nil)
-    (number nonempty-type-decl nil numbers nil)
-    (boolean nonempty-type-decl nil booleans nil)
-    (number_field_pred const-decl "[number -> boolean]" number_fields
-     nil)
-    (number_field nonempty-type-from-decl nil number_fields nil)
-    (real_pred const-decl "[number_field -> boolean]" reals nil)
-    (real nonempty-type-from-decl nil reals nil)
-    (rational_pred const-decl "[real -> boolean]" rationals nil)
-    (rational nonempty-type-from-decl nil rationals nil)
-    (integer_pred const-decl "[rational -> boolean]" integers nil)
-    (int nonempty-type-eq-decl nil integers nil)
-    (bool nonempty-type-eq-decl nil booleans nil)
-    (>= const-decl "bool" reals nil)
-    (nat nonempty-type-eq-decl nil naturalnumbers nil)
-    (restrict const-decl "R" restrict nil)
-    (< const-decl "bool" reals nil)
-    (RExpr adt-constructor-decl "[RefExpr -> (RExpr?)]" Expr_adt nil)
-    (RExpr? adt-recognizer-decl "[Expr -> boolean]" Expr_adt nil)
-    (RefExpr type-decl nil RefExpr_adt nil)
-    (eval const-decl "Val" Evaluation nil)
-    (NExpr adt-constructor-decl "[NumExpr -> (NExpr?)]" Expr_adt nil)
-    (NExpr? adt-recognizer-decl "[Expr -> boolean]" Expr_adt nil)
-    (NumExpr type-decl nil NumExpr_adt nil)
-    (MethodCall adt-constructor-decl
-     "[[Expr, Name, Expr] -> (MethodCall?)]" Expr_adt nil)
-    (MethodCall? adt-recognizer-decl "[Expr -> boolean]" Expr_adt nil)
-    (CondExpr adt-constructor-decl
-     "[[Expr, Expr, Expr] -> (CondExpr?)]" Expr_adt nil)
-    (CondExpr? adt-recognizer-decl "[Expr -> boolean]" Expr_adt nil)
-    (BExpr adt-constructor-decl "[BoolExpr -> (BExpr?)]" Expr_adt nil)
-    (BExpr? adt-recognizer-decl "[Expr -> boolean]" Expr_adt nil)
-    (BoolExpr type-decl nil BoolExpr_adt nil)
-    (Assign adt-constructor-decl "[[Name, Expr] -> (Assign?)]" Expr_adt
-     nil)
-    (Assign? adt-recognizer-decl "[Expr -> boolean]" Expr_adt nil)
-    (numfield nonempty-type-eq-decl nil number_fields nil)
-    (- const-decl "[numfield, numfield -> numfield]" number_fields nil)
-    (x!1 skolem-const-decl "nat" SemanticsProofs nil)
-    (update_field const-decl "PState" State nil)
-    (is_field const-decl "boolean" State nil)
-    (update_local const-decl "PState" State nil)
-    (is_local const-decl "boolean" State nil)
-    (update const-decl "PState" State nil)
-    (NOT const-decl "[bool -> bool]" booleans nil)
-    (Expr_induction formula-decl nil Expr_adt nil)
-    (up? adt-recognizer-decl "[lift -> boolean]" lift_adt nil)
-    (Bottom? adt-recognizer-decl "[Val -> boolean]" Val_adt nil)
-    (= const-decl "[T, T -> boolean]" equalities nil)
-    (deriv_stmt def-decl "bool" Semantics nil)
-    (deriv_expr def-decl "bool" Semantics nil)
-    (on_method_exit_exceptional formal-const-decl
-     "(on_method_event_type)" SemanticsProofs nil)
-    (on_method_exit_normal formal-const-decl "(on_method_event_type)"
-     SemanticsProofs nil)
-    (on_method_entry formal-const-decl "(on_method_event_type)"
-     SemanticsProofs nil)
-    (on_method_event_type const-decl "boolean" SemanticsTypes nil)
-    (execute_CaseJML formal-const-decl "(execute_CaseJML_type)"
-     SemanticsProofs nil)
-    (execute_CaseJML_type const-decl "boolean" SemanticsTypes nil)
-    (list type-decl nil list_adt nil)
-    (execute_set formal-const-decl "(execute_set_type)" SemanticsProofs
-     nil)
-    (execute_set_type const-decl "boolean" SemanticsTypes nil)
-    (deriv_expr_rec_type type-eq-decl nil SemanticsTypes nil)
-    (deriv_expr_type type-eq-decl nil SemanticsTypes nil)
-    (deriv_stmt_rec_type type-eq-decl nil SemanticsTypes nil)
-    (<= const-decl "bool" reals nil)
-    (upto nonempty-type-eq-decl nil naturalnumbers nil)
-    (update_PState formal-const-decl "(update_PState_type)"
-     SemanticsProofs nil)
-    (update_PState_type const-decl "boolean" SemanticsTypes nil)
-    (lookup formal-const-decl "[Name, FullState -> Val]"
-            SemanticsProofs nil)
-    (program formal-const-decl "[FullProgram -> Program]"
-     SemanticsProofs nil)
-    (Program type-eq-decl nil Program nil)
-    (Class type-eq-decl nil Program nil)
-    (Method type-eq-decl nil Program nil)
-    (LocalVarDecl type-eq-decl nil Program nil)
-    (finite_set type-eq-decl nil finite_sets nil)
-    (FieldDecl type-eq-decl nil Program nil)
-    (JType type-decl nil JType_adt nil)
-    (defined? const-decl "boolean" ValProp nil)
-    (deriv_stmt_type type-eq-decl nil SemanticsTypes nil)
+   ((deriv_expr const-decl "bool" Semantics nil)
+    (wf_nat formula-decl nil naturalnumbers nil)
+    (Name formal-nonempty-type-decl nil SemanticsProofs nil)
+    (Expr type-decl nil Expr_adt nil)
+    (FullState formal-type-decl nil SemanticsProofs nil)
+    (Val type-decl nil Val_adt nil)
+    (IMPLIES const-decl "[bool, bool -> bool]" booleans nil)
+    (FullProgram formal-type-decl nil SemanticsProofs nil)
+    (Stmt type-decl nil Stmt_adt nil)
+    (below type-eq-decl nil naturalnumbers nil)
+    (Excpt type-decl nil Excpt_adt nil)
+    (lift type-decl nil lift_adt nil) (PSt type-eq-decl nil State nil)
+    (PState type-eq-decl nil State nil)
     (pstate formal-const-decl "[FullState -> PState]" SemanticsProofs
      nil)
-    (PState type-eq-decl nil State nil)
-    (PSt type-eq-decl nil State nil) (lift type-decl nil lift_adt nil)
-    (Excpt type-decl nil Excpt_adt nil)
-    (below type-eq-decl nil naturalnumbers nil)
-    (Stmt type-decl nil Stmt_adt nil)
-    (FullProgram formal-type-decl nil SemanticsProofs nil)
-    (IMPLIES const-decl "[bool, bool -> bool]" booleans nil)
-    (Val type-decl nil Val_adt nil)
-    (FullState formal-type-decl nil SemanticsProofs nil)
-    (Expr type-decl nil Expr_adt nil)
-    (Name formal-nonempty-type-decl nil SemanticsProofs nil)
-    (wf_nat formula-decl nil naturalnumbers nil)
-    (deriv_expr const-decl "bool" Semantics nil))
-   37488 14600 t shostak)))
+    (deriv_stmt_type type-eq-decl nil SemanticsTypes nil)
+    (defined? const-decl "boolean" ValProp nil)
+    (JType type-decl nil JType_adt nil)
+    (FieldDecl type-eq-decl nil Program nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (LocalVarDecl type-eq-decl nil Program nil)
+    (Method type-eq-decl nil Program nil)
+    (Class type-eq-decl nil Program nil)
+    (Program type-eq-decl nil Program nil)
+    (program formal-const-decl "[FullProgram -> Program]"
+     SemanticsProofs nil)
+    (lookup formal-const-decl "[Name, FullState -> Val]"
+            SemanticsProofs nil)
+    (update_PState_type const-decl "boolean" SemanticsTypes nil)
+    (update_PState formal-const-decl "(update_PState_type)"
+     SemanticsProofs nil)
+    (upto nonempty-type-eq-decl nil naturalnumbers nil)
+    (<= const-decl "bool" reals nil)
+    (deriv_stmt_rec_type type-eq-decl nil SemanticsTypes nil)
+    (deriv_expr_type type-eq-decl nil SemanticsTypes nil)
+    (deriv_expr_rec_type type-eq-decl nil SemanticsTypes nil)
+    (execute_set_type const-decl "boolean" SemanticsTypes nil)
+    (execute_set formal-const-decl "(execute_set_type)" SemanticsProofs
+     nil)
+    (list type-decl nil list_adt nil)
+    (execute_CaseJML_type const-decl "boolean" SemanticsTypes nil)
+    (execute_CaseJML formal-const-decl "(execute_CaseJML_type)"
+     SemanticsProofs nil)
+    (on_method_event_type const-decl "boolean" SemanticsTypes nil)
+    (on_method_entry formal-const-decl "(on_method_event_type)"
+     SemanticsProofs nil)
+    (on_method_exit_normal formal-const-decl "(on_method_event_type)"
+     SemanticsProofs nil)
+    (on_method_exit_exceptional formal-const-decl
+     "(on_method_event_type)" SemanticsProofs nil)
+    (deriv_expr def-decl "bool" Semantics nil)
+    (deriv_stmt def-decl "bool" Semantics nil)
+    (= const-decl "[T, T -> boolean]" equalities nil)
+    (Bottom? adt-recognizer-decl "[Val -> boolean]" Val_adt nil)
+    (up? adt-recognizer-decl "[lift -> boolean]" lift_adt nil)
+    (Expr_induction formula-decl nil Expr_adt nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (update const-decl "PState" State nil)
+    (is_local const-decl "boolean" State nil)
+    (update_local const-decl "PState" State nil)
+    (is_field const-decl "boolean" State nil)
+    (update_field const-decl "PState" State nil)
+    (x!1 skolem-const-decl "nat" SemanticsProofs nil)
+    (- const-decl "[numfield, numfield -> numfield]" number_fields nil)
+    (numfield nonempty-type-eq-decl nil number_fields nil)
+    (Assign? adt-recognizer-decl "[Expr -> boolean]" Expr_adt nil)
+    (Assign adt-constructor-decl "[[Name, Expr] -> (Assign?)]" Expr_adt
+     nil)
+    (BoolExpr type-decl nil BoolExpr_adt nil)
+    (BExpr? adt-recognizer-decl "[Expr -> boolean]" Expr_adt nil)
+    (BExpr adt-constructor-decl "[BoolExpr -> (BExpr?)]" Expr_adt nil)
+    (CondExpr? adt-recognizer-decl "[Expr -> boolean]" Expr_adt nil)
+    (CondExpr adt-constructor-decl
+     "[[Expr, Expr, Expr] -> (CondExpr?)]" Expr_adt nil)
+    (MethodCall? adt-recognizer-decl "[Expr -> boolean]" Expr_adt nil)
+    (MethodCall adt-constructor-decl
+     "[[Expr, Name, Expr] -> (MethodCall?)]" Expr_adt nil)
+    (NumExpr type-decl nil NumExpr_adt nil)
+    (NExpr? adt-recognizer-decl "[Expr -> boolean]" Expr_adt nil)
+    (NExpr adt-constructor-decl "[NumExpr -> (NExpr?)]" Expr_adt nil)
+    (eval const-decl "Val" Evaluation nil)
+    (RefExpr type-decl nil RefExpr_adt nil)
+    (RExpr? adt-recognizer-decl "[Expr -> boolean]" Expr_adt nil)
+    (RExpr adt-constructor-decl "[RefExpr -> (RExpr?)]" Expr_adt nil)
+    (< const-decl "bool" reals nil)
+    (restrict const-decl "R" restrict nil)
+    (nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (>= const-decl "bool" reals nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (int nonempty-type-eq-decl nil integers nil)
+    (integer_pred const-decl "[rational -> boolean]" integers nil)
+    (rational nonempty-type-from-decl nil rationals nil)
+    (rational_pred const-decl "[real -> boolean]" rationals nil)
+    (real nonempty-type-from-decl nil reals nil)
+    (real_pred const-decl "[number_field -> boolean]" reals nil)
+    (number_field nonempty-type-from-decl nil number_fields nil)
+    (number_field_pred const-decl "[number -> boolean]" number_fields
+     nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (number nonempty-type-decl nil numbers nil)
+    (wf_induction formula-decl nil wf_induction nil)
+    (well_founded? const-decl "bool" orders nil)
+    (pred type-eq-decl nil defined_types nil))
+   12086 10640 t shostak)))
 (SemanticsJML
+ (wf_initial_ghost_state_TCC1 0
+  (wf_initial_ghost_state_TCC1-1 nil 3392370163 nil
+   ("" (subtype-tcc) nil nil) nil nil nil nil nil nil))
+ (wf_initial_ghost_state 0
+  (wf_initial_ghost_state-1 nil 3392370167 3392370431
+   ("" (skosimp*)
+    (("" (expand "wf_ghoststate")
+      (("" (skosimp*)
+        (("" (expand "is_ghost")
+          (("" (replace -1 :hide? t)
+            (("" (assert)
+              (("" (expand "var_names")
+                (("" (expand "get_GhostDecl")
+                  (("" (lift-if)
+                    (("" (assert)
+                      (("" (split 1)
+                        (("1" (skosimp*)
+                          (("1"
+                            (typepred "choose({g: FieldDecl[Name] |
+                            getGhostDecls(program(p!1))(g) AND
+                             name(g) = vn!1})`init_val")
+                            (("1" (expand "defined?")
+                              (("1"
+                                (assert)
+                                (("1"
+                                  (rewrite "nonempty_exists")
+                                  (("1"
+                                    (skosimp*)
+                                    (("1"
+                                      (typepred "x!1")
+                                      (("1"
+                                        (inst?)
+                                        (("1" (assert) nil nil))
+                                        nil))
+                                      nil))
+                                    nil))
+                                  nil))
+                                nil))
+                              nil)
+                             ("2" (propax) nil nil))
+                            nil))
+                          nil)
+                         ("2" (skosimp*)
+                          (("2" (rewrite "nonempty_exists")
+                            (("2" (inst?) (("2" (assert) nil nil))
+                              nil))
+                            nil))
+                          nil))
+                        nil))
+                      nil))
+                    nil))
+                  nil))
+                nil))
+              nil))
+            nil))
+          nil))
+        nil))
+      nil))
+    nil)
+   proved
+   ((wf_ghoststate const-decl "boolean" SemanticsJML nil)
+    (is_ghost const-decl "boolean" SemanticsJML nil)
+    (get_GhostDecl const-decl "lift[FieldDecl]" ProgramFunctions nil)
+    (vn!1 skolem-const-decl "Name" SemanticsJML nil)
+    (f!1 skolem-const-decl "FieldDecl[Name]" SemanticsJML nil)
+    (p!1 skolem-const-decl "FullProgram" SemanticsJML nil)
+    (nonempty_exists formula-decl nil sets_lemmas nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (Name formal-nonempty-type-decl nil SemanticsJML nil)
+    (Val type-decl nil Val_adt nil)
+    (defined? const-decl "boolean" ValProp nil)
+    (JType type-decl nil JType_adt nil)
+    (FieldDecl type-eq-decl nil Program nil)
+    (set type-eq-decl nil sets nil)
+    (nonempty? const-decl "bool" sets nil)
+    (choose const-decl "(p)" sets nil)
+    (AND const-decl "[bool, bool -> bool]" booleans nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (Expr type-decl nil Expr_adt nil)
+    (LocalVarDecl type-eq-decl nil Program nil)
+    (Stmt type-decl nil Stmt_adt nil)
+    (Method type-eq-decl nil Program nil)
+    (lift type-decl nil lift_adt nil)
+    (Class type-eq-decl nil Program nil)
+    (Program type-eq-decl nil Program nil)
+    (is_finite const-decl "bool" finite_sets nil)
+    (getGhostDecls const-decl "finite_set[FieldDecl]" ProgramFunctions
+     nil)
+    (FullProgram formal-type-decl nil SemanticsJML nil)
+    (program formal-const-decl "[FullProgram -> Program[Name]]"
+     SemanticsJML nil)
+    (= const-decl "[T, T -> boolean]" equalities nil)
+    (var_names const-decl "finite_set[Name]" ProgramFunctions nil))
+   264864 11200 t shostak))
  (execute_set_TCC1 0
   (execute_set_TCC1-1 nil 3390908875 3391166715
    ("" (subtype-tcc) nil nil) unchecked

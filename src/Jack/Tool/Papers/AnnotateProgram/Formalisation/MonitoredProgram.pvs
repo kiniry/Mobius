@@ -75,14 +75,20 @@ BEGIN
   wf_state(mp : MonitoredProgram)(sigma : MPState) : boolean =
     wf_AState(mva(mp))(astate(sigma)) AND
     wf_state(program(mp))(pstate(sigma)) AND
-    FORALL (vn : Name) :
-      is_ghost(vn, sigma) IFF var_names(getGhostDecls(program(mp)))(vn)
+    wf_ghoststate(mp)(sigma)
+
+  wf_state_implies_wf_PSt : LEMMA % :-)
+    FORALL (mp : MonitoredProgram, s : MPState) :
+      wf_state(program(mp))(pstate(s)) IMPLIES
+        wf_PSt(vdsP(mva(mp)))(st(pstate(s)))
+
 
   % Instantiation of its semantics
 
   on_method_MVA(etype : EventType)
-               (mp : MonitoredProgram, md : Method, s : (wf_state(mp))) : AState =
-    IF (evs(mva(mp)))((# etype := etype, mname := name(md) #))
+               (mp : MonitoredProgram, md : Method, s : MPState) : AState =
+    IF wf_state(mp)(s) AND
+       evs(mva(mp))((# etype := etype, mname := name(md) #))
     THEN step(mva(mp))(astate(s), (# stP := st(pstate(s)),
                                      event := (# etype := etype,
                                                  mname := name(md) #)
@@ -146,7 +152,7 @@ BEGIN
 
   % Well-formedness properties
 
-  wf_initial_MP_state : LEMMA
+  wf_initial_MP_state : LEMMA % :-)
     FORALL (mp : MonitoredProgram)(this_val : (defined?)) :
       wf_MP(mp) IMPLIES wf_state(mp)(initial_MP_state(mp)(this_val))
 
@@ -154,6 +160,10 @@ BEGIN
     FORALL (mp : MonitoredProgram, e : Expr, v : Val)
            (sigma1, sigma2 : MPState, n : nat) :
       wf_MP(mp) IMPLIES
+      (FORALL (c : Stmt)(tau1, tau2 : MPState)(m : below(n)) :
+          wf_state(mp)(tau1) IMPLIES
+          deriv_stmt(mp)(c, tau1, tau2)(m) IMPLIES
+            wf_state(mp)(tau2)) IMPLIES
       wf_state(mp)(sigma1) IMPLIES
       deriv_expr(mp)(e, sigma1, v, sigma2)(n) IMPLIES
         wf_state(mp)(sigma2)
@@ -164,12 +174,6 @@ BEGIN
       wf_state(mp)(sigma1) IMPLIES
       deriv_stmt(mp)(c, sigma1, sigma2)(n) IMPLIES
         wf_state(mp)(sigma2)
-
-  wf_state_implies_wf_PSt : LEMMA % :->
-    FORALL (mp : MonitoredProgram, s : MPState) :
-      wf_MP(mp) IMPLIES
-      wf_state(program(mp))(pstate(s)) IMPLIES
-        wf_PSt(vdsP(mva(mp)))(st(pstate(s)))
 
 
 END MonitoredProgramSemantics

@@ -626,6 +626,19 @@ BEGIN
     ELSE gvs(sigma)(vn)
     ENDIF
 
+  wf_ghoststate(p : FullProgram)(sigma : FullState) : boolean =
+    FORALL (vn : Name) :
+      is_ghost(vn, sigma) IFF var_names(getGhostDecls(program(p)))(vn)
+
+  wf_initial_ghost_state : LEMMA % :-)
+    FORALL(p : FullProgram)(sigma : FullState) :
+      (gvs(sigma) = LAMBDA (n : Name) :
+                      LET gd = get_GhostDecl(n, program(p)) IN
+                      IF bottom?(gd)
+                      THEN Bottom
+                      ELSE init_val(down(gd))
+                      ENDIF) IMPLIES
+      wf_ghoststate(p)(sigma)
 
   execute_set : (execute_set_type) =
     LAMBDA (p : FullProgram, vn : Name, e : Expr, s1, s2 : FullState, n : nat,

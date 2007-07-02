@@ -32,10 +32,6 @@ BEGIN
                       on_method_exit_normal,
                       on_method_exit_exceptional]
 
-  wf_ghoststate(p : Program)(sigma : APState) : boolean =
-    FORALL (vn : Name) :
-      is_ghost(vn, sigma) IFF var_names(getGhostDecls(p))(vn)
-
   wf_state(p : Program)(sigma : APState) : boolean =
     wf_state(p)(pstate(sigma)) AND
     wf_ghoststate(p)(sigma)
