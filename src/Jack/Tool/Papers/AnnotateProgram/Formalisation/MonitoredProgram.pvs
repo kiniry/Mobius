@@ -1,11 +1,11 @@
 MonitoredProgram[CP, Name : TYPE+] : THEORY
 BEGIN
 
-  IMPORTING WellFormedMVA[CP, Name],
+  IMPORTING MVASemantics[CP, Name],
             WellFormedProgram[Name]
 
-  MonitoredProgram : TYPE =
-    [# mva : MVA[CP, Name],
+  MonitoredProgramPre : TYPE =
+    [# mva : (complete[CP, Name]),
        program : Program[Name]
     #]
 
@@ -14,7 +14,7 @@ BEGIN
   % Requirements:
   % Variables in vdsP must be fields in the program
   % Every method mentioned in the events must be in the class
-  compatible(mp : MonitoredProgram) : boolean =  
+  compatible(mp : MonitoredProgramPre) : boolean =  
     LET a = mva(mp), p = program(mp) IN
     EXISTS (c : Class) :
       classes(p)(c) AND 
@@ -27,18 +27,19 @@ BEGIN
         mname(ev) = n IMPLIES
           EXISTS (m : Method) : methods(c)(m) AND name(m) = n)
 
-  % Syntactic constraints on MPs
-  wf_MP(mp : MonitoredProgram) : boolean =
-    wf_MVA(mva(mp)) AND
-    wf_Program(program(mp)) AND
-    compatible(mp)
 
+  % Syntactic constraints on MPs
+  wf_MP(mp : MonitoredProgramPre) : boolean =
+    wf_MVA(mva(mp)) AND
+    wf_Program(program(mp))
+
+  MonitoredProgram : TYPE = (compatible)
 
 END MonitoredProgram
 
 
-% The semantics of MonitoredPrograms assumes that the program is annotated, thus
-% this can be thought as MonitoredAnnotatedProgramSemantics
+% The semantics of MonitoredPrograms assumes that the program is annotated, 
+% thus this can be thought as MonitoredAnnotatedProgramSemantics
 MonitoredProgramSemantics[CP, Name : TYPE+] : THEORY
 BEGIN
 
@@ -80,7 +81,7 @@ BEGIN
   % Instantiation of its semantics
 
   on_method_MVA(etype : EventType)
-               (mp : (wf_MP), md : Method, s : (wf_state(mp))) : AState =
+               (mp : MonitoredProgram, md : Method, s : (wf_state(mp))) : AState =
     IF (evs(mva(mp)))((# etype := etype, mname := name(md) #))
     THEN step(mva(mp))(astate(s), (# stP := st(pstate(s)),
                                      event := (# etype := etype,

@@ -2,7 +2,7 @@
 (MonitoredProgramSemantics
  (update_PState_TCC1 0
   (update_PState_TCC1-1 nil 3391514279 3391514295
-   ("" (subtype-tcc) nil nil) proved
+   ("" (subtype-tcc) nil nil) unchecked
    ((MPState type-eq-decl nil MonitoredProgramSemantics nil)
     (PState type-eq-decl nil State nil)
     (Store type-eq-decl nil State nil)
@@ -16,7 +16,7 @@
    112 70 nil nil))
  (update_GhostVars_TCC1 0
   (update_GhostVars_TCC1-1 nil 3391514279 3391514295
-   ("" (subtype-tcc) nil nil) proved
+   ("" (subtype-tcc) nil nil) unchecked
    ((MPState type-eq-decl nil MonitoredProgramSemantics nil)
     (PState type-eq-decl nil State nil)
     (Store type-eq-decl nil State nil)
@@ -26,29 +26,116 @@
     (update_GhostVars_type const-decl "boolean" SemanticsJMLTypes nil))
    69 60 nil nil))
  (on_method_MVA_TCC1 0
-  (on_method_MVA_TCC1-1 nil 3387174104 3389012373
-   ("" (skosimp)
-    (("" (typepred "s!1")
-      (("" (expand "wf_state") (("" (flatten) nil nil)) nil)) nil))
+  (on_method_MVA_TCC1-1 nil 3387174104 3391752772
+   ("" (skosimp*) (("" (typepred "s!1") (("" (grind) nil nil)) nil))
     nil)
-   proved-incomplete
+   proved
    ((wf_state const-decl "boolean" MonitoredProgramSemantics nil)
     (MPState type-eq-decl nil MonitoredProgramSemantics nil)
     (PState type-eq-decl nil State nil)
     (Store type-eq-decl nil State nil)
     (AState type-eq-decl nil MVASemantics nil)
     (MonitoredProgram type-eq-decl nil MonitoredProgram nil)
+    (compatible const-decl "boolean" MonitoredProgram nil)
+    (MonitoredProgramPre type-eq-decl nil MonitoredProgram nil)
     (Program type-eq-decl nil Program nil)
+    (complete const-decl "boolean" MVASemantics nil)
     (MVA type-eq-decl nil MVA nil)
-    (Name formal-nonempty-type-decl nil MonitoredProgramSemantics nil)
+    (ProgVarDecl type-eq-decl nil MVA nil)
+    (MVAVarDecl type-eq-decl nil MVA nil)
+    (JType type-decl nil JType_adt nil)
+    (defined? const-decl "boolean" ValProp nil)
+    (Val type-decl nil Val_adt nil)
+    (Transition type-eq-decl nil MVA nil)
+    (Guard type-eq-decl nil MVA nil) (Action type-eq-decl nil MVA nil)
+    (Event type-eq-decl nil MVA nil)
+    (EventType type-decl nil EventType_adt nil)
+    (finite_set type-eq-decl nil finite_sets nil)
     (CP formal-nonempty-type-decl nil MonitoredProgramSemantics nil)
+    (Name formal-nonempty-type-decl nil MonitoredProgramSemantics nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
-    (boolean nonempty-type-decl nil booleans nil))
-   136 40 t nil))
+    (boolean nonempty-type-decl nil booleans nil)
+    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
+    (wf_Store const-decl "boolean" WellFormedMVA nil)
+    (wf_Store const-decl "boolean" WellFormedMVA nil)
+    (wf_AState const-decl "boolean" MVASemantics nil)
+    (is_field const-decl "boolean" State nil)
+    (getFieldDecls const-decl "finite_set[FieldDecl]" ProgramFunctions
+     nil)
+    (is_local const-decl "boolean" State nil)
+    (getLocalDecls const-decl "finite_set[LocalVarDecl]"
+     ProgramFunctions nil)
+    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
+    (wf_state const-decl "boolean" State nil)
+    (update_GhostVars const-decl "(update_GhostVars_type)"
+     MonitoredProgramSemantics nil)
+    (update_GhostVars_type const-decl "boolean" SemanticsJMLTypes nil)
+    (update_PState const-decl "(update_PState_type)"
+     MonitoredProgramSemantics nil)
+    (update_PState_type const-decl "boolean" SemanticsTypes nil)
+    (PSt type-eq-decl nil State nil) (lift type-decl nil lift_adt nil)
+    (Excpt type-decl nil Excpt_adt nil)
+    (is_ghost const-decl "boolean" SemanticsJML nil)
+    (getGhostDecls const-decl "finite_set[FieldDecl]" ProgramFunctions
+     nil))
+   12311 1150 t nil))
  (on_method_MVA_TCC2 0
-  (on_method_MVA_TCC2-1 nil 3387174104 3391514331
-   ("" (subtype-tcc) nil nil) unfinished
+  (on_method_MVA_TCC2-1 nil 3387174104 3391753130
+   ("" (skosimp*)
+    (("" (expand "wf_PEvent")
+      (("" (assert)
+        (("" (typepred "mp!1")
+          (("" (expand "compatible")
+            (("" (skosimp*)
+              (("" (expand "wf_PSt")
+                (("" (expand "wf_PSt")
+                  (("" (skosimp*)
+                    (("" (expand "var_names")
+                      (("" (skosimp*)
+                        (("" (inst -3 "l!1")
+                          (("" (assert)
+                            (("" (skosimp*)
+                              ((""
+                                (typepred "s!1")
+                                ((""
+                                  (expand "wf_state")
+                                  ((""
+                                    (flatten)
+                                    ((""
+                                      (expand "wf_state")
+                                      ((""
+                                        (inst -2 "name(l!1)")
+                                        ((""
+                                          (assert)
+                                          ((""
+                                            (flatten)
+                                            ((""
+                                              (assert)
+                                              (("" (postpone) nil nil))
+                                              nil))
+                                            nil))
+                                          nil))
+                                        nil))
+                                      nil))
+                                    nil))
+                                  nil))
+                                nil))
+                              nil))
+                            nil))
+                          nil))
+                        nil))
+                      nil))
+                    nil))
+                  nil))
+                nil))
+              nil))
+            nil))
+          nil))
+        nil))
+      nil))
+    nil)
+   unfinished
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
@@ -64,71 +151,75 @@
     (Expr type-decl nil Expr_adt nil)
     (finite_set type-eq-decl nil finite_sets nil)
     (LocalVarDecl type-eq-decl nil Program nil)
-    (Stmt type-decl nil Stmt_adt nil) nil
-    (Event type-eq-decl nil MVA nil)
+    (Stmt type-decl nil Stmt_adt nil) (Event type-eq-decl nil MVA nil)
     (EventType type-decl nil EventType_adt nil)
     (Val type-decl nil Val_adt nil)
-    (FieldDecl type-eq-decl nil Program nil) nil
+    (FieldDecl type-eq-decl nil Program nil)
     (lift type-decl nil lift_adt nil)
     (Class type-eq-decl nil Program nil)
     (JType type-decl nil JType_adt nil)
     (ProgVarDecl type-eq-decl nil MVA nil)
-    (MVAVarDecl type-eq-decl nil MVA nil) nil nil
-    (wf_state const-decl "boolean" State nil) nil
-    (is_local const-decl "boolean" State nil) nil
+    (MVAVarDecl type-eq-decl nil MVA nil)
+    (wf_state const-decl "boolean" State nil)
+    (is_local const-decl "boolean" State nil)
     (is_field const-decl "boolean" State nil)
     (wf_AState const-decl "boolean" MVASemantics nil)
     (Name formal-nonempty-type-decl nil MonitoredProgramSemantics nil)
     (CP formal-nonempty-type-decl nil MonitoredProgramSemantics nil)
     (wf_PEvent const-decl "boolean" MVASemantics nil))
-   36470 27810 nil nil))
+   263985 10560 t nil))
  (on_method_MVA_TCC3 0
-  (on_method_MVA_TCC3-1 nil 3387174104 3391514498
+  (on_method_MVA_TCC3-1 nil 3387174104 3391752832
    ("" (skosimp*)
-    (("" (typepred "mp!1")
-      (("" (expand "wf_MP")
-        (("" (flatten) (("" (assert) (("" (postpone) nil nil)) nil))
-          nil))
-        nil))
+    (("" (typepred "mva(mp!1)")
+      (("" (expand "complete")
+        (("" (flatten) (("" (assert) nil nil)) nil)) nil))
       nil))
     nil)
-   unfinished
-   ((MonitoredProgram type-eq-decl nil MonitoredProgram nil)
-    (Program type-eq-decl nil Program nil)
-    (MVA type-eq-decl nil MVA nil)
+   proved
+   ((boolean nonempty-type-decl nil booleans nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
     (Name formal-nonempty-type-decl nil MonitoredProgramSemantics nil)
     (CP formal-nonempty-type-decl nil MonitoredProgramSemantics nil)
-    (NOT const-decl "[bool -> bool]" booleans nil)
-    (bool nonempty-type-eq-decl nil booleans nil)
-    (boolean nonempty-type-decl nil booleans nil))
-   23260 940 t nil))
+    (finite_set type-eq-decl nil finite_sets nil)
+    (EventType type-decl nil EventType_adt nil)
+    (Event type-eq-decl nil MVA nil) (Action type-eq-decl nil MVA nil)
+    (Guard type-eq-decl nil MVA nil)
+    (Transition type-eq-decl nil MVA nil)
+    (Val type-decl nil Val_adt nil)
+    (defined? const-decl "boolean" ValProp nil)
+    (JType type-decl nil JType_adt nil)
+    (MVAVarDecl type-eq-decl nil MVA nil)
+    (ProgVarDecl type-eq-decl nil MVA nil)
+    (MVA type-eq-decl nil MVA nil)
+    (complete const-decl "boolean" MVASemantics nil)
+    (Program type-eq-decl nil Program nil)
+    (MonitoredProgramPre type-eq-decl nil MonitoredProgram nil)
+    (compatible const-decl "boolean" MonitoredProgram nil)
+    (MonitoredProgram type-eq-decl nil MonitoredProgram nil))
+   37789 2950 t nil))
  (on_method_entry_MP_TCC1 0
   (on_method_entry_MP_TCC1-1 nil 3387174104 nil
-   ("" (subtype-tcc) nil nil) unfinished nil nil nil nil nil))
+   ("" (subtype-tcc) nil nil) unchecked nil nil nil nil nil))
  (on_method_entry_MP_TCC2 0
   (on_method_entry_MP_TCC2-1 nil 3387174104 nil
-   ("" (subtype-tcc) nil nil) unfinished nil nil nil nil nil))
- (on_method_entry_MP_TCC3 0
-  (on_method_entry_MP_TCC3-1 nil 3387174104 nil
-   ("" (subtype-tcc) nil nil) unfinished nil nil nil nil nil))
+   ("" (subtype-tcc) nil nil) unchecked nil nil nil nil nil))
  (on_method_exit_normal_MP_TCC1 0
   (on_method_exit_normal_MP_TCC1-1 nil 3387174104 nil
-   ("" (subtype-tcc) nil nil) unfinished nil nil nil nil nil))
+   ("" (subtype-tcc) nil nil) unchecked nil nil nil nil nil))
  (on_method_exit_normal_MP_TCC2 0
   (on_method_exit_normal_MP_TCC2-1 nil 3387174104 nil
-   ("" (subtype-tcc) nil nil) unfinished nil nil nil nil nil))
- (on_method_exit_normal_MP_TCC3 0
-  (on_method_exit_normal_MP_TCC3-1 nil 3387174104 nil
-   ("" (subtype-tcc) nil nil) unfinished nil nil nil nil nil))
+   ("" (subtype-tcc) nil nil) unchecked nil nil nil nil nil))
  (on_method_exit_exceptional_MP_TCC1 0
   (on_method_exit_exceptional_MP_TCC1-1 nil 3387174104 nil
-   ("" (subtype-tcc) nil nil) unfinished nil nil nil nil nil))
+   ("" (subtype-tcc) nil nil) unchecked nil nil nil nil nil))
  (initial_MP_state_TCC1 0
   (initial_MP_state_TCC1-1 nil 3387174104 nil
-   ("" (subtype-tcc) nil nil) unfinished nil nil nil nil nil))
+   ("" (subtype-tcc) nil nil) unchecked nil nil nil nil nil))
  (initial_MP_state_TCC2 0
   (initial_MP_state_TCC2-1 nil 3387174104 nil
-   ("" (subtype-tcc) nil nil) proved-complete nil nil nil nil nil))
+   ("" (subtype-tcc) nil nil) unchecked nil nil nil nil nil))
  (wf_initial_MP_state 0
   (wf_initial_MP_state-1 nil 3390055553 3391515192
    ("" (skosimp*)
@@ -308,13 +399,12 @@
     (CP formal-nonempty-type-decl nil MonitoredProgramSemantics nil)
     (ProgVarDecl type-eq-decl nil MVA nil)
     (wf_state const-decl "boolean" State nil)
-    (is_field const-decl "boolean" State nil) nil
+    (is_field const-decl "boolean" State nil)
     (Class type-eq-decl nil Program nil)
     (lift type-decl nil lift_adt nil)
     (Method type-eq-decl nil Program nil)
     (LocalVarDecl type-eq-decl nil Program nil)
-    (Stmt type-decl nil Stmt_adt nil) nil
-    (Expr type-decl nil Expr_adt nil) nil
+    (Stmt type-decl nil Stmt_adt nil) (Expr type-decl nil Expr_adt nil)
     (finite_set type-eq-decl nil finite_sets nil)
     (FieldDecl type-eq-decl nil Program nil)
     (Val type-decl nil Val_adt nil))

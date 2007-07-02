@@ -82,22 +82,6 @@ BEGIN
   IMPORTING MVA[CP, Name],
             ProgramFunctions[Name] % imports var_names
 
-  wf_Store(vds : finite_set[MVAVarDecl])(st : Store) : boolean =
-    FORALL (n : Name) :
-      var_names(vds)(n) IFF NOT Bottom?(st(n))
-
-  wf_Store(a : MVA)(f : Store) : boolean =
-    wf_Store(vdsA(a))(f)
-
-  % NOTE: Recall that we assume that variables in PSt are fields.
-  % Variables in PSt are a subset of the program variables, if we require them
-  % to be equal then we can use an IFF
-  wf_PSt(vds : finite_set[ProgVarDecl])(st : PSt) : boolean =
-    FORALL (n : Name) :
-      var_names(vds)(n) IMPLIES NOT Bottom?(fvs(st)(n))
-
-  wf_PSt(a : MVA)(f : PSt) : boolean =
-    wf_PSt(vdsP(a))(f)
 
   wf_vdsA(vds : set[MVAVarDecl]) : boolean =
     FORALL (vd1, vd2 : MVAVarDecl) : vds(vd1) IMPLIES vds(vd2) IMPLIES
@@ -117,6 +101,14 @@ BEGIN
     FORALL (c : OneAction) :
       member(c, l) IMPLIES var_names(vdsA(a))(target(c))
 
+  wf_Trans(a : MVA)(t : Transition) : boolean = 
+      ts(a)(t) IMPLIES
+        cps(a)(scp(t)) AND
+        cps(a)(tcp(t)) AND
+        evs(a)(event(t)) AND
+        wf_Guard(a)(guard(t)) AND
+        wf_Action(a)(action(t))
+
   % Rules that every MVA must follow:
   % The initial control point is in the set of control points of the automaton
   % The sets vdsA and vdsP are "well formed"
@@ -131,13 +123,7 @@ BEGIN
     wf_vdsA(vdsA(a)) AND
     wf_vdsP(vdsP(a)) AND
     disjoint?(var_names(vdsA(a)), var_names(vdsP(a))) AND
-    FORALL (t : Transition) :
-      ts(a)(t) IMPLIES
-        cps(a)(scp(t)) AND
-        cps(a)(tcp(t)) AND
-        evs(a)(event(t)) AND
-        wf_Guard(a)(guard(t)) AND
-        wf_Action(a)(action(t))
+    FORALL (t : Transition) : wf_Trans(a)(t)
 
 
 END WellFormedMVA
@@ -148,24 +134,24 @@ BEGIN
 
   IMPORTING WellFormedMVA[CP, Name]
 
-  deterministic(a : (wf_MVA)) : boolean =
+  deterministic(a : MVA) : boolean =
     FORALL (t1, t2 : Transition, stA : Store, stP : PSt) :
       ts(a)(t1) IMPLIES
       ts(a)(t2) IMPLIES
-      wf_Store(a)(stA) IMPLIES
-      wf_PSt(a)(stP) IMPLIES
+%      wf_Store(a)(stA) IMPLIES
+%      wf_PSt(a)(stP) IMPLIES
       scp(t2) = scp(t1) IMPLIES
       event(t2) = event(t1) IMPLIES
       guard(t1)(stA, stP) IMPLIES
       guard(t2)(stA, stP) IMPLIES
         t1 = t2
 
-  total(a : (wf_MVA)) : boolean =
+  total(a : MVA) : boolean =
     FORALL (q : CP, e : Event, stA : Store, stP : PSt) :
       cps(a)(q) IMPLIES
       evs(a)(e) IMPLIES
-      wf_Store(a)(stA) IMPLIES
-      wf_PSt(a)(stP) IMPLIES
+%      wf_Store(a)(stA) IMPLIES
+%      wf_PSt(a)(stP) IMPLIES
         EXISTS (t : Transition) : ts(a)(t) AND
                                   scp(t) = q AND
                                   event(t) = e AND
@@ -196,7 +182,7 @@ BEGIN
        stA : Store
     #]
 
-  get_MVAVarDecl(n : Name, a : (wf_MVA)) : lift[MVAVarDecl] =
+  get_MVAVarDecl(n : Name, a : MVA) : lift[MVAVarDecl] =
     LET vds = {vd : MVAVarDecl | vdsA(a)(vd) AND name(vd) = n}  IN
       IF empty?(vds) 
       THEN bottom 
@@ -204,7 +190,7 @@ BEGIN
       ENDIF
 
   % Initial state of a MVA
-  initial_MVA_state(a : (wf_MVA)) : AState =
+  initial_MVA_state(a : MVA) : AState =
     (# cp := init_cp(a),
        stA := LAMBDA (n: Name) :
          LET vd = get_MVAVarDecl(n, a) IN
@@ -230,11 +216,6 @@ BEGIN
       ELSE st(m)
       ENDIF
 
-  update_yields_wf_Store : LEMMA % :->
-    FORALL (a : MVA, st : Store, n : Name, v : Val) :
-      wf_Store(a)(st) IMPLIES
-      (Bottom?(st(n)) IFF Bottom?(v)) IMPLIES
-        wf_Store(a)(update(st)(n)(v))
 
   % guard_to_expression is implicitly defined by guard_to_expression_behavior
   % in Equivalence.
@@ -259,6 +240,23 @@ BEGIN
 
   %  Well formed states
 
+  wf_Store(vds : finite_set[MVAVarDecl])(st : Store) : boolean =
+    FORALL (n : Name) :
+      var_names(vds)(n) IFF NOT Bottom?(st(n))
+
+  wf_Store(a : MVA)(f : Store) : boolean =
+    wf_Store(vdsA(a))(f)
+
+  % NOTE: Recall that we assume that variables in PSt are fields.
+  % Variables in PSt are a subset of the program variables, if we require them
+  % to be equal then we can use an IFF
+  wf_PSt(vds : finite_set[ProgVarDecl])(st : PSt) : boolean =
+    FORALL (n : Name) :
+      var_names(vds)(n) IMPLIES NOT Bottom?(fvs(st)(n))
+
+  wf_PSt(a : MVA)(f : PSt) : boolean =
+    wf_PSt(vdsP(a))(f)
+
   wf_AState(a : MVA)(s : AState) : boolean =
     cps(a)(cp(s)) AND
     wf_Store(a)(stA(s))
@@ -266,6 +264,12 @@ BEGIN
   wf_PEvent(a : MVA)(pe : PEvent) : boolean =
     evs(a)(event(pe)) AND wf_PSt(a)(stP(pe))
 
+
+  update_yields_wf_Store : LEMMA % :->
+    FORALL (a : MVA, st : Store, n : Name, v : Val) :
+      wf_Store(a)(st) IMPLIES
+      (Bottom?(st(n)) IFF Bottom?(v)) IMPLIES
+        wf_Store(a)(update(st)(n)(v))
 
   % Single judgement for a MVA
   step(a : (total))(s : (wf_AState(a)), pe : (wf_PEvent(a))) : AState =
@@ -305,6 +309,7 @@ BEGIN
 
   step_yields_wf_state : THEOREM % :-)
     FORALL (a : (total), s : (wf_AState(a)), pe : (wf_PEvent(a))) :
+      wf_MVA(a) IMPLIES
       wf_AState(a)(step(a)(s, pe))
 
 
