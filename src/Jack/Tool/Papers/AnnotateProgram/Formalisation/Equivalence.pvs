@@ -44,20 +44,34 @@ BEGIN
   % evaluates to the same result. Note that if the guard holds then evaluation
   % of the expression can not result in an exception (v would be Bottom).
   % Furthermore, the evaluation must have no side-effects.
+%   guard_to_expression_behavior(mp : MonitoredProgram) : boolean =
+%     FORALL (g : Guard, s : MPState, sMVA : AState, stP : PSt) :
+%       (EXISTS (t : Transition) :
+%         ts(mva(mp))(t) AND guard(t) = g) IMPLIES
+%       wf_MP(mp) IMPLIES
+%       wf_state(mp)(s) IMPLIES
+%       s = (# astate := sMVA,
+%              pstate := (# ex := bottom, st := stP #),
+%              gvs := stA(sMVA) #) IMPLIES
+%         EXISTS (e : Expr, v : Val, n : nat) : 
+%           guard_to_expression(mva(mp))(g) = e IMPLIES
+%           BExpr?(e) AND
+%           deriv_expr(mp)(e, s, v, s)(n) AND
+%           g(stA(sMVA), stP) IFF v = Bool(TRUE)
   guard_to_expression_behavior(mp : MonitoredProgram) : boolean =
-    FORALL (g : Guard, s : MPState, sMVA : AState, stP : PSt) :
+    FORALL (g : Guard, sAP : APState, sMVA : AState) :
+      ann_program_pre(mp) IMPLIES
+      wf_state(ann_program(mp))(sAP) IMPLIES
+      NOT up?(ex(pstate(sAP))) IMPLIES
+      (FORALL (vn : string) : NOT Bottom?(stA(sMVA)(vn))
+        IMPLIES stA(sMVA)(vn) = gvs(sAP)(vn)) IMPLIES
       (EXISTS (t : Transition) :
         ts(mva(mp))(t) AND guard(t) = g) IMPLIES
-      wf_MP(mp) IMPLIES
-      wf_state(mp)(s) IMPLIES
-      s = (# astate := sMVA,
-             pstate := (# ex := bottom, st := stP #),
-             gvs := stA(sMVA) #) IMPLIES
         EXISTS (e : Expr, v : Val, n : nat) : 
           guard_to_expression(mva(mp))(g) = e IMPLIES
           BExpr?(e) AND
-          deriv_expr(mp)(e, s, v, s)(n) AND
-          g(stA(sMVA), stP) IFF v = Bool(TRUE)
+          deriv_expr(ann_program(mp))(e, sAP, v, sAP)(n) AND
+          g(stA(sMVA), st(pstate(sAP))) IFF v = Bool(TRUE)
 
   % TODO: This generates an unprovable TC!! 
   %   it doesn't consider the  hypothesis ann_program_pre(mp).

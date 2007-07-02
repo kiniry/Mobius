@@ -175,7 +175,7 @@ BEGIN
         deriv_stmt(p)(CaseJML(bs), s1, s2)(n) IMPLIES
           s2 = tau
 
-  CaseJML_evalueates_true_stmt : LEMMA % :-)
+  CaseJML_evaluates_true_stmt : LEMMA % :-)
     FORALL (p : Program, bs : list[[Expr, Stmt]], s1, s2 : APState, n : nat,
             b1 : [Expr, Stmt]) :
       NOT up?(ex(pstate(s1))) IMPLIES

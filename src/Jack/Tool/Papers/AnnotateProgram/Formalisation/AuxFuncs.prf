@@ -247,6 +247,29 @@
   (before_TCC1-1 nil 3388429891 3390292587
    ("" (termination-tcc) nil nil) unchecked
    ((length def-decl "nat" list_props nil)) 195 170 nil nil))
+ (before_distinct 0
+  (before_distinct-1 nil 3392381403 3392381563
+   ("" (induct "l")
+    (("1" (skosimp)
+      (("1" (expand "before") (("1" (propax) nil nil)) nil)) nil)
+     ("2" (skosimp*)
+      (("2" (expand "before" -2)
+        (("2" (ground) (("2" (inst?) (("2" (assert) nil nil)) nil))
+          nil))
+        nil))
+      nil))
+    nil)
+   proved
+   ((list_induction formula-decl nil list_adt nil)
+    (T formal-type-decl nil listfuncs nil)
+    (= const-decl "[T, T -> boolean]" equalities nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (before def-decl "boolean" listfuncs nil)
+    (IMPLIES const-decl "[bool, bool -> bool]" booleans nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (list type-decl nil list_adt nil))
+   159587 110 t shostak))
  (every_is_forall 0
   (every_is_forall-1 nil 3389528321 3391340512
    ("" (induct "l")
@@ -327,11 +350,11 @@
         nil))
       nil))
     nil)
-   unchecked
+   unfinished
    ((list_induction formula-decl nil list_adt nil)
     (T formal-type-decl nil listfuncs nil)
     (member def-decl "bool" list_props nil)
-    (IMPLIES const-decl "[bool, bool -> bool]" booleans nil) nil
+    (IMPLIES const-decl "[bool, bool -> bool]" booleans nil)
     (PRED type-eq-decl nil defined_types nil)
     (= const-decl "[T, T -> boolean]" equalities nil)
     (pred type-eq-decl nil defined_types nil)
@@ -386,12 +409,11 @@
         nil))
       nil))
     nil)
-   proved
+   unfinished
    ((list_induction formula-decl nil list_adt nil)
     (T formal-type-decl nil listfuncs nil)
     (member def-decl "bool" list_props nil)
-    (AND const-decl "[bool, bool -> bool]" booleans nil)
-    (some adt-def-decl "boolean" list_adt nil)
+    (AND const-decl "[bool, bool -> bool]" booleans nil) nil
     (PRED type-eq-decl nil defined_types nil)
     (= const-decl "[T, T -> boolean]" equalities nil)
     (pred type-eq-decl nil defined_types nil)
@@ -620,7 +642,7 @@
     (cons adt-constructor-decl "[[T, list] -> (cons?)]" list_adt nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
     (+ const-decl "[numfield, numfield -> numfield]" number_fields nil)
-    (numfield nonempty-type-eq-decl nil number_fields nil) nil nil
+    (numfield nonempty-type-eq-decl nil number_fields nil)
     (list_induction formula-decl nil list_adt nil)
     (character type-decl nil character_adt nil)
     (boolean nonempty-type-decl nil booleans nil)

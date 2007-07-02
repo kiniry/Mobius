@@ -42,6 +42,10 @@ BEGIN
     MEASURE
       length(l)
 
+  before_distinct : LEMMA % :-)
+    FORALL (a, b : T, l : list[T]) :
+      before(a, b, l) IMPLIES NOT a = b
+
   every_is_forall : LEMMA % :-)
     FORALL (p : pred[T], l : list[T]) : 
       every(p)(l) = FORALL (x : T) : member(x, l) IMPLIES p(x)

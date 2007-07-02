@@ -7,6 +7,7 @@ BEGIN
   ENDASSUMING
 
   IMPORTING Equivalence[CP],
+            APSemanticsProperties,
             listfuncs
 
   % Properties of subterms
@@ -128,19 +129,20 @@ BEGIN
       IMPLIES
         NOT null?(ann_guard_actions(mp)(ts))
 
-  % Rename to ann_event_correctness
+
+  % Rename
   MP_modeled_preserved_by_ann_event : LEMMA
-    FORALL (mp : MonitoredProgram, ap : Program, m1 : Method)
-           (sMP1, sMP2 : MPState, sAP1, sAP2 : APState)
-           (n : nat, ts : finite_set[Transition], et : EventType) :
+    FORALL (mp : MonitoredProgram, ap : Program, c : Class, m : Method,
+            sMP1, sMP2 : MPState, sAP1, sAP2 : APState,
+            n : nat, ts : finite_set[Transition], et : EventType) :
       related_states(mp, ap)(sMP1, sAP1) IMPLIES
-%      classes(ap)(c) IMPLIES
-%      methods(c)(m1) IMPLIES
-      astate(sMP2) = on_method_MVA(et)(mp, m1, sMP1) IMPLIES
+      classes(ap)(c) IMPLIES
+      methods(c)(m) IMPLIES
+      astate(sMP2) = on_method_MVA(et)(mp, m, sMP1) IMPLIES
       NOT up?(ex(pstate(sAP1))) IMPLIES
-      ts = filter_event(mva(mp))(et)(name(m1)) IMPLIES
+      ts = filter_event(mva(mp))(et)(name(m)) IMPLIES
       deriv_stmt(ap)(ann_event(mp)(ts), sAP1, sAP2)(n) IMPLIES
         MVA_modeled?(mva(mp))(astate(sMP2), sAP2)
 
- 
+
 END AnnGenerationLemmas
