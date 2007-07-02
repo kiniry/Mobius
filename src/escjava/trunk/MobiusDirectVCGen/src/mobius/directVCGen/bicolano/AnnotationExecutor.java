@@ -47,6 +47,9 @@ public class AnnotationExecutor extends Executor {
    * @throws FileNotFoundException if a file is missing
    */
   public ClassExecutor getClassExecutor(final ClassGen cg) throws FileNotFoundException {
-    return new AnnotationClassExecutor(this, cg, fWorkingDir, fSig);
+    return new AnnotationClassExecutor(this, cg, fWorkingDir, fSig, this.getModuleName());
   }
+
+
+
 }
