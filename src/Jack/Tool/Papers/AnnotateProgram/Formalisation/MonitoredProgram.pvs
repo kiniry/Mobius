@@ -169,7 +169,7 @@ BEGIN
     FORALL (mp : MonitoredProgram, s : MPState) :
       wf_MP(mp) IMPLIES
       wf_state(program(mp))(pstate(s)) IMPLIES
-        wf_PSt(mva(mp))(st(pstate(s)))
+        wf_PSt(vdsP(mva(mp)))(st(pstate(s)))
 
 
 END MonitoredProgramSemantics

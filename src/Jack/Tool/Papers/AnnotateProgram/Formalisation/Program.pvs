@@ -229,6 +229,9 @@ BEGIN
     {n : Name | EXISTS (m : Method) : classes(p)(c) AND methods(c)(m) AND 
                                       name(m) = n}
 
+  methods(p : Program) : finite_set[Method] =
+    {m : Method |EXISTS (c : Class) : classes(p)(c) AND methods(c)(m)}
+
   get_class(p : Program)(tgt : Val) : lift[Class] =
     IF Reference?(tgt) AND class_names(p)(class_name(tgt))
     THEN up(choose({c : Class | classes(p)(c) AND name(c) = class_name(tgt)}))
@@ -236,7 +239,7 @@ BEGIN
     ENDIF
 
   % TODO: See the TCC generated!
-  lookup_mthd(p : Program, tgt : Val, mn : Name) : lift[Method] =
+  lookup_mthd(p : Program, tgt : Val, mn : Name) : lift[(methods(p))] =
     LET gc = get_class(p)(tgt) IN
     IF up?(gc) AND method_names(p, down(gc))(mn)
     THEN up(choose({m : Method | classes(p)(down(gc)) AND methods(down(gc))(m)
@@ -289,6 +292,32 @@ BEGIN
   var_names(ls : finite_set[LocalVarDecl]) : finite_set[Name] =
     {n : Name |EXISTS (l : LocalVarDecl) : ls(l) AND name(l) = n}
 
+
+%  program_code(p : Program)(s : Stmt) : boolean =
+%    EXISTS(c : Class, m : Method) :
+%      classes(p)(c) AND
+%      methods(c)(m) AND
+%      s << body(m)
+
+%  direct_sub_expr(s : Stmt) : RECURSIVE list[Expr] =
+%    CASES s OF
+%      CaseJML(branches) : append(map(proj_1)(branches),
+%                                 map(direct_sub_expr o proj_2)(branches)),
+%      IfThenElse(c, t, e) : cons(c, append(direct_sub_expr(t), 
+%                                           direct_sub_expr(e))),
+%      Sequence(s1, s2) : append(direct_sub_expr(s1), direct_sub_expr(s2)),
+%      Set(target, source) : cons(source, null),
+%      Skip : null
+%      StmtExpr(expr) : cons(expr, null),
+%      Throw : null,
+%      TryCatch(t, c, f) : TryCatch?
+%  While(test : Expr, body : Stmt) : While?
+
+%  program_code(p : Program)(e : Expr) : boolean =
+%    EXISTS(c : Class, m : Method) :
+%      classes(p)(c) AND
+%      methods(c)(m) AND
+%      e << body(m)
 
 END ProgramFunctions
 
@@ -361,6 +390,12 @@ BEGIN
       name(m1) = name(m2) IMPLIES
         m1 = m2
 
+  % This misses that the set statement actually occurs in the program
+  wf_program_target_of_set_declared : LEMMA
+    FORALL(p : Program, g : Name) : 
+      wf_Program(p) IMPLIES
+        var_names(getGhostDecls(p))(g)
+            
 
 END WellFormedProgram
 

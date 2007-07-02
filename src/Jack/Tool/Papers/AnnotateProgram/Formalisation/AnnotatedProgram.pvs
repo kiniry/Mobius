@@ -109,9 +109,8 @@ BEGIN
        wf_state(p)(s2)
 
   wf_state_update_stack : LEMMA % :-)
-    FORALL(p : Program, this_val : (defined?), arg : (getLocalDecls(p)), 
-           param_val : (defined?),
-           lvds : finite_set[LocalVarDecl], s : APState) : 
+    FORALL(p : Program, this_val : Val, arg : (getLocalDecls(p)), 
+           param_val : Val, lvds : finite_set[LocalVarDecl], s : APState) : 
       wf_state(p)(s) IMPLIES
       (FORALL (l : LocalVarDecl) : lvds(l) IMPLIES getLocalDecls(p)(l)) IMPLIES
         wf_state(p)(update_stack(this_val, arg, param_val, lvds, s))
@@ -121,8 +120,7 @@ BEGIN
       wf_Program(p) IMPLIES wf_state(p)(initial_AP_state(p)(this_val))
 
 
-  % TODO: prove!
-  deriv_expr_yields_wf_state_AP : LEMMA
+  deriv_expr_yields_wf_state_AP : LEMMA % :-)
     FORALL (p : Program, e : Expr, v : Val)
            (sigma1, sigma2 : APState, n : nat) :
       wf_Program(p) IMPLIES
@@ -134,8 +132,9 @@ BEGIN
       deriv_expr(p)(e, sigma1, v, sigma2)(n) IMPLIES
         wf_state(p)(sigma2)
 
-  % TODO: prove!
-  deriv_stmt_yields_wf_state_AP : LEMMA
+  % proven, but assumption about target of set statements not very nicely 
+  % phrased
+  deriv_stmt_yields_wf_state_AP : LEMMA % :-)
     FORALL (p : Program, c : Stmt, sigma1, sigma2 : APState, n : nat) :
       wf_Program(p) IMPLIES
       wf_state(p)(sigma1) IMPLIES

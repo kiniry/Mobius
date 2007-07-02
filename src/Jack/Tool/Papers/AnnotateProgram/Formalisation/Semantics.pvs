@@ -150,6 +150,8 @@ BEGIN
 
   update_stack(this_val : Val, arg : LocalVarDecl, param_val : Val,
                lvds : finite_set[LocalVarDecl], s : FullState) : FullState =
+    IF defined?(this_val) AND defined?(param_val) 
+    THEN 
     LET new_pstate =
       (update_local(This, this_val)) o
         (update_local(name(arg), param_val)) o
@@ -157,7 +159,8 @@ BEGIN
                                lvds(l) AND name(l) = proj_1(x) AND
                                default_value(jtype(l)) = proj_2(x)}))
     IN update_PState(s, new_pstate)
-
+    ELSE s
+    ENDIF
 
   deriv_expr(p : FullProgram)
             (c : Expr, sigma1 : FullState, v : Val, sigma2 : FullState)

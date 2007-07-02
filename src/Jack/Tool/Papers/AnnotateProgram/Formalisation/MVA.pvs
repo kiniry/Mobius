@@ -138,8 +138,6 @@ BEGIN
     FORALL (t1, t2 : Transition, stA : Store, stP : PSt) :
       ts(a)(t1) IMPLIES
       ts(a)(t2) IMPLIES
-%      wf_Store(a)(stA) IMPLIES
-%      wf_PSt(a)(stP) IMPLIES
       scp(t2) = scp(t1) IMPLIES
       event(t2) = event(t1) IMPLIES
       guard(t1)(stA, stP) IMPLIES
@@ -150,8 +148,6 @@ BEGIN
     FORALL (q : CP, e : Event, stA : Store, stP : PSt) :
       cps(a)(q) IMPLIES
       evs(a)(e) IMPLIES
-%      wf_Store(a)(stA) IMPLIES
-%      wf_PSt(a)(stP) IMPLIES
         EXISTS (t : Transition) : ts(a)(t) AND
                                   scp(t) = q AND
                                   event(t) = e AND
@@ -244,8 +240,6 @@ BEGIN
     FORALL (n : Name) :
       var_names(vds)(n) IFF NOT Bottom?(st(n))
 
-  wf_Store(a : MVA)(f : Store) : boolean =
-    wf_Store(vdsA(a))(f)
 
   % NOTE: Recall that we assume that variables in PSt are fields.
   % Variables in PSt are a subset of the program variables, if we require them
@@ -254,22 +248,20 @@ BEGIN
     FORALL (n : Name) :
       var_names(vds)(n) IMPLIES NOT Bottom?(fvs(st)(n))
 
-  wf_PSt(a : MVA)(f : PSt) : boolean =
-    wf_PSt(vdsP(a))(f)
 
   wf_AState(a : MVA)(s : AState) : boolean =
     cps(a)(cp(s)) AND
-    wf_Store(a)(stA(s))
+    wf_Store(vdsA(a))(stA(s))
 
   wf_PEvent(a : MVA)(pe : PEvent) : boolean =
-    evs(a)(event(pe)) AND wf_PSt(a)(stP(pe))
+    evs(a)(event(pe)) AND wf_PSt(vdsP(a))(stP(pe))
 
 
   update_yields_wf_Store : LEMMA % :->
     FORALL (a : MVA, st : Store, n : Name, v : Val) :
-      wf_Store(a)(st) IMPLIES
+      wf_Store(vdsA(a))(st) IMPLIES
       (Bottom?(st(n)) IFF Bottom?(v)) IMPLIES
-        wf_Store(a)(update(st)(n)(v))
+        wf_Store(vdsA(a))(update(st)(n)(v))
 
   % Single judgement for a MVA
   step(a : (total))(s : (wf_AState(a)), pe : (wf_PEvent(a))) : AState =
@@ -296,16 +288,16 @@ BEGIN
   % to MonitoredProgramSemantics).
   eval_yields_not_bottom : AXIOM
     FORALL (a : MVA, e : Expr, stA : Store, stP : PSt) :
-      wf_Store(a)(stA) IMPLIES
-      wf_PSt(a)(stP) IMPLIES
+      wf_Store(vdsA(a))(stA) IMPLIES
+      wf_PSt(vdsP(a))(stP) IMPLIES
         NOT Bottom?(eval(e)(stA, stP))
 
   execute_action_yields_wf_state : LEMMA % :-)
     FORALL (a : MVA, l : Action, stA : Store, stP : PSt) :
-      wf_Store(a)(stA) IMPLIES
-      wf_PSt(a)(stP) IMPLIES
+      wf_Store(vdsA(a))(stA) IMPLIES
+      wf_PSt(vdsP(a))(stP) IMPLIES
       wf_Action(a)(l) IMPLIES
-        wf_Store(a)(execute_action(l)(stA, stP))
+        wf_Store(vdsA(a))(execute_action(l)(stA, stP))
 
   step_yields_wf_state : THEOREM % :-)
     FORALL (a : (total), s : (wf_AState(a)), pe : (wf_PEvent(a))) :
