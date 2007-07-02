@@ -38,7 +38,7 @@ public class ListImplemSpecif implements IImplemSpecifics {
   /**
    * @see IImplemSpecifics#getFileName(String)
    * @param pathname the path name to make implementation specific
-   * @return <code>pathname_List</code>
+   * @return <code>pathnameList</code>
    */
   public String getFileName(final String pathname) {
     return pathname + "List";
