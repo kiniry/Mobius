@@ -20,7 +20,7 @@ import org.apache.bcel.generic.ClassGen;
 public class ClassExecutor extends ASignatureExecutor {
   /** the standard lib paths. */
   //FIXME: should be relative to the package dir
-  private static final String libPath = 
+  private final String fLibPath = 
                       "Add LoadPath \"Formalisation/Library\".\n" + 
                       "Add LoadPath \"Formalisation/Library/Map\".\n" +
                       "Add LoadPath \"Formalisation/Bicolano\".\n";
@@ -29,15 +29,11 @@ public class ClassExecutor extends ASignatureExecutor {
   /** the current class which is inspected. */
   private ClassGen fClass;
   
-
   /** an executor to generate things concerning methods. */
-  private MethodExecutor fMethExecutor;
+  private final MethodExecutor fMethExecutor;
   
   /** an executor to generate things concerning fields. */
-  private FieldExecutor fFieldExecutor;
-
-  /** the file that will be the output of the executor. */
-  private File fOutputFile;
+  private final FieldExecutor fFieldExecutor;
 
   /** the coqified name of the class (package + classname). */
   private String fModuleName;
@@ -48,8 +44,8 @@ public class ClassExecutor extends ASignatureExecutor {
   /** the real directory which corresponds to the current package. */
   private File fWorkingDir;
 
-
-  protected String fName;
+  /** the name of the library file where the whole program should be written. */
+  private String fName;
   
   
   /**
@@ -57,13 +53,12 @@ public class ClassExecutor extends ASignatureExecutor {
    * executor.
    * @param be the BasicExecutor to get the initialization from
    * @param cg the class object to manipulate
-   * @param baseDir the current working directory
    * @param name the name of the main file
    * @throws FileNotFoundException if the file cannot be opened
    */
   public ClassExecutor(final ABasicExecutor be, final ClassGen cg,
-                       final File baseDir, final String name) throws FileNotFoundException {
-    super(be, baseDir, cg);
+                       final String name) throws FileNotFoundException {
+    super(be, cg);
     fClass = cg;
     fName = name;
     final JavaClass jc = fClass.getJavaClass();
@@ -72,10 +67,9 @@ public class ClassExecutor extends ASignatureExecutor {
     fModuleName = Util.coqify(jc.getClassName());
 
     fPackageDir = new File(jc.getPackageName().replace('.', File.separatorChar));
-    fWorkingDir = new File(baseDir, fPackageDir.getPath());
+    fWorkingDir = new File(be.getBaseDir(), fPackageDir.getPath());
     
-    fOutputFile = new File(fWorkingDir, fModuleName + ".v");    
-    fOut = new Util.Stream(new FileOutputStream(fOutputFile));
+    fOut = new Util.Stream(new FileOutputStream(new File(fWorkingDir, fModuleName + ".v")));
 
     fFieldExecutor = new FieldExecutor(this, fClass.getJavaClass());
     fMethExecutor = new MethodExecutor(this, fClass);
@@ -102,8 +96,18 @@ public class ClassExecutor extends ASignatureExecutor {
     System.out.println("done.");
     
     System.out.print("  --> Generating " + fModuleName + ":");
-    
-    fOut.println(libPath);
+    doMain();
+    System.out.println("done.");
+
+  }
+
+  /**
+   * Does the main file generation.
+   * @throws ClassNotFoundException if there was a problem retrieving
+   * a field or a method
+   */
+  private void doMain() throws ClassNotFoundException {
+    fOut.println(fLibPath);
     fOut.println("Require Import ImplemProgramWithMap.\n" +
                     "Import P.\n");
     fOut.println("Require Import " + fName + "_signature.");
@@ -125,8 +129,6 @@ public class ClassExecutor extends ASignatureExecutor {
     doClassDefinition();
    
     fOut.decPrintln("End " + fModuleName + ".\n");
-    System.out.println("done.");
-
   }
   
   /**
@@ -135,7 +137,7 @@ public class ClassExecutor extends ASignatureExecutor {
    * methods which corresponds to no class.
    */
   public void doSignature() throws ClassNotFoundException {
-    fOutSig.println(libPath);
+    fOutSig.println(fLibPath);
     fOutSig.println("Require Import ImplemProgramWithMap.\n" +
                     "Import P.\n");
     fOutSig.println("Require Import " + fModuleName + "_type.");
@@ -163,7 +165,7 @@ public class ClassExecutor extends ASignatureExecutor {
     final Stream  fOutTyp = new Util.Stream(new FileOutputStream(typeFile));
     
     
-    fOutTyp.println(libPath);
+    fOutTyp.println(fLibPath);
     
     fOutTyp.println("Require Import ImplemProgramWithMap.\n" +
                     "Import P.\n");
@@ -241,17 +243,20 @@ public class ClassExecutor extends ASignatureExecutor {
   }
 
   /**
-   * Return the relative path to the output file.
-   * @return a file which has its relative path valid
+   * Returns the module name; a coqified name of the
+   * the full class name.
+   * @return a string representing the module name
    */
-  public File getOuputFile() {
-    return fOutputFile;
-  }
-
   public String getModuleName() {
     return fModuleName;
   }
   
+  /**
+   * Returns the relative path to the file.
+   * It is a path relative to the base directory, and 
+   * it does not represents an existing physical one.
+   * @return the path corresponding to the package
+   */
   public File getPackageDir() {
     return fPackageDir;
   }

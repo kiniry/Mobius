@@ -154,8 +154,7 @@ class MethodExecutor extends ASignatureExecutor {
     
     String str = "Definition " + name;
     str += "ShortSignature : ShortMethodSignature := METHODSIGNATURE.Build_t";
-    fOutSig.println(str);
-    fOutSig.incTab();
+    fOutSig.incPrintln(str);
     str = "(" + coqMethodName + "%positive)";
     fOutSig.println(str);
     final Type[] atrr = method.getArgumentTypes();
@@ -172,8 +171,7 @@ class MethodExecutor extends ASignatureExecutor {
     }
     final Type t = method.getReturnType();
     fOutSig.println(Util.convertTypeOption(t, fRepos));
-    fOutSig.decTab();
-    fOutSig.println(".");
+    fOutSig.decPrintln(".");
     
     String clName = "className";
     if (fClass.getJavaClass().isInterface()) {

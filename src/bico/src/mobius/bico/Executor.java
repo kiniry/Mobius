@@ -55,11 +55,6 @@ public class Executor extends ABasicExecutor {
   /** the coq files extension. */
   private static final String suffix = ".v";
 
-
-  /** the name of the output file. */
-  private File fFileName;
-
-
   /** the standard lib paths. */
   //FIXME: should be relative to the package dir
   private static final String libPath = 
@@ -67,6 +62,9 @@ public class Executor extends ABasicExecutor {
                       "Add LoadPath \"Formalisation/Library/Map\".\n" +
                       "Add LoadPath \"Formalisation/Bicolano\".\n";
   
+  /** the name of the output file. */
+  private File fFileName;
+
   /** classes to be parsed from standard library. */
   private final List<String> fOtherLibs = new ArrayList<String>();
 
@@ -305,9 +303,10 @@ public class Executor extends ABasicExecutor {
 
   /**
    * Write the dictionnary to a file.
-   * @throws IOException If there is a problem in writing.
+   * @throws FileNotFoundException If there is a problem 
+   * in writing.
    */
-  private void writeDictionnary() throws IOException {
+  private void writeDictionnary() throws FileNotFoundException {
     final File dicoFile = new File(getBaseDir(), "dico.ml");
     fOut = new Util.Stream(new FileOutputStream(dicoFile));
     fDico.write(fOut);
@@ -438,7 +437,7 @@ public class Executor extends ABasicExecutor {
    * @throws FileNotFoundException if a file is missing
    */
   public ClassExecutor getClassExecutor(final ClassGen cg) throws FileNotFoundException {
-    return new ClassExecutor(this, cg, getBaseDir(), fName);
+    return new ClassExecutor(this, cg, fName);
   }
 
   /**
@@ -480,13 +479,13 @@ public class Executor extends ABasicExecutor {
     final int strClss = 10;
     final int strMeth = 13;
     
-    dico.addPackage("java/lang/", javaLangPkg);
+    dico.addPackage("java.lang", javaLangPkg);
     dico.addPackage("", emptyPkg);
 
-    dico.addClass("Object", javaLangPkg, objClss);
-    dico.addClass("Throwable", javaLangPkg, thrwClss);
-    dico.addClass("Exception", javaLangPkg, excpClss);
-    dico.addClass("String", javaLangPkg, strClss);
+    dico.addClass("Object", "java.lang", objClss);
+    dico.addClass("Throwable", "java.lang", thrwClss);
+    dico.addClass("Exception", "java.lang", excpClss);
+    dico.addClass("String", "java.lang", strClss);
     
     dico.addMethod("Object.<init>", javaLangPkg, objClss, objMeth);
     dico.addMethod("Exception.<init>", javaLangPkg, excpClss, excpMeth);

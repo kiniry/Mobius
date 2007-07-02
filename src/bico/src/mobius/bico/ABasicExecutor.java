@@ -43,6 +43,7 @@ public abstract class ABasicExecutor {
    * @param methodHandler the method handler
    * @param out the output file
    * @param dico the dictionnary associated with the executor
+   * @param baseDir the file to set the field base dir to.
    */
   public ABasicExecutor(final Repository repos, final IImplemSpecifics implemSpecif, 
                         final MethodHandler methodHandler, final Util.Stream out, 
@@ -55,12 +56,7 @@ public abstract class ABasicExecutor {
     fBaseDir = baseDir;
   }
   
-  public void setBaseDir(File baseDir) {
-    fBaseDir = baseDir;
-  }
-  public File getBaseDir() {
-    return fBaseDir;
-  }
+
   
   /**
    * A constructor that initialize all the variables from another
@@ -103,4 +99,23 @@ public abstract class ABasicExecutor {
     return fMethodHandler;
   }
   
+  
+  /**
+   * Sets the base directory to the specified file.
+   * @param baseDir the file to set the field base dir to.
+   */
+  public void setBaseDir(final File baseDir) {
+    if (baseDir == null) {
+      throw new NullPointerException();
+    }
+    fBaseDir = baseDir;
+  }
+  
+  /**
+   * Returns the current base dir.
+   * @return not null if it has been set
+   */
+  public File getBaseDir() {
+    return fBaseDir;
+  }
 }

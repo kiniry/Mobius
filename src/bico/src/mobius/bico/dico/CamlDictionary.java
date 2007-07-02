@@ -6,156 +6,199 @@ import java.util.Map;
 
 import org.apache.bcel.classfile.JavaClass;
 
-
 /**
+ * This class is used to generate a dictionnary file
+ * readable by OCaml.
+ * <p>
+ *  Here is an example of OCaml code that needs to be
+ * added to the dictionary to have something usable.
+ * (in a file TranslatorDef, it's the file included by
+ * the generated file)
+ *
+ *<pre>
+ *
+ *    module OrderedInt =
+ *  struct
+ *    type t = int
+ *    let compare= Pervasives.compare
+ *  end
+ *
+ *  module OrderedPair =
+ *    functor (M1:Map.OrderedType) ->
+ *      functor (M2:Map.OrderedType) ->
+ *  struct
+ *    type t = M1.t * M2.t
+ *    let compare = Pervasives.compare
+ *  end
+ *  module OrderedClassName = OrderedPair(OrderedInt)(OrderedInt)
+ *  module OrderedMethodName = OrderedPair (OrderedClassName) (OrderedInt)
+ *  module OrderedFieldName = OrderedMethodName
+ *
+ *  module DicoInt = Map.Make(OrderedInt)
+ *  module DicoPN = DicoInt
+ *  module DicoCN = Map.Make(OrderedClassName)
+ *  module DicoMN = Map.Make(OrderedMethodName)
+ *  module DicoFN = Map.Make(OrderedFieldName)
+ *  module DicoMNPC = Map.Make (OrderedPair (OrderedMethodName) (OrderedInt))
+ *  module DicoType = Map.Make (OrderedPair (OrderedInt) (OrderedClassName))
+ *
+ *  module PN = DicoPN
+ *  module CN = DicoCN
+ *  module FN = DicoFN
+ *  module MN = DicoMN
+ *  let pn : string PN.t = PN.empty
+ *  let cn : string CN.t = CN.empty
+ *  let fn : string FN.t = FN.empty
+ *  let mn : string MN.t = MN.empty
+ *  </pre>
+ *
  * @author Laurent.Hubert@irisa.fr
- * 
  */
 public class CamlDictionary implements Dictionary {
   /** current class number. */
   private int fCurrentClass = RESERVED_CLASSES;
 
-  private class Singleton {
-    int i;
+  /**
+   * This class is used to implement the Couples and 
+   * the Triplets.
+   * @author Laurent.Hubert@irisa.fr
+   */
+  private abstract static class ABaseCouple<T> {
+    /** the first element of the couple. */
+    final T fI1;
+    /** the second element of the couple. */
+    final int fI2;
 
-    Singleton(final int i) {
-      this.i = i;
+    /**
+     * Creates a couple of 2 elements.
+     * @param i1 the first element of the couple
+     * @param i2 the second element of the couple
+     */
+    ABaseCouple(final T i1, final int i2) {
+      fI1 = i1;
+      fI2 = i2;
     }
 
+    /**
+     * @return (the_first_element, the_second_element)
+     */
     @Override
     public String toString() {
-      return "" + i;
+      return "(" + fI1 + "," + fI2 + ")";
     }
 
+    /**
+     * Tells if 2 couples are equal.
+     * @param obj the object to compare
+     * @return true if both object contents are equal
+     */
     @Override
     public boolean equals(final Object obj) {
       if (this == obj) {
         return true;
       }
-      if (!super.equals(obj)) {
+      if (obj == null) {
         return false;
       }
-      if (getClass() != obj.getClass()) {
-        return false;
+      if (obj instanceof ABaseCouple) {
+        final ABaseCouple other = (ABaseCouple) obj;
+        return ((fI1.equals(other.fI1)) &&
+                 (fI2 == other.fI2));
       }
-      final Singleton other = (Singleton) obj;
-      if (i != other.i) {
-        return false;
-      }
-      return true;
+      return false;      
+    }
+    
+    /**
+     * Computes the hash code of the object from the 
+     * toString method.
+     * @return a valid hash code
+     */
+    @Override
+    public int hashCode() {
+      return toString().hashCode();
     }
   }
-
-  private class Couple {
-    int i1, i2;
-
+  
+  /**
+   * This class represents integer couples.
+   * @author Laurent.Hubert@irisa.fr
+   */
+  private static final class Couple extends ABaseCouple<Integer> {
+    /**
+     * Build a couple of int.
+     * @param i1 the first element of the couple
+     * @param i2 the second element of the couple
+     */
     Couple(final int i1, final int i2) {
-      this.i1 = i1;
-      this.i2 = i2;
+      super(i1, i2);
     }
-
-    @Override
-    public String toString() {
-      return "(" + i1 + "," + i2 + ")";
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-      if (this == obj) {
-        return true;
-      }
-      if (obj == null) {
-        return false;
-      }
-      if (!(obj instanceof Couple)) {
-        return false;
-      }
-      final Couple other = (Couple) obj;
-      if (i1 != other.i1) {
-        return false;
-      }
-      if (i2 != other.i2) {
-        return false;
-      }
-      return true;
-    }
-  }
-
-  private class Triplet {
-    int i1, i2, i3;
-
+  } 
+  
+  /**
+   * This class represents integer triplets.
+   * @author Laurent.Hubert@irisa.fr
+   */
+  private static final class Triplet extends ABaseCouple<Couple> {
+    /**
+     * Build a triplet.
+     * @param i1 the first element of the triplet
+     * @param i2 the second element of the triplet
+     * @param i3 the third element of the triplet
+     */
     Triplet(final int i1, final int i2, final int i3) {
-      this.i1 = i1;
-      this.i2 = i2;
-      this.i3 = i3;
+      super(new Couple(i1, i2), i3);
     }
-
-    @Override
-    public String toString() {
-      return "((" + i1 + "," + i2 + ")," + i3 + ")";
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-      if (this == obj) {
-        return true;
-      }
-      if (obj == null) {
-        return false;
-      }
-      if (getClass() != obj.getClass()) {
-        return false;
-      }
-      final Triplet other = (Triplet) obj;
-      if (i1 != other.i1) {
-        return false;
-      }
-      if (i2 != other.i2) {
-        return false;
-      }
-      if (i3 != other.i3) {
-        return false;
-      }
-      return true;
-    }
+    
   }
 
-  private Map<String, Singleton> pn = new HashMap<String, Singleton>();
-  private Map<String, Couple> cn = new HashMap<String, Couple>();
-  private Map<String, Triplet> fn = new HashMap<String, Triplet>();
-  private Map<String, Triplet> mn = new HashMap<String, Triplet>();
+  /** the package names and their associated numbers. */
+  private Map<String, Integer> fPackageNames = new HashMap<String, Integer>();
+  
+  /** the class names and their associated numbers (class number and package number). */
+  private Map<String, Couple> fClassNames = new HashMap<String, Couple>();
+  
+  /** the field names and their associated numbers (class, package and field numbers). */
+  private Map<String, Triplet> fFieldNames = new HashMap<String, Triplet>();
+  
+  /** the method names and their associated numbers (class, package and method numbers). */
+  private Map<String, Triplet> fMethodNames = new HashMap<String, Triplet>();
 
   /*
    * (non-Javadoc)
    * 
    * @see bico.Dictionary#addClass(java.lang.String, int, int)
    */
-  public void addClass(final String javaName, final int coqPackageName, 
+  public void addClass(final String javaName, final String packageName, 
                        final int coqClassName) {
     if (coqClassName > fCurrentClass) {
       fCurrentClass = coqClassName;
     }
-    cn.put(javaName, new Couple(coqPackageName, coqClassName));
+    fClassNames.put(javaName, new Couple(fPackageNames.get(packageName), coqClassName));
   }
+  
+  
   public void addClass(final JavaClass jc, 
                        final int coqClassName) {
-    addClass(jc.getClassName(), getCoqPackageName(jc.getPackageName()), coqClassName);
+    addClass(jc.getClassName(), jc.getPackageName(), coqClassName);
   }
+  
+  
   public int getCurrentClass() {
     return fCurrentClass;
   }
 
   public int getCoqClassName(final String javaName) {
-    return cn.get(javaName).i2;
+    return fClassNames.get(javaName).fI2;
   }
   public int getCoqClassName(final JavaClass jc) {
     return getCoqClassName(jc.getClassName());
   }
 
   public int getCoqPackageName(final JavaClass jc) {
-    final Couple c = cn.get(jc.getClassName());
-    return c.i1;
+    final Couple c = fClassNames.get(jc.getClassName());
+    return c.fI1;
   }
+  
   /*
    * (non-Javadoc)
    * 
@@ -164,7 +207,7 @@ public class CamlDictionary implements Dictionary {
   public void addField(final String javaName, final int coqPackageName, 
                        final int coqClassName,
                        final int coqFieldName) {
-    fn.put(javaName,
+    fFieldNames.put(javaName,
            new Triplet(coqPackageName, coqClassName, coqFieldName));
   }
 
@@ -175,7 +218,7 @@ public class CamlDictionary implements Dictionary {
    */
   public void addMethod(final String javaName, final int coqPackageName,
                         final int coqClassName, final int coqMethodName) {
-    mn.put(javaName, new Triplet(coqPackageName, coqClassName,
+    fMethodNames.put(javaName, new Triplet(coqPackageName, coqClassName,
                                  coqMethodName));
   }
 
@@ -185,7 +228,7 @@ public class CamlDictionary implements Dictionary {
    * @see bico.Dictionary#addPackage(java.lang.String, int)
    */
   public void addPackage(final String javaName, final int coqPackageName) {
-    pn.put(javaName, new Singleton(coqPackageName));
+    fPackageNames.put(javaName, coqPackageName);
   }
 
   /*
@@ -194,32 +237,32 @@ public class CamlDictionary implements Dictionary {
    * @see bico.Dictionary#getCoqPackageName(java.lang.String)
    */
   public int getCoqPackageName(final String javaName) {
-    final Singleton s = pn.get(javaName);
-    if (s != null) {
-      return s.i;
-    }
-    return 0;
+    return fPackageNames.get(javaName);
   }
 
-  public void write(final PrintStream out) throws java.io.IOException {
+  /**
+   * Dump the caml dictionnary to the given stream.
+   * @param out the stream to dump to
+   */
+  public void write(final PrintStream out) {
     out.print("include TranslatorDef\n\n");
 
-    for (Map.Entry<String, Singleton> e: pn.entrySet()) {
+    for (Map.Entry<String, Integer> e: fPackageNames.entrySet()) {
       out.print("let pn= DicoPN.add " + e.getValue() + " \"" + 
                 e.getKey().replaceAll("\"", "\\\"") + "\" pn\n");
     }
 
-    for (Map.Entry<String, Couple> e: cn.entrySet()) {
+    for (Map.Entry<String, Couple> e: fClassNames.entrySet()) {
       out.print("let cn= DicoCN.add " + e.getValue() + " \"" + 
                 e.getKey().replaceAll("\"", "\\\"") + "\" cn\n");
     }
 
-    for (Map.Entry<String, Triplet> e: fn.entrySet()) {
+    for (Map.Entry<String, Triplet> e: fFieldNames.entrySet()) {
       out.print("let fn= DicoFN.add " + e.getValue() + " \"" + 
                 e.getKey().replaceAll("\"", "\\\"") + "\" fn\n");
     }
 
-    for (Map.Entry<String, Triplet> e: mn.entrySet()) {
+    for (Map.Entry<String, Triplet> e: fMethodNames.entrySet()) {
       out.print("let mn= DicoMN.add (" + e.getValue() + ") \"" + 
                 e.getKey().replaceAll("\"", "\\\"") + "\" mn\n");
     }
@@ -229,43 +272,4 @@ public class CamlDictionary implements Dictionary {
 
 }
 
-/* Here is an example of OCaml code that needs to be
- * added to the dictionary to have something usable.
- * (in a file TranslatorDef, it's the file included by
- * the generated file)
- *****************************************************
-    module OrderedInt =
-  struct
-    type t = int
-    let compare= Pervasives.compare
-  end
 
-  module OrderedPair =
-    functor (M1:Map.OrderedType) ->
-      functor (M2:Map.OrderedType) ->
-  struct
-    type t = M1.t * M2.t
-    let compare = Pervasives.compare
-  end
-  module OrderedClassName = OrderedPair(OrderedInt)(OrderedInt)
-  module OrderedMethodName = OrderedPair (OrderedClassName) (OrderedInt)
-  module OrderedFieldName = OrderedMethodName
-
-  module DicoInt = Map.Make(OrderedInt)
-  module DicoPN = DicoInt
-  module DicoCN = Map.Make(OrderedClassName)
-  module DicoMN = Map.Make(OrderedMethodName)
-  module DicoFN = Map.Make(OrderedFieldName)
-  module DicoMNPC = Map.Make (OrderedPair (OrderedMethodName) (OrderedInt))
-  module DicoType = Map.Make (OrderedPair (OrderedInt) (OrderedClassName))
-
-  module PN = DicoPN
-  module CN = DicoCN
-  module FN = DicoFN
-  module MN = DicoMN
-  let pn : string PN.t = PN.empty
-  let cn : string CN.t = CN.empty
-  let fn : string FN.t = FN.empty
-  let mn : string MN.t = MN.empty
- *********************************
- */

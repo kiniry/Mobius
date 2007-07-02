@@ -1,29 +1,43 @@
 package mobius.bico.implem;
 import java.io.PrintStream;
 
-import mobius.bico.Util;
-
+/**
+ * This class handles elements specific to the map implementation.
+ * It uses the Map data structure from the formalisation library.
+ * @author J. Charles (julien.charles@inria.fr)
+ */
 public class MapImplemSpecif implements IImplemSpecifics {
-  String interfaceParen = "";
-  String instructionsParen = "";
-  String classParen = "";
-  String fieldsParen = "";
-  String methodsParen = "";
+  
+  /** closing parenthese for interfaces enumeration. */
+  private String fInterfaceParen = "";
+  
+  /** closing parenthese for instructions enumeration. */
+  private String fInstrParen = "";
+  
+  /** closing parenthese for classes enumeration. */
+  private String fClassParen = "";
+  
+  /** closing parenthese for fields enumeration. */
+  private String fFieldsParen = "";
+  
+  /** closing parenthese for methods enumeration. */
+  private String fMethodsParen = "";
   
   public String classType() {
     return "PROG.MapClass.t";
   }
+  
   public String interfaceType() {
     return "PROG.MapInterface.t";
   }
 
   public String interfaceCons(final String name) {
-    interfaceParen += ")";
+    fInterfaceParen += ")";
     return "(mi_cons " + name;
   }
   public String interfaceEnd() {
-    final String res = "mi_empty" + interfaceParen;
-    interfaceParen = "";
+    final String res = "mi_empty" + fInterfaceParen;
+    fInterfaceParen = "";
     return res;
   }
   public String interfaceEmpty() {
@@ -31,12 +45,12 @@ public class MapImplemSpecif implements IImplemSpecifics {
   }
 
   public String classCons(final String name) {
-    classParen += ")";
+    fClassParen += ")";
     return "(mc_cons " + name;
   }
   public String classEnd() {
-    final String res = "mc_empty" + classParen;
-    classParen = "";
+    final String res = "mc_empty" + fClassParen;
+    fClassParen = "";
     return res;
   }
   public String getBeginning() {
@@ -49,12 +63,12 @@ public class MapImplemSpecif implements IImplemSpecifics {
 
 
   public String fieldsCons(final String name) {
-    fieldsParen += ")";
+    fFieldsParen += ")";
     return "(mf_cons " + name;
   }
   public String fieldsEnd(final String name) {
-    final String res = "(mf_single " + name + ")" + fieldsParen;
-    fieldsParen = "";
+    final String res = "(mf_single " + name + ")" + fFieldsParen;
+    fFieldsParen = "";
     return res;
   }
 
@@ -64,12 +78,12 @@ public class MapImplemSpecif implements IImplemSpecifics {
 
 
   public String methodsCons(final String name) {
-    methodsParen += ")";
+    fMethodsParen += ")";
     return "(ms_cons " + name;
   }
   public String methodsEnd(final String name) {
-    final String res = "(ms_single " + name + ")" + methodsParen;
-    methodsParen = "";
+    final String res = "(ms_single " + name + ")" + fMethodsParen;
+    fMethodsParen = "";
     return res;
   }
   public void printExtraBodyField(final PrintStream out) {
@@ -86,22 +100,30 @@ public class MapImplemSpecif implements IImplemSpecifics {
 
 
   public String instructionsCons(final String name, final int pos, 
-                                 final int pos_next) {
-    instructionsParen += ")";
-    return "(bc_cons " + pos + "%N " + name + " " + pos_next + "%N ";
+                                 final int nextPos) {
+    fInstrParen += ")";
+    return "(bc_cons " + pos + "%N " + name + " " + nextPos + "%N ";
   }
+  
   public String instructionsEnd(final String name, final int pos) {
-    final String res = "(bc_single " + pos + "%N " + name + ")" + instructionsParen;
-    instructionsParen = "";
+    final String res = "(bc_single " + pos + "%N " + name + ")" + fInstrParen;
+    fInstrParen = "";
     return res;
   }
+  
   public String requireLib(final String string) {
     return "Map_" + string;
   }
+  
   public String getFileName(final String pathname) {
     return pathname + "Map";
   }
   
+  /**
+   * Returns a string that tells which implementation is
+   * used.
+   * @return <code>Map Implementation</code>
+   */
   public String toString() {
     return "Map implementation";
   }

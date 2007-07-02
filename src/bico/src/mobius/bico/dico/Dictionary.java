@@ -28,7 +28,7 @@ public interface Dictionary {
   void addPackage(String javaName, int coqPackageName);
 
   /**
-   * @param javaName
+   * @param javaName returns the package number corresponding to the given java name
    * @return the implementation name corresponding to javaName or 0 if unfound
    */
   int getCoqPackageName(String javaName);
@@ -40,12 +40,12 @@ public interface Dictionary {
    * 
    * @param javaName
    *            the corresponding human readable name
-   * @param coqPackageName
+   * @param packageName
    *            the Biclano package name
    * @param coqClassName
    *            the Bicolano class name
    */
-  void addClass(String javaName, int coqPackageName, int coqClassName);
+  void addClass(String javaName, String packageName, int coqClassName);
 
   /**
    * Associate a field implementation name to the corresponding java name. It
@@ -80,8 +80,12 @@ public interface Dictionary {
    */
   void addMethod(String javaName, int coqPackageName,
                         int coqClassName, int coqMethodName);
-
-  void write(PrintStream out) throws IOException;
+  
+  /**
+   * Dump the dictionnary to the given stream.
+   * @param out the stream to dump to
+   */
+  void write(PrintStream out);
 
   int getCurrentClass();
   int getCoqClassName(String javaName);
