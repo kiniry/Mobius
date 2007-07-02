@@ -112,8 +112,8 @@ BEGIN
     FORALL (mp : MonitoredProgram, t : Transition) :
       ts(mva(mp))(t) IMPLIES
       nonempty?({e: Expr |
-                  FORALL (stA: (wf_Store[CP, string](mva(mp))),
-                          stP: (wf_PSt[CP, string](mva(mp))))
+                  FORALL (stA: (wf_Store[CP, string](vdsA(mva(mp)))),
+                          stP: (wf_PSt[CP, string](vdsP(mva(mp)))))
                          (sMP1, sMP2: MPState, v: Val, n: nat):
                     pstate(sMP1) = (# ex := bottom, st := stP #) IMPLIES
                     deriv_expr(mp)(e, sMP1, v, sMP2)(n) IMPLIES 
