@@ -51,7 +51,6 @@ class FieldExecutor extends ASignatureExecutor {
   public void doEnumeration() {
     // fields
     final Field[] ifield = fJavaClass.getFields();
-    fOut.incTab();
     if (ifield.length == 0) {
       fOut.println(fImplemSpecif.getNoFields());
     } 
@@ -65,7 +64,6 @@ class FieldExecutor extends ASignatureExecutor {
       str2 += ")";
       fOut.println(str2);
     }
-    fOut.decTab();
   }
 
   /**

@@ -64,7 +64,7 @@ public class ListImplemSpecif implements IImplemSpecifics {
     return  "(" + pos + "%N, " + name + ") :: nil";
   }
   public String requireLib(final String string) {
-    return "Require Import List_" + string + ".";
+    return "List_" + string;
   }
   public String getFileName(final String pathname) {
     return pathname + "List";

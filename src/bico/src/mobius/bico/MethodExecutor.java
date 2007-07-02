@@ -123,7 +123,6 @@ class MethodExecutor extends ASignatureExecutor {
   public void doEnumeration() {
     final JavaClass jc = fClass.getJavaClass();
     // methods
-    fOut.incTab();
     final Method[] imeth = jc.getMethods();
     if (imeth.length == 0) {
       fOut.println(fImplemSpecif.getNoMethods());
@@ -139,7 +138,6 @@ class MethodExecutor extends ASignatureExecutor {
       str2 += ")";
       fOut.println(str2);
     }
-    fOut.decTab();
   }
   
   /**
@@ -484,7 +482,7 @@ class MethodExecutor extends ASignatureExecutor {
         final String className = Util.coqify(fom.getReferenceType(fConstantPool).toString());
         // String fmName = coqify(fom.getName(cpg));
         if (ins instanceof FieldInstruction) {
-          final String fs = className + "." + 
+          final String fs = className + "Signature." + 
               Util.coqify(fom.getName(fConstantPool)) + "FieldSignature";
           ret = name + " " + fs;
         } 

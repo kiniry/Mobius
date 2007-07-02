@@ -96,7 +96,7 @@ public class MapImplemSpecif implements IImplemSpecifics {
     return res;
   }
   public String requireLib(final String string) {
-    return "Require Import Map_" + string + ".";
+    return "Map_" + string;
   }
   public String getFileName(final String pathname) {
     return pathname + "Map";

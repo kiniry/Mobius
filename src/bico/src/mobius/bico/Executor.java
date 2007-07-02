@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
+import mobius.bico.Util.Stream;
 import mobius.bico.dico.CamlDictionary;
 import mobius.bico.dico.Dictionary;
 import mobius.bico.implem.IImplemSpecifics;
@@ -51,11 +52,21 @@ public class Executor extends ABasicExecutor {
   /** determine the span of the 'reserved' packages names number default is 10. */
   private static final int RESERVED_PACKAGES = 10;
 
+  /** the coq files extension. */
+  private static final String suffix = ".v";
+
 
   /** the name of the output file. */
   private File fFileName;
 
 
+  /** the standard lib paths. */
+  //FIXME: should be relative to the package dir
+  private static final String libPath = 
+                      "Add LoadPath \"Formalisation/Library\".\n" + 
+                      "Add LoadPath \"Formalisation/Library/Map\".\n" +
+                      "Add LoadPath \"Formalisation/Bicolano\".\n";
+  
   /** classes to be parsed from standard library. */
   private final List<String> fOtherLibs = new ArrayList<String>();
 
@@ -64,10 +75,10 @@ public class Executor extends ABasicExecutor {
                                          "java.lang.Exception", "java.lang.String" };
 
   /** list of already treated classes. */
-  private List<String> fTreatedClasses = new ArrayList<String>();
+  private List<ClassExecutor> fTreatedClasses = new ArrayList<ClassExecutor>();
   
   /** list of already treated interfaces. */
-  private List<String> fTreatedInterfaces = new ArrayList<String>();
+  private List<ClassExecutor> fTreatedInterfaces = new ArrayList<ClassExecutor>();
   
 
 
@@ -77,15 +88,16 @@ public class Executor extends ABasicExecutor {
   /** tells whether or not the help message must be shown. */
   private boolean fShowHelp;
 
-  /** the current working directory, where to generate the files. */ 
-  private File fWorkingDir;
+  
+  /** the name of the executor file which will be declined to Type and Sig. */
+  private String fName;
   
   /**
    * Minimal constructor.
    */
   private Executor() {
     super(SyntheticRepository.getInstance(), new MapImplemSpecif(),
-          new MethodHandler(), null, new CamlDictionary());
+          new MethodHandler(), null, new CamlDictionary(), null);
   }
 
   /**
@@ -113,7 +125,7 @@ public class Executor extends ABasicExecutor {
                   final File outFile, final List<String> classToTreat) {
     this();
     fImplemSpecif = implem;
-    fWorkingDir = workingDir;
+    setBaseDir(workingDir);
     fFileName = outFile;
     fOtherLibs.addAll(classToTreat);
   }
@@ -174,14 +186,14 @@ public class Executor extends ABasicExecutor {
     }
 
     final File pathname = path.get(0);
-    fWorkingDir = pathname; 
+    setBaseDir(pathname); 
     if (!pathname.isDirectory()) {
-      fWorkingDir = pathname.getParentFile();
+      setBaseDir(pathname.getParentFile());
     }
-    
+    fName = fImplemSpecif.getFileName(Util.coqify(pathname.getName()));
+     
 
-    fFileName = new File(fWorkingDir, 
-                        fImplemSpecif.getFileName(Util.coqify(pathname.getName())) + ".v");
+    fFileName = new File(getBaseDir(), fName + ".v");
     System.out.println("Output file: " + fFileName);
   }
 
@@ -200,7 +212,7 @@ public class Executor extends ABasicExecutor {
     }
     
     System.out.println("Using " + fImplemSpecif + ".");
-    System.out.println("Working path: " + fWorkingDir);
+    System.out.println("Working path: " + getBaseDir());
     // creating file for output
     if (fFileName.exists()) {
       fFileName.delete();
@@ -230,8 +242,65 @@ public class Executor extends ABasicExecutor {
     doEnding();
 
     fOut.close(); // closing output file
-    
+    doType();
+    doSignature();
     writeDictionnary();
+  }
+
+  private void doSignature() throws FileNotFoundException {
+    final File typ = new File(getBaseDir(), fName + "_signature" + suffix);
+    final Stream out = new Stream(new FileOutputStream(typ));
+    out.println(libPath);
+    out.println(fImplemSpecif.getBeginning());
+
+    //out.println("Require Import " + fName + "_type.");
+    out.println();
+    out.incPrintln("Module " + fName + "Signature.");
+
+
+    // the already treated classes + interfaces
+    for (ClassExecutor ce: fTreatedClasses) {
+      out.println("Load \"" + ce.getPackageDir().getPath() + 
+                  ce.getModuleName() + "_signature.v\".");
+    }
+    
+    for (ClassExecutor ce: fTreatedInterfaces) {
+      out.println("Load \"" + ce.getPackageDir().getPath() + 
+                  ce.getModuleName() + "_signature.v\".");
+    }
+    
+    out.decPrintln("End " + fName + "Signature.");
+    
+  }
+
+  private void doType() throws FileNotFoundException {
+    final File typ = new File(getBaseDir(), fName + "_type" + suffix);
+    final Stream out = new Stream(new FileOutputStream(typ));
+    out.println(libPath);
+    out.println(fImplemSpecif.getBeginning());
+
+
+    out.println();
+    out.incPrintln("Module " + fName + "Type.");
+    // the special library
+    for (int i = 0; i < fSpecialLibs.length; i++) {
+      final String str = fImplemSpecif.requireLib(Util.coqify(fSpecialLibs[i]));
+      out.println("Load \"" + str + ".v\".");
+    }
+    
+
+    // the already treated classes + interfaces
+    for (ClassExecutor ce: fTreatedClasses) {
+      out.println("Load \"" + ce.getPackageDir().getPath() + 
+                  ce.getModuleName() + "_type.v\".");
+    }
+    
+    for (ClassExecutor ce: fTreatedInterfaces) {
+      out.println("Load \"" + ce.getPackageDir().getPath() + 
+                  ce.getModuleName() + "_type.v\".");
+    }
+    
+    out.decPrintln("End " + fName + "Type.");
   }
 
   /**
@@ -239,7 +308,7 @@ public class Executor extends ABasicExecutor {
    * @throws IOException If there is a problem in writing.
    */
   private void writeDictionnary() throws IOException {
-    final File dicoFile = new File(fWorkingDir, "dico.ml");
+    final File dicoFile = new File(getBaseDir(), "dico.ml");
     fOut = new Util.Stream(new FileOutputStream(dicoFile));
     fDico.write(fOut);
     fOut.close();
@@ -318,7 +387,7 @@ public class Executor extends ABasicExecutor {
                                final String pathname) throws ClassNotFoundException, 
                                                              IOException {
     final ClassPath cp = new ClassPath(pathname);
-    System.out.println(cp);
+    //System.out.println(cp);
     handleClass(clname, cp);
 
   }
@@ -344,17 +413,17 @@ public class Executor extends ABasicExecutor {
       fDico.addPackage(pn, packageName);
     }
     pn = Util.getCoqPackageName(pn);
-    final String moduleName = Util.coqify(jc.getClassName());
+    final ClassExecutor ce = getClassExecutor(cg);
+    
     if (jc.isInterface()) {
-      fTreatedInterfaces.add(moduleName + ".interface"); 
+      fTreatedInterfaces.add(ce); 
     } 
     else {
-      fTreatedClasses.add(moduleName + ".class");
+      fTreatedClasses.add(ce);
     }
+    fOut.println("Load \"" + ce.getPackageDir().getPath() +  ce.getModuleName() + ".v\".");
     
-    final ClassExecutor ce = getClassExecutor(cg);
     ce.start();
-    fOut.println(1, "Load \"" + ce.getOuputFile().getPath() + "\".");
   }
 
   
@@ -369,28 +438,25 @@ public class Executor extends ABasicExecutor {
    * @throws FileNotFoundException if a file is missing
    */
   public ClassExecutor getClassExecutor(final ClassGen cg) throws FileNotFoundException {
-    return new ClassExecutor(this, cg, fWorkingDir);
+    return new ClassExecutor(this, cg, getBaseDir(), fName);
   }
 
   /**
    * Write the file preable.
    */
   private void doBeginning() {
-    fOut.println(0, fImplemSpecif.getBeginning());
-
-    for (int i = 0; i < fSpecialLibs.length; i++) {
-      final String str = fImplemSpecif.requireLib(Util.coqify(fSpecialLibs[i]));
-      fOut.println(0, str);
-      // out.newLine();
-    }
-
+    fOut.println(libPath);
+    fOut.println(fImplemSpecif.getBeginning());
+    fOut.println("Require Import " + fName + "_type.");
+    fOut.println("Require Import " + fName + "_signature.");
+    
     initDico(fDico);
 
 
-    fOut.println(0, "Import P.");
-    fOut.println();
-    fOut.println(0, "Module TheProgram.");
-    fOut.println();
+    fOut.println("Import P.\n");
+    fOut.println("Import " + fName + "Type.");
+    fOut.println("Import " + fName + "Signature.");
+    fOut.incPrintln("Module " + fName + "Program.");
 
   }
 
@@ -437,11 +503,11 @@ public class Executor extends ABasicExecutor {
     defineClassAndInterface();
     
     // the program definition
-    fOut.println(1, "Definition program : Program := PROG.Build_t");
-    fOut.println(2, "AllClasses");
-    fOut.println(2, "AllInterfaces");
-    fOut.println(1, ".\n");
-    fOut.println(0, "End TheProgram.\n");
+    fOut.incPrintln("Definition program : Program := PROG.Build_t");
+    fOut.println("AllClasses");
+    fOut.println("AllInterfaces");
+    fOut.decPrintln(".\n");
+    fOut.decPrintln("End " + fName + "Program.\n");
   }
 
   /**
@@ -451,8 +517,8 @@ public class Executor extends ABasicExecutor {
   private void defineClassAndInterface() {
     // all classes
     String str = "Definition AllClasses : " + fImplemSpecif.classType() + " := ";
-    for (String clss: fTreatedClasses) {
-      str += fImplemSpecif.classCons(clss);
+    for (ClassExecutor clss: fTreatedClasses) {
+      str += fImplemSpecif.classCons(clss.getModuleName() + ".class");
     }
     for (int i = 0; i < fSpecialLibs.length; i++) {
       str += fImplemSpecif.classCons(Util.coqify(fSpecialLibs[i]) + ".class");
@@ -464,14 +530,17 @@ public class Executor extends ABasicExecutor {
 
     // all interfaces
     str = "Definition AllInterfaces : " + fImplemSpecif.interfaceType() + " := ";
-    for (String interf: fTreatedInterfaces) {
-      str += fImplemSpecif.interfaceCons(interf);
+    for (ClassExecutor interf: fTreatedInterfaces) {
+      str += fImplemSpecif.interfaceCons(interf.getModuleName() + ".interface");
     }
     str += " " + fImplemSpecif.interfaceEnd() + ".";
     fOut.println(1, str);
     fOut.println();
   }
-
+  public String getModuleName() {
+   
+    return fName;
+  }
 
 
 }

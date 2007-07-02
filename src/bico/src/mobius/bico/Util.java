@@ -301,6 +301,23 @@ public final class Util {
     }
     
     /**
+     * Does a println and then increments the tabulation level.
+     * @param s the string to print tabbed
+     */
+    public void incPrintln(final String s) {
+      println(s);
+      incTab();
+    }
+    
+    /**
+     * Decrements the tabulation and then does a println.
+     * @param s the string to print tabbed
+     */
+    public void decPrintln(final String s) {
+      decTab();      
+      println(s);
+    }
+    /**
      * Decrements the tabulations.
      */
     public void decTab() {

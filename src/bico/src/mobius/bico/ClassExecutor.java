@@ -18,8 +18,10 @@ import org.apache.bcel.generic.ClassGen;
  * L. Hubert (laurent.hubert@irisa.fr)
  */
 public class ClassExecutor extends ASignatureExecutor {
-  
-  private static final String libPath = "Add LoadPath \"Formalisation/Library\".\n" + 
+  /** the standard lib paths. */
+  //FIXME: should be relative to the package dir
+  private static final String libPath = 
+                      "Add LoadPath \"Formalisation/Library\".\n" + 
                       "Add LoadPath \"Formalisation/Library/Map\".\n" +
                       "Add LoadPath \"Formalisation/Bicolano\".\n";
 
@@ -37,73 +39,62 @@ public class ClassExecutor extends ASignatureExecutor {
   /** the file that will be the output of the executor. */
   private File fOutputFile;
 
-  private File fTypeFile;
-
-
-  private Stream fOutTyp;
-
-
+  /** the coqified name of the class (package + classname). */
   private String fModuleName;
 
+  /** the directory which corresponds to the current package. */
+  private File fPackageDir;
+  
+  /** the real directory which corresponds to the current package. */
+  private File fWorkingDir;
+
+
+  protected String fName;
+  
+  
   /**
    * Create a class executor in the context of another
    * executor.
    * @param be the BasicExecutor to get the initialization from
    * @param cg the class object to manipulate
-   * @param workingDir the current working directory
+   * @param baseDir the current working directory
+   * @param name the name of the main file
    * @throws FileNotFoundException if the file cannot be opened
    */
   public ClassExecutor(final ABasicExecutor be, final ClassGen cg,
-                       final File workingDir) throws FileNotFoundException {
-    super(be, workingDir, cg);
+                       final File baseDir, final String name) throws FileNotFoundException {
+    super(be, baseDir, cg);
     fClass = cg;
-    fOutputFile = determineFileName(workingDir);
-    fTypeFile = determineTypeFileName(workingDir);
-    fOut = new Util.Stream(new FileOutputStream(new File(workingDir, fOutputFile.getPath())));
-    fOutTyp = new Util.Stream(new FileOutputStream(new File(workingDir, fTypeFile.getPath())));
+    fName = name;
+    final JavaClass jc = fClass.getJavaClass();
+    
+    
+    fModuleName = Util.coqify(jc.getClassName());
+
+    fPackageDir = new File(jc.getPackageName().replace('.', File.separatorChar));
+    fWorkingDir = new File(baseDir, fPackageDir.getPath());
+    
+    fOutputFile = new File(fWorkingDir, fModuleName + ".v");    
+    fOut = new Util.Stream(new FileOutputStream(fOutputFile));
+
     fFieldExecutor = new FieldExecutor(this, fClass.getJavaClass());
     fMethExecutor = new MethodExecutor(this, fClass);
+  }
 
-    final JavaClass jc = fClass.getJavaClass();
-    fModuleName = Util.coqify(jc.getClassName());
-  }
- 
-  /**
-   * Determine the file name of the output file.
-   * @param workingDir the current working directory
-   * @return a File which has a path relative
-   */
-  private File determineFileName(final File workingDir) {
-    final JavaClass jc = fClass.getJavaClass(); 
-    final File dir = new File(jc.getPackageName().replace('.', File.separatorChar));
-    new File(workingDir, dir.getPath()).mkdirs();
-    return new File(dir, Util.coqify(jc.getClassName()) + ".v");
-  }
-  
-  /**
-   * Determine the file name of the type file.
-   * @param workingDir the current working directory
-   * @return a File which is a relative path
-   */
-  private File determineTypeFileName(final File workingDir) {
-    final JavaClass jc = fClass.getJavaClass(); 
-    final File dir = new File(jc.getPackageName().replace('.', File.separatorChar));
-    new File(workingDir, dir.getPath()).mkdirs();
-    return new File(dir, Util.coqify(jc.getClassName()) + "_type.v");
-  }
   /**
    * Real handling of one class in jc.
    * 
    * @throws ClassNotFoundException if a class cannot be resolved
+   * @throws FileNotFoundException if the type stream cannot be created
    */
   @Override
-  public void start() throws ClassNotFoundException {
+  public void start() throws ClassNotFoundException, FileNotFoundException {
 
     final JavaClass jc = fClass.getJavaClass(); 
     final int className = fDico.getCurrentClass() + 1;
     fDico.addClass(jc, className); 
     System.out.print("  --> Generating " + fModuleName + "Type: ");    
-    doClassNameDefinition();
+    doType();
     System.out.println("done.");
     
     System.out.print("  --> Generating " + fModuleName + "Signature: ");
@@ -115,16 +106,16 @@ public class ClassExecutor extends ASignatureExecutor {
     fOut.println(libPath);
     fOut.println("Require Import ImplemProgramWithMap.\n" +
                     "Import P.\n");
-    fOut.println("Require Import " + fModuleName + "_signature.");
-
-    fOut.println("Module " + fModuleName + ".\n");
+    fOut.println("Require Import " + fName + "_signature.");
+    fOut.println("Require Import " + fName + "_type.");
+    fOut.println("Import " + fName + "Signature.");
+    fOut.println("Import " + fName + "Type.");
+    fOut.println();
     
+    fOut.incPrintln("Module " + fModuleName + ".\n");
+    fOut.println("Import "  + fModuleName + "Type.");
     fOut.println("Import "  + fModuleName + "Signature.");
     
-    fOut.incTab();
-    
-    
- 
     
     fFieldExecutor.start();
     
@@ -133,12 +124,16 @@ public class ClassExecutor extends ASignatureExecutor {
 
     doClassDefinition();
    
-    fOut.decTab();
-    fOut.println("End " + fModuleName + ".\n");
+    fOut.decPrintln("End " + fModuleName + ".\n");
     System.out.println("done.");
 
   }
-
+  
+  /**
+   * Prints the signatures of the methods and fields.
+   * @throws ClassNotFoundException in case of a field or a 
+   * methods which corresponds to no class.
+   */
   public void doSignature() throws ClassNotFoundException {
     fOutSig.println(libPath);
     fOutSig.println("Require Import ImplemProgramWithMap.\n" +
@@ -146,37 +141,34 @@ public class ClassExecutor extends ASignatureExecutor {
     fOutSig.println("Require Import " + fModuleName + "_type.");
     fOutSig.println("Import "  + fModuleName + "Type.\n");
     
-    fOutSig.println("Module " + fModuleName + "Signature.\n");
-    
-    fOutSig.incTab();
+    fOutSig.incPrintln("Module " + fModuleName + "Signature.\n");
   
     fFieldExecutor.doSignature();
 
     fMethExecutor.doSignature();
-   
-    fOutSig.decTab();
-    fOutSig.println("End " + fModuleName + "Signature.\n");
-
-    // TODO Auto-generated method stub
+  
+    fOutSig.decPrintln("End " + fModuleName + "Signature.\n");
     
   }
 
   /**
    * Prints the class name definition of the current class.
+   * @throws FileNotFoundException if the output file cannot be created
    */
-  public void doClassNameDefinition() {
+  public void doType() throws FileNotFoundException {
     final JavaClass jc = fClass.getJavaClass();
     final int className =  fDico.getCoqClassName(jc);
     final int packageName = fDico.getCoqPackageName(jc);
-
+    final File typeFile = new File(fWorkingDir, fModuleName + "_type.v");
+    final Stream  fOutTyp = new Util.Stream(new FileOutputStream(typeFile));
+    
     
     fOutTyp.println(libPath);
     
     fOutTyp.println("Require Import ImplemProgramWithMap.\n" +
                     "Import P.\n");
-    fOutTyp.println("Module " + fModuleName + "Type.\n");
+    fOutTyp.incPrintln("Module " + fModuleName + "Type.\n");
     
-    fOutTyp.incTab();
     // classname
     String def;
     if (jc.isInterface()) {
@@ -191,8 +183,7 @@ public class ClassExecutor extends ASignatureExecutor {
     }
     fOutTyp.println(def);
 
-    fOutTyp.decTab();
-    fOutTyp.println("End " + fModuleName + "Type.\n");
+    fOutTyp.decPrintln("End " + fModuleName + "Type.\n");
     
   }
 
@@ -200,16 +191,14 @@ public class ClassExecutor extends ASignatureExecutor {
   /**
    * Do the proper class definition.
    */
-  public void doClassDefinition() {
+  protected void doClassDefinition() {
     final JavaClass jc = fClass.getJavaClass(); 
     if (jc.isInterface()) {
-      fOut.println("Definition interface : Interface := INTERFACE.Build_t");
-      fOut.incTab();
+      fOut.incPrintln("Definition interface : Interface := INTERFACE.Build_t");
       fOut.println("interfaceName");
     } 
     else {
-      fOut.println("Definition class : Class := CLASS.Build_t");
-      fOut.incTab();
+      fOut.incPrintln("Definition class : Class := CLASS.Build_t");
       fOut.println("className");
       final String superClassName = Util.coqify(jc.getSuperclassName());
       if (superClassName == null) {
@@ -220,16 +209,16 @@ public class ClassExecutor extends ASignatureExecutor {
       }
     }
     enumerateInterfaces();
-    fOut.decTab();
+    
     fFieldExecutor.doEnumeration();
 
     fMethExecutor.doEnumeration();
-    fOut.incTab();
+    
     fOut.println("" + jc.isFinal());
     fOut.println("" + jc.isPublic());
     fOut.println("" + jc.isAbstract());
-    fOut.decTab();
-    fOut.println(".\n");
+    
+    fOut.decPrintln(".\n");
 
   }
 
@@ -237,7 +226,6 @@ public class ClassExecutor extends ASignatureExecutor {
    * Enumerates the interfaces of the class.
    */
   private void enumerateInterfaces() {
-    fOut.incTab();
     final String[] inames = fClass.getInterfaceNames();
     if (inames.length == 0) {
       fOut.println("nil");
@@ -250,7 +238,6 @@ public class ClassExecutor extends ASignatureExecutor {
       str = str.concat("nil)");
       fOut.println(str);
     }
-    fOut.decTab();
   }
 
   /**
@@ -261,5 +248,12 @@ public class ClassExecutor extends ASignatureExecutor {
     return fOutputFile;
   }
 
+  public String getModuleName() {
+    return fModuleName;
+  }
+  
+  public File getPackageDir() {
+    return fPackageDir;
+  }
 
 }

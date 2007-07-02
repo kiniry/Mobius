@@ -1,5 +1,6 @@
 package mobius.bico;
 
+import java.io.File;
 import java.io.IOException;
 
 import mobius.bico.Util.Stream;
@@ -31,6 +32,10 @@ public abstract class ABasicExecutor {
   /** the current bcel repository used. */
   final Repository fRepos;
   
+  
+  /** the current base directory, from where to generate the files. */ 
+  private File fBaseDir;
+  
   /**
    * Initialize an executor object.
    * @param repos the bcel repository
@@ -41,12 +46,20 @@ public abstract class ABasicExecutor {
    */
   public ABasicExecutor(final Repository repos, final IImplemSpecifics implemSpecif, 
                         final MethodHandler methodHandler, final Util.Stream out, 
-                        final Dictionary dico) {
+                        final Dictionary dico, final File baseDir) {
     fImplemSpecif = implemSpecif;
     fMethodHandler = methodHandler;
     fRepos = repos;
     fOut = out;
     fDico = dico;
+    fBaseDir = baseDir;
+  }
+  
+  public void setBaseDir(File baseDir) {
+    fBaseDir = baseDir;
+  }
+  public File getBaseDir() {
+    return fBaseDir;
   }
   
   /**
@@ -55,7 +68,7 @@ public abstract class ABasicExecutor {
    * @param be the BasicExecutor to get the initialization from
    */
   public ABasicExecutor(final ABasicExecutor be) {
-    this(be.fRepos, be.fImplemSpecif, be.fMethodHandler, be.fOut, be.fDico);
+    this(be.fRepos, be.fImplemSpecif, be.fMethodHandler, be.fOut, be.fDico, be.fBaseDir);
   }
   
   /**
