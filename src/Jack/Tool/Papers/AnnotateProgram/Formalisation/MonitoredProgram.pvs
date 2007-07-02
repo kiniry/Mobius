@@ -61,6 +61,9 @@ BEGIN
     LAMBDA (s : MPState, upd : [PState -> PState]) : 
       s WITH [pstate := upd(pstate(s))]
 
+  update_AState(s : MPState, upd : [MPState -> AState]) : MPState =
+      s WITH [astate := upd(s)]
+
   update_GhostVars : (update_GhostVars_type) =
     LAMBDA (s : MPState, upd : [Store -> Store]) : 
       s WITH [gvs := upd(gvs(s))]
@@ -86,7 +89,7 @@ BEGIN
   % Instantiation of its semantics
 
   on_method_MVA(etype : EventType)
-               (mp : MonitoredProgram, md : Method, s : MPState) : AState =
+               (mp : MonitoredProgram, md : Method)(s : MPState) : AState =
     IF wf_state(mp)(s) AND
        evs(mva(mp))((# etype := etype, mname := name(md) #))
     THEN step(mva(mp))(astate(s), (# stP := st(pstate(s)),
@@ -102,25 +105,27 @@ BEGIN
             deriv_stmt_rec : deriv_stmt_rec_type(n),
             deriv_expr_rec : deriv_expr_rec_type(n)) :
     NOT cp(astate(s1)) = halted AND
-    astate(s2) = on_method_MVA(Entry)(mp, md, s1)  AND
-    on_method_entry(mp, md, a, s1, s2, n, deriv_stmt_rec, deriv_expr_rec)
+    on_method_entry(mp, md, a, 
+                    update_AState(s1, on_method_MVA(Entry)(mp, md)), 
+                    s2, n, deriv_stmt_rec, deriv_expr_rec)
 
   on_method_exit_normal_MP : (on_method_event_type) =
     LAMBDA (mp : MonitoredProgram, md : Method, a : Val, s1, s2 : MPState,
             n : nat,
             deriv_stmt_rec : deriv_stmt_rec_type(n),
             deriv_expr_rec : deriv_expr_rec_type(n)) :
-    astate(s2) = on_method_MVA(ExitNormal)(mp, md, s1)  AND
-    on_method_exit_normal(mp, md, a, s1, s2, n, deriv_stmt_rec, deriv_expr_rec)
+    on_method_exit_normal(mp, md, a, 
+                          update_AState(s1, on_method_MVA(ExitNormal)(mp, md)),
+                          s2, n, deriv_stmt_rec, deriv_expr_rec)
 
   on_method_exit_exceptional_MP : (on_method_event_type) =
     LAMBDA (mp : MonitoredProgram, md : Method, a : Val, s1, s2 : MPState,
             n : nat,
             deriv_stmt_rec : deriv_stmt_rec_type(n),
             deriv_expr_rec : deriv_expr_rec_type(n)) :
-    astate(s2) = on_method_MVA(ExitExceptional)(mp, md, s1)  AND
-    on_method_exit_exceptional(mp, md, a, s1, s2, n, 
-                               deriv_stmt_rec, deriv_expr_rec)
+    on_method_exit_exceptional(mp, md, a, 
+                 update_AState(s1, on_method_MVA(ExitExceptional)(mp, md)), 
+                 s2, n, deriv_stmt_rec, deriv_expr_rec)
 
   IMPORTING Semantics[Name, MonitoredProgram, MPState, 
                       LAMBDA (mp : MonitoredProgram) : program(mp),
@@ -150,11 +155,55 @@ BEGIN
     run_FullProgram(mp)(main, arg)(initial_MP_state(mp)(this_val), final)
 
 
+  IMPORTING SemanticsProofs[Name, MonitoredProgram, MPState, 
+                      LAMBDA (mp : MonitoredProgram) : program(mp),
+                      LAMBDA (s : MPState) : pstate(s),
+                      lookup,
+                      update_PState,
+                      execute_set,
+                      execute_CaseJML,
+                      on_method_entry_MP,
+                      on_method_exit_normal_MP,
+                      on_method_exit_exceptional_MP]
+
+  stmt_determ_step_MP : LEMMA % :-)
+    FORALL (p : MonitoredProgram, n1, n2 : nat, c : Stmt, sigma : MPState,
+            sigma1, sigma2 : MPState) :
+        deriv_stmt(p)(c, sigma, sigma1)(n1) AND
+        deriv_stmt(p)(c, sigma, sigma2)(n2) IMPLIES
+          sigma1 = sigma2 AND n1 = n2
+
   % Well-formedness properties
 
   wf_initial_MP_state : LEMMA % :-)
     FORALL (mp : MonitoredProgram)(this_val : (defined?)) :
       wf_MP(mp) IMPLIES wf_state(mp)(initial_MP_state(mp)(this_val))
+
+   wf_update_PState : LEMMA % :-)
+     FORALL (p : MonitoredProgram, s1 : MPState, 
+             upd : [PState[Name] -> PState[Name]]) :
+       wf_state(p)(s1) IMPLIES
+       LET s2 = update_PState(s1, upd) IN
+       (wf_state(program(p))(pstate(s1)) IMPLIES 
+           wf_state(program(p))(pstate(s2))) IMPLIES
+       wf_state(p)(s2)
+
+   wf_update_GhostVars : LEMMA % :-)
+     FORALL (p : MonitoredProgram, s1 : MPState, 
+             upd : [Store -> Store]) :
+       wf_state(p)(s1) IMPLIES
+       LET s2 = update_GhostVars(s1, upd) IN
+       (wf_ghoststate(p)(s1) IMPLIES wf_ghoststate(p)(s2)) IMPLIES
+       wf_state(p)(s2)
+
+  wf_state_update_stack : LEMMA %:-)
+    FORALL(p : MonitoredProgram, this_val : Val, 
+           arg : (getLocalDecls(program(p))), 
+           param_val : Val, lvds : finite_set[LocalVarDecl], s : MPState) : 
+      wf_state(p)(s) IMPLIES
+      (FORALL (l : LocalVarDecl) : 
+         lvds(l) IMPLIES getLocalDecls(program(p))(l)) IMPLIES
+        wf_state(p)(update_stack(this_val, arg, param_val, lvds, s))
 
   deriv_expr_yields_wf_state_MP : LEMMA
     FORALL (mp : MonitoredProgram, e : Expr, v : Val)
@@ -168,7 +217,7 @@ BEGIN
       deriv_expr(mp)(e, sigma1, v, sigma2)(n) IMPLIES
         wf_state(mp)(sigma2)
 
-  deriv_stmt_yields_wf_state_MP : LEMMA
+  deriv_stmt_yields_wf_state_MP : LEMMA % :-)
     FORALL (mp : MonitoredProgram, c : Stmt, sigma1, sigma2 : MPState, n : nat) :
       wf_MP(mp) IMPLIES
       wf_state(mp)(sigma1) IMPLIES

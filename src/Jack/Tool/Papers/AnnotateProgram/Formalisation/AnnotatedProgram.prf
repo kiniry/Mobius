@@ -823,6 +823,8 @@
     (wf_state const-decl "boolean" State nil))
    28712 6090 t shostak))
  (wf_update_PState 0
+  (wf_update_PState-2 nil 3392375532 nil ("" (grind) nil nil) unchecked
+   nil nil nil nil nil)
   (wf_update_PState-1 nil 3391156508 3392371192 ("" (grind) nil nil)
    proved
    ((defined? const-decl "boolean" ValProp nil)
