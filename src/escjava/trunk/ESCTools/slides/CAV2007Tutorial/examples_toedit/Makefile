@@ -3,13 +3,14 @@
 # A simple makefile for working with jmlunit
 
 CLASSPATH='.;c:\cygwin\usr\local\junit\junit.jar'
+# Flags below are for JML common tools release 5.4, looking to the future
 JML = jml -Q -e
-# flags below are for JML common tools release 5.4, adjusting for the future
 # JMLC = jmlc -Q -e -o
 JMLC = jmlc -Q --universes --neutralContext
 JMLRAC = jmlrac
 JMLUNIT = jmlunit -i
 JAVAC = javac
+# Flags below are for ESC/Java2 release 2.0b1
 ESCJAVA = escjava2 -nonNullByDefault -CounterExample
 
 TYPES = ArrayOps BagOfInt BagOfIntMain \
