@@ -85,8 +85,7 @@ public class ClassExecutor extends ASignatureExecutor {
   public void start() throws ClassNotFoundException, FileNotFoundException {
 
     final JavaClass jc = fClass.getJavaClass(); 
-    final int className = fDico.getCurrentClass() + 1;
-    fDico.addClass(jc, className); 
+    fDico.addClass(jc); 
     System.out.print("  --> Generating " + fModuleName + "Type: ");    
     doType();
     System.out.println("done.");

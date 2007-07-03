@@ -163,23 +163,26 @@ public class CamlDictionary implements Dictionary {
   /** the method names and their associated numbers (class, package and method numbers). */
   private Map<String, Triplet> fMethodNames = new HashMap<String, Triplet>();
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see bico.Dictionary#addClass(java.lang.String, int, int)
-   */
+
+  
   public void addClass(final String javaName, final String packageName, 
+                       final int coqClassName) {
+    addClass(javaName, fPackageNames.get(packageName), coqClassName);
+  }
+  
+  private void addClass(final String javaName, final int packageName, 
                        final int coqClassName) {
     if (coqClassName > fCurrentClass) {
       fCurrentClass = coqClassName;
     }
-    fClassNames.put(javaName, new Couple(fPackageNames.get(packageName), coqClassName));
+    fClassNames.put(javaName, new Couple(packageName, coqClassName));
   }
   
-  
-  public void addClass(final JavaClass jc, 
-                       final int coqClassName) {
-    addClass(jc.getClassName(), jc.getPackageName(), coqClassName);
+  public void addClass(final JavaClass jc) {
+    if (getCoqClassName(jc) == 0) {
+      fCurrentClass++;
+      addClass(jc.getClassName(), getCoqPackageName(jc), fCurrentClass);  
+    }
   }
   
   
@@ -187,12 +190,12 @@ public class CamlDictionary implements Dictionary {
     return fCurrentClass;
   }
 
-  public int getCoqClassName(final String javaName) {
-    return fClassNames.get(javaName).fI2;
-  }
+
+  
   public int getCoqClassName(final JavaClass jc) {
-    return getCoqClassName(jc.getClassName());
+    return fClassNames.get(jc.getClassName()).fI2;
   }
+
 
   public int getCoqPackageName(final JavaClass jc) {
     final Couple c = fClassNames.get(jc.getClassName());
@@ -231,14 +234,6 @@ public class CamlDictionary implements Dictionary {
     fPackageNames.put(javaName, coqPackageName);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see bico.Dictionary#getCoqPackageName(java.lang.String)
-   */
-  public int getCoqPackageName(final String javaName) {
-    return fPackageNames.get(javaName);
-  }
 
   /**
    * Dump the caml dictionnary to the given stream.

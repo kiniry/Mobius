@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.security.Permission;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -29,8 +28,6 @@ import org.apache.bcel.util.SyntheticRepository;
  * L. Hubert (laurent.hubert@irisa.fr)
  */
 public class Executor extends ABasicExecutor {
-  /** BICO version 0.5. */
-  public static final String WELCOME_MSG = "BICO version 0.5";
 
   /** the help message. */
   public static final String HELP_MSG = 
@@ -78,8 +75,6 @@ public class Executor extends ABasicExecutor {
   /** list of already treated interfaces. */
   private List<ClassExecutor> fTreatedInterfaces = new ArrayList<ClassExecutor>();
   
-
-
   /** current package number. */
   private int fCurrentPackage = RESERVED_PACKAGES;
 
@@ -107,9 +102,7 @@ public class Executor extends ABasicExecutor {
    */
   public Executor(final String[] args) {
     this();
-    
-    init(args);
-    
+    init(args); 
   }
   
   /**
@@ -198,11 +191,9 @@ public class Executor extends ABasicExecutor {
   /**
    * Launch bico !
    * 
-   * @throws IOException
-   *             in case of any I/O errors....
-   * @throws ClassNotFoundException
-   *             if libraries file specified in {@link #fOtherLibs} cannot be
-   *             found
+   * @throws IOException in case of any I/O errors....
+   * @throws ClassNotFoundException if libraries 
+   * file specified in {@link #fOtherLibs} cannot be found
    */
   public void start() throws ClassNotFoundException, IOException {
     if (fShowHelp) {
@@ -220,6 +211,21 @@ public class Executor extends ABasicExecutor {
     final FileOutputStream fwr = new FileOutputStream(fFileName);
     fOut = new Util.Stream(fwr);
 
+    doMain();
+
+    fOut.close(); // closing output file
+    doType();
+    doSignature();
+    writeDictionnary();
+  }
+
+  /**
+   * Write the main file.
+   * @throws ClassNotFoundException if there is a problem with
+   * name resolution
+   * @throws IOException if there is a problem writing from the disk
+   */
+  private void doMain() throws ClassNotFoundException, IOException {
     // write prelude ;)
     doBeginning();
 
@@ -238,13 +244,13 @@ public class Executor extends ABasicExecutor {
     }
 
     doEnding();
-
-    fOut.close(); // closing output file
-    doType();
-    doSignature();
-    writeDictionnary();
   }
 
+  /**
+   * Write the signature file.
+   * @throws FileNotFoundException in case the file cannot be
+   * written
+   */
   private void doSignature() throws FileNotFoundException {
     final File typ = new File(getBaseDir(), fName + "_signature" + suffix);
     final Stream out = new Stream(new FileOutputStream(typ));
@@ -271,6 +277,11 @@ public class Executor extends ABasicExecutor {
     
   }
 
+  /**
+   * Write the type file.
+   * @throws FileNotFoundException if the type file cannot be 
+   * created
+   */
   private void doType() throws FileNotFoundException {
     final File typ = new File(getBaseDir(), fName + "_type" + suffix);
     final Stream out = new Stream(new FileOutputStream(typ));
@@ -334,36 +345,6 @@ public class Executor extends ABasicExecutor {
   }
 
   /**
-   * Bico main entry point.
-   * @param args the program arguments
-   * @throws IOException if the is an error while creating the files
-   */
-  public static void main(final String[] args) throws IOException {
-    System.out.println(WELCOME_MSG);
-    System.setSecurityManager(new SecurityManager() {
-      public void checkPermission(final Permission perm) {
-      }
-    });
-    Executor exec;
-    try {
-      exec = new Executor(args);
-    } 
-    catch (IllegalArgumentException e) {
-      System.err.println(e.getMessage());
-      System.err.println("(try java -jar bico.jar help)");
-      return;
-    }
-    try {
-      exec.start();
-    } 
-    catch (ClassNotFoundException e) {
-      e.printStackTrace();
-      System.err.println(e.getMessage() + "\n" +
-          "It was specified as a file to load... it should be in the class path!");
-    }
-  }
-
-  /**
    * Handle one class from library files.
    * @param clname the class to load from the classpath
    * @throws ClassNotFoundException if the specified class cannot be found
@@ -406,7 +387,7 @@ public class Executor extends ABasicExecutor {
     fRepos.storeClass(jc);
     final ClassGen cg = new ClassGen(jc);
     String pn = jc.getPackageName();
-    int packageName = fDico.getCoqPackageName(jc.getPackageName());
+    int packageName = fDico.getCoqPackageName(jc);
     if (packageName == 0) {
       packageName = fCurrentPackage++;
       fDico.addPackage(pn, packageName);
@@ -424,9 +405,6 @@ public class Executor extends ABasicExecutor {
     
     ce.start();
   }
-
-  
- 
  
   /**
    * Returns an instance of a class executor.
@@ -536,10 +514,12 @@ public class Executor extends ABasicExecutor {
     fOut.println(1, str);
     fOut.println();
   }
-  public String getModuleName() {
-   
+  
+  /**
+   * Returns the name of the module.
+   * @return not null
+   */
+  public String getModuleName() {  
     return fName;
   }
-
-
 }

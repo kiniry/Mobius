@@ -1,6 +1,5 @@
 package mobius.bico.dico;
 
-import java.io.IOException;
 import java.io.PrintStream;
 
 import org.apache.bcel.classfile.JavaClass;
@@ -22,31 +21,50 @@ public interface Dictionary {
    * java name. It also works if the association has already been done with
    * the same name or with an other one.
    * 
-   * @param javaName
-   * @param coqPackageName
+   * @param name the java name of the package
+   * @param coqName the coq name of the package
    */
-  void addPackage(String javaName, int coqPackageName);
+  void addPackage(String name, int coqName);
 
+  
   /**
-   * @param javaName returns the package number corresponding to the given java name
-   * @return the implementation name corresponding to javaName or 0 if unfound
+   * Returns the registered package number of the package of the
+   * specified Java class.
+   * @param jc the class to get the package name from
+   * @return the implementation number or 0 if unfound
    */
-  int getCoqPackageName(String javaName);
-
+  int getCoqPackageName(JavaClass jc);
+  
   /**
    * Associate a class implementation name to the corresponding java name. It
    * also works if the association has already been done with the same name or
    * with an other one.
    * 
-   * @param javaName
+   * @param className
    *            the corresponding human readable name
    * @param packageName
    *            the Biclano package name
    * @param coqClassName
    *            the Bicolano class name
    */
-  void addClass(String javaName, String packageName, int coqClassName);
+  void addClass(String className, String packageName, int coqClassName);
 
+  /**
+   * Associate a class implementation name to the corresponding java name. It
+   * also works if the association has already been done with the same name or
+   * with an other one.
+   * @param jc the java class to associate to the coq name
+   */
+  void addClass(JavaClass jc);
+
+  /**
+   * Returns the registered class number of the
+   * specified Java class.
+   * @param jc the class to get the number for
+   * @return the implementation number or 0 if unfound
+   */
+  int getCoqClassName(JavaClass jc);
+  
   /**
    * Associate a field implementation name to the corresponding java name. It
    * also works if the association has already been done with the same name or
@@ -87,10 +105,5 @@ public interface Dictionary {
    */
   void write(PrintStream out);
 
-  int getCurrentClass();
-  int getCoqClassName(String javaName);
-  int getCoqClassName(JavaClass jc);
-  int getCoqPackageName(JavaClass jc);
-  void addClass(JavaClass jc, int coqClassName);
 
 }
