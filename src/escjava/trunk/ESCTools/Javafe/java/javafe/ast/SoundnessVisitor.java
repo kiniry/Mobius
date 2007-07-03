@@ -1,7 +1,7 @@
 /**
  * $Id$
  *
- * @title "Visitor for Detection of RightShift Incompleteness cases"
+ * @title "Visitor for Detection of various Unsoundness cases"
  * @description "Walks through an AST and finds any cases where the right
  * shift operator is used. It then adds a warning to ErrorSet about this"
  */
@@ -10,22 +10,7 @@ package javafe.ast;
 
 import javafe.util.ErrorSet;
 
-public class RShiftVisitor extends ASTVisitor {
-
-  public void visitASTNode(/*@ non_null */ ASTNode x) {
-    // a child of this node
-    Object child = null;
-    // temporary ASTNode
-    ASTNode temp = null;
-    // visit each child in this ASTNode if the child is an ASTNode
-    for(int count = 0; count < x.childCount(); count++) {
-      child = x.childAt(count);
-      if(child instanceof ASTNode) {
-        temp = (ASTNode) child;
-        temp.accept(this);
-      }
-    }
-  }
+public class SoundnessVisitor extends ASTVisitor {
 
   public void visitCompilationUnit(/*@ non_null */ CompilationUnit x) {
     visitASTNode(x);
@@ -240,11 +225,6 @@ public class RShiftVisitor extends ASTVisitor {
   }
 
   public void visitBinaryExpr(/*@ non_null */ BinaryExpr x) {
-    // if the binary expression contains the right shift operator warn about
-    // it
-    if(x.getTag() == TagConstants.RSHIFT || x.getTag() == TagConstants.ASGRSHIFT) {
-      ErrorSet.warning(x.getStartLoc(), "The semantics of the right shift operator are incomplete.");
-    }
     visitExpr(x);
   }
 

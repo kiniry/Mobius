@@ -11,7 +11,7 @@ package javafe.ast;
 import javafe.util.Location;
 import javafe.util.ErrorSet;
 
-public class LShiftVisitor extends Visitor {
+public class LShiftVisitor extends ASTVisitor {
 
   public void visitASTNode(/*@ non_null */ ASTNode x) {
     // a child of this node
