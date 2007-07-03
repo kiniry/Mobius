@@ -23,8 +23,7 @@ public class Consistency {
     
     public void consistency(RoutineDecl r, TypeSig sig,
 		     InitialState initState, long startTime){
-    Object[] obj = new Object[r.getDecorations().length];
-    obj = r.getDecorations();
+    Object[] obj = r.getDecorations();
     for (int i = 0; i < obj.length; i++){
         if (obj[i] instanceof DerivedMethodDecl){
             dmd = (DerivedMethodDecl)obj[i];
