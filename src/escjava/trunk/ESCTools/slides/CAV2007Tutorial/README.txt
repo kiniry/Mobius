@@ -2,6 +2,8 @@ This directory contains materials for the tutorial by Gary T. Leavens
 (with help from Joseph R. Kiniry and Erik Poll) given at CAV 2007.
 
 The time available for this was 3 hours, split into two 1.5 hour parts.
+In the event, the tutorial ran just about in the right length of time,
+but this depended on not taking too much time for the demos.
 
 The main file is JMLTutorial.tex.
 
