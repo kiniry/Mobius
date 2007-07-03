@@ -1,4 +1,4 @@
-//@ refines "Person.java";
+//@ refine "Person.java";
 public class Person extends Animal {
   /*@ also
     @   requires 65 <= age;

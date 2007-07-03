@@ -1,4 +1,4 @@
-public class Actor {
+public class ActorUnderspecified {
 
   private /*@ spec_public @*/ int age;
   private /*@ spec_public @*/ int fate;

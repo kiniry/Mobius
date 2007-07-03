@@ -3,7 +3,7 @@ public interface GenderedEqualsBad extends Gendered {
     @   ensures obj instanceof Gendered
     @       ==> (\result
     @              == gender.equals(
-    @                   ((Gendered)obj).gender);
+    @                   ((Gendered)obj).gender));
     @*/
   public /*@ pure @*/ 
   boolean equals(/*@ nullable @*/ Object obj);

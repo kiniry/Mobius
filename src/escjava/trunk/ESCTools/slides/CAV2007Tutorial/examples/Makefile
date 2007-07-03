@@ -11,12 +11,13 @@ JMLRAC = jmlrac
 JMLUNIT = jmlunit -i
 JAVAC = javac
 # Flags below are for ESC/Java2 release 2.0b1
-ESCJAVA = escjava2 -nonNullByDefault -CounterExample
+ESCJAVA = escjava2 -nonNullByDefault
 
 TYPES = ArrayOps BagOfInt BagOfIntMain \
         Actor ActorUnderspecified Aging \
 	BoundedStack Counter Counter2 \
-	Gendered Animal Patient FemalePatient Females \
+	Gendered GenderedEqualsBad GenderedEqualsGood \
+	Animal Patient FemalePatient Females \
         Person Staff Doctor Nurse HeadTest \
 	ScreenPoint ScreenPoint2 Hailstone Hailstone2 \
 	Ex Factor SortedInts SortedInts2 SortedInts3 \
