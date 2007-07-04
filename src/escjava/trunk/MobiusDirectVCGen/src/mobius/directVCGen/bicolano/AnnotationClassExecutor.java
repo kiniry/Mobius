@@ -19,7 +19,7 @@ public class AnnotationClassExecutor extends ClassExecutor {
   private final TypeSig fSig;
   
   public AnnotationClassExecutor(ABasicExecutor be, ClassGen cg, File workingDir, TypeSig sig, String name) throws FileNotFoundException {
-    super(be, cg, workingDir, name);
+    super(be, cg, name);
     fClass = cg;
     fSig = sig;
   }
