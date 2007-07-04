@@ -323,7 +323,6 @@ BEGIN
             EXISTS (gd : FieldDecl) :
               ghost_vars(c)(gd) AND name(gd) = name(v))
 
-  % FIX: the definition of is_ghost has changed
   ann_program_defines_MVA_vars : LEMMA % :-)
     FORALL (mp : MonitoredProgram, ap : Program, s : APState) :
       ann_program_pre(mp) IMPLIES
