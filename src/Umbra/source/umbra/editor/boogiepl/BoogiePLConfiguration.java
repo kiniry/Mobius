@@ -68,10 +68,14 @@ public class BoogiePLConfiguration extends SourceViewerConfiguration {
 
   /**
    * TODO
+   * @param a_source_viewer TODO
+   * @param the_content_type TODO
+   * @return TODO
+   * @see SourceViewerConfiguration#getDoubleClickStrategy(ISourceViewer, String)
    */
   public final ITextDoubleClickStrategy getDoubleClickStrategy(
-    final ISourceViewer sourceViewer,
-    final String contentType) {
+    final ISourceViewer a_source_viewer,
+    final String the_content_type) {
     if (doubleClickStrategy == null)
       doubleClickStrategy = new BoogiePLDoubleClickStrategy();
     return doubleClickStrategy;

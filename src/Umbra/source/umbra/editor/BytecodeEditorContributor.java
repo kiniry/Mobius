@@ -247,13 +247,15 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
    * The same as {@ref #refreshEditor(IEditorPart, IEditorInput)}, but
    * the input is obtained from the current editor window.
    *
-   * @see #refreshEditor(IEditorPart, IEditorInput)
+   * @param an_editor TODO
    * @throws PartInitException if the new editor could not be created or
    *               initialized
+   * @see #refreshEditor(IEditorPart, IEditorInput)
    */
-  public final void refreshEditor(final IEditorPart editor) throws PartInitException {
-    final IEditorInput input = editor.getEditorInput();
-    refreshEditor(editor, input);
+  public final void refreshEditor(final IEditorPart an_editor)
+    throws PartInitException {
+    final IEditorInput input = an_editor.getEditorInput();
+    refreshEditor(an_editor, input);
   }
 
   /**

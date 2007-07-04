@@ -33,6 +33,11 @@ import umbra.UmbraPlugin;
 public class BytecodeDocument extends Document {
 
   /**
+   * TODO: why we increase by 2?
+   */
+  private static final int SYNC_INCREMENT = 2;
+
+  /**
    * TODO.
    */
   private static final int NO_OF_POSITIONS = 2;
@@ -159,7 +164,7 @@ public class BytecodeDocument extends Document {
     Method m;
     for (int i = 0; i < methods.length; i++) {
       m = methods[i];
-      pos += 2; //TODO: why we increase here by 2?
+      pos += SYNC_INCREMENT;
       l = m.getLineNumberTable().getLineNumberTable().length;
       for (j = 0; j < l; j++) {
         pop = lnr;

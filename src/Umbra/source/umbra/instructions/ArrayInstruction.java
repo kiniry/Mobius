@@ -29,18 +29,18 @@ public class ArrayInstruction extends StringInstruction {
   /**
    * The names of base bytecode types relevant for
    * array instructions. It correspond to the types
-   * in the array {@ref types}.
+   * in the array {@ref TYPES}.
    */
-  private static final String[] names =
+  private static final String[] NAMES =
   {"VOID", "BOOLEAN", "INT", "SHORT", "BYTE", "LONG",
     "DOUBLE", "FLOAT", "CHAR"};
 
   /**
    * The types of the bytecode types relevant for
    * array instructions. It correspond to the types
-   * in the array {@ref names}.
+   * in the array {@ref NAMES}.
    */
-  private static final Type[] types =
+  private static final Type[] TYPES =
   {Type.VOID, Type.BOOLEAN, Type.INT, Type.SHORT,
    Type.BYTE, Type.LONG, Type.DOUBLE,
    Type.FLOAT, Type.CHAR};
@@ -48,44 +48,56 @@ public class ArrayInstruction extends StringInstruction {
   /**
    * The number of types relevant to the array
    * instructions. It is correlated with the arrays
-   * <code>names</code> and <code>types</code>
+   * <code>NAMES</code> and <code>TYPES</code>
    */
-  private static final int typeCount = types.length;
+  private static final int TYPE_COUNT = TYPES.length;
 
   /**
-   * TODO
+   * This creates an instance of an instruction
+   * named as <code>a_name</code> in a line the text of which is
+   * <code>a_line_text</code>. Currently it just calls the constructor of the
+   * superclass.
+   *
+   * @param a_line_text the line number of the instruction
+   * @param a_name the mnemonic name of the instruction
+   * @see InstructionLineController#InstructionLineController(String, String)
+
    */
-  public ArrayInstruction(final String l, final String n) {
-    super(l, n);
+  public ArrayInstruction(final String a_line_text, final String a_name) {
+    super(a_line_text, a_name);
   }
 
   /**
    * This method returns the type that corresponds to
-   * the given name
+   * the given name.
    *
-   * @param the string for which the type
+   * @param an_ins_name the string for which the type
+   * @return the type for that name or <code>null</code> when no type
+   * corresponds to the name
    */
-  private static Type getType(final String insName) {
-    for (int i = 0; i < typeCount; i++) {
-      if ((names[i].startsWith(insName)) && (insName.startsWith(names[i])))
-        return types[i];
+  private static Type getType(final String an_ins_name) {
+    for (int i = 0; i < TYPE_COUNT; i++) {
+      if ((NAMES[i].startsWith(an_ins_name)) && (an_ins_name.startsWith(NAMES[i])))
+        return TYPES[i];
     }
     return null;
   }
 
 
   /**
+   * @return TODO
    * @see BytecodeLineController#getInstruction()
    */
   public final Instruction getInstruction() {
     //UmbraPlugin.messagelog("ArrayInstruction->getInstruction...");
-    String insType = line.substring(line.indexOf("<") + 1, line.indexOf(">"));
-    insType = insType.toUpperCase();
-    if (getType(insType) == null) {
+    String an_ins_type = my_line_text.substring(my_line_text.indexOf("<") + 1,
+                                        my_line_text.indexOf(">"));
+    an_ins_type = an_ins_type.toUpperCase();
+    if (getType(an_ins_type) == null) {
       //UmbraPlugin.messagelog("   Wrong instruction argument!");
       return null;
     }
-    final byte r = getType(insType).getType();
+    final byte r = getType(an_ins_type).getType();
     //&*
     final boolean isOK = correct();
     if (isOK) {
@@ -101,12 +113,13 @@ public class ArrayInstruction extends StringInstruction {
    * Array instruction line is correct if it has
    * one parameter that is class (or non-classed type) name.
    *
-   *@see InstructionLineController#correct()
+   * @return TODO
+   * @see InstructionLineController#correct()
    */
   public final boolean correct()
   {
     String s;
-    s = UmbraHelper.stripAllWhitespace(line);
+    s = UmbraHelper.stripAllWhitespace(my_line_text);
     final String[] s2 = IBytecodeStrings.array;
     int j, y;
     for (j = 0; j < s2.length; j++) {

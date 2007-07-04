@@ -32,10 +32,17 @@ import umbra.editor.parsing.IBytecodeStrings;
 public class StackInstruction extends NumInstruction {
 
   /**
-   * TODO
+   * This creates an instance of an instruction
+   * named as <code>a_name</code> in a line the text of which is
+   * <code>a_line</code>. Currently it just calls the constructor of the
+   * superclass.
+   *
+   * @param a_line_text the line number of the instruction
+   * @param a_name the mnemonic name of the instruction
+   * @see InstructionLineController#InstructionLineController(String, String)
    */
-  public StackInstruction(final String l, final String n) {
-    super(l, n);
+  public StackInstruction(final String a_line_text, final String a_name) {
+    super(a_line_text, a_name);
   }
 
   /**
@@ -47,7 +54,7 @@ public class StackInstruction extends NumInstruction {
   public final boolean correct()
   {
     String s;
-    s = UmbraHelper.stripAllWhitespace(line);
+    s = UmbraHelper.stripAllWhitespace(my_line_text);
     final String[] s2 = IBytecodeStrings.stack;
     int j;
     int y;
@@ -63,15 +70,15 @@ public class StackInstruction extends NumInstruction {
           int a, b, d, e, f, g;
           a = (s.length() - s.indexOf("%"));
           int c = 0;
-          e = line.length() - line.indexOf("%");
+          e = my_line_text.length() - my_line_text.indexOf("%");
           f = 0;
-          g = line.length();
+          g = my_line_text.length();
           for (d = 0; d < e; d++) {
-            if (Character.isDigit(line.charAt(g - d - 1))) {
+            if (Character.isDigit(my_line_text.charAt(g - d - 1))) {
               f = 1;
             }
             if (f == 0) {
-              if (Character.isWhitespace(line.charAt(g - d - 1))) {
+              if (Character.isWhitespace(my_line_text.charAt(g - d - 1))) {
                 c++;
               }
             }
@@ -95,17 +102,17 @@ public class StackInstruction extends NumInstruction {
     int liczba;
 
     isd = true;
-    int dokad = line.length();
-    for (int i = line.lastIndexOf("%") + 1; i < line.length(); i++) {
-      if (!Character.isDigit(line.charAt(i))) {
+    int dokad = my_line_text.length();
+    for (int i = my_line_text.lastIndexOf("%") + 1; i < my_line_text.length(); i++) {
+      if (!Character.isDigit(my_line_text.charAt(i))) {
         dokad = i;
         break;
       }
     }
     if (isd) {
       liczba = 0;
-      for (int i = line.lastIndexOf("%") + 1; i < dokad; i++) {
-        liczba = 10 * liczba + licznik.indexOf(line.substring(i, i + 1));
+      for (int i = my_line_text.lastIndexOf("%") + 1; i < dokad; i++) {
+        liczba = 10 * liczba + licznik.indexOf(my_line_text.substring(i, i + 1));
       }
       return liczba;
     }
@@ -119,43 +126,43 @@ public class StackInstruction extends NumInstruction {
    */
   public final Instruction getInstruction() {
     int index = 0;
+    Instruction res = null;
     //&*
     if (!correct())
       return null;
     index = getInd();
 
     if (name.compareTo("aload") == 0) {
-      return new ALOAD(index);
+      res = new ALOAD(index);
     }
     if (name.compareTo("astore") == 0) {
-      return new ASTORE(index);
+      res = new ASTORE(index);
     }
     if (name.compareTo("dload") == 0) {
-      return new DLOAD(index);
+      res = new DLOAD(index);
     }
     if (name.compareTo("dstore") == 0) {
-      return new DSTORE(index);
+      res = new DSTORE(index);
     }
     if (name.compareTo("fload") == 0) {
-      return new FLOAD(index);
+      res = new FLOAD(index);
     }
     if (name.compareTo("fstore") == 0) {
-      return new FSTORE(index);
+      res = new FSTORE(index);
     }
     if (name.compareTo("iload") == 0) {
-      return new ILOAD(index);
+      res = new ILOAD(index);
     }
     if (name.compareTo("istore") == 0) {
-      return new ISTORE(index);
+      res = new ISTORE(index);
     }
     if (name.compareTo("lload") == 0) {
-      return new LLOAD(index);
+      res = new LLOAD(index);
     }
     if (name.compareTo("lstore") == 0) {
-      return new LSTORE(index);
+      res = new LSTORE(index);
     }
 
-    return null;
-
+    return res;
   }
 }

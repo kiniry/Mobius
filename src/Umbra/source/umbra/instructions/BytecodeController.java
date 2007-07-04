@@ -93,10 +93,10 @@ public class BytecodeController {
    * This is a debugging method. It prints out to the standard output the
    * list of all the instructions in the controller.
    */
-  public final void showInstructionList()
-  {
+  public final void showInstructionList() {
     for (int i = 0; i < all.size(); i++) {
-      UmbraPlugin.LOG.print(((BytecodeLineController)(all.get(i))).line);
+      UmbraPlugin.LOG.print(
+                  ((BytecodeLineController)(all.get(i))).my_line_text);
     }
   }
 
@@ -110,7 +110,7 @@ public class BytecodeController {
     UmbraPlugin.LOG.flush();
     for (int i = 0; i < incorrect.size(); i++) {
       UmbraPlugin.messagelog(" " +
-             ((BytecodeLineController)(incorrect.get(i))).line);
+             ((BytecodeLineController)(incorrect.get(i))).my_line_text);
     }
   }
 
@@ -256,28 +256,32 @@ public class BytecodeController {
   /**
    * TODO
    *
-   * @param doc bytecode document for which the changes are analysed
-   * @param startRem the beginning of the removed area
-   * @param stopRem the end of the removed area
-   * @param i
-   * @param j
-   * @param oldlc
-   * @param nextLine
-   * @param theLast
-   * @param metEnd true when <code>j</code> is the last instruction in a
+   * @param a_doc bytecode document for which the changes are analysed
+   * @param a_start_of_rem the beginning of the removed area
+   * @param an_end_rem the end of the removed area
+   * @param i TODO
+   * @param j TODO
+   * @param an_old_lc TODO
+   * @param the_next_line TODO
+   * @param the_last_flag TODO
+   * @param the_methend_flag true when <code>j</code> is the last instruction in a
    *         method
-   * @return
+   * @return TODO
    */
-  private int addInstructions(final IDocument doc, final int startRem, final int stopRem,
-                final int i, final int j,
-                final BytecodeLineController oldlc,
-                final BytecodeLineController nextLine,
-                final boolean theLast, final boolean metEnd) {
+  private int addInstructions(final IDocument a_doc,
+                              final int a_start_of_rem,
+                              final int an_end_rem,
+                              final int i,
+                              final int j,
+                              final BytecodeLineController an_old_lc,
+                              final BytecodeLineController the_next_line,
+                              final boolean the_last_flag,
+                              final boolean the_methend_flag) {
     int res = i;
-    final ClassGen cg = ((BytecodeDocument)doc).getClassGen();
+    final ClassGen cg = ((BytecodeDocument)a_doc).getClassGen();
     final int off = getInstructionOff(j);
     try {
-      final String line = doc.get(doc.getLineOffset(j), doc.getLineLength(j));
+      final String line = a_doc.get(a_doc.getLineOffset(j), a_doc.getLineLength(j));
       //%%
       final String lineName = removeCommentFromLine(line);
       final String comment = extractCommentFromLine(line);
@@ -286,20 +290,22 @@ public class BytecodeController {
       if (comment != null) comments.put(lc, comment);
       final Instruction ins = lc.getInstruction();
       if (ins != null) {
-        lc.setTarget(nextLine.getList(), ins);
+        lc.setTarget(the_next_line.getList(), ins);
       } else {
-        if (comment != null) interline.put(nextLine, comment);
+        if (comment != null) interline.put(the_next_line, comment);
       }
       //UmbraPlugin.messagelog("After target");
-      if (res >= startRem && res <= stopRem) {
-        lc.update(oldlc, nextLine, cg, ins, metEnd, theLast,
-              instructions, off);
+      if (res >= a_start_of_rem && res <= an_end_rem) {
+        lc.update(an_old_lc, the_next_line, cg, ins, the_methend_flag,
+                  the_last_flag, instructions, off);
         all.set(j, lc);
       } else {
-        if (oldlc.getHandle() == null)
-          lc.initHandle(nextLine, cg, ins, metEnd, instructions, off);
+        if (an_old_lc.getHandle() == null)
+          lc.initHandle(the_next_line, cg, ins, the_methend_flag,
+                        instructions, off);
         else
-          lc.initHandle(oldlc, cg, ins, metEnd, instructions, off);
+          lc.initHandle(an_old_lc, cg, ins, the_methend_flag,
+                        instructions, off);
         all.add(j, lc);
         res--;
       }
@@ -652,10 +658,12 @@ public class BytecodeController {
 
   /**
    * TODO
+   *
+   * @param an_index TODO
    */
-  private void controlPrint(final int index) {
+  private void controlPrint(final int an_index) {
     UmbraPlugin.messagelog("");
-    UmbraPlugin.messagelog("Control print of bytecode modification (" + index + "):");
+    UmbraPlugin.messagelog("Control print of bytecode modification (" + an_index + "):");
     for (int i = 0; i < instructions.size(); i++) {
       final InstructionLineController line = (InstructionLineController)instructions.get(i);
       if (line == null) {

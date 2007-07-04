@@ -31,16 +31,18 @@ public class BytecodeDocumentProvider extends FileDocumentProvider {
    * the editor is initialized. An additional listener is installed.
    * It is related to contribution class that allow displaying control label.
    *
-   * @param TODO
-   * @throws TODO
+   * @param an_element TODO
+   * @return TODO
+   * @throws CoreException TODO
    */
-  protected final IDocument createDocument(final Object element) throws CoreException {
-    if (element instanceof IEditorInput) {
+  protected final IDocument createDocument(final Object an_element)
+    throws CoreException {
+    if (an_element instanceof IEditorInput) {
       final IDocument document = createEmptyDocument();
       if (setDocumentContent(document,
-                   (IEditorInput) element,
-                   getEncoding(element))) {
-        setupDocument(element, document);
+                   (IEditorInput) an_element,
+                   getEncoding(an_element))) {
+        setupDocument(an_element, document);
       } /*
       IDocumentPartitioner partitioner =
         new FastPartitioner(

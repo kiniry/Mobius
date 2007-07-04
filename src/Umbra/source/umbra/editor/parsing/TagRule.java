@@ -42,17 +42,22 @@ public class TagRule extends MultiLineRule {
 
   /**
    * TODO
+   *
+   * @param a_scanner TODO
+   * @param a_sequence TODO
+   * @param an_eof_allowed_flag TODO
+   * @return TODO
    * @see PatternRule#sequenceDetected(ICharacterScanner, char[], boolean)
    */
-  protected final boolean sequenceDetected (final ICharacterScanner scanner,
-                                            final char[] sequence,
-                                            final boolean eofAllowed) {
-    UmbraPlugin.messagelog("TagRule#sequenceDetected: " + new String(sequence));
-    final int c = scanner.read();
-    if (sequence[0] == '<') {
+  protected final boolean sequenceDetected (final ICharacterScanner a_scanner,
+                                            final char[] a_sequence,
+                                            final boolean an_eof_allowed_flag) {
+    UmbraPlugin.messagelog("TagRule#sequenceDetected: " + new String(a_sequence));
+    final int c = a_scanner.read();
+    if (a_sequence[0] == '<') {
       if (c == '?') {
         // processing instruction - abort
-        scanner.unread();
+        a_scanner.unread();
         return false;
       }
       if (c == '!') {
@@ -60,10 +65,10 @@ public class TagRule extends MultiLineRule {
         // comment - abort
         //return false;
       }
-    } else if (sequence[0] == '>') {
-      scanner.unread();
+    } else if (a_sequence[0] == '>') {
+      a_scanner.unread();
     }
-    return super.sequenceDetected(scanner, sequence, eofAllowed);
+    return super.sequenceDetected(a_scanner, a_sequence, an_eof_allowed_flag);
   }
 
   /**

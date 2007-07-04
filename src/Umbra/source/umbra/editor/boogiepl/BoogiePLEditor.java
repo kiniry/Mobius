@@ -74,8 +74,10 @@ public class BoogiePLEditor extends TextEditor {
 
   /**
    * A constructor with no BoogiePL-related specificity
+   * TODO
+   * @param an_editor TODO
    */
-  public BoogiePLEditor(final BytecodeEditor editor) {
+  public BoogiePLEditor(final BytecodeEditor an_editor) {
     super();
     mod = Composition.getMod();
     colorManager = ColorManager.getColorManager();

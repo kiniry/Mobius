@@ -15,13 +15,15 @@ public class StringInstruction extends MultiInstruction {
 
   /**
    * This creates an instance of an instruction
-   * named as <code>a_name</code> at the line number
-   * <code>a_line</code>.
+   * named as <code>a_name</code> in a line the text of which is
+   * <code>a_line_text</code>. Currently it just calls the constructor of the
+   * superclass.
    *
-   * @param a_line the line number of the instruction
+   * @param a_line_text the line number of the instruction
    * @param a_name the mnemonic name of the instruction
+   * @see InstructionLineController#InstructionLineController(String, String)
    */
-  public StringInstruction(final String a_line, final String a_name) {
-    super(a_line, a_name);
+  public StringInstruction(final String a_line_text, final String a_name) {
+    super(a_line_text, a_name);
   }
 }

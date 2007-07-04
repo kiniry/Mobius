@@ -5,7 +5,6 @@ package umbra.instructions;
 
 
 /**
- *
  * This is a class for a line with whitespaces only.
  *
  * @author Jarosław Paszek (jp209217@students.mimuw.edu.pl)
@@ -14,10 +13,14 @@ package umbra.instructions;
 public class EmptyLineController extends BytecodeLineController {
 
   /**
-   * TODO
+   * This constructor remembers only the line text of the line which contains
+   * solely whitespaces.
+   *
+   * @param a_line_text the string representation of the line
+   * @see BytecodeLineController#BytecodeLineController(String)
    */
-  public EmptyLineController(final String l) {
-    super(l);
+  public EmptyLineController(final String a_line_text) {
+    super(a_line_text);
   }
 
   /**

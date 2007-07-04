@@ -77,10 +77,14 @@ public class BytecodeConfiguration extends SourceViewerConfiguration {
 
   /**
    * TODO
+   * @param a_source_viewer TODO
+   * @param the_content_type TODO
+   * @return TODO
+   * @see SourceViewerConfiguration#getDoubleClickStrategy(ISourceViewer, String)
    */
   public final ITextDoubleClickStrategy getDoubleClickStrategy(
-    final ISourceViewer sourceViewer,
-    final String contentType) {
+                                  final ISourceViewer a_source_viewer,
+                                  final String the_content_type) {
     if (my_dblClickStrategy == null)
       my_dblClickStrategy = new BytecodeDoubleClickStrategy();
     return my_dblClickStrategy;
@@ -89,7 +93,7 @@ public class BytecodeConfiguration extends SourceViewerConfiguration {
   /**
    * TODO
    *
-   * @return
+   * @return TODO
    */
   protected final BytecodeScanner getBytecodeScanner() {
     if (scanner == null) {

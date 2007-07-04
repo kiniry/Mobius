@@ -88,9 +88,10 @@ public class BoogiePLContribution extends ControlContribution {
 
   /**
    * TODO
+   * @param a_doc TODO
+   * @throws BadLocationException TODO
    */
-  private void init(final IDocument doc) throws BadLocationException
-  {
+  private void init(final IDocument a_doc) throws BadLocationException {
     /*
     bcc = new BoogiePLController();
     bcc.init(doc);
@@ -234,17 +235,18 @@ public class BoogiePLContribution extends ControlContribution {
 
   /**
    * TODO
+   * @param a_doc TODO
    */
-  public final void addListener(final IDocument document) {
+  public final void addListener(final IDocument a_doc) {
     final BoogiePLListener listener = new BoogiePLListener();
-    document.addDocumentListener(listener);
+    a_doc.addDocumentListener(listener);
   }
 
   /**
-   * @param editor
+   * @param an_editor TODO
    */
-  public final void setActiveEditor(final IEditorPart editor) {
-    activeEditor = editor;
+  public final void setActiveEditor(final IEditorPart an_editor) {
+    activeEditor = an_editor;
   }
 
   /**

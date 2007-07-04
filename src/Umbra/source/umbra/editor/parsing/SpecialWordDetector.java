@@ -18,19 +18,25 @@ public class SpecialWordDetector implements IWordDetector {
 
   /**
    * TODO
+   *
+   * @param a_char TODO
+   * @return TODO
    */
-  public final boolean isWordStart(final char c) {
-    return (Character.isWhitespace(c));
+  public final boolean isWordStart(final char a_char) {
+    return (Character.isWhitespace(a_char));
   }
 
   /**
    * TODO
+   *
+   * @param a_char TODO
+   * @return TODO
    */
-  public final boolean isWordPart(final char c) {
+  public final boolean isWordPart(final char a_char) {
     for (int i = 0; i < IBytecodeStrings.keys.length; i++) {
-      if (c == IBytecodeStrings.keys[i]) return true;
+      if (a_char == IBytecodeStrings.keys[i]) return true;
     }
-    return (c == '[' || c == '(' || c == ')');
+    return (a_char == '[' || a_char == '(' || a_char == ')');
   }
 
 }

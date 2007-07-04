@@ -11,6 +11,8 @@ import umbra.UmbraHelper;
  * the headers or at the end of the method,
  * containing some method data, not to be edited by a user.
  *
+ * TODO lines of which kind of file are checked here?
+ *
  * @author Tomek Batkiewicz (tb209231@students.mimuw.edu.pl)
  * @author Jarosław Paszek (jp209217@students.mimuw.edu.pl)
  * @version a-01
@@ -18,10 +20,27 @@ import umbra.UmbraHelper;
 public class CodeLineController extends BytecodeLineController {
 
   /**
-   * TODO
+   * The constant gives position in the line before which (<) the
+   * text "max_stack=" must occur.
    */
-  public CodeLineController(final String l) {
-    super(l);
+  private static final int MAX_STACK_BOUND = 6;
+
+  /**
+   * The constant gives position in the line strictly before which (<) the
+   * parenthesis character must occur.
+   */
+  private static final int PARENTHESIS_BOUND = 5;
+
+  /**
+   * This constructor remembers only the line text of the line with the "Code"
+   * keyword.
+   *
+   * @param a_line_text the string representation of the line in the bytecode
+   *               document
+   * @see BytecodeLineController#BytecodeLineController(String)
+   */
+  public CodeLineController(final String a_line_text) {
+    super(a_line_text);
   }
 
   /**
@@ -32,23 +51,23 @@ public class CodeLineController extends BytecodeLineController {
    * these lines is not provided.
    *
    * @return <code>true</code> when the line contained in
-   *         {@ref BytecodeLineController#line} contains a correct line from
+   *         {@ref BytecodeLineController#my_line_text} contains a correct line from
    *         the bytecode file
    * @see BytecodeLineController#correct()
    */
   public final boolean correct() {
     //Code must exist because otherwise it would not be the class
     boolean res = false;
-    if (this.line.startsWith("Code")) {
+    if (this.my_line_text.startsWith("Code")) {
       res = correctCode();
     }
-    if (this.line.startsWith("LineNumber")) {
+    if (this.my_line_text.startsWith("LineNumber")) {
       res = true;
     }
-    if (this.line.startsWith("LocalVariable")) {
+    if (this.my_line_text.startsWith("LocalVariable")) {
       res = correctLocalVariable();
     }
-    if (this.line.startsWith("Attribute")) {
+    if (this.my_line_text.startsWith("Attribute")) {
       res = correctAttribute();
     }
 
@@ -57,9 +76,10 @@ public class CodeLineController extends BytecodeLineController {
 
   /**
    * TODO
+   * @return TODO
    */
   private boolean correctAttribute() {
-    final String s = UmbraHelper.stripAllWhitespace(line);
+    final String s = UmbraHelper.stripAllWhitespace(my_line_text);
     if ((s.indexOf("(s)=")) > -1) {
       return true;
     }
@@ -68,21 +88,17 @@ public class CodeLineController extends BytecodeLineController {
 
   /**
    * TODO
+   * @return TODO
    */
   private boolean correctLocalVariable() {
-    final String s = UmbraHelper.stripAllWhitespace(line);
-    if ((s.indexOf("start_pc=")) > -1) {
-      if ((s.indexOf("length=")) > -1) {
-        if ((s.indexOf("index=")) > -1) {
-          if ((line.indexOf("start_pc")) > -1) {
-            if ((line.indexOf("length")) > -1) {
-              if ((line.indexOf("index")) > -1) {
-                return true;
-              }
-            }
-          }
-        }
-      }
+    final String s = UmbraHelper.stripAllWhitespace(my_line_text);
+    if ((s.indexOf("start_pc=")) > -1 &&
+        (s.indexOf("length=")) > -1 &&
+        (s.indexOf("index=")) > -1 &&
+        (my_line_text.indexOf("start_pc")) > -1 &&
+        (my_line_text.indexOf("length")) > -1 &&
+        (my_line_text.indexOf("index")) > -1) {
+      return true;
     }
     return false;
   }
@@ -91,10 +107,10 @@ public class CodeLineController extends BytecodeLineController {
    * TODO
    */
   private boolean correctCode() {
-    if (!(line.indexOf("(") > 0))
+    if (!(my_line_text.indexOf("(") > 0))
       return false;
 
-    final String s = UmbraHelper.stripAllWhitespace(line);
+    final String s = UmbraHelper.stripAllWhitespace(my_line_text);
     int i = 0;
     //czy jest to co trzeba
     if (!(s.indexOf("max_stack=") > 0))
@@ -142,29 +158,36 @@ public class CodeLineController extends BytecodeLineController {
     if ((s.indexOf(")")) + 1 < (s.length()))
       return false;
 
-    //  czy kolejnosc ok
-    if ((s.indexOf("Code")) < (s.indexOf("(")))
-      if ((s.indexOf("(")) < (s.indexOf("max_stack=")))
-        if ((s.indexOf("max_stack=")) < (s.indexOf(",max_locals=")))
-          if ((s.indexOf(",max_locals=")) < (s.indexOf(",code_length=")))
-            if ((s.indexOf(",code_length")) < (s.indexOf(")")))
-              if ((s.indexOf("(")) < 5)
-                if ((s.indexOf("max_stack=")) < 6)
-                  return true;
+    //is the sequence ok?
+    if ((s.indexOf("Code")) < (s.indexOf("(")) &&
+        (s.indexOf("(")) < (s.indexOf("max_stack=")) &&
+        (s.indexOf("max_stack=")) < (s.indexOf(",max_locals=")) &&
+        (s.indexOf(",max_locals=")) < (s.indexOf(",code_length=")) &&
+        (s.indexOf(",code_length")) < (s.indexOf(")")) &&
+        (s.indexOf("(")) < PARENTHESIS_BOUND &&
+        (s.indexOf("max_stack=")) < MAX_STACK_BOUND) {
+      return true;
+    }
     return false;
   }
 
   /**
-   * TODO
-   * @param s
-   * @param string
-   * @param string2
-   * @return
+   * This method checks if the string <code>a_string2</code> starts in the
+   * string <code>a_string0</code> farther than at the first position after
+   * the string <code>a_string1</code>. This works properly only when
+   * the strings <code>a_string1</code>, <code>a_string2</code> actually
+   * occur in <code>a_string</code> and this condition is not checked here.
+   *
+   * @param a_string0 a string in which the positions are checked
+   * @param a_string1 the string to occur first
+   * @param a_string2 the string to occur next
+   * @return <code>true</code> when <code>a_string2</code> occrus after
+   * <code>a_string2</code>
    */
-  private boolean isOneStrictlyAfterAnother(final String s,
-                                            final String string1,
-                                            final String string2) {
-    final int len = string1.length() + 1;
-    return ((s.indexOf(string1)) + len) > (s.indexOf(string2));
+  private boolean isOneStrictlyAfterAnother(final String a_string0,
+                                            final String a_string1,
+                                            final String a_string2) {
+    final int len = a_string1.length() + 1;
+    return ((a_string0.indexOf(a_string1)) + len) > (a_string0.indexOf(a_string2));
   }
 }

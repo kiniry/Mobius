@@ -27,10 +27,17 @@ public class LdcInstruction extends OtherInstruction {
 
 
   /**
-   * TODO
+   * This creates an instance of an instruction
+   * named as <code>a_name</code> in a line the text of which is
+   * <code>a_line_text</code>. Currently it just calls the constructor of the
+   * superclass.
+   *
+   * @param a_line_text the line number of the instruction
+   * @param a_name the mnemonic name of the instruction
+   * @see InstructionLineController#InstructionLineController(String, String)
    */
-  public LdcInstruction(final String l, final String n) {
-    super(l, n);
+  public LdcInstruction(final String a_line_text, final String a_name) {
+    super(a_line_text, a_name);
   }
 
   /**
@@ -40,19 +47,21 @@ public class LdcInstruction extends OtherInstruction {
     boolean isd;
     final String licznik = "0123456789";
     int number;
-    if (line.lastIndexOf("(") >= line.lastIndexOf(")")) {
-      UmbraPlugin.messagelog("linia jest niepoprawna nic nie tworzy " + line.lastIndexOf("(") + " " + line.lastIndexOf(")"));
+    if (my_line_text.lastIndexOf("(") >= my_line_text.lastIndexOf(")")) {
+      UmbraPlugin.messagelog("linia jest niepoprawna nic nie tworzy " +
+                             my_line_text.lastIndexOf("(") + " " +
+                             my_line_text.lastIndexOf(")"));
     } else {
       isd = true;
-      for (int i = line.lastIndexOf("(") + 1; i < line.lastIndexOf(")"); i++) {
-        if (!Character.isDigit(line.charAt(i))) {
+      for (int i = my_line_text.lastIndexOf("(") + 1; i < my_line_text.lastIndexOf(")"); i++) {
+        if (!Character.isDigit(my_line_text.charAt(i))) {
           isd = false;
         }
       }
       if (isd) {
         number = 0;
-        for (int i = line.lastIndexOf("(") + 1; i < line.lastIndexOf(")"); i++) {
-          number = 10 * number + licznik.indexOf(line.substring(i, i + 1));
+        for (int i = my_line_text.lastIndexOf("(") + 1; i < my_line_text.lastIndexOf(")"); i++) {
+          number = 10 * number + licznik.indexOf(my_line_text.substring(i, i + 1));
         }
         return number;
       }
@@ -93,7 +102,7 @@ public class LdcInstruction extends OtherInstruction {
   public final boolean correct()
   {
     String s, str;
-    s = UmbraHelper.stripAllWhitespace(line);
+    s = UmbraHelper.stripAllWhitespace(my_line_text);
     final String[] s2 = IBytecodeStrings.ldc;
     int j, y, okok, okokok;
     for (j = 0; j < s2.length; j++) {
@@ -104,13 +113,13 @@ public class LdcInstruction extends OtherInstruction {
           if (s.lastIndexOf("(") < 2) return false;
           if (s.lastIndexOf(")") < 2) return false;
           int m, n, o;
-          m = line.lastIndexOf("(");
-          n = line.lastIndexOf(")");
+          m = my_line_text.lastIndexOf("(");
+          n = my_line_text.lastIndexOf(")");
           if (m + 1 >= n) {
             return false;
           }
           for (o = m + 1; o < n; o++) {
-            if (!(Character.isDigit(line.charAt(o)))) return false;
+            if (!(Character.isDigit(my_line_text.charAt(o)))) return false;
           }
           //two types: number and (number) or string and (number)
           okok = 0;
@@ -137,15 +146,15 @@ public class LdcInstruction extends OtherInstruction {
           f = 0;
           g = 0;
           l = 0;
-          e = line.lastIndexOf("(");
-          d = line.indexOf(s2[j]) + s2[j].length();
+          e = my_line_text.lastIndexOf("(");
+          d = my_line_text.indexOf(s2[j]) + s2[j].length();
           for (c = d; c < e; c++) {
             l = 0;
-            if (Character.isDigit(line.charAt(c))) {
+            if (Character.isDigit(my_line_text.charAt(c))) {
               f = 1;
             }
             if (f == 1) {
-              if (!(Character.isDigit(line.charAt(c)))) {
+              if (!(Character.isDigit(my_line_text.charAt(c)))) {
                 if (g == 1) {
                   l = 0;
                 } else {
@@ -155,7 +164,7 @@ public class LdcInstruction extends OtherInstruction {
               }
             }
             if ((l == 0) && (g == 1)) {
-              if  (!(Character.isDigit(line.charAt(c)))) {
+              if  (!(Character.isDigit(my_line_text.charAt(c)))) {
                 okok = 1;
               }
             }
@@ -167,7 +176,6 @@ public class LdcInstruction extends OtherInstruction {
             }
             return true;
           }
-
           return false;
         }
     }

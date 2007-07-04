@@ -46,12 +46,25 @@ import umbra.editor.parsing.IBytecodeStrings;
 public class JumpInstruction extends NumInstruction {
 
 
+  /**
+   * TODO not generalized !-3, this magic number must be replaced with a
+   * better heuristic to deal with the case when the target jump line does
+   * not exist.
+   */
+  private static final int MAGIC_THREE = 3;
 
   /**
-   * TODO
+   * This creates an instance of an instruction
+   * named as <code>a_name</code> in a line the text of which is
+   * <code>a_line</code>. Currently it just calls the constructor of the
+   * superclass.
+   *
+   * @param a_line_text the line number of the instruction
+   * @param a_name the mnemonic name of the instruction
+   * @see InstructionLineController#InstructionLineController(String, String)
    */
-  public JumpInstruction(final String l, final String n) {
-    super(l, n);
+  public JumpInstruction(final String a_line_text, final String a_name) {
+    super(a_line_text, a_name);
   }
 
 
@@ -65,7 +78,7 @@ public class JumpInstruction extends NumInstruction {
   public final boolean correct()
   {
     String s;
-    s = UmbraHelper.stripAllWhitespace(line);
+    s = UmbraHelper.stripAllWhitespace(my_line_text);
     final String[] s2 = IBytecodeStrings.jump;
     int j;
     int y;
@@ -80,15 +93,15 @@ public class JumpInstruction extends NumInstruction {
           int a, b, d, e, f, g;
           a = (s.length() - s.indexOf("#"));
           int c = 0;
-          e = line.length() - line.indexOf("#");
+          e = my_line_text.length() - my_line_text.indexOf("#");
           f = 0;
-          g = line.length();
+          g = my_line_text.length();
           for (d = 0; d < e; d++) {
-            if (Character.isDigit(line.charAt(g - d - 1))) {
+            if (Character.isDigit(my_line_text.charAt(g - d - 1))) {
               f = 1;
             }
             if (f == 0) {
-              if (Character.isWhitespace(line.charAt(g - d - 1))) {
+              if (Character.isWhitespace(my_line_text.charAt(g - d - 1))) {
                 c++;
               }
             }
@@ -112,17 +125,17 @@ public class JumpInstruction extends NumInstruction {
     int number;
 
     isd = true;
-    int upto = line.length(); //we seek the first non-digit character after #
-    for (int i = line.lastIndexOf("#") + 1; i < line.length(); i++) {
-      if (!Character.isDigit(line.charAt(i))) {
+    int upto = my_line_text.length(); //we seek the first non-digit character after #
+    for (int i = my_line_text.lastIndexOf("#") + 1; i < my_line_text.length(); i++) {
+      if (!Character.isDigit(my_line_text.charAt(i))) {
         upto = i;
         break;
       }
     }
     if (isd) { //TODO is is necessary?
       number = 0;
-      for (int i = line.lastIndexOf("#") + 1; i < upto; i++) {
-        number = 10 * number + counter.indexOf(line.substring(i, i + 1));
+      for (int i = my_line_text.lastIndexOf("#") + 1; i < upto; i++) {
+        number = 10 * number + counter.indexOf(my_line_text.substring(i, i + 1));
       }
       return number;
     }
@@ -222,10 +235,7 @@ public class JumpInstruction extends NumInstruction {
     InstructionHandle iha = null;
     // add parameter to getInstruction
     iha = an_ins_list.findHandle(i);
-    //TODO not generalized !-3, this magic number must be replaced with a
-    //better heuristic to deal with the case when the target jump line does
-    //not exist
-    if (iha == null) iha = an_ins_list.findHandle(i - 3);
+    if (iha == null) iha = an_ins_list.findHandle(i - MAGIC_THREE);
     UmbraPlugin.messagelog("i = " + i);
     if (an_ins_list == null) UmbraPlugin.messagelog("null il");
     else if (iha == null) UmbraPlugin.messagelog("null iha");

@@ -27,6 +27,17 @@ import umbra.UmbraPlugin;
  * @version a-01
  */
 public class BoogiePLDocument extends Document {
+
+  /**
+   * TODO.
+   */
+  private static final int NO_OF_POSITIONS = 2;
+
+  /**
+   * TODO: why we increase by 2?
+   */
+  private static final int SYNC_INCREMENT = 2;
+
   /**
    * TODO
    */
@@ -42,13 +53,15 @@ public class BoogiePLDocument extends Document {
 
   /**
    * TODO
+   * @param an_editor TODO
    */
-  public final void setRelatedEditor(final CompilationUnitEditor editor) {
-    fRelatedEditor = editor;
+  public final void setRelatedEditor(final CompilationUnitEditor an_editor) {
+    fRelatedEditor = an_editor;
   }
 
   /**
-   * TODO
+   * @return the Java source code editor corresponding to the current
+   * bytecode file
    */
   public final CompilationUnitEditor getRelatedEditor() {
     return fRelatedEditor;
@@ -56,13 +69,17 @@ public class BoogiePLDocument extends Document {
 
   /**
    * TODO
+   *
+   * @param a_javaclass TODO
    */
-  public final void setJavaClass(final JavaClass jc) {
-    fJavaClass = jc;
+  public final void setJavaClass(final JavaClass a_javaclass) {
+    fJavaClass = a_javaclass;
   }
 
   /**
    * TODO
+   *
+   * @return TODO
    */
   public final JavaClass getJavaClass() {
     return fJavaClass;
@@ -70,9 +87,10 @@ public class BoogiePLDocument extends Document {
 
   /**
    * TODO
+   * @param a_class_gen TODO
    */
-  public final void setClassGen(final ClassGen cg) {
-    classGen = cg;
+  public final void setClassGen(final ClassGen a_class_gen) {
+    classGen = a_class_gen;
   }
 
   /**
@@ -125,7 +143,7 @@ public class BoogiePLDocument extends Document {
   private int[] syncBS(final IDocument Sdoc, final JavaClass jc, final int line) throws BadLocationException
   // Synchronizacja: Btc --> Src
   {
-    final int[] w = new int[2];
+    final int[] w = new int[NO_OF_POSITIONS];
     final int maxL = Sdoc.getNumberOfLines() - 1;
     int l_od = 0;
     int l_do = maxL;
@@ -140,7 +158,7 @@ public class BoogiePLDocument extends Document {
     Method m;
     for (int i = 0; i < methods.length; i++) {
       m = methods[i];
-      pos += 2;
+      pos += SYNC_INCREMENT;
       l = m.getLineNumberTable().getLineNumberTable().length;
       for (j = 0; j < l; j++) {
         pop = lnr;

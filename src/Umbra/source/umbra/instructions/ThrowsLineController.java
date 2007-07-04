@@ -16,10 +16,14 @@ package umbra.instructions;
 public class ThrowsLineController extends BytecodeLineController {
 
   /**
-   * TODO
+   * This constructor remembers only the line text of a line with the throws
+   * instruction.
+   *
+   * @param a_line_text the string representation of the line
+   * @see BytecodeLineController#BytecodeLineController(String)
    */
-  public ThrowsLineController(final String l) {
-    super(l);
+  public ThrowsLineController(final String a_line_text) {
+    super(a_line_text);
   }
 
 

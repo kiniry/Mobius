@@ -37,17 +37,21 @@ public class NonRuleBasedDamagerRepairer
 
   /**
    * Constructor for NonRuleBasedDamagerRepairer.
+   *
+   * @param a_default_text_attribute TODO
    */
   public NonRuleBasedDamagerRepairer(
-        /*@ non_null @*/ final TextAttribute defaultTextAttribute) {
-    fDefaultTextAttribute = defaultTextAttribute;
+        /*@ non_null @*/ final TextAttribute a_default_text_attribute) {
+    fDefaultTextAttribute = a_default_text_attribute;
   }
 
   /**
+   * TODO
+   * @param a_doc TODO
    * @see IPresentationRepairer#setDocument(IDocument)
    */
-  public final void setDocument(final IDocument document) {
-    fDocument = document;
+  public final void setDocument(final IDocument a_doc) {
+    fDocument = a_doc;
   }
 
   /**
@@ -74,23 +78,28 @@ public class NonRuleBasedDamagerRepairer
   }
 
   /**
+   * TODO.
+   * @param a_partition TODO
+   * @param an_event TODO
+   * @param a_doc_partitioning_chngd TODO
+   * @return TODO
    * @see IPresentationDamager#getDamageRegion(ITypedRegion, DocumentEvent, boolean)
    */
   public final IRegion getDamageRegion(
-    final ITypedRegion partition,
-    final DocumentEvent event,
-    final boolean documentPartitioningChanged) {
-    if (!documentPartitioningChanged) {
+    final ITypedRegion a_partition,
+    final DocumentEvent an_event,
+    final boolean a_doc_partitioning_chngd) {
+    if (!a_doc_partitioning_chngd) {
       try {
 
         final IRegion info =
-          fDocument.getLineInformationOfOffset(event.getOffset());
-        final int start = Math.max(partition.getOffset(), info.getOffset());
+          fDocument.getLineInformationOfOffset(an_event.getOffset());
+        final int start = Math.max(a_partition.getOffset(), info.getOffset());
 
         int end =
-          event.getOffset() + (event.getText() == null ?
-                                         event.getLength() :
-                                         event.getText().length());
+          an_event.getOffset() + (an_event.getText() == null ?
+                                         an_event.getLength() :
+                                         an_event.getText().length());
 
         if (info.getOffset() <= end &&
             end <= info.getOffset() + info.getLength()) {
@@ -101,7 +110,7 @@ public class NonRuleBasedDamagerRepairer
 
         end =
           Math.min(
-            partition.getOffset() + partition.getLength(),
+            a_partition.getOffset() + a_partition.getLength(),
             end);
         return new Region(start, end - start);
 
@@ -109,7 +118,7 @@ public class NonRuleBasedDamagerRepairer
       }
     }
 
-    return partition;
+    return a_partition;
   }
 
   /**

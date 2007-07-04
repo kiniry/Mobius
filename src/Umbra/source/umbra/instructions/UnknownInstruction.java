@@ -17,18 +17,21 @@ public class UnknownInstruction extends InstructionLineController {
 
 
   /**
-   * This constructor remembers only the content of the line
-   * and the form of the mnemonic.
+   * This constructor creates an instruction which is not recognized. It stores
+   * only the content of the line and the form of the mnemonic by calling
+   * the superclass constructor.
    *
-   * @param l the line with the unknown mnemonic
-   * @param n the unknown mnemonic
+   * @param a_line_text the line with the unknown mnemonic
+   * @param a_name the unknown mnemonic
+   * @see InstructionLineController#InstructionLineController(String, String)
    */
-  public UnknownInstruction(final String l, final String n) {
-    super(l, n);
+  public UnknownInstruction(final String a_line_text, final String a_name) {
+    super(a_line_text, a_name);
   }
   /**
-   * Instruction out of classification must be obviously incorrect.
+   * Instruction out of classification is never correct.
    *
+   * @return <code>false</code>
    * @see  InstructionLineController#correct()
    */
   public final boolean correct() {

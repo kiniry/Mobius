@@ -16,10 +16,12 @@ public class UnknownLineController extends BytecodeLineController {
    * This constructor only remembers the line with the
    * unrecognized content.
    *
-   * @param a_line the line with the unrecognized content
+   * @param a_line_text the string representation of the line with unrecognized
+   * content
+   * @see BytecodeLineController#BytecodeLineController(String)
    */
-  public UnknownLineController(final String a_line) {
-    super(a_line);
+  public UnknownLineController(final String a_line_text) {
+    super(a_line_text);
   }
 
 }

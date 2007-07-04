@@ -35,6 +35,7 @@ public class SpecialNumberRule extends NumberRule {
    * @param a_start TODO
    * @param an_end TODO
    * @param a_token TODO
+   * @see NumberRule#NumberRule(IToken)
    */
   public SpecialNumberRule(final char a_start,
                            final char an_end,

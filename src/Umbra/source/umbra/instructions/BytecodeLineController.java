@@ -28,9 +28,9 @@ import umbra.UmbraPlugin;
 public abstract class BytecodeLineController {
 
   /**
-   * The string representation of the bytecode line number.
+   * The string representation of the line in the bytecode file
    */
-  protected String line;
+  protected String my_line_text;
 
   /**
    * The number of the method that contains the current line.
@@ -44,11 +44,12 @@ public abstract class BytecodeLineController {
   /**
    * TODO
    *
-   * @param l the string representation of the line number.
+   * @param a_line the string representation of the line in the bytecode
+   *               document
    */
-  public BytecodeLineController(final String l) {
+  public BytecodeLineController(final String a_line) {
     super();
-    line = l;
+    my_line_text = a_line;
   }
 
   /**
@@ -92,52 +93,58 @@ public abstract class BytecodeLineController {
   /**
    * TODO
    *
-   * @param il
-   * @param ins
+   * @param an_ilist TODO
+   * @param an_ins TODO
    */
-  public void setTarget(final InstructionList il, final Instruction ins) {
+  public void setTarget(final InstructionList an_ilist,
+                        final Instruction an_ins) {
 
   }
 
   /**
    * TODO
    *
-   * @param nextLine
-   * @param cg a {@ref ClassGen} object in the {@ref BytecodeDocument} object
+   * @param the_next_line TODO
+   * @param a_classgen a {@ref ClassGen} object in the {@ref BytecodeDocument} object
    *       that describes the state of the bytecode editor which contains
    *       the line that corresponds to the current object.
-   * @param ins
-   * @param metEnd
-   * @param instructions
-   * @param off
+   * @param an_ins TODO
+   * @param a_methend_flag TODO
+   * @param the_instructions TODO
+   * @param an_off TODO
    */
-  public void initHandle(final BytecodeLineController nextLine, final ClassGen cg,
-      final Instruction ins, final boolean metEnd,
-      final LinkedList instructions, final int off) {
+  public void initHandle(final BytecodeLineController the_next_line,
+                         final ClassGen a_classgen,
+                         final Instruction an_ins,
+                         final boolean a_methend_flag,
+                         final LinkedList the_instructions,
+                         final int an_off) {
   }
 
   /**
    * TODO
    *
-   * @param oldLine
-   * @param nextLine
-   * @param cg a {@ref ClassGen} object in the {@ref BytecodeDocument} object
+   * @param the_old_line TODO
+   * @param the_next_line TODO
+   * @param a_classgen a {@ref ClassGen} object in the {@ref BytecodeDocument} object
    *       that describes the state of the bytecode editor which contains
    *       the line that corresponds to the current object.
-   * @param ins
-   * @param metEnd
-   * @param theLast
-   * @param instructions
-   * @param off
+   * @param an_ins TODO
+   * @param a_methend_flag TODO
+   * @param the_last_flag TODO
+   * @param the_instructions TODO
+   * @param an_off TODO
    */
-  public void update(final BytecodeLineController oldLine,
-             final BytecodeLineController nextLine,
-             final ClassGen cg,
-             final Instruction ins,
-             final boolean metEnd, final boolean theLast,
-             final LinkedList instructions, final int off) {
-    if (oldLine.getHandle() != null) { //in case this was an instruction before
-      oldLine.dispose(nextLine, cg, theLast, instructions, off);
+  public void update(final BytecodeLineController the_old_line,
+                     final BytecodeLineController the_next_line,
+                     final ClassGen a_classgen,
+                     final Instruction an_ins,
+                     final boolean a_methend_flag,
+                     final boolean the_last_flag,
+                     final LinkedList the_instructions,
+                     final int an_off) {
+    if (the_old_line.getHandle() != null) { //in case this was an instruction before
+      the_old_line.dispose(the_next_line, a_classgen, the_last_flag, the_instructions, an_off);
     }
   }
 
@@ -215,10 +222,10 @@ public abstract class BytecodeLineController {
   /**
    * TODO
    *
-   * @param index2
+   * @param an_index TODO
    */
-  public void setIndex(final int index2) {
-    this.index = index2;
+  public void setIndex(final int an_index) {
+    this.index = an_index;
   }
 
   /**
@@ -228,6 +235,6 @@ public abstract class BytecodeLineController {
    * @return the representation of the line
    */
   public final String getLineContent() {
-    return line;
+    return my_line_text;
   }
 }

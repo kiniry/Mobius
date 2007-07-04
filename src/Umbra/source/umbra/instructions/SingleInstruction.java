@@ -97,6 +97,7 @@ import umbra.editor.parsing.IBytecodeStrings;
  * depending on parameters. It redefines some crucial while
  * handling with single instruction methods(correctness, getting handle).
  * Various instructions with no parameter.
+ * TODO rewrite the description
  *
  * @author Jarosław Paszek (jp209217@students.mimuw.edu.pl)
  * @version a-01
@@ -134,10 +135,17 @@ public class SingleInstruction extends InstructionLineController {
   private static final int BUILTIN_NUMBER_5 = 5;
 
   /**
-   * TODO
+   * This creates an instance of an instruction
+   * named as <code>a_name</code> with the line text
+   * <code>a_line</code>. Currently it just calls the constructor of the
+   * superclass.
+   *
+   * @param a_line_text the line number of the instruction
+   * @param a_name the mnemonic name of the instruction
+   * @see InstructionLineController#InstructionLineController(String, String)
    */
-  public SingleInstruction(final String l, final String n) {
-    super(l, n);
+  public SingleInstruction(final String a_line_text, final String a_name) {
+    super(a_line_text, a_name);
   }
 
   /**
@@ -272,15 +280,14 @@ public class SingleInstruction extends InstructionLineController {
   }
 
   /**
-   * Simple instruction line is correct if it has
-   * no parameter
+   * Simple instruction line is correct if it has no parameter.
    *
-   *@see InstructionLineController#correct()
+   * @return <code>true</code> when the instruction mnemonic is the only text
+   *         in the line of the instruction text
+   * @see InstructionLineController#correct()
    */
-  public final boolean correct()
-  {
-    String s;
-    s = UmbraHelper.stripAllWhitespace(line);
+  public final boolean correct() {
+    final String s = UmbraHelper.stripAllWhitespace(my_line_text);
     final String[] s2 = IBytecodeStrings.single;
     int j;
     for (j = 0; j < s2.length; j++) {

@@ -26,10 +26,17 @@ public class InvokeInstruction extends StringInstruction {
 
 
   /**
-   * TODO
+   * This creates an instance of an instruction
+   * named as <code>a_name</code> in a line the text of which is
+   * <code>a_line_text</code>. Currently it just calls the constructor of the
+   * superclass.
+   *
+   * @param a_line_text the line number of the instruction
+   * @param a_name the mnemonic name of the instruction
+   * @see InstructionLineController#InstructionLineController(String, String)
    */
-  public InvokeInstruction(final String l, final String n) {
-    super(l, n);
+  public InvokeInstruction(final String a_line_text, final String a_name) {
+    super(a_line_text, a_name);
   }
 
 
@@ -43,7 +50,7 @@ public class InvokeInstruction extends StringInstruction {
   public final boolean correct()
   {
     String s;
-    s = UmbraHelper.stripAllWhitespace(line);
+    s = UmbraHelper.stripAllWhitespace(my_line_text);
     final String[] s2 = IBytecodeStrings.invoke;
     int j;
     for (j = 0; j < s2.length; j++) {
@@ -52,11 +59,11 @@ public class InvokeInstruction extends StringInstruction {
         if (s.lastIndexOf("(") < 2) return false; //TODO is it all right
         if (s.lastIndexOf(")") < 2) return false;
         int m, n, o;
-        m = line.lastIndexOf("(");
-        n = line.lastIndexOf(")");
+        m = my_line_text.lastIndexOf("(");
+        n = my_line_text.lastIndexOf(")");
         if (m + 1 >= n) return false;
         for (o = m + 1; o < n; o++) {
-          if (!(Character.isDigit(line.charAt(o)))) {
+          if (!(Character.isDigit(my_line_text.charAt(o)))) {
             return false;
           }
         }
@@ -72,17 +79,17 @@ public class InvokeInstruction extends StringInstruction {
     boolean isd;
     final String licznik = "0123456789";
     int number;
-    if (line.lastIndexOf("(") < line.lastIndexOf(")")) {
+    if (my_line_text.lastIndexOf("(") < my_line_text.lastIndexOf(")")) {
       isd = true;
-      for (int i = line.lastIndexOf("(") + 1; i < line.lastIndexOf(")"); i++) {
-        if (!Character.isDigit(line.charAt(i))) {
+      for (int i = my_line_text.lastIndexOf("(") + 1; i < my_line_text.lastIndexOf(")"); i++) {
+        if (!Character.isDigit(my_line_text.charAt(i))) {
           isd = false;
         }
       }
       if (isd) {
         number = 0;
-        for (int i = line.lastIndexOf("(") + 1; i < line.lastIndexOf(")"); i++) {
-          number = 10 * number + licznik.indexOf(line.substring(i, i + 1));
+        for (int i = my_line_text.lastIndexOf("(") + 1; i < my_line_text.lastIndexOf(")"); i++) {
+          number = 10 * number + licznik.indexOf(my_line_text.substring(i, i + 1));
         }
         return number;
       }

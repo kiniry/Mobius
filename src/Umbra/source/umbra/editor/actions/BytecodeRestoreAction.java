@@ -92,7 +92,7 @@ public class BytecodeRestoreAction extends BytecodeEditorAction {
     final String clnameTo = afile.getFullPath().toPortableString();
     final String lastSegment = afile.getFullPath().lastSegment();
     final String clnameFrom = active.removeLastSegments(1).append("_" +
-                                       num + "_" + lastSegment).toPortableString();
+                                    num + "_" + lastSegment).toPortableString();
     final IFile classFrom = root.getFile(new Path(clnameFrom));
     final IPath clpathTo = new Path(clnameTo);
     final IFile classTo = root.getFile(clpathTo);
@@ -130,7 +130,8 @@ public class BytecodeRestoreAction extends BytecodeEditorAction {
     final String lastSegment = UmbraHelper.replaceLast(aPath.lastSegment(),
                                         UmbraHelper.BYTECODE_EXTENSION,
                                         UmbraHelper.CLASS_EXTENSION);
-    final String fname = aPath.removeLastSegments(1).append(lastSegment).toPortableString();
+    final String fname = aPath.removeLastSegments(1).append(lastSegment).
+                                                     toPortableString();
     final IWorkspace workspace = ResourcesPlugin.getWorkspace();
     return workspace.getRoot().getFile(Path.fromPortableString(fname));
   }
@@ -157,20 +158,23 @@ public class BytecodeRestoreAction extends BytecodeEditorAction {
         num = Integer.parseInt(strnum);
       } catch (NumberFormatException ne) {
         num = UmbraHelper.DEFAULT_HISTORY;
-        once_more = !MessageDialog.openQuestion(getEditor().getSite().getShell(),
+        once_more = !MessageDialog.openQuestion(getEditor().getSite().
+                                                            getShell(),
                                 "Bytecode", "It's not an integer. " +
                                             "Should we use " +
                                             num + " instead");
       }
       if (num > UmbraHelper.MAX_HISTORY || num < UmbraHelper.MIN_HISTORY) {
         num = UmbraHelper.DEFAULT_HISTORY;
-        once_more = !MessageDialog.openQuestion(getEditor().getSite().getShell(),
+        once_more = !MessageDialog.openQuestion(getEditor().getSite().
+                                                            getShell(),
                                               "Bytecode",
                                               "It's not in the range " +
                                               "(" + UmbraHelper.MIN_HISTORY +
                                               " to " +
-                                                    UmbraHelper.MAX_HISTORY + ")." +
-                                              "Should we use " + UmbraHelper.DEFAULT_HISTORY +
+                                              UmbraHelper.MAX_HISTORY + ")." +
+                                              "Should we use " +
+                                              UmbraHelper.DEFAULT_HISTORY +
                                               "?");
       }
     }

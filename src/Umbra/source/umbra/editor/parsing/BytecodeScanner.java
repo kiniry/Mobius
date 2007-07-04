@@ -16,7 +16,8 @@ import umbra.editor.IColorValues;
 /**
  * This class is responsible for coloring all text in a bytecode
  * editor window according to some special 9 rules.
- * Colors are chosen as a token array with a particular style (param 'mod').
+ * Colors are chosen as a token array with a particular colouring style
+ * given in the constructor.
  *
  * @author Wojciech Wąs (ww209224@students.mimuw.edu.pl)
  * @version a-01
@@ -81,56 +82,146 @@ public class BytecodeScanner extends RuleBasedScanner {
    * sets the scanning rules
    *
    *
-   * @param manager the color manager related to the current bytecode
+   * @param the_manager the color manager related to the current bytecode
    *    editor, it must be the same as in the current
    *    {@ref BytecodeConfiguration} object
-   * @param mod the number of the current coloring style, it must be the
+   * @param a_mode the number of the current coloring style, it must be the
    *    same as in the current {@ref BytecodeConfiguration} object
    */
-  public BytecodeScanner(final ColorManager manager, final int mod) {
+  public BytecodeScanner(final ColorManager the_manager, final int a_mode) {
 
-    final IToken[] tokens = TokenGetter.getTokenTab(manager, mod);
+    final IToken[] tokens = TokenGetter.getTokenTab(the_manager, a_mode);
 
+    final IRule[] rules = createRulesArray(tokens);
+    setRules(rules);
+  }
+
+
+  /**
+   * The method creates an array of rules that are used in the colouring of
+   * an edited bytecode document. The array has the size {@ref #NUMBER_OF_RULES}
+   * and its elements are filled as the descriptions of the constants
+   * <code>RULE_*</code> say:
+   * <ul>
+   *   <li> {@ref #RULE_EOL}
+   *   <li> {@ref #RULE_INSTRUCTION}
+   *   <li> {@ref #RULE_SEPARATOR}
+   *   <li> {@ref #RULE_HASH}
+   *   <li> {@ref #RULE_PERCENT}
+   *   <li> {@ref #RULE_PARENTHESES}
+   *   <li> {@ref #RULE_BRACES}
+   *   <li> {@ref #RULE_NUMBER}
+   *   <li> {@ref #RULE_WHITESPACE}
+   *   <li> {@ref #RULE_STAR}
+   *   <li> {@ref #RULE_COMMENT}
+   * </ul>
+   *
+   * @param the_tokens the array of tokens that are returned when rules are
+   *        applied
+   *         TODO verify?
+   * @return the array with the rules
+   */
+  private IRule[] createRulesArray(final IToken[] the_tokens) {
+    //WordRule keyrule = new WordRule(new SpecialWordDetector(),
+    //                                tokens[IColorValues.KEY]);
+    final IRule[] rules = new IRule[NUMBER_OF_RULES];
+    rules[RULE_EOL] = new EndOfLineRule("//", the_tokens[IColorValues.COMMENT]);
+    rules[RULE_INSTRUCTION] = createInstructionRule(the_tokens);
+    rules[RULE_SEPARATOR] = new SpecialNumberRule('\n', ':',
+                     the_tokens[IColorValues.POSITION]);
+    rules[RULE_HASH] = new SpecialNumberRule('#',
+                     the_tokens[IColorValues.HASH]);
+    rules[RULE_PERCENT] = new SpecialNumberRule('%',
+                                                the_tokens[IColorValues.ATTR]);
+    rules[RULE_PARENTHESES] = new SpecialNumberRule('(', ')',
+                                           the_tokens[IColorValues.SQUARE]);
+    //rules[6] = keyrule;
+    rules[RULE_BRACES] = new SingleLineRule("{", "}",
+                                            the_tokens[IColorValues.SQUARE]);
+    rules[RULE_NUMBER] = new NumberRule(the_tokens[IColorValues.NUMBER]);
+    rules[RULE_WHITESPACE] = new WhitespaceRule(
+                                      new BytecodeWhitespaceDetector());
+    rules[RULE_STAR] = new EndOfLineRule("*", the_tokens[IColorValues.ANNOT]);
+    rules[RULE_COMMENT] = new EndOfLineRule("/*",
+                                            the_tokens[IColorValues.ANNOT]);
+    return rules;
+  }
+
+
+  /**
+   * This method creates a rule used for colouring the instructions, BML
+   * keywords, keywords in a "Line" line, and keywords in the "Code" line.
+   * TODO more abstract description required
+   *
+   * @param the_tokens the array with tokens that are returned in different
+   *        situations
+   * @return the rule for colouring the instructions
+   */
+  private WordRule createInstructionRule(final IToken[] the_tokens) {
     final WordRule insrule = new WordRule(new BytecodeWordDetector(),
-                    tokens[IColorValues.DEFAULT]);
-    for (int i = 0; i < IBytecodeStrings.instructions.length; i++) {
-      insrule.addWord(IBytecodeStrings.instructions[i],
-              tokens[IColorValues.BTC_INSTR]);
-    }
+                                          the_tokens[IColorValues.DEFAULT]);
+    tokensForInstructions(the_tokens, insrule);
+    tokensForBMLKeywords(the_tokens, insrule);
+    tokensForLinewords(the_tokens, insrule);
+    tokensForCodeline(the_tokens, insrule);
+    return insrule;
+  }
 
-    for (int i = 0; i < IBytecodeStrings.BMLKeywords.length; i++) {
-      insrule.addWord(IBytecodeStrings.BMLKeywords[i],
-              tokens[IColorValues.ANNOTKEY]);
-    }
 
+  /**
+   * This method associates in <code>the_insrule</code> the words which
+   * occur in a line with the "Code" keyword with the token in
+   * <code>the_tokens</code> under {@ref IColorValues#LINE}.
+   * TODO - better description needed
+   *
+   * @param the_tokens the array with tokens, in particular with the
+   *                   {@ref IColorValues#LINE} token
+   * @param the_insrule the rule in which the association is created
+   */
+  private void tokensForCodeline(final IToken[] the_tokens,
+                                 final WordRule the_insrule) {
+    for (int i = 0; i < IBytecodeStrings.code.length; i++) {
+      the_insrule.addWord(IBytecodeStrings.code[i],
+              the_tokens[IColorValues.LINE]);
+    }
+  }
+
+
+  /**
+   * @param tokens
+   * @param insrule
+   */
+  private void tokensForLinewords(final IToken[] tokens,
+                                  final WordRule insrule) {
     for (int i = 0; i < IBytecodeStrings.linewords.length; i++) {
       insrule.addWord(IBytecodeStrings.linewords[i],
               tokens[IColorValues.LINE]);
     }
+  }
 
-    for (int i = 0; i < IBytecodeStrings.code.length; i++) {
-      insrule.addWord(IBytecodeStrings.code[i],
-              tokens[IColorValues.LINE]);
+
+  /**
+   * @param tokens
+   * @param insrule
+   */
+  private void tokensForBMLKeywords(final IToken[] tokens,
+                                    final WordRule insrule) {
+    for (int i = 0; i < IBytecodeStrings.BMLKeywords.length; i++) {
+      insrule.addWord(IBytecodeStrings.BMLKeywords[i],
+              tokens[IColorValues.ANNOTKEY]);
     }
+  }
 
-    //WordRule keyrule = new WordRule(new SpecialWordDetector(), tokens[IColorValues.KEY]);
 
-    final IRule[] rules = new IRule[NUMBER_OF_RULES];
-    rules[RULE_EOL] = new EndOfLineRule("//", tokens[IColorValues.COMMENT]);
-    rules[RULE_INSTRUCTION] = insrule;
-    rules[RULE_SEPARATOR] = new SpecialNumberRule('\n', ':',
-                     tokens[IColorValues.POSITION]);
-    rules[RULE_HASH] = new SpecialNumberRule('#',
-                     tokens[IColorValues.HASH]);
-    rules[RULE_PERCENT] = new SpecialNumberRule('%', tokens[IColorValues.ATTR]);
-    rules[RULE_PARENTHESES] = new SpecialNumberRule('(', ')', tokens[IColorValues.SQUARE]);
-    //rules[6] = keyrule;
-    rules[RULE_BRACES] = new SingleLineRule("{", "}", tokens[IColorValues.SQUARE]);
-    rules[RULE_NUMBER] = new NumberRule(tokens[IColorValues.NUMBER]);
-    rules[RULE_WHITESPACE] = new WhitespaceRule(new BytecodeWhitespaceDetector());
-    rules[RULE_STAR] = new EndOfLineRule("*", tokens[IColorValues.ANNOT]);
-    rules[RULE_COMMENT] = new EndOfLineRule("/*", tokens[IColorValues.ANNOT]);
-
-    setRules(rules);
+  /**
+   * @param tokens
+   * @param insrule
+   */
+  private void tokensForInstructions(final IToken[] tokens,
+                                     final WordRule insrule) {
+    for (int i = 0; i < IBytecodeStrings.instructions.length; i++) {
+      insrule.addWord(IBytecodeStrings.instructions[i],
+              tokens[IColorValues.BTC_INSTR]);
+    }
   }
 }

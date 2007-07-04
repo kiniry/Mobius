@@ -44,9 +44,11 @@ public final class Composition {
 
   /**
    * This method sets the current initial colouring style.
+   *
+   * @param a_color_mode the new value of the initial colouring style
    */
-  public static void setMod(final int i) {
-    mod = i;
+  public static void setMod(final int a_color_mode) {
+    mod = a_color_mode;
   }
 
   /**

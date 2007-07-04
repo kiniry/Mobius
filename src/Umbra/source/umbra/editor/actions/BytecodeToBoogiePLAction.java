@@ -69,7 +69,8 @@ public class BytecodeToBoogiePLAction implements IEditorActionDelegate {
                     UmbraHelper.B2BPL_SAVE_BYTECODE_FIRST);
       return;
     }
-    final int lind = active.toOSString().lastIndexOf(UmbraHelper.BYTECODE_EXTENSION);
+    final int lind = active.toPortableString().
+                            lastIndexOf(UmbraHelper.BYTECODE_EXTENSION);
     if (lind == -1) {
       MessageDialog.openInformation(editor.getSite().getShell(),
                   UmbraHelper.B2BPL_MESSAGE_TITLE,
@@ -105,19 +106,23 @@ public class BytecodeToBoogiePLAction implements IEditorActionDelegate {
 
       // TODO include all files of the current project
       final IPath path = file.getLocation().removeLastSegments(1);
-      UmbraPlugin.messagelog("Looking for other classes in " + path.toOSString());
+      UmbraPlugin.messagelog("Looking for other classes in " +
+                             path.toOSString());
       for (String a : getClassesInDirectory(path.toFile())) {
         if (a.endsWith(".class")) {
-          args.add(javaPath.substring(0, javaPath.lastIndexOf('.')) + "." + a.substring(0, a.lastIndexOf('.')));
+          args.add(javaPath.substring(0, javaPath.lastIndexOf('.')) + "." +
+                   a.substring(0, a.lastIndexOf('.')));
         }
       }
 
-      final String[] argsArray = (String[])args.toArray(new String[args.size()]);
+      final String[] argsArray = (String[])args.toArray(
+                                                  new String[args.size()]);
 
       // MessageDialog.openError(editor.getSite().getShell(), "Bytecode", "B");
 
       try {
-        final PrintWriter messageWriter = new PrintWriter(new FileOutputStream(boogiePLPath));
+        final PrintWriter messageWriter = new PrintWriter(
+                                            new FileOutputStream(boogiePLPath));
         final Project proj = Project.fromCommandLine(argsArray, messageWriter);
         final Main main = new Main(proj);
         main.compile();

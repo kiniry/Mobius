@@ -89,8 +89,9 @@ public class HistoryAction implements IEditorActionDelegate {
                                     UmbraHelper.CLASS_EXTENSION);
     final String clnameFrom = active.removeLastSegments(1).append(lastSegment).
                                                      toOSString();
-    final String clnameTo = active.removeLastSegments(1).append("_" + a_hist_num +
-                                           "_" + lastSegment).toOSString();
+    final String clnameTo = active.removeLastSegments(1).append("_" +
+                                           a_hist_num + "_" +
+                                           lastSegment).toPortableString();
     final IFile classFrom = the_root.getFile(new Path(clnameFrom));
     final IPath clpathTo = new Path(clnameTo);
     final IFile classTo = the_root.getFile(clpathTo);

@@ -36,18 +36,20 @@ public class TokenGetter {
   }
 
   /**
-   * @param manager the color manager related to the current bytecode
+   * @param the_manager the color manager related to the current bytecode
    *    editor, it must be the same as in the current
    *    {@ref BytecodeConfiguration} object
-   * @param mod the number of the current coloring style, it must be the
+   * @param a_mode the number of the current coloring style, it must be the
    *    same as in the current {@ref BytecodeConfiguration} object
-   * @return      Array of tokens for each color value
+   * @return Array of tokens for each color value
    *           (for each window element to be coloured)
+   *  TODO what the window element is?
    */
-  public static IToken[] getTokenTab(final ColorManager manager, final int mod) {
+  public static IToken[] getTokenTab(final ColorManager the_manager,
+                                     final int a_mode) {
     final IToken[] tokens = new IToken[IColorValues.PARTS];
     for (int i = 0; i < IColorValues.PARTS; i++) {
-      tokens[i] = TokenGetter.getToken(manager, mod, i);
+      tokens[i] = TokenGetter.getToken(the_manager, a_mode, i);
     }
     return tokens;
   }

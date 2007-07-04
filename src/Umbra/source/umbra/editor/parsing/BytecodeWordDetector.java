@@ -15,16 +15,23 @@ import org.eclipse.jface.text.rules.IWordDetector;
 public class BytecodeWordDetector implements IWordDetector {
 
   /**
-   * TODO
+   * This method returns true when the character is a legal character to start
+   * a word. In this case it means it is a letter.
+   *
+   * @param a_char a character to check
+   * @return <code>true</code> when the character can start a word
    */
-  public final boolean isWordStart(final char c) {
-    return Character.isLetter(c);
+  public final boolean isWordStart(final char a_char) {
+    return Character.isLetter(a_char);
   }
 
   /**
    * TODO
+   * @param a_char TODO
+   * @return TODO
+   * @see org.eclipse.jface.text.rules.IWordDetector#isWordPart(char)
    */
-  public final boolean isWordPart(final char c) {
-    return (Character.isLetterOrDigit(c) || c == '_');
+  public final boolean isWordPart(final char a_char) {
+    return (Character.isLetterOrDigit(a_char) || a_char == '_');
   }
 }

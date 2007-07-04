@@ -23,10 +23,17 @@ import umbra.editor.parsing.IBytecodeStrings;
 public class PushInstruction extends NumInstruction {
 
   /**
-   * TODO
+   * This creates an instance of an instruction
+   * named as <code>a_name</code> in a line the text of which is
+   * <code>a_line</code>. Currently it just calls the constructor of the
+   * superclass.
+   *
+   * @param a_line_text the line number of the instruction
+   * @param a_name the mnemonic name of the instruction
+   * @see InstructionLineController#InstructionLineController(String, String)
    */
-  public PushInstruction(final String l, final String n) {
-    super(l, n);
+  public PushInstruction(final String a_line_text, final String a_name) {
+    super(a_line_text, a_name);
   }
 
   /**
@@ -38,7 +45,7 @@ public class PushInstruction extends NumInstruction {
   public final boolean correct()
   {
     String s;
-    s = UmbraHelper.stripAllWhitespace(line);
+    s = UmbraHelper.stripAllWhitespace(my_line_text);
     final String[] s2 = IBytecodeStrings.push;
     int j;
     int y;
@@ -49,11 +56,11 @@ public class PushInstruction extends NumInstruction {
         }
         int counter = 0;
         boolean lastisdig = false;
-        for (y = ((line.indexOf(s2[j])) + (s2[j].length()) + 1); y < line.length(); y++) {
-          if (Character.isDigit(line.charAt(y))) {
+        for (y = ((my_line_text.indexOf(s2[j])) + (s2[j].length()) + 1); y < my_line_text.length(); y++) {
+          if (Character.isDigit(my_line_text.charAt(y))) {
             if (!(lastisdig)) counter++;
             lastisdig = true;
-          } else if (Character.isWhitespace(line.charAt(y))) {
+          } else if (Character.isWhitespace(my_line_text.charAt(y))) {
             lastisdig = false;
           }
         }
@@ -72,7 +79,7 @@ public class PushInstruction extends NumInstruction {
     int liczba;
 
     String line1;
-    line1 = UmbraHelper.stripAllWhitespace(line);
+    line1 = UmbraHelper.stripAllWhitespace(my_line_text);
 
     isd = true;
     // zakladam ze poprawnosc jest juz wyzej

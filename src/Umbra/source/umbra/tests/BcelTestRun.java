@@ -75,27 +75,28 @@ public class BcelTestRun {
 
   /**
    * TODO
-   * @param cpg
-   * @param methods
-   * @param i
+   * @param a_cpg TODO
+   * @param the_methods TODO
+   * @param an_index TODO
    */
-  private static void workOnLDCInstructions(final ConstantPoolGen cpg,
-                                            final Method[] methods,
-                                            final int i) {
-    final MethodGen mg = new MethodGen(methods[i], HWClName, cpg);
+  private static void workOnLDCInstructions(final ConstantPoolGen a_cpg,
+                                            final Method[] the_methods,
+                                            final int an_index) {
+    final MethodGen mg = new MethodGen(the_methods[an_index], HWClName, a_cpg);
     final InstructionList il = mg.getInstructionList();
     final InstructionHandle start = il.getStart();
     final InstructionHandle end = il.getEnd();
     for (InstructionHandle pos = start; pos != end; pos = pos.getNext()) {
       final Instruction ins = pos.getInstruction();
       if ("ldc".equals(ins.getName())) {
-        UmbraPlugin.messagelog(Integer.toString(cpg.getSize()));
-        cpg.addString("CompDiff");
-        final Constant con = cpg.getConstant(35);
-        UmbraPlugin.messagelog("Index " + ((ConstantString)con).getStringIndex());
-        cpg.setConstant(INSTRUCTION_TO_CHANGE_NO, con);
+        UmbraPlugin.messagelog(Integer.toString(a_cpg.getSize()));
+        a_cpg.addString("CompDiff");
+        final Constant con = a_cpg.getConstant(35);
+        UmbraPlugin.messagelog("Index " +
+                               ((ConstantString)con).getStringIndex());
+        a_cpg.setConstant(INSTRUCTION_TO_CHANGE_NO, con);
         final Method mm = mg.getMethod();
-        methods[i] = mm;
+        the_methods[an_index] = mm;
       }
     }
   }
@@ -131,34 +132,34 @@ public class BcelTestRun {
 
   /**
    * TODO
-   * @param methods
-   * @param names
-   * @param code
-   * @param namesLen
-   * @param codeLen
-   * @param contents
-   * @return
+   * @param the_methods TODO
+   * @param the_names TODO
+   * @param the_code TODO
+   * @param the_names_len TODO
+   * @param the_code_len TODO
+   * @param the_contents TODO
+   * @return TODO
    */
-  private static int fillInContents(final Method[] methods,
-                                    final byte[][] names,
-                                    final byte[][] code,
-                                    final int[] namesLen,
-                                    final int[] codeLen,
-                                    final char[] contents) {
+  private static int fillInContents(final Method[] the_methods,
+                                    final byte[][] the_names,
+                                    final byte[][] the_code,
+                                    final int[] the_names_len,
+                                    final int[] the_code_len,
+                                    final char[] the_contents) {
     int k = 0;
-    for (int i = 0; i < methods.length; i++) {
-      for (int j = 0; j < namesLen[i]; j++, k++) {
-        contents[k] = (char)names[i][j];
+    for (int i = 0; i < the_methods.length; i++) {
+      for (int j = 0; j < the_names_len[i]; j++, k++) {
+        the_contents[k] = (char)the_names[i][j];
       }
-      contents[k] = '\n';
+      the_contents[k] = '\n';
       k++;
-      for (int j = 0; j < codeLen[i]; j++, k++) {
-        contents[k] = (char)code[i][j];
+      for (int j = 0; j < the_code_len[i]; j++, k++) {
+        the_contents[k] = (char)the_code[i][j];
       }
-      contents[k] = '\n';
+      the_contents[k] = '\n';
       k++;
     }
-    contents[k] = '\0';
+    the_contents[k] = '\0';
     return k;
   }
 }

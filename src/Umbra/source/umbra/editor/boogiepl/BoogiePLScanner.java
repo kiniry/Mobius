@@ -17,8 +17,10 @@ public class BoogiePLScanner extends RuleBasedScanner {
 
   /**
    * TODO
+   * @param the_manager the manager which manages the color allocation
+   * @param a_mode the current colouring mode
    */
-  public BoogiePLScanner(final ColorManager manager, final int mod) {
+  public BoogiePLScanner(final ColorManager the_manager, final int a_mode) {
     /*
     IToken[] tokens = TokenGetter.getTokenTab(manager, mod);
 

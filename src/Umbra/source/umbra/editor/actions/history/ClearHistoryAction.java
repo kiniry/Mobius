@@ -57,7 +57,8 @@ public class ClearHistoryAction implements IEditorActionDelegate {
     for (int i = 0; i <= UmbraHelper.MAX_HISTORY; i++) {
       final String ext = UmbraHelper.BYTECODE_HISTORY_EXTENSION + i;
       final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-      final IFile inputFile = ((FileEditorInput)my_editor.getEditorInput()).getFile();
+      final IFile inputFile = ((FileEditorInput)my_editor.getEditorInput()).
+                                                          getFile();
       final IPath active = inputFile.getFullPath();
       final String fname = active.toOSString().replaceFirst(
                              UmbraHelper.BYTECODE_EXTENSION, ext);

@@ -15,10 +15,14 @@ package umbra.instructions;
 public class HeaderLineController extends BytecodeLineController {
 
   /**
-   * TODO
+   * This constructor remembers only the line text of the line which contains
+   * the header information. TODO which header?
+   *
+   * @param a_line_text the string representation of the line text
+   * @see BytecodeLineController#BytecodeLineController(String)
    */
-  public HeaderLineController(final String l) {
-    super(l);
+  public HeaderLineController(final String a_line_text) {
+    super(a_line_text);
   }
 
   /**
@@ -26,7 +30,7 @@ public class HeaderLineController extends BytecodeLineController {
    */
   public final boolean correct()
   {
-    //niz za bardzo mozna ustalic zaleznosci
+    //nie za bardzo mozna ustalic zaleznosci
     //zbior wyrazow przed innym niektore opcjonalne
     return true;
   }
@@ -35,8 +39,10 @@ public class HeaderLineController extends BytecodeLineController {
    * The method index of the header is equal to
    * the previous line's one increased by one.
    * TODO
+   * 
+   * @param an_index TODO
    */
-  public final void setIndex(final int index2) {
-    this.index = index2 + 1;
+  public final void setIndex(final int an_index) {
+    this.index = an_index + 1;
   }
 }

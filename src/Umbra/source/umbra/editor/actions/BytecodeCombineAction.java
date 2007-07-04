@@ -47,8 +47,8 @@ public class BytecodeCombineAction extends BytecodeEditorAction {
    * "Combine" and stores locally the object which creates all the actions
    * and which contributs the editor GUI elements to the eclipse GUI.
    *
-   * @param a_contributor the manager that initialises all the actions within the
-   * bytecode plugin
+   * @param a_contributor the manager that initialises all the actions within
+   * the bytecode plugin
    * @param a_bytecode_contribution the GUI elements contributed to the eclipse
    * GUI by the bytecode editor. This reference should be the same as in the
    * parameter <code>a_contributor</code>.
@@ -158,7 +158,8 @@ public class BytecodeCombineAction extends BytecodeEditorAction {
     final IEditorPart my_editor = getEditor();
     final IFile file = ((FileEditorInput)my_editor.getEditorInput()).getFile();
     final String projectName = file.getFullPath().segment(0);
-    final IWorkspaceRoot myWorkspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
+    final IWorkspaceRoot myWorkspaceRoot = ResourcesPlugin.getWorkspace().
+                                                           getRoot();
     final IProject project = myWorkspaceRoot.getProject(projectName);
     final IJavaProject jproject = JavaCore.create(project);
     IClasspathEntry[] ent;

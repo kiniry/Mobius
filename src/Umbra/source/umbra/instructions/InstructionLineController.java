@@ -52,16 +52,18 @@ public abstract class InstructionLineController extends BytecodeLineController {
 
   /**
    * The constructon creates the controler which
-   * binds the instruction mnemonic with the line
-   * number of the instruction.
+   * binds the instruction mnemonic with the line text. The name is set locally
+   * while the assignment of the line is done in the constructor of the
+   * superclass.
    *
-   * @param l the string representation of the line number
-   * @param n the mnemonic name of the instruction
+   * @param a_line_text the string representation of the line text
+   * @param a_name the mnemonic name of the instruction
+   * @see BytecodeLineController#BytecodeLineController(String)
    */
-  public InstructionLineController(final String l, final String n) {
-    super(l);
-    name = n;
-    // tu moze w podklasach gdzie w podklasach instrukcje sie tworzy odpowiednio
+  public InstructionLineController(final String a_line_text,
+                                   final String a_name) {
+    super(a_line_text);
+    name = a_name;
   }
 
   /**
@@ -125,7 +127,8 @@ public abstract class InstructionLineController extends BytecodeLineController {
           if (((BranchInstruction)an_instruction).getTarget() == null)
             UmbraPlugin.messagelog("null target");
           else
-            UmbraPlugin.messagelog(Integer.toString(((BranchInstruction)an_instruction).
+            UmbraPlugin.messagelog(
+                       Integer.toString(((BranchInstruction)an_instruction).
                        getTarget().getPosition()));
           ih = newList.insert(next, (BranchInstruction) an_instruction);
         } else
@@ -168,10 +171,10 @@ public abstract class InstructionLineController extends BytecodeLineController {
    * This is a debugging helper method which prints out to the standard
    * output the contents of the given BCEL instruction list.
    *
-   * @param the isntruction list to print out
+   * @param an_ilist the isntruction list to print out
    */
-  public static void printInstructionList(final InstructionList il) {
-    InstructionHandle ih = il.getStart();
+  public static void printInstructionList(final InstructionList an_ilist) {
+    InstructionHandle ih = an_ilist.getStart();
     if (ih == null) {
       UmbraPlugin.messagelog("start ih==null");
       return;
@@ -181,7 +184,7 @@ public abstract class InstructionLineController extends BytecodeLineController {
       ih = ih.getNext();
       UmbraPlugin.messagelog(ih.getInstruction().getName());
     }
-    while (ih != il.getEnd());
+    while (ih != an_ilist.getEnd());
   }
 
   /**
@@ -204,8 +207,8 @@ public abstract class InstructionLineController extends BytecodeLineController {
       final BytecodeLineController nextLine, final ClassGen cg,
       final Instruction ins, final boolean metEnd, final boolean theLast,
       final LinkedList instructions, final int off) {
-    UmbraPlugin.messagelog("oldline=" + oldLine.line);
-    UmbraPlugin.messagelog("nextline=" + nextLine.line);
+    UmbraPlugin.messagelog("oldline=" + oldLine.my_line_text);
+    UmbraPlugin.messagelog("nextline=" + nextLine.my_line_text);
     UmbraPlugin.messagelog("cg=" + ((cg == null) ? "null" : "ok"));
     UmbraPlugin.messagelog("ins=" + ((ins == null) ? "null" : ins.getName()));
     UmbraPlugin.messagelog("MetEnd=" + metEnd);

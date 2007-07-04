@@ -23,13 +23,18 @@ import umbra.editor.parsing.IBytecodeStrings;
  */
 public class IncInstruction extends NumInstruction {
 
-
-
   /**
-   * TODO
+   * This creates an instance of an instruction
+   * named as <code>a_name</code> in a line the text of which is
+   * <code>a_line</code>. Currently it just calls the constructor of the
+   * superclass.
+   *
+   * @param a_line_text the line number of the instruction
+   * @param a_name the mnemonic name of the instruction
+   * @see InstructionLineController#InstructionLineController(String, String)
    */
-  public IncInstruction(final String l, final String n) {
-    super(l, n);
+  public IncInstruction(final String a_line_text, final String a_name) {
+    super(a_line_text, a_name);
   }
 
 
@@ -41,7 +46,7 @@ public class IncInstruction extends NumInstruction {
    *@see InstructionLineController#chkcorr(String, String)
    */
   public final boolean correct() {
-    return super.chkcorr(line, "W%DW?-D?W");
+    return super.chkcorr(my_line_text, "W%DW?-D?W");
   }
 
   /**
@@ -50,7 +55,7 @@ public class IncInstruction extends NumInstruction {
   public final boolean correct0()
   {
     String s;
-    s = UmbraHelper.stripAllWhitespace(line);
+    s = UmbraHelper.stripAllWhitespace(my_line_text);
     final String[] s2 = IBytecodeStrings.incc;
     int j;
     int y;
@@ -62,12 +67,10 @@ public class IncInstruction extends NumInstruction {
     boolean isminus = false;
     for (j = 0; j < s2.length; j++) {
       if ((s.indexOf(s2[j]) > 0) && (s.indexOf(s2[j]) < s.indexOf(":") + 2))
-        if (s.indexOf(s2[j]) + (s2[j].length()) + 1 > s.indexOf("%"))
-        {
-          for (y = (s.indexOf("%") + 1); y < s.length(); y++)
-            {
+        if (s.indexOf(s2[j]) + (s2[j].length()) + 1 > s.indexOf("%")) {
+          for (y = (s.indexOf("%") + 1); y < s.length(); y++) {
             if (!(Character.isDigit(s.charAt(y)))) {
-              UmbraPlugin.LOG.print("tu ten minus " + s + " " + line);
+              UmbraPlugin.LOG.print("tu ten minus " + s + " " + my_line_text);
               if (isminus)
                 return false;
               else if (s.charAt(y) == '-')
@@ -75,16 +78,16 @@ public class IncInstruction extends NumInstruction {
               else
                 return false;
             }
-            }
+          }
           int counter = 0;
           boolean lastisdig = false;
-          for (y = ((line.indexOf(s2[j])) + (s2[j].length()) + 1); 
-               y < line.length(); y++) {
-            if (Character.isDigit(line.charAt(y))) {
+          for (y = ((my_line_text.indexOf(s2[j])) + (s2[j].length()) + 1);
+               y < my_line_text.length(); y++) {
+            if (Character.isDigit(my_line_text.charAt(y))) {
               if (!(lastisdig)) counter++;
               lastisdig = true;
             } else
-              if (Character.isWhitespace(line.charAt(y))) {
+              if (Character.isWhitespace(my_line_text.charAt(y))) {
                 lastisdig = false;
               }
           }
@@ -104,17 +107,17 @@ public class IncInstruction extends NumInstruction {
     int number = 0;
 
     isd = true;
-    int dokad = line.length();
-    for (int i = line.lastIndexOf("%") + 1; i < line.length(); i++) {
-      if (!Character.isDigit(line.charAt(i))) {
+    int dokad = my_line_text.length();
+    for (int i = my_line_text.lastIndexOf("%") + 1; i < my_line_text.length(); i++) {
+      if (!Character.isDigit(my_line_text.charAt(i))) {
         dokad = i;
         break;
       }
     }
     if (isd) {
       number = 0;
-      for (int i = line.lastIndexOf("%") + 1; i < dokad; i++) {
-        number = 10 * number + licznik.indexOf(line.substring(i, i + 1));
+      for (int i = my_line_text.lastIndexOf("%") + 1; i < dokad; i++) {
+        number = 10 * number + licznik.indexOf(my_line_text.substring(i, i + 1));
       }
       return number;
     }
@@ -131,25 +134,25 @@ public class IncInstruction extends NumInstruction {
 
     isd = true;
     //sets after first number parameter
-    int skadskad = line.length();
-    for (int i = line.lastIndexOf("%") + 1; i < line.length(); i++) {
-      if (!Character.isDigit(line.charAt(i))) {
+    int skadskad = my_line_text.length();
+    for (int i = my_line_text.lastIndexOf("%") + 1; i < my_line_text.length(); i++) {
+      if (!Character.isDigit(my_line_text.charAt(i))) {
         skadskad = i;
         break;
       }
     }
     //sets the starting point of second number parameter
     int skad = 0;
-    for (int i = skadskad; i < line.length(); i++) {
-      if (Character.isDigit(line.charAt(i))) {
+    for (int i = skadskad; i < my_line_text.length(); i++) {
+      if (Character.isDigit(my_line_text.charAt(i))) {
         skad = i;
         break;
       }
     }
     //sets the ending point of second number parameter
-    int dokad = line.length();
-    for (int i = skad; i < line.length(); i++) {
-      if (!Character.isDigit(line.charAt(i))) {
+    int dokad = my_line_text.length();
+    for (int i = skad; i < my_line_text.length(); i++) {
+      if (!Character.isDigit(my_line_text.charAt(i))) {
         dokad = i;
         break;
       }
@@ -160,9 +163,9 @@ public class IncInstruction extends NumInstruction {
     if (isd) {
       number = 0;
       for (int i = skad; i < dokad; i++) {
-        number = 10 * number + licznik.indexOf(line.substring(i, i + 1));
+        number = 10 * number + licznik.indexOf(my_line_text.substring(i, i + 1));
       }
-      if (line.charAt(skad - 1) == '-') {
+      if (my_line_text.charAt(skad - 1) == '-') {
         number = number * (-1);
       }
       return number;

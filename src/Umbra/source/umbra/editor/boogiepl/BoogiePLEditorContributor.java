@@ -248,12 +248,14 @@ public class BoogiePLEditorContributor extends EditorActionBarContributor {
 
   /**
    * The same as below with input obtained from the current editor window.
-   *
+   * @param an_editor TODO
+   * @throws PartInitException TODO
    * @see #refreshEditor(IEditorPart, IEditorInput)
    */
-  private void refreshEditor(final IEditorPart editor) throws PartInitException {
-    final IEditorInput input = editor.getEditorInput();
-    refreshEditor(editor, input);
+  private void refreshEditor(final IEditorPart an_editor)
+    throws PartInitException {
+    final IEditorInput input = an_editor.getEditorInput();
+    refreshEditor(an_editor, input);
   }
 
   /**

@@ -31,6 +31,11 @@ import umbra.instructions.BytecodeController;
 public class BytecodeContribution extends ControlContribution {
 
   /**
+   * TODO. what does the constant mean?
+   */
+  private static final int CHECK_ALL_LINES_DECREMENT = 2;
+
+  /**
    * TODO
    */
   private boolean needNew = true;
@@ -71,6 +76,11 @@ public class BytecodeContribution extends ControlContribution {
   private BytecodeEditorContributor editorContributor;
 
   /**
+   * The current bytecode editor for which the contribution works.
+   */
+  private IEditorPart my_editor;
+
+  /**
    * TODO
    */
   protected BytecodeContribution() {
@@ -94,8 +104,8 @@ public class BytecodeContribution extends ControlContribution {
       bcc.setModified(modified);
       modTable = false;
     }
-    //TODO why we decrease here by 2?
-    bcc.checkAllLines(0, a_doc.getNumberOfLines() - 2);
+    //TODO why we decrease here by CHECK_ALL_LINES_DECREMENT?
+    bcc.checkAllLines(0, a_doc.getNumberOfLines() - CHECK_ALL_LINES_DECREMENT);
     ready = true;
     editorContributor.getRefreshAction().setEnabled(true);
   }
@@ -129,25 +139,25 @@ public class BytecodeContribution extends ControlContribution {
      * change is made. This method initialises the BytecodeContribution
      * object in case it has not been initialised yet.
      *
-     * @param event the event that triggers the change, it should be
+     * @param an_event the event that triggers the change, it should be
      * the same as in {@ref #documentChanged(DocumentEvent)}
      *
-     * @see org.eclipse.jface.text.IDocumentListener#documentAboutToBeChanged(org.eclipse.jface.text.DocumentEvent)
+     * @see IDocumentListener#documentAboutToBeChanged(DocumentEvent)
      */
-    public final void documentAboutToBeChanged(final DocumentEvent event) {
+    public final void documentAboutToBeChanged(final DocumentEvent an_event) {
       if (!ready)
-        init(event.fDocument); //this marks ready as true
-      UmbraPlugin.messagelog("documentAboutToBeChanged " + event.getText());
-      UmbraPlugin.messagelog("documentAboutToBeChanged " + event.getModificationStamp());
-      UmbraPlugin.messagelog("documentAboutToBeChanged " + event.getOffset());
-      UmbraPlugin.messagelog("documentAboutToBeChanged " + event.getLength());
-      UmbraPlugin.messagelog("documentAboutToBeChanged " + event.getDocument().hashCode());
+        init(an_event.fDocument); //this marks ready as true
+      UmbraPlugin.messagelog("documentAboutToBeChanged " + an_event.getText());
+      UmbraPlugin.messagelog("documentAboutToBeChanged " + an_event.getModificationStamp());
+      UmbraPlugin.messagelog("documentAboutToBeChanged " + an_event.getOffset());
+      UmbraPlugin.messagelog("documentAboutToBeChanged " + an_event.getLength());
+      UmbraPlugin.messagelog("documentAboutToBeChanged " + an_event.getDocument().hashCode());
       UmbraPlugin.LOG.flush();
-      current_event = event;
+      current_event = an_event;
 
       try {
-        endLine = event.fDocument.getLineOfOffset(
-              event.getOffset() + event.getLength());
+        endLine = an_event.fDocument.getLineOfOffset(
+              an_event.getOffset() + an_event.getLength());
       } catch (BadLocationException e) {
         // TODO Auto-generated catch block
         e.printStackTrace();
@@ -276,9 +286,14 @@ public class BytecodeContribution extends ControlContribution {
   }
 
   /**
-   * @param editor
+   * This method sets the bytecode editor for which the
+   * bytecode contribution works.
+   *
+   * @param a_target_editor the bytecode editor for which the action will be
+   *    executed
    */
-  public void setActiveEditor(final IEditorPart editor) {
+  public void setActiveEditor(final IEditorPart a_target_editor) {
+    my_editor = a_target_editor;
   }
 
   /**
@@ -323,9 +338,10 @@ public class BytecodeContribution extends ControlContribution {
 
   /**
    * TODO
-   * @param contributor
+   * @param a_contributor TODO
    */
-  public final void addEditorContributor(final BytecodeEditorContributor contributor) {
-    editorContributor = contributor;
+  public final void addEditorContributor(
+                          final BytecodeEditorContributor a_contributor) {
+    editorContributor = a_contributor;
   }
 }

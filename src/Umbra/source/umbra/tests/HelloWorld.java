@@ -38,6 +38,7 @@ public final class HelloWorld {
     final int i4 = b.compareTo(a);
     final int i5 = c.compareTo(a);
     final int i6 = c.compareTo("");
-    UmbraPlugin.messagelog("" + i1 + " " + i2 + " " + i3 + " " + i4 + " " + i5 + " " + i6 + " ");
+    UmbraPlugin.messagelog("" + i1 + " " + i2 + " " + i3 + " " + i4 + " " +
+                                i5 + " " + i6 + " ");
   }
 }
