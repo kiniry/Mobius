@@ -169,8 +169,40 @@ BEGIN
       ann_program_pre(mp) IMPLIES
         wf_Program(ann_program(mp))
 
+  ann_program_class_correspondence : LEMMA % :-)
+    FORALL(mp : MonitoredProgram) :
+      ann_program_pre(mp) IMPLIES
+        FORALL(c : Class) :
+          classes(ann_program(mp))(c) IMPLIES
+            EXISTS (c1 : Class) :
+              classes(program(mp))(c1) AND c = ann_class(mp)(c1)
+ 
+  ann_program_method_correspondence : LEMMA % :-)
+    FORALL(mp : MonitoredProgram) :
+      ann_program_pre(mp) IMPLIES
+        FORALL(c : Class, m : Method) :
+          classes(ann_program(mp))(c) IMPLIES
+          methods(c)(m) IMPLIES
+            EXISTS (c1 : Class, m1 : Method) :
+              classes(program(mp))(c1) AND 
+              methods(c1)(m1) AND 
+              (IF name(c1) = class_name(mva(mp))
+               THEN m = ann_method(mp)(m1)
+               ELSE m = m1
+               ENDIF)
+
+  % proven except for locals case
+  ann_program_preserves_var_decls : LEMMA % :-)
+    FORALL (mp : MonitoredProgram)(vn : string) :
+      ann_program_pre(mp) IMPLIES
+        getFieldDecls(program(mp)) = getFieldDecls(ann_program(mp))
+        AND
+        getLocalDecls(program(mp)) = getLocalDecls(ann_program(mp))
+        AND
+        subset?(getGhostDecls(program(mp)), getGhostDecls(ann_program(mp)))
+
   % NOT USED 
-  ann_program_preserves_var_decls : LEMMA
+  ann_program_preserves_var_decl_names : LEMMA % :-)
     FORALL (mp : MonitoredProgram)(vn : string) :
       ann_program_pre(mp) IMPLIES
         (var_names(getFieldDecls(program(mp)))(vn) IFF
@@ -190,6 +222,25 @@ BEGIN
         wf_state(ann_program(mp))(s)
 
   % PROVE
+  ann_program_preserves_pstate_vars : LEMMA % :-)
+    FORALL (mp : MonitoredProgram)(vn : string)
+           (sMP : MPState, sAP : APState) :
+      ann_program_pre(mp) IMPLIES
+      wf_state(mp)(sMP) IMPLIES
+      wf_state(ann_program(mp))(sAP) IMPLIES
+        (is_field(vn, pstate(sMP)) IFF is_field(vn, pstate(sAP))) AND
+        (is_local(vn, pstate(sMP)) IFF is_local(vn, pstate(sAP)))
+
+
+  ann_program_preserves_ghoststate_vars : LEMMA % :-)
+    FORALL (mp : MonitoredProgram)(vn : string)
+           (sMP : MPState, sAP : APState) :
+      ann_program_pre(mp) IMPLIES
+      wf_state(mp)(sMP) IMPLIES
+      wf_state(ann_program(mp))(sAP) IMPLIES
+        (is_ghost(vn, sMP) IMPLIES is_ghost(vn, sAP))
+
+  % not provable this way
   ann_program_preserves_state_vars : LEMMA
     FORALL (mp : MonitoredProgram)(vn : string)
            (sMP : MPState, sAP : APState) :
@@ -200,7 +251,7 @@ BEGIN
         (is_local(vn, pstate(sMP)) IFF is_local(vn, pstate(sAP))) AND
         (is_ghost(vn, sMP) IFF is_ghost(vn, sAP))
 
-  get_class_ann_program : LEMMA
+  get_class_ann_program : LEMMA % :-)
     FORALL (mp : MonitoredProgram, c1, c2 : Class, s : PState, tgt : Val) :
       ann_program_pre(mp) IMPLIES
       up?(get_class(program(mp))(tgt)) IMPLIES
@@ -232,6 +283,7 @@ BEGIN
         m2 = ann_method(mp)(m1)
 
   % FIX PROOF
+  % if possible?? (MH)
   lookup_mthd_ann_program : LEMMA % :-)
     FORALL (mp : MonitoredProgram, m1, m2 : Method, mn : string, tgt : Val) :
       ann_program_pre(mp) IMPLIES
@@ -246,7 +298,10 @@ BEGIN
         ENDIF
 
   % PROVE
-  ann_program_preserves_well_bahaved_Program : LEMMA
+  % unprovable for the moment
+  % one problem: derive(mp)(inv) = derive(ann_program(mp))(inv)
+  % should not depend on astate
+  ann_program_preserves_well_behaved_Program : LEMMA
     FORALL (mp : MonitoredProgram) :
       ann_program_pre(mp) IMPLIES
       well_behaved_Program(mp) IMPLIES
