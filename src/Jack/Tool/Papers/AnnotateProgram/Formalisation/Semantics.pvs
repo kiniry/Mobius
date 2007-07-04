@@ -400,6 +400,13 @@ BEGIN
       deriv_stmt(p)(s, sigma1, sigma2)(n)
 
 
+%  wf_Stmt(p : FullProgram)(s : Stmt) : bool = TRUE
+
+%  deriv_stmt_preserves_wf_Stmt : JUDGEMENT 
+%    deriv_stmt HAS_TYPE [p : FullProgram ->
+%                        [(wf_Stmt(p)), FullState, FullState ->
+%                        [nat -> bool]]]
+
   % The following expression (that appear only in annotations) should have no
   % side-effects: invariants, preconditions, postconditions, source expression
   % of a set statement.
@@ -720,14 +727,18 @@ BEGIN
             deriv_stmt_rec : deriv_stmt_rec_type(n),
             deriv_expr_rec : deriv_expr_rec_type(n)) :
     IF up?(ex(pstate(s1))) 
-    THEN s1 = s2 AND n = 0
-    ELSE 
+    THEN 
     EXISTS (m1, m2 : nat, tau1, tau2 : FullState, inv : Expr) :
       n = m1 + m2 + 1 AND
-      deriv_stmt_rec(n)(p)(exc_set(md), s1, tau1)(m1) AND
+      deriv_stmt_rec(n)(p)(exc_set(md), update_PState(s1, catch), tau1)(m1) AND
       inv = lookup_inv(program(p), a) AND
-      check_assertion(p)(inv, tau1, s2)(m2)(deriv_expr_rec(m2)) AND
+      check_assertion(p)(inv, tau1, tau2)(m2)(deriv_expr_rec(m2)) AND
+      s2 = (IF up?(ex(pstate(tau2)))
+            THEN tau2 
+            ELSE update_PState(tau2, raise(down(ex(pstate(s1)))))
+            ENDIF) AND
       st(pstate(s1)) = st(pstate(s2))
+    ELSE s1 = s2 AND n = 0
     ENDIF
 
 

@@ -105,27 +105,39 @@ BEGIN
             deriv_stmt_rec : deriv_stmt_rec_type(n),
             deriv_expr_rec : deriv_expr_rec_type(n)) :
     NOT cp(astate(s1)) = halted AND
-    on_method_entry(mp, md, a, 
-                    update_AState(s1, on_method_MVA(Entry)(mp, md)), 
-                    s2, n, deriv_stmt_rec, deriv_expr_rec)
+    IF up?(ex(pstate(s1)))
+    THEN s1 = s2 AND n = 0
+    ELSE
+      astate(s2) = on_method_MVA(Entry)(mp, md)(s1) AND
+      EXISTS (s3 : MPState) : 
+        pstate(s3) = pstate(s2) AND
+        gvs(s3) = gvs(s2) AND
+        on_method_entry(mp, md, a, s1, s3, n, deriv_stmt_rec, deriv_expr_rec)
+    ENDIF
 
   on_method_exit_normal_MP : (on_method_event_type) =
     LAMBDA (mp : MonitoredProgram, md : Method, a : Val, s1, s2 : MPState,
             n : nat,
             deriv_stmt_rec : deriv_stmt_rec_type(n),
             deriv_expr_rec : deriv_expr_rec_type(n)) :
-    on_method_exit_normal(mp, md, a, 
-                          update_AState(s1, on_method_MVA(ExitNormal)(mp, md)),
-                          s2, n, deriv_stmt_rec, deriv_expr_rec)
+    astate(s2) = on_method_MVA(Entry)(mp, md)(s1) AND
+    EXISTS (s3 : MPState) : 
+      pstate(s3) = pstate(s2) AND
+      gvs(s3) = gvs(s2) AND
+      on_method_exit_normal(mp, md, a, s1, s3, n, 
+                            deriv_stmt_rec, deriv_expr_rec)
 
   on_method_exit_exceptional_MP : (on_method_event_type) =
     LAMBDA (mp : MonitoredProgram, md : Method, a : Val, s1, s2 : MPState,
             n : nat,
             deriv_stmt_rec : deriv_stmt_rec_type(n),
             deriv_expr_rec : deriv_expr_rec_type(n)) :
-    on_method_exit_exceptional(mp, md, a, 
-                 update_AState(s1, on_method_MVA(ExitExceptional)(mp, md)), 
-                 s2, n, deriv_stmt_rec, deriv_expr_rec)
+    astate(s2) = on_method_MVA(Entry)(mp, md)(s1) AND
+    EXISTS (s3 : MPState) : 
+      pstate(s3) = pstate(s2) AND
+      gvs(s3) = gvs(s2) AND
+      on_method_exit_exceptional(mp, md, a, s1, s3, n, 
+                                 deriv_stmt_rec, deriv_expr_rec)
 
   IMPORTING Semantics[Name, MonitoredProgram, MPState, 
                       LAMBDA (mp : MonitoredProgram) : program(mp),
@@ -205,7 +217,7 @@ BEGIN
          lvds(l) IMPLIES getLocalDecls(program(p))(l)) IMPLIES
         wf_state(p)(update_stack(this_val, arg, param_val, lvds, s))
 
-  deriv_expr_yields_wf_state_MP : LEMMA
+  deriv_expr_yields_wf_state_MP : LEMMA % :-)
     FORALL (mp : MonitoredProgram, e : Expr, v : Val)
            (sigma1, sigma2 : MPState, n : nat) :
       wf_MP(mp) IMPLIES
