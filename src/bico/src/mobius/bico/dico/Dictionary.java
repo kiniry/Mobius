@@ -40,14 +40,10 @@ public interface Dictionary {
    * also works if the association has already been done with the same name or
    * with an other one.
    * 
-   * @param className
-   *            the corresponding human readable name
-   * @param packageName
-   *            the Biclano package name
-   * @param coqClassName
-   *            the Bicolano class name
+   * @param jc the java class to add
+   * @param className the Bicolano class name
    */
-  void addClass(String className, String packageName, int coqClassName);
+  void addClass(JavaClass jc, int className);
 
   /**
    * Associate a class implementation name to the corresponding java name. It

@@ -11,7 +11,9 @@ import org.apache.bcel.generic.Type;
 
 /**
  * 
- * @author L. Hubert (lhubert@irisa.fr)
+ * @author L. Hubert (lhubert@irisa.fr) 
+ * with some slight modifications 
+ * from J. Charles (julien.charles@inria.fr)
  */
 public class MethodHandler {
 
@@ -37,23 +39,31 @@ public class MethodHandler {
     /** the coq name of the method. */
     private String fCoqName;
 
-    public MethodType(final String name, final Type[] targs, final Type tret) {
-      this.fArgsType = targs;
-      this.fReturnType = tret;
-      this.fName = name;
+    private MethodType(final String name, final Type[] targs, final Type tret) {
+      fArgsType = targs;
+      fReturnType = tret;
+      fName = name;
     }
     
     /**
-     * Constructor form a method gen.
+     * Constructor from a method gen.
      * @param mg the object to abstract
      */
     public MethodType(final MethodGen mg) {
-      this.fArgsType = mg.getArgumentTypes();
-      this.fReturnType = mg.getReturnType();
-      this.fName = mg.getName();
+      this(mg.getName(),  mg.getArgumentTypes(), mg.getReturnType());
     }
     
-    
+    /**
+     * Constructor from a method definition.
+     * @param met the object to abstract
+     */
+    public MethodType(final Method met) {
+      this(met.getName(),
+           met.getArgumentTypes(),
+           met.getReturnType());
+    }
+
+    @Override
     public boolean equals(final Object o) {
       if (o instanceof MethodType) {
         final MethodType mt = (MethodType) o;
@@ -76,6 +86,7 @@ public class MethodHandler {
      * The hashcode is computed from the toString value.
      * @return a valid hashcode
      */
+    @Override
     public int hashCode() {
       return toString().hashCode();
     }
@@ -83,6 +94,7 @@ public class MethodHandler {
     /**
      * @return Name [ retType, argType ]
      */
+    @Override
     public String toString() {
       return getName() + " [" + fReturnType + ", " + fArgsType + "]";
     }
@@ -114,8 +126,6 @@ public class MethodHandler {
     }
   }
 
-
-
   /** the list of method types already seen. */
   private List<MethodType> fMethodList = new ArrayList<MethodType>();
   
@@ -123,7 +133,7 @@ public class MethodHandler {
   public void addMethod(final MethodGen m) {
     final MethodType mt = new MethodType(m);
     
-    if (find(mt) == null) {
+    if (!fMethodList.contains(mt)) {
       final List l = findByName(mt);
       final int postfix = l.size();
       if (postfix > 0) {
@@ -137,9 +147,9 @@ public class MethodHandler {
   }
 
   private String getName(final MethodType mt) {
-    final MethodType mtOld = find(mt);
-    if (mtOld != null) {
-      return mtOld.getCoqName();
+    final int idx = fMethodList.indexOf(mt);
+    if (idx != -1) {
+      return fMethodList.get(idx).getCoqName();
     }
     else {
       return null;
@@ -147,18 +157,12 @@ public class MethodHandler {
   }
 
   public String getName(final MethodGen m) {
-    final String name = m.getName();
-    final Type[] targs = m.getArgumentTypes();
-    final Type tret = m.getReturnType();
-    final MethodType mt = new MethodType(name, targs, tret);
+    final MethodType mt = new MethodType(m);
     return getName(mt);
   }
 
   public String getName(final Method met) {
-    final String name = met.getName();
-    final Type[] targs = met.getArgumentTypes();
-    final Type tret = met.getReturnType();
-    final MethodType mt = new MethodType(name, targs, tret);
+    final MethodType mt = new MethodType(met);
     return getName(mt);
   }
 
@@ -178,15 +182,6 @@ public class MethodHandler {
       }
     }
     return ret;
-  }
-
-  private MethodType find(final MethodType mt) {
-    for (MethodType tmp: fMethodList) {
-      if (tmp.equals(mt)) {
-        return tmp;
-      }
-    }
-    return null;
   }
 
 }

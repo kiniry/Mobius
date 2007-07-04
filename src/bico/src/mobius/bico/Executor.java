@@ -10,7 +10,7 @@ import java.util.Vector;
 
 import mobius.bico.Util.Stream;
 import mobius.bico.dico.CamlDictionary;
-import mobius.bico.dico.Dictionary;
+import mobius.bico.dico.Dico;
 import mobius.bico.implem.IImplemSpecifics;
 import mobius.bico.implem.ListImplemSpecif;
 import mobius.bico.implem.MapImplemSpecif;
@@ -199,7 +199,7 @@ public class Executor extends ABasicExecutor {
     if (fShowHelp) {
       System.out.println(HELP_MSG);
     }
-    
+    Dico.initDico(fDico);
     System.out.println("Using " + fImplemSpecif + ".");
     System.out.println("Working path: " + getBaseDir());
     // creating file for output
@@ -426,8 +426,6 @@ public class Executor extends ABasicExecutor {
     fOut.println(fImplemSpecif.getBeginning());
     fOut.println("Require Import " + fName + "_type.");
     fOut.println("Require Import " + fName + "_signature.");
-    
-    initDico(fDico);
 
 
     fOut.println("Import P.\n");
@@ -437,40 +435,6 @@ public class Executor extends ABasicExecutor {
 
   }
 
-  /**
-   * Initialize a dictionary with some standard values.
-   * @param dico the dictionary to initialize
-   */
-  public static void initDico(final Dictionary dico) {
-    final int javaLangPkg = 1;
-    final int emptyPkg = 2;
-    
-    final int objClss = 1;
-    final int objMeth = 12;
-    
-    final int thrwClss = 8;
-    final int thrwMeth = 11;
-    
-    final int excpClss = 9;
-    final int excpMeth = 10;
-    
-    final int strClss = 10;
-    final int strMeth = 13;
-    
-    dico.addPackage("java.lang", javaLangPkg);
-    dico.addPackage("", emptyPkg);
-
-    dico.addClass("Object", "java.lang", objClss);
-    dico.addClass("Throwable", "java.lang", thrwClss);
-    dico.addClass("Exception", "java.lang", excpClss);
-    dico.addClass("String", "java.lang", strClss);
-    
-    dico.addMethod("Object.<init>", javaLangPkg, objClss, objMeth);
-    dico.addMethod("Exception.<init>", javaLangPkg, excpClss, excpMeth);
-    dico.addMethod("String.<init>", javaLangPkg, strClss, strMeth);
-    dico.addMethod("Throwable.<init>", javaLangPkg, thrwClss, thrwMeth);
-    // TODO complete the list...
-  }
 
   /**
    * Write the file ending.

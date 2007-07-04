@@ -30,6 +30,7 @@ import org.apache.bcel.generic.FieldInstruction;
 import org.apache.bcel.generic.FieldOrMethod;
 import org.apache.bcel.generic.GOTO;
 import org.apache.bcel.generic.GOTO_W;
+import org.apache.bcel.generic.GotoInstruction;
 import org.apache.bcel.generic.ICONST;
 import org.apache.bcel.generic.IINC;
 import org.apache.bcel.generic.IMPDEP1;
@@ -310,8 +311,7 @@ class MethodExecutor extends ASignatureExecutor {
       if (etab != null && etab.length > 0) {
         handlers = true;
         String str = "Definition " + name + "Handlers : list ExceptionHandler := ";
-        fOut.println(str);
-        fOut.incTab();
+        fOut.incPrintln(str);
         for (CodeException codExc: etab) {
           str = "(EXCEPTIONHANDLER.Build_t ";
           final int catchType = codExc.getCatchType();
@@ -330,8 +330,7 @@ class MethodExecutor extends ASignatureExecutor {
           fOut.println(str);
         }
         fOut.println("nil");
-        fOut.decTab();
-        fOut.println(".\n");
+        fOut.decPrintln(".\n");
       }
     }
     return handlers;
@@ -407,53 +406,7 @@ class MethodExecutor extends ASignatureExecutor {
       ret = "Const BYTE " + Util.printZ(((BIPUSH) ins).getValue());
     } 
     else if (ins instanceof BranchInstruction) {
-      final String index = Util.printZ(((BranchInstruction) ins).getIndex());
-
-      if (ins instanceof GOTO) {
-        ret = name + " " + index;
-      } 
-      else if (ins instanceof GOTO_W) {
-        ret = "Goto " + index;
-      } 
-      else if (ins instanceof IfInstruction) {
-        String op;
-
-        if (name.endsWith("null")) {
-          // ifnonnull o --> Ifnull NeRef o
-          // ifnull o --> Ifnull EqRef o
-          if (name.indexOf("non") != -1) {
-            op = "Ne";
-          } 
-          else {
-            op = "Eq";
-          }
-          ret = "Ifnull " + op + "Ref " + index;
-        } 
-        else if (name.charAt(2) != '_') {
-          // Ifgt -> GtInt
-          op = Util.upCase(name.substring(2));
-          ret = "If0 " + op + "Int " + index;
-        } 
-        else {
-          op = Util.upCase(name.substring(7));
-          if (name.charAt(3) == 'i') {
-            ret = "If_icmp " + op + "Int " + index;
-          } 
-          else {
-            ret = "If_acmp " + op + "Ref " + index;
-          }
-        }
-      } 
-      else if (ins instanceof JsrInstruction) {
-        ret = Util.unhandled("JsrInstruction", ins);
-      } 
-      else if (ins instanceof Select) {
-        // TODO: Select
-        ret = Util.unimplemented("Select", ins);
-      } 
-      else {
-        ret = Util.unknown("BranchInstruction", ins);
-      }
+      ret = BranchInstructionVisitor.translate((BranchInstruction) ins);
     } 
     else if (ins instanceof BREAKPOINT) {
       ret = Util.unhandled(ins);
@@ -624,6 +577,12 @@ class MethodExecutor extends ASignatureExecutor {
 
   }
 
+
+  /**
+   * Trigger the writing of the signature of the methods.
+   * @throws ClassNotFoundException if there is a type which cannot be
+   * properly resolved.
+   */
   @Override
   public void doSignature() throws ClassNotFoundException {
     final Method[] methods = fClass.getMethods();

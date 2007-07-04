@@ -165,9 +165,9 @@ public class CamlDictionary implements Dictionary {
 
 
   
-  public void addClass(final String javaName, final String packageName, 
+  public void addClass(final JavaClass jc, 
                        final int coqClassName) {
-    addClass(javaName, fPackageNames.get(packageName), coqClassName);
+    addClass(jc.getClassName(), fPackageNames.get(jc.getPackageName()), coqClassName);
   }
   
   private void addClass(final String javaName, final int packageName, 
@@ -193,13 +193,24 @@ public class CamlDictionary implements Dictionary {
 
   
   public int getCoqClassName(final JavaClass jc) {
-    return fClassNames.get(jc.getClassName()).fI2;
+    final Couple c = fClassNames.get(jc.getClassName());
+    if (c == null) {
+      return 0;
+    }
+    else {
+      return c.fI2;
+    }
   }
 
 
   public int getCoqPackageName(final JavaClass jc) {
     final Couple c = fClassNames.get(jc.getClassName());
-    return c.fI1;
+    if (c == null) {
+      return 0;
+    }
+    else {
+      return c.fI1;
+    }
   }
   
   /*

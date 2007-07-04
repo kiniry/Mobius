@@ -128,6 +128,11 @@ class FieldExecutor extends ASignatureExecutor {
     fOut.println(".");
   }
 
+  /**
+   * Trigger the writing of the signature of the fields.
+   * @throws ClassNotFoundException if there is a type which cannot be
+   * properly resolved.
+   */
   @Override
   public void doSignature() throws ClassNotFoundException {
     int fieldIdx = RESERVED_FIELDS;
