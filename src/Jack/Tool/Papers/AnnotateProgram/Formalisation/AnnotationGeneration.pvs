@@ -59,11 +59,6 @@ BEGIN
     (BExpr(Eq(NumVarEval(cp), NumVarEval(name_of(q)))),
      CaseJML(ann_guard_actions(mp)(ts)))
 
-  ann_guard_actions_injective : LEMMA
-    injective?(ann_guard_actions(mp))
-
-  ann_trans_cp_injective : LEMMA
-    injective?(ann_trans_cp(mp))
 
   % Generates annotations to update the control point and the variables when an
   % event occurs
