@@ -7,8 +7,8 @@ import javafe.tc.TypeSig;
 
 import org.apache.bcel.generic.ClassGen;
 
-import mobius.bico.ClassExecutor;
-import mobius.bico.Executor;
+import mobius.bico.executors.ClassExecutor;
+import mobius.bico.executors.Executor;
 
 /**
  * An executor that generates the annotations for the class

@@ -12,9 +12,9 @@ import org.apache.bcel.generic.Type;
 
 import escjava.sortedProver.Lifter.QuantVariableRef;
 
-import mobius.bico.ABasicExecutor;
-import mobius.bico.MethodHandler;
 import mobius.bico.Util.Stream;
+import mobius.bico.dico.MethodHandler;
+import mobius.bico.executors.ABasicExecutor;
 import mobius.directVCGen.formula.Expression;
 import mobius.directVCGen.formula.Formula;
 import mobius.directVCGen.formula.Heap;

@@ -4,8 +4,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 
 import javafe.tc.TypeSig;
-import mobius.bico.ABasicExecutor;
-import mobius.bico.ClassExecutor;
+import mobius.bico.executors.ABasicExecutor;
+import mobius.bico.executors.ClassExecutor;
 
 import org.apache.bcel.classfile.Method;
 import org.apache.bcel.generic.ClassGen;
