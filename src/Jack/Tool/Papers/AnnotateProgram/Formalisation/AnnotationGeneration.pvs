@@ -59,6 +59,12 @@ BEGIN
     (BExpr(Eq(NumVarEval(cp), NumVarEval(name_of(q)))),
      CaseJML(ann_guard_actions(mp)(ts)))
 
+  ann_guard_actions_injective : LEMMA
+    injective?(ann_guard_actions(mp))
+
+  ann_trans_cp_injective : LEMMA
+    injective?(ann_trans_cp(mp))
+
   % Generates annotations to update the control point and the variables when an
   % event occurs
   ann_event(mp)(ts : finite_set[Transition]): Stmt =
@@ -191,9 +197,8 @@ BEGIN
                ELSE m = m1
                ENDIF)
 
-  % proven except for locals case
   ann_program_preserves_var_decls : LEMMA % :-)
-    FORALL (mp : MonitoredProgram)(vn : string) :
+    FORALL (mp : MonitoredProgram):
       ann_program_pre(mp) IMPLIES
         getFieldDecls(program(mp)) = getFieldDecls(ann_program(mp))
         AND
@@ -201,7 +206,7 @@ BEGIN
         AND
         subset?(getGhostDecls(program(mp)), getGhostDecls(ann_program(mp)))
 
-  % NOT USED 
+
   ann_program_preserves_var_decl_names : LEMMA % :-)
     FORALL (mp : MonitoredProgram)(vn : string) :
       ann_program_pre(mp) IMPLIES
@@ -215,11 +220,17 @@ BEGIN
          var_names(getLocalDecls(ann_program(mp)))(vn))
 
   % PROVE
-  ann_program_preserves_wf_state : LEMMA  
+  ann_program_preserves_wf_state : LEMMA  % :-)
     FORALL (mp : MonitoredProgram, s : PState) :
       ann_program_pre(mp) IMPLIES
       wf_state(program(mp))(s) IMPLIES
         wf_state(ann_program(mp))(s)
+
+%  ann_program_preserves_AP_wf_state : LEMMA  
+%    FORALL (mp : MonitoredProgram, s : APState) :
+%      ann_program_pre(mp) IMPLIES
+%      wf_state(program(mp))(s) IMPLIES
+%        wf_state(ann_program(mp))(s)
 
   % PROVE
   ann_program_preserves_pstate_vars : LEMMA % :-)

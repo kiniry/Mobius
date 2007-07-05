@@ -167,7 +167,7 @@ BEGIN
 
   Class : TYPE = [# name : Name,
                     super_class : lift[Name],
-                    inv : Expr,
+                    inv : (BExpr?),
                     ghost_vars : finite_set[FieldDecl],
                     fields : finite_set[FieldDecl],
                     methods : finite_set[Method] #]

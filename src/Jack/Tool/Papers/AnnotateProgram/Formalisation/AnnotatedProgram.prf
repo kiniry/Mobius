@@ -1,7 +1,7 @@
 (AnnotatedProgramSemantics
  (update_PState_TCC1 0
-  (update_PState_TCC1-1 nil 3390796236 3392371180
-   ("" (subtype-tcc) nil nil) proved-complete
+  (update_PState_TCC1-1 nil 3390796236 3392610736
+   ("" (subtype-tcc) nil nil) proved
    ((APState type-eq-decl nil AnnotatedProgramSemantics nil)
     (PState type-eq-decl nil State nil)
     (Store type-eq-decl nil State nil)
@@ -11,6 +11,7 @@
     (Method type-eq-decl nil Program nil)
     (Stmt type-decl nil Stmt_adt nil)
     (LocalVarDecl type-eq-decl nil Program nil)
+    (BExpr? adt-recognizer-decl "[Expr -> boolean]" Expr_adt nil)
     (Expr type-decl nil Expr_adt nil)
     (finite_set type-eq-decl nil finite_sets nil)
     (FieldDecl type-eq-decl nil Program nil)
@@ -20,35 +21,35 @@
     (Val type-decl nil Val_adt nil)
     (Name formal-nonempty-type-decl nil AnnotatedProgramSemantics nil)
     (update_PState_type const-decl "boolean" SemanticsTypes nil))
-   48 40 nil nil))
+   94 60 nil nil))
  (update_GhostVars_TCC1 0
-  (update_GhostVars_TCC1-1 nil 3390796236 3392371181
-   ("" (subtype-tcc) nil nil) proved-complete
+  (update_GhostVars_TCC1-1 nil 3390796236 3392610736
+   ("" (subtype-tcc) nil nil) proved
    ((APState type-eq-decl nil AnnotatedProgramSemantics nil)
     (PState type-eq-decl nil State nil)
     (Store type-eq-decl nil State nil)
     (Name formal-nonempty-type-decl nil AnnotatedProgramSemantics nil)
     (update_GhostVars_type const-decl "boolean" SemanticsJMLTypes nil))
-   41 30 t nil))
+   55 60 t nil))
  (initial_AP_state_TCC1 0
-  (initial_AP_state_TCC1-1 nil 3389427978 3392371181
-   ("" (subtype-tcc) nil nil) proved-incomplete
+  (initial_AP_state_TCC1-1 nil 3389427978 3392610737
+   ("" (subtype-tcc) nil nil) proved
    ((Name formal-nonempty-type-decl nil AnnotatedProgramSemantics nil)
     (getGhostDecls const-decl "finite_set[FieldDecl]" ProgramFunctions
      nil)
     (member const-decl "bool" sets nil)
     (empty? const-decl "bool" sets nil)
     (nonempty? const-decl "bool" sets nil))
-   180 140 nil nil))
+   216 170 nil nil))
  (on_method_entry_AP_TCC1 0
-  (on_method_entry_AP_TCC1-1 nil 3391506354 3392371181
+  (on_method_entry_AP_TCC1-1 nil 3391506354 3392610737
    ("" (typepred "on_method_entry")
     (("" (assert)
       (("" (expand "on_method_event_type") (("" (propax) nil nil))
         nil))
       nil))
     nil)
-   proved-incomplete
+   proved
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
@@ -59,6 +60,7 @@
     (FieldDecl type-eq-decl nil Program nil)
     (finite_set type-eq-decl nil finite_sets nil)
     (Expr type-decl nil Expr_adt nil)
+    (BExpr? adt-recognizer-decl "[Expr -> boolean]" Expr_adt nil)
     (LocalVarDecl type-eq-decl nil Program nil)
     (Stmt type-decl nil Stmt_adt nil)
     (Method type-eq-decl nil Program nil)
@@ -100,9 +102,9 @@
      AnnotatedProgramSemantics nil)
     (on_method_entry const-decl "(on_method_event_type)" SemanticsJML
      nil))
-   209 170 t nil))
+   219 180 t nil))
  (IMP_SemanticsProofs_TCC1 0
-  (IMP_SemanticsProofs_TCC1-1 nil 3390796236 3392371183
+  (IMP_SemanticsProofs_TCC1-1 nil 3390796236 3392610739
    ("" (skosimp*)
     (("" (expand "on_method_entry")
       (("" (split -3)
@@ -215,7 +217,7 @@
         nil))
       nil))
     nil)
-   proved-incomplete
+   proved
    ((on_method_entry const-decl "(on_method_event_type)" SemanticsJML
      nil)
     (Method type-eq-decl nil Program nil)
@@ -228,7 +230,9 @@
     (APState type-eq-decl nil AnnotatedProgramSemantics nil)
     (PState type-eq-decl nil State nil)
     (Store type-eq-decl nil State nil) (< const-decl "bool" reals nil)
-    (below type-eq-decl nil naturalnumbers nil) nil nil
+    (below type-eq-decl nil naturalnumbers nil)
+    (m1!2 skolem-const-decl "nat" AnnotatedProgramSemantics nil)
+    (m1!1 skolem-const-decl "nat" AnnotatedProgramSemantics nil)
     (- const-decl "[numfield, numfield -> numfield]" number_fields nil)
     (numfield nonempty-type-eq-decl nil number_fields nil)
     (upto nonempty-type-eq-decl nil naturalnumbers nil)
@@ -249,9 +253,9 @@
     (number nonempty-type-decl nil numbers nil)
     (Val type-decl nil Val_adt nil)
     (check_assertion const-decl "boolean" SemanticsJML nil))
-   2373 2070 t nil))
+   2420 2130 t nil))
  (IMP_SemanticsProofs_TCC2 0
-  (IMP_SemanticsProofs_TCC2-1 nil 3390796236 3392371185
+  (IMP_SemanticsProofs_TCC2-1 nil 3390796236 3392610741
    ("" (skosimp*)
     (("" (expand "on_method_exit_normal")
       (("" (split -3)
@@ -364,7 +368,7 @@
         nil))
       nil))
     nil)
-   proved-incomplete
+   proved
    ((on_method_exit_normal const-decl "(on_method_event_type)"
      SemanticsJML nil)
     (Val type-decl nil Val_adt nil)
@@ -398,66 +402,45 @@
     (PState type-eq-decl nil State nil)
     (APState type-eq-decl nil AnnotatedProgramSemantics nil)
     (check_assertion const-decl "boolean" SemanticsJML nil))
-   1947 1690 t nil))
+   1950 1740 t nil))
  (IMP_SemanticsProofs_TCC3 0
-  (IMP_SemanticsProofs_TCC3-1 nil 3390796236 3392371188
+  (IMP_SemanticsProofs_TCC3-1 nil 3390796236 3392611284
    ("" (skosimp*)
     (("" (expand "on_method_exit_exceptional")
       (("" (split -3)
         (("1" (flatten)
-          (("1" (assert) (("1" (flatten) (("1" (assert) nil nil)) nil))
-            nil))
-          nil)
-         ("2" (flatten)
-          (("2" (assert)
-            (("2" (expand "check_assertion")
-              (("2" (skosimp*)
-                (("2"
-                  (inst -8 "exc_set(m!1)" "s!1" "tau1!1" "tau1!3"
-                   "n1!1" "n2!1" "m1!1" "m1!2")
-                  (("2" (assert)
-                    (("2" (flatten)
-                      (("2" (replace -1)
-                        (("2" (replace -8)
-                          (("2" (replace -9)
-                            (("2" (assert)
-                              (("2"
-                                (replace -13 :dir rl)
-                                (("2"
-                                  (replace -3)
-                                  (("2"
-                                    (inst
-                                     -10
-                                     "inv!2"
-                                     "v!2"
-                                     "v!3"
-                                     "tau1!3"
-                                     "tau1!2"
-                                     "tau1!4"
-                                     "m2!1"
-                                     "m2!2"
-                                     "m2!1 - 1"
-                                     "m2!2 - 1")
-                                    (("2"
-                                      (assert)
-                                      (("2"
-                                        (flatten)
-                                        (("2"
-                                          (replace -10)
-                                          (("2"
-                                            (replace -11)
-                                            (("2"
-                                              (replace -12)
-                                              (("2"
-                                                (assert)
-                                                (("2"
-                                                  (replace -6 :dir rl)
-                                                  (("2"
-                                                    (assert)
-                                                    nil
-                                                    nil))
-                                                  nil))
-                                                nil))
+          (("1" (assert)
+            (("1" (expand "check_assertion")
+              (("1" (skosimp*)
+                (("1"
+                  (inst -10 "exc_set(m!1)" "update_PState(s!1, catch)"
+                   "tau1!1" "tau1!3" "n1!1" "n2!1" "m1!1" "m1!2")
+                  (("1" (assert)
+                    (("1" (flatten)
+                      (("1" (replace -10)
+                        (("1" (replace -15 :dir rl)
+                          (("1" (replace -4)
+                            (("1"
+                              (inst -12 "inv!2" "v!2" "v!3" "tau1!3"
+                               "tau1!2" "tau1!4" "m2!1" "m2!2"
+                               "m2!1 - 1" "m2!2 - 1")
+                              (("1"
+                                (assert)
+                                (("1"
+                                  (flatten)
+                                  (("1"
+                                    (replace -12)
+                                    (("1"
+                                      (replace -13)
+                                      (("1"
+                                        (assert)
+                                        (("1"
+                                          (replace -7 :dir rl)
+                                          (("1"
+                                            (replace -20)
+                                            (("1"
+                                              (replace -21 :dir rl)
+                                              (("1" (propax) nil nil))
                                               nil))
                                             nil))
                                           nil))
@@ -476,34 +459,51 @@
                 nil))
               nil))
             nil))
+          nil)
+         ("2" (flatten)
+          (("2" (assert) (("2" (flatten) (("2" (assert) nil nil)) nil))
+            nil))
           nil))
         nil))
       nil))
     nil)
-   proved-incomplete
+   proved
    ((on_method_exit_exceptional const-decl "(on_method_event_type)"
      SemanticsJML nil)
     (check_assertion const-decl "boolean" SemanticsJML nil)
-    (APState type-eq-decl nil AnnotatedProgramSemantics nil)
+    (Store type-eq-decl nil State nil)
     (PState type-eq-decl nil State nil)
-    (Store type-eq-decl nil State nil) (< const-decl "bool" reals nil)
+    (APState type-eq-decl nil AnnotatedProgramSemantics nil)
+    (Excpt type-decl nil Excpt_adt nil)
+    (lift type-decl nil lift_adt nil) (PSt type-eq-decl nil State nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (Val type-decl nil Val_adt nil)
+    (defined? const-decl "boolean" ValProp nil)
+    (FieldDecl type-eq-decl nil Program nil)
+    (BExpr? adt-recognizer-decl "[Expr -> boolean]" Expr_adt nil)
+    (Class type-eq-decl nil Program nil)
+    (Program type-eq-decl nil Program nil)
+    (update_PState_type const-decl "boolean" SemanticsTypes nil)
+    (update_PState const-decl "(update_PState_type)"
+     AnnotatedProgramSemantics nil)
+    (catch const-decl "PState" State nil)
+    (< const-decl "bool" reals nil)
     (below type-eq-decl nil naturalnumbers nil)
-    (upto nonempty-type-eq-decl nil naturalnumbers nil)
-    (<= const-decl "bool" reals nil)
-    (nat nonempty-type-eq-decl nil naturalnumbers nil)
-    (>= const-decl "bool" reals nil)
-    (bool nonempty-type-eq-decl nil booleans nil)
-    (int nonempty-type-eq-decl nil integers nil)
-    (integer_pred const-decl "[rational -> boolean]" integers nil)
-    (rational nonempty-type-from-decl nil rationals nil)
-    (rational_pred const-decl "[real -> boolean]" rationals nil)
-    (real nonempty-type-from-decl nil reals nil)
-    (real_pred const-decl "[number_field -> boolean]" reals nil)
-    (number_field nonempty-type-from-decl nil number_fields nil)
+    (number nonempty-type-decl nil numbers nil)
     (number_field_pred const-decl "[number -> boolean]" number_fields
      nil)
-    (boolean nonempty-type-decl nil booleans nil)
-    (number nonempty-type-decl nil numbers nil)
+    (number_field nonempty-type-from-decl nil number_fields nil)
+    (real_pred const-decl "[number_field -> boolean]" reals nil)
+    (real nonempty-type-from-decl nil reals nil)
+    (rational_pred const-decl "[real -> boolean]" rationals nil)
+    (rational nonempty-type-from-decl nil rationals nil)
+    (integer_pred const-decl "[rational -> boolean]" integers nil)
+    (int nonempty-type-eq-decl nil integers nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (>= const-decl "bool" reals nil)
+    (nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (<= const-decl "bool" reals nil)
+    (upto nonempty-type-eq-decl nil naturalnumbers nil)
     (Method type-eq-decl nil Program nil)
     (Expr type-decl nil Expr_adt nil)
     (finite_set type-eq-decl nil finite_sets nil)
@@ -511,12 +511,11 @@
     (LocalVarDecl type-eq-decl nil Program nil)
     (Stmt type-decl nil Stmt_adt nil)
     (Name formal-nonempty-type-decl nil AnnotatedProgramSemantics nil)
-    (numfield nonempty-type-eq-decl nil number_fields nil)
     (- const-decl "[numfield, numfield -> numfield]" number_fields nil)
-    (Val type-decl nil Val_adt nil))
-   3131 1070 t nil))
+    (numfield nonempty-type-eq-decl nil number_fields nil))
+   142426 5920 t nil))
  (IMP_SemanticsProofs_TCC4 0
-  (IMP_SemanticsProofs_TCC4-1 nil 3390796236 3392371189
+  (IMP_SemanticsProofs_TCC4-1 nil 3390796236 3392610744
    ("" (skosimp*)
     (("" (expand "execute_CaseJML")
       (("" (lift-if)
@@ -543,7 +542,7 @@
         nil))
       nil))
     nil)
-   proved-incomplete
+   proved
    ((execute_CaseJML const-decl "(execute_CaseJML_type)" SemanticsJML
      nil)
     (Name formal-nonempty-type-decl nil AnnotatedProgramSemantics nil)
@@ -580,9 +579,9 @@
     (< const-decl "bool" reals nil) (Store type-eq-decl nil State nil)
     (PState type-eq-decl nil State nil)
     (APState type-eq-decl nil AnnotatedProgramSemantics nil))
-   411 330 t nil))
+   375 340 t nil))
  (IMP_SemanticsProofs_TCC5 0
-  (IMP_SemanticsProofs_TCC5-1 nil 3390796236 3392371189
+  (IMP_SemanticsProofs_TCC5-1 nil 3390796236 3392610745
    ("" (skosimp*)
     (("" (expand "execute_set")
       (("" (skosimp*)
@@ -608,7 +607,7 @@
         nil))
       nil))
     nil)
-   proved-incomplete
+   proved
    ((execute_set const-decl "(execute_set_type)" SemanticsJML nil)
     (Val type-decl nil Val_adt nil)
     (number nonempty-type-decl nil numbers nil)
@@ -629,16 +628,18 @@
     (upto nonempty-type-eq-decl nil naturalnumbers nil)
     (numfield nonempty-type-eq-decl nil number_fields nil)
     (- const-decl "[numfield, numfield -> numfield]" number_fields nil)
-    nil nil (below type-eq-decl nil naturalnumbers nil)
+    (n1!1 skolem-const-decl "nat" AnnotatedProgramSemantics nil)
+    (n2!1 skolem-const-decl "nat" AnnotatedProgramSemantics nil)
+    (below type-eq-decl nil naturalnumbers nil)
     (< const-decl "bool" reals nil)
     (APState type-eq-decl nil AnnotatedProgramSemantics nil)
     (PState type-eq-decl nil State nil)
     (Store type-eq-decl nil State nil)
     (Expr type-decl nil Expr_adt nil)
     (Name formal-nonempty-type-decl nil AnnotatedProgramSemantics nil))
-   444 370 t nil))
+   429 380 t nil))
  (stmt_determ_step_AP 0
-  (stmt_determ_step_AP-1 nil 3390125303 3392545414
+  (stmt_determ_step_AP-1 nil 3390125303 3392610745
    ("" (use "stmt_determ_step") nil nil) proved
    ((on_method_exit_exceptional const-decl "(on_method_event_type)"
      SemanticsJML nil)
@@ -693,6 +694,7 @@
     (Method type-eq-decl nil Program nil)
     (Stmt type-decl nil Stmt_adt nil)
     (LocalVarDecl type-eq-decl nil Program nil)
+    (BExpr? adt-recognizer-decl "[Expr -> boolean]" Expr_adt nil)
     (Expr type-decl nil Expr_adt nil)
     (finite_set type-eq-decl nil finite_sets nil)
     (FieldDecl type-eq-decl nil Program nil)
@@ -702,9 +704,9 @@
     (Val type-decl nil Val_adt nil)
     (Name formal-nonempty-type-decl nil AnnotatedProgramSemantics nil)
     (stmt_determ_step formula-decl nil SemanticsProofs nil))
-   47 40 t shostak))
+   41 40 t shostak))
  (wf_state_ghost_not_local_or_field 0
-  (wf_state_ghost_not_local_or_field-1 nil 3390125110 3392545418
+  (wf_state_ghost_not_local_or_field-1 nil 3390125110 3392610747
    ("" (skosimp*)
     (("" (expand "wf_state")
       (("" (assert)
@@ -791,6 +793,7 @@
     (Method type-eq-decl nil Program nil)
     (Stmt type-decl nil Stmt_adt nil)
     (LocalVarDecl type-eq-decl nil Program nil)
+    (BExpr? adt-recognizer-decl "[Expr -> boolean]" Expr_adt nil)
     (Expr type-decl nil Expr_adt nil)
     (finite_set type-eq-decl nil finite_sets nil)
     (FieldDecl type-eq-decl nil Program nil)
@@ -817,9 +820,9 @@
     (is_field const-decl "boolean" State nil)
     (id const-decl "(bijective?[T, T])" identity nil)
     (wf_state const-decl "boolean" State nil))
-   3962 2190 t shostak))
+   2179 2030 t shostak))
  (wf_update_PState 0
-  (wf_update_PState-2 nil 3392375532 3392545419 ("" (grind) nil nil)
+  (wf_update_PState-2 nil 3392375532 3392610747 ("" (grind) nil nil)
    proved
    ((defined? const-decl "boolean" ValProp nil)
     (Name formal-nonempty-type-decl nil AnnotatedProgramSemantics nil)
@@ -852,6 +855,7 @@
     (Method type-eq-decl nil Program nil)
     (Stmt type-decl nil Stmt_adt nil)
     (LocalVarDecl type-eq-decl nil Program nil)
+    (BExpr? adt-recognizer-decl "[Expr -> boolean]" Expr_adt nil)
     (Expr type-decl nil Expr_adt nil)
     (finite_set type-eq-decl nil finite_sets nil)
     (FieldDecl type-eq-decl nil Program nil)
@@ -863,18 +867,18 @@
      nil)
     (wf_ghoststate const-decl "boolean" SemanticsJML nil)
     (wf_state const-decl "boolean" AnnotatedProgramSemantics nil))
-   478 430 nil nil)
+   470 440 nil nil)
   (wf_update_PState-1 nil 3391156508 3392371192 ("" (grind) nil nil)
-   proved
+   unchecked
    ((defined? const-decl "boolean" ValProp nil)
     (Name formal-nonempty-type-decl nil AnnotatedProgramSemantics nil)
     (is_field const-decl "boolean" State nil)
     (getFieldDecls const-decl "finite_set[FieldDecl]" ProgramFunctions
      nil)
-    nil (is_local const-decl "boolean" State nil)
+    (is_local const-decl "boolean" State nil)
     (getLocalDecls const-decl "finite_set[LocalVarDecl]"
      ProgramFunctions nil)
-    nil (wf_state const-decl "boolean" State nil)
+    (wf_state const-decl "boolean" State nil)
     (update_GhostVars const-decl "(update_GhostVars_type)"
      AnnotatedProgramSemantics nil)
     (update_GhostVars_type const-decl "boolean" SemanticsJMLTypes nil)
@@ -908,7 +912,7 @@
     (wf_state const-decl "boolean" AnnotatedProgramSemantics nil))
    468 420 t shostak))
  (wf_update_GhostVars 0
-  (wf_update_GhostVars-1 nil 3391169512 3392545419
+  (wf_update_GhostVars-1 nil 3391169512 3392610747
    ("" (skosimp*)
     (("" (expand "wf_state")
       (("" (expand "update_GhostVars")
@@ -919,9 +923,9 @@
    ((wf_state const-decl "boolean" AnnotatedProgramSemantics nil)
     (update_GhostVars const-decl "(update_GhostVars_type)"
      AnnotatedProgramSemantics nil))
-   51 50 t shostak))
+   46 40 t shostak))
  (wf_state_update_stack 0
-  (wf_state_update_stack-1 nil 3391162146 3392545431
+  (wf_state_update_stack-1 nil 3391162146 3392610760
    ("" (skosimp*)
     (("" (expand "update_stack")
       (("" (split 1)
@@ -1230,7 +1234,9 @@
     (Program type-eq-decl nil Program nil)
     (Class type-eq-decl nil Program nil)
     (Method type-eq-decl nil Program nil)
-    (Stmt type-decl nil Stmt_adt nil) (Expr type-decl nil Expr_adt nil)
+    (Stmt type-decl nil Stmt_adt nil)
+    (BExpr? adt-recognizer-decl "[Expr -> boolean]" Expr_adt nil)
+    (Expr type-decl nil Expr_adt nil)
     (FieldDecl type-eq-decl nil Program nil)
     (This const-decl "Name" Program nil)
     (update_local const-decl "PState" State nil)
@@ -1269,9 +1275,9 @@
     (< const-decl "bool" reals nil)
     (nonempty? const-decl "bool" sets nil)
     (wf_update_PState formula-decl nil AnnotatedProgramSemantics nil))
-   12566 11380 t shostak))
+   12239 11060 t shostak))
  (wf_initial_AP_state 0
-  (wf_initial_AP_state-1 nil 3390075578 3392545432
+  (wf_initial_AP_state-1 nil 3390075578 3392610760
    ("" (skosimp*)
     (("" (expand "initial_AP_state")
       (("" (expand "wf_state")
@@ -1298,6 +1304,7 @@
     (FieldDecl type-eq-decl nil Program nil)
     (finite_set type-eq-decl nil finite_sets nil)
     (Expr type-decl nil Expr_adt nil)
+    (BExpr? adt-recognizer-decl "[Expr -> boolean]" Expr_adt nil)
     (LocalVarDecl type-eq-decl nil Program nil)
     (Stmt type-decl nil Stmt_adt nil)
     (Method type-eq-decl nil Program nil)
@@ -1334,9 +1341,9 @@
     (Store type-eq-decl nil State nil)
     (wf_initial_ghost_state formula-decl nil SemanticsJML nil)
     (wf_state const-decl "boolean" AnnotatedProgramSemantics nil))
-   165 170 t shostak))
+   218 180 t shostak))
  (deriv_expr_yields_wf_state_AP 0
-  (deriv_expr_yields_wf_state_AP-1 nil 3390125399 3392545996
+  (deriv_expr_yields_wf_state_AP-1 nil 3390125399 3392610804
    ("" (expand "deriv_expr")
     (("" (use "wf_induction[nat, <]")
       (("1"
@@ -2650,141 +2657,142 @@
       nil))
     nil)
    proved
-   ((deriv_expr const-decl "bool" Semantics nil)
-    (wf_nat formula-decl nil naturalnumbers nil)
-    (Name formal-nonempty-type-decl nil AnnotatedProgramSemantics nil)
-    (Val type-decl nil Val_adt nil)
-    (defined? const-decl "boolean" ValProp nil)
-    (JType type-decl nil JType_adt nil)
-    (FieldDecl type-eq-decl nil Program nil)
-    (finite_set type-eq-decl nil finite_sets nil)
-    (Expr type-decl nil Expr_adt nil)
-    (LocalVarDecl type-eq-decl nil Program nil)
-    (Stmt type-decl nil Stmt_adt nil)
-    (Method type-eq-decl nil Program nil)
-    (lift type-decl nil lift_adt nil)
-    (Class type-eq-decl nil Program nil)
-    (Program type-eq-decl nil Program nil)
-    (Store type-eq-decl nil State nil)
-    (PState type-eq-decl nil State nil)
-    (APState type-eq-decl nil AnnotatedProgramSemantics nil)
-    (IMPLIES const-decl "[bool, bool -> bool]" booleans nil)
-    (wf_Program const-decl "boolean" WellFormedProgram nil)
-    (below type-eq-decl nil naturalnumbers nil)
-    (wf_state const-decl "boolean" AnnotatedProgramSemantics nil)
-    (bijective? const-decl "bool" functions nil)
-    (id const-decl "(bijective?[T, T])" identity nil)
-    (Excpt type-decl nil Excpt_adt nil)
-    (PSt type-eq-decl nil State nil)
-    (update_PState_type const-decl "boolean" SemanticsTypes nil)
-    (update_PState const-decl "(update_PState_type)"
+   ((pred type-eq-decl nil defined_types nil)
+    (well_founded? const-decl "bool" orders nil)
+    (wf_induction formula-decl nil wf_induction nil)
+    (number nonempty-type-decl nil numbers nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (number_field_pred const-decl "[number -> boolean]" number_fields
+     nil)
+    (number_field nonempty-type-from-decl nil number_fields nil)
+    (real_pred const-decl "[number_field -> boolean]" reals nil)
+    (real nonempty-type-from-decl nil reals nil)
+    (rational_pred const-decl "[real -> boolean]" rationals nil)
+    (rational nonempty-type-from-decl nil rationals nil)
+    (integer_pred const-decl "[rational -> boolean]" integers nil)
+    (int nonempty-type-eq-decl nil integers nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (>= const-decl "bool" reals nil)
+    (nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (restrict const-decl "R" restrict nil)
+    (< const-decl "bool" reals nil)
+    (deriv_expr_bottom_iff_exception_step formula-decl nil
+     SemanticsProofs nil)
+    (v!1 skolem-const-decl "Val[Name]" AnnotatedProgramSemantics nil)
+    (wf_state_update formula-decl nil State nil)
+    (target adt-accessor-decl "[(Assign?) -> Name]" Expr_adt nil)
+    (update const-decl "PState" State nil)
+    (wf_update_PState formula-decl nil AnnotatedProgramSemantics nil)
+    (source adt-accessor-decl "[(Assign?) -> Expr]" Expr_adt nil)
+    (Assign? adt-recognizer-decl "[Expr -> boolean]" Expr_adt nil)
+    (x!1 skolem-const-decl "nat" AnnotatedProgramSemantics nil)
+    (- const-decl "[numfield, numfield -> numfield]" number_fields nil)
+    (numfield nonempty-type-eq-decl nil number_fields nil)
+    (test adt-accessor-decl "[(CondExpr?) -> Expr]" Expr_adt nil)
+    (CondExpr? adt-recognizer-decl "[Expr -> boolean]" Expr_adt nil)
+    (then_expr adt-accessor-decl "[(CondExpr?) -> Expr]" Expr_adt nil)
+    (else_expr adt-accessor-decl "[(CondExpr?) -> Expr]" Expr_adt nil)
+    (arg adt-accessor-decl "[(MethodCall?) -> Expr]" Expr_adt nil)
+    (m1!2 skolem-const-decl "nat" AnnotatedProgramSemantics nil)
+    (raise const-decl "PState" State nil)
+    (JMLExc? adt-recognizer-decl "[Excpt -> boolean]" Excpt_adt nil)
+    (JMLExc adt-constructor-decl "(JMLExc?)" Excpt_adt nil)
+    (wf_state_raise formula-decl nil State nil)
+    (check_assertion const-decl "boolean" SemanticsJML nil)
+    (catch const-decl "PState" State nil)
+    (m1!2 skolem-const-decl "nat" AnnotatedProgramSemantics nil)
+    (wf_state_catch formula-decl nil State nil)
+    (up? adt-recognizer-decl "[lift -> boolean]" lift_adt nil)
+    (down adt-accessor-decl "[(up?) -> T]" lift_adt nil)
+    (m2!2 skolem-const-decl "nat" AnnotatedProgramSemantics nil)
+    (update_local const-decl "PState" State nil)
+    (set type-eq-decl nil sets nil)
+    (is_finite const-decl "bool" finite_sets nil)
+    (getLocalDecls const-decl "finite_set[LocalVarDecl]"
+     ProgramFunctions nil)
+    (wf_state_update_local formula-decl nil State nil)
+    (old_val_arg!1 skolem-const-decl "Val[Name]"
      AnnotatedProgramSemantics nil)
-    (update_GhostVars_type const-decl "boolean" SemanticsJMLTypes nil)
-    (update_GhostVars const-decl "(update_GhostVars_type)"
-     AnnotatedProgramSemantics nil)
-    (lookup const-decl "Val" SemanticsJML nil)
-    (upto nonempty-type-eq-decl nil naturalnumbers nil)
-    (<= const-decl "bool" reals nil)
-    (deriv_stmt_type type-eq-decl nil SemanticsTypes nil)
-    (deriv_stmt_rec_type type-eq-decl nil SemanticsTypes nil)
-    (deriv_expr_type type-eq-decl nil SemanticsTypes nil)
-    (deriv_expr_rec_type type-eq-decl nil SemanticsTypes nil)
-    (execute_set_type const-decl "boolean" SemanticsTypes nil)
-    (execute_set const-decl "(execute_set_type)" SemanticsJML nil)
-    (list type-decl nil list_adt nil)
-    (execute_CaseJML_type const-decl "boolean" SemanticsTypes nil)
-    (execute_CaseJML const-decl "(execute_CaseJML_type)" SemanticsJML
-     nil)
-    (on_method_event_type const-decl "boolean" SemanticsTypes nil)
-    (on_method_entry const-decl "(on_method_event_type)" SemanticsJML
-     nil)
-    (on_method_exit_normal const-decl "(on_method_event_type)"
-     SemanticsJML nil)
-    (on_method_exit_exceptional const-decl "(on_method_event_type)"
-     SemanticsJML nil)
-    (deriv_stmt def-decl "bool" Semantics nil)
-    (deriv_expr def-decl "bool" Semantics nil)
-    (tgt adt-accessor-decl "[(MethodCall?) -> Expr]" Expr_adt nil)
-    (MethodCall? adt-recognizer-decl "[Expr -> boolean]" Expr_adt nil)
-    (NullPointer adt-constructor-decl "(NullPointer?)" Excpt_adt nil)
-    (NullPointer? adt-recognizer-decl "[Excpt -> boolean]" Excpt_adt
-     nil)
-    (p!1 skolem-const-decl "Program[Name]" AnnotatedProgramSemantics
+    (wf_state const-decl "boolean" State nil)
+    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
+    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
+    (lookup_local const-decl "Val" State nil)
+    (is_local const-decl "boolean" State nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (PRED type-eq-decl nil defined_types nil)
+    (every adt-def-decl "boolean" lift_adt nil)
+    (methods const-decl "finite_set[Method]" ProgramFunctions nil)
+    (lookup_mthd const-decl "lift[(methods(p))]" ProgramFunctions nil)
+    (name adt-accessor-decl "[(MethodCall?) -> Name]" Expr_adt nil)
+    (wf_state_update_stack formula-decl nil AnnotatedProgramSemantics
      nil)
     (md!1 skolem-const-decl "Method[Name]" AnnotatedProgramSemantics
      nil)
-    (wf_state_update_stack formula-decl nil AnnotatedProgramSemantics
+    (p!1 skolem-const-decl "Program[Name]" AnnotatedProgramSemantics
      nil)
-    (name adt-accessor-decl "[(MethodCall?) -> Name]" Expr_adt nil)
-    (lookup_mthd const-decl "lift[(methods(p))]" ProgramFunctions nil)
-    (methods const-decl "finite_set[Method]" ProgramFunctions nil)
-    (every adt-def-decl "boolean" lift_adt nil)
-    (PRED type-eq-decl nil defined_types nil)
-    (NOT const-decl "[bool -> bool]" booleans nil)
-    (is_local const-decl "boolean" State nil)
-    (lookup_local const-decl "Val" State nil)
-    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
-    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
-    (wf_state const-decl "boolean" State nil)
-    (old_val_arg!1 skolem-const-decl "Val[Name]"
+    (NullPointer? adt-recognizer-decl "[Excpt -> boolean]" Excpt_adt
+     nil)
+    (NullPointer adt-constructor-decl "(NullPointer?)" Excpt_adt nil)
+    (MethodCall? adt-recognizer-decl "[Expr -> boolean]" Expr_adt nil)
+    (tgt adt-accessor-decl "[(MethodCall?) -> Expr]" Expr_adt nil)
+    (deriv_expr def-decl "bool" Semantics nil)
+    (deriv_stmt def-decl "bool" Semantics nil)
+    (on_method_exit_exceptional const-decl "(on_method_event_type)"
+     SemanticsJML nil)
+    (on_method_exit_normal const-decl "(on_method_event_type)"
+     SemanticsJML nil)
+    (on_method_entry const-decl "(on_method_event_type)" SemanticsJML
+     nil)
+    (on_method_event_type const-decl "boolean" SemanticsTypes nil)
+    (execute_CaseJML const-decl "(execute_CaseJML_type)" SemanticsJML
+     nil)
+    (execute_CaseJML_type const-decl "boolean" SemanticsTypes nil)
+    (list type-decl nil list_adt nil)
+    (execute_set const-decl "(execute_set_type)" SemanticsJML nil)
+    (execute_set_type const-decl "boolean" SemanticsTypes nil)
+    (deriv_expr_rec_type type-eq-decl nil SemanticsTypes nil)
+    (deriv_expr_type type-eq-decl nil SemanticsTypes nil)
+    (deriv_stmt_rec_type type-eq-decl nil SemanticsTypes nil)
+    (deriv_stmt_type type-eq-decl nil SemanticsTypes nil)
+    (<= const-decl "bool" reals nil)
+    (upto nonempty-type-eq-decl nil naturalnumbers nil)
+    (lookup const-decl "Val" SemanticsJML nil)
+    (update_GhostVars const-decl "(update_GhostVars_type)"
      AnnotatedProgramSemantics nil)
-    (wf_state_update_local formula-decl nil State nil)
-    (getLocalDecls const-decl "finite_set[LocalVarDecl]"
-     ProgramFunctions nil)
-    (is_finite const-decl "bool" finite_sets nil)
-    (set type-eq-decl nil sets nil)
-    (update_local const-decl "PState" State nil)
-    (m2!2 skolem-const-decl "nat" AnnotatedProgramSemantics nil)
-    (down adt-accessor-decl "[(up?) -> T]" lift_adt nil)
-    (up? adt-recognizer-decl "[lift -> boolean]" lift_adt nil)
-    (wf_state_catch formula-decl nil State nil)
-    (m1!2 skolem-const-decl "nat" AnnotatedProgramSemantics nil)
-    (catch const-decl "PState" State nil)
-    (check_assertion const-decl "boolean" SemanticsJML nil)
-    (wf_state_raise formula-decl nil State nil)
-    (JMLExc adt-constructor-decl "(JMLExc?)" Excpt_adt nil)
-    (JMLExc? adt-recognizer-decl "[Excpt -> boolean]" Excpt_adt nil)
-    (raise const-decl "PState" State nil)
-    (m1!2 skolem-const-decl "nat" AnnotatedProgramSemantics nil)
-    (arg adt-accessor-decl "[(MethodCall?) -> Expr]" Expr_adt nil)
-    (else_expr adt-accessor-decl "[(CondExpr?) -> Expr]" Expr_adt nil)
-    (then_expr adt-accessor-decl "[(CondExpr?) -> Expr]" Expr_adt nil)
-    (CondExpr? adt-recognizer-decl "[Expr -> boolean]" Expr_adt nil)
-    (test adt-accessor-decl "[(CondExpr?) -> Expr]" Expr_adt nil)
-    (numfield nonempty-type-eq-decl nil number_fields nil)
-    (- const-decl "[numfield, numfield -> numfield]" number_fields nil)
-    (x!1 skolem-const-decl "nat" AnnotatedProgramSemantics nil)
-    (Assign? adt-recognizer-decl "[Expr -> boolean]" Expr_adt nil)
-    (source adt-accessor-decl "[(Assign?) -> Expr]" Expr_adt nil)
-    (wf_update_PState formula-decl nil AnnotatedProgramSemantics nil)
-    (update const-decl "PState" State nil)
-    (target adt-accessor-decl "[(Assign?) -> Name]" Expr_adt nil)
-    (wf_state_update formula-decl nil State nil)
-    (v!1 skolem-const-decl "Val[Name]" AnnotatedProgramSemantics nil)
-    (deriv_expr_bottom_iff_exception_step formula-decl nil
-     SemanticsProofs nil)
-    (< const-decl "bool" reals nil)
-    (restrict const-decl "R" restrict nil)
-    (nat nonempty-type-eq-decl nil naturalnumbers nil)
-    (>= const-decl "bool" reals nil)
-    (bool nonempty-type-eq-decl nil booleans nil)
-    (int nonempty-type-eq-decl nil integers nil)
-    (integer_pred const-decl "[rational -> boolean]" integers nil)
-    (rational nonempty-type-from-decl nil rationals nil)
-    (rational_pred const-decl "[real -> boolean]" rationals nil)
-    (real nonempty-type-from-decl nil reals nil)
-    (real_pred const-decl "[number_field -> boolean]" reals nil)
-    (number_field nonempty-type-from-decl nil number_fields nil)
-    (number_field_pred const-decl "[number -> boolean]" number_fields
-     nil)
-    (boolean nonempty-type-decl nil booleans nil)
-    (number nonempty-type-decl nil numbers nil)
-    (wf_induction formula-decl nil wf_induction nil)
-    (well_founded? const-decl "bool" orders nil)
-    (pred type-eq-decl nil defined_types nil))
-   483501 81500 t shostak))
+    (update_GhostVars_type const-decl "boolean" SemanticsJMLTypes nil)
+    (update_PState const-decl "(update_PState_type)"
+     AnnotatedProgramSemantics nil)
+    (update_PState_type const-decl "boolean" SemanticsTypes nil)
+    (PSt type-eq-decl nil State nil)
+    (Excpt type-decl nil Excpt_adt nil)
+    (id const-decl "(bijective?[T, T])" identity nil)
+    (bijective? const-decl "bool" functions nil)
+    (wf_state const-decl "boolean" AnnotatedProgramSemantics nil)
+    (below type-eq-decl nil naturalnumbers nil)
+    (wf_Program const-decl "boolean" WellFormedProgram nil)
+    (IMPLIES const-decl "[bool, bool -> bool]" booleans nil)
+    (APState type-eq-decl nil AnnotatedProgramSemantics nil)
+    (PState type-eq-decl nil State nil)
+    (Store type-eq-decl nil State nil)
+    (Program type-eq-decl nil Program nil)
+    (Class type-eq-decl nil Program nil)
+    (lift type-decl nil lift_adt nil)
+    (Method type-eq-decl nil Program nil)
+    (Stmt type-decl nil Stmt_adt nil)
+    (LocalVarDecl type-eq-decl nil Program nil)
+    (BExpr? adt-recognizer-decl "[Expr -> boolean]" Expr_adt nil)
+    (Expr type-decl nil Expr_adt nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (FieldDecl type-eq-decl nil Program nil)
+    (JType type-decl nil JType_adt nil)
+    (defined? const-decl "boolean" ValProp nil)
+    (Val type-decl nil Val_adt nil)
+    (Name formal-nonempty-type-decl nil AnnotatedProgramSemantics nil)
+    (wf_nat formula-decl nil naturalnumbers nil)
+    (deriv_expr const-decl "bool" Semantics nil))
+   43966 35950 t shostak))
  (deriv_stmt_yields_wf_state_AP 0
-  (deriv_stmt_yields_wf_state_AP-2 nil 3392371370 3392545480
+  (deriv_stmt_yields_wf_state_AP-2 nil 3392371370 3392610813
    ("" (use "wf_induction[nat, <]")
     (("1"
       (inst -1
@@ -3537,6 +3545,7 @@
     (FieldDecl type-eq-decl nil Program nil)
     (finite_set type-eq-decl nil finite_sets nil)
     (Expr type-decl nil Expr_adt nil)
+    (BExpr? adt-recognizer-decl "[Expr -> boolean]" Expr_adt nil)
     (LocalVarDecl type-eq-decl nil Program nil)
     (Stmt type-decl nil Stmt_adt nil)
     (Method type-eq-decl nil Program nil)
@@ -3662,7 +3671,7 @@
     (wf_induction formula-decl nil wf_induction nil)
     (well_founded? const-decl "bool" orders nil)
     (pred type-eq-decl nil defined_types nil))
-   9561 8750 t nil)
+   9523 8530 t nil)
   (deriv_stmt_yields_wf_state_AP-1 nil 3391168604 3392371252
    ("" (use "wf_induction[nat, <]")
     (("1"
@@ -4562,7 +4571,7 @@
         nil))
       nil))
     nil)
-   proved
+   unchecked
    ((execute_set const-decl "(execute_set_type)" SemanticsJML nil)
     (deriv_stmt def-decl "bool" Semantics nil)
     (deriv_expr const-decl "bool" Semantics nil)
@@ -4589,8 +4598,7 @@
     (rational nonempty-type-from-decl nil rationals nil)
     (integer_pred const-decl "[rational -> boolean]" integers nil)
     (int nonempty-type-eq-decl nil integers nil)
-    (nat nonempty-type-eq-decl nil naturalnumbers nil)
-    (n!1 skolem-const-decl "nat" APSemanticsProperties nil))
+    (nat nonempty-type-eq-decl nil naturalnumbers nil) nil)
    2491 680 t nil))
  (CaseJML_exclusive_branches_semantics 0
   (CaseJML_exclusive_branches_semantics-1 nil 3389427193 3392545486
@@ -4771,9 +4779,8 @@
         nil))
       nil))
     nil)
-   proved
-   ((m1!1 skolem-const-decl "nat" APSemanticsProperties nil)
-    (n!1 skolem-const-decl "nat" APSemanticsProperties nil)
+   unchecked
+   (nil nil
     (stmt_determ_step_AP formula-decl nil AnnotatedProgramSemantics
      nil)
     (list_induction formula-decl nil list_adt nil)
@@ -5036,7 +5043,7 @@
         nil))
       nil))
     nil)
-   proved
+   unchecked
    ((list type-decl nil list_adt nil)
     (boolean nonempty-type-decl nil booleans nil)
     (Val type-decl nil Val_adt nil)
@@ -5115,8 +5122,6 @@
      Stmt_adt nil)
     (Stmt type-decl nil Stmt_adt nil) (Expr type-decl nil Expr_adt nil)
     (Name formal-nonempty-type-decl nil APSemanticsProperties nil)
-    (list_induction formula-decl nil list_adt nil)
-    (m1!1 skolem-const-decl "nat" APSemanticsProperties nil)
-    (n!1 skolem-const-decl "nat" APSemanticsProperties nil))
+    (list_induction formula-decl nil list_adt nil) nil nil)
    6549 3970 t nil)))
 
