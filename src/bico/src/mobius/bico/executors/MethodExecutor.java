@@ -1,6 +1,7 @@
 package mobius.bico.executors;
 
 import mobius.bico.Util;
+import mobius.bico.visitors.ArrayInstructionVisitor;
 import mobius.bico.visitors.BranchInstructionVisitor;
 
 import org.apache.bcel.Constants;
@@ -373,25 +374,7 @@ class MethodExecutor extends ASignatureExecutor {
       }
     } 
     else if (ins instanceof ArrayInstruction) {
-      final char c = name.charAt(0);
-
-      if (c == 'A' || c == 'B' || c == 'I' || c == 'S') {
-        ret = "V";
-        if (ins instanceof StackProducer) { // ?aload instructions
-          ret += name.substring(1, 6);
-        } 
-        else if (ins instanceof StackConsumer) { // ?astore
-          // instructions
-          ret += name.substring(1, 7);
-        }
-        ret += " " + c + "array";
-      } 
-      else if (c == 'C' || c == 'D' || c == 'F' || c == 'L') {
-        ret = Util.unhandled("ArrayInstruction", ins);
-      } 
-      else {
-        ret = Util.unknown("ArrayInstruction", ins);
-      }
+      ret = ArrayInstructionVisitor.translate((ArrayInstruction) ins);
     } 
     else if (ins instanceof ARRAYLENGTH) {
       ret = name;
