@@ -13,8 +13,8 @@
 *.lot
 *.toc
 *.dvi
-JMLTutorial.pdf
-JMLTutorial.ps4.pdf
+JMLTutorial*.pdf
+JMLTutorial*.ps
 *.zip
 *.emf
 *.wmf
