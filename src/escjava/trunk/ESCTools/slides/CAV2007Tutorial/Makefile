@@ -1,15 +1,15 @@
 # $Id$
 
 FILES = JMLTutorial
-PSFILES = $(FILES:%=%.ps)
-PDFFILES = $(FILES:%=%.pdf)
-HANDOUTS = $(FILES:%=%.ps4.pdf)
+PSFILES = $(FILES:%=%Presentation.ps)
+PDFFILES = $(FILES:%=%Presentation.pdf)
+HANDOUTS = $(FILES:%=%Handouts.ps4.pdf)
 
-LATEX=echo n | latex
-PDFLATEX=echo n | pdflatex
+LATEX=latex
+PDFLATEX=pdflatex
 # mlatex is the miktex version of latex
-HLATEX=echo y | mlatex
-HPDFLATEX=echo y | mpdflatex
+HLATEX=mlatex
+HPDFLATEX=mpdflatex
 DVIPS=dvips  
 PSNUP=psnup
 PS2PDF=ps2pdf
@@ -22,27 +22,27 @@ both: pdf handouts
 
 ps: $(PSFILES)
 
-%.pdf: %.tex
+%.pdf: %.tex $(FILES:%=%.tex)
 	$(PDFLATEX) $<
 	$(PDFLATEX) $<
 
-%.ps4.pdf: %.tex
+%.ps4.pdf: %.tex $(FILES:%=%.tex)
 	$(HPDFLATEX) $<
 	$(HPDFLATEX) $<
 	mv $(subst .tex,.pdf,$<) $@
 
-%.dvi: %.tex
+%.dvi: %.tex $(FILES:%=%.tex)
 	$(LATEX) $<
 	$(LATEX) $<
 
-%.ps: %.dvi
+%.ps: %.dvi 
 	$(DVIPS) -o $@ $<
 
-%.ps4.ps: %.ps
+%.ps4.ps: %.ps 
 	$(PSNUP) -2 $< >$<4.ps
 
 cleanall: clean
-	rm -f JMLTutorial.pdf
+	rm -f JMLTutorial*.pdf
 
 clean:
 	rm -f *.dvi *.ps *.log *.out *.vrb *~

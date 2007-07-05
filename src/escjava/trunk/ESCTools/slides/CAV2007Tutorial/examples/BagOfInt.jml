@@ -6,7 +6,7 @@ public class BagOfInt {
   /** Number of active elements in a. */
   private /*@ spec_public @*/ int n;
 
-  //@ public invariant n <= a.length;
+  //@ public invariant 0 <= n && n <= a.length;
 
   /** Initialize to contain input's elements. */
   //@ also
@@ -26,8 +26,14 @@ public class BagOfInt {
   /** Return and delete the minimum element. */
   //@ also
   /*@ requires 0 < n;
-    @ assignable n, a; 
+    @ assignable n, a, a[*]; 
     @ ensures n == \old(n-1);
+    @ ensures (\forall int j; 0 <= j && j < n;
+    @     (occurrences(a[j])
+    @           == \old(occurrences(a[j])))
+    @  || (\old(a[j]) == \result
+    @       && occurrences(a[j])
+    @           == \old(occurrences(a[j])-1)));
     @ ensures \result 
     @     == \old((\min int j; 0 <= j && j < n;
     @                   a[j]));       @*/

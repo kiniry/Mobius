@@ -1,10 +1,7 @@
 % -*- latex -*- mode for emacs
 % $Id$
-\typein[\MAKEHANDOUTS]{Handouts (y/n)?}
-\if y\MAKEHANDOUTS \documentclass[t,compress,landscape,handout]{beamer}
-\else \documentclass[t,compress]{beamer}
-\fi
-%
+% This file is input from JMLTutorialPresentation.tex, 
+% JMLTutorialPresentationWithNotes.tex, and JMLTutorialHandouts.tex.
 \mode<presentation>
 {
 % overall themes that seem to work for this talk, pick one:
@@ -17,13 +14,6 @@
   \setbeamercovered{transparent}
   % or whatever (possibly just delete it)
 }
-\mode<handout>
-{
-   \usepackage{pgfpages}
-   \pgfpagesuselayout{4 on 1}[border shrink=5mm]
-}
-% \setbeameroption{show notes} % to see the notes, supposedly,
-                               % but doesn't work
 
 \usepackage[english]{babel}
 \usepackage[latin1]{inputenc}
@@ -324,6 +314,7 @@ Invariants.
 \lstinputlisting[linerange={3-3},frame=single,frameround=tttt,rulecolor=\color{violet},belowskip=0pt]{examples/ArrayOps.java}
 \lstinputlisting[linerange={4-12},basicstyle=\ttfamily\color{lightgray},keywordstyle={[2]\bfseries\color{lightgray}}]{examples/ArrayOps.java}
 \note{Note the annotation comments. 
+
 You can't put a space between /* and the @, otherwise JML doesn't see it.}
 \end{frame}
 
@@ -390,7 +381,8 @@ More Java-like syntax.
 \item
 Tailored to Java semantics.
 \end{itemize}
-\note{These make it easier for Java programmers.}
+\note{The JML features/differences make it easier for Java programmers
+  to use JML and to read it.}
 \end{frame}
 
 \begin{frame}
@@ -489,7 +481,6 @@ Extensible tool architecture.
 \item
 Unification of tools.
 \end{itemize}
-\note{Currently the tools are in a bit of a mess.}
 \end{frame}
 
 \subsection[Finding More]{Where to Find More}
@@ -549,8 +540,9 @@ ignoring \lstinline!@!'s starting lines.
 First character must be \lstinline!@!
 
 \note{Java annotations are not in comments.
+
 We are experimenting with putting JML in Java annotations, but that's
-not standard and doesn't work with any tools.}
+not standard and doesn't work with any tools at present.}
 \end{frame}
 
 \begin{frame}[fragile]
@@ -612,8 +604,13 @@ Specify bounded stacks of objects.
 \frametitle{BoundedStack's Data and Invariant}
 \lstinputlisting[linerange={1-13}]{examples/BoundedStack.java}
 \note{Explain notation. Stress client view.
+
 The elems field is nullable, to allow the elements to be null.
 Without this the JML default is that they are both non-null.
+
+The part of the invariant that talks about the elements at indexes
+at size and larger being null could reasonably be private, but we
+haven't introduced that concept yet.
 }
 \end{frame}
 
@@ -627,8 +624,12 @@ Without this the JML default is that they are both non-null.
 \lstinputlisting[linerange={22-33}]{examples/BoundedStack.java}
 \note{Talk about the assignable clause and the postcondition
 and how they relate to the code.
+
 Subexpressions of assignable clause store-ref expressions are
 evaluated in the pre-state.
+
+The \lstinline!ensures_redundantly! is there becuase that
+postcondition follows from the assignable clause.
 }
 \end{frame}
 
@@ -674,7 +675,9 @@ True at end of constructor.
 Preserved by each method.
 \end{itemize}
 
-\note{Helper methods are an exception to invariant preservation.}
+\note{\par
+Helper methods are an exception to invariant preservation, which
+  we'll discuss later, so no need to talk about it now.}
 \end{frame}
 
 \begin{frame}[fragile]
@@ -848,7 +851,7 @@ Note: runtime checker gives better errors with multiple clauses.
 \end{itemize}
 \note{Strictly speaking, the defaults listed here are a lie.
   For lightweight specifications the defaults are all
-  \lstinline!\not_specified!.  The listed defaults are
+  ``not specified.''  The listed defaults are
   actually the defaults for heavyweight specifications
   (that use the \lstinline!behavior! or \lstinline!normal_behavior! keywords).
   However, the tools treat them this way.
@@ -888,11 +891,14 @@ Note: runtime checker gives better errors with multiple clauses.
 \item
 $\ldots$
 \end{itemize}
-\note{This is more than we need now, but stress the regular pattern of
+\note{We use the backslashes to avoid reserving words in expression contexts.
+
+This is more than we need now, but stress the regular pattern of
 the quantifiers, with a domain and range predicate.
-The listeners of this tutorial will be able to use \lstinline!\num_of! later.
-We use the backslashes to avoid reserving words in expression contexts.
-The \lstinline!\num_of! quantifier actually produces a long, not int, result.
+
+The listeners of this tutorial will be able to use \texttt{\textbackslash}\lstinline!num_of! later.
+
+The \texttt{\textbackslash}\lstinline!num_of! quantifier actually produces a long, not int, result.
 }
 \end{frame}
 
@@ -934,15 +940,22 @@ Specify the following:
 \rm
 \lstinputlisting[language=Java,commentstyle=\itshape]{examples/BagOfInt.jml-refined}
 \end{exercise}
+\note{We have somewhat artificially decided on data structures here,
+  since we haven't introduced JML's model features.
+
+The intent is that \texttt{a} holds the elements that are not yet deleted,
+and \texttt{n} tells the number of elements that haven't yet been
+deleted.
+}
 \end{frame}
 
 \begin{frame}<beamer>[fragile]
 \frametitle{My Solution: BagOfInt's Data}
 
 \lstinputlisting[linerange={2-2,4-9}]{examples/BagOfInt.jml}
-\note{Why do we need n?  To allow deletion.
-Note that we're using the default \lstinline!non_null! for
+\note{Note that we're using the default \lstinline!non_null! for
 \lstinline!a! instead of making it \lstinline!nullable!.
+This is because there are no elements of reference types.
 }
 \end{frame}
 
@@ -950,6 +963,9 @@ Note that we're using the default \lstinline!non_null! for
 \frametitle{My Solution: BagOfInt's Constructor}
 
 \lstinputlisting[linerange={11-11,13-17}]{examples/BagOfInt.jml}
+\note{It would be a bad specification to make \texttt{a} and
+  \texttt{input} be aliases.
+}
 \end{frame}
 
 \begin{frame}<beamer>[fragile]
@@ -961,7 +977,15 @@ Note that we're using the default \lstinline!non_null! for
 \begin{frame}<beamer>[fragile]
 \frametitle{My Solution: Method extractMin}
 
-\lstinputlisting[linerange={26-26,28-34}]{examples/BagOfInt.jml}
+\lstinputlisting[linerange={26-26,28-40}]{examples/BagOfInt.jml}
+\note{The frame is written to allow one to either replace/copy
+ the entire array or to assign to some elements.
+
+Note that one could use \texttt{\textbackslash}\lstinline!num_of!
+directly instead of calling \texttt{occurrences} in the specification,
+however, this illustrates how to do that, and makes the specification
+much shorter.
+}
 \end{frame}
 
 
@@ -1008,18 +1032,22 @@ ESC/Java2 Eclipse plugin \\
 
 \begin{example}
 \begin{verbatim}
-$ jmlc -Q -e -o BagOfInt.java BagOfIntMain.java
+$ jmlc -Q -e BagOfInt.java BagOfIntMain.java
 $ jmlrac BagOfIntMain
 \end{verbatim}
 \end{example}
 \note{This should be a demo, with Emacs or Eclipse.
+
 We're using CLASSPATH=. because of the use of the unnamed package;
 for other packages, we have to be careful, as with Java.
-Might want to show what happens with javac first.
+
+(You might want to show what happens with compiling with javac and
+running with java (the VM) first, to see what difference using jmlc makes.)
+
 The -Q flag shuts jmlc up somewhat.  The -e flag turns on universes.
-The -o flag uses the ``neutral context'' semantics, which will
-be part of future release of JML's common tools.
+
 These flags are valid for JML Common Tools release 5.4.
+
 There are manual pages for each of the tools.
 }
 \end{frame}
@@ -1029,6 +1057,7 @@ There are manual pages for each of the tools.
 
 \lstinputlisting[linerange={4-17}]{examples/BagOfIntMain.java}
 \note{It's much better to use assert than to try to look at output!
+
 You can use Java's assert too, but there are advantages to using
 JML's assert, as is done here.
 }
@@ -1082,12 +1111,17 @@ $ jmlrac BagOfInt_JML_Test
 % $
 \end{example}
 \note{This should be a demo.
+
 Note you have to compile with jmlc \emph{after} compiling with javac,
 since javac will compile the executable without RAC.  
-Put in data for ints (3, 4, 5, 10),
-arrays {3, 4, 2, 3, 3}, {0, 10, 20, 30, 10},
-and bags with those arrays (case N: return new BagOfInt(...);).
-Might want to show what happens with javac first.
+
+Put in data for
+ints: 3, 4, 5, 10, \\
+
+arrays: new int[] \{3, 4, 2, 3, 3\}, \{0, 10, 20, 30, 10\}, \{\}, and \\
+
+bags with those arrays as initial values:
+\lstinline!case N: return new BagOfInt(...);!.
 }
 \end{frame}
 
@@ -1125,6 +1159,7 @@ $ escjava2 -nonNullByDefault BagOfInt.java
 % $
 \end{example}
 \note{This should be a demo, with Emacs or Eclipse.
+
 To get the Eclipse demo to run on Windows, I had to tell Eclipse about the
 Simplify executable location explicitly in the preferences.
 See Window/Preferences/Java/EscJava2 in the Eclipse menus.
@@ -1302,7 +1337,8 @@ What's wrong with this? \uncover<2->{How to fix it?}
 \rm
 \lstinputlisting{examples/Counter.java}
 \end{question}
-\note{The postcondition may fail.  ESC/Java shows this.
+\note<1>{The postcondition may fail.  ESC/Java shows this.
+
 Note: in Java variables of different types can be aliased, 
 due to multiple inheritance of interface types.
 }
@@ -1330,7 +1366,7 @@ What's wrong with this? \uncover<2->{How to fix it?}
 \lstinputlisting[linerange={4-6}]{examples/SortedInts.java}
 \lstinputlisting[linerange={16-22}]{examples/SortedInts.java}
 \end{question}
-\note{The invariant may not hold on entry to the method, 
+\note<1>{The invariant may not hold on entry to the method, 
 due to representation exposure.
 }
 \end{frame}
@@ -1565,6 +1601,7 @@ Assume frame and joined postcondition.
 \end{itemize}
 \end{itemize}
 \note{Conditions must be adapted to the actual parameters by substitution...
+
 Computing the join is easy if the preconditions are equal.
 }
 \end{frame}
@@ -1700,9 +1737,13 @@ Doesn't specify normal/exceptional.
 Can use to underspecify normal/exceptional.
 \end{itemize}
 \note{Generally, the defaults for boolean clauses are ``true''.
-But for frames (assignable) the default is \lstinline!\everything!,
+
+But for frames (assignable) the default is
+\texttt{\textbackslash}\lstinline!everything!, 
 as that is most permissive.
-And \lstinline!signals_only! has its standard default (see below).
+
+However, \lstinline!signals_only! has a default that is based on the
+declared exceptions in a method (see below).
 }
 \end{frame}
 
@@ -1751,7 +1792,7 @@ else \lstinline!signals_only \nothing;!.
 \end{itemize}
 \note{Assuming $n > 0$.
   The default only applies to lightweight spec cases and
-  heavyweight exceptional_behavior spec cases.
+  heavyweight \lstinline!exceptional_behavior! spec cases.
 }
 \end{frame}
 
@@ -1791,9 +1832,9 @@ So preconditions shouldn't overlap.
 What happens if they overlap?
 \end{question}
 \note{The specification will be unsatisfiable (for the overlap).
-      Thanks to Erik Poll for first pointing this out.
-      In many such cases you want to use a single Behavior.
-      See examples/Factor.java for how to do this.
+
+  In many such cases you want to use a single Behavior.
+  See \texttt{examples/Factor.java} for how to do this.
 }
 \end{frame}
 
@@ -1827,8 +1868,11 @@ and $h$ is undefined on negative numbers.
 \frametitle{My Answer, Using Nesting}
 \lstinputlisting[linerange={3-11}]{examples/Hailstone.java}
 \note{Explain the nesting of spec cases by conjoining the outer
-  requires onto each inner requires.
-  Why not specify an exception?  It's not under user control.
+  requires onto each inner requires.  That is, it's sugar for the
+  previous slide.
+
+  Why not specify an exception?  Because the user can control the
+  argument, so best just to have a precondition.
 }
 \end{frame}
 
@@ -1890,6 +1934,7 @@ Java \textbf{\texttt{interface}}s.
 \frametitle{Kinds of Clients}
 \includegraphics[width=4.25in]{visibility-modifiers}
 \note{The public clients are all most specification languages discuss.
+
   This and some other parts on visibility and information hiding
   are from work by Leavens and Mueller presented at ICSE 2007.
 }
@@ -1907,8 +1952,10 @@ Protected        & $C$'s subclasses, \\
                  & $C$'s package \\
 Public           & all
 \end{tabular}
-\note{ESC/Java2 currently ignores visibility.
-But checked by other JML tools.
+\note{ESC/Java2 currently ignores some of the visibility checks.
+
+But it is checked by other JML tools, and should be checked eventually
+by ESC/Java2 also.
 }
 \end{frame}
 
@@ -1940,26 +1987,27 @@ For sound modular verification.
 \begin{question}
 Can private fields be mentioned in public specifications?
 \end{question}
+\note<1>{No, it volates the principles given.}
 
 \pause
 \begin{question}
 Can non-trivial preconditions be hidden from clients?
 \end{question}
+\note<2>{No, it volates the principles given.}
 
 \pause
 \begin{question}
 What should a client assume is the precondition of \\
 a method with no visible specification cases?
 \end{question}
+\note<3>{The predicate ``true''.}
 
 \pause
 \begin{question}
 If invariant $\inv$ depends on field $f$, \\
 can $\inv$ be less visible than $f$?
 \end{question}
-\note{No to 1,2 and 4, as these violate the principles.
-The answer to 3 is ``true''.
-}
+\note<4>{No, it volates the principles given.}
 \end{frame}
 
 \subsection[Model]{Data Abstraction with Model Fields}
@@ -2355,7 +2403,8 @@ What is the extended specification of \texttt{Patient}'s
     @   requires \same;
     @   ensures 65 <= age ==> ageDiscount;  @*/
 \end{lstlisting}
-\note{This doesn't yet work in ESC/Java2.}
+\note{The \texttt{\textbackslash}\lstinline!same! in the requires clause
+doesn't yet work in ESC/Java2.}
 \end{frame}
 
 \begin{frame}
@@ -2547,7 +2596,7 @@ $o$.$m$();
 //@ assume $o.\extpost^{\REDT}_m$;
 //@ assume $o.\extinv^{\REDT}_m$ && $o$.$\exthc^{\REDT}$;
 \end{lstlisting}
-\note{Here $\REDT$ is the static type of $o$, that's why all the
+\note<1>{Here $\REDT$ is the static type of $o$, that's why all the
   assertions refer to its specification.
 }
 \end{frame}
@@ -3111,8 +3160,11 @@ In the CLASSPATH.
 \end{example}
 \note{ESC/Java warns about the array index out of bounds error
   possible in m().
+
 Does adding a postcondition on the constructor help?  No.
+
 What about adding a precondition on m?  No.
+
 Need to write an invariant.
 }
 \end{frame}
@@ -3136,6 +3188,8 @@ use a modifier (\lstinline!pure!, \lstinline!non_null!),
 \end{description}
 \note{Can use invariants and constraints to specify assumptions about
   methods also, but only if they apply to all methods.
+
+(Actually JML has a way to apply constraints only to certain named methods.)
 }
 \end{frame}
 
@@ -3168,9 +3222,13 @@ Best to avoid \lstinline!assume!.
 \begin{frame}[fragile]
 \frametitle{Need for Assignable Clauses}
 \lstinputlisting[linerange={32-38}]{examples/ScreenPoint.java}
-\note{Note the problem with the last assert, need frame for moveUp to
-  reason that the change to x is not overwritten by moveUp.
-  So need to have assignable clause for moveUp (or have it be pure).
+\note{Note the problem with the last assert, need frame for \texttt{moveUp} to
+  reason that the change to \texttt{x} is not overwritten by \texttt{moveUp}.
+
+  So need to have assignable clause for \texttt{moveUp}.
+
+  Actually, you also need an assignable clause for \texttt{moveRight}
+  in this example also.  Do you see why?
 }
 \end{frame}
 

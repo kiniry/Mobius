@@ -5,7 +5,14 @@ The time available for this was 3 hours, split into two 1.5 hour parts.
 In the event, the tutorial ran just about in the right length of time,
 but this depended on not taking too much time for the demos.
 
-The main file is JMLTutorial.tex.
+To make the tutorial PDF files (for presentation, etc.), use the Makefile.
+
+The main file is JMLTutorial.tex.  This is input in each of the
+following 3 files:
+
+  - JMLTutorialPresentation.tex           (what you'd use to give it)
+  - JMLTutorialPresentationWithNotes.tex  (for off-line readers, or review)
+  - JMLTutorialHandouts.tex               (for handouts given to attendees)
 
 A starting point was the tutorial material in ../ETAPSTutorial/,
 and the various talks and tutorial papers on JML.
@@ -29,6 +36,5 @@ The directory examples_toedit/ contains copies of some files to use
 when starting examples that are to be edited.  This directories
 contents should be copied into examples_worked before the start of the
 show.
-
 
 $Id$
