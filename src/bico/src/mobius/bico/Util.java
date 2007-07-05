@@ -34,7 +34,7 @@ public final class Util {
    * @param raw the string to coqify
    * @return null only if str == null
    */
-  static String coqify(final String raw) {
+  public static String coqify(final String raw) {
     String str = raw;
     if (str == null) {
       return null;

@@ -1,7 +1,9 @@
-package mobius.bico;
+package mobius.bico.dico;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import mobius.bico.Util;
 
 import org.apache.bcel.classfile.Method;
 import org.apache.bcel.generic.ConstantPoolGen;

@@ -11,6 +11,7 @@ import java.util.Vector;
 import mobius.bico.Util.Stream;
 import mobius.bico.dico.CamlDictionary;
 import mobius.bico.dico.Dico;
+import mobius.bico.dico.MethodHandler;
 import mobius.bico.implem.IImplemSpecifics;
 import mobius.bico.implem.ListImplemSpecif;
 import mobius.bico.implem.MapImplemSpecif;

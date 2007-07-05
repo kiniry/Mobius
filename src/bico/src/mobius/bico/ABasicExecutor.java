@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import mobius.bico.Util.Stream;
 import mobius.bico.dico.Dictionary;
+import mobius.bico.dico.MethodHandler;
 import mobius.bico.implem.IImplemSpecifics;
 
 import org.apache.bcel.util.Repository;
