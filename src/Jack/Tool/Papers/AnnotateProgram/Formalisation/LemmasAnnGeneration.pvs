@@ -138,7 +138,7 @@ BEGIN
       related_states(mp, ap)(sMP1, sAP1) IMPLIES
       classes(ap)(c) IMPLIES
       methods(c)(m) IMPLIES
-      astate(sMP2) = on_method_MVA(et)(mp, m, sMP1) IMPLIES
+      astate(sMP2) = on_method_MVA(et)(mp, m)(sMP1) IMPLIES
       NOT up?(ex(pstate(sAP1))) IMPLIES
       ts = filter_event(mva(mp))(et)(name(m)) IMPLIES
       deriv_stmt(ap)(ann_event(mp)(ts), sAP1, sAP2)(n) IMPLIES
