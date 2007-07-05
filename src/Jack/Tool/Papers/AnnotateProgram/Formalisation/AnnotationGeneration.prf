@@ -3,7 +3,7 @@
   (unique_TCC1-1 nil 3383987003 3390296182
    ("" (use "CP_is_enumerable")
     (("" (skolem!) (("" (inst?) nil nil)) nil)) nil)
-   unchecked
+   proved-complete
    ((CP formal-nonempty-type-decl nil AnnotateProgram nil)
     (number nonempty-type-decl nil numbers nil)
     (boolean nonempty-type-decl nil booleans nil)
@@ -36,7 +36,7 @@
         nil))
       nil))
     nil)
-   unchecked
+   proved-complete
    ((nat2string_injective_function_exists formula-decl nil FunProp nil)
     (injective? const-decl "bool" functions nil)
     (nat nonempty-type-eq-decl nil naturalnumbers nil)
@@ -66,7 +66,244 @@
     (unique_TCC1 existence-tcc nil AnnotateProgram nil))
    61 60 t nil))
  (new_gvds_TCC1 0
-  (new_gvds_TCC1-1 nil 3390028807 3390296008
+  (new_gvds_TCC1-2 nil 3392614976 3392614981
+   ("" (skosimp*)
+    ((""
+      (case-replace "{gd: FieldDecl[string] |
+                  jtype(gd) = IntType AND
+                   (name(gd) = cp AND
+                     init_val(gd) = Int(unique(init_cp(mva(mp!1)))))
+                   OR
+                   ((EXISTS (q: (cps(mva(mp!1)))):
+                       name(gd) = name_of(q) AND jtype(gd) = IntType AND init_val(gd) = Int(unique(q)))
+                     OR
+                     (EXISTS (v: (vdsA(mva(mp!1)))):
+                        name(gd) = name(v) AND jtype(gd) = jtype(v) AND init_val(gd) = init_val(v)))} = union ({gd: FieldDecl[string] |
+                  jtype(gd) = IntType AND
+                   (name(gd) = cp AND
+                     init_val(gd) = Int(unique(init_cp(mva(mp!1)))))}, union({gd : FieldDecl[string] | ((EXISTS (q: (cps(mva(mp!1)))):
+                       name(gd) = name_of(q) AND jtype(gd) = IntType AND init_val(gd) = Int(unique(q))))}, {gd : FieldDecl[string] |  (EXISTS (v: (vdsA(mva(mp!1)))):
+                        name(gd) = name(v) AND jtype(gd) = jtype(v) AND init_val(gd) = init_val(v))}))")
+      (("1" (hide -1)
+        (("1" (use "finite_union[FieldDecl[string]]")
+          (("1" (hide 2)
+            (("1" (use "finite_union[FieldDecl[string]]")
+              (("1" (hide 2)
+                (("1" (typepred "vdsA(mva(mp!1))")
+                  (("1" (expand "is_finite")
+                    (("1" (skosimp*)
+                      (("1"
+                        (inst 1 "N!1"
+                         "LAMBDA(gd : ({gd: FieldDecl[string] |
+                             (EXISTS (v: (vdsA(mva(mp!1)))):
+                                name(gd) = name(v) AND
+                                 jtype(gd) = jtype(v) AND
+                                  init_val(gd) = init_val(v))})) : f!1((# name := name(gd), jtype := jtype(gd), init_val := init_val(gd) #))")
+                        (("1" (expand "injective?")
+                          (("1" (skosimp*)
+                            (("1"
+                              (inst -1
+                               "(# name := name(x1!1), jtype := jtype(x1!1), init_val := init_val(x1!1) #)"
+                               "(# name := name(x2!1), jtype := jtype(x2!1), init_val := init_val(x2!1) #)")
+                              (("1"
+                                (assert)
+                                (("1"
+                                  (apply-extensionality :hide? t)
+                                  nil
+                                  nil))
+                                nil))
+                              nil))
+                            nil))
+                          nil)
+                         ("2" (skosimp*)
+                          (("2" (typepred "gd!1")
+                            (("2" (skosimp*)
+                              (("2"
+                                (typepred "v!1")
+                                (("2"
+                                  (case-replace
+                                   "v!1 = (# name := name(gd!1), jtype := jtype(gd!1), init_val := init_val(gd!1) #)")
+                                  (("2"
+                                    (apply-extensionality :hide? t)
+                                    nil
+                                    nil))
+                                  nil))
+                                nil))
+                              nil))
+                            nil))
+                          nil))
+                        nil))
+                      nil))
+                    nil))
+                  nil))
+                nil)
+               ("2" (hide 2)
+                (("2" (typepred "cps(mva(mp!1))")
+                  (("2" (expand "is_finite")
+                    (("2" (skosimp*)
+                      (("2"
+                        (inst 1 "N!1"
+                         "LAMBDA(gd : ({gd: FieldDecl[string] |
+                             ((EXISTS (q: (cps(mva(mp!1)))):
+                                 name(gd) = name_of(q) AND
+                                  jtype(gd) = IntType AND
+                                   init_val(gd) = Int(unique(q))))})) : f!1(choose ({q : (cps(mva(mp!1))) | name(gd) = name_of(q) AND init_val(gd) = Int(unique(q))}))")
+                        (("1" (expand "injective?")
+                          (("1" (skosimp*)
+                            (("1" (typepred "x1!1")
+                              (("1"
+                                (typepred "x2!1")
+                                (("1"
+                                  (skosimp*)
+                                  (("1"
+                                    (inst? -7)
+                                    (("1"
+                                      (assert)
+                                      (("1"
+                                        (apply-extensionality :hide? t)
+                                        nil
+                                        nil))
+                                      nil)
+                                     ("2"
+                                      (rewrite "nonempty_exists")
+                                      (("2"
+                                        (inst 1 "q!1")
+                                        (("2" (assert) nil nil))
+                                        nil))
+                                      nil)
+                                     ("3"
+                                      (rewrite "nonempty_exists")
+                                      (("3"
+                                        (inst 1 "q!2")
+                                        (("3" (assert) nil nil))
+                                        nil))
+                                      nil))
+                                    nil))
+                                  nil))
+                                nil))
+                              nil))
+                            nil))
+                          nil)
+                         ("2" (grind) nil nil))
+                        nil))
+                      nil))
+                    nil))
+                  nil))
+                nil))
+              nil))
+            nil)
+           ("2" (hide 2)
+            (("2" (expand "is_finite")
+              (("2"
+                (inst 1 "1" "LAMBDA(gd : ({gd: FieldDecl[string] |
+                                 jtype(gd) = IntType AND
+                                  (name(gd) = cp AND
+                                    init_val(gd) =
+                                     Int(unique(init_cp(mva(mp!1)))))})) : 0")
+                (("2" (expand "injective?")
+                  (("2" (skosimp*)
+                    (("2" (typepred "x1!1")
+                      (("2" (typepred "x2!1")
+                        (("2" (apply-extensionality :hide? t) nil nil))
+                        nil))
+                      nil))
+                    nil))
+                  nil))
+                nil))
+              nil))
+            nil))
+          nil))
+        nil)
+       ("2" (hide 2)
+        (("2" (apply-extensionality :hide? t) (("2" (grind) nil nil))
+          nil))
+        nil))
+      nil))
+    nil)
+   proved
+   ((nonempty? const-decl "bool" sets nil)
+    (choose const-decl "(p)" sets nil)
+    (x1!1 skolem-const-decl "({gd: FieldDecl[string] |
+    ((EXISTS (q: (cps(mva(mp!1)))):
+        name(gd) = name_of(q) AND
+         jtype(gd) = IntType AND init_val(gd) = Int[string](unique(q))))})"
+     AnnotateProgram nil)
+    (x2!1 skolem-const-decl "({gd: FieldDecl[string] |
+    ((EXISTS (q: (cps(mva(mp!1)))):
+        name(gd) = name_of(q) AND
+         jtype(gd) = IntType AND init_val(gd) = Int[string](unique(q))))})"
+     AnnotateProgram nil)
+    (q!1 skolem-const-decl "(cps(mva(mp!1)))" AnnotateProgram nil)
+    (nonempty_exists formula-decl nil sets_lemmas nil)
+    (q!2 skolem-const-decl "(cps(mva(mp!1)))" AnnotateProgram nil)
+    (empty? const-decl "bool" sets nil)
+    (member const-decl "bool" sets nil) (< const-decl "bool" reals nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (is_finite const-decl "bool" finite_sets nil)
+    (mp!1 skolem-const-decl
+     "{mp: MonitoredProgram | wf_MP(mp) AND well_typed_Program(program(mp))}"
+     AnnotateProgram nil)
+    (finite_union judgement-tcc nil finite_sets nil)
+    (union const-decl "set" sets nil) (set type-eq-decl nil sets nil)
+    (name_of const-decl "(injective?[CP, string])" AnnotateProgram nil)
+    (well_typed_Program const-decl "boolean" WellTypedProgram nil)
+    (Class type-eq-decl nil Program nil)
+    (lift type-decl nil lift_adt nil)
+    (Method type-eq-decl nil Program nil)
+    (Stmt type-decl nil Stmt_adt nil)
+    (LocalVarDecl type-eq-decl nil Program nil)
+    (Expr type-decl nil Expr_adt nil)
+    (wf_MP const-decl "boolean" MonitoredProgram nil)
+    (MonitoredProgram type-eq-decl nil MonitoredProgram nil)
+    (compatible const-decl "boolean" MonitoredProgram nil)
+    (MonitoredProgramPre type-eq-decl nil MonitoredProgram nil)
+    (Program type-eq-decl nil Program nil)
+    (complete const-decl "boolean" MVASemantics nil)
+    (MVA type-eq-decl nil MVA nil)
+    (ProgVarDecl type-eq-decl nil MVA nil)
+    (MVAVarDecl type-eq-decl nil MVA nil)
+    (Transition type-eq-decl nil MVA nil)
+    (Guard type-eq-decl nil MVA nil) (Action type-eq-decl nil MVA nil)
+    (Event type-eq-decl nil MVA nil)
+    (EventType type-decl nil EventType_adt nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (unique const-decl "(injective?[CP, nat])" AnnotateProgram nil)
+    (injective? const-decl "bool" functions nil)
+    (>= const-decl "bool" reals nil)
+    (CP formal-nonempty-type-decl nil AnnotateProgram nil)
+    (Int adt-constructor-decl "[int -> (Int?)]" Val_adt nil)
+    (Int? adt-recognizer-decl "[Val -> boolean]" Val_adt nil)
+    (int nonempty-type-eq-decl nil integers nil)
+    (integer_pred const-decl "[rational -> boolean]" integers nil)
+    (rational nonempty-type-from-decl nil rationals nil)
+    (rational_pred const-decl "[real -> boolean]" rationals nil)
+    (real nonempty-type-from-decl nil reals nil)
+    (real_pred const-decl "[number_field -> boolean]" reals nil)
+    (number_field nonempty-type-from-decl nil number_fields nil)
+    (number_field_pred const-decl "[number -> boolean]" number_fields
+     nil)
+    (number nonempty-type-decl nil numbers nil)
+    (cp const-decl "string" AnnotateProgram nil)
+    (IntType adt-constructor-decl "(IntType?)" JType_adt nil)
+    (IntType? adt-recognizer-decl "[JType -> boolean]" JType_adt nil)
+    (AND const-decl "[bool, bool -> bool]" booleans nil)
+    (OR const-decl "[bool, bool -> bool]" booleans nil)
+    (= const-decl "[T, T -> boolean]" equalities nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (FieldDecl type-eq-decl nil Program nil)
+    (JType type-decl nil JType_adt nil)
+    (defined? const-decl "boolean" ValProp nil)
+    (Val type-decl nil Val_adt nil)
+    (string type-eq-decl nil strings nil)
+    (char type-eq-decl nil strings nil)
+    (char? adt-recognizer-decl "[character -> boolean]" character_adt
+     nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (character type-decl nil character_adt nil)
+    (below type-eq-decl nil nat_types nil)
+    (nat nonempty-type-eq-decl nil naturalnumbers nil))
+   4697 2170 t nil)
+  (new_gvds_TCC1-1 nil 3390028807 3392614965
    ("" (skosimp*)
     ((""
       (case-replace "{gd: GhostVarDecl[string] |
@@ -220,7 +457,7 @@
         nil))
       nil))
     nil)
-   unchecked
+   unfinished
    ((Val type-decl nil Val_adt nil) (JType type-decl nil JType_adt nil)
     (nat nonempty-type-eq-decl nil naturalnumbers nil)
     (below type-eq-decl nil nat_types nil)
@@ -294,10 +531,10 @@
     (nonempty_exists formula-decl nil sets_lemmas nil)
     (choose const-decl "(p)" sets nil)
     (nonempty? const-decl "bool" sets nil))
-   53 50 t nil))
+   24297 410 t nil))
  (ann_action_TCC1 0
   (ann_action_TCC1-1 nil 3383987003 3390295115
-   ("" (termination-tcc) nil nil) unchecked
+   ("" (termination-tcc) nil nil) proved-complete
    ((real_lt_is_strict_total_order name-judgement
      "(strict_total_order?[real])" real_props nil)
     (nnint_plus_posint_is_posint application-judgement "posint"
@@ -349,7 +586,7 @@
         nil))
       nil))
     nil)
-   unchecked
+   proved-incomplete
    ((finite_set type-eq-decl nil finite_sets nil)
     (is_finite const-decl "bool" finite_sets nil)
     (set type-eq-decl nil sets nil)
@@ -442,7 +679,7 @@
         nil))
       nil))
     nil)
-   unchecked
+   proved-incomplete
    ((finite_set type-eq-decl nil finite_sets nil)
     (is_finite const-decl "bool" finite_sets nil)
     (set type-eq-decl nil sets nil)
@@ -477,7 +714,7 @@
     (number nonempty-type-decl nil numbers nil))
    338 110 t nil))
  (ann_event_TCC2 0
-  (ann_event_TCC2-1 nil 3390028807 3392610102
+  (ann_event_TCC2-1 nil 3390028807 3392613203
    ("" (skosimp*)
     (("" (typepred "cps(mva(mp!1))")
       (("" (expand "is_finite")
@@ -485,56 +722,137 @@
           ((""
             (inst 1 "N!1"
              "LAMBDA(c : ({c: [Expr[string], Stmt[string]] |
-                     EXISTS (q: CP):
-                       cps(mva(mp!1))(q) AND
-                        nonempty?[Transition[CP, string]]
-                            ({t: Transition[CP, string] |
-                                ts!1(t) AND scp(t) = q})
-                         AND
-                         c =
-                          ann_trans_cp(mp!1)
-                                      (q,
-                                       {t: Transition[CP, string]
-                                        |
-                                        ts!1(t) AND scp(t) = q})})) : f!1(choose({q : CP | cps(mva(mp!1))(q) AND
-                        nonempty?[Transition[CP, string]]
-                            ({t: Transition[CP, string] |
-                                ts!1(t) AND scp(t) = q})
-                         AND
-                         c =
-                          ann_trans_cp(mp!1)
-                                      (q,
-                                       {t: Transition[CP, string]
-                                        |
-                                        ts!1(t) AND scp(t) = q})}))")
+                       EXISTS (q: CP):
+                         cps(mva(mp!1))(q) AND
+                          nonempty?[Transition[CP, string]]
+                              ({t: Transition[CP, string] |
+                                  ts!1(t) AND scp(t) = q})
+                           AND
+                           c =
+                            ann_trans_cp(mp!1)
+                                        (q,
+                                         {t: Transition[CP, string]
+                                          |
+                                          ts!1(t) AND scp(t) = q})})) : f!1(choose({q : CP | cps(mva(mp!1))(q) AND
+                          nonempty?[Transition[CP, string]]
+                              ({t: Transition[CP, string] |
+                                  ts!1(t) AND scp(t) = q})
+                           AND
+                           c =
+                            ann_trans_cp(mp!1)
+                                        (q,
+                                         {t: Transition[CP, string]
+                                          |
+                                          ts!1(t) AND scp(t) = q})}))")
             (("1" (expand "injective?")
               (("1" (skosimp*)
-                (("1" (typepred "x1!1")
-                  (("1" (typepred "x2!1")
-                    (("1" (skosimp*)
-                      (("1" (inst?)
-                        (("1" (assert)
-                          (("1" (hide -8)
-                            (("1" (replace -3)
+                (("1" (inst?)
+                  (("1" (assert)
+                    (("1" (hide -2)
+                      (("1"
+                        (name "q1" "choose({q: CP |
+                 cps(mva(mp!1))(q) AND
+                  nonempty?[Transition[CP, string]]
+                      ({t: Transition[CP, string] |
+                          ts!1(t) AND scp(t) = q})
+                   AND
+                   x1!1 =
+                    ann_trans_cp(mp!1)
+                                (q,
+                                 {t: Transition[CP, string] |
+                                    ts!1(t) AND scp(t) = q})})")
+                        (("1"
+                          (name "q2" "choose({q: CP |
+                 cps(mva(mp!1))(q) AND
+                  nonempty?[Transition[CP, string]]
+                      ({t: Transition[CP, string] |
+                          ts!1(t) AND scp(t) = q})
+                   AND
+                   x2!1 =
+                    ann_trans_cp(mp!1)
+                                (q,
+                                 {t: Transition[CP, string] |
+                                    ts!1(t) AND scp(t) = q})})")
+                          (("1" (replace -1)
+                            (("1" (replace -2)
                               (("1"
-                                (replace -6)
+                                (case
+                                 "ann_trans_cp(mp!1)(q1, {t : Transition[CP, string] | ts!1(t) AND scp(t) = q1}) = x1!1")
                                 (("1"
-                                  (expand "ann_trans_cp")
+                                  (case
+                                   "ann_trans_cp(mp!1)(q2, {t : Transition[CP, string] | ts!1(t) AND scp(t) = q2}) = x2!1")
                                   (("1"
-                                    (assert)
-                                    (("1"
-                                      (apply-extensionality :hide? t)
-                                      (("1"
-                                        (expand "ann_guard_actions")
-                                        (("1" (postpone) nil nil))
-                                        nil)
-                                       ("2"
-                                        (use "ann_event_TCC1")
-                                        (("2" (assert) nil nil))
-                                        nil)
-                                       ("3"
-                                        (use "ann_event_TCC1")
-                                        (("3" (assert) nil nil))
+                                    (replace -5)
+                                    (("1" (assert) nil nil))
+                                    nil)
+                                   ("2"
+                                    (replace -2 :dir rl)
+                                    (("2" (assert) nil nil))
+                                    nil)
+                                   ("3"
+                                    (typepred "ts!1")
+                                    (("3"
+                                      (expand "is_finite")
+                                      (("3"
+                                        (skosimp*)
+                                        (("3"
+                                          (inst 1 "N!2" "f!2")
+                                          (("3" (grind) nil nil))
+                                          nil))
+                                        nil))
+                                      nil))
+                                    nil))
+                                  nil)
+                                 ("2"
+                                  (replace -1 :dir rl)
+                                  (("2" (assert) nil nil))
+                                  nil)
+                                 ("3"
+                                  (typepred "ts!1")
+                                  (("3"
+                                    (expand "is_finite")
+                                    (("3"
+                                      (skosimp*)
+                                      (("3"
+                                        (inst 1 "N!2" "f!2")
+                                        (("3" (grind) nil nil))
+                                        nil))
+                                      nil))
+                                    nil))
+                                  nil))
+                                nil))
+                              nil))
+                            nil)
+                           ("2" (typepred "x2!1")
+                            (("2" (skosimp*)
+                              (("2"
+                                (rewrite "nonempty_exists" 1)
+                                (("2"
+                                  (inst?)
+                                  (("2" (assert) nil nil))
+                                  nil))
+                                nil))
+                              nil))
+                            nil))
+                          nil)
+                         ("2" (typepred "x1!1")
+                          (("2" (skosimp*)
+                            (("2" (rewrite "nonempty_exists" 1)
+                              (("1"
+                                (inst?)
+                                (("1" (assert) nil nil))
+                                nil)
+                               ("2"
+                                (skosimp*)
+                                (("2"
+                                  (typepred "ts!1")
+                                  (("2"
+                                    (expand "is_finite")
+                                    (("2"
+                                      (skosimp*)
+                                      (("2"
+                                        (inst 1 "N!2" "f!2")
+                                        (("2" (grind) nil nil))
                                         nil))
                                       nil))
                                     nil))
@@ -543,25 +861,68 @@
                               nil))
                             nil))
                           nil)
-                         ("2" (rewrite "nonempty_exists")
-                          (("1" (inst 1 "q!1") (("1" (assert) nil nil))
-                            nil)
-                           ("2" (skosimp*)
-                            (("2" (use "ann_event_TCC1")
-                              (("2" (assert) nil nil)) nil))
+                         ("3" (skosimp*)
+                          (("3" (typepred "ts!1")
+                            (("3" (expand "is_finite")
+                              (("3"
+                                (skosimp*)
+                                (("3"
+                                  (inst 1 "N!2" "f!2")
+                                  (("3" (grind) nil nil))
+                                  nil))
+                                nil))
+                              nil))
                             nil))
-                          nil)
-                         ("3" (rewrite "nonempty_exists")
-                          (("1" (inst 1 "q!2") (("1" (assert) nil nil))
-                            nil)
-                           ("2" (skosimp*)
-                            (("2" (use "ann_event_TCC1")
-                              (("2" (assert) nil nil)) nil))
+                          nil))
+                        nil))
+                      nil))
+                    nil)
+                   ("2" (typepred "x2!1")
+                    (("2" (skosimp*)
+                      (("2" (rewrite "nonempty_exists" 1)
+                        (("1" (inst?) (("1" (assert) nil nil)) nil)
+                         ("2" (skosimp*)
+                          (("2" (typepred "ts!1")
+                            (("2" (expand "is_finite")
+                              (("2"
+                                (skosimp*)
+                                (("2"
+                                  (inst 1 "N!2" "f!2")
+                                  (("2" (grind) nil nil))
+                                  nil))
+                                nil))
+                              nil))
                             nil))
-                          nil)
-                         ("4" (skosimp*)
-                          (("4" (use "ann_event_TCC1")
-                            (("4" (assert) nil nil)) nil))
+                          nil))
+                        nil))
+                      nil))
+                    nil)
+                   ("3" (typepred "x1!1")
+                    (("3" (skosimp*)
+                      (("3" (rewrite "nonempty_exists" 1)
+                        (("1" (inst?) (("1" (assert) nil nil)) nil)
+                         ("2" (skosimp*)
+                          (("2" (typepred "ts!1")
+                            (("2" (expand "is_finite")
+                              (("2"
+                                (skosimp*)
+                                (("2"
+                                  (inst 1 "N!2" "f!2")
+                                  (("2" (grind) nil nil))
+                                  nil))
+                                nil))
+                              nil))
+                            nil))
+                          nil))
+                        nil))
+                      nil))
+                    nil)
+                   ("4" (skosimp*)
+                    (("4" (typepred "ts!1")
+                      (("4" (expand "is_finite")
+                        (("4" (skosimp*)
+                          (("4" (inst 1 "N!2" "f!2")
+                            (("4" (grind) nil nil)) nil))
                           nil))
                         nil))
                       nil))
@@ -569,9 +930,33 @@
                   nil))
                 nil))
               nil)
-             ("2" (grind) nil nil)
+             ("2" (skosimp*)
+              (("2" (typepred "c!1")
+                (("2" (skosimp*)
+                  (("2" (rewrite "nonempty_exists" 1)
+                    (("1" (inst?) (("1" (assert) nil nil)) nil)
+                     ("2" (skosimp*)
+                      (("2" (typepred "ts!1")
+                        (("2" (expand "is_finite")
+                          (("2" (skosimp*)
+                            (("2" (inst 1 "N!2" "f!2")
+                              (("2" (grind) nil nil)) nil))
+                            nil))
+                          nil))
+                        nil))
+                      nil))
+                    nil))
+                  nil))
+                nil))
+              nil)
              ("3" (skosimp*)
-              (("3" (use "ann_event_TCC1") (("3" (assert) nil nil))
+              (("3" (typepred "ts!1")
+                (("3" (expand "is_finite")
+                  (("3" (skosimp*)
+                    (("3" (inst 1 "N!2" "f!2") (("3" (grind) nil nil))
+                      nil))
+                    nil))
+                  nil))
                 nil))
               nil))
             nil))
@@ -579,7 +964,72 @@
         nil))
       nil))
     nil)
-   unfinished nil 3045 2640 t nil))
+   proved-incomplete
+   ((well_typed_Program const-decl "boolean" WellTypedProgram nil)
+    (Class type-eq-decl nil Program nil)
+    (lift type-decl nil lift_adt nil)
+    (Method type-eq-decl nil Program nil)
+    (Stmt type-decl nil Stmt_adt nil)
+    (LocalVarDecl type-eq-decl nil Program nil)
+    (BExpr? adt-recognizer-decl "[Expr -> boolean]" Expr_adt nil)
+    (Expr type-decl nil Expr_adt nil)
+    (FieldDecl type-eq-decl nil Program nil)
+    (wf_MP const-decl "boolean" MonitoredProgram nil)
+    (AND const-decl "[bool, bool -> bool]" booleans nil)
+    (MonitoredProgram type-eq-decl nil MonitoredProgram nil)
+    (compatible const-decl "boolean" MonitoredProgram nil)
+    (MonitoredProgramPre type-eq-decl nil MonitoredProgram nil)
+    (Program type-eq-decl nil Program nil)
+    (complete const-decl "boolean" MVASemantics nil)
+    (MVA type-eq-decl nil MVA nil)
+    (ProgVarDecl type-eq-decl nil MVA nil)
+    (MVAVarDecl type-eq-decl nil MVA nil)
+    (JType type-decl nil JType_adt nil)
+    (defined? const-decl "boolean" ValProp nil)
+    (Val type-decl nil Val_adt nil)
+    (Transition type-eq-decl nil MVA nil)
+    (Guard type-eq-decl nil MVA nil) (Action type-eq-decl nil MVA nil)
+    (Event type-eq-decl nil MVA nil)
+    (EventType type-decl nil EventType_adt nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (string type-eq-decl nil strings nil)
+    (char type-eq-decl nil strings nil)
+    (char? adt-recognizer-decl "[character -> boolean]" character_adt
+     nil)
+    (character type-decl nil character_adt nil)
+    (below type-eq-decl nil nat_types nil)
+    (nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (is_finite const-decl "bool" finite_sets nil)
+    (set type-eq-decl nil sets nil)
+    (CP formal-nonempty-type-decl nil AnnotateProgram nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (boolean nonempty-type-decl nil booleans nil) nil nil
+    (injective? const-decl "bool" functions nil) nil nil nil
+    (restrict const-decl "R" restrict nil)
+    (ann_guard_actions const-decl "list[[Expr, Stmt]]" AnnotateProgram
+     nil)
+    (empty? const-decl "bool" sets nil)
+    (member const-decl "bool" sets nil)
+    (update_vars const-decl "Stmt" AnnotateProgram nil) nil
+    (nonempty_exists formula-decl nil sets_lemmas nil) nil nil
+    (choose const-decl "(p)" sets nil) (< const-decl "bool" reals nil)
+    (>= const-decl "bool" reals nil)
+    (int nonempty-type-eq-decl nil integers nil)
+    (integer_pred const-decl "[rational -> boolean]" integers nil)
+    (rational nonempty-type-from-decl nil rationals nil)
+    (rational_pred const-decl "[real -> boolean]" rationals nil)
+    (real nonempty-type-from-decl nil reals nil)
+    (real_pred const-decl "[number_field -> boolean]" reals nil)
+    (number_field nonempty-type-from-decl nil number_fields nil)
+    (number_field_pred const-decl "[number -> boolean]" number_fields
+     nil)
+    (number nonempty-type-decl nil numbers nil) nil
+    (nonempty? const-decl "bool" sets nil) nil
+    (= const-decl "[T, T -> boolean]" equalities nil)
+    (ann_trans_cp const-decl "[Expr, Stmt]" AnnotateProgram nil)
+    (IMPLIES const-decl "[bool, bool -> bool]" booleans nil))
+   501790 30860 t nil))
  (filter_event_TCC1 0
   (filter_event_TCC1-1 nil 3383987003 3390295125
    ("" (skosimp*)
@@ -595,7 +1045,7 @@
         nil))
       nil))
     nil)
-   unchecked
+   proved-complete
    ((wf_MVA const-decl "boolean" WellFormedMVA nil)
     (MVA type-eq-decl nil MVA nil)
     (ProgVarDecl type-eq-decl nil MVA nil)
@@ -640,7 +1090,7 @@
    ("" (skolem-typepred)
     (("" (expand* "wf_MP" "complete") (("" (flatten) nil nil)) nil))
     nil)
-   unchecked
+   proved-incomplete
    ((on_method_exit_exceptional_MP const-decl "(on_method_event_type)"
      MonitoredProgramSemantics nil)
     (on_method_exit_normal_MP const-decl "(on_method_event_type)"
@@ -742,7 +1192,7 @@
         nil))
       nil))
     nil)
-   unchecked
+   proved-incomplete
    ((is_finite const-decl "bool" finite_sets nil)
     (set type-eq-decl nil sets nil)
     (Method type-eq-decl nil Program nil)
@@ -808,14 +1258,69 @@
     (ann_method const-decl "Method" AnnotateProgram nil)
     (nonempty? const-decl "bool" sets nil))
    5038 360 t nil))
+ (ann_class_TCC1 0
+  (ann_class_TCC1-1 nil 3392614111 3392614137
+   ("" (subtype-tcc) nil nil) proved
+   ((boolean nonempty-type-decl nil booleans nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (below type-eq-decl nil nat_types nil)
+    (character type-decl nil character_adt nil)
+    (char? adt-recognizer-decl "[character -> boolean]" character_adt
+     nil)
+    (char type-eq-decl nil strings nil)
+    (string type-eq-decl nil strings nil)
+    (CP formal-nonempty-type-decl nil AnnotateProgram nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (EventType type-decl nil EventType_adt nil)
+    (Event type-eq-decl nil MVA nil) (Action type-eq-decl nil MVA nil)
+    (Guard type-eq-decl nil MVA nil)
+    (Transition type-eq-decl nil MVA nil)
+    (Val type-decl nil Val_adt nil)
+    (defined? const-decl "boolean" ValProp nil)
+    (JType type-decl nil JType_adt nil)
+    (MVAVarDecl type-eq-decl nil MVA nil)
+    (ProgVarDecl type-eq-decl nil MVA nil)
+    (MVA type-eq-decl nil MVA nil)
+    (complete const-decl "boolean" MVASemantics nil)
+    (Program type-eq-decl nil Program nil)
+    (MonitoredProgramPre type-eq-decl nil MonitoredProgram nil)
+    (compatible const-decl "boolean" MonitoredProgram nil)
+    (MonitoredProgram type-eq-decl nil MonitoredProgram nil)
+    (AND const-decl "[bool, bool -> bool]" booleans nil)
+    (wf_MP const-decl "boolean" MonitoredProgram nil)
+    (FieldDecl type-eq-decl nil Program nil)
+    (Expr type-decl nil Expr_adt nil)
+    (LocalVarDecl type-eq-decl nil Program nil)
+    (Stmt type-decl nil Stmt_adt nil)
+    (Method type-eq-decl nil Program nil)
+    (lift type-decl nil lift_adt nil)
+    (Class type-eq-decl nil Program nil)
+    (well_typed_Program const-decl "boolean" WellTypedProgram nil)
+    (wf_vdsA const-decl "boolean" WellFormedMVA nil)
+    (wf_vdsP const-decl "boolean" WellFormedMVA nil)
+    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
+    (member const-decl "bool" sets nil)
+    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
+    (intersection const-decl "set" sets nil)
+    (empty? const-decl "bool" sets nil)
+    (disjoint? const-decl "bool" sets nil)
+    (wf_Guard const-decl "boolean" WellFormedMVA nil)
+    (wf_Action const-decl "boolean" WellFormedMVA nil)
+    (wf_Trans const-decl "boolean" WellFormedMVA nil)
+    (wf_MVA const-decl "boolean" WellFormedMVA nil)
+    (invariants_are_booleans const-decl "boolean" WellTypedProgram
+     nil))
+   1468 1330 nil nil))
  (not_clashing_model_vars_TCC1 0
   (not_clashing_model_vars_TCC1-1 nil 3392566270 nil
-   ("" (subtype-tcc) nil nil) unchecked nil nil nil nil nil))
+   ("" (subtype-tcc) nil nil) proved-incomplete nil nil nil nil nil))
  (ann_program_TCC1 0
   (ann_program_TCC1-1 nil 3383987003 3390295131
    ("" (skolem-typepred)
     (("" (expand "ann_program_pre") (("" (prop) nil nil)) nil)) nil)
-   unchecked
+   proved-incomplete
    ((ann_program_pre const-decl "boolean" AnnotateProgram nil)
     (MonitoredProgram type-eq-decl nil MonitoredProgram nil)
     (Program type-eq-decl nil Program nil)
@@ -885,7 +1390,7 @@
         nil))
       nil))
     nil)
-   unchecked
+   proved-incomplete
    ((ann_program_pre const-decl "boolean" AnnotateProgram nil)
     (MonitoredProgram type-eq-decl nil MonitoredProgram nil)
     (Program type-eq-decl nil Program nil)
@@ -961,23 +1466,23 @@
 (AnnotateProgramProperties
  (CP_is_enumerable 0
   (CP_is_enumerable-1 nil 3392611795 3392611802 ("" (postpone) nil nil)
-   unfinished nil 7000 150 t shostak))
+   unchecked nil 7000 150 t shostak))
  (IMP_AnnotateProgram_TCC1 0
   (IMP_AnnotateProgram_TCC1-1 nil 3390292134 3392610102
-   ("" (use "CP_is_enumerable") nil nil) unchecked
+   ("" (use "CP_is_enumerable") nil nil) proved-complete
    ((CP_is_enumerable formula-decl nil AnnotateProgramProperties nil))
    170 170 t nil))
  (ann_program_class_correspondence_TCC1 0
   (ann_program_class_correspondence_TCC1-1 nil 3392569207 nil
-   ("" (subtype-tcc) nil nil) unchecked nil nil nil nil nil))
+   ("" (subtype-tcc) nil nil) proved-incomplete nil nil nil nil nil))
  (ann_program_class_correspondence 0
-  (ann_program_class_correspondence-1 nil 3392569211 3392610102
+  (ann_program_class_correspondence-1 nil 3392569211 3392614122
    ("" (skosimp*)
     (("" (expand "ann_program") (("" (propax) nil nil)) nil)) nil)
-   unchecked ((ann_program const-decl "Program" AnnotateProgram nil))
-   186 190 t shostak))
+   proved ((ann_program const-decl "Program" AnnotateProgram nil)) 217
+   210 t shostak))
  (ann_program_method_correspondence 0
-  (ann_program_method_correspondence-1 nil 3392569244 3392610103
+  (ann_program_method_correspondence-1 nil 3392569244 3392614123
    ("" (skosimp*)
     (("" (use "ann_program_class_correspondence")
       (("" (assert)
@@ -1024,7 +1529,7 @@
         nil))
       nil))
     nil)
-   unchecked
+   proved
    ((ann_program_class_correspondence formula-decl nil
      AnnotateProgramProperties nil)
     (MonitoredProgram type-eq-decl nil MonitoredProgram nil)
@@ -1057,14 +1562,13 @@
     (Method type-eq-decl nil Program nil)
     (Stmt type-decl nil Stmt_adt nil)
     (LocalVarDecl type-eq-decl nil Program nil)
-    (BExpr? adt-recognizer-decl "[Expr -> boolean]" Expr_adt nil)
     (Expr type-decl nil Expr_adt nil)
     (FieldDecl type-eq-decl nil Program nil)
     (ann_methods const-decl "finite_set[Method]" AnnotateProgram nil)
     (ann_class const-decl "Class" AnnotateProgram nil))
-   420 320 t shostak))
+   453 370 t shostak))
  (ann_program_preserves_var_decls 0
-  (ann_program_preserves_var_decls-1 nil 3392566301 3392610104
+  (ann_program_preserves_var_decls-1 nil 3392566301 3392614124
    ("" (skosimp*)
     (("" (use "ann_program_method_correspondence")
       (("" (assert)
@@ -1227,7 +1731,7 @@
         nil))
       nil))
     nil)
-   unchecked
+   proved
    ((ann_program_method_correspondence formula-decl nil
      AnnotateProgramProperties nil)
     (MonitoredProgram type-eq-decl nil MonitoredProgram nil)
@@ -1260,7 +1764,9 @@
      nil)
     (well_typed_Program const-decl "boolean" WellTypedProgram nil)
     (wf_MP const-decl "boolean" MonitoredProgram nil)
-    (AND const-decl "[bool, bool -> bool]" booleans nil) nil
+    (AND const-decl "[bool, bool -> bool]" booleans nil)
+    (mp!1 skolem-const-decl "MonitoredProgram[CP, string]"
+     AnnotateProgramProperties nil)
     (IMPLIES const-decl "[bool, bool -> bool]" booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (Class type-eq-decl nil Program nil)
@@ -1268,7 +1774,6 @@
     (Method type-eq-decl nil Program nil)
     (Stmt type-decl nil Stmt_adt nil)
     (LocalVarDecl type-eq-decl nil Program nil)
-    (BExpr? adt-recognizer-decl "[Expr -> boolean]" Expr_adt nil)
     (Expr type-decl nil Expr_adt nil)
     (= const-decl "[T, T -> boolean]" equalities nil)
     (ann_class const-decl "Class" AnnotateProgram nil)
@@ -1284,9 +1789,9 @@
     (getGhostDecls const-decl "finite_set[FieldDecl]" ProgramFunctions
      nil)
     (subset? const-decl "bool" sets nil))
-   1387 1180 t shostak))
+   1375 1170 t shostak))
  (ann_program_preserves_var_decl_names 0
-  (ann_program_preserves_var_decl_names-1 nil 3392567558 3392610105
+  (ann_program_preserves_var_decl_names-1 nil 3392567558 3392614124
    ("" (skosimp*)
     (("" (use "ann_program_preserves_var_decls")
       (("" (assert)
@@ -1314,7 +1819,7 @@
         nil))
       nil))
     nil)
-   unchecked
+   proved
    ((ann_program_preserves_var_decls formula-decl nil
      AnnotateProgramProperties nil)
     (MonitoredProgram type-eq-decl nil MonitoredProgram nil)
@@ -1342,12 +1847,13 @@
     (character type-decl nil character_adt nil)
     (below type-eq-decl nil nat_types nil)
     (nat nonempty-type-eq-decl nil naturalnumbers nil)
-    (subset? const-decl "bool" sets nil) nil
+    (subset? const-decl "bool" sets nil)
+    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
     (FieldDecl type-eq-decl nil Program nil)
     (member const-decl "bool" sets nil))
-   307 260 t shostak))
+   309 270 t shostak))
  (ann_program_preserves_wf_state 0
-  (ann_program_preserves_wf_state-1 nil 3390298254 3392610242
+  (ann_program_preserves_wf_state-1 nil 3390298254 3392614125
    ("" (skosimp)
     (("" (use "ann_program_preserves_var_decls")
       (("" (assert)
@@ -1368,7 +1874,7 @@
         nil))
       nil))
     nil)
-   unchecked
+   proved
    ((ann_program_preserves_var_decls formula-decl nil
      AnnotateProgramProperties nil)
     (MonitoredProgram type-eq-decl nil MonitoredProgram nil)
@@ -1396,11 +1902,10 @@
     (character type-decl nil character_adt nil)
     (below type-eq-decl nil nat_types nil)
     (nat nonempty-type-eq-decl nil naturalnumbers nil)
-    (wf_state const-decl "boolean" State nil)
-    (This const-decl "Name" Program nil))
-   65295 1620 t shostak))
+    (wf_state const-decl "boolean" State nil))
+   290 250 t shostak))
  (ann_program_preserves_pstate_vars 0
-  (ann_program_preserves_pstate_vars-1 nil 3392567663 3392610105
+  (ann_program_preserves_pstate_vars-1 nil 3392567663 3392614125
    ("" (skosimp*)
     (("" (use "ann_program_preserves_var_decls")
       (("" (assert)
@@ -1426,7 +1931,7 @@
         nil))
       nil))
     nil)
-   unchecked
+   proved
    ((ann_program_preserves_var_decls formula-decl nil
      AnnotateProgramProperties nil)
     (MonitoredProgram type-eq-decl nil MonitoredProgram nil)
@@ -1457,9 +1962,9 @@
     (wf_state const-decl "boolean" AnnotatedProgramSemantics nil)
     (wf_state const-decl "boolean" MonitoredProgramSemantics nil)
     (wf_state const-decl "boolean" State nil))
-   478 410 t shostak))
+   407 370 t shostak))
  (ann_program_preserves_ghoststate_vars 0
-  (ann_program_preserves_ghoststate_vars-1 nil 3392567791 3392610106
+  (ann_program_preserves_ghoststate_vars-1 nil 3392567791 3392614125
    ("" (skosimp*)
     (("" (use "ann_program_preserves_var_decls")
       (("" (assert)
@@ -1507,7 +2012,7 @@
         nil))
       nil))
     nil)
-   unchecked
+   proved
    ((ann_program_preserves_var_decls formula-decl nil
      AnnotateProgramProperties nil)
     (MonitoredProgram type-eq-decl nil MonitoredProgram nil)
@@ -1536,15 +2041,16 @@
     (below type-eq-decl nil nat_types nil)
     (nat nonempty-type-eq-decl nil naturalnumbers nil)
     (member const-decl "bool" sets nil)
-    (FieldDecl type-eq-decl nil Program nil) nil
+    (FieldDecl type-eq-decl nil Program nil)
+    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
     (subset? const-decl "bool" sets nil)
     (id const-decl "(bijective?[T, T])" identity nil)
     (wf_ghoststate const-decl "boolean" SemanticsJML nil)
     (wf_state const-decl "boolean" MonitoredProgramSemantics nil)
     (wf_state const-decl "boolean" AnnotatedProgramSemantics nil))
-   488 440 t shostak))
+   447 420 t shostak))
  (get_class_ann_program 0
-  (get_class_ann_program-1 nil 3392567967 3392610106
+  (get_class_ann_program-1 nil 3392567967 3392614126
    ("" (skosimp*)
     (("" (replace -4 :hide? t)
       (("" (replace -4 :hide? t)
@@ -1574,21 +2080,21 @@
         nil))
       nil))
     nil)
-   unchecked
+   proved
    ((ann_program const-decl "Program" AnnotateProgram nil)
     (get_class const-decl "lift[Class]" ProgramFunctions nil))
-   526 490 t shostak))
+   531 460 t shostak))
  (same_class_name_ann_class_implies_same_class_TCC1 0
   (same_class_name_ann_class_implies_same_class_TCC1-1 nil 3389418365
    3390296014
    ("" (skosimp)
     (("" (expand "ann_program_pre") (("" (prop) nil nil)) nil)) nil)
-   unchecked
+   proved-incomplete
    ((ann_program_pre const-decl "boolean" AnnotateProgram nil)) 171 60
    t nil))
  (same_class_name_ann_class_implies_same_class 0
   (same_class_name_ann_class_implies_same_class-1 nil 3387512899
-   3392610107
+   3392614126
    ("" (skosimp)
     (("" (expand "ann_program")
       (("" (skosimp)
@@ -1624,7 +2130,7 @@
         nil))
       nil))
     nil)
-   unchecked
+   proved
    ((ann_program const-decl "Program" AnnotateProgram nil)
     (ann_program_pre const-decl "boolean" AnnotateProgram nil)
     (string type-eq-decl nil strings nil)
@@ -1657,25 +2163,24 @@
     (Method type-eq-decl nil Program nil)
     (Stmt type-decl nil Stmt_adt nil)
     (LocalVarDecl type-eq-decl nil Program nil)
-    (BExpr? adt-recognizer-decl "[Expr -> boolean]" Expr_adt nil)
     (Expr type-decl nil Expr_adt nil)
     (finite_set type-eq-decl nil finite_sets nil)
     (FieldDecl type-eq-decl nil Program nil)
     (JType type-decl nil JType_adt nil)
     (defined? const-decl "boolean" ValProp nil)
     (Val type-decl nil Val_adt nil))
-   363 330 t shostak))
+   350 310 t shostak))
  (same_method_name_ann_class_implies_same_method_TCC1 0
   (same_method_name_ann_class_implies_same_method_TCC1-1 nil 3389418365
    3390296014
    ("" (skosimp)
     (("" (expand "ann_program_pre") (("" (prop) nil nil)) nil)) nil)
-   unchecked
+   proved-incomplete
    ((ann_program_pre const-decl "boolean" AnnotateProgram nil)) 69 60 t
    nil))
  (same_method_name_ann_class_implies_same_method 0
   (same_method_name_ann_class_implies_same_method-1 nil 3387516443
-   3392610107
+   3392614127
    ("" (skosimp)
     (("" (lemma "wf_class_has_unique_method_names")
       (("" (inst -1 "c2!1" "m2!1" "ann_method(mp!1)(m1!1)")
@@ -1705,7 +2210,7 @@
         nil))
       nil))
     nil)
-   unchecked
+   proved
    ((string type-eq-decl nil strings nil)
     (char type-eq-decl nil strings nil)
     (char? adt-recognizer-decl "[character -> boolean]" character_adt
@@ -1721,7 +2226,9 @@
      AnnotateProgramProperties nil)
     (ann_class const-decl "Class" AnnotateProgram nil)
     (ann_methods const-decl "finite_set[Method]" AnnotateProgram nil)
-    (ann_program const-decl "Program" AnnotateProgram nil) nil
+    (ann_program const-decl "Program" AnnotateProgram nil)
+    (mp!1 skolem-const-decl "MonitoredProgram[CP, string]"
+     AnnotateProgramProperties nil)
     (ann_program_pre const-decl "boolean" AnnotateProgram nil)
     (ann_method const-decl "Method" AnnotateProgram nil)
     (well_typed_Program const-decl "boolean" WellTypedProgram nil)
@@ -1746,23 +2253,22 @@
     (Method type-eq-decl nil Program nil)
     (Stmt type-decl nil Stmt_adt nil)
     (LocalVarDecl type-eq-decl nil Program nil)
-    (BExpr? adt-recognizer-decl "[Expr -> boolean]" Expr_adt nil)
     (Expr type-decl nil Expr_adt nil)
     (finite_set type-eq-decl nil finite_sets nil)
     (FieldDecl type-eq-decl nil Program nil)
     (JType type-decl nil JType_adt nil)
     (defined? const-decl "boolean" ValProp nil)
     (Val type-decl nil Val_adt nil))
-   419 350 t shostak))
+   358 300 t shostak))
  (lookup_mthd_ann_program_TCC1 0
   (lookup_mthd_ann_program_TCC1-1 nil 3387195852 3390296015
    ("" (skosimp)
     (("" (expand "ann_program_pre") (("" (prop) nil nil)) nil)) nil)
-   unchecked
+   proved-incomplete
    ((ann_program_pre const-decl "boolean" AnnotateProgram nil)) 74 80 t
    nil))
  (lookup_mthd_ann_program 0
-  (lookup_mthd_ann_program-1 nil 3387195852 3392610107
+  (lookup_mthd_ann_program-1 nil 3387195852 3392614127
    ("" (skosimp)
     (("" (lemma "lookup_mthd_axiom")
       (("" (inst-cp -1 "program(mp!1)" "s!1" "m1!1" "mn!1" "tgt!1")
@@ -1894,10 +2400,10 @@
      nil)
     (char type-eq-decl nil strings nil)
     (string type-eq-decl nil strings nil))
-   242 210 t shostak))
+   178 180 t shostak))
  (ann_program_preserves_well_behaved_Program 0
   (ann_program_preserves_well_behaved_Program-1 nil 3392570267
-   3392610115
+   3392614134
    ("" (skosimp*)
     (("" (expand "well_behaved_Program")
       (("" (skosimp*)
@@ -2034,9 +2540,9 @@
         nil))
       nil))
     nil)
-   unfinished nil 7293 6610 t shostak))
+   unfinished nil 6957 6270 t shostak))
  (ann_program_defines_MVA_vars2 0
-  (ann_program_defines_MVA_vars2-1 nil 3390026041 3392610116
+  (ann_program_defines_MVA_vars2-1 nil 3390026041 3392614135
    ("" (skosimp*)
     (("" (typepred "mp!1")
       (("" (expand "compatible")
@@ -2096,7 +2602,7 @@
         nil))
       nil))
     nil)
-   unchecked
+   proved
    ((MonitoredProgram type-eq-decl nil MonitoredProgram nil)
     (compatible const-decl "boolean" MonitoredProgram nil)
     (MonitoredProgramPre type-eq-decl nil MonitoredProgram nil)
@@ -2128,9 +2634,10 @@
     (ann_program const-decl "Program" AnnotateProgram nil)
     (union const-decl "set" sets nil)
     (new_gvds const-decl "finite_set[FieldDecl]" AnnotateProgram nil)
-    nil
+    (v!1 skolem-const-decl "MVAVarDecl[CP, string]"
+     AnnotateProgramProperties nil)
     (name_of const-decl "(injective?[CP, string])" AnnotateProgram nil)
-    nil
+    (q!1 skolem-const-decl "CP" AnnotateProgramProperties nil)
     (IntType? adt-recognizer-decl "[JType -> boolean]" JType_adt nil)
     (IntType adt-constructor-decl "(IntType?)" JType_adt nil)
     (cp const-decl "string" AnnotateProgram nil)
@@ -2152,19 +2659,20 @@
     (member const-decl "bool" sets nil)
     (ann_class const-decl "Class" AnnotateProgram nil)
     (AND const-decl "[bool, bool -> bool]" booleans nil)
-    (wf_MP const-decl "boolean" MonitoredProgram nil) nil
+    (wf_MP const-decl "boolean" MonitoredProgram nil)
+    (mp!1 skolem-const-decl "MonitoredProgram[CP, string]"
+     AnnotateProgramProperties nil)
     (FieldDecl type-eq-decl nil Program nil)
     (Expr type-decl nil Expr_adt nil)
-    (BExpr? adt-recognizer-decl "[Expr -> boolean]" Expr_adt nil)
     (LocalVarDecl type-eq-decl nil Program nil)
     (Stmt type-decl nil Stmt_adt nil)
     (Method type-eq-decl nil Program nil)
     (lift type-decl nil lift_adt nil)
     (Class type-eq-decl nil Program nil)
     (well_typed_Program const-decl "boolean" WellTypedProgram nil))
-   1327 1200 t nil))
+   1369 1190 t nil))
  (ann_program_defines_MVA_vars 0
-  (ann_program_defines_MVA_vars-1 nil 3389956467 3392610117
+  (ann_program_defines_MVA_vars-1 nil 3389956467 3392614136
    ("" (skosimp*)
     ((""
       (expand* "wf_state" "wf_AState" "wf_ghoststate" "wf_Store"
@@ -2241,7 +2749,7 @@
         nil))
       nil))
     nil)
-   unchecked
+   proved
    ((is_ghost const-decl "boolean" SemanticsJML nil)
     (wf_ghoststate const-decl "boolean" SemanticsJML nil)
     (wf_state const-decl "boolean" AnnotatedProgramSemantics nil)
@@ -2251,7 +2759,8 @@
     (bool nonempty-type-eq-decl nil booleans nil)
     (injective? const-decl "bool" functions nil)
     (name_of const-decl "(injective?[CP, string])" AnnotateProgram nil)
-    (cp const-decl "string" AnnotateProgram nil) nil
+    (cp const-decl "string" AnnotateProgram nil)
+    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
     (nat nonempty-type-eq-decl nil naturalnumbers nil)
     (below type-eq-decl nil nat_types nil)
     (character type-decl nil character_adt nil)
@@ -2279,7 +2788,6 @@
     (MonitoredProgram type-eq-decl nil MonitoredProgram nil)
     (FieldDecl type-eq-decl nil Program nil)
     (Expr type-decl nil Expr_adt nil)
-    (BExpr? adt-recognizer-decl "[Expr -> boolean]" Expr_adt nil)
     (LocalVarDecl type-eq-decl nil Program nil)
     (Stmt type-decl nil Stmt_adt nil)
     (Method type-eq-decl nil Program nil)
@@ -2287,5 +2795,5 @@
     (Class type-eq-decl nil Program nil)
     (ann_program_defines_MVA_vars2 formula-decl nil
      AnnotateProgramProperties nil))
-   560 470 t shostak)))
+   566 460 t shostak)))
 

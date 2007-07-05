@@ -214,20 +214,13 @@ BEGIN
         (var_names(getLocalDecls(program(mp)))(vn) IFF
          var_names(getLocalDecls(ann_program(mp)))(vn))
 
-  % PROVE
   ann_program_preserves_wf_state : LEMMA  % :-)
     FORALL (mp : MonitoredProgram, s : PState) :
       ann_program_pre(mp) IMPLIES
       wf_state(program(mp))(s) IMPLIES
         wf_state(ann_program(mp))(s)
 
-%  ann_program_preserves_AP_wf_state : LEMMA  
-%    FORALL (mp : MonitoredProgram, s : APState) :
-%      ann_program_pre(mp) IMPLIES
-%      wf_state(program(mp))(s) IMPLIES
-%        wf_state(ann_program(mp))(s)
 
-  % PROVE
   ann_program_preserves_pstate_vars : LEMMA % :-)
     FORALL (mp : MonitoredProgram)(vn : string)
            (sMP : MPState, sAP : APState) :
@@ -290,7 +283,7 @@ BEGIN
 
   % FIX PROOF
   % if possible?? (MH)
-  lookup_mthd_ann_program : LEMMA % :-)
+  lookup_mthd_ann_program : LEMMA % 
     FORALL (mp : MonitoredProgram, m1, m2 : Method, mn : string, tgt : Val) :
       ann_program_pre(mp) IMPLIES
       up?(lookup_mthd(program(mp), tgt, mn)) IMPLIES
