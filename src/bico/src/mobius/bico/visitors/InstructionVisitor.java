@@ -5,7 +5,6 @@ import mobius.bico.dico.MethodHandler;
 
 import org.apache.bcel.Constants;
 import org.apache.bcel.generic.ACONST_NULL;
-import org.apache.bcel.generic.ANEWARRAY;
 import org.apache.bcel.generic.ARRAYLENGTH;
 import org.apache.bcel.generic.ATHROW;
 import org.apache.bcel.generic.ArithmeticInstruction;
@@ -14,7 +13,6 @@ import org.apache.bcel.generic.BIPUSH;
 import org.apache.bcel.generic.BREAKPOINT;
 import org.apache.bcel.generic.BasicType;
 import org.apache.bcel.generic.BranchInstruction;
-import org.apache.bcel.generic.CHECKCAST;
 import org.apache.bcel.generic.CPInstruction;
 import org.apache.bcel.generic.ConstantPoolGen;
 import org.apache.bcel.generic.ConversionInstruction;
@@ -25,34 +23,22 @@ import org.apache.bcel.generic.EmptyVisitor;
 import org.apache.bcel.generic.FCMPG;
 import org.apache.bcel.generic.FCMPL;
 import org.apache.bcel.generic.FCONST;
-import org.apache.bcel.generic.FieldInstruction;
-import org.apache.bcel.generic.FieldOrMethod;
 import org.apache.bcel.generic.ICONST;
 import org.apache.bcel.generic.IINC;
 import org.apache.bcel.generic.IMPDEP1;
 import org.apache.bcel.generic.IMPDEP2;
-import org.apache.bcel.generic.INSTANCEOF;
 import org.apache.bcel.generic.Instruction;
-import org.apache.bcel.generic.InvokeInstruction;
 import org.apache.bcel.generic.LCMP;
 import org.apache.bcel.generic.LCONST;
-import org.apache.bcel.generic.LDC;
-import org.apache.bcel.generic.LDC2_W;
 import org.apache.bcel.generic.LocalVariableInstruction;
 import org.apache.bcel.generic.MONITORENTER;
 import org.apache.bcel.generic.MONITOREXIT;
-import org.apache.bcel.generic.MULTIANEWARRAY;
-import org.apache.bcel.generic.NEW;
 import org.apache.bcel.generic.NEWARRAY;
 import org.apache.bcel.generic.NOP;
 import org.apache.bcel.generic.RET;
-import org.apache.bcel.generic.ReferenceType;
 import org.apache.bcel.generic.ReturnInstruction;
 import org.apache.bcel.generic.SIPUSH;
 import org.apache.bcel.generic.StackInstruction;
-import org.apache.bcel.generic.Type;
-import org.apache.bcel.util.Repository;
-import org.apache.bcel.util.SyntheticRepository;
 
 
 /**
@@ -119,7 +105,7 @@ public final class InstructionVisitor extends EmptyVisitor {
    */
   @Override
   public void visitArrayInstruction(final ArrayInstruction ins) {
-    fRes = ArrayInstructionVisitor.translate((ArrayInstruction) ins);
+    fRes = ArrayInstructionVisitor.translate(ins);
   }
   
   /**
@@ -157,7 +143,7 @@ public final class InstructionVisitor extends EmptyVisitor {
    */
   @Override
   public void visitBranchInstruction(final BranchInstruction ins) {
-    fRes = BranchInstructionVisitor.translate((BranchInstruction) ins);
+    fRes = BranchInstructionVisitor.translate(ins);
   }
   
   /**
@@ -180,74 +166,17 @@ public final class InstructionVisitor extends EmptyVisitor {
     }
   }
   
+  
+  /**
+   * Visits a CPInstruction using the {@link CPInstructionVisitor}
+   * and sets the result in consequence.
+   * @param ins the instruction which is passed to the called
+   * visitor
+   */
   @Override
   public void visitCPInstruction(final CPInstruction ins) {
-    final String name = Util.upCase(ins.getName());
-    final Repository fRepos = SyntheticRepository.getInstance();
-    final Type type = ((CPInstruction) ins).getType(fConstantPool);
-    if (ins instanceof ANEWARRAY) {
-      try {
-        fRes = "Newarray " + Util.convertType(type, fRepos);
-      } 
-      catch (ClassNotFoundException e) {
-        e.printStackTrace();
-      }
-    } 
-    else if (ins instanceof CHECKCAST) {
-      try {
-        fRes = name + " " + Util.convertReferenceType((ReferenceType) type, fRepos);
-      }
-      catch (ClassNotFoundException e) {
-        e.printStackTrace();
-      }
-    } 
-    else if (ins instanceof FieldOrMethod) {
-      final FieldOrMethod fom = (FieldOrMethod) ins;
-      final String className = Util.coqify(fom.getReferenceType(fConstantPool).toString());
-      // String fmName = coqify(fom.getName(cpg));
-      if (ins instanceof FieldInstruction) {
-        final String fs = className + "Signature." + 
-            Util.coqify(fom.getName(fConstantPool)) + "FieldSignature";
-        fRes = name + " " + fs;
-      } 
-      else if (ins instanceof InvokeInstruction) {
-        String ms;
-        ms = className + "Signature" + "." + 
-             fMethodHandler.getName((InvokeInstruction) fom, fConstantPool) + 
-             "Signature";
-
-        fRes = name + " " + ms;
-      } 
-      else {
-        fRes = Util.unknown("FieldOrMethod", ins);
-      }
-    } 
-    else if (ins instanceof INSTANCEOF) {
-      try {
-        fRes = name + " " + Util.convertReferenceType((ReferenceType) type, fRepos);
-      }
-      catch (ClassNotFoundException e) {
-        e.printStackTrace();
-      }
-    } 
-    else if (ins instanceof LDC) {
-      fRes = Util.unhandled(ins);
-    } 
-    else if (ins instanceof LDC2_W) {
-      fRes = Util.unhandled(ins);
-    } 
-    else if (ins instanceof MULTIANEWARRAY) {
-      fRes = Util.unhandled(ins);
-    } 
-    else if (ins instanceof NEW) {
-      fRes = name + " " + 
-           Util.coqify(((NEW) ins).getType(fConstantPool).toString()) + 
-             ".className";
-      // convertType(type);
-    } 
-    else {
-      fRes = Util.unknown("CPInstruction", ins);
-    }
+    CPInstructionVisitor.translate(fMethodHandler, 
+                                   fConstantPool, ins);
   }
   
   /**
