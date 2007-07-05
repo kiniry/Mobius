@@ -1,4 +1,6 @@
-package mobius.bico;
+package mobius.bico.visitors;
+
+import mobius.bico.Util;
 
 import org.apache.bcel.generic.BranchInstruction;
 import org.apache.bcel.generic.EmptyVisitor;
@@ -27,8 +29,11 @@ public class BranchInstructionVisitor extends EmptyVisitor {
   /** the result string. */
   private String fRes;
 
+  /**
+   * Does nothing.
+   */
   private BranchInstructionVisitor() {
-    
+    fRes = "";
   }
   
   @Override
@@ -130,7 +135,12 @@ public class BranchInstructionVisitor extends EmptyVisitor {
   }
 
 
-  public static String translate(BranchInstruction ins) {
+  /**
+   * Translate the given instruction to a Bicolano version of it.
+   * @param ins the instruction to translate
+   * @return the bicolano compatible translation
+   */
+  public static String translate(final BranchInstruction ins) {
     final BranchInstructionVisitor v = new BranchInstructionVisitor();
     ins.accept(v);
     if (v.fRes.equals("")) {

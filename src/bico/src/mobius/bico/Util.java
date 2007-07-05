@@ -70,7 +70,7 @@ public final class Util {
    * @param index the offset to print
    * @return i%Z or (-i)%Z
    */
-  static String printZ(final Number index) {
+  public static String printZ(final Number index) {
     return Util.printZ(index.intValue());
   }
 
@@ -98,7 +98,7 @@ public final class Util {
    * @return the name of the instruction, uppercase, tagged as
    * Unimplemented
    */
-  static String unimplemented(final String instruction, final Instruction ins) {
+  public static String unimplemented(final String instruction, final Instruction ins) {
     final String name = ins.getName();
     System.err.println("Unimplemented " + instruction + ": " + name);
     return upCase(name) + " (* Unimplemented *)";
@@ -111,7 +111,7 @@ public final class Util {
    * @param ins the instruction to state as unhandled
    * @return a valid coq structure
    */
-  static String unknown(final String str, final  Instruction ins) {
+  public static String unknown(final String str, final  Instruction ins) {
     final String name = ins.getName();
     System.err.println("Unknown " + str + ": " + name);
     return "Nop (* " + name + " *)";
@@ -132,7 +132,7 @@ public final class Util {
    * @param ins the instruction to state as unhandled
    * @return a valid coq structure
    */ 
-  static String unhandled(final String str, final Instruction ins) {
+  public static String unhandled(final String str, final Instruction ins) {
     final String name = ins.getName();
     System.err.println("Unhandled " + str + ": " + name);
     return "Nop (* " + name + " *)";

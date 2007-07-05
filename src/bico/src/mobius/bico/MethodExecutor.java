@@ -1,5 +1,7 @@
 package mobius.bico;
 
+import mobius.bico.visitors.BranchInstructionVisitor;
+
 import org.apache.bcel.Constants;
 import org.apache.bcel.classfile.Code;
 import org.apache.bcel.classfile.CodeException;
@@ -28,19 +30,14 @@ import org.apache.bcel.generic.FCMPL;
 import org.apache.bcel.generic.FCONST;
 import org.apache.bcel.generic.FieldInstruction;
 import org.apache.bcel.generic.FieldOrMethod;
-import org.apache.bcel.generic.GOTO;
-import org.apache.bcel.generic.GOTO_W;
-import org.apache.bcel.generic.GotoInstruction;
 import org.apache.bcel.generic.ICONST;
 import org.apache.bcel.generic.IINC;
 import org.apache.bcel.generic.IMPDEP1;
 import org.apache.bcel.generic.IMPDEP2;
 import org.apache.bcel.generic.INSTANCEOF;
-import org.apache.bcel.generic.IfInstruction;
 import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.InstructionList;
 import org.apache.bcel.generic.InvokeInstruction;
-import org.apache.bcel.generic.JsrInstruction;
 import org.apache.bcel.generic.LCMP;
 import org.apache.bcel.generic.LCONST;
 import org.apache.bcel.generic.LDC;
@@ -57,7 +54,6 @@ import org.apache.bcel.generic.RET;
 import org.apache.bcel.generic.ReferenceType;
 import org.apache.bcel.generic.ReturnInstruction;
 import org.apache.bcel.generic.SIPUSH;
-import org.apache.bcel.generic.Select;
 import org.apache.bcel.generic.StackConsumer;
 import org.apache.bcel.generic.StackInstruction;
 import org.apache.bcel.generic.StackProducer;
