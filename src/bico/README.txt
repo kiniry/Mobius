@@ -28,3 +28,4 @@ sometimes removes "orphane" .class files.
 	'java -jar bico.jar'), go into the bico directory and type in 'make'.
 	If it doesn't find bcel as a part of the umbra package you can specify its
 	absolute path in the makefile.
+	
