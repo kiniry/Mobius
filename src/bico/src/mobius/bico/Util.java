@@ -55,7 +55,7 @@ public final class Util {
    * @param s a string
    * @return s with the first char toUpperCase
    */
-  static String upCase(final String s) {
+  public static String upCase(final String s) {
     if (s != null && s.length() > 0) {
       final char c1 = Character.toUpperCase(s.charAt(0));
       return Character.toString(c1) + s.substring(1);
@@ -143,7 +143,7 @@ public final class Util {
    * @param ins the instruction to treat.
    * @return a String saying that the instruction is unhandled
    */
-  static String unhandled(final Instruction ins) {
+  public static String unhandled(final Instruction ins) {
     return unhandled("Instruction", ins);
   }
 
@@ -154,7 +154,7 @@ public final class Util {
    * @return (Some "coq type t") or None
    * @throws ClassNotFoundException if the type couldn't be resolved
    */
-  static String convertTypeOption(final Type t, final Repository repos)
+  public static String convertTypeOption(final Type t, final Repository repos)
     throws ClassNotFoundException {
     if (t == Type.VOID || t == null) {
       return "None";
@@ -169,7 +169,7 @@ public final class Util {
    * @return Coq value of t of type type
    * @throws ClassNotFoundException if the type cannot be resolved
    */
-  static String convertType(final Type t, final Repository repos)
+  public static String convertType(final Type t, final Repository repos)
     throws ClassNotFoundException {
     if (t instanceof BasicType) {
       return "(PrimitiveType " + Util.convertPrimitiveType((BasicType) t) + ")";
@@ -189,7 +189,7 @@ public final class Util {
    * @return Coq value of t of type refType
    * @throws ClassNotFoundException if a type cannot have its class resolved
    */
-  static String convertReferenceType(final ReferenceType type, 
+  public static String convertReferenceType(final ReferenceType type, 
                                   final Repository repos) throws ClassNotFoundException {
     String convertedType;
     if (type instanceof ArrayType) {
@@ -337,7 +337,7 @@ public final class Util {
    * @param pkg the original package name
    * @return the coqified version
    */
-  static String getCoqPackageName(final String pkg) {
+  public static String getCoqPackageName(final String pkg) {
     String pn;
     if (pkg.length() == 0) {
       pn = "EmptyPackageName";

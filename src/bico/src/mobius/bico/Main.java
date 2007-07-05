@@ -3,6 +3,8 @@ package mobius.bico;
 import java.io.IOException;
 import java.security.Permission;
 
+import mobius.bico.executors.Executor;
+
 /**
  * The main class to launch bico!
  * @author J. Charles (julien.charles@inria.fr),
