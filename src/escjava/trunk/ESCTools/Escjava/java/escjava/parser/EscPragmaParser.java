@@ -247,6 +247,8 @@ import java.util.Iterator;
 public class EscPragmaParser extends Parse 
   implements PragmaParser
 {
+  public static final String NESTED_ANNOTATION_COMMENTS = "Annotation comments may be nested at most 1 time";
+
   private static final boolean DEBUG = false;
 
   /** 
@@ -323,8 +325,7 @@ public class EscPragmaParser extends Parse
     if (level < maxAnnotationNestingLevel)
       pp = new EscPragmaParser(level + 1);
     else
-      pp = new ErrorPragmaParser("Annotation comments may be nested "
-          + "at most 1 time");
+      pp = new ErrorPragmaParser(NESTED_ANNOTATION_COMMENTS);
 
     scanner = new EscPragmaLex(pp, true);
     scanner.addPunctuation("==>", TagConstants.IMPLIES);

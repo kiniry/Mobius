@@ -1,3 +1,12 @@
+/**
+ * @title Reachability Analysis
+ * @description Reachability Analysis
+ * @author Radu Grigore, Michal Moskal and Mikolas Janota
+ * @copyright 2007, Mobius IST-15905
+ * @license MIT/X11
+ * @version "$Id$"
+ */
+
 package escjava.dfa.daganalysis;
 
 import escjava.ast.*;
@@ -14,6 +23,10 @@ import escjava.dfa.daganalysis.AlgebraUtils;
 import java.util.Hashtable;
 
 public class DAGBackpropagation {
+  
+    public static final String INPUT_GRAPH_NOT_ACYCLIC = "The input graph is not acyclic";
+    public static final String INPUT_GRAPH_NOT_CONSISTENT = "The input graph is not consistent";
+
     Hashtable nodeToInfo;
 
     /**
@@ -27,7 +40,7 @@ public class DAGBackpropagation {
     Expr reachPredicate;
 
     /**
-     * The back-propagation will lead to thid  node.
+     * The back-propagation will lead to this node.
      */
     Node start;
 
@@ -43,8 +56,8 @@ public class DAGBackpropagation {
     //@   ensures this.reach == reach;
     public DAGBackpropagation(CFD cfd) {
         this.cfd = cfd;
-        Assert.notFalse(cfd.isConsistent(), "The input graph is not consistent");
-        Assert.notFalse(cfd.isAcyclic(), "The input graph is not acyclic");
+        Assert.notFalse(cfd.isConsistent(), INPUT_GRAPH_NOT_CONSISTENT);
+        Assert.notFalse(cfd.isAcyclic(), INPUT_GRAPH_NOT_ACYCLIC);
     }
 
     /**
@@ -62,7 +75,7 @@ public class DAGBackpropagation {
 
     /**
      * After the back-propagation was computed returns the computed information for a given node.
-     * @param node the node for whic the information requested
+     * @param node the node for which the information was requested
      * @return the reach-expression for <code>node</code>
      */
     public /*@ non_null @*/ Expr getInformation(/*@ non_null @*/ Node node) {
@@ -197,7 +210,7 @@ public class DAGBackpropagation {
                 ecmd = stripOffLabelsCommand((ExprCmd) command);
                 Expr commandPred = ecmd.pred;
                 if (!AlgebraUtils.shareVariables(commandPred, expression)) {
-                    return expression; // skip expressions that do not share variables with the back propagagted one
+                    return expression; // skip expressions that do not share variables with the back propagated one
                 }
             }
                      

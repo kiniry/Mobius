@@ -1,3 +1,12 @@
+/**
+ * @title Reachability Analysis
+ * @description Reachability Analysis
+ * @author Radu Grigore, Michal Moskal and Mikolas Janota
+ * @copyright 2007, Mobius IST-15905 
+ * @license MIT/X11
+ * @version "$Id$"
+ */
+
 package escjava.dfa.buildcfd;
 
 import escjava.translate.GC;
@@ -12,6 +21,7 @@ import javafe.util.Assert;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.io.PrintStream;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -23,7 +33,10 @@ import java.util.Set;
  */
 public class GCtoCFDBuilder {
 
-	/*@ non_null @*/List unreachable;
+	public static final String UNREACHABLE = "Unreachable: ";
+  public static final String COMMANDS_LOST_CONSTRUCTION = "Some commands got lost in the construction.";
+  public static final String LOOP_TRANSLATION_CONSTRUCTION_NOT_IMPLEMENTED = "Loop translation construction not implemented";
+  /*@ non_null @*/List unreachable;
 
 	public GCtoCFDBuilder() {
 		unreachable = new LinkedList();
@@ -45,7 +58,8 @@ public class GCtoCFDBuilder {
 
     
     protected CFD constructLoopGraph(LoopCmd loopCommand, GenericVarDeclVec scope) {
-        Assert.fail("Loop translation construction no implemented");
+        // TODO
+        Assert.fail(LOOP_TRANSLATION_CONSTRUCTION_NOT_IMPLEMENTED);
         return null;
     }
     
@@ -272,22 +286,23 @@ public class GCtoCFDBuilder {
         
         visitedCmds = new HashSet();
         
+        final PrintStream printStream = System.err;
         // Add the unreachable nodes to visited
         // Print unreachable
-        System.err.println("Unreachable: ");
+        printStream.println(UNREACHABLE);
         for (Iterator it = builder.unreachable.iterator(); it.hasNext();) {
             CFD ug = (CFD) it.next();
-            System.err.println(ug);
+            printStream.println(ug);
             addToVisitedCmds(ug.getInitNode());
         }
 
         addToVisitedCmds(g.getInitNode());
         
         
-        System.err.println("Visited: " + visitedCmds);
-        System.err.println("cmds: " + cmds);
+        printStream.println("Visited: " + visitedCmds);
+        printStream.println("cmds: " + cmds);
         
-        OutputStreamWriter ow = new OutputStreamWriter(System.err);
+        OutputStreamWriter ow = new OutputStreamWriter(printStream);
         try {
             ow.write("\n\n=====da dot====\n"); 
             g.printToDot(ow);
@@ -301,12 +316,12 @@ public class GCtoCFDBuilder {
             
             ow.flush();
         } catch (IOException e) {
-            System.err.println("Can't print to the err output.");
+            printStream.println("Can't print to the err output.");
         }
         
         
         //Assert.notFalse(visitedCmds.equals(cmds), "Some commands got lost in the construction.");
-        Assert.notFalse(cmds.equals(visitedCmds), "Some commands got lost in the construction.");
+        Assert.notFalse(cmds.equals(visitedCmds), COMMANDS_LOST_CONSTRUCTION);
 
     }
     

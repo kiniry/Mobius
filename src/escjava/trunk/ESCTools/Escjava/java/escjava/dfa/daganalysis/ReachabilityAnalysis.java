@@ -1,3 +1,13 @@
+/**
+ * @title Reachability Analysis
+ * @description Reachability Analysis
+ * @author Radu Grigore, Michal Moskal and Mikolas Janota
+ * @copyright 2007, Mobius IST-15905 
+ * @license MIT/X11
+ * @version "$Id$"
+ */
+
+
 package escjava.dfa.daganalysis;
 
 import java.io.File;
@@ -50,6 +60,10 @@ import escjava.translate.VcToString;
  */
 class LabelDataUtil implements Comparator {
     
+    // Message strings
+    public static final String DUPLICATE_ERROR = "Hmm? This is strange: same error at the same location?";
+    public static final String LABEL_WITHOUT_LOCATION = "We expect that each label has a location.";
+    
     /** Extract most significant location. */
     static public int getLocation(LabelData ld) {
         if (ld.hasUseLoc()) {
@@ -57,7 +71,7 @@ class LabelDataUtil implements Comparator {
         } else if (ld.hasDeclLoc()) {
             return ld.getDeclLoc();
         }
-        Assert.fail("We expect that each label has a location.");
+        Assert.fail(LABEL_WITHOUT_LOCATION);
         // If you are really sure you want label without location within ESC/Java
         // then for this class it should be fine if you just remove the assertion above.
         return Location.NULL;
@@ -80,7 +94,7 @@ class LabelDataUtil implements Comparator {
         if (lineA != lineB) return lineA - lineB;
         if (locA != locB) return locA - locB;
         if (tagA != tagB) return tagA - tagB;
-        Assert.fail("Hmm? This is strange: same error at the same location?");
+        Assert.fail(DUPLICATE_ERROR);
         return -1;
     }
     
@@ -328,7 +342,7 @@ public class ReachabilityAnalysis {
         labelChildrenTmp.add(new ArrayList());
         recCollectNodes(init, 0);
         
-        // Conver ArrayLists to simple arrays. (I wouldn't do this in a later
+        // Convert ArrayLists to simple arrays. (I wouldn't do this in a later
         // version of Java.)
         labels = (NodeAndLabel[])labelsTmp.toArray(new NodeAndLabel[0]);
         preconditions = new Expr[labels.length];
