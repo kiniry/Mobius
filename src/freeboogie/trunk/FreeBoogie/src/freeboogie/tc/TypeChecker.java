@@ -609,4 +609,14 @@ public class TypeChecker extends Evaluator<Type> {
     if (tail != null) tail.eval(this);
     return null;
   }
+  
+  // === do not look at block successors ===
+  @Override
+  public Type eval(Block block, String name, Commands cmds, Identifiers succ, Block tail) {
+    if (cmds != null) cmds.eval(this);
+    if (tail != null) tail.eval(this);
+    return null;
+  }
+
+  
 }

@@ -112,15 +112,15 @@ body returns [Body v]:
 ;
 
 block_list returns [Block v]:
-  ID ':' (command_list)? block_end (t=block_list)?
-    { if(ok) $v=Block.mk($ID.text,$command_list.v,$block_end.v,$t.v,tokLoc($ID));}
+  ID ':' (command_list)? block_succ (t=block_list)?
+    { if(ok) $v=Block.mk($ID.text,$command_list.v,$block_succ.v,$t.v,tokLoc($ID));}
 ;
 
-block_end returns [BlockEnd v]:
+block_succ returns [Identifiers v]:
     a='goto' id_list ';' 
-      { if(ok) $v=BlockEnd.mk(BlockEnd.BlockType.GOTO, $id_list.v,tokLoc($a)); }
+      { if(ok) $v=$id_list.v; }
   |  a='return' ';'
-      { if(ok) $v=BlockEnd.mk(BlockEnd.BlockType.RETURN, null,tokLoc($a)); }
+      { if(ok) $v=null; }
 ;
 	
 command	returns [Command v]:

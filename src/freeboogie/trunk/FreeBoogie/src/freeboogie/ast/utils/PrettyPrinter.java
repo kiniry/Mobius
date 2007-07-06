@@ -40,8 +40,6 @@ public class PrettyPrinter extends Transformer {
     = new HashMap<AtomQuant.QuantType,String>(5);
   private static final HashMap<BinaryOp.Op,String> binRep
     = new HashMap<BinaryOp.Op,String>(29);
-  private static final HashMap<BlockEnd.BlockType,String> bendRep
-    = new HashMap<BlockEnd.BlockType,String>(5);
   private static final HashMap<PrimitiveType.Ptype,String> typeRep
     = new HashMap<PrimitiveType.Ptype,String>(11);
   private static final HashMap<Specification.SpecType,String> specRep
@@ -73,8 +71,6 @@ public class PrettyPrinter extends Transformer {
     binRep.put(BinaryOp.Op.OR, " || ");
     binRep.put(BinaryOp.Op.PLUS, " + ");
     binRep.put(BinaryOp.Op.SUBTYPE, " <: ");
-    bendRep.put(BlockEnd.BlockType.GOTO, "goto ");
-    bendRep.put(BlockEnd.BlockType.RETURN, "return");
     typeRep.put(PrimitiveType.Ptype.ANY, "any");
     typeRep.put(PrimitiveType.Ptype.BOOL, "bool");
     typeRep.put(PrimitiveType.Ptype.INT, "int");
@@ -223,21 +219,20 @@ public class PrettyPrinter extends Transformer {
   }
 
   @Override
-  public void see(Block block, String name, Commands cmds, BlockEnd end, Block tail) {
+  public void see(Block block, String name, Commands cmds, Identifiers succ, Block tail) {
     say(name);
     say(":");
     ++indentLevel; nl();
     if (cmds != null) cmds.eval(this);
-    end.eval(this);
+    if (succ == null) {
+      say("return");
+    } else {
+      say("goto ");
+      succ.eval(this);
+    }
+    semi();
     --indentLevel; nl();
     if (tail != null) tail.eval(this);
-  }
-
-  @Override
-  public void see(BlockEnd blockEnd, BlockEnd.BlockType type, Identifiers dest) {
-    say(bendRep.get(type));
-    if (dest != null) dest.eval(this);
-    semi();
   }
 
   @Override

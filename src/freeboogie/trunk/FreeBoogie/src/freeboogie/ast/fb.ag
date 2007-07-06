@@ -39,8 +39,8 @@ Signature = String! name, Declaration args, Declaration results;
 Specification = enum(SpecType: REQUIRES, MODIFIES, ENSURES) type,
                 Expr! expr, boolean free, Specification tail;
 Body = Declaration vars, Block blocks;
-Block = String! name, Commands cmds, BlockEnd! end, Block tail;
-BlockEnd = enum(BlockType: GOTO, RETURN) type, Identifiers dest;
+Block = String! name, Commands cmds, Identifiers succ, Block tail;
+  // succ == null means that we return
 
 // Commands
 Commands = Command! cmd, Commands tail;

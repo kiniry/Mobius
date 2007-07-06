@@ -12,7 +12,6 @@ import freeboogie.util.Err;
  * Constructs a {@code SymbolTable} from an AST.
  * 
  * NOTE: generic types in boogie are a hack so I'll treat them as such.
- * TODO: `see' all definitions
  *
  * @author rgrig 
  * @author reviewed by TODO
@@ -169,12 +168,6 @@ public class SymbolTableBuilder extends Transformer {
     localScopes.removeFirst();
   }
   
-  // === don't look at goto's ===
-  @Override
-  public void see(BlockEnd blockEnd, BlockEnd.BlockType type, Identifiers dest) {
-    // do nothing
-  }
-  
   // === remember if we are below a modifies spec ===
   
   @Override
@@ -197,5 +190,12 @@ public class SymbolTableBuilder extends Transformer {
     --arrayCnt;
   }
 
+  // === do not lok at goto-s ===
+  @Override
+  public void see(Block block, String name, Commands cmds, Identifiers succ, Block tail) {
+    if (cmds != null) cmds.eval(this);
+    if (tail != null) tail.eval(this);
+  }
+  
   
 }
