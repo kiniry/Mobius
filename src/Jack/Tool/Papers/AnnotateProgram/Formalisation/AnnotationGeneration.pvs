@@ -7,16 +7,14 @@ BEGIN
   ENDASSUMING
 
   IMPORTING MonitoredProgramSemantics[CP, string],
-            set2list
+            set2list,
+            FunProp
 
   mp : VAR {mp : MonitoredProgram | wf_MP(mp) AND 
                                     well_typed_Program(program(mp))}
   a : VAR (wf_MVA)
 
-  % TODO: These definitions generates TCCs that can not be proved!
   unique : (injective?[CP, nat])
-
-  IMPORTING FunProp
 
   name_of : (injective?[CP, string])
 
@@ -49,7 +47,7 @@ BEGIN
 
   update_vars(t : Transition) : Stmt =
     Sequence(Set(cp, NExpr(NumVarEval(name_of(tcp(t))))), 
-                       ann_action(action(t)))
+             ann_action(action(t)))
 
   ann_guard_actions(mp)(ts : finite_set[Transition]) : list[[Expr, Stmt]] =
     set2list({x : [Expr, Stmt] | EXISTS (t : Transition) :

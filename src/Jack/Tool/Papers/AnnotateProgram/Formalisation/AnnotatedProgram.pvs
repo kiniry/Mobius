@@ -137,6 +137,14 @@ BEGIN
       deriv_stmt(p)(c, sigma1, sigma2)(n) IMPLIES
         wf_state(p)(sigma2)
 
+  % AT: The proof of execute_action_correctness now requires to disambiguate
+  % the instantiation
+  deriv_expr_bottom_iff_exception_step_AP : LEMMA % :-)
+    FORALL (p : Program)(e : Expr)
+           (sigma1, sigma2 : APState, v : Val, n : nat) :
+      deriv_expr(p)(e, sigma1, v, sigma2)(n) IMPLIES
+      Bottom?(v) = up?(ex(pstate(sigma2)))
+
 
 END AnnotatedProgramSemantics
 

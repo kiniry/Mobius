@@ -112,7 +112,7 @@ BEGIN
   guard_to_expr_exists : AXIOM
     FORALL (mp : MonitoredProgram, t : Transition) :
       ts(mva(mp))(t) IMPLIES
-      nonempty?({e: Expr |
+      nonempty?({e : Expr |
                   FORALL (stA: (wf_Store[CP, string](vdsA(mva(mp)))),
                           stP: (wf_PSt[CP, string](vdsP(mva(mp)))))
                          (sMP1, sMP2: MPState, v: Val, n: nat):
@@ -123,7 +123,7 @@ BEGIN
   ann_guard_actions_not_empty : LEMMA % :-)
     FORALL (mp : MonitoredProgram, ts : finite_set[Transition],
             q : CP, e : Event) :
-      wf_MP(mp) IMPLIES
+      specification_requirements(mp) IMPLIES
       NOT empty?(ts) IMPLIES
       ts = {t : Transition | ts(mva(mp))(t) AND scp(t) = q AND event(t) = e}
       IMPLIES
