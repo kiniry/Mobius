@@ -1,8 +1,5 @@
 package umbra.tests;
 
-import java.io.IOException;
-
-import org.apache.bcel.Repository;
 import org.apache.bcel.classfile.Constant;
 import org.apache.bcel.classfile.ConstantString;
 import org.apache.bcel.classfile.JavaClass;
@@ -17,42 +14,50 @@ import org.apache.bcel.generic.MethodGen;
 import umbra.UmbraPlugin;
 
 /**
- * TODO write description
+ * TODO write description.
  *
  * @author Tomasz Batkiewicz (tb209231@students.mimuw.edu.pl)
  * @author Jarosław Paszek (jp209217@students.mimuw.edu.pl)
  * @author Wojciech Was (ww209224@students.mimuw.edu.pl)
  * @version a-01
  */
-public class BcelTestRun {
+public final class BcelTestRun {
 
   /**
-   * TODO
-   */
-  private static final int INSTRUCTION_TO_CHANGE_NO = 23;
-
-  /**
-   * TODO
-   */
-  private static final int NO_OF_CHARS = 4096;
-
-  /**
-   * TODO
-   */
-  private static final int NO_OF_LINES = 256;
-
-  /**
-   * TODO
+   * TODO.
    */
   static final String HWClName = "umbra.test.HelloWorld";
 
+
   /**
-   * TODO
+   * TODO.
    */
   static final String HWClNameW = "bin\\umbra\\test\\HelloWorld.class";
 
   /**
-   * TODO
+   * TODO.
+   */
+  private static final int INSTRUCTION_TO_CHANGE_NO = 23;
+
+  /**
+   * TODO.
+   */
+  private static final int NO_OF_CHARS = 4096;
+
+  /**
+   * TODO.
+   */
+  private static final int NO_OF_LINES = 256;
+
+  /**
+   * This is a utility class so the constructor is declared to prevent
+   * accidental creation of the instences of the class.
+   */
+  private BcelTestRun() {
+  }
+
+  /**
+   * TODO.
    *
    * @param a_java_class TODO
    * @return TODO
@@ -74,7 +79,7 @@ public class BcelTestRun {
   }
 
   /**
-   * TODO
+   * TODO.
    * @param a_cpg TODO
    * @param the_methods TODO
    * @param an_index TODO
@@ -102,7 +107,7 @@ public class BcelTestRun {
   }
 
   /**
-   * TODO
+   * TODO.
    * @param a_java_class TODO
    */
   public static void wypisz(final JavaClass a_java_class) {
@@ -131,7 +136,7 @@ public class BcelTestRun {
   }
 
   /**
-   * TODO
+   * TODO.
    * @param the_methods TODO
    * @param the_names TODO
    * @param the_code TODO

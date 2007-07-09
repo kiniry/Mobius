@@ -64,7 +64,8 @@ public class SynchrSBAction implements IEditorActionDelegate {
     final int off = selection.getOffset();
     final IPath active = ((FileEditorInput)my_editor.getEditorInput()).
                         getFile().getFullPath();
-    final int lind = active.toOSString().lastIndexOf(UmbraHelper.JAVA_EXTENSION);
+    final int lind = active.toPortableString().
+                            lastIndexOf(UmbraHelper.JAVA_EXTENSION);
     if (lind == -1) {
       MessageDialog.openError(my_editor.getSite().getShell(),
                   "Bytecode", "This is not a \"" +

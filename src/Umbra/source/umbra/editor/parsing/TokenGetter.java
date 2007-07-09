@@ -20,24 +20,32 @@ import umbra.editor.NonRuleBasedDamagerRepairer;
  * @author Wojciech Wąs (ww209224@students.mimuw.edu.pl)
  * @version a-01
  */
-public class TokenGetter {
+public final class TokenGetter {
 
   /**
-   * @param manager the color manager related to the current bytecode
+   * This is a utility class so we declare a private constructor to prevent
+   * accidental creation of the instances.
+   */
+  private TokenGetter() {
+  }
+  /**
+   * @param the_colour_manager the color manager related to the current bytecode
    *    editor, it must be the same as in the current
    *    {@ref BytecodeConfiguration} object
-   * @param mod the number of the current coloring style, it must be the
+   * @param a_mode the number of the current coloring style, it must be the
    *    same as in the current {@ref BytecodeConfiguration} object
-   * @param i      Position in array of color values
-   * @return      Color value as a token
+   * @param a_col a colour value with fixed meaning across the colouring styles
+   * @return the colour value as a token
    */
-  public static IToken getToken(final ColorManager manager, final int mod, final int i) {
-    return new Token(getTextAttribute(manager, mod, i));
+  public static IToken getToken(final ColorManager the_colour_manager,
+                                final int a_mode,
+                                final int a_col) {
+    return new Token(getTextAttribute(the_colour_manager, a_mode, a_col));
   }
 
   /**
    * @param the_manager the color manager related to the current bytecode
-   *    editor, it must be the same as in the current
+   *    editor, it must be the same as the one in the current
    *    {@ref BytecodeConfiguration} object
    * @param a_mode the number of the current coloring style, it must be the
    *    same as in the current {@ref BytecodeConfiguration} object
@@ -55,46 +63,48 @@ public class TokenGetter {
   }
 
   /**
-   * TODO
+   * TODO.
    *
-   * @param manager manager the color manager related to the current bytecode
+   * @param a_manager manager the color manager related to the current bytecode
    *    editor, it must be the same as in the current
    *    {@ref BytecodeConfiguration} object
-   * @param mod the number of the current coloring style, it must be the
+   * @param a_mode the number of the current coloring style, it must be the
    *    same as in the current {@ref BytecodeConfiguration} object
-   * @param i particular color as an attribute
+   * @param a_col particular color as an attribute
+   * @return each time a new damage repairer with the given colour parameters
    */
   public static NonRuleBasedDamagerRepairer getRepairer(
-            final ColorManager manager,
-            final int mod,
-            final int i) {
-    return new NonRuleBasedDamagerRepairer(getTextAttribute(manager,
-                                mod, i));
+            final ColorManager a_manager,
+            final int a_mode,
+            final int a_col) {
+    return new NonRuleBasedDamagerRepairer(getTextAttribute(a_manager,
+                                a_mode, a_col));
   }
 
   /**
-   * TODO
+   * TODO.
    *
-   * @param manager the color manager related to the current bytecode
+   * @param the_manager the color manager related to the current bytecode
    *    editor, it must be the same as in the current
    *    {@ref BytecodeConfiguration} object
-   * @param mod the number of the current coloring style, it must be the
+   * @param a_mode the number of the current coloring style, it must be the
    *    same as in the current {@ref BytecodeConfiguration} object
-   * @param i      Position in array of color values
-   * @return      Particular color as an attribute
+   * @param a_col a colour value with fixed meaning across the colouring styles
+   * @return the given colour as an attribute
    */
-  private static TextAttribute getTextAttribute(final ColorManager manager,
-                          final int mod,
-                          final int i) {
-    return new TextAttribute(manager.getColor(
-             new RGB(IColorValues.MODELS[mod][(IColorValues.CN * i) +
+  private static TextAttribute getTextAttribute(final ColorManager the_manager,
+                          final int a_mode,
+                          final int a_col) {
+    return new TextAttribute(the_manager.getColor(
+             new RGB(IColorValues.MODELS[a_mode][(IColorValues.CN * a_col) +
                                                IColorValues.RED_COMPONENT],
-                     IColorValues.MODELS[mod][(IColorValues.CN * i) +
+                     IColorValues.MODELS[a_mode][(IColorValues.CN * a_col) +
                                               IColorValues.GREEN_COMPONENT],
-                     IColorValues.MODELS[mod][(IColorValues.CN * i) +
+                     IColorValues.MODELS[a_mode][(IColorValues.CN * a_col) +
                                               IColorValues.BLUE_COMPONENT])),
                      null,
-                     IColorValues.MODELS[mod][(IColorValues.CN * i) +
+                     IColorValues.MODELS[a_mode][(IColorValues.CN * a_col) +
                                               IColorValues.STYLE_COMPONENT]);
   }
+
 }

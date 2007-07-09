@@ -7,7 +7,7 @@ package umbra.editor.parsing;
 import org.eclipse.jface.text.rules.IWordDetector;
 
 /**
- * TODO
+ * TODO.
  *
  * @author Wojciech Wąs  (ww209224@students.mimuw.edu.pl)
  * @version a-01
@@ -26,7 +26,7 @@ public class BytecodeWordDetector implements IWordDetector {
   }
 
   /**
-   * TODO
+   * TODO.
    * @param a_char TODO
    * @return TODO
    * @see org.eclipse.jface.text.rules.IWordDetector#isWordPart(char)

@@ -5,7 +5,7 @@ package umbra.editor.boogiepl;
 
 /**
  * Some string arrays used to identify keywords and instruction
- * names in bytecode
+ * names in bytecode.
  *
  * @author Samuel Willimann (wsamuel@student.ethz.ch)
  * @version a-01
@@ -13,7 +13,7 @@ package umbra.editor.boogiepl;
 public interface IBoogiePLStrings {
 
   /**
-   * TODO
+   * TODO.
    */
   String[] instructions = new String[] {"assume", "assert", ":=",
                                         "goto", "return", "call",
@@ -21,27 +21,28 @@ public interface IBoogiePLStrings {
                                         "returns", "int", "ref" };
 
   /**
-   * TODO
+   * TODO.
    */
   String[] jump = new String[] {"goto", "return" };
 
   /**
-   * TODO
+   * TODO.
    */
   String[] call = new String[] {"call" };
 
   /**
-   * TODO
+   * TODO.
    */
   String[] unary = new String[] {"assume", "assert" };
 
   /**
-   * TODO
+   * TODO.
    */
   String[] binary = new String[] {":=" };
 
   /**
-   * TODO
+   * TODO.
    */
-  String[] boogiePLKeywords = new String[] {"procedure", "implementation", "returns", "int", "ref" };
+  String[] boogiePLKeywords = new String[] {"procedure", "implementation",
+                                            "returns", "int", "ref" };
 }

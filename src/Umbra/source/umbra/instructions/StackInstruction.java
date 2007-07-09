@@ -49,61 +49,45 @@ public class StackInstruction extends NumInstruction {
    * Stack instruction line is correct if it has
    * one number parameter preceded with %.
    *
-   *@see InstructionLineController#correct()
+   * @return <code>true</code> when the syntax of the instruction line is
+   *         correct
+   * @see InstructionLineController#correct()
    */
   public final boolean correct()
   {
     String s;
-    s = UmbraHelper.stripAllWhitespace(my_line_text);
+    s = UmbraHelper.stripAllWhitespace(getMy_line_text());
     final String[] s2 = IBytecodeStrings.stack;
-    int j;
-    int y;
     if (s.indexOf("%") < s.indexOf(":") + 1)
       return false;
-    for (j = 0; j < s2.length; j++) {
-      if ((s.indexOf(s2[j]) > 0) && (s.indexOf(s2[j]) < s.indexOf(":") + 2))
-        if (s.indexOf(s2[j]) + (s2[j].length()) + 1 > s.indexOf("%")) {
-          for (y = (s.indexOf("%") + 1); y < s.length(); y++) {
-            if (!(Character.isDigit(s.charAt(y))))
-              return false;
-          }
-          int a, b, d, e, f, g;
-          a = (s.length() - s.indexOf("%"));
-          int c = 0;
-          e = my_line_text.length() - my_line_text.indexOf("%");
-          f = 0;
-          g = my_line_text.length();
-          for (d = 0; d < e; d++) {
-            if (Character.isDigit(my_line_text.charAt(g - d - 1))) {
-              f = 1;
-            }
-            if (f == 0) {
-              if (Character.isWhitespace(my_line_text.charAt(g - d - 1))) {
-                c++;
-              }
-            }
-          }
-
-          b = e - c;
-          if (a == b)
-            return true;
-        }
+    int res = 0;
+    for (int j = 0; j < s2.length; j++) {
+      res = checkInstructionWithNumber(s, s2[j], '%');
+      if (res != 0) return res > 0;
     }
     return false;
   }
 
 
   /**
-   * TODO
+   * This method retrieves the numerical value of the index parameter of the
+   * instruction in {@link BytecodeLineController#getMy_line_text()}. This
+   * parameter is located after the last '%' character in the line.
+   *
+   * TODO this may be done simpler, and it is duplicated code
+   *
+   * @return the value of the numerical parameter of the instruction
    */
   private int getInd() {
+    final String my_line_text = getMy_line_text();
     boolean isd;
     final String licznik = "0123456789";
     int liczba;
 
     isd = true;
     int dokad = my_line_text.length();
-    for (int i = my_line_text.lastIndexOf("%") + 1; i < my_line_text.length(); i++) {
+    for (int i = my_line_text.lastIndexOf("%") + 1; //XXX maybe first?
+         i < my_line_text.length(); i++) {
       if (!Character.isDigit(my_line_text.charAt(i))) {
         dokad = i;
         break;
@@ -112,7 +96,8 @@ public class StackInstruction extends NumInstruction {
     if (isd) {
       liczba = 0;
       for (int i = my_line_text.lastIndexOf("%") + 1; i < dokad; i++) {
-        liczba = 10 * liczba + licznik.indexOf(my_line_text.substring(i, i + 1));
+        liczba = 10 * liczba +
+                              licznik.indexOf(my_line_text.substring(i, i + 1));
       }
       return liczba;
     }
@@ -120,14 +105,34 @@ public class StackInstruction extends NumInstruction {
   }
 
   /**
-   * TODO
+   * This method, based on the value of the field
+   * {@ref InstructionLineController#name}, creates a new BCEL instruction
+   * object for a stack instruction. It computes the index parameter of the
+   * instruction before the instruction is constructed. The method can construct
+   * one of the instructions:
+   * <ul>
+   *    <li>aload,</li>
+   *    <li>astore,</li>
+   *    <li>dload,</li>
+   *    <li>dstore,</li>
+   *    <li>fload,</li>
+   *    <li>fstore,</li>
+   *    <li>iload,</li>
+   *    <li>istore,</li>
+   *    <li>lload,</li>
+   *    <li>lstore.</li>
+   * </ul>
+   * This method also checks the syntactical correctness of the current
+   * instruction line.
    *
+   * @return the freshly constructed BCEL instruction or <code>null</code>
+   *         in case the instruction is not a stack instruction and
+   *         in case the instruction line is incorrect
    * @see BytecodeLineController#getInstruction()
    */
   public final Instruction getInstruction() {
     int index = 0;
     Instruction res = null;
-    //&*
     if (!correct())
       return null;
     index = getInd();

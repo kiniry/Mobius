@@ -51,23 +51,24 @@ public class CodeLineController extends BytecodeLineController {
    * these lines is not provided.
    *
    * @return <code>true</code> when the line contained in
-   *         {@ref BytecodeLineController#my_line_text} contains a correct line from
-   *         the bytecode file
+   *         {@ref BytecodeLineController#my_line_text} contains a correct
+   *         line from the bytecode file
    * @see BytecodeLineController#correct()
    */
   public final boolean correct() {
     //Code must exist because otherwise it would not be the class
     boolean res = false;
-    if (this.my_line_text.startsWith("Code")) {
+    final String my_line_text = getMy_line_text();
+    if (my_line_text.startsWith("Code")) {
       res = correctCode();
     }
-    if (this.my_line_text.startsWith("LineNumber")) {
+    if (my_line_text.startsWith("LineNumber")) {
       res = true;
     }
-    if (this.my_line_text.startsWith("LocalVariable")) {
+    if (my_line_text.startsWith("LocalVariable")) {
       res = correctLocalVariable();
     }
-    if (this.my_line_text.startsWith("Attribute")) {
+    if (my_line_text.startsWith("Attribute")) {
       res = correctAttribute();
     }
 
@@ -75,11 +76,11 @@ public class CodeLineController extends BytecodeLineController {
   }
 
   /**
-   * TODO
+   * TODO.
    * @return TODO
    */
   private boolean correctAttribute() {
-    final String s = UmbraHelper.stripAllWhitespace(my_line_text);
+    final String s = UmbraHelper.stripAllWhitespace(getMy_line_text());
     if ((s.indexOf("(s)=")) > -1) {
       return true;
     }
@@ -87,10 +88,11 @@ public class CodeLineController extends BytecodeLineController {
   }
 
   /**
-   * TODO
+   * TODO.
    * @return TODO
    */
   private boolean correctLocalVariable() {
+    final String my_line_text = getMy_line_text();
     final String s = UmbraHelper.stripAllWhitespace(my_line_text);
     if ((s.indexOf("start_pc=")) > -1 &&
         (s.indexOf("length=")) > -1 &&
@@ -104,9 +106,11 @@ public class CodeLineController extends BytecodeLineController {
   }
 
   /**
-   * TODO
+   * TODO.
+   * @return TODO
    */
   private boolean correctCode() {
+    final String my_line_text = getMy_line_text();
     if (!(my_line_text.indexOf("(") > 0))
       return false;
 
@@ -188,6 +192,7 @@ public class CodeLineController extends BytecodeLineController {
                                             final String a_string1,
                                             final String a_string2) {
     final int len = a_string1.length() + 1;
-    return ((a_string0.indexOf(a_string1)) + len) > (a_string0.indexOf(a_string2));
+    return ((a_string0.indexOf(a_string1)) + len) >
+            (a_string0.indexOf(a_string2));
   }
 }

@@ -27,6 +27,16 @@ import umbra.editor.parsing.IBytecodeStrings;
 public class ArrayInstruction extends StringInstruction {
 
   /**
+   * A position before which the '>' character cannot occur in a correct line.
+   */
+  private static final int GREATER_FORBIDDEN_BOUND = 2;
+
+  /**
+   * A position before which the '<' character cannot occur in a correct line.
+   */
+  private static final int LESS_FORBIDDEN_BOUND = 2;
+
+  /**
    * The names of base bytecode types relevant for
    * array instructions. It correspond to the types
    * in the array {@ref TYPES}.
@@ -77,7 +87,8 @@ public class ArrayInstruction extends StringInstruction {
    */
   private static Type getType(final String an_ins_name) {
     for (int i = 0; i < TYPE_COUNT; i++) {
-      if ((NAMES[i].startsWith(an_ins_name)) && (an_ins_name.startsWith(NAMES[i])))
+      if ((NAMES[i].startsWith(an_ins_name)) &&
+          (an_ins_name.startsWith(NAMES[i])))
         return TYPES[i];
     }
     return null;
@@ -90,6 +101,7 @@ public class ArrayInstruction extends StringInstruction {
    */
   public final Instruction getInstruction() {
     //UmbraPlugin.messagelog("ArrayInstruction->getInstruction...");
+    final String my_line_text = getMy_line_text();
     String an_ins_type = my_line_text.substring(my_line_text.indexOf("<") + 1,
                                         my_line_text.indexOf(">"));
     an_ins_type = an_ins_type.toUpperCase();
@@ -118,16 +130,17 @@ public class ArrayInstruction extends StringInstruction {
    */
   public final boolean correct()
   {
-    String s;
-    s = UmbraHelper.stripAllWhitespace(my_line_text);
+    final String my_line_text = getMy_line_text();
+    final String s = UmbraHelper.stripAllWhitespace(my_line_text);
     final String[] s2 = IBytecodeStrings.array;
     int j, y;
     for (j = 0; j < s2.length; j++) {
-      if ((s.indexOf(s2[j]) > 0) && (s.indexOf(s2[j]) < s.indexOf(":") + 2)) {
+      if ((s.indexOf(s2[j]) > 0) &&
+          (s.indexOf(s2[j]) <= s.indexOf(":") + 1)) {
         //UmbraPlugin.messagelog(s);
         //UmbraPlugin.messagelog("array " + s);
-        if (s.indexOf("<") < 2) return false;
-        if (s.indexOf(">") < 2) return false;
+        if (s.indexOf("<") < LESS_FORBIDDEN_BOUND) return false;
+        if (s.indexOf(">") < GREATER_FORBIDDEN_BOUND) return false;
         // zmienione 7.26.15
         String insType = s.substring(s.indexOf("<") + 1, s.indexOf(">"));
         insType = insType.toUpperCase();

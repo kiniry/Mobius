@@ -3,7 +3,8 @@ package umbra.editor.parsing;
 import org.eclipse.jface.text.rules.IWhitespaceDetector;
 
 /**
- * New definition of whitespace
+ * This class defines objects that are able to chceck if a particular character
+ * is a whitespace.
  *
  * @author Wojciech Wąs (ww209224@students.mimuw.edu.pl)
  * @version a-01
@@ -11,11 +12,13 @@ import org.eclipse.jface.text.rules.IWhitespaceDetector;
 public class BytecodeWhitespaceDetector implements IWhitespaceDetector {
 
   /**
-   * This method defines which characters are whitespace characters
+   * This method defines which characters are whitespace characters.
    *
-   * @param c the character to determine if it is whitespace
+   * @param a_char the character to determine if it is whitespace
+   * @return <code>true</code> when the character is regarded as a whitespace
    */
-  public final boolean isWhitespace(final char c) {
-    return (c == ' ' || c == '\t' || c == '\n' || c == '\r');
+  public final boolean isWhitespace(final char a_char) {
+    return (a_char == ' ' || a_char == '\t' ||
+            a_char == '\n' || a_char == '\r');
   }
 }

@@ -1,5 +1,5 @@
 /**
- * 
+ * TODO.
  */
 package umbra.editor.actions;
 
@@ -7,6 +7,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.ui.IEditorPart;
 
 import umbra.editor.BytecodeContribution;
+import umbra.editor.BytecodeEditor;
 import umbra.editor.BytecodeEditorContributor;
 
 /**
@@ -19,7 +20,7 @@ public class BytecodeEditorAction extends Action {
   /**
    * The current bytecode editor for which the action takes place.
    */
-  private IEditorPart my_editor;
+  private BytecodeEditor my_editor;
 
   /**
    * The manager that initialises all the actions within the
@@ -58,20 +59,19 @@ public class BytecodeEditorAction extends Action {
 
 
   /**
-   * The method sets the editor for which the operation to combine
-   * the modifications in the source code and in the byte code will
+   * The method sets the bytecode editor for which the operation will
    * be performed.
    *
-   * @param a_part the editor to combine modifications
+   * @param a_part the bytecode editor to perform the operations
    */
   public void setActiveEditor(final IEditorPart a_part) {
-    my_editor = a_part;
+    my_editor = (BytecodeEditor)a_part;
   }
 
   /**
    * @return the bytecode editor currently associated with the action
    */
-  public final IEditorPart getEditor() {
+  public final BytecodeEditor getEditor() {
     return my_editor;
   }
 

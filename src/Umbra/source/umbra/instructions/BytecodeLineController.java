@@ -28,11 +28,6 @@ import umbra.UmbraPlugin;
 public abstract class BytecodeLineController {
 
   /**
-   * The string representation of the line in the bytecode file
-   */
-  protected String my_line_text;
-
-  /**
    * The number of the method that contains the current line.
    * This is an index in the {@ref ClassGen} object in the
    * {@ref BytecodeDocument} object
@@ -42,7 +37,14 @@ public abstract class BytecodeLineController {
   protected int index;
 
   /**
-   * TODO
+   * The string representation of the line in the bytecode file that contains
+   * the current instruction. We assume that the comments have been stripped
+   * off the line.
+   */
+  private String my_line_text;
+
+  /**
+   * TODO.
    *
    * @param a_line the string representation of the line in the bytecode
    *               document
@@ -91,7 +93,7 @@ public abstract class BytecodeLineController {
 
 
   /**
-   * TODO
+   * TODO.
    *
    * @param an_ilist TODO
    * @param an_ins TODO
@@ -102,12 +104,12 @@ public abstract class BytecodeLineController {
   }
 
   /**
-   * TODO
+   * TODO.
    *
    * @param the_next_line TODO
-   * @param a_classgen a {@ref ClassGen} object in the {@ref BytecodeDocument} object
-   *       that describes the state of the bytecode editor which contains
-   *       the line that corresponds to the current object.
+   * @param a_classgen a {@ref ClassGen} object in the {@ref BytecodeDocument}
+   *        object that describes the state of the bytecode editor which
+   *        contains the line that corresponds to the current object.
    * @param an_ins TODO
    * @param a_methend_flag TODO
    * @param the_instructions TODO
@@ -122,13 +124,13 @@ public abstract class BytecodeLineController {
   }
 
   /**
-   * TODO
+   * TODO.
    *
    * @param the_old_line TODO
    * @param the_next_line TODO
-   * @param a_classgen a {@ref ClassGen} object in the {@ref BytecodeDocument} object
-   *       that describes the state of the bytecode editor which contains
-   *       the line that corresponds to the current object.
+   * @param a_classgen a {@ref ClassGen} object in the {@ref BytecodeDocument}
+   *        object that describes the state of the bytecode editor which
+   *        contains the line that corresponds to the current object.
    * @param an_ins TODO
    * @param a_methend_flag TODO
    * @param the_last_flag TODO
@@ -143,42 +145,44 @@ public abstract class BytecodeLineController {
                      final boolean the_last_flag,
                      final LinkedList the_instructions,
                      final int an_off) {
-    if (the_old_line.getHandle() != null) { //in case this was an instruction before
-      the_old_line.dispose(the_next_line, a_classgen, the_last_flag, the_instructions, an_off);
+    if (the_old_line.getHandle() != null) { //in case this was an instruction
+                                            //before
+      the_old_line.dispose(the_next_line, a_classgen, the_last_flag,
+                           the_instructions, an_off);
     }
   }
 
   /**
-   * TODO
+   * TODO.
    *
-   * @return
+   * @return TODO
    */
   public InstructionHandle getHandle() {
     return null;
   }
 
   /**
-   * TODO
+   * TODO.
    *
-   * @return
+   * @return TODO
    */
   public InstructionList getList() {
     return null;
   }
 
   /**
-   * TODO
+   * TODO.
    *
-   * @return
+   * @return TODO
    */
   public MethodGen getMethod() {
     return null;
   }
 
   /**
-   * TODO
+   * TODO.
    *
-   * @return
+   * @return TODO
    */
   public final int getIndex() {
     return index;
@@ -200,27 +204,30 @@ public abstract class BytecodeLineController {
   }
 
   /**
-   * TODO
+   * TODO.
    *
-   * @param nextLine
-   * @param cg a {@ref ClassGen} object in the {@ref BytecodeDocument} object
-   *       that describes the state of the bytecode editor which contains
+   * @param the_next_line TODO
+   * @param a_classgen a {@ref ClassGen} object in the {@ref BytecodeDocument}
+   *       object that describes the state of the bytecode editor which contains
    *       the line that corresponds to the current object.
-   * @param theLast
-   * @param instructions an array with instruction representations. These
+   * @param the_last TODO
+   * @param the_instructions an array with instruction representations. These
    * are represented as objects the classes of which are subclasses of
    * {@ref InstructionLineController}.
-   * @param off
+   * @param an_off TODO
    */
-  public void dispose(final BytecodeLineController nextLine,
-            final ClassGen cg,
-            final boolean theLast,
-            final LinkedList instructions, final int off) {
-    UmbraPlugin.messagelog("dispose(BytecodeLineController)" + ((InstructionLineController) (instructions.get(off))).getHandle().getInstruction().getName());
+  public void dispose(final BytecodeLineController the_next_line,
+            final ClassGen a_classgen,
+            final boolean the_last,
+            final LinkedList the_instructions, final int an_off) {
+    UmbraPlugin.messagelog("dispose(BytecodeLineController)" +
+                           ((InstructionLineController)(the_instructions.
+                                        get(an_off))).
+                                        getHandle().getInstruction().getName());
   }
 
   /**
-   * TODO
+   * TODO.
    *
    * @param an_index TODO
    */
@@ -235,6 +242,13 @@ public abstract class BytecodeLineController {
    * @return the representation of the line
    */
   public final String getLineContent() {
+    return my_line_text;
+  }
+
+  /**
+   * @return the line of the text with the bytecode line
+   */
+  public String getMy_line_text() {
     return my_line_text;
   }
 }

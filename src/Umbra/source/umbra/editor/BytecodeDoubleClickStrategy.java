@@ -24,15 +24,15 @@ public class BytecodeDoubleClickStrategy implements ITextDoubleClickStrategy {
    * editor. Most the information about the selected area is not used.
    * Only the position of the cursor is taken into account.
    *
-   * @param part the selected area of the bytecode document
+   * @param a_selection the selected area of the bytecode document
    */
-  public final void doubleClicked(final ITextViewer part) {
-    final int pos = part.getSelectedRange().x;
+  public final void doubleClicked(final ITextViewer a_selection) {
+    final int pos = a_selection.getSelectedRange().x;
 
     if (pos < 0)
       return;
 
-    final BytecodeDocument bDoc = (BytecodeDocument)part.getDocument();
+    final BytecodeDocument bDoc = (BytecodeDocument)a_selection.getDocument();
     bDoc.synchronizeBS(pos);
   }
 }

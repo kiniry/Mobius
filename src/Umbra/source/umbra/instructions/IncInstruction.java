@@ -42,20 +42,21 @@ public class IncInstruction extends NumInstruction {
    * Inc instruction line is correct if it has
    * two simple number parameters (first preceded with %).
    *
-   *@see InstructionLineController#correct()
-   *@see InstructionLineController#chkcorr(String, String)
+   * @return TODO
+   * @see InstructionLineController#correct()
+   * @see InstructionLineController#chkcorr(String, String)
    */
   public final boolean correct() {
-    return super.chkcorr(my_line_text, "W%DW?-D?W");
+    return super.chkcorr(getMy_line_text(), "W%DW?-D?W");
   }
 
   /**
-   * TODO
+   * TODO.
+   * @return TODO
    */
-  public final boolean correct0()
-  {
-    String s;
-    s = UmbraHelper.stripAllWhitespace(my_line_text);
+  public final boolean correct0() {
+    final String my_line_text = getMy_line_text();
+    final String s = UmbraHelper.stripAllWhitespace(my_line_text);
     final String[] s2 = IBytecodeStrings.incc;
     int j;
     int y;
@@ -66,7 +67,8 @@ public class IncInstruction extends NumInstruction {
     }
     boolean isminus = false;
     for (j = 0; j < s2.length; j++) {
-      if ((s.indexOf(s2[j]) > 0) && (s.indexOf(s2[j]) < s.indexOf(":") + 2))
+      if ((s.indexOf(s2[j]) > 0) &&
+          (s.indexOf(s2[j]) <= s.indexOf(":") + 1))
         if (s.indexOf(s2[j]) + (s2[j].length()) + 1 > s.indexOf("%")) {
           for (y = (s.indexOf("%") + 1); y < s.length(); y++) {
             if (!(Character.isDigit(s.charAt(y)))) {
@@ -99,16 +101,19 @@ public class IncInstruction extends NumInstruction {
   }
 
   /**
-   * TODO
+   * TODO.
+   * @return TODO
    */
   private int getInd1() {
+    final String my_line_text = getMy_line_text();
     boolean isd;
     final String licznik = "0123456789";
     int number = 0;
 
     isd = true;
     int dokad = my_line_text.length();
-    for (int i = my_line_text.lastIndexOf("%") + 1; i < my_line_text.length(); i++) {
+    for (int i = my_line_text.lastIndexOf("%") + 1;
+         i < my_line_text.length(); i++) {
       if (!Character.isDigit(my_line_text.charAt(i))) {
         dokad = i;
         break;
@@ -117,7 +122,8 @@ public class IncInstruction extends NumInstruction {
     if (isd) {
       number = 0;
       for (int i = my_line_text.lastIndexOf("%") + 1; i < dokad; i++) {
-        number = 10 * number + licznik.indexOf(my_line_text.substring(i, i + 1));
+        number = 10 * number +
+                              licznik.indexOf(my_line_text.substring(i, i + 1));
       }
       return number;
     }
@@ -125,9 +131,11 @@ public class IncInstruction extends NumInstruction {
   }
 
   /**
-   * TODO
+   * TODO.
+   * @return TODO
    */
   private int getInd2() {
+    final String my_line_text = getMy_line_text();
     boolean isd;
     final String licznik = "0123456789";
     int number = 0;
@@ -135,7 +143,8 @@ public class IncInstruction extends NumInstruction {
     isd = true;
     //sets after first number parameter
     int skadskad = my_line_text.length();
-    for (int i = my_line_text.lastIndexOf("%") + 1; i < my_line_text.length(); i++) {
+    for (int i = my_line_text.lastIndexOf("%") + 1;
+         i < my_line_text.length(); i++) {
       if (!Character.isDigit(my_line_text.charAt(i))) {
         skadskad = i;
         break;
@@ -163,7 +172,8 @@ public class IncInstruction extends NumInstruction {
     if (isd) {
       number = 0;
       for (int i = skad; i < dokad; i++) {
-        number = 10 * number + licznik.indexOf(my_line_text.substring(i, i + 1));
+        number = 10 * number +
+                 licznik.indexOf(my_line_text.substring(i, i + 1));
       }
       if (my_line_text.charAt(skad - 1) == '-') {
         number = number * (-1);
@@ -174,8 +184,8 @@ public class IncInstruction extends NumInstruction {
   }
 
   /**
-   * TODO
-   *
+   * TODO.
+   * @return TODO
    * @see BytecodeLineController#getInstruction()
    */
   public final Instruction getInstruction() {

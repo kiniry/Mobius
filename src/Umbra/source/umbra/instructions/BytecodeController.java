@@ -43,11 +43,25 @@ import umbra.editor.parsing.IBytecodeStrings;
 public class BytecodeController {
 
   /**
+   * The strings which starts a single line comment in a bytecode file.
+   */
+  private static final String SINGLE_LINE_COMMENT_MARK = "//";
+
+  /**
+   * The lenght of the single line comment marker.
+   */
+  private static final int SINGLE_LINE_COMMENT_MARK_LEN =
+                                              SINGLE_LINE_COMMENT_MARK.length();
+  /*@ static invariant SINGLE_LINE_COMMENT_MARK_LEN ==
+    @                  SINGLE_LINE_COMMENT_MARK.length();
+    @*/
+
+  /**
    * The list of all the lines in the current bytecode editor. These lines
    * are stored as objects the classes of which are subclasses of
    * {@ref BytecodeLineController}.
    */
-  private LinkedList all;
+  private LinkedList my_editor_lines;
 
   /**
    * The list of all the lines in the editor which contain codes of
@@ -62,12 +76,12 @@ public class BytecodeController {
   private LinkedList incorrect;
 
   /**
-   * TODO
+   * TODO.
    */
   private Hashtable comments;
 
   /**
-   * TODO
+   * TODO.
    */
   private Hashtable interline;
 
@@ -78,11 +92,11 @@ public class BytecodeController {
   private boolean[] modified;
 
   /**
-   * TODO
+   * TODO.
    */
   public BytecodeController() {
     super();
-    all = new LinkedList();
+    my_editor_lines = new LinkedList();
     instructions = new LinkedList();
     incorrect = new LinkedList();
     comments = new Hashtable();
@@ -94,9 +108,10 @@ public class BytecodeController {
    * list of all the instructions in the controller.
    */
   public final void showInstructionList() {
-    for (int i = 0; i < all.size(); i++) {
+    for (int i = 0; i < my_editor_lines.size(); i++) {
       UmbraPlugin.LOG.print(
-                  ((BytecodeLineController)(all.get(i))).my_line_text);
+                ((BytecodeLineController)(my_editor_lines.get(i))).
+                                  getMy_line_text());
     }
   }
 
@@ -110,7 +125,7 @@ public class BytecodeController {
     UmbraPlugin.LOG.flush();
     for (int i = 0; i < incorrect.size(); i++) {
       UmbraPlugin.messagelog(" " +
-             ((BytecodeLineController)(incorrect.get(i))).my_line_text);
+             ((BytecodeLineController)(incorrect.get(i))).getMy_line_text());
     }
   }
 
@@ -119,7 +134,7 @@ public class BytecodeController {
    * the document; it uses BCEL objects associated with the
    * document and based on them it generates the Umbra line
    * structures (subclasses of the {@ref BytecodeLineController})
-   * together with the links to the BCEL objects
+   * together with the links to the BCEL objects. TODO all described?
    *
    * @param a_doc the bytecode document with the corresponding BCEL
    *   structures linked into it
@@ -158,7 +173,7 @@ public class BytecodeController {
       final String lineName = removeCommentFromLine(line);
       final String comment = extractCommentFromLine(line);
       final BytecodeLineController lc = getType(lineName);
-      all.add(j, lc);
+      my_editor_lines.add(j, lc);
       if (lc.addHandle(ih, il, mg, i - 1)) { //this is an instruction line
         instructions.add(ic, lc);
         if (comment != null) comments.put(lc, comment);
@@ -192,7 +207,8 @@ public class BytecodeController {
    */
   public final void removeIncorrects(final int a_start, final int a_stop) {
     for (int i = a_start; i <= a_stop; i++) {
-      final BytecodeLineController line = (BytecodeLineController)all.get(i);
+      final BytecodeLineController line =
+                                 (BytecodeLineController)my_editor_lines.get(i);
       if (incorrect.contains(line)) {
         incorrect.remove(line);
       }
@@ -204,47 +220,51 @@ public class BytecodeController {
    * removing lines or both) has been made and preforms appropriate action
    * to the bytecode structures of the given bytecode document.
    *
-   * @param doc a bytecode document in which the modification have
+   * @param a_doc a bytecode document in which the modification have
    *      been made to
-   * @param startRem  Old-version number of the first modified line
-   * @param stopRem  Old-version number of the last modified line
-   * @param stop    New-version number of the last modified line
+   * @param a_start_rem  Old-version number of the first modified line
+   * @param an_end_rem  Old-version number of the last modified line
+   * @param a_stop    New-version number of the last modified line
    */
-  public final void addAllLines(final IDocument doc,
-              final int startRem, final int stopRem, final int stop)
+  public final void addAllLines(final IDocument a_doc,
+              final int a_start_rem, final int an_end_rem, final int a_stop)
   {
-    final ClassGen cg = ((BytecodeDocument)doc).getClassGen();
-    UmbraPlugin.messagelog("startRem=" + startRem);
-    UmbraPlugin.messagelog("stopRem=" + stopRem);
-    UmbraPlugin.messagelog("stop=" + stop);
+    final ClassGen cg = ((BytecodeDocument)a_doc).getClassGen();
+    UmbraPlugin.messagelog("startRem=" + a_start_rem);
+    UmbraPlugin.messagelog("stopRem=" + an_end_rem);
+    UmbraPlugin.messagelog("stop=" + a_stop);
     // i - index in the removed lines
     // j - index in the inserted lines
-    for (int i = startRem, j = startRem;
-         (i <= stopRem || j <= stop) && i < all.size();
+    for (int i = a_start_rem, j = a_start_rem;
+         (i <= an_end_rem || j <= a_stop) && i < my_editor_lines.size();
          i++, j++) {
-      final BytecodeLineController oldlc = (BytecodeLineController)all.get(j);
-      BytecodeLineController nextLine = null;
+      final BytecodeLineController oldlc =
+                                 (BytecodeLineController)my_editor_lines.get(j);
+      BytecodeLineController a_next_line = null;
       final int off = getInstructionOff(j);
-      boolean theLast = false;
+      boolean the_last_flag = false;
       final boolean metEnd = (isEnd(j)) &&
                (oldlc.getIndex() ==
                 ((InstructionLineController)instructions.
                              get(off)).getIndex());
       if (metEnd) {
         if (isFirst(j)) {
-          theLast = true;
-          nextLine = (BytecodeLineController)instructions.get(off);
-        } else nextLine = (BytecodeLineController)instructions.get(off - 1);
-      } else //TODO poprawnie: 1 enter przed wpisaniem 2 wpisac przed ta przed ktora checmy wstawic i enter; zle inaczej: enter przed i potem wpisac
-        nextLine = (BytecodeLineController)instructions.get(off + 1);
-      modified[nextLine.getIndex()] = true;
-      if (startRem <= j && j <= stop) { //we are in the area of inserted lines
-        i = addInstructions(doc, startRem, stopRem, i, j, oldlc,
-                  nextLine, theLast, metEnd);
+          the_last_flag = true;
+          a_next_line = (BytecodeLineController)instructions.get(off);
+        } else a_next_line = (BytecodeLineController)instructions.get(off - 1);
+      } else //TODO poprawnie: 1 enter przed wpisaniem 2 wpisac przed ta przed
+             //ktora checmy wstawic i enter; zle inaczej: enter przed i potem
+             //wpisac
+        a_next_line = (BytecodeLineController)instructions.get(off + 1);
+      modified[a_next_line.getIndex()] = true;
+      if (a_start_rem <= j && j <= a_stop) { //we are in the area of inserted
+                                             //lines
+        i = addInstructions(a_doc, a_start_rem, an_end_rem, i, j, oldlc,
+                  a_next_line, the_last_flag, metEnd);
       } else { // we are beyond the area of the inserted instructions
-        if (startRem <= i && i <= stopRem) {
-          oldlc.dispose(nextLine, cg, theLast, instructions, off);
-          all.remove(oldlc);
+        if (a_start_rem <= i && i <= an_end_rem) {
+          oldlc.dispose(a_next_line, cg, the_last_flag, instructions, off);
+          my_editor_lines.remove(oldlc);
           j--;
         }
       }
@@ -254,7 +274,7 @@ public class BytecodeController {
   }
 
   /**
-   * TODO
+   * TODO.
    *
    * @param a_doc bytecode document for which the changes are analysed
    * @param a_start_of_rem the beginning of the removed area
@@ -264,8 +284,8 @@ public class BytecodeController {
    * @param an_old_lc TODO
    * @param the_next_line TODO
    * @param the_last_flag TODO
-   * @param the_methend_flag true when <code>j</code> is the last instruction in a
-   *         method
+   * @param the_methend_flag true when <code>j</code> is the last instruction
+   *        in a method
    * @return TODO
    */
   private int addInstructions(final IDocument a_doc,
@@ -281,12 +301,14 @@ public class BytecodeController {
     final ClassGen cg = ((BytecodeDocument)a_doc).getClassGen();
     final int off = getInstructionOff(j);
     try {
-      final String line = a_doc.get(a_doc.getLineOffset(j), a_doc.getLineLength(j));
+      final String line = a_doc.get(a_doc.getLineOffset(j),
+                                    a_doc.getLineLength(j));
       //%%
       final String lineName = removeCommentFromLine(line);
       final String comment = extractCommentFromLine(line);
       final BytecodeLineController lc = getType(lineName);
-      lc.setIndex(((BytecodeLineController)all.get(j - 1)).getIndex());
+      lc.setIndex(((BytecodeLineController)my_editor_lines.get(j - 1)).
+                                                           getIndex());
       if (comment != null) comments.put(lc, comment);
       final Instruction ins = lc.getInstruction();
       if (ins != null) {
@@ -298,7 +320,7 @@ public class BytecodeController {
       if (res >= a_start_of_rem && res <= an_end_rem) {
         lc.update(an_old_lc, the_next_line, cg, ins, the_methend_flag,
                   the_last_flag, instructions, off);
-        all.set(j, lc);
+        my_editor_lines.set(j, lc);
       } else {
         if (an_old_lc.getHandle() == null)
           lc.initHandle(the_next_line, cg, ins, the_methend_flag,
@@ -306,7 +328,7 @@ public class BytecodeController {
         else
           lc.initHandle(an_old_lc, cg, ins, the_methend_flag,
                         instructions, off);
-        all.add(j, lc);
+        my_editor_lines.add(j, lc);
         res--;
       }
     } catch (BadLocationException e) {
@@ -317,7 +339,7 @@ public class BytecodeController {
 
   /**
    * Checks whether all lines of a selected area are correct
-   * (they satisfies some given syntax conditions)
+   * (they satisfies some given syntax conditions). TODO check
    *
    * @param a_start  the beginning of the area
    * @param an_end  the end of the area
@@ -329,10 +351,11 @@ public class BytecodeController {
   {
     boolean ok = true;
     for (int i = a_start; i <= an_end; i++) {
-      final BytecodeLineController line = (BytecodeLineController)(all.get(i));
+      final BytecodeLineController line =
+                               (BytecodeLineController)(my_editor_lines.get(i));
       if (!line.correct()) {
         ok = false;
-        incorrect.addLast(all.get(i));
+        incorrect.addLast(my_editor_lines.get(i));
       }
     }
     return ok;
@@ -340,7 +363,7 @@ public class BytecodeController {
 
   /**
    * Chooses one of line types that matches the given line
-   * contents
+   * contents. TODO check
    *
    * @param line  String contents of inserted or modified line
    * @return    Instance of subclass of line controller
@@ -390,7 +413,8 @@ public class BytecodeController {
     final int ppos = line.indexOf(":");
     if (ppos >= 0) { //nie >= czy jest : od 2 pozycji
       //tzn liczy chyba od zerowej czyli sprawdzaczy cyfra przed
-      //UmbraPlugin.messagelog("dwukropek" + ppos + line.charAt(0) + line.charAt(1));
+      //UmbraPlugin.messagelog("dwukropek" + ppos + line.charAt(0) +
+      //                       line.charAt(1));
       ok = true;
       for (i = 0; i < ppos; i++) {
         //UmbraPlugin.messagelog("i" + i + line.charAt(i) + line.charAt(1));
@@ -398,7 +422,8 @@ public class BytecodeController {
         if  (!(Character.isDigit(line.charAt(i)))) ok = false;
       }
       String subline = line.substring(ppos + 1);
-      while (Character.isWhitespace(subline.charAt(0))) subline = subline.substring(1);
+      while (Character.isWhitespace(subline.charAt(0)))
+        subline = subline.substring(1);
       for (i = 1; i < subline.length(); i++) {
         if (Character.isWhitespace(subline.charAt(i))) {
           subline = subline.substring(0, i);
@@ -406,8 +431,8 @@ public class BytecodeController {
         }
       }
       if (ok) {
-        final String[] s1 = IBytecodeStrings.single;
-        final String[] s2 = IBytecodeStrings.push;
+        final String[] s1 = IBytecodeStrings.SINGLE_INS;
+        final String[] s2 = IBytecodeStrings.PUSH_INS;
         final String[] s3 = IBytecodeStrings.jump;
         final String[] s4 = IBytecodeStrings.incc;
         final String[] s5 = IBytecodeStrings.stack;
@@ -466,7 +491,7 @@ public class BytecodeController {
       }
     }
 
-    //String[] s = IBytecodeStrings.instructions;
+    //String[] s = IBytecodeStrings.INSTRUCTIONS;
     //for (int i = 0; i < s.length; i++) {
     //  if ((l.startsWith(s[i] + " ")) || (l.equalsIgnoreCase(s[i])))
     //    return new InstructionLineController(line);
@@ -476,28 +501,36 @@ public class BytecodeController {
 
   /**
    * This method strips off the whitespace characters both at the beginning
-   * and at the end of the given string.
+   * and at the end of the given string. It works similarly to
+   * {@ref String#trim()}, but it uses the local definition of the whitespace
+   * as in {@ref BytecodeWhitespaceDetector}.
    *
-   * @param string to strip off the whitespace
+   * @param a_string to strip off the whitespace
    * @return the string with no whitespace
    */
-  private String removeWhiteSpace(/*@ non_null @*/ final String string) {
-    final BytecodeWhitespaceDetector wd = new BytecodeWhitespaceDetector();
-    int i = 0;
-    boolean ok = true;
-    while (ok && i < string.length() && string.length() > 0) {
-      if (!wd.isWhitespace(string.charAt(i))) ok = false;
-      i++;
+  private String removeWhiteSpace(/*@ non_null @*/ final String a_string) {
+    String res = "";
+    if (a_string.length() != 0) {
+      final BytecodeWhitespaceDetector wd = new BytecodeWhitespaceDetector();
+      int i = 0;
+      boolean ok = true;
+      //count whitespace at the beginning
+      while (ok && i < a_string.length()) {
+        if (!wd.isWhitespace(a_string.charAt(i))) ok = false;
+        i++;
+      }
+      if (!ok) { //not only whitespace in the string
+        int j = a_string.length();
+        ok = true;
+        //count whitespace at the end
+        while (ok && j > 0) {
+          j--;
+          if (!wd.isWhitespace(a_string.charAt(j))) ok = false;
+        }
+        if (!ok) res = a_string.substring(i - 1, j + 1);
+      }
     }
-    if (ok) return "";
-    int j = string.length() - 1;
-    ok = true;
-    while (ok && j >= 0) {
-      if (!wd.isWhitespace(string.charAt(j))) ok = false;
-      j--;
-    }
-    if (ok) return "";
-    return string.substring(i - 1, j + 2);
+    return res;
   }
 
   /**
@@ -510,7 +543,7 @@ public class BytecodeController {
     String res;
     int j = a_line.length() - 1;
 
-    final int k = (a_line.indexOf("//", 0));
+    final int k = (a_line.indexOf(SINGLE_LINE_COMMENT_MARK, 0));
     if (k != -1)
       j = k - 1;
     while ((j >= 0) && (Character.isWhitespace(a_line.charAt(j))))
@@ -524,6 +557,7 @@ public class BytecodeController {
    * character (":") and then the whitespace characters.
    *
    * @param l the string to strip the initial characters from
+   * @return TODO
    */
   protected final String removeColonFromLine(final String l) {
     int i = 0;
@@ -541,14 +575,16 @@ public class BytecodeController {
    * and extracts the comment string. In case there is no
    * comment in the line, it returns <code>null</code>.
    *
-   * @param line  the line to check for comments
-   * @return    comment or null
+   * @param a_line_text  the line to check for comments
+   * @return comment or <code>null</code> in case there is no comment in the
+   *         line
    */
-  private String extractCommentFromLine(final String line) {
-    final int i = line.indexOf("//");
+  private String extractCommentFromLine(final String a_line_text) {
+    final int i = a_line_text.indexOf(SINGLE_LINE_COMMENT_MARK);
     if (i == -1) return null;
-    final String nl = line.substring(i + 2, line.indexOf("\n"));
-    UmbraPlugin.messagelog("//" + nl);
+    final String nl = a_line_text.substring(i + SINGLE_LINE_COMMENT_MARK_LEN,
+                                            a_line_text.indexOf("\n"));
+    UmbraPlugin.messagelog(SINGLE_LINE_COMMENT_MARK + nl);
     return nl;
   }
 
@@ -564,12 +600,12 @@ public class BytecodeController {
    * (not necessarily: number of the first line that an error occurs)
    */
   public final int getFirstError() {
-    return all.lastIndexOf(incorrect.getFirst());
+    return my_editor_lines.lastIndexOf(incorrect.getFirst());
   }
 
   /**
    * The method finds index in the instruction array that is linked with
-   * the position in the line array
+   * the position in the line array. TODO check
    *
    * @param lineNum line number (including all lines in a document)
    * @return  Instruction offset (including only instruction lines)
@@ -577,7 +613,7 @@ public class BytecodeController {
    */
   private int getInstructionOff(final int lineNum) {
     for (int i = lineNum; i >= 0; i--) {
-      final Object line = all.get(i);
+      final Object line = my_editor_lines.get(i);
       if (instructions.contains(line))
         return instructions.indexOf(line);
     }
@@ -595,7 +631,8 @@ public class BytecodeController {
     final int off = getInstructionOff(lineNum);
     if (off + 1 >= instructions.size()) return true;
     if (off == -1) return false;
-    final int index1 = ((BytecodeLineController)instructions.get(off)).getIndex();
+    final int index1 = ((BytecodeLineController)instructions.get(off)).
+                                                             getIndex();
     final int index2 = ((BytecodeLineController)instructions.get(off + 1)).
              getIndex();
     return (index1 != index2);
@@ -603,26 +640,29 @@ public class BytecodeController {
 
   /**
    * @param lineNum Numebr of line (including all lines)
-   * @return true if the line is located before the first instruction in a method
+   * @return <code>true</code> if the line is located before the first
+   *         instruction in a method TODO any method or a fixed method?
    */
   private boolean isFirst(final int lineNum) {
     final int off = getInstructionOff(lineNum);
     if (off == 0) return true;
-    final int index1 = ((BytecodeLineController)instructions.get(off)).getIndex();
-    final int index2 = ((BytecodeLineController)instructions.get(off - 1)).getIndex();
+    final int index1 = ((BytecodeLineController)instructions.get(off)).
+                                                             getIndex();
+    final int index2 = ((BytecodeLineController)instructions.get(off - 1)).
+                                                             getIndex();
     return (index1 != index2);
   }
 
   /**
-   * TODO
+   * TODO.
+   * @return TODO
    */
   public final boolean[] getModified() {
     return modified;
   }
 
   /**
-   * TODO
-   * @param the_modified
+   * @param the_modified the array that indicates which methods were modified
    */
   public final void setModified(final boolean[] the_modified) {
     this.modified = the_modified;
@@ -644,7 +684,8 @@ public class BytecodeController {
   }
 
   /**
-   * TODO
+   * TODO.
+   * @return TODO
    */
   public final String[] getInterline() {
     final String[] commentTab = new String[instructions.size()];
@@ -657,15 +698,17 @@ public class BytecodeController {
   }
 
   /**
-   * TODO
+   * TODO.
    *
    * @param an_index TODO
    */
   private void controlPrint(final int an_index) {
     UmbraPlugin.messagelog("");
-    UmbraPlugin.messagelog("Control print of bytecode modification (" + an_index + "):");
+    UmbraPlugin.messagelog("Control print of bytecode modification (" +
+                           an_index + "):");
     for (int i = 0; i < instructions.size(); i++) {
-      final InstructionLineController line = (InstructionLineController)instructions.get(i);
+      final InstructionLineController line =
+                                 (InstructionLineController)instructions.get(i);
       if (line == null) {
         UmbraPlugin.messagelog("" + i + ". null");
         return;

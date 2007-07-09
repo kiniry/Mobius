@@ -18,7 +18,6 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor;
 import org.eclipse.ui.editors.text.TextEditor;
 import org.eclipse.ui.part.FileEditorInput;
-import org.eclipse.ui.texteditor.AbstractDecoratedTextEditor;
 
 import umbra.UmbraHelper;
 import umbra.UmbraPlugin;
@@ -48,33 +47,33 @@ public class BoogiePLEditor extends TextEditor {
    */
   private ColorManager colorManager;
   /**
-   * The current colouring style, see {@link IColorValues}
+   * The current colouring style, see {@link IColorValues}.
    */
   private int mod;
   /**
-   * TODO
+   * TODO.
    */
   private boolean updated = true;
   /**
-   * TODO
+   * TODO.
    */
   private CompilationUnitEditor relatedEditor;
   /**
-   * TODO
+   * TODO.
    */
   private JavaClass javaClass;
   /**
-   * TODO
+   * TODO.
    */
   private ClassGen classGen;
   /**
-   * TODO
+   * TODO.
    */
   private int historyNum = -1;
 
   /**
-   * A constructor with no BoogiePL-related specificity
-   * TODO
+   * A constructor with no BoogiePL-related specificity.
+   * TODO more details
    * @param an_editor TODO
    */
   public BoogiePLEditor(final BytecodeEditor an_editor) {
@@ -86,7 +85,7 @@ public class BoogiePLEditor extends TextEditor {
   }
 
   /**
-   * Default function used while closing editor
+   * Default function used while closing the BoogiePL editor.
    */
   public final void dispose() {
     colorManager.dispose();
@@ -94,14 +93,15 @@ public class BoogiePLEditor extends TextEditor {
   }
 
   /**
-   * TODO
+   * TODO.
+   * @return TODO
    */
   public final boolean isUpdated() {
     return updated;
   }
 
   /**
-   * TODO
+   * TODO.
    */
   public final void leave() {
     updated = false;
@@ -125,18 +125,20 @@ public class BoogiePLEditor extends TextEditor {
 
   /**
    * This is a function executed directly after initialization
-   * that makes realtion to BCEL structures
+   * that makes realtion to BCEL structures. TODO check
    *
    * @param editor  Java code editor with intended relation
    *           (used especially during synchronization)
    * @param jc    BCEL structures that BoogiePL has been
    *           generated from and may be modificated with
    */
-  public final void setRelation(final CompilationUnitEditor editor, final JavaClass jc) {
+  public final void setRelation(final CompilationUnitEditor editor,
+                                final JavaClass jc) {
     relatedEditor = editor;
     javaClass = jc;
     classGen = new ClassGen(jc);
-    ((BoogiePLDocumentProvider)getDocumentProvider()).setRelation(editor, jc, classGen, getEditorInput());
+    ((BoogiePLDocumentProvider)getDocumentProvider()).
+                            setRelation(editor, jc, classGen, getEditorInput());
   }
 
   /**
@@ -148,12 +150,18 @@ public class BoogiePLEditor extends TextEditor {
    * with '_' at the beginning in case later rebuilding (if there has
    * not existed such yet, the binary file is simply rewritten, otherwise
    * it is saved unchanged).
+   *
+   * @param a_progress_monitor an object to present the progress; currently,
+   *        it is only used in a call to the superclass
+   * @see AbstractTextEditor#doSave(IProgressMonitor)
    */
-  public final void doSave(final IProgressMonitor progressMonitor) {
-    super.doSave(progressMonitor);
-    final IPath active = ((FileEditorInput)getEditorInput()).getFile().getFullPath();
+  public final void doSave(final IProgressMonitor a_progress_monitor) {
+    super.doSave(a_progress_monitor);
+    final IPath active = ((FileEditorInput)getEditorInput()).getFile().
+                                                             getFullPath();
     final String fnameFrom = active.toOSString().replaceFirst(".bpl", ".class");
-    final String lastSegment = active.lastSegment().replaceFirst(".bpl", ".class");
+    final String lastSegment = active.lastSegment().replaceFirst(".bpl",
+                                                                 ".class");
     final String fnameTo = UmbraHelper.getSavedClassFileNameForBPL(active);
     final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
     final IFile fileFrom = root.getFile(new Path(fnameFrom));
@@ -175,13 +183,15 @@ public class BoogiePLEditor extends TextEditor {
   }
 
   /**
-   * Transform relative file path (inside the project) into absolute
+   * Transform a relative file path (inside the project) into the absolute one.
+   * TODO this is a duplicated code, find "absolute path"
    *
-   * @param path    relative path
-   * @return      absolute path
+   * @param path relative path
+   * @return absolute path
    */
   public final IPath getPath(final IPath path) {
-    return ResourcesPlugin.getWorkspace().getRoot().getFolder(path).getProject().getLocation();
+    return ResourcesPlugin.getWorkspace().getRoot().getFolder(path).
+                                                    getProject().getLocation();
   }
 
   /**
@@ -195,21 +205,47 @@ public class BoogiePLEditor extends TextEditor {
    * There is temporary limit of 256 signs for method name
    * and 4096 signs for method code.
    *
-   * @param path      The relative path of the input file
-   * @param commentTab  Table of comments to be inserted
-   * @param interlineTab   Table of comments between instructions to be also inserted
-   * @throws ClassNotFoundException
-   * @throws CoreException
-   * @throws IOException
+   * @param a_path      The relative path of the input file
+   * @param the_comment_tab  Table of comments to be inserted
+   * @param the_interline_tab Table of comments between instructions to be also
+   *                       inserted
+   * @throws ClassNotFoundException the class corresponding to the Java source
+   *         code file cannot be found
+   * @throws CoreException the reasons for this exception include:
+   *<ul>
+   * <li> The location corresponding to the edited input
+   *       in the local file system is occupied by a directory.</li>
+   * <li> The workspace is not in sync with the location of the input
+   *       in the local file system and <code>force </code> is
+   *       <code>false</code>.</li>
+   * <li> Resource changes are disallowed during certain types of resource
+   *      change event notification. See <code>IResourceChangeEvent</code> for
+   *      more details.</li>
+   * <li> The file modification validator of the input disallowed the
+   *      change.</li>
+   * <li> The parent of this resource does not exist.</li>
+   * <li> The project of this resource is not accessible.</li>
+   * <li> The parent contains a resource of a different type
+   *      at the same path as this resource.</li>
+   * <li> The name of this resource is not valid (according to
+   *    <code>IWorkspace.validateName</code>).</li>
+   * </ul>
    */
-  public final void refreshBoogiePL(final IPath path, final String[] commentTab, final String[] interlineTab) throws ClassNotFoundException, CoreException, IOException {
-    final String pathName = getPath(path).toOSString();
+  public final void refreshBoogiePL(final IPath a_path,
+                                    final String[] the_comment_tab,
+                                    final String[] the_interline_tab)
+    throws ClassNotFoundException, CoreException {
+
+    final String pathName = getPath(a_path).toOSString();
     final FileEditorInput input = (FileEditorInput)getEditorInput();
     final IFile file = input.getFile(); // BoogiePL file (.btc)
 
-    // String clname = path.lastSegment().substring(0, path.lastSegment().lastIndexOf("."));
+    // String clname = path.lastSegment().substring(0, path.lastSegment().
+    //                                                      lastIndexOf("."));
     final String projectPath =  file.getProject().getLocation().toOSString();
-    final String clname   = file.getLocation().toOSString().replaceAll(".bpl", "" /*.class" */).substring(projectPath.length() + 1);
+    final String clname   = file.getLocation().toPortableString().
+                                 replaceAll(".bpl", "" /*.class" */).
+                                 substring(projectPath.length() + 1);
 
 
     final ClassPath cp = new ClassPath(pathName);
@@ -266,7 +302,13 @@ public class BoogiePLEditor extends TextEditor {
       } else {
         file.create(stream, true, null);
       }
-      stream.close();
+      try {
+        stream.close();
+      } catch (IOException e) {
+        //This cannot happen.
+        UmbraPlugin.messagelog("IMPOSSIBLE: Stream close generated exception " +
+                               "in BoogiePLEditor.refreshBoogiePL");
+      }
 
     } catch (ReadAttributeException e1) {
       // TODO Auto-generated catch block
@@ -276,7 +318,8 @@ public class BoogiePLEditor extends TextEditor {
     javaClass = jc;
   }
 
-//  private BCLocalVariable[] createLocalVariables(MethodGen m, ConstantPoolGen cpGen) {
+//  private BCLocalVariable[] createLocalVariables(MethodGen m,
+//                                                 ConstantPoolGen cpGen) {
 //    LocalVariableGen[] locVarTable = m.getLocalVariables();
 //    if (locVarTable == null) {
 //      return null;
@@ -291,14 +334,18 @@ public class BoogiePLEditor extends TextEditor {
 //    return bclv;
 //  }
 //
-//  private String addAnnot(Method method, ConstantPoolGen cpg, BCClass bcc, String cn) throws IOException, ReadAttributeException {
-//    //UmbraPlugin.messagelog(method.getAttributes().length + " annotation(s):");
+//  private String addAnnot(Method method, ConstantPoolGen cpg,
+//                          BCClass bcc, String cn) throws IOException,
+//                          ReadAttributeException {
+//    //UmbraPlugin.messagelog(method.getAttributes().length +
+//                             " annotation(s):");
 //    if (method.getAttributes().length > 1) {
 //      Unknown att = (Unknown)method.getAttributes()[1];
 ////      UmbraPlugin.messagelog(att.getBytes().length);
 ////      UmbraPlugin.messagelog();
 ////      for (int i = 0; i < att.getBytes().length; i++) {
-////        UmbraPlugin.messagelog.print(Integer.toHexString((att.getBytes()[i] + 256) % 256) + " ");
+////        UmbraPlugin.messagelog.print(Integer.toHexString(
+////                                    (att.getBytes()[i] + 256) % 256) + " ");
 ////      }
 ////      UmbraPlugin.messagelog();
 //      MethodGen mg = new MethodGen(method, cn, cpg);
@@ -360,14 +407,17 @@ public class BoogiePLEditor extends TextEditor {
 //  /**
 //   * Adds comments to one BoogiePL method.
 //   *
-//   * @param bareCode    one method of the BoogiePL (as a String with no comments)
-//   * @param commentTab  array of comments (as Strings, without leading slashes)
+//   * @param bareCode    one method of the BoogiePL (as a String with no
+//                        comments)
+//   * @param commentTab  array of comments (as Strings, without leading
+//                        slashes)
 //   *             for each line of bytecode
 //   * @param interlineTab   array of comments between lines
 //   * @param off      position of bareCode's first line's comment in commentTab
 //   * @return        bareCode with inserted comments from commentTab
 //   */
-//  private String addComment(String bareCode, String[] commentTab, String[] interlineTab, int off) {
+//  private String addComment(String bareCode, String[] commentTab,
+//                            String[] interlineTab, int off) {
 //    if ((commentTab == null) || (interlineTab == null)) return bareCode;
 //    int len = commentTab.length;
 //    if (interlineTab.length != len) return bareCode;
@@ -385,7 +435,8 @@ public class BoogiePLEditor extends TextEditor {
 //        break;
 //      if (n > 0){
 //        if (commentTab[n + off - 1] != null) {
-//          line = line.replaceFirst("\n", " //" + commentTab[n + off - 1] + "\n");
+//          line = line.replaceFirst("\n", " //" +
+//          commentTab[n + off - 1] + "\n");
 //        }
 //        if ((interlineTab[n + off - 1] != null)
 //          && (interlineTab[n + off - 1].compareTo("") != 0)) {
@@ -401,7 +452,7 @@ public class BoogiePLEditor extends TextEditor {
 
   /**
    * Updating number of historical versions executed
-   * after adding new version
+   * after adding new version. TODO check
    *
    * @return Current number of versions;
    * -1 if limit has been reached
@@ -442,8 +493,10 @@ public class BoogiePLEditor extends TextEditor {
         Instruction ins = ih[i].getInstruction();
         if (ins == null) UmbraPlugin.messagelog("Null instruction");
         else UmbraPlugin.messagelog.print(ins.getName());
-        if (ih[i].getNext() == null) UmbraPlugin.messagelog.print(" next: null");
-        else UmbraPlugin.messagelog.print(" next: " + ih[i].getNext().getPosition());
+        if (ih[i].getNext() == null) UmbraPlugin.messagelog.
+                                                 print(" next: null");
+        else UmbraPlugin.messagelog.print(" next: " +
+                                          ih[i].getNext().getPosition());
         if (ih[i].getPrev() == null) UmbraPlugin.messagelog(" prev: null");
         else UmbraPlugin.messagelog(" prev: " + ih[i].getPrev().getPosition());
       }

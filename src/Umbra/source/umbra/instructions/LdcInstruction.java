@@ -25,6 +25,15 @@ import umbra.editor.parsing.IBytecodeStrings;
  */
 public class LdcInstruction extends OtherInstruction {
 
+  /**
+   * A position before which the '(' character cannot occur in a correct line.
+   */
+  private static final int LEFT_PAREN_FORBIDDEN_BOUND = 2;
+
+  /**
+   * A position before which the ')' character cannot occur in a correct line.
+   */
+  private static final int RIGHT_PAREN_FORBIDDEN_BOUND = 2;
 
   /**
    * This creates an instance of an instruction
@@ -41,9 +50,11 @@ public class LdcInstruction extends OtherInstruction {
   }
 
   /**
-   * TODO
+   * TODO.
+   * @return TODO
    */
   private int getInd() {
+    final String my_line_text = getMy_line_text();
     boolean isd;
     final String licznik = "0123456789";
     int number;
@@ -53,15 +64,18 @@ public class LdcInstruction extends OtherInstruction {
                              my_line_text.lastIndexOf(")"));
     } else {
       isd = true;
-      for (int i = my_line_text.lastIndexOf("(") + 1; i < my_line_text.lastIndexOf(")"); i++) {
+      for (int i = my_line_text.lastIndexOf("(") + 1;
+           i < my_line_text.lastIndexOf(")"); i++) {
         if (!Character.isDigit(my_line_text.charAt(i))) {
           isd = false;
         }
       }
       if (isd) {
         number = 0;
-        for (int i = my_line_text.lastIndexOf("(") + 1; i < my_line_text.lastIndexOf(")"); i++) {
-          number = 10 * number + licznik.indexOf(my_line_text.substring(i, i + 1));
+        for (int i = my_line_text.lastIndexOf("(") + 1;
+             i < my_line_text.lastIndexOf(")"); i++) {
+          number = 10 * number +
+                              licznik.indexOf(my_line_text.substring(i, i + 1));
         }
         return number;
       }
@@ -70,7 +84,8 @@ public class LdcInstruction extends OtherInstruction {
   }
 
   /**
-   * TODO
+   * TODO.
+   * @return TODO
    * @see BytecodeLineController#getInstruction()
    */
   public final Instruction getInstruction() {
@@ -97,21 +112,24 @@ public class LdcInstruction extends OtherInstruction {
    * as well as a string in "" and another one that
    * is a number in ().
    *
-   *@see InstructionLineController#correct()
+   * @return TODO
+   * @see InstructionLineController#correct()
    */
   public final boolean correct()
   {
-    String s, str;
-    s = UmbraHelper.stripAllWhitespace(my_line_text);
+    String str;
+    final String my_line_text = getMy_line_text();
+    final String s = UmbraHelper.stripAllWhitespace(my_line_text);
     final String[] s2 = IBytecodeStrings.ldc;
     int j, y, okok, okokok;
     for (j = 0; j < s2.length; j++) {
-      if ((s.indexOf(s2[j]) > 0) && (s.indexOf(s2[j]) < s.indexOf(":") + 2))
+      if ((s.indexOf(s2[j]) > 0) &&
+          (s.indexOf(s2[j]) <= s.indexOf(":") + 1))
         if (s.indexOf(s2[j]) + (s2[j].length()) + 1 > s.indexOf("%"))
         {
         //parameter checking
-          if (s.lastIndexOf("(") < 2) return false;
-          if (s.lastIndexOf(")") < 2) return false;
+          if (s.lastIndexOf("(") < LEFT_PAREN_FORBIDDEN_BOUND) return false;
+          if (s.lastIndexOf(")") < RIGHT_PAREN_FORBIDDEN_BOUND) return false;
           int m, n, o;
           m = my_line_text.lastIndexOf("(");
           n = my_line_text.lastIndexOf(")");
@@ -123,7 +141,8 @@ public class LdcInstruction extends OtherInstruction {
           }
           //two types: number and (number) or string and (number)
           okok = 0;
-          for (y = (s.indexOf(s2[j]) + s2[j].length()); y < s.lastIndexOf("("); y++) {
+          for (y = (s.indexOf(s2[j]) + s2[j].length());
+               y < s.lastIndexOf("("); y++) {
             if (!(Character.isDigit(s.charAt(y)))) okok++;
           }
           okokok = 0;

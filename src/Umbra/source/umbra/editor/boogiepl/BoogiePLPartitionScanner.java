@@ -75,7 +75,7 @@ public class BoogiePLPartitionScanner extends RuleBasedPartitionScanner {
   /**
    * TODO.
    */
-  private static final int RULES_NUMBER = 7;
+  private static final int NUMBER_OF_RULES = 7;
 
   /**
    * TODO.
@@ -98,7 +98,7 @@ public class BoogiePLPartitionScanner extends RuleBasedPartitionScanner {
   private void setPredicateRulesForMe(final IToken a_throws_token,
                                       final IToken a_head_token,
                                       final IToken a_tag_token) {
-    final IPredicateRule[] rules = new IPredicateRule[RULES_NUMBER];
+    final IPredicateRule[] rules = new IPredicateRule[NUMBER_OF_RULES];
 
     rules[COMMENT_RULE] = new MultiLineRule("<!--", "-->", a_head_token);
     rules[TAG_RULE] = new TagRule(a_tag_token);

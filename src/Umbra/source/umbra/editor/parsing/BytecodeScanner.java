@@ -25,61 +25,61 @@ import umbra.editor.IColorValues;
 public class BytecodeScanner extends RuleBasedScanner {
 
   /**
-   * TODO
+   * TODO.
    */
   private static final int RULE_EOL = 0;
-  
+
   /**
-   * TODO
+   * TODO.
    */
   private static final int RULE_INSTRUCTION = 1;
-  
+
   /**
-   * TODO
+   * TODO.
    */
   private static final int RULE_SEPARATOR = 2;
   /**
-   * TODO
+   * TODO.
    */
   private static final int RULE_HASH = 3;
   /**
-   * TODO
+   * TODO.
    */
   private static final int RULE_PERCENT = 4;
   /**
-   * TODO
+   * TODO.
    */
   private static final int RULE_PARENTHESES = 5;
   /**
-   * TODO
+   * TODO.
    */
   private static final int RULE_BRACES = 6;
   /**
-   * TODO
+   * TODO.
    */
   private static final int RULE_NUMBER = 7;
   /**
-   * TODO
+   * TODO.
    */
   private static final int RULE_WHITESPACE = 8;
   /**
-   * TODO
+   * TODO.
    */
   private static final int RULE_STAR = 9;
   /**
-   * TODO
+   * TODO.
    */
   private static final int RULE_COMMENT = 10;
 
   /**
-   * TODO
+   * TODO.
    */
   private static final int NUMBER_OF_RULES = 11;
 
 
   /**
    * This method TODO
-   * sets the scanning rules
+   * sets the scanning rules.
    *
    *
    * @param the_manager the color manager related to the current bytecode
@@ -188,40 +188,59 @@ public class BytecodeScanner extends RuleBasedScanner {
 
 
   /**
-   * @param tokens
-   * @param insrule
+   * This method associates in <code>the_insrule</code> the words which
+   * occur in a line with the "Line" keyword with the token in
+   * <code>the_tokens</code> under {@ref IColorValues#LINE}.
+   * TODO - better description needed
+   *
+   * @param the_tokens the array with tokens, in particular with the
+   *                   {@ref IColorValues#LINE} token
+   * @param the_insrule the rule in which the association is created
    */
-  private void tokensForLinewords(final IToken[] tokens,
-                                  final WordRule insrule) {
+  private void tokensForLinewords(final IToken[] the_tokens,
+                                  final WordRule the_insrule) {
     for (int i = 0; i < IBytecodeStrings.linewords.length; i++) {
-      insrule.addWord(IBytecodeStrings.linewords[i],
-              tokens[IColorValues.LINE]);
+      the_insrule.addWord(IBytecodeStrings.linewords[i],
+              the_tokens[IColorValues.LINE]);
     }
   }
 
 
   /**
-   * @param tokens
-   * @param insrule
+   * This method associates in <code>the_insrule</code> the BML keywords
+   * with the token in <code>the_tokens</code> under
+   * {@ref IColorValues#ANNOTKEY}.
+   * TODO - better description needed
+   *
+   * @param the_tokens the array with tokens, in particular with the
+   *                   {@ref IColorValues#ANNOTKEY} token
+   * @param the_insrule the rule in which the association is created
+
    */
-  private void tokensForBMLKeywords(final IToken[] tokens,
-                                    final WordRule insrule) {
+  private void tokensForBMLKeywords(final IToken[] the_tokens,
+                                    final WordRule the_insrule) {
     for (int i = 0; i < IBytecodeStrings.BMLKeywords.length; i++) {
-      insrule.addWord(IBytecodeStrings.BMLKeywords[i],
-              tokens[IColorValues.ANNOTKEY]);
+      the_insrule.addWord(IBytecodeStrings.BMLKeywords[i],
+              the_tokens[IColorValues.ANNOTKEY]);
     }
   }
 
 
   /**
-   * @param tokens
-   * @param insrule
-   */
-  private void tokensForInstructions(final IToken[] tokens,
-                                     final WordRule insrule) {
-    for (int i = 0; i < IBytecodeStrings.instructions.length; i++) {
-      insrule.addWord(IBytecodeStrings.instructions[i],
-              tokens[IColorValues.BTC_INSTR]);
+   * This method associates in <code>the_insrule</code> the words of the
+   * bytecode instructions with the token in <code>the_tokens</code> under
+   * {@ref IColorValues#BTC_INSTR}.
+   * TODO - better description needed
+   *
+   * @param the_tokens the array with tokens, in particular with the
+   *                   {@ref IColorValues#BTC_INSTR} token
+   * @param the_insrule the rule in which the association is created
+  */
+  private void tokensForInstructions(final IToken[] the_tokens,
+                                     final WordRule the_insrule) {
+    for (int i = 0; i < IBytecodeStrings.INSTRUCTIONS.length; i++) {
+      the_insrule.addWord(IBytecodeStrings.INSTRUCTIONS[i],
+              the_tokens[IColorValues.BTC_INSTR]);
     }
   }
 }

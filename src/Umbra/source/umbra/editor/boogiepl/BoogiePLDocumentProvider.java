@@ -9,13 +9,12 @@ import org.eclipse.jface.text.IDocumentPartitioner;
 import org.eclipse.jface.text.rules.FastPartitioner;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.editors.text.FileDocumentProvider;
-import org.eclipse.ui.texteditor.AbstractDecoratedTextEditor;
 
 
 
 /**
  * This class has been modificated with relation to the generated automatically
- * to allow adding listener that is responsible for error checking
+ * to allow adding listener that is responsible for error checking.
  *
  * @author Samuel Willimann (wsamuel@student.ethz.ch)
  * @version a-01
@@ -23,7 +22,8 @@ import org.eclipse.ui.texteditor.AbstractDecoratedTextEditor;
 public class BoogiePLDocumentProvider extends FileDocumentProvider {
 
   /**
-   * TODO
+   * TODO.
+   * @return TODO
    */
   protected final IDocument createEmptyDocument() {
     return new BoogiePLDocument();
@@ -42,7 +42,8 @@ public class BoogiePLDocumentProvider extends FileDocumentProvider {
     throws CoreException {
     if (an_element instanceof IEditorInput) {
       final IDocument document = createEmptyDocument();
-      if (setDocumentContent(document, (IEditorInput) an_element, getEncoding(an_element))) {
+      if (setDocumentContent(document, (IEditorInput) an_element,
+                             getEncoding(an_element))) {
         setupDocument(an_element, document);
       }
       final IDocumentPartitioner partitioner =

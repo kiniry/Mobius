@@ -1,34 +1,41 @@
 package umbra.editor;
 
-import org.eclipse.jface.text.rules.*;
+import org.eclipse.jface.text.rules.EndOfLineRule;
+import org.eclipse.jface.text.rules.IPredicateRule;
+import org.eclipse.jface.text.rules.IToken;
+import org.eclipse.jface.text.rules.MultiLineRule;
+import org.eclipse.jface.text.rules.RuleBasedPartitionScanner;
+import org.eclipse.jface.text.rules.Token;
 
 import umbra.editor.parsing.TagRule;
 
 /**
+ * TODO.
+ *
  * @author Tomasz Batkiewicz (tb209231@students.mimuw.edu.pl)
  * @author Jarosław Paszek (jp209217@students.mimuw.edu.pl)
  * @author Wojciech Was (ww209224@students.mimuw.edu.pl)
- * @versin a-01
+ * @version a-01
  */
 public class BytecodePartitionScanner extends RuleBasedPartitionScanner {
 
   /**
-   * TODO
+   * TODO.
    */
   public static final String DEFAULT = "__xml_default";
 
   /**
-   * TODO
+   * TODO.
    */
   public static final String HEAD = "__xml_head";
 
   /**
-   * TODO
+   * TODO.
    */
   public static final String THROWS = "__xml_thr";
 
   /**
-   * TODO
+   * TODO.
    */
   public static final String TAG = "__xml_tag";
 
@@ -71,11 +78,11 @@ public class BytecodePartitionScanner extends RuleBasedPartitionScanner {
   /**
    * TODO.
    */
-  private static final int RULES_NUMBER = 7;
+  private static final int NUMBER_OF_RULES = 7;
 
 
   /**
-   * TODO
+   * TODO.
    */
   public BytecodePartitionScanner() {
 
@@ -83,7 +90,7 @@ public class BytecodePartitionScanner extends RuleBasedPartitionScanner {
     final IToken head = new Token(HEAD);
     final IToken tag = new Token(TAG);
 
-    final IPredicateRule[] rules = new IPredicateRule[RULES_NUMBER];
+    final IPredicateRule[] rules = new IPredicateRule[NUMBER_OF_RULES];
 
     rules[COMMENT_RULE] = new MultiLineRule("<!--", "-->", head);
     rules[TAG_RULE] = new TagRule(tag);

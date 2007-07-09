@@ -8,6 +8,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PartInitException;
 
+import umbra.editor.BytecodeEditor;
 import umbra.editor.BytecodeEditorContributor;
 import umbra.editor.Composition;
 import umbra.editor.IColorValues;
@@ -24,7 +25,7 @@ public class BytecodeColorAction extends Action {
   /**
    * The current bytecode editor for which the action takes place.
    */
-  private IEditorPart my_active_editor;
+  private BytecodeEditor my_active_editor;
 
   /**
    * The number which decides on how the colouring mode
@@ -99,7 +100,7 @@ public class BytecodeColorAction extends Action {
    *    executed
    */
   public final void setActiveEditor(final IEditorPart a_part) {
-    my_active_editor = a_part;
+    my_active_editor = (BytecodeEditor)a_part;
     my_mod = Composition.getMod();
   }
 }

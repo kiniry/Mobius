@@ -1,7 +1,5 @@
 package umbra.editor.actions;
 
-import java.io.IOException;
-
 import javax.swing.JOptionPane;
 
 import org.eclipse.core.resources.IFile;
@@ -114,14 +112,12 @@ public class BytecodeRestoreAction extends BytecodeEditorAction {
       e1.printStackTrace();
     } catch (CoreException e1) {
       e1.printStackTrace();
-    } catch (IOException e1) {
-      e1.printStackTrace();
     }
     contributor.synchrEnable();
   }
 
   /**
-   * TODO
+   * TODO.
    * @param a_btc_file TODO
    * @return TODO.
    */

@@ -16,7 +16,7 @@ import umbra.editor.ColorManager;
 public class BoogiePLScanner extends RuleBasedScanner {
 
   /**
-   * TODO
+   * TODO.
    * @param the_manager the manager which manages the color allocation
    * @param a_mode the current colouring mode
    */
@@ -24,12 +24,15 @@ public class BoogiePLScanner extends RuleBasedScanner {
     /*
     IToken[] tokens = TokenGetter.getTokenTab(manager, mod);
 
-    WordRule insrule = new WordRule(new BoogiePLWordDetector(), tokens[IColorValues.DEFAULT]);
+    WordRule insrule = new WordRule(new BoogiePLWordDetector(),
+                                    tokens[IColorValues.DEFAULT]);
     for (int i = 0; i < IBoogiePLStrings.instructions.length; i++) {
-      insrule.addWord(IBoogiePLStrings.instructions[i], tokens[IColorValues.BTC_INSTR]);
+      insrule.addWord(IBoogiePLStrings.instructions[i],
+                      tokens[IColorValues.BTC_INSTR]);
     }
 
-    WordRule keyrule = new WordRule(new SpecialWordDetector(), tokens[IColorValues.KEY]);
+    WordRule keyrule = new WordRule(new SpecialWordDetector(),
+                                    tokens[IColorValues.KEY]);
 
     IRule[] rules = new IRule[9];
     rules[0] = new EndOfLineRule("//", tokens[IColorValues.COMMENT]);

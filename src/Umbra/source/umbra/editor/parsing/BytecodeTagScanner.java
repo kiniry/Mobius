@@ -9,13 +9,14 @@ import org.eclipse.jface.text.rules.WordRule;
 
 import umbra.editor.ColorManager;
 import umbra.editor.IColorValues;
-import umbra.editor.parsing.BytecodeWhitespaceDetector;
-import umbra.editor.parsing.SpecialWordDetector;
 
 /**
  * This method defines coloring rules in tags.
  * It has been generated automatically except obtaing
  * color values from the array in IColorValues.
+ *
+ * @author Samuel Willimann (wsamuel@student.ethz.ch)
+ * @version a-01
  */
 public class BytecodeTagScanner extends RuleBasedScanner {
 
@@ -42,10 +43,10 @@ public class BytecodeTagScanner extends RuleBasedScanner {
   /**
    * TODO.
    */
-  private static final int RULES_NUMBER = 4;
+  private static final int NUMBER_OF_RULES = 4;
 
   /**
-   * TODO
+   * TODO.
    *
    * @param manager the color manager related to the current bytecode
    *    editor, it must be the same as in the current
@@ -60,17 +61,20 @@ public class BytecodeTagScanner extends RuleBasedScanner {
     final WordRule linerule = new WordRule(new SpecialWordDetector());
     linerule.addWord("<init>", tokens[IColorValues.KEY]);
 
-    final IRule[] rules = new IRule[RULES_NUMBER];
+    final IRule[] rules = new IRule[NUMBER_OF_RULES];
 
     // Add rule for double quotes
     rules[DOUBLE_QUOTE_RULE] = new SingleLineRule("\"", "\"",
                                                   tokens[IColorValues.STRING],
                                                   '\\');
     // Add a rule for single quotes
-    rules[SINGLE_QUOTE_RULE] = new SingleLineRule("'", "'", tokens[IColorValues.STRING], '\\');
+    rules[SINGLE_QUOTE_RULE] = new SingleLineRule("'", "'",
+                                                  tokens[IColorValues.STRING],
+                                                  '\\');
     // Add generic whitespace rule.
     rules[LINE_RULE] = linerule;
-    rules[WHITESPACE_RULE] = new WhitespaceRule(new BytecodeWhitespaceDetector());
+    rules[WHITESPACE_RULE] = new WhitespaceRule(
+                                              new BytecodeWhitespaceDetector());
 
     setRules(rules);
   }

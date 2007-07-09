@@ -26,4 +26,34 @@ public class StringInstruction extends MultiInstruction {
   public StringInstruction(final String a_line_text, final String a_name) {
     super(a_line_text, a_name);
   }
+
+  /**
+   * TODO.
+   * @return TODO
+   */
+  protected int getInd() {
+    final String my_line_text = getMy_line_text();
+    boolean isd;
+    final String licznik = "0123456789";
+    int number;
+    if (my_line_text.lastIndexOf("(") < my_line_text.lastIndexOf(")")) {
+      isd = true;
+      for (int i = my_line_text.lastIndexOf("(") + 1;
+           i < my_line_text.lastIndexOf(")"); i++) {
+        if (!Character.isDigit(my_line_text.charAt(i))) {
+          isd = false;
+        }
+      }
+      if (isd) {
+        number = 0;
+        for (int i = my_line_text.lastIndexOf("(") + 1;
+             i < my_line_text.lastIndexOf(")"); i++) {
+          number = 10 * number +
+                              licznik.indexOf(my_line_text.substring(i, i + 1));
+        }
+        return number;
+      }
+    }
+    return 0;
+  }
 }

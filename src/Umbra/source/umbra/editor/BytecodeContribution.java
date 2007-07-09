@@ -20,7 +20,7 @@ import umbra.instructions.BytecodeController;
 
 /**
  * This class represents a GUI element that is contributed to the
- * eclipse GUI by the bytecode editor. 
+ * eclipse GUI by the bytecode editor.
  *
  * change performed in a bytecode editor.
  * TODO more detailed description is needed
@@ -36,44 +36,45 @@ public class BytecodeContribution extends ControlContribution {
   private static final int CHECK_ALL_LINES_DECREMENT = 2;
 
   /**
-   * TODO
-   */
-  private boolean needNew = true;
-
-  /**
-   * TODO
+   * TODO.
    */
   private static BytecodeContribution inUse;
 
   /**
-   * TODO
+   * TODO.
    */
-  private BytecodeController bcc;
+  private boolean my_need_new_flag = true;
 
   /**
-   * TODO
+   * TODO.
    */
-  private boolean ready = false;
+  private BytecodeController my_bcc;
+
   /**
-   * TODO
+   * TODO.
    */
-  private boolean modTable = false;
+  private boolean my_ready_flag;
+
+  /**
+   * TODO.
+   */
+  private boolean my_mod_table_flag; //@ initially false;
 
   /**
    * This array keeps track of which methods in the class edited by the
    * bytecode editor are modified. It contains <code>true</code> on i-th
    * position when the i-th method is modified.
    *
-   * TODO it's not completely true, the modified in bcc is the actual
+   * TODO it's not completely true, the my_modified in my_bcc is the actual
    * point
    */
-  private boolean[] modified;
+  private boolean[] my_modified;
 
   /**
    * The manager that initialises all the actions within the
    * bytecode plugin.
    */
-  private BytecodeEditorContributor editorContributor;
+  private BytecodeEditorContributor my_editor_cntrbtr;
 
   /**
    * The current bytecode editor for which the contribution works.
@@ -81,7 +82,7 @@ public class BytecodeContribution extends ControlContribution {
   private IEditorPart my_editor;
 
   /**
-   * TODO
+   * TODO.
    */
   protected BytecodeContribution() {
     super("Bytecode");
@@ -94,20 +95,21 @@ public class BytecodeContribution extends ControlContribution {
    * manages the BCEL operations and enables the relevant actions
    * in the Umbra plugin bytecode contributor.
    *
-   * TODO what's modTable
+   * TODO what's my_mod_table_flag
    * @param a_doc TODO
    */
   private void init(final IDocument a_doc) {
-    bcc = new BytecodeController();
-    bcc.init(a_doc);
-    if (modTable) {
-      bcc.setModified(modified);
-      modTable = false;
+    my_bcc = new BytecodeController();
+    my_bcc.init(a_doc);
+    if (my_mod_table_flag) {
+      my_bcc.setModified(my_modified);
+      my_mod_table_flag = false;
     }
     //TODO why we decrease here by CHECK_ALL_LINES_DECREMENT?
-    bcc.checkAllLines(0, a_doc.getNumberOfLines() - CHECK_ALL_LINES_DECREMENT);
-    ready = true;
-    editorContributor.getRefreshAction().setEnabled(true);
+    my_bcc.checkAllLines(0,
+                         a_doc.getNumberOfLines() - CHECK_ALL_LINES_DECREMENT);
+    my_ready_flag = true;
+    my_editor_cntrbtr.getRefreshAction().setEnabled(true);
   }
 
   /**
@@ -117,21 +119,22 @@ public class BytecodeContribution extends ControlContribution {
   public class BytecodeListener implements IDocumentListener {
 
     /**
+     * Data passed from documentAboutToBeChanged to documentChanged.
+     * Should be null if no event is currently being processed.
+     */
+    private DocumentEvent my_current_event; //@ initially null;
+
+    /**
+     * TODO.
+     */
+    private int my_end_line;
+
+    /**
      * The current constructor does nothing.
      */
     public BytecodeListener() {
     }
 
-    /**
-     * Data passed from documentAboutToBeChanged to documentChanged.
-     * Should be null if no event is currently being processed.
-     */
-    private DocumentEvent current_event = null;
-
-    /**
-     * TODO
-     */
-    private int endLine;
 
     /**
      * This method handles the event of the change in the current
@@ -145,18 +148,23 @@ public class BytecodeContribution extends ControlContribution {
      * @see IDocumentListener#documentAboutToBeChanged(DocumentEvent)
      */
     public final void documentAboutToBeChanged(final DocumentEvent an_event) {
-      if (!ready)
-        init(an_event.fDocument); //this marks ready as true
-      UmbraPlugin.messagelog("documentAboutToBeChanged " + an_event.getText());
-      UmbraPlugin.messagelog("documentAboutToBeChanged " + an_event.getModificationStamp());
-      UmbraPlugin.messagelog("documentAboutToBeChanged " + an_event.getOffset());
-      UmbraPlugin.messagelog("documentAboutToBeChanged " + an_event.getLength());
-      UmbraPlugin.messagelog("documentAboutToBeChanged " + an_event.getDocument().hashCode());
+      if (!my_ready_flag)
+        init(an_event.fDocument); //this marks my_ready_flag as true
+      UmbraPlugin.messagelog("documentAboutToBeChanged " +
+                             an_event.getText());
+      UmbraPlugin.messagelog("documentAboutToBeChanged " +
+                             an_event.getModificationStamp());
+      UmbraPlugin.messagelog("documentAboutToBeChanged " +
+                             an_event.getOffset());
+      UmbraPlugin.messagelog("documentAboutToBeChanged " +
+                             an_event.getLength());
+      UmbraPlugin.messagelog("documentAboutToBeChanged " +
+                             an_event.getDocument().hashCode());
       UmbraPlugin.LOG.flush();
-      current_event = an_event;
+      my_current_event = an_event;
 
       try {
-        endLine = an_event.fDocument.getLineOfOffset(
+        my_end_line = an_event.fDocument.getLineOfOffset(
               an_event.getOffset() + an_event.getLength());
       } catch (BadLocationException e) {
         // TODO Auto-generated catch block
@@ -173,55 +181,58 @@ public class BytecodeContribution extends ControlContribution {
      * checks if there are errors in the resulting text and
      * displays the information on the error.
      *
-     * @param event the event that triggers the change, it should be
+     * @param an_event the event that triggers the change, it should be
      * the same as in {@ref #documentAboutToBeChanged(DocumentEvent)}
      *
-     * @see org.eclipse.jface.text.IDocumentListener#documentChanged(org.eclipse.jface.text.DocumentEvent)
+     * @see IDocumentListener#documentChanged(DocumentEvent)
      */
-    public final void documentChanged(final DocumentEvent event) {
-      UmbraPlugin.messagelog("documentChanged " + event.getText());
+    public final void documentChanged(final DocumentEvent an_event) {
+      UmbraPlugin.messagelog("documentChanged " + an_event.getText());
       UmbraPlugin.LOG.flush();
       int stop = 0;
-      int startRem = 0, stopRem = 0;
+      int start_rem = 0, stop_rem = 0;
       try {
-        startRem = event.fDocument.getLineOfOffset(event.getOffset());
-        final int insertedLen = event.getText().length();
-        stop = event.fDocument.getLineOfOffset(event.getOffset() +
+        start_rem = an_event.fDocument.getLineOfOffset(an_event.getOffset());
+        final int insertedLen = an_event.getText().length();
+        stop = an_event.fDocument.getLineOfOffset(an_event.getOffset() +
             insertedLen);
-        if (event == current_event) {
-          stopRem = endLine;
+        if (an_event == my_current_event) {
+          stop_rem = my_end_line;
         } else {
-          throw new RuntimeException("documentChanged event does not match documentAboutToBeChanged event");
+          throw new RuntimeException("documentChanged event does not match " +
+                                     "documentAboutToBeChanged event");
         }
-        current_event = null;
+        my_current_event = null;
       } catch (BadLocationException e) {
         // TODO Auto-generated catch block
         e.printStackTrace();
       }
-      bcc.removeIncorrects(startRem, stopRem);
-      bcc.addAllLines(event.fDocument, startRem, stopRem, stop);
-      bcc.checkAllLines(startRem, stop);
-      if (!bcc.allCorrect())
-        displayError(event.fDocument, bcc.getFirstError());
-      else displayCorrect(event.fDocument);
+      my_bcc.removeIncorrects(start_rem, stop_rem);
+      my_bcc.addAllLines(an_event.fDocument, start_rem, stop_rem, stop);
+      my_bcc.checkAllLines(start_rem, stop);
+      if (!my_bcc.allCorrect())
+        displayError(an_event.fDocument, my_bcc.getFirstError());
+      else displayCorrect(an_event.fDocument);
     }
 
   }
 
   /**
-   * TODO
+   * TODO.
+   * @return TODO
    */
   public static BytecodeContribution inUse() {
     return inUse;
   }
 
   /**
-   * TODO
+   * TODO.
+   * @return TODO
    */
   public static BytecodeContribution newItem() {
     if (inUse != null) {
-      if (!inUse.needNew) {
-        inUse.needNew = true;
+      if (!inUse.my_need_new_flag) {
+        inUse.my_need_new_flag = true;
         return inUse;
       }
     }
@@ -229,17 +240,26 @@ public class BytecodeContribution extends ControlContribution {
   }
 
   /**
-   * TODO
+   * TODO.
    */
   public final void survive() {
-    needNew = false;
+    my_need_new_flag = false;
   }
 
   /**
-   * Creates the GUI control associated with the bytecode editor
+   * Creates the GUI control associated with the bytecode editor setting
+   * <code>a_parent</code> as a parent and {@ref SWT#BORDER} as the style.
+   * It registers the current object as a data field
+   * ({@see Composite#setData(Object)}) in the newly created control.
+   *
+   * @param a_parent a parent composite control under which the current control
+   *                 is registered
+   * @return the freshly created control
+   * @see ControlContribution#createControl(Composite)
    */
-  protected final Control createControl(final Composite parent) {
-    final Composite composite = new Composite(parent, SWT.BORDER);
+  protected final Control createControl(
+                              final /*@ non_null @*/ Composite a_parent) {
+    final Composite composite = new Composite(a_parent, SWT.BORDER);
     composite.setData(this);
 
     return composite;
@@ -249,10 +269,10 @@ public class BytecodeContribution extends ControlContribution {
    * This method displays in the status line the information
    * that something is correct.
    *
-   * @param document the status line is extracted from
+   * @param a_doc the status line is extracted from
    */
-  private void displayCorrect(final IDocument document) {
-    final BytecodeEditor editor = ((BytecodeDocument)document).getEditor();
+  private void displayCorrect(final IDocument a_doc) {
+    final BytecodeEditor editor = ((BytecodeDocument)a_doc).getEditor();
     final IActionBars bars = editor.getEditorSite().getActionBars();
     bars.getStatusLineManager().setMessage("Correct");
   }
@@ -261,27 +281,27 @@ public class BytecodeContribution extends ControlContribution {
    * This method displays in the status line the information
    * about an error in the indicated line.
    *
-   * @param document the status line is extracted from
-   * @param line the number of the line with the error
+   * @param a_doc the status line is extracted from
+   * @param a_line the number of the line with the error
    */
-  private void displayError(final IDocument document, final int line) {
-    final BytecodeEditor editor = ((BytecodeDocument)document).getEditor();
+  private void displayError(final IDocument a_doc, final int a_line) {
+    final BytecodeEditor editor = ((BytecodeDocument)a_doc).getEditor();
     final IActionBars bars = editor.getEditorSite().getActionBars();
-    bars.getStatusLineManager().setMessage("Error detected: " + line);
+    bars.getStatusLineManager().setMessage("Error detected: " + a_line);
   }
 
   /**
    * This method adds to the document in the parameter a listener
    * which keeps track of all the document modifications.
    *
-   * @param document the modifications of which will be notified
+   * @param a_doc the modifications of which will be notified
    * by the listener
    */
-  public final void addListener(final IDocument document) {
-    final BytecodeDocument doc = (BytecodeDocument) document;
+  public final void addListener(final IDocument a_doc) {
+    final BytecodeDocument doc = (BytecodeDocument) a_doc;
     if (doc.isListenerAdded()) {
       final BytecodeListener listener = new BytecodeListener();
-      document.addDocumentListener(listener);
+      a_doc.addDocumentListener(listener);
     }
   }
 
@@ -297,10 +317,10 @@ public class BytecodeContribution extends ControlContribution {
   }
 
   /**
-   * TODO
+   * TODO.
    */
   public final void reinit() {
-    ready = false;
+    my_ready_flag = false;
   }
 
   /**
@@ -308,16 +328,16 @@ public class BytecodeContribution extends ControlContribution {
    * the corresponding method is modified by the bytecode editor
    */
   public final boolean[] getModified() {
-    return bcc.getModified();
+    return my_bcc.getModified();
   }
 
   /**
-   * TODO
-   * @param the_modified
+   * TODO.
+   * @param the_modified a table which indicates which methods are modified
    */
   public final void setModTable(final boolean[] the_modified) {
-    this.modified = the_modified;
-    modTable = true;
+    this.my_modified = the_modified;
+    my_mod_table_flag = true;
   }
 
   /**
@@ -326,22 +346,23 @@ public class BytecodeContribution extends ControlContribution {
    * the current editor
    */
   public final String[] getCommentTab() {
-    return bcc.getComments();
+    return my_bcc.getComments();
   }
 
   /**
-   * TODO
+   * TODO.
+   * @return TODO
    */
   public final String[] getInterlineTab() {
-    return bcc.getInterline();
+    return my_bcc.getInterline();
   }
 
   /**
-   * TODO
+   * TODO.
    * @param a_contributor TODO
    */
   public final void addEditorContributor(
                           final BytecodeEditorContributor a_contributor) {
-    editorContributor = a_contributor;
+    my_editor_cntrbtr = a_contributor;
   }
 }

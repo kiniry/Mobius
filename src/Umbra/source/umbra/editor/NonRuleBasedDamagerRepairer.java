@@ -12,9 +12,11 @@ import org.eclipse.jface.text.presentation.IPresentationDamager;
 import org.eclipse.jface.text.presentation.IPresentationRepairer;
 import org.eclipse.swt.custom.StyleRange;
 
+import umbra.UmbraPlugin;
+
 
 /**
- * TODO
+ * TODO.
  *
  * @author Tomasz Batkiewicz (tb209231@students.mimuw.edu.pl)
  * @author Jarosław Paszek (jp209217@students.mimuw.edu.pl)
@@ -25,13 +27,13 @@ public class NonRuleBasedDamagerRepairer
   implements IPresentationDamager, IPresentationRepairer {
 
   /**
-   * The document this object works on
+   * The document this object works on TODO???
    */
   protected IDocument fDocument;
 
   /**
    * The default text attribute
-   * if non is returned as data by the current token
+   * if non is returned as data by the current token TODO.
    */
   protected TextAttribute fDefaultTextAttribute;
 
@@ -46,7 +48,7 @@ public class NonRuleBasedDamagerRepairer
   }
 
   /**
-   * TODO
+   * TODO.
    * @param a_doc TODO
    * @see IPresentationRepairer#setDocument(IDocument)
    */
@@ -60,9 +62,11 @@ public class NonRuleBasedDamagerRepairer
    *
    * @param offset the offset whose line end offset must be computed
    * @return the line end offset for the given offset
-   * @exception BadLocationException if offset is invalid in the current document
+   * @exception BadLocationException if offset is invalid in the current
+   *            document
    */
-  protected final int endOfLineOf(final int offset) throws BadLocationException {
+  protected final int endOfLineOf(final int offset)
+    throws BadLocationException {
 
     IRegion info = fDocument.getLineInformationOfOffset(offset);
     if (offset <= info.getOffset() + info.getLength())
@@ -83,12 +87,12 @@ public class NonRuleBasedDamagerRepairer
    * @param an_event TODO
    * @param a_doc_partitioning_chngd TODO
    * @return TODO
-   * @see IPresentationDamager#getDamageRegion(ITypedRegion, DocumentEvent, boolean)
+   * @see IPresentationDamager#getDamageRegion(ITypedRegion, DocumentEvent,
+   *                                           boolean)
    */
-  public final IRegion getDamageRegion(
-    final ITypedRegion a_partition,
-    final DocumentEvent an_event,
-    final boolean a_doc_partitioning_chngd) {
+  public final IRegion getDamageRegion(final ITypedRegion a_partition,
+                                       final DocumentEvent an_event,
+                                       final boolean a_doc_partitioning_chngd) {
     if (!a_doc_partitioning_chngd) {
       try {
 
@@ -115,45 +119,51 @@ public class NonRuleBasedDamagerRepairer
         return new Region(start, end - start);
 
       } catch (BadLocationException x) {
+        //TODO what should really be here?
+        UmbraPlugin.messagelog("BadLocationException in getDamageRegion");
       }
     }
-
     return a_partition;
   }
 
   /**
-   * @see IPresentationRepairer#createPresentation(TextPresentation, ITypedRegion)
+   * This method adds to <code>a_presentation</code> a presentation style
+   * to be used to display <code>a_region</code>. The presentation style
+   * is defined with the use of {@ref #fDefaultTextAttribute}.
+   *
+   * @param a_presentation the text presentation to be filled by this repairer
+   * @param a_region the damage to be repaired
+   * @see IPresentationRepairer#createPresentation(TextPresentation,
+   *                                               ITypedRegion)
    */
-  public final void createPresentation(
-    final TextPresentation presentation,
-    final ITypedRegion region) {
+  public final void createPresentation(final TextPresentation a_presentation,
+                                       final ITypedRegion a_region) {
     addRange(
-      presentation,
-      region.getOffset(),
-      region.getLength(),
+      a_presentation,
+      a_region.getOffset(),
+      a_region.getLength(),
       fDefaultTextAttribute);
   }
 
   /**
    * Adds style information to the given text presentation.
    *
-   * @param presentation the text presentation to be extended
-   * @param offset the offset of the range to be styled
-   * @param length the length of the range to be styled
-   * @param attr the attribute describing the style of the range to be styled
+   * @param a_presentation the text presentation to be extended
+   * @param the_offset the offset of the range to be styled
+   * @param the_length the length of the range to be styled
+   * @param an_attr the attribute describing the style of the range to be styled
    */
-  protected final void addRange(
-    final TextPresentation presentation,
-    final int offset,
-    final int length,
-    final TextAttribute attr) {
-    if (attr != null)
-      presentation.addStyleRange(
+  protected final void addRange(final TextPresentation a_presentation,
+                                final int the_offset,
+                                final int the_length,
+                                final TextAttribute an_attr) {
+    if (an_attr != null)
+      a_presentation.addStyleRange(
         new StyleRange(
-          offset,
-          length,
-          attr.getForeground(),
-          attr.getBackground(),
-          attr.getStyle()));
+          the_offset,
+          the_length,
+          an_attr.getForeground(),
+          an_attr.getBackground(),
+          an_attr.getStyle()));
   }
 }

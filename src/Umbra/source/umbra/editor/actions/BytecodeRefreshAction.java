@@ -3,8 +3,6 @@
  */
 package umbra.editor.actions;
 
-import java.io.IOException;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -65,7 +63,7 @@ public class BytecodeRefreshAction extends BytecodeEditorAction {
    * formatted presentation of the code.
    */
   public final void run() {
-    final IEditorPart my_editor = getEditor();
+    final BytecodeEditor my_editor = getEditor();
     final BytecodeContribution my_btcodeCntrbtn = getContribution();
     final BytecodeEditorContributor my_contributor = getContributor();
     my_editor.doSave(null);
@@ -74,8 +72,7 @@ public class BytecodeRefreshAction extends BytecodeEditorAction {
     try {
       final String[] commentTab = my_btcodeCntrbtn.getCommentTab();
       final String[] interlineTab = my_btcodeCntrbtn.getInterlineTab();
-      ((BytecodeEditor)my_editor).refreshBytecode(active, commentTab,
-                           interlineTab);
+      my_editor.refreshBytecode(active, commentTab, interlineTab);
       final FileEditorInput input = new FileEditorInput(file);
       final boolean[] modified = my_btcodeCntrbtn.getModified();
       my_btcodeCntrbtn.setModTable(modified);
@@ -83,8 +80,6 @@ public class BytecodeRefreshAction extends BytecodeEditorAction {
     } catch (ClassNotFoundException e) {
       e.printStackTrace();
     } catch (CoreException e) {
-      e.printStackTrace();
-    } catch (IOException e) {
       e.printStackTrace();
     }
     my_contributor.synchrEnable();

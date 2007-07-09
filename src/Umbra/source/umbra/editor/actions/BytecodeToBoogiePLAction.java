@@ -7,25 +7,17 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.bcel.classfile.JavaClass;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IEditorActionDelegate;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.part.FileEditorInput;
-import org.eclipse.ui.texteditor.AbstractDecoratedTextEditor;
 
 import umbra.UmbraHelper;
 import umbra.UmbraPlugin;
-import umbra.editor.BytecodeEditor;
 import b2bpl.Main;
 import b2bpl.Project;
 
@@ -44,7 +36,7 @@ public class BytecodeToBoogiePLAction implements IEditorActionDelegate {
   private IEditorPart editor;
 
   /**
-   * TODO
+   * TODO.
    * @param an_action TODO
    * @param a_target_editor TODO
    * @see IEditorActionDelegate#setActiveEditor(IAction, IEditorPart)
@@ -55,7 +47,7 @@ public class BytecodeToBoogiePLAction implements IEditorActionDelegate {
   }
 
   /**
-   * TODO
+   * TODO.
    * @param an_action TODO
    * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
    */
@@ -137,6 +129,11 @@ public class BytecodeToBoogiePLAction implements IEditorActionDelegate {
     }
   }
 
+  /**
+   * TODO.
+   * @param dir TODO
+   * @return TODO
+   */
   private String[] getClassesInDirectory(final File dir) {
     if (dir.isDirectory()) {
       final String[] children = dir.list();
@@ -146,17 +143,18 @@ public class BytecodeToBoogiePLAction implements IEditorActionDelegate {
   }
 
   /**
-   * TODO
+   * TODO.
    *
    * @param an_active TODO
    * @param a_lind TODO
    */
   private void loadBPLFile(final IPath an_active, final int a_lind) {
-    final String actlind = an_active.toOSString().substring(0, a_lind);
-    final String fname = actlind + UmbraHelper.BOOGIEPL_EXTENSION;
-    final IWorkspace workspace = ResourcesPlugin.getWorkspace();
-    IFile file = workspace.getRoot().getFile(new Path(fname));
     /*  FIXME not sure if it makes sense
+      final String actlind = an_active.toOSString().substring(0, a_lind);
+      final String fname = actlind + UmbraHelper.BOOGIEPL_EXTENSION;
+      final IWorkspace workspace = ResourcesPlugin.getWorkspace();
+      final IFile file = workspace.getRoot().getFile(new Path(fname));
+
      final FileEditorInput input = new FileEditorInput(file);
      try {
 

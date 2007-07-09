@@ -15,20 +15,20 @@ package umbra.editor;
 public final class Composition {
 
   /**
-   * TODO
-   */
-  private Composition() {
-  }
-  
-  /**
    * The current value of the colouring style.
    */
   private static int mod = 1;
 
   /**
-   * TODO
+   * TODO.
    */
-  private static boolean disas = false;
+  private static boolean disas; //@ initially false;
+
+  /**
+   * TODO.
+   */
+  private Composition() {
+  }
 
   /**
    * @return if called during disassembling - the current
@@ -59,7 +59,7 @@ public final class Composition {
   }
 
   /**
-   * TODO
+   * TODO.
    */
   public static void stopDisas() {
     disas = false;

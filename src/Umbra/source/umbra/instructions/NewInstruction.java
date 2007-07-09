@@ -25,6 +25,25 @@ import umbra.editor.parsing.IBytecodeStrings;
  */
 public class NewInstruction extends StringInstruction {
 
+  /**
+   * A position before which the '(' character cannot occur in a correct line.
+   */
+  private static final int LEFT_PAREN_FORBIDDEN_BOUND = 2;
+
+  /**
+   * A position before which the ')' character cannot occur in a correct line.
+   */
+  private static final int RIGHT_PAREN_FORBIDDEN_BOUND = 2;
+
+  /**
+   * A position before which the '<' character cannot occur in a correct line.
+   */
+  private static final int LESS_FORBIDDEN_BOUND = 2;
+
+  /**
+   * A position before which the '>' character cannot occur in a correct line.
+   */
+  private static final int GREATER_FORBIDDEN_BOUND = 2;
 
   /**
    * This creates an instance of an instruction
@@ -46,23 +65,24 @@ public class NewInstruction extends StringInstruction {
    * one parameter that is a class name and
    * another one that is a number in ().
    *
-   *@see InstructionLineController#correct()
+   * @return TODO
+   * @see InstructionLineController#correct()
    */
-  public final boolean correct()
-  {
-    String s;
-    s = UmbraHelper.stripAllWhitespace(my_line_text);
+  public final boolean correct() {
+    final String my_line_text = getMy_line_text();
+    final String s = UmbraHelper.stripAllWhitespace(my_line_text);
     final String[] s2 = IBytecodeStrings.anew;
     int j, y;
     for (j = 0; j < s2.length; j++) {
-      if ((s.indexOf(s2[j]) > 0) && (s.indexOf(s2[j]) < s.indexOf(":") + 2)) {
+      if ((s.indexOf(s2[j]) > 0) &&
+          (s.indexOf(s2[j]) <= s.indexOf(":") + 1)) {
         //zakladam ze zawsze z (number)
         // w <char lub java.costam> wiec tez nie wiadomo co
-        if (s.indexOf("<") < 2) return false;
-        if (s.indexOf(">") < 2) return false;
+        if (s.indexOf("<") < LESS_FORBIDDEN_BOUND) return false;
+        if (s.indexOf(">") < GREATER_FORBIDDEN_BOUND) return false;
         //&*poprawiam
-        if (s.lastIndexOf("(") < 2) return false;
-        if (s.lastIndexOf(")") < 2) return false;
+        if (s.lastIndexOf("(") < LEFT_PAREN_FORBIDDEN_BOUND) return false;
+        if (s.lastIndexOf(")") < RIGHT_PAREN_FORBIDDEN_BOUND) return false;
         int m, n, o;
         m = my_line_text.lastIndexOf("(");
         n = my_line_text.lastIndexOf(")");
@@ -85,52 +105,45 @@ public class NewInstruction extends StringInstruction {
     return false;
   }
 
-  /**
-   * TODO
-   */
-  private int getInd() {
-    boolean isd;
-    final String licznik = "0123456789";
-    int number;
-    if (my_line_text.lastIndexOf("(") < my_line_text.lastIndexOf(")")) {
-      isd = true;
-      for (int i = my_line_text.lastIndexOf("(") + 1; i < my_line_text.lastIndexOf(")"); i++) {
-        if (!Character.isDigit(my_line_text.charAt(i))) {
-          //UmbraPlugin.messagelog("to nie jest cyfra zle ");
-          isd = false;
-        }
-      }
-      if (isd) {
-        number = 0;
-        for (int i = my_line_text.lastIndexOf("(") + 1; i < my_line_text.lastIndexOf(")"); i++) {
-          number = 10 * number + licznik.indexOf(my_line_text.substring(i, i + 1));
-        }
-        return number;
-      }
-    }
-    return 0;
-  }
 
   /**
+   * This method, based on the value of the field
+   * {@ref InstructionLineController#name}, creates a new BCEL instruction
+   * object for a new-like instruction. It computes the index parameter
+   * of the instruction before the instruction is constructed. The method can
+   * construct one of the instructions:
+   * <ul>
+   *   <li>anewarray,</li>
+   *   <li>checkcast,</li>
+   *   <li>instanceof,</li>
+   *   <li>new.</li>
+   * </ul>
+   * This method also checks the syntactical correctness of the current
+   * instruction line.
+   *
+   * @return the freshly constructed BCEL instruction or <code>null</code>
+   *         in case the instruction is not a new-like instruction and in case
+   *         the line is incorrect
    * @see BytecodeLineController#getInstruction()
    */
   public final Instruction getInstruction() {
     int index;
+    Instruction res = null;
     if (!correct())
       return null;
     index = getInd();
     if (name.compareTo("anewarray") == 0) {
-      return new ANEWARRAY(index);
+      res = new ANEWARRAY(index);
     }
     if (name.compareTo("checkcast") == 0) {
-      return new CHECKCAST(index);
+      res = new CHECKCAST(index);
     }
     if (name.compareTo("instanceof") == 0) {
-      return new INSTANCEOF(index);
+      res = new INSTANCEOF(index);
     }
     if (name.compareTo("new") == 0) {
-      return new NEW(index);
+      res = new NEW(index);
     }
-    return null;
+    return res;
   }
 }

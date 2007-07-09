@@ -20,18 +20,21 @@ import umbra.editor.parsing.TokenGetter;
  * automatically and some changes has been made, for example
  * involving special ways of colouring and possibility of
  * changing the coloring styles ('mod' parameter).
+ *
+ * @author Samuel Willimann (wsamuel@student.ethz.ch)
+ * @version a-01
  */
 public class BoogiePLConfiguration extends SourceViewerConfiguration {
   /**
-   * TODO
+   * TODO.
    */
   private BoogiePLDoubleClickStrategy doubleClickStrategy;
   /**
-   * TODO
+   * TODO.
    */
   private BoogiePLTagScanner tagScanner;
   /**
-   * TODO
+   * TODO.
    */
   private BoogiePLScanner scanner;
 
@@ -40,12 +43,12 @@ public class BoogiePLConfiguration extends SourceViewerConfiguration {
    */
   private ColorManager colorManager;
   /**
-   * The current colouring style, see {@link IColorValues}
+   * The current colouring style, see {@link IColorValues}.
    */
   private int mod;
 
   /**
-   * TODO
+   * TODO.
    *
    * @param the_color_manager TODO
    * @param a_mod TODO
@@ -57,9 +60,19 @@ public class BoogiePLConfiguration extends SourceViewerConfiguration {
   }
 
   /**
-   * TODO
+   * @param a_source_viewer a source viewer for which the content types are
+   *                        specified
+   * @return a table with content types for the given source viewer, in this
+   *         case it contains always:
+   * <ul>
+   *   <li>{@ref IDocument#DEFAULT_CONTENT_TYPE}</li>
+   *   <li>{@ref BytecodePartitionScanner#HEAD}</li>
+   *   <li>{@ref BytecodePartitionScanner#TAG}</li>
+   * </ul>
+   * @see SourceViewerConfiguration#getConfiguredContentTypes(ISourceViewer)
    */
-  public final String[] getConfiguredContentTypes(final ISourceViewer sourceViewer) {
+  public final String[] getConfiguredContentTypes(
+                                  final ISourceViewer a_source_viewer) {
     return new String[] {
       IDocument.DEFAULT_CONTENT_TYPE,
       BoogiePLPartitionScanner.HEAD,
@@ -67,11 +80,12 @@ public class BoogiePLConfiguration extends SourceViewerConfiguration {
   }
 
   /**
-   * TODO
+   * TODO.
    * @param a_source_viewer TODO
    * @param the_content_type TODO
    * @return TODO
-   * @see SourceViewerConfiguration#getDoubleClickStrategy(ISourceViewer, String)
+   * @see SourceViewerConfiguration#getDoubleClickStrategy(ISourceViewer,
+   *                                                       String)
    */
   public final ITextDoubleClickStrategy getDoubleClickStrategy(
     final ISourceViewer a_source_viewer,
@@ -82,7 +96,8 @@ public class BoogiePLConfiguration extends SourceViewerConfiguration {
   }
 
   /**
-   * TODO
+   * TODO.
+   * @return TODO
    */
   protected final BoogiePLScanner getBoogiePLScanner() {
     if (scanner == null) {
@@ -94,7 +109,8 @@ public class BoogiePLConfiguration extends SourceViewerConfiguration {
   }
 
   /**
-   * TODO
+   * TODO.
+   * @return TODO
    */
   protected final BoogiePLTagScanner getBoogiePLTagScanner() {
     if (tagScanner == null) {
@@ -106,9 +122,30 @@ public class BoogiePLConfiguration extends SourceViewerConfiguration {
   }
 
   /**
-   * TODO
+   * This method creates a new presentation reconciler
+   * ({@ref PresentationReconciler}) and registers in it damagers and
+   * repairers for types ({@ref DefaultDamagerRepairer}):
+   * <ul>
+   *   <li>{@ref BytecodePartitionScanner#TAG},</li>
+   *   <li>{@ref IDocument#DEFAULT_CONTENT_TYPE},</li>
+   * </ul>
+   * and for types ({@ref NonRuleBasedDamagerRepairer}):
+   * <ul>
+   *   <li>{@ref BytecodePartitionScanner#HEAD},</li>
+   *   <li>{@ref BytecodePartitionScanner#THROWS}.</li>
+   * </ul>
+   * The {@link NonRuleBasedDamagerRepairer} is initialised with
+   * the current values of the fields {@ref #colorManager} and
+   * {@ref #mod} combined with an abstrac color indication
+   * ({@ref IColorValues#HEADER}, {@ref IColorValues#THROWS}).
+   *
+   * @param a_source_viewer the source viewer for which the reconciler is
+   *        returned
+   * @return the new, configured presentation reconciler
+   * @see SourceViewerConfiguration#getPresentationReconciler(ISourceViewer)
    */
-  public final IPresentationReconciler getPresentationReconciler(final ISourceViewer sourceViewer) {
+  public final IPresentationReconciler getPresentationReconciler(
+                                          final ISourceViewer a_source_viewer) {
     final PresentationReconciler reconciler = new PresentationReconciler();
 
     DefaultDamagerRepairer dr =

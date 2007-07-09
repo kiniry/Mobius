@@ -17,8 +17,7 @@ import org.eclipse.ui.editors.text.FileDocumentProvider;
 public class BytecodeDocumentProvider extends FileDocumentProvider {
 
   /**
-   * TODO
-   *
+   * This method creates a bytecode document with the empty content.
    *
    * @return a fresh {@ref BytecodeDocument} object with no content
    */

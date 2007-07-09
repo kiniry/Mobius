@@ -21,7 +21,7 @@ import org.eclipse.ui.IEditorPart;
 // import umbra.instructions.boogiepl.BoogiePLController;
 
 /**
- * TODO
+ * TODO.
  *
  * @author Samuel Willimann (wsamuel@student.ethz.ch)
  * @version a-01
@@ -54,32 +54,35 @@ public class BoogiePLContribution extends ControlContribution {
   private static final int WIDGET_WIDTH = 120;
 
   /**
-   * TODO
-   */
-  private boolean needNew = true;
-  /**
-   * TODO
-   */
-  private IEditorPart activeEditor;
-  /**
-   * TODO
-   */
-  private Label labelText;
-  /**
-   * TODO
+   * TODO.
    */
   private static BoogiePLContribution inUse;
+
+  /**
+   * TODO.
+   */
+  private boolean needNew = true;
+
+  /**
+   * The current BoogiePL editor for which the contribution works.
+   */
+  private IEditorPart my_editor;
+  /**
+   * TODO.
+   */
+  private Label labelText;
+
   /**
    * TODO
    */
   // private BoogiePLController bcc;
   /**
-   * TODO
+   * TODO.
    */
-  private boolean ready = false;
+  private boolean ready;
 
   /**
-   * TODO
+   * TODO.
    */
   protected BoogiePLContribution() {
     super("BoogiePL");
@@ -87,7 +90,7 @@ public class BoogiePLContribution extends ControlContribution {
   }
 
   /**
-   * TODO
+   * TODO.
    * @param a_doc TODO
    * @throws BadLocationException TODO
    */
@@ -106,23 +109,25 @@ public class BoogiePLContribution extends ControlContribution {
   }
 
   /**
-   * TODO
+   * TODO.
    */
   public class BoogiePLListener implements IDocumentListener {
 
     /**
-     * TODO
+     * TODO.
      */
     int startRem = -1, stopRem = -1;
 
     /**
-     * TODO
+     * TODO.
      */
     public BoogiePLListener() {
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.text.IDocumentListener#documentAboutToBeChanged(org.eclipse.jface.text.DocumentEvent)
+    /**
+     * TODO.
+     * @param event TODO
+     * @see IDocumentListener#documentAboutToBeChanged(DocumentEvent)
      */
     public final void documentAboutToBeChanged(final DocumentEvent event) {
       if (!ready)
@@ -143,8 +148,10 @@ public class BoogiePLContribution extends ControlContribution {
       }
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.text.IDocumentListener#documentChanged(org.eclipse.jface.text.DocumentEvent)
+    /**
+     * TODO.
+     * @param event TODO
+     * @see IDocumentListener#documentChanged(DocumentEvent)
      */
     public final void documentChanged(final DocumentEvent event) {
       //int start = 0, stop = 0;
@@ -173,14 +180,16 @@ public class BoogiePLContribution extends ControlContribution {
   }
 
   /**
-   * TODO
+   * TODO.
+   * @return TODO
    */
   public static BoogiePLContribution inUse() {
     return inUse;
   }
 
   /**
-   * TODO
+   * TODO.
+   * @return TODO
    */
   public static BoogiePLContribution newItem() {
     if (inUse != null) {
@@ -193,20 +202,29 @@ public class BoogiePLContribution extends ControlContribution {
   }
 
   /**
-   * TODO
+   * TODO.
    */
   public final void survive() {
     needNew = false;
   }
 
   /**
-   * TODO
-   * @param parent
-   * @return
-   * @see org.eclipse.jface.action.ControlContribution#createControl(org.eclipse.swt.widgets.Composite)
+   * Creates the GUI control associated with the BoogiePL editor by setting
+   * <code>a_parent</code> as a parent and {@ref SWT#BORDER} as the style.
+   * It registers the current object as a data field
+   * ({@see Composite#setData(Object)}) in the newly created control. Next,
+   * the method adds a label of the size {@ref #WIDGET_WIDTH},
+   * {@ref #WIDGET_HEIGHT}, font "Arial" of the height
+   * {@ref #WIDGET_TEXT_HEIGHT} and style {@ref #WIDGET_TEXT_STYLE}. The text
+   * is typed using the color {@ref #WIDGET_FOREGROUND_COLOR}.
+   *
+   * @param a_parent a parent composite control under which the current control
+   *                 is registered
+   * @return the freshly created control
+   * @see ControlContribution#createControl(Composite)
    */
-  protected final Control createControl(final Composite parent) {
-    final Composite composite = new Composite(parent, SWT.BORDER);
+  protected final Control createControl(final Composite a_parent) {
+    final Composite composite = new Composite(a_parent, SWT.BORDER);
     composite.setData(this);
 
     labelText = new Label(composite, SWT.NONE);
@@ -234,7 +252,7 @@ public class BoogiePLContribution extends ControlContribution {
   }*/
 
   /**
-   * TODO
+   * TODO.
    * @param a_doc TODO
    */
   public final void addListener(final IDocument a_doc) {
@@ -246,45 +264,50 @@ public class BoogiePLContribution extends ControlContribution {
    * @param an_editor TODO
    */
   public final void setActiveEditor(final IEditorPart an_editor) {
-    activeEditor = an_editor;
+    my_editor = an_editor;
   }
 
   /**
-   * @param editor
+   * @return the current BoogiePL editor for which the contribution works.
    */
   public final IEditorPart getActiveEditor() {
-    return activeEditor;
+    return my_editor;
   }
 
   /**
-   * TODO
+   * TODO.
    */
   public final void reinit() {
     ready = false;
   }
 
   /**
-   * TODO
+   * TODO.
+   * @return TODO
    */
   public final boolean[] getModified() {
     return null; // return bcc.getModified();
   }
 
   /**
-   * TODO
+   * The method currently does nothing.
+   *
+   * @param the_modified a table which indicates which methods are modified
    */
-  public void setModTable(final boolean[] modified) {
+  public void setModTable(final boolean[] the_modified) {
   }
 
   /**
-   * TODO
+   * TODO.
+   * @return TODO
    */
   public final String[] getCommentTab() {
     return null; // return bcc.getComments();
   }
 
   /**
-   * TODO
+   * TODO.
+   * @return TODO
    */
   public final String[] getInterlineTab() {
     return null; // return bcc.getInterline();

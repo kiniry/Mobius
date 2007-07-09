@@ -73,60 +73,38 @@ public class JumpInstruction extends NumInstruction {
    * Jump instruction line is correct if it has
    * one number parameter preceded by #.
    *
-   *@see InstructionLineController#correct()
+   * @return <code>true</code> when the current line of the bytecode is
+   *         correctly formatted jump instruction
+   * @see InstructionLineController#correct()
    */
-  public final boolean correct()
-  {
-    String s;
-    s = UmbraHelper.stripAllWhitespace(my_line_text);
+  public final boolean correct() {
+    final String s = UmbraHelper.stripAllWhitespace(getMy_line_text());
     final String[] s2 = IBytecodeStrings.jump;
-    int j;
-    int y;
     if (s.indexOf("#") < s.indexOf(":") + 1) return false;
-    for (j = 0; j < s2.length; j++) {
-      if ((s.indexOf(s2[j]) > 0) && (s.indexOf(s2[j]) < s.indexOf(":") + 2))
-        if (s.indexOf(s2[j]) + (s2[j].length()) + 1 > s.indexOf("#")) {
-          for (y = (s.indexOf("#") + 1); y < s.length(); y++) {
-            if (!(Character.isDigit(s.charAt(y)))) return false;
-          }
-        //checking if there are two numbers or one
-          int a, b, d, e, f, g;
-          a = (s.length() - s.indexOf("#"));
-          int c = 0;
-          e = my_line_text.length() - my_line_text.indexOf("#");
-          f = 0;
-          g = my_line_text.length();
-          for (d = 0; d < e; d++) {
-            if (Character.isDigit(my_line_text.charAt(g - d - 1))) {
-              f = 1;
-            }
-            if (f == 0) {
-              if (Character.isWhitespace(my_line_text.charAt(g - d - 1))) {
-                c++;
-              }
-            }
-          }
-
-          b = e - c;
-          if (a == b)
-            return true;
-        }
+    // we check all the instructions in s2
+    int res = 0;
+    for (int j = 0; j < s2.length; j++) {
+      res = checkInstructionWithNumber(s, s2[j], '#');
+      if (res != 0) return res > 0;
     }
     return false;
   }
 
   /**
-   * TODO
-   * @return
+   * TODO.
+   * @return TODO
    */
   private int getInd() {
+    final String my_line_text = getMy_line_text();
     boolean isd;
     final String counter = "0123456789";
     int number;
 
     isd = true;
-    int upto = my_line_text.length(); //we seek the first non-digit character after #
-    for (int i = my_line_text.lastIndexOf("#") + 1; i < my_line_text.length(); i++) {
+    int upto = my_line_text.length(); //we seek the first non-digit character
+                                      //after #
+    for (int i = my_line_text.lastIndexOf("#") + 1;
+         i < my_line_text.length(); i++) {
       if (!Character.isDigit(my_line_text.charAt(i))) {
         upto = i;
         break;
@@ -135,7 +113,8 @@ public class JumpInstruction extends NumInstruction {
     if (isd) { //TODO is is necessary?
       number = 0;
       for (int i = my_line_text.lastIndexOf("#") + 1; i < upto; i++) {
-        number = 10 * number + counter.indexOf(my_line_text.substring(i, i + 1));
+        number = 10 * number +
+                              counter.indexOf(my_line_text.substring(i, i + 1));
       }
       return number;
     }
@@ -143,12 +122,11 @@ public class JumpInstruction extends NumInstruction {
   }
 
   /**
-   * TODO
+   * TODO.
+   * @return TODO
    * @see BytecodeLineController#getInstruction()
    */
   public final Instruction getInstruction() {
-
-
     final InstructionHandle ih = null;
 
     if (!correct())
@@ -239,7 +217,8 @@ public class JumpInstruction extends NumInstruction {
     UmbraPlugin.messagelog("i = " + i);
     if (an_ins_list == null) UmbraPlugin.messagelog("null il");
     else if (iha == null) UmbraPlugin.messagelog("null iha");
-    else if (iha.getInstruction() == null) UmbraPlugin.messagelog("null ins (drugie)");
+    else if (iha.getInstruction() == null)
+        UmbraPlugin.messagelog("null ins (drugie)");
     else UmbraPlugin.messagelog(iha.getInstruction().getName());
     if (an_ins == null) UmbraPlugin.messagelog("null ins");
     else UmbraPlugin.messagelog(an_ins.getName());

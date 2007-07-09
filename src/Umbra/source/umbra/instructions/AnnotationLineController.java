@@ -22,6 +22,8 @@ public class AnnotationLineController extends BytecodeLineController {
   }
 
   /**
+   * TODO.
+   * @return TODO
    * @see BytecodeLineController#correct()
    */
   public final boolean correct()

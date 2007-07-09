@@ -26,7 +26,8 @@ public class HeaderLineController extends BytecodeLineController {
   }
 
   /**
-   * TODO
+   * TODO.
+   * @return TODO
    */
   public final boolean correct()
   {
@@ -39,7 +40,7 @@ public class HeaderLineController extends BytecodeLineController {
    * The method index of the header is equal to
    * the previous line's one increased by one.
    * TODO
-   * 
+   *
    * @param an_index TODO
    */
   public final void setIndex(final int an_index) {

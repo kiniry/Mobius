@@ -20,6 +20,7 @@ import org.eclipse.ui.editors.text.TextEditor;
 import org.eclipse.ui.part.FileEditorInput;
 
 import umbra.UmbraHelper;
+import umbra.UmbraPlugin;
 import annot.bcclass.BCClass;
 import annot.bcio.ReadAttributeException;
 
@@ -34,7 +35,7 @@ import annot.bcio.ReadAttributeException;
  *
  * The input file for this editor is a .btc file which resides
  * alongside the corresponding .java file (it is a different place
- * from the place for .class files). 
+ * from the place for .class files).
  *
  * @author Tomasz Batkiewicz (tb209231@students.mimuw.edu.pl)
  * @author Jarosław Paszek (jp209217@students.mimuw.edu.pl)
@@ -69,18 +70,18 @@ public class BytecodeEditor extends TextEditor {
    * field contains -1 when there are no active history
    * snapshots (i.e. the history is clear).
    */
-  private int historyNum = -1;
+  private int my_history_num = -1;
 
   /**
    * The bytecode editor configuration manager associated with the current
    * editor.
    */
-  private BytecodeConfiguration bconfig;
+  private BytecodeConfiguration my_bconf;
 
   /**
    * Bytecode document edited by the editor.
    */
-  private BytecodeDocument currentDocument;
+  private BytecodeDocument my_current_doc;
 
   /**
    * This constructor creates the class and initialises the default
@@ -88,8 +89,8 @@ public class BytecodeEditor extends TextEditor {
    */
   public BytecodeEditor() {
     super();
-    bconfig = new BytecodeConfiguration();
-    setSourceViewerConfiguration(bconfig);
+    my_bconf = new BytecodeConfiguration();
+    setSourceViewerConfiguration(my_bconf);
     setDocumentProvider(new BytecodeDocumentProvider());
   }
 
@@ -97,7 +98,7 @@ public class BytecodeEditor extends TextEditor {
    * Default function used while closing the current editor.
    */
   public final void dispose() {
-    bconfig.disposeColor();
+    my_bconf.disposeColor();
     super.dispose();
   }
 
@@ -120,18 +121,18 @@ public class BytecodeEditor extends TextEditor {
    * This is a function executed directly after initialization
    * and it arranges the relation between the editor and BCEL structures.
    *
-   * @param editor  Java code editor with intended relation
+   * @param an_editor  Java code editor with intended relation
    *           (used in particular during synchronization)
-   * @param jc    BCEL structures that Bytecode has been
+   * @param a_javaclass    BCEL structures that Bytecode has been
    *           generated from and may be modificated with
    */
-  public final void setRelation(final CompilationUnitEditor editor,
-                                final JavaClass jc) {
-    my_related_editor = editor;
-    my_javaClass = jc;
-    my_classGen = new ClassGen(jc);
+  public final void setRelation(final CompilationUnitEditor an_editor,
+                                final JavaClass a_javaclass) {
+    my_related_editor = an_editor;
+    my_javaClass = a_javaclass;
+    my_classGen = new ClassGen(a_javaclass);
     ((BytecodeDocumentProvider)getDocumentProvider()).
-            setRelation(editor, this, getEditorInput());
+            setRelation(an_editor, this, getEditorInput());
   }
 
   /**
@@ -149,7 +150,8 @@ public class BytecodeEditor extends TextEditor {
    */
   public final void doSave(final IProgressMonitor a_progress_monitor) {
     super.doSave(a_progress_monitor);
-    final IPath active = ((FileEditorInput)getEditorInput()).getFile().getFullPath();
+    final IPath active = ((FileEditorInput)getEditorInput()).getFile().
+                                                             getFullPath();
     final String fnameTo = UmbraHelper.getSavedClassFileNameForBTC(active);
     final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
     final String fnameFrom = active.toOSString().replaceFirst(
@@ -176,13 +178,14 @@ public class BytecodeEditor extends TextEditor {
   }
 
   /**
-   * Transform relative file path (inside the project) into absolute
+   * Transform relative file path (inside the project) into the absolute one.
    *
-   * @param path    relative path
-   * @return      absolute path
+   * @param a_path a relative path
+   * @return the corresponding absolute path
    */
-  public final IPath getPath(final IPath path) {
-    return ResourcesPlugin.getWorkspace().getRoot().getFolder(path).getProject().getLocation();
+  public final IPath getPath(final IPath a_path) {
+    return ResourcesPlugin.getWorkspace().getRoot().getFolder(a_path).
+                           getProject().getLocation();
   }
 
   /**
@@ -193,28 +196,51 @@ public class BytecodeEditor extends TextEditor {
    * Possibly comments can be inserted if they are given
    * as a parameter (in the situation that they have been
    * previously written).
+   *
+   * TODO probably obsolete:
    * There is temporary limit of 256 characters for method name
    * and 4096 characters for method code.
    *
-   * @param path a relative path of the classfile
-   * @param comments  Table of comments to be inserted
-   * @param interlineComments   Table of comments between instructions to be also inserted
-   * @throws ClassNotFoundException
-   * @throws CoreException
-   * @throws IOException
+   * @param a_path a workspace relative path to a Java source code file
+   * @param the_comments  a table of comments to be inserted
+   * @param the_interline_comments  Table of comments between instructions to be
+   *                           lso inserted
+   * @throws ClassNotFoundException the class corresponding to the Java source
+   *         code file cannot be found
+   * @throws CoreException the reasons for this exception include:
+   *<ul>
+   * <li> The location corresponding to the edited input
+   *       in the local file system is occupied by a directory.</li>
+   * <li> The workspace is not in sync with the location of the input
+   *       in the local file system and <code>force </code> is
+   *       <code>false</code>.</li>
+   * <li> Resource changes are disallowed during certain types of resource
+   *      change event notification. See <code>IResourceChangeEvent</code> for
+   *      more details.</li>
+   * <li> The file modification validator of the input disallowed the
+   *      change.</li>
+   * <li> The parent of this resource does not exist.</li>
+   * <li> The project of this resource is not accessible.</li>
+   * <li> The parent contains a resource of a different type
+   *      at the same path as this resource.</li>
+   * <li> The name of this resource is not valid (according to
+   *    <code>IWorkspace.validateName</code>).</li>
+   * </ul>
    */
-  public final void refreshBytecode(final IPath path,
-                final String[] comments,
-                final String[] interlineComments)
-         throws ClassNotFoundException, CoreException, IOException {
-    final String pathName = getPath(path).toOSString();
+  public final void refreshBytecode(final IPath a_path,
+                final String[] the_comments,
+                final String[] the_interline_comments)
+    throws ClassNotFoundException, CoreException {
+
+    final String pathName = getPath(a_path).toPortableString();
     final FileEditorInput input = (FileEditorInput)getEditorInput();
     final IFile file = input.getFile();
 
-    // Get class name along with package name
-    String clname = path.lastSegment().substring(0,
-                       path.lastSegment().lastIndexOf("."));
-    final String tmp = path.removeFirstSegments(1).toOSString();
+    // Get class name together with its package name
+    //FIXME there is a better way to obtain the name!!!
+    String clname = a_path.lastSegment().substring(0,
+                       a_path.lastSegment().lastIndexOf("."));
+    final String tmp = a_path.removeFirstSegments(1).toPortableString();
     clname = tmp.substring(0, tmp.lastIndexOf("."));
 
     final ClassPath cp = new ClassPath(pathName);
@@ -270,7 +296,13 @@ public class BytecodeEditor extends TextEditor {
       } else {
         file.create(stream, true, null);
       }
-      stream.close();
+      try {
+        stream.close();
+      } catch (IOException e) {
+        //This cannot happen.
+        UmbraPlugin.messagelog("IMPOSSIBLE: Stream close generated exception " +
+                               "in BytecodeEditor.refreshBytecode");
+      }
 
     } catch (ReadAttributeException e1) {
       e1.printStackTrace();
@@ -279,7 +311,8 @@ public class BytecodeEditor extends TextEditor {
     my_javaClass = jc;
   }
 
-//  private BCLocalVariable[] createLocalVariables(MethodGen m, ConstantPoolGen cpGen) {
+//  private BCLocalVariable[] createLocalVariables(MethodGen m,
+//                                                 ConstantPoolGen cpGen) {
 //    LocalVariableGen[] locVarTable = m.getLocalVariables();
 //    if (locVarTable == null) {
 //      return null;
@@ -294,14 +327,18 @@ public class BytecodeEditor extends TextEditor {
 //    return bclv;
 //  }
 //
-//  private String addAnnot(Method method, ConstantPoolGen cpg, BCClass bcc, String cn) throws IOException, ReadAttributeException {
-//    //UmbraPlugin.messagelog(method.getAttributes().length + " annotation(s):");
+//  private String addAnnot(Method method, ConstantPoolGen cpg, BCClass bcc,
+//                          String cn) throws IOException,
+//                                            ReadAttributeException {
+//    //UmbraPlugin.messagelog(method.getAttributes().length +
+//                             " annotation(s):");
 //    if (method.getAttributes().length > 1) {
 //      Unknown att = (Unknown)method.getAttributes()[1];
 ////      UmbraPlugin.messagelog(att.getBytes().length);
 ////      UmbraPlugin.messagelog();
 ////      for (int i = 0; i < att.getBytes().length; i++) {
-////        UmbraPlugin.messagelog.print(Integer.toHexString((att.getBytes()[i] + 256) % 256) + " ");
+////        UmbraPlugin.messagelog.print(Integer.toHexString(
+////                               (att.getBytes()[i] + 256) % 256) + " ");
 ////      }
 ////      UmbraPlugin.messagelog();
 //      MethodGen mg = new MethodGen(method, cn, cpg);
@@ -363,14 +400,17 @@ public class BytecodeEditor extends TextEditor {
 //  /**
 //   * Adds comments to one Bytecode method.
 //   *
-//   * @param bareCode    one method of the Bytecode (as a String with no comments)
-//   * @param commentTab  array of comments (as Strings, without leading slashes)
+//   * @param bareCode    one method of the Bytecode (as a String with no
+//                        comments)
+//   * @param commentTab  array of comments (as Strings, without leading
+//                        slashes)
 //   *             for each line of bytecode
 //   * @param interlineTab   array of comments between lines
 //   * @param off      position of bareCode's first line's comment in commentTab
 //   * @return        bareCode with inserted comments from commentTab
 //   */
-//  private String addComment(String bareCode, String[] commentTab, String[] interlineTab, int off) {
+//  private String addComment(String bareCode, String[] commentTab,
+//                            String[] interlineTab, int off) {
 //    if ((commentTab == null) || (interlineTab == null)) return bareCode;
 //    int len = commentTab.length;
 //    if (interlineTab.length != len) return bareCode;
@@ -388,7 +428,8 @@ public class BytecodeEditor extends TextEditor {
 //        break;
 //      if (n > 0){
 //        if (commentTab[n + off - 1] != null) {
-//          line = line.replaceFirst("\n", " //" + commentTab[n + off - 1] + "\n");
+//          line = line.replaceFirst("\n", " //" +
+//                                   commentTab[n + off - 1] + "\n");
 //        }
 //        if ((interlineTab[n + off - 1] != null)
 //          && (interlineTab[n + off - 1].compareTo("") != 0)) {
@@ -404,14 +445,14 @@ public class BytecodeEditor extends TextEditor {
 
   /**
    * Updating number of historical versions executed
-   * after adding new version
+   * after adding new version.
    *
-   * @return Current number of versions; -1 if limit has been reached
+   * @return current number of versions; -1 if limit has been reached
    */
   public final int newHistory() {
-    if (historyNum == UmbraHelper.MAX_HISTORY) return -1;
-    historyNum++;
-    return historyNum;
+    if (my_history_num == UmbraHelper.MAX_HISTORY) return -1;
+    my_history_num++;
+    return my_history_num;
   }
 
   /**
@@ -419,7 +460,7 @@ public class BytecodeEditor extends TextEditor {
    * when all of them are removed.
    */
   public final void clearHistory() {
-    historyNum = -1;
+    my_history_num = -1;
   }
 
   /**
@@ -433,25 +474,25 @@ public class BytecodeEditor extends TextEditor {
    * This method sets the internal BCEL structures which contain the
    * information oabout the Java class.
    *
-   * @param jc the Java class representation
+   * @param a_javaclass the Java class representation
    */
-  public final void setMy_javaClass(final JavaClass jc) {
-    my_javaClass = jc;
-    my_classGen = new ClassGen(jc);
+  public final void setMy_javaClass(final JavaClass a_javaclass) {
+    my_javaClass = a_javaclass;
+    my_classGen = new ClassGen(a_javaclass);
   }
 
   /**
-   * @param document document to associate with the current editor
+   * @param a_doc document to associate with the current editor
    */
-  public final void setDocument(final BytecodeDocument document) {
-    currentDocument = document;
+  public final void setDocument(final BytecodeDocument a_doc) {
+    my_current_doc = a_doc;
   }
 
   /**
    * @return the currently edited document
    */
   public final BytecodeDocument getDocument() {
-    return currentDocument;
+    return my_current_doc;
   }
 
   /**
@@ -475,8 +516,10 @@ public class BytecodeEditor extends TextEditor {
         Instruction ins = ih[i].getInstruction();
         if (ins == null) UmbraPlugin.messagelog("Null instruction");
         else UmbraPlugin.messagelog.print(ins.getName());
-        if (ih[i].getNext() == null) UmbraPlugin.messagelog.print(" next: null");
-        else UmbraPlugin.messagelog.print(" next: " + ih[i].getNext().getPosition());
+        if (ih[i].getNext() == null) UmbraPlugin.messagelog.
+                               print(" next: null");
+        else UmbraPlugin.messagelog.print(" next: " +
+                                          ih[i].getNext().getPosition());
         if (ih[i].getPrev() == null) UmbraPlugin.messagelog(" prev: null");
         else UmbraPlugin.messagelog(" prev: " + ih[i].getPrev().getPosition());
       }

@@ -1,7 +1,5 @@
 package umbra.editor.actions;
 
-import java.io.IOException;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -33,7 +31,7 @@ public class BytecodeRebuildAction extends Action {
   /**
    * The current bytecode editor for which the action takes place.
    */
-  private IEditorPart my_editor;
+  private BytecodeEditor my_editor;
 
   /**
    * The manager that initialises all the actions within the
@@ -63,7 +61,7 @@ public class BytecodeRebuildAction extends Action {
    *    executed
    */
   public final void setActiveEditor(final IEditorPart a_target_editor) {
-    my_editor = a_target_editor;
+    my_editor = (BytecodeEditor)a_target_editor;
   }
 
   /**
@@ -99,8 +97,6 @@ public class BytecodeRebuildAction extends Action {
     } catch (ClassNotFoundException e1) {
       e1.printStackTrace();
     } catch (CoreException e1) {
-      e1.printStackTrace();
-    } catch (IOException e1) {
       e1.printStackTrace();
     }
     my_contributor.synchrEnable();

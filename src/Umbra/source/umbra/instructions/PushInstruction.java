@@ -40,23 +40,25 @@ public class PushInstruction extends NumInstruction {
    * Push instruction line is correct if it has
    * one simple number parameter.
    *
-   *@see InstructionLineController#correct()
+   * @return TODO
+   * @see InstructionLineController#correct()
    */
-  public final boolean correct()
-  {
-    String s;
-    s = UmbraHelper.stripAllWhitespace(my_line_text);
-    final String[] s2 = IBytecodeStrings.push;
+  public final boolean correct() {
+    final String my_line_text = getMy_line_text();
+    final String s = UmbraHelper.stripAllWhitespace(my_line_text);
+    final String[] s2 = IBytecodeStrings.PUSH_INS;
     int j;
     int y;
     for (j = 0; j < s2.length; j++) {
-      if ((s.indexOf(s2[j]) > 0) && (s.indexOf(s2[j]) < s.indexOf(":") + 2)) {
+      if ((s.indexOf(s2[j]) > 0) &&
+          (s.indexOf(s2[j]) <= s.indexOf(":") + 1)) {
         for (y = ((s.indexOf(s2[j])) + (s2[j].length())); y < s.length(); y++) {
           if (!(Character.isDigit(s.charAt(y)))) return false;
         }
         int counter = 0;
         boolean lastisdig = false;
-        for (y = ((my_line_text.indexOf(s2[j])) + (s2[j].length()) + 1); y < my_line_text.length(); y++) {
+        for (y = ((my_line_text.indexOf(s2[j])) + (s2[j].length()) + 1);
+             y < my_line_text.length(); y++) {
           if (Character.isDigit(my_line_text.charAt(y))) {
             if (!(lastisdig)) counter++;
             lastisdig = true;
@@ -71,7 +73,8 @@ public class PushInstruction extends NumInstruction {
   }
 
   /**
-   * TODO
+   * TODO.
+   * @return TODO
    */
   private int getInd() {
     boolean isd;
@@ -79,7 +82,7 @@ public class PushInstruction extends NumInstruction {
     int liczba;
 
     String line1;
-    line1 = UmbraHelper.stripAllWhitespace(my_line_text);
+    line1 = UmbraHelper.stripAllWhitespace(getMy_line_text());
 
     isd = true;
     // zakladam ze poprawnosc jest juz wyzej
@@ -97,8 +100,9 @@ public class PushInstruction extends NumInstruction {
   }
 
   /**
-   * TODO
+   * TODO.
    *
+   * @return TODO
    * @see BytecodeLineController#getInstruction()
    */
   public final Instruction getInstruction() {
@@ -120,5 +124,5 @@ public class PushInstruction extends NumInstruction {
 
     return null;
 
-    }
+  }
 }

@@ -24,6 +24,15 @@ import umbra.editor.parsing.IBytecodeStrings;
  */
 public class InvokeInstruction extends StringInstruction {
 
+  /**
+   * A position before which the '(' character cannot occur in a correct line.
+   */
+  private static final int LEFT_PAREN_FORBIDDEN_BOUND = 2;
+
+  /**
+   * A position before which the ')' character cannot occur in a correct line.
+   */
+  private static final int RIGHT_PAREN_FORBIDDEN_BOUND = 2;
 
   /**
    * This creates an instance of an instruction
@@ -45,19 +54,20 @@ public class InvokeInstruction extends StringInstruction {
    * contains class name at the beginning and a number in ()
    * at the end.
    *
-   *@see InstructionLineController#correct()
+   * @return TODO
+   * @see InstructionLineController#correct()
    */
-  public final boolean correct()
-  {
-    String s;
-    s = UmbraHelper.stripAllWhitespace(my_line_text);
+  public final boolean correct() {
+    final String my_line_text = getMy_line_text();
+    final String s = UmbraHelper.stripAllWhitespace(my_line_text);
     final String[] s2 = IBytecodeStrings.invoke;
     int j;
     for (j = 0; j < s2.length; j++) {
-      if ((s.indexOf(s2[j]) > 0) && (s.indexOf(s2[j]) < s.indexOf(":") + 2))
-
-        if (s.lastIndexOf("(") < 2) return false; //TODO is it all right
-        if (s.lastIndexOf(")") < 2) return false;
+      if ((s.indexOf(s2[j]) > 0) &&
+          (s.indexOf(s2[j]) <= s.indexOf(":") + 1)) {
+        if (s.lastIndexOf("(") < LEFT_PAREN_FORBIDDEN_BOUND)
+          return false; //TODO is it all right
+        if (s.lastIndexOf(")") < RIGHT_PAREN_FORBIDDEN_BOUND) return false;
         int m, n, o;
         m = my_line_text.lastIndexOf("(");
         n = my_line_text.lastIndexOf(")");
@@ -68,56 +78,48 @@ public class InvokeInstruction extends StringInstruction {
           }
         }
         return true;
+      }
     }
     return false;
   }
 
   /**
-   * TODO
-   */
-  private int getInd() {
-    boolean isd;
-    final String licznik = "0123456789";
-    int number;
-    if (my_line_text.lastIndexOf("(") < my_line_text.lastIndexOf(")")) {
-      isd = true;
-      for (int i = my_line_text.lastIndexOf("(") + 1; i < my_line_text.lastIndexOf(")"); i++) {
-        if (!Character.isDigit(my_line_text.charAt(i))) {
-          isd = false;
-        }
-      }
-      if (isd) {
-        number = 0;
-        for (int i = my_line_text.lastIndexOf("(") + 1; i < my_line_text.lastIndexOf(")"); i++) {
-          number = 10 * number + licznik.indexOf(my_line_text.substring(i, i + 1));
-        }
-        return number;
-      }
-    }
-    return 0;
-  }
-
-  /**
+   * This method, based on the value of the field
+   * {@ref InstructionLineController#name}, creates a new BCEL instruction
+   * object for an invoke instruction. It computes the index parameter
+   * of the instruction before the instruction is constructed. The method can
+   * construct one of the instructions:
+   * <ul>
+   *   <li>invokespecial,</li>
+   *   <li>invokestatic,</li>
+   *   <li>invokevirtual.</li>
+   * </ul>
+   * This method also checks the syntactical correctness of the current
+   * instruction line.
+   *
+   * @return the freshly constructed BCEL instruction or <code>null</code>
+   *         in case the instruction is not an invoke instruction and in case
+   *         the line is incorrect
    * @see BytecodeLineController#getInstruction()
    */
   public final Instruction getInstruction() {
-  int index;
-  index = getInd();
+    int index;
+    index = getInd();
 
-  if (!correct())
+    if (!correct())
+      return null;
+
+    if (name.compareTo("invokespecial") == 0) {
+      return new INVOKESPECIAL(index);
+    }
+    if (name.compareTo("invokestatic") == 0) {
+      return new INVOKESTATIC(index);
+    }
+    if (name.compareTo("invokevirtual") == 0) {
+      return new INVOKEVIRTUAL(index);
+    }
+
     return null;
-
-  if (name.compareTo("invokespecial") == 0) {
-    return new INVOKESPECIAL(index);
-  }
-  if (name.compareTo("invokestatic") == 0) {
-    return new INVOKESTATIC(index);
-  }
-  if (name.compareTo("invokevirtual") == 0) {
-    return new INVOKEVIRTUAL(index);
-  }
-
-  return null;
 
   }
 }

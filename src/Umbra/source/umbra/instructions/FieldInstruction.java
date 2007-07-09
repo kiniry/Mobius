@@ -26,6 +26,16 @@ import umbra.editor.parsing.IBytecodeStrings;
 public class FieldInstruction extends StringInstruction {
 
   /**
+   * A position before which the '(' character cannot occur in a correct line.
+   */
+  private static final int LEFT_PAREN_FORBIDDEN_BOUND = 2;
+
+  /**
+   * A position before which the ')' character cannot occur in a correct line.
+   */
+  private static final int RIGHT_PAREN_FORBIDDEN_BOUND = 2;
+
+  /**
    * This creates an instance of an instruction
    * named as <code>a_name</code> in a line the text of which is
    * <code>a_line_text</code>. Currently it just calls the constructor of the
@@ -44,19 +54,20 @@ public class FieldInstruction extends StringInstruction {
    * Field instruction line is correct if its
    * parameter contains a number in ().
    *
-   *@see InstructionLineController#correct()
+   * @return TODO
+   * @see InstructionLineController#correct()
    */
-  public final boolean correct()
-  {
-    String s;
-    s = UmbraHelper.stripAllWhitespace(my_line_text);
+  public final boolean correct() {
+    final String my_line_text = getMy_line_text();
+    final String s = UmbraHelper.stripAllWhitespace(my_line_text);
     final String[] s2 = IBytecodeStrings.field;
     int j;
     for (j = 0; j < s2.length; j++) {
-      if ((s.indexOf(s2[j]) > 0) && (s.indexOf(s2[j]) < s.indexOf(":") + 2)) {
+      if ((s.indexOf(s2[j]) > 0) &&
+          (s.indexOf(s2[j]) <= s.indexOf(":") + 1)) {
 
-        if (s.lastIndexOf("(") < 2) return false;
-        if (s.lastIndexOf(")") < 2) return false;
+        if (s.lastIndexOf("(") < LEFT_PAREN_FORBIDDEN_BOUND) return false;
+        if (s.lastIndexOf(")") < RIGHT_PAREN_FORBIDDEN_BOUND) return false;
         int m, n, o;
         m = my_line_text.lastIndexOf("(");
         n = my_line_text.lastIndexOf(")");
@@ -67,7 +78,6 @@ public class FieldInstruction extends StringInstruction {
             return false;
           }
         }
-
         return true;
       }
     }
@@ -75,33 +85,23 @@ public class FieldInstruction extends StringInstruction {
   }
 
   /**
-   * TODO
-   */
-  private int getInd() {
-    boolean isd;
-    final String licznik = "0123456789";
-    int liczba;
-    if (my_line_text.lastIndexOf("(") < my_line_text.lastIndexOf(")")) {
-      isd = true;
-      for (int i = my_line_text.lastIndexOf("(") + 1; i < my_line_text.lastIndexOf(")"); i++) {
-        if (!Character.isDigit(my_line_text.charAt(i))) {
-          isd = false;
-        }
-      }
-      if (isd) {
-        liczba = 0;
-        for (int i = my_line_text.lastIndexOf("(") + 1; i < my_line_text.lastIndexOf(")"); i++) {
-          liczba = 10 * liczba + licznik.indexOf(my_line_text.substring(i, i + 1));
-        }
-        return liczba;
-      }
-    }
-    return 0;
-  }
-
-  /**
-   * TODO
+   * This method, based on the value of the field
+   * {@ref InstructionLineController#name}, creates a new BCEL instruction
+   * object for a field access instruction. It computes the index parameter
+   * of the instruction before the instruction is constructed. The method can
+   * construct one of the instructions:
+   * <ul>
+   *   <li>getfield,</li>
+   *   <li>getstatic,</li>
+   *   <li>putfield,</li>
+   *   <li>putstatic.</li>
+   * </ul>
+   * This method also checks the syntactical correctness of the current
+   * instruction line.
    *
+   * @return the freshly constructed BCEL instruction or <code>null</code>
+   *         in case the instruction is not a field access instruction and
+   *         in case the instruction line is incorrect
    * @see BytecodeLineController#getInstruction()
    */
   public final Instruction getInstruction() {

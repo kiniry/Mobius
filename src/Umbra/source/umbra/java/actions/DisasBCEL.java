@@ -4,8 +4,6 @@
  */
 package umbra.java.actions;
 
-import java.io.IOException;
-
 import org.apache.bcel.classfile.JavaClass;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
@@ -83,8 +81,6 @@ public class DisasBCEL implements IEditorActionDelegate {
     } catch (CoreException e) {
       e.printStackTrace();
     } catch (ClassNotFoundException e) {
-      e.printStackTrace();
-    } catch (IOException e) {
       e.printStackTrace();
     }
   }

@@ -28,6 +28,17 @@ import umbra.UmbraPlugin;
 public abstract class InstructionLineController extends BytecodeLineController {
 
   /**
+   * A list of characters that should be left intact by the method
+   * {@ref #typ(String)}.
+   */
+  private static final String SKIP_CHARS = ":-#%()<>;|";
+
+  /**
+   * The length of the {@ref SKIP_CHARS} constant.
+   */
+  private static final int howManySp = SKIP_CHARS.length();
+
+  /**
    * The list of instructions in the method in which the current instruction
    * occurs.
    */
@@ -43,7 +54,7 @@ public abstract class InstructionLineController extends BytecodeLineController {
    * A BCEL object that represents the method in which the current instruction
    * is located.
    */
-  protected MethodGen mg;
+  private MethodGen mg;
 
   /**
    * The mnemonic name of the current instruction.
@@ -95,7 +106,7 @@ public abstract class InstructionLineController extends BytecodeLineController {
   /**
    * This method is executed when a new line is inserted to
    * the method and it must be added to BCEL structures,
-   * especially new handle is generated
+   * especially new handle is generated. TODO more details
    *
    * @param a_next_line    next line necessary to get handle -
    *     a new handle is inserted before the next one
@@ -194,61 +205,70 @@ public abstract class InstructionLineController extends BytecodeLineController {
    * dispose method (if new version is incorrect) or
    * init handle (if the previous one was incorrect).
    *
-   * @param oldLine    the previous structure
-   * @param nextLine    next line, necessary if new handle must be generated
-   * @param cg      class generator from BCEL
-   * @param ins      BCEL instruction (to generate handle)
-   * @param metEnd    true if the line is the last one of the method
-   * @param instructions  an array from BytecodeController that the line
+   * @param an_old_line the previous structure
+   * @param the_next_line next line, necessary if new handle must be generated
+   * @param a_classgen class generator from BCEL
+   * @param an_ins BCEL instruction (to generate handle)
+   * @param a_meth_end true if the line is the last one of the method
+   * @param the_last TODO
+   * @param the_instructions  an array from BytecodeController that the line
    *     is included
-   * @param off      an offset in this array
+   * @param an_off an offset in this array
    */
-  public final void update(final BytecodeLineController oldLine,
-      final BytecodeLineController nextLine, final ClassGen cg,
-      final Instruction ins, final boolean metEnd, final boolean theLast,
-      final LinkedList instructions, final int off) {
-    UmbraPlugin.messagelog("oldline=" + oldLine.my_line_text);
-    UmbraPlugin.messagelog("nextline=" + nextLine.my_line_text);
-    UmbraPlugin.messagelog("cg=" + ((cg == null) ? "null" : "ok"));
-    UmbraPlugin.messagelog("ins=" + ((ins == null) ? "null" : ins.getName()));
-    UmbraPlugin.messagelog("MetEnd=" + metEnd);
-    UmbraPlugin.messagelog("theLast=" + theLast);
-    UmbraPlugin.messagelog("off=" + off);
-    mg = oldLine.getMethod();
-    il = oldLine.getList();
-    ih = oldLine.getHandle();
-    index = oldLine.getIndex();
+  public final void update(final BytecodeLineController an_old_line,
+                           final BytecodeLineController the_next_line,
+                           final ClassGen a_classgen,
+                           final Instruction an_ins,
+                           final boolean a_meth_end,
+                           final boolean the_last,
+                           final LinkedList the_instructions,
+                           final int an_off) {
+    UmbraPlugin.messagelog("oldline=" + an_old_line.getMy_line_text());
+    UmbraPlugin.messagelog("nextline=" + the_next_line.getMy_line_text());
+    UmbraPlugin.messagelog("cg=" + ((a_classgen == null) ? "null" : "ok"));
+    UmbraPlugin.messagelog("ins=" + ((an_ins == null) ? "null" :
+                                                        an_ins.getName()));
+    UmbraPlugin.messagelog("MetEnd=" + a_meth_end);
+    UmbraPlugin.messagelog("theLast=" + the_last);
+    UmbraPlugin.messagelog("off=" + an_off);
+    mg = an_old_line.getMethod();
+    il = an_old_line.getList();
+    ih = an_old_line.getHandle();
+    index = an_old_line.getIndex();
     UmbraPlugin.messagelog("ih=" + ((ih == null) ? "null" :
-      ((ih.getInstruction() == null) ? "null ins" : ih.getInstruction().getName())));
+      ((ih.getInstruction() == null) ? "null ins" :
+                                       ih.getInstruction().getName())));
     if (il == null) UmbraPlugin.messagelog("il = null");
     else printInstructionList(il);
     if (ih == null) {
       UmbraPlugin.messagelog("A");
-      initHandle(nextLine, cg, ins, metEnd, instructions, off);
+      initHandle(the_next_line, a_classgen, an_ins, a_meth_end,
+                 the_instructions, an_off);
     } else if (ih.getInstruction() == null) {
       UmbraPlugin.messagelog("B");
-      initHandle(nextLine, cg, ins, metEnd, instructions, off);
-    } else if (ins != null) {
+      initHandle(the_next_line, a_classgen, an_ins, a_meth_end,
+                 the_instructions, an_off);
+    } else if (an_ins != null) {
       UmbraPlugin.messagelog("C");
-      ih.setInstruction(ins);
+      ih.setInstruction(an_ins);
       UmbraPlugin.messagelog("");
-      updateMethod(cg);
-      instructions.set(off, this);
+      updateMethod(a_classgen);
+      the_instructions.set(an_off, this);
     } else {
       UmbraPlugin.messagelog("D");
-      dispose(nextLine, cg, theLast, instructions, off);
+      dispose(the_next_line, a_classgen, the_last, the_instructions, an_off);
     }
   }
 
   /**
    * Replacing BCEL method with the new one with updated
-   * instruction list
+   * instruction list.
    *
-   * @param cg      class generator from BCEL
+   * @param a_classgen a class generator from BCEL
    */
-  private void updateMethod(final ClassGen cg) {
-    final Method oldMet = cg.getMethodAt(index);
-    cg.replaceMethod(oldMet, mg.getMethod());
+  private void updateMethod(final ClassGen a_classgen) {
+    final Method oldMet = a_classgen.getMethodAt(index);
+    a_classgen.replaceMethod(oldMet, mg.getMethod());
     //UmbraPlugin.messagelog(cg.getMethodAt(index).getCode().toString());
   }
 
@@ -288,26 +308,26 @@ public abstract class InstructionLineController extends BytecodeLineController {
   }
 
   /**
-   * This method removes the current instruction line from BCEL structures
+   * This method removes the current instruction line from BCEL structures.
    *
-   * @param nextLine a line after the removed one; it becomes a target of
+   * @param the_next_line a line after the removed one; it becomes a target of
    *         any jump instruction directed to the removed one
-   * @param cg class generator from BCEL, this should be the same as in the
-   *       {@ref BytecodeDocument} object for the currently edited
+   * @param a_classgen class generator from BCEL, this should be the same as
+   *       in the {@ref BytecodeDocument} object for the currently edited
    *       bytecode file
-   * @param instructions an array from {@ref BytecodeController} that
+   * @param the_last currently not used
+   * @param the_instructions an array from {@ref BytecodeController} that
    *           contains the current line
-   * @param off an offset in the <code>instructions</code> array which
+   * @param an_off an offset in the <code>instructions</code> array which
    *      points to the instruction to be removed
    */
-  public final void dispose(final BytecodeLineController nextLine,
-            final ClassGen cg,
-            final boolean theLast,
-            final LinkedList instructions,
-            final int off)
-  {
+  public final void dispose(final BytecodeLineController the_next_line,
+                            final ClassGen a_classgen,
+                            final boolean the_last,
+                            final LinkedList the_instructions,
+                            final int an_off) {
     final InstructionHandle me = getHandle();
-    final InstructionHandle next = nextLine.getHandle();
+    final InstructionHandle next = the_next_line.getHandle();
     UmbraPlugin.messagelog("InstructionLineController#dispose   name=" + name);
     final InstructionTargeter[] tgters = ih.getTargeters();
     if (tgters != null)
@@ -317,32 +337,25 @@ public abstract class InstructionLineController extends BytecodeLineController {
     try {
       il.delete(ih);
     } catch (TargetLostException e) {
+      //This should not happen as the instruction ih has been retargeted
+      UmbraPlugin.messagelog("IMPOSSIBLE: dispose generated exception " +
+                             "in InstructionLineController.dispose(...)");
     }
     ih = null;
     mg.setInstructionList(il);
-    updateMethod(cg);
+    updateMethod(a_classgen);
     UmbraPlugin.messagelog("I am here");
-    instructions.remove(off);
+    the_instructions.remove(an_off);
     printInstructionList(il);
     UmbraPlugin.messagelog("Done");
   }
 
   /**
-   * A list of characters that should be left intact by the method
-   * {@ref #typ(String)}.
-   */
-  private static final String sp = ":-#%()<>;|";
-
-  /**
-   * The length of the {@ref sp} constant.
-   */
-  private static final int howManySp = sp.length();
-
-  /**
    * Replaces some words in a string with single characters.
-   * Each of the letters in the returned word means that in original line
-   * there was the same character (if it belongs to string {@link #sp sp}) or
-   * a corresponding word listed below (otherwise):
+   * Each of the letters in the returned word means that in the original line
+   * there was the same character (if it belongs to string
+   * {@link #SKIP_CHARS SKIP_CHARS}) or a corresponding word listed below
+   * (otherwise):
    * <ul>
    * <li> C means a string within double quotes
    * <li> W means one or more following whitespaces
@@ -350,17 +363,18 @@ public abstract class InstructionLineController extends BytecodeLineController {
    * <li> X means any other word
    * </ul>
    * @param a_line  processing string
-   * @return    line with each (maximal) word from list above
-   * (excluding characters from sp) replaced with corresponding character
+   * @return line with each (maximal) word from list above
+   * (excluding characters from {@ref #SKIP_CHARS}) replaced with corresponding
+   * character
    */
-  private static String typ(String a_line) {
+  private static String typ(final String a_line) {
     String s = "";
     boolean b;
     final String line = a_line + "|";
     for (int i = 0; i < line.length();) {
       b = false;
       for (int j = 0; j < howManySp; j++)
-        if (sp.charAt(j) == line.charAt(i)) {
+        if (SKIP_CHARS.charAt(j) == line.charAt(i)) {
           s = s + line.charAt(i);
           i++;
           b = true;
@@ -434,13 +448,14 @@ public abstract class InstructionLineController extends BytecodeLineController {
 
   /**
    * Compares line with a pattern.
-   * @param line  the line of bytecode (with removed all comments)
-   * @param typ  the pattern
-   * @return    <code> true </code> if line matches pattern
+   * @param a_line a line of bytecode (with removed all comments)
+   * @param a_type the type pattern in the fashion generated by
+   *               the {@ref #typ(String)} method
+   * @return <code> true </code> if line matches pattern,
    *         <code> false </code> otherwise
    */
-  public final boolean chkcorr(final String line, final String typ) {
-    final boolean b = compare(typ(line), "?D:?WX" + typ + "|");
+  public final boolean chkcorr(final String a_line, final String a_type) {
+    final boolean b = compare(typ(a_line), "?D:?WX" + a_type + "|");
     return b;
   }
 }

@@ -18,20 +18,20 @@ import org.eclipse.jface.text.rules.Token;
 public class SpecialNumberRule extends NumberRule {
 
   /**
-   * TODO
+   * TODO.
    */
   char start;
   /**
-   * TODO
+   * TODO.
    */
   char fin;
   /**
-   * TODO
+   * TODO.
    */
   boolean isFin;
 
   /**
-   * TODO
+   * TODO.
    * @param a_start TODO
    * @param an_end TODO
    * @param a_token TODO
@@ -47,7 +47,7 @@ public class SpecialNumberRule extends NumberRule {
   }
 
   /**
-   * TODO
+   * TODO.
    * @param a_start TODO
    * @param a_token TODO
    */
@@ -58,24 +58,27 @@ public class SpecialNumberRule extends NumberRule {
   }
 
   /**
-   * TODO
-   * @see org.eclipse.jface.text.rules.NumberRule#evaluate(org.eclipse.jface.text.rules.ICharacterScanner)
+   * TODO.
+   * @param a_scanner the character scanner to be used to obtain the token
+   * @return the recognized token (supplied in the constructor) or
+   *         {@ref Token#UNDEFINED} in case the rule does not apply
+   * @see NumberRule#evaluate(ICharacterScanner)
    */
-  public final IToken evaluate(final ICharacterScanner scanner) {
-    int c = scanner.read();
+  public final IToken evaluate(final ICharacterScanner a_scanner) {
+    int c = a_scanner.read();
     if ((char)c == start) {
-      if (super.evaluate(scanner) == fToken) {
+      if (super.evaluate(a_scanner) == fToken) {
         if (!isFin) return fToken;
-        c = scanner.read();
+        c = a_scanner.read();
         if ((char)c == fin) return fToken;
         do {
-          scanner.unread();
-          scanner.unread();
-          c = scanner.read();
+          a_scanner.unread();
+          a_scanner.unread();
+          c = a_scanner.read();
         } while (Character.isDigit((char) c));
       }
     }
-    scanner.unread();
+    a_scanner.unread();
     return Token.UNDEFINED;
   }
 }

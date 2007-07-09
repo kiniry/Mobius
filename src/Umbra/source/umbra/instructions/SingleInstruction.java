@@ -149,8 +149,8 @@ public class SingleInstruction extends InstructionLineController {
   }
 
   /**
-   * TODO
-   *
+   * TODO.
+   * @return TODO
    * @see BytecodeLineController#getInstruction()
    */
   public final Instruction getInstruction() {
@@ -287,11 +287,13 @@ public class SingleInstruction extends InstructionLineController {
    * @see InstructionLineController#correct()
    */
   public final boolean correct() {
-    final String s = UmbraHelper.stripAllWhitespace(my_line_text);
-    final String[] s2 = IBytecodeStrings.single;
+    final String s = UmbraHelper.stripAllWhitespace(getMy_line_text());
+    final String[] s2 = IBytecodeStrings.SINGLE_INS;
     int j;
     for (j = 0; j < s2.length; j++) {
-      if ((s.indexOf(s2[j]) > 0) && (s.indexOf(s2[j]) < s.indexOf(":") + 2))
+      if ((s.indexOf(s2[j]) > 0) &&
+          (s.indexOf(s2[j]) <= s.indexOf(":") + 1)) // TODO why not ==
+                                                    // instead of <=?
         if (((s.indexOf(s2[j])) + (s2[j].length())) == s.length())
           return true;
     }

@@ -28,11 +28,10 @@ public class ThrowsLineController extends BytecodeLineController {
 
 
   /**
-   * TODO
+   * TODO we don't quite know how it looks like as the type is given.
+   * @return currently, it returns always <code>true</code>
    */
-  public final boolean correct()
-  {
-    //tez niezbyt - patrz przy wyborze typu - nie za bardzo wiemy jak wyglada
+  public final boolean correct() {
     return true;
   }
 }

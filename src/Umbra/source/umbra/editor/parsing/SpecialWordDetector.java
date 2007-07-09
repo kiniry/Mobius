@@ -17,7 +17,7 @@ import org.eclipse.jface.text.rules.IWordDetector;
 public class SpecialWordDetector implements IWordDetector {
 
   /**
-   * TODO
+   * TODO.
    *
    * @param a_char TODO
    * @return TODO
@@ -27,7 +27,7 @@ public class SpecialWordDetector implements IWordDetector {
   }
 
   /**
-   * TODO
+   * TODO.
    *
    * @param a_char TODO
    * @return TODO

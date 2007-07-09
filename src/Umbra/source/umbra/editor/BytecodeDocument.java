@@ -89,7 +89,7 @@ public class BytecodeDocument extends Document {
   }
 
   /**
-   * The current representation of the Java class associated with
+   * @return the current representation of the Java class associated with
    * the document.
    */
   public final JavaClass getJavaClass() {
@@ -106,7 +106,7 @@ public class BytecodeDocument extends Document {
   /* synchronization of cursor's positions */
 
   /**
-   * Highlights the area computed in {@link #syncBS(IDocument, JavaClass, int) syncBS}
+   * Highlights the area computed in {@link #syncBS(IDocument, JavaClass, int)}
    * method in related source code editor. Works correctly only inside a method.
    *
    * @see #synchronizeSB(int, IEditorPart)
@@ -114,7 +114,8 @@ public class BytecodeDocument extends Document {
    * editor correspondings to this line will be highlighted.
    */
   public final void synchronizeBS(final int pos) {
-    final IDocument sDoc = fRelatedEditor.getDocumentProvider().getDocument(fRelatedEditor.getEditorInput());
+    final IDocument sDoc = fRelatedEditor.getDocumentProvider().
+                               getDocument(fRelatedEditor.getEditorInput());
     try {
       final int line = getLineOfOffset(pos);
       final int[] syncLine = syncBS(sDoc, fJavaClass, line);
@@ -122,16 +123,18 @@ public class BytecodeDocument extends Document {
       final int syncLen = sDoc.getLineOffset(syncLine[1] + 1) - syncPos;
       UmbraPlugin.messagelog("sync(" + syncLine[0] + ", " + syncLine[1] + ")");
       fRelatedEditor.getEditorSite().getPage().activate(fRelatedEditor);
-      if (syncLen < 0) MessageDialog.openError(new Shell(), "Bytecode", "Synchronisation failed");
-      else fRelatedEditor.getSelectionProvider().setSelection(new TextSelection(syncPos, syncLen));
+      if (syncLen < 0) MessageDialog.openError(new Shell(), "Bytecode",
+                                               "Synchronisation failed");
+      else fRelatedEditor.getSelectionProvider().
+                          setSelection(new TextSelection(syncPos, syncLen));
     } catch (BadLocationException e) {
       e.printStackTrace();
     }
   }
 
   /**
-   * Computes the area in current java source code corresponding to given line of
-   * bytecode. The bytecode should be refreshed before calling this metod,
+   * Computes the area in current java source code corresponding to given line
+   * of bytecode. The bytecode should be refreshed before calling this metod,
    * to update JavaClass structures. Works correctly only inside a method.
    *
    * @param a_source_doc  IDocument with source (java) code
@@ -168,7 +171,8 @@ public class BytecodeDocument extends Document {
       l = m.getLineNumberTable().getLineNumberTable().length;
       for (j = 0; j < l; j++) {
         pop = lnr;
-        lnr = m.getLineNumberTable().getLineNumberTable()[j].getLineNumber() - 1;
+        lnr = m.getLineNumberTable().getLineNumberTable()[j].
+                                     getLineNumber() - 1;
         if (lnr > lnrmax)
           lnrmax = lnr;
         pc = m.getLineNumberTable().getLineNumberTable()[j].getStartPC();
@@ -182,7 +186,8 @@ public class BytecodeDocument extends Document {
         if (pos == -1) {
           if (l_od != 0)
             l_do = l_od;
-          UmbraPlugin.messagelog("syncBS: b��d -- nie znaleziono kolejnej pozycji z LineNumberTable!");
+          UmbraPlugin.messagelog("syncBS: b��d -- nie znaleziono kolejnej " +
+                                 "pozycji z LineNumberTable!");
           break;
         }
         posln = getLineOfOffset(pos);
@@ -218,8 +223,9 @@ public class BytecodeDocument extends Document {
   }
 
   /**
-   * Highlights the area computed in {@link #syncSB(IDocument, JavaClass, int) syncSB}
-   * method in related bytecode editor. Works correctly only inside a method.
+   * Highlights the area computed in {@link #syncSB(IDocument, JavaClass, int)
+   * syncSB} method in related bytecode editor. Works correctly only inside
+   * a method.
    *
    * @see #synchronizeBS(int)
    * @param pos  index of line in source code editor. Lines in related bytecode
@@ -227,15 +233,18 @@ public class BytecodeDocument extends Document {
    * @param editor the source code editor
    */
   public final void synchronizeSB(final int pos, final IEditorPart editor) {
-    final IDocument sDoc = fRelatedEditor.getDocumentProvider().getDocument(fRelatedEditor.getEditorInput());
+    final IDocument sDoc = fRelatedEditor.getDocumentProvider().
+                                  getDocument(fRelatedEditor.getEditorInput());
     try {
       final int line = sDoc.getLineOfOffset(pos);
       final int[] syncLine = syncSB(sDoc, fJavaClass, line);
       final int syncPos = getLineOffset(syncLine[0]);
       final int syncLen = getLineOffset(syncLine[1] + 1) - syncPos;
       editor.getEditorSite().getPage().activate(editor);
-      if (syncLen < 0) MessageDialog.openError(new Shell(), "Bytecode", "Synchronisation failed");
-      else ((AbstractDecoratedTextEditor)editor).getSelectionProvider().setSelection(new TextSelection(syncPos, syncLen));
+      if (syncLen < 0) MessageDialog.openError(new Shell(), "Bytecode",
+                                               "Synchronisation failed");
+      else ((AbstractDecoratedTextEditor)editor).getSelectionProvider().
+                             setSelection(new TextSelection(syncPos, syncLen));
     } catch (BadLocationException e) {
       e.printStackTrace();
     }
@@ -249,9 +258,9 @@ public class BytecodeDocument extends Document {
    * @param a_source_doc  IDocument with source (java) code
    * @param a_java_class  JavaClass with current bytecode
    * @param a_line_no  index of line in Sdoc
-   * @return array of 2 ({@ref #NO_OF_POSITIONS}) ints representing index of first and
-   *         last line of bytecode (corresponding to given source line), in
-   *         related bytecode editor
+   * @return array of 2 ({@ref #NO_OF_POSITIONS}) ints representing index of
+   *         first and last line of bytecode (corresponding to given source
+   *         line), in the related bytecode editor
    * @throws BadLocationException if line parameter is invalid. May occur also
    *         if bytecode in JavaClass jc is out-of-date.
    */
@@ -270,7 +279,8 @@ public class BytecodeDocument extends Document {
     String a_src_line = a_source_doc.get(a_source_doc.getLineOffset(a_line_no),
                                       a_source_doc.getLineLength(a_line_no)) +
                                       "$";
-    while ((a_src_line.length() > 1) && (Character.isWhitespace(a_src_line.charAt(0))))
+    while ((a_src_line.length() > 1) &&
+           (Character.isWhitespace(a_src_line.charAt(0))))
       a_src_line = a_src_line.substring(1, a_src_line.length() - 1);
     String s;
     final Method[] methods = a_java_class.getMethods();
@@ -281,7 +291,7 @@ public class BytecodeDocument extends Document {
       if (a_src_line.startsWith(m.toString())) {
         while (bcln < maxL) {
           bcln++;
-          s = LineAt(bcln);
+          s = lineAt(bcln);
           if (s.startsWith("Code"))
             break;
         }
@@ -296,7 +306,7 @@ public class BytecodeDocument extends Document {
         popln = bcln;
         while (bcln < maxL) {
           bcln++;
-          s = LineAt(bcln);
+          s = lineAt(bcln);
           if (s.startsWith("" + pc + ":"))
             break;
         }
@@ -319,7 +329,7 @@ public class BytecodeDocument extends Document {
       if ((l_od != 0) && (l_do == -1)) {
         while (bcln < maxL) {
           bcln++;
-          s = LineAt(bcln);
+          s = lineAt(bcln);
           if (s.lastIndexOf(":") == -1)
             break;
         }
@@ -343,14 +353,14 @@ public class BytecodeDocument extends Document {
   /**
    * Gives specified line of the current bytecode.
    *
-   * @param n  index of line in bytecode editor (starting from 0).
+   * @param a_line  index of line in bytecode editor (starting from 0).
    * Must be non-negative and less than number of lines in bytecode editor.
    * @return  n-th line in bytecode editor
-   * @throws BadLocationException  occurs when parameter n isn't a valid line number.
+   * @throws BadLocationException  occurs when parameter n isn't a valid line
+   *        number.
    */
-  private String LineAt(final int n) throws BadLocationException
-  {
-    return get(getLineOffset(n), getLineLength(n));
+  private String lineAt(final int a_line) throws BadLocationException {
+    return get(getLineOffset(a_line), getLineLength(a_line));
   }
 
   /**
