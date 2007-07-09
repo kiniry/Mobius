@@ -195,7 +195,7 @@ public final class ArrayInstructionVisitor extends EmptyVisitor {
     final ArrayInstructionVisitor v = new ArrayInstructionVisitor();
     ins.accept(v);
     if (v.fRes.equals("")) {
-      v.fRes = Util.unknown("BranchInstruction", ins);
+      v.fRes = Util.unknown("ArrayInstruction", ins);
     }
     return v.fRes;
   }

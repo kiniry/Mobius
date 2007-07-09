@@ -79,7 +79,7 @@ public final class Util {
    * @param index the offset to print
    * @return i%Z or (-i)%Z
    */
-  static String printZ(final int index) {
+  public static String printZ(final int index) {
     if (index < 0) {
       return "(" + index + ")%Z";
     } 

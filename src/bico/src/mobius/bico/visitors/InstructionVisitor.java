@@ -175,7 +175,7 @@ public final class InstructionVisitor extends EmptyVisitor {
    */
   @Override
   public void visitCPInstruction(final CPInstruction ins) {
-    CPInstructionVisitor.translate(fMethodHandler, 
+    fRes = CPInstructionVisitor.translate(fMethodHandler, 
                                    fConstantPool, ins);
   }
   

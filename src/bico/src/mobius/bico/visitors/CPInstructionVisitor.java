@@ -178,7 +178,7 @@ public final class CPInstructionVisitor extends EmptyVisitor {
     final CPInstructionVisitor v = new CPInstructionVisitor(metHandler, constPool);
     ins.accept(v);
     if (v.fRes.equals("")) {
-      v.fRes = Util.unknown("Instruction", ins);
+      v.fRes = Util.unknown("CPInstruction", ins);
     }
     return v.fRes;
   }
