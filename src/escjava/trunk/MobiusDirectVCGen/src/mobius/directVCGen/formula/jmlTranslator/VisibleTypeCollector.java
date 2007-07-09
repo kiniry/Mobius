@@ -85,8 +85,13 @@ import escjava.tc.FlowInsensitiveChecks;
 public class VisibleTypeCollector extends VisitorArgResult {
 
   private java.util.Set<Type> fTypeSet;
+  private Properties fProperties;
 
   public VisibleTypeCollector() {
+    fProperties = new Properties();
+   // fProperties.put("pred", Boolean.TRUE);
+    fProperties.put("old", Boolean.FALSE);
+   // fProperties.put("interesting", Boolean.FALSE);
     fTypeSet = new HashSet<Type>();
   }
 
@@ -106,7 +111,7 @@ public class VisibleTypeCollector extends VisitorArgResult {
   @Override
   public Object visitClassDecl(final /*@non_null*/ ClassDecl x, final Object o) {
     //should never be called
-    return visitTypeDecl(x, o);
+    return visitTypeDecl(x, fProperties);
   }
 
   @Override
