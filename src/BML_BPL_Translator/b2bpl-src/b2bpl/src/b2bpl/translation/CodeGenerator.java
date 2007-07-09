@@ -712,7 +712,11 @@ public final class CodeGenerator implements ITranslationConstants {
   }
 
   public static BPLTrigger trigger(BPLExpression... expressions) {
+    if (Main.getProject().useTriggers()) {
       return new BPLTrigger(expressions);
+    } else {
+      return null;
+    }
   }
 
   public static BPLCastExpression cast(

@@ -27,7 +27,7 @@ import b2bpl.bytecode.bml.StandardDesugarer;
  * @see ISpecificationProvider
  * @see IBPLTransformator
  *
- * @author Ovidio Mallo
+ * @author Ovidio Mallo, Samuel Willimann
  */
 public class Project {
 
@@ -118,12 +118,20 @@ public class Project {
 
   /**
    * If set to {@code true}, logical expressions will be simplified
-   * while they are being built. For instance, the expression (false || x)
-   * is simplified to the expression x.
+   * while they are being built. For instance, the expression {@code (false || x)}
+   * is simplified to the expression {@code x}.
    *
    * @see #simplifyLogicalExpressions()
    */
   private boolean simplifyLogicalExpressions = false;
+  
+  /**
+   * If set to {@code true}, triggers will be added to the axioms
+   * of the background theory (where applicable).
+   * 
+   * @see #useTriggers()
+   */
+  private boolean useTriggers = false;
   
   /**
    * The root directory used to look for the given classes if they are
@@ -173,7 +181,7 @@ public class Project {
       } else if ("-s".equals(args[i])) {
         project.translateSeparately = true;
         i++;
-      } else if ("-t".equals(args[i])) {
+      } else if ("-this".equals(args[i])) {
         // Check invariants in "this" object only
         project.thisInvariantsOnly = true;
         i++;
@@ -197,6 +205,10 @@ public class Project {
       } else if ("-sl".equals(args[i])) {
         // Simplify logical expressions, e.g. (false || x) <==> x
         project.simplifyLogicalExpressions = true;
+        i++;
+      } else if ("-t".equals(args[i])) {
+        // Use triggers in axioms
+        project.useTriggers = true;
         i++;
       } else {
         if (args[i].endsWith(".class")) {
@@ -260,6 +272,10 @@ public class Project {
   public boolean simplifyLogicalExpressions() {
     return simplifyLogicalExpressions;
   }
+  
+  public boolean useTriggers() {
+    return useTriggers;
+  }
 
   /**
    * Prints the help message describing the command line arguments supported
@@ -274,7 +290,9 @@ public class Project {
     messageWriter.write("  -h              Print this help message.\n");
     messageWriter.write("  -o <outfile>    The file to which to write the BoogiePL program.\n");
     messageWriter.write("  -s              Translate every class into a separate file.\n");
-    messageWriter.write("  -t              Verify the object invariants of the this object only.\n");
+    messageWriter.write("  -t              Adds triggers to the axioms (where applicable).\n");
+    messageWriter.write("  -sl             Removes redundancy from logical formulas.\n");
+    messageWriter.write("  -this           Verify the object invariants of the this object only.\n");
     messageWriter.write("  -l              Perform a sound elimination of loops in the BoogiePL program.\n");
     messageWriter.write("  -r              Model runtime exceptions of bytecode instructions (instead of ruling them out).\n");
     messageWriter.write("  -c <constant>   The magnitude of the largest integer constant to represent explicitly.\n");

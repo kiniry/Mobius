@@ -17,7 +17,6 @@ import static b2bpl.translation.CodeGenerator.cast;
 import static b2bpl.translation.CodeGenerator.divide;
 import static b2bpl.translation.CodeGenerator.elementType;
 import static b2bpl.translation.CodeGenerator.fieldAccess;
-import static b2bpl.translation.CodeGenerator.fieldLoc;
 import static b2bpl.translation.CodeGenerator.fieldUpdate;
 import static b2bpl.translation.CodeGenerator.forall;
 import static b2bpl.translation.CodeGenerator.get;
@@ -59,8 +58,6 @@ import static b2bpl.translation.CodeGenerator.typ;
 import static b2bpl.translation.CodeGenerator.type;
 import static b2bpl.translation.CodeGenerator.var;
 
-import java.io.FileOutputStream;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -68,10 +65,11 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import b2bpl.Main;
 import b2bpl.Project;
-import b2bpl.bpl.BPLPrinter;
 import b2bpl.bpl.ast.BPLAssertCommand;
 import b2bpl.bpl.ast.BPLAssignmentCommand;
 import b2bpl.bpl.ast.BPLAssumeCommand;
@@ -340,6 +338,7 @@ public class MethodTranslator implements ITranslationConstants {
     for (int i = 0; i < method.getMaxLocals(); i++) {
       BPLVariable regr = new BPLVariable(refLocalVar(i), BPLBuiltInType.REF);
       BPLVariable regi = new BPLVariable(intLocalVar(i), BPLBuiltInType.INT);
+      
       // vars.add(new BPLVariableDeclaration(regr, regi));
       vars.add(filterVariableDeclarations(blocks, regr, regi));
     }
@@ -348,37 +347,34 @@ public class MethodTranslator implements ITranslationConstants {
     for (int i = 0; i < method.getMaxStack(); i++) {
       BPLVariable stackr = new BPLVariable(refStackVar(i), BPLBuiltInType.REF);
       BPLVariable stacki = new BPLVariable(intStackVar(i), BPLBuiltInType.INT);
+      
       // vars.add(new BPLVariableDeclaration(stackr, stacki));
       vars.add(filterVariableDeclarations(blocks, stackr, stacki));
     }
 
     // Return variables for method calls
     for (int i = 0; i < callStatements; i++) {
-      BPLVariable rs = new BPLVariable(returnStateVar(i), new BPLTypeName(
-          RETURN_STATE_TYPE));
-      BPLVariable rvr = new BPLVariable(
-          refReturnValueVar(i),
-          BPLBuiltInType.REF);
-      BPLVariable rvi = new BPLVariable(
-          intReturnValueVar(i),
-          BPLBuiltInType.INT);
+      BPLVariable rs = new BPLVariable(returnStateVar(i), new BPLTypeName(RETURN_STATE_TYPE));
+      BPLVariable rvr = new BPLVariable(refReturnValueVar(i), BPLBuiltInType.REF);
+      BPLVariable rvi = new BPLVariable(intReturnValueVar(i), BPLBuiltInType.INT);
       BPLVariable exr = new BPLVariable(exceptionVar(i), BPLBuiltInType.REF);
+      
       vars.add(filterVariableDeclarations(blocks, rs, rvr, rvi, exr));
     }
 
+    /*
     // Helper variables for storing the return value of a method call.
-    BPLVariable callResultr = new BPLVariable(
-        REF_CALL_RESULT_VAR,
-        BPLBuiltInType.REF);
-    BPLVariable callResulti = new BPLVariable(
-        INT_CALL_RESULT_VAR,
-        BPLBuiltInType.INT);
+    BPLVariable callResultr = new BPLVariable(REF_CALL_RESULT_VAR, BPLBuiltInType.REF);
+    BPLVariable callResulti = new BPLVariable(INT_CALL_RESULT_VAR, BPLBuiltInType.INT);
+    
     // vars.add(new BPLVariableDeclaration(callResultr, callResulti));
     vars.add(filterVariableDeclarations(blocks, callResultr, callResulti));
+    */
 
     // Helper variables for swapping two values.
     BPLVariable swapr = new BPLVariable(REF_SWAP_VAR, BPLBuiltInType.REF);
     BPLVariable swapi = new BPLVariable(INT_SWAP_VAR, BPLBuiltInType.INT);
+    
     // vars.add(new BPLVariableDeclaration(swapr, swapi));
     vars.add(filterVariableDeclarations(blocks, swapr, swapi));
 
@@ -487,21 +483,35 @@ public class MethodTranslator implements ITranslationConstants {
     List<BPLRequiresClause> requiresClauses = new ArrayList<BPLRequiresClause>();
     JType[] params = method.getRealParameterTypes();
 
-    // If we have a this object, then it is must not be null.
+    // If we have a "this" object, then it must not be null.
     boolean hasThisParameter = !(method.isStatic() || method.isConstructor());
-    if (hasThisParameter) {
+    
+    if (method.isConstructor()) {
+      requiresClauses.add(new BPLRequiresClause(logicalAnd(
+         alive(
+           rval(var(thisVar())),
+           var(HEAP_VAR)
+         ),
+         isOfType(
+           rval(var(thisVar())),
+           typeRef(params[0])
+         )
+         ,
+         notEqual(
+           var(thisVar()),
+           BPLNullLiteral.NULL
+         )
+       )));
+    }
+    else if (hasThisParameter) {
       requiresClauses.add(new BPLRequiresClause(logicalAnd(
         alive(
           rval(var(thisVar())),
           var(HEAP_VAR)
         ),
-        isOfType(
+        isInstanceOf(
           rval(var(thisVar())),
           typeRef(params[0])
-        ),
-        notEqual(
-          var(thisVar()),
-          BPLNullLiteral.NULL
         )
       )));
     }
@@ -539,7 +549,7 @@ public class MethodTranslator implements ITranslationConstants {
       // The JVM guarantees us that the this object is not aliased at the
       // beginning of a constructor, so let's assume that.
 
-      // No parameter is equal to the this object.
+      // No parameter is equal to the "this" object.
       for (int i = 1; i < params.length; i++) {
         // We only insert the appropriate assumption for types which are
         // compatible to the type of the this object since other assumptions are
@@ -600,10 +610,22 @@ public class MethodTranslator implements ITranslationConstants {
   /**
    * Returns an expression containing the preconditional invariant
    * for a constructor method call.
+   * We can safely assume that all invariants hold, 
+   * because the "this" object is not yet an instance of any type,
+   * and hence its invariant holds.
    * @return BPLExpression invariant (upon entering constructor)
    */
   private BPLExpression getInvariantUponEnteringConstructor() {
-    return BPLBoolLiteral.TRUE;
+    // return BPLBoolLiteral.TRUE;
+    
+    String o = quantVarName("o");
+    BPLVariable oVar = new BPLVariable(o, BPLBuiltInType.REF);
+
+    String t = quantVarName("t");
+    BPLVariable tVar = new BPLVariable(t, BPLBuiltInType.NAME);
+
+    // return forall(oVar, tVar, implies(notEqual(var(o), var(thisVar())), inv(var(t), var(o), var(HEAP_VAR))));
+    return forall(oVar, tVar, inv(var(t), var(o), var(HEAP_VAR)));
   }
   
   /**
@@ -614,7 +636,7 @@ public class MethodTranslator implements ITranslationConstants {
     String o = quantVarName("o");
     BPLVariable oVar = new BPLVariable(o, BPLBuiltInType.REF);
 
-    String t = quantVarName("T");
+    String t = quantVarName("t");
     BPLVariable tVar = new BPLVariable(t, BPLBuiltInType.NAME);
 
     return forall(oVar, tVar, inv(var(t), var(o), var(HEAP_VAR)));
@@ -626,41 +648,67 @@ public class MethodTranslator implements ITranslationConstants {
    * @return BPLExpression object invariant (only referring to modified class fields)
    */
   private BPLExpression getInvariantBeforeLeavingMethod() {
+    System.out.println("PREPARING INVARIANT FOR BEFORE LEAVING METHOD:");
+    for (String s : modifiedVarNames) {
+      System.out.println("\t" + s);
+    }
+    
     String o = quantVarName("o");
     BPLVariable oVar = new BPLVariable(o, BPLBuiltInType.REF);
 
-    String t = quantVarName("T");
+    String t = quantVarName("t");
     BPLVariable tVar = new BPLVariable(t, BPLBuiltInType.NAME);
     
-    BPLExpression notInModVars = BPLBoolLiteral.FALSE;
-    for (String typeName : method.getModifiedFields()) {
-      notInModVars = logicalOr(notInModVars, isEqual(var(t), var(VALUE_TYPE_PREFIX + typeName)));
+    BPLExpression isModifiedVar = BPLBoolLiteral.TRUE;
+    
+    for (String s : modifiedVarNames) {
+      isModifiedVar = logicalAnd(isModifiedVar, inv(typ(rval(var(s))), var(s), var(HEAP_VAR)));
     }
-
-    return forall(oVar, tVar,
-         implies(notInModVars, inv(var(t), var(o), var(HEAP_VAR)))
-//        implies(notInModVars, inv(fieldType(), var(x), var(HEAP_VAR)));
-    );
+    
+    return isModifiedVar;
+    
+    // return forall(oVar, tVar, implies(notInModVars, inv(var(t), var(o), var(HEAP_VAR))));
   }
   
   
   private BPLExpression getInvariantAfterLeavingMethod() {
+    System.out.println("PREPARING INVARIANT FOR AFTER LEAVING METHOD:");
+    for (String s : modifiedVarNames) {
+      System.out.println("\t" + s);
+    }
+    
     String o = quantVarName("o");
     BPLVariable oVar = new BPLVariable(o, BPLBuiltInType.REF);
 
-    String t = quantVarName("T");
+    String t = quantVarName("t");
+    BPLVariable tVar = new BPLVariable(t, BPLBuiltInType.NAME);
+    
+    BPLExpression isUnmodifiedVar = BPLBoolLiteral.TRUE;
+    
+    for (String s : modifiedVarNames) {
+      isUnmodifiedVar = logicalAnd(isUnmodifiedVar, logicalOr(isEqual(var(o), var(s)), isEqual(var(t), typ(rval(var(s))))));
+    }
+       
+    return forall(oVar, tVar, implies(isUnmodifiedVar, inv(var(t), var(o), var(HEAP_VAR))));
+    
+    /*
+    
+    String o = quantVarName("o");
+    BPLVariable oVar = new BPLVariable(o, BPLBuiltInType.REF);
+
+    String t = quantVarName("t");
     BPLVariable tVar = new BPLVariable(t, BPLBuiltInType.NAME);
     
     BPLExpression notInModVars = BPLBoolLiteral.FALSE;
-    for (String typeName : method.getModifiableFields()) {
-      if (!method.isModifiedField(typeName)) {
-        notInModVars = logicalOr(notInModVars, isEqual(var(t), var(VALUE_TYPE_PREFIX + typeName)));
+    for (BPLExpression ref : method.getModifiedObjectRefs()) {
+      if (!method.isModifiedObjectRef(ref)) {
+        notInModVars = logicalOr(notInModVars, isEqual(var(t), var(VALUE_TYPE_PREFIX + ref)));
       }
     }
 
     return forall(oVar, tVar,
         implies(notInModVars, inv(var(t), var(o), var(HEAP_VAR)))
-    );
+    ); */
   }
   /**
    * Returns an expression stating that, for all non-modified class fields,
@@ -671,12 +719,12 @@ public class MethodTranslator implements ITranslationConstants {
     String o = quantVarName("o");
     BPLVariable oVar = new BPLVariable(o, BPLBuiltInType.REF);
 
-    String t = quantVarName("T");
+    String t = quantVarName("t");
     BPLVariable tVar = new BPLVariable(t, BPLBuiltInType.NAME);
     
     BPLExpression notInModVars = BPLBoolLiteral.TRUE;
-    for (String typeName : method.getModifiedFields()) {
-      notInModVars = logicalAnd(notInModVars, notEqual(var(t), var(VALUE_TYPE_PREFIX + typeName)));
+    for (BPLExpression ref : method.getModifiedObjectRefs()) {
+      notInModVars = logicalAnd(notInModVars, notEqual(var(t), var(VALUE_TYPE_PREFIX + ref)));
     }
 
     return forall(oVar, tVar,
@@ -767,9 +815,8 @@ public class MethodTranslator implements ITranslationConstants {
     if (method.isConstructor()) {
       qResult = logicalAnd(
             Q,
-            notEqual(var(RESULT_PARAM), BPLNullLiteral.NULL),
             alive(rval(var(RESULT_PARAM)), var(HEAP_VAR)),
-            isOfType(rval(var(RESULT_PARAM)), typeRef(method.getOwner()))
+            isInstanceOf(rval(var(RESULT_PARAM)), typeRef(method.getOwner()))
       );
     } else {
       if (provideReturnValue) {
@@ -963,6 +1010,15 @@ public class MethodTranslator implements ITranslationConstants {
    * </ul>
    */
   private void translateInit() {
+    
+    aliasMap.clear();
+    modifiedVarNames.clear();
+    
+    // constructors return an initialized "this"-parameter,
+    // so we add an alias telling that "param0" actually refers to "result"
+    // in the constructor's postcondition
+    if (method.isConstructor()) addAlias(RESULT_PARAM, thisVar());
+    
     startBlock(INIT_BLOCK_LABEL);
 
     callStatements = 0; // count the number of call statements used so far
@@ -1133,9 +1189,8 @@ public class MethodTranslator implements ITranslationConstants {
       BPLExpression topElem = var(stackVar(0, retType));
       
       if (method.getReturnType().isReferenceType() || method.isConstructor()) {
-        addAssume(notEqual(topElem, BPLNullLiteral.NULL));
         addAssume(alive(rval(topElem), var(HEAP_VAR)));
-        addAssume(isOfType(rval(topElem), typeRef(retType)));
+        addAssume(isInstanceOf(rval(topElem), typeRef(retType)));
       } else {
         addAssume(alive(ival(topElem), var(HEAP_VAR)));
       }
@@ -1601,15 +1656,16 @@ public class MethodTranslator implements ITranslationConstants {
       
       // TODO REMOVE
       System.out.println("Modified types for " + override.getName());
-      String[] types = override.getModifiedFields();
-      for (String t : types) {
-        System.out.println("  - " + t);
+      BPLExpression[] refs = override.getModifiedObjectRefs();
+      for (BPLExpression ref : refs) {
+        System.out.println("  - " + ref);
       }
+      /*
       System.out.println("Propagated types for " + override.getName());
-      types = override.getPropagatedFields();
-      for (String t : types) {
-        System.out.println("  - " + t);
-      }
+      refs = override.getPropagatedFields();
+      for (String ref : refs) {
+        System.out.println("  - " + ref);
+      } */
       
       BMLMethodSpecification spec = override.getSpecification();
       if (spec != null) {
@@ -1662,14 +1718,14 @@ public class MethodTranslator implements ITranslationConstants {
           implies(
               alive(rval(obj(var(l))), old(var(HEAP_VAR))),
               alive(rval(obj(var(l))), var(HEAP_VAR))
-          ),
+          ) /* [SW]: removed due to issues with invariant checks:,
           implies(
               filter.translate(context, storeRefs),
               isEqual(
                   get(var(HEAP_VAR), var(l)),
                   get(old(var(HEAP_VAR)), var(l))
               )
-          )
+          )*/
       );
 
       SpecificationTranslator translator = SpecificationTranslator.forPrecondition(var(HEAP_VAR).toString(), parameters);
@@ -1777,6 +1833,18 @@ public class MethodTranslator implements ITranslationConstants {
   private void addCommand(BPLCommand command) {
     commands.add(command);
   }
+  
+  /**
+   * Adds the given {@code comment} to the given {@code command} and
+   * adds the command to the currently active BoogiePL block.
+   * 
+   * @param command The command to add to the currently active BoogiePL block.
+   * @param comment The comment to add to the command.
+   */
+  private void addCommentedCommand(BPLCommand command, String comment) {
+    command.addComment(comment);
+    commands.add(command);
+  }
 
   /**
    * Adds an assignment for the given operands to the currently active BoogiePL
@@ -1786,7 +1854,8 @@ public class MethodTranslator implements ITranslationConstants {
    * @param rhs The RHS expression of the assignment.
    */
   private void addAssignment(BPLExpression lhs, BPLExpression rhs) {
-    addCommand(new BPLAssignmentCommand(lhs, rhs));
+    addCommand(new BPLAssignmentCommand(lhs, rhs));    
+    addAlias(rhs.toString(), lhs.toString());
   }
 
   /**
@@ -2056,8 +2125,7 @@ public class MethodTranslator implements ITranslationConstants {
    * @return The label to be used for the BoogiePL block.
    */
   private String handlerBlockLabel(BasicBlock cfgBlock, JType exception) {
-    return blockLabel(cfgBlock) + HANDLER_BLOCK_LABEL_SUFFIX
-        + exception.getName();
+    return blockLabel(cfgBlock) + HANDLER_BLOCK_LABEL_SUFFIX + exception.getName();
   }
 
   private static String typeAbbrev(BPLType type) {
@@ -2121,10 +2189,178 @@ public class MethodTranslator implements ITranslationConstants {
     return SWAP_VAR_PREFIX + typeAbbrev(type(type));
   }
 
+  
+  private void registerModifiedObjectRef(BPLExpression ref /*BCField field*/) {
+    // Check whether the field belongs to the "this" object.
+    // If so, add it to the method's internal list of "modified" fields.
+    method.addModifiedObjectRef(ref);
+  }
+  
+  
+  // private List<String> localReferenceVariables = new ArrayList<String>();
+  
+  /**
+   * Contains a mapping of local BoogiePL variable names to variables names
+   * which are either globally defined or passed as method arguments.
+   * The idea is that only the invariants of those variables need to be checked,
+   * and all locally defined variables need not be taken into consideration.
+   * This is only a helper structure used for aliasing purposes. The actually modified
+   * objects are stored in {@link modifiedObjects}.
+   * 
+   */
+  private static HashMap<String, ArrayList<String>> aliasMap = new HashMap<String, ArrayList<String>>();
+ 
+  /**
+   * Contains all modified objects (only method arguments or globally defined values).
+   * The invariants of these objects need to be checked at the end of method bodies.
+   */
+  private static ArrayList<String> modifiedVarNames = new ArrayList<String>();
+   
+  /**
+   * Adds a new alias to our data strukture.
+   * @param actualVar name of the actual variable (i.e. method argument or global variable)
+   * @param alias name of the new (local) variable, e.g. register or stack variable
+   */
+  private static void addAlias(String actualVar, String alias) {
+      // We do not need to alias the heap variable.
+      // This is a unique, global 
+      if (alias == HEAP_VAR || alias == RESULT_PARAM) return;
+      
+      // Check whether the actual variable is already an alias
+      // and resolve it so it points to the un-aliased actual variable.
+      if (aliasMap.containsKey(actualVar)) {
+        for (String existingAlias : getAliasedValues(actualVar)){
+          addAlias(existingAlias, alias);
+        }
+      }
+      
+      // Let us define a new alias if none exists already:
+      // if (existingAlias == null) {  
+      // Ignore locally instantiated variables and constants    
+      if (isLocalVariable(actualVar) || actualVar.startsWith(VALUE_TYPE_PREFIX)) return;
+      else if (!isMethodArgument(actualVar)) {
+        // The actual value is no method argument, so it must be
+        // a reference to the heap.
+        for (String key : aliasMap.keySet()) {
+          for (String value : aliasMap.get(key)) {
+            actualVar = actualVar.replaceAll(key, value);
+          }
+        }
+      } else {
+        try {
+          // Integer constants do not need to be aliased
+          Integer.parseInt(actualVar); return;
+        } catch (NumberFormatException ex) { /* ok: value is not an integer */ }
+      }
+
+      // Define new alias
+      ArrayList<String> al = (aliasMap.containsKey(alias)) ? aliasMap.get(alias) : new ArrayList<String>();
+      if (!al.contains(actualVar)) al.add(actualVar);
+      aliasMap.put(alias, al);
+      /*
+      } else {
+        // Define new alias via an existing alias
+        ArrayList<String> al = (aliasMap.containsKey(alias)) ? aliasMap.get(alias) : new ArrayList<String>();
+        al.add(existingAlias);
+        aliasMap.put(alias, al);
+      }*/
+  }
+  /*
+  private void addAlias(String blockLabel, BPLExpression actualVar, String alias) {
+    if (aliasMap.containsKey(blockLabel)) {
+      
+      // We do not need to alias the heap variable.
+      // This is a unique, global 
+      if (alias == HEAP_VAR) return;
+      
+      // Check whether the actual variable is already an alias
+      // and resolve it so it points to the un-aliased actual variable.
+      BPLExpression existingAlias = getAliasedValue(actualVar.toString());
+      
+      // Let us define a new alias if none exists already:
+      if (existingAlias == null) {  
+        // Ignore locally instantiated variables and constants
+        String s = actualVar.toString();
+        if (isLocalVariable(s) || s.startsWith(VALUE_TYPE_PREFIX)) return;
+        try {
+           // Integer constants do not need to be aliased
+           Integer.parseInt(s); return;
+        } catch (NumberFormatException ex) { / * ok: value is not an integer * / }
+        
+        // Define new alias
+        aliasMap.get(blockLabel).put(alias, actualVar);
+        
+        
+        System.out.println(">> Added new alias: [" + blockLabel + "] " + alias + " --> " + actualVar);
+        
+      } else {
+        // Define new alias via an existing alias
+        aliasMap.get(blockLabel).put(alias, existingAlias);
+        
+        System.out.println(">> Added alias from existing: [" + blockLabel + "] " + alias + " --> " + actualVar + " --> " + existingAlias);
+      }
+    }
+  }*/
+  
+  private static void addModifiedVarName(String varName) {
+    for (String s : getAliasedValues(varName)) {
+      if (!modifiedVarNames.contains(s)) {
+        modifiedVarNames.add(s);
+      }
+    }
+  }
+  
+  /**
+   * Returns {@code true} if the given variable name is locally defined.
+   * @param string variable name
+   * @return {@code true} if it is a locally defined variable, {@code false} if it is a globally defined variable or a method argument.
+   */
+  private static boolean isLocalVariable(String string) {
+    Pattern pattern = Pattern.compile("^(" + LOCAL_VAR_PREFIX + "|" + STACK_VAR_PREFIX + "|" + RETURN_VALUE_VAR + ")(\\d)+" + REF_TYPE_ABBREV + "$");
+    Matcher matcher = pattern.matcher(string);
+    return matcher.find();
+  }
+  
+  /**
+   * Returns {@code true} if the given variable name is a method argument.
+   * @param string variable name
+   * @return {@code true} if it is a method argument variable, {@code false} if it is any other variablet.
+   */
+  private static boolean isMethodArgument(String string) {
+    Pattern pattern = Pattern.compile("^" + PARAM_VAR_PREFIX + "(\\d)+$");
+    Matcher matcher = pattern.matcher(string);
+    return matcher.find();
+  }
+  
+ 
+  /**
+   * Gets the name of the original variable (i.e. method argument or global variable)
+   * from a given local variable name (e.g. register or stack variable).
+   * @param alias name of the local register or stack variable
+   * @return name of the actual variable (i.e. method argument or global variable)
+   */
+  private static ArrayList<String> getAliasedValues(String alias) {
+    if (aliasMap.containsKey(alias)) {
+      return aliasMap.get(alias);
+    }
+    return new ArrayList<String>();
+  }
+  /*
+  private BPLExpression getAliasedValue(String alias) {
+    BPLExpression latestAlias = null;
+    for (String blockLabel : aliasMap.keySet()) {
+      HashMap<String, BPLExpression> map = aliasMap.get(blockLabel);
+      if (map.containsKey(alias)) {
+        latestAlias = map.get(alias);
+      }
+    }
+    return latestAlias;
+  }*/
+  
   /**
    * The visitor performing the actual translation of the bytecode instructions.
    * 
-   * @author Ovidio Mallo
+   * @author Ovidio Mallo, Samuel Willimann
    */
   private final class InstructionTranslator implements IInstructionVisitor {
 
@@ -2312,8 +2548,20 @@ public class MethodTranslator implements ITranslationConstants {
       int stackRhs = handle.getFrame().getStackSize() - 1;
       BCField field = insn.getField();
 
+      /*
       if (field.getOwner() == method.getOwner() && field.getType().isReferenceType()) {
-        registerModifiedFieldType(field.getType().getName());
+        this.registerModifiedObjectRef(field.getType().getName());
+      }
+      */
+      addModifiedVarName(refStackVar(stackLhs));
+      
+      String aliases = "KNOWN ALIASES\n";
+      for (String alias : aliasMap.keySet()) {
+        aliases += "  - " + alias + " --> " + aliasMap.get(alias).toString() + "\n";
+      }
+      aliases += "MODIFIED OBJECTS\n";
+      for (String alias : modifiedVarNames) {
+        aliases += "  - " + alias + " was modified.\n";
       }
             
       translateRuntimeException(
@@ -2323,7 +2571,10 @@ public class MethodTranslator implements ITranslationConstants {
       BPLExpression lhs = var(refStackVar(stackLhs));
       BPLExpression rhs = var(stackVar(stackRhs, field.getType()));
       BPLExpression update = fieldUpdate(context, HEAP_VAR, lhs, field, rhs);
-      addAssignment(var(HEAP_VAR), update);
+      
+      // addAssignment(var(HEAP_VAR), update);
+      BPLCommand cmd = new BPLAssignmentCommand(var(HEAP_VAR), update);
+      addCommentedCommand(cmd, aliases);
     }
 
     public void visitGetStaticInstruction(GetStaticInstruction insn) {
@@ -2594,7 +2845,7 @@ public class MethodTranslator implements ITranslationConstants {
         : invokedMethod.getReturnType()
       );
 
-      registerModifiedFieldType(invokedMethod.getOwner().getName());
+      // registerModifiedObjectRef(invokedMethod.getOwner().getName());
       
       // Non-static method calls may throw a NullPointerException.
       if (!invokedMethod.isStatic() && !invokedMethod.isConstructor()) {
@@ -2625,8 +2876,8 @@ public class MethodTranslator implements ITranslationConstants {
         // resultVars.add(new BPLVariableExpression(returnValueVar(callStatements, retType)));
       } else if (invokedMethod.isConstructor()) {
         // "Return value" from constructor (initialized "this"-object)
-        resultVars.add(var(refLocalVar(first)));
-        //resultVars.add(new BPLVariableExpression(returnValueVar(callStatements, retType)));
+        //resultVars.add(var(refLocalVar(first)));
+        resultVars.add(new BPLVariableExpression(returnValueVar(callStatements, retType)));
       }
       resultVars.add(new BPLVariableExpression(exceptionVar(callStatements)));
 
@@ -2652,17 +2903,23 @@ public class MethodTranslator implements ITranslationConstants {
       );
       addCommand(callCmd);
 
+      addAssume(getInvariantAfterLeavingMethod());
       
       // TODO/FIXME If the current method call initialized this object
       // (i.e. we call Object..init() in A..init(), set this-variable correctly.
-      if (method.isConstructor() &&
-          invokedMethod.isConstructor() &&
-          method.getReturnType() == invokedMethod.getReturnType()) {
-        
-        // addAssignment(var(refLocalVar(0)), var(returnValueVar(callStatements, retType)));
-        
+      if (method.isConstructor() && invokedMethod.isConstructor() ) {
+        BPLCallCommand callCommand = (BPLCallCommand)callCmd;
+        if (callCommand.getArguments().length > 0) {
+          // if (getAliasedValues(callCommand.getArguments()[0].toString()).contains(thisVar())) {
+          if (callCommand.getArguments()[0].toString().equals("stack0_r")) {
+            // This method call is a nested constructor call (e.g. C..init() => Object..init() )
+            addAssignment(var(refLocalVar(0)), var(returnValueVar(callStatements, retType)));
+          } else {
+            // This method is a constructor for another object in the current scope
+          }
+        }
       }
-      
+            
       if (provideReturnValue) {
         
         // TODO assign returned method result to the topmost stack variable
@@ -3451,12 +3708,6 @@ public class MethodTranslator implements ITranslationConstants {
           }
         }
       }
-    }
-    
-    private void registerModifiedFieldType(String typeName /*BCField field*/) {
-      // Check whether the field belongs to the "this" object.
-      // If so, add it to the method's internal list of "modified" fields.
-      method.addModifiedField(typeName);
     }
   }
 }

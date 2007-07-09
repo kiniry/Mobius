@@ -493,9 +493,11 @@ public class Translator implements ITranslationConstants {
         iVar, jVar,
         isEqual(
             modulo(var(i), var(j)),
-            sub(var(i), multiply(divide(var(i), var(j)), var(j)))),
+            sub(var(i), multiply(divide(var(i), var(j)), var(j)))
+        ),
         trigger(modulo(var(i), var(j))),
-        trigger(divide(var(i), var(j)))));
+        trigger(divide(var(i), var(j)))
+    ));
 
     iVar = new BPLVariable(i, BPLBuiltInType.INT);
     jVar = new BPLVariable(j, BPLBuiltInType.INT);
@@ -505,11 +507,14 @@ public class Translator implements ITranslationConstants {
         implies(
             logicalAnd(
                 lessEqual(intLiteral(0), var(i)),
-                less(intLiteral(0), var(j))),
+                less(intLiteral(0), var(j))
+            ),
             logicalAnd(
                 lessEqual(intLiteral(0), modulo(var(i), var(j))),
-                less(modulo(var(i), var(j)), var(j)))),
-        trigger(modulo(var(i), var(j)))));
+                less(modulo(var(i), var(j)), var(j)))
+            ),
+        trigger(modulo(var(i), var(j)))
+    ));
 
     iVar = new BPLVariable(i, BPLBuiltInType.INT);
     jVar = new BPLVariable(j, BPLBuiltInType.INT);
@@ -519,11 +524,14 @@ public class Translator implements ITranslationConstants {
         implies(
             logicalAnd(
                 lessEqual(intLiteral(0), var(i)),
-                less(var(j), intLiteral(0))),
+                less(var(j), intLiteral(0))
+            ),
             logicalAnd(
                 lessEqual(intLiteral(0), modulo(var(i), var(j))),
-                less(modulo(var(i), var(j)), sub(intLiteral(0), var(j))))),
-        trigger(modulo(var(i), var(j)))));
+                less(modulo(var(i), var(j)), sub(intLiteral(0), var(j))))
+            ),
+        trigger(modulo(var(i), var(j)))
+    ));
 
     iVar = new BPLVariable(i, BPLBuiltInType.INT);
     jVar = new BPLVariable(j, BPLBuiltInType.INT);
@@ -533,11 +541,14 @@ public class Translator implements ITranslationConstants {
         implies(
             logicalAnd(
                 lessEqual(var(i), intLiteral(0)),
-                less(intLiteral(0), var(j))),
+                less(intLiteral(0), var(j))
+            ),
             logicalAnd(
                 less(sub(intLiteral(0), var(j)), modulo(var(i), var(j))),
-                lessEqual(modulo(var(i), var(j)), intLiteral(0)))),
-        trigger(modulo(var(i), var(j)))));
+                lessEqual(modulo(var(i), var(j)), intLiteral(0)))
+            ),
+        trigger(modulo(var(i), var(j)))
+    ));
 
     iVar = new BPLVariable(i, BPLBuiltInType.INT);
     jVar = new BPLVariable(j, BPLBuiltInType.INT);
@@ -547,11 +558,14 @@ public class Translator implements ITranslationConstants {
         implies(
             logicalAnd(
                 lessEqual(var(i), intLiteral(0)),
-                less(var(j), intLiteral(0))),
+                less(var(j), intLiteral(0))
+            ),
             logicalAnd(
                 less(var(j), modulo(var(i), var(j))),
-                lessEqual(modulo(var(i), var(j)), intLiteral(0)))),
-        trigger(modulo(var(i), var(j)))));
+                lessEqual(modulo(var(i), var(j)), intLiteral(0)))
+            ),
+        trigger(modulo(var(i), var(j)))
+    ));
 
     iVar = new BPLVariable(i, BPLBuiltInType.INT);
     jVar = new BPLVariable(j, BPLBuiltInType.INT);
@@ -561,11 +575,14 @@ public class Translator implements ITranslationConstants {
         implies(
             logicalAnd(
                 lessEqual(intLiteral(0), var(i)),
-                less(intLiteral(0), var(j))),
+                less(intLiteral(0), var(j))
+            ),
             isEqual(
                 modulo(add(var(i), var(j)), var(j)),
-                modulo(var(i), var(j)))),
-        trigger(modulo(add(var(i), var(j)), var(j)))));
+                modulo(var(i), var(j)))
+            ),
+        trigger(modulo(add(var(i), var(j)), var(j)))
+    ));
 
     iVar = new BPLVariable(i, BPLBuiltInType.INT);
     jVar = new BPLVariable(j, BPLBuiltInType.INT);
@@ -575,11 +592,14 @@ public class Translator implements ITranslationConstants {
         implies(
             logicalAnd(
                 lessEqual(intLiteral(0), var(i)),
-                less(intLiteral(0), var(j))),
+                less(intLiteral(0), var(j))
+            ),
             isEqual(
                 modulo(add(var(j), var(i)), var(j)),
-                modulo(var(i), var(j)))),
-        trigger(modulo(add(var(j), var(i)), var(j)))));
+                modulo(var(i), var(j)))
+            ),
+        trigger(modulo(add(var(j), var(i)), var(j)))
+    ));
 
     iVar = new BPLVariable(i, BPLBuiltInType.INT);
     jVar = new BPLVariable(j, BPLBuiltInType.INT);
@@ -589,11 +609,15 @@ public class Translator implements ITranslationConstants {
         implies(
             logicalAnd(
                 lessEqual(intLiteral(0), sub(var(i), var(j))),
-                less(intLiteral(0), var(j))),
+                less(intLiteral(0), var(j))
+            ),
             isEqual(
                 modulo(sub(var(i), var(j)), var(j)),
-                modulo(var(i), var(j)))),
-        trigger(modulo(sub(var(i), var(j)), var(j)))));
+                modulo(var(i), var(j))
+            )
+        ),
+        trigger(modulo(sub(var(i), var(j)), var(j)))
+    ));
 
     String a = quantVarName("a");
     String b = quantVarName("b");
@@ -611,7 +635,8 @@ public class Translator implements ITranslationConstants {
                     isEqual(modulo(var(a), var(d)), modulo(var(b), var(d)))),
                 less(var(a), var(b))),
             lessEqual(add(var(a), var(d)), var(b))),
-        trigger(modulo(var(a), var(d)), modulo(var(b), var(d)))));
+        trigger(modulo(var(a), var(d)), modulo(var(b), var(d)))
+    ));
   }
 
   /**
@@ -656,7 +681,8 @@ public class Translator implements ITranslationConstants {
     addAxiom(forall(
         iVar,
         isEqual(bitShl(var(i), intLiteral(0)), var(i)),
-        trigger(bitShl(var(i), intLiteral(0)))));
+        trigger(bitShl(var(i), intLiteral(0)))
+    ));
     String j = quantVarName("j");
     iVar = new BPLVariable(i, BPLBuiltInType.INT);
     BPLVariable jVar = new BPLVariable(j, BPLBuiltInType.INT);
@@ -668,14 +694,20 @@ public class Translator implements ITranslationConstants {
                 bitShl(var(i), var(j)),
                 multiply(
                     bitShl(var(i), sub(var(j), intLiteral(1))),
-                    intLiteral(2))))));
+                    intLiteral(2)
+                )
+            )
+        ),
+        trigger(bitShl(var(i), var(j)))
+    ));
 
     // shift right
     iVar = new BPLVariable(i, BPLBuiltInType.INT);
     addAxiom(forall(
         iVar,
         isEqual(bitShr(var(i), intLiteral(0)), var(i)),
-        trigger(bitShr(var(i), intLiteral(0)))));
+        trigger(bitShr(var(i), intLiteral(0)))
+    ));
     iVar = new BPLVariable(i, BPLBuiltInType.INT);
     jVar = new BPLVariable(j, BPLBuiltInType.INT);
     addAxiom(forall(
@@ -686,7 +718,12 @@ public class Translator implements ITranslationConstants {
                 bitShr(var(i), var(j)),
                 divide(
                     bitShr(var(i), sub(var(j), intLiteral(1))),
-                    intLiteral(2))))));
+                    intLiteral(2)
+                )
+            )
+        ),
+        trigger(bitShr(var(i), var(j)))
+    ));
 
     // unsigned shift right
     iVar = new BPLVariable(i, BPLBuiltInType.INT);
@@ -695,16 +732,20 @@ public class Translator implements ITranslationConstants {
         iVar, jVar,
         implies(
             lessEqual(intLiteral(0), var(i)),
-            isEqual(bitUShr(var(i), var(j)), bitShr(var(i), var(j)))),
-        trigger(bitUShr(var(i), var(j)))));
+            isEqual(bitUShr(var(i), var(j)), bitShr(var(i), var(j)))
+        ),
+        trigger(bitUShr(var(i), var(j)))
+    ));
     iVar = new BPLVariable(i, BPLBuiltInType.INT);
     jVar = new BPLVariable(j, BPLBuiltInType.INT);
     addAxiom(forall(
         iVar, jVar,
         implies(
             less(intLiteral(0), var(j)),
-            lessEqual(intLiteral(0), bitUShr(var(i), var(j)))),
-        trigger(bitUShr(var(i), var(j)))));
+            lessEqual(intLiteral(0), bitUShr(var(i), var(j)))
+        ),
+        trigger(bitUShr(var(i), var(j)))
+    ));
 
     // bitwise and
     iVar = new BPLVariable(i, BPLBuiltInType.INT);
@@ -715,8 +756,10 @@ public class Translator implements ITranslationConstants {
             logicalOr(
                 lessEqual(intLiteral(0), var(i)),
                 lessEqual(intLiteral(0), var(j))),
-            lessEqual(intLiteral(0), bitAnd(var(i), var(j)))),
-        trigger(bitAnd(var(i), var(j)))));
+            lessEqual(intLiteral(0), bitAnd(var(i), var(j)))
+        ),
+        trigger(bitAnd(var(i), var(j)))
+    ));
     iVar = new BPLVariable(i, BPLBuiltInType.INT);
     jVar = new BPLVariable(j, BPLBuiltInType.INT);
     addAxiom(forall(
@@ -724,10 +767,12 @@ public class Translator implements ITranslationConstants {
         implies(
             isEqual(
                 lessEqual(intLiteral(0), var(i)),
-                lessEqual(intLiteral(0), var(j))),
+                lessEqual(intLiteral(0), var(j))
+            ),
             logicalAnd(
                 lessEqual(bitAnd(var(i), var(j)), var(i)),
-                lessEqual(bitAnd(var(i), var(j)), var(j)))),
+                lessEqual(bitAnd(var(i), var(j)), var(j))
+            )),
         trigger(bitAnd(var(i), var(j)))));
 
     // bitwise or
@@ -739,8 +784,10 @@ public class Translator implements ITranslationConstants {
             logicalAnd(
                 lessEqual(intLiteral(0), var(i)),
                 lessEqual(intLiteral(0), var(j))),
-            lessEqual(intLiteral(0), bitOr(var(i), var(j)))),
-        trigger(bitOr(var(i), var(j)))));
+            lessEqual(intLiteral(0), bitOr(var(i), var(j)))
+        ),
+        trigger(bitOr(var(i), var(j)))
+    ));
     iVar = new BPLVariable(i, BPLBuiltInType.INT);
     jVar = new BPLVariable(j, BPLBuiltInType.INT);
     addAxiom(forall(
@@ -749,8 +796,10 @@ public class Translator implements ITranslationConstants {
             logicalAnd(
                 lessEqual(intLiteral(0), var(i)),
                 lessEqual(intLiteral(0), var(j))),
-            lessEqual(bitOr(var(i), var(j)), add(var(i), var(j)))),
-        trigger(bitOr(var(i), var(j)))));
+            lessEqual(bitOr(var(i), var(j)), add(var(i), var(j)))
+        ),
+        trigger(bitOr(var(i), var(j)))
+    ));
 
     // bitwise xor
     iVar = new BPLVariable(i, BPLBuiltInType.INT);
@@ -761,8 +810,10 @@ public class Translator implements ITranslationConstants {
             isEqual(
                 lessEqual(intLiteral(0), var(i)),
                 lessEqual(intLiteral(0), var(j))),
-            lessEqual(intLiteral(0), bitXor(var(i), var(j)))),
-        trigger(bitXor(var(i), var(j)))));
+            lessEqual(intLiteral(0), bitXor(var(i), var(j)))
+        ),
+        trigger(bitXor(var(i), var(j)))
+    ));
   }
 
   /**
@@ -793,14 +844,17 @@ public class Translator implements ITranslationConstants {
           iVar, jVar,
           isEquiv(
               isEqual(ival(var(i)), ival(var(j))),
-              isEqual(var(i), var(j)))));
+              isEqual(var(i), var(j))
+          ),
+          trigger(isEqual(ival(var(i)), ival(var(j))))
+      ));
       String v = quantVarName("v");
       BPLVariable vVar = new BPLVariable(v, new BPLTypeName(VALUE_TYPE));
-      addAxiom(forall(vVar, isEqual(ival(toint(var(v))), var(v))));
+      addAxiom(forall(vVar, isEqual(ival(toint(var(v))), var(v)), trigger(ival(toint(var(v))))));
 
       addFunction(TOINT_FUNC, new BPLTypeName(VALUE_TYPE), BPLBuiltInType.INT);
       iVar = new BPLVariable(i, BPLBuiltInType.INT);
-      addAxiom(forall(iVar, isEqual(toint(ival(var(i))), var(i))));
+      addAxiom(forall(iVar, isEqual(toint(ival(var(i))), var(i)), trigger(toint(ival(var(i))))));
     }
 
     {
@@ -814,15 +868,19 @@ public class Translator implements ITranslationConstants {
           o1Var, o2Var,
           isEquiv(
               isEqual(rval(var(o1)), rval(var(o2))),
-              isEqual(var(o1), var(o2)))));
+              isEqual(var(o1), var(o2))
+          ),
+          trigger(rval(var(o1))),
+          trigger(rval(var(o2)))
+      ));
       String v = quantVarName("v");
       BPLVariable vVar = new BPLVariable(v, new BPLTypeName(VALUE_TYPE));
-      addAxiom(forall(vVar, isEqual(rval(toref(var(v))), var(v))));
+      addAxiom(forall(vVar, isEqual(rval(toref(var(v))), var(v)), trigger(rval(toref(var(v))))));
 
       addFunction(TOREF_FUNC, new BPLTypeName(VALUE_TYPE), BPLBuiltInType.REF);
       String o = quantVarName("o");
       BPLVariable oVar = new BPLVariable(o, BPLBuiltInType.REF);
-      addAxiom(forall(oVar, isEqual(toref(rval(var(o))), var(o))));
+      addAxiom(forall(oVar, isEqual(toref(rval(var(o))), var(o)), trigger(toref(rval(var(o))))));
     }
 
     {
@@ -831,7 +889,7 @@ public class Translator implements ITranslationConstants {
       String o = quantVarName("o");
       BPLVariable iVar = new BPLVariable(i, BPLBuiltInType.INT);
       BPLVariable oVar = new BPLVariable(o, BPLBuiltInType.REF);
-      addAxiom(forall(iVar, oVar, notEqual(ival(var(i)), rval(var(o)))));
+      addAxiom(forall(iVar, oVar, notEqual(ival(var(i)), rval(var(o))), trigger(ival(var(i))), trigger(rval(var(o)))));
     }
 
     {
@@ -839,7 +897,7 @@ public class Translator implements ITranslationConstants {
       addFunction(TYP_FUNC, new BPLTypeName(VALUE_TYPE),  BPLBuiltInType.NAME);
       String i = quantVarName("i");
       BPLVariable iVar = new BPLVariable(i, BPLBuiltInType.INT);
-      addAxiom(forall(iVar, isValueType(typ(ival(var(i))))));
+      addAxiom(forall(iVar, isValueType(typ(ival(var(i)))), trigger(isValueType(typ(ival(var(i)))))));
     }
 
     {
@@ -852,21 +910,30 @@ public class Translator implements ITranslationConstants {
           tVar,
           implies(
               isValueType(var(t)),
-              isEqual(initVal(var(t)), ival(intLiteral(0))))));
+              isEqual(initVal(var(t)), ival(intLiteral(0)))
+          ),
+          trigger(isValueType(var(t)))
+      ));
 
       tVar = new BPLVariable(t, BPLBuiltInType.NAME);
       addAxiom(forall(
           tVar,
           implies(
               isClassType(var(t)),
-              isEqual(initVal(var(t)), rval(nullLiteral())))));
+              isEqual(initVal(var(t)), rval(nullLiteral()))
+          ),
+          trigger(isClassType(var(t)))
+      ));
 
       tVar = new BPLVariable(t, BPLBuiltInType.NAME);
       addAxiom(forall(
           tVar,
           isEqual(
               initVal(arrayType(elementType(var(t)))),
-              rval(nullLiteral()))));
+              rval(nullLiteral())
+          ),
+          trigger(initVal(arrayType(elementType(var(t)))))
+      ));
     }
 
     {
@@ -883,7 +950,11 @@ public class Translator implements ITranslationConstants {
               isStatic(var(v)),
               logicalOr(
                   isValueType(typ(var(v))),
-                  isEqual(var(v), rval(nullLiteral()))))));
+                  isEqual(var(v), rval(nullLiteral()))
+              )
+          ),
+          trigger(isValueType(typ(var(v))))
+      ));
     }
 
     {
@@ -894,7 +965,7 @@ public class Translator implements ITranslationConstants {
           BPLBuiltInType.INT);
       String v = quantVarName("v");
       BPLVariable vVar = new BPLVariable(v, new BPLTypeName(VALUE_TYPE));
-      addAxiom(forall(vVar, lessEqual(intLiteral(0), arrayLength((var(v))))));
+      addAxiom(forall(vVar, lessEqual(intLiteral(0), arrayLength(var(v))), trigger(arrayLength(var(v)))));
     }
 
     //
@@ -924,7 +995,12 @@ public class Translator implements ITranslationConstants {
               isEqual(fieldLoc(var(o1), var(f1)), fieldLoc(var(o2), var(f2))),
               logicalAnd(
                   isEqual(var(o1), var(o2)),
-                  isEqual(var(f1), var(f2))))));
+                  isEqual(var(f1), var(f2))
+              )
+          ),
+          trigger(fieldLoc(var(o1), var(f1))),
+          trigger(fieldLoc(var(o2), var(f2)))
+      ));
     }
 
     {
@@ -949,7 +1025,12 @@ public class Translator implements ITranslationConstants {
               isEqual(arrayLoc(var(o1), var(i1)), arrayLoc(var(o2), var(i2))),
               logicalAnd(
                   isEqual(var(o1), var(o2)),
-                  isEqual(var(i1), var(i2))))));
+                  isEqual(var(i1), var(i2))
+              )
+          ),
+          trigger(arrayLoc(var(o1), var(i1))),
+          trigger(arrayLoc(var(o2), var(i2)))
+      ));
     }
 
     {
@@ -964,7 +1045,10 @@ public class Translator implements ITranslationConstants {
       BPLVariable i2Var = new BPLVariable(i2, BPLBuiltInType.INT);
       addAxiom(forall(
           o1Var, f1Var, o2Var, i2Var,
-          notEqual(fieldLoc(var(o1), var(f1)), arrayLoc(var(o2), var(i2)))));
+          notEqual(fieldLoc(var(o1), var(f1)), arrayLoc(var(o2), var(i2))),
+          trigger(fieldLoc(var(o1), var(f1))),
+          trigger(arrayLoc(var(o2), var(i2)))
+      ));
     }
 
     {
@@ -976,13 +1060,17 @@ public class Translator implements ITranslationConstants {
       BPLVariable fVar = new BPLVariable(f, BPLBuiltInType.NAME);
       addAxiom(forall(
           oVar, fVar,
-          isEqual(obj(fieldLoc(var(o), var(f))), var(o))));
+          isEqual(obj(fieldLoc(var(o), var(f))), var(o)),
+          trigger(obj(fieldLoc(var(o), var(f))))
+      ));
       String i = quantVarName("i");
       oVar = new BPLVariable(o, BPLBuiltInType.REF);
       BPLVariable iVar = new BPLVariable(i, BPLBuiltInType.INT);
       addAxiom(forall(
           oVar, iVar,
-          isEqual(obj(arrayLoc(var(o), var(i))), var(o))));
+          isEqual(obj(arrayLoc(var(o), var(i))), var(o)),
+          trigger(obj(arrayLoc(var(o), var(i))))
+      ));
     }
 
     {
@@ -997,7 +1085,9 @@ public class Translator implements ITranslationConstants {
       BPLVariable fVar = new BPLVariable(f, BPLBuiltInType.NAME);
       addAxiom(forall(
           oVar, fVar,
-          isEqual(ltyp(fieldLoc(var(o), var(f))), fieldType(var(f)))));
+          isEqual(ltyp(fieldLoc(var(o), var(f))), fieldType(var(f))),
+          trigger(ltyp(fieldLoc(var(o), var(f))))
+      ));
       String i = quantVarName("i");
       oVar = new BPLVariable(o, BPLBuiltInType.REF);
       BPLVariable iVar = new BPLVariable(i, BPLBuiltInType.INT);
@@ -1005,7 +1095,10 @@ public class Translator implements ITranslationConstants {
           oVar, iVar,
           isEqual(
               ltyp(arrayLoc(var(o), var(i))),
-              elementType(typ(rval(var(o)))))));
+              elementType(typ(rval(var(o))))
+          ),
+          trigger(ltyp(arrayLoc(var(o), var(i))))
+      ));
     }
 
     // Field declaration
@@ -1016,11 +1109,11 @@ public class Translator implements ITranslationConstants {
       addFunction(TYPE_OBJECT_FUNC, BPLBuiltInType.NAME, BPLBuiltInType.REF);
       String t = quantVarName("t");
       BPLVariable tVar = new BPLVariable(t, BPLBuiltInType.NAME);
-      addAxiom(forall(tVar, nonNull(typeObject(var(t)))));
+      addAxiom(forall(tVar, nonNull(typeObject(var(t))), trigger(typeObject(var(t)))));
       String h = quantVarName("h");
       BPLVariable hVar = new BPLVariable(h, new BPLTypeName(HEAP_TYPE));
       tVar = new BPLVariable(t, BPLBuiltInType.NAME);
-      addAxiom(forall(hVar, tVar, alive(rval(typeObject(var(t))), var(h))));
+      addAxiom(forall(hVar, tVar, alive(rval(typeObject(var(t))), var(h)), trigger(alive(rval(typeObject(var(t))), var(h)))));
     }
 
     //
@@ -1052,14 +1145,16 @@ public class Translator implements ITranslationConstants {
           BPLBuiltInType.NAME);
       String t = quantVarName("t");
       BPLVariable tVar = new BPLVariable(t, BPLBuiltInType.NAME);
-      addAxiom(forall(tVar, isEqual(allocType(objectAlloc(var(t))), var(t))));
+      addAxiom(forall(tVar, isEqual(allocType(objectAlloc(var(t))), var(t)), trigger(allocType(objectAlloc(var(t))))));
 
       String i = quantVarName("i");
       tVar = new BPLVariable(t, BPLBuiltInType.NAME);
       BPLVariable iVar = new BPLVariable(i, BPLBuiltInType.INT);
       addAxiom(forall(
           tVar, iVar,
-          isEqual(allocType(arrayAlloc(var(t), var(i))), arrayType(var(t)))));
+          isEqual(allocType(arrayAlloc(var(t), var(i))), arrayType(var(t))),
+          trigger(allocType(arrayAlloc(var(t), var(i))))
+      ));
 
       String a = quantVarName("a");
       tVar = new BPLVariable(t, BPLBuiltInType.NAME);
@@ -1069,7 +1164,10 @@ public class Translator implements ITranslationConstants {
           tVar, iVar, aVar,
           isEqual(
               allocType(multiArrayAlloc(var(t), var(i), var(a))),
-              arrayType(var(t)))));
+              arrayType(var(t))
+          ),
+          trigger(allocType(multiArrayAlloc(var(t), var(i), var(a))))
+      ));
     }
 
     //
@@ -1118,8 +1216,7 @@ public class Translator implements ITranslationConstants {
     //
 
     {
-      addComment(
-          "Field stores do not affect the values stored in other fields.");
+      addComment("Field stores do not affect the values stored in other fields.");
       String l1 = quantVarName("l1");
       String l2 = quantVarName("l2");
       String h = quantVarName("h");
@@ -1134,7 +1231,11 @@ public class Translator implements ITranslationConstants {
               notEqual(var(l1), var(l2)),
               isEqual(
                   get(update(var(h), var(l1), var(v)), var(l2)),
-                  get(var(h), var(l2))))));
+                  get(var(h), var(l2))
+              )
+          ),
+          trigger(get(update(var(h), var(l1), var(v)), var(l2)))
+      ));
     }
 
     {
@@ -1151,7 +1252,10 @@ public class Translator implements ITranslationConstants {
               logicalAnd(
                   alive(rval(obj(var(l))), var(h)),
                   alive(var(v), var(h))),
-              isEqual(get(update(var(h), var(l), var(v)), var(l)), var(v)))));
+              isEqual(get(update(var(h), var(l), var(v)), var(l)), var(v))
+          ),
+          trigger(get(update(var(h), var(l), var(v)), var(l)))
+      ));
     }
 
     {
@@ -1164,7 +1268,26 @@ public class Translator implements ITranslationConstants {
       BPLVariable aVar = new BPLVariable(a, new BPLTypeName(ALLOCATION_TYPE));
       addAxiom(forall(
           lVar, hVar, aVar,
-          isEqual(get(heapAdd(var(h), var(a)), var(l)), get(var(h), var(l)))));
+          isEqual(get(heapAdd(var(h), var(a)), var(l)), get(var(h), var(l))),
+          trigger(get(heapAdd(var(h), var(a)), var(l)))
+      ));
+    }
+    
+    {
+      addComment("[SW]: Object allocation does not affect existing invariants.");
+      String o = quantVarName("o");
+      String t = quantVarName("t");
+      String h = quantVarName("h");
+      String a = quantVarName("a");
+      BPLVariable oVar = new BPLVariable(o, BPLBuiltInType.REF);
+      BPLVariable tVar = new BPLVariable(t, BPLBuiltInType.NAME);
+      BPLVariable hVar = new BPLVariable(h, new BPLTypeName(HEAP_TYPE));
+      BPLVariable aVar = new BPLVariable(a, new BPLTypeName(ALLOCATION_TYPE));
+      addAxiom(forall(
+         oVar, tVar, hVar, aVar,
+         isEqual(inv(var(t), var(o), heapAdd(var(h), var(a))), inv(var(t), var(o), var(h))),
+         trigger(inv(var(t), var(o), heapAdd(var(h), var(a))))
+      ));
     }
 
     {
@@ -1181,9 +1304,37 @@ public class Translator implements ITranslationConstants {
           lVar, hVar, v1Var, v2Var,
           isEquiv(
               alive(var(v1), update(var(h), var(l), var(v2))),
-              alive(var(v1), var(h)))));
+              alive(var(v1), var(h))
+          ),
+          trigger(alive(var(v1), update(var(h), var(l), var(v2))))
+      ));
     }
 
+    {
+      addComment("[SW]: Field stores do not affect the invariants of other fields.");
+      String l = quantVarName("l");
+      String h = quantVarName("h");
+      String o = quantVarName("o");
+      String t = quantVarName("t");
+      String v = quantVarName("v");
+      BPLVariable lVar = new BPLVariable(l, new BPLTypeName(LOCATION_TYPE));
+      BPLVariable hVar = new BPLVariable(h, new BPLTypeName(HEAP_TYPE));
+      BPLVariable oVar = new BPLVariable(o, BPLBuiltInType.REF);
+      BPLVariable tVar = new BPLVariable(t, BPLBuiltInType.NAME);
+      BPLVariable vVar = new BPLVariable(v, new BPLTypeName(VALUE_TYPE));
+      addAxiom(forall(
+        lVar, hVar, oVar, tVar, vVar,
+        implies(
+          notEqual(var(o), obj(var(l))),
+          isEqual(
+            inv(var(t), var(o), update(var(h), var(l), var(v))),
+            inv(var(t), var(o), var(h))
+          )
+        ),
+        trigger(inv(var(t), var(o), update(var(h), var(l), var(v))))
+      ));
+    }
+    
     {
       addComment("Alive objects remain alive when a newly allocated object is"
                  + " added to the heap.");
@@ -1197,15 +1348,20 @@ public class Translator implements ITranslationConstants {
           hVar, vVar, aVar,
           implies(
               alive(var(v), var(h)),
-              alive(var(v), heapAdd(var(h), var(a))))));
+              alive(var(v), heapAdd(var(h), var(a)))
+          ),
+          trigger(alive(var(v), heapAdd(var(h), var(a))))
+      ));
 
-      addComment(
-          "A newly allocated object becomes alive in the heap it is added to.");
+      addComment("A newly allocated object becomes alive in the heap it is added to.");
       hVar = new BPLVariable(h, new BPLTypeName(HEAP_TYPE));
       aVar = new BPLVariable(a, new BPLTypeName(ALLOCATION_TYPE));
       addAxiom(forall(
           hVar, aVar,
-          alive(heapNew(var(h), var(a)), heapAdd(var(h), var(a)))));
+          alive(heapNew(var(h), var(a)), heapAdd(var(h), var(a))),
+          trigger(heapNew(var(h), var(a))),
+          trigger(heapAdd(var(h), var(a)))
+      ));
     }
 
     {
@@ -1219,7 +1375,8 @@ public class Translator implements ITranslationConstants {
           implies(
               alive(rval(obj(var(l))), var(h)),
               alive(get(var(h), var(l)), var(h))),
-          trigger(alive(get(var(h), var(l)), var(h)))));
+          trigger(alive(get(var(h), var(l)), var(h)))
+      ));
     }
 
     {
@@ -1230,7 +1387,9 @@ public class Translator implements ITranslationConstants {
       BPLVariable vVar = new BPLVariable(v, new BPLTypeName(VALUE_TYPE));
       addAxiom(forall(
           hVar, vVar,
-          implies(isStatic(var(v)), alive(var(v), var(h)))));
+          implies(isStatic(var(v)), alive(var(v), var(h))),
+          trigger(alive(var(v), var(h)))
+      ));
     }
 
     {
@@ -1242,7 +1401,9 @@ public class Translator implements ITranslationConstants {
       BPLVariable aVar = new BPLVariable(a, new BPLTypeName(ALLOCATION_TYPE));
       addAxiom(forall(
           hVar, aVar,
-          logicalNot(alive(heapNew(var(h), var(a)), var(h)))));
+          logicalNot(alive(heapNew(var(h), var(a)), var(h))),
+          trigger(alive(heapNew(var(h), var(a)), var(h)))
+      ));
     }
 
     {
@@ -1253,7 +1414,9 @@ public class Translator implements ITranslationConstants {
       BPLVariable aVar = new BPLVariable(a, new BPLTypeName(ALLOCATION_TYPE));
       addAxiom(forall(
           hVar, aVar,
-          isEqual(typ(heapNew(var(h), var(a))), allocType(var(a)))));
+          isEqual(typ(heapNew(var(h), var(a))), allocType(var(a))),
+          trigger(typ(heapNew(var(h), var(a))))
+      ));
     }
 
     {
@@ -1278,7 +1441,17 @@ public class Translator implements ITranslationConstants {
                       isEqual(typ(var(v)), allocType(var(a))),
                       isEquiv(
                           alive(var(v), var(h1)),
-                          alive(var(v), var(h2))))))));
+                          alive(var(v), var(h2))
+                      )
+                  ),
+                  trigger(alive(var(v), var(h1))),
+                  trigger(alive(var(v), var(h2))),
+                  trigger(allocType(var(a)))
+              )
+          ),
+          trigger(heapNew(var(h1), var(a))),
+          trigger(heapNew(var(h2), var(a)))
+      ));
     }
 
     {
@@ -1298,11 +1471,22 @@ public class Translator implements ITranslationConstants {
               logicalAnd(
                   forall(
                       vVar,
-                      isEquiv(alive(var(v), var(h1)), alive(var(v), var(h2)))),
+                      isEquiv(alive(var(v), var(h1)), alive(var(v), var(h2))),
+                      trigger(alive(var(v), var(h1))),
+                      trigger(alive(var(v), var(h2)))
+                  ),
                   forall(
                       lVar,
-                      isEqual(get(var(h1), var(l)), get(var(h2), var(l))))),
-              isEqual(var(h1), var(h2)))));
+                      isEqual(get(var(h1), var(l)), get(var(h2), var(l))),
+                      trigger(get(var(h1), var(l))),
+                      trigger(get(var(h2), var(l)))
+                  )
+              ),
+              isEqual(var(h1), var(h2))
+          ),
+          trigger(alive(var(v), var(h1))),
+          trigger(alive(var(v), var(h2)))
+      ));
     }
 
     {
@@ -1312,7 +1496,7 @@ public class Translator implements ITranslationConstants {
       String l = quantVarName("l");
       BPLVariable hVar = new BPLVariable(h, new BPLTypeName(HEAP_TYPE));
       BPLVariable lVar = new BPLVariable(l, new BPLTypeName(LOCATION_TYPE));
-      addAxiom(forall(hVar, lVar, isOfType(get(var(h), var(l)), ltyp(var(l)))));
+      addAxiom(forall(hVar, lVar, isOfType(get(var(h), var(l)), ltyp(var(l))),trigger(isOfType(get(var(h), var(l)), ltyp(var(l))))));
     }
 
     {
@@ -1327,7 +1511,10 @@ public class Translator implements ITranslationConstants {
           hVar, tVar, iVar,
           isEqual(
               arrayLength(heapNew(var(h), arrayAlloc(var(t), var(i)))),
-              var(i))));
+              var(i)
+          ),
+          trigger(arrayLength(heapNew(var(h), arrayAlloc(var(t), var(i)))))
+      ));
 
       String a = quantVarName("a");
       hVar = new BPLVariable(h, new BPLTypeName(HEAP_TYPE));
@@ -1337,9 +1524,11 @@ public class Translator implements ITranslationConstants {
       addAxiom(forall(
           hVar, tVar, iVar, aVar,
           isEqual(
-              arrayLength(
-                  heapNew(var(h), multiArrayAlloc(var(t), var(i), var(a)))),
-              var(i))));
+              arrayLength(heapNew(var(h), multiArrayAlloc(var(t), var(i), var(a)))),
+              var(i)
+          ),
+          trigger(arrayLength(heapNew(var(h), multiArrayAlloc(var(t), var(i), var(a)))))
+      ));
     }
 
     {
@@ -1372,7 +1561,16 @@ public class Translator implements ITranslationConstants {
           isNewMultiArray(
               heapNew(var(h), multiArrayAlloc(var(t), var(i), var(a))),
               var(h),
-              multiArrayAlloc(var(t), var(i), var(a)))));
+              multiArrayAlloc(var(t), var(i), var(a))
+          ),
+          trigger(
+              isNewMultiArray(
+                  heapNew(var(h), multiArrayAlloc(var(t), var(i), var(a))),
+                  var(h),
+                  multiArrayAlloc(var(t), var(i), var(a))
+            )
+          )
+      ));
 
       String v = quantVarName("v");
       BPLVariable vVar = new BPLVariable(v, new BPLTypeName(VALUE_TYPE));
@@ -1386,7 +1584,11 @@ public class Translator implements ITranslationConstants {
               logicalAnd(
                   logicalNot(alive(var(v), var(h))),
                   isEqual(typ(var(v)), arrayType(var(t))),
-                  isEqual(arrayLength(var(v)), var(i))))));
+                  isEqual(arrayLength(var(v)), var(i))
+              )
+          ),
+          trigger(isNewMultiArray(var(v), var(h), arrayAlloc(var(t), var(i))))
+      ));
 
       String e = quantVarName("e");
       vVar = new BPLVariable(v, new BPLTypeName(VALUE_TYPE));
@@ -1409,10 +1611,19 @@ public class Translator implements ITranslationConstants {
                           isNewMultiArray(get(var(h), arrayLoc(toref(var(v)), var(e))), var(h), var(a)),
                           isEqual(
                               multiArrayParent(get(var(h), arrayLoc(toref(var(v)), var(e)))),
-                              var(v)),
+                              var(v)
+                          ),
                           isEqual(
                               multiArrayPosition(get(var(h), arrayLoc(toref(var(v)), var(e)))),
-                              var(e))))))));
+                              var(e)
+                          )
+                      ),
+                      trigger(isNewMultiArray(get(var(h), arrayLoc(toref(var(v)), var(e))), var(h), var(a)))
+                  )
+              )
+          ),
+          trigger(isNewMultiArray(var(v), var(h), multiArrayAlloc(var(t), var(i), var(a))))
+      ));
     }
   }
 
@@ -1441,7 +1652,7 @@ public class Translator implements ITranslationConstants {
         vtExprs[i] = isEqual(var(t), typeRef(valueTypes[i]));
       }
       addComment("Defines the set of value types.");
-      addAxiom(forall(tVar, isEquiv(isValueType(var(t)), logicalOr(vtExprs))));
+      addAxiom(forall(tVar, isEquiv(isValueType(var(t)), logicalOr(vtExprs)), trigger(isValueType(var(t)))));
     }
 
     {
@@ -1461,7 +1672,11 @@ public class Translator implements ITranslationConstants {
                 isInRange(var(i), typeRef(valueType)),
                 logicalAnd(
                     lessEqual(intLiteral(getMinValue(valueType)), var(i)),
-                    lessEqual(var(i), intLiteral(getMaxValue(valueType)))))));
+                    lessEqual(var(i), intLiteral(getMaxValue(valueType)))
+                )
+            ),
+            trigger(isInRange(var(i), typeRef(valueType)))
+        ));
       }
 
       String i = quantVarName("i");
@@ -1473,7 +1688,10 @@ public class Translator implements ITranslationConstants {
           iVar, tVar,
           isEquiv(
               isSubtype(typ(ival(var(i))), var(t)),
-              isInRange(var(i), var(t)))));
+              isInRange(var(i), var(t))
+          ),
+          trigger(isInRange(var(i), var(t)))
+      ));
     }
 
     {
@@ -1491,7 +1709,9 @@ public class Translator implements ITranslationConstants {
       BPLVariable tVar = new BPLVariable(t, BPLBuiltInType.NAME);
       addAxiom(forall(
           iVar, tVar,
-          isInRange(icast(var(i), var(t)), var(t))));
+          isInRange(icast(var(i), var(t)), var(t)),
+          trigger(isInRange(icast(var(i), var(t)), var(t)))
+      ));
 
       addComment("Values which already are in the target value range are"
                  + " not affected by a cast.");
@@ -1501,7 +1721,10 @@ public class Translator implements ITranslationConstants {
           iVar, tVar,
           implies(
               isInRange(var(i), var(t)),
-              isEqual(icast(var(i), var(t)), var(i)))));
+              isEqual(icast(var(i), var(t)), var(i))
+          ),
+          trigger(isInRange(var(i), var(t)))
+      ));
     }
 
     {
@@ -1511,7 +1734,7 @@ public class Translator implements ITranslationConstants {
       addFunction(ELEMENT_TYPE_FUNC, BPLBuiltInType.NAME, BPLBuiltInType.NAME);
       String t = quantVarName("t");
       BPLVariable tVar = new BPLVariable(t, BPLBuiltInType.NAME);
-      addAxiom(forall(tVar, isEqual(elementType(arrayType(var(t))), var(t))));
+      addAxiom(forall(tVar, isEqual(elementType(arrayType(var(t))), var(t)), trigger(elementType(arrayType(var(t))))));
     }
 
     {
@@ -1552,8 +1775,10 @@ public class Translator implements ITranslationConstants {
               isSubtype(var(t1), arrayType(var(t2))),
               logicalAnd(
                   isEqual(var(t1), arrayType(elementType(var(t1)))),
-                  isSubtype(elementType(var(t1)), var(t2)))),
-          trigger(isSubtype(var(t1), arrayType(var(t2))))));
+                  isSubtype(elementType(var(t1)), var(t2)))
+              ),
+          trigger(isSubtype(var(t1), arrayType(var(t2))))
+      ));
     }
     
     {
@@ -1575,8 +1800,8 @@ public class Translator implements ITranslationConstants {
       
       addFunction(IS_NORMAL_RETURN_STATE_FUNC, returnState, BPLBuiltInType.BOOL);
       addFunction(IS_EXCEPTIONAL_RETURN_STATE_FUNC, returnState, BPLBuiltInType.BOOL);
-      addAxiom(forall(sVar, isEquiv(notEqual(var(s), var(n)), logicalNot(isNormalReturnState(var(s))))));
-      addAxiom(forall(sVar, isEquiv(notEqual(var(s), var(ex)), logicalNot(isExceptionalReturnState(var(s))))));
+      addAxiom(forall(sVar, isEquiv(notEqual(var(s), var(n)), logicalNot(isNormalReturnState(var(s)))), trigger(isNormalReturnState(var(s)))));
+      addAxiom(forall(sVar, isEquiv(notEqual(var(s), var(ex)), logicalNot(isExceptionalReturnState(var(s)))), trigger(isExceptionalReturnState(var(s)))));
     }
     
     {
@@ -1586,7 +1811,7 @@ public class Translator implements ITranslationConstants {
       //            precompiled BoogiePL version.
       declarations.add(axiomatizeHelperProcedure("java.lang.Object..init", "$java.lang.Object"));
       declarations.add(axiomatizeHelperProcedure("java.lang.Throwable..init", "$java.lang.Throwable"));
-      declarations.add(axiomatizeHelperProcedure("java.lang.Exception..init", "$java.lang.Exception"));
+      // declarations.add(axiomatizeHelperProcedure("java.lang.Exception..init", "$java.lang.Exception")); // $java.lang.Throwable is sufficient
       declarations.add(axiomatizeHelperProcedure("java.io.PrintStream.println", null));
     }
     
@@ -1600,7 +1825,7 @@ public class Translator implements ITranslationConstants {
   private BPLProcedure axiomatizeHelperProcedure(String name, String type) {
     String l = quantVarName("l");
     String o = quantVarName("o");
-    String T = quantVarName("T");
+    String T = quantVarName("t");
     BPLVariable lVar = new BPLVariable(l, new BPLTypeName(LOCATION_TYPE));
     BPLVariable oVar = new BPLVariable(o, BPLBuiltInType.REF);
     BPLVariable tVar = new BPLVariable(T, BPLBuiltInType.NAME);
@@ -1620,6 +1845,7 @@ public class Translator implements ITranslationConstants {
         new BPLSpecification(new BPLSpecificationClause[] {
 
             new BPLRequiresClause(
+              // All invariants are required to hold prior to a constructor call.
               forall(oVar, tVar, inv(var(T), var(o), var(HEAP_VAR)))
             )
             
@@ -1663,6 +1889,7 @@ public class Translator implements ITranslationConstants {
             ,
             
             new BPLEnsuresClause(
+                // All invariants are required to hold after a constructor call.
                 forall(oVar, tVar, inv(var(T), var(o), var(HEAP_VAR)))
             )
             
@@ -1684,14 +1911,20 @@ public class Translator implements ITranslationConstants {
           bVar,
           isEquiv(
               isEqual(bool2int(var(b)), intLiteral(0)),
-              isEqual(var(b), BPLBoolLiteral.FALSE))));
+              isEqual(var(b), BPLBoolLiteral.FALSE)
+          ),
+          trigger(bool2int(var(b)))
+      ));
 
       bVar = new BPLVariable(b, BPLBuiltInType.BOOL);
       addAxiom(forall(
           bVar,
           isEquiv(
               notEqual(bool2int(var(b)), intLiteral(0)),
-              isEqual(var(b), BPLBoolLiteral.TRUE))));
+              isEqual(var(b), BPLBoolLiteral.TRUE)
+          ),
+          trigger(bool2int(var(b)))
+      ));
     }
 
     {
@@ -1704,13 +1937,19 @@ public class Translator implements ITranslationConstants {
           iVar,
           isEquiv(
               isEqual(int2bool(var(i)), BPLBoolLiteral.FALSE),
-              isEqual(var(i), intLiteral(0)))));
+              isEqual(var(i), intLiteral(0))
+          ),
+          trigger(int2bool(var(i)))
+      ));
 
       addAxiom(forall(
           iVar,
           isEquiv(
               isEqual(int2bool(var(i)), BPLBoolLiteral.TRUE),
-              notEqual(var(i), intLiteral(0)))));
+              notEqual(var(i), intLiteral(0))
+          ),
+          trigger(int2bool(var(i)))
+      ));
     }
 
     {
@@ -1731,7 +1970,11 @@ public class Translator implements ITranslationConstants {
               isOfType(var(v), var(t)),
               logicalOr(
                   isEqual(var(v), rval(nullLiteral())),
-                  isSubtype(typ(var(v)), var(t))))));
+                  isSubtype(typ(var(v)), var(t))
+              )
+          ),
+          trigger(isOfType(var(v), var(t)))
+      ));
     }
 
     {
@@ -1752,7 +1995,22 @@ public class Translator implements ITranslationConstants {
               isInstanceOf(var(v), var(t)),
               logicalAnd(
                   notEqual(var(v), rval(nullLiteral())),
-                  isSubtype(typ(var(v)), var(t))))));
+                  isSubtype(typ(var(v)), var(t))
+              )
+          ),
+          trigger(isInstanceOf(var(v), var(t)))
+      ));
+
+      // [SW] inserted: if a value is an instance of a given type t,
+      // the value is of type t.
+      addAxiom(forall(
+          vVar, tVar,
+          implies(
+              isInstanceOf(var(v), var(t)),
+              isOfType(var(v), var(t))
+          ),
+          trigger(isInstanceOf(var(v), var(t)))
+      ));   
     }
 
     addComment("The function used for the declaration of object invariants.");
@@ -1782,8 +2040,10 @@ public class Translator implements ITranslationConstants {
           bVar, xVar, yVar,
           implies(
               var(b),
-              isEqual(ifThenElse(var(b), var(x), var(y)), var(x))),
-          trigger(ifThenElse(var(b), var(x), var(y)))));
+              isEqual(ifThenElse(var(b), var(x), var(y)), var(x))
+          ),
+          trigger(ifThenElse(var(b), var(x), var(y)))
+      ));
 
       bVar = new BPLVariable(b, BPLBuiltInType.BOOL);
       xVar = new BPLVariable(x, BPLBuiltInType.ANY);
@@ -1792,8 +2052,10 @@ public class Translator implements ITranslationConstants {
           bVar, xVar, yVar,
           implies(
               logicalNot(var(b)),
-              isEqual(ifThenElse(var(b), var(x), var(y)), var(y))),
-          trigger(ifThenElse(var(b), var(x), var(y)))));
+              isEqual(ifThenElse(var(b), var(x), var(y)), var(y))
+          ),
+          trigger(ifThenElse(var(b), var(x), var(y)))
+      ));
     }
   }
 
@@ -1880,7 +2142,10 @@ public class Translator implements ITranslationConstants {
             inv(typeRef(type), var(o), var(h)),
             implies(
                 isInstanceOf(rval(var(o)), typeRef(type)),
-                translator.translate(context, invariant)))));
+                translator.translate(context, invariant))
+            ),
+            trigger(inv(typeRef(type), var(o), var(h)))
+        ));
   }
 
   /**
@@ -2005,8 +2270,10 @@ public class Translator implements ITranslationConstants {
               tVar,
               implies(
                   isSubtype(var(t), typeRef(classType)),
-                  isEqual(var(t), typeRef(classType))),
-              trigger(isSubtype(var(t), typeRef(classType)))));
+                  isEqual(var(t), typeRef(classType))
+              ),
+              trigger(isSubtype(var(t), typeRef(classType)))
+          ));
         }
 
         // Generate axioms for ruling out "wrong supertypes".
@@ -2123,7 +2390,10 @@ public class Translator implements ITranslationConstants {
             hVar,
             logicalAnd(
                 isInstanceOf(rval(var(name)), typeRef(string)),
-                alive(rval(var(name)), var(h)))));
+                alive(rval(var(name)), var(h))
+            ),
+            trigger(alive(rval(var(name)), var(h)))
+        ));
       }
       return var(stringLiterals.get(literal));
     }
@@ -2149,7 +2419,10 @@ public class Translator implements ITranslationConstants {
             hVar,
             logicalAnd(
                 isInstanceOf(rval(var(name)), typeRef(clazz)),
-                alive(rval(var(name)), var(h)))));
+                alive(rval(var(name)), var(h))
+            ),
+            trigger(alive(rval(var(name)), var(h)))
+        ));
       }
       return var(name);
     }

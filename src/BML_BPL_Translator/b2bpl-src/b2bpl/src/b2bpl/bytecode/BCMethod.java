@@ -1,17 +1,15 @@
 package b2bpl.bytecode;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import b2bpl.bpl.ast.BPLExpression;
 import b2bpl.bytecode.analysis.ControlFlowGraph;
 import b2bpl.bytecode.bml.ast.BMLAssertStatement;
 import b2bpl.bytecode.bml.ast.BMLAssumeStatement;
 import b2bpl.bytecode.bml.ast.BMLLoopSpecification;
 import b2bpl.bytecode.bml.ast.BMLMethodSpecification;
-import b2bpl.bytecode.instructions.Instruction;
-import b2bpl.bytecode.instructions.InvokeInstruction;
 import b2bpl.translation.ITranslationConstants;
 
 
@@ -43,9 +41,7 @@ public class BCMethod extends BCMember implements IOpCodes {
 
   private ControlFlowGraph cfg;
   
-  private Set<String> m = new HashSet<String>(); // potentially modified variables
-  private Set<String> a = new HashSet<String>(); // all variables visble to this method
-  private Set<String> p = new HashSet<String>(); // propagated variables from invoked methods
+  private Set<BPLExpression> modifiedObjectes = new HashSet<BPLExpression>(); // references to potentially modified objects
 
   public BCMethod(
       int accessModifiers,
@@ -258,96 +254,20 @@ public class BCMethod extends BCMember implements IOpCodes {
   
   
   /**
-   * If a class field of a given JType t is being modified in this method,
-   * it will appear in this collection.
-   * @return List of all potentially modified types
+   * If an object is modified this method (e.g. either via an "invoke" instruction
+   * or a "putfield" instruction), its reference will appear in this collection.
+   * @return List of all references pointing to potentially modified objects
    */
-  public String[] getModifiedFields() {
-    return this.m.toArray(new String[this.m.size()]);
+  public BPLExpression[] getModifiedObjectRefs() {
+    return this.modifiedObjectes.toArray(new BPLExpression[this.modifiedObjectes.size()]);
   }
   
   /**
-   * If a class field of a given JType t is accessible from within this method,
-   * it will appear in this collection.
-   * @return List of all accessible types
+   * Adds a new reference to the list of references which point to potentially modified objects.
+   * @param ref BPLExpression reference to modified object
    */
-  public String[] getModifiableFields() {
-    return this.a.toArray(new String[this.a.size()]);
-  }
+  public void addModifiedObjectRef(BPLExpression ref) { this.modifiedObjectes.add(ref); }
   
-  /**
-   * If a class field of a given JType t is modified by a method called within this method,
-   * it will appear in this collection.
-   * @return List of all propagated types
-   */
-  public String[] getPropagatedFields() {
-    if (!this.fetchedPropagatedFields) {
-      this.p.clear();
-      this.fetchPropagatedFields(this);
-    }
-    return this.p.toArray(new String[this.p.size()]);
-  }
-  
-  /**
-   * Checks whether there are class fields of a given JType t which
-   * are being modified in this methd.
-   * @param t JType of the class field
-   * @return {@code True}, if there is a class field of the given type which is modified in this method.
-   * /
-  public boolean isModifiedType(String t) {
-    return m.contains(t);
-  } */
-  
-  /**
-   * Adds a new JType object to the collection of modifies types, indicating
-   * that there is a class field in this method's owner class of JType t
-   * with is being modified in this method.
-   * @param t JType object
-   */
-  public void addModifiedField(String t) { m.add(t); }
-  
-  /**
-   * Adds a new JType object to the collection of modifiable types, indicating
-   * that there is a class field in this method's owner class of JType t
-   * which is accessible from within this method.
-   * @param t JType object
-   */
-  public void addModifiableField(String t) { a.add(t); }
-  
-  public boolean isModifiedField(String t) { return this.m.contains(t); }
-  
-  public boolean isModifiableField(String t) { return this.a.contains(t); }
-  
-  public boolean isPropagatedField(String t) { return this.a.contains(t); }
-  
-  private boolean fetchedPropagatedFields = false;
-  /**
-   * Automatically retrieves all class fields which are potentially modified
-   * by a method invokation from within this method.
-   *
-   */
-  private void fetchPropagatedFields(BCMethod currentMethod) {
-    if (currentMethod.getInstructions() == null) return;
-    
-    for (InstructionHandle ih : currentMethod.getInstructions()) {
-      Instruction instr = ih.getInstruction();
-      if (instr instanceof InvokeInstruction) {
-        
-        BCMethod method = ((InvokeInstruction)instr).getMethod();
-        this.fetchPropagatedFields(method);
-        
-        for (String mt : method.getModifiedFields()) {
-          currentMethod.p.add(mt);
-        }
-        for (String pt : method.getPropagatedFields()) {
-          currentMethod.p.add(pt);
-        }
-        
-        currentMethod.fetchedPropagatedFields = true;
-        
-      }
-    }
-
-  }
+  public boolean isModifiedObjectRef(BPLExpression ref) { return this.modifiedObjectes.contains(ref); }
   
 }

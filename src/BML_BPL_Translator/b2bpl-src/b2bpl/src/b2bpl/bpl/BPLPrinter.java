@@ -92,6 +92,7 @@ public class BPLPrinter implements IBPLVisitor<Object> {
       if (i > 0) {
         print(", ");
       }
+     
       nodes[i].accept(this);
     }
   }
