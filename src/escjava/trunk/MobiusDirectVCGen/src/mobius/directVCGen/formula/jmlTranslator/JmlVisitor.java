@@ -1,6 +1,8 @@
 package mobius.directVCGen.formula.jmlTranslator;
 
+import mobius.directVCGen.formula.Bool;
 import mobius.directVCGen.formula.Expression;
+import mobius.directVCGen.formula.Formula;
 import mobius.directVCGen.formula.Heap;
 import mobius.directVCGen.formula.Logic;
 import mobius.directVCGen.formula.Lookup;
@@ -13,24 +15,30 @@ import mobius.directVCGen.formula.annotation.Cut;
 import mobius.directVCGen.formula.annotation.Set;
 import mobius.directVCGen.vcgen.struct.Post;
 
+import java.util.HashSet;
 import java.util.Properties;
 import java.util.Vector;
 import javafe.ast.ASTNode;
+import javafe.ast.AmbiguousVariableAccess;
 import javafe.ast.BinaryExpr;
 import javafe.ast.BlockStmt;
 import javafe.ast.ClassDecl;
 import javafe.ast.ConstructorDecl;
 import javafe.ast.DoStmt;
 import javafe.ast.FieldAccess;
+import javafe.ast.FieldDecl;
 import javafe.ast.ForStmt;
 import javafe.ast.FormalParaDecl;
+import javafe.ast.GenericVarDecl;
 import javafe.ast.IfStmt;
 import javafe.ast.InstanceOfExpr;
 import javafe.ast.LiteralExpr;
 import javafe.ast.LocalVarDecl;
 import javafe.ast.MethodDecl;
 import javafe.ast.ModifierPragma;
+import javafe.ast.ObjectDesignator;
 import javafe.ast.RoutineDecl;
+import javafe.ast.SkipStmt;
 import javafe.ast.Stmt;
 import javafe.ast.ThisExpr;
 import javafe.ast.TryCatchStmt;
@@ -89,6 +97,7 @@ import escjava.ast.VarDeclModifierPragma;
 import escjava.ast.VarExprModifierPragma;
 import escjava.ast.VisitorArgResult;
 import escjava.ast.WildRefExpr;
+import escjava.sortedProver.Lifter.FnTerm;
 import escjava.sortedProver.Lifter.QuantVariable;
 import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
@@ -118,7 +127,13 @@ public class JmlVisitor extends VisitorArgResult {
     fProperties = new Properties();
     fProperties.put("pred", Boolean.TRUE);
     fProperties.put("old", Boolean.FALSE);
+    fProperties.put("fieldSet", new HashSet<QuantVariableRef>());
+    fProperties.put("assignableSet", new HashSet<QuantVariableRef>());
+    fProperties.put("nothing", Boolean.FALSE); //used for assignable
     fProperties.put("interesting", Boolean.FALSE);
+    // firstPost: To add invariant only once to Lookup.postcondition
+    fProperties.put("firstPost", Boolean.TRUE);
+    fProperties.put("routinebegin", Boolean.TRUE);    
     fTranslator = new JmlExprToFormula(this);
   }
 
@@ -151,20 +166,30 @@ public class JmlVisitor extends VisitorArgResult {
     return visitTypeDecl(x, fProperties);
   }
 
+  
+  
+  
   /* (non-Javadoc 
    * @see javafe.ast.VisitorArgResult#visitRoutineDecl(javafe.ast.RoutineDecl, java.lang.Object)
    */
   public final Object visitRoutineDecl(final /*@non_null*/ RoutineDecl x, final Object o) {
-    x.accept(new VisibleTypeCollector(), o); // Visible Type Collector
+    x.accept(new VisibleTypeCollector(), o); 
     ((Properties) o).put("method", x);
-    //  invariante wird nur einmal zu Lookup.postcond angehängt
-    ((Properties) o).put("firstPost", new Boolean(true));
-    ((Properties) o).put("routinebegin", new Boolean(true));
+    ((Properties) o).put("firstPost",Boolean.TRUE);
+    ((Properties) o).put("routinebegin", Boolean.TRUE);
+    ((Properties) o).put("nothing", Boolean.FALSE);
     final QuantVariableRef result = (QuantVariableRef) ((Properties) o).get("result");
     Lookup.postconditions.put(x, new Post(result, Logic.True()));
     Lookup.exceptionalPostconditions.put(x, new Post(Expression.rvar(Ref.sort), Logic.True()));
-    return visitASTNode(x, o);
+    Object fObj = visitASTNode(x, o);
+    doAssignable(o);
+    return fObj;
   }
+
+  
+  
+  
+  
 
   /* (non-Javadoc)
    * @see javafe.ast.VisitorArgResult#visitMethodDecl(javafe.ast.MethodDecl, java.lang.Object)
@@ -225,6 +250,20 @@ public class JmlVisitor extends VisitorArgResult {
     }
   }
 
+  /* (non-Javadoc 
+   * @see javafe.ast.VisitorArgResult#visitFieldDecl(javafe.ast.RoutineDecl, java.lang.Object)
+   */
+  /*public /*@non_null* Object visitFieldDecl(/*@non_null  FieldDecl x, Object o) {
+    //alle objekte sammeln
+    HashSet<QuantVariableRef> fFieldSet = (HashSet<QuantVariableRef>) ((Properties) o).get("fieldSet");
+    QuantVariableRef fField = Expression.rvar(x);
+    fFieldSet.add(fField);
+    ((Properties) o).put("fieldSet", fFieldSet);
+    return visitGenericVarDecl(x,o);
+  }*/
+  
+  
+  
   /* (non-Javadoc)
    * @see javafe.ast.VisitorArgResult#visitLocalVarDecl(javafe.ast.LocalVarDecl, java.lang.Object)
    */
@@ -284,9 +323,38 @@ public class JmlVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitCondExprModifierPragma(escjava.ast.CondExprModifierPragma, java.lang.Object)
    */
   public final Object visitCondExprModifierPragma(final /*@non_null*/ CondExprModifierPragma x, final Object o) {
+    
+    switch (x.getTag()) {
+    case TagConstants.ASSIGNABLE:
+     // Term t = (Term) visitASTNode(x,o); //Objekt assignable
+      //final RoutineDecl rd = (RoutineDecl)((Properties) o).get("method");
+      //Post allPosts = Lookup.postconditions.get(rd);
+      if (x.expr instanceof FieldAccess)
+      {
+        HashSet fAssignableSet = (HashSet) ((Properties) o).get("assignableSet");
+        FieldAccess fField = (FieldAccess) x.expr;
+        FieldDecl fDecl = fField.decl;
+        QuantVariableRef rvar = Expression.rvar(fDecl);
+        fAssignableSet.add(rvar); 
+        ((Properties) o).put("assignableSet", fAssignableSet);         
+        
+      }
+      else if (x.expr instanceof NothingExpr)
+      {
+        ((Properties) o).put("nothing",Boolean.TRUE);
+      }
+      break;
+   
+   
+    default:
+      break;
+  }
+    
     return visitASTNode(x, o);
   }
-
+ 
+  
+  
   /* (non-Javadoc)
    * @see escjava.ast.VisitorArgResult#visitCondition(escjava.ast.Condition, java.lang.Object)
    */
@@ -357,7 +425,7 @@ public class JmlVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitExprModifierPragma(escjava.ast.ExprModifierPragma, java.lang.Object)
    */
   public final Object visitExprModifierPragma(final /*@non_null*/ ExprModifierPragma x, final Object o) {
-    ((Properties) o).put("interesting", new Boolean(true));
+    ((Properties) o).put("interesting", Boolean.TRUE);
     final RoutineDecl rd = (RoutineDecl)((Properties) o).get("method");
     Term t = (Term)visitASTNode(x, o);
     switch (x.getTag()) {
@@ -375,10 +443,16 @@ public class JmlVisitor extends VisitorArgResult {
         if (((Boolean) ((Properties) o).get("firstPost")).booleanValue()) {
           final Term invToPost = (Term) invToPostconditions(o);
           allPosts = new Post(allPosts.getRVar(), Logic.and(allPosts.getPost(), invToPost));
-          ((Properties) o).put("firstPost", new Boolean(false));
+          ((Properties) o).put("firstPost", Boolean.FALSE);
         }
         Lookup.postconditions.put(rd, allPosts);
         break;
+      case TagConstants.ASSIGNABLE:
+      int a = 8;
+        break;
+      case TagConstants.DIVERGES:
+        int ad = 8;
+          break;
       default:
         break;
     }
@@ -389,7 +463,7 @@ public class JmlVisitor extends VisitorArgResult {
    * @see escjava.ast.VisitorArgResult#visitVarExprModifierPragma(escjava.ast.VarExprModifierPragma, java.lang.Object)
    */
   public final Object visitVarExprModifierPragma(final /*@non_null*/ VarExprModifierPragma x, final Object o) {
-    ((Properties) o).put("interesting", new Boolean(true));
+    ((Properties) o).put("interesting", Boolean.TRUE);
 
     final RoutineDecl currentRoutine = (RoutineDecl) ((Properties) o).get("method");
     Post allExPosts = Lookup.exceptionalPostconditions.get(currentRoutine);
@@ -424,7 +498,7 @@ public class JmlVisitor extends VisitorArgResult {
 
     //Save arguments values in prestate as ghosts.
     if (((Boolean)((Properties) o).get("routinebegin")).booleanValue()){
-      ((Properties) o).put("routinebegin", new Boolean(false));
+      ((Properties) o).put("routinebegin", Boolean.FALSE);
       RoutineDecl m = (RoutineDecl) ((Properties) o).get("method");
       for (FormalParaDecl p: m.args.toArray()) {
         t1 = Expression.rvar(p);
@@ -453,6 +527,7 @@ public class JmlVisitor extends VisitorArgResult {
           case TagConstants.MAINTAINING:
             inv = t;
             break;
+            //decreases, decreasing, loop_predicate
           default:
             break;
         }
@@ -515,6 +590,15 @@ public class JmlVisitor extends VisitorArgResult {
         }
       }
     }
+    
+    //If there is no more Stmt, we generate a dummy SkipStmt and add the last precondition to it
+    if(!annos.isEmpty())
+    {
+      SkipStmt skipStmt = SkipStmt.make(200); //loc=??????????? welche location?
+      AnnotationDecoration.inst.setAnnotPre(skipStmt,annos);
+      x.stmts.addElement(skipStmt);
+      annos.clear();
+    }    
     return null;
   }
 
@@ -946,6 +1030,39 @@ public class JmlVisitor extends VisitorArgResult {
     return forAllTerm;
   }
 
+  
+  /**
+   * Adds a Term to the routines postcondition describing all assignable variables
+   * @param o Properties object also containing all assignable variables
+   */
+  private void doAssignable(Object o) {
+    HashSet fAssignable    = (HashSet) ((Properties) o).get("assignableSet");
+    
+    if(((Boolean) ((Properties) o).get("nothing")).booleanValue() | !fAssignable.isEmpty())
+    {
+      final RoutineDecl rd = (RoutineDecl)((Properties) o).get("method");
+      Post allPosts = Lookup.postconditions.get(rd);
+      Term forAllTerm = null;
+      QuantVariableRef targetVar = Expression.rvar(Ref.sort); 
+      //    FIXME: sortAny should be available (now deprecated in Formula.sort)
+      QuantVariableRef fieldVar = Expression.rvar(Formula.sort);
+      QuantVariableRef fieldVarOld= Expression.old(fieldVar);
+      Term fEquals = Logic.equals(fieldVar, fieldVarOld);
+      final QuantVariable[] vars = {targetVar.qvar, fieldVar.qvar}; 
+      Term fTerm = Logic.not(Logic.isAllocated(Heap.varPre, targetVar));
+      if (!fAssignable.isEmpty())
+      {    
+          fTerm = Logic.or(fTerm,Logic.isAssignable(fieldVar, o));       
+      }
+      fTerm = Logic.or(fTerm, fEquals); 
+      forAllTerm = Logic.forall(vars, fTerm);
+      //    FIXME jgc: I don't know if fVar should be needed here; needs a review
+      allPosts = new Post(allPosts.getRVar(), Logic.and(allPosts.getPost(), forAllTerm));
+      Lookup.postconditions.put(rd, allPosts);
+     ((Properties) o).put("nothing", Boolean.FALSE); //set default values for next routine
+     ((Properties) o).put("assignableSet", new HashSet<QuantVariableRef>()); 
+    } 
+  }
 
 
 }
