@@ -227,17 +227,24 @@ public final class Logic {
     Term left = l;
     Term right = r;
     
+    if ((l.getSort() == Formula.sort) | (r.getSort() == Formula.sort))
+    {
+      return Formula.lf.mkFnTerm(Formula.lf.symAnyEQ, new Term[]{left, right});
+    }
+    
     if (l.getSort() != r.getSort() && 
-        (!Num.isNum(r.getSort()) || !Num.isNum(l.getSort()))) {
+        (!Num.isNum(r.getSort()) || !Num.isNum(l.getSort())))
+        {
       throw new IllegalArgumentException("Different types when creating equals, " +
                                          "found: " + l.getSort() + " and " + r.getSort());
     }
+    
     FnTerm t = null;
-    if (l.getSort() == Bool.sort) {
+    if ((l.getSort() == Bool.sort)) {
       t = Formula.lf.mkFnTerm(Formula.lf.symBoolPred, new Term[] {left, right});
       t.tag = NodeBuilder.predEQ;
     }
-    if (l.getSort() == Ref.sort) {
+    if ((l.getSort() == Ref.sort)) {
       t = Formula.lf.mkFnTerm(Formula.lf.symRefEQ, new Term[] {left, right});
     }
     else if (l.getSort() == Num.sortInt) {
@@ -497,7 +504,6 @@ public final class Logic {
       throw new IllegalArgumentException("Type of the second param should be ref (" + 
                                          Type.sort + "), found: " + type.getSort());
     }
-
     return Formula.lf.mkFnTerm(Formula.lf.symAssignCompat, new Term [] {heap, val, type});
   }
 
@@ -525,15 +531,6 @@ public final class Logic {
     return Formula.lf.mkFnTerm(Formula.lf.symIsAllocated, new Term [] {heap, val});
   }
 
-  /**
-   * @deprecated Use Logic.equals instead.
-   * @param t1
-   * @param t2
-   * @return
-   */
-  public static Term eqInv(final Term t1, final Term t2) {
-    return Formula.lf.mkFnTerm(Formula.lf.symRefEQ, new Term[]{t1, t2});
-  }
 
 
   /**
@@ -551,7 +548,7 @@ public final class Logic {
     while (iter.hasNext()) {
       final javafe.ast.Type type = (javafe.ast.Type) iter.next();
       final QuantVariableRef typeTerm = Type.translate(type);
-      t1 = Logic.eqInv(var, typeTerm);
+      t1 = Logic.equals(var, typeTerm);
       if (t2 == null) {
         t2 = t1;
       }
@@ -563,6 +560,31 @@ public final class Logic {
   }
 
 
+  /**
+   * @param var The object for which we want to find out whether it could
+   * have been modified by the method.
+   * @param o Parameter object also containing a list of modifiable types.
+   * @return A Term expressing the check described above.
+   */
+  public static Term isAssignable(final  QuantVariableRef targetVar, final Object o) {
+    Term t1 = null;
+    Term t2 = null;
+    final Set assignSet = (HashSet) ((Properties)o).get("assignableSet");
+    final Iterator iter = assignSet.iterator();
+    
+    while (iter.hasNext()) {
+      final QuantVariableRef setVar = (QuantVariableRef) iter.next();
+      t1 = Logic.equals(setVar, targetVar); 
+      if (t2 == null) {
+        t2 = t1;
+      }
+      else {
+        t2 = Logic.and(t2, t1);
+      }
+    }
+    return t2;
+  }
+  
 
   /**
    * Main for testing purpose.
