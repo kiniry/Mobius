@@ -112,6 +112,22 @@ public final class Heap {
                                       new Term[] {heap, obj, Expression.rvar(var)});
     return valueToSort(select, var.type);
   }
+  
+  
+  /**
+   * The location (loc) for a dynamic field.
+   * @param heap the heap on which to do the loc
+   * @param obj the object to which the field belong
+   * @param var the name of the field on which to do the loc
+   * @return the term representing the loc
+   */
+  public static Term loc(final QuantVariableRef heap, final Term obj, 
+                            final QuantVariable var) {
+    final Term loc = Formula.lf.mkFnTerm(Formula.lf.symDynLoc, 
+                                      new Term[] {heap, obj, Expression.rvar(var)});
+    return valueToSort(loc, var.type);
+  }
+  
 
   /**
    * The select for an element of an array.
@@ -162,6 +178,9 @@ public final class Heap {
     }
     else if (type == Formula.lf.sortReal) {
       res = Formula.lf.mkFnTerm(Formula.lf.symValueToReal,  new Term [] {t});
+    }
+    else if (type == Formula.lf.sortAny) {
+      res = Formula.lf.mkFnTerm(Formula.lf.symValueToAny,  new Term [] {t});
     }
     else {
       throw new IllegalArgumentException("Bad type " +
