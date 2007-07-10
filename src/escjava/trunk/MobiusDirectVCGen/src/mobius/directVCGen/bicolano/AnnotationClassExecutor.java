@@ -29,6 +29,10 @@ public class AnnotationClassExecutor extends ClassExecutor {
     
     // first we print 
     final Method[] methods = fClass.getMethods();
+    if (!fClass.getClassName().equals(fSig.simpleName)) {
+      // quick fix; should check the package names too
+      return;
+    }
     for (Method met: methods) {
       final AnnotationMethodExecutor ame = new AnnotationMethodExecutor(this, met, 
                                                                   MethodGetter.get(fSig, met));

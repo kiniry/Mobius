@@ -43,7 +43,6 @@ public class MethodGetter extends ABasicVisitor {
   public Object visitConstructorDecl(final /*@non_null*/ ConstructorDecl cd, 
                                      final Object o) {
     if (fMetName.equals("<init>")) {
-      System.out.println("here" + cd);
       return cd;
     }
     return o;
@@ -66,7 +65,11 @@ public class MethodGetter extends ABasicVisitor {
   }
   
   public static RoutineDecl get(final TypeSig sig, final Method met) {
-    return (RoutineDecl) sig.getCompilationUnit().accept(new MethodGetter(met),  
-                                                    null);  
+    final RoutineDecl rout = (RoutineDecl) sig.getCompilationUnit()
+                                  .accept(new MethodGetter(met), null); 
+    if (rout == null) {
+      throw new NullPointerException("" + met + sig.getCompilationUnit());
+    }
+    return rout;
   }
 }

@@ -24,6 +24,9 @@ public class Post {
    * @param post the logical formula
    */
   public Post (final QuantVariableRef var, final Term post) {
+    if (post == null) {
+      throw new NullPointerException();
+    }
     fVar = var;
     fPost = post;
   }
@@ -94,7 +97,7 @@ public class Post {
       return p1;
     }
     return new Post(p1.fVar, 
-                    Logic.Safe.and(p1.fPost, p2.subst(p2.fVar, p1.fVar)));
+                    Logic.and(p1.fPost, p2.subst(p2.fVar, p1.fVar)));
   }
 
   /**
@@ -112,7 +115,7 @@ public class Post {
       return p1;
     }
     return new Post(p1.fVar, 
-                    Logic.Safe.implies(p1.fPost, p2.subst(p2.fVar, p1.fVar)));
+                    Logic.implies(p1.fPost, p2.subst(p2.fVar, p1.fVar)));
   }
   /**
    * Nearly the same semantic as the {@link #implies(Post, Post)} method.
@@ -127,7 +130,7 @@ public class Post {
     if (p2 == null) {
       return p1;
     }
-    return Logic.Safe.implies(p1, p2.fPost);
+    return Logic.implies(p1, p2.fPost);
   }
   
   /**

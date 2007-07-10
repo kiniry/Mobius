@@ -101,14 +101,14 @@ public class StmtVCGen extends ExpressionVisitor {
       final AAnnotation aa = annot.get(i);
       switch(aa.getID()) {
         case AAnnotation.annotAssert:
-          fVcs.add(Logic.Safe.implies(aa.formula, post));
+          fVcs.add(Logic.implies(aa.formula, post));
           post = aa.formula;
           break;
         case AAnnotation.annotCut:
-          post = Logic.Safe.and(aa.formula, Logic.Safe.implies(aa.formula, post));
+          post = Logic.and(aa.formula, Logic.implies(aa.formula, post));
           break;
         case AAnnotation.annotAssume:
-          post = Logic.Safe.implies(aa.formula, post);
+          post = Logic.implies(aa.formula, post);
           break;
         case AAnnotation.annotSet: {
           final mobius.directVCGen.formula.annotation.Set s = 
@@ -142,7 +142,7 @@ public class StmtVCGen extends ExpressionVisitor {
     Post post = treatAnnot(entry, fAnnot.getAnnotPost(x));
     final QuantVariableRef b  = Expression.rvar(Bool.sort);
 
-    post = new Post(b, Logic.Safe.and(b, Logic.Safe.implies(b, post.getPost())));
+    post = new Post(b, Logic.and(b, Logic.implies(b, post.getPost())));
     entry.fPost = post;
     post = (Post)x.pred.accept(fExprVisitor, entry);
     return treatAnnot(entry, fAnnot.getAnnotPre(x));
@@ -224,10 +224,12 @@ public class StmtVCGen extends ExpressionVisitor {
     final Post pinv = new Post(inv);
     final VCEntry vceBody = mkEntryWhile(vce, pinv);
     Post bodypre;
-    if (x.stmt instanceof BlockStmt)
+    if (x.stmt instanceof BlockStmt) {
       bodypre = visitInnerBlockStmt((BlockStmt)x.stmt, vceBody);
-    else 
+    }
+    else { 
       bodypre = (Post) x.stmt.accept(this, vceBody);
+    }
 
     final QuantVariableRef v = Expression.rvar(Bool.sort);
     vce.fPost = new Post(v,
@@ -613,10 +615,12 @@ public class StmtVCGen extends ExpressionVisitor {
       vceBody.fPost = (Post) x.forUpdate.elementAt(i).accept(this, vceBody);
     }
     Post bodypre;
-    if (x.body instanceof BlockStmt)
+    if (x.body instanceof BlockStmt) {
       bodypre = visitInnerBlockStmt((BlockStmt)x.body, vceBody);
-    else 
+    }
+    else {
       bodypre = (Post) x.body.accept(this, vceBody);
+    }
 
     final QuantVariableRef v = Expression.rvar(Bool.sort);
     vce.fPost = new Post(v,

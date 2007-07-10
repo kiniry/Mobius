@@ -30,6 +30,12 @@ public class AnnotationMethodExecutor extends ABasicExecutor {
 
   public AnnotationMethodExecutor(ABasicExecutor be, final Method met, final RoutineDecl rout) {
     super(be);
+    if (rout == null) {
+      throw new NullPointerException();
+    }
+    if (met == null) {
+      throw new NullPointerException();
+    }
     fRout = rout;
     fMeth = met;
   }
@@ -147,14 +153,14 @@ public class AnnotationMethodExecutor extends ABasicExecutor {
     
     // momentary fix
     for (QuantVariableRef qvr: list) {
-      System.out.println();
-      System.out.println(qvr + " " + Expression.old(qvr));
+//      System.out.println();
+//      System.out.println(qvr + " " + Expression.old(qvr));
       
       normalPost = new Post(normalPost.getRVar(),
                             normalPost.subst(Expression.old(qvr), qvr));
       excpPost = new Post(excpPost.getRVar(),
                             excpPost.subst(Expression.old(qvr), qvr));
-      System.out.println(normalPost);
+//      System.out.println(normalPost);
     }
     // end momentary fix 
     out.incTab();

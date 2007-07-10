@@ -444,7 +444,7 @@ public class JmlVisitor extends VisitorArgResult {
           final Term invToPre = (Term) invToPreconditions(o);
           t = Logic.Safe.and(t, invToPre);
         }
-        if (rd instanceof ConstructorDecl){
+        if (rd instanceof ConstructorDecl) {
           t = Logic.boolToProp(t);
         }
         Lookup.preconditions.put(rd, t);
