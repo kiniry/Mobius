@@ -95,7 +95,7 @@ public class ClassExecutor extends ASignatureExecutor {
     doSignature();
     System.out.println("done.");
     
-    System.out.print("  --> Generating " + fModuleName + ":");
+    System.out.print("  --> Generating " + fModuleName + ": ");
     doMain();
     System.out.println("done.");
 
