@@ -1,10 +1,14 @@
-/**
- * 
- */
+public class A {
+  int val ; 
+  A next;
 
-public class A  extends ToyExample{
-	static int fs = 2;
-	public  ToyExample t(int i) {
-		return null;
-	}
+  A m(A list ) {
+   while (list.next != null ) {
+     list = list.next;
+   }
+//   A copy = new A();
+//   copy.val = list.val;
+   return new A();
+  } 
 }
+

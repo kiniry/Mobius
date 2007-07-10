@@ -197,7 +197,7 @@ public class ExpressionVCGen extends BinaryExpressionVCGen {
                                               entry.fPost.substWith(res)).subst(Ref.varThis, 
                                                                                 newThis));
 
-    entry.fPost = new Post(Logic.and(pre, Logic.implies(pre, Logic.and(tNormal, tExcp))));
+    entry.fPost = new Post(Logic.Safe.and(pre, Logic.Safe.implies(pre, Logic.and(tNormal, tExcp))));
 
     entry.fPost = new Post(Logic.forall(newThis, 
                                        Logic.forall(newheap, 
