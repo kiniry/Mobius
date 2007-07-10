@@ -968,7 +968,9 @@ public class Lifter extends EscNodeBuilder
     public FnSymbol symValueToInt = registerFnSymbol("%valueToInt", new Sort[] { sortValue }, sortInt);
     public FnSymbol symValueToBool = registerFnSymbol("%valueToBool", new Sort[] { sortValue }, sortBool);
     public FnSymbol symValueToReal = registerFnSymbol("%valueToReal", new Sort[] { sortValue }, sortReal);
+    public FnSymbol symValueToAny = registerFnSymbol("%valueToAny", new Sort[] { sortValue }, sortAny);
 
+    
     public FnSymbol symRefToValue = registerFnSymbol("%RefToValue", new Sort[] { sortRef}, sortValue);
     public FnSymbol symIntToValue = registerFnSymbol("%IntToValue", new Sort[] { sortInt}, sortValue);
     public FnSymbol symBoolToValue = registerFnSymbol("%BoolToValue", new Sort[] {sortBool}, sortValue);
@@ -985,6 +987,8 @@ public class Lifter extends EscNodeBuilder
     public FnSymbol symNewObj = registerFnSymbol("%newObj", new Sort[] { sortMap, sortType, sortMap, sortRef }, sortPred);
     /** symbol for dynamic fields select Map -> Ref -> Name -> Value */
     public FnSymbol symDynSelect = registerFnSymbol("%dynSelect", new Sort[] { sortMap, sortRef, sortRef }, sortValue);
+    /** symbol for dynamic fields select Map -> Ref -> Name -> Value */
+    public FnSymbol symDynLoc = registerFnSymbol("%dynLoc", new Sort[] { sortMap, sortRef, sortRef }, sortValue);
     /** symbol for dynamic fields store Map -> Ref -> Name -> Value -> Map */
     public FnSymbol symDynStore = registerFnSymbol("%dynStore", new Sort[] { sortMap, sortRef, sortRef, sortValue }, sortMap);
     /** symbol to mean a new array has been created */
