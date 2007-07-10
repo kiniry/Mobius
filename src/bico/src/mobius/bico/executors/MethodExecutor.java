@@ -274,7 +274,7 @@ class MethodExecutor extends ASignatureExecutor {
             str += "(Some ";
             final String exName = method.getConstantPool().getConstantString(catchType,
                                                                 Constants.CONSTANT_Class);
-            str += Util.coqify(exName) + ".className) ";
+            str += Util.coqify(exName) + "Type.className) ";
           }
           str += codExc.getStartPC() + "%N " + 
                  codExc.getEndPC() + "%N " + 

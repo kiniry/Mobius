@@ -15,6 +15,9 @@ public interface Dictionary {
 
   /** determine the span of the 'reserved' class names number default is 20. */
   int RESERVED_CLASSES = 20;
+  
+  /** determine the span of the 'reserved' packages names number default is 10. */
+  int RESERVED_PACKAGES = 10;
 
   /**
    * Associate package implementation name coqPackageName to the corresponding

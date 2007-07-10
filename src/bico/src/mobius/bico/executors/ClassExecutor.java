@@ -207,7 +207,7 @@ public class ClassExecutor extends ASignatureExecutor {
         fOut.println("None");
       } 
       else {
-        fOut.println("(Some " + superClassName + ".className)");
+        fOut.println("(Some " + superClassName + "Type.className)");
       }
     }
     enumerateInterfaces();

@@ -19,6 +19,7 @@ import mobius.bico.implem.MapImplemSpecif;
 
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.generic.ClassGen;
+import org.apache.bcel.util.ClassLoaderRepository;
 import org.apache.bcel.util.ClassPath;
 import org.apache.bcel.util.SyntheticRepository;
 
@@ -48,9 +49,6 @@ public class Executor extends ABasicExecutor {
     "              in its class path\n" + 
     "-----------------------------------------------------------------------------------";
 
-  /** determine the span of the 'reserved' packages names number default is 10. */
-  private static final int RESERVED_PACKAGES = 10;
-
   /** the coq files extension. */
   private static final String suffix = ".v";
 
@@ -77,9 +75,6 @@ public class Executor extends ABasicExecutor {
   /** list of already treated interfaces. */
   private List<ClassExecutor> fTreatedInterfaces = new ArrayList<ClassExecutor>();
   
-  /** current package number. */
-  private int fCurrentPackage = RESERVED_PACKAGES;
-
   /** tells whether or not the help message must be shown. */
   private boolean fShowHelp;
 
@@ -91,8 +86,9 @@ public class Executor extends ABasicExecutor {
    * Minimal constructor.
    */
   private Executor() {
-    super(SyntheticRepository.getInstance(), new MapImplemSpecif(),
+    super(new ClassLoaderRepository(ClassLoader.getSystemClassLoader()), new MapImplemSpecif(),
           new MethodHandler(), null, new CamlDictionary(), null);
+    //System.out.println(ClassLoader.getSystemClassLoader());
   }
 
   /**
@@ -105,6 +101,24 @@ public class Executor extends ABasicExecutor {
   public Executor(final String[] args) {
     this();
     init(args); 
+  }
+  
+  /**
+   * A class loader that changes the behaviour of the loadClass method.
+   * @author J. Charles (julien.charles@inria.fr)
+   */
+  private static class MyClassLoader extends ClassLoader {
+    /**
+     * Does a call to {@link #loadClass(String, boolean)}, but with the second
+     * argument as true: the class has to be resolved.
+     * @param name the name of the class to load
+     * @return the newly loaded class
+     * @throws ClassNotFoundException if the class cannot be retrieved
+     */
+    @Override
+    public Class< ? > loadClass(final String name) throws ClassNotFoundException {
+      return loadClass(name, true);
+    }
   }
   
   /**
@@ -159,8 +173,6 @@ public class Executor extends ABasicExecutor {
     
     initWorkingDir(paths);
   }
-  
-  
   
   /**
    * Initialize the working directory and file from the given path.
@@ -354,8 +366,11 @@ public class Executor extends ABasicExecutor {
    */
   public void handleLibraryClass(final String clname) throws ClassNotFoundException, 
                                                              IOException {
-    System.out.println(clname);
-    handleClass(clname, ClassPath.SYSTEM_CLASS_PATH);
+    final MyClassLoader mcl = new MyClassLoader(); 
+    mcl.loadClass(clname);
+    final ClassLoaderRepository rep = new ClassLoaderRepository(mcl); 
+    handleClass(rep.loadClass(clname));
+    
   }
 
   /**
@@ -370,30 +385,24 @@ public class Executor extends ABasicExecutor {
                                                              IOException {
     final ClassPath cp = new ClassPath(pathname);
     //System.out.println(cp);
-    handleClass(clname, cp);
+    handleClass(SyntheticRepository.getInstance(cp).loadClass(clname));
 
   }
 
   /**
    * Handle one class. The class name must be valid, and  the class
    * should be available in the class path.
-   * @param clname the name of the class to load
-   * @param cp the class path where to find the class
+   * @param jc the class to load
    * @throws ClassNotFoundException if the class is unavailable or if there
    * are some type resolution problems 
    * @throws IOException if the class executor has a writing problem
    */
-  public void handleClass(final String clname, 
-                           final ClassPath cp) throws ClassNotFoundException, IOException {
-    final JavaClass jc = SyntheticRepository.getInstance(cp).loadClass(clname);
+  public void handleClass(final JavaClass jc) throws ClassNotFoundException, IOException {
+    
     fRepos.storeClass(jc);
     final ClassGen cg = new ClassGen(jc);
     String pn = jc.getPackageName();
-    int packageName = fDico.getCoqPackageName(jc);
-    if (packageName == 0) {
-      packageName = fCurrentPackage++;
-      fDico.addPackage(pn, packageName);
-    }
+    
     pn = Util.getCoqPackageName(pn);
     final ClassExecutor ce = getClassExecutor(cg);
     

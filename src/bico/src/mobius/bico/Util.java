@@ -200,11 +200,12 @@ public final class Util {
       final ObjectType ot = (ObjectType) type;
       try {
         if (ot.referencesClassExact()) {
-          convertedType = "(ClassType " + coqify(ot.getClassName()) + ".className)";
+          convertedType = "(ClassType " + coqify(ot.getClassName()) + "Type.className)";
         } 
         else if (ot.referencesInterfaceExact()) {
           // TODO: adjust to the structure of "interface" modules
-          convertedType = "(InterfaceType " + coqify(ot.getClassName()) + ".interfaceName)";
+          convertedType = "(InterfaceType " + 
+                  coqify(ot.getClassName()) + "Type.interfaceName)";
         } 
         else {
           unhandled("ObjectType", type);
@@ -215,10 +216,10 @@ public final class Util {
         final JavaClass jc = repos.findClass(ot.getClassName());
         if (jc != null) {
           if (jc.isClass()) {
-            return "(ClassType " + coqify(ot.getClassName()) + ".className)";
+            return "(ClassType " + coqify(ot.getClassName()) + "Type.className)";
           }
           else if (jc.isInterface()) {
-            return "(InterfaceType " + coqify(ot.getClassName()) + ".interfaceName)";
+            return "(InterfaceType " + coqify(ot.getClassName()) + "Type.interfaceName)";
           }
         }
         throw e;

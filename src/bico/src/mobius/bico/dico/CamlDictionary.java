@@ -57,6 +57,9 @@ import org.apache.bcel.classfile.JavaClass;
 public class CamlDictionary implements Dictionary {
   /** current class number. */
   private int fCurrentClass = RESERVED_CLASSES;
+  
+  /** current package number. */
+  private int fCurrentPackage = RESERVED_PACKAGES;
 
   /**
    * This class is used to implement the Couples and 
@@ -204,13 +207,12 @@ public class CamlDictionary implements Dictionary {
 
 
   public int getCoqPackageName(final JavaClass jc) {
-    final Couple c = fClassNames.get(jc.getClassName());
-    if (c == null) {
-      return 0;
+    int packageName = fPackageNames.get(jc.getPackageName());
+    if (packageName == 0) {
+      packageName = fCurrentPackage++;
+      addPackage(jc.getPackageName(), packageName);
     }
-    else {
-      return c.fI1;
-    }
+    return packageName;
   }
   
   /*
