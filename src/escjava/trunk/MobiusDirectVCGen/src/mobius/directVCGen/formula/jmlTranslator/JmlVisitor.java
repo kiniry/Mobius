@@ -608,7 +608,7 @@ public class JmlVisitor extends VisitorArgResult {
     
     //If there is no more Stmt, we generate a dummy SkipStmt and add the last precondition to it
     if (!annos.isEmpty()) { 
-      final SkipStmt skipStmt = SkipStmt.make(200); //loc=??????????? welche location?
+      final SkipStmt skipStmt = SkipStmt.make(0); //FIXME cbr: which location?
       AnnotationDecoration.inst.setAnnotPre(skipStmt, annos);
       x.stmts.addElement(skipStmt);
       annos.clear();
