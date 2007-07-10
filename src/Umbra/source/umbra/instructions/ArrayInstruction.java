@@ -9,7 +9,7 @@ import org.apache.bcel.generic.Type;
 
 import umbra.UmbraHelper;
 import umbra.UmbraPlugin;
-import umbra.editor.parsing.IBytecodeStrings;
+import umbra.editor.parsing.AbstractBytecodeStrings;
 
 
 
@@ -132,7 +132,7 @@ public class ArrayInstruction extends StringInstruction {
   {
     final String my_line_text = getMy_line_text();
     final String s = UmbraHelper.stripAllWhitespace(my_line_text);
-    final String[] s2 = IBytecodeStrings.array;
+    final String[] s2 = AbstractBytecodeStrings.ARRAY_INS;
     int j, y;
     for (j = 0; j < s2.length; j++) {
       if ((s.indexOf(s2[j]) > 0) &&

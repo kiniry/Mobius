@@ -13,9 +13,9 @@ import umbra.editor.IColorValues;
 /**
  * This method defines coloring rules in tags.
  * It has been generated automatically except obtaing
- * color values from the array in IColorValues.
+ * color values from the array in {@ref IColorValues}.
  *
- * @author Samuel Willimann (wsamuel@student.ethz.ch)
+ * @author Wojciech Wąs (ww209224@students.mimuw.edu.pl)
  * @version a-01
  */
 public class BytecodeTagScanner extends RuleBasedScanner {
@@ -48,15 +48,15 @@ public class BytecodeTagScanner extends RuleBasedScanner {
   /**
    * TODO.
    *
-   * @param manager the color manager related to the current bytecode
+   * @param a_manager the color manager related to the current bytecode
    *    editor, it must be the same as in the current
    *    {@ref BytecodeConfiguration} object
-   * @param mod the number of the current coloring style, it must be the
+   * @param a_mode the number of the current coloring style, it must be the
    *    same as in the current {@ref BytecodeConfiguration} object
    */
-  public BytecodeTagScanner(final ColorManager manager, final int mod) {
+  public BytecodeTagScanner(final ColorManager a_manager, final int a_mode) {
 
-    final IToken[] tokens = TokenGetter.getTokenTab(manager, mod);
+    final IToken[] tokens = TokenGetter.getTokenTab(a_manager, a_mode);
 
     final WordRule linerule = new WordRule(new SpecialWordDetector());
     linerule.addWord("<init>", tokens[IColorValues.KEY]);

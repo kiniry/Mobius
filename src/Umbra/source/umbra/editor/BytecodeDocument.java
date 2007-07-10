@@ -55,29 +55,29 @@ public class BytecodeDocument extends Document {
    * field.
    */
   private JavaClass fJavaClass;
-  //@ invariant bytecodeEditor.javaClass == fJavaClass;
+  //@ invariant my_bcode_editor.javaClass == fJavaClass;
 
   /**
    * The object to build Java classes. It is associated
    * with the {@link #fJavaClass} field.
    */
   private ClassGen classGen;
-  //@ invariant bytecodeEditor.javaClass == fJavaClass;
+  //@ invariant my_bcode_editor.javaClass == fJavaClass;
 
   /**
    * The bytecode editor that manipulates the current document.
    */
-  private BytecodeEditor bytecodeEditor;
+  private BytecodeEditor my_bcode_editor;
 
   /**
    * The Java source code editor of the source code file associated
    * with the current bytecode document.
    *
-   * @param editor updates the Java source code editor associated with the
+   * @param an_editor updates the Java source code editor associated with the
    * current bytecode document.
    */
-  public final void setRelatedEditor(final CompilationUnitEditor editor) {
-    fRelatedEditor = editor;
+  public final void setRelatedEditor(final CompilationUnitEditor an_editor) {
+    fRelatedEditor = an_editor;
   }
 
   /**
@@ -110,14 +110,14 @@ public class BytecodeDocument extends Document {
    * method in related source code editor. Works correctly only inside a method.
    *
    * @see #synchronizeSB(int, IEditorPart)
-   * @param pos  index of line in bytecode editor. Lines in related source code
+   * @param a_pos index of line in bytecode editor. Lines in related source code
    * editor correspondings to this line will be highlighted.
    */
-  public final void synchronizeBS(final int pos) {
+  public final void synchronizeBS(final int a_pos) {
     final IDocument sDoc = fRelatedEditor.getDocumentProvider().
                                getDocument(fRelatedEditor.getEditorInput());
     try {
-      final int line = getLineOfOffset(pos);
+      final int line = getLineOfOffset(a_pos);
       final int[] syncLine = syncBS(sDoc, fJavaClass, line);
       final int syncPos = sDoc.getLineOffset(syncLine[0]);
       final int syncLen = sDoc.getLineOffset(syncLine[1] + 1) - syncPos;
@@ -228,22 +228,23 @@ public class BytecodeDocument extends Document {
    * a method.
    *
    * @see #synchronizeBS(int)
-   * @param pos  index of line in source code editor. Lines in related bytecode
+   * @param a_pos index of line in source code editor. Lines in related bytecode
    *       editor correspondings to this line will be highlighted.
-   * @param editor the source code editor
+   * @param an_editor the source code editor
    */
-  public final void synchronizeSB(final int pos, final IEditorPart editor) {
+  public final void synchronizeSB(final int a_pos,
+                                  final IEditorPart an_editor) {
     final IDocument sDoc = fRelatedEditor.getDocumentProvider().
                                   getDocument(fRelatedEditor.getEditorInput());
     try {
-      final int line = sDoc.getLineOfOffset(pos);
+      final int line = sDoc.getLineOfOffset(a_pos);
       final int[] syncLine = syncSB(sDoc, fJavaClass, line);
       final int syncPos = getLineOffset(syncLine[0]);
       final int syncLen = getLineOffset(syncLine[1] + 1) - syncPos;
-      editor.getEditorSite().getPage().activate(editor);
+      an_editor.getEditorSite().getPage().activate(an_editor);
       if (syncLen < 0) MessageDialog.openError(new Shell(), "Bytecode",
                                                "Synchronisation failed");
-      else ((AbstractDecoratedTextEditor)editor).getSelectionProvider().
+      else ((AbstractDecoratedTextEditor)an_editor).getSelectionProvider().
                              setSelection(new TextSelection(syncPos, syncLen));
     } catch (BadLocationException e) {
       e.printStackTrace();
@@ -368,20 +369,20 @@ public class BytecodeDocument extends Document {
    * current document. Additionally, it updates the fields that
    * represent the bytecode of the document.
    *
-   * @param editor the bytecode editor
+   * @param an_editor the bytecode editor
    */
-  public final void setEditor(final BytecodeEditor editor) {
-    bytecodeEditor = editor;
-    editor.setDocument(this);
-    classGen = bytecodeEditor.getMy_classGen();
-    fJavaClass = bytecodeEditor.getMy_javaClass();
+  public final void setEditor(final BytecodeEditor an_editor) {
+    my_bcode_editor = an_editor;
+    an_editor.setDocument(this);
+    classGen = my_bcode_editor.getMy_classGen();
+    fJavaClass = my_bcode_editor.getMy_javaClass();
   }
 
   /**
    * @return the editor for the current bytecode document
    */
   public final BytecodeEditor getEditor() {
-    return bytecodeEditor;
+    return my_bcode_editor;
   }
 
   /**

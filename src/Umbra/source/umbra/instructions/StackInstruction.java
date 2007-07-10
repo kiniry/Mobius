@@ -17,7 +17,7 @@ import org.apache.bcel.generic.LLOAD;
 import org.apache.bcel.generic.LSTORE;
 
 import umbra.UmbraHelper;
-import umbra.editor.parsing.IBytecodeStrings;
+import umbra.editor.parsing.AbstractBytecodeStrings;
 
 
 /**
@@ -57,7 +57,7 @@ public class StackInstruction extends NumInstruction {
   {
     String s;
     s = UmbraHelper.stripAllWhitespace(getMy_line_text());
-    final String[] s2 = IBytecodeStrings.stack;
+    final String[] s2 = AbstractBytecodeStrings.STACK_INS;
     if (s.indexOf("%") < s.indexOf(":") + 1)
       return false;
     int res = 0;

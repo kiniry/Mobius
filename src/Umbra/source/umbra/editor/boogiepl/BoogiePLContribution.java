@@ -126,21 +126,22 @@ public class BoogiePLContribution extends ControlContribution {
 
     /**
      * TODO.
-     * @param event TODO
+     * @param an_event TODO
      * @see IDocumentListener#documentAboutToBeChanged(DocumentEvent)
      */
-    public final void documentAboutToBeChanged(final DocumentEvent event) {
+    public final void documentAboutToBeChanged(final DocumentEvent an_event) {
       if (!ready)
         try {
-          init(event.fDocument);
+          init(an_event.fDocument);
         } catch (BadLocationException e1) {
           // TODO Auto-generated catch block
           e1.printStackTrace();
         }
       try {
-        startRem = event.fDocument.getLineOfOffset(event.getOffset());
-        final int len = event.fLength;
-        stopRem = event.fDocument.getLineOfOffset(event.getOffset() + len);
+        startRem = an_event.fDocument.getLineOfOffset(an_event.getOffset());
+        final int len = an_event.fLength;
+        stopRem = an_event.fDocument.getLineOfOffset(an_event.getOffset() +
+                                                     len);
         // bcc.removeIncorrects(startRem, stopRem);
       } catch (BadLocationException e) {
         // TODO Auto-generated catch block

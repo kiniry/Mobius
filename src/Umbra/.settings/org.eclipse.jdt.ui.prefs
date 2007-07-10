@@ -1,8 +1,8 @@
-#Thu Jun 21 10:11:28 CEST 2007
+#Tue Jul 10 10:25:59 CEST 2007
 eclipse.preferences.version=1
 formatter_profile=_WU Umbra
 formatter_settings_version=10
-internal.default.compliance=default
+internal.default.compliance=user
 org.eclipse.jdt.ui.exception.name=e
 org.eclipse.jdt.ui.gettersetter.use.is=true
 org.eclipse.jdt.ui.javadoc=false

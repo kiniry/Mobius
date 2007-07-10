@@ -11,7 +11,7 @@ import org.apache.bcel.generic.PUTFIELD;
 import org.apache.bcel.generic.PUTSTATIC;
 
 import umbra.UmbraHelper;
-import umbra.editor.parsing.IBytecodeStrings;
+import umbra.editor.parsing.AbstractBytecodeStrings;
 
 
 /**
@@ -60,7 +60,7 @@ public class FieldInstruction extends StringInstruction {
   public final boolean correct() {
     final String my_line_text = getMy_line_text();
     final String s = UmbraHelper.stripAllWhitespace(my_line_text);
-    final String[] s2 = IBytecodeStrings.field;
+    final String[] s2 = AbstractBytecodeStrings.FIELD_INS;
     int j;
     for (j = 0; j < s2.length; j++) {
       if ((s.indexOf(s2[j]) > 0) &&

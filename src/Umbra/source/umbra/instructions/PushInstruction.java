@@ -9,7 +9,7 @@ import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.SIPUSH;
 
 import umbra.UmbraHelper;
-import umbra.editor.parsing.IBytecodeStrings;
+import umbra.editor.parsing.AbstractBytecodeStrings;
 
 /**
  * This class is related to some subset of instructions
@@ -46,7 +46,7 @@ public class PushInstruction extends NumInstruction {
   public final boolean correct() {
     final String my_line_text = getMy_line_text();
     final String s = UmbraHelper.stripAllWhitespace(my_line_text);
-    final String[] s2 = IBytecodeStrings.PUSH_INS;
+    final String[] s2 = AbstractBytecodeStrings.PUSH_INS;
     int j;
     int y;
     for (j = 0; j < s2.length; j++) {

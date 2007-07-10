@@ -9,6 +9,7 @@ import org.eclipse.jface.text.rules.IWordDetector;
 
 /**
  * Detector used for finding type symbols in bytecode (like '(V)').
+ * See {@ref AbstractBytecodeStrings#KEY_TYPE_CHARS} for more type symbols.
  * TODO ???
  *
  * @author Wojciech Wąs  (ww209224@students.mimuw.edu.pl)
@@ -33,8 +34,8 @@ public class SpecialWordDetector implements IWordDetector {
    * @return TODO
    */
   public final boolean isWordPart(final char a_char) {
-    for (int i = 0; i < IBytecodeStrings.keys.length; i++) {
-      if (a_char == IBytecodeStrings.keys[i]) return true;
+    for (int i = 0; i < AbstractBytecodeStrings.KEY_TYPE_CHARS.length; i++) {
+      if (a_char == AbstractBytecodeStrings.KEY_TYPE_CHARS[i]) return true;
     }
     return (a_char == '[' || a_char == '(' || a_char == ')');
   }

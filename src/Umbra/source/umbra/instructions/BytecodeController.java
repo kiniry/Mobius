@@ -22,7 +22,7 @@ import org.eclipse.swt.widgets.Shell;
 import umbra.UmbraPlugin;
 import umbra.editor.BytecodeDocument;
 import umbra.editor.parsing.BytecodeWhitespaceDetector;
-import umbra.editor.parsing.IBytecodeStrings;
+import umbra.editor.parsing.AbstractBytecodeStrings;
 
 /**
  * This class defines some structures related to BCEL as well
@@ -199,8 +199,8 @@ public class BytecodeController {
 
   /**
    * The method removes from the collection of the incorrect lines
-   * all the lines which are between <code>start</code> and
-   * <code>stop</code>.
+   * all the lines which are between <code>a_start</code> and
+   * <code>a_stop</code>.
    *
    * @param a_start the first line which is checked for removing
    * @param a_stop the last line which is checked for removing
@@ -370,8 +370,7 @@ public class BytecodeController {
    *     that contents of the given line satisfies
    *     classification conditions (Unknown if it does not for all)
    */
-  private BytecodeLineController getType(final String line)
-  {
+  private BytecodeLineController getType(final String line) {
     int i;
     boolean ok;
     int j;
@@ -431,17 +430,17 @@ public class BytecodeController {
         }
       }
       if (ok) {
-        final String[] s1 = IBytecodeStrings.SINGLE_INS;
-        final String[] s2 = IBytecodeStrings.PUSH_INS;
-        final String[] s3 = IBytecodeStrings.jump;
-        final String[] s4 = IBytecodeStrings.incc;
-        final String[] s5 = IBytecodeStrings.stack;
-        final String[] s6 = IBytecodeStrings.array;
-        final String[] s7 = IBytecodeStrings.anew;
-        final String[] s8 = IBytecodeStrings.field;
-        final String[] s9 = IBytecodeStrings.invoke;
-        final String[] s10 = IBytecodeStrings.ldc;
-        final String[] s11 = IBytecodeStrings.unknown;
+        final String[] s1 = AbstractBytecodeStrings.SINGLE_INS;
+        final String[] s2 = AbstractBytecodeStrings.PUSH_INS;
+        final String[] s3 = AbstractBytecodeStrings.JUMP_INS;
+        final String[] s4 = AbstractBytecodeStrings.INCC_INS;
+        final String[] s5 = AbstractBytecodeStrings.STACK_INS;
+        final String[] s6 = AbstractBytecodeStrings.ARRAY_INS;
+        final String[] s7 = AbstractBytecodeStrings.NEW_INS;
+        final String[] s8 = AbstractBytecodeStrings.FIELD_INS;
+        final String[] s9 = AbstractBytecodeStrings.INVOKE_INS;
+        final String[] s10 = AbstractBytecodeStrings.LDC_INS;
+        final String[] s11 = AbstractBytecodeStrings.UNCLASSIFIED_INS;
         //wazna jest kolejnosc bo aload_0 przed aload
         // i ty tworzenie inshan !!!!!!!!!
         for (j = 0; j < s1.length; j++) {
@@ -486,12 +485,12 @@ public class BytecodeController {
         }
         for (j = 0; j < s11.length; j++) {
           if (subline.equalsIgnoreCase(s11[j]))
-            return new UnknownInstruction(line, s11[j]);
+            return new UnclassifiedInstruction(line, s11[j]);
         }
       }
     }
 
-    //String[] s = IBytecodeStrings.INSTRUCTIONS;
+    //String[] s = AbstractBytecodeStrings.INSTRUCTIONS;
     //for (int i = 0; i < s.length; i++) {
     //  if ((l.startsWith(s[i] + " ")) || (l.equalsIgnoreCase(s[i])))
     //    return new InstructionLineController(line);

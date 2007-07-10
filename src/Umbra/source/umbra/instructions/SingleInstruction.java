@@ -89,7 +89,7 @@ import org.apache.bcel.generic.SASTORE;
 import org.apache.bcel.generic.SWAP;
 
 import umbra.UmbraHelper;
-import umbra.editor.parsing.IBytecodeStrings;
+import umbra.editor.parsing.AbstractBytecodeStrings;
 
 
 /**
@@ -288,7 +288,7 @@ public class SingleInstruction extends InstructionLineController {
    */
   public final boolean correct() {
     final String s = UmbraHelper.stripAllWhitespace(getMy_line_text());
-    final String[] s2 = IBytecodeStrings.SINGLE_INS;
+    final String[] s2 = AbstractBytecodeStrings.SINGLE_INS;
     int j;
     for (j = 0; j < s2.length; j++) {
       if ((s.indexOf(s2[j]) > 0) &&

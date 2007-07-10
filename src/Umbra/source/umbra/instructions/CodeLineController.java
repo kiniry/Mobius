@@ -7,7 +7,7 @@ import umbra.UmbraHelper;
 
 
 /**
- * This is a class for a special Bytecode lines located after
+ * This is a class for a special bytecode lines located after
  * the headers or at the end of the method,
  * containing some method data, not to be edited by a user.
  *

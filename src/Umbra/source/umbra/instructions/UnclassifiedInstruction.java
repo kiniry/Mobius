@@ -13,7 +13,7 @@ package umbra.instructions;
  * @author Jarosław Paszek (jp209217@students.mimuw.edu.pl)
  * @version a-01
  */
-public class UnknownInstruction extends InstructionLineController {
+public class UnclassifiedInstruction extends InstructionLineController {
 
 
   /**
@@ -21,11 +21,11 @@ public class UnknownInstruction extends InstructionLineController {
    * only the content of the line and the form of the mnemonic by calling
    * the superclass constructor.
    *
-   * @param a_line_text the line with the unknown mnemonic
-   * @param a_name the unknown mnemonic
+   * @param a_line_text the line with the unclassified mnemonic
+   * @param a_name the unclassified mnemonic
    * @see InstructionLineController#InstructionLineController(String, String)
    */
-  public UnknownInstruction(final String a_line_text, final String a_name) {
+  public UnclassifiedInstruction(final String a_line_text, final String a_name) {
     super(a_line_text, a_name);
   }
   /**

@@ -93,7 +93,7 @@ public final class BcelTestRun {
     final InstructionHandle end = il.getEnd();
     for (InstructionHandle pos = start; pos != end; pos = pos.getNext()) {
       final Instruction ins = pos.getInstruction();
-      if ("ldc".equals(ins.getName())) {
+      if ("ldc".equals(ins.getName())) { //we check here that arrays are OK too
         UmbraPlugin.messagelog(Integer.toString(a_cpg.getSize()));
         a_cpg.addString("CompDiff");
         final Constant con = a_cpg.getConstant(35);

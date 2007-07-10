@@ -180,8 +180,8 @@ public class BytecodeScanner extends RuleBasedScanner {
    */
   private void tokensForCodeline(final IToken[] the_tokens,
                                  final WordRule the_insrule) {
-    for (int i = 0; i < IBytecodeStrings.code.length; i++) {
-      the_insrule.addWord(IBytecodeStrings.code[i],
+    for (int i = 0; i < AbstractBytecodeStrings.CODE_KEYWORDS.length; i++) {
+      the_insrule.addWord(AbstractBytecodeStrings.CODE_KEYWORDS[i],
               the_tokens[IColorValues.LINE]);
     }
   }
@@ -199,8 +199,8 @@ public class BytecodeScanner extends RuleBasedScanner {
    */
   private void tokensForLinewords(final IToken[] the_tokens,
                                   final WordRule the_insrule) {
-    for (int i = 0; i < IBytecodeStrings.linewords.length; i++) {
-      the_insrule.addWord(IBytecodeStrings.linewords[i],
+    for (int i = 0; i < AbstractBytecodeStrings.LINE_KEYWORDS.length; i++) {
+      the_insrule.addWord(AbstractBytecodeStrings.LINE_KEYWORDS[i],
               the_tokens[IColorValues.LINE]);
     }
   }
@@ -219,8 +219,8 @@ public class BytecodeScanner extends RuleBasedScanner {
    */
   private void tokensForBMLKeywords(final IToken[] the_tokens,
                                     final WordRule the_insrule) {
-    for (int i = 0; i < IBytecodeStrings.BMLKeywords.length; i++) {
-      the_insrule.addWord(IBytecodeStrings.BMLKeywords[i],
+    for (int i = 0; i < AbstractBytecodeStrings.BML_KEYWORDS.length; i++) {
+      the_insrule.addWord(AbstractBytecodeStrings.BML_KEYWORDS[i],
               the_tokens[IColorValues.ANNOTKEY]);
     }
   }
@@ -238,8 +238,8 @@ public class BytecodeScanner extends RuleBasedScanner {
   */
   private void tokensForInstructions(final IToken[] the_tokens,
                                      final WordRule the_insrule) {
-    for (int i = 0; i < IBytecodeStrings.INSTRUCTIONS.length; i++) {
-      the_insrule.addWord(IBytecodeStrings.INSTRUCTIONS[i],
+    for (int i = 0; i < AbstractBytecodeStrings.INSTRUCTIONS.length; i++) {
+      the_insrule.addWord(AbstractBytecodeStrings.INSTRUCTIONS[i],
               the_tokens[IColorValues.BTC_INSTR]);
     }
   }

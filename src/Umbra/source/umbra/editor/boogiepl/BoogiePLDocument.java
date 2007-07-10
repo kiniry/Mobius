@@ -41,22 +41,24 @@ public class BoogiePLDocument extends Document {
   /**
    * TODO.
    */
-  private CompilationUnitEditor fRelatedEditor;
+  private CompilationUnitEditor my_related_editor;
+
   /**
    * TODO.
    */
-  private JavaClass fJavaClass;
+  private JavaClass my_javaclass;
+
   /**
    * TODO.
    */
-  private ClassGen classGen;
+  private ClassGen my_classgen;
 
   /**
    * TODO.
    * @param an_editor TODO
    */
   public final void setRelatedEditor(final CompilationUnitEditor an_editor) {
-    fRelatedEditor = an_editor;
+    my_related_editor = an_editor;
   }
 
   /**
@@ -64,7 +66,7 @@ public class BoogiePLDocument extends Document {
    * bytecode file
    */
   public final CompilationUnitEditor getRelatedEditor() {
-    return fRelatedEditor;
+    return my_related_editor;
   }
 
   /**
@@ -73,7 +75,7 @@ public class BoogiePLDocument extends Document {
    * @param a_javaclass TODO
    */
   public final void setJavaClass(final JavaClass a_javaclass) {
-    fJavaClass = a_javaclass;
+    my_javaclass = a_javaclass;
   }
 
   /**
@@ -82,7 +84,7 @@ public class BoogiePLDocument extends Document {
    * @return TODO
    */
   public final JavaClass getJavaClass() {
-    return fJavaClass;
+    return my_javaclass;
   }
 
   /**
@@ -90,7 +92,7 @@ public class BoogiePLDocument extends Document {
    * @param a_class_gen TODO
    */
   public final void setClassGen(final ClassGen a_class_gen) {
-    classGen = a_class_gen;
+    my_classgen = a_class_gen;
   }
 
   /**
@@ -98,7 +100,7 @@ public class BoogiePLDocument extends Document {
    * @return TODO
    */
   public final ClassGen getClassGen() {
-    return classGen;
+    return my_classgen;
   }
 
   /* synchronization of cursor's positions */
@@ -108,23 +110,23 @@ public class BoogiePLDocument extends Document {
    * {@link #syncBS(IDocument, JavaClass, int) syncBS} method in related source
    * code editor. Works correctly only inside a method.
    *
-   * @see #synchronizeSB(int, IEditorPart)
-   * @param pos  index of line in bytecode editor. Lines in related source code
+   * @param a_pos index of line in bytecode editor. Lines in related source code
    * editor correspondings to this line will be highlighted.
+   * @see #synchronizeSB(int, IEditorPart)
    */
-  public final void synchronizeBS(final int pos) {
-    final IDocument sDoc = fRelatedEditor.getDocumentProvider().
-                                getDocument(fRelatedEditor.getEditorInput());
+  public final void synchronizeBS(final int a_pos) {
+    final IDocument sDoc = my_related_editor.getDocumentProvider().
+                                getDocument(my_related_editor.getEditorInput());
     try {
-      final int line = getLineOfOffset(pos);
-      final int[] syncLine = syncBS(sDoc, fJavaClass, line);
+      final int line = getLineOfOffset(a_pos);
+      final int[] syncLine = syncBS(sDoc, my_javaclass, line);
       final int syncPos = sDoc.getLineOffset(syncLine[0]);
       final int syncLen = sDoc.getLineOffset(syncLine[1] + 1) - syncPos;
       UmbraPlugin.messagelog("sync(" + syncLine[0] + ", " + syncLine[1] + ")");
-      fRelatedEditor.getEditorSite().getPage().activate(fRelatedEditor);
+      my_related_editor.getEditorSite().getPage().activate(my_related_editor);
       if (syncLen < 0) MessageDialog.openError(new Shell(), "BoogiePL",
                                                "Synchronisation failed");
-      else fRelatedEditor.getSelectionProvider().
+      else my_related_editor.getSelectionProvider().
                          setSelection(new TextSelection(syncPos, syncLen));
     } catch (BadLocationException e) {
       e.printStackTrace();
@@ -226,23 +228,24 @@ public class BoogiePLDocument extends Document {
    * syncSB} method in related bytecode editor. Works correctly only inside a
    * method.
    *
-   * @see #synchronizeBS(int)
-   * @param pos  index of line in source code editor. Lines in related bytecode
+   * @param a_pos index of line in source code editor. Lines in related bytecode
    *       editor correspondings to this line will be highlighted.
-   * @param editor the source code editor
+   * @param an_editor the source code editor
+   * @see #synchronizeBS(int)
    */
-  public final void synchronizeSB(final int pos, final IEditorPart editor) {
-    final IDocument sDoc = fRelatedEditor.getDocumentProvider().
-                                  getDocument(fRelatedEditor.getEditorInput());
+  public final void synchronizeSB(final int a_pos,
+                                  final IEditorPart an_editor) {
+    final IDocument sDoc = my_related_editor.getDocumentProvider().
+                                getDocument(my_related_editor.getEditorInput());
     try {
-      final int line = sDoc.getLineOfOffset(pos);
-      final int[] syncLine = syncSB(sDoc, fJavaClass, line);
+      final int line = sDoc.getLineOfOffset(a_pos);
+      final int[] syncLine = syncSB(sDoc, my_javaclass, line);
       final int syncPos = getLineOffset(syncLine[0]);
       final int syncLen = getLineOffset(syncLine[1] + 1) - syncPos;
-      editor.getEditorSite().getPage().activate(editor);
+      an_editor.getEditorSite().getPage().activate(an_editor);
       if (syncLen < 0) MessageDialog.openError(new Shell(), "BoogiePL",
                                                "Synchronisation failed");
-      else ((AbstractDecoratedTextEditor)editor).getSelectionProvider().
+      else ((AbstractDecoratedTextEditor)an_editor).getSelectionProvider().
                               setSelection(new TextSelection(syncPos, syncLen));
     } catch (BadLocationException e) {
       e.printStackTrace();
@@ -252,20 +255,22 @@ public class BoogiePLDocument extends Document {
   /**
    * Computes the area in current bytecode corresponding to given line of
    * source code. The bytecode should be refreshed before calling this metod,
-   * to update JavaClass structures. Works correctly only inside a method.
+   * to update {@ref JavaClass} structures. Works correctly only inside
+   * a method.
    *
-   * @param Sdoc  IDocument with source (java) code
-   * @param jc  JavaClass with current bytecode
-   * @param line  index of line in Sdoc
-   * @return    array of two ints representing index of first and last line of
-   *         bytecode (corresponding to given source line),
-   *         in related bytecode editor
+   * @param a_source_doc {@ref IDocument} with the Java source code
+   * @param a_javaclass {@ref JavaClass} with current bytecode
+   * @param a_lineno index of line in <code>a_source_doc</code>
+   * @return array of 2 ({@ref #NO_OF_POSITIONS}) ints representing index of
+   *         first and last line of bytecode (corresponding to given source
+   *         line), in related bytecode editor
    * @throws BadLocationException if line parameter is invalid. May occur also
-   *         if bytecode in JavaClass jc is out-of-date.
+   *         if bytecode in {@ref JavaClass} <code>a_javaclass</code> is
+   *         out-of-date.
    */
-  private int[] syncSB(final IDocument Sdoc,
-                       final JavaClass jc,
-                       final int line) throws BadLocationException
+  private int[] syncSB(final IDocument a_source_doc,
+                       final JavaClass a_javaclass,
+                       final int a_lineno) throws BadLocationException
   // Synchronizacja Src --> Btc
   {
     final int[] result = new int [NO_OF_POSITIONS];
@@ -275,21 +280,21 @@ public class BoogiePLDocument extends Document {
     final int maxL = getNumberOfLines() - 1;
     int l_od = 0;
     int l_do = maxL;
-    String SrcLine = Sdoc.get(Sdoc.getLineOffset(line),
-                              Sdoc.getLineLength(line)) + "$";
-    while ((SrcLine.length() > 1) &&
-           (Character.isWhitespace(SrcLine.charAt(0))))
-      SrcLine = SrcLine.substring(1, SrcLine.length() - 1);
+    String src_line = a_source_doc.get(a_source_doc.getLineOffset(a_lineno),
+                              a_source_doc.getLineLength(a_lineno)) + "$";
+    while ((src_line.length() > 1) &&
+           (Character.isWhitespace(src_line.charAt(0))))
+      src_line = src_line.substring(1, src_line.length() - 1);
     String s;
-    final Method[] methods = jc.getMethods();
+    final Method[] methods = a_javaclass.getMethods();
     Method m;
     for (int i = 0; i < methods.length; i++) {
       m = methods[i];
       l = m.getLineNumberTable().getLineNumberTable().length;
-      if (SrcLine.startsWith(m.toString())) {
+      if (src_line.startsWith(m.toString())) {
         while (bcln < maxL) {
           bcln++;
-          s = LineAt(bcln);
+          s = lineAt(bcln);
           if (s.startsWith("Code"))
             break;
         }
@@ -304,20 +309,20 @@ public class BoogiePLDocument extends Document {
         popln = bcln;
         while (bcln < maxL) {
           bcln++;
-          s = LineAt(bcln);
+          s = lineAt(bcln);
           if (s.startsWith("" + pc + ":"))
             break;
         }
-        if (ln == line) {
+        if (ln == a_lineno) {
           l_od = bcln;
           continue;
         }
-        if ((ln > line) && (l_od == 0)) {
+        if ((ln > a_lineno) && (l_od == 0)) {
           l_od = popln;
           l_do = bcln - 1;
           break;
         }
-        if ((l_od != 0) && (ln != line)) {
+        if ((l_od != 0) && (ln != a_lineno)) {
           l_do = bcln - 1;
           break;
         }
@@ -327,7 +332,7 @@ public class BoogiePLDocument extends Document {
       if ((l_od != 0) && (l_do == -1)) {
         while (bcln < maxL) {
           bcln++;
-          s = LineAt(bcln);
+          s = lineAt(bcln);
           if (s.lastIndexOf(":") == -1)
             break;
         }
@@ -351,16 +356,16 @@ public class BoogiePLDocument extends Document {
   /**
    * Gives specified line of current bytecode.
    *
-   * @param n  index of line in bytecode editor (starting from 0).
+   * @param a_lineno  index of line in bytecode editor (starting from 0).
    * Must be non-negative and less than number of lines in bytecode editor.
    * @return  n-th line in bytecode editor
    * @throws BadLocationException  occurs when parameter n isn't a valid line
    *                               number.
    */
-  private String LineAt(final int n) throws BadLocationException
+  private String lineAt(final int a_lineno) throws BadLocationException
   // n-ta linia dokumentu d
   {
-    return get(getLineOffset(n), getLineLength(n));
+    return get(getLineOffset(a_lineno), getLineLength(a_lineno));
   }
 
 }

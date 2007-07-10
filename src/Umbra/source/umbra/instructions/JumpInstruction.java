@@ -30,7 +30,7 @@ import org.apache.bcel.generic.JSR_W;
 
 import umbra.UmbraHelper;
 import umbra.UmbraPlugin;
-import umbra.editor.parsing.IBytecodeStrings;
+import umbra.editor.parsing.AbstractBytecodeStrings;
 
 
 /**
@@ -79,7 +79,7 @@ public class JumpInstruction extends NumInstruction {
    */
   public final boolean correct() {
     final String s = UmbraHelper.stripAllWhitespace(getMy_line_text());
-    final String[] s2 = IBytecodeStrings.jump;
+    final String[] s2 = AbstractBytecodeStrings.JUMP_INS;
     if (s.indexOf("#") < s.indexOf(":") + 1) return false;
     // we check all the instructions in s2
     int res = 0;

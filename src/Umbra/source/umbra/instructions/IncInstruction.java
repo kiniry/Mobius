@@ -8,7 +8,7 @@ import org.apache.bcel.generic.Instruction;
 
 import umbra.UmbraHelper;
 import umbra.UmbraPlugin;
-import umbra.editor.parsing.IBytecodeStrings;
+import umbra.editor.parsing.AbstractBytecodeStrings;
 
 
 /**
@@ -57,7 +57,7 @@ public class IncInstruction extends NumInstruction {
   public final boolean correct0() {
     final String my_line_text = getMy_line_text();
     final String s = UmbraHelper.stripAllWhitespace(my_line_text);
-    final String[] s2 = IBytecodeStrings.incc;
+    final String[] s2 = AbstractBytecodeStrings.INCC_INS;
     int j;
     int y;
     UmbraPlugin.LOG.print(s);
