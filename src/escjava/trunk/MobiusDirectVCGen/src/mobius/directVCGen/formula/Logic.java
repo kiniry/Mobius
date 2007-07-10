@@ -561,25 +561,25 @@ public final class Logic {
 
 
   /**
-   * @param var The object for which we want to find out whether it could
-   * have been modified by the method.
+   * @param targetVar The object holding the fieldVar
+   * @param fieldVar The field for which we want to find out whether it's assignable or not
    * @param o Parameter object also containing a list of modifiable types.
    * @return A Term expressing the check described above.
    */
-  public static Term isAssignable(final  QuantVariableRef targetVar, final Object o) {
+  public static Term isAssignable(final  Term targetVar,final QuantVariableRef fieldVar, final Object o) {
     Term t1 = null;
     Term t2 = null;
-    final Set assignSet = (HashSet) ((Properties)o).get("assignableSet");
+    final Set assignSet = (HashSet<QuantVariableRef[]>) ((Properties)o).get("assignableSet");
     final Iterator iter = assignSet.iterator();
     
     while (iter.hasNext()) {
-      final QuantVariableRef setVar = (QuantVariableRef) iter.next();
-      t1 = Logic.equals(setVar, targetVar); 
+      final QuantVariableRef[] setVar = (QuantVariableRef[]) iter.next();
+      t1 = Logic.equals(Heap.loc(Heap.var, setVar[0], setVar[1].qvar), Heap.loc(Heap.var, targetVar, fieldVar.qvar));
       if (t2 == null) {
         t2 = t1;
       }
       else {
-        t2 = Logic.and(t2, t1);
+        t2 = Logic.or(t2, t1);
       }
     }
     return t2;
