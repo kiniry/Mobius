@@ -128,7 +128,7 @@ public class JmlVisitor extends VisitorArgResult {
     fProperties = new Properties();
     fProperties.put("pred", Boolean.TRUE);
     fProperties.put("old", Boolean.FALSE);
-    fProperties.put("fieldSet", new HashSet<QuantVariableRef>());
+    fProperties.put("visibleTypeSet", new HashSet<QuantVariableRef>());
     fProperties.put("assignableSet", new HashSet<QuantVariableRef[]>());
     fProperties.put("nothing", Boolean.FALSE); //used for assignable
     fProperties.put("interesting", Boolean.FALSE);
@@ -150,11 +150,11 @@ public class JmlVisitor extends VisitorArgResult {
       final Object child = x.childAt(i);
       if (child instanceof ASTNode) {
         o = ((ASTNode) child).accept(this, prop);
-        if (o != null) {
-          if (!o.equals(child)) {
-            System.out.println(o);
-          }
-        }
+//        if (o != null) {
+//          if (!o.equals(child)) {
+//            System.out.println(o);
+//          }
+//        }
       }
 
     }
@@ -509,7 +509,7 @@ public class JmlVisitor extends VisitorArgResult {
     Set.Assignment assignment = null;
     boolean interesting;
     final Vector<AAnnotation> annos = new Vector<AAnnotation>();
-    Term inv = null;
+    Term inv = Logic.True();
 
     //Save arguments values in prestate as ghosts.
     if (((Boolean)((Properties) o).get("routinebegin")).booleanValue()){
@@ -529,7 +529,7 @@ public class JmlVisitor extends VisitorArgResult {
       //We are interested in Asserts, Assumes and Loop Invariants
       if (s instanceof ExprStmtPragma) {
         interesting = true; 
-        ((Properties) o).put("interesting", new Boolean(true));
+        ((Properties) o).put("interesting", Boolean.TRUE);
         t = (Term)s.accept(this, o);
         switch (s.getTag()) {
           case javafe.parser.TagConstants.ASSERT:
@@ -538,11 +538,10 @@ public class JmlVisitor extends VisitorArgResult {
           case TagConstants.ASSUME:
             annos.add(new Assume(t));
             break;
-          case TagConstants.LOOP_INVARIANT:
+          case TagConstants.LOOP_INVARIANT: 
           case TagConstants.MAINTAINING:
             inv = t;
             break;
-            //decreases, decreasing, loop_predicate
           default:
             break;
         }
@@ -559,7 +558,7 @@ public class JmlVisitor extends VisitorArgResult {
             }
           }
           if (interesting) {
-            ((Properties) o).put("interesting", new Boolean(true));
+            ((Properties) o).put("interesting", Boolean.TRUE);
             t = (Term)s.accept(this, o);
             final Set ghostVar = new Set();
             ghostVar.declaration = (QuantVariableRef) t;
@@ -571,7 +570,7 @@ public class JmlVisitor extends VisitorArgResult {
           //Also set statements should be processed
           if (s instanceof SetStmtPragma) {
             interesting = true;
-            ((Properties) o).put("interesting", new Boolean(true));
+            ((Properties) o).put("interesting", Boolean.TRUE);
             assignment = (Set.Assignment)s.accept(this, o);
             set = new Set();
             set.assignment = assignment;
@@ -582,7 +581,7 @@ public class JmlVisitor extends VisitorArgResult {
         x.stmts.removeElement(s);
       } 
       else {
-        ((Properties) o).put("interesting", new Boolean(false));
+        ((Properties) o).put("interesting", Boolean.FALSE);
         if (!annos.isEmpty()) {
           AnnotationDecoration.inst.setAnnotPre(s, annos);
           annos.clear();
