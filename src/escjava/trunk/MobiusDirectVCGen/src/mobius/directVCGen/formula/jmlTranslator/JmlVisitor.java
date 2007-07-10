@@ -25,6 +25,7 @@ import javafe.ast.BlockStmt;
 import javafe.ast.ClassDecl;
 import javafe.ast.ConstructorDecl;
 import javafe.ast.DoStmt;
+import javafe.ast.ExprObjectDesignator;
 import javafe.ast.FieldAccess;
 import javafe.ast.FieldDecl;
 import javafe.ast.ForStmt;
@@ -113,11 +114,11 @@ public class JmlVisitor extends VisitorArgResult {
   /**
    * Reference to JML Expression Translator.
    */
-  private JmlExprToFormula fTranslator;
+  private final JmlExprToFormula fTranslator;
   /**
    * Properties that are passed as argument of the visitor.
    */
-  private Properties fProperties;
+  private final Properties fProperties;
 
   /**
    * Visitor that translates JML Constructs to FOL by using JmlExprToFormula to
@@ -128,18 +129,20 @@ public class JmlVisitor extends VisitorArgResult {
     fProperties.put("pred", Boolean.TRUE);
     fProperties.put("old", Boolean.FALSE);
     fProperties.put("fieldSet", new HashSet<QuantVariableRef>());
-    fProperties.put("assignableSet", new HashSet<QuantVariableRef>());
+    fProperties.put("assignableSet", new HashSet<QuantVariableRef[]>());
     fProperties.put("nothing", Boolean.FALSE); //used for assignable
     fProperties.put("interesting", Boolean.FALSE);
     // firstPost: To add invariant only once to Lookup.postcondition
     fProperties.put("firstPost", Boolean.TRUE);
     fProperties.put("routinebegin", Boolean.TRUE);    
     fTranslator = new JmlExprToFormula(this);
+     
   }
 
   /* (non-Javadoc)
    * @see javafe.ast.VisitorArgResult#visitASTNode(javafe.ast.ASTNode, java.lang.Object)
    */
+  @Override
   public final Object visitASTNode(final ASTNode x, final Object prop) {
     Object o = null;
     final int max = x.childCount();
@@ -161,9 +164,10 @@ public class JmlVisitor extends VisitorArgResult {
   /* (non-Javadoc)
    * @see javafe.ast.VisitorArgResult#visitClassDecl(javafe.ast.ClassDecl, java.lang.Object)
    */
+  @Override
   public final Object visitClassDecl(final /*@non_null*/ ClassDecl x, final Object o) {
     //Use default properties to start with.
-    return visitTypeDecl(x, fProperties);
+    return visitTypeDecl(x, this.fProperties);
   }
 
   
@@ -172,16 +176,17 @@ public class JmlVisitor extends VisitorArgResult {
   /* (non-Javadoc 
    * @see javafe.ast.VisitorArgResult#visitRoutineDecl(javafe.ast.RoutineDecl, java.lang.Object)
    */
+  @Override
   public final Object visitRoutineDecl(final /*@non_null*/ RoutineDecl x, final Object o) {
     x.accept(new VisibleTypeCollector(), o); 
     ((Properties) o).put("method", x);
-    ((Properties) o).put("firstPost",Boolean.TRUE);
+    ((Properties) o).put("firstPost", Boolean.TRUE);
     ((Properties) o).put("routinebegin", Boolean.TRUE);
     ((Properties) o).put("nothing", Boolean.FALSE);
     final QuantVariableRef result = (QuantVariableRef) ((Properties) o).get("result");
     Lookup.postconditions.put(x, new Post(result, Logic.True()));
     Lookup.exceptionalPostconditions.put(x, new Post(Expression.rvar(Ref.sort), Logic.True()));
-    Object fObj = visitASTNode(x, o);
+    final Object fObj = visitASTNode(x, o);
     doAssignable(o);
     return fObj;
   }
@@ -189,11 +194,11 @@ public class JmlVisitor extends VisitorArgResult {
   
   
   
-  
 
   /* (non-Javadoc)
    * @see javafe.ast.VisitorArgResult#visitMethodDecl(javafe.ast.MethodDecl, java.lang.Object)
    */
+  @Override
   public final Object visitMethodDecl(final /*@non_null*/ MethodDecl x, final Object o) {
     ((Properties) o).put("result", Expression.rvar(Expression.getResultVar(x)));
     return visitRoutineDecl(x, o);
@@ -202,6 +207,7 @@ public class JmlVisitor extends VisitorArgResult {
   /* (non-Javadoc)
    * @see javafe.ast.VisitorArgResult#visitConstructorDecl(javafe.ast.ConstructorDecl, java.lang.Object)
    */
+  @Override
   public final Object visitConstructorDecl(final /*@non_null*/ ConstructorDecl x, final Object o) {
     return visitRoutineDecl(x, o);
   }
@@ -209,17 +215,19 @@ public class JmlVisitor extends VisitorArgResult {
   /* (non-Javadoc)
    * @see javafe.ast.VisitorArgResult#visitFormalParaDecl(javafe.ast.FormalParaDecl, java.lang.Object)
    */
+  @Override
   public final Object visitFormalParaDecl(final /*@non_null*/ FormalParaDecl x, final Object o) {
-    return fTranslator.genericVarDecl(x, o);
+    return this.fTranslator.genericVarDecl(x, o);
   }
 
   /* (non-Javadoc)
    * @see javafe.ast.VisitorArgResult#visitLiteralExpr(javafe.ast.LiteralExpr, java.lang.Object)
    */
+  @Override
   public final Object visitLiteralExpr(final /*@non_null*/ LiteralExpr x, final Object o) {
     final Properties prop = (Properties) o;
     if (((Boolean) prop.get("interesting")).booleanValue()) {
-      return fTranslator.literal(x, o);
+      return this.fTranslator.literal(x, o);
     }
     else {
       return null;
@@ -229,9 +237,10 @@ public class JmlVisitor extends VisitorArgResult {
   /* (non-Javadoc)
    * @see javafe.ast.VisitorArgResult#visitVariableAccess(javafe.ast.VariableAccess, java.lang.Object)
    */
+  @Override
   public final Object visitVariableAccess(final /*@non_null*/ VariableAccess x, final Object o) {
     if (((Boolean) ((Properties) o).get("interesting")).booleanValue()) {
-      return fTranslator.variableAccess(x, o);
+      return this.fTranslator.variableAccess(x, o);
     }
     else {
       return null;
@@ -241,32 +250,22 @@ public class JmlVisitor extends VisitorArgResult {
   /* (non-Javadoc)
    * @see javafe.ast.VisitorArgResult#visitFieldAccess(javafe.ast.FieldAccess, java.lang.Object)
    */
+  @Override
   public final Object visitFieldAccess(final /*@non_null*/ FieldAccess x, final Object o) {
     if (((Boolean) ((Properties) o).get("interesting")).booleanValue()) {
-      return fTranslator.fieldAccess(x, o);
+      return this.fTranslator.fieldAccess(x, o);
     }
     else {
       return null;
     }
   }
-
-  /* (non-Javadoc 
-   * @see javafe.ast.VisitorArgResult#visitFieldDecl(javafe.ast.RoutineDecl, java.lang.Object)
-   */
-  /*public /*@non_null* Object visitFieldDecl(/*@non_null  FieldDecl x, Object o) {
-    //alle objekte sammeln
-    HashSet<QuantVariableRef> fFieldSet = (HashSet<QuantVariableRef>) ((Properties) o).get("fieldSet");
-    QuantVariableRef fField = Expression.rvar(x);
-    fFieldSet.add(fField);
-    ((Properties) o).put("fieldSet", fFieldSet);
-    return visitGenericVarDecl(x,o);
-  }*/
   
   
   
   /* (non-Javadoc)
    * @see javafe.ast.VisitorArgResult#visitLocalVarDecl(javafe.ast.LocalVarDecl, java.lang.Object)
    */
+  @Override
   public Object visitLocalVarDecl(final /*@non_null*/ LocalVarDecl x, final Object o) {
     return null;
   }
@@ -274,10 +273,11 @@ public class JmlVisitor extends VisitorArgResult {
   /* (non-Javadoc)
    * @see escjava.ast.VisitorArgResult#visitNaryExpr(escjava.ast.NaryExpr, java.lang.Object)
    */
+  @Override
   public final Object visitNaryExpr(final /*@non_null*/ NaryExpr x, final Object o) {
     if (((Boolean) ((Properties) o).get("interesting")).booleanValue()) {
       if (x.op == TagConstants.PRE) {
-        return fTranslator.naryExpr(x, o);
+        return this.fTranslator.naryExpr(x, o);
       }
       else {
         return visitGCExpr(x, o);
@@ -291,9 +291,10 @@ public class JmlVisitor extends VisitorArgResult {
   /* (non-Javadoc)
    * @see javafe.ast.VisitorArgResult#visitInstanceOfExpr(javafe.ast.InstanceOfExpr, java.lang.Object)
    */
+  @Override
   public final Object visitInstanceOfExpr(final /*@non_null*/ InstanceOfExpr x, final Object o) {
     if (((Boolean) ((Properties) o).get("interesting")).booleanValue()) {
-      return fTranslator.instanceOfExpr(x, o);
+      return this.fTranslator.instanceOfExpr(x, o);
     }
     else {
       return null;
@@ -303,9 +304,10 @@ public class JmlVisitor extends VisitorArgResult {
   /* (non-Javadoc)
    * @see javafe.ast.VisitorArgResult#visitThisExpr(javafe.ast.ThisExpr, java.lang.Object)
    */
+  @Override
   public final Object visitThisExpr(final /*@non_null*/ ThisExpr x, final Object o) {
     if (((Boolean) ((Properties) o).get("interesting")).booleanValue()) {
-      return fTranslator.thisLiteral(x, o);
+      return this.fTranslator.thisLiteral(x, o);
     }
     else {
       return null;
@@ -315,6 +317,7 @@ public class JmlVisitor extends VisitorArgResult {
   /* (non-Javadoc)
    * @see escjava.ast.VisitorArgResult#visitArrayRangeRefExpr(escjava.ast.ArrayRangeRefExpr, java.lang.Object)
    */
+  @Override
   public final Object visitArrayRangeRefExpr(final /*@non_null*/ ArrayRangeRefExpr x, final Object o) {
     return null;
   }
@@ -322,22 +325,19 @@ public class JmlVisitor extends VisitorArgResult {
   /* (non-Javadoc)
    * @see escjava.ast.VisitorArgResult#visitCondExprModifierPragma(escjava.ast.CondExprModifierPragma, java.lang.Object)
    */
+  @Override
   public final Object visitCondExprModifierPragma(final /*@non_null*/ CondExprModifierPragma x, final Object o) {
     
     switch (x.getTag()) {
     case TagConstants.ASSIGNABLE:
-     // Term t = (Term) visitASTNode(x,o); //Objekt assignable
-      //final RoutineDecl rd = (RoutineDecl)((Properties) o).get("method");
-      //Post allPosts = Lookup.postconditions.get(rd);
-      if (x.expr instanceof FieldAccess)
-      {
-        HashSet fAssignableSet = (HashSet) ((Properties) o).get("assignableSet");
-        FieldAccess fField = (FieldAccess) x.expr;
-        FieldDecl fDecl = fField.decl;
-        QuantVariableRef rvar = Expression.rvar(fDecl);
-        fAssignableSet.add(rvar); 
-        ((Properties) o).put("assignableSet", fAssignableSet);         
-        
+      if (x.expr instanceof FieldAccess){
+        final HashSet<QuantVariableRef[]> fAssignableSet = (HashSet<QuantVariableRef[]>) ((Properties) o).get("assignableSet");
+        final FieldAccess var = (FieldAccess) x.expr;
+        final QuantVariableRef targetVar = (QuantVariableRef) var.od.accept(this,o);
+        final QuantVariableRef fieldVar = Expression.rvar(var.decl);
+        final QuantVariableRef[] qvars = {targetVar, fieldVar};
+        fAssignableSet.add(qvars);
+        ((Properties) o).put("assignableSet",fAssignableSet);    
       }
       else if (x.expr instanceof NothingExpr)
       {
@@ -358,6 +358,7 @@ public class JmlVisitor extends VisitorArgResult {
   /* (non-Javadoc)
    * @see escjava.ast.VisitorArgResult#visitCondition(escjava.ast.Condition, java.lang.Object)
    */
+  @Override
   public final Object visitCondition(final /*@non_null*/ Condition x, final Object o) {
     return null;
   }
@@ -365,6 +366,7 @@ public class JmlVisitor extends VisitorArgResult {
   /* (non-Javadoc)
    * @see escjava.ast.VisitorArgResult#visitDecreasesInfo(escjava.ast.DecreasesInfo, java.lang.Object)
    */
+  @Override
   public final Object visitDecreasesInfo(final /*@non_null*/ DecreasesInfo x, final Object o) {
     return null;
   }
@@ -372,6 +374,7 @@ public class JmlVisitor extends VisitorArgResult {
   /* (non-Javadoc)
    * @see escjava.ast.VisitorArgResult#visitDefPred(escjava.ast.DefPred, java.lang.Object)
    */
+  @Override
   public final Object visitDefPred(final /*@non_null*/ DefPred x, final Object o) {
     return null;
   }
@@ -379,6 +382,7 @@ public class JmlVisitor extends VisitorArgResult {
   /* (non-Javadoc)
    * @see escjava.ast.VisitorArgResult#visitDefPredApplExpr(escjava.ast.DefPredApplExpr, java.lang.Object)
    */
+  @Override
   public final Object visitDefPredApplExpr(final /*@non_null*/ DefPredApplExpr x, final Object o) {
     return null;
   }
@@ -386,6 +390,7 @@ public class JmlVisitor extends VisitorArgResult {
   /* (non-Javadoc)
    * @see escjava.ast.VisitorArgResult#visitDefPredLetExpr(escjava.ast.DefPredLetExpr, java.lang.Object)
    */
+  @Override
   public final Object visitDefPredLetExpr(final /*@non_null*/ DefPredLetExpr x, final Object o) {
     return null;
   }
@@ -393,6 +398,7 @@ public class JmlVisitor extends VisitorArgResult {
   /* (non-Javadoc)
    * @see escjava.ast.VisitorArgResult#visitDependsPragma(escjava.ast.DependsPragma, java.lang.Object)
    */
+  @Override
   public final Object visitDependsPragma(final /*@non_null*/ DependsPragma x, final Object o) {
     return null;
   }
@@ -400,6 +406,7 @@ public class JmlVisitor extends VisitorArgResult {
   /* (non-Javadoc)
    * @see escjava.ast.VisitorArgResult#visitEscPrimitiveType(escjava.ast.EscPrimitiveType, java.lang.Object)
    */
+  @Override
   public final Object visitEscPrimitiveType(final /*@non_null*/ EscPrimitiveType x, final Object o) {
     return null;
   }
@@ -407,6 +414,7 @@ public class JmlVisitor extends VisitorArgResult {
   /* (non-Javadoc)
    * @see escjava.ast.VisitorArgResult#visitEverythingExpr(escjava.ast.EverythingExpr, java.lang.Object)
    */
+  @Override
   public final Object visitEverythingExpr(final /*@non_null*/ EverythingExpr x, final Object o) {
     return visitASTNode(x, o);
   }
@@ -414,6 +422,7 @@ public class JmlVisitor extends VisitorArgResult {
   /* (non-Javadoc)
    * @see escjava.ast.VisitorArgResult#visitExprDeclPragma(escjava.ast.ExprDeclPragma, java.lang.Object)
    */
+  @Override
   public final Object visitExprDeclPragma(final /*@non_null*/ ExprDeclPragma x, final Object o) {
     ((Properties) o).put("interesting", Boolean.TRUE);
     final Term  t = (Term) x.expr.accept(this, o);
@@ -424,6 +433,7 @@ public class JmlVisitor extends VisitorArgResult {
   /* (non-Javadoc)
    * @see escjava.ast.VisitorArgResult#visitExprModifierPragma(escjava.ast.ExprModifierPragma, java.lang.Object)
    */
+  @Override
   public final Object visitExprModifierPragma(final /*@non_null*/ ExprModifierPragma x, final Object o) {
     ((Properties) o).put("interesting", Boolean.TRUE);
     final RoutineDecl rd = (RoutineDecl)((Properties) o).get("method");
@@ -433,6 +443,9 @@ public class JmlVisitor extends VisitorArgResult {
         if (rd  instanceof MethodDecl) { 
           final Term invToPre = (Term) invToPreconditions(o);
           t = Logic.Safe.and(t, invToPre);
+        }
+        if (rd instanceof ConstructorDecl){
+          t = Logic.boolToProp(t);
         }
         Lookup.preconditions.put(rd, t);
         break;
@@ -448,10 +461,10 @@ public class JmlVisitor extends VisitorArgResult {
         Lookup.postconditions.put(rd, allPosts);
         break;
       case TagConstants.ASSIGNABLE:
-      int a = 8;
+      final int a = 8;
         break;
       case TagConstants.DIVERGES:
-        int ad = 8;
+        final int ad = 8;
           break;
       default:
         break;
@@ -462,6 +475,7 @@ public class JmlVisitor extends VisitorArgResult {
   /* (non-Javadoc)
    * @see escjava.ast.VisitorArgResult#visitVarExprModifierPragma(escjava.ast.VarExprModifierPragma, java.lang.Object)
    */
+  @Override
   public final Object visitVarExprModifierPragma(final /*@non_null*/ VarExprModifierPragma x, final Object o) {
     ((Properties) o).put("interesting", Boolean.TRUE);
 
@@ -486,6 +500,7 @@ public class JmlVisitor extends VisitorArgResult {
   /* (non-Javadoc)
    * @see javafe.ast.VisitorArgResult#visitBlockStmt(javafe.ast.BlockStmt, java.lang.Object)
    */
+  @Override
   public final Object visitBlockStmt(final /*@non_null*/ BlockStmt x, final Object o) {
     Term t = null;
     Term t1 = null;
@@ -499,8 +514,8 @@ public class JmlVisitor extends VisitorArgResult {
     //Save arguments values in prestate as ghosts.
     if (((Boolean)((Properties) o).get("routinebegin")).booleanValue()){
       ((Properties) o).put("routinebegin", Boolean.FALSE);
-      RoutineDecl m = (RoutineDecl) ((Properties) o).get("method");
-      for (FormalParaDecl p: m.args.toArray()) {
+      final RoutineDecl m = (RoutineDecl) ((Properties) o).get("method");
+      for (final FormalParaDecl p: m.args.toArray()) {
         t1 = Expression.rvar(p);
         t2 = Expression.old(p);
         assignment = new Set.Assignment((QuantVariableRef) t2, t1);
@@ -509,7 +524,7 @@ public class JmlVisitor extends VisitorArgResult {
     }
 
     //
-    for (Stmt s: x.stmts.toArray()) {
+    for (final Stmt s: x.stmts.toArray()) {
       interesting = false;
       //We are interested in Asserts, Assumes and Loop Invariants
       if (s instanceof ExprStmtPragma) {
@@ -517,7 +532,7 @@ public class JmlVisitor extends VisitorArgResult {
         ((Properties) o).put("interesting", new Boolean(true));
         t = (Term)s.accept(this, o);
         switch (s.getTag()) {
-          case TagConstants.ASSERT:
+          case javafe.parser.TagConstants.ASSERT:
             annos.add(new Cut(t));
             break;
           case TagConstants.ASSUME:
@@ -537,7 +552,7 @@ public class JmlVisitor extends VisitorArgResult {
         //We are also interested in ghost var declarations
         if (s instanceof VarDeclStmt) {
 
-          for (ModifierPragma p: ((VarDeclStmt) s).decl.pmodifiers.toArray()) {
+          for (final ModifierPragma p: ((VarDeclStmt) s).decl.pmodifiers.toArray()) {
             if (p.getTag() == TagConstants.GHOST) {
               interesting = true;
               break;
@@ -592,10 +607,9 @@ public class JmlVisitor extends VisitorArgResult {
     }
     
     //If there is no more Stmt, we generate a dummy SkipStmt and add the last precondition to it
-    if(!annos.isEmpty())
-    {
-      SkipStmt skipStmt = SkipStmt.make(200); //loc=??????????? welche location?
-      AnnotationDecoration.inst.setAnnotPre(skipStmt,annos);
+    if (!annos.isEmpty()) { 
+      final SkipStmt skipStmt = SkipStmt.make(200); //loc=??????????? welche location?
+      AnnotationDecoration.inst.setAnnotPre(skipStmt, annos);
       x.stmts.addElement(skipStmt);
       annos.clear();
     }    
@@ -605,6 +619,7 @@ public class JmlVisitor extends VisitorArgResult {
   /* (non-Javadoc)
    * @see javafe.ast.VisitorArgResult#visitVarDeclStmt(javafe.ast.VarDeclStmt, java.lang.Object)
    */
+  @Override
   public final Object visitVarDeclStmt(final /*@non_null*/ VarDeclStmt x, final Object o) {
     //It's only called if we have a ghost variable declaration
     return Expression.rvar(x.decl);
@@ -613,6 +628,7 @@ public class JmlVisitor extends VisitorArgResult {
   /* (non-Javadoc)
    * @see escjava.ast.VisitorArgResult#visitExprStmtPragma(escjava.ast.ExprStmtPragma, java.lang.Object)
    */
+  @Override
   public final Object visitExprStmtPragma(final /*@non_null*/ ExprStmtPragma x, final Object o) {
     return visitASTNode(x, o);
   }
@@ -620,6 +636,7 @@ public class JmlVisitor extends VisitorArgResult {
   /* (non-Javadoc)
    * @see escjava.ast.VisitorArgResult#visitGCExpr(escjava.ast.GCExpr, java.lang.Object)
    */
+  @Override
   public final Object visitGCExpr(final /*@non_null*/ GCExpr x, final Object o) {
     return visitASTNode(x, o);
   }
@@ -627,6 +644,7 @@ public class JmlVisitor extends VisitorArgResult {
   /* (non-Javadoc)
    * @see escjava.ast.VisitorArgResult#visitGhostDeclPragma(escjava.ast.GhostDeclPragma, java.lang.Object)
    */
+  @Override
   public final Object visitGhostDeclPragma(final /*@non_null*/ GhostDeclPragma x, final Object o) {
     return null;
   }
@@ -634,6 +652,7 @@ public class JmlVisitor extends VisitorArgResult {
   /* (non-Javadoc)
    * @see escjava.ast.VisitorArgResult#visitGuardExpr(escjava.ast.GuardExpr, java.lang.Object)
    */
+  @Override
   public final Object visitGuardExpr(final /*@non_null*/ GuardExpr x, final Object o) {
     return null;
   }
@@ -641,6 +660,7 @@ public class JmlVisitor extends VisitorArgResult {
   /* (non-Javadoc)
    * @see escjava.ast.VisitorArgResult#visitGuardedCmd(escjava.ast.GuardedCmd, java.lang.Object)
    */
+  @Override
   public final Object visitGuardedCmd(final /*@non_null*/ GuardedCmd x, final Object o) {
     return null;
   }
@@ -648,6 +668,7 @@ public class JmlVisitor extends VisitorArgResult {
   /* (non-Javadoc)
    * @see escjava.ast.VisitorArgResult#visitIdExprDeclPragma(escjava.ast.IdExprDeclPragma, java.lang.Object)
    */
+  @Override
   public final Object visitIdExprDeclPragma(final /*@non_null*/ IdExprDeclPragma x, final Object o) {
     return null;
   }
@@ -656,6 +677,7 @@ public class JmlVisitor extends VisitorArgResult {
   /* (non-Javadoc)
    * @see escjava.ast.VisitorArgResult#visitIdentifierModifierPragma(escjava.ast.IdentifierModifierPragma, java.lang.Object)
    */
+  @Override
   public final Object visitIdentifierModifierPragma(final /*@non_null*/ IdentifierModifierPragma x, final Object o) {
     return null;
   }
@@ -664,6 +686,7 @@ public class JmlVisitor extends VisitorArgResult {
   /* (non-Javadoc)
    * @see escjava.ast.VisitorArgResult#visitImportPragma(escjava.ast.ImportPragma, java.lang.Object)
    */
+  @Override
   public final Object visitImportPragma(final /*@non_null*/ ImportPragma x, final Object o) {
     return visitASTNode(x, o);
   }
@@ -672,6 +695,7 @@ public class JmlVisitor extends VisitorArgResult {
   /* (non-Javadoc)
    * @see escjava.ast.VisitorArgResult#visitLockSetExpr(escjava.ast.LockSetExpr, java.lang.Object)
    */
+  @Override
   public final Object visitLockSetExpr(final /*@non_null*/ LockSetExpr x, final Object o) {
     return null;
   }
@@ -680,6 +704,7 @@ public class JmlVisitor extends VisitorArgResult {
   /* (non-Javadoc)
    * @see escjava.ast.VisitorArgResult#visitMapsExprModifierPragma(escjava.ast.MapsExprModifierPragma, java.lang.Object)
    */
+  @Override
   public final Object visitMapsExprModifierPragma(final /*@non_null*/ MapsExprModifierPragma x, final Object o) {
     return null;
   }
@@ -688,6 +713,7 @@ public class JmlVisitor extends VisitorArgResult {
   /* (non-Javadoc)
    * @see escjava.ast.VisitorArgResult#visitModelConstructorDeclPragma(escjava.ast.ModelConstructorDeclPragma, java.lang.Object)
    */
+  @Override
   public final Object visitModelConstructorDeclPragma(final /*@non_null*/ ModelConstructorDeclPragma x, final Object o) {
     return null;
   }
@@ -696,6 +722,7 @@ public class JmlVisitor extends VisitorArgResult {
   /* (non-Javadoc)
    * @see escjava.ast.VisitorArgResult#visitModelDeclPragma(escjava.ast.ModelDeclPragma, java.lang.Object)
    */
+  @Override
   public final Object visitModelDeclPragma(final /*@non_null*/ ModelDeclPragma x, final Object o) {
     return null;
   }
@@ -704,6 +731,7 @@ public class JmlVisitor extends VisitorArgResult {
   /* (non-Javadoc)
    * @see escjava.ast.VisitorArgResult#visitModelMethodDeclPragma(escjava.ast.ModelMethodDeclPragma, java.lang.Object)
    */
+  @Override
   public final Object visitModelMethodDeclPragma(final /*@non_null*/ ModelMethodDeclPragma x, final Object o) {
     return null;
   }
@@ -712,6 +740,7 @@ public class JmlVisitor extends VisitorArgResult {
   /* (non-Javadoc)
    * @see escjava.ast.VisitorArgResult#visitModelProgamModifierPragma(escjava.ast.ModelProgamModifierPragma, java.lang.Object)
    */
+  @Override
   public final Object visitModelProgamModifierPragma(final /*@non_null*/ ModelProgamModifierPragma x, final Object o) {
     return null;
   }
@@ -720,6 +749,7 @@ public class JmlVisitor extends VisitorArgResult {
   /* (non-Javadoc)
    * @see escjava.ast.VisitorArgResult#visitModelTypePragma(escjava.ast.ModelTypePragma, java.lang.Object)
    */
+  @Override
   public final Object visitModelTypePragma(final /*@non_null*/ ModelTypePragma x, final Object o) {
     return null;
   }
@@ -728,6 +758,7 @@ public class JmlVisitor extends VisitorArgResult {
   /* (non-Javadoc)
    * @see escjava.ast.VisitorArgResult#visitModifiesGroupPragma(escjava.ast.ModifiesGroupPragma, java.lang.Object)
    */
+  @Override
   public final Object visitModifiesGroupPragma(final /*@non_null*/ ModifiesGroupPragma x, final Object o) {
     return visitASTNode(x, o);
   }
@@ -736,6 +767,7 @@ public class JmlVisitor extends VisitorArgResult {
   /* (non-Javadoc)
    * @see escjava.ast.VisitorArgResult#visitNamedExprDeclPragma(escjava.ast.NamedExprDeclPragma, java.lang.Object)
    */
+  @Override
   public final Object visitNamedExprDeclPragma(final /*@non_null*/ NamedExprDeclPragma x, final Object o) {
     return null;
   }
@@ -744,6 +776,7 @@ public class JmlVisitor extends VisitorArgResult {
   /* (non-Javadoc)
    * @see escjava.ast.VisitorArgResult#visitNestedModifierPragma(escjava.ast.NestedModifierPragma, java.lang.Object)
    */
+  @Override
   public final Object visitNestedModifierPragma(final /*@non_null*/ NestedModifierPragma x, final Object o) {
     return null;
   }
@@ -752,6 +785,7 @@ public class JmlVisitor extends VisitorArgResult {
   /* (non-Javadoc)
    * @see escjava.ast.VisitorArgResult#visitNotModifiedExpr(escjava.ast.NotModifiedExpr, java.lang.Object)
    */
+  @Override
   public final Object visitNotModifiedExpr(final /*@non_null*/ NotModifiedExpr x, final Object o) {
     return null;
   }
@@ -760,6 +794,7 @@ public class JmlVisitor extends VisitorArgResult {
   /* (non-Javadoc)
    * @see escjava.ast.VisitorArgResult#visitNotSpecifiedExpr(escjava.ast.NotSpecifiedExpr, java.lang.Object)
    */
+  @Override
   public final Object visitNotSpecifiedExpr(final /*@non_null*/ NotSpecifiedExpr x, final Object o) {
     return null;
   }
@@ -768,6 +803,7 @@ public class JmlVisitor extends VisitorArgResult {
   /* (non-Javadoc)
    * @see escjava.ast.VisitorArgResult#visitNothingExpr(escjava.ast.NothingExpr, java.lang.Object)
    */
+  @Override
   public final Object visitNothingExpr(final /*@non_null*/ NothingExpr x, final Object o) {
     return null;
   }
@@ -776,6 +812,7 @@ public class JmlVisitor extends VisitorArgResult {
   /* (non-Javadoc)
    * @see escjava.ast.VisitorArgResult#visitNowarnPragma(escjava.ast.NowarnPragma, java.lang.Object)
    */
+  @Override
   public final Object visitNowarnPragma(final /*@non_null*/ NowarnPragma x, final Object o) {
     return null;
   }
@@ -784,6 +821,7 @@ public class JmlVisitor extends VisitorArgResult {
   /* (non-Javadoc)
    * @see escjava.ast.VisitorArgResult#visitParsedSpecs(escjava.ast.ParsedSpecs, java.lang.Object)
    */
+  @Override
   public final Object visitParsedSpecs(final /*@non_null*/ ParsedSpecs x, final Object o) {
     //FIXME hel: what's up here?
     //return visitASTNode(x, o); //generates a stack overflow... but should be used
@@ -812,7 +850,7 @@ public class JmlVisitor extends VisitorArgResult {
    */
   public final Object visitResExpr(final /*@non_null*/ ResExpr x, final Object o) {
     if (((Boolean) ((Properties) o).get("interesting")).booleanValue()) {
-      return fTranslator.resultLiteral(x, o);
+      return this.fTranslator.resultLiteral(x, o);
     }
     else {
       return null;
@@ -902,76 +940,76 @@ public class JmlVisitor extends VisitorArgResult {
     if (((Boolean) ((Properties) o).get("interesting")).booleanValue()) {
       switch(expr.op) {
         case TagConstants.EQ: 
-          return fTranslator.eq(expr, o);
+          return this.fTranslator.eq(expr, o);
         case TagConstants.OR: 
-          return fTranslator.or(expr, o);
+          return this.fTranslator.or(expr, o);
         case TagConstants.AND: 
-          return fTranslator.and(expr, o);
+          return this.fTranslator.and(expr, o);
         case TagConstants.NE:
-          return fTranslator.ne(expr, o);
+          return this.fTranslator.ne(expr, o);
         case TagConstants.GE: 
-          return fTranslator.ge(expr, o);
+          return this.fTranslator.ge(expr, o);
         case TagConstants.GT: 
-          return fTranslator.gt(expr, o);
+          return this.fTranslator.gt(expr, o);
         case TagConstants.LE: 
-          return fTranslator.le(expr, o);
+          return this.fTranslator.le(expr, o);
         case TagConstants.LT:  
-          return fTranslator.lt(expr, o);
+          return this.fTranslator.lt(expr, o);
         case TagConstants.BITOR: 
-          return fTranslator.bitor(expr, o);
+          return this.fTranslator.bitor(expr, o);
         case TagConstants.BITXOR: 
-          return fTranslator.bitxor(expr, o);
+          return this.fTranslator.bitxor(expr, o);
         case TagConstants.BITAND: 
-          return fTranslator.bitand(expr, o);
+          return this.fTranslator.bitand(expr, o);
         case TagConstants.LSHIFT:
-          return fTranslator.lshift(expr, o);
+          return this.fTranslator.lshift(expr, o);
         case TagConstants.RSHIFT: 
-          return fTranslator.rshift(expr, o);
+          return this.fTranslator.rshift(expr, o);
         case TagConstants.URSHIFT:
-          return fTranslator.urshift(expr, o);
+          return this.fTranslator.urshift(expr, o);
         case TagConstants.ADD: 
-          return fTranslator.add(expr, o);
+          return this.fTranslator.add(expr, o);
         case TagConstants.SUB: 
-          return fTranslator.sub(expr, o);
+          return this.fTranslator.sub(expr, o);
         case TagConstants.DIV: 
-          return fTranslator.div(expr, o);
+          return this.fTranslator.div(expr, o);
         case TagConstants.MOD: 
-          return fTranslator.mod(expr, o);
+          return this.fTranslator.mod(expr, o);
         case TagConstants.STAR: 
-          return fTranslator.star(expr, o);
+          return this.fTranslator.star(expr, o);
         case TagConstants.ASSIGN:
-          return fTranslator.assign(expr, o);
+          return this.fTranslator.assign(expr, o);
         case TagConstants.ASGMUL: 
-          return fTranslator.asgmul(expr, o);
+          return this.fTranslator.asgmul(expr, o);
         case TagConstants.ASGDIV: 
-          return fTranslator.asgdiv(expr, o);
+          return this.fTranslator.asgdiv(expr, o);
         case TagConstants.ASGREM: 
-          return fTranslator.asgrem(expr, o);
+          return this.fTranslator.asgrem(expr, o);
         case TagConstants.ASGADD: 
-          return fTranslator.asgadd(expr, o);
+          return this.fTranslator.asgadd(expr, o);
         case TagConstants.ASGSUB: 
-          return fTranslator.asgsub(expr, o);
+          return this.fTranslator.asgsub(expr, o);
         case TagConstants.ASGLSHIFT: 
-          return fTranslator.asglshift(expr, o);
+          return this.fTranslator.asglshift(expr, o);
         case TagConstants.ASGRSHIFT: 
-          return fTranslator.asgrshift(expr, o);
+          return this.fTranslator.asgrshift(expr, o);
         case TagConstants.ASGURSHIFT: 
-          return fTranslator.asgurshif(expr, o);
+          return this.fTranslator.asgurshif(expr, o);
         case TagConstants.ASGBITAND: 
-          return fTranslator.asgbitand(expr, o);
+          return this.fTranslator.asgbitand(expr, o);
           // jml specific operators 
         case TagConstants.IMPLIES: 
-          return fTranslator.implies(expr, o);
+          return this.fTranslator.implies(expr, o);
         case TagConstants.EXPLIES:
-          return fTranslator.explies(expr, o);
+          return this.fTranslator.explies(expr, o);
         case TagConstants.IFF: // equivalence (equality)
-          return fTranslator.iff(expr, o);
+          return this.fTranslator.iff(expr, o);
         case TagConstants.NIFF:    // discrepance (xor)
-          return fTranslator.niff(expr, o);
+          return this.fTranslator.niff(expr, o);
         case TagConstants.SUBTYPE: 
-          return fTranslator.subtype(expr, o);
+          return this.fTranslator.subtype(expr, o);
         case TagConstants.DOTDOT: 
-          return fTranslator.dotdot(expr, o);
+          return this.fTranslator.dotdot(expr, o);
   
         default:
           throw new IllegalArgumentException("Unknown construct :" +
@@ -1035,27 +1073,25 @@ public class JmlVisitor extends VisitorArgResult {
    * Adds a Term to the routines postcondition describing all assignable variables
    * @param o Properties object also containing all assignable variables
    */
-  private void doAssignable(Object o) {
-    HashSet fAssignable    = (HashSet) ((Properties) o).get("assignableSet");
+  private void doAssignable(final Object o) {
+    final HashSet fAssignable    = (HashSet) ((Properties) o).get("assignableSet");
     
-    if(((Boolean) ((Properties) o).get("nothing")).booleanValue() | !fAssignable.isEmpty())
+    if (((Boolean) ((Properties) o).get("nothing")).booleanValue() | !fAssignable.isEmpty())
     {
       final RoutineDecl rd = (RoutineDecl)((Properties) o).get("method");
       Post allPosts = Lookup.postconditions.get(rd);
       Term forAllTerm = null;
-      QuantVariableRef targetVar = Expression.rvar(Ref.sort); 
+      final QuantVariableRef targetVar = Expression.rvar(Ref.sort); 
       //    FIXME: sortAny should be available (now deprecated in Formula.sort)
-      QuantVariableRef fieldVar = Expression.rvar(Formula.sort);
-      QuantVariableRef fieldVarOld= Expression.old(fieldVar);
-      Term fEquals = Logic.equals(fieldVar, fieldVarOld);
+      final QuantVariableRef fieldVar = Expression.rvar(Formula.sort);
+      final Term equalsTerm = Logic.equals(Heap.select(Heap.varPre, (Term) targetVar, fieldVar.qvar), Heap.select(Heap.var, (Term) targetVar, fieldVar.qvar)); //gibt noch kein any
       final QuantVariable[] vars = {targetVar.qvar, fieldVar.qvar}; 
-      Term fTerm = Logic.not(Logic.isAllocated(Heap.varPre, targetVar));
-      if (!fAssignable.isEmpty())
-      {    
-          fTerm = Logic.or(fTerm,Logic.isAssignable(fieldVar, o));       
+      Term assigTerm = Logic.not(Logic.isAllocated(Heap.varPre, targetVar));
+      if (!fAssignable.isEmpty()) {
+        assigTerm = Logic.or(assigTerm, Logic.isAssignable((Term) targetVar, fieldVar, o));       
       }
-      fTerm = Logic.or(fTerm, fEquals); 
-      forAllTerm = Logic.forall(vars, fTerm);
+      assigTerm = Logic.or(assigTerm, equalsTerm); 
+      forAllTerm = Logic.forall(vars, assigTerm);
       //    FIXME jgc: I don't know if fVar should be needed here; needs a review
       allPosts = new Post(allPosts.getRVar(), Logic.and(allPosts.getPost(), forAllTerm));
       Lookup.postconditions.put(rd, allPosts);
