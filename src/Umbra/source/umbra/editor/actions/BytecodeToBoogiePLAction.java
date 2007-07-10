@@ -131,12 +131,12 @@ public class BytecodeToBoogiePLAction implements IEditorActionDelegate {
 
   /**
    * TODO.
-   * @param dir TODO
+   * @param a_dir TODO
    * @return TODO
    */
-  private String[] getClassesInDirectory(final File dir) {
-    if (dir.isDirectory()) {
-      final String[] children = dir.list();
+  private String[] getClassesInDirectory(final File a_dir) {
+    if (a_dir.isDirectory()) {
+      final String[] children = a_dir.list();
       return children;
     }
     return null;
