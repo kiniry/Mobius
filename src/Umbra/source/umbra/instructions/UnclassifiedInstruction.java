@@ -25,7 +25,8 @@ public class UnclassifiedInstruction extends InstructionLineController {
    * @param a_name the unclassified mnemonic
    * @see InstructionLineController#InstructionLineController(String, String)
    */
-  public UnclassifiedInstruction(final String a_line_text, final String a_name) {
+  public UnclassifiedInstruction(final String a_line_text,
+                                 final String a_name) {
     super(a_line_text, a_name);
   }
   /**

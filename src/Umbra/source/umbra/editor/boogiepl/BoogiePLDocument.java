@@ -187,8 +187,8 @@ public class BoogiePLDocument extends Document {
         if (pos == -1) {
           if (l_od != 0)
             l_do = l_od;
-          UmbraPlugin.messagelog("syncBS: b��d -- nie znaleziono kolejnej " +
-                                 "pozycji z LineNumberTable!");
+          UmbraPlugin.messagelog("syncBS: ERROR - a position not found in " +
+                                 "LineNumberTable!");
           break;
         }
         posln = getLineOfOffset(pos);
