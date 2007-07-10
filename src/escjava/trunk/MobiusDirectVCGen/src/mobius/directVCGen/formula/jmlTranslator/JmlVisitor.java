@@ -25,6 +25,7 @@ import javafe.ast.BlockStmt;
 import javafe.ast.ClassDecl;
 import javafe.ast.ConstructorDecl;
 import javafe.ast.DoStmt;
+import javafe.ast.Expr;
 import javafe.ast.ExprObjectDesignator;
 import javafe.ast.FieldAccess;
 import javafe.ast.FieldDecl;
@@ -134,7 +135,8 @@ public class JmlVisitor extends VisitorArgResult {
     fProperties.put("interesting", Boolean.FALSE);
     // firstPost: To add invariant only once to Lookup.postcondition
     fProperties.put("firstPost", Boolean.TRUE);
-    fProperties.put("routinebegin", Boolean.TRUE);    
+    fProperties.put("routinebegin", Boolean.TRUE);  
+    fProperties.put("noPostconditions", Boolean.FALSE);  
     fTranslator = new JmlExprToFormula(this);
      
   }
@@ -184,6 +186,26 @@ public class JmlVisitor extends VisitorArgResult {
     ((Properties) o).put("routinebegin", Boolean.TRUE);
     ((Properties) o).put("nothing", Boolean.FALSE);
     final QuantVariableRef result = (QuantVariableRef) ((Properties) o).get("result");
+    
+    boolean hasPost = false;
+
+    for (int i = 0; i < x.pmodifiers.size(); i++)
+    {
+      if (x.pmodifiers.elementAt(i).getTag() == TagConstants.ENSURES)
+      {
+        hasPost = true;
+      }
+    }
+    
+    if (!hasPost)
+    {
+      ((Properties) o).put("noPostconditions", Boolean.TRUE);
+      LiteralExpr litEx = LiteralExpr.make(TagConstants.BOOLEANLIT, Boolean.TRUE, 0);
+      ExprModifierPragma postc = ExprModifierPragma.make(TagConstants.ENSURES, litEx, 0); //FIXME: cbr: which loc? (here set to 0)
+      x.pmodifiers.addElement(postc);
+    }
+
+    
     Lookup.postconditions.put(x, new Post(result, Logic.True()));
     Lookup.exceptionalPostconditions.put(x, new Post(Expression.rvar(Ref.sort), Logic.True()));
     final Object fObj = visitASTNode(x, o);
@@ -438,25 +460,28 @@ public class JmlVisitor extends VisitorArgResult {
     ((Properties) o).put("interesting", Boolean.TRUE);
     final RoutineDecl rd = (RoutineDecl)((Properties) o).get("method");
     Term t = (Term)visitASTNode(x, o);
+    t = Logic.boolToProp(t);
     switch (x.getTag()) {
       case TagConstants.REQUIRES:
         if (rd  instanceof MethodDecl) { 
           final Term invToPre = (Term) invToPreconditions(o);
           t = Logic.Safe.and(t, invToPre);
         }
-        if (rd instanceof ConstructorDecl) {
-          t = Logic.boolToProp(t);
-        }
         Lookup.preconditions.put(rd, t);
         break;
       case TagConstants.ENSURES:
         Post allPosts = Lookup.postconditions.get(rd);
         // FIXME jgc: I don't know if fVar should be needed here; needs a review
-        allPosts = new Post(allPosts.getRVar(), Logic.and(allPosts.getPost(), t));
-        if (((Boolean) ((Properties) o).get("firstPost")).booleanValue()) {
+        if (((Boolean) ((Properties) o).get("noPostconditions")).booleanValue())//to avoid eq(true==true)
+        {
+          ((Properties) o).put("noSetPostconditions",Boolean.FALSE); 
+          allPosts = new Post(allPosts.getRVar(), Logic.and(allPosts.getPost(), t));
+        }
+        if (((Boolean) ((Properties) o).get("firstPost")).booleanValue()) { //add invariants only once
+          ((Properties) o).put("firstPost", Boolean.FALSE);
           final Term invToPost = (Term) invToPostconditions(o);
           allPosts = new Post(allPosts.getRVar(), Logic.and(allPosts.getPost(), invToPost));
-          ((Properties) o).put("firstPost", Boolean.FALSE);
+
         }
         Lookup.postconditions.put(rd, allPosts);
         break;
