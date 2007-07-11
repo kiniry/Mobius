@@ -128,12 +128,12 @@ public class BytecodeCombineAction extends BytecodeEditorAction {
       final BytecodeEditor my_editor = (BytecodeEditor)getEditor();
       JavaClass jc = strin.loadClass(clname);
       strin.removeClass(jc);
-      final JavaClass oldJc = my_editor.getMy_javaClass();
+      final JavaClass oldJc = my_editor.getJavaClass();
       final ClassGen cg = updateModifiedMethods(oldJc, jc);
       jc = cg.getJavaClass();
       final String fullName = my_editor.getPath(a_path).toOSString();
       jc.dump(fullName + UmbraHelper.getFileSeparator() + the_last_segment);
-      my_editor.setMy_javaClass(jc);
+      my_editor.setJavaClass(jc);
       my_editor.refreshBytecode(a_path, null, null);
       final IEditorInput input = new FileEditorInput(a_file);
       getContributor().refreshEditor(my_editor, input);

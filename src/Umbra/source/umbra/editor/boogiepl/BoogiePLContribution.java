@@ -61,7 +61,7 @@ public class BoogiePLContribution extends ControlContribution {
   /**
    * TODO.
    */
-  private boolean needNew = true;
+  private boolean my_neednew_flag = true;
 
   /**
    * The current BoogiePL editor for which the contribution works.
@@ -70,7 +70,7 @@ public class BoogiePLContribution extends ControlContribution {
   /**
    * TODO.
    */
-  private Label labelText;
+  private Label my_label_text;
 
   /**
    * TODO
@@ -79,7 +79,7 @@ public class BoogiePLContribution extends ControlContribution {
   /**
    * TODO.
    */
-  private boolean ready;
+  private boolean my_ready_flag;
 
   /**
    * TODO.
@@ -103,7 +103,7 @@ public class BoogiePLContribution extends ControlContribution {
       modTable = false;
     }
     bcc.checkAllLines(0, doc.getNumberOfLines() - 2);
-    ready = true;
+    my_ready_flag = true;
     return;
     */
   }
@@ -116,7 +116,12 @@ public class BoogiePLContribution extends ControlContribution {
     /**
      * TODO.
      */
-    int startRem = -1, stopRem = -1;
+    int my_start_rmvd = -1;
+
+    /**
+     * TODO.
+     */
+    int my_stop_rmvd = -1;
 
     /**
      * TODO.
@@ -130,7 +135,7 @@ public class BoogiePLContribution extends ControlContribution {
      * @see IDocumentListener#documentAboutToBeChanged(DocumentEvent)
      */
     public final void documentAboutToBeChanged(final DocumentEvent an_event) {
-      if (!ready)
+      if (!my_ready_flag)
         try {
           init(an_event.fDocument);
         } catch (BadLocationException e1) {
@@ -138,11 +143,12 @@ public class BoogiePLContribution extends ControlContribution {
           e1.printStackTrace();
         }
       try {
-        startRem = an_event.fDocument.getLineOfOffset(an_event.getOffset());
+        my_start_rmvd = an_event.fDocument.
+                                 getLineOfOffset(an_event.getOffset());
         final int len = an_event.fLength;
-        stopRem = an_event.fDocument.getLineOfOffset(an_event.getOffset() +
+        my_stop_rmvd = an_event.fDocument.getLineOfOffset(an_event.getOffset() +
                                                      len);
-        // bcc.removeIncorrects(startRem, stopRem);
+        // bcc.removeIncorrects(my_start_rmvd, my_stop_rmvd);
       } catch (BadLocationException e) {
         // TODO Auto-generated catch block
         e.printStackTrace();
@@ -151,26 +157,27 @@ public class BoogiePLContribution extends ControlContribution {
 
     /**
      * TODO.
-     * @param event TODO
+     * @param an_event TODO
      * @see IDocumentListener#documentChanged(DocumentEvent)
      */
-    public final void documentChanged(final DocumentEvent event) {
+    public final void documentChanged(final DocumentEvent an_event) {
       //int start = 0, stop = 0;
       try {
         //start =
-        event.fDocument.getLineOfOffset(event.getOffset());
-        final int len = event.getText().length();
+        an_event.fDocument.getLineOfOffset(an_event.getOffset());
+        final int len = an_event.getText().length();
         //stop =
-        event.fDocument.getLineOfOffset(event.getOffset() + len);
+        an_event.fDocument.getLineOfOffset(an_event.getOffset() + len);
 
       } catch (BadLocationException e) {
         // TODO Auto-generated catch block
         e.printStackTrace();
       }
       /*
-      bcc.addAllLines(event.fDocument, startRem, stopRem, start, stop);
-      startRem = -1;
-      stopRem = -1;
+      bcc.addAllLines(event.fDocument, my_start_rmvd, my_stop_rmvd,
+                      start, stop);
+      my_start_rmvd = -1;
+      my_stop_rmvd = -1;
       bcc.checkAllLines(start, stop);
       if (!bcc.allCorrect())
         displayError(bcc.getFirstError());
@@ -194,8 +201,8 @@ public class BoogiePLContribution extends ControlContribution {
    */
   public static BoogiePLContribution newItem() {
     if (inUse != null) {
-      if (!inUse.needNew) {
-        inUse.needNew = true;
+      if (!inUse.my_neednew_flag) {
+        inUse.my_neednew_flag = true;
         return inUse;
       }
     }
@@ -206,7 +213,7 @@ public class BoogiePLContribution extends ControlContribution {
    * TODO.
    */
   public final void survive() {
-    needNew = false;
+    my_neednew_flag = false;
   }
 
   /**
@@ -228,11 +235,11 @@ public class BoogiePLContribution extends ControlContribution {
     final Composite composite = new Composite(a_parent, SWT.BORDER);
     composite.setData(this);
 
-    labelText = new Label(composite, SWT.NONE);
-    labelText.setSize(WIDGET_WIDTH, WIDGET_HEIGHT);
-    labelText.setFont(new Font(null, "Arial", WIDGET_TEXT_HEIGHT,
+    my_label_text = new Label(composite, SWT.NONE);
+    my_label_text.setSize(WIDGET_WIDTH, WIDGET_HEIGHT);
+    my_label_text.setFont(new Font(null, "Arial", WIDGET_TEXT_HEIGHT,
                                               WIDGET_TEXT_STYLE));
-    labelText.setForeground(new Color(null, WIDGET_FOREGROUND_COLOR));
+    my_label_text.setForeground(new Color(null, WIDGET_FOREGROUND_COLOR));
     return composite;
   }
 
@@ -240,16 +247,16 @@ public class BoogiePLContribution extends ControlContribution {
    * used for debugging purposes
    *
   private void displayCorrect() {
-    labelText.setBackground(new Color(null, new RGB(0, 128, 0)));
-    labelText.setText("Correct");
+    my_label_text.setBackground(new Color(null, new RGB(0, 128, 0)));
+    my_label_text.setText("Correct");
   } */
 
   /**
    * used for debugging purposes
    *
   private void displayError(int line) {
-    labelText.setBackground(new Color(null, new RGB(255, 128, 0)));
-    labelText.setText("Error detected: " + line);
+    my_label_text.setBackground(new Color(null, new RGB(255, 128, 0)));
+    my_label_text.setText("Error detected: " + line);
   }*/
 
   /**
@@ -279,7 +286,7 @@ public class BoogiePLContribution extends ControlContribution {
    * TODO.
    */
   public final void reinit() {
-    ready = false;
+    my_ready_flag = false;
   }
 
   /**

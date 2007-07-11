@@ -17,7 +17,7 @@ import org.apache.bcel.generic.LLOAD;
 import org.apache.bcel.generic.LSTORE;
 
 import umbra.UmbraHelper;
-import umbra.editor.parsing.AbstractBytecodeStrings;
+import umbra.editor.parsing.BytecodeStrings;
 
 
 /**
@@ -57,7 +57,7 @@ public class StackInstruction extends NumInstruction {
   {
     String s;
     s = UmbraHelper.stripAllWhitespace(getMy_line_text());
-    final String[] s2 = AbstractBytecodeStrings.STACK_INS;
+    final String[] s2 = BytecodeStrings.STACK_INS;
     if (s.indexOf("%") < s.indexOf(":") + 1)
       return false;
     int res = 0;
@@ -106,7 +106,7 @@ public class StackInstruction extends NumInstruction {
 
   /**
    * This method, based on the value of the field
-   * {@ref InstructionLineController#name}, creates a new BCEL instruction
+   * {@ref InstructionLineController#my_name}, creates a new BCEL instruction
    * object for a stack instruction. It computes the index parameter of the
    * instruction before the instruction is constructed. The method can construct
    * one of the instructions:
@@ -137,34 +137,34 @@ public class StackInstruction extends NumInstruction {
       return null;
     index = getInd();
 
-    if (name.compareTo("aload") == 0) {
+    if (getName().compareTo("aload") == 0) {
       res = new ALOAD(index);
     }
-    if (name.compareTo("astore") == 0) {
+    if (getName().compareTo("astore") == 0) {
       res = new ASTORE(index);
     }
-    if (name.compareTo("dload") == 0) {
+    if (getName().compareTo("dload") == 0) {
       res = new DLOAD(index);
     }
-    if (name.compareTo("dstore") == 0) {
+    if (getName().compareTo("dstore") == 0) {
       res = new DSTORE(index);
     }
-    if (name.compareTo("fload") == 0) {
+    if (getName().compareTo("fload") == 0) {
       res = new FLOAD(index);
     }
-    if (name.compareTo("fstore") == 0) {
+    if (getName().compareTo("fstore") == 0) {
       res = new FSTORE(index);
     }
-    if (name.compareTo("iload") == 0) {
+    if (getName().compareTo("iload") == 0) {
       res = new ILOAD(index);
     }
-    if (name.compareTo("istore") == 0) {
+    if (getName().compareTo("istore") == 0) {
       res = new ISTORE(index);
     }
-    if (name.compareTo("lload") == 0) {
+    if (getName().compareTo("lload") == 0) {
       res = new LLOAD(index);
     }
-    if (name.compareTo("lstore") == 0) {
+    if (getName().compareTo("lstore") == 0) {
       res = new LSTORE(index);
     }
 

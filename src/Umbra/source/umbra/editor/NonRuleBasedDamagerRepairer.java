@@ -29,13 +29,13 @@ public class NonRuleBasedDamagerRepairer
   /**
    * The document this object works on TODO???
    */
-  protected IDocument fDocument;
+  private IDocument my_doc;
 
   /**
    * The default text attribute
    * if non is returned as data by the current token TODO.
    */
-  protected TextAttribute fDefaultTextAttribute;
+  private TextAttribute my_dflt_textattribute;
 
   /**
    * Constructor for NonRuleBasedDamagerRepairer.
@@ -44,7 +44,7 @@ public class NonRuleBasedDamagerRepairer
    */
   public NonRuleBasedDamagerRepairer(
         /*@ non_null @*/ final TextAttribute a_default_text_attribute) {
-    fDefaultTextAttribute = a_default_text_attribute;
+    my_dflt_textattribute = a_default_text_attribute;
   }
 
   /**
@@ -53,31 +53,31 @@ public class NonRuleBasedDamagerRepairer
    * @see IPresentationRepairer#setDocument(IDocument)
    */
   public final void setDocument(final IDocument a_doc) {
-    fDocument = a_doc;
+    my_doc = a_doc;
   }
 
   /**
    * Returns the end offset of the line that contains the specified offset or
    * if the offset is inside a line delimiter, the end offset of the next line.
    *
-   * @param offset the offset whose line end offset must be computed
+   * @param an_offset the offset whose line end offset must be computed
    * @return the line end offset for the given offset
    * @exception BadLocationException if offset is invalid in the current
    *            document
    */
-  protected final int endOfLineOf(final int offset)
+  protected final int endOfLineOf(final int an_offset)
     throws BadLocationException {
 
-    IRegion info = fDocument.getLineInformationOfOffset(offset);
-    if (offset <= info.getOffset() + info.getLength())
+    IRegion info = my_doc.getLineInformationOfOffset(an_offset);
+    if (an_offset <= info.getOffset() + info.getLength())
       return info.getOffset() + info.getLength();
 
-    final int line = fDocument.getLineOfOffset(offset);
+    final int line = my_doc.getLineOfOffset(an_offset);
     try {
-      info = fDocument.getLineInformation(line + 1);
+      info = my_doc.getLineInformation(line + 1);
       return info.getOffset() + info.getLength();
     } catch (BadLocationException x) {
-      return fDocument.getLength();
+      return my_doc.getLength();
     }
   }
 
@@ -97,7 +97,7 @@ public class NonRuleBasedDamagerRepairer
       try {
 
         final IRegion info =
-          fDocument.getLineInformationOfOffset(an_event.getOffset());
+          my_doc.getLineInformationOfOffset(an_event.getOffset());
         final int start = Math.max(a_partition.getOffset(), info.getOffset());
 
         int end =
@@ -129,7 +129,7 @@ public class NonRuleBasedDamagerRepairer
   /**
    * This method adds to <code>a_presentation</code> a presentation style
    * to be used to display <code>a_region</code>. The presentation style
-   * is defined with the use of {@ref #fDefaultTextAttribute}.
+   * is defined with the use of {@ref #my_dflt_textattribute}.
    *
    * @param a_presentation the text presentation to be filled by this repairer
    * @param a_region the damage to be repaired
@@ -142,7 +142,7 @@ public class NonRuleBasedDamagerRepairer
       a_presentation,
       a_region.getOffset(),
       a_region.getLength(),
-      fDefaultTextAttribute);
+      my_dflt_textattribute);
   }
 
   /**
@@ -166,4 +166,5 @@ public class NonRuleBasedDamagerRepairer
           an_attr.getBackground(),
           an_attr.getStyle()));
   }
+
 }

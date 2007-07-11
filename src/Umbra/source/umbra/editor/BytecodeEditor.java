@@ -25,17 +25,19 @@ import annot.bcclass.BCClass;
 import annot.bcio.ReadAttributeException;
 
 /**
- * This is the main class defining the Bytecode Editor
- * as a subclass of TextEditor, which is a standard class
- * extended by each editor window.
- * Its specificities are additional attributes describing
- * BCEL structures related to the edited Bytecode
- * such as JavaClass to obtain particular instructions
- * and ClassGen to allow changes in BCEL.
+ * This is the main class that defines the bytecode editor.
+ * It does so by subclassing {@ref TextEditor}, which is a standard class
+ * extended by each editor plugin.
+ * Its additional features are attributes that describe
+ * BCEL structures related to the edited bytecode
+ * such as {@ref JavaClass}, to obtain particular instructions,
+ * and {@ref ClassGen}, to allow changes in BCEL.
  *
- * The input file for this editor is a .btc file which resides
- * alongside the corresponding .java file (it is a different place
- * from the place for .class files).
+ * The input file for this editor is a .btc
+ * ({@ref UmbraHelper#BYTECODE_EXTENSION}) file which resides
+ * alongside the corresponding .java ({@ref UmbraHelper#JAVA_EXTENSION})
+ * file. (Note that it is a different place from the place for .class,
+ * {@ref UmbraHelper#CLASS_EXTENSION}, files).
  *
  * @author Tomasz Batkiewicz (tb209231@students.mimuw.edu.pl)
  * @author Jarosław Paszek (jp209217@students.mimuw.edu.pl)
@@ -57,13 +59,13 @@ public class BytecodeEditor extends TextEditor {
    * current editor has been generated from. They also serve to modify
    * the bytecode.
    */
-  private JavaClass my_javaClass;
+  private JavaClass my_javaclass;
 
   /**
    * The BCEL structure to generate the bytecode file corresponding
-   * to the {@link #my_javaClass}.
+   * to the {@link #my_javaclass}.
    */
-  private ClassGen my_classGen;
+  private ClassGen my_classgen;
 
   /**
    * This field contains the number of history items. This
@@ -113,8 +115,8 @@ public class BytecodeEditor extends TextEditor {
    * @return BCEL structure related to Bytecode
    * that allows obtaining its particular instructions
    */
-  public final JavaClass getMy_javaClass() {
-    return my_javaClass;
+  public final JavaClass getJavaClass() {
+    return my_javaclass;
   }
 
   /**
@@ -129,8 +131,8 @@ public class BytecodeEditor extends TextEditor {
   public final void setRelation(final CompilationUnitEditor an_editor,
                                 final JavaClass a_javaclass) {
     my_related_editor = an_editor;
-    my_javaClass = a_javaclass;
-    my_classGen = new ClassGen(a_javaclass);
+    my_javaclass = a_javaclass;
+    my_classgen = new ClassGen(a_javaclass);
     ((BytecodeDocumentProvider)getDocumentProvider()).
             setRelation(an_editor, this, getEditorInput());
   }
@@ -166,7 +168,7 @@ public class BytecodeEditor extends TextEditor {
       e1.printStackTrace();
     }
     try {
-      final JavaClass jc = my_classGen.getJavaClass();
+      final JavaClass jc = my_classgen.getJavaClass();
       final String lastSegment = active.lastSegment().replaceFirst(
                   UmbraHelper.BYTECODE_EXTENSION,
                   UmbraHelper.CLASS_EXTENSION);
@@ -308,7 +310,7 @@ public class BytecodeEditor extends TextEditor {
       e1.printStackTrace();
     }
 
-    my_javaClass = jc;
+    my_javaclass = jc;
   }
 
 //  private BCLocalVariable[] createLocalVariables(MethodGen m,
@@ -466,8 +468,8 @@ public class BytecodeEditor extends TextEditor {
   /**
    * @return the object which generates the class file
    */
-  public final ClassGen getMy_classGen() {
-    return my_classGen;
+  public final ClassGen getClassGen() {
+    return my_classgen;
   }
 
   /**
@@ -476,9 +478,9 @@ public class BytecodeEditor extends TextEditor {
    *
    * @param a_javaclass the Java class representation
    */
-  public final void setMy_javaClass(final JavaClass a_javaclass) {
-    my_javaClass = a_javaclass;
-    my_classGen = new ClassGen(a_javaclass);
+  public final void setJavaClass(final JavaClass a_javaclass) {
+    my_javaclass = a_javaclass;
+    my_classgen = new ClassGen(a_javaclass);
   }
 
   /**

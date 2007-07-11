@@ -75,7 +75,7 @@ public class DisasBCEL implements IEditorActionDelegate {
       bc_editor.refreshBytecode(UmbraHelper.getClassFileFile(jFile, my_editor).
                                             getProjectRelativePath(),
                                 null, null);
-      final JavaClass jc = bc_editor.getMy_javaClass();
+      final JavaClass jc = bc_editor.getJavaClass();
       page.closeEditor(bc_editor, true);
       openEditorAndDisassemble(page, input, jc);
     } catch (CoreException e) {

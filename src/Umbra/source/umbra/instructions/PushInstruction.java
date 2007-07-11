@@ -9,7 +9,7 @@ import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.SIPUSH;
 
 import umbra.UmbraHelper;
-import umbra.editor.parsing.AbstractBytecodeStrings;
+import umbra.editor.parsing.BytecodeStrings;
 
 /**
  * This class is related to some subset of instructions
@@ -46,7 +46,7 @@ public class PushInstruction extends NumInstruction {
   public final boolean correct() {
     final String my_line_text = getMy_line_text();
     final String s = UmbraHelper.stripAllWhitespace(my_line_text);
-    final String[] s2 = AbstractBytecodeStrings.PUSH_INS;
+    final String[] s2 = BytecodeStrings.PUSH_INS;
     int j;
     int y;
     for (j = 0; j < s2.length; j++) {
@@ -87,7 +87,7 @@ public class PushInstruction extends NumInstruction {
     isd = true;
     // zakladam ze poprawnosc jest juz wyzej
     final int dokad = line1.length();
-    final int skad = line1.indexOf(name) + name.length();
+    final int skad = line1.indexOf(getName()) + getName().length();
 
     if (isd) {
       liczba = 0;
@@ -113,16 +113,16 @@ public class PushInstruction extends NumInstruction {
 
     byte b = 0;
     b = (byte)index;
-
-    if (name.compareTo("bipush") == 0) {
-      return new BIPUSH(b);
+    Instruction res = null;
+    if (getName().compareTo("bipush") == 0) {
+      res = new BIPUSH(b);
     }
-    if (name.compareTo("sipush") == 0) {
-      return new SIPUSH(b);
+    if (getName().compareTo("sipush") == 0) {
+      res = new SIPUSH(b);
     }
 
 
-    return null;
+    return res;
 
   }
 }

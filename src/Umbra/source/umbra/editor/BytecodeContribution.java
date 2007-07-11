@@ -76,10 +76,10 @@ public class BytecodeContribution extends ControlContribution {
    */
   private BytecodeEditorContributor my_editor_cntrbtr;
 
-  /**
+  /* *
    * The current bytecode editor for which the contribution works.
    */
-  private IEditorPart my_editor;
+  //private IEditorPart my_editor; it's never read
 
   /**
    * TODO.
@@ -307,13 +307,14 @@ public class BytecodeContribution extends ControlContribution {
 
   /**
    * This method sets the bytecode editor for which the
-   * bytecode contribution works.
+   * bytecode contribution works. Currently, it does nothing as the
+   * editor is not used internally.
    *
    * @param a_target_editor the bytecode editor for which the action will be
    *    executed
    */
   public void setActiveEditor(final IEditorPart a_target_editor) {
-    my_editor = a_target_editor;
+    //my_editor = a_target_editor; it's never read
   }
 
   /**

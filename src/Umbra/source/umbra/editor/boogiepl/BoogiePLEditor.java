@@ -45,31 +45,31 @@ public class BoogiePLEditor extends TextEditor {
   /**
    * The object which menages the allocation of the system colours.
    */
-  private ColorManager colorManager;
+  private ColorManager my_color_mngr;
   /**
-   * The current colouring style, see {@link IColorValues}.
+   * The current colouring style, see {@link ColorValues}.
    */
-  private int mod;
-  /**
-   * TODO.
-   */
-  private boolean updated = true;
+  private int my_mode;
   /**
    * TODO.
    */
-  private CompilationUnitEditor relatedEditor;
+  private boolean my_updated_flag = true;
   /**
    * TODO.
    */
-  private JavaClass javaClass;
+  private CompilationUnitEditor my_related_editor;
   /**
    * TODO.
    */
-  private ClassGen classGen;
+  private JavaClass my_javaclass;
   /**
    * TODO.
    */
-  private int historyNum = -1;
+  private ClassGen my_classgen;
+  /**
+   * TODO.
+   */
+  private int my_historynum = -1;
 
   /**
    * A constructor with no BoogiePL-related specificity.
@@ -78,9 +78,10 @@ public class BoogiePLEditor extends TextEditor {
    */
   public BoogiePLEditor(final BytecodeEditor an_editor) {
     super();
-    mod = Composition.getMod();
-    colorManager = ColorManager.getColorManager();
-    setSourceViewerConfiguration(new BoogiePLConfiguration(colorManager, mod));
+    my_mode = Composition.getMod();
+    my_color_mngr = ColorManager.getColorManager();
+    setSourceViewerConfiguration(new BoogiePLConfiguration(my_color_mngr,
+                                                           my_mode));
     setDocumentProvider(new BoogiePLDocumentProvider());
   }
 
@@ -88,7 +89,7 @@ public class BoogiePLEditor extends TextEditor {
    * Default function used while closing the BoogiePL editor.
    */
   public final void dispose() {
-    colorManager.dispose();
+    my_color_mngr.dispose();
     super.dispose();
   }
 
@@ -97,14 +98,14 @@ public class BoogiePLEditor extends TextEditor {
    * @return TODO
    */
   public final boolean isUpdated() {
-    return updated;
+    return my_updated_flag;
   }
 
   /**
    * TODO.
    */
   public final void leave() {
-    updated = false;
+    my_updated_flag = false;
   }
 
   /**
@@ -112,7 +113,7 @@ public class BoogiePLEditor extends TextEditor {
    * that BoogiePL has been generated from
    */
   public final CompilationUnitEditor getRelatedEditor() {
-    return relatedEditor;
+    return my_related_editor;
   }
 
   /**
@@ -120,25 +121,26 @@ public class BoogiePLEditor extends TextEditor {
    * that allows obtaining its particular instructions
    */
   public final JavaClass getJavaClass() {
-    return javaClass;
+    return my_javaclass;
   }
 
   /**
    * This is a function executed directly after initialization
    * that makes realtion to BCEL structures. TODO check
    *
-   * @param editor  Java code editor with intended relation
+   * @param an_editor  Java code editor with intended relation
    *           (used especially during synchronization)
-   * @param jc    BCEL structures that BoogiePL has been
+   * @param a_javaclass    BCEL structures that BoogiePL has been
    *           generated from and may be modificated with
    */
-  public final void setRelation(final CompilationUnitEditor editor,
-                                final JavaClass jc) {
-    relatedEditor = editor;
-    javaClass = jc;
-    classGen = new ClassGen(jc);
+  public final void setRelation(final CompilationUnitEditor an_editor,
+                                final JavaClass a_javaclass) {
+    my_related_editor = an_editor;
+    my_javaclass = a_javaclass;
+    my_classgen = new ClassGen(a_javaclass);
     ((BoogiePLDocumentProvider)getDocumentProvider()).
-                            setRelation(editor, jc, classGen, getEditorInput());
+                            setRelation(an_editor, a_javaclass,
+                                        my_classgen, getEditorInput());
   }
 
   /**
@@ -173,7 +175,7 @@ public class BoogiePLEditor extends TextEditor {
       e1.printStackTrace();
     }
     try {
-      final JavaClass jc = classGen.getJavaClass();
+      final JavaClass jc = my_classgen.getJavaClass();
       final String path3 = getPath(active).append(lastSegment).toOSString();
       UmbraPlugin.messagelog("Path3: " + path3);
       jc.dump(path3);
@@ -186,11 +188,11 @@ public class BoogiePLEditor extends TextEditor {
    * Transform a relative file path (inside the project) into the absolute one.
    * TODO this is a duplicated code, find "absolute path"
    *
-   * @param path relative path
+   * @param a_path relative path
    * @return absolute path
    */
-  public final IPath getPath(final IPath path) {
-    return ResourcesPlugin.getWorkspace().getRoot().getFolder(path).
+  public final IPath getPath(final IPath a_path) {
+    return ResourcesPlugin.getWorkspace().getRoot().getFolder(a_path).
                                                     getProject().getLocation();
   }
 
@@ -315,7 +317,7 @@ public class BoogiePLEditor extends TextEditor {
       e1.printStackTrace();
     }
 
-    javaClass = jc;
+    my_javaclass = jc;
   }
 
 //  private BCLocalVariable[] createLocalVariables(MethodGen m,
@@ -458,9 +460,9 @@ public class BoogiePLEditor extends TextEditor {
    * -1 if limit has been reached
    */
   public final int newHistory() {
-    if (historyNum == UmbraHelper.MAX_HISTORY) return -1;
-    historyNum++;
-    return historyNum;
+    if (my_historynum == UmbraHelper.MAX_HISTORY) return -1;
+    my_historynum++;
+    return my_historynum;
   }
 
   /**
@@ -469,7 +471,7 @@ public class BoogiePLEditor extends TextEditor {
    */
 
   public final void clearHistory() {
-    historyNum = -1;
+    my_historynum = -1;
   }
 
   /**

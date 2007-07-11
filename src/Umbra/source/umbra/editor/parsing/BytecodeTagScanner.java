@@ -8,12 +8,12 @@ import org.eclipse.jface.text.rules.WhitespaceRule;
 import org.eclipse.jface.text.rules.WordRule;
 
 import umbra.editor.ColorManager;
-import umbra.editor.IColorValues;
+import umbra.editor.ColorValues;
 
 /**
  * This method defines coloring rules in tags.
  * It has been generated automatically except obtaing
- * color values from the array in {@ref IColorValues}.
+ * color values from the array in {@ref ColorValues}.
  *
  * @author Wojciech Wąs (ww209224@students.mimuw.edu.pl)
  * @version a-01
@@ -59,17 +59,17 @@ public class BytecodeTagScanner extends RuleBasedScanner {
     final IToken[] tokens = TokenGetter.getTokenTab(a_manager, a_mode);
 
     final WordRule linerule = new WordRule(new SpecialWordDetector());
-    linerule.addWord("<init>", tokens[IColorValues.KEY]);
+    linerule.addWord("<init>", tokens[ColorValues.KEY]);
 
     final IRule[] rules = new IRule[NUMBER_OF_RULES];
 
     // Add rule for double quotes
     rules[DOUBLE_QUOTE_RULE] = new SingleLineRule("\"", "\"",
-                                                  tokens[IColorValues.STRING],
+                                                  tokens[ColorValues.STRING],
                                                   '\\');
     // Add a rule for single quotes
     rules[SINGLE_QUOTE_RULE] = new SingleLineRule("'", "'",
-                                                  tokens[IColorValues.STRING],
+                                                  tokens[ColorValues.STRING],
                                                   '\\');
     // Add generic whitespace rule.
     rules[LINE_RULE] = linerule;

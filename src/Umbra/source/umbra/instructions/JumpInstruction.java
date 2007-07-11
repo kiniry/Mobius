@@ -30,7 +30,7 @@ import org.apache.bcel.generic.JSR_W;
 
 import umbra.UmbraHelper;
 import umbra.UmbraPlugin;
-import umbra.editor.parsing.AbstractBytecodeStrings;
+import umbra.editor.parsing.BytecodeStrings;
 
 
 /**
@@ -79,7 +79,7 @@ public class JumpInstruction extends NumInstruction {
    */
   public final boolean correct() {
     final String s = UmbraHelper.stripAllWhitespace(getMy_line_text());
-    final String[] s2 = AbstractBytecodeStrings.JUMP_INS;
+    final String[] s2 = BytecodeStrings.JUMP_INS;
     if (s.indexOf("#") < s.indexOf(":") + 1) return false;
     // we check all the instructions in s2
     int res = 0;
@@ -131,67 +131,68 @@ public class JumpInstruction extends NumInstruction {
 
     if (!correct())
       return null;
-    if (name.compareTo("goto") == 0) {
-      return new GOTO(ih);
+    Instruction res = null;
+    if (getName().compareTo("goto") == 0) {
+      res = new GOTO(ih);
     }
-    if (name.compareTo("goto_w") == 0) {
-      return new GOTO_W(ih);
+    if (getName().compareTo("goto_w") == 0) {
+      res = new GOTO_W(ih);
     }
-    if (name.compareTo("if_acmpeq") == 0) {
-      return new IF_ACMPEQ(ih);
+    if (getName().compareTo("if_acmpeq") == 0) {
+      res = new IF_ACMPEQ(ih);
     }
-    if (name.compareTo("if_acmpne") == 0) {
-      return new IF_ACMPNE(ih);
+    if (getName().compareTo("if_acmpne") == 0) {
+      res = new IF_ACMPNE(ih);
     }
-    if (name.compareTo("if_icmpeq") == 0) {
-      return new IF_ICMPEQ(ih);
+    if (getName().compareTo("if_icmpeq") == 0) {
+      res = new IF_ICMPEQ(ih);
     }
-    if (name.compareTo("if_icmpge") == 0) {
-      return new IF_ICMPGE(ih);
+    if (getName().compareTo("if_icmpge") == 0) {
+      res = new IF_ICMPGE(ih);
     }
-    if (name.compareTo("if_icmpgt") == 0) {
-      return new IF_ICMPGT(ih);
+    if (getName().compareTo("if_icmpgt") == 0) {
+      res = new IF_ICMPGT(ih);
     }
-    if (name.compareTo("if_icmple") == 0) {
-      return new IF_ICMPLE(ih);
+    if (getName().compareTo("if_icmple") == 0) {
+      res = new IF_ICMPLE(ih);
     }
-    if (name.compareTo("if_icmplt") == 0) {
-      return new IF_ICMPLT(ih);
+    if (getName().compareTo("if_icmplt") == 0) {
+      res = new IF_ICMPLT(ih);
     }
-    if (name.compareTo("if_icmpne") == 0) {
-      return new IF_ICMPNE(ih);
+    if (getName().compareTo("if_icmpne") == 0) {
+      res = new IF_ICMPNE(ih);
     }
-    if (name.compareTo("ifeq") == 0) {
-      return new IFEQ(ih);
+    if (getName().compareTo("ifeq") == 0) {
+      res = new IFEQ(ih);
     }
-    if (name.compareTo("ifge") == 0) {
-      return new IFGE(ih);
+    if (getName().compareTo("ifge") == 0) {
+      res = new IFGE(ih);
     }
-    if (name.compareTo("ifgt") == 0) {
-      return new IFGT(ih);
+    if (getName().compareTo("ifgt") == 0) {
+      res = new IFGT(ih);
     }
-    if (name.compareTo("ifle") == 0) {
-      return new IFLE(ih);
+    if (getName().compareTo("ifle") == 0) {
+      res = new IFLE(ih);
     }
-    if (name.compareTo("iflt") == 0) {
-      return new IFLT(ih);
+    if (getName().compareTo("iflt") == 0) {
+      res = new IFLT(ih);
     }
-    if (name.compareTo("ifne") == 0) {
-      return new IFNE(ih);
+    if (getName().compareTo("ifne") == 0) {
+      res = new IFNE(ih);
     }
-    if (name.compareTo("ifnonnull") == 0) {
-      return new IFNONNULL(ih);
+    if (getName().compareTo("ifnonnull") == 0) {
+      res = new IFNONNULL(ih);
     }
-    if (name.compareTo("ifnull") == 0) {
-      return new IFNULL(ih);
+    if (getName().compareTo("ifnull") == 0) {
+      res = new IFNULL(ih);
     }
-    if (name.compareTo("jsr") == 0) {
-      return new JSR(ih);
+    if (getName().compareTo("jsr") == 0) {
+      res = new JSR(ih);
     }
-    if (name.compareTo("jsr_w") == 0) {
-      return new JSR_W(ih);
+    if (getName().compareTo("jsr_w") == 0) {
+      res = new JSR_W(ih);
     }
-    return null;
+    return res;
   }
 
   /**

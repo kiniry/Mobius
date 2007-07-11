@@ -44,6 +44,6 @@ public class HeaderLineController extends BytecodeLineController {
    * @param an_index TODO
    */
   public final void setIndex(final int an_index) {
-    this.index = an_index + 1;
+    super.setIndex(an_index + 1);
   }
 }

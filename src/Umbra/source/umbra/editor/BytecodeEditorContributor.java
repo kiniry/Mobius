@@ -78,19 +78,19 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
    * The action to combine the modifications from the source code editor
    * and from the bytecode editor.
    */
-  private BytecodeCombineAction combineAction;
+  private BytecodeCombineAction my_combine_action;
 
   /**
    * The action to restore one of the history snapshots that
    * were stored before.
    */
-  private BytecodeRestoreAction restoreAction;
+  private BytecodeRestoreAction my_restore_action;
 
   /**
    * The action to synchronize the position in the bytecode file with
    * the corresponding position in the source code file.
    */
-  private BytecodeSynchrAction synchrAction;
+  private BytecodeSynchrAction my_synchr_action;
 
   /**
    * The constructor is executed when the editor is started.
@@ -104,16 +104,16 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
     my_bcode_cntrbtn.addEditorContributor(this);
     my_refresh_action = new BytecodeRefreshAction(this, my_bcode_cntrbtn);
     my_rebuild_action = new BytecodeRebuildAction(this);
-    combineAction = new BytecodeCombineAction(this, my_bcode_cntrbtn);
-    restoreAction = new BytecodeRestoreAction(this, my_bcode_cntrbtn);
-    synchrAction = new BytecodeSynchrAction();
+    my_combine_action = new BytecodeCombineAction(this, my_bcode_cntrbtn);
+    my_restore_action = new BytecodeRestoreAction(this, my_bcode_cntrbtn);
+    my_synchr_action = new BytecodeSynchrAction();
     final URL installURL = UmbraPlugin.getDefault().getBundle().getEntry("/");
     assignIcons(installURL);
     my_refresh_action.setToolTipText("Refresh");
     my_rebuild_action.setToolTipText("Rebuild");
-    combineAction.setToolTipText("Combine");
-    restoreAction.setToolTipText("Restore");
-    synchrAction.setToolTipText("Synchronize");
+    my_combine_action.setToolTipText("Combine");
+    my_restore_action.setToolTipText("Restore");
+    my_synchr_action.setToolTipText("Synchronize");
     setupColorActions(installURL, Composition.getMod());
   }
 
@@ -129,7 +129,7 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
                                  final int a_mode) {
     my_action_plus = new BytecodeColorAction(this, 1, a_mode);
     // TODO: for some reason the second parameter was
-    //       IColorValues.MODELS.length - 2,
+    //       ColorValues.MODELS.length - 2,
     my_action_minus = new BytecodeColorAction(this, -1, a_mode);
     ImageDescriptor icon_right;
     ImageDescriptor icon_left;
@@ -175,9 +175,9 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
         createFromURL(new URL(an_install_url, "icons/synchronize.gif"));
       my_refresh_action.setImageDescriptor(refresh_icon);
       my_rebuild_action.setImageDescriptor(rebuild_icon);
-      combineAction.setImageDescriptor(combine_icon);
-      restoreAction.setImageDescriptor(restore_icon);
-      synchrAction.setImageDescriptor(synchr_icon);
+      my_combine_action.setImageDescriptor(combine_icon);
+      my_restore_action.setImageDescriptor(restore_icon);
+      my_synchr_action.setImageDescriptor(synchr_icon);
     } catch (MalformedURLException e) {
       wrongIconMessage(e);
     }
@@ -220,46 +220,46 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
     a_tbar_mngr.add(my_action_minus);
     a_tbar_mngr.add(my_refresh_action);
     a_tbar_mngr.add(my_rebuild_action);
-    a_tbar_mngr.add(combineAction);
-    a_tbar_mngr.add(restoreAction);
-    a_tbar_mngr.add(synchrAction);
+    a_tbar_mngr.add(my_combine_action);
+    a_tbar_mngr.add(my_restore_action);
+    a_tbar_mngr.add(my_synchr_action);
   }
 
   /**
    * New items for the actions are added to the menu.
    *
-   * @param menuManager TODO
+   * @param a_menu_mngr TODO
    */
-  public final void contributeToMenu(final IMenuManager menuManager) {
+  public final void contributeToMenu(final IMenuManager a_menu_mngr) {
     // Run super.
-    super.contributeToMenu(menuManager);
+    super.contributeToMenu(a_menu_mngr);
     final MenuManager bytecodeMenu = new MenuManager("Editor"); //$NON-NLS-1$
-    menuManager.insertAfter("additions", bytecodeMenu); //$NON-NLS-1$
+    a_menu_mngr.insertAfter("additions", bytecodeMenu); //$NON-NLS-1$
     bytecodeMenu.add(my_action_plus);
     bytecodeMenu.add(my_action_minus);
     bytecodeMenu.add(my_refresh_action);
     bytecodeMenu.add(my_rebuild_action);
-    bytecodeMenu.add(combineAction);
-    bytecodeMenu.add(restoreAction);
-    bytecodeMenu.add(synchrAction);
+    bytecodeMenu.add(my_combine_action);
+    bytecodeMenu.add(my_restore_action);
+    bytecodeMenu.add(my_synchr_action);
   }
 
   /**
    * The current editor window is set as an attribute
    * (also for each action).
    *
-   * @param editor  the current editor window
+   * @param an_editor  the current editor window
    */
-  public final void setActiveEditor(final IEditorPart editor) {
-    super.setActiveEditor(editor);
-    my_bcode_cntrbtn.setActiveEditor(editor);
-    my_action_plus.setActiveEditor(editor);
-    my_action_minus.setActiveEditor(editor);
-    my_refresh_action.setActiveEditor(editor);
-    my_rebuild_action.setActiveEditor(editor);
-    combineAction.setActiveEditor(editor);
-    restoreAction.setActiveEditor(editor);
-    synchrAction.setActiveEditor(editor);
+  public final void setActiveEditor(final IEditorPart an_editor) {
+    super.setActiveEditor(an_editor);
+    my_bcode_cntrbtn.setActiveEditor(an_editor);
+    my_action_plus.setActiveEditor(an_editor);
+    my_action_minus.setActiveEditor(an_editor);
+    my_refresh_action.setActiveEditor(an_editor);
+    my_rebuild_action.setActiveEditor(an_editor);
+    my_combine_action.setActiveEditor(an_editor);
+    my_restore_action.setActiveEditor(an_editor);
+    my_synchr_action.setActiveEditor(an_editor);
   }
 
   /**
@@ -297,7 +297,7 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
     final int len = selection.getLength();
     final CompilationUnitEditor related = ((BytecodeEditor)an_editor).
                                                            getRelatedEditor();
-    final JavaClass jc = ((BytecodeEditor)an_editor).getMy_javaClass();
+    final JavaClass jc = ((BytecodeEditor)an_editor).getJavaClass();
     final boolean proper = (related != null);
     my_bcode_cntrbtn.survive();
     if (proper) Composition.startDisas();
@@ -317,14 +317,14 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
    * This method disables the synchronisation action in the editor.
    */
   public final void synchrDisable() {
-    synchrAction.setEnabled(false);
+    my_synchr_action.setEnabled(false);
   }
 
   /**
    * This method enables the synchronisation action in the editor.
    */
   public final void synchrEnable() {
-    synchrAction.setEnabled(true);
+    my_synchr_action.setEnabled(true);
   }
 
   /**

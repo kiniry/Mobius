@@ -9,11 +9,11 @@ import org.eclipse.jface.text.rules.Token;
 import org.eclipse.swt.graphics.RGB;
 
 import umbra.editor.ColorManager;
-import umbra.editor.IColorValues;
+import umbra.editor.ColorValues;
 import umbra.editor.NonRuleBasedDamagerRepairer;
 
 /**
- * This method collects array of colors from IColorValues interface
+ * This method collects array of colors from ColorValues interface
  * and returns them as a token array.
  * TODO ???
  *
@@ -55,8 +55,8 @@ public final class TokenGetter {
    */
   public static IToken[] getTokenTab(final ColorManager the_manager,
                                      final int a_mode) {
-    final IToken[] tokens = new IToken[IColorValues.PARTS];
-    for (int i = 0; i < IColorValues.PARTS; i++) {
+    final IToken[] tokens = new IToken[ColorValues.PARTS];
+    for (int i = 0; i < ColorValues.PARTS; i++) {
       tokens[i] = TokenGetter.getToken(the_manager, a_mode, i);
     }
     return tokens;
@@ -96,15 +96,15 @@ public final class TokenGetter {
                           final int a_mode,
                           final int a_col) {
     return new TextAttribute(the_manager.getColor(
-             new RGB(IColorValues.MODELS[a_mode][(IColorValues.CN * a_col) +
-                                               IColorValues.RED_COMPONENT],
-                     IColorValues.MODELS[a_mode][(IColorValues.CN * a_col) +
-                                              IColorValues.GREEN_COMPONENT],
-                     IColorValues.MODELS[a_mode][(IColorValues.CN * a_col) +
-                                              IColorValues.BLUE_COMPONENT])),
+             new RGB(ColorValues.MODELS[a_mode][(ColorValues.CN * a_col) +
+                                               ColorValues.RED_COMPONENT],
+                     ColorValues.MODELS[a_mode][(ColorValues.CN * a_col) +
+                                              ColorValues.GREEN_COMPONENT],
+                     ColorValues.MODELS[a_mode][(ColorValues.CN * a_col) +
+                                              ColorValues.BLUE_COMPONENT])),
                      null,
-                     IColorValues.MODELS[a_mode][(IColorValues.CN * a_col) +
-                                              IColorValues.STYLE_COMPONENT]);
+                     ColorValues.MODELS[a_mode][(ColorValues.CN * a_col) +
+                                              ColorValues.STYLE_COMPONENT]);
   }
 
 }

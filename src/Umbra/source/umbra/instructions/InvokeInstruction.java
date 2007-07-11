@@ -10,7 +10,7 @@ import org.apache.bcel.generic.INVOKEVIRTUAL;
 import org.apache.bcel.generic.Instruction;
 
 import umbra.UmbraHelper;
-import umbra.editor.parsing.AbstractBytecodeStrings;
+import umbra.editor.parsing.BytecodeStrings;
 
 
 /**
@@ -60,7 +60,7 @@ public class InvokeInstruction extends StringInstruction {
   public final boolean correct() {
     final String my_line_text = getMy_line_text();
     final String s = UmbraHelper.stripAllWhitespace(my_line_text);
-    final String[] s2 = AbstractBytecodeStrings.INVOKE_INS;
+    final String[] s2 = BytecodeStrings.INVOKE_INS;
     int j;
     for (j = 0; j < s2.length; j++) {
       if ((s.indexOf(s2[j]) > 0) &&
@@ -85,7 +85,7 @@ public class InvokeInstruction extends StringInstruction {
 
   /**
    * This method, based on the value of the field
-   * {@ref InstructionLineController#name}, creates a new BCEL instruction
+   * {@ref InstructionLineController#my_name}, creates a new BCEL instruction
    * object for an invoke instruction. It computes the index parameter
    * of the instruction before the instruction is constructed. The method can
    * construct one of the instructions:
@@ -108,18 +108,18 @@ public class InvokeInstruction extends StringInstruction {
 
     if (!correct())
       return null;
+    Instruction res = null;
+    if (getName().compareTo("invokespecial") == 0) {
+      res = new INVOKESPECIAL(index);
+    }
+    if (getName().compareTo("invokestatic") == 0) {
+      res = new INVOKESTATIC(index);
+    }
+    if (getName().compareTo("invokevirtual") == 0) {
+      res = new INVOKEVIRTUAL(index);
+    }
 
-    if (name.compareTo("invokespecial") == 0) {
-      return new INVOKESPECIAL(index);
-    }
-    if (name.compareTo("invokestatic") == 0) {
-      return new INVOKESTATIC(index);
-    }
-    if (name.compareTo("invokevirtual") == 0) {
-      return new INVOKEVIRTUAL(index);
-    }
-
-    return null;
+    return res;
 
   }
 }

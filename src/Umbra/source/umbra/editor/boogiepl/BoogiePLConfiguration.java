@@ -9,7 +9,7 @@ import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.SourceViewerConfiguration;
 
 import umbra.editor.ColorManager;
-import umbra.editor.IColorValues;
+import umbra.editor.ColorValues;
 import umbra.editor.NonRuleBasedDamagerRepairer;
 import umbra.editor.parsing.TokenGetter;
 
@@ -28,24 +28,26 @@ public class BoogiePLConfiguration extends SourceViewerConfiguration {
   /**
    * TODO.
    */
-  private BoogiePLDoubleClickStrategy doubleClickStrategy;
+  private BoogiePLDoubleClickStrategy my_dbl_clickstrategy;
   /**
    * TODO.
    */
-  private BoogiePLTagScanner tagScanner;
+  private BoogiePLTagScanner my_tag_scanner;
+
   /**
    * TODO.
    */
-  private BoogiePLScanner scanner;
+  private BoogiePLScanner my_scanner;
 
   /**
    * The object which menages the allocation of the colours.
    */
-  private ColorManager colorManager;
+  private ColorManager my_color_mngr;
+
   /**
-   * The current colouring style, see {@link IColorValues}.
+   * The current colouring style, see {@link ColorValues}.
    */
-  private int mod;
+  private int my_mode;
 
   /**
    * TODO.
@@ -55,8 +57,8 @@ public class BoogiePLConfiguration extends SourceViewerConfiguration {
    */
   public BoogiePLConfiguration(final ColorManager the_color_manager,
                                final int a_mod) {
-    this.colorManager = the_color_manager;
-    this.mod = a_mod;
+    this.my_color_mngr = the_color_manager;
+    this.my_mode = a_mod;
   }
 
   /**
@@ -90,9 +92,9 @@ public class BoogiePLConfiguration extends SourceViewerConfiguration {
   public final ITextDoubleClickStrategy getDoubleClickStrategy(
     final ISourceViewer a_source_viewer,
     final String the_content_type) {
-    if (doubleClickStrategy == null)
-      doubleClickStrategy = new BoogiePLDoubleClickStrategy();
-    return doubleClickStrategy;
+    if (my_dbl_clickstrategy == null)
+      my_dbl_clickstrategy = new BoogiePLDoubleClickStrategy();
+    return my_dbl_clickstrategy;
   }
 
   /**
@@ -100,12 +102,12 @@ public class BoogiePLConfiguration extends SourceViewerConfiguration {
    * @return TODO
    */
   protected final BoogiePLScanner getBoogiePLScanner() {
-    if (scanner == null) {
-      scanner = new BoogiePLScanner(colorManager, mod);
-      scanner.setDefaultReturnToken(
-        TokenGetter.getToken(colorManager, mod, IColorValues.DEFAULT));
+    if (my_scanner == null) {
+      my_scanner = new BoogiePLScanner(my_color_mngr, my_mode);
+      my_scanner.setDefaultReturnToken(
+        TokenGetter.getToken(my_color_mngr, my_mode, ColorValues.DEFAULT));
     }
-    return scanner;
+    return my_scanner;
   }
 
   /**
@@ -113,12 +115,12 @@ public class BoogiePLConfiguration extends SourceViewerConfiguration {
    * @return TODO
    */
   protected final BoogiePLTagScanner getBoogiePLTagScanner() {
-    if (tagScanner == null) {
-      tagScanner = new BoogiePLTagScanner(colorManager, mod);
-      tagScanner.setDefaultReturnToken(
-        TokenGetter.getToken(colorManager, mod, IColorValues.TAG));
+    if (my_tag_scanner == null) {
+      my_tag_scanner = new BoogiePLTagScanner(my_color_mngr, my_mode);
+      my_tag_scanner.setDefaultReturnToken(
+        TokenGetter.getToken(my_color_mngr, my_mode, ColorValues.TAG));
     }
-    return tagScanner;
+    return my_tag_scanner;
   }
 
   /**
@@ -135,9 +137,9 @@ public class BoogiePLConfiguration extends SourceViewerConfiguration {
    *   <li>{@ref BytecodePartitionScanner#THROWS}.</li>
    * </ul>
    * The {@link NonRuleBasedDamagerRepairer} is initialised with
-   * the current values of the fields {@ref #colorManager} and
-   * {@ref #mod} combined with an abstrac color indication
-   * ({@ref IColorValues#HEADER}, {@ref IColorValues#THROWS}).
+   * the current values of the fields {@ref #my_color_mngr} and
+   * {@ref #my_mode} combined with an abstrac color indication
+   * ({@ref ColorValues#HEADER}, {@ref ColorValues#THROWS}).
    *
    * @param a_source_viewer the source viewer for which the reconciler is
    *        returned
@@ -158,12 +160,12 @@ public class BoogiePLConfiguration extends SourceViewerConfiguration {
     reconciler.setRepairer(dr, IDocument.DEFAULT_CONTENT_TYPE);
 
     final NonRuleBasedDamagerRepairer ndr =
-      TokenGetter.getRepairer(colorManager, mod, IColorValues.HEADER);
+      TokenGetter.getRepairer(my_color_mngr, my_mode, ColorValues.HEADER);
     reconciler.setDamager(ndr, BoogiePLPartitionScanner.HEAD);
     reconciler.setRepairer(ndr, BoogiePLPartitionScanner.HEAD);
 
     final NonRuleBasedDamagerRepairer ndr2 =
-      TokenGetter.getRepairer(colorManager, mod, IColorValues.THROWS);
+      TokenGetter.getRepairer(my_color_mngr, my_mode, ColorValues.THROWS);
     reconciler.setDamager(ndr2, BoogiePLPartitionScanner.THROWS);
     reconciler.setRepairer(ndr2, BoogiePLPartitionScanner.THROWS);
 

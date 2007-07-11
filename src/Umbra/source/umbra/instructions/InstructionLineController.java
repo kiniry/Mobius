@@ -18,7 +18,7 @@ import org.apache.bcel.generic.TargetLostException;
 import umbra.UmbraPlugin;
 
 /**
- * This class defines a structure that describes a single Bytecode
+ * This class defines a structure that describes a single bytecode
  * instruction and contains related BCEL structures.
  *
  * @author Wojciech Wąs (ww209224@students.mimuw.edu.pl)
@@ -26,6 +26,11 @@ import umbra.UmbraPlugin;
  * @version a-01
  */
 public abstract class InstructionLineController extends BytecodeLineController {
+
+  /**
+   * TODO.
+   */
+  private static final int RBRACE_AFTER = 2;
 
   /**
    * A list of characters that should be left intact by the method
@@ -36,30 +41,30 @@ public abstract class InstructionLineController extends BytecodeLineController {
   /**
    * The length of the {@ref SKIP_CHARS} constant.
    */
-  private static final int howManySp = SKIP_CHARS.length();
+  private static final int SKIP_CHARS_LEN = SKIP_CHARS.length();
 
   /**
    * The list of instructions in the method in which the current instruction
    * occurs.
    */
-  protected InstructionList il;
+  private InstructionList my_instr_list;
 
   /**
    * A BCEL handle to the current instruction representation in BCEL
    * format.
    */
-  protected InstructionHandle ih;
+  private InstructionHandle my_instr_handle;
 
   /**
    * A BCEL object that represents the method in which the current instruction
    * is located.
    */
-  private MethodGen mg;
+  private MethodGen my_methodgen;
 
   /**
    * The mnemonic name of the current instruction.
    */
-  protected String name;
+  private String my_name;
 
   /**
    * The constructon creates the controler which
@@ -74,7 +79,7 @@ public abstract class InstructionLineController extends BytecodeLineController {
   public InstructionLineController(final String a_line_text,
                                    final String a_name) {
     super(a_line_text);
-    name = a_name;
+    setName(a_name);
   }
 
   /**
@@ -94,12 +99,13 @@ public abstract class InstructionLineController extends BytecodeLineController {
   public final boolean addHandle(final InstructionHandle a_handle,
                final InstructionList a_list,
                final MethodGen a_method_gen, final int a_method_num) {
-    UmbraPlugin.messagelog("InstructionLineController#addHandle name=" + name);
-    UmbraPlugin.messagelog("il=" + a_list.toString());
-    this.ih = a_handle;
-    this.il = a_list;
-    this.mg = a_method_gen;
-    index = a_method_num;
+    UmbraPlugin.messagelog("InstructionLineController#addHandle my_name=" +
+                           getName());
+    UmbraPlugin.messagelog("my_instr_list=" + a_list.toString());
+    this.my_instr_handle = a_handle;
+    this.my_instr_list = a_list;
+    this.my_methodgen = a_method_gen;
+    setIndex(a_method_num);
     return true;
   }
 
@@ -108,16 +114,16 @@ public abstract class InstructionLineController extends BytecodeLineController {
    * the method and it must be added to BCEL structures,
    * especially new handle is generated. TODO more details
    *
-   * @param a_next_line    next line necessary to get handle -
-   *     a new handle is inserted before the next one
-   * @param a_class_gen      class generator from BCEL
-   * @param an_instruction      BCEL instruction (to generate handle)
-   * @param a_method_end    true if the line is inserted after the
-   *     end of the method - then the 'nextLine' is actually the previous
-   *     one and the handle is generated with 'append'
-   * @param the_instructions  an array from BytecodeController that the new line
-   *     is added
-   * @param an_offset      an offset in this array
+   * @param a_next_line a next line, necessary to get handle - a new handle is
+   *   inserted before the next one
+   * @param a_class_gen a class generator from BCEL
+   * @param an_instruction a BCEL instruction (to generate handle)
+   * @param a_method_end <code>true</code> if the line is inserted after the
+   *   end of the method - then the <code>a_next_line</code> is actually the
+   *   previous one and the handle is generated with 'append'
+   * @param the_instructions an array from {@ref BytecodeController} that the
+   *   new line is added to
+   * @param an_offset an offset in this array
    */
   public final void initHandle(final BytecodeLineController a_next_line,
                final ClassGen a_class_gen, final Instruction an_instruction,
@@ -128,11 +134,11 @@ public abstract class InstructionLineController extends BytecodeLineController {
     if (next != null) {
       final InstructionList newList = a_next_line.getList();
       final MethodGen a_mg = a_next_line.getMethod();
-      //index = nextLine.getIndex();
+      //my_index = nextLine.getIndex();
       if (an_instruction == null) {
-        ih = null;
+        my_instr_handle = null;
       } else if (a_method_end) {
-        ih = newList.append(an_instruction);
+        my_instr_handle = newList.append(an_instruction);
       } else {
         if (an_instruction instanceof BranchInstruction) {
           if (((BranchInstruction)an_instruction).getTarget() == null)
@@ -141,12 +147,13 @@ public abstract class InstructionLineController extends BytecodeLineController {
             UmbraPlugin.messagelog(
                        Integer.toString(((BranchInstruction)an_instruction).
                        getTarget().getPosition()));
-          ih = newList.insert(next, (BranchInstruction) an_instruction);
+          my_instr_handle = newList.insert(next,
+                                           (BranchInstruction)an_instruction);
         } else
-          ih = newList.insert(next, an_instruction);
+          my_instr_handle = newList.insert(next, an_instruction);
       }
-      il = newList;
-      this.mg = a_mg;
+      my_instr_list = newList;
+      this.my_methodgen = a_mg;
       updateMethod(a_class_gen);
       if (an_instruction != null) the_instructions.add(an_offset + 1, this);
     }
@@ -155,22 +162,24 @@ public abstract class InstructionLineController extends BytecodeLineController {
   /**
    * The debugging method that prints out to the standard output the
    * information on the line given in the parameter. It prints out:
-   * + the name of the instruction,
-   * + the position of the instruction handle
+   * <ul>
+   *   <li> the name of the instruction,</li>
+   *   <li> the position of the instruction handle</li>
+   * </ul>
    *
-   *  @param line the line for which the information is printed out
+   *  @param a_line the line for which the information is printed out
    */
-  public static void controlPrint(final BytecodeLineController line) {
+  public static void controlPrint(final BytecodeLineController a_line) {
     UmbraPlugin.messagelog("Init: next line");
-    if (line == null)
+    if (a_line == null)
       UmbraPlugin.messagelog("Null");
     else {
-      final Instruction ins = line.getInstruction();
+      final Instruction ins = a_line.getInstruction();
       if (ins == null)
         UmbraPlugin.messagelog("Null instruction");
       else
         UmbraPlugin.messagelog(ins.getName());
-      final InstructionHandle nih = line.getHandle();
+      final InstructionHandle nih = a_line.getHandle();
       if (nih == null)
         UmbraPlugin.messagelog("Null handle");
       else
@@ -187,7 +196,7 @@ public abstract class InstructionLineController extends BytecodeLineController {
   public static void printInstructionList(final InstructionList an_ilist) {
     InstructionHandle ih = an_ilist.getStart();
     if (ih == null) {
-      UmbraPlugin.messagelog("start ih==null");
+      UmbraPlugin.messagelog("start my_instr_handle==null");
       return;
     }
     UmbraPlugin.messagelog(ih.getInstruction().getName());
@@ -206,13 +215,14 @@ public abstract class InstructionLineController extends BytecodeLineController {
    * init handle (if the previous one was incorrect).
    *
    * @param an_old_line the previous structure
-   * @param the_next_line next line, necessary if new handle must be generated
-   * @param a_classgen class generator from BCEL
-   * @param an_ins BCEL instruction (to generate handle)
-   * @param a_meth_end true if the line is the last one of the method
+   * @param the_next_line a next line, necessary if new handle must be generated
+   * @param a_classgen a class generator from BCEL
+   * @param an_ins a BCEL instruction (to generate handle)
+   * @param a_meth_end <code>true</code> if the line is the last one of the
+   *   method
    * @param the_last TODO
-   * @param the_instructions  an array from BytecodeController that the line
-   *     is included
+   * @param the_instructions an array from {@ref BytecodeController} that the
+   *   line is included
    * @param an_off an offset in this array
    */
   public final void update(final BytecodeLineController an_old_line,
@@ -231,26 +241,28 @@ public abstract class InstructionLineController extends BytecodeLineController {
     UmbraPlugin.messagelog("MetEnd=" + a_meth_end);
     UmbraPlugin.messagelog("theLast=" + the_last);
     UmbraPlugin.messagelog("off=" + an_off);
-    mg = an_old_line.getMethod();
-    il = an_old_line.getList();
-    ih = an_old_line.getHandle();
-    index = an_old_line.getIndex();
-    UmbraPlugin.messagelog("ih=" + ((ih == null) ? "null" :
-      ((ih.getInstruction() == null) ? "null ins" :
-                                       ih.getInstruction().getName())));
-    if (il == null) UmbraPlugin.messagelog("il = null");
-    else printInstructionList(il);
-    if (ih == null) {
+    my_methodgen = an_old_line.getMethod();
+    my_instr_list = an_old_line.getList();
+    my_instr_handle = an_old_line.getHandle();
+    setIndex(an_old_line.getIndex());
+    UmbraPlugin.messagelog("my_instr_handle=" + ((my_instr_handle == null) ?
+                           "null" :
+                           ((my_instr_handle.getInstruction() == null) ?
+                           "null ins" :
+                           my_instr_handle.getInstruction().getName())));
+    if (my_instr_list == null) UmbraPlugin.messagelog("my_instr_list = null");
+    else printInstructionList(my_instr_list);
+    if (my_instr_handle == null) {
       UmbraPlugin.messagelog("A");
       initHandle(the_next_line, a_classgen, an_ins, a_meth_end,
                  the_instructions, an_off);
-    } else if (ih.getInstruction() == null) {
+    } else if (my_instr_handle.getInstruction() == null) {
       UmbraPlugin.messagelog("B");
       initHandle(the_next_line, a_classgen, an_ins, a_meth_end,
                  the_instructions, an_off);
     } else if (an_ins != null) {
       UmbraPlugin.messagelog("C");
-      ih.setInstruction(an_ins);
+      my_instr_handle.setInstruction(an_ins);
       UmbraPlugin.messagelog("");
       updateMethod(a_classgen);
       the_instructions.set(an_off, this);
@@ -267,16 +279,16 @@ public abstract class InstructionLineController extends BytecodeLineController {
    * @param a_classgen a class generator from BCEL
    */
   private void updateMethod(final ClassGen a_classgen) {
-    final Method oldMet = a_classgen.getMethodAt(index);
-    a_classgen.replaceMethod(oldMet, mg.getMethod());
-    //UmbraPlugin.messagelog(cg.getMethodAt(index).getCode().toString());
+    final Method oldMet = a_classgen.getMethodAt(getIndex());
+    a_classgen.replaceMethod(oldMet, my_methodgen.getMethod());
+    //UmbraPlugin.messagelog(cg.getMethodAt(my_index).getCode().toString());
   }
 
   /**
    * @return the BCEL handle to the current instruction.
    */
   public final InstructionHandle getHandle() {
-    return ih;
+    return my_instr_handle;
   }
 
   /**
@@ -284,14 +296,14 @@ public abstract class InstructionLineController extends BytecodeLineController {
    * the current instruction.
    */
   public final InstructionList getList() {
-    return il;
+    return my_instr_list;
   }
 
   /**
    * @return the method in which the current instruction is located
    */
   public final MethodGen getMethod() {
-    return mg;
+    return my_methodgen;
   }
 
   /**
@@ -310,16 +322,16 @@ public abstract class InstructionLineController extends BytecodeLineController {
   /**
    * This method removes the current instruction line from BCEL structures.
    *
-   * @param the_next_line a line after the removed one; it becomes a target of
-   *         any jump instruction directed to the removed one
-   * @param a_classgen class generator from BCEL, this should be the same as
-   *       in the {@ref BytecodeDocument} object for the currently edited
-   *       bytecode file
+   * @param the_next_line the line after the removed one; it becomes a target of
+   *   any jump instruction directed to the removed one
+   * @param a_classgen a class generator from BCEL, this should be the same as
+   *   in the {@ref BytecodeDocument} object for the currently edited
+   *   bytecode file
    * @param the_last currently not used
    * @param the_instructions an array from {@ref BytecodeController} that
-   *           contains the current line
-   * @param an_off an offset in the <code>instructions</code> array which
-   *      points to the instruction to be removed
+   *   contains the current line
+   * @param an_off an offset in the <code>the_instructions</code> array which
+   *   points to the instruction to be removed
    */
   public final void dispose(final BytecodeLineController the_next_line,
                             final ClassGen a_classgen,
@@ -328,25 +340,27 @@ public abstract class InstructionLineController extends BytecodeLineController {
                             final int an_off) {
     final InstructionHandle me = getHandle();
     final InstructionHandle next = the_next_line.getHandle();
-    UmbraPlugin.messagelog("InstructionLineController#dispose   name=" + name);
-    final InstructionTargeter[] tgters = ih.getTargeters();
+    UmbraPlugin.messagelog("InstructionLineController#dispose   my_name=" +
+                           getName());
+    final InstructionTargeter[] tgters = my_instr_handle.getTargeters();
     if (tgters != null)
       for (int i = 0; i < tgters.length; i++) {
         tgters[i].updateTarget(me, next);
       }
     try {
-      il.delete(ih);
+      my_instr_list.delete(my_instr_handle);
     } catch (TargetLostException e) {
-      //This should not happen as the instruction ih has been retargeted
+      //This should not happen as the instruction my_instr_handle has been
+      //retargeted
       UmbraPlugin.messagelog("IMPOSSIBLE: dispose generated exception " +
                              "in InstructionLineController.dispose(...)");
     }
-    ih = null;
-    mg.setInstructionList(il);
+    my_instr_handle = null;
+    my_methodgen.setInstructionList(my_instr_list);
     updateMethod(a_classgen);
     UmbraPlugin.messagelog("I am here");
     the_instructions.remove(an_off);
-    printInstructionList(il);
+    printInstructionList(my_instr_list);
     UmbraPlugin.messagelog("Done");
   }
 
@@ -354,8 +368,8 @@ public abstract class InstructionLineController extends BytecodeLineController {
    * Replaces some words in a string with single characters.
    * Each of the letters in the returned word means that in the original line
    * there was the same character (if it belongs to string
-   * {@link #SKIP_CHARS SKIP_CHARS}) or a corresponding word listed below
-   * (otherwise):
+   * {@link #SKIP_CHARS SKIP_CHARS}) or a corresponding word
+   * listed below (otherwise):
    * <ul>
    * <li> C means a string within double quotes
    * <li> W means one or more following whitespaces
@@ -364,8 +378,8 @@ public abstract class InstructionLineController extends BytecodeLineController {
    * </ul>
    * @param a_line  processing string
    * @return line with each (maximal) word from list above
-   * (excluding characters from {@ref #SKIP_CHARS}) replaced with corresponding
-   * character
+   * (excluding characters from {@link #SKIP_CHARS SKIP_CHARS}) replaced with
+   * corresponding character
    */
   private static String typ(final String a_line) {
     String s = "";
@@ -373,7 +387,7 @@ public abstract class InstructionLineController extends BytecodeLineController {
     final String line = a_line + "|";
     for (int i = 0; i < line.length();) {
       b = false;
-      for (int j = 0; j < howManySp; j++)
+      for (int j = 0; j < SKIP_CHARS_LEN; j++)
         if (SKIP_CHARS.charAt(j) == line.charAt(i)) {
           s = s + line.charAt(i);
           i++;
@@ -420,42 +434,60 @@ public abstract class InstructionLineController extends BytecodeLineController {
    * as the corresponding character from corresponding string.
    * For example, string "A?B?{CD}E" as a second argument (typ) represents
    * the set of strings: {"AE", "ABE", "ACDE", "ABCDE"}.
+   * TODO rewrite the description
    *
-   * @param lt  comparing string
-   * @param typ  class of acceptable strings
-   * @return    <code> true </code> if lt is one of strings from typ
-   *         <code> false </code> otherwise
+   * @param a_pattern a string to compare
+   * @param a_type a class of acceptable strings
+   * @return <code>true</code> if <code>a_pattern</code> is one of strings
+   *   from the type <code>a_type</code>, <code>false</code> otherwise
    */
-  private static boolean compare(final String lt, final String typ) {
-    if (lt.equals(typ))
+  private static boolean compare(final String a_pattern, final String a_type) {
+    if (a_pattern.equals(a_type))
       return true;
-    if ((lt.length() == 0) || (typ.length() == 0))
+    if ((a_pattern.length() == 0) || (a_type.length() == 0))
       return false;
-    if (typ.startsWith("?{")) {
-      final int n = typ.indexOf("}");
-      if (n > 2)
-        if (compare(lt, typ.substring(n + 1)))
+    if (a_type.startsWith("?{")) {
+      final int n = a_type.indexOf("}");
+      if (n > RBRACE_AFTER)
+        if (compare(a_pattern, a_type.substring(n + 1)))
           return true;
-      return compare(lt, typ.substring(2, n) + typ.substring(n + 1));
+      return compare(a_pattern, a_type.substring(RBRACE_AFTER, n) +
+                     a_type.substring(n + 1));
     }
-    if (typ.startsWith("?"))
-      return (compare(lt, typ.substring(1)) ||
-              ((typ.length() > 1) && compare(lt, typ.substring(2))));
-    if (lt.charAt(0) != typ.charAt(0))
+    if (a_type.startsWith("?"))
+      return (compare(a_pattern, a_type.substring(1)) ||
+              ((a_type.length() > 1) && compare(a_pattern,
+                                              a_type.substring(RBRACE_AFTER))));
+    if (a_pattern.charAt(0) != a_type.charAt(0))
       return false;
-    return compare(lt.substring(1), typ.substring(1));
+    return compare(a_pattern.substring(1), a_type.substring(1));
   }
 
   /**
    * Compares line with a pattern.
    * @param a_line a line of bytecode (with removed all comments)
    * @param a_type the type pattern in the fashion generated by
-   *               the {@ref #typ(String)} method
-   * @return <code> true </code> if line matches pattern,
-   *         <code> false </code> otherwise
+   *   the {@ref #typ(String)} method
+   * @return <code>true</code> if <code>a_line</code> matches the pattern in
+   *   <code>a_type</code>,
+   *   <code>false</code> otherwise
    */
   public final boolean chkcorr(final String a_line, final String a_type) {
     final boolean b = compare(typ(a_line), "?D:?WX" + a_type + "|");
     return b;
+  }
+
+  /**
+   * @param a_name the name to set
+   */
+  protected void setName(final String a_name) {
+    my_name = a_name;
+  }
+
+  /**
+   * @return the my_name
+   */
+  protected String getName() {
+    return my_name;
   }
 }

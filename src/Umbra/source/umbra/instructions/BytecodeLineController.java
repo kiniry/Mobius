@@ -34,7 +34,7 @@ public abstract class BytecodeLineController {
    * that describes the state of the bytecode editor which contains
    * the line that corresponds to the current object.
    */
-  protected int index;
+  private int my_index;
 
   /**
    * The string representation of the line in the bytecode file that contains
@@ -60,21 +60,21 @@ public abstract class BytecodeLineController {
    * line does not correspond to an instruction we only register
    * the number of the method the line is associated with.
    *
-   * @param ih the BCEL instruction handle that corresponds to the
+   * @param an_ihandle the BCEL instruction handle that corresponds to the
    *       instruction associated with the current object
-   * @param il the list of instructions in the current method
-   * @param mg the object which represents the method of the current
+   * @param a_ilist the list of instructions in the current method
+   * @param a_methodgen the object which represents the method of the current
    *    instruction in the BCEL representation of the current class
    *    in the bytecode editor
-   * @param i method number in the current class
+   * @param an_index method number in the current class
    * @return true when the current line corresponds to an instruction, false
    *     otherwise
    */
-  public boolean addHandle(final InstructionHandle ih,
-               final InstructionList il,
-               final MethodGen mg,
-               final int i) {
-    index = i;
+  public boolean addHandle(final InstructionHandle an_ihandle,
+               final InstructionList a_ilist,
+               final MethodGen a_methodgen,
+               final int an_index) {
+    my_index = an_index;
     return false;
   }
 
@@ -185,7 +185,7 @@ public abstract class BytecodeLineController {
    * @return TODO
    */
   public final int getIndex() {
-    return index;
+    return my_index;
   }
 
 
@@ -232,7 +232,7 @@ public abstract class BytecodeLineController {
    * @param an_index TODO
    */
   public void setIndex(final int an_index) {
-    this.index = an_index;
+    my_index = an_index;
   }
 
   /**

@@ -51,17 +51,17 @@ public class BoogiePLEditorContributor extends EditorActionBarContributor {
   /**
    * TODO.
    */
-  private BoogiePLContribution boogiePLContribution;
+  private BoogiePLContribution my_boogiepl_cntrbtn;
 
   /**
    * TODO.
    */
   private BoogiePLVerifyAction my_verify_action;
 
-  /**
-   * The current colouring style, see {@link IColorValues}.
+  /* *
+   * The current colouring style, see {@link ColorValues}.
    */
-  private int mod;
+  //private int my_mode; it's never read
 
   /**
    * This is a class defining an action: save current bytecode
@@ -73,7 +73,7 @@ public class BoogiePLEditorContributor extends EditorActionBarContributor {
     /**
      * TODO.
      */
-    private BoogiePLEditor editor;
+    private BoogiePLEditor my_editor;
 
     /**
      * TODO.
@@ -88,7 +88,7 @@ public class BoogiePLEditorContributor extends EditorActionBarContributor {
      * @param a_target_editor the current editor window
      */
     public final void setActiveEditor(final IEditorPart a_target_editor) {
-      editor = (BoogiePLEditor)a_target_editor;
+      my_editor = (BoogiePLEditor)a_target_editor;
     }
 
     /**
@@ -98,22 +98,23 @@ public class BoogiePLEditorContributor extends EditorActionBarContributor {
      * the newly generated input.
      */
     public final void run() {
-      editor.doSave(null);
-      final IPath active = ((FileEditorInput)editor.getEditorInput()).getFile().
-                                                    getFullPath();
-      final IFile file = ((FileEditorInput)editor.getEditorInput()).getFile();
+      my_editor.doSave(null);
+      final IPath active = ((FileEditorInput)my_editor.getEditorInput()).
+                                                       getFile().getFullPath();
+      final IFile file = ((FileEditorInput)my_editor.getEditorInput()).
+                                                     getFile();
       try {
-        final String[] commentTab = boogiePLContribution.getCommentTab();
-        final String[] interlineTab = boogiePLContribution.getInterlineTab();
+        final String[] commentTab = my_boogiepl_cntrbtn.getCommentTab();
+        final String[] interlineTab = my_boogiepl_cntrbtn.getInterlineTab();
         for (int i = 0; i < interlineTab.length; i++) {
           UmbraPlugin.messagelog("" + i + ". " + interlineTab[i]);
         }
-        ((BoogiePLEditor)editor).refreshBoogiePL(active, commentTab,
+        ((BoogiePLEditor)my_editor).refreshBoogiePL(active, commentTab,
                                                  interlineTab);
         final FileEditorInput input = new FileEditorInput(file);
-        final boolean[] modified = boogiePLContribution.getModified();
-        boogiePLContribution.setModTable(modified);
-        refreshEditor(editor, input);
+        final boolean[] modified = my_boogiepl_cntrbtn.getModified();
+        my_boogiepl_cntrbtn.setModTable(modified);
+        refreshEditor(my_editor, input);
       } catch (ClassNotFoundException e) {
         e.printStackTrace();
       } catch (CoreException e) {
@@ -192,11 +193,11 @@ public class BoogiePLEditorContributor extends EditorActionBarContributor {
    */
   public BoogiePLEditorContributor() {
     super();
-    mod = Composition.getMod();
+    // my_mode = Composition.getMod(); it's never read
     my_verify_action = new BoogiePLVerifyAction();
     final ImageDescriptor a_verify_icon = getConvertIcon();
     my_verify_action.setImageDescriptor(a_verify_icon);
-    boogiePLContribution = BoogiePLContribution.newItem();
+    my_boogiepl_cntrbtn = BoogiePLContribution.newItem();
     my_verify_action.setToolTipText("Verify with Boogie");
   }
 
@@ -236,7 +237,7 @@ public class BoogiePLEditorContributor extends EditorActionBarContributor {
     // Run super.
     super.contributeToToolBar(a_tbar_mngr);
     // Test status line.
-    a_tbar_mngr.add(boogiePLContribution);
+    a_tbar_mngr.add(my_boogiepl_cntrbtn);
     a_tbar_mngr.add(my_verify_action);
   }
 
@@ -262,14 +263,14 @@ public class BoogiePLEditorContributor extends EditorActionBarContributor {
    * The current editor window is set as an attribute
    * (also for each action). TODO check
    *
-   * @param editor  the current editor window
+   * @param an_editor  the current editor window
    */
-  public final void setActiveEditor(final IEditorPart editor) {
-    super.setActiveEditor(editor);
-    if (editor instanceof BoogiePLEditor) {
+  public final void setActiveEditor(final IEditorPart an_editor) {
+    super.setActiveEditor(an_editor);
+    if (an_editor instanceof BoogiePLEditor) {
       /*if (needRefresh ||
-          !((BoogiePLEditor)editor).isUpdated()) try {
-        refreshEditor(editor);
+          !((BoogiePLEditor)my_editor).isUpdated()) try {
+        refreshEditor(my_editor);
         needRefresh = false;
       } catch (PartInitException e) {
         // TODO Auto-generated catch block
@@ -277,24 +278,24 @@ public class BoogiePLEditorContributor extends EditorActionBarContributor {
       }*/
       UmbraPlugin.messagelog("setActiveEditor in BoogiePLVerifyAction");
     }
-    boogiePLContribution.setActiveEditor(editor);
-    my_verify_action.setActiveEditor(editor);
-    /*if (editor instanceof BoogiePLEditor) {
-      ((BoogiePLEditor)editor).leave();
+    my_boogiepl_cntrbtn.setActiveEditor(an_editor);
+    my_verify_action.setActiveEditor(an_editor);
+    /*if (my_editor instanceof BoogiePLEditor) {
+      ((BoogiePLEditor)my_editor).leave();
     }*/
   }
 
-  /**
+  /* * It's not used
    * The same as below with input obtained from the current editor window.
    * @param an_editor TODO
    * @throws PartInitException TODO
    * @see #refreshEditor(BoogiePLEditor, IEditorInput)
    */
-  private void refreshEditor(final BoogiePLEditor an_editor)
-    throws PartInitException {
-    final IEditorInput input = an_editor.getEditorInput();
-    refreshEditor(an_editor, input);
-  }
+  //private void refreshEditor(final BoogiePLEditor an_editor)
+  //  throws PartInitException {
+  //  final IEditorInput input = an_editor.getEditorInput();
+  //  refreshEditor(an_editor, input);
+  //}
 
   /**
    * Saves all settings of the current editor (selection positions,
@@ -319,7 +320,7 @@ public class BoogiePLEditorContributor extends EditorActionBarContributor {
                                                              getRelatedEditor();
     final JavaClass jc = ((BoogiePLEditor)an_editor).getJavaClass();
     final boolean proper = (related != null);
-    boogiePLContribution.survive();
+    my_boogiepl_cntrbtn.survive();
     if (proper) Composition.startDisas();
     page.closeEditor(an_editor, true);
     final IEditorPart newEditor = page.openEditor(an_input,
@@ -329,7 +330,7 @@ public class BoogiePLEditorContributor extends EditorActionBarContributor {
     final ISelectionProvider sp = ((AbstractTextEditor)newEditor).
                                                          getSelectionProvider();
     sp.setSelection(ns);
-    boogiePLContribution.reinit();
+    my_boogiepl_cntrbtn.reinit();
     if (proper) Composition.stopDisas();
   }
 

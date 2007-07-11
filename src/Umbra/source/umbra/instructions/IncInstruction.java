@@ -8,7 +8,7 @@ import org.apache.bcel.generic.Instruction;
 
 import umbra.UmbraHelper;
 import umbra.UmbraPlugin;
-import umbra.editor.parsing.AbstractBytecodeStrings;
+import umbra.editor.parsing.BytecodeStrings;
 
 
 /**
@@ -22,6 +22,11 @@ import umbra.editor.parsing.AbstractBytecodeStrings;
  * @version a-01
  */
 public class IncInstruction extends NumInstruction {
+
+  /**
+   * TODO.
+   */
+  private static final int NUMBERS_NO = 2;
 
   /**
    * This creates an instance of an instruction
@@ -57,7 +62,7 @@ public class IncInstruction extends NumInstruction {
   public final boolean correct0() {
     final String my_line_text = getMy_line_text();
     final String s = UmbraHelper.stripAllWhitespace(my_line_text);
-    final String[] s2 = AbstractBytecodeStrings.INCC_INS;
+    final String[] s2 = BytecodeStrings.INCC_INS;
     int j;
     int y;
     UmbraPlugin.LOG.print(s);
@@ -93,7 +98,7 @@ public class IncInstruction extends NumInstruction {
                 lastisdig = false;
               }
           }
-          if (counter == 2) return true;
+          if (counter == NUMBERS_NO) return true;
         }
 
     }
@@ -198,7 +203,7 @@ public class IncInstruction extends NumInstruction {
     int index2 = 0;
     index2 = getInd2();
 
-    if (name.compareTo("iinc") == 0) {
+    if (getName().compareTo("iinc") == 0) {
       return new IINC(index1, index2);
     }
 

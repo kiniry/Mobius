@@ -11,7 +11,7 @@ import org.eclipse.ui.PartInitException;
 import umbra.editor.BytecodeEditor;
 import umbra.editor.BytecodeEditorContributor;
 import umbra.editor.Composition;
-import umbra.editor.IColorValues;
+import umbra.editor.ColorValues;
 
 /**
  *  This class defines an action of changing the coloring style. Two
@@ -35,7 +35,7 @@ public class BytecodeColorAction extends Action {
   //@ invariant my_colour_delta==1 || my_colour_delta == -1;
 
   /**
-   * The current colouring style, see {@link IColorValues}.
+   * The current colouring style, see {@link ColorValues}.
    */
   private int my_mod;
 
@@ -78,8 +78,8 @@ public class BytecodeColorAction extends Action {
    * and refreshes the editor window.
    */
   public final void run() {
-    if (my_mod == IColorValues.MODELS.length - 1) return;
-    my_mod = (my_mod + my_colour_delta) % (IColorValues.MODELS.length - 1);
+    if (my_mod == ColorValues.MODELS.length - 1) return;
+    my_mod = (my_mod + my_colour_delta) % (ColorValues.MODELS.length - 1);
     Composition.setMod(my_mod);
     if (my_active_editor != null) {
       try {

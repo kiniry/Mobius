@@ -9,7 +9,7 @@ import org.apache.bcel.generic.Type;
 
 import umbra.UmbraHelper;
 import umbra.UmbraPlugin;
-import umbra.editor.parsing.AbstractBytecodeStrings;
+import umbra.editor.parsing.BytecodeStrings;
 
 
 
@@ -113,7 +113,7 @@ public class ArrayInstruction extends StringInstruction {
     //&*
     final boolean isOK = correct();
     if (isOK) {
-      if (name.compareTo("newarray") == 0)
+      if (getName().compareTo("newarray") == 0)
         return new NEWARRAY(r);
     }
     //UmbraPlugin.messagelog("   Failed!");
@@ -132,7 +132,7 @@ public class ArrayInstruction extends StringInstruction {
   {
     final String my_line_text = getMy_line_text();
     final String s = UmbraHelper.stripAllWhitespace(my_line_text);
-    final String[] s2 = AbstractBytecodeStrings.ARRAY_INS;
+    final String[] s2 = BytecodeStrings.ARRAY_INS;
     int j, y;
     for (j = 0; j < s2.length; j++) {
       if ((s.indexOf(s2[j]) > 0) &&
@@ -142,9 +142,9 @@ public class ArrayInstruction extends StringInstruction {
         if (s.indexOf("<") < LESS_FORBIDDEN_BOUND) return false;
         if (s.indexOf(">") < GREATER_FORBIDDEN_BOUND) return false;
         // zmienione 7.26.15
-        String insType = s.substring(s.indexOf("<") + 1, s.indexOf(">"));
-        insType = insType.toUpperCase();
-        if (getType(insType) == null) {
+        String ins_type = s.substring(s.indexOf("<") + 1, s.indexOf(">"));
+        ins_type = ins_type.toUpperCase();
+        if (getType(ins_type) == null) {
           UmbraPlugin.messagelog("E04");
           return false;
         }

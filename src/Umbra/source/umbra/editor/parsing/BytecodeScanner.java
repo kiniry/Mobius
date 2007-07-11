@@ -10,7 +10,7 @@ import org.eclipse.jface.text.rules.WhitespaceRule;
 import org.eclipse.jface.text.rules.WordRule;
 
 import umbra.editor.ColorManager;
-import umbra.editor.IColorValues;
+import umbra.editor.ColorValues;
 
 
 /**
@@ -123,27 +123,27 @@ public class BytecodeScanner extends RuleBasedScanner {
    */
   private IRule[] createRulesArray(final IToken[] the_tokens) {
     //WordRule keyrule = new WordRule(new SpecialWordDetector(),
-    //                                tokens[IColorValues.KEY]);
+    //                                tokens[ColorValues.KEY]);
     final IRule[] rules = new IRule[NUMBER_OF_RULES];
-    rules[RULE_EOL] = new EndOfLineRule("//", the_tokens[IColorValues.COMMENT]);
+    rules[RULE_EOL] = new EndOfLineRule("//", the_tokens[ColorValues.COMMENT]);
     rules[RULE_INSTRUCTION] = createInstructionRule(the_tokens);
     rules[RULE_SEPARATOR] = new SpecialNumberRule('\n', ':',
-                     the_tokens[IColorValues.POSITION]);
+                     the_tokens[ColorValues.POSITION]);
     rules[RULE_HASH] = new SpecialNumberRule('#',
-                     the_tokens[IColorValues.HASH]);
+                     the_tokens[ColorValues.HASH]);
     rules[RULE_PERCENT] = new SpecialNumberRule('%',
-                                                the_tokens[IColorValues.ATTR]);
+                                                the_tokens[ColorValues.ATTR]);
     rules[RULE_PARENTHESES] = new SpecialNumberRule('(', ')',
-                                           the_tokens[IColorValues.SQUARE]);
+                                           the_tokens[ColorValues.SQUARE]);
     //rules[6] = keyrule;
     rules[RULE_BRACES] = new SingleLineRule("{", "}",
-                                            the_tokens[IColorValues.SQUARE]);
-    rules[RULE_NUMBER] = new NumberRule(the_tokens[IColorValues.NUMBER]);
+                                            the_tokens[ColorValues.SQUARE]);
+    rules[RULE_NUMBER] = new NumberRule(the_tokens[ColorValues.NUMBER]);
     rules[RULE_WHITESPACE] = new WhitespaceRule(
                                       new BytecodeWhitespaceDetector());
-    rules[RULE_STAR] = new EndOfLineRule("*", the_tokens[IColorValues.ANNOT]);
+    rules[RULE_STAR] = new EndOfLineRule("*", the_tokens[ColorValues.ANNOT]);
     rules[RULE_COMMENT] = new EndOfLineRule("/*",
-                                            the_tokens[IColorValues.ANNOT]);
+                                            the_tokens[ColorValues.ANNOT]);
     return rules;
   }
 
@@ -159,7 +159,7 @@ public class BytecodeScanner extends RuleBasedScanner {
    */
   private WordRule createInstructionRule(final IToken[] the_tokens) {
     final WordRule insrule = new WordRule(new BytecodeWordDetector(),
-                                          the_tokens[IColorValues.DEFAULT]);
+                                          the_tokens[ColorValues.DEFAULT]);
     tokensForInstructions(the_tokens, insrule);
     tokensForBMLKeywords(the_tokens, insrule);
     tokensForLinewords(the_tokens, insrule);
@@ -171,18 +171,18 @@ public class BytecodeScanner extends RuleBasedScanner {
   /**
    * This method associates in <code>the_insrule</code> the words which
    * occur in a line with the "Code" keyword with the token in
-   * <code>the_tokens</code> under {@ref IColorValues#LINE}.
+   * <code>the_tokens</code> under {@ref ColorValues#LINE}.
    * TODO - better description needed
    *
    * @param the_tokens the array with tokens, in particular with the
-   *                   {@ref IColorValues#LINE} token
+   *                   {@ref ColorValues#LINE} token
    * @param the_insrule the rule in which the association is created
    */
   private void tokensForCodeline(final IToken[] the_tokens,
                                  final WordRule the_insrule) {
-    for (int i = 0; i < AbstractBytecodeStrings.CODE_KEYWORDS.length; i++) {
-      the_insrule.addWord(AbstractBytecodeStrings.CODE_KEYWORDS[i],
-              the_tokens[IColorValues.LINE]);
+    for (int i = 0; i < BytecodeStrings.CODE_KEYWORDS.length; i++) {
+      the_insrule.addWord(BytecodeStrings.CODE_KEYWORDS[i],
+              the_tokens[ColorValues.LINE]);
     }
   }
 
@@ -190,18 +190,18 @@ public class BytecodeScanner extends RuleBasedScanner {
   /**
    * This method associates in <code>the_insrule</code> the words which
    * occur in a line with the "Line" keyword with the token in
-   * <code>the_tokens</code> under {@ref IColorValues#LINE}.
+   * <code>the_tokens</code> under {@ref ColorValues#LINE}.
    * TODO - better description needed
    *
    * @param the_tokens the array with tokens, in particular with the
-   *                   {@ref IColorValues#LINE} token
+   *                   {@ref ColorValues#LINE} token
    * @param the_insrule the rule in which the association is created
    */
   private void tokensForLinewords(final IToken[] the_tokens,
                                   final WordRule the_insrule) {
-    for (int i = 0; i < AbstractBytecodeStrings.LINE_KEYWORDS.length; i++) {
-      the_insrule.addWord(AbstractBytecodeStrings.LINE_KEYWORDS[i],
-              the_tokens[IColorValues.LINE]);
+    for (int i = 0; i < BytecodeStrings.LINE_KEYWORDS.length; i++) {
+      the_insrule.addWord(BytecodeStrings.LINE_KEYWORDS[i],
+              the_tokens[ColorValues.LINE]);
     }
   }
 
@@ -209,19 +209,19 @@ public class BytecodeScanner extends RuleBasedScanner {
   /**
    * This method associates in <code>the_insrule</code> the BML keywords
    * with the token in <code>the_tokens</code> under
-   * {@ref IColorValues#ANNOTKEY}.
+   * {@ref ColorValues#ANNOTKEY}.
    * TODO - better description needed
    *
    * @param the_tokens the array with tokens, in particular with the
-   *                   {@ref IColorValues#ANNOTKEY} token
+   *                   {@ref ColorValues#ANNOTKEY} token
    * @param the_insrule the rule in which the association is created
 
    */
   private void tokensForBMLKeywords(final IToken[] the_tokens,
                                     final WordRule the_insrule) {
-    for (int i = 0; i < AbstractBytecodeStrings.BML_KEYWORDS.length; i++) {
-      the_insrule.addWord(AbstractBytecodeStrings.BML_KEYWORDS[i],
-              the_tokens[IColorValues.ANNOTKEY]);
+    for (int i = 0; i < BytecodeStrings.BML_KEYWORDS.length; i++) {
+      the_insrule.addWord(BytecodeStrings.BML_KEYWORDS[i],
+              the_tokens[ColorValues.ANNOTKEY]);
     }
   }
 
@@ -229,18 +229,18 @@ public class BytecodeScanner extends RuleBasedScanner {
   /**
    * This method associates in <code>the_insrule</code> the words of the
    * bytecode instructions with the token in <code>the_tokens</code> under
-   * {@ref IColorValues#BTC_INSTR}.
+   * {@ref ColorValues#BTC_INSTR}.
    * TODO - better description needed
    *
    * @param the_tokens the array with tokens, in particular with the
-   *                   {@ref IColorValues#BTC_INSTR} token
+   *                   {@ref ColorValues#BTC_INSTR} token
    * @param the_insrule the rule in which the association is created
   */
   private void tokensForInstructions(final IToken[] the_tokens,
                                      final WordRule the_insrule) {
-    for (int i = 0; i < AbstractBytecodeStrings.INSTRUCTIONS.length; i++) {
-      the_insrule.addWord(AbstractBytecodeStrings.INSTRUCTIONS[i],
-              the_tokens[IColorValues.BTC_INSTR]);
+    for (int i = 0; i < BytecodeStrings.INSTRUCTIONS.length; i++) {
+      the_insrule.addWord(BytecodeStrings.INSTRUCTIONS[i],
+              the_tokens[ColorValues.BTC_INSTR]);
     }
   }
 }

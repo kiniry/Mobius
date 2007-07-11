@@ -57,7 +57,7 @@ public class BytecodeConfiguration extends SourceViewerConfiguration {
   private ColorManager my_color_manager;
 
   /**
-   * The current colouring style, see {@link IColorValues}.
+   * The current colouring style, see {@link ColorValues}.
    */
   private int my_mode;
 
@@ -114,7 +114,7 @@ public class BytecodeConfiguration extends SourceViewerConfiguration {
    * This method is a lazy getter for the scanner object. It checks if the
    * corresponding field is <code>null</code>. If so it generates a new
    * {@ref BytecodeScanner} object and registers in it a default return
-   * token. This is {@ref IColorValues#DEFAULT}.
+   * token. This is {@ref ColorValues#DEFAULT}.
    *
    * @return the bytecode scanner object
    */
@@ -122,7 +122,7 @@ public class BytecodeConfiguration extends SourceViewerConfiguration {
     if (my_scanner == null) {
       my_scanner = new BytecodeScanner(my_color_manager, my_mode);
       my_scanner.setDefaultReturnToken(
-        TokenGetter.getToken(my_color_manager, my_mode, IColorValues.DEFAULT));
+        TokenGetter.getToken(my_color_manager, my_mode, ColorValues.DEFAULT));
     }
     return my_scanner;
   }
@@ -131,7 +131,7 @@ public class BytecodeConfiguration extends SourceViewerConfiguration {
    * This method is a lazy getter for the tag scanner object. It checks if the
    * corresponding field is <code>null</code>. If so it generates a new
    * {@ref BytecodeTagScanner} object and registers in it a default return
-   * token. This is {@ref IColorValues#TAG}.
+   * token. This is {@ref ColorValues#TAG}.
    *
    * @return the bytecode tag scanner object
    */
@@ -139,7 +139,7 @@ public class BytecodeConfiguration extends SourceViewerConfiguration {
     if (my_tag_scanner == null) {
       my_tag_scanner = new BytecodeTagScanner(my_color_manager, my_mode);
       my_tag_scanner.setDefaultReturnToken(
-        TokenGetter.getToken(my_color_manager, my_mode, IColorValues.TAG));
+        TokenGetter.getToken(my_color_manager, my_mode, ColorValues.TAG));
     }
     return my_tag_scanner;
   }
@@ -160,7 +160,7 @@ public class BytecodeConfiguration extends SourceViewerConfiguration {
    * The {@link NonRuleBasedDamagerRepairer} is initialised with
    * the current values of the fields {@ref #colorManager} and
    * {@ref #mod} combined with an abstrac color indication
-   * ({@ref IColorValues#HEADER}, {@ref IColorValues#THROWS}).
+   * ({@ref ColorValues#HEADER}, {@ref ColorValues#THROWS}).
    *
    * @param a_source_viewer the source viewer for which the reconciler is
    *        returned
@@ -181,12 +181,12 @@ public class BytecodeConfiguration extends SourceViewerConfiguration {
     reconciler.setRepairer(dr, IDocument.DEFAULT_CONTENT_TYPE);
 
     final NonRuleBasedDamagerRepairer ndr =
-      TokenGetter.getRepairer(my_color_manager, my_mode, IColorValues.HEADER);
+      TokenGetter.getRepairer(my_color_manager, my_mode, ColorValues.HEADER);
     reconciler.setDamager(ndr, BytecodePartitionScanner.HEAD);
     reconciler.setRepairer(ndr, BytecodePartitionScanner.HEAD);
 
     final NonRuleBasedDamagerRepairer ndr2 =
-      TokenGetter.getRepairer(my_color_manager, my_mode, IColorValues.THROWS);
+      TokenGetter.getRepairer(my_color_manager, my_mode, ColorValues.THROWS);
     reconciler.setDamager(ndr2, BytecodePartitionScanner.THROWS);
     reconciler.setRepairer(ndr2, BytecodePartitionScanner.THROWS);
 

@@ -17,14 +17,14 @@ public class BoogiePLWhitespaceDetector implements IWhitespaceDetector {
   /**
    * TODO.
    */
-  private BytecodeWhitespaceDetector decorator;
+  private BytecodeWhitespaceDetector my_decorator;
 
   /**
    * This constructor creates a delegate to {@link BytecodeWhitespaceDetector}
    * which simply does the same job.
    */
   public BoogiePLWhitespaceDetector() {
-    decorator = new BytecodeWhitespaceDetector();
+    my_decorator = new BytecodeWhitespaceDetector();
   }
 
   /**
@@ -33,6 +33,6 @@ public class BoogiePLWhitespaceDetector implements IWhitespaceDetector {
    * @return TODO
    */
   public final boolean isWhitespace(final char a_char) {
-    return decorator.isWhitespace(a_char);
+    return my_decorator.isWhitespace(a_char);
   }
 }

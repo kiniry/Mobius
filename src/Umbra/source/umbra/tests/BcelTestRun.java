@@ -26,13 +26,13 @@ public final class BcelTestRun {
   /**
    * TODO.
    */
-  static final String HWClName = "umbra.test.HelloWorld";
+  static final String HW_CLASS_NAME = "umbra.test.HelloWorld";
 
 
   /**
    * TODO.
    */
-  static final String HWClNameW = "bin\\umbra\\test\\HelloWorld.class";
+  static final String HW_PATH_NAME = "bin\\umbra\\test\\HelloWorld.class";
 
   /**
    * TODO.
@@ -87,7 +87,8 @@ public final class BcelTestRun {
   private static void workOnLDCInstructions(final ConstantPoolGen a_cpg,
                                             final Method[] the_methods,
                                             final int an_index) {
-    final MethodGen mg = new MethodGen(the_methods[an_index], HWClName, a_cpg);
+    final MethodGen mg = new MethodGen(the_methods[an_index],
+                                       HW_CLASS_NAME, a_cpg);
     final InstructionList il = mg.getInstructionList();
     final InstructionHandle start = il.getStart();
     final InstructionHandle end = il.getEnd();

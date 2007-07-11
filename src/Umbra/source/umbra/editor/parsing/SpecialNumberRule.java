@@ -20,15 +20,15 @@ public class SpecialNumberRule extends NumberRule {
   /**
    * TODO.
    */
-  char start;
+  char my_start_char;
   /**
    * TODO.
    */
-  char fin;
+  char my_fin;
   /**
    * TODO.
    */
-  boolean isFin;
+  boolean my_isfin_flag;
 
   /**
    * TODO.
@@ -41,9 +41,9 @@ public class SpecialNumberRule extends NumberRule {
                            final char an_end,
                            final IToken a_token) {
     super(a_token);
-    this.start = a_start;
-    this.fin = an_end;
-    isFin = true;
+    this.my_start_char = a_start;
+    this.my_fin = an_end;
+    my_isfin_flag = true;
   }
 
   /**
@@ -53,8 +53,8 @@ public class SpecialNumberRule extends NumberRule {
    */
   public SpecialNumberRule(final char a_start, final IToken a_token) {
     super(a_token);
-    this.start = a_start;
-    isFin = false;
+    this.my_start_char = a_start;
+    my_isfin_flag = false;
   }
 
   /**
@@ -66,11 +66,11 @@ public class SpecialNumberRule extends NumberRule {
    */
   public final IToken evaluate(final ICharacterScanner a_scanner) {
     int c = a_scanner.read();
-    if ((char)c == start) {
+    if ((char)c == my_start_char) {
       if (super.evaluate(a_scanner) == fToken) {
-        if (!isFin) return fToken;
+        if (!my_isfin_flag) return fToken;
         c = a_scanner.read();
-        if ((char)c == fin) return fToken;
+        if ((char)c == my_fin) return fToken;
         do {
           a_scanner.unread();
           a_scanner.unread();

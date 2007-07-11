@@ -31,9 +31,9 @@ import b2bpl.Project;
 public class BytecodeToBoogiePLAction implements IEditorActionDelegate {
 
   /**
-   * The current bytecode editor for which the action takes place.
+   * The current bytecode my_editor for which the action takes place.
    */
-  private IEditorPart editor;
+  private IEditorPart my_editor;
 
   /**
    * TODO.
@@ -43,7 +43,7 @@ public class BytecodeToBoogiePLAction implements IEditorActionDelegate {
    */
   public final void setActiveEditor(final IAction an_action,
                 final IEditorPart a_target_editor) {
-    editor = a_target_editor;
+    my_editor = a_target_editor;
   }
 
   /**
@@ -53,10 +53,10 @@ public class BytecodeToBoogiePLAction implements IEditorActionDelegate {
    */
   public final void run(final IAction an_action) {
 
-    final IPath active = ((FileEditorInput)editor.getEditorInput()).
+    final IPath active = ((FileEditorInput)my_editor.getEditorInput()).
                             getFile().getFullPath();
-    if (editor.isSaveOnCloseNeeded()) {
-      MessageDialog.openWarning(editor.getSite().getShell(),
+    if (my_editor.isSaveOnCloseNeeded()) {
+      MessageDialog.openWarning(my_editor.getSite().getShell(),
                     UmbraHelper.B2BPL_MESSAGE_TITLE,
                     UmbraHelper.B2BPL_SAVE_BYTECODE_FIRST);
       return;
@@ -64,7 +64,7 @@ public class BytecodeToBoogiePLAction implements IEditorActionDelegate {
     final int lind = active.toPortableString().
                             lastIndexOf(UmbraHelper.BYTECODE_EXTENSION);
     if (lind == -1) {
-      MessageDialog.openInformation(editor.getSite().getShell(),
+      MessageDialog.openInformation(my_editor.getSite().getShell(),
                   UmbraHelper.B2BPL_MESSAGE_TITLE,
                   UmbraHelper.INVALID_EXTENSION.replace(UmbraHelper.SUBSTITUTE,
                        UmbraHelper.BYTECODE_EXTENSION));
@@ -72,12 +72,13 @@ public class BytecodeToBoogiePLAction implements IEditorActionDelegate {
       // replaceClass(active);
 
 
-      // editor.doSave(null);
+      // my_editor.doSave(null);
       // IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
       // IProject project = root.getProject("selectedProject name");
       // String entirePath = p.getLocation().toOSString();
 
-      final IFile file = ((FileEditorInput)editor.getEditorInput()).getFile();
+      final IFile file = ((FileEditorInput)my_editor.getEditorInput()).
+                                                     getFile();
 
       // String location = root.getLocation().toString();
 
@@ -110,7 +111,8 @@ public class BytecodeToBoogiePLAction implements IEditorActionDelegate {
       final String[] argsArray = (String[])args.toArray(
                                                   new String[args.size()]);
 
-      // MessageDialog.openError(editor.getSite().getShell(), "Bytecode", "B");
+      // MessageDialog.openError(my_editor.getSite().getShell(),
+      //                         "Bytecode", "B");
 
       try {
         final PrintWriter messageWriter = new PrintWriter(
@@ -122,7 +124,7 @@ public class BytecodeToBoogiePLAction implements IEditorActionDelegate {
         UmbraPlugin.messagelog(ioex.toString());
       }
 
-      // -------------- Load .bpl file in editor
+      // -------------- Load .bpl file in my_editor
       // TODO: Create BoogiePL Editor
 
       loadBPLFile(active, lind);
@@ -158,7 +160,7 @@ public class BytecodeToBoogiePLAction implements IEditorActionDelegate {
      final FileEditorInput input = new FileEditorInput(file);
      try {
 
-      IWorkbenchPage page = editor.getEditorSite().getPage();
+      IWorkbenchPage page = my_editor.getEditorSite().getPage();
       BoogiePLEditor bplEditor = (BytecodeEditor) page.openEditor(input,
           UmbraHelper.BOOGIEPL_EDITOR_CLASS, true);
       bplEditor.refreshBytecode(active, null, null);
@@ -167,7 +169,7 @@ public class BytecodeToBoogiePLAction implements IEditorActionDelegate {
       page.closeEditor(bplEditor, true);
       bplEditor = (BytecodeEditor) page.openEditor(input,
           UmbraHelper.BOOGIEPL_EDITOR_CLASS, true);
-      bplEditor.setRelation(editor, jc);
+      bplEditor.setRelation(my_editor, jc);
 
     } catch (CoreException e) {
       e.printStackTrace();

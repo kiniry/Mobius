@@ -11,7 +11,7 @@ import org.apache.bcel.generic.PUTFIELD;
 import org.apache.bcel.generic.PUTSTATIC;
 
 import umbra.UmbraHelper;
-import umbra.editor.parsing.AbstractBytecodeStrings;
+import umbra.editor.parsing.BytecodeStrings;
 
 
 /**
@@ -60,7 +60,7 @@ public class FieldInstruction extends StringInstruction {
   public final boolean correct() {
     final String my_line_text = getMy_line_text();
     final String s = UmbraHelper.stripAllWhitespace(my_line_text);
-    final String[] s2 = AbstractBytecodeStrings.FIELD_INS;
+    final String[] s2 = BytecodeStrings.FIELD_INS;
     int j;
     for (j = 0; j < s2.length; j++) {
       if ((s.indexOf(s2[j]) > 0) &&
@@ -86,7 +86,7 @@ public class FieldInstruction extends StringInstruction {
 
   /**
    * This method, based on the value of the field
-   * {@ref InstructionLineController#name}, creates a new BCEL instruction
+   * {@ref InstructionLineController#my_name}, creates a new BCEL instruction
    * object for a field access instruction. It computes the index parameter
    * of the instruction before the instruction is constructed. The method can
    * construct one of the instructions:
@@ -109,20 +109,21 @@ public class FieldInstruction extends StringInstruction {
     index = getInd();
 
     final boolean isOK = correct();
+    Instruction res = null;
     if (isOK) {
-      if (name.compareTo("getfield") == 0) {
-        return new GETFIELD(index);
+      if (getName().compareTo("getfield") == 0) {
+        res = new GETFIELD(index);
       }
-      if (name.compareTo("getstatic") == 0) {
-        return new GETSTATIC(index);
+      if (getName().compareTo("getstatic") == 0) {
+        res = new GETSTATIC(index);
       }
-      if (name.compareTo("putfield") == 0) {
-        return new PUTFIELD(index);
+      if (getName().compareTo("putfield") == 0) {
+        res = new PUTFIELD(index);
       }
-      if (name.compareTo("putstatic") == 0) {
-        return new PUTSTATIC(index);
+      if (getName().compareTo("putstatic") == 0) {
+        res = new PUTSTATIC(index);
       }
     }
-    return null;
+    return res;
   }
 }

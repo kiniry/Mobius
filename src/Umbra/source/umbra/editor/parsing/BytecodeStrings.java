@@ -11,7 +11,7 @@ package umbra.editor.parsing;
  * @author Jarosław Paszek (jp209217@students.mimuw.edu.pl)
  * @version a-01
  */
-public class AbstractBytecodeStrings {
+public class BytecodeStrings {
 
   /**
    * TODO.

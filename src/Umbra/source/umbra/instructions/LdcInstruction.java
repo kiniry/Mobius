@@ -11,7 +11,7 @@ import org.apache.bcel.generic.LDC_W;
 
 import umbra.UmbraHelper;
 import umbra.UmbraPlugin;
-import umbra.editor.parsing.AbstractBytecodeStrings;
+import umbra.editor.parsing.BytecodeStrings;
 
 
 /**
@@ -93,17 +93,18 @@ public class LdcInstruction extends OtherInstruction {
 
     if (!correct())
       return null;
+    Instruction res = null;
     index = getInd();
-    if (name.compareTo("ldc") == 0) {
-      return new LDC(index);
+    if (getName().compareTo("ldc") == 0) {
+      res = new LDC(index);
     }
-    if (name.compareTo("ldc_w") == 0) {
-      return new LDC_W(index);
+    if (getName().compareTo("ldc_w") == 0) {
+      res = new LDC_W(index);
     }
-    if (name.compareTo("ldc2_w") == 0) {
-      return new LDC2_W(index);
+    if (getName().compareTo("ldc2_w") == 0) {
+      res = new LDC2_W(index);
     }
-    return null;
+    return res;
   }
 
   /**
@@ -120,7 +121,7 @@ public class LdcInstruction extends OtherInstruction {
     String str;
     final String my_line_text = getMy_line_text();
     final String s = UmbraHelper.stripAllWhitespace(my_line_text);
-    final String[] s2 = AbstractBytecodeStrings.LDC_INS;
+    final String[] s2 = BytecodeStrings.LDC_INS;
     int j, y, okok, okokok;
     for (j = 0; j < s2.length; j++) {
       if ((s.indexOf(s2[j]) > 0) &&

@@ -11,7 +11,7 @@ import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.NEW;
 
 import umbra.UmbraHelper;
-import umbra.editor.parsing.AbstractBytecodeStrings;
+import umbra.editor.parsing.BytecodeStrings;
 
 /**
  * This class is related to some subset of instructions
@@ -71,7 +71,7 @@ public class NewInstruction extends StringInstruction {
   public final boolean correct() {
     final String my_line_text = getMy_line_text();
     final String s = UmbraHelper.stripAllWhitespace(my_line_text);
-    final String[] s2 = AbstractBytecodeStrings.NEW_INS;
+    final String[] s2 = BytecodeStrings.NEW_INS;
     int j, y;
     for (j = 0; j < s2.length; j++) {
       if ((s.indexOf(s2[j]) > 0) &&
@@ -108,7 +108,7 @@ public class NewInstruction extends StringInstruction {
 
   /**
    * This method, based on the value of the field
-   * {@ref InstructionLineController#name}, creates a new BCEL instruction
+   * {@ref InstructionLineController#my_name}, creates a new BCEL instruction
    * object for a new-like instruction. It computes the index parameter
    * of the instruction before the instruction is constructed. The method can
    * construct one of the instructions:
@@ -132,16 +132,16 @@ public class NewInstruction extends StringInstruction {
     if (!correct())
       return null;
     index = getInd();
-    if (name.compareTo("anewarray") == 0) {
+    if (getName().compareTo("anewarray") == 0) {
       res = new ANEWARRAY(index);
     }
-    if (name.compareTo("checkcast") == 0) {
+    if (getName().compareTo("checkcast") == 0) {
       res = new CHECKCAST(index);
     }
-    if (name.compareTo("instanceof") == 0) {
+    if (getName().compareTo("instanceof") == 0) {
       res = new INSTANCEOF(index);
     }
-    if (name.compareTo("new") == 0) {
+    if (getName().compareTo("new") == 0) {
       res = new NEW(index);
     }
     return res;

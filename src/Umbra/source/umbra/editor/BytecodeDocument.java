@@ -46,23 +46,23 @@ public class BytecodeDocument extends Document {
    * The Java source code editor for the source code file associated with
    * the current bytecode document.
    */
-  private CompilationUnitEditor fRelatedEditor;
+  private CompilationUnitEditor my_related_editor;
 
   /**
    * The representation of the Java class the content of which
    * we edint in the current document. The corresponding
-   * class generator object is in the {@link #classGen}
+   * class generator object is in the {@link #my_classgen}
    * field.
    */
-  private JavaClass fJavaClass;
-  //@ invariant my_bcode_editor.javaClass == fJavaClass;
+  private JavaClass my_javaclass;
+  //@ invariant my_bcode_editor.javaClass == my_javaclass;
 
   /**
    * The object to build Java classes. It is associated
-   * with the {@link #fJavaClass} field.
+   * with the {@link #my_javaclass} field.
    */
-  private ClassGen classGen;
-  //@ invariant my_bcode_editor.javaClass == fJavaClass;
+  private ClassGen my_classgen;
+  //@ invariant my_bcode_editor.javaClass == my_javaclass;
 
   /**
    * The bytecode editor that manipulates the current document.
@@ -77,7 +77,7 @@ public class BytecodeDocument extends Document {
    * current bytecode document.
    */
   public final void setRelatedEditor(final CompilationUnitEditor an_editor) {
-    fRelatedEditor = an_editor;
+    my_related_editor = an_editor;
   }
 
   /**
@@ -85,7 +85,7 @@ public class BytecodeDocument extends Document {
    * current bytecode document.
    */
   public final CompilationUnitEditor getRelatedEditor() {
-    return fRelatedEditor;
+    return my_related_editor;
   }
 
   /**
@@ -93,14 +93,14 @@ public class BytecodeDocument extends Document {
    * the document.
    */
   public final JavaClass getJavaClass() {
-    return fJavaClass;
+    return my_javaclass;
   }
 
   /**
    * @return the current generator of the Java class file
    */
   public final ClassGen getClassGen() {
-    return classGen;
+    return my_classgen;
   }
 
   /* synchronization of cursor's positions */
@@ -114,18 +114,18 @@ public class BytecodeDocument extends Document {
    * editor correspondings to this line will be highlighted.
    */
   public final void synchronizeBS(final int a_pos) {
-    final IDocument sDoc = fRelatedEditor.getDocumentProvider().
-                               getDocument(fRelatedEditor.getEditorInput());
+    final IDocument sDoc = my_related_editor.getDocumentProvider().
+                               getDocument(my_related_editor.getEditorInput());
     try {
       final int line = getLineOfOffset(a_pos);
-      final int[] syncLine = syncBS(sDoc, fJavaClass, line);
+      final int[] syncLine = syncBS(sDoc, my_javaclass, line);
       final int syncPos = sDoc.getLineOffset(syncLine[0]);
       final int syncLen = sDoc.getLineOffset(syncLine[1] + 1) - syncPos;
       UmbraPlugin.messagelog("sync(" + syncLine[0] + ", " + syncLine[1] + ")");
-      fRelatedEditor.getEditorSite().getPage().activate(fRelatedEditor);
+      my_related_editor.getEditorSite().getPage().activate(my_related_editor);
       if (syncLen < 0) MessageDialog.openError(new Shell(), "Bytecode",
                                                "Synchronisation failed");
-      else fRelatedEditor.getSelectionProvider().
+      else my_related_editor.getSelectionProvider().
                           setSelection(new TextSelection(syncPos, syncLen));
     } catch (BadLocationException e) {
       e.printStackTrace();
@@ -234,11 +234,11 @@ public class BytecodeDocument extends Document {
    */
   public final void synchronizeSB(final int a_pos,
                                   final IEditorPart an_editor) {
-    final IDocument sDoc = fRelatedEditor.getDocumentProvider().
-                                  getDocument(fRelatedEditor.getEditorInput());
+    final IDocument sDoc = my_related_editor.getDocumentProvider().
+                                getDocument(my_related_editor.getEditorInput());
     try {
       final int line = sDoc.getLineOfOffset(a_pos);
-      final int[] syncLine = syncSB(sDoc, fJavaClass, line);
+      final int[] syncLine = syncSB(sDoc, my_javaclass, line);
       final int syncPos = getLineOffset(syncLine[0]);
       final int syncLen = getLineOffset(syncLine[1] + 1) - syncPos;
       an_editor.getEditorSite().getPage().activate(an_editor);
@@ -374,8 +374,8 @@ public class BytecodeDocument extends Document {
   public final void setEditor(final BytecodeEditor an_editor) {
     my_bcode_editor = an_editor;
     an_editor.setDocument(this);
-    classGen = my_bcode_editor.getMy_classGen();
-    fJavaClass = my_bcode_editor.getMy_javaClass();
+    my_classgen = my_bcode_editor.getClassGen();
+    my_javaclass = my_bcode_editor.getJavaClass();
   }
 
   /**
