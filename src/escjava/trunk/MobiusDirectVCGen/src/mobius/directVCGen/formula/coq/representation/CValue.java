@@ -1,5 +1,6 @@
 package mobius.directVCGen.formula.coq.representation;
 
+import escjava.sortedProver.NodeBuilder.SRef;
 import escjava.sortedProver.NodeBuilder.STerm;
 import escjava.sortedProver.NodeBuilder.SValue;
 
@@ -10,7 +11,7 @@ import escjava.sortedProver.NodeBuilder.SValue;
  * (<i>eg.</i> Ref, Int, <i>etc.</i>...) subclass this class.
  * @author J. Charles (julien.charles@inria.fr)
  */
-public class CValue extends CAny implements SValue {
+public class CValue extends CAny implements SValue, SRef {
   /**
    * Constructs a formula of type value.
    * @param pref if true the symbol is considered as a prefix

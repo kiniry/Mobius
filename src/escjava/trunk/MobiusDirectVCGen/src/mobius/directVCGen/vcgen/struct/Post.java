@@ -57,6 +57,11 @@ public class Post {
    */
   public Term substWith(final Term f) {
     if (fVar != null) {
+      if (!fVar.getSort().equals(f.getSort())) {
+        throw new IllegalArgumentException("The 2 terms don't have the same type " + 
+                                           fVar + " " + f);
+      }
+      
       return fPost.subst(fVar, f);
     }
     return fPost;
@@ -71,6 +76,11 @@ public class Post {
    */
   public Term subst(final Term v, final Term f) {
     if ((v != null) && (f != null)) {
+      if (!v.getSort().equals(f.getSort())) {
+        throw new IllegalArgumentException("The 2 terms don't have the same type " + 
+                                           v + " " + f);
+      }
+        
       return fPost.subst(v, f);
     }
     return fPost;

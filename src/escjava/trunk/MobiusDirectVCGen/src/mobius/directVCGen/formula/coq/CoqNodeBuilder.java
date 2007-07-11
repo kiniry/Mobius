@@ -696,4 +696,22 @@ public class CoqNodeBuilder extends EscNodeBuilder {
   }
 
 
+  @Override
+  public SBool buildRefBoolFun(int refPredTag, SRef arg1, SRef arg2) {
+    String sym;
+    switch (refPredTag) {
+      case NodeBuilder.predEQ:
+        sym = "refeq";
+        break;
+      case NodeBuilder.predNE:
+      default:
+        sym = "refneq";
+        break;
+      
+    }
+    
+    return new CBool(false, sym, new STerm[] {arg1, arg2});
+  }
+
+
 }
