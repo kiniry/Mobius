@@ -158,9 +158,9 @@ public class BytecodeConfiguration extends SourceViewerConfiguration {
    *   <li>{@ref BytecodePartitionScanner#THROWS}.</li>
    * </ul>
    * The {@link NonRuleBasedDamagerRepairer} is initialised with
-   * the current values of the fields {@ref #colorManager} and
-   * {@ref #mod} combined with an abstrac color indication
-   * ({@ref ColorValues#HEADER}, {@ref ColorValues#THROWS}).
+   * the current values of the fields {@link #my_color_manager} and
+   * {@link #my_mode} combined with an abstrac color indication
+   * ({@link ColorValues#HEADER}, {@link ColorValues#THROWS}).
    *
    * @param a_source_viewer the source viewer for which the reconciler is
    *        returned
