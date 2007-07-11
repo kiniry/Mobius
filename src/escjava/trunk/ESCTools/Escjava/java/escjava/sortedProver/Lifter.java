@@ -615,6 +615,10 @@ public class Lifter extends EscNodeBuilder
       if (fn == symInv) {
         return dumpBuilder.buildInv(args[0].dumpValue(), args[1].dumpAny());
       }
+      if (fn == symRefBoolFn) {
+        return dumpBuilder.buildRefBoolFun(tag, args[0].dumpRef(), args[1].dumpRef());
+      }
+      
 			if(fn.name.startsWith("%"))
 				System.out.println(fn.name);
 			Assert.notFalse(! fn.name.startsWith("%"));
@@ -937,12 +941,13 @@ public class Lifter extends EscNodeBuilder
 	public PredSymbol symIff = registerPredSymbol("%iff", new Sort[] { sortPred, sortPred }, TagConstants.BOOLEQ);
 	public PredSymbol symXor = registerPredSymbol("%xor", new Sort[] { sortPred, sortPred }, TagConstants.BOOLNE);
 	public PredSymbol symNot = registerPredSymbol("%not", new Sort[] { sortPred }, TagConstants.BOOLNOT);
-    public FnSymbol symTermConditional = registerFnSymbol("%ite", new Sort[] { sortPred, sortValue, sortValue }, sortValue, TagConstants.CONDITIONAL);
+  public FnSymbol symTermConditional = registerFnSymbol("%ite", new Sort[] { sortPred, sortValue, sortValue }, sortValue, TagConstants.CONDITIONAL);
 	public PredSymbol symIntPred = registerPredSymbol("%int-pred", new Sort[] { sortInt, sortInt });
 	public PredSymbol symRealPred = registerPredSymbol("%real-pred", new Sort[] { sortReal, sortReal });
 	public FnSymbol symBoolPred = registerFnSymbol("%bool-pred", new Sort[] { sortBool, sortBool }, sortPred);
 	public FnSymbol symIntBoolFn = registerFnSymbol("%int-bool-fn", new Sort[] { sortInt, sortInt }, sortBool);
 	public FnSymbol symRealBoolFn = registerFnSymbol("%real-bool-fn", new Sort[] { sortReal, sortReal }, sortBool);
+  public FnSymbol symRefBoolFn = registerFnSymbol("%ref-bool-fn", new Sort[] { sortRef, sortRef }, sortBool);
 	public FnSymbol symIntFn = registerFnSymbol("%int-fn", new Sort[] { sortInt, sortInt }, sortInt);
 	public FnSymbol symRealFn = registerFnSymbol("%real-fn", new Sort[] { sortReal, sortReal }, sortReal);
 	public FnSymbol symBoolFn = registerFnSymbol("%bool-fn", new Sort[] { sortBool, sortBool }, sortBool);
@@ -1029,7 +1034,8 @@ public class Lifter extends EscNodeBuilder
 	public SPred buildRealPred(int realPredTag, SReal arg1, SReal arg2) { throw new Die(); }
 	public SBool buildRealBoolFun(int realPredTag, SReal arg1, SReal arg2) { throw new Die(); }
 	public SReal buildRealFun(int realFunTag, SReal arg1, SReal arg2) { throw new Die(); }
-	public SInt buildIntFun(int intFunTag, SInt arg1) { throw new Die(); }
+  public SBool buildRefBoolFun(int refPredTag, SRef arg1, SRef arg2) { throw new Die(); }
+  public SInt buildIntFun(int intFunTag, SInt arg1) { throw new Die(); }
 	public SReal buildRealFun(int realFunTag, SReal arg1) { throw new Die(); }
 	public SBool buildBool(boolean b) { throw new Die(); }
 	public SInt buildInt(long n) { throw new Die(); }

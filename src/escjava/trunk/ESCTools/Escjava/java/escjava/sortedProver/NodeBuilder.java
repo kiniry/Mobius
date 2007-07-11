@@ -382,7 +382,10 @@ public abstract class NodeBuilder
 	
 	//@ requires predFirst <= intPredTag && intPredTag <= predLast;
 	abstract public SBool buildIntBoolFun(int intPredTag, SInt arg1, SInt arg2);
-	
+  
+  //@ requires predFirst <= refPredTag && refPredTag <= predLast;
+  abstract public SBool buildRefBoolFun(int refPredTag, SRef arg1, SRef arg2);
+  
 	//@ requires predFirst <= realPredTag && realPredTag <= predLast;
 	abstract public SPred buildRealPred(int realPredTag, SReal arg1, SReal arg2);
 	//@ requires predFirst <= realPredTag && realPredTag <= predLast;

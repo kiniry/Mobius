@@ -403,6 +403,9 @@ public class SimplifyNodeBuilder extends EscNodeBuilder
 	public SBool buildIntBoolFun(int intFunTag, SInt arg1, SInt arg2) {
 		return (SBool) buildIntPred(intFunTag, arg1, arg2);
 	}
+  public SBool buildRefBoolFun(int intFunTag, SRef arg1, SRef arg2) {
+    return buildIntBoolFun(intFunTag, (SInt)arg1, (SInt)arg2);
+  }
 	public SBool buildRealBoolFun(int realPredTag, SReal arg1, SReal arg2) {
 		return (SBool) buildRealPred(realPredTag, arg1, arg2);
 	}
