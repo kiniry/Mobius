@@ -254,16 +254,18 @@ public class BytecodeDocument extends Document {
   /**
    * Computes the area in current bytecode corresponding to given line of
    * source code. The bytecode should be refreshed before calling this metod,
-   * to update JavaClass structures. Works correctly only inside a method.
+   * to update {@ref JavaClass} structures. Works correctly only inside
+   * a method.
    *
-   * @param a_source_doc  IDocument with source (java) code
-   * @param a_java_class  JavaClass with current bytecode
-   * @param a_line_no  index of line in Sdoc
+   * @param a_source_doc {@ref IDocument} with source (java) code
+   * @param a_java_class {@ref JavaClass} with current bytecode
+   * @param a_line_no an index of line in <code>a_source_doc</code>
    * @return array of 2 ({@ref #NO_OF_POSITIONS}) ints representing index of
    *         first and last line of bytecode (corresponding to given source
    *         line), in the related bytecode editor
    * @throws BadLocationException if line parameter is invalid. May occur also
-   *         if bytecode in JavaClass jc is out-of-date.
+   *         if bytecode in {@ref JavaClass} <code>a_java_class</code>
+   *         is out-of-date.
    */
   private int[] syncSB(final IDocument a_source_doc,
                        final JavaClass a_java_class,

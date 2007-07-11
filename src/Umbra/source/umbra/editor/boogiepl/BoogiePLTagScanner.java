@@ -7,7 +7,7 @@ import umbra.editor.ColorManager;
 /**
  * This method defines coloring rules in tags.
  * It has been generated automatically except obtaing
- * color values from the array in ColorValues.
+ * color values from the array in {@ref ColorValues}.
  *
  * @author Samuel Willimann (wsamuel@student.ethz.ch)
  * @version a-01

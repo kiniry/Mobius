@@ -13,7 +13,7 @@ import umbra.editor.ColorValues;
 import umbra.editor.NonRuleBasedDamagerRepairer;
 
 /**
- * This method collects array of colors from ColorValues interface
+ * This method collects array of colors from {@ref ColorValues} class
  * and returns them as a token array.
  * TODO ???
  *
