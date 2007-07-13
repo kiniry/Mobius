@@ -51,16 +51,6 @@ BEGIN
     run_FullProgram(p)(main, arg)(initial_AP_state(p)(this_val), final)
 
 
-  % The following are adapted versions for AP to avoid having to give all the 
-  % theory parameters to uniquely identify them
-
- on_method_entry_AP : (on_method_event_type) =
-   LAMBDA (p : Program, md : Method, a : Val, s1, s2 : APState, n : nat,
-           deriv_stmt_rec : deriv_stmt_rec_type(n),
-           deriv_expr_rec : deriv_expr_rec_type(n)) :
-   on_method_entry(p, md, a, s1, s2, n, deriv_stmt_rec, deriv_expr_rec)
-
-
   IMPORTING SemanticsProofs[Name, Program, APState, id,
                       LAMBDA (s : APState) : pstate(s),
                       lookup,
@@ -70,13 +60,6 @@ BEGIN
                       on_method_entry,
                       on_method_exit_normal,
                       on_method_exit_exceptional]
-
-  stmt_determ_step_AP : LEMMA % :-)
-    FORALL (p : Program, n1, n2 : nat, c : Stmt, sigma : APState,
-            sigma1, sigma2 : APState) :
-        deriv_stmt(p)(c, sigma, sigma1)(n1) AND
-        deriv_stmt(p)(c, sigma, sigma2)(n2) IMPLIES
-          sigma1 = sigma2 AND n1 = n2
 
 
   % Well-formedness properties
@@ -137,13 +120,47 @@ BEGIN
       deriv_stmt(p)(c, sigma1, sigma2)(n) IMPLIES
         wf_state(p)(sigma2)
 
-  % AT: The proof of execute_action_correctness now requires to disambiguate
-  % the instantiation
+
+  % The following are adapted versions for AP to avoid having to give all the 
+  % theory parameters to uniquely identify them
+
+ on_method_entry_AP : (on_method_event_type) =
+   LAMBDA (p : Program, md : Method, a : Val, s1, s2 : APState, n : nat,
+           deriv_stmt_rec : deriv_stmt_rec_type(n),
+           deriv_expr_rec : deriv_expr_rec_type(n)) :
+   on_method_entry(p, md, a, s1, s2, n, deriv_stmt_rec, deriv_expr_rec)
+
+  expr_determ_step_AP : LEMMA % :-)
+    FORALL (p : Program)(n1, n2 : nat)(e : Expr)
+           (v1, v2 : Val, sigma, sigma1, sigma2 : APState) :
+        (FORALL (c : Stmt)(sigma, sigma1, sigma2 : APState)
+                (m1 : below(n1), m2 : below(n2)) :
+          deriv_stmt(p)(c, sigma, sigma1)(m1) AND
+          deriv_stmt(p)(c, sigma, sigma2)(m2) IMPLIES
+            sigma1 = sigma2 AND m1 = m2) IMPLIES
+        deriv_expr(p)(e, sigma, v1, sigma1)(n1) IMPLIES
+        deriv_expr(p)(e, sigma, v2, sigma2)(n2) IMPLIES
+           v1 = v2 AND sigma1 = sigma2 AND n1 = n2
+
+  stmt_determ_step_AP : LEMMA % :-)
+    FORALL (p : Program)(n1, n2 : nat)(c : Stmt)(sigma : APState) :
+      FORALL (sigma1, sigma2 : APState) :
+        deriv_stmt(p)(c, sigma, sigma1)(n1) AND
+        deriv_stmt(p)(c, sigma, sigma2)(n2) IMPLIES
+          sigma1 = sigma2 AND n1 = n2
+  
   deriv_expr_bottom_iff_exception_step_AP : LEMMA % :-)
     FORALL (p : Program)(e : Expr)
            (sigma1, sigma2 : APState, v : Val, n : nat) :
       deriv_expr(p)(e, sigma1, v, sigma2)(n) IMPLIES
       Bottom?(v) = up?(ex(pstate(sigma2)))
+
+  deriv_boolean_expr_type_AP : LEMMA % :-)
+    FORALL (p : Program)(e : Expr)
+           (sigma1, sigma2 : APState, v : Val, n : nat) :
+      deriv_expr(p)(e, sigma1, v, sigma2)(n) IMPLIES
+      NOT up?(ex(pstate(sigma2))) IMPLIES
+      BExpr?(e) IMPLIES Bool?(v)
 
 
 END AnnotatedProgramSemantics

@@ -54,10 +54,10 @@ BEGIN
       (EXISTS (t : Transition) :
         ts(mva(mp))(t) AND guard(t) = g) IMPLIES
         EXISTS (e : Expr, v : Val, n : nat) : 
-          guard_to_expression(mva(mp))(g) = e IMPLIES
+          guard_to_expression(mva(mp))(g) = e AND
           BExpr?(e) AND
           deriv_expr(ann_program(mp))(e, sAP, v, sAP)(n) AND
-          g(stA(sMVA), st(pstate(sAP))) IFF v = Bool(TRUE)
+          (g(stA(sMVA), st(pstate(sAP))) IFF v = Bool(TRUE))
 
   % TODO: This generates an unprovable TC!! 
   %   it doesn't consider the  hypothesis ann_program_pre(mp).

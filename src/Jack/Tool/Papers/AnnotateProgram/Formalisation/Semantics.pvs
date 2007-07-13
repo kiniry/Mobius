@@ -563,9 +563,7 @@ ASSUMING
 
 ENDASSUMING
 
-
   IMPORTING WF[nat, nat] % used in the proofs
-
 
   expr_determ_step : LEMMA % :-)
     FORALL (p : FullProgram)(n1, n2 : nat)(e : Expr)
@@ -604,7 +602,16 @@ ENDASSUMING
     FORALL (p : FullProgram)(e : Expr)
            (sigma1, sigma2 : FullState, v : Val, n : nat) :
       deriv_expr(p)(e, sigma1, v, sigma2)(n) IMPLIES
-      Bottom?(v) = up?(ex(pstate(sigma2)))
+        Bottom?(v) = up?(ex(pstate(sigma2)))
+
+  % Note that the converse is not true because an assigment returns a 
+  % boolean if the source is a boolean expression
+  deriv_boolean_expr_type : LEMMA % :-)
+    FORALL (p : FullProgram)(e : Expr)
+           (sigma1, sigma2 : FullState, v : Val, n : nat) :
+      deriv_expr(p)(e, sigma1, v, sigma2)(n) IMPLIES
+      NOT up?(ex(pstate(sigma2))) IMPLIES
+      BExpr?(e) IMPLIES Bool?(v)
 
 
 END SemanticsProofs

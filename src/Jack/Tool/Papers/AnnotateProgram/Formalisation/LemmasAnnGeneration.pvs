@@ -106,29 +106,15 @@ BEGIN
         MVA_modeled?(mva(mp))(sMVA, sAP2)
 
 
-  % This can not be proved without having an explicit way of translating a
-  % guard into an expression. Here is where the assumption that guards can be
-  % translated into Java expressions
-  guard_to_expr_exists : AXIOM
-    FORALL (mp : MonitoredProgram, t : Transition) :
+  update_vars_proper_subterm_set_clause : LEMMA % :-)
+    FORALL (mp : MonitoredProgram, c : Class, m : Method, t : Transition) :
+      ann_program_pre(mp) IMPLIES
+      name(c) = class_name(mva(mp)) IMPLIES
+      classes(ann_program(mp))(c) IMPLIES
+      methods(c)(m) IMPLIES
       ts(mva(mp))(t) IMPLIES
-      nonempty?({e : Expr |
-                  FORALL (stA: (wf_Store[CP, string](vdsA(mva(mp)))),
-                          stP: (wf_PSt[CP, string](vdsP(mva(mp)))))
-                         (sMP1, sMP2: MPState, v: Val, n: nat):
-                    pstate(sMP1) = (# ex := bottom, st := stP #) IMPLIES
-                    deriv_expr(mp)(e, sMP1, v, sMP2)(n) IMPLIES 
-                    Bool?(v) IMPLIES b(v) = guard(t)(stA, stP)})
-
-  ann_guard_actions_not_empty : LEMMA % :-)
-    FORALL (mp : MonitoredProgram, ts : finite_set[Transition],
-            q : CP, e : Event) :
-      specification_requirements(mp) IMPLIES
-      NOT empty?(ts) IMPLIES
-      ts = {t : Transition | ts(mva(mp))(t) AND scp(t) = q AND event(t) = e}
-      IMPLIES
-        NOT null?(ann_guard_actions(mp)(ts))
-
+      mname(event(t)) = name(m) IMPLIES
+        proper_subterm_set_clause(update_vars(t), m)
 
   % Rename
   MP_modeled_preserved_by_ann_event : LEMMA
@@ -136,6 +122,7 @@ BEGIN
             sMP1, sMP2 : MPState, sAP1, sAP2 : APState,
             n : nat, ts : finite_set[Transition], et : EventType) :
       related_states(mp, ap)(sMP1, sAP1) IMPLIES
+      name(c) = class_name(mva(mp)) IMPLIES
       classes(ap)(c) IMPLIES
       methods(c)(m) IMPLIES
       astate(sMP2) = on_method_MVA(et)(mp, m)(sMP1) IMPLIES
