@@ -287,7 +287,14 @@ void \= around() : call (void m()) \{\\
 \end{figure}
 \paragraph{Semantic of the ensure clause}
 The other interesting element in Pipa is the semantic of the ensure clause which slightly differs from the one in
-JML.
+JML. It enables to express properties about the caller variables which were passed to the advice while 
+weaving. For instance if you have a variable {\tt x} inside a method, 
+and the advice is weaved on a method call that uses {\tt x}, you can express properties over {\tt x} in the 
+postcondition. In normal JML it makes no sense to express a property like that, and if {\tt x} is mentionned
+in the postcondition, it would have been the old value of {\tt x}. It is especially useful to express real 
+invasive aspects. In our framework we will use this semantic for {\it any} postcondition, {\it e.g.} 
+for normal method calls as well.
+
 \subsection{Compilation to invasive model methods}
 The main idea is to compile aspects to their effects, which would be modeled by methods that are defined
 solely by their specifications. 
