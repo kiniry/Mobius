@@ -181,8 +181,9 @@ to handle aspects found in Pipa. The other restriction we add is that we don't t
 because they can be desugared \cite{RaghavanL00}.
 
 \subsubsection{JML} JML is a behavioural specification language for Java. It is made of numerous keyword: you 
-can express methods pre and post conditions with it (the keywords {\tt requires} and {\tt ensures}
-\paragraph{Purity} 
+can express methods pre and post conditions with it (the keywords {\tt requires} and {\tt ensures}). There
+are notions of frame conditions (the {\tt assignable} clauses). One can also express assertions ({\tt assert} 
+construct), and loop invariants.
 
 \paragraph{Invasive model methods} 
 Model methods are an interesting construct of JML: these are specification
@@ -193,6 +194,60 @@ the ensure clause) will be satisfied.
 In this paper we won't talk about pure model methods which could be use in specifications. Here we rather talk
 about invasive ones: just like invasive aspects they are meant to state that the program has been modified 
 non explicitly.
+\begin{figure}
+\begin{center}\begin{minipage}{3cm}
+\bcode
+ghost int i;\\
+...\\
+requires i > 0;\\
+assignable i;\\
+ensures i == 1;\\
+model void m();
+\ecode
+\end{minipage}\end{center}
+\caption{A model method definition}
+\label{model_meth_def}
+\end{figure}
+
+
+\paragraph{Model methods call}
+To be able to use model methods with the full expressivity desired, we add a new annotation to JML, the simple 
+annotation method call. Its syntax would be simply the model method call in the middle of annotations as shown 
+on figure \ref{model_meth}. This construct is natural from a JML point of view because for most of the cases 
+(the non exceptional ones) it could be desugared easily into 
+more primitive JML. Hence a normal model call could be desugared into 3 construct:
+\begin{itemize} 
+\item an assert of the require clause, followed by 
+\item an  instruction to state that all the variable assignable have new values: it can be represented by JML 
+keyword {\tt fresh} which is usually used for method specifications, but here could be used to annotate the method, 
+and finally 
+\item the assume of the method's postcondition.
+\end{itemize}
+Nevertheless, the exceptional cases being difficult to desugar, it is interesting to have the model method calls in
+JML specification.
+
+\begin{figure}
+\begin{center}\begin{minipage}{4cm}
+The program code:
+\bcode
+...\\
+//@ m();\\
+//@ assert(i == 1);\\
+...
+\ecode
+Could be desugared to:
+\bcode
+...\\
+//@ assert (i > 0);\\
+//@ fresh(i);\\
+//@ assume (i == 1);\\
+//@ assert(i == 1);\\
+...
+\ecode
+\end{minipage}\end{center}
+\caption{A non exceptional model method call desugared}
+\label{model_meth}
+\end{figure}
 \subsubsection{Pipa}
  For our case study we will limit the scope of annotations
 to simple JML annotations: we allow to specify loop invariants, methods pre and post conditions
