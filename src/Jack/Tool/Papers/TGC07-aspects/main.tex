@@ -181,7 +181,8 @@ to handle aspects found in Pipa. The other restriction we add is that we don't t
 because they can be desugared \cite{RaghavanL00}.
 
 \subsubsection{JML} JML is a behavioural specification language for Java. It is made of numerous keyword: you 
-can express methods pre and post conditions with it (the keywords {\tt requires} and {\tt ensures}). There
+can express methods pre and post conditions with it (the keywords {\tt requires} and {\tt ensures}), exceptional
+postcondition ({\tt exsures}). There
 are notions of frame conditions (the {\tt assignable} clauses). One can also express assertions ({\tt assert} 
 construct), and loop invariants.
 
@@ -213,9 +214,10 @@ model void m();
 \paragraph{Model methods call}
 To be able to use model methods with the full expressivity desired, we add a new annotation to JML, the simple 
 annotation method call. Its syntax would be simply the model method call in the middle of annotations as shown 
-on figure \ref{model_meth}. This construct is natural from a JML point of view because for most of the cases 
-(the non exceptional ones) it could be desugared easily into 
-more primitive JML. Hence a normal model call could be desugared into 3 construct:
+on figure \ref{model_meth}. This construct is natural from a JML point of view because for most of the non 
+exceptional cases  it could be desugared easily into 
+more primitive JML. Hence a normal model call could be desugared into 3 construct (it is similar to what is done
+in guarded commands \cite{BarnettL05}):
 \begin{itemize} 
 \item an assert of the require clause, followed by 
 \item an  instruction to state that all the variable assignable have new values: it can be represented by JML 
@@ -249,14 +251,43 @@ Could be desugared to:
 \label{model_meth}
 \end{figure}
 \subsubsection{Pipa}
- For our case study we will limit the scope of annotations
-to simple JML annotations: we allow to specify loop invariants, methods pre and post conditions
-and assertions. For Pipa we take mainly its constructs {\tt proceed} and {\tt then} which are made to
-specify around advices.
-The methods will not use JML's semantic for ensures annotations but rather the one of Pipa.
-\fixme{talk about behavioural limitation}
-\paragraph{Semantic of the proceed}
+Pipa is a behavioural specification language based on JML. As was previously stated, we don't treat behaviours 
+which was it seems the main feature the authors of Pipa were trying to emphasize in their paper.
+The specification of an advice is similar to the one of a method call. It has a pre and post condition,
+an exceptional postcondition and a frame condition. The specification are not different for JML's method's 
+specification, being applied on advices.
+Pipa mainly adds two construct plus a specific semantic we are interested in:
+the specific constructs for around advices, and their semantic of the ensure clause.
+
+\paragraph{Around advice specifications} The difficulty of specification of around advices is due to the presence
+of the proceed construct. It has to be stated in the method specification and in JML there are no keywords to
+represent it. To represent the proceed in specification, Pipa uses the predicate {\tt proceed}
+as well as the {\tt then} construct as what was stated in Clifton and Leavens paper~\cite{clifton02spectators}.
+The specification of an around advice is divided in two the part before the proceeds (the part before the 
+execution of the target instruction) and the part after the proceeds. These two parts have both pre and post 
+conditions as well as a frame condition. There is also for the first part a new keyword proceeds which take a 
+boolean condition which is an invariant for an around advice which determined if the instruction must be executed.
+
+\begin{figure}
+\begin{center}\begin{minipage}{3cm}\bcode
+int f;\\
+...\\
+/*\=@ \ \ \=requires f > 0;\+ \\
+@ \>ensures f == 1;\\
+@ \>proceeds true;\\
+@ then\\
+@ \> requires f == 2;\\
+@ \> ensures f == 3;\\
+@*/\-\\
+void \= around() : call (void m()) \{\\
+\>...\\
+\} \ecode\end{minipage}\end{center}
+\caption{Around annotations}
+\label{arround_annot}
+\end{figure}
 \paragraph{Semantic of the ensure clause}
+The other interesting element in Pipa is the semantic of the ensure clause which slightly differs from the one in
+JML.
 \subsection{Compilation to invasive model methods}
 The main idea is to compile aspects to their effects, which would be modeled by methods that are defined
 solely by their specifications. 
