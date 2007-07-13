@@ -576,8 +576,10 @@ public class BPLPrinter implements IBPLVisitor<Object> {
     printList(expr.getVariables());
     print(" :: ");
     for (BPLTrigger trigger : expr.getTriggers()) {
-      trigger.accept(this);
-      print(' ');
+      if (trigger != null) {
+        trigger.accept(this);
+        print(' ');
+      }
     }
     expr.getExpression().accept(this);
     print(')');
