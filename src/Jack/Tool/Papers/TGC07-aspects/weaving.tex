@@ -1,0 +1,24 @@
+
+First all the pointcut are abstracted as a syntactical pointcut. Then they are ordered using the compilation
+order.
+They are ordered in a list made of couples (instr, (model\_list)) where model\_list is the list of model methods 
+that correspond to a specific syntactical match.
+
+%
+\begin{figure}
+\bcode
+weave \=(instr; Linstr, (instr, (model :: model\_list)) :: Lmatch) -> \\
+\>model:: weave (instr; Linstr, (instr, (model\_list)) :: Lmatch);\\
+weave \=(instr; Linstr, (instr, (instr :: model\_list)) :: Lmatch) -> \\
+\>instr:: weave (instr; Linstr, (instr, (model\_list)) :: Lmatch);\\
+weave (instr:: Linstr, (instr', (model :: model\_list)) :: Lmatch) -> \\
+\>instr <> instr',  weave (instr; Linstr, Lmatch);\\
+weave (instr:: Linstr, (instr, (nil)) :: Lmatch) -> \\
+\>weave (Linstr, Lmatch);\\
+weave (instr:: Linstr, nil) -> \\
+\>instr :: weave (Linstr, Lmatch).
+\ecode
+\caption{The algorithm to weave method}
+\label{weaving_algo}
+\end{figure}
+Then for each program point that matches
