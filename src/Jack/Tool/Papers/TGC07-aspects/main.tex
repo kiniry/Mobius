@@ -161,56 +161,81 @@ po\=intcut(Object o) : \=target(o) \&\& !within(SecurityManager)\+ \\
 \section{The verification framework}
 The verification framework we are building in this paper is an adaptation of static
 verification based on weakest precondition calculus for aspects. Here we will consider
-the SecurityManager as an invasive aspect, so we must have a weakest precondition calculus that
- takes into account Aspects.
+the SecurityManager as an invasive aspect, so we must take into the weaving process.
 
+To keep the calculus simple, we do the generation of the verification conditions in 3 steps.
+First we abstract their specification from the aspects, which gives us a model of the aspects.
+Then we statically weave these model aspects into the program, it is a syntactic weaving so
+it is supposed to be lightweight, and finally we verify them
+using a standard weakest precondition calculus.
+
+\subsection{Annotations}
 The weakest precondition calculus we are targetting relies on program and aspects specifications that are
-strong enough to make the verification conditions generated provable.
-The annotation language we will choose to use is similar to JML and moreover to Pipa (the extension
-of JML for Aspects). For our case study we will limit the scope of annotations
+precise enough to make the verification conditions generated provable.
+The annotation language we use is like Pipa (the extension
+of JML for Aspects), but in a limited form. The annotation language is a JML level 0 type language, to which
+we remove the universe types, but to which we add model methods as well as purity, and some constructs
+to handle aspects found in Pipa.
+
+\subsubsection{JML}
+\paragraph{Purity}
+
+\paragraph{Invasive model methods} model methods are methods that can be seen on the specification
+level and be bodyless
+
+\subsubsection{Pipa}
+ For our case study we will limit the scope of annotations
 to simple JML annotations: we allow to specify loop invariants, methods pre and post conditions
 and assertions. For Pipa we take mainly its constructs {\tt proceed} and {\tt then} which are made to
 specify around advices.
 The methods will not use JML's semantic for ensures annotations but rather the one of Pipa.
-\subsection{Definition of the predicate transformer compilation}
+\fixme{talk about behavioural limitation}
+\paragraph{Semantic of the proceed}
+\paragraph{Semantic of the ensure clause}
+\subsection{Compilation to invasive model methods}
+The main idea is to compile aspects to their effects, which would be modeled by methods that are defined
+solely by their specifications. 
+\subsubsection{Translation of the specifications}
+The annotations are translated directly to the model methods. The method has the same signature
+that of the aspect, and the specifications are copied entirely to the model method. It works smoothly
+for most of the case except for the around advice which is split into 2 model methods: the one corresponding
+to the before part, with added the proceed instruction as conjuncted in the ensures.
+\subsubsection{Translation of pointcuts}
+The pointcuts are not directly translated to the model methods, though the conditions over the pointcut undecidable
+at compile time are added to the require clause.
+\subsection{Weaving of the models}
+First all the pointcut are abstracted as a syntactical pointcut. Then they are ordered using the compilation
+order.
+They are ordered in a list made of couples (instr, (model\_list)) where model\_list is the list of model methods 
+that correspond to a specific syntactical match.
 
-The base weakest precondition calculus is a standard one. Here we define it
-for the instructions: 
+%
 \begin{figure}
-\begin{small}\begin{verbatim}
-static_call();
-dyn_call();
-var_decl
-if(b){
-}
-else {
-}
-while (b) {
-}
-return v
-static { }
-{ }
-String_lit
-throw
-\end{verbatim}
-\end{small}
-\caption{The base language}
-\label{lang}
+\bcode
+weave \=(instr; Linstr, (instr, (model :: model\_list)) :: Lmatch) -> \\
+\>model:: weave (instr; Linstr, (instr, (model\_list)) :: Lmatch);\\
+weave \=(instr; Linstr, (instr, (instr :: model\_list)) :: Lmatch) -> \\
+\>instr:: weave (instr; Linstr, (instr, (model\_list)) :: Lmatch);\\
+weave (instr:: Linstr, (instr', (model :: model\_list)) :: Lmatch) -> \\
+\>instr <> instr',  weave (instr; Linstr, Lmatch);\\
+weave (instr:: Linstr, (instr, (nil)) :: Lmatch) -> \\
+\>weave (Linstr, Lmatch);\\
+weave (instr:: Linstr, nil) -> \\
+\>instr :: weave (Linstr, Lmatch).
+\ecode
+\caption{The algorithm to weave method}
+\label{weaving_algo}
 \end{figure}
+Then for each program point that matches
+
+\subsection{The weakest precondition calculus}
 
 In our framework aspects are considered as methods calls that are transferred the whole
 control flow, and enable to modify local variables as well. Therefore when aspects are weaved
 there wp is just like the one of a method call.
 For instance if an advice is weaved before an instruction i, the effective execution of the program
 will be of
-\begin{figure}
-\begin{small}\begin{verbatim}
 
-\end{verbatim}
-\end{small}
-\caption{The base language}
-\label{lang}
-\end{figure}
 The aspect are compiled into a list containing the.
 The predicate transformers associated with an advice is similar to the weakest precondition
 clause toward an invasive method call i.e. a method call that would be able to modify local variables
@@ -222,13 +247,7 @@ semantic which is given by the aspects.
 General form of the final wp rule:
 \bcode
 
-wp\_weaver \= (stmt, (stmt ==> pt) :: aspects, post) = \\
-\>wp\_weaver (stmt, aspects, (pt post))\\
-wp\_weaver (stmt, nil, post) =  post\\
-
-wp (stmt1; stmt2, post) = \\
-\> wp\_\=weaver(stmt1; stmt2, befores, \\
- \>\>      wp(stmt1, wp(stmt2, wp\_weaver(stmt1; stmt2, afters, post))\\
+w\\
 \ecode
 where befores, arounds and afters are the compiled predicate
 \subsection{Definition of the weakest precondition calculus on the programs}
