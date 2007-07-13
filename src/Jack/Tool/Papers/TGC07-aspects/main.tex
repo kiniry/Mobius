@@ -66,8 +66,9 @@ of heterogenous nature like cellphones or JavaCards. Thus the verification of th
 platform is made of is crucial; and even more so taking in account their specific caracteristic which would
 change the general behaviour of a JVM. Verification of specific components is scattered through litterature: 
 there has been verifications of Bytecode Verifiers, as well as Access Contoller. As far as our knowledge goes
-though, the SecurityManager of the Virtual Machine has never been taken into account for
-the verification of a Java program, especially for the checks it does on the Virtual Machine level.
+though~\cite{HartelMoreau01}, the SecurityManager of the Virtual Machine is not taken into account when
+doing static verification of Java programs.
+
 
 The main goal of this paper is to verify an implementation of a Security Manager, and especially to use 
 this verification as a mean to specify more precisely the behaviour of Java Virtual Machine in order to
@@ -172,17 +173,26 @@ using a standard weakest precondition calculus.
 \subsection{Annotations}
 The weakest precondition calculus we are targetting relies on program and aspects specifications that are
 precise enough to make the verification conditions generated provable.
-The annotation language we use is like Pipa (the extension
-of JML for Aspects), but in a limited form. The annotation language is a JML level 0 type language, to which
+The annotation language we use is like Pipa \cite{ZhaoR03} (the extension
+of JML for Aspects), but in a limited form. The annotation language is a JML level 0 type language 
+\cite{Leavens-etal07}, to which
 we remove the universe types, but to which we add model methods as well as purity, and some constructs
-to handle aspects found in Pipa.
+to handle aspects found in Pipa. The other restriction we add is that we don't treat behavioural specifications
+because they can be desugared \cite{RaghavanL00}.
 
-\subsubsection{JML}
-\paragraph{Purity}
+\subsubsection{JML} JML is a behavioural specification language for Java. It is made of numerous keyword: you 
+can express methods pre and post conditions with it (the keywords {\tt requires} and {\tt ensures}
+\paragraph{Purity} 
 
-\paragraph{Invasive model methods} model methods are methods that can be seen on the specification
-level and be bodyless
-
+\paragraph{Invasive model methods} 
+Model methods are an interesting construct of JML: these are specification
+methods that can be with or without side-effects, their effects being determined by their specifications.
+They can have a body, but in our framework we are interested by bodyless model methods. They are used to 
+assume an effect over the program, and so state that if their requires are satisfied, the given effect (given by
+the ensure clause) will be satisfied.
+In this paper we won't talk about pure model methods which could be use in specifications. Here we rather talk
+about invasive ones: just like invasive aspects they are meant to state that the program has been modified 
+non explicitly.
 \subsubsection{Pipa}
  For our case study we will limit the scope of annotations
 to simple JML annotations: we allow to specify loop invariants, methods pre and post conditions
@@ -195,6 +205,7 @@ The methods will not use JML's semantic for ensures annotations but rather the o
 \subsection{Compilation to invasive model methods}
 The main idea is to compile aspects to their effects, which would be modeled by methods that are defined
 solely by their specifications. 
+They are specifically
 \subsubsection{Translation of the specifications}
 The annotations are translated directly to the model methods. The method has the same signature
 that of the aspect, and the specifications are copied entirely to the model method. It works smoothly
@@ -231,7 +242,7 @@ Then for each program point that matches
 \subsection{The weakest precondition calculus}
 
 In our framework aspects are considered as methods calls that are transferred the whole
-control flow, and enable to modify local variables as well. Therefore when aspects are weaved
+control flow, and are permitted to modify local variables in the caller methods. Therefore when aspects are weaved
 there wp is just like the one of a method call.
 For instance if an advice is weaved before an instruction i, the effective execution of the program
 will be of
@@ -247,7 +258,7 @@ semantic which is given by the aspects.
 General form of the final wp rule:
 \bcode
 
-w\\
+\\
 \ecode
 where befores, arounds and afters are the compiled predicate
 \subsection{Definition of the weakest precondition calculus on the programs}
@@ -263,10 +274,13 @@ where befores, arounds and afters are the compiled predicate
 %
 % ---- Bibliography ----
 %
-\begin{thebibliography}{}
+
+
+\bibliographystyle{plain}
+\bibliography{bibli,aspects}
 %
 
 
-\end{thebibliography}
+
 
 \end{document}
