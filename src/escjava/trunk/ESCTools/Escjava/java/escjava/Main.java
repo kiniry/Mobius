@@ -202,6 +202,8 @@ public class Main extends javafe.SrcTool
       if (!keepProver) ProverManager.kill();
       // Disallow the -avoidSpec option:
       javafe.SrcToolOptions.allowAvoidSpec = false; 
+      javafe.util.LocationManagerCorrelatedReader.clear();
+      escjava.translate.NoWarn.clear();
     }
 
     /**

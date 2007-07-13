@@ -294,6 +294,14 @@ public class NoWarn
 
         return chkStatus[ tag - TagConstants.FIRSTESCCHECKTAG ];
     }
+
+    static public void clear() {
+        noWarnStreamId = -1;
+        startLine = -1;
+    	init();
+    	nowarns = LexicalPragmaVec.make();
+      }
+   
 } // end of class NoWarn
 
 /*
