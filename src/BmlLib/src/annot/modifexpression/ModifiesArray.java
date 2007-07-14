@@ -461,7 +461,7 @@ public class ModifiesArray extends ModifiesExpression {
 //	}
 
 	public String printCode1(BMLConfig conf) {
-		String s = getModifies().printCode(conf) + " [" + getSpecArray().printCode(conf) + "]";
+		String s = getModifies().printCode(conf) + "[" + getSpecArray().printCode(conf) + "]";
 		return s;
 	}
 }

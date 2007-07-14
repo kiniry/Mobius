@@ -10,7 +10,7 @@ import org.apache.bcel.classfile.Method;
  *
  */
 public class BMLConfig {
-	// constant pool
+	// constant pool; XXX unused?
 	private	BCConstantPool cp;
 	
 	// method that is currently being displayed
@@ -19,6 +19,9 @@ public class BMLConfig {
 	// true iff expressions should be displayed
 	// in debug (raw) mode
 	public boolean goControlPrint = false;
+	
+	// using old, smartless line breaking algorithm
+	public boolean goSimpleLineBreaking = false;
 	
 	// priority of the parent of the currently
 	// displayed expression
@@ -32,22 +35,35 @@ public class BMLConfig {
 	// line breaking)
 	public int line_pos;
 	
-	// unused
-	public int max_line_width;
+	// maximum annotation line width
+	public int max_line_width = 80;
 	
 	// depth of currrently displayed expression
 	// in expression tree
 	public int expr_depth;
 	
+	// this two characters in expressions are reserved
+	// for line-breaking procedure and shouldn't appear
+	// anywhere else in expressions
 	public char expr_block_start = '{';
 	public char expr_block_end = '}';
 	
 	public BMLConfig(BCConstantPool cp) {
 		this.cp = cp;
-		max_line_width = 40;
 	}
 	
-	public BCConstantPool getConstantPool() {
-		return cp;
+	// beginning of the annotation's line
+	public String newLine() {
+		return "\n *  " + wciecie;
+	}
+	
+	// surrounds annotation str with comment brackets
+	// XXX unused?
+	public String addComment(String str) {
+		if (str.lastIndexOf("\n") >= 0) {
+			return "/*  " + str + "\n */\n";
+		} else {
+			return "/*  " + str + "  */\n";
+		}
 	}
 }

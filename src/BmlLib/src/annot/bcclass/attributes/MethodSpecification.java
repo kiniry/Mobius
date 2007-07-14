@@ -22,13 +22,16 @@ public class MethodSpecification implements BCAttribute{
 	}
 	
 	public String printCode(BMLConfig conf) {
-		String code = "/*\n";
+		conf.wciecie = "";
+		String code = "";
 		if (precondition != null)
 			if (precondition != Predicate0Ar.TRUE)
-				code += " *  requires " + precondition.printLine(conf, 11) + "\n";
+				code += conf.newLine() + "requires " + precondition.printLine(conf, 11);
 		for (int i=0; i < specificationCases.length; i++)
 			code += specificationCases[i].printCode(conf);
-		return code + " */\n";
+		if (code.indexOf("\n") < 0)
+			return "";
+		return conf.addComment(code);
 	}
 
 	private void init() {		

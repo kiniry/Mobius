@@ -22,10 +22,20 @@ public class ExsuresTable implements BCAttribute {
 	}
 	
 	public String printCode(BMLConfig conf) {
-		String code = "";
+		if (excPostcondition[0].getPostcondition() == Predicate0Ar.FALSE)
+			return "";
+		String code = conf.newLine() + "exsures: ";
+		String s = conf.wciecie;
+		conf.wciecie += "  ";
+		if (excPostcondition.length > 1)
+			code += conf.newLine();
 		for (int i=0; i<excPostcondition.length; i++)
-			if (excPostcondition[i].getPostcondition() != Predicate0Ar.FALSE)
-				code += " *  exsures " + excPostcondition[i].printCode(conf) + "\n";
+			if (excPostcondition[i].getPostcondition() != Predicate0Ar.FALSE) {
+				if (i > 0)
+					code += conf.newLine();
+				code += excPostcondition[i].printExsures(conf);
+			}
+		conf.wciecie = s;
 		return code;
 	}
 	

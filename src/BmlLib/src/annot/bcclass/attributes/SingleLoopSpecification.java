@@ -20,13 +20,13 @@ public class SingleLoopSpecification {
 	}
 
 	public String printCode(BMLConfig conf) {
-		String code = "/* ("+pcIndex+")\n";
-		code += " *   loop_invariant " + invariant.printLine(conf, 17) + "\n";
-		code += " *   loop_modifies " + modifies.printCode(conf) + "\n";
+		String code = "("+pcIndex+")";
+		code += conf.newLine() + "loop_invariant " + invariant.printLine(conf, 17);
+		code += conf.newLine() + "loop_modifies " + modifies.printCode(conf);
 		String dec = decreases.printLine(conf, 12);
 		if (!"1".equals(dec)) // TODO zrób cos z tym
-			code += " *   decreases " + dec + "\n";
-		return code + " */\n";
+			code += conf.newLine() + "decreases " + dec;
+		return conf.addComment(code);
 	}
 	
 	/**

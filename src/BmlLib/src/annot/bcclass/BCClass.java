@@ -80,7 +80,7 @@ public class BCClass {
 			for (int i=0; i<interfaceNames.length; i++)
 				code += interfaceNames[i] + ((i < interfaceNames.length-1) ? ", " : "");
 		}
-		code += " {\n";
+		code += " {\n\n";
 		Iterator iter = metody.iterator();
 //		iter.next(); -- pominicie wypisywania inita.
 		while (iter.hasNext())

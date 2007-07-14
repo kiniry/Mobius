@@ -59,9 +59,11 @@ public class QuantifiedFormula extends Formula {
 		Formula subformula = (Formula) getSubExpressions()[0];
 		String s = "";
 		for (int i = 0; i < quantificators.length; i++) {
+			if (i > 0)
+				s += " ";
 			s = s + quantificators[i].printCode(conf);
 		}
-		s = s + subformula.printCode(conf);
+		s = s + "; " + subformula.printCode(conf);
 		return s;
 	}
 //	/**

@@ -1,5 +1,6 @@
 package annot.bcclass.attributes;
 
+import annot.bcclass.BMLConfig;
 import annot.bcexpression.javatype.JavaObjectType;
 import annot.formula.Formula;
 
@@ -9,6 +10,10 @@ public class Exsures extends Postcondition {
 	public Exsures(Formula f, JavaObjectType _exc) {
 		super(f);
 		excType = _exc;
+	}
+	
+	public String printExsures(BMLConfig conf) {
+		return excType.toString() + " " + printCode(conf);
 	}
 	
 //	/**

@@ -56,11 +56,11 @@ public class Quantificator extends Expression {
 	
 	public String printCode1(BMLConfig conf) {
 		/*	if (domain == null) {*/
-			String s = quantifier ;
+			String s = quantifier;
 			for (int i = 0; i < boundVar.length; i++ ) {
 				 s = s + " " + boundVar[i].printCode(conf);
 			}
-			return s + "; ";
+			return s;
 			/*return  "(" + quantifier + "  " + boundVar +  "."+ domain.toString() + ")";*/
 		}
 

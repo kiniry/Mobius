@@ -34,17 +34,21 @@ public class SpecificationCase {
 	}
 
 	public String printCode(BMLConfig conf) {
-		String code = "";
-		code += " *  {| \n";
+		String code = conf.newLine() + "{|";
+		String s = conf.wciecie;
+		conf.wciecie += "  ";
 		if (precondition != Predicate0Ar.TRUE)
-			code += " *    requires " + precondition.printLine(conf, 13) + "\n";
+			code += conf.newLine() + "requires " + precondition.printLine(conf, 13);
 		if (modifies.getModifiesExpressions()[0].printCode(conf) != "\\everything")
-			code += " *    modifies " + modifies.printCode(conf) + "\n";
+			code += conf.newLine() + "modifies " + modifies.printCode(conf);
 		if (postcondition.getPostcondition() != Predicate0Ar.TRUE)
-			code += " *    ensures " + postcondition.printCode(conf) + "\n";
+			code += conf.newLine() + "ensures " + postcondition.printCode(conf);
 		if (exsures != null)
 			code += exsures.printCode(conf);
-		code += " *  |} \n";
+		conf.wciecie = s;
+		code += conf.newLine() + "|}";
+		if (code.split("\n").length < 4)
+			return "";
 		return code;
 	}
 	

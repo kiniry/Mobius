@@ -9,11 +9,12 @@ public class ArrayLengthConstant  extends BCConstantFieldRef {
 	}
 	
 	public String printCode(BMLConfig conf) {
-		return "_length";
+		return "length";
 	}
 	
+	// should be removed
 	public String toString() {
-		return "_length" ;
+		return "__length" ;
 	}
 	
 //	public boolean equals(Expression expr ) {
