@@ -1,0 +1,314 @@
+%%%% GILADAS %%%%%%%%%%%%
+\newcommand{\alarm}[1]{\marginpar{#1}}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\infr}[2]{\textstyle \frac{\stackrel{\textstyle #1}{}}{\stackrel{}{\textstyle #2}}}
+
+\newcommand{\redsIMP}{\leadsto}
+\newcommand{\redsADV}[1]{\overset{\mbox{\tiny%
+$#1$}}{\Rightarrow}}
+\newcommand{\redsADVX}[2]{\underset{\mbox{\tiny $#2$}}{\overset{\mbox{\tiny%
+$#1$}}{\Rightarrow}}}
+\newcommand{\redsADVb}[1]{\redsADVX{#1}{\bot}}
+\newcommand{\redsADVt}[1]{\redsADVX{#1}{\top}}
+\newcommand{\redsAOP}[1]{\overset{\mbox{\tiny $#1$}}\Uparrow}
+
+
+
+%%%% AOP Syntax %%%%%%%
+\newcommand{\langfont}{\mathtt}
+
+\newcommand{\Skip}{\langfont{skip}}
+\newcommand{\Abort}{\langfont{abort}}
+\newcommand{\Assign}[2]{#1\langfont{:=}#2}
+\newcommand{\Seq}{\langfont{;}}
+\newcommand{\If}[3]{\langfont{if}~#1~\langfont{then}~#2~\langfont{else}~#3}
+\newcommand{\While}[2]{\langfont{while}~#1~\langfont{do}~#2}
+\newcommand{\Call}[3]{#1\langfont{:=}#2(#3)}
+\newcommand{\Return}[1]{\langfont{return}~#1}
+\newcommand{\Sreturn}{\langfont{return}}
+
+\newcommand{\Proceed}[2]{#1\langfont{:=proceed}(#2)}
+\newcommand{\Sproceed}{\langfont{proceed}}
+
+\newcommand{\VarSet}{\mathcal{V}}
+\newcommand{\FSet}{\mathcal{F}}
+\newcommand{\ASet}{\mathcal{A}}
+\newcommand{\bop}{\mathsf{bop}}
+\newcommand{\rop}{\mathsf{rop}}
+\newcommand{\iop}{\mathsf{op}}
+\newcommand{\cflow}{\mathsf{cflow}}
+
+%%%% STATE and frames, etc.. %%%%%%%%%%
+% command, locals, globals
+\newcommand{\atuple}[3]{\langle #1,\istate{#2}{#3} \rangle}
+\newcommand{\wtuple}[3]{\langle #1, \istate{#2}{#3} \rangle}
+
+% locals, globals
+\newcommand{\istate}[2]{\llparenthesis #1,#2 \rrparenthesis}
+
+% value,  globals
+\newcommand{\fstate}[2]{\Langle #1, #2 \Rangle}
+
+
+%%% 
+\newcommand{\emptylist}{[\,]}
+\newcommand{\cons}{\triangleright}
+\newcommand{\semantics}[1]{\llbracket #1 \rrbracket}
+
+
+%%%% Function declaration %%%%%%%%%%%
+
+%% \newcommand{\Pre}{\varphi}
+%% \newcommand{\Post}{\psi}
+\newcommand{\Assert}{\phi}
+%% \newcommand{\Pmap}{\vec{\Lambda} }
+%% \newcommand{\fundecl}[6]{\{{#1};~ {#2};~{#3};~{#4};~{#5};~{#6}\}}
+%% \newcommand{\Fundecl}
+%%  {\fundecl{\vec{r}}{\Pre}{G}{\Post}{\PR}{\Pmap}}
+
+%% Assertions
+%% \newcommand{\Acmp}{\triangleleft}
+\newcommand{\True}{\mathsf{true}}
+\newcommand{\False}{\mathsf{false}}
+\newcommand{\Aand}{\wedge}
+\newcommand{\Aor}{\vee}
+\newcommand{\Aneg}{\neg}
+\newcommand{\Aimp}{\!\Rightarrow\!}
+%% \newcommand{\subst}[2]{\{#1\!\leftarrow\!#2\}}
+\newcommand{\res}{{\sf res}}
+\newcommand{\pre}[1]{{\sf Pre}_{#1}}
+\newcommand{\post}[1]{{\sf Post}_{#1}}
+\newcommand{\ppre}[1]{{\sf pPre}_{#1}}
+\newcommand{\ppost}[1]{{\sf pPost}_{#1}}
+\newcommand{\preInv}[1]{{\sf Pre^{Inv}}_{#1}}
+\newcommand{\postInv}[1]{{\sf Post^{Inv}}_{#1}}
+\newcommand{\ppreInv}[1]{{\sf pPre^{Inv}}_{#1}}
+\newcommand{\ppostInv}[1]{{\sf pPost^{Inv}}_{#1}}
+
+\renewcommand{\wp}{\mathsf{wp}}
+\newcommand{\vcg}{\mathsf{vcg}}
+\newcommand{\vcgInv}{\mathsf{vcg^{Inv}}}
+%\newcommand{\subst}[2]{\{#1\!\rightarrow\!#2\}}
+\newcommand{\subst}[2]{[{^{#2}}\!\!/\!{_{#1}}]}
+
+\newcommand{\PO}{\mathsf{PO}}
+\newcommand{\POInv}{\mathsf{PO^{Inv}}}
+
+
+%%%%%%%%%%%%%%%%%% RTL Syntax %%%%%%%%%%%%%%
+
+\newcommand{\insfont}[1]{\mathsf{#1}}
+
+\newcommand{\Iop}{op}
+\newcommand{\Icomp}{cmp}
+\newcommand{\ins}{\insfont{ins}}
+
+\newcommand{\Inop}{\insfont{nop}}
+\newcommand{\Iassert}{\insfont{assert}}
+\newcommand{\Iassign}{\insfont{:=}}
+\newcommand{\Ijmpif}{\insfont{jmpif}}
+\newcommand{\Ijmp}{\insfont{jmp}}
+\newcommand{\Ireturn}{\insfont{return}}
+\newcommand{\Iinvoke}{\insfont{invoke}}
+\newcommand{\Iinvokecont}{\insfont{invokecont}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\newbox\c@rtbox
+\@ifundefined{@tempdimc}{\newdimen\@tempdimc}{}
+\newdimen\c@rtht
+\newcommand{\cartouchecorner}{\@ifstar{\sc@rtcorner}{\c@rtcorner}}
+\newcommand{\sc@rtcorner}[1]{%
+  \@tempdima=#1\relax
+  \edef\thec@rtcorner{\number\@tempdima sp}}
+\newcommand{\c@rtcorner}[1]{%
+  \edef\thec@rtcorner{#1\noexpand\@tempdimb}}
+\cartouchecorner{.75}
+
+
+\def\c@rtoval(#1,#2){%
+  \begingroup
+    \c@rt@oval{#1\unitlength}{#2\unitlength}%
+    \@put{-.5\wd\@tempboxa}{-.5\ht\@tempboxa}{\ht\@tempboxa=\z@\box\@tempboxa}%
+  \endgroup}
+
+\newcommand{\c@rt@oval}[2]{%
+  \boxmaxdepth \maxdimen
+  \@ovttrue \@ovbtrue \@ovltrue \@ovrtrue
+  \@ovxx#1\relax
+  \advance\@ovxx-\@wholewidth
+  \@ovyy#2\relax
+  \advance\@ovyy-\@wholewidth
+  \@tempdimb \ifdim \@ovyy >\@ovxx \@ovxx\else \@ovyy \fi
+  \advance\@tempdimb-2\p@
+  \ifdim\@tempdimb>\thec@rtcorner\relax
+    \@tempdimb=\thec@rtcorner
+  \fi
+    \@getcirc\@tempdimb
+  \@ovro\ht\@tempboxa \@ovri\dp\@tempboxa
+  \@ovdx\@ovxx \advance\@ovdx-\@tempdima \divide\@ovdx \tw@
+  \@ovdy\@ovyy \advance\@ovdy-\@tempdima \divide\@ovdy \tw@
+  \@circlefnt
+  \setbox\@tempboxa\hbox{%
+    \@ovvert32\kern -\@tempdima
+    \kern \@ovxx \@ovvert01\kern -\@tempdima \kern -\@ovxx
+    \@ovhorz \kern -\@ovxx
+    \raise \@ovyy \@ovhorz}%
+  \advance\@ovdx\@ovro
+  \advance\@ovdy\@ovro
+  \advance\@ovxx\@wholewidth
+  \wd\@tempboxa=\@ovxx
+  \dp\@tempboxa=\z@}
+
+\newcommand{\cartouche}[1]{
+  \begingroup
+    \cartsetoval{#1}
+    \leavevmode\hbox{%
+      \lower\@tempdima\box\@tempboxa
+      \kern\@tempdimc\box\c@rtbox\kern\@tempdimc}%
+  \endgroup}
+
+
+\newcommand{\cartsetoval}[1]{%
+  \setbox\c@rtbox\hbox{{#1}}%
+  \@tempdimc\fboxsep \advance\@tempdimc\@wholewidth
+  \@tempdima\ht\c@rtbox \advance\@tempdima\dp\c@rtbox
+  \advance\@tempdima2\@tempdimc
+  \@tempdimb\wd\c@rtbox \advance\@tempdimb2\@tempdimc
+  \c@rt@oval\@tempdimb\@tempdima%
+  \@tempdima\dp\c@rtbox \advance\@tempdima\@tempdimc
+  \c@rtht\ht\c@rtbox \advance\c@rtht\@tempdima \advance\c@rtht\@tempdimc
+  \wd\@tempboxa=\z@
+}
+
+
+
+%% \newcommand{\infr}[2]{\textstyle \frac{\stackrel{\textstyle
+%% #1}{}}{\stackrel{}{\textstyle #2}}}
+
+
+\newcommand{\before}[2]{#1\triangleright#2}
+\newcommand{\after}[2]{#2\triangleleft#1}
+\newcommand{\beforeB}[3]{#2\overset{#1}{\triangleright}#3}
+\newcommand{\afterB}[3]{#3\overset{#1}{\triangleleft}#2}
+\newcommand{\aroundB}[3]{#2\overset{#1}{\bowtie}#3}
+\newcommand{\beforeC}[2]{\beforeB{\!\!\cflow\!\!}{#1}{#2}}
+\newcommand{\afterC}[2]{\afterB{\!\!\cflow\!\!}{#1}{#2}}
+\newcommand{\aroundC}[2]{\aroundB{\!\!\cflow\!\!}{#1}{#2}}
+
+%\usepackage{macros}
+%\usepackage{stmaryrd}
+
+%\newcommand{\around}[2]{#1\!-\!\!\!\!\mbox{\cartouche{$#2$}}}
+\newcommand{\around}[2]{#1\bowtie #2}
+
+%\newcommand{\juicio}[3]{\begin{array}{ccc}\end{array}}...
+
+\newcommand{\hoare}[4]{#1\vdash\tripla{#2}{#3}{#4}}
+\newcommand{\tripla}[3]{\{#1\}#2\{#3\}}
+\newcommand{\juicio}[5]{(#1,#2)\vdash\tripla{#3}{#4}{#5}}
+%\newcommand{\judgement}[3]{\vdash\tripla{#1}{#2}{#3}}
+\newcommand{\judgmentIMP}[4]{\mbox{$~#1\!\vdash_{_{\!\sf IMP}}\!\!\tripla{#2}{#3}{#4}$}}
+\newcommand{\judgmentAOP}[4]{\mbox{$~#1\!\vdash_{_{\!\sf AOP}}\!\!\tripla{#2}{#3}{#4}$}}
+\newcommand{\judgmentADV}[4]{\mbox{$~#1\!\vdash_{_{\!\sf ADV}}\!\!\tripla{#2}{#3}{#4}$}}
+\newcommand{\judgmentRTL}[4]{\mbox{$~#1\!\vdash_{_{\!\sf RTL}}\!\!\tripla{#2}{#3}{#4}$}}
+\newcommand{\judgmentWrite}[3]{\mbox{$~#1\!\vdash_{_{\!\sf w}}\!\!{#2}~{\sf writes}~{#3}$}}
+\newcommand{\judgment}[2]{\mbox{$~#1\!\vdash\!{#2}$}}
+\newcommand{\JudgmentIMP}[2]{\mbox{$~#1\!\vdash\!\!\!\vdash_{_{\!\sf IMP}}\!\!{#2}$}}
+\newcommand{\JudgmentAOP}[2]{\mbox{$~#1\!\vdash\!\!\!\vdash_{_{\!\sf AOP}}\!\!{#2}$}}
+\newcommand{\JudgmentADV}[2]{\mbox{$~#1\!\vdash\!\!\!\vdash_{_{\!\sf ADV}}\!\!{#2}$}}
+\newcommand{\JudgmentRTL}[2]{\mbox{$~#1\!\vdash\!\!\!\vdash_{_{\!\sf RTL}}\!\!{#2}$}}
+\newcommand{\JudgmentWrite}[2]{\mbox{$~#1\!\vdash\!\!\!\vdash_{_{\!\sf w}}\!\!{#2}$}}
+\newcommand{\Judgment}[2]{\mbox{$~#1\!\vdash\!\!\!\vdash\!{#2}$}}
+%\newcommand{\judgmentWrite}[2]{\mbox{$#1\vdash_{_{\!\sf w}}\!\!  #2$}}
+\newcommand{\modelsIMP}[4]{\mbox{$~#1\!\models_{_{\!\sf IMP}}\!\!\tripla{#2}{#3}{#4}$}}
+\newcommand{\modelsADV}[4]{\mbox{$~#1\!\models_{_{\!\sf ADV}}\!\!\tripla{#2}{#3}{#4}$}}
+\newcommand{\modelsAOP}[4]{\mbox{$~#1\!\models_{_{\!\sf AOP}}\!\!\tripla{#2}{#3}{#4}$}}
+\newcommand{\modelsRTL}[4]{\mbox{$~#1\!\models_{_{\!\sf RTL}}\!\!\tripla{#2}{#3}{#4}$}}
+\newcommand{\modelsWrite}[3]{\mbox{$~#1\!\models_{_{\!\sf w}}\!\!{#2}~{\sf writes}~{#3}$}}
+%\newcommand{\modelsWrite}[2]{\mbox{$#1\!\!\models_{_{\!\sf w}}\!#2$}}
+
+
+
+%%   The frameit and Frameit environments formats text within a single 
+%%   Anything can be framed, including verbatim text.
+  
+\def\doframeit#1{\vbox{%
+  \hrule heigxht\fboxrule
+    \hbox{%
+      \vrule width\fboxrule \kern\fboxsep
+      \vbox{\kern\fboxsep #1\kern\fboxsep }%
+      \kern\fboxsep \vrule width\fboxrule }%
+    \hrule height\fboxrule }}
+
+\def\frameit{\smallskip \advance \linewidth by -7.5pt \setbox0=\vbox \bgroup
+\strut \ignorespaces }
+
+\def\endframeit{\ifhmode \par \nointerlineskip \fi \egroup
+\doframeit{\box0}}
+
+\newcommand{\tempnote}[1]{\begin{center}\begin{frameit}
+{\sc #1}
+\end{frameit}\end{center}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%% NEW %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\Write}[1]{W_{#1}}
+\newcommand{\Read}[1]{R_{#1}}
+\newcommand{\FV}{\mathsf{FV}}
+
+\newcommand{\old}[1]{{#1}^\star}
+\newcommand{\inp}{\langfont{in}}
+\renewcommand{\succ}{\mathsf{succ}}
+\newcommand{\body}{\mathsf{body}}
+
+%\newcommand{\Compile}{\mathsf{C_e}} % send this to macros.sty
+\newcommand{\CompileExp}[1]{\mathsf{C^{#1}_e}} % send this to macros.sty
+\newcommand{\CompileB}{\mathsf{C_b}} % send this to macros.sty
+\newcommand{\CompileC}{\mathsf{C_c}} % send this to macros.sty
+\newcommand{\CompileA}{\mathsf{C_a}} % send this to macros.sty
+\newcommand{\CompileW}{\mathsf{C_w}} % send this to macros.sty
+%\newcommand{\Atrue}{\sf true}
+\newcommand{\concat}{::}
+
+\newcommand{\letin}[2]{\mbox{let $#1$=$#2$ in}}
+
+
+
+
+\newcommand{\Context}{\Gamma}
+\newcommand{\ContextADV}{\Gamma_{\sf a}}
+\newcommand{\ContextAOP}{\Gamma_{\sf \WeavingSet}}
+\newcommand{\ContextWrite}{\Gamma^{\sf w}}
+\newcommand{\State}{\Delta}
+\newcommand{\FState}{\Delta^{F}}
+\newcommand{\IState}{\Delta^{I}}
+\newcommand{\Weaving}{\theta}
+\newcommand{\WeavingSet}{\Theta}
+\newcommand{\CommandSet}{\mathcal{C}}
+\newcommand{\Bool}{\mathbb{B}}
+\newcommand{\Int}{\mathbb{Z}}
+\newcommand{\MethodSet}{\mathcal{M}}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\tti}{\mathtt{i}}
+\newcommand{\ttcache}{\mathtt{cache}}
+% TODO: A better definition for this please
+\newcommand{\CacheConsistency}{\phi}
+\newcommand{\main}{\mathsf{main}}
+%\renewcommand{\star}{\sdfkjsdkj}
+
