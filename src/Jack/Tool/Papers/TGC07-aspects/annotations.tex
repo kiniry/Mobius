@@ -5,7 +5,8 @@ of JML for Aspects), but in a limited form. The annotation language is a JML lev
 \cite{Leavens-etal07}, to which
 we remove the universe types, but to which we add model methods as well as purity, and some constructs
 to handle aspects found in Pipa. In our annotations we also allow behavioural specifications
-because they can be desugared in JML \cite{RaghavanL00} and in Pipa as is shown below.
+because JML's can be desugared as shown in \cite{RaghavanL00} and Pipa's specific constructs
+ as how we show below.
 
 \subsubsection{JML} JML is a behavioural specification language for Java. It is made of numerous keyword: you 
 can express methods pre and post conditions with it (the keywords {\tt requires} and {\tt ensures}), exceptional
@@ -78,8 +79,9 @@ Could be desugared to:
 \label{model_meth}
 \end{figure}
 \subsubsection{Pipa}
-Pipa is a behavioural specification language based on JML. As was previously stated, we don't treat behaviours 
-which was it seems the main feature the authors of Pipa were trying to emphasize in their paper.
+Pipa is a behavioural specification language based on JML. 
+You can specify advices as well as pointcuts~\cite{pointcuts07} with Pipa.
+In this paper we will only treat the advices specifications. 
 The specification of an advice is similar to the one of a method call. It has a pre and post condition,
 an exceptional postcondition and a frame condition. The specification are not different for JML's method's 
 specification, being applied on advices.
@@ -117,12 +119,13 @@ void \= around() : call (void m()) \{\\
 \end{figure}
 
 \paragraph{Desugaring around advice specifications}
-The desugaring of the proceed construct is very easy: it is transformed into the predicate {\tt proceed(bool)} and conjuncted
-to the ensures specifications of the part before the then of the given case. 
+The desugaring of the proceed construct is very easy: it is transformed into the predicate {\tt proceed(bool)} 
+and conjuncted to the ensures specifications of the part before the then of the given case. 
 If the proceed was omitted it is added in the ensures as {\tt proceed(false)}.
 
-Each around advice behaviour is desugared arount the {\tt then} construct: each part of each behaviour taking place 
-before the {\tt then} construct are desugared with each other as stated for standard JML behaviour in~\cite{clifton02spectators}.
+Each around advice behaviour is desugared arount the {\tt then} construct: each part of each 
+behaviour taking place before the {\tt then} construct are desugared with each other as 
+stated for standard JML behaviour in~\cite{clifton02spectators}.
 And the part after the {\tt then} construct is given the same treatment.
 
 \paragraph{Semantic of the ensure clause}
@@ -134,3 +137,4 @@ postcondition. In normal JML it makes no sense to express a property like that, 
 in the postcondition, it would have been the old value of {\tt x}. It is especially useful to express real 
 invasive aspects. In our framework we will use this semantic for {\it any} postcondition, {\it e.g.} 
 for normal method calls as well.
+The desugaring is not changed by this peculiar semantic.

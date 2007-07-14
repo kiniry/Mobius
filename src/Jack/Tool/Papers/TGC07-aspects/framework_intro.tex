@@ -1,15 +1,23 @@
-The verification framework we are building in this paper is an adaptation of
-static 
-verification based on weakest precondition calculus for aspects. Here we will
-consider 
-the SecurityManager as an invasive aspect, so we must take into the weaving
-process. 
+The verification framework we are building in this paper 
+is an adaptation of static 
+verification based on weakest precondition calculus for aspects. 
+Here we will consider 
+the SecurityManager as an invasive aspect, 
+so we must take into the weaving process. 
 
-To keep the calculus simple, we do the generation of the verification
-conditions in 3 steps. 
-First we abstract their specification from the aspects, which gives us a model
-of the aspects. 
-Then we statically weave these model aspects into the program, it is a
-syntactic weaving so 
-it is supposed to be lightweight, and finally we verify them
-using a standard weakest precondition calculus.
+The verification is made of several steps:
+\begin{enumerate}
+\item the program and it's aspects are annotated using Pipa,
+\item the behavioural specifications are desugared
+\item the specifications of the aspects are compiled into model methods
+\item the model methods are weaved to the program
+\item a weakest precondition calculus is made on the transformed program, and verification
+conditions are generated, and finally,
+\item the verification conditions can be discharged automatically or interactively.
+\end{enumerate}
+This verification procedure is indeed made of 3 main parts: the annotation
+part (step 1 and 2), the compilation and program transformation part (step 3 and 4)
+and the verification part (steps 5 and 6).
+The crucial part here being the second, since the third can be done with any verification tool
+supporting static verification with Java and JML, and part 1 is only simple desugaring, and has been
+extensively described in \cite{RaghavanL00}.

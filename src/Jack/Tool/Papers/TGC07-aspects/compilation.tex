@@ -1,13 +1,21 @@
-The main idea is to compile advices to their effects, which would be modeled by methods that are defined
-solely by their specifications. We have already a data structure in JML that allows us to define methods
-this way: the model methods. Another key idea of this compilation is to remove all the unstatically definable
-predicates in the pointcuts and to put them instead in the requires specifications.
+The next step once the program is fully annotated and the specification desugared is the compilation of the
+advices to their effects on the program solely, something  which can be expressed by simple bodyless model 
+methods.
+This transformation is direct, but the specifications of the advices have to be
+ enriched with the pointcuts conditions that cannot be determined syntactically.
+This enrichment is to make the weaving of the models simpler.
 
 \subsubsection{Translation of the specifications}
 The annotations are translated directly to the model methods. The method has the same signature
  of the corresponding advice, and the specifications are copied entirely to the model method. It works smoothly
-for most of the case except for the around advice which is split into 2 model methods: the one corresponding
-to the before part, with added the proceed instruction as conjuncted in the ensures.
+for most of the cases except for the around advice which is split into 2 model methods: the one corresponding
+to the first part, and the one corresponding to the part after the {\tt then} construction. 
+The {\tt proceed} instruction has to be translated to JML as well: it becomes a global 
+ghost variable of type bool.
+For an around advice the model method corresponding to the first part has to be modified consequently.
+The ensures has the equality {\tt (proceed == proc\_cond)} where {\tt proc\_cond} was the argument 
+to the annotation {\tt proceed}. The assignable clause is also modified: the {\tt proceed} global variable is 
+added to it.
 \subsubsection{Translation of pointcuts}
 The pointcuts are not directly translated to the model methods, though the conditions over the pointcut undecidable
 at compile time are added to the require clause.
