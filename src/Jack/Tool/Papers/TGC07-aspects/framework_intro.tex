@@ -1,0 +1,15 @@
+The verification framework we are building in this paper is an adaptation of
+static 
+verification based on weakest precondition calculus for aspects. Here we will
+consider 
+the SecurityManager as an invasive aspect, so we must take into the weaving
+process. 
+
+To keep the calculus simple, we do the generation of the verification
+conditions in 3 steps. 
+First we abstract their specification from the aspects, which gives us a model
+of the aspects. 
+Then we statically weave these model aspects into the program, it is a
+syntactic weaving so 
+it is supposed to be lightweight, and finally we verify them
+using a standard weakest precondition calculus.

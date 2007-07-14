@@ -1,9 +1,11 @@
-The main idea is to compile aspects to their effects, which would be modeled by methods that are defined
-solely by their specifications. 
-They are specifically
+The main idea is to compile advices to their effects, which would be modeled by methods that are defined
+solely by their specifications. We have already a data structure in JML that allows us to define methods
+this way: the model methods. Another key idea of this compilation is to remove all the unstatically definable
+predicates in the pointcuts and to put them instead in the requires specifications.
+
 \subsubsection{Translation of the specifications}
 The annotations are translated directly to the model methods. The method has the same signature
-that of the aspect, and the specifications are copied entirely to the model method. It works smoothly
+ of the corresponding advice, and the specifications are copied entirely to the model method. It works smoothly
 for most of the case except for the around advice which is split into 2 model methods: the one corresponding
 to the before part, with added the proceed instruction as conjuncted in the ensures.
 \subsubsection{Translation of pointcuts}
