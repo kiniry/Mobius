@@ -4,8 +4,8 @@ The annotation language we use is like Pipa \cite{ZhaoR03} (the extension
 of JML for Aspects), but in a limited form. The annotation language is a JML level 0 type language 
 \cite{Leavens-etal07}, to which
 we remove the universe types, but to which we add model methods as well as purity, and some constructs
-to handle aspects found in Pipa. The other restriction we add is that we don't treat behavioural specifications
-because they can be desugared \cite{RaghavanL00}.
+to handle aspects found in Pipa. In our annotations we also allow behavioural specifications
+because they can be desugared in JML \cite{RaghavanL00} and in Pipa as is shown below.
 
 \subsubsection{JML} JML is a behavioural specification language for Java. It is made of numerous keyword: you 
 can express methods pre and post conditions with it (the keywords {\tt requires} and {\tt ensures}), exceptional
@@ -84,7 +84,10 @@ The specification of an advice is similar to the one of a method call. It has a 
 an exceptional postcondition and a frame condition. The specification are not different for JML's method's 
 specification, being applied on advices.
 Pipa mainly adds two construct plus a specific semantic we are interested in:
-the specific constructs for around advices, and their semantic of the ensure clause.
+the specific constructs for around advices, and their semantic of the ensure clause. These construct will have
+to be desugared in case of behavioural specifications.
+
+
 
 \paragraph{Around advice specifications} The difficulty of specification of around advices is due to the presence
 of the proceed construct. It has to be stated in the method specification and in JML there are no keywords to
@@ -112,6 +115,16 @@ void \= around() : call (void m()) \{\\
 \caption{Around annotations}
 \label{arround_annot}
 \end{figure}
+
+\paragraph{Desugaring around advice specifications}
+The desugaring of the proceed construct is very easy: it is transformed into the predicate {\tt proceed(bool)} and conjuncted
+to the ensures specifications of the part before the then of the given case. 
+If the proceed was omitted it is added in the ensures as {\tt proceed(false)}.
+
+Each around advice behaviour is desugared arount the {\tt then} construct: each part of each behaviour taking place 
+before the {\tt then} construct are desugared with each other as stated for standard JML behaviour in~\cite{clifton02spectators}.
+And the part after the {\tt then} construct is given the same treatment.
+
 \paragraph{Semantic of the ensure clause}
 The other interesting element in Pipa is the semantic of the ensure clause which slightly differs from the one in
 JML. It enables to express properties about the caller variables which were passed to the advice while 
