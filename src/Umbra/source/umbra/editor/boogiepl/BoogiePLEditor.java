@@ -18,6 +18,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor;
 import org.eclipse.ui.editors.text.TextEditor;
 import org.eclipse.ui.part.FileEditorInput;
+import org.eclipse.ui.texteditor.AbstractTextEditor;
 
 import umbra.UmbraHelper;
 import umbra.UmbraPlugin;

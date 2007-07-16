@@ -26,8 +26,6 @@ import umbra.editor.BytecodeEditor;
  * form source code to bytecode. It is available with the standard
  * Java editor.
  *
- * @see DocumentProvider
- *
  * @author Wojciech Wąs (ww209224@students.mimuw.edu.pl)
  * @version a-01
  */

@@ -250,7 +250,7 @@ public class BytecodeContribution extends ControlContribution {
    * Creates the GUI control associated with the bytecode editor setting
    * <code>a_parent</code> as a parent and {@ref SWT#BORDER} as the style.
    * It registers the current object as a data field
-   * ({@see Composite#setData(Object)}) in the newly created control.
+   * ({@ref Composite#setData(Object)}) in the newly created control.
    *
    * @param a_parent a parent composite control under which the current control
    *                 is registered

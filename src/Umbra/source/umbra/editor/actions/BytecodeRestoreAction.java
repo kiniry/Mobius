@@ -137,7 +137,7 @@ public class BytecodeRestoreAction extends BytecodeEditorAction {
    * the given value is not a number or is a number outside of the
    * range {@ref UmbraHelper#MIN_HISTORY}-{@ref UmbraHelper#MAX_HISTORY}
    * the method asks to confirm the default value
-   * ({@ref UmbraHelper#DEFAULT_HISTORY). The user can refuse to accept the
+   * ({@ref UmbraHelper#DEFAULT_HISTORY}). The user can refuse to accept the
    * default and then the procedure repeats.
    *
    * @return the history item number given by the user

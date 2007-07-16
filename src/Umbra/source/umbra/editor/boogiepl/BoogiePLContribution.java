@@ -220,7 +220,7 @@ public class BoogiePLContribution extends ControlContribution {
    * Creates the GUI control associated with the BoogiePL editor by setting
    * <code>a_parent</code> as a parent and {@ref SWT#BORDER} as the style.
    * It registers the current object as a data field
-   * ({@see Composite#setData(Object)}) in the newly created control. Next,
+   * ({@ref Composite#setData(Object)}) in the newly created control. Next,
    * the method adds a label of the size {@ref #WIDGET_WIDTH},
    * {@ref #WIDGET_HEIGHT}, font "Arial" of the height
    * {@ref #WIDGET_TEXT_HEIGHT} and style {@ref #WIDGET_TEXT_STYLE}. The text

@@ -96,9 +96,9 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
    * The constructor is executed when the editor is started.
    * It includes creating all actions and provide them with their icons.
    *
-   * @throws MalformedURLException
+   * @throws MalformedURLException TODO
    */
-  public BytecodeEditorContributor() {
+  public BytecodeEditorContributor() throws MalformedURLException {
     super();
     my_bcode_cntrbtn = BytecodeContribution.newItem();
     my_bcode_cntrbtn.addEditorContributor(this);
@@ -269,7 +269,7 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
    * @param an_editor TODO
    * @throws PartInitException if the new editor could not be created or
    *               initialized
-   * @see #refreshEditor(IEditorPart, IEditorInput)
+   * @see #refreshEditor(BytecodeEditor, IEditorInput)
    */
   public final void refreshEditor(final BytecodeEditor an_editor)
     throws PartInitException {
