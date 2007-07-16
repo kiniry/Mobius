@@ -4393,7 +4393,7 @@
         nil))
       nil))
     nil)
-   unchecked
+   untried
    ((ann_program const-decl "Program" AnnotateProgram nil)
     (MonitoredProgram type-eq-decl nil MonitoredProgram nil)
     (compatible const-decl "boolean" MonitoredProgram nil)
@@ -4516,7 +4516,7 @@
     (related_states const-decl "boolean" Equivalence nil))
    378 300 t nil))
  (MP_modeled_preserved_by_ann_event 0
-  (MP_modeled_preserved_by_ann_event-1 nil 3387890818 3393343172
+  (MP_modeled_preserved_by_ann_event-1 nil 3387890818 3393568080
    ("" (skosimp*)
     (("" (hide -2)
       ((""
@@ -5152,8 +5152,28 @@
                                                                                                                                                                   (("1"
                                                                                                                                                                     (grind)
                                                                                                                                                                     (("1"
-                                                                                                                                                                      (postpone)
-                                                                                                                                                                      nil
+                                                                                                                                                                      (case
+                                                                                                                                                                       "FORALL (v : Val) : Bool?(v) IMPLIES b(v) OR NOT b(v)")
+                                                                                                                                                                      (("1"
+                                                                                                                                                                        (inst?)
+                                                                                                                                                                        (("1"
+                                                                                                                                                                          (prop)
+                                                                                                                                                                          (("1"
+                                                                                                                                                                            (decompose-equality
+                                                                                                                                                                             2)
+                                                                                                                                                                            nil
+                                                                                                                                                                            nil)
+                                                                                                                                                                           ("2"
+                                                                                                                                                                            (decompose-equality
+                                                                                                                                                                             2)
+                                                                                                                                                                            nil
+                                                                                                                                                                            nil))
+                                                                                                                                                                          nil))
+                                                                                                                                                                        nil)
+                                                                                                                                                                       ("2"
+                                                                                                                                                                        (skosimp)
+                                                                                                                                                                        nil
+                                                                                                                                                                        nil))
                                                                                                                                                                       nil))
                                                                                                                                                                     nil))
                                                                                                                                                                   nil))
@@ -6040,5 +6060,187 @@
         nil))
       nil))
     nil)
-   unfinished nil 1403703 44350 t shostak)))
+   proved
+   ((related_states const-decl "boolean" Equivalence nil)
+    (deriv_stmt def-decl "bool" Semantics nil)
+    (execute_CaseJML const-decl "(execute_CaseJML_type)" SemanticsJML
+     nil)
+    (on_method_MVA const-decl "AState" MonitoredProgramSemantics nil)
+    (ann_event const-decl "Stmt" AnnotateProgram nil)
+    (set2list def-decl "list[T]" set2list nil)
+    (m!1 skolem-const-decl "Method[string]" AnnGenerationLemmas nil)
+    (et!1 skolem-const-decl "EventType" AnnGenerationLemmas nil)
+    (sMP1!1 skolem-const-decl "MPState[CP, string]" AnnGenerationLemmas
+     nil)
+    (t!1 skolem-const-decl "Transition[CP, string]" AnnGenerationLemmas
+     nil)
+    (mp!1 skolem-const-decl "MonitoredProgram[CP, string]"
+     AnnGenerationLemmas nil)
+    (wf_AState const-decl "boolean" MVASemantics nil)
+    (total const-decl "boolean" MVASemantics nil)
+    (wf_state const-decl "boolean" MonitoredProgramSemantics nil)
+    (wf_state_implies_wf_PSt formula-decl nil MonitoredProgramSemantics
+     nil)
+    (choose const-decl "(p)" sets nil)
+    (nonempty_exists formula-decl nil sets_lemmas nil)
+    (ann_program_pre const-decl "boolean" AnnotateProgram nil)
+    (FieldDecl type-eq-decl nil Program nil)
+    (lift type-decl nil lift_adt nil)
+    (Class type-eq-decl nil Program nil)
+    (wf_Program const-decl "boolean" WellFormedProgram nil)
+    (wf_Trans const-decl "boolean" WellFormedMVA nil)
+    (is_finite const-decl "bool" finite_sets nil)
+    (unique const-decl "(injective?[CP, nat])" AnnotateProgram nil)
+    (TRUE const-decl "bool" booleans nil)
+    (CaseJML_exclusive_branches_semantics formula-decl nil
+     APSemanticsProperties nil)
+    (int_minus_int_is_int application-judgement "int" integers nil)
+    (ann_guard_actions const-decl "list[[Expr, Stmt]]" AnnotateProgram
+     nil)
+    (empty? const-decl "bool" sets nil)
+    (filter_event const-decl "finite_set[Transition]" AnnotateProgram
+     nil)
+    (wf_MVA const-decl "boolean" WellFormedMVA nil)
+    (Val_Bool_extensionality formula-decl nil Val_adt nil)
+    (b adt-accessor-decl "[(Bool?) -> bool]" Val_adt nil)
+    (OR const-decl "[bool, bool -> bool]" booleans nil)
+    (ann_program const-decl "Program" AnnotateProgram nil)
+    (deriv_boolean_expr_type_AP formula-decl nil
+     AnnotatedProgramSemantics nil)
+    (deterministic const-decl "boolean" MVASemantics nil)
+    (CaseJML_evaluates_true_stmt formula-decl nil APSemanticsProperties
+     nil)
+    (before_distinct formula-decl nil listfuncs nil)
+    (set2list_same_elements formula-decl nil set2list nil)
+    (member const-decl "bool" sets nil)
+    (update_vars_correctness formula-decl nil AnnGenerationLemmas nil)
+    (update_vars_proper_subterm_set_clause formula-decl nil
+     AnnGenerationLemmas nil)
+    (well_behaved_MP const-decl "boolean" Equivalence nil)
+    (guard_to_expression_behavior const-decl "boolean" Equivalence nil)
+    (well_behaved_MVA const-decl "boolean" Equivalence nil)
+    (specification_requirements const-decl "boolean" Equivalence nil)
+    (stmt_determ_step_AP formula-decl nil AnnotatedProgramSemantics
+     nil)
+    (MP_modeled? const-decl "boolean" Equivalence nil)
+    (Program_modeled? const-decl "boolean" Equivalence nil)
+    (expr_determ_step_AP formula-decl nil AnnotatedProgramSemantics
+     nil)
+    (MVA_modeled? const-decl "boolean" Equivalence nil)
+    (null? adt-recognizer-decl "[list -> boolean]" list_adt nil)
+    (update_vars const-decl "Stmt" AnnotateProgram nil)
+    (guard_to_expression const-decl "Expr" MVASemantics nil)
+    (eval def-decl "int" Evaluation nil)
+    (wf_state_ghost_not_local_or_field formula-decl nil
+     AnnotatedProgramSemantics nil)
+    (cp const-decl "string" AnnotateProgram nil)
+    (val2int const-decl "int" State nil)
+    (injective? const-decl "bool" functions nil)
+    (name_of const-decl "(injective?[CP, string])" AnnotateProgram nil)
+    (ann_program_defines_MVA_vars formula-decl nil
+     AnnotateProgramProperties nil)
+    (eval def-decl "bool" Evaluation nil)
+    (deriv_expr def-decl "bool" Semantics nil)
+    (APState type-eq-decl nil AnnotatedProgramSemantics nil)
+    (number nonempty-type-decl nil numbers nil)
+    (number_field_pred const-decl "[number -> boolean]" number_fields
+     nil)
+    (number_field nonempty-type-from-decl nil number_fields nil)
+    (real_pred const-decl "[number_field -> boolean]" reals nil)
+    (real nonempty-type-from-decl nil reals nil)
+    (rational_pred const-decl "[real -> boolean]" rationals nil)
+    (rational nonempty-type-from-decl nil rationals nil)
+    (integer_pred const-decl "[rational -> boolean]" integers nil)
+    (int nonempty-type-eq-decl nil integers nil)
+    (>= const-decl "bool" reals nil) (< const-decl "bool" reals nil)
+    (below type-eq-decl nil naturalnumbers nil)
+    (list type-decl nil list_adt nil)
+    (member def-decl "bool" list_props nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (bijective? const-decl "bool" functions nil)
+    (id const-decl "(bijective?[T, T])" identity nil)
+    (Excpt type-decl nil Excpt_adt nil)
+    (PSt type-eq-decl nil State nil)
+    (update_PState_type const-decl "boolean" SemanticsTypes nil)
+    (update_PState const-decl "(update_PState_type)"
+     AnnotatedProgramSemantics nil)
+    (update_GhostVars_type const-decl "boolean" SemanticsJMLTypes nil)
+    (update_GhostVars const-decl "(update_GhostVars_type)"
+     AnnotatedProgramSemantics nil)
+    (lookup const-decl "Val" SemanticsJML nil)
+    (upto nonempty-type-eq-decl nil naturalnumbers nil)
+    (<= const-decl "bool" reals nil)
+    (deriv_stmt_type type-eq-decl nil SemanticsTypes nil)
+    (deriv_stmt_rec_type type-eq-decl nil SemanticsTypes nil)
+    (deriv_expr_type type-eq-decl nil SemanticsTypes nil)
+    (deriv_expr_rec_type type-eq-decl nil SemanticsTypes nil)
+    (execute_set_type const-decl "boolean" SemanticsTypes nil)
+    (execute_set const-decl "(execute_set_type)" SemanticsJML nil)
+    (execute_CaseJML_type const-decl "boolean" SemanticsTypes nil)
+    (on_method_event_type const-decl "boolean" SemanticsTypes nil)
+    (on_method_entry const-decl "(on_method_event_type)" SemanticsJML
+     nil)
+    (on_method_exit_normal const-decl "(on_method_event_type)"
+     SemanticsJML nil)
+    (on_method_exit_exceptional const-decl "(on_method_event_type)"
+     SemanticsJML nil)
+    (deriv_expr const-decl "bool" Semantics nil)
+    (Bool? adt-recognizer-decl "[Val -> boolean]" Val_adt nil)
+    (Bool adt-constructor-decl "[bool -> (Bool?)]" Val_adt nil)
+    (FALSE const-decl "bool" booleans nil)
+    (IMPLIES const-decl "[bool, bool -> bool]" booleans nil)
+    (ann_trans_cp const-decl "[Expr, Stmt]" AnnotateProgram nil)
+    (well_typed_Program const-decl "boolean" WellTypedProgram nil)
+    (wf_MP const-decl "boolean" MonitoredProgram nil)
+    (finite_subset formula-decl nil finite_sets nil)
+    (subset? const-decl "bool" sets nil)
+    (subset_is_partial_order name-judgement "(partial_order?[set[T]])"
+     sets_lemmas nil)
+    (ann_program_yields_wf_program formula-decl nil
+     AnnotateProgramProperties nil)
+    (pred type-eq-decl nil defined_types nil)
+    (epsilon_ax formula-decl nil epsilons nil)
+    (CP formal-nonempty-type-decl nil AnnGenerationLemmas nil)
+    (nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (below type-eq-decl nil nat_types nil)
+    (character type-decl nil character_adt nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (char? adt-recognizer-decl "[character -> boolean]" character_adt
+     nil)
+    (char type-eq-decl nil strings nil)
+    (string type-eq-decl nil strings nil)
+    (Action type-eq-decl nil MVA nil) (Event type-eq-decl nil MVA nil)
+    (Guard type-eq-decl nil MVA nil)
+    (Transition type-eq-decl nil MVA nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (set type-eq-decl nil sets nil)
+    (nonempty? const-decl "bool" sets nil)
+    (AND const-decl "[bool, bool -> bool]" booleans nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (EventType type-decl nil EventType_adt nil)
+    (Val type-decl nil Val_adt nil)
+    (defined? const-decl "boolean" ValProp nil)
+    (JType type-decl nil JType_adt nil)
+    (MVAVarDecl type-eq-decl nil MVA nil)
+    (ProgVarDecl type-eq-decl nil MVA nil)
+    (MVA type-eq-decl nil MVA nil)
+    (complete const-decl "boolean" MVASemantics nil)
+    (Program type-eq-decl nil Program nil)
+    (MonitoredProgramPre type-eq-decl nil MonitoredProgram nil)
+    (compatible const-decl "boolean" MonitoredProgram nil)
+    (MonitoredProgram type-eq-decl nil MonitoredProgram nil)
+    (= const-decl "[T, T -> boolean]" equalities nil)
+    (AState type-eq-decl nil MVASemantics nil)
+    (Store type-eq-decl nil State nil)
+    (PState type-eq-decl nil State nil)
+    (MPState type-eq-decl nil MonitoredProgramSemantics nil)
+    (LocalVarDecl type-eq-decl nil Program nil)
+    (Stmt type-decl nil Stmt_adt nil) (Expr type-decl nil Expr_adt nil)
+    (Method type-eq-decl nil Program nil)
+    (step const-decl "AState" MVASemantics nil)
+    (posint_plus_nnint_is_posint application-judgement "posint"
+     integers nil)
+    (real_gt_is_strict_total_order name-judgement
+     "(strict_total_order?[real])" real_props nil))
+   829911 39740 t shostak)))
 
