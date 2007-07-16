@@ -1,0 +1,39 @@
+\paragraph*{Non-interference:}
+Non-interference of advices code with respect to the base code behavior is a
+common property of practical AOP examples. 
+Dantas and Walker \cite{DantasW06} define the notion of
+\emph{harmless advice}, as advices that may only interfere by performing extra
+I/O or by preventing termination.
+They propose an information-flow type system over a core AOP language
+\cite{WalkerZL03} to check harmlessness with respect to the main program.
+Clifton and Leavens \cite{clifton02spectators} classify aspects as
+\emph{spectators} or \emph{assistants}; the former include aspects that only
+modify the state space they own and do not alter the control flow.
+On the other hand, \emph{assistants} can interfere with the original behavior of
+the program but only if \emph{explicitly accepted} by the original
+program. 
+Shmuel Katz et al. \cite{Katz06,GoldmanK06} propose a classification of
+aspects as \emph{spectative}, \emph{regulative} or \emph{invasive}, to simplify
+program verification by focusing on the properties that may be affected by the
+introduction of an aspect. 
+More concretely it model-checks a state machine representation of
+the aspect merged with the representation of the underlying program,
+analyzing how already valid properties are influenced.
+Following the result of this analysis, a concrete static procedure to classify
+advices is proposed. 
+
+\paragraph*{JML-based verification:}
+\alarm{Talk about JML}
+Pipa \cite{ZhaoR03} is proposed as an extension to JML
+\cite{Leavens-etal07} for AspectJ \cite{AspectJ06}, 
+to support specification for aspects invariants, pre- and post-conditions for
+advices and variable introductions.
+The main motivation is to transfer the application of current tools for Java
+programs to the AspectJ language, by extending an AspectJ to Java compiler
+with a simultaneous translation of a Pipa specification into a standard JML
+specification.
+
+\alarm{Talk about Cesar Work}
+
+
+
