@@ -59,8 +59,6 @@ BEGIN
           deriv_expr(ann_program(mp))(e, sAP, v, sAP)(n) AND
           (g(stA(sMVA), st(pstate(sAP))) IFF v = Bool(TRUE))
 
-  % TODO: This generates an unprovable TC!! 
-  %   it doesn't consider the  hypothesis ann_program_pre(mp).
   % It is possible to evaluate expression appearing in actions (they terminate) 
   % and they are side-effect-free. Note that the evaluation of the expresion can
   % not throw an exception (if it starts in a non-exceptional state).
@@ -71,8 +69,8 @@ BEGIN
       NOT up?(ex(pstate(sAP))) IMPLIES
       (FORALL (vn : string) : NOT Bottom?(stA(sMVA)(vn))
         IMPLIES stA(sMVA)(vn) = gvs(sAP)(vn)) IMPLIES
-        eval(e)(stA(sMVA), st(pstate(sAP))) = v IFF
-        EXISTS (n : nat) : deriv_expr(ann_program(mp))(e, sAP, v, sAP)(n)
+        (eval(e)(stA(sMVA), st(pstate(sAP))) = v IFF
+         EXISTS (n : nat) : deriv_expr(ann_program(mp))(e, sAP, v, sAP)(n))
 
   well_behaved_MVA(mp : MonitoredProgram) : boolean =
     guard_to_expression_behavior(mp) AND

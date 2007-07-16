@@ -182,8 +182,9 @@ END Program
 ProgramFunctions[Name : TYPE+] : THEORY
 BEGIN
 
-  IMPORTING Program[Name],  
-            FiniteSetInduction[Class], %% Used for proving TCCs
+  IMPORTING Program[Name],
+            %% Used for proving TCCs
+            FiniteSetInduction[Class],
             FiniteSetInduction[Method]
 
   getFieldDecls(p : Program) : finite_set[FieldDecl] =
@@ -238,14 +239,22 @@ BEGIN
     ELSE bottom
     ENDIF
 
-  % TODO: See the TCC generated!
+  % There is a bug in PVS that generated an unprovable TCC if we write 
+  % lookup_mthd like this
+%   lookup_mthd(p : Program, tgt : Val, mn : Name) : lift[(methods(p))] =
+%     LET gc : lift[Class[Name]] = get_class(p)(tgt) IN
+%     IF up?(gc) AND method_names(p, down(gc))(mn)
+%     THEN up(choose({m : Method | classes(p)(down(gc)) AND methods(down(gc))(m)
+%                                  AND name(m) = mn}))
+%     ELSE bottom
+%     ENDIF
+
   lookup_mthd(p : Program, tgt : Val, mn : Name) : lift[(methods(p))] =
-    LET gc = get_class(p)(tgt) IN
-    IF up?(gc) AND method_names(p, down(gc))(mn)
-    THEN up(choose({m : Method | classes(p)(down(gc)) AND methods(down(gc))(m)
+    IF up?(get_class(p)(tgt)) AND method_names(p, down(get_class(p)(tgt)))(mn)
+    THEN up(choose({m : Method | classes(p)(down(get_class(p)(tgt))) AND methods(down(get_class(p)(tgt)))(m)
                                  AND name(m) = mn}))
     ELSE bottom
-    ENDIF
+    ENDIF    
 
   % If it can't find an invariant in tgt it just returns TRUE
   lookup_inv(p : Program, tgt : Val) : Expr =
@@ -330,24 +339,43 @@ BEGIN
 
   IMPORTING ProgramFunctions[Name]
 
-  wf_Class(c : Class) : boolean
+  wf_Class(c : Class) : boolean =
+    FORALL (m1, m2 : Method) :
+      methods(c)(m1) IMPLIES
+      methods(c)(m2) IMPLIES
+      name(m1) = name(m2) IMPLIES
+        m1 = m2
 
-  wf_Program(p : Program) : boolean
+  wf_program_variables_disjoint_def(p : Program) : boolean =
+    LET fname = var_names(getFieldDecls(p)),
+        lname = var_names(getLocalDecls(p)),
+        gname = var_names(getGhostDecls(p)) IN
+    disjoint?(fname, lname) AND
+    disjoint?(lname, gname) AND
+    disjoint?(fname, gname)
 
-%  AUTO_REWRITE- wf_Program
+  wf_program_variables_not_this_def(p : Program) : boolean =
+    NOT var_names(getFieldDecls(p))(This) AND
+    NOT var_names(getLocalDecls(p))(This) AND
+    NOT var_names(getGhostDecls(p))(This)
+
+  wf_program_has_unique_class_names_def(p : Program) : boolean =
+    FORALL (c1, c2 : Class) :
+      classes(p)(c1) IMPLIES
+      classes(p)(c2) IMPLIES
+      name(c1) = name(c2) IMPLIES
+        c1 = c2
+
+  wf_Program(p : Program) : boolean =
+    wf_program_variables_disjoint_def(p) AND
+    wf_program_variables_not_this_def(p) AND
+    wf_program_has_unique_class_names_def(p) AND
+    (FORALL (c : Class) : classes(p)(c) IMPLIES wf_Class(c)) AND
+    (FORALL (g : Name) : var_names(getGhostDecls(p))(g))   % review this
+
+  AUTO_REWRITE- wf_Program
 
   % Properties needed of well-formed programs
-
-  % TODO: This lemma is included in the following. 
-  % Change ann_action_correctness and delete it
-%   wf_program_has_unique_ghost_var_decl : LEMMA
-%      FORALL (p : Program, c1, c2 : Class, gv1, gv2 : FieldDecl) :
-%        wf_Program(p) IMPLIES
-%        classes(p)(c1) IMPLIES
-%        classes(p)(c2) IMPLIES
-%        ghost_vars(c1)(gv1) IMPLIES
-%        ghost_vars(c2)(gv2) IMPLIES
-%          NOT name(gv1) = name(gv2)
 
   % Because we model the heap as a flat Store here we need to require that
   % variables have a unique name within the program.
