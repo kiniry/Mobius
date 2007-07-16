@@ -481,16 +481,9 @@ public class JmlVisitor extends VisitorArgResult {
           ((Properties) o).put("firstPost", Boolean.FALSE);
           final Term invToPost = (Term) invToPostconditions(o);
           allPosts = new Post(allPosts.getRVar(), Logic.and(allPosts.getPost(), invToPost));
-
         }
         Lookup.postconditions.put(rd, allPosts);
         break;
-      case TagConstants.ASSIGNABLE:
-      final int a = 8;
-        break;
-      case TagConstants.DIVERGES:
-        final int ad = 8;
-          break;
       default:
         break;
     }
