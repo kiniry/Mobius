@@ -1,0 +1,57 @@
+When the screen width is 80 columns:
+
+assert (forall a b; lo <= a && a < left && lo <= b && b < left && a < b ==> 
+          tab[a] <= tab[b]) && 
+       (forall a; lo <= a && a < left ==> tab[a] <= tab[left]) && 
+       (forall a; left < a && a <= hi ==> tab[left] <= tab[a]) &&
+       (forall a; lo <= a && a <= hi ==> 
+          (exists a; lo <= a && a <= hi && old(tab[a]) = tab[b]))
+
+When the screen width is 40 columns:
+
+Formatting with alignment to the operator column:
+
+assert (forall a b; lo <= a && 
+                    a < left && 
+                    lo <= b && 
+                    b < left && 
+                    a < b ==> 
+                    tab[a] <= tab[b]) && 
+       (forall a; lo <= a && 
+                  a < left ==> 
+                  tab[a] <= tab[left]) && 
+       (forall a; left < a && 
+                  a <= hi ==> 
+                  tab[left] <= tab[a]) &&
+       (forall a; lo <= a &&
+                  a <= hi ==> 
+                  (exists a; lo <= a && 
+                             a <= hi &&
+                             old(tab[a]) = tab[b]))
+                             
+Formatting with alignment to the constant tab:
+assert
+  (forall a b; lo <= a && a < left && 
+    lo <= b && b < left && a < b ==> 
+    tab[a] <= tab[b]) && 
+  (forall a; lo <= a && a < left ==> 
+    tab[a] <= tab[left]) && 
+  (forall a; left < a && a <= hi ==> 
+    tab[left] <= tab[a]) &&
+  (forall a; lo <= a && a <= hi ==> 
+    (exists a; lo <= a && a <= hi &&
+      old(tab[a]) = tab[b]))
+
+Variations on formatting:
+assert
+  (forall a b;
+    lo <= a && a < left && lo <= b && 
+    b < left && a < b ==> 
+    tab[a] <= tab[b]) && 
+  (forall a; lo <= a && a < left ==> 
+    tab[a] <= tab[left]) && 
+  (forall a; left < a && a <= hi ==> 
+    tab[left] <= tab[a]) &&
+  (forall a; lo <= a && a <= hi ==> 
+    (exists a; lo <= a && a <= hi &&
+      old(tab[a]) = tab[b]))
