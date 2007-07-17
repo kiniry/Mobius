@@ -1,5 +1,7 @@
 package mobius.directVCGen.formula.jmlTranslator;
 
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Properties;
 
 import javafe.ast.BinaryExpr;
@@ -17,6 +19,7 @@ import mobius.directVCGen.formula.Num;
 import mobius.directVCGen.formula.Ref;
 import mobius.directVCGen.formula.Type;
 import escjava.ast.NaryExpr;
+import escjava.ast.QuantifiedExpr;
 import escjava.ast.ResExpr;
 import escjava.ast.TagConstants;
 import escjava.sortedProver.Lifter.QuantVariable;
@@ -442,5 +445,29 @@ public class JmlExprToFormula {
   public Object thisLiteral(final ThisExpr x, final Object o) {
     
     return Ref.varThis;
+  }
+
+  public Term forAllQuantifier(QuantifiedExpr x, Object o) {
+    
+    ((Properties) o).put("quantifier", Boolean.TRUE); 
+    fVisitor.visitGCExpr(x, o);  
+    ((Properties) o).put("quantifier", Boolean.FALSE); 
+    
+    final HashSet<QuantVariable> qVarsSet    = (HashSet) ((Properties) o).get("quantVars");
+    final QuantVariable[] qVarArray = new QuantVariable[qVarsSet.size()];
+    final Iterator iter = qVarsSet.iterator();
+    int i = 0;
+    while (iter.hasNext()) {
+      qVarArray[i] = (QuantVariable) iter.next();
+      i++;
+    }        
+    final Term exprTerm = (Term) x.expr.accept(fVisitor, o);
+    return Logic.forall(qVarArray, exprTerm);
+  }
+
+  
+  public Term existsQuantor(QuantifiedExpr x, Object o) {
+    // TODO Auto-generated method stub
+    return null;
   }
 }
