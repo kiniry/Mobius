@@ -7,6 +7,7 @@ import mobius.directVCGen.formula.Heap;
 import mobius.directVCGen.formula.Logic;
 import mobius.directVCGen.formula.Lookup;
 import mobius.directVCGen.formula.Ref;
+import mobius.directVCGen.formula.Num;
 import mobius.directVCGen.formula.Type;
 import mobius.directVCGen.formula.annotation.AAnnotation;
 import mobius.directVCGen.formula.annotation.AnnotationDecoration;
@@ -16,10 +17,12 @@ import mobius.directVCGen.formula.annotation.Set;
 import mobius.directVCGen.vcgen.struct.Post;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Properties;
 import java.util.Vector;
 import javafe.ast.ASTNode;
 import javafe.ast.AmbiguousVariableAccess;
+import javafe.ast.ArrayRefExpr;
 import javafe.ast.BinaryExpr;
 import javafe.ast.BlockStmt;
 import javafe.ast.ClassDecl;
@@ -84,6 +87,7 @@ import escjava.ast.NotSpecifiedExpr;
 import escjava.ast.NothingExpr;
 import escjava.ast.NowarnPragma;
 import escjava.ast.ParsedSpecs;
+import escjava.ast.QuantifiedExpr;
 import escjava.ast.ReachModifierPragma;
 import escjava.ast.RefinePragma;
 import escjava.ast.ResExpr;
@@ -137,6 +141,8 @@ public class JmlVisitor extends VisitorArgResult {
     fProperties.put("firstPost", Boolean.TRUE);
     fProperties.put("routinebegin", Boolean.TRUE);  
     fProperties.put("noPostconditions", Boolean.FALSE);  
+    fProperties.put("quantifier", Boolean.FALSE);
+    fProperties.put("quantVars", new HashSet<QuantVariable>());
     fTranslator = new JmlExprToFormula(this);
      
   }
@@ -152,13 +158,7 @@ public class JmlVisitor extends VisitorArgResult {
       final Object child = x.childAt(i);
       if (child instanceof ASTNode) {
         o = ((ASTNode) child).accept(this, prop);
-//        if (o != null) {
-//          if (!o.equals(child)) {
-//            System.out.println(o);
-//          }
-//        }
       }
-
     }
     return o;
   }
@@ -189,19 +189,16 @@ public class JmlVisitor extends VisitorArgResult {
     
     boolean hasPost = false;
 
-    for (int i = 0; i < x.pmodifiers.size(); i++)
-    {
-      if (x.pmodifiers.elementAt(i).getTag() == TagConstants.ENSURES)
-      {
+    for (int i = 0; i < x.pmodifiers.size(); i++) {
+      if (x.pmodifiers.elementAt(i).getTag() == TagConstants.ENSURES) {
         hasPost = true;
       }
     }
     
-    if (!hasPost)
-    {
+    if (!hasPost) {
       ((Properties) o).put("noPostconditions", Boolean.TRUE);
-      LiteralExpr litEx = LiteralExpr.make(TagConstants.BOOLEANLIT, Boolean.TRUE, 0);
-      ExprModifierPragma postc = ExprModifierPragma.make(TagConstants.ENSURES, litEx, 0); //FIXME: cbr: which loc? (here set to 0)
+      final LiteralExpr litEx = LiteralExpr.make(TagConstants.BOOLEANLIT, Boolean.TRUE, 0);
+      final ExprModifierPragma postc = ExprModifierPragma.make(TagConstants.ENSURES, litEx, 0);  //FIXME: cbr: which loc? (here set to 0)
       x.pmodifiers.addElement(postc);
     }
 
@@ -289,6 +286,13 @@ public class JmlVisitor extends VisitorArgResult {
    */
   @Override
   public Object visitLocalVarDecl(final /*@non_null*/ LocalVarDecl x, final Object o) {
+    
+    if (((Boolean) ((Properties) o).get("quantifier")).booleanValue()) {
+      HashSet<QuantVariable> qVarsSet = (HashSet) ((Properties) o).get("quantVars");
+      final QuantVariable qvar = Expression.var(x);
+      qVarsSet.add(qvar);
+      ((Properties) o).put("quantVars", qVarsSet);
+    }   
     return null;
   }
 
@@ -343,6 +347,14 @@ public class JmlVisitor extends VisitorArgResult {
   public final Object visitArrayRangeRefExpr(final /*@non_null*/ ArrayRangeRefExpr x, final Object o) {
     return null;
   }
+  
+  public /*@non_null*/ Object visitArrayRefExpr(/*@non_null*/ ArrayRefExpr x, Object o) {
+    final Term var = (Term) x.array.accept(this, o); 
+    final Term idx = (Term) x.index.accept(this, o);
+    
+    return Heap.selectArray(Heap.var, var, idx, Type.getSort(x));
+  }
+  
 
   /* (non-Javadoc)
    * @see escjava.ast.VisitorArgResult#visitCondExprModifierPragma(escjava.ast.CondExprModifierPragma, java.lang.Object)
@@ -351,26 +363,25 @@ public class JmlVisitor extends VisitorArgResult {
   public final Object visitCondExprModifierPragma(final /*@non_null*/ CondExprModifierPragma x, final Object o) {
     
     switch (x.getTag()) {
-    case TagConstants.ASSIGNABLE:
-      if (x.expr instanceof FieldAccess){
-        final HashSet<QuantVariableRef[]> fAssignableSet = (HashSet<QuantVariableRef[]>) ((Properties) o).get("assignableSet");
-        final FieldAccess var = (FieldAccess) x.expr;
-        final QuantVariableRef targetVar = (QuantVariableRef) var.od.accept(this,o);
-        final QuantVariableRef fieldVar = Expression.rvar(var.decl);
-        final QuantVariableRef[] qvars = {targetVar, fieldVar};
-        fAssignableSet.add(qvars);
-        ((Properties) o).put("assignableSet",fAssignableSet);    
-      }
-      else if (x.expr instanceof NothingExpr)
-      {
-        ((Properties) o).put("nothing",Boolean.TRUE);
-      }
-      break;
-   
-   
-    default:
-      break;
-  }
+      case TagConstants.ASSIGNABLE:
+        if (x.expr instanceof FieldAccess) {
+          final HashSet<QuantVariableRef[]> fAssignableSet = (HashSet<QuantVariableRef[]>) ((Properties) o).get("assignableSet");
+          final FieldAccess var = (FieldAccess) x.expr;
+          final QuantVariableRef targetVar = (QuantVariableRef) var.od.accept(this, o);
+          final QuantVariableRef fieldVar = Expression.rvar(var.decl);
+          final QuantVariableRef[] qvars = {targetVar, fieldVar};
+          fAssignableSet.add(qvars);
+          ((Properties) o).put("assignableSet", fAssignableSet);    
+        } 
+        else if (x.expr instanceof NothingExpr) {
+          ((Properties) o).put("nothing", Boolean.TRUE);
+        }
+        break;
+        
+        
+      default:
+        break;
+    }
     
     return visitASTNode(x, o);
   }
@@ -474,7 +485,7 @@ public class JmlVisitor extends VisitorArgResult {
         // FIXME jgc: I don't know if fVar should be needed here; needs a review
         if (((Boolean) ((Properties) o).get("noPostconditions")).booleanValue())//to avoid eq(true==true)
         {
-          ((Properties) o).put("noSetPostconditions",Boolean.FALSE); 
+          ((Properties) o).put("noSetPostconditions", Boolean.FALSE); 
           allPosts = new Post(allPosts.getRVar(), Logic.and(allPosts.getPost(), t));
         }
         if (((Boolean) ((Properties) o).get("firstPost")).booleanValue()) { //add invariants only once
@@ -530,7 +541,7 @@ public class JmlVisitor extends VisitorArgResult {
     Term inv = Logic.True();
 
     //Save arguments values in prestate as ghosts.
-    if (((Boolean)((Properties) o).get("routinebegin")).booleanValue()){
+    if (((Boolean)((Properties) o).get("routinebegin")).booleanValue()) {
       ((Properties) o).put("routinebegin", Boolean.FALSE);
       final RoutineDecl m = (RoutineDecl) ((Properties) o).get("method");
       for (final FormalParaDecl p: m.args.toArray()) {
@@ -845,6 +856,22 @@ public class JmlVisitor extends VisitorArgResult {
     return null;
   }
 
+  
+  public /*@non_null*/ Object visitQuantifiedExpr(/*@non_null*/ QuantifiedExpr x, Object o) {
+    Term resultTerm = null; 
+    switch (x.quantifier) {
+      case TagConstants.FORALL:
+        resultTerm = fTranslator.forAllQuantifier(x, o);
+        break;
+      case TagConstants.EXISTS:
+        resultTerm = fTranslator.existsQuantor(x, o);
+        break;
+      default: //error  
+        break;
+    }
+    return resultTerm; 
+  }
+  
   
   /* (non-Javadoc)
    * @see escjava.ast.VisitorArgResult#visitReachModifierPragma(escjava.ast.ReachModifierPragma, java.lang.Object)
