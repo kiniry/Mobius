@@ -1,8 +1,9 @@
 
-First all the pointcut are abstracted as a syntactical pointcut. Then they are ordered using the compilation
-order.
-They are ordered in a list made of couples (instr, (model\_list)) where model\_list is the list of model methods 
-that correspond to a specific syntactical match.
+After the effects of the point cuts have been
+ abstracted; they only apply syntactically. So the point where
+they apply can be determined statically.
+The only difficulty here is the way they will be introduced.
+
 
 %
 \begin{figure}
