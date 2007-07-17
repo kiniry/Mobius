@@ -1,4 +1,4 @@
-BCEL=`find ../../ -name bcel-5.2.jar`
+BCEL=`find ../ -name bcel-5.2.jar`
 
 jar: clean java
 	@ echo Packing:
@@ -19,4 +19,4 @@ clean:
 java:
 	@ echo Compiling:
 	mkdir -p tmp
-	cd src; javac -source 1.5 -sourcepath ../src -classpath  ${BCEL} -d ../tmp `find ./ -name *.java`
+	cd src; javac -source 1.5 -sourcepath ../src -classpath ${BCEL} -d ../tmp `find ./ -name *.java`
