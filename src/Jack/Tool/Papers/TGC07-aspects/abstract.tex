@@ -5,13 +5,10 @@ of the Java system libraries and of the JVM, for it throws exceptions
 in case of security policy violation.  The difficulty for the
 verification of a environment containing it lies in the fact that its
 use mixes library calls (easy to specify) as well as direct VM calls
-(hard to take in account because they modifies directly the Java
-semantic of the execution).  Moreover its use could be modelled solely
-as a JVM level component, which would make the use of this component
-more homogenous as well as the application of its security policies it
-applies more trustable.
+(hard to take in account because they modify directly the Java
+semantic of the execution). 
 
-In this article we use a JVM-level modelisation of a SecurityManager
-seen as an aspect component, and we define a verification framework to
-verify statically programs that takes in account the presence of this
-component, and more generally aspects.
+In this article we use a modelisation of a SecurityManager
+seen as an aspect component, and we define a verification framework for
+Pipa and AspectJ to take in account the presence of this aspect
+component in the verification of programs.
