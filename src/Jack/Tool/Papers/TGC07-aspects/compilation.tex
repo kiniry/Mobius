@@ -1,10 +1,17 @@
-The next step once the program is fully annotated and the
-specification desugared is the compilation of the advices to their
-effects on the program solely, something which can be expressed by
-simple bodyless model methods.  This transformation is direct, but the
-specifications of the advices have to be enriched with the pointcuts
-conditions that cannot be determined syntactically.  This enrichment
-is to make the weaving of the models simpler.
+The next step after the specifications are desugared is the
+compilation of the advices to their effects on the program solely.
+Advices are only represented by their specifications.
+This can be expressed by simple bodyless model methods.
+The transformation is direct, but the specifications of the advices
+have to be enriched with the pointcuts conditions that cannot be
+determined statically. 
+In the weaving described in \cite{weaving04}, the code
+of non static joint point are added to the program directly.
+Here we add this condition to the specification of the model method 
+representing the advice, since we only manipulate the specifications
+and the signature of the method representing the advice.
+
+
 
 \subsubsection{Translation of the specifications}
 The annotations are translated directly to the model methods. The
@@ -52,45 +59,8 @@ a {\tt or}: the method is duplicated, with one version with conjuncted
  of the point cut.
 \end{enumerate}
 \end{enumerate}
-Once the model methods are generated with their specifications, they
-can be weaved to the program.
 
 
 
-\subsection{Guarded commands}
-\label{gc}
-\begin{itemize} 
-\item 
-an assert of the require clause, followed by
-\item 
-an instruction to state that all the variable assignable have new
-values: it can be represented by JML keyword {\tt fresh} which is
-usually used for method specifications, but here could be used to
-annotate the method, and finally
-\item the assume of the method's postcondition.
-\end{itemize}
-Nevertheless, the exceptional cases being difficult to desugar, it is
-interesting to have the model method calls in JML specification.
 
-\begin{figure}
-\begin{center}\begin{minipage}{4cm}
-The program code:
-\bcode
-...\\
-//@ m();\\
-//@ assert(i == 1);\\
-...
-\ecode
-Could be desugared to:
-\bcode
-...\\
-//@ assert (i > 0);\\
-//@ fresh(i);\\
-//@ assume (i == 1);\\
-//@ assert(i == 1);\\
-...
-\ecode
-\end{minipage}\end{center}
-\caption{A non exceptional model method call desugared}
-\label{model_meth}
-\end{figure}
+

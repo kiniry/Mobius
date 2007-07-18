@@ -1,0 +1,36 @@
+The only semantics that are properly defined for AspectJ are defined
+on Java bytecode \cite{weaving06,weaving04}. Therefore the only way to
+implement a verification which is correct against the semantic of
+AspectJ is by defining it on the bytecode level.  The program as well
+as the annotations have to be compiled to Java bytecode and
+and bytecode annotations. 
+
+\subsubsection{Compilation of source code}
+The source code of the Java program can be compiled with {\tt javac}.
+The source code of {\tt before} and {\tt after}
+advices does not have to be changed to be compiled to Java bytecode.
+The advice just have to be named with a unique method name.
+The around advices are more complex to compile as they contain the instruction
+{\tt proceed()}. The proceed instruction is translated on bytecode as
+a method that does not need to have a body, and which is specific 
+to a single around advice that is compiled.
+
+
+\subsubsection{Compilation of specifications} 
+We have chosen the Bytecode Modelling Language (BML) to annotate the
+bytecode. BML is a version of JML for bytecode, and there exists a
+simple transformation from fully desugared JML to BML as presented
+M. Pavlova PhD. thesis~\cite{PavlovaPhd}. Since our specifications
+have been turned into simple JML (in Subsection~\ref{desugar}), we can
+translate all the JML annotations to BML's. The advices all keep their
+Pipa/JML specification unchanged except for the {\tt around} advice.
+The {\tt ensures}, {\tt proceeds} and {\tt requires} that are the
+nearer to the {\tt then} construct are removed from the {\tt around}
+advice specifications. The {\tt proceed()} specific method takes its
+specification from the one that were removed from the {\tt around} advice.
+The {\tt requires} of the {\tt proceed()} equals the removed {\tt ensures}
+and the ensures clause of the proceed() is the {\tt proceed} clause 
+implies the {\tt requires} clause that were removed.
+The frame condition should be easily inferred from the advice's 
+static joint point.
+

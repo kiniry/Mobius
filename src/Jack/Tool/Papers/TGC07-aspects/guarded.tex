@@ -1,0 +1,35 @@
+\begin{itemize} 
+\item 
+an assert of the require clause, followed by
+\item 
+an instruction to state that all the variable assignable have new
+values: it can be represented by JML keyword {\tt fresh} which is
+usually used for method specifications, but here could be used to
+annotate the method, and finally
+\item the assume of the method's postcondition.
+\end{itemize}
+Nevertheless, the exceptional cases being difficult to desugar, it is
+interesting to have the model method calls in JML specification.
+
+\begin{figure}
+\begin{center}\begin{minipage}{4cm}
+The program code:
+\bcode
+...\\
+//@ m();\\
+//@ assert(i == 1);\\
+...
+\ecode
+Could be desugared to:
+\bcode
+...\\
+//@ assert (i > 0);\\
+//@ fresh(i);\\
+//@ assume (i == 1);\\
+//@ assert(i == 1);\\
+...
+\ecode
+\end{minipage}\end{center}
+\caption{A non exceptional model method call desugared}
+\label{model_meth}
+\end{figure}
