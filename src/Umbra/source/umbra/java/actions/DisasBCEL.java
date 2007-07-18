@@ -41,8 +41,8 @@ public class DisasBCEL implements IEditorActionDelegate {
   private CompilationUnitEditor my_editor;
 
   /**
-   * Finds JavaClass structure related to the current Java
-   * source. Generates new bytecode from it and displays
+   * Finds {@ref JavaClass} structure related to the current Java
+   * source code. Generates new bytecode from it and displays
    * it in a new bytecode editor window.
    *
    * @param an_action see the IActionDelegate.run(IAction)
@@ -73,10 +73,11 @@ public class DisasBCEL implements IEditorActionDelegate {
       final FileEditorInput input = new FileEditorInput(file);
       final BytecodeEditor bc_editor = (BytecodeEditor) (page.openEditor(input,
                            UmbraHelper.BYTECODE_EDITOR_CLASS, true));
-      bc_editor.refreshBytecode(UmbraHelper.getClassFileFile(jFile, my_editor).
-                                            getProjectRelativePath(),
-                                null, null);
       final JavaClass jc = bc_editor.getJavaClass();
+      bc_editor.setRelatedEditor(my_editor);
+      bc_editor.refreshBytecode(UmbraHelper.getClassFileFile(jFile, my_editor).
+                                            getFullPath(),
+                                null, null);
       page.closeEditor(bc_editor, true);
       openEditorAndDisassemble(page, input, jc);
     } catch (CoreException e) {

@@ -311,18 +311,18 @@ public final class UmbraHelper {
   }
 
   /**
-   * This method gives the proper classfile file for a given
-   * Java file.
+   * This method gives the proper classfile file for a given source
+   * file (usually Java or .btc file).
    *
    * XXX Isn't there an eclipse method to do this task?
    *
-   * @param a_java_file Java source code file for which we try to find the
-   *        class file
+   * @param a_java_file a source code file for which we try to find the
+   *   class file
    * @param an_editor a Java file editor in which the corresponging Java file
-   * is edited
+   *   is edited
    * @param an_extension an extension of the file for which we generate
-   * the .class file name (usually .java or .btc)
-   * @return the IFile for the corresponding .class file
+   *   the .class file name (usually .java or .btc)
+   * @return the {@link IFile}for the corresponding .class file
    * @throws JavaModelException in case the project in which the editor operates
    *                            has no classfile output location set
    */

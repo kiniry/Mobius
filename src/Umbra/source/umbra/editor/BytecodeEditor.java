@@ -9,12 +9,15 @@ import org.apache.bcel.generic.ClassGen;
 import org.apache.bcel.util.ClassPath;
 import org.apache.bcel.util.SyntheticRepository;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor;
 import org.eclipse.ui.editors.text.TextEditor;
 import org.eclipse.ui.part.FileEditorInput;
@@ -181,24 +184,25 @@ public class BytecodeEditor extends TextEditor {
   }
 
   /**
-   * Transform relative file path (inside the project) into the absolute one.
+   * Transform a relative file path (inside the project) into the absolute one.
    *
    * @param a_path a relative path
    * @return the corresponding absolute path
    */
   public final IPath getPath(final IPath a_path) {
     return ResourcesPlugin.getWorkspace().getRoot().getFolder(a_path).
-                           getProject().getLocation();
+                           getLocation();
   }
 
   /**
-   * Generates input file from JavaClass structure
-   * and puts it into the editor window.
-   * The input file is created literally from JavaClass
-   * code getting methods.
-   * Possibly comments can be inserted if they are given
-   * as a parameter (in the situation that they have been
-   * previously written).
+   * Generates input file from a {@link JavaClass} structure and puts it into
+   * the editor window. The input file is created literally from the
+   * {@link JavaClass} code getting methods.
+   *
+   * This method can also add to the displayed text the comments which were
+   * added to the bytecode file before. They are displayed when they are given
+   * as the parameters <code>the_comments</code> and
+   * <code>the_interline_comments</code>.
    *
    * TODO probably obsolete:
    * There is temporary limit of 256 characters for method name
@@ -207,7 +211,7 @@ public class BytecodeEditor extends TextEditor {
    * @param a_path a workspace relative path to a Java source code file
    * @param the_comments  a table of comments to be inserted
    * @param the_interline_comments  Table of comments between instructions to be
-   *                           lso inserted
+   *    also inserted
    * @throws ClassNotFoundException the class corresponding to the Java source
    *         code file cannot be found
    * @throws CoreException the reasons for this exception include:
@@ -235,16 +239,19 @@ public class BytecodeEditor extends TextEditor {
                 final String[] the_interline_comments)
     throws ClassNotFoundException, CoreException {
 
-    final String pathName = getPath(a_path).toPortableString();
-    final FileEditorInput input = (FileEditorInput)getEditorInput();
-    final IFile file = input.getFile();
+    //obtain the classpath for the classes
+    final IProject project = ((FileEditorInput)my_related_editor.
+        getEditorInput()).getFile().getProject();
+    final IJavaProject jproject = JavaCore.create(project);
+    final IPath outputloc = jproject.getOutputLocation().append("/A");
+                                                                //bogus name
+    final String pathName = getPath(outputloc).removeLastSegments(1).
+                                               toPortableString();
 
     // Get class name together with its package name
     //FIXME there is a better way to obtain the name!!!
-    String clname = a_path.lastSegment().substring(0,
-                       a_path.lastSegment().lastIndexOf("."));
-    final String tmp = a_path.removeFirstSegments(1).toPortableString();
-    clname = tmp.substring(0, tmp.lastIndexOf("."));
+    final String tmp = a_path.removeFirstSegments(1).toOSString();
+    final String clname = tmp.substring(0, tmp.lastIndexOf("."));
 
     final ClassPath cp = new ClassPath(pathName);
     final SyntheticRepository strin = SyntheticRepository.getInstance(cp);
@@ -293,6 +300,8 @@ public class BytecodeEditor extends TextEditor {
 //        contents[k] = '\n';
 //        k++;
       }
+      final FileEditorInput input = (FileEditorInput)getEditorInput();
+      final IFile file = input.getFile();
       final InputStream stream = new ByteArrayInputStream(contents);
       if (file.exists()) {
         file.setContents(stream, true, true, null);
@@ -496,6 +505,14 @@ public class BytecodeEditor extends TextEditor {
    */
   public final BytecodeDocument getDocument() {
     return my_current_doc;
+  }
+
+  /**
+   * @param a_related_editor the Java source code editor to associate with the
+   *   current bytecode editor
+   */
+  public void setRelatedEditor(final CompilationUnitEditor a_related_editor) {
+    this.my_related_editor = a_related_editor;
   }
 
   /**
