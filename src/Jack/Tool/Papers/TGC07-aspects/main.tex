@@ -55,42 +55,8 @@
 
 
 \section{The verification framework}
-\input{framework_intro}
+\input{framework}
 
-
-\subsection{Specifications}
-\input{annotations}
-
-\subsection{Compilation to invasive model methods}
-\input{compilation}
-\subsection{Weaving of the models}
-\input{weaving}
-
-\subsection{The weakest precondition calculus}
-
-In our framework aspects are considered as methods calls that are
-transferred the whole control flow, and are permitted to modify local
-variables in the caller methods. Therefore when aspects are weaved
-there wp is just like the one of a method call.  For instance if an
-advice is weaved before an instruction i, the effective execution of
-the program will be of
-
-The aspect are compiled into a list containing the.  The predicate
-transformers associated with an advice is similar to the weakest
-precondition clause toward an invasive method call i.e. a method call
-that would be able to modify local variables as well as the other
-program variables.
-
-One of the amusing fact about this approach is that the weakest
-precondition calculus is parametized by a new semantic which is given
-by the aspects.
-
-General form of the final wp rule:
-\bcode
-
-\\
-\ecode
-where befores, arounds and afters are the compiled predicate
 
 %
 \section{Verifying a security manager}
