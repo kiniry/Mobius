@@ -1,0 +1,17 @@
+The Security Manager is an important system component in the Java
+Virtual Machine (JVM).  It forbids access to some specific methods
+depending on a given security policy.  It modifies both the behavior
+of the Java system libraries and of the JVM, for it throws exceptions
+in case of security policy violation.  The difficulty for the
+verification of a environment containing it lies in the fact that its
+use mixes library calls (easy to specify) as well as direct VM calls
+(hard to take in account because they modifies directly the Java
+semantic of the execution).  Moreover its use could be modelled solely
+as a JVM level component, which would make the use of this component
+more homogenous as well as the application of its security policies it
+applies more trustable.
+
+In this article we use a JVM-level modelisation of a SecurityManager
+seen as an aspect component, and we define a verification framework to
+verify statically programs that takes in account the presence of this
+component, and more generally aspects.
