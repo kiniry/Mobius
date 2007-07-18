@@ -1,29 +1,31 @@
-The verification framework we are building in this paper 
-is an adaptation of static 
-verification based on weakest precondition calculus for aspects. 
-Here we will consider 
-the SecurityManager as an invasive aspect, 
-so we must take into the weaving process. 
+The verification framework we are building in this paper is an
+adaptation of static verification techniques based on weakest
+precondition calculus. It is based upon Java extended static verification
+tools using guarded commands language like ESC/Java2~\cite{CokK04} and
+what is planned to be done using BoogiePL for the Mobius
+PVE~\cite{MobiusPVE07}.
 
-The verification is made of several steps:
+
+The verification process is made of several steps:
+First the program and the aspects are annotated:
 \begin{enumerate}
-\item the program and it's aspects are annotated using Pipa,
+\item the program and its aspects are annotated using Pipa,
 \item the behavioural specifications are desugared
-\item the specifications of the aspects are compiled into model methods
-\item the model methods are weaved to the program
-\item a weakest precondition calculus is made on the transformed program, and verification
-conditions are generated, and finally,
-\item the verification conditions can be discharged automatically or interactively.
+\item the specifications of the aspects are compiled into model
+methods
 \end{enumerate}
-This verification procedure is indeed made of 3 main parts: the annotation
-part (step 1 and 2), the compilation and program transformation part (step 3 and 4)
-and the verification part (steps 5 and 6).
-The crucial part here being the second, since the third can be done with any verification tool
-supporting static verification with Java and JML, and part 1 is only simple desugaring, and has been
-extensively described in \cite{RaghavanL00}.
+Then the proper compilation of aspects is done:
+\begin{enumerate}
+\item the program is compiled to bytecode with its specifications
+\item the program is transformed into guarded commands
+\item the model methods are weaved to the program
+\end{enumerate}
+Finally a weakest precondition calculus is made on the transformed
+program, and verification conditions are generated in order to be
+solved automatically or interactively.
 
 
-\subsection{Specifications}
+\subsection{Specifying the program}
 \input{annotations}
 
 \subsection{Compilation to invasive model methods}
@@ -50,7 +52,7 @@ One of the amusing fact about this approach is that the weakest
 precondition calculus is parametized by a new semantic which is given
 by the aspects.
 
-General form of the final wp rule:
+General form of the final wp rule: 
 \bcode
 
 \\

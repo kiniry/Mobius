@@ -1,28 +1,34 @@
-The weakest precondition calculus we are targetting relies on program and aspects specifications that are
-precise enough to make the verification conditions generated provable.
-The annotation language we use is like Pipa \cite{ZhaoR03} (the extension
-of JML for Aspects), but in a limited form. The annotation language is a JML level 0 type language 
-\cite{Leavens-etal07}, to which
-we remove the universe types, but to which we add model methods as well as purity, and some constructs
-to handle aspects found in Pipa. In our annotations we also allow behavioural specifications
-because JML's can be desugared as shown in \cite{RaghavanL00} and Pipa's specific constructs
- as how we show below.
+The weakest precondition calculus we are targetting relies on program
+and aspects specifications that are precise enough to make the
+verification conditions generated provable.  The annotation language
+we use is like Pipa \cite{ZhaoR03} (the extension of JML for Aspects),
+but in a limited form. The annotation language is a JML level 0 type
+language \cite{Leavens-etal07}, to which we remove the universe types,
+but to which we add model methods as well as purity, and some
+constructs to handle aspects found in Pipa. In our annotations we also
+allow behavioural specifications because JML's can be desugared as
+shown in \cite{RaghavanL00} and Pipa's specific constructs as how we
+show below.
 
-\subsubsection{JML} JML is a behavioural specification language for Java. It is made of numerous keyword: you 
-can express methods pre and post conditions with it (the keywords {\tt requires} and {\tt ensures}), exceptional
-postcondition ({\tt exsures}). There
-are notions of frame conditions (the {\tt assignable} clauses). One can also express assertions ({\tt assert} 
-construct), and loop invariants.
+\subsubsection{JML} 
+JML is a behavioural specification language for Java. It is made of
+numerous keyword: you can express methods pre and post conditions with
+it (the keywords {\tt requires} and {\tt ensures}), exceptional
+postcondition ({\tt exsures}). There are notions of frame conditions
+(the {\tt assignable} clauses). One can also express assertions ({\tt
+assert} construct), and loop invariants.
 
 \paragraph{Invasive model methods} 
-Model methods are an interesting construct of JML: these are specification
-methods that can be with or without side-effects, their effects being determined by their specifications.
-They can have a body, but in our framework we are interested by bodyless model methods. They are used to 
-assume an effect over the program, and so state that if their requires are satisfied, the given effect (given by
-the ensure clause) will be satisfied.
-In this paper we won't talk about pure model methods which could be use in specifications. Here we rather talk
-about invasive ones: just like invasive aspects they are meant to state that the program has been modified 
-non explicitly.
+Model methods are an interesting construct of JML: these are
+specification methods that can be with or without side-effects, their
+effects being determined by their specifications.  They can have a
+body, but in our framework we are interested by bodyless model
+methods. They are used to assume an effect over the program, and so
+state that if their requires are satisfied, the given effect (given by
+the ensure clause) will be satisfied.  In this paper we won't talk
+about pure model methods which could be use in specifications. Here we
+rather talk about invasive ones: just like invasive aspects they are
+meant to state that the program has been modified non explicitly.
 \begin{figure}
 \begin{center}\begin{minipage}{3cm}
 \bcode
@@ -40,21 +46,26 @@ model void m();
 
 
 \paragraph{Model methods call}
-To be able to use model methods with the full expressivity desired, we add a new annotation to JML, the simple 
-annotation method call. Its syntax would be simply the model method call in the middle of annotations as shown 
-on figure \ref{model_meth}. This construct is natural from a JML point of view because for most of the non 
-exceptional cases  it could be desugared easily into 
-more primitive JML. Hence a normal model call could be desugared into 3 construct (it is similar to what is done
-in guarded commands \cite{BarnettL05}):
+To be able to use model methods with the full expressivity desired, we
+add a new annotation to JML, the simple annotation method call. Its
+syntax would be simply the model method call in the middle of
+annotations as shown on figure \ref{model_meth}. This construct is
+natural from a JML point of view because for most of the non
+exceptional cases it could be desugared easily into more primitive
+JML. Hence a normal model call could be desugared into 3 construct (it
+is similar to what is done in guarded commands \cite{BarnettL05}):
 \begin{itemize} 
-\item an assert of the require clause, followed by 
-\item an  instruction to state that all the variable assignable have new values: it can be represented by JML 
-keyword {\tt fresh} which is usually used for method specifications, but here could be used to annotate the method, 
-and finally 
+\item 
+an assert of the require clause, followed by
+\item 
+an instruction to state that all the variable assignable have new
+values: it can be represented by JML keyword {\tt fresh} which is
+usually used for method specifications, but here could be used to
+annotate the method, and finally
 \item the assume of the method's postcondition.
 \end{itemize}
-Nevertheless, the exceptional cases being difficult to desugar, it is interesting to have the model method calls in
-JML specification.
+Nevertheless, the exceptional cases being difficult to desugar, it is
+interesting to have the model method calls in JML specification.
 
 \begin{figure}
 \begin{center}\begin{minipage}{4cm}
@@ -79,26 +90,34 @@ Could be desugared to:
 \label{model_meth}
 \end{figure}
 \subsubsection{Pipa}
-Pipa is a behavioural specification language based on JML. 
-You can specify advices as well as pointcuts~\cite{pointcuts07} with Pipa.
-In this paper we will only treat the advices specifications. 
-The specification of an advice is similar to the one of a method call. It has a pre and post condition,
-an exceptional postcondition and a frame condition. The specification are not different for JML's method's 
-specification, being applied on advices.
-Pipa mainly adds two construct plus a specific semantic we are interested in:
-the specific constructs for around advices, and their semantic of the ensure clause. These construct will have
-to be desugared in case of behavioural specifications.
+Pipa is a behavioural specification language based on JML.  You can
+specify advices as well as pointcuts~\cite{pointcuts07} with Pipa.  In
+this paper we will only treat the advices specifications.  The
+specification of an advice is similar to the one of a method call. It
+has a pre and post condition, an exceptional postcondition and a frame
+condition. The specification are not different for JML's method's
+specification, being applied on advices.  Pipa mainly adds two
+construct plus a specific semantic we are interested in: the specific
+constructs for around advices, and their semantic of the ensure
+clause. These construct will have to be desugared in case of
+behavioural specifications.
 
 
 
-\paragraph{Around advice specifications} The difficulty of specification of around advices is due to the presence
-of the proceed construct. It has to be stated in the method specification and in JML there are no keywords to
-represent it. To represent the proceed in specification, Pipa uses the predicate {\tt proceed}
-as well as the {\tt then} construct as what was stated in Clifton and Leavens paper~\cite{clifton02spectators}.
-The specification of an around advice is divided in two the part before the proceeds (the part before the 
-execution of the target instruction) and the part after the proceeds. These two parts have both pre and post 
-conditions as well as a frame condition. There is also for the first part a new keyword proceeds which take a 
-boolean condition which is an invariant for an around advice which determined if the instruction must be executed.
+\paragraph{Around advice specifications} 
+The difficulty of specification of around advices is due to the
+presence of the proceed construct. It has to be stated in the method
+specification and in JML there are no keywords to represent it. To
+represent the proceed in specification, Pipa uses the predicate {\tt
+proceed} as well as the {\tt then} construct as what was stated in
+Clifton and Leavens paper~\cite{clifton02spectators}.  The
+specification of an around advice is divided in two the part before
+the proceeds (the part before the execution of the target instruction)
+and the part after the proceeds. These two parts have both pre and
+post conditions as well as a frame condition. There is also for the
+first part a new keyword proceeds which take a boolean condition which
+is an invariant for an around advice which determined if the
+instruction must be executed.
 
 \begin{figure}
 \begin{center}\begin{minipage}{3cm}\bcode
@@ -119,22 +138,28 @@ void \= around() : call (void m()) \{\\
 \end{figure}
 
 \paragraph{Desugaring around advice specifications}
-The desugaring of the proceed construct is very easy: it is transformed into the predicate {\tt proceed(bool)} 
-and conjuncted to the ensures specifications of the part before the then of the given case. 
-If the proceed was omitted it is added in the ensures as {\tt proceed(false)}.
+The desugaring of the proceed construct is very easy: it is
+transformed into the predicate {\tt proceed(bool)} and conjuncted to
+the ensures specifications of the part before the then of the given
+case.  If the proceed was omitted it is added in the ensures as {\tt
+proceed(false)}.
 
-Each around advice behaviour is desugared arount the {\tt then} construct: each part of each 
-behaviour taking place before the {\tt then} construct are desugared with each other as 
-stated for standard JML behaviour in~\cite{clifton02spectators}.
-And the part after the {\tt then} construct is given the same treatment.
+Each around advice behaviour is desugared arount the {\tt then}
+construct: each part of each behaviour taking place before the {\tt
+then} construct are desugared with each other as stated for standard
+JML behaviour in~\cite{clifton02spectators}.  And the part after the
+{\tt then} construct is given the same treatment.
 
 \paragraph{Semantic of the ensure clause}
-The other interesting element in Pipa is the semantic of the ensure clause which slightly differs from the one in
-JML. It enables to express properties about the caller variables which were passed to the advice while 
-weaving. For instance if you have a variable {\tt x} inside a method, 
-and the advice is weaved on a method call that uses {\tt x}, you can express properties over {\tt x} in the 
-postcondition. In normal JML it makes no sense to express a property like that, and if {\tt x} is mentionned
-in the postcondition, it would have been the old value of {\tt x}. It is especially useful to express real 
-invasive aspects. In our framework we will use this semantic for {\it any} postcondition, {\it e.g.} 
-for normal method calls as well.
+The other interesting element in Pipa is the semantic of the ensure
+clause which slightly differs from the one in JML. It enables to
+express properties about the caller variables which were passed to the
+advice while weaving. For instance if you have a variable {\tt x}
+inside a method, and the advice is weaved on a method call that uses
+{\tt x}, you can express properties over {\tt x} in the
+postcondition. In normal JML it makes no sense to express a property
+like that, and if {\tt x} is mentionned in the postcondition, it would
+have been the old value of {\tt x}. It is especially useful to express
+real invasive aspects. In our framework we will use this semantic for
+{\it any} postcondition, {\it e.g.}  for normal method calls as well.
 The desugaring is not changed by this peculiar semantic.

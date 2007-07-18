@@ -14,7 +14,8 @@ account when doing static verification of Java programs.
 The main goal of this paper is to verify an implementation of a
 Security Manager, and also to give a framework to more generally verify
 programs taking into account the semantic differences that different
-component of the JVM can bring to their execution.
+component of the JVM can bring to executions of program inside 
+a JVM.
 
 
 \subsection{The Security Manager}
@@ -104,15 +105,12 @@ po\=intcut(Object o) : \=target(o) \&\& !within(SecurityManager)\+ \\
 \end{figure}
 
 
-
-\subsection{Related Work}
-\input{related}
-
-\paragraph{Contents of the paper?}
-In this paper we will restrict to the Aspects that can easily
-represent a Security Manager, the invasive ones. This focus removes
-all the modularity that was aimed at in the other verification
-framework mentioned above, because it's the specific case where the
-Aspects have effects and likely break the original behaviour of the
-program.
+\subsubsection{Outline:}
+First, in Section \ref{framework} we will define properly the
+verification framework to take into account aspects in the
+verification of programs. Then in Section \ref{example} we will
+illustrate our framework by using it on the verification of a toy
+program in the context of a Security Manager. In Section \ref{related}
+we will review the related works, and finally give a conclusion in
+Section \ref{conclusion}.
 
