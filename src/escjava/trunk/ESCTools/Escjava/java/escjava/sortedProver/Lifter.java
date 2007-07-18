@@ -689,9 +689,16 @@ public class Lifter extends EscNodeBuilder
 				trace("infer q " + pass + ": " + this);
 		}
 		
+		//TODO: cbr: What about \max, \min, \sum etc...???
 		public void printTo(StringBuffer sb)
 		{
-			sb.append("forall [");
+      if (universal){
+        sb.append("%forAll [");
+      }
+      else {
+        sb.append("%exists [");
+      }
+       
 			int max = vars.length -1;
 			int i;
 			for (i = 0; i < max; ++i)
