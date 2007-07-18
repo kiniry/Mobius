@@ -88,7 +88,7 @@ BEGIN
           FORALL (tau1, tau2 : APState, v : Val, n2 : nat) :
             deriv_expr(p)(source(c), tau1, v, tau2)(n2) IMPLIES tau1 = tau2)
 
-  update_vars_correctness : LEMMA % :-)
+ update_vars_preserves_MVA_modeled : LEMMA % :-)
     FORALL (mp : MonitoredProgram, ap : Program,
             a : Class, m : Method, t : Transition,  n : nat,
             sMVA : AState, sMP : MPState, sAP1, sAP2 : APState) :
@@ -116,8 +116,7 @@ BEGIN
       mname(event(t)) = name(m) IMPLIES
         proper_subterm_set_clause(update_vars(t), m)
 
-  % Rename
-  MP_modeled_preserved_by_ann_event : LEMMA
+  ann_event_preserves_MVA_modeled : LEMMA % :-)
     FORALL (mp : MonitoredProgram, ap : Program, c : Class, m : Method,
             sMP1, sMP2 : MPState, sAP1, sAP2 : APState,
             n : nat, ts : finite_set[Transition], et : EventType) :
