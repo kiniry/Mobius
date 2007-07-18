@@ -1,14 +1,15 @@
-The weakest precondition calculus we are targetting relies on program
-and aspects specifications that are precise enough to make the
+The verification framework we are targetting relies on program and
+aspects specifications that are precise enough to make the
 verification conditions generated provable.  The annotation language
-we use is like Pipa \cite{ZhaoR03} (the extension of JML for Aspects),
-but in a limited form. The annotation language is a JML level 0 type
-language \cite{Leavens-etal07}, to which we remove the universe types,
-but to which we add model methods as well as purity, and some
-constructs to handle aspects found in Pipa. In our annotations we also
-allow behavioural specifications because JML's can be desugared as
-shown in \cite{RaghavanL00} and Pipa's specific constructs as how we
-show below.
+we use is Pipa~\cite{ZhaoR03} (the extension of JML for AspectJ).  The
+choice was obvious since it is to our knowledge the only proper
+annotation language defined for aspects. Here we won't treat point
+cuts specification that Pipa allows.  We will use a JML level
+0~\cite{Leavens-etal07} like subset of Pipa.  We won't allow universe
+types, but we will allow other non level 0 constructs like the model
+methods, and some constructs to handle aspects found in Pipa.
+We will also permit behavioural specifications because JML's can
+be desugared as shown in \cite{RaghavanL00}.
 
 \subsubsection{JML} 
 JML is a behavioural specification language for Java. It is made of
@@ -30,7 +31,9 @@ about pure model methods which could be use in specifications. Here we
 rather talk about invasive ones: just like invasive aspects they are
 meant to state that the program has been modified non explicitly.
 \begin{figure}
-\begin{center}\begin{minipage}{3cm}
+\begin{center}
+\begin{tabular}{lll}
+\begin{minipage}{3cm}
 \bcode
 ghost int i;\\
 ...\\
@@ -39,8 +42,21 @@ assignable i;\\
 ensures i == 1;\\
 model void m();
 \ecode
-\end{minipage}\end{center}
-\caption{A model method definition}
+\end{minipage} & 
+\ \ \ \ \ \ 
+&
+\begin{minipage}{3cm}
+\bcode
+...\\
+i++;\\
+//@ m();\\
+//@ assert(i == 1);\\
+...
+\ecode \end{minipage}
+
+\end{tabular}
+\end{center}
+\caption{Model method definition and use}
 \label{model_meth_def}
 \end{figure}
 
@@ -49,46 +65,10 @@ model void m();
 To be able to use model methods with the full expressivity desired, we
 add a new annotation to JML, the simple annotation method call. Its
 syntax would be simply the model method call in the middle of
-annotations as shown on figure \ref{model_meth}. This construct is
-natural from a JML point of view because for most of the non
-exceptional cases it could be desugared easily into more primitive
-JML. Hence a normal model call could be desugared into 3 construct (it
-is similar to what is done in guarded commands \cite{BarnettL05}):
-\begin{itemize} 
-\item 
-an assert of the require clause, followed by
-\item 
-an instruction to state that all the variable assignable have new
-values: it can be represented by JML keyword {\tt fresh} which is
-usually used for method specifications, but here could be used to
-annotate the method, and finally
-\item the assume of the method's postcondition.
-\end{itemize}
-Nevertheless, the exceptional cases being difficult to desugar, it is
-interesting to have the model method calls in JML specification.
+annotations as shown on figure \ref{model_meth}. It can be easily 
+translated into guarded commands (like the one there \cite{BarnettL05}),
+but we will define it more precisely in Subsection \ref{gc}.
 
-\begin{figure}
-\begin{center}\begin{minipage}{4cm}
-The program code:
-\bcode
-...\\
-//@ m();\\
-//@ assert(i == 1);\\
-...
-\ecode
-Could be desugared to:
-\bcode
-...\\
-//@ assert (i > 0);\\
-//@ fresh(i);\\
-//@ assume (i == 1);\\
-//@ assert(i == 1);\\
-...
-\ecode
-\end{minipage}\end{center}
-\caption{A non exceptional model method call desugared}
-\label{model_meth}
-\end{figure}
 \subsubsection{Pipa}
 Pipa is a behavioural specification language based on JML.  You can
 specify advices as well as pointcuts~\cite{pointcuts07} with Pipa.  In
@@ -99,8 +79,7 @@ condition. The specification are not different for JML's method's
 specification, being applied on advices.  Pipa mainly adds two
 construct plus a specific semantic we are interested in: the specific
 constructs for around advices, and their semantic of the ensure
-clause. These construct will have to be desugared in case of
-behavioural specifications.
+clause.
 
 
 
@@ -120,7 +99,8 @@ is an invariant for an around advice which determined if the
 instruction must be executed.
 
 \begin{figure}
-\begin{center}\begin{minipage}{3cm}\bcode
+\begin{center}
+\begin{tabular}{ll} \begin{minipage}{3cm}\bcode
 int f;\\
 ...\\
 /*\=@ \ \ \=requires f > 0;\+ \\
@@ -132,34 +112,42 @@ int f;\\
 @*/\-\\
 void \= around() : call (void m()) \{\\
 \>...\\
-\} \ecode\end{minipage}\end{center}
+\} \ecode\end{minipage}
+
+
+
+\end{tabular}
+\end{center}
+
 \caption{Around annotations}
 \label{arround_annot}
 \end{figure}
 
-\paragraph{Desugaring around advice specifications}
-The desugaring of the proceed construct is very easy: it is
-transformed into the predicate {\tt proceed(bool)} and conjuncted to
-the ensures specifications of the part before the then of the given
-case.  If the proceed was omitted it is added in the ensures as {\tt
-proceed(false)}.
 
-Each around advice behaviour is desugared arount the {\tt then}
+\subsection{Desugaring specifications}
+In the seminal paper about Pipa~\cite{ZhaoR03}, the authors stated
+that annotations written with Pipa could be translated back to JML
+annotation, and they propose to weave Pipa annotation to JML
+annotation, being unclear how to do it.  Here what we understand by
+translating Pipa annotation to JML annotations is removing most of the
+Pipa specific annotations. We turn the advices into methods so 
+we can apply the behaviours desugaring described in Raghavan and Leavens
+paper \cite{RaghavanL00}.
+
+\paragraph{Proceed}
+Proceed construct is transformed into the predicate {\tt
+proceed(bool)} and conjuncted to the ensures specifications of the
+part before the then of the given case.  If the proceed was omitted it
+is added in the ensures as {\tt proceed(false)}.
+
+
+\paragraph{then}
+The {\tt then} is the only Pipa construct that cannot be desugared
+into proper JML. It is used in the contract of around advices, and it
+modifies the semantic of the {\tt proceed()} instruction in the code.
+Behaviours of around advices is desugared around the {\tt then}
 construct: each part of each behaviour taking place before the {\tt
 then} construct are desugared with each other as stated for standard
 JML behaviour in~\cite{clifton02spectators}.  And the part after the
 {\tt then} construct is given the same treatment.
 
-\paragraph{Semantic of the ensure clause}
-The other interesting element in Pipa is the semantic of the ensure
-clause which slightly differs from the one in JML. It enables to
-express properties about the caller variables which were passed to the
-advice while weaving. For instance if you have a variable {\tt x}
-inside a method, and the advice is weaved on a method call that uses
-{\tt x}, you can express properties over {\tt x} in the
-postcondition. In normal JML it makes no sense to express a property
-like that, and if {\tt x} is mentionned in the postcondition, it would
-have been the old value of {\tt x}. It is especially useful to express
-real invasive aspects. In our framework we will use this semantic for
-{\it any} postcondition, {\it e.g.}  for normal method calls as well.
-The desugaring is not changed by this peculiar semantic.

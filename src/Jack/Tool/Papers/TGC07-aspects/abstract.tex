@@ -1,14 +1,9 @@
-The Security Manager is an important system component in the Java
-Virtual Machine (JVM).  It forbids access to some specific methods
-depending on a given security policy.  It modifies both the behavior
-of the Java system libraries and of the JVM, for it throws exceptions
-in case of security policy violation.  The difficulty for the
-verification of a environment containing it lies in the fact that its
-use mixes library calls (easy to specify) as well as direct VM calls
-(hard to take in account because they modify directly the Java
-semantic of the execution). 
+The verification of Java programs is a difficult task,
+especially with components like the Security Manager which
+modify the semantic of the Virtual Machine.
+One of the way to model this invasive behaviour is to model
+the Security Manager as an aspect component, using AspectJ.
 
-In this article we use a modelisation of a SecurityManager
-seen as an aspect component, and we define a verification framework for
-Pipa and AspectJ to take in account the presence of this aspect
-component in the verification of programs.
+In this paper we describe a framework for static verification 
+of Java programs containing AspectJ advices, 
+and we use this framework on a case study, the Security Manager.

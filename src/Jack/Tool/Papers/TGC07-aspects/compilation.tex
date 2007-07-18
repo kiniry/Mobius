@@ -1,41 +1,96 @@
-The next step once the program is fully annotated and the specification desugared is the compilation of the
-advices to their effects on the program solely, something  which can be expressed by simple bodyless model 
-methods.
-This transformation is direct, but the specifications of the advices have to be
- enriched with the pointcuts conditions that cannot be determined syntactically.
-This enrichment is to make the weaving of the models simpler.
+The next step once the program is fully annotated and the
+specification desugared is the compilation of the advices to their
+effects on the program solely, something which can be expressed by
+simple bodyless model methods.  This transformation is direct, but the
+specifications of the advices have to be enriched with the pointcuts
+conditions that cannot be determined syntactically.  This enrichment
+is to make the weaving of the models simpler.
 
 \subsubsection{Translation of the specifications}
-The annotations are translated directly to the model methods. The method has the same signature
- of the corresponding advice, and the specifications are copied entirely to the model method. It works smoothly
-for most of the cases except for the around advice which is split into 2 model methods: the one corresponding
-to the first part, and the one corresponding to the part after the {\tt then} construction. 
-The {\tt proceed} instruction has to be translated to JML as well: it becomes a global 
-ghost variable of type bool.
-For an around advice the model method corresponding to the first part has to be modified consequently.
-The ensures has the equality {\tt (proceed == proc\_cond)} where {\tt proc\_cond} was the argument 
-to the annotation {\tt proceed}. The assignable clause is also modified: the {\tt proceed} global variable is 
-added to it.
+The annotations are translated directly to the model methods. The
+method has the same signature of the corresponding advice, and the
+specifications are copied entirely to the model method. It works
+smoothly for most of the cases except for the around advice which is
+split into 2 model methods: the one corresponding to the first part,
+and the one corresponding to the part after the {\tt then}
+construction.  The {\tt proceed} instruction has to be translated to
+ JML as well: it becomes a global ghost variable of type bool.  For an
+ around advice the model method corresponding to the first part has to
+ be modified consequently.  The ensures has the equality {\tt (proceed
+ == proc\_cond)} where {\tt proc\_cond} was the argument to the
+ annotation {\tt proceed}. The assignable clause is also modified: the
+ {\tt proceed} global variable is added to it.
 \subsubsection{Translation of the point cuts}
-The pointcuts are not directly translated to the model methods, 
-though the conditions over the pointcut which are not purely syntactical (the ones not taking only patterns
-as arguments) are added to the specification of the method.  
-More precisely the algorithm is the following:
+The pointcuts are not directly translated to the model methods, though
+the conditions over the pointcut which are not purely syntactical (the
+ones not taking only patterns as arguments) are added to the
+specification of the method.  More precisely the algorithm is the
+following:
 \begin{enumerate}
-\item the point cuts are fully resolved and unfolded to simple boolean expressions (only a combination
-of {\tt $||$}, {\tt \&\&}, or {\tt !} with the point cuts specific keywords).
-\item then the point cuts expression is ordered in two group: the pattern related (the one which take an argument
-of type pattern) and the others. Typically it will be separated by an {\tt and} ({\tt \&\&}), 
+\item 
+the point cuts are fully resolved and unfolded to simple boolean
+expressions (only a combination of {\tt $||$}, {\tt \&\&}, or {\tt !}
+with the point cuts specific keywords).
+\item 
+then the point cuts expression is ordered in two group: the pattern
+related (the one which take an argument of type pattern) and the
+others. Typically it will be separated by an {\tt and} ({\tt \&\&}),
 but it won't be always the case.
-\item if the sepation between the pattern point cuts and the other point cuts is:
+\item 
+if the sepation between the pattern point cuts and the other point
+cuts is:
 \begin{enumerate}
-\item an {\tt and}: the method {\tt requires} clause is conjuncted with the expression 
-of the non pattern point cuts
-and a new behaviour is added to the methods, where only the {\tt requires} is precised and 
-is the negation of the expression of the non pattern point cuts.
-\item a {\tt or}: the method is duplicated, with one version with conjuncted to its {\tt requires} clause 
- the expression of the non pattern point cuts. This case should most likely be an error in the specification
-of the point cut.
+\item 
+an {\tt and}: the method {\tt requires} clause is conjuncted with the
+expression of the non pattern point cuts and a new behaviour is added
+to the methods, where only the {\tt requires} is precised and is the
+negation of the expression of the non pattern point cuts.
+\item 
+a {\tt or}: the method is duplicated, with one version with conjuncted
+ to its {\tt requires} clause the expression of the non pattern point
+ cuts. This case should most likely be an error in the specification
+ of the point cut.
 \end{enumerate}
 \end{enumerate}
-Once the model methods are generated with their specifications, they can be weaved to the program.
+Once the model methods are generated with their specifications, they
+can be weaved to the program.
+
+
+
+\subsection{Guarded commands}
+\label{gc}
+\begin{itemize} 
+\item 
+an assert of the require clause, followed by
+\item 
+an instruction to state that all the variable assignable have new
+values: it can be represented by JML keyword {\tt fresh} which is
+usually used for method specifications, but here could be used to
+annotate the method, and finally
+\item the assume of the method's postcondition.
+\end{itemize}
+Nevertheless, the exceptional cases being difficult to desugar, it is
+interesting to have the model method calls in JML specification.
+
+\begin{figure}
+\begin{center}\begin{minipage}{4cm}
+The program code:
+\bcode
+...\\
+//@ m();\\
+//@ assert(i == 1);\\
+...
+\ecode
+Could be desugared to:
+\bcode
+...\\
+//@ assert (i > 0);\\
+//@ fresh(i);\\
+//@ assume (i == 1);\\
+//@ assert(i == 1);\\
+...
+\ecode
+\end{minipage}\end{center}
+\caption{A non exceptional model method call desugared}
+\label{model_meth}
+\end{figure}
