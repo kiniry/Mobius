@@ -1,3 +1,16 @@
+To make the weaving lighter then the weaving done by {\tt ajc}, only
+the specification of the advices will be weaved. Therefore we need a form
+for the bytecode that can handle directly the weaving of the specification.
+For this purpose we use a guarded command language. The language of 
+choice is BoogiePL, because work has been done on the bytecode level for it.
+There is a formal definition of Java bytecode translation to BoogiePL 
+\cite{LehnerM07} as well as existing implementations of the translation
+\cite{javatrans07,coqtrans06}.
+
+\paragraph{description of the language}
+
+\paragraph{bodyless BML model methods}
+
 \begin{itemize} 
 \item 
 an assert of the require clause, followed by
