@@ -1,25 +1,41 @@
+At this stage of the transformation, all the program source is turned
+into guarded commands. On one side we have the main program part 
+which still does not contain any aspects. On the other side
+we have the related to aspects elements:
+\begin{enumerate}
+\item 
+we have model methods which represents the behaviour of before and
+after advices, model methods that represent the first part of around
+advices, model that represent the second part and,
+\item
+methods representing the advices, and for around advices, proceeds 
+model methods.
+\end{enumerate}
 
-After the effects of the point cuts have been
- abstracted; they only apply syntactically. So the point where
-they apply can be determined statically.
-The only difficulty here is the way they will be introduced.
+Now the weaving can be done over the implementation part of the
+guarded commands program. The semantic of the weaving we base our work
+upon has been presented in two papers \cite{weaving04,weaving06}.  The
+more formal of the two~\cite{weaving06} lacking a proper semantic for
+around advices.
+
+We weave in the code the model methods representing the advices.  For
+before and after advices we use exactly the weaving semantic presented
+in Belblidia and Debbabi's paper.
+In our case the four rules become:
+
+\fixme{write nicely the four rules}.
+
+Since the around advice is not treated in~\cite{weaving06} and is 
+mentionned vaguely in~\cite{weaving04}, we derive from the later
+a generic weaving method, adapted to the way they were specified.
+
+\fixme{write the stupid weaving}
+
+\fixme{prove the correctness by reduction}
+
+
+
+
 
 
 %
-\begin{figure}
-\bcode
-weave \=(instr; Linstr, (instr, (model :: model\_list)) :: Lmatch) -> \\
-\>model:: weave (instr; Linstr, (instr, (model\_list)) :: Lmatch);\\
-weave \=(instr; Linstr, (instr, (instr :: model\_list)) :: Lmatch) -> \\
-\>instr:: weave (instr; Linstr, (instr, (model\_list)) :: Lmatch);\\
-weave (instr:: Linstr, (instr', (model :: model\_list)) :: Lmatch) -> \\
-\>instr <> instr',  weave (instr; Linstr, Lmatch);\\
-weave (instr:: Linstr, (instr, (nil)) :: Lmatch) -> \\
-\>weave (Linstr, Lmatch);\\
-weave (instr:: Linstr, nil) -> \\
-\>instr :: weave (Linstr, Lmatch).
-\ecode
-\caption{The algorithm to weave method}
-\label{weaving_algo}
-\end{figure}
-Then for each program point that matches
