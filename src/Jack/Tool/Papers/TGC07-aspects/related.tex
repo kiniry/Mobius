@@ -6,9 +6,14 @@ weaving semantic is still partly missing~\cite{weaving06}.  Pipa is an
 annotation language which was inspired by Clifton and Leavens'
 work~\cite{clifton02observers}. There are some extensions to it like
 pointcuts annotations~\cite{pointcuts07}, or Moxa \cite{moxa05}.
+Our framework  relies on verification based
+on an intermediate language, 
+like what is done in ESC/Java2~\cite{FlanaganLLNSS02},
+ Boogie~\cite{BarnettCDJL05}, or Krakatoa~\cite{MarcheP-MU04}. The work
+is made to be adapted on a BoogiePL-like guarded command which
+is coupled with a VCGen~\cite{BarnettL05,FlanaganS01}.
 
-
-\paragraph{Modular verification}
+\paragraph{Modular verification of Aspects}
 Verification in Aspect Oriented Programming language is often linked
 to a modular approach.  It is orthogonal to the aim of this paperh: we
 tailor verification of aspects which were not specially wanted by the
@@ -23,13 +28,14 @@ show a way of weaving specifications using a control-flow graph
 analysis. In their 2004 work~\cite{shriram04} Krishnamurthi {\it et
 al} present a model-checking framework for verification of programs
 containing aspects. It is quite different from our work as it presents
-a generic framework for aspects. In an unpublished paper~\cite{cesar}
-Kunz presents a Hoare logic for modular verification of aspects. His
-paper is quite formal, but his approach remains less modular for the
-specification around advices, especially for the {\tt proceeds}.
+a generic framework for aspects. In an unpublished paper~\cite{cesar},
+Kunz presents a Hoare logic for modular verification of aspects. The
+paper is quite formal, but he does not add special annotations for method
+specifications as Clifton and Leavens. For this reason his approach remains 
+less modular than Clifton's.
 
-\paragraph{Verification of Java programs annotated with JML}
- 
+
+
 
 % Shmuel Katz et al. \cite{Katz06,GoldmanK06} propose
 % a classification of aspects as \emph{spectative}, \emph{regulative} or
