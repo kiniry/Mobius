@@ -6,6 +6,10 @@ import java.util.Iterator;
 import java.util.Properties;
 import java.util.Set;
 
+import javafe.ast.GenericVarDecl;
+import javafe.ast.VariableAccess;
+
+import escjava.sortedProver.Lifter;
 import escjava.sortedProver.NodeBuilder;
 import escjava.sortedProver.Lifter.FnTerm;
 import escjava.sortedProver.Lifter.QuantTerm;
@@ -320,6 +324,14 @@ public final class Logic {
     }
     return Formula.lf.mkQuantTerm(true, new QuantVariable [] {v.qvar}, f, null, null);
   }
+  
+  
+  public static Term fresh(Term x) {
+    
+    //return logicUnaryOp(x, Formula.lf.symFresh); is ref, not pred
+    return Formula.lf.mkFnTerm(Formula.lf.symFresh, new Term []{x});
+  }
+  
 
   /**
    * Creates a universal binding for several vars from the formula f.
