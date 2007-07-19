@@ -1,39 +1,43 @@
-\paragraph*{Non-interference:}
-Non-interference of advices code with respect to the base code behavior is a
-common property of practical AOP examples. 
-Dantas and Walker \cite{DantasW06} define the notion of
-\emph{harmless advice}, as advices that may only interfere by performing extra
-I/O or by preventing termination.
-They propose an information-flow type system over a core AOP language
-\cite{WalkerZL03} to check harmlessness with respect to the main program.
-Clifton and Leavens \cite{clifton02spectators} classify aspects as
-\emph{spectators} or \emph{assistants}; the former include aspects that only
-modify the state space they own and do not alter the control flow.
-On the other hand, \emph{assistants} can interfere with the original behavior of
-the program but only if \emph{explicitly accepted} by the original
-program. 
-Shmuel Katz et al. \cite{Katz06,GoldmanK06} propose a classification of
-aspects as \emph{spectative}, \emph{regulative} or \emph{invasive}, to simplify
-program verification by focusing on the properties that may be affected by the
-introduction of an aspect. 
-More concretely it model-checks a state machine representation of
-the aspect merged with the representation of the underlying program,
-analyzing how already valid properties are influenced.
-Following the result of this analysis, a concrete static procedure to classify
-advices is proposed. 
+In this paper we focus on a verification framework adapted for the
+verification of AspectJ programs annotated with Pipa.  The pointcut
+semantic has been properly
+defined~\cite{DBLP:conf/popl/AvgustinovHOMSTV07} though the advice
+weaving semantic is still partly missing~\cite{weaving06}.  Pipa is an
+annotation language which was inspired by Clifton and Leavens'
+work~\cite{clifton02observers}. There are some extensions to it like
+pointcuts annotations~\cite{pointcuts07}, or Moxa \cite{moxa05}.
 
-\paragraph*{JML-based verification:}
-\alarm{Talk about JML}
-Pipa \cite{ZhaoR03} is proposed as an extension to JML
-\cite{Leavens-etal07} for AspectJ \cite{AspectJ06}, 
-to support specification for aspects invariants, pre- and post-conditions for
-advices and variable introductions.
-The main motivation is to transfer the application of current tools for Java
-programs to the AspectJ language, by extending an AspectJ to Java compiler
-with a simultaneous translation of a Pipa specification into a standard JML
-specification.
 
-\alarm{Talk about Cesar Work}
+\paragraph{Modular verification}
+Verification in Aspect Oriented Programming language is often linked
+to a modular approach.  It is orthogonal to the aim of this paperh: we
+tailor verification of aspects which were not specially wanted by the
+user, and are most-likely imposed by the environment.  Clifton and
+Leavens~\cite{clifton02observers,clifton02spectators,cliftonPhd}
+propose a programming discipline to define and specify aspects, using
+an extension of JML as specification language.  They define two kind
+of aspects, the \emph{spectators} and \emph{assistants} and propose to
+explicitly allows the weaving of these aspects. This approach allows
+efficient modular reasonning and easy implementations because they
+show a way of weaving specifications using a control-flow graph
+analysis. In their 2004 work~\cite{shriram04} Krishnamurthi {\it et
+al} present a model-checking framework for verification of programs
+containing aspects. It is quite different from our work as it presents
+a generic framework for aspects. In an unpublished paper~\cite{cesar}
+Kunz presents a Hoare logic for modular verification of aspects. His
+paper is quite formal, but his approach remains less modular for the
+specification around advices, especially for the {\tt proceeds}.
+
+\paragraph{Verification of Java programs annotated with JML}
+ 
+
+% Shmuel Katz et al. \cite{Katz06,GoldmanK06} propose
+% a classification of aspects as \emph{spectative}, \emph{regulative} or
+% \emph{invasive}, to simplify program verification by focusing on the
+
+
+
+
 
 
 
