@@ -1,48 +1,38 @@
 To make the weaving lighter then the weaving done by {\tt ajc}, only
 the specification of the advices will be weaved. Therefore we need a form
-for the bytecode that can handle directly the weaving of the specification.
+for the bytecode that can handle directly the weaving of the specifications.
 For this purpose we use a guarded command language. The language of 
 choice is BoogiePL, because work has been done on the bytecode level for it.
 There is a formal definition of Java bytecode translation to BoogiePL 
 \cite{LehnerM07} as well as existing implementations of the translation
 \cite{javatrans07,coqtrans06}.
 
-\paragraph{description of the language}
+\subsubsection{Description of the language} 
+The version of the language we use is the same set of instruction
+described in \cite{DeLineL05}. It has 5 commands the assume, assert,
+the assignment, havoc and the non-deterministic goto. The language is
+standard and has been described numerous time. We also consider block IDs.
+\fixme{be more precise}
 
-\paragraph{bodyless BML model methods}
 
-\begin{itemize} 
-\item 
-an assert of the require clause, followed by
-\item 
-an instruction to state that all the variable assignable have new
-values: it can be represented by JML keyword {\tt fresh} which is
-usually used for method specifications, but here could be used to
-annotate the method, and finally
-\item the assume of the method's postcondition.
-\end{itemize}
-Nevertheless, the exceptional cases being difficult to desugar, it is
-interesting to have the model method calls in JML specification.
+\subsubsection{BML inclusion}
+The inclusion of BML annotations to BoogiePL has been described in 
+\cite{javatrans07}, and is straightforward since BoogiePL has already 
+assert and assume statements which are used in BML.  BoogiePL also
+permits annotation of methods with requires, ensures as well as frame
+conditions.  The two annotation constructs that are introduced for
+this paper and are not yet described are the model methods and the
+model method's calls and the aspect specific construct {\tt proceed}.
 
-\begin{figure}
-\begin{center}\begin{minipage}{4cm}
-The program code:
-\bcode
-...\\
-//@ m();\\
-//@ assert(i == 1);\\
-...
-\ecode
-Could be desugared to:
-\bcode
-...\\
-//@ assert (i > 0);\\
-//@ fresh(i);\\
-//@ assume (i == 1);\\
-//@ assert(i == 1);\\
-...
-\ecode
-\end{minipage}\end{center}
-\caption{A non exceptional model method call desugared}
-\label{model_meth}
-\end{figure}
+The model methods are methods that are only defined with their
+specifications and on which we allow call within the
+specifications. Their effects on the program is only represented by
+their specifications. In BoogiePL one can generate procedure which 
+does not contain implementation which would match exactly this behaviour.
+The model methods calls within specification would be replaced by a
+{\tt call} command withing BoogiePL methods' body.
+
+The proceed is a predicate that can be called at any time in the program.
+In BoogiePL it is easily represented by a variable {\tt proceed} 
+of type {\tt bool}. This variable will be defined properly in next section.
+
