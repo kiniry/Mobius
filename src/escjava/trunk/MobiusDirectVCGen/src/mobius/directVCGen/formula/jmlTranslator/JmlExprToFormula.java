@@ -84,7 +84,7 @@ public class JmlExprToFormula {
   public Object eq(final BinaryExpr expr, final Object o) {
     final Boolean predOld = (Boolean) ((Properties) o).get("pred");
     //set Properties.prop:=false (equality operation wants sortBool)
-    ((Properties) o).put("pred", new Boolean(false));
+    ((Properties) o).put("pred", Boolean.FALSE);
     final Term t1 = (Term)expr.left.accept(fVisitor, o);
     final Term t2 = (Term)expr.right.accept(fVisitor, o);
     ((Properties) o).put("pred", predOld);
@@ -389,8 +389,19 @@ public class JmlExprToFormula {
 
   public Object variableAccess(final VariableAccess x, final Object o) {
     final Boolean oldProp = (Boolean) ((Properties) o).get("old");
+    final Boolean fresh = (Boolean) ((Properties) o).get("fresh");
     final Boolean predProp = (Boolean) ((Properties)o).get("pred");
     Term res = null;
+   
+
+    if (fresh.booleanValue()) { 
+      res = Logic.fresh(Expression.rvar(x.decl));
+      HashSet<Term> freshSet = (HashSet) ((Properties)o).get("freshSet");
+      freshSet.add(res);
+      ((Properties)o).put("freshSet", freshSet);
+    } //TODO:  better else if...
+    
+    
     if (oldProp.booleanValue()) { 
       res = Expression.old(x.decl); // x.decl cannot be null
     }
@@ -422,7 +433,6 @@ public class JmlExprToFormula {
 
   public Object fieldAccess(final FieldAccess x, final Object o) {
     final Boolean oldProp = (Boolean) ((Properties) o).get("old");
-    //Boolean predProp = (Boolean) ((Properties)o).get("pred");
     final Term obj = (Term) x.od.accept(fVisitor, o);
     QuantVariable var = null;
     QuantVariableRef heap = Heap.var;
@@ -433,10 +443,38 @@ public class JmlExprToFormula {
     var = Expression.var(x.decl);
     return Heap.select(heap, obj, var);
   }
+  
+  
+  /**
+   * Builds up a FOL term as: \fresh(x,y) --> and(%fresh(x:ref),%(y:ref)):PRED
+   * @param x the NaryExpr with TagConstant.FRESH
+   * @param o
+   * @return the generated FOL term
+   */
+  public Object freshExpression(final NaryExpr x, final Object o){
+    ((Properties) o).put("fresh", Boolean.TRUE);
+    fVisitor.visitGCExpr(x, o);
+    ((Properties) o).put("fresh", Boolean.FALSE);
+    final HashSet freshVars = (HashSet) ((Properties)o).get("freshSet");
+    
+    Term res = null;
+    
+    final Iterator iter = freshVars.iterator();
+    while (iter.hasNext()) { 
+      if (res == null) {
+        res = (Term) iter.next();
+      }
+      else { 
+        res = Logic.and(res, (Term) iter.next());
+      }
+      
+    }
+    return res;
+  }
 
   public Object naryExpr(final NaryExpr x, final Object o) {
     final Boolean old = (Boolean) ((Properties) o).get("old");
-    ((Properties) o).put("old", true);
+    ((Properties) o).put("old", Boolean.TRUE);
     final Object res = fVisitor.visitGCExpr(x, o);
     ((Properties) o).put("old", old);
     return res;
@@ -447,8 +485,9 @@ public class JmlExprToFormula {
     return Ref.varThis;
   }
 
-  public Term forAllQuantifier(QuantifiedExpr x, Object o) {
-    
+  
+  public Term quantifier(QuantifiedExpr x, Object o){
+  
     ((Properties) o).put("quantifier", Boolean.TRUE); 
     fVisitor.visitGCExpr(x, o);  
     ((Properties) o).put("quantifier", Boolean.FALSE); 
@@ -462,12 +501,13 @@ public class JmlExprToFormula {
       i++;
     }        
     final Term exprTerm = (Term) x.expr.accept(fVisitor, o);
-    return Logic.forall(qVarArray, exprTerm);
-  }
-
-  
-  public Term existsQuantor(QuantifiedExpr x, Object o) {
-    // TODO Auto-generated method stub
-    return null;
+    
+    if (x.quantifier == TagConstants.FORALL) {
+      return Logic.forall(qVarArray, exprTerm);
+    }
+    else {
+      return Logic.exists(qVarArray, exprTerm);
+    }
   }
 }
+ 
