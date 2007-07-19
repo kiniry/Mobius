@@ -1011,9 +1011,10 @@ public class Lifter extends EscNodeBuilder
     public FnSymbol symArrStore = registerFnSymbol("%arrStore", new Sort[] { sortMap, sortRef, sortInt, sortValue }, sortMap);
     /** bicolano special subtyping relation (heap -> value -> type -> pred) */
     public FnSymbol symAssignCompat = registerFnSymbol("%assignCompat", new Sort[] { sortMap, sortValue, sortType }, sortPred);
-    /** used for invariants. \forall x,t : alive(x) & typeof(x)=t -> inv(x,t) */
+    /** cbr: used for invariants. \forall x,t : alive(x) & typeof(x)=t -> inv(x,t) */
     public PredSymbol symInv = registerPredSymbol("%inv", new Sort[]{sortRef, sortType});
-
+    /** cbr: symFresh used for a fresh allocated object */
+    public PredSymbol symFresh = registerPredSymbol("%fresh", new Sort[]{sortRef});
     
     
 	// we just want Sort and the like, don't implement anything	
