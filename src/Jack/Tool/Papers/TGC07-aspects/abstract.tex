@@ -1,9 +1,12 @@
-The verification of Java programs is a difficult task,
-especially with components like the Security Manager which
-modify the semantic of the Virtual Machine.
-One of the way to model this invasive behaviour is to model
-the Security Manager as an aspect component, using AspectJ.
+The verification of Java programs is a difficult task, especially with
+components like the Security Manager which modify the semantic of the
+Virtual Machine.  One of the way to model this invasive behaviour is
+to model the Security Manager as an aspect component, using AspectJ.
 
-In this paper we describe a framework for static verification 
-of Java programs containing AspectJ advices, 
-and we use this framework on a case study, the Security Manager.
+In this paper we describe a framework for static verification of Java
+programs containing AspectJ advices specified with Pipa.  The
+framework is built around a weakest precondition calculus over Java
+bytecode using guarded commands, and is correct against AspectJ advice weaving semantic.
+This framework is then instanciated over a case study, the Security
+Manager.
+
