@@ -35,13 +35,16 @@ public class BMLConfig {
 	// line breaking)
 	public int line_pos;
 	
+	public final int max_total_line_width = 40;
+	
 	// maximum annotation line width
-	public int max_line_width = 80;
+	public int max_line_width = max_total_line_width - 4;
 	
 	// depth of currrently displayed expression
 	// in expression tree
 	public int expr_depth;
 	
+	// TODO: unused (!)
 	// this two characters in expressions are reserved
 	// for line-breaking procedure and shouldn't appear
 	// anywhere else in expressions
@@ -54,6 +57,7 @@ public class BMLConfig {
 	
 	// beginning of the annotation's line
 	public String newLine() {
+		max_line_width = max_total_line_width - wciecie.length() + 1;
 		return "\n *  " + wciecie;
 	}
 	

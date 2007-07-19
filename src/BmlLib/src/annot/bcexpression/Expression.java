@@ -1,5 +1,7 @@
 package annot.bcexpression;
 
+import java.util.Vector;
+
 import annot.bcclass.BMLConfig;
 import annot.bcexpression.jml.RESULT;
 
@@ -316,6 +318,114 @@ public abstract class Expression {
 		return res;
 	}
 	
+	private String[] splitRoot(String str) {
+		Vector<String> v = new Vector<String>();
+		int level = 0;
+		String sub = "";
+		for (int p=0; p<str.length(); p++) {
+			char ch = str.charAt(p);
+			if (ch == '{') {
+				if (level == 0) {
+					v.add(sub);
+					sub = "";
+				} else {
+					sub += '{';
+				}
+				level++;
+			} else if (ch == '}') {
+				level--;
+				if (level < 0)
+					throw new RuntimeException(str.substring(0, p)+"#"+str.substring(p));
+				if (level == 0) {
+					v.add(sub);
+					sub = "";
+				} else {
+					sub += '}';
+				}
+			} else {
+				sub += ch;
+			}
+		}
+		if ((v.size() == 0) && (str.lastIndexOf("{") >= 0))
+			return (splitRoot(str.substring(1, str.length()-1)));
+		v.add(sub);
+		v.add("");
+		String[] result = new String[v.size()];
+		for (int i=0; i<v.size(); i++)
+			result[i] = v.elementAt(i);
+		return result;
+	}
+	
+	private String cleanup(String str) {
+		String result = "";
+		for (int i=0; i<str.length(); i++) {
+			char ch = str.charAt(i);
+			if ((ch != '{') && (ch != '}'))
+				result += ch;
+		}
+		return result;
+	}
+	
+	private int colsLeft(BMLConfig conf, String str, int start) {
+		int p = str.lastIndexOf("\n");
+		if (p < 0) {
+			return conf.max_line_width - start - str.length();
+		} else {
+			return conf.max_total_line_width - str.substring(p).length();
+		}
+	}
+	
+	private int strlen(String str) {
+		return cleanup(str).length();
+	}
+
+	private String breakLines1(BMLConfig conf, String str, int spos) {
+		System.out.println(str);
+		System.out.println(cleanup(str));
+//		for (int i=0; i<sub.length; i++)
+//		System.out.println(sub[i]);
+		System.out.println("-----------------------------------");
+//		System.out.println(conf.wciecie+";");
+		String result = breakLines1(conf, str, spos, "");
+//		System.out.println(conf.wciecie+";");
+		return result;
+	}
+	
+	private String breakLines1(BMLConfig conf, String str, int spos, String suffix) {
+//		if (str.length() < 1) throw new RuntimeException(str);
+//		System.out.println("|"+str+"|");
+		String result = "";
+		if (strlen(str) < conf.max_line_width - spos - suffix.length())
+			return cleanup(str);
+		String[] sub = splitRoot(str);
+		if (sub.length == 1)
+			return cleanup(sub[0]);
+		String w = conf.wciecie;
+		conf.wciecie += "  ";
+		if (spos == 0)
+			result = "  ";
+		result += sub[0];
+		spos += strlen(sub[0]); //XXX
+		for (int i=1; i<sub.length-1; i+=2) {
+			String s = sub[i] + sub[i+1];
+			if (colsLeft(conf, s, spos) > 0) {
+				result += cleanup(s);
+				spos += strlen(s);
+			} else {
+				if (spos > 0)
+					result += conf.newLine();
+				result += breakLines1(conf, sub[i], 0, "");
+				spos = conf.max_line_width - colsLeft(conf, result, 0);
+				result += sub[i+1];
+				spos += strlen(sub[i+1]);
+			}
+		}
+		if (sub.length % 2 == 1)
+			result += sub[sub.length - 1];
+		conf.wciecie = w;
+		return result;
+	}
+	
 	/**
 	 * Adds parenthness to root of the expression.
 	 * 
@@ -352,7 +462,7 @@ public abstract class Expression {
 				if ((ch == ' ') || (ch == '\n') || (ch == '*')) {
 					str2 += ch;
 				} else {
-					str2 += "(" + str.substring(i, str.length()) + ")";
+					str2 += "{(" + str.substring(i, str.length()) + ")}";
 					break;
 				}
 			}
