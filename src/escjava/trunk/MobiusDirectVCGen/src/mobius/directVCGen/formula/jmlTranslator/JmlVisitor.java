@@ -135,14 +135,16 @@ public class JmlVisitor extends VisitorArgResult {
     fProperties.put("old", Boolean.FALSE);
     fProperties.put("visibleTypeSet", new HashSet<QuantVariableRef>());
     fProperties.put("assignableSet", new HashSet<QuantVariableRef[]>());
+    fProperties.put("freshSet", new HashSet<Term>());
     fProperties.put("nothing", Boolean.FALSE); //used for assignable
     fProperties.put("interesting", Boolean.FALSE);
     // firstPost: To add invariant only once to Lookup.postcondition
     fProperties.put("firstPost", Boolean.TRUE);
     fProperties.put("routinebegin", Boolean.TRUE);  
-    fProperties.put("noPostconditions", Boolean.FALSE);  
     fProperties.put("quantifier", Boolean.FALSE);
     fProperties.put("quantVars", new HashSet<QuantVariable>());
+    fProperties.put("isHelper", Boolean.FALSE);
+    fProperties.put("fresh", Boolean.FALSE);
     fTranslator = new JmlExprToFormula(this);
      
   }
@@ -185,7 +187,6 @@ public class JmlVisitor extends VisitorArgResult {
     ((Properties) o).put("firstPost", Boolean.TRUE);
     ((Properties) o).put("routinebegin", Boolean.TRUE);
     ((Properties) o).put("nothing", Boolean.FALSE);
-    final QuantVariableRef result = (QuantVariableRef) ((Properties) o).get("result");
     
     boolean hasPost = false;
 
@@ -193,18 +194,19 @@ public class JmlVisitor extends VisitorArgResult {
       if (x.pmodifiers.elementAt(i).getTag() == TagConstants.ENSURES) {
         hasPost = true;
       }
+      else if (x.pmodifiers.elementAt(i).getTag() == TagConstants.HELPER) { //TODO: Doesn't work yet. Tag is not set to TagConstant.Helper, even it's a helper routine
+        ((Properties) o).put("isHelper", Boolean.TRUE);
+      }
     }
     
     if (!hasPost) {
-      ((Properties) o).put("noPostconditions", Boolean.TRUE);
       final LiteralExpr litEx = LiteralExpr.make(TagConstants.BOOLEANLIT, Boolean.TRUE, 0);
       final ExprModifierPragma postc = ExprModifierPragma.make(TagConstants.ENSURES, litEx, 0);  //FIXME: cbr: which loc? (here set to 0)
       x.pmodifiers.addElement(postc);
     }
 
-    
-    Lookup.postconditions.put(x, new Post(result, Logic.True()));
-    Lookup.exceptionalPostconditions.put(x, new Post(Expression.rvar(Ref.sort), Logic.True()));
+     
+    Lookup.exceptionalPostconditions.put(x, new Post(Expression.rvar(Ref.sort), Logic.True())); //dummy exceptional postcondition    
     final Object fObj = visitASTNode(x, o);
     doAssignable(o);
     return fObj;
@@ -228,7 +230,16 @@ public class JmlVisitor extends VisitorArgResult {
    */
   @Override
   public final Object visitConstructorDecl(final /*@non_null*/ ConstructorDecl x, final Object o) {
-    return visitRoutineDecl(x, o);
+    Object obj = visitRoutineDecl(x, o);
+    
+    //if !isHelper, add predicate of initially jml-clause to postconditions
+    if (((Boolean) ((Properties) o).get("isHelper")).booleanValue() == Boolean.FALSE) {
+      final Term initiallyTerm = (Term) ((Properties) o).get("initiallyFOL");
+      if (initiallyTerm instanceof Term) {
+        addToPostcondition(initiallyTerm, o);
+      }
+    }
+    return obj;
   }
 
   /* (non-Javadoc)
@@ -244,8 +255,7 @@ public class JmlVisitor extends VisitorArgResult {
    */
   @Override
   public final Object visitLiteralExpr(final /*@non_null*/ LiteralExpr x, final Object o) {
-    final Properties prop = (Properties) o;
-    if (((Boolean) prop.get("interesting")).booleanValue()) {
+    if (((Boolean) ((Properties) o).get("interesting")).booleanValue()) {
       return this.fTranslator.literal(x, o);
     }
     else {
@@ -304,6 +314,9 @@ public class JmlVisitor extends VisitorArgResult {
     if (((Boolean) ((Properties) o).get("interesting")).booleanValue()) {
       if (x.op == TagConstants.PRE) {
         return this.fTranslator.naryExpr(x, o);
+      }
+      else if (x.op == TagConstants.FRESH) {
+        return this.fTranslator.freshExpression(x, o);
       }
       else {
         return visitGCExpr(x, o);
@@ -458,8 +471,18 @@ public class JmlVisitor extends VisitorArgResult {
   @Override
   public final Object visitExprDeclPragma(final /*@non_null*/ ExprDeclPragma x, final Object o) {
     ((Properties) o).put("interesting", Boolean.TRUE);
-    final Term  t = (Term) x.expr.accept(this, o);
-    Lookup.invariants.put(x.parent, t);
+    Term  t = (Term) x.expr.accept(this, o);
+    
+    if (x.tag == TagConstants.INITIALLY) { //add visited expr to properties "initiallyFOL"
+      ((Properties) o).put("initiallyFOL", t);
+    }
+    else {
+      final Term allInvs = Lookup.invariants.get(x.parent);   
+      if (allInvs != null) {
+        t = Logic.and(allInvs, t); 
+      }
+      Lookup.invariants.put(x.parent, t); 
+    }
     return null;
   }
 
@@ -474,26 +497,19 @@ public class JmlVisitor extends VisitorArgResult {
     t = Logic.boolToProp(t);
     switch (x.getTag()) {
       case TagConstants.REQUIRES:
-        if (rd  instanceof MethodDecl) { 
-          final Term invToPre = (Term) invToPreconditions(o);
-          t = Logic.Safe.and(t, invToPre);
+        if (rd  instanceof MethodDecl && ((Boolean) ((Properties) o).get("isHelper")).booleanValue() == Boolean.FALSE) {   
+          invToPreconditions(o);
         }
-        Lookup.preconditions.put(rd, t);
+        else { 
+          addToPrecondition(t, o);
+        }
         break;
       case TagConstants.ENSURES:
-        Post allPosts = Lookup.postconditions.get(rd);
-        // FIXME jgc: I don't know if fVar should be needed here; needs a review
-        if (((Boolean) ((Properties) o).get("noPostconditions")).booleanValue())//to avoid eq(true==true)
-        {
-          ((Properties) o).put("noSetPostconditions", Boolean.FALSE); 
-          allPosts = new Post(allPosts.getRVar(), Logic.and(allPosts.getPost(), t));
-        }
-        if (((Boolean) ((Properties) o).get("firstPost")).booleanValue()) { //add invariants only once
+          addToPostcondition(t, o);
+        if (((Boolean) ((Properties) o).get("firstPost")).booleanValue() && ((Boolean) ((Properties) o).get("isHelper")).booleanValue() == Boolean.FALSE) { //add invariants only once
           ((Properties) o).put("firstPost", Boolean.FALSE);
-          final Term invToPost = (Term) invToPostconditions(o);
-          allPosts = new Post(allPosts.getRVar(), Logic.and(allPosts.getPost(), invToPost));
+          invToPostconditions(o);
         }
-        Lookup.postconditions.put(rd, allPosts);
         break;
       default:
         break;
@@ -519,10 +535,7 @@ public class JmlVisitor extends VisitorArgResult {
     newExPost = newExPost.subst(newExceptionVar, commonExceptionVar);
     final Term guard = Logic.assignCompat(Heap.var, commonExceptionVar, typeOfException);
     final Term result = Logic.Safe.implies(guard, newExPost);
-    allExPosts = new Post(allExPosts.getRVar(), Logic.and(allExPosts.getPost(), result));
-    Lookup.exceptionalPostconditions.put(currentRoutine, allExPosts);
-
-
+    addToExceptionalPostcondition(result, o);
     return null;
   }
 
@@ -858,18 +871,7 @@ public class JmlVisitor extends VisitorArgResult {
 
   
   public /*@non_null*/ Object visitQuantifiedExpr(/*@non_null*/ QuantifiedExpr x, Object o) {
-    Term resultTerm = null; 
-    switch (x.quantifier) {
-      case TagConstants.FORALL:
-        resultTerm = fTranslator.forAllQuantifier(x, o);
-        break;
-      case TagConstants.EXISTS:
-        resultTerm = fTranslator.existsQuantor(x, o);
-        break;
-      default: //error  
-        break;
-    }
-    return resultTerm; 
+    return fTranslator.quantifier(x, o);
   }
   
   
@@ -1077,7 +1079,8 @@ public class JmlVisitor extends VisitorArgResult {
    * @param o Properties object also containing all modifiable types.
    * @return Returns a term that says that all invariants have to hold.
    */
-  public Object invToPreconditions(final /*@non_null*/ Object o) {
+  public void invToPreconditions(final /*@non_null*/ Object o) {
+     
     final QuantVariableRef x = Expression.rvar(Ref.sort);
     final QuantVariableRef type = Expression.rvar(Type.sort);
     final QuantVariable[] vars = {x.qvar, type.qvar};
@@ -1087,7 +1090,7 @@ public class JmlVisitor extends VisitorArgResult {
     final Term andTerm = Logic.and(allocTerm, typeOfTerm);
     final Term implTerm = Logic.implies(andTerm, invTerm);
     final Term forAllTerm = Logic.forall(vars, implTerm);
-    return forAllTerm;
+    addToPrecondition(forAllTerm, o);
   }
 
 
@@ -1097,7 +1100,7 @@ public class JmlVisitor extends VisitorArgResult {
    * @return Returns a Term containing the invariants that have to be checked
    * at the end of a method.
    */
-  public Object invToPostconditions(final /*@non_null*/ Object o) { 
+  public void invToPostconditions(final /*@non_null*/ Object o) { 
     final QuantVariableRef x = Expression.rvar(Ref.sort);
     final QuantVariableRef type = Expression.rvar(Type.sort);
     final QuantVariable[] vars = {x.qvar, type.qvar}; 
@@ -1109,7 +1112,7 @@ public class JmlVisitor extends VisitorArgResult {
     andTerm = Logic.and(andTerm, visibleTerm);
     final Term implTerm = Logic.implies(andTerm, invTerm);
     final Term forAllTerm = Logic.forall(vars, implTerm);
-    return forAllTerm;
+    addToPostcondition(forAllTerm, o);
   }
 
   
@@ -1117,13 +1120,11 @@ public class JmlVisitor extends VisitorArgResult {
    * Adds a Term to the routines postcondition describing all assignable variables
    * @param o Properties object also containing all assignable variables
    */
-  private void doAssignable(final Object o) {
+  public void doAssignable(final Object o) {
     final HashSet fAssignable    = (HashSet) ((Properties) o).get("assignableSet");
     
     if (((Boolean) ((Properties) o).get("nothing")).booleanValue() | !fAssignable.isEmpty())
     {
-      final RoutineDecl rd = (RoutineDecl)((Properties) o).get("method");
-      Post allPosts = Lookup.postconditions.get(rd);
       Term forAllTerm = null;
       final QuantVariableRef targetVar = Expression.rvar(Ref.sort); 
       //    FIXME: sortAny should be available (now deprecated in Formula.sort)
@@ -1136,13 +1137,79 @@ public class JmlVisitor extends VisitorArgResult {
       }
       assigTerm = Logic.or(assigTerm, equalsTerm); 
       forAllTerm = Logic.forall(vars, assigTerm);
-      //    FIXME jgc: I don't know if fVar should be needed here; needs a review
-      allPosts = new Post(allPosts.getRVar(), Logic.and(allPosts.getPost(), forAllTerm));
-      Lookup.postconditions.put(rd, allPosts);
-     ((Properties) o).put("nothing", Boolean.FALSE); //set default values for next routine
-     ((Properties) o).put("assignableSet", new HashSet<QuantVariableRef>()); 
+      addToPostcondition(forAllTerm, o);
+      ((Properties) o).put("nothing", Boolean.FALSE); //cbr: set default values for next routine, I think it's not needful here, coz their value doesn't affect the next routine
+      ((Properties) o).put("assignableSet", new HashSet<QuantVariableRef>()); 
     } 
   }
+  
+  public boolean testcase1() {
+    return false;
+  }
 
+  
+  /**
+   * Adds a given Term to preconditions of a given method
+   * @param folTerm to add to preconditions in Lookup hash map
+   * @param o Properties object contains the concerning method
+   */
+  public void addToPrecondition(final Term folTerm, final Object o) {
+    final RoutineDecl rd = (RoutineDecl)((Properties) o).get("method");
+    Term allPres = Lookup.preconditions.get(rd);
+    
+    if (allPres == null) {
+      allPres = folTerm;
+    }
+    else {
+      allPres = Logic.Safe.and(allPres, folTerm);
+    }
+    Lookup.preconditions.put(rd, allPres);
+  }  
+  
+  
+  /**
+   * Adds a given Term to postconditions of a given method 
+   * @param folTerm to add to postconditions in Lookup hash map
+   * @param o Properties object contains the concerning method
+   */
+  public void addToPostcondition(final Term folTerm, final Object o) {
+    
+    final RoutineDecl rd = (RoutineDecl)((Properties) o).get("method");
+    Post allPosts = Lookup.postconditions.get(rd);
+    
+    if (allPosts == null) {
+      final QuantVariableRef result = (QuantVariableRef) ((Properties) o).get("result");
+      Lookup.postconditions.put(rd, new Post(result, folTerm));
+    }
+    else {
+      allPosts = new Post(allPosts.getRVar(), Logic.Safe.and(allPosts.getPost(), folTerm));
+      Lookup.postconditions.put(rd, allPosts);
+    }
+  }
+  
+  
+  
+  /**
+   * Adds a given Term to exceptional postconditions of a given method 
+   * @param folTerm to add to exceptional postconditions in Lookup hash map
+   * @param o Properties object contains the concerning method
+   */
+  public void addToExceptionalPostcondition(final Term folTerm, final Object o) {
+    
+    final RoutineDecl rd = (RoutineDecl)((Properties) o).get("method");
+    Post allExPosts = Lookup.exceptionalPostconditions.get(rd);
+    
+    if (allExPosts == null) {
+      final QuantVariableRef result = (QuantVariableRef) ((Properties) o).get("result");
+      Lookup.exceptionalPostconditions.put(rd, new Post(result, folTerm));
+    }
+    else {
+      allExPosts = new Post(allExPosts.getRVar(), Logic.Safe.and(allExPosts.getPost(), folTerm));
+      Lookup.exceptionalPostconditions.put(rd, allExPosts);
+    }
+    
+  }
+  
+  
 
 }
