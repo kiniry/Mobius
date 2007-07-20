@@ -22,7 +22,7 @@ public class MethodSpecification implements BCAttribute{
 	}
 	
 	public String printCode(BMLConfig conf) {
-		conf.wciecie = "";
+		conf.indent = "";
 		String code = "";
 		if (precondition != null)
 			if (precondition != Predicate0Ar.TRUE)

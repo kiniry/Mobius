@@ -21,6 +21,7 @@ public class BMLConfig {
 	public boolean goControlPrint = false;
 	
 	// using old, smartless line breaking algorithm
+	@Deprecated
 	public boolean goSimpleLineBreaking = false;
 	
 	// priority of the parent of the currently
@@ -29,22 +30,29 @@ public class BMLConfig {
 	
 	// used in controlPrint as a prefix of each
 	// line of expression (sequence of spaces)
-	public String wciecie;
+	public String indent;
+	
+	public final String lineStart = " *  ";
+	
+	public final String lineIndent = "  ";
 	
 	// position in current line (for expression.printCode*(),
-	// line breaking)
+	// and old (simple) line breaking algorithm)
+	@Deprecated
 	public int line_pos;
 	
 	public final int max_total_line_width = 40;
 	
 	// maximum annotation line width
+	@Deprecated
 	public int max_line_width = max_total_line_width - 4;
 	
 	// depth of currrently displayed expression
 	// in expression tree
 	public int expr_depth;
+
+	public IPrittyPrinter pp;
 	
-	// TODO: unused (!)
 	// this two characters in expressions are reserved
 	// for line-breaking procedure and shouldn't appear
 	// anywhere else in expressions
@@ -53,18 +61,33 @@ public class BMLConfig {
 	
 	public BMLConfig(BCConstantPool cp) {
 		this.cp = cp;
+		this.pp = new PrittyPrinter(this);
 	}
 	
 	// beginning of the annotation's line
 	public String newLine() {
-		max_line_width = max_total_line_width - wciecie.length() + 1;
-		return "\n *  " + wciecie;
+		max_line_width = max_total_line_width - indent.length() - 4;
+		return "\n" + lineStart + indent;
+	}
+	
+	// position of first character (after indent) in line
+	public int start_line_pos() {
+		return newLine().length() - 1;
+	}
+	
+	// increase indent
+	public void incInd() {
+		indent += lineIndent;
+	}
+	
+	// decrease indent
+	public void decInd() {
+		indent = indent.substring(0, indent.length() - lineIndent.length());
 	}
 	
 	// surrounds annotation str with comment brackets
-	// XXX unused?
 	public String addComment(String str) {
-		if (str.lastIndexOf("\n") >= 0) {
+		if ((str.lastIndexOf("\n") >= 0) || (str.length() > max_total_line_width - 8)) {
 			return "/*  " + str + "\n */\n";
 		} else {
 			return "/*  " + str + "  */\n";

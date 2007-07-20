@@ -140,18 +140,17 @@ public abstract class Expression {
 		int length = 0;
 		if (subExpressions != null)
 			length = subExpressions.length;
-		String w = conf.wciecie;
-		conf.wciecie = w + "   ";
+		conf.incInd();
 		if (length > 0)
 			str += "(" + printRoot(conf) + ", " + priority;
 		for (int i=0; i<length; i++) {
 			if (i > 0)
 				str += ", ";
-			str += "\n" + conf.wciecie + subExpressions[i].controlPrint(conf);
+			str += "\n" + conf.indent + subExpressions[i].controlPrint(conf);
 		}
 		if (length > 0)
 			str += ")";
-		conf.wciecie = w;
+		conf.decInd();
 		return str;
 	}
 	
@@ -179,251 +178,13 @@ public abstract class Expression {
 	public String printLine(BMLConfig conf, int usedc) {
 		conf.line_pos = usedc;
 		conf.root_pri = MAX_PRI;
-		String s = conf.wciecie;
-		conf.wciecie += "   ";
+		conf.incInd();
 		conf.expr_depth = 0;
 		String str = printCode(conf);
 		if (!conf.goSimpleLineBreaking)
-			str = breakLines(conf, str, usedc);
-		conf.wciecie = s;
+			str = conf.pp.breakLines(str, usedc);
+		conf.decInd();
 		return str;
-	}
-
-	// debug array print, will be removed shortly
-	private void printArr(int[] arr, int cnt) {
-		for (int i=0; i<cnt; i++)
-			System.out.print(arr[i]);
-		System.out.println();
-	}
-
-	/**
-	 * Line-breaking for expression str. Characters
-	 * conf.expr_block_start and conf.expr_block_end
-	 * represents blocks boundaries.
-	 * 
-	 * @param conf - see {@link BMLConfig}
-	 * @param str - expression to be divided
-	 * @param spos - current position in line
-	 * @return str with conf.newLine()'s
-	 * 			and without block boundaries
-	 */
-	private String breakLines(BMLConfig conf, String str, int spos) {
-		boolean debug = false;
-		int strlen = str.length();
-		int maxlen = conf.max_line_width;
-		int pos = 0;
-		int d = 0;
-		int charc = 0;
-		String line = "";
-		int[] depth = new int[strlen];
-		while (pos < strlen) {
-			char ch = str.charAt(pos);
-			if (ch == '{') {
-				d++;
-			} else if (ch == '}') {
-				d--;
-			} else {
-				depth[charc] = d;
-				line += ch;
-				charc++;
-			}
-			pos++;
-		}
-		int maxl = maxlen - spos;
-		if (charc <= maxl)
-			return line;
-		if (debug) {
-			for (int i=0; i<10; i++)
-				System.out.print("V---------");
-			System.out.println("/n  charc="+charc+", maxl="+maxl);
-			System.out.println(str);
-			System.out.println(line);
-			printArr(depth, charc);
-		}
-		double[] bonus = new double[256];
-		for (int i=0; i<256; i++)
-			bonus[i] = 1;
-		bonus[(int)'['] = 0.5;
-		bonus[(int)'.'] = 0.3;
-		int startp = 0;
-		String res = "";
-		while (true) {
-			int endp = startp + maxl;
-			if (debug)
-				System.out.println(line.substring(startp, endp));
-			boolean[] ok = new boolean[maxl];
-			for (int i=0; i<maxl; i++)
-				ok[i] = false;
-			int[] br = new int[maxl];
-			int brc = 0;
-			int lastd = 1000;
-			for (int i=endp-1; i>startp; i--) {
-				if ((depth[i] < depth[i-1]) && (depth[i] < lastd)) {
-					int j = i-1;
-					char ch;
-					do {
-						j++;
-						ch = line.charAt(j);
-					} while ((j < endp) && ((ch == ')') || (ch == ']') || (ch == ';')));
-					if (j < endp) {
-						ok[j-startp] = true;
-						lastd = depth[i];
-						br[brc++] = j;
-					}
-				}
-			}
-			br[brc] = startp;
-			if (debug) {
-				for (int i=0; i<maxl; i++)
-					System.out.print(ok[i] ? "X" : ".");
-				System.out.println();
-			}
-			int npos = startp + maxl;
-			if (brc > 0) {
-				int bestp = 0;
-				double bestv = 1000 * ((double)(br[0] - br[1]) / (endp - br[1])) - Math.pow(endp - br[0], 2);
-				bestv *= bonus[(int)(line.charAt(br[0]))];
-				if (debug)
-					System.out.print((int)bestv);
-				for (int i=1; i<brc; i++) {
-					double v = -1;
-					if (br[i-1] > br[i])
-						v = 2000 * ((double)(br[i] - br[i+1]) / (br[i-1] - br[i+1])) - Math.pow(endp - br[i], 2);
-					v *= bonus[(int)(line.charAt(br[i]))];
-					if (debug)
-						System.out.print("  " + (int)v);
-					if (v > bestv) {
-						bestv = v;
-						bestp = i;
-					}
-				}
-				npos = br[bestp];
-				if (debug) {
-					System.out.println();
-					for (int i=0; i<maxl; i++)
-						System.out.print(i+startp == br[bestp] ? "#" : ".");
-					System.out.println();
-				}
-			}
-			res += line.substring(startp, npos) + conf.newLine();
-			if (npos + maxlen >= charc) {
-				res += line.substring(npos);
-				break;
-			}
-			maxl = maxlen;
-			startp = npos;
-			if (debug)
-				System.out.println("+++++++++++++");
-		}
-		return res;
-	}
-	
-	private String[] splitRoot(String str) {
-		Vector<String> v = new Vector<String>();
-		int level = 0;
-		String sub = "";
-		for (int p=0; p<str.length(); p++) {
-			char ch = str.charAt(p);
-			if (ch == '{') {
-				if (level == 0) {
-					v.add(sub);
-					sub = "";
-				} else {
-					sub += '{';
-				}
-				level++;
-			} else if (ch == '}') {
-				level--;
-				if (level < 0)
-					throw new RuntimeException(str.substring(0, p)+"#"+str.substring(p));
-				if (level == 0) {
-					v.add(sub);
-					sub = "";
-				} else {
-					sub += '}';
-				}
-			} else {
-				sub += ch;
-			}
-		}
-		if ((v.size() == 0) && (str.lastIndexOf("{") >= 0))
-			return (splitRoot(str.substring(1, str.length()-1)));
-		v.add(sub);
-		v.add("");
-		String[] result = new String[v.size()];
-		for (int i=0; i<v.size(); i++)
-			result[i] = v.elementAt(i);
-		return result;
-	}
-	
-	private String cleanup(String str) {
-		String result = "";
-		for (int i=0; i<str.length(); i++) {
-			char ch = str.charAt(i);
-			if ((ch != '{') && (ch != '}'))
-				result += ch;
-		}
-		return result;
-	}
-	
-	private int colsLeft(BMLConfig conf, String str, int start) {
-		int p = str.lastIndexOf("\n");
-		if (p < 0) {
-			return conf.max_line_width - start - str.length();
-		} else {
-			return conf.max_total_line_width - str.substring(p).length();
-		}
-	}
-	
-	private int strlen(String str) {
-		return cleanup(str).length();
-	}
-
-	private String breakLines1(BMLConfig conf, String str, int spos) {
-		System.out.println(str);
-		System.out.println(cleanup(str));
-//		for (int i=0; i<sub.length; i++)
-//		System.out.println(sub[i]);
-		System.out.println("-----------------------------------");
-//		System.out.println(conf.wciecie+";");
-		String result = breakLines1(conf, str, spos, "");
-//		System.out.println(conf.wciecie+";");
-		return result;
-	}
-	
-	private String breakLines1(BMLConfig conf, String str, int spos, String suffix) {
-//		if (str.length() < 1) throw new RuntimeException(str);
-//		System.out.println("|"+str+"|");
-		String result = "";
-		if (strlen(str) < conf.max_line_width - spos - suffix.length())
-			return cleanup(str);
-		String[] sub = splitRoot(str);
-		if (sub.length == 1)
-			return cleanup(sub[0]);
-		String w = conf.wciecie;
-		conf.wciecie += "  ";
-		if (spos == 0)
-			result = "  ";
-		result += sub[0];
-		spos += strlen(sub[0]); //XXX
-		for (int i=1; i<sub.length-1; i+=2) {
-			String s = sub[i] + sub[i+1];
-			if (colsLeft(conf, s, spos) > 0) {
-				result += cleanup(s);
-				spos += strlen(s);
-			} else {
-				if (spos > 0)
-					result += conf.newLine();
-				result += breakLines1(conf, sub[i], 0, "");
-				spos = conf.max_line_width - colsLeft(conf, result, 0);
-				result += sub[i+1];
-				spos += strlen(sub[i+1]);
-			}
-		}
-		if (sub.length % 2 == 1)
-			result += sub[sub.length - 1];
-		conf.wciecie = w;
-		return result;
 	}
 	
 	/**
@@ -462,7 +223,8 @@ public abstract class Expression {
 				if ((ch == ' ') || (ch == '\n') || (ch == '*')) {
 					str2 += ch;
 				} else {
-					str2 += "{(" + str.substring(i, str.length()) + ")}";
+					str2 += conf.expr_block_start + "(" + str.substring(i, str.length())
+						+ ")" + conf.expr_block_end;
 					break;
 				}
 			}

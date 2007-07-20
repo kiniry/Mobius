@@ -86,6 +86,7 @@ public class BCClass {
 		while (iter.hasNext())
 			code += ((BCMethod)(iter.next())).printCode(conf) + "\n";
 		code += "}\n";
+		code = conf.pp.afterDisplay(code);
 		return code;
 	}
 	

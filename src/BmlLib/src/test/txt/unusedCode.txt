@@ -1,0 +1,78 @@
+This are deprecated fragments of code, that may be needed again, for example for debugging
+  after founding an old, hidden bug, but it's very unlikely. They have been commented out,
+  and later moved here after they weren't needed for some (long) time.
+
+				result += "{"+conf.start_line_pos()+"+"+start+"+"+strlen(s)+"<"+conf.max_total_line_width+"-"+epos+cleanup(s)+"}";
+
+		for (int i=0; i<sub.length-2; i+=2) {
+			int epos = (i > sub.length-5) ? end : 0; //?
+			String s = sub[i] + sub[i+1];
+			if (strlen(s) + start < conf.max_line_width - epos) {
+				result += cleanup(s);
+				start += strlen(s);
+			} else {
+				String[] sub2 = splitRoot(sub[i+1]);
+				boolean b = breakLines(sub2[1], 0, sub2[2].length(), w).lastIndexOf("\n") >= 0;
+				start += strlen(sub[i]);
+				String e = breakLines(sub[i+1], strlen(sub[i]), epos, b ? w : w+"  ");
+				if (e.charAt(0) != '\n') {
+					result += conf.newLine();
+					start = 0;
+				}
+				result += sub[i] + e;
+				start += e.length() - e.lastIndexOf("\n")
+					- (conf.max_total_line_width - conf.max_line_width) + sub[i].length();
+			}
+		}
+		if (sub.length % 2 == 0)
+			result += sub[sub.length - 2];
+	
+	private int colsLeft(String str, int start) {
+		int p = str.lastIndexOf("\n");
+		if (p < 0) {
+			return conf.max_line_width - start - str.length();
+		} else {
+			return conf.max_total_line_width - str.substring(p).length();
+		}
+	}
+			
+	private String breakLines(String str, int spos, String suffix) {
+//		if (str.length() < 1) throw new RuntimeException(str);
+//		System.out.println("|"+str+"|");
+		String result = "";
+		if (strlen(str) < conf.max_line_width - spos - suffix.length())
+			return cleanup(str);
+		String[] sub = splitRoot(str);
+		if (sub.length == 1)
+			return cleanup(sub[0]);
+		String w = conf.wciecie;
+		conf.wciecie += "  ";
+		if (spos == 0)
+			result = "  ";
+		result += sub[0];
+		spos += strlen(sub[0]); //XXX
+		for (int i=1; i<sub.length-1; i+=2) {
+			String s = sub[i] + sub[i+1];
+			if (colsLeft(s, spos) > 0) {
+				result += cleanup(s);
+				spos += strlen(s);
+			} else {
+				if (spos > 0)
+					result += conf.newLine();
+				result += breakLines(sub[i], 0, "");
+				spos = conf.max_line_width - colsLeft(result, 0);
+				result += sub[i+1];
+				spos += strlen(sub[i+1]);
+			}
+		}
+		if (sub.length % 2 == 1)
+			result += sub[sub.length - 1];
+		conf.wciecie = w;
+		return result;
+	}
+
+		System.out.println(str);
+		System.out.println(cleanup(str));
+		for (int i=0; i<sub.length; i++)
+			System.out.println(sub[i]);
+		System.out.println("-----------------------------------");

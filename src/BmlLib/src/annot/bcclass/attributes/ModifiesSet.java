@@ -29,13 +29,20 @@ public class ModifiesSet implements BCAttribute {
 		clazz = _clazz;
 	}
 	
-	public String printCode(BMLConfig conf) {
+	public String printCode(BMLConfig conf, int usedc) {
 		if (modifiesExpression.length <= 0)
 			return "?";
 		String code = "";
+		conf.incInd();
 		for (int i=0; i<modifiesExpression.length; i++)
-			if (modifiesExpression[i] != null)
-				code += ((i==0) ? "" : ", ") + modifiesExpression[i].printLine(conf);
+			if (modifiesExpression[i] != null) {
+				if (i > 0)
+					code += ", ";
+				code += conf.expr_block_start + modifiesExpression[i].printCode(conf)
+					+ conf.expr_block_end;
+			}
+		code = conf.pp.breakLines(code, usedc);
+		conf.decInd();
 		return code;
 	}
 	

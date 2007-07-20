@@ -22,9 +22,9 @@ public class SingleLoopSpecification {
 	public String printCode(BMLConfig conf) {
 		String code = "("+pcIndex+")";
 		code += conf.newLine() + "loop_invariant " + invariant.printLine(conf, 17);
-		code += conf.newLine() + "loop_modifies " + modifies.printCode(conf);
+		code += conf.newLine() + "loop_modifies " + modifies.printCode(conf, 14);
 		String dec = decreases.printLine(conf, 12);
-		if (!"1".equals(dec)) // TODO zrób cos z tym
+		if (!"1".equals(dec)) // TODO zrï¿½b cos z tym
 			code += conf.newLine() + "decreases " + dec;
 		return conf.addComment(code);
 	}
