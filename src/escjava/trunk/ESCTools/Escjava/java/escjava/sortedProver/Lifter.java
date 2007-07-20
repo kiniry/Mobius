@@ -1013,8 +1013,6 @@ public class Lifter extends EscNodeBuilder
     public FnSymbol symAssignCompat = registerFnSymbol("%assignCompat", new Sort[] { sortMap, sortValue, sortType }, sortPred);
     /** cbr: used for invariants. \forall x,t : alive(x) & typeof(x)=t -> inv(x,t) */
     public PredSymbol symInv = registerPredSymbol("%inv", new Sort[]{sortRef, sortType});
-    /** cbr: symFresh used for a fresh allocated object */
-    public PredSymbol symFresh = registerPredSymbol("%fresh", new Sort[]{sortRef});
     
     
 	// we just want Sort and the like, don't implement anything	
