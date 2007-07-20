@@ -194,7 +194,7 @@ public class JmlVisitor extends VisitorArgResult {
       if (x.pmodifiers.elementAt(i).getTag() == TagConstants.ENSURES) {
         hasPost = true;
       }
-      else if (x.pmodifiers.elementAt(i).getTag() == TagConstants.HELPER) { //TODO: Doesn't work yet. Tag is not set to TagConstant.Helper, even it's a helper routine
+      else if (x.pmodifiers.elementAt(i).getTag() == TagConstants.HELPER) {
         ((Properties) o).put("isHelper", Boolean.TRUE);
       }
     }
