@@ -389,17 +389,8 @@ public class JmlExprToFormula {
 
   public Object variableAccess(final VariableAccess x, final Object o) {
     final Boolean oldProp = (Boolean) ((Properties) o).get("old");
-    final Boolean fresh = (Boolean) ((Properties) o).get("fresh");
     final Boolean predProp = (Boolean) ((Properties)o).get("pred");
     Term res = null;
-   
-
-    if (fresh.booleanValue()) { 
-      res = Logic.fresh(Expression.rvar(x.decl));
-      HashSet<Term> freshSet = (HashSet) ((Properties)o).get("freshSet");
-      freshSet.add(res);
-      ((Properties)o).put("freshSet", freshSet);
-    } //TODO:  better else if...
     
     
     if (oldProp.booleanValue()) { 
@@ -432,26 +423,38 @@ public class JmlExprToFormula {
   }
 
   public Object fieldAccess(final FieldAccess x, final Object o) {
-    final Boolean oldProp = (Boolean) ((Properties) o).get("old");
-    final Term obj = (Term) x.od.accept(fVisitor, o);
-    QuantVariable var = null;
-    QuantVariableRef heap = Heap.var;
-    if (oldProp.booleanValue()) {
-      heap = Heap.varPre;
+
+    if ((Boolean) ((Properties) o).get("fresh")) { 
+      //TODO: create a new quantvariableref with type as sort
+      final QuantVariableRef qref = Type.translate(x.decl.type);
+      final QuantVariableRef qref2 = Expression.rvar(x.decl);
+      HashSet<Term> freshSet = (HashSet) ((Properties)o).get("freshSet");
+      freshSet.add(qref2);
+      ((Properties)o).put("freshSet", freshSet);
+      return null;
     }
+    else { 
+      final Boolean oldProp = (Boolean) ((Properties) o).get("old");
+      final Term obj = (Term) x.od.accept(fVisitor, o);
+      QuantVariable var = null;
+      QuantVariableRef heap = Heap.var;
+      if (oldProp.booleanValue()) {
+        heap = Heap.varPre;
+      }
 
     var = Expression.var(x.decl);
     return Heap.select(heap, obj, var);
+    }
   }
   
   
   /**
    * Builds up a FOL term as: \fresh(x,y) --> and(%fresh(x:ref),%(y:ref)):PRED
    * @param x the NaryExpr with TagConstant.FRESH
-   * @param o
+   * @param o properties object holding whether fresh property is set and holds the freshSet
    * @return the generated FOL term
    */
-  public Object freshExpression(final NaryExpr x, final Object o){
+  public Object freshExpression(final NaryExpr x, final Object o) { 
     ((Properties) o).put("fresh", Boolean.TRUE);
     fVisitor.visitGCExpr(x, o);
     ((Properties) o).put("fresh", Boolean.FALSE);
@@ -462,16 +465,31 @@ public class JmlExprToFormula {
     final Iterator iter = freshVars.iterator();
     while (iter.hasNext()) { 
       if (res == null) {
-        res = (Term) iter.next();
+        res = doFreshTerm((QuantVariableRef)iter.next());
       }
       else { 
-        res = Logic.and(res, (Term) iter.next());
+        res = Logic.and(res, doFreshTerm((QuantVariableRef) iter.next()));
       }
       
     }
     return res;
   }
 
+  
+  
+  
+  /**
+   * Generates a Term of an fresh variable: (x != null) and !isAllocated(Pre_Heap, x) and isAllocated(Heap, x)
+   * @param qref the Term to translate into a fresh FOL term
+   * @return the generated FOL term
+   */
+  public Term doFreshTerm(final QuantVariableRef qref) {
+    final Term notEqualNull = Logic.not(Logic.equalsNull(qref));
+    final Term isNotAllocatedInPreHeap = Logic.not(Logic.isAllocated(Heap.varPre, qref));
+    final Term isAllocatedinHeap = Logic.isAllocated(Heap.var, qref);
+    return Logic.and(Logic.and(notEqualNull, isNotAllocatedInPreHeap), isAllocatedinHeap);
+  }
+  
   public Object naryExpr(final NaryExpr x, final Object o) {
     final Boolean old = (Boolean) ((Properties) o).get("old");
     ((Properties) o).put("old", Boolean.TRUE);
