@@ -397,9 +397,12 @@ public class Main extends javafe.SrcTool
           ArrayList temp = options.inputEntries;
           // the package name of this class
           String[] p = new String[0];
+          
+          // TODO Task #585 Soundness and Completeness Visitors
           // create the visitors
           RShiftVisitor rshift = new RShiftVisitor();
           LShiftVisitor lshift = new LShiftVisitor();
+          LoopSoundnessVisitor forloop = new LoopSoundnessVisitor();
           // run the visitors on each of the classes
           for(; current_class < temp.size(); current_class++) {
             // get the type signature for the class we are interested in as
@@ -410,6 +413,7 @@ public class Main extends javafe.SrcTool
             CompilationUnit classunit = classtype.getCompilationUnit();
             rshift.visitASTNode(classunit);
             lshift.visitASTNode(classunit);
+            forloop.visitASTNode(classunit);
           }
         }
 	if (!keepProver) ProverManager.kill();
