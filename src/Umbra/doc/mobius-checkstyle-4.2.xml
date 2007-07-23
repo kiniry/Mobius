@@ -123,9 +123,6 @@
         <module name="ReturnCount">
             <property name="max" value="3"/>
         </module>
-        <module name="IllegalType">
-            <property name="tokens" value="METHOD_DEF,PARAMETER_DEF,VARIABLE_DEF"/>
-        </module>
         <module name="DeclarationOrder"/>
         <module name="ParameterAssignment"/>
         <module name="ExplicitInitialization"/>
@@ -167,9 +164,6 @@
         <module name="Indentation">
             <property name="basicOffset" value="2"/>
             <property name="caseIndent" value="2"/>
-        </module>
-        <module name="IllegalType">
-            <property name="tokens" value="METHOD_DEF,PARAMETER_DEF,VARIABLE_DEF"/>
         </module>
     </module>
     <module name="PackageHtml"/>

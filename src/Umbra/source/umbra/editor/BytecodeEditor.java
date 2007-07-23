@@ -21,7 +21,6 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor;
 import org.eclipse.ui.editors.text.TextEditor;
 import org.eclipse.ui.part.FileEditorInput;
-import org.eclipse.ui.texteditor.AbstractTextEditor;
 
 import umbra.UmbraHelper;
 import umbra.UmbraPlugin;
@@ -152,7 +151,7 @@ public class BytecodeEditor extends TextEditor {
    * it is saved unchanged).
    *
    * @param a_progress_monitor TODO
-   * @see AbstractTextEditor#doSave(IProgressMonitor)
+   * @see org.eclipse.ui.texteditor.AbstractTextEditor#doSave(IProgressMonitor)
    */
   public final void doSave(final IProgressMonitor a_progress_monitor) {
     super.doSave(a_progress_monitor);
@@ -246,12 +245,13 @@ public class BytecodeEditor extends TextEditor {
     final IPath outputloc = jproject.getOutputLocation().append("/A");
                                                                 //bogus name
     final String pathName = getPath(outputloc).removeLastSegments(1).
+                                               addTrailingSeparator().
                                                toPortableString();
 
     // Get class name together with its package name
     //FIXME there is a better way to obtain the name!!!
     final String tmp = a_path.removeFirstSegments(1).toOSString();
-    final String clname = tmp.substring(0, tmp.lastIndexOf("."));
+    final String clname = (tmp.substring(0, tmp.lastIndexOf(".")));
 
     final ClassPath cp = new ClassPath(pathName);
     final SyntheticRepository strin = SyntheticRepository.getInstance(cp);
@@ -270,35 +270,13 @@ public class BytecodeEditor extends TextEditor {
     BCClass bcc;
     try {
       bcc = new BCClass(jc);
+      //this is where the textual representation is generated
+      //FIXME we have to make sure it makes sense!!!
       final char[] bccode = bcc.printCode().toCharArray();
-//      for(int i = 0; i < methods.length; i++) {
-//        try {
-//          namesLen[i] = methods[i].toString().getBytes().length;
-//          names[i] = methods[i].toString().getBytes();
-//          codeLen[i] = methods[i].getCode().toString().length();
-//          String bareCode = methods[i].getCode().toString();
-//          String c = addComment(bareCode, commentTab, interlineTab, off);
-//          code[i] = c.getBytes();
-//          codeLen[i] = c.length();
-//          off += getOffset(bareCode);
-//        } catch (NullPointerException e) {
-//          e.printStackTrace();
-//        }
-//      }
-
       final byte[] contents = new byte[bccode.length];
+      //here a char array is transformed to byte array
       for (int i = 0; i < bccode.length; i++) {
         contents[i] = (byte) bccode[i];
-//        for(int j = 0; j < namesLen[i]; j++, k++) {
-//          contents[k] = names[i][j];
-//        }
-//        contents[k] = '\n';
-//        k++;
-//        for(int j = 0; j < codeLen[i]; j++, k++) {
-//          contents[k] = code[i][j];
-//        }
-//        contents[k] = '\n';
-//        k++;
       }
       final FileEditorInput input = (FileEditorInput)getEditorInput();
       final IFile file = input.getFile();

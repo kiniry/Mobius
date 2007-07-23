@@ -12,7 +12,6 @@ import org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.ui.IActionDelegate;
 import org.eclipse.ui.IEditorActionDelegate;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
@@ -46,7 +45,7 @@ public class DisasBCEL implements IEditorActionDelegate {
    * it in a new bytecode editor window.
    *
    * @param an_action see the IActionDelegate.run(IAction)
-   * @see IActionDelegate#run(IAction)
+   * @see org.eclipse.ui.IActionDelegate#run(IAction)
    */
   public final void run(final IAction an_action) {
     final IPath active = ((FileEditorInput) (my_editor.getEditorInput())).
@@ -73,11 +72,11 @@ public class DisasBCEL implements IEditorActionDelegate {
       final FileEditorInput input = new FileEditorInput(file);
       final BytecodeEditor bc_editor = (BytecodeEditor) (page.openEditor(input,
                            UmbraHelper.BYTECODE_EDITOR_CLASS, true));
-      final JavaClass jc = bc_editor.getJavaClass();
       bc_editor.setRelatedEditor(my_editor);
       bc_editor.refreshBytecode(UmbraHelper.getClassFileFile(jFile, my_editor).
                                             getFullPath(),
                                 null, null);
+      final JavaClass jc = bc_editor.getJavaClass();
       page.closeEditor(bc_editor, true);
       openEditorAndDisassemble(page, input, jc);
     } catch (CoreException e) {

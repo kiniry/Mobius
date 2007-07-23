@@ -12,7 +12,6 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.ui.IActionDelegate;
 import org.eclipse.ui.IEditorActionDelegate;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.part.FileEditorInput;
@@ -186,7 +185,7 @@ public class BytecodeToBoogiePLAction implements IEditorActionDelegate {
    *
    * @param an_action TODO
    * @param a_selection TODO
-   * @see IActionDelegate#selectionChanged(IAction, ISelection)
+   * @see org.eclipse.ui.IActionDelegate#selectionChanged(IAction, ISelection)
    */
   public void selectionChanged(final IAction an_action,
                                final ISelection a_selection) {

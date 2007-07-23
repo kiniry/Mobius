@@ -9,7 +9,6 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.ui.IActionDelegate;
 import org.eclipse.ui.IEditorActionDelegate;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.part.FileEditorInput;
@@ -51,7 +50,7 @@ public class CommitAction implements IEditorActionDelegate {
    * of Java compilation (@see BytecodeEditor#doSave(IProgressMonitor)).
    *
    * @param an_action the action that triggered the operation
-   * @see IActionDelegate#run(IAction)
+   * @see org.eclipse.ui.IActionDelegate#run(IAction)
    */
   public final void run(final IAction an_action) {
     my_editor.doSave(null);

@@ -18,7 +18,6 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor;
 import org.eclipse.ui.editors.text.TextEditor;
 import org.eclipse.ui.part.FileEditorInput;
-import org.eclipse.ui.texteditor.AbstractTextEditor;
 
 import umbra.UmbraHelper;
 import umbra.UmbraPlugin;
@@ -156,7 +155,7 @@ public class BoogiePLEditor extends TextEditor {
    *
    * @param a_progress_monitor an object to present the progress; currently,
    *        it is only used in a call to the superclass
-   * @see AbstractTextEditor#doSave(IProgressMonitor)
+   * @see org.eclipse.ui.texteditor.AbstractTextEditor#doSave(IProgressMonitor)
    */
   public final void doSave(final IProgressMonitor a_progress_monitor) {
     super.doSave(a_progress_monitor);
