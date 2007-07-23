@@ -59,8 +59,9 @@ public class BinReader extends Reader {
 			boolean avoidSpec) {
 		javafe.util.Info.out("[loading " + target.getHumanName() + "]");
 
-		// Use BCEL to parse Java 1.5 bytecode
-		if (System.getProperty("java.version").indexOf("1.5") != -1) {
+		// Use BCEL to parse Java 1.5 and later bytecode
+		if ((System.getProperty("java.version").indexOf("1.6") != -1)||
+		    (System.getProperty("java.version").indexOf("1.5") != -1)) {
 
 			BCELReader bcelReader = new BCELReader();
 			return bcelReader.read(target, avoidSpec);
