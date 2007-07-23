@@ -2,7 +2,7 @@
 
 rem To install ESC/Java2 on a new machine, change the following 
 rem line to point to the directory containing the installation:
-set ESCJAVA_ROOT=C:\cygwin\ESC\ESCTools
+set ESCJAVA_ROOT?=C:\cygwin\ESC\ESCTools
 
 
 
