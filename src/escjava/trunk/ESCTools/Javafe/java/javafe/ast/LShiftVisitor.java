@@ -241,7 +241,7 @@ public class LShiftVisitor extends ASTVisitor {
   }
 
   public void visitBinaryExpr(/*@ non_null */ BinaryExpr x) {
-    // if the binary expression contains the right shift operator warn about
+    // if the binary expression contains the left shift operator warn about
     // it
     if(x.getTag() == TagConstants.LSHIFT || x.getTag() == TagConstants.ASGLSHIFT) {
       ErrorSet.warning(x.getStartLoc(), "The semantics of the left shift operator are incomplete.");
