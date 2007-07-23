@@ -1,7 +1,7 @@
 /**
  * $Id$
  *
- * @title "Visitor for Detection of various Unsoundness cases"
+ * @title "Visitor for detection or unsoundness in loops"
  * @description "Walks through an AST and finds any cases where the right
  * shift operator is used. It then adds a warning to ErrorSet about this"
  */
@@ -56,7 +56,7 @@ public class LoopSoundnessVisitor extends ASTVisitor {
     visitASTNode(x);
   }
 
-  public void visitTypeDeclElemPragma(/*@ non_null */ TypeDeclElemPragma x) {
+  public void visitTypeDeclElemPragma(/*@ non_null */ TypeDeclElemPragma x) {    
     visitASTNode(x);
   }
 
@@ -149,7 +149,7 @@ public class LoopSoundnessVisitor extends ASTVisitor {
   }
 
   public void visitForStmt(/*@ non_null */ ForStmt x) {
-    ErrorSet.warning(x.getStartLoc(), "The semantics of loop invariants are unsound.");
+    ErrorSet.warning(x.getStartLoc(), "The semantics of loops without loop invariants are unsound.");
     visitStmt(x);
   }
 
