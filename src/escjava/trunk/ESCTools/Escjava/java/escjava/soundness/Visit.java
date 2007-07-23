@@ -7,7 +7,7 @@ import escjava.ast.TagConstants;
 
 public class Visit {
 	
-	   /*Helper method for retrieving all Bianry "AND" and "OR"
+	   /*Helper method for retrieving all Binary "AND" and "OR"
      *occurences in the children of a Node. Performs a Depth First
      *Search and returns a vector of the results.
      *Used by the Consistency Checker - Conor 2005
