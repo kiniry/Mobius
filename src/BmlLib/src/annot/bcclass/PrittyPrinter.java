@@ -6,6 +6,11 @@ public class PrittyPrinter implements IPrittyPrinter {
 
 	private BMLConfig conf;
 	
+	/**
+	 * true iff infix operators should be at the beginning of a line.
+	 */
+	public boolean startFormOp = true;
+	
 	public PrittyPrinter(BMLConfig conf) {
 		this.conf = conf;
 	}
@@ -52,8 +57,12 @@ public class PrittyPrinter implements IPrittyPrinter {
 	public String afterDisplay(String str) {
 		String result = "";
 		String[] lines = str.split("\n");
-		for (int i=0; i<lines.length; i++)
-			result += filter2(filter1(lines[i])) + "\n";
+		for (int i=0; i<lines.length; i++) {
+			String s = lines[i];
+			s = filter1(s);
+//			s = filter2(s);
+			result += s + "\n";
+		}
 		return result;
 	}
 	
@@ -137,12 +146,13 @@ public class PrittyPrinter implements IPrittyPrinter {
 	 * @param start - used characters in current line, excluding standard indention
 	 * @param end -	used characters at the end of last generated lines
 	 * @param w -	indention to be used at the root of expression <code>str</code>.
+	 * @param prefix - operator to be inserted after newLine (only if <code> startFromOp </code> == true).
 	 * @return <code>str</code> with line-breaks and indentoin when nessessery. No line of this expression
 	 * 				should be longer than max_total_line_width defined in BMLConfig (if possible).
 	 * 				The first line should be shorter by at least <code>start</code> lines, and the last
 	 * 				line by <code>end</code> lines.
 	 */
-	private String breakLines(String str, int start, int end, String w) {
+	private String breakLines(String str, int start, int end, String w, String prefix) {
 		String result = "";
 		if (conf.start_line_pos() + strlen(str) < conf.max_total_line_width - start - end)
 			return cleanup(str);
@@ -151,29 +161,61 @@ public class PrittyPrinter implements IPrittyPrinter {
 			return cleanup(sub[0]);
 		String oldInd = conf.indent;
 		conf.indent = w;
-		result += sub[0];
-		start += strlen(sub[0]);
 		boolean ok = true;
-		for (int i=1; i<sub.length-1; i+=2) {
-			int epos = (i > sub.length - 4) ? end : 0;
-			String s = sub[i] + sub[i+1];
-			if ((conf.start_line_pos() + start + strlen(s) <= conf.max_total_line_width - epos) && ok) {
-				result += cleanup(s);
-				start += strlen(s);
-			} else {
-				String[] sub2 = splitRoot(sub[i]);
-				boolean b = false;
-				if (sub2.length > 3)
-					b = breakLines(sub2[1], 0, sub2[2].length()+epos, w).lastIndexOf("\n") >= 0; //XXX ??
-				String e = breakLines(sub[i], 0, sub[i+1].length()+epos, b ? w : w+conf.lineIndent);
-				if (e.charAt(0) != '\n') {
-					result += conf.newLine();
-					start = 0;
-					if (e.substring(1).lastIndexOf("\n") >= 0)
-						ok = false;
+		if (startFormOp) {
+			for (int i=0; i<sub.length-1; i+=2) {
+				int epos = 0; //?
+				String s = sub[i] + sub[i+1];
+				if ((conf.start_line_pos() + start + strlen(s) <= conf.max_total_line_width - epos) && ok) {
+					result += cleanup(s);
+					start += strlen(s);
+				} else {
+					String[] sub2 = splitRoot(sub[i+1]);
+					boolean b = false;
+					if (sub2.length > 3)
+						b = breakLines(sub2[1], strlen(sub[i]), epos, w, "").lastIndexOf("\n") >= 0; //?
+						String e = breakLines(sub[i+1], strlen(sub[i]), epos, b ? w : w+conf.lineIndent, sub[i]);
+						if (e.length() == 0) {
+							result += sub[i];
+							continue;
+						}
+						if (e.charAt(0) != '\n') {
+							result += conf.newLine();
+							if (i < 2)
+								result += prefix;
+							start = 0;
+							if (e.substring(1).lastIndexOf('\n') >= 0)
+								ok = false;
+							result += sub[i];
+						}
+						result += e;
+						start += result.length() - (result.lastIndexOf("\n") + 1) - conf.start_line_pos();
 				}
-				result += e + sub[i+1];
-				start += result.length() - (result.lastIndexOf("\n") + 1) - conf.start_line_pos();
+			}
+		} else {
+			result += sub[0];
+			start += strlen(sub[0]);
+			for (int i=1; i<sub.length-1; i+=2) {
+				int epos = (i > sub.length - 4) ? end : 0;
+				String s = sub[i] + sub[i+1];
+				if ((conf.start_line_pos() + start + strlen(s) <= conf.max_total_line_width - epos) && ok) {
+					result += cleanup(s);
+					start += strlen(s);
+				} else {
+					String[] sub2 = splitRoot(sub[i]);
+					boolean b = false;
+					if (sub2.length > 3)
+						b = breakLines(sub2[1], 0, sub2[2].length()+epos, w, "").lastIndexOf("\n") >= 0; //XXX ??
+					String e = breakLines(sub[i], 0, sub[i+1].length()+epos, b ? w : w+conf.lineIndent, "");
+					if (e.charAt(0) != '\n') {
+						result += conf.newLine();
+						start = 0;
+						if (e.substring(1).lastIndexOf("\n") >= 0)
+							ok = false;
+					}
+					result += e + sub[i+1];
+					start += result.length() - (result.lastIndexOf("\n") + 1) - conf.start_line_pos();
+				}
 			}
 		}
 		conf.indent = oldInd;
@@ -184,6 +226,6 @@ public class PrittyPrinter implements IPrittyPrinter {
 	 * Adds line-breaking with indention to str (first line should be shorter by <code>spos</code> characters).
 	 */
 	public String breakLines(String str, int spos) {
-		return breakLines(str, spos, 0, conf.indent);
+		return breakLines(str, spos, 0, conf.indent, "");
 	}
 }

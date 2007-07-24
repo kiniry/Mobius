@@ -2,6 +2,12 @@ This are deprecated fragments of code, that may be needed again, for example for
   after founding an old, hidden bug, but it's very unlikely. They have been commented out,
   and later moved here after they weren't needed for some (long) time.
 
+						if ((i > 1) || (sub2.length < 4) || (breakLines(sub2[1], start, sub2[2].length()+epos, w, "").lastIndexOf("\n") >= 0)) {
+						} else {
+							e = breakLines(sub[i], start, sub[i+1].length()+epos, b ? w : w+conf.lineIndent, "");
+						}
+
+
 				result += "{"+conf.start_line_pos()+"+"+start+"+"+strlen(s)+"<"+conf.max_total_line_width+"-"+epos+cleanup(s)+"}";
 
 		for (int i=0; i<sub.length-2; i+=2) {

@@ -36,10 +36,12 @@ public class ModifiesSet implements BCAttribute {
 		conf.incInd();
 		for (int i=0; i<modifiesExpression.length; i++)
 			if (modifiesExpression[i] != null) {
-				if (i > 0)
+//				if (i > 0)
+//					code += ", ";
+				code += conf.expr_block_start + modifiesExpression[i].printCode(conf);
+				if (i < modifiesExpression.length - 1)
 					code += ", ";
-				code += conf.expr_block_start + modifiesExpression[i].printCode(conf)
-					+ conf.expr_block_end;
+				code += conf.expr_block_end;
 			}
 		code = conf.pp.breakLines(code, usedc);
 		conf.decInd();
