@@ -5,7 +5,6 @@ package umbra.java.actions;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -16,7 +15,6 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.FileEditorInput;
 
-import umbra.UmbraException;
 import umbra.UmbraHelper;
 import umbra.editor.BytecodeDocument;
 import umbra.editor.BytecodeEditor;
@@ -60,8 +58,9 @@ public class SynchrSBAction implements IEditorActionDelegate {
     final ITextSelection selection = (ITextSelection)my_editor.
                     getSelectionProvider().getSelection();
     final int off = selection.getOffset();
-    final IPath active = ((FileEditorInput)my_editor.getEditorInput()).
-                        getFile().getFullPath();
+    final IFile activef = ((FileEditorInput)my_editor.getEditorInput()).
+                                                      getFile();
+    final IPath active = activef.getFullPath();
     final int lind = active.toPortableString().
                             lastIndexOf(UmbraHelper.JAVA_EXTENSION);
     if (lind == -1) {
@@ -70,12 +69,7 @@ public class SynchrSBAction implements IEditorActionDelegate {
                   UmbraHelper.JAVA_EXTENSION + "\" file");
       return;
     }
-    IFile file;
-    try {
-      file = getClassFileForJavaFile(active);
-    } catch (UmbraException e1) {
-      return;
-    }
+    final IFile file = UmbraHelper.getBTCFileName(activef, my_editor);
     final FileEditorInput input = new FileEditorInput(file);
     try {
       final BytecodeEditor bcEditor = (BytecodeEditor)my_editor.getSite().
@@ -96,41 +90,6 @@ public class SynchrSBAction implements IEditorActionDelegate {
     } catch (PartInitException e) {
       e.printStackTrace();
     }
-  }
-
-  /**
-   * This method gives the <code>IFile</code> with the bytecode that
-   * corresponds to the file pointed out by the parameter
-   * <code>a_java_path</code>. The method actually adds up the local error
-   * handling code to an invocation of {@ref UmbraHelper.getClassFileName}.
-   *
-   * @param a_java_path a path for a file with a Java source code
-   * @return the corresponding bytecode file
-   * @throws UmbraException in case the file does not exist or
-   */
-  private IFile getClassFileForJavaFile(final IPath a_java_path)
-    throws UmbraException {
-    final String fname = UmbraHelper.replaceLast(a_java_path.toOSString(),
-                  UmbraHelper.JAVA_EXTENSION, UmbraHelper.CLASS_EXTENSION);
-    final IFile filel = ((FileEditorInput)my_editor.getEditorInput()).
-            getFile();
-    IFile file = null;
-    try {
-      file = UmbraHelper.getClassFileFile(filel, my_editor);
-      if (!file.exists()) {
-        MessageDialog.openError(my_editor.getSite().getShell(),
-                    "Bytecode",
-                    "File " + fname + " not found");
-        throw new UmbraException();
-      }
-    } catch (JavaModelException e1) {
-      MessageDialog.openError(my_editor.getSite().getShell(),
-                              "Bytecode",
-                              "The current project has no classfile output " +
-                              "location configured.");
-      throw new UmbraException();
-    }
-    return file;
   }
 
   /**
