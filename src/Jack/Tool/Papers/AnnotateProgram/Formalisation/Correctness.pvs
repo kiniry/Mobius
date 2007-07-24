@@ -112,8 +112,8 @@ BEGIN
         v1 = v2 AND MP_modeled?(mp)(sMP2, sAP2)
 
   deriv_stmt_maintains_equivalence : THEOREM
-    FORALL (mp : MonitoredProgram, ap : Program)(n1, n2 : nat)(c : Stmt)
-           (sMP1, sMP2 : MPState, sAP1, sAP2 : APState) :
+    FORALL (mp : MonitoredProgram, ap : Program)(c : Stmt)
+           (sMP1, sMP2 : MPState, sAP1, sAP2 : APState)(n1, n2 : nat) :
       related_states(mp, ap)(sMP1, sAP1) IMPLIES
       deriv_stmt(mp)(c, sMP1, sMP2)(n1) IMPLIES
       deriv_stmt(ap)(c, sAP1, sAP2)(n2) IMPLIES

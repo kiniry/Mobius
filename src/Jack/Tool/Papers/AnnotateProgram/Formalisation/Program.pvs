@@ -141,7 +141,7 @@ BEGIN
             Stmt[Name],
             Expr[Name]
 
-  This, Super : Name
+  This : Name
 
   % NOTE: It is not correct to have Val in programs because they belong to the
   % semantic domain, however, we do so to simplify the definition of the initial

@@ -25,7 +25,7 @@ BEGIN
 
   % Ghost variable declarations
 
-  new_gvds(mp) : finite_set[FieldDecl] =
+  new_gvds(mp : MonitoredProgram) : finite_set[FieldDecl] =
    {gd : FieldDecl | jtype(gd) = IntType AND
      (name(gd) = cp AND init_val(gd) = Int(unique(init_cp(mva(mp))))) OR
      ((EXISTS (q : (cps(mva(mp)))) : name(gd) = name_of(q) AND 
@@ -114,31 +114,38 @@ BEGIN
       vdsA(a)(vd) IMPLIES
         NOT name_of(q) = name(vd))
 
+  % Java reserved words. We only need to mention This, the other are given as
+  % examples. 
+  reserved_words : finite_set[string] = 
+    {n : string | n = This OR n = "super" OR n = "if" OR n = "then" OR n = "else"}
+
   % The ghost variables we add should not be already defined in the program.
   % (This is because we a flat heap, otherwise we could require them just not
   % to be defined in the monitored class).
-  % NOTE: The case where there is no monitored class is trivial, thus to
-  % simplify proofs we restrict ourselves to the case where such a class exists.
-  not_clashing_model_vars(mp : (wf_MP)) : boolean =
-    LET a = mva(mp), p = program(mp) IN
-    FORALL (c : Class) :
-      classes(p)(c) IMPLIES
-        (FORALL (gv : FieldDecl) :
-          ghost_vars(c)(gv) IMPLIES
-            NOT name(gv) = cp) AND
-        (FORALL (q : CP, gd : FieldDecl) :
-          cps(a)(q) IMPLIES ghost_vars(c)(gd) IMPLIES 
-            NOT name(gd) = name_of(q)) AND
-        (FORALL (vd : MVAVarDecl, gd : FieldDecl) :
-          vdsA(a)(vd) IMPLIES ghost_vars(c)(gd) IMPLIES
-            NOT name(gd) = name(vd))
+%  not_clashing_model_vars(mp : MonitoredProgram) : boolean =
+%         (FORALL (gv : FieldDecl) :
+%           ghost_vars(c)(gv) IMPLIES
+%             NOT name(gv) = cp) AND
+%         (FORALL (q : CP, gd : FieldDecl) :
+%           cps(a)(q) IMPLIES ghost_vars(c)(gd) IMPLIES 
+%             NOT name(gd) = name_of(q)) AND
+%         (FORALL (vd : MVAVarDecl, gd : FieldDecl) :
+%           vdsA(a)(vd) IMPLIES ghost_vars(c)(gd) IMPLIES
+%             NOT name(gd) = name(vd))
+
+  wf_new_vars(mp : MonitoredProgram) : boolean =
+    disjoint_model_vars(mva(mp)) AND
+    FORALL (nv : FieldDecl) : new_gvds(mp)(nv) IMPLIES 
+      NOT reserved_words(name(nv)) AND
+      NOT var_names(getGhostDecls(program(mp)))(name(nv)) AND
+      NOT var_names(getFieldDecls(program(mp)))(name(nv)) AND
+      NOT var_names(getLocalDecls(program(mp)))(name(nv))
 
   ann_program_pre(mp : MonitoredProgram) : boolean =
     wf_MP(mp) AND
     complete(mva(mp)) AND
     well_typed_Program(program(mp)) AND
-    disjoint_model_vars(mva(mp)) AND
-    not_clashing_model_vars(mp)
+    wf_new_vars(mp)
 
   ann_program(mp : (ann_program_pre)) : Program = 
     (# classes := {c : Class | EXISTS (c1 : Class) : 
@@ -161,6 +168,18 @@ BEGIN
   IMPORTING AnnotateProgram[CP],
             AnnotatedProgramSemantics[string],
             MonitoredProgramSemantics[CP, string]
+
+  ann_program_preserves_fields : LEMMA % :-)
+    FORALL (mp : MonitoredProgram, fv : FieldDecl) :
+      ann_program_pre(mp) IMPLIES
+      getFieldDecls(ann_program(mp))(fv) IMPLIES
+        getFieldDecls(program(mp))(fv)
+
+  ann_program_preserves_locals : LEMMA % :-)
+    FORALL (mp : MonitoredProgram, lv : LocalVarDecl) :
+      ann_program_pre(mp) IMPLIES
+      getLocalDecls(ann_program(mp))(lv) IMPLIES
+        getLocalDecls(program(mp))(lv)
 
   % PROVE
   ann_program_yields_wf_program : LEMMA
