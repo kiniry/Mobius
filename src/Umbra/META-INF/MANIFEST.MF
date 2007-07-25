@@ -20,7 +20,7 @@ Import-Package: org.eclipse.ui.part,
  org.eclipse.ui.texteditor
 Bundle-ClassPath: libs/org.apache.bcel_5.1.0/bcel.jar,
  libs/bmllib.jar,
- asm.jar,
- b2bpl.jar
+ libs/asm.jar,
+ libs/b2bpl.jar
 Eclipse-LazyStart: true
 Bundle-Activator: umbra.UmbraPlugin
