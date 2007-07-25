@@ -26,9 +26,11 @@ public class ModifiedVariable {
   }
 
   public boolean equals(Object other) {
+    if (other == null) return false;
+    ModifiedVariable mv = (ModifiedVariable)other;
     return other instanceof ModifiedVariable
-           && name.equals(((ModifiedVariable) other).name)
-           && type.equals(((ModifiedVariable) other).type);
+           && ((name == null) ? (mv.name == null) : name.equals(mv.name))
+           && ((type == null) ? (mv.type == null) : type.equals(mv.type));
   }
 
   public int hashCode() {

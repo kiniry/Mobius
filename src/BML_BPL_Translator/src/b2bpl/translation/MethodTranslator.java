@@ -36,6 +36,7 @@ import static b2bpl.translation.CodeGenerator.isInstanceOf;
 import static b2bpl.translation.CodeGenerator.isNormalReturnState;
 import static b2bpl.translation.CodeGenerator.isNull;
 import static b2bpl.translation.CodeGenerator.isOfType;
+import static b2bpl.translation.CodeGenerator.isSubtype;
 import static b2bpl.translation.CodeGenerator.ival;
 import static b2bpl.translation.CodeGenerator.less;
 import static b2bpl.translation.CodeGenerator.lessEqual;
@@ -320,7 +321,7 @@ public class MethodTranslator implements ITranslationConstants {
     // translatePre();
     translateInstructions();
     translatePost();
-    return buildProcedure();
+    return buildProcedure(); 
   }
 
   /**
@@ -624,7 +625,16 @@ public class MethodTranslator implements ITranslationConstants {
     BPLVariable tVar = new BPLVariable(t, BPLBuiltInType.NAME);
 
     // return forall(oVar, tVar, implies(notEqual(var(o), var(thisVar())), inv(var(t), var(o), var(HEAP_VAR))));
-    return forall(oVar, tVar, inv(var(t), var(o), var(HEAP_VAR)));
+    return forall(
+        oVar, tVar,
+        implies(
+            logicalAnd(
+                alive(rval(var(o)), var(HEAP_VAR)),
+                isSubtype(var(t), typ(rval(var(o))))
+            ),
+            inv(var(t), var(o), var(HEAP_VAR))
+        )
+    );
   }
   
   /**
@@ -638,7 +648,16 @@ public class MethodTranslator implements ITranslationConstants {
     String t = quantVarName("t");
     BPLVariable tVar = new BPLVariable(t, BPLBuiltInType.NAME);
 
-    return forall(oVar, tVar, inv(var(t), var(o), var(HEAP_VAR)));
+    return forall(
+        oVar, tVar,
+            implies(
+                logicalAnd(
+                    alive(rval(var(o)), var(HEAP_VAR)),
+                    isSubtype(var(t), typ(rval(var(o))))
+                ),
+                inv(var(t), var(o), var(HEAP_VAR))
+            )
+        );
   }
   
   /**
@@ -667,6 +686,9 @@ public class MethodTranslator implements ITranslationConstants {
   
   private BPLExpression getInvariantAfterLeavingMethod() {
     System.out.println("PREPARING INVARIANT FOR AFTER LEAVING METHOD:");
+    
+    // TODO: modifiedVarNames is not yet set.
+    
     for (ModifiedVariable s : modifiedVarNames) {
       System.out.println("\t" + s.getName() /* + "\t" + s.getType().toString() */);
     }
@@ -778,7 +800,19 @@ public class MethodTranslator implements ITranslationConstants {
         getInParameters()
     );
     
-   
+    // create clause to ensure aliveness of all objects
+    // (if an object was alive on the heap prior to the method call,
+    // it will be alive on the heap after the method call as well)
+    String v = quantVarName("v");
+    BPLVariable vVar = new BPLVariable(v, new BPLTypeName(VALUE_TYPE));
+    BPLExpression guaranteeAliveness = forall(
+        vVar,
+        implies(
+            alive(var(v), old(var(HEAP_VAR))),
+            alive(var(v), var(HEAP_VAR))
+        )
+    );
+    
     // If no method specifications are provided (BPLBoolLiteral.TRUE),
     // establish default frame condition
     /*
@@ -813,7 +847,8 @@ public class MethodTranslator implements ITranslationConstants {
             Q,
             alive(rval(var(RESULT_PARAM)), var(HEAP_VAR)),
             isInstanceOf(rval(var(RESULT_PARAM)), typeRef(method.getOwner())),
-            notEqual(var(RESULT_PARAM), BPLNullLiteral.NULL)
+            notEqual(var(RESULT_PARAM), BPLNullLiteral.NULL),
+            guaranteeAliveness
       );
     } else {
       if (provideReturnValue) {
@@ -1663,8 +1698,9 @@ public class MethodTranslator implements ITranslationConstants {
       
       
       // TODO REMOVE
-      System.out.println("Modified types for " + override.getName());
+      System.out.println("Modified types for " + override.getName() + ":");
       BPLExpression[] refs = override.getModifiedObjectRefs();
+      if (refs.length == 0) System.out.println("  (none)");
       for (BPLExpression ref : refs) {
         System.out.println("  - " + ref);
       }
@@ -1868,13 +1904,7 @@ public class MethodTranslator implements ITranslationConstants {
    * @param rhs The RHS expression of the assignment.
    */
   private void addAssignment(BPLExpression lhs, BPLExpression rhs) {
-    addCommand(new BPLAssignmentCommand(lhs, rhs));
-    
-    BPLVariableExpression v = (BPLVariableExpression)lhs;
-    
-    System.out.println("ADDING ASSIGNMENT:");
-    System.out.println("  " + lhs.toString());
-    
+    addCommand(new BPLAssignmentCommand(lhs, rhs)); 
     addAlias(rhs.toString(), lhs.toString());
   }
 
@@ -2868,15 +2898,10 @@ public class MethodTranslator implements ITranslationConstants {
     private void translateInvokeInstruction(InvokeInstruction insn) {
       BCMethod invokedMethod = insn.getMethod();
       JType[] params = invokedMethod.getRealParameterTypes();
-      
+           
       int first = handle.getFrame().getStackSize() - params.length;
       int stack = handle.getFrame().getStackSize();
-
-      System.out.println("translateInvokeInstruction(" + invokedMethod.getName() + ")");
-      System.out.println("  stack = " + stack);
-      System.out.println("  params.length = " + params.length);
-      System.out.println("  first = " + first);  
-      
+     
       // Prepare arguments of method call
       List<BPLExpression> methodParams = new ArrayList<BPLExpression>();
             
@@ -2895,8 +2920,6 @@ public class MethodTranslator implements ITranslationConstants {
       boolean isSuperConstructor = method.isConstructor() && invokedMethod.isConstructor() &&
                                    (args.length > 0) ? (args[0].equals(stackVar(0, params[0]))) : false;
       
-      System.out.println("Is " + invokedMethod.getName() + " invoked by " + method.getName() + " a super-constructor? " + isSuperConstructor);
-                                   
       JType retType = (invokedMethod.isConstructor()
         ? invokedMethod.getOwner()
         : invokedMethod.getReturnType()
@@ -2925,8 +2948,8 @@ public class MethodTranslator implements ITranslationConstants {
    
       if (!invokedMethod.isVoid()) {
         // Normal return value
-        resultVars.add(var(refStackVar(stack)));
-        // resultVars.add(new BPLVariableExpression(returnValueVar(callStatements, retType)));
+        // resultVars.add(var(refStackVar(stack)));
+        resultVars.add(new BPLVariableExpression(returnValueVar(callStatements, retType)));
       } else if (invokedMethod.isConstructor()) {
         // "Return value" from constructor (initialized "this"-object)
         //resultVars.add(var(refLocalVar(first)));
@@ -2940,8 +2963,11 @@ public class MethodTranslator implements ITranslationConstants {
           methodParams.toArray(new BPLExpression[methodParams.size()]),
           resultVars.toArray(new BPLVariableExpression[resultVars.size()])
       );
+      
+      callCmd.addComment("Number of modified variables in the invoked method: " + modifiedVarNames);
+      
       addCommand(callCmd);
-
+      
       addAssume(getInvariantAfterLeavingMethod());
       
       // If the invoked method is a super-constructor, we need to assign
@@ -2993,6 +3019,7 @@ public class MethodTranslator implements ITranslationConstants {
         for (int i = 0; i < exceptions.length; i++) {
           labels[i + 1] = exceptionalPostBlockLabel(cfgBlock, exceptions[i]) + "_" + callStatements;
         }
+        
         endBlock(labels);
 
         for (JClassType exception : exceptions) {
