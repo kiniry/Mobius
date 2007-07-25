@@ -242,7 +242,7 @@ BEGIN
   % There is a bug in PVS that generated an unprovable TCC if we write 
   % lookup_mthd like this
 %   lookup_mthd(p : Program, tgt : Val, mn : Name) : lift[(methods(p))] =
-%     LET gc : lift[Class[Name]] = get_class(p)(tgt) IN
+%     LET gc = get_class(p)(tgt) IN
 %     IF up?(gc) AND method_names(p, down(gc))(mn)
 %     THEN up(choose({m : Method | classes(p)(down(gc)) AND methods(down(gc))(m)
 %                                  AND name(m) = mn}))
@@ -251,12 +251,14 @@ BEGIN
 
   lookup_mthd(p : Program, tgt : Val, mn : Name) : lift[(methods(p))] =
     IF up?(get_class(p)(tgt)) AND method_names(p, down(get_class(p)(tgt)))(mn)
-    THEN up(choose({m : Method | classes(p)(down(get_class(p)(tgt))) AND methods(down(get_class(p)(tgt)))(m)
+    THEN up(choose({m : Method | classes(p)(down(get_class(p)(tgt))) AND 
+                                 methods(down(get_class(p)(tgt)))(m)
                                  AND name(m) = mn}))
     ELSE bottom
-    ENDIF    
+    ENDIF
 
   % If it can't find an invariant in tgt it just returns TRUE
+  % COMMENT
   lookup_inv(p : Program, tgt : Val) : Expr =
     IF up?(get_class(p)(tgt))
     THEN inv(down(get_class(p)(tgt)))

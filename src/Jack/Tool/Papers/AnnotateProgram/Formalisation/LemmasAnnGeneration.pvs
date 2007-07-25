@@ -11,6 +11,7 @@ BEGIN
             listfuncs
 
   % Properties of subterms
+  % MOVE to ProgramFunctions
 
   proper_subterm_sequence : LEMMA % :-)
     FORALL (c1, c2, c3 : Stmt) :
@@ -55,10 +56,12 @@ BEGIN
     FORALL (c : Stmt, a : Action) :
       set_stmt_of_ann_action(c, a) IMPLIES c << ann_action(a)
 
+  % Prove
   set_stmt_of_ann_action_only_for_Set : LEMMA % :-)
     FORALL (c : Stmt, a : Action) : 
       set_stmt_of_ann_action(c, a) IMPLIES Set?(c)
 
+  % Remove Set?(c)
   non_interference_of_sets_in_ann_actions : LEMMA % :-)
     FORALL (p : Program, a : Action, s1, s2 : APState,
             n : nat, vn : string) :
@@ -72,6 +75,7 @@ BEGIN
       deriv_stmt(p)(ann_action(a), s1, s2)(n) IMPLIES
         gvs(s1)(vn) = gvs(s2)(vn)
 
+  % TODO: Remove vn
   ann_action_sets_mva_vars : LEMMA % :-)
     FORALL (vn : string, c : Stmt, a : MVA, l : Action) :
       wf_Action(a)(l) IMPLIES

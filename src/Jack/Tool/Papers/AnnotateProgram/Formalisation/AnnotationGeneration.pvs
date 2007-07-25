@@ -119,32 +119,19 @@ BEGIN
   reserved_words : finite_set[string] = 
     {n : string | n = This OR n = "super" OR n = "if" OR n = "then" OR n = "else"}
 
-  % The ghost variables we add should not be already defined in the program.
-  % (This is because we a flat heap, otherwise we could require them just not
-  % to be defined in the monitored class).
-%  not_clashing_model_vars(mp : MonitoredProgram) : boolean =
-%         (FORALL (gv : FieldDecl) :
-%           ghost_vars(c)(gv) IMPLIES
-%             NOT name(gv) = cp) AND
-%         (FORALL (q : CP, gd : FieldDecl) :
-%           cps(a)(q) IMPLIES ghost_vars(c)(gd) IMPLIES 
-%             NOT name(gd) = name_of(q)) AND
-%         (FORALL (vd : MVAVarDecl, gd : FieldDecl) :
-%           vdsA(a)(vd) IMPLIES ghost_vars(c)(gd) IMPLIES
-%             NOT name(gd) = name(vd))
-
   wf_new_vars(mp : MonitoredProgram) : boolean =
     disjoint_model_vars(mva(mp)) AND
-    FORALL (nv : FieldDecl) : new_gvds(mp)(nv) IMPLIES 
-      NOT reserved_words(name(nv)) AND
-      NOT var_names(getGhostDecls(program(mp)))(name(nv)) AND
-      NOT var_names(getFieldDecls(program(mp)))(name(nv)) AND
-      NOT var_names(getLocalDecls(program(mp)))(name(nv))
+    FORALL (n : string) : 
+      var_names(new_gvds(mp))(n) IMPLIES
+        NOT reserved_words(n) AND
+        NOT var_names(getGhostDecls(program(mp)))(n) AND
+        NOT var_names(getFieldDecls(program(mp)))(n) AND
+        NOT var_names(getLocalDecls(program(mp)))(n)
 
   ann_program_pre(mp : MonitoredProgram) : boolean =
     wf_MP(mp) AND
-    complete(mva(mp)) AND
-    well_typed_Program(program(mp)) AND
+    complete(mva(mp)) AND % REMOVE
+    well_typed_Program(program(mp)) AND % REMOVE
     wf_new_vars(mp)
 
   ann_program(mp : (ann_program_pre)) : Program = 
@@ -175,16 +162,13 @@ BEGIN
       getFieldDecls(ann_program(mp))(fv) IMPLIES
         getFieldDecls(program(mp))(fv)
 
-
   ann_program_preserves_locals : LEMMA % :-)
     FORALL (mp : MonitoredProgram, lv : LocalVarDecl) :
       ann_program_pre(mp) IMPLIES
       getLocalDecls(ann_program(mp))(lv) IMPLIES
         getLocalDecls(program(mp))(lv)
 
-
-  % PROVE
-  ann_program_yields_wf_program : LEMMA
+  ann_program_yields_wf_program : LEMMA % :-)
     FORALL (mp : MonitoredProgram) :
       ann_program_pre(mp) IMPLIES
         wf_Program(ann_program(mp))
@@ -211,18 +195,6 @@ BEGIN
                ELSE m = m1
                ENDIF)
 
-  ann_program_preserves_fields_eq : LEMMA % :-)
-    FORALL (mp : MonitoredProgram, fv : FieldDecl) :
-      ann_program_pre(mp) IMPLIES
-      getFieldDecls(ann_program(mp))(fv) =
-        getFieldDecls(program(mp))(fv)
-
-  ann_program_preserves_locals_eq : LEMMA % :-)
-    FORALL (mp : MonitoredProgram, lv : LocalVarDecl) :
-      ann_program_pre(mp) IMPLIES
-      getLocalDecls(ann_program(mp))(lv) =
-        getLocalDecls(program(mp))(lv)
-
   ann_program_preserves_var_decls : LEMMA % :-)
     FORALL (mp : MonitoredProgram):
       ann_program_pre(mp) IMPLIES
@@ -245,7 +217,7 @@ BEGIN
         (var_names(getLocalDecls(program(mp)))(vn) IFF
          var_names(getLocalDecls(ann_program(mp)))(vn))
 
-  ann_program_preserves_wf_state : LEMMA  % :-)
+  ann_program_preserves_wf_state : LEMMA % :-)
     FORALL (mp : MonitoredProgram, s : PState) :
       ann_program_pre(mp) IMPLIES
       wf_state(program(mp))(s) IMPLIES

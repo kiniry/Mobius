@@ -12,31 +12,34 @@ BEGIN
             AnnotateProgram[CP],
             AnnotateProgramProperties[CP, string]
 
+  MVA_vars_modeled?(sA : AState, sAP : APState) : boolean =
+    FORALL (n : string) : defined?(stA(sA)(n)) IMPLIES
+      stA(sA)(n) = gvs(sAP)(n)
+
   % A state of a MVA, sA, is modeled by a state of an AP, sAP, if:
   % .The value of cp in sAP is equal to the mapping from cp to integers
   % .Variables that model the control points remain constant
-  % .Variables in MVA have the same value the respective ghost vars in the AP
+  % .Variables in MVA have the same value as the respective ghost vars in the AP
   MVA_modeled?(a : MVA)(sA : AState, sAP : APState) : boolean =
     (Int(unique(cp(sA))) = gvs(sAP)(cp)) AND
     (FORALL (q : CP) : cps(a)(q) IMPLIES
       Int(unique(q)) = gvs(sAP)(name_of(q))) AND
-    (FORALL (n : string) : NOT Bottom?(stA(sA)(n)) IMPLIES
-      stA(sA)(n) = gvs(sAP)(n))
-
-  % Not used now
-  halted_implies_JMLExc(sA : AState, sAP : APState) : boolean =
-    cp(sA) = halted IMPLIES
-      up?(ex(pstate(sAP))) AND down(ex(pstate(sAP))) = JMLExc
+    MVA_vars_modeled?(sA, sAP)
 
   % Says if sAP is a super state of sMP
   Program_modeled?(sMP : MPState, sAP : APState) : boolean =
     pstate(sMP) = pstate(sAP) AND
-    FORALL (n : string) : NOT Bottom?(gvs(sMP)(n)) IMPLIES
+    FORALL (n : string) : defined?(gvs(sMP)(n)) IMPLIES
       gvs(sMP)(n) = gvs(sAP)(n)
+
+  halted_implies_JMLExc(sA : AState, sAP : APState) : boolean =
+    cp(sA) = halted IMPLIES
+      up?(ex(pstate(sAP))) AND down(ex(pstate(sAP))) = JMLExc
 
   % Says if an state of a MP is correctly modeled by a state of an AP
   MP_modeled?(mp : MonitoredProgram)(sMP : MPState, sAP : APState) : boolean =
     MVA_modeled?(mva(mp))(astate(sMP), sAP) AND
+    halted_implies_JMLExc(astate(sMP), sAP) AND
     Program_modeled?(sMP, sAP)
 
 
@@ -49,8 +52,7 @@ BEGIN
       ann_program_pre(mp) IMPLIES
       wf_state(ann_program(mp))(sAP) IMPLIES
       NOT up?(ex(pstate(sAP))) IMPLIES
-      (FORALL (vn : string) : NOT Bottom?(stA(sMVA)(vn))
-        IMPLIES stA(sMVA)(vn) = gvs(sAP)(vn)) IMPLIES
+      MVA_vars_modeled?(sMVA, sAP) IMPLIES
       (EXISTS (t : Transition) :
         ts(mva(mp))(t) AND guard(t) = g) IMPLIES
         EXISTS (e : Expr, v : Val, n : nat) : 
@@ -59,16 +61,15 @@ BEGIN
           deriv_expr(ann_program(mp))(e, sAP, v, sAP)(n) AND
           (g(stA(sMVA), st(pstate(sAP))) IFF v = Bool(TRUE))
 
-  % It is possible to evaluate expression appearing in actions (they terminate) 
+  % It is possible to evaluate expressions appearing in actions (they terminate) 
   % and they are side-effect-free. Note that the evaluation of the expresion can
-  % not throw an exception (if it starts in a non-exceptional state).
+  % not throw an exception (provided it starts in a non-exceptional state).
   eval_action_behavior(mp : MonitoredProgram) : boolean =
     FORALL (e : Expr, v : Val, sAP : APState, sMVA : AState) :
       ann_program_pre(mp) IMPLIES
       wf_state(ann_program(mp))(sAP) IMPLIES
       NOT up?(ex(pstate(sAP))) IMPLIES
-      (FORALL (vn : string) : NOT Bottom?(stA(sMVA)(vn))
-        IMPLIES stA(sMVA)(vn) = gvs(sAP)(vn)) IMPLIES
+      MVA_vars_modeled?(sMVA, sAP) IMPLIES
         (eval(e)(stA(sMVA), st(pstate(sAP))) = v IFF
          EXISTS (n : nat) : deriv_expr(ann_program(mp))(e, sAP, v, sAP)(n))
 
@@ -82,9 +83,9 @@ BEGIN
 
   specification_requirements(mp : MonitoredProgram) : boolean =
     wf_MP(mp) AND
-    complete(mva(mp)) AND
-    well_typed_Program(program(mp)) AND
-    ann_program_pre(mp) AND
+    complete(mva(mp)) AND % TODO: remove
+    well_typed_Program(program(mp)) AND % TODO: move well_type inside wf
+    ann_program_pre(mp) AND % TODO: delete?
     well_behaved_MP(mp)
 
   related_states(mp : MonitoredProgram, ap : Program)
