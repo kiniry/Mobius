@@ -1,952 +1,982 @@
-(CorrectnessAnnProgram
- (IMP_AnnGenerationLemmas_TCC1 0
-  (IMP_AnnGenerationLemmas_TCC1-1 nil 3393590714 3393595614
-   ("" (use "CP_is_enumerable") nil nil) unchecked
-   ((CP_is_enumerable formula-decl nil CorrectnessAnnProgram nil)) 8222
-   10 t nil))
- (MP_modeled_implies_same_exception 0
-  (MP_modeled_implies_same_exception-1 nil 3393591341 3393591398
-   ("" (skosimp)
-    (("" (skosimp)
-      (("" (expand* "MP_modeled?" "Program_modeled?")
-        (("" (ground) nil nil)) nil))
-      nil))
-    nil)
-   unfinished
-   ((Program_modeled? const-decl "boolean" Equivalence nil)
-    (MP_modeled? const-decl "boolean" Equivalence nil))
-   55503 110 t nil))
- (MP_modeled_implies_cp_not_halted 0
-  (MP_modeled_implies_cp_not_halted-1 nil 3393591448 3393595381
-   ("" (skosimp)
-    (("" (expand* "MP_modeled?" "MVA_modeled?")
-      (("" (flatten) (("" (postpone) nil nil)) nil)) nil))
-    nil)
-   unfinished nil 161 70 t shostak))
- (MP_modeled_preserved_by_update 0
-  (MP_modeled_preserved_by_update-1 nil 3393591712 3393592403
-   ("" (skosimp*)
-    (("" (expand "related_states")
-      (("" (use "MP_modeled_implies_cp_not_halted")
-        (("" (prop)
-          (("" (expand* "MP_modeled?" "update_PState")
-            (("" (prop)
-              (("1" (expand "MVA_modeled?") (("1" (propax) nil nil))
-                nil)
-               ("2" (expand "Program_modeled?")
-                (("2" (ground) nil nil)) nil))
-              nil))
-            nil))
-          nil))
-        nil))
-      nil))
-    nil)
-   unfinished
-   ((related_states const-decl "boolean" Equivalence nil)
-    (MVA_modeled? const-decl "boolean" Equivalence nil)
-    (Program_modeled? const-decl "boolean" Equivalence nil)
-    (MP_modeled? const-decl "boolean" Equivalence nil)
-    (update_PState const-decl "(update_PState_type)"
-     AnnotatedProgramSemantics nil)
-    (update_PState const-decl "(update_PState_type)"
-     MonitoredProgramSemantics nil)
-    (nat nonempty-type-eq-decl nil naturalnumbers nil)
-    (below type-eq-decl nil nat_types nil)
-    (character type-decl nil character_adt nil)
-    (boolean nonempty-type-decl nil booleans nil)
-    (char? adt-recognizer-decl "[character -> boolean]" character_adt
-     nil)
-    (char type-eq-decl nil strings nil)
-    (string type-eq-decl nil strings nil)
-    (CP formal-nonempty-type-decl nil CorrectnessAnnProgram nil)
-    (finite_set type-eq-decl nil finite_sets nil)
-    (EventType type-decl nil EventType_adt nil)
-    (Event type-eq-decl nil MVA nil) (Action type-eq-decl nil MVA nil)
-    (Guard type-eq-decl nil MVA nil)
-    (Transition type-eq-decl nil MVA nil)
-    (Val type-decl nil Val_adt nil)
-    (defined? const-decl "boolean" ValProp nil)
-    (JType type-decl nil JType_adt nil)
-    (MVAVarDecl type-eq-decl nil MVA nil)
-    (ProgVarDecl type-eq-decl nil MVA nil)
-    (MVA type-eq-decl nil MVA nil)
-    (complete const-decl "boolean" MVASemantics nil)
-    (Program type-eq-decl nil Program nil)
-    (MonitoredProgramPre type-eq-decl nil MonitoredProgram nil)
-    (compatible const-decl "boolean" MonitoredProgram nil)
-    (MonitoredProgram type-eq-decl nil MonitoredProgram nil)
-    (AState type-eq-decl nil MVASemantics nil)
-    (Store type-eq-decl nil State nil)
-    (PState type-eq-decl nil State nil)
-    (MPState type-eq-decl nil MonitoredProgramSemantics nil)
-    (APState type-eq-decl nil AnnotatedProgramSemantics nil)
-    (MP_modeled_implies_cp_not_halted formula-decl nil
-     CorrectnessAnnProgram nil))
-   114052 250 t nil))
- (MP_modeled_implies_same_num_eval 0
-  (MP_modeled_implies_same_num_eval-1 nil 3393592500 3393593846
-   ("" (skolem!)
-    (("" (skolem!)
-      (("" (induct "n")
-        (("1" (skosimp)
-          (("1" (expand "eval") (("1" (propax) nil nil)) nil)) nil)
-         ("2" (skosimp)
-          (("2" (assert)
-            (("2" (expand "eval" 1) (("2" (assert) nil nil)) nil))
-            nil))
-          nil)
-         ("3" (skosimp)
-          (("3" (assert)
-            (("3" (expand "eval" 1) (("3" (assert) nil nil)) nil))
-            nil))
-          nil)
-         ("4" (skosimp*)
-          (("4" (expand "eval" 1) (("4" (assert) nil nil)) nil)) nil)
-         ("5" (skosimp*)
-          (("5" (expand "eval" 1)
-            (("5" (lift-if)
-              (("5" (lift-if) (("5" (assert) nil nil)) nil)) nil))
-            nil))
-          nil)
-         ("6" (skosimp*)
-          (("6" (expand* "eval" "lookup")
-            (("6" (use "ann_program_preserves_state_vars")
-              (("6" (lemma "wf_state_vars_local_or_field")
-                (("6"
-                  (inst -1 "ap!1" "pstate(sAP!1)" "NumVarEval1_var!1")
-                  (("6" (lemma "wf_state_vars_local_or_field")
+(|CorrectnessAnnProgram|
+ (|IMP_AnnGenerationLemmas_TCC1| 0
+  (|IMP_AnnGenerationLemmas_TCC1-1| NIL 3393590714 3394357838
+   ("" (USE "CP_is_enumerable") NIL NIL) UNCHECKED
+   ((|CP_is_enumerable| FORMULA-DECL NIL |CorrectnessAnnProgram| NIL)) 1 1 T
+   NIL))
+ (|MP_modeled_implies_same_exception| 0
+  (|MP_modeled_implies_same_exception-1| NIL 3393591341 3394357838
+   ("" (SKOSIMP)
+    (("" (SKOSIMP)
+      (("" (EXPAND* "MP_modeled?" "Program_modeled?") (("" (GROUND) NIL NIL))
+        NIL))
+      NIL))
+    NIL)
+   UNCHECKED
+   ((|MP_modeled?| CONST-DECL "boolean" |Equivalence| NIL)
+    (|Program_modeled?| CONST-DECL "boolean" |Equivalence| NIL))
+   3 3 T NIL))
+ (|MP_modeled_implies_cp_not_halted| 0
+  (|MP_modeled_implies_cp_not_halted-1| NIL 3393591448 3394357838
+   ("" (SKOSIMP)
+    (("" (EXPAND* "MP_modeled?" "MVA_modeled?")
+      (("" (FLATTEN) (("" (POSTPONE) NIL NIL)) NIL)) NIL))
+    NIL)
+   UNFINISHED NIL 23 22 T SHOSTAK))
+ (|MP_modeled_preserved_by_update| 0
+  (|MP_modeled_preserved_by_update-1| NIL 3393591712 3394357838
+   ("" (SKOSIMP*)
+    (("" (EXPAND "related_states")
+      (("" (USE "MP_modeled_implies_cp_not_halted")
+        (("" (PROP)
+          (("" (EXPAND* "MP_modeled?" "update_PState")
+            (("" (PROP)
+              (("1" (EXPAND "MVA_modeled?") (("1" (PROPAX) NIL NIL)) NIL)
+               ("2" (EXPAND "Program_modeled?") (("2" (GROUND) NIL NIL)) NIL))
+              NIL))
+            NIL))
+          NIL))
+        NIL))
+      NIL))
+    NIL)
+   UNCHECKED
+   ((|related_states| CONST-DECL "boolean" |Equivalence| NIL)
+    (|MVA_modeled?| CONST-DECL "boolean" |Equivalence| NIL)
+    (|Program_modeled?| CONST-DECL "boolean" |Equivalence| NIL)
+    (|MP_modeled?| CONST-DECL "boolean" |Equivalence| NIL)
+    (|update_PState| CONST-DECL "(update_PState_type)"
+     |MonitoredProgramSemantics| NIL)
+    (|update_PState| CONST-DECL "(update_PState_type)"
+     |AnnotatedProgramSemantics| NIL)
+    (|MP_modeled_implies_cp_not_halted| FORMULA-DECL NIL
+     |CorrectnessAnnProgram| NIL)
+    (|APState| TYPE-EQ-DECL NIL |AnnotatedProgramSemantics| NIL)
+    (|MPState| TYPE-EQ-DECL NIL |MonitoredProgramSemantics| NIL)
+    (|PState| TYPE-EQ-DECL NIL |State| NIL)
+    (|Store| TYPE-EQ-DECL NIL |State| NIL)
+    (|AState| TYPE-EQ-DECL NIL |MVASemantics| NIL)
+    (|MonitoredProgram| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
+    (|compatible| CONST-DECL "boolean" |MonitoredProgram| NIL)
+    (|MonitoredProgramPre| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
+    (|Program| TYPE-EQ-DECL NIL |Program| NIL)
+    (|complete| CONST-DECL "boolean" |MVASemantics| NIL)
+    (MVA TYPE-EQ-DECL NIL MVA NIL) (|ProgVarDecl| TYPE-EQ-DECL NIL MVA NIL)
+    (|MVAVarDecl| TYPE-EQ-DECL NIL MVA NIL)
+    (|JType| TYPE-DECL NIL |JType_adt| NIL)
+    (|defined?| CONST-DECL "boolean" |ValProp| NIL)
+    (|Val| TYPE-DECL NIL |Val_adt| NIL) (|Transition| TYPE-EQ-DECL NIL MVA NIL)
+    (|Guard| TYPE-EQ-DECL NIL MVA NIL) (|Action| TYPE-EQ-DECL NIL MVA NIL)
+    (|Event| TYPE-EQ-DECL NIL MVA NIL)
+    (|EventType| TYPE-DECL NIL |EventType_adt| NIL)
+    (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
+    (CP FORMAL-NONEMPTY-TYPE-DECL NIL |CorrectnessAnnProgram| NIL)
+    (|string| TYPE-EQ-DECL NIL |strings| NIL)
+    (|char| TYPE-EQ-DECL NIL |strings| NIL)
+    (|char?| ADT-RECOGNIZER-DECL "[character -> boolean]" |character_adt| NIL)
+    (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
+    (|character| TYPE-DECL NIL |character_adt| NIL)
+    (|below| TYPE-EQ-DECL NIL |nat_types| NIL)
+    (|nat| NONEMPTY-TYPE-EQ-DECL NIL |naturalnumbers| NIL))
+   9 10 T NIL))
+ (|MP_modeled_implies_same_num_eval| 0
+  (|MP_modeled_implies_same_num_eval-1| NIL 3393592500 3394357856
+   ("" (SKOLEM!)
+    (("" (SKOLEM!)
+      (("" (INDUCT "n")
+        (("1" (SKOSIMP) (("1" (EXPAND "eval") (("1" (PROPAX) NIL NIL)) NIL))
+          NIL)
+         ("2" (SKOSIMP)
+          (("2" (ASSERT) (("2" (EXPAND "eval" 1) (("2" (ASSERT) NIL NIL)) NIL))
+            NIL))
+          NIL)
+         ("3" (SKOSIMP)
+          (("3" (ASSERT) (("3" (EXPAND "eval" 1) (("3" (ASSERT) NIL NIL)) NIL))
+            NIL))
+          NIL)
+         ("4" (SKOSIMP*) (("4" (EXPAND "eval" 1) (("4" (ASSERT) NIL NIL)) NIL))
+          NIL)
+         ("5" (SKOSIMP*)
+          (("5" (EXPAND "eval" 1)
+            (("5" (LIFT-IF) (("5" (LIFT-IF) (("5" (ASSERT) NIL NIL)) NIL))
+              NIL))
+            NIL))
+          NIL)
+         ("6" (SKOSIMP*)
+          (("6" (EXPAND* "eval" "lookup")
+            (("6" (USE "ann_program_preserves_state_vars")
+              (("6" (LEMMA "wf_state_vars_local_or_field")
+                (("6" (INST -1 "ap!1" "pstate(sAP!1)" "NumVarEval1_var!1")
+                  (("6" (LEMMA "wf_state_vars_local_or_field")
                     (("6"
-                      (inst -1 "program(mp!1)" "pstate(sMP!1)"
+                      (INST -1 "program(mp!1)" "pstate(sMP!1)"
                        "NumVarEval1_var!1")
                       (("6"
-                        (expand* "related_states"
-                         "specification_requirements")
-                        (("6" (flatten)
-                          (("6" (assert)
-                            (("6" (expand* "wf_MP")
-                              (("6"
-                                (expand "wf_state" (-9 -10))
-                                (("6"
-                                  (flatten)
+                        (EXPAND* "related_states" "specification_requirements")
+                        (("6" (FLATTEN)
+                          (("6" (ASSERT)
+                            (("6" (EXPAND* "wf_MP")
+                              (("6" (EXPAND "wf_state" (-9 -10))
+                                (("6" (FLATTEN)
                                   (("6"
-                                    (hide
-                                     -9
-                                     -10
-                                     -11
-                                     -12
-                                     -13
-                                     -14
-                                     -15
-                                     -16
-                                     -17
-                                     -18
-                                     -19)
-                                    (("6" (grind) nil nil))
-                                    nil))
-                                  nil))
-                                nil))
-                              nil))
-                            nil))
-                          nil))
-                        nil))
-                      nil))
-                    nil))
-                  nil))
-                nil))
-              nil))
-            nil))
-          nil))
-        nil))
-      nil))
-    nil)
-   unfinished
-   ((NumExpr type-decl nil NumExpr_adt nil)
-    (bool nonempty-type-eq-decl nil booleans nil)
-    (IMPLIES const-decl "[bool, bool -> bool]" booleans nil)
-    (CP formal-nonempty-type-decl nil CorrectnessAnnProgram nil)
-    (finite_set type-eq-decl nil finite_sets nil)
-    (EventType type-decl nil EventType_adt nil)
-    (Event type-eq-decl nil MVA nil) (Action type-eq-decl nil MVA nil)
-    (Guard type-eq-decl nil MVA nil)
-    (Transition type-eq-decl nil MVA nil)
-    (Val type-decl nil Val_adt nil)
-    (defined? const-decl "boolean" ValProp nil)
-    (JType type-decl nil JType_adt nil)
-    (MVAVarDecl type-eq-decl nil MVA nil)
-    (ProgVarDecl type-eq-decl nil MVA nil)
-    (MVA type-eq-decl nil MVA nil)
-    (complete const-decl "boolean" MVASemantics nil)
-    (Program type-eq-decl nil Program nil)
-    (MonitoredProgramPre type-eq-decl nil MonitoredProgram nil)
-    (compatible const-decl "boolean" MonitoredProgram nil)
-    (MonitoredProgram type-eq-decl nil MonitoredProgram nil)
-    (FieldDecl type-eq-decl nil Program nil)
-    (Expr type-decl nil Expr_adt nil)
-    (LocalVarDecl type-eq-decl nil Program nil)
-    (Stmt type-decl nil Stmt_adt nil)
-    (Method type-eq-decl nil Program nil)
-    (lift type-decl nil lift_adt nil)
-    (Class type-eq-decl nil Program nil)
-    (AState type-eq-decl nil MVASemantics nil)
-    (Store type-eq-decl nil State nil)
-    (PState type-eq-decl nil State nil)
-    (MPState type-eq-decl nil MonitoredProgramSemantics nil)
-    (APState type-eq-decl nil AnnotatedProgramSemantics nil)
-    (related_states const-decl "boolean" Equivalence nil)
-    (number nonempty-type-decl nil numbers nil)
-    (= const-decl "[T, T -> boolean]" equalities nil)
-    (number_field_pred const-decl "[number -> boolean]" number_fields
-     nil)
-    (number_field nonempty-type-from-decl nil number_fields nil)
-    (real_pred const-decl "[number_field -> boolean]" reals nil)
-    (real nonempty-type-from-decl nil reals nil)
-    (rational_pred const-decl "[real -> boolean]" rationals nil)
-    (rational nonempty-type-from-decl nil rationals nil)
-    (integer_pred const-decl "[rational -> boolean]" integers nil)
-    (int nonempty-type-eq-decl nil integers nil)
-    (Excpt type-decl nil Excpt_adt nil)
-    (PSt type-eq-decl nil State nil)
-    (update_PState_type const-decl "boolean" SemanticsTypes nil)
-    (update_PState const-decl "(update_PState_type)"
-     MonitoredProgramSemantics nil)
-    (update_GhostVars_type const-decl "boolean" SemanticsJMLTypes nil)
-    (update_GhostVars const-decl "(update_GhostVars_type)"
-     MonitoredProgramSemantics nil)
-    (lookup const-decl "Val" SemanticsJML nil)
-    (eval def-decl "int" Evaluation nil)
-    (bijective? const-decl "bool" functions nil)
-    (id const-decl "(bijective?[T, T])" identity nil)
-    (update_PState const-decl "(update_PState_type)"
-     AnnotatedProgramSemantics nil)
-    (update_GhostVars const-decl "(update_GhostVars_type)"
-     AnnotatedProgramSemantics nil)
-    (string type-eq-decl nil strings nil)
-    (char type-eq-decl nil strings nil)
-    (char? adt-recognizer-decl "[character -> boolean]" character_adt
-     nil)
-    (boolean nonempty-type-decl nil booleans nil)
-    (character type-decl nil character_adt nil)
-    (below type-eq-decl nil nat_types nil)
-    (nat nonempty-type-eq-decl nil naturalnumbers nil)
-    (NumExpr_induction formula-decl nil NumExpr_adt nil)
-    (int_plus_int_is_int application-judgement "int" integers nil)
-    (int_minus_int_is_int application-judgement "int" integers nil)
-    (minus_odd_is_odd application-judgement "odd_int" integers nil)
-    (mult_divides1 application-judgement "(divides(n))" divides nil)
-    (mult_divides2 application-judgement "(divides(m))" divides nil)
-    (wf_state_vars_local_or_field formula-decl nil State nil)
-    (specification_requirements const-decl "boolean" Equivalence nil)
-    (wf_state const-decl "boolean" AnnotatedProgramSemantics nil)
-    (wf_state const-decl "boolean" MonitoredProgramSemantics nil)
-    (getFieldDecls const-decl "finite_set[FieldDecl]" ProgramFunctions
-     nil)
-    (getLocalDecls const-decl "finite_set[LocalVarDecl]"
-     ProgramFunctions nil)
-    (wf_state const-decl "boolean" State nil)
-    (lookup_local const-decl "Val" State nil)
-    (is_field const-decl "boolean" State nil)
-    (is_local const-decl "boolean" State nil)
-    (is_ghost const-decl "boolean" SemanticsJML nil)
-    (MVA_modeled? const-decl "boolean" Equivalence nil)
-    (Program_modeled? const-decl "boolean" Equivalence nil)
-    (MP_modeled? const-decl "boolean" Equivalence nil)
-    (val2int const-decl "int" State nil)
-    (lookup_field const-decl "Val" State nil)
-    (wf_MP const-decl "boolean" MonitoredProgram nil)
-    (ann_program_preserves_state_vars formula-decl nil
-     AnnotateProgramProperties nil))
-   34592 22340 t nil))
- (MP_modeled_implies_same_bool_eval 0
-  (MP_modeled_implies_same_bool_eval-1 nil 3393595270 3393595327
-   ("" (skosimp)
-    (("" (skosimp)
-      (("" (expand "related_states")
-        (("" (induct "b")
-          (("1" (expand "eval") (("1" (propax) nil nil)) nil)
-           ("2" (expand "eval") (("2" (propax) nil nil)) nil)
-           ("3" (skosimp)
-            (("3" (expand "eval" 1) (("3" (assert) nil nil)) nil)) nil)
-           ("4" (skosimp)
-            (("4" (expand "eval" 1)
-              (("4" (assert)
-                (("4" (replace -1)
-                  (("4" (replace -2) (("4" (propax) nil nil)) nil))
-                  nil))
-                nil))
-              nil))
-            nil)
-           ("5" (skosimp)
-            (("5" (assert)
-              (("5" (expand "eval" 1)
-                (("5" (replace -1)
-                  (("5" (replace -2) (("5" (propax) nil nil)) nil))
-                  nil))
-                nil))
-              nil))
-            nil)
-           ("6" (skosimp)
-            (("6" (use "MP_modeled_implies_same_num_eval")
-              (("6" (lemma "MP_modeled_implies_same_num_eval")
-                (("6"
-                  (inst -1 "mp!1" "ap!1" "sMP!1" "sAP!1" "Lt2_var!1")
-                  (("6" (expand "related_states")
-                    (("6" (assert)
-                      (("6" (expand "eval" 1)
-                        (("6" (replace -1)
-                          (("6" (replace -2) (("6" (propax) nil nil))
-                            nil))
-                          nil))
-                        nil))
-                      nil))
-                    nil))
-                  nil))
-                nil))
-              nil))
-            nil)
-           ("7" (skosimp)
-            (("7" (use "MP_modeled_implies_same_num_eval")
-              (("7" (lemma "MP_modeled_implies_same_num_eval")
-                (("7"
-                  (inst -1 "mp!1" "ap!1" "sMP!1" "sAP!1" "Le2_var!1")
-                  (("7" (expand "related_states")
-                    (("7" (assert)
-                      (("7" (expand "eval" 1)
-                        (("7" (replace -1)
-                          (("7" (replace -2) (("7" (propax) nil nil))
-                            nil))
-                          nil))
-                        nil))
-                      nil))
-                    nil))
-                  nil))
-                nil))
-              nil))
-            nil)
-           ("8" (skosimp)
-            (("8" (use "MP_modeled_implies_same_num_eval")
-              (("8" (lemma "MP_modeled_implies_same_num_eval")
-                (("8"
-                  (inst -1 "mp!1" "ap!1" "sMP!1" "sAP!1" "Eq2_var!1")
-                  (("8" (expand "related_states")
-                    (("8" (assert)
-                      (("8" (expand "eval" 1)
-                        (("8" (replace -1)
-                          (("8" (replace -2) (("8" (propax) nil nil))
-                            nil))
-                          nil))
-                        nil))
-                      nil))
-                    nil))
-                  nil))
-                nil))
-              nil))
-            nil)
-           ("9" (skosimp)
-            (("9" (use "MP_modeled_implies_same_num_eval")
-              (("9" (lemma "MP_modeled_implies_same_num_eval")
-                (("9"
-                  (inst -1 "mp!1" "ap!1" "sMP!1" "sAP!1" "Neq2_var!1")
-                  (("9" (expand "related_states")
-                    (("9" (assert)
-                      (("9" (expand "eval" 1)
-                        (("9" (replace -1)
-                          (("9" (replace -2) (("9" (propax) nil nil))
-                            nil))
-                          nil))
-                        nil))
-                      nil))
-                    nil))
-                  nil))
-                nil))
-              nil))
-            nil)
-           ("10" (skosimp)
-            (("10" (use "MP_modeled_implies_same_num_eval")
-              (("10" (lemma "MP_modeled_implies_same_num_eval")
-                (("10"
-                  (inst -1 "mp!1" "ap!1" "sMP!1" "sAP!1" "Ge2_var!1")
-                  (("10" (expand "related_states")
-                    (("10" (assert)
-                      (("10" (expand "eval" 1)
-                        (("10" (replace -1)
-                          (("10" (replace -2) (("10" (propax) nil nil))
-                            nil))
-                          nil))
-                        nil))
-                      nil))
-                    nil))
-                  nil))
-                nil))
-              nil))
-            nil)
-           ("11" (skosimp)
-            (("11" (use "MP_modeled_implies_same_num_eval")
-              (("11" (lemma "MP_modeled_implies_same_num_eval")
-                (("11"
-                  (inst -1 "mp!1" "ap!1" "sMP!1" "sAP!1" "Gt2_var!1")
-                  (("11" (expand "related_states")
-                    (("11" (assert)
-                      (("11" (expand "eval" 1)
-                        (("11" (replace -1)
-                          (("11" (replace -2) (("11" (propax) nil nil))
-                            nil))
-                          nil))
-                        nil))
-                      nil))
-                    nil))
-                  nil))
-                nil))
-              nil))
-            nil)
-           ("12" (skosimp)
-            (("12" (expand* "eval" "val2bool" "lookup")
-              (("12" (use "ann_program_preserves_state_vars")
-                (("12" (lemma "wf_state_vars_local_or_field")
+                                    (HIDE -9 -10 -11 -12 -13 -14 -15 -16 -17
+                                     -18 -19)
+                                    (("6" (GRIND) NIL NIL)) NIL))
+                                  NIL))
+                                NIL))
+                              NIL))
+                            NIL))
+                          NIL))
+                        NIL))
+                      NIL))
+                    NIL))
+                  NIL))
+                NIL))
+              NIL))
+            NIL))
+          NIL))
+        NIL))
+      NIL))
+    NIL)
+   UNCHECKED
+   ((|ann_program_preserves_state_vars| FORMULA-DECL NIL
+     |AnnotateProgramProperties| NIL)
+    (|wf_MP| CONST-DECL "boolean" |MonitoredProgram| NIL)
+    (|wf_state| CONST-DECL "boolean" |State| NIL) NIL
+    (|getLocalDecls| CONST-DECL "finite_set[LocalVarDecl]" |ProgramFunctions|
+     NIL)
+    NIL
+    (|getFieldDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
+    (|lookup_local| CONST-DECL "Val" |State| NIL)
+    (|MP_modeled?| CONST-DECL "boolean" |Equivalence| NIL)
+    (|Program_modeled?| CONST-DECL "boolean" |Equivalence| NIL)
+    (|MVA_modeled?| CONST-DECL "boolean" |Equivalence| NIL)
+    (|is_ghost| CONST-DECL "boolean" |SemanticsJML| NIL)
+    (|is_local| CONST-DECL "boolean" |State| NIL)
+    (|is_field| CONST-DECL "boolean" |State| NIL)
+    (|lookup_field| CONST-DECL "Val" |State| NIL)
+    (|val2int| CONST-DECL "int" |State| NIL)
+    (|wf_state| CONST-DECL "boolean" |MonitoredProgramSemantics| NIL)
+    (|wf_state| CONST-DECL "boolean" |AnnotatedProgramSemantics| NIL)
+    (|specification_requirements| CONST-DECL "boolean" |Equivalence| NIL)
+    (|wf_state_vars_local_or_field| FORMULA-DECL NIL |State| NIL)
+    (|mult_divides1| APPLICATION-JUDGEMENT "(divides(n))" |divides| NIL)
+    (|mult_divides2| APPLICATION-JUDGEMENT "(divides(m))" |divides| NIL)
+    (|minus_odd_is_odd| APPLICATION-JUDGEMENT "odd_int" |integers| NIL)
+    (|int_minus_int_is_int| APPLICATION-JUDGEMENT "int" |integers| NIL)
+    (|int_plus_int_is_int| APPLICATION-JUDGEMENT "int" |integers| NIL)
+    (|string| TYPE-EQ-DECL NIL |strings| NIL)
+    (|char| TYPE-EQ-DECL NIL |strings| NIL)
+    (|char?| ADT-RECOGNIZER-DECL "[character -> boolean]" |character_adt| NIL)
+    (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
+    (|character| TYPE-DECL NIL |character_adt| NIL)
+    (|below| TYPE-EQ-DECL NIL |nat_types| NIL)
+    (|nat| NONEMPTY-TYPE-EQ-DECL NIL |naturalnumbers| NIL)
+    (|NumExpr_induction| FORMULA-DECL NIL |NumExpr_adt| NIL)
+    (|update_GhostVars| CONST-DECL "(update_GhostVars_type)"
+     |AnnotatedProgramSemantics| NIL)
+    (|update_PState| CONST-DECL "(update_PState_type)"
+     |AnnotatedProgramSemantics| NIL)
+    (|id| CONST-DECL "(bijective?[T, T])" |identity| NIL)
+    (|bijective?| CONST-DECL "bool" |functions| NIL)
+    (|eval| DEF-DECL "int" |Evaluation| NIL)
+    (|lookup| CONST-DECL "Val" |SemanticsJML| NIL)
+    (|update_GhostVars| CONST-DECL "(update_GhostVars_type)"
+     |MonitoredProgramSemantics| NIL)
+    (|update_GhostVars_type| CONST-DECL "boolean" |SemanticsJMLTypes| NIL)
+    (|update_PState| CONST-DECL "(update_PState_type)"
+     |MonitoredProgramSemantics| NIL)
+    (|update_PState_type| CONST-DECL "boolean" |SemanticsTypes| NIL)
+    (|PSt| TYPE-EQ-DECL NIL |State| NIL)
+    (|Excpt| TYPE-DECL NIL |Excpt_adt| NIL)
+    (|int| NONEMPTY-TYPE-EQ-DECL NIL |integers| NIL)
+    (|integer_pred| CONST-DECL "[rational -> boolean]" |integers| NIL)
+    (|rational| NONEMPTY-TYPE-FROM-DECL NIL |rationals| NIL)
+    (|rational_pred| CONST-DECL "[real -> boolean]" |rationals| NIL)
+    (|real| NONEMPTY-TYPE-FROM-DECL NIL |reals| NIL)
+    (|real_pred| CONST-DECL "[number_field -> boolean]" |reals| NIL)
+    (|number_field| NONEMPTY-TYPE-FROM-DECL NIL |number_fields| NIL)
+    (|number_field_pred| CONST-DECL "[number -> boolean]" |number_fields| NIL)
+    (= CONST-DECL "[T, T -> boolean]" |equalities| NIL)
+    (|number| NONEMPTY-TYPE-DECL NIL |numbers| NIL)
+    (|related_states| CONST-DECL "boolean" |Equivalence| NIL)
+    (|APState| TYPE-EQ-DECL NIL |AnnotatedProgramSemantics| NIL)
+    (|MPState| TYPE-EQ-DECL NIL |MonitoredProgramSemantics| NIL)
+    (|PState| TYPE-EQ-DECL NIL |State| NIL)
+    (|Store| TYPE-EQ-DECL NIL |State| NIL)
+    (|AState| TYPE-EQ-DECL NIL |MVASemantics| NIL)
+    (|Class| TYPE-EQ-DECL NIL |Program| NIL)
+    (|lift| TYPE-DECL NIL |lift_adt| NIL)
+    (|Method| TYPE-EQ-DECL NIL |Program| NIL)
+    (|Stmt| TYPE-DECL NIL |Stmt_adt| NIL)
+    (|LocalVarDecl| TYPE-EQ-DECL NIL |Program| NIL)
+    (|Expr| TYPE-DECL NIL |Expr_adt| NIL)
+    (|FieldDecl| TYPE-EQ-DECL NIL |Program| NIL)
+    (|MonitoredProgram| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
+    (|compatible| CONST-DECL "boolean" |MonitoredProgram| NIL)
+    (|MonitoredProgramPre| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
+    (|Program| TYPE-EQ-DECL NIL |Program| NIL)
+    (|complete| CONST-DECL "boolean" |MVASemantics| NIL)
+    (MVA TYPE-EQ-DECL NIL MVA NIL) (|ProgVarDecl| TYPE-EQ-DECL NIL MVA NIL)
+    (|MVAVarDecl| TYPE-EQ-DECL NIL MVA NIL)
+    (|JType| TYPE-DECL NIL |JType_adt| NIL)
+    (|defined?| CONST-DECL "boolean" |ValProp| NIL)
+    (|Val| TYPE-DECL NIL |Val_adt| NIL) (|Transition| TYPE-EQ-DECL NIL MVA NIL)
+    (|Guard| TYPE-EQ-DECL NIL MVA NIL) (|Action| TYPE-EQ-DECL NIL MVA NIL)
+    (|Event| TYPE-EQ-DECL NIL MVA NIL)
+    (|EventType| TYPE-DECL NIL |EventType_adt| NIL)
+    (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
+    (CP FORMAL-NONEMPTY-TYPE-DECL NIL |CorrectnessAnnProgram| NIL)
+    (IMPLIES CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
+    (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
+    (|NumExpr| TYPE-DECL NIL |NumExpr_adt| NIL))
+   1723 1723 T NIL))
+ (|MP_modeled_implies_same_bool_eval| 0
+  (|MP_modeled_implies_same_bool_eval-1| NIL 3393595270 3394357935
+   ("" (SKOSIMP)
+    (("" (SKOSIMP)
+      (("" (EXPAND "related_states")
+        (("" (INDUCT "b")
+          (("1" (EXPAND "eval") (("1" (PROPAX) NIL NIL)) NIL)
+           ("2" (EXPAND "eval") (("2" (PROPAX) NIL NIL)) NIL)
+           ("3" (SKOSIMP)
+            (("3" (EXPAND "eval" 1) (("3" (ASSERT) NIL NIL)) NIL)) NIL)
+           ("4" (SKOSIMP)
+            (("4" (EXPAND "eval" 1)
+              (("4" (ASSERT)
+                (("4" (REPLACE -1)
+                  (("4" (REPLACE -2) (("4" (PROPAX) NIL NIL)) NIL)) NIL))
+                NIL))
+              NIL))
+            NIL)
+           ("5" (SKOSIMP)
+            (("5" (ASSERT)
+              (("5" (EXPAND "eval" 1)
+                (("5" (REPLACE -1)
+                  (("5" (REPLACE -2) (("5" (PROPAX) NIL NIL)) NIL)) NIL))
+                NIL))
+              NIL))
+            NIL)
+           ("6" (SKOSIMP)
+            (("6" (USE "MP_modeled_implies_same_num_eval")
+              (("6" (LEMMA "MP_modeled_implies_same_num_eval")
+                (("6" (INST -1 "mp!1" "ap!1" "sMP!1" "sAP!1" "Lt2_var!1")
+                  (("6" (EXPAND "related_states")
+                    (("6" (ASSERT)
+                      (("6" (EXPAND "eval" 1)
+                        (("6" (REPLACE -1)
+                          (("6" (REPLACE -2) (("6" (PROPAX) NIL NIL)) NIL))
+                          NIL))
+                        NIL))
+                      NIL))
+                    NIL))
+                  NIL))
+                NIL))
+              NIL))
+            NIL)
+           ("7" (SKOSIMP)
+            (("7" (USE "MP_modeled_implies_same_num_eval")
+              (("7" (LEMMA "MP_modeled_implies_same_num_eval")
+                (("7" (INST -1 "mp!1" "ap!1" "sMP!1" "sAP!1" "Le2_var!1")
+                  (("7" (EXPAND "related_states")
+                    (("7" (ASSERT)
+                      (("7" (EXPAND "eval" 1)
+                        (("7" (REPLACE -1)
+                          (("7" (REPLACE -2) (("7" (PROPAX) NIL NIL)) NIL))
+                          NIL))
+                        NIL))
+                      NIL))
+                    NIL))
+                  NIL))
+                NIL))
+              NIL))
+            NIL)
+           ("8" (SKOSIMP)
+            (("8" (USE "MP_modeled_implies_same_num_eval")
+              (("8" (LEMMA "MP_modeled_implies_same_num_eval")
+                (("8" (INST -1 "mp!1" "ap!1" "sMP!1" "sAP!1" "Eq2_var!1")
+                  (("8" (EXPAND "related_states")
+                    (("8" (ASSERT)
+                      (("8" (EXPAND "eval" 1)
+                        (("8" (REPLACE -1)
+                          (("8" (REPLACE -2) (("8" (PROPAX) NIL NIL)) NIL))
+                          NIL))
+                        NIL))
+                      NIL))
+                    NIL))
+                  NIL))
+                NIL))
+              NIL))
+            NIL)
+           ("9" (SKOSIMP)
+            (("9" (USE "MP_modeled_implies_same_num_eval")
+              (("9" (LEMMA "MP_modeled_implies_same_num_eval")
+                (("9" (INST -1 "mp!1" "ap!1" "sMP!1" "sAP!1" "Neq2_var!1")
+                  (("9" (EXPAND "related_states")
+                    (("9" (ASSERT)
+                      (("9" (EXPAND "eval" 1)
+                        (("9" (REPLACE -1)
+                          (("9" (REPLACE -2) (("9" (PROPAX) NIL NIL)) NIL))
+                          NIL))
+                        NIL))
+                      NIL))
+                    NIL))
+                  NIL))
+                NIL))
+              NIL))
+            NIL)
+           ("10" (SKOSIMP)
+            (("10" (USE "MP_modeled_implies_same_num_eval")
+              (("10" (LEMMA "MP_modeled_implies_same_num_eval")
+                (("10" (INST -1 "mp!1" "ap!1" "sMP!1" "sAP!1" "Ge2_var!1")
+                  (("10" (EXPAND "related_states")
+                    (("10" (ASSERT)
+                      (("10" (EXPAND "eval" 1)
+                        (("10" (REPLACE -1)
+                          (("10" (REPLACE -2) (("10" (PROPAX) NIL NIL)) NIL))
+                          NIL))
+                        NIL))
+                      NIL))
+                    NIL))
+                  NIL))
+                NIL))
+              NIL))
+            NIL)
+           ("11" (SKOSIMP)
+            (("11" (USE "MP_modeled_implies_same_num_eval")
+              (("11" (LEMMA "MP_modeled_implies_same_num_eval")
+                (("11" (INST -1 "mp!1" "ap!1" "sMP!1" "sAP!1" "Gt2_var!1")
+                  (("11" (EXPAND "related_states")
+                    (("11" (ASSERT)
+                      (("11" (EXPAND "eval" 1)
+                        (("11" (REPLACE -1)
+                          (("11" (REPLACE -2) (("11" (PROPAX) NIL NIL)) NIL))
+                          NIL))
+                        NIL))
+                      NIL))
+                    NIL))
+                  NIL))
+                NIL))
+              NIL))
+            NIL)
+           ("12" (SKOSIMP)
+            (("12" (EXPAND* "eval" "val2bool" "lookup")
+              (("12" (USE "ann_program_preserves_state_vars")
+                (("12" (LEMMA "wf_state_vars_local_or_field")
                   (("12"
-                    (inst -1 "program(mp!1)" "pstate(sMP!1)"
+                    (INST -1 "program(mp!1)" "pstate(sMP!1)"
                      "BoolVarEval1_var!1")
                     (("12"
-                      (expand* "related_states"
-                       "specification_requirements" "wf_MP")
-                      (("12" (flatten)
-                        (("12" (assert)
-                          (("12" (expand "wf_state" (-9 -10))
-                            (("12" (flatten)
-                              (("12"
-                                (assert)
+                      (EXPAND* "related_states" "specification_requirements"
+                       "wf_MP")
+                      (("12" (FLATTEN)
+                        (("12" (ASSERT)
+                          (("12" (EXPAND "wf_state" (-9 -10))
+                            (("12" (FLATTEN)
+                              (("12" (ASSERT)
                                 (("12"
-                                  (hide
-                                   -8
-                                   -9
-                                   -10
-                                   -11
-                                   -12
-                                   -13
-                                   -14
-                                   -15
-                                   -16
-                                   -17
+                                  (HIDE -8 -9 -10 -11 -12 -13 -14 -15 -16 -17
                                    -18)
-                                  (("12" (grind) nil nil))
-                                  nil))
-                                nil))
-                              nil))
-                            nil))
-                          nil))
-                        nil))
-                      nil))
-                    nil))
-                  nil))
-                nil))
-              nil))
-            nil)
-           ("13" (expand "specification_requirements")
-            (("13" (flatten) nil nil)) nil))
-          nil))
-        nil))
-      nil))
-    nil)
-   unfinished
-   ((related_states const-decl "boolean" Equivalence nil)
-    (ann_program_preserves_state_vars formula-decl nil
-     AnnotateProgramProperties nil)
-    (lookup_field const-decl "Val" State nil)
-    (Program_modeled? const-decl "boolean" Equivalence nil)
-    (MVA_modeled? const-decl "boolean" Equivalence nil)
-    (is_ghost const-decl "boolean" SemanticsJML nil)
-    (is_local const-decl "boolean" State nil)
-    (is_field const-decl "boolean" State nil)
-    (lookup_local const-decl "Val" State nil)
-    (cp const-decl "string" AnnotateProgram nil)
-    (wf_MP const-decl "boolean" MonitoredProgram nil)
-    (wf_state_vars_local_or_field formula-decl nil State nil)
-    (val2bool const-decl "bool" State nil)
-    (NumExpr type-decl nil NumExpr_adt nil)
-    (MP_modeled_implies_same_num_eval formula-decl nil
-     CorrectnessAnnProgram nil)
-    (BoolExpr_induction formula-decl nil BoolExpr_adt nil)
-    (nat nonempty-type-eq-decl nil naturalnumbers nil)
-    (below type-eq-decl nil nat_types nil)
-    (character type-decl nil character_adt nil)
-    (boolean nonempty-type-decl nil booleans nil)
-    (char? adt-recognizer-decl "[character -> boolean]" character_adt
-     nil)
-    (char type-eq-decl nil strings nil)
-    (string type-eq-decl nil strings nil)
-    (update_GhostVars const-decl "(update_GhostVars_type)"
-     AnnotatedProgramSemantics nil)
-    (update_PState const-decl "(update_PState_type)"
-     AnnotatedProgramSemantics nil)
-    (id const-decl "(bijective?[T, T])" identity nil)
-    (bijective? const-decl "bool" functions nil)
-    (eval def-decl "bool" Evaluation nil)
-    (lookup const-decl "Val" SemanticsJML nil)
-    (update_GhostVars const-decl "(update_GhostVars_type)"
-     MonitoredProgramSemantics nil)
-    (update_GhostVars_type const-decl "boolean" SemanticsJMLTypes nil)
-    (update_PState const-decl "(update_PState_type)"
-     MonitoredProgramSemantics nil)
-    (update_PState_type const-decl "boolean" SemanticsTypes nil)
-    (PSt type-eq-decl nil State nil)
-    (Excpt type-decl nil Excpt_adt nil)
-    (MP_modeled? const-decl "boolean" Equivalence nil)
-    (wf_state const-decl "boolean" AnnotatedProgramSemantics nil)
-    (APState type-eq-decl nil AnnotatedProgramSemantics nil)
-    (wf_state const-decl "boolean" MonitoredProgramSemantics nil)
-    (MPState type-eq-decl nil MonitoredProgramSemantics nil)
-    (PState type-eq-decl nil State nil)
-    (Store type-eq-decl nil State nil)
-    (AState type-eq-decl nil MVASemantics nil)
-    (ann_program const-decl "Program" AnnotateProgram nil)
-    (= const-decl "[T, T -> boolean]" equalities nil)
-    (Class type-eq-decl nil Program nil)
-    (lift type-decl nil lift_adt nil)
-    (Method type-eq-decl nil Program nil)
-    (Stmt type-decl nil Stmt_adt nil)
-    (LocalVarDecl type-eq-decl nil Program nil)
-    (Expr type-decl nil Expr_adt nil)
-    (FieldDecl type-eq-decl nil Program nil)
-    (AND const-decl "[bool, bool -> bool]" booleans nil)
-    (BoolExpr type-decl nil BoolExpr_adt nil)
-    (bool nonempty-type-eq-decl nil booleans nil)
-    (IMPLIES const-decl "[bool, bool -> bool]" booleans nil)
-    (CP formal-nonempty-type-decl nil CorrectnessAnnProgram nil)
-    (finite_set type-eq-decl nil finite_sets nil)
-    (EventType type-decl nil EventType_adt nil)
-    (Event type-eq-decl nil MVA nil) (Action type-eq-decl nil MVA nil)
-    (Guard type-eq-decl nil MVA nil)
-    (Transition type-eq-decl nil MVA nil)
-    (Val type-decl nil Val_adt nil)
-    (defined? const-decl "boolean" ValProp nil)
-    (JType type-decl nil JType_adt nil)
-    (MVAVarDecl type-eq-decl nil MVA nil)
-    (ProgVarDecl type-eq-decl nil MVA nil)
-    (MVA type-eq-decl nil MVA nil)
-    (complete const-decl "boolean" MVASemantics nil)
-    (Program type-eq-decl nil Program nil)
-    (MonitoredProgramPre type-eq-decl nil MonitoredProgram nil)
-    (compatible const-decl "boolean" MonitoredProgram nil)
-    (MonitoredProgram type-eq-decl nil MonitoredProgram nil)
-    (specification_requirements const-decl "boolean" Equivalence nil)
-    (ann_program_pre const-decl "boolean" AnnotateProgram nil))
-   54618 38050 t nil))
- (MP_modeled_preserved_by_assertion_checking_TCC1 0
-  (MP_modeled_preserved_by_assertion_checking_TCC1-1 nil 3393591169
-   3393595405 ("" (subtype-tcc) nil nil) unchecked
-   ((string type-eq-decl nil strings nil)
-    (char type-eq-decl nil strings nil)
-    (char? adt-recognizer-decl "[character -> boolean]" character_adt
-     nil)
-    (boolean nonempty-type-decl nil booleans nil)
-    (character type-decl nil character_adt nil)
-    (below type-eq-decl nil nat_types nil)
-    (nat nonempty-type-eq-decl nil naturalnumbers nil)
-    (CP formal-nonempty-type-decl nil CorrectnessAnnProgram nil)
-    (wf_vdsA const-decl "boolean" WellFormedMVA nil)
-    (wf_vdsP const-decl "boolean" WellFormedMVA nil)
-    (member const-decl "bool" sets nil)
-    (intersection const-decl "set" sets nil)
-    (empty? const-decl "bool" sets nil)
-    (disjoint? const-decl "bool" sets nil)
-    (wf_Guard const-decl "boolean" WellFormedMVA nil)
-    (wf_Action const-decl "boolean" WellFormedMVA nil)
-    (wf_Trans const-decl "boolean" WellFormedMVA nil)
-    (wf_MVA const-decl "boolean" WellFormedMVA nil)
-    (wf_MP const-decl "boolean" MonitoredProgram nil)
-    (invariants_are_booleans const-decl "boolean" WellTypedProgram nil)
-    (well_typed_Program const-decl "boolean" WellTypedProgram nil)
-    (disjoint_model_vars const-decl "boolean" AnnotateProgram nil)
-    (not_clashing_model_vars const-decl "boolean" AnnotateProgram nil)
-    (ann_program_pre const-decl "boolean" AnnotateProgram nil)
-    (on_method_exit_exceptional_MP const-decl "(on_method_event_type)"
-     MonitoredProgramSemantics nil)
-    (on_method_exit_normal_MP const-decl "(on_method_event_type)"
-     MonitoredProgramSemantics nil)
-    (on_method_entry_MP const-decl "(on_method_event_type)"
-     MonitoredProgramSemantics nil)
-    (on_method_event_type const-decl "boolean" SemanticsTypes nil)
-    (Method type-eq-decl nil Program nil)
-    (LocalVarDecl type-eq-decl nil Program nil)
-    (execute_CaseJML const-decl "(execute_CaseJML_type)" SemanticsJML
-     nil)
-    (execute_CaseJML_type const-decl "boolean" SemanticsTypes nil)
-    (list type-decl nil list_adt nil)
-    (execute_set const-decl "(execute_set_type)" SemanticsJML nil)
-    (execute_set_type const-decl "boolean" SemanticsTypes nil)
-    (deriv_expr_rec_type type-eq-decl nil SemanticsTypes nil)
-    (deriv_expr_type type-eq-decl nil SemanticsTypes nil)
-    (deriv_stmt_rec_type type-eq-decl nil SemanticsTypes nil)
-    (deriv_stmt_type type-eq-decl nil SemanticsTypes nil)
-    (below type-eq-decl nil naturalnumbers nil)
-    (<= const-decl "bool" reals nil) (< const-decl "bool" reals nil)
-    (Stmt type-decl nil Stmt_adt nil) (>= const-decl "bool" reals nil)
-    (bool nonempty-type-eq-decl nil booleans nil)
-    (int nonempty-type-eq-decl nil integers nil)
-    (integer_pred const-decl "[rational -> boolean]" integers nil)
-    (rational nonempty-type-from-decl nil rationals nil)
-    (rational_pred const-decl "[real -> boolean]" rationals nil)
-    (real nonempty-type-from-decl nil reals nil)
-    (real_pred const-decl "[number_field -> boolean]" reals nil)
-    (number_field nonempty-type-from-decl nil number_fields nil)
-    (number_field_pred const-decl "[number -> boolean]" number_fields
-     nil)
-    (number nonempty-type-decl nil numbers nil)
-    (upto nonempty-type-eq-decl nil naturalnumbers nil)
-    (Expr type-decl nil Expr_adt nil)
-    (lookup const-decl "Val" SemanticsJML nil)
-    (update_GhostVars const-decl "(update_GhostVars_type)"
-     MonitoredProgramSemantics nil)
-    (update_GhostVars_type const-decl "boolean" SemanticsJMLTypes nil)
-    (update_PState const-decl "(update_PState_type)"
-     MonitoredProgramSemantics nil)
-    (update_PState_type const-decl "boolean" SemanticsTypes nil)
-    (PSt type-eq-decl nil State nil) (lift type-decl nil lift_adt nil)
-    (Excpt type-decl nil Excpt_adt nil)
-    (MPState type-eq-decl nil MonitoredProgramSemantics nil)
-    (PState type-eq-decl nil State nil)
-    (Store type-eq-decl nil State nil)
-    (AState type-eq-decl nil MVASemantics nil)
-    (MonitoredProgram type-eq-decl nil MonitoredProgram nil)
-    (compatible const-decl "boolean" MonitoredProgram nil)
-    (MonitoredProgramPre type-eq-decl nil MonitoredProgram nil)
-    (Program type-eq-decl nil Program nil)
-    (complete const-decl "boolean" MVASemantics nil)
-    (MVA type-eq-decl nil MVA nil)
-    (ProgVarDecl type-eq-decl nil MVA nil)
-    (MVAVarDecl type-eq-decl nil MVA nil)
-    (JType type-decl nil JType_adt nil)
-    (defined? const-decl "boolean" ValProp nil)
-    (Val type-decl nil Val_adt nil)
-    (Transition type-eq-decl nil MVA nil)
-    (Guard type-eq-decl nil MVA nil) (Action type-eq-decl nil MVA nil)
-    (Event type-eq-decl nil MVA nil)
-    (EventType type-decl nil EventType_adt nil)
-    (finite_set type-eq-decl nil finite_sets nil)
-    (deriv_expr const-decl "bool" Semantics nil)
-    (proper_subterm_set_clause const-decl "boolean" ProgramFunctions
-     nil)
-    (well_behaved_Program const-decl "boolean" Semantics nil)
-    (ann_program const-decl "Program" AnnotateProgram nil)
-    (is_field const-decl "boolean" State nil)
-    (getFieldDecls const-decl "finite_set[FieldDecl]" ProgramFunctions
-     nil)
-    (is_local const-decl "boolean" State nil)
-    (getLocalDecls const-decl "finite_set[LocalVarDecl]"
-     ProgramFunctions nil)
-    (wf_state const-decl "boolean" State nil)
-    (update_GhostVars const-decl "(update_GhostVars_type)"
-     AnnotatedProgramSemantics nil)
-    (update_PState const-decl "(update_PState_type)"
-     AnnotatedProgramSemantics nil)
-    (id const-decl "(bijective?[T, T])" identity nil)
-    (bijective? const-decl "bool" functions nil)
-    (APState type-eq-decl nil AnnotatedProgramSemantics nil)
-    (Class type-eq-decl nil Program nil)
-    (FieldDecl type-eq-decl nil Program nil)
-    (is_ghost const-decl "boolean" SemanticsJML nil)
-    (getGhostDecls const-decl "finite_set[FieldDecl]" ProgramFunctions
-     nil)
-    (wf_ghoststate const-decl "boolean" SemanticsJML nil)
-    (wf_state const-decl "boolean" AnnotatedProgramSemantics nil)
-    (on_method_exit_exceptional const-decl "(on_method_event_type)"
-     SemanticsJML nil)
-    (on_method_exit_normal const-decl "(on_method_event_type)"
-     SemanticsJML nil)
-    (on_method_entry const-decl "(on_method_event_type)" SemanticsJML
-     nil)
-    (guard_to_expression_behavior const-decl "boolean" Equivalence nil)
-    (eval_action_behavior const-decl "boolean" Equivalence nil)
-    (well_behaved_MVA const-decl "boolean" Equivalence nil)
-    (well_behaved_MP const-decl "boolean" Equivalence nil)
-    (specification_requirements const-decl "boolean" Equivalence nil)
-    (wf_Store const-decl "boolean" MVASemantics nil)
-    (wf_AState const-decl "boolean" MVASemantics nil)
-    (wf_state const-decl "boolean" MonitoredProgramSemantics nil)
-    (MVA_modeled? const-decl "boolean" Equivalence nil)
-    (Program_modeled? const-decl "boolean" Equivalence nil)
-    (MP_modeled? const-decl "boolean" Equivalence nil)
-    (related_states const-decl "boolean" Equivalence nil)
-    (finite_intersection1 application-judgement "finite_set"
-     finite_sets nil))
-   23736 14770 nil nil))
- (MP_modeled_preserved_by_assertion_checking_TCC2 0
-  (MP_modeled_preserved_by_assertion_checking_TCC2-1 nil 3393591169
-   3393595420 ("" (subtype-tcc) nil nil) unchecked
-   ((string type-eq-decl nil strings nil)
-    (char type-eq-decl nil strings nil)
-    (char? adt-recognizer-decl "[character -> boolean]" character_adt
-     nil)
-    (boolean nonempty-type-decl nil booleans nil)
-    (character type-decl nil character_adt nil)
-    (below type-eq-decl nil nat_types nil)
-    (nat nonempty-type-eq-decl nil naturalnumbers nil)
-    (CP formal-nonempty-type-decl nil CorrectnessAnnProgram nil)
-    (wf_vdsA const-decl "boolean" WellFormedMVA nil)
-    (wf_vdsP const-decl "boolean" WellFormedMVA nil)
-    (member const-decl "bool" sets nil)
-    (intersection const-decl "set" sets nil)
-    (empty? const-decl "bool" sets nil)
-    (disjoint? const-decl "bool" sets nil)
-    (wf_Guard const-decl "boolean" WellFormedMVA nil)
-    (wf_Action const-decl "boolean" WellFormedMVA nil)
-    (wf_Trans const-decl "boolean" WellFormedMVA nil)
-    (wf_MVA const-decl "boolean" WellFormedMVA nil)
-    (wf_MP const-decl "boolean" MonitoredProgram nil)
-    (invariants_are_booleans const-decl "boolean" WellTypedProgram nil)
-    (well_typed_Program const-decl "boolean" WellTypedProgram nil)
-    (disjoint_model_vars const-decl "boolean" AnnotateProgram nil)
-    (not_clashing_model_vars const-decl "boolean" AnnotateProgram nil)
-    (ann_program_pre const-decl "boolean" AnnotateProgram nil)
-    (on_method_exit_exceptional_MP const-decl "(on_method_event_type)"
-     MonitoredProgramSemantics nil)
-    (on_method_exit_normal_MP const-decl "(on_method_event_type)"
-     MonitoredProgramSemantics nil)
-    (on_method_entry_MP const-decl "(on_method_event_type)"
-     MonitoredProgramSemantics nil)
-    (on_method_event_type const-decl "boolean" SemanticsTypes nil)
-    (Method type-eq-decl nil Program nil)
-    (LocalVarDecl type-eq-decl nil Program nil)
-    (execute_CaseJML const-decl "(execute_CaseJML_type)" SemanticsJML
-     nil)
-    (execute_CaseJML_type const-decl "boolean" SemanticsTypes nil)
-    (list type-decl nil list_adt nil)
-    (execute_set const-decl "(execute_set_type)" SemanticsJML nil)
-    (execute_set_type const-decl "boolean" SemanticsTypes nil)
-    (deriv_expr_rec_type type-eq-decl nil SemanticsTypes nil)
-    (deriv_expr_type type-eq-decl nil SemanticsTypes nil)
-    (deriv_stmt_rec_type type-eq-decl nil SemanticsTypes nil)
-    (deriv_stmt_type type-eq-decl nil SemanticsTypes nil)
-    (below type-eq-decl nil naturalnumbers nil)
-    (<= const-decl "bool" reals nil) (< const-decl "bool" reals nil)
-    (Stmt type-decl nil Stmt_adt nil) (>= const-decl "bool" reals nil)
-    (bool nonempty-type-eq-decl nil booleans nil)
-    (int nonempty-type-eq-decl nil integers nil)
-    (integer_pred const-decl "[rational -> boolean]" integers nil)
-    (rational nonempty-type-from-decl nil rationals nil)
-    (rational_pred const-decl "[real -> boolean]" rationals nil)
-    (real nonempty-type-from-decl nil reals nil)
-    (real_pred const-decl "[number_field -> boolean]" reals nil)
-    (number_field nonempty-type-from-decl nil number_fields nil)
-    (number_field_pred const-decl "[number -> boolean]" number_fields
-     nil)
-    (number nonempty-type-decl nil numbers nil)
-    (upto nonempty-type-eq-decl nil naturalnumbers nil)
-    (Expr type-decl nil Expr_adt nil)
-    (lookup const-decl "Val" SemanticsJML nil)
-    (update_GhostVars const-decl "(update_GhostVars_type)"
-     MonitoredProgramSemantics nil)
-    (update_GhostVars_type const-decl "boolean" SemanticsJMLTypes nil)
-    (update_PState const-decl "(update_PState_type)"
-     MonitoredProgramSemantics nil)
-    (update_PState_type const-decl "boolean" SemanticsTypes nil)
-    (PSt type-eq-decl nil State nil) (lift type-decl nil lift_adt nil)
-    (Excpt type-decl nil Excpt_adt nil)
-    (MPState type-eq-decl nil MonitoredProgramSemantics nil)
-    (PState type-eq-decl nil State nil)
-    (Store type-eq-decl nil State nil)
-    (AState type-eq-decl nil MVASemantics nil)
-    (MonitoredProgram type-eq-decl nil MonitoredProgram nil)
-    (compatible const-decl "boolean" MonitoredProgram nil)
-    (MonitoredProgramPre type-eq-decl nil MonitoredProgram nil)
-    (Program type-eq-decl nil Program nil)
-    (complete const-decl "boolean" MVASemantics nil)
-    (MVA type-eq-decl nil MVA nil)
-    (ProgVarDecl type-eq-decl nil MVA nil)
-    (MVAVarDecl type-eq-decl nil MVA nil)
-    (JType type-decl nil JType_adt nil)
-    (defined? const-decl "boolean" ValProp nil)
-    (Val type-decl nil Val_adt nil)
-    (Transition type-eq-decl nil MVA nil)
-    (Guard type-eq-decl nil MVA nil) (Action type-eq-decl nil MVA nil)
-    (Event type-eq-decl nil MVA nil)
-    (EventType type-decl nil EventType_adt nil)
-    (finite_set type-eq-decl nil finite_sets nil)
-    (deriv_expr const-decl "bool" Semantics nil)
-    (proper_subterm_set_clause const-decl "boolean" ProgramFunctions
-     nil)
-    (well_behaved_Program const-decl "boolean" Semantics nil)
-    (ann_program const-decl "Program" AnnotateProgram nil)
-    (is_field const-decl "boolean" State nil)
-    (getFieldDecls const-decl "finite_set[FieldDecl]" ProgramFunctions
-     nil)
-    (is_local const-decl "boolean" State nil)
-    (getLocalDecls const-decl "finite_set[LocalVarDecl]"
-     ProgramFunctions nil)
-    (wf_state const-decl "boolean" State nil)
-    (update_GhostVars const-decl "(update_GhostVars_type)"
-     AnnotatedProgramSemantics nil)
-    (update_PState const-decl "(update_PState_type)"
-     AnnotatedProgramSemantics nil)
-    (id const-decl "(bijective?[T, T])" identity nil)
-    (bijective? const-decl "bool" functions nil)
-    (APState type-eq-decl nil AnnotatedProgramSemantics nil)
-    (Class type-eq-decl nil Program nil)
-    (FieldDecl type-eq-decl nil Program nil)
-    (is_ghost const-decl "boolean" SemanticsJML nil)
-    (getGhostDecls const-decl "finite_set[FieldDecl]" ProgramFunctions
-     nil)
-    (wf_ghoststate const-decl "boolean" SemanticsJML nil)
-    (wf_state const-decl "boolean" AnnotatedProgramSemantics nil)
-    (on_method_exit_exceptional const-decl "(on_method_event_type)"
-     SemanticsJML nil)
-    (on_method_exit_normal const-decl "(on_method_event_type)"
-     SemanticsJML nil)
-    (on_method_entry const-decl "(on_method_event_type)" SemanticsJML
-     nil)
-    (guard_to_expression_behavior const-decl "boolean" Equivalence nil)
-    (eval_action_behavior const-decl "boolean" Equivalence nil)
-    (well_behaved_MVA const-decl "boolean" Equivalence nil)
-    (well_behaved_MP const-decl "boolean" Equivalence nil)
-    (specification_requirements const-decl "boolean" Equivalence nil)
-    (wf_Store const-decl "boolean" MVASemantics nil)
-    (wf_AState const-decl "boolean" MVASemantics nil)
-    (wf_state const-decl "boolean" MonitoredProgramSemantics nil)
-    (MVA_modeled? const-decl "boolean" Equivalence nil)
-    (Program_modeled? const-decl "boolean" Equivalence nil)
-    (MP_modeled? const-decl "boolean" Equivalence nil)
-    (related_states const-decl "boolean" Equivalence nil)
-    (deriv_expr_rec const-decl "deriv_expr_type(n)" Semantics nil)
-    (int_minus_int_is_int application-judgement "int" integers nil)
-    (finite_intersection1 application-judgement "finite_set"
-     finite_sets nil))
-   15207 13090 nil nil))
- (MP_modeled_preserved_by_assertion_checking 0
-  (MP_modeled_preserved_by_assertion_checking-2 nil 3393591227
-   3393595423
-   ("" (skosimp*)
-    (("" (expand* "related_states" "check_assertion")
-      (("" (flatten)
-        (("" (skosimp*)
-          (("" (inst -6 "v!1" "v!2" "tau1!1" "tau1!2")
-            (("" (assert)
-              (("" (flatten)
-                (("" (lift-if)
-                  (("" (ground)
-                    (("" (use "MP_modeled_preserved_by_update")
-                      (("" (expand "related_states")
-                        ((""
-                          (lemma "MP_modeled_implies_same_exception")
-                          (("" (assert) (("" (postpone) nil nil)) nil))
-                          nil))
-                        nil))
-                      nil))
-                    nil))
-                  nil))
-                nil))
-              nil))
-            nil))
-          nil))
-        nil))
-      nil))
-    nil)
-   unfinished nil 2138 1970 t nil)
-  (MP_modeled_preserved_by_assertion_checking-1 nil 3393591178
-   3393591212
-   ("" (skosimp*)
-    (("" (expand* "related_states" "check_assertion")
-      (("" (flatten)
-        (("" (skosimp*)
-          (("" (inst -6 "v!1" "v!2" "tau1!1" "tau1!2")
-            (("" (assert)
-              (("" (flatten)
-                (("" (lift-if)
-                  (("" (ground)
-                    (("" (use "MP_modeled_preserved_by_update2")
-                      (("" (expand "related_states")
-                        ((""
-                          (lemma "MP_modeled_implies_same_exception")
-                          (("" (inst -1 "tau1!1" "tau1!2")
-                            (("" (assert) nil))))))))))))))))))))))))))
-    nil)
-   unfinished nil 31813 660 t nil))
- (on_method_entry_for_ann_method_equivalence_TCC1 0
-  (on_method_entry_for_ann_method_equivalence_TCC1-1 nil 3393591169
-   3393595708
-   ("" (skosimp)
-    (("" (expand* "related_states" "specification_requirements")
-      (("" (prop) nil nil)) nil))
-    nil)
-   unchecked
-   ((specification_requirements const-decl "boolean" Equivalence nil)
-    (related_states const-decl "boolean" Equivalence nil))
-   35005 120 t nil))
- (deriv_expr_maintains_equivalence 0
-  (deriv_expr_maintains_equivalence-1 nil 3393591001 3393595483
-   ("" (skosimp)
-    (("" (induct e)
-      (("1" (skosimp*)
-        (("1" (expand "related_states")
-          (("1" (flatten)
-            (("1" (expand "deriv_expr" (-7 -8))
-              (("1" (expand "deriv_expr" (-7 -8))
-                (("1" (use "MP_modeled_implies_same_exception")
-                  (("1" (assert)
-                    (("1" (case "up?(ex(pstate(sMP1!1)))")
-                      (("1" (ground) nil)
-                       ("2" (assert)
-                        (("2" (flatten)
-                          (("2" (skosimp*)
-                            (("2"
-                              (inst -2 "v1!1" "v2!1" "sMP1!1" "tau!1"
-                               "sAP1!1" "tau!2" "n1!1 - 1" "n2!1 - 1")
-                              (("1"
-                                (expand "deriv_expr" -2)
-                                (("1"
-                                  (assert)
-                                  (("1"
-                                    (lift-if)
-                                    (("1"
-                                      (lemma
-                                       "MP_modeled_implies_same_exception")
-                                      (("1"
-                                        (inst -1 "tau!1" "tau!2")
-                                        (("1"
-                                          (flatten)
+                                  (("12" (GRIND) NIL NIL)) NIL))
+                                NIL))
+                              NIL))
+                            NIL))
+                          NIL))
+                        NIL))
+                      NIL))
+                    NIL))
+                  NIL))
+                NIL))
+              NIL))
+            NIL)
+           ("13" (EXPAND "specification_requirements")
+            (("13" (FLATTEN) NIL NIL)) NIL))
+          NIL))
+        NIL))
+      NIL))
+    NIL)
+   UNCHECKED
+   ((|BoolExpr| TYPE-DECL NIL |BoolExpr_adt| NIL)
+    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
+    (|FieldDecl| TYPE-EQ-DECL NIL |Program| NIL)
+    (|Expr| TYPE-DECL NIL |Expr_adt| NIL)
+    (|LocalVarDecl| TYPE-EQ-DECL NIL |Program| NIL)
+    (|Stmt| TYPE-DECL NIL |Stmt_adt| NIL)
+    (|Method| TYPE-EQ-DECL NIL |Program| NIL)
+    (|lift| TYPE-DECL NIL |lift_adt| NIL)
+    (|Class| TYPE-EQ-DECL NIL |Program| NIL)
+    (= CONST-DECL "[T, T -> boolean]" |equalities| NIL)
+    (|ann_program| CONST-DECL "Program" |AnnotateProgram| NIL)
+    (|AState| TYPE-EQ-DECL NIL |MVASemantics| NIL)
+    (|Store| TYPE-EQ-DECL NIL |State| NIL)
+    (|PState| TYPE-EQ-DECL NIL |State| NIL)
+    (|MPState| TYPE-EQ-DECL NIL |MonitoredProgramSemantics| NIL)
+    (|wf_state| CONST-DECL "boolean" |MonitoredProgramSemantics| NIL)
+    (|APState| TYPE-EQ-DECL NIL |AnnotatedProgramSemantics| NIL)
+    (|wf_state| CONST-DECL "boolean" |AnnotatedProgramSemantics| NIL)
+    (|MP_modeled?| CONST-DECL "boolean" |Equivalence| NIL)
+    (|Excpt| TYPE-DECL NIL |Excpt_adt| NIL)
+    (|PSt| TYPE-EQ-DECL NIL |State| NIL)
+    (|update_PState_type| CONST-DECL "boolean" |SemanticsTypes| NIL)
+    (|update_PState| CONST-DECL "(update_PState_type)"
+     |MonitoredProgramSemantics| NIL)
+    (|update_GhostVars_type| CONST-DECL "boolean" |SemanticsJMLTypes| NIL)
+    (|update_GhostVars| CONST-DECL "(update_GhostVars_type)"
+     |MonitoredProgramSemantics| NIL)
+    (|lookup| CONST-DECL "Val" |SemanticsJML| NIL)
+    (|eval| DEF-DECL "bool" |Evaluation| NIL)
+    (|bijective?| CONST-DECL "bool" |functions| NIL)
+    (|id| CONST-DECL "(bijective?[T, T])" |identity| NIL)
+    (|update_PState| CONST-DECL "(update_PState_type)"
+     |AnnotatedProgramSemantics| NIL)
+    (|update_GhostVars| CONST-DECL "(update_GhostVars_type)"
+     |AnnotatedProgramSemantics| NIL)
+    (|ann_program_pre| CONST-DECL "boolean" |AnnotateProgram| NIL) NIL
+    (|specification_requirements| CONST-DECL "boolean" |Equivalence| NIL)
+    (|MonitoredProgram| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
+    (|compatible| CONST-DECL "boolean" |MonitoredProgram| NIL)
+    (|MonitoredProgramPre| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
+    (|Program| TYPE-EQ-DECL NIL |Program| NIL)
+    (|complete| CONST-DECL "boolean" |MVASemantics| NIL)
+    (MVA TYPE-EQ-DECL NIL MVA NIL) (|ProgVarDecl| TYPE-EQ-DECL NIL MVA NIL)
+    (|MVAVarDecl| TYPE-EQ-DECL NIL MVA NIL)
+    (|JType| TYPE-DECL NIL |JType_adt| NIL)
+    (|defined?| CONST-DECL "boolean" |ValProp| NIL)
+    (|Val| TYPE-DECL NIL |Val_adt| NIL) (|Transition| TYPE-EQ-DECL NIL MVA NIL)
+    (|Guard| TYPE-EQ-DECL NIL MVA NIL) (|Action| TYPE-EQ-DECL NIL MVA NIL)
+    (|Event| TYPE-EQ-DECL NIL MVA NIL)
+    (|EventType| TYPE-DECL NIL |EventType_adt| NIL)
+    (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
+    (CP FORMAL-NONEMPTY-TYPE-DECL NIL |CorrectnessAnnProgram| NIL)
+    (IMPLIES CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
+    (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
+    (|BoolExpr_induction| FORMULA-DECL NIL |BoolExpr_adt| NIL)
+    (|nat| NONEMPTY-TYPE-EQ-DECL NIL |naturalnumbers| NIL)
+    (|below| TYPE-EQ-DECL NIL |nat_types| NIL)
+    (|character| TYPE-DECL NIL |character_adt| NIL)
+    (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
+    (|char?| ADT-RECOGNIZER-DECL "[character -> boolean]" |character_adt| NIL)
+    (|char| TYPE-EQ-DECL NIL |strings| NIL)
+    (|string| TYPE-EQ-DECL NIL |strings| NIL)
+    (|NumExpr| TYPE-DECL NIL |NumExpr_adt| NIL)
+    (|MP_modeled_implies_same_num_eval| FORMULA-DECL NIL
+     |CorrectnessAnnProgram| NIL)
+    (|val2bool| CONST-DECL "bool" |State| NIL)
+    (|wf_state_vars_local_or_field| FORMULA-DECL NIL |State| NIL)
+    (|wf_MP| CONST-DECL "boolean" |MonitoredProgram| NIL)
+    (|is_field| CONST-DECL "boolean" |State| NIL)
+    (|is_local| CONST-DECL "boolean" |State| NIL)
+    (|is_ghost| CONST-DECL "boolean" |SemanticsJML| NIL)
+    (|MVA_modeled?| CONST-DECL "boolean" |Equivalence| NIL)
+    (|Program_modeled?| CONST-DECL "boolean" |Equivalence| NIL)
+    (|lookup_field| CONST-DECL "Val" |State| NIL)
+    (|lookup_local| CONST-DECL "Val" |State| NIL)
+    (|cp| CONST-DECL "string" |AnnotateProgram| NIL)
+    (|ann_program_preserves_state_vars| FORMULA-DECL NIL
+     |AnnotateProgramProperties| NIL)
+    (|related_states| CONST-DECL "boolean" |Equivalence| NIL))
+   7979 7976 T NIL))
+ (|MP_modeled_preserved_by_assertion_checking_TCC1| 0
+  (|MP_modeled_preserved_by_assertion_checking_TCC1-1| NIL 3393591169
+   3394357944 ("" (SUBTYPE-TCC) NIL NIL) UNCHECKED
+   ((|finite_intersection1| APPLICATION-JUDGEMENT "finite_set" |finite_sets|
+     NIL)
+    (|related_states| CONST-DECL "boolean" |Equivalence| NIL)
+    (|MP_modeled?| CONST-DECL "boolean" |Equivalence| NIL)
+    (|Program_modeled?| CONST-DECL "boolean" |Equivalence| NIL)
+    (|MVA_modeled?| CONST-DECL "boolean" |Equivalence| NIL)
+    (|wf_state| CONST-DECL "boolean" |MonitoredProgramSemantics| NIL)
+    (|wf_AState| CONST-DECL "boolean" |MVASemantics| NIL)
+    (|wf_Store| CONST-DECL "boolean" |MVASemantics| NIL)
+    (|specification_requirements| CONST-DECL "boolean" |Equivalence| NIL)
+    (|well_behaved_MP| CONST-DECL "boolean" |Equivalence| NIL)
+    (|well_behaved_MVA| CONST-DECL "boolean" |Equivalence| NIL)
+    (|eval_action_behavior| CONST-DECL "boolean" |Equivalence| NIL)
+    (|guard_to_expression_behavior| CONST-DECL "boolean" |Equivalence| NIL)
+    (|on_method_entry| CONST-DECL "(on_method_event_type)" |SemanticsJML| NIL)
+    (|on_method_exit_normal| CONST-DECL "(on_method_event_type)" |SemanticsJML|
+     NIL)
+    (|on_method_exit_exceptional| CONST-DECL "(on_method_event_type)"
+     |SemanticsJML| NIL)
+    (|wf_state| CONST-DECL "boolean" |AnnotatedProgramSemantics| NIL)
+    (|wf_ghoststate| CONST-DECL "boolean" |SemanticsJML| NIL)
+    (|is_ghost| CONST-DECL "boolean" |SemanticsJML| NIL)
+    (|FieldDecl| TYPE-EQ-DECL NIL |Program| NIL)
+    (|Class| TYPE-EQ-DECL NIL |Program| NIL)
+    (|APState| TYPE-EQ-DECL NIL |AnnotatedProgramSemantics| NIL)
+    (|bijective?| CONST-DECL "bool" |functions| NIL)
+    (|id| CONST-DECL "(bijective?[T, T])" |identity| NIL)
+    (|update_PState| CONST-DECL "(update_PState_type)"
+     |AnnotatedProgramSemantics| NIL)
+    (|update_GhostVars| CONST-DECL "(update_GhostVars_type)"
+     |AnnotatedProgramSemantics| NIL)
+    (|wf_state| CONST-DECL "boolean" |State| NIL)
+    (|is_local| CONST-DECL "boolean" |State| NIL)
+    (|is_field| CONST-DECL "boolean" |State| NIL)
+    (|ann_program| CONST-DECL "Program" |AnnotateProgram| NIL)
+    (|well_behaved_Program| CONST-DECL "boolean" |Semantics| NIL)
+    (|proper_subterm_set_clause| CONST-DECL "boolean" |ProgramFunctions| NIL)
+    (|deriv_expr| CONST-DECL "bool" |Semantics| NIL)
+    (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
+    (|EventType| TYPE-DECL NIL |EventType_adt| NIL)
+    (|Event| TYPE-EQ-DECL NIL MVA NIL) (|Action| TYPE-EQ-DECL NIL MVA NIL)
+    (|Guard| TYPE-EQ-DECL NIL MVA NIL) (|Transition| TYPE-EQ-DECL NIL MVA NIL)
+    (|Val| TYPE-DECL NIL |Val_adt| NIL)
+    (|defined?| CONST-DECL "boolean" |ValProp| NIL)
+    (|JType| TYPE-DECL NIL |JType_adt| NIL)
+    (|MVAVarDecl| TYPE-EQ-DECL NIL MVA NIL)
+    (|ProgVarDecl| TYPE-EQ-DECL NIL MVA NIL) (MVA TYPE-EQ-DECL NIL MVA NIL)
+    (|complete| CONST-DECL "boolean" |MVASemantics| NIL)
+    (|Program| TYPE-EQ-DECL NIL |Program| NIL)
+    (|MonitoredProgramPre| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
+    (|compatible| CONST-DECL "boolean" |MonitoredProgram| NIL)
+    (|MonitoredProgram| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
+    (|AState| TYPE-EQ-DECL NIL |MVASemantics| NIL)
+    (|Store| TYPE-EQ-DECL NIL |State| NIL)
+    (|PState| TYPE-EQ-DECL NIL |State| NIL)
+    (|MPState| TYPE-EQ-DECL NIL |MonitoredProgramSemantics| NIL)
+    (|Excpt| TYPE-DECL NIL |Excpt_adt| NIL)
+    (|lift| TYPE-DECL NIL |lift_adt| NIL) (|PSt| TYPE-EQ-DECL NIL |State| NIL)
+    (|update_PState_type| CONST-DECL "boolean" |SemanticsTypes| NIL)
+    (|update_PState| CONST-DECL "(update_PState_type)"
+     |MonitoredProgramSemantics| NIL)
+    (|update_GhostVars_type| CONST-DECL "boolean" |SemanticsJMLTypes| NIL)
+    (|update_GhostVars| CONST-DECL "(update_GhostVars_type)"
+     |MonitoredProgramSemantics| NIL)
+    (|lookup| CONST-DECL "Val" |SemanticsJML| NIL)
+    (|Expr| TYPE-DECL NIL |Expr_adt| NIL)
+    (|upto| NONEMPTY-TYPE-EQ-DECL NIL |naturalnumbers| NIL)
+    (|number| NONEMPTY-TYPE-DECL NIL |numbers| NIL)
+    (|number_field_pred| CONST-DECL "[number -> boolean]" |number_fields| NIL)
+    (|number_field| NONEMPTY-TYPE-FROM-DECL NIL |number_fields| NIL)
+    (|real_pred| CONST-DECL "[number_field -> boolean]" |reals| NIL)
+    (|real| NONEMPTY-TYPE-FROM-DECL NIL |reals| NIL)
+    (|rational_pred| CONST-DECL "[real -> boolean]" |rationals| NIL)
+    (|rational| NONEMPTY-TYPE-FROM-DECL NIL |rationals| NIL)
+    (|integer_pred| CONST-DECL "[rational -> boolean]" |integers| NIL)
+    (|int| NONEMPTY-TYPE-EQ-DECL NIL |integers| NIL)
+    (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
+    (>= CONST-DECL "bool" |reals| NIL) (|Stmt| TYPE-DECL NIL |Stmt_adt| NIL)
+    (< CONST-DECL "bool" |reals| NIL) (<= CONST-DECL "bool" |reals| NIL)
+    (|below| TYPE-EQ-DECL NIL |naturalnumbers| NIL)
+    (|deriv_stmt_type| TYPE-EQ-DECL NIL |SemanticsTypes| NIL)
+    (|deriv_stmt_rec_type| TYPE-EQ-DECL NIL |SemanticsTypes| NIL)
+    (|deriv_expr_type| TYPE-EQ-DECL NIL |SemanticsTypes| NIL)
+    (|deriv_expr_rec_type| TYPE-EQ-DECL NIL |SemanticsTypes| NIL)
+    (|execute_set_type| CONST-DECL "boolean" |SemanticsTypes| NIL)
+    (|execute_set| CONST-DECL "(execute_set_type)" |SemanticsJML| NIL)
+    (|list| TYPE-DECL NIL |list_adt| NIL)
+    (|execute_CaseJML_type| CONST-DECL "boolean" |SemanticsTypes| NIL)
+    (|execute_CaseJML| CONST-DECL "(execute_CaseJML_type)" |SemanticsJML| NIL)
+    (|LocalVarDecl| TYPE-EQ-DECL NIL |Program| NIL)
+    (|Method| TYPE-EQ-DECL NIL |Program| NIL)
+    (|on_method_event_type| CONST-DECL "boolean" |SemanticsTypes| NIL)
+    (|on_method_entry_MP| CONST-DECL "(on_method_event_type)"
+     |MonitoredProgramSemantics| NIL)
+    (|on_method_exit_normal_MP| CONST-DECL "(on_method_event_type)"
+     |MonitoredProgramSemantics| NIL)
+    (|on_method_exit_exceptional_MP| CONST-DECL "(on_method_event_type)"
+     |MonitoredProgramSemantics| NIL)
+    (|ann_program_pre| CONST-DECL "boolean" |AnnotateProgram| NIL)
+    (|wf_new_vars| CONST-DECL "boolean" |AnnotateProgram| NIL)
+    (|getLocalDecls| CONST-DECL "finite_set[LocalVarDecl]" |ProgramFunctions|
+     NIL)
+    (|getFieldDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
+    (|getGhostDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
+    (|reserved_words| CONST-DECL "finite_set[string]" |AnnotateProgram| NIL)
+    (|list2finseq| CONST-DECL "finseq[T]" |list2finseq| NIL)
+    (|new_gvds| CONST-DECL "finite_set[FieldDecl]" |AnnotateProgram| NIL)
+    (|disjoint_model_vars| CONST-DECL "boolean" |AnnotateProgram| NIL)
+    (|well_typed_Program| CONST-DECL "boolean" |WellTypedProgram| NIL)
+    (|invariants_are_booleans| CONST-DECL "boolean" |WellTypedProgram| NIL)
+    (|wf_MP| CONST-DECL "boolean" |MonitoredProgram| NIL)
+    (|wf_MVA| CONST-DECL "boolean" |WellFormedMVA| NIL)
+    (|wf_Trans| CONST-DECL "boolean" |WellFormedMVA| NIL)
+    (|wf_Action| CONST-DECL "boolean" |WellFormedMVA| NIL)
+    (|wf_Guard| CONST-DECL "boolean" |WellFormedMVA| NIL)
+    (|disjoint?| CONST-DECL "bool" |sets| NIL)
+    (|empty?| CONST-DECL "bool" |sets| NIL)
+    (|intersection| CONST-DECL "set" |sets| NIL) NIL
+    (|member| CONST-DECL "bool" |sets| NIL) NIL
+    (|wf_vdsP| CONST-DECL "boolean" |WellFormedMVA| NIL)
+    (|wf_vdsA| CONST-DECL "boolean" |WellFormedMVA| NIL)
+    (CP FORMAL-NONEMPTY-TYPE-DECL NIL |CorrectnessAnnProgram| NIL)
+    (|nat| NONEMPTY-TYPE-EQ-DECL NIL |naturalnumbers| NIL)
+    (|below| TYPE-EQ-DECL NIL |nat_types| NIL)
+    (|character| TYPE-DECL NIL |character_adt| NIL)
+    (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
+    (|char?| ADT-RECOGNIZER-DECL "[character -> boolean]" |character_adt| NIL)
+    (|char| TYPE-EQ-DECL NIL |strings| NIL)
+    (|string| TYPE-EQ-DECL NIL |strings| NIL))
+   828 828 NIL NIL))
+ (|MP_modeled_preserved_by_assertion_checking_TCC2| 0
+  (|MP_modeled_preserved_by_assertion_checking_TCC2-1| NIL 3393591169
+   3394357952 ("" (SUBTYPE-TCC) NIL NIL) UNCHECKED
+   ((|finite_intersection1| APPLICATION-JUDGEMENT "finite_set" |finite_sets|
+     NIL)
+    (|int_minus_int_is_int| APPLICATION-JUDGEMENT "int" |integers| NIL)
+    (|deriv_expr_rec| CONST-DECL "deriv_expr_type(n)" |Semantics| NIL)
+    (|related_states| CONST-DECL "boolean" |Equivalence| NIL)
+    (|MP_modeled?| CONST-DECL "boolean" |Equivalence| NIL)
+    (|Program_modeled?| CONST-DECL "boolean" |Equivalence| NIL)
+    (|MVA_modeled?| CONST-DECL "boolean" |Equivalence| NIL)
+    (|wf_state| CONST-DECL "boolean" |MonitoredProgramSemantics| NIL)
+    (|wf_AState| CONST-DECL "boolean" |MVASemantics| NIL)
+    (|wf_Store| CONST-DECL "boolean" |MVASemantics| NIL)
+    (|specification_requirements| CONST-DECL "boolean" |Equivalence| NIL)
+    (|well_behaved_MP| CONST-DECL "boolean" |Equivalence| NIL)
+    (|well_behaved_MVA| CONST-DECL "boolean" |Equivalence| NIL)
+    (|eval_action_behavior| CONST-DECL "boolean" |Equivalence| NIL)
+    (|guard_to_expression_behavior| CONST-DECL "boolean" |Equivalence| NIL)
+    (|on_method_entry| CONST-DECL "(on_method_event_type)" |SemanticsJML| NIL)
+    (|on_method_exit_normal| CONST-DECL "(on_method_event_type)" |SemanticsJML|
+     NIL)
+    (|on_method_exit_exceptional| CONST-DECL "(on_method_event_type)"
+     |SemanticsJML| NIL)
+    (|wf_state| CONST-DECL "boolean" |AnnotatedProgramSemantics| NIL)
+    (|wf_ghoststate| CONST-DECL "boolean" |SemanticsJML| NIL)
+    (|is_ghost| CONST-DECL "boolean" |SemanticsJML| NIL)
+    (|FieldDecl| TYPE-EQ-DECL NIL |Program| NIL)
+    (|Class| TYPE-EQ-DECL NIL |Program| NIL)
+    (|APState| TYPE-EQ-DECL NIL |AnnotatedProgramSemantics| NIL)
+    (|bijective?| CONST-DECL "bool" |functions| NIL)
+    (|id| CONST-DECL "(bijective?[T, T])" |identity| NIL)
+    (|update_PState| CONST-DECL "(update_PState_type)"
+     |AnnotatedProgramSemantics| NIL)
+    (|update_GhostVars| CONST-DECL "(update_GhostVars_type)"
+     |AnnotatedProgramSemantics| NIL)
+    (|wf_state| CONST-DECL "boolean" |State| NIL)
+    (|is_local| CONST-DECL "boolean" |State| NIL)
+    (|is_field| CONST-DECL "boolean" |State| NIL)
+    (|ann_program| CONST-DECL "Program" |AnnotateProgram| NIL)
+    (|well_behaved_Program| CONST-DECL "boolean" |Semantics| NIL)
+    (|proper_subterm_set_clause| CONST-DECL "boolean" |ProgramFunctions| NIL)
+    (|deriv_expr| CONST-DECL "bool" |Semantics| NIL)
+    (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
+    (|EventType| TYPE-DECL NIL |EventType_adt| NIL)
+    (|Event| TYPE-EQ-DECL NIL MVA NIL) (|Action| TYPE-EQ-DECL NIL MVA NIL)
+    (|Guard| TYPE-EQ-DECL NIL MVA NIL) (|Transition| TYPE-EQ-DECL NIL MVA NIL)
+    (|Val| TYPE-DECL NIL |Val_adt| NIL)
+    (|defined?| CONST-DECL "boolean" |ValProp| NIL)
+    (|JType| TYPE-DECL NIL |JType_adt| NIL)
+    (|MVAVarDecl| TYPE-EQ-DECL NIL MVA NIL)
+    (|ProgVarDecl| TYPE-EQ-DECL NIL MVA NIL) (MVA TYPE-EQ-DECL NIL MVA NIL)
+    (|complete| CONST-DECL "boolean" |MVASemantics| NIL)
+    (|Program| TYPE-EQ-DECL NIL |Program| NIL)
+    (|MonitoredProgramPre| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
+    (|compatible| CONST-DECL "boolean" |MonitoredProgram| NIL)
+    (|MonitoredProgram| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
+    (|AState| TYPE-EQ-DECL NIL |MVASemantics| NIL)
+    (|Store| TYPE-EQ-DECL NIL |State| NIL)
+    (|PState| TYPE-EQ-DECL NIL |State| NIL)
+    (|MPState| TYPE-EQ-DECL NIL |MonitoredProgramSemantics| NIL)
+    (|Excpt| TYPE-DECL NIL |Excpt_adt| NIL)
+    (|lift| TYPE-DECL NIL |lift_adt| NIL) (|PSt| TYPE-EQ-DECL NIL |State| NIL)
+    (|update_PState_type| CONST-DECL "boolean" |SemanticsTypes| NIL)
+    (|update_PState| CONST-DECL "(update_PState_type)"
+     |MonitoredProgramSemantics| NIL)
+    (|update_GhostVars_type| CONST-DECL "boolean" |SemanticsJMLTypes| NIL)
+    (|update_GhostVars| CONST-DECL "(update_GhostVars_type)"
+     |MonitoredProgramSemantics| NIL)
+    (|lookup| CONST-DECL "Val" |SemanticsJML| NIL)
+    (|Expr| TYPE-DECL NIL |Expr_adt| NIL)
+    (|upto| NONEMPTY-TYPE-EQ-DECL NIL |naturalnumbers| NIL)
+    (|number| NONEMPTY-TYPE-DECL NIL |numbers| NIL)
+    (|number_field_pred| CONST-DECL "[number -> boolean]" |number_fields| NIL)
+    (|number_field| NONEMPTY-TYPE-FROM-DECL NIL |number_fields| NIL)
+    (|real_pred| CONST-DECL "[number_field -> boolean]" |reals| NIL)
+    (|real| NONEMPTY-TYPE-FROM-DECL NIL |reals| NIL)
+    (|rational_pred| CONST-DECL "[real -> boolean]" |rationals| NIL)
+    (|rational| NONEMPTY-TYPE-FROM-DECL NIL |rationals| NIL)
+    (|integer_pred| CONST-DECL "[rational -> boolean]" |integers| NIL)
+    (|int| NONEMPTY-TYPE-EQ-DECL NIL |integers| NIL)
+    (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
+    (>= CONST-DECL "bool" |reals| NIL) (|Stmt| TYPE-DECL NIL |Stmt_adt| NIL)
+    (< CONST-DECL "bool" |reals| NIL) (<= CONST-DECL "bool" |reals| NIL)
+    (|below| TYPE-EQ-DECL NIL |naturalnumbers| NIL)
+    (|deriv_stmt_type| TYPE-EQ-DECL NIL |SemanticsTypes| NIL)
+    (|deriv_stmt_rec_type| TYPE-EQ-DECL NIL |SemanticsTypes| NIL)
+    (|deriv_expr_type| TYPE-EQ-DECL NIL |SemanticsTypes| NIL)
+    (|deriv_expr_rec_type| TYPE-EQ-DECL NIL |SemanticsTypes| NIL)
+    (|execute_set_type| CONST-DECL "boolean" |SemanticsTypes| NIL)
+    (|execute_set| CONST-DECL "(execute_set_type)" |SemanticsJML| NIL)
+    (|list| TYPE-DECL NIL |list_adt| NIL)
+    (|execute_CaseJML_type| CONST-DECL "boolean" |SemanticsTypes| NIL)
+    (|execute_CaseJML| CONST-DECL "(execute_CaseJML_type)" |SemanticsJML| NIL)
+    (|LocalVarDecl| TYPE-EQ-DECL NIL |Program| NIL)
+    (|Method| TYPE-EQ-DECL NIL |Program| NIL)
+    (|on_method_event_type| CONST-DECL "boolean" |SemanticsTypes| NIL)
+    (|on_method_entry_MP| CONST-DECL "(on_method_event_type)"
+     |MonitoredProgramSemantics| NIL)
+    (|on_method_exit_normal_MP| CONST-DECL "(on_method_event_type)"
+     |MonitoredProgramSemantics| NIL)
+    (|on_method_exit_exceptional_MP| CONST-DECL "(on_method_event_type)"
+     |MonitoredProgramSemantics| NIL)
+    (|ann_program_pre| CONST-DECL "boolean" |AnnotateProgram| NIL)
+    (|wf_new_vars| CONST-DECL "boolean" |AnnotateProgram| NIL)
+    (|getLocalDecls| CONST-DECL "finite_set[LocalVarDecl]" |ProgramFunctions|
+     NIL)
+    (|getFieldDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
+    (|getGhostDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
+    (|reserved_words| CONST-DECL "finite_set[string]" |AnnotateProgram| NIL)
+    (|list2finseq| CONST-DECL "finseq[T]" |list2finseq| NIL)
+    (|new_gvds| CONST-DECL "finite_set[FieldDecl]" |AnnotateProgram| NIL)
+    (|disjoint_model_vars| CONST-DECL "boolean" |AnnotateProgram| NIL)
+    (|well_typed_Program| CONST-DECL "boolean" |WellTypedProgram| NIL)
+    (|invariants_are_booleans| CONST-DECL "boolean" |WellTypedProgram| NIL)
+    (|wf_MP| CONST-DECL "boolean" |MonitoredProgram| NIL)
+    (|wf_MVA| CONST-DECL "boolean" |WellFormedMVA| NIL)
+    (|wf_Trans| CONST-DECL "boolean" |WellFormedMVA| NIL)
+    (|wf_Action| CONST-DECL "boolean" |WellFormedMVA| NIL)
+    (|wf_Guard| CONST-DECL "boolean" |WellFormedMVA| NIL)
+    (|disjoint?| CONST-DECL "bool" |sets| NIL)
+    (|empty?| CONST-DECL "bool" |sets| NIL)
+    (|intersection| CONST-DECL "set" |sets| NIL) NIL
+    (|member| CONST-DECL "bool" |sets| NIL) NIL
+    (|wf_vdsP| CONST-DECL "boolean" |WellFormedMVA| NIL)
+    (|wf_vdsA| CONST-DECL "boolean" |WellFormedMVA| NIL)
+    (CP FORMAL-NONEMPTY-TYPE-DECL NIL |CorrectnessAnnProgram| NIL)
+    (|nat| NONEMPTY-TYPE-EQ-DECL NIL |naturalnumbers| NIL)
+    (|below| TYPE-EQ-DECL NIL |nat_types| NIL)
+    (|character| TYPE-DECL NIL |character_adt| NIL)
+    (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
+    (|char?| ADT-RECOGNIZER-DECL "[character -> boolean]" |character_adt| NIL)
+    (|char| TYPE-EQ-DECL NIL |strings| NIL)
+    (|string| TYPE-EQ-DECL NIL |strings| NIL))
+   826 823 NIL NIL))
+ (|MP_modeled_preserved_by_assertion_checking| 0
+  (|MP_modeled_preserved_by_assertion_checking-2| NIL 3393591227 3394357957
+   ("" (SKOSIMP*)
+    (("" (EXPAND* "related_states" "check_assertion")
+      (("" (FLATTEN)
+        (("" (SKOSIMP*)
+          (("" (INST -6 "v!1" "v!2" "tau1!1" "tau1!2")
+            (("" (ASSERT)
+              (("" (FLATTEN)
+                (("" (LIFT-IF)
+                  (("" (GROUND)
+                    (("" (USE "MP_modeled_preserved_by_update")
+                      (("" (EXPAND "related_states")
+                        (("" (LEMMA "MP_modeled_implies_same_exception")
+                          (("" (ASSERT) (("" (POSTPONE) NIL NIL)) NIL)) NIL))
+                        NIL))
+                      NIL))
+                    NIL))
+                  NIL))
+                NIL))
+              NIL))
+            NIL))
+          NIL))
+        NIL))
+      NIL))
+    NIL)
+   UNFINISHED NIL 481 481 T NIL)
+  (|MP_modeled_preserved_by_assertion_checking-1| NIL 3393591178 3393591212
+   ("" (SKOSIMP*)
+    (("" (EXPAND* "related_states" "check_assertion")
+      (("" (FLATTEN)
+        (("" (SKOSIMP*)
+          (("" (INST -6 "v!1" "v!2" "tau1!1" "tau1!2")
+            (("" (ASSERT)
+              (("" (FLATTEN)
+                (("" (LIFT-IF)
+                  (("" (GROUND)
+                    (("" (USE "MP_modeled_preserved_by_update2")
+                      (("" (EXPAND "related_states")
+                        (("" (LEMMA "MP_modeled_implies_same_exception")
+                          (("" (INST -1 "tau1!1" "tau1!2")
+                            (("" (ASSERT) NIL))))))))))))))))))))))))))
+    NIL)
+   UNFINISHED NIL 31813 660 T NIL))
+ (|on_method_entry_for_ann_method_equivalence_TCC1| 0
+  (|on_method_entry_for_ann_method_equivalence_TCC1-1| NIL 3393591169
+   3394357957
+   ("" (SKOSIMP)
+    (("" (EXPAND* "related_states" "specification_requirements")
+      (("" (PROP) NIL NIL)) NIL))
+    NIL)
+   UNCHECKED
+   ((|specification_requirements| CONST-DECL "boolean" |Equivalence| NIL)
+    (|related_states| CONST-DECL "boolean" |Equivalence| NIL))
+   3 3 T NIL))
+ (|initial_states_are_equivalent| 0
+  (|initial_states_are_equivalent-1| NIL 3394358076 3394359787
+   ("" (SKOSIMP*)
+    (("" (AUTO-REWRITE "ann_program_preserves_locals_eq")
+      (("" (AUTO-REWRITE "ann_program_preserves_fields_eq")
+        (("" (EXPAND "MP_modeled?")
+          (("" (SPLIT 1)
+            (("1" (EXPAND "MVA_modeled?")
+              (("1" (SPLIT 1)
+                (("1" (EXPAND "initial_MP_state")
+                  (("1" (EXPAND "initial_MVA_state")
+                    (("1" (EXPAND "initial_AP_state")
+                      (("1" (LIFT-IF)
+                        (("1" (ASSERT)
+                          (("1" (SPLIT 1)
+                            (("1" (EXPAND "ann_program")
+                              (("1" (EXPAND "get_GhostDecl")
+                                (("1" (EXPAND "getGhostDecls")
+                                  (("1" (LIFT-IF)
+                                    (("1" (ASSERT)
+                                      (("1" (SPLIT -1)
+                                        (("1" (PROPAX) NIL NIL)
+                                         ("2" (REWRITE "nonempty_exists")
                                           (("1"
-                                            (assert)
+                                            (INST 1
+                                             "(# name := cp, jtype := IntType, init_val :=  Int(unique(init_cp(mva(mp!1)))) #)")
+                                            (("1" (ALL-TYPEPREDS)
+                                              (("1" (EXPAND "compatible")
+                                                (("1" (SKOSIMP*)
+                                                  (("1"
+                                                    (INST 1
+                                                     "ann_class(mp!1)(c!1)")
+                                                    (("1" (SPLIT 1)
+                                                      (("1" (INST?) NIL NIL)
+                                                       ("2"
+                                                        (EXPAND "ann_class")
+                                                        (("2" (ASSERT)
+                                                          (("2"
+                                                            (EXPAND "union")
+                                                            (("2"
+                                                              (EXPAND "member")
+                                                              (("2" (FLATTEN)
+                                                                (("2" (ASSERT)
+                                                                  (("2"
+                                                                    (EXPAND
+                                                                     "new_gvds")
+                                                                    (("2"
+                                                                      (PROPAX)
+                                                                      NIL NIL))
+                                                                    NIL))
+                                                                  NIL))
+                                                                NIL))
+                                                              NIL))
+                                                            NIL))
+                                                          NIL))
+                                                        NIL))
+                                                      NIL)
+                                                     ("2"
+                                                      (EXPAND
+                                                       "ann_program_pre")
+                                                      (("2" (FLATTEN)
+                                                        (("2" (ASSERT) NIL
+                                                          NIL))
+                                                        NIL))
+                                                      NIL))
+                                                    NIL))
+                                                  NIL))
+                                                NIL))
+                                              NIL)
+                                             ("2" (EXPAND "defined?")
+                                              (("2" (PROPAX) NIL NIL)) NIL))
+                                            NIL)
+                                           ("2" (SKOSIMP*)
+                                            (("2" (EXPAND "ann_program_pre")
+                                              (("2" (FLATTEN)
+                                                (("2" (ASSERT) NIL NIL)) NIL))
+                                              NIL))
+                                            NIL))
+                                          NIL))
+                                        NIL))
+                                      NIL))
+                                    NIL))
+                                  NIL))
+                                NIL))
+                              NIL)
+                             ("2" (SKOSIMP*)
+                              (("2" (EXPAND "ann_program")
+                                (("2" (EXPAND "get_GhostDecl")
+                                  (("2" (LIFT-IF)
+                                    (("2" (ASSERT)
+                                      (("2" (SPLIT 1)
+                                        (("1" (ASSERT)
+                                          (("1" (EXPAND "getGhostDecls")
+                                            (("1" (POSTPONE) NIL NIL)) NIL))
+                                          NIL)
+                                         ("2" (PROPAX) NIL NIL))
+                                        NIL))
+                                      NIL))
+                                    NIL))
+                                  NIL))
+                                NIL))
+                              NIL))
+                            NIL))
+                          NIL))
+                        NIL))
+                      NIL))
+                    NIL))
+                  NIL)
+                 ("2" (SKOSIMP*) (("2" (POSTPONE) NIL NIL)) NIL)
+                 ("3" (POSTPONE) NIL NIL))
+                NIL))
+              NIL)
+             ("2" (POSTPONE) NIL NIL))
+            NIL))
+          NIL))
+        NIL))
+      NIL))
+    NIL)
+   UNFINISHED NIL 71019 7058 T SHOSTAK))
+ (|deriv_expr_maintains_equivalence| 0
+  (|deriv_expr_maintains_equivalence-1| NIL 3393591001 3394357959
+   ("" (SKOSIMP)
+    (("" (INDUCT E)
+      (("1" (SKOSIMP*)
+        (("1" (EXPAND "related_states")
+          (("1" (FLATTEN)
+            (("1" (EXPAND "deriv_expr" (-7 -8))
+              (("1" (EXPAND "deriv_expr" (-7 -8))
+                (("1" (USE "MP_modeled_implies_same_exception")
+                  (("1" (ASSERT)
+                    (("1" (CASE "up?(ex(pstate(sMP1!1)))")
+                      (("1" (GROUND) NIL)
+                       ("2" (ASSERT)
+                        (("2" (FLATTEN)
+                          (("2" (SKOSIMP*)
+                            (("2"
+                              (INST -2 "v1!1" "v2!1" "sMP1!1" "tau!1" "sAP1!1"
+                               "tau!2" "n1!1 - 1" "n2!1 - 1")
+                              (("1" (EXPAND "deriv_expr" -2)
+                                (("1" (ASSERT)
+                                  (("1" (LIFT-IF)
+                                    (("1"
+                                      (LEMMA
+                                       "MP_modeled_implies_same_exception")
+                                      (("1" (INST -1 "tau!1" "tau!2")
+                                        (("1" (FLATTEN)
+                                          (("1" (ASSERT)
                                             (("1"
-                                              (case
-                                               "up?(ex(pstate(tau!1)))")
-                                              (("1" (assert) nil)
-                                               ("2"
-                                                (assert)
+                                              (CASE "up?(ex(pstate(tau!1)))")
+                                              (("1" (ASSERT) NIL)
+                                               ("2" (ASSERT)
                                                 (("2"
-                                                  (use
+                                                  (USE
                                                    "MP_modeled_preserved_by_update")
                                                   (("2"
-                                                    (expand
-                                                     "related_states")
+                                                    (EXPAND "related_states")
                                                     (("2"
-                                                      (lemma
+                                                      (LEMMA
                                                        "related_states_implies_wf_mp_and_ap")
                                                       (("2"
-                                                        (inst
-                                                         -1
-                                                         "mp!1"
-                                                         "ap!1"
-                                                         "sMP1!1"
-                                                         "sAP1!1")
+                                                        (INST -1 "mp!1" "ap!1"
+                                                         "sMP1!1" "sAP1!1")
                                                         (("2"
-                                                          (expand
+                                                          (EXPAND
                                                            "related_states")
                                                           (("2"
-                                                            (lemma
+                                                            (LEMMA
                                                              "deriv_expr_yields_wf_state_MP")
                                                             (("2"
-                                                              (inst
-                                                               -1
-                                                               "mp!1"
+                                                              (INST -1 "mp!1"
                                                                "Assign2_var!1"
-                                                               "v1!1"
-                                                               "sMP1!1"
+                                                               "v1!1" "sMP1!1"
                                                                "tau!1"
                                                                "n1!1 -1")
                                                               (("2"
-                                                                (lemma
+                                                                (LEMMA
                                                                  "deriv_expr_yields_wf_state_AP")
                                                                 (("2"
-                                                                  (inst
-                                                                   -1
+                                                                  (INST -1
                                                                    "ap!1"
                                                                    "Assign2_var!1"
                                                                    "v2!1"
@@ -954,118 +984,79 @@
                                                                    "tau!2"
                                                                    "n2!1 -1")
                                                                   (("2"
-                                                                    (flatten)
+                                                                    (FLATTEN)
                                                                     (("2"
-                                                                      (replace
+                                                                      (REPLACE
                                                                        -10)
                                                                       (("2"
-                                                                        (expand
+                                                                        (EXPAND
                                                                          "deriv_expr"
                                                                          (-1
                                                                           -2))
                                                                         (("2"
-                                                                          (assert)
-                                                                          nil)))))))))))))))))))))))))))))))))))))))))))
-                               ("2" (assert) nil)
-                               ("3"
-                                (assert)
-                                nil)))))))))))))))))))))))))
-       ("2" (skosimp*)
-        (("2" (expand* "related_states" "deriv_expr")
-          (("2" (expand "deriv_expr")
-            (("2" (flatten)
-              (("2" (use "MP_modeled_implies_same_exception")
-                (("2" (assert)
-                  (("2" (case "up?(ex(pstate(sMP1!1)))")
-                    (("1" (ground) nil)
-                     ("2" (assert)
-                      (("2" (prop)
-                        (("1" (use "MP_modeled_implies_same_bool_eval")
-                          (("1" (assert)
-                            (("1" (expand "related_states")
-                              (("1" (propax) nil)))))))
-                         ("2" (assert) nil)))))))))))))))))))
-       ("3" (skosimp*)
-        (("3" (expand "related_states")
-          (("3" (flatten)
-            (("3" (expand "deriv_expr" (-9 -10))
-              (("3" (expand "deriv_expr" (-9 -10))
-                (("3" (use "MP_modeled_implies_same_exception")
-                  (("3" (assert)
-                    (("3" (case "up?(ex(pstate(sMP1!1)))")
-                      (("1" (ground) nil)
-                       ("2" (assert)
-                        (("2" (skosimp*)
+                                                                          (ASSERT)
+                                                                          NIL)))))))))))))))))))))))))))))))))))))))))))
+                               ("2" (ASSERT) NIL)
+                               ("3" (ASSERT) NIL)))))))))))))))))))))))))
+       ("2" (SKOSIMP*)
+        (("2" (EXPAND* "related_states" "deriv_expr")
+          (("2" (EXPAND "deriv_expr")
+            (("2" (FLATTEN)
+              (("2" (USE "MP_modeled_implies_same_exception")
+                (("2" (ASSERT)
+                  (("2" (CASE "up?(ex(pstate(sMP1!1)))")
+                    (("1" (GROUND) NIL)
+                     ("2" (ASSERT)
+                      (("2" (PROP)
+                        (("1" (USE "MP_modeled_implies_same_bool_eval")
+                          (("1" (ASSERT)
+                            (("1" (EXPAND "related_states")
+                              (("1" (PROPAX) NIL)))))))
+                         ("2" (ASSERT) NIL)))))))))))))))))))
+       ("3" (SKOSIMP*)
+        (("3" (EXPAND "related_states")
+          (("3" (FLATTEN)
+            (("3" (EXPAND "deriv_expr" (-9 -10))
+              (("3" (EXPAND "deriv_expr" (-9 -10))
+                (("3" (USE "MP_modeled_implies_same_exception")
+                  (("3" (ASSERT)
+                    (("3" (CASE "up?(ex(pstate(sMP1!1)))")
+                      (("1" (GROUND) NIL)
+                       ("2" (ASSERT)
+                        (("2" (SKOSIMP*)
                           (("2"
-                            (inst -2 "v1!2" "v1!3" "sMP1!1" "tau!1"
-                             "sAP1!1" "tau!2" "m1!1" "m1!2")
-                            (("2" (expand "deriv_expr" -2)
-                              (("2"
-                                (assert)
-                                (("2"
-                                  (flatten)
-                                  (("2"
-                                    (lemma
-                                     "deriv_expr_yields_wf_state_MP")
+                            (INST -2 "v1!2" "v1!3" "sMP1!1" "tau!1" "sAP1!1"
+                             "tau!2" "m1!1" "m1!2")
+                            (("2" (EXPAND "deriv_expr" -2)
+                              (("2" (ASSERT)
+                                (("2" (FLATTEN)
+                                  (("2" (LEMMA "deriv_expr_yields_wf_state_MP")
                                     (("2"
-                                      (inst
-                                       -1
-                                       "mp!1"
-                                       "CondExpr1_var!1"
-                                       "v1!2"
-                                       "sMP1!1"
-                                       "tau!1"
-                                       "m1!1")
+                                      (INST -1 "mp!1" "CondExpr1_var!1" "v1!2"
+                                       "sMP1!1" "tau!1" "m1!1")
                                       (("2"
-                                        (lemma
-                                         "deriv_expr_yields_wf_state_AP")
+                                        (LEMMA "deriv_expr_yields_wf_state_AP")
                                         (("2"
-                                          (inst
-                                           -1
-                                           "ap!1"
-                                           "CondExpr1_var!1"
-                                           "v1!3"
-                                           "sAP1!1"
-                                           "tau!2"
-                                           "m1!2")
-                                          (("2"
-                                            (expand
-                                             "deriv_expr"
-                                             (-1 -2))
+                                          (INST -1 "ap!1" "CondExpr1_var!1"
+                                           "v1!3" "sAP1!1" "tau!2" "m1!2")
+                                          (("2" (EXPAND "deriv_expr" (-1 -2))
                                             (("2"
-                                              (use
+                                              (USE
                                                "ann_program_yields_wf_program")
-                                              (("2"
-                                                (assert)
+                                              (("2" (ASSERT)
                                                 (("2"
-                                                  (expand
-                                                   "ann_program_pre")
-                                                  (("2"
-                                                    (flatten)
-                                                    (("2"
-                                                      (assert)
+                                                  (EXPAND "ann_program_pre")
+                                                  (("2" (FLATTEN)
+                                                    (("2" (ASSERT)
                                                       (("2"
-                                                        (hide
-                                                         -4
-                                                         -10
-                                                         -12
-                                                         -13
-                                                         -14
-                                                         -15
-                                                         -16
-                                                         -19
-                                                         1)
-                                                        (("2"
-                                                          (lift-if)
-                                                          (("2"
-                                                            (split)
-                                                            (("1"
-                                                              (flatten)
-                                                              (("1"
-                                                                (assert)
+                                                        (HIDE -4 -10 -12 -13
+                                                         -14 -15 -16 -19 1)
+                                                        (("2" (LIFT-IF)
+                                                          (("2" (SPLIT)
+                                                            (("1" (FLATTEN)
+                                                              (("1" (ASSERT)
                                                                 (("1"
-                                                                  (inst
-                                                                   -8
+                                                                  (INST -8
                                                                    "v1!1"
                                                                    "v2!1"
                                                                    "tau!1"
@@ -1075,19 +1066,16 @@
                                                                    "m2!1"
                                                                    "m2!2")
                                                                   (("1"
-                                                                    (expand
+                                                                    (EXPAND
                                                                      "deriv_expr"
                                                                      -8)
                                                                     (("1"
-                                                                      (propax)
-                                                                      nil)))))))))
-                                                             ("2"
-                                                              (flatten)
-                                                              (("2"
-                                                                (assert)
+                                                                      (PROPAX)
+                                                                      NIL)))))))))
+                                                             ("2" (FLATTEN)
+                                                              (("2" (ASSERT)
                                                                 (("2"
-                                                                  (inst
-                                                                   -8
+                                                                  (INST -8
                                                                    "v1!1"
                                                                    "v2!1"
                                                                    "tau!1"
@@ -1097,109 +1085,70 @@
                                                                    "m2!1"
                                                                    "m2!2")
                                                                   (("2"
-                                                                    (expand
+                                                                    (EXPAND
                                                                      "deriv_expr"
                                                                      -8)
                                                                     (("2"
-                                                                      (propax)
-                                                                      nil)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
-       ("4" (skosimp*)
-        (("4" (expand "related_states")
-          (("4" (flatten)
-            (("4" (expand "deriv_expr" (-8 -9))
-              (("4" (expand "deriv_expr" (-8 -9))
-                (("4" (use "MP_modeled_implies_same_exception")
-                  (("4" (assert)
-                    (("4" (case "up?(ex(pstate(sMP1!1)))")
-                      (("1" (ground) nil)
-                       ("2" (assert)
-                        (("2" (skosimp*)
+                                                                      (PROPAX)
+                                                                      NIL)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
+       ("4" (SKOSIMP*)
+        (("4" (EXPAND "related_states")
+          (("4" (FLATTEN)
+            (("4" (EXPAND "deriv_expr" (-8 -9))
+              (("4" (EXPAND "deriv_expr" (-8 -9))
+                (("4" (USE "MP_modeled_implies_same_exception")
+                  (("4" (ASSERT)
+                    (("4" (CASE "up?(ex(pstate(sMP1!1)))")
+                      (("1" (GROUND) NIL)
+                       ("2" (ASSERT)
+                        (("2" (SKOSIMP*)
                           (("2"
-                            (inst -2 "a!1" "a!2" "sMP1!1" "tau1!1"
-                             "sAP1!1" "tau1!2" "m1!1" "m1!2")
-                            (("2" (expand "deriv_expr" -2)
-                              (("2"
-                                (assert)
-                                (("2"
-                                  (flatten)
+                            (INST -2 "a!1" "a!2" "sMP1!1" "tau1!1" "sAP1!1"
+                             "tau1!2" "m1!1" "m1!2")
+                            (("2" (EXPAND "deriv_expr" -2)
+                              (("2" (ASSERT)
+                                (("2" (FLATTEN)
                                   (("2"
-                                    (inst
-                                     -4
-                                     "pv!1"
-                                     "pv!2"
-                                     "tau1!1"
-                                     "tau2!1"
-                                     "tau1!2"
-                                     "tau2!2"
-                                     "m2!1"
-                                     "m2!2")
-                                    (("2"
-                                      (expand "deriv_expr" -4)
-                                      (("2"
-                                        (assert)
+                                    (INST -4 "pv!1" "pv!2" "tau1!1" "tau2!1"
+                                     "tau1!2" "tau2!2" "m2!1" "m2!2")
+                                    (("2" (EXPAND "deriv_expr" -4)
+                                      (("2" (ASSERT)
                                         (("2"
-                                          (lemma
+                                          (LEMMA
                                            "deriv_expr_yields_wf_state_MP")
                                           (("2"
-                                            (inst
-                                             -1
-                                             "mp!1"
-                                             "MethodCall1_var!1"
-                                             "a!1"
-                                             "sMP1!1"
-                                             "tau1!1"
-                                             "m1!1")
+                                            (INST -1 "mp!1" "MethodCall1_var!1"
+                                             "a!1" "sMP1!1" "tau1!1" "m1!1")
                                             (("2"
-                                              (lemma
+                                              (LEMMA
                                                "deriv_expr_yields_wf_state_AP")
                                               (("2"
-                                                (inst
-                                                 -1
-                                                 "ap!1"
-                                                 "MethodCall1_var!1"
-                                                 "a!2"
-                                                 "sAP1!1"
-                                                 "tau1!2"
-                                                 "m1!2")
+                                                (INST -1 "ap!1"
+                                                 "MethodCall1_var!1" "a!2"
+                                                 "sAP1!1" "tau1!2" "m1!2")
                                                 (("2"
-                                                  (lemma
+                                                  (LEMMA
                                                    "related_states_implies_wf_mp_and_ap")
                                                   (("2"
-                                                    (inst
-                                                     -1
-                                                     "mp!1"
-                                                     "ap!1"
-                                                     "sMP1!1"
-                                                     "sAP1!1")
+                                                    (INST -1 "mp!1" "ap!1"
+                                                     "sMP1!1" "sAP1!1")
                                                     (("2"
-                                                      (expand
-                                                       "related_states")
-                                                      (("2"
-                                                        (flatten)
+                                                      (EXPAND "related_states")
+                                                      (("2" (FLATTEN)
                                                         (("2"
-                                                          (expand
-                                                           "deriv_expr"
-                                                           (-3 -4))
-                                                          (("2"
-                                                            (assert)
-                                                            (("2"
-                                                              (flatten)
+                                                          (EXPAND "deriv_expr"
+                                                                  (-3 -4))
+                                                          (("2" (ASSERT)
+                                                            (("2" (FLATTEN)
                                                               (("2"
-                                                                (hide
-                                                                 -5
-                                                                 -12
-                                                                 -13
-                                                                 -14
-                                                                 -15
-                                                                 -16
-                                                                 -27
-                                                                 -28)
+                                                                (HIDE -5 -12
+                                                                 -13 -14 -15
+                                                                 -16 -27 -28)
                                                                 (("2"
-                                                                  (lemma
+                                                                  (LEMMA
                                                                    "deriv_expr_yields_wf_state_MP")
                                                                   (("2"
-                                                                    (inst
-                                                                     -1
+                                                                    (INST -1
                                                                      "mp!1"
                                                                      "MethodCall3_var!1"
                                                                      "pv!1"
@@ -1207,10 +1156,10 @@
                                                                      "tau2!1"
                                                                      "m2!1")
                                                                     (("2"
-                                                                      (lemma
+                                                                      (LEMMA
                                                                        "deriv_expr_yields_wf_state_AP")
                                                                       (("2"
-                                                                        (inst
+                                                                        (INST
                                                                          -1
                                                                          "ap!1"
                                                                          "MethodCall3_var!1"
@@ -1219,12 +1168,12 @@
                                                                          "tau2!2"
                                                                          "m2!2")
                                                                         (("2"
-                                                                          (expand
+                                                                          (EXPAND
                                                                            "deriv_expr"
                                                                            (-1
                                                                             -2))
                                                                           (("2"
-                                                                            (hide
+                                                                            (HIDE
                                                                              -5
                                                                              -6
                                                                              -8
@@ -1232,42 +1181,42 @@
                                                                              -23
                                                                              1)
                                                                             (("2"
-                                                                              (case
-                                                                               "MP_modeled?(tau3!1, tau3!2)")
+                                                                              (CASE
+                                                                                  "MP_modeled?(tau3!1, tau3!2)")
                                                                               (("1"
-                                                                                (case
-                                                                                 "wf_state(mp!1)(tau3!1) AND wf_state(ap!1)(tau3!2)")
+                                                                                (CASE
+                                                                                    "wf_state(mp!1)(tau3!1) AND wf_state(ap!1)(tau3!2)")
                                                                                 (("1"
-                                                                                  (flatten)
+                                                                                  (FLATTEN)
                                                                                   (("1"
-                                                                                    (hide
+                                                                                    (HIDE
                                                                                      -4
                                                                                      -5
                                                                                      -10
                                                                                      -13
                                                                                      -22)
                                                                                     (("1"
-                                                                                      (case
-                                                                                       "IF name(down(get_class(program(mp!1))(a!1, pstate(tau3!1)))) = class_name(mva(mp!1)) THEN md!2 = ann_method(mp!1)(md!1) ELSE md!2 = md!1 ENDIF")
+                                                                                      (CASE
+                                                                                          "IF name(down(get_class(program(mp!1))(a!1, pstate(tau3!1)))) = class_name(mva(mp!1)) THEN md!2 = ann_method(mp!1)(md!1) ELSE md!2 = md!1 ENDIF")
                                                                                       (("1"
-                                                                                        (split)
+                                                                                        (SPLIT)
                                                                                         (("1"
-                                                                                          (flatten)
+                                                                                          (FLATTEN)
                                                                                           (("1"
-                                                                                            (hide
+                                                                                            (HIDE
                                                                                              -12
                                                                                              -20)
                                                                                             (("1"
-                                                                                              (case
-                                                                                               "MP_modeled?(tau4!1, tau4!2)")
+                                                                                              (CASE
+                                                                                                  "MP_modeled?(tau4!1, tau4!2)")
                                                                                               (("1"
-                                                                                                (postpone)
-                                                                                                nil)
+                                                                                                (POSTPONE)
+                                                                                                NIL)
                                                                                                ("2"
-                                                                                                (lemma
+                                                                                                (LEMMA
                                                                                                  "on_method_entry_for_ann_method_equivalence")
                                                                                                 (("2"
-                                                                                                  (inst
+                                                                                                  (INST
                                                                                                    -1
                                                                                                    "mp!1"
                                                                                                    "ap!1"
@@ -1321,54 +1270,54 @@
                                                                                       deriv_stmt
                                                                                       (p_1)(s, sigma1_1, sigma2_1)(m_1))")
                                                                                                   (("2"
-                                                                                                    (expand
+                                                                                                    (EXPAND
                                                                                                      "related_states"
                                                                                                      -1)
                                                                                                     (("2"
-                                                                                                      (assert)
-                                                                                                      nil)))))))))))))
+                                                                                                      (ASSERT)
+                                                                                                      NIL)))))))))))))
                                                                                          ("2"
-                                                                                          (flatten)
+                                                                                          (FLATTEN)
                                                                                           (("2"
-                                                                                            (postpone)
-                                                                                            nil)))))
+                                                                                            (POSTPONE)
+                                                                                            NIL)))))
                                                                                        ("2"
-                                                                                        (use
+                                                                                        (USE
                                                                                          "lookup_mthd_ann_program")
                                                                                         (("2"
-                                                                                          (split
+                                                                                          (SPLIT
                                                                                            -11)
                                                                                           (("1"
-                                                                                            (split
+                                                                                            (SPLIT
                                                                                              -19)
                                                                                             (("1"
-                                                                                              (flatten)
+                                                                                              (FLATTEN)
                                                                                               (("1"
-                                                                                                (expand
+                                                                                                (EXPAND
                                                                                                  "id")
                                                                                                 (("1"
-                                                                                                  (assert)
-                                                                                                  nil)))))
+                                                                                                  (ASSERT)
+                                                                                                  NIL)))))
                                                                                              ("2"
-                                                                                              (propax)
-                                                                                              nil)))
+                                                                                              (PROPAX)
+                                                                                              NIL)))
                                                                                            ("2"
-                                                                                            (propax)
-                                                                                            nil)))))
+                                                                                            (PROPAX)
+                                                                                            NIL)))))
                                                                                        ("3"
-                                                                                        (use
+                                                                                        (USE
                                                                                          "get_class_definedness")
                                                                                         (("3"
-                                                                                          (assert)
+                                                                                          (ASSERT)
                                                                                           (("3"
-                                                                                            (expand
+                                                                                            (EXPAND
                                                                                              "wf_state"
                                                                                              -1)
                                                                                             (("3"
-                                                                                              (propax)
-                                                                                              nil)))))))))))))
+                                                                                              (PROPAX)
+                                                                                              NIL)))))))))))))
                                                                                  ("2"
-                                                                                  (hide-all-but
+                                                                                  (HIDE-ALL-BUT
                                                                                    (-2
                                                                                     -3
                                                                                     -4
@@ -1377,61 +1326,61 @@
                                                                                     -20
                                                                                     1))
                                                                                   (("2"
-                                                                                    (split)
+                                                                                    (SPLIT)
                                                                                     (("1"
-                                                                                      (use
+                                                                                      (USE
                                                                                        "wf_update_state_MP")
                                                                                       (("1"
-                                                                                        (assert)
+                                                                                        (ASSERT)
                                                                                         (("1"
-                                                                                          (hide
+                                                                                          (HIDE
                                                                                            -4
                                                                                            -5
                                                                                            -7)
                                                                                           (("1"
-                                                                                            (lift-if)
+                                                                                            (LIFT-IF)
                                                                                             (("1"
-                                                                                              (split
+                                                                                              (SPLIT
                                                                                                -4)
                                                                                               (("1"
-                                                                                                (flatten)
+                                                                                                (FLATTEN)
                                                                                                 (("1"
-                                                                                                  (assert)
+                                                                                                  (ASSERT)
                                                                                                   (("1"
-                                                                                                    (skosimp*)
+                                                                                                    (SKOSIMP*)
                                                                                                     (("1"
-                                                                                                      (grind)
-                                                                                                      nil)))))))
+                                                                                                      (GRIND)
+                                                                                                      NIL)))))))
                                                                                                ("2"
-                                                                                                (assert)
-                                                                                                nil)))))))))))
+                                                                                                (ASSERT)
+                                                                                                NIL)))))))))))
                                                                                      ("2"
-                                                                                      (hide
+                                                                                      (HIDE
                                                                                        -2
                                                                                        -3
                                                                                        -4
                                                                                        -5)
                                                                                       (("2"
-                                                                                        (lift-if)
+                                                                                        (LIFT-IF)
                                                                                         (("2"
-                                                                                          (split)
+                                                                                          (SPLIT)
                                                                                           (("1"
-                                                                                            (flatten)
+                                                                                            (FLATTEN)
                                                                                             (("1"
-                                                                                              (use
+                                                                                              (USE
                                                                                                "wf_update_state_AP")
                                                                                               (("1"
-                                                                                                (assert)
+                                                                                                (ASSERT)
                                                                                                 (("1"
-                                                                                                  (skolem!)
+                                                                                                  (SKOLEM!)
                                                                                                   (("1"
-                                                                                                    (grind)
-                                                                                                    nil)))))))))
+                                                                                                    (GRIND)
+                                                                                                    NIL)))))))))
                                                                                            ("2"
-                                                                                            (assert)
-                                                                                            nil)))))))))))))
+                                                                                            (ASSERT)
+                                                                                            NIL)))))))))))))
                                                                                ("2"
-                                                                                (hide
+                                                                                (HIDE
                                                                                  -6
                                                                                  -11
                                                                                  -12
@@ -1451,468 +1400,390 @@
                                                                                  -27
                                                                                  2)
                                                                                 (("2"
-                                                                                  (lemma
+                                                                                  (LEMMA
                                                                                    "MP_modeled_implies_same_exception")
                                                                                   (("2"
-                                                                                    (inst
+                                                                                    (INST
                                                                                      -1
                                                                                      "tau2!1"
                                                                                      "tau2!2")
                                                                                     (("2"
-                                                                                      (assert)
+                                                                                      (ASSERT)
                                                                                       (("2"
-                                                                                        (case
-                                                                                         "bottom?(ex(pstate(tau2!1))) AND Null?(a!1)")
+                                                                                        (CASE
+                                                                                            "bottom?(ex(pstate(tau2!1))) AND Null?(a!1)")
                                                                                         (("1"
-                                                                                          (flatten)
+                                                                                          (FLATTEN)
                                                                                           (("1"
-                                                                                            (assert)
+                                                                                            (ASSERT)
                                                                                             (("1"
-                                                                                              (use
+                                                                                              (USE
                                                                                                "MP_modeled_preserved_by_update")
                                                                                               (("1"
-                                                                                                (expand
+                                                                                                (EXPAND
                                                                                                  "related_states")
                                                                                                 (("1"
-                                                                                                  (propax)
-                                                                                                  nil)))))))))
+                                                                                                  (PROPAX)
+                                                                                                  NIL)))))))))
                                                                                          ("2"
-                                                                                          (split)
+                                                                                          (SPLIT)
                                                                                           (("1"
-                                                                                            (assert)
-                                                                                            nil)
+                                                                                            (ASSERT)
+                                                                                            NIL)
                                                                                            ("2"
-                                                                                            (assert)
-                                                                                            nil)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
-       ("5" (skosimp*)
-        (("5" (expand* "related_states" "deriv_expr")
-          (("5" (expand "deriv_expr")
-            (("5" (flatten)
-              (("5" (use "MP_modeled_implies_same_exception")
-                (("5" (assert)
-                  (("5" (case "up?(ex(pstate(sMP1!1)))")
-                    (("1" (ground) nil)
-                     ("2" (assert)
-                      (("2" (prop)
-                        (("1" (use "MP_modeled_implies_same_num_eval")
-                          (("1" (assert)
-                            (("1" (expand "related_states")
-                              (("1" (propax) nil)))))))
-                         ("2" (assert) nil)))))))))))))))))))
-       ("6" (skosimp*)
-        (("6" (expand* "related_states" "deriv_expr")
-          (("6" (expand "deriv_expr")
-            (("6" (flatten)
-              (("6" (use "MP_modeled_implies_same_exception")
-                (("6" (assert)
-                  (("6" (case "up?(ex(pstate(sMP1!1)))")
-                    (("1" (ground) nil)
-                     ("2" (assert)
-                      (("2" (prop)
-                        (("1" (case "RExpr1_var!1 = Null")
-                          (("1" (assert) nil) ("2" (assert) nil)))
-                         ("2" (assert) nil))))))))))))))))))))))
-    nil)
-   unfinished nil 33065 29520 nil nil))
- (deriv_stmt_maintains_equivalence 0
-  (deriv_stmt_maintains_equivalence-1 nil 3394257849 3394266822
-   ("" (skosimp)
-    (("" (induct "c")
-      (("1" (skosimp*)
-        (("1" (use "every_is_forall[[Expr, Stmt]]")
-          (("1" (rewrite -1)
-            (("1" (expand "deriv_stmt" (-3 -4))
-              (("1" (copy -2)
-                (("1" (expand "related_states" -1)
-                  (("1" (flatten)
-                    (("1" (use "MP_modeled_implies_same_exception")
-                      (("1" (assert)
-                        (("1" (split)
-                          (("1" (ground) nil nil)
-                           ("2" (ground)
-                            (("2" (expand "execute_CaseJML")
-                              (("2"
-                                (lift-if)
-                                (("2"
-                                  (ground)
-                                  (("2"
-                                    (expand "deriv_stmt" (-2 -5))
-                                    (("2"
-                                      (skosimp*)
-                                      (("2" (postpone) nil nil))
-                                      nil))
-                                    nil))
-                                  nil))
-                                nil))
-                              nil))
-                            nil))
-                          nil))
-                        nil))
-                      nil))
-                    nil))
-                  nil))
-                nil))
-              nil))
-            nil))
-          nil))
-        nil)
-       ("2" (skosimp*)
-        (("2" (expand "deriv_stmt" (-4 -5))
-          (("2" (copy -3)
-            (("2" (expand "related_states" -1)
-              (("2" (use "MP_modeled_implies_same_exception")
-                (("2" (ground)
-                  (("2" (skosimp*)
-                    (("2" (lift-if)
-                      (("2" (lemma "deriv_expr_maintains_equivalence")
+                                                                                            (ASSERT)
+                                                                                            NIL)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
+       ("5" (SKOSIMP*)
+        (("5" (EXPAND* "related_states" "deriv_expr")
+          (("5" (EXPAND "deriv_expr")
+            (("5" (FLATTEN)
+              (("5" (USE "MP_modeled_implies_same_exception")
+                (("5" (ASSERT)
+                  (("5" (CASE "up?(ex(pstate(sMP1!1)))")
+                    (("1" (GROUND) NIL)
+                     ("2" (ASSERT)
+                      (("2" (PROP)
+                        (("1" (USE "MP_modeled_implies_same_num_eval")
+                          (("1" (ASSERT)
+                            (("1" (EXPAND "related_states")
+                              (("1" (PROPAX) NIL)))))))
+                         ("2" (ASSERT) NIL)))))))))))))))))))
+       ("6" (SKOSIMP*)
+        (("6" (EXPAND* "related_states" "deriv_expr")
+          (("6" (EXPAND "deriv_expr")
+            (("6" (FLATTEN)
+              (("6" (USE "MP_modeled_implies_same_exception")
+                (("6" (ASSERT)
+                  (("6" (CASE "up?(ex(pstate(sMP1!1)))")
+                    (("1" (GROUND) NIL)
+                     ("2" (ASSERT)
+                      (("2" (PROP)
+                        (("1" (CASE "RExpr1_var!1 = Null")
+                          (("1" (ASSERT) NIL) ("2" (ASSERT) NIL)))
+                         ("2" (ASSERT) NIL))))))))))))))))))))))
+    NIL)
+   UNFINISHED NIL 226 226 NIL NIL))
+ (|deriv_stmt_maintains_equivalence| 0
+  (|deriv_stmt_maintains_equivalence-1| NIL 3394257849 3394357968
+   ("" (SKOSIMP)
+    (("" (INDUCT "c")
+      (("1" (SKOSIMP*)
+        (("1" (USE "every_is_forall[[Expr, Stmt]]")
+          (("1" (REWRITE -1)
+            (("1" (EXPAND "deriv_stmt" (-3 -4))
+              (("1" (COPY -2)
+                (("1" (EXPAND "related_states" -1)
+                  (("1" (FLATTEN)
+                    (("1" (USE "MP_modeled_implies_same_exception")
+                      (("1" (ASSERT)
+                        (("1" (SPLIT)
+                          (("1" (GROUND) NIL NIL)
+                           ("2" (GROUND)
+                            (("2" (EXPAND "execute_CaseJML")
+                              (("2" (LIFT-IF)
+                                (("2" (GROUND)
+                                  (("2" (EXPAND "deriv_stmt" (-2 -5))
+                                    (("2" (SKOSIMP*) (("2" (POSTPONE) NIL NIL))
+                                      NIL))
+                                    NIL))
+                                  NIL))
+                                NIL))
+                              NIL))
+                            NIL))
+                          NIL))
+                        NIL))
+                      NIL))
+                    NIL))
+                  NIL))
+                NIL))
+              NIL))
+            NIL))
+          NIL))
+        NIL)
+       ("2" (SKOSIMP*)
+        (("2" (EXPAND "deriv_stmt" (-4 -5))
+          (("2" (COPY -3)
+            (("2" (EXPAND "related_states" -1)
+              (("2" (USE "MP_modeled_implies_same_exception")
+                (("2" (GROUND)
+                  (("2" (SKOSIMP*)
+                    (("2" (LIFT-IF)
+                      (("2" (LEMMA "deriv_expr_maintains_equivalence")
                         (("2"
-                          (inst - "mp!1" "ap!1" "IfThenElse1_var!1"
-                           "v!2" "v!1" "sMP1!1" "tau!2" "sAP1!1"
-                           "tau!1" "m1!2" "m1!1")
-                          (("2" (expand "deriv_expr" -1)
-                            (("2" (case "wf_state(mp!1)(tau!2)")
-                              (("1"
-                                (case "wf_state(ap!1)(tau!1)")
-                                (("1"
-                                  (ground)
+                          (INST - "mp!1" "ap!1" "IfThenElse1_var!1" "v!2" "v!1"
+                           "sMP1!1" "tau!2" "sAP1!1" "tau!1" "m1!2" "m1!1")
+                          (("2" (EXPAND "deriv_expr" -1)
+                            (("2" (CASE "wf_state(mp!1)(tau!2)")
+                              (("1" (CASE "wf_state(ap!1)(tau!1)")
+                                (("1" (GROUND)
                                   (("1"
-                                    (inst
-                                     -
-                                     "tau!2"
-                                     "sMP2!1"
-                                     "tau!1"
-                                     "sAP2!1"
-                                     "m2!2"
-                                     "m2!1")
-                                    (("1"
-                                      (assert)
-                                      (("1"
-                                        (expand "related_states" 3)
-                                        (("1" (propax) nil nil))
-                                        nil))
-                                      nil))
-                                    nil)
+                                    (INST - "tau!2" "sMP2!1" "tau!1" "sAP2!1"
+                                     "m2!2" "m2!1")
+                                    (("1" (ASSERT)
+                                      (("1" (EXPAND "related_states" 3)
+                                        (("1" (PROPAX) NIL NIL)) NIL))
+                                      NIL))
+                                    NIL)
                                    ("2"
-                                    (inst
-                                     -20
-                                     "tau!2"
-                                     "sMP2!1"
-                                     "tau!1"
-                                     "sAP2!1"
-                                     "m2!2"
-                                     "m2!1")
+                                    (INST -20 "tau!2" "sMP2!1" "tau!1" "sAP2!1"
+                                     "m2!2" "m2!1")
+                                    (("2" (ASSERT)
+                                      (("2" (EXPAND "related_states" 5)
+                                        (("2" (PROPAX) NIL NIL)) NIL))
+                                      NIL))
+                                    NIL))
+                                  NIL)
+                                 ("2" (LEMMA "deriv_expr_yields_wf_state_AP")
+                                  (("2" (HIDE-ALL-BUT (-1 -5 -13 -14 -16 1))
                                     (("2"
-                                      (assert)
-                                      (("2"
-                                        (expand "related_states" 5)
-                                        (("2" (propax) nil nil))
-                                        nil))
-                                      nil))
-                                    nil))
-                                  nil)
-                                 ("2"
-                                  (lemma
-                                   "deriv_expr_yields_wf_state_AP")
-                                  (("2"
-                                    (hide-all-but
-                                     (-1 -5 -13 -14 -16 1))
-                                    (("2"
-                                      (inst
-                                       -
-                                       "ap!1"
-                                       "IfThenElse1_var!1"
-                                       "v!1"
-                                       "sAP1!1"
-                                       "tau!1"
-                                       "m1!1")
-                                      (("2"
-                                        (expand "deriv_expr" -1)
-                                        (("2"
-                                          (assert)
+                                      (INST - "ap!1" "IfThenElse1_var!1" "v!1"
+                                       "sAP1!1" "tau!1" "m1!1")
+                                      (("2" (EXPAND "deriv_expr" -1)
+                                        (("2" (ASSERT)
                                           (("2"
-                                            (use
+                                            (USE
                                              "ann_program_yields_wf_program")
                                             (("2"
-                                              (expand
+                                              (EXPAND
                                                "specification_requirements")
-                                              (("2"
-                                                (ground)
+                                              (("2" (GROUND)
                                                 (("2"
-                                                  (lemma
+                                                  (LEMMA
                                                    "deriv_stmt_yields_wf_state_AP")
-                                                  (("2"
-                                                    (skosimp*)
-                                                    (("2"
-                                                      (inst?)
-                                                      (("2"
-                                                        (assert)
-                                                        nil
-                                                        nil))
-                                                      nil))
-                                                    nil))
-                                                  nil))
-                                                nil))
-                                              nil))
-                                            nil))
-                                          nil))
-                                        nil))
-                                      nil))
-                                    nil))
-                                  nil))
-                                nil)
-                               ("2"
-                                (hide-all-but (-7 -11 -12 -13 1))
-                                (("2"
-                                  (lemma
-                                   "deriv_expr_yields_wf_state_MP")
-                                  (("2"
-                                    (expand "deriv_expr" -1)
-                                    (("2"
-                                      (inst?)
+                                                  (("2" (SKOSIMP*)
+                                                    (("2" (INST?)
+                                                      (("2" (ASSERT) NIL NIL))
+                                                      NIL))
+                                                    NIL))
+                                                  NIL))
+                                                NIL))
+                                              NIL))
+                                            NIL))
+                                          NIL))
+                                        NIL))
+                                      NIL))
+                                    NIL))
+                                  NIL))
+                                NIL)
+                               ("2" (HIDE-ALL-BUT (-7 -11 -12 -13 1))
+                                (("2" (LEMMA "deriv_expr_yields_wf_state_MP")
+                                  (("2" (EXPAND "deriv_expr" -1)
+                                    (("2" (INST?)
                                       (("2"
-                                        (expand
-                                         "specification_requirements")
-                                        (("2"
-                                          (ground)
-                                          (("2"
-                                            (skosimp*)
+                                        (EXPAND "specification_requirements")
+                                        (("2" (GROUND)
+                                          (("2" (SKOSIMP*)
                                             (("2"
-                                              (lemma
+                                              (LEMMA
                                                "deriv_stmt_yields_wf_state_MP")
-                                              (("2"
-                                                (inst?)
-                                                (("2"
-                                                  (assert)
-                                                  nil
-                                                  nil))
-                                                nil))
-                                              nil))
-                                            nil))
-                                          nil))
-                                        nil))
-                                      nil))
-                                    nil))
-                                  nil))
-                                nil))
-                              nil))
-                            nil))
-                          nil))
-                        nil))
-                      nil))
-                    nil))
-                  nil))
-                nil))
-              nil))
-            nil))
-          nil))
-        nil)
-       ("3" (skosimp*)
-        (("3" (expand "deriv_stmt" (-4 -5))
-          (("3" (copy -3)
-            (("3" (expand "related_states" -1)
-              (("3" (use "MP_modeled_implies_same_exception")
-                (("3" (ground)
-                  (("3" (skosimp*)
+                                              (("2" (INST?)
+                                                (("2" (ASSERT) NIL NIL)) NIL))
+                                              NIL))
+                                            NIL))
+                                          NIL))
+                                        NIL))
+                                      NIL))
+                                    NIL))
+                                  NIL))
+                                NIL))
+                              NIL))
+                            NIL))
+                          NIL))
+                        NIL))
+                      NIL))
+                    NIL))
+                  NIL))
+                NIL))
+              NIL))
+            NIL))
+          NIL))
+        NIL)
+       ("3" (SKOSIMP*)
+        (("3" (EXPAND "deriv_stmt" (-4 -5))
+          (("3" (COPY -3)
+            (("3" (EXPAND "related_states" -1)
+              (("3" (USE "MP_modeled_implies_same_exception")
+                (("3" (GROUND)
+                  (("3" (SKOSIMP*)
                     (("3"
-                      (inst - "sMP1!1" "tau!2" "sAP1!1" "tau!1" "m1!2"
-                       "m1!1")
+                      (INST - "sMP1!1" "tau!2" "sAP1!1" "tau!1" "m1!2" "m1!1")
                       (("3"
-                        (inst - "tau!2" "sMP2!1" "tau!1" "sAP2!1"
-                         "m2!2" "m2!1")
-                        (("3" (assert)
-                          (("3" (expand "related_states" 3)
-                            (("3" (split)
-                              (("1"
-                                (use "deriv_stmt_yields_wf_state_MP")
-                                (("1"
-                                  (expand "specification_requirements")
-                                  (("1" (ground) nil nil))
-                                  nil))
-                                nil)
-                               ("2"
-                                (use "deriv_stmt_yields_wf_state_AP")
-                                (("2"
-                                  (assert)
-                                  (("2"
-                                    (use
-                                     "ann_program_yields_wf_program")
-                                    (("2"
-                                      (expand
-                                       "specification_requirements")
-                                      (("2" (assert) nil nil))
-                                      nil))
-                                    nil))
-                                  nil))
-                                nil))
-                              nil))
-                            nil))
-                          nil))
-                        nil))
-                      nil))
-                    nil))
-                  nil))
-                nil))
-              nil))
-            nil))
-          nil))
-        nil)
-       ("4" (skosimp*)
-        (("4" (expand* "deriv_stmt" "related_states")
-          (("4" (use "MP_modeled_implies_same_exception")
-            (("4" (ground)
-              (("4" (expand "execute_set")
-                (("4" (skosimp*)
-                  (("4" (lemma "deriv_expr_maintains_equivalence")
-                    (("4" (postpone) nil nil)) nil))
-                  nil))
-                nil))
-              nil))
-            nil))
-          nil))
-        nil)
-       ("5" (postpone) nil nil) ("6" (postpone) nil nil)
-       ("7" (postpone) nil nil) ("8" (postpone) nil nil)
-       ("9" (postpone) nil nil))
-      nil))
-    nil)
-   unfinished nil 6439676 28720 t shostak))
- (correcteness_of_ann_program_TCC1 0
-  (correcteness_of_ann_program_TCC1-1 nil 3393590714 3393595666
-   ("" (skosimp)
-    (("" (expand "specification_requirements") (("" (flatten) nil nil))
-      nil))
-    nil)
-   unchecked
-   ((specification_requirements const-decl "boolean" Equivalence nil))
-   20529 60 t nil))
- (correcteness_of_ann_program 0
-  (correcteness_of_ann_program-1 nil 3393590728 3393595513
-   ("" (skosimp*)
+                        (INST - "tau!2" "sMP2!1" "tau!1" "sAP2!1" "m2!2"
+                         "m2!1")
+                        (("3" (ASSERT)
+                          (("3" (EXPAND "related_states" 3)
+                            (("3" (SPLIT)
+                              (("1" (USE "deriv_stmt_yields_wf_state_MP")
+                                (("1" (EXPAND "specification_requirements")
+                                  (("1" (GROUND) NIL NIL)) NIL))
+                                NIL)
+                               ("2" (USE "deriv_stmt_yields_wf_state_AP")
+                                (("2" (ASSERT)
+                                  (("2" (USE "ann_program_yields_wf_program")
+                                    (("2" (EXPAND "specification_requirements")
+                                      (("2" (ASSERT) NIL NIL)) NIL))
+                                    NIL))
+                                  NIL))
+                                NIL))
+                              NIL))
+                            NIL))
+                          NIL))
+                        NIL))
+                      NIL))
+                    NIL))
+                  NIL))
+                NIL))
+              NIL))
+            NIL))
+          NIL))
+        NIL)
+       ("4" (SKOSIMP*)
+        (("4" (EXPAND* "deriv_stmt" "related_states")
+          (("4" (USE "MP_modeled_implies_same_exception")
+            (("4" (GROUND)
+              (("4" (EXPAND "execute_set")
+                (("4" (SKOSIMP*)
+                  (("4" (LEMMA "deriv_expr_maintains_equivalence")
+                    (("4" (POSTPONE) NIL NIL)) NIL))
+                  NIL))
+                NIL))
+              NIL))
+            NIL))
+          NIL))
+        NIL)
+       ("5" (POSTPONE) NIL NIL) ("6" (POSTPONE) NIL NIL)
+       ("7" (POSTPONE) NIL NIL) ("8" (POSTPONE) NIL NIL)
+       ("9" (POSTPONE) NIL NIL))
+      NIL))
+    NIL)
+   UNFINISHED NIL 867 867 T SHOSTAK))
+ (|correcteness_of_ann_program_TCC1| 0
+  (|correcteness_of_ann_program_TCC1-1| NIL 3393590714 3394357968
+   ("" (SKOSIMP)
+    (("" (EXPAND "specification_requirements") (("" (FLATTEN) NIL NIL)) NIL))
+    NIL)
+   UNCHECKED
+   ((|specification_requirements| CONST-DECL "boolean" |Equivalence| NIL)) 22
+   22 T NIL))
+ (|correcteness_of_ann_program| 0
+  (|correcteness_of_ann_program-1| NIL 3393590728 3394357969
+   ("" (SKOSIMP*)
     ((""
-      (expand* "run_monitored_program" "run_annotated_program"
+      (EXPAND* "run_monitored_program" "run_annotated_program"
        "run_FullProgram" "derives")
-      (("" (skosimp*)
-        (("" (use "initial_states_are_equivalent")
-          (("" (copy -2)
-            (("" (expand "specification_requirements" -1)
-              (("" (ground)
-                (("" (lemma "deriv_stmt_maintains_equivalence")
+      (("" (SKOSIMP*)
+        (("" (USE "initial_states_are_equivalent")
+          (("" (COPY -2)
+            (("" (EXPAND "specification_requirements" -1)
+              (("" (GROUND)
+                (("" (LEMMA "deriv_stmt_maintains_equivalence")
                   ((""
-                    (inst -1 "mp!1" "ann_program(mp!1)" "n!1" "n!2"
+                    (INST -1 "mp!1" "ann_program(mp!1)" "n!1" "n!2"
                      "StmtExpr(MethodCall(RExpr(RefVarEval(This)), name(main!1), NExpr(Int(arg!1))))"
                      "initial_MP_state(mp!1)(root_object!1)" "sMP!1"
                      "initial_AP_state(ann_program(mp!1))(root_object!1)"
                      "sAP!1")
-                    (("" (assert)
-                      (("" (expand "related_states")
-                        (("" (use "wf_initial_MP_state")
-                          (("" (use "wf_initial_AP_state")
-                            (("" (use "ann_program_yields_wf_program")
-                              (("" (assert) nil nil)) nil))
-                            nil))
-                          nil))
-                        nil))
-                      nil))
-                    nil))
-                  nil))
-                nil))
-              nil))
-            nil))
-          nil))
-        nil))
-      nil))
-    nil)
-   unfinished
-   ((run_annotated_program const-decl "boolean"
-     AnnotatedProgramSemantics nil)
-    (run_FullProgram const-decl "boolean" Semantics nil)
-    (run_monitored_program const-decl "boolean"
-     MonitoredProgramSemantics nil)
-    (initial_states_are_equivalent formula-decl nil
-     CorrectnessAnnProgram nil)
-    (MonitoredProgram type-eq-decl nil MonitoredProgram nil)
-    (compatible const-decl "boolean" MonitoredProgram nil)
-    (MonitoredProgramPre type-eq-decl nil MonitoredProgram nil)
-    (Program type-eq-decl nil Program nil)
-    (complete const-decl "boolean" MVASemantics nil)
-    (MVA type-eq-decl nil MVA nil)
-    (ProgVarDecl type-eq-decl nil MVA nil)
-    (MVAVarDecl type-eq-decl nil MVA nil)
-    (JType type-decl nil JType_adt nil)
-    (defined? const-decl "boolean" ValProp nil)
-    (Val type-decl nil Val_adt nil)
-    (Transition type-eq-decl nil MVA nil)
-    (Guard type-eq-decl nil MVA nil) (Action type-eq-decl nil MVA nil)
-    (Event type-eq-decl nil MVA nil)
-    (EventType type-decl nil EventType_adt nil)
-    (finite_set type-eq-decl nil finite_sets nil)
-    (CP formal-nonempty-type-decl nil CorrectnessAnnProgram nil)
-    (string type-eq-decl nil strings nil)
-    (char type-eq-decl nil strings nil)
-    (char? adt-recognizer-decl "[character -> boolean]" character_adt
-     nil)
-    (boolean nonempty-type-decl nil booleans nil)
-    (character type-decl nil character_adt nil)
-    (below type-eq-decl nil nat_types nil)
-    (nat nonempty-type-eq-decl nil naturalnumbers nil)
-    (deriv_stmt_maintains_equivalence formula-decl nil
-     CorrectnessAnnProgram nil)
-    (wf_initial_MP_state formula-decl nil MonitoredProgramSemantics
-     nil)
-    (ann_program_yields_wf_program formula-decl nil
-     AnnotateProgramProperties nil)
-    (wf_initial_AP_state formula-decl nil AnnotatedProgramSemantics
-     nil)
-    (related_states const-decl "boolean" Equivalence nil)
-    (initial_AP_state const-decl "APState" AnnotatedProgramSemantics
-     nil)
-    (APState type-eq-decl nil AnnotatedProgramSemantics nil)
-    (initial_MP_state const-decl "MPState" MonitoredProgramSemantics
-     nil)
-    (MPState type-eq-decl nil MonitoredProgramSemantics nil)
-    (PState type-eq-decl nil State nil)
-    (Store type-eq-decl nil State nil)
-    (AState type-eq-decl nil MVASemantics nil)
-    (Int adt-constructor-decl "[int -> (Int?)]" NumExpr_adt nil)
-    (Int? adt-recognizer-decl "[NumExpr -> boolean]" NumExpr_adt nil)
-    (NExpr adt-constructor-decl "[NumExpr -> (NExpr?)]" Expr_adt nil)
-    (NExpr? adt-recognizer-decl "[Expr -> boolean]" Expr_adt nil)
-    (NumExpr type-decl nil NumExpr_adt nil)
-    (This const-decl "Name" Program nil)
-    (RefVarEval adt-constructor-decl "[Name -> (RefVarEval?)]"
-     RefExpr_adt nil)
-    (RefVarEval? adt-recognizer-decl "[RefExpr -> boolean]" RefExpr_adt
-     nil)
-    (RExpr adt-constructor-decl "[RefExpr -> (RExpr?)]" Expr_adt nil)
-    (RExpr? adt-recognizer-decl "[Expr -> boolean]" Expr_adt nil)
-    (RefExpr type-decl nil RefExpr_adt nil)
-    (MethodCall adt-constructor-decl
-     "[[Expr, Name, Expr] -> (MethodCall?)]" Expr_adt nil)
-    (MethodCall? adt-recognizer-decl "[Expr -> boolean]" Expr_adt nil)
-    (StmtExpr adt-constructor-decl "[Expr -> (StmtExpr?)]" Stmt_adt
-     nil)
-    (StmtExpr? adt-recognizer-decl "[Stmt -> boolean]" Stmt_adt nil)
-    (>= const-decl "bool" reals nil)
-    (bool nonempty-type-eq-decl nil booleans nil)
-    (int nonempty-type-eq-decl nil integers nil)
-    (integer_pred const-decl "[rational -> boolean]" integers nil)
-    (rational nonempty-type-from-decl nil rationals nil)
-    (rational_pred const-decl "[real -> boolean]" rationals nil)
-    (real nonempty-type-from-decl nil reals nil)
-    (real_pred const-decl "[number_field -> boolean]" reals nil)
-    (number_field nonempty-type-from-decl nil number_fields nil)
-    (number_field_pred const-decl "[number -> boolean]" number_fields
-     nil)
-    (number nonempty-type-decl nil numbers nil)
-    (ann_program const-decl "Program" AnnotateProgram nil)
-    (ann_program_pre const-decl "boolean" AnnotateProgram nil)
-    (Class type-eq-decl nil Program nil)
-    (lift type-decl nil lift_adt nil)
-    (Method type-eq-decl nil Program nil)
-    (Stmt type-decl nil Stmt_adt nil)
-    (LocalVarDecl type-eq-decl nil Program nil)
-    (Expr type-decl nil Expr_adt nil)
-    (FieldDecl type-eq-decl nil Program nil)
-    (specification_requirements const-decl "boolean" Equivalence nil))
-   1693 1550 nil nil)))
+                    (("" (ASSERT)
+                      (("" (EXPAND "related_states")
+                        (("" (USE "wf_initial_MP_state")
+                          (("" (USE "wf_initial_AP_state")
+                            (("" (USE "ann_program_yields_wf_program")
+                              (("" (ASSERT) NIL NIL)) NIL))
+                            NIL))
+                          NIL))
+                        NIL))
+                      NIL))
+                    NIL))
+                  NIL))
+                NIL))
+              NIL))
+            NIL))
+          NIL))
+        NIL))
+      NIL))
+    NIL)
+   UNFINISHED
+   ((|run_annotated_program| CONST-DECL "boolean" |AnnotatedProgramSemantics|
+     NIL)
+    (|run_FullProgram| CONST-DECL "boolean" |Semantics| NIL)
+    (|run_monitored_program| CONST-DECL "boolean" |MonitoredProgramSemantics|
+     NIL)
+    (|initial_states_are_equivalent| FORMULA-DECL NIL |CorrectnessAnnProgram|
+     NIL)
+    (|MonitoredProgram| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
+    (|compatible| CONST-DECL "boolean" |MonitoredProgram| NIL)
+    (|MonitoredProgramPre| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
+    (|Program| TYPE-EQ-DECL NIL |Program| NIL)
+    (|complete| CONST-DECL "boolean" |MVASemantics| NIL)
+    (MVA TYPE-EQ-DECL NIL MVA NIL) (|ProgVarDecl| TYPE-EQ-DECL NIL MVA NIL)
+    (|MVAVarDecl| TYPE-EQ-DECL NIL MVA NIL)
+    (|JType| TYPE-DECL NIL |JType_adt| NIL)
+    (|defined?| CONST-DECL "boolean" |ValProp| NIL)
+    (|Val| TYPE-DECL NIL |Val_adt| NIL) (|Transition| TYPE-EQ-DECL NIL MVA NIL)
+    (|Guard| TYPE-EQ-DECL NIL MVA NIL) (|Action| TYPE-EQ-DECL NIL MVA NIL)
+    (|Event| TYPE-EQ-DECL NIL MVA NIL)
+    (|EventType| TYPE-DECL NIL |EventType_adt| NIL)
+    (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
+    (CP FORMAL-NONEMPTY-TYPE-DECL NIL |CorrectnessAnnProgram| NIL)
+    (|string| TYPE-EQ-DECL NIL |strings| NIL)
+    (|char| TYPE-EQ-DECL NIL |strings| NIL)
+    (|char?| ADT-RECOGNIZER-DECL "[character -> boolean]" |character_adt| NIL)
+    (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
+    (|character| TYPE-DECL NIL |character_adt| NIL)
+    (|below| TYPE-EQ-DECL NIL |nat_types| NIL)
+    (|nat| NONEMPTY-TYPE-EQ-DECL NIL |naturalnumbers| NIL)
+    (|deriv_stmt_maintains_equivalence| FORMULA-DECL NIL
+     |CorrectnessAnnProgram| NIL)
+    (|wf_initial_MP_state| FORMULA-DECL NIL |MonitoredProgramSemantics| NIL)
+    (|ann_program_yields_wf_program| FORMULA-DECL NIL
+     |AnnotateProgramProperties| NIL)
+    (|wf_initial_AP_state| FORMULA-DECL NIL |AnnotatedProgramSemantics| NIL)
+    (|related_states| CONST-DECL "boolean" |Equivalence| NIL)
+    (|initial_AP_state| CONST-DECL "APState" |AnnotatedProgramSemantics| NIL)
+    (|APState| TYPE-EQ-DECL NIL |AnnotatedProgramSemantics| NIL)
+    (|initial_MP_state| CONST-DECL "MPState" |MonitoredProgramSemantics| NIL)
+    (|MPState| TYPE-EQ-DECL NIL |MonitoredProgramSemantics| NIL)
+    (|PState| TYPE-EQ-DECL NIL |State| NIL)
+    (|Store| TYPE-EQ-DECL NIL |State| NIL)
+    (|AState| TYPE-EQ-DECL NIL |MVASemantics| NIL)
+    (|Int| ADT-CONSTRUCTOR-DECL "[int -> (Int?)]" |NumExpr_adt| NIL)
+    (|Int?| ADT-RECOGNIZER-DECL "[NumExpr -> boolean]" |NumExpr_adt| NIL)
+    (|NExpr| ADT-CONSTRUCTOR-DECL "[NumExpr -> (NExpr?)]" |Expr_adt| NIL)
+    (|NExpr?| ADT-RECOGNIZER-DECL "[Expr -> boolean]" |Expr_adt| NIL)
+    (|NumExpr| TYPE-DECL NIL |NumExpr_adt| NIL)
+    (|This| CONST-DECL "Name" |Program| NIL)
+    (|RefVarEval| ADT-CONSTRUCTOR-DECL "[Name -> (RefVarEval?)]" |RefExpr_adt|
+     NIL)
+    (|RefVarEval?| ADT-RECOGNIZER-DECL "[RefExpr -> boolean]" |RefExpr_adt|
+     NIL)
+    (|RExpr| ADT-CONSTRUCTOR-DECL "[RefExpr -> (RExpr?)]" |Expr_adt| NIL)
+    (|RExpr?| ADT-RECOGNIZER-DECL "[Expr -> boolean]" |Expr_adt| NIL)
+    (|RefExpr| TYPE-DECL NIL |RefExpr_adt| NIL)
+    (|MethodCall| ADT-CONSTRUCTOR-DECL "[[Expr, Name, Expr] -> (MethodCall?)]"
+     |Expr_adt| NIL)
+    (|MethodCall?| ADT-RECOGNIZER-DECL "[Expr -> boolean]" |Expr_adt| NIL)
+    (|StmtExpr| ADT-CONSTRUCTOR-DECL "[Expr -> (StmtExpr?)]" |Stmt_adt| NIL)
+    (|StmtExpr?| ADT-RECOGNIZER-DECL "[Stmt -> boolean]" |Stmt_adt| NIL)
+    (>= CONST-DECL "bool" |reals| NIL)
+    (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
+    (|int| NONEMPTY-TYPE-EQ-DECL NIL |integers| NIL)
+    (|integer_pred| CONST-DECL "[rational -> boolean]" |integers| NIL)
+    (|rational| NONEMPTY-TYPE-FROM-DECL NIL |rationals| NIL)
+    (|rational_pred| CONST-DECL "[real -> boolean]" |rationals| NIL)
+    (|real| NONEMPTY-TYPE-FROM-DECL NIL |reals| NIL)
+    (|real_pred| CONST-DECL "[number_field -> boolean]" |reals| NIL)
+    (|number_field| NONEMPTY-TYPE-FROM-DECL NIL |number_fields| NIL)
+    (|number_field_pred| CONST-DECL "[number -> boolean]" |number_fields| NIL)
+    (|number| NONEMPTY-TYPE-DECL NIL |numbers| NIL)
+    (|ann_program| CONST-DECL "Program" |AnnotateProgram| NIL)
+    (|ann_program_pre| CONST-DECL "boolean" |AnnotateProgram| NIL)
+    (|Class| TYPE-EQ-DECL NIL |Program| NIL)
+    (|lift| TYPE-DECL NIL |lift_adt| NIL)
+    (|Method| TYPE-EQ-DECL NIL |Program| NIL)
+    (|Stmt| TYPE-DECL NIL |Stmt_adt| NIL)
+    (|LocalVarDecl| TYPE-EQ-DECL NIL |Program| NIL)
+    (|Expr| TYPE-DECL NIL |Expr_adt| NIL)
+    (|FieldDecl| TYPE-EQ-DECL NIL |Program| NIL)
+    (|specification_requirements| CONST-DECL "boolean" |Equivalence| NIL))
+   144 144 NIL NIL)))
 

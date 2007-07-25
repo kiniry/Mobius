@@ -175,11 +175,13 @@ BEGIN
       getFieldDecls(ann_program(mp))(fv) IMPLIES
         getFieldDecls(program(mp))(fv)
 
+
   ann_program_preserves_locals : LEMMA % :-)
     FORALL (mp : MonitoredProgram, lv : LocalVarDecl) :
       ann_program_pre(mp) IMPLIES
       getLocalDecls(ann_program(mp))(lv) IMPLIES
         getLocalDecls(program(mp))(lv)
+
 
   % PROVE
   ann_program_yields_wf_program : LEMMA
@@ -208,6 +210,18 @@ BEGIN
                THEN m = ann_method(mp)(m1)
                ELSE m = m1
                ENDIF)
+
+  ann_program_preserves_fields_eq : LEMMA % :-)
+    FORALL (mp : MonitoredProgram, fv : FieldDecl) :
+      ann_program_pre(mp) IMPLIES
+      getFieldDecls(ann_program(mp))(fv) =
+        getFieldDecls(program(mp))(fv)
+
+  ann_program_preserves_locals_eq : LEMMA % :-)
+    FORALL (mp : MonitoredProgram, lv : LocalVarDecl) :
+      ann_program_pre(mp) IMPLIES
+      getLocalDecls(ann_program(mp))(lv) =
+        getLocalDecls(program(mp))(lv)
 
   ann_program_preserves_var_decls : LEMMA % :-)
     FORALL (mp : MonitoredProgram):

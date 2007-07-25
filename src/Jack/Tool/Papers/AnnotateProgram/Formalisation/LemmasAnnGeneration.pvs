@@ -47,13 +47,17 @@ BEGIN
     CASES a OF
       null : FALSE,
       cons(x, xs) : c = Set(target(x), source(x)) OR 
-                    set_stmt_of_ann_action(c, xs)
+                     set_stmt_of_ann_action(c, xs)
     ENDCASES
     MEASURE length(a)
 
   set_stmt_of_ann_action_proper_subterm : LEMMA % :-)
     FORALL (c : Stmt, a : Action) :
       set_stmt_of_ann_action(c, a) IMPLIES c << ann_action(a)
+
+  set_stmt_of_ann_action_only_for_Set : LEMMA % :-)
+    FORALL (c : Stmt, a : Action) : 
+      set_stmt_of_ann_action(c, a) IMPLIES Set?(c)
 
   non_interference_of_sets_in_ann_actions : LEMMA % :-)
     FORALL (p : Program, a : Action, s1, s2 : APState,
