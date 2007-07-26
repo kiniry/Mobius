@@ -238,7 +238,7 @@ BEGIN
 
   wf_Store(vds : finite_set[MVAVarDecl])(st : Store) : boolean =
     FORALL (n : Name) :
-      var_names(vds)(n) IFF NOT Bottom?(st(n))
+      var_names(vds)(n) IFF defined?(st(n))
 
 
   % NOTE: Recall that we assume that variables in PSt are fields.
@@ -246,7 +246,7 @@ BEGIN
   % to be equal then we can use an IFF
   wf_PSt(vds : finite_set[ProgVarDecl])(st : PSt) : boolean =
     FORALL (n : Name) :
-      var_names(vds)(n) IMPLIES NOT Bottom?(fvs(st)(n))
+      var_names(vds)(n) IMPLIES defined?(fvs(st)(n))
 
 
   wf_AState(a : MVA)(s : AState) : boolean =
@@ -290,7 +290,7 @@ BEGIN
     FORALL (a : MVA, e : Expr, stA : Store, stP : PSt) :
       wf_Store(vdsA(a))(stA) IMPLIES
       wf_PSt(vdsP(a))(stP) IMPLIES
-        NOT Bottom?(eval(e)(stA, stP))
+        defined?(eval(e)(stA, stP))
 
   execute_action_yields_wf_state : LEMMA % :-)
     FORALL (a : MVA, l : Action, stA : Store, stP : PSt) :

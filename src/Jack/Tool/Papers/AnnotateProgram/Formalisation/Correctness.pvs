@@ -15,10 +15,7 @@ BEGIN
     FORALL (mp : MonitoredProgram)(sMP : MPState, sAP : APState) :
       MP_modeled?(mp)(sMP, sAP) IMPLIES ex(pstate(sMP)) = ex(pstate(sAP))
 
-  % SEE
-  % This used to be easy to prove when that condition was included in 
-  % MVA_modeled? but now it may require a long proof.
-  MP_modeled_implies_cp_not_halted : LEMMA
+  MP_modeled_implies_cp_not_halted : LEMMA % :-)
     FORALL (mp : MonitoredProgram, sMP : MPState, sAP : APState) :
       MP_modeled?(mp)(sMP, sAP) IMPLIES
       NOT up?(ex(pstate(sAP))) IMPLIES

@@ -172,16 +172,37 @@ BEGIN
   IMPORTING AnnotatedProgramSemantics[Name],
             listfuncs
 
+  % Properties of subterms
+
+  proper_subterm_sequence : LEMMA % :-)
+    FORALL (c1, c2, c3 : Stmt) :
+      Sequence(c1, c2) << c3 IMPLIES 
+        c1 << c3 AND c2 << c3
+
+  proper_subterm_set_clause_sequence : LEMMA % :-)
+    FORALL (c1, c2 : Stmt, m : Method) :
+      proper_subterm_set_clause(Sequence(c1, c2), m) IMPLIES 
+        proper_subterm_set_clause(c1, m) AND proper_subterm_set_clause(c2, m)
+
+  stmt_proper_subterm_is_transitive : LEMMA % :-)
+    FORALL (c1, c2, c3 : Stmt) :
+      c1 << c2 AND c2 << c3 IMPLIES c1 << c3
+
+  % The execution of a set statement that does not have vn as target and whose
+  % source expression has no side-effects, does not change the value of vn.
   non_interference_of_set_stmt : LEMMA % :-)
     FORALL (p : Program, c : Stmt, s1, s2 : APState, n : nat, vn : Name) :
       Set?(c) AND
       NOT target(c) = vn IMPLIES
-      (FORALL (tau1, tau2 : APState, v : Val, n2 : nat) :
-        deriv_expr(p)(source(c), tau1, v, tau2)(n2) IMPLIES tau1 = tau2)
-      IMPLIES
+      expr_has_no_side_effects(p)(source(c)) IMPLIES
       deriv_stmt(p)(c, s1, s2)(n) IMPLIES
         gvs(s1)(vn) = gvs(s2)(vn)
 
+  % Consider the evaluation of a CaseJML on a non-exceptional state for which 
+  % there is a branch b1 whose condition has no side-effects and holds and all
+  % the braches preceding b1 have no side-effect and do not hold. The state
+  % resulting from the evaluation of such CaseJML will be equal to the state
+  % after the execution of the statement associated with b1.
   CaseJML_exclusive_branches_semantics : LEMMA % :-)
     FORALL (p : Program, bs : list[[Expr, Stmt]], s1, s2, tau : APState,
             n1, n : nat, b1 : [Expr, Stmt]) :
@@ -200,6 +221,10 @@ BEGIN
         deriv_stmt(p)(CaseJML(bs), s1, s2)(n) IMPLIES
           s2 = tau
 
+  % A CaseJML for which there is a branch b1 that has no side-effects and holds
+  % and for which all the branches preceding b1 do not throw exceptions, have no
+  % side-effects and do not hold, will eventually evaluate the statement
+  % associated with b1.
   CaseJML_evaluates_true_stmt : LEMMA % :-)
     FORALL (p : Program, bs : list[[Expr, Stmt]], s1, s2 : APState, n : nat,
             b1 : [Expr, Stmt]) :

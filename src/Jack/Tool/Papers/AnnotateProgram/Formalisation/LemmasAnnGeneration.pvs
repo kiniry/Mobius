@@ -10,28 +10,14 @@ BEGIN
             APSemanticsProperties,
             listfuncs
 
-  % Properties of subterms
-  % MOVE to ProgramFunctions
 
-  proper_subterm_sequence : LEMMA % :-)
-    FORALL (c1, c2, c3 : Stmt) :
-      Sequence(c1, c2) << c3 IMPLIES 
-        c1 << c3 AND c2 << c3
-
-  proper_subterm_set_clause_sequence : LEMMA % :-)
-    FORALL (c1, c2 : Stmt, m : Method) :
-      proper_subterm_set_clause(Sequence(c1, c2), m) IMPLIES 
-        proper_subterm_set_clause(c1, m) AND proper_subterm_set_clause(c2, m)
-
-  stmt_proper_subterm_is_transitive : LEMMA % :-)
-    FORALL (c1, c2, c3 : Stmt) :
-      c1 << c2 AND c2 << c3 IMPLIES c1 << c3
-
-
+  % Eexecuting an action on a MVA modifies its variables in the same way that
+  % the execution of the annotations representing that action modifies the 
+  % corresponding ghost variables in the annotated program.
   execute_action_correctness : LEMMA % :-)
     FORALL (mp : MonitoredProgram, ap : Program, c : Class, m : Method,
-            a : Action, vn : string, n : nat,
-            sMP : MPState, sMVA : AState, sAP1, sAP2 : APState) :
+            a : Action, n : nat,
+            sMP : MPState, sMVA2 : AState, sAP1, sAP2 : APState) :
       related_states(mp, ap)(sMP, sAP1) IMPLIES
       classes(ap)(c) IMPLIES
       methods(c)(m) IMPLIES
@@ -39,51 +25,52 @@ BEGIN
       wf_Action(mva(mp))(a) IMPLIES
       NOT up?(ex(pstate(sAP1))) IMPLIES
       deriv_stmt(ap)(ann_action(a), sAP1, sAP2)(n) IMPLIES
-      stA(sMVA) = execute_action(a)(stA(astate(sMP)), st(pstate(sMP))) IMPLIES
-      NOT Bottom?(stA(astate(sMP))(vn)) IMPLIES
-        stA(sMVA)(vn) = gvs(sAP2)(vn)
+      stA(sMVA2) = execute_action(a)(stA(astate(sMP)), st(pstate(sMP))) IMPLIES
+        MVA_vars_modeled?(sMVA2, sAP2)
 
 
+  % Tells if a statement c is part of the translation of an action a.
   set_stmt_of_ann_action(c : Stmt, a : Action) : RECURSIVE boolean =
     CASES a OF
       null : FALSE,
       cons(x, xs) : c = Set(target(x), source(x)) OR 
-                     set_stmt_of_ann_action(c, xs)
+                        set_stmt_of_ann_action(c, xs)
     ENDCASES
     MEASURE length(a)
 
+  % If a statement c is part of the translation of an action a then c is a
+  % (proper) substament of ann_action(a).
   set_stmt_of_ann_action_proper_subterm : LEMMA % :-)
     FORALL (c : Stmt, a : Action) :
       set_stmt_of_ann_action(c, a) IMPLIES c << ann_action(a)
 
-  % Prove
+  % Only set statements are satisfy the predicate set_stmt_of_ann_action.
   set_stmt_of_ann_action_only_for_Set : LEMMA % :-)
-    FORALL (c : Stmt, a : Action) : 
+    FORALL (c : Stmt, a : Action) :
       set_stmt_of_ann_action(c, a) IMPLIES Set?(c)
 
-  % Remove Set?(c)
+  % If none of the set statements in ann_action(a) has vn as target and their
+  % source expressions have no side effect then the value of vn is not changed
+  % by the evaluation of ann_action(a).
   non_interference_of_sets_in_ann_actions : LEMMA % :-)
     FORALL (p : Program, a : Action, s1, s2 : APState,
             n : nat, vn : string) :
-      (FORALL (c : Stmt) :
-        set_stmt_of_ann_action(c, a) IMPLIES
-        Set?(c) IMPLIES
-          NOT target(c) = vn AND
-          FORALL (tau1, tau2 : APState, v : Val, n2 : nat) :
-            deriv_expr(p)(source(c), tau1, v, tau2)(n2) IMPLIES tau1 = tau2)
+      (FORALL (c : Stmt) : set_stmt_of_ann_action(c, a) IMPLIES
+        NOT target(c) = vn AND expr_has_no_side_effects(p)(source(c)))
       IMPLIES
       deriv_stmt(p)(ann_action(a), s1, s2)(n) IMPLIES
         gvs(s1)(vn) = gvs(s2)(vn)
 
-  % TODO: Remove vn
+  % The target of a set statement that is part of ann_action(l) is a name of a
+  % variable declared by the MVA a. 
   ann_action_sets_mva_vars : LEMMA % :-)
-    FORALL (vn : string, c : Stmt, a : MVA, l : Action) :
+    FORALL (c : Stmt, a : MVA, l : Action) :
       wf_Action(a)(l) IMPLIES
-      Set?(c) IMPLIES
       set_stmt_of_ann_action(c, l) IMPLIES
-      vn = target(c) IMPLIES
-        var_names(vdsA(a))(vn)
+        var_names(vdsA(a))(target(c))
 
+  % In a well behaved program, a substatement of update_vars(t) is either Skip
+  % a Set statement that has no side effects.
   sequence_of_sets_have_no_side_effects : LEMMA % :-)
     FORALL (p : Program, a : Class, m : Method, c  : Stmt, t : Transition) :
       well_behaved_Program(p) IMPLIES
@@ -92,14 +79,18 @@ BEGIN
       proper_subterm_set_clause(update_vars(t), m) IMPLIES
       c << update_vars(t) IMPLIES
         Skip?(c) OR
-        (Set?(c) IMPLIES
-          FORALL (tau1, tau2 : APState, v : Val, n2 : nat) :
-            deriv_expr(p)(source(c), tau1, v, tau2)(n2) IMPLIES tau1 = tau2)
+        (Set?(c) IMPLIES expr_has_no_side_effects(p)(source(c)))
 
+ % FIX PROOF
+ % If sMP1 and sAP1 are related states and for a given transition t, sMVA is the
+ % state of the automaton after performing t and sAP2 is the state of the 
+ % annotated program after executing the annotations that model the effect of t, 
+ % then sMVA is still well modeled by sAP2.
  update_vars_preserves_MVA_modeled : LEMMA % :-)
     FORALL (mp : MonitoredProgram, ap : Program,
             a : Class, m : Method, t : Transition,  n : nat,
             sMVA : AState, sMP : MPState, sAP1, sAP2 : APState) :
+%            sMP : MPState, sMVA2 : AState, sAP1, sAP2 : APState) :
       related_states(mp, ap)(sMP, sAP1) IMPLIES
       classes(ap)(a) IMPLIES
       methods(a)(m) IMPLIES
@@ -114,6 +105,8 @@ BEGIN
         MVA_modeled?(mva(mp))(sMVA, sAP2)
 
 
+  % If m is a method that has been annotated then update_vars(t) is a subterm of
+  % each of its set clauses (pre_set, post_set or exc_set).
   update_vars_proper_subterm_set_clause : LEMMA % :-)
     FORALL (mp : MonitoredProgram, c : Class, m : Method, t : Transition) :
       ann_program_pre(mp) IMPLIES
@@ -124,19 +117,24 @@ BEGIN
       mname(event(t)) = name(m) IMPLIES
         proper_subterm_set_clause(update_vars(t), m)
 
+  % If sMP1 and sAP1 are related stated, sMVA2 is the state of the automaton
+  % after evaluating on_method_MVA with some event type et and some annotated
+  % method m, ts is the set of transitions that have as event (et, name(m)) and
+  % sAP2 is the state of the annotated program after the execution of ann_event
+  % with ts as argument, then sMVA2 is well modeled by sAP2.
   ann_event_preserves_MVA_modeled : LEMMA % :-)
     FORALL (mp : MonitoredProgram, ap : Program, c : Class, m : Method,
-            sMP1, sMP2 : MPState, sAP1, sAP2 : APState,
+            sMP1 : MPState, sMVA2 : AState, sAP1, sAP2 : APState,
             n : nat, ts : finite_set[Transition], et : EventType) :
       related_states(mp, ap)(sMP1, sAP1) IMPLIES
       name(c) = class_name(mva(mp)) IMPLIES
       classes(ap)(c) IMPLIES
       methods(c)(m) IMPLIES
-      astate(sMP2) = on_method_MVA(et)(mp, m)(sMP1) IMPLIES
+      sMVA2 = on_method_MVA(et)(mp, m)(sMP1) IMPLIES
       NOT up?(ex(pstate(sAP1))) IMPLIES
       ts = filter_event(mva(mp))(et)(name(m)) IMPLIES
       deriv_stmt(ap)(ann_event(mp)(ts), sAP1, sAP2)(n) IMPLIES
-        MVA_modeled?(mva(mp))(astate(sMP2), sAP2)
+        MVA_modeled?(mva(mp))(sMVA2, sAP2)
 
 
 END AnnGenerationLemmas
