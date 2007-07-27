@@ -4,6 +4,9 @@ import java.util.Vector;
 
 public class PrittyPrinter implements IPrittyPrinter {
 
+	/**
+	 * contains constants (e.g. line width) and environment (e.g. current indention) of expression to be formatted.
+	 */
 	private BMLConfig conf;
 	
 	/**
@@ -144,60 +147,74 @@ public class PrittyPrinter implements IPrittyPrinter {
 	 * @param str - String representation of an expression with blocks marked with BMLConfig.expr_block_start
 	 * 				and BMLConfig.expr_block_end and without newLines ("\n")
 	 * @param start - used characters in current line, excluding standard indention
-	 * @param end -	used characters at the end of last generated lines
+	 * @param end -	used characters at the end of last generated lines (used only iff
+	 * 				<code>startFromOp</code> == false)
 	 * @param w -	indention to be used at the root of expression <code>str</code>.
-	 * @param prefix - operator to be inserted after newLine (only if <code> startFromOp </code> == true).
+	 * @param prefix - operator to be inserted after newLine (used only if <code>startFromOp</code> == true).
 	 * @return <code>str</code> with line-breaks and indentoin when nessessery. No line of this expression
 	 * 				should be longer than max_total_line_width defined in BMLConfig (if possible).
 	 * 				The first line should be shorter by at least <code>start</code> lines, and the last
 	 * 				line by <code>end</code> lines.
 	 */
 	private String breakLines(String str, int start, int end, String w, String prefix) {
-		String result = "";
+		// start variable is used as current position in line inside this procedure
+		String result = ""; // returned String
 		if (conf.start_line_pos() + strlen(str) < conf.max_total_line_width - start - end)
-			return cleanup(str);
+			return cleanup(str); // if whole expression fit into current line
 		String[] sub = splitRoot(str);
-		if (sub.length == 1)
+		if (sub.length <= 2) // if we are in leaf of the expression
 			return cleanup(sub[0]);
 		String oldInd = conf.indent;
-		conf.indent = w;
-		boolean ok = true;
+		conf.indent = w; // increase indention to w (for next lines)
+		boolean ok = true; // iff all subexpr. can be displayed in one line
 		if (startFormOp) {
-			for (int i=0; i<sub.length-1; i+=2) {
-				int epos = 0; //?
-				String s = sub[i] + sub[i+1];
+			for (int i=0; i<sub.length-1; i+=2) { // for each subexpression with its operator
+				int epos = 0; // unused?  'and' parameter should be always zero in this case (startFromOp == true)
+				String s = sub[i] + sub[i+1]; // current (operator + subexpression)
 				if ((conf.start_line_pos() + start + strlen(s) <= conf.max_total_line_width - epos) && ok) {
+					// s fit into current line
+					// and we are allowed to display subexpression in the same line (ok == true)
 					result += cleanup(s);
 					start += strlen(s);
 				} else {
-					String[] sub2 = splitRoot(sub[i+1]);
-					boolean b = false;
+					String[] sub2 = splitRoot(sub[i+1]); // subexpressions of current subexpression
+					boolean b = false; // first subexpression of current subexpression won't fit into current line
 					if (sub2.length > 3)
-						b = breakLines(sub2[1], strlen(sub[i]), epos, w, "").lastIndexOf("\n") >= 0; //?
-						String e = breakLines(sub[i+1], strlen(sub[i]), epos, b ? w : w+conf.lineIndent, sub[i]);
-						if (e.length() == 0) {
-							result += sub[i];
-							continue;
-						}
-						if (e.charAt(0) != '\n') {
-							result += conf.newLine();
-							if (i < 2)
-								result += prefix;
-							start = 0;
-							if (e.substring(1).lastIndexOf('\n') >= 0)
-								ok = false;
-							result += sub[i];
-						}
-						result += e;
-						start += result.length() - (result.lastIndexOf("\n") + 1) - conf.start_line_pos();
+						b = breakLines(sub2[1], strlen(sub[i]), epos, w, "").lastIndexOf("\n") >= 0;
+					// indention won't extend if it will do so just after, in recursive call, before writing
+					// anything, to avoid double indention after quantifiers, for example.
+					String e = breakLines(sub[i+1], strlen(sub[i]), epos, b ? w : w+conf.lineIndent, sub[i]);
+					// e is the string representation of current subexpression, with preceding operator (sub[i]),
+					// displayed with line breaking and indention.
+					if (e.length() == 0) {
+						// for operators that are after last subexpressions, e.g. sub[i]=="]" in arr[index]
+						result += sub[i];
+						continue;
+					}
+					if (e.charAt(0) != '\n') {
+						// adding newline unless we did it at the beginning of recursive call. 
+						result += conf.newLine();
+						if (i < 2) // if it's the first subexpression, we should add prefix just after newline
+							result += prefix;
+						start = 0; // reseting current positoin to begining of the line
+						if (e.substring(1).lastIndexOf('\n') >= 0)
+							ok = false; // next subexpressions at this level will be displayed in separate lines.
+						result += sub[i]; // writing operator
+					} // {else // operator has been already written (to e) in recursive call, as a 'prefix' argument}
+					result += e; // writing current subexpression
+					start += result.length() - (result.lastIndexOf("\n") + 1) - 
+						conf.start_line_pos(); // updating position in current line
 				}
 			}
-		} else {
-			result += sub[0];
-			start += strlen(sub[0]);
+		} else { // this case is very similar to the previous one.
+			// in this case, 'prefix' argument will be unused
+			result += sub[0]; // writing first (prefix) operator, if any
+			start += strlen(sub[0]); // and updating position
 			for (int i=1; i<sub.length-1; i+=2) {
+				// if this is the last subexpression, we have to left some ('end' argument)
+				// space at the end of the line for parent's operator
 				int epos = (i > sub.length - 4) ? end : 0;
-				String s = sub[i] + sub[i+1];
+				String s = sub[i] + sub[i+1]; // current (subexpression + operator)
 				if ((conf.start_line_pos() + start + strlen(s) <= conf.max_total_line_width - epos) && ok) {
 					result += cleanup(s);
 					start += strlen(s);
@@ -205,7 +222,7 @@ public class PrittyPrinter implements IPrittyPrinter {
 					String[] sub2 = splitRoot(sub[i]);
 					boolean b = false;
 					if (sub2.length > 3)
-						b = breakLines(sub2[1], 0, sub2[2].length()+epos, w, "").lastIndexOf("\n") >= 0; //XXX ??
+						b = breakLines(sub2[1], 0, sub2[2].length()+epos, w, "").lastIndexOf("\n") >= 0;
 					String e = breakLines(sub[i], 0, sub[i+1].length()+epos, b ? w : w+conf.lineIndent, "");
 					if (e.charAt(0) != '\n') {
 						result += conf.newLine();
@@ -214,11 +231,12 @@ public class PrittyPrinter implements IPrittyPrinter {
 							ok = false;
 					}
 					result += e + sub[i+1];
-					start += result.length() - (result.lastIndexOf("\n") + 1) - conf.start_line_pos();
+					start += result.length() - (result.lastIndexOf("\n") + 1)
+						- conf.start_line_pos();
 				}
 			}
 		}
-		conf.indent = oldInd;
+		conf.indent = oldInd; // restoring indention
 		return result;
 	}
 	
