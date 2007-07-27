@@ -1824,13 +1824,12 @@ public class Translator implements ITranslationConstants {
   }
   
   private BPLProcedure axiomatizeHelperProcedure(String name, String type) {
-    String l = quantVarName("l");
     String o = quantVarName("o");
-    String T = quantVarName("t");
-    BPLVariable lVar = new BPLVariable(l, new BPLTypeName(LOCATION_TYPE));
+    String t = quantVarName("t");
+    String this_var_name = quantVarName("param0");
     BPLVariable oVar = new BPLVariable(o, BPLBuiltInType.REF);
-    BPLVariable tVar = new BPLVariable(T, BPLBuiltInType.NAME);
-    BPLVariable this_var = new BPLVariable("param0", BPLBuiltInType.REF);
+    BPLVariable tVar = new BPLVariable(t, BPLBuiltInType.NAME);
+    BPLVariable this_var = new BPLVariable(this_var_name, BPLBuiltInType.REF);
     
     boolean hasReturnType = (type != null);
     
@@ -1841,13 +1840,22 @@ public class Translator implements ITranslationConstants {
             new BPLVariable(RETURN_STATE_PARAM, new BPLTypeName(RETURN_STATE_TYPE)),
             new BPLVariable(RESULT_PARAM, BPLBuiltInType.REF),
             new BPLVariable(EXCEPTION_PARAM, BPLBuiltInType.REF)
-        },
-                
+        },   
+        
         new BPLSpecification(new BPLSpecificationClause[] {
 
             new BPLRequiresClause(
-              // All invariants are required to hold prior to a constructor call.
-              forall(oVar, tVar, inv(var(T), var(o), var(HEAP_VAR)))
+                // All invariants are required to hold prior to a constructor call.
+                forall(
+                    oVar, tVar,
+                    implies(
+                        logicalAnd(
+                            alive(rval(var(o)), var(HEAP_VAR)),
+                            isSubtype(var(t), typ(rval(var(o))))
+                        ),
+                        inv(var(t), var(o), var(HEAP_VAR))
+                    )
+                )
             )
             
             ,
@@ -1856,6 +1864,7 @@ public class Translator implements ITranslationConstants {
             
             new BPLEnsuresClause(logicalAnd(
                 // postcondition of helper procedure (usually constructor)
+                isEqual(var(RESULT_PARAM), var(this_var_name)),
                 notEqual(var(RESULT_PARAM), BPLNullLiteral.NULL),
                 alive(rval(var(RESULT_PARAM)), var(HEAP_VAR)),
                 isInstanceOf(rval(var(RESULT_PARAM)), var(type)),
@@ -1897,7 +1906,7 @@ public class Translator implements ITranslationConstants {
             
             new BPLEnsuresClause(
                 // All invariants are required to hold after a constructor call.
-                forall(oVar, tVar, inv(var(T), var(o), var(HEAP_VAR)))
+                forall(oVar, tVar, inv(var(t), var(o), var(HEAP_VAR)))
             )
             
         })
