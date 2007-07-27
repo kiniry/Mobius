@@ -28,8 +28,8 @@ public class ModifiedVariable {
   public boolean equals(Object other) {
     ModifiedVariable mv = (ModifiedVariable)other;
     return other instanceof ModifiedVariable
-           && (mv.name == null) ? (name == null) : name.equals(mv.name)
-           && (mv.type == null) ? (type == null) : type.equals(mv.type);
+           && ((mv.name == null) ? (name == null) : name.equals(mv.name))
+           && ((mv.type == null) ? (type == null) : type.equals(mv.type));
   }
 
   public int hashCode() {
