@@ -1,8 +1,7 @@
-#Tue Jul 10 10:25:59 CEST 2007
+#Wed Jul 25 15:33:52 CEST 2007
 eclipse.preferences.version=1
 formatter_profile=_Bico formatting
 formatter_settings_version=10
-internal.default.compliance=default
 org.eclipse.jdt.ui.exception.name=e
 org.eclipse.jdt.ui.gettersetter.use.is=true
 org.eclipse.jdt.ui.overrideannotation=true
