@@ -104,6 +104,11 @@ public class Options
    * messages are issued. (cf. javafe.util.ErrorSet)
    */
   public boolean showErrorLocation = false;
+  
+  /**
+   * Flag to turn on and off the invariant subset checker.
+   */
+  public boolean doSubsetChecking = false;
 
   /**
    *	Flags to use or not use source or binary files.
@@ -325,7 +330,11 @@ public class Options
       while (offset < args.length) {
         inputEntries.add(new UnknownInputEntry(args[offset++]));
       }
-      return offset;
+      return offset; 
+    } else if (option.equals("-dosubsetchecking") || 
+        option.equals("-dsc")) {
+        doSubsetChecking = true;
+        return offset;
     }
 
     // Pass on unrecognized options:
