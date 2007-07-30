@@ -13,6 +13,7 @@ import javafe.ast.ThisExpr;
 import javafe.ast.VariableAccess;
 import mobius.directVCGen.formula.Bool;
 import mobius.directVCGen.formula.Expression;
+import mobius.directVCGen.formula.Formula;
 import mobius.directVCGen.formula.Heap;
 import mobius.directVCGen.formula.Logic;
 import mobius.directVCGen.formula.Num;
@@ -25,6 +26,7 @@ import escjava.ast.TagConstants;
 import escjava.sortedProver.Lifter.QuantVariable;
 import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
+import escjava.sortedProver.NodeBuilder.Sort;
 
 public class JmlExprToFormula {
 
@@ -425,15 +427,17 @@ public class JmlExprToFormula {
   public Object fieldAccess(final FieldAccess x, final Object o) {
 
     if ((Boolean) ((Properties) o).get("fresh")) { 
-      //TODO: create a new quantvariableref with type as sort
-      final QuantVariableRef qref = Type.translate(x.decl.type);
-      final QuantVariableRef qref2 = Expression.rvar(x.decl);
+      final QuantVariableRef qref = Expression.rvar(x.decl);
       HashSet<Term> freshSet = (HashSet) ((Properties)o).get("freshSet");
-      freshSet.add(qref2);
+      freshSet.add(qref);
       ((Properties)o).put("freshSet", freshSet);
-      return null;
     }
     else { 
+      if ((Boolean) ((Properties) o).get("invariant")) { // collect invariant fields for subset checking
+        HashSet<FieldAccess> subSet = (HashSet) ((Properties)o).get("subsetCheckingSet");
+        subSet.add(x);
+        ((Properties)o).put("subsetCheckingSet", subSet);
+      }
       final Boolean oldProp = (Boolean) ((Properties) o).get("old");
       final Term obj = (Term) x.od.accept(fVisitor, o);
       QuantVariable var = null;
@@ -441,10 +445,10 @@ public class JmlExprToFormula {
       if (oldProp.booleanValue()) {
         heap = Heap.varPre;
       }
-
-    var = Expression.var(x.decl);
-    return Heap.select(heap, obj, var);
+      var = Expression.var(x.decl);
+      return Heap.select(heap, obj, var);
     }
+    return null;
   }
   
   
@@ -485,9 +489,9 @@ public class JmlExprToFormula {
    */
   public Term doFreshTerm(final QuantVariableRef qref) {
     final Term notEqualNull = Logic.not(Logic.equalsNull(qref));
-    final Term isNotAllocatedInPreHeap = Logic.not(Logic.isAllocated(Heap.varPre, qref));
-    final Term isAllocatedinHeap = Logic.isAllocated(Heap.var, qref);
-    return Logic.and(Logic.and(notEqualNull, isNotAllocatedInPreHeap), isAllocatedinHeap);
+    final Term isNotAliveInPreHeap = Logic.not(Logic.isAlive(Heap.varPre, qref));
+    final Term isAliveInHeap = Logic.isAlive(Heap.var, qref);
+    return Logic.and(Logic.and(notEqualNull, isNotAliveInPreHeap), isAliveInHeap);
   }
   
   public Object naryExpr(final NaryExpr x, final Object o) {
