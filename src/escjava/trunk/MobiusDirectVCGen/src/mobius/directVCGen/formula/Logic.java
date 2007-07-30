@@ -528,12 +528,12 @@ public final class Logic {
    * @param val The object in question.
    * @return A Term that expresses the predicate isAlloc(heap,val)
    */
-  public static Term isAllocated(final Term heap, final Term val) {
+  public static Term isAlive(final Term heap, final Term val) {
     if (heap.getSort() != Heap.sort) {
       throw new IllegalArgumentException("Type of the first param should be heap (" + 
                                          Heap.sort + "), found: " + heap.getSort());
     }
-    return Formula.lf.mkFnTerm(Formula.lf.symIsAllocated, new Term [] {heap, val});
+    return Formula.lf.mkFnTerm(Formula.lf.symIsAlive, new Term [] {heap, val});
   }
 
 
