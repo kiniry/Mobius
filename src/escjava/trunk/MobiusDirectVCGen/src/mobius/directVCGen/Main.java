@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.util.Properties;
 
 
 import javafe.ast.DelegatingPrettyPrint;
@@ -17,6 +18,7 @@ import javafe.util.ErrorSet;
 import javafe.util.Location;
 import mobius.directVCGen.bicolano.AnnotationCompiler;
 import mobius.directVCGen.bicolano.Unarchiver;
+import mobius.directVCGen.formula.Lookup;
 import mobius.directVCGen.formula.jmlTranslator.JmlVisitor;
 import mobius.directVCGen.vcgen.DirectVCGen;
 import escjava.ast.EscPrettyPrint;
@@ -222,7 +224,9 @@ public class Main extends escjava.Main {
     fOut.println("[" + timeUsed(startTime) + "]\n");
 
     final long midTime = currentTime();
-    sig.getCompilationUnit().accept(new JmlVisitor(), null);
+    Properties prop = new Properties();
+    prop.put("dsc", options.doSubsetChecking);
+    sig.getCompilationUnit().accept(new JmlVisitor(), prop);
     fOut.println("[" + timeUsed(midTime) + "]\n");
 
     doSrcVCGen(sig);
