@@ -518,6 +518,18 @@ public class CoqNodeBuilder extends EscNodeBuilder {
    * @see escjava.sortedProver.NodeBuilder#buildDynSelect(escjava.sortedProver.NodeBuilder.SMap, escjava.sortedProver.NodeBuilder.SRef, escjava.sortedProver.NodeBuilder.SAny)
    */
   @Override
+  //TODO: cbr: change body of this method. copied out of buildDynSelect
+  public SRef buildDynLoc(final SMap heap, final SRef obj, final SRef field) {
+    final CRef addr = new CRef("Heap.DynamicField", new STerm [] {getLoc(obj), field});
+    return new CRef("get", new STerm[] {heap, addr});
+  }
+  
+  
+  /*
+   * (non-Javadoc)
+   * @see escjava.sortedProver.NodeBuilder#buildDynSelect(escjava.sortedProver.NodeBuilder.SMap, escjava.sortedProver.NodeBuilder.SRef, escjava.sortedProver.NodeBuilder.SAny)
+   */
+  @Override
   public SValue buildDynSelect(final SMap heap, final SRef obj, final SAny field) {
     final CRef addr = new CRef("Heap.DynamicField", new STerm [] {getLoc(obj), field});
     return new CValue("get", new STerm[] {heap, addr});
@@ -694,6 +706,17 @@ public class CoqNodeBuilder extends EscNodeBuilder {
   public SPred buildInv(final SValue val, final SAny type) {
     return new CPred("inv", new STerm [] {val, type});
   }
+  
+  
+  @Override
+  public SPred buildIsAlive(final SMap map, final SRef ref) {
+    return new CPred("inv", new STerm [] {map, ref});
+  }
+  
+  
+  
+  
+  
 
 
   @Override
