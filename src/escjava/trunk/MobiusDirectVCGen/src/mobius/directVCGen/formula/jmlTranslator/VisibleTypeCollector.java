@@ -13,6 +13,7 @@ import javafe.ast.FormalParaDecl;
 import javafe.ast.InstanceOfExpr;
 import javafe.ast.LiteralExpr;
 import javafe.ast.MethodDecl;
+import javafe.ast.MethodInvocation;
 import javafe.ast.OperatorTags;
 import javafe.ast.PrimitiveType;
 import javafe.ast.RoutineDecl;
@@ -122,20 +123,36 @@ public class VisibleTypeCollector extends VisitorArgResult {
     // add own class type into set 
     ((Properties) o).put("assign", new Boolean(false));
     visitASTNode(x, o); 
-    ((Properties) o).put("visibleTypeSet", fTypeSet); 
-               //put set into properties once for each routine
     return null;
   }
 
   @Override
   public Object visitMethodDecl(final /*@non_null*/ MethodDecl x, 
                                               final Object o) {
-    return visitRoutineDecl(x, o);
+    Object obi = visitRoutineDecl(x, o);
+    ((Properties) o).put("visibleTypeSet", fTypeSet); 
+    //put set into properties once for each method
+    return obi;
   }
+  
+  /**
+   * We want also collect all modifiable object of a method invocation.
+   * Can be done by visiting the "routineDecl" of the invocated method.
+   * Doing this, we collect all modifiable object and put them in the same set.
+   * At the end of every method/constructor, we put the set into the properties.
+   */
+  public /*@non_null*/ Object visitMethodInvocation(/*@non_null*/ MethodInvocation x, Object o) {
+    Object obi = visitRoutineDecl(x.decl, o);
+    return visitExpr(x, o);
+  }
+  
 
   @Override
   public Object visitConstructorDecl(/*@non_null*/ final ConstructorDecl x, final Object o) {
-    return visitRoutineDecl(x, o);
+    Object obi = visitRoutineDecl(x, o);
+    ((Properties) o).put("visibleTypeSet", fTypeSet); 
+    //put set into properties once for each constructor
+    return obi;
   }
 
   @Override
