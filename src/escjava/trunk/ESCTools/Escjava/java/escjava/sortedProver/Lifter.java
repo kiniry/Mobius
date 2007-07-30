@@ -594,6 +594,9 @@ public class Lifter extends EscNodeBuilder
 			if (fn == symDynSelect){
 				return dumpBuilder.buildDynSelect((SMap)args[0].dump(), args[1].dumpRef(), args[2].dumpValue());
 			}
+      if (fn == symDynLoc){
+        return dumpBuilder.buildDynLoc((SMap)args[0].dump(), args[1].dumpRef(), args[2].dumpRef());
+      }
 			if (fn == symDynStore){
 				return dumpBuilder.buildDynStore((SMap)args[0].dump(), args[1].dumpRef(), args[2].dumpValue(), args[3].dumpValue());
 			}
@@ -617,6 +620,9 @@ public class Lifter extends EscNodeBuilder
       }
       if (fn == symRefBoolFn) {
         return dumpBuilder.buildRefBoolFun(tag, args[0].dumpRef(), args[1].dumpRef());
+      }
+      if (fn == symIsAlive) {
+        return dumpBuilder.buildIsAlive((SMap) args[0].dump(), args[1].dumpRef());
       }
       
 			if(fn.name.startsWith("%"))
@@ -1000,7 +1006,7 @@ public class Lifter extends EscNodeBuilder
     /** symbol for dynamic fields select Map -> Ref -> Name -> Value */
     public FnSymbol symDynSelect = registerFnSymbol("%dynSelect", new Sort[] { sortMap, sortRef, sortRef }, sortValue);
     /** symbol for dynamic fields select Map -> Ref -> Name -> Value */
-    public FnSymbol symDynLoc = registerFnSymbol("%dynLoc", new Sort[] { sortMap, sortRef, sortRef }, sortValue);
+    public FnSymbol symDynLoc = registerFnSymbol("%dynLoc", new Sort[] { sortMap, sortRef, sortRef }, sortRef);
     /** symbol for dynamic fields store Map -> Ref -> Name -> Value -> Map */
     public FnSymbol symDynStore = registerFnSymbol("%dynStore", new Sort[] { sortMap, sortRef, sortRef, sortValue }, sortMap);
     /** symbol to mean a new array has been created */
@@ -1013,6 +1019,8 @@ public class Lifter extends EscNodeBuilder
     public FnSymbol symAssignCompat = registerFnSymbol("%assignCompat", new Sort[] { sortMap, sortValue, sortType }, sortPred);
     /** cbr: used for invariants. \forall x,t : alive(x) & typeof(x)=t -> inv(x,t) */
     public PredSymbol symInv = registerPredSymbol("%inv", new Sort[]{sortRef, sortType});
+    /** cbr: symbol to mean the object is alive in Heap */
+    public PredSymbol symIsAlive = registerPredSymbol("%isAlive", new Sort[] {sortMap, sortRef});
     
     
 	// we just want Sort and the like, don't implement anything	
@@ -1060,13 +1068,14 @@ public class Lifter extends EscNodeBuilder
 	public SAny buildSort(Sort s) { throw new Die(); }
 	public SValue buildDynSelect(SMap map, SRef obj, SAny field) {throw new Die(); }
 	public SMap buildDynStore(SMap map, SRef obj, SAny field, SValue val) {throw new Die(); }
-	public SPred buildNewArray(SMap oldh, SAny type, SMap heap, SRef r, SInt len) { throw new Die(); }
+  public SMap buildDynLoc(SMap map, SRef obj, SRef field) {throw new Die(); }
+  public SPred buildNewArray(SMap oldh, SAny type, SMap heap, SRef r, SInt len) { throw new Die(); }
 	public SValue buildArrSelect(SMap map, SRef obj, SInt idx) {throw new Die(); }
 	public SMap buildArrStore(SMap map, SRef obj, SInt idx, SValue val) {throw new Die(); }
 	public SPred buildAssignCompat(SMap map, SValue val, SAny type) {throw new Die(); }
   public SPred buildInv(SValue val, SAny type) {throw new Die(); }
-
-	
+  public SPred buildIsAlive(SMap map, SRef obj) {throw new Die(); }
+  
 	boolean isEarlySort(Sort s, Sort p)
 	{
 		return isEarlySort(s) || isEarlySort(p);
@@ -1912,7 +1921,7 @@ public class Lifter extends EscNodeBuilder
 			body = new FnTerm(symValueToPred, new Term[] { body });			
 		unify(body.getSort(), sortPred, this);
 		return body;		
-	}
+}
 
 
 	
