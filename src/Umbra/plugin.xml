@@ -3,21 +3,23 @@
 <plugin>
    <extension point="org.eclipse.ui.editors">
       <editor
-            class="umbra.editor.BytecodeEditor"
-            icon="icons/bytecode_file.gif"
-            default="true"
-            name="Bytecode Editor"
-            contributorClass="umbra.editor.BytecodeEditorContributor"
             id="umbra.BytecodeEditor"
-            extensions="btc"/>
-      <editor
-            class="umbra.editor.boogiepl.BoogiePLEditor"
+            name="Bytecode Editor"
+            class="umbra.editor.BytecodeEditor"
+            contributorClass="umbra.editor.BytecodeEditorContributor"
             icon="icons/bytecode_file.gif"
+            extensions="btc"
             default="true"
-            name="BoogiePL Editor"
-            contributorClass="umbra.editor.boogiepl.BoogiePLEditorContributor"
+      />
+      <editor
             id="umbra.BoogiePLEditor"
-            extensions="bpl"/>
+            name="BoogiePL Editor"
+            class="umbra.editor.boogiepl.BoogiePLEditor"
+            contributorClass="umbra.editor.boogiepl.BoogiePLEditorContributor"
+            icon="icons/bytecode_file.gif"
+            extensions="bpl"
+            default="true"
+      />
    </extension>
    <extension point="org.eclipse.ui.editorActions">
       <editorContribution
@@ -27,7 +29,15 @@
                label="&amp;Bytecode"
                id="umbra.bytecodeMenu">
                <separator name="showGroup"/>
-         </menu>      
+         </menu>
+         <action
+               toolbarPath="showGroup"
+               label="(TestAction)"
+               tooltip="Test Action"
+               icon="icons/convert_to_boogiepl.gif"
+               class="umbra.java.actions.B2BPLTranslation"
+               menubarPath="umbra.bytecodeMenu/showGroup"
+               id="umbra.textAction"/>
          <action
                toolbarPath="showGroup"
                label="Disassemble"
@@ -50,7 +60,6 @@
                id="umbra.commit"
                label="Commit Cha&amp;nges in Bytecode"
                menubarPath="umbra.bytecodeMenu/showGroup"
-               style="push"
                toolbarPath="showGroup"/>
       </editorContribution>
       <editorContribution
