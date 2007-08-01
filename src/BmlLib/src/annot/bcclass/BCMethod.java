@@ -6,6 +6,7 @@ import java.util.Vector;
 import org.apache.bcel.classfile.Attribute;
 import org.apache.bcel.classfile.LineNumber;
 import org.apache.bcel.classfile.LineNumberTable;
+import org.apache.bcel.classfile.Method;
 import org.apache.bcel.classfile.Unknown;
 import org.apache.bcel.generic.*;
 
@@ -1295,5 +1296,11 @@ public class BCMethod extends AccessFlags {
 	
 	public AssertTable getAssertTable() {
 		return assertTable;
+	}
+
+	public Method getBCELMethod() {
+		if (bcelMethod == null)
+			return null;
+		return bcelMethod.getMethod();
 	}
 }

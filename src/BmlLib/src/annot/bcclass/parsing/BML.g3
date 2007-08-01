@@ -1,0 +1,62 @@
+grammar BML;
+
+options {
+	output=AST;
+	ASTLabelType=CommonTree;
+}
+
+@header {
+	package annot.bcclass.parsing;
+	import annot.bcclass.*;
+	import annot.bcclass.attributes.*;
+	import annot.bcexpression.*;
+	import annot.formula.*;
+}
+
+@members {
+	public RecognitionException lastE = null;
+	
+	private BCMethod m;
+	private int pc;
+
+	// set context for attribute parsing.
+	public void init(BCMethod m, int pc) {
+		this.m = m;
+		this.pc = pc;
+	}
+
+	public void reportError(RecognitionException re) {
+		lastE = re;
+		System.out.println("PARSER ERROR");
+		super.reportError(re);
+	}
+}
+
+@lexer::header {
+	package annot.bcclass.parsing;
+}
+
+@lexer::members {
+	public RecognitionException lastE = null;
+
+	public void reportError(RecognitionException re) {
+		lastE = re;
+		System.out.println("LEXER ERROR");
+		super.reportError(re);
+	}
+}
+
+// parser :
+
+printableAttribute returns [BCPrintableAttribute ast] :
+	ASSERT f=formula {$ast = new Assert($f.ast, pc, m);};
+
+formula returns [Formula ast] :
+	UNKNOWN {$ast = new UnknownFormula();};
+
+// lexer :
+
+ASSERT: 'assert';
+UNKNOWN: '?';
+
+WS: (' '|'\t')+ {skip();};

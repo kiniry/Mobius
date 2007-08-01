@@ -2,6 +2,11 @@ package annot.bcclass.parsing;
 
 import java.util.Iterator;
 
+import org.antlr.runtime.ANTLRStringStream;
+import org.antlr.runtime.CharStream;
+import org.antlr.runtime.CommonTokenStream;
+import org.antlr.runtime.RecognitionException;
+
 import annot.bcclass.BCClass;
 import annot.bcclass.BCMethod;
 import annot.bcclass.attributes.AssertTable;
@@ -106,5 +111,32 @@ public class Parsing {
 		for (int i=pa.line_start; i<=pa.line_end; i++)
 			ret += lines[i] + "\n";
 		return ret;
+	}
+	
+	public String removeComment(String str) {
+		String result = "";
+		String[] lines = str.split("\n");
+		for (int i=0; i<lines.length; i++)
+			result += lines[i].substring(3);
+		result = result.split("\\*/")[0];
+		return result;
+	}
+	
+	public BCPrintableAttribute parseAttribute(BCMethod m, int pc, String str) throws RecognitionException {
+		CharStream chstr = new ANTLRStringStream(str);
+		BMLLexer lex = new BMLLexer(chstr);
+		CommonTokenStream tokens = new CommonTokenStream(lex);
+		BMLParser parser = new BMLParser(tokens);
+		parser.init(m, pc);
+		BCPrintableAttribute result = parser.printableAttribute().ast;
+		if (lex.lastE != null)
+			throw lex.lastE;
+		if (parser.lastE != null)
+			throw parser.lastE;
+		return result;
+	}
+
+	public BCPrintableAttribute parseAttribute(BCPrintableAttribute oldattr, String str) throws RecognitionException {
+		return parseAttribute(oldattr.method, oldattr.pcIndex, str);
 	}
 }

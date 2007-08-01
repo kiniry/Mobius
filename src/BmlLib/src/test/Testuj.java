@@ -1,15 +1,20 @@
 package test;
 
+import org.antlr.runtime.RecognitionException;
 import org.apache.bcel.classfile.Constant;
 import org.apache.bcel.classfile.JavaClass;
+import org.apache.bcel.classfile.Method;
 import org.apache.bcel.generic.ClassGen;
 import org.apache.bcel.generic.ConstantPoolGen;
 import org.apache.bcel.util.ClassPath;
 import org.apache.bcel.util.SyntheticRepository;
 
 import annot.bcclass.BCClass;
+import annot.bcclass.BCMethod;
+import annot.bcclass.BMLConfig;
 import annot.bcclass.attributes.BCPrintableAttribute;
 import annot.bcio.AttributeReader;
+import annot.bcio.ReadAttributeException;
 
 public class Testuj {
 
@@ -19,6 +24,8 @@ public class Testuj {
 	static String clName3 = "test.Loop";
 	static String clName4 = "test.Toto";
 	static String clName5 = "test.QuickSort";
+
+	private static BCClass bcc;
 	
 	/**
 	 * prints constantpool of given JavaClass.
@@ -142,20 +149,55 @@ public class Testuj {
 			}
 		}
 	}
+
+	public static void ptInit() {
+		ClassPath cp = new ClassPath(path);
+		JavaClass jc;
+		try {
+			jc = SyntheticRepository.getInstance(cp).loadClass(clName5);
+			bcc = new BCClass(jc);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (ReadAttributeException e) {
+			e.printStackTrace();
+		}
+		printStars();
+	}
+	
+	public static void parserTest(String str) {
+		System.out.println("parsing:\n"+str);
+		try {
+			BCMethod m = null;
+			BCPrintableAttribute old = new BCPrintableAttribute();
+			old.method = m;
+			BMLConfig conf = new BMLConfig(bcc.getConstantPool());
+			if (m != null)
+				conf.currMethod = m.getBCELMethod();
+			BCPrintableAttribute pa = bcc.parser.parseAttribute(old, str);
+			String out = pa.printCode(conf);
+			System.out.println("understood:\n"+out);
+		} catch (RecognitionException e) {
+			System.out.flush();
+			System.err.flush();
+			System.err.println("parsing error.");
+		}
+	}
 	
 	public static void main(String[] args) {
 		try {
+			ptInit();
 //			testuj(clName1);
 //			testuj(clName2);
 //			testuj(clName3);
 //			testuj(clName4);
 //			testuj(clName5);
-			parsingTest(clName5);
-			int br = AttributeReader.bytes_read;
-			int bt = AttributeReader.bytes_total;
-			System.out.println("Understood: " + br
-					+ " bytes of " + bt + " ("
-					+ (int)(100*br/bt) + "%)");
+//			parsingTest(clName5);
+			parserTest(bcc.parser.removeComment("/* assert ? \n * \n */"));
+//			int br = AttributeReader.bytes_read;
+//			int bt = AttributeReader.bytes_total;
+//			System.out.println("Understood: " + br
+//					+ " bytes of " + bt + " ("
+//					+ (int)(100*br/bt) + "%)");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

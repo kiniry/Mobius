@@ -11,7 +11,7 @@ import annot.bcclass.BMLConfig;
  */
 public class /*interface?*/ BCPrintableAttribute implements BCAttribute {
 
-	public BCMethod method;
+	public BCMethod method = null;
 	public int pcIndex = -1;
 	public String atype = "?";
 	
