@@ -1,5 +1,7 @@
 package annot.bcclass.attributes;
 
+import annot.bcclass.BMLConfig;
+
 public interface BCAttribute {
 	// method specification
 	public static final String MethodSpecification = "MethodSpecification";
@@ -12,5 +14,4 @@ public interface BCAttribute {
 	public static final String HISTORY_CONSTRAINTS = "HistoryConstraints";
 	public static final String CLASSINVARIANT = "ClassInvariant";
 	public static final String SECOND_CONSTANT_POOL = "SecondConstantPool";
-
 }

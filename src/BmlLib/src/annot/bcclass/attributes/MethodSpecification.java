@@ -8,7 +8,7 @@ import annot.formula.Predicate0Ar;
 //import annot.formula.Formula;
 //import annot.formula.Predicate0Ar;
 
-public class MethodSpecification implements BCAttribute{
+public class MethodSpecification extends BCPrintableAttribute implements BCAttribute{
 	private Formula precondition;
 //	private ClassInvariant invariant;
 //	private Formula historyConstraint;
@@ -16,6 +16,7 @@ public class MethodSpecification implements BCAttribute{
 	private SpecificationCase[] specificationCases;
 	
 	public MethodSpecification(Formula precondition, SpecificationCase[] specificationCases) {
+		this.atype = "method spec ";
 		this.precondition = precondition;
 		this.specificationCases = specificationCases;
 		init();

@@ -19,6 +19,7 @@ import annot.bcclass.attributes.BCAttribute;
 import annot.bcclass.attributes.ClassInvariant;
 import annot.bcclass.attributes.HistoryConstraints;
 import annot.bcclass.attributes.SecondConstantPool;
+import annot.bcclass.parsing.Parsing;
 import annot.bcclass.utils.MethodSignature;
 import annot.bcexpression.BCLocalVariable;
 import annot.bcio.AttributeReader;
@@ -27,7 +28,7 @@ import annot.bytecode.block.IllegalLoopException;
 
 public class BCClass {
 //	private HashMap<String, BCMethod> methods;
-	private Vector<BCMethod> metody;
+	public Vector<BCMethod> metody;
 	private BCField[] fields;
 	private String className;
 	private String[] interfaceNames;
@@ -39,8 +40,10 @@ public class BCClass {
 	private HistoryConstraints historyConstraints;
 	private ClassInvariant classInvariant;
 //	private ClassStateVector visibleState;
+	public Parsing parser;
 
 	public BCClass(JavaClass _clazz) throws ReadAttributeException {
+		parser = new Parsing(this);
 		className = _clazz.getClassName();
 		superClassName = _clazz.getSuperclassName();
 		interfaceNames = _clazz.getInterfaceNames();
@@ -142,7 +145,7 @@ public class BCClass {
 			if (_attributes[i] instanceof Unknown) {
 				privateAttr = (Unknown) _attributes[i];
 				BCAttribute bcAttribute = AttributeReader.readAttribute(
-						privateAttr, this, new BCLocalVariable[] { new BCLocalVariable(0) });
+						privateAttr, this, new BCLocalVariable[] { new BCLocalVariable(0) }, null);
 				if (bcAttribute instanceof SecondConstantPool) {
 //					System.out.println("Second constant pool detected.");
 					constantPool.add(cp,(SecondConstantPool) bcAttribute);

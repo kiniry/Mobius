@@ -19,7 +19,6 @@ public class AssertTable implements BCAttribute {
 		asserts = _asserts;
 	} 
 	
-	
 	/**
 	 * @return
 	 */
@@ -27,5 +26,14 @@ public class AssertTable implements BCAttribute {
 		return asserts;
 	}
 
+	public Assert getAtPC(int pc, int n) {
+		for (int i=asserts.length-1; i>=0; i--)
+			if (asserts[i].pcIndex == pc) {
+				if (--n == 0)
+					return asserts[i];
+			}
+		System.err.println("(AssertTable) Attribute not found!");
+		return null;
+	}
 
 }

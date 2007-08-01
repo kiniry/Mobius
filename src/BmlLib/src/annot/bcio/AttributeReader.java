@@ -9,6 +9,7 @@ import org.apache.bcel.classfile.ConstantPool;
 import org.apache.bcel.classfile.Unknown;
 
 import annot.bcclass.BCClass;
+import annot.bcclass.BCMethod;
 import annot.bcclass.attributes.Assert;
 import annot.bcclass.attributes.AssertTable;
 import annot.bcclass.attributes.BCAttribute;
@@ -69,8 +70,8 @@ public class AttributeReader {
 	public static final int ERROR_READING_OUT_OF_ARR = -1;
 
 	public static BCAttribute readAttribute(Unknown privateAttr,
-			BCClass _clazz, BCLocalVariable[] _localVariables) 
-				throws ReadAttributeException {
+			BCClass _clazz, BCLocalVariable[] _localVariables,
+			BCMethod method) throws ReadAttributeException {
 		int alen = privateAttr.getLength();
 		ok = true;
 		bytes_total += alen;
@@ -79,7 +80,7 @@ public class AttributeReader {
 		localVariables = _localVariables;
 		String name = privateAttr.getName();
 		if (name.equals(BCAttribute.ASSERT)) {
-			return readAssertTable(privateAttr.getBytes());
+			return readAssertTable(privateAttr.getBytes(), method);
 		}
 		if (name.equals(BCAttribute.SET))
 			try {
@@ -94,7 +95,7 @@ public class AttributeReader {
 			return readMethodSpecification(privateAttr.getBytes());
 		}
 		if (name.equals(BCAttribute.LOOPSPECIFICATION)) {
-			return readLoopSpecification(privateAttr.getBytes());
+			return readLoopSpecification(privateAttr.getBytes(), method);
 		}
 //		if (name.equals(BCAttribute.BLOCKSPECIFICATION)) {
 //			return readBlockSpecification(privateAttr.getBytes());
@@ -211,7 +212,7 @@ public class AttributeReader {
 	// //////////////////// start : loopspecifcation
 	// /////////////////////////////////////////////////
 
-	private static LoopSpecification readLoopSpecification(byte[] bytes)
+	private static LoopSpecification readLoopSpecification(byte[] bytes, BCMethod method)
 			throws ReadAttributeException {
 		pos = 0;
 		int attribute_length = bytes.length;
@@ -235,7 +236,7 @@ public class AttributeReader {
 								+ attribute_length
 								+ " <  actual length of attribute ");
 			}
-			loopSpecs[i] = readSingleLoopSpecification(bytes);
+			loopSpecs[i] = readSingleLoopSpecification(bytes, method);
 		}
 		LoopSpecification loopSpe = new LoopSpecification(loopSpecs);
 		System.out.println("  read " + pos + " of " + bytes.length + " bytes " +
@@ -244,7 +245,7 @@ public class AttributeReader {
 	}
 
 	private static SingleLoopSpecification readSingleLoopSpecification(
-			byte[] bytes) throws ReadAttributeException {
+			byte[] bytes, BCMethod method) throws ReadAttributeException {
 		int loopIndex = readShort(bytes);
 		System.out.println("    modifies");
 		ModifiesSet modifies = readModifies(bytes);
@@ -253,7 +254,7 @@ public class AttributeReader {
 		System.out.println("    decreases");
 		Expression decreases = readExpression(bytes);
 		SingleLoopSpecification loopSpec = new SingleLoopSpecification(
-				loopIndex, modifies, (Formula) invariant, decreases);
+				loopIndex, modifies, (Formula) invariant, decreases, method);
 		return loopSpec;
 	}
 
@@ -313,7 +314,7 @@ public class AttributeReader {
 
 	// //////////////////// start : assert table
 	// /////////////////////////////////////////////////
-	private static AssertTable readAssertTable(byte[] bytes)
+	private static AssertTable readAssertTable(byte[] bytes, BCMethod method)
 			throws ReadAttributeException {
 		pos = 0;
 		int attribute_length = bytes.length;
@@ -332,7 +333,7 @@ public class AttributeReader {
 								+ attribute_length
 								+ " <  actual length of attribute ");
 			}
-			asserts[i] = readAssert(bytes);
+			asserts[i] = readAssert(bytes, method);
 		}
 		AssertTable assertTable = new AssertTable(asserts);
 		return assertTable;
@@ -343,16 +344,17 @@ public class AttributeReader {
 	 *            the position from which starts the assert object
 	 * @param bytes
 	 *            -the array from which the assert object is read
+	 * @param method - current method
 	 * @param assert -
 	 *            an object that should be initialised by the method
 	 * @return the leftmost index into the byte array bytes that is not read by
 	 *         the method
 	 */
-	private static Assert readAssert(byte[] bytes)
+	private static Assert readAssert(byte[] bytes, BCMethod method)
 			throws ReadAttributeException {
 		int pcIndex = readShort(bytes);
 		Formula formula = (Formula) readExpression(bytes);
-		return new Assert(formula, pcIndex);
+		return new Assert(formula, pcIndex, method);
 	}
 
 	// //////////////////// end : assert table

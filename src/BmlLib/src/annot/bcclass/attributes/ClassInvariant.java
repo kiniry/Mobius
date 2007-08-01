@@ -1,6 +1,6 @@
 package annot.bcclass.attributes;
 
-public class ClassInvariant implements BCAttribute {
+public class ClassInvariant extends BCPrintableAttribute implements BCAttribute {
 //    public static final int STATIC = 0;
 //
 //    public static final int INSTANCE = 1;

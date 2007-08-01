@@ -77,7 +77,7 @@ public class BCMethod extends AccessFlags {
 			String code = "";
 			if (methodSpecification != null)
 				code += methodSpecification.printCode(conf);
-			code += bcelMethod.toString() + "\n";
+			code += getHeader() + "\n";
 			String bcode = bcelMethod.getMethod().getCode().toString();
 			bcode = bcode.substring(bcode.indexOf("\n")+1);
 			bcode = bcode.split("\n\n")[0];
@@ -107,6 +107,10 @@ public class BCMethod extends AccessFlags {
 		return "[ERROR]\n";
 	}
 
+	public String getHeader() {
+		return bcelMethod.toString();
+	}
+	
 //	public BCLocalVariable[] getLocalVariables() {
 //		if (localVariables == null)
 //			return new BCLocalVariable[0];
@@ -366,10 +370,10 @@ public class BCMethod extends AccessFlags {
 				BCAttribute bcAttribute = null;
 				if (localVariables != null) {
 					bcAttribute = AttributeReader.readAttribute(privateAttr,
-							clazz, localVariables.getLocalVariables());
+							clazz, localVariables.getLocalVariables(), this);
 				} else {
 					bcAttribute = AttributeReader.readAttribute(privateAttr,
-							clazz, null);
+							clazz, null, this);
 				}
 				if (bcAttribute instanceof MethodSpecification) {
 					methodSpecification = (MethodSpecification) bcAttribute;
@@ -1287,5 +1291,9 @@ public class BCMethod extends AccessFlags {
 	 */
 	public MethodSpecification getMethodSpecification() {
 		return methodSpecification;
+	}
+	
+	public AssertTable getAssertTable() {
+		return assertTable;
 	}
 }

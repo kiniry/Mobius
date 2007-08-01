@@ -3,6 +3,6 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
-	<classpathentry kind="lib" path="/umbra/libs/org.apache.bcel_5.1.0/bcel.jar" sourcepath="D:/studia/V/mobius/eclipse 3.2.1/plugins/org.apache.bcel_5.1.0/src"/>
+	<classpathentry kind="lib" path="/Umbra/libs/org.apache.bcel_5.1.0/bcel.jar" sourcepath="/Umbra/libs/bcel-5.1-src.zip"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

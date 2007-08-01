@@ -1,22 +1,27 @@
 package annot.bcclass.attributes;
 
+import annot.bcclass.BCMethod;
 import annot.bcclass.BMLConfig;
 import annot.bcexpression.Expression;
 import annot.bcexpression.NumberLiteral;
 import annot.formula.Formula;
 
-public class SingleLoopSpecification {
+public class SingleLoopSpecification extends BCPrintableAttribute {
 	// the intrsuction index in the bytecode array that corresponds to the beginning of the loop
-	private int pcIndex;
+//	private int pcIndex;
 	private Formula invariant;
 	private ModifiesSet modifies;
 	private Expression decreases;
 	
-	public SingleLoopSpecification(int _cpIndex, ModifiesSet _modifies, Formula _invariant, Expression _decreases) {
+	public SingleLoopSpecification(int _cpIndex,
+			ModifiesSet _modifies, Formula _invariant,
+			Expression _decreases, BCMethod m) {
+		atype = "loop spec.";
 		pcIndex  = _cpIndex;
 		invariant = _invariant;
 		decreases = _decreases;
 		modifies = _modifies;
+		method = m;
 	}
 
 	public String printCode(BMLConfig conf) {

@@ -6,6 +6,7 @@
  */
 package annot.bcclass.attributes;
 
+import annot.bcclass.BCMethod;
 import annot.bcclass.BMLConfig;
 import annot.formula.Formula;
 
@@ -14,16 +15,18 @@ import annot.formula.Formula;
  * 
  *   
  */
-public class Assert {
+public class Assert extends BCPrintableAttribute {
 	
 
 	// the position in the bytecode where the predicate must hold
-	private int position;
+//	private int pcIndex;
 	
 	private Formula assertFormula;
-	public Assert(Formula _f, int _p) {
+	public Assert(Formula _f, int _p, BCMethod m) {
+			atype = "assert";
 			assertFormula = _f;
-			position = _p;
+			pcIndex = _p;
+			method = m;
 	}	
 	
 	/**
@@ -31,7 +34,7 @@ public class Assert {
 	 * @return Returns the position where the predicate must hold
 	 */
 	public int getPosition() {
-		return position;
+		return pcIndex;
 	}
 	
 	/**

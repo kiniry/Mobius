@@ -8,6 +8,7 @@ import org.apache.bcel.util.ClassPath;
 import org.apache.bcel.util.SyntheticRepository;
 
 import annot.bcclass.BCClass;
+import annot.bcclass.attributes.BCPrintableAttribute;
 import annot.bcio.AttributeReader;
 
 public class Testuj {
@@ -19,6 +20,11 @@ public class Testuj {
 	static String clName4 = "test.Toto";
 	static String clName5 = "test.QuickSort";
 	
+	/**
+	 * prints constantpool of given JavaClass.
+	 * 
+	 * @param jc - JavaClass
+	 */
 	public static void printCP(JavaClass jc) {
 		ClassGen cg = new ClassGen(jc);
 		ConstantPoolGen cpg = cg.getConstantPool();
@@ -32,7 +38,11 @@ public class Testuj {
 		}
 	}
 	
-	public static void testuj(String clName) throws Exception {
+	/**
+	 * prints given class name, surrounded by hashes.
+	 * @param clName - class name.
+	 */
+	public static void printHeader(String clName) {
 		for (int i=0; i<80; i++)
 			System.out.print("#");
 		System.out.println("");
@@ -46,32 +56,108 @@ public class Testuj {
 		for (int i=0; i<80; i++)
 			System.out.print("#");
 		System.out.println();
+	}
+	
+	public static void printStars() {
+		System.out.println("*******************************************************************************************");
+	}
+
+	/**
+	 * Add line number to the beginning of each line
+	 * of given String. 
+	 * 
+	 * @param str - string to be procesed
+	 * @return <code>str</code> with "line i: " at the
+	 * 				beginning of i-th line.
+	 */
+	public static String addLineNumbers(String str) {
+		String ret = "";
+		String[] lines = str.split("\n");
+		for (int i=0; i<lines.length; i++)
+			ret += "line " + i + ":  " + lines[i] + "\n";
+		return ret;
+	}
+	
+	/**
+	 * Loads and displays bytecode with annotations
+	 * 	of given class.
+	 * @param clName - class name (see path constant).
+	 * @throws Exception - if something goes wrong.
+	 */
+	public static void testuj(String clName) throws Exception {
+		printHeader(clName);
 		ClassPath cp = new ClassPath(path);
 		JavaClass jc = SyntheticRepository.getInstance(cp).loadClass(clName);
 		printCP(jc);
-		System.out.println("*******************************************************************************************");
+		printStars();
 		BCClass bcc = new BCClass(jc);
-		System.out.println("*******************************************************************************************");
+		printStars();
 		String str = bcc.printCode();
-		System.out.println("*******************************************************************************************");
+		printStars();
 		System.out.print(str);
 	}
 
+	/**
+	 * Displays all annotations from code displayed
+	 *  from given class, with some information on them
+	 *  (first generate and display code, then recognize
+	 *  annotations in it).
+	 * @param clName - class name
+	 * @throws Exception - when something goes wrong.
+	 */
+	public static void parsingTest(String clName) throws Exception {
+		printHeader(clName);
+		ClassPath cp = new ClassPath(path);
+		JavaClass jc = SyntheticRepository.getInstance(cp).loadClass(clName);
+		BCClass bcc = new BCClass(jc);
+		String str = bcc.printCode();
+		String[] lines = str.split("\n");
+		printStars();
+		System.out.println(addLineNumbers(str));
+		printStars();
+		System.out.println("length = " + lines.length);
+		BCPrintableAttribute pra = null;
+		int o = -1;
+		for (int i=0; i<lines.length; i++) {
+			BCPrintableAttribute a = bcc.parser.getAttributeAtLine(str, i);
+			if (pra == null) {
+				pra = a;
+				o = i;
+				continue;
+			} else {
+				if (a == pra)
+					continue;
+				System.out.println("line: " + o + " -- " + (i-1)
+						+ ", attribute: " + pra.atype);
+				if (pra.pcIndex >= 0)
+					System.out.println("   method: "
+							+ pra.method.getHeader()
+							+ ", pc: " + pra.pcIndex
+							+ ", lines: " + pra.line_start
+							+ " -- " + pra.line_end);
+				System.out.println(
+						bcc.parser.getCurrentCode(pra, str));
+				pra = a;
+				o = i;
+			}
+		}
+	}
+	
 	public static void main(String[] args) {
 		try {
-			testuj(clName1);
-			testuj(clName2);
-			testuj(clName3);
-			testuj(clName4);
-			testuj(clName5);
+//			testuj(clName1);
+//			testuj(clName2);
+//			testuj(clName3);
+//			testuj(clName4);
+//			testuj(clName5);
+			parsingTest(clName5);
 			int br = AttributeReader.bytes_read;
 			int bt = AttributeReader.bytes_total;
-			System.out.println("\nUnderstood: " + br
+			System.out.println("Understood: " + br
 					+ " bytes of " + bt + " ("
 					+ (int)(100*br/bt) + "%)");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-
 }
