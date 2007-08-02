@@ -155,17 +155,16 @@ public class Testuj {
 		JavaClass jc;
 		try {
 			jc = SyntheticRepository.getInstance(cp).loadClass(clName5);
-			bcc = new BCClass(jc);
+			bcc = new BCClass(jc, true);
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (ReadAttributeException e) {
 			e.printStackTrace();
 		}
-		printStars();
 	}
 	
 	public static void parserTest(String str) {
-		System.out.println("parsing:\n"+str);
+		System.out.println("### parsing:\n"+str);
 		try {
 			BCMethod m = null;
 			BCPrintableAttribute old = new BCPrintableAttribute();
@@ -175,7 +174,8 @@ public class Testuj {
 				conf.currMethod = m.getBCELMethod();
 			BCPrintableAttribute pa = bcc.parser.parseAttribute(old, str);
 			String out = pa.printCode(conf);
-			System.out.println("understood:\n"+out);
+			System.out.println("### understood:\n"
+					+ bcc.parser.removeComment(out));
 		} catch (RecognitionException e) {
 			System.out.flush();
 			System.err.flush();
@@ -192,7 +192,7 @@ public class Testuj {
 //			testuj(clName4);
 //			testuj(clName5);
 //			parsingTest(clName5);
-			parserTest(bcc.parser.removeComment("/* assert ? \n * \n */"));
+			parserTest(bcc.parser.removeComment("/*  assert ? \n * \n */"));
 //			int br = AttributeReader.bytes_read;
 //			int bt = AttributeReader.bytes_total;
 //			System.out.println("Understood: " + br

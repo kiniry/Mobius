@@ -68,7 +68,13 @@ public class AttributeReader {
 	public static int bytes_total = 1;
 	public static boolean ok;
 	public static final int ERROR_READING_OUT_OF_ARR = -1;
+	public static boolean silent = false;
 
+	public static void syso(String str) {
+		if (!silent)
+			System.out.println(str);
+	}
+	
 	public static BCAttribute readAttribute(Unknown privateAttr,
 			BCClass _clazz, BCLocalVariable[] _localVariables,
 			BCMethod method) throws ReadAttributeException {
@@ -109,7 +115,7 @@ public class AttributeReader {
 		if (name.equals(BCAttribute.SECOND_CONSTANT_POOL)) {
 			return readSecondConstantPool(privateAttr.getBytes());
 		}
-		System.out.println("Unknown attribute: " + name + ", skipping " + alen + " bytes.");
+		syso("Unknown attribute: " + name + ", skipping " + alen + " bytes.");
 		return null;
 	}
 
@@ -141,9 +147,9 @@ public class AttributeReader {
 	private static SecondConstantPool readSecondConstantPool(byte[] bytes) throws ReadAttributeException {
 		try {
 			bytes_read += bytes.length; // XXX unchecked
-			System.out.println("Reading second constant pool...");
+			syso("Reading second constant pool...");
 			SecondConstantPool scp = new SecondConstantPool(new DataInputStream(new ByteArrayInputStream(bytes)));
-			System.out.println("...done");
+			syso("...done");
 			return scp;
 		} catch (IOException e) {
 			System.err.println("error in reading cp2");
@@ -226,7 +232,7 @@ public class AttributeReader {
 							+ attributes_count + " and attribute length  = "
 							+ attribute_length);
 		}
-		System.out.println("  loops specification:");
+		syso("  loops specification:");
 		printByteArr(bytes); // syso -- wywali
 		SingleLoopSpecification[] loopSpecs = new SingleLoopSpecification[attributes_count];
 		for (int i = 0; i < attributes_count; i++) {
@@ -239,7 +245,7 @@ public class AttributeReader {
 			loopSpecs[i] = readSingleLoopSpecification(bytes, method);
 		}
 		LoopSpecification loopSpe = new LoopSpecification(loopSpecs);
-		System.out.println("  read " + pos + " of " + bytes.length + " bytes " +
+		syso("  read " + pos + " of " + bytes.length + " bytes " +
 				((pos == bytes.length) ? "(ok)" : "(err)"));
 		return loopSpe;
 	}
@@ -247,11 +253,11 @@ public class AttributeReader {
 	private static SingleLoopSpecification readSingleLoopSpecification(
 			byte[] bytes, BCMethod method) throws ReadAttributeException {
 		int loopIndex = readShort(bytes);
-		System.out.println("    modifies");
+		syso("    modifies");
 		ModifiesSet modifies = readModifies(bytes);
-		System.out.println("    invariant");
+		syso("    invariant");
 		Expression invariant = readExpression(bytes);
-		System.out.println("    decreases");
+		syso("    decreases");
 		Expression decreases = readExpression(bytes);
 		SingleLoopSpecification loopSpec = new SingleLoopSpecification(
 				loopIndex, modifies, (Formula) invariant, decreases, method);
@@ -375,20 +381,22 @@ public class AttributeReader {
 	}
 	
 	private static void printByteArr(byte[] bytes) {
+		if (silent)
+			return;
 		System.out.print("  ");
 		for (int i=0; i<bytes.length; i++) {
 			System.out.print(printByte(bytes[i]) + " ");
 		}
-		System.out.println("");
+		System.out.println();
 	}
 	
 	private static MethodSpecification readMethodSpecification(byte[] bytes)
 			throws ReadAttributeException {
 		pos = 0;
 		int attribute_length = bytes.length;
-		System.out.println("  method specification:");
+		syso("  method specification:");
 		printByteArr(bytes); // syso -- wywali
-		System.out.println("    precondition");
+		syso("    precondition");
 		Formula precondition = (Formula) readExpression(bytes);
 		int attributes_count = readAttributeCount(bytes);
 		if (attribute_length <= 0) { // XXX po co?
@@ -407,20 +415,20 @@ public class AttributeReader {
 //		SpecificationCase[] specCases = null; // wywali
 		MethodSpecification methodSpec = new MethodSpecification(precondition,
 				specCases);
-		System.out.println("  read " + pos + " of " + bytes.length + " bytes " +
+		syso("  read " + pos + " of " + bytes.length + " bytes " +
 				((pos == bytes.length) ? "(ok)" : "(err)"));
 		return methodSpec;
 	}
 
 	private static SpecificationCase readSpecificationCase(byte[] bytes)
 			throws ReadAttributeException {
-		System.out.println("    specCase");
+		syso("    specCase");
 		Formula precondition = (Formula) readExpression(bytes);
-		System.out.println("      modifies");
+		syso("      modifies");
 		ModifiesSet modifies = readModifies(bytes);
-		System.out.println("      postcondition");
+		syso("      postcondition");
 		Formula postcondition = (Formula) readExpression(bytes);
-		System.out.println("      exsures");
+		syso("      exsures");
 		ExsuresTable exsures = readExsuresTable(bytes);
 		SpecificationCase specCase = new SpecificationCase(precondition,
 				new Postcondition(postcondition), modifies, exsures);
@@ -487,7 +495,7 @@ public class AttributeReader {
 					clazz);
 			return modArray;
 		}
-		System.out.println("Unknown nodify expression");
+		syso("Unknown nodify expression");
 		return new UnknownModifies();
 	}
 
@@ -512,7 +520,7 @@ public class AttributeReader {
 //			return new UnknownArray();
 			return AllArrayElem.ALLARRAYELEM;
 		}
-		System.out.println("Unknown spec arr");
+		syso("Unknown spec arr");
 		return new UnknownArray();
 	}
 
@@ -559,7 +567,7 @@ public class AttributeReader {
 
 	private static int readAttributeCount(byte[] bytes) {
 		if (!ok) {
-			System.out.println("        skipping attributes");
+			syso("        skipping attributes");
 			return 0;
 		}
 		int attribute_count = readShort(bytes);
@@ -814,7 +822,7 @@ public class AttributeReader {
 			// the index of the local variable
 			int ind = readShort(bytes);
 			if (localVariables.length <= ind) {		// TODO add ghost field case
-				System.out.println("        ERROR: lvar index ("+ind+") out of bounds ("+localVariables.length+") or ghost field");
+				syso("        ERROR: lvar index ("+ind+") out of bounds ("+localVariables.length+") or ghost field");
 				Formula f = new UnknownFormula("lvar index out of bounds!");
 				ok = true;
 				return f;
@@ -936,7 +944,7 @@ public class AttributeReader {
 					PredicateSymbol.LESSEQ);
 			return predicate;
 		} else if (_byte == Code.EQ) {
-			System.out.println("        niesprawdzone -- EQ");
+			syso("        niesprawdzone -- EQ");
 			Expression expr1 = readExpression(bytes);
 			// here we substitute the appearing formulas in equality relation
 			// as the JVM do not support the boolean type, in place of the true
@@ -1077,7 +1085,7 @@ public class AttributeReader {
 			Formula forallFormula = Formula.getFormula(f, forall);
 			return forallFormula;
 		}
-		System.out.println("ERROR: Unknown Code - " + printByte(_byte));
+		syso("ERROR: Unknown Code - " + printByte(_byte));
 		return new UnknownFormula("0x"+printByte(_byte));
 	}
 //

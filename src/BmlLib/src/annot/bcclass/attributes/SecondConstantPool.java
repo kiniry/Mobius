@@ -142,7 +142,7 @@ public class SecondConstantPool implements BCAttribute {
 	      constant_pool[i] = readConstant(file);
 //	      DataOutputStream dos = new DataOutputStream(System.out);
 //	      constant_pool[i].dump(dos);
-	      System.out.println("   "+constant_pool[i].toString());
+//	      System.out.println("   "+constant_pool[i].toString());
 
 	      /* Quote from the JVM specification:
 	       * "All eight byte constants take up two spots in the constant pool.

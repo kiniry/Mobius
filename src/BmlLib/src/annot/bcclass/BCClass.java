@@ -41,8 +41,15 @@ public class BCClass {
 	private ClassInvariant classInvariant;
 //	private ClassStateVector visibleState;
 	public Parsing parser;
+	public boolean silent;
 
 	public BCClass(JavaClass _clazz) throws ReadAttributeException {
+		this(_clazz, false);
+	}
+	
+	public BCClass(JavaClass _clazz, boolean s) throws ReadAttributeException {
+		silent = s;
+		AttributeReader.silent = s;
 		parser = new Parsing(this);
 		className = _clazz.getClassName();
 		superClassName = _clazz.getSuperclassName();
@@ -62,8 +69,12 @@ public class BCClass {
 	public void InicjalizujMetody() throws ReadAttributeException {
 		try {
 			Iterator iter = metody.iterator();
-			while (iter.hasNext())
-				((BCMethod)(iter.next())).initMethod();
+			while (iter.hasNext()) {
+				BCMethod m = (BCMethod)(iter.next());
+				if (!silent)
+					System.out.println("Initializing nethod: "+m.getName());
+				m.initMethod();
+			}
 		} catch (Exception e) {
 			e.printStackTrace();	// XXX: wywalic
 			throw new ReadAttributeException("Bd przy inicjalizacji metod");

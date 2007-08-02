@@ -27,7 +27,7 @@ public class UnknownFormula extends Formula {
 	}
 
 	public String toString() {
-		System.out.println("unimplemented: " + opis);
+		AttributeReader.syso("unimplemented: " + opis);
 		return "?";
 	}
 	

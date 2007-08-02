@@ -135,7 +135,6 @@ public class BCMethod extends AccessFlags {
 		}
 		signature = MethodSignature
 				.getSignature(getArgTypes(), getReturnType());
-		System.out.println("Initializing method: " + name);
 //		bytecode = BCMethod.wrapByteCode(bcelMethod, this, clazz
 //				.getConstantPool(), localVariables);
 //		exceptionHandlerTable = new BCExceptionHandlerTable(bcelMethod
