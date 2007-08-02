@@ -3,12 +3,14 @@ package umbra.editor;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.IDocumentPartitioner;
+import org.eclipse.jface.text.rules.FastPartitioner;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.editors.text.FileDocumentProvider;
 
 
 /**
- * This class has been modificated with relation to the generated automatically
+ * This class has been modified with relation to the generated automatically
  * to allow adding listener that is responsible for error checking.
  *
  * @author Wojciech Wąs (ww209224@students.mimuw.edu.pl)
@@ -42,7 +44,7 @@ public class BytecodeDocumentProvider extends FileDocumentProvider {
                    (IEditorInput) an_element,
                    getEncoding(an_element))) {
         setupDocument(an_element, document);
-      } /*
+      } 
       IDocumentPartitioner partitioner =
         new FastPartitioner(
           new BytecodePartitionScanner(),
@@ -51,7 +53,7 @@ public class BytecodeDocumentProvider extends FileDocumentProvider {
             BytecodePartitionScanner.HEAD,
             BytecodePartitionScanner.THROWS});
       partitioner.connect(document);
-      document.setDocumentPartitioner(partitioner);*/
+      document.setDocumentPartitioner(partitioner);
       final BytecodeContribution contribution = BytecodeContribution.inUse();
       contribution.addListener(document);
       return document;

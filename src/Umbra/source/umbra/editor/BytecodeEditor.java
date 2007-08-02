@@ -103,7 +103,6 @@ public class BytecodeEditor extends TextEditor {
    * Default function used while closing the current editor.
    */
   public final void dispose() {
-    my_bconf.disposeColor();
     super.dispose();
   }
 
@@ -522,5 +521,17 @@ public class BytecodeEditor extends TextEditor {
         else UmbraPlugin.messagelog(" prev: " + ih[i].getPrev().getPosition());
       }
     }
-  }*/
+  }
+
+  /**
+   * This method disposes the color allocated from the system and then calls
+   * the superclass finalization.
+   *
+   * @throws Throwable in case something wrong happens in the superclass
+   *    finalization
+   */
+  protected void finalize() throws Throwable {
+    my_bconf.disposeColor();
+    super.finalize();
+  }
 }
