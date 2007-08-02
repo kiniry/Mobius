@@ -46,11 +46,11 @@ BEGIN
 
   get_dynamic_type_name(vn : Name, sigma : FullState) : Name
 
-  IMPORTING WellTypedProgram[Name]
+  IMPORTING WellFormedProgram[Name]
 
   get_dynamic_type_name_correctness : AXIOM
     FORALL (p : Program, vn : Name, sigma : FullState) :
-      well_typed_Program(p) IMPLIES 
+      wf_Program(p) IMPLIES 
         class_names(p)(get_dynamic_type_name(vn, sigma))
 
 

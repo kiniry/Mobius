@@ -81,7 +81,6 @@ BEGIN
         Skip?(c) OR
         (Set?(c) IMPLIES expr_has_no_side_effects(p)(source(c)))
 
- % FIX PROOF
  % If sMP1 and sAP1 are related states and for a given transition t, sMVA is the
  % state of the automaton after performing t and sAP2 is the state of the 
  % annotated program after executing the annotations that model the effect of t, 
@@ -89,27 +88,26 @@ BEGIN
  update_vars_preserves_MVA_modeled : LEMMA % :-)
     FORALL (mp : MonitoredProgram, ap : Program,
             a : Class, m : Method, t : Transition,  n : nat,
-            sMVA : AState, sMP : MPState, sAP1, sAP2 : APState) :
-%            sMP : MPState, sMVA2 : AState, sAP1, sAP2 : APState) :
+            sMP : MPState, sMVA2 : AState, sAP1, sAP2 : APState) :
       related_states(mp, ap)(sMP, sAP1) IMPLIES
       classes(ap)(a) IMPLIES
       methods(a)(m) IMPLIES
       proper_subterm_set_clause(update_vars(t), m) IMPLIES
       ts(mva(mp))(t) IMPLIES
-      sMVA = (# cp := tcp(t),
-                stA := execute_action(action(t))(stA(astate(sMP)),
-                                                 st(pstate(sMP)))
+      sMVA2 = (# cp := tcp(t),
+                 stA := execute_action(action(t))(stA(astate(sMP)),
+                                                  st(pstate(sMP)))
              #) IMPLIES
       NOT up?(ex(pstate(sAP1))) IMPLIES
       deriv_stmt(ap)(update_vars(t), sAP1, sAP2)(n) IMPLIES
-        MVA_modeled?(mva(mp))(sMVA, sAP2)
+        MVA_modeled?(mva(mp))(sMVA2, sAP2)
 
 
   % If m is a method that has been annotated then update_vars(t) is a subterm of
   % each of its set clauses (pre_set, post_set or exc_set).
   update_vars_proper_subterm_set_clause : LEMMA % :-)
     FORALL (mp : MonitoredProgram, c : Class, m : Method, t : Transition) :
-      ann_program_pre(mp) IMPLIES
+      wf_MP(mp) IMPLIES
       name(c) = class_name(mva(mp)) IMPLIES
       classes(ann_program(mp))(c) IMPLIES
       methods(c)(m) IMPLIES

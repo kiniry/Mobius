@@ -12,6 +12,13 @@ BEGIN
             AnnotateProgram[CP],
             AnnotateProgramProperties[CP, string]
 
+  MVA_cp_modeled?(sA : AState, sAP : APState) : boolean =
+    Int(unique(cp(sA))) = gvs(sAP)(cp)
+
+  MVA_cps_modeled?(a : MVA)(sAP : APState) : boolean =
+    FORALL (q : CP) : cps(a)(q) IMPLIES
+      Int(unique(q)) = gvs(sAP)(name_of(q))
+
   MVA_vars_modeled?(sA : AState, sAP : APState) : boolean =
     FORALL (n : string) : defined?(stA(sA)(n)) IMPLIES
       stA(sA)(n) = gvs(sAP)(n)
@@ -21,26 +28,31 @@ BEGIN
   % .Variables that model the control points remain constant
   % .Variables in MVA have the same value as the respective ghost vars in the AP
   MVA_modeled?(a : MVA)(sA : AState, sAP : APState) : boolean =
-    (Int(unique(cp(sA))) = gvs(sAP)(cp)) AND
-    (FORALL (q : CP) : cps(a)(q) IMPLIES
-      Int(unique(q)) = gvs(sAP)(name_of(q))) AND
+    MVA_cp_modeled?(sA, sAP) AND
+    MVA_cps_modeled?(a)(sAP) AND
     MVA_vars_modeled?(sA, sAP)
+
+  Program_gvs_modeled?(sMP : MPState, sAP : APState) : boolean =
+    FORALL (n : string) : defined?(gvs(sMP)(n)) IMPLIES
+      gvs(sMP)(n) = gvs(sAP)(n)
 
   % Says if sAP is a super state of sMP
   Program_modeled?(sMP : MPState, sAP : APState) : boolean =
     pstate(sMP) = pstate(sAP) AND
-    FORALL (n : string) : defined?(gvs(sMP)(n)) IMPLIES
-      gvs(sMP)(n) = gvs(sAP)(n)
-
-  halted_implies_JMLExc(sA : AState, sAP : APState) : boolean =
-    cp(sA) = halted IMPLIES
-      up?(ex(pstate(sAP))) AND down(ex(pstate(sAP))) = JMLExc
+    Program_gvs_modeled?(sMP, sAP)
 
   % Says if an state of a MP is correctly modeled by a state of an AP
   MP_modeled?(mp : MonitoredProgram)(sMP : MPState, sAP : APState) : boolean =
     MVA_modeled?(mva(mp))(astate(sMP), sAP) AND
-    halted_implies_JMLExc(astate(sMP), sAP) AND
     Program_modeled?(sMP, sAP)
+
+  % NOTE: It looks natural to include this requirement in MVA_modeled?. The
+  % problem is that it does not hold in the intermediate state of the method
+  % call case (before the invariant is checked), in particular for the some
+  % lemmas in LemmasAnnGeneration.
+  halted_implies_JMLExc(sA : AState, sAP : APState) : boolean =
+    cp(sA) = halted IMPLIES
+      up?(ex(pstate(sAP))) AND down(ex(pstate(sAP))) = JMLExc
 
 
   % It is possible to translate every guard of the MVA into an expression that
@@ -49,7 +61,7 @@ BEGIN
   % Furthermore, the evaluation must have no side-effects.
   guard_to_expression_behavior(mp : MonitoredProgram) : boolean =
     FORALL (g : Guard, sAP : APState, sMVA : AState) :
-      ann_program_pre(mp) IMPLIES
+      wf_MP(mp) IMPLIES
       wf_state(ann_program(mp))(sAP) IMPLIES
       NOT up?(ex(pstate(sAP))) IMPLIES
       MVA_vars_modeled?(sMVA, sAP) IMPLIES
@@ -66,7 +78,7 @@ BEGIN
   % not throw an exception (provided it starts in a non-exceptional state).
   eval_action_behavior(mp : MonitoredProgram) : boolean =
     FORALL (e : Expr, v : Val, sAP : APState, sMVA : AState) :
-      ann_program_pre(mp) IMPLIES
+      wf_MP(mp) IMPLIES
       wf_state(ann_program(mp))(sAP) IMPLIES
       NOT up?(ex(pstate(sAP))) IMPLIES
       MVA_vars_modeled?(sMVA, sAP) IMPLIES
@@ -81,16 +93,10 @@ BEGIN
     well_behaved_Program(mp) AND
     well_behaved_MVA(mp)
 
-  specification_requirements(mp : MonitoredProgram) : boolean =
-    wf_MP(mp) AND
-    complete(mva(mp)) AND % TODO: remove
-    well_typed_Program(program(mp)) AND % TODO: move well_type inside wf
-    ann_program_pre(mp) AND % TODO: delete?
-    well_behaved_MP(mp)
-
   related_states(mp : MonitoredProgram, ap : Program)
                 (sMP : MPState, sAP : APState) : boolean =
-    specification_requirements(mp) AND
+    wf_MP(mp) AND
+    well_behaved_MP(mp) AND
     ap = ann_program(mp) AND
     wf_state(mp)(sMP) AND
     wf_state(ap)(sAP) AND

@@ -111,8 +111,8 @@ BEGIN
       deriv_expr(p)(e, sigma1, v, sigma2)(n) IMPLIES
         wf_state(p)(sigma2)
 
-  % proven, but assumption about target of set statements not very nicely 
-  % phrased
+  % Proven, but assumption about target of set statements not very nicely 
+  % phrased.
   deriv_stmt_yields_wf_state_AP : LEMMA % :-)
     FORALL (p : Program, c : Stmt, sigma1, sigma2 : APState, n : nat) :
       wf_Program(p) IMPLIES
@@ -122,7 +122,7 @@ BEGIN
 
 
   % The following are adapted versions for AP to avoid having to give all the 
-  % theory parameters to uniquely identify them
+  % theory parameters to uniquely identify them.
 
  on_method_entry_AP : (on_method_event_type) =
    LAMBDA (p : Program, md : Method, a : Val, s1, s2 : APState, n : nat,
@@ -200,9 +200,9 @@ BEGIN
 
   % Consider the evaluation of a CaseJML on a non-exceptional state for which 
   % there is a branch b1 whose condition has no side-effects and holds and all
-  % the braches preceding b1 have no side-effect and do not hold. The state
-  % resulting from the evaluation of such CaseJML will be equal to the state
-  % after the execution of the statement associated with b1.
+  % the other branches have no side-effect and do not hold. 
+  % The state resulting from the evaluation of such CaseJML will be equal to the
+  % state after the execution of the statement associated with b1.
   CaseJML_exclusive_branches_semantics : LEMMA % :-)
     FORALL (p : Program, bs : list[[Expr, Stmt]], s1, s2, tau : APState,
             n1, n : nat, b1 : [Expr, Stmt]) :
@@ -221,10 +221,11 @@ BEGIN
         deriv_stmt(p)(CaseJML(bs), s1, s2)(n) IMPLIES
           s2 = tau
 
+  % TODO: 
   % A CaseJML for which there is a branch b1 that has no side-effects and holds
-  % and for which all the branches preceding b1 do not throw exceptions, have no
-  % side-effects and do not hold, will eventually evaluate the statement
-  % associated with b1.
+  % and for which all the branches preceding b1 have no side-effects (and hence
+  % do not throw exceptions) and do not hold, will eventually evaluate the
+  % statement associated with b1.
   CaseJML_evaluates_true_stmt : LEMMA % :-)
     FORALL (p : Program, bs : list[[Expr, Stmt]], s1, s2 : APState, n : nat,
             b1 : [Expr, Stmt]) :
@@ -238,7 +239,7 @@ BEGIN
         member(b2, bs) IMPLIES
         before(b2, b1, bs) IMPLIES
         (deriv_expr(p)(PROJ_1(b2), s1, v, tau)(m2) IMPLIES
-          NOT up?(ex(pstate(tau))) AND
+%          NOT up?(ex(pstate(tau))) AND  % This can be deduced!!
           s1 = tau AND v = Bool(FALSE))) IMPLIES
       deriv_stmt(p)(CaseJML(bs), s1, s2)(n) IMPLIES
         EXISTS (tau : APState, n1 : nat) : 

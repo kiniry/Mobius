@@ -143,6 +143,14 @@ BEGIN
 
   This : Name
 
+  % Other reserved words given as examples
+  Super, rsIf, rsThen, rsElse : Name
+
+  % Java reserved words. We only need to mention This, the other are given as
+  % examples. 
+  reserved_words : finite_set[Name] =
+    {n : Name | n = This OR n = Super OR n = rsIf OR n = rsThen OR n = rsElse}
+
   % NOTE: It is not correct to have Val in programs because they belong to the
   % semantic domain, however, we do so to simplify the definition of the initial
   % state (otherwise we would have to define an order of initialization).
@@ -187,6 +195,45 @@ BEGIN
             FiniteSetInduction[Class],
             FiniteSetInduction[Method]
 
+  % Used variable names
+
+  var_names(ne : NumExpr) : set[Name] =
+    {n : Name | some(LAMBDA (m : Name) : m = n)(ne)}
+
+  var_names(be : BoolExpr) : set[Name] =
+    {n : Name | some(LAMBDA (m : Name) : m = n)(be)}
+
+  var_names(re : RefExpr) : set[Name] =
+    {n : Name | some(LAMBDA (m : Name) : m = n)(re)}
+
+  var_names(e : Expr) : set[Name] =
+    {n : Name | some(LAMBDA (m : Name) : m = n)(e)}
+
+  var_names(s : Stmt) : set[Name] =
+    {n : Name | some(LAMBDA (m : Name) : m = n)(s)}
+
+  var_names(m : Method) : set[Name] =
+    Union({ns : set[Name] | ns = var_names(pre(m)) OR ns = var_names(post(m)) OR
+      ns = var_names(body(m)) OR ns = var_names(pre_set(m)) OR 
+      ns = var_names(post_set(m)) OR ns = var_names(exc_set(m))})
+
+  var_names(c : Class) : set[Name] = 
+    Union({ns : set[Name] | EXISTS (m : Method) :
+      methods(c)(m) AND ns = var_names(m)})
+
+  var_names(p : Program) : set[Name] =
+    Union({ns : set[Name] | EXISTS (c : Class) :
+      classes(p)(c) AND ns = var_names(c)})
+
+  var_names(fs : finite_set[FieldDecl]) : finite_set[Name] =
+    {n : Name |EXISTS (f : FieldDecl) : fs(f) AND name(f) = n}
+
+  var_names(ls : finite_set[LocalVarDecl]) : finite_set[Name] =
+    {n : Name |EXISTS (l : LocalVarDecl) : ls(l) AND name(l) = n}
+
+
+  % Declared variable names
+
   getFieldDecls(p : Program) : finite_set[FieldDecl] =
     {f : FieldDecl | EXISTS (c : Class) : classes(p)(c) AND 
                                           fields(c)(f)}
@@ -222,12 +269,17 @@ BEGIN
     ELSE bottom
     ENDIF
 
+  declared_var_names(p : Program) : finite_set[Name] =
+    {n : Name | var_names(getFieldDecls(p))(n) OR
+                var_names(getLocalDecls(p))(n) OR
+                var_names(getGhostDecls(p))(n)}
+
 
   class_names(p : Program) : finite_set[Name] =
     {n : Name | EXISTS (c : Class) : classes(p)(c) AND name(c) = n}
 
   method_names(p : Program, c : Class) : finite_set[Name] =
-    {n : Name | EXISTS (m : Method) : classes(p)(c) AND methods(c)(m) AND 
+    {n : Name | EXISTS (m : Method) : classes(p)(c) AND methods(c)(m) AND
                                       name(m) = n}
 
   methods(p : Program) : finite_set[Method] =
@@ -239,16 +291,10 @@ BEGIN
     ELSE bottom
     ENDIF
 
-  % There is a bug in PVS that generated an unprovable TCC if we write 
-  % lookup_mthd like this
-%   lookup_mthd(p : Program, tgt : Val, mn : Name) : lift[(methods(p))] =
-%     LET gc = get_class(p)(tgt) IN
-%     IF up?(gc) AND method_names(p, down(gc))(mn)
-%     THEN up(choose({m : Method | classes(p)(down(gc)) AND methods(down(gc))(m)
-%                                  AND name(m) = mn}))
-%     ELSE bottom
-%     ENDIF
-
+  % TODO: This specification is not correct because we can not return any method
+  % in the program that has the required name, we should return the first in the
+  % hierarchy of classes of the dynamic type of tgt.
+  % Probably the best thing to do is to leave it undefined.
   lookup_mthd(p : Program, tgt : Val, mn : Name) : lift[(methods(p))] =
     IF up?(get_class(p)(tgt)) AND method_names(p, down(get_class(p)(tgt)))(mn)
     THEN up(choose({m : Method | classes(p)(down(get_class(p)(tgt))) AND 
@@ -257,8 +303,9 @@ BEGIN
     ELSE bottom
     ENDIF
 
+  % TODO: Maybe this function should be left undefined since it should also
+  % return the conjunction of the invariant of the the parent classes
   % If it can't find an invariant in tgt it just returns TRUE
-  % COMMENT
   lookup_inv(p : Program, tgt : Val) : Expr =
     IF up?(get_class(p)(tgt))
     THEN inv(down(get_class(p)(tgt)))
@@ -268,40 +315,6 @@ BEGIN
 
   proper_subterm_set_clause(s : Stmt, m : Method) : boolean =
     s << pre_set(m) OR s << post_set(m) OR s << exc_set(m)
-
-  var_names(ne : NumExpr) : set[Name] =
-    {n : Name | some(LAMBDA (m : Name) : m = n)(ne)}
-
-  var_names(be : BoolExpr) : set[Name] =
-    {n : Name | some(LAMBDA (m : Name) : m = n)(be)}
-
-  var_names(re : RefExpr) : set[Name] =
-    {n : Name | some(LAMBDA (m : Name) : m = n)(re)}
-
-  var_names(e : Expr) : set[Name] =
-    {n : Name | some(LAMBDA (m : Name) : m = n)(e)}
-
-  var_names(s : Stmt) : set[Name] =
-    {n : Name | some(LAMBDA (m : Name) : m = n)(s)}
-
-  var_names(m : Method) : set[Name] =
-    Union({ns : set[Name] | ns = var_names(pre(m)) OR ns = var_names(post(m)) OR
-      ns = var_names(body(m)) OR ns = var_names(pre_set(m)) OR 
-      ns = var_names(post_set(m)) OR ns = var_names(exc_set(m))})
-
-  var_names(c : Class) : set[Name] = 
-    Union({ns : set[Name] | EXISTS (m : Method) :
-      methods(c)(m) AND ns = var_names(m)})
-
-  var_names(p : Program) : set[Name] =
-    Union({ns : set[Name] | EXISTS (c : Class) :
-      classes(p)(c) AND ns = var_names(c)})
-
-  var_names(fs : finite_set[FieldDecl]) : finite_set[Name] =
-    {n : Name |EXISTS (f : FieldDecl) : fs(f) AND name(f) = n}
-
-  var_names(ls : finite_set[LocalVarDecl]) : finite_set[Name] =
-    {n : Name |EXISTS (l : LocalVarDecl) : ls(l) AND name(l) = n}
 
 
 %  program_code(p : Program)(s : Stmt) : boolean =
@@ -356,10 +369,8 @@ BEGIN
     disjoint?(lname, gname) AND
     disjoint?(fname, gname)
 
-  wf_program_variables_not_this_def(p : Program) : boolean =
-    NOT var_names(getFieldDecls(p))(This) AND
-    NOT var_names(getLocalDecls(p))(This) AND
-    NOT var_names(getGhostDecls(p))(This)
+  wf_program_variables_not_reserved_words_def(p : Program) : boolean =
+    disjoint?(declared_var_names(p), reserved_words)
 
   wf_program_has_unique_class_names_def(p : Program) : boolean =
     FORALL (c1, c2 : Class) :
@@ -368,20 +379,33 @@ BEGIN
       name(c1) = name(c2) IMPLIES
         c1 = c2
 
+  % Basic type information
+  invariants_are_bool_expr(p : Program) : boolean =
+    FORALL (c : Class) :
+      classes(p)(c) IMPLIES
+        BExpr?(inv(c))
+
+  % TODO: review this definition
+  % NOTE: In a complete specification, wf_Program would include only syntactic
+  % requirements and then we would define well_typed_Program. Since we don't
+  % have many type requirements, it doesn't make sense to have two different
+  % notions.
   wf_Program(p : Program) : boolean =
     wf_program_variables_disjoint_def(p) AND
-    wf_program_variables_not_this_def(p) AND
+    wf_program_variables_not_reserved_words_def(p) AND
     wf_program_has_unique_class_names_def(p) AND
     (FORALL (c : Class) : classes(p)(c) IMPLIES wf_Class(c)) AND
-    (FORALL (g : Name) : var_names(getGhostDecls(p))(g))   % review this
+    (FORALL (g : Name) : var_names(getGhostDecls(p))(g)) AND   % review this
+    invariants_are_bool_expr(p)
 
   AUTO_REWRITE- wf_Program
+
 
   % Properties needed of well-formed programs
 
   % Because we model the heap as a flat Store here we need to require that
   % variables have a unique name within the program.
-  wf_program_variables_disjoint : LEMMA
+  wf_program_variables_disjoint : LEMMA % :-)
      FORALL(p : Program) :
        wf_Program(p) IMPLIES
        LET fname = var_names(getFieldDecls(p)),
@@ -391,14 +415,16 @@ BEGIN
        disjoint?(lname, gname) AND
        disjoint?(fname, gname)
 
-  wf_program_variables_not_this : LEMMA
-    FORALL(p : Program) : 
-      wf_Program(p) IMPLIES 
-         NOT var_names(getFieldDecls(p))(This) AND
-         NOT var_names(getLocalDecls(p))(This) AND
-         NOT var_names(getGhostDecls(p))(This)
+  % TODO: delete
+%   wf_program_variables_not_this : LEMMA
+%     FORALL(p : Program) : 
+%       wf_Program(p) IMPLIES NOT declared_var_names(p)(This)
 
-  wf_program_has_unique_class_names : LEMMA
+  wf_program_variables_not_reserved_words : LEMMA % :-)
+    FORALL(p : Program) : 
+      wf_Program(p) IMPLIES disjoint?(declared_var_names(p), reserved_words)
+
+  wf_program_has_unique_class_names : LEMMA % :-)
     FORALL (p : Program, c1, c2 : Class) :
       wf_Program(p) IMPLIES
       classes(p)(c1) IMPLIES
@@ -406,13 +432,13 @@ BEGIN
       name(c1) = name(c2) IMPLIES
         c1 = c2
 
-  wf_program_has_wf_classes : LEMMA
+  wf_program_has_wf_classes : LEMMA % :-)
     FORALL (p : Program, c : Class) :
       wf_Program(p) IMPLIES
       classes(p)(c) IMPLIES
         wf_Class(c)
 
-  wf_class_has_unique_method_names : LEMMA
+  wf_class_has_unique_method_names : LEMMA % :-)
     FORALL (c : Class, m1, m2 : Method) :
       wf_Class(c) IMPLIES
       methods(c)(m1) IMPLIES
@@ -425,28 +451,6 @@ BEGIN
     FORALL(p : Program, g : Name) : 
       wf_Program(p) IMPLIES
         var_names(getGhostDecls(p))(g)
-            
+
 
 END WellFormedProgram
-
-
-% We name only the type constraints needed for the proofs.
-WellTypedProgram[Name : TYPE+] : THEORY
-BEGIN
-
-  IMPORTING WellFormedProgram[Name]
-
-  invariants_are_booleans(p : Program) : boolean =
-    FORALL (c : Class) :
-      classes(p)(c) IMPLIES
-        BExpr?(inv(c))
-
-  %method_names(p, down(get_class(p)(tgt)))(mn)
-
-  % See also get_dynamic_type_name_correctness in Evaluation (Semantics.pvs)
-  well_typed_Program(p : Program) : boolean =
-    wf_Program(p) AND
-    invariants_are_booleans(p)
-
-
-END WellTypedProgram

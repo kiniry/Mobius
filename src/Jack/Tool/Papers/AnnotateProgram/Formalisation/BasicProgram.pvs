@@ -206,7 +206,6 @@ BEGIN
                       on_method_event, on_method_event, on_method_event]
 
   % MH: Missing is a proof that this semantics preserves wf_state 
-  % wf_state should actually be defined in this file
-  % 
+  % wf_state should actually be defined in this file.
 
 END ProgramSemantics

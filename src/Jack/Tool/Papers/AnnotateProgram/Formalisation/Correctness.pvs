@@ -94,7 +94,7 @@ BEGIN
 
   initial_states_are_equivalent : LEMMA
     FORALL (mp : MonitoredProgram)(root_object : (defined?)) :
-      ann_program_pre(mp) IMPLIES
+      wf_MP(mp) IMPLIES
         MP_modeled?(mp)(initial_MP_state(mp)(root_object),
                         initial_AP_state(ann_program(mp))(root_object))
 
@@ -121,7 +121,8 @@ BEGIN
     FORALL (mp : MonitoredProgram)(main : Method, arg : int)
            (root_object : (defined?))
            (sMP : MPState, sAP : APState) :
-      specification_requirements(mp) IMPLIES
+      wf_MP(mp) IMPLIES
+      well_behaved_MP(mp) IMPLIES
       run_monitored_program(mp)(main, arg)(root_object)(sMP) IMPLIES
       run_annotated_program(ann_program(mp))(main, arg)(root_object)(sAP)
       IMPLIES
