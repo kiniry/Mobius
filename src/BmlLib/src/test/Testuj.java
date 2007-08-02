@@ -91,19 +91,33 @@ public class Testuj {
 	 * @param clName - class name (see path constant).
 	 * @throws Exception - if something goes wrong.
 	 */
-	public static void testuj(String clName) throws Exception {
-		printHeader(clName);
-		ClassPath cp = new ClassPath(path);
-		JavaClass jc = SyntheticRepository.getInstance(cp).loadClass(clName);
-		printCP(jc);
-		printStars();
-		BCClass bcc = new BCClass(jc);
-		printStars();
-		String str = bcc.printCode();
-		printStars();
-		System.out.print(str);
+	public static void testuj(String clName) {
+		try {
+			printHeader(clName);
+			ClassPath cp = new ClassPath(path);
+			JavaClass jc = SyntheticRepository.getInstance(cp).loadClass(clName);
+			printCP(jc);
+			printStars();
+			BCClass bcc = new BCClass(jc);
+			printStars();
+			String str = bcc.printCode();
+			printStars();
+			System.out.print(str);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (ReadAttributeException e) {
+			e.printStackTrace();
+		}
 	}
 
+	public static void ARunderstoodStats() {
+		int br = AttributeReader.bytes_read;
+		int bt = AttributeReader.bytes_total;
+		System.out.println("Understood: " + br
+				+ " bytes of " + bt + " ("
+				+ (int)(100*br/bt) + "%)");
+	}
+	
 	/**
 	 * Displays all annotations from code displayed
 	 *  from given class, with some information on them
@@ -112,11 +126,20 @@ public class Testuj {
 	 * @param clName - class name
 	 * @throws Exception - when something goes wrong.
 	 */
-	public static void parsingTest(String clName) throws Exception {
-		printHeader(clName);
-		ClassPath cp = new ClassPath(path);
-		JavaClass jc = SyntheticRepository.getInstance(cp).loadClass(clName);
-		BCClass bcc = new BCClass(jc);
+	public static void parsingTest(String clName) {
+		BCClass bcc;
+		try {
+			printHeader(clName);
+			ClassPath cp = new ClassPath(path);
+			JavaClass jc = SyntheticRepository.getInstance(cp).loadClass(clName);
+			bcc = new BCClass(jc, true);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+			return;
+		} catch (ReadAttributeException e) {
+			e.printStackTrace();
+			return;
+		}
 		String str = bcc.printCode();
 		String[] lines = str.split("\n");
 		printStars();
@@ -163,8 +186,18 @@ public class Testuj {
 		}
 	}
 	
-	public static void parserTest(String str) {
-		System.out.println("### parsing:\n"+str);
+	private static int count = 0;
+	private static int errors = 0;
+
+	public static void parserTest(boolean ok, String str) {
+		parserTest(ok, str, str);
+	}
+
+	public static void parserTest(boolean ok, String str, String result) {
+		count++;
+		System.out.println("---- test nr " + count + " ----");
+		str = bcc.parser.purge(str);
+		System.out.println("  parsing: "+str);
 		try {
 			BCMethod m = null;
 			BCPrintableAttribute old = new BCPrintableAttribute();
@@ -173,33 +206,60 @@ public class Testuj {
 			if (m != null)
 				conf.currMethod = m.getBCELMethod();
 			BCPrintableAttribute pa = bcc.parser.parseAttribute(old, str);
+			if (!ok) {
+				errors++;
+				System.out.println("### this parsing should have failed!");
+				return;
+			}
 			String out = pa.printCode(conf);
-			System.out.println("### understood:\n"
-					+ bcc.parser.removeComment(out));
+			String outp = bcc.parser.purge(out);
+			result = bcc.parser.purge(result);
+			if (result.equals(outp))
+				return;
+			errors++;
+			System.out.println("  parsed : "+out);
+			System.out.println("### attribute was not understood!");
 		} catch (RecognitionException e) {
-			System.out.flush();
-			System.err.flush();
-			System.err.println("parsing error.");
+			if (!ok) {
+				return;
+			}
+			errors++;
+			System.out.println("### parsing error.");
+		}
+	}
+	
+	private static void longParserTest() {
+		parserTest(true, bcc.parser.removeComment("/*  assert # \n * \n */"));
+		parserTest(true, "assert 1 < 2");
+		parserTest(false, "assert (1)() < 2");
+		parserTest(true, "assert ((((((1)) < (((2)))))))", "assert 1 < 2");
+		parserTest(true, "assert (true ? 1 : 2) < 1");
+		parserTest(true, "assert (12 < 34 ? 1 : 2) < 45");
+		parserTest(false, "assert 1 < 2 ? 3 : 4 < 5");
+		parserTest(false, "assert (1 < 2 ? 3 : 4 ? 5 : 6) < 7");
+		parserTest(true, "assert 1 < 2 <==> 3 < 4");
+		parserTest(true, "assert 1 < 2 <==> 3 < 4 <==> 5 < 6");
+		parserTest(true, "assert 1 < 2 <==> (3 < 4 ? 7 : 8) < 9");
+		if (errors == 0) {
+			System.out.println("\nSUCCESS\n all "
+					+count+" tests passed.");
+		} else {
+			System.out.println("\nFAILURES!\n"+errors+" out of "
+					+count+" tests failed.");
 		}
 	}
 	
 	public static void main(String[] args) {
-		try {
-			ptInit();
-//			testuj(clName1);
-//			testuj(clName2);
-//			testuj(clName3);
-//			testuj(clName4);
-//			testuj(clName5);
-//			parsingTest(clName5);
-			parserTest(bcc.parser.removeComment("/*  assert ? \n * \n */"));
-//			int br = AttributeReader.bytes_read;
-//			int bt = AttributeReader.bytes_total;
-//			System.out.println("Understood: " + br
-//					+ " bytes of " + bt + " ("
-//					+ (int)(100*br/bt) + "%)");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		ptInit();
+		longParserTest();
+//		System.out.println(bcc.parser.purge(
+//			"/*  assert \n *  \n * \n # \n */")+"|");
+//		parsingTest(clName5);
+//		testuj(clName1);
+//		testuj(clName2);
+//		testuj(clName3);
+//		testuj(clName4);
+//		testuj(clName5);
+//		ARunderstoodStats();
 	}
 }

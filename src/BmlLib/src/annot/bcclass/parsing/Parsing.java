@@ -121,6 +121,15 @@ public class Parsing {
 		result = result.split("\\*/")[0];
 		return result;
 	}
+
+	public String purge(String attr) {
+		attr = attr.replaceAll("/\\*", "");
+		attr = attr.replaceAll("\\*/", "");
+		attr = attr.replaceAll("\n \\*", "\n");
+		attr = attr.replaceAll("\n", "");
+		attr = attr.replaceAll(" ", "");
+		return attr;
+	}
 	
 	public BCPrintableAttribute parseAttribute(BCMethod m, int pc, String str) throws RecognitionException {
 		CharStream chstr = new ANTLRStringStream(str);

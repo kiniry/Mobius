@@ -62,6 +62,7 @@ public class BMLConfig {
 	public BMLConfig(BCConstantPool cp) {
 		this.cp = cp;
 		this.pp = new PrittyPrinter(this);
+		this.indent = "";
 	}
 	
 	// beginning of the annotation's line

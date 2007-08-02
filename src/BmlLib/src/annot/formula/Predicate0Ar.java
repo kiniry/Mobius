@@ -1,5 +1,6 @@
 package annot.formula;
 
+import annot.bcclass.BMLConfig;
 import annot.bcexpression.Expression;
 
 public class Predicate0Ar extends Predicate {
@@ -7,7 +8,7 @@ public class Predicate0Ar extends Predicate {
 	public static final Predicate0Ar  FALSE = new Predicate0Ar();
 	public static final Predicate0Ar  TRUE = new Predicate0Ar();
 
-	private Predicate0Ar() {	
+	private Predicate0Ar() {
 	}
 	
 //	public Expression copy() {
@@ -18,11 +19,11 @@ public class Predicate0Ar extends Predicate {
 //		return this;
 //	}
 	
-	public String toString() {
+	public String printCode1(BMLConfig conf) {
 		if (this.equals( Predicate0Ar.TRUE)) {
-			return "TRUE";
+			return "true";
 		} else if(this.equals( Predicate0Ar.FALSE) ) {
-			return "FALSE";
+			return "false";
 		}
 		return null;
 	}

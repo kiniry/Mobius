@@ -25,6 +25,7 @@ import annot.bcclass.attributes.SpecificationCase;
 import annot.bcexpression.ArithmeticExpression;
 import annot.bcexpression.ArrayAccessExpression;
 import annot.bcexpression.BCLocalVariable;
+import annot.bcexpression.ConditionalExpression;
 import annot.bcexpression.Expression;
 import annot.bcexpression.ExpressionConstants;
 import annot.bcexpression.FieldAccess;
@@ -789,13 +790,13 @@ public class AttributeReader {
 			 */
 			// else null; e.i. if a qualified name is found it must a field
 			// access expression
-//		} else if (_byte == Code.BOOLEAN_EXPR) { // ? :
-//			Formula condition = (Formula) readExpression(bytes);
-//			Expression expr1 = readExpression(bytes);
-//			Expression expr2 = readExpression(bytes);
-//			ConditionalExpression conditionExpr = new ConditionalExpression(
-//					condition, expr1, expr2);
-//			return conditionExpr;
+		} else if (_byte == Code.BOOLEAN_EXPR) { // ? :
+			Formula condition = (Formula) readExpression(bytes);
+			Expression expr1 = readExpression(bytes);
+			Expression expr2 = readExpression(bytes);
+			ConditionalExpression conditionExpr = new ConditionalExpression(
+					condition, expr1, expr2);
+			return conditionExpr;
 		} else if (_byte == Code.THIS) { // this expression
 			Expression _this = localVariables[0];
 			return _this;

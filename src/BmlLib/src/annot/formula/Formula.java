@@ -21,6 +21,13 @@ public class Formula extends Expression {
 		case Connector.IMPLIES: priority = 13; break;
 		}
 	}
+
+	//XXX?
+	public Formula(Formula f1, Formula f2, byte conn) {
+		super(f1, f2);
+		connector = conn;
+		setPriority();
+	}
 	
 	protected Formula() {
 	}
@@ -519,6 +526,7 @@ public class Formula extends Expression {
 //		return v;
 //	}
 
+	//FIXME! po co to?
 	public static Formula getFormula(Expression f1, Expression f2, byte connector) {
 		if (!  ( f1 instanceof Formula ) ) {
 //			if ( f1 instanceof DesugarNegBoolExpr) {

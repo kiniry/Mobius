@@ -10,7 +10,7 @@ public class UnknownFormula extends Formula {
 	String opis;
 
 	public UnknownFormula() {
-		opis = "?";
+		opis = "#";
 	}
 	
 	public UnknownFormula(String opis) {
@@ -28,7 +28,7 @@ public class UnknownFormula extends Formula {
 
 	public String toString() {
 		AttributeReader.syso("unimplemented: " + opis);
-		return "?";
+		return "#"; // '?' is used in ConditionalExpression
 	}
 	
 	public String printCode1(BMLConfig conf) {
