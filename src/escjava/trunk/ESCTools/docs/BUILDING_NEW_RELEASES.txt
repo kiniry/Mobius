@@ -1,17 +1,18 @@
 o Synchronize all workspaces
 o Update ChangeLog
 o Full build and alltests. 'make build alltests'
+o Update the version number: the current version is 2.0.3
 o Update release-files/RELEASE_NOTES.txt
 o Resynchronize
 o Release builds (binary and source) 
   if working in MAC OS X
     export MACOSX_DEPLOYMENT_TARGET=10.x
-  ESC_VERSION=2.0bX ESC_RELEASE_DATE=`date "+%d-%m-%y"` make releases
+  ESC_VERSION=2.0.4 ESC_RELEASE_DATE=`date "+%d-%m-%y"` make releases
 or
-  ESC_VERSION=2.0bX ESC_RELEASE_DATE=`date "+%d-%m-%y"` make releases-notests
+  ESC_VERSION=2.0.4 ESC_RELEASE_DATE=`date "+%d-%m-%y"` make releases-notests
 o Take release to another machine, unpack, install, and test.
 o Tag repository for new release.  E.g.,
-  cvs tag escjava-2-0bX
+  cvs tag escjava-2-0-4
 o Upload to GForge
 o Announce to world
  + All JMLSpecs mailing lists
