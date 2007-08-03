@@ -18,7 +18,7 @@ import annot.bcio.ReadAttributeException;
 
 public class Testuj {
 
-	static String path = "D:\\dane\\workspace\\BmlLib\\src\\";
+	static String path = Sciezka.path;
 	static String clName1 = "test.List";
 	static String clName2 = "test.TestNestedLoops";
 	static String clName3 = "test.Loop";
@@ -196,8 +196,7 @@ public class Testuj {
 	public static void parserTest(boolean ok, String str, String result) {
 		count++;
 		System.out.println("---- test nr " + count + " ----");
-		str = bcc.parser.purge(str);
-		System.out.println("  parsing: "+str);
+		System.out.println("  parsing: "+bcc.parser.purge(str));
 		try {
 			BCMethod m = null;
 			BCPrintableAttribute old = new BCPrintableAttribute();
