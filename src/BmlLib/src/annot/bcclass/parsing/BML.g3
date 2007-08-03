@@ -20,7 +20,7 @@ options {
 	private BCMethod m;
 	private int pc;
 
-	// set context for attribute parsing.
+	// set context for attribute parsing
 	public void init(BCMethod m, int pc) {
 		this.m = m;
 		this.pc = pc;

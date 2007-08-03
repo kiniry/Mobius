@@ -3,8 +3,7 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
-	<classpathentry kind="lib" path="/Umbra/libs/org.apache.bcel_5.1.0/bcel.jar" sourcepath="/Umbra/libs/bcel-5.1-src.zip"/>
-	<classpathentry kind="lib" path="lib/antlr-runtime-3.0.jar" rootpath="/"/>
+	<classpathentry kind="lib" path="lib/antlr-runtime-3.0.jar"/>
 	<classpathentry kind="src" path="antlr3-generated"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

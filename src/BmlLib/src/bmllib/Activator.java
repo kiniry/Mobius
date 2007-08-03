@@ -9,7 +9,7 @@ import org.osgi.framework.BundleContext;
 public class Activator extends AbstractUIPlugin {
 
 	// The plug-in ID
-	public static final String PLUGIN_ID = "BmlLib";
+	public static final String PLUGIN_ID = "mobius.bmllib";
 
 	// The shared instance
 	private static Activator plugin;

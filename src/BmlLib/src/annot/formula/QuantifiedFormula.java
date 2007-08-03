@@ -56,7 +56,7 @@ public class QuantifiedFormula extends Formula {
 //	}
 
 	public String printCode1(BMLConfig conf) {
-		boolean go3args = false; // makes operator display as 3-arg. instead of binary
+		boolean go3args = true; // makes operator display as 3-arg. instead of binary
 		Formula subformula = (Formula) getSubExpressions()[0];
 		String s = "";
 		for (int i = 0; i < quantificators.length; i++) {
