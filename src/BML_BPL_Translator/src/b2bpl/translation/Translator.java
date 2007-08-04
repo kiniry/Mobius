@@ -52,6 +52,7 @@ import static b2bpl.translation.CodeGenerator.multiArrayAlloc;
 import static b2bpl.translation.CodeGenerator.multiArrayParent;
 import static b2bpl.translation.CodeGenerator.multiArrayPosition;
 import static b2bpl.translation.CodeGenerator.multiply;
+import static b2bpl.translation.CodeGenerator.neg;
 import static b2bpl.translation.CodeGenerator.nonNull;
 import static b2bpl.translation.CodeGenerator.notEqual;
 import static b2bpl.translation.CodeGenerator.nullLiteral;
@@ -1282,7 +1283,7 @@ public class Translator implements ITranslationConstants {
       ));
     }
     
-    {
+    { /*
       addComment("[SW]: Object allocation does not affect existing invariants.");
       String o = quantVarName("o");
       String t = quantVarName("t");
@@ -1297,7 +1298,7 @@ public class Translator implements ITranslationConstants {
          isEqual(inv(var(t), var(o), heapAdd(var(h), var(a))), inv(var(t), var(o), var(h))),
          trigger(inv(var(t), var(o), heapAdd(var(h), var(a))))
       ));
-    }
+    */ }
 
     {
       addComment("Field stores do not affect object liveness.");
@@ -1490,6 +1491,47 @@ public class Translator implements ITranslationConstants {
       ));
     }
 
+    {
+      addComment("[SW]: object allocations preserve existing invariants");
+      String o = quantVarName("o");
+      String t = quantVarName("t");
+      String o2 = quantVarName("o2");
+      String t2 = quantVarName("t2");
+      String pre_h = quantVarName("pre_h");
+      String new_h = quantVarName("new_h");
+      BPLVariable oVar = new BPLVariable(o, BPLBuiltInType.REF);
+      BPLVariable tVar = new BPLVariable(t, BPLBuiltInType.NAME);
+      BPLVariable o2Var = new BPLVariable(o2, BPLBuiltInType.REF);
+      BPLVariable t2Var = new BPLVariable(t2, BPLBuiltInType.NAME);
+      BPLVariable pre_hVar = new BPLVariable(pre_h, new BPLTypeName(HEAP_TYPE));
+      BPLVariable new_hVar = new BPLVariable(new_h, new BPLTypeName(HEAP_TYPE));
+      addAxiom(forall(
+          oVar, tVar, pre_hVar, new_hVar,
+          implies(
+              logicalAnd(
+                  isEqual(heapNew(var(pre_h), objectAlloc(var(t))), rval(var(o))),
+                  isEqual(var(new_h), heapAdd(var(pre_h), objectAlloc(var(t))))
+              ),
+              logicalAnd(
+                  logicalNot(inv(var(t), var(o), var(new_h))),
+                  forall(
+                      o2Var, t2Var,
+                      implies(
+                          logicalOr(
+                             notEqual(var(t2), var(t)),
+                             notEqual(var(o2), var(o))
+                          ),
+                          isEqual(
+                              inv(var(t2), var(o2), var(new_h)),
+                              inv(var(t2), var(o2), var(pre_h))
+                          )
+                      )
+                  )
+              )
+          )
+      ));
+    }
+    
     {
       addComment("Get always returns either null or a value whose type"
                  + " is a subtype of the (static) location type.");
@@ -1808,11 +1850,11 @@ public class Translator implements ITranslationConstants {
     {
       // FIXME[sw]: Temporary partial axiomatization of the Java type system.
       //            Should later be replaced with either an on-the-fly compilation
-      //            of Java Runtime Libraries (from BML to BoogiePL) or a
+      //            of (BML annotated) Java Runtime Libraries or a
       //            precompiled BoogiePL version.
       declarations.add(axiomatizeHelperProcedure("java.lang.Object..init", "$java.lang.Object"));
       declarations.add(axiomatizeHelperProcedure("java.lang.Throwable..init", "$java.lang.Throwable"));
-      // declarations.add(axiomatizeHelperProcedure("java.lang.Exception..init", "$java.lang.Exception")); // $java.lang.Throwable is sufficient
+      declarations.add(axiomatizeHelperProcedure("java.lang.Exception..init", "$java.lang.Exception")); // $java.lang.Throwable is sufficient
       declarations.add(axiomatizeHelperProcedure("java.io.PrintStream.println", null));
     }
     
@@ -1824,9 +1866,11 @@ public class Translator implements ITranslationConstants {
   }
   
   private BPLProcedure axiomatizeHelperProcedure(String name, String type) {
+    String l = quantVarName("l");
     String o = quantVarName("o");
     String t = quantVarName("t");
     String this_var_name = quantVarName("param0");
+    BPLVariable lVar = new BPLVariable(l, new BPLTypeName(LOCATION_TYPE));
     BPLVariable oVar = new BPLVariable(o, BPLBuiltInType.REF);
     BPLVariable tVar = new BPLVariable(t, BPLBuiltInType.NAME);
     BPLVariable this_var = new BPLVariable(this_var_name, BPLBuiltInType.REF);
@@ -1851,7 +1895,8 @@ public class Translator implements ITranslationConstants {
                     implies(
                         logicalAnd(
                             alive(rval(var(o)), var(HEAP_VAR)),
-                            isSubtype(var(t), typ(rval(var(o))))
+                            isSubtype(var(t), typ(rval(var(o)))),
+                            notEqual(var(o), var(this_var_name))
                         ),
                         inv(var(t), var(o), var(HEAP_VAR))
                     )
@@ -1868,45 +1913,53 @@ public class Translator implements ITranslationConstants {
                 notEqual(var(RESULT_PARAM), BPLNullLiteral.NULL),
                 alive(rval(var(RESULT_PARAM)), var(HEAP_VAR)),
                 isInstanceOf(rval(var(RESULT_PARAM)), var(type)),
-                forall(oVar, logicalAnd(
+                forall(lVar,
                     implies(
-                        //alive(rval(obj(var(l))), old(var(HEAP_VAR))),
-                        //alive(rval(obj(var(l))), var(HEAP_VAR))
-                        alive(rval(var(o)), old(var(HEAP_VAR))),
-                        alive(rval(var(o)), var(HEAP_VAR))
+                        // alive(rval(var(o)), old(var(HEAP_VAR))),
+                        alive(rval(obj(var(l))), old(var(HEAP_VAR))),
+                        logicalAnd(
+                            isEqual(
+                                get(var(HEAP_VAR), var(l)),
+                                get(old(var(HEAP_VAR)), var(l))
+                            ),
+                            //alive(rval(var(o)), var(HEAP_VAR))
+                            alive(rval(obj(var(l))), var(HEAP_VAR))
+                        )
                     )
-                    //,
-                    //isEqual(
-                    //    get(var(HEAP_VAR), var(l)),
-                    //    get(old(var(HEAP_VAR)), var(l))
-                    //)
-                ))
+                )
             ))
             
             :
               
             new BPLEnsuresClause(
                 // postcondition of helper procedure (usually constructor)
-                forall(oVar, logicalAnd(
+                forall(lVar,
                     implies(
-                        //alive(rval(obj(var(l))), old(var(HEAP_VAR))),
-                        //alive(rval(obj(var(l))), var(HEAP_VAR))
-                        alive(rval(var(o)), old(var(HEAP_VAR))),
-                        alive(rval(var(o)), var(HEAP_VAR))
+                        // alive(rval(var(o)), old(var(HEAP_VAR))),
+                        alive(rval(obj(var(l))), old(var(HEAP_VAR))),
+                        logicalAnd(
+                            isEqual(
+                                get(var(HEAP_VAR), var(l)),
+                                get(old(var(HEAP_VAR)), var(l))
+                            ),
+                            //alive(rval(var(o)), var(HEAP_VAR))
+                            alive(rval(obj(var(l))), var(HEAP_VAR))
+                        )
                     )
-                    //,
-                    //isEqual(
-                    //    get(var(HEAP_VAR), var(l)),
-                    //    get(old(var(HEAP_VAR)), var(l))
-                    //)
-                ))
+                )
             )
               
             ,
             
             new BPLEnsuresClause(
                 // All invariants are required to hold after a constructor call.
-                forall(oVar, tVar, inv(var(t), var(o), var(HEAP_VAR)))
+                forall(
+                    oVar, tVar,
+                    implies(
+                        BPLBoolLiteral.FALSE,
+                        inv(var(t), var(o), var(HEAP_VAR))
+                    )
+                )
             )
             
         })

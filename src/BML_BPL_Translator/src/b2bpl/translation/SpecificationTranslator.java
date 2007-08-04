@@ -367,8 +367,8 @@ public class SpecificationTranslator {
     return new BPLModifiesClause(vars);    
   }
   
-  private static String old(String heap) {
-    return "old(" + heap + ")";
+  private static String old(String s) {
+    return "old(" + s + ")";
   }
 
   /**
