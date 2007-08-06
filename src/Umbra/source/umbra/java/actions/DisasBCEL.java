@@ -68,8 +68,8 @@ public class DisasBCEL implements IEditorActionDelegate {
     final IFile jFile = ((FileEditorInput)my_editor.getEditorInput()).getFile();
     final IWorkbenchPage page = my_editor.getEditorSite().getPage();
     try {
-      final IFile file = UmbraHelper.getBTCFileName(jFile, my_editor);
-      final FileEditorInput input = new FileEditorInput(file);
+      final IFile btcFile = UmbraHelper.getBTCFileName(jFile, my_editor);
+      final FileEditorInput input = new FileEditorInput(btcFile);
       final BytecodeEditor bc_editor = (BytecodeEditor) (page.openEditor(input,
                            UmbraHelper.BYTECODE_EDITOR_CLASS, true));
       bc_editor.setRelatedEditor(my_editor);

@@ -23,7 +23,7 @@ Import-Package: org.eclipse.ui.part,
 Bundle-ClassPath: libs/bmllib.jar,
  libs/asm.jar,
  libs/b2bpl.jar
-Eclipse-LazyStart: false
+Eclipse-LazyStart: true
 Bundle-Activator: umbra.UmbraPlugin
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Vendor: Mobius

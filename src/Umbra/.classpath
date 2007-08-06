@@ -8,6 +8,7 @@
 		<accessrules>
 			<accessrule kind="accessible" pattern="org/eclipse/ui/ide/**"/>
 			<accessrule kind="accessible" pattern="org/eclipse/ui/part/**"/>
+			<accessrule kind="accessible" pattern="org/eclipse/ui/texteditor/**"/>
 		</accessrules>
 	</classpathentry>
 	<classpathentry kind="output" path="bin"/>

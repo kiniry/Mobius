@@ -8,6 +8,8 @@ import org.eclipse.jface.text.rules.FastPartitioner;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.editors.text.FileDocumentProvider;
 
+import umbra.editor.parsing.BytecodePartitionScanner;
+
 
 /**
  * This class has been modified with relation to the generated automatically
@@ -44,16 +46,16 @@ public class BytecodeDocumentProvider extends FileDocumentProvider {
                    (IEditorInput) an_element,
                    getEncoding(an_element))) {
         setupDocument(an_element, document);
-      } 
-      IDocumentPartitioner partitioner =
+      }
+      final IDocumentPartitioner partitioner =
         new FastPartitioner(
           new BytecodePartitionScanner(),
           new String[] {
             BytecodePartitionScanner.TAG,
             BytecodePartitionScanner.HEAD,
             BytecodePartitionScanner.THROWS});
-      partitioner.connect(document);
       document.setDocumentPartitioner(partitioner);
+      partitioner.connect(document);
       final BytecodeContribution contribution = BytecodeContribution.inUse();
       contribution.addListener(document);
       return document;

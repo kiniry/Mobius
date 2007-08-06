@@ -10,6 +10,7 @@ import org.apache.bcel.util.ClassPath;
 import org.apache.bcel.util.SyntheticRepository;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -18,7 +19,10 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.editors.text.TextEditor;
 import org.eclipse.ui.part.FileEditorInput;
 
@@ -157,24 +161,28 @@ public class BytecodeEditor extends TextEditor {
     final IPath active = ((FileEditorInput)getEditorInput()).getFile().
                                                              getFullPath();
     final String fnameTo = UmbraHelper.getSavedClassFileNameForBTC(active);
-    final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-    final String fnameFrom = active.toOSString().replaceFirst(
-                UmbraHelper.BYTECODE_EXTENSION,
-                UmbraHelper.CLASS_EXTENSION);
-    final IFile fileFrom = root.getFile(new Path(fnameFrom));
-    final IPath pathTo = new Path(fnameTo);
-    final IFile fileTo = root.getFile(pathTo);
+    IFile a_fileFrom;
     try {
-      if (!fileTo.exists()) fileFrom.copy(pathTo, true, null);
+      a_fileFrom = UmbraHelper.getClassFileFileFor(
+               ((FileEditorInput)getEditorInput()).getFile(),
+               this, UmbraHelper.BYTECODE_EXTENSION);
+    } catch (JavaModelException e2) {
+      MessageDialog.openError(new Shell(), "Bytecode",
+                              "No classfile path set for the project");
+      return;
+    }
+    final IPath pathTo = new Path(fnameTo);
+    final IWorkspace workspace = ResourcesPlugin.getWorkspace();
+    final IFile fileTo = workspace.getRoot().getFile(pathTo);
+    try {
+      if (!fileTo.exists())
+        a_fileFrom.copy(pathTo, true, null);
     } catch (CoreException e1) {
       e1.printStackTrace();
     }
     try {
       final JavaClass jc = my_classgen.getJavaClass();
-      final String lastSegment = active.lastSegment().replaceFirst(
-                  UmbraHelper.BYTECODE_EXTENSION,
-                  UmbraHelper.CLASS_EXTENSION);
-      final String path3 = getPath(active).append(lastSegment).toOSString();
+      final String path3 = a_fileFrom.getLocation().toOSString();
       jc.dump(path3);
     } catch (IOException e) {
       e.printStackTrace();

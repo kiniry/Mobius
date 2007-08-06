@@ -14,6 +14,7 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor;
 import org.eclipse.ui.part.FileEditorInput;
+import org.eclipse.ui.texteditor.AbstractTextEditor;
 
 
 /**
@@ -249,7 +250,7 @@ public final class UmbraHelper {
    * This method returns for a given path to a .btc file a name of the
    * classfile that was saved in order to keep the original copy of the
    * classfile generated from the Java source code file. No check is made that
-   * the path indeed has the extension.
+   * the path <code>a_path</code> indeed has the extension.
    *
    * @param a_path a path to a .btc file
    * @return corresponding name of the file with the saved version of the
@@ -327,7 +328,7 @@ public final class UmbraHelper {
    *                            has no classfile output location set
    */
   public static IFile getClassFileFileFor(final IFile a_java_file,
-                     final CompilationUnitEditor an_editor,
+                     final AbstractTextEditor an_editor,
                      final String an_extension)
     throws JavaModelException {
     final IProject project = ((FileEditorInput)an_editor.

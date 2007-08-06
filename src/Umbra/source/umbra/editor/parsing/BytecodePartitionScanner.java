@@ -7,6 +7,7 @@ import org.eclipse.jface.text.rules.MultiLineRule;
 import org.eclipse.jface.text.rules.RuleBasedPartitionScanner;
 import org.eclipse.jface.text.rules.Token;
 
+
 /**
  * TODO.
  *
@@ -20,22 +21,26 @@ public class BytecodePartitionScanner extends RuleBasedPartitionScanner {
   /**
    * TODO.
    */
-  public static final String DEFAULT = "__xml_default";
+  public static final String DEFAULT = "__btc.default";
+
+  /**
+   * This is the name of a content type assigned to areas of a bytecode
+   * document that correspond to headers of methods or classes. These
+   * include {@link #COMMENT_RULE}, {@link #PUBLIC_RULE}, {@link #PRIVATE_RULE},
+   * {@link #PROTECTED_RULE}, rules for braces, and {@link #CLASS_RULE}.
+   */
+  public static final String HEAD = "__btc.header";
 
   /**
    * TODO.
    */
-  public static final String HEAD = "__xml_head";
+  public static final String THROWS = "__btc.throwssec";
 
   /**
    * TODO.
    */
-  public static final String THROWS = "__xml_thr";
+  public static final String TAG = "__btc.bmlcode";
 
-  /**
-   * TODO.
-   */
-  public static final String TAG = "__xml_tag";
 
   /**
    * TODO.
@@ -45,7 +50,7 @@ public class BytecodePartitionScanner extends RuleBasedPartitionScanner {
   /**
    * TODO.
    */
-  private static final int TAG_RULE = 1;
+  private static final int BML_RULE = 1;
 
   /**
    * TODO.
@@ -65,17 +70,27 @@ public class BytecodePartitionScanner extends RuleBasedPartitionScanner {
   /**
    * TODO.
    */
-  private static final int BRACE_RULE = 5;
+  private static final int OPEN_BRACE_RULE = 5;
 
   /**
    * TODO.
    */
-  private static final int THROWS_RULE = 6;
+  private static final int CLOSE_BRACE_RULE = 6;
 
   /**
    * TODO.
    */
-  private static final int NUMBER_OF_RULES = 7;
+  private static final int THROWS_RULE = 7;
+
+  /**
+   * TODO.
+   */
+  private static final int CLASS_RULE = 8;
+
+  /**
+   * The total number of rules in the current scanner.
+   */
+  private static final int NUMBER_OF_RULES = 9;
 
   /**
    * TODO.
@@ -86,27 +101,17 @@ public class BytecodePartitionScanner extends RuleBasedPartitionScanner {
     final IToken head = new Token(HEAD);
     final IToken tag = new Token(TAG);
 
-    setPredicateRulesForMe(thr, head, tag);
-  }
-
-  /**
-   * TODO.
-   * @param a_throws_token TODO
-   * @param a_head_token TODO
-   * @param a_tag_token TODO
-   */
-  private void setPredicateRulesForMe(final IToken a_throws_token,
-                                      final IToken a_head_token,
-                                      final IToken a_tag_token) {
     final IPredicateRule[] rules = new IPredicateRule[NUMBER_OF_RULES];
 
-    rules[COMMENT_RULE] = new MultiLineRule("<!--", "-->", a_head_token);
-    rules[TAG_RULE] = new TagRule(a_tag_token);
-    rules[PUBLIC_RULE] = new EndOfLineRule("public", a_head_token);
-    rules[PRIVATE_RULE] = new EndOfLineRule("private", a_head_token);
-    rules[PROTECTED_RULE] = new EndOfLineRule("protected", a_head_token);
-    rules[BRACE_RULE] = new EndOfLineRule("}", a_head_token);
-    rules[THROWS_RULE] = new EndOfLineRule("throws", a_throws_token);
+    rules[COMMENT_RULE] = new MultiLineRule("<!--", "-->", head);
+    rules[BML_RULE] = new MultiLineRule("/*", "*/", tag);
+    rules[PUBLIC_RULE] = new EndOfLineRule("public", head);
+    rules[PRIVATE_RULE] = new EndOfLineRule("private", head);
+    rules[PROTECTED_RULE] = new EndOfLineRule("protected", head);
+    rules[OPEN_BRACE_RULE] = new EndOfLineRule("{", head);
+    rules[CLOSE_BRACE_RULE] = new EndOfLineRule("}", head);
+    rules[THROWS_RULE] = new EndOfLineRule("throws", thr);
+    rules[CLASS_RULE] = new EndOfLineRule("class", head);
 
     setPredicateRules(rules);
   }
