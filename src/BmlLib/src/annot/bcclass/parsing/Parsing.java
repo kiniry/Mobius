@@ -12,7 +12,6 @@ import annot.bcclass.BCMethod;
 import annot.bcclass.attributes.AssertTable;
 import annot.bcclass.attributes.BCPrintableAttribute;
 import annot.bcclass.attributes.LoopSpecification;
-import annot.bcclass.attributes.SingleLoopSpecification;
 
 public class Parsing {
 	private BCClass bcc;
