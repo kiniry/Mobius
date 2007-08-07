@@ -3,8 +3,6 @@
 	<name>Umbra</name>
 	<comment></comment>
 	<projects>
-		<project>BCEL5.1</project>
-		<project>BMLlib</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

@@ -2,8 +2,8 @@
  * @title       "Umbra"
  * @description "An editor for the Java bytecode and BML specifications"
  * @copyright   "(c) ${date} University of Warsaw"
- * @license     "All rights reserved. This program and the accompanying 
- *               materials are made available under the terms of the LGPL 
+ * @license     "All rights reserved. This program and the accompanying
+ *               materials are made available under the terms of the LGPL
  *               licence see LICENCE.txt file"
  */
 package umbra.editor;
@@ -19,7 +19,6 @@ import org.apache.bcel.util.SyntheticRepository;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -169,9 +168,9 @@ public class BytecodeEditor extends TextEditor {
     final IPath active = ((FileEditorInput)getEditorInput()).getFile().
                                                              getFullPath();
     final String fnameTo = UmbraHelper.getSavedClassFileNameForBTC(active);
-    IFile a_fileFrom;
+    IFile a_filefrom;
     try {
-      a_fileFrom = UmbraHelper.getClassFileFileFor(
+      a_filefrom = UmbraHelper.getClassFileFileFor(
                ((FileEditorInput)getEditorInput()).getFile(),
                this, UmbraHelper.BYTECODE_EXTENSION);
     } catch (JavaModelException e2) {
@@ -184,13 +183,13 @@ public class BytecodeEditor extends TextEditor {
     final IFile fileTo = workspace.getRoot().getFile(pathTo);
     try {
       if (!fileTo.exists())
-        a_fileFrom.copy(pathTo, true, null);
+        a_filefrom.copy(pathTo, true, null);
     } catch (CoreException e1) {
       e1.printStackTrace();
     }
     try {
       final JavaClass jc = my_classgen.getJavaClass();
-      final String path3 = a_fileFrom.getLocation().toOSString();
+      final String path3 = a_filefrom.getLocation().toOSString();
       jc.dump(path3);
     } catch (IOException e) {
       e.printStackTrace();
