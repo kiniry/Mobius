@@ -46,9 +46,9 @@ public class PrittyPrinter implements IPrittyPrinter {
 	 */
 	private String filter1(String s) {
 		int i = s.length() - 1;
-		while ((i>0) && (s.charAt(i) == ' '))
+		while ((i>=0) && (s.charAt(i) == ' '))
 			i--;
-		if (i<=0)
+		if (i<0)
 			return "";
 		return s.substring(0, i+1);
 	}
