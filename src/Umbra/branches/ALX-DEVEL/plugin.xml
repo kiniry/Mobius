@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+   <extension point="org.eclipse.ui.editors">
+      <editor
+            id="umbra.BytecodeEditor"
+            name="Bytecode Editor"
+            class="umbra.editor.BytecodeEditor"
+            contributorClass="umbra.editor.BytecodeEditorContributor"
+            icon="icons/bytecode_file.gif"
+            extensions="btc"
+            default="true"
+      />
+      <editor
+            id="umbra.BoogiePLEditor"
+            name="BoogiePL Editor"
+            class="umbra.editor.boogiepl.BoogiePLEditor"
+            contributorClass="umbra.editor.boogiepl.BoogiePLEditorContributor"
+            icon="icons/bytecode_file.gif"
+            extensions="bpl"
+            default="true"
+      />
+   </extension>
+   <extension point="org.eclipse.ui.editorActions">
+      <editorContribution
+            targetID="org.eclipse.jdt.ui.CompilationUnitEditor"
+            id="umbra.javaEditorContribution">
+         <menu
+               label="&amp;Bytecode"
+               id="umbra.bytecodeMenu">
+               <separator name="showGroup"/>
+         </menu>
+         <action
+               toolbarPath="showGroup"
+               label="(TestAction)"
+               tooltip="Test Action"
+               icon="icons/convert_to_boogiepl.gif"
+               class="umbra.java.actions.B2BPLTranslation"
+               menubarPath="umbra.bytecodeMenu/showGroup"
+               id="umbra.textAction"/>
+         <action
+               toolbarPath="showGroup"
+               label="Disassemble"
+               tooltip="Disassemble from Bytecode"
+               icon="icons/disassemble.gif"
+               class="umbra.java.actions.DisasBCEL"
+               menubarPath="umbra.bytecodeMenu/showGroup"
+               id="umbra.BCELTest"/>
+         <action
+               toolbarPath="showGroup"
+               label="Show Bytecode"
+               tooltip="Show Bytecode of selected statement"
+               class="umbra.java.actions.SynchrSBAction"
+               icon="icons/synchronize.gif"
+               menubarPath="umbra.bytecodeMenu/showGroup"
+               id="umbra.synchrAction"/>
+         <action
+               class="umbra.java.actions.CommitAction"
+               icon="icons/commit.gif"
+               id="umbra.commit"
+               label="Commit Cha&amp;nges in Bytecode"
+               menubarPath="umbra.bytecodeMenu/showGroup"
+               toolbarPath="showGroup"/>
+      </editorContribution>
+      <editorContribution
+            targetID="umbra.BytecodeEditor"
+            id="umbra.bytecodeEditorContribution">
+         <menu
+               label="&amp;Bytecode"
+               id="umbra.bytecodeMenu">
+               <separator name="synchrGroup"/>
+               <separator name="verifyGroup"/>
+               <separator name="historyGroup"/>
+               <separator name="helpGroup"/>
+         </menu>
+         <action
+               toolbarPath="verifyGroup"
+               label="Convert to BoogiePL"
+               tooltip="Convert to BoogiePL"
+               icon="icons/convert_to_boogiepl.gif"
+               class="umbra.editor.actions.BytecodeToBoogiePLAction"
+               menubarPath="umbra.bytecodeMenu/verifyGroup"
+               id="umbra.toBoogiePL"/>
+         <action
+               toolbarPath="verifyGroup"
+               label="Verify Bytecode"
+               tooltip="Verify Bytecode by creating BoogiePL and sending in to Boogie"
+               icon="icons/convert_to_boogiepl.gif"
+               class="umbra.java.actions.VerifyAction"
+               menubarPath="umbra.bytecodeMenu/verifyGroup"
+               id="umbra.verify"/>
+         <action
+               toolbarPath="historyGroup"
+               label="&amp;Add to history"
+               tooltip="Add to history"
+               class="umbra.editor.actions.history.HistoryAction"
+               icon="icons/add_to_history.gif"
+               menubarPath="umbra.bytecodeMenu/historyGroup"
+               id="umbra.history"/>
+         <action
+               toolbarPath="historyGroup"
+               label="&amp;Clear history"
+               tooltip="Clear history"
+               class="umbra.editor.actions.history.ClearHistoryAction"
+               icon="icons/clear_history.gif"
+               menubarPath="umbra.bytecodeMenu/historyGroup"
+               id="umbra.clearHistory"/>
+         <action
+               toolbarPath="helpGroup"
+               label="&amp;Installation Info"
+               tooltip="Installation Info"
+               class="umbra.editor.actions.info.InstalInfoAction"
+               icon="icons/help.gif"
+               menubarPath="umbra.bytecodeMenu/helpGroup"
+               id="umbra.instalInfo"/>
+         <action
+               toolbarPath="helpGroup"
+               label="&amp;User Guide"
+               tooltip="User Guide"
+               class="umbra.editor.actions.info.UserGuideAction"
+               icon="icons/help.gif"
+               menubarPath="umbra.bytecodeMenu/helpGroup"
+               id="umbra.userGuide"/>
+      </editorContribution>
+   </extension>
+<!-- ============================================== -->
+<!-- Define the main book                           -->
+<!-- ============================================== -->
+   <extension
+         point="org.eclipse.help.toc">
+      <toc
+            category="main"
+            file="help/index.xml"
+            primary="true">
+      </toc>
+   </extension>
+<!-- =============================================== -->
+<!-- Link the sections into the book                 -->
+<!-- =============================================== -->
+   <extension
+         point="org.eclipse.help.toc">
+      <toc
+            file="help/toc_user_guide.xml">
+      </toc>
+      <toc
+            file="help/toc_programmers_guide.xml">
+      </toc>
+      <toc
+            file="help/toc_reference.xml">
+      </toc>
+   </extension>
+</plugin>
