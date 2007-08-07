@@ -1,7 +1,3 @@
-/*
- * Created on 2005-05-03
- *
- */
 package umbra.editor;
 
 import org.eclipse.jface.action.ControlContribution;

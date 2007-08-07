@@ -1,6 +1,3 @@
-/*
- * Created on 2005-04-30
- */
 package umbra.editor.boogiepl;
 
 /**

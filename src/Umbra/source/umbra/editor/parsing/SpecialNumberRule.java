@@ -1,6 +1,3 @@
-/*
- * Created on 2005-05-13
- */
 package umbra.editor.parsing;
 
 import org.eclipse.jface.text.rules.ICharacterScanner;

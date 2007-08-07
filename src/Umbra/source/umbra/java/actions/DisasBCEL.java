@@ -1,7 +1,3 @@
-/*
- * Created on 2005-04-21
- *
- */
 package umbra.java.actions;
 
 import org.apache.bcel.classfile.JavaClass;

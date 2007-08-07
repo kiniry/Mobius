@@ -1,6 +1,3 @@
-/*
- * Created on 2005-07-20
- */
 package umbra.java.actions;
 
 import org.eclipse.core.resources.IFile;

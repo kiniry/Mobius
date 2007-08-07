@@ -1,6 +1,3 @@
-/**
- *
- */
 package umbra.editor.actions;
 
 import org.eclipse.core.resources.IFile;

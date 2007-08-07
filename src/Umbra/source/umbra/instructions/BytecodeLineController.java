@@ -1,6 +1,3 @@
-/*
- * Created on 2005-05-17
- */
 package umbra.instructions;
 import java.util.LinkedList;
 

@@ -1,7 +1,3 @@
-/*
- * Created on 2005-05-19
- *
- */
 package umbra.instructions;
 
 /**

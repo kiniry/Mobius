@@ -1,7 +1,3 @@
-/*
- * Created on 2005-09-06
- *
- */
 package umbra.editor.actions.history;
 
 import org.eclipse.core.resources.IFile;

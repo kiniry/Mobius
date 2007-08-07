@@ -1,7 +1,3 @@
-/*
- * Created on 2005-06-18
- *
- */
 package umbra.editor.boogiepl;
 
 import org.apache.bcel.classfile.JavaClass;

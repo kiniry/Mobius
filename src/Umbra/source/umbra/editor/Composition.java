@@ -1,7 +1,3 @@
-/*
- * Created on 2005-05-14
- *
- */
 package umbra.editor;
 
 /**

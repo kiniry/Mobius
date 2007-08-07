@@ -1,6 +1,3 @@
-/*
- * Created on 2005-09-06
- */
 package umbra.editor.actions.info;
 
 import org.eclipse.jface.action.IAction;

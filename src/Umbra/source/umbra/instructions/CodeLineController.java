@@ -1,6 +1,3 @@
-/*
- * Created on 2005-05-18
- */
 package umbra.instructions;
 
 import umbra.UmbraHelper;

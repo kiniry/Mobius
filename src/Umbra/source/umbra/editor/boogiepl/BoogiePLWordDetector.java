@@ -1,7 +1,3 @@
-/*
- * Created on 2005-04-25
- *
- */
 package umbra.editor.boogiepl;
 
 import org.eclipse.jface.text.rules.IWordDetector;
