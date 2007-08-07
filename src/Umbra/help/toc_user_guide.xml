@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<?NLS TYPE="org.eclipse.help.toc"?>
-
-<toc label="User Guide">
-    <topic label="Functionality" href="help/user_guide.html">
-    </topic>
-    <topic label="Tips and trics" href="html/user_guide/tips.html">
-    </topic>
-</toc>

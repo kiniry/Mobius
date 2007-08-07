@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<?NLS TYPE="org.eclipse.help.toc"?>
-
-<toc label="Reference">
-    <topic label="A" href="html/user_guide/user_guide.html">
-        <topic label="1" href="help/user_guide/javaActions.html"/>
-        <topic label="2" href="help/user_guide/bytecodeActions.html"/>
-    </topic>
-</toc>
