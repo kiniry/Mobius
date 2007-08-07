@@ -1,0 +1,34 @@
+<project name="umbra" default="all" basedir=".">
+
+	<property name="src.dir" value="${basedir}/source/umbra"/>
+	<property name="build.dir"   value="${basedir}/build"/>
+
+	<target name="clean">
+		<delete dir="${build.dir}"/>
+	</target>
+	
+	<target name="prepare">
+		<mkdir dir="${build.dir}"/>
+		<mkdir dir="${build.dir}/umbra1.0.0"/>
+		<mkdir dir="${build.dir}/org.apache.bcel_5.1.0"/>
+		<mkdir dir="${build.dir}/umbra1.0.0/icons"/>
+		<copy todir="${build.dir}/umbra1.0.0">
+			<fileset dir="${basedir}">
+				<!-- TODO: utworzyc plik umbra.jar -->
+				<include name="umbra.jar"/>
+				<include name="plugin.xml"/>
+			</fileset>
+		</copy>
+		<copy todir="${build.dir}/org.apache.bcel_5.1.0">
+			<fileset dir="${basedir}/libs/org.apache.bcel_5.1.0"/>
+		</copy>
+		<copy todir="${build.dir}/umbra1.0.0/icons">
+			<fileset dir="${basedir}/icons"/>
+		</copy>
+	</target>
+
+	<target name="all">
+		<antcall target="clean"/>
+		<antcall target="prepare"/>
+	</target>
+</project>
