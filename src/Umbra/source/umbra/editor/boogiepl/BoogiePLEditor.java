@@ -1,3 +1,9 @@
+/*
+ * @title       "BoogiePL in Umbra"
+ * @description "BoobiePL support for Umbra bytecode editor"
+ * @copyright   ""
+ * @license     ""
+ */
 package umbra.editor.boogiepl;
 
 import java.io.ByteArrayInputStream;
