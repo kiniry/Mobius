@@ -89,8 +89,9 @@ call but it is easily solved like what is done in Figure \ref{base_implem}.
 pu\=blic aspect SecurityManager \{\+\\
 
 Set$<$String$>$ s = new HashSet$<$String$>$();\\
-po\=intcut(Object o) : \=target(o) \&\& !within(SecurityManager)\+ \\
-           \>\&\& call(public * funName(..)) \{\\
+po\=intcut anyPublicMethod(Object o) : \=target(o) \&\& !within(SecurityManager)\+ \\
+           \>\&\& call( public *(*))\-\\
+before(Object o) : anyPublicMethod(o) \{\+\\
     String pkg = o.getClass().getPackage().toString();\\
     if\=(!s.contains(pkg)) \{\+\\     
        s.add(pkg);\\

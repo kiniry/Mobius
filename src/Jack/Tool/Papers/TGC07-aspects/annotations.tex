@@ -140,6 +140,8 @@ specifications are side-effect free.
 pu\=blic aspect SecurityManager \{\+\\
 Set$<$String$>$ /*@ spec\_public @*/ s = new HashSet$<$String$>$();\\
 \ \\
+po\=intcut anyPublicMethod(Object o) : \=target(o) \&\& \\
+           \>!within(SecurityManager) \&\& call( public *(*))\\
 /*\=@ requires o != null \&\& s != null;\+\\
   @ modifies $\backslash$nothing;\\
   @ ensures \= s.contains(o.getClass().getPackage().toString())\\
@@ -147,8 +149,7 @@ Set$<$String$>$ /*@ spec\_public @*/ s = new HashSet$<$String$>$();\\
   @ exsures (SecurityE\=xception) !s.contains("b")\\
   @                     \>\&\& (o.getClass().getPackage().equals("b"));\\
   @*/\-\\
-po\=intcut(Object o) : \=target(o) \&\& !within(SecurityManager)\+ \\
-           \>\&\& call(public * funName(..)) \{\\
+before(Object o) : anyPublicMethod(o) \{\+\\
     ...\-\\
 \}\-\\
 \}
