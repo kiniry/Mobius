@@ -1,1 +1,46 @@
-\subsection{An instanciation example}
+\subsection{Annotating the program}
+
+
+
+\bcode
+ \\
+  /*\=@ exsures false;\+\\
+    @*/\-\\
+  pub\=lic static void main(String[] args) \{\+\\
+    b.A a = new b.A();\-\\
+  \}\\
+\ecode
+\bcode
+st\=art:\+\\
+    (New b.A) \\
+    (Invokespecial b.A.$<$init$>$)\\
+\< end:\\
+    (Return)
+\ecode
+
+
+\bcode
+ini\=t:\+\\
+    old\_heap := heap;\\
+    reg0 := \#0;\\
+    assume requires(main, (old\_heap, \#0));\\
+\<start:\\
+    heap := add(heap, b.A);\\
+    stack[0] := new(heap, b.A);\\
+%(Invokevirtual java\_lang\_Class.getPackage) 
+    arg0 := stack[0];\\
+    pre\_heap := heap;\\
+    assert arg0 != null;\\
+    assert requires(java\_lang\_Class.getPackage, pre\_heap, arg0);\\
+    havoc heap;\\
+    goto getPackage\_normal, getPackage\_excp;\\
+\< getPackage\_excp:\\
+    havoc stack[0]\\
+    assume alloc (stack[0], heap) $\wedge$ typeof(stack[0]) $<$: Throwable;\\
+    assume exsures(java\_lang\_Class.getPackage, (pre\_heap, arg0), (heap, stack[0]));\\
+    goto handler;\\
+\< getPackage\_normal:\\
+    havoc stack[0];\\
+    assume ensures(java\_lang\_Class.getPackage, (pre\_heap, arg0), (heap, stack[0]));\\
+
+\ecode

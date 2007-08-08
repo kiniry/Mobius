@@ -1,33 +1,12 @@
-The verification framework we are building in this paper is an
-adaptation of static verification techniques based on weakest
-precondition calculus. It is based upon Java extended static verification
-tools using guarded commands language like ESC/Java2~\cite{CokK04} and
-what is planned to be done using BoogiePL for the Mobius
-PVE~\cite{MobiusPVE07}.
 
 
-The verification process is made of several steps:
-First the program and the aspects are annotated:
-\begin{enumerate}
-\item the program and its aspects are annotated using Pipa,
-\item the behavioural specifications are desugared
-\item the specifications of the aspects are compiled into model
-methods
-\end{enumerate}
-Then the proper compilation of aspects is done:
-\begin{enumerate}
-\item the program is compiled to bytecode with its specifications
-\item the program is transformed into guarded commands
-\item the model methods are weaved to the program
-\end{enumerate}
-Finally a weakest precondition calculus is made on the transformed
-program, and verification conditions are generated in order to be
-solved automatically or interactively.
 
-
-\subsection{Specifying the program}
+\section{Specifying the program}
+\label{specs}
 \input{annotations}
 
+\section{Program transformations}
+\label{transf}
 \subsection{Compilation to invasive model methods}
 \input{compilation}
 
@@ -38,6 +17,8 @@ solved automatically or interactively.
 \label{gc}
 \input{guarded}
 
+\section{Verification process}
+\label{verif}
 \subsection{Weaving of the models}
 \input{weaving}
 

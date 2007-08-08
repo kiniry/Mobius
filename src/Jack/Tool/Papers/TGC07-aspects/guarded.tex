@@ -9,11 +9,15 @@ There is a formal definition of Java bytecode translation to BoogiePL
 
 \subsubsection{Description of the language} 
 The version of the language we use is the same set of instruction
-described in \cite{DeLineL05}. It has 5 commands the assume, assert,
-the assignment, havoc and the non-deterministic goto. The language is
-standard and has been described numerous time. We also consider block IDs.
-\fixme{be more precise}
-
+described for weakest precondition on bytecode in \cite{BarnettL05}.
+The full language described in \cite{DeLineL05} is not necessary
+since our approach operates on bytecode.
+It has 5 commands: {\tt assume}, {\tt assert}, {\tt assign}, {\tt
+skip}, {\tt havoc}, {\tt goto} and label expressions.  The first four
+commands are standard. {\tt havoc} is used to assign an arbitrary to a
+variable, typically after a method call when a variable was modified
+by it.  The {\tt goto} command determines an unconditionnal jump to
+several labels.
 
 \subsubsection{BML inclusion}
 The inclusion of BML annotations to BoogiePL has been described in 

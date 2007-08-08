@@ -91,7 +91,7 @@ pu\=blic aspect SecurityManager \{\+\\
 Set$<$String$>$ s = new HashSet$<$String$>$();\\
 po\=intcut(Object o) : \=target(o) \&\& !within(SecurityManager)\+ \\
            \>\&\& call(public * funName(..)) \{\\
-    String pkg = o.getClass().getPackage();\\
+    String pkg = o.getClass().getPackage().toString();\\
     if\=(!s.contains(pkg)) \{\+\\     
        s.add(pkg);\\
        if\=(pkg.equals("b"))\\
@@ -105,12 +105,39 @@ po\=intcut(Object o) : \=target(o) \&\& !within(SecurityManager)\+ \\
 \end{figure}
 
 
+\subsection{The verification framework}
+\label{framework}
+The verification framework we are building in this paper is an
+adaptation of static verification techniques based on weakest
+precondition calculus. It is based upon Java extended static verification
+tools using guarded commands language like ESC/Java2~\cite{CokK04} and
+what is planned to be done using BoogiePL for the Mobius
+PVE~\cite{MobiusPVE07}.
+
+
+The verification process is made of several steps:
+First the program and the aspects are annotated:
+\begin{enumerate}
+\item the program and its aspects are annotated using Pipa,
+\item the behavioural specifications are desugared
+\item the specifications of the aspects are compiled into model
+methods
+\end{enumerate}
+Then the proper compilation of aspects is done:
+\begin{enumerate}
+\item the program is compiled to bytecode with its specifications
+\item the program is transformed into guarded commands
+\item the model methods are weaved to the program
+\end{enumerate}
+Finally a weakest precondition calculus is made on the transformed
+program, and verification conditions are generated in order to be
+solved automatically or interactively.
+
 \subsubsection{Outline:}
-First, in Section \ref{framework} we will define properly the
-verification framework to take into account aspects in the
-verification of programs. Then in Section \ref{example} we will
-illustrate our framework by using it on the verification of a toy
-program in the context of a Security Manager. In Section \ref{related}
-we will review the related works, and finally give a conclusion in
-Section \ref{conclusion}.
+First, in Section \ref{specs} we will show how the program has to be
+ properly annotated. Then in Section \ref{transf} we will
+transform the program to ease its verification: the aspects will be turned
+into model methods and the main program code into guarded commands.
+In section \ref{verif} we will explain how to verify the transformed program
+and finally give a conclusion in Section \ref{conclusion}.
 

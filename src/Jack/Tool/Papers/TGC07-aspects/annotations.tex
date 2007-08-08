@@ -11,7 +11,7 @@ methods, and some constructs to handle aspects found in Pipa.
 We will also permit behavioural specifications because JML's can
 be desugared as shown in \cite{RaghavanL00}.
 
-\subsubsection{JML} 
+\subsection{JML} 
 JML is a behavioural specification language for Java. It is made of
 numerous keyword: you can express methods pre and post conditions with
 it (the keywords {\tt requires} and {\tt ensures}), exceptional
@@ -69,7 +69,7 @@ annotations as shown on figure \ref{model_meth}. It can be easily
 translated into guarded commands (like the one there \cite{BarnettL05}),
 but we will define it more precisely in Subsection \ref{gc}.
 
-\subsubsection{Pipa}
+\subsection{Pipa}
 Pipa is a behavioural specification language based on JML.  You can
 specify advices as well as pointcuts~\cite{pointcuts07} with Pipa.  In
 this paper we will only treat the advices specifications.  The
@@ -80,8 +80,6 @@ specification, being applied on advices.  Pipa mainly adds two
 construct plus a specific semantic we are interested in: the specific
 constructs for around advices, and their semantic of the ensure
 clause.
-
-
 
 \paragraph{Around advice specifications} 
 The difficulty of specification of around advices is due to the
@@ -123,6 +121,70 @@ void \= around() : call (void m()) \{\\
 \label{arround_annot}
 \end{figure}
 
+
+\subsection{The annotated program}
+To verify our program we have to specify with Pipa the Security Manager
+as well as the base program.
+ 
+The Security Manager (Figure \ref{sm_annot}) as an advice has to be
+annotated. The annotations tells that the advice modifies nothing, and
+that an exception will be thrown if the package name of the called
+method is {\tt b}, and otherwise nothing will be done. To be able to
+use the field {\tt s} in the specifications it is made {\tt
+spec\_public}. Please note that all the methods called in the
+specifications are side-effect free.
+
+\begin{figure}
+\begin{center}
+\begin{tabular}{ll} \begin{minipage}{3cm}\bcode
+pu\=blic aspect SecurityManager \{\+\\
+Set$<$String$>$ /*@ spec\_public @*/ s = new HashSet$<$String$>$();\\
+\ \\
+/*\=@ requires o != null \&\& s != null;\+\\
+  @ modifies $\backslash$nothing;\\
+  @ ensures \= s.contains(o.getClass().getPackage().toString())\\
+  @         \> \&\& !(o.getClass().getPackage().equals("b"));\\
+  @ exsures (SecurityE\=xception) !s.contains("b")\\
+  @                     \>\&\& (o.getClass().getPackage().equals("b"));\\
+  @*/\-\\
+po\=intcut(Object o) : \=target(o) \&\& !within(SecurityManager)\+ \\
+           \>\&\& call(public * funName(..)) \{\\
+    ...\-\\
+\}\-\\
+\}
+\ecode
+\end{minipage}
+\end{tabular}
+\end{center}
+\caption{The annotated Security Manager}
+\label{sm_annot}
+\end{figure}
+
+The base program is annotated with normal JML specification 
+(Figure \ref{prog_annot}),
+although if the verification must be doable we have to annotate it taking
+into account the aspect that will be weaved afterward. Therefore the 
+specifications of the base program have to reflect the advice specifications.
+Here, an exception is thrown if there is a call on package {\tt b} and this 
+is the first try (otherwise the field {\tt s} would already contain the package
+representation String).
+\begin{figure}
+\begin{center}
+\begin{tabular}{ll} \begin{minipage}{3cm}\bcode
+  /*\=@ modifies $\backslash$nothing \+\\
+    @ ensures s.contains("b");\\
+    @ exsures !s.contains("b");\\
+    @*/\-\\
+  pub\=lic static void main(String[] args) \{\+\\
+    b.A a = new b.A();\-\\
+  \}\\
+\ecode
+\end{minipage}
+\end{tabular}
+\end{center}
+\caption{The annotated base program}
+\label{prog_annot}
+\end{figure}
 
 \subsection{Desugaring specifications}
 \label{desugar}
