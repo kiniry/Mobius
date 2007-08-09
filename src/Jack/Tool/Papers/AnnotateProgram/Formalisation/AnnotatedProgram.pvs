@@ -4,6 +4,7 @@ BEGIN
   IMPORTING State[Name]
 
   APState : TYPE = [# gvs : Store, pstate : PState #]
+%  APState : TYPE = PState WITH [# gvs : Store #]
 
   IMPORTING SemanticsTypes[Name, Program, APState,
                            LAMBDA (s : APState) : pstate(s)],
@@ -63,6 +64,14 @@ BEGIN
 
 
   % Well-formedness properties
+
+  wf_state_vars_tricotomy : LEMMA % :-)
+    FORALL (p : Program, s : APState, vn : Name) :
+      wf_state(p)(s) IMPLIES
+      declared_var_names(p)(vn) IMPLIES
+        is_ghost(vn, s) OR
+        is_field(vn, pstate(s)) OR
+        is_local(vn, pstate(s))
 
   wf_state_ghost_not_local_or_field : LEMMA % :-)
     FORALL (p : Program, s : APState, vn : Name) :

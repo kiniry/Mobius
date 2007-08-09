@@ -1,20 +1,24 @@
-AnnotateProgram[CP : TYPE+] : THEORY
+AnnotateProgram[CP, Name : TYPE+] : THEORY
 BEGIN
 
   ASSUMING
+
     CP_is_enumerable : ASSUMPTION
       EXISTS (f : [CP -> nat]) : injective?(f)
+
+    name_of_exists : ASSUMPTION
+      EXISTS (f : [CP -> Name]) : injective?(f)
+
   ENDASSUMING
 
-  IMPORTING MonitoredProgramSemantics[CP, string],
-            set2list,
-            FunProp
+  IMPORTING MonitoredProgramSemantics[CP, Name],
+            set2list
 
   mp : VAR (wf_MP)
 
   a : VAR (wf_MVA)
 
-  halted : string = name_of(halted)
+  halted : Name = name_of(halted)
 
 
   % Event annotation
@@ -51,7 +55,7 @@ BEGIN
 
   % Method annotation
 
-  filter_event(a)(et : EventType)(m : string) : finite_set[Transition] =
+  filter_event(a)(et : EventType)(m : Name) : finite_set[Transition] =
     {t : Transition | ts(a)(t) AND etype(event(t)) = et AND mname(event(t)) = m}
 
   ann_method(mp)(m : Method) : Method =
@@ -96,13 +100,18 @@ AnnotateProgramProperties[CP, Name : TYPE+] : THEORY
 BEGIN
 
   ASSUMING
+
     CP_is_enumerable : ASSUMPTION
       EXISTS (f : [CP -> nat]) : injective?(f)
+
+    name_of_exists : ASSUMPTION
+      EXISTS (f : [CP -> Name]) : injective?(f)
+
   ENDASSUMING
 
-  IMPORTING AnnotateProgram[CP],
-            AnnotatedProgramSemantics[string],
-            MonitoredProgramSemantics[CP, string]
+  IMPORTING AnnotateProgram[CP, Name],
+            AnnotatedProgramSemantics[Name],
+            MonitoredProgramSemantics[CP, Name]
 
   mp : VAR (wf_MP)
 
@@ -128,7 +137,7 @@ BEGIN
     subset?(getGhostDecls(program(mp)), getGhostDecls(ann_program(mp)))
 
   ann_program_preserves_var_decl_names : LEMMA % :-)
-    FORALL (vn : string) :
+    FORALL (vn : Name) :
       (var_names(getFieldDecls(program(mp)))(vn) IFF
        var_names(getFieldDecls(ann_program(mp)))(vn))
       AND
@@ -144,30 +153,18 @@ BEGIN
         wf_state(ann_program(mp))(s)
 
 
-  % THINK: It may be convenient to change the IFF by and =
   ann_program_preserves_pstate_vars : LEMMA % :-)
-    FORALL (vn : string)(sMP : MPState, sAP : APState) :
+    FORALL (vn : Name)(sMP : MPState, sAP : APState) :
       wf_state(mp)(sMP) IMPLIES
       wf_state(ann_program(mp))(sAP) IMPLIES
         (is_field(vn, pstate(sMP)) IFF is_field(vn, pstate(sAP))) AND
         (is_local(vn, pstate(sMP)) IFF is_local(vn, pstate(sAP)))
 
   ann_program_preserves_ghoststate_vars : LEMMA % :-)
-    FORALL (vn : string)(sMP : MPState, sAP : APState) :
+    FORALL (vn : Name)(sMP : MPState, sAP : APState) :
       wf_state(mp)(sMP) IMPLIES
       wf_state(ann_program(mp))(sAP) IMPLIES
         (is_ghost(vn, sMP) IMPLIES is_ghost(vn, sAP))
-
-  % TODO: This is not true! ghost(vn, sAP) IMPLIES ghost(vn, sMP) does not
-  % hold for the new variables. Look where this lemma is used and try to use
-  % ann_program_preserves_pstate_vars or ann_program_preserves_ghoststate_vars
-  ann_program_preserves_state_vars : LEMMA
-    FORALL (vn : string)(sMP : MPState, sAP : APState) :
-      wf_state(mp)(sMP) IMPLIES
-      wf_state(ann_program(mp))(sAP) IMPLIES
-        (is_field(vn, pstate(sMP)) IFF is_field(vn, pstate(sAP))) AND
-        (is_local(vn, pstate(sMP)) IFF is_local(vn, pstate(sAP))) AND
-        (is_ghost(vn, sMP) IFF is_ghost(vn, sAP))
 
 
   ann_program_yields_wf_program : LEMMA
@@ -213,7 +210,7 @@ BEGIN
   % TODO: If we don't give a definition for lookup_mthd we will have to take
   % this as an axiom.
   lookup_mthd_ann_program : LEMMA
-    FORALL (m1, m2 : Method, mn : string, tgt : Val) :
+    FORALL (m1, m2 : Method, mn : Name, tgt : Val) :
       up?(lookup_mthd(program(mp), tgt, mn)) IMPLIES
       up?(lookup_mthd(ann_program(mp), tgt, mn)) IMPLIES
       m1 = down(lookup_mthd(program(mp), tgt, mn)) IMPLIES
@@ -224,31 +221,6 @@ BEGIN
         ELSE m2 = m1
         ENDIF
 
-
-%   TODO: Use the new version and delete this
-%   ann_program_defines_MVA_vars2 : LEMMA
-%     EXISTS (c : Class) :
-%       classes(ann_program(mp))(c) AND 
-%       name(c) = class_name(mva(mp)) AND
-%       (EXISTS (gd : FieldDecl) :  
-%         ghost_vars(c)(gd) AND name(gd) = cp) AND
-%       (FORALL (q : CP) : cps(mva(mp))(q) IMPLIES
-%         EXISTS (gd : FieldDecl) :
-%           ghost_vars(c)(gd) AND name(gd) = name_of(q)) AND
-%       (FORALL (v : MVAVarDecl) : vdsA(mva(mp))(v) IMPLIES
-%         EXISTS (gd : FieldDecl) :
-%           ghost_vars(c)(gd) AND name(gd) = name(v))
-
-  % TODO: This has been renamed and rewriten. Delete
-%   ann_program_defines_MVA_vars : LEMMA
-%     FORALL (s : APState) :
-%       wf_state(ann_program(mp))(s) IMPLIES
-%         is_ghost(cp, s) AND
-%         (FORALL (q : CP) :
-%           cps(mva(mp))(q) IMPLIES is_ghost(name_of(q), s)) AND
-%         (FORALL (v : MVAVarDecl) :
-%           vdsA(mva(mp))(v) IMPLIES is_ghost(name(v), s))
-
   new_vars_derived_from_mp : LEMMA % :-)
     var_names(new_gvds(mp))(cp) AND
     (FORALL (q : CP) : cps(mva(mp))(q) IMPLIES
@@ -257,14 +229,14 @@ BEGIN
       var_names(new_gvds(mp))(name(v)))
 
   ann_program_defines_MVA_vars : LEMMA % :-)
-    FORALL (n : string) : var_names(new_gvds(mp))(n) IMPLIES
+    FORALL (n : Name) : var_names(new_gvds(mp))(n) IMPLIES
       EXISTS (c : Class, gd : FieldDecl) :
         classes(ann_program(mp))(c) AND 
         name(c) = class_name(mva(mp)) AND
         ghost_vars(c)(gd) AND name(gd) = n
 
   new_vars_ghost_in_ann_program : LEMMA % :-)
-    FORALL (n : string, s : APState) :
+    FORALL (n : Name, s : APState) :
       wf_state(ann_program(mp))(s) IMPLIES
       var_names(new_gvds(mp))(n) IMPLIES
         is_ghost(n, s)

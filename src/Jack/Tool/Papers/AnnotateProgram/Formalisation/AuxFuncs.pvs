@@ -61,6 +61,8 @@ BEGIN
 
 END listfuncs
 
+
+% NOT USED
 FunProp : THEORY
 BEGIN
 

@@ -530,6 +530,26 @@
     (real_gt_is_strict_total_order name-judgement
      "(strict_total_order?[real])" real_props nil))
    68 68 t nil))
+ (wf_state_vars_tricotomy 0
+  (wf_state_vars_tricotomy-1 nil 3395147174 3395147438
+   ("" (skosimp)
+    (("" (expand* "wf_state" "declared_var_names")
+      (("" (expand* "wf_state" "wf_ghoststate" "id")
+        (("" (flatten)
+          (("" (inst?) (("" (inst?) (("" (prop) nil nil)) nil)) nil))
+          nil))
+        nil))
+      nil))
+    nil)
+   proved
+   ((declared_var_names const-decl "finite_set[Name]" ProgramFunctions
+     nil)
+    (wf_state const-decl "boolean" AnnotatedProgramSemantics nil)
+    (Name formal-nonempty-type-decl nil AnnotatedProgramSemantics nil)
+    (wf_state const-decl "boolean" State nil)
+    (id const-decl "(bijective?[T, T])" identity nil)
+    (wf_ghoststate const-decl "boolean" SemanticsJML nil))
+   263651 490 t shostak))
  (wf_state_ghost_not_local_or_field 0
   (wf_state_ghost_not_local_or_field-1 nil 3390125110 3394992614
    ("" (skosimp)
@@ -589,7 +609,7 @@
         nil))
       nil))
     nil)
-   proved
+   unfinished
    ((wf_state const-decl "boolean" AnnotatedProgramSemantics nil)
     (wf_program_variables_not_reserved_words formula-decl nil
      WellFormedProgram nil)
@@ -627,7 +647,7 @@
    459014 2090 t shostak))
  (wf_update_PState 0
   (wf_update_PState-2 nil 3392375532 3394352455 ("" (grind) nil nil)
-   unchecked
+   unfinished
    ((boolean nonempty-type-decl nil booleans nil)
     (finite_set type-eq-decl nil finite_sets nil)
     (lift type-decl nil lift_adt nil)
@@ -652,7 +672,7 @@
         (("" (flatten) (("" (assert) nil nil)) nil)) nil))
       nil))
     nil)
-   unchecked nil 20 21 t shostak))
+   unfinished nil 20 21 t shostak))
  (wf_state_update_stack 0
   (wf_state_update_stack-1 nil 3391162146 3394353275
    ("" (skosimp*)
@@ -901,7 +921,7 @@
         nil))
       nil))
     nil)
-   unchecked
+   unfinished
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (set type-eq-decl nil sets nil)
@@ -2261,7 +2281,7 @@
        ("2" (use "wf_nat") (("2" (grind) nil nil)) nil))
       nil))
     nil)
-   unchecked
+   unfinished
    ((real_lt_is_strict_total_order name-judgement
      "(strict_total_order?[real])" real_props nil)
     (strict_total_order_restrict application-judgement
@@ -3032,7 +3052,7 @@
       nil)
      ("2" (use "wf_nat") (("2" (grind) nil nil)) nil))
     nil)
-   unchecked
+   unfinished
    ((wf_nat formula-decl nil naturalnumbers nil)
     (Name formal-nonempty-type-decl nil AnnotatedProgramSemantics nil)
     (Val type-decl nil Val_adt nil)
@@ -3140,7 +3160,7 @@
     (wf_update_GhostVars formula-decl nil AnnotatedProgramSemantics
      nil)
     (source adt-accessor-decl "[(Set?) -> Expr[Name]]" Stmt_adt nil)
-    (Set? adt-recognizer-decl "[Stmt -> boolean]" Stmt_adt nil) nil
+    (Set? adt-recognizer-decl "[Stmt -> boolean]" Stmt_adt nil)
     (deriv_expr const-decl "bool" Semantics nil)
     (else_stmt adt-accessor-decl "[(IfThenElse?) -> Stmt]" Stmt_adt
      nil)
@@ -3999,7 +4019,7 @@
       (("" (inst?) (("" (inst?) (("" (ground) nil nil)) nil)) nil))
       nil))
     nil)
-   unchecked
+   unfinished
    ((on_method_exit_exceptional const-decl "(on_method_event_type)"
      SemanticsJML nil)
     (on_method_exit_normal const-decl "(on_method_event_type)"
@@ -4070,7 +4090,7 @@
       (("" (inst?) (("" (inst?) (("" (assert) nil nil)) nil)) nil))
       nil))
     nil)
-   unchecked
+   unfinished
    ((on_method_exit_exceptional const-decl "(on_method_event_type)"
      SemanticsJML nil)
     (on_method_exit_normal const-decl "(on_method_event_type)"
@@ -4140,7 +4160,7 @@
     (("" (use "deriv_expr_bottom_iff_exception_step")
       (("" (assert) nil nil)) nil))
     nil)
-   unchecked
+   unfinished
    ((deriv_expr_bottom_iff_exception_step formula-decl nil
      SemanticsProofs nil)
     (Name formal-nonempty-type-decl nil AnnotatedProgramSemantics nil)
@@ -4210,7 +4230,7 @@
    ("" (use "deriv_boolean_expr_type")
     (("" (skosimp*) (("" (inst?) (("" (assert) nil nil)) nil)) nil))
     nil)
-   unchecked
+   unfinished
    ((on_method_exit_exceptional const-decl "(on_method_event_type)"
      SemanticsJML nil)
     (on_method_exit_normal const-decl "(on_method_event_type)"
@@ -4428,14 +4448,12 @@
         nil))
       nil))
     nil)
-   proved
+   unfinished
    ((= const-decl "[T, T -> boolean]" equalities nil)
-    (PRED type-eq-decl nil defined_types nil)
-    (every adt-def-decl "boolean" list_adt nil)
+    (PRED type-eq-decl nil defined_types nil) nil
     (member def-decl "bool" list_props nil)
     (some_is_exists formula-decl nil listfuncs nil)
-    (OR const-decl "[bool, bool -> bool]" booleans nil)
-    (some adt-def-decl "boolean" list_adt nil)
+    (OR const-decl "[bool, bool -> bool]" booleans nil) nil
     (list type-decl nil list_adt nil)
     (every_is_forall formula-decl nil listfuncs nil)
     (Expr type-decl nil Expr_adt nil)
@@ -4467,7 +4485,7 @@
         nil))
       nil))
     nil)
-   proved
+   unfinished
    ((proper_subterm_set_clause const-decl "boolean" ProgramFunctions
      nil)
     (Name formal-nonempty-type-decl nil APSemanticsProperties nil)
@@ -4542,15 +4560,13 @@
         (("9" (inst?) (("9" (ground) nil nil)) nil)) nil))
       nil))
     nil)
-   proved
+   unfinished
    ((Expr type-decl nil Expr_adt nil)
     (every_is_forall formula-decl nil listfuncs nil)
     (list type-decl nil list_adt nil)
     (some_is_exists formula-decl nil listfuncs nil)
-    (OR const-decl "[bool, bool -> bool]" booleans nil)
-    (some adt-def-decl "boolean" list_adt nil)
-    (member def-decl "bool" list_props nil)
-    (every adt-def-decl "boolean" list_adt nil)
+    (OR const-decl "[bool, bool -> bool]" booleans nil) nil
+    (member def-decl "bool" list_props nil) nil
     (PRED type-eq-decl nil defined_types nil)
     (= const-decl "[T, T -> boolean]" equalities nil)
     (Stmt_induction formula-decl nil Stmt_adt nil)
@@ -4804,15 +4820,14 @@
         nil))
       nil))
     nil)
-   proved
+   unfinished
    ((real_gt_is_strict_total_order name-judgement
      "(strict_total_order?[real])" real_props nil)
     (posint_plus_nnint_is_posint application-judgement "posint"
      integers nil)
     (real_lt_is_strict_total_order name-judgement
      "(strict_total_order?[real])" real_props nil)
-    (m1!1 skolem-const-decl "nat" APSemanticsProperties nil)
-    (n!1 skolem-const-decl "nat" APSemanticsProperties nil)
+    nil nil
     (stmt_determ_step_AP formula-decl nil AnnotatedProgramSemantics
      nil)
     (int_minus_int_is_int application-judgement "int" integers nil)
@@ -5075,11 +5090,10 @@
         nil))
       nil))
     nil)
-   proved
+   unfinished
    ((posint_plus_nnint_is_posint application-judgement "posint"
      integers nil)
-    (n!1 skolem-const-decl "nat" APSemanticsProperties nil)
-    (m1!1 skolem-const-decl "nat" APSemanticsProperties nil)
+    nil nil
     (real_lt_is_strict_total_order name-judgement
      "(strict_total_order?[real])" real_props nil)
     (int_minus_int_is_int application-judgement "int" integers nil)

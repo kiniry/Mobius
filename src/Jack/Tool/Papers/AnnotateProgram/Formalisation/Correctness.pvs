@@ -1,12 +1,17 @@
-CorrectnessAnnProgram[CP : TYPE+] : THEORY
+CorrectnessAnnProgram[CP, Name : TYPE+] : THEORY
 BEGIN
 
   ASSUMING
+
     CP_is_enumerable : ASSUMPTION
       EXISTS (f : [CP -> nat]) : injective?(f)
+
+    name_of_exists : ASSUMPTION
+      EXISTS (f : [CP -> Name]) : injective?(f)
+
   ENDASSUMING
 
-  IMPORTING AnnGenerationLemmas[CP]
+  IMPORTING AnnGenerationLemmas[CP, Name]
 
 
   % Properties about MP_modeled?
@@ -15,25 +20,24 @@ BEGIN
     FORALL (mp : MonitoredProgram)(sMP : MPState, sAP : APState) :
       MP_modeled?(mp)(sMP, sAP) IMPLIES ex(pstate(sMP)) = ex(pstate(sAP))
 
-  MP_modeled_implies_cp_not_halted : LEMMA % :-)
-    FORALL (mp : MonitoredProgram, sMP : MPState, sAP : APState) :
-      MP_modeled?(mp)(sMP, sAP) IMPLIES
-      NOT up?(ex(pstate(sAP))) IMPLIES
-        NOT cp(astate(sMP)) = halted
- 
   % If cp(astate(sMP)) = halted, upd must leave the JML exception in sAP
   MP_modeled_preserved_by_update : LEMMA % :-)
     FORALL (mp : MonitoredProgram, ap : Program)
            (sMP : MPState, sAP : APState)(upd : [PState -> PState]) :
       related_states(mp, ap)(sMP, sAP) IMPLIES
+      halted_implies_JMLExc(astate(sMP), sAP) IMPLIES
       NOT up?(ex(pstate(sAP))) IMPLIES
         MP_modeled?(mp)(update_PState(sMP, upd), update_PState(sAP, upd))
 
+  % PROVE! This can be long. We have to show that the expressions and
+  % statements of the mp are not modified, only new exprs and stmts are
+  % added and they do not interfere with the others.
   MP_modeled_implies_same_num_eval : LEMMA % :-)
     FORALL (mp : MonitoredProgram, ap : Program)
            (sMP : MPState, sAP : APState)(n : NumExpr) :
       related_states(mp, ap)(sMP, sAP) IMPLIES
-        eval(n)(sMP) = eval(n)(sAP)
+      (VarEval?(n) IMPLIES declared_var_names(program(mp))(varname(n))) IMPLIES
+          eval(n)(sMP) = eval(n)(sAP)
 
   MP_modeled_implies_same_bool_eval : LEMMA % :-)
     FORALL (mp : MonitoredProgram, ap : Program)

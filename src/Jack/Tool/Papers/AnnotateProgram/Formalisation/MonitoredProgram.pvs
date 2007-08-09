@@ -104,11 +104,11 @@ BEGIN
 
   ASSUMING
 
-    name_of_exists : ASSUMPTION
-      EXISTS (f : [CP -> Name]) : injective?(f)
-
     CP_is_enumerable : ASSUMPTION
       EXISTS (f : [CP -> nat]) : injective?(f)
+
+    name_of_exists : ASSUMPTION
+      EXISTS (f : [CP -> Name]) : injective?(f)
 
   ENDASSUMING
 

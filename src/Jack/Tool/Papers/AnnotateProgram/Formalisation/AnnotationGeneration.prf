@@ -1,13 +1,13 @@
 (AnnotateProgram
  (IMP_MonitoredProgramSemantics_TCC1 0
   (IMP_MonitoredProgramSemantics_TCC1-1 nil 3394988076 nil
-   ("" (assuming-tcc) nil nil) nil nil nil nil nil nil))
+   ("" (assuming-tcc) nil nil) unchecked nil nil nil nil nil))
  (IMP_MonitoredProgramSemantics_TCC2 0
   (IMP_MonitoredProgramSemantics_TCC2-1 nil 3394988076 nil
-   ("" (assuming-tcc) nil nil) nil nil nil nil nil nil))
+   ("" (assuming-tcc) nil nil) unchecked nil nil nil nil nil))
  (ann_action_TCC1 0
   (ann_action_TCC1-1 nil 3383987003 3394988972
-   ("" (termination-tcc) nil nil) proved
+   ("" (termination-tcc) nil nil) unchecked
    ((real_lt_is_strict_total_order name-judgement
      "(strict_total_order?[real])" real_props nil)
     (nnint_plus_posint_is_posint application-judgement "posint"
@@ -59,7 +59,7 @@
         nil))
       nil))
     nil)
-   proved
+   unchecked
    ((finite_set type-eq-decl nil finite_sets nil)
     (is_finite const-decl "bool" finite_sets nil)
     (set type-eq-decl nil sets nil)
@@ -78,23 +78,9 @@
     (bool nonempty-type-eq-decl nil booleans nil)
     (boolean nonempty-type-decl nil booleans nil)
     (injective? const-decl "bool" functions nil)
-    (nonempty_exists formula-decl nil sets_lemmas nil)
-    (t!2 skolem-const-decl "Transition[CP, string]" AnnotateProgram
-     nil)
+    (nonempty_exists formula-decl nil sets_lemmas nil) nil
     (member const-decl "bool" sets nil)
-    (empty? const-decl "bool" sets nil)
-    (x2!1 skolem-const-decl "({x: [Expr[string], Stmt[string]] |
-    EXISTS (t: Transition[CP, string]):
-      ts!1(t) AND
-       x =
-        (guard_to_expression[CP, string](mva(mp!1))(guard(t)),
-         update_vars(t))})" AnnotateProgram nil)
-    (x1!1 skolem-const-decl "({x: [Expr[string], Stmt[string]] |
-    EXISTS (t: Transition[CP, string]):
-      ts!1(t) AND
-       x =
-        (guard_to_expression[CP, string](mva(mp!1))(guard(t)),
-         update_vars(t))})" AnnotateProgram nil)
+    (empty? const-decl "bool" sets nil) nil nil
     (choose const-decl "(p)" sets nil) (< const-decl "bool" reals nil)
     (>= const-decl "bool" reals nil)
     (int nonempty-type-eq-decl nil integers nil)
@@ -108,9 +94,7 @@
      nil)
     (number nonempty-type-decl nil numbers nil)
     (Expr type-decl nil Expr_adt nil) (Stmt type-decl nil Stmt_adt nil)
-    (AND const-decl "[bool, bool -> bool]" booleans nil)
-    (ts!1 skolem-const-decl "finite_set[Transition[CP, string]]"
-     AnnotateProgram nil)
+    (AND const-decl "[bool, bool -> bool]" booleans nil) nil
     (= const-decl "[T, T -> boolean]" equalities nil)
     (EventType type-decl nil EventType_adt nil)
     (Val type-decl nil Val_adt nil)
@@ -126,8 +110,7 @@
     (MonitoredProgramPre type-eq-decl nil MonitoredProgram nil)
     (compatible const-decl "boolean" MonitoredProgram nil)
     (MonitoredProgram type-eq-decl nil MonitoredProgram nil)
-    (wf_MP const-decl "boolean" MonitoredProgram nil)
-    (mp!1 skolem-const-decl "(wf_MP[CP, string])" AnnotateProgram nil)
+    (wf_MP const-decl "boolean" MonitoredProgram nil) nil
     (update_vars const-decl "Stmt" AnnotateProgram nil)
     (nonempty? const-decl "bool" sets nil))
    1720 1530 t nil))
@@ -150,7 +133,7 @@
         nil))
       nil))
     nil)
-   proved
+   unchecked
    ((finite_set type-eq-decl nil finite_sets nil)
     (is_finite const-decl "bool" finite_sets nil)
     (set type-eq-decl nil sets nil)
@@ -435,7 +418,7 @@
         nil))
       nil))
     nil)
-   proved
+   unchecked
    ((wf_MP const-decl "boolean" MonitoredProgram nil)
     (MonitoredProgram type-eq-decl nil MonitoredProgram nil)
     (compatible const-decl "boolean" MonitoredProgram nil)
@@ -465,56 +448,15 @@
     (CP formal-nonempty-type-decl nil AnnotateProgram nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
-    (boolean nonempty-type-decl nil booleans nil)
-    (q!1 skolem-const-decl "CP" AnnotateProgram nil)
-    (c!1 skolem-const-decl "({c: [Expr[string], Stmt[string]] |
-    EXISTS (q: CP):
-      cps(mva(mp!1))(q) AND
-       nonempty?[Transition[CP, string]]
-           ({t: Transition[CP, string] | ts!1(t) AND scp(t) = q})
-        AND
-        c =
-         ann_trans_cp(mp!1)
-                     (q,
-                      {t: Transition[CP, string] |
-                         ts!1(t) AND scp(t) = q})})" AnnotateProgram
-     nil)
-    (injective? const-decl "bool" functions nil)
-    (x1!1 skolem-const-decl "({c: [Expr[string], Stmt[string]] |
-    EXISTS (q: CP):
-      cps(mva(mp!1))(q) AND
-       nonempty?[Transition[CP, string]]
-           ({t: Transition[CP, string] | ts!1(t) AND scp(t) = q})
-        AND
-        c =
-         ann_trans_cp(mp!1)
-                     (q,
-                      {t: Transition[CP, string] |
-                         ts!1(t) AND scp(t) = q})})" AnnotateProgram
-     nil)
-    (x2!1 skolem-const-decl "({c: [Expr[string], Stmt[string]] |
-    EXISTS (q: CP):
-      cps(mva(mp!1))(q) AND
-       nonempty?[Transition[CP, string]]
-           ({t: Transition[CP, string] | ts!1(t) AND scp(t) = q})
-        AND
-        c =
-         ann_trans_cp(mp!1)
-                     (q,
-                      {t: Transition[CP, string] |
-                         ts!1(t) AND scp(t) = q})})" AnnotateProgram
-     nil)
-    (q!1 skolem-const-decl "CP" AnnotateProgram nil)
+    (boolean nonempty-type-decl nil booleans nil) nil nil
+    (injective? const-decl "bool" functions nil) nil nil nil
     (restrict const-decl "R" restrict nil)
     (ann_guard_actions const-decl "list[[Expr, Stmt]]" AnnotateProgram
      nil)
     (empty? const-decl "bool" sets nil)
     (member const-decl "bool" sets nil)
-    (update_vars const-decl "Stmt" AnnotateProgram nil)
-    (q!1 skolem-const-decl "CP" AnnotateProgram nil)
-    (nonempty_exists formula-decl nil sets_lemmas nil)
-    (q!1 skolem-const-decl "CP" AnnotateProgram nil)
-    (q!1 skolem-const-decl "CP" AnnotateProgram nil)
+    (update_vars const-decl "Stmt" AnnotateProgram nil) nil
+    (nonempty_exists formula-decl nil sets_lemmas nil) nil nil
     (choose const-decl "(p)" sets nil) (< const-decl "bool" reals nil)
     (>= const-decl "bool" reals nil)
     (int nonempty-type-eq-decl nil integers nil)
@@ -528,11 +470,8 @@
      nil)
     (number nonempty-type-decl nil numbers nil)
     (Expr type-decl nil Expr_adt nil) (Stmt type-decl nil Stmt_adt nil)
-    (AND const-decl "[bool, bool -> bool]" booleans nil)
-    (mp!1 skolem-const-decl "(wf_MP[CP, string])" AnnotateProgram nil)
-    (nonempty? const-decl "bool" sets nil)
-    (ts!1 skolem-const-decl "finite_set[Transition[CP, string]]"
-     AnnotateProgram nil)
+    (AND const-decl "[bool, bool -> bool]" booleans nil) nil
+    (nonempty? const-decl "bool" sets nil) nil
     (= const-decl "[T, T -> boolean]" equalities nil)
     (ann_trans_cp const-decl "[Expr, Stmt]" AnnotateProgram nil)
     (IMPLIES const-decl "[bool, bool -> bool]" booleans nil))
@@ -552,7 +491,7 @@
         nil))
       nil))
     nil)
-   proved
+   unchecked
    ((wf_MVA const-decl "boolean" WellFormedMVA nil)
     (MVA type-eq-decl nil MVA nil)
     (ProgVarDecl type-eq-decl nil MVA nil)
@@ -599,7 +538,7 @@
    ("" (skolem-typepred)
     (("" (expand* "wf_MP" "complete") (("" (flatten) nil nil)) nil))
     nil)
-   proved
+   unchecked
    ((wf_MP const-decl "boolean" MonitoredProgram nil)
     (MonitoredProgram type-eq-decl nil MonitoredProgram nil)
     (compatible const-decl "boolean" MonitoredProgram nil)
@@ -674,7 +613,7 @@
         nil))
       nil))
     nil)
-   proved
+   unchecked
    ((is_finite const-decl "bool" finite_sets nil)
     (set type-eq-decl nil sets nil)
     (Method type-eq-decl nil Program nil)
@@ -692,21 +631,9 @@
     (nat nonempty-type-eq-decl nil naturalnumbers nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
-    (boolean nonempty-type-decl nil booleans nil)
-    (n!1 skolem-const-decl "Method[string]" AnnotateProgram nil)
-    (m!1 skolem-const-decl "({m: Method[string] |
-    EXISTS (n: Method[string]): ms!1(n) AND m = ann_method(mp!1)(n)})"
-     AnnotateProgram nil)
-    (injective? const-decl "bool" functions nil)
-    (n!2 skolem-const-decl "Method[string]" AnnotateProgram nil)
-    (nonempty_exists formula-decl nil sets_lemmas nil)
-    (n!1 skolem-const-decl "Method[string]" AnnotateProgram nil)
-    (x2!1 skolem-const-decl "({m: Method[string] |
-    EXISTS (n: Method[string]): ms!1(n) AND m = ann_method(mp!1)(n)})"
-     AnnotateProgram nil)
-    (x1!1 skolem-const-decl "({m: Method[string] |
-    EXISTS (n: Method[string]): ms!1(n) AND m = ann_method(mp!1)(n)})"
-     AnnotateProgram nil)
+    (boolean nonempty-type-decl nil booleans nil) nil nil
+    (injective? const-decl "bool" functions nil) nil
+    (nonempty_exists formula-decl nil sets_lemmas nil) nil nil nil
     (choose const-decl "(p)" sets nil) (< const-decl "bool" reals nil)
     (>= const-decl "bool" reals nil)
     (int nonempty-type-eq-decl nil integers nil)
@@ -719,9 +646,7 @@
     (number_field_pred const-decl "[number -> boolean]" number_fields
      nil)
     (number nonempty-type-decl nil numbers nil)
-    (AND const-decl "[bool, bool -> bool]" booleans nil)
-    (ms!1 skolem-const-decl "finite_set[Method[string]]"
-     AnnotateProgram nil)
+    (AND const-decl "[bool, bool -> bool]" booleans nil) nil
     (= const-decl "[T, T -> boolean]" equalities nil)
     (CP formal-nonempty-type-decl nil AnnotateProgram nil)
     (EventType type-decl nil EventType_adt nil)
@@ -739,8 +664,7 @@
     (compatible const-decl "boolean" MonitoredProgram nil)
     (MonitoredProgram type-eq-decl nil MonitoredProgram nil)
     (wf_MP const-decl "boolean" MonitoredProgram nil)
-    (ann_method const-decl "Method" AnnotateProgram nil)
-    (mp!1 skolem-const-decl "(wf_MP[CP, string])" AnnotateProgram nil)
+    (ann_method const-decl "Method" AnnotateProgram nil) nil
     (nonempty? const-decl "bool" sets nil))
    586 370 t nil))
  (ann_class_TCC1 0
@@ -753,7 +677,7 @@
         nil))
       nil))
     nil)
-   proved
+   unchecked
    ((wf_MP const-decl "boolean" MonitoredProgram nil)
     (MonitoredProgram type-eq-decl nil MonitoredProgram nil)
     (compatible const-decl "boolean" MonitoredProgram nil)
@@ -840,7 +764,7 @@
         nil))
       nil))
     nil)
-   proved
+   unchecked
    ((wf_MP const-decl "boolean" MonitoredProgram nil)
     (MonitoredProgram type-eq-decl nil MonitoredProgram nil)
     (compatible const-decl "boolean" MonitoredProgram nil)
@@ -877,24 +801,9 @@
     (nat nonempty-type-eq-decl nil naturalnumbers nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
-    (boolean nonempty-type-decl nil booleans nil)
-    (c1!1 skolem-const-decl "Class[string]" AnnotateProgram nil)
-    (c!1 skolem-const-decl "({c: Class[string] |
-    EXISTS (c1: Class[string]):
-      classes(program(mp!1))(c1) AND c = ann_class(mp!1)(c1)})"
-     AnnotateProgram nil)
-    (injective? const-decl "bool" functions nil)
-    (c1!2 skolem-const-decl "Class[string]" AnnotateProgram nil)
-    (nonempty_exists formula-decl nil sets_lemmas nil)
-    (c1!1 skolem-const-decl "Class[string]" AnnotateProgram nil)
-    (x2!1 skolem-const-decl "({c: Class[string] |
-    EXISTS (c1: Class[string]):
-      classes(program(mp!1))(c1) AND c = ann_class(mp!1)(c1)})"
-     AnnotateProgram nil)
-    (x1!1 skolem-const-decl "({c: Class[string] |
-    EXISTS (c1: Class[string]):
-      classes(program(mp!1))(c1) AND c = ann_class(mp!1)(c1)})"
-     AnnotateProgram nil)
+    (boolean nonempty-type-decl nil booleans nil) nil nil
+    (injective? const-decl "bool" functions nil) nil
+    (nonempty_exists formula-decl nil sets_lemmas nil) nil nil nil
     (choose const-decl "(p)" sets nil) (< const-decl "bool" reals nil)
     (>= const-decl "bool" reals nil)
     (int nonempty-type-eq-decl nil integers nil)
@@ -907,8 +816,7 @@
     (number_field_pred const-decl "[number -> boolean]" number_fields
      nil)
     (number nonempty-type-decl nil numbers nil)
-    (AND const-decl "[bool, bool -> bool]" booleans nil)
-    (mp!1 skolem-const-decl "(wf_MP[CP, string])" AnnotateProgram nil)
+    (AND const-decl "[bool, bool -> bool]" booleans nil) nil
     (= const-decl "[T, T -> boolean]" equalities nil)
     (ann_class const-decl "Class" AnnotateProgram nil)
     (nonempty? const-decl "bool" sets nil))
@@ -922,12 +830,17 @@
    ("" (use "CP_is_enumerable") nil nil) unchecked
    ((CP_is_enumerable formula-decl nil AnnotateProgramProperties nil))
    11 20 t nil))
+ (IMP_AnnotateProgram_TCC2 0
+  (IMP_AnnotateProgram_TCC2-1 nil 3395037658 3395037684
+   ("" (use "name_of_exists") nil nil) proved
+   ((name_of_exists formula-decl nil AnnotateProgramProperties nil))
+   8037 10 t nil))
  (ann_program_class_correspondence 0
   (ann_program_class_correspondence-1 nil 3392569211 3394988973
    ("" (skosimp*)
     (("" (expand "ann_program") (("" (propax) nil nil)) nil)) nil)
-   proved ((ann_program const-decl "Program" AnnotateProgram nil)) 215
-   110 t shostak))
+   unfinished ((ann_program const-decl "Program" AnnotateProgram nil))
+   215 110 t shostak))
  (ann_program_method_correspondence 0
   (ann_program_method_correspondence-1 nil 3392569244 3394988973
    ("" (skosimp*)
@@ -959,7 +872,7 @@
         nil))
       nil))
     nil)
-   proved
+   unfinished
    ((ann_program_class_correspondence formula-decl nil
      AnnotateProgramProperties nil)
     (Class type-eq-decl nil Program nil)
@@ -1113,7 +1026,7 @@
         nil))
       nil))
     nil)
-   proved
+   unfinished
    ((nat nonempty-type-eq-decl nil naturalnumbers nil)
     (below type-eq-decl nil nat_types nil)
     (character type-decl nil character_adt nil)
@@ -2209,7 +2122,7 @@
         nil))
       nil))
     nil)
-   proved
+   unfinished
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
@@ -2269,9 +2182,7 @@
     (disjoint? const-decl "bool" sets nil)
     (finite_intersection1 application-judgement "finite_set"
      finite_sets nil)
-    (intersection const-decl "set" sets nil)
-    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
-    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
+    (intersection const-decl "set" sets nil) nil nil
     (member const-decl "bool" sets nil)
     (empty? const-decl "bool" sets nil)
     (wf_program_variables_not_reserved_words_def const-decl "boolean"
@@ -2759,7 +2670,7 @@
         nil))
       nil))
     nil)
-   proved
+   unfinished
    ((wf_MP const-decl "boolean" MonitoredProgram nil)
     (MonitoredProgram type-eq-decl nil MonitoredProgram nil)
     (compatible const-decl "boolean" MonitoredProgram nil)
@@ -2787,12 +2698,9 @@
     (nat nonempty-type-eq-decl nil naturalnumbers nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
-    (boolean nonempty-type-decl nil booleans nil)
-    (v!1 skolem-const-decl "MVAVarDecl[CP, string]"
-     AnnotateProgramProperties nil)
+    (boolean nonempty-type-decl nil booleans nil) nil
     (name_of const-decl "(injective?[CP, Name])" MonitoredProgram nil)
-    (q!1 skolem-const-decl "CP" AnnotateProgramProperties nil)
-    (FieldDecl type-eq-decl nil Program nil)
+    nil (FieldDecl type-eq-decl nil Program nil)
     (IntType? adt-recognizer-decl "[JType -> boolean]" JType_adt nil)
     (IntType adt-constructor-decl "(IntType?)" JType_adt nil)
     (cp const-decl "Name" MonitoredProgram nil)
@@ -2811,9 +2719,9 @@
     (>= const-decl "bool" reals nil)
     (injective? const-decl "bool" functions nil)
     (unique const-decl "(injective?[CP, nat])" MonitoredProgram nil)
-    (mp!1 skolem-const-decl "(wf_MP)" AnnotateProgramProperties nil)
+    nil
     (new_gvds const-decl "finite_set[FieldDecl]" MonitoredProgram nil)
-    (var_names const-decl "finite_set[Name]" ProgramFunctions nil))
+    nil)
    587 490 t shostak))
  (ann_program_defines_MVA_vars 0
   (ann_program_defines_MVA_vars-2 nil 3394875181 3394989042
@@ -2837,7 +2745,7 @@
         nil))
       nil))
     nil)
-   proved
+   unfinished
    ((wf_MP const-decl "boolean" MonitoredProgram nil)
     (MonitoredProgram type-eq-decl nil MonitoredProgram nil)
     (compatible const-decl "boolean" MonitoredProgram nil)
@@ -2878,7 +2786,7 @@
     (Expr type-decl nil Expr_adt nil)
     (FieldDecl type-eq-decl nil Program nil)
     (new_gvds const-decl "finite_set[FieldDecl]" MonitoredProgram nil)
-    (var_names const-decl "finite_set[Name]" ProgramFunctions nil))
+    nil)
    428 340 t nil)
   (ann_program_defines_MVA_vars-1 nil 3389956467 3394872339
    ("" (skosimp*)
@@ -2983,7 +2891,7 @@
         nil))
       nil))
     nil)
-   proved
+   unfinished
    ((id const-decl "(bijective?[T, T])" identity nil)
     (is_ghost const-decl "boolean" SemanticsJML nil)
     (wf_ghoststate const-decl "boolean" SemanticsJML nil)
@@ -2995,8 +2903,7 @@
     (char? adt-recognizer-decl "[character -> boolean]" character_adt
      nil)
     (char type-eq-decl nil strings nil)
-    (string type-eq-decl nil strings nil)
-    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
+    (string type-eq-decl nil strings nil) nil
     (FieldDecl type-eq-decl nil Program nil)
     (Class type-eq-decl nil Program nil)
     (lift type-decl nil lift_adt nil)

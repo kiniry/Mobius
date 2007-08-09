@@ -19,10 +19,10 @@ BEGIN
   PState : TYPE = [# ex : lift[Excpt],
                      st : PSt #]
 
-  lift_PSt(p : PSt) : PState =
-    (# ex := bottom, st := p #)
+%  lift_PSt(p : PSt) : PState =
+%    (# ex := bottom, st := p #)
 
-  CONVERSION lift_PSt
+%  CONVERSION lift_PSt
 
   is_local(vn : Name, sigma : PState) : boolean =
     defined?(lvs(st(sigma))(vn)) 

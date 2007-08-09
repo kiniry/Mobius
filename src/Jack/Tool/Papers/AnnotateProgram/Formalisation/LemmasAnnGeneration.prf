@@ -1,10 +1,14 @@
 (AnnGenerationLemmas
  (IMP_Equivalence_TCC1 0
-  (IMP_Equivalence_TCC1-1 nil 3390907940 3393582824
-   ("" (lemma "CP_is_enumerable") (("" (propax) nil nil)) nil)
-   unchecked
-   ((CP_is_enumerable formula-decl nil AnnGenerationLemmas nil)) 240
-   120 t nil))
+  (IMP_Equivalence_TCC1-1 nil 3390907940 3395037841
+   ("" (lemma "CP_is_enumerable") (("" (propax) nil nil)) nil) proved
+   ((CP_is_enumerable formula-decl nil AnnGenerationLemmas nil)) 53 30
+   t nil))
+ (IMP_Equivalence_TCC2 0
+  (IMP_Equivalence_TCC2-1 nil 3395037817 3395037860
+   ("" (use "name_of_exists") nil nil) proved
+   ((name_of_exists formula-decl nil AnnGenerationLemmas nil)) 12653 30
+   t nil))
  (execute_action_correctness 0
   (execute_action_correctness-2 nil 3391434568 3394957377
    ("" (induct "a")
@@ -639,7 +643,7 @@
         nil))
       nil))
     nil)
-   unchecked
+   unfinished
    ((list type-decl nil list_adt nil) (Action type-eq-decl nil MVA nil)
     (finite_set type-eq-decl nil finite_sets nil)
     (EventType type-decl nil EventType_adt nil)
@@ -742,7 +746,7 @@
      real_props nil)
     (- const-decl "[numfield, numfield -> numfield]" number_fields nil)
     (numfield nonempty-type-eq-decl nil number_fields nil)
-    (update_store const-decl "Store" State nil) nil
+    (update_store const-decl "Store" State nil)
     (Program_modeled? const-decl "boolean" Equivalence nil)
     (Program_gvs_modeled? const-decl "boolean" Equivalence nil)
     (new_vars_derived_from_mp formula-decl nil
@@ -1525,7 +1529,7 @@
         nil))
       nil))
     nil)
-   unchecked
+   unfinished
    ((list_induction formula-decl nil list_adt nil)
     (nat nonempty-type-eq-decl nil naturalnumbers nil)
     (below type-eq-decl nil nat_types nil)
@@ -1562,7 +1566,7 @@
         nil))
       nil))
     nil)
-   unchecked
+   unfinished
    ((list_induction formula-decl nil list_adt nil)
     (nat nonempty-type-eq-decl nil naturalnumbers nil)
     (below type-eq-decl nil nat_types nil)
@@ -1684,7 +1688,7 @@
         (("4" (assert) nil nil)) nil))
       nil))
     nil)
-   unchecked
+   unfinished
    ((set_stmt_of_ann_action_only_for_Set formula-decl nil
      AnnGenerationLemmas nil)
     (posint_plus_nnint_is_posint application-judgement "posint"
@@ -1820,7 +1824,7 @@
         (("3" (assert) nil nil)) nil))
       nil))
     nil)
-   unchecked
+   unfinished
    ((set_stmt_of_ann_action_only_for_Set formula-decl nil
      AnnGenerationLemmas nil)
     (member def-decl "bool" list_props nil)
@@ -1901,7 +1905,7 @@
         nil))
       nil))
     nil)
-   unchecked
+   unfinished
    ((well_behaved_Program const-decl "boolean" Semantics nil)
     (id const-decl "(bijective?[T, T])" identity nil)
     (stmt_proper_subterm_is_transitive formula-decl nil
@@ -2996,7 +3000,7 @@
         nil))
       nil))
     nil)
-   proved
+   unfinished
    ((MP_modeled? const-decl "boolean" Equivalence nil)
     (deriv_stmt def-decl "bool" Semantics nil)
     (posint_plus_nnint_is_posint application-judgement "posint"
@@ -3020,8 +3024,7 @@
     (set_stmt_of_ann_action_only_for_Set formula-decl nil
      AnnGenerationLemmas nil)
     (ann_action_sets_mva_vars formula-decl nil AnnGenerationLemmas nil)
-    (NOT const-decl "[bool -> bool]" booleans nil)
-    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
+    (NOT const-decl "[bool -> bool]" booleans nil) nil
     (wf_new_vars const-decl "boolean" MonitoredProgram nil)
     (disjoint_new_vars const-decl "boolean" MonitoredProgram nil)
     (execute_set const-decl "(execute_set_type)" SemanticsJML nil)
@@ -3109,9 +3112,7 @@
     (new_gvds const-decl "finite_set[FieldDecl]" MonitoredProgram nil)
     (IntType adt-constructor-decl "(IntType?)" JType_adt nil)
     (IntType? adt-recognizer-decl "[JType -> boolean]" JType_adt nil)
-    (mp!1 skolem-const-decl "MonitoredProgram[CP, string]"
-     AnnGenerationLemmas nil)
-    (Program_gvs_modeled? const-decl "boolean" Equivalence nil)
+    nil (Program_gvs_modeled? const-decl "boolean" Equivalence nil)
     (Program_modeled? const-decl "boolean" Equivalence nil)
     (update_GhostVars_type const-decl "boolean" SemanticsJMLTypes nil)
     (update_PState const-decl "(update_PState_type)"
@@ -3125,8 +3126,7 @@
      nil)
     (getFieldDecls const-decl "finite_set[FieldDecl]" ProgramFunctions
      nil)
-    (MVA_vars_are_fields const-decl "boolean" MonitoredProgram nil)
-    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
+    (MVA_vars_are_fields const-decl "boolean" MonitoredProgram nil) nil
     (is_field const-decl "boolean" State nil)
     (wf_PSt const-decl "boolean" MVASemantics nil)
     (execute_action_yields_wf_state formula-decl nil MVASemantics nil)
@@ -3778,7 +3778,7 @@
         nil))
       nil))
     nil)
-   proved
+   unfinished
    ((ann_program const-decl "Program" AnnotateProgram nil)
     (MonitoredProgram type-eq-decl nil MonitoredProgram nil)
     (compatible const-decl "boolean" MonitoredProgram nil)
@@ -3849,12 +3849,7 @@
     (set2list_same_elements formula-decl nil set2list nil)
     (ann_guard_actions const-decl "list[[Expr, Stmt]]" AnnotateProgram
      nil)
-    (mp!1 skolem-const-decl "MonitoredProgram[CP, string]"
-     AnnGenerationLemmas nil)
-    (t!1 skolem-const-decl "Transition[CP, string]" AnnGenerationLemmas
-     nil)
-    (n!1 skolem-const-decl "Method[string]" AnnGenerationLemmas nil)
-    (set2list def-decl "list[T]" set2list nil)
+    nil nil nil (set2list def-decl "list[T]" set2list nil)
     (list type-decl nil list_adt nil)
     (OR const-decl "[bool, bool -> bool]" booleans nil)
     (some_is_exists formula-decl nil listfuncs nil)
@@ -3873,63 +3868,8 @@
     (integer_pred const-decl "[rational -> boolean]" integers nil)
     (int nonempty-type-eq-decl nil integers nil)
     (>= const-decl "bool" reals nil) (< const-decl "bool" reals nil)
-    (choose const-decl "(p)" sets nil)
-    (q!1 skolem-const-decl "CP" AnnGenerationLemmas nil)
-    (q!1 skolem-const-decl "CP" AnnGenerationLemmas nil)
-    (q!1 skolem-const-decl "CP" AnnGenerationLemmas nil)
-    (q!1 skolem-const-decl "CP" AnnGenerationLemmas nil)
-    (x2!1 skolem-const-decl "({c: [Expr, Stmt] |
-    EXISTS (q: CP):
-      cps(mva(mp!1))(q) AND
-       nonempty?({t: Transition |
-                    filter_event[CP]
-                        (mva(mp!1))(etype(event(t!1)))(name(n!1))(t)
-                     AND scp(t) = q})
-        AND
-        c =
-         ann_trans_cp(mp!1)
-                     (q,
-                      {t: Transition |
-                         filter_event(mva(mp!1))
-                                     (etype(event(t!1)))
-                                     (name(n!1))
-                                     (t)
-                          AND scp(t) = q})})" AnnGenerationLemmas nil)
-    (x1!1 skolem-const-decl "({c: [Expr, Stmt] |
-    EXISTS (q: CP):
-      cps(mva(mp!1))(q) AND
-       nonempty?({t: Transition |
-                    filter_event[CP]
-                        (mva(mp!1))(etype(event(t!1)))(name(n!1))(t)
-                     AND scp(t) = q})
-        AND
-        c =
-         ann_trans_cp(mp!1)
-                     (q,
-                      {t: Transition |
-                         filter_event(mva(mp!1))
-                                     (etype(event(t!1)))
-                                     (name(n!1))
-                                     (t)
-                          AND scp(t) = q})})" AnnGenerationLemmas nil)
-    (injective? const-decl "bool" functions nil)
-    (c!2 skolem-const-decl "({c: [Expr[string], Stmt[string]] |
-    EXISTS (q: CP):
-      cps(mva(mp!1))(q) AND
-       nonempty?[Transition[CP, string]]
-           ({t: Transition[CP, string] |
-               filter_event[CP](mva(mp!1))(etype(event(t!1)))(name(n!1))(t)
-                AND scp(t) = q})
-        AND
-        c =
-         ann_trans_cp[CP]
-             (mp!1)
-             (q,
-              {t: Transition[CP, string] |
-                 filter_event[CP]
-                     (mva(mp!1))(etype(event(t!1)))(name(n!1))(t)
-                  AND scp(t) = q})})" AnnGenerationLemmas nil)
-    (q!1 skolem-const-decl "CP" AnnGenerationLemmas nil)
+    (choose const-decl "(p)" sets nil) nil nil nil nil nil nil
+    (injective? const-decl "bool" functions nil) nil nil
     (filter_event const-decl "finite_set[Transition]" AnnotateProgram
      nil)
     (AND const-decl "[bool, bool -> bool]" booleans nil)
@@ -5679,7 +5619,7 @@
         nil))
       nil))
     nil)
-   proved
+   unfinished
    ((related_states const-decl "boolean" Equivalence nil)
     (deriv_stmt def-decl "bool" Semantics nil)
     (execute_CaseJML const-decl "(execute_CaseJML_type)" SemanticsJML
@@ -5689,15 +5629,8 @@
     (set2list def-decl "list[T]" set2list nil)
     (wf_state const-decl "boolean" MonitoredProgramSemantics nil)
     (total const-decl "boolean" MVASemantics nil)
-    (wf_AState const-decl "boolean" MVASemantics nil)
-    (mp!1 skolem-const-decl "MonitoredProgram[CP, string]"
-     AnnGenerationLemmas nil)
-    (t!1 skolem-const-decl "Transition[CP, string]" AnnGenerationLemmas
-     nil)
-    (sMP1!1 skolem-const-decl "MPState[CP, string]" AnnGenerationLemmas
-     nil)
-    (et!1 skolem-const-decl "EventType" AnnGenerationLemmas nil)
-    (m!1 skolem-const-decl "Method[string]" AnnGenerationLemmas nil)
+    (wf_AState const-decl "boolean" MVASemantics nil) nil nil nil nil
+    nil
     (wf_state_implies_wf_PSt formula-decl nil MonitoredProgramSemantics
      nil)
     (choose const-decl "(p)" sets nil)

@@ -1,16 +1,21 @@
-Equivalence[CP : TYPE+] : THEORY
+Equivalence[CP, Name : TYPE+] : THEORY
 BEGIN
 
   ASSUMING
+
     CP_is_enumerable : ASSUMPTION
       EXISTS (f : [CP -> nat]) : injective?(f)
+
+    name_of_exists : ASSUMPTION
+      EXISTS (f : [CP -> Name]) : injective?(f)
+
   ENDASSUMING
 
-  IMPORTING MVASemantics[CP, string],
-            AnnotatedProgramSemantics[string],
-            MonitoredProgramSemantics[CP, string],
-            AnnotateProgram[CP],
-            AnnotateProgramProperties[CP, string]
+  IMPORTING MVASemantics[CP, Name],
+            AnnotatedProgramSemantics[Name],
+            MonitoredProgramSemantics[CP, Name],
+            AnnotateProgram[CP, Name],
+            AnnotateProgramProperties[CP, Name]
 
   MVA_cp_modeled?(sA : AState, sAP : APState) : boolean =
     Int(unique(cp(sA))) = gvs(sAP)(cp)
@@ -20,7 +25,7 @@ BEGIN
       Int(unique(q)) = gvs(sAP)(name_of(q))
 
   MVA_vars_modeled?(sA : AState, sAP : APState) : boolean =
-    FORALL (n : string) : defined?(stA(sA)(n)) IMPLIES
+    FORALL (n : Name) : defined?(stA(sA)(n)) IMPLIES
       stA(sA)(n) = gvs(sAP)(n)
 
   % A state of a MVA, sA, is modeled by a state of an AP, sAP, if:
@@ -33,7 +38,7 @@ BEGIN
     MVA_vars_modeled?(sA, sAP)
 
   Program_gvs_modeled?(sMP : MPState, sAP : APState) : boolean =
-    FORALL (n : string) : defined?(gvs(sMP)(n)) IMPLIES
+    FORALL (n : Name) : defined?(gvs(sMP)(n)) IMPLIES
       gvs(sMP)(n) = gvs(sAP)(n)
 
   % Says if sAP is a super state of sMP

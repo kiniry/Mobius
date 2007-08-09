@@ -1,12 +1,17 @@
-AnnGenerationLemmas[CP : TYPE+] : THEORY
+AnnGenerationLemmas[CP, Name : TYPE+] : THEORY
 BEGIN
 
   ASSUMING
+
     CP_is_enumerable : ASSUMPTION
       EXISTS (f : [CP -> nat]) : injective?(f)
+
+    name_of_exists : ASSUMPTION
+      EXISTS (f : [CP -> Name]) : injective?(f)
+
   ENDASSUMING
 
-  IMPORTING Equivalence[CP],
+  IMPORTING Equivalence[CP, Name],
             APSemanticsProperties,
             listfuncs
 
@@ -54,7 +59,7 @@ BEGIN
   % by the evaluation of ann_action(a).
   non_interference_of_sets_in_ann_actions : LEMMA % :-)
     FORALL (p : Program, a : Action, s1, s2 : APState,
-            n : nat, vn : string) :
+            n : nat, vn : Name) :
       (FORALL (c : Stmt) : set_stmt_of_ann_action(c, a) IMPLIES
         NOT target(c) = vn AND expr_has_no_side_effects(p)(source(c)))
       IMPLIES

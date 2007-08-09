@@ -1,10 +1,14 @@
 (CorrectnessAnnProgram
  (IMP_AnnGenerationLemmas_TCC1 0
-  (IMP_AnnGenerationLemmas_TCC1-1 nil 3393590714 3394357838
-   ("" (use "CP_is_enumerable") nil nil) unchecked (nil) 1 1 t nil))
+  (IMP_AnnGenerationLemmas_TCC1-1 nil 3393590714 3395037906
+   ("" (use "CP_is_enumerable") nil nil) proved
+   ((CP_is_enumerable formula-decl nil CorrectnessAnnProgram nil)) 74
+   40 t nil))
  (IMP_AnnGenerationLemmas_TCC2 0
-  (IMP_AnnGenerationLemmas_TCC2-1 nil 3394370067 nil
-   ("" (existence-tcc) nil nil) nil nil nil nil nil nil))
+  (IMP_AnnGenerationLemmas_TCC2-1 nil 3395037883 3395037922
+   ("" (use "name_of_exists") nil nil) proved
+   ((name_of_exists formula-decl nil CorrectnessAnnProgram nil)) 8661
+   40 t nil))
  (MP_modeled_implies_same_exception 0
   (MP_modeled_implies_same_exception-1 nil 3393591341 3394357838
    ("" (skosimp)
@@ -13,50 +17,44 @@
         (("" (ground) nil nil)) nil))
       nil))
     nil)
-   untried (nil nil) 3 3 t nil))
- (MP_modeled_implies_cp_not_halted 0
-  (MP_modeled_implies_cp_not_halted-1 nil 3393591448 3394370128
-   ("" (skosimp)
-    (("" (expand* "MP_modeled?" "halted_implies_JMLExc")
-      (("" (ground) nil nil)) nil))
-    nil)
-   proved
-   ((halted_implies_JMLExc const-decl "boolean" Equivalence nil)
-    (MP_modeled? const-decl "boolean" Equivalence nil))
-   50964 50 t shostak))
+   unfinished nil 3 3 t nil))
  (MP_modeled_preserved_by_update 0
-  (MP_modeled_preserved_by_update-1 nil 3393591712 3394357838
+  (MP_modeled_preserved_by_update-1 nil 3393591712 3395031909
    ("" (skosimp*)
-    (("" (expand "related_states")
-      (("" (use "MP_modeled_implies_cp_not_halted")
-        (("" (prop)
-          (("" (expand* "MP_modeled?" "update_PState")
-            (("" (prop)
-              (("1" (expand "MVA_modeled?") (("1" (propax) nil nil))
-                nil)
-               ("2" (expand "Program_modeled?")
-                (("2" (ground) nil nil)) nil))
-              nil))
+    (("" (expand* "related_states" "halted_implies_JMLExc")
+      (("" (prop)
+        (("" (expand* "MP_modeled?" "update_PState")
+          (("" (prop)
+            (("1" (expand "MVA_modeled?")
+              (("1"
+                (expand* "MVA_modeled?" "MVA_cp_modeled?"
+                 "MVA_cps_modeled?" "MVA_vars_modeled?")
+                nil nil))
+              nil)
+             ("2" (expand* "Program_modeled?" "Program_gvs_modeled?")
+              (("2" (ground) nil nil)) nil))
             nil))
           nil))
         nil))
       nil))
     nil)
-   untried
-   (nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil
-    nil nil nil nil nil nil nil nil nil nil nil
-    (finite_set type-eq-decl nil finite_sets nil) nil
-    (string type-eq-decl nil strings nil)
-    (char type-eq-decl nil strings nil)
-    (char? adt-recognizer-decl "[character -> boolean]" character_adt
-     nil)
-    (boolean nonempty-type-decl nil booleans nil)
-    (character type-decl nil character_adt nil)
-    (below type-eq-decl nil nat_types nil)
-    (nat nonempty-type-eq-decl nil naturalnumbers nil))
-   9 10 t nil))
+   unchecked
+   ((halted_implies_JMLExc const-decl "boolean" Equivalence nil)
+    (related_states const-decl "boolean" Equivalence nil)
+    (update_PState const-decl "(update_PState_type)"
+     MonitoredProgramSemantics nil)
+    (update_PState const-decl "(update_PState_type)"
+     AnnotatedProgramSemantics nil)
+    (MP_modeled? const-decl "boolean" Equivalence nil)
+    (Program_gvs_modeled? const-decl "boolean" Equivalence nil)
+    (Program_modeled? const-decl "boolean" Equivalence nil)
+    (MVA_modeled? const-decl "boolean" Equivalence nil)
+    (MVA_cp_modeled? const-decl "boolean" Equivalence nil)
+    (MVA_cps_modeled? const-decl "boolean" Equivalence nil)
+    (MVA_vars_modeled? const-decl "boolean" Equivalence nil))
+   195384 420 t nil))
  (MP_modeled_implies_same_num_eval 0
-  (MP_modeled_implies_same_num_eval-1 nil 3393592500 3394357856
+  (MP_modeled_implies_same_num_eval-1 nil 3393592500 3395033927
    ("" (skolem!)
     (("" (skolem!)
       (("" (induct "n")
@@ -82,38 +80,27 @@
           nil)
          ("6" (skosimp*)
           (("6" (expand* "eval" "lookup")
-            (("6" (use "ann_program_preserves_state_vars")
-              (("6" (lemma "wf_state_vars_local_or_field")
-                (("6"
-                  (inst -1 "ap!1" "pstate(sAP!1)" "NumVarEval1_var!1")
-                  (("6" (lemma "wf_state_vars_local_or_field")
-                    (("6"
-                      (inst -1 "program(mp!1)" "pstate(sMP!1)"
-                       "NumVarEval1_var!1")
-                      (("6"
-                        (expand* "related_states"
-                         "specification_requirements")
-                        (("6" (flatten)
-                          (("6" (assert)
-                            (("6" (expand* "wf_MP")
-                              (("6"
-                                (expand "wf_state" (-9 -10))
-                                (("6"
-                                  (flatten)
-                                  (("6"
-                                    (hide
-                                     -9
-                                     -10
-                                     -11
-                                     -12
-                                     -13
-                                     -14
-                                     -15
-                                     -16
-                                     -17
-                                     -18
-                                     -19)
-                                    (("6" (grind) nil nil))
+            (("6"
+              (case "is_field(NumVarEval1_var!1, pstate(sMP!1)) = is_field(NumVarEval1_var!1, pstate(sAP!1)) AND
+             is_local(NumVarEval1_var!1, pstate(sMP!1)) = is_local(NumVarEval1_var!1, pstate(sAP!1))")
+              (("1" (flatten)
+                (("1" (replace -1 :hide? t)
+                  (("1" (replace -1 :hide? t)
+                    (("1" (use "wf_state_vars_local_or_field")
+                      (("1" (expand "related_states")
+                        (("1" (flatten)
+                          (("1" (expand "wf_state" -6)
+                            (("1" (flatten)
+                              (("1"
+                                (use "ann_program_yields_wf_program")
+                                (("1"
+                                  (assert)
+                                  (("1"
+                                    (flatten)
+                                    (("1"
+                                      (hide-all-but (-2 -3 -10 1))
+                                      (("1" (postpone) nil nil))
+                                      nil))
                                     nil))
                                   nil))
                                 nil))
@@ -124,6 +111,12 @@
                       nil))
                     nil))
                   nil))
+                nil)
+               ("2" (hide 2)
+                (("2" (expand "related_states")
+                  (("2" (use "ann_program_preserves_pstate_vars")
+                    (("2" (ground) nil nil)) nil))
+                  nil))
                 nil))
               nil))
             nil))
@@ -131,10 +124,8 @@
         nil))
       nil))
     nil)
-   untried
-   (nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil
-    nil
-    (mult_divides1 application-judgement "(divides(n))" divides nil)
+   unfinished
+   ((mult_divides1 application-judgement "(divides(n))" divides nil)
     (mult_divides2 application-judgement "(divides(m))" divides nil)
     (minus_odd_is_odd application-judgement "odd_int" integers nil)
     (int_minus_int_is_int application-judgement "int" integers nil)
@@ -146,10 +137,10 @@
     (boolean nonempty-type-decl nil booleans nil)
     (character type-decl nil character_adt nil)
     (below type-eq-decl nil nat_types nil)
-    (nat nonempty-type-eq-decl nil naturalnumbers nil) nil nil nil
+    (nat nonempty-type-eq-decl nil naturalnumbers nil)
     (id const-decl "(bijective?[T, T])" identity nil)
-    (bijective? const-decl "bool" functions nil) nil nil nil nil nil
-    nil nil nil (int nonempty-type-eq-decl nil integers nil)
+    (bijective? const-decl "bool" functions nil)
+    (int nonempty-type-eq-decl nil integers nil)
     (integer_pred const-decl "[rational -> boolean]" integers nil)
     (rational nonempty-type-from-decl nil rationals nil)
     (rational_pred const-decl "[real -> boolean]" rationals nil)
@@ -159,12 +150,11 @@
     (number_field_pred const-decl "[number -> boolean]" number_fields
      nil)
     (= const-decl "[T, T -> boolean]" equalities nil)
-    (number nonempty-type-decl nil numbers nil) nil nil nil nil nil nil
-    nil (lift type-decl nil lift_adt nil) nil nil nil nil nil nil nil
-    nil nil nil nil nil nil nil nil nil nil nil nil nil nil
-    (finite_set type-eq-decl nil finite_sets nil) nil nil
-    (bool nonempty-type-eq-decl nil booleans nil) nil)
-   1723 1723 t nil))
+    (number nonempty-type-decl nil numbers nil)
+    (lift type-decl nil lift_adt nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (bool nonempty-type-eq-decl nil booleans nil))
+   1953995 32170 t nil))
  (MP_modeled_implies_same_bool_eval 0
   (MP_modeled_implies_same_bool_eval-1 nil 3393595270 3394357935
    ("" (skosimp)
@@ -355,15 +345,13 @@
         nil))
       nil))
     nil)
-   untried
-   (nil nil nil nil nil nil nil (lift type-decl nil lift_adt nil) nil
-    (= const-decl "[T, T -> boolean]" equalities nil) nil nil nil nil
-    nil nil nil nil nil nil nil nil nil nil nil nil nil
+   unfinished
+   ((lift type-decl nil lift_adt nil)
+    (= const-decl "[T, T -> boolean]" equalities nil)
     (bijective? const-decl "bool" functions nil)
-    (id const-decl "(bijective?[T, T])" identity nil) nil nil nil nil
-    nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil
-    (finite_set type-eq-decl nil finite_sets nil) nil nil
-    (bool nonempty-type-eq-decl nil booleans nil) nil
+    (id const-decl "(bijective?[T, T])" identity nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
     (nat nonempty-type-eq-decl nil naturalnumbers nil)
     (below type-eq-decl nil nat_types nil)
     (character type-decl nil character_adt nil)
@@ -371,21 +359,18 @@
     (char? adt-recognizer-decl "[character -> boolean]" character_adt
      nil)
     (char type-eq-decl nil strings nil)
-    (string type-eq-decl nil strings nil) nil nil nil nil nil nil nil
-    nil nil nil nil nil nil nil nil)
+    (string type-eq-decl nil strings nil))
    7979 7976 t nil))
  (MP_modeled_preserved_by_assertion_checking_TCC1 0
   (MP_modeled_preserved_by_assertion_checking_TCC1-1 nil 3393591169
    3394357944 ("" (subtype-tcc) nil nil) unchecked
    ((finite_intersection1 application-judgement "finite_set"
      finite_sets nil)
-    nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil
-    nil nil nil nil (bijective? const-decl "bool" functions nil)
-    (id const-decl "(bijective?[T, T])" identity nil) nil nil nil nil
-    nil nil nil nil nil (finite_set type-eq-decl nil finite_sets nil)
-    nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil
-    nil nil nil nil (lift type-decl nil lift_adt nil) nil nil nil nil
-    nil nil nil (upto nonempty-type-eq-decl nil naturalnumbers nil)
+    (bijective? const-decl "bool" functions nil)
+    (id const-decl "(bijective?[T, T])" identity nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (lift type-decl nil lift_adt nil)
+    (upto nonempty-type-eq-decl nil naturalnumbers nil)
     (number nonempty-type-decl nil numbers nil)
     (number_field_pred const-decl "[number -> boolean]" number_fields
      nil)
@@ -397,16 +382,15 @@
     (integer_pred const-decl "[rational -> boolean]" integers nil)
     (int nonempty-type-eq-decl nil integers nil)
     (bool nonempty-type-eq-decl nil booleans nil)
-    (>= const-decl "bool" reals nil) nil
-    (< const-decl "bool" reals nil) (<= const-decl "bool" reals nil)
-    (below type-eq-decl nil naturalnumbers nil) nil nil nil nil nil nil
-    (list type-decl nil list_adt nil) nil nil nil nil nil nil nil nil
-    nil nil nil nil nil nil
-    (list2finseq const-decl "finseq[T]" list2finseq nil) nil nil nil
-    nil nil nil nil nil nil (disjoint? const-decl "bool" sets nil)
+    (>= const-decl "bool" reals nil) (< const-decl "bool" reals nil)
+    (<= const-decl "bool" reals nil)
+    (below type-eq-decl nil naturalnumbers nil)
+    (list type-decl nil list_adt nil)
+    (list2finseq const-decl "finseq[T]" list2finseq nil)
+    (disjoint? const-decl "bool" sets nil)
     (empty? const-decl "bool" sets nil)
     (intersection const-decl "set" sets nil)
-    (member const-decl "bool" sets nil) nil nil nil
+    (member const-decl "bool" sets nil)
     (nat nonempty-type-eq-decl nil naturalnumbers nil)
     (below type-eq-decl nil nat_types nil)
     (character type-decl nil character_adt nil)
@@ -421,14 +405,12 @@
    3394357952 ("" (subtype-tcc) nil nil) unchecked
    ((finite_intersection1 application-judgement "finite_set"
      finite_sets nil)
-    (int_minus_int_is_int application-judgement "int" integers nil) nil
-    nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil
-    nil nil nil nil (bijective? const-decl "bool" functions nil)
-    (id const-decl "(bijective?[T, T])" identity nil) nil nil nil nil
-    nil nil nil nil nil (finite_set type-eq-decl nil finite_sets nil)
-    nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil
-    nil nil nil nil (lift type-decl nil lift_adt nil) nil nil nil nil
-    nil nil nil (upto nonempty-type-eq-decl nil naturalnumbers nil)
+    (int_minus_int_is_int application-judgement "int" integers nil)
+    (bijective? const-decl "bool" functions nil)
+    (id const-decl "(bijective?[T, T])" identity nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (lift type-decl nil lift_adt nil)
+    (upto nonempty-type-eq-decl nil naturalnumbers nil)
     (number nonempty-type-decl nil numbers nil)
     (number_field_pred const-decl "[number -> boolean]" number_fields
      nil)
@@ -440,16 +422,15 @@
     (integer_pred const-decl "[rational -> boolean]" integers nil)
     (int nonempty-type-eq-decl nil integers nil)
     (bool nonempty-type-eq-decl nil booleans nil)
-    (>= const-decl "bool" reals nil) nil
-    (< const-decl "bool" reals nil) (<= const-decl "bool" reals nil)
-    (below type-eq-decl nil naturalnumbers nil) nil nil nil nil nil nil
-    (list type-decl nil list_adt nil) nil nil nil nil nil nil nil nil
-    nil nil nil nil nil nil
-    (list2finseq const-decl "finseq[T]" list2finseq nil) nil nil nil
-    nil nil nil nil nil nil (disjoint? const-decl "bool" sets nil)
+    (>= const-decl "bool" reals nil) (< const-decl "bool" reals nil)
+    (<= const-decl "bool" reals nil)
+    (below type-eq-decl nil naturalnumbers nil)
+    (list type-decl nil list_adt nil)
+    (list2finseq const-decl "finseq[T]" list2finseq nil)
+    (disjoint? const-decl "bool" sets nil)
     (empty? const-decl "bool" sets nil)
     (intersection const-decl "set" sets nil)
-    (member const-decl "bool" sets nil) nil nil nil
+    (member const-decl "bool" sets nil)
     (nat nonempty-type-eq-decl nil naturalnumbers nil)
     (below type-eq-decl nil nat_types nil)
     (character type-decl nil character_adt nil)
@@ -488,7 +469,7 @@
         nil))
       nil))
     nil)
-   untried nil 481 481 t nil)
+   unfinished nil 481 481 t nil)
   (MP_modeled_preserved_by_assertion_checking-1 nil 3393591178
    3393591212
    ("" (skosimp*)
@@ -515,7 +496,7 @@
     (("" (expand* "related_states" "specification_requirements")
       (("" (prop) nil nil)) nil))
     nil)
-   unchecked (nil nil) 3 3 t nil))
+   unchecked nil 3 3 t nil))
  (initial_states_are_equivalent 0
   (initial_states_are_equivalent-1 nil 3394358076 3394359787
    ("" (skosimp*)
@@ -677,7 +658,7 @@
         nil))
       nil))
     nil)
-   untried nil 71019 7058 t shostak))
+   unfinished nil 71019 7058 t shostak))
  (deriv_expr_maintains_equivalence 0
   (deriv_expr_maintains_equivalence-1 nil 3393591001 3394357959
    ("" (skosimp)
@@ -1321,7 +1302,7 @@
                           (("1" (assert) nil) ("2" (assert) nil)))
                          ("2" (assert) nil))))))))))))))))))))))
     nil)
-   untried nil 226 226 nil nil))
+   unfinished nil 226 226 nil nil))
  (deriv_stmt_maintains_equivalence 0
   (deriv_stmt_maintains_equivalence-1 nil 3394257849 3394357968
    ("" (skosimp)
@@ -1583,14 +1564,7 @@
        ("9" (postpone) nil nil))
       nil))
     nil)
-   untried nil 867 867 t shostak))
- (correcteness_of_ann_program_TCC1 0
-  (correcteness_of_ann_program_TCC1-1 nil 3393590714 3394357968
-   ("" (skosimp)
-    (("" (expand "specification_requirements") (("" (flatten) nil nil))
-      nil))
-    nil)
-   unchecked (nil) 22 22 t nil))
+   unfinished nil 867 867 t shostak))
  (correcteness_of_ann_program 0
   (correcteness_of_ann_program-1 nil 3393590728 3394357969
    ("" (skosimp*)
@@ -1628,9 +1602,8 @@
         nil))
       nil))
     nil)
-   untried
-   (nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil
-    nil nil nil (finite_set type-eq-decl nil finite_sets nil) nil
+   unfinished
+   ((finite_set type-eq-decl nil finite_sets nil)
     (string type-eq-decl nil strings nil)
     (char type-eq-decl nil strings nil)
     (char? adt-recognizer-decl "[character -> boolean]" character_adt
@@ -1638,9 +1611,8 @@
     (boolean nonempty-type-decl nil booleans nil)
     (character type-decl nil character_adt nil)
     (below type-eq-decl nil nat_types nil)
-    (nat nonempty-type-eq-decl nil naturalnumbers nil) nil nil nil nil
-    nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil
-    nil nil nil nil nil nil (>= const-decl "bool" reals nil)
+    (nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (>= const-decl "bool" reals nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (int nonempty-type-eq-decl nil integers nil)
     (integer_pred const-decl "[rational -> boolean]" integers nil)
@@ -1651,7 +1623,7 @@
     (number_field nonempty-type-from-decl nil number_fields nil)
     (number_field_pred const-decl "[number -> boolean]" number_fields
      nil)
-    (number nonempty-type-decl nil numbers nil) nil nil nil
-    (lift type-decl nil lift_adt nil) nil nil nil nil nil nil)
+    (number nonempty-type-decl nil numbers nil)
+    (lift type-decl nil lift_adt nil))
    144 144 nil nil)))
 

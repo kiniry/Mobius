@@ -457,6 +457,13 @@ ASSUMING
               on_method_entry, on_method_exit_normal,
               on_method_exit_exceptional]
 
+    % AT: It would be nice to simplify these assumptions using 
+    % deriv_stmt_determ and deriv_expr_determ. I tried it but for instance in
+    % expr_determ_step these assumptions are discharged with just an assert
+    % but now it doesn't work (even after expanding the definition). It works
+    % issuing a grind but the whole proof while take ages. I couldn't find a
+    % simple way of proving those branches.
+
     on_method_entry_deterministic : ASSUMPTION
       FORALL (p : FullProgram, m : Method[Name], v : Val,
               s, s1, s2 : FullState, n1, n2 : nat)
@@ -641,7 +648,7 @@ BEGIN
       is_ghost(vn, sigma) IFF var_names(getGhostDecls(program(p)))(vn)
 
   wf_initial_ghost_state : LEMMA % :-)
-    FORALL(p : FullProgram)(sigma : FullState) :
+    FORALL (p : FullProgram)(sigma : FullState) :
       (gvs(sigma) = LAMBDA (n : Name) :
                       LET gd = get_GhostDecl(n, program(p)) IN
                       IF bottom?(gd)
