@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Grok Plug-in
+Bundle-SymbolicName: grok
+Bundle-Version: 1.0.0
+Bundle-Vendor: Phosphorus
+Require-Bundle: org.eclipse.jface.text,
+ org.eclipse.ui,
+ org.eclipse.ui.editors,
+ org.eclipse.jdt.ui,
+ org.eclipse.jdt.core,
+ org.eclipse.ui.workbench.texteditor,
+ org.eclipse.core.runtime,
+ org.eclipse.core.resources
