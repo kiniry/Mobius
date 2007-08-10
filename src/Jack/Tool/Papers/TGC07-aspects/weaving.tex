@@ -1,41 +1,159 @@
 At this stage of the transformation, all the program source is turned
-into guarded commands. On one side we have the main program part 
-which still does not contain any aspects. On the other side
-we have the related to aspects elements:
+into guarded commands. The complete code is composed of the guarded
+command version of the base program, the guarded command version of
+the advices, and the model abstraction of the aspects.  What has to be
+done at this stage is the weaving of the models to the normal code.
+
+The model abstraction is made of:
 \begin{enumerate}
 \item 
-we have model methods which represents the behaviour of before and
-after advices, model methods that represent the first part of around
-advices, model that represent the second part and,
+methods which represents the behaviour of before and after advices,
+model methods that represent the first part of around advices, model
+that represent the second part and,
 \item
-methods representing the advices, and for around advices, proceeds 
+methods representing the advices, and for around advices, proceeds
 model methods.
 \end{enumerate}
+The weaving consists in adding these methods call in the guarded
+commands program. The methods are inserted at the same points as they
+would on bytecode. The semantic of the weaving we base our work upon
+has been presented in two papers \cite{weaving04,weaving06}.  We use
+the rules which were defined in~\cite{weaving06}. Since we operate on
+the guarded command version of the program, we need a correspondence
+between the bytecode program and the guarded command program. This
+will be assured by a correspondence table.  This table has been
+computed during the translation from bytecode to guarded commands in
+the previous stage.
 
-Now the weaving can be done over the implementation part of the
-guarded commands program. The semantic of the weaving we base our work
-upon has been presented in two papers \cite{weaving04,weaving06}.  The
-more formal of the two~\cite{weaving06} lacking a proper semantic for
-around advices.
+\begin{figure}[ht]\vspace{-0.4cm}
+\begin{mathpar}
+%\inferrule [noshadow]
+%{
+%{\neg \ {\tt isShadow(}m, pc{\tt )} \vee ads = []}
+%}
+%{
+%{\langle \varepsilon, m, pc, ads, nextpc, gcs \rangle \rightarrow }
+%{\langle \varepsilon, m, nextpc, \varepsilon.advices, nextpc, gcs \rangle}
+%}
+%\and
 
-We weave in the code the model methods representing the advices.  For
-before and after advices we use exactly the weaving semantic presented
-in Belblidia and Debbabi's paper.
-In our case the four rules become:
+%\inferrule [nomatch]
+%{
+% {{\tt isShadow(}m, pc{\tt )} \wedge ads \neq []}  \ 
+% {\wedge \  \neg \ {\tt matchPcut(}\varepsilon, head(ads).pointcut, m,
+%  pc{\tt )}}
+%}
+%{
+%\langle \varepsilon, m, pc, ads, nextpc, gcs \rangle \rightarrow 
+%\langle \varepsilon, m, nextpc, tail(ads), nextpc, gcs \rangle
+%}
+%\\[3ex]
+%\and
+\inferrule[before]
+{
+ {{\tt isShadow(}m, pc{\tt )} \wedge ads \neq []}  \ \\
+ {\wedge \  
+  {\tt matchPcut(}\varepsilon, head(ads).pointcut, m, pc{\tt )}} \ 
+ {\wedge\ 
+   {\tt head(}ads{\tt ).kind = Before}}\ \\ \wedge\ 
+ (\varepsilon', gcs') = {\tt insertBeforeAdvice(}\varepsilon, m, pc,
+ head(ads), gcs {\tt )}
+}
+{
+\langle \varepsilon, m, pc, ads, nextpc, gcs \rangle \rightarrow 
+\langle \varepsilon', m, pc, tail(ads), nextpc, gcs' \rangle
+}
+%\\[3ex]
+\and
 
-\fixme{write nicely the four rules}.
+\inferrule[after]
+{
+ {{\tt isShadow(}m, pc{\tt )} \wedge ads \neq []}  \ \\
+ {\wedge \  
+  {\tt matchPcut(}\varepsilon, head(ads).pointcut, m, pc{\tt )}} \ 
+ {\wedge\ 
+   {\tt head(}ads{\tt ).kind = After}}\  \\\wedge\  
+ (\varepsilon', gcs') =  {\tt insertAfterAdvice(}
+  \varepsilon, m, pc,head(ads), nextpc, gcs {\tt )}
+}
+{
+\langle \varepsilon, m, pc, ads, nextpc, gcs \rangle \rightarrow 
+\langle \varepsilon', m, pc, tail(ads), nextpc, gcs' \rangle
+}
+%\\[3ex]
+\end{mathpar}
+\vspace{-0.4cm}
+\caption{The two weaving rules which are modified}
+\label{weaving_rules}
+\vspace{-0.4cm}
+\end{figure}
 
-Since the around advice is not treated in~\cite{weaving06} and is 
-mentionned vaguely in~\cite{weaving04}, we derive from the later
-a generic weaving method, adapted to the way they were specified.
+The weaving we use is the one presented in~\cite{weaving06}. We use the four
+ rules defined in the paper, which takes as an entry an environment 
+$\varepsilon$, the current method $m$, the code pointer in the method $pc$,
+the list of advices $ads$ which is composed of the advices name with their
+syntactic pointcuts and $nextpc$, a pointer to the next instruction in the
+program.
+We add a new parameter, {\it gcs},
+a tuple containing the  guarded command program and 
+the bytecode/guarded commands correspondence table 
+(Figure \ref{weaving_rules}). The main difference
+in the algorithm is for the {\small  BEFORE} and {\small AFTER} rules, where
+{\it gcs} is modified and not the code. The the {\tt insertBeforeAdvice} and 
+{\tt insertAfterAdvice} are modified in order to add the guarded commands
+translation of a simple static method call to the method {\tt aspectOf()}, 
+followed by a call to the advice model method. In the case of the 
+SecurityManager, we only have to weave a before advice, as shown in Figure
+\ref{weaved_prog}.
 
-\fixme{write the stupid weaving}
 
-\fixme{prove the correctness by reduction}
+The around advice weaving is not properly treated in~\cite{weaving06}
+ or in~\cite{weaving04}. In our framework the around advice was
+ compiled in two methods. So we derive from the later a generic
+ weaving method, adapted to the way they were specified. The key idea is
+to weave the around-before method like a normal around advice, and add
+two guarded command at the end of the weaved method, a non deterministic goto
+that goes to the begining of the pointcut or after the pointcut, and at the 
+beginning of the pointcut add the assertion {\tt proceed = true}.
 
 
-
-
-
-
+\vspace{-0.4cm}
+\begin{figure}[h]
+\begin{center}
+\begin{tabular}{ll} \begin{minipage}{3cm}
+\bcode
+sta\=rt: \+ \\
+    ...\\
+    stack[0] := new(heap, b.A);\\
+%(Invokevirtual java\_lang\_Class.getPackage)
+     arg0 := stack[0]; // advice method call \\
+    pre\_heap := heap;\\
+    assert arg0 != null;\\
+    assert requires(SM.beforeAnyMethod,
+     pre\_heap, arg0);\\
+    havoc heap;\\
+    goto SM.beforeAnyPublicMethod\_normal, 
+SM.beforeAnyMethod\_excp;\\
+\< SM.beforeAnyMethod\_excp:\\
+    havoc stack[0]\\
+    assume alloc (stack[0], heap) $\wedge$ typeof(stack[0]) $<$: Throwable;\\
+    assume exsures(\=SM.beforeAnyMethod,\\
+\> (pre\_heap, arg0), (heap, stack[0]));\\
+    goto handler;\\
+\< SM.beforeAnyMethod\_normal:\\
+    havoc stack[0];\\
+    assume ensures(\=SM.beforeAnyMethod, \\
+\>(pre\_heap, arg0), (heap, stack[0]));\\
+    arg0 := stack[0]; // constructor call \\
+    ...
+\ecode
+\end{minipage}
+\end{tabular}
+\end{center}
+\vspace{-0.4cm}
+\caption{The weaved guarded command base program}
+\label{weaved_prog}
+\vspace{-0.4cm}
+\end{figure}
+\vspace{-0.4cm}
 %

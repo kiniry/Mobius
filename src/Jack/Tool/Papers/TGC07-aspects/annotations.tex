@@ -1,15 +1,13 @@
 The verification framework we are targetting relies on program and
 aspects specifications that are precise enough to make the
 verification conditions generated provable.  The annotation language
-we use is Pipa~\cite{ZhaoR03} (the extension of JML for AspectJ).  The
-choice was obvious since it is to our knowledge the only proper
-annotation language defined for aspects. Here we won't treat point
-cuts specification that Pipa allows.  We will use a JML level
-0~\cite{Leavens-etal07} like subset of Pipa.  We won't allow universe
-types, but we will allow other non level 0 constructs like the model
-methods, and some constructs to handle aspects found in Pipa.
-We will also permit behavioural specifications because JML's can
-be desugared as shown in \cite{RaghavanL00}.
+we use is Pipa (an extension of JML for AspectJ).  The subset of the
+language is a JML level 0~\cite{Leavens-etal07} like subset of Pipa. 
+Pointcuts specifications~\cite{pointcuts07}  and universe types 
+will be ignored. Nevertheless some non level 0 constructs like model or pure
+methods are allowed.
+Behavioural specifications are allowed too because these specifications can
+be desugared~\cite{RaghavanL00}.
 
 \subsection{JML} 
 JML is a behavioural specification language for Java. It is made of
@@ -17,19 +15,20 @@ numerous keyword: you can express methods pre and post conditions with
 it (the keywords {\tt requires} and {\tt ensures}), exceptional
 postcondition ({\tt exsures}). There are notions of frame conditions
 (the {\tt assignable} clauses). One can also express assertions ({\tt
-assert} construct), and loop invariants.
+assert} construct), and loop invariants. Some data structures can be defined
+only on the specification level, the model classes, fields and methods.
 
 \paragraph{Invasive model methods} 
-Model methods are an interesting construct of JML: these are
-specification methods that can be with or without side-effects, their
-effects being determined by their specifications.  They can have a
-body, but in our framework we are interested by bodyless model
-methods. They are used to assume an effect over the program, and so
-state that if their requires are satisfied, the given effect (given by
-the ensure clause) will be satisfied.  In this paper we won't talk
-about pure model methods which could be use in specifications. Here we
-rather talk about invasive ones: just like invasive aspects they are
-meant to state that the program has been modified non explicitly.
+Model methods are specification methods that can be with or without
+side-effects, their effects being determined by their specifications.
+They can have a body, but in our framework we are interested by
+bodyless model methods. They are used to assume an effect over the
+program, and so state that if their requires are satisfied, the given
+effect (given by the ensure clause) will be satisfied. The model methods can
+be defined as invasive, because just like aspect they can have unexpected 
+side effects on their environment.
+
+\vspace{-0.4cm}
 \begin{figure}
 \begin{center}
 \begin{tabular}{lll}
@@ -57,44 +56,40 @@ i++;\\
 \end{tabular}
 \end{center}
 \caption{Model method definition and use}
-\label{model_meth_def}
+\label{model_meth}
 \end{figure}
 
-
+\vspace{-1cm}
 \paragraph{Model methods call}
 To be able to use model methods with the full expressivity desired, we
 add a new annotation to JML, the simple annotation method call. Its
 syntax would be simply the model method call in the middle of
-annotations as shown on figure \ref{model_meth}. It can be easily 
+annotations as shown on Figure \ref{model_meth}. It can be easily 
 translated into guarded commands (like the one there \cite{BarnettL05}),
 but we will define it more precisely in Subsection \ref{gc}.
 
 \subsection{Pipa}
-Pipa is a behavioural specification language based on JML.  You can
-specify advices as well as pointcuts~\cite{pointcuts07} with Pipa.  In
-this paper we will only treat the advices specifications.  The
-specification of an advice is similar to the one of a method call. It
-has a pre and post condition, an exceptional postcondition and a frame
-condition. The specification are not different for JML's method's
-specification, being applied on advices.  Pipa mainly adds two
-construct plus a specific semantic we are interested in: the specific
-constructs for around advices, and their semantic of the ensure
-clause.
+Pipa is a behavioural specification language based on JML.  
+The specification of an advice is similar to the one of a method call. It
+has a pre- and post- condition, an exceptional postcondition and a frame
+condition. The specifications are not different from JML's method's
+specification, but they are used on advices.  Pipa mainly adds two
+constructs specific to around advice.
 
 \paragraph{Around advice specifications} 
-The difficulty of specification of around advices is due to the
-presence of the proceed construct. It has to be stated in the method
-specification and in JML there are no keywords to represent it. To
-represent the proceed in specification, Pipa uses the predicate {\tt
-proceed} as well as the {\tt then} construct as what was stated in
-Clifton and Leavens paper~\cite{clifton02spectators}.  The
-specification of an around advice is divided in two the part before
-the proceeds (the part before the execution of the target instruction)
-and the part after the proceeds. These two parts have both pre and
-post conditions as well as a frame condition. There is also for the
-first part a new keyword proceeds which take a boolean condition which
-is an invariant for an around advice which determined if the
-instruction must be executed.
+The difficulty of specifying an around advices is due to the presence
+of the proceed construct. It has to be stated in the method
+specification, and in JML no keywords exist to represent it.  The
+solution commonly used was proposed by Clifton and
+Leavens~\cite{clifton02spectators}: we need a {\tt proceed} 
+and a {\tt then} construct, to express what happens before and after
+the proceed call. Therefore the specification of an around advice is
+divided into two parts the part before the proceed (before the
+execution of the target instruction) and the part after the
+proceed. These two parts have both pre and post conditions as well as
+a frame condition. The first part has the construct proceed which
+take a boolean condition that determine if the instruction, target of
+the proceed, can be executed.
 
 \begin{figure}[h]
 \begin{center}
@@ -123,28 +118,27 @@ void \= around() : call (void m()) \{\\
 
 
 \subsection{The annotated program}
-To verify our program we have to specify with Pipa the Security Manager
-as well as the base program.
- 
-The Security Manager (Figure \ref{sm_annot}) as an advice has to be
-annotated. The annotations tells that the advice modifies nothing, and
-that an exception will be thrown if the package name of the called
-method is {\tt b}, and otherwise nothing will be done. To be able to
-use the field {\tt s} in the specifications it is made {\tt
-spec\_public}. Please note that all the methods called in the
-specifications are side-effect free.
+To continue with the Security Manager example, at this step we have to
+annotate the Security Manager and the base program.  The Security
+Manager (Figure \ref{sm_annot}) has to be annotated, and especially
+its main advice are annotated. We specify that the advice
+modifies nothing, and that an exception will be thrown if the package
+name of the called method is {\tt b}, and otherwise nothing will be
+done. To be able to use the field {\tt s} in the specifications it is
+made {\tt spec\_public}. Please note that all the methods called in
+the specifications at this stage are side-effect free.
 
 \begin{figure}[h]
 \begin{center}
 \begin{tabular}{ll} \begin{minipage}{3cm}\bcode
 pu\=blic aspect SecurityManager \{\+\\
-//@ public static invariant s != null;\\
-static Set$<$String$>$ /*@ spec\_public @*/ s = new HashSet$<$String$>$();\\
+//@ public invariant s != null;\\
+ Set$<$String$>$ /*@ spec\_public @*/ s = new HashSet$<$String$>$();\\
 \ \\
 po\=intcut anyPublicMethod(Object o) : \=target(o) \&\& \\
            \>!within(SecurityManager) \&\& call( public *(*))\\
 /*\=@ requires o != null \&\& s != null;\+\\
-  @ modifies $\backslash$nothing;\\
+  @ assignable $\backslash$nothing;\\
   @ ensures \= s.contains(o.getClass().getPackage().toString())\\
   @         \> \&\& !(o.getClass().getPackage().equals("b"));\\
   @ exsures (SecurityE\=xception) !s.contains("b")\\
@@ -163,8 +157,8 @@ before(Object o) : anyPublicMethod(o) \{\+\\
 \end{figure}
 
 The base program is annotated with normal JML specification 
-(Figure \ref{prog_annot}),
-although if the verification must be doable we have to annotate it taking
+(Figure \ref{prog_annot}).
+Though, if we want to manage to verify it, the specifications must take
 into account the aspect that will be weaved afterward. Therefore the 
 specifications of the base program have to reflect the advice specifications.
 Here, an exception is thrown if there is a call on package {\tt b} and this 
@@ -173,7 +167,7 @@ representation String).
 \begin{figure}
 \begin{center}
 \begin{tabular}{ll} \begin{minipage}{3cm}\bcode
-  /*\=@ modifies $\backslash$nothing \+\\
+  /*\=@ assignable $\backslash$nothing \+\\
     @ ensures s.contains("b");\\
     @ exsures !s.contains("b");\\
     @*/\-\\
@@ -192,8 +186,8 @@ representation String).
 \label{desugar}
 In the seminal paper about Pipa~\cite{ZhaoR03}, the authors stated
 that annotations written with Pipa could be translated back to JML
-annotation, and they propose to weave Pipa annotation to JML
-annotation, being unclear how to do it.  Here what we understand by
+annotations, and they propose to weave Pipa annotations to JML
+annotations, being unclear how to do it. What we understand by
 translating Pipa annotation to JML annotations is removing most of the
 Pipa specific annotations. We turn the advices into methods so 
 we can apply the behaviours desugaring described in Raghavan and Leavens
@@ -202,9 +196,8 @@ paper~\cite{RaghavanL00}.
 \paragraph{proceed}
 Proceed construct is transformed into the predicate {\tt
 proceed(bool)} and conjuncted to the ensures specifications of the
-part before the then of the given case.  If the proceed was omitted it
+part before the {\tt then} of the given case.  If the proceed was omitted it
 is added in the ensures as {\tt proceed(false)}.
-
 
 \paragraph{then}
 The {\tt then} is the only Pipa construct that cannot be desugared

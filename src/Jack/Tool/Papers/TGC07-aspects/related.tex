@@ -1,17 +1,16 @@
-The verification framework is adapted for the
-verification of AspectJ programs annotated with Pipa.  The pointcut
-semantic of AspectJ has been properly
-defined~\cite{DBLP:conf/popl/AvgustinovHOMSTV07} as well as the advice
-weaving semantic~\cite{weaving04} though only parts have been
-formalized~\cite{weaving06}.  Pipa is an annotation language which was
-inspired by Clifton and Leavens' work~\cite{clifton02observers}. There
-are some extensions to it like pointcuts
-annotations~\cite{pointcuts07}, or Moxa \cite{moxa05}.  Our framework
-relies on verification based on an intermediate language, like what is
-done in ESC/Java2~\cite{FlanaganLLNSS02}, Boogie~\cite{BarnettCDJL05},
-or Krakatoa~\cite{MarcheP-MU04}. The work is made to be adapted on a
-BoogiePL-like guarded command which is coupled with a
-VCGen~\cite{BarnettL05,FlanaganS01}.
+The verification framework is adapted for the verification of AspectJ
+programs annotated with Pipa.  The pointcut semantic of AspectJ has
+been properly defined~\cite{DBLP:conf/popl/AvgustinovHOMSTV07} as well
+as the advice weaving semantic~\cite{weaving04} though only parts have
+been formalized~\cite{weaving06}.  Pipa~\cite{ZhaoR03} is an
+annotation language which was inspired by Clifton and Leavens'
+work~\cite{clifton02observers}. There are some extensions to it like
+pointcuts annotations~\cite{pointcuts07}, or Moxa \cite{moxa05}.  Our
+framework relies on verification based on an intermediate language,
+like what is done in ESC/Java2~\cite{FlanaganLLNSS02},
+Boogie~\cite{BarnettCDJL05}, or Krakatoa~\cite{MarcheP-MU04}. The work
+is made to be adapted on a BoogiePL-like guarded command which is
+coupled with a VCGen~\cite{BarnettL05,FlanaganS01}.
 
 \paragraph{Modular verification of Aspects}
 Verification in Aspect Oriented Programming language is often linked

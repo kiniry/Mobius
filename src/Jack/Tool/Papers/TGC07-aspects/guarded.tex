@@ -8,6 +8,7 @@ There is a formal definition of Java bytecode translation to BoogiePL
 \cite{javatrans07,coqtrans06}. The base program code is transformed, as well
 as the advices code.
 
+\vspace{-0.4cm}
 \subsubsection{Description of the language} 
 The version of the language we use is the same set of instruction
 described for weakest precondition on bytecode in \cite{BarnettL05}.
@@ -20,6 +21,7 @@ variable, typically after a method call when a variable was modified
 by it.  The {\tt goto} command determines an unconditionnal jump to
 several labels.
 
+\vspace{-0.4cm}
 \subsubsection{BML inclusion}
 The inclusion of BML annotations to BoogiePL has been described in 
 \cite{javatrans07}, and is straightforward since BoogiePL has already 
@@ -39,7 +41,7 @@ The model methods calls within specification would be replaced by a
 
 The proceed is a predicate that can be called at any time in the program.
 In BoogiePL it is easily represented by a variable {\tt proceed} 
-of type {\tt bool}. This variable will be defined properly in next section.
+of type {\tt bool}.
 
 \subsubsection{Translating the Security Manager}
 For the Security Manager, the guarded command translation is easy, but
@@ -51,7 +53,7 @@ commands too. The model Security Manager is kept unchanged.
 
 
 
-
+\vspace{-0.4cm}
 %\bcode
 %st\=art:\+\\
 %    (New b.A) \\
@@ -98,6 +100,9 @@ ini\=t: \+\\ // initialization of the method\\
 \end{minipage}
 \end{tabular}
 \end{center}
+\vspace{-0.4cm}
 \caption{The guarded command version of the base program}
 \label{prog_gc}
+\vspace{-0.4cm}
 \end{figure}
+\vspace{-0.6cm}

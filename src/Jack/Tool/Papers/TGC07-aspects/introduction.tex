@@ -1,14 +1,14 @@
-Java is a language commonly used on small device, which can be of
-heterogenous nature like cellphones or JavaCards. Thus the
-verification of the different components Java platform is important
-and taking into account their specific caracteristic is crucial
-especially if these components change the general behaviour of a
-JVM. Verification of specific components is scattered through
+Java is a language commonly used on small device, with specific flavour
+of it being used on heterogenous devices like cellphones or JavaCards. 
+Thus taking into account their specific caracteristic each implementations
+is important for verification.
+Especially if specific system components change the overall behaviour of JVMs. 
+Verification of system components is scattered through
 litterature: there has been verifications of bytecode verifiers, as
 well as access contoller. As far as our knowledge goes
-though~\cite{HartelMoreau01}, the SecurityManager of the Virtual
-Machine has not been verified and its semantic is not taken into
-account when doing static verification of Java programs.
+though~\cite{HartelMoreau01}, the Security Manager of the JVM 
+has not been verified and its semantic is not taken into
+account when usually doing static verification of Java programs.
 
 
 The main goal of this paper is to verify an implementation of a
@@ -17,23 +17,25 @@ programs taking into account the semantic differences that different
 component of the JVM can bring to executions of program inside 
 a JVM.
 
-
+\vspace{-0.4cm}
 \subsection{The Security Manager}
 The Security Manager applies the security policies on two
-levels. First on the library level, each time a writing or reading
+levels. First on the library level: each time a writing or reading
 operation is called for instance a call to the Security Manager is
 made and if the caller has not respected a given security policy, a
-SecurityException is thrown, several other operations of the same type
-are handled. Second on the Virtual Machine level, each time a class is
+{\tt SecurityException} is thrown.
+Second on the JVM level: each time a class is
 loaded, it checks on a meta level with the use of the ClassLoader
 (which for this paper will be considered as a part of the JVM) if the
 currently inspected class has the right to access a specified type
-from an outside package.  The second set of property is hard to take
-in account for a program verification, because it changes the behavior
-of type resolution which is done to the program.  A practical way to
+from an outside package.  
+The latter is hard to take into account for a program verification, 
+because it changes the behavior of type resolution which is part
+of the language semantic.  A practical way to
 model these changes would be to consider the Security Manager as an
 Aspect which would weave at the cutting points representing type
 resolution.
+\vspace{-0.4cm}
 \begin{figure}
 \bcode
 pa\=ckage a;\\
@@ -62,28 +64,29 @@ Excepti\=on in thread "main" java.lang.SecurityException: That is true\+\\
 \caption{An invasive Security Manager}
 \end{figure}
 
-
-\subsection{A Security Manager modeled with AspectJ}
-Aspect Oriented Programming (AOP) is a recent paradigm that offers
+\vspace{-1cm}
+\subsection{Modeling with AspectJ}
+Aspect Oriented Programming (AOP) is a paradigm that offers
 modularity though it is ortogonal to the usual Object Oriented
 Programming paradigm. AOP enables to weave code directly into a
-program thus changing the behaviour of given constructs. Two new
+program,  changing the behaviour of given language constructs. Two new
 notions have been introduced through AOP:
 \begin{itemize}
 \item the concept of cutting points, points in the program where code
-could be inserted, and
-\item advice, the code to be inserted at the specified cutting point.
+can be inserted, and
+\item advices, code to be inserted at a specified cutting point.
 \end{itemize}
-AspectJ is one of the most popular of the AOP languages. It is to be
-used with Java, so it was a natural choice for us to choose this
-language for modelling the Security Manager through aspects.
+AspectJ is one of the most popular of the AOP languages. It is Java-based, 
+so it is a natural choice for modelling the Security Manager through aspects.
 
 Implementing the Security Manager as an invasive Aspect is easy.  As
 we have seen in the above example, a minimal Security Manager could
 change the behaviour of the JVM at the type access step. The
 difficulty here would be that the type is checked only on the first
-call but it is easily solved like what is done in Figure \ref{base_implem}.
+call, for this purpose a field has to be introduced, as shown in
+Figure \ref{base_implem}.
 %
+\vspace{-0.4cm}
 \begin{figure}
 \bcode
 pu\=blic aspect SecurityManager \{\+\\
@@ -104,41 +107,40 @@ before(Object o) : anyPublicMethod(o) \{\+\\
 \caption{An Aspect implementation of the invasive SecurityManager}
 \label{base_implem}
 \end{figure}
-
-
-\subsection{The verification framework}
+\vspace{-1cm}
+\subsection{Verification framework}
 \label{framework}
-The verification framework we are building in this paper is an
-adaptation of static verification techniques based on weakest
-precondition calculus. It is based upon Java extended static verification
-tools using guarded commands language like ESC/Java2~\cite{CokK04} and
-what is planned to be done using BoogiePL for the Mobius
-PVE~\cite{MobiusPVE07}.
+The verification framework we will use to handle the Security Manager concerns 
+is an adaptation of static verification techniques based on weakest
+precondition calculus. It is inspired by Java extended static verification
+tools that use guarded commands language like ESC/Java2~\cite{CokK04} and
+the Mobius PVE~\cite{MobiusPVE07}.
 
 
 The verification process is made of several steps:
-First the program and the aspects are annotated:
+First the program and the aspects have to be fully specified:
 \begin{enumerate}
-\item the program and its aspects are annotated using Pipa,
+\item the program and its aspects are annotated using an aspect specific
+behavioural specification language, Pipa,
 \item the behavioural specifications are desugared
-\item the specifications of the aspects are compiled into model
-methods
+\item the aspects are abstracted to models
 \end{enumerate}
 Then the proper compilation of aspects is done:
 \begin{enumerate}
 \item the program is compiled to bytecode with its specifications
 \item the program is transformed into guarded commands
-\item the model methods are weaved to the program
+\item the model methods representing advices are weaved into the program
 \end{enumerate}
 Finally a weakest precondition calculus is made on the transformed
 program, and verification conditions are generated in order to be
 solved automatically or interactively.
 
+\vspace{-0.4cm}
 \subsection{Related Work}
 \label{related}
 \input{related}
 
-
+\vspace{-0.4cm}
 \subsubsection{Outline:}
 First, in Section \ref{specs} we will show how the program has to be
  properly annotated. Then in Section \ref{transf} we will

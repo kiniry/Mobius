@@ -1,2 +1,21 @@
-In this paper we have described a full static verification framework 
-for AspectJ programs specified with Pipa.
+In this paper we have described a verification framework 
+for taking into account meta-programming concern in the verification.
+These concerns were modelled using AspectJ aspects specified with Pipa.
+The verification was made using a standard guarded command language, and
+an abstraction of aspects as model classes.
+The concerns were by choice invasive, so no real modular verification was
+possible.
+
+A great part of the framework is meant to exist as part of the 
+Mobius PVE~\cite{MobiusPVE07}, like the translation of annotated bytecode
+to BoogiePL~\cite{javatrans07}, or the weakest precondition calculus
+over a BoogiePL-like language. But there is lots of implementation
+to be done still: JML should be extended with the Pipa constructs 
+(to our knowledge no implementation of Pipa exists), the abstraction
+from advices to models has to be implemented, and the weaving too.
+
+An interesting difficulty arises when using this framework: when a user first
+specify the base program, his specifications are not complete enough to enable 
+verification. There should be a way to enrich automatically these 
+specifications, maybe by using specification weaving like what is presented
+in Moxa~\cite{moxa05}.

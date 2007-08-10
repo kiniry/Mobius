@@ -9,9 +9,20 @@
 \usepackage[inline, nomargin]{fixme}
 \usepackage{listings}
 \usepackage{float}
+\usepackage{mathpartir}
 \usepackage{macros}
+
 %
 \begin{document}
+\makeatletter
+\newcommand{\addToLabel}[1]{%
+  \protected@edef\@currentlabel{\@currentlabel#1}%
+}\makeatother
+\newcounter{rule}
+\renewcommand{\therule}{}
+% now called from mathpartir.\inferrule:
+\newcommand{\rlabel}[1]{\refstepcounter{rule}\addToLabel{#1}\label{#1}#1}
+\newcommand{\rref}[1]{{\small\sc\ref{#1}}}
 
 \newcommand{\rarrow}{$\rightarrow$}
 \newcommand{\conj}{$\wedge$}
@@ -21,6 +32,8 @@
 \newcommand{\etab}{\end{tabbing}\end{tt}}
 \newcommand{\bcode}{\begin{tt}\begin{small}\begin{tabbing}}
 \newcommand{\ecode}{\end{tabbing}\end{small}\end{tt}}
+
+
 %
 \frontmatter % for the preliminaries
 %

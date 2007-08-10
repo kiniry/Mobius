@@ -1,6 +1,46 @@
 After all the previous steps, we have a guarded command representation
-of the weaved base program, a guarded command representation  of the 
-weaved advices, and a model representing the advices.
-What is left to do is to check the base program with a weakest precondition
-calculus, check the weaved advices, and check the weaved advices against 
-the model. The calculus that we use is the one presented in~\cite{BarnettL05}.
+of the weaved base program, a guarded command representation of the
+weaved advices, and a model representing the advices.  What is left to
+do is to check the base program with a weakest precondition calculus,
+check the weaved advices, and check the weaved advices against the
+model. The calculus that we use is the one presented
+in~\cite{BarnettL05}.  For the base program which we showed before we
+obtain the following verification condition presented in Figure \ref{vc}.
+\vspace{-0.4cm}
+\begin{figure}[ht]
+\vspace{-0.4cm}
+\bcode
+$\forall$ h\=eap, 
+   requires(main) $\rightarrow$\+\\
+   (new(heap, b.A) != null) $\wedge$ \\
+   ((ne\=w(heap, b.A) != null) $\rightarrow$\+\\
+    requires(SM.beforeAnyMethod) $\wedge$ \\
+    (\=requires(SM.beforeAnyMethod)\+\\
+     $\forall$ \=heap,\+\\
+       $\forall$ stack[0],
+            alloc (stack[0], heap) $\wedge$\\ typeof(stack[0]) $<$: Throwable 
+            $\rightarrow$\\
+            exsures(\=SM.beforeAnyMethod) $\rightarrow$
+	        !s.contains("b")\-\\
+
+$\vee$\\
+    $\forall$\= stack[0],
+    ensures(SM.beforeAnyMethod) $\rightarrow$\+\\
+    arg0 != null $\wedge$ \\
+   (\=arg0 != null $\rightarrow$
+    requires(b.A.$<$init$>$) $\wedge$\+\\
+     (requires(b.A.$<$init$>$) $\rightarrow$\\
+    $\forall$ \=heap,
+      ($\forall$ stack[0],
+         alloc (stack[0], heap)\+\\ $\wedge$ typeof(stack[0]) $<$: Throwable 
+                     $\rightarrow$\\
+                exsures(b.A.$<$init$>$) $\rightarrow$
+                   !s.contains("b")) $\vee$\\
+      ($\forall$ stack[0], ensures(b.A.$<$init$>$)$\rightarrow$  s.contains("b"))))) \\
+ 
+\ecode
+\vspace{-0.4cm}
+\caption{The verification condition generated for the base program}
+\label{vc}
+\vspace{-0.4cm}
+\end{figure}

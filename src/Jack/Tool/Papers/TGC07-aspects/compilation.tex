@@ -1,14 +1,14 @@
 The next step after the specifications are desugared is the
 compilation of aspects to their {\it effects} on the program. The
-approach presented here restricts itself to advices. The introduction of
-instance fields and methods is not supported. 
+approach presented here restricts itself to advices and fields 
+introduction. 
 
 Aspects are first turned into model class, a specification only class.
 Fields are translated into their model versions.
-Advices are turned to static model methods, which are bodyless.
-Actually this transformation is just abstracting the aspects to 
-the specification level. 
-These transformation are direct, but the
+Advices are turned to model methods, which are bodyless.
+To respect the semantic of AspectJ, a static method {\tt aspectOf()}
+has to be added. This method returns the current instance of the aspect.
+These transformations are direct, but the
 specifications of the advices have to be enriched with the pointcuts
 conditions that cannot be determined statically.  In the weaving
 described in \cite{weaving04}, the code of non static joint point are
@@ -17,6 +17,7 @@ specification of the model method representing the advice, since we
 only manipulate the specifications and the signature of the method
 representing the advice.
 
+\vspace{-0.4cm}
 \subsubsection{Translation of the specifications}
 The annotations are translated directly to the model methods. The
 method has the same signature of the corresponding advice, and the
@@ -69,30 +70,38 @@ straight-forward (Figure \ref{sm_model}).
  The field is turned to an equivalent model field. The 
 aspect invariant becomes a class invariant. The advice becomes a normal 
 method. The pointcut was entirely static so the specifications do not have
-to be enriched with the dynamic elements of the pointcut.
+to be enriched with the dynamic elements of the pointcut. The method
+{\tt aspectOf()} is added as well.
 
 
-
+\vspace{-0.4cm}
 \begin{figure}
 \begin{center}
 \begin{tabular}{ll} \begin{minipage}{3cm}\bcode
-/*\=@ pu\=blic model class SecurityManager \{\+\\
-    @ \>public static invariant s != null;\\
-    @ \> static model Set$<$String$>$ s;\\
+/*\=@ pu\=blic model class SM \{\+\\
+    @ \>public invariant s != null;\\
+    @ \>model Set$<$String$>$ s;\\
     @ \\
     @ \>requires o != null \&\& s != null;\\
-    @ \>modifies $\backslash$nothing;\\
+    @ \>assignable $\backslash$nothing;\\
     @ \>ensures  s.contains\=(o.getClass().getPackage().toString())\\
     @ \>        \> \&\& !(o.getClass().getPackage().equals("b"));\\
     @ \>exsures (SecurityE\=xception) !s.contains("b")\\
     @ \>                   \>\&\& (o.getClass().getPackage().equals("b"));\\
-    @ \>public model static beforeAnyPublicMethod (\=Object o);\\
+    @ \>public model void beforeAnyPublicMethod (\=Object o);\\
+    @\\
+    @ \>assignable $\backslash$nothing; \\
+    @ \>ensures $\backslash$result != null;\\
+    @ \>public model static SM aspectOf();\\
     @  \}\\
     @*/
 \ecode
 \end{minipage}
 \end{tabular}
 \end{center}
+\vspace{-0.4cm}
 \caption{The model Security Manager}
 \label{sm_model}
+\vspace{-0.4cm}
 \end{figure}
+\vspace{-0.4cm}
