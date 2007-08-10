@@ -8,19 +8,18 @@ BEGIN
 
   execute_set : (execute_set_type) =
     LAMBDA (p : Program, vn : Name, e : Expr, s1, s2 : PState, n : nat,
-            deriv_stmt_rec : deriv_stmt_rec_type(n),
-            deriv_expr_rec : deriv_expr_rec_type(n)) :
+            derive_rec : derive_rec_type(n)) :
       s1 = s2 AND n = 1
 
   execute_CaseJML : (execute_CaseJML_type) =
-    LAMBDA (p : Program, bs : list[[Expr, Stmt]], s1, s2 : PState,  n : nat,
-            deriv_stmt_rec : deriv_stmt_rec_type(n)) :
+    LAMBDA (p : Program, bs : list[[BoolExpr, Stmt]], s1, s2 : PState,  
+            n : nat,
+            derive_rec : derive_rec_type(n)) :
       s1 = s2 AND n = 1
 
   on_method_event : (on_method_event_type) =
     LAMBDA (p : Program, md : Method, a : Val, s1, s2 : PState, n : nat,
-            deriv_stmt : deriv_stmt_rec_type(n),
-            deriv_expr : deriv_expr_rec_type(n)) :
+            derive_rec : derive_rec_type(n)) :
       s1 = s2 AND n = 1
 
   IMPORTING Semantics[Name, Program, PState, id, id, lookup,
