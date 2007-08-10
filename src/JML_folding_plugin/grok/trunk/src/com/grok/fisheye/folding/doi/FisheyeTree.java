@@ -33,7 +33,7 @@ public class FisheyeTree {
 	}
 	
 	/* @region commands */
-	protected void addAnnotation(JavaProjectionAnnotation an_annotation, Position a_position) {
+	public void addAnnoation(JavaProjectionAnnotation an_annotation, Position a_position) {
 		my_root.addNode(an_annotation, a_position);
 	}
 	

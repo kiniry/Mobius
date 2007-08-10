@@ -32,7 +32,7 @@ import org.eclipse.jface.text.source.projection.IProjectionPosition;
  * the lines before the one containing the simple name of the java element, one
  * folding away any lines after the caption.
  */
-final class JavaElementPosition extends Position implements IProjectionPosition {
+public final class JavaElementPosition extends Position implements IProjectionPosition {
 
 	private IMember fMember;
 

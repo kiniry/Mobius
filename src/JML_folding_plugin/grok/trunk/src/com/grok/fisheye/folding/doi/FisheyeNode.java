@@ -426,6 +426,7 @@ public class FisheyeNode {
 	}
 	
 	protected FisheyeNode findNode(IJavaElement an_element) {
+		//TODO implement
 		return null;
 	}
 	

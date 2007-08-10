@@ -30,8 +30,8 @@ import org.eclipse.jface.text.source.projection.IProjectionPosition;
  * the region from after the '/**' to the beginning of the content, the other
  * from after the first content line until after the comment.
  */
-final class CommentPosition extends Position implements IProjectionPosition {
-	CommentPosition(int offset, int length) {
+public final class CommentPosition extends Position implements IProjectionPosition {
+	public CommentPosition(int offset, int length) {
 		super(offset, length);
 	}
 
