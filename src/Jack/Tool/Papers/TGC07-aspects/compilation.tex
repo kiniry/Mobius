@@ -1,17 +1,21 @@
 The next step after the specifications are desugared is the
-compilation of the advices to their effects on the program solely.
-Advices are only represented by their specifications.
-This can be expressed by simple bodyless model methods.
-The transformation is direct, but the specifications of the advices
-have to be enriched with the pointcuts conditions that cannot be
-determined statically. 
-In the weaving described in \cite{weaving04}, the code
-of non static joint point are added to the program directly.
-Here we add this condition to the specification of the model method 
-representing the advice, since we only manipulate the specifications
-and the signature of the method representing the advice.
+compilation of aspects to their {\it effects} on the program. The
+approach presented here restricts itself to advices. The introduction of
+instance fields and methods is not supported. 
 
-
+Aspects are first turned into model class, a specification only class.
+Fields are translated into their model versions.
+Advices are turned to static model methods, which are bodyless.
+Actually this transformation is just abstracting the aspects to 
+the specification level. 
+These transformation are direct, but the
+specifications of the advices have to be enriched with the pointcuts
+conditions that cannot be determined statically.  In the weaving
+described in \cite{weaving04}, the code of non static joint point are
+added to the program directly.  Here we add this condition to the
+specification of the model method representing the advice, since we
+only manipulate the specifications and the signature of the method
+representing the advice.
 
 \subsubsection{Translation of the specifications}
 The annotations are translated directly to the model methods. The
@@ -60,7 +64,35 @@ a {\tt or}: the method is duplicated, with one version with conjuncted
 \end{enumerate}
 \end{enumerate}
 
+On our example, the Security Manager aspect, the transformation is
+straight-forward (Figure \ref{sm_model}).
+ The field is turned to an equivalent model field. The 
+aspect invariant becomes a class invariant. The advice becomes a normal 
+method. The pointcut was entirely static so the specifications do not have
+to be enriched with the dynamic elements of the pointcut.
 
 
 
-
+\begin{figure}
+\begin{center}
+\begin{tabular}{ll} \begin{minipage}{3cm}\bcode
+/*\=@ pu\=blic model class SecurityManager \{\+\\
+    @ \>public static invariant s != null;\\
+    @ \> static model Set$<$String$>$ s;\\
+    @ \\
+    @ \>requires o != null \&\& s != null;\\
+    @ \>modifies $\backslash$nothing;\\
+    @ \>ensures  s.contains\=(o.getClass().getPackage().toString())\\
+    @ \>        \> \&\& !(o.getClass().getPackage().equals("b"));\\
+    @ \>exsures (SecurityE\=xception) !s.contains("b")\\
+    @ \>                   \>\&\& (o.getClass().getPackage().equals("b"));\\
+    @ \>public model static beforeAnyPublicMethod (\=Object o);\\
+    @  \}\\
+    @*/
+\ecode
+\end{minipage}
+\end{tabular}
+\end{center}
+\caption{The model Security Manager}
+\label{sm_model}
+\end{figure}

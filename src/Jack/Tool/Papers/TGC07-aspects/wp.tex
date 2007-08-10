@@ -1,2 +1,6 @@
 After all the previous steps, we have a guarded command representation
-of the fully weaved program.
+of the weaved base program, a guarded command representation  of the 
+weaved advices, and a model representing the advices.
+What is left to do is to check the base program with a weakest precondition
+calculus, check the weaved advices, and check the weaved advices against 
+the model. The calculus that we use is the one presented in~\cite{BarnettL05}.

@@ -24,7 +24,7 @@ M. Pavlova PhD. thesis~\cite{PavlovaPhd}. Since our specifications
 have been turned into simple JML (in Subsection~\ref{desugar}), we can
 translate all the JML annotations to BML's. The advices all keep their
 Pipa/JML specifications unchanged for the translation
-except for the {\tt around} advice.
+except in case of an {\tt around} advice.
 The {\tt ensures}, {\tt proceeds} and {\tt requires} that are the
 nearer to the {\tt then} construct are removed from the {\tt around}
 advice specifications. The {\tt proceed()} specific method takes its
@@ -35,3 +35,4 @@ implies the {\tt requires} clause that were removed.
 The frame condition should be easily inferred from the advice's 
 static joint point.
 
+Following these rules, the Security Manager model is unmodified by this step.

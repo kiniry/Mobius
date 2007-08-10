@@ -96,7 +96,7 @@ first part a new keyword proceeds which take a boolean condition which
 is an invariant for an around advice which determined if the
 instruction must be executed.
 
-\begin{figure}
+\begin{figure}[h]
 \begin{center}
 \begin{tabular}{ll} \begin{minipage}{3cm}\bcode
 int f;\\
@@ -134,11 +134,12 @@ use the field {\tt s} in the specifications it is made {\tt
 spec\_public}. Please note that all the methods called in the
 specifications are side-effect free.
 
-\begin{figure}
+\begin{figure}[h]
 \begin{center}
 \begin{tabular}{ll} \begin{minipage}{3cm}\bcode
 pu\=blic aspect SecurityManager \{\+\\
-Set$<$String$>$ /*@ spec\_public @*/ s = new HashSet$<$String$>$();\\
+//@ public static invariant s != null;\\
+static Set$<$String$>$ /*@ spec\_public @*/ s = new HashSet$<$String$>$();\\
 \ \\
 po\=intcut anyPublicMethod(Object o) : \=target(o) \&\& \\
            \>!within(SecurityManager) \&\& call( public *(*))\\
