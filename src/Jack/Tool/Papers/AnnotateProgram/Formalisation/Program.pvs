@@ -42,95 +42,68 @@ BEGIN
 
 END Excpt
 
+Body[Name : TYPE+] : DATATYPE
+                         WITH SUBTYPES Expr, NumExpr, BoolExpr, RefExpr, Stmt
+BEGIN
 
 % Numerical expressions. They are parameterized with a variable name to handle
 %  the case of variable evaluation.
-NumExpr[Name : TYPE+] : DATATYPE
-BEGIN
 
-  Int(i : int) : Int?
-  Plus(b1, b2 : NumExpr) : Plus?
-  Minus(b1, b2 : NumExpr) : Minus?
-  Times(b1, b2 : NumExpr) : Times?
-  Div(b1, b2 : NumExpr) : Div?
-  NumVarEval(varname : Name) : VarEval?
+  Int(i : int) : Int?                     : NumExpr
+  Plus(b1, b2 : Expr) : Plus?             : NumExpr
+%  Minus(b1, b2 : Expr) : Minus?           : NumExpr
+%  Times(b1, b2 : Expr) : Times?           : NumExpr
+%  Div(b1, b2 : Expr) : Div?               : NumExpr
+  NumVarEval(varname : Name) : NumVarEval?: NumExpr
 
-
-END NumExpr
-
-
-% Boolean expressions
-BoolExpr[Name : TYPE+] : DATATYPE
-BEGIN
-
-  IMPORTING NumExpr[Name]
 
   % True, False, not, and, or are reserved keywords in PVS
-  TT : TT?
-  FF : FF?
-  Neg(b : BoolExpr) : Neg?
-  Conj(b1, b2 : BoolExpr) : Conj?
-  Disj(b1, b2 : BoolExpr) : Disj?
-  Lt (b1, b2 : NumExpr) : Lt?
-  Le (b1, b2 : NumExpr) : Le?
-  Eq (b1, b2 : NumExpr) : Eq?
-  Neq (b1, b2 : NumExpr) : Neq?
-  Ge (b1, b2 : NumExpr) : Ge?
-  Gt (b1, b2 : NumExpr) : Gt?
-  BoolVarEval(varname : Name) : VarEval?
-
-
-END BoolExpr
+  TT : TT?                                : BoolExpr
+  FF : FF?                                : BoolExpr
+  Neg(b : Expr) : Neg?                    : BoolExpr
+  Conj(b1, b2 : Expr) : Conj?             : BoolExpr
+%  Disj(b1, b2 : Expr) : Disj?             : BoolExpr
+%  Lt (b1, b2 : Expr) : Lt?                : BoolExpr
+%  Le (b1, b2 : Expr) : Le?                : BoolExpr
+%  Eq (b1, b2 : Expr) : Eq?                : BoolExpr
+%  Neq (b1, b2 : Expr) : Neq?              : BoolExpr
+%  Ge (b1, b2 : Expr) : Ge?                : BoolExpr
+%  Gt (b1, b2 : Expr) : Gt?                : BoolExpr
+  BoolVarEval(varname : Name) : BoolVarEval? : BoolExpr
 
 
 % Reference expressions
-RefExpr[Name : TYPE+] : DATATYPE
-BEGIN
-
-  Null : Null?
-  RefVarEval(varname : Name) : RefVarEval?
-
-
-END RefExpr
+  Null : Null?                            : RefExpr
+  RefVarEval(varname : Name) : RefVarEval?: RefExpr
 
 
 % Program's expressions
-Expr[Name : TYPE+] : DATATYPE
-BEGIN
-
-  IMPORTING BoolExpr[Name],
-            NumExpr[Name],
-            RefExpr[Name]
-
-  Assign(target : Name, source : Expr) : Assign?
-  BExpr(b : BoolExpr) : BExpr?
-  CondExpr(test : Expr, then_expr : Expr, else_expr : Expr) : CondExpr?
-  MethodCall(tgt : Expr, name : Name, arg : Expr) : MethodCall?
-  NExpr(n : NumExpr) : NExpr?
-  RExpr(r : RefExpr) : RExpr?
-
-
-END Expr
+  Assign(target : Name, source : Expr) : Assign? : Expr
+  BExpr(b : BoolExpr) : BExpr?                   : Expr
+  CondExpr(test : Expr, then_expr : Expr, 
+           else_expr : Expr) : CondExpr?         : Expr
+  MethodCall(tgt : Expr, name : Name, 
+             arg : Expr) : MethodCall?           : Expr
+  NExpr(n : NumExpr) : NExpr?                    : Expr
+  RExpr(r : RefExpr) : RExpr?                    : Expr
 
 
 % Program's statements
-Stmt[Name : TYPE+] : DATATYPE
-BEGIN
-  
-  IMPORTING Expr[Name]
 
-  CaseJML(branches : list[[Expr, Stmt]]) : CaseJML?
-  IfThenElse(test : Expr, then_stmt : Stmt, else_stmt : Stmt) : IfThenElse?
-  Sequence(s1, s2 : Stmt) : Sequence?
-  Set(target : Name, source : Expr) : Set?
-  Skip : Skip?
-  StmtExpr(expr : Expr) : StmtExpr?
-  Throw : Throw?
-  TryCatch(try : Stmt, catch : Stmt, finally : Stmt) : TryCatch?
-  While(test : Expr, body : Stmt) : While?
+  CaseJML(branches : list[[BoolExpr, Stmt]]) : CaseJML? : Stmt
+  IfThenElse(test : BoolExpr, then_stmt : Stmt, 
+             else_stmt : Stmt) : IfThenElse?        : Stmt
+  Sequence(s1, s2 : Stmt) : Sequence?               : Stmt
+  Set(target : Name, source : Expr) : Set?          : Stmt
+  Skip : Skip?                                      : Stmt
+  StmtExpr(expr : Expr) : StmtExpr?                 : Stmt
+  Throw : Throw?                                    : Stmt
+  TryCatch(try : Stmt, catch : Stmt, 
+           finally : Stmt) : TryCatch?              : Stmt
+  While(test : BoolExpr, body : Stmt) : While?      : Stmt
 
 
-END Stmt
+END Body
 
 
 % Syntax of programs
@@ -138,9 +111,8 @@ Program[Name : TYPE+] : THEORY
 BEGIN
   
   IMPORTING ValProp[Name],
-            Stmt[Name],
-            Expr[Name]
-
+            Body[Name]
+            
   This : Name
 
   % Other reserved words given as examples
@@ -163,8 +135,8 @@ BEGIN
 
   Method : TYPE = [# name : Name,
                      arg : LocalVarDecl,
-                     pre : Expr,
-                     post : Expr,
+                     pre : BoolExpr,
+                     post : BoolExpr,
                      lvars : finite_set[LocalVarDecl],
                      body : Stmt,
                      pre_set : Stmt,
@@ -175,7 +147,7 @@ BEGIN
 
   Class : TYPE = [# name : Name,
                     super_class : lift[Name],
-                    inv : Expr,
+                    inv : BoolExpr,
                     ghost_vars : finite_set[FieldDecl],
                     fields : finite_set[FieldDecl],
                     methods : finite_set[Method] #]
@@ -295,22 +267,22 @@ BEGIN
   % in the program that has the required name, we should return the first in the
   % hierarchy of classes of the dynamic type of tgt.
   % Probably the best thing to do is to leave it undefined.
-  lookup_mthd(p : Program, tgt : Val, mn : Name) : lift[(methods(p))] =
-    IF up?(get_class(p)(tgt)) AND method_names(p, down(get_class(p)(tgt)))(mn)
-    THEN up(choose({m : Method | classes(p)(down(get_class(p)(tgt))) AND 
-                                 methods(down(get_class(p)(tgt)))(m)
-                                 AND name(m) = mn}))
-    ELSE bottom
-    ENDIF
+  lookup_mthd(p : Program, tgt : Val, mn : Name) : lift[(methods(p))] %=
+%    IF up?(get_class(p)(tgt)) AND method_names(p, down(get_class(p)(tgt)))(mn)
+%    THEN up(choose({m : Method | classes(p)(down(get_class(p)(tgt))) AND 
+%                                 methods(down(get_class(p)(tgt)))(m)
+%                                 AND name(m) = mn}))
+%    ELSE bottom
+%    ENDIF
 
   % TODO: Maybe this function should be left undefined since it should also
   % return the conjunction of the invariant of the the parent classes
   % If it can't find an invariant in tgt it just returns TRUE
-  lookup_inv(p : Program, tgt : Val) : Expr =
-    IF up?(get_class(p)(tgt))
-    THEN inv(down(get_class(p)(tgt)))
-    ELSE BExpr(TT)
-    ENDIF
+  lookup_inv(p : Program, tgt : Val) : BoolExpr %=
+%    IF up?(get_class(p)(tgt))
+%    THEN inv(down(get_class(p)(tgt)))
+%    ELSE BExpr(TT)
+%    ENDIF
 
 
   proper_subterm_set_clause(s : Stmt, m : Method) : boolean =
@@ -361,6 +333,9 @@ BEGIN
       name(m1) = name(m2) IMPLIES
         m1 = m2
 
+  wf_Classes(p : Program) : boolean =
+    FORALL (c : Class) : classes(p)(c) IMPLIES wf_Class(c)
+    
   wf_program_variables_disjoint_def(p : Program) : boolean =
     LET fname = var_names(getFieldDecls(p)),
         lname = var_names(getLocalDecls(p)),
@@ -379,11 +354,14 @@ BEGIN
       name(c1) = name(c2) IMPLIES
         c1 = c2
 
-  % Basic type information
-  invariants_are_bool_expr(p : Program) : boolean =
-    FORALL (c : Class) :
-      classes(p)(c) IMPLIES
-        BExpr?(inv(c))
+  wf_program_all_variables_declared(p : Program) : boolean =
+    FORALL(v : Name) : var_names(p)(v) IMPLIES declared_var_names(p)(v)
+    
+%  % Basic type information
+%  invariants_are_bool_expr(p : Program) : boolean =
+%    FORALL (c : Class) :
+%      classes(p)(c) IMPLIES
+%        BExpr?(inv(c))
 
   % TODO: review this definition
   % NOTE: In a complete specification, wf_Program would include only syntactic
@@ -394,9 +372,9 @@ BEGIN
     wf_program_variables_disjoint_def(p) AND
     wf_program_variables_not_reserved_words_def(p) AND
     wf_program_has_unique_class_names_def(p) AND
-    (FORALL (c : Class) : classes(p)(c) IMPLIES wf_Class(c)) AND
-    (FORALL (g : Name) : var_names(getGhostDecls(p))(g)) AND   % review this
-    invariants_are_bool_expr(p)
+    wf_Classes(p) AND
+    wf_program_all_variables_declared(p)
+%    invariants_are_bool_expr(p)
 
   AUTO_REWRITE- wf_Program
 
@@ -414,11 +392,6 @@ BEGIN
        disjoint?(fname, lname) AND
        disjoint?(lname, gname) AND
        disjoint?(fname, gname)
-
-  % TODO: delete
-%   wf_program_variables_not_this : LEMMA
-%     FORALL(p : Program) : 
-%       wf_Program(p) IMPLIES NOT declared_var_names(p)(This)
 
   wf_program_variables_not_reserved_words : LEMMA % :-)
     FORALL(p : Program) : 
@@ -447,10 +420,11 @@ BEGIN
         m1 = m2
 
   % This misses that the set statement actually occurs in the program
-  wf_program_target_of_set_declared : LEMMA
-    FORALL(p : Program, g : Name) : 
+  wf_program_all_variables_declared : LEMMA
+    FORALL(p : Program, v : Name) : 
       wf_Program(p) IMPLIES
-        var_names(getGhostDecls(p))(g)
+        var_names(p)(v) IMPLIES
+        declared_var_names(p)(v)
 
 
 END WellFormedProgram
