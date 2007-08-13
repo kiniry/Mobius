@@ -1068,7 +1068,7 @@ public class Lifter extends EscNodeBuilder
 	public SAny buildSort(Sort s) { throw new Die(); }
 	public SValue buildDynSelect(SMap map, SRef obj, SAny field) {throw new Die(); }
 	public SMap buildDynStore(SMap map, SRef obj, SAny field, SValue val) {throw new Die(); }
-  public SMap buildDynLoc(SMap map, SRef obj, SRef field) {throw new Die(); }
+  public SRef buildDynLoc(SMap map, SRef obj, SRef field) {throw new Die(); }
   public SPred buildNewArray(SMap oldh, SAny type, SMap heap, SRef r, SInt len) { throw new Die(); }
 	public SValue buildArrSelect(SMap map, SRef obj, SInt idx) {throw new Die(); }
 	public SMap buildArrStore(SMap map, SRef obj, SInt idx, SValue val) {throw new Die(); }
