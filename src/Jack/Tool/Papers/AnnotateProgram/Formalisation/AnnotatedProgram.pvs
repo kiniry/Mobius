@@ -108,25 +108,33 @@ BEGIN
       wf_Program(p) IMPLIES wf_state(p)(initial_AP_state(p)(this_val))
 
 
-  deriv_expr_yields_wf_state_AP : LEMMA % :-)
-    FORALL (p : Program, e : Expr, v : Val)
+%  deriv_expr_yields_wf_state_AP : LEMMA % :-)
+%    FORALL (p : Program, e : Expr, v : Val)
+%           (sigma1, sigma2 : APState, n : nat) :
+%      wf_Program(p) IMPLIES
+%      (FORALL (c : Stmt)(tau1, tau2 : APState)(m : below(n)) :
+%          wf_state(p)(tau1) IMPLIES
+%          deriv_stmt(p)(c, tau1, tau2)(m) IMPLIES
+%            wf_state(p)(tau2)) IMPLIES
+%      wf_state(p)(sigma1) IMPLIES
+%      deriv_expr(p)(e, sigma1, v, sigma2)(n) IMPLIES
+%        wf_state(p)(sigma2)
+
+%  % Proven, but assumption about target of set statements not very nicely 
+%  % phrased.
+%  deriv_stmt_yields_wf_state_AP : LEMMA % :-)
+%    FORALL (p : Program, c : Stmt, sigma1, sigma2 : APState, n : nat) :
+%      wf_Program(p) IMPLIES
+%      wf_state(p)(sigma1) IMPLIES
+%      deriv_stmt(p)(c, sigma1, sigma2)(n) IMPLIES
+%        wf_state(p)(sigma2)
+
+  derive_yields_wf_state_AP : LEMMA % :-)
+    FORALL (p : Program, b : Body, v : Val)
            (sigma1, sigma2 : APState, n : nat) :
       wf_Program(p) IMPLIES
-      (FORALL (c : Stmt)(tau1, tau2 : APState)(m : below(n)) :
-          wf_state(p)(tau1) IMPLIES
-          deriv_stmt(p)(c, tau1, tau2)(m) IMPLIES
-            wf_state(p)(tau2)) IMPLIES
       wf_state(p)(sigma1) IMPLIES
-      deriv_expr(p)(e, sigma1, v, sigma2)(n) IMPLIES
-        wf_state(p)(sigma2)
-
-  % Proven, but assumption about target of set statements not very nicely 
-  % phrased.
-  deriv_stmt_yields_wf_state_AP : LEMMA % :-)
-    FORALL (p : Program, c : Stmt, sigma1, sigma2 : APState, n : nat) :
-      wf_Program(p) IMPLIES
-      wf_state(p)(sigma1) IMPLIES
-      deriv_stmt(p)(c, sigma1, sigma2)(n) IMPLIES
+      derive(p)(b, sigma1, v, sigma2)(n) IMPLIES
         wf_state(p)(sigma2)
 
 
@@ -135,41 +143,28 @@ BEGIN
 
  on_method_entry_AP : (on_method_event_type) =
    LAMBDA (p : Program, md : Method, a : Val, s1, s2 : APState, n : nat,
-           deriv_stmt_rec : deriv_stmt_rec_type(n),
-           deriv_expr_rec : deriv_expr_rec_type(n)) :
-   on_method_entry(p, md, a, s1, s2, n, deriv_stmt_rec, deriv_expr_rec)
+           derive_rec : derive_rec_type(n)) :
+   on_method_entry(p, md, a, s1, s2, n, derive_rec)
 
-  expr_determ_step_AP : LEMMA % :-)
-    FORALL (p : Program)(n1, n2 : nat)(e : Expr)
+  determ_step_AP : LEMMA % :-)
+    FORALL (p : Program)(n1, n2 : nat)(b : Body)
            (v1, v2 : Val, sigma, sigma1, sigma2 : APState) :
-        (FORALL (c : Stmt)(sigma, sigma1, sigma2 : APState)
-                (m1 : below(n1), m2 : below(n2)) :
-          deriv_stmt(p)(c, sigma, sigma1)(m1) AND
-          deriv_stmt(p)(c, sigma, sigma2)(m2) IMPLIES
-            sigma1 = sigma2 AND m1 = m2) IMPLIES
-        deriv_expr(p)(e, sigma, v1, sigma1)(n1) IMPLIES
-        deriv_expr(p)(e, sigma, v2, sigma2)(n2) IMPLIES
+        derive(p)(b, sigma, v1, sigma1)(n1) IMPLIES
+        derive(p)(b, sigma, v2, sigma2)(n2) IMPLIES
            v1 = v2 AND sigma1 = sigma2 AND n1 = n2
 
-  stmt_determ_step_AP : LEMMA % :-)
-    FORALL (p : Program)(n1, n2 : nat)(c : Stmt)(sigma : APState) :
-      FORALL (sigma1, sigma2 : APState) :
-        deriv_stmt(p)(c, sigma, sigma1)(n1) AND
-        deriv_stmt(p)(c, sigma, sigma2)(n2) IMPLIES
-          sigma1 = sigma2 AND n1 = n2
-  
-  deriv_expr_bottom_iff_exception_step_AP : LEMMA % :-)
-    FORALL (p : Program)(e : Expr)
+  derive_bottom_iff_exception_step_AP : LEMMA % :-)
+    FORALL (p : Program)(b : Body)
            (sigma1, sigma2 : APState, v : Val, n : nat) :
-      deriv_expr(p)(e, sigma1, v, sigma2)(n) IMPLIES
+      derive(p)(b, sigma1, v, sigma2)(n) IMPLIES
       Bottom?(v) = up?(ex(pstate(sigma2)))
 
-  deriv_boolean_expr_type_AP : LEMMA % :-)
-    FORALL (p : Program)(e : Expr)
+  derive_boolean_expr_type_AP : LEMMA % :-)
+    FORALL (p : Program)(b : BoolExpr)
            (sigma1, sigma2 : APState, v : Val, n : nat) :
-      deriv_expr(p)(e, sigma1, v, sigma2)(n) IMPLIES
+      derive(p)(b, sigma1, v, sigma2)(n) IMPLIES
       NOT up?(ex(pstate(sigma2))) IMPLIES
-      BExpr?(e) IMPLIES Bool?(v)
+      Bool?(v)
 
 
 END AnnotatedProgramSemantics
@@ -200,11 +195,12 @@ BEGIN
   % The execution of a set statement that does not have vn as target and whose
   % source expression has no side-effects, does not change the value of vn.
   non_interference_of_set_stmt : LEMMA % :-)
-    FORALL (p : Program, c : Stmt, s1, s2 : APState, n : nat, vn : Name) :
+    FORALL (p : Program, c : Stmt, s1, s2 : APState, v : Val, 
+            n : nat, vn : Name) :
       Set?(c) AND
       NOT target(c) = vn IMPLIES
-      expr_has_no_side_effects(p)(source(c)) IMPLIES
-      deriv_stmt(p)(c, s1, s2)(n) IMPLIES
+      spec_expr_has_no_side_effects(p)(source(c)) IMPLIES
+      derive(p)(c, s1, v, s2)(n) IMPLIES
         gvs(s1)(vn) = gvs(s2)(vn)
 
   % Consider the evaluation of a CaseJML on a non-exceptional state for which 
@@ -214,20 +210,20 @@ BEGIN
   % state after the execution of the statement associated with b1.
   CaseJML_exclusive_branches_semantics : LEMMA % :-)
     FORALL (p : Program, bs : list[[Expr, Stmt]], s1, s2, tau : APState,
-            n1, n : nat, b1 : [Expr, Stmt]) :
+            v1, v2 : Val, n1, n : nat, b1 : [Expr, Stmt]) :
       NOT up?(ex(pstate(s1))) IMPLIES
       n > 0 IMPLIES
       member(b1, bs) IMPLIES
       (FORALL (tau : APState, v : Val, m1 : below(n)) :
-        (deriv_expr(p)(PROJ_1(b1), s1, v, tau)(m1) IMPLIES
+        (derive(p)(PROJ_1(b1), s1, v, tau)(m1) IMPLIES
           s1 = tau AND v = Bool(TRUE))) IMPLIES
       (FORALL (b2 : [Expr, Stmt], tau : APState, v : Val, m2 : below(n)) :
         member(b2, bs) IMPLIES
         NOT b1 = b2 IMPLIES
-        (deriv_expr(p)(PROJ_1(b2), s1, v, tau)(m2) IMPLIES
+        (derive(p)(PROJ_1(b2), s1, v, tau)(m2) IMPLIES
           s1 = tau AND v = Bool(FALSE))) IMPLIES
-        deriv_stmt(p)(PROJ_2(b1), s1, tau)(n1) IMPLIES
-        deriv_stmt(p)(CaseJML(bs), s1, s2)(n) IMPLIES
+        derive(p)(PROJ_2(b1), s1, v1, tau)(n1) IMPLIES
+        derive(p)(CaseJML(bs), s1, v2, s2)(n) IMPLIES
           s2 = tau
 
   % TODO: 
@@ -236,23 +232,23 @@ BEGIN
   % do not throw exceptions) and do not hold, will eventually evaluate the
   % statement associated with b1.
   CaseJML_evaluates_true_stmt : LEMMA % :-)
-    FORALL (p : Program, bs : list[[Expr, Stmt]], s1, s2 : APState, n : nat,
-            b1 : [Expr, Stmt]) :
+    FORALL (p : Program, bs : list[[Expr, Stmt]], s1, s2 : APState, 
+            v : Val, n : nat, b1 : [Expr, Stmt]) :
       NOT up?(ex(pstate(s1))) IMPLIES
       n > 0 IMPLIES
       member(b1, bs) IMPLIES
       (FORALL (tau : APState, v : Val, m1 : below(n)) :
-        (deriv_expr(p)(PROJ_1(b1), s1, v, tau)(m1) IMPLIES
+        (derive(p)(PROJ_1(b1), s1, v, tau)(m1) IMPLIES
           s1 = tau AND v = Bool(TRUE))) IMPLIES
       (FORALL (b2 : [Expr, Stmt], tau : APState, v : Val, m2 : below(n)) :
         member(b2, bs) IMPLIES
         before(b2, b1, bs) IMPLIES
-        (deriv_expr(p)(PROJ_1(b2), s1, v, tau)(m2) IMPLIES
+        (derive(p)(PROJ_1(b2), s1, v, tau)(m2) IMPLIES
 %          NOT up?(ex(pstate(tau))) AND  % This can be deduced!!
           s1 = tau AND v = Bool(FALSE))) IMPLIES
-      deriv_stmt(p)(CaseJML(bs), s1, s2)(n) IMPLIES
-        EXISTS (tau : APState, n1 : nat) : 
-          deriv_stmt(p)(PROJ_2(b1), s1, tau)(n1)
+      derive(p)(CaseJML(bs), s1, v, s2)(n) IMPLIES
+        EXISTS (tau : APState, n1 : nat, v1 : Val) : 
+          derive(p)(PROJ_2(b1), s1, v1, tau)(n1)
 
 
 END APSemanticsProperties

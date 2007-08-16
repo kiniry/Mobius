@@ -288,6 +288,22 @@ BEGIN
   proper_subterm_set_clause(s : Stmt, m : Method) : boolean =
     s << pre_set(m) OR s << post_set(m) OR s << exc_set(m)
 
+  IMPORTING listfuncs
+
+  proper_subterm_sequence : LEMMA % :-)
+    FORALL (c1, c2 : Stmt, c3 : Body) :
+      Sequence(c1, c2) << c3 IMPLIES 
+        c1 << c3 AND c2 << c3
+
+  proper_subterm_set_clause_sequence : LEMMA % :-)
+    FORALL (c1, c2 : Stmt, m : Method) :
+      proper_subterm_set_clause(Sequence(c1, c2), m) IMPLIES 
+        proper_subterm_set_clause(c1, m) AND proper_subterm_set_clause(c2, m)
+
+  proper_subterm_is_transitive : LEMMA % :-)
+    FORALL (c1, c2, c3 : Body) :
+      c1 << c2 AND c2 << c3 IMPLIES c1 << c3
+
 
 %  program_code(p : Program)(s : Stmt) : boolean =
 %    EXISTS(c : Class, m : Method) :
