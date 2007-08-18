@@ -39,19 +39,19 @@ public class Predicate2Ar extends Predicate {
 	public String printRoot(BMLConfig conf) {
 		byte ps = getPredicateSymbol();
 		switch (ps) {
-		case PredicateSymbol.EQ: return "==";
-		case PredicateSymbol.NOTEQ: return "!=";
-		case PredicateSymbol.GRT: return ">";
-		case PredicateSymbol.GRT_uscmp: return ">_cmp";
-		case PredicateSymbol.GRTEQ: return ">=";
-		case PredicateSymbol.GRTEQ_uscmp: return ">=_cmp";
-		case PredicateSymbol.LESS: return "<";
-		case PredicateSymbol.LESS_uscmp: return "<_cmp";
-		case PredicateSymbol.LESSEQ: return "<=";
-		case PredicateSymbol.LESSEQ_uscmp: return "<=_cmp";
-		case PredicateSymbol.INSTANCEOF: return "instanceof";
-		case PredicateSymbol.ODD: return "odd";
-		case PredicateSymbol.SUBTYPE: return "subtype";
+		case PredicateSymbol.EQ: return " == ";
+		case PredicateSymbol.NOTEQ: return " != ";
+		case PredicateSymbol.GRT: return " > ";
+		case PredicateSymbol.GRT_uscmp: return " >_cmp ";
+		case PredicateSymbol.GRTEQ: return " >= ";
+		case PredicateSymbol.GRTEQ_uscmp: return " >=_cmp ";
+		case PredicateSymbol.LESS: return " < ";
+		case PredicateSymbol.LESS_uscmp: return " <_cmp ";
+		case PredicateSymbol.LESSEQ: return " <= ";
+		case PredicateSymbol.LESSEQ_uscmp: return " <=_cmp ";
+		case PredicateSymbol.INSTANCEOF: return " instanceof ";
+		case PredicateSymbol.ODD: return " odd ";
+		case PredicateSymbol.SUBTYPE: return " <: ";
 		default: return "?";
 		}
 	}
@@ -257,31 +257,7 @@ public class Predicate2Ar extends Predicate {
 //	}
 
 	public String printCode1(BMLConfig conf) {
-		String op = "";
-		if (getPredicateSymbol() == PredicateSymbol.NOTEQ) {
-			op = " =/= ";
-//			op = " \\neq ";
-		}
-		if (getPredicateSymbol() == PredicateSymbol.EQ) {
-			op = " = ";
-		}
-		if (getPredicateSymbol() == PredicateSymbol.GRT) {
-			op = " > ";
-		}
-		if (getPredicateSymbol() == PredicateSymbol.GRTEQ) {
-			op = " >= ";
-//			op = " \\geq ";
-		}
-		if (getPredicateSymbol() == PredicateSymbol.LESS) {
-			op = " < ";
-		}
-		if (getPredicateSymbol() == PredicateSymbol.LESSEQ) {
-			op = " <= ";
-//			op = " \\leq ";
-		}
-		if (getPredicateSymbol() == PredicateSymbol.SUBTYPE) {
-			op = " <: ";
-		}
+		String op = printRoot(conf);
 		return getLeftExpr().printCode(conf) + op + getRightExpr().printCode(conf);
 
 	}

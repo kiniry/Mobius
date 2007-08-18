@@ -98,7 +98,7 @@ public class ArithmeticExpression extends Expression {
 	 * @param _subExpr
 	 * @param _arithmetic_op
 	 */
-	private ArithmeticExpression(Expression _subExpr, byte _arithmetic_op) {
+	public ArithmeticExpression(Expression _subExpr, byte _arithmetic_op) {
 		arithmetic_op = _arithmetic_op;
 		setSubExpressions(new Expression[] { _subExpr });
 		SetPriority();
@@ -477,31 +477,33 @@ public class ArithmeticExpression extends Expression {
 //		this.arithmetic_op = arithmetic_op;
 //	}
 
+	public String printRoot(BMLConfig conf) {
+		switch (arithmetic_op) {
+		case ExpressionConstants.ADD: return " + ";
+		case ExpressionConstants.SUB: return " - ";
+		case ExpressionConstants.MULT: return " * ";
+		case ExpressionConstants.DIV: return " / ";
+		case ExpressionConstants.BITWISEAND: return " & ";
+		case ExpressionConstants.BITWISEOR: return " | ";
+		case ExpressionConstants.BITWISEXOR: return " ^ ";
+		case ExpressionConstants.NEG: return " -";
+		case ExpressionConstants.REM: return " %";
+		case ExpressionConstants.SHL: return " << ";
+		case ExpressionConstants.SHR: return " >> ";
+		case ExpressionConstants.USHR: return " >>> "; //?
+		case ExpressionConstants.NOP: return " nop "; //?
+		default:
+			System.out.println("unknown operator!");
+			return " # ";
+		}
+	}
+	
 	public String printCode1(BMLConfig conf) {
-		String op = "";
-		if (arithmetic_op == ExpressionConstants.ADD) {
-			op = " + ";
-		}
-		if (arithmetic_op == ExpressionConstants.SUB) {
-			op = " - ";
-		}
-		if (arithmetic_op == ExpressionConstants.MULT) {
-			op = " * ";
-		}
-		if (arithmetic_op == ExpressionConstants.DIV) {
-			op = " / ";
-		}
-		if (arithmetic_op == ExpressionConstants.REM) {
-			op = " % ";
-		}
-		if (arithmetic_op == ExpressionConstants.NEG) {
-			op = " -";
-		}
+		String op = printRoot(conf);
 		Expression[] subExpr = getSubExpressions();
 		if (getSubExpressions() == null) {
 			System.err.println("E R R O R ! ! !");
-//			return " ERR ";
-		}
+		}//?
 		if (getSubExpressions().length == 1) {
 			return op + subExpr[0].printCode(conf);
 		} else {

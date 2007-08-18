@@ -46,6 +46,7 @@ import annot.formula.Predicate0Ar;
 import annot.formula.Predicate2Ar;
 import annot.formula.PredicateSymbol;
 import annot.formula.Quantificator;
+import annot.formula.QuantifiedFormula;
 import annot.formula.UnknownFormula;
 import annot.modifexpression.AllArrayElem;
 import annot.modifexpression.ArrayElemFromTo;
@@ -732,7 +733,8 @@ public class AttributeReader {
 		} else if (_byte == Code.ARRAY_ACCESS) {
 			Expression array = readExpression(bytes);
 			Expression arrIndex = readExpression(bytes);
-			if (array instanceof OLD) {
+			if (array instanceof OLD) { //XXX ??
+				syso("Unchecked: old array");
 				array = ((OLD) array).getSubExpressions()[0];
 				if (arrIndex instanceof OLD) {
 					arrIndex = ((OLD) arrIndex).getSubExpressions()[0];
@@ -769,10 +771,11 @@ public class AttributeReader {
 //			Expression expr = readExpression(bytes);
 //			CastExpression castExpr = new CastExpression(type, expr);
 //			return castExpr;
-		} else if (_byte == Code.FULL_QUALIFIED_NAME) { // .
+		} else if (_byte == Code.FULL_QUALIFIED_NAME) {// .
 			Expression expr = readExpression(bytes);
 			Expression constant = readExpression(bytes);
-			if (constant instanceof OLD) {
+			if (constant instanceof OLD) {// XXX ??
+				syso("Unchecked: old constant");
 				constant = ((OLD) constant).getSubExpressions()[0];
 				if (expr instanceof OLD) {
 					expr = ((OLD) expr).getSubExpressions()[0];
@@ -899,8 +902,8 @@ public class AttributeReader {
 		} else if (_byte == Code.AND) {
 			Expression f1 = readExpression(bytes);
 			Expression f2 = readExpression(bytes);
-			Formula formula = Formula.getFormula(f1, f2, Connector.AND);
-			return formula;
+//			Formula formula = Formula.getFormula(f1, f2, Connector.AND);
+			return new Formula(f1, f2, Connector.AND);
 //		} else if (_byte == Code.OR) {
 //			Expression f1 = readExpression(bytes);
 //			Expression f2 = readExpression(bytes);
@@ -909,8 +912,8 @@ public class AttributeReader {
 		} else if (_byte == Code.IMPLIES) {
 			Expression f1 = readExpression(bytes);
 			Expression f2 = readExpression(bytes);
-			Formula formula = Formula.getFormula(f1, f2, Connector.IMPLIES);
-			return formula;
+//			Formula formula = Formula.getFormula(f1, f2, Connector.IMPLIES);
+			return new Formula(f1, f2, Connector.IMPLIES);
 //		} else if (_byte == Code.NOT) {
 //			Expression f1 = readExpression(bytes);
 //			if (f1 instanceof Formula) {
@@ -945,108 +948,16 @@ public class AttributeReader {
 					PredicateSymbol.LESSEQ);
 			return predicate;
 		} else if (_byte == Code.EQ) {
-			syso("        niesprawdzone -- EQ");
 			Expression expr1 = readExpression(bytes);
-			// here we substitute the appearing formulas in equality relation
-			// as the JVM do not support the boolean type, in place of the true
-			// boolean value
-			// 1 is used and in place of the false boolean value 0 is used
-			// Thus suppose that expr1 is a formula. It is substituted with:
-			// 1 if the formula is the predicate true
-			// 0 if the formula is the predicate false
-			// else if it is another type of formula and expr2 is not a formula:
-			// f == expr2 is substituted with
-			// 1 == expr2 ==> f /\ 0 == expr2 ==> !f
-			// else if
-			Formula f1 = null;
-//			DesugarNegBoolExpr des1 = null;
-			if (expr1 == Predicate0Ar.TRUE) {
-				expr1 = new NumberLiteral(1);
-			} else if (expr1 == Predicate0Ar.FALSE) {
-				expr1 = new NumberLiteral(0);
-			} else if (expr1 instanceof Formula) {
-				f1 = (Formula) expr1;
-//			} else if (expr1 instanceof DesugarNegBoolExpr) {
-//				des1 = (DesugarNegBoolExpr) expr1;
-			}
-
 			Expression expr2 = readExpression(bytes);
-//			return new UnknownFormula("EQ");
-			Formula f2 = null;
-//			DesugarNegBoolExpr des2 = null;
-			if (expr2 == Predicate0Ar.TRUE) {
-				expr2 = new NumberLiteral(1);
-			} else if (expr2 == Predicate0Ar.FALSE) {
-				expr2 = new NumberLiteral(0);
-			} else if (expr2 instanceof Formula) {
-				f2 = (Formula) expr2;
-//			} else if (expr2 instanceof DesugarNegBoolExpr) {
-//				des2 = (DesugarNegBoolExpr) expr2;
-			}
-//			if ((des2 != null) && (f1 == null) && (des1 == null)) {
-//				Formula posCondition = des2.getPositiveCondition();
-//				Expression posValue = des2.getPositiveValue();
-//				Formula expr2_eq_posValue = new Predicate2Ar(expr1, posValue,
-//						PredicateSymbol.EQ);
-//				Formula posCase = Formula.getFormula(posCondition,
-//						expr2_eq_posValue, Connector.EQUIV);
-//
-//				return posCase;
-//				/*
-//				 * Formula negCondition = des2.getNegativeCondition();
-//				 * Expression negValue = des2.getNegativeValue(); Formula
-//				 * expr2_eq_negValue = new Predicate2Ar(expr1, negValue,
-//				 * PredicateSymbol.EQ ); Formula negCase = Formula.getFormula(
-//				 * negCondition, expr2_eq_negValue, Connector.IMPLIES); Formula
-//				 * posAndNeg = Formula.getFormula(posCase, negCase,
-//				 * Connector.AND); return posAndNeg;
-//				 */
-//			}
-			if ((f1 != null) && (f2 != null)) {
-				Formula f = Formula.getFormula(f1, f2, Connector.EQUIV);
-				return f;
-			} else if (f1 != null) {
-				Formula true_eq_e2 = Predicate2Ar.getPredicate(
-						new NumberLiteral(1), expr2, PredicateSymbol.EQ);
-				Formula true_eq_e2_equiv_f1 = Formula.getFormula(true_eq_e2,
-						f1, Connector.EQUIV);
-				return true_eq_e2_equiv_f1;
-
-				/*
-				 * Formula false_eq_e2 = Predicate2Ar.getPredicate(new
-				 * NumberLiteral(0), expr2, PredicateSymbol.EQ); Formula
-				 * false_eq_e2_equiv_notf1 = Formula.getFormula(false_eq_e2,
-				 * Formula.getFormula(f1, Connector.NOT), Connector.IMPLIES );
-				 * 
-				 * Formula equivalence = Formula.getFormula(true_eq_e2_equiv_f1,
-				 * false_eq_e2_equiv_notf1, Connector.AND); return equivalence;
-				 */
-			} else if (f2 != null) {
-				Formula true_eq_e1 = Predicate2Ar.getPredicate(expr1,
-						new NumberLiteral(1), PredicateSymbol.EQ);
-				Formula true_eq_e1_equiv_f2 = Formula.getFormula(true_eq_e1,
-						f2, Connector.EQUIV);
-				return true_eq_e1_equiv_f2;
-				/*
-				 * Formula false_eq_e1 = Predicate2Ar.getPredicate(expr1, new
-				 * NumberLiteral(0), PredicateSymbol.EQ); Formula
-				 * false_eq_e1_equiv_notf2 = Formula.getFormula(false_eq_e1,
-				 * Formula.getFormula(f2, Connector.NOT), Connector.IMPLIES);
-				 * 
-				 * Formula equivalence = Formula.getFormula(true_eq_e1_equiv_f2,
-				 * false_eq_e1_equiv_notf2, Connector.AND); return equivalence;
-				 */
-			} else {
-				Formula predicate = Predicate2Ar.getPredicate(expr1, expr2,
-						PredicateSymbol.EQ);
-				return predicate;
-			}
+			return new Predicate2Ar(expr1, expr2, PredicateSymbol.EQ);
 		} else if (_byte == Code.NOTEQ) {
 			Expression expr1 = readExpression(bytes);
 			Expression expr2 = readExpression(bytes);
-			Formula predicate = Formula.getFormula(Predicate2Ar.getPredicate(
-					expr1, expr2, PredicateSymbol.EQ), Connector.NOT);
-			return predicate;
+			return new Predicate2Ar(expr1, expr2, PredicateSymbol.NOTEQ);
+//			Formula predicate = Formula.getFormula(Predicate2Ar.getPredicate(
+//					expr1, expr2, PredicateSymbol.EQ), Connector.NOT);
+//			return predicate;
 //		} else if (_byte == Code.INSTANCEOF) {
 //			Expression expr1 = readExpression(bytes);
 //			JavaType type = readJavaType(bytes);
@@ -1070,9 +981,8 @@ public class AttributeReader {
 			}
 			Quantificator exists = new Quantificator(Quantificator.EXISTS, vars);
 			Formula f = (Formula) readExpression(bytes);
-			Formula forallFormula = Formula.getFormula(f, exists);
-			return forallFormula;
-//			return new UnknownFormula("EXISTS");
+//			Formula forallFormula = Formula.getFormula(f, exists);
+			return new QuantifiedFormula(f, exists);
 		} else if (_byte == Code.FORALL) {
 			int numBoundVars = readByte(bytes);
 			Variable[] vars = new Variable[numBoundVars];
@@ -1083,8 +993,8 @@ public class AttributeReader {
 			}
 			Quantificator forall = new Quantificator(Quantificator.FORALL, vars);
 			Formula f = (Formula) readExpression(bytes);
-			Formula forallFormula = Formula.getFormula(f, forall);
-			return forallFormula;
+//			Formula forallFormula = Formula.getFormula(f, forall);
+			return new QuantifiedFormula(f, forall);
 		}
 		syso("ERROR: Unknown Code - " + printByte(_byte));
 		return new UnknownFormula("0x"+printByte(_byte));

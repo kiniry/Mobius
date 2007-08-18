@@ -165,12 +165,16 @@ public class Testuj {
 							+ ", pc: " + pra.pcIndex
 							+ ", lines: " + pra.line_start
 							+ " -- " + pra.line_end);
-				System.out.println(
-						bcc.parser.getCurrentCode(pra, str));
+				String code = bcc.parser.getCurrentCode(pra, str);
+				System.out.println(code);
+				System.out.println(bcc.parser.removeComment(code));
+				parserTest(true, bcc.parser.removeComment(code));
 				pra = a;
 				o = i;
 			}
 		}
+		showParserTestStats();
+		count = errors = 0;
 	}
 
 	public static void ptInit() {
@@ -190,13 +194,14 @@ public class Testuj {
 	private static int errors = 0;
 
 	public static void parserTest(boolean ok, String str) {
+//		str = str.replaceAll(" ", "");
 		parserTest(ok, str, str);
 	}
 
 	public static void parserTest(boolean ok, String str, String result) {
 		count++;
 		System.out.println("---- test nr " + count + " ----");
-		System.out.println("  parsing: "+bcc.parser.purge(str));
+		System.out.println("  parsing: "+bcc.parser.purge(str).substring(6) + (ok ? "" : " (err)"));
 		try {
 			BCMethod m = null;
 			BCPrintableAttribute old = new BCPrintableAttribute();
@@ -226,12 +231,25 @@ public class Testuj {
 			System.out.println("### parsing error.");
 		}
 	}
+
+	private static void showParserTestStats() {
+		if (errors == 0) {
+			System.out.println("\nSUCCESS\n all "
+					+count+" tests passed.");
+		} else {
+			System.out.println("\nFAILURES!\n"
+					+((errors < count) ? errors : "all")
+					+" out of "+count+" tests failed.");
+		}
+	}
 	
 	private static void longParserTest() {
 		parserTest(true, bcc.parser.removeComment("/*  assert # \n * \n */"));
+		parserTest(true, "assert true");
 		parserTest(true, "assert 1 < 2");
 		parserTest(false, "assert (1)() < 2");
-		parserTest(true, "assert ((((((1)) < (((2)))))))", "assert 1 < 2");
+//		parserTest(true, "assert ((((((1)) < (((2)))))))", "assert 1 < 2"); //XXX: 2^n ??
+		parserTest(true, "assert ((1 < (((2)))))", "assert 1 < 2");
 		parserTest(true, "assert (true ? 1 : 2) < 1");
 		parserTest(true, "assert (12 < 34 ? 1 : 2) < 45");
 		parserTest(false, "assert 1 < 2 ? 3 : 4 < 5");
@@ -239,13 +257,53 @@ public class Testuj {
 		parserTest(true, "assert 1 < 2 <==> 3 < 4");
 		parserTest(true, "assert 1 < 2 <==> 3 < 4 <==> 5 < 6");
 		parserTest(true, "assert 1 < 2 <==> (3 < 4 ? 7 : 8) < 9");
-		if (errors == 0) {
-			System.out.println("\nSUCCESS\n all "
-					+count+" tests passed.");
-		} else {
-			System.out.println("\nFAILURES!\n"+errors+" out of "
-					+count+" tests failed.");
-		}
+		parserTest(true, "assert true <=!=> false");
+		parserTest(true, "assert true <=!=> false <==> true");
+		parserTest(true, "assert 1 < 2 <==> (3 < 4 ? 5 : 6) < 7 <=!=> 8 < 9");
+		parserTest(false, "assert true <==> 3 ? 4 : 5 < 6");
+		parserTest(true, "assert 1 < 2 ==> 3 < 4");
+		parserTest(true, "assert (false ==> true ? 1 : 2) < 3");
+		parserTest(false, "assert false ==> true ==> false");
+		parserTest(true, "assert true || false");
+		parserTest(true, "assert true || 1 < 2 || true");
+		parserTest(false, "assert true || 3");
+		parserTest(true, "assert true && false");
+		parserTest(true, "assert true && false || true");
+		parserTest(true, "assert (true && false) || (false && true)", "assert true && false || false && true");
+		parserTest(true, "assert (true || false) && (false || true)");
+		parserTest(true, "assert 1 > 2");
+		parserTest(true, "assert 1 < 2 && 3 <= 4 && 4 >= 5 && 6 > 7");
+		parserTest(false, "assert 1 > 2 > 3");
+		parserTest(false, "assert true > false");
+		parserTest(true, "assert (1 | 2) > 0");
+		parserTest(false, "assert 1 | 2 > 0");
+		parserTest(false, "assert 1 & 2 > 3 ^ 4");
+		parserTest(true, "assert (1 ^ 2) > 0");
+		parserTest(true, "assert (1 & 2) > 0");
+		parserTest(true, "assert (1 | 2 | 3) > (4 ^ 5 & 6 ^ 7)");
+		parserTest(true, "assert (1 | 2 ^ 3 & (4 | 5)) > ((6 ^ 7) & 8)");
+		parserTest(true, "assert (1 | 2 ^ (3 & 4 | 5)) > (6 ^ 7 & 8)");
+		parserTest(true, "assert 1 == 2 && 3 != 4");
+		parserTest(false, "assert 1 == 2 == 3 && 4 != 5 != 6");
+		parserTest(false, "assert 1 == 2 != 3 && 4 != 5 == 6");
+		parserTest(false, "assert 1 == 2 == 3 < 4");
+		parserTest(true, "assert 1 << 2 < 3");
+		parserTest(true, "assert 1 >> 2 < 3 >>> 4");
+		parserTest(true, "assert 1 << 2 << 3 + 4 >> 5 >> 6 + 7 >>> 8 >>> 9 < 10");
+		parserTest(true, "assert 1 << 2 >> 3 >>> 4 << 5 < 6");
+		parserTest(true, "assert 1 + 2 - 3 * 4 / 5 % 6 - 7 == 8");
+		parserTest(true, "assert (1 + 2) * (3 + 4) < 1 << 2 >> (3 + 4) * 5");
+		parserTest(true, "assert 1 << (2 << 3) < 4", "assert 1 << 2 << 3 < 4");
+		parserTest(true, "assert 1 << 2 + (3 * 4) < 5", "assert 1 << 2 + 3 * 4 < 5");
+		parserTest(false, "assert 1 << 2 >> true < 3");
+//		parserTest(false, "assert (1 << (2 >> true)) < 3");  FIXME!! SEGV
+		parserTest(false, "assert 1 << (2 >> true) < 3");
+		parserTest(true, "assert -1 < 2");
+		parserTest(true, "assert 1 + -2 < 3");
+		parserTest(false, "assert --1 < 2 - -3");
+		parserTest(true, "assert -(-1) < 2 - -3", "assert --1 < 2 - -3");
+		parserTest(true, "assert -(+1) < +(-2) - +3", "assert -1 < -2 - 3");
+		showParserTestStats();
 	}
 	
 	public static void main(String[] args) {

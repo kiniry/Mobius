@@ -116,7 +116,8 @@ public class Parsing {
 		String result = "";
 		String[] lines = str.split("\n");
 		for (int i=0; i<lines.length; i++)
-			result += lines[i].substring(3);
+			if (lines[i].length() > 3)
+				result += lines[i].substring(3);
 		result = result.split("\\*/")[0];
 		return result;
 	}
@@ -127,6 +128,8 @@ public class Parsing {
 		attr = attr.replaceAll("\n \\*", "\n");
 		attr = attr.replaceAll("\n", "");
 		attr = attr.replaceAll(" ", "");
+//		while (attr.lastIndexOf("  ") >= 0)
+//			attr = attr.replaceAll("  ", " ");
 		return attr;
 	}
 	

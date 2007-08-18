@@ -54,14 +54,13 @@ printableAttribute returns [BCPrintableAttribute ast] :
 
 expression returns [Expression ast] :
 	e=conditionalExpr {$ast = $e.ast;}
-	| se=shiftExpr {$ast = $se.ast;}
+	| ioe=inclusiveOrExpr {$ast = $ioe.ast;}
 	;
 
 conditionalExpr returns [Expression ast] :
-	se=shiftExpr {$ast = $se.ast;}
-	| (e=formula
-		COND1 t=conditionalExpr
-		COND2 f=conditionalExpr)
+	(e=formula
+		COND1 t=expression
+		COND2 f=expression)
 			{$ast = new ConditionalExpression($e.ast, $t.ast, $f.ast);}
 	;
 
@@ -72,49 +71,80 @@ formula returns [Formula ast] :
 
 equivalenceExpr returns [Formula ast] :
 	e=impliesExpr {$ast = $e.ast;}
-	(EQUIV r=impliesExpr {$ast = new Formula($ast, $r.ast, Connector.EQUIV);})*
-	;
+	( EQUIV r=impliesExpr {$ast = new Formula($ast, $r.ast, Connector.EQUIV);}
+		| NOTEQUIV r=impliesExpr {$ast = new Formula($ast, $r.ast, Connector.NOTEQUIV);}
+	)*;
 
 impliesExpr returns [Formula ast] :
-	e=logicalOrExpr {$ast = $e.ast;};
+	e=logicalOrExpr {$ast = $e.ast;}
+	(IMPLIES r=logicalOrExpr {$ast = new Formula($ast, $r.ast, Connector.IMPLIES);})?;
 
 logicalOrExpr returns [Formula ast] :
-	e=logicalAndExpr {$ast = $e.ast;};
+	e=logicalAndExpr {$ast = $e.ast;}
+	(LOG_OR r=logicalAndExpr {$ast = new Formula($ast, $r.ast, Connector.OR);})*;
 
 logicalAndExpr returns [Formula ast] :
-	e=inclusiveOrExpr {$ast = $e.ast;};
+	e=equalityExpr {$ast = $e.ast;}
+	(LOG_AND r=equalityExpr {$ast = new Formula($ast, $r.ast, Connector.AND);})*;
 
-inclusiveOrExpr returns [Formula ast] :
-	e=exclusiveOrExpr {$ast = $e.ast;};
+inclusiveOrExpr returns [Expression ast] :
+	e=exclusiveOrExpr {$ast = $e.ast;}
+	(OR r=exclusiveOrExpr {$ast = new ArithmeticExpression($ast, $r.ast, ExpressionConstants.BITWISEOR);})*;
 
-exclusiveOrExpr returns [Formula ast] :
-	e=andExpr {$ast = $e.ast;};
+exclusiveOrExpr returns [Expression ast] :
+	e=andExpr {$ast = $e.ast;}
+	(XOR r=andExpr {$ast = new ArithmeticExpression($ast, $r.ast, ExpressionConstants.BITWISEXOR);})*;
 
-andExpr returns [Formula ast] :
-	e=equalityExpr {$ast = $e.ast;};
+andExpr returns [Expression ast] :
+	e=shiftExpr {$ast = $e.ast;}
+	(AND r=shiftExpr {$ast = new ArithmeticExpression($ast, $r.ast, ExpressionConstants.BITWISEAND);})*;
 
 equalityExpr returns [Formula ast] :
 	e=relationalExpr {$ast = $e.ast;};
 
 relationalExpr returns [Formula ast] :
-	l=shiftExpr LESS r=shiftExpr
+	l=shiftExpr EQ r=shiftExpr
+		{$ast = new Predicate2Ar($l.ast, $r.ast, PredicateSymbol.EQ);}
+	| l=shiftExpr NEQ r=shiftExpr
+		{$ast = new Predicate2Ar($l.ast, $r.ast, PredicateSymbol.NOTEQ);}
+	| l=shiftExpr LESS r=shiftExpr
 		{$ast = new Predicate2Ar($l.ast, $r.ast, PredicateSymbol.LESS);}
+	| l=shiftExpr GRT r=shiftExpr
+		{$ast = new Predicate2Ar($l.ast, $r.ast, PredicateSymbol.GRT);}
+	| l=shiftExpr LESSEQ r=shiftExpr
+		{$ast = new Predicate2Ar($l.ast, $r.ast, PredicateSymbol.LESSEQ);}
+	| l=shiftExpr GRTEQ r=shiftExpr
+		{$ast = new Predicate2Ar($l.ast, $r.ast, PredicateSymbol.GRTEQ);}
 	| FALSE {$ast = Predicate0Ar.FALSE;}
 	| TRUE {$ast = Predicate0Ar.TRUE;}
 	| PAR_LEFT f=formula PAR_RIGHT {$ast = $f.ast;}
 	;
 
 shiftExpr returns [Expression ast] :
-	e=additiveExpr {$ast = $e.ast;};
-
+	e=additiveExpr {$ast = $e.ast;}
+	( SHL l=additiveExpr {$ast = new ArithmeticExpression($ast, $l.ast, ExpressionConstants.SHL);}
+		| SHR r=additiveExpr {$ast = new ArithmeticExpression($ast, $r.ast, ExpressionConstants.SHR);}
+		| USHR u=additiveExpr {$ast = new ArithmeticExpression($ast, $u.ast, ExpressionConstants.USHR);}
+	)*;
+		
 additiveExpr returns [Expression ast] :
-	e=multExpr {$ast = $e.ast;};
+	e=multExpr {$ast = $e.ast;}
+	( PLUS r=multExpr {$ast = new ArithmeticExpression($ast, $r.ast, ExpressionConstants.ADD);}
+		| MINUS r=multExpr {$ast = new ArithmeticExpression($ast, $r.ast, ExpressionConstants.SUB);}
+	)*;
 
 multExpr returns [Expression ast] :
-	e=unaryExpr {$ast = $e.ast;};
+	e=unaryExpr {$ast = $e.ast;}
+	( MULT r=unaryExpr {$ast = new ArithmeticExpression($ast, $r.ast, ExpressionConstants.MULT);}
+		| DIV r=unaryExpr {$ast = new ArithmeticExpression($ast, $r.ast, ExpressionConstants.DIV);}
+		| REM r=unaryExpr {$ast = new ArithmeticExpression($ast, $r.ast, ExpressionConstants.REM);}
+	)*;
 
 unaryExpr returns [Expression ast] :
-	e=unaryExprNotPlusMinus {$ast = $e.ast;};
+	e=unaryExprNotPlusMinus {$ast = $e.ast;}
+	| MINUS e=unaryExprNotPlusMinus {$ast = new ArithmeticExpression($e.ast, ExpressionConstants.NEG);}
+	| PLUS e=unaryExprNotPlusMinus {$ast = $e.ast;}
+	;
 
 unaryExprNotPlusMinus returns [Expression ast] :
 	e=postfixExpr {$ast = $e.ast;};
@@ -136,9 +166,29 @@ COND2: ':';
 PAR_LEFT: '(';
 PAR_RIGHT: ')';
 LESS: '<';
+GRT: '>';
+LESSEQ: '<=';
+GRTEQ: '>=';
 FALSE: 'false';
 TRUE: 'true';
 EQUIV: '<==>';
+NOTEQUIV: '<=!=>';
+IMPLIES: '==>';
+LOG_OR:	'||';
+LOG_AND: '&&';
+OR: '|';
+XOR: '^';
+AND: '&';
+EQ: '==';
+NEQ: '!=';
+SHL: '<<';
+SHR: '>>';
+USHR: '>>>';
+PLUS: '+';
+MINUS: '-';
+MULT: '*';
+DIV: '/';
+REM: '%';
 
 NAT: ('0'..'9')+;
 
