@@ -522,10 +522,23 @@ public class MethodTranslator implements ITranslationConstants {
     //   - assume its type is a subtype of the static type
     //   - assume the parameter's value is alive
     //   - assign the parameter to the corresponding local variable in the stack frame
+    
+    if (hasThisParameter && !method.isConstructor()) {
+      requiresClauses.add(new BPLRequiresClause(logicalAnd(
+          alive(
+              rval(var(thisVar())),
+              var(HEAP_VAR)
+          ),
+          isOfType(
+              rval(var(thisVar())),
+              typeRef(params[0])
+          )
+      )));
+    }
+    
     for (int i = (hasThisParameter ? 1 : 0); i < params.length; i++) {
       BPLExpression typeRef = typeRef(params[i]);
-      /*
-      if (params[i].isBaseType()) {
+      if (!params[i].isReferenceType()) {
         // Base type: There is no need to assume aliveness of base types.
         //requiresClauses.add(new BPLRequiresClause(isOfType(
         //  ival(var(paramVar(i))),
@@ -537,13 +550,13 @@ public class MethodTranslator implements ITranslationConstants {
               rval(var(paramVar(i))),
               var(HEAP_VAR)
             ),
-            isOfType(
+            isInstanceOf( // isOfType
               rval(var(paramVar(i))),
               typeRef
             )
           )));
         }
-      } */
+      }
       // addAssignment(var(localVar(i, params[i])), var(paramVar(i)));
     }
 
