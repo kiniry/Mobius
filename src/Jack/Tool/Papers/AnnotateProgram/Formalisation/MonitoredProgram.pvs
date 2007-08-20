@@ -1,16 +1,6 @@
 MonitoredProgram[CP, Name : TYPE+] : THEORY
 BEGIN
 
-  ASSUMING
-
-    name_of_exists : ASSUMPTION
-      EXISTS (f : [CP -> Name]) : injective?(f)
-
-    CP_is_enumerable : ASSUMPTION
-      EXISTS (f : [CP -> nat]) : injective?(f)
-
-  ENDASSUMING
-
   IMPORTING MVASemantics[CP, Name],
             WellFormedProgram[Name]
 
@@ -20,72 +10,38 @@ BEGIN
     #]
 
 
-  name_of : (injective?[CP, Name])
-
-  unique : (injective?[CP, nat])
-
-%  AT:
-%  The problem with this definition is that it only says that cps are well
-%  mapped. We still need the conditions that the variables of the MVA and cp
-%  do not clash with the variables of the program.
-%  name_of(p : Program) : (injective?[CP, difference(Name,
-%                                                    declared_var_names(p))])
-
-  cp : Name
-
-  % Variables that will be added in the annotation process
-  new_gvds(mp : MonitoredProgramPre) : finite_set[FieldDecl] =
-   {gd : FieldDecl | jtype(gd) = IntType AND
-     (name(gd) = cp AND init_val(gd) = Int(unique(init_cp(mva(mp))))) OR
-     ((EXISTS (q : (cps(mva(mp)))) : name(gd) = name_of(q) AND 
-                                     jtype(gd) = IntType AND
-                                     init_val(gd) = Int(unique(q))) OR
-      (EXISTS (v : (vdsA(mva(mp)))) : name(gd) = name(v) AND
-                                      jtype(gd) = jtype(v) AND
-                                      init_val(gd) = init_val(v)))}
-
-  % The generated ghost variables must have differnt names
-  disjoint_new_vars(a : MVA) : boolean =
-    (FORALL (q : CP) : cps(a)(q) IMPLIES
-        NOT name_of(q) = cp) AND
-    (FORALL (vd : MVAVarDecl) : vdsA(a)(vd) IMPLIES
-        NOT name(vd) = cp) AND
-    (FORALL (q : CP, vd : MVAVarDecl) :
-      cps(a)(q) IMPLIES
-      vdsA(a)(vd) IMPLIES
-        NOT name_of(q) = name(vd))
-
-  wf_new_vars(mp : MonitoredProgramPre) : boolean =
-    disjoint_new_vars(mva(mp)) AND
-    disjoint?(var_names(new_gvds(mp)), reserved_words) AND
-    disjoint?(var_names(new_gvds(mp)), declared_var_names(program(mp)))
-
-  MVA_vars_are_fields(mp : MonitoredProgramPre, c : Class) : boolean =
+  MVA_prog_vars_are_fields(mp : MonitoredProgramPre, c : Class) : boolean =
     FORALL (v : ProgVarDecl) :
       classes(program(mp))(c) IMPLIES
       vdsP(mva(mp))(v) IMPLIES
         EXISTS (fd : FieldDecl) : fields(c)(fd) AND name(v) = name(fd)
 
-  wf_events(mp : MonitoredProgramPre, c : Class) : boolean =
+
+  MVA_aut_vars_are_not_prog_vars(mp : MonitoredProgramPre) : boolean =
+    FORALL (v : MVAVarDecl) :
+      vdsA(mva(mp))(v) IMPLIES
+        NOT declared_var_names(program(mp))(name(v))
+
+  MVA_events_correspond_to_methods(mp : MonitoredProgramPre, 
+                                   c : Class) : boolean =
     FORALL (ev : Event, n : Name) :
       classes(program(mp))(c) IMPLIES
       evs(mva(mp))(ev) IMPLIES
       mname(ev) = n IMPLIES
         EXISTS (m : Method) : methods(c)(m) AND name(m) = n
 
-  % NOTE: We restrict ourselves to the case where the automaton monitors at least
-  % one of the classes of the program. Requirements:
-  % . Variables that we will be introduced in the annotation process are
-  %   disjoint among themselves and are not reserved words.
-  % . Variables in vdsP must be fields of the monitored class
-  % . Every method mentioned in events must be in the monitored class
+  % NOTE: We restrict ourselves to the case where the automaton monitors 
+  % one of the classes of the program.
+  % Requirements:
+  % Variables in vdsP must be fields in the program
+  % Every method mentioned in the events must be in the class
   compatible(mp : MonitoredProgramPre) : boolean =
-    wf_new_vars(mp) AND
+    MVA_aut_vars_are_not_prog_vars(mp) AND
     EXISTS (c : Class) :
-      classes(program(mp))(c) AND 
+      classes(program(mp))(c) AND
       name(c) = class_name(mva(mp)) AND
-      MVA_vars_are_fields(mp, c) AND
-      wf_events(mp, c)
+      MVA_prog_vars_are_fields(mp, c) AND
+      MVA_events_correspond_to_methods(mp, c)
 
   MonitoredProgram : TYPE = (compatible)
 
@@ -101,16 +57,6 @@ END MonitoredProgram
 % thus this can be thought as MonitoredAnnotatedProgramSemantics
 MonitoredProgramSemantics[CP, Name : TYPE+] : THEORY
 BEGIN
-
-  ASSUMING
-
-    CP_is_enumerable : ASSUMPTION
-      EXISTS (f : [CP -> nat]) : injective?(f)
-
-    name_of_exists : ASSUMPTION
-      EXISTS (f : [CP -> Name]) : injective?(f)
-
-  ENDASSUMING
 
   IMPORTING MonitoredProgram[CP, Name],
             MVASemantics[CP, Name]
@@ -170,9 +116,7 @@ BEGIN
 
   on_method_entry_MP : (on_method_event_type) =
     LAMBDA (mp : MonitoredProgram, md : Method, a : Val, s1, s2 : MPState,
-            n : nat,
-            deriv_stmt_rec : deriv_stmt_rec_type(n),
-            deriv_expr_rec : deriv_expr_rec_type(n)) :
+            n : nat, derive_rec : derive_rec_type(n)) :
     NOT cp(astate(s1)) = halted AND
     IF up?(ex(pstate(s1)))
     THEN s1 = s2 AND n = 0
@@ -181,32 +125,26 @@ BEGIN
       EXISTS (s3 : MPState) : 
         pstate(s3) = pstate(s2) AND
         gvs(s3) = gvs(s2) AND
-        on_method_entry(mp, md, a, s1, s3, n, deriv_stmt_rec, deriv_expr_rec)
+        on_method_entry(mp, md, a, s1, s3, n, derive_rec)
     ENDIF
 
   on_method_exit_normal_MP : (on_method_event_type) =
     LAMBDA (mp : MonitoredProgram, md : Method, a : Val, s1, s2 : MPState,
-            n : nat,
-            deriv_stmt_rec : deriv_stmt_rec_type(n),
-            deriv_expr_rec : deriv_expr_rec_type(n)) :
+            n : nat, derive_rec : derive_rec_type(n)) :
     astate(s2) = on_method_MVA(Entry)(mp, md)(s1) AND
     EXISTS (s3 : MPState) : 
       pstate(s3) = pstate(s2) AND
       gvs(s3) = gvs(s2) AND
-      on_method_exit_normal(mp, md, a, s1, s3, n, 
-                            deriv_stmt_rec, deriv_expr_rec)
+      on_method_exit_normal(mp, md, a, s1, s3, n, derive_rec)
 
   on_method_exit_exceptional_MP : (on_method_event_type) =
     LAMBDA (mp : MonitoredProgram, md : Method, a : Val, s1, s2 : MPState,
-            n : nat,
-            deriv_stmt_rec : deriv_stmt_rec_type(n),
-            deriv_expr_rec : deriv_expr_rec_type(n)) :
+            n : nat, derive_rec : derive_rec_type(n)) :
     astate(s2) = on_method_MVA(Entry)(mp, md)(s1) AND
     EXISTS (s3 : MPState) : 
       pstate(s3) = pstate(s2) AND
       gvs(s3) = gvs(s2) AND
-      on_method_exit_exceptional(mp, md, a, s1, s3, n, 
-                                 deriv_stmt_rec, deriv_expr_rec)
+      on_method_exit_exceptional(mp, md, a, s1, s3, n, derive_rec)
 
   IMPORTING Semantics[Name, MonitoredProgram, MPState, 
                       LAMBDA (mp : MonitoredProgram) : program(mp),
@@ -247,12 +185,12 @@ BEGIN
                       on_method_exit_normal_MP,
                       on_method_exit_exceptional_MP]
 
-  stmt_determ_step_MP : LEMMA % :-)
-    FORALL (p : MonitoredProgram, n1, n2 : nat, c : Stmt, sigma : MPState,
-            sigma1, sigma2 : MPState) :
-        deriv_stmt(p)(c, sigma, sigma1)(n1) AND
-        deriv_stmt(p)(c, sigma, sigma2)(n2) IMPLIES
-          sigma1 = sigma2 AND n1 = n2
+  determ_step_MP : LEMMA % :-)
+    FORALL (p : MonitoredProgram, n1, n2 : nat, b : Body, sigma : MPState,
+            sigma1, sigma2 : MPState, v1, v2 : Val) :
+        derive(p)(b, sigma, v1, sigma1)(n1) AND
+        derive(p)(b, sigma, v2, sigma2)(n2) IMPLIES
+          sigma1 = sigma2 AND v1 = v2 AND n1 = n2
 
   % Well-formedness properties
 
@@ -286,24 +224,14 @@ BEGIN
          lvds(l) IMPLIES getLocalDecls(program(p))(l)) IMPLIES
         wf_state(p)(update_stack(this_val, arg, param_val, lvds, s))
 
-  deriv_expr_yields_wf_state_MP : LEMMA % :-)
-    FORALL (mp : MonitoredProgram, e : Expr, v : Val)
+  derive_yields_wf_state_MP : LEMMA % :-)
+    FORALL (mp : MonitoredProgram, b : Body, v : Val)
            (sigma1, sigma2 : MPState, n : nat) :
       wf_MP(mp) IMPLIES
-      (FORALL (c : Stmt)(tau1, tau2 : MPState)(m : below(n)) :
-          wf_state(mp)(tau1) IMPLIES
-          deriv_stmt(mp)(c, tau1, tau2)(m) IMPLIES
-            wf_state(mp)(tau2)) IMPLIES
       wf_state(mp)(sigma1) IMPLIES
-      deriv_expr(mp)(e, sigma1, v, sigma2)(n) IMPLIES
+      derive(mp)(b, sigma1, v, sigma2)(n) IMPLIES
         wf_state(mp)(sigma2)
 
-  deriv_stmt_yields_wf_state_MP : LEMMA % :-)
-    FORALL (mp : MonitoredProgram, c : Stmt, sigma1, sigma2 : MPState, n : nat) :
-      wf_MP(mp) IMPLIES
-      wf_state(mp)(sigma1) IMPLIES
-      deriv_stmt(mp)(c, sigma1, sigma2)(n) IMPLIES
-        wf_state(mp)(sigma2)
 
 
 END MonitoredProgramSemantics

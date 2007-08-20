@@ -1,3 +1,28 @@
+VariableNames[CP, Name : TYPE+] : THEORY
+BEGIN
+
+  ASSUMING
+
+    infinite_namespace : ASSUMPTION
+      is_infinite({n : Name | TRUE})
+
+  ENDASSUMING
+
+  IMPORTING MonitoredProgram[CP, Name]
+
+  forbidden_names(mp : MonitoredProgram) : set[Name] =
+    union(declared_var_names(program(mp)),
+    union(var_names(mva(mp)),
+          reserved_words))
+
+  cp(mp : MonitoredProgram) : {n : Name | NOT forbidden_names(mp)(n)}
+
+
+  legal_names(mp : MonitoredProgram) : set[Name] =
+    {n : Name | NOT forbidden_names(mp)(n) AND NOT n = cp(mp)}
+
+END VariableNames
+
 AnnotateProgram[CP, Name : TYPE+] : THEORY
 BEGIN
 
@@ -6,8 +31,15 @@ BEGIN
     CP_is_enumerable : ASSUMPTION
       EXISTS (f : [CP -> nat]) : injective?(f)
 
+    infinite_namespace : ASSUMPTION
+      is_infinite({n : Name | TRUE})
+
+    IMPORTING VariableNames[CP, Name]
+
     name_of_exists : ASSUMPTION
-      EXISTS (f : [CP -> Name]) : injective?(f)
+      EXISTS (f : [mp : (wf_MP) -> [CP -> (legal_names(mp))]]) : 
+        FORALL(mp : (wf_MP)) : 
+          injective?(f(mp))
 
   ENDASSUMING
 
@@ -18,7 +50,46 @@ BEGIN
 
   a : VAR (wf_MVA)
 
-  halted : Name = name_of(halted)
+  name_of(mp) : (injective?[CP, (legal_names(mp))])
+
+  unique : (injective?[CP, nat])
+
+  halted(mp) : Name = name_of(mp)(halted)
+
+
+  % Variables that will be added in the annotation process
+  new_gvds(mp) : finite_set[FieldDecl] =
+   {gd : FieldDecl | jtype(gd) = IntType AND
+     (name(gd) = cp(mp) AND init_val(gd) = Int(unique(init_cp(mva(mp))))) OR
+     ((EXISTS (q : (cps(mva(mp)))) : name(gd) = name_of(mp)(q) AND 
+                                     jtype(gd) = IntType AND
+                                     init_val(gd) = Int(unique(q))) OR
+      (EXISTS (v : (vdsA(mva(mp)))) : name(gd) = name(v) AND
+                                      jtype(gd) = jtype(v) AND
+                                      init_val(gd) = init_val(v)))}
+
+  new_vars_derived_from_mp : LEMMA % :-)
+    var_names(new_gvds(mp))(cp(mp)) AND
+    (FORALL (q : CP) : cps(mva(mp))(q) IMPLIES
+      var_names(new_gvds(mp))(name_of(mp)(q))) AND
+    (FORALL (v : MVAVarDecl) : vdsA(mva(mp))(v) IMPLIES
+      var_names(new_gvds(mp))(name(v)))
+
+
+  % The generated ghost variables must have different names
+  wf_new_vars : LEMMA % :-)
+    (FORALL (q : CP) : cps(mva(mp))(q) IMPLIES
+        NOT name_of(mp)(q) = cp(mp)) AND
+    (FORALL (vd : MVAVarDecl) : vdsA(mva(mp))(vd) IMPLIES
+        NOT name(vd) = cp(mp)) AND
+    (FORALL (q : CP, vd : MVAVarDecl) :
+      cps(mva(mp))(q) IMPLIES
+      vdsA(mva(mp))(vd) IMPLIES
+        NOT name_of(mp)(q) = name(vd)) AND
+    disjoint?(var_names(new_gvds(mp)), reserved_words) AND
+    disjoint?(var_names(new_gvds(mp)), declared_var_names(program(mp)))
+
+
 
 
   % Event annotation
@@ -30,23 +101,25 @@ BEGIN
     ENDCASES
   MEASURE length(l)
 
-  update_vars(t : Transition) : Stmt =
-    Sequence(Set(cp, NExpr(NumVarEval(name_of(tcp(t))))), 
+  update_vars(mp)(t : Transition) : Stmt =
+    Sequence(Set(cp(mp), NExpr(NumVarEval(name_of(mp)(tcp(t))))), 
              ann_action(action(t)))
 
-  ann_guard_actions(mp)(ts : finite_set[Transition]) : list[[Expr, Stmt]] =
-    set2list({x : [Expr, Stmt] | EXISTS (t : Transition) :
-      ts(t) AND x = (guard_to_expression(mva(mp))(guard(t)), update_vars(t))})
+  ann_guard_actions(mp)(ts : finite_set[Transition]) : list[[BoolExpr, Stmt]] =
+    set2list({x : [BoolExpr, Stmt] | EXISTS (t : Transition) :
+      ts(t) AND x = (guard_to_expression(mva(mp))(guard(t)), 
+                     update_vars(mp)(t))})
 
-  ann_trans_cp(mp)(q : CP, ts : finite_set[Transition]) : [Expr, Stmt] =
-    (BExpr(Eq(NumVarEval(cp), NumVarEval(name_of(q)))),
+  ann_trans_cp(mp)(q : CP, ts : finite_set[Transition]) : [BoolExpr, Stmt] =
+    (Eq(NExpr(NumVarEval(cp(mp))), 
+        NExpr(NumVarEval(name_of(mp)(q)))),
      CaseJML(ann_guard_actions(mp)(ts)))
 
 
   % Generates annotations to update the control point and the variables when an
   % event occurs
   ann_event(mp)(ts : finite_set[Transition]): Stmt =
-    CaseJML(set2list({c : [Expr, Stmt] | EXISTS (q : CP) : 
+    CaseJML(set2list({c : [BoolExpr, Stmt] | EXISTS (q : CP) : 
               cps(mva(mp))(q) AND
               nonempty?({t: Transition | ts(t) AND scp(t) = q}) AND
               c = ann_trans_cp(mp)(q,
@@ -75,8 +148,9 @@ BEGIN
 
   ann_class(mp)(c : Class) : Class =
     IF classes(program(mp))(c) AND name(c) = class_name(mva(mp))
-    THEN c WITH [inv := BExpr(Conj(b(inv(c)), Neq(NumVarEval(cp), 
-                                                  NumVarEval(halted)))),
+    THEN c WITH [inv := Conj(BExpr(inv(c)), 
+                             BExpr(Neg(BExpr(Eq(NExpr(NumVarEval(cp(mp))), 
+                                                NExpr(NumVarEval(halted(mp)))))))),
                  ghost_vars := union(ghost_vars(c),
                                      new_gvds(mp)),
                  methods := ann_methods(mp)(methods(c))]
@@ -104,8 +178,16 @@ BEGIN
     CP_is_enumerable : ASSUMPTION
       EXISTS (f : [CP -> nat]) : injective?(f)
 
+    infinite_namespace : ASSUMPTION
+      is_infinite({n : Name | TRUE})
+
+    IMPORTING VariableNames[CP, Name]
+
+
     name_of_exists : ASSUMPTION
-      EXISTS (f : [CP -> Name]) : injective?(f)
+      EXISTS (f : [mp : (wf_MP) -> [CP -> (legal_names(mp))]]) : 
+        FORALL(mp : (wf_MP)) : 
+          injective?(f(mp))
 
   ENDASSUMING
 
@@ -180,7 +262,7 @@ BEGIN
 
 
   get_class_ann_program : LEMMA % :-)
-    FORALL (c1, c2 : Class, s : PState, tgt : Val) :
+    FORALL (c1, c2 : Class, tgt : Val) :
       up?(get_class(program(mp))(tgt)) IMPLIES
       up?(get_class(ann_program(mp))(tgt)) IMPLIES
       c1 = down(get_class(program(mp))(tgt)) IMPLIES
@@ -207,8 +289,6 @@ BEGIN
       name(m1) = name(m2) IMPLIES
         m2 = ann_method(mp)(m1)
 
-  % TODO: If we don't give a definition for lookup_mthd we will have to take
-  % this as an axiom.
   lookup_mthd_ann_program : LEMMA
     FORALL (m1, m2 : Method, mn : Name, tgt : Val) :
       up?(lookup_mthd(program(mp), tgt, mn)) IMPLIES
@@ -220,13 +300,6 @@ BEGIN
         THEN m2 = ann_method(mp)(m1)
         ELSE m2 = m1
         ENDIF
-
-  new_vars_derived_from_mp : LEMMA % :-)
-    var_names(new_gvds(mp))(cp) AND
-    (FORALL (q : CP) : cps(mva(mp))(q) IMPLIES
-      var_names(new_gvds(mp))(name_of(q))) AND
-    (FORALL (v : MVAVarDecl) : vdsA(mva(mp))(v) IMPLIES
-      var_names(new_gvds(mp))(name(v)))
 
   ann_program_defines_MVA_vars : LEMMA % :-)
     FORALL (n : Name) : var_names(new_gvds(mp))(n) IMPLIES
@@ -241,5 +314,6 @@ BEGIN
       var_names(new_gvds(mp))(n) IMPLIES
         is_ghost(n, s)
 
+     
 
 END AnnotateProgramProperties

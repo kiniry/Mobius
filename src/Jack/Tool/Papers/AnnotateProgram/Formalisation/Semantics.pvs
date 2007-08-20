@@ -113,6 +113,17 @@ BEGIN
     IF up?(ex(pstate(sigma2))) THEN Bottom ELSE Unit ENDIF
 
 
+  check_for_exception(intermed, final : FullState,
+                      v : Val, otherwise : bool) : bool =
+    IF up?(ex(pstate(intermed)))
+    THEN v = Bottom AND intermed = final
+    ELSE otherwise
+    ENDIF
+
+  check_for_exception_final(final : FullState,
+                            v : Val, otherwise : bool) : bool =
+    check_for_exception(final, final, v, otherwise)
+
   derive(p : FullProgram)
         (b : Body, sigma1 : FullState, v : Val, sigma2 : FullState)
         (n : nat) : RECURSIVE bool =
@@ -137,9 +148,8 @@ BEGIN
           n = m1 + m2 + 1 AND
           derive(p)(e1, sigma1, v1, tau)(m1) AND
           derive(p)(e2, tau, v2, sigma2)(m2) AND
-          Int?(v1) AND
-          Int?(v2) AND
-          v = Int(i(v1) + i(v2)),
+          check_for_exception_final(sigma2, v,
+                Int?(v1) AND Int?(v2) AND v = Int(i(v1) + i(v2))),
       NumVarEval(vn) : sigma1 = sigma2 AND n = 0 AND 
                        v = Int(val2int(lookup(vn, sigma1))),
       TT : sigma1 = sigma2 AND n = 0 AND v = Bool(TRUE),
@@ -147,16 +157,21 @@ BEGIN
       Neg(e) : n > 0 AND
                EXISTS(v1 : Val) :
                  derive(p)(e, sigma1, v1, sigma2)(n - 1) AND
-                 Bool?(v1) AND
-                 v = Bool(NOT b(v1)),
+                 check_for_exception_final(sigma2, v,
+                       Bool?(v1) AND v = Bool(NOT b(v1))),
       Conj(e1, e2) :
         EXISTS (tau : FullState, v1, v2 : Val, m1, m2 : nat) : 
           n = m1 + m2 + 1 AND
           derive(p)(e1, sigma1, v1, tau)(m1) AND
           derive(p)(e2, tau, v2, sigma2)(m2) AND
-          Bool?(v1) AND
-          Bool?(v2) AND
-          v = Bool(b(v1) AND b(v2)),
+          check_for_exception_final(sigma2, v,
+                Bool?(v1) AND Bool?(v2) AND v = Bool(b(v1) AND b(v2))),
+      Eq(e1, e2) :
+        EXISTS (tau : FullState, v1, v2 : Val, m1, m2 : nat) : 
+          n = m1 + m2 + 1 AND
+          derive(p)(e1, sigma1, v1, tau)(m1) AND
+          derive(p)(e2, tau, v2, sigma2)(m2) AND
+          check_for_exception_final(sigma2, v, v = Bool(v1 = v2)),
       BoolVarEval(vn) : sigma1 = sigma2 AND n = 0 AND 
                        v = Bool(val2bool(lookup(vn, sigma1))),
       Null : sigma1 = sigma2 AND n = 0 AND v = Null,
@@ -178,8 +193,9 @@ BEGIN
         EXISTS (tau : FullState, v1 : Val, m1, m2 : nat) :
           n = m1 + m2 + 1 AND
           derive(p)(c, sigma1, v1, tau)(m1) AND
-          Bool?(v1) AND
-          derive(p)(IF b(v1) THEN t ELSE e ENDIF, tau, v, sigma2)(m2),
+          check_for_exception(tau, sigma2, v,
+                Bool?(v1) AND
+                derive(p)(IF b(v1) THEN t ELSE e ENDIF, tau, v, sigma2)(m2)),
       MethodCall(e, mn, pr) :
         EXISTS (m1, m2, m3, m4, m5, m6 : nat)
                (tau1, tau2, tau3, tau4, tau5, tau6, tau7, tau8 : FullState)
@@ -244,8 +260,10 @@ BEGIN
         EXISTS (tau : FullState, v1 : Val, m1, m2 : nat) :
           n = m1 + m2 + 1 AND
           derive(p)(e, sigma1, v1, tau)(m1) AND
-          Bool?(v1) AND
-          derive(p)(IF b(v1) THEN c1 ELSE c2 ENDIF, tau, Unit, sigma2)(m2),
+          check_for_exception(tau, sigma2, v, 
+                Bool?(v1) AND
+                derive(p)(IF b(v1) THEN c1 ELSE c2 ENDIF, tau, Unit, 
+                          sigma2)(m2)),
       Sequence(c1, c2) :
         v = return_of_stmt(sigma2) AND
          EXISTS(m1, m2 : nat)(tau : FullState) :
@@ -260,7 +278,7 @@ BEGIN
         v = return_of_stmt(sigma2), 
       StmtExpr(e) :
          n > 0 AND
-        v = return_of_stmt(sigma2) AND
+         v = return_of_stmt(sigma2) AND
          EXISTS (v1 : Val) : derive(p)(e, sigma1, v1, sigma2)(n - 1),
       Throw: 
         n = 0 AND
@@ -400,7 +418,7 @@ ASSUMING
         s1 = s2 AND n1 = n2
 
   execute_CaseJML_deterministic : ASSUMPTION
-    FORALL (p : FullProgram, branches : list[[Expr, Stmt]], 
+    FORALL (p : FullProgram, branches : list[[BoolExpr, Stmt]], 
             s, s1, s2 : FullState,
             n1, n2 : nat, 
             d1 : derive_rec_type(n1), d2 : derive_rec_type(n2)) :
@@ -455,9 +473,10 @@ ENDASSUMING
       derive(p)(e, sigma1, v, sigma2)(n) IMPLIES
         Bottom?(v) = up?(ex(pstate(sigma2)))
 
+
   % Note that the converse is not true because an assigment returns a 
   % boolean if the source is a boolean expression
-  deriv_boolean_expr_type : LEMMA % :-)
+  derive_boolean_expr_type : LEMMA % :-)
     FORALL (p : FullProgram)(b : BoolExpr)
            (sigma1, sigma2 : FullState, v : Val, n : nat) :
       derive(p)(b, sigma1, v, sigma2)(n) IMPLIES
@@ -471,7 +490,7 @@ END SemanticsProofs
 % Functions related to the semantics of JML needed to instantiate Semantics.
 SemanticsJML[Name : TYPE+,
              FullProgram, FullState : TYPE,
-             (IMPORTING Program) program : [FullProgram -> Program[Name]],
+             (IMPORTING Program[Name]) program : [FullProgram -> Program[Name]],
              (IMPORTING State[Name]) pstate : [FullState -> PState],
              (IMPORTING SemanticsTypes[Name, FullProgram, FullState, pstate])
              update_PState : (update_PState_type),
@@ -517,15 +536,18 @@ BEGIN
              ENDIF AND
         pstate(s1) = pstate(s2)
 
-  execute_CaseJML : (execute_CaseJML_type[Name, FullProgram, FullState,pstate]) =
+  execute_CaseJML : (execute_CaseJML_type) =
     LAMBDA (p : FullProgram, branches : list[[BoolExpr, Stmt]], 
             s1, s2 : FullState,
             n : nat, derive_rec : derive_rec_type(n)) :
       CASES branches OF
         null : n = 0 AND s1 = s2,
         cons(x, xs) : n > 0 AND
-                      derive_rec(n)(p)(IfThenElse(proj_1(x), proj_2(x), 
-                                                      CaseJML(xs)),
+                      % MH: HACK Needed: this looks like PVS bug to me
+                      % If we replace the s by the CaseJML(xs), it does not
+                      % type check
+                      LET s : Stmt = CaseJML(xs) IN
+                      derive_rec(n)(p)(IfThenElse(proj_1(x), proj_2(x), s),
                                            s1, Unit, s2)(n - 1) AND
                       pstate(s1) = pstate(s2)
       ENDCASES

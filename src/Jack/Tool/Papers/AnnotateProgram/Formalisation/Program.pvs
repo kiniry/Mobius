@@ -65,7 +65,7 @@ BEGIN
 %  Disj(b1, b2 : Expr) : Disj?             : BoolExpr
 %  Lt (b1, b2 : Expr) : Lt?                : BoolExpr
 %  Le (b1, b2 : Expr) : Le?                : BoolExpr
-%  Eq (b1, b2 : Expr) : Eq?                : BoolExpr
+  Eq (b1, b2 : Expr) : Eq?                : BoolExpr
 %  Neq (b1, b2 : Expr) : Neq?              : BoolExpr
 %  Ge (b1, b2 : Expr) : Ge?                : BoolExpr
 %  Gt (b1, b2 : Expr) : Gt?                : BoolExpr
@@ -135,19 +135,19 @@ BEGIN
 
   Method : TYPE = [# name : Name,
                      arg : LocalVarDecl,
-                     pre : BoolExpr,
-                     post : BoolExpr,
+                     pre : BoolExpr[Name],
+                     post : BoolExpr[Name],
                      lvars : finite_set[LocalVarDecl],
-                     body : Stmt,
-                     pre_set : Stmt,
-                     post_set : Stmt,
-                     exc_set : Stmt,
-                     res : Expr,
+                     body : Stmt[Name],
+                     pre_set : Stmt[Name],
+                     post_set : Stmt[Name],
+                     exc_set : Stmt[Name],
+                     res : Expr[Name],
                      res_type : JType #]
 
   Class : TYPE = [# name : Name,
                     super_class : lift[Name],
-                    inv : BoolExpr,
+                    inv : BoolExpr[Name],
                     ghost_vars : finite_set[FieldDecl],
                     fields : finite_set[FieldDecl],
                     methods : finite_set[Method] #]
@@ -267,22 +267,22 @@ BEGIN
   % in the program that has the required name, we should return the first in the
   % hierarchy of classes of the dynamic type of tgt.
   % Probably the best thing to do is to leave it undefined.
-  lookup_mthd(p : Program, tgt : Val, mn : Name) : lift[(methods(p))] %=
-%    IF up?(get_class(p)(tgt)) AND method_names(p, down(get_class(p)(tgt)))(mn)
-%    THEN up(choose({m : Method | classes(p)(down(get_class(p)(tgt))) AND 
-%                                 methods(down(get_class(p)(tgt)))(m)
-%                                 AND name(m) = mn}))
-%    ELSE bottom
-%    ENDIF
+  lookup_mthd(p : Program, tgt : Val, mn : Name) : lift[(methods(p))] =
+    IF up?(get_class(p)(tgt)) AND method_names(p, down(get_class(p)(tgt)))(mn)
+    THEN up(choose({m : Method | classes(p)(down(get_class(p)(tgt))) AND 
+                                 methods(down(get_class(p)(tgt)))(m)
+                                 AND name(m) = mn}))
+    ELSE bottom
+    ENDIF
 
   % TODO: Maybe this function should be left undefined since it should also
   % return the conjunction of the invariant of the the parent classes
   % If it can't find an invariant in tgt it just returns TRUE
-  lookup_inv(p : Program, tgt : Val) : BoolExpr %=
-%    IF up?(get_class(p)(tgt))
-%    THEN inv(down(get_class(p)(tgt)))
-%    ELSE BExpr(TT)
-%    ENDIF
+  lookup_inv(p : Program, tgt : Val) : BoolExpr =
+    IF up?(get_class(p)(tgt))
+    THEN inv(down(get_class(p)(tgt)))
+    ELSE TT
+    ENDIF
 
 
   proper_subterm_set_clause(s : Stmt, m : Method) : boolean =

@@ -72,6 +72,10 @@ BEGIN
   % NOTE: vdsA and vdsP are just the signatures of the variables, they do not
   %       contain their values. Only states have values for variables.
 
+  IMPORTING ProgramFunctions[Name] % imports var_names
+
+  var_names(a : MVA) : finite_set[Name] =
+    union(var_names(vdsA(a)), var_names(vdsP(a)))
 
 END MVA
 
@@ -83,11 +87,12 @@ BEGIN
             ProgramFunctions[Name] % imports var_names
 
 
-  wf_vdsA(vds : set[MVAVarDecl]) : boolean =
-    FORALL (vd1, vd2 : MVAVarDecl) : vds(vd1) IMPLIES vds(vd2) IMPLIES
-      name(vd1) = name(vd2) IMPLIES vd1 = vd2
+  wf_vdsA(vds : finite_set[MVAVarDecl]) : boolean =
+    (FORALL (vd1, vd2 : MVAVarDecl) : vds(vd1) IMPLIES vds(vd2) IMPLIES
+       name(vd1) = name(vd2) IMPLIES vd1 = vd2) AND
+    disjoint?(var_names(vds), reserved_words)
 
-  wf_vdsP(vds : set[ProgVarDecl]) : boolean =
+  wf_vdsP(vds : finite_set[ProgVarDecl]) : boolean =
     FORALL (vd1, vd2 : ProgVarDecl) : vds(vd1) IMPLIES vds(vd2) IMPLIES
       name(vd1) = name(vd2) IMPLIES vd1 = vd2
 
@@ -215,7 +220,7 @@ BEGIN
 
   % guard_to_expression is implicitly defined by guard_to_expression_behavior
   % in Equivalence.
-  guard_to_expression(a : MVA)(g : Guard) : Expr
+  guard_to_expression(a : MVA)(g : Guard) : BoolExpr
 
   % NOTE: eval is implicitly defined by eval_action_behavior in Equivalence.
   % Since we only consider the PSt of the state of the program, actions can not
@@ -257,7 +262,7 @@ BEGIN
     evs(a)(event(pe)) AND wf_PSt(vdsP(a))(stP(pe))
 
 
-  update_yields_wf_Store : LEMMA % :->
+  update_yields_wf_Store : LEMMA % :-)
     FORALL (a : MVA, st : Store, n : Name, v : Val) :
       wf_Store(vdsA(a))(st) IMPLIES
       (Bottom?(st(n)) IFF Bottom?(v)) IMPLIES

@@ -176,31 +176,15 @@ BEGIN
   IMPORTING AnnotatedProgramSemantics[Name],
             listfuncs
 
-  % Properties of subterms
-
-  proper_subterm_sequence : LEMMA % :-)
-    FORALL (c1, c2, c3 : Stmt) :
-      Sequence(c1, c2) << c3 IMPLIES 
-        c1 << c3 AND c2 << c3
-
-  proper_subterm_set_clause_sequence : LEMMA % :-)
-    FORALL (c1, c2 : Stmt, m : Method) :
-      proper_subterm_set_clause(Sequence(c1, c2), m) IMPLIES 
-        proper_subterm_set_clause(c1, m) AND proper_subterm_set_clause(c2, m)
-
-  stmt_proper_subterm_is_transitive : LEMMA % :-)
-    FORALL (c1, c2, c3 : Stmt) :
-      c1 << c2 AND c2 << c3 IMPLIES c1 << c3
-
   % The execution of a set statement that does not have vn as target and whose
   % source expression has no side-effects, does not change the value of vn.
   non_interference_of_set_stmt : LEMMA % :-)
-    FORALL (p : Program, c : Stmt, s1, s2 : APState, v : Val, 
-            n : nat, vn : Name) :
-      Set?(c) AND
-      NOT target(c) = vn IMPLIES
+    FORALL (p : Program, c : (Set?)) 
+           (s1, s2 : APState, v : Val, n : nat)
+           (vn : Name) :
       spec_expr_has_no_side_effects(p)(source(c)) IMPLIES
       derive(p)(c, s1, v, s2)(n) IMPLIES
+      NOT target(c) = vn IMPLIES
         gvs(s1)(vn) = gvs(s2)(vn)
 
   % Consider the evaluation of a CaseJML on a non-exceptional state for which 
@@ -208,9 +192,9 @@ BEGIN
   % the other branches have no side-effect and do not hold. 
   % The state resulting from the evaluation of such CaseJML will be equal to the
   % state after the execution of the statement associated with b1.
-  CaseJML_exclusive_branches_semantics : LEMMA % :-)
-    FORALL (p : Program, bs : list[[Expr, Stmt]], s1, s2, tau : APState,
-            v1, v2 : Val, n1, n : nat, b1 : [Expr, Stmt]) :
+  CaseJML_exclusive_branches_semantics : LEMMA % :-?
+    FORALL (p : Program, bs : list[[BoolExpr, Stmt]], s1, s2, tau : APState,
+            v1, v2 : Val, n1, n : nat, b1 : [BoolExpr, Stmt]) :
       NOT up?(ex(pstate(s1))) IMPLIES
       n > 0 IMPLIES
       member(b1, bs) IMPLIES
@@ -231,9 +215,9 @@ BEGIN
   % and for which all the branches preceding b1 have no side-effects (and hence
   % do not throw exceptions) and do not hold, will eventually evaluate the
   % statement associated with b1.
-  CaseJML_evaluates_true_stmt : LEMMA % :-)
-    FORALL (p : Program, bs : list[[Expr, Stmt]], s1, s2 : APState, 
-            v : Val, n : nat, b1 : [Expr, Stmt]) :
+  CaseJML_evaluates_true_stmt : LEMMA % :-?
+    FORALL (p : Program, bs : list[[BoolExpr, Stmt]], s1, s2 : APState, 
+            v : Val, n : nat, b1 : [BoolExpr, Stmt]) :
       NOT up?(ex(pstate(s1))) IMPLIES
       n > 0 IMPLIES
       member(b1, bs) IMPLIES
