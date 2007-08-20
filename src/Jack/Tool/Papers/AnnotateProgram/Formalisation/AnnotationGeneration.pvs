@@ -68,6 +68,20 @@ BEGIN
                                       jtype(gd) = jtype(v) AND
                                       init_val(gd) = init_val(v)))}
 
+  new_gvds_as_union : LEMMA % :-)
+    new_gvds(mp) = 
+      add((# jtype := IntType, name := cp(mp), 
+             init_val := Int(unique(init_cp(mva(mp)))) #),
+      union({gd : FieldDecl | EXISTS (q : (cps(mva(mp)))) : 
+                                name(gd) = name_of(mp)(q) AND 
+                                jtype(gd) = IntType AND
+                                init_val(gd) = Int(unique(q))},
+            {gd : FieldDecl | EXISTS (v : (vdsA(mva(mp)))) : 
+                                name(gd) = name(v) AND
+                                jtype(gd) = jtype(v) AND
+                                init_val(gd) = init_val(v)}))
+
+
   new_vars_derived_from_mp : LEMMA % :-)
     var_names(new_gvds(mp))(cp(mp)) AND
     (FORALL (q : CP) : cps(mva(mp))(q) IMPLIES
@@ -228,6 +242,11 @@ BEGIN
       AND
       (var_names(getLocalDecls(program(mp)))(vn) IFF
        var_names(getLocalDecls(ann_program(mp)))(vn))
+
+  ann_program_add_ghost_var_decls : LEMMA % :-)
+    getGhostDecls(ann_program(mp)) =
+      union(getGhostDecls(program(mp)), new_gvds(mp))
+
 
   ann_program_preserves_wf_state : LEMMA % :-)
     FORALL (s : PState) :

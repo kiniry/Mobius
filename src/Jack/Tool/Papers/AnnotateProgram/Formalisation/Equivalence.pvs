@@ -6,8 +6,15 @@ BEGIN
     CP_is_enumerable : ASSUMPTION
       EXISTS (f : [CP -> nat]) : injective?(f)
 
+    infinite_namespace : ASSUMPTION
+      is_infinite({n : Name | TRUE})
+
+    IMPORTING VariableNames[CP, Name]
+
     name_of_exists : ASSUMPTION
-      EXISTS (f : [CP -> Name]) : injective?(f)
+      EXISTS (f : [mp : (wf_MP) -> [CP -> (legal_names(mp))]]) : 
+        FORALL(mp : (wf_MP)) : 
+          injective?(f(mp))
 
   ENDASSUMING
 
@@ -17,12 +24,15 @@ BEGIN
             AnnotateProgram[CP, Name],
             AnnotateProgramProperties[CP, Name]
 
-  MVA_cp_modeled?(sA : AState, sAP : APState) : boolean =
-    Int(unique(cp(sA))) = gvs(sAP)(cp)
 
-  MVA_cps_modeled?(a : MVA)(sAP : APState) : boolean =
-    FORALL (q : CP) : cps(a)(q) IMPLIES
-      Int(unique(q)) = gvs(sAP)(name_of(q))
+  mp : VAR (wf_MP)
+
+  MVA_cp_modeled?(mp)(sA : AState, sAP : APState) : boolean =
+    Int(unique(cp(sA))) = gvs(sAP)(cp(mp))
+
+  MVA_cps_modeled?(mp)(sAP : APState) : boolean =
+    FORALL (q : CP) : cps(mva(mp))(q) IMPLIES
+      Int(unique(q)) = gvs(sAP)(name_of(mp)(q))
 
   MVA_vars_modeled?(sA : AState, sAP : APState) : boolean =
     FORALL (n : Name) : defined?(stA(sA)(n)) IMPLIES
@@ -30,11 +40,11 @@ BEGIN
 
   % A state of a MVA, sA, is modeled by a state of an AP, sAP, if:
   % .The value of cp in sAP is equal to the mapping from cp to integers
-  % .Variables that model the control points remain constant
+  % .Variables that model the control points are unchnaged
   % .Variables in MVA have the same value as the respective ghost vars in the AP
-  MVA_modeled?(a : MVA)(sA : AState, sAP : APState) : boolean =
-    MVA_cp_modeled?(sA, sAP) AND
-    MVA_cps_modeled?(a)(sAP) AND
+  MVA_modeled?(mp)(sA : AState, sAP : APState) : boolean =
+    MVA_cp_modeled?(mp)(sA, sAP) AND
+    MVA_cps_modeled?(mp)(sAP) AND
     MVA_vars_modeled?(sA, sAP)
 
   Program_gvs_modeled?(sMP : MPState, sAP : APState) : boolean =
@@ -47,16 +57,16 @@ BEGIN
     Program_gvs_modeled?(sMP, sAP)
 
   % Says if an state of a MP is correctly modeled by a state of an AP
-  MP_modeled?(mp : MonitoredProgram)(sMP : MPState, sAP : APState) : boolean =
-    MVA_modeled?(mva(mp))(astate(sMP), sAP) AND
+  MP_modeled?(mp)(sMP : MPState, sAP : APState) : boolean =
+    MVA_modeled?(mp)(astate(sMP), sAP) AND
     Program_modeled?(sMP, sAP)
 
   % NOTE: It looks natural to include this requirement in MVA_modeled?. The
   % problem is that it does not hold in the intermediate state of the method
-  % call case (before the invariant is checked), in particular for the some
+  % call case (before the invariant is checked), in particular for some
   % lemmas in LemmasAnnGeneration.
-  halted_implies_JMLExc(sA : AState, sAP : APState) : boolean =
-    cp(sA) = halted IMPLIES
+  halted_implies_JMLExc(sMP : MPState, sAP : APState) : boolean =
+    cp(astate(sMP)) = halted IMPLIES
       up?(ex(pstate(sAP))) AND down(ex(pstate(sAP))) = JMLExc
 
 
@@ -64,9 +74,8 @@ BEGIN
   % evaluates to the same result. Note that if the guard holds then evaluation
   % of the expression can not result in an exception (v would be Bottom).
   % Furthermore, the evaluation must have no side-effects.
-  guard_to_expression_behavior(mp : MonitoredProgram) : boolean =
+  guard_to_expression_behavior(mp) : boolean =
     FORALL (g : Guard, sAP : APState, sMVA : AState) :
-      wf_MP(mp) IMPLIES
       wf_state(ann_program(mp))(sAP) IMPLIES
       NOT up?(ex(pstate(sAP))) IMPLIES
       MVA_vars_modeled?(sMVA, sAP) IMPLIES
@@ -74,38 +83,34 @@ BEGIN
         ts(mva(mp))(t) AND guard(t) = g) IMPLIES
         EXISTS (e : Expr, v : Val, n : nat) : 
           guard_to_expression(mva(mp))(g) = e AND
-          BExpr?(e) AND
-          deriv_expr(ann_program(mp))(e, sAP, v, sAP)(n) AND
+          derive(ann_program(mp))(e, sAP, v, sAP)(n) AND
           (g(stA(sMVA), st(pstate(sAP))) IFF v = Bool(TRUE))
 
-  % It is possible to evaluate expressions appearing in actions (they terminate) 
-  % and they are side-effect-free. Note that the evaluation of the expresion can
-  % not throw an exception (provided it starts in a non-exceptional state).
-  eval_action_behavior(mp : MonitoredProgram) : boolean =
+  % It is possible to evaluate expressions appearing in actions (they 
+  % terminate) and they are side-effect-free. Note that the evaluation 
+  % of the expresion can not throw an exception (provided it starts in 
+  % a non-exceptional state).
+  eval_action_behavior(mp) : boolean =
     FORALL (e : Expr, v : Val, sAP : APState, sMVA : AState) :
-      wf_MP(mp) IMPLIES
       wf_state(ann_program(mp))(sAP) IMPLIES
       NOT up?(ex(pstate(sAP))) IMPLIES
       MVA_vars_modeled?(sMVA, sAP) IMPLIES
         (eval(e)(stA(sMVA), st(pstate(sAP))) = v IFF
-         EXISTS (n : nat) : deriv_expr(ann_program(mp))(e, sAP, v, sAP)(n))
+         EXISTS (n : nat) : derive(ann_program(mp))(e, sAP, v, sAP)(n))
 
-  well_behaved_MVA(mp : MonitoredProgram) : boolean =
+  well_behaved_MVA(mp) : boolean =
     guard_to_expression_behavior(mp) AND
     eval_action_behavior(mp)
 
-  well_behaved_MP(mp : MonitoredProgram) : boolean =
+  well_behaved_MP(mp) : boolean =
     well_behaved_Program(mp) AND
     well_behaved_MVA(mp)
 
-  related_states(mp : MonitoredProgram, ap : Program)
-                (sMP : MPState, sAP : APState) : boolean =
-    wf_MP(mp) AND
-    well_behaved_MP(mp) AND
-    ap = ann_program(mp) AND
-    wf_state(mp)(sMP) AND
-    wf_state(ap)(sAP) AND
-    MP_modeled?(mp)(sMP, sAP)
+  related_states(mp)(sMP : (wf_state(mp)), 
+                     sAP : (AnnotatedProgramSemantics.wf_state(ann_program(mp)))) : boolean =
+    MP_modeled?(mp)(sMP, sAP) AND
+    halted_implies_JMLExc(sMP, sAP)
+    
 
 
 END Equivalence

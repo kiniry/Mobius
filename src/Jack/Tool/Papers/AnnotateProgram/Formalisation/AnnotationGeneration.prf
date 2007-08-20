@@ -28,7 +28,7 @@
         NIL))
       NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|infinite_difference| JUDGEMENT-TCC NIL |infinite_sets_def| NIL)
     (|infinite_namespace| FORMULA-DECL NIL |VariableNames| NIL)
     (|FieldDecl| TYPE-EQ-DECL NIL |Program| NIL)
@@ -40,17 +40,16 @@
     (|lift| TYPE-DECL NIL |lift_adt| NIL)
     (|Class| TYPE-EQ-DECL NIL |Program| NIL)
     (= CONST-DECL "[T, T -> boolean]" |equalities| NIL)
-    (|infinite_set| TYPE-EQ-DECL NIL |infinite_sets_def| NIL)
-    (|mp!1| SKOLEM-CONST-DECL "MonitoredProgram[CP, Name]" |VariableNames| NIL)
+    (|infinite_set| TYPE-EQ-DECL NIL |infinite_sets_def| NIL) NIL
     (|infinite_nonempty| JUDGEMENT-TCC NIL |infinite_sets_def| NIL)
     (|finite_union| APPLICATION-JUDGEMENT "finite_set" |finite_sets| NIL)
     (|var_names| CONST-DECL "finite_set[Name]" MVA NIL)
     (|member| CONST-DECL "bool" |sets| NIL)
     (|getFieldDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    NIL
     (|getLocalDecls| CONST-DECL "finite_set[LocalVarDecl]" |ProgramFunctions|
      NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    NIL
     (|getGhostDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
     (|declared_var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
     (|union| CONST-DECL "set" |sets| NIL)
@@ -87,15 +86,13 @@
 (|AnnotateProgram|
  (|IMP_VariableNames_TCC1| 0
   (|IMP_VariableNames_TCC1-1| NIL 3396601203 3396602726
-   ("" (USE "infinite_namespace") NIL NIL) PROVED
+   ("" (USE "infinite_namespace") NIL NIL) UNCHECKED
    ((|infinite_namespace| FORMULA-DECL NIL |AnnotateProgram| NIL)) 2 2 T NIL))
  (|name_of_TCC1| 0
   (|name_of_TCC1-1| NIL 3396601203 3396602727
    ("" (USE "name_of_exists") (("" (SKOSIMP*) (("" (INST?) NIL NIL)) NIL)) NIL)
-   PROVED
-   ((|f!1| SKOLEM-CONST-DECL "[mp: (wf_MP) -> [CP -> (legal_names(mp))]]"
-     |AnnotateProgram| NIL)
-    (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |AnnotateProgram| NIL)
+   UNCHECKED
+   (NIL (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |AnnotateProgram| NIL)
     (CP FORMAL-NONEMPTY-TYPE-DECL NIL |AnnotateProgram| NIL)
     (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
     (|EventType| TYPE-DECL NIL |EventType_adt| NIL)
@@ -123,9 +120,8 @@
   (|unique_TCC1-1| NIL 3396601203 3396602728
    ("" (USE "CP_is_enumerable") (("" (SKOSIMP*) (("" (INST?) NIL NIL)) NIL))
     NIL)
-   PROVED
-   ((|f!1| SKOLEM-CONST-DECL "[CP -> nat]" |AnnotateProgram| NIL)
-    (CP FORMAL-NONEMPTY-TYPE-DECL NIL |AnnotateProgram| NIL)
+   UNCHECKED
+   (NIL (CP FORMAL-NONEMPTY-TYPE-DECL NIL |AnnotateProgram| NIL)
     (|number| NONEMPTY-TYPE-DECL NIL |numbers| NIL)
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|number_field_pred| CONST-DECL "[number -> boolean]" |number_fields| NIL)
@@ -321,7 +317,7 @@
        ("3" (GRIND) NIL NIL))
       NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |AnnotateProgram| NIL)
     (|Val| TYPE-DECL NIL |Val_adt| NIL)
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
@@ -372,53 +368,107 @@
      |AnnotateProgram| NIL)
     (|nonempty?| CONST-DECL "bool" |sets| NIL)
     (|add| CONST-DECL "(nonempty?)" |sets| NIL)
-    (|union| CONST-DECL "set" |sets| NIL)
-    (|mp!1| SKOLEM-CONST-DECL "(wf_MP[CP, Name])" |AnnotateProgram| NIL)
+    (|union| CONST-DECL "set" |sets| NIL) NIL
     (|is_finite| CONST-DECL "bool" |finite_sets| NIL)
-    (|finite_union| JUDGEMENT-TCC NIL |finite_sets| NIL)
-    (|gd!1| SKOLEM-CONST-DECL "({gd: FieldDecl[Name] |
-    (EXISTS (v: (vdsA(mva(mp!1)))):
-       name(gd) = name(v) AND
-        jtype(gd) = jtype(v) AND init_val(gd) = init_val(v))})"
-     |AnnotateProgram| NIL)
-    (|v!1| SKOLEM-CONST-DECL "(vdsA(mva(mp!1)))" |AnnotateProgram| NIL)
-    (|x2!1| SKOLEM-CONST-DECL "({gd: FieldDecl[Name] |
-    (EXISTS (v: (vdsA(mva(mp!1)))):
-       name(gd) = name(v) AND
-        jtype(gd) = jtype(v) AND init_val(gd) = init_val(v))})"
-     |AnnotateProgram| NIL)
-    (|x1!1| SKOLEM-CONST-DECL "({gd: FieldDecl[Name] |
-    (EXISTS (v: (vdsA(mva(mp!1)))):
-       name(gd) = name(v) AND
-        jtype(gd) = jtype(v) AND init_val(gd) = init_val(v))})"
-     |AnnotateProgram| NIL)
-    (|v!1| SKOLEM-CONST-DECL "(vdsA(mva(mp!1)))" |AnnotateProgram| NIL)
-    (|nonempty_exists| FORMULA-DECL NIL |sets_lemmas| NIL)
-    (|v!1| SKOLEM-CONST-DECL "(vdsA(mva(mp!1)))" |AnnotateProgram| NIL)
+    (|finite_union| JUDGEMENT-TCC NIL |finite_sets| NIL) NIL NIL NIL NIL NIL
+    (|nonempty_exists| FORMULA-DECL NIL |sets_lemmas| NIL) NIL
     (|choose| CONST-DECL "(p)" |sets| NIL)
     (|below| TYPE-EQ-DECL NIL |nat_types| NIL)
-    (< CONST-DECL "bool" |reals| NIL)
-    (|q!1| SKOLEM-CONST-DECL "(cps(mva(mp!1)))" |AnnotateProgram| NIL)
-    (|gd!1| SKOLEM-CONST-DECL "({gd: FieldDecl[Name] |
-    ((EXISTS (q: (cps(mva(mp!1)))):
-        name(gd) = name_of(mp!1)(q) AND
-         jtype(gd) = IntType AND init_val(gd) = Int[Name](unique(q))))})"
-     |AnnotateProgram| NIL)
-    (|x2!1| SKOLEM-CONST-DECL "({gd: FieldDecl[Name] |
-    ((EXISTS (q: (cps(mva(mp!1)))):
-        name(gd) = name_of(mp!1)(q) AND
-         jtype(gd) = IntType AND init_val(gd) = Int[Name](unique(q))))})"
-     |AnnotateProgram| NIL)
-    (|x1!1| SKOLEM-CONST-DECL "({gd: FieldDecl[Name] |
-    ((EXISTS (q: (cps(mva(mp!1)))):
-        name(gd) = name_of(mp!1)(q) AND
-         jtype(gd) = IntType AND init_val(gd) = Int[Name](unique(q))))})"
-     |AnnotateProgram| NIL)
-    (|q!1| SKOLEM-CONST-DECL "(cps(mva(mp!1)))" |AnnotateProgram| NIL)
-    (|q!1| SKOLEM-CONST-DECL "(cps(mva(mp!1)))" |AnnotateProgram| NIL)
+    (< CONST-DECL "bool" |reals| NIL) NIL NIL NIL NIL NIL NIL
     (|finite_add| FORMULA-DECL NIL |finite_sets| NIL)
     (|member| CONST-DECL "bool" |sets| NIL))
    678 673 T NIL))
+ (|new_gvds_as_union_TCC1| 0
+  (|new_gvds_as_union_TCC1-1| NIL 3396609153 NIL ("" (SUBTYPE-TCC) NIL NIL) NIL
+   NIL NIL NIL NIL NIL))
+ (|new_gvds_as_union| 0
+  (|new_gvds_as_union-1| NIL 3396609157 3396609198
+   ("" (SKOSIMP*)
+    (("" (EXPAND "add")
+      (("" (EXPAND "union")
+        (("" (EXPAND "member")
+          (("" (EXPAND "new_gvds")
+            (("" (APPLY-EXTENSIONALITY :HIDE? T)
+              (("1" (IFF)
+                (("1" (SPLIT 1)
+                  (("1" (SKOSIMP*)
+                    (("1" (SPLIT -1)
+                      (("1" (FLATTEN)
+                        (("1" (APPLY-EXTENSIONALITY :HIDE? T) NIL NIL)) NIL)
+                       ("2" (PROPAX) NIL NIL) ("3" (PROPAX) NIL NIL))
+                      NIL))
+                    NIL)
+                   ("2" (SKOSIMP*)
+                    (("2" (SPLIT -1)
+                      (("1" (REPLACE -1 :DIR RL) (("1" (ASSERT) NIL NIL)) NIL)
+                       ("2" (PROPAX) NIL NIL) ("3" (PROPAX) NIL NIL))
+                      NIL))
+                    NIL))
+                  NIL))
+                NIL)
+               ("2" (GRIND) NIL NIL))
+              NIL))
+            NIL))
+          NIL))
+        NIL))
+      NIL))
+    NIL)
+   PROVED
+   ((|add| CONST-DECL "(nonempty?)" |sets| NIL)
+    (|member| CONST-DECL "bool" |sets| NIL)
+    (OR CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
+    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
+    (= CONST-DECL "[T, T -> boolean]" |equalities| NIL)
+    (|IntType?| ADT-RECOGNIZER-DECL "[JType -> boolean]" |JType_adt| NIL)
+    (|IntType| ADT-CONSTRUCTOR-DECL "(IntType?)" |JType_adt| NIL)
+    (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
+    (|set| TYPE-EQ-DECL NIL |sets| NIL)
+    (|forbidden_names| CONST-DECL "set[Name]" |VariableNames| NIL)
+    (|cp| CONST-DECL "{n: Name | NOT forbidden_names(mp)(n)}" |VariableNames|
+     NIL)
+    (|legal_names| CONST-DECL "set[Name]" |VariableNames| NIL)
+    (|name_of| CONST-DECL "(injective?[CP, (legal_names(mp))])"
+     |AnnotateProgram| NIL)
+    (|mp!1| SKOLEM-CONST-DECL "(wf_MP)" |AnnotateProgram| NIL)
+    (|wf_MP| CONST-DECL "boolean" |MonitoredProgram| NIL)
+    (|MonitoredProgram| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
+    (|compatible| CONST-DECL "boolean" |MonitoredProgram| NIL)
+    (|MonitoredProgramPre| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
+    (|Program| TYPE-EQ-DECL NIL |Program| NIL)
+    (|complete| CONST-DECL "boolean" |MVASemantics| NIL)
+    (MVA TYPE-EQ-DECL NIL MVA NIL) (|ProgVarDecl| TYPE-EQ-DECL NIL MVA NIL)
+    (|MVAVarDecl| TYPE-EQ-DECL NIL MVA NIL)
+    (|Transition| TYPE-EQ-DECL NIL MVA NIL) (|Guard| TYPE-EQ-DECL NIL MVA NIL)
+    (|Action| TYPE-EQ-DECL NIL MVA NIL) (|Event| TYPE-EQ-DECL NIL MVA NIL)
+    (|EventType| TYPE-DECL NIL |EventType_adt| NIL)
+    (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
+    (|unique| CONST-DECL "(injective?[CP, nat])" |AnnotateProgram| NIL)
+    (|injective?| CONST-DECL "bool" |functions| NIL)
+    (|nat| NONEMPTY-TYPE-EQ-DECL NIL |naturalnumbers| NIL)
+    (>= CONST-DECL "bool" |reals| NIL)
+    (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
+    (CP FORMAL-NONEMPTY-TYPE-DECL NIL |AnnotateProgram| NIL)
+    (|Int| ADT-CONSTRUCTOR-DECL "[int -> (Int?)]" |Val_adt| NIL)
+    (|Int?| ADT-RECOGNIZER-DECL "[Val -> boolean]" |Val_adt| NIL)
+    (|int| NONEMPTY-TYPE-EQ-DECL NIL |integers| NIL)
+    (|integer_pred| CONST-DECL "[rational -> boolean]" |integers| NIL)
+    (|rational| NONEMPTY-TYPE-FROM-DECL NIL |rationals| NIL)
+    (|rational_pred| CONST-DECL "[real -> boolean]" |rationals| NIL)
+    (|real| NONEMPTY-TYPE-FROM-DECL NIL |reals| NIL)
+    (|real_pred| CONST-DECL "[number_field -> boolean]" |reals| NIL)
+    (|number_field| NONEMPTY-TYPE-FROM-DECL NIL |number_fields| NIL)
+    (|number_field_pred| CONST-DECL "[number -> boolean]" |number_fields| NIL)
+    (|number| NONEMPTY-TYPE-DECL NIL |numbers| NIL)
+    (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |AnnotateProgram| NIL)
+    (|Val| TYPE-DECL NIL |Val_adt| NIL)
+    (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
+    (|defined?| CONST-DECL "boolean" |ValProp| NIL)
+    (|JType| TYPE-DECL NIL |JType_adt| NIL)
+    (|FieldDecl| TYPE-EQ-DECL NIL |Program| NIL)
+    (|x!1| SKOLEM-CONST-DECL "FieldDecl[Name]" |AnnotateProgram| NIL)
+    (|new_gvds| CONST-DECL "finite_set[FieldDecl]" |AnnotateProgram| NIL)
+    (|union| CONST-DECL "set" |sets| NIL))
+   4080 162 T SHOSTAK))
  (|new_vars_derived_from_mp| 0
   (|new_vars_derived_from_mp-1| NIL 3396602954 3396603090
    ("" (SKOSIMP*)
@@ -449,9 +499,8 @@
         NIL))
       NIL))
     NIL)
-   PROVED
-   ((|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
-    (|unique| CONST-DECL "(injective?[CP, nat])" |AnnotateProgram| NIL)
+   UNFINISHED
+   (NIL (|unique| CONST-DECL "(injective?[CP, nat])" |AnnotateProgram| NIL)
     (|injective?| CONST-DECL "bool" |functions| NIL)
     (|nat| NONEMPTY-TYPE-EQ-DECL NIL |naturalnumbers| NIL)
     (>= CONST-DECL "bool" |reals| NIL)
@@ -492,13 +541,11 @@
     (|defined?| CONST-DECL "boolean" |ValProp| NIL)
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|Val| TYPE-DECL NIL |Val_adt| NIL)
-    (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |AnnotateProgram| NIL)
-    (|mp!1| SKOLEM-CONST-DECL "(wf_MP)" |AnnotateProgram| NIL)
+    (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |AnnotateProgram| NIL) NIL
     (|legal_names| CONST-DECL "set[Name]" |VariableNames| NIL)
     (|name_of| CONST-DECL "(injective?[CP, (legal_names(mp))])"
      |AnnotateProgram| NIL)
-    (|q!1| SKOLEM-CONST-DECL "CP" |AnnotateProgram| NIL)
-    (|new_gvds| CONST-DECL "finite_set[FieldDecl]" |AnnotateProgram| NIL))
+    NIL (|new_gvds| CONST-DECL "finite_set[FieldDecl]" |AnnotateProgram| NIL))
    13658 178 T SHOSTAK))
  (|wf_new_vars| 0
   (|wf_new_vars-1| NIL 3396603095 3396603326
@@ -602,7 +649,7 @@
         NIL))
       NIL))
     NIL)
-   PROVED
+   UNFINISHED
    ((|MVA_aut_vars_are_not_prog_vars| CONST-DECL "boolean" |MonitoredProgram|
      NIL)
     (|disjoint?| CONST-DECL "bool" |sets| NIL)
@@ -621,10 +668,10 @@
     (|var_names| CONST-DECL "finite_set[Name]" MVA NIL)
     (|forbidden_names| CONST-DECL "set[Name]" |VariableNames| NIL)
     (|getFieldDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    NIL
     (|getLocalDecls| CONST-DECL "finite_set[LocalVarDecl]" |ProgramFunctions|
      NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    NIL
     (|getGhostDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
     (|declared_var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
     (|member| CONST-DECL "bool" |sets| NIL)
@@ -658,7 +705,7 @@
    23101 1064 T SHOSTAK))
  (|ann_action_TCC1| 0
   (|ann_action_TCC1-1| NIL 3383987003 3396602735 ("" (TERMINATION-TCC) NIL NIL)
-   PROVED
+   UNCHECKED
    ((|real_lt_is_strict_total_order| NAME-JUDGEMENT
      "(strict_total_order?[real])" |real_props| NIL)
     (|nnint_plus_posint_is_posint| APPLICATION-JUDGEMENT "posint" |integers|
@@ -706,7 +753,7 @@
         NIL))
       NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
@@ -718,24 +765,9 @@
     (|is_finite| CONST-DECL "bool" |finite_sets| NIL)
     (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
     (|injective?| CONST-DECL "bool" |functions| NIL)
-    (|nonempty_exists| FORMULA-DECL NIL |sets_lemmas| NIL)
-    (|t!2| SKOLEM-CONST-DECL "Transition[CP, Name]" |AnnotateProgram| NIL)
+    (|nonempty_exists| FORMULA-DECL NIL |sets_lemmas| NIL) NIL
     (|member| CONST-DECL "bool" |sets| NIL)
-    (|empty?| CONST-DECL "bool" |sets| NIL)
-    (|x1!1| SKOLEM-CONST-DECL "({x: [BoolExpr[Name], Stmt[Name]] |
-    EXISTS (t: Transition[CP, Name]):
-      ts!1(t) AND
-       x =
-        (guard_to_expression[CP, Name](mva(mp!1))(guard(t)),
-         update_vars(mp!1)(t))})"
-     |AnnotateProgram| NIL)
-    (|x2!1| SKOLEM-CONST-DECL "({x: [BoolExpr[Name], Stmt[Name]] |
-    EXISTS (t: Transition[CP, Name]):
-      ts!1(t) AND
-       x =
-        (guard_to_expression[CP, Name](mva(mp!1))(guard(t)),
-         update_vars(mp!1)(t))})"
-     |AnnotateProgram| NIL)
+    (|empty?| CONST-DECL "bool" |sets| NIL) NIL NIL
     (|Body| TYPE-DECL NIL |Body_adt| NIL)
     (OR CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
     (TT? ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
@@ -755,9 +787,7 @@
     (|TryCatch?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
     (|While?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
     (|Stmt| TYPE-EQ-DECL NIL |Body_adt| NIL)
-    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
-    (|ts!1| SKOLEM-CONST-DECL "finite_set[Transition[CP, Name]]"
-     |AnnotateProgram| NIL)
+    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL) NIL
     (= CONST-DECL "[T, T -> boolean]" |equalities| NIL)
     (|EventType| TYPE-DECL NIL |EventType_adt| NIL)
     (|Val| TYPE-DECL NIL |Val_adt| NIL)
@@ -772,8 +802,7 @@
     (|MonitoredProgramPre| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
     (|compatible| CONST-DECL "boolean" |MonitoredProgram| NIL)
     (|MonitoredProgram| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
-    (|wf_MP| CONST-DECL "boolean" |MonitoredProgram| NIL)
-    (|mp!1| SKOLEM-CONST-DECL "(wf_MP[CP, Name])" |AnnotateProgram| NIL)
+    (|wf_MP| CONST-DECL "boolean" |MonitoredProgram| NIL) NIL
     (|update_vars| CONST-DECL "Stmt" |AnnotateProgram| NIL)
     (|nonempty?| CONST-DECL "bool" |sets| NIL)
     (|choose| CONST-DECL "(p)" |sets| NIL)
@@ -809,7 +838,7 @@
         NIL))
       NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
@@ -1037,7 +1066,7 @@
                     (("3" (INST 1 "N!2" "f!2")
                       (("3" (GRIND) NIL))))))))))))))))))))
     ";;; developed with SHOSTAK decision procedures")
-   PROVED
+   UNCHECKED
    ((|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
@@ -1059,53 +1088,15 @@
     (|MonitoredProgramPre| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
     (|compatible| CONST-DECL "boolean" |MonitoredProgram| NIL)
     (|MonitoredProgram| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
-    (|wf_MP| CONST-DECL "boolean" |MonitoredProgram| NIL)
-    (|c!1| SKOLEM-CONST-DECL "({c: [BoolExpr[Name], Stmt[Name]] |
-    EXISTS (q: CP):
-      cps(mva(mp!1))(q) AND
-       nonempty?[Transition[CP, Name]]
-           ({t: Transition[CP, Name] | ts!1(t) AND scp(t) = q})
-        AND
-        c =
-         ann_trans_cp(mp!1)
-                     (q,
-                      {t: Transition[CP, Name] | ts!1(t) AND scp(t) = q})})"
-     |AnnotateProgram| NIL)
-    (|q!1| SKOLEM-CONST-DECL "CP" |AnnotateProgram| NIL)
-    (|injective?| CONST-DECL "bool" |functions| NIL)
-    (|x2!1| SKOLEM-CONST-DECL "({c: [BoolExpr[Name], Stmt[Name]] |
-    EXISTS (q: CP):
-      cps(mva(mp!1))(q) AND
-       nonempty?[Transition[CP, Name]]
-           ({t: Transition[CP, Name] | ts!1(t) AND scp(t) = q})
-        AND
-        c =
-         ann_trans_cp(mp!1)
-                     (q,
-                      {t: Transition[CP, Name] | ts!1(t) AND scp(t) = q})})"
-     |AnnotateProgram| NIL)
-    (|x1!1| SKOLEM-CONST-DECL "({c: [BoolExpr[Name], Stmt[Name]] |
-    EXISTS (q: CP):
-      cps(mva(mp!1))(q) AND
-       nonempty?[Transition[CP, Name]]
-           ({t: Transition[CP, Name] | ts!1(t) AND scp(t) = q})
-        AND
-        c =
-         ann_trans_cp(mp!1)
-                     (q,
-                      {t: Transition[CP, Name] | ts!1(t) AND scp(t) = q})})"
-     |AnnotateProgram| NIL)
-    (|q!1| SKOLEM-CONST-DECL "CP" |AnnotateProgram| NIL)
+    (|wf_MP| CONST-DECL "boolean" |MonitoredProgram| NIL) NIL NIL
+    (|injective?| CONST-DECL "bool" |functions| NIL) NIL NIL NIL
     (|restrict| CONST-DECL "R" |restrict| NIL)
     (|ann_guard_actions| CONST-DECL "list[[BoolExpr, Stmt]]" |AnnotateProgram|
      NIL)
     (|empty?| CONST-DECL "bool" |sets| NIL)
     (|member| CONST-DECL "bool" |sets| NIL)
-    (|update_vars| CONST-DECL "Stmt" |AnnotateProgram| NIL)
-    (|q!1| SKOLEM-CONST-DECL "CP" |AnnotateProgram| NIL)
-    (|nonempty_exists| FORMULA-DECL NIL |sets_lemmas| NIL)
-    (|q!1| SKOLEM-CONST-DECL "CP" |AnnotateProgram| NIL)
-    (|q!1| SKOLEM-CONST-DECL "CP" |AnnotateProgram| NIL)
+    (|update_vars| CONST-DECL "Stmt" |AnnotateProgram| NIL) NIL
+    (|nonempty_exists| FORMULA-DECL NIL |sets_lemmas| NIL) NIL NIL
     (|Body| TYPE-DECL NIL |Body_adt| NIL)
     (OR CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
     (TT? ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
@@ -1125,11 +1116,8 @@
     (|TryCatch?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
     (|While?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
     (|Stmt| TYPE-EQ-DECL NIL |Body_adt| NIL)
-    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
-    (|mp!1| SKOLEM-CONST-DECL "(wf_MP[CP, Name])" |AnnotateProgram| NIL)
-    (|nonempty?| CONST-DECL "bool" |sets| NIL)
-    (|ts!1| SKOLEM-CONST-DECL "finite_set[Transition[CP, Name]]"
-     |AnnotateProgram| NIL)
+    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL) NIL
+    (|nonempty?| CONST-DECL "bool" |sets| NIL) NIL
     (= CONST-DECL "[T, T -> boolean]" |equalities| NIL)
     (|ann_trans_cp| CONST-DECL "[BoolExpr, Stmt]" |AnnotateProgram| NIL)
     (IMPLIES CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
@@ -1428,7 +1416,7 @@
         NIL))
       NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
@@ -1467,7 +1455,7 @@
   (|ann_method_TCC1-1| NIL 3389418364 3396602774
    ("" (SKOLEM-TYPEPRED)
     (("" (EXPAND* "wf_MP" "complete") (("" (FLATTEN) NIL NIL)) NIL)) NIL)
-   PROVED
+   UNCHECKED
    ((|wf_MP| CONST-DECL "boolean" |MonitoredProgram| NIL)
     (|MonitoredProgram| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
     (|compatible| CONST-DECL "boolean" |MonitoredProgram| NIL)
@@ -1531,7 +1519,7 @@
         NIL))
       NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
@@ -1544,23 +1532,10 @@
     (|Expr| TYPE-EQ-DECL NIL |Body_adt| NIL)
     (|Method| TYPE-EQ-DECL NIL |Program| NIL)
     (|set| TYPE-EQ-DECL NIL |sets| NIL)
-    (|is_finite| CONST-DECL "bool" |finite_sets| NIL)
-    (|m!1| SKOLEM-CONST-DECL "({m: Method[Name] |
-    EXISTS (n: Method[Name]): ms!1(n) AND m = ann_method(mp!1)(n)})"
-     |AnnotateProgram| NIL)
-    (|n!1| SKOLEM-CONST-DECL "Method[Name]" |AnnotateProgram| NIL)
-    (|injective?| CONST-DECL "bool" |functions| NIL)
-    (|n!2| SKOLEM-CONST-DECL "Method[Name]" |AnnotateProgram| NIL)
-    (|nonempty_exists| FORMULA-DECL NIL |sets_lemmas| NIL)
-    (|n!1| SKOLEM-CONST-DECL "Method[Name]" |AnnotateProgram| NIL)
-    (|x1!1| SKOLEM-CONST-DECL "({m: Method[Name] |
-    EXISTS (n: Method[Name]): ms!1(n) AND m = ann_method(mp!1)(n)})"
-     |AnnotateProgram| NIL)
-    (|x2!1| SKOLEM-CONST-DECL "({m: Method[Name] |
-    EXISTS (n: Method[Name]): ms!1(n) AND m = ann_method(mp!1)(n)})"
-     |AnnotateProgram| NIL)
-    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
-    (|ms!1| SKOLEM-CONST-DECL "finite_set[Method[Name]]" |AnnotateProgram| NIL)
+    (|is_finite| CONST-DECL "bool" |finite_sets| NIL) NIL NIL
+    (|injective?| CONST-DECL "bool" |functions| NIL) NIL
+    (|nonempty_exists| FORMULA-DECL NIL |sets_lemmas| NIL) NIL NIL NIL
+    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL) NIL
     (= CONST-DECL "[T, T -> boolean]" |equalities| NIL)
     (CP FORMAL-NONEMPTY-TYPE-DECL NIL |AnnotateProgram| NIL)
     (|EventType| TYPE-DECL NIL |EventType_adt| NIL)
@@ -1576,8 +1551,7 @@
     (|compatible| CONST-DECL "boolean" |MonitoredProgram| NIL)
     (|MonitoredProgram| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
     (|wf_MP| CONST-DECL "boolean" |MonitoredProgram| NIL)
-    (|ann_method| CONST-DECL "Method" |AnnotateProgram| NIL)
-    (|mp!1| SKOLEM-CONST-DECL "(wf_MP[CP, Name])" |AnnotateProgram| NIL)
+    (|ann_method| CONST-DECL "Method" |AnnotateProgram| NIL) NIL
     (|nonempty?| CONST-DECL "bool" |sets| NIL)
     (|choose| CONST-DECL "(p)" |sets| NIL)
     (|below| TYPE-EQ-DECL NIL |nat_types| NIL)
@@ -1637,7 +1611,7 @@
         NIL))
       NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
@@ -1667,26 +1641,10 @@
     (|MonitoredProgramPre| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
     (|compatible| CONST-DECL "boolean" |MonitoredProgram| NIL)
     (|MonitoredProgram| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
-    (|wf_MP| CONST-DECL "boolean" |MonitoredProgram| NIL)
-    (|c!1| SKOLEM-CONST-DECL "({c: Class[Name] |
-    EXISTS (c1: Class[Name]):
-      classes(program(mp!1))(c1) AND c = ann_class(mp!1)(c1)})"
-     |AnnotateProgram| NIL)
-    (|c1!1| SKOLEM-CONST-DECL "Class[Name]" |AnnotateProgram| NIL)
-    (|injective?| CONST-DECL "bool" |functions| NIL)
-    (|c1!2| SKOLEM-CONST-DECL "Class[Name]" |AnnotateProgram| NIL)
-    (|nonempty_exists| FORMULA-DECL NIL |sets_lemmas| NIL)
-    (|c1!1| SKOLEM-CONST-DECL "Class[Name]" |AnnotateProgram| NIL)
-    (|x1!1| SKOLEM-CONST-DECL "({c: Class[Name] |
-    EXISTS (c1: Class[Name]):
-      classes(program(mp!1))(c1) AND c = ann_class(mp!1)(c1)})"
-     |AnnotateProgram| NIL)
-    (|x2!1| SKOLEM-CONST-DECL "({c: Class[Name] |
-    EXISTS (c1: Class[Name]):
-      classes(program(mp!1))(c1) AND c = ann_class(mp!1)(c1)})"
-     |AnnotateProgram| NIL)
-    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
-    (|mp!1| SKOLEM-CONST-DECL "(wf_MP[CP, Name])" |AnnotateProgram| NIL)
+    (|wf_MP| CONST-DECL "boolean" |MonitoredProgram| NIL) NIL NIL
+    (|injective?| CONST-DECL "bool" |functions| NIL) NIL
+    (|nonempty_exists| FORMULA-DECL NIL |sets_lemmas| NIL) NIL NIL NIL
+    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL) NIL
     (= CONST-DECL "[T, T -> boolean]" |equalities| NIL)
     (|ann_class| CONST-DECL "Class" |AnnotateProgram| NIL)
     (|nonempty?| CONST-DECL "bool" |sets| NIL)
@@ -1711,7 +1669,7 @@
    UNCHECKED NIL 7000 150 T SHOSTAK))
  (|IMP_VariableNames_TCC1| 0
   (|IMP_VariableNames_TCC1-1| NIL 3396601223 3396603425
-   ("" (USE "infinite_namespace") NIL NIL) PROVED
+   ("" (USE "infinite_namespace") NIL NIL) UNCHECKED
    ((|infinite_namespace| FORMULA-DECL NIL |AnnotateProgramProperties| NIL))
    318 1 T NIL))
  (|IMP_AnnotateProgram_TCC1| 0
@@ -1728,8 +1686,8 @@
   (|ann_program_class_correspondence-1| NIL 3392569211 3396602776
    ("" (SKOSIMP*) (("" (EXPAND "ann_program") (("" (PROPAX) NIL NIL)) NIL))
     NIL)
-   UNCHECKED ((|ann_program| CONST-DECL "Program" |AnnotateProgram| NIL)) 3 3 T
-   SHOSTAK))
+   UNFINISHED ((|ann_program| CONST-DECL "Program" |AnnotateProgram| NIL)) 3 3
+   T SHOSTAK))
  (|ann_program_method_correspondence| 0
   (|ann_program_method_correspondence-1| NIL 3392569244 3396602777
    ("" (SKOSIMP*)
@@ -1759,7 +1717,7 @@
         NIL))
       NIL))
     NIL)
-   UNCHECKED
+   UNFINISHED
    ((|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |AnnotateProgramProperties| NIL)
     (CP FORMAL-NONEMPTY-TYPE-DECL NIL |AnnotateProgramProperties| NIL)
     (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
@@ -1896,7 +1854,7 @@
         NIL))
       NIL))
     NIL)
-   UNCHECKED
+   UNFINISHED
    ((|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
     (|BoolExpr| TYPE-EQ-DECL NIL |Body_adt| NIL)
     (|LocalVarDecl| TYPE-EQ-DECL NIL |Program| NIL)
@@ -1963,7 +1921,7 @@
         NIL))
       NIL))
     NIL)
-   UNCHECKED
+   UNFINISHED
    ((|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |AnnotateProgramProperties| NIL)
     (CP FORMAL-NONEMPTY-TYPE-DECL NIL |AnnotateProgramProperties| NIL)
     (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
@@ -1990,6 +1948,125 @@
     (|subset?| CONST-DECL "bool" |sets| NIL)
     (|member| CONST-DECL "bool" |sets| NIL) NIL)
    110 110 T SHOSTAK))
+ (|ann_program_add_ghost_var_decls| 0
+  (|ann_program_add_ghost_var_decls-1| NIL 3396607040 3396607483
+   ("" (SKOSIMP*)
+    (("" (APPLY-EXTENSIONALITY :HIDE? T)
+      (("" (EXPAND "getGhostDecls")
+        (("" (EXPAND "union")
+          (("" (EXPAND "member")
+            (("" (IFF)
+              (("" (SPLIT 1)
+                (("1" (SKOSIMP*)
+                  (("1" (USE "ann_program_class_correspondence")
+                    (("1" (ASSERT)
+                      (("1" (SKOSIMP*)
+                        (("1" (INST 1 "c1!1")
+                          (("1" (ASSERT)
+                            (("1" (REPLACE -2 :HIDE? T)
+                              (("1" (EXPAND "ann_class")
+                                (("1" (EXPAND "union")
+                                  (("1" (EXPAND "member")
+                                    (("1" (PROPAX) NIL NIL)) NIL))
+                                  NIL))
+                                NIL))
+                              NIL))
+                            NIL))
+                          NIL))
+                        NIL))
+                      NIL))
+                    NIL))
+                  NIL)
+                 ("2" (SKOSIMP*)
+                  (("2" (SPLIT -1)
+                    (("1" (SKOSIMP*)
+                      (("1" (INST 1 "ann_class(mp!1)(c!1)")
+                        (("1" (EXPAND "ann_program")
+                          (("1" (SPLIT 1)
+                            (("1" (INST?) NIL NIL)
+                             ("2" (EXPAND "ann_class")
+                              (("2" (ASSERT)
+                                (("2" (EXPAND "union")
+                                  (("2" (EXPAND "member")
+                                    (("2" (PROPAX) NIL NIL)) NIL))
+                                  NIL))
+                                NIL))
+                              NIL))
+                            NIL))
+                          NIL))
+                        NIL))
+                      NIL)
+                     ("2" (TYPEPRED "mp!1")
+                      (("2" (EXPAND "compatible")
+                        (("2" (FLATTEN)
+                          (("2" (SKOSIMP*)
+                            (("2" (INST 1 "ann_class(mp!1)(c!1)")
+                              (("2" (EXPAND "ann_program")
+                                (("2" (SPLIT 1)
+                                  (("1" (INST?) NIL NIL)
+                                   ("2" (EXPAND "ann_class")
+                                    (("2" (EXPAND "union")
+                                      (("2" (EXPAND "member")
+                                        (("2" (ASSERT) NIL NIL)) NIL))
+                                      NIL))
+                                    NIL))
+                                  NIL))
+                                NIL))
+                              NIL))
+                            NIL))
+                          NIL))
+                        NIL))
+                      NIL))
+                    NIL))
+                  NIL))
+                NIL))
+              NIL))
+            NIL))
+          NIL))
+        NIL))
+      NIL))
+    NIL)
+   UNCHECKED
+   ((|finite_union| APPLICATION-JUDGEMENT "finite_set" |finite_sets| NIL)
+    (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
+    (|BoolExpr| TYPE-EQ-DECL NIL |Body_adt| NIL)
+    (|LocalVarDecl| TYPE-EQ-DECL NIL |Program| NIL)
+    (|Stmt| TYPE-EQ-DECL NIL |Body_adt| NIL)
+    (|Expr| TYPE-EQ-DECL NIL |Body_adt| NIL)
+    (|Method| TYPE-EQ-DECL NIL |Program| NIL)
+    (|lift| TYPE-DECL NIL |lift_adt| NIL)
+    (|Class| TYPE-EQ-DECL NIL |Program| NIL)
+    (|Program| TYPE-EQ-DECL NIL |Program| NIL)
+    (|is_finite| CONST-DECL "bool" |finite_sets| NIL)
+    (|getGhostDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
+    (CP FORMAL-NONEMPTY-TYPE-DECL NIL |AnnotateProgramProperties| NIL)
+    (|EventType| TYPE-DECL NIL |EventType_adt| NIL)
+    (|Event| TYPE-EQ-DECL NIL MVA NIL) (|Action| TYPE-EQ-DECL NIL MVA NIL)
+    (|Guard| TYPE-EQ-DECL NIL MVA NIL) (|Transition| TYPE-EQ-DECL NIL MVA NIL)
+    (|MVAVarDecl| TYPE-EQ-DECL NIL MVA NIL)
+    (|ProgVarDecl| TYPE-EQ-DECL NIL MVA NIL) (MVA TYPE-EQ-DECL NIL MVA NIL)
+    (|complete| CONST-DECL "boolean" |MVASemantics| NIL)
+    (|MonitoredProgramPre| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
+    (|compatible| CONST-DECL "boolean" |MonitoredProgram| NIL)
+    (|MonitoredProgram| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
+    (|wf_MP| CONST-DECL "boolean" |MonitoredProgram| NIL)
+    (|ann_program| CONST-DECL "Program" |AnnotateProgram| NIL)
+    (|union| CONST-DECL "set" |sets| NIL)
+    (|new_gvds| CONST-DECL "finite_set[FieldDecl]" |AnnotateProgram| NIL)
+    (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |AnnotateProgramProperties| NIL)
+    (|Val| TYPE-DECL NIL |Val_adt| NIL)
+    (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
+    (|defined?| CONST-DECL "boolean" |ValProp| NIL)
+    (|JType| TYPE-DECL NIL |JType_adt| NIL)
+    (|FieldDecl| TYPE-EQ-DECL NIL |Program| NIL)
+    (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
+    (|set| TYPE-EQ-DECL NIL |sets| NIL)
+    (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
+    (|ann_class| CONST-DECL "Class" |AnnotateProgram| NIL)
+    (|ann_program_class_correspondence| FORMULA-DECL NIL
+     |AnnotateProgramProperties| NIL)
+    (|member| CONST-DECL "bool" |sets| NIL))
+   37314 829 T SHOSTAK))
  (|ann_program_preserves_wf_state| 0
   (|ann_program_preserves_wf_state-1| NIL 3390298254 3396602781
    ("" (SKOSIMP*)
@@ -2006,7 +2083,7 @@
         NIL))
       NIL))
     NIL)
-   UNCHECKED
+   UNFINISHED
    ((|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |AnnotateProgramProperties| NIL)
     (CP FORMAL-NONEMPTY-TYPE-DECL NIL |AnnotateProgramProperties| NIL)
     (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
@@ -2046,7 +2123,7 @@
         NIL))
       NIL))
     NIL)
-   UNCHECKED
+   UNFINISHED
    ((|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |AnnotateProgramProperties| NIL)
     (CP FORMAL-NONEMPTY-TYPE-DECL NIL |AnnotateProgramProperties| NIL)
     (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
@@ -2093,7 +2170,7 @@
         NIL))
       NIL))
     NIL)
-   UNCHECKED
+   UNFINISHED
    ((|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |AnnotateProgramProperties| NIL)
     (CP FORMAL-NONEMPTY-TYPE-DECL NIL |AnnotateProgramProperties| NIL)
     (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
@@ -2956,7 +3033,7 @@
         NIL))
       NIL))
     NIL)
-   UNCHECKED
+   UNFINISHED
    ((|get_class| CONST-DECL "lift[Class]" |ProgramFunctions| NIL)
     (|ann_program| CONST-DECL "Program" |AnnotateProgram| NIL))
    41 41 T SHOSTAK))
@@ -2978,7 +3055,7 @@
         NIL))
       NIL))
     NIL)
-   UNCHECKED
+   UNFINISHED
    ((|ann_program| CONST-DECL "Program" |AnnotateProgram| NIL)
     (|wf_program_has_unique_class_names| FORMULA-DECL NIL |WellFormedProgram|
      NIL)
@@ -3043,7 +3120,7 @@
         NIL))
       NIL))
     NIL)
-   UNCHECKED
+   UNFINISHED
    ((|wf_class_has_unique_method_names| FORMULA-DECL NIL |WellFormedProgram|
      NIL)
     (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |AnnotateProgramProperties| NIL)
@@ -3208,7 +3285,7 @@
         NIL))
       NIL))
     NIL)
-   UNCHECKED
+   UNFINISHED
    ((|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
@@ -3337,7 +3414,7 @@
         NIL))
       NIL))
     NIL)
-   UNCHECKED
+   UNFINISHED
    ((|id| CONST-DECL "(bijective?[T, T])" |identity| NIL)
     (|is_ghost| CONST-DECL "boolean" |SemanticsJML| NIL)
     (|wf_ghoststate| CONST-DECL "boolean" |SemanticsJML| NIL)

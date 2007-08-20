@@ -1,11 +1,19 @@
-(Equivalence
- (IMP_MonitoredProgramSemantics_TCC1 0
-  (IMP_MonitoredProgramSemantics_TCC1-1 nil 3395029525 3395037740
-   ("" (use "CP_is_enumerable") nil nil) proved
-   ((CP_is_enumerable formula-decl nil Equivalence nil)) 8998 20 t
-   nil))
- (IMP_MonitoredProgramSemantics_TCC2 0
-  (IMP_MonitoredProgramSemantics_TCC2-1 nil 3395029525 3395037753
-   ("" (use "name_of_exists") nil nil) proved
-   ((name_of_exists formula-decl nil Equivalence nil)) 6272 30 t nil)))
+(|Equivalence|
+ (|IMP_VariableNames_TCC1| 0
+  (|IMP_VariableNames_TCC1-1| NIL 3396603944 3396604128
+   ("" (USE "infinite_namespace") NIL NIL) PROVED
+   ((|infinite_namespace| FORMULA-DECL NIL |Equivalence| NIL)) 647 4 T NIL))
+ (|IMP_AnnotateProgram_TCC1| 0
+  (|IMP_AnnotateProgram_TCC1-1| NIL 3396603944 3396604138
+   ("" (USE "CP_is_enumerable") NIL NIL) PROVED
+   ((|CP_is_enumerable| FORMULA-DECL NIL |Equivalence| NIL)) 668 0 T NIL))
+ (|IMP_AnnotateProgram_TCC2| 0
+  (|yes| "" 3396604154 3396604154 ("" (USE "name_of_exists") NIL NIL) PROVED
+   NIL 1208 19 T SHOSTAK)
+  (|IMP_AnnotateProgram_TCC2-1| NIL 3396603944 3396603953
+   ("" (ASSUMING-TCC) NIL NIL) PROVED
+   ((|name_of_exists| FORMULA-DECL NIL |Equivalence| NIL)) 151 151 NIL NIL))
+ (|MP_modeled?_TCC1| 0
+  (|MP_modeled?_TCC1-1| NIL 3396603944 3396604107 ("" (SUBTYPE-TCC) NIL NIL)
+   UNFINISHED NIL 15379 15365 NIL NIL)))
 
