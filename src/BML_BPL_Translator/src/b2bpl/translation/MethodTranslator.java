@@ -106,6 +106,7 @@ import b2bpl.bytecode.IInstructionVisitor;
 import b2bpl.bytecode.IOpCodes;
 import b2bpl.bytecode.InstructionHandle;
 import b2bpl.bytecode.JArrayType;
+import b2bpl.bytecode.JBaseType;
 import b2bpl.bytecode.JClassType;
 import b2bpl.bytecode.JNullType;
 import b2bpl.bytecode.JType;
@@ -1281,6 +1282,7 @@ public class MethodTranslator implements ITranslationConstants {
         addAssume(isInstanceOf(rval(topElem), typeRef(retType)));
       } else {
         addAssume(alive(ival(topElem), var(HEAP_VAR)));
+        addAssume(isOfType(ival(topElem), var(VALUE_TYPE_PREFIX + JBaseType.INT.toString())));
       }
       addAssignment(var(RESULT_PARAM), var(stackVar(0, retType)));
       addAssignment(var(RETURN_STATE_PARAM), var(NORMAL_RETURN_STATE));
@@ -2813,6 +2815,7 @@ public class MethodTranslator implements ITranslationConstants {
         }
       }
       
+      /*
       String aliases = "KNOWN ALIASES\n";
       for (String alias : aliasMap.keySet()) {
         aliases += "  - " + alias + " --> { ";
@@ -2832,10 +2835,13 @@ public class MethodTranslator implements ITranslationConstants {
       for (ModifiedHeapLocation mhl : modifiedHeapLocations) {
         aliases += "  - " + mhl.getReference() + " @ " + mhl.getLocation() + " was modified.\n";
       }
+      */
 
       // addAssignment(var(HEAP_VAR), update);
       BPLCommand cmd = new BPLAssignmentCommand(var(HEAP_VAR), update);
-      addCommentedCommand(cmd, aliases);
+      addCommand(cmd);
+      
+      // addCommentedCommand(cmd, aliases);
     }
 
     public void visitGetStaticInstruction(GetStaticInstruction insn) {
