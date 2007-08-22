@@ -116,6 +116,7 @@ BEGIN
 
   % Rules that every MVA must follow:
   % The initial control point is in the set of control points of the automaton
+  % The initial control point is not halted
   % The sets vdsA and vdsP are "well formed"
   % The name of the variables in vdsA and vdsP are distinct
   % The source and target of every transition is in the set of control points
@@ -125,6 +126,7 @@ BEGIN
   % Guards and actions are well formed
   wf_MVA(a : MVA) : boolean =
     cps(a)(init_cp(a)) AND
+    NOT init_cp(a) = halted AND  % needed to prove initial_states_are_equivalent
     wf_vdsA(vdsA(a)) AND
     wf_vdsP(vdsP(a)) AND
     disjoint?(var_names(vdsA(a)), var_names(vdsP(a))) AND
@@ -169,7 +171,6 @@ BEGIN
     wf_MVA(a) AND
     cps(a)(halted) AND
     trap_state(halted, a) AND
-    NOT init_cp(a) = halted AND  % needed to prove initial_states_are_equivalent
     deterministic(a) AND
     total(a)
 

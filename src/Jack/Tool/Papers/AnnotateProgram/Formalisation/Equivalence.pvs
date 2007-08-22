@@ -106,11 +106,11 @@ BEGIN
     well_behaved_Program(mp) AND
     well_behaved_MVA(mp)
 
-  related_states(mp)(sMP : (wf_state(mp)), 
-                     sAP : (AnnotatedProgramSemantics.wf_state(ann_program(mp)))) : boolean =
+  related_states(mp)(sMP : MPState, sAP : APState) : boolean = 
+    wf_state(mp)(sMP) AND
+    wf_state(ann_program(mp))(sAP) AND
     MP_modeled?(mp)(sMP, sAP) AND
     halted_implies_JMLExc(sMP, sAP)
     
-
 
 END Equivalence

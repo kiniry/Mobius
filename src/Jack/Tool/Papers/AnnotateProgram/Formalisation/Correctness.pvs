@@ -31,13 +31,30 @@ BEGIN
     FORALL (mp)(sMP : MPState, sAP : APState) :
       MP_modeled?(mp)(sMP, sAP) IMPLIES ex(pstate(sMP)) = ex(pstate(sAP))
 
+  related_states_implies_same_exception : LEMMA % :-)
+    FORALL (mp)(sMP : MPState, sAP : APState) :
+      related_states(mp)(sMP, sAP) IMPLIES ex(pstate(sMP)) = ex(pstate(sAP))
+
+  related_states_implies_same_lookup : LEMMA % :-)
+    FORALL(mp)(sMP : MPState, sAP : APState, n : Name) :
+      related_states(mp)(sMP, sAP) IMPLIES 
+      declared_var_names(program(mp))(n) IMPLIES
+        lookup(n, sMP) = lookup(n, sAP)
+       
   % If cp(astate(sMP)) = halted, upd must leave the JML exception in sAP
   MP_modeled_preserved_by_update : LEMMA % :-)
     FORALL (mp)(sMP : MPState, sAP : APState)(upd : [PState -> PState]) :
       related_states(mp)(sMP, sAP) IMPLIES
-      halted_implies_JMLExc(sMP, sAP) IMPLIES
       NOT up?(ex(pstate(sAP))) IMPLIES
         MP_modeled?(mp)(update_PState(sMP, upd), update_PState(sAP, upd))
+
+  % If cp(astate(sMP)) = halted, upd must leave the JML exception in sAP
+  halted_implies_JMLExc_preserved_by_update : LEMMA % :-)
+    FORALL (mp)(sMP : MPState, sAP : APState)(upd : [PState -> PState]) :
+      related_states(mp)(sMP, sAP) IMPLIES
+      NOT up?(ex(pstate(sAP))) IMPLIES
+        halted_implies_JMLExc(update_PState(sMP, upd), update_PState(sAP, upd))
+
 
   % PROVE! This can be long. We have to show that the expressions and
   % statements of the mp are not modified, only new exprs and stmts are
@@ -104,12 +121,50 @@ BEGIN
 
   % Main lemmas used in the proof of the correcteness_of_ann_program
 
-  initial_states_are_equivalent : LEMMA
+  initial_states_are_equivalent : LEMMA % :-)
     FORALL (mp)(root_object : (defined?)) :
         related_states(mp)(initial_MP_state(mp)(root_object),
                            initial_AP_state(ann_program(mp))(root_object))
 
+
   derive_maintains_MP_modeled? : THEOREM
+    FORALL (mp)(b : Body, v1, v2 : Val)
+           (sMP1, sMP2 : MPState, sAP1, sAP2 : APState)
+           (n1, n2 : nat) :
+      wf_state(mp)(sMP1) IMPLIES
+      wf_state(ann_program(mp))(sAP1) IMPLIES
+      well_behaved_MP(mp) IMPLIES
+      MP_modeled?(mp)(sMP1, sAP1) IMPLIES
+      derive(mp)(b, sMP1, v1, sMP2)(n1) IMPLIES
+      derive(ann_program(mp))(b, sAP1, v2, sAP2)(n2) IMPLIES
+        wf_state(mp)(sMP2) AND
+        wf_state(ann_program(mp))(sAP2) AND
+        MP_modeled?(mp)(sMP2, sAP2)
+
+
+  derive_maintains_related_states_for_unchanged_program : THEOREM
+    FORALL (mp)(b : Body, v1, v2 : Val)
+           (sMP1, sMP2 : MPState, sAP1, sAP2 : APState)
+           (n1, n2 : nat) :
+      well_behaved_MP(mp) IMPLIES
+      subset?(var_names(b), declared_var_names(program(mp))) IMPLIES
+      related_states(mp)(sMP1, sAP1) IMPLIES
+      derive(mp)(b, sMP1, v1, sMP2)(n1) IMPLIES
+      derive(ann_program(mp))(b, sAP1, v2, sAP2)(n2) IMPLIES
+        related_states(mp)(sMP2, sAP2) AND v1 = v2
+
+  derive_maintains_related_states : THEOREM
+    FORALL (mp)(b : Body, v1, v2 : Val)
+           (sMP1, sMP2 : MPState, sAP1, sAP2 : APState)
+           (n1, n2 : nat) :
+      well_behaved_MP(mp) IMPLIES
+      related_states(mp)(sMP1, sAP1) IMPLIES
+      derive(mp)(b, sMP1, v1, sMP2)(n1) IMPLIES
+      derive(ann_program(mp))(b, sAP1, v2, sAP2)(n2) IMPLIES
+        related_states(mp)(sMP2, sAP2) AND v1 = v2
+
+
+  derive_maintains_same_value : THEOREM % not strictly necessary
     FORALL (mp)(b : Body, v1, v2 : Val)
            (sMP1, sMP2 : MPState, sAP1, sAP2 : APState)
            (n1, n2 : nat) :
@@ -119,7 +174,7 @@ BEGIN
       related_states(mp)(sMP1, sAP1) IMPLIES
       derive(mp)(b, sMP1, v1, sMP2)(n1) IMPLIES
       derive(ann_program(mp))(b, sAP1, v2, sAP2)(n2) IMPLIES
-        v1 = v2 AND MP_modeled?(mp)(sMP2, sAP2)
+        v1 = v2
 
   derive_maintains_halted_equivalence : THEOREM
     FORALL (mp)(b : Body, v1, v2 : Val)
@@ -131,7 +186,7 @@ BEGIN
       related_states(mp)(sMP1, sAP1) IMPLIES
       derive(mp)(b, sMP1, v1, sMP2)(n1) IMPLIES
       derive(ann_program(mp))(b, sAP1, v2, sAP2)(n2) IMPLIES
-        v1 = v2 AND halted_implies_JMLExc(sMP2, sAP2)
+        halted_implies_JMLExc(sMP2, sAP2)
 
 %  deriv_expr_maintains_equivalence : THEOREM
 %    FORALL (mp, ap : Program)

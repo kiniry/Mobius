@@ -184,6 +184,9 @@ BEGIN
   var_names(s : Stmt) : set[Name] =
     {n : Name | some(LAMBDA (m : Name) : m = n)(s)}
 
+  var_names(b : Body) : set[Name] =
+    {n : Name | some(LAMBDA (m : Name) : m = n)(b)}
+
   var_names(m : Method) : set[Name] =
     Union({ns : set[Name] | ns = var_names(pre(m)) OR ns = var_names(post(m)) OR
       ns = var_names(body(m)) OR ns = var_names(pre_set(m)) OR 
@@ -304,7 +307,17 @@ BEGIN
     FORALL (c1, c2, c3 : Body) :
       c1 << c2 AND c2 << c3 IMPLIES c1 << c3
 
+  % problem with case jml
+  subterm_subset_varnames : LEMMA
+    FORALL(b1, b2 : Body) :
+      b1 << b2 IMPLIES subset?(var_names(b1), var_names(b2))
 
+  subterm_subset_of_var : LEMMA % :-)
+    FORALL(b1, b2 : Body, v : set[Name]) :
+      subset?(var_names(b1), v) IMPLIES
+        b2 << b1 IMPLIES subset?(var_names(b2), v)
+
+       
 %  program_code(p : Program)(s : Stmt) : boolean =
 %    EXISTS(c : Class, m : Method) :
 %      classes(p)(c) AND

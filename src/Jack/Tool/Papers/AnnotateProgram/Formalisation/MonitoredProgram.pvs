@@ -100,6 +100,21 @@ BEGIN
       wf_state(program(mp))(pstate(s)) IMPLIES
         wf_PSt(vdsP(mva(mp)))(st(pstate(s)))
 
+  wf_state_vars_tricotomy : LEMMA % :-)
+    FORALL (mp : MonitoredProgram, s : MPState, vn : Name) :
+      wf_state(mp)(s) IMPLIES
+      declared_var_names(program(mp))(vn) IMPLIES
+        is_ghost(vn, s) OR
+        is_field(vn, pstate(s)) OR
+        is_local(vn, pstate(s))
+
+  wf_state_ghost_not_local_or_field : LEMMA % :-)
+    FORALL (mp : MonitoredProgram, s : MPState, vn : Name) :
+      wf_state(mp)(s) IMPLIES
+      wf_Program(program(mp)) IMPLIES
+      is_ghost(vn, s) IMPLIES 
+        NOT is_local(vn, pstate(s)) AND NOT is_field(vn, pstate(s))
+
 
   % Instantiation of its semantics
 
