@@ -25,20 +25,27 @@ import annot.bcclass.attributes.SpecificationCase;
 import annot.bcexpression.ArithmeticExpression;
 import annot.bcexpression.ArrayAccessExpression;
 import annot.bcexpression.BCLocalVariable;
+import annot.bcexpression.CastExpression;
 import annot.bcexpression.ConditionalExpression;
 import annot.bcexpression.Expression;
 import annot.bcexpression.ExpressionConstants;
 import annot.bcexpression.FieldAccess;
+import annot.bcexpression.MethodInvocation;
 import annot.bcexpression.NULL;
 import annot.bcexpression.NumberLiteral;
 import annot.bcexpression.Variable;
 import annot.bcexpression.javatype.JavaObjectType;
 import annot.bcexpression.javatype.JavaType;
+import annot.bcexpression.jml.ELEMTYPE;
+import annot.bcexpression.jml.JML_CONST_TYPE;
 import annot.bcexpression.jml.OLD;
 import annot.bcexpression.jml.RESULT;
+import annot.bcexpression.jml.TYPEOF;
+import annot.bcexpression.jml._TYPE;
 import annot.constants.ArrayLengthConstant;
 import annot.constants.BCConstant;
 import annot.constants.BCConstantFieldRef;
+import annot.constants.BCConstantMethodRef;
 import annot.constants.BCConstantUtf8;
 import annot.formula.Connector;
 import annot.formula.Formula;
@@ -61,6 +68,8 @@ import annot.modifexpression.SingleIndex;
 import annot.modifexpression.SpecArray;
 import annot.modifexpression.UnknownArray;
 import annot.modifexpression.UnknownModifies;
+import annot.vm.Counter;
+import annot.vm.Stack;
 
 public class AttributeReader {
 	private static int pos;
@@ -473,7 +482,6 @@ public class AttributeReader {
 		}
 		if (_byte == Code.MODIFIES_IDENT) {
 			Expression e = readExpression(bytes);
-//			return new UnknownModifies();
 			if (e instanceof BCLocalVariable) {
 				ModifiesLocalVariable modifLocVar = new ModifiesLocalVariable(
 						(BCLocalVariable) e, clazz);
@@ -485,14 +493,12 @@ public class AttributeReader {
 		if (_byte == Code.MODIFIES_DOT) {
 			ModifiesExpression ident = readModifiesExpression(bytes);
 			Expression expr = readExpression(bytes);
-//			return new UnknownModifies();
 			ModifiesDOT modifDot = new ModifiesDOT(ident, expr, clazz);
 			return modifDot;
 		}
 		if (_byte == Code.MODIFIES_ARRAY) {
 			ModifiesExpression arrExpr = readModifiesExpression(bytes);
 			SpecArray specArray = readSpecArray(bytes);
-//			return new UnknownModifies();
 			ModifiesArray modArray = new ModifiesArray(arrExpr, specArray,
 					clazz);
 			return modArray;
@@ -507,19 +513,16 @@ public class AttributeReader {
 
 		if (_byte == Code.MODIFIES_SINGLE_INDICE) {
 			Expression singleIndice = readExpression(bytes);
-//			return new UnknownArray();
 			SingleIndex index = new SingleIndex(singleIndice);
 			return index;
 		}
 		if (_byte == Code.MODIFIES_INTERVAL) {
 			Expression start = readExpression(bytes);
 			Expression end = readExpression(bytes);
-//			return new UnknownArray();
 			ArrayElemFromTo interval = new ArrayElemFromTo(start, end);
 			return interval;
 		}
 		if (_byte == Code.MODIFIES_STAR) {
-//			return new UnknownArray();
 			return AllArrayElem.ALLARRAYELEM;
 		}
 		syso("Unknown spec arr");
@@ -711,24 +714,24 @@ public class AttributeReader {
 
 			Expression e = new NumberLiteral(literal);
 			return e;
-//		} else if (_byte == Code.TYPE_OF) { // JML expressions
-//			Expression e1 = readExpression(bytes);
-//			Expression e = new TYPEOF(e1);
-//			return e;
-//		} else if (_byte == Code.ELEM_TYPE) {
-//			Expression e1 = readExpression(bytes);
-//			Expression e = new ELEMTYPE(e1);
-//			return e;
+		} else if (_byte == Code.TYPE_OF) { // JML expressions
+			Expression e1 = readExpression(bytes);
+			Expression e = new TYPEOF(e1);
+			return e;
+		} else if (_byte == Code.ELEM_TYPE) {
+			Expression e1 = readExpression(bytes);
+			Expression e = new ELEMTYPE(e1);
+			return e;
 		} else if (_byte == Code.RESULT) {
 			Expression e = RESULT._RESULT;
 			return e;
-//		} else if (_byte == Code._type) {
-//			JavaType javaType = readJavaType(bytes);
-//			Expression _type = new _TYPE(javaType);
-//			return _type;
-//		} else if (_byte == Code.TYPE) {
-//			Expression TYPE = JML_CONST_TYPE.JML_CONST_TYPE;
-//			return TYPE;
+		} else if (_byte == Code._type) {
+			JavaType javaType = readJavaType(bytes);
+			Expression _type = new _TYPE(javaType);
+			return _type;
+		} else if (_byte == Code.TYPE) {
+			Expression TYPE = JML_CONST_TYPE.JML_CONST_TYPE;
+			return TYPE;
 		} else if (_byte == Code.ARRAY_ACCESS) {
 			Expression array = readExpression(bytes);
 			Expression arrIndex = readExpression(bytes);
@@ -744,32 +747,32 @@ public class AttributeReader {
 			}
 			Expression arrAccess = new ArrayAccessExpression(array, arrIndex);
 			return arrAccess;
-//		} else if (_byte == Code.METHOD_CALL) {
-//			// what to do here - there is not encoding offered for the method
-//			// references
-//			// methodRef expression n expression^n
-//			BCConstantMethodRef mRef = (BCConstantMethodRef) readExpression(bytes);
-//			Expression ref = readExpression(bytes);
-//			int numberArgs = readShort(bytes);
-//			Expression[] subExpr = new Expression[numberArgs + 1];
-//			subExpr[0] = ref;
-//
-//			for (int i = 0; i < numberArgs; i++) {
-//				subExpr[i + 1] = readExpression(bytes);
-//			}
-////		commented by jgc: what's its use?
-////			String clazz_name = ((BCConstantClass) (clazz.getConstantPool()
-////					.getConstant(mRef.getClassIndex()))).getName();
-//
-//			MethodInvocation methInv = new MethodInvocation(mRef, subExpr);
-//			return methInv;
-//			// here should be substituted with the specification of the called
-//			// method with the needed substitutions
-//		} else if (_byte == Code.CAST) {
-//			JavaType type = readJavaType(bytes);
-//			Expression expr = readExpression(bytes);
-//			CastExpression castExpr = new CastExpression(type, expr);
-//			return castExpr;
+		} else if (_byte == Code.METHOD_CALL) {
+			// what to do here - there is not encoding offered for the method
+			// references
+			// methodRef expression n expression^n
+			BCConstantMethodRef mRef = (BCConstantMethodRef) readExpression(bytes);
+			Expression ref = readExpression(bytes);
+			int numberArgs = readShort(bytes);
+			Expression[] subExpr = new Expression[numberArgs + 1];
+			subExpr[0] = ref;
+
+			for (int i = 0; i < numberArgs; i++) {
+				subExpr[i + 1] = readExpression(bytes);
+			}
+//		commented by jgc: what's its use?
+//			String clazz_name = ((BCConstantClass) (clazz.getConstantPool()
+//					.getConstant(mRef.getClassIndex()))).getName();
+
+			MethodInvocation methInv = new MethodInvocation(mRef, subExpr);
+			return methInv;
+			// here should be substituted with the specification of the called
+			// method with the needed substitutions
+		} else if (_byte == Code.CAST) {
+			JavaType type = readJavaType(bytes);
+			Expression expr = readExpression(bytes);
+			CastExpression castExpr = new CastExpression(type, expr);
+			return castExpr;
 		} else if (_byte == Code.FULL_QUALIFIED_NAME) {// .
 			Expression expr = readExpression(bytes);
 			Expression constant = readExpression(bytes);
@@ -863,16 +866,16 @@ public class AttributeReader {
 								+ cpIndex);
 			}
 			return constantField;
-//		} else if (_byte == Code.METHOD_REF) {
-//			int cpIndex = readShort(bytes);
-//			BCConstant consantMethodRef = clazz.getConstantPool().getConstant(
-//					cpIndex);
-//			if (!(consantMethodRef instanceof BCConstantMethodRef)) {
-//				throw new ReadAttributeException(
-//						"Error reading in the Constant Pool :  reason: CONSTANT_Methodref  expected  at index "
-//								+ cpIndex);
-//			}
-//			return consantMethodRef;
+		} else if (_byte == Code.METHOD_REF) {
+			int cpIndex = readShort(bytes);
+			BCConstant consantMethodRef = clazz.getConstantPool().getConstant(
+					cpIndex);
+			if (!(consantMethodRef instanceof BCConstantMethodRef)) {
+				throw new ReadAttributeException(
+						"Error reading in the Constant Pool :  reason: CONSTANT_Methodref  expected  at index "
+								+ cpIndex);
+			}
+			return consantMethodRef;
 		} else if (_byte == Code.JAVA_TYPE) {
 			int cpIndex = readShort(bytes);
 			BCConstant constantUtf8 = clazz.getConstantPool().getConstant(
@@ -887,13 +890,13 @@ public class AttributeReader {
 			int ind = readShort(bytes);
 			Variable var = new Variable(ind);
 			return var;
-//		} else if (_byte == Code.STACK) {
-//			ArithmeticExpression counter = (ArithmeticExpression) readExpression(bytes);
-//			Stack stack = new Stack(counter);
-//			return stack;
-//		} else if (_byte == Code.STACK_COUNTER) {
-//			Counter c = Counter.getCounter();
-//			return c;
+		} else if (_byte == Code.STACK) {
+			ArithmeticExpression counter = (ArithmeticExpression) readExpression(bytes);
+			Stack stack = new Stack(counter);
+			return stack;
+		} else if (_byte == Code.STACK_COUNTER) {
+			Counter c = Counter.getCounter();
+			return c;
 		} else if (_byte == Code.TRUE) {
 			return Predicate0Ar.TRUE;
 		} else if (_byte == Code.FALSE) {
@@ -903,18 +906,19 @@ public class AttributeReader {
 			Expression f2 = readExpression(bytes);
 //			Formula formula = Formula.getFormula(f1, f2, Connector.AND);
 			return new Formula(f1, f2, Connector.AND);
-//		} else if (_byte == Code.OR) {
-//			Expression f1 = readExpression(bytes);
-//			Expression f2 = readExpression(bytes);
+		} else if (_byte == Code.OR) {
+			Expression f1 = readExpression(bytes);
+			Expression f2 = readExpression(bytes);
 //			Formula formula = Formula.getFormula(f1, f2, Connector.OR);
-//			return formula;
+			return new Formula(f1, f2, Connector.OR);
 		} else if (_byte == Code.IMPLIES) {
 			Expression f1 = readExpression(bytes);
 			Expression f2 = readExpression(bytes);
 //			Formula formula = Formula.getFormula(f1, f2, Connector.IMPLIES);
 			return new Formula(f1, f2, Connector.IMPLIES);
-//		} else if (_byte == Code.NOT) {
-//			Expression f1 = readExpression(bytes);
+		} else if (_byte == Code.NOT) {
+			Expression f1 = readExpression(bytes);
+			return new Formula(f1, Connector.NOT);
 //			if (f1 instanceof Formula) {
 //				Formula formula = Formula.getFormula((Formula) f1,
 //						Connector.NOT);
@@ -922,12 +926,12 @@ public class AttributeReader {
 //			}
 //			DesugarNegBoolExpr des = new DesugarNegBoolExpr(f1, true);
 //			return des;
-//		} else if (_byte == Code.GRT) {
-//			Expression expr1 = readExpression(bytes);
-//			Expression expr2 = readExpression(bytes);
-//			Formula predicate = Predicate2Ar.getPredicate(expr1, expr2,
-//					PredicateSymbol.GRT);
-//			return predicate;
+		} else if (_byte == Code.GRT) {
+			Expression expr1 = readExpression(bytes);
+			Expression expr2 = readExpression(bytes);
+			Formula predicate = Predicate2Ar.getPredicate(expr1, expr2,
+					PredicateSymbol.GRT);
+			return predicate;
 		} else if (_byte == Code.GRTEQ) {
 			Expression expr1 = readExpression(bytes);
 			Expression expr2 = readExpression(bytes);

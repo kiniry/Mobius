@@ -2,6 +2,9 @@ This are deprecated fragments of code, that may be needed again, for example for
   after founding an old, hidden bug, but it's very unlikely. They have been commented out,
   and later moved here after they weren't needed for some (long) time.
 
+//		System.out.println(bcc.parser.purge(
+//			"/*  assert \n *  \n * \n # \n */")+"|");
+
 //	| (e=shiftExpr {$ast = $e.ast;}
 //		( EQ r1=shiftExpr {$ast = new Predicate2Ar($e.ast, $r1.ast, PredicateSymbol.EQ);}
 //		| NEQ r2=shiftExpr {$ast = new Predicate2Ar($e.ast, $r1.ast, PredicateSymbol.NOTEQ);}));

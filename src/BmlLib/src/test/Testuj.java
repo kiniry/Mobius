@@ -312,8 +312,6 @@ public class Testuj {
 	public static void main(String[] args) {
 		ptInit();
 		longParserTest();
-//		System.out.println(bcc.parser.purge(
-//			"/*  assert \n *  \n * \n # \n */")+"|");
 //		parsingTest(clName5);
 //		testuj(clName1);
 //		testuj(clName2);

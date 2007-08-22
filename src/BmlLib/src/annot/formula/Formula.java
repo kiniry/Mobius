@@ -29,6 +29,12 @@ public class Formula extends Expression {
 		setPriority();
 	}
 	
+	public Formula(Expression f1, byte conn) {
+		super(f1);
+		connector = conn;
+		setPriority();
+	}
+
 	protected Formula() {}
 
 	protected Formula(Expression _f) {
