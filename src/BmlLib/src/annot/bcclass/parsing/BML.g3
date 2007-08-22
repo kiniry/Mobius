@@ -155,6 +155,7 @@ postfixExpr returns [Expression ast] :
 primaryExpr returns [Expression ast] :
 	PAR_LEFT e=expression PAR_RIGHT {$ast = $e.ast;}
 	| n=NAT {$ast = new NumberLiteral(Integer.parseInt($n.text));}
+	| NULL {$ast = annot.bcexpression.NULL.getNULL();}
 	;
 
 // lexer :
@@ -189,6 +190,7 @@ MINUS: '-';
 MULT: '*';
 DIV: '/';
 REM: '%';
+NULL: 'NULL';
 
 NAT: ('0'..'9')+;
 

@@ -303,6 +303,9 @@ public class Testuj {
 		parserTest(false, "assert --1 < 2 - -3");
 		parserTest(true, "assert -(-1) < 2 - -3", "assert --1 < 2 - -3");
 		parserTest(true, "assert -(+1) < +(-2) - +3", "assert -1 < -2 - 3");
+		parserTest(true, "assert NULL < 0");
+		parserTest(true, "assert NULL + 1 < 0");
+		parserTest(false, "assert NULL");
 		showParserTestStats();
 	}
 	

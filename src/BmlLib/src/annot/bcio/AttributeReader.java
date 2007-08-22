@@ -592,11 +592,11 @@ public class AttributeReader {
 		return _short;
 	}
 
-//	private static int readChar(byte[] bytes) {
-//		int _char = (int) ((bytes[pos] << 8) | (bytes[pos + 1] & 0xff));
-//		pos = pos + 2;
-//		return _char;
-//	}
+	private static int readChar(byte[] bytes) {
+		int _char = (int) ((bytes[pos] << 8) | (bytes[pos + 1] & 0xff));
+		pos = pos + 2;
+		return _char;
+	}
 
 	private static int readByte(byte[] bytes) {
 		// Util.dump("pos = " + pos );
@@ -656,62 +656,61 @@ public class AttributeReader {
 			Expression e = ArithmeticExpression.getArithmeticExpression(e1, e2,
 					ExpressionConstants.REM);
 			return e;
-//		} else if (_byte == Code.NEG) {
-//			Expression e1 = readExpression(bytes);
-//			Expression e = ArithmeticExpression.getArithmeticExpression(e1,
-//					ExpressionConstants.NEG);
-//			return e;
-//		} else if (_byte == Code.BITWISEAND) { // Bitwise
-//			Expression e1 = readExpression(bytes);
-//			Expression e2 = readExpression(bytes);
-//			Expression e = new BitExpression(e1, e2,
-//					ExpressionConstants.BITWISEAND);
-//			return e;
-//		} else if (_byte == Code.BITWISEOR) {
-//			Expression e1 = readExpression(bytes);
-//			Expression e2 = readExpression(bytes);
-//			Expression e = new BitExpression(e1, e2,
-//					ExpressionConstants.BITWISEOR);
-//			return e;
-//		} else if (_byte == Code.BITWISEXOR) {
-//			Expression e1 = readExpression(bytes);
-//			Expression e2 = readExpression(bytes);
-//			Expression e = new BitExpression(e1, e2,
-//					ExpressionConstants.BITWISEXOR);
-//			return e;
-//		} else if (_byte == Code.SHL) {
-//			Expression e1 = readExpression(bytes);
-//			Expression e2 = readExpression(bytes);
-//			Expression e =
-//			// e1 the expression that is shifted
-//			// e2 is the number of positions e1 to shift with
-//			new BitExpression(e1, e2, ExpressionConstants.SHL);
-//			return e;
-//		} else if (_byte == Code.SHR) {
-//			Expression e1 = readExpression(bytes);
-//			Expression e2 = readExpression(bytes);
-//			Expression e =
-//			// e1 the expression that is shifted
-//			// e2 is the number of positions e1 to shift with
-//			new BitExpression(e1, e2, ExpressionConstants.SHR);
-//			return e;
-//		} else if (_byte == Code.USHR) {
-//			Expression e1 = readExpression(bytes);
-//			Expression e2 = readExpression(bytes);
-//			Expression e =
-//			// e1 the expression that is shifted
-//			// e2 is the number of positions e1 to shift with
-//			new BitExpression(e1, e2, ExpressionConstants.USHR);
-//			return e;
+		} else if (_byte == Code.NEG) {
+			Expression e1 = readExpression(bytes);
+			Expression e = new ArithmeticExpression(e1,	ExpressionConstants.NEG);
+			return e;
+		} else if (_byte == Code.BITWISEAND) { // Bitwise
+			Expression e1 = readExpression(bytes);
+			Expression e2 = readExpression(bytes);
+			Expression e = new ArithmeticExpression(e1, e2,
+					ExpressionConstants.BITWISEAND);
+			return e;
+		} else if (_byte == Code.BITWISEOR) {
+			Expression e1 = readExpression(bytes);
+			Expression e2 = readExpression(bytes);
+			Expression e = new ArithmeticExpression(e1, e2,
+					ExpressionConstants.BITWISEOR);
+			return e;
+		} else if (_byte == Code.BITWISEXOR) {
+			Expression e1 = readExpression(bytes);
+			Expression e2 = readExpression(bytes);
+			Expression e = new ArithmeticExpression(e1, e2,
+					ExpressionConstants.BITWISEXOR);
+			return e;
+		} else if (_byte == Code.SHL) {
+			Expression e1 = readExpression(bytes);
+			Expression e2 = readExpression(bytes);
+			Expression e =
+			// e1 the expression that is shifted
+			// e2 is the number of positions e1 to shift with
+			new ArithmeticExpression(e1, e2, ExpressionConstants.SHL);
+			return e;
+		} else if (_byte == Code.SHR) {
+			Expression e1 = readExpression(bytes);
+			Expression e2 = readExpression(bytes);
+			Expression e =
+			// e1 the expression that is shifted
+			// e2 is the number of positions e1 to shift with
+			new ArithmeticExpression(e1, e2, ExpressionConstants.SHR);
+			return e;
+		} else if (_byte == Code.USHR) {
+			Expression e1 = readExpression(bytes);
+			Expression e2 = readExpression(bytes);
+			Expression e =
+			// e1 the expression that is shifted
+			// e2 is the number of positions e1 to shift with
+			new ArithmeticExpression(e1, e2, ExpressionConstants.USHR);
+			return e;
 		} else if (_byte == Code.INT_LITERAL) { // Literals
 			int literal = readInt(bytes);
 			Expression e = new NumberLiteral(literal);
 			return e;
-//		} else if (_byte == Code.CHAR_LITERAL) {
-//			int literal = readChar(bytes);
-//
-//			Expression e = new NumberLiteral(literal);
-//			return e;
+		} else if (_byte == Code.CHAR_LITERAL) {
+			int literal = readChar(bytes);
+
+			Expression e = new NumberLiteral(literal);
+			return e;
 //		} else if (_byte == Code.TYPE_OF) { // JML expressions
 //			Expression e1 = readExpression(bytes);
 //			Expression e = new TYPEOF(e1);
@@ -854,16 +853,16 @@ public class AttributeReader {
 								+ cpIndex);
 			}
 			return constantField;
-//		} else if (_byte == Code.JML_MODEL_FIELD) {
-//			int cpIndex = readShort(bytes);
-//			BCConstant constantField = clazz.getConstantPool().getConstant(
-//					cpIndex);
-//			if (!(constantField instanceof BCConstantFieldRef)) {
-//				throw new ReadAttributeException(
-//						"Error reading in the Constant Pool :reason :  CONSTANT_Fieldref expected for a model field ref at index "
-//								+ cpIndex);
-//			}
-//			return constantField;
+		} else if (_byte == Code.JML_MODEL_FIELD) {
+			int cpIndex = readShort(bytes);
+			BCConstant constantField = clazz.getConstantPool().getConstant(
+					cpIndex);
+			if (!(constantField instanceof BCConstantFieldRef)) {
+				throw new ReadAttributeException(
+						"Error reading in the Constant Pool :reason :  CONSTANT_Fieldref expected for a model field ref at index "
+								+ cpIndex);
+			}
+			return constantField;
 //		} else if (_byte == Code.METHOD_REF) {
 //			int cpIndex = readShort(bytes);
 //			BCConstant consantMethodRef = clazz.getConstantPool().getConstant(
@@ -958,19 +957,19 @@ public class AttributeReader {
 //			Formula predicate = Formula.getFormula(Predicate2Ar.getPredicate(
 //					expr1, expr2, PredicateSymbol.EQ), Connector.NOT);
 //			return predicate;
-//		} else if (_byte == Code.INSTANCEOF) {
-//			Expression expr1 = readExpression(bytes);
-//			JavaType type = readJavaType(bytes);
-//			Formula predicate = new Predicate2Ar(type, expr1,
-//					PredicateSymbol.INSTANCEOF);
-//			return predicate;
-//		} else if (_byte == Code.SUBTYPE) {
-//			JavaType type1 = readJavaType(bytes);
-//			JavaType type2 = readJavaType(bytes);
-//			Formula predicate = new Predicate2Ar(type1, type2,
-//					PredicateSymbol.SUBTYPE);
-//			return predicate;
-//
+		} else if (_byte == Code.INSTANCEOF) {
+			Expression expr1 = readExpression(bytes);
+			JavaType type = readJavaType(bytes);
+			Formula predicate = new Predicate2Ar(type, expr1,
+					PredicateSymbol.INSTANCEOF);
+			return predicate;
+		} else if (_byte == Code.SUBTYPE) {
+			JavaType type1 = readJavaType(bytes);
+			JavaType type2 = readJavaType(bytes);
+			Formula predicate = new Predicate2Ar(type1, type2,
+					PredicateSymbol.SUBTYPE);
+			return predicate;
+
 		} if (_byte == Code.EXISTS) {
 			int numBoundVars = readByte(bytes);
 			Variable[] vars = new Variable[numBoundVars];

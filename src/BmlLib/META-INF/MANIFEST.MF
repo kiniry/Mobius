@@ -6,8 +6,7 @@ Bundle-Version: 1.0.0
 Bundle-Activator: bmllib.Activator
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
- org.eclipse.core.runtime,
- org.apache.bcel_5.1
+ org.eclipse.core.runtime
 Eclipse-LazyStart: true
 Bundle-Vendor: MOBIUS
 Export-Package: annot.bcclass,

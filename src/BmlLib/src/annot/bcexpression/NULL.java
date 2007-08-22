@@ -33,7 +33,7 @@ public class NULL extends Expression {
 	/* (non-Javadoc)
 	 * @see bcexpression.Expression#toString()
 	 */
-	public String printCode(BMLConfig conf) {
+	public String printCode1(BMLConfig conf) {
 		return "NULL";
 	}
 
