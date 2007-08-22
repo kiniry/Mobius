@@ -134,7 +134,10 @@ public class MethodHandler {
 
   public void addMethod(final MethodGen m) {
     final MethodType mt = new MethodType(m);
-    
+    addMethod(mt);
+  }
+
+  public void addMethod(final MethodType mt) { 
     if (!fMethodList.contains(mt)) {
       final List l = findByName(mt);
       final int postfix = l.size();
@@ -154,7 +157,9 @@ public class MethodHandler {
       return fMethodList.get(idx).getCoqName();
     }
     else {
-      return null;
+      System.err.println("Method " + mt + " is unknown... let's add it!");
+      addMethod(mt);
+      return getName(mt);
     }
   }
 

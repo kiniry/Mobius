@@ -155,16 +155,16 @@ public class CamlDictionary implements Dictionary {
   }
 
   /** the package names and their associated numbers. */
-  private Map<String, Integer> fPackageNames = new HashMap<String, Integer>();
+  private final Map<String, Integer> fPackageNames = new HashMap<String, Integer>();
   
   /** the class names and their associated numbers (class number and package number). */
-  private Map<String, Couple> fClassNames = new HashMap<String, Couple>();
+  private final Map<String, Couple> fClassNames = new HashMap<String, Couple>();
   
   /** the field names and their associated numbers (class, package and field numbers). */
-  private Map<String, Triplet> fFieldNames = new HashMap<String, Triplet>();
+  private final Map<String, Triplet> fFieldNames = new HashMap<String, Triplet>();
   
   /** the method names and their associated numbers (class, package and method numbers). */
-  private Map<String, Triplet> fMethodNames = new HashMap<String, Triplet>();
+  private final Map<String, Triplet> fMethodNames = new HashMap<String, Triplet>();
 
 
   
@@ -207,7 +207,13 @@ public class CamlDictionary implements Dictionary {
 
 
   public int getCoqPackageName(final JavaClass jc) {
-    int packageName = fPackageNames.get(jc.getPackageName());
+    if (fPackageNames == null) {
+      throw new NullPointerException();
+    }
+    if (jc == null) {
+      throw new NullPointerException();
+    }
+    int packageName = 0;// fPackageNames.get(jc.getPackageName());
     if (packageName == 0) {
       packageName = fCurrentPackage++;
       addPackage(jc.getPackageName(), packageName);
