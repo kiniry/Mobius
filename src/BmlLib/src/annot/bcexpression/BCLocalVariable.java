@@ -20,6 +20,8 @@ public class BCLocalVariable extends Expression {
 	private  int start_pc;
 	private BCMethod method ;
 	
+	public final static BCLocalVariable THIS = new BCLocalVariable(0);
+	
 	// when this a register that does not store any local variable
 	private static int UNDEF_LEN = -1;
 	public BCLocalVariable(String _name, int _start_pc, int _length,  int _index,  JavaType _type , BCMethod _method) {
@@ -112,7 +114,12 @@ public class BCLocalVariable extends Expression {
 //	}
 
 	public String printCode1(BMLConfig conf) {
-		return conf.currMethod.getLocalVariableTable().getLocalVariableTable()[getIndex()].getName();
+		if (this == THIS)
+			return "this";
+		return conf.currMethod
+			.getLocalVariableTable()
+			.getLocalVariableTable()[getIndex()]
+			.getName();
 //		return "lv("+getIndex()+")";
 	}
 	

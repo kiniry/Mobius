@@ -150,11 +150,18 @@ unaryExprNotPlusMinus returns [Expression ast] :
 	e=postfixExpr {$ast = $e.ast;};
 
 postfixExpr returns [Expression ast] :
-	e=primaryExpr {$ast = $e.ast;};
+	e=primaryExpr {$ast = $e.ast;} (
+		DOT LV LEFT_BR n=NAT RIGHT_BR
+			{int index = Integer.parseInt($n.text);
+			BCLocalVariable bcl = new BCLocalVariable("?", -1, -1, index, null, m);
+			$ast = new FieldAccess(bcl, $ast);
+			}
+	)*;
 
 primaryExpr returns [Expression ast] :
 	PAR_LEFT e=expression PAR_RIGHT {$ast = $e.ast;}
 	| n=NAT {$ast = new NumberLiteral(Integer.parseInt($n.text));}
+	| THIS {$ast = BCLocalVariable.THIS;}
 	| NULL {$ast = annot.bcexpression.NULL.getNULL();}
 	;
 
@@ -191,6 +198,11 @@ MULT: '*';
 DIV: '/';
 REM: '%';
 NULL: 'NULL';
+THIS: 'this';
+DOT: '.';
+LV: 'lv';
+LEFT_BR: '[';
+RIGHT_BR: ']';
 
 NAT: ('0'..'9')+;
 

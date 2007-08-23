@@ -203,7 +203,7 @@ public class Testuj {
 		System.out.println("---- test nr " + count + " ----");
 		System.out.println("  parsing: "+bcc.parser.purge(str).substring(6) + (ok ? "" : " (err)"));
 		try {
-			BCMethod m = null;
+			BCMethod m = bcc.metody.elementAt(2);
 			BCPrintableAttribute old = new BCPrintableAttribute();
 			old.method = m;
 			BMLConfig conf = new BMLConfig(bcc.getConstantPool());
@@ -221,7 +221,7 @@ public class Testuj {
 			if (result.equals(outp))
 				return;
 			errors++;
-			System.out.println("  parsed : "+out);
+			System.out.println("  parsed : "+bcc.parser.removeComment(out));
 			System.out.println("### attribute was not understood!");
 		} catch (RecognitionException e) {
 			if (!ok) {
@@ -306,6 +306,10 @@ public class Testuj {
 		parserTest(true, "assert NULL < 0");
 		parserTest(true, "assert NULL + 1 < 0");
 		parserTest(false, "assert NULL");
+		parserTest(true, "assert this < 0");
+		parserTest(false, "assert this.this < 0");
+		parserTest(true, "assert this.lv[1] < 1", "assert lo < 1");
+		parserTest(true, "assert this.lv[2].lv[1] < 2", "assert hi.lo < 2");
 		showParserTestStats();
 	}
 	
@@ -313,11 +317,5 @@ public class Testuj {
 		ptInit();
 		longParserTest();
 //		parsingTest(clName5);
-//		testuj(clName1);
-//		testuj(clName2);
-//		testuj(clName3);
-//		testuj(clName4);
-//		testuj(clName5);
-//		ARunderstoodStats();
 	}
 }
