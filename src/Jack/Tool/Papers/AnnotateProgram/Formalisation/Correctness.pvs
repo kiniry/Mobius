@@ -127,20 +127,6 @@ BEGIN
                            initial_AP_state(ann_program(mp))(root_object))
 
 
-  derive_maintains_MP_modeled? : THEOREM
-    FORALL (mp)(b : Body, v1, v2 : Val)
-           (sMP1, sMP2 : MPState, sAP1, sAP2 : APState)
-           (n1, n2 : nat) :
-      wf_state(mp)(sMP1) IMPLIES
-      wf_state(ann_program(mp))(sAP1) IMPLIES
-      well_behaved_MP(mp) IMPLIES
-      MP_modeled?(mp)(sMP1, sAP1) IMPLIES
-      derive(mp)(b, sMP1, v1, sMP2)(n1) IMPLIES
-      derive(ann_program(mp))(b, sAP1, v2, sAP2)(n2) IMPLIES
-        wf_state(mp)(sMP2) AND
-        wf_state(ann_program(mp))(sAP2) AND
-        MP_modeled?(mp)(sMP2, sAP2)
-
 
   derive_maintains_related_states_for_unchanged_program : THEOREM
     FORALL (mp)(b : Body, v1, v2 : Val)
@@ -164,47 +150,7 @@ BEGIN
         related_states(mp)(sMP2, sAP2) AND v1 = v2
 
 
-  derive_maintains_same_value : THEOREM % not strictly necessary
-    FORALL (mp)(b : Body, v1, v2 : Val)
-           (sMP1, sMP2 : MPState, sAP1, sAP2 : APState)
-           (n1, n2 : nat) :
-      wf_state(mp)(sMP1) IMPLIES
-      wf_state(ann_program(mp))(sAP1) IMPLIES
-      well_behaved_MP(mp) IMPLIES
-      related_states(mp)(sMP1, sAP1) IMPLIES
-      derive(mp)(b, sMP1, v1, sMP2)(n1) IMPLIES
-      derive(ann_program(mp))(b, sAP1, v2, sAP2)(n2) IMPLIES
-        v1 = v2
 
-  derive_maintains_halted_equivalence : THEOREM
-    FORALL (mp)(b : Body, v1, v2 : Val)
-           (sMP1, sMP2 : MPState, sAP1, sAP2 : APState)
-           (n1, n2 : nat) :
-      wf_state(mp)(sMP1) IMPLIES
-      wf_state(ann_program(mp))(sAP1) IMPLIES
-      well_behaved_MP(mp) IMPLIES
-      related_states(mp)(sMP1, sAP1) IMPLIES
-      derive(mp)(b, sMP1, v1, sMP2)(n1) IMPLIES
-      derive(ann_program(mp))(b, sAP1, v2, sAP2)(n2) IMPLIES
-        halted_implies_JMLExc(sMP2, sAP2)
-
-%  deriv_expr_maintains_equivalence : THEOREM
-%    FORALL (mp, ap : Program)
-%           (e : Expr, v1, v2 : Val)
-%           (sMP1, sMP2 : MPState, sAP1, sAP2 : APState)
-%           (n1, n2 : nat) :
-%      related_states(mp, ap)(sMP1, sAP1) IMPLIES
-%      deriv_expr(mp)(e, sMP1, v1, sMP2)(n1) IMPLIES
-%      deriv_expr(ap)(e, sAP1, v2, sAP2)(n2) IMPLIES
-%        v1 = v2 AND MP_modeled?(mp)(sMP2, sAP2)
-
-%  deriv_stmt_maintains_equivalence : THEOREM
-%    FORALL (mp, ap : Program)(c : Stmt)
-%           (sMP1, sMP2 : MPState, sAP1, sAP2 : APState)(n1, n2 : nat) :
-%      related_states(mp, ap)(sMP1, sAP1) IMPLIES
-%      deriv_stmt(mp)(c, sMP1, sMP2)(n1) IMPLIES
-%      deriv_stmt(ap)(c, sAP1, sAP2)(n2) IMPLIES
-%        MP_modeled?(mp)(sMP2, sAP2)
 
   % The main result
   correctness_of_ann_program : THEOREM % :-)

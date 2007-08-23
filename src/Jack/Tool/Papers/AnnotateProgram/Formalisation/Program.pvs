@@ -206,6 +206,10 @@ BEGIN
   var_names(ls : finite_set[LocalVarDecl]) : finite_set[Name] =
     {n : Name |EXISTS (l : LocalVarDecl) : ls(l) AND name(l) = n}
 
+  
+  var_names_union : LEMMA % :-)
+    FORALL(fs1, fs2 : finite_set[FieldDecl]) :
+      var_names(union(fs1, fs2)) = union(var_names(fs1), var_names(fs2))
 
   % Declared variable names
 
@@ -317,7 +321,13 @@ BEGIN
       subset?(var_names(b1), v) IMPLIES
         b2 << b1 IMPLIES subset?(var_names(b2), v)
 
-       
+  
+  % I can prove this, and it should not be provable!
+  problem_with_var_names : LEMMA
+    FORALL(x : list[[BoolExpr, Stmt]]) :
+      var_names(CaseJML(x)) = emptyset
+
+     
 %  program_code(p : Program)(s : Stmt) : boolean =
 %    EXISTS(c : Class, m : Method) :
 %      classes(p)(c) AND

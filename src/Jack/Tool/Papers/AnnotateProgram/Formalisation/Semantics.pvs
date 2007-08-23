@@ -271,7 +271,7 @@ BEGIN
            derive(p)(c1, sigma1, Unit, tau)(m1) AND
            derive(p)(c2, tau, Unit, sigma2)(m2),
       Set(vn, e) :
-         n > 0 AND
+        n > 0 AND
         v = return_of_stmt(sigma2) AND
          execute_set(p, vn, e, sigma1, sigma2, n, derive_rec),
       Skip : sigma1 = sigma2 AND n = 0 AND 

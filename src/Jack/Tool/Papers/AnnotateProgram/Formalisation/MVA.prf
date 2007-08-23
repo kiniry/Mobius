@@ -3,20 +3,20 @@
 (|WellFormedMVA|)
 (|MVASemantics|
  (|get_MVAVarDecl_TCC1| 0
-  (|get_MVAVarDecl_TCC1-1| NIL 3383053727 3391765237 ("" (SUBTYPE-TCC) NIL NIL)
-   UNCHECKED
-   ((|member| CONST-DECL "bool" |sets| NIL)
+  (|get_MVAVarDecl_TCC1-1| NIL 3383053727 3396848582 ("" (SUBTYPE-TCC) NIL NIL)
+   PROVED
+   ((|nonempty?| CONST-DECL "bool" |sets| NIL)
     (|empty?| CONST-DECL "bool" |sets| NIL)
-    (|nonempty?| CONST-DECL "bool" |sets| NIL))
-   56 50 NIL NIL))
+    (|member| CONST-DECL "bool" |sets| NIL))
+   42 43 NIL NIL))
  (|initial_MVA_state_TCC1| 0
-  (|initial_MVA_state_TCC1-1| NIL 3383053727 3391765237
-   ("" (SUBTYPE-TCC) NIL NIL) UNCHECKED
-   ((|member| CONST-DECL "bool" |sets| NIL)
-    (|empty?| CONST-DECL "bool" |sets| NIL))
-   162 80 NIL NIL))
+  (|initial_MVA_state_TCC1-1| NIL 3383053727 3396848582
+   ("" (SUBTYPE-TCC) NIL NIL) PROVED
+   ((|empty?| CONST-DECL "bool" |sets| NIL)
+    (|member| CONST-DECL "bool" |sets| NIL))
+   8 7 NIL NIL))
  (|guard_to_expression_TCC1| 0
-  (|guard_to_expression_TCC1-1| NIL 3396585244 3396585301
+  (|guard_to_expression_TCC1-1| NIL 3396585244 3396848583
    ("" (INST 1 "LAMBDA(m : MVA)(g : Guard) : TT") NIL NIL) PROVED
    ((TT ADT-CONSTRUCTOR-DECL "(TT?)" |Body_adt| NIL)
     (|BoolExpr| TYPE-EQ-DECL NIL |Body_adt| NIL)
@@ -42,16 +42,21 @@
     (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
     (CP FORMAL-NONEMPTY-TYPE-DECL NIL |MVASemantics| NIL)
     (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |MVASemantics| NIL))
-   4327 2 T NIL))
+   20 21 T NIL))
  (|execute_action_TCC1| 0
-  (|execute_action_TCC1-1| NIL 3389011015 3391765237 ("" (SUBTYPE-TCC) NIL NIL)
-   UNCHECKED NIL 32 30 NIL NIL))
+  (|execute_action_TCC1-1| NIL 3389011015 3396848583 ("" (SUBTYPE-TCC) NIL NIL)
+   PROVED NIL 5 5 NIL NIL))
  (|execute_action_TCC2| 0
-  (|execute_action_TCC2-1| NIL 3389011015 3391765237
-   ("" (TERMINATION-TCC) NIL NIL) UNCHECKED
-   ((|length| DEF-DECL "nat" |list_props| NIL)) 180 180 NIL NIL))
+  (|execute_action_TCC2-1| NIL 3389011015 3396848583
+   ("" (TERMINATION-TCC) NIL NIL) PROVED
+   ((|length| DEF-DECL "nat" |list_props| NIL)
+    (|nnint_plus_posint_is_posint| APPLICATION-JUDGEMENT "posint" |integers|
+     NIL)
+    (|real_lt_is_strict_total_order| NAME-JUDGEMENT
+     "(strict_total_order?[real])" |real_props| NIL))
+   26 25 NIL NIL))
  (|update_yields_wf_Store| 0
-  (|update_yields_wf_Store-1| NIL 3390898573 3396585392
+  (|update_yields_wf_Store-1| NIL 3390898573 3396848584
    ("" (SKOSIMP*)
     (("" (EXPAND* "wf_Store" "update")
       (("" (SKOLEM!)
@@ -77,9 +82,9 @@
     (|defined?| CONST-DECL "boolean" |ValProp| NIL)
     (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |MVASemantics| NIL)
     (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL))
-   8126 145 T SHOSTAK))
+   118 116 T SHOSTAK))
  (|step_TCC1| 0
-  (|step_TCC1-2| NIL 3383053820 3391765237
+  (|step_TCC1-2| NIL 3383053820 3396848584
    ("" (SKOSIMP*)
     (("" (TYPEPRED "a!1")
       (("" (EXPAND "total")
@@ -109,35 +114,39 @@
         NIL))
       NIL))
     NIL)
-   UNCHECKED
-   ((|total| CONST-DECL "boolean" |MVASemantics| NIL)
-    (MVA TYPE-EQ-DECL NIL MVA NIL) (|ProgVarDecl| TYPE-EQ-DECL NIL MVA NIL)
-    (|MVAVarDecl| TYPE-EQ-DECL NIL MVA NIL)
-    (|JType| TYPE-DECL NIL |JType_adt| NIL)
-    (|defined?| CONST-DECL "boolean" |ValProp| NIL)
-    (|Val| TYPE-DECL NIL |Val_adt| NIL) (|Transition| TYPE-EQ-DECL NIL MVA NIL)
-    (|Guard| TYPE-EQ-DECL NIL MVA NIL) (|Action| TYPE-EQ-DECL NIL MVA NIL)
-    (|Event| TYPE-EQ-DECL NIL MVA NIL)
-    (|EventType| TYPE-DECL NIL |EventType_adt| NIL)
-    (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
-    (CP FORMAL-NONEMPTY-TYPE-DECL NIL |MVASemantics| NIL)
-    (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |MVASemantics| NIL)
-    (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
+   PROVED
+   ((|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
-    (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
-    (|wf_AState| CONST-DECL "boolean" |MVASemantics| NIL)
-    (|AState| TYPE-EQ-DECL NIL |MVASemantics| NIL)
+    (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
+    (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |MVASemantics| NIL)
+    (CP FORMAL-NONEMPTY-TYPE-DECL NIL |MVASemantics| NIL)
+    (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
+    (|EventType| TYPE-DECL NIL |EventType_adt| NIL)
+    (|Event| TYPE-EQ-DECL NIL MVA NIL) (|Action| TYPE-EQ-DECL NIL MVA NIL)
+    (|Guard| TYPE-EQ-DECL NIL MVA NIL) (|Transition| TYPE-EQ-DECL NIL MVA NIL)
+    (|Val| TYPE-DECL NIL |Val_adt| NIL)
+    (|defined?| CONST-DECL "boolean" |ValProp| NIL)
+    (|JType| TYPE-DECL NIL |JType_adt| NIL)
+    (|MVAVarDecl| TYPE-EQ-DECL NIL MVA NIL)
+    (|ProgVarDecl| TYPE-EQ-DECL NIL MVA NIL) (MVA TYPE-EQ-DECL NIL MVA NIL)
+    (|total| CONST-DECL "boolean" |MVASemantics| NIL)
     (|Store| TYPE-EQ-DECL NIL |State| NIL)
+    (|AState| TYPE-EQ-DECL NIL |MVASemantics| NIL)
+    (|wf_AState| CONST-DECL "boolean" |MVASemantics| NIL)
     (|nonempty_exists| FORMULA-DECL NIL |sets_lemmas| NIL)
     (|set| TYPE-EQ-DECL NIL |sets| NIL)
     (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
     (= CONST-DECL "[T, T -> boolean]" |equalities| NIL)
+    (|a!1| SKOLEM-CONST-DECL "(total)" |MVASemantics| NIL)
+    (|t!1| SKOLEM-CONST-DECL "Transition[CP, Name]" |MVASemantics| NIL)
+    (|s!1| SKOLEM-CONST-DECL "(wf_AState(a!1))" |MVASemantics| NIL)
+    (|pe!1| SKOLEM-CONST-DECL "(wf_PEvent(a!1))" |MVASemantics| NIL)
     (|wf_PEvent| CONST-DECL "boolean" |MVASemantics| NIL)
     (|PEvent| TYPE-EQ-DECL NIL |MVASemantics| NIL)
     (|PSt| TYPE-EQ-DECL NIL |State| NIL))
-   181 100 T NIL))
+   9 8 T NIL))
  (|wf_initial_MVA_state| 0
-  (|wf_initial_MVA_state-1| NIL 3387787557 3396585870
+  (|wf_initial_MVA_state-1| NIL 3387787557 3396849593
    ("" (SKOSIMP*)
     (("" (EXPAND* "wf_AState" "initial_MVA_state" "wf_MVA")
       (("" (FLATTEN)
@@ -147,7 +156,7 @@
               (("" (EXPAND "defined?")
                 (("" (LIFT-IF)
                   (("" (ASSERT)
-                    (("" (SPLIT 1)
+                    (("" (SPLIT 2)
                       (("1" (SKOSIMP*) (("1" (GRIND) NIL NIL)) NIL)
                        ("2" (SKOSIMP*)
                         (("2"
@@ -191,22 +200,22 @@
    ((|wf_MVA| CONST-DECL "boolean" |WellFormedMVA| NIL)
     (|initial_MVA_state| CONST-DECL "AState" |MVASemantics| NIL)
     (|wf_AState| CONST-DECL "boolean" |MVASemantics| NIL)
-    (|set| TYPE-EQ-DECL NIL |sets| NIL)
-    (|epsilon| CONST-DECL "T" |epsilons| NIL)
-    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
-    (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
-    (|EventType| TYPE-DECL NIL |EventType_adt| NIL)
-    (|Event| TYPE-EQ-DECL NIL MVA NIL) (|Action| TYPE-EQ-DECL NIL MVA NIL)
-    (|Guard| TYPE-EQ-DECL NIL MVA NIL) (|Transition| TYPE-EQ-DECL NIL MVA NIL)
-    (|ProgVarDecl| TYPE-EQ-DECL NIL MVA NIL) (MVA TYPE-EQ-DECL NIL MVA NIL)
-    (= CONST-DECL "[T, T -> boolean]" |equalities| NIL)
-    (TRUE CONST-DECL "bool" |booleans| NIL)
-    (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
-    (|MVAVarDecl| TYPE-EQ-DECL NIL MVA NIL)
-    (|JType| TYPE-DECL NIL |JType_adt| NIL)
-    (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
-    (|Val| TYPE-DECL NIL |Val_adt| NIL)
     (|FieldDecl| TYPE-EQ-DECL NIL |Program| NIL)
+    (|Val| TYPE-DECL NIL |Val_adt| NIL)
+    (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
+    (|JType| TYPE-DECL NIL |JType_adt| NIL)
+    (|MVAVarDecl| TYPE-EQ-DECL NIL MVA NIL)
+    (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
+    (TRUE CONST-DECL "bool" |booleans| NIL)
+    (= CONST-DECL "[T, T -> boolean]" |equalities| NIL)
+    (MVA TYPE-EQ-DECL NIL MVA NIL) (|ProgVarDecl| TYPE-EQ-DECL NIL MVA NIL)
+    (|Transition| TYPE-EQ-DECL NIL MVA NIL) (|Guard| TYPE-EQ-DECL NIL MVA NIL)
+    (|Action| TYPE-EQ-DECL NIL MVA NIL) (|Event| TYPE-EQ-DECL NIL MVA NIL)
+    (|EventType| TYPE-DECL NIL |EventType_adt| NIL)
+    (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
+    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
+    (|epsilon| CONST-DECL "T" |epsilons| NIL)
+    (|set| TYPE-EQ-DECL NIL |sets| NIL)
     (|finite_intersection1| APPLICATION-JUDGEMENT "finite_set" |finite_sets|
      NIL)
     (|member| CONST-DECL "bool" |sets| NIL)
@@ -215,12 +224,13 @@
     (|get_MVAVarDecl| CONST-DECL "lift[MVAVarDecl]" |MVASemantics| NIL)
     (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |MVASemantics| NIL)
     (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    (|reserved_words| CONST-DECL "finite_set[Name]" |Program| NIL)
+    (|intersection| CONST-DECL "set" |sets| NIL)
+    (|disjoint?| CONST-DECL "bool" |sets| NIL)
     (CP FORMAL-NONEMPTY-TYPE-DECL NIL |MVASemantics| NIL)
     (|wf_vdsA| CONST-DECL "boolean" |WellFormedMVA| NIL)
     (|wf_vdsP| CONST-DECL "boolean" |WellFormedMVA| NIL)
     (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
-    (|intersection| CONST-DECL "set" |sets| NIL)
-    (|disjoint?| CONST-DECL "bool" |sets| NIL)
     (|wf_Guard| CONST-DECL "boolean" |WellFormedMVA| NIL)
     (|wf_Action| CONST-DECL "boolean" |WellFormedMVA| NIL)
     (|wf_Trans| CONST-DECL "boolean" |WellFormedMVA| NIL)
@@ -230,7 +240,7 @@
     (|down| ADT-ACCESSOR-DECL "[(up?) -> T]" |lift_adt| NIL)
     (|defined?| CONST-DECL "boolean" |ValProp| NIL)
     (|wf_Store| CONST-DECL "boolean" |MVASemantics| NIL))
-   36446 566 T SHOSTAK))
+   4156 258 T SHOSTAK))
  (|eval_yields_not_bottom| 0
   (|eval_yields_not_bottom-1| NIL 3389011192 3389011218 ("" (POSTPONE) NIL NIL)
    UNCHECKED NIL 26400 10 T SHOSTAK))
@@ -280,7 +290,7 @@
         NIL))
       NIL))
     NIL)
-   UNCHECKED
+   UNFINISHED
    ((|eval| CONST-DECL "Val" |MVASemantics| NIL)
     (|update| CONST-DECL "Store" |MVASemantics| NIL)
     (|member| DEF-DECL "bool" |list_props| NIL)
@@ -419,7 +429,7 @@
         NIL))
       NIL))
     NIL)
-   UNCHECKED
+   UNFINISHED
    ((|step| CONST-DECL "AState" |MVASemantics| NIL)
     (|step_TCC1| SUBTYPE-TCC NIL |MVASemantics| NIL)
     (|execute_action_yields_wf_state| FORMULA-DECL NIL |MVASemantics| NIL) NIL
