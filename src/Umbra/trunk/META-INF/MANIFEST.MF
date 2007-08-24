@@ -25,5 +25,4 @@ Bundle-ClassPath: libs/bmllib.jar,
  libs/b2bpl.jar
 Eclipse-LazyStart: true
 Bundle-Activator: umbra.UmbraPlugin
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Vendor: Mobius
