@@ -77,6 +77,7 @@ BEGIN
   var_names(a : MVA) : finite_set[Name] =
     union(var_names(vdsA(a)), var_names(vdsP(a)))
 
+
 END MVA
 
 

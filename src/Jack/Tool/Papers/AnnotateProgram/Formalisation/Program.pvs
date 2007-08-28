@@ -46,9 +46,8 @@ Body[Name : TYPE+] : DATATYPE
                          WITH SUBTYPES Expr, NumExpr, BoolExpr, RefExpr, Stmt
 BEGIN
 
-% Numerical expressions. They are parameterized with a variable name to handle
-%  the case of variable evaluation.
-
+  % Numerical expressions. They are parameterized with a variable name to handle
+  %  the case of variable evaluation.
   Int(i : int) : Int?                     : NumExpr
   Plus(b1, b2 : Expr) : Plus?             : NumExpr
 %  Minus(b1, b2 : Expr) : Minus?           : NumExpr
@@ -57,6 +56,7 @@ BEGIN
   NumVarEval(varname : Name) : NumVarEval?: NumExpr
 
 
+  % Boolean expressions
   % True, False, not, and, or are reserved keywords in PVS
   TT : TT?                                : BoolExpr
   FF : FF?                                : BoolExpr
@@ -72,12 +72,12 @@ BEGIN
   BoolVarEval(varname : Name) : BoolVarEval? : BoolExpr
 
 
-% Reference expressions
+  % Reference expressions
   Null : Null?                            : RefExpr
   RefVarEval(varname : Name) : RefVarEval?: RefExpr
 
 
-% Program's expressions
+  % Program's expressions
   Assign(target : Name, source : Expr) : Assign? : Expr
   BExpr(b : BoolExpr) : BExpr?                   : Expr
   CondExpr(test : Expr, then_expr : Expr, 
@@ -88,8 +88,7 @@ BEGIN
   RExpr(r : RefExpr) : RExpr?                    : Expr
 
 
-% Program's statements
-
+  % Program's statements
   CaseJML(branches : list[[BoolExpr, Stmt]]) : CaseJML? : Stmt
   IfThenElse(test : BoolExpr, then_stmt : Stmt, 
              else_stmt : Stmt) : IfThenElse?        : Stmt
@@ -181,11 +180,33 @@ BEGIN
   var_names(e : Expr) : set[Name] =
     {n : Name | some(LAMBDA (m : Name) : m = n)(e)}
 
-  var_names(s : Stmt) : set[Name] =
-    {n : Name | some(LAMBDA (m : Name) : m = n)(s)}
+   var_names(s : Stmt) : set[Name] =
+     {n : Name | some(LAMBDA (m : Name) : m = n)(s)}
+
+   % AT: Do we also have to do a workaround in this case?
+%   var_names(s : Stmt) : set[Name] =
+%     union({n : Name | some(LAMBDA (m : Name) : m = n)(s)},
+%           {n : Name | CaseJML?(s) AND every(id[bool])
+%             (map(LAMBDA (x : [BoolExpr, Stmt]) : 
+%               some(LAMBDA (m : Name) : m = n)(proj_1(x)) OR
+%               some(LAMBDA (m : Name) : m = n)(proj_2(x)))(branches(s)))})
+              
+%  NOTE: There seems to be a problem with the definition of some in the 
+%  CaseJML case. If we define:
+%   var_names(b : Body) : set[Name] =
+%     {n : Name | some(LAMBDA (m : Name) : m = n)(b)}
+%
+%  Then it can proved that:
+%   problem_with_var_names : LEMMA
+%     FORALL(x : list[[BoolExpr, Stmt]]) :
+%       var_names(CaseJML(x)) = emptyset
 
   var_names(b : Body) : set[Name] =
-    {n : Name | some(LAMBDA (m : Name) : m = n)(b)}
+    union({n : Name | some(LAMBDA (m : Name) : m = n)(b)},
+          {n : Name | CaseJML?(b) AND every(id[bool])
+            (map(LAMBDA (x : [BoolExpr, Stmt]) : 
+              some(LAMBDA (m : Name) : m = n)(proj_1(x)) OR
+              some(LAMBDA (m : Name) : m = n)(proj_2(x)))(branches(b)))})
 
   var_names(m : Method) : set[Name] =
     Union({ns : set[Name] | ns = var_names(pre(m)) OR ns = var_names(post(m)) OR
@@ -283,7 +304,7 @@ BEGIN
     ENDIF
 
   % TODO: Maybe this function should be left undefined since it should also
-  % return the conjunction of the invariant of the the parent classes
+  % return the conjunction of the invariant of the the parent classes.
   % If it can't find an invariant in tgt it just returns TRUE
   lookup_inv(p : Program, tgt : Val) : BoolExpr =
     IF up?(get_class(p)(tgt))
@@ -291,6 +312,8 @@ BEGIN
     ELSE TT
     ENDIF
 
+
+  % Proper subtern (<<) properties
 
   proper_subterm_set_clause(s : Stmt, m : Method) : boolean =
     s << pre_set(m) OR s << post_set(m) OR s << exc_set(m)
@@ -321,13 +344,7 @@ BEGIN
       subset?(var_names(b1), v) IMPLIES
         b2 << b1 IMPLIES subset?(var_names(b2), v)
 
-  
-  % I can prove this, and it should not be provable!
-  problem_with_var_names : LEMMA
-    FORALL(x : list[[BoolExpr, Stmt]]) :
-      var_names(CaseJML(x)) = emptyset
 
-     
 %  program_code(p : Program)(s : Stmt) : boolean =
 %    EXISTS(c : Class, m : Method) :
 %      classes(p)(c) AND
@@ -353,6 +370,7 @@ BEGIN
 %      classes(p)(c) AND
 %      methods(c)(m) AND
 %      e << body(m)
+
 
 END ProgramFunctions
 

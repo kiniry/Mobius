@@ -15,15 +15,17 @@ BEGIN
             APSemanticsProperties,
             listfuncs
 
+  mp : VAR (wf_MP)
 
   % Eexecuting an action on a MVA modifies its variables in the same way that
   % the execution of the annotations representing that action modifies the 
   % corresponding ghost variables in the annotated program.
   execute_action_correctness : LEMMA % :-)
-    FORALL (mp : MonitoredProgram, ap : Program, c : Class, m : Method,
-            a : Action, n : nat,
-            sMP : MPState, sMVA2 : AState, sAP1, sAP2 : APState) :
-      related_states(mp, ap)(sMP, sAP1) IMPLIES
+    FORALL (mp)(c : Class, m : Method, a : Action, n : nat)
+           (sMP : MPState, sMVA2 : AState, sAP1, sAP2 : APState) :
+      wf_state(mp)(sMP) IMPLIES
+      wf_state(ann_program(mp)(sAP1)) IMPLIES
+      MP_modeled?(sMP, sAP1) IMPLIES
       classes(ap)(c) IMPLIES
       methods(c)(m) IMPLIES
       proper_subterm_set_clause(ann_action(a), m) IMPLIES
@@ -32,6 +34,20 @@ BEGIN
       deriv_stmt(ap)(ann_action(a), sAP1, sAP2)(n) IMPLIES
       stA(sMVA2) = execute_action(a)(stA(astate(sMP)), st(pstate(sMP))) IMPLIES
         MVA_vars_modeled?(sMVA2, sAP2)
+
+%   execute_action_correctness : LEMMA % :-)
+%     FORALL (mp : MonitoredProgram, ap : Program, c : Class, m : Method,
+%             a : Action, n : nat,
+%             sMP : MPState, sMVA2 : AState, sAP1, sAP2 : APState) :
+%       related_states(mp, ap)(sMP, sAP1) IMPLIES
+%       classes(ap)(c) IMPLIES
+%       methods(c)(m) IMPLIES
+%       proper_subterm_set_clause(ann_action(a), m) IMPLIES
+%       wf_Action(mva(mp))(a) IMPLIES
+%       NOT up?(ex(pstate(sAP1))) IMPLIES
+%       deriv_stmt(ap)(ann_action(a), sAP1, sAP2)(n) IMPLIES
+%       stA(sMVA2) = execute_action(a)(stA(astate(sMP)), st(pstate(sMP))) IMPLIES
+%         MVA_vars_modeled?(sMVA2, sAP2)
 
 
   % Tells if a statement c is part of the translation of an action a.
@@ -122,7 +138,7 @@ BEGIN
 
   % If sMP1 and sAP1 are related stated, sMVA2 is the state of the automaton
   % after evaluating on_method_MVA with some event type et and some annotated
-  % method m, ts is the set of transitions that have as event (et, name(m)) and
+  % method m, ts is the set of transitions that has as event (et, name(m)) and
   % sAP2 is the state of the annotated program after the execution of ann_event
   % with ts as argument, then sMVA2 is well modeled by sAP2.
   ann_event_preserves_MVA_modeled : LEMMA % :-)

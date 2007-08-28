@@ -142,6 +142,7 @@ BEGIN
     THEN sigma1 = sigma2 AND v = Bottom AND n = 0
     ELSE % sigma1 is a normal state
     CASES b OF
+      % Numerical expressions
       Int(i) : sigma1 = sigma2 AND n = 0 AND v = Int(i),
       Plus(e1, e2) : 
         EXISTS (tau : FullState, v1, v2 : Val, m1, m2 : nat) : 
@@ -152,6 +153,7 @@ BEGIN
                 Int?(v1) AND Int?(v2) AND v = Int(i(v1) + i(v2))),
       NumVarEval(vn) : sigma1 = sigma2 AND n = 0 AND 
                        v = Int(val2int(lookup(vn, sigma1))),
+      % Boolean expressions
       TT : sigma1 = sigma2 AND n = 0 AND v = Bool(TRUE),
       FF : sigma1 = sigma2 AND n = 0 AND v = Bool(FALSE),
       Neg(e) : n > 0 AND
@@ -174,10 +176,12 @@ BEGIN
           check_for_exception_final(sigma2, v, v = Bool(v1 = v2)),
       BoolVarEval(vn) : sigma1 = sigma2 AND n = 0 AND 
                        v = Bool(val2bool(lookup(vn, sigma1))),
+      % Reference expressions
       Null : sigma1 = sigma2 AND n = 0 AND v = Null,
       RefVarEval(vn) : sigma1 = sigma2 AND n = 0 AND 
                        v = Reference(get_address(vn, sigma1), 
                                  get_dynamic_type_name(vn, sigma1)),
+      % Program's expressions
       Assign(vn, e) :
         n > 0 AND
         (EXISTS (tau : FullState) :
@@ -216,8 +220,7 @@ BEGIN
           ELSE FALSE % should not happen in a wf_Program
           ENDIF AND
           % actions taken at the entry of the method
-          on_method_entry(p, md, a, tau3, tau4, m3,
-                          bounded_derive_rec(m3)) AND
+          on_method_entry(p, md, a, tau3, tau4, m3, bounded_derive_rec(m3)) AND
           % give a name the value of the argument before the call,
           old_val_arg = lookup_local(name(arg(md)), pstate(tau4)) AND
           % update the value of this, the argument and initialize the local vars
@@ -251,6 +254,7 @@ BEGIN
       RExpr(r) :
         n > 0 AND
         derive(p)(r, sigma1, v, sigma2)(n - 1),
+      % Program's statements
       CaseJML(l) :
         n > 0 AND
         v = return_of_stmt(sigma2) AND
@@ -536,6 +540,7 @@ BEGIN
              ENDIF AND
         pstate(s1) = pstate(s2)
 
+  % TODO: See weird TCC
   execute_CaseJML : (execute_CaseJML_type) =
     LAMBDA (p : FullProgram, branches : list[[BoolExpr, Stmt]], 
             s1, s2 : FullState,
@@ -548,7 +553,7 @@ BEGIN
                       % type check
                       LET s : Stmt = CaseJML(xs) IN
                       derive_rec(n)(p)(IfThenElse(proj_1(x), proj_2(x), s),
-                                           s1, Unit, s2)(n - 1) AND
+                                       s1, Unit, s2)(n - 1) AND
                       pstate(s1) = pstate(s2)
       ENDCASES
 
