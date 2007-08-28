@@ -540,7 +540,7 @@ BEGIN
              ENDIF AND
         pstate(s1) = pstate(s2)
 
-  % TODO: See weird TCC
+  % TODO: See execute_CaseJML_TCC4
   execute_CaseJML : (execute_CaseJML_type) =
     LAMBDA (p : FullProgram, branches : list[[BoolExpr, Stmt]], 
             s1, s2 : FullState,
@@ -573,13 +573,14 @@ BEGIN
            ELSE tau1 % This won't happen in a well typed program
            ENDIF
 
+  % TODO: See on_method_entry_TCC3
   on_method_entry : (on_method_event_type) =
     LAMBDA (p : FullProgram, md : Method, a : Val, s1, s2 : FullState, n : nat,
             derive_rec : derive_rec_type(n)) :
     IF up?(ex(pstate(s1))) 
     THEN s1 = s2 AND n = 0
     ELSE 
-    EXISTS (m1, m2, m3 : nat, tau1, tau2 : FullState, inv : Expr) :
+    EXISTS (m1, m2, m3 : nat, tau1, tau2 : FullState, inv : BoolExpr) :
       n = m1 + m2 + m3 + 1 AND
       inv = lookup_inv(program(p), a) AND
       check_assertion(p)(inv, s1, tau1)(m1)(derive_rec(m1)) AND
@@ -588,13 +589,14 @@ BEGIN
       st(pstate(s1)) = st(pstate(s2))
     ENDIF
 
+  % TODO: See on_method_exit_normal_TCC4
   on_method_exit_normal : (on_method_event_type) =
     LAMBDA (p : FullProgram, md : Method, a : Val, s1, s2 : FullState, n : nat,
             derive_rec : derive_rec_type(n)) :
     IF up?(ex(pstate(s1))) 
     THEN s1 = s2 AND n = 0
     ELSE 
-    EXISTS (m1, m2, m3 : nat, tau1, tau2 : FullState, inv : Expr) :
+    EXISTS (m1, m2, m3 : nat, tau1, tau2 : FullState, inv : BoolExpr) :
       n = m1 + m2 + m3 + 1 AND
       derive_rec(n)(p)(post_set(md), s1, Unit, tau1)(m1) AND
       check_assertion(p)(post(md), tau1, tau2)(m2)(derive_rec(m2)) AND
@@ -610,7 +612,7 @@ BEGIN
             derive_rec : derive_rec_type(n)) :
     IF up?(ex(pstate(s1))) 
     THEN 
-    EXISTS (m1, m2 : nat, tau1, tau2 : FullState, inv : Expr) :
+    EXISTS (m1, m2 : nat, tau1, tau2 : FullState, inv : BoolExpr) :
       n = m1 + m2 + 1 AND
       derive_rec(n)(p)(exc_set(md), update_PState(s1, catch), Unit, tau1)(m1) AND
       inv = lookup_inv(program(p), a) AND
