@@ -163,18 +163,7 @@ public class SingleInstruction extends InstructionLineController {
     Instruction res = null;
     if (getName().compareTo("aconst_null") == 0)
       res = new ACONST_NULL();
-    if (getName().compareTo("dadd") == 0)
-      res = new DADD();
-    if (getName().compareTo("ddiv") == 0)
-      res = new DDIV();
-    if (getName().compareTo("dmul") == 0)
-      res = new DMUL();
-    if (getName().compareTo("dneg") == 0)
-      res = new DNEG();
-    if (getName().compareTo("drem") == 0)
-      res = new DREM();
-    if (getName().compareTo("dsub") == 0)
-      res = new DSUB();
+    res = getDoubleInstruction();
     if (getName().compareTo("fadd") == 0)
       res = new FADD();
     if (getName().compareTo("fdiv") == 0)
@@ -267,21 +256,7 @@ public class SingleInstruction extends InstructionLineController {
       res = new ARRAYLENGTH();
     if (getName().compareTo("athrow") == 0)
       res = new ATHROW();
-    if (getName().compareTo("iconst_0") == 0)
-      res = new ICONST(BUILTIN_NUMBER_0);
-    if (getName().compareTo("iconst_1") == 0)
-      res = new ICONST(BUILTIN_NUMBER_1);
-    if (getName().compareTo("iconst_2") == 0)
-      res = new ICONST(BUILTIN_NUMBER_2);
-    if (getName().compareTo("iconst_3") == 0)
-      res = new ICONST(BUILTIN_NUMBER_3);
-    if (getName().compareTo("iconst_4") == 0)
-      res = new ICONST(BUILTIN_NUMBER_4);
-    if (getName().compareTo("iconst_5") == 0)
-      res = new ICONST(BUILTIN_NUMBER_5);
-    // TODO is it really up to 5?
-    if (getName().compareTo("iconst_m1") == 0)
-      res = new ICONST(-1);
+    res = getIconstInstruction();
     if (getName().compareTo("lcmp") == 0)
       res = new LCMP();
     if (getName().compareTo("aload_0") == 0)
@@ -300,22 +275,6 @@ public class SingleInstruction extends InstructionLineController {
       res = new ASTORE(BUILTIN_NUMBER_2);
     if (getName().compareTo("astore_3") == 0)
       res = new ASTORE(BUILTIN_NUMBER_3);
-    if (getName().compareTo("dload_0") == 0)
-      res = new DLOAD(BUILTIN_NUMBER_0);
-    if (getName().compareTo("dload_1") == 0)
-      res = new DLOAD(BUILTIN_NUMBER_1);
-    if (getName().compareTo("dload_2") == 0)
-      res = new DLOAD(BUILTIN_NUMBER_2);
-    if (getName().compareTo("dload_3") == 0)
-      res = new DLOAD(BUILTIN_NUMBER_3);
-    if (getName().compareTo("dstore_0") == 0)
-      res = new DSTORE(BUILTIN_NUMBER_0);
-    if (getName().compareTo("dstore_1") == 0)
-      res = new DSTORE(BUILTIN_NUMBER_1);
-    if (getName().compareTo("dstore_2") == 0)
-      res = new DSTORE(BUILTIN_NUMBER_2);
-    if (getName().compareTo("dstore_3") == 0)
-      res = new DSTORE(BUILTIN_NUMBER_3);
     if (getName().compareTo("fload_0") == 0)
       res = new FLOAD(BUILTIN_NUMBER_0);
     if (getName().compareTo("fload_1") == 0)
@@ -398,6 +357,75 @@ public class SingleInstruction extends InstructionLineController {
       res = new POP2();
     if (getName().compareTo("swap") == 0)
       res = new SWAP();
+    return res;
+  }
+
+  /**
+   * This method checks if the current single instruction is one of the
+   * instructions that operate on the double type. If so it returns appropriate
+   * BCEL object, otherwise <code>null</code> is returned
+   *
+   * @return the appropriate BCEL object that represents an instruction which
+   *   operates on the double type or <code>null</code>
+   *   if no BCEL object for double types is appropriate
+   */
+  private Instruction getDoubleInstruction() {
+    Instruction res = null;
+    if (getName().compareTo("dadd") == 0)
+      res = new DADD();
+    if (getName().compareTo("ddiv") == 0)
+      res = new DDIV();
+    if (getName().compareTo("dmul") == 0)
+      res = new DMUL();
+    if (getName().compareTo("dneg") == 0)
+      res = new DNEG();
+    if (getName().compareTo("drem") == 0)
+      res = new DREM();
+    if (getName().compareTo("dsub") == 0)
+      res = new DSUB();
+    if (getName().compareTo("dload_0") == 0)
+      res = new DLOAD(BUILTIN_NUMBER_0);
+    if (getName().compareTo("dload_1") == 0)
+      res = new DLOAD(BUILTIN_NUMBER_1);
+    if (getName().compareTo("dload_2") == 0)
+      res = new DLOAD(BUILTIN_NUMBER_2);
+    if (getName().compareTo("dload_3") == 0)
+      res = new DLOAD(BUILTIN_NUMBER_3);
+    if (getName().compareTo("dstore_0") == 0)
+      res = new DSTORE(BUILTIN_NUMBER_0);
+    if (getName().compareTo("dstore_1") == 0)
+      res = new DSTORE(BUILTIN_NUMBER_1);
+    if (getName().compareTo("dstore_2") == 0)
+      res = new DSTORE(BUILTIN_NUMBER_2);
+    if (getName().compareTo("dstore_3") == 0)
+      res = new DSTORE(BUILTIN_NUMBER_3);
+    return res;
+  }
+
+  /**
+   * This method checks if the current single instruction is one of the ICONST
+   * instructions and returns appropriate BCEL {@link ICONST} object.
+   *
+   * @return the appropriate {@link ICONST} object or <code>null</code>
+   *   if no ICONST object is appropriate
+   */
+  private Instruction getIconstInstruction() {
+    Instruction res = null;
+    if (getName().compareTo("iconst_0") == 0)
+      res = new ICONST(BUILTIN_NUMBER_0);
+    if (getName().compareTo("iconst_1") == 0)
+      res = new ICONST(BUILTIN_NUMBER_1);
+    if (getName().compareTo("iconst_2") == 0)
+      res = new ICONST(BUILTIN_NUMBER_2);
+    if (getName().compareTo("iconst_3") == 0)
+      res = new ICONST(BUILTIN_NUMBER_3);
+    if (getName().compareTo("iconst_4") == 0)
+      res = new ICONST(BUILTIN_NUMBER_4);
+    if (getName().compareTo("iconst_5") == 0)
+      res = new ICONST(BUILTIN_NUMBER_5);
+    // TODO is it really up to 5?
+    if (getName().compareTo("iconst_m1") == 0)
+      res = new ICONST(-1);
     return res;
   }
 

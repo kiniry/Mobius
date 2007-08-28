@@ -39,12 +39,28 @@ import umbra.editor.parsing.BytecodeStrings;
  * modified (in case of combining changes) and what comments
  * are added to Bytecode
  *
- * @author Wojciech Wąs (ww209224@students.mimuw.edu.pl)
+ * @author Wojciech WÄs (ww209224@students.mimuw.edu.pl)
  * @author Tomek Batkiewicz (tb209231@students.mimuw.edu.pl)
- * @author Jarosław Paszek (jp209217@students.mimuw.edu.pl)
+ * @author JarosĹaw Paszek (jp209217@students.mimuw.edu.pl)
  * @version a-01
  */
 public class BytecodeController {
+
+  /**
+   * This constant is used in the method
+   * {@link #handleInitOfMethod(ClassGen, int, IDocument, int)} to indicate the
+   * situation when the given method number exceeds the range of available
+   * methods.
+   */
+  private static final int INIT_METHOD_NOMETHOD = -2;
+
+  /**
+   * This constant is used in the method
+   * {@link #handleInitOfMethod(ClassGen, int, IDocument, int)} to indicate the
+   * situation when the document is finished during an initialisation of a
+   * method handling.
+   */
+  private static final int INIT_METHOD_EOF = -1;
 
   /**
    * The strings which starts a single line comment in a bytecode file.
@@ -73,6 +89,13 @@ public class BytecodeController {
    * are subclasses of {@ref InstructionLineController}.
    */
   private LinkedList my_instructions;
+
+  /**
+   * This is a counter which is used in {@ref #handleInitOfMethod} to
+   * trace the numbers of lines in the analysed document where an
+   * instruction is located.
+   */
+  private int my_instrlineno;
 
   /**
    * The list of all the lines which were detected to be incorrect.
@@ -136,69 +159,203 @@ public class BytecodeController {
   /**
    * Initialization of all the bytecode structures related to
    * the document; it uses BCEL objects associated with the
-   * document and based on them it generates the Umbra line
+   * document <code>a_doc</code> and based on them it generates the Umbra line
    * structures (subclasses of the {@ref BytecodeLineController})
-   * together with the links to the BCEL objects. TODO all described?
+   * together with the links to the BCEL objects.
    *
    * @param a_doc the bytecode document with the corresponding BCEL
    *   structures linked into it
    */
   public final void init(final IDocument a_doc) {
     final ClassGen cg = ((BytecodeDocument)a_doc).getClassGen();
-    final ConstantPoolGen cpg = cg.getConstantPool();
-    final Method[] methods = cg.getMethods();
-    String part_comment = "";
-    boolean met_end = true;
-    MethodGen mg = null;
-    InstructionList il = null;
-    InstructionHandle ih = null;
-    InstructionHandle end = null;
-    int ic = 0; // counts lines with my_instructions
+    final int methno = cg.getMethods().length;
+    my_instrlineno = 0; // counts lines with my_instructions
     // i - iterates over methods
-    // j - iterates over lines in the document
-    for (int i = 0, j = 0; j < a_doc.getNumberOfLines() - 1; j++) {
-      if (met_end && i < methods.length) {
-        mg = new MethodGen(methods[i], cg.getClassName(), cpg);
-        il = mg.getInstructionList();
-        UmbraPlugin.messagelog("method number[" + i + "]" + mg.getName() +
-                           "il=" + il.toString());
-        ih = il.getStart();
-        end = il.getEnd();
-        met_end = false;
-        i++;
-      }
-      String line = "";
-      try {
-        line = a_doc.get(a_doc.getLineOffset(j), a_doc.getLineLength(j));
-      } catch (BadLocationException e) {
+    // line - iterates over lines in the document
+    for (int i = 0, line = 0; i < methno; i++) {
+      line = handleInitOfMethod(cg, i, a_doc, line);
+      if (line == INIT_METHOD_EOF && i != methno - 1) {
         MessageDialog.openInformation(new Shell(), "Bytecode",
-            "The current document has no positions for line " + j);
+               "The current document has strange number of methods" + i);
+        break;
       }
-      final String lineName = removeCommentFromLine(line);
-      final String comment = extractCommentFromLine(line);
-      final BytecodeLineController lc = getType(lineName);
-      my_editor_lines.add(j, lc);
-      if (lc.addHandle(ih, il, mg, i - 1)) { //this is an instruction line
-        my_instructions.add(ic, lc);
-        if (comment != null) my_comments.put(lc, comment);
-        if (part_comment.compareTo("") != 0) {
-          my_interline.put(lc, part_comment);
-          part_comment = "";
-        }
-        if (ih == end) {
-          met_end = true;
-        } else {
-          ih = ih.getNext();
-        }
-        ic++;
-      } else //this is non-instruction line in the editor
-        if (comment != null) part_comment.concat("\n" + comment);
     }
 
+    //Note that this is the number of last method in the text file which may
+    //differ from what is in the actual classgen (cg).
     final int methodNum = ((BytecodeLineController)my_instructions.getLast()).
                                 getIndex() + 1;
     my_modified = new boolean[methodNum];
-    for (int i = 0; i < my_modified.length; i++) my_modified[i] = false;
+    for (int i = 0; i < my_modified.length; i++)
+      my_modified[i] = false;
+  }
+
+  /**
+   * This method handles the initialisation of the structures that mediate
+   * between Umbra editor and BCEL and that correspond to a single method. It
+   * takes as an argument both a BCEL class representation and a textual
+   * representation of the file and generates {@ref BytecodeLineController}
+   * objects that correspond to subsequent lines in the textual representation
+   * and relate the lines with the instructions in <code>a_cg</code> BCEL class
+   * representation. It iterates over the lines in the textual representation
+   * and adds up there the corresponding BCEL information on the instruction
+   * in the line.
+   *
+   * This method adds a new items to the lists:
+   * <ul>
+   *   <li> {@link #my_editor_lines} in all cases</li>
+   *   <li> {@link #my_instructions} in case the line contains an
+   *        instruction</li>
+   *   <li> {@link #my_comments} in case the line contains a "//"-comment</li>
+   *   <li> {@link #my_interline} in case the interline comment occurs</li>
+   * </ul>
+   *
+   * This method also modifies the global counter {@ref #my_instrlineno} which
+   * serves to count the lines where the instructions are located.
+   *
+   * @param a_cg a {@link ClassGen} BCEL structure with the class information
+   *   for the current bytecode file
+   * @param a_methnum a number of a method in the class for which we generate
+   *   the structures
+   * @param a_doc a document with the textual representation of the bytecode
+   *   of the class, this document must agree with the <code>a_cg</code>
+   *   class structure
+   * @param a_line a line number in <code>a_doc</code> which is currently
+   *   analysed
+   * @return a non-negative number in case the method has been correctly
+   *   handled; {@link #INIT_METHOD_EOF} in case the end of the document
+   *   <code>a_doc</code> is reached; {@link #INIT_METHOD_NOMETHOD} in case
+   *   the number of method <code>a_methnum</code> exceeds the range of
+   *   available methods.
+   */
+  private int handleInitOfMethod(final ClassGen a_cg, final int a_methnum,
+                                 final IDocument a_doc, final int a_line) {
+    final ConstantPoolGen cpg = a_cg.getConstantPool();
+    final Method[] methods = a_cg.getMethods();
+    final StringBuffer part_comment = new StringBuffer("");
+    if (a_methnum >= methods.length || a_methnum < 0) {
+      return INIT_METHOD_NOMETHOD;
+    }
+    final MethodGen mg = new MethodGen(methods[a_methnum],
+                                       a_cg.getClassName(), cpg);
+    final InstructionList il = mg.getInstructionList();
+    UmbraPlugin.messagelog("method number[" + a_methnum + "]" + mg.getName() +
+                           "il=" + il.toString());
+    InstructionHandle ih = il.getStart();
+    for (int j = a_line; j < a_doc.getNumberOfLines() - 1; j++) {
+      final String line_text = getLineText(a_doc, j);
+      final String lineName = removeCommentFromLine(line_text);
+      final String comment = extractCommentFromLine(line_text);
+      final BytecodeLineController lc = getType(lineName);
+      my_editor_lines.add(j, lc);
+      final InstructionHandle nih = handleInstructionLine(lc, ih, mg,
+                                                          a_methnum);
+      handleComments(lc, part_comment, comment, nih != ih);
+      ih = nih;
+      if (ih == null) {
+        return j;
+      }
+    }
+    return INIT_METHOD_EOF;
+  }
+
+  /**
+   * This method handles the initialisation of the internal structures related
+   * to comments. In case the current line is an instruction line, it
+   * updates {@link #my_comments} (in case we have a comment at the end of the
+   * current line), it updates {@link #my_interline} in case there are
+   * full line comments before the current line. In case the line is not an
+   * instruction line we accumulate the comments in <code>a_multicomment</code>.
+   *
+   * @param a_lcontroller a controller structure for the current line
+   * @param a_multicomment an accumulator which contains full line comments
+   *   from the preceding lines
+   * @param a_comment a comment part of the currently handled line in the
+   *   document
+   * @param a_instrflag <code>true</code> in case the current line is an
+   *   instruction line
+   */
+  private void handleComments(final BytecodeLineController a_lcontroller,
+                              final StringBuffer a_multicomment,
+                              final String a_comment,
+                              final boolean a_instrflag) {
+    if (a_instrflag) {
+      if (a_comment != null) my_comments.put(a_lcontroller, a_comment);
+      final String str = a_multicomment.toString();
+      if (str.compareTo("") != 0) {
+        my_interline.put(a_lcontroller, str);
+        a_multicomment.delete(0, a_multicomment.length() - 1);
+      }
+    } else {
+      if (a_comment != null) {
+        if (a_multicomment.length() > 0) {
+          a_multicomment.append("\n" + a_comment);
+        } else {
+          a_multicomment.append(a_comment);
+        }
+      }
+    }
+  }
+
+  /**
+   * This method handles the initialisation of the internal structures for a
+   * single instruction line. It tries to add a link between the Umbra
+   * line structures and BCEL structures. In case it succeeds we know that
+   * the currently handled line is an instruction line so we update
+   * {@link #my_instructions} and {@link #my_instrlineno}. At last
+   * we check if the current instruction is the last one in the method and
+   * return <code>null</code> if this is the case or the next
+   * instruction handle otherwise. In case the current line is not an
+   * instruction line we return <code>an_instrhandle</code>.
+   *
+   * @param a_lcontroller a line controller for a line in the currently
+   *   handled bytecode document
+   * @param an_instrhandle a BCEL handle to the instruction which corresponds
+   *   to the line controller
+   * @param a_methgen a BCEL class containing the currently handled method
+   * @param a_methnum a number of the currently handled method in the class
+   * @return <code>null</code> in case the current line is the last one in
+   *   the current method; next instruction handle in the method in case
+   *   the current line contains an instruction; <code>an_instrhandle</code>
+   *   in case the current line contains no instruction.
+   */
+  private InstructionHandle handleInstructionLine(
+                                   final BytecodeLineController a_lcontroller,
+                                   final InstructionHandle an_instrhandle,
+                                   final MethodGen a_methgen,
+                                   final int a_methnum) {
+    final InstructionList il = a_methgen.getInstructionList();
+    final InstructionHandle end = il.getEnd();
+    if (a_lcontroller.addHandle(an_instrhandle, il, a_methgen, a_methnum)) {
+                                                 //this is an instruction line
+      my_instructions.add(my_instrlineno, a_lcontroller);
+      my_instrlineno++;
+      if (an_instrhandle == end) {
+        return null;
+      } else {
+        return an_instrhandle.getNext();
+      }
+    }
+    return an_instrhandle;
+  }
+
+  /**
+   * This method extracts a single line text from a document.
+   *
+   * @param a_doc a document to extract the string of a line from
+   * @param a_lineno a number of the line to extract
+   * @return the string with the content of the line
+   */
+  private String getLineText(final IDocument a_doc, final int a_lineno) {
+    String line_text = "";
+    try {
+      line_text = a_doc.get(a_doc.getLineOffset(a_lineno),
+                            a_doc.getLineLength(a_lineno));
+    } catch (BadLocationException e) {
+      MessageDialog.openInformation(new Shell(), "Bytecode",
+        "The current document has no positions for line " + a_lineno);
+    }
+    return line_text;
   }
 
   /**
@@ -358,7 +515,7 @@ public class BytecodeController {
                                      final int an_end)
   {
     boolean ok = true;
-    for (int i = a_start; i <= an_end; i++) {
+    for (int i = a_start; i < an_end; i++) {
       final BytecodeLineController line =
                                (BytecodeLineController)(my_editor_lines.get(i));
       if (!line.correct()) {
@@ -383,15 +540,13 @@ public class BytecodeController {
     boolean ok;
     int j;
     final String l = removeWhiteSpace(removeColonFromLine(a_line));
+    BytecodeLineController res = null;
     if (l.length() == 0)
       return new EmptyLineController(a_line);
 
-    //kod - tylko zaczynajace sie Code reszte przy poprawnosci
-    if (l.startsWith("Code") ||
-       (l.startsWith("LocalVariable")) ||
-       (l.startsWith("LineNumber")) ||
-       (l.startsWith("Attribute")))
-        return new CodeLineController(a_line);
+    res = getTypeCodeController(a_line, l);
+    if (res != null)
+      return res;
 
     //wyjatki throw Exception from nie znam reguly
     if ((l.startsWith("throws")) ||
@@ -507,6 +662,26 @@ public class BytecodeController {
   }
 
   /**
+   * This method checks if the given line should be encapsulated in a
+   * {@link CodeLineController}.
+   *
+   * @param a_line the full text of the line
+   * @param a_sline the text of the line with whitespace stripped
+   * @return <code>null</code> if the {@link CodeLineController} is not
+   *   appropriate; a {@link CodeLineController} object otherwise
+   */
+  private CodeLineController getTypeCodeController(final String a_line,
+                                                   final String a_sline) {
+    if (a_sline.startsWith("Code") ||
+       (a_sline.startsWith("LocalVariable")) ||
+       (a_sline.startsWith("LineNumber")) ||
+       (a_sline.startsWith("Attribute")))
+        return new CodeLineController(a_line);
+    else
+      return null;
+  }
+
+  /**
    * This method strips off the whitespace characters both at the beginning
    * and at the end of the given string. It works similarly to
    * {@ref String#trim()}, but it uses the local definition of the whitespace
@@ -551,7 +726,7 @@ public class BytecodeController {
     int j = a_line.length() - 1;
 
     final int k = (a_line.indexOf(SINGLE_LINE_COMMENT_MARK, 0));
-    if (k != -1)
+    if (k != INIT_METHOD_EOF)
       j = k - 1;
     while ((j >= 0) && (Character.isWhitespace(a_line.charAt(j))))
       j--;
@@ -589,7 +764,7 @@ public class BytecodeController {
    */
   private String extractCommentFromLine(final String a_line_text) {
     final int i = a_line_text.indexOf(SINGLE_LINE_COMMENT_MARK);
-    if (i == -1) return null;
+    if (i == INIT_METHOD_EOF) return null;
     final String nl = a_line_text.substring(i + SINGLE_LINE_COMMENT_MARK_LEN,
                                             a_line_text.indexOf("\n"));
     UmbraPlugin.messagelog(SINGLE_LINE_COMMENT_MARK + nl);
@@ -626,7 +801,7 @@ public class BytecodeController {
       if (my_instructions.contains(line))
         return my_instructions.indexOf(line);
     }
-    return -1;
+    return INIT_METHOD_EOF;
   }
 
   /**
@@ -640,7 +815,7 @@ public class BytecodeController {
   private boolean isEnd(final int a_linenum) {
     final int off = getInstructionOff(a_linenum);
     if (off + 1 >= my_instructions.size()) return true;
-    if (off == -1) return false;
+    if (off == INIT_METHOD_EOF) return false;
     final int index1 = ((BytecodeLineController)my_instructions.get(off)).
                                                              getIndex();
     final int index2 = ((BytecodeLineController)my_instructions.get(off + 1)).

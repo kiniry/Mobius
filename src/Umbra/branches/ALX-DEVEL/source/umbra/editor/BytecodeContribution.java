@@ -37,7 +37,7 @@ public class BytecodeContribution extends ControlContribution {
   /**
    * TODO. what does the constant mean?
    */
-  private static final int CHECK_ALL_LINES_DECREMENT = 2;
+  private static final int CHECK_ALL_LINES_DECREMENT = 4;
 
   /**
    * TODO.

@@ -326,43 +326,6 @@ public class BoogiePLEditor extends TextEditor {
     my_javaclass = jc;
   }
 
-//  private BCLocalVariable[] createLocalVariables(MethodGen m,
-//                                                 ConstantPoolGen cpGen) {
-//    LocalVariableGen[] locVarTable = m.getLocalVariables();
-//    if (locVarTable == null) {
-//      return null;
-//    }
-//    BCLocalVariable[] bclv = new BCLocalVariable[locVarTable.length];
-//    for (int i = 0; i < locVarTable.length; i++) {
-//      JavaType type = JavaType.getJavaType(locVarTable[i].getType());
-//      BCLocalVariable lv = new BCLocalVariable(locVarTable[i]
-//          .getLocalVariable(cpGen), type);
-//      bclv[i] = lv;
-//    }
-//    return bclv;
-//  }
-//
-//  private String addAnnot(Method method, ConstantPoolGen cpg,
-//                          BCClass bcc, String cn) throws IOException,
-//                          ReadAttributeException {
-//    //UmbraPlugin.messagelog(method.getAttributes().length +
-//                             " annotation(s):");
-//    if (method.getAttributes().length > 1) {
-//      Unknown att = (Unknown)method.getAttributes()[1];
-////      UmbraPlugin.messagelog(att.getBytes().length);
-////      UmbraPlugin.messagelog();
-////      for (int i = 0; i < att.getBytes().length; i++) {
-////        UmbraPlugin.messagelog.print(Integer.toHexString(
-////                                    (att.getBytes()[i] + 256) % 256) + " ");
-////      }
-////      UmbraPlugin.messagelog();
-//      MethodGen mg = new MethodGen(method, cn, cpg);
-//      BCLocalVariable[] bclv = createLocalVariables(mg, cpg);
-//      return AttributeReader.printAttribute(att, bcc, bclv);
-//    }
-//    return "";
-//  }
-
 //  /**
 //   * Computes position of the next instruction line in the BoogiePL method.
 //   *
