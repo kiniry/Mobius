@@ -217,6 +217,7 @@ public class BytecodeContribution extends ControlContribution {
       if (!my_bcc.allCorrect())
         displayError(an_event.fDocument, my_bcc.getFirstError());
       else displayCorrect(an_event.fDocument);
+      Global.bmlp.onChange(an_event);
     }
 
   }

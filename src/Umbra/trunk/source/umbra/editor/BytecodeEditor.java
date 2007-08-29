@@ -284,7 +284,8 @@ public class BytecodeEditor extends TextEditor {
 //    int off = 0;
     BCClass bcc;
     try {
-      bcc = new BCClass(jc);
+      bcc = new BCClass(jc, true);
+      Global.bmlp = new BMLParsing(bcc);
       //this is where the textual representation is generated
       //FIXME we have to make sure it makes sense!!!
       final char[] bccode = bcc.printCode().toCharArray();
