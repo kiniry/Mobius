@@ -154,17 +154,6 @@ public class BytecodeContribution extends ControlContribution {
     public final void documentAboutToBeChanged(final DocumentEvent an_event) {
       if (!my_ready_flag)
         init(an_event.fDocument); //this marks my_ready_flag as true
-      UmbraPlugin.messagelog("documentAboutToBeChanged " +
-                             an_event.getText());
-      UmbraPlugin.messagelog("documentAboutToBeChanged " +
-                             an_event.getModificationStamp());
-      UmbraPlugin.messagelog("documentAboutToBeChanged " +
-                             an_event.getOffset());
-      UmbraPlugin.messagelog("documentAboutToBeChanged " +
-                             an_event.getLength());
-      UmbraPlugin.messagelog("documentAboutToBeChanged " +
-                             an_event.getDocument().hashCode());
-      UmbraPlugin.LOG.flush();
       my_current_event = an_event;
 
       try {

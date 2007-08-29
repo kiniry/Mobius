@@ -105,23 +105,19 @@ public class ArrayInstruction extends StringInstruction {
    * @see BytecodeLineController#getInstruction()
    */
   public final Instruction getInstruction() {
-    //UmbraPlugin.messagelog("ArrayInstruction->getInstruction...");
     final String my_line_text = getMy_line_text();
     String an_ins_type = my_line_text.substring(my_line_text.indexOf("<") + 1,
                                         my_line_text.indexOf(">"));
     an_ins_type = an_ins_type.toUpperCase();
     if (getType(an_ins_type) == null) {
-      //UmbraPlugin.messagelog("   Wrong instruction argument!");
       return null;
     }
     final byte r = getType(an_ins_type).getType();
-    //&*
     final boolean isOK = correct();
     if (isOK) {
       if (getName().compareTo("newarray") == 0)
         return new NEWARRAY(r);
     }
-    //UmbraPlugin.messagelog("   Failed!");
     return null;
   }
 
@@ -142,15 +138,12 @@ public class ArrayInstruction extends StringInstruction {
     for (j = 0; j < s2.length; j++) {
       if ((s.indexOf(s2[j]) > 0) &&
           (s.indexOf(s2[j]) <= s.indexOf(":") + 1)) {
-        //UmbraPlugin.messagelog(s);
-        //UmbraPlugin.messagelog("array " + s);
         if (s.indexOf("<") < LESS_FORBIDDEN_BOUND) return false;
         if (s.indexOf(">") < GREATER_FORBIDDEN_BOUND) return false;
         // zmienione 7.26.15
         String ins_type = s.substring(s.indexOf("<") + 1, s.indexOf(">"));
         ins_type = ins_type.toUpperCase();
         if (getType(ins_type) == null) {
-          UmbraPlugin.messagelog("E04");
           return false;
         }
 

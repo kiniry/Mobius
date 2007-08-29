@@ -225,10 +225,6 @@ public abstract class BytecodeLineController {
             final ClassGen a_classgen,
             final boolean the_last,
             final LinkedList the_instructions, final int an_off) {
-    UmbraPlugin.messagelog("dispose(BytecodeLineController)" +
-                           ((InstructionLineController)(the_instructions.
-                                        get(an_off))).
-                                        getHandle().getInstruction().getName());
   }
 
   /**

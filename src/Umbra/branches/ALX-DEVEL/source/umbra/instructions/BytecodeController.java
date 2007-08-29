@@ -143,7 +143,7 @@ public class BytecodeController {
   }
 
   /**
-   * This method prints out to the standard output the
+   * This method prints out to the standard Umbra log the
    * list of all the incorrect instructions in the controller.
    */
   public final void showAllIncorrectLines()
@@ -239,8 +239,6 @@ public class BytecodeController {
     final MethodGen mg = new MethodGen(methods[a_methnum],
                                        a_cg.getClassName(), cpg);
     final InstructionList il = mg.getInstructionList();
-    UmbraPlugin.messagelog("method number[" + a_methnum + "]" + mg.getName() +
-                           "il=" + il.toString());
     InstructionHandle ih = il.getStart();
     for (int j = a_line; j < a_doc.getNumberOfLines() - 1; j++) {
       final String line_text = getLineText(a_doc, j);
@@ -575,11 +573,8 @@ public class BytecodeController {
     final int ppos = a_line.indexOf(":");
     if (ppos >= 0) { //nie >= czy jest : od 2 pozycji
       //tzn liczy chyba od zerowej czyli sprawdzaczy cyfra przed
-      //UmbraPlugin.messagelog("dwukropek" + ppos + line.charAt(0) +
-      //                       line.charAt(1));
       ok = true;
       for (i = 0; i < ppos; i++) {
-        //UmbraPlugin.messagelog("i" + i + line.charAt(i) + line.charAt(1));
         //sprawdza czy tylko numeryczne przed :
         if  (!(Character.isDigit(a_line.charAt(i)))) ok = false;
       }
@@ -767,7 +762,6 @@ public class BytecodeController {
     if (i == INIT_METHOD_EOF) return null;
     final String nl = a_line_text.substring(i + SINGLE_LINE_COMMENT_MARK_LEN,
                                             a_line_text.indexOf("\n"));
-    UmbraPlugin.messagelog(SINGLE_LINE_COMMENT_MARK + nl);
     return nl;
   }
 
@@ -898,7 +892,6 @@ public class BytecodeController {
         UmbraPlugin.messagelog("" + i + ". null");
         return;
       }
-      //if (line.index == index) {
       UmbraPlugin.messagelog("" + i + ". " + line.getName());
       final InstructionHandle ih = line.getHandle();
       if (ih == null) UmbraPlugin.messagelog("  handle - null");
@@ -912,7 +905,6 @@ public class BytecodeController {
         if (ih.getPrev() == null) UmbraPlugin.messagelog(" prev: null");
         else UmbraPlugin.messagelog(" prev: " + ih.getPrev().getPosition());
       }
-      //}
     }
   }
 }

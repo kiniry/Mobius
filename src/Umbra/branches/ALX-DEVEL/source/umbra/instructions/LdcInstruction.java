@@ -63,7 +63,8 @@ public class LdcInstruction extends OtherInstruction {
     final String licznik = "0123456789";
     int number;
     if (my_line_text.lastIndexOf("(") >= my_line_text.lastIndexOf(")")) {
-      UmbraPlugin.messagelog("linia jest niepoprawna nic nie tworzy " +
+      UmbraPlugin.messagelog("INFORMATION: the line is improper, it does not " +
+                             "create anything" +
                              my_line_text.lastIndexOf("(") + " " +
                              my_line_text.lastIndexOf(")"));
     } else {

@@ -75,7 +75,6 @@ public class FieldInstruction extends StringInstruction {
         int m, n, o;
         m = my_line_text.lastIndexOf("(");
         n = my_line_text.lastIndexOf(")");
-        //UmbraPlugin.messagelog(m + " " + n + " " + my_line_text);
         if (m + 1 >= n) return false;
         for (o = m + 1; o < n; o++) {
           if (!(Character.isDigit(my_line_text.charAt(o)))) {
