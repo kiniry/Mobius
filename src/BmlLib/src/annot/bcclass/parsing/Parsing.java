@@ -10,6 +10,7 @@ import org.antlr.runtime.RecognitionException;
 import annot.bcclass.BCClass;
 import annot.bcclass.BCMethod;
 import annot.bcclass.attributes.AssertTable;
+import annot.bcclass.attributes.BCAttribute;
 import annot.bcclass.attributes.BCPrintableAttribute;
 import annot.bcclass.attributes.LoopSpecification;
 
@@ -149,5 +150,16 @@ public class Parsing {
 
 	public BCPrintableAttribute parseAttribute(BCPrintableAttribute oldattr, String str) throws RecognitionException {
 		return parseAttribute(oldattr.method, oldattr.pcIndex, str);
+	}
+	
+	public BCPrintableAttribute checkSyntax(BCPrintableAttribute oldattr, String str) {
+		try {
+			BCPrintableAttribute newattr = parseAttribute(oldattr.method, oldattr.pcIndex, str);
+			newattr.line_start = oldattr.line_start;
+			newattr.line_end = oldattr.line_end;
+			return newattr;
+		} catch (RecognitionException e) {
+			return null;
+		}
 	}
 }

@@ -9,7 +9,7 @@ import annot.bcclass.BMLConfig;
  * 
  * @author Tomek
  */
-public class /*interface?*/ BCPrintableAttribute implements BCAttribute {
+public abstract class /*interface?*/ BCPrintableAttribute implements BCAttribute {
 
 	public BCMethod method = null;
 	public int pcIndex = -1;
@@ -23,4 +23,6 @@ public class /*interface?*/ BCPrintableAttribute implements BCAttribute {
 	public String printCode(BMLConfig conf) {
 		return "?";
 	}
+	
+	public abstract void replaceWith(BCPrintableAttribute attr);
 }

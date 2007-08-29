@@ -47,4 +47,12 @@ public class Assert extends BCPrintableAttribute {
 	public String printCode (BMLConfig conf) {
 		return conf.addComment("assert " + assertFormula.printLine(conf, 7));
 	}
+
+	@Override
+	public void replaceWith(BCPrintableAttribute attr) {
+		Assert[] at = method.getAssertTable().getAsserts();
+		for (int i=0; i<at.length; i++)
+			if (at[i] == this)
+				at[i] = (Assert)attr;
+	}
 }

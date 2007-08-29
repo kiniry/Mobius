@@ -1,6 +1,11 @@
 package annot.bcclass.attributes;
 
 public class ClassInvariant extends BCPrintableAttribute implements BCAttribute {
+
+	@Override
+	public void replaceWith(BCPrintableAttribute attr) {
+		// TODO Auto-generated method stub
+	}
 //    public static final int STATIC = 0;
 //
 //    public static final int INSTANCE = 1;

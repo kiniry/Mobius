@@ -71,4 +71,12 @@ public class SingleLoopSpecification extends BCPrintableAttribute {
 	public int getLoopIndex() {
 		return pcIndex;
 	}
+
+	@Override
+	public void replaceWith(BCPrintableAttribute attr) {
+		SingleLoopSpecification[] lt = method.getLoopSpecification().getLoopSpecifications();
+		for (int i=0; i<lt.length; i++)
+			if (lt[i] == this)
+				lt[i] = (SingleLoopSpecification)attr;
+	}
 }

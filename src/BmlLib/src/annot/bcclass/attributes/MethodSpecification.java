@@ -44,6 +44,11 @@ public class MethodSpecification extends BCPrintableAttribute implements BCAttri
 		}
 	}
 
+	@Override
+	public void replaceWith(BCPrintableAttribute attr) {
+		method.setMethodSpecification((MethodSpecification)attr);
+	}
+
 //
 //
 //	/**

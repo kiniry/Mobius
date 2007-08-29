@@ -1292,6 +1292,10 @@ public class BCMethod extends AccessFlags {
 	public MethodSpecification getMethodSpecification() {
 		return methodSpecification;
 	}
+
+	public void setMethodSpecification(MethodSpecification ms) {
+		methodSpecification = ms;
+	}
 	
 	public AssertTable getAssertTable() {
 		return assertTable;

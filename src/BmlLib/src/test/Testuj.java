@@ -12,9 +12,12 @@ import org.apache.bcel.util.SyntheticRepository;
 import annot.bcclass.BCClass;
 import annot.bcclass.BCMethod;
 import annot.bcclass.BMLConfig;
+import annot.bcclass.attributes.Assert;
 import annot.bcclass.attributes.BCPrintableAttribute;
+import annot.bcclass.attributes.SingleLoopSpecification;
 import annot.bcio.AttributeReader;
 import annot.bcio.ReadAttributeException;
+import annot.formula.Predicate0Ar;
 
 public class Testuj {
 
@@ -204,7 +207,7 @@ public class Testuj {
 		System.out.println("  parsing: "+bcc.parser.purge(str).substring(6) + (ok ? "" : " (err)"));
 		try {
 			BCMethod m = bcc.metody.elementAt(2);
-			BCPrintableAttribute old = new BCPrintableAttribute();
+			BCPrintableAttribute old = new Assert(Predicate0Ar.FALSE, 0, m);
 			old.method = m;
 			BMLConfig conf = new BMLConfig(bcc.getConstantPool());
 			if (m != null)

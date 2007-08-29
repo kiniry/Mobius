@@ -15,10 +15,14 @@ import org.apache.bcel.classfile.Unknown;
 import org.apache.bcel.generic.ConstantPoolGen;
 import org.apache.bcel.generic.MethodGen;
 
+import annot.bcclass.attributes.Assert;
 import annot.bcclass.attributes.BCAttribute;
+import annot.bcclass.attributes.BCPrintableAttribute;
 import annot.bcclass.attributes.ClassInvariant;
 import annot.bcclass.attributes.HistoryConstraints;
+import annot.bcclass.attributes.LoopSpecification;
 import annot.bcclass.attributes.SecondConstantPool;
+import annot.bcclass.attributes.SingleLoopSpecification;
 import annot.bcclass.parsing.Parsing;
 import annot.bcclass.utils.MethodSignature;
 import annot.bcexpression.BCLocalVariable;
@@ -79,6 +83,31 @@ public class BCClass {
 			e.printStackTrace();	// XXX: wywalic
 			throw new ReadAttributeException("Bd przy inicjalizacji metod");
 		}
+	}
+	
+	public BCPrintableAttribute[] getAllAttributes() {
+		Vector<BCPrintableAttribute> v = new Vector<BCPrintableAttribute>();
+		Iterator iter = metody.iterator();
+		while (iter.hasNext()) {
+			BCMethod m = (BCMethod)(iter.next());
+			v.add(m.getMethodSpecification());
+			if (m.getAssertTable() != null) {
+				Assert[] at = m.getAssertTable().getAsserts();
+				for (int i=0; i<at.length; i++)
+					v.add(at[i]);
+			}
+			if (m.getLoopSpecification() != null) {
+				SingleLoopSpecification[] lt = m.getLoopSpecification().getLoopSpecifications();
+				for (int i=0; i<lt.length; i++)
+					v.add(lt[i]);
+			}
+		}
+		BCPrintableAttribute[] arr = new BCPrintableAttribute[v.size()];
+		v.copyInto(arr);
+		String code = printCode();
+		for (int i=0; i<code.split("\n").length; i++)
+			parser.getAttributeAtLine(code, i);
+		return arr;
 	}
 	
 	public String printCode() {
