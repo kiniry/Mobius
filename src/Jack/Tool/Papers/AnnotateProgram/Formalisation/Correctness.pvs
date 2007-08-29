@@ -53,8 +53,34 @@ BEGIN
     FORALL (mp)(sMP : MPState, sAP : APState)(upd : [PState -> PState]) :
       related_states(mp)(sMP, sAP) IMPLIES
       NOT up?(ex(pstate(sAP))) IMPLIES
-        halted_implies_JMLExc(update_PState(sMP, upd), update_PState(sAP, upd))
+        halted_implies_JMLExc(mp)(update_PState(sMP, upd), 
+                                  update_PState(sAP, upd))
 
+  MP_modeled_preserved_by_catch : LEMMA % :-)
+    FORALL (mp)(sMP : MPState, sAP : APState) :
+      related_states(mp)(sMP, sAP) IMPLIES
+        MP_modeled?(mp)(update_PState(sMP, catch), update_PState(sAP, catch))
+
+  MP_modeled_preserved_by_raise : LEMMA % :-)
+    FORALL (mp)(sMP : MPState, sAP : APState, e : Excpt) :
+      related_states(mp)(sMP, sAP) IMPLIES
+        MP_modeled?(mp)(update_PState(sMP, raise(e)), 
+                        update_PState(sAP, raise(e)))
+
+  halted_implies_JMLExc_preserved_by_catch : LEMMA % :-)
+    FORALL (mp)(sMP : MPState, sAP : APState) :
+      related_states(mp)(sMP, sAP) IMPLIES
+      (up?(ex(pstate(sAP))) IMPLIES NOT down(ex(pstate(sAP))) = JMLExc) IMPLIES
+        halted_implies_JMLExc(mp)(update_PState(sMP, catch), 
+                                  update_PState(sAP, catch))
+
+  halted_implies_JMLExc_preserved_by_raise : LEMMA % :-)
+    FORALL (mp)(sMP : MPState, sAP : APState, e : Excpt) :
+      related_states(mp)(sMP, sAP) IMPLIES
+      NOT e = JMLExc IMPLIES
+      NOT up?(ex(pstate(sAP))) IMPLIES
+        halted_implies_JMLExc(mp)(update_PState(sMP, raise(e)), 
+                                  update_PState(sAP, raise(e)))
 
   % PROVE! This can be long. We have to show that the expressions and
   % statements of the mp are not modified, only new exprs and stmts are
@@ -73,6 +99,7 @@ BEGIN
 %        eval(b)(sMP) = eval(b)(sAP)
 
 
+
   % Main lemmas used in the proof of the correcteness_of_ann_program
 
   initial_states_are_equivalent : LEMMA % :-)
@@ -85,21 +112,21 @@ BEGIN
            (sMP1, sMP2 : MPState, sAP1, sAP2 : APState)
            (n1, n2 : nat) :
       well_behaved_MP(mp) IMPLIES
-      subset?(var_names(b), declared_var_names(program(mp))) IMPLIES
+      subset?(var_names(b), ext_declared_var_names(program(mp))) IMPLIES
       related_states(mp)(sMP1, sAP1) IMPLIES
       derive(mp)(b, sMP1, v1, sMP2)(n1) IMPLIES
       derive(ann_program(mp))(b, sAP1, v2, sAP2)(n2) IMPLIES
         related_states(mp)(sMP2, sAP2) AND v1 = v2
 
-  derive_maintains_related_states : THEOREM
-    FORALL (mp)(b : Body, v1, v2 : Val)
-           (sMP1, sMP2 : MPState, sAP1, sAP2 : APState)
-           (n1, n2 : nat) :
-      well_behaved_MP(mp) IMPLIES
-      related_states(mp)(sMP1, sAP1) IMPLIES
-      derive(mp)(b, sMP1, v1, sMP2)(n1) IMPLIES
-      derive(ann_program(mp))(b, sAP1, v2, sAP2)(n2) IMPLIES
-        related_states(mp)(sMP2, sAP2) AND v1 = v2
+%  derive_maintains_related_states : THEOREM
+%    FORALL (mp)(b : Body, v1, v2 : Val)
+%           (sMP1, sMP2 : MPState, sAP1, sAP2 : APState)
+%           (n1, n2 : nat) :
+%      well_behaved_MP(mp) IMPLIES
+%      related_states(mp)(sMP1, sAP1) IMPLIES
+%      derive(mp)(b, sMP1, v1, sMP2)(n1) IMPLIES
+%      derive(ann_program(mp))(b, sAP1, v2, sAP2)(n2) IMPLIES
+%        related_states(mp)(sMP2, sAP2) AND v1 = v2
 
 
   % The main result

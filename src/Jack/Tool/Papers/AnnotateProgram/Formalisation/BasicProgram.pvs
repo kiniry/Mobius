@@ -11,6 +11,11 @@ BEGIN
             derive_rec : derive_rec_type(n)) :
       s1 = s2 AND n = 1
 
+  execute_assert : (execute_assert_type) =
+    LAMBDA (p : Program, e : BoolExpr, s1, s2 : PState, n : nat,
+            derive_rec : derive_rec_type(n)) :
+      s1 = s2 AND n = 1
+
   execute_CaseJML : (execute_CaseJML_type) =
     LAMBDA (p : Program, bs : list[[BoolExpr, Stmt]], s1, s2 : PState,  
             n : nat,
@@ -24,7 +29,7 @@ BEGIN
 
   IMPORTING Semantics[Name, Program, PState, id, id, lookup,
                       LAMBDA(s : PState, upd : [PState -> PState]) : upd(s),
-                      execute_set, execute_CaseJML,
+                      execute_set, execute_assert, execute_CaseJML,
                       on_method_event, on_method_event, on_method_event]
 
   run_program(p : Program)(main : Method, arg : int)(this_val : (defined?))
@@ -34,7 +39,7 @@ BEGIN
 
   IMPORTING SemanticsProofs[Name, Program, PState, id, id, lookup,
                       LAMBDA(s : PState, upd : [PState -> PState]) : upd(s),
-                      execute_set, execute_CaseJML,
+                      execute_set, execute_assert, execute_CaseJML,
                       on_method_event, on_method_event, on_method_event]
 
   % MH: Missing is a proof that this semantics preserves wf_state 

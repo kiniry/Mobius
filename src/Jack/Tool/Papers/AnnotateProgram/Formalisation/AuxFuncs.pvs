@@ -58,9 +58,34 @@ BEGIN
     FORALL (xs : list[T]) :
       xs = null OR EXISTS (y : T, ys : list[T]) : xs = cons(y, ys)
 
-
+  
 END listfuncs
 
+list_map_funcs[T1, T2 : TYPE] : THEORY
+BEGIN
+
+  list_map_member : LEMMA % :-)
+    FORALL(xs : list[T1], x : T1, f : [T1 -> T2]) :
+      member(x, xs) IMPLIES member(f(x), map(f)(xs))
+
+END list_map_funcs
+
+
+list_of_set_funcs[T : TYPE] : THEORY
+BEGIN
+
+  list_to_union(l : list[set[T]]) : RECURSIVE set[T] =
+    IF null?(l)
+    THEN emptyset[T]
+    ELSE union(car(l), list_to_union(cdr(l)))
+    ENDIF
+  MEASURE length(l)
+
+  list_to_union_subset : LEMMA % :-)
+    FORALL(l : list[set[T]], x : set[T]) :
+      member(x, l) IMPLIES subset?(x, list_to_union(l))
+
+END list_of_set_funcs
 
 % NOT USED
 FunProp : THEORY

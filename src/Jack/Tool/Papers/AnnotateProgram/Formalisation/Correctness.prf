@@ -140,7 +140,7 @@
         NIL))
       NIL))
     NIL)
-   UNCHECKED
+   UNFINISHED
    ((|related_states| CONST-DECL "boolean" |Equivalence| NIL)
     (|AState| TYPE-EQ-DECL NIL |MVASemantics| NIL)
     (|Store| TYPE-EQ-DECL NIL |State| NIL)
@@ -200,7 +200,7 @@
         NIL))
       NIL))
     NIL)
-   UNCHECKED
+   UNFINISHED
    ((|MVA_cp_modeled?| CONST-DECL "boolean" |Equivalence| NIL)
     (|MVA_vars_modeled?| CONST-DECL "boolean" |Equivalence| NIL)
     (|MVA_cps_modeled?| CONST-DECL "boolean" |Equivalence| NIL)
@@ -225,7 +225,7 @@
         NIL))
       NIL))
     NIL)
-   UNCHECKED
+   UNFINISHED
    ((|related_states| CONST-DECL "boolean" |Equivalence| NIL)
     (|halted_implies_JMLExc| CONST-DECL "boolean" |Equivalence| NIL)
     (|update_PState| CONST-DECL "(update_PState_type)"
@@ -233,50 +233,119 @@
     (|update_PState| CONST-DECL "(update_PState_type)"
      |AnnotatedProgramSemantics| NIL))
    1004 5 T SHOSTAK))
- (|MP_modeled_preserved_by_assertion_checking| 0
-  (|MP_modeled_preserved_by_assertion_checking-2| NIL 3393591227 3394357957
+ (|MP_modeled_preserved_by_catch| 0
+  (|MP_modeled_preserved_by_catch-1| NIL 3397388161 3397388248
    ("" (SKOSIMP*)
-    (("" (EXPAND* "related_states" "check_assertion")
+    ((""
+      (EXPAND* "related_states" "MP_modeled?" "MVA_modeled?"
+       "Program_modeled?")
+      (("" (PROP)
+        (("1" (EXPAND "MVA_cp_modeled?")
+          (("1" (EXPAND "update_PState") (("1" (PROPAX) NIL NIL)) NIL)) NIL)
+         ("2" (EXPAND "MVA_cps_modeled?")
+          (("2" (EXPAND "update_PState") (("2" (PROPAX) NIL NIL)) NIL)) NIL)
+         ("3" (EXPAND "MVA_vars_modeled?")
+          (("3" (EXPAND "update_PState") (("3" (PROPAX) NIL NIL)) NIL)) NIL)
+         ("4" (EXPAND "update_PState") (("4" (ASSERT) NIL NIL)) NIL)
+         ("5" (EXPAND "Program_gvs_modeled?")
+          (("5" (EXPAND "update_PState") (("5" (PROPAX) NIL NIL)) NIL)) NIL))
+        NIL))
+      NIL))
+    NIL)
+   UNCHECKED
+   ((|Program_modeled?| CONST-DECL "boolean" |Equivalence| NIL)
+    (|MVA_modeled?| CONST-DECL "boolean" |Equivalence| NIL)
+    (|MP_modeled?| CONST-DECL "boolean" |Equivalence| NIL)
+    (|related_states| CONST-DECL "boolean" |Equivalence| NIL)
+    (|Program_gvs_modeled?| CONST-DECL "boolean" |Equivalence| NIL)
+    (|MVA_vars_modeled?| CONST-DECL "boolean" |Equivalence| NIL)
+    (|MVA_cps_modeled?| CONST-DECL "boolean" |Equivalence| NIL)
+    (|MVA_cp_modeled?| CONST-DECL "boolean" |Equivalence| NIL)
+    (|update_PState| CONST-DECL "(update_PState_type)"
+     |MonitoredProgramSemantics| NIL)
+    (|update_PState| CONST-DECL "(update_PState_type)"
+     |AnnotatedProgramSemantics| NIL))
+   8633 39 T SHOSTAK))
+ (|MP_modeled_preserved_by_raise| 0
+  (|MP_modeled_preserved_by_raise-1| NIL 3397388258 3397388285
+   ("" (SKOSIMP*)
+    ((""
+      (EXPAND* "related_states" "MP_modeled?" "MVA_modeled?"
+       "Program_modeled?")
+      (("" (PROP)
+        (("1" (EXPAND "MVA_cp_modeled?")
+          (("1" (EXPAND "update_PState") (("1" (PROPAX) NIL NIL)) NIL)) NIL)
+         ("2" (EXPAND "MVA_cps_modeled?")
+          (("2" (EXPAND "update_PState") (("2" (PROPAX) NIL NIL)) NIL)) NIL)
+         ("3" (EXPAND "MVA_vars_modeled?")
+          (("3" (EXPAND "update_PState") (("3" (PROPAX) NIL NIL)) NIL)) NIL)
+         ("4" (EXPAND "update_PState") (("4" (ASSERT) NIL NIL)) NIL)
+         ("5" (EXPAND "Program_gvs_modeled?")
+          (("5" (EXPAND "update_PState") (("5" (PROPAX) NIL NIL)) NIL)) NIL))
+        NIL))
+      NIL))
+    NIL)
+   UNCHECKED
+   ((|Program_modeled?| CONST-DECL "boolean" |Equivalence| NIL)
+    (|MVA_modeled?| CONST-DECL "boolean" |Equivalence| NIL)
+    (|MP_modeled?| CONST-DECL "boolean" |Equivalence| NIL)
+    (|related_states| CONST-DECL "boolean" |Equivalence| NIL)
+    (|Program_gvs_modeled?| CONST-DECL "boolean" |Equivalence| NIL)
+    (|MVA_vars_modeled?| CONST-DECL "boolean" |Equivalence| NIL)
+    (|MVA_cps_modeled?| CONST-DECL "boolean" |Equivalence| NIL)
+    (|MVA_cp_modeled?| CONST-DECL "boolean" |Equivalence| NIL)
+    (|update_PState| CONST-DECL "(update_PState_type)"
+     |MonitoredProgramSemantics| NIL)
+    (|update_PState| CONST-DECL "(update_PState_type)"
+     |AnnotatedProgramSemantics| NIL))
+   2712 37 T SHOSTAK))
+ (|halted_implies_JMLExc_preserved_by_catch| 0
+  (|halted_implies_JMLExc_preserved_by_catch-1| NIL 3397388295 3397388662
+   ("" (SKOSIMP*)
+    ((""
+      (EXPAND* "related_states" "halted_implies_JMLExc" "MVA_modeled?"
+       "Program_modeled?")
       (("" (FLATTEN)
-        (("" (SKOSIMP*)
-          (("" (INST -6 "v!1" "v!2" "tau1!1" "tau1!2")
-            (("" (ASSERT)
-              (("" (FLATTEN)
-                (("" (LIFT-IF)
-                  (("" (GROUND)
-                    (("" (USE "MP_modeled_preserved_by_update")
-                      (("" (EXPAND "related_states")
-                        (("" (LEMMA "MP_modeled_implies_same_exception")
-                          (("" (ASSERT) (("" (POSTPONE) NIL NIL)) NIL)) NIL))
-                        NIL))
-                      NIL))
-                    NIL))
-                  NIL))
-                NIL))
+        (("" (EXPAND "update_PState")
+          (("" (ASSERT)
+            (("" (EXPAND "catch")
+              (("" (ASSERT) (("" (FLATTEN) (("" (ASSERT) NIL NIL)) NIL)) NIL))
               NIL))
             NIL))
           NIL))
         NIL))
       NIL))
     NIL)
-   UNFINISHED NIL 481 481 T NIL)
-  (|MP_modeled_preserved_by_assertion_checking-1| NIL 3393591178 3393591212
+   UNCHECKED
+   ((|halted_implies_JMLExc| CONST-DECL "boolean" |Equivalence| NIL)
+    (|related_states| CONST-DECL "boolean" |Equivalence| NIL)
+    (|update_PState| CONST-DECL "(update_PState_type)"
+     |AnnotatedProgramSemantics| NIL)
+    (|update_PState| CONST-DECL "(update_PState_type)"
+     |MonitoredProgramSemantics| NIL)
+    (|catch| CONST-DECL "PState" |State| NIL))
+   4425 59 T SHOSTAK))
+ (|halted_implies_JMLExc_preserved_by_raise| 0
+  (|halted_implies_JMLExc_preserved_by_raise-1| NIL 3397388495 3397388580
    ("" (SKOSIMP*)
-    (("" (EXPAND* "related_states" "check_assertion")
+    ((""
+      (EXPAND* "related_states" "halted_implies_JMLExc" "MVA_modeled?"
+       "Program_modeled?")
       (("" (FLATTEN)
-        (("" (SKOSIMP*)
-          (("" (INST -6 "v!1" "v!2" "tau1!1" "tau1!2")
-            (("" (ASSERT)
-              (("" (FLATTEN)
-                (("" (LIFT-IF)
-                  (("" (GROUND)
-                    (("" (USE "MP_modeled_preserved_by_update2")
-                      (("" (EXPAND "related_states")
-                        (("" (LEMMA "MP_modeled_implies_same_exception")
-                          (("" (INST -1 "tau1!1" "tau1!2")
-                            (("" (ASSERT) NIL))))))))))))))))))))))))))
+        (("" (EXPAND "update_PState")
+          (("" (EXPAND "raise") (("" (ASSERT) NIL NIL)) NIL)) NIL))
+        NIL))
+      NIL))
     NIL)
-   UNFINISHED NIL 31813 660 T NIL))
+   UNCHECKED
+   ((|raise| CONST-DECL "PState" |State| NIL)
+    (|update_PState| CONST-DECL "(update_PState_type)"
+     |MonitoredProgramSemantics| NIL)
+    (|update_PState| CONST-DECL "(update_PState_type)"
+     |AnnotatedProgramSemantics| NIL)
+    (|related_states| CONST-DECL "boolean" |Equivalence| NIL)
+    (|halted_implies_JMLExc| CONST-DECL "boolean" |Equivalence| NIL))
+   284 29 T SHOSTAK))
  (|initial_states_are_equivalent| 0
   (|initial_states_are_equivalent-2| NIL 3396612347 3396761595
    ("" (SKOSIMP*)
@@ -1278,15 +1347,12 @@
     (|Int| ADT-CONSTRUCTOR-DECL "[int -> (Int?)]" |Val_adt| NIL)
     (>= CONST-DECL "bool" |reals| NIL)
     (|nat| NONEMPTY-TYPE-EQ-DECL NIL |naturalnumbers| NIL)
-    (|injective?| CONST-DECL "bool" |functions| NIL)
-    (|unique| CONST-DECL "(injective?[CP, nat])" |AnnotateProgram| NIL) NIL
+    (|injective?| CONST-DECL "bool" |functions| NIL) NIL NIL
     (PRED TYPE-EQ-DECL NIL |defined_types| NIL)
     (|finite_emptyset| NAME-JUDGEMENT "finite_set" |finite_sets| NIL)
     (|emptyset| CONST-DECL "set" |sets| NIL)
     (|union_empty| FORMULA-DECL NIL |sets_lemmas| NIL) NIL
-    (|member| CONST-DECL "bool" |sets| NIL)
-    (|new_gvds_as_union| FORMULA-DECL NIL |AnnotateProgram| NIL)
-    (|wf_new_vars| FORMULA-DECL NIL |AnnotateProgram| NIL)
+    (|member| CONST-DECL "bool" |sets| NIL) NIL NIL
     (|nonempty_add| FORMULA-DECL NIL |sets_lemmas| NIL)
     (|nonempty_finite_union1| APPLICATION-JUDGEMENT "non_empty_finite_set"
      |finite_sets| NIL)
@@ -1300,9 +1366,7 @@
      |finite_sets| NIL)
     (|nonempty_add_finite| APPLICATION-JUDGEMENT "non_empty_finite_set"
      |finite_sets| NIL)
-    (|name_of| CONST-DECL "(injective?[CP, (legal_names(mp))])"
-     |AnnotateProgram| NIL)
-    (|legal_names| CONST-DECL "set[Name]" |VariableNames| NIL)
+    NIL (|legal_names| CONST-DECL "set[Name]" |VariableNames| NIL)
     (|add| CONST-DECL "(nonempty?)" |sets| NIL)
     (|nonempty?| CONST-DECL "bool" |sets| NIL)
     (|union_commutative| FORMULA-DECL NIL |sets_lemmas| NIL)
@@ -1313,8 +1377,7 @@
      NIL)
     NIL
     (|declared_var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
-    (|reserved_words| CONST-DECL "finite_set[Name]" |Program| NIL)
-    (|new_gvds| CONST-DECL "finite_set[FieldDecl]" |AnnotateProgram| NIL)
+    (|reserved_words| CONST-DECL "finite_set[Name]" |Program| NIL) NIL
     (|getGhostDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
     (|is_finite| CONST-DECL "bool" |finite_sets| NIL)
     (|union| CONST-DECL "set" |sets| NIL)
@@ -1333,8 +1396,7 @@
     (|wf_MVA| CONST-DECL "boolean" |WellFormedMVA| NIL) NIL
     (|choose| CONST-DECL "(p)" |sets| NIL)
     (|wf_vdsA| CONST-DECL "boolean" |WellFormedMVA| NIL)
-    (|MVA_vars_modeled?| CONST-DECL "boolean" |Equivalence| NIL)
-    (|halted| CONST-DECL "Name" |AnnotateProgram| NIL)
+    (|MVA_vars_modeled?| CONST-DECL "boolean" |Equivalence| NIL) NIL
     (|ann_class| CONST-DECL "Class" |AnnotateProgram| NIL)
     (|subset?| CONST-DECL "bool" |sets| NIL)
     (IMPLIES CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
@@ -1658,338 +1720,9 @@
       NIL))
     NIL)
    UNFINISHED NIL 203163 4418 T SHOSTAK))
- (|derive_maintains_MP_modeled?| 0
-  (|derive_maintains_MP_modeled?-1| NIL 3396762859 3396771308
-   ("" (SKOSIMP)
-    ((""
-      (LEMMA
-       "wf_induction[[nat, nat], LAMBDA(i, j : [nat, nat]) : proj_1(i) < proj_1(j) AND proj_2(i) < proj_2(j)]")
-      (("1"
-        (INST -1 "LAMBDA(n1, n2 : nat) : FORALL (b: Body, v1, v2: Val)
-                                 (sMP1, sMP2: MPState, sAP1, sAP2: APState):
-                            wf_state(mp!1)(sMP1) IMPLIES
-                             wf_state(ann_program(mp!1))(sAP1) IMPLIES
-                              well_behaved_MP(mp!1) IMPLIES
-                               MP_modeled?(mp!1)(sMP1, sAP1) IMPLIES
-                                derive(mp!1)(b, sMP1, v1, sMP2)(n1) IMPLIES
-                                 derive(ann_program(mp!1))(b, sAP1, v2, sAP2)(n2) IMPLIES
-                                  wf_state(mp!1)(sMP2) AND wf_state(ann_program(mp!1))(sAP2) AND MP_modeled?(mp!1)(sMP2, sAP2)")
-        (("1" (ASSERT)
-          (("1" (SPLIT -1)
-            (("1" (SKOSIMP*)
-              (("1" (INST -1 "(n1!1, n2!1)")
-                (("1" (INST?)
-                  (("1" (INST?) (("1" (INST?) (("1" (ASSERT) NIL NIL)) NIL))
-                    NIL))
-                  NIL))
-                NIL))
-              NIL)
-             ("2" (HIDE 2)
-              (("2" (SKOSIMP*)
-                (("2" (USE "MP_modeled_implies_same_exception")
-                  (("2" (ASSERT)
-                    (("2" (EXPAND "derive" -7)
-                      (("2" (EXPAND "derive" -8)
-                        (("2" (REPLACE -1)
-                          (("2" (SPLIT -7)
-                            (("1"
-                              (APPLY
-                               (THEN (FLATTEN) (ASSERT) (FLATTEN) (ASSERT)))
-                              NIL NIL)
-                             ("2"
-                              (APPLY
-                               (THEN (FLATTEN) (ASSERT) (FLATTEN) (ASSERT)))
-                              (("2" (LIFT-IF)
-                                (("2" (SPLIT -1)
-                                  (("1"
-                                    (APPLY
-                                     (THEN (FLATTEN) (ASSERT) (FLATTEN)
-                                      (ASSERT)))
-                                    NIL NIL)
-                                   ("2"
-                                    (APPLY
-                                     (THEN (FLATTEN) (ASSERT) (SPLIT -1)))
-                                    (("1"
-                                      (APPLY
-                                       (THEN (FLATTEN) (ASSERT) (FLATTEN)
-                                        (ASSERT)))
-                                      (("1" (SKOSIMP*)
-                                        (("1" (INST-CP -7 "(m1!1, m1!2)")
-                                          (("1" (ASSERT)
-                                            (("1" (APPLY (REPEAT (INST? -8)))
-                                              (("1" (ASSERT)
-                                                (("1" (FLATTEN)
-                                                  (("1"
-                                                    (INST-CP -7 "(m2!1, m2!2)")
-                                                    (("1" (ASSERT)
-                                                      (("1"
-                                                        (APPLY
-                                                         (REPEAT (INST? -8)))
-                                                        (("1" (ASSERT) NIL
-                                                          NIL))
-                                                        NIL))
-                                                      NIL))
-                                                    NIL))
-                                                  NIL))
-                                                NIL))
-                                              NIL))
-                                            NIL))
-                                          NIL))
-                                        NIL))
-                                      NIL)
-                                     ("2"
-                                      (APPLY
-                                       (THEN (FLATTEN) (ASSERT) (SPLIT -1)))
-                                      (("1"
-                                        (APPLY
-                                         (THEN (FLATTEN) (ASSERT) (FLATTEN)
-                                          (ASSERT)))
-                                        NIL NIL)
-                                       ("2"
-                                        (APPLY
-                                         (THEN (FLATTEN) (ASSERT) (SPLIT -1)))
-                                        (("1"
-                                          (APPLY
-                                           (THEN (FLATTEN) (ASSERT) (FLATTEN)
-                                            (ASSERT)))
-                                          NIL NIL)
-                                         ("2"
-                                          (APPLY
-                                           (THEN (FLATTEN) (ASSERT)
-                                            (SPLIT -1)))
-                                          (("1"
-                                            (APPLY
-                                             (THEN (FLATTEN) (ASSERT) (FLATTEN)
-                                              (ASSERT)))
-                                            NIL NIL)
-                                           ("2"
-                                            (APPLY
-                                             (THEN (FLATTEN) (ASSERT)
-                                              (SPLIT -1)))
-                                            (("1"
-                                              (APPLY
-                                               (THEN (FLATTEN) (ASSERT)
-                                                (FLATTEN) (ASSERT)))
-                                              (("1" (SKOSIMP*)
-                                                (("1"
-                                                  (INST -6
-                                                   "(x!1`1 - 1, x!1`2 - 1)")
-                                                  (("1" (ASSERT)
-                                                    (("1"
-                                                      (APPLY
-                                                       (REPEAT (INST? -6)))
-                                                      (("1" (ASSERT) NIL NIL))
-                                                      NIL))
-                                                    NIL))
-                                                  NIL))
-                                                NIL))
-                                              NIL)
-                                             ("2"
-                                              (APPLY
-                                               (THEN (FLATTEN) (ASSERT)
-                                                (SPLIT -1)))
-                                              (("1"
-                                                (APPLY
-                                                 (THEN (FLATTEN) (ASSERT)
-                                                  (FLATTEN) (ASSERT)))
-                                                (("1" (SKOSIMP*)
-                                                  (("1"
-                                                    (INST-CP -7 "(m1!1, m1!2)")
-                                                    (("1" (ASSERT)
-                                                      (("1"
-                                                        (APPLY
-                                                         (REPEAT (INST? -8)))
-                                                        (("1" (ASSERT)
-                                                          (("1" (FLATTEN)
-                                                            (("1"
-                                                              (INST -7
-                                                               "(m2!1, m2!2)")
-                                                              (("1" (ASSERT)
-                                                                (("1"
-                                                                  (APPLY
-                                                                   (REPEAT
-                                                                    (INST?
-                                                                     -7)))
-                                                                  (("1"
-                                                                    (ASSERT)
-                                                                    NIL NIL))
-                                                                  NIL))
-                                                                NIL))
-                                                              NIL))
-                                                            NIL))
-                                                          NIL))
-                                                        NIL))
-                                                      NIL))
-                                                    NIL))
-                                                  NIL))
-                                                NIL)
-                                               ("2"
-                                                (APPLY
-                                                 (THEN (FLATTEN) (ASSERT)
-                                                  (SPLIT -1)))
-                                                (("1"
-                                                  (APPLY
-                                                   (THEN (FLATTEN) (ASSERT)
-                                                    (FLATTEN) (ASSERT)))
-                                                  (("1" (SKOSIMP*)
-                                                    (("1"
-                                                      (INST-CP -7
-                                                       "(m1!1, m1!2)")
-                                                      (("1" (ASSERT)
-                                                        (("1"
-                                                          (APPLY
-                                                           (REPEAT (INST? -8)))
-                                                          (("1" (ASSERT)
-                                                            (("1" (FLATTEN)
-                                                              (("1"
-                                                                (INST -7
-                                                                 "(m2!1, m2!2)")
-                                                                (("1" (ASSERT)
-                                                                  (("1"
-                                                                    (APPLY
-                                                                     (REPEAT
-                                                                      (INST?
-                                                                       -7)))
-                                                                    (("1"
-                                                                      (ASSERT)
-                                                                      NIL NIL))
-                                                                    NIL))
-                                                                  NIL))
-                                                                NIL))
-                                                              NIL))
-                                                            NIL))
-                                                          NIL))
-                                                        NIL))
-                                                      NIL))
-                                                    NIL))
-                                                  NIL)
-                                                 ("2"
-                                                  (APPLY
-                                                   (THEN (FLATTEN) (ASSERT)
-                                                    (SPLIT -1)))
-                                                  (("1"
-                                                    (APPLY
-                                                     (THEN (FLATTEN) (ASSERT)
-                                                      (FLATTEN) (ASSERT)))
-                                                    NIL NIL)
-                                                   ("2"
-                                                    (APPLY
-                                                     (THEN (FLATTEN) (ASSERT)
-                                                      (SPLIT -1)))
-                                                    (("1"
-                                                      (APPLY
-                                                       (THEN (FLATTEN) (ASSERT)
-                                                        (FLATTEN) (ASSERT)))
-                                                      NIL NIL)
-                                                     ("2"
-                                                      (APPLY
-                                                       (THEN (FLATTEN) (ASSERT)
-                                                        (SPLIT -1)))
-                                                      (("1"
-                                                        (APPLY
-                                                         (THEN (FLATTEN)
-                                                          (ASSERT) (FLATTEN)
-                                                          (ASSERT)))
-                                                        NIL NIL)
-                                                       ("2"
-                                                        (APPLY
-                                                         (THEN (FLATTEN)
-                                                          (ASSERT) (SPLIT -1)))
-                                                        (("1"
-                                                          (APPLY
-                                                           (THEN (FLATTEN)
-                                                            (ASSERT) (FLATTEN)
-                                                            (ASSERT)))
-                                                          (("1" (SKOSIMP*)
-                                                            (("1"
-                                                              (INST -6
-                                                               "(x!1`1 - 1, x!1`2 - 1)")
-                                                              (("1" (ASSERT)
-                                                                (("1"
-                                                                  (APPLY
-                                                                   (REPEAT
-                                                                    (INST?
-                                                                     -6)))
-                                                                  (("1"
-                                                                    (ASSERT)
-                                                                    (("1"
-                                                                      (FLATTEN)
-                                                                      (("1"
-                                                                        (USE
-                                                                         " MP_modeled_implies_same_exception")
-                                                                        (("1"
-                                                                          (ASSERT)
-                                                                          (("1"
-                                                                            (REPLACE
-                                                                             -1)
-                                                                            (("1"
-                                                                              (LIFT-IF)
-                                                                              (("1"
-                                                                                (SPLIT
-                                                                                 -5)
-                                                                                (("1"
-                                                                                  (FLATTEN)
-                                                                                  (("1"
-                                                                                    (ASSERT)
-                                                                                    NIL
-                                                                                    NIL))
-                                                                                  NIL)
-                                                                                 ("2"
-                                                                                  (FLATTEN)
-                                                                                  (("2"
-                                                                                    (ASSERT)
-                                                                                    (("2"
-                                                                                      (POSTPONE)
-                                                                                      NIL
-                                                                                      NIL))
-                                                                                    NIL))
-                                                                                  NIL))
-                                                                                NIL))
-                                                                              NIL))
-                                                                            NIL))
-                                                                          NIL))
-                                                                        NIL))
-                                                                      NIL))
-                                                                    NIL))
-                                                                  NIL))
-                                                                NIL))
-                                                              NIL))
-                                                            NIL))
-                                                          NIL)
-                                                         ("2" (POSTPONE) NIL
-                                                          NIL))
-                                                        NIL))
-                                                      NIL))
-                                                    NIL))
-                                                  NIL))
-                                                NIL))
-                                              NIL))
-                                            NIL))
-                                          NIL))
-                                        NIL))
-                                      NIL))
-                                    NIL))
-                                  NIL))
-                                NIL))
-                              NIL))
-                            NIL))
-                          NIL))
-                        NIL))
-                      NIL))
-                    NIL))
-                  NIL))
-                NIL))
-              NIL))
-            NIL))
-          NIL))
-        NIL)
-       ("2" (POSTPONE) NIL NIL))
-      NIL))
-    NIL)
-   UNFINISHED NIL 105519 2831 T NIL))
  (|derive_maintains_related_states_for_unchanged_program| 0
   (|derive_maintains_related_states_for_unchanged_program-1| NIL 3396778537
-   3396785870
+   3397375312
    ("" (SKOSIMP)
     ((""
       (LEMMA
@@ -2132,9 +1865,17 @@
                                                     (INST -8 "varname(b!1)")
                                                     (("1" (ASSERT)
                                                       (("1"
-                                                        (EXPAND "var_names")
-                                                        (("1" (EXPAND "some")
-                                                          (("1" (PROPAX) NIL
+                                                        (EXPAND "var_names" 5)
+                                                        (("1" (EXPAND "union")
+                                                          (("1"
+                                                            (EXPAND "member")
+                                                            (("1" (ASSERT)
+                                                              (("1"
+                                                                (EXPAND "some")
+                                                                (("1" (PROPAX)
+                                                                  NIL NIL))
+                                                                NIL))
+                                                              NIL))
                                                             NIL))
                                                           NIL))
                                                         NIL))
@@ -2460,8 +2201,13 @@
                                                                       (EXPAND
                                                                        "some")
                                                                       (("1"
-                                                                        (PROPAX)
-                                                                        NIL
+                                                                        (AUTO-REWRITE
+                                                                         "union"
+                                                                         "member")
+                                                                        (("1"
+                                                                          (ASSERT)
+                                                                          NIL
+                                                                          NIL))
                                                                         NIL))
                                                                       NIL))
                                                                     NIL))
@@ -2916,8 +2662,93 @@
                                                                   (("1"
                                                                     (SKOSIMP*)
                                                                     (("1"
-                                                                      (POSTPONE)
-                                                                      NIL NIL))
+                                                                      (INST-CP
+                                                                       -16
+                                                                       "(m1!1, m1!2)")
+                                                                      (("1"
+                                                                        (ASSERT)
+                                                                        (("1"
+                                                                          (APPLY
+                                                                           (REPEAT
+                                                                            (INST?
+                                                                             -17
+                                                                             :WHERE
+                                                                             (-3
+                                                                              -22))))
+                                                                          (("1"
+                                                                            (ASSERT)
+                                                                            (("1"
+                                                                              (APPLY
+                                                                               (THEN
+                                                                                (USE
+                                                                                 "subterm_subset_of_var"
+                                                                                 ("b1"
+                                                                                  "b!1"))
+                                                                                (EXPAND
+                                                                                 "<<")
+                                                                                (ASSERT)
+                                                                                (ASSERT)))
+                                                                              (("1"
+                                                                                (FLATTEN)
+                                                                                (("1"
+                                                                                  (INST-CP
+                                                                                   -17
+                                                                                   "(m2!1, m2!2)")
+                                                                                  (("1"
+                                                                                    (ASSERT)
+                                                                                    (("1"
+                                                                                      (APPLY
+                                                                                       (REPEAT
+                                                                                        (INST?
+                                                                                         -18
+                                                                                         :WHERE
+                                                                                         (-5
+                                                                                          -26))))
+                                                                                      (("1"
+                                                                                        (ASSERT)
+                                                                                        (("1"
+                                                                                          (APPLY
+                                                                                           (THEN
+                                                                                            (USE
+                                                                                             "subterm_subset_of_var"
+                                                                                             ("b1"
+                                                                                              "b!1"
+                                                                                              "b2"
+                                                                                              "arg(b!1)"))
+                                                                                            (EXPAND
+                                                                                             "<<")
+                                                                                            (ASSERT)
+                                                                                            (ASSERT)))
+                                                                                          (("1"
+                                                                                            (FLATTEN)
+                                                                                            (("1"
+                                                                                              (CASE
+                                                                                                  "related_states(mp!1)(tau3!1, tau3!2)")
+                                                                                              (("1"
+                                                                                                (COMMENT
+                                                                                                 "here we would use lemma on on_method_entry")
+                                                                                                (("1"
+                                                                                                  (POSTPONE)
+                                                                                                  NIL
+                                                                                                  ";;; here we would use lemma on on_method_entry"))
+                                                                                                NIL)
+                                                                                               ("2"
+                                                                                                (POSTPONE)
+                                                                                                NIL
+                                                                                                NIL))
+                                                                                              NIL))
+                                                                                            NIL))
+                                                                                          NIL))
+                                                                                        NIL))
+                                                                                      NIL))
+                                                                                    NIL))
+                                                                                  NIL))
+                                                                                NIL))
+                                                                              NIL))
+                                                                            NIL))
+                                                                          NIL))
+                                                                        NIL))
+                                                                      NIL))
                                                                     NIL))
                                                                   NIL)
                                                                  ("2"
@@ -3494,100 +3325,126 @@
                                                                                 (FLATTEN)
                                                                                 (ASSERT)))
                                                                               (("1"
-                                                                                (EXPAND
-                                                                                 "execute_set")
+                                                                                (USE
+                                                                                 "derive_yields_wf_state_MP"
+                                                                                 ("sigma1"
+                                                                                  "sMP1!1"
+                                                                                  "sigma2"
+                                                                                  "sMP2!1"))
                                                                                 (("1"
-                                                                                  (SKOSIMP*)
+                                                                                  (USE
+                                                                                   "derive_yields_wf_state_AP"
+                                                                                   ("sigma1"
+                                                                                    "sAP1!1"
+                                                                                    "sigma2"
+                                                                                    "sAP2!1"
+                                                                                    "v"
+                                                                                    "v2!1"
+                                                                                    "n"
+                                                                                    "x!1`2"))
                                                                                   (("1"
-                                                                                    (INST
-                                                                                     -8
-                                                                                     "(x!1`1 - 1, x!1`2 - 1)")
+                                                                                    (TYPEPRED
+                                                                                     "mp!1")
                                                                                     (("1"
-                                                                                      (ASSERT)
+                                                                                      (USE
+                                                                                       "ann_program_yields_wf_program")
                                                                                       (("1"
-                                                                                        (APPLY
-                                                                                         (REPEAT
-                                                                                          (INST?
-                                                                                           -8
-                                                                                           :WHERE
-                                                                                           (-4
-                                                                                            -14))))
+                                                                                        (ASSERT)
                                                                                         (("1"
-                                                                                          (ASSERT)
+                                                                                          (COPY
+                                                                                           -14)
                                                                                           (("1"
-                                                                                            (APPLY
-                                                                                             (THEN
-                                                                                              (USE
-                                                                                               "subterm_subset_of_var"
-                                                                                               ("b1"
-                                                                                                "b!1"))
-                                                                                              (EXPAND
-                                                                                               "<<")
-                                                                                              (ASSERT)
-                                                                                              (ASSERT)))
+                                                                                            (EXPAND
+                                                                                             "related_states"
+                                                                                             -1)
                                                                                             (("1"
                                                                                               (FLATTEN)
                                                                                               (("1"
                                                                                                 (ASSERT)
                                                                                                 (("1"
-                                                                                                  (APPLY
-                                                                                                   (THEN
-                                                                                                    (USE
-                                                                                                     "related_states_implies_same_exception")
-                                                                                                    (ASSERT)
-                                                                                                    (REPLACE
-                                                                                                     -1)))
+                                                                                                  (EXPAND
+                                                                                                   "execute_set")
                                                                                                   (("1"
-                                                                                                    (LIFT-IF)
+                                                                                                    (SKOSIMP*)
                                                                                                     (("1"
-                                                                                                      (APPLY
-                                                                                                       (BRANCH
-                                                                                                        (SPLIT
-                                                                                                         -7)
-                                                                                                        ((THEN
-                                                                                                          (FLATTEN)
-                                                                                                          (ASSERT)))))
+                                                                                                      (INST
+                                                                                                       -17
+                                                                                                       "(x!1`1 -1, x!1`2 - 1)")
                                                                                                       (("1"
-                                                                                                        (EXPAND
-                                                                                                         "related_states"
-                                                                                                         23)
+                                                                                                        (ASSERT)
                                                                                                         (("1"
-                                                                                                          (SPLIT
-                                                                                                           23)
+                                                                                                          (APPLY
+                                                                                                           (REPEAT
+                                                                                                            (INST?
+                                                                                                             -17
+                                                                                                             :WHERE
+                                                                                                             (-13
+                                                                                                              -23))))
                                                                                                           (("1"
-                                                                                                            (COMMENT
-                                                                                                             "needs calm thinking")
+                                                                                                            (ASSERT)
                                                                                                             (("1"
-                                                                                                              (POSTPONE)
-                                                                                                              NIL
-                                                                                                              ";;; needs calm thinking"))
-                                                                                                            NIL)
-                                                                                                           ("2"
-                                                                                                            (COMMENT
-                                                                                                             "needs calm thinking")
-                                                                                                            (("2"
-                                                                                                              (POSTPONE)
-                                                                                                              NIL
-                                                                                                              ";;; needs calm thinking"))
-                                                                                                            NIL)
-                                                                                                           ("3"
-                                                                                                            (COMMENT
-                                                                                                             "needs property")
-                                                                                                            (("3"
-                                                                                                              (POSTPONE)
-                                                                                                              NIL
-                                                                                                              ";;; needs property"))
-                                                                                                            NIL)
-                                                                                                           ("4"
-                                                                                                            (POSTPONE)
-                                                                                                            NIL
-                                                                                                            NIL)
-                                                                                                           ("5"
-                                                                                                            (EXPAND
-                                                                                                             "return_of_stmt")
-                                                                                                            (("5"
-                                                                                                              (ASSERT)
-                                                                                                              NIL
+                                                                                                              (APPLY
+                                                                                                               (THEN
+                                                                                                                (USE
+                                                                                                                 "subterm_subset_of_var"
+                                                                                                                 ("b1"
+                                                                                                                  "b!1"))
+                                                                                                                (EXPAND
+                                                                                                                 "<<")
+                                                                                                                (ASSERT)
+                                                                                                                (ASSERT)))
+                                                                                                              (("1"
+                                                                                                                (FLATTEN)
+                                                                                                                (("1"
+                                                                                                                  (ASSERT)
+                                                                                                                  (("1"
+                                                                                                                    (APPLY
+                                                                                                                     (THEN
+                                                                                                                      (USE
+                                                                                                                       "related_states_implies_same_exception")
+                                                                                                                      (ASSERT)
+                                                                                                                      (REPLACE
+                                                                                                                       -1)))
+                                                                                                                    (("1"
+                                                                                                                      (LIFT-IF)
+                                                                                                                      (("1"
+                                                                                                                        (APPLY
+                                                                                                                         (BRANCH
+                                                                                                                          (SPLIT
+                                                                                                                           -16)
+                                                                                                                          ((THEN
+                                                                                                                            (FLATTEN)
+                                                                                                                            (ASSERT)))))
+                                                                                                                        (("1"
+                                                                                                                          (EXPAND
+                                                                                                                           "related_states"
+                                                                                                                           23)
+                                                                                                                          (("1"
+                                                                                                                            (SPLIT
+                                                                                                                             23)
+                                                                                                                            (("1"
+                                                                                                                              (POSTPONE)
+                                                                                                                              NIL
+                                                                                                                              NIL)
+                                                                                                                             ("2"
+                                                                                                                              (POSTPONE)
+                                                                                                                              NIL
+                                                                                                                              NIL)
+                                                                                                                             ("3"
+                                                                                                                              (EXPAND
+                                                                                                                               "return_of_stmt")
+                                                                                                                              (("3"
+                                                                                                                                (ASSERT)
+                                                                                                                                NIL
+                                                                                                                                NIL))
+                                                                                                                              NIL))
+                                                                                                                            NIL))
+                                                                                                                          NIL))
+                                                                                                                        NIL))
+                                                                                                                      NIL))
+                                                                                                                    NIL))
+                                                                                                                  NIL))
+                                                                                                                NIL))
                                                                                                               NIL))
                                                                                                             NIL))
                                                                                                           NIL))
@@ -3897,12 +3754,370 @@
                                                                                                     (("1"
                                                                                                       (LIFT-IF)
                                                                                                       (("1"
-                                                                                                        (COMMENT
-                                                                                                         "finish tomorrow")
+                                                                                                        (SPLIT
+                                                                                                         -7)
                                                                                                         (("1"
+                                                                                                          (FLATTEN)
+                                                                                                          (("1"
+                                                                                                            (ASSERT)
+                                                                                                            (("1"
+                                                                                                              (INST-CP
+                                                                                                               -12
+                                                                                                               "(m2!1, m2!2)")
+                                                                                                              (("1"
+                                                                                                                (ASSERT)
+                                                                                                                (("1"
+                                                                                                                  (APPLY
+                                                                                                                   (REPEAT
+                                                                                                                    (INST?
+                                                                                                                     -13
+                                                                                                                     :WHERE
+                                                                                                                     (-2
+                                                                                                                      -21))))
+                                                                                                                  (("1"
+                                                                                                                    (ASSERT)
+                                                                                                                    (("1"
+                                                                                                                      (APPLY
+                                                                                                                       (THEN
+                                                                                                                        (USE
+                                                                                                                         "subterm_subset_of_var"
+                                                                                                                         ("b1"
+                                                                                                                          "b!1"
+                                                                                                                          "b2"
+                                                                                                                          "catch(b!1)"))
+                                                                                                                        (EXPAND
+                                                                                                                         "<<")
+                                                                                                                        (ASSERT)
+                                                                                                                        (ASSERT)))
+                                                                                                                      (("1"
+                                                                                                                        (SPLIT
+                                                                                                                         -14)
+                                                                                                                        (("1"
+                                                                                                                          (APPLY
+                                                                                                                           (THEN
+                                                                                                                            (USE
+                                                                                                                             "related_states_implies_same_exception")
+                                                                                                                            (ASSERT)
+                                                                                                                            (REPLACE
+                                                                                                                             -1)))
+                                                                                                                          (("1"
+                                                                                                                            (INST
+                                                                                                                             -15
+                                                                                                                             "(m3!1, m3!2)")
+                                                                                                                            (("1"
+                                                                                                                              (ASSERT)
+                                                                                                                              (("1"
+                                                                                                                                (APPLY
+                                                                                                                                 (REPEAT
+                                                                                                                                  (INST?
+                                                                                                                                   -15
+                                                                                                                                   :WHERE
+                                                                                                                                   (-12
+                                                                                                                                    -24))))
+                                                                                                                                (("1"
+                                                                                                                                  (ASSERT)
+                                                                                                                                  (("1"
+                                                                                                                                    (APPLY
+                                                                                                                                     (THEN
+                                                                                                                                      (USE
+                                                                                                                                       "subterm_subset_of_var"
+                                                                                                                                       ("b1"
+                                                                                                                                        "b!1"
+                                                                                                                                        "b2"
+                                                                                                                                        "finally(b!1)"))
+                                                                                                                                      (EXPAND
+                                                                                                                                       "<<")
+                                                                                                                                      (ASSERT)
+                                                                                                                                      (ASSERT)))
+                                                                                                                                    (("1"
+                                                                                                                                      (SPLIT
+                                                                                                                                       -16)
+                                                                                                                                      (("1"
+                                                                                                                                        (SPLIT
+                                                                                                                                         -15)
+                                                                                                                                        (("1"
+                                                                                                                                          (FLATTEN)
+                                                                                                                                          (("1"
+                                                                                                                                            (ASSERT)
+                                                                                                                                            (("1"
+                                                                                                                                              (REPLACE
+                                                                                                                                               -2)
+                                                                                                                                              (("1"
+                                                                                                                                                (REPLACE
+                                                                                                                                                 -27)
+                                                                                                                                                (("1"
+                                                                                                                                                  (EXPAND
+                                                                                                                                                   "related_states"
+                                                                                                                                                   26)
+                                                                                                                                                  (("1"
+                                                                                                                                                    (SPLIT
+                                                                                                                                                     26)
+                                                                                                                                                    (("1"
+                                                                                                                                                      (EXPAND
+                                                                                                                                                       "related_states"
+                                                                                                                                                       -3)
+                                                                                                                                                      (("1"
+                                                                                                                                                        (FLATTEN)
+                                                                                                                                                        (("1"
+                                                                                                                                                          (USE
+                                                                                                                                                           "wf_update_PState"
+                                                                                                                                                           ("p"
+                                                                                                                                                            "mp!1"))
+                                                                                                                                                          (("1"
+                                                                                                                                                            (ASSERT)
+                                                                                                                                                            (("1"
+                                                                                                                                                              (SKOSIMP*)
+                                                                                                                                                              (("1"
+                                                                                                                                                                (EXPAND
+                                                                                                                                                                 "update_PState")
+                                                                                                                                                                (("1"
+                                                                                                                                                                  (REWRITE
+                                                                                                                                                                   "wf_state_raise")
+                                                                                                                                                                  NIL
+                                                                                                                                                                  NIL))
+                                                                                                                                                                NIL))
+                                                                                                                                                              NIL))
+                                                                                                                                                            NIL))
+                                                                                                                                                          NIL))
+                                                                                                                                                        NIL))
+                                                                                                                                                      NIL)
+                                                                                                                                                     ("2"
+                                                                                                                                                      (EXPAND
+                                                                                                                                                       "related_states"
+                                                                                                                                                       -3)
+                                                                                                                                                      (("2"
+                                                                                                                                                        (FLATTEN)
+                                                                                                                                                        (("2"
+                                                                                                                                                          (USE
+                                                                                                                                                           "wf_update_PState"
+                                                                                                                                                           ("p"
+                                                                                                                                                            "ann_program(mp!1)"))
+                                                                                                                                                          (("2"
+                                                                                                                                                            (ASSERT)
+                                                                                                                                                            (("2"
+                                                                                                                                                              (SKOSIMP*)
+                                                                                                                                                              (("2"
+                                                                                                                                                                (EXPAND
+                                                                                                                                                                 "update_PState")
+                                                                                                                                                                (("2"
+                                                                                                                                                                  (REWRITE
+                                                                                                                                                                   "wf_state_raise")
+                                                                                                                                                                  NIL
+                                                                                                                                                                  NIL))
+                                                                                                                                                                NIL))
+                                                                                                                                                              NIL))
+                                                                                                                                                            NIL))
+                                                                                                                                                          NIL))
+                                                                                                                                                        NIL))
+                                                                                                                                                      NIL)
+                                                                                                                                                     ("3"
+                                                                                                                                                      (USE
+                                                                                                                                                       "MP_modeled_preserved_by_update")
+                                                                                                                                                      (("3"
+                                                                                                                                                        (POSTPONE)
+                                                                                                                                                        NIL
+                                                                                                                                                        NIL))
+                                                                                                                                                      NIL)
+                                                                                                                                                     ("4"
+                                                                                                                                                      (EXPAND
+                                                                                                                                                       "related_states"
+                                                                                                                                                       -3)
+                                                                                                                                                      (("4"
+                                                                                                                                                        (FLATTEN)
+                                                                                                                                                        (("4"
+                                                                                                                                                          (EXPAND
+                                                                                                                                                           "halted_implies_JMLExc")
+                                                                                                                                                          (("4"
+                                                                                                                                                            (EXPAND
+                                                                                                                                                             "update_PState")
+                                                                                                                                                            (("4"
+                                                                                                                                                              (EXPAND
+                                                                                                                                                               "raise")
+                                                                                                                                                              (("4"
+                                                                                                                                                                (COMMENT
+                                                                                                                                                                 "to think about")
+                                                                                                                                                                (("4"
+                                                                                                                                                                  (POSTPONE)
+                                                                                                                                                                  NIL
+                                                                                                                                                                  ";;; to think about"))
+                                                                                                                                                                NIL))
+                                                                                                                                                              NIL))
+                                                                                                                                                            NIL))
+                                                                                                                                                          NIL))
+                                                                                                                                                        NIL))
+                                                                                                                                                      NIL)
+                                                                                                                                                     ("5"
+                                                                                                                                                      (EXPAND
+                                                                                                                                                       "return_of_stmt")
+                                                                                                                                                      (("5"
+                                                                                                                                                        (ASSERT)
+                                                                                                                                                        (("5"
+                                                                                                                                                          (EXPAND
+                                                                                                                                                           "update_PState")
+                                                                                                                                                          (("5"
+                                                                                                                                                            (EXPAND
+                                                                                                                                                             "raise")
+                                                                                                                                                            (("5"
+                                                                                                                                                              (ASSERT)
+                                                                                                                                                              NIL
+                                                                                                                                                              NIL))
+                                                                                                                                                            NIL))
+                                                                                                                                                          NIL))
+                                                                                                                                                        NIL))
+                                                                                                                                                      NIL))
+                                                                                                                                                    NIL))
+                                                                                                                                                  NIL))
+                                                                                                                                                NIL))
+                                                                                                                                              NIL))
+                                                                                                                                            NIL))
+                                                                                                                                          NIL)
+                                                                                                                                         ("2"
+                                                                                                                                          (FLATTEN)
+                                                                                                                                          (("2"
+                                                                                                                                            (ASSERT)
+                                                                                                                                            (("2"
+                                                                                                                                              (REPLACE
+                                                                                                                                               -1)
+                                                                                                                                              (("2"
+                                                                                                                                                (REPLACE
+                                                                                                                                                 -26)
+                                                                                                                                                (("2"
+                                                                                                                                                  (EXPAND
+                                                                                                                                                   "return_of_stmt")
+                                                                                                                                                  (("2"
+                                                                                                                                                    (APPLY
+                                                                                                                                                     (THEN
+                                                                                                                                                      (USE
+                                                                                                                                                       "related_states_implies_same_exception")
+                                                                                                                                                      (ASSERT)
+                                                                                                                                                      (REPLACE
+                                                                                                                                                       -1)))
+                                                                                                                                                    (("2"
+                                                                                                                                                      (LIFT-IF)
+                                                                                                                                                      (("2"
+                                                                                                                                                        (SPLIT
+                                                                                                                                                         -13)
+                                                                                                                                                        (("1"
+                                                                                                                                                          (FLATTEN)
+                                                                                                                                                          (("1"
+                                                                                                                                                            (ASSERT)
+                                                                                                                                                            NIL
+                                                                                                                                                            NIL))
+                                                                                                                                                          NIL)
+                                                                                                                                                         ("2"
+                                                                                                                                                          (FLATTEN)
+                                                                                                                                                          (("2"
+                                                                                                                                                            (ASSERT)
+                                                                                                                                                            NIL
+                                                                                                                                                            NIL))
+                                                                                                                                                          NIL))
+                                                                                                                                                        NIL))
+                                                                                                                                                      NIL))
+                                                                                                                                                    NIL))
+                                                                                                                                                  NIL))
+                                                                                                                                                NIL))
+                                                                                                                                              NIL))
+                                                                                                                                            NIL))
+                                                                                                                                          NIL))
+                                                                                                                                        NIL)
+                                                                                                                                       ("2"
+                                                                                                                                        (EXPAND
+                                                                                                                                         "related_states"
+                                                                                                                                         1)
+                                                                                                                                        (("2"
+                                                                                                                                          (SPLIT
+                                                                                                                                           1)
+                                                                                                                                          (("1"
+                                                                                                                                            (EXPAND
+                                                                                                                                             "related_states"
+                                                                                                                                             -3)
+                                                                                                                                            (("1"
+                                                                                                                                              (FLATTEN)
+                                                                                                                                              (("1"
+                                                                                                                                                (USE
+                                                                                                                                                 "wf_update_PState"
+                                                                                                                                                 ("p"
+                                                                                                                                                  "mp!1"))
+                                                                                                                                                (("1"
+                                                                                                                                                  (ASSERT)
+                                                                                                                                                  (("1"
+                                                                                                                                                    (SKOSIMP*)
+                                                                                                                                                    (("1"
+                                                                                                                                                      (EXPAND
+                                                                                                                                                       "update_PState")
+                                                                                                                                                      (("1"
+                                                                                                                                                        (REWRITE
+                                                                                                                                                         "wf_state_catch")
+                                                                                                                                                        NIL
+                                                                                                                                                        NIL))
+                                                                                                                                                      NIL))
+                                                                                                                                                    NIL))
+                                                                                                                                                  NIL))
+                                                                                                                                                NIL))
+                                                                                                                                              NIL))
+                                                                                                                                            NIL)
+                                                                                                                                           ("2"
+                                                                                                                                            (EXPAND
+                                                                                                                                             "related_states"
+                                                                                                                                             -3)
+                                                                                                                                            (("2"
+                                                                                                                                              (FLATTEN)
+                                                                                                                                              (("2"
+                                                                                                                                                (USE
+                                                                                                                                                 "wf_update_PState"
+                                                                                                                                                 ("p"
+                                                                                                                                                  "ann_program(mp!1)"))
+                                                                                                                                                (("2"
+                                                                                                                                                  (ASSERT)
+                                                                                                                                                  (("2"
+                                                                                                                                                    (SKOSIMP*)
+                                                                                                                                                    (("2"
+                                                                                                                                                      (EXPAND
+                                                                                                                                                       "update_PState")
+                                                                                                                                                      (("2"
+                                                                                                                                                        (REWRITE
+                                                                                                                                                         "wf_state_catch")
+                                                                                                                                                        NIL
+                                                                                                                                                        NIL))
+                                                                                                                                                      NIL))
+                                                                                                                                                    NIL))
+                                                                                                                                                  NIL))
+                                                                                                                                                NIL))
+                                                                                                                                              NIL))
+                                                                                                                                            NIL)
+                                                                                                                                           ("3"
+                                                                                                                                            (POSTPONE)
+                                                                                                                                            NIL
+                                                                                                                                            NIL)
+                                                                                                                                           ("4"
+                                                                                                                                            (POSTPONE)
+                                                                                                                                            NIL
+                                                                                                                                            NIL))
+                                                                                                                                          NIL))
+                                                                                                                                        NIL))
+                                                                                                                                      NIL))
+                                                                                                                                    NIL))
+                                                                                                                                  NIL))
+                                                                                                                                NIL))
+                                                                                                                              NIL))
+                                                                                                                            NIL))
+                                                                                                                          NIL)
+                                                                                                                         ("2"
+                                                                                                                          (POSTPONE)
+                                                                                                                          NIL
+                                                                                                                          NIL))
+                                                                                                                        NIL))
+                                                                                                                      NIL))
+                                                                                                                    NIL))
+                                                                                                                  NIL))
+                                                                                                                NIL))
+                                                                                                              NIL))
+                                                                                                            NIL))
+                                                                                                          NIL)
+                                                                                                         ("2"
                                                                                                           (POSTPONE)
                                                                                                           NIL
-                                                                                                          ";;; finish tomorrow"))
+                                                                                                          NIL))
                                                                                                         NIL))
                                                                                                       NIL))
                                                                                                     NIL))
@@ -3994,33 +4209,46 @@
                                                                                                               (("2"
                                                                                                                 (ASSERT)
                                                                                                                 (("2"
-                                                                                                                  (SPLIT
-                                                                                                                   -1)
-                                                                                                                  (("1"
-                                                                                                                    (EXPAND
-                                                                                                                     "some"
-                                                                                                                     28)
-                                                                                                                    (("1"
-                                                                                                                      (ASSERT)
-                                                                                                                      NIL
-                                                                                                                      NIL))
-                                                                                                                    NIL)
-                                                                                                                   ("2"
-                                                                                                                    (CASE-REPLACE
-                                                                                                                     "While(test(b!1), body(b!1)) = b!1")
+                                                                                                                  (EXPAND
+                                                                                                                   "some"
+                                                                                                                   28)
+                                                                                                                  (("2"
+                                                                                                                    (ASSERT)
                                                                                                                     (("2"
-                                                                                                                      (APPLY-EXTENSIONALITY
-                                                                                                                       :HIDE?
-                                                                                                                       T)
-                                                                                                                      NIL
-                                                                                                                      NIL))
-                                                                                                                    NIL)
-                                                                                                                   ("3"
-                                                                                                                    (EXPAND
-                                                                                                                     "some")
-                                                                                                                    (("3"
-                                                                                                                      (PROPAX)
-                                                                                                                      NIL
+                                                                                                                      (AUTO-REWRITE
+                                                                                                                       "union"
+                                                                                                                       "member")
+                                                                                                                      (("2"
+                                                                                                                        (ASSERT)
+                                                                                                                        (("2"
+                                                                                                                          (FLATTEN)
+                                                                                                                          (("2"
+                                                                                                                            (SPLIT
+                                                                                                                             -1)
+                                                                                                                            (("1"
+                                                                                                                              (PROPAX)
+                                                                                                                              NIL
+                                                                                                                              NIL)
+                                                                                                                             ("2"
+                                                                                                                              (EXPAND
+                                                                                                                               "some"
+                                                                                                                               -1)
+                                                                                                                              (("2"
+                                                                                                                                (ASSERT)
+                                                                                                                                NIL
+                                                                                                                                NIL))
+                                                                                                                              NIL)
+                                                                                                                             ("3"
+                                                                                                                              (EXPAND
+                                                                                                                               "some")
+                                                                                                                              (("3"
+                                                                                                                                (PROPAX)
+                                                                                                                                NIL
+                                                                                                                                NIL))
+                                                                                                                              NIL))
+                                                                                                                            NIL))
+                                                                                                                          NIL))
+                                                                                                                        NIL))
                                                                                                                       NIL))
                                                                                                                     NIL))
                                                                                                                   NIL))
@@ -4088,452 +4316,30 @@
         NIL))
       NIL))
     NIL)
-   UNFINISHED NIL 551078 13283 T NIL))
- (|derive_maintains_related_states| 0
-  (|derive_maintains_related_states-1| NIL 3396771358 3396773513
-   ("" (SKOSIMP)
-    ((""
-      (LEMMA
-       "wf_induction[[nat, nat], LAMBDA(i, j : [nat, nat]) : proj_1(i) < proj_1(j) AND proj_2(i) < proj_2(j)]")
-      (("1"
-        (INST -1 "LAMBDA(n1, n2 : nat) : FORALL (b: Body, v1, v2: Val)
-                                         (sMP1, sMP2: MPState, sAP1, sAP2: APState):
-                                    
-                                      well_behaved_MP(mp!1) IMPLIES
-                                       related_states(mp!1)(sMP1, sAP1) IMPLIES
-                                        derive(mp!1)(b, sMP1, v1, sMP2)(n1) IMPLIES
-                                         derive(ann_program(mp!1))(b, sAP1, v2, sAP2)(n2) IMPLIES
-                                          related_states(mp!1)(sMP2, sAP2)")
-        (("1" (ASSERT)
-          (("1" (SPLIT -1)
-            (("1" (SKOSIMP*)
-              (("1" (INST -1 "(n1!1, n2!1)")
-                (("1" (APPLY (REPEAT (INST?))) (("1" (ASSERT) NIL NIL)) NIL))
-                NIL))
-              NIL)
-             ("2" (HIDE 2)
-              (("2" (SKOSIMP*)
-                (("2" (USE "related_states_implies_same_exception")
-                  (("2" (ASSERT)
-                    (("2" (EXPAND "derive" -5)
-                      (("2" (EXPAND "derive" -6)
-                        (("2" (REPLACE -1)
-                          (("2" (SPLIT -5)
-                            (("1" (APPLY (THEN (FLATTEN) (ASSERT))) NIL NIL)
-                             ("2" (FLATTEN)
-                              (("2" (ASSERT)
-                                (("2" (LIFT-IF)
-                                  (("2" (SPLIT -1)
-                                    (("1" (APPLY (THEN (FLATTEN) (ASSERT))) NIL
-                                      NIL)
-                                     ("2"
-                                      (APPLY
-                                       (THEN (FLATTEN) (ASSERT) (SPLIT -1)))
-                                      (("1" (APPLY (THEN (FLATTEN) (ASSERT)))
-                                        (("1" (SKOSIMP*)
-                                          (("1" (INST-CP -7 "(m1!1, m1!2)")
-                                            (("1" (ASSERT)
-                                              (("1" (APPLY (REPEAT (INST? -8)))
-                                                (("1" (ASSERT)
-                                                  (("1"
-                                                    (INST-CP -7 "(m2!1, m2!2)")
-                                                    (("1" (ASSERT)
-                                                      (("1"
-                                                        (APPLY
-                                                         (REPEAT (INST? -8)))
-                                                        (("1" (ASSERT) NIL
-                                                          NIL))
-                                                        NIL))
-                                                      NIL))
-                                                    NIL))
-                                                  NIL))
-                                                NIL))
-                                              NIL))
-                                            NIL))
-                                          NIL))
-                                        NIL)
-                                       ("2"
-                                        (APPLY
-                                         (THEN (FLATTEN) (ASSERT) (SPLIT -1)))
-                                        (("1" (APPLY (THEN (FLATTEN) (ASSERT)))
-                                          NIL NIL)
-                                         ("2"
-                                          (APPLY
-                                           (THEN (FLATTEN) (ASSERT)
-                                            (SPLIT -1)))
-                                          (("1"
-                                            (APPLY (THEN (FLATTEN) (ASSERT)))
-                                            NIL NIL)
-                                           ("2"
-                                            (APPLY
-                                             (THEN (FLATTEN) (ASSERT)
-                                              (SPLIT -1)))
-                                            (("1"
-                                              (APPLY (THEN (FLATTEN) (ASSERT)))
-                                              NIL NIL)
-                                             ("2"
-                                              (APPLY
-                                               (THEN (FLATTEN) (ASSERT)
-                                                (SPLIT -1)))
-                                              (("1"
-                                                (APPLY
-                                                 (THEN (FLATTEN) (ASSERT)))
-                                                (("1" (SKOSIMP*)
-                                                  (("1" (ASSERT)
-                                                    (("1"
-                                                      (INST -6
-                                                       "(x!1`1 - 1, x!1`2 - 1)")
-                                                      (("1" (ASSERT)
-                                                        (("1"
-                                                          (APPLY
-                                                           (REPEAT (INST? -6)))
-                                                          (("1" (ASSERT) NIL
-                                                            NIL))
-                                                          NIL))
-                                                        NIL))
-                                                      NIL))
-                                                    NIL))
-                                                  NIL))
-                                                NIL)
-                                               ("2"
-                                                (APPLY
-                                                 (THEN (FLATTEN) (ASSERT)
-                                                  (SPLIT -1)))
-                                                (("1"
-                                                  (APPLY
-                                                   (THEN (FLATTEN) (ASSERT)))
-                                                  (("1" (SKOSIMP*)
-                                                    (("1"
-                                                      (INST-CP -7
-                                                       "(m1!1, m1!2)")
-                                                      (("1" (ASSERT)
-                                                        (("1"
-                                                          (APPLY
-                                                           (REPEAT (INST? -8)))
-                                                          (("1" (ASSERT)
-                                                            (("1"
-                                                              (INST -7
-                                                               "(m2!1, m2!2)")
-                                                              (("1" (ASSERT)
-                                                                (("1"
-                                                                  (APPLY
-                                                                   (REPEAT
-                                                                    (INST?
-                                                                     -7)))
-                                                                  (("1"
-                                                                    (ASSERT)
-                                                                    NIL NIL))
-                                                                  NIL))
-                                                                NIL))
-                                                              NIL))
-                                                            NIL))
-                                                          NIL))
-                                                        NIL))
-                                                      NIL))
-                                                    NIL))
-                                                  NIL)
-                                                 ("2"
-                                                  (APPLY
-                                                   (THEN (FLATTEN) (ASSERT)
-                                                    (SPLIT -1)))
-                                                  (("1"
-                                                    (APPLY
-                                                     (THEN (FLATTEN) (ASSERT)))
-                                                    (("1" (SKOSIMP*)
-                                                      (("1"
-                                                        (INST-CP -7
-                                                         "(m1!1, m1!2)")
-                                                        (("1" (ASSERT)
-                                                          (("1"
-                                                            (APPLY
-                                                             (REPEAT
-                                                              (INST? -8)))
-                                                            (("1" (ASSERT)
-                                                              (("1"
-                                                                (INST -7
-                                                                 "(m2!1, m2!2)")
-                                                                (("1" (ASSERT)
-                                                                  (("1"
-                                                                    (APPLY
-                                                                     (REPEAT
-                                                                      (INST?
-                                                                       -7)))
-                                                                    (("1"
-                                                                      (ASSERT)
-                                                                      NIL NIL))
-                                                                    NIL))
-                                                                  NIL))
-                                                                NIL))
-                                                              NIL))
-                                                            NIL))
-                                                          NIL))
-                                                        NIL))
-                                                      NIL))
-                                                    NIL)
-                                                   ("2"
-                                                    (APPLY
-                                                     (THEN (FLATTEN) (ASSERT)
-                                                      (SPLIT -1)))
-                                                    (("1"
-                                                      (APPLY
-                                                       (THEN (FLATTEN)
-                                                        (ASSERT)))
-                                                      NIL NIL)
-                                                     ("2"
-                                                      (APPLY
-                                                       (THEN (FLATTEN) (ASSERT)
-                                                        (SPLIT -1)))
-                                                      (("1"
-                                                        (APPLY
-                                                         (THEN (FLATTEN)
-                                                          (ASSERT)))
-                                                        NIL NIL)
-                                                       ("2"
-                                                        (APPLY
-                                                         (THEN (FLATTEN)
-                                                          (ASSERT) (SPLIT -1)))
-                                                        (("1"
-                                                          (APPLY
-                                                           (THEN (FLATTEN)
-                                                            (ASSERT)))
-                                                          NIL NIL)
-                                                         ("2"
-                                                          (APPLY
-                                                           (THEN (FLATTEN)
-                                                            (ASSERT)
-                                                            (SPLIT -1)))
-                                                          (("1"
-                                                            (APPLY
-                                                             (THEN (FLATTEN)
-                                                              (ASSERT)))
-                                                            (("1" (SKOSIMP*)
-                                                              (("1" (ASSERT)
-                                                                (("1"
-                                                                  (INST -6
-                                                                   "(x!1`1 - 1, x!1`2 - 1)")
-                                                                  (("1"
-                                                                    (ASSERT)
-                                                                    (("1"
-                                                                      (APPLY
-                                                                       (REPEAT
-                                                                        (INST?
-                                                                         -6)))
-                                                                      (("1"
-                                                                        (ASSERT)
-                                                                        (("1"
-                                                                          (USE
-                                                                           "related_states_implies_same_exception")
-                                                                          (("1"
-                                                                            (ASSERT)
-                                                                            (("1"
-                                                                              (REPLACE
-                                                                               -1)
-                                                                              (("1"
-                                                                                (LIFT-IF)
-                                                                                (("1"
-                                                                                  (SPLIT
-                                                                                   -5)
-                                                                                  (("1"
-                                                                                    (FLATTEN)
-                                                                                    (("1"
-                                                                                      (ASSERT)
-                                                                                      NIL
-                                                                                      NIL))
-                                                                                    NIL)
-                                                                                   ("2"
-                                                                                    (FLATTEN)
-                                                                                    (("2"
-                                                                                      (ASSERT)
-                                                                                      (("2"
-                                                                                        (EXPAND
-                                                                                         "related_states"
-                                                                                         14)
-                                                                                        (("2"
-                                                                                          (SPLIT
-                                                                                           14)
-                                                                                          (("1"
-                                                                                            (EXPAND
-                                                                                             "related_states"
-                                                                                             -7)
-                                                                                            (("1"
-                                                                                              (FLATTEN)
-                                                                                              (("1"
-                                                                                                (USE
-                                                                                                 "MonitoredProgramSemantics.wf_update_PState")
-                                                                                                (("1"
-                                                                                                  (ASSERT)
-                                                                                                  (("1"
-                                                                                                    (SKOSIMP*)
-                                                                                                    (("1"
-                                                                                                      (EXPAND
-                                                                                                       "update_PState")
-                                                                                                      (("1"
-                                                                                                        (USE
-                                                                                                         "wf_state_update")
-                                                                                                        (("1"
-                                                                                                          (ASSERT)
-                                                                                                          NIL
-                                                                                                          NIL)
-                                                                                                         ("2"
-                                                                                                          (USE
-                                                                                                           "derive_bottom_iff_exception_step"
-                                                                                                           ("p"
-                                                                                                            "mp!1"))
-                                                                                                          (("2"
-                                                                                                            (ASSERT)
-                                                                                                            (("2"
-                                                                                                              (EXPAND
-                                                                                                               "defined?")
-                                                                                                              (("2"
-                                                                                                                (PROPAX)
-                                                                                                                NIL
-                                                                                                                NIL))
-                                                                                                              NIL))
-                                                                                                            NIL))
-                                                                                                          NIL))
-                                                                                                        NIL))
-                                                                                                      NIL))
-                                                                                                    NIL))
-                                                                                                  NIL))
-                                                                                                NIL))
-                                                                                              NIL))
-                                                                                            NIL)
-                                                                                           ("2"
-                                                                                            (EXPAND
-                                                                                             "related_states"
-                                                                                             -7)
-                                                                                            (("2"
-                                                                                              (FLATTEN)
-                                                                                              (("2"
-                                                                                                (USE
-                                                                                                 "AnnotatedProgramSemantics.wf_update_PState")
-                                                                                                (("2"
-                                                                                                  (ASSERT)
-                                                                                                  (("2"
-                                                                                                    (SKOSIMP*)
-                                                                                                    (("2"
-                                                                                                      (EXPAND
-                                                                                                       "update_PState")
-                                                                                                      (("2"
-                                                                                                        (USE
-                                                                                                         "wf_state_update")
-                                                                                                        (("1"
-                                                                                                          (ASSERT)
-                                                                                                          NIL
-                                                                                                          NIL)
-                                                                                                         ("2"
-                                                                                                          (USE
-                                                                                                           "derive_bottom_iff_exception_step"
-                                                                                                           ("p"
-                                                                                                            "ann_program(mp!1)"))
-                                                                                                          (("2"
-                                                                                                            (ASSERT)
-                                                                                                            (("2"
-                                                                                                              (EXPAND
-                                                                                                               "defined?")
-                                                                                                              (("2"
-                                                                                                                (PROPAX)
-                                                                                                                NIL
-                                                                                                                NIL))
-                                                                                                              NIL))
-                                                                                                            NIL))
-                                                                                                          NIL))
-                                                                                                        NIL))
-                                                                                                      NIL))
-                                                                                                    NIL))
-                                                                                                  NIL))
-                                                                                                NIL))
-                                                                                              NIL))
-                                                                                            NIL)
-                                                                                           ("3"
-                                                                                            (USE
-                                                                                             "MP_modeled_preserved_by_update")
-                                                                                            (("3"
-                                                                                              (ASSERT)
-                                                                                              (("3"
-                                                                                                (POSTPONE)
-                                                                                                NIL
-                                                                                                NIL))
-                                                                                              NIL))
-                                                                                            NIL)
-                                                                                           ("4"
-                                                                                            (POSTPONE)
-                                                                                            NIL
-                                                                                            NIL))
-                                                                                          NIL))
-                                                                                        NIL))
-                                                                                      NIL))
-                                                                                    NIL))
-                                                                                  NIL))
-                                                                                NIL))
-                                                                              NIL))
-                                                                            NIL))
-                                                                          NIL))
-                                                                        NIL))
-                                                                      NIL))
-                                                                    NIL))
-                                                                  NIL))
-                                                                NIL))
-                                                              NIL))
-                                                            NIL)
-                                                           ("2" (POSTPONE) NIL
-                                                            NIL))
-                                                          NIL))
-                                                        NIL))
-                                                      NIL))
-                                                    NIL))
-                                                  NIL))
-                                                NIL))
-                                              NIL))
-                                            NIL))
-                                          NIL))
-                                        NIL))
-                                      NIL))
-                                    NIL))
-                                  NIL))
-                                NIL))
-                              NIL))
-                            NIL))
-                          NIL))
-                        NIL))
-                      NIL))
-                    NIL))
-                  NIL))
-                NIL))
-              NIL))
-            NIL))
-          NIL))
-        NIL)
-       ("2" (POSTPONE) NIL NIL))
-      NIL))
-    NIL)
-   UNFINISHED NIL 63615 3612 T NIL))
+   UNFINISHED NIL 842022 20612 T NIL))
  (|correctness_of_ann_program| 0
-  (|correctness_of_ann_program-1| NIL 3396605549 3396606064
+  (|correctness_of_ann_program-1| NIL 3396605549 3397389463
    ("" (SKOSIMP*)
     ((""
       (EXPAND* "run_monitored_program" "run_annotated_program"
        "run_FullProgram" "derives")
       (("" (SKOSIMP*)
         (("" (USE "initial_states_are_equivalent")
-          (("" (EXPAND "related_states" 1)
-            (("" (USE "derive_maintains_MP_modeled?")
-              (("" (USE "wf_initial_MP_state")
-                (("" (TYPEPRED "mp!1")
-                  (("" (ASSERT)
-                    (("" (USE "wf_initial_AP_state")
-                      (("" (EXPAND "wf_MP")
-                        (("" (FLATTEN)
-                          (("" (ASSERT)
-                            (("" (USE "ann_program_yields_wf_program")
-                              (("" (ASSERT)
-                                ((""
-                                  (USE "derive_maintains_halted_equivalence")
-                                  (("" (ASSERT) NIL NIL)) NIL))
-                                NIL))
-                              NIL))
-                            NIL))
-                          NIL))
+          (("" (USE "derive_maintains_related_states_for_unchanged_program")
+            (("" (ASSERT)
+              ((""
+                (AUTO-REWRITE "var_names"
+                              "subset?"
+                              "union"
+                              "add"
+                              "member"
+                              "singleton"
+                              "emptyset")
+                (("" (ASSERT)
+                  (("" (SKOSIMP*)
+                    (("" (EXPAND "ext_declared_var_names")
+                      (("" (EXPAND "union")
+                        (("" (EXPAND "member") (("" (ASSERT) NIL NIL)) NIL))
                         NIL))
                       NIL))
                     NIL))
@@ -4545,34 +4351,8 @@
         NIL))
       NIL))
     NIL)
-   UNCHECKED
-   ((|derives| CONST-DECL "bool" |Semantics| NIL)
-    (|run_FullProgram| CONST-DECL "boolean" |Semantics| NIL)
-    (|run_annotated_program| CONST-DECL "boolean" |AnnotatedProgramSemantics|
-     NIL)
-    (|run_monitored_program| CONST-DECL "boolean" |MonitoredProgramSemantics|
-     NIL)
-    (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |CorrectnessAnnProgram| NIL)
-    (CP FORMAL-NONEMPTY-TYPE-DECL NIL |CorrectnessAnnProgram| NIL)
-    (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
-    (|EventType| TYPE-DECL NIL |EventType_adt| NIL)
-    (|Event| TYPE-EQ-DECL NIL MVA NIL) (|Action| TYPE-EQ-DECL NIL MVA NIL)
-    (|Guard| TYPE-EQ-DECL NIL MVA NIL) (|Transition| TYPE-EQ-DECL NIL MVA NIL)
-    (|Val| TYPE-DECL NIL |Val_adt| NIL)
-    (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
-    (|defined?| CONST-DECL "boolean" |ValProp| NIL)
-    (|JType| TYPE-DECL NIL |JType_adt| NIL)
-    (|MVAVarDecl| TYPE-EQ-DECL NIL MVA NIL)
-    (|ProgVarDecl| TYPE-EQ-DECL NIL MVA NIL) (MVA TYPE-EQ-DECL NIL MVA NIL)
-    (|complete| CONST-DECL "boolean" |MVASemantics| NIL)
-    (|Program| TYPE-EQ-DECL NIL |Program| NIL)
-    (|MonitoredProgramPre| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
-    (|compatible| CONST-DECL "boolean" |MonitoredProgram| NIL)
-    (|MonitoredProgram| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
-    (|wf_MP| CONST-DECL "boolean" |MonitoredProgram| NIL)
-    (|initial_states_are_equivalent| FORMULA-DECL NIL |CorrectnessAnnProgram|
-     NIL)
-    (|AState| TYPE-EQ-DECL NIL |MVASemantics| NIL)
+   PROVED
+   ((|AState| TYPE-EQ-DECL NIL |MVASemantics| NIL)
     (|MPState| TYPE-EQ-DECL NIL |MonitoredProgramSemantics| NIL)
     (|initial_MP_state| CONST-DECL "MPState" |MonitoredProgramSemantics| NIL)
     (|Body| TYPE-DECL NIL |Body_adt| NIL)
@@ -4627,15 +4407,48 @@
     (|ann_program| CONST-DECL "Program" |AnnotateProgram| NIL)
     (>= CONST-DECL "bool" |reals| NIL)
     (|nat| NONEMPTY-TYPE-EQ-DECL NIL |naturalnumbers| NIL)
-    (|derive_maintains_MP_modeled?| FORMULA-DECL NIL |CorrectnessAnnProgram|
-     NIL)
-    (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
-    (|wf_initial_AP_state| FORMULA-DECL NIL |AnnotatedProgramSemantics| NIL)
-    (|ann_program_yields_wf_program| FORMULA-DECL NIL
-     |AnnotateProgramProperties| NIL)
-    (|derive_maintains_halted_equivalence| FORMULA-DECL NIL
+    (|derive_maintains_related_states_for_unchanged_program| FORMULA-DECL NIL
      |CorrectnessAnnProgram| NIL)
-    (|wf_initial_MP_state| FORMULA-DECL NIL |MonitoredProgramSemantics| NIL)
-    (|related_states| CONST-DECL "boolean" |Equivalence| NIL))
-   15997 289 T NIL)))
+    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    (|ext_declared_var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions|
+     NIL)
+    (|finite_emptyset| NAME-JUDGEMENT "finite_set" |finite_sets| NIL)
+    (|nonempty_singleton_finite| APPLICATION-JUDGEMENT "non_empty_finite_set"
+     |finite_sets| NIL)
+    (|subset_is_partial_order| NAME-JUDGEMENT "(partial_order?[set[T]])"
+     |sets_lemmas| NIL)
+    (|var_names| DEF-DECL "[Name -> boolean]" |ProgramFunctions| NIL)
+    (|singleton| CONST-DECL "(singleton?)" |sets| NIL)
+    (|member| CONST-DECL "bool" |sets| NIL)
+    (|emptyset| CONST-DECL "set" |sets| NIL)
+    (|union| CONST-DECL "set" |sets| NIL)
+    (|subset?| CONST-DECL "bool" |sets| NIL)
+    (|initial_states_are_equivalent| FORMULA-DECL NIL |CorrectnessAnnProgram|
+     NIL)
+    (|wf_MP| CONST-DECL "boolean" |MonitoredProgram| NIL)
+    (|MonitoredProgram| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
+    (|compatible| CONST-DECL "boolean" |MonitoredProgram| NIL)
+    (|MonitoredProgramPre| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
+    (|Program| TYPE-EQ-DECL NIL |Program| NIL)
+    (|complete| CONST-DECL "boolean" |MVASemantics| NIL)
+    (MVA TYPE-EQ-DECL NIL MVA NIL) (|ProgVarDecl| TYPE-EQ-DECL NIL MVA NIL)
+    (|MVAVarDecl| TYPE-EQ-DECL NIL MVA NIL)
+    (|JType| TYPE-DECL NIL |JType_adt| NIL)
+    (|defined?| CONST-DECL "boolean" |ValProp| NIL)
+    (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
+    (|Val| TYPE-DECL NIL |Val_adt| NIL) (|Transition| TYPE-EQ-DECL NIL MVA NIL)
+    (|Guard| TYPE-EQ-DECL NIL MVA NIL) (|Action| TYPE-EQ-DECL NIL MVA NIL)
+    (|Event| TYPE-EQ-DECL NIL MVA NIL)
+    (|EventType| TYPE-DECL NIL |EventType_adt| NIL)
+    (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
+    (CP FORMAL-NONEMPTY-TYPE-DECL NIL |CorrectnessAnnProgram| NIL)
+    (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |CorrectnessAnnProgram| NIL)
+    (|run_monitored_program| CONST-DECL "boolean" |MonitoredProgramSemantics|
+     NIL)
+    (|run_annotated_program| CONST-DECL "boolean" |AnnotatedProgramSemantics|
+     NIL)
+    (|run_FullProgram| CONST-DECL "boolean" |Semantics| NIL)
+    (|derives| CONST-DECL "bool" |Semantics| NIL))
+   3981 503 T NIL)))
 

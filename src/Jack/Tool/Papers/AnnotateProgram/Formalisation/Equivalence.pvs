@@ -65,9 +65,10 @@ BEGIN
   % problem is that it does not hold in the intermediate state of the method
   % call case (before the invariant is checked), in particular for some
   % lemmas in LemmasAnnGeneration.
-  halted_implies_JMLExc(sMP : MPState, sAP : APState) : boolean =
-    cp(astate(sMP)) = halted IMPLIES
-      up?(ex(pstate(sAP))) AND down(ex(pstate(sAP))) = JMLExc
+  halted_implies_JMLExc(mp)(sMP : MPState, sAP : APState) : boolean =
+    cp(astate(sMP)) = halted IFF
+      (up?(ex(pstate(sAP))) AND down(ex(pstate(sAP))) = JMLExc AND
+       lookup(cp(mp), sAP) = lookup(halted(mp), sAP))
 
 
   % It is possible to translate every guard of the MVA into an expression that
@@ -110,7 +111,7 @@ BEGIN
     wf_state(mp)(sMP) AND
     wf_state(ann_program(mp))(sAP) AND
     MP_modeled?(mp)(sMP, sAP) AND
-    halted_implies_JMLExc(sMP, sAP)
+    halted_implies_JMLExc(mp)(sMP, sAP)
     
 
 END Equivalence

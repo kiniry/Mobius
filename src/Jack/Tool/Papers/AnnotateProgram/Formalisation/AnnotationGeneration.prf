@@ -1,6 +1,6 @@
 (|VariableNames|
  (|cp_TCC1| 0
-  (|cp_TCC1-1| NIL 3396601202 3396848582
+  (|cp_TCC1-1| NIL 3396601202 3397387587
    (""
     (INST 1
      "LAMBDA(mp : MonitoredProgram) : choose({n : Name | NOT forbidden_names(mp)(n)})")
@@ -83,20 +83,32 @@
     (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
     (CP FORMAL-NONEMPTY-TYPE-DECL NIL |VariableNames| NIL)
     (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |VariableNames| NIL))
-   130 130 T NIL)))
-(|AnnotateProgram|
+   187 188 T NIL)))
+(|NewVariableDeclarations|
  (|IMP_VariableNames_TCC1| 0
-  (|IMP_VariableNames_TCC1-1| NIL 3396601203 3396850591
-   ("" (USE "infinite_namespace") NIL NIL) PROVED
-   ((|infinite_namespace| FORMULA-DECL NIL |AnnotateProgram| NIL)) 2 2 T NIL))
+  (|IMP_VariableNames_TCC1-2| NIL 3397386732 3397387587
+   (";;; Proof IMP_VariableNames_TCC1-1 for formula AnnotateProgram.IMP_VariableNames_TCC1"
+    (USE "infinite_namespace") NIL
+    ";;; developed with SHOSTAK decision procedures")
+   PROVED
+   ((|infinite_namespace| FORMULA-DECL NIL |NewVariableDeclarations| NIL)) 2 2
+   NIL NIL)
+  (|IMP_VariableNames_TCC1-1| NIL 3397386612 NIL ("" (ASSUMING-TCC) NIL NIL)
+   NIL NIL NIL NIL NIL NIL))
  (|name_of_TCC1| 0
-  (|name_of_TCC1-1| NIL 3396601203 3396850593
-   ("" (USE "name_of_exists") (("" (SKOSIMP*) (("" (INST?) NIL NIL)) NIL)) NIL)
+  (|name_of_TCC1-2| NIL 3397386758 3397387588
+   (";;; Proof name_of_TCC1-1 for formula AnnotateProgram.name_of_TCC1"
+    (USE "name_of_exists")
+    ((";;; Proof name_of_TCC1-1 for formula AnnotateProgram.name_of_TCC1"
+      (SKOSIMP*)
+      ((";;; Proof name_of_TCC1-1 for formula AnnotateProgram.name_of_TCC1"
+        (INST?) NIL))))
+    ";;; developed with SHOSTAK decision procedures")
    PROVED
    ((|f!1| SKOLEM-CONST-DECL "[mp: (wf_MP) -> [CP -> (legal_names(mp))]]"
-     |AnnotateProgram| NIL)
-    (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |AnnotateProgram| NIL)
-    (CP FORMAL-NONEMPTY-TYPE-DECL NIL |AnnotateProgram| NIL)
+     |NewVariableDeclarations| NIL)
+    (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |NewVariableDeclarations| NIL)
+    (CP FORMAL-NONEMPTY-TYPE-DECL NIL |NewVariableDeclarations| NIL)
     (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
     (|EventType| TYPE-DECL NIL |EventType_adt| NIL)
     (|Event| TYPE-EQ-DECL NIL MVA NIL) (|Action| TYPE-EQ-DECL NIL MVA NIL)
@@ -117,15 +129,22 @@
     (|set| TYPE-EQ-DECL NIL |sets| NIL)
     (|legal_names| CONST-DECL "set[Name]" |VariableNames| NIL)
     (|injective?| CONST-DECL "bool" |functions| NIL)
-    (|name_of_exists| FORMULA-DECL NIL |AnnotateProgram| NIL))
-   153 151 T NIL))
+    (|name_of_exists| FORMULA-DECL NIL |NewVariableDeclarations| NIL))
+   151 151 NIL NIL)
+  (|name_of_TCC1-1| NIL 3397386612 NIL ("" (EXISTENCE-TCC) NIL NIL) NIL NIL NIL
+   NIL NIL NIL))
  (|unique_TCC1| 0
-  (|unique_TCC1-1| NIL 3396601203 3396850594
-   ("" (USE "CP_is_enumerable") (("" (SKOSIMP*) (("" (INST?) NIL NIL)) NIL))
-    NIL)
+  (|unique_TCC1-2| NIL 3397386786 3397387589
+   (";;; Proof unique_TCC1-1 for formula AnnotateProgram.unique_TCC1"
+    (USE "CP_is_enumerable")
+    ((";;; Proof unique_TCC1-1 for formula AnnotateProgram.unique_TCC1"
+      (SKOSIMP*)
+      ((";;; Proof unique_TCC1-1 for formula AnnotateProgram.unique_TCC1"
+        (INST?) NIL))))
+    ";;; developed with SHOSTAK decision procedures")
    PROVED
-   ((|f!1| SKOLEM-CONST-DECL "[CP -> nat]" |AnnotateProgram| NIL)
-    (CP FORMAL-NONEMPTY-TYPE-DECL NIL |AnnotateProgram| NIL)
+   ((|f!1| SKOLEM-CONST-DECL "[CP -> nat]" |NewVariableDeclarations| NIL)
+    (CP FORMAL-NONEMPTY-TYPE-DECL NIL |NewVariableDeclarations| NIL)
     (|number| NONEMPTY-TYPE-DECL NIL |numbers| NIL)
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|number_field_pred| CONST-DECL "[number -> boolean]" |number_fields| NIL)
@@ -140,34 +159,37 @@
     (>= CONST-DECL "bool" |reals| NIL)
     (|nat| NONEMPTY-TYPE-EQ-DECL NIL |naturalnumbers| NIL)
     (|injective?| CONST-DECL "bool" |functions| NIL)
-    (|CP_is_enumerable| FORMULA-DECL NIL |AnnotateProgram| NIL))
-   69 67 T NIL))
+    (|CP_is_enumerable| FORMULA-DECL NIL |NewVariableDeclarations| NIL))
+   67 67 NIL NIL)
+  (|unique_TCC1-1| NIL 3397386612 NIL ("" (EXISTENCE-TCC) NIL NIL) NIL NIL NIL
+   NIL NIL NIL))
  (|new_gvds_TCC1| 0
-  (|new_gvds_TCC1-1| NIL 3396601203 3396850601
-   ("" (SKOSIMP*)
-    ((""
+  (|new_gvds_TCC1-2| NIL 3397386699 3397387596
+   (";;; Proof new_gvds_TCC1-1 for formula AnnotateProgram.new_gvds_TCC1"
+    (SKOSIMP*)
+    ((";;; Proof new_gvds_TCC1-1 for formula AnnotateProgram.new_gvds_TCC1"
       (CASE-REPLACE "({gd: FieldDecl[Name] |
-              jtype(gd) = IntType AND
-               (name(gd) = cp[CP, Name](mp!1) AND
-                 init_val(gd) = Int[Name](unique(init_cp(mva(mp!1)))))
-               OR
-               ((EXISTS (q: (cps(mva(mp!1)))):
-                   name(gd) = name_of(mp!1)(q) AND
-                    jtype(gd) = IntType AND
-                     init_val(gd) = Int[Name](unique(q)))
+                jtype(gd) = IntType AND
+                 (name(gd) = cp[CP, Name](mp!1) AND
+                   init_val(gd) = Int[Name](unique(init_cp(mva(mp!1)))))
                  OR
-                 (EXISTS (v: (vdsA(mva(mp!1)))):
-                    name(gd) = name(v) AND
-                     jtype(gd) = jtype(v) AND init_val(gd) = init_val(v)))}) = add((# jtype := IntType, name := cp(mp!1), init_val := Int[Name](unique(init_cp(mva(mp!1)))) #), union({gd: FieldDecl[Name] |((EXISTS (q: (cps(mva(mp!1)))):
-                   name(gd) = name_of(mp!1)(q) AND
-                    jtype(gd) = IntType AND
-                     init_val(gd) = Int[Name](unique(q))))}, {gd: FieldDecl[Name] | (EXISTS (v: (vdsA(mva(mp!1)))):
-                    name(gd) = name(v) AND
-                     jtype(gd) = jtype(v) AND init_val(gd) = init_val(v))}))"
+                 ((EXISTS (q: (cps(mva(mp!1)))):
+                     name(gd) = name_of(mp!1)(q) AND
+                      jtype(gd) = IntType AND
+                       init_val(gd) = Int[Name](unique(q)))
+                   OR
+                   (EXISTS (v: (vdsA(mva(mp!1)))):
+                      name(gd) = name(v) AND
+                       jtype(gd) = jtype(v) AND init_val(gd) = init_val(v)))}) = add((# jtype := IntType, name := cp(mp!1), init_val := Int[Name](unique(init_cp(mva(mp!1)))) #), union({gd: FieldDecl[Name] |((EXISTS (q: (cps(mva(mp!1)))):
+                     name(gd) = name_of(mp!1)(q) AND
+                      jtype(gd) = IntType AND
+                       init_val(gd) = Int[Name](unique(q))))}, {gd: FieldDecl[Name] | (EXISTS (v: (vdsA(mva(mp!1)))):
+                      name(gd) = name(v) AND
+                       jtype(gd) = jtype(v) AND init_val(gd) = init_val(v))}))"
        :HIDE? T)
       (("1" (LEMMA "finite_add[FieldDecl[Name]]")
         (("1" (INST?)
-          (("1" (EXPAND "defined?") (("1" (PROPAX) NIL NIL)) NIL)
+          (("1" (EXPAND "defined?") (("1" (PROPAX) NIL)))
            ("2" (HIDE 2)
             (("2" (USE "finite_union[FieldDecl[Name]]")
               (("1" (HIDE 2)
@@ -176,114 +198,71 @@
                     (("1" (SKOSIMP*)
                       (("1"
                         (INST 1 "N!1" "LAMBDA(gd : ({gd: FieldDecl[Name] |
-                     (EXISTS (v: (vdsA(mva(mp!1)))):
-                        name(gd) = name(v) AND
-                         jtype(gd) = jtype(v) AND
-                          init_val(gd) = init_val(v))})) : f!1(choose({v: (vdsA(mva(mp!1))) | name(gd) = name(v) AND
-                         jtype(gd) = jtype(v) AND
-                          init_val(gd) = init_val(v)}))")
+                             (EXISTS (v: (vdsA(mva(mp!1)))):
+                                name(gd) = name(v) AND
+                                 jtype(gd) = jtype(v) AND
+                                  init_val(gd) = init_val(v))})) : f!1(choose({v: (vdsA(mva(mp!1))) | name(gd) = name(v) AND
+                                 jtype(gd) = jtype(v) AND
+                                  init_val(gd) = init_val(v)}))")
                         (("1" (EXPAND "injective?")
                           (("1" (SKOSIMP*)
                             (("1" (INST? -1 :WHERE -2)
                               (("1" (ASSERT)
-                                (("1" (APPLY-EXTENSIONALITY :HIDE? T) NIL NIL))
-                                NIL)
+                                (("1" (APPLY-EXTENSIONALITY :HIDE? T) NIL)))
                                ("2" (REWRITE "nonempty_exists")
                                 (("2" (TYPEPRED "x2!1")
                                   (("2" (SKOSIMP*)
                                     (("2" (TYPEPRED "v!1")
-                                      (("2" (INST?) (("2" (ASSERT) NIL NIL))
-                                        NIL))
-                                      NIL))
-                                    NIL))
-                                  NIL))
-                                NIL)
+                                      (("2" (INST?)
+                                        (("2" (ASSERT) NIL)))))))))))
                                ("3" (REWRITE "nonempty_exists")
                                 (("3" (TYPEPRED "x1!1")
                                   (("3" (SKOSIMP*)
                                     (("3" (TYPEPRED "v!1")
-                                      (("3" (INST?) (("3" (ASSERT) NIL NIL))
-                                        NIL))
-                                      NIL))
-                                    NIL))
-                                  NIL))
-                                NIL))
-                              NIL))
-                            NIL))
-                          NIL)
+                                      (("3" (INST?)
+                                        (("3" (ASSERT) NIL)))))))))))))))))
                          ("2" (SKOSIMP*)
                           (("2" (TYPEPRED "gd!1")
                             (("2" (REWRITE "nonempty_exists")
                               (("2" (SKOSIMP*)
                                 (("2" (TYPEPRED "v!1")
-                                  (("2" (INST?) (("2" (ASSERT) NIL NIL)) NIL))
-                                  NIL))
-                                NIL))
-                              NIL))
-                            NIL))
-                          NIL))
-                        NIL))
-                      NIL))
-                    NIL))
-                  NIL))
-                NIL)
+                                  (("2" (INST?)
+                                    (("2" (ASSERT) NIL)))))))))))))))))))))))
                ("2" (HIDE 2)
                 (("2" (TYPEPRED "cps(mva(mp!1))")
                   (("2" (EXPAND "is_finite")
                     (("2" (SKOSIMP*)
                       (("2"
                         (INST 1 "N!1" "LAMBDA(gd : ({gd: FieldDecl[Name] |
-                     ((EXISTS (q: (cps(mva(mp!1)))):
-                         name(gd) = name_of(mp!1)(q) AND
-                          jtype(gd) = IntType AND
-                           init_val(gd) = Int[Name](unique(q))))})) : f!1(choose({q: (cps(mva(mp!1))) |
-                         name(gd) = name_of(mp!1)(q) AND
-                          jtype(gd) = IntType AND
-                           init_val(gd) = Int[Name](unique(q))}))")
+                             ((EXISTS (q: (cps(mva(mp!1)))):
+                                 name(gd) = name_of(mp!1)(q) AND
+                                  jtype(gd) = IntType AND
+                                   init_val(gd) = Int[Name](unique(q))))})) : f!1(choose({q: (cps(mva(mp!1))) |
+                                 name(gd) = name_of(mp!1)(q) AND
+                                  jtype(gd) = IntType AND
+                                   init_val(gd) = Int[Name](unique(q))}))")
                         (("1" (EXPAND "injective?")
                           (("1" (SKOSIMP*)
                             (("1" (INST? -1 :WHERE -2)
                               (("1" (SPLIT -1)
-                                (("1" (APPLY-EXTENSIONALITY :HIDE? T) NIL NIL)
-                                 ("2" (PROPAX) NIL NIL))
-                                NIL)
+                                (("1" (APPLY-EXTENSIONALITY :HIDE? T) NIL)
+                                 ("2" (PROPAX) NIL)))
                                ("2" (REWRITE "nonempty_exists")
                                 (("2" (TYPEPRED "x2!1")
                                   (("2" (SKOSIMP*)
-                                    (("2" (INST?) (("2" (ASSERT) NIL NIL))
-                                      NIL))
-                                    NIL))
-                                  NIL))
-                                NIL)
+                                    (("2" (INST?) (("2" (ASSERT) NIL)))))))))
                                ("3" (REWRITE "nonempty_exists")
                                 (("3" (TYPEPRED "x1!1")
                                   (("3" (SKOSIMP*)
-                                    (("3" (INST?) (("3" (ASSERT) NIL NIL))
-                                      NIL))
-                                    NIL))
-                                  NIL))
-                                NIL))
-                              NIL))
-                            NIL))
-                          NIL)
+                                    (("3" (INST?)
+                                      (("3" (ASSERT) NIL)))))))))))))))
                          ("2" (SKOSIMP*)
                           (("2" (TYPEPRED "gd!1")
                             (("2" (REWRITE "nonempty_exists")
                               (("2" (SKOSIMP*)
-                                (("2" (INST?) (("2" (ASSERT) NIL NIL)) NIL))
-                                NIL))
-                              NIL))
-                            NIL))
-                          NIL))
-                        NIL))
-                      NIL))
-                    NIL))
-                  NIL))
-                NIL))
-              NIL))
-            NIL))
-          NIL))
-        NIL)
+                                (("2" (INST?)
+                                  (("2" (ASSERT)
+                                    NIL)))))))))))))))))))))))))))))
        ("2" (HIDE 2)
         (("2" (APPLY-EXTENSIONALITY :HIDE? T)
           (("1" (EXPAND "add")
@@ -296,33 +275,17 @@
                         (("1" (SPLIT -1)
                           (("1" (FLATTEN)
                             (("1" (ASSERT)
-                              (("1" (APPLY-EXTENSIONALITY :HIDE? T) NIL NIL))
-                              NIL))
-                            NIL)
-                           ("2" (PROPAX) NIL NIL) ("3" (PROPAX) NIL NIL))
-                          NIL))
-                        NIL))
-                      NIL)
+                              (("1" (APPLY-EXTENSIONALITY :HIDE? T) NIL)))))
+                           ("2" (PROPAX) NIL) ("3" (PROPAX) NIL)))))))
                      ("2" (SKOSIMP*)
                       (("2" (SPLIT -1)
-                        (("1" (REPLACE -1 :DIR RL) (("1" (ASSERT) NIL NIL))
-                          NIL)
-                         ("2" (PROPAX) NIL NIL) ("3" (PROPAX) NIL NIL))
-                        NIL))
-                      NIL))
-                    NIL))
-                  NIL))
-                NIL))
-              NIL))
-            NIL)
-           ("2" (GRIND) NIL NIL))
-          NIL))
-        NIL)
-       ("3" (GRIND) NIL NIL))
-      NIL))
-    NIL)
+                        (("1" (REPLACE -1 :DIR RL) (("1" (ASSERT) NIL)))
+                         ("2" (PROPAX) NIL) ("3" (PROPAX) NIL)))))))))))))))
+           ("2" (GRIND) NIL)))))
+       ("3" (GRIND) NIL))))
+    ";;; developed with SHOSTAK decision procedures")
    PROVED
-   ((|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |AnnotateProgram| NIL)
+   ((|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |NewVariableDeclarations| NIL)
     (|Val| TYPE-DECL NIL |Val_adt| NIL)
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|defined?| CONST-DECL "boolean" |ValProp| NIL)
@@ -334,7 +297,7 @@
     (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
     (|IntType?| ADT-RECOGNIZER-DECL "[JType -> boolean]" |JType_adt| NIL)
     (|IntType| ADT-CONSTRUCTOR-DECL "(IntType?)" |JType_adt| NIL)
-    (CP FORMAL-NONEMPTY-TYPE-DECL NIL |AnnotateProgram| NIL)
+    (CP FORMAL-NONEMPTY-TYPE-DECL NIL |NewVariableDeclarations| NIL)
     (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
     (|EventType| TYPE-DECL NIL |EventType_adt| NIL)
     (|Event| TYPE-EQ-DECL NIL MVA NIL) (|Action| TYPE-EQ-DECL NIL MVA NIL)
@@ -366,97 +329,95 @@
     (>= CONST-DECL "bool" |reals| NIL)
     (|nat| NONEMPTY-TYPE-EQ-DECL NIL |naturalnumbers| NIL)
     (|injective?| CONST-DECL "bool" |functions| NIL)
-    (|unique| CONST-DECL "(injective?[CP, nat])" |AnnotateProgram| NIL)
+    (|unique| CONST-DECL "(injective?[CP, nat])" |NewVariableDeclarations| NIL)
     (|legal_names| CONST-DECL "set[Name]" |VariableNames| NIL)
     (|name_of| CONST-DECL "(injective?[CP, (legal_names(mp))])"
-     |AnnotateProgram| NIL)
+     |NewVariableDeclarations| NIL)
     (|nonempty?| CONST-DECL "bool" |sets| NIL)
     (|add| CONST-DECL "(nonempty?)" |sets| NIL)
     (|union| CONST-DECL "set" |sets| NIL)
-    (|mp!1| SKOLEM-CONST-DECL "(wf_MP[CP, Name])" |AnnotateProgram| NIL)
+    (|mp!1| SKOLEM-CONST-DECL "(wf_MP[CP, Name])" |NewVariableDeclarations|
+     NIL)
     (|is_finite| CONST-DECL "bool" |finite_sets| NIL)
     (|finite_union| JUDGEMENT-TCC NIL |finite_sets| NIL)
     (|gd!1| SKOLEM-CONST-DECL "({gd: FieldDecl[Name] |
     (EXISTS (v: (vdsA(mva(mp!1)))):
        name(gd) = name(v) AND
         jtype(gd) = jtype(v) AND init_val(gd) = init_val(v))})"
-     |AnnotateProgram| NIL)
-    (|v!1| SKOLEM-CONST-DECL "(vdsA(mva(mp!1)))" |AnnotateProgram| NIL)
+     |NewVariableDeclarations| NIL)
+    (|v!1| SKOLEM-CONST-DECL "(vdsA(mva(mp!1)))" |NewVariableDeclarations| NIL)
     (|x2!1| SKOLEM-CONST-DECL "({gd: FieldDecl[Name] |
     (EXISTS (v: (vdsA(mva(mp!1)))):
        name(gd) = name(v) AND
         jtype(gd) = jtype(v) AND init_val(gd) = init_val(v))})"
-     |AnnotateProgram| NIL)
+     |NewVariableDeclarations| NIL)
     (|x1!1| SKOLEM-CONST-DECL "({gd: FieldDecl[Name] |
     (EXISTS (v: (vdsA(mva(mp!1)))):
        name(gd) = name(v) AND
         jtype(gd) = jtype(v) AND init_val(gd) = init_val(v))})"
-     |AnnotateProgram| NIL)
-    (|v!1| SKOLEM-CONST-DECL "(vdsA(mva(mp!1)))" |AnnotateProgram| NIL)
+     |NewVariableDeclarations| NIL)
+    (|v!1| SKOLEM-CONST-DECL "(vdsA(mva(mp!1)))" |NewVariableDeclarations| NIL)
     (|nonempty_exists| FORMULA-DECL NIL |sets_lemmas| NIL)
-    (|v!1| SKOLEM-CONST-DECL "(vdsA(mva(mp!1)))" |AnnotateProgram| NIL)
+    (|v!1| SKOLEM-CONST-DECL "(vdsA(mva(mp!1)))" |NewVariableDeclarations| NIL)
     (|choose| CONST-DECL "(p)" |sets| NIL)
     (|below| TYPE-EQ-DECL NIL |nat_types| NIL)
     (< CONST-DECL "bool" |reals| NIL)
-    (|q!1| SKOLEM-CONST-DECL "(cps(mva(mp!1)))" |AnnotateProgram| NIL)
+    (|q!1| SKOLEM-CONST-DECL "(cps(mva(mp!1)))" |NewVariableDeclarations| NIL)
     (|gd!1| SKOLEM-CONST-DECL "({gd: FieldDecl[Name] |
     ((EXISTS (q: (cps(mva(mp!1)))):
         name(gd) = name_of(mp!1)(q) AND
          jtype(gd) = IntType AND init_val(gd) = Int[Name](unique(q))))})"
-     |AnnotateProgram| NIL)
+     |NewVariableDeclarations| NIL)
     (|x2!1| SKOLEM-CONST-DECL "({gd: FieldDecl[Name] |
     ((EXISTS (q: (cps(mva(mp!1)))):
         name(gd) = name_of(mp!1)(q) AND
          jtype(gd) = IntType AND init_val(gd) = Int[Name](unique(q))))})"
-     |AnnotateProgram| NIL)
+     |NewVariableDeclarations| NIL)
     (|x1!1| SKOLEM-CONST-DECL "({gd: FieldDecl[Name] |
     ((EXISTS (q: (cps(mva(mp!1)))):
         name(gd) = name_of(mp!1)(q) AND
          jtype(gd) = IntType AND init_val(gd) = Int[Name](unique(q))))})"
-     |AnnotateProgram| NIL)
-    (|q!1| SKOLEM-CONST-DECL "(cps(mva(mp!1)))" |AnnotateProgram| NIL)
-    (|q!1| SKOLEM-CONST-DECL "(cps(mva(mp!1)))" |AnnotateProgram| NIL)
+     |NewVariableDeclarations| NIL)
+    (|q!1| SKOLEM-CONST-DECL "(cps(mva(mp!1)))" |NewVariableDeclarations| NIL)
+    (|q!1| SKOLEM-CONST-DECL "(cps(mva(mp!1)))" |NewVariableDeclarations| NIL)
     (|finite_add| FORMULA-DECL NIL |finite_sets| NIL)
     (|member| CONST-DECL "bool" |sets| NIL))
-   694 692 T NIL))
+   736 736 NIL NIL)
+  (|new_gvds_TCC1-1| NIL 3397386612 NIL ("" (SUBTYPE-TCC) NIL NIL) NIL NIL NIL
+   NIL NIL NIL))
  (|new_gvds_as_union_TCC1| 0
-  (|new_gvds_as_union_TCC1-1| NIL 3396609153 3396850601
+  (|new_gvds_as_union_TCC1-1| NIL 3397386612 3397387597
    ("" (SUBTYPE-TCC) NIL NIL) PROVED
    ((|defined?| CONST-DECL "boolean" |ValProp| NIL)
-    (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |AnnotateProgram| NIL))
-   60 59 NIL NIL))
+    (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |NewVariableDeclarations| NIL))
+   67 67 NIL NIL))
  (|new_gvds_as_union| 0
-  (|new_gvds_as_union-1| NIL 3396609157 3396850602
-   ("" (SKOSIMP*)
-    (("" (EXPAND "add")
-      (("" (EXPAND "union")
-        (("" (EXPAND "member")
-          (("" (EXPAND "new_gvds")
-            (("" (APPLY-EXTENSIONALITY :HIDE? T)
+  (|new_gvds_as_union-1| NIL 3397386660 3397387598
+   (";;; Proof new_gvds_as_union-1 for formula AnnotateProgram.new_gvds_as_union"
+    (SKOSIMP*)
+    ((";;; Proof new_gvds_as_union-1 for formula AnnotateProgram.new_gvds_as_union"
+      (EXPAND "add")
+      ((";;; Proof new_gvds_as_union-1 for formula AnnotateProgram.new_gvds_as_union"
+        (EXPAND "union")
+        ((";;; Proof new_gvds_as_union-1 for formula AnnotateProgram.new_gvds_as_union"
+          (EXPAND "member")
+          ((";;; Proof new_gvds_as_union-1 for formula AnnotateProgram.new_gvds_as_union"
+            (EXPAND "new_gvds")
+            ((";;; Proof new_gvds_as_union-1 for formula AnnotateProgram.new_gvds_as_union"
+              (APPLY-EXTENSIONALITY :HIDE? T)
               (("1" (IFF)
                 (("1" (SPLIT 1)
                   (("1" (SKOSIMP*)
                     (("1" (SPLIT -1)
                       (("1" (FLATTEN)
-                        (("1" (APPLY-EXTENSIONALITY :HIDE? T) NIL NIL)) NIL)
-                       ("2" (PROPAX) NIL NIL) ("3" (PROPAX) NIL NIL))
-                      NIL))
-                    NIL)
+                        (("1" (APPLY-EXTENSIONALITY :HIDE? T) NIL)))
+                       ("2" (PROPAX) NIL) ("3" (PROPAX) NIL)))))
                    ("2" (SKOSIMP*)
                     (("2" (SPLIT -1)
-                      (("1" (REPLACE -1 :DIR RL) (("1" (ASSERT) NIL NIL)) NIL)
-                       ("2" (PROPAX) NIL NIL) ("3" (PROPAX) NIL NIL))
-                      NIL))
-                    NIL))
-                  NIL))
-                NIL)
-               ("2" (GRIND) NIL NIL))
-              NIL))
-            NIL))
-          NIL))
-        NIL))
-      NIL))
-    NIL)
+                      (("1" (REPLACE -1 :DIR RL) (("1" (ASSERT) NIL)))
+                       ("2" (PROPAX) NIL) ("3" (PROPAX) NIL)))))))))
+               ("2" (GRIND) NIL))))))))))))
+    ";;; developed with SHOSTAK decision procedures")
    PROVED
    ((|add| CONST-DECL "(nonempty?)" |sets| NIL)
     (|member| CONST-DECL "bool" |sets| NIL)
@@ -472,8 +433,8 @@
      NIL)
     (|legal_names| CONST-DECL "set[Name]" |VariableNames| NIL)
     (|name_of| CONST-DECL "(injective?[CP, (legal_names(mp))])"
-     |AnnotateProgram| NIL)
-    (|mp!1| SKOLEM-CONST-DECL "(wf_MP)" |AnnotateProgram| NIL)
+     |NewVariableDeclarations| NIL)
+    (|mp!1| SKOLEM-CONST-DECL "(wf_MP)" |NewVariableDeclarations| NIL)
     (|wf_MP| CONST-DECL "boolean" |MonitoredProgram| NIL)
     (|MonitoredProgram| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
     (|compatible| CONST-DECL "boolean" |MonitoredProgram| NIL)
@@ -486,12 +447,12 @@
     (|Action| TYPE-EQ-DECL NIL MVA NIL) (|Event| TYPE-EQ-DECL NIL MVA NIL)
     (|EventType| TYPE-DECL NIL |EventType_adt| NIL)
     (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
-    (|unique| CONST-DECL "(injective?[CP, nat])" |AnnotateProgram| NIL)
+    (|unique| CONST-DECL "(injective?[CP, nat])" |NewVariableDeclarations| NIL)
     (|injective?| CONST-DECL "bool" |functions| NIL)
     (|nat| NONEMPTY-TYPE-EQ-DECL NIL |naturalnumbers| NIL)
     (>= CONST-DECL "bool" |reals| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
-    (CP FORMAL-NONEMPTY-TYPE-DECL NIL |AnnotateProgram| NIL)
+    (CP FORMAL-NONEMPTY-TYPE-DECL NIL |NewVariableDeclarations| NIL)
     (|Int| ADT-CONSTRUCTOR-DECL "[int -> (Int?)]" |Val_adt| NIL)
     (|Int?| ADT-RECOGNIZER-DECL "[Val -> boolean]" |Val_adt| NIL)
     (|int| NONEMPTY-TYPE-EQ-DECL NIL |integers| NIL)
@@ -503,49 +464,47 @@
     (|number_field| NONEMPTY-TYPE-FROM-DECL NIL |number_fields| NIL)
     (|number_field_pred| CONST-DECL "[number -> boolean]" |number_fields| NIL)
     (|number| NONEMPTY-TYPE-DECL NIL |numbers| NIL)
-    (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |AnnotateProgram| NIL)
+    (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |NewVariableDeclarations| NIL)
     (|Val| TYPE-DECL NIL |Val_adt| NIL)
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|defined?| CONST-DECL "boolean" |ValProp| NIL)
     (|JType| TYPE-DECL NIL |JType_adt| NIL)
     (|FieldDecl| TYPE-EQ-DECL NIL |Program| NIL)
-    (|x!1| SKOLEM-CONST-DECL "FieldDecl[Name]" |AnnotateProgram| NIL)
-    (|new_gvds| CONST-DECL "finite_set[FieldDecl]" |AnnotateProgram| NIL)
+    (|x!1| SKOLEM-CONST-DECL "FieldDecl[Name]" |NewVariableDeclarations| NIL)
+    (|new_gvds| CONST-DECL "finite_set[FieldDecl]" |NewVariableDeclarations|
+     NIL)
     (|union| CONST-DECL "set" |sets| NIL))
-   103 102 T SHOSTAK))
+   112 112 NIL NIL))
  (|new_vars_derived_from_mp| 0
-  (|new_vars_derived_from_mp-1| NIL 3396602954 3396850604
-   ("" (SKOSIMP*)
-    (("" (EXPAND "var_names")
-      (("" (EXPAND "new_gvds")
-        (("" (SPLIT 1)
+  (|new_vars_derived_from_mp-1| NIL 3397386643 3397387600
+   (";;; Proof new_vars_derived_from_mp-1 for formula AnnotateProgram.new_vars_derived_from_mp"
+    (SKOSIMP*)
+    ((";;; Proof new_vars_derived_from_mp-1 for formula AnnotateProgram.new_vars_derived_from_mp"
+      (EXPAND "var_names")
+      ((";;; Proof new_vars_derived_from_mp-1 for formula AnnotateProgram.new_vars_derived_from_mp"
+        (EXPAND "new_gvds")
+        ((";;; Proof new_vars_derived_from_mp-1 for formula AnnotateProgram.new_vars_derived_from_mp"
+          (SPLIT 1)
           (("1"
             (INST 1
              "(# jtype := IntType, name := cp(mp!1), init_val := Int(unique(init_cp(mva(mp!1)))) #)")
-            (("1" (GRIND) NIL NIL)) NIL)
+            (("1" (GRIND) NIL)))
            ("2" (SKOSIMP*)
             (("2"
               (INST 1
                "(# jtype := IntType, name := name_of(mp!1)(q!1), init_val := Int(unique(q!1)) #)")
-              (("1" (ASSERT) (("1" (FLATTEN) (("1" (INST?) NIL NIL)) NIL)) NIL)
-               ("2" (GRIND) NIL NIL))
-              NIL))
-            NIL)
+              (("1" (ASSERT) (("1" (FLATTEN) (("1" (INST?) NIL)))))
+               ("2" (GRIND) NIL)))))
            ("3" (SKOSIMP*)
             (("3"
               (INST 1
                "(# jtype := jtype(v!1), name := name(v!1), init_val := init_val(v!1) #)")
-              (("3" (FLATTEN) (("3" (ASSERT) (("3" (INST? 3) NIL NIL)) NIL))
-                NIL))
-              NIL))
-            NIL))
-          NIL))
-        NIL))
-      NIL))
-    NIL)
+              (("3" (FLATTEN)
+                (("3" (ASSERT) (("3" (INST? 3) NIL))))))))))))))))
+    ";;; developed with SHOSTAK decision procedures")
    PROVED
    ((|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
-    (|unique| CONST-DECL "(injective?[CP, nat])" |AnnotateProgram| NIL)
+    (|unique| CONST-DECL "(injective?[CP, nat])" |NewVariableDeclarations| NIL)
     (|injective?| CONST-DECL "bool" |functions| NIL)
     (|nat| NONEMPTY-TYPE-EQ-DECL NIL |naturalnumbers| NIL)
     (>= CONST-DECL "bool" |reals| NIL)
@@ -578,7 +537,7 @@
     (|Action| TYPE-EQ-DECL NIL MVA NIL) (|Event| TYPE-EQ-DECL NIL MVA NIL)
     (|EventType| TYPE-DECL NIL |EventType_adt| NIL)
     (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
-    (CP FORMAL-NONEMPTY-TYPE-DECL NIL |AnnotateProgram| NIL)
+    (CP FORMAL-NONEMPTY-TYPE-DECL NIL |NewVariableDeclarations| NIL)
     (|IntType| ADT-CONSTRUCTOR-DECL "(IntType?)" |JType_adt| NIL)
     (|IntType?| ADT-RECOGNIZER-DECL "[JType -> boolean]" |JType_adt| NIL)
     (|FieldDecl| TYPE-EQ-DECL NIL |Program| NIL)
@@ -586,27 +545,28 @@
     (|defined?| CONST-DECL "boolean" |ValProp| NIL)
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|Val| TYPE-DECL NIL |Val_adt| NIL)
-    (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |AnnotateProgram| NIL)
-    (|mp!1| SKOLEM-CONST-DECL "(wf_MP)" |AnnotateProgram| NIL)
+    (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |NewVariableDeclarations| NIL)
+    (|mp!1| SKOLEM-CONST-DECL "(wf_MP)" |NewVariableDeclarations| NIL)
     (|legal_names| CONST-DECL "set[Name]" |VariableNames| NIL)
     (|name_of| CONST-DECL "(injective?[CP, (legal_names(mp))])"
-     |AnnotateProgram| NIL)
-    (|q!1| SKOLEM-CONST-DECL "CP" |AnnotateProgram| NIL)
-    (|new_gvds| CONST-DECL "finite_set[FieldDecl]" |AnnotateProgram| NIL))
-   162 162 T SHOSTAK))
+     |NewVariableDeclarations| NIL)
+    (|q!1| SKOLEM-CONST-DECL "CP" |NewVariableDeclarations| NIL)
+    (|new_gvds| CONST-DECL "finite_set[FieldDecl]" |NewVariableDeclarations|
+     NIL))
+   200 193 NIL NIL))
  (|wf_new_vars| 0
-  (|wf_new_vars-1| NIL 3396603095 3396850856
-   ("" (SKOSIMP*)
-    (("" (AUTO-REWRITE ("empty?" "disjoint?" "intersection" "member"))
-      (("" (SPLIT 1)
+  (|wf_new_vars-1| NIL 3397386628 3397387612
+   (";;; Proof wf_new_vars-1 for formula AnnotateProgram.wf_new_vars"
+    (SKOSIMP*)
+    ((";;; Proof wf_new_vars-1 for formula AnnotateProgram.wf_new_vars"
+      (AUTO-REWRITE ("empty?" "disjoint?" "intersection" "member"))
+      ((";;; Proof wf_new_vars-1 for formula AnnotateProgram.wf_new_vars"
+        (SPLIT 1)
         (("1" (SKOSIMP*)
-          (("1" (TYPEPRED "name_of(mp!1)(q!1)") (("1" (GRIND) NIL NIL)) NIL))
-          NIL)
-         ("2" (SKOSIMP*)
-          (("2" (TYPEPRED "cp(mp!1)") (("2" (GRIND) NIL NIL)) NIL)) NIL)
+          (("1" (TYPEPRED "name_of(mp!1)(q!1)") (("1" (GRIND) NIL)))))
+         ("2" (SKOSIMP*) (("2" (TYPEPRED "cp(mp!1)") (("2" (GRIND) NIL)))))
          ("3" (SKOSIMP*)
-          (("3" (TYPEPRED "name_of(mp!1)(q!1)") (("3" (GRIND) NIL NIL)) NIL))
-          NIL)
+          (("3" (TYPEPRED "name_of(mp!1)(q!1)") (("3" (GRIND) NIL)))))
          ("4" (ASSERT)
           (("4" (SKOSIMP*)
             (("4" (EXPAND "var_names")
@@ -614,12 +574,10 @@
                 (("4" (SKOSIMP*)
                   (("4" (SPLIT -1)
                     (("1" (FLATTEN)
-                      (("1" (TYPEPRED "cp(mp!1)") (("1" (GRIND) NIL NIL)) NIL))
-                      NIL)
+                      (("1" (TYPEPRED "cp(mp!1)") (("1" (GRIND) NIL)))))
                      ("2" (SKOSIMP*)
                       (("2" (TYPEPRED "name_of(mp!1)(q!1)")
-                        (("2" (GRIND) NIL NIL)) NIL))
-                      NIL)
+                        (("2" (GRIND) NIL)))))
                      ("3" (SKOSIMP*)
                       (("3" (CASE-REPLACE "f!1 = v!1" :HIDE? T)
                         (("1" (TYPEPRED "v!1")
@@ -633,26 +591,10 @@
                                         (("1" (ASSERT)
                                           (("1" (EXPAND "var_names")
                                             (("1" (INST? 2)
-                                              (("1" (ASSERT) NIL NIL)) NIL))
-                                            NIL))
-                                          NIL))
-                                        NIL))
-                                      NIL))
-                                    NIL))
-                                  NIL))
-                                NIL))
-                              NIL))
-                            NIL))
-                          NIL)
-                         ("2" (APPLY-EXTENSIONALITY :HIDE? T) NIL NIL))
-                        NIL))
-                      NIL))
-                    NIL))
-                  NIL))
-                NIL))
-              NIL))
-            NIL))
-          NIL)
+                                              (("1" (ASSERT)
+                                                NIL)))))))))))))))))))))))
+                         ("2" (APPLY-EXTENSIONALITY :HIDE? T)
+                          NIL)))))))))))))))))
          ("5" (ASSERT)
           (("5" (SKOSIMP*)
             (("5" (EXPAND "var_names")
@@ -661,13 +603,10 @@
                   (("5" (SKOSIMP*)
                     (("5" (SPLIT -1)
                       (("1" (FLATTEN)
-                        (("1" (TYPEPRED "cp(mp!1)") (("1" (GRIND) NIL NIL))
-                          NIL))
-                        NIL)
+                        (("1" (TYPEPRED "cp(mp!1)") (("1" (GRIND) NIL)))))
                        ("2" (SKOSIMP*)
                         (("2" (TYPEPRED "name_of(mp!1)(q!1)")
-                          (("2" (GRIND) NIL NIL)) NIL))
-                        NIL)
+                          (("2" (GRIND) NIL)))))
                        ("3" (SKOSIMP*)
                         (("3" (TYPEPRED "mp!1")
                           (("3" (EXPAND "compatible")
@@ -675,27 +614,10 @@
                               (("3" (EXPAND "MVA_aut_vars_are_not_prog_vars")
                                 (("3" (CASE-REPLACE "f!1 = v!1" :HIDE? T)
                                   (("1" (TYPEPRED "v!1")
-                                    (("1" (INST?) (("1" (ASSERT) NIL NIL))
-                                      NIL))
-                                    NIL)
-                                   ("2" (APPLY-EXTENSIONALITY :HIDE? T) NIL
-                                    NIL))
-                                  NIL))
-                                NIL))
-                              NIL))
-                            NIL))
-                          NIL))
-                        NIL))
-                      NIL))
-                    NIL))
-                  NIL))
-                NIL))
-              NIL))
-            NIL))
-          NIL))
-        NIL))
-      NIL))
-    NIL)
+                                    (("1" (INST?) (("1" (ASSERT) NIL)))))
+                                   ("2" (APPLY-EXTENSIONALITY :HIDE? T)
+                                    NIL))))))))))))))))))))))))))))))))
+    ";;; developed with SHOSTAK decision procedures")
    PROVED
    ((|MVA_aut_vars_are_not_prog_vars| CONST-DECL "boolean" |MonitoredProgram|
      NIL)
@@ -707,7 +629,8 @@
     (|wf_vdsA| CONST-DECL "boolean" |WellFormedMVA| NIL)
     (|wf_MVA| CONST-DECL "boolean" |WellFormedMVA| NIL)
     (= CONST-DECL "[T, T -> boolean]" |equalities| NIL)
-    (|new_gvds| CONST-DECL "finite_set[FieldDecl]" |AnnotateProgram| NIL)
+    (|new_gvds| CONST-DECL "finite_set[FieldDecl]" |NewVariableDeclarations|
+     NIL)
     (|FieldDecl| TYPE-EQ-DECL NIL |Program| NIL)
     (|cp| CONST-DECL "{n: Name | NOT forbidden_names(mp)(n)}" |VariableNames|
      NIL)
@@ -725,7 +648,7 @@
     (|union| CONST-DECL "set" |sets| NIL)
     (|reserved_words| CONST-DECL "finite_set[Name]" |Program| NIL)
     (|name_of| CONST-DECL "(injective?[CP, (legal_names(mp))])"
-     |AnnotateProgram| NIL)
+     |NewVariableDeclarations| NIL)
     (|injective?| CONST-DECL "bool" |functions| NIL)
     (|wf_MP| CONST-DECL "boolean" |MonitoredProgram| NIL)
     (|legal_names| CONST-DECL "set[Name]" |VariableNames| NIL)
@@ -744,23 +667,36 @@
     (|Event| TYPE-EQ-DECL NIL MVA NIL)
     (|EventType| TYPE-DECL NIL |EventType_adt| NIL)
     (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
-    (CP FORMAL-NONEMPTY-TYPE-DECL NIL |AnnotateProgram| NIL)
-    (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |AnnotateProgram| NIL)
+    (CP FORMAL-NONEMPTY-TYPE-DECL NIL |NewVariableDeclarations| NIL)
+    (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |NewVariableDeclarations| NIL)
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL))
-   9001 1116 T SHOSTAK))
+   1154 1147 NIL NIL)))
+(|AnnotateProgram|
+ (|IMP_VariableNames_TCC1| 0
+  (|IMP_VariableNames_TCC1-1| NIL 3396601203 3397387612
+   ("" (USE "infinite_namespace") NIL NIL) PROVED
+   ((|infinite_namespace| FORMULA-DECL NIL |AnnotateProgram| NIL)) 2 2 T NIL))
+ (|IMP_NewVariableDeclarations_TCC1| 0
+  (|IMP_NewVariableDeclarations_TCC1-1| NIL 3397387554 3397387785
+   ("" (USE "CP_is_enumerable") NIL NIL) PROVED
+   ((|CP_is_enumerable| FORMULA-DECL NIL |AnnotateProgram| NIL)) 1500 2 T NIL))
+ (|IMP_NewVariableDeclarations_TCC2| 0
+  (|IMP_NewVariableDeclarations_TCC2-1| NIL 3397387554 3397387799
+   ("" (USE "name_of_exists") NIL NIL) PROVED
+   ((|name_of_exists| FORMULA-DECL NIL |AnnotateProgram| NIL)) 800 2 T NIL))
  (|ann_action_TCC1| 0
-  (|ann_action_TCC1-1| NIL 3383987003 3396850615 ("" (TERMINATION-TCC) NIL NIL)
+  (|ann_action_TCC1-1| NIL 3383987003 3397387614 ("" (TERMINATION-TCC) NIL NIL)
    PROVED
    ((|real_lt_is_strict_total_order| NAME-JUDGEMENT
      "(strict_total_order?[real])" |real_props| NIL)
     (|nnint_plus_posint_is_posint| APPLICATION-JUDGEMENT "posint" |integers|
      NIL)
     (|length| DEF-DECL "nat" |list_props| NIL))
-   26 27 NIL NIL))
+   47 46 NIL NIL))
  (|ann_guard_actions_TCC1| 0
-  (|ann_guard_actions_TCC1-1| NIL 3390028807 3396850618
+  (|ann_guard_actions_TCC1-1| NIL 3390028807 3397387617
    ("" (SKOSIMP*)
     (("" (TYPEPRED "ts!1")
       (("" (EXPAND "is_finite")
@@ -848,6 +784,7 @@
     (|Throw?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
     (|TryCatch?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
     (|While?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|Assert?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
     (|Stmt| TYPE-EQ-DECL NIL |Body_adt| NIL)
     (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
     (|ts!1| SKOLEM-CONST-DECL "finite_set[Transition[CP, Name]]"
@@ -884,9 +821,9 @@
     (|number_field| NONEMPTY-TYPE-FROM-DECL NIL |number_fields| NIL)
     (|number_field_pred| CONST-DECL "[number -> boolean]" |number_fields| NIL)
     (|number| NONEMPTY-TYPE-DECL NIL |numbers| NIL))
-   305 301 T NIL))
+   294 293 T NIL))
  (|ann_event_TCC1| 0
-  (|ann_event_TCC1-2| NIL 3396602486 3396850618
+  (|ann_event_TCC1-2| NIL 3396602486 3397387617
    ("" (SKOSIMP*)
     (("" (TYPEPRED "ts!1")
       (("" (EXPAND "is_finite")
@@ -930,7 +867,7 @@
     (|number_field| NONEMPTY-TYPE-FROM-DECL NIL |number_fields| NIL)
     (|number_field_pred| CONST-DECL "[number -> boolean]" |number_fields| NIL)
     (|number| NONEMPTY-TYPE-DECL NIL |numbers| NIL))
-   28 29 T NIL)
+   28 28 T NIL)
   (|ann_event_TCC1-1| NIL 3390028807 3396601298
    ("" (SKOSIMP*)
     (("" (TYPEPRED "ts!1")
@@ -980,7 +917,7 @@
     (|number| NONEMPTY-TYPE-DECL NIL |numbers| NIL))
    214 212 T NIL))
  (|ann_event_TCC2| 0
-  (|ann_event_TCC2-2| NIL 3396602568 3396850648
+  (|ann_event_TCC2-2| NIL 3396602568 3397387648
    (";;; Proof ann_event_TCC2-1 for formula AnnotateProgram.ann_event_TCC2"
     (SKOSIMP*)
     ((";;; Proof ann_event_TCC2-1 for formula AnnotateProgram.ann_event_TCC2"
@@ -1218,6 +1155,7 @@
     (|Throw?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
     (|TryCatch?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
     (|While?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|Assert?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
     (|Stmt| TYPE-EQ-DECL NIL |Body_adt| NIL)
     (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
     (|mp!1| SKOLEM-CONST-DECL "(wf_MP[CP, Name])" |AnnotateProgram| NIL)
@@ -1241,7 +1179,7 @@
     (|number_field| NONEMPTY-TYPE-FROM-DECL NIL |number_fields| NIL)
     (|number_field_pred| CONST-DECL "[number -> boolean]" |number_fields| NIL)
     (|number| NONEMPTY-TYPE-DECL NIL |numbers| NIL))
-   2991 2977 NIL NIL)
+   3068 3055 NIL NIL)
   (|ann_event_TCC2-1| NIL 3390028807 3396601300
    ("" (SKOSIMP*)
     (("" (TYPEPRED "cps(mva(mp!1))")
@@ -1508,7 +1446,7 @@
     (IMPLIES CONST-DECL "[bool, bool -> bool]" |booleans| NIL))
    197 197 T NIL))
  (|filter_event_TCC1| 0
-  (|filter_event_TCC1-1| NIL 3383987003 3396850650
+  (|filter_event_TCC1-1| NIL 3383987003 3397387650
    ("" (SKOSIMP*)
     (("" (TYPEPRED "ts(a!1)")
       (("" (EXPAND "is_finite")
@@ -1556,9 +1494,9 @@
     (|number_field| NONEMPTY-TYPE-FROM-DECL NIL |number_fields| NIL)
     (|number_field_pred| CONST-DECL "[number -> boolean]" |number_fields| NIL)
     (|number| NONEMPTY-TYPE-DECL NIL |numbers| NIL))
-   212 208 T NIL))
+   196 196 T NIL))
  (|ann_method_TCC1| 0
-  (|ann_method_TCC1-1| NIL 3389418364 3396850650
+  (|ann_method_TCC1-1| NIL 3389418364 3397387650
    ("" (SKOLEM-TYPEPRED)
     (("" (EXPAND* "wf_MP" "complete") (("" (FLATTEN) NIL NIL)) NIL)) NIL)
    PROVED
@@ -1582,9 +1520,9 @@
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL))
-   3 3 T NIL))
+   23 24 T NIL))
  (|ann_methods_TCC1| 0
-  (|ann_methods_TCC1-1| NIL 3383987003 3396850651
+  (|ann_methods_TCC1-1| NIL 3383987003 3397387650
    ("" (SKOSIMP*)
     (("" (TYPEPRED "ms!1")
       (("" (EXPAND "is_finite")
@@ -1687,9 +1625,9 @@
     (|number_field| NONEMPTY-TYPE-FROM-DECL NIL |number_fields| NIL)
     (|number_field_pred| CONST-DECL "[number -> boolean]" |number_fields| NIL)
     (|number| NONEMPTY-TYPE-DECL NIL |numbers| NIL))
-   61 61 T NIL))
+   41 41 T NIL))
  (|ann_program_TCC1| 0
-  (|ann_program_TCC1-1| NIL 3383987003 3396850651
+  (|ann_program_TCC1-1| NIL 3383987003 3397387651
    ("" (SKOSIMP)
     (("" (TYPEPRED "classes(program(mp!1))")
       (("" (EXPAND "is_finite")
@@ -1798,34 +1736,34 @@
     (|number_field| NONEMPTY-TYPE-FROM-DECL NIL |number_fields| NIL)
     (|number_field_pred| CONST-DECL "[number -> boolean]" |number_fields| NIL)
     (|number| NONEMPTY-TYPE-DECL NIL |numbers| NIL))
-   45 44 T NIL)))
+   87 87 T NIL)))
 (|AnnotateProgramProperties|
  (|CP_is_enumerable| 0
   (|CP_is_enumerable-1| NIL 3392611795 3392611802 ("" (POSTPONE) NIL NIL)
    UNCHECKED NIL 7000 150 T SHOSTAK))
  (|IMP_VariableNames_TCC1| 0
-  (|IMP_VariableNames_TCC1-1| NIL 3396601223 3396850656
+  (|IMP_VariableNames_TCC1-1| NIL 3396601223 3397387651
    ("" (USE "infinite_namespace") NIL NIL) PROVED
    ((|infinite_namespace| FORMULA-DECL NIL |AnnotateProgramProperties| NIL)) 2
    2 T NIL))
  (|IMP_AnnotateProgram_TCC1| 0
-  (|IMP_AnnotateProgram_TCC1-1| NIL 3390292134 3396850656
+  (|IMP_AnnotateProgram_TCC1-1| NIL 3390292134 3397387651
    ("" (USE "CP_is_enumerable") NIL NIL) PROVED
    ((|CP_is_enumerable| FORMULA-DECL NIL |AnnotateProgramProperties| NIL)) 2 2
    T NIL))
  (|IMP_AnnotateProgram_TCC2| 0
-  (|IMP_AnnotateProgram_TCC2-1| NIL 3395037658 3396850656
+  (|IMP_AnnotateProgram_TCC2-1| NIL 3395037658 3397387652
    ("" (USE "name_of_exists") NIL NIL) PROVED
-   ((|name_of_exists| FORMULA-DECL NIL |AnnotateProgramProperties| NIL)) 2 3 T
-   NIL))
+   ((|name_of_exists| FORMULA-DECL NIL |AnnotateProgramProperties| NIL)) 23 23
+   T NIL))
  (|ann_program_class_correspondence| 0
-  (|ann_program_class_correspondence-1| NIL 3392569211 3396850656
+  (|ann_program_class_correspondence-1| NIL 3392569211 3397387652
    ("" (SKOSIMP*) (("" (EXPAND "ann_program") (("" (PROPAX) NIL NIL)) NIL))
     NIL)
    PROVED ((|ann_program| CONST-DECL "Program" |AnnotateProgram| NIL)) 4 3 T
    SHOSTAK))
  (|ann_program_method_correspondence| 0
-  (|ann_program_method_correspondence-1| NIL 3392569244 3396850657
+  (|ann_program_method_correspondence-1| NIL 3392569244 3397387653
    ("" (SKOSIMP*)
     (("" (USE "ann_program_class_correspondence")
       (("" (ASSERT)
@@ -1885,9 +1823,9 @@
     (|finite_union| APPLICATION-JUDGEMENT "finite_set" |finite_sets| NIL)
     (|ann_class| CONST-DECL "Class" |AnnotateProgram| NIL)
     (|ann_methods| CONST-DECL "finite_set[Method]" |AnnotateProgram| NIL))
-   103 100 T SHOSTAK))
+   105 104 T SHOSTAK))
  (|ann_program_preserves_var_decls| 0
-  (|ann_program_preserves_var_decls-1| NIL 3392566301 3396850660
+  (|ann_program_preserves_var_decls-1| NIL 3392566301 3397387655
    ("" (SKOSIMP*)
     (("" (SPLIT)
       (("1" (EXPAND* "ann_program" "getFieldDecls")
@@ -2034,9 +1972,9 @@
     (|getGhostDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
     (|subset?| CONST-DECL "bool" |sets| NIL)
     (|member| CONST-DECL "bool" |sets| NIL))
-   221 220 T SHOSTAK))
+   248 246 T SHOSTAK))
  (|ann_program_preserves_var_decl_names| 0
-  (|ann_program_preserves_var_decl_names-1| NIL 3392567558 3396850660
+  (|ann_program_preserves_var_decl_names-1| NIL 3392567558 3397387656
    ("" (SKOSIMP*)
     (("" (USE "ann_program_preserves_var_decls")
       (("" (FLATTEN)
@@ -2084,9 +2022,9 @@
     (|subset?| CONST-DECL "bool" |sets| NIL)
     (|member| CONST-DECL "bool" |sets| NIL)
     (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL))
-   91 91 T SHOSTAK))
+   95 95 T SHOSTAK))
  (|ann_program_add_ghost_var_decls| 0
-  (|ann_program_add_ghost_var_decls-1| NIL 3396607040 3396850661
+  (|ann_program_add_ghost_var_decls-1| NIL 3396607040 3397387657
    ("" (SKOSIMP*)
     (("" (APPLY-EXTENSIONALITY :HIDE? T)
       (("" (EXPAND "getGhostDecls")
@@ -2189,7 +2127,8 @@
     (|wf_MP| CONST-DECL "boolean" |MonitoredProgram| NIL)
     (|ann_program| CONST-DECL "Program" |AnnotateProgram| NIL)
     (|union| CONST-DECL "set" |sets| NIL)
-    (|new_gvds| CONST-DECL "finite_set[FieldDecl]" |AnnotateProgram| NIL)
+    (|new_gvds| CONST-DECL "finite_set[FieldDecl]" |NewVariableDeclarations|
+     NIL)
     (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |AnnotateProgramProperties| NIL)
     (|Val| TYPE-DECL NIL |Val_adt| NIL)
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
@@ -2203,9 +2142,9 @@
     (|ann_program_class_correspondence| FORMULA-DECL NIL
      |AnnotateProgramProperties| NIL)
     (|member| CONST-DECL "bool" |sets| NIL))
-   93 92 T SHOSTAK))
+   72 72 T SHOSTAK))
  (|ann_program_preserves_wf_state| 0
-  (|ann_program_preserves_wf_state-1| NIL 3390298254 3396850662
+  (|ann_program_preserves_wf_state-1| NIL 3390298254 3397387658
    ("" (SKOSIMP*)
     (("" (USE "ann_program_preserves_var_decls")
       (("" (EXPAND "wf_state")
@@ -2242,9 +2181,9 @@
     (|ann_program_preserves_var_decls| FORMULA-DECL NIL
      |AnnotateProgramProperties| NIL)
     (|wf_state| CONST-DECL "boolean" |State| NIL))
-   94 94 T SHOSTAK))
+   97 97 T SHOSTAK))
  (|ann_program_preserves_pstate_vars| 0
-  (|ann_program_preserves_pstate_vars-1| NIL 3392567663 3396850663
+  (|ann_program_preserves_pstate_vars-1| NIL 3392567663 3397387659
    ("" (SKOSIMP*)
     (("" (USE "ann_program_preserves_var_decls")
       (("" (EXPAND "wf_state")
@@ -2284,9 +2223,9 @@
     (|wf_state| CONST-DECL "boolean" |State| NIL)
     (|wf_state| CONST-DECL "boolean" |MonitoredProgramSemantics| NIL)
     (|wf_state| CONST-DECL "boolean" |AnnotatedProgramSemantics| NIL))
-   99 98 T SHOSTAK))
+   100 99 T SHOSTAK))
  (|ann_program_preserves_ghoststate_vars| 0
-  (|ann_program_preserves_ghoststate_vars-1| NIL 3392567791 3396850665
+  (|ann_program_preserves_ghoststate_vars-1| NIL 3392567791 3397387660
    ("" (SKOSIMP*)
     (("" (USE "ann_program_preserves_var_decls")
       (("" (EXPAND* "wf_state" "wf_ghoststate")
@@ -2336,9 +2275,9 @@
     (|wf_state| CONST-DECL "boolean" |MonitoredProgramSemantics| NIL)
     (|wf_state| CONST-DECL "boolean" |AnnotatedProgramSemantics| NIL)
     (|wf_ghoststate| CONST-DECL "boolean" |SemanticsJML| NIL))
-   136 135 T SHOSTAK))
+   138 138 T SHOSTAK))
  (|ann_program_yields_wf_program| 0
-  (|ann_program_yields_wf_program-1| NIL 3393664525 3396850676
+  (|ann_program_yields_wf_program-1| NIL 3393664525 3397387672
    ("" (SKOLEM-TYPEPRED)
     (("" (EXPAND* "wf_MP" "wf_Program")
       (("" (PROP)
@@ -2602,9 +2541,9 @@
     (|wf_Class| CONST-DECL "boolean" |WellFormedProgram| NIL)
     (|subset?| CONST-DECL "bool" |sets| NIL) NIL
     (|wf_Program| CONST-DECL "boolean" |WellFormedProgram| NIL))
-   1114 1112 T SHOSTAK))
+   1139 1137 T SHOSTAK))
  (|ann_program_preserves_well_behaved_Program| 0
-  (|ann_program_preserves_well_behaved_Program-1| NIL 3392570267 3396850678
+  (|ann_program_preserves_well_behaved_Program-1| NIL 3392570267 3397387673
    ("" (SKOSIMP*)
     (("" (EXPAND "well_behaved_Program")
       (("" (SKOSIMP*)
@@ -2700,9 +2639,9 @@
         NIL))
       NIL))
     NIL)
-   UNFINISHED NIL 188 188 T SHOSTAK))
+   UNFINISHED NIL 170 170 T SHOSTAK))
  (|get_class_ann_program| 0
-  (|get_class_ann_program-1| NIL 3392567967 3396850678
+  (|get_class_ann_program-1| NIL 3392567967 3397387674
    ("" (SKOSIMP*)
     (("" (REPLACE -3 :HIDE? T)
       (("" (REPLACE -3 :HIDE? T)
@@ -2731,9 +2670,9 @@
    PROVED
    ((|get_class| CONST-DECL "lift[Class]" |ProgramFunctions| NIL)
     (|ann_program| CONST-DECL "Program" |AnnotateProgram| NIL))
-   42 43 T SHOSTAK))
+   43 43 T SHOSTAK))
  (|same_class_name_ann_class_implies_same_class| 0
-  (|same_class_name_ann_class_implies_same_class-1| NIL 3387512899 3396850679
+  (|same_class_name_ann_class_implies_same_class-1| NIL 3387512899 3397387674
    ("" (SKOSIMP)
     (("" (EXPAND "ann_program")
       (("" (SKOSIMP)
@@ -2786,7 +2725,7 @@
     (|Val| TYPE-DECL NIL |Val_adt| NIL))
    39 39 T SHOSTAK))
  (|same_method_name_ann_class_implies_same_method| 0
-  (|same_method_name_ann_class_implies_same_method-1| NIL 3387516443 3396850680
+  (|same_method_name_ann_class_implies_same_method-1| NIL 3387516443 3397387676
    ("" (SKOSIMP)
     (("" (LEMMA "wf_class_has_unique_method_names")
       (("" (INST -1 "c2!1" "m2!1" "ann_method(mp!1)(m1!1)")
@@ -2851,9 +2790,9 @@
     (|defined?| CONST-DECL "boolean" |ValProp| NIL)
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|Val| TYPE-DECL NIL |Val_adt| NIL))
-   103 102 T SHOSTAK))
+   126 126 T SHOSTAK))
  (|lookup_mthd_ann_program| 0
-  (|lookup_mthd_ann_program-1| NIL 3387195852 3396850680
+  (|lookup_mthd_ann_program-1| NIL 3387195852 3397387676
    ("" (SKOSIMP)
     (("" (LEMMA "lookup_mthd_axiom")
       (("" (INST-CP -1 "program(mp!1)" "s!1" "m1!1" "mn!1" "tgt!1")
@@ -2961,7 +2900,7 @@
     (|string| TYPE-EQ-DECL NIL |strings| NIL))
    26 26 T SHOSTAK))
  (|ann_program_defines_MVA_vars| 0
-  (|ann_program_defines_MVA_vars-2| NIL 3394875181 3396850680
+  (|ann_program_defines_MVA_vars-2| NIL 3394875181 3397387676
    ("" (SKOSIMP)
     (("" (TYPEPRED "mp!1")
       (("" (EXPAND* "compatible" "var_names" "new_gvds")
@@ -3014,8 +2953,9 @@
     (|BoolExpr| TYPE-EQ-DECL NIL |Body_adt| NIL)
     (|FieldDecl| TYPE-EQ-DECL NIL |Program| NIL)
     (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
-    (|new_gvds| CONST-DECL "finite_set[FieldDecl]" |AnnotateProgram| NIL))
-   42 42 T NIL)
+    (|new_gvds| CONST-DECL "finite_set[FieldDecl]" |NewVariableDeclarations|
+     NIL))
+   43 43 T NIL)
   (|ann_program_defines_MVA_vars-1| NIL 3389956467 3394872339
    ("" (SKOSIMP*)
     ((""
@@ -3081,7 +3021,7 @@
     (|Class| TYPE-EQ-DECL NIL |Program| NIL))
    974962 4000 T SHOSTAK))
  (|new_vars_ghost_in_ann_program| 0
-  (|new_vars_ghost_in_ann_program-1| NIL 3394876088 3396850681
+  (|new_vars_ghost_in_ann_program-1| NIL 3394876088 3397387677
    ("" (SKOSIMP*)
     ((""
       (EXPAND* "wf_state" "wf_AState" "wf_ghoststate" "wf_Store" "is_ghost"
@@ -3146,5 +3086,5 @@
     (CP FORMAL-NONEMPTY-TYPE-DECL NIL |AnnotateProgramProperties| NIL)
     (|getGhostDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions|
      NIL))
-   64 64 T SHOSTAK)))
+   88 88 T SHOSTAK)))
 

@@ -30,6 +30,16 @@ BEGIN
             n : nat, d : derive_rec_type(n)) :
       f(p, branches, s1, s2, n, d) IMPLIES pstate(s2) = pstate(s1)
 
+  execute_assert_type
+    (f : [FullProgram, BoolExpr, FullState, FullState, n : nat,
+          derive_rec_type(n) -> boolean]) : boolean =
+    FORALL (p : FullProgram, e : BoolExpr, s1, s2 : FullState,
+            n : nat, d : derive_rec_type(n)) : 
+      f(p, e, s1, s2, n, d) IMPLIES 
+        st(pstate(s1)) = st(pstate(s2)) AND
+        (up?(ex(pstate(s1))) IMPLIES up?(ex(pstate(s2))))
+
+
   % We allow on_method_event to throw an exception if an assertion failed
   on_method_event_type
     (f : [FullProgram, Method[Name], Val, FullState, FullState, n : nat,
@@ -71,6 +81,7 @@ Semantics[Name : TYPE+,
           (IMPORTING SemanticsTypes[Name, FullProgram, FullState, pstate])
           update_PState : (update_PState_type),
           execute_set : (execute_set_type),
+          execute_assert : (execute_assert_type),
           execute_CaseJML : (execute_CaseJML_type),
           on_method_entry : (on_method_event_type),
           on_method_exit_normal : (on_method_event_type),
@@ -304,7 +315,11 @@ BEGIN
         n > 0 AND
         v = return_of_stmt(sigma2) AND
         derive(p)(IfThenElse(e, While(e, c), Skip), 
-                  sigma1, Unit, sigma2)(n - 1)
+                  sigma1, Unit, sigma2)(n - 1),
+      Assert(e) :
+        n > 0 AND
+        v = return_of_stmt(sigma2) AND
+         execute_assert(p, e, sigma1, sigma2, n, derive_rec)
     ENDCASES
     ENDIF
   MEASURE n
@@ -360,6 +375,7 @@ SemanticsProofs[Name : TYPE+,
           (IMPORTING SemanticsTypes[Name, FullProgram, FullState, pstate])
           update_PState : (update_PState_type),
           execute_set : (execute_set_type),
+          execute_assert : (execute_assert_type),
           execute_CaseJML : (execute_CaseJML_type),
           on_method_entry : (on_method_event_type),
           on_method_exit_normal : (on_method_event_type),
@@ -368,7 +384,8 @@ BEGIN
 ASSUMING
 
     IMPORTING Semantics[Name, FullProgram, FullState, program, pstate,
-              lookup, update_PState, execute_set, execute_CaseJML,
+              lookup, update_PState, 
+              execute_set, execute_assert, execute_CaseJML,
               on_method_entry, on_method_exit_normal,
               on_method_exit_exceptional]
 
@@ -450,6 +467,19 @@ ASSUMING
       execute_set(p, vn, e, s, s2, n2, d2) IMPLIES
         s1 = s2 AND n1 = n2
 
+  execute_assert_deterministic : ASSUMPTION
+    FORALL (p : FullProgram, e : BoolExpr, s, s1, s2 : FullState,
+            n1, n2 : nat, 
+            d1 : derive_rec_type(n1), d2 : derive_rec_type(n2)) :
+        (FORALL (b : Body)(v1, v2 : Val)(sigma, sigma1, sigma2 : FullState)
+                (k1 : upto(n1), k2 : upto(n2))
+                (m1 : below(k1), m2 : below(k2)) :
+          d1(k1)(p)(b, sigma, v1, sigma1)(m1) AND
+          d2(k2)(p)(b, sigma, v2, sigma2)(m2) IMPLIES
+            sigma1 = sigma2 AND m1 = m2 AND v1 = v2) IMPLIES
+      execute_assert(p, e, s, s1, n1, d1) IMPLIES
+      execute_assert(p, e, s, s2, n2, d2) IMPLIES
+        s1 = s2 AND n1 = n2
 
 ENDASSUMING
 
@@ -572,6 +602,16 @@ BEGIN
              ENDIF
            ELSE tau1 % This won't happen in a well typed program
            ENDIF
+
+  execute_assert : (execute_assert_type) =
+    LAMBDA (p : FullProgram, e : BoolExpr, s1, s2 : FullState, n : nat,
+            derive_rec : derive_rec_type(n)) :
+    IF up?(ex(pstate(s1))) 
+    THEN s1 = s2 AND n = 0
+    ELSE 
+      check_assertion(p)(e, s1, s2)(n)(derive_rec(n)) AND
+      st(pstate(s1)) = st(pstate(s2))
+    ENDIF
 
   % TODO: See on_method_entry_TCC3
   on_method_entry : (on_method_event_type) =

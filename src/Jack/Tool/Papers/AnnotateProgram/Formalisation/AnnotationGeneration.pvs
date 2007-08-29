@@ -23,7 +23,7 @@ BEGIN
 
 END VariableNames
 
-AnnotateProgram[CP, Name : TYPE+] : THEORY
+NewVariableDeclarations[CP, Name : TYPE+] : THEORY
 BEGIN
 
   ASSUMING
@@ -47,8 +47,6 @@ BEGIN
             set2list
 
   mp : VAR (wf_MP)
-
-  a : VAR (wf_MVA)
 
   name_of(mp) : (injective?[CP, (legal_names(mp))])
 
@@ -104,6 +102,36 @@ BEGIN
     disjoint?(var_names(new_gvds(mp)), declared_var_names(program(mp)))
 
 
+END NewVariableDeclarations
+
+
+AnnotateProgram[CP, Name : TYPE+] : THEORY
+BEGIN
+
+  ASSUMING
+
+    CP_is_enumerable : ASSUMPTION
+      EXISTS (f : [CP -> nat]) : injective?(f)
+
+    infinite_namespace : ASSUMPTION
+      is_infinite({n : Name | TRUE})
+
+    IMPORTING VariableNames[CP, Name]
+
+    name_of_exists : ASSUMPTION
+      EXISTS (f : [mp : (wf_MP) -> [CP -> (legal_names(mp))]]) : 
+        FORALL(mp : (wf_MP)) : 
+          injective?(f(mp))
+
+  ENDASSUMING
+
+  IMPORTING NewVariableDeclarations[CP, Name]
+
+  mp : VAR (wf_MP)
+
+  a : VAR (wf_MVA)
+
+
   % Event annotation
 
   ann_action(l : Action) : RECURSIVE Stmt =
@@ -147,7 +175,10 @@ BEGIN
     LET ann_event_type = LAMBDA (et : EventType) : 
                            ann_event(mp)(filter_event(mva(mp))(et)(name(m)))
     IN
-    m WITH [pre_set  := Sequence(pre_set(m), ann_event_type(Entry)),
+    m WITH [pre_set  := Sequence(pre_set(m), 
+                        Sequence(ann_event_type(Entry),
+                        Assert(Neg(Eq(NExpr(NumVarEval(cp(mp))),
+                                      NExpr(NumVarEval(halted(mp)))))))),
             post_set := Sequence(post_set(m), ann_event_type(ExitNormal)),
             exc_set  := Sequence(exc_set(m), ann_event_type(ExitExceptional))]
 
@@ -160,9 +191,9 @@ BEGIN
 
   ann_class(mp)(c : Class) : Class =
     IF classes(program(mp))(c) AND name(c) = class_name(mva(mp))
-    THEN c WITH [inv := Conj(BExpr(inv(c)), 
-                             BExpr(Neg(BExpr(Eq(NExpr(NumVarEval(cp(mp))), 
-                                                NExpr(NumVarEval(halted(mp)))))))),
+    THEN c WITH [inv := Conj(inv(c), 
+                             Neg(Eq(NExpr(NumVarEval(cp(mp))), 
+                                    NExpr(NumVarEval(halted(mp)))))),
                  ghost_vars := union(ghost_vars(c),
                                      new_gvds(mp)),
                  methods := ann_methods(mp)(methods(c))]
@@ -312,8 +343,8 @@ BEGIN
       up?(lookup_mthd(ann_program(mp), tgt, mn)) IMPLIES
       m1 = down(lookup_mthd(program(mp), tgt, mn)) IMPLIES
       m2 = down(lookup_mthd(ann_program(mp), tgt, mn)) IMPLIES
-        IF up?(get_class(program(mp))(tgt)) AND
-           name(down(get_class(program(mp))(tgt))) = class_name(mva(mp))
+      up?(get_class(program(mp))(tgt)) IMPLIES
+        IF name(down(get_class(program(mp))(tgt))) = class_name(mva(mp))
         THEN m2 = ann_method(mp)(m1)
         ELSE m2 = m1
         ENDIF

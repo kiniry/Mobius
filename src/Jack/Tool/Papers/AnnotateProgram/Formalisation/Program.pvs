@@ -49,7 +49,7 @@ BEGIN
   % Numerical expressions. They are parameterized with a variable name to handle
   %  the case of variable evaluation.
   Int(i : int) : Int?                     : NumExpr
-  Plus(b1, b2 : Expr) : Plus?             : NumExpr
+  Plus(b1, b2 : NumExpr) : Plus?          : NumExpr
 %  Minus(b1, b2 : Expr) : Minus?           : NumExpr
 %  Times(b1, b2 : Expr) : Times?           : NumExpr
 %  Div(b1, b2 : Expr) : Div?               : NumExpr
@@ -60,8 +60,8 @@ BEGIN
   % True, False, not, and, or are reserved keywords in PVS
   TT : TT?                                : BoolExpr
   FF : FF?                                : BoolExpr
-  Neg(b : Expr) : Neg?                    : BoolExpr
-  Conj(b1, b2 : Expr) : Conj?             : BoolExpr
+  Neg(b : BoolExpr) : Neg?                : BoolExpr
+  Conj(b1, b2 : BoolExpr) : Conj?         : BoolExpr
 %  Disj(b1, b2 : Expr) : Disj?             : BoolExpr
 %  Lt (b1, b2 : Expr) : Lt?                : BoolExpr
 %  Le (b1, b2 : Expr) : Le?                : BoolExpr
@@ -80,7 +80,7 @@ BEGIN
   % Program's expressions
   Assign(target : Name, source : Expr) : Assign? : Expr
   BExpr(b : BoolExpr) : BExpr?                   : Expr
-  CondExpr(test : Expr, then_expr : Expr, 
+  CondExpr(test : BoolExpr, then_expr : Expr, 
            else_expr : Expr) : CondExpr?         : Expr
   MethodCall(tgt : Expr, name : Name, 
              arg : Expr) : MethodCall?           : Expr
@@ -100,6 +100,7 @@ BEGIN
   TryCatch(try : Stmt, catch : Stmt, 
            finally : Stmt) : TryCatch?              : Stmt
   While(test : BoolExpr, body : Stmt) : While?      : Stmt
+  Assert(expr : BoolExpr) : Assert?                 : Stmt
 
 
 END Body
@@ -168,20 +169,20 @@ BEGIN
 
   % Used variable names
 
-  var_names(ne : NumExpr) : set[Name] =
-    {n : Name | some(LAMBDA (m : Name) : m = n)(ne)}
+%  var_names(ne : NumExpr) : set[Name] =
+%    {n : Name | some(LAMBDA (m : Name) : m = n)(ne)}
 
-  var_names(be : BoolExpr) : set[Name] =
-    {n : Name | some(LAMBDA (m : Name) : m = n)(be)}
+%  var_names(be : BoolExpr) : set[Name] =
+%    {n : Name | some(LAMBDA (m : Name) : m = n)(be)}
 
-  var_names(re : RefExpr) : set[Name] =
-    {n : Name | some(LAMBDA (m : Name) : m = n)(re)}
+%  var_names(re : RefExpr) : set[Name] =
+%    {n : Name | some(LAMBDA (m : Name) : m = n)(re)}
 
-  var_names(e : Expr) : set[Name] =
-    {n : Name | some(LAMBDA (m : Name) : m = n)(e)}
+%  var_names(e : Expr) : set[Name] =
+%    {n : Name | some(LAMBDA (m : Name) : m = n)(e)}
 
-   var_names(s : Stmt) : set[Name] =
-     {n : Name | some(LAMBDA (m : Name) : m = n)(s)}
+%   var_names(s : Stmt) : set[Name] =
+%     {n : Name | some(LAMBDA (m : Name) : m = n)(s)}
 
    % AT: Do we also have to do a workaround in this case?
 %   var_names(s : Stmt) : set[Name] =
@@ -201,12 +202,54 @@ BEGIN
 %     FORALL(x : list[[BoolExpr, Stmt]]) :
 %       var_names(CaseJML(x)) = emptyset
 
-  var_names(b : Body) : set[Name] =
-    union({n : Name | some(LAMBDA (m : Name) : m = n)(b)},
-          {n : Name | CaseJML?(b) AND every(id[bool])
-            (map(LAMBDA (x : [BoolExpr, Stmt]) : 
-              some(LAMBDA (m : Name) : m = n)(proj_1(x)) OR
-              some(LAMBDA (m : Name) : m = n)(proj_2(x)))(branches(b)))})
+  IMPORTING list_of_set_funcs[Name]
+
+  var_names(b : Body) : RECURSIVE [Name -> boolean] =
+    CASES b OF    
+       Int(i) : emptyset[Name],
+       Plus(b1, b2) : union(var_names(b1), var_names(b2)),
+       NumVarEval(varname) : singleton(varname),
+       TT : emptyset[Name],
+       FF : emptyset[Name],
+       Neg(b) : var_names(b),
+       Conj(b1, b2) : union(var_names(b1), var_names(b2)),
+       Eq (b1, b2) : union(var_names(b1), var_names(b2)),
+       BoolVarEval(varname) : singleton(varname),
+       Null : emptyset[Name],
+       RefVarEval(varname) : singleton(varname),
+       Assign(target, source) : add(target, var_names(source)),
+       BExpr(b) : var_names(b),
+       CondExpr(test, then_expr, else_expr) : 
+         union(var_names(test), 
+         union(var_names(then_expr), var_names(else_expr))),
+       MethodCall(tgt, name, arg) :
+         union(var_names(tgt), var_names(arg)),
+       NExpr(n) : var_names(n),
+       RExpr(r) : var_names(r),
+       CaseJML(branches) : 
+         IF null?(branches)
+         THEN emptyset[Name]
+         ELSE
+         list_to_union
+              (map(LAMBDA(x : [BoolExpr, Stmt]) : 
+                     union(var_names(proj_1(x)), var_names(proj_2(x))))
+                  (branches))
+         ENDIF,
+       IfThenElse(test, then_stmt, else_stmt) :
+         union(var_names(test), 
+         union(var_names(then_stmt), var_names(else_stmt))),
+       Sequence(s1, s2) : union(var_names(s1), var_names(s2)),
+       Set(target, source) : add(target, var_names(source)),
+       Skip : emptyset[Name],
+       StmtExpr(expr) : var_names(expr),
+       Throw : emptyset[Name],
+       TryCatch(try, catch, finally) : 
+         union(var_names(try), union(var_names(catch), var_names(finally))),
+       While(test, body) : union(var_names(test), var_names(body)),
+       Assert(expr) : var_names(expr)
+    ENDCASES
+  MEASURE b BY <<
+
 
   var_names(m : Method) : set[Name] =
     Union({ns : set[Name] | ns = var_names(pre(m)) OR ns = var_names(post(m)) OR
@@ -274,6 +317,12 @@ BEGIN
                 var_names(getLocalDecls(p))(n) OR
                 var_names(getGhostDecls(p))(n)}
 
+  ext_declared_var_names(p : Program) : finite_set[Name] =
+    union({n : Name | var_names(getFieldDecls(p))(n) OR
+                      var_names(getLocalDecls(p))(n) OR
+                      var_names(getGhostDecls(p))(n)},
+          {n : Name | n = This OR n = Super})
+
 
   class_names(p : Program) : finite_set[Name] =
     {n : Name | EXISTS (c : Class) : classes(p)(c) AND name(c) = n}
@@ -334,8 +383,9 @@ BEGIN
     FORALL (c1, c2, c3 : Body) :
       c1 << c2 AND c2 << c3 IMPLIES c1 << c3
 
-  % problem with case jml
-  subterm_subset_varnames : LEMMA
+  IMPORTING list_map_funcs[[BoolExpr, Stmt], set[Name]]
+
+  subterm_subset_varnames : LEMMA % :-)
     FORALL(b1, b2 : Body) :
       b1 << b2 IMPLIES subset?(var_names(b1), var_names(b2))
 

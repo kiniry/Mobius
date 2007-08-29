@@ -151,7 +151,7 @@ BEGIN
         wf_state(p)(update(vn, v)(s))
 
 
-  wf_state_raise : LEMMA % :-)
+  wf_state_raise : LEMMA % :-)f
     FORALL(p : Program, s : PState, exc : Excpt) :
       wf_state(p)(s) IMPLIES
         wf_state(p)(raise(exc)(s))
