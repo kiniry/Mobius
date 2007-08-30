@@ -25,7 +25,18 @@ BEGIN
 
   mp : VAR (wf_MP)
 
-  % Properties about MP_modeled?
+  % Properties about related_states
+
+  get_address_same_in_related_states : LEMMA  %:-)
+    FORALL(vn : Name, sMP : MPState, sAP : APState) :
+      related_states(mp)(sMP, sAP) IMPLIES
+        get_address(vn, sMP) = get_address(vn, sAP)
+
+  get_dynamic_type_name_same_in_related_states : LEMMA % :-)
+    FORALL(vn : Name, sMP : MPState, sAP : APState) :
+      related_states(mp)(sMP, sAP) IMPLIES
+        get_dynamic_type_name(vn, sMP) = get_dynamic_type_name(vn, sAP)
+  
 
   MP_modeled_implies_same_exception : LEMMA % :-)
     FORALL (mp)(sMP : MPState, sAP : APState) :
@@ -38,7 +49,7 @@ BEGIN
   related_states_implies_same_lookup : LEMMA % :-)
     FORALL(mp)(sMP : MPState, sAP : APState, n : Name) :
       related_states(mp)(sMP, sAP) IMPLIES 
-      declared_var_names(program(mp))(n) IMPLIES
+      ext_declared_var_names(program(mp))(n) IMPLIES
         lookup(n, sMP) = lookup(n, sAP)
        
   % If cp(astate(sMP)) = halted, upd must leave the JML exception in sAP
@@ -99,6 +110,26 @@ BEGIN
 %        eval(b)(sMP) = eval(b)(sAP)
 
 
+  on_method_entry_preserves_related_states : LEMMA
+    FORALL(md : Method, a : (defined?), m1, m2 : nat,
+           sMP1, sMP2 : MPState, sAP1, sAP2 : APState) : 
+      related_states(mp)(sMP1, sAP1) IMPLIES
+      NOT up?(ex(pstate(sAP1))) IMPLIES
+      NOT a = Null IMPLIES
+      on_method_entry_MP(mp, md, a, sMP1, sMP2, m1,
+                         LAMBDA (k: upto(m1))
+                                (p: MonitoredProgram[CP, Name])
+                                (b: Body[Name], sigma1: MPState[CP, Name],
+                                 v: Val[Name], sigma2: MPState[CP, Name])
+                                (m: below(k)):
+                           derive(p)(b, sigma1, v, sigma2)(m)) IMPLIES
+      on_method_entry(ann_program(mp), md, a, sAP1, sAP2, m2,
+                      LAMBDA (k: upto(m2))(p: Program[Name])
+                             (b: Body[Name], sigma1: APState[Name],
+                              v: Val[Name], sigma2: APState[Name])
+                             (m: below(k)):
+                        derive(p)(b, sigma1, v, sigma2)(m)) IMPLIES
+        related_states(mp)(sMP2, sAP2)
 
   % Main lemmas used in the proof of the correcteness_of_ann_program
 

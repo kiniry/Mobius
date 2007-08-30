@@ -249,6 +249,18 @@ BEGIN
       derive(mp)(b, sigma1, v, sigma2)(n) IMPLIES
         wf_state(mp)(sigma2)
 
+  IMPORTING AnnotatedProgramSemantics[Name]
 
+  % method call case not finished
+  derive_MP_from_derive_AP : LEMMA
+    FORALL(mp : MonitoredProgram, b : Body, v : Val)
+          (sMP1 : MPState)(sAP1, sAP2 : APState)(n : nat) :
+      pstate(sMP1) = pstate(sAP1) IMPLIES
+      gvs(sMP1) = gvs(sAP1) IMPLIES
+      derive(program(mp))(b, sAP1, v, sAP2)(n) IMPLIES
+      EXISTS (sMP2 : MPState) :
+        pstate(sMP2) = pstate(sAP2) AND
+        gvs(sMP2) = gvs(sAP2) AND
+        derive(mp)(b, sMP1, v, sMP2)(n)
 
 END MonitoredProgramSemantics

@@ -28,7 +28,7 @@
         NIL))
       NIL))
     NIL)
-   PROVED
+   PROVED-COMPLETE
    ((|infinite_difference| JUDGEMENT-TCC NIL |infinite_sets_def| NIL)
     (|infinite_namespace| FORMULA-DECL NIL |VariableNames| NIL)
     (|FieldDecl| TYPE-EQ-DECL NIL |Program| NIL)
@@ -40,17 +40,16 @@
     (|lift| TYPE-DECL NIL |lift_adt| NIL)
     (|Class| TYPE-EQ-DECL NIL |Program| NIL)
     (= CONST-DECL "[T, T -> boolean]" |equalities| NIL)
-    (|infinite_set| TYPE-EQ-DECL NIL |infinite_sets_def| NIL)
-    (|mp!1| SKOLEM-CONST-DECL "MonitoredProgram[CP, Name]" |VariableNames| NIL)
+    (|infinite_set| TYPE-EQ-DECL NIL |infinite_sets_def| NIL) NIL
     (|infinite_nonempty| JUDGEMENT-TCC NIL |infinite_sets_def| NIL)
     (|finite_union| APPLICATION-JUDGEMENT "finite_set" |finite_sets| NIL)
     (|var_names| CONST-DECL "finite_set[Name]" MVA NIL)
     (|member| CONST-DECL "bool" |sets| NIL)
     (|getFieldDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    NIL
     (|getLocalDecls| CONST-DECL "finite_set[LocalVarDecl]" |ProgramFunctions|
      NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    NIL
     (|getGhostDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
     (|declared_var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
     (|union| CONST-DECL "set" |sets| NIL)
@@ -90,7 +89,7 @@
    (";;; Proof IMP_VariableNames_TCC1-1 for formula AnnotateProgram.IMP_VariableNames_TCC1"
     (USE "infinite_namespace") NIL
     ";;; developed with SHOSTAK decision procedures")
-   PROVED
+   PROVED-COMPLETE
    ((|infinite_namespace| FORMULA-DECL NIL |NewVariableDeclarations| NIL)) 2 2
    NIL NIL)
   (|IMP_VariableNames_TCC1-1| NIL 3397386612 NIL ("" (ASSUMING-TCC) NIL NIL)
@@ -104,10 +103,8 @@
       ((";;; Proof name_of_TCC1-1 for formula AnnotateProgram.name_of_TCC1"
         (INST?) NIL))))
     ";;; developed with SHOSTAK decision procedures")
-   PROVED
-   ((|f!1| SKOLEM-CONST-DECL "[mp: (wf_MP) -> [CP -> (legal_names(mp))]]"
-     |NewVariableDeclarations| NIL)
-    (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |NewVariableDeclarations| NIL)
+   PROVED-INCOMPLETE
+   (NIL (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |NewVariableDeclarations| NIL)
     (CP FORMAL-NONEMPTY-TYPE-DECL NIL |NewVariableDeclarations| NIL)
     (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
     (|EventType| TYPE-DECL NIL |EventType_adt| NIL)
@@ -142,9 +139,8 @@
       ((";;; Proof unique_TCC1-1 for formula AnnotateProgram.unique_TCC1"
         (INST?) NIL))))
     ";;; developed with SHOSTAK decision procedures")
-   PROVED
-   ((|f!1| SKOLEM-CONST-DECL "[CP -> nat]" |NewVariableDeclarations| NIL)
-    (CP FORMAL-NONEMPTY-TYPE-DECL NIL |NewVariableDeclarations| NIL)
+   PROVED-COMPLETE
+   (NIL (CP FORMAL-NONEMPTY-TYPE-DECL NIL |NewVariableDeclarations| NIL)
     (|number| NONEMPTY-TYPE-DECL NIL |numbers| NIL)
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|number_field_pred| CONST-DECL "[number -> boolean]" |number_fields| NIL)
@@ -284,7 +280,7 @@
            ("2" (GRIND) NIL)))))
        ("3" (GRIND) NIL))))
     ";;; developed with SHOSTAK decision procedures")
-   PROVED
+   PROVED-INCOMPLETE
    ((|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |NewVariableDeclarations| NIL)
     (|Val| TYPE-DECL NIL |Val_adt| NIL)
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
@@ -335,51 +331,13 @@
      |NewVariableDeclarations| NIL)
     (|nonempty?| CONST-DECL "bool" |sets| NIL)
     (|add| CONST-DECL "(nonempty?)" |sets| NIL)
-    (|union| CONST-DECL "set" |sets| NIL)
-    (|mp!1| SKOLEM-CONST-DECL "(wf_MP[CP, Name])" |NewVariableDeclarations|
-     NIL)
+    (|union| CONST-DECL "set" |sets| NIL) NIL
     (|is_finite| CONST-DECL "bool" |finite_sets| NIL)
-    (|finite_union| JUDGEMENT-TCC NIL |finite_sets| NIL)
-    (|gd!1| SKOLEM-CONST-DECL "({gd: FieldDecl[Name] |
-    (EXISTS (v: (vdsA(mva(mp!1)))):
-       name(gd) = name(v) AND
-        jtype(gd) = jtype(v) AND init_val(gd) = init_val(v))})"
-     |NewVariableDeclarations| NIL)
-    (|v!1| SKOLEM-CONST-DECL "(vdsA(mva(mp!1)))" |NewVariableDeclarations| NIL)
-    (|x2!1| SKOLEM-CONST-DECL "({gd: FieldDecl[Name] |
-    (EXISTS (v: (vdsA(mva(mp!1)))):
-       name(gd) = name(v) AND
-        jtype(gd) = jtype(v) AND init_val(gd) = init_val(v))})"
-     |NewVariableDeclarations| NIL)
-    (|x1!1| SKOLEM-CONST-DECL "({gd: FieldDecl[Name] |
-    (EXISTS (v: (vdsA(mva(mp!1)))):
-       name(gd) = name(v) AND
-        jtype(gd) = jtype(v) AND init_val(gd) = init_val(v))})"
-     |NewVariableDeclarations| NIL)
-    (|v!1| SKOLEM-CONST-DECL "(vdsA(mva(mp!1)))" |NewVariableDeclarations| NIL)
-    (|nonempty_exists| FORMULA-DECL NIL |sets_lemmas| NIL)
-    (|v!1| SKOLEM-CONST-DECL "(vdsA(mva(mp!1)))" |NewVariableDeclarations| NIL)
+    (|finite_union| JUDGEMENT-TCC NIL |finite_sets| NIL) NIL NIL NIL NIL NIL
+    (|nonempty_exists| FORMULA-DECL NIL |sets_lemmas| NIL) NIL
     (|choose| CONST-DECL "(p)" |sets| NIL)
     (|below| TYPE-EQ-DECL NIL |nat_types| NIL)
-    (< CONST-DECL "bool" |reals| NIL)
-    (|q!1| SKOLEM-CONST-DECL "(cps(mva(mp!1)))" |NewVariableDeclarations| NIL)
-    (|gd!1| SKOLEM-CONST-DECL "({gd: FieldDecl[Name] |
-    ((EXISTS (q: (cps(mva(mp!1)))):
-        name(gd) = name_of(mp!1)(q) AND
-         jtype(gd) = IntType AND init_val(gd) = Int[Name](unique(q))))})"
-     |NewVariableDeclarations| NIL)
-    (|x2!1| SKOLEM-CONST-DECL "({gd: FieldDecl[Name] |
-    ((EXISTS (q: (cps(mva(mp!1)))):
-        name(gd) = name_of(mp!1)(q) AND
-         jtype(gd) = IntType AND init_val(gd) = Int[Name](unique(q))))})"
-     |NewVariableDeclarations| NIL)
-    (|x1!1| SKOLEM-CONST-DECL "({gd: FieldDecl[Name] |
-    ((EXISTS (q: (cps(mva(mp!1)))):
-        name(gd) = name_of(mp!1)(q) AND
-         jtype(gd) = IntType AND init_val(gd) = Int[Name](unique(q))))})"
-     |NewVariableDeclarations| NIL)
-    (|q!1| SKOLEM-CONST-DECL "(cps(mva(mp!1)))" |NewVariableDeclarations| NIL)
-    (|q!1| SKOLEM-CONST-DECL "(cps(mva(mp!1)))" |NewVariableDeclarations| NIL)
+    (< CONST-DECL "bool" |reals| NIL) NIL NIL NIL NIL NIL NIL
     (|finite_add| FORMULA-DECL NIL |finite_sets| NIL)
     (|member| CONST-DECL "bool" |sets| NIL))
    736 736 NIL NIL)
@@ -387,7 +345,7 @@
    NIL NIL NIL))
  (|new_gvds_as_union_TCC1| 0
   (|new_gvds_as_union_TCC1-1| NIL 3397386612 3397387597
-   ("" (SUBTYPE-TCC) NIL NIL) PROVED
+   ("" (SUBTYPE-TCC) NIL NIL) PROVED-INCOMPLETE
    ((|defined?| CONST-DECL "boolean" |ValProp| NIL)
     (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |NewVariableDeclarations| NIL))
    67 67 NIL NIL))
@@ -418,7 +376,7 @@
                        ("2" (PROPAX) NIL) ("3" (PROPAX) NIL)))))))))
                ("2" (GRIND) NIL))))))))))))
     ";;; developed with SHOSTAK decision procedures")
-   PROVED
+   UNCHECKED
    ((|add| CONST-DECL "(nonempty?)" |sets| NIL)
     (|member| CONST-DECL "bool" |sets| NIL)
     (OR CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
@@ -434,8 +392,7 @@
     (|legal_names| CONST-DECL "set[Name]" |VariableNames| NIL)
     (|name_of| CONST-DECL "(injective?[CP, (legal_names(mp))])"
      |NewVariableDeclarations| NIL)
-    (|mp!1| SKOLEM-CONST-DECL "(wf_MP)" |NewVariableDeclarations| NIL)
-    (|wf_MP| CONST-DECL "boolean" |MonitoredProgram| NIL)
+    NIL (|wf_MP| CONST-DECL "boolean" |MonitoredProgram| NIL)
     (|MonitoredProgram| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
     (|compatible| CONST-DECL "boolean" |MonitoredProgram| NIL)
     (|MonitoredProgramPre| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
@@ -469,8 +426,7 @@
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|defined?| CONST-DECL "boolean" |ValProp| NIL)
     (|JType| TYPE-DECL NIL |JType_adt| NIL)
-    (|FieldDecl| TYPE-EQ-DECL NIL |Program| NIL)
-    (|x!1| SKOLEM-CONST-DECL "FieldDecl[Name]" |NewVariableDeclarations| NIL)
+    (|FieldDecl| TYPE-EQ-DECL NIL |Program| NIL) NIL
     (|new_gvds| CONST-DECL "finite_set[FieldDecl]" |NewVariableDeclarations|
      NIL)
     (|union| CONST-DECL "set" |sets| NIL))
@@ -502,8 +458,8 @@
               (("3" (FLATTEN)
                 (("3" (ASSERT) (("3" (INST? 3) NIL))))))))))))))))
     ";;; developed with SHOSTAK decision procedures")
-   PROVED
-   ((|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+   UNCHECKED
+   (NIL
     (|unique| CONST-DECL "(injective?[CP, nat])" |NewVariableDeclarations| NIL)
     (|injective?| CONST-DECL "bool" |functions| NIL)
     (|nat| NONEMPTY-TYPE-EQ-DECL NIL |naturalnumbers| NIL)
@@ -545,12 +501,11 @@
     (|defined?| CONST-DECL "boolean" |ValProp| NIL)
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|Val| TYPE-DECL NIL |Val_adt| NIL)
-    (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |NewVariableDeclarations| NIL)
-    (|mp!1| SKOLEM-CONST-DECL "(wf_MP)" |NewVariableDeclarations| NIL)
+    (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |NewVariableDeclarations| NIL) NIL
     (|legal_names| CONST-DECL "set[Name]" |VariableNames| NIL)
     (|name_of| CONST-DECL "(injective?[CP, (legal_names(mp))])"
      |NewVariableDeclarations| NIL)
-    (|q!1| SKOLEM-CONST-DECL "CP" |NewVariableDeclarations| NIL)
+    NIL
     (|new_gvds| CONST-DECL "finite_set[FieldDecl]" |NewVariableDeclarations|
      NIL))
    200 193 NIL NIL))
@@ -618,7 +573,7 @@
                                    ("2" (APPLY-EXTENSIONALITY :HIDE? T)
                                     NIL))))))))))))))))))))))))))))))))
     ";;; developed with SHOSTAK decision procedures")
-   PROVED
+   UNCHECKED
    ((|MVA_aut_vars_are_not_prog_vars| CONST-DECL "boolean" |MonitoredProgram|
      NIL)
     (|disjoint?| CONST-DECL "bool" |sets| NIL)
@@ -638,10 +593,10 @@
     (|var_names| CONST-DECL "finite_set[Name]" MVA NIL)
     (|forbidden_names| CONST-DECL "set[Name]" |VariableNames| NIL)
     (|getFieldDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    NIL
     (|getLocalDecls| CONST-DECL "finite_set[LocalVarDecl]" |ProgramFunctions|
      NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    NIL
     (|getGhostDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
     (|declared_var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
     (|member| CONST-DECL "bool" |sets| NIL)
@@ -676,19 +631,19 @@
 (|AnnotateProgram|
  (|IMP_VariableNames_TCC1| 0
   (|IMP_VariableNames_TCC1-1| NIL 3396601203 3397387612
-   ("" (USE "infinite_namespace") NIL NIL) PROVED
+   ("" (USE "infinite_namespace") NIL NIL) PROVED-COMPLETE
    ((|infinite_namespace| FORMULA-DECL NIL |AnnotateProgram| NIL)) 2 2 T NIL))
  (|IMP_NewVariableDeclarations_TCC1| 0
   (|IMP_NewVariableDeclarations_TCC1-1| NIL 3397387554 3397387785
-   ("" (USE "CP_is_enumerable") NIL NIL) PROVED
+   ("" (USE "CP_is_enumerable") NIL NIL) PROVED-COMPLETE
    ((|CP_is_enumerable| FORMULA-DECL NIL |AnnotateProgram| NIL)) 1500 2 T NIL))
  (|IMP_NewVariableDeclarations_TCC2| 0
   (|IMP_NewVariableDeclarations_TCC2-1| NIL 3397387554 3397387799
-   ("" (USE "name_of_exists") NIL NIL) PROVED
+   ("" (USE "name_of_exists") NIL NIL) PROVED-INCOMPLETE
    ((|name_of_exists| FORMULA-DECL NIL |AnnotateProgram| NIL)) 800 2 T NIL))
  (|ann_action_TCC1| 0
   (|ann_action_TCC1-1| NIL 3383987003 3397387614 ("" (TERMINATION-TCC) NIL NIL)
-   PROVED
+   PROVED-INCOMPLETE
    ((|real_lt_is_strict_total_order| NAME-JUDGEMENT
      "(strict_total_order?[real])" |real_props| NIL)
     (|nnint_plus_posint_is_posint| APPLICATION-JUDGEMENT "posint" |integers|
@@ -736,7 +691,7 @@
         NIL))
       NIL))
     NIL)
-   PROVED
+   PROVED-INCOMPLETE
    ((|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
@@ -748,24 +703,9 @@
     (|is_finite| CONST-DECL "bool" |finite_sets| NIL)
     (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
     (|injective?| CONST-DECL "bool" |functions| NIL)
-    (|nonempty_exists| FORMULA-DECL NIL |sets_lemmas| NIL)
-    (|t!2| SKOLEM-CONST-DECL "Transition[CP, Name]" |AnnotateProgram| NIL)
+    (|nonempty_exists| FORMULA-DECL NIL |sets_lemmas| NIL) NIL
     (|member| CONST-DECL "bool" |sets| NIL)
-    (|empty?| CONST-DECL "bool" |sets| NIL)
-    (|x1!1| SKOLEM-CONST-DECL "({x: [BoolExpr[Name], Stmt[Name]] |
-    EXISTS (t: Transition[CP, Name]):
-      ts!1(t) AND
-       x =
-        (guard_to_expression[CP, Name](mva(mp!1))(guard(t)),
-         update_vars(mp!1)(t))})"
-     |AnnotateProgram| NIL)
-    (|x2!1| SKOLEM-CONST-DECL "({x: [BoolExpr[Name], Stmt[Name]] |
-    EXISTS (t: Transition[CP, Name]):
-      ts!1(t) AND
-       x =
-        (guard_to_expression[CP, Name](mva(mp!1))(guard(t)),
-         update_vars(mp!1)(t))})"
-     |AnnotateProgram| NIL)
+    (|empty?| CONST-DECL "bool" |sets| NIL) NIL NIL
     (|Body| TYPE-DECL NIL |Body_adt| NIL)
     (OR CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
     (TT? ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
@@ -786,9 +726,7 @@
     (|While?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
     (|Assert?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
     (|Stmt| TYPE-EQ-DECL NIL |Body_adt| NIL)
-    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
-    (|ts!1| SKOLEM-CONST-DECL "finite_set[Transition[CP, Name]]"
-     |AnnotateProgram| NIL)
+    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL) NIL
     (= CONST-DECL "[T, T -> boolean]" |equalities| NIL)
     (|EventType| TYPE-DECL NIL |EventType_adt| NIL)
     (|Val| TYPE-DECL NIL |Val_adt| NIL)
@@ -803,8 +741,7 @@
     (|MonitoredProgramPre| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
     (|compatible| CONST-DECL "boolean" |MonitoredProgram| NIL)
     (|MonitoredProgram| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
-    (|wf_MP| CONST-DECL "boolean" |MonitoredProgram| NIL)
-    (|mp!1| SKOLEM-CONST-DECL "(wf_MP[CP, Name])" |AnnotateProgram| NIL)
+    (|wf_MP| CONST-DECL "boolean" |MonitoredProgram| NIL) NIL
     (|update_vars| CONST-DECL "Stmt" |AnnotateProgram| NIL)
     (|nonempty?| CONST-DECL "bool" |sets| NIL)
     (|choose| CONST-DECL "(p)" |sets| NIL)
@@ -840,7 +777,7 @@
         NIL))
       NIL))
     NIL)
-   PROVED
+   PROVED-INCOMPLETE
    ((|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
@@ -1068,7 +1005,7 @@
                     (("3" (INST 1 "N!2" "f!2")
                       (("3" (GRIND) NIL))))))))))))))))))))
     ";;; developed with SHOSTAK decision procedures")
-   PROVED
+   PROVED-INCOMPLETE
    ((|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
@@ -1090,53 +1027,15 @@
     (|MonitoredProgramPre| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
     (|compatible| CONST-DECL "boolean" |MonitoredProgram| NIL)
     (|MonitoredProgram| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
-    (|wf_MP| CONST-DECL "boolean" |MonitoredProgram| NIL)
-    (|c!1| SKOLEM-CONST-DECL "({c: [BoolExpr[Name], Stmt[Name]] |
-    EXISTS (q: CP):
-      cps(mva(mp!1))(q) AND
-       nonempty?[Transition[CP, Name]]
-           ({t: Transition[CP, Name] | ts!1(t) AND scp(t) = q})
-        AND
-        c =
-         ann_trans_cp(mp!1)
-                     (q,
-                      {t: Transition[CP, Name] | ts!1(t) AND scp(t) = q})})"
-     |AnnotateProgram| NIL)
-    (|q!1| SKOLEM-CONST-DECL "CP" |AnnotateProgram| NIL)
-    (|injective?| CONST-DECL "bool" |functions| NIL)
-    (|x2!1| SKOLEM-CONST-DECL "({c: [BoolExpr[Name], Stmt[Name]] |
-    EXISTS (q: CP):
-      cps(mva(mp!1))(q) AND
-       nonempty?[Transition[CP, Name]]
-           ({t: Transition[CP, Name] | ts!1(t) AND scp(t) = q})
-        AND
-        c =
-         ann_trans_cp(mp!1)
-                     (q,
-                      {t: Transition[CP, Name] | ts!1(t) AND scp(t) = q})})"
-     |AnnotateProgram| NIL)
-    (|x1!1| SKOLEM-CONST-DECL "({c: [BoolExpr[Name], Stmt[Name]] |
-    EXISTS (q: CP):
-      cps(mva(mp!1))(q) AND
-       nonempty?[Transition[CP, Name]]
-           ({t: Transition[CP, Name] | ts!1(t) AND scp(t) = q})
-        AND
-        c =
-         ann_trans_cp(mp!1)
-                     (q,
-                      {t: Transition[CP, Name] | ts!1(t) AND scp(t) = q})})"
-     |AnnotateProgram| NIL)
-    (|q!1| SKOLEM-CONST-DECL "CP" |AnnotateProgram| NIL)
+    (|wf_MP| CONST-DECL "boolean" |MonitoredProgram| NIL) NIL NIL
+    (|injective?| CONST-DECL "bool" |functions| NIL) NIL NIL NIL
     (|restrict| CONST-DECL "R" |restrict| NIL)
     (|ann_guard_actions| CONST-DECL "list[[BoolExpr, Stmt]]" |AnnotateProgram|
      NIL)
     (|empty?| CONST-DECL "bool" |sets| NIL)
     (|member| CONST-DECL "bool" |sets| NIL)
-    (|update_vars| CONST-DECL "Stmt" |AnnotateProgram| NIL)
-    (|q!1| SKOLEM-CONST-DECL "CP" |AnnotateProgram| NIL)
-    (|nonempty_exists| FORMULA-DECL NIL |sets_lemmas| NIL)
-    (|q!1| SKOLEM-CONST-DECL "CP" |AnnotateProgram| NIL)
-    (|q!1| SKOLEM-CONST-DECL "CP" |AnnotateProgram| NIL)
+    (|update_vars| CONST-DECL "Stmt" |AnnotateProgram| NIL) NIL
+    (|nonempty_exists| FORMULA-DECL NIL |sets_lemmas| NIL) NIL NIL
     (|Body| TYPE-DECL NIL |Body_adt| NIL)
     (OR CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
     (TT? ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
@@ -1157,11 +1056,8 @@
     (|While?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
     (|Assert?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
     (|Stmt| TYPE-EQ-DECL NIL |Body_adt| NIL)
-    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
-    (|mp!1| SKOLEM-CONST-DECL "(wf_MP[CP, Name])" |AnnotateProgram| NIL)
-    (|nonempty?| CONST-DECL "bool" |sets| NIL)
-    (|ts!1| SKOLEM-CONST-DECL "finite_set[Transition[CP, Name]]"
-     |AnnotateProgram| NIL)
+    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL) NIL
+    (|nonempty?| CONST-DECL "bool" |sets| NIL) NIL
     (= CONST-DECL "[T, T -> boolean]" |equalities| NIL)
     (|ann_trans_cp| CONST-DECL "[BoolExpr, Stmt]" |AnnotateProgram| NIL)
     (IMPLIES CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
@@ -1460,7 +1356,7 @@
         NIL))
       NIL))
     NIL)
-   PROVED
+   PROVED-INCOMPLETE
    ((|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
@@ -1499,7 +1395,7 @@
   (|ann_method_TCC1-1| NIL 3389418364 3397387650
    ("" (SKOLEM-TYPEPRED)
     (("" (EXPAND* "wf_MP" "complete") (("" (FLATTEN) NIL NIL)) NIL)) NIL)
-   PROVED
+   PROVED-INCOMPLETE
    ((|wf_MP| CONST-DECL "boolean" |MonitoredProgram| NIL)
     (|MonitoredProgram| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
     (|compatible| CONST-DECL "boolean" |MonitoredProgram| NIL)
@@ -1563,7 +1459,7 @@
         NIL))
       NIL))
     NIL)
-   PROVED
+   PROVED-INCOMPLETE
    ((|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
@@ -1576,23 +1472,10 @@
     (|Expr| TYPE-EQ-DECL NIL |Body_adt| NIL)
     (|Method| TYPE-EQ-DECL NIL |Program| NIL)
     (|set| TYPE-EQ-DECL NIL |sets| NIL)
-    (|is_finite| CONST-DECL "bool" |finite_sets| NIL)
-    (|m!1| SKOLEM-CONST-DECL "({m: Method[Name] |
-    EXISTS (n: Method[Name]): ms!1(n) AND m = ann_method(mp!1)(n)})"
-     |AnnotateProgram| NIL)
-    (|n!1| SKOLEM-CONST-DECL "Method[Name]" |AnnotateProgram| NIL)
-    (|injective?| CONST-DECL "bool" |functions| NIL)
-    (|n!2| SKOLEM-CONST-DECL "Method[Name]" |AnnotateProgram| NIL)
-    (|nonempty_exists| FORMULA-DECL NIL |sets_lemmas| NIL)
-    (|n!1| SKOLEM-CONST-DECL "Method[Name]" |AnnotateProgram| NIL)
-    (|x1!1| SKOLEM-CONST-DECL "({m: Method[Name] |
-    EXISTS (n: Method[Name]): ms!1(n) AND m = ann_method(mp!1)(n)})"
-     |AnnotateProgram| NIL)
-    (|x2!1| SKOLEM-CONST-DECL "({m: Method[Name] |
-    EXISTS (n: Method[Name]): ms!1(n) AND m = ann_method(mp!1)(n)})"
-     |AnnotateProgram| NIL)
-    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
-    (|ms!1| SKOLEM-CONST-DECL "finite_set[Method[Name]]" |AnnotateProgram| NIL)
+    (|is_finite| CONST-DECL "bool" |finite_sets| NIL) NIL NIL
+    (|injective?| CONST-DECL "bool" |functions| NIL) NIL
+    (|nonempty_exists| FORMULA-DECL NIL |sets_lemmas| NIL) NIL NIL NIL
+    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL) NIL
     (= CONST-DECL "[T, T -> boolean]" |equalities| NIL)
     (CP FORMAL-NONEMPTY-TYPE-DECL NIL |AnnotateProgram| NIL)
     (|EventType| TYPE-DECL NIL |EventType_adt| NIL)
@@ -1608,8 +1491,7 @@
     (|compatible| CONST-DECL "boolean" |MonitoredProgram| NIL)
     (|MonitoredProgram| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
     (|wf_MP| CONST-DECL "boolean" |MonitoredProgram| NIL)
-    (|ann_method| CONST-DECL "Method" |AnnotateProgram| NIL)
-    (|mp!1| SKOLEM-CONST-DECL "(wf_MP[CP, Name])" |AnnotateProgram| NIL)
+    (|ann_method| CONST-DECL "Method" |AnnotateProgram| NIL) NIL
     (|nonempty?| CONST-DECL "bool" |sets| NIL)
     (|choose| CONST-DECL "(p)" |sets| NIL)
     (|below| TYPE-EQ-DECL NIL |nat_types| NIL)
@@ -1669,7 +1551,7 @@
         NIL))
       NIL))
     NIL)
-   PROVED
+   PROVED-INCOMPLETE
    ((|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
@@ -1699,26 +1581,10 @@
     (|MonitoredProgramPre| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
     (|compatible| CONST-DECL "boolean" |MonitoredProgram| NIL)
     (|MonitoredProgram| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
-    (|wf_MP| CONST-DECL "boolean" |MonitoredProgram| NIL)
-    (|c!1| SKOLEM-CONST-DECL "({c: Class[Name] |
-    EXISTS (c1: Class[Name]):
-      classes(program(mp!1))(c1) AND c = ann_class(mp!1)(c1)})"
-     |AnnotateProgram| NIL)
-    (|c1!1| SKOLEM-CONST-DECL "Class[Name]" |AnnotateProgram| NIL)
-    (|injective?| CONST-DECL "bool" |functions| NIL)
-    (|c1!2| SKOLEM-CONST-DECL "Class[Name]" |AnnotateProgram| NIL)
-    (|nonempty_exists| FORMULA-DECL NIL |sets_lemmas| NIL)
-    (|c1!1| SKOLEM-CONST-DECL "Class[Name]" |AnnotateProgram| NIL)
-    (|x1!1| SKOLEM-CONST-DECL "({c: Class[Name] |
-    EXISTS (c1: Class[Name]):
-      classes(program(mp!1))(c1) AND c = ann_class(mp!1)(c1)})"
-     |AnnotateProgram| NIL)
-    (|x2!1| SKOLEM-CONST-DECL "({c: Class[Name] |
-    EXISTS (c1: Class[Name]):
-      classes(program(mp!1))(c1) AND c = ann_class(mp!1)(c1)})"
-     |AnnotateProgram| NIL)
-    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
-    (|mp!1| SKOLEM-CONST-DECL "(wf_MP[CP, Name])" |AnnotateProgram| NIL)
+    (|wf_MP| CONST-DECL "boolean" |MonitoredProgram| NIL) NIL NIL
+    (|injective?| CONST-DECL "bool" |functions| NIL) NIL
+    (|nonempty_exists| FORMULA-DECL NIL |sets_lemmas| NIL) NIL NIL NIL
+    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL) NIL
     (= CONST-DECL "[T, T -> boolean]" |equalities| NIL)
     (|ann_class| CONST-DECL "Class" |AnnotateProgram| NIL)
     (|nonempty?| CONST-DECL "bool" |sets| NIL)
@@ -1743,24 +1609,24 @@
    UNCHECKED NIL 7000 150 T SHOSTAK))
  (|IMP_VariableNames_TCC1| 0
   (|IMP_VariableNames_TCC1-1| NIL 3396601223 3397387651
-   ("" (USE "infinite_namespace") NIL NIL) PROVED
+   ("" (USE "infinite_namespace") NIL NIL) PROVED-COMPLETE
    ((|infinite_namespace| FORMULA-DECL NIL |AnnotateProgramProperties| NIL)) 2
    2 T NIL))
  (|IMP_AnnotateProgram_TCC1| 0
   (|IMP_AnnotateProgram_TCC1-1| NIL 3390292134 3397387651
-   ("" (USE "CP_is_enumerable") NIL NIL) PROVED
+   ("" (USE "CP_is_enumerable") NIL NIL) PROVED-COMPLETE
    ((|CP_is_enumerable| FORMULA-DECL NIL |AnnotateProgramProperties| NIL)) 2 2
    T NIL))
  (|IMP_AnnotateProgram_TCC2| 0
   (|IMP_AnnotateProgram_TCC2-1| NIL 3395037658 3397387652
-   ("" (USE "name_of_exists") NIL NIL) PROVED
+   ("" (USE "name_of_exists") NIL NIL) PROVED-INCOMPLETE
    ((|name_of_exists| FORMULA-DECL NIL |AnnotateProgramProperties| NIL)) 23 23
    T NIL))
  (|ann_program_class_correspondence| 0
   (|ann_program_class_correspondence-1| NIL 3392569211 3397387652
    ("" (SKOSIMP*) (("" (EXPAND "ann_program") (("" (PROPAX) NIL NIL)) NIL))
     NIL)
-   PROVED ((|ann_program| CONST-DECL "Program" |AnnotateProgram| NIL)) 4 3 T
+   UNCHECKED ((|ann_program| CONST-DECL "Program" |AnnotateProgram| NIL)) 4 3 T
    SHOSTAK))
  (|ann_program_method_correspondence| 0
   (|ann_program_method_correspondence-1| NIL 3392569244 3397387653
@@ -1791,7 +1657,7 @@
         NIL))
       NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |AnnotateProgramProperties| NIL)
     (CP FORMAL-NONEMPTY-TYPE-DECL NIL |AnnotateProgramProperties| NIL)
     (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
@@ -1928,7 +1794,7 @@
         NIL))
       NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
     (|BoolExpr| TYPE-EQ-DECL NIL |Body_adt| NIL)
     (|LocalVarDecl| TYPE-EQ-DECL NIL |Program| NIL)
@@ -1995,7 +1861,7 @@
         NIL))
       NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |AnnotateProgramProperties| NIL)
     (CP FORMAL-NONEMPTY-TYPE-DECL NIL |AnnotateProgramProperties| NIL)
     (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
@@ -2020,8 +1886,7 @@
      |sets_lemmas| NIL)
     (|FieldDecl| TYPE-EQ-DECL NIL |Program| NIL)
     (|subset?| CONST-DECL "bool" |sets| NIL)
-    (|member| CONST-DECL "bool" |sets| NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL))
+    (|member| CONST-DECL "bool" |sets| NIL) NIL)
    95 95 T SHOSTAK))
  (|ann_program_add_ghost_var_decls| 0
   (|ann_program_add_ghost_var_decls-1| NIL 3396607040 3397387657
@@ -2101,7 +1966,7 @@
         NIL))
       NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|finite_union| APPLICATION-JUDGEMENT "finite_set" |finite_sets| NIL)
     (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
     (|BoolExpr| TYPE-EQ-DECL NIL |Body_adt| NIL)
@@ -2159,7 +2024,7 @@
         NIL))
       NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |AnnotateProgramProperties| NIL)
     (CP FORMAL-NONEMPTY-TYPE-DECL NIL |AnnotateProgramProperties| NIL)
     (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
@@ -2199,7 +2064,7 @@
         NIL))
       NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |AnnotateProgramProperties| NIL)
     (CP FORMAL-NONEMPTY-TYPE-DECL NIL |AnnotateProgramProperties| NIL)
     (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
@@ -2246,7 +2111,7 @@
         NIL))
       NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |AnnotateProgramProperties| NIL)
     (CP FORMAL-NONEMPTY-TYPE-DECL NIL |AnnotateProgramProperties| NIL)
     (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
@@ -2270,14 +2135,825 @@
     (|FieldDecl| TYPE-EQ-DECL NIL |Program| NIL)
     (|id| CONST-DECL "(bijective?[T, T])" |identity| NIL)
     (|subset?| CONST-DECL "bool" |sets| NIL)
-    (|member| CONST-DECL "bool" |sets| NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    (|member| CONST-DECL "bool" |sets| NIL) NIL
     (|wf_state| CONST-DECL "boolean" |MonitoredProgramSemantics| NIL)
     (|wf_state| CONST-DECL "boolean" |AnnotatedProgramSemantics| NIL)
     (|wf_ghoststate| CONST-DECL "boolean" |SemanticsJML| NIL))
    138 138 T SHOSTAK))
+ (|var_names_ann_method_body| 0
+  (|var_names_ann_method_body-1| NIL 3397473331 3397473335
+   ("" (SKOSIMP*) (("" (EXPAND "ann_method") (("" (PROPAX) NIL NIL)) NIL)) NIL)
+   UNTRIED ((|ann_method| CONST-DECL "Method" |AnnotateProgram| NIL)) 345 24 T
+   SHOSTAK))
+ (|var_names_ann_method_pre| 0
+  (|var_names_ann_method_pre-1| NIL 3397473370 3397473375
+   ("" (EXPAND "ann_method") (("" (PROPAX) NIL NIL)) NIL) UNTRIED
+   ((|ann_method| CONST-DECL "Method" |AnnotateProgram| NIL)) 527 4 T SHOSTAK))
+ (|var_names_ann_method_post| 0
+  (|var_names_ann_method_post-1| NIL 3397473379 3397473381
+   ("" (EXPAND "ann_method") (("" (PROPAX) NIL NIL)) NIL) UNTRIED
+   ((|ann_method| CONST-DECL "Method" |AnnotateProgram| NIL)) 128 4 T SHOSTAK))
+ (|var_names_ann_method_pre_set_TCC1| 0
+  (|var_names_ann_method_pre_set_TCC1-1| NIL 3397473576 NIL
+   ("" (SUBTYPE-TCC) NIL NIL) UNCHECKED NIL NIL NIL NIL NIL))
+ (|var_names_ann_method_pre_set| 0
+  (|var_names_ann_method_pre_set-1| NIL 3397473576 3397473579
+   ("" (EXPAND "ann_method") (("" (PROPAX) NIL NIL)) NIL) UNTRIED
+   ((|ann_method| CONST-DECL "Method" |AnnotateProgram| NIL)) 344 4 T SHOSTAK))
+ (|var_names_ann_method_post_set_TCC1| 0
+  (|var_names_ann_method_post_set_TCC1-1| NIL 3397473576 NIL
+   ("" (SUBTYPE-TCC) NIL NIL) UNCHECKED NIL NIL NIL NIL NIL))
+ (|var_names_ann_method_post_set| 0
+  (|var_names_ann_method_post_set-1| NIL 3397473582 3397473585
+   ("" (EXPAND "ann_method") (("" (PROPAX) NIL NIL)) NIL) UNTRIED
+   ((|ann_method| CONST-DECL "Method" |AnnotateProgram| NIL)) 306 4 T SHOSTAK))
+ (|var_names_ann_method_exc_set_TCC1| 0
+  (|var_names_ann_method_exc_set_TCC1-1| NIL 3397473576 NIL
+   ("" (SUBTYPE-TCC) NIL NIL) UNCHECKED NIL NIL NIL NIL NIL))
+ (|var_names_ann_method_exc_set| 0
+  (|var_names_ann_method_exc_set-1| NIL 3397473588 3397473591
+   ("" (EXPAND "ann_method") (("" (PROPAX) NIL NIL)) NIL) UNTRIED
+   ((|ann_method| CONST-DECL "Method" |AnnotateProgram| NIL)) 281 4 T SHOSTAK))
+ (|var_names_ann_class_inv_TCC1| 0
+  (|var_names_ann_class_inv_TCC1-1| NIL 3397473847 NIL
+   ("" (SUBTYPE-TCC) NIL NIL) UNCHECKED NIL NIL NIL NIL NIL))
+ (|var_names_ann_class_inv| 0
+  (|var_names_ann_class_inv-1| NIL 3397473848 3397473855
+   ("" (SKOSIMP*)
+    (("" (EXPAND "ann_class")
+      (("" (ASSERT) (("" (LIFT-IF) (("" (PROPAX) NIL NIL)) NIL)) NIL)) NIL))
+    NIL)
+   UNTRIED ((|ann_class| CONST-DECL "Class" |AnnotateProgram| NIL)) 780 40 T
+   SHOSTAK))
+ (|var_names_ann_program| 0
+  (|var_names_ann_program-1| NIL 3397470724 3397473140
+   ("" (AUTO-REWRITE "subset?" "member" "union")
+    (("" (SKOSIMP*)
+      (("" (ASSERT)
+        (("" (SKOSIMP*)
+          (("" (EXPAND "ann_program")
+            (("" (EXPAND "var_names" -1)
+              (("" (EXPAND "Union")
+                (("" (SKOSIMP*)
+                  (("" (TYPEPRED "a!1")
+                    (("" (SKOSIMP*)
+                      (("" (REPLACE -3 :HIDE? T)
+                        (("" (REPLACE -2 :HIDE? T)
+                          (("" (EXPAND "ann_class")
+                            (("" (ASSERT)
+                              (("" (SPLIT -2)
+                                (("1" (FLATTEN)
+                                  (("1" (AUTO-REWRITE "Union")
+                                    (("1" (REWRITE "var_names")
+                                      (("1" (ASSERT)
+                                        (("1" (SKOSIMP*)
+                                          (("1" (TYPEPRED "a!2")
+                                            (("1" (SKOSIMP*)
+                                              (("1" (REPLACE -2 :HIDE? T)
+                                                (("1" (ASSERT)
+                                                  (("1" (EXPAND "ann_methods")
+                                                    (("1" (SKOSIMP*)
+                                                      (("1"
+                                                        (REPLACE -2 :HIDE? T)
+                                                        (("1"
+                                                          (REWRITE "var_names")
+                                                          (("1" (ASSERT)
+                                                            (("1" (SKOSIMP*)
+                                                              (("1"
+                                                                (TYPEPRED
+                                                                 "a!3")
+                                                                (("1" (ASSERT)
+                                                                  (("1"
+                                                                    (EXPAND
+                                                                     "ann_method")
+                                                                    (("1"
+                                                                      (ASSERT)
+                                                                      (("1"
+                                                                        (SPLIT
+                                                                         -1)
+                                                                        (("1"
+                                                                          (REWRITE
+                                                                           "var_names"
+                                                                           1)
+                                                                          (("1"
+                                                                            (ASSERT)
+                                                                            (("1"
+                                                                              (INST
+                                                                               1
+                                                                               "var_names(c1!1)")
+                                                                              (("1"
+                                                                                (REWRITE
+                                                                                 "var_names"
+                                                                                 1)
+                                                                                (("1"
+                                                                                  (ASSERT)
+                                                                                  (("1"
+                                                                                    (INST
+                                                                                     1
+                                                                                     "var_names(n!1)")
+                                                                                    (("1"
+                                                                                      (REWRITE
+                                                                                       "var_names"
+                                                                                       1)
+                                                                                      (("1"
+                                                                                        (ASSERT)
+                                                                                        (("1"
+                                                                                          (INST
+                                                                                           1
+                                                                                           "a!3")
+                                                                                          NIL
+                                                                                          NIL))
+                                                                                        NIL))
+                                                                                      NIL)
+                                                                                     ("2"
+                                                                                      (INST?)
+                                                                                      NIL
+                                                                                      NIL))
+                                                                                    NIL))
+                                                                                  NIL))
+                                                                                NIL)
+                                                                               ("2"
+                                                                                (INST?)
+                                                                                NIL
+                                                                                NIL))
+                                                                              NIL))
+                                                                            NIL))
+                                                                          NIL)
+                                                                         ("2"
+                                                                          (REWRITE
+                                                                           "var_names"
+                                                                           1)
+                                                                          (("2"
+                                                                            (ASSERT)
+                                                                            (("2"
+                                                                              (INST
+                                                                               1
+                                                                               "var_names(c1!1)")
+                                                                              (("1"
+                                                                                (REWRITE
+                                                                                 "var_names"
+                                                                                 1)
+                                                                                (("1"
+                                                                                  (ASSERT)
+                                                                                  (("1"
+                                                                                    (INST
+                                                                                     1
+                                                                                     "var_names(n!1)")
+                                                                                    (("1"
+                                                                                      (REWRITE
+                                                                                       "var_names"
+                                                                                       1)
+                                                                                      (("1"
+                                                                                        (ASSERT)
+                                                                                        (("1"
+                                                                                          (INST
+                                                                                           1
+                                                                                           "a!3")
+                                                                                          NIL
+                                                                                          NIL))
+                                                                                        NIL))
+                                                                                      NIL)
+                                                                                     ("2"
+                                                                                      (INST?)
+                                                                                      NIL
+                                                                                      NIL))
+                                                                                    NIL))
+                                                                                  NIL))
+                                                                                NIL)
+                                                                               ("2"
+                                                                                (INST?)
+                                                                                NIL
+                                                                                NIL))
+                                                                              NIL))
+                                                                            NIL))
+                                                                          NIL)
+                                                                         ("3"
+                                                                          (REWRITE
+                                                                           "var_names"
+                                                                           1)
+                                                                          (("3"
+                                                                            (ASSERT)
+                                                                            (("3"
+                                                                              (INST
+                                                                               1
+                                                                               "var_names(c1!1)")
+                                                                              (("1"
+                                                                                (REWRITE
+                                                                                 "var_names"
+                                                                                 1)
+                                                                                (("1"
+                                                                                  (ASSERT)
+                                                                                  (("1"
+                                                                                    (INST
+                                                                                     1
+                                                                                     "var_names(n!1)")
+                                                                                    (("1"
+                                                                                      (REWRITE
+                                                                                       "var_names"
+                                                                                       1)
+                                                                                      (("1"
+                                                                                        (ASSERT)
+                                                                                        (("1"
+                                                                                          (INST
+                                                                                           1
+                                                                                           "a!3")
+                                                                                          NIL
+                                                                                          NIL))
+                                                                                        NIL))
+                                                                                      NIL)
+                                                                                     ("2"
+                                                                                      (INST?)
+                                                                                      NIL
+                                                                                      NIL))
+                                                                                    NIL))
+                                                                                  NIL))
+                                                                                NIL)
+                                                                               ("2"
+                                                                                (INST?)
+                                                                                NIL
+                                                                                NIL))
+                                                                              NIL))
+                                                                            NIL))
+                                                                          NIL)
+                                                                         ("4"
+                                                                          (REWRITE
+                                                                           "var_names")
+                                                                          (("4"
+                                                                            (REPLACE
+                                                                             -1
+                                                                             :HIDE? T)
+                                                                            (("4"
+                                                                              (ASSERT)
+                                                                              (("4"
+                                                                                (SPLIT
+                                                                                 -3)
+                                                                                (("1"
+                                                                                  (REWRITE
+                                                                                   "var_names"
+                                                                                   1)
+                                                                                  (("1"
+                                                                                    (ASSERT)
+                                                                                    (("1"
+                                                                                      (INST
+                                                                                       1
+                                                                                       "var_names(c1!1)")
+                                                                                      (("1"
+                                                                                        (REWRITE
+                                                                                         "var_names"
+                                                                                         1)
+                                                                                        (("1"
+                                                                                          (ASSERT)
+                                                                                          (("1"
+                                                                                            (INST
+                                                                                             1
+                                                                                             "var_names(n!1)")
+                                                                                            (("1"
+                                                                                              (REWRITE
+                                                                                               "var_names"
+                                                                                               1)
+                                                                                              (("1"
+                                                                                                (ASSERT)
+                                                                                                (("1"
+                                                                                                  (INST
+                                                                                                   1
+                                                                                                   "var_names(pre_set(n!1))")
+                                                                                                  NIL
+                                                                                                  NIL))
+                                                                                                NIL))
+                                                                                              NIL)
+                                                                                             ("2"
+                                                                                              (INST?)
+                                                                                              NIL
+                                                                                              NIL))
+                                                                                            NIL))
+                                                                                          NIL))
+                                                                                        NIL)
+                                                                                       ("2"
+                                                                                        (INST?)
+                                                                                        NIL
+                                                                                        NIL))
+                                                                                      NIL))
+                                                                                    NIL))
+                                                                                  NIL)
+                                                                                 ("2"
+                                                                                  (REWRITE
+                                                                                   "var_names")
+                                                                                  (("2"
+                                                                                    (ASSERT)
+                                                                                    (("2"
+                                                                                      (SPLIT
+                                                                                       -1)
+                                                                                      (("1"
+                                                                                        (USE
+                                                                                         "var_names_ann_event")
+                                                                                        (("1"
+                                                                                          (ASSERT)
+                                                                                          (("1"
+                                                                                            (SPLIT
+                                                                                             -1)
+                                                                                            (("1"
+                                                                                              (INST?)
+                                                                                              (("1"
+                                                                                                (ASSERT)
+                                                                                                NIL
+                                                                                                NIL))
+                                                                                              NIL)
+                                                                                             ("2"
+                                                                                              (EXPAND
+                                                                                               "filter_event")
+                                                                                              (("2"
+                                                                                                (SKOSIMP*)
+                                                                                                NIL
+                                                                                                NIL))
+                                                                                              NIL))
+                                                                                            NIL))
+                                                                                          NIL))
+                                                                                        NIL)
+                                                                                       ("2"
+                                                                                        (APPLY
+                                                                                         (REPEAT
+                                                                                          (REWRITE
+                                                                                           "var_names"
+                                                                                           -1)))
+                                                                                        (("2"
+                                                                                          (ASSERT)
+                                                                                          (("2"
+                                                                                            (EXPAND
+                                                                                             "singleton")
+                                                                                            (("2"
+                                                                                              (REWRITE
+                                                                                               "new_gvds_as_union")
+                                                                                              (("2"
+                                                                                                (REWRITE
+                                                                                                 "add_as_union")
+                                                                                                (("1"
+                                                                                                  (APPLY
+                                                                                                   (REPEAT
+                                                                                                    (REWRITE
+                                                                                                     "var_names_union")))
+                                                                                                  (("1"
+                                                                                                    (ASSERT)
+                                                                                                    (("1"
+                                                                                                      (FLATTEN)
+                                                                                                      (("1"
+                                                                                                        (SPLIT
+                                                                                                         -1)
+                                                                                                        (("1"
+                                                                                                          (EXPAND
+                                                                                                           "var_names")
+                                                                                                          (("1"
+                                                                                                            (INST?
+                                                                                                             4)
+                                                                                                            (("1"
+                                                                                                              (GRIND)
+                                                                                                              NIL
+                                                                                                              NIL)
+                                                                                                             ("2"
+                                                                                                              (EXPAND
+                                                                                                               "defined?")
+                                                                                                              (("2"
+                                                                                                                (PROPAX)
+                                                                                                                NIL
+                                                                                                                NIL))
+                                                                                                              NIL))
+                                                                                                            NIL))
+                                                                                                          NIL)
+                                                                                                         ("2"
+                                                                                                          (EXPAND
+                                                                                                           "halted")
+                                                                                                          (("2"
+                                                                                                            (EXPAND
+                                                                                                             "var_names")
+                                                                                                            (("2"
+                                                                                                              (INST
+                                                                                                               2
+                                                                                                               "(# name := name_of(mp!1)(halted), jtype := IntType, init_val := Int(unique(halted)) #)")
+                                                                                                              (("1"
+                                                                                                                (ASSERT)
+                                                                                                                (("1"
+                                                                                                                  (INST
+                                                                                                                   2
+                                                                                                                   "halted")
+                                                                                                                  (("1"
+                                                                                                                    (TYPEPRED
+                                                                                                                     "mva(mp!1)")
+                                                                                                                    (("1"
+                                                                                                                      (EXPAND
+                                                                                                                       "complete")
+                                                                                                                      (("1"
+                                                                                                                        (FLATTEN)
+                                                                                                                        NIL
+                                                                                                                        NIL))
+                                                                                                                      NIL))
+                                                                                                                    NIL))
+                                                                                                                  NIL))
+                                                                                                                NIL)
+                                                                                                               ("2"
+                                                                                                                (EXPAND
+                                                                                                                 "defined?")
+                                                                                                                (("2"
+                                                                                                                  (PROPAX)
+                                                                                                                  NIL
+                                                                                                                  NIL))
+                                                                                                                NIL))
+                                                                                                              NIL))
+                                                                                                            NIL))
+                                                                                                          NIL))
+                                                                                                        NIL))
+                                                                                                      NIL))
+                                                                                                    NIL)
+                                                                                                   ("2"
+                                                                                                    (EXPAND
+                                                                                                     "defined?")
+                                                                                                    (("2"
+                                                                                                      (PROPAX)
+                                                                                                      NIL
+                                                                                                      NIL))
+                                                                                                    NIL))
+                                                                                                  NIL)
+                                                                                                 ("2"
+                                                                                                  (EXPAND
+                                                                                                   "defined?")
+                                                                                                  (("2"
+                                                                                                    (PROPAX)
+                                                                                                    NIL
+                                                                                                    NIL))
+                                                                                                  NIL))
+                                                                                                NIL))
+                                                                                              NIL))
+                                                                                            NIL))
+                                                                                          NIL))
+                                                                                        NIL))
+                                                                                      NIL))
+                                                                                    NIL))
+                                                                                  NIL))
+                                                                                NIL))
+                                                                              NIL))
+                                                                            NIL))
+                                                                          NIL)
+                                                                         ("5"
+                                                                          (REPLACE
+                                                                           -1
+                                                                           :HIDE? T)
+                                                                          (("5"
+                                                                            (REWRITE
+                                                                             "var_names")
+                                                                            (("5"
+                                                                              (ASSERT)
+                                                                              (("5"
+                                                                                (SPLIT
+                                                                                 -3)
+                                                                                (("1"
+                                                                                  (REWRITE
+                                                                                   "var_names"
+                                                                                   1)
+                                                                                  (("1"
+                                                                                    (ASSERT)
+                                                                                    (("1"
+                                                                                      (INST
+                                                                                       1
+                                                                                       "var_names(c1!1)")
+                                                                                      (("1"
+                                                                                        (REWRITE
+                                                                                         "var_names"
+                                                                                         1)
+                                                                                        (("1"
+                                                                                          (ASSERT)
+                                                                                          (("1"
+                                                                                            (INST
+                                                                                             1
+                                                                                             "var_names(n!1)")
+                                                                                            (("1"
+                                                                                              (REWRITE
+                                                                                               "var_names"
+                                                                                               1)
+                                                                                              (("1"
+                                                                                                (ASSERT)
+                                                                                                (("1"
+                                                                                                  (INST
+                                                                                                   1
+                                                                                                   "var_names(post_set(n!1))")
+                                                                                                  NIL
+                                                                                                  NIL))
+                                                                                                NIL))
+                                                                                              NIL)
+                                                                                             ("2"
+                                                                                              (INST?)
+                                                                                              NIL
+                                                                                              NIL))
+                                                                                            NIL))
+                                                                                          NIL))
+                                                                                        NIL)
+                                                                                       ("2"
+                                                                                        (INST?)
+                                                                                        NIL
+                                                                                        NIL))
+                                                                                      NIL))
+                                                                                    NIL))
+                                                                                  NIL)
+                                                                                 ("2"
+                                                                                  (USE
+                                                                                   "var_names_ann_event")
+                                                                                  (("2"
+                                                                                    (ASSERT)
+                                                                                    (("2"
+                                                                                      (SPLIT
+                                                                                       -1)
+                                                                                      (("1"
+                                                                                        (INST?)
+                                                                                        (("1"
+                                                                                          (ASSERT)
+                                                                                          NIL
+                                                                                          NIL))
+                                                                                        NIL)
+                                                                                       ("2"
+                                                                                        (EXPAND
+                                                                                         "filter_event")
+                                                                                        (("2"
+                                                                                          (SKOSIMP*)
+                                                                                          NIL
+                                                                                          NIL))
+                                                                                        NIL))
+                                                                                      NIL))
+                                                                                    NIL))
+                                                                                  NIL))
+                                                                                NIL))
+                                                                              NIL))
+                                                                            NIL))
+                                                                          NIL)
+                                                                         ("6"
+                                                                          (REPLACE
+                                                                           -1
+                                                                           :HIDE? T)
+                                                                          (("6"
+                                                                            (REWRITE
+                                                                             "var_names")
+                                                                            (("6"
+                                                                              (ASSERT)
+                                                                              (("6"
+                                                                                (SPLIT
+                                                                                 -3)
+                                                                                (("1"
+                                                                                  (REWRITE
+                                                                                   "var_names"
+                                                                                   1)
+                                                                                  (("1"
+                                                                                    (ASSERT)
+                                                                                    (("1"
+                                                                                      (INST
+                                                                                       1
+                                                                                       "var_names(c1!1)")
+                                                                                      (("1"
+                                                                                        (REWRITE
+                                                                                         "var_names"
+                                                                                         1)
+                                                                                        (("1"
+                                                                                          (ASSERT)
+                                                                                          (("1"
+                                                                                            (INST
+                                                                                             1
+                                                                                             "var_names(n!1)")
+                                                                                            (("1"
+                                                                                              (REWRITE
+                                                                                               "var_names"
+                                                                                               1)
+                                                                                              (("1"
+                                                                                                (ASSERT)
+                                                                                                (("1"
+                                                                                                  (INST
+                                                                                                   1
+                                                                                                   "var_names(exc_set(n!1))")
+                                                                                                  NIL
+                                                                                                  NIL))
+                                                                                                NIL))
+                                                                                              NIL)
+                                                                                             ("2"
+                                                                                              (INST?)
+                                                                                              NIL
+                                                                                              NIL))
+                                                                                            NIL))
+                                                                                          NIL))
+                                                                                        NIL)
+                                                                                       ("2"
+                                                                                        (INST?)
+                                                                                        NIL
+                                                                                        NIL))
+                                                                                      NIL))
+                                                                                    NIL))
+                                                                                  NIL)
+                                                                                 ("2"
+                                                                                  (USE
+                                                                                   "var_names_ann_event")
+                                                                                  (("2"
+                                                                                    (ASSERT)
+                                                                                    (("2"
+                                                                                      (SPLIT
+                                                                                       -1)
+                                                                                      (("1"
+                                                                                        (INST?)
+                                                                                        (("1"
+                                                                                          (ASSERT)
+                                                                                          NIL
+                                                                                          NIL))
+                                                                                        NIL)
+                                                                                       ("2"
+                                                                                        (EXPAND
+                                                                                         "filter_event")
+                                                                                        (("2"
+                                                                                          (SKOSIMP*)
+                                                                                          NIL
+                                                                                          NIL))
+                                                                                        NIL))
+                                                                                      NIL))
+                                                                                    NIL))
+                                                                                  NIL))
+                                                                                NIL))
+                                                                              NIL))
+                                                                            NIL))
+                                                                          NIL))
+                                                                        NIL))
+                                                                      NIL))
+                                                                    NIL))
+                                                                  NIL))
+                                                                NIL))
+                                                              NIL))
+                                                            NIL))
+                                                          NIL))
+                                                        NIL))
+                                                      NIL))
+                                                    NIL))
+                                                  NIL))
+                                                NIL))
+                                              NIL))
+                                            NIL))
+                                          NIL))
+                                        NIL))
+                                      NIL))
+                                    NIL))
+                                  NIL)
+                                 ("2" (FLATTEN)
+                                  (("2" (EXPAND "var_names" 2)
+                                    (("2" (EXPAND "Union")
+                                      (("2" (INST 2 "var_names(c1!1)")
+                                        (("2" (INST 1 "c1!1") NIL NIL)) NIL))
+                                      NIL))
+                                    NIL))
+                                  NIL))
+                                NIL))
+                              NIL))
+                            NIL))
+                          NIL))
+                        NIL))
+                      NIL))
+                    NIL))
+                  NIL))
+                NIL))
+              NIL))
+            NIL))
+          NIL))
+        NIL))
+      NIL))
+    NIL)
+   UNTRIED
+   ((|subset?| CONST-DECL "bool" |sets| NIL)
+    (|union| CONST-DECL "set" |sets| NIL)
+    (|member| CONST-DECL "bool" |sets| NIL)
+    (|subset_is_partial_order| NAME-JUDGEMENT "(partial_order?[set[T]])"
+     |sets_lemmas| NIL)
+    (|ann_program| CONST-DECL "Program" |AnnotateProgram| NIL)
+    (|Union| CONST-DECL "set" |sets| NIL)
+    (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
+    (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
+    (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
+    (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |AnnotateProgramProperties| NIL)
+    (|Val| TYPE-DECL NIL |Val_adt| NIL)
+    (|defined?| CONST-DECL "boolean" |ValProp| NIL)
+    (|JType| TYPE-DECL NIL |JType_adt| NIL)
+    (|FieldDecl| TYPE-EQ-DECL NIL |Program| NIL)
+    (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
+    (|BoolExpr| TYPE-EQ-DECL NIL |Body_adt| NIL)
+    (|LocalVarDecl| TYPE-EQ-DECL NIL |Program| NIL)
+    (|Stmt| TYPE-EQ-DECL NIL |Body_adt| NIL)
+    (|Expr| TYPE-EQ-DECL NIL |Body_adt| NIL)
+    (|Method| TYPE-EQ-DECL NIL |Program| NIL)
+    (|lift| TYPE-DECL NIL |lift_adt| NIL)
+    (|Class| TYPE-EQ-DECL NIL |Program| NIL)
+    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
+    (CP FORMAL-NONEMPTY-TYPE-DECL NIL |AnnotateProgramProperties| NIL)
+    (|EventType| TYPE-DECL NIL |EventType_adt| NIL)
+    (|Event| TYPE-EQ-DECL NIL MVA NIL) (|Action| TYPE-EQ-DECL NIL MVA NIL)
+    (|Guard| TYPE-EQ-DECL NIL MVA NIL) (|Transition| TYPE-EQ-DECL NIL MVA NIL)
+    (|MVAVarDecl| TYPE-EQ-DECL NIL MVA NIL)
+    (|ProgVarDecl| TYPE-EQ-DECL NIL MVA NIL) (MVA TYPE-EQ-DECL NIL MVA NIL)
+    (|complete| CONST-DECL "boolean" |MVASemantics| NIL)
+    (|Program| TYPE-EQ-DECL NIL |Program| NIL)
+    (|MonitoredProgramPre| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
+    (|compatible| CONST-DECL "boolean" |MonitoredProgram| NIL)
+    (|MonitoredProgram| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
+    (|wf_MP| CONST-DECL "boolean" |MonitoredProgram| NIL)
+    (= CONST-DECL "[T, T -> boolean]" |equalities| NIL)
+    (|ann_class| CONST-DECL "Class" |AnnotateProgram| NIL)
+    (|set| TYPE-EQ-DECL NIL |sets| NIL) NIL NIL
+    (|var_names| DEF-DECL "[Name -> boolean]" |ProgramFunctions| NIL) NIL NIL
+    NIL
+    (|nonempty_singleton_finite| APPLICATION-JUDGEMENT "non_empty_finite_set"
+     |finite_sets| NIL)
+    (|singleton| CONST-DECL "(singleton?)" |sets| NIL)
+    (|nonempty_union2| APPLICATION-JUDGEMENT "(nonempty?)" |sets| NIL)
+    (|add_as_union| FORMULA-DECL NIL |sets_lemmas| NIL)
+    (|legal_names| CONST-DECL "set[Name]" |VariableNames| NIL)
+    (|injective?| CONST-DECL "bool" |functions| NIL)
+    (|name_of| CONST-DECL "(injective?[CP, (legal_names(mp))])"
+     |NewVariableDeclarations| NIL)
+    (|IntType?| ADT-RECOGNIZER-DECL "[JType -> boolean]" |JType_adt| NIL)
+    (|IntType| ADT-CONSTRUCTOR-DECL "(IntType?)" |JType_adt| NIL)
+    (|number| NONEMPTY-TYPE-DECL NIL |numbers| NIL)
+    (|number_field_pred| CONST-DECL "[number -> boolean]" |number_fields| NIL)
+    (|number_field| NONEMPTY-TYPE-FROM-DECL NIL |number_fields| NIL)
+    (|real_pred| CONST-DECL "[number_field -> boolean]" |reals| NIL)
+    (|real| NONEMPTY-TYPE-FROM-DECL NIL |reals| NIL)
+    (|rational_pred| CONST-DECL "[real -> boolean]" |rationals| NIL)
+    (|rational| NONEMPTY-TYPE-FROM-DECL NIL |rationals| NIL)
+    (|integer_pred| CONST-DECL "[rational -> boolean]" |integers| NIL)
+    (|int| NONEMPTY-TYPE-EQ-DECL NIL |integers| NIL)
+    (|Int?| ADT-RECOGNIZER-DECL "[Val -> boolean]" |Val_adt| NIL)
+    (|Int| ADT-CONSTRUCTOR-DECL "[int -> (Int?)]" |Val_adt| NIL)
+    (>= CONST-DECL "bool" |reals| NIL)
+    (|nat| NONEMPTY-TYPE-EQ-DECL NIL |naturalnumbers| NIL)
+    (|unique| CONST-DECL "(injective?[CP, nat])" |NewVariableDeclarations| NIL)
+    NIL (|halted| CONST-DECL "CP" MVA NIL)
+    (|singleton?| CONST-DECL "bool" |sets| NIL)
+    (|var_names_union| FORMULA-DECL NIL |ProgramFunctions| NIL)
+    (|new_gvds_as_union| FORMULA-DECL NIL |NewVariableDeclarations| NIL)
+    (|nonempty_finite_union2| APPLICATION-JUDGEMENT "non_empty_finite_set"
+     |finite_sets| NIL)
+    (|var_names_ann_event| FORMULA-DECL NIL |AnnotateProgramProperties| NIL)
+    (|Assert| ADT-CONSTRUCTOR-DECL "[BoolExpr -> (Assert?)]" |Body_adt| NIL)
+    (|Entry| ADT-CONSTRUCTOR-DECL "(Entry?)" |EventType_adt| NIL)
+    (|Entry?| ADT-RECOGNIZER-DECL "[EventType -> boolean]" |EventType_adt| NIL)
+    (|filter_event| CONST-DECL "finite_set[Transition]" |AnnotateProgram| NIL)
+    (|wf_MVA| CONST-DECL "boolean" |WellFormedMVA| NIL)
+    (|ann_event| CONST-DECL "Stmt" |AnnotateProgram| NIL)
+    (|Sequence| ADT-CONSTRUCTOR-DECL "[[Stmt, Stmt] -> (Sequence?)]" |Body_adt|
+     NIL)
+    (|Assert?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|While?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|TryCatch?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|Throw?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|StmtExpr?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|Skip?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|Set?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|Sequence?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|IfThenElse?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|CaseJML?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|ExitNormal?| ADT-RECOGNIZER-DECL "[EventType -> boolean]" |EventType_adt|
+     NIL)
+    (|ExitNormal| ADT-CONSTRUCTOR-DECL "(ExitNormal?)" |EventType_adt| NIL)
+    (|ExitExceptional?| ADT-RECOGNIZER-DECL "[EventType -> boolean]"
+     |EventType_adt| NIL)
+    (|ExitExceptional| ADT-CONSTRUCTOR-DECL "(ExitExceptional?)"
+     |EventType_adt| NIL)
+    (|ann_method| CONST-DECL "Method" |AnnotateProgram| NIL)
+    (|ann_methods| CONST-DECL "finite_set[Method]" |AnnotateProgram| NIL)
+    (|new_gvds| CONST-DECL "finite_set[FieldDecl]" |NewVariableDeclarations|
+     NIL)
+    (|is_finite| CONST-DECL "bool" |finite_sets| NIL)
+    (|halted| CONST-DECL "Name" |NewVariableDeclarations| NIL)
+    (|cp| CONST-DECL "{n: Name | NOT forbidden_names(mp)(n)}" |VariableNames|
+     NIL)
+    (|forbidden_names| CONST-DECL "set[Name]" |VariableNames| NIL)
+    (|NumVarEval| ADT-CONSTRUCTOR-DECL "[Name -> (NumVarEval?)]" |Body_adt|
+     NIL)
+    (|NExpr| ADT-CONSTRUCTOR-DECL "[NumExpr -> (NExpr?)]" |Body_adt| NIL)
+    (|NumExpr| TYPE-EQ-DECL NIL |Body_adt| NIL)
+    (|NumVarEval?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|Plus?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|Int?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|Eq| ADT-CONSTRUCTOR-DECL "[[Expr, Expr] -> (Eq?)]" |Body_adt| NIL)
+    (|RExpr?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|NExpr?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|MethodCall?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|CondExpr?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|BExpr?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|Assign?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|Neg| ADT-CONSTRUCTOR-DECL "[BoolExpr -> (Neg?)]" |Body_adt| NIL)
+    (|Conj| ADT-CONSTRUCTOR-DECL "[[BoolExpr, BoolExpr] -> (Conj?)]" |Body_adt|
+     NIL)
+    (|BoolVarEval?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|Eq?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|Conj?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|Neg?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (FF? ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (TT? ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (OR CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
+    (|Body| TYPE-DECL NIL |Body_adt| NIL)
+    (|finite_union| APPLICATION-JUDGEMENT "finite_set" |finite_sets| NIL)
+    (|Union_surjective| NAME-JUDGEMENT "(surjective?[setofsets[T], set[T]])"
+     |sets_lemmas| NIL)
+    NIL)
+   32209 862 T SHOSTAK))
  (|ann_program_yields_wf_program| 0
-  (|ann_program_yields_wf_program-1| NIL 3393664525 3397387672
+  (|ann_program_yields_wf_program-1| NIL 3393664525 3397470716
    ("" (SKOLEM-TYPEPRED)
     (("" (EXPAND* "wf_MP" "wf_Program")
       (("" (PROP)
@@ -2463,7 +3139,17 @@
                             (("5" (REWRITE "var_names_union")
                               (("5" (AUTO-REWRITE "union" "member")
                                 (("5" (ASSERT)
-                                  (("5" (FLATTEN) (("5" (POSTPONE) NIL NIL))
+                                  (("5" (FLATTEN)
+                                    (("5" (USE "var_names_ann_program")
+                                      (("5" (ASSERT)
+                                        (("5" (EXPAND "subset?")
+                                          (("5" (EXPAND "member")
+                                            (("5" (INST?)
+                                              (("5" (ASSERT) NIL NIL)) NIL))
+                                            NIL))
+                                          NIL))
+                                        NIL))
+                                      NIL))
                                     NIL))
                                   NIL))
                                 NIL))
@@ -2485,12 +3171,7 @@
    ((|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
-    (|nat| NONEMPTY-TYPE-EQ-DECL NIL |naturalnumbers| NIL)
-    (|below| TYPE-EQ-DECL NIL |nat_types| NIL)
-    (|character| TYPE-DECL NIL |character_adt| NIL)
-    (|char?| ADT-RECOGNIZER-DECL "[character -> boolean]" |character_adt| NIL)
-    (|char| TYPE-EQ-DECL NIL |strings| NIL)
-    (|string| TYPE-EQ-DECL NIL |strings| NIL)
+    (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |AnnotateProgramProperties| NIL)
     (CP FORMAL-NONEMPTY-TYPE-DECL NIL |AnnotateProgramProperties| NIL)
     (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
     (|EventType| TYPE-DECL NIL |EventType_adt| NIL)
@@ -2509,41 +3190,54 @@
     (|wf_MP| CONST-DECL "boolean" |MonitoredProgram| NIL)
     (|wf_program_variables_disjoint_def| CONST-DECL "boolean"
      |WellFormedProgram| NIL)
-    (|getGhostDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
     (|finite_union| APPLICATION-JUDGEMENT "finite_set" |finite_sets| NIL)
-    (|declared_var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
-    (|union| CONST-DECL "set" |sets| NIL) NIL
-    (|ann_program_preserves_var_decls| FORMULA-DECL NIL
+    (|ann_program_add_ghost_var_decls| FORMULA-DECL NIL
      |AnnotateProgramProperties| NIL)
-    (|wf_program_variables_disjoint| FORMULA-DECL NIL |WellFormedProgram| NIL)
-    NIL (|LocalVarDecl| TYPE-EQ-DECL NIL |Program| NIL) NIL
+    (|wf_new_vars| FORMULA-DECL NIL |NewVariableDeclarations| NIL)
+    (|subset_is_partial_order| NAME-JUDGEMENT "(partial_order?[set[T]])"
+     |sets_lemmas| NIL)
+    (|declared_var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    (|var_names_union| FORMULA-DECL NIL |ProgramFunctions| NIL)
+    (|FieldDecl| TYPE-EQ-DECL NIL |Program| NIL)
+    (|set| TYPE-EQ-DECL NIL |sets| NIL)
+    (|is_finite| CONST-DECL "bool" |finite_sets| NIL)
+    (|BoolExpr| TYPE-EQ-DECL NIL |Body_adt| NIL)
+    (|LocalVarDecl| TYPE-EQ-DECL NIL |Program| NIL)
+    (|Stmt| TYPE-EQ-DECL NIL |Body_adt| NIL)
+    (|Expr| TYPE-EQ-DECL NIL |Body_adt| NIL)
     (|Method| TYPE-EQ-DECL NIL |Program| NIL)
     (|lift| TYPE-DECL NIL |lift_adt| NIL)
     (|Class| TYPE-EQ-DECL NIL |Program| NIL)
-    (|getFieldDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
-    (|ann_class| CONST-DECL "Class" |AnnotateProgram| NIL)
-    (|ann_program| CONST-DECL "Program" |AnnotateProgram| NIL)
-    (|ann_methods| CONST-DECL "finite_set[Method]" |AnnotateProgram| NIL)
-    (|ann_method| CONST-DECL "Method" |AnnotateProgram| NIL)
-    (|getLocalDecls| CONST-DECL "finite_set[LocalVarDecl]" |ProgramFunctions|
+    (|getGhostDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
+    (|new_gvds| CONST-DECL "finite_set[FieldDecl]" |NewVariableDeclarations|
      NIL)
-    (|FieldDecl| TYPE-EQ-DECL NIL |Program| NIL)
-    (|disjoint?| CONST-DECL "bool" |sets| NIL)
     (|finite_intersection1| APPLICATION-JUDGEMENT "finite_set" |finite_sets|
      NIL)
-    (|intersection| CONST-DECL "set" |sets| NIL)
     (|member| CONST-DECL "bool" |sets| NIL)
+    (|intersection| CONST-DECL "set" |sets| NIL)
     (|empty?| CONST-DECL "bool" |sets| NIL)
+    (|disjoint?| CONST-DECL "bool" |sets| NIL)
+    (|union| CONST-DECL "set" |sets| NIL)
+    (|subset?| CONST-DECL "bool" |sets| NIL)
+    (|ann_program_preserves_var_decls| FORMULA-DECL NIL
+     |AnnotateProgramProperties| NIL)
     (|wf_program_variables_not_reserved_words_def| CONST-DECL "boolean"
      |WellFormedProgram| NIL)
     (|wf_program_has_unique_class_names_def| CONST-DECL "boolean"
      |WellFormedProgram| NIL)
+    (|ann_class| CONST-DECL "Class" |AnnotateProgram| NIL)
+    (|ann_program| CONST-DECL "Program" |AnnotateProgram| NIL)
+    (|wf_Classes| CONST-DECL "boolean" |WellFormedProgram| NIL)
     (|wf_Class| CONST-DECL "boolean" |WellFormedProgram| NIL)
-    (|subset?| CONST-DECL "bool" |sets| NIL) NIL
+    (|ann_methods| CONST-DECL "finite_set[Method]" |AnnotateProgram| NIL)
+    (|ann_method| CONST-DECL "Method" |AnnotateProgram| NIL)
+    (|var_names_ann_program| FORMULA-DECL NIL |AnnotateProgramProperties| NIL)
+    (|wf_program_all_variables_declared| CONST-DECL "boolean"
+     |WellFormedProgram| NIL)
     (|wf_Program| CONST-DECL "boolean" |WellFormedProgram| NIL))
-   1139 1137 T SHOSTAK))
+   4595 1345 T SHOSTAK))
  (|ann_program_preserves_well_behaved_Program| 0
-  (|ann_program_preserves_well_behaved_Program-1| NIL 3392570267 3397387673
+  (|ann_program_preserves_well_behaved_Program-1| NIL 3392570267 3397481085
    ("" (SKOSIMP*)
     (("" (EXPAND "well_behaved_Program")
       (("" (SKOSIMP*)
@@ -2639,7 +3333,7 @@
         NIL))
       NIL))
     NIL)
-   UNFINISHED NIL 170 170 T SHOSTAK))
+   UNFINISHED NIL 30846 2555 T SHOSTAK))
  (|get_class_ann_program| 0
   (|get_class_ann_program-1| NIL 3392567967 3397387674
    ("" (SKOSIMP*)
@@ -2667,7 +3361,7 @@
         NIL))
       NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|get_class| CONST-DECL "lift[Class]" |ProgramFunctions| NIL)
     (|ann_program| CONST-DECL "Program" |AnnotateProgram| NIL))
    43 43 T SHOSTAK))
@@ -2689,7 +3383,7 @@
         NIL))
       NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|ann_program| CONST-DECL "Program" |AnnotateProgram| NIL)
     (|wf_program_has_unique_class_names| FORMULA-DECL NIL |WellFormedProgram|
      NIL)
@@ -2754,7 +3448,7 @@
         NIL))
       NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|wf_class_has_unique_method_names| FORMULA-DECL NIL |WellFormedProgram|
      NIL)
     (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |AnnotateProgramProperties| NIL)
@@ -2792,47 +3486,39 @@
     (|Val| TYPE-DECL NIL |Val_adt| NIL))
    126 126 T SHOSTAK))
  (|lookup_mthd_ann_program| 0
-  (|lookup_mthd_ann_program-1| NIL 3387195852 3397387676
+  (|lookup_mthd_ann_program-1| NIL 3387195852 3397481974
    ("" (SKOSIMP)
-    (("" (LEMMA "lookup_mthd_axiom")
-      (("" (INST-CP -1 "program(mp!1)" "s!1" "m1!1" "mn!1" "tgt!1")
-        (("" (INST -1 "ann_program(mp!1)" "s!1" "m2!1" "mn!1" "tgt!1")
-          (("" (ASSERT)
-            (("" (SPLIT)
-              (("1" (FLATTEN)
-                (("1" (NAME "c1" "down(get_class(program(mp!1))(tgt!1, s!1))")
-                  (("1" (REPLACE -1)
-                    (("1"
-                      (NAME "c2"
-                            "down(get_class(ann_program(mp!1))(tgt!1, s!1))")
-                      (("1" (REPLACE -1)
+    (("" (EXPAND "lookup_mthd")
+      (("" (LIFT-IF)
+        (("" (ASSERT)
+          (("" (CASE "up?(get_class(ann_program(mp!1))(tgt!1))")
+            (("1" (ASSERT)
+              (("1" (SPLIT -2)
+                (("1" (SPLIT -3)
+                  (("1" (ASSERT)
+                    (("1" (SPLIT 1)
+                      (("1" (SKOSIMP*)
                         (("1"
-                          (LEMMA
-                           "same_class_name_ann_class_implies_same_class")
-                          (("1" (INST -1 "mp!1" "c1" "c2")
-                            (("1" (ASSERT)
-                              (("1" (LEMMA "get_class_ann_program")
-                                (("1" (INST -1 "mp!1" "c1" "c2" "s!1" "tgt!1")
-                                  (("1" (ASSERT)
-                                    (("1" (PROP)
-                                      (("1"
-                                        (USE
-                                         "same_method_name_ann_class_implies_same_method")
-                                        (("1" (ASSERT) NIL NIL)) NIL)
-                                       ("2"
-                                        (USE
-                                         "wf_class_has_unique_method_names")
-                                        (("2" (ASSERT)
-                                          (("2"
-                                            (LEMMA "wf_program_has_wf_classes")
-                                            (("2"
-                                              (INST -1 "program(mp!1)" "c1")
-                                              (("2" (ASSERT)
-                                                (("2"
-                                                  (EXPAND* "ann_program_pre"
-                                                   "wf_MP")
-                                                  NIL NIL))
-                                                NIL))
+                          (NAME "c1" "down(get_class(program(mp!1))(tgt!1))")
+                          (("1" (REPLACE -1)
+                            (("1"
+                              (NAME "c2"
+                                    "down(get_class(ann_program(mp!1))(tgt!1))")
+                              (("1" (REPLACE -1)
+                                (("1"
+                                  (LEMMA
+                                   "same_class_name_ann_class_implies_same_class")
+                                  (("1" (INST -1 "mp!1" "c1" "c2")
+                                    (("1" (ASSERT)
+                                      (("1" (LEMMA "get_class_ann_program")
+                                        (("1" (ASSERT)
+                                          (("1"
+                                            (INST -1 "mp!1" "c1" "c2" "tgt!1")
+                                            (("1" (ASSERT)
+                                              (("1"
+                                                (USE
+                                                 "same_method_name_ann_class_implies_same_method")
+                                                (("1" (ASSERT) NIL NIL)) NIL))
                                               NIL))
                                             NIL))
                                           NIL))
@@ -2844,61 +3530,87 @@
                               NIL))
                             NIL))
                           NIL))
+                        NIL)
+                       ("2" (SKOSIMP*)
+                        (("2" (ASSERT)
+                          (("2"
+                            (CASE-REPLACE
+                             " methods(down(get_class(ann_program(mp!1))(tgt!1))) = methods(down(get_class(program(mp!1))(tgt!1)))")
+                            (("1" (ASSERT) NIL NIL)
+                             ("2"
+                              (CASE-REPLACE
+                               "get_class(ann_program(mp!1))(tgt!1) = get_class(program(mp!1))(tgt!1)")
+                              (("2"
+                                (USE
+                                 "same_class_name_ann_class_implies_same_class")
+                                (("2" (ASSERT)
+                                  (("2" (USE "get_class_ann_program")
+                                    (("2" (ASSERT) NIL NIL)) NIL))
+                                  NIL))
+                                NIL))
+                              NIL))
+                            NIL))
+                          NIL))
                         NIL))
                       NIL))
-                    NIL))
-                  NIL))
-                NIL)
-               ("2" (HIDE-ALL-BUT (-2 -3 1))
-                (("2" (USE "ann_program_preserves_wf_state")
-                  (("2" (ASSERT) NIL NIL)) NIL))
+                    NIL)
+                   ("2" (PROPAX) NIL NIL))
+                  NIL)
+                 ("2" (PROPAX) NIL NIL))
                 NIL))
-              NIL))
+              NIL)
+             ("2" (USE "ann_program_class_correspondence")
+              (("1" (ASSERT) NIL NIL) ("2" (ASSERT) NIL NIL)) NIL))
             NIL))
           NIL))
         NIL))
       NIL))
     NIL)
-   UNFINISHED
-   ((|Val| TYPE-DECL NIL |Val_adt| NIL)
-    (|defined?| CONST-DECL "boolean" |ValProp| NIL)
-    (|JType| TYPE-DECL NIL |JType_adt| NIL)
-    (|FieldDecl| TYPE-EQ-DECL NIL |Program| NIL)
-    (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL) NIL
-    (|LocalVarDecl| TYPE-EQ-DECL NIL |Program| NIL) NIL
-    (|Method| TYPE-EQ-DECL NIL |Program| NIL)
-    (|lift| TYPE-DECL NIL |lift_adt| NIL)
-    (|Class| TYPE-EQ-DECL NIL |Program| NIL)
-    (|Program| TYPE-EQ-DECL NIL |Program| NIL)
-    (CP FORMAL-NONEMPTY-TYPE-DECL NIL |AnnotateProgramProperties| NIL)
-    (MVA TYPE-EQ-DECL NIL MVA NIL)
-    (|MonitoredProgram| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
-    (|Excpt| TYPE-DECL NIL |Excpt_adt| NIL)
-    (|PSt| TYPE-EQ-DECL NIL |State| NIL)
-    (|PState| TYPE-EQ-DECL NIL |State| NIL)
-    (|ann_program_preserves_wf_state| FORMULA-DECL NIL
-     |AnnotateProgramProperties| NIL)
-    (|get_class_ann_program| FORMULA-DECL NIL |AnnotateProgramProperties| NIL)
-    (|wf_class_has_unique_method_names| FORMULA-DECL NIL |WellFormedProgram|
-     NIL)
-    (|wf_program_has_wf_classes| FORMULA-DECL NIL |WellFormedProgram| NIL)
-    (|wf_MP| CONST-DECL "boolean" |MonitoredProgram| NIL)
-    (|same_method_name_ann_class_implies_same_method| FORMULA-DECL NIL
-     |AnnotateProgramProperties| NIL)
-    (|same_class_name_ann_class_implies_same_class| FORMULA-DECL NIL
+   PROVED
+   ((|lookup_mthd| CONST-DECL "lift[(methods(p))]" |ProgramFunctions| NIL)
+    (|tgt!1| SKOLEM-CONST-DECL "Val[Name]" |AnnotateProgramProperties| NIL)
+    (|mp!1| SKOLEM-CONST-DECL "(wf_MP)" |AnnotateProgramProperties| NIL)
+    (|ann_program_class_correspondence| FORMULA-DECL NIL
      |AnnotateProgramProperties| NIL)
     (= CONST-DECL "[T, T -> boolean]" |equalities| NIL)
-    (|up?| ADT-RECOGNIZER-DECL "[lift -> boolean]" |lift_adt| NIL)
     (|down| ADT-ACCESSOR-DECL "[(up?) -> T]" |lift_adt| NIL)
+    (|same_class_name_ann_class_implies_same_class| FORMULA-DECL NIL
+     |AnnotateProgramProperties| NIL)
+    (|same_method_name_ann_class_implies_same_method| FORMULA-DECL NIL
+     |AnnotateProgramProperties| NIL)
+    (|get_class_ann_program| FORMULA-DECL NIL |AnnotateProgramProperties| NIL)
+    (|set| TYPE-EQ-DECL NIL |sets| NIL)
+    (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (|ann_program| CONST-DECL "Program" |AnnotateProgram| NIL)
-    (|nat| NONEMPTY-TYPE-EQ-DECL NIL |naturalnumbers| NIL)
-    (|below| TYPE-EQ-DECL NIL |nat_types| NIL)
-    (|character| TYPE-DECL NIL |character_adt| NIL)
+    (|wf_MP| CONST-DECL "boolean" |MonitoredProgram| NIL)
+    (|MonitoredProgram| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
+    (|compatible| CONST-DECL "boolean" |MonitoredProgram| NIL)
+    (|MonitoredProgramPre| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
+    (|complete| CONST-DECL "boolean" |MVASemantics| NIL)
+    (MVA TYPE-EQ-DECL NIL MVA NIL) (|ProgVarDecl| TYPE-EQ-DECL NIL MVA NIL)
+    (|MVAVarDecl| TYPE-EQ-DECL NIL MVA NIL)
+    (|Transition| TYPE-EQ-DECL NIL MVA NIL) (|Guard| TYPE-EQ-DECL NIL MVA NIL)
+    (|Action| TYPE-EQ-DECL NIL MVA NIL) (|Event| TYPE-EQ-DECL NIL MVA NIL)
+    (|EventType| TYPE-DECL NIL |EventType_adt| NIL)
+    (CP FORMAL-NONEMPTY-TYPE-DECL NIL |AnnotateProgramProperties| NIL)
+    (|get_class| CONST-DECL "lift[Class]" |ProgramFunctions| NIL)
+    (|Program| TYPE-EQ-DECL NIL |Program| NIL)
+    (|up?| ADT-RECOGNIZER-DECL "[lift -> boolean]" |lift_adt| NIL)
+    (|Class| TYPE-EQ-DECL NIL |Program| NIL)
+    (|lift| TYPE-DECL NIL |lift_adt| NIL)
+    (|Method| TYPE-EQ-DECL NIL |Program| NIL)
+    (|Expr| TYPE-EQ-DECL NIL |Body_adt| NIL)
+    (|Stmt| TYPE-EQ-DECL NIL |Body_adt| NIL)
+    (|LocalVarDecl| TYPE-EQ-DECL NIL |Program| NIL)
+    (|BoolExpr| TYPE-EQ-DECL NIL |Body_adt| NIL)
+    (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
+    (|FieldDecl| TYPE-EQ-DECL NIL |Program| NIL)
+    (|JType| TYPE-DECL NIL |JType_adt| NIL)
+    (|defined?| CONST-DECL "boolean" |ValProp| NIL)
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
-    (|char?| ADT-RECOGNIZER-DECL "[character -> boolean]" |character_adt| NIL)
-    (|char| TYPE-EQ-DECL NIL |strings| NIL)
-    (|string| TYPE-EQ-DECL NIL |strings| NIL))
-   26 26 T SHOSTAK))
+    (|Val| TYPE-DECL NIL |Val_adt| NIL)
+    (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |AnnotateProgramProperties| NIL))
+   71777 1554 T SHOSTAK))
  (|ann_program_defines_MVA_vars| 0
   (|ann_program_defines_MVA_vars-2| NIL 3394875181 3397387676
    ("" (SKOSIMP)
@@ -2919,7 +3631,7 @@
         NIL))
       NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
@@ -2951,8 +3663,7 @@
     (|Stmt| TYPE-EQ-DECL NIL |Body_adt| NIL)
     (|LocalVarDecl| TYPE-EQ-DECL NIL |Program| NIL)
     (|BoolExpr| TYPE-EQ-DECL NIL |Body_adt| NIL)
-    (|FieldDecl| TYPE-EQ-DECL NIL |Program| NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    (|FieldDecl| TYPE-EQ-DECL NIL |Program| NIL) NIL
     (|new_gvds| CONST-DECL "finite_set[FieldDecl]" |NewVariableDeclarations|
      NIL))
    43 43 T NIL)
@@ -3050,13 +3761,12 @@
         NIL))
       NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|id| CONST-DECL "(bijective?[T, T])" |identity| NIL)
     (|is_ghost| CONST-DECL "boolean" |SemanticsJML| NIL)
     (|wf_ghoststate| CONST-DECL "boolean" |SemanticsJML| NIL)
     (|wf_state| CONST-DECL "boolean" |AnnotatedProgramSemantics| NIL)
-    (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |AnnotateProgramProperties| NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |AnnotateProgramProperties| NIL) NIL
     (|FieldDecl| TYPE-EQ-DECL NIL |Program| NIL)
     (|BoolExpr| TYPE-EQ-DECL NIL |Body_adt| NIL)
     (|LocalVarDecl| TYPE-EQ-DECL NIL |Program| NIL)

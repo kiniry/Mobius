@@ -272,7 +272,7 @@ BEGIN
 
   
   var_names_union : LEMMA % :-)
-    FORALL(fs1, fs2 : finite_set[FieldDecl]) :
+    FORALL(fs1, fs2 : set[FieldDecl]) :
       var_names(union(fs1, fs2)) = union(var_names(fs1), var_names(fs2))
 
   % Declared variable names

@@ -1,3 +1,14 @@
+ReferenceFunctions[Name : TYPE+, PState : TYPE] : THEORY
+BEGIN
+
+  % Functions whose existence we assume
+  get_address(vn : Name, sigma : PState) : int
+
+  get_dynamic_type_name(vn : Name, sigma : PState) : Name
+
+END ReferenceFunctions
+
+
 SemanticsTypes[Name : TYPE+,
                FullProgram, FullState : TYPE,
                (IMPORTING State[Name]) pstate : [FullState -> PState]] : THEORY
@@ -88,13 +99,13 @@ Semantics[Name : TYPE+,
           on_method_exit_exceptional : (on_method_event_type)] : THEORY
 BEGIN
 
+  IMPORTING ReferenceFunctions[Name, PState]
 
+  get_address(vn : Name, sigma : FullState) : int =
+    get_address(vn, pstate(sigma))
 
-
-  % Functions whose existence we assume
-  get_address(vn : Name, sigma : FullState) : int
-
-  get_dynamic_type_name(vn : Name, sigma : FullState) : Name
+  get_dynamic_type_name(vn : Name, sigma : FullState) : Name =
+    get_dynamic_type_name(vn, pstate(sigma))
 
   IMPORTING WellFormedProgram[Name]
 

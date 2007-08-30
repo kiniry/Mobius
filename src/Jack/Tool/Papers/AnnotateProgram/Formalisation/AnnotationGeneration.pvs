@@ -296,8 +296,49 @@ BEGIN
       wf_state(ann_program(mp))(sAP) IMPLIES
         (is_ghost(vn, sMP) IMPLIES is_ghost(vn, sAP))
 
+  var_names_ann_method_body : LEMMA % :-)
+    FORALL(m : Method) :
+      var_names(body(ann_method(mp)(m))) = var_names(body(m))
 
-  ann_program_yields_wf_program : LEMMA
+  var_names_ann_method_pre : LEMMA % :-)
+    FORALL(m : Method) :
+      var_names(pre(ann_method(mp)(m))) = var_names(pre(m))
+
+  var_names_ann_method_post : LEMMA % :-)
+    FORALL(m : Method) :
+      var_names(post(ann_method(mp)(m))) = var_names(post(m))
+
+  var_names_ann_method_pre_set : LEMMA % :-)
+    FORALL(m : Method) :
+        var_names(s1(pre_set(ann_method(mp)(m)))) = var_names(pre_set(m))
+
+  var_names_ann_method_post_set : LEMMA % :-)
+    FORALL(m : Method) :
+        var_names(s1(post_set(ann_method(mp)(m)))) = var_names(post_set(m))
+
+  var_names_ann_method_exc_set : LEMMA % :-)
+    FORALL(m : Method) :
+        var_names(s1(exc_set(ann_method(mp)(m)))) = var_names(exc_set(m))
+
+  var_names_ann_class_inv : LEMMA % :-)
+    FORALL(c : Class) :
+    IF classes(program(mp))(c) AND name(c) = class_name(mva(mp))
+    THEN var_names(b1(inv(ann_class(mp)(c)))) = var_names(inv(c))
+    ELSE var_names(inv(ann_class(mp)(c))) = var_names(inv(c))
+    ENDIF
+      
+
+  var_names_ann_event : LEMMA
+    FORALL(ts : finite_set[Transition]) :
+      subset?(ts, ts(mva(mp))) IMPLIES
+        subset?(var_names(ann_event(mp)(ts)), 
+                union(var_names(program(mp)), var_names(new_gvds(mp))))
+
+  var_names_ann_program : LEMMA % :-)
+    subset?(var_names(ann_program(mp)), 
+            union(var_names(program(mp)), var_names(new_gvds(mp))))
+
+  ann_program_yields_wf_program : LEMMA % :-)
     wf_Program(ann_program(mp))
 
   % PROVE
@@ -337,7 +378,7 @@ BEGIN
       name(m1) = name(m2) IMPLIES
         m2 = ann_method(mp)(m1)
 
-  lookup_mthd_ann_program : LEMMA
+  lookup_mthd_ann_program : LEMMA % :-)
     FORALL (m1, m2 : Method, mn : Name, tgt : Val) :
       up?(lookup_mthd(program(mp), tgt, mn)) IMPLIES
       up?(lookup_mthd(ann_program(mp), tgt, mn)) IMPLIES
@@ -362,6 +403,5 @@ BEGIN
       var_names(new_gvds(mp))(n) IMPLIES
         is_ghost(n, s)
 
-     
 
 END AnnotateProgramProperties
