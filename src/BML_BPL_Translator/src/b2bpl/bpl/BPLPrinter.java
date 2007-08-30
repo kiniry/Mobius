@@ -363,14 +363,20 @@ public class BPLPrinter implements IBPLVisitor<Object> {
 
   public Object visitAssertCommand(BPLAssertCommand command) {
     print("assert ");
-    command.getExpression().accept(this);
+    if (command.getExpression() != null)
+      command.getExpression().accept(this);
+    else
+      print("true");
     print(';');
     return null;
   }
 
   public Object visitAssumeCommand(BPLAssumeCommand command) {
     print("assume ");
-    command.getExpression().accept(this);
+    if (command.getExpression() != null)
+      command.getExpression().accept(this);
+    else
+      print("true");
     print(';');
     return null;
   }

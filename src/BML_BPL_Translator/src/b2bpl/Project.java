@@ -134,6 +134,12 @@ public class Project {
   private boolean useTriggers = false;
   
   /**
+   * If set ti {@code true}, object invariant checks will be included.
+   * in the resulting BoogiePL code.
+   */
+  private boolean performInvariantChecks = false;
+  
+  /**
    * The root directory used to look for the given classes if they are
    * not found in the Java's class path.
    * 
@@ -210,6 +216,10 @@ public class Project {
         // Use triggers in axioms
         project.useTriggers = true;
         i++;
+      } else if ("-i".equals(args[i])) {
+        // Perform object invariant checks
+        project.performInvariantChecks = true;
+        i++;
       } else {
         if (args[i].endsWith(".class")) {
           args[i] = args[i].substring(0, args[i].lastIndexOf(".class"));
@@ -276,6 +286,10 @@ public class Project {
   public boolean useTriggers() {
     return useTriggers;
   }
+  
+  public boolean performInvariantChecks() {
+    return performInvariantChecks;
+  }
 
   /**
    * Prints the help message describing the command line arguments supported
@@ -291,6 +305,7 @@ public class Project {
     messageWriter.write("  -o <outfile>    The file to which to write the BoogiePL program.\n");
     messageWriter.write("  -s              Translate every class into a separate file.\n");
     messageWriter.write("  -t              Adds triggers to the axioms (where applicable).\n");
+    messageWriter.write("  -i              Includes invariant checks.\n");
     messageWriter.write("  -sl             Removes redundancy from logical formulas.\n");
     messageWriter.write("  -this           Verify the object invariants of the this object only.\n");
     messageWriter.write("  -l              Perform a sound elimination of loops in the BoogiePL program.\n");

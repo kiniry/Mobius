@@ -3,6 +3,8 @@ package b2bpl.translation;
 
 public interface ITranslationConstants {
 
+  String UNDERSCORE = "_";
+  
   String CONSTRUCTOR_NAME = ".init";
 
   String CLASS_INITIALIZER_NAME = ".clinit";
@@ -35,9 +37,9 @@ public interface ITranslationConstants {
 
   String RESULT_VAR = "result";
 
-  String INT_TYPE_ABBREV = "_i";
+  String INT_TYPE_ABBREV = UNDERSCORE + "i";
 
-  String REF_TYPE_ABBREV = "_r";
+  String REF_TYPE_ABBREV = UNDERSCORE + "r";
 
   String PARAM_VAR_PREFIX = "param";
 
@@ -45,9 +47,13 @@ public interface ITranslationConstants {
 
   String STACK_VAR_PREFIX = "stack";
 
-  // String CALL_RESULT_VAR_PREFIX = "callResult";
+  String CALL_RESULT_VAR_PREFIX = "callResult";
   
   // String THIS_VAR = "this";
+  
+  String INT_CALL_RESULT_VAR = CALL_RESULT_VAR_PREFIX + INT_TYPE_ABBREV;
+
+  String REF_CALL_RESULT_VAR = CALL_RESULT_VAR_PREFIX + REF_TYPE_ABBREV;
   
   String NORMAL_RETURN_STATE =      VALUE_TYPE_PREFIX + "normal";
   

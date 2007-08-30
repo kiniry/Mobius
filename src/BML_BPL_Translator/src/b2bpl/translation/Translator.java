@@ -1956,7 +1956,8 @@ public class Translator implements ITranslationConstants {
                 forall(
                     oVar, tVar,
                     implies(
-                        BPLBoolLiteral.FALSE,
+                        // BPLBoolLiteral.FALSE,
+                        isEqual(var(o), var(this_var_name)),
                         inv(var(t), var(o), var(HEAP_VAR))
                     )
                 )

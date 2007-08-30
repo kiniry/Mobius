@@ -7,12 +7,12 @@ import java.io.PrintWriter;
 import b2bpl.bpl.BPLPrinter;
 import b2bpl.bpl.ast.BPLProgram;
 import b2bpl.bpl.transformation.IBPLTransformator;
+import b2bpl.bytecode.ITroubleReporter;
 import b2bpl.bytecode.JClassType;
 import b2bpl.bytecode.TroubleDescription;
 import b2bpl.bytecode.TroubleException;
 import b2bpl.bytecode.TroubleMessage;
 import b2bpl.bytecode.TroublePosition;
-import b2bpl.bytecode.ITroubleReporter;
 import b2bpl.bytecode.TypeLoader;
 import b2bpl.bytecode.analysis.SemanticAnalyzer;
 import b2bpl.translation.Translator;
@@ -88,7 +88,9 @@ public class Main implements ITroubleReporter {
         writer = new PrintWriter(new FileOutputStream(outFile));
       }
       program.accept(new BPLPrinter(writer));
+      writer.flush();
       writer.close();
+
     } catch (FileNotFoundException e) {
       e.printStackTrace();
     }

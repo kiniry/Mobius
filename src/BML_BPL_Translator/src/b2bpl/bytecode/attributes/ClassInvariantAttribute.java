@@ -1,5 +1,8 @@
 package b2bpl.bytecode.attributes;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.objectweb.asm.Attribute;
 import org.objectweb.asm.ByteVector;
 import org.objectweb.asm.ClassReader;
@@ -60,6 +63,24 @@ public class ClassInvariantAttribute extends Attribute {
       invariants[i] = new BMLInvariant(0, owner, predicate);
     }
 
+    // [SW]: Check admissibility of invariants.
+    //       At this point, field references are ONLY allowed to
+    //       fields declared within the same class.
+    //       Valid invariants:     f >= 0;
+    //                             this.a != null;
+    //       Invalid invariants:   a.f >= 0;
+    //                             this.a.b != null;
+    // TODO: this should be replaced by a more sophisticated algorithm,
+    //       particularly if the admissibility of invariants changes.
+    ClassInvariantAttribute cia = new ClassInvariantAttribute(invariants);
+    Pattern pattern = Pattern.compile("^invariant\\s([^\\.]*|this.[^\\.]*)(\\s&&\\s([^\\.]*|this.[^\\.]*))*;$");
+
+    for (BMLInvariant inv : cia.getInvariants()) {
+      Matcher matcher = pattern.matcher(inv.toString());
+      if (!matcher.find()) 
+        System.out.println("COMPILE ERROR: The following invariant is not admissible in " + owner.getName() + ":\n\t" + inv.toString());
+    }
+    
     return new ClassInvariantAttribute(invariants);
   }
 

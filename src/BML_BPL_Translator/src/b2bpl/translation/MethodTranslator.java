@@ -642,17 +642,22 @@ public class MethodTranslator implements ITranslationConstants {
     BPLVariable tVar = new BPLVariable(t, BPLBuiltInType.NAME);
 
     // return forall(oVar, tVar, implies(notEqual(var(o), var(thisVar())), inv(var(t), var(o), var(HEAP_VAR))));
-    return forall(
-        oVar, tVar,
-        implies(
-            logicalAnd(
-                alive(rval(var(o)), var(HEAP_VAR)),
-                isSubtype(var(t), typ(rval(var(o)))),
-                (method.isConstructor()) ? notEqual(var(o), var(thisVar())) : BPLBoolLiteral.TRUE
-            ),
-            inv(var(t), var(o), var(HEAP_VAR))
-        )
-    );
+    if (project.performInvariantChecks()) {    
+      return forall(
+          oVar, tVar,
+          implies(
+              logicalAnd(
+                  alive(rval(var(o)), var(HEAP_VAR)),
+                  isSubtype(var(t), typ(rval(var(o)))),
+                  (method.isConstructor()) ? notEqual(var(o), var(thisVar())) : BPLBoolLiteral.TRUE
+              ),
+              inv(var(t), var(o), var(HEAP_VAR))
+          )
+      );
+    } else {
+      return BPLBoolLiteral.TRUE;
+    }
+      
   }
   
   /**
@@ -666,16 +671,20 @@ public class MethodTranslator implements ITranslationConstants {
     String t = quantVarName("t");
     BPLVariable tVar = new BPLVariable(t, BPLBuiltInType.NAME);
 
-    return forall(
-        oVar, tVar,
-            implies(
-                logicalAnd(
-                    alive(rval(var(o)), var(HEAP_VAR)),
-                    isSubtype(var(t), typ(rval(var(o))))
-                ),
-                inv(var(t), var(o), var(HEAP_VAR))
-            )
-        );
+    if (project.performInvariantChecks()) {
+      return forall(
+          oVar, tVar,
+              implies(
+                  logicalAnd(
+                      alive(rval(var(o)), var(HEAP_VAR)),
+                      isSubtype(var(t), typ(rval(var(o))))
+                  ),
+                  inv(var(t), var(o), var(HEAP_VAR))
+              )
+          );
+    } else {
+      return BPLBoolLiteral.TRUE;
+    }
   }
   
   /**
@@ -684,32 +693,24 @@ public class MethodTranslator implements ITranslationConstants {
    * @return BPLExpression object invariant (only referring to modified class fields)
    */
   private BPLExpression getInvariantBeforeLeavingMethod() {
-    System.out.println("PREPARING INVARIANT FOR BEFORE LEAVING METHOD:");
-    for (BPLVariableExpression v : modifiedVariables) {
-      System.out.println("\t" + v.getIdentifier() /* + "\t" + s.getType().toString() */);
-    }
-    
     BPLExpression isModifiedVar = BPLBoolLiteral.TRUE;
-    
-    System.out.println("GETTING INVARIANT FOR BEFORE LEAVING METHOD:\n");
-    
     for (BPLVariableExpression v : modifiedVariables) {
       // isModifiedVar = logicalAnd(isModifiedVar, inv(var(s.getType().toString()), var(s.getName()), var(HEAP_VAR)));
          isModifiedVar = logicalAnd(isModifiedVar, inv(typ(rval(v)), v, var(HEAP_VAR)));
-         System.out.println(v.getIdentifier() + "\n");
     }
     
-    return isModifiedVar;
+    if (project.performInvariantChecks()) {
+      return isModifiedVar;
+    } else {
+      return BPLBoolLiteral.TRUE;
+    }
     
     // return forall(oVar, tVar, implies(notInModVars, inv(var(t), var(o), var(HEAP_VAR))));
   }
   
   
   private BPLExpression getInvariantAfterLeavingMethod() {
-    System.out.println("PREPARING INVARIANT FOR AFTER LEAVING METHOD:");
-    
-    // TODO: modifiedVarNames is not yet set.
-    
+
     for (BPLVariableExpression s : modifiedVariables) {
       System.out.println("\t" + s.getIdentifier() /* + "\t" + s.getType().toString() */);
     }
@@ -723,19 +724,16 @@ public class MethodTranslator implements ITranslationConstants {
     BPLExpression isUnmodifiedVar = BPLBoolLiteral.TRUE;
     
     for (BPLVariableExpression v : modifiedVariables) {
-      // isUnmodifiedVar = logicalAnd(isUnmodifiedVar, logicalOr(isEqual(var(o), var(s.getName())), isEqual(var(t), var(s.getType().toString()))));
       isUnmodifiedVar = logicalAnd(isUnmodifiedVar, logicalOr(notEqual(var(o), v), notEqual(var(t), typ(rval(v)))));
     }
-       
-    return forall(oVar, tVar, implies(isUnmodifiedVar, inv(var(t), var(o), var(HEAP_VAR))));
+    
+    if (project.performInvariantChecks()) {
+      return forall(oVar, tVar, implies(isUnmodifiedVar, inv(var(t), var(o), var(HEAP_VAR))));
+    } else {
+      return BPLBoolLiteral.TRUE;
+    }
     
     /*
-    
-    String o = quantVarName("o");
-    BPLVariable oVar = new BPLVariable(o, BPLBuiltInType.REF);
-
-    String t = quantVarName("t");
-    BPLVariable tVar = new BPLVariable(t, BPLBuiltInType.NAME);
     
     BPLExpression notInModVars = BPLBoolLiteral.FALSE;
     for (BPLExpression ref : method.getModifiedObjectRefs()) {
@@ -748,28 +746,7 @@ public class MethodTranslator implements ITranslationConstants {
         implies(notInModVars, inv(var(t), var(o), var(HEAP_VAR)))
     ); */
   }
-  /**
-   * Returns an expression stating that, for all non-modified class fields,
-   * their invariant must hold
-   * @return BPLExpression object invariant (only referring to non-modified class fields)
-   */
-  private BPLExpression getInvariantForUnmodifiedFields() {
-    String o = quantVarName("o");
-    BPLVariable oVar = new BPLVariable(o, BPLBuiltInType.REF);
-
-    String t = quantVarName("t");
-    BPLVariable tVar = new BPLVariable(t, BPLBuiltInType.NAME);
-    
-    BPLExpression notInModVars = BPLBoolLiteral.TRUE;
-    for (BPLExpression ref : method.getModifiedObjectRefs()) {
-      notInModVars = logicalAnd(notInModVars, notEqual(var(t), var(VALUE_TYPE_PREFIX + ref)));
-    }
-
-    return forall(oVar, tVar,
-        implies(notInModVars, inv(var(t), var(o), var(HEAP_VAR)))
-    );
-  }
-  
+   
   
   /**
    * TODO
@@ -2952,164 +2929,25 @@ public class MethodTranslator implements ITranslationConstants {
       return false;
     }
 
-    /**
-     * Method to translate the different kinds of method call instructions.
-     * 
-     * @param insn The method call instruction to translate.
-     * @deprecated
-     */
-    /*
-    private void translateInvokeInstructionOld(InvokeInstruction insn) {
-      BCMethod invokedMethod = insn.getMethod();
-      JType[] params = invokedMethod.getRealParameterTypes();
-      int first = handle.getFrame().getStackSize() - params.length;
-
-      // Non-static method calls may throw a NullPointerException.
-      if (!invokedMethod.isStatic()) {
-        translateRuntimeException(
-            "java.lang.NullPointerException",
-            nonNull(var(refStackVar(first))));
-      }
-
-      // Assert the invariants on the relevant objects.
-      // If the this object has not been initialized yet (inside a constructor),
-      // its invariant is not required to hold.
-      assertExposedInvariants(!handle.isThisInitialized());
-
-      // Start the actual desugaring of the method call.
-
-      // Collect the names of the method's actual arguments and check that the
-      // method's precondition holds.
-      String[] args = new String[params.length];
-      for (int i = 0; i < params.length; i++) {
-        args[i] = stackVar(first + i, params[i]);
-      }
-      addAssert(translatePrecondition(invokedMethod, args));
-
-      // Keep a copy of the heap in the method's pre-state and havoc the current
-      // heap.
-      //@deprecated addAssignment(var(PRE_HEAP_VAR), var(HEAP_VAR));
-      addHavoc(var(HEAP_VAR));
-
-      // Assume that no objects are de-allocated during the execution of the
-      // method. Note that this assumption ignores the effect of any potential
-      // garbage collector.
-      String v = quantVarName("v");
-      BPLVariable vVar = new BPLVariable(v, new BPLTypeName(VALUE_TYPE));
-      addAssume(forall(vVar, implies(alive(var(v), var(PRE_HEAP_VAR)), alive(
-          var(v),
-          var(HEAP_VAR)))));
-
-      // Assume the method's frame condition.
-      addAssume(translateMethodFrame(invokedMethod, args));
-
-      // Assume the object invariants as justified by the verification
-      // methodology.
-      if (isSuperConstructorCall(invokedMethod, handle)) {
-        // Right after a super constructor call we may only assume the
-        // supertype's invariants on the this object but not the invariants of
-        // the current class, so we exclude the this object.
-        assumeAllInvariants(true);
-
-        // For the this object, only assume the invariants of its supertype.
-        BPLExpression type = typeRef(invokedMethod.getOwner());
-        addAssume(inv(type, var(thisVar()), var(HEAP_VAR)));
-      } else {
-        // Assume the invariants of all objects, including the this object.
-        assumeAllInvariants(false);
-      }
-
-      JClassType[] exceptions = invokedMethod.getExceptionTypes();
-      if (exceptions.length > 0) {
-        // For every exception thrown by the method call, we create a synthetic
-        // BoogiePL block in which we assume the corresponding exceptional
-        // postcondition.
-
-        // Branch to the blocks modeling the normal and the individual
-        // exceptional terminations of the method call.
-        String[] labels = new String[exceptions.length + 1];
-        labels[0] = normalPostBlockLabel(cfgBlock);
-        for (int i = 0; i < exceptions.length; i++) {
-          labels[i + 1] = exceptionalPostBlockLabel(cfgBlock, exceptions[i]);
-        }
-        endBlock(labels);
-
-        for (JClassType exception : exceptions) {
-          // Create the actual blocks for the individual exceptions and assume
-          // the corresponding exceptional postcondition.
-          startBlock(exceptionalPostBlockLabel(cfgBlock, exception));
-
-          // Havoc the exception object and assume its static type.
-          addHavoc(var(refStackVar(0)));
-          addAssume(alive(rval(var(refStackVar(0))), var(HEAP_VAR)));
-          addAssume(isInstanceOf(rval(var(refStackVar(0))), typeRef(exception)));
-
-          // Assume the corresponding exceptional postcondition.
-          addAssume(translateXPostcondition(
-              invokedMethod,
-              exception,
-              refStackVar(0),
-              args));
-
-          // Now, branch to the actual exception handlers.
-          branchToHandlers(exception);
-        }
-
-        translateReachableExceptionHandlers();
-
-        // Finally, open the BoogiePL block representing the normal termination
-        // of the method. The subsequent translation can simply continue inside
-        // this block.
-        startBlock(normalPostBlockLabel(cfgBlock));
-      }
-
-      JType returnType = invokedMethod.getReturnType();
-      String resultVar = "N/A"; // callResultVar(returnType);
-
-      // If the method has a return value, we havoc it and assume its static
-      // type.
-      if (!invokedMethod.isVoid()) {
-        addHavoc(var(resultVar));
-        if (returnType.isReferenceType()) {
-          addAssume(alive(rval(var(resultVar)), var(HEAP_VAR)));
-          addAssume(isOfType(rval(var(resultVar)), typeRef(returnType)));
-        } else {
-          addAssume(isOfType(ival(var(resultVar)), typeRef(returnType)));
-        }
-      }
-
-      // Assume the method's normal postcondition.
-      addAssume(translatePostcondition(
-          invokedMethod,
-          resultVar,
-          args));
-
-      // If the method has a return value, we copy the helper variable
-      // callResult to the actual stack variable which will hold the value.
-      if (!invokedMethod.isVoid()) {
-        String resultStackVar = stackVar(first, returnType);
-        addAssignment(var(resultStackVar), var(resultVar));
-      }
-    }
-    */
     
     /**
      * Method to translate the different kinds of method call instructions.
      * 
      * @param insn The method call instruction to translate.
+     * @requires insn != null;
      */
     private void translateInvokeInstruction(InvokeInstruction insn) {
       BCMethod invokedMethod = insn.getMethod();
       JType[] params = invokedMethod.getRealParameterTypes();
            
-      int first = handle.getFrame().getStackSize() - params.length;
-      int stack = handle.getFrame().getStackSize();
+      int first = handle.getFrame().getStackSize() - params.length; // first method argument on the stack
+      int stack = handle.getFrame().getStackSize();                 // stack size
      
       // Prepare arguments of method call
       List<BPLExpression> methodParams = new ArrayList<BPLExpression>();
             
       // Pass all other method arguments (the first of which refers to the "this" object
-      // if the method is not static.
+      // if the method is not static).
       String[] args = new String[params.length];
       for (int i = 0; i < params.length; i++) {
         args[i] = stackVar(first + i, params[i]);
@@ -3117,57 +2955,53 @@ public class MethodTranslator implements ITranslationConstants {
       }
       
       // does the invoked method provide a return value?
-      boolean provideReturnValue = !invokedMethod.isVoid() || invokedMethod.isConstructor();
+      //   - non-void method return an object reference or integer value
+      //   - constructors "return" the reference to the instantiated owner object
+      boolean hasReturnValue = !invokedMethod.isVoid() || invokedMethod.isConstructor();
       
       // is the invoked method a super-constructor called in the current constructor?
+      //   - every constructors calls a super-constructor, the most general is Object..init()
+      boolean isSuperConstructor = isSuperConstructorCall(invokedMethod, handle);
+      /*
       boolean isSuperConstructor = method.isConstructor() && invokedMethod.isConstructor() &&
                                    (args.length > 0) ? (args[0].equals(stackVar(0, params[0]))) : false;
-      
+      */
+                                   
+      // get return type of method
+      //   - normal method: explicitely declared return type
+      //   - constructor: type of the owner object
       JType retType = (invokedMethod.isConstructor()
         ? invokedMethod.getOwner()
         : invokedMethod.getReturnType()
       );
-
-      // registerModifiedObjectRef(invokedMethod.getOwner().getName());
       
       // Non-static method calls may throw a NullPointerException.
+      /*
       if (!invokedMethod.isStatic() && !invokedMethod.isConstructor()) {
         translateRuntimeException(
             "java.lang.NullPointerException",
             nonNull(var(refStackVar(first))));
       }
-
-      /*
-      if (!invokedMethod.isConstructor()) {
-        // addAssume(alive(rval(var(refStackVar(0))), var(HEAP_VAR)));
-        addAssume(alive(rval(var(stackVar(first, params[0]))), var(HEAP_VAR)));
-      }
       */
 
       // Prepare return values of method call
       List<BPLVariableExpression> resultVars = new ArrayList<BPLVariableExpression>();
-      //@deprecated resultVars.add(new BPLVariableExpression(HEAP_VAR));
-      resultVars.add(new BPLVariableExpression(returnStateVar(callStatements)));
-   
-      if (!invokedMethod.isVoid()) {
-        // Normal return value
-        // resultVars.add(var(refStackVar(stack)));
-        resultVars.add(new BPLVariableExpression(returnValueVar(callStatements, retType)));
-      } else if (invokedMethod.isConstructor()) {
-        // "Return value" from constructor (initialized "this"-object)
-        //resultVars.add(var(refLocalVar(first)));
-        resultVars.add(new BPLVariableExpression(returnValueVar(callStatements, retType)));
+      resultVars.add(new BPLVariableExpression(returnStateVar(callStatements)));            // return state
+      if (hasReturnValue) {
+        resultVars.add(new BPLVariableExpression(returnValueVar(callStatements, retType))); // return value
       }
-      resultVars.add(new BPLVariableExpression(exceptionVar(callStatements)));
-
-      // Create call command
+      resultVars.add(new BPLVariableExpression(exceptionVar(callStatements)));              // exception
+      
+      // Create call command with input and output parameters
       BPLCommand callCmd = new BPLCallCommand(
           getProcedureName(invokedMethod),
           methodParams.toArray(new BPLExpression[methodParams.size()]),
           resultVars.toArray(new BPLVariableExpression[resultVars.size()])
       );
       
-      callCmd.addComment("Number of modified variables in the invoked method: " + modifiedVariables);
+      if (isSuperConstructor) {
+        callCmd.addComment("Super-Constructor:");
+      }
       
       addCommand(callCmd);
       
@@ -3178,6 +3012,8 @@ public class MethodTranslator implements ITranslationConstants {
         }
       }
       
+      // For all object which have not been modified by the method call,
+      // assume their object invariants
       addAssume(getInvariantAfterLeavingMethod());
       
       // If the invoked method is a super-constructor, we need to assign
@@ -3185,39 +3021,13 @@ public class MethodTranslator implements ITranslationConstants {
       if (isSuperConstructor) {
         addAssignment(var(refLocalVar(0)), var(returnValueVar(callStatements, retType)));
       }
-      
-      // TODO/FIXME If the current method call initialized this object
-      // (i.e. we call Object..init() in A..init(), set this-variable correctly.
-      /*
-      if (method.isConstructor() && invokedMethod.isConstructor() ) {
-        BPLCallCommand callCommand = (BPLCallCommand)callCmd;
-        if (callCommand.getArguments().length > 0) {
-          // if (getAliasedValues(callCommand.getArguments()[0].toString()).contains(thisVar())) {
-          if (callCommand.getArguments()[0].toString().equals("stack0_r")) {
-            // This method call is a nested constructor call (e.g. C..init() => Object..init() )          
-            addAssignment(var(refLocalVar(0)), var(returnValueVar(callStatements, retType)));
-          } else {
-            // This method is a constructor for another object in the current scope
-          }
-        }
-      }*/
-            
-      if (provideReturnValue) {
-        
-        // TODO assign returned method result to the topmost stack variable
-        /*
-        addAssignment(
-            var(stackVar(0, retType)),
-            new BPLVariableExpression(returnValueVar(callStatements, retType))
-        );
-        */
-      }
-
+                 
       // Assume exceptional postcondition for all exceptions
       // and jump to the appropriate exception handler defined below.
 
       JClassType[] exceptions = invokedMethod.getExceptionTypes();
-      //if (exceptions.length > 0) {
+      
+      if (exceptions.length > 0) {
         // For every exception thrown by the method call, we create a synthetic
         // BoogiePL block in which we assume the corresponding exceptional
         // postcondition.
@@ -3225,29 +3035,25 @@ public class MethodTranslator implements ITranslationConstants {
         // Branch to the blocks modeling the normal and the individual
         // exceptional terminations of the method call.
         String[] labels = new String[exceptions.length + 1];
-        labels[0] = normalPostBlockLabel(cfgBlock) + "_" + callStatements;
+        labels[0] = normalPostBlockLabel(cfgBlock) + UNDERSCORE + callStatements;
         for (int i = 0; i < exceptions.length; i++) {
-          labels[i + 1] = exceptionalPostBlockLabel(cfgBlock, exceptions[i]) + "_" + callStatements;
+          labels[i + 1] = exceptionalPostBlockLabel(cfgBlock, exceptions[i]) + UNDERSCORE + callStatements;
         }
-        
+
         endBlock(labels);
 
         for (JClassType exception : exceptions) {
           // Create the actual blocks for the individual exceptions.
           // It is not necessary to check the exceptional postcondition,
           // for this will be implicitely done by Boogie.
-          startBlock(exceptionalPostBlockLabel(cfgBlock, exception) + "_" + callStatements);
+          startBlock(exceptionalPostBlockLabel(cfgBlock, exception) + UNDERSCORE + callStatements);
 
           // Havoc the exception object and assume its static type.
-          /*
+          /* TODO: REMOVE this deprecated implementation:
           addHavoc(var(exceptionVar(callStatements)));
           addAssume(alive(
               rval(var(exceptionVar(callStatements))),
               var(HEAP_VAR)));
-          addAssume(isInstanceOf(
-              rval(var(exceptionVar(callStatements))),
-              typeRef(exception)));
-          addAssume(isExceptionalReturnState(var(RETURN_STATE_VAR + callStatements)));
           */
           
           addAssume(logicalAnd(
@@ -3258,10 +3064,7 @@ public class MethodTranslator implements ITranslationConstants {
           ));
 
           // Assume the corresponding exceptional postcondition.
-          /*
-           * addAssume(translateXPostcondition( invokedMethod, exception,
-           * PRE_HEAP_VAR, refStackVar(0), args));
-           */
+          // addAssume(translateXPostcondition( invokedMethod, exception, PRE_HEAP_VAR, refStackVar(0), args));
 
           // Now, branch to the actual exception handlers.
           branchToHandlers(exception);
@@ -3272,14 +3075,14 @@ public class MethodTranslator implements ITranslationConstants {
         // Finally, open the BoogiePL block representing the normal termination
         // of the method. The subsequent translation can simply continue inside
         // this block.
-        startBlock(normalPostBlockLabel(cfgBlock) + "_" + callStatements);
-      //}
+        startBlock(normalPostBlockLabel(cfgBlock) + UNDERSCORE + callStatements);
+      }
 
       // JType returnType = invokedMethod.getReturnType();
       String resultVar = returnValueVar(callStatements, retType);
 
-      // If the method has a return value, we havoc it and assume its static type.
-      if (provideReturnValue) {
+      // Upon normal method termination, assume properties about the return value
+      if (hasReturnValue) {
         // addHavoc(var(resultVar)); // do not havoc: we need to know whether the return value is null
         if (retType.isReferenceType()) {
           addAssume(alive(rval(var(resultVar)), var(HEAP_VAR)));
@@ -3287,31 +3090,21 @@ public class MethodTranslator implements ITranslationConstants {
         } else {
           addAssume(isOfType(ival(var(resultVar)), typeRef(retType)));
         }
-        /*deprecated 
-        if (method.isConstructor()) {
-          addAssume(isOfType(rval(var(RETURN_VALUE_PARAM)), typeRef(method.getOwner())));
-        } else {
-          addAssume(isOfType(rval(var(RETURN_VALUE_PARAM)), typeRef(method.getReturnType())));
-        }
-        */
       }
       addAssume(isNormalReturnState(var(RETURN_STATE_VAR + callStatements)));
 
-      // It is not necessary to assume the method's normal postcondition.
-      // This will be implicitely done by Boogie.
-      /*
-      addAssume(translatePostcondition(
-          invokedMethod,
-          resultVar,
-          args));
-      */
-
       // If the method has a return value, we copy the helper variable
       // callResult to the actual stack variable which will hold the value.
-      if (provideReturnValue) {
+      if (hasReturnValue) {
         //String resultStackVar = stackVar(first, retType);
-        String resultStackVar = stackVar(isSuperConstructor ? first : first - 1, retType); // [SW]
-        addAssignment(var(resultStackVar), var(resultVar));
+        String lhs = "";
+        if (isSuperConstructor) {
+          lhs = stackVar(first, retType);
+        } else {
+          // lhs = stackVar(first - 1, retType);
+          lhs = stackVar(first, retType);
+        }        
+        addAssignment(var(lhs), var(resultVar));
       }
 
       callStatements++;
