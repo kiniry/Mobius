@@ -1,6 +1,6 @@
 (|AnnotatedProgramSemantics|
  (|update_PState_TCC1| 0
-  (|update_PState_TCC1-1| NIL 3390796236 3397385557 ("" (SUBTYPE-TCC) NIL NIL)
+  (|update_PState_TCC1-1| NIL 3390796236 3397561465 ("" (SUBTYPE-TCC) NIL NIL)
    PROVED
    ((|update_PState_type| CONST-DECL "boolean" |SemanticsTypes| NIL)
     (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |AnnotatedProgramSemantics| NIL)
@@ -21,27 +21,27 @@
     (|Store| TYPE-EQ-DECL NIL |State| NIL)
     (|PState| TYPE-EQ-DECL NIL |State| NIL)
     (|APState| TYPE-EQ-DECL NIL |AnnotatedProgramSemantics| NIL))
-   23 23 NIL NIL))
+   25 25 NIL NIL))
  (|update_GhostVars_TCC1| 0
-  (|update_GhostVars_TCC1-1| NIL 3390796236 3397385557
+  (|update_GhostVars_TCC1-1| NIL 3390796236 3397561465
    ("" (SUBTYPE-TCC) NIL NIL) PROVED
    ((|update_GhostVars_type| CONST-DECL "boolean" |SemanticsJMLTypes| NIL)
     (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |AnnotatedProgramSemantics| NIL)
     (|Store| TYPE-EQ-DECL NIL |State| NIL)
     (|PState| TYPE-EQ-DECL NIL |State| NIL)
     (|APState| TYPE-EQ-DECL NIL |AnnotatedProgramSemantics| NIL))
-   4 4 T NIL))
+   5 5 T NIL))
  (|initial_AP_state_TCC1| 0
-  (|initial_AP_state_TCC1-1| NIL 3389427978 3397385557
+  (|initial_AP_state_TCC1-1| NIL 3389427978 3397561466
    ("" (SUBTYPE-TCC) NIL NIL) PROVED
    ((|nonempty?| CONST-DECL "bool" |sets| NIL)
     (|empty?| CONST-DECL "bool" |sets| NIL)
     (|member| CONST-DECL "bool" |sets| NIL)
     (|getGhostDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
     (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |AnnotatedProgramSemantics| NIL))
-   28 27 NIL NIL))
+   30 29 NIL NIL))
  (|IMP_SemanticsProofs_TCC1| 0
-  (|IMP_SemanticsProofs_TCC1-1| NIL 3390796236 3397385559
+  (|IMP_SemanticsProofs_TCC1-1| NIL 3390796236 3397561468
    ("" (SKOSIMP*)
     (("" (EXPAND "on_method_entry")
       (("" (SPLIT -3)
@@ -169,9 +169,9 @@
     (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |AnnotatedProgramSemantics| NIL)
     (|check_assertion| CONST-DECL "boolean" |SemanticsJML| NIL)
     (|int_minus_int_is_int| APPLICATION-JUDGEMENT "int" |integers| NIL))
-   235 234 T NIL))
+   241 240 T NIL))
  (|IMP_SemanticsProofs_TCC2| 0
-  (|IMP_SemanticsProofs_TCC2-1| NIL 3390796236 3397385561
+  (|IMP_SemanticsProofs_TCC2-1| NIL 3390796236 3397561470
    ("" (SKOSIMP*)
     (("" (EXPAND "on_method_exit_normal")
       (("" (SPLIT -3)
@@ -303,9 +303,9 @@
     (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |AnnotatedProgramSemantics| NIL)
     (|check_assertion| CONST-DECL "boolean" |SemanticsJML| NIL)
     (|int_minus_int_is_int| APPLICATION-JUDGEMENT "int" |integers| NIL))
-   165 165 T NIL))
+   169 169 T NIL))
  (|IMP_SemanticsProofs_TCC3| 0
-  (|IMP_SemanticsProofs_TCC3-1| NIL 3390796236 3397385562
+  (|IMP_SemanticsProofs_TCC3-1| NIL 3390796236 3397561471
    ("" (SKOSIMP*)
     (("" (EXPAND "on_method_exit_exceptional")
       (("" (SPLIT -3)
@@ -421,9 +421,9 @@
     (|real_gt_is_strict_total_order| NAME-JUDGEMENT
      "(strict_total_order?[real])" |real_props| NIL)
     (|id_preserves| APPLICATION-JUDGEMENT "S" |identity_props| NIL))
-   114 114 T NIL))
+   120 119 T NIL))
  (|IMP_SemanticsProofs_TCC4| 0
-  (|IMP_SemanticsProofs_TCC4-1| NIL 3390796236 3397385563
+  (|IMP_SemanticsProofs_TCC4-1| NIL 3390796236 3397561472
    ("" (SKOSIMP*)
     (("" (EXPAND "execute_CaseJML")
       (("" (LIFT-IF)
@@ -517,9 +517,9 @@
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|Body| TYPE-DECL NIL |Body_adt| NIL)
     (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |AnnotatedProgramSemantics| NIL))
-   52 52 T NIL))
+   115 115 T NIL))
  (|IMP_SemanticsProofs_TCC5| 0
-  (|IMP_SemanticsProofs_TCC5-1| NIL 3390796236 3397385563
+  (|IMP_SemanticsProofs_TCC5-1| NIL 3390796236 3397561472
    ("" (SKOSIMP*)
     (("" (EXPAND "execute_set")
       (("" (SKOSIMP*)
@@ -585,9 +585,9 @@
      |real_props| NIL)
     (|real_gt_is_strict_total_order| NAME-JUDGEMENT
      "(strict_total_order?[real])" |real_props| NIL))
-   31 31 T NIL))
+   33 33 T NIL))
  (|IMP_SemanticsProofs_TCC6| 0
-  (|IMP_SemanticsProofs_TCC6-1| NIL 3397385547 3397385808
+  (|IMP_SemanticsProofs_TCC6-1| NIL 3397385547 3397561473
    ("" (SKOSIMP*)
     (("" (EXPAND "execute_assert")
       (("" (SPLIT -2)
@@ -679,27 +679,34 @@
     (|n1!1| SKOLEM-CONST-DECL "nat" |AnnotatedProgramSemantics| NIL)
     (|check_assertion| CONST-DECL "boolean" |SemanticsJML| NIL)
     (|int_minus_int_is_int| APPLICATION-JUDGEMENT "int" |integers| NIL))
-   14500 105 T NIL))
+   64 64 T NIL))
  (|wf_state_vars_tricotomy| 0
-  (|wf_state_vars_tricotomy-1| NIL 3395147174 3397385591
+  (|wf_state_vars_tricotomy-1| NIL 3395147174 3397561549
    ("" (SKOSIMP)
-    (("" (EXPAND* "wf_state" "declared_var_names")
+    (("" (EXPAND* "wf_state" "ext_declared_var_names")
       (("" (EXPAND* "wf_state" "wf_ghoststate" "id")
-        (("" (FLATTEN)
-          (("" (INST?) (("" (INST?) (("" (PROP) NIL NIL)) NIL)) NIL)) NIL))
+        (("" (EXPAND "union")
+          (("" (EXPAND "member")
+            (("" (FLATTEN)
+              (("" (INST?) (("" (INST?) (("" (PROP) NIL NIL)) NIL)) NIL)) NIL))
+            NIL))
+          NIL))
         NIL))
       NIL))
     NIL)
    PROVED
-   ((|declared_var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+   ((|ext_declared_var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions|
+     NIL)
     (|wf_state| CONST-DECL "boolean" |AnnotatedProgramSemantics| NIL)
+    (|union| CONST-DECL "set" |sets| NIL)
     (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |AnnotatedProgramSemantics| NIL)
+    (|member| CONST-DECL "bool" |sets| NIL)
     (|wf_state| CONST-DECL "boolean" |State| NIL)
     (|wf_ghoststate| CONST-DECL "boolean" |SemanticsJML| NIL)
     (|id| CONST-DECL "(bijective?[T, T])" |identity| NIL))
-   26 25 T SHOSTAK))
+   4356 35 T SHOSTAK))
  (|wf_state_ghost_not_local_or_field| 0
-  (|wf_state_ghost_not_local_or_field-1| NIL 3390125110 3397385594
+  (|wf_state_ghost_not_local_or_field-1| NIL 3390125110 3397561475
    ("" (SKOSIMP)
     (("" (EXPAND "wf_state")
       ((""
@@ -784,9 +791,9 @@
     (|is_ghost| CONST-DECL "boolean" |SemanticsJML| NIL)
     (|is_field| CONST-DECL "boolean" |State| NIL)
     (|is_local| CONST-DECL "boolean" |State| NIL))
-   219 219 T SHOSTAK))
+   241 241 T SHOSTAK))
  (|wf_update_PState| 0
-  (|wf_update_PState-2| NIL 3392375532 3397385594 ("" (GRIND) NIL NIL) PROVED
+  (|wf_update_PState-2| NIL 3392375532 3397561476 ("" (GRIND) NIL NIL) PROVED
    ((|wf_state| CONST-DECL "boolean" |AnnotatedProgramSemantics| NIL)
     (|wf_ghoststate| CONST-DECL "boolean" |SemanticsJML| NIL)
     (|getGhostDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
@@ -828,7 +835,7 @@
     (|is_field| CONST-DECL "boolean" |State| NIL)
     (|defined?| CONST-DECL "boolean" |ValProp| NIL)
     (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |AnnotatedProgramSemantics| NIL))
-   66 65 NIL NIL)
+   90 89 NIL NIL)
   (|wf_update_PState-1| NIL 3391156508 3392371192 ("" (GRIND) NIL NIL)
    UNCHECKED
    ((|id| CONST-DECL "(bijective?[T, T])" |identity| NIL)
@@ -839,7 +846,7 @@
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL))
    468 420 T SHOSTAK))
  (|wf_update_GhostVars| 0
-  (|wf_update_GhostVars-1| NIL 3391169512 3397385594
+  (|wf_update_GhostVars-1| NIL 3391169512 3397561476
    ("" (SKOSIMP*)
     (("" (EXPAND "wf_state")
       (("" (EXPAND "update_GhostVars")
@@ -850,9 +857,9 @@
    ((|wf_state| CONST-DECL "boolean" |AnnotatedProgramSemantics| NIL)
     (|update_GhostVars| CONST-DECL "(update_GhostVars_type)"
      |AnnotatedProgramSemantics| NIL))
-   2 2 T SHOSTAK))
+   3 3 T SHOSTAK))
  (|wf_state_update_stack| 0
-  (|wf_state_update_stack-1| NIL 3391162146 3397385598
+  (|wf_state_update_stack-1| NIL 3391162146 3397561480
    ("" (SKOSIMP*)
     (("" (EXPAND "update_stack")
       (("" (SPLIT 1)
@@ -1127,9 +1134,9 @@
     (|number_field_pred| CONST-DECL "[number -> boolean]" |number_fields| NIL)
     (|number| NONEMPTY-TYPE-DECL NIL |numbers| NIL)
     (|wf_update_PState| FORMULA-DECL NIL |AnnotatedProgramSemantics| NIL))
-   353 353 T SHOSTAK))
+   364 363 T SHOSTAK))
  (|wf_initial_AP_state| 0
-  (|wf_initial_AP_state-1| NIL 3390075578 3397385598
+  (|wf_initial_AP_state-1| NIL 3390075578 3397561480
    ("" (SKOSIMP*)
     (("" (EXPAND "initial_AP_state")
       (("" (EXPAND "wf_state")
@@ -1190,9 +1197,9 @@
     (IF CONST-DECL "[boolean, T, T -> T]" |if_def| NIL)
     (|initial_Program_state| CONST-DECL "PState" |State| NIL)
     (|wf_state| CONST-DECL "boolean" |AnnotatedProgramSemantics| NIL))
-   31 31 T SHOSTAK))
+   13 12 T SHOSTAK))
  (|on_method_entry_AP_TCC1| 0
-  (|on_method_entry_AP_TCC1-1| NIL 3391506354 3397385598
+  (|on_method_entry_AP_TCC1-1| NIL 3391506354 3397561481
    ("" (TYPEPRED "on_method_entry")
     (("" (ASSERT)
       (("" (EXPAND "on_method_event_type") (("" (PROPAX) NIL NIL)) NIL)) NIL))
@@ -1246,9 +1253,9 @@
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL))
-   15 15 T NIL))
+   36 37 T NIL))
  (|determ_step_AP| 0
-  (|determ_step_AP-1| NIL 3396347126 3397385599
+  (|determ_step_AP-1| NIL 3396347126 3397561481
    ("" (SKOSIMP*) (("" (USE "derive_determ_step") (("" (ASSERT) NIL NIL)) NIL))
     NIL)
    PROVED
@@ -1336,9 +1343,9 @@
      NIL)
     (|on_method_exit_exceptional| CONST-DECL "(on_method_event_type)"
      |SemanticsJML| NIL))
-   25 25 T SHOSTAK))
+   27 27 T SHOSTAK))
  (|derive_bottom_iff_exception_step_AP| 0
-  (|derive_bottom_iff_exception_step_AP-1| NIL 3396347163 3397385599
+  (|derive_bottom_iff_exception_step_AP-1| NIL 3396347163 3397561481
    ("" (SKOSIMP*)
     (("" (USE "derive_bottom_iff_exception_step") (("" (ASSERT) NIL NIL)) NIL))
     NIL)
@@ -1427,9 +1434,9 @@
      NIL)
     (|on_method_exit_exceptional| CONST-DECL "(on_method_event_type)"
      |SemanticsJML| NIL))
-   24 23 T SHOSTAK))
+   6 6 T SHOSTAK))
  (|derive_boolean_expr_type_AP| 0
-  (|derive_boolean_expr_type_AP-1| NIL 3396347184 3397385599
+  (|derive_boolean_expr_type_AP-1| NIL 3396347184 3397561481
    ("" (SKOSIMP*)
     (("" (USE "derive_boolean_expr_type") (("" (ASSERT) NIL NIL)) NIL)) NIL)
    PROVED
@@ -1517,10 +1524,10 @@
      NIL)
     (|on_method_exit_exceptional| CONST-DECL "(on_method_event_type)"
      |SemanticsJML| NIL))
-   5 4 T SHOSTAK)))
+   25 25 T SHOSTAK)))
 (|APSemanticsProperties|
  (|non_interference_of_set_stmt| 0
-  (|non_interference_of_set_stmt-1| NIL 3389426699 3397385600
+  (|non_interference_of_set_stmt-1| NIL 3389426699 3397561483
    ("" (SKOSIMP*)
     (("" (EXPAND "derive")
       (("" (EXPAND "spec_expr_has_no_side_effects")
@@ -1583,9 +1590,12 @@
     (|real_gt_is_strict_total_order| NAME-JUDGEMENT
      "(strict_total_order?[real])" |real_props| NIL)
     (|spec_expr_has_no_side_effects| CONST-DECL "boolean" |Semantics| NIL))
-   135 135 T NIL))
+   142 141 T NIL))
+ (|CaseJML_evaluates_true_stmt_TCC1| 0
+  (|CaseJML_evaluates_true_stmt_TCC1-1| NIL 3397561465 3397561487
+   ("" (SUBTYPE-TCC) NIL NIL) UNFINISHED NIL 451 448 NIL NIL))
  (|CaseJML_evaluates_true_stmt| 0
-  (|CaseJML_evaluates_true_stmt-1| NIL 3392546029 3397385605
+  (|CaseJML_evaluates_true_stmt-1| NIL 3392546029 3397561492
    ("" (INDUCT "bs")
     (("1" (EXPAND "member") (("1" (PROPAX) NIL NIL)) NIL)
      ("2" (SKOSIMP*)
@@ -1748,9 +1758,9 @@
     (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|list| TYPE-DECL NIL |list_adt| NIL))
-   448 447 T NIL))
+   477 476 T NIL))
  (|CaseJML_exclusive_branches_semantics| 0
-  (|CaseJML_exclusive_branches_semantics-1| NIL 3389427193 3397385610
+  (|CaseJML_exclusive_branches_semantics-1| NIL 3389427193 3397561497
    ("" (INDUCT "bs")
     (("1" (EXPAND "member") (("1" (PROPAX) NIL NIL)) NIL)
      ("2" (SKOSIMP*)
@@ -1888,5 +1898,5 @@
     (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|list| TYPE-DECL NIL |list_adt| NIL))
-   520 520 T NIL)))
+   495 494 T NIL)))
 

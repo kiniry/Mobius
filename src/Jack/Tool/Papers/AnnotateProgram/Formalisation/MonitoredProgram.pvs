@@ -103,7 +103,7 @@ BEGIN
   wf_state_vars_tricotomy : LEMMA % :-)
     FORALL (mp : MonitoredProgram, s : MPState, vn : Name) :
       wf_state(mp)(s) IMPLIES
-      declared_var_names(program(mp))(vn) IMPLIES
+      ext_declared_var_names(program(mp))(vn) IMPLIES
         is_ghost(vn, s) OR
         is_field(vn, pstate(s)) OR
         is_local(vn, pstate(s))

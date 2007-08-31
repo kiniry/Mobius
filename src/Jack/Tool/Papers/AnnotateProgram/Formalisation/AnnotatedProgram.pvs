@@ -69,7 +69,7 @@ BEGIN
   wf_state_vars_tricotomy : LEMMA % :-)
     FORALL (p : Program, s : APState, vn : Name) :
       wf_state(p)(s) IMPLIES
-      declared_var_names(p)(vn) IMPLIES
+      ext_declared_var_names(p)(vn) IMPLIES
         is_ghost(vn, s) OR
         is_field(vn, pstate(s)) OR
         is_local(vn, pstate(s))

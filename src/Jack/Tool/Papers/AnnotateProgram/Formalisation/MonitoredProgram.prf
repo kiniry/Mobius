@@ -1,10 +1,4 @@
-(|MonitoredProgram|
- (|IMP_MVASemantics_TCC1| 0
-  (|IMP_MVASemantics_TCC1-1| NIL 3397472774 NIL ("" (EXISTENCE-TCC) NIL NIL)
-   NIL NIL NIL NIL NIL NIL))
- (|IMP_MVASemantics_TCC2| 0
-  (|IMP_MVASemantics_TCC2-1| NIL 3397472774 NIL ("" (EXISTENCE-TCC) NIL NIL)
-   NIL NIL NIL NIL NIL NIL)))
+(|MonitoredProgram|)
 (|MonitoredProgramSemantics|
  (|update_PState_TCC1| 0
   (|update_PState_TCC1-1| NIL 3391514279 3397385945 ("" (SUBTYPE-TCC) NIL NIL)
@@ -116,16 +110,20 @@
     (|LocalVarDecl| TYPE-EQ-DECL NIL |Program| NIL) NIL)
    2767 2745 T SHOSTAK))
  (|wf_state_vars_tricotomy| 0
-  (|wf_state_vars_tricotomy-1| NIL 3396777599 3397385973
+  (|wf_state_vars_tricotomy-1| NIL 3396777599 3397561631
    ("" (SKOSIMP*)
-    (("" (EXPAND "declared_var_names")
+    (("" (EXPAND "ext_declared_var_names")
       (("" (EXPAND "wf_state")
-        (("" (FLATTEN)
-          (("" (EXPAND "wf_state")
-            (("" (EXPAND "wf_ghoststate")
-              (("" (INST -2 "vn!1")
-                (("" (INST -3 "vn!1")
-                  (("" (ASSERT) (("" (FLATTEN) (("" (ASSERT) NIL NIL)) NIL))
+        (("" (EXPAND "union")
+          (("" (EXPAND "member")
+            (("" (FLATTEN)
+              (("" (EXPAND "wf_state")
+                (("" (EXPAND "wf_ghoststate")
+                  (("" (INST -2 "vn!1")
+                    (("" (INST -3 "vn!1")
+                      (("" (ASSERT)
+                        (("" (FLATTEN) (("" (ASSERT) NIL NIL)) NIL)) NIL))
+                      NIL))
                     NIL))
                   NIL))
                 NIL))
@@ -135,13 +133,16 @@
         NIL))
       NIL))
     NIL)
-   UNCHECKED
-   ((|declared_var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+   PROVED
+   ((|ext_declared_var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions|
+     NIL)
+    (|union| CONST-DECL "set" |sets| NIL)
     (|wf_ghoststate| CONST-DECL "boolean" |SemanticsJML| NIL)
     (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |MonitoredProgramSemantics| NIL)
     (|wf_state| CONST-DECL "boolean" |State| NIL)
+    (|member| CONST-DECL "bool" |sets| NIL)
     (|wf_state| CONST-DECL "boolean" |MonitoredProgramSemantics| NIL))
-   26 26 T SHOSTAK))
+   1895 28 T SHOSTAK))
  (|wf_state_ghost_not_local_or_field| 0
   (|wf_state_ghost_not_local_or_field-1| NIL 3396777649 3397385974
    ("" (SKOSIMP*)

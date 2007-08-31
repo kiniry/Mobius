@@ -138,6 +138,7 @@ BEGIN
         related_states(mp)(initial_MP_state(mp)(root_object),
                            initial_AP_state(ann_program(mp))(root_object))
 
+
   derive_maintains_related_states_for_unchanged_program : THEOREM
     FORALL (mp)(b : Body, v1, v2 : Val)
            (sMP1, sMP2 : MPState, sAP1, sAP2 : APState)
