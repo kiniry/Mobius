@@ -1,7 +1,7 @@
 (|set2list|
  (|set2list_TCC1| 0
   (|set2list_TCC1-1| NIL 3387877128 3390299916 ("" (SUBTYPE-TCC) NIL NIL)
-   UNCHECKED
+   PROVED-COMPLETE
    ((|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
@@ -20,7 +20,7 @@
         (("" (REWRITE "card_remove[T]") (("" (ASSERT) NIL NIL)) NIL)) NIL))
       NIL))
     NIL)
-   UNCHECKED
+   PROVED-COMPLETE
    ((|card_remove| FORMULA-DECL NIL |finite_sets| NIL)
     (T FORMAL-TYPE-DECL NIL |set2list| NIL)
     (|remove| CONST-DECL "set" |sets| NIL)
@@ -91,7 +91,7 @@
       NIL)
      ("2" (USE "wf_card") NIL NIL))
     NIL)
-   UNFINISHED
+   PROVED-COMPLETE
    ((|wf_card| FORMULA-DECL NIL |WF_Card| NIL)
     (|set2list| DEF-DECL "list[T]" |set2list| NIL)
     (|member| DEF-DECL "bool" |list_props| NIL)
@@ -183,7 +183,7 @@
       NIL)
      ("2" (USE "wf_card") NIL NIL))
     NIL)
-   UNFINISHED
+   PROVED-COMPLETE
    ((|wf_card| FORMULA-DECL NIL |WF_Card| NIL)
     (|card_remove| FORMULA-DECL NIL |finite_sets| NIL)
     (|add| CONST-DECL "(nonempty?)" |sets| NIL)
@@ -224,7 +224,8 @@
 (|listfuncs|
  (|before_TCC1| 0
   (|before_TCC1-1| NIL 3388429891 3390292587 ("" (TERMINATION-TCC) NIL NIL)
-   UNCHECKED ((|length| DEF-DECL "nat" |list_props| NIL)) 195 170 NIL NIL))
+   PROVED-COMPLETE ((|length| DEF-DECL "nat" |list_props| NIL)) 195 170 NIL
+   NIL))
  (|before_distinct| 0
   (|before_distinct-1| NIL 3392381403 3392381563
    ("" (INDUCT "l")
@@ -234,7 +235,7 @@
         (("2" (GROUND) (("2" (INST?) (("2" (ASSERT) NIL NIL)) NIL)) NIL)) NIL))
       NIL))
     NIL)
-   UNFINISHED
+   PROVED-COMPLETE
    ((|list_induction| FORMULA-DECL NIL |list_adt| NIL)
     (T FORMAL-TYPE-DECL NIL |listfuncs| NIL)
     (= CONST-DECL "[T, T -> boolean]" |equalities| NIL)
@@ -312,7 +313,7 @@
         NIL))
       NIL))
     NIL)
-   UNFINISHED
+   PROVED-COMPLETE
    ((|list_induction| FORMULA-DECL NIL |list_adt| NIL)
     (T FORMAL-TYPE-DECL NIL |listfuncs| NIL)
     (|member| DEF-DECL "bool" |list_props| NIL)
@@ -365,7 +366,7 @@
         NIL))
       NIL))
     NIL)
-   UNFINISHED
+   PROVED-COMPLETE
    ((|list_induction| FORMULA-DECL NIL |list_adt| NIL)
     (T FORMAL-TYPE-DECL NIL |listfuncs| NIL)
     (|member| DEF-DECL "bool" |list_props| NIL)
@@ -387,7 +388,7 @@
         NIL))
       NIL))
     NIL)
-   UNFINISHED
+   PROVED-COMPLETE
    ((|list_inclusive| FORMULA-DECL NIL |list_adt| NIL)
     (T FORMAL-TYPE-DECL NIL |listfuncs| NIL)
     (|list| TYPE-DECL NIL |list_adt| NIL)
@@ -398,13 +399,48 @@
     (|list_cons_extensionality| FORMULA-DECL NIL |list_adt| NIL)
     (|cons| ADT-CONSTRUCTOR-DECL "[[T, list] -> (cons?)]" |list_adt| NIL))
    65 40 T SHOSTAK)))
+(|listsum|
+ (|sum_TCC1| 0
+  (|sum_TCC1-1| NIL 3397556841 NIL ("" (SUBTYPE-TCC) NIL NIL) NIL NIL NIL NIL
+   NIL NIL))
+ (|sum_TCC2| 0
+  (|sum_TCC2-1| NIL 3397556841 NIL ("" (TERMINATION-TCC) NIL NIL) NIL NIL NIL
+   NIL NIL NIL))
+ (|sum_geq_than_elements| 0
+  (|sum_geq_than_elements-1| NIL 3397556841 3397556849
+   ("" (INDUCT-AND-SIMPLIFY "l") NIL NIL) PROVED
+   ((|nnint_plus_nnint_is_nnint| APPLICATION-JUDGEMENT "nonneg_int" |integers|
+     NIL)
+    (|real_ge_is_total_order| NAME-JUDGEMENT "(total_order?[real])"
+     |real_props| NIL)
+    (|nat| NONEMPTY-TYPE-EQ-DECL NIL |naturalnumbers| NIL)
+    (>= CONST-DECL "bool" |reals| NIL)
+    (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
+    (|int| NONEMPTY-TYPE-EQ-DECL NIL |integers| NIL)
+    (|integer_pred| CONST-DECL "[rational -> boolean]" |integers| NIL)
+    (|rational| NONEMPTY-TYPE-FROM-DECL NIL |rationals| NIL)
+    (|rational_pred| CONST-DECL "[real -> boolean]" |rationals| NIL)
+    (|real| NONEMPTY-TYPE-FROM-DECL NIL |reals| NIL)
+    (|real_pred| CONST-DECL "[number_field -> boolean]" |reals| NIL)
+    (|number_field| NONEMPTY-TYPE-FROM-DECL NIL |number_fields| NIL)
+    (|number_field_pred| CONST-DECL "[number -> boolean]" |number_fields| NIL)
+    (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
+    (|number| NONEMPTY-TYPE-DECL NIL |numbers| NIL)
+    (|list_induction| FORMULA-DECL NIL |list_adt| NIL)
+    (|sum| DEF-DECL "nat" |listsum| NIL)
+    (|member| DEF-DECL "bool" |list_props| NIL)
+    (IMPLIES CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
+    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
+    (|every| ADT-DEF-DECL "boolean" |list_adt| NIL)
+    (PRED TYPE-EQ-DECL NIL |defined_types| NIL)
+    (|list| TYPE-DECL NIL |list_adt| NIL))
+   848 109 T SHOSTAK)))
 (|list_map_funcs|
  (|list_map_member| 0
   (|list_map_member-1| NIL 3397382384 3397382391
-   ("" (INDUCT-AND-SIMPLIFY "xs") NIL NIL) PROVED
+   ("" (INDUCT-AND-SIMPLIFY "xs") NIL NIL) PROVED-COMPLETE
    ((T1 FORMAL-TYPE-DECL NIL |list_map_funcs| NIL)
-    (|list_induction| FORMULA-DECL NIL |list_adt| NIL)
-    (|map| ADT-DEF-DECL "list[T1]" |list_adt_map| NIL)
+    (|list_induction| FORMULA-DECL NIL |list_adt| NIL) NIL
     (|member| DEF-DECL "bool" |list_props| NIL)
     (IMPLIES CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
@@ -414,14 +450,14 @@
    645 46 T SHOSTAK)))
 (|list_of_set_funcs|
  (|list_to_union_TCC1| 0
-  (|list_to_union_TCC1-1| NIL 3397382258 NIL ("" (SUBTYPE-TCC) NIL NIL) NIL NIL
-   NIL NIL NIL NIL))
+  (|list_to_union_TCC1-1| NIL 3397382258 NIL ("" (SUBTYPE-TCC) NIL NIL)
+   PROVED-COMPLETE NIL NIL NIL NIL NIL))
  (|list_to_union_TCC2| 0
-  (|list_to_union_TCC2-1| NIL 3397382258 NIL ("" (TERMINATION-TCC) NIL NIL) NIL
-   NIL NIL NIL NIL NIL))
+  (|list_to_union_TCC2-1| NIL 3397382258 NIL ("" (TERMINATION-TCC) NIL NIL)
+   PROVED-COMPLETE NIL NIL NIL NIL NIL))
  (|list_to_union_subset| 0
   (|list_to_union_subset-1| NIL 3397382261 3397382267
-   ("" (INDUCT-AND-SIMPLIFY "l") NIL NIL) PROVED
+   ("" (INDUCT-AND-SIMPLIFY "l") NIL NIL) PROVED-COMPLETE
    ((|subset_is_partial_order| NAME-JUDGEMENT "(partial_order?[set[T]])"
      |sets_lemmas| NIL)
     (|member| CONST-DECL "bool" |sets| NIL)
@@ -439,7 +475,7 @@
 (|FunProp|
  (|nat2string_TCC1| 0
   (|nat2string_TCC1-1| NIL 3390113818 3390292588 ("" (SUBTYPE-TCC) NIL NIL)
-   UNCHECKED
+   PROVED-COMPLETE
    ((|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
@@ -457,7 +493,7 @@
    65 60 NIL NIL))
  (|nat2string_TCC2| 0
   (|nat2string_TCC2-1| NIL 3390113818 3390292588 ("" (SUBTYPE-TCC) NIL NIL)
-   UNCHECKED NIL 10 10 NIL NIL))
+   PROVED-COMPLETE NIL 10 10 NIL NIL))
  (|nat2string_injective| 0
   (|nat2string_injective-1| NIL 3390113998 3390292588
    ("" (EXPAND "injective?")
@@ -489,7 +525,7 @@
         NIL))
       NIL))
     NIL)
-   UNFINISHED
+   PROVED-COMPLETE
    ((|number| NONEMPTY-TYPE-DECL NIL |numbers| NIL)
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|number_field_pred| CONST-DECL "[number -> boolean]" |number_fields| NIL)
@@ -605,7 +641,7 @@
         NIL))
       NIL))
     NIL)
-   UNFINISHED
+   PROVED-COMPLETE
    ((|list2finseq| CONST-DECL "finseq[T]" |list2finseq| NIL)
     (|cdr| ADT-ACCESSOR-DECL "[(cons?) -> list]" |list_adt| NIL)
     (|cons?| ADT-RECOGNIZER-DECL "[list -> boolean]" |list_adt| NIL)
@@ -650,7 +686,7 @@
        ("2" (USE "nat2string_injective") NIL NIL))
       NIL))
     NIL)
-   UNFINISHED
+   PROVED-COMPLETE
    ((|composition_injective| JUDGEMENT-TCC NIL |function_props| NIL)
     (|injective?| CONST-DECL "bool" |functions| NIL)
     (|list2finseq_injective| FORMULA-DECL NIL |FunProp| NIL)

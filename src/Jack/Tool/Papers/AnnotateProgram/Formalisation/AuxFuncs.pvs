@@ -58,8 +58,26 @@ BEGIN
     FORALL (xs : list[T]) :
       xs = null OR EXISTS (y : T, ys : list[T]) : xs = cons(y, ys)
 
-  
+    
 END listfuncs
+
+listsum : THEORY
+BEGIN
+
+  sum(l : list[nat]) : RECURSIVE nat =
+    IF null?(l)
+    THEN 0
+    ELSE car(l) + sum(cdr(l))
+    ENDIF
+  MEASURE length(l)
+
+  sum_geq_than_elements : LEMMA % :-)
+    FORALL(l : list[nat], x : nat) :
+      member(x, l) IMPLIES
+        sum(l) >= x
+
+END listsum
+
 
 list_map_funcs[T1, T2 : TYPE] : THEORY
 BEGIN

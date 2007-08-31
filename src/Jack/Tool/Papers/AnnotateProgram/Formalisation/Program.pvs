@@ -202,7 +202,42 @@ BEGIN
 %     FORALL(x : list[[BoolExpr, Stmt]]) :
 %       var_names(CaseJML(x)) = emptyset
 
-  IMPORTING list_of_set_funcs[Name]
+  IMPORTING list_of_set_funcs[Name], 
+            listfuncs[[BoolExpr, Stmt]],
+            listsum,
+            list_map_funcs
+
+  size(b : Body) : nat = 
+    reduce_nat(
+       LAMBDA(i : int) : 1, % Int
+       LAMBDA(n1, n2 : nat) : n1 + n2 + 1, % Plus
+       LAMBDA(n : Name) : 1, % NumVarEval
+       1, % TT
+       1, % FF
+       LAMBDA(n : nat) : n + 1, % Neg
+       LAMBDA(n1, n2 : nat) : n1 + n2 + 1, % Conj
+       LAMBDA(n1, n2 : nat) : n1 + n2 + 1, % Eq
+       LAMBDA(n : Name) : 1, % BoolVarEval
+       1, % Null
+       LAMBDA(n : Name) : 1, % RefVarEval
+       LAMBDA(nm : Name, n : nat) : n + 1, % Assign
+       LAMBDA(n : nat) : n + 1, % BExpr
+       LAMBDA(n1, n2, n3 : nat) : n1 + n2 + n3 + 1, % CondExpr
+       LAMBDA(n1 : nat, nm : Name, n2 : nat) : n1 + n2 + 1, % MethodCall
+       LAMBDA(n : nat) : n + 1, % NExpr
+       LAMBDA(n : nat) : n + 1, % RExpr
+       LAMBDA(l : list[[nat, nat]]) : 
+         sum(map[[nat, nat], nat](LAMBDA(n1, n2 : nat) : n1 + n2 + 1)(l)) + 1, % CaseJML
+       LAMBDA(n1, n2, n3 : nat) : n1 + n2 + n3 + 1, % IfThenElse
+       LAMBDA(n1, n2 : nat) : n1 + n2 + 1, % Sequence
+       LAMBDA(nm : Name, n : nat) : n + 1, % Set
+       1, % Skip
+       LAMBDA(n : nat) : n + 1, % StmtExpr
+       1, % Throw
+       LAMBDA(n1, n2, n3 : nat) : n1 + n2 + n3 + 1, % TryCatchFinally
+       LAMBDA(n1, n2 : nat) : n1 + n2 + 1, % While
+       LAMBDA(n : nat) : n + 1)(b) % Assert
+
 
   var_names(b : Body) : RECURSIVE [Name -> boolean] =
     CASES b OF    
@@ -227,14 +262,13 @@ BEGIN
        NExpr(n) : var_names(n),
        RExpr(r) : var_names(r),
        CaseJML(branches) : 
-         IF null?(branches)
-         THEN emptyset[Name]
-         ELSE
          list_to_union
               (map(LAMBDA(x : [BoolExpr, Stmt]) : 
-                     union(var_names(proj_1(x)), var_names(proj_2(x))))
-                  (branches))
-         ENDIF,
+                     IF member(x, branches)
+                     THEN union(var_names(proj_1(x)), var_names(proj_2(x)))
+                     ELSE emptyset
+                     ENDIF)
+                  (branches)),
        IfThenElse(test, then_stmt, else_stmt) :
          union(var_names(test), 
          union(var_names(then_stmt), var_names(else_stmt))),
@@ -248,7 +282,7 @@ BEGIN
        While(test, body) : union(var_names(test), var_names(body)),
        Assert(expr) : var_names(expr)
     ENDCASES
-  MEASURE b BY <<
+  MEASURE size(b)
 
 
   var_names(m : Method) : set[Name] =
@@ -272,7 +306,7 @@ BEGIN
 
   
   var_names_union : LEMMA % :-)
-    FORALL(fs1, fs2 : set[FieldDecl]) :
+    FORALL(fs1, fs2 : finite_set[FieldDecl]) :
       var_names(union(fs1, fs2)) = union(var_names(fs1), var_names(fs2))
 
   % Declared variable names
@@ -321,7 +355,7 @@ BEGIN
     union({n : Name | var_names(getFieldDecls(p))(n) OR
                       var_names(getLocalDecls(p))(n) OR
                       var_names(getGhostDecls(p))(n)},
-          {n : Name | n = This OR n = Super})
+          {n : Name | n = This})
 
 
   class_names(p : Program) : finite_set[Name] =
@@ -383,7 +417,7 @@ BEGIN
     FORALL (c1, c2, c3 : Body) :
       c1 << c2 AND c2 << c3 IMPLIES c1 << c3
 
-  IMPORTING list_map_funcs[[BoolExpr, Stmt], set[Name]]
+%  IMPORTING list_map_funcs[[BoolExpr, Stmt], set[Name]]
 
   subterm_subset_varnames : LEMMA % :-)
     FORALL(b1, b2 : Body) :
