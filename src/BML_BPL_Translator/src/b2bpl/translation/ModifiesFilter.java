@@ -47,7 +47,7 @@ import b2bpl.bytecode.bml.ast.BMLThisStoreRef;
  * provided for constructing translators for the two contexts.
  * </p>
  *
- * @author Ovidio Mallo
+ * @author Ovidio Mallo, Samuel Willimann
  */
 public class ModifiesFilter {
 
@@ -84,6 +84,7 @@ public class ModifiesFilter {
    * @param location           The name of the variable representing the
    *                           location in the heap containing the store
    *                           references of the modifies clause.
+   * @requires heap != null && thisReference != null && localVariables != null && location != null;
    */
   protected ModifiesFilter(
       String heap,
@@ -112,6 +113,7 @@ public class ModifiesFilter {
    * @param location    The name of the variable representing the location in
    *                    the heap containing the store references of the modifies
    *                    clause.
+   * @requires heap != null && parameters != null && location != null;
    */
   public static ModifiesFilter forMethod(
       String heap,
@@ -143,6 +145,7 @@ public class ModifiesFilter {
    * @param location        The name of the variable representing the location
    *                        in the heap containing the store references of the
    *                        modifies clause.
+   * @requires heap != null;
    */
   public static ModifiesFilter forLoop(
       String heap,
@@ -174,6 +177,7 @@ public class ModifiesFilter {
    * @return           The BoogiePL predicate which filters out all the
    *                   locations corresponding to the given BML store
    *                   references.
+   * @requires context != null && storeRefs != null;
    */
   public BPLExpression translate(
       ITranslationContext context,
@@ -190,7 +194,7 @@ public class ModifiesFilter {
   /**
    * The visitor performing the actual translation of the BML store references.
    *
-   * @author Ovidio Mallo
+   * @author Ovidio Mallo, Samuel Willimann
    */
   private final class Filter implements IBMLStoreRefVisitor<BPLExpression> {
 
@@ -200,15 +204,18 @@ public class ModifiesFilter {
      */
     private int onLhs = 0;
 
+    //@ requires storeRef != null;
     public BPLExpression visitEverythingStoreRef(
         BMLEverythingStoreRef storeRef) {
       return BPLBoolLiteral.FALSE;
     }
 
+    //@ requires storeRef != null;
     public BPLExpression visitNothingStoreRef(BMLNothingStoreRef storeRef) {
       return BPLBoolLiteral.TRUE;
     }
 
+    //@ requires storeRef != null;
     public BPLExpression visitThisStoreRef(BMLThisStoreRef storeRef) {
       if (onLhs > 0) {
         return var(specTranslator.thisReference);
@@ -218,8 +225,8 @@ public class ModifiesFilter {
       return BPLBoolLiteral.TRUE;
     }
 
-    public BPLExpression visitLocalVariableStoreRef(
-        BMLLocalVariableStoreRef storeRef) {
+    //@ requires storeRef != null;
+    public BPLExpression visitLocalVariableStoreRef(BMLLocalVariableStoreRef storeRef) {
       if (onLhs > 0) {
         return var(specTranslator.localVariables[storeRef.getIndex()]);
       }
@@ -228,6 +235,7 @@ public class ModifiesFilter {
       return BPLBoolLiteral.TRUE;
     }
 
+    //@ requires storeRef != null;
     public BPLExpression visitFieldStoreRef(BMLFieldStoreRef storeRef) {
       BCField field = storeRef.getField();
       if (onLhs > 0) {
@@ -247,8 +255,8 @@ public class ModifiesFilter {
           fieldLoc(context, var(specTranslator.thisReference), field));
     }
 
-    public BPLExpression visitFieldAccessStoreRef(
-        BMLFieldAccessStoreRef storeRef) {
+    //@ requires storeRef != null;
+    public BPLExpression visitFieldAccessStoreRef(BMLFieldAccessStoreRef storeRef) {
       onLhs++;
       BPLExpression left = storeRef.getPrefix().accept(this);
       onLhs--;
@@ -265,13 +273,12 @@ public class ModifiesFilter {
       return notEqual(var(location), fieldLoc(context, left, field));
     }
 
-    public BPLExpression visitArrayElementStoreRef(
-        BMLArrayElementStoreRef storeRef) {
+    //@ requires storeRef != null;
+    public BPLExpression visitArrayElementStoreRef(BMLArrayElementStoreRef storeRef) {
       onLhs++;
       BPLExpression prefix = storeRef.getPrefix().accept(this);
       onLhs--;
-      BPLExpression index =
-        specTranslator.translate(context, storeRef.getIndex());
+      BPLExpression index = specTranslator.translate(context, storeRef.getIndex());
 
       if (onLhs > 0) {
         // If we are on the LHS of a field/array access, we simply return a
@@ -284,6 +291,7 @@ public class ModifiesFilter {
       return notEqual(var(location), arrayLoc(prefix, index));
     }
 
+    //@ requires storeRef != null;
     public BPLExpression visitArrayAllStoreRef(BMLArrayAllStoreRef storeRef) {
       onLhs++;
       BPLExpression prefix = storeRef.getPrefix().accept(this);
@@ -302,15 +310,13 @@ public class ModifiesFilter {
               notEqual(var(location), arrayLoc(prefix, var(i)))));
     }
 
-    public BPLExpression visitArrayRangeStoreRef(
-        BMLArrayRangeStoreRef storeRef) {
+    //@ requires storeRef != null;
+    public BPLExpression visitArrayRangeStoreRef(BMLArrayRangeStoreRef storeRef) {
       onLhs++;
       BPLExpression prefix = storeRef.getPrefix().accept(this);
       onLhs--;
-      BPLExpression startIndex =
-        specTranslator.translate(context, storeRef.getStartIndex());
-      BPLExpression endIndex =
-        specTranslator.translate(context, storeRef.getEndIndex());
+      BPLExpression startIndex = specTranslator.translate(context, storeRef.getStartIndex());
+      BPLExpression endIndex =   specTranslator.translate(context, storeRef.getEndIndex());
 
       // We should never be on the LHS of some field access since this is
       // currently not supported.

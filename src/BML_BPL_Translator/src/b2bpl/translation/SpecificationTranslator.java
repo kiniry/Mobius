@@ -192,6 +192,7 @@ public class SpecificationTranslator {
    *                       object.
    * @return               A specification translator for translating object
    *                       invariants.
+   * @requires heap != null && thisReference != null;
    */
   public static SpecificationTranslator forInvariant(
       String heap,
@@ -214,6 +215,7 @@ public class SpecificationTranslator {
    * @param parameters  The names of the method's parameters.
    * @return            A specification translator for translating method
    *                    preconditions.
+   * @requires heap != null && parameters != null;
    */
   public static SpecificationTranslator forPrecondition(
       String heap,
@@ -237,6 +239,7 @@ public class SpecificationTranslator {
    * @param parameters  The names of the method's parameters.
    * @return            A specification translator for translating method's
    *                    modifies variables.
+   * @requires heap != null && parameters != null;
    */
   public static SpecificationTranslator forModifiesClause(
       String heap,
@@ -265,6 +268,7 @@ public class SpecificationTranslator {
    * @param parameters         The names of the method's parameters.
    * @return                   A specification translator for translating normal
    *                           or exceptional method postconditions.
+   * @requires heap != null && resultOrException != null && parameters != null;
    */
   public static SpecificationTranslator forPostcondition(
       String heap,
@@ -296,6 +300,7 @@ public class SpecificationTranslator {
    *                        variables).
    * @return                A specification translator for translating local
    *                        specifications.
+   * @requires heap != null && oldHeap != null && localVariables != null && stackElements != null && parameters != null;
    */
   public static SpecificationTranslator forLocalSpecification(
       String heap,
@@ -323,6 +328,7 @@ public class SpecificationTranslator {
    * @param specification  The specification to be translated.
    * @return               The BoogiePL expression resulting from the 
    *                       translation of the given BML specification.
+   * @requires context != null && specification != null;
    */
   public BPLExpression translate(
       ITranslationContext context,
@@ -340,6 +346,9 @@ public class SpecificationTranslator {
     return bplExpr;
   }
   
+  /**
+   * @requires context != null && refs != null;
+   */
   public BPLModifiesClause translateModifiesStoreRefs(
       ITranslationContext context,
       BMLStoreRef[] refs) {
@@ -367,6 +376,10 @@ public class SpecificationTranslator {
     return new BPLModifiesClause(vars);    
   }
   
+  /**
+   * @requires s != null;
+   * @ensures \result != null;
+   */
   private static String old(String s) {
     return "old(" + s + ")";
   }
@@ -374,7 +387,7 @@ public class SpecificationTranslator {
   /**
    * The visitor performing the actual translation of the BML specification.
    *
-   * @author Ovidio Mallo
+   * @author Ovidio Mallo, Samuel Willimann
    */
   private final class Translator
       implements IBMLExpressionVisitor<BPLExpression> {
@@ -394,6 +407,7 @@ public class SpecificationTranslator {
      *
      * @return  The name of the heap variable to be used in the current context
      *          of the translation.
+     * @ensures \result != null;
      */
     private String getHeap() {
       return (insideOld > 0) ? oldHeap : heap;
@@ -409,6 +423,9 @@ public class SpecificationTranslator {
      * @return       The name of the local variable for the given
      *               {@code index} to be used in the current context of the
      *               translation.
+     * @reqires index >= 0 && ((insideOld >  0 && index < oldLocalVariables.length) ||
+     *                         (insideOld <= 0 && index < localVariables.length));
+     * @ensures \result != null;
      */
     private String getLocalVariable(int index) {
       if (insideOld > 0) {
@@ -424,7 +441,9 @@ public class SpecificationTranslator {
      * @param index  The index of the bound variable.
      * @return       The name of the bound variable for the given
      *               {@code index} to be used in the current context of the
-     *               translation.     
+     *               translation.
+     * @requires index >= 0 && index < boundVariables.size();
+     * @ensures \result != null;
      */
     private String getBoundVariable(int index) {
       return boundVariables.get(index);
@@ -437,6 +456,7 @@ public class SpecificationTranslator {
      *
      * @param count  The number of new bound variables to add to the current
      *               context of the translation.
+     * @requires count >= 0;
      */
     private void addBoundVariables(int count) {
       for (int i = 0; i < count; i++) {
@@ -450,6 +470,7 @@ public class SpecificationTranslator {
      *
      * @param count  The number of bound variables to remove from the current
      *               context of the translation.
+     * @requires count >= 0;
      */
     private void removeBoundVariables(int count) {
       for (int i = 0; i < count; i++) {
@@ -457,6 +478,7 @@ public class SpecificationTranslator {
       }
     }
 
+    //@ requires expr != null;
     public BPLExpression visitQuantifierExpression(BMLQuantifierExpression expr) {
       JType[] bvTypes = expr.getVariableTypes();
 
@@ -503,8 +525,8 @@ public class SpecificationTranslator {
       }
     }
 
-    public BPLExpression visitBinaryArithmeticExpression(
-        BMLBinaryArithmeticExpression expr) {
+    //@ requires expr != null;
+    public BPLExpression visitBinaryArithmeticExpression(BMLBinaryArithmeticExpression expr) {
       BPLExpression left = expr.getLeft().accept(this);
       BPLExpression right = expr.getRight().accept(this);
 
@@ -523,8 +545,8 @@ public class SpecificationTranslator {
       }
     }
 
-    public BPLExpression visitBinaryLogicalExpression(
-        BMLBinaryLogicalExpression expr) {
+    //@ requires expr != null;
+    public BPLExpression visitBinaryLogicalExpression(BMLBinaryLogicalExpression expr) {
       BPLExpression left = expr.getLeft().accept(this);
       BPLExpression right = expr.getRight().accept(this);
 
@@ -547,6 +569,7 @@ public class SpecificationTranslator {
       }
     }
 
+    //@ requires expr != null;
     public BPLExpression visitEqualityExpression(BMLEqualityExpression expr) {
       BPLExpression left = expr.getLeft().accept(this);
       BPLExpression right = expr.getRight().accept(this);
@@ -573,8 +596,8 @@ public class SpecificationTranslator {
       }
     }
 
-    public BPLExpression visitRelationalExpression(
-        BMLRelationalExpression expr) {
+    //@ requires expr != null;
+    public BPLExpression visitRelationalExpression(BMLRelationalExpression expr) {
       BPLExpression left = expr.getLeft().accept(this);
       BPLExpression right = expr.getRight().accept(this);
 
@@ -591,8 +614,8 @@ public class SpecificationTranslator {
       }
     }
 
-    public BPLExpression visitBinaryBitwiseExpression(
-        BMLBinaryBitwiseExpression expr) {
+    //@ requires expr != null;
+    public BPLExpression visitBinaryBitwiseExpression(BMLBinaryBitwiseExpression expr) {
       BPLExpression left = expr.getLeft().accept(this);
       BPLExpression right = expr.getRight().accept(this);
 
@@ -613,14 +636,14 @@ public class SpecificationTranslator {
       }
     }
 
-    public BPLExpression visitUnaryMinusExpression(
-        BMLUnaryMinusExpression expr) {
+    //@ requires expr != null;
+    public BPLExpression visitUnaryMinusExpression(BMLUnaryMinusExpression expr) {
       BPLExpression expression = expr.getExpression().accept(this);
       return new BPLUnaryMinusExpression(expression);
     }
 
-    public BPLExpression visitLogicalNotExpression(
-        BMLLogicalNotExpression expr) {
+    //@ requires expr != null;
+    public BPLExpression visitLogicalNotExpression(BMLLogicalNotExpression expr) {
       BPLExpression expression = expr.getExpression().accept(this);
       // Since boolean variables are mapped to int variables in the BoogiePL
       // program, we must explicitly convert them to BoogiePL bool values
@@ -631,13 +654,14 @@ public class SpecificationTranslator {
       return new BPLLogicalNotExpression(expression);
     }
 
-    public BPLExpression visitInstanceOfExpression(
-        BMLInstanceOfExpression expr) {
+    //@ requires expr != null;
+    public BPLExpression visitInstanceOfExpression(BMLInstanceOfExpression expr) {
       return isInstanceOf(
           rval(expr.getExpression().accept(this)),
           context.translateTypeReference(expr.getTargetType()));
     }
 
+    //@ requires expr != null;
     public BPLExpression visitCastExpression(BMLCastExpression expr) {
       BPLExpression expression = expr.getExpression().accept(this);
       JType type = expr.getTargetType();
@@ -648,6 +672,7 @@ public class SpecificationTranslator {
       return expression;
     }
 
+    //@ requires literal != null;
     public BPLExpression visitBooleanLiteral(BMLBooleanLiteral literal) {
       if (literal == BMLBooleanLiteral.TRUE) {
         return BPLBoolLiteral.TRUE;
@@ -656,34 +681,37 @@ public class SpecificationTranslator {
       }
     }
 
+    //@ requires literal != null;
     public BPLExpression visitIntLiteral(BMLIntLiteral literal) {
       return context.translateIntLiteral(literal.getValue());
     }
 
+    //@ requires literal != null;
     public BPLExpression visitNullLiteral(BMLNullLiteral literal) {
       return BPLNullLiteral.NULL;
     }
 
-    public BPLExpression visitLocalVariableExpression(
-        BMLLocalVariableExpression expr) {
+    //@ requires expr != null;
+    public BPLExpression visitLocalVariableExpression(BMLLocalVariableExpression expr) {
       return var(getLocalVariable(expr.getIndex()));
     }
 
-    public BPLExpression visitBoundVariableExpression(
-        BMLBoundVariableExpression expr) {
+    //@ requires expr != null;
+    public BPLExpression visitBoundVariableExpression(BMLBoundVariableExpression expr) {
       return var(getBoundVariable(expr.getIndex()));
     }
 
-    public BPLExpression visitStackElementExpression(
-        BMLStackElementExpression expr) {
+    //@ requires expr != null;
+    public BPLExpression visitStackElementExpression(BMLStackElementExpression expr) {
       return var(stackElements[expr.getIndex()]);
     }
 
-    public BPLExpression visitStackCounterExpression(
-        BMLStackCounterExpression expr) {
+    //@ requires expr != null;
+    public BPLExpression visitStackCounterExpression(BMLStackCounterExpression expr) {
       return new BPLIntLiteral(expr.getCounter());
     }
 
+    //@ requires expr != null;
     public BPLExpression visitOldExpression(BMLOldExpression expr) {
       insideOld++;
       BPLExpression result = expr.getExpression().accept(this);
@@ -691,10 +719,12 @@ public class SpecificationTranslator {
       return result;
     }
 
+    //@ requires predicate != null;
     public BPLExpression visitPredicate(BMLPredicate predicate) {
       return predicate.getExpression().accept(this);
     }
 
+    //@ requires expr != null;
     public BPLExpression visitFieldExpression(BMLFieldExpression expr) {
       BCField field = expr.getField();
       if (field.isStatic()) {
@@ -703,8 +733,8 @@ public class SpecificationTranslator {
       return fieldAccess(context, getHeap(), var(thisReference), field);
     }
 
-    public BPLExpression visitFieldAccessExpression(
-        BMLFieldAccessExpression expr) {
+    //@ requires expr != null;
+    public BPLExpression visitFieldAccessExpression(BMLFieldAccessExpression expr) {
       BCField field = expr.getField();
       if (field.isStatic()) {
         // If the field is static, we ignore the prefix of the field access
@@ -715,20 +745,21 @@ public class SpecificationTranslator {
       return fieldAccess(context, getHeap(), prefix, field);
     }
 
-    public BPLExpression visitArrayAccessExpression(
-        BMLArrayAccessExpression expr) {
+    //@ requires expr != null;
+    public BPLExpression visitArrayAccessExpression(BMLArrayAccessExpression expr) {
       BPLExpression prefix = expr.getPrefix().accept(this);
       BPLExpression index = expr.getIndex().accept(this);
       JArrayType arrayType = (JArrayType) expr.getPrefix().getType();
       return arrayAccess(getHeap(), arrayType, prefix, index);
     }
 
-    public BPLExpression visitArrayLengthExpression(
-        BMLArrayLengthExpression expr) {
+    //@ requires expr != null;
+    public BPLExpression visitArrayLengthExpression(BMLArrayLengthExpression expr) {
       BPLExpression prefix = expr.getPrefix().accept(this);
       return arrayLength(rval(prefix));
     }
 
+    //@ requires expr != null;
     public BPLExpression visitTypeOfExpression(BMLTypeOfExpression expr) {
       BPLExpression typeExpr = expr.getExpression().accept(this);
       if (expr.getExpression().getType().isReferenceType()) {
@@ -737,19 +768,23 @@ public class SpecificationTranslator {
       return typ(ival(typeExpr));
     }
 
+    //@ requires expr != null;
     public BPLExpression visitElemTypeExpression(BMLElemTypeExpression expr) {
       BPLExpression typeExpr = expr.getTypeExpression().accept(this);
       return elementType(typeExpr);
     }
 
+    //@ requires expr != null;
     public BPLExpression visitResultExpression(BMLResultExpression expr) {
       return var(result);
     }
 
+    //@ requires expr != null;
     public BPLExpression visitThisExpression(BMLThisExpression expr) {
       return var(thisReference);
     }
 
+    //@ requires expr != null;
     public BPLExpression visitFreshExpression(BMLFreshExpression expr) {
       BPLExpression expression = expr.getExpression().accept(this);
       return logicalNot(alive(rval(expression), var(oldHeap)));

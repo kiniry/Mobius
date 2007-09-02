@@ -31,14 +31,18 @@ public class BPLFunctionApplication extends BPLExpression {
     return function;
   }
 
+  //@ ensures this.function == function;
   public void setFunction(BPLFunction function) {
     this.function = function;
   }
 
+  //@ requires visitor != null;
+  //@ ensures \result != null;
   public <R> R accept(IBPLVisitor<R> visitor) {
     return visitor.visitFunctionApplication(this);
   }
 
+  //@ ensures \result != null;
   public String toString() {
     StringBuffer sb = new StringBuffer();
 
