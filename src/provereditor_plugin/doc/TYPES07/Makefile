@@ -68,8 +68,9 @@ everything: all $(destpdf)
 	texi2dvi $<
 add:
 	cvs add *.tex *.dot *.bib *.v
-commit:
+up:
 	svn up
+commit: up
 	svn commit
 
 clean :
