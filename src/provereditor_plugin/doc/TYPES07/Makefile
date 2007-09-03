@@ -1,55 +1,81 @@
-#
-# $Id: Makefile,v 1.1 2004/08/27 06:47:36 kiniry Exp $
-#
+source = paper.tex
 
-paper =		paper
+#######################################################
+dest =  $(foreach sourcefile,$(source), \
+             $(subst .tex,.pdf,$(sourcefile)))
+destpdf =  $(foreach sourcefile,$(source), \
+             $(subst .tex,.pdf,$(sourcefile)))
 
-talk = 		talk
+pngfiles =      $(wildcard *.png)
 
-texfiles =	$(wildcard *.tex)
-jpgfiles =	$(wildcard *.jpg)
-dvifiles =	$(foreach texfile,$(texfiles),\
-		$(subst .tex,.dvi,$(texfile)))
+pngpsfiles =  $(foreach pngfile,$(pngfiles), \
+             $(subst .png,.ps,$(pngfile)))
 
-psfiles =	$(foreach texfile,$(texfiles),\
-		$(subst .tex,.ps,$(texfile))) $(foreach jpgfile,$(jpgfiles), $(subst .jpg,.ps,$(jpgfile)))
-graphicfiles =	$(foreach jpgfile,$(jpgfiles), \
+jpgfiles =      $(wildcard *.jpg)
+
+jpgpsfiles =  $(foreach jpgfile,$(jpgfiles), \
              $(subst .jpg,.ps,$(jpgfile)))
 
-pdffiles =	$(foreach texfile,$(texfiles),\
-		$(subst .tex,.pdf,$(texfile)))
+dotfiles =      $(wildcard *.dot)
 
-.PHONY: all talk archive
+dotpsfiles =  $(foreach dotfile,$(dotfiles), \
+             $(subst .dot,.ps,$(dotfile)))
 
-all:	paper.pdf
+texfiles =      $(wildcard *.tex)
+bibfiles =      $(wildcard *.bib)
+graphicfiles =  $(pngpsfiles) $(jpgpsfiles)
 
-talk: 	talk.ps talk.pdf
+####################################################
 
-# archive: uitp06.pdf
-# 	tar cjf UITP-06.tbz \
-# 		entcsmacro.sty snapshot.sty \
-# 		Makefile \
-# 		paper.tex paper.bib paper.bbl paper.pdf
+all:  $(graphicfiles) $(dest) 
+everything: all $(destpdf)
 
-paper.pdf: $(graphicfiles) paper.tex 
-	pdflatex paper;
-	pdflatex paper;
-	bibtex paper;
-	pdflatex paper;
-	pdflatex paper;
+%.tex: %.java
+	tiny_c2l < $< > $@ 
+
+%.dvi: %.tex *.tex 
+	latex $<
+	-bibtex -min-crossrefs=1000 $*
+	latex $<
+	latex $<
+
+%.png: %.dot
+	dot -Tpng  -o $@ $<
+
+%.pnm : %.png
+	pngtopnm $< > $@
+
+
+%.pdf : %.tex $(texfiles)  $(bibfiles)
+	pdflatex $<
+	-bibtex -min-crossrefs=1000 $*
+	 pdflatex $<
+	pdflatex $<
+
+
 
 %.pnm : %.jpg
 	jpegtopnm $< > $@
 
+
+%.ps : %.dvi
+	dvips $< -o
+
 %.ps : %.pnm
 	pnmtops -noturn $< > $@
 
-cleanup:
-	rm -f _region_* *.aux *.log *# *~
+%.dvi : %.tex
+	texi2dvi $<
+add:
+	cvs add *.tex *.dot *.bib *.v
+commit:
+	svn up
+	svn commit
 
-clean:
-	rm -rf auto _region_* \
-		*.aux *.log *~ *.dvi ${paper}.ps ${paper}.pdf *.brf *.txt \
-		*.bbl *.blg *.toc *.thm *.out *.cb *.dep \
-		*.lof *.lot *.gz *.Z TAGS #*
+clean :
+	@echo Cleaning.
+	@rm -f *.html *.pdf *.dvi *~ *.ps *.log *.aux *.bbl *.blg *.toc
+
+
+
 

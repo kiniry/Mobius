@@ -2,10 +2,10 @@
 % $Id: paper.tex,v 1.4 2005/04/04 10:38:07 kiniry Exp $
 %
 
-\documentclass{entcs}
+\documentclass{llncs}
 
 % \usepackage{latex8}
-\usepackage{entcsmacro}
+
 \usepackage{times}
 \usepackage{ifpdf}
 % \usepackage{a4wide}
@@ -66,31 +66,27 @@
 
 \begin{document}
 
-\begin{frontmatter}
 
-\title{A Lightweight\\Theorem Prover Interface\\for Eclipse}
+\mainmatter
+\title{A Lightweight Theorem Prover Interface for Eclipse}
 
-\author{Julien Charles\thanksref{charles}}
+\author{Julien Charles\inst{1} \and Joseph R.~Kiniry\inst{2}}
 
-\address{Everest Group\\
+\institute{Everest Group\\
   INRIA Sophia Antipolis\\
   2004 Route des Lucioles - BP 93\\
-  FR-06902 Sophia Antipolis, France}
-
-\author{Joseph R.~Kiniry\thanksref{kiniry}}
-
-\address{Systems Research Group\\
-  School of Computer Science and Informatics\\
-  University College Dublin\\
-  Belfield, Dublin 4, Ireland}
-
-\thanks[charles]{Email:\href{mailto:julien.charles@sophia.inria.fr}
-  {\texttt{\normalshape julien.charles@sophia.inria.fr}}}
-\thanks[kiniry]{Email:\href{mailto:joseph.kiniry@ucd.ie}
-  {\texttt{\normalshape joseph.kiniry@ucd.ie}}}
+  FR-06902 Sophia Antipolis, France\\
+%\email{julien.charles@sophia.inria.fr}
+\and
+Systems Research Group\\
+School of Computer Science and Informatics\\
+University College Dublin\\
+Belfield, Dublin 4, Ireland}
+%\email{joseph.kiniry@ucd.ie}
+\maketitle
 
 %======================================================================
-\thispagestyle{empty}
+
 \begin{abstract}
 
   A major deliverable of the EU FP6 FET program MOBIUS project is the
@@ -102,11 +98,11 @@
   unusual set of requirements.  In particular, the IVE must be 
 
 \end{abstract}
-\begin{keyword}
- interative theorem prover, Eclipse, IDE, higher-order, interface, editor
-\end{keyword}
+%\begin{keyword}
+% interative theorem prover, Eclipse, IDE, higher-order, interface, editor
+%\end{keyword}
 
-\end{frontmatter}
+
 
 %=====================================================================
 \section{Introduction}
@@ -516,7 +512,7 @@ Some intro text.
 
 %======================================================================
 
-\bibliographystyle{entcs}
+\bibliographystyle{llncs}
 %\bibliography{abbrev,ads,category,complexity,hypertext,icsr,knowledge,languages,linguistics,meta,metrics,misc,modeling,modeltheory,reuse,rewriting,softeng,specification,ssr,technology,theory,web,upcoming,upcoming_conferences,conferences,workshops,verification,escjava,jml,nijmegen}
 \bibliography{uitp06}
 
