@@ -255,6 +255,22 @@ public class ClassExecutor extends ASignatureExecutor {
   }
   
   /**
+   * Returns the module name with the right relative path.
+   * @return a string representing the module name + the 
+   * package dir
+   */
+  public String getModuleFileName() {
+    final String pack = getPackageDir().getPath();
+    final String mod  = getModuleName();
+    if (pack.equals("")) {
+      return mod;
+    }
+    else {
+      return pack + File.separator + mod;
+    }
+  }
+  
+  /**
    * Returns the relative path to the file.
    * It is a path relative to the base directory, and 
    * it does not represents an existing physical one.

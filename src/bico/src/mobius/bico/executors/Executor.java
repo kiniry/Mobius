@@ -278,13 +278,11 @@ public class Executor extends ABasicExecutor {
 
     // the already treated classes + interfaces
     for (ClassExecutor ce: fTreatedClasses) {
-      out.println("Load \"" + ce.getPackageDir().getPath() + 
-                  ce.getModuleName() + "_signature.v\".");
+      out.println("Load \"" + ce.getModuleFileName() + "_signature.v\".");
     }
     
     for (ClassExecutor ce: fTreatedInterfaces) {
-      out.println("Load \"" + ce.getPackageDir().getPath() + 
-                  ce.getModuleName() + "_signature.v\".");
+      out.println("Load \"" + ce.getModuleFileName() + "_signature.v\".");
     }
     
     out.decPrintln("End " + fName + "Signature.");
@@ -314,13 +312,11 @@ public class Executor extends ABasicExecutor {
 
     // the already treated classes + interfaces
     for (ClassExecutor ce: fTreatedClasses) {
-      out.println("Load \"" + ce.getPackageDir().getPath() + 
-                  ce.getModuleName() + "_type.v\".");
+      out.println("Load \"" + ce.getModuleFileName() + "_type.v\".");
     }
     
     for (ClassExecutor ce: fTreatedInterfaces) {
-      out.println("Load \"" + ce.getPackageDir().getPath() + 
-                  ce.getModuleName() + "_type.v\".");
+      out.println("Load \"" + ce.getModuleFileName() + "_type.v\".");
     }
     
     out.decPrintln("End " + fName + "Type.");
@@ -412,7 +408,7 @@ public class Executor extends ABasicExecutor {
     else {
       fTreatedClasses.add(ce);
     }
-    fOut.println("Load \"" + ce.getPackageDir().getPath() +  ce.getModuleName() + ".v\".");
+    fOut.println("Load \"" + ce.getModuleFileName() + ".v\".");
     
     ce.start();
   }
