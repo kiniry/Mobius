@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.List;
 
 import mobius.bico.executors.ClassExecutor;
@@ -42,27 +43,21 @@ public class MakefileGenerator {
    */
   public void generate() {
     final File mkfile = new File (fBaseDir, "Makefile");
+    final List<String> generatedFiles = new ArrayList<String>();
+    
     try {
       final PrintStream out = new PrintStream(new FileOutputStream(mkfile));
       out.println("all:");
-      out.println("\t# Types compilation ");
-      for (ClassExecutor ce: fTreated) {
-        out.println("\tcoqc " + ce.getModuleFileName() + "_type.v");
-      }
-      out.println("\tcoqc " + fBaseName + "_type.v");
+      generatedFiles.addAll(printCompileInstr(out, "Type", "_type"));
+      generatedFiles.addAll(printCompileInstr(out, "Signature", "_signature"));
+      generatedFiles.addAll(printCompileInstr(out, "Main", ""));
       
-      out.println("\n\t# Signature compilation ");
-      for (ClassExecutor ce: fTreated) {
-        out.println("\tcoqc " + ce.getModuleFileName() + "_signature.v");
+      out.println("\nclean:");
+      out.print("\trm -f");
+      for (String name: generatedFiles) {
+        out.print(" " + name);
       }
-      out.println("\tcoqc " + fBaseName + "_signature.v");
-      
-      out.println("\n\t# Main compilation ");
-      for (ClassExecutor ce: fTreated) {
-        out.println("\tcoqc " + ce.getModuleFileName() + ".v");
-      }
-      out.println("\tcoqc " + fBaseName + ".v");
-      
+      out.println();
       
       out.close();
     } 
@@ -71,6 +66,32 @@ public class MakefileGenerator {
       e.printStackTrace();
     }
     
+  }
+
+
+  /**
+   * Print the compile instruction.
+   * @param out the output stream to the makefile
+   * @param word the word in the comment describing what is done
+   * @param postfix the postfix element of the name
+   * @return the files that should be generated
+   * by the compilation
+   */
+  private List<String> printCompileInstr(final PrintStream out,
+                                         final String word,
+                                         final String postfix) {
+    final List<String> generatedFiles = new ArrayList<String>();
+    out.println("\t# " + word + " compilation ");
+    String filename;
+    for (ClassExecutor ce: fTreated) {
+      filename = ce.getModuleFileName() + postfix + ".v";
+      out.println("\tcoqc " + filename);
+      generatedFiles.add(filename + "o");
+    }
+    filename = fBaseName + postfix + ".v";
+    out.println("\tcoqc " + filename);
+    generatedFiles.add(filename + "o");
+    return generatedFiles;
   }
   
 }
