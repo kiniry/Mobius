@@ -57,7 +57,7 @@ public abstract class ASignatureExecutor extends ABasicExecutor {
     final File dir = new File(workingDir, 
                               jc.getPackageName().replace('.', 
                                                           File.separatorChar));
-    new File(workingDir, dir.getPath()).mkdirs();
+    dir.getAbsoluteFile().getParentFile().mkdirs();
     return new File(dir, Util.coqify(jc.getClassName()) + "_signature" + ".v");
   }
   
