@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
+import mobius.bico.MakefileGenerator;
 import mobius.bico.Util;
 import mobius.bico.Util.Stream;
 import mobius.bico.dico.CamlDictionary;
@@ -88,7 +89,6 @@ public class Executor extends ABasicExecutor {
   private Executor() {
     super(new ClassLoaderRepository(ClassLoader.getSystemClassLoader()), new MapImplemSpecif(),
           new MethodHandler(), null, new CamlDictionary(), null);
-    //System.out.println(ClassLoader.getSystemClassLoader());
   }
 
   /**
@@ -243,8 +243,7 @@ public class Executor extends ABasicExecutor {
     // write prelude ;)
     doBeginning();
 
-    // handle library classes specified as 'the other libs'
-    
+    // handle library classes specified as 'the other libs'    
     for (String current: fOtherLibs) {
       System.out.println("Handling: " + current);
       handleLibraryClass(current);
@@ -258,6 +257,18 @@ public class Executor extends ABasicExecutor {
     }
 
     doEnding();
+    
+    generateMakefile();
+  }
+
+  /**
+   * Generates the makefile to compile everything.
+   */
+  private void generateMakefile() {
+    final List<ClassExecutor> treated = new ArrayList<ClassExecutor>();
+    treated.addAll(fTreatedClasses);
+    treated.addAll(fTreatedInterfaces);
+    new MakefileGenerator(getBaseDir(), fName, treated).generate();
   }
 
   /**
