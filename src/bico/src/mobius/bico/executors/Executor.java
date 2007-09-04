@@ -219,7 +219,7 @@ public class Executor extends ABasicExecutor {
     // creating file for output
     if (fFileName.exists()) {
       fFileName.delete();
-      System.err.println("previous file is being overwritten...");
+      System.out.println("previous file is being overwritten...");
     }
     fFileName.createNewFile();
     final FileOutputStream fwr = new FileOutputStream(fFileName);

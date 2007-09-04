@@ -47,19 +47,22 @@ public class ClassExecutor extends ASignatureExecutor {
 
   /** the name of the library file where the whole program should be written. */
   private String fName;
+
+//  /** the executor which spawned this class executor. */
+//  private final Executor fExecutor;
   
   
   /**
    * Create a class executor in the context of another
    * executor.
-   * @param be the BasicExecutor to get the initialization from
+   * @param exec the BasicExecutor to get the initialization from
    * @param cg the class object to manipulate
    * @param name the name of the main file
    * @throws FileNotFoundException if the file cannot be opened
    */
-  public ClassExecutor(final ABasicExecutor be, final ClassGen cg,
+  public ClassExecutor(final ABasicExecutor exec, final ClassGen cg,
                        final String name) throws FileNotFoundException {
-    super(be, cg);
+    super(exec, cg);
     fClass = cg;
     fName = name;
     final JavaClass jc = fClass.getJavaClass();
@@ -68,12 +71,14 @@ public class ClassExecutor extends ASignatureExecutor {
     fModuleName = Util.coqify(jc.getClassName());
 
     fPackageDir = new File(jc.getPackageName().replace('.', File.separatorChar));
-    fWorkingDir = new File(be.getBaseDir(), fPackageDir.getPath());
+    fWorkingDir = new File(exec.getBaseDir(), fPackageDir.getPath());
     
     fOut = new Util.Stream(new FileOutputStream(new File(fWorkingDir, fModuleName + ".v")));
 
     fFieldExecutor = new FieldExecutor(this, fClass.getJavaClass());
     fMethExecutor = new MethodExecutor(this, fClass);
+    
+    //fExecutor = exec;
   }
 
   /**
@@ -143,11 +148,11 @@ public class ClassExecutor extends ASignatureExecutor {
     fOutSig.println(fLibPath);
     fOutSig.println("Require Import ImplemProgramWithMap.\n" +
                     "Import P.\n");
-    fOutSig.println("Require Import " + fModuleName + "_type.");
-    fOutSig.println("Import "  + fModuleName + "Type.\n");
+    fOutSig.println("Require Import " + fName + "_type.");
+    fOutSig.println("Import "  + fName + "Type.\n");
     
     fOutSig.incPrintln("Module " + fModuleName + "Signature.\n");
-  
+    fOutSig.println("Import "  + fModuleName + "Type.\n");
     fFieldExecutor.doSignature();
 
     fMethExecutor.doSignature();
