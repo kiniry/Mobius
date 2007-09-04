@@ -82,6 +82,7 @@ import b2bpl.bpl.ast.BPLCallCommand;
 import b2bpl.bpl.ast.BPLCommand;
 import b2bpl.bpl.ast.BPLEnsuresClause;
 import b2bpl.bpl.ast.BPLExpression;
+import b2bpl.bpl.ast.BPLFunctionApplication;
 import b2bpl.bpl.ast.BPLGotoCommand;
 import b2bpl.bpl.ast.BPLHavocCommand;
 import b2bpl.bpl.ast.BPLImplementation;
@@ -522,21 +523,7 @@ public class MethodTranslator implements ITranslationConstants {
     // For every method parameter, we do the following:
     //   - assume its type is a subtype of the static type
     //   - assume the parameter's value is alive
-    //   - assign the parameter to the corresponding local variable in the stack frame
-    
-    if (hasThisParameter && !method.isConstructor()) {
-      requiresClauses.add(new BPLRequiresClause(logicalAnd(
-          alive(
-              rval(var(thisVar())),
-              var(HEAP_VAR)
-          ),
-          isOfType(
-              rval(var(thisVar())),
-              typeRef(params[0])
-          )
-      )));
-    }
-    
+    //   - assign the parameter to the corresponding local variable in the stack frame  
     for (int i = (hasThisParameter ? 1 : 0); i < params.length; i++) {
       BPLExpression typeRef = typeRef(params[i]);
       if (!params[i].isReferenceType()) {
@@ -1938,24 +1925,47 @@ public class MethodTranslator implements ITranslationConstants {
    * 
    * @param lhs The LHS expression of the assignment.
    * @param rhs The RHS expression of the assignment.
+   * @requires lhs != null && rhs != null;
    */
   private void addAssignment(BPLExpression lhs, BPLExpression rhs) {
     addCommand(new BPLAssignmentCommand(lhs, rhs));
     
-    try {
-      BPLVariableExpression vrhs = (BPLVariableExpression)rhs;
-      BPLVariableExpression vlhs = (BPLVariableExpression)lhs;
-      
-      if (vrhs.getIdentifier().startsWith(VALUE_TYPE_PREFIX)) return;
+    //try {
     
-      addAlias(vrhs.getIdentifier(), vlhs.getIdentifier());
+    if (!(lhs instanceof BPLVariableExpression)) return;
+    String lhs_label = ((BPLVariableExpression)lhs).getIdentifier();
+    
+    String rhs_label = null;
+    if (rhs instanceof BPLVariableExpression) {
+      BPLVariableExpression vrhs = ((BPLVariableExpression)rhs);
+      rhs_label = vrhs.getIdentifier();
       
-      for (String v : getAliasedValues(vlhs.getIdentifier())) {
+      addAlias(rhs_label, lhs_label);
+      for (String v : getAliasedValues(lhs_label)) {
         addModifiedVariable(var(v));
       }
-    } catch (ClassCastException ccex) {
-      // this assignment does not consist of BPLVariableExpressions only.
-    }
+    } else if (rhs instanceof BPLFunctionApplication) {
+      BPLFunctionApplication farhs = ((BPLFunctionApplication)rhs);
+      
+      if (lhs_label == HEAP_VAR) {
+      
+        if (farhs.getFunctionName() == UPDATE_FUNC) {
+          
+          BPLFunctionApplication fieldLocFunction = ((BPLFunctionApplication)farhs.getArguments()[1]);
+          BPLVariableExpression ref = ((BPLVariableExpression)fieldLocFunction.getArguments()[0]);
+        
+          String ref_name = ref.getVariable().getName();
+          rhs_label = rhs.toString();
+          
+          addAlias(rhs_label, lhs_label);
+          for (String v : getAliasedValues(ref_name)) {
+            addModifiedVariable(var(rhs_label.replace(ref_name, v)));
+          }
+        }
+      } else {
+        System.out.println("Class of Expression: " + rhs.getClass().getName());
+      }
+    }    
   }
 
   /**
@@ -1963,6 +1973,7 @@ public class MethodTranslator implements ITranslationConstants {
    * BoogiePL block.
    * 
    * @param expression The assertion's expression.
+   * @requires expression != null;
    */
   private void addAssert(BPLExpression expression) {
     addCommand(new BPLAssertCommand(expression));
@@ -2357,11 +2368,13 @@ public class MethodTranslator implements ITranslationConstants {
     // Only alias ref variables
     if (!isRefVariable(alias)) return;
     
-    // Check whether @see actualRef is an alias too
+    // Check whether {@see actualRef} is an alias too
     if (getAliasedValues(actualRef).isEmpty()) { // (alias)
       // Add new alias
       if (isMethodArgument(actualRef) || isReturnValue(actualRef)) {
-        existingAliases.add(actualRef);
+        if (!existingAliases.contains(actualRef)) {
+          existingAliases.add(actualRef);
+        }
       }
     } else {
       // Iterate over all existing aliases
@@ -2385,10 +2398,23 @@ public class MethodTranslator implements ITranslationConstants {
    * @requires alias != null;
    */
   private static ArrayList<String> getAliasedValues(String alias) {
+    
+    // TODO: remove
+    // dump current hash table
+    System.out.println("CURRENT ALIASING HASHMAP:");
+    System.out.println("-------------------------");
+    for (String key : aliasMap.keySet()) {
+      System.out.println(key + " =>");
+      for (String value : aliasMap.get(key)) {
+        System.out.println("\t" + value);
+      }
+    }
+    
     if (aliasMap.containsKey(alias)) {
       return aliasMap.get(alias);
-    }
+    } else {
     return new ArrayList<String>();
+    }
   }
   
   /**

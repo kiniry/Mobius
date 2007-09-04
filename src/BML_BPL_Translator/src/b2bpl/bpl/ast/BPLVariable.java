@@ -7,9 +7,9 @@ public class BPLVariable extends BPLNode {
 
   public static final BPLVariable[] EMPTY_ARRAY = new BPLVariable[0];
 
-  private final String name;
+  private String name;
 
-  private final BPLType type;
+  private BPLType type;
 
   private final BPLExpression whereClause;
 
@@ -29,6 +29,14 @@ public class BPLVariable extends BPLNode {
 
   public BPLType getType() {
     return type;
+  }
+  
+  public void setName(String value) {
+    name = value;
+  }
+  
+  public void setType(BPLType value) {
+    type = value;
   }
 
   public BPLExpression getWhereClause() {
