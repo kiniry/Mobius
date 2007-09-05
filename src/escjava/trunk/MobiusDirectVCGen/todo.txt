@@ -13,3 +13,5 @@ Things to do when I (or we) will have time:
   is fixed.
   
 - The comments need proof reading would somebody do that for me (us)?
+
+- test checkin
