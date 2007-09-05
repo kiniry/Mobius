@@ -442,13 +442,19 @@ public class Executor extends ABasicExecutor {
   private void doBeginning() {
     fOut.println(libPath);
     fOut.println(fImplemSpecif.getBeginning());
-    fOut.println("Require Import " + fName + "_type.");
-    fOut.println("Require Import " + fName + "_signature.");
+    fOut.println("Require Import ImplemDomain.");
+    fOut.println("Module Dom := Make P.");
+    fOut.println("Import P.");
+    fOut.println("Import Dom.\n");
+    
+    fOut.println("Require Export " + fName + "_type.");
+    fOut.println("Require Export " + fName + "_signature.");
 
 
-    fOut.println("Import P.\n");
-    fOut.println("Import " + fName + "Type.");
-    fOut.println("Import " + fName + "Signature.");
+
+    
+    fOut.println("Export " + fName + "Type.");
+    fOut.println("Export " + fName + "Signature.");
     fOut.incPrintln("Module " + fName + "Program.");
 
   }

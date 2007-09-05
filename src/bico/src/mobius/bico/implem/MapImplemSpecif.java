@@ -85,7 +85,7 @@ public class MapImplemSpecif implements IImplemSpecifics {
    * @return <code>Require Import ImplemProgramWithMap.</code>
    */
   public String getBeginning() {
-    return "Require Import ImplemProgramWithMap.";
+    return "Require Export ImplemProgramWithMap.";
   }
 
   /**

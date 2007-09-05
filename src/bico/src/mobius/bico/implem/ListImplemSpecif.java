@@ -23,7 +23,7 @@ public class ListImplemSpecif implements IImplemSpecifics {
    * @return <code>Require Import ImplemProgramWithList.</code>
    */
   public String getBeginning() {
-    return "Require Import ImplemProgramWithList.";
+    return "Require Export ImplemProgramWithList.";
   }
   
   /**
