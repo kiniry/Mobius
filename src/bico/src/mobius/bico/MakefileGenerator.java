@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import mobius.bico.executors.ClassExecutor;
@@ -51,7 +52,7 @@ public class MakefileGenerator {
       generatedFiles.addAll(printCompileInstr(out, "Type", "_type"));
       generatedFiles.addAll(printCompileInstr(out, "Signature", "_signature"));
       generatedFiles.addAll(printCompileInstr(out, "Main", ""));
-      
+      generatedFiles.addAll(getExtraGeneratedFiles(out));
       out.println("\nclean:");
       out.print("\trm -f");
       for (String name: generatedFiles) {
@@ -69,6 +70,11 @@ public class MakefileGenerator {
   }
 
 
+  protected List<String> getExtraGeneratedFiles(PrintStream out) {
+    return new ArrayList<String>();
+  }
+
+
   /**
    * Print the compile instruction.
    * @param out the output stream to the makefile
@@ -77,7 +83,7 @@ public class MakefileGenerator {
    * @return the files that should be generated
    * by the compilation
    */
-  private List<String> printCompileInstr(final PrintStream out,
+  public List<String> printCompileInstr(final PrintStream out,
                                          final String word,
                                          final String postfix) {
     final List<String> generatedFiles = new ArrayList<String>();

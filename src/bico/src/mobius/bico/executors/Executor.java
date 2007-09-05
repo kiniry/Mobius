@@ -58,6 +58,7 @@ public class Executor extends ABasicExecutor {
   private static final String libPath = 
                       "Add LoadPath \"Formalisation/Library\".\n" + 
                       "Add LoadPath \"Formalisation/Library/Map\".\n" +
+                      "Add LoadPath \"Formalisation/Logic\".\n" +
                       "Add LoadPath \"Formalisation/Bicolano\".\n";
   
   /** the name of the output file. */
@@ -264,11 +265,16 @@ public class Executor extends ABasicExecutor {
   /**
    * Generates the makefile to compile everything.
    */
-  protected void generateMakefile() {
+  private void generateMakefile() {
     final List<ClassExecutor> treated = new ArrayList<ClassExecutor>();
     treated.addAll(fTreatedClasses);
     treated.addAll(fTreatedInterfaces);
-    new MakefileGenerator(getBaseDir(), fName, treated).generate();
+    getMakefileGenerator(getBaseDir(), fName, treated).generate();
+  }
+
+
+  public MakefileGenerator getMakefileGenerator(File file, String name, final List<ClassExecutor> treated) {
+    return new MakefileGenerator(file, name, treated);
   }
 
   /**
@@ -442,10 +448,9 @@ public class Executor extends ABasicExecutor {
   private void doBeginning() {
     fOut.println(libPath);
     fOut.println(fImplemSpecif.getBeginning());
-    fOut.println("Require Import ImplemDomain.");
-    fOut.println("Module Dom := Make P.");
+    fOut.println("Require Import ImplemSWp.");
     fOut.println("Import P.");
-    fOut.println("Import Dom.\n");
+    fOut.println("Import MDom.\n");
     
     fOut.println("Require Export " + fName + "_type.");
     fOut.println("Require Export " + fName + "_signature.");
