@@ -84,9 +84,10 @@ public class CoqFile {
                  "Add LoadPath \"" + fBase + File.separator + "Formalisation" +
                  File.separator + "Library" + 
                  File.separator + "Map" + "\".\n");
-    fOut.println("Load \"" + fBase + File.separator + "defs_types.v\".\n");
-    fOut.println("Load \"" + fBase + File.separator + "BicoMap.v\".\n");
-//    for (String name: classNames) {
+    fOut.println("Require Import defs_types.");
+    fOut.println("Import P.");
+    fOut.println("Import Dom.\n");
+   //    for (String name: classNames) {
 //      fOut.println("Variable " + name + ": ClassName.");
 //    }
     fOut.println();

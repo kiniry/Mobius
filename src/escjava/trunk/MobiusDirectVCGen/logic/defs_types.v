@@ -2,16 +2,14 @@ Add LoadPath "/home/jcharles/workspaces/EscJava-workspace/MobiusDirectVCGen/vcs/
 Add LoadPath "/home/jcharles/workspaces/EscJava-workspace/MobiusDirectVCGen/vcs/Formalisation/Library".
 Add LoadPath "/home/jcharles/workspaces/EscJava-workspace/MobiusDirectVCGen/vcs/Formalisation/Library/Map".
 
-Require Import Bool.
-Require Import Sumbool.
-Require Import ImplemProgramWithMap.
-Require Import ImplemDomain.
-Require Import BicoMap.
-Import BicoMapProgram.
-Print BicoMapProgram.
+Require Export Bool.
+Require Export Sumbool.
+
+Require Export BicoMap.
+Export BicoMapProgram.
 Import P.
-Module Dom := Make P.
 Import Dom.
+
 Variable heap: Heap.t.
 Definition p := program.
 

@@ -27,8 +27,12 @@ public class AnnotationMethodExecutor extends ABasicExecutor {
   private final RoutineDecl fRout;
   /** the current method (routine) that is treated - bcel style. */
   private final Method fMeth;
+  
+  /** the stream where to write the annotations. */
+  private final Stream fAnnotOut;
 
-  public AnnotationMethodExecutor(ABasicExecutor be, final Method met, final RoutineDecl rout) {
+  public AnnotationMethodExecutor(ABasicExecutor be, final Stream annotationOut, 
+                                  final Method met, final RoutineDecl rout) {
     super(be);
     if (rout == null) {
       throw new NullPointerException();
@@ -38,6 +42,7 @@ public class AnnotationMethodExecutor extends ABasicExecutor {
     }
     fRout = rout;
     fMeth = met;
+    fAnnotOut = annotationOut;
   }
 
   @Override
@@ -56,7 +61,7 @@ public class AnnotationMethodExecutor extends ABasicExecutor {
     final String nameSpec = "spec";
     final String defaultSpecs = "(0%nat,,(" + namePre + ",," + namePost + "))";
 
-    final Stream out = getOut();
+    final Stream out = getAnnotationOut();
 //    out.println(tab, "Definition " + namePost + " (s0:InitState) (t:ReturnState) := " +
 //                        " @nil Prop.\n");
     out.println("Module " + nameModule + ".");
@@ -80,8 +85,12 @@ public class AnnotationMethodExecutor extends ABasicExecutor {
     
   }
   
+  protected Stream getAnnotationOut() {
+    return fAnnotOut;
+  }
+
   private void doMethodPre(final String namePre) {
-    final Stream out = getOut();
+    final Stream out = getAnnotationOut();
     out.println("Definition mk_" + namePre + " := ");
     final List<QuantVariableRef> list = mkArguments(fRout, fMeth);
     
@@ -112,7 +121,7 @@ public class AnnotationMethodExecutor extends ABasicExecutor {
   
   
   private void doMethodPost(final String namePost) {
-    final Stream out = getOut();
+    final Stream out = getAnnotationOut();
     // definition of the mk method
     out.println("Definition mk_" + namePost + " := ");
     final List<QuantVariableRef> list = mkOldArguments(fRout, fMeth);
@@ -197,7 +206,7 @@ public class AnnotationMethodExecutor extends ABasicExecutor {
   }
   
   private String doLetPre() {
-    final Stream out = getOut();
+    final Stream out = getAnnotationOut();
     String vars = "";
     final String hname = Formula.generateFormulas(Heap.var).toString();
     out.println("let " + hname + " := (snd s0) " + " in");
@@ -212,7 +221,7 @@ public class AnnotationMethodExecutor extends ABasicExecutor {
     return vars;
   }
   private String doLetPost() {
-    final Stream out = getOut();
+    final Stream out = getAnnotationOut();
     String vars = "";
     final String olhname = Formula.generateFormulas(Heap.varPre).toString();
     out.println("let " + olhname + " := (snd s0) " + " in");
