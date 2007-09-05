@@ -2,6 +2,8 @@ package mobius.directVCGen.bicolano;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javafe.tc.TypeSig;
 
@@ -50,6 +52,8 @@ public class AnnotationExecutor extends Executor {
     return new AnnotationClassExecutor(this, cg, fWorkingDir, fSig, this.getModuleName());
   }
 
-
-
+  
+  public mobius.bico.MakefileGenerator getMakefileGenerator(File file, String name, final List<ClassExecutor> treated) {
+    return new MakefileGenerator(file, name, treated);
+  }
 }

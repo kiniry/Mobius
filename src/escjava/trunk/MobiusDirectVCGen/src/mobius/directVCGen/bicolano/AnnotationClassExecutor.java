@@ -50,18 +50,32 @@ public class AnnotationClassExecutor extends ClassExecutor {
       }
     }
     
-    Stream annotationOut;
+    Stream anOut;
     try {
-      annotationOut = new Util.Stream(
+      anOut = new Util.Stream(
                                        new FileOutputStream(
                                          new File(getWorkingDir(), 
                                                   getModuleName() + 
                                          "_annotations.v")));
     
+      anOut.println("Add LoadPath \"Formalisation/Library\".");
+      anOut.println("Add LoadPath \"Formalisation/Library/Map\".");
+      anOut.println("Add LoadPath \"Formalisation/Bicolano\".");
+      anOut.println("Add LoadPath \"Formalisation/Logic\".");
 
+
+      anOut.println("Require Export defs_types.");
+      anOut.println("Require Export Bool.");
+      anOut.println("Require Export Sumbool.");
+      anOut.println("Require Export BicoMap.");
+      anOut.println("Require Export ImplemSWp.");
+      anOut.println("Export BicoMapProgram.");
+
+      anOut.println("Import P MDom Mwp.");
+      
       for (Method met: methods) {
         final AnnotationMethodExecutor ame = 
-            new AnnotationMethodExecutor(this, annotationOut, met, 
+            new AnnotationMethodExecutor(this, anOut, met, 
                                          MethodGetter.get(fSig, met));
         ame.start();
   

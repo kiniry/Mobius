@@ -26,6 +26,9 @@ public class Unarchiver {
   private static final String libdir = "Formalisation" + File.separator + "Library";
   /** the directory in the archive of the Map library: /Formalisation/Library/Map. */
   private static final String libmapdir = libdir + File.separator + "Map";
+  
+  
+  private static final String liblogicdir = "Formalisation" + File.separator + "Logic";
 
   /** the jar file containing bicolano. */
   private final File fBicoFile;
@@ -116,14 +119,20 @@ public class Unarchiver {
     final LineNumberReader in = new LineNumberReader(new InputStreamReader(
                                            bico.getInputStream(entry)));
     // we skip the first three lines
-    in.readLine(); in.readLine(); in.readLine();
+    in.readLine(); in.readLine(); in.readLine(); in.readLine();
     // and we replace them by system dependent lines
-    out.println("Add LoadPath \"" + basedir.getAbsolutePath() + 
-                File.separator + bicodir + "\".");
-    out.println("Add LoadPath \"" + basedir.getAbsolutePath() + 
-                File.separator + libdir + "\".");
-    out.println("Add LoadPath \"" + basedir.getAbsolutePath() + 
-                File.separator + libmapdir + "\".");
+    out.println("Add LoadPath \"" + //basedir.getAbsolutePath() + 
+                //File.separator + 
+                bicodir + "\".");
+    out.println("Add LoadPath \"" + // basedir.getAbsolutePath() + 
+                //File.separator + 
+                libdir + "\".");
+    out.println("Add LoadPath \"" + //basedir.getAbsolutePath() + 
+                //File.separator + 
+                libmapdir + "\".");
+    out.println("Add LoadPath \"" + //basedir.getAbsolutePath() + 
+                //File.separator + 
+                liblogicdir + "\".");
     String str;
     while ((str = in.readLine()) != null) {
       out.println(str);

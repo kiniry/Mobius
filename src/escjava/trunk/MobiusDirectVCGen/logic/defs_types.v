@@ -1,6 +1,7 @@
-Add LoadPath "/home/jcharles/workspaces/EscJava-workspace/MobiusDirectVCGen/vcs/Formalisation/Bicolano".
-Add LoadPath "/home/jcharles/workspaces/EscJava-workspace/MobiusDirectVCGen/vcs/Formalisation/Library".
-Add LoadPath "/home/jcharles/workspaces/EscJava-workspace/MobiusDirectVCGen/vcs/Formalisation/Library/Map".
+Add LoadPath "Formalisation/Bicolano".
+Add LoadPath "Formalisation/Library".
+Add LoadPath "Formalisation/Library/Map".
+Add LoadPath "Formalisation/Logic".
 
 Require Export Bool.
 Require Export Sumbool.
@@ -8,7 +9,8 @@ Require Export Sumbool.
 Require Export BicoMap.
 Export BicoMapProgram.
 Import P.
-Import Dom.
+Require Export ImplemSWp.
+Import MDom.
 
 Variable heap: Heap.t.
 Definition p := program.
