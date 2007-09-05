@@ -85,9 +85,10 @@ public class CoqFile {
                  File.separator + "Library" + 
                  File.separator + "Map" + "\".\n");
     fOut.println("Load \"" + fBase + File.separator + "defs_types.v\".\n");
-    for (String name: classNames) {
-      fOut.println("Variable " + name + ": ClassName.");
-    }
+    fOut.println("Load \"" + fBase + File.separator + "BicoMap.v\".\n");
+//    for (String name: classNames) {
+//      fOut.println("Variable " + name + ": ClassName.");
+//    }
     fOut.println();
     for (QuantVariable field: fieldsToDeclare) {
       fOut.println("Variable " + CoqNodeBuilder.normalize(field.name) + ": FieldSignature.");

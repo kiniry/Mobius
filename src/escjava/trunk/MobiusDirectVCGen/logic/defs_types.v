@@ -1,19 +1,19 @@
-Add LoadPath "/home/jcharles/sources/EscJava-workspace/MobiusDirectVCGen/logic/Formalisation/Bicolano".
-Add LoadPath "/home/jcharles/sources/EscJava-workspace/MobiusDirectVCGen/logic/Formalisation/Library".
-Add LoadPath "/home/jcharles/sources/EscJava-workspace/MobiusDirectVCGen/logic/Formalisation/Library/Map".
+Add LoadPath "/home/jcharles/workspaces/EscJava-workspace/MobiusDirectVCGen/vcs/Formalisation/Bicolano".
+Add LoadPath "/home/jcharles/workspaces/EscJava-workspace/MobiusDirectVCGen/vcs/Formalisation/Library".
+Add LoadPath "/home/jcharles/workspaces/EscJava-workspace/MobiusDirectVCGen/vcs/Formalisation/Library/Map".
 
 Require Import Bool.
 Require Import Sumbool.
-Require Import "ImplemProgramWithList".
-Require Import "ImplemDomain".
-
+Require Import ImplemProgramWithMap.
+Require Import ImplemDomain.
+Require Import BicoMap.
+Import BicoMapProgram.
+Print BicoMapProgram.
+Import P.
 Module Dom := Make P.
-
 Import Dom.
-
 Variable heap: Heap.t.
-Import Prog.
-Variable p: Program.
+Definition p := program.
 
 Definition get (heap: Heap.t) (loc: Heap.AdressingMode)  : value :=
 match (Heap.get heap loc) with
@@ -45,5 +45,5 @@ Definition le_bool (v1: Int.t) (v2: Int.t): bool :=
 Definition lt_bool (v1: Int.t) (v2: Int.t): bool :=
   Zlt_bool (Int.toZ v1) (Int.toZ v2).
 
-
-
+Variable inv: value -> type -> Prop.
+Variable isAlive: Heap.t -> value -> Prop.

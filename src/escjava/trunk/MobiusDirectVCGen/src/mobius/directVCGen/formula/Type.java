@@ -79,11 +79,11 @@ public final class Type {
       String name = UniqName.type(type);
       if (Types.isReferenceType(type)) {
         if (Types.toClassTypeSig(type) != null) {
-          name = "(ClassType " + name.substring(2) + ".className)";
+          name = "(ClassType " + name.substring(2) + "Type.className)";
         }
         else {
         // gee! it's an interface!
-          name = "(InterfaceType " + name.substring(2) + ".interfaceName)";
+          name = "(InterfaceType " + name.substring(2) + "Type.interfaceName)";
         }
         name = "(ReferenceType " + name + ")";
       }

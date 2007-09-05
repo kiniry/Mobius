@@ -710,7 +710,7 @@ public class CoqNodeBuilder extends EscNodeBuilder {
   
   @Override
   public SPred buildIsAlive(final SMap map, final SRef ref) {
-    return new CPred("inv", new STerm [] {map, ref});
+    return new CPred("isAlive", new STerm [] {map, ref});
   }
   
   
