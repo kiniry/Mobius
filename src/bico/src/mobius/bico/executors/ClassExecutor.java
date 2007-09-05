@@ -285,4 +285,9 @@ public class ClassExecutor extends ASignatureExecutor {
     return fPackageDir;
   }
 
+  
+  public File getWorkingDir() {
+    return fWorkingDir;
+  }
+
 }

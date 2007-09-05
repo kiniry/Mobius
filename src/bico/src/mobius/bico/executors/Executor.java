@@ -264,7 +264,7 @@ public class Executor extends ABasicExecutor {
   /**
    * Generates the makefile to compile everything.
    */
-  private void generateMakefile() {
+  protected void generateMakefile() {
     final List<ClassExecutor> treated = new ArrayList<ClassExecutor>();
     treated.addAll(fTreatedClasses);
     treated.addAll(fTreatedInterfaces);
