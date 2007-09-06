@@ -102,6 +102,12 @@ BEGIN
     disjoint?(var_names(new_gvds(mp)), declared_var_names(program(mp)))
 
 
+  cp_new_ghostvar : LEMMA % :-)
+    var_names(new_gvds(mp))(cp(mp))
+
+  halted_new_ghostvar : LEMMA % :-)
+    var_names(new_gvds(mp))(halted(mp))
+
 END NewVariableDeclarations
 
 
