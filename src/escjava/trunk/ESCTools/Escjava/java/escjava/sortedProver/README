@@ -14,7 +14,7 @@ inference easier. The whole idea is a giant hack, so beware.
 
 
 Differences WRT escjava.vcGeneration
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 The main differences are the coverage of the guarded command language
 (this implementation is far more complete) and the size of the interface,
 which is split into two parts:
