@@ -697,14 +697,15 @@ public class CoqNodeBuilder extends EscNodeBuilder {
 
   /**
    * Should generate something of the form:
-   * \forall x,t : alive(x) & typeof(x)=t -> inv(x,t) .
+   * \forall x,t : isAlive(heap, x) & typeof(x)=t -> inv(heap, x, t) .
+   * @param map the actual heap
    * @param val the ref add infos upon
    * @param type the type associated to the reference
    * @return a Coq term ready to be printed
    */
   @Override
-  public SPred buildInv(final SValue val, final SAny type) {
-    return new CPred("inv", new STerm [] {val, type});
+  public SPred buildInv(final SMap map, final SValue val, final SAny type) {
+    return new CPred("inv", new STerm [] {map, val, type});
   }
   
   
