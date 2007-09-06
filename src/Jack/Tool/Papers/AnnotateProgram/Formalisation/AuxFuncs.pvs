@@ -23,6 +23,7 @@ BEGIN
     FORALL (s : finite_set[T]) : list2set(set2list(s)) = s
 
 
+  
 END set2list
 
 

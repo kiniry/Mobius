@@ -56,28 +56,27 @@ BEGIN
 
 
   % Variables that will be added in the annotation process
-  new_gvds(mp) : finite_set[FieldDecl] =
-   {gd : FieldDecl | jtype(gd) = IntType AND
-     (name(gd) = cp(mp) AND init_val(gd) = Int(unique(init_cp(mva(mp))))) OR
-     ((EXISTS (q : (cps(mva(mp)))) : name(gd) = name_of(mp)(q) AND 
-                                     jtype(gd) = IntType AND
-                                     init_val(gd) = Int(unique(q))) OR
-      (EXISTS (v : (vdsA(mva(mp)))) : name(gd) = name(v) AND
-                                      jtype(gd) = jtype(v) AND
-                                      init_val(gd) = init_val(v)))}
 
-  new_gvds_as_union : LEMMA % :-)
-    new_gvds(mp) = 
-      add((# jtype := IntType, name := cp(mp), 
-             init_val := Int(unique(init_cp(mva(mp)))) #),
-      union({gd : FieldDecl | EXISTS (q : (cps(mva(mp)))) : 
-                                name(gd) = name_of(mp)(q) AND 
-                                jtype(gd) = IntType AND
-                                init_val(gd) = Int(unique(q))},
-            {gd : FieldDecl | EXISTS (v : (vdsA(mva(mp)))) : 
-                                name(gd) = name(v) AND
-                                jtype(gd) = jtype(v) AND
-                                init_val(gd) = init_val(v)}))
+  new_cp_gvd(mp) : FieldDecl =
+     (# name := cp(mp), 
+        jtype := IntType, 
+        init_val := Int(unique(init_cp(mva(mp)))) #)
+
+  new_cps_gvds(mp) : finite_set[FieldDecl] =
+      {gd : FieldDecl | EXISTS (q : (cps(mva(mp)))) : 
+                        name(gd) = name_of(mp)(q) AND 
+                        jtype(gd) = IntType AND
+                        init_val(gd) = Int(unique(q))}
+
+  new_mva_vars_gvds(mp) : finite_set[FieldDecl] =
+      {gd : FieldDecl | EXISTS (v : (vdsA(mva(mp)))) : 
+                        name(gd) = name(v) AND
+                        jtype(gd) = jtype(v) AND
+                        init_val(gd) = init_val(v)}
+
+  new_gvds(mp) : finite_set[FieldDecl] =
+   add(new_cp_gvd(mp), union(new_cps_gvds(mp), new_mva_vars_gvds(mp)))
+
 
 
   new_vars_derived_from_mp : LEMMA % :-)
@@ -151,10 +150,14 @@ BEGIN
     Sequence(Set(cp(mp), NExpr(NumVarEval(name_of(mp)(tcp(t))))), 
              ann_action(action(t)))
 
+  ann_guard_actions_set(mp)(ts : finite_set[Transition]) : 
+                            finite_set[[BoolExpr, Stmt]] =
+     {x : [BoolExpr, Stmt] | EXISTS (t : Transition) :
+          ts(t) AND x = (guard_to_expression(mva(mp))(guard(t)), 
+          update_vars(mp)(t))}
+
   ann_guard_actions(mp)(ts : finite_set[Transition]) : list[[BoolExpr, Stmt]] =
-    set2list({x : [BoolExpr, Stmt] | EXISTS (t : Transition) :
-      ts(t) AND x = (guard_to_expression(mva(mp))(guard(t)), 
-                     update_vars(mp)(t))})
+    set2list(ann_guard_actions_set(mp)(ts))
 
   ann_trans_cp(mp)(q : CP, ts : finite_set[Transition]) : [BoolExpr, Stmt] =
     (Eq(NExpr(NumVarEval(cp(mp))), 
@@ -162,14 +165,18 @@ BEGIN
      CaseJML(ann_guard_actions(mp)(ts)))
 
 
+  ann_event_set(mp)(ts : finite_set[Transition]) : 
+                         finite_set[[BoolExpr, Stmt]] = 
+    {c : [BoolExpr, Stmt] | EXISTS (q : CP) : 
+         cps(mva(mp))(q) AND
+         nonempty?({t: Transition | ts(t) AND scp(t) = q}) AND
+         c = ann_trans_cp(mp)(q, {t: Transition | ts(t) AND scp(t) = q})}
+
   % Generates annotations to update the control point and the variables when an
   % event occurs
   ann_event(mp)(ts : finite_set[Transition]): Stmt =
-    CaseJML(set2list({c : [BoolExpr, Stmt] | EXISTS (q : CP) : 
-              cps(mva(mp))(q) AND
-              nonempty?({t: Transition | ts(t) AND scp(t) = q}) AND
-              c = ann_trans_cp(mp)(q,
-                                  {t: Transition | ts(t) AND scp(t) = q})}))
+    CaseJML(set2list(ann_event_set(mp)(ts)))
+
 
 
   % Method annotation
@@ -332,8 +339,34 @@ BEGIN
     THEN var_names(b1(inv(ann_class(mp)(c)))) = var_names(inv(c))
     ELSE var_names(inv(ann_class(mp)(c))) = var_names(inv(c))
     ENDIF
-      
+  
+  var_names_ann_action : LEMMA
+    FORALL(a : Action, n : Name) :
+      var_names(ann_action(a))(n) = 
+        EXISTS(oa : OneAction) : 
+          member(oa, a) AND
+          (n = target(oa) OR var_names(source(oa))(n))
 
+
+  var_names_ann_guard_actions : LEMMA
+    FORALL(ts : finite_set[Transition], n : Name) :
+      var_names(CaseJML(ann_guard_actions(mp)(ts)))(n) =
+        EXISTS (t : Transition, x : [BoolExpr, Stmt]) : 
+          ts(t) AND 
+          x = (guard_to_expression(mva(mp))(guard(t)), update_vars(mp)(t)) AND
+          union(var_names(proj_1(x)), var_names(proj_2(x)))(n)
+
+
+  IMPORTING FiniteSetInduction[Transition]
+
+  var_names_ann_event_set : LEMMA
+    FORALL(ts : finite_set[Transition], n : Name) :
+      var_names(ann_event(mp)(ts))(n) =
+          EXISTS(x : [BoolExpr, Stmt]) :
+            ann_event_set(mp)(ts)(x) AND
+            union(var_names(proj_1(x)), var_names(proj_2(x)))(n)
+
+  % two open branches need additional assumptions
   var_names_ann_event : LEMMA
     FORALL(ts : finite_set[Transition]) :
       subset?(ts, ts(mva(mp))) IMPLIES
