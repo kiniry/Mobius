@@ -239,19 +239,12 @@ BEGIN
        NExpr(n) : var_names(n),
        RExpr(r) : var_names(r),
        CaseJML(branches) : 
-%          list_to_union
-%               (map(LAMBDA(x : [BoolExpr, Stmt]) : 
-%                      IF member(x, branches)
-%                      THEN union(var_names(proj_1(x)), var_names(proj_2(x)))
-%                      ELSE emptyset
-%                      ENDIF)
-%                   (branches)),
-         IF null?(branches)
-         THEN emptyset
-         ELSE union(union(var_names(proj_1(car(branches))),
-                          var_names(proj_2(car(branches)))),
-                    var_names(CaseJML(cdr(branches))))
-         ENDIF,
+        IF null?(branches)
+        THEN emptyset[Name]
+        ELSE union(var_names(proj_1(car(branches))),
+             union(var_names(proj_2(car(branches))),
+                   var_names(CaseJML(cdr(branches)))))
+        ENDIF,
        IfThenElse(test, then_stmt, else_stmt) :
          union(var_names(test), 
          union(var_names(then_stmt), var_names(else_stmt))),

@@ -93,6 +93,21 @@ BEGIN
         halted_implies_JMLExc(mp)(update_PState(sMP, raise(e)), 
                                   update_PState(sAP, raise(e)))
 
+  % lemmas not provable now, need assumptions about upd
+  MP_modeled_preserved_by_update_GhostVars : LEMMA % 
+    FORALL (mp)(sMP : MPState, sAP : APState)(upd : [Store -> Store]) :
+      related_states(mp)(sMP, sAP) IMPLIES
+%      (FORALL(gv : Name) : 
+%        var_names(new_gcs 
+        MP_modeled?(mp)(update_GhostVars(sMP, upd), update_GhostVars(sAP, upd))
+
+  halted_implies_JMLExc_preserved_by_update_GhostVars : LEMMA % 
+    FORALL (mp)(sMP : MPState, sAP : APState)(upd : [Store -> Store]) :
+      related_states(mp)(sMP, sAP) IMPLIES
+%      NOT up?(ex(pstate(sAP))) IMPLIES
+        halted_implies_JMLExc(mp)(update_GhostVars(sMP, upd), 
+                                  update_GhostVars(sAP, upd))
+
   % PROVE! This can be long. We have to show that the expressions and
   % statements of the mp are not modified, only new exprs and stmts are
   % added and they do not interfere with the others.

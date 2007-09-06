@@ -90,6 +90,7 @@ BEGIN
     FORALL(xs : list[T1], x : T1, f : [T1 -> T2]) :
       member(x, xs) IMPLIES member(f(x), map(f)(xs))
 
+
 END list_map_funcs
 
 
