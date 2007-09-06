@@ -188,54 +188,14 @@ BEGIN
       NOT target(c) = vn IMPLIES
         gvs(s1)(vn) = gvs(s2)(vn)
 
-  % Consider the evaluation of a CaseJML on a non-exceptional state for which 
+  % Consider the evaluation of a CaseJML on a non-exceptional state for which
   % there is a branch b1 whose condition has no side-effects and holds and all
-  % the other branches have no side-effect and do not hold. 
-  % The state resulting from the evaluation of such CaseJML will be equal to the
-  % state after the execution of the statement associated with b1.
-  CaseJML_exclusive_branches_semantics1 : LEMMA % :-?
-    FORALL (p : Program, bs : list[[BoolExpr, Stmt]], s1, s2, tau : APState,
-            v1, v2 : Val, n1, n : nat, b1 : [BoolExpr, Stmt]) :
-      NOT up?(ex(pstate(s1))) IMPLIES
-      n > 0 IMPLIES
-      member(b1, bs) IMPLIES
-      (FORALL (tau : APState, v : Val, m1 : below(n)) :
-        (derive(p)(PROJ_1(b1), s1, v, tau)(m1) IMPLIES
-          s1 = tau AND v = Bool(TRUE))) IMPLIES
-      (FORALL (b2 : [Expr, Stmt], tau : APState, v : Val, m2 : below(n)) :
-        member(b2, bs) IMPLIES
-        NOT b1 = b2 IMPLIES
-        (derive(p)(PROJ_1(b2), s1, v, tau)(m2) IMPLIES
-          s1 = tau AND v = Bool(FALSE))) IMPLIES
-        derive(p)(PROJ_2(b1), s1, v1, tau)(n1) IMPLIES
-        derive(p)(CaseJML(bs), s1, v2, s2)(n) IMPLIES
-          s2 = tau
-
-  % A CaseJML for which there is a branch b1 that has no side-effects and holds
-  % and for which all the branches preceding b1 have no side-effects (and hence
-  % do not throw exceptions) and do not hold, will eventually evaluate the
-  % statement associated with b1.
-  CaseJML_evaluates_true_stmt : LEMMA % :-?
-    FORALL (p : Program, bs : list[[BoolExpr, Stmt]], s1, s2 : APState, 
-            v : Val, n : nat, b1 : [BoolExpr, Stmt]) :
-      NOT up?(ex(pstate(s1))) IMPLIES
-      n > 0 IMPLIES
-      member(b1, bs) IMPLIES
-      (FORALL (tau : APState, v : Val, m1 : below(n)) :
-        (derive(p)(PROJ_1(b1), s1, v, tau)(m1) IMPLIES
-          s1 = tau AND v = Bool(TRUE))) IMPLIES
-      (FORALL (b2 : [Expr, Stmt], tau : APState, v : Val, m2 : below(n)) :
-        member(b2, bs) IMPLIES
-        before(b2, b1, bs) IMPLIES
-        (derive(p)(PROJ_1(b2), s1, v, tau)(m2) IMPLIES
-          s1 = tau AND v = Bool(FALSE))) IMPLIES
-      derive(p)(CaseJML(bs), s1, v, s2)(n) IMPLIES
-        EXISTS (tau : APState, n1 : nat, v1 : Val) : 
-          derive(p)(PROJ_2(b1), s1, v1, tau)(n1)
-
-  % TODO: Consider merging the two properties.
-  % Ver la ultima tcc
-  CaseJML_exclusive_branches_semantics : LEMMA
+  % the branches before b1 have no side-effect (and hence do not throw exceptions),
+  % and do not hold.
+  % Then the statement associated with b1 will be eventually evaluated and the
+  % resulting state and value (Unit) will be the same as the respective state and
+  % value for the whole CaseJML statement.
+  CaseJML_exclusive_branches_semantics : LEMMA % :-)
     FORALL (p : Program, bs : list[[BoolExpr, Stmt]], s1, s2 : APState,
             v : Val, n : nat, b1 : [BoolExpr, Stmt]) :
       NOT up?(ex(pstate(s1))) IMPLIES
@@ -244,14 +204,13 @@ BEGIN
       (FORALL (tau : APState, v : Val, m1 : below(n)) :
         (derive(p)(PROJ_1(b1), s1, v, tau)(m1) IMPLIES
           s1 = tau AND v = Bool(TRUE))) IMPLIES
-      (FORALL (b2 : [Expr, Stmt], tau : APState, v : Val, m2 : below(n)) :
-        member(b2, bs) IMPLIES
+      (FORALL (b2 : [BoolExpr, Stmt], tau : APState, v : Val, m2 : below(n)) :
         before(b2, b1, bs) IMPLIES
         (derive(p)(PROJ_1(b2), s1, v, tau)(m2) IMPLIES
           s1 = tau AND v = Bool(FALSE))) IMPLIES
         derive(p)(CaseJML(bs), s1, v, s2)(n) IMPLIES
-          EXISTS (n1 : nat, v1 : Val) : 
-            derive(p)(PROJ_2(b1), s1, v1, s2)(n1)
+          EXISTS (n1 : nat) :
+            derive(p)(PROJ_2(b1), s1, v, s2)(n1)
 
 
 END APSemanticsProperties

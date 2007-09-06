@@ -169,29 +169,6 @@ BEGIN
 
   % Used variable names
 
-%  var_names(ne : NumExpr) : set[Name] =
-%    {n : Name | some(LAMBDA (m : Name) : m = n)(ne)}
-
-%  var_names(be : BoolExpr) : set[Name] =
-%    {n : Name | some(LAMBDA (m : Name) : m = n)(be)}
-
-%  var_names(re : RefExpr) : set[Name] =
-%    {n : Name | some(LAMBDA (m : Name) : m = n)(re)}
-
-%  var_names(e : Expr) : set[Name] =
-%    {n : Name | some(LAMBDA (m : Name) : m = n)(e)}
-
-%   var_names(s : Stmt) : set[Name] =
-%     {n : Name | some(LAMBDA (m : Name) : m = n)(s)}
-
-   % AT: Do we also have to do a workaround in this case?
-%   var_names(s : Stmt) : set[Name] =
-%     union({n : Name | some(LAMBDA (m : Name) : m = n)(s)},
-%           {n : Name | CaseJML?(s) AND every(id[bool])
-%             (map(LAMBDA (x : [BoolExpr, Stmt]) : 
-%               some(LAMBDA (m : Name) : m = n)(proj_1(x)) OR
-%               some(LAMBDA (m : Name) : m = n)(proj_2(x)))(branches(s)))})
-              
 %  NOTE: There seems to be a problem with the definition of some in the 
 %  CaseJML case. If we define:
 %   var_names(b : Body) : set[Name] =
@@ -262,13 +239,19 @@ BEGIN
        NExpr(n) : var_names(n),
        RExpr(r) : var_names(r),
        CaseJML(branches) : 
-         list_to_union
-              (map(LAMBDA(x : [BoolExpr, Stmt]) : 
-                     IF member(x, branches)
-                     THEN union(var_names(proj_1(x)), var_names(proj_2(x)))
-                     ELSE emptyset
-                     ENDIF)
-                  (branches)),
+%          list_to_union
+%               (map(LAMBDA(x : [BoolExpr, Stmt]) : 
+%                      IF member(x, branches)
+%                      THEN union(var_names(proj_1(x)), var_names(proj_2(x)))
+%                      ELSE emptyset
+%                      ENDIF)
+%                   (branches)),
+         IF null?(branches)
+         THEN emptyset
+         ELSE union(union(var_names(proj_1(car(branches))),
+                          var_names(proj_2(car(branches)))),
+                    var_names(CaseJML(cdr(branches))))
+         ENDIF,
        IfThenElse(test, then_stmt, else_stmt) :
          union(var_names(test), 
          union(var_names(then_stmt), var_names(else_stmt))),

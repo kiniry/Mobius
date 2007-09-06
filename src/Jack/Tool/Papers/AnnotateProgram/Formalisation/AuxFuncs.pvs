@@ -46,6 +46,10 @@ BEGIN
     FORALL (a, b : T, l : list[T]) :
       before(a, b, l) IMPLIES NOT a = b
 
+  before_member : LEMMA % :-)
+    FORALL (a, b : T, l : list[T]) :
+      before(a, b, l) IMPLIES member(a, l)
+
   every_is_forall : LEMMA % :-)
     FORALL (p : pred[T], l : list[T]) : 
       every(p)(l) = FORALL (x : T) : member(x, l) IMPLIES p(x)
