@@ -616,7 +616,7 @@ public class Lifter extends EscNodeBuilder
 							args[2].dumpAny());
 			}
       if (fn == symInv) {
-        return dumpBuilder.buildInv(args[0].dumpValue(), args[1].dumpAny());
+        return dumpBuilder.buildInv((SMap)args[0].dumpValue(), args[1].dumpValue(), args[2].dumpAny());
       }
       if (fn == symRefBoolFn) {
         return dumpBuilder.buildRefBoolFun(tag, args[0].dumpRef(), args[1].dumpRef());
@@ -1017,8 +1017,8 @@ public class Lifter extends EscNodeBuilder
     public FnSymbol symArrStore = registerFnSymbol("%arrStore", new Sort[] { sortMap, sortRef, sortInt, sortValue }, sortMap);
     /** bicolano special subtyping relation (heap -> value -> type -> pred) */
     public FnSymbol symAssignCompat = registerFnSymbol("%assignCompat", new Sort[] { sortMap, sortValue, sortType }, sortPred);
-    /** cbr: used for invariants. \forall x,t : alive(x) & typeof(x)=t -> inv(x,t) */
-    public PredSymbol symInv = registerPredSymbol("%inv", new Sort[]{sortRef, sortType});
+    /** cbr: used for invariants. \forall x,t : isAlive(heap, x) & typeof(x)=t -> inv(heap, x,t) */
+    public PredSymbol symInv = registerPredSymbol("%inv", new Sort[]{sortMap, sortRef, sortType});
     /** cbr: symbol to mean the object is alive in Heap */
     public PredSymbol symIsAlive = registerPredSymbol("%isAlive", new Sort[] {sortMap, sortRef});
     
@@ -1073,7 +1073,7 @@ public class Lifter extends EscNodeBuilder
 	public SValue buildArrSelect(SMap map, SRef obj, SInt idx) {throw new Die(); }
 	public SMap buildArrStore(SMap map, SRef obj, SInt idx, SValue val) {throw new Die(); }
 	public SPred buildAssignCompat(SMap map, SValue val, SAny type) {throw new Die(); }
-  public SPred buildInv(SValue val, SAny type) {throw new Die(); }
+  public SPred buildInv(SMap map, SValue val, SAny type) {throw new Die(); }
   public SPred buildIsAlive(SMap map, SRef obj) {throw new Die(); }
   
 	boolean isEarlySort(Sort s, Sort p)
