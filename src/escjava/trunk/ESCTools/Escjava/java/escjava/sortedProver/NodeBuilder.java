@@ -446,7 +446,7 @@ public abstract class NodeBuilder
 	abstract public SValue buildArrSelect(SMap map, SRef obj, SInt idx);
 	abstract public SMap buildArrStore(SMap map, SRef obj, SInt idx, SValue val);
 	abstract public SPred buildAssignCompat(SMap map, SValue val, SAny type);
-  abstract public SPred buildInv(SValue val, SAny type);
+  abstract public SPred buildInv(SMap map, SValue val, SAny type);
   abstract public SPred buildIsAlive(SMap map, SRef obj);
 
 }
