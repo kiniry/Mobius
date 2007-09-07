@@ -340,7 +340,7 @@ BEGIN
     ELSE var_names(inv(ann_class(mp)(c))) = var_names(inv(c))
     ENDIF
   
-  var_names_ann_action : LEMMA
+  var_names_ann_action : LEMMA % :-)
     FORALL(a : Action, n : Name) :
       var_names(ann_action(a))(n) = 
         EXISTS(oa : OneAction) : 
@@ -348,13 +348,13 @@ BEGIN
           (n = target(oa) OR var_names(source(oa))(n))
 
 
-  var_names_ann_guard_actions : LEMMA
-    FORALL(ts : finite_set[Transition], n : Name) :
-      var_names(CaseJML(ann_guard_actions(mp)(ts)))(n) =
-        EXISTS (t : Transition, x : [BoolExpr, Stmt]) : 
-          ts(t) AND 
-          x = (guard_to_expression(mva(mp))(guard(t)), update_vars(mp)(t)) AND
-          union(var_names(proj_1(x)), var_names(proj_2(x)))(n)
+%  var_names_ann_guard_actions : LEMMA
+%    FORALL(ts : finite_set[Transition], n : Name) :
+%      var_names(CaseJML(ann_guard_actions(mp)(ts)))(n) =
+%        EXISTS (t : Transition, x : [BoolExpr, Stmt]) : 
+%          ts(t) AND 
+%          x = (guard_to_expression(mva(mp))(guard(t)), update_vars(mp)(t)) AND
+%          union(var_names(proj_1(x)), var_names(proj_2(x)))(n)
 
 
   IMPORTING WF_Card[[BoolExpr, Stmt]]
@@ -365,8 +365,13 @@ BEGIN
           EXISTS(x : [BoolExpr, Stmt]) :
             s(x) AND union(var_names(proj_1(x)), var_names(proj_2(x)))(n)
 
-  % two open branches need additional assumptions
-  var_names_ann_event : LEMMA
+  var_names_guard_to_expresion : LEMMA % ? AXIOM or provable
+    FORALL(t : Transition, n : Name) : 
+      ts(mva(mp))(t) IMPLIES
+      var_names(guard_to_expression(mva(mp))(guard(t)))(n) IMPLIES
+      (var_names(program(mp))(n) OR var_names(new_gvds(mp))(n))
+
+  var_names_ann_event : LEMMA % :-)
     FORALL(ts : finite_set[Transition]) :
       subset?(ts, ts(mva(mp))) IMPLIES
         subset?(var_names(ann_event(mp)(ts)), 

@@ -260,25 +260,28 @@ BEGIN
     ENDCASES
   MEASURE size(b)
 
-
-  var_names(m : Method) : set[Name] =
-    Union({ns : set[Name] | ns = var_names(pre(m)) OR ns = var_names(post(m)) OR
-      ns = var_names(body(m)) OR ns = var_names(pre_set(m)) OR 
-      ns = var_names(post_set(m)) OR ns = var_names(exc_set(m))})
-
-  var_names(c : Class) : set[Name] = 
-    Union({ns : set[Name] | EXISTS (m : Method) :
-      methods(c)(m) AND ns = var_names(m)})
-
-  var_names(p : Program) : set[Name] =
-    Union({ns : set[Name] | EXISTS (c : Class) :
-      classes(p)(c) AND ns = var_names(c)})
-
   var_names(fs : finite_set[FieldDecl]) : finite_set[Name] =
     {n : Name |EXISTS (f : FieldDecl) : fs(f) AND name(f) = n}
 
   var_names(ls : finite_set[LocalVarDecl]) : finite_set[Name] =
     {n : Name |EXISTS (l : LocalVarDecl) : ls(l) AND name(l) = n}
+
+
+  var_names(m : Method) : set[Name] =
+    Union({ns : set[Name] | ns = var_names(pre(m)) OR ns = var_names(post(m)) OR
+      ns = var_names(body(m)) OR ns = var_names(pre_set(m)) OR 
+      ns = var_names(post_set(m)) OR ns = var_names(exc_set(m)) OR 
+      ns = var_names(lvars(m))})
+
+  var_names(c : Class) : set[Name] = 
+    union(Union({ns : set[Name] | EXISTS (m : Method) :
+                 methods(c)(m) AND ns = var_names(m)}),
+    union(var_names(fields(c)), 
+    union(var_names(ghost_vars(c)), var_names(inv(c)))))
+
+  var_names(p : Program) : set[Name] =
+    Union({ns : set[Name] | EXISTS (c : Class) :
+      classes(p)(c) AND ns = var_names(c)})
 
   
   var_names_union : LEMMA % :-)

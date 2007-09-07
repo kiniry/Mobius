@@ -105,7 +105,10 @@ BEGIN
 
   wf_Action(a : MVA)(l : Action) : boolean =
     FORALL (c : OneAction) :
-      member(c, l) IMPLIES var_names(vdsA(a))(target(c))
+      member(c, l) IMPLIES 
+        (var_names(vdsA(a))(target(c)) AND
+         subset?(var_names(source(c)), 
+                 union(var_names(vdsA(a)), var_names(vdsP(a)))))
 
   wf_Trans(a : MVA)(t : Transition) : boolean = 
       ts(a)(t) IMPLIES
