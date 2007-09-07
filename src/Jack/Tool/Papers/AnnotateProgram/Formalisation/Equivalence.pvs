@@ -67,8 +67,7 @@ BEGIN
   % lemmas in LemmasAnnGeneration.
   halted_implies_JMLExc(mp)(sMP : MPState, sAP : APState) : boolean =
     cp(astate(sMP)) = halted IFF
-      (up?(ex(pstate(sAP))) AND down(ex(pstate(sAP))) = JMLExc AND
-       lookup(cp(mp), sAP) = lookup(halted(mp), sAP))
+      (up?(ex(pstate(sAP))) AND down(ex(pstate(sAP))) = JMLExc)
 
 
   % It is possible to translate every guard of the MVA into an expression that

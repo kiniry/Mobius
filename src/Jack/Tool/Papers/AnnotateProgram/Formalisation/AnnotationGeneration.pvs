@@ -107,6 +107,12 @@ BEGIN
   halted_new_ghostvar : LEMMA % :-)
     var_names(new_gvds(mp))(halted(mp))
 
+  cp_not_cps_ghostvar : LEMMA % :-)
+    NOT new_cps_gvds(mp)(new_cp_gvd(mp))
+
+  cp_not_mva_ghostvar : LEMMA % :-)
+    NOT new_mva_vars_gvds(mp)(new_cp_gvd(mp))
+
 END NewVariableDeclarations
 
 

@@ -94,6 +94,18 @@ BEGIN
         halted_implies_JMLExc(mp)(update_PState(sMP, raise(e)), 
                                   update_PState(sAP, raise(e)))
 
+  MP_modeled_implies_cp_halted_correspondence : LEMMA % :-)
+    FORALL(mp)(sMP : MPState, sAP : APState) :
+      wf_state(ann_program(mp))(sAP) IMPLIES
+      MP_modeled?(mp)(sMP, sAP) IMPLIES
+      cp(astate(sMP)) = halted IMPLIES
+      lookup(cp(mp), sAP) = lookup(halted(mp), sAP)
+
+  related_states_implies_cp_halted_correspondence : LEMMA % :-)
+    FORALL(mp)(sMP : MPState, sAP : APState) :
+      related_states(mp)(sMP, sAP) IMPLIES
+      cp(astate(sMP)) = halted IMPLIES
+      lookup(cp(mp), sAP) = lookup(halted(mp), sAP)
 
   % PROVE! This can be long. We have to show that the expressions and
   % statements of the mp are not modified, only new exprs and stmts are
