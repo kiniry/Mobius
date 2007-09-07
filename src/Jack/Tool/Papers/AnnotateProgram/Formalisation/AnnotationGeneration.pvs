@@ -357,14 +357,13 @@ BEGIN
           union(var_names(proj_1(x)), var_names(proj_2(x)))(n)
 
 
-  IMPORTING FiniteSetInduction[Transition]
+  IMPORTING WF_Card[[BoolExpr, Stmt]]
 
-  var_names_ann_event_set : LEMMA
-    FORALL(ts : finite_set[Transition], n : Name) :
-      var_names(ann_event(mp)(ts))(n) =
+  var_names_CaseJML_set2list : LEMMA % :-)
+    FORALL(s : finite_set[[BoolExpr, Stmt]], n : Name) :
+      var_names(CaseJML(set2list(s)))(n) =
           EXISTS(x : [BoolExpr, Stmt]) :
-            ann_event_set(mp)(ts)(x) AND
-            union(var_names(proj_1(x)), var_names(proj_2(x)))(n)
+            s(x) AND union(var_names(proj_1(x)), var_names(proj_2(x)))(n)
 
   % two open branches need additional assumptions
   var_names_ann_event : LEMMA
