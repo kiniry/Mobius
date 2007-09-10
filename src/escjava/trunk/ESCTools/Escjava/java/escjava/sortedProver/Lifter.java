@@ -41,6 +41,7 @@ import escjava.ast.TagConstants;
 import escjava.ast.TypeExpr;
 import escjava.backpred.BackPred;
 import escjava.backpred.FindContributors;
+import escjava.sortedProver.NodeBuilder.FnSymbol;
 import escjava.translate.GC;
 import escjava.translate.TrAnExpr;
 import escjava.translate.UniqName;
@@ -618,6 +619,9 @@ public class Lifter extends EscNodeBuilder
       if (fn == symInv) {
         return dumpBuilder.buildInv((SMap)args[0].dumpValue(), args[1].dumpValue(), args[2].dumpAny());
       }
+      if (fn == symIsFieldOf) {
+        return dumpBuilder.buildIsFieldOf((SMap)args[0].dumpValue(), args[1].dumpRef(), args[2].dumpAny());
+      }
       if (fn == symRefBoolFn) {
         return dumpBuilder.buildRefBoolFun(tag, args[0].dumpRef(), args[1].dumpRef());
       }
@@ -1019,9 +1023,10 @@ public class Lifter extends EscNodeBuilder
     public FnSymbol symAssignCompat = registerFnSymbol("%assignCompat", new Sort[] { sortMap, sortValue, sortType }, sortPred);
     /** cbr: used for invariants. \forall x,t : isAlive(heap, x) & typeof(x)=t -> inv(heap, x,t) */
     public PredSymbol symInv = registerPredSymbol("%inv", new Sort[]{sortMap, sortRef, sortType});
-    /** cbr: symbol to mean the object is alive in Heap */
+    /** cbr: symbol to denote that the object is alive in heap */
     public PredSymbol symIsAlive = registerPredSymbol("%isAlive", new Sort[] {sortMap, sortRef});
-    
+    /** cbr: symbol to state that field is of object in given heap*/
+    public PredSymbol symIsFieldOf = registerPredSymbol("%isFieldOf", new Sort[] {sortMap, sortRef, sortAny});
     
 	// we just want Sort and the like, don't implement anything	
 	static class Die extends RuntimeException { private static final long serialVersionUID = 1L; }
@@ -1075,6 +1080,7 @@ public class Lifter extends EscNodeBuilder
 	public SPred buildAssignCompat(SMap map, SValue val, SAny type) {throw new Die(); }
   public SPred buildInv(SMap map, SValue val, SAny type) {throw new Die(); }
   public SPred buildIsAlive(SMap map, SRef obj) {throw new Die(); }
+  public SPred buildIsFieldOf(SMap map, SRef obj, SAny field) {throw new Die(); }
   
 	boolean isEarlySort(Sort s, Sort p)
 	{
