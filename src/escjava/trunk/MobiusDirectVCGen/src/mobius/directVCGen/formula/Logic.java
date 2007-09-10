@@ -123,12 +123,12 @@ public final class Logic {
   }
 
   /**
-   * Create a BoolProp object, a conversion from a boolean object
-   * to a property object if necessary.
+   * Create a BoolPred object, a conversion from a boolean object
+   * to a predicate object if necessary.
    * @param e the boolean object to convert
-   * @return the BoolProp conversion object
+   * @return the BoolPred conversion object
    */
-  public static Term boolToProp(final Term e) {
+  public static Term boolToPred(final Term e) {
     if (e.getSort() == Bool.sort) {
       return Formula.lf.mkFnTerm(Formula.lf.symIsTrue, new Term[] {e});
     }
@@ -172,10 +172,10 @@ public final class Logic {
     public static Term and(final Term f1, final Term f2) {
       Term left = f1, right = f2;
       if (f1.getSort().equals(Bool.sort)) {
-        left = Logic.boolToProp(f1);
+        left = Logic.boolToPred(f1);
       }
       if (f2.getSort().equals(Bool.sort)) {
-        right = Logic.boolToProp(f1);
+        right = Logic.boolToPred(f1);
       }
       return Logic.and(left, right);
     }
@@ -190,10 +190,10 @@ public final class Logic {
     public static Term implies(final Term f1, final Term f2) {
       Term left = f1, right = f2;
       if (f1.getSort().equals(Bool.sort)) {
-        left = Logic.boolToProp(f1);
+        left = Logic.boolToPred(f1);
       }
       if (f2.getSort().equals(Bool.sort)) {
-        right = Logic.boolToProp(f1);
+        right = Logic.boolToPred(f2);
       }
       return Logic.implies(left, right);
     }
@@ -403,9 +403,7 @@ public final class Logic {
    * @return The and expression a FnTerm with tag {@link NodeBuilder#predLE}
    */
   public static Term ge(final Term l, final Term r) {
-    //return numBinaryOp(l,r,NodeBuilder.predGE);
-    //return numBinaryOp(r,l,NodeBuilder.predLT);
-    return numBinaryOp(r, l, NodeBuilder.predLE);
+    return numBinaryOp(l, r, NodeBuilder.predGE);
   }
 
   /**
@@ -415,9 +413,7 @@ public final class Logic {
    * @return The and expression a FnTerm with tag {@link NodeBuilder#predLE}
    */
   public static Term gt(final Term l, final Term r) {
-    //return numBinaryOp(l,r,NodeBuilder.predGT);
-    //return numBinaryOp(r,l,NodeBuilder.predLE);
-    return numBinaryOp(r, l, NodeBuilder.predLT);
+    return numBinaryOp(l,r,NodeBuilder.predGT);
   }
 
 
@@ -518,13 +514,13 @@ public final class Logic {
    * @param t The type where the invariant is defined.
    * @return A Predicate 'inv' representing an invariant of type t for object x.
    */
-  public static Term inv(final Term x, final Term t) {
-    return Formula.lf.mkFnTerm(Formula.lf.symInv, new Term[]{x, t});
+  public static Term inv(final Term heap, final Term x, final Term t) {
+    return Formula.lf.mkFnTerm(Formula.lf.symInv, new Term[]{heap, x, t});
   }
 
 
   /**
-   * @param heap Heap for which we want to know whether val is alive.
+   * @param heap Heap for which we want to know whether or not val is alive.
    * @param val The object in question.
    * @return A Term that expresses the predicate isAlloc(heap,val)
    */
@@ -564,10 +560,23 @@ public final class Logic {
     return t2;
   }
 
+  /**
+   * @param heap the current heap
+   * @param targetVar the object containing fieldVar
+   * @param fieldVar field of object targetVar
+   * @return A term expressing the field "fieldVar" is of object "targetVar"
+   */
+  public static Term isFieldOf(QuantVariableRef heap, QuantVariableRef targetVar, QuantVariableRef fieldVar) {
+    if (heap.getSort() != Heap.sort) {
+      throw new IllegalArgumentException("Type of the first param should be heap (" + 
+                                         Heap.sort + "), found: " + heap.getSort());
+    }
+    return Formula.lf.mkFnTerm(Formula.lf.symIsFieldOf, new Term [] {heap, targetVar, fieldVar});
+  }
 
   /**
-   * @param targetVar The object holding the fieldVar
-   * @param fieldVar The field for which we want to find out whether it's assignable or not
+   * @param targetVar the object containing the fieldVar
+   * @param fieldVar the field for which we want to find out whether it's assignable or not
    * @param o Parameter object also containing a list of modifiable types.
    * @return A Term expressing the check described above.
    */
@@ -605,8 +614,10 @@ public final class Logic {
       Logic.forall(vars, Logic.implies(rv1, rv2));
     System.out.println(formula);
     System.out.println(formula.subst(rv2,
-                                     Logic.implies(Logic.boolToProp(rv2), 
+                                     Logic.implies(Logic.boolToPred(rv2), 
                                                    Logic.False())));
     System.out.println(Logic.and(Logic.True(), Logic.False()));
   }
+
+
 }
