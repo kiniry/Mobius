@@ -313,7 +313,9 @@ public class CoqNodeBuilder extends EscNodeBuilder {
   }
 
   /*
-   * (non-Javadoc)
+   * (non-Javadoc)  public SPred buildIsAlive(SMap map, SRef ref) {
+    throw new UnsupportedOperationException();
+  }
    * @see escjava.sortedProver.NodeBuilder#buildRealFun(int, escjava.sortedProver.NodeBuilder.SReal, escjava.sortedProver.NodeBuilder.SReal)
    */
   @Override
@@ -716,7 +718,9 @@ public class CoqNodeBuilder extends EscNodeBuilder {
   
   
   
-  
+  public SPred buildIsFieldOf(SMap map, SRef obj, SAny field) {
+    throw new UnsupportedOperationException();
+  }
   
 
 
