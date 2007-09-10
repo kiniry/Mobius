@@ -2,7 +2,6 @@ package mobius.directVCGen.formula.jmlTranslator;
 
 import java.util.HashSet;
 import java.util.Properties;
-
 import javafe.ast.ASTNode;
 import javafe.ast.BinaryExpr;
 import javafe.ast.ClassDecl;
@@ -73,7 +72,6 @@ import escjava.ast.VarDeclModifierPragma;
 import escjava.ast.VarExprModifierPragma;
 import escjava.ast.VisitorArgResult;
 import escjava.ast.WildRefExpr;
-import escjava.tc.FlowInsensitiveChecks;
 
 
 
@@ -90,9 +88,8 @@ public class VisibleTypeCollector extends VisitorArgResult {
 
   public VisibleTypeCollector() {
     fProperties = new Properties();
-   // fProperties.put("pred", Boolean.TRUE);
     fProperties.put("old", Boolean.FALSE);
-   // fProperties.put("interesting", Boolean.FALSE);
+    fProperties.put("everything", Boolean.FALSE); 
     fTypeSet = new HashSet<Type>();
   }
 
@@ -116,44 +113,55 @@ public class VisibleTypeCollector extends VisitorArgResult {
   }
 
   @Override
-  public Object visitRoutineDecl(final /*@non_null*/ RoutineDecl x, 
-                                               final Object o) {
+  public Object visitRoutineDecl(final /*@non_null*/ RoutineDecl x, final Object o) {
     fTypeSet.add((Type) x.parent.getDecorations()[3]);
     // FIXME should be replaced by the proper call to FlowInsensitiveChecks
-    // add own class type into set 
     ((Properties) o).put("assign", new Boolean(false));
     visitASTNode(x, o); 
+    if ((Boolean) ((Properties) fProperties).get("everything") == Boolean.TRUE) {
+      fTypeSet.clear();
+    }
+    ((Properties) o).put("visibleTypeSet", fTypeSet); 
     return null;
   }
 
   @Override
-  public Object visitMethodDecl(final /*@non_null*/ MethodDecl x, 
-                                              final Object o) {
-    Object obi = visitRoutineDecl(x, o);
-    ((Properties) o).put("visibleTypeSet", fTypeSet); 
-    //put set into properties once for each method
-    return obi;
+  public Object visitConstructorDecl(/*@non_null*/ final ConstructorDecl x, final Object o) {
+    return visitRoutineDecl(x, o);
+  }
+  
+  
+  @Override
+  public Object visitMethodDecl(final /*@non_null*/ MethodDecl x, final Object o) {
+    return visitRoutineDecl(x, o);
   }
   
   /**
-   * We want also collect all modifiable object of a method invocation.
-   * Can be done by visiting the "routineDecl" of the invocated method.
-   * Doing this, we collect all modifiable object and put them in the same set.
-   * At the end of every method/constructor, we put the set into the properties.
+   * We also want to collect all assignable types of a method invocation.
    */
-  public /*@non_null*/ Object visitMethodInvocation(/*@non_null*/ MethodInvocation x, Object o) {
-    Object obi = visitRoutineDecl(x.decl, o);
-    return visitExpr(x, o);
+  public /*@non_null*/ Object visitMethodInvocation(final /*@non_null*/ MethodInvocation x, final Object o) {
+    //add assignable pragma types to fTypeSet   
+    for (int i = 0; i < x.decl.pmodifiers.size(); i++) {
+      if (x.decl.pmodifiers.elementAt(i).getTag() == TagConstants.MODIFIESGROUPPRAGMA) {
+        final ModifiesGroupPragma modi = (ModifiesGroupPragma) x.decl.pmodifiers.elementAt(i);
+        CondExprModifierPragma assigPragma = null;
+        for (int j = 0; j < modi.items.size(); j++) {
+          assigPragma = modi.items.elementAt(j);
+          if (assigPragma.expr instanceof FieldAccess) {
+            final javafe.ast.Type type2 = javafe.tc.FlowInsensitiveChecks.getType(assigPragma.expr);
+            fTypeSet.add(type2);
+          }
+          else if (assigPragma.expr instanceof EverythingExpr) {
+            fProperties.put("everything", Boolean.TRUE); 
+            break;
+          }
+        }
+      }
+    }
+    
+    return null;
   }
   
-
-  @Override
-  public Object visitConstructorDecl(/*@non_null*/ final ConstructorDecl x, final Object o) {
-    Object obi = visitRoutineDecl(x, o);
-    ((Properties) o).put("visibleTypeSet", fTypeSet); 
-    //put set into properties once for each constructor
-    return obi;
-  }
 
   @Override
   public Object visitFormalParaDecl(/*@non_null*/ final FormalParaDecl x, final Object o) {
@@ -425,7 +433,6 @@ public class VisibleTypeCollector extends VisitorArgResult {
   @Override
   public Object visitParsedSpecs(final ParsedSpecs x, final Object o) {
     
-    //return visitASTNode(x, o); //generates a stack overflow... but should be used
     return null;
   }
 
