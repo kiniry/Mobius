@@ -13,7 +13,6 @@ import javafe.ast.ThisExpr;
 import javafe.ast.VariableAccess;
 import mobius.directVCGen.formula.Bool;
 import mobius.directVCGen.formula.Expression;
-import mobius.directVCGen.formula.Formula;
 import mobius.directVCGen.formula.Heap;
 import mobius.directVCGen.formula.Logic;
 import mobius.directVCGen.formula.Num;
@@ -26,7 +25,6 @@ import escjava.ast.TagConstants;
 import escjava.sortedProver.Lifter.QuantVariable;
 import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
-import escjava.sortedProver.NodeBuilder.Sort;
 
 public class JmlExprToFormula {
 
@@ -47,7 +45,7 @@ public class JmlExprToFormula {
       return Bool.and(t1, t2);
     }
     else {
-      return Logic.and(Logic.boolToProp(t1), Logic.boolToProp(t2));
+      return Logic.and(Logic.boolToPred(t1), Logic.boolToPred(t2));
     }
   }
 
@@ -63,7 +61,7 @@ public class JmlExprToFormula {
       return Bool.or(t1, t2);
     }
     else {
-      return Logic.or(Logic.boolToProp(t1), Logic.boolToProp(t2));
+      return Logic.or(Logic.boolToPred(t1), Logic.boolToPred(t2));
     }
   }
 
@@ -78,7 +76,7 @@ public class JmlExprToFormula {
   /**
    * Returns either a sortPred or sortBool equality term depending of the 
    * expection of the upper method.
-   * @param expr
+   * @param expr binary expression with a left and a right expression
    * @param o the Properties object, contains information about the excepted 
    * sort of the return value
    * @return term in the excepted sort, if possible
@@ -101,7 +99,7 @@ public class JmlExprToFormula {
       return Logic.equals(t1, t2);
     }
     else {
-      return Logic.fullImplies(Logic.boolToProp(t1), Logic.boolToProp(t2));
+      return Logic.fullImplies(Logic.boolToPred(t1), Logic.boolToPred(t2));
     }
   }
 
@@ -117,7 +115,7 @@ public class JmlExprToFormula {
       return Bool.not(t);
     }
     else {
-      return Logic.not(Logic.boolToProp(t));
+      return Logic.not(Logic.boolToPred(t));
     }
   }
 
@@ -299,7 +297,7 @@ public class JmlExprToFormula {
       return Bool.implies(t1, t2);
     }
     else {
-      return Logic.implies(Logic.boolToProp(t1), Logic.boolToProp(t2));
+      return Logic.implies(Logic.boolToPred(t1), Logic.boolToPred(t2));
     }
   }
 
@@ -331,7 +329,7 @@ public class JmlExprToFormula {
 
 
   public Object instanceOfExpr(final InstanceOfExpr x, final Object o) {
-    final Term refTerm = (Term) x.expr.accept(this.fVisitor, o) ;
+    final Term refTerm = (Term) x.expr.accept(this.fVisitor, o);
 
     final Term sortType = Type.translate(x.type);
     return Logic.assignCompat(Heap.var, refTerm, sortType);
@@ -339,49 +337,67 @@ public class JmlExprToFormula {
 
 
 
-  /* To know how a tag and the type of an expression fits together look 
-     at the list given in LiteralExpr -> isValidValue(int tag, Object value)
-
-   if (tag == TagConstants.NULLLIT)  return value == null;
-         if (tag == TagConstants.BOOLEANLIT) return value instanceof Boolean;
-         if (tag == TagConstants.BYTELIT)    return value instanceof Byte;
-         if (tag == TagConstants.SHORTLIT)   return value instanceof Short;
-         if (tag == TagConstants.CHARLIT)    return value instanceof Integer;
-         if (tag == TagConstants.INTLIT)     return value instanceof Integer;
-         if (tag == TagConstants.LONGLIT)    return value instanceof Long;
-         if (tag == TagConstants.FLOATLIT)   return value instanceof Float;
-         if (tag == TagConstants.DOUBLELIT)  return value instanceof Double;
-         if (tag == TagConstants.STRINGLIT)  return value instanceof String;
-   */
+  
   public Object literal(final LiteralExpr x, final Object o) {
+    final int unaryOp = (Integer) ((Properties) o).get("unaryOp");
+    ((Properties) o).put("unaryOp", 0); // default value
+    final int neg = -1;
     switch (x.getTag()) {
       case javafe.ast.TagConstants.BOOLEANLIT: 
-        return Bool.value((Boolean) x.value);
+        switch (unaryOp) {
+          case TagConstants.NOT:
+            return Bool.value(!((Boolean) x.value));
+          default: 
+            return Bool.value((Boolean) x.value);
+        }
       case javafe.ast.TagConstants.INTLIT:
-        return Num.value((Integer) x.value);
+        switch (unaryOp) {
+          case TagConstants.UNARYSUB:
+            return Num.value((Integer) x.value * neg);
+          default: 
+            return Num.value((Integer) x.value);
+        }
       case javafe.ast.TagConstants.LONGLIT:
-        return Num.value((Long) x.value);
+        switch (unaryOp) {
+          case TagConstants.UNARYSUB:
+            return Num.value((Long) x.value * -neg);
+          default: 
+            return Num.value((Long) x.value);
+        }
       case javafe.ast.TagConstants.CHARLIT:
         return Num.value((Character) x.value);
       case javafe.ast.TagConstants.FLOATLIT:
-        return Num.value((Float) x.value);
+        switch (unaryOp) {
+          case TagConstants.UNARYSUB:
+            return Num.value((Float) x.value * -neg);
+          default: 
+            return Num.value((Float) x.value);
+        }
       case javafe.ast.TagConstants.DOUBLELIT:
-        return Num.value((Double) x.value);
+        switch (unaryOp) {
+          case TagConstants.UNARYSUB:
+            return Num.value((Double) x.value * -neg);
+          default: 
+            return Num.value((Double) x.value);
+        } 
       case javafe.ast.TagConstants.STRINGLIT:
-        break;
+        return null;
       case javafe.ast.TagConstants.NULLLIT:
         return Ref.Null();
       case javafe.ast.TagConstants.BYTELIT:
         return Num.value((Byte) x.value);
       case javafe.ast.TagConstants.SHORTLIT:
-        return Num.value((Short) x.value);
-  
+        switch (unaryOp) {
+          case TagConstants.NOT:
+            return Num.value((Short) x.value * neg);
+          default: 
+            return Num.value((Short) x.value);
+        } 
       default: 
         throw new IllegalArgumentException("LiteralExpr " + x.toString() + 
                                            " has unknown type.");  
                                               // should be unreachable
     }
-    return null;
   }
 
 
@@ -402,7 +418,7 @@ public class JmlExprToFormula {
       res = Expression.rvar(x.decl);
     }
     if (predProp.booleanValue() && (res.getSort() == Bool.sort)) {
-      res = Logic.boolToProp(res);
+      res = Logic.boolToPred(res);
     }
     return res;
   }
@@ -419,7 +435,7 @@ public class JmlExprToFormula {
       res = Expression.rvar(x);
     }
     if (predProp.booleanValue() && (res.getSort() == Bool.sort)) {
-      res = Logic.boolToProp(res);
+      res = Logic.boolToPred(res);
     }
     return res;
   }
@@ -428,13 +444,13 @@ public class JmlExprToFormula {
 
     if ((Boolean) ((Properties) o).get("fresh")) { 
       final QuantVariableRef qref = Expression.rvar(x.decl);
-      HashSet<Term> freshSet = (HashSet) ((Properties)o).get("freshSet");
+      final HashSet<Term> freshSet = (HashSet) ((Properties)o).get("freshSet");
       freshSet.add(qref);
       ((Properties)o).put("freshSet", freshSet);
     }
     else { 
-      if ((Boolean) ((Properties) o).get("invariant")) { // collect invariant fields for subset checking
-        HashSet<FieldAccess> subSet = (HashSet) ((Properties)o).get("subsetCheckingSet");
+      if ((Boolean) ((Properties) o).get("doSubsetChecking")) {
+        final HashSet<FieldAccess> subSet = (HashSet) ((Properties)o).get("subsetCheckingSet");
         subSet.add(x);
         ((Properties)o).put("subsetCheckingSet", subSet);
       }
@@ -458,7 +474,7 @@ public class JmlExprToFormula {
    * @param o properties object holding whether fresh property is set and holds the freshSet
    * @return the generated FOL term
    */
-  public Object freshExpression(final NaryExpr x, final Object o) { 
+  public Object freshExpr(final NaryExpr x, final Object o) { 
     ((Properties) o).put("fresh", Boolean.TRUE);
     fVisitor.visitGCExpr(x, o);
     ((Properties) o).put("fresh", Boolean.FALSE);
@@ -483,7 +499,7 @@ public class JmlExprToFormula {
   
   
   /**
-   * Generates a Term of an fresh variable: (x != null) and !isAllocated(Pre_Heap, x) and isAllocated(Heap, x)
+   * Generates a Term of an fresh variable: (x != null) and !isAlive(Pre_Heap, x) and isAlive(Heap, x)
    * @param qref the Term to translate into a fresh FOL term
    * @return the generated FOL term
    */
@@ -494,7 +510,7 @@ public class JmlExprToFormula {
     return Logic.and(Logic.and(notEqualNull, isNotAliveInPreHeap), isAliveInHeap);
   }
   
-  public Object naryExpr(final NaryExpr x, final Object o) {
+  public Object oldExpr(final NaryExpr x, final Object o) {
     final Boolean old = (Boolean) ((Properties) o).get("old");
     ((Properties) o).put("old", Boolean.TRUE);
     final Object res = fVisitor.visitGCExpr(x, o);
@@ -508,7 +524,7 @@ public class JmlExprToFormula {
   }
 
   
-  public Term quantifier(QuantifiedExpr x, Object o){
+  public Term quantifier(final QuantifiedExpr x, final Object o) {
   
     ((Properties) o).put("quantifier", Boolean.TRUE); 
     fVisitor.visitGCExpr(x, o);  
@@ -521,7 +537,8 @@ public class JmlExprToFormula {
     while (iter.hasNext()) {
       qVarArray[i] = (QuantVariable) iter.next();
       i++;
-    }        
+    }  
+    ((Properties) o).put("quantVars", new HashSet<QuantVariable>()); 
     final Term exprTerm = (Term) x.expr.accept(fVisitor, o);
     
     if (x.quantifier == TagConstants.FORALL) {
