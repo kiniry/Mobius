@@ -233,8 +233,8 @@ public class StmtVCGen extends ExpressionVisitor {
 
     final QuantVariableRef v = Expression.rvar(Bool.sort);
     vce.fPost = new Post(v,
-                        Logic.and(Logic.implies(Logic.boolToProp(v), bodypre.getPost()),
-                                  Logic.implies(Logic.not(Logic.boolToProp(v)), post)));
+                        Logic.and(Logic.implies(Logic.boolToPred(v), bodypre.getPost()),
+                                  Logic.implies(Logic.not(Logic.boolToPred(v)), post)));
     // the only field that can be modified in a VCentry is post 
     final Term aux = ((Post) x.expr.accept(fExprVisitor, vce)).getPost();
     fVcs.add(Logic.implies(inv, aux));
@@ -404,8 +404,8 @@ public class StmtVCGen extends ExpressionVisitor {
     final QuantVariableRef v = Expression.rvar(Bool.sort);
 
     vce.fPost = new Post(v,
-                        Logic.and(Logic.implies(Logic.boolToProp(v), preT.getPost()),
-                                  Logic.implies(Logic.not(Logic.boolToProp(v)), 
+                        Logic.and(Logic.implies(Logic.boolToPred(v), preT.getPost()),
+                                  Logic.implies(Logic.not(Logic.boolToPred(v)), 
                                                 preF.getPost())));
 
     vce.fPost = (Post) x.accept(fExprVisitor, vce);
@@ -624,8 +624,8 @@ public class StmtVCGen extends ExpressionVisitor {
 
     final QuantVariableRef v = Expression.rvar(Bool.sort);
     vce.fPost = new Post(v,
-                        Logic.and(Logic.implies(Logic.boolToProp(v), bodypre.getPost()),
-                                  Logic.implies(Logic.not(Logic.boolToProp(v)), post)));
+                        Logic.and(Logic.implies(Logic.boolToPred(v), bodypre.getPost()),
+                                  Logic.implies(Logic.not(Logic.boolToPred(v)), post)));
     // the only field that can be modified in a VCentry is post 
     final Term aux = ((Post) x.test.accept(fExprVisitor, vce)).getPost();
     Term vc = Logic.implies(inv, aux);
