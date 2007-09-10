@@ -1,13 +1,11 @@
 package mobius.directVCGen.formula.jmlTranslator;
 
-import mobius.directVCGen.formula.Bool;
 import mobius.directVCGen.formula.Expression;
 import mobius.directVCGen.formula.Formula;
 import mobius.directVCGen.formula.Heap;
 import mobius.directVCGen.formula.Logic;
 import mobius.directVCGen.formula.Lookup;
 import mobius.directVCGen.formula.Ref;
-import mobius.directVCGen.formula.Num;
 import mobius.directVCGen.formula.Type;
 import mobius.directVCGen.formula.annotation.AAnnotation;
 import mobius.directVCGen.formula.annotation.AnnotationDecoration;
@@ -15,28 +13,20 @@ import mobius.directVCGen.formula.annotation.Assume;
 import mobius.directVCGen.formula.annotation.Cut;
 import mobius.directVCGen.formula.annotation.Set;
 import mobius.directVCGen.vcgen.struct.Post;
-
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Properties;
 import java.util.Vector;
-
-import javafe.ast.ASTDecoration;
 import javafe.ast.ASTNode;
-import javafe.ast.AmbiguousVariableAccess;
 import javafe.ast.ArrayRefExpr;
 import javafe.ast.BinaryExpr;
 import javafe.ast.BlockStmt;
 import javafe.ast.ClassDecl;
 import javafe.ast.ConstructorDecl;
 import javafe.ast.DoStmt;
-import javafe.ast.Expr;
-import javafe.ast.ExprObjectDesignator;
 import javafe.ast.FieldAccess;
-import javafe.ast.FieldDecl;
 import javafe.ast.ForStmt;
 import javafe.ast.FormalParaDecl;
-import javafe.ast.GenericVarDecl;
 import javafe.ast.Identifier;
 import javafe.ast.IfStmt;
 import javafe.ast.InstanceOfExpr;
@@ -44,20 +34,13 @@ import javafe.ast.LiteralExpr;
 import javafe.ast.LocalVarDecl;
 import javafe.ast.MethodDecl;
 import javafe.ast.ModifierPragma;
-import javafe.ast.ModifierPragmaVec;
-import javafe.ast.ObjectDesignator;
+import javafe.ast.NewInstanceExpr;
 import javafe.ast.RoutineDecl;
 import javafe.ast.SkipStmt;
 import javafe.ast.Stmt;
 import javafe.ast.ThisExpr;
 import javafe.ast.TryCatchStmt;
-import javafe.ast.TypeDecl;
-import javafe.ast.TypeDeclElem;
-import javafe.ast.TypeDeclElemPragma;
-import javafe.ast.TypeDeclElemVec;
-import javafe.ast.TypeModifierPragma;
-import javafe.ast.TypeModifierPragmaVec;
-import javafe.ast.TypeName;
+import javafe.ast.UnaryExpr;
 import javafe.ast.VarDeclStmt;
 import javafe.ast.VariableAccess;
 import javafe.ast.WhileStmt;
@@ -110,15 +93,15 @@ import escjava.ast.SkolemConstantPragma;
 import escjava.ast.Spec;
 import escjava.ast.StillDeferredDeclPragma;
 import escjava.ast.TagConstants;
+import escjava.ast.TypeExpr;
 import escjava.ast.VarDeclModifierPragma;
 import escjava.ast.VarExprModifierPragma;
 import escjava.ast.VisitorArgResult;
 import escjava.ast.WildRefExpr;
-import escjava.sortedProver.Lifter.FnTerm;
 import escjava.sortedProver.Lifter.QuantVariable;
 import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
-import escjava.tc.TypeSig;
+import escjava.tc.Types;
 
 
 /**
@@ -144,15 +127,16 @@ public class JmlVisitor extends VisitorArgResult {
   public JmlVisitor() {
     fProperties = new Properties();
     fProperties.put("pred", Boolean.TRUE);
+    fProperties.put("unaryOp", 0);
     fProperties.put("old", Boolean.FALSE);
     fProperties.put("visibleTypeSet", new HashSet<QuantVariableRef>());
+    fProperties.put("doSubsetChecking", Boolean.FALSE); // cbr: doSubsetChecking to collect all fieldaccess in the subsetCheckingSet
     fProperties.put("subsetCheckingSet", new HashSet<FieldAccess>()); // cbr: subSetCheckingSet for invariant checking 
+    fProperties.put("subsetCheckingSetConstraints", new HashSet<FieldAccess>());
+    fProperties.put("subSetCheckingSetInitially", new HashSet<FieldAccess>());
     fProperties.put("assignableSet", new HashSet<QuantVariableRef[]>()); 
-    fProperties.put("freshSet", new HashSet<Term>());
     fProperties.put("nothing", Boolean.FALSE); // cbr: nothing used for assignable
     fProperties.put("interesting", Boolean.FALSE);
-    fProperties.put("invariant", Boolean.FALSE); // cbr: invariant to collect all fieldaccess of the predicate of the invariant
-    fProperties.put("firstPost", Boolean.TRUE); // cbr: firstPost to add invariant formula only once to Lookup.postcondition
     fProperties.put("routinebegin", Boolean.TRUE);  
     fProperties.put("quantifier", Boolean.FALSE);
     fProperties.put("quantVars", new HashSet<QuantVariable>());
@@ -160,6 +144,7 @@ public class JmlVisitor extends VisitorArgResult {
     fProperties.put("fresh", Boolean.FALSE);
     fProperties.put("dsc", Boolean.FALSE); // cbr: dsc = do subset checking, value of option flag
     fProperties.put("classId", Identifier.intern("")); // for dsc, to check, whether class invariants only access own fields
+    fProperties.put("firstExPost", Boolean.TRUE);
     fTranslator = new JmlExprToFormula(this);
      
   }
@@ -186,6 +171,7 @@ public class JmlVisitor extends VisitorArgResult {
   @Override
   public final Object visitClassDecl(final /*@non_null*/ ClassDecl x, final Object o) {
     fProperties.put("classId", x.id);
+    fProperties.remove("initiallyFOL");
     fProperties.put("dsc", ((Boolean) ((Properties) o).get("dsc")).booleanValue()); // option dsc = doSubsetChecking
     //Use default properties to start with.
     return visitTypeDecl(x, this.fProperties);
@@ -202,12 +188,12 @@ public class JmlVisitor extends VisitorArgResult {
     fProperties.put("visibleTypeSet", new HashSet<QuantVariableRef>());
     x.accept(new VisibleTypeCollector(), o); 
     ((Properties) o).put("method", x);
-    ((Properties) o).put("firstPost", Boolean.TRUE);
+    ((Properties) o).put("isHelper", Boolean.FALSE);
     ((Properties) o).put("routinebegin", Boolean.TRUE);
     ((Properties) o).put("nothing", Boolean.FALSE);
     
     boolean hasPost = false;
-
+    // Check, if method has at least one postcondition/exceptional postcondition or is a helper method
     for (int i = 0; i < x.pmodifiers.size(); i++) {
       if (x.pmodifiers.elementAt(i).getTag() == TagConstants.ENSURES) {
         hasPost = true;
@@ -217,22 +203,26 @@ public class JmlVisitor extends VisitorArgResult {
       }
     }
     
+    // If method is not decorated with any postcondition, we add a dummy postcondition node "//@ ensures true;"
     if (!hasPost) {
       final LiteralExpr litEx = LiteralExpr.make(TagConstants.BOOLEANLIT, Boolean.TRUE, 0);
       final ExprModifierPragma postc = ExprModifierPragma.make(TagConstants.ENSURES, litEx, 0);  //FIXME: cbr: which loc? (here set to 0)
       x.pmodifiers.addElement(postc);
     }
-
-    Lookup.exceptionalPostconditions.put(x, new Post(Expression.rvar(Ref.sort), Logic.True())); //dummy exceptional postcondition    
-    final Object fObj = visitASTNode(x, o);
-    if (!((Boolean) ((Properties) o).get("isHelper")).booleanValue()) {
-      final Term initiallyTerm = (Term) ((Properties) o).get("initiallyFOL");
-      if (initiallyTerm != null) { 
-        addToPostcondition(initiallyTerm, o);
-      }
-    }
+    
+    // Add dummy exceptional postcondition to Lookup hash map   
+    Lookup.exceptionalPostconditions.put(x, new Post(Expression.rvar(Ref.sort), Logic.True())); 
+    fProperties.put("firstExPost", Boolean.TRUE);
+    
+    visitASTNode(x, o);
     doAssignable(o);
-    return fObj;
+    
+    // Add invPred (forall r:ref, t:type (isAlive(r) and assignCompat (r, t) -> inv(r, t))) to method's or constructor's post- and exceptional postconditions
+    if (!((Boolean) ((Properties) o).get("isHelper")).booleanValue()) {
+      invPredToPostconditions(o);
+      invPredToExceptionalPostconditions(o);    
+    }  
+    return null;
   }
 
   
@@ -245,7 +235,15 @@ public class JmlVisitor extends VisitorArgResult {
   @Override
   public final Object visitMethodDecl(final /*@non_null*/ MethodDecl x, final Object o) {
     ((Properties) o).put("result", Expression.rvar(Expression.getResultVar(x)));
-    return visitRoutineDecl(x, o);
+    visitRoutineDecl(x, o);
+    
+    if (((Boolean)((Properties)o).get("isHelper")).booleanValue() == Boolean.FALSE) {
+      final Term constraints = Lookup.constraints.get(x.getParent());
+      invPredToPreconditions(o);
+      addToPostcondition(constraints, o);
+      addToExceptionalPostcondition(constraints, o);
+    }  
+    return null;
   }
 
   /* (non-Javadoc)
@@ -253,7 +251,14 @@ public class JmlVisitor extends VisitorArgResult {
    */
   @Override
   public final Object visitConstructorDecl(final /*@non_null*/ ConstructorDecl x, final Object o) {
-    return visitRoutineDecl(x, o);
+    visitRoutineDecl(x, o);
+ 
+    if (((Boolean)((Properties)o).get("isHelper")).booleanValue() == Boolean.FALSE) {
+      Term initially = (Term) ((Properties)o).get("initiallyFOL");
+      addToPostcondition(initially, o);
+      addToExceptionalPostcondition(initially, o);
+    } 
+    return null;
   }
 
   /* (non-Javadoc)
@@ -327,10 +332,14 @@ public class JmlVisitor extends VisitorArgResult {
   public final Object visitNaryExpr(final /*@non_null*/ NaryExpr x, final Object o) {
     if (((Boolean) ((Properties) o).get("interesting")).booleanValue()) {
       if (x.op == TagConstants.PRE) {
-        return this.fTranslator.naryExpr(x, o);
+        return this.fTranslator.oldExpr(x, o);
       }
       else if (x.op == TagConstants.FRESH) {
-        return this.fTranslator.freshExpression(x, o);
+        return this.fTranslator.freshExpr(x, o);
+      }
+      else if (x.op == TagConstants.TYPEOF) {
+        final Term exprTerm = (Term) visitGCExpr(x, o);
+        return Type.of(Heap.var, exprTerm);
       }
       else {
         return visitGCExpr(x, o);
@@ -479,20 +488,74 @@ public class JmlVisitor extends VisitorArgResult {
   @Override
   public final Object visitExprDeclPragma(final /*@non_null*/ ExprDeclPragma x, final Object o) {
     ((Properties) o).put("interesting", Boolean.TRUE);
-    final Term t;
+    Term t;
     
     if (x.tag == TagConstants.INITIALLY) {
-      t = (Term) x.expr.accept(this, o);
-      ((Properties) o).put("initiallyFOL", t);
+      fProperties.put("doSubsetChecking", Boolean.TRUE); // to collect all fields in initially to do the subset check
+      final Term initiallyFOL = (Term) x.expr.accept(this, o);
+      fProperties.put("doSubsetChecking", Boolean.FALSE);
+      t = (Term) ((Properties) o).get("initiallyFOL");
+      boolean initIsValid = doSubsetChecking(o);
+      if (initIsValid) {
+        if (initiallyFOL != null) { //NullLiteral is default value for initiallyFOL
+          if (t != null) {
+            t = Logic.and(t, initiallyFOL);
+          }
+          else {
+            t = initiallyFOL;
+          }
+        }
+        ((Properties) o).put("initiallyFOL", t);
+      }
+      else if (!initIsValid) {
+        System.out.println("Initially error (subset check)! The following term was not conjoined to the overall type initially term: " + initiallyFOL.toString() + "\n");
+      }
     }
     else if (x.tag == TagConstants.INVARIANT) { 
-      fProperties.put("invariant", Boolean.TRUE); // to collect all invariant fields
+      fProperties.put("doSubsetChecking", Boolean.TRUE); // to collect all fields in invariant to do the subset check
       t = (Term) x.expr.accept(this, o);
-      fProperties.put("invariant", Boolean.FALSE);
-      invToInv(x, t, o);
+      fProperties.put("doSubsetChecking", Boolean.FALSE);
+      addToInv(x, t, o);
+    }
+    else if (x.tag == TagConstants.CONSTRAINT) {
+      fProperties.put("doSubsetChecking", Boolean.TRUE); // to collect all fields in constraint to do the subset check
+      t = (Term) x.expr.accept(this, o);
+      fProperties.put("doSubsetChecking", Boolean.FALSE);
+      constrToConstraints(x, t, o);
     }
     return null;
   }
+  
+  
+  /**
+   * @param x constraint node containing the parents class declaration
+   * @param t translated term to conjoin the class constraints
+   * @param o object containing the flag for subset checking
+   */
+  public void constrToConstraints(ExprDeclPragma x, Term t, Object o) {
+    boolean constIsValid = true;
+    Term constTerm = t;
+    
+    final Term allConst = Lookup.constraints.get(x.parent);
+    
+    if (((Boolean) ((Properties) o).get("dsc")).booleanValue()) { // doSubsetChecking
+      constIsValid = doSubsetChecking(o);
+    }
+    if (constIsValid && allConst != null) {
+      constTerm = Logic.and(allConst, constTerm); 
+    }
+    else if (constIsValid) {
+      Lookup.constraints.put(x.parent, constTerm); 
+    }
+    else if (!constIsValid) {
+      System.out.println("Constraint error (subset check)! The following term was not conjoined to the overall type constraints: " + t.toString() + "\n");
+    }
+    // cbr:
+    // TODO: Now: All constraints get conjoined to one FOL term for each class (I miss the list of methods in the ExprDeclPragma node)
+    // Should be: Every constraint could be followed by a list of methods that have to resprect the constraint 
+    //           Safe each constraint in Lookup.constraints as <classDecl, Set1>, Set1 = <Set2, FOL term> and Set2 = <MethodDecl>
+  }
+  
 
   /* (non-Javadoc)
    * @see escjava.ast.VisitorArgResult#visitExprModifierPragma(escjava.ast.ExprModifierPragma, java.lang.Object)
@@ -500,22 +563,14 @@ public class JmlVisitor extends VisitorArgResult {
   @Override
   public final Object visitExprModifierPragma(final /*@non_null*/ ExprModifierPragma x, final Object o) {
     ((Properties) o).put("interesting", Boolean.TRUE);
-    final RoutineDecl rd = (RoutineDecl)((Properties) o).get("method");
     Term t = (Term)visitASTNode(x, o);
-    t = Logic.boolToProp(t);
+    t = Logic.boolToPred(t);
     switch (x.getTag()) {
       case TagConstants.REQUIRES:
         addToPrecondition(t, o);
-        if (rd  instanceof MethodDecl && ((Boolean) ((Properties) o).get("isHelper")).booleanValue() == Boolean.FALSE) {   
-          invToPreconditions(o);
-        }
         break;
       case TagConstants.ENSURES:
         addToPostcondition(t, o);
-        if (((Boolean) ((Properties) o).get("firstPost")).booleanValue() && ((Boolean) ((Properties) o).get("isHelper")).booleanValue() == Boolean.FALSE) { //add invariants only once
-          ((Properties) o).put("firstPost", Boolean.FALSE);
-          invToPostconditions(o);
-        }
         break;
       default:
         break;
@@ -545,37 +600,35 @@ public class JmlVisitor extends VisitorArgResult {
     return null;
   }
 
-  /* (non-Javadoc)
-   * @see javafe.ast.VisitorArgResult#visitBlockStmt(javafe.ast.BlockStmt, java.lang.Object)
+  // Save values of all arguments as ghost variables. Now we also have the argument's value of the pre-state, not only of post-state
+  /**
+   * @param annos Vector of AAnotations, here Annotations = Assignments
+   * @param o Properties Object holding routines declaration
    */
-  @Override
-  public final Object visitBlockStmt(final /*@non_null*/ BlockStmt x, final Object o) {
+  public void argsToGhost(Vector<AAnnotation> annos, Object o) {  
+    final RoutineDecl m = (RoutineDecl) ((Properties) o).get("method");
+    for (final FormalParaDecl p: m.args.toArray()) {
+      final Term t1 = Expression.rvar(p);
+      final Term t2 = Expression.old(p);
+      final Set.Assignment assignment = new Set.Assignment((QuantVariableRef) t2, t1);
+      annos.add(new Set((QuantVariableRef) t2, assignment)); 
+    }
+  }
+  
+  /**
+   * @param x BlockStmt holding all statements of one entire block
+   * @param annos Collection of statement pragmas as annotations
+   * @param o Object as Properties object
+   */
+  public void handleStmt(final BlockStmt x, final Vector<AAnnotation> annos, final Object o) {
+    Term inv = null;
     Term t = null;
-    Term t1 = null;
-    Term t2 = null;
-    Set  set = null;
     Set.Assignment assignment = null;
     boolean interesting;
-    final Vector<AAnnotation> annos = new Vector<AAnnotation>();
-    Term inv = null;
-
-    //Save arguments values in prestate as ghosts.
-    if (((Boolean)((Properties) o).get("routinebegin")).booleanValue()) {
-      ((Properties) o).put("routinebegin", Boolean.FALSE);
-      final RoutineDecl m = (RoutineDecl) ((Properties) o).get("method");
-      for (final FormalParaDecl p: m.args.toArray()) {
-        t1 = Expression.rvar(p);
-        t2 = Expression.old(p);
-        assignment = new Set.Assignment((QuantVariableRef) t2, t1);
-        annos.add(new Set((QuantVariableRef) t2, assignment)); 
-      }
-    }
-
-    //
+   
     for (final Stmt s: x.stmts.toArray()) {
       interesting = false;
-      //We are interested in Asserts, Assumes and Loop Invariants
-      if (s instanceof ExprStmtPragma) {
+      if (s instanceof ExprStmtPragma) { //Asserts, Assumes and Loop Invariants
         interesting = true; 
         ((Properties) o).put("interesting", Boolean.TRUE);
         t = (Term)s.accept(this, o);
@@ -601,11 +654,8 @@ public class JmlVisitor extends VisitorArgResult {
             break;
         }
       }
-      else
-
-        //We are also interested in ghost var declarations
-        if (s instanceof VarDeclStmt) {
-
+      else {
+        if (s instanceof VarDeclStmt) { // Ghost var declarations
           for (final ModifierPragma p: ((VarDeclStmt) s).decl.pmodifiers.toArray()) {
             if (p.getTag() == TagConstants.GHOST) {
               interesting = true;
@@ -614,34 +664,44 @@ public class JmlVisitor extends VisitorArgResult {
           }
           if (interesting) {
             ((Properties) o).put("interesting", Boolean.TRUE);
-            t = (Term)s.accept(this, o);
-            final Set ghostVar = new Set();
-            ghostVar.declaration = (QuantVariableRef) t;
+            final Set ghostVar = (Set) s.accept(this, o);
             annos.add(ghostVar);
           }
         }
-        else
-          
-          //Also set statements should be processed
+        else {
           if (s instanceof SetStmtPragma) {
             interesting = true;
             ((Properties) o).put("interesting", Boolean.TRUE);
             assignment = (Set.Assignment)s.accept(this, o);
-            set = new Set();
-            set.assignment = assignment;
-            annos.add(set);
+            final Set newSet = new Set();
+            newSet.assignment = assignment;
+            final Iterator iter = annos.iterator();
+   
+            while (iter.hasNext()) { 
+              final AAnnotation annot = (AAnnotation) iter.next();
+              if (annot instanceof Set) {
+                final Set existingSet = (Set) annot;
+                if (existingSet.declaration.equals(newSet.assignment.var)) {
+                  annos.remove(existingSet);
+                  newSet.declaration = existingSet.declaration;
+                  break;
+                }
+              }
+            }
+            annos.add(newSet);
           }
-
+        }
+      }
       if (interesting) {
         x.stmts.removeElement(s);
       } 
-      else {
+      else { // Put annotations to next Java Stmt
         ((Properties) o).put("interesting", Boolean.FALSE);
         if (!annos.isEmpty()) {
           AnnotationDecoration.inst.setAnnotPre(s, annos);
           annos.clear();
         }
-        if (inv != null) {
+        if (inv != null) { // Add inv as invariant to next Loop Stmt
           if (s instanceof WhileStmt || 
               s instanceof ForStmt || 
               s instanceof DoStmt) {
@@ -649,7 +709,7 @@ public class JmlVisitor extends VisitorArgResult {
             inv = null;
           }
         }
-        if (s instanceof WhileStmt || 
+        if (s instanceof WhileStmt ||  // Visit body of Loop Stmt
             s instanceof ForStmt || 
             s instanceof DoStmt || 
             s instanceof BlockStmt || 
@@ -659,13 +719,31 @@ public class JmlVisitor extends VisitorArgResult {
         }
       }
     }
+  }
+  
+  
+  
+  
+  /* (non-Javadoc)
+   * @see javafe.ast.VisitorArgResult#visitBlockStmt(javafe.ast.BlockStmt, java.lang.Object)
+   */
+  @Override
+  public final Object visitBlockStmt(final /*@non_null*/ BlockStmt x, final Object o) {
+    final Vector<AAnnotation> annos = new Vector<AAnnotation>();
     
-    // cbr: If there is no more Stmt, we generate a dummy SkipStmt and add the last precondition to it
+    //Save argument's values in prestate as ghosts at beginning of each routine (in annos)
+    if (((Boolean)((Properties) o).get("routinebegin")).booleanValue()) {
+      ((Properties) o).put("routinebegin", Boolean.FALSE);
+      argsToGhost(annos, o);
+    }
+
+    handleStmt(x, annos, o);
+    
+    // If there is no more Stmt, we generate a dummy SkipStmt to add last Stmt Pragma as precondition
     if (!annos.isEmpty()) { 
       final SkipStmt skipStmt = SkipStmt.make(0); //FIXME cbr: which location?
       AnnotationDecoration.inst.setAnnotPre(skipStmt, annos);
       x.stmts.addElement(skipStmt);
-      annos.clear();
     }    
     return null;
   }
@@ -675,9 +753,16 @@ public class JmlVisitor extends VisitorArgResult {
    */
   @Override
   public final Object visitVarDeclStmt(final /*@non_null*/ VarDeclStmt x, final Object o) {
-    //It's only called if we have a ghost variable declaration
-    return Expression.rvar(x.decl);
-  }
+    //It's only called if we have a ghost variable declaration with maybe a set stmt
+    final Set ghostVar = new Set();
+    if (x.decl.init != null) {
+      ghostVar.assignment = new Set.Assignment();
+      ghostVar.assignment.expr = (Term) x.decl.init.accept(this, o);
+      ghostVar.assignment.var = Expression.rvar(x.decl);
+    }
+    ghostVar.declaration = Expression.rvar(x.decl); 
+    return ghostVar;
+ }
 
   /* (non-Javadoc)
    * @see escjava.ast.VisitorArgResult#visitExprStmtPragma(escjava.ast.ExprStmtPragma, java.lang.Object)
@@ -692,6 +777,14 @@ public class JmlVisitor extends VisitorArgResult {
    */
   @Override
   public final Object visitGCExpr(final /*@non_null*/ GCExpr x, final Object o) {
+    
+    if (x instanceof TypeExpr) { 
+      // creates a QuantVariableRef with name:=x.type and type:=sortType
+      // ex. \typeof(true) --> ?boolean:type
+      // ex. \typeof(5)    --> ?int:type
+      final String name = Types.printName(((TypeExpr)x).type);
+      return Expression.rvar(name, Type.sort);
+    }
     return visitASTNode(x, o);
   }
 
@@ -700,6 +793,7 @@ public class JmlVisitor extends VisitorArgResult {
    */
   @Override
   public final Object visitGhostDeclPragma(final /*@non_null*/ GhostDeclPragma x, final Object o) {
+    //TODO: handle ghost fields
     return null;
   }
 
@@ -911,9 +1005,7 @@ public class JmlVisitor extends VisitorArgResult {
     if (((Boolean) ((Properties) o).get("interesting")).booleanValue()) {
       return this.fTranslator.resultLiteral(x, o);
     }
-    else {
-      return null;
-    }
+   return null;
   }
 
   
@@ -930,8 +1022,10 @@ public class JmlVisitor extends VisitorArgResult {
    */
   public final Object visitSetStmtPragma(final /*@non_null*/ SetStmtPragma x, final Object o) {
     final Set.Assignment res = new Set.Assignment();
-    res.var = (QuantVariableRef) x.target.accept(this, o);
-    res.expr = (Term) x.value.accept(this, o);
+    if (x.target instanceof VariableAccess) {
+      res.var = (QuantVariableRef) x.target.accept(this, o);
+      res.expr = (Term) x.value.accept(this, o);
+    }
     return res;
   }
 
@@ -991,6 +1085,20 @@ public class JmlVisitor extends VisitorArgResult {
     return null;
   }
 
+  /* (non-Javadoc)
+   * @see escjava.ast.VisitorArgResult#visitNewInstanceExpr(escjava.ast.NewInstanceExpr, java.lang.Object)
+   */
+  public /*@non_null*/ Object visitNewInstanceExpr(/*@non_null*/ NewInstanceExpr x, Object o) {
+    final String name = Types.printName(x.type);
+    return Expression.rvar(name, Type.typeToSort(x.type)); // Ref.sort);
+    //return visitExpr(x, o);
+  }
+  
+  public /*@non_null*/ Object visitUnaryExpr(/*@non_null*/ UnaryExpr x, Object o) {
+    ((Properties) o).put("unaryOp", (int) x.op);
+    return visitExpr(x, o);
+  }
+  
   
   /* (non-Javadoc)
    * @see javafe.ast.VisitorArgResult#visitBinaryExpr(javafe.ast.BinaryExpr, java.lang.Object)
@@ -1092,12 +1200,12 @@ public class JmlVisitor extends VisitorArgResult {
    * @param o Properties object also containing all modifiable types.
    * 
    */
-  public void invToPreconditions(final /*@non_null*/ Object o) {
+  public void invPredToPreconditions(final /*@non_null*/ Object o) {
      
     final QuantVariableRef x = Expression.rvar(Ref.sort);
     final QuantVariableRef type = Expression.rvar(Type.sort);
     final QuantVariable[] vars = {x.qvar, type.qvar};
-    final Term invTerm = Logic.inv(x, type);
+    final Term invTerm = Logic.inv(Heap.var, x, type);
     final Term typeOfTerm = Logic.assignCompat(Heap.var, x, type);
     final Term allocTerm = Logic.isAlive(Heap.var, x);
     final Term andTerm = Logic.and(allocTerm, typeOfTerm);
@@ -1107,47 +1215,37 @@ public class JmlVisitor extends VisitorArgResult {
   }
 
 
-
-  /**
-   * @param o Properties object also containing all modifiable types.
-   * 
-   */
-  public void invToPostconditions(final /*@non_null*/ Object o) { 
+  public Term invPostPred(final /*@non_null*/ Object o) {
     final QuantVariableRef x = Expression.rvar(Ref.sort);
     final QuantVariableRef type = Expression.rvar(Type.sort);
     final QuantVariable[] vars = {x.qvar, type.qvar}; 
-    final Term invTerm = Logic.inv(x, type);
-    final Term typeOfTerm = Logic.assignCompat(Heap.var , x, type);
+    final Term invTerm = Logic.inv(Heap.var, x, type);
+    final Term typeOfTerm = Logic.assignCompat(Heap.var, x, type);
     final Term allocTerm = Logic.isAlive(Heap.var, x);
-    final Term visibleTerm = Logic.isVisibleIn(type, o);
     Term andTerm = Logic.and(allocTerm, typeOfTerm);
-    andTerm = Logic.and(andTerm, visibleTerm);
+    java.util.Set<Type> visSet = (java.util.Set) ((Properties)o).get("visibleTypeSet");
+    if (!visSet.isEmpty()) {
+      final Term visibleTerm = Logic.isVisibleIn(type, o);
+      andTerm = Logic.and(andTerm, visibleTerm);
+    }
+    
     final Term implTerm = Logic.implies(andTerm, invTerm);
     final Term forAllTerm = Logic.forall(vars, implTerm);
-    addToPostcondition(forAllTerm, o);
+    return forAllTerm;
+  }
+  
+  
+  public void invPredToPostconditions(final /*@non_null*/ Object o) { 
+    this.addToPostcondition(this.invPostPred(o), o);
   }
 
-  /**
-   * @param x invariant node containing the parents class declaration
-   * @param t translated term to conjoin the class invariants
-   * @param o object containing the flag for subset checking
-   */
-  public void invToInv(ExprDeclPragma x, Term t, Object o) {
-    boolean invIsValid = true;
-    Term invTerm = t;
-    final Term allInvs = Lookup.invariants.get(x.parent);
-    
-    if (((Boolean) ((Properties) o).get("dsc")).booleanValue()) { // doSubsetChecking
-      invIsValid = doSubsetChecking(o);
-    }
-    if (invIsValid && allInvs != null) {
-      invTerm = Logic.and(allInvs, invTerm); 
-    }
-    else if (invIsValid) {
-      Lookup.invariants.put(x.parent, invTerm); 
-    }
+  
+  private void invPredToExceptionalPostconditions(Object o) {
+    this.addToExceptionalPostcondition(this.invPostPred(o), o);
   }
+  
 
+  
   /**
    * @param o containing all field access of the invariant and the class id
    * @return boolean value whether the subset checking of the invariant fields was successfull 
@@ -1176,25 +1274,24 @@ public class JmlVisitor extends VisitorArgResult {
    * @param o Properties object also containing all assignable variables
    */
   public void doAssignable(final Object o) {
-    final HashSet fAssignable    = (HashSet) ((Properties) o).get("assignableSet");
+    final HashSet assignableSet    = (HashSet) ((Properties) o).get("assignableSet");
     
-    if (((Boolean) ((Properties) o).get("nothing")).booleanValue() | !fAssignable.isEmpty())
+    if (((Boolean) ((Properties) o).get("nothing")).booleanValue() | !assignableSet.isEmpty())
     {
       Term forAllTerm = null;
       final QuantVariableRef targetVar = Expression.rvar(Ref.sort); 
-      //    FIXME: we should use sortAny instead of sortRef, because we don't know the field sort at the beginning. But the Heap.loc requires arguments of sortRef... Bugfix it.
-      final QuantVariableRef fieldVar = Expression.rvar(Ref.sort); //Expression.rvar(Formula.sort);
+      final QuantVariableRef fieldVar = Expression.rvar(Formula.sort); // FIXME: Why sortRef is not available?
       final Term equalsTerm = Logic.equals(Heap.select(Heap.varPre, (Term) targetVar, fieldVar.qvar), Heap.select(Heap.var, (Term) targetVar, fieldVar.qvar)); //gibt noch kein any
       final QuantVariable[] vars = {targetVar.qvar, fieldVar.qvar}; 
       Term assigTerm = Logic.not(Logic.isAlive(Heap.varPre, targetVar));
-      if (!fAssignable.isEmpty()) {
+      if (!assignableSet.isEmpty()) {
         assigTerm = Logic.or(assigTerm, Logic.isAssignable((Term) targetVar, fieldVar, o));       
       }
-      assigTerm = Logic.or(assigTerm, equalsTerm); 
+      assigTerm = Logic.or(assigTerm, equalsTerm);
+      assigTerm = Logic.implies(Logic.isFieldOf(Heap.var, targetVar, fieldVar), assigTerm);
       forAllTerm = Logic.forall(vars, assigTerm);
       addToPostcondition(forAllTerm, o);
-      ((Properties) o).put("nothing", Boolean.FALSE); //cbr: set default values for next routine, I think it's not needful here, coz their value doesn't affect the next routine
-      ((Properties) o).put("assignableSet", new HashSet<QuantVariableRef>()); 
+      addToExceptionalPostcondition(forAllTerm, o);
     } 
   }
 
@@ -1205,16 +1302,18 @@ public class JmlVisitor extends VisitorArgResult {
    * @param o Properties object contains the concerning method
    */
   public void addToPrecondition(final Term folTerm, final Object o) {
-    final RoutineDecl rd = (RoutineDecl)((Properties) o).get("method");
-    Term allPres = Lookup.preconditions.get(rd);
-    
-    if (allPres == null) {
-      allPres = folTerm;
+    if (folTerm != null) {
+      final RoutineDecl rd = (RoutineDecl)((Properties) o).get("method");
+      Term allPres = Lookup.preconditions.get(rd);
+      
+      if (allPres == null) {
+        allPres = folTerm;
+      }
+      else {
+        allPres = Logic.Safe.and(allPres, folTerm);
+      }
+      Lookup.preconditions.put(rd, allPres);
     }
-    else {
-      allPres = Logic.Safe.and(allPres, folTerm);
-    }
-    Lookup.preconditions.put(rd, allPres);
   }  
   
   
@@ -1224,17 +1323,19 @@ public class JmlVisitor extends VisitorArgResult {
    * @param o Properties object contains the concerning method
    */
   public void addToPostcondition(final Term folTerm, final Object o) {
-    
-    final RoutineDecl rd = (RoutineDecl)((Properties) o).get("method");
-    Post allPosts = Lookup.postconditions.get(rd);
-    
-    if (allPosts == null) {
-      final QuantVariableRef result = (QuantVariableRef) ((Properties) o).get("result");
-      Lookup.postconditions.put(rd, new Post(result, folTerm));
-    }
-    else {
-      allPosts = new Post(allPosts.getRVar(), Logic.Safe.and(allPosts.getPost(), folTerm));
-      Lookup.postconditions.put(rd, allPosts);
+    if (folTerm != null) {
+      Post folPost = new Post(folTerm);
+      final RoutineDecl rd = (RoutineDecl)((Properties) o).get("method");
+      Post allPosts = Lookup.postconditions.get(rd);
+      
+      if (allPosts == null) {
+        final QuantVariableRef result = (QuantVariableRef) ((Properties) o).get("result");
+        Lookup.postconditions.put(rd, new Post(result, folTerm));
+      }
+      else {
+        allPosts = Post.and(allPosts, folPost);
+        Lookup.postconditions.put(rd, allPosts);
+      }
     }
   }
   
@@ -1246,19 +1347,49 @@ public class JmlVisitor extends VisitorArgResult {
    * @param o Properties object contains the concerning method
    */
   public void addToExceptionalPostcondition(final Term folTerm, final Object o) {
-    
-    final RoutineDecl rd = (RoutineDecl)((Properties) o).get("method");
-    Post allExPosts = Lookup.exceptionalPostconditions.get(rd);
-    
-    if (allExPosts == null) {
-      final QuantVariableRef result = (QuantVariableRef) ((Properties) o).get("result");
-      Lookup.exceptionalPostconditions.put(rd, new Post(result, folTerm));
-    }
-    else {
-      allExPosts = new Post(allExPosts.getRVar(), Logic.Safe.and(allExPosts.getPost(), folTerm));
+    if (folTerm != null) {
+      Post folPost = new Post(folTerm);
+      final RoutineDecl rd = (RoutineDecl)((Properties) o).get("method");
+      Post allExPosts = Lookup.exceptionalPostconditions.get(rd);
+      
+      if ((Boolean) ((Properties)o).get("firstExPost") == Boolean.TRUE) {
+        ((Properties)o).put("firstExPost", Boolean.FALSE);
+        allExPosts = new Post(allExPosts.getRVar(), folTerm);
+      }
+      else {
+        allExPosts = Post.and(allExPosts, folPost);
+      }
       Lookup.exceptionalPostconditions.put(rd, allExPosts);
     }
-    
+  } 
+  
+  
+
+  /**
+   * @param x invariant node containing the parents class declaration
+   * @param t translated term to conjoin the class invariants
+   * @param o object containing the flag for subset checking
+   */
+  public void addToInv(ExprDeclPragma x, Term t, Object o) {
+    if (t != null) {
+      boolean invIsValid = true;
+      Term invTerm = t;
+      final Term allInvs = Lookup.invariants.get(x.parent);
+      
+      if (((Boolean) ((Properties) o).get("dsc")).booleanValue()) { // doSubsetChecking
+        invIsValid = doSubsetChecking(o);
+      }
+      if (invIsValid && allInvs != null) {
+        invTerm = Logic.and(allInvs, invTerm); 
+      }
+      else if (invIsValid) {
+        Lookup.invariants.put(x.parent, invTerm); 
+      }
+      else if (!invIsValid) {
+        System.out.println("Invariant error (subset check)! The following term was not conjoined to the overall type invariant: " + t.toString() + "\n");
+      }
+    }
+   
   }
   
   
