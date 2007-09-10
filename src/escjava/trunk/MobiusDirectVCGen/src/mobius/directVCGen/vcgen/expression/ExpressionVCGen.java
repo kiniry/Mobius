@@ -122,8 +122,8 @@ public class ExpressionVCGen extends BinaryExpressionVCGen {
     e.fPost = pelse;
     pelse = getPre(x.els, e);
 
-    Post pcond = new Post(cond, Logic.and(Logic.implies(Logic.boolToProp(cond), pthen.getPost()),
-                                          Logic.implies(Logic.not(Logic.boolToProp(cond)), 
+    Post pcond = new Post(cond, Logic.and(Logic.implies(Logic.boolToPred(cond), pthen.getPost()),
+                                          Logic.implies(Logic.not(Logic.boolToPred(cond)), 
                                                         pelse.getPost())));
     // now for the wp...
     e.fPost = pcond;
