@@ -448,5 +448,6 @@ public abstract class NodeBuilder
 	abstract public SPred buildAssignCompat(SMap map, SValue val, SAny type);
   abstract public SPred buildInv(SMap map, SValue val, SAny type);
   abstract public SPred buildIsAlive(SMap map, SRef obj);
+  abstract public SPred buildIsFieldOf(SMap map, SRef obj, SAny field);
 
 }
