@@ -1,4 +1,6 @@
-package javafe.ast;
+package escjava.ast;
+
+import javafe.ast.ASTNode;
 
 /**
  * @title       "Abstract Syntax Tree Visitor"
@@ -6,19 +8,19 @@ package javafe.ast;
  * @author      "Dermot Cochran"
  * @copyright   "(c) 2007 EU Mobius FP-6 IST-15909 project"
  * @license     "MIT open source"
- * @version     "$Revision$"
+ * @version     "$Revision: 1.1 $"
  */
 
 /**
  * <p> An abstract subclass of the Visitor class which specialises in visiting
  * the nodes of an Abstract Syntax Tree.
  * 
- * @version 1.0 $Date$
+ * @version 1.0 $Date: 2007/07/03 16:35:22 $
  * @author Dermot Cochran
  */
 
 public abstract class ASTVisitor extends Visitor {
-
+   
   public ASTVisitor() {
     super();
   }
@@ -37,5 +39,4 @@ public abstract class ASTVisitor extends Visitor {
       }
     }
   }
-
 }
