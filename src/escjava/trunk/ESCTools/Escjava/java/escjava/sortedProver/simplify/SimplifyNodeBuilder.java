@@ -444,4 +444,7 @@ public class SimplifyNodeBuilder extends EscNodeBuilder
   public SPred buildIsAlive(SMap map, SRef ref) {
     throw new UnsupportedOperationException();
   }
+  public SPred buildIsFieldOf(SMap map, SRef obj, SAny field) {
+    throw new UnsupportedOperationException();
+  }
 }
