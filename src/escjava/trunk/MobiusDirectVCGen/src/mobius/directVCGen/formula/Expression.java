@@ -140,8 +140,6 @@ public final class Expression {
     String name = UniqName.variable(decl);
     if (decl instanceof FieldDecl) {
       final FieldDecl field = (FieldDecl) decl;
-      System.out.println(field.parent);
-      System.out.println(decl.id);
       name = field.parent.id.toString() + "?" + 
              field.id.toString() + "FieldSignature";
     }
