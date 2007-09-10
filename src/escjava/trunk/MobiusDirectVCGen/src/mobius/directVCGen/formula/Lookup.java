@@ -48,6 +48,8 @@ public class Lookup {
   /** map containing ClassDecl as keys and Terms (the invariant) as value. **/
   public static Map<TypeDecl, Term> invariants = new HashMap<TypeDecl, Term>();
 
+  /** map containing ClassDecl as keys and Terms (the constraint) as value. **/
+  public static Map<TypeDecl, Term> constraints = new HashMap<TypeDecl, Term>();
 
   /**
    * Build a condition which is made of a custom predicate with the method's argument 
