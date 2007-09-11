@@ -598,7 +598,7 @@ binary-release: build jars alldocs cleanup
 # 	Copy other miscellaneous files
 	${MAKE} clean-norel-noreltemp
 	${MAKE} -C Utils build
-        mkdir ${RELTEMP}/Utils
+	mkdir ${RELTEMP}/Utils
 	cp -r ${ESCTOOLS_ROOT}/Utils/BCEL ${RELTEMP}/Utils/BCEL
 	cp ${ESCJAVA_ROOT}/escj ${RELTEMP}
 	cp ${ESCJAVA_ROOT}/escj.bat ${RELTEMP}
