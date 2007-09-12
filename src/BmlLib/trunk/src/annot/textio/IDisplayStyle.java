@@ -1,0 +1,31 @@
+package annot.textio;
+
+public interface IDisplayStyle {
+
+	public boolean goControlPrint = false;
+	public int max_total_line_width = 40;
+
+	public static final String comment_start = "/* ";
+	public static final String comment_next = " * ";
+	public static final String comment_end = " */";
+
+	public static final char expr_block_start = '{';
+	public static final char expr_block_end = '}';
+	public static final String lineIndent = "  ";
+
+	public static final String jt_int = "int";
+
+	public static final String __mspec = "method specification";
+	public static final String __classInvariant = "class invariant";
+	public static final String __assertTable = "assert table";
+	public static final String __second_cp = "second constant pool";
+
+	public static final String _classInvariant = "\\class invariant";
+	public static final String _assert = "\\assert";
+	public static final String _requires = "\\requires ";
+	public static final String _sc_start = "{|";
+	public static final String _sc_end = "|}";
+	public static final String _precondition = "\\precondition";
+	public static final String _postcondition = "\\ensures";
+
+}

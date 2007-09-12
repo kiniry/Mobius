@@ -1,0 +1,188 @@
+grammar BML;
+
+options {
+	output=AST;
+	ASTLabelType=CommonTree;
+	backtrack=true;
+}
+
+@header {
+	package annot.textio;
+	import org.apache.bcel.generic.InstructionHandle;
+	import annot.bcclass.*;
+	import annot.attributes.*;
+	import annot.bcexpression.*;
+	import annot.formula.*;
+	import annot.io.Code;
+	import annot.io.ReadAttributeException;
+}
+
+@members {
+	public RecognitionException lastE = null;
+	
+	private BCClass bcc;
+	private BCMethod m;
+	private BCConstantPool cp;
+	private InstructionHandle ih;
+	private int minor;
+
+	// global variables
+	private int i;
+	private HashMap<String, BoundVar> env;
+
+	// set context for attribute parsing
+	public void init(BCClass bcc, BCMethod m, BCConstantPool cp, InstructionHandle ih, int minor) {
+		this.bcc = bcc;
+		this.m = m;
+		this.cp = cp;
+		this.ih = ih;
+		this.minor = minor;
+		this.i = 0;
+		this.env = new HashMap<String, BoundVar>();
+	}
+
+	public void reportError(RecognitionException rex) {
+		lastE = rex;
+	}
+	
+	private AbstractIntExpression whatIsIt(String ident) {
+		if (env.containsKey(ident))
+			return env.get(ident);
+		MLog.putMsg(MLog.PInfo, "undefined identifier: "+ident);
+		RecognitionException rex = new RecognitionException();
+		reportError(rex);
+		return null;
+	}
+}
+
+@lexer::header {
+	package annot.textio;
+	import annot.bcclass.*;
+}
+
+@lexer::members {
+	public RecognitionException lastE = null;
+
+	public void reportError(RecognitionException rex) {
+		lastE = rex;
+		MLog.putMsg(MLog.PError, "LEXER ERROR");
+		super.reportError(rex);
+	}
+}
+
+// PARSER RULES:
+
+printableAttribute returns [BCPrintableAttribute ast] :
+	ASSERT f1=formula EOF {$ast = new SingleAssert(m, null, -1, $f1.ast);}
+	| CLASSINVARIANT f2=formula EOF {$ast = new ClassInvariant(bcc, $f2.ast);}
+	| REQUIRES f3=formula EOF {$ast = new MethodSpecification(m, $f3.ast, new SpecificationCase[0]);}
+	;
+
+expression returns [AbstractIntExpression ast] :
+	e=shiftExpr {$ast = $e.ast;};
+
+formula returns [AbstractFormula ast] :		// remove
+	e=equivalenceExpr {$ast = $e.ast;};
+
+equivalenceExpr returns [AbstractFormula ast] :
+	e=impliesExpr {$ast = $e.ast;}
+	( EQUIV r=impliesExpr {$ast = new Formula(Code.EQUIV, $ast, $r.ast);}
+		| NOTEQUIV r=impliesExpr {$ast = new Formula(Code.NOTEQUIV, $ast, $r.ast);}
+	)*;
+
+impliesExpr returns [AbstractFormula ast] :
+	e=logicalOrExpr {$ast = $e.ast;}
+	(IMPLIES r=logicalOrExpr {$ast = new Formula(Code.IMPLIES, $ast, $r.ast);})?;
+
+logicalOrExpr returns [AbstractFormula ast] :
+	e=logicalAndExpr {$ast = $e.ast;}
+	(LOG_OR r=logicalAndExpr {$ast = new Formula(Code.OR, $ast, $r.ast);})*;
+
+logicalAndExpr returns [AbstractFormula ast] :
+	e=equalityExpr {$ast = $e.ast;}
+	(LOG_AND r=equalityExpr {$ast = new Formula(Code.AND, $ast, $r.ast);})*;
+
+equalityExpr returns [AbstractFormula ast] :
+	l=shiftExpr EQ r=shiftExpr
+		{$ast = new Predicate2Ar(Code.EQ, $l.ast, $r.ast);}
+	| l=shiftExpr NOTEQ r=shiftExpr
+		{$ast = new Predicate2Ar(Code.NOTEQ, $l.ast, $r.ast);}
+	| e=relationalExpr {$ast = $e.ast;}
+	;
+
+relationalExpr returns [AbstractFormula ast] :
+	| l=shiftExpr LESS r=shiftExpr
+		{$ast = new Predicate2Ar(Code.LESS, $l.ast, $r.ast);}
+	| l=shiftExpr GRT r=shiftExpr
+		{$ast = new Predicate2Ar(Code.GRT, $l.ast, $r.ast);}
+	| l=shiftExpr LESSEQ r=shiftExpr
+		{$ast = new Predicate2Ar(Code.LESSEQ, $l.ast, $r.ast);}
+	| l=shiftExpr GRTEQ r=shiftExpr
+		{$ast = new Predicate2Ar(Code.GRTEQ, $l.ast, $r.ast);}
+	| q=quantifiedFormula {$ast = $q.ast;}
+	;
+
+quantifiedFormula returns [AbstractFormula ast] :
+	(FORALL {$ast = new QuantifiedFormula(true);
+		i=0;}
+	| EXISTS {$ast = new QuantifiedFormula(false);
+		i=0;})
+	 (t=IDENT v=IDENT {try {
+			JavaType jt = JavaType.getJavaType($t.text);
+			BoundVar bv = new BoundVar(jt, i++, (QuantifiedFormula)$ast, $v.text);
+			env.put($v.text, bv);
+	 		((QuantifiedFormula)$ast).addVariable(bv);
+	 	} catch(ReadAttributeException e) {
+	 		reportError(new RecognitionException());
+	 		//throw new RuntimeException("Error in BML.g3.quantifiedFormula");
+	 	}})+
+	 	f=primaryFormula {((QuantifiedFormula)$ast).setFormula($f.ast);
+	 		env.remove($v.text);
+	 		}
+	| p=primaryFormula {$ast = $p.ast;}
+	;
+
+primaryFormula returns [AbstractFormula ast] :
+	FALSE {$ast = Predicate0Ar.FALSE;}
+	| TRUE {$ast = Predicate0Ar.TRUE;}
+	| PAR_LEFT f=formula PAR_RIGHT {$ast = $f.ast;}
+	;
+
+shiftExpr returns [AbstractIntExpression ast] :
+	p=primaryExpr {$ast = $p.ast;};
+
+primaryExpr returns [AbstractIntExpression ast] :
+	n=NAT {$ast = new NumberLiteral(Integer.parseInt($n.text));}
+	| i=IDENT {$ast = whatIsIt($i.text);}
+	| PAR_LEFT e=expression PAR_RIGHT {$ast = $e.ast;}
+	;
+
+// LEXER RULES:
+
+ASSERT: '\\assert';
+CLASSINVARIANT: '\\class invariant';
+REQUIRES: '\\requires';
+LOG_AND: '&&';
+LOG_OR: '||';
+IMPLIES: '==>';
+EQUIV: '<==>';
+NOTEQUIV: '<=!=>';
+LOG_NOT: '~';
+FORALL: 'forall';
+EXISTS: 'exists';
+TRUE: 'true';
+FALSE: 'false';
+LESS: '<';
+LESSEQ: '<=';
+EQ: '==';
+NOTEQ: '!=';
+GRTEQ: '>=';
+GRT: '>';
+PAR_LEFT: '(';
+PAR_RIGHT: ')';
+
+NAT: ('0'..'9')+;
+IDENT: ('a'..'z')+;
+
+WS: (' '|'\t')+ {skip();};
+EOF: '\f';

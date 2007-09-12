@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: BmlLib3 Plug-in
+Bundle-SymbolicName: BmlLib3
+Bundle-Version: 1.0.0
+Bundle-Localization: plugin
+Require-Bundle: org.apache.bcel_5.1,
+ org.eclipse.core.runtime
