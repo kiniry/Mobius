@@ -15,10 +15,6 @@ public abstract class BCAttributeTable1 implements IBCAttribute {
 		this.parent = parent;
 	}
 
-	public int getIndex() {
-		return method.bcc.cp.findConstant(getName()).getIndex();
-	}
-
 	public abstract String getName();
 
 	public abstract int singleType();
@@ -47,6 +43,10 @@ public abstract class BCAttributeTable1 implements IBCAttribute {
 			aw.writeShort(all[i].getPC());
 			all[i].saveSingle(aw);
 		}
+	}
+
+	public int getIndex() {
+		return method.bcc.cp.findConstant(getName());
 	}
 
 }

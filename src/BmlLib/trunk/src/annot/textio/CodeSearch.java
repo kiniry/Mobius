@@ -132,8 +132,12 @@ public class CodeSearch {
 			if (lc.length() == 0)
 				throw new RuntimeException("attribute wasn't displayed yet!");
 			int pos = code.indexOf(lc);
-			if (pos < 0)
+			if (pos < 0){
+				System.out.println(all[a].last_code);
+				System.out.println(lc);
+				System.out.println(code);
 				throw new RuntimeException("attribute's code not found!");
+			}
 			code = code.substring(0, pos) + clear(lc)
 					+ code.substring(pos + lc.length());
 			int pos2 = pos + lc.length();

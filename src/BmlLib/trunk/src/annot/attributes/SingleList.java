@@ -64,7 +64,7 @@ public class SingleList implements Comparable<SingleList> {
 		if (prev == null) {
 			attributes.addLast(ica);
 		} else {
-			attributes.add(attributes.indexOf(prev), ica); // XXX ??
+			attributes.add(attributes.indexOf(prev), ica); //?
 		}
 		iter = attributes.iterator();
 		int minor = -1;

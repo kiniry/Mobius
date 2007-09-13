@@ -12,7 +12,7 @@ public abstract class BCExpression {
 	protected int connector;
 	protected BCExpression[] subExpr;
 	protected int priority = 0;
-	protected static int MAX_PRI = 17;
+	protected static int MAX_PRI = 18;
 
 	public BCExpression() {
 		this.subExpr = new BCExpression[0];
@@ -53,19 +53,23 @@ public abstract class BCExpression {
 		this.priority = getPriority();
 	}
 
-	public abstract int getPriority();
-
 	public abstract String printCode1(BMLConfig conf);
-
 	public abstract void write(AttributeWriter aw);
-
 	public abstract void read(AttributeReader ar, int root)
 			throws ReadAttributeException;
-
 	public abstract void init();
+	public abstract int getPriority();
+	public abstract JavaType getType1();
 
 	@Override
 	public abstract String toString();
+
+	public JavaType getType() {
+		for (int i = 0; i < subExpr.length; i++)
+			if (subExpr[i] == null)
+				return null;
+		return getType1();
+	}
 
 	/**
 	 * Prints expression as a whole attribute

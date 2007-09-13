@@ -1,101 +1,140 @@
 package annot.bcclass;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.util.Vector;
+
+import org.apache.bcel.classfile.Attribute;
 import org.apache.bcel.classfile.Constant;
 import org.apache.bcel.classfile.ConstantPool;
 import org.apache.bcel.classfile.ConstantUtf8;
+import org.apache.bcel.classfile.JavaClass;
+import org.apache.bcel.classfile.Unknown;
 import org.apache.bcel.generic.ConstantPoolGen;
 
-import annot.attributes.SecondConstantPool;
-import annot.constants.BCConstant;
-import annot.constants.BCConstantUtf8;
-import annot.constants.UnknownConstant;
-import annot.textio.BMLConfig;
+import annot.io.ConstantPoolReader;
+import annot.io.ReadAttributeException;
 import annot.textio.IDisplayStyle;
 
 public class BCConstantPool {
-	private BCClass bcc;
-	private ConstantPoolGen cpg;
-	private BCConstant[] constants;
-	public int initialSize;
-	public int currentSize;
-	public SecondConstantPool scp;
 
-	public BCConstantPool(BCClass bcc, ConstantPoolGen cpg) {
-		this.bcc = bcc;
-		this.cpg = cpg;
-		this.scp = new SecondConstantPool(this);
-		addStandardConstants();
-		update();
-		cpg = this.cpg;
-		currentSize = initialSize = cpg.getSize();
-		constants = new BCConstant[initialSize];
+	private Vector<Constant> constants;
+	private int initialSize;
+
+	public BCConstantPool(JavaClass jc) throws ReadAttributeException {
+		constants = new Vector<Constant>();
+		ConstantPoolGen cpg = new ConstantPoolGen(jc.getConstantPool());
+		addStandardConstants(cpg);
+		jc.setConstantPool(cpg.getFinalConstantPool());
+		ConstantPool cp = jc.getConstantPool();
+		initialSize = cp.getLength();
 		for (int i = 0; i < initialSize; i++)
-			constants[i] = convert(cpg.getConstant(i), i);
+			constants.add(cp.getConstant(i));
+		Attribute[] attrs = jc.getAttributes();
+		byte[] bytes = null;
+		for (int i = 0; i < attrs.length; i++)
+			if (attrs[i] instanceof Unknown) {
+				Unknown ua = (Unknown) attrs[i];
+				if (IDisplayStyle.__second_cp.equals(ua.getName()))
+					bytes = ua.getBytes();
+			}
+		if (bytes != null) {
+			MLog.putMsg(MLog.PNotice, "second constant pool detected.");
+			DataInputStream file = new DataInputStream(
+					new ByteArrayInputStream(bytes));
+			try {
+				int size = file.readUnsignedShort();
+				for (int i = 0; i < size; i++) {
+					Constant c = ConstantPoolReader.readConstant(file);
+					constants.add(c);
+				}
+			} catch (IOException e) {
+				throw new ReadAttributeException(
+						"error while reading second constant pool");
+			}
+		}
 	}
 
-	private void update() {
-		ConstantPool cp = cpg.getFinalConstantPool();
-		bcc.jc.setConstantPool(cp);
-		cpg = new ConstantPoolGen(cp);
-	}
-
-	private void addStandardConstants() {
-		cpg.addUtf8(IDisplayStyle.__mspec);
-		cpg.addUtf8(IDisplayStyle.__classInvariant);
-		cpg.addUtf8(IDisplayStyle.__assertTable);
-		cpg.addUtf8(IDisplayStyle.__second_cp);
+	private void addStandardConstants(ConstantPoolGen cpg) {
 		cpg.addUtf8(IDisplayStyle.jt_int);
+		cpg.addUtf8(IDisplayStyle.__assertTable);
+		cpg.addUtf8(IDisplayStyle.__classInvariant);
+		cpg.addUtf8(IDisplayStyle.__mspec);
+		cpg.addUtf8(IDisplayStyle.__second_cp);
 	}
 
-	private BCConstant convert(Constant c, int index) {
-		if (c == null)
+	public void addConstant(Constant c) {
+		constants.add(c);
+	}
+
+	public Constant getConstant(int i) {
+		return constants.elementAt(i);
+	}
+
+	public Constant searchForString(String str) {
+		int pos = findConstant(str);
+		if (pos == -1)
 			return null;
-		if (c instanceof ConstantUtf8)
-			return new BCConstantUtf8(this, (ConstantUtf8) c, index);
-		// TODO: make BCConstant abstract and throw an exception here
-		return new UnknownConstant(this, c, index);
+		return getConstant(pos);
 	}
 
-	public String printCode(BMLConfig conf) {
-		String code = "------ BCConstantPool ------\n";
+	public int findConstant(String cdata) {
+		int n = constants.size();
+		for (int i = 0; i < n; i++) {
+			Constant c = constants.elementAt(i);
+			if (c instanceof ConstantUtf8) {
+				ConstantUtf8 uc8 = (ConstantUtf8) c;
+				if (cdata.equals(uc8.getBytes()))
+					return i;
+			}
+		}
+		return -1;
+	}
+
+	private String printElement(int i) {
+		Constant c = constants.elementAt(i);
+		if (c == null)
+			return "";
+		return ((i < 100) ? " " : "") + ((i < 10) ? " " : "") + i + ": "
+				+ c.toString() + "\n";
+	}
+
+	public String printCode() {
+		String code = "**** primary constant pool ****\n";
 		for (int i = 0; i < initialSize; i++)
-			if (constants[i] != null)
-				code += i + ": " + ((i < 10) ? " " : "")
-						+ constants[i].printCode(conf) + "\n";
-		code += "---- SecondConstantPool ----\n";
-		for (int i = initialSize; i < currentSize; i++)
-			code += i + ": " + ((i < 10) ? " " : "") + getAt(i).printCode(conf);
+			code += printElement(i);
+		code += "*** secondary constant pool ****\n";
+		int n = constants.size();
+		for (int i = initialSize; i < n; i++)
+			code += printElement(i);
 		return code;
 	}
 
-	public BCConstantUtf8 findConstant(String value) {
-		for (int i = 0; i < currentSize; i++) {
-			BCConstant c = getAt(i);
-			if (c instanceof BCConstantUtf8) {
-				BCConstantUtf8 bccu8 = (BCConstantUtf8) c;
-				if (bccu8.data.equals(value))
-					return bccu8;
-			}
-		}
-		return null;
-	}
-
-	public BCConstant getAt(int i) {
-		if (i >= currentSize)
-			return null;
-		if (i >= initialSize)
-			return scp.getAt(i - initialSize);
-		return constants[i];
-	}
-
-	public void addConstant(BCConstant c) {
-		scp.addConstant(c);
-		c.cpIndex = currentSize;
-		currentSize++;
+	public void save(JavaClass jc) throws IOException {
+		int n = constants.size();
+		Constant[] carr = new Constant[initialSize];
+		for (int i = 0; i < initialSize; i++)
+			carr[i] = constants.elementAt(i);
+		jc.getConstantPool().setConstantPool(carr);
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		DataOutputStream file = new DataOutputStream(baos);
+		file.writeShort(n - initialSize);
+		for (int i = initialSize; i < n; i++)
+			constants.elementAt(i).dump(file);
+		ConstantPool cp = jc.getConstantPool();
+		int nameIndex = findConstant(IDisplayStyle.__second_cp);
+		int length = file.size();
+		byte[] bytes = baos.toByteArray();
+		Unknown scp = new Unknown(nameIndex, length, bytes, cp);
+		Attribute[] atab = BCClass.addAttribute(jc.getAttributes(), scp);
+		jc.setAttributes(atab);
 	}
 
 	public int size() {
-		return currentSize;
+		return constants.size();
 	}
 
 }

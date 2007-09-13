@@ -1,13 +1,12 @@
 package annot.io;
 
+import org.apache.bcel.classfile.ConstantUtf8;
 import org.apache.bcel.classfile.Unknown;
 
 import annot.attributes.IBCAttribute;
 import annot.bcclass.BCClass;
 import annot.bcclass.BCMethod;
 import annot.bcclass.MLog;
-import annot.constants.BCConstant;
-import annot.constants.BCConstantUtf8;
 
 public class AttributeWriter {
 
@@ -82,14 +81,14 @@ public class AttributeWriter {
 			writeByte((byte) str.charAt(i));
 	}
 
-	public int findConstant(String cname) {
-		BCConstant c = bcc.cp.findConstant(cname);
-		if (c == null) {
-			BCConstantUtf8 bccu8 = new BCConstantUtf8(bcc.cp, cname);
-			bcc.cp.addConstant(bccu8);
-			return bccu8.getIndex();
+	public int findConstant(String str) {
+		int pos = bcc.cp.findConstant(str);
+		if (pos == -1) {
+			ConstantUtf8 cu8 = new ConstantUtf8(str);
+			bcc.cp.addConstant(cu8);
+			return bcc.cp.size() - 1;
 		}
-		return c.getIndex();
+		return pos;
 	}
 
 }

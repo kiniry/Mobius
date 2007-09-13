@@ -13,16 +13,16 @@ public class AssertTable extends BCAttributeTable1 {
 	}
 
 	@Override
-	public String getName() {
-		return IDisplayStyle.__assertTable;
-	}
-
-	@Override
 	public SingleAssert loadSingle(BCMethod m, AttributeReader ar)
 			throws ReadAttributeException {
 		AbstractFormula f = (AbstractFormula) ar.readExpression();
 		SingleAssert sa = new SingleAssert(m, null, -1, f);
 		return sa;
+	}
+
+	@Override
+	public String getName() {
+		return IDisplayStyle.__assertTable;
 	}
 
 	@Override

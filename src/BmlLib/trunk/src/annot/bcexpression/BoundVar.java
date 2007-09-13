@@ -8,8 +8,7 @@ import annot.io.ReadAttributeException;
 import annot.textio.BMLConfig;
 import annot.textio.Priorities;
 
-public class BoundVar extends AbstractIntExpression {
-	// FIXME! what class BoundVar should extend and how can it be parsed??
+public class BoundVar extends BCExpression {
 
 	public static final boolean goWriteVarNames = true;
 
@@ -29,7 +28,7 @@ public class BoundVar extends AbstractIntExpression {
 	public static BoundVar getBoundVar(AttributeReader ar)
 			throws ReadAttributeException {
 		int i = ar.readShort();
-		return ar.env[i];
+		return ar.bvars.elementAt(i);
 	}
 
 	@Override
@@ -41,7 +40,7 @@ public class BoundVar extends AbstractIntExpression {
 	public String printCode1(BMLConfig conf) {
 		String n = getVname();
 		if (n != null)
-			return n;
+			return "" + n;
 		return "var[" + index + "]";
 	}
 
@@ -58,7 +57,8 @@ public class BoundVar extends AbstractIntExpression {
 		aw.writeShort(index);
 	}
 
-	public JavaType getType() {
+	@Override
+	public JavaType getType1() {
 		return type;
 	}
 

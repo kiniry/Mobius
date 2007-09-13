@@ -27,7 +27,8 @@ options {
 	private int minor;
 
 	// global variables
-	private int i;
+	private int bvc;
+	private int lqfs;
 	private HashMap<String, BoundVar> env;
 
 	// set context for attribute parsing
@@ -37,15 +38,18 @@ options {
 		this.cp = cp;
 		this.ih = ih;
 		this.minor = minor;
-		this.i = 0;
+		this.bvc = 0;
+		this.lqfs = 0;
 		this.env = new HashMap<String, BoundVar>();
 	}
 
 	public void reportError(RecognitionException rex) {
+		if (rex == null)
+			rex = new RecognitionException();
 		lastE = rex;
 	}
 	
-	private AbstractIntExpression whatIsIt(String ident) {
+	private BCExpression whatIsIt(String ident) {
 		if (env.containsKey(ident))
 			return env.get(ident);
 		MLog.putMsg(MLog.PInfo, "undefined identifier: "+ident);
@@ -78,31 +82,42 @@ printableAttribute returns [BCPrintableAttribute ast] :
 	| REQUIRES f3=formula EOF {$ast = new MethodSpecification(m, $f3.ast, new SpecificationCase[0]);}
 	;
 
-expression returns [AbstractIntExpression ast] :
+expression returns [BCExpression ast] :
 	e=shiftExpr {$ast = $e.ast;};
 
-formula returns [AbstractFormula ast] :		// remove
+formula returns [AbstractFormula ast] :
+	e=uncheckedFormula {
+		if ($e.ast == null) {
+			$ast = null;
+		} else {
+			if ($e.ast.getType() != JavaType.JavaBool)
+				reportError(null);
+			$ast = (AbstractFormula)$e.ast;
+		}
+	};
+
+uncheckedFormula returns [BCExpression ast] :
 	e=equivalenceExpr {$ast = $e.ast;};
 
-equivalenceExpr returns [AbstractFormula ast] :
+equivalenceExpr returns [BCExpression ast] :
 	e=impliesExpr {$ast = $e.ast;}
 	( EQUIV r=impliesExpr {$ast = new Formula(Code.EQUIV, $ast, $r.ast);}
 		| NOTEQUIV r=impliesExpr {$ast = new Formula(Code.NOTEQUIV, $ast, $r.ast);}
 	)*;
 
-impliesExpr returns [AbstractFormula ast] :
+impliesExpr returns [BCExpression ast] :
 	e=logicalOrExpr {$ast = $e.ast;}
 	(IMPLIES r=logicalOrExpr {$ast = new Formula(Code.IMPLIES, $ast, $r.ast);})?;
 
-logicalOrExpr returns [AbstractFormula ast] :
+logicalOrExpr returns [BCExpression ast] :
 	e=logicalAndExpr {$ast = $e.ast;}
 	(LOG_OR r=logicalAndExpr {$ast = new Formula(Code.OR, $ast, $r.ast);})*;
 
-logicalAndExpr returns [AbstractFormula ast] :
+logicalAndExpr returns [BCExpression ast] :
 	e=equalityExpr {$ast = $e.ast;}
 	(LOG_AND r=equalityExpr {$ast = new Formula(Code.AND, $ast, $r.ast);})*;
 
-equalityExpr returns [AbstractFormula ast] :
+equalityExpr returns [BCExpression ast] :
 	l=shiftExpr EQ r=shiftExpr
 		{$ast = new Predicate2Ar(Code.EQ, $l.ast, $r.ast);}
 	| l=shiftExpr NOTEQ r=shiftExpr
@@ -110,7 +125,7 @@ equalityExpr returns [AbstractFormula ast] :
 	| e=relationalExpr {$ast = $e.ast;}
 	;
 
-relationalExpr returns [AbstractFormula ast] :
+relationalExpr returns [BCExpression ast] :
 	| l=shiftExpr LESS r=shiftExpr
 		{$ast = new Predicate2Ar(Code.LESS, $l.ast, $r.ast);}
 	| l=shiftExpr GRT r=shiftExpr
@@ -122,36 +137,38 @@ relationalExpr returns [AbstractFormula ast] :
 	| q=quantifiedFormula {$ast = $q.ast;}
 	;
 
-quantifiedFormula returns [AbstractFormula ast] :
-	(FORALL {$ast = new QuantifiedFormula(true);
-		i=0;}
-	| EXISTS {$ast = new QuantifiedFormula(false);
-		i=0;})
+quantifiedFormula returns [BCExpression ast] :
+	(FORALL {$ast = new QuantifiedFormula(Code.FORALL_WITH_NAME); lqfs=0;}
+	| EXISTS {$ast = new QuantifiedFormula(Code.EXISTS_WITH_NAME); lqfs=0;})
 	 (t=IDENT v=IDENT {try {
 			JavaType jt = JavaType.getJavaType($t.text);
-			BoundVar bv = new BoundVar(jt, i++, (QuantifiedFormula)$ast, $v.text);
+			lqfs++;
+			BoundVar bv = new BoundVar(jt, bvc++, (QuantifiedFormula)$ast, $v.text);
 			env.put($v.text, bv);
 	 		((QuantifiedFormula)$ast).addVariable(bv);
 	 	} catch(ReadAttributeException e) {
 	 		reportError(new RecognitionException());
 	 		//throw new RuntimeException("Error in BML.g3.quantifiedFormula");
 	 	}})+
-	 	f=primaryFormula {((QuantifiedFormula)$ast).setFormula($f.ast);
+	 	SEMICOLON
+	 	f=uncheckedFormula {((QuantifiedFormula)$ast).setFormula($f.ast);
 	 		env.remove($v.text);
-	 		}
+	 		bvc -= lqfs;
+	 	}
 	| p=primaryFormula {$ast = $p.ast;}
 	;
 
-primaryFormula returns [AbstractFormula ast] :
+primaryFormula returns [BCExpression ast] :
 	FALSE {$ast = Predicate0Ar.FALSE;}
 	| TRUE {$ast = Predicate0Ar.TRUE;}
-	| PAR_LEFT f=formula PAR_RIGHT {$ast = $f.ast;}
+	| i=IDENT {$ast = whatIsIt($i.text);}
+	| PAR_LEFT f=uncheckedFormula PAR_RIGHT {$ast = $f.ast;}
 	;
 
-shiftExpr returns [AbstractIntExpression ast] :
+shiftExpr returns [BCExpression ast] :
 	p=primaryExpr {$ast = $p.ast;};
 
-primaryExpr returns [AbstractIntExpression ast] :
+primaryExpr returns [BCExpression ast] :
 	n=NAT {$ast = new NumberLiteral(Integer.parseInt($n.text));}
 	| i=IDENT {$ast = whatIsIt($i.text);}
 	| PAR_LEFT e=expression PAR_RIGHT {$ast = $e.ast;}
@@ -168,6 +185,7 @@ IMPLIES: '==>';
 EQUIV: '<==>';
 NOTEQUIV: '<=!=>';
 LOG_NOT: '~';
+SEMICOLON: ';';
 FORALL: 'forall';
 EXISTS: 'exists';
 TRUE: 'true';

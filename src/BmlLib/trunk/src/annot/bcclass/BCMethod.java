@@ -46,7 +46,6 @@ public class BCMethod {
 	}
 
 	public String printCode(BMLConfig conf) {
-		// TODO
 		String code = "";
 		if (mspec != null)
 			code += mspec.printCode(conf);

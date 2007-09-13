@@ -145,7 +145,8 @@ public class PrettyPrinter extends AbstractPrettyPrinter {
 	 *            BMLConfig.expr_block_start and BMLConfig.expr_block_end and
 	 *            without newLines ("\n")
 	 * @param start -
-	 *            used characters in current line, excluding standard indentation
+	 *            used characters in current line, excluding standard
+	 *            indentation
 	 * @param end -
 	 *            used characters at the end of last generated lines (used only
 	 *            iff <code>startFromOp</code> == false)
@@ -180,12 +181,12 @@ public class PrettyPrinter extends AbstractPrettyPrinter {
 		boolean ok = true; // iff all subexpr. can be displayed in one line
 		if (startFormOp) {
 			for (int i = 0; i < sub.length - 1; i += 2) { // for each
-															// subexpression
-															// with its operator
+				// subexpression
+				// with its operator
 				int epos = 0; // unused? 'end' parameter should be always zero
-								// in this case (startFromOp == true)
+				// in this case (startFromOp == true)
 				String s = sub[i] + sub[i + 1]; // current (operator +
-												// subexpression)
+				// subexpression)
 				if ((conf.start_line_pos() + start + strlen(s) <= IDisplayStyle.max_total_line_width
 						- epos)
 						&& ok) {
@@ -196,18 +197,19 @@ public class PrettyPrinter extends AbstractPrettyPrinter {
 					start += strlen(s);
 				} else {
 					String[] sub2 = splitRoot(sub[i + 1]); // subexpressions of
-															// current
-															// subexpression
+					// current
+					// subexpression
 					boolean b = false; // first subexpression of current
-										// subexpression won't fit into current
-										// line
-					 if (sub2.length > 3)
-					 b = breakLines(sub2[1], strlen(sub[i]+prefix), epos,
-					 w+IDisplayStyle.lineIndent, "").lastIndexOf("\n") >= 0;
-//					 indentation won't extend if it will do so just after, in
-//					 recursive call, before writing
-//					 anything, to avoid double indentation after quantifiers,
-//					 for example.
+					// subexpression won't fit into current
+					// line
+					if (sub2.length > 3)
+						b = breakLines(sub2[1], strlen(sub[i] + prefix), epos,
+								w + IDisplayStyle.lineIndent, "").lastIndexOf(
+								"\n") >= 0;
+					// indentation won't extend if it will do so just after, in
+					// recursive call, before writing
+					// anything, to avoid double indentation after quantifiers,
+					// for example.
 					// FIXME! double indentations should be removed in
 					// afterDisplay()
 					String e = breakLines(sub[i + 1], strlen(sub[i] + prefix),
@@ -227,20 +229,20 @@ public class PrettyPrinter extends AbstractPrettyPrinter {
 						// recursive call.
 						result += conf.newLine();
 						if (i < 2) // if it's the first subexpression, we
-									// should add prefix just after newline
+							// should add prefix just after newline
 							result += prefix;
 						start = 0; // reseting current position to beginning of
-									// the line
+						// the line
 						if (e.substring(1).lastIndexOf('\n') >= 0)
 							ok = false; // next subexpressions at this level
-										// will be displayed in separate lines.
+						// will be displayed in separate lines.
 						result += sub[i]; // writing operator
 					} // {else // operator has been already written (to e) in
-						// recursive call, as a 'prefix' argument}
+					// recursive call, as a 'prefix' argument}
 					result += e; // writing current subexpression
 					start += result.length() - (result.lastIndexOf("\n") + 1)
 							- conf.start_line_pos(); // updating position in
-														// current line
+					// current line
 				}
 				prefix = "";
 			}
@@ -254,7 +256,7 @@ public class PrettyPrinter extends AbstractPrettyPrinter {
 				// space at the end of the line for parent's operator
 				int epos = (i > sub.length - 4) ? end : 0;
 				String s = sub[i] + sub[i + 1]; // current (subexpression +
-												// operator)
+				// operator)
 				if ((conf.start_line_pos() + start + strlen(s) <= IDisplayStyle.max_total_line_width
 						- epos)
 						&& ok) {
@@ -265,7 +267,8 @@ public class PrettyPrinter extends AbstractPrettyPrinter {
 					boolean b = false;
 					if (sub2.length > 3)
 						b = breakLines(sub2[1], 0, sub2[2].length() + epos,
-								w + IDisplayStyle.lineIndent, "").lastIndexOf("\n") >= 0;
+								w + IDisplayStyle.lineIndent, "").lastIndexOf(
+								"\n") >= 0;
 					String e = breakLines(sub[i], 0,
 							sub[i + 1].length() + epos, b ? w : w
 									+ IDisplayStyle.lineIndent, "");

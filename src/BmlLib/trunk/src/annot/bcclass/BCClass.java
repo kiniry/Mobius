@@ -46,34 +46,6 @@ public class BCClass {
 		load(jc);
 	}
 
-	private void load(JavaClass jc) throws ReadAttributeException {
-		MLog.putMsg(MLog.PProgress, "initializing bcclass");
-		this.jc = jc;
-		this.cp = new BCConstantPool(this, new ConstantPoolGen(jc
-				.getConstantPool()));
-		MLog.putMsg(MLog.PInfo, "  loading class attributes");
-		Attribute[] attrs = jc.getAttributes();
-		AttributeReader ar = new AttributeReader(this);
-		// load the secondConstantPool first
-		for (int i = 0; i < attrs.length; i++)
-			if (attrs[i] instanceof Unknown)
-				if (IDisplayStyle.__second_cp.equals(((Unknown) attrs[i])
-						.getName()))
-					ar.readAttribute((Unknown) attrs[i]);
-		// then other class attributes
-		for (int i = 0; i < attrs.length; i++)
-			if (attrs[i] instanceof Unknown)
-				if (!IDisplayStyle.__second_cp.equals(((Unknown) attrs[i])
-						.getName()))
-					ar.readAttribute((Unknown) attrs[i]);
-		// and methods
-		Method[] mtab = jc.getMethods();
-		methods = new BCMethod[mtab.length];
-		for (int i = 0; i < mtab.length; i++)
-			methods[i] = new BCMethod(this, new MethodGen(mtab[i], jc
-					.getClassName(), new ConstantPoolGen(jc.getConstantPool())));
-	}
-
 	@Override
 	public String toString() {
 		String ret = "package " + jc.getPackageName() + "\n\n";
@@ -113,7 +85,24 @@ public class BCClass {
 
 	public String printCp() {
 		MLog.putMsg(MLog.PProgress, "displaying constant pool");
-		return cp.printCode(new BMLConfig());
+		return cp.printCode();
+	}
+
+	private void load(JavaClass jc) throws ReadAttributeException {
+		MLog.putMsg(MLog.PProgress, "initializing bcclass");
+		this.jc = jc;
+		this.cp = new BCConstantPool(jc);
+		MLog.putMsg(MLog.PInfo, "  loading class attributes");
+		Attribute[] attrs = jc.getAttributes();
+		AttributeReader ar = new AttributeReader(this);
+		for (int i = 0; i < attrs.length; i++)
+			if (attrs[i] instanceof Unknown)
+				ar.readAttribute((Unknown) attrs[i]);
+		Method[] mtab = jc.getMethods();
+		methods = new BCMethod[mtab.length];
+		for (int i = 0; i < mtab.length; i++)
+			methods[i] = new BCMethod(this, new MethodGen(mtab[i], jc
+					.getClassName(), new ConstantPoolGen(jc.getConstantPool())));
 	}
 
 	public BCPrintableAttribute[] getAllAttributes() {
@@ -186,18 +175,20 @@ public class BCClass {
 		return attrs;
 	}
 
-	private void saveJC() {
+	private void saveJC() throws IOException {
 		Method[] marr = new Method[methods.length];
 		for (int i = 0; i < methods.length; i++)
 			marr[i] = methods[i].save();
 		jc.setMethods(marr);
-		MLog.putMsg(MLog.PInfo, "  saving class attributes");
+		MLog.putMsg(MLog.PProgress, "  saving class attributes");
 		AttributeWriter aw = new AttributeWriter(this);
 		Attribute[] attrs = removeBMLAttributes(jc.getAttributes());
+		jc.setAttributes(attrs);
+		MLog.putMsg(MLog.PProgress, "  saving second constant pool");
+		cp.save(jc);
+		attrs = jc.getAttributes();
 		if (invariant != null)
 			attrs = addAttribute(attrs, aw.writeAttribute(invariant));
-		if (cp.scp.size() > 0)
-			attrs = addAttribute(attrs, aw.writeAttribute(cp.scp));
 		jc.setAttributes(attrs);
 	}
 

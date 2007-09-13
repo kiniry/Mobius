@@ -14,6 +14,7 @@ public interface IDisplayStyle {
 	public static final String lineIndent = "  ";
 
 	public static final String jt_int = "int";
+	public static final String jt_boolean = "boolean";
 
 	public static final String __mspec = "method specification";
 	public static final String __classInvariant = "class invariant";

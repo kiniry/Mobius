@@ -52,4 +52,9 @@ public class NumberLiteral extends AbstractIntExpression {
 		return "" + value;
 	}
 
+	@Override
+	public JavaType getType1() {
+		return JavaType.JavaInt;
+	}
+
 }

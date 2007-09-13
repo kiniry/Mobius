@@ -1,5 +1,6 @@
 package annot.formula;
 
+import annot.bcexpression.JavaType;
 import annot.io.AttributeReader;
 import annot.io.AttributeWriter;
 import annot.io.Code;
@@ -44,6 +45,11 @@ public class Predicate0Ar extends AbstractFormula {
 	@Override
 	public String toString() {
 		return value ? "true" : "false";
+	}
+
+	@Override
+	public JavaType getType1() {
+		return JavaType.JavaBool;
 	}
 
 }

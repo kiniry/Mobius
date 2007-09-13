@@ -60,7 +60,7 @@ public class MethodSpecification extends BCPrintableAttribute implements
 	}
 
 	public int getIndex() {
-		return method.bcc.cp.findConstant(IDisplayStyle.__mspec).getIndex();
+		return method.bcc.cp.findConstant(IDisplayStyle.__mspec);
 	}
 
 	public String getName() {

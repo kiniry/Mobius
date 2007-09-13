@@ -1,5 +1,9 @@
 package annot.io;
 
+import java.util.Vector;
+
+import org.apache.bcel.classfile.Constant;
+import org.apache.bcel.classfile.ConstantUtf8;
 import org.apache.bcel.classfile.Unknown;
 
 import annot.attributes.ClassInvariant;
@@ -11,8 +15,6 @@ import annot.bcexpression.BCExpression;
 import annot.bcexpression.BoundVar;
 import annot.bcexpression.JavaType;
 import annot.bcexpression.NumberLiteral;
-import annot.constants.BCConstant;
-import annot.constants.BCConstantUtf8;
 import annot.formula.Formula;
 import annot.formula.Predicate0Ar;
 import annot.formula.Predicate2Ar;
@@ -27,15 +29,17 @@ public class AttributeReader {
 	private int pos;
 	private int length;
 	private String attrName = "?"; // debug
-	public BoundVar[] env;  //vector
+	public Vector<BoundVar> bvars;
 
 	public AttributeReader(BCClass bcc) {
 		this.bcc = bcc;
+		this.bvars = new Vector<BoundVar>();
 	}
 
 	public AttributeReader(BCMethod bcm) {
 		this.bcc = bcm.bcc;
 		this.method = bcm;
+		this.bvars = new Vector<BoundVar>();
 	}
 
 	public void readAttribute(Unknown ua) throws ReadAttributeException {
@@ -55,12 +59,9 @@ public class AttributeReader {
 			MLog.putMsg(MLog.PInfo, "    reading attribute: "
 					+ IDisplayStyle.__assertTable);
 			method.amap.atab.load(this);
-		} else if (aname.equals(IDisplayStyle.__second_cp)) {
-			MLog.putMsg(MLog.PInfo, "    reading attribute: "
-					+ IDisplayStyle.__second_cp);
-			bcc.cp.scp.load(this);
 		} else {
 			MLog.putMsg(MLog.PTodo, "    unrecognized attribute: " + aname);
+			return;
 		}
 		if (pos != length)
 			throw new ReadAttributeException((length - pos) + " of " + length
@@ -97,23 +98,14 @@ public class AttributeReader {
 		return i;
 	}
 
-	public String readUtf8() throws ReadAttributeException {
-		// XXX check annotated .class file format compatibility
-		int l = readByte();
-		String ret = "";
-		for (int i = 0; i < l; i++)
-			ret += (char) readByte();
-		return ret;
-	}
-
 	public int readAttributesCount() throws ReadAttributeException {
 		return readShort();
 	}
 
 	public String findString(int index) throws ReadAttributeException {
-		BCConstant c = bcc.cp.getAt(index);
-		if (c instanceof BCConstantUtf8)
-			return ((BCConstantUtf8) c).data;
+		Constant c = bcc.cp.getConstant(index);
+		if (c instanceof ConstantUtf8)
+			return ((ConstantUtf8) c).getBytes();
 		throw new ReadAttributeException("invalid constant index: " + index);
 	}
 
@@ -128,7 +120,7 @@ public class AttributeReader {
 		case Code.OR:
 		case Code.IMPLIES:
 		case Code.NOT:
-			// FIXME! not supported by .class file format!
+			// XXX not supported by .class file format!
 		case Code.EQUIV:
 		case Code.NOTEQUIV:
 			return new Formula(this, b);
@@ -150,11 +142,11 @@ public class AttributeReader {
 			return BoundVar.getBoundVar(this);
 		case Code.JAVA_TYPE:
 			int i = readShort();
-			BCConstant c = bcc.cp.getAt(i);
-			if (!(c instanceof BCConstantUtf8))
+			Constant c = bcc.cp.getConstant(i);
+			if (!(c instanceof ConstantUtf8))
 				throw new ReadAttributeException(
 						"Utf8 expected as javaType name");
-			String name = ((BCConstantUtf8) c).data;
+			String name = ((ConstantUtf8) c).getBytes();
 			return JavaType.getJavaType(name);
 		default:
 			throw new ReadAttributeException("Unknown expression code: " + b);

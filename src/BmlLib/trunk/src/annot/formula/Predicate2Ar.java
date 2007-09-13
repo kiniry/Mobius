@@ -1,7 +1,7 @@
 package annot.formula;
 
-import annot.bcexpression.AbstractIntExpression;
 import annot.bcexpression.BCExpression;
+import annot.bcexpression.JavaType;
 import annot.io.AttributeReader;
 import annot.io.AttributeWriter;
 import annot.io.Code;
@@ -20,18 +20,7 @@ public class Predicate2Ar extends AbstractFormula {
 		super(connector, left, right);
 	}
 
-	@Override
-	public int getPriority() {
-		return Priorities.getPriority(connector);
-	}
-
-	@Override
-	public String printCode1(BMLConfig conf) {
-		return subExpr[0].printCode(conf) + printRoot(conf)
-				+ subExpr[1].printCode(conf);
-	}
-
-	public String printRoot(BMLConfig conf) {
+	public String printRoot() {
 		switch (connector) {
 		case Code.GRT:
 			return " > ";
@@ -51,19 +40,17 @@ public class Predicate2Ar extends AbstractFormula {
 	}
 
 	@Override
+	public String printCode1(BMLConfig conf) {
+		return subExpr[0].printCode(conf) + printRoot()
+				+ subExpr[1].printCode(conf);
+	}
+
+	@Override
 	public void read(AttributeReader ar, int root)
 			throws ReadAttributeException {
 		subExpr = new BCExpression[2];
 		subExpr[0] = ar.readExpression();
-		if (!(subExpr[0] instanceof AbstractIntExpression))
-			throw new ReadAttributeException(
-					"Integer expression expected, read "
-							+ subExpr[0].getClass().toString());
 		subExpr[1] = ar.readExpression();
-		if (!(subExpr[0] instanceof AbstractIntExpression))
-			throw new ReadAttributeException(
-					"integer expression expected, read "
-							+ subExpr[0].getClass().toString());
 	}
 
 	@Override
@@ -73,17 +60,29 @@ public class Predicate2Ar extends AbstractFormula {
 	}
 
 	@Override
+	public int getPriority() {
+		return Priorities.getPriority(connector);
+	}
+
+	@Override
 	public void init() {
 	}
 
 	@Override
 	public String toString() {
 		if (subExpr.length == 1) {
-			return printRoot(null) + subExpr[0].toString();
+			return printRoot() + subExpr[0].toString();
 		} else {
-			return subExpr[0].toString() + printRoot(null)
-					+ subExpr[1].toString();
+			return subExpr[0].toString() + printRoot() + subExpr[1].toString();
 		}
+	}
+
+	@Override
+	public JavaType getType1() {
+		for (int i = 0; i < subExpr.length; i++)
+			if (subExpr[i].getType() != JavaType.JavaInt)
+				return null;
+		return JavaType.JavaBool;
 	}
 
 }

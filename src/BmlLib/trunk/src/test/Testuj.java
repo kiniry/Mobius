@@ -17,7 +17,7 @@ import annot.textio.Parsing;
 
 public class Testuj {
 
-	private static boolean goShowTraceOnFailures = false;
+	private static boolean goShowTraceOnFailures = true;
 	private static boolean goFullSaveAndLoadTests = true;
 	private static boolean goShowFileChangesIfAny = false;
 
@@ -113,6 +113,8 @@ public class Testuj {
 			bcc = new BCClass(Paths.tmp_path + "tmp3.class", "test.Empty2");
 		} catch (ReadAttributeException e) {
 			System.out.println("\nError while saving / loading");
+			if (goShowFileChangesIfAny)
+				System.out.println(bcc.printCode());
 			if (goShowTraceOnFailures)
 				e.printStackTrace();
 			return false;
@@ -192,20 +194,26 @@ public class Testuj {
 		test(false, 2, "1 > err");
 		test(false, 2, "aaa && bbb < ccc");
 		test(false, 2, "forall true");
-		test(true, 2, "forall int a (a > 0)", "forall a (a > 0)");
-		test(true, 2, "forall int a int b (a > b)", "forall a b (a > b)");
-		test(false, 2, "forall int true (true > 0)");
-		test(true, 2, "forall int xyz (xyz > 0)", "forall xyz (xyz > 0)");
-		test(true, 2, "exists int a (a < 0) && forall int b (b > 1)",
-				"exists a (a < 0) && forall b (b > 1)");
-		// test(true, 2, "forall int a (exists int b (a < b))", "forall a (exists b (a < b))");
-        //test(true, 2, "forall int a; exists int b; a < b");
-		test(true, 3, "forall int a (a > 0) && 1 < 2",
-				"forall a (a > 0) && 1 < 2");
-		test(false, 3, "forall int a (a > 0) && a < 1");
-		// test(true, 2, "forall int a (exists int b (a < b) && a > 0)", "forall a (exists b (a < b) && a > 0)");
-		test(true, 3, "false || (forall int a (a > 0)) && 1 < 2",
-				"false || forall a (a > 0) && 1 < 2");
+		test(true, 2, "forall int a; a > 0");
+		test(true, 2, "forall int a int b; a > b");
+		test(false, 2, "forall int true; (true > 0)");
+		test(true, 2, "forall int xyz; xyz > 0");
+		test(true, 2, "(exists int a; a < 0) && (forall int b; b > 1)");
+		test(true, 2, "forall int a; (exists int b; a < b)");
+		test(true, 3, "(forall int a; a > 0) && 1 < 2");
+		test(false, 3, "(forall int a; a > 0) && a < 1");
+		test(true, 2, "forall int a; (exists int b; a < b) && a > 0");
+		test(true, 2, "(forall int a; (exists int b; a < b)) && 1 > 0");
+		test(false, 2, "(forall int a; (exists int b; a < b)) && a > 0");
+		test(true, 3, "false || (forall int a; a > 0) && 1 < 2");
+		test(true, 3, "forall boolean ok; ok");
+		test(true, 3, "forall int i; (exists boolean b; i > 0 ==> b)");
+		test(true, 3,
+				"1 > 0 || (forall int i; (exists boolean b; i > 0 ==> b))");
+		test(true, 3,
+				"1 > 0 || (forall int i; (exists boolean b; i > 0 ==> b) ==> i < 0)");
+		test(false, 3, "forall int i; i");
+		test(false, 3, "forall int i; i ==> false");
 
 		// test(true, 3, "(true ? 1 : 2) < 1");
 		// test(true, 3, "(12 < 34 ? 1 : 2) < 45");
@@ -236,7 +244,7 @@ public class Testuj {
 		// test(true, 3, "1 << (2 << 3) < 4", "1 << 2 << 3 < 4");
 		// test(true, 3, "1 << 2 + (3 * 4) < 5", "1 << 2 + 3 * 4 < 5");
 		// test(false, 3, "1 << 2 >> true < 3");
-		// test(false, 3, "(1 << (2 >> true)) < 3"); //FIXME!! SEGV
+		// test(false, 3, "(1 << (2 >> true)) < 3"); //SEGV
 		// test(false, 3, "1 << (2 >> true) < 3");
 
 		// test(true, 3, "-1 < 2");

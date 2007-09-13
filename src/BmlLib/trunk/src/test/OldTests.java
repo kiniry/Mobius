@@ -23,12 +23,13 @@ import annot.formula.Predicate2Ar;
 import annot.formula.QuantifiedFormula;
 import annot.io.Code;
 import annot.io.ReadAttributeException;
-import annot.textio.BMLConfig;
 import annot.textio.CodeSearch;
 import annot.textio.Parsing;
 
 public class OldTests {
 
+	static public final boolean goGenerateRandomQuantifiedFormulas = false;
+	
 	static public String xxx = "################################################################################";
 	private static BCClass bcc;
 	private static Random random;
@@ -47,13 +48,16 @@ public class OldTests {
 	}
 
 	private static AbstractFormula generateRandomFormula(int size) {
-		return grf(size, 0.5);
+		return grf(size, 0.5, 0);
 	}
 
-	private static AbstractFormula grf(int size, double w) {
+	private static AbstractFormula grf(int size, double w, int ind) {
 		int[] connectors = { Code.TRUE, Code.FALSE, Code.NOT, Code.AND,
-				Code.OR, Code.IMPLIES };
+				Code.OR, Code.IMPLIES, Code.FORALL_WITH_NAME };
+		String[] names = { "a", "b", "c", "d", "e", "f", "g", "h", "i", "j" };
 		int n = connectors.length;
+		if (!goGenerateRandomQuantifiedFormulas)
+			n--;
 		int r = rand() % n;
 		if (w > 1)
 			w = 1;
@@ -66,13 +70,23 @@ public class OldTests {
 		case Code.AND:
 		case Code.OR:
 		case Code.IMPLIES:
-			return new Formula(code, grf(s, w + 0.1), grf(s, w + 0.1));
+			return new Formula(code, grf(s, w + 0.1, ind), grf(s, w + 0.1, ind));
 		case Code.NOT:
-			return new Formula(code, grf(s, w + 0.1));
+			return new Formula(code, grf(s, w + 0.1, ind));
 		case Code.TRUE:
 			return Predicate0Ar.TRUE;
 		case Code.FALSE:
 			return Predicate0Ar.FALSE;
+		case Code.FORALL_WITH_NAME:
+			QuantifiedFormula qf = new QuantifiedFormula(code);
+			int bvc = rand() % 3 + 1;
+			for (int i = 0; i < bvc; i++) {
+				qf.addVariable(new BoundVar(JavaType.JavaInt, ind, qf,
+						names[ind % names.length]));
+				ind++;
+			}
+			qf.setFormula(grf(s, w + 0.1, ind));
+			return qf;
 		default:
 			throw new RuntimeException("error in generateRandomFormula");
 		}
@@ -189,7 +203,7 @@ public class OldTests {
 	}
 
 	private static AbstractFormula sampleQuantifiedFormula() {
-		QuantifiedFormula f = new QuantifiedFormula(true);
+		QuantifiedFormula f = new QuantifiedFormula(Code.FORALL_WITH_NAME);
 		BoundVar bv = new BoundVar(JavaType.JavaInt, 0, f, "a");
 		f.addVariable(bv);
 		f.setFormula(new Predicate2Ar(Code.LESS, bv, new NumberLiteral(10)));
@@ -200,9 +214,9 @@ public class OldTests {
 			ReadAttributeException {
 		bcc = new BCClass(Paths.path, "test.Empty");
 		BCMethod m = bcc.methods[1];
-		// AbstractFormula f = generateRandomFormula(8);
+		AbstractFormula f = generateRandomFormula(8);
 		// AbstractFormula f = getSampleFormula();
-		AbstractFormula f = sampleQuantifiedFormula();
+		// AbstractFormula f = sampleQuantifiedFormula();
 		SingleAssert sa = new SingleAssert(m, 8, 3, f);
 		m.addAttribute(sa);
 		String code = bcc.printCode();
@@ -210,26 +224,10 @@ public class OldTests {
 		System.out.println(code);
 	}
 
-	private static void scp_cleanup_test() throws ClassNotFoundException,
-			ReadAttributeException, RecognitionException {
-		createSampleClass();
-		BMLConfig conf = new BMLConfig();
-		BCPrintableAttribute[] at = bcc.getAllAttributes();
-		at[2].parse("\\assert forall int a int b int c ((a < b) || (b < c))");
-		at = bcc.getAllAttributes();
-		at[2].parse("\\assert forall int b int d (b > d)");
-		at = bcc.getAllAttributes();
-		String code = bcc.cp.printCode(conf);
-		System.out.println(code);
-		// ...
-		// incomplete
-	}
-
 	public static void main(String[] args) {
 		try {
 			addRemoveTest();
 			addRemoveTest2();
-			// scp_cleanup_test();
 			pp_test();
 			System.out.println("done.");
 		} catch (Exception e) {

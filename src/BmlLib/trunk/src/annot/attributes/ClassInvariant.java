@@ -44,18 +44,6 @@ public class ClassInvariant extends BCPrintableAttribute implements
 		bcc.invariant = (ClassInvariant) pa;
 	}
 
-	public int getIndex() {
-		return bcc.cp.findConstant(IDisplayStyle.__classInvariant).getIndex();
-	}
-
-	public String getName() {
-		return IDisplayStyle.__classInvariant;
-	}
-
-	public void save(AttributeWriter aw) {
-		invariant.write(aw);
-	}
-
 	@Override
 	public void remove() {
 		bcc.invariant = null;
@@ -69,6 +57,18 @@ public class ClassInvariant extends BCPrintableAttribute implements
 	@Override
 	public String toString() {
 		return "class invariant";
+	}
+
+	public int getIndex() {
+		return bcc.cp.findConstant(IDisplayStyle.__classInvariant);
+	}
+
+	public String getName() {
+		return IDisplayStyle.__classInvariant;
+	}
+
+	public void save(AttributeWriter aw) {
+		invariant.write(aw);
 	}
 
 }

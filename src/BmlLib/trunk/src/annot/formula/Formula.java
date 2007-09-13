@@ -1,6 +1,7 @@
 package annot.formula;
 
 import annot.bcexpression.BCExpression;
+import annot.bcexpression.JavaType;
 import annot.io.AttributeReader;
 import annot.io.AttributeWriter;
 import annot.io.Code;
@@ -63,25 +64,15 @@ public class Formula extends AbstractFormula {
 		if (root == Code.NOT) {
 			subExpr = new BCExpression[1];
 			subExpr[0] = ar.readExpression();
-			if (!(subExpr[0] instanceof AbstractFormula))
-				throw new ReadAttributeException("Formula expected, read "
-						+ subExpr[0].getClass().toString());
 		} else {
 			subExpr = new BCExpression[2];
 			subExpr[0] = ar.readExpression();
-			if (!(subExpr[0] instanceof AbstractFormula))
-				throw new ReadAttributeException("Formula expected, read "
-						+ subExpr[0].getClass().toString());
 			subExpr[1] = ar.readExpression();
-			if (!(subExpr[1] instanceof AbstractFormula))
-				throw new ReadAttributeException("Formula expected, read "
-						+ subExpr[1].getClass().toString());
 		}
 	}
 
 	@Override
 	public void write(AttributeWriter aw) {
-		// FIXME! what about EQUIV and NOTEQUIV connectors??
 		aw.writeByte(connector);
 		writeSubExpressions(aw);
 	}
@@ -103,6 +94,14 @@ public class Formula extends AbstractFormula {
 			return subExpr[0].toString() + printRoot(null)
 					+ subExpr[1].toString();
 		}
+	}
+
+	@Override
+	public JavaType getType1() {
+		for (int i = 0; i < subExpr.length; i++)
+			if (subExpr[i].getType() != JavaType.JavaBool)
+				return null;
+		return JavaType.JavaBool;
 	}
 
 }

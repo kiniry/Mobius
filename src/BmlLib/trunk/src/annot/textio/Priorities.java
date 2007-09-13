@@ -12,10 +12,6 @@ public abstract class Priorities implements Code {
 		priorities = new int[255];
 		for (int i = 0; i < 255; i++)
 			priorities[i] = -1;
-		priorities[FORALL] = 1;
-		priorities[EXISTS] = 1;
-		priorities[FORALL_WITH_NAME] = 1;
-		priorities[EXISTS_WITH_NAME] = 1;
 		priorities[NOT] = 3;
 		priorities[LESS] = 7;
 		priorities[LESSEQ] = 7;
@@ -28,6 +24,11 @@ public abstract class Priorities implements Code {
 		priorities[IMPLIES] = 14;
 		priorities[EQUIV] = 15;
 		priorities[NOTEQUIV] = 15;
+		// ?
+		priorities[FORALL] = 17;
+		priorities[EXISTS] = 17;
+		priorities[FORALL_WITH_NAME] = 17;
+		priorities[EXISTS_WITH_NAME] = 17;
 	}
 
 	public static int getPriority(int opcode) {

@@ -1,7 +1,7 @@
 package annot.textio;
 
 public class NewPrettyPrinter extends PrettyPrinter {
-	// ERRORS!
+	// FIXME! ERRORS!
 
 	private int maxW;
 
@@ -41,7 +41,8 @@ public class NewPrettyPrinter extends PrettyPrinter {
 		if (input.length() == 0)
 			return "";
 		if (strlen(prefix + input + suffix) < maxW) {
-			return prefix + cleanup(input) + suffix; // if whole expression fit
+			return prefix + cleanup(input) + suffix; // if whole expression
+														// fit
 			// into current line
 		}
 		String[] sub = splitRoot(input);

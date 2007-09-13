@@ -17,12 +17,16 @@ public class JavaType extends BCExpression {
 		this.name = name;
 	};
 
+	public static JavaType JavaType = new JavaType(null);
 	public static JavaType JavaInt = new JavaType(IDisplayStyle.jt_int);
+	public static JavaType JavaBool = new JavaType(IDisplayStyle.jt_boolean);
 
 	public static JavaType getJavaType(String name)
 			throws ReadAttributeException {
 		if (IDisplayStyle.jt_int.equals(name))
 			return JavaInt;
+		if (IDisplayStyle.jt_boolean.equals(name))
+			return JavaBool;
 		throw new ReadAttributeException("Unknown java type");
 	}
 
@@ -58,6 +62,11 @@ public class JavaType extends BCExpression {
 	@Override
 	public String toString() {
 		return name;
+	}
+
+	@Override
+	public JavaType getType1() {
+		return JavaType;
 	}
 
 }

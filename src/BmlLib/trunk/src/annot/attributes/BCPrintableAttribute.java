@@ -17,7 +17,7 @@ public abstract class BCPrintableAttribute {
 		return last_code;
 	}
 
-	protected abstract String printCode1(BMLConfig conf);
+	public abstract String printCode1(BMLConfig conf);
 
 	public abstract void replaceWith(BCPrintableAttribute pa);
 
