@@ -162,6 +162,13 @@ BEGIN
         wf_state(p)(catch(s))
 
 
+  wf_state_arg_is_local : LEMMA  %:-)
+    FORALL(p : Program, s : PState, c : Class, m : Method) :
+      wf_state(p)(s) IMPLIES
+      classes(p)(c) IMPLIES
+      methods(c)(m) IMPLIES
+        is_local(name(arg(m)), s)
+
 END State
 
 

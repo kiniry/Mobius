@@ -1,5 +1,6 @@
-CorrectnessAnnProgram[CP, Name : TYPE+] : THEORY
+RelatedStateProperties[CP, Name : TYPE+] : THEORY
 BEGIN
+
 
   ASSUMING
 
@@ -18,14 +19,9 @@ BEGIN
 
   ENDASSUMING
 
-%  IMPORTING AnnGenerationLemmas[CP, Name]
-  IMPORTING Equivalence[CP, Name],
-            APSemanticsProperties,
-            listfuncs
+  IMPORTING Equivalence[CP, Name]
 
   mp : VAR (wf_MP)
-
-  % Properties about related_states
 
   get_address_same_in_related_states : LEMMA  %:-)
     FORALL(vn : Name, sMP : MPState, sAP : APState) :
@@ -68,6 +64,14 @@ BEGIN
         halted_implies_JMLExc(mp)(update_PState(sMP, upd), 
                                   update_PState(sAP, upd))
 
+  related_states_preserved_by_update_local : LEMMA % :-)
+    FORALL (mp)(sMP : MPState, sAP : APState)(vn : Name, v : (defined?)) :
+      related_states(mp)(sMP, sAP) IMPLIES
+      is_local(vn, pstate(sMP)) IMPLIES
+      is_local(vn, pstate(sAP)) IMPLIES
+        related_states(mp)(update_PState(sMP, update_local(vn, v)), 
+                           update_PState(sAP, update_local(vn, v)))
+
   MP_modeled_preserved_by_catch : LEMMA % :-)
     FORALL (mp)(sMP : MPState, sAP : APState) :
       related_states(mp)(sMP, sAP) IMPLIES
@@ -94,6 +98,21 @@ BEGIN
         halted_implies_JMLExc(mp)(update_PState(sMP, raise(e)), 
                                   update_PState(sAP, raise(e)))
 
+  related_states_preserved_by_catch : LEMMA % :-)
+    FORALL (mp)(sMP : MPState, sAP : APState) :
+      related_states(mp)(sMP, sAP) IMPLIES
+      (up?(ex(pstate(sAP))) IMPLIES NOT down(ex(pstate(sAP))) = JMLExc) IMPLIES
+        related_states(mp)(update_PState(sMP, catch), 
+                           update_PState(sAP, catch))
+
+  related_states_preserved_by_raise : LEMMA % :-)
+    FORALL (mp)(sMP : MPState, sAP : APState, e : Excpt) :
+      related_states(mp)(sMP, sAP) IMPLIES
+      NOT e = JMLExc IMPLIES
+      NOT up?(ex(pstate(sAP))) IMPLIES
+        related_states(mp)(update_PState(sMP, raise(e)), 
+                           update_PState(sAP, raise(e)))
+
   MP_modeled_implies_cp_halted_correspondence : LEMMA % :-)
     FORALL(mp)(sMP : MPState, sAP : APState) :
       wf_state(ann_program(mp))(sAP) IMPLIES
@@ -107,29 +126,94 @@ BEGIN
       cp(astate(sMP)) = halted IMPLIES
       lookup(cp(mp), sAP) = lookup(halted(mp), sAP)
 
-  % PROVE! This can be long. We have to show that the expressions and
-  % statements of the mp are not modified, only new exprs and stmts are
-  % added and they do not interfere with the others.
-%  MP_modeled_implies_same_num_eval : LEMMA % :-)
-%    FORALL (mp, ap : Program)
-%           (sMP : MPState, sAP : APState)(n : NumExpr) :
-%      related_states(mp, ap)(sMP, sAP) IMPLIES
-%      (VarEval?(n) IMPLIES declared_var_names(program(mp))(varname(n))) IMPLIES
-%          eval(n)(sMP) = eval(n)(sAP)
 
-%  MP_modeled_implies_same_bool_eval : LEMMA % :-)
-%    FORALL (mp, ap : Program)
-%           (sMP : MPState, sAP : APState)(b : BoolExpr) :
-%      related_states(mp, ap)(sMP, sAP) IMPLIES
-%        eval(b)(sMP) = eval(b)(sAP)
+  related_states_preserved_by_update_stack : LEMMA % :-)
+    FORALL(mp)(sMP : MPState, sAP : APState,
+               this_val : Val, arg :  (getLocalDecls(program(mp))), 
+               param_val : Val, lvds : finite_set[LocalVarDecl]) :
+      related_states(mp)(sMP, sAP) IMPLIES
+      NOT up?(ex(pstate(sAP))) IMPLIES
+      (FORALL (l : LocalVarDecl) : lvds(l) IMPLIES 
+                                   getLocalDecls(program(mp))(l)) IMPLIES
+        related_states(mp)(update_stack(this_val, arg, param_val,
+                                        lvds, sMP),
+                           update_stack(this_val, arg, param_val,
+                                        lvds, sAP))
+
+END RelatedStateProperties
 
 
-  on_method_entry_preserves_related_states : LEMMA
+MethodCallsPreserveRelatedState[CP, Name : TYPE+] : THEORY
+BEGIN
+
+  ASSUMING
+
+    CP_is_enumerable : ASSUMPTION
+      EXISTS (f : [CP -> nat]) : injective?(f)
+
+    infinite_namespace : ASSUMPTION
+      is_infinite({n : Name | TRUE})
+
+    IMPORTING VariableNames[CP, Name]
+
+    name_of_exists : ASSUMPTION
+      EXISTS (f : [mp : (wf_MP) -> [CP -> (legal_names(mp))]]) : 
+        FORALL(mp : (wf_MP)) : 
+          injective?(f(mp))
+
+  ENDASSUMING
+
+  IMPORTING RelatedStateProperties[CP, Name]
+
+  mp : VAR (wf_MP)
+
+  on_method_entry_preserves_related_states_annotated : LEMMA
     FORALL(md : Method, a : (defined?), m1, m2 : nat,
            sMP1, sMP2 : MPState, sAP1, sAP2 : APState) : 
       related_states(mp)(sMP1, sAP1) IMPLIES
       NOT up?(ex(pstate(sAP1))) IMPLIES
       NOT a = Null IMPLIES
+      up?(get_class[Name](program(mp))(a)) IMPLIES
+      name(down(get_class(program(mp))(a))) = class_name(mva(mp)) IMPLIES
+      (FORALL(b : Body, v1, v2 : Val)
+             (sMP1, sMP2 : MPState, sAP1, sAP2 : APState)
+             (n1 : below(m1), n2 : below(m2)) :
+        subset?(var_names(b), ext_declared_var_names(program(mp))) IMPLIES
+        related_states(mp)(sMP1, sAP1) IMPLIES
+        derive(mp)(b, sMP1, v1, sMP2)(n1) IMPLIES
+        derive(ann_program(mp))(b, sAP1, v2, sAP2)(n2) IMPLIES
+          related_states(mp)(sMP2, sAP2) AND v1 = v2) IMPLIES
+      on_method_entry_MP(mp, md, a, sMP1, sMP2, m1,
+                         LAMBDA (k: upto(m1))
+                                (p: MonitoredProgram[CP, Name])
+                                (b: Body[Name], sigma1: MPState[CP, Name],
+                                 v: Val[Name], sigma2: MPState[CP, Name])
+                                (m: below(k)):
+                           derive(p)(b, sigma1, v, sigma2)(m)) IMPLIES
+      on_method_entry(ann_program(mp), ann_method(mp)(md), a, sAP1, sAP2, m2,
+                      LAMBDA (k: upto(m2))(p: Program[Name])
+                             (b: Body[Name], sigma1: APState[Name],
+                              v: Val[Name], sigma2: APState[Name])
+                             (m: below(k)):
+                        derive(p)(b, sigma1, v, sigma2)(m)) IMPLIES
+        related_states(mp)(sMP2, sAP2)
+
+  on_method_entry_preserves_related_states_not_annotated : LEMMA
+    FORALL(md : Method, a : (defined?), m1, m2 : nat,
+           sMP1, sMP2 : MPState, sAP1, sAP2 : APState) : 
+      related_states(mp)(sMP1, sAP1) IMPLIES
+      NOT up?(ex(pstate(sAP1))) IMPLIES
+      NOT a = Null IMPLIES
+      up?(get_class[Name](program(mp))(a)) IMPLIES
+      NOT name(down(get_class(program(mp))(a))) = class_name(mva(mp)) IMPLIES
+      (FORALL(b : Body, v1, v2 : Val)
+             (sMP1, sMP2 : MPState, sAP1, sAP2 : APState)
+             (n1 : below(m1), n2 : below(m2)) :
+        subset?(var_names(b), ext_declared_var_names(program(mp))) IMPLIES
+        related_states(mp)(sMP1, sAP1) IMPLIES
+        derive(mp)(b, sMP1, v1, sMP2)(n1) IMPLIES
+        derive(ann_program(mp))(b, sAP1, v2, sAP2)(n2) IMPLIES
+          related_states(mp)(sMP2, sAP2) AND v1 = v2) IMPLIES
       on_method_entry_MP(mp, md, a, sMP1, sMP2, m1,
                          LAMBDA (k: upto(m1))
                                 (p: MonitoredProgram[CP, Name])
@@ -145,6 +229,158 @@ BEGIN
                         derive(p)(b, sigma1, v, sigma2)(m)) IMPLIES
         related_states(mp)(sMP2, sAP2)
 
+  on_method_exit_normal_preserves_related_states_annotated : LEMMA
+    FORALL(md : Method, a : (defined?), m1, m2 : nat,
+           sMP1, sMP2 : MPState, sAP1, sAP2 : APState) : 
+      related_states(mp)(sMP1, sAP1) IMPLIES
+      NOT up?(ex(pstate(sAP1))) IMPLIES
+      NOT a = Null IMPLIES
+      up?(get_class[Name](program(mp))(a)) IMPLIES
+      name(down(get_class(program(mp))(a))) = class_name(mva(mp)) IMPLIES
+      (FORALL(b : Body, v1, v2 : Val)
+             (sMP1, sMP2 : MPState, sAP1, sAP2 : APState)
+             (n1 : below(m1), n2 : below(m2)) :
+        subset?(var_names(b), ext_declared_var_names(program(mp))) IMPLIES
+        related_states(mp)(sMP1, sAP1) IMPLIES
+        derive(mp)(b, sMP1, v1, sMP2)(n1) IMPLIES
+        derive(ann_program(mp))(b, sAP1, v2, sAP2)(n2) IMPLIES
+          related_states(mp)(sMP2, sAP2) AND v1 = v2) IMPLIES
+      on_method_exit_normal_MP(mp, md, a, sMP1, sMP2, m1,
+                         LAMBDA (k: upto(m1))
+                                (p: MonitoredProgram[CP, Name])
+                                (b: Body[Name], sigma1: MPState[CP, Name],
+                                 v: Val[Name], sigma2: MPState[CP, Name])
+                                (m: below(k)):
+                           derive(p)(b, sigma1, v, sigma2)(m)) IMPLIES
+      on_method_exit_normal(ann_program(mp), ann_method(mp)(md), 
+                            a, sAP1, sAP2, m2,
+                      LAMBDA (k: upto(m2))(p: Program[Name])
+                             (b: Body[Name], sigma1: APState[Name],
+                              v: Val[Name], sigma2: APState[Name])
+                             (m: below(k)):
+                        derive(p)(b, sigma1, v, sigma2)(m)) IMPLIES
+        related_states(mp)(sMP2, sAP2)
+
+  on_method_exit_normal_preserves_related_states_not_annotated : LEMMA
+    FORALL(md : Method, a : (defined?), m1, m2 : nat,
+           sMP1, sMP2 : MPState, sAP1, sAP2 : APState) : 
+      related_states(mp)(sMP1, sAP1) IMPLIES
+      NOT up?(ex(pstate(sAP1))) IMPLIES
+      NOT a = Null IMPLIES
+      up?(get_class[Name](program(mp))(a)) IMPLIES
+      NOT name(down(get_class(program(mp))(a))) = class_name(mva(mp)) IMPLIES
+      (FORALL(b : Body, v1, v2 : Val)
+             (sMP1, sMP2 : MPState, sAP1, sAP2 : APState)
+             (n1 : below(m1), n2 : below(m2)) :
+        subset?(var_names(b), ext_declared_var_names(program(mp))) IMPLIES
+        related_states(mp)(sMP1, sAP1) IMPLIES
+        derive(mp)(b, sMP1, v1, sMP2)(n1) IMPLIES
+        derive(ann_program(mp))(b, sAP1, v2, sAP2)(n2) IMPLIES
+          related_states(mp)(sMP2, sAP2) AND v1 = v2) IMPLIES
+      on_method_exit_normal_MP(mp, md, a, sMP1, sMP2, m1,
+                         LAMBDA (k: upto(m1))
+                                (p: MonitoredProgram[CP, Name])
+                                (b: Body[Name], sigma1: MPState[CP, Name],
+                                 v: Val[Name], sigma2: MPState[CP, Name])
+                                (m: below(k)):
+                           derive(p)(b, sigma1, v, sigma2)(m)) IMPLIES
+      on_method_exit_normal(ann_program(mp), md, a, sAP1, sAP2, m2,
+                      LAMBDA (k: upto(m2))(p: Program[Name])
+                             (b: Body[Name], sigma1: APState[Name],
+                              v: Val[Name], sigma2: APState[Name])
+                             (m: below(k)):
+                        derive(p)(b, sigma1, v, sigma2)(m)) IMPLIES
+        related_states(mp)(sMP2, sAP2)
+
+  on_method_exit_exceptional_preserves_related_states_annotated : LEMMA
+    FORALL(md : Method, a : (defined?), m1, m2 : nat,
+           sMP1, sMP2 : MPState, sAP1, sAP2 : APState) : 
+      related_states(mp)(sMP1, sAP1) IMPLIES
+      up?(ex(pstate(sAP1))) IMPLIES
+      NOT a = Null IMPLIES
+      up?(get_class[Name](program(mp))(a)) IMPLIES
+      name(down(get_class(program(mp))(a))) = class_name(mva(mp)) IMPLIES
+      (FORALL(b : Body, v1, v2 : Val)
+             (sMP1, sMP2 : MPState, sAP1, sAP2 : APState)
+             (n1 : below(m1), n2 : below(m2)) :
+        subset?(var_names(b), ext_declared_var_names(program(mp))) IMPLIES
+        related_states(mp)(sMP1, sAP1) IMPLIES
+        derive(mp)(b, sMP1, v1, sMP2)(n1) IMPLIES
+        derive(ann_program(mp))(b, sAP1, v2, sAP2)(n2) IMPLIES
+          related_states(mp)(sMP2, sAP2) AND v1 = v2) IMPLIES
+      on_method_exit_exceptional_MP(mp, md, a, sMP1, sMP2, m1,
+                         LAMBDA (k: upto(m1))
+                                (p: MonitoredProgram[CP, Name])
+                                (b: Body[Name], sigma1: MPState[CP, Name],
+                                 v: Val[Name], sigma2: MPState[CP, Name])
+                                (m: below(k)):
+                           derive(p)(b, sigma1, v, sigma2)(m)) IMPLIES
+      on_method_exit_exceptional(ann_program(mp), ann_method(mp)(md), 
+                                  a, sAP1, sAP2, m2,
+                      LAMBDA (k: upto(m2))(p: Program[Name])
+                             (b: Body[Name], sigma1: APState[Name],
+                              v: Val[Name], sigma2: APState[Name])
+                             (m: below(k)):
+                        derive(p)(b, sigma1, v, sigma2)(m)) IMPLIES
+        related_states(mp)(sMP2, sAP2)
+
+  on_method_exit_exceptional_preserves_related_states_not_annotated : LEMMA
+    FORALL(md : Method, a : (defined?), m1, m2 : nat,
+           sMP1, sMP2 : MPState, sAP1, sAP2 : APState) : 
+      related_states(mp)(sMP1, sAP1) IMPLIES
+      up?(ex(pstate(sAP1))) IMPLIES
+      NOT a = Null IMPLIES
+      up?(get_class[Name](program(mp))(a)) IMPLIES
+      NOT name(down(get_class(program(mp))(a))) = class_name(mva(mp)) IMPLIES
+      (FORALL(b : Body, v1, v2 : Val)
+             (sMP1, sMP2 : MPState, sAP1, sAP2 : APState)
+             (n1 : below(m1), n2 : below(m2)) :
+        subset?(var_names(b), ext_declared_var_names(program(mp))) IMPLIES
+        related_states(mp)(sMP1, sAP1) IMPLIES
+        derive(mp)(b, sMP1, v1, sMP2)(n1) IMPLIES
+        derive(ann_program(mp))(b, sAP1, v2, sAP2)(n2) IMPLIES
+          related_states(mp)(sMP2, sAP2) AND v1 = v2) IMPLIES
+      on_method_exit_exceptional_MP(mp, md, a, sMP1, sMP2, m1,
+                         LAMBDA (k: upto(m1))
+                                (p: MonitoredProgram[CP, Name])
+                                (b: Body[Name], sigma1: MPState[CP, Name],
+                                 v: Val[Name], sigma2: MPState[CP, Name])
+                                (m: below(k)):
+                           derive(p)(b, sigma1, v, sigma2)(m)) IMPLIES
+      on_method_exit_exceptional(ann_program(mp), md, a, sAP1, sAP2, m2,
+                      LAMBDA (k: upto(m2))(p: Program[Name])
+                             (b: Body[Name], sigma1: APState[Name],
+                              v: Val[Name], sigma2: APState[Name])
+                             (m: below(k)):
+                        derive(p)(b, sigma1, v, sigma2)(m)) IMPLIES
+        related_states(mp)(sMP2, sAP2)
+
+END MethodCallsPreserveRelatedState
+
+CorrectnessAnnProgram[CP, Name : TYPE+] : THEORY
+BEGIN
+
+  ASSUMING
+
+    CP_is_enumerable : ASSUMPTION
+      EXISTS (f : [CP -> nat]) : injective?(f)
+
+    infinite_namespace : ASSUMPTION
+      is_infinite({n : Name | TRUE})
+
+    IMPORTING VariableNames[CP, Name]
+
+    name_of_exists : ASSUMPTION
+      EXISTS (f : [mp : (wf_MP) -> [CP -> (legal_names(mp))]]) : 
+        FORALL(mp : (wf_MP)) : 
+          injective?(f(mp))
+
+  ENDASSUMING
+
+  mp : VAR (wf_MP)
+
+  IMPORTING MethodCallsPreserveRelatedState[CP, Name]
+
   % Main lemmas used in the proof of the correcteness_of_ann_program
 
   initial_states_are_equivalent : LEMMA % :-)
@@ -153,6 +389,7 @@ BEGIN
                            initial_AP_state(ann_program(mp))(root_object))
 
 
+  % all cases proven, except try catch
   derive_maintains_related_states_for_unchanged_program : THEOREM
     FORALL (mp)(b : Body, v1, v2 : Val)
            (sMP1, sMP2 : MPState, sAP1, sAP2 : APState)
@@ -164,15 +401,6 @@ BEGIN
       derive(ann_program(mp))(b, sAP1, v2, sAP2)(n2) IMPLIES
         related_states(mp)(sMP2, sAP2) AND v1 = v2
 
-%  derive_maintains_related_states : THEOREM
-%    FORALL (mp)(b : Body, v1, v2 : Val)
-%           (sMP1, sMP2 : MPState, sAP1, sAP2 : APState)
-%           (n1, n2 : nat) :
-%      well_behaved_MP(mp) IMPLIES
-%      related_states(mp)(sMP1, sAP1) IMPLIES
-%      derive(mp)(b, sMP1, v1, sMP2)(n1) IMPLIES
-%      derive(ann_program(mp))(b, sAP1, v2, sAP2)(n2) IMPLIES
-%        related_states(mp)(sMP2, sAP2) AND v1 = v2
 
 
   % The main result

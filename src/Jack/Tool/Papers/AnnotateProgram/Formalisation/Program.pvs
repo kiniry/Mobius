@@ -271,7 +271,8 @@ BEGIN
     Union({ns : set[Name] | ns = var_names(pre(m)) OR ns = var_names(post(m)) OR
       ns = var_names(body(m)) OR ns = var_names(pre_set(m)) OR 
       ns = var_names(post_set(m)) OR ns = var_names(exc_set(m)) OR 
-      ns = var_names(lvars(m))})
+      ns = var_names(lvars(m)) OR ns = var_names(res(m)) OR
+      ns = singleton(name(arg(m)))})
 
   var_names(c : Class) : set[Name] = 
     union(Union({ns : set[Name] | EXISTS (m : Method) :
@@ -299,6 +300,13 @@ BEGIN
                         classes(p)(c) AND 
                         methods(c)(m) AND
                         (lvars(m)(l) OR l = arg(m))}
+
+  arg_in_getLocalDecls : LEMMA % :-)
+    FORALL(p : Program, c : Class, m : Method) : 
+      classes(p)(c) IMPLIES
+      methods(c)(m) IMPLIES
+      getLocalDecls(p)(arg(m))
+
 
   getGhostDecls(p : Program) : finite_set[FieldDecl] =
     {g : FieldDecl | EXISTS (c : Class) :  classes(p)(c) AND ghost_vars(c)(g)}

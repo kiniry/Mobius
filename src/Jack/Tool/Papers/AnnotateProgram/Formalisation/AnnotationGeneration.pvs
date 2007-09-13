@@ -315,35 +315,56 @@ BEGIN
       wf_state(ann_program(mp))(sAP) IMPLIES
         (is_ghost(vn, sMP) IMPLIES is_ghost(vn, sAP))
 
-  var_names_ann_method_body : LEMMA % :-)
-    FORALL(m : Method) :
-      var_names(body(ann_method(mp)(m))) = var_names(body(m))
 
-  var_names_ann_method_pre : LEMMA % :-)
+  ann_method_body : LEMMA % :-)
     FORALL(m : Method) :
-      var_names(pre(ann_method(mp)(m))) = var_names(pre(m))
+      body(ann_method(mp)(m)) = body(m)
 
-  var_names_ann_method_post : LEMMA % :-)
+  ann_method_pre : LEMMA % :-)
     FORALL(m : Method) :
-      var_names(post(ann_method(mp)(m))) = var_names(post(m))
+      pre(ann_method(mp)(m)) = pre(m)
 
-  var_names_ann_method_pre_set : LEMMA % :-)
+  ann_method_post : LEMMA % :-)
     FORALL(m : Method) :
-        var_names(s1(pre_set(ann_method(mp)(m)))) = var_names(pre_set(m))
+      post(ann_method(mp)(m)) = post(m)
 
-  var_names_ann_method_post_set : LEMMA % :-)
+  ann_method_arg : LEMMA % :-)
     FORALL(m : Method) :
-        var_names(s1(post_set(ann_method(mp)(m)))) = var_names(post_set(m))
+      arg(ann_method(mp)(m)) = arg(m)
 
-  var_names_ann_method_exc_set : LEMMA % :-)
+  ann_method_res : LEMMA % :-)
     FORALL(m : Method) :
-        var_names(s1(exc_set(ann_method(mp)(m)))) = var_names(exc_set(m))
+      res(ann_method(mp)(m)) = res(m)
 
-  var_names_ann_class_inv : LEMMA % :-)
+  ann_method_res_type : LEMMA % :-)
+    FORALL(m : Method) :
+      res_type(ann_method(mp)(m)) = res_type(m)
+
+  ann_method_lvars : LEMMA % :-)
+    FORALL(m : Method) :
+      lvars(ann_method(mp)(m)) = lvars(m)
+
+  ann_method_pre_set : LEMMA % :-)
+    FORALL(m : Method) :
+      Sequence?(pre_set(ann_method(mp)(m))) AND
+        s1(pre_set(ann_method(mp)(m))) = pre_set(m)
+
+  ann_method_post_set : LEMMA % :-)
+    FORALL(m : Method) :
+      Sequence?(post_set(ann_method(mp)(m))) AND
+        s1(post_set(ann_method(mp)(m))) = post_set(m)
+
+  ann_method_exc_set : LEMMA % :-)
+    FORALL(m : Method) :
+      Sequence?(exc_set(ann_method(mp)(m))) AND
+        s1(exc_set(ann_method(mp)(m))) = exc_set(m)
+
+  ann_class_inv : LEMMA % :-)
     FORALL(c : Class) :
     IF classes(program(mp))(c) AND name(c) = class_name(mva(mp))
-    THEN var_names(b1(inv(ann_class(mp)(c)))) = var_names(inv(c))
-    ELSE var_names(inv(ann_class(mp)(c))) = var_names(inv(c))
+    THEN Conj?(inv(ann_class(mp)(c))) AND 
+         b1(inv(ann_class(mp)(c))) = inv(c)
+    ELSE inv(ann_class(mp)(c)) = inv(c)
     ENDIF
   
   var_names_ann_action : LEMMA % :-)
@@ -433,7 +454,6 @@ BEGIN
       up?(lookup_mthd(ann_program(mp), tgt, mn)) IMPLIES
       m1 = down(lookup_mthd(program(mp), tgt, mn)) IMPLIES
       m2 = down(lookup_mthd(ann_program(mp), tgt, mn)) IMPLIES
-      up?(get_class(program(mp))(tgt)) IMPLIES
         IF name(down(get_class(program(mp))(tgt))) = class_name(mva(mp))
         THEN m2 = ann_method(mp)(m1)
         ELSE m2 = m1
@@ -453,4 +473,25 @@ BEGIN
         is_ghost(n, s)
 
 
+  ann_program_preserves_class_name : LEMMA % :-)
+    FORALL(c : Class) :
+      name(ann_class(mp)(c)) = name(c)
+
+  ann_program_preserves_class_names : LEMMA % :-)
+    class_names(program(mp)) = class_names(ann_program(mp))
+
+  up_get_class_equivalence : LEMMA % :-)
+    FORALL(a : Val) : 
+      up?(get_class(program(mp))(a)) IMPLIES
+       up?(get_class(ann_program(mp))(a))
+
+  get_class_equivalence : LEMMA % :-)
+    FORALL(a : Val) :
+      up?(get_class(program(mp))(a)) IMPLIES
+      IF name(down(get_class(program(mp))(a))) = class_name(mva(mp)) 
+      THEN get_class(ann_program(mp))(a) = 
+             up(ann_class(mp)(down(get_class(program(mp))(a))))
+      ELSE get_class(ann_program(mp))(a) = get_class(program(mp))(a)
+      ENDIF
+             
 END AnnotateProgramProperties

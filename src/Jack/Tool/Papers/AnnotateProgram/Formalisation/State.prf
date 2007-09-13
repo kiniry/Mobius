@@ -1,7 +1,7 @@
 (|State|
  (|update_locals_TCC1| 0
   (|update_locals_TCC1-1| NIL 3391159723 3395750968 ("" (SUBTYPE-TCC) NIL NIL)
-   PROVED
+   UNCHECKED
    ((|nonempty?| CONST-DECL "bool" |sets| NIL)
     (|empty?| CONST-DECL "bool" |sets| NIL)
     (|member| CONST-DECL "bool" |sets| NIL)
@@ -16,7 +16,7 @@
  (|update_locals_TCC2| 0
   (|update_locals_TCC2-1| NIL 3391159723 3395750968
    ("" (SKOSIMP*) (("" (REWRITE "card_rest") (("" (ASSERT) NIL NIL)) NIL)) NIL)
-   PROVED
+   UNCHECKED
    ((|int_minus_int_is_int| APPLICATION-JUDGEMENT "int" |integers| NIL)
     (|card_rest| FORMULA-DECL NIL |finite_sets| NIL)
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
@@ -31,7 +31,7 @@
    22 23 T NIL))
  (|initial_Program_state_TCC1| 0
   (|initial_Program_state_TCC1-1| NIL 3390799294 3395750968
-   ("" (SUBTYPE-TCC) NIL NIL) PROVED
+   ("" (SUBTYPE-TCC) NIL NIL) UNCHECKED
    ((|nonempty?| CONST-DECL "bool" |sets| NIL)
     (|empty?| CONST-DECL "bool" |sets| NIL)
     (|member| CONST-DECL "bool" |sets| NIL)
@@ -40,7 +40,7 @@
    10 10 NIL NIL))
  (|initial_Program_state_TCC2| 0
   (|initial_Program_state_TCC2-1| NIL 3390799294 3395750968
-   ("" (SUBTYPE-TCC) NIL NIL) PROVED
+   ("" (SUBTYPE-TCC) NIL NIL) UNCHECKED
    ((|nonempty?| CONST-DECL "bool" |sets| NIL)
     (|empty?| CONST-DECL "bool" |sets| NIL)
     (|member| CONST-DECL "bool" |sets| NIL)
@@ -158,15 +158,11 @@
         NIL))
       NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|initial_Program_state| CONST-DECL "PState" |State| NIL)
-    (|is_local| CONST-DECL "boolean" |State| NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    (|is_local| CONST-DECL "boolean" |State| NIL) NIL NIL
     (|get_LocalDecl| CONST-DECL "lift[LocalVarDecl]" |ProgramFunctions| NIL)
-    (|vn!1| SKOLEM-CONST-DECL "Name" |State| NIL)
-    (|l!1| SKOLEM-CONST-DECL "LocalVarDecl[Name]" |State| NIL)
-    (|p!1| SKOLEM-CONST-DECL "Program[Name]" |State| NIL)
+    NIL NIL NIL
     (|getLocalDecls| CONST-DECL "finite_set[LocalVarDecl]" |ProgramFunctions|
      NIL)
     (|default_value| CONST-DECL "(defined?)" |ValProp| NIL)
@@ -208,7 +204,7 @@
         NIL))
       NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|Val| TYPE-DECL NIL |Val_adt| NIL)
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|defined?| CONST-DECL "boolean" |ValProp| NIL)
@@ -237,10 +233,10 @@
     (|member| CONST-DECL "bool" |sets| NIL)
     (|declared_var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
     (|getGhostDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    NIL
     (|getLocalDecls| CONST-DECL "finite_set[LocalVarDecl]" |ProgramFunctions|
      NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    NIL
     (|getFieldDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
     (|finite_intersection1| APPLICATION-JUDGEMENT "finite_set" |finite_sets|
      NIL)
@@ -288,7 +284,7 @@
         NIL))
       NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|update_local| CONST-DECL "PState" |State| NIL)
     (|is_field| CONST-DECL "boolean" |State| NIL)
     (|defined?| CONST-DECL "boolean" |ValProp| NIL)
@@ -391,7 +387,7 @@
       NIL)
      ("2" (USE "wf_card[[Name, Val]]") NIL NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|wf_card| FORMULA-DECL NIL |WF_Card| NIL)
     (|defined?| CONST-DECL "boolean" |ValProp| NIL)
     (|JType| TYPE-DECL NIL |JType_adt| NIL)
@@ -420,15 +416,13 @@
     (/= CONST-DECL "boolean" |notequal| NIL)
     (|member| CONST-DECL "bool" |sets| NIL)
     (|remove| CONST-DECL "set" |sets| NIL)
-    (|finite_remove| APPLICATION-JUDGEMENT "finite_set" |finite_sets| NIL)
-    (|x!1| SKOLEM-CONST-DECL "finite_set[[Name, Val]]" |State| NIL)
+    (|finite_remove| APPLICATION-JUDGEMENT "finite_set" |finite_sets| NIL) NIL
     (|is_field| CONST-DECL "boolean" |State| NIL)
     (|getFieldDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    NIL
     (|getLocalDecls| CONST-DECL "finite_set[LocalVarDecl]" |ProgramFunctions|
      NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
-    (|wf_state_update_local| FORMULA-DECL NIL |State| NIL)
+    NIL (|wf_state_update_local| FORMULA-DECL NIL |State| NIL)
     (|real_lt_is_strict_total_order| NAME-JUDGEMENT
      "(strict_total_order?[real])" |real_props| NIL)
     (|finite_rest| APPLICATION-JUDGEMENT "finite_set" |finite_sets| NIL)
@@ -562,7 +556,7 @@
         NIL))
       NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|update| CONST-DECL "PState" |State| NIL)
     (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |State| NIL)
     (|is_field| CONST-DECL "boolean" |State| NIL)
@@ -578,31 +572,68 @@
     (|wf_state| CONST-DECL "boolean" |State| NIL))
    115 115 T SHOSTAK))
  (|wf_state_raise| 0
-  (|wf_state_raise-1| NIL 3390908545 3395751000 ("" (GRIND) NIL NIL) PROVED
+  (|wf_state_raise-1| NIL 3390908545 3395751000 ("" (GRIND) NIL NIL) UNCHECKED
    ((|raise| CONST-DECL "PState" |State| NIL)
-    (|wf_state| CONST-DECL "boolean" |State| NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    (|wf_state| CONST-DECL "boolean" |State| NIL) NIL
     (|getLocalDecls| CONST-DECL "finite_set[LocalVarDecl]" |ProgramFunctions|
      NIL)
-    (|is_local| CONST-DECL "boolean" |State| NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    (|is_local| CONST-DECL "boolean" |State| NIL) NIL
     (|getFieldDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
     (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |State| NIL)
     (|is_field| CONST-DECL "boolean" |State| NIL)
     (|defined?| CONST-DECL "boolean" |ValProp| NIL))
    30 30 T SHOSTAK))
  (|wf_state_catch| 0
-  (|wf_state_catch-1| NIL 3390908555 3395751000 ("" (GRIND) NIL NIL) PROVED
+  (|wf_state_catch-1| NIL 3390908555 3395751000 ("" (GRIND) NIL NIL) UNCHECKED
    ((|catch| CONST-DECL "PState" |State| NIL)
-    (|wf_state| CONST-DECL "boolean" |State| NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    (|wf_state| CONST-DECL "boolean" |State| NIL) NIL
     (|getLocalDecls| CONST-DECL "finite_set[LocalVarDecl]" |ProgramFunctions|
      NIL)
-    (|is_local| CONST-DECL "boolean" |State| NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    (|is_local| CONST-DECL "boolean" |State| NIL) NIL
     (|getFieldDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
     (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |State| NIL)
     (|is_field| CONST-DECL "boolean" |State| NIL)
     (|defined?| CONST-DECL "boolean" |ValProp| NIL))
-   29 29 T SHOSTAK)))
+   29 29 T SHOSTAK))
+ (|wf_state_arg_is_local| 0
+  (|wf_state_arg_is_local-1| NIL 3398660967 3398661012
+   ("" (SKOSIMP*)
+    (("" (EXPAND "wf_state")
+      (("" (INST -1 "name(arg(m!1))")
+        (("" (FLATTEN)
+          (("" (ASSERT)
+            (("" (FLATTEN)
+              (("" (EXPAND "var_names")
+                (("" (INST 1 "arg(m!1)")
+                  (("" (USE "arg_in_getLocalDecls") (("" (ASSERT) NIL NIL))
+                    NIL))
+                  NIL))
+                NIL))
+              NIL))
+            NIL))
+          NIL))
+        NIL))
+      NIL))
+    NIL)
+   PROVED
+   ((|wf_state| CONST-DECL "boolean" |State| NIL)
+    (|arg_in_getLocalDecls| FORMULA-DECL NIL |ProgramFunctions| NIL)
+    (|Program| TYPE-EQ-DECL NIL |Program| NIL)
+    (|Class| TYPE-EQ-DECL NIL |Program| NIL)
+    (|lift| TYPE-DECL NIL |lift_adt| NIL)
+    (|FieldDecl| TYPE-EQ-DECL NIL |Program| NIL)
+    (|defined?| CONST-DECL "boolean" |ValProp| NIL)
+    (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
+    (|Val| TYPE-DECL NIL |Val_adt| NIL)
+    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    (|Method| TYPE-EQ-DECL NIL |Program| NIL)
+    (|Expr| TYPE-EQ-DECL NIL |Body_adt| NIL)
+    (|BoolExpr| TYPE-EQ-DECL NIL |Body_adt| NIL)
+    (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
+    (|JType| TYPE-DECL NIL |JType_adt| NIL)
+    (|Stmt| TYPE-EQ-DECL NIL |Body_adt| NIL)
+    (|LocalVarDecl| TYPE-EQ-DECL NIL |Program| NIL)
+    (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |State| NIL))
+   4594 83 T SHOSTAK)))
 

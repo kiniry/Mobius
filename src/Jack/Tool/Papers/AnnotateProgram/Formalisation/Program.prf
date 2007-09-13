@@ -1,12 +1,12 @@
-(JType)
-(Excpt)
-(Body)
-(Program
- (reserved_words_TCC1 0
-  (reserved_words_TCC1-2 nil 3394869706 3397382521
-   ("" (expand "is_finite")
+(|JType|)
+(|Excpt|)
+(|Body|)
+(|Program|
+ (|reserved_words_TCC1| 0
+  (|reserved_words_TCC1-2| NIL 3394869706 3397382521
+   ("" (EXPAND "is_finite")
     ((""
-      (inst 1 "6"
+      (INST 1 "6"
        "LAMBDA (n : {n: Name | n = This OR n = Super OR n = rsIf OR n = rsThen OR n = rsElse}) :
                          IF n = This THEN 1
                          ELSIF n = Super THEN 2
@@ -439,7 +439,7 @@
       (("" (EXPAND "reduce_nat" 1 2)
         (("" (ASSERT)
           ((""
-            (name-replace "s" "reduce_nat(LAMBDA (i: int): 1,
+            (NAME-REPLACE "s" "reduce_nat(LAMBDA (i: int): 1,
                                       LAMBDA (n1, n2: nat): 1 + n1 + n2,
                                       LAMBDA (n: Name): 1, 1, 1,
                                       LAMBDA (n: nat): 1 + n,
@@ -471,7 +471,7 @@
                                       LAMBDA (n1, n2: nat): 1 + n1 + n2,
                                       LAMBDA (n: nat): 1 + n)")
             ((""
-              (use "sum_geq_than_elements"
+              (USE "sum_geq_than_elements"
                    ("x" "s(proj_1(x!1)) + s(proj_2(x!1)) + 1"))
               (("" (SPLIT -1)
                 (("1" (ASSERT) NIL NIL)
@@ -502,7 +502,7 @@
       (("" (REPLACE -1)
         (("" (EXPAND "reduce_nat" 2 2)
           ((""
-            (name-replace "s" "reduce_nat(LAMBDA (i: int): 1,
+            (NAME-REPLACE "s" "reduce_nat(LAMBDA (i: int): 1,
                                     LAMBDA (n1, n2: nat): 1 + n1 + n2,
                                     LAMBDA (n: Name): 1, 1, 1,
                                     LAMBDA (n: nat): 1 + n,
@@ -975,7 +975,7 @@
         (("" (ASSERT) (("" (ASSERT) (("" (GRIND) NIL NIL)) NIL)) NIL)) NIL))
       NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|posint_plus_nnint_is_posint| APPLICATION-JUDGEMENT "posint" |integers|
      NIL)
     (|size| CONST-DECL "nat" |ProgramFunctions| NIL)
@@ -989,7 +989,7 @@
     (("" (EXPAND "size")
       (("" (EXPAND "reduce_nat" 1 2) (("" (GRIND) NIL NIL)) NIL)) NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|posint_plus_nnint_is_posint| APPLICATION-JUDGEMENT "posint" |integers|
      NIL)
     (|size| CONST-DECL "nat" |ProgramFunctions| NIL)
@@ -1002,7 +1002,7 @@
     (("" (EXPAND "is_finite")
       (("" (SKOLEM!)
         ((""
-          (inst 1 "N!1"
+          (INST 1 "N!1"
            "LAMBDA (n : ({n: Name | EXISTS (l : LocalVarDecl): ls!1(l) AND name(l) = n})) :
                       f!1(choose({l : LocalVarDecl | ls!1(l) AND name(l) = n}))")
           (("1" (EXPAND "injective?")
@@ -1148,69 +1148,59 @@
    ("" (SKOSIMP*)
     (("" (USE "finite_set_induction[Class]")
       ((""
-        (inst -1
+        (INST -1
          "LAMBDA(C : finite_set[Class]) : is_finite[FieldDecl]({f : FieldDecl | EXISTS (c : Class) : C(c) AND fields(c)(f)})")
-        (("" (split -1)
-          (("1" (inst -1 "classes(p!1)") nil nil)
-           ("2" (hide 2)
-            (("2" (skosimp*)
+        (("" (SPLIT -1)
+          (("1" (INST -1 "classes(p!1)") NIL NIL)
+           ("2" (HIDE 2)
+            (("2" (SKOSIMP*)
               (("2"
-                (case-replace " ({f: FieldDecl |
+                (CASE-REPLACE " ({f: FieldDecl |
                   EXISTS (c: Class): add(t!1, x!1)(c) AND fields(c)(f)}) = union({f : FieldDecl | fields(t!1)(f)}, {f : FieldDecl | EXISTS (c : Class) : x!1(c) AND fields(c)(f)})")
-                (("1" (hide -1)
-                  (("1" (use "finite_union[FieldDecl]")
-                    (("1" (hide -1 2)
-                      (("1" (typepred "fields(t!1)")
+                (("1" (HIDE -1)
+                  (("1" (USE "finite_union[FieldDecl]")
+                    (("1" (HIDE -1 2)
+                      (("1" (TYPEPRED "fields(t!1)")
                         (("1"
-                          (case-replace
+                          (CASE-REPLACE
                            "fields(t!1) = {f : FieldDecl | fields(t!1)(f)}")
-                          (("1" (assert)
-                            (("1" (apply-extensionality :hide? t) nil
-                              nil))
-                            nil))
-                          nil))
-                        nil))
-                      nil))
-                    nil))
-                  nil)
-                 ("2" (apply-extensionality :hide? t)
-                  (("2" (hide -1 2)
-                    (("2" (expand "union")
-                      (("2" (expand "add")
-                        (("2" (expand "member")
-                          (("2" (iff)
-                            (("2" (prop)
-                              (("1"
-                                (skosimp*)
-                                (("1"
-                                  (split -1)
-                                  (("1" (assert) nil nil)
-                                   ("2"
-                                    (inst?)
-                                    (("2" (assert) nil nil))
-                                    nil))
-                                  nil))
-                                nil)
-                               ("2" (inst?) nil nil)
-                               ("3"
-                                (skosimp*)
-                                (("3"
-                                  (inst?)
-                                  (("3" (assert) nil nil))
-                                  nil))
-                                nil))
-                              nil))
-                            nil))
-                          nil))
-                        nil))
-                      nil))
-                    nil))
-                  nil))
-                nil))
-              nil))
-            nil)
-           ("3" (hide 2)
-            (("3" (expand "emptyset")
+                          (("1" (ASSERT)
+                            (("1" (APPLY-EXTENSIONALITY :HIDE? T) NIL NIL))
+                            NIL))
+                          NIL))
+                        NIL))
+                      NIL))
+                    NIL))
+                  NIL)
+                 ("2" (APPLY-EXTENSIONALITY :HIDE? T)
+                  (("2" (HIDE -1 2)
+                    (("2" (EXPAND "union")
+                      (("2" (EXPAND "add")
+                        (("2" (EXPAND "member")
+                          (("2" (IFF)
+                            (("2" (PROP)
+                              (("1" (SKOSIMP*)
+                                (("1" (SPLIT -1)
+                                  (("1" (ASSERT) NIL NIL)
+                                   ("2" (INST?) (("2" (ASSERT) NIL NIL)) NIL))
+                                  NIL))
+                                NIL)
+                               ("2" (INST?) NIL NIL)
+                               ("3" (SKOSIMP*)
+                                (("3" (INST?) (("3" (ASSERT) NIL NIL)) NIL))
+                                NIL))
+                              NIL))
+                            NIL))
+                          NIL))
+                        NIL))
+                      NIL))
+                    NIL))
+                  NIL))
+                NIL))
+              NIL))
+            NIL)
+           ("3" (HIDE 2)
+            (("3" (EXPAND "emptyset")
               (("3"
                 (CASE-REPLACE "{f : FieldDecl | FALSE} = emptyset[FieldDecl]")
                 (("1" (USE "finite_emptyset[FieldDecl]") NIL NIL)
@@ -1262,57 +1252,51 @@
    ("" (SKOSIMP*)
     (("" (USE "finite_set_induction[Class]")
       ((""
-        (inst -1
+        (INST -1
          "LAMBDA(C : finite_set[Class]) : is_finite[FieldDecl]({f : FieldDecl | EXISTS (c : Class) : C(c) AND fields(c)(f)})")
-        (("" (split -1)
-          (("1" (inst -1 "classes(p!1)") nil nil)
-           ("2" (hide 2)
-            (("2" (skosimp*)
+        (("" (SPLIT -1)
+          (("1" (INST -1 "classes(p!1)") NIL NIL)
+           ("2" (HIDE 2)
+            (("2" (SKOSIMP*)
               (("2"
-                (case-replace " ({f: FieldDecl |
+                (CASE-REPLACE " ({f: FieldDecl |
                       EXISTS (c: Class): add(t!1, x!1)(c) AND fields(c)(f)}) = union({f : FieldDecl | fields(t!1)(f)}, {f : FieldDecl | EXISTS (c : Class) : x!1(c) AND fields(c)(f)})")
-                (("1" (hide -1)
-                  (("1" (use "finite_union[FieldDecl]")
-                    (("1" (hide -1 2)
-                      (("1" (typepred "fields(t!1)")
+                (("1" (HIDE -1)
+                  (("1" (USE "finite_union[FieldDecl]")
+                    (("1" (HIDE -1 2)
+                      (("1" (TYPEPRED "fields(t!1)")
                         (("1"
-                          (case-replace
+                          (CASE-REPLACE
                            "fields(t!1) = {f : FieldDecl[Name] | fields(t!1)(f)}")
-                          (("1" (apply-extensionality 1) nil nil))
-                          nil))
-                        nil))
-                      nil))
-                    nil))
-                  nil)
-                 ("2" (apply-extensionality :hide? t)
-                  (("2" (hide -1 2)
-                    (("2" (expand* "union" "add" "member")
-                      (("2" (iff)
-                        (("2" (prop)
-                          (("1" (skosimp*)
-                            (("1" (split -1)
-                              (("1" (assert) nil nil)
-                               ("2"
-                                (inst?)
-                                (("2" (assert) nil nil))
-                                nil))
-                              nil))
-                            nil)
-                           ("2" (inst?) nil nil)
-                           ("3" (skosimp*)
-                            (("3" (inst?) (("3" (assert) nil nil))
-                              nil))
-                            nil))
-                          nil))
-                        nil))
-                      nil))
-                    nil))
-                  nil))
-                nil))
-              nil))
-            nil)
-           ("3" (hide 2)
-            (("3" (expand "emptyset")
+                          (("1" (APPLY-EXTENSIONALITY 1) NIL NIL)) NIL))
+                        NIL))
+                      NIL))
+                    NIL))
+                  NIL)
+                 ("2" (APPLY-EXTENSIONALITY :HIDE? T)
+                  (("2" (HIDE -1 2)
+                    (("2" (EXPAND* "union" "add" "member")
+                      (("2" (IFF)
+                        (("2" (PROP)
+                          (("1" (SKOSIMP*)
+                            (("1" (SPLIT -1)
+                              (("1" (ASSERT) NIL NIL)
+                               ("2" (INST?) (("2" (ASSERT) NIL NIL)) NIL))
+                              NIL))
+                            NIL)
+                           ("2" (INST?) NIL NIL)
+                           ("3" (SKOSIMP*)
+                            (("3" (INST?) (("3" (ASSERT) NIL NIL)) NIL)) NIL))
+                          NIL))
+                        NIL))
+                      NIL))
+                    NIL))
+                  NIL))
+                NIL))
+              NIL))
+            NIL)
+           ("3" (HIDE 2)
+            (("3" (EXPAND "emptyset")
               (("3"
                 (CASE-REPLACE "{f : FieldDecl | FALSE} = emptyset[FieldDecl]")
                 (("1" (USE "finite_emptyset[FieldDecl]") NIL NIL)
@@ -1370,182 +1354,126 @@
    ("" (SKOSIMP*)
     (("" (USE "finite_set_induction[Class]")
       ((""
-        (inst -1
+        (INST -1
          "LAMBDA(C : finite_set[Class]) : is_finite[LocalVarDecl]({l : LocalVarDecl | EXISTS (c : Class, m : Method) : C(c) AND methods(c)(m) AND (lvars(m)(l) OR l = arg(m))})")
-        (("" (split -1)
-          (("1" (inst -1 "classes(p!1)") nil nil)
-           ("2" (hide 2)
-            (("2" (skosimp*)
+        (("" (SPLIT -1)
+          (("1" (INST -1 "classes(p!1)") NIL NIL)
+           ("2" (HIDE 2)
+            (("2" (SKOSIMP*)
               (("2"
-                (case-replace " {l: LocalVarDecl |
+                (CASE-REPLACE " {l: LocalVarDecl |
                   EXISTS (c: Class, m: Method):
                     add(t!1, x!1)(c) AND
                      methods(c)(m) AND (lvars(m)(l) OR l = arg(m))} = union({l : LocalVarDecl | EXISTS (m : Method) : methods(t!1)(m) AND (lvars(m)(l) OR l = arg(m))}, {l : LocalVarDecl |
                   EXISTS (c: Class, m: Method):
                     x!1(c) AND methods(c)(m) AND (lvars(m)(l) OR l = arg(m))})"
-                 :hide? t)
-                (("1" (use "finite_union[LocalVarDecl]")
-                  (("1" (hide -1 2)
-                    (("1" (use "finite_set_induction[Method]")
+                 :HIDE? T)
+                (("1" (USE "finite_union[LocalVarDecl]")
+                  (("1" (HIDE -1 2)
+                    (("1" (USE "finite_set_induction[Method]")
                       (("1"
-                        (inst -1
+                        (INST -1
                          "LAMBDA(M : finite_set[Method]) : is_finite[LocalVarDecl]({l: LocalVarDecl |EXISTS(m : Method) : M(m) AND (lvars(m)(l) OR l = arg(m))})")
-                        (("1" (split -1)
-                          (("1" (inst?) nil nil)
-                           ("2" (hide 2)
-                            (("2" (skosimp*)
+                        (("1" (SPLIT -1)
+                          (("1" (INST?) NIL NIL)
+                           ("2" (HIDE 2)
+                            (("2" (SKOSIMP*)
                               (("2"
-                                (case-replace
-                                 "{l: LocalVarDecl |
+                                (CASE-REPLACE "{l: LocalVarDecl |
                       EXISTS (m: Method):
                         add(t!2, x!2)(m) AND (lvars(m)(l) OR l = arg(m))} = union(lvars(t!2), union(singleton(arg(t!2)), {l : LocalVarDecl | EXISTS (m: Method): x!2(m) AND (lvars(m)(l) OR l = arg(m))}))"
-                                 :hide?
-                                 t)
-                                (("1"
-                                  (use "finite_union[LocalVarDecl]")
-                                  (("1"
-                                    (use "finite_union[LocalVarDecl]")
-                                    nil
-                                    nil))
-                                  nil)
-                                 ("2"
-                                  (hide -1 2)
-                                  (("2"
-                                    (apply-extensionality :hide? t)
-                                    (("2"
-                                      (expand "union")
-                                      (("2"
-                                        (expand "add")
-                                        (("2"
-                                          (expand "singleton")
-                                          (("2"
-                                            (expand "member")
-                                            (("2"
-                                              (iff)
-                                              (("2"
-                                                (prop)
-                                                (("1"
-                                                  (skosimp*)
-                                                  (("1"
-                                                    (inst?)
-                                                    (("1"
-                                                      (split -1)
-                                                      (("1"
-                                                        (assert)
-                                                        nil
-                                                        nil)
-                                                       ("2"
-                                                        (assert)
-                                                        nil
-                                                        nil))
-                                                      nil))
-                                                    nil))
-                                                  nil)
-                                                 ("2"
-                                                  (inst?)
-                                                  (("2"
-                                                    (assert)
-                                                    nil
-                                                    nil))
-                                                  nil)
-                                                 ("3"
-                                                  (inst?)
-                                                  (("3"
-                                                    (assert)
-                                                    nil
-                                                    nil))
-                                                  nil)
-                                                 ("4"
-                                                  (skosimp*)
-                                                  (("4"
-                                                    (inst?)
-                                                    (("4"
-                                                      (assert)
-                                                      nil
-                                                      nil))
-                                                    nil))
-                                                  nil))
-                                                nil))
-                                              nil))
-                                            nil))
-                                          nil))
-                                        nil))
-                                      nil))
-                                    nil))
-                                  nil))
-                                nil))
-                              nil))
-                            nil)
-                           ("3" (hide 2)
-                            (("3" (expand "emptyset")
+                                 :HIDE? T)
+                                (("1" (USE "finite_union[LocalVarDecl]")
+                                  (("1" (USE "finite_union[LocalVarDecl]") NIL
+                                    NIL))
+                                  NIL)
+                                 ("2" (HIDE -1 2)
+                                  (("2" (APPLY-EXTENSIONALITY :HIDE? T)
+                                    (("2" (EXPAND "union")
+                                      (("2" (EXPAND "add")
+                                        (("2" (EXPAND "singleton")
+                                          (("2" (EXPAND "member")
+                                            (("2" (IFF)
+                                              (("2" (PROP)
+                                                (("1" (SKOSIMP*)
+                                                  (("1" (INST?)
+                                                    (("1" (SPLIT -1)
+                                                      (("1" (ASSERT) NIL NIL)
+                                                       ("2" (ASSERT) NIL NIL))
+                                                      NIL))
+                                                    NIL))
+                                                  NIL)
+                                                 ("2" (INST?)
+                                                  (("2" (ASSERT) NIL NIL)) NIL)
+                                                 ("3" (INST?)
+                                                  (("3" (ASSERT) NIL NIL)) NIL)
+                                                 ("4" (SKOSIMP*)
+                                                  (("4" (INST?)
+                                                    (("4" (ASSERT) NIL NIL))
+                                                    NIL))
+                                                  NIL))
+                                                NIL))
+                                              NIL))
+                                            NIL))
+                                          NIL))
+                                        NIL))
+                                      NIL))
+                                    NIL))
+                                  NIL))
+                                NIL))
+                              NIL))
+                            NIL)
+                           ("3" (HIDE 2)
+                            (("3" (EXPAND "emptyset")
                               (("3"
-                                (case-replace
+                                (CASE-REPLACE
                                  "{f : LocalVarDecl | FALSE} = emptyset[LocalVarDecl]")
-                                (("1"
-                                  (use "finite_emptyset[LocalVarDecl]")
-                                  nil
-                                  nil)
-                                 ("2"
-                                  (apply-extensionality :hide? t)
-                                  (("2" (grind) nil nil))
-                                  nil))
-                                nil))
-                              nil))
-                            nil))
-                          nil))
-                        nil))
-                      nil))
-                    nil))
-                  nil)
-                 ("2" (apply-extensionality :hide? t)
-                  (("2" (hide -1 2)
-                    (("2" (expand "union")
-                      (("2" (expand "add")
-                        (("2" (expand "member")
-                          (("2" (iff)
-                            (("2" (prop)
-                              (("1"
-                                (skosimp*)
-                                (("1"
-                                  (split -1)
-                                  (("1"
-                                    (inst?)
-                                    (("1" (assert) nil nil))
-                                    nil)
-                                   ("2"
-                                    (inst? 2)
-                                    (("2" (assert) nil nil))
-                                    nil))
-                                  nil))
-                                nil)
-                               ("2"
-                                (skosimp*)
-                                (("2"
-                                  (inst?)
-                                  (("2" (assert) nil nil))
-                                  nil))
-                                nil)
-                               ("3"
-                                (skosimp*)
-                                (("3"
-                                  (inst?)
-                                  (("3" (assert) nil nil))
-                                  nil))
-                                nil))
-                              nil))
-                            nil))
-                          nil))
-                        nil))
-                      nil))
-                    nil))
-                  nil))
-                nil))
-              nil))
-            nil)
-           ("3" (hide 2)
-            (("3" (expand "emptyset")
+                                (("1" (USE "finite_emptyset[LocalVarDecl]") NIL
+                                  NIL)
+                                 ("2" (APPLY-EXTENSIONALITY :HIDE? T)
+                                  (("2" (GRIND) NIL NIL)) NIL))
+                                NIL))
+                              NIL))
+                            NIL))
+                          NIL))
+                        NIL))
+                      NIL))
+                    NIL))
+                  NIL)
+                 ("2" (APPLY-EXTENSIONALITY :HIDE? T)
+                  (("2" (HIDE -1 2)
+                    (("2" (EXPAND "union")
+                      (("2" (EXPAND "add")
+                        (("2" (EXPAND "member")
+                          (("2" (IFF)
+                            (("2" (PROP)
+                              (("1" (SKOSIMP*)
+                                (("1" (SPLIT -1)
+                                  (("1" (INST?) (("1" (ASSERT) NIL NIL)) NIL)
+                                   ("2" (INST? 2) (("2" (ASSERT) NIL NIL))
+                                    NIL))
+                                  NIL))
+                                NIL)
+                               ("2" (SKOSIMP*)
+                                (("2" (INST?) (("2" (ASSERT) NIL NIL)) NIL))
+                                NIL)
+                               ("3" (SKOSIMP*)
+                                (("3" (INST?) (("3" (ASSERT) NIL NIL)) NIL))
+                                NIL))
+                              NIL))
+                            NIL))
+                          NIL))
+                        NIL))
+                      NIL))
+                    NIL))
+                  NIL))
+                NIL))
+              NIL))
+            NIL)
+           ("3" (HIDE 2)
+            (("3" (EXPAND "emptyset")
               (("3"
-                (case-replace
+                (CASE-REPLACE
                  "{f : LocalVarDecl | FALSE} = emptyset[LocalVarDecl]")
                 (("1" (USE "finite_emptyset[LocalVarDecl]") NIL NIL)
                  ("2" (APPLY-EXTENSIONALITY :HIDE? T) (("2" (GRIND) NIL NIL))
@@ -1600,68 +1528,87 @@
    387 386 T NIL)
   (|getLocalDecls_TCC1-1| NIL 3390821142 3390821234 ("" (SUBTYPE-TCC) NIL NIL)
    UNCHECKED NIL 605 450 NIL NIL))
+ (|arg_in_getLocalDecls| 0
+  (|arg_in_getLocalDecls-1| NIL 3398660837 3398660843
+   ("" (SKOSIMP*)
+    (("" (EXPAND "getLocalDecls") (("" (INST?) (("" (ASSERT) NIL NIL)) NIL))
+      NIL))
+    NIL)
+   PROVED
+   ((|getLocalDecls| CONST-DECL "finite_set[LocalVarDecl]" |ProgramFunctions|
+     NIL)
+    (|Class| TYPE-EQ-DECL NIL |Program| NIL)
+    (|lift| TYPE-DECL NIL |lift_adt| NIL)
+    (|Method| TYPE-EQ-DECL NIL |Program| NIL)
+    (|Expr| TYPE-EQ-DECL NIL |Body_adt| NIL)
+    (|Stmt| TYPE-EQ-DECL NIL |Body_adt| NIL)
+    (|LocalVarDecl| TYPE-EQ-DECL NIL |Program| NIL)
+    (|BoolExpr| TYPE-EQ-DECL NIL |Body_adt| NIL)
+    (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
+    (|FieldDecl| TYPE-EQ-DECL NIL |Program| NIL)
+    (|JType| TYPE-DECL NIL |JType_adt| NIL)
+    (|defined?| CONST-DECL "boolean" |ValProp| NIL)
+    (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
+    (|Val| TYPE-DECL NIL |Val_adt| NIL)
+    (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |ProgramFunctions| NIL))
+   567 2 T SHOSTAK))
  (|getGhostDecls_TCC1| 0
   (|getGhostDecls_TCC1-3| NIL 3391148598 3398058960
    ("" (SKOSIMP*)
     (("" (USE "finite_set_induction[Class]")
       ((""
-        (inst -1
+        (INST -1
          "LAMBDA(C : finite_set[Class]) : is_finite[FieldDecl]({f : FieldDecl | EXISTS (c : Class) : C(c) AND ghost_vars(c)(f)})")
-        (("" (split -1)
-          (("1" (inst -1 "classes(p!1)") nil nil)
-           ("2" (hide 2)
-            (("2" (skosimp*)
+        (("" (SPLIT -1)
+          (("1" (INST -1 "classes(p!1)") NIL NIL)
+           ("2" (HIDE 2)
+            (("2" (SKOSIMP*)
               (("2"
-                (case-replace " ({f: FieldDecl |
+                (CASE-REPLACE " ({f: FieldDecl |
                           EXISTS (c: Class): add(t!1, x!1)(c) AND ghost_vars(c)(f)}) = union({f : FieldDecl | ghost_vars(t!1)(f)}, {f : FieldDecl | EXISTS (c : Class) : x!1(c) AND ghost_vars(c)(f)})")
-                (("1" (hide -1)
-                  (("1" (use "finite_union[FieldDecl]")
-                    (("1" (hide -1 2)
-                      (("1" (typepred "ghost_vars(t!1)")
+                (("1" (HIDE -1)
+                  (("1" (USE "finite_union[FieldDecl]")
+                    (("1" (HIDE -1 2)
+                      (("1" (TYPEPRED "ghost_vars(t!1)")
                         (("1"
-                          (case-replace
+                          (CASE-REPLACE
                            "ghost_vars(t!1) = {f : FieldDecl | ghost_vars(t!1)(f)}")
-                          (("1" (assert)
-                            (("1" (apply-extensionality :hide? t) nil
-                              nil))
-                            nil))
-                          nil))
-                        nil))
-                      nil))
-                    nil))
-                  nil)
-                 ("2" (apply-extensionality :hide? t)
-                  (("2" (hide -1 2)
-                    (("2" (expand* "union" "add" "member")
-                      (("2" (iff)
-                        (("2" (prop)
-                          (("1" (skosimp*)
-                            (("1" (ground)
-                              (("1"
-                                (inst?)
-                                (("1"
-                                  (split)
-                                  (("1" (propax) nil nil)
-                                   ("2" (propax) nil nil))
-                                  nil))
-                                nil))
-                              nil))
-                            nil)
-                           ("2" (inst?) nil nil)
-                           ("3" (skosimp*)
-                            (("3" (inst?) (("3" (assert) nil nil))
-                              nil))
-                            nil))
-                          nil))
-                        nil))
-                      nil))
-                    nil))
-                  nil))
-                nil))
-              nil))
-            nil)
-           ("3" (hide 2)
-            (("3" (expand "emptyset")
+                          (("1" (ASSERT)
+                            (("1" (APPLY-EXTENSIONALITY :HIDE? T) NIL NIL))
+                            NIL))
+                          NIL))
+                        NIL))
+                      NIL))
+                    NIL))
+                  NIL)
+                 ("2" (APPLY-EXTENSIONALITY :HIDE? T)
+                  (("2" (HIDE -1 2)
+                    (("2" (EXPAND* "union" "add" "member")
+                      (("2" (IFF)
+                        (("2" (PROP)
+                          (("1" (SKOSIMP*)
+                            (("1" (GROUND)
+                              (("1" (INST?)
+                                (("1" (SPLIT)
+                                  (("1" (PROPAX) NIL NIL)
+                                   ("2" (PROPAX) NIL NIL))
+                                  NIL))
+                                NIL))
+                              NIL))
+                            NIL)
+                           ("2" (INST?) NIL NIL)
+                           ("3" (SKOSIMP*)
+                            (("3" (INST?) (("3" (ASSERT) NIL NIL)) NIL)) NIL))
+                          NIL))
+                        NIL))
+                      NIL))
+                    NIL))
+                  NIL))
+                NIL))
+              NIL))
+            NIL)
+           ("3" (HIDE 2)
+            (("3" (EXPAND "emptyset")
               (("3"
                 (CASE-REPLACE "{f : FieldDecl | FALSE} = emptyset[FieldDecl]")
                 (("1" (USE "finite_emptyset[FieldDecl]") NIL NIL)
@@ -1713,65 +1660,56 @@
    ("" (SKOSIMP*)
     (("" (USE "finite_set_induction[Class]")
       ((""
-        (inst -1
+        (INST -1
          "LAMBDA(C : finite_set[Class]) : is_finite[FieldDecl]({f : FieldDecl | EXISTS (c : Class) : C(c) AND ghost_vars(c)(f)})")
-        (("" (split -1)
-          (("1" (inst -1 "classes(p!1)") nil nil)
-           ("2" (hide 2)
-            (("2" (skosimp*)
+        (("" (SPLIT -1)
+          (("1" (INST -1 "classes(p!1)") NIL NIL)
+           ("2" (HIDE 2)
+            (("2" (SKOSIMP*)
               (("2"
-                (case-replace " ({f: FieldDecl |
+                (CASE-REPLACE " ({f: FieldDecl |
                       EXISTS (c: Class): add(t!1, x!1)(c) AND ghost_vars(c)(f)}) = union({f : FieldDecl | ghost_vars(t!1)(f)}, {f : FieldDecl | EXISTS (c : Class) : x!1(c) AND ghost_vars(c)(f)})")
-                (("1" (hide -1)
-                  (("1" (use "finite_union[FieldDecl]")
-                    (("1" (hide -1 2)
-                      (("1" (typepred "ghost_vars(t!1)")
+                (("1" (HIDE -1)
+                  (("1" (USE "finite_union[FieldDecl]")
+                    (("1" (HIDE -1 2)
+                      (("1" (TYPEPRED "ghost_vars(t!1)")
                         (("1"
-                          (case-replace
+                          (CASE-REPLACE
                            "ghost_vars(t!1) = {f : FieldDecl | ghost_vars(t!1)(f)}")
-                          (("1" (apply-extensionality) nil nil)) nil))
-                        nil))
-                      nil))
-                    nil))
-                  nil)
-                 ("2" (apply-extensionality :hide? t)
-                  (("2" (hide -1 2)
-                    (("2" (expand "union")
-                      (("2" (expand "add")
-                        (("2" (expand "member")
-                          (("2" (iff)
-                            (("2" (prop)
-                              (("1"
-                                (skosimp*)
-                                (("1"
-                                  (split -1)
-                                  (("1" (assert) nil nil)
-                                   ("2"
-                                    (inst?)
-                                    (("2" (assert) nil nil))
-                                    nil))
-                                  nil))
-                                nil)
-                               ("2" (inst?) nil nil)
-                               ("3"
-                                (skosimp*)
-                                (("3"
-                                  (inst?)
-                                  (("3" (assert) nil nil))
-                                  nil))
-                                nil))
-                              nil))
-                            nil))
-                          nil))
-                        nil))
-                      nil))
-                    nil))
-                  nil))
-                nil))
-              nil))
-            nil)
-           ("3" (hide 2)
-            (("3" (expand "emptyset")
+                          (("1" (APPLY-EXTENSIONALITY) NIL NIL)) NIL))
+                        NIL))
+                      NIL))
+                    NIL))
+                  NIL)
+                 ("2" (APPLY-EXTENSIONALITY :HIDE? T)
+                  (("2" (HIDE -1 2)
+                    (("2" (EXPAND "union")
+                      (("2" (EXPAND "add")
+                        (("2" (EXPAND "member")
+                          (("2" (IFF)
+                            (("2" (PROP)
+                              (("1" (SKOSIMP*)
+                                (("1" (SPLIT -1)
+                                  (("1" (ASSERT) NIL NIL)
+                                   ("2" (INST?) (("2" (ASSERT) NIL NIL)) NIL))
+                                  NIL))
+                                NIL)
+                               ("2" (INST?) NIL NIL)
+                               ("3" (SKOSIMP*)
+                                (("3" (INST?) (("3" (ASSERT) NIL NIL)) NIL))
+                                NIL))
+                              NIL))
+                            NIL))
+                          NIL))
+                        NIL))
+                      NIL))
+                    NIL))
+                  NIL))
+                NIL))
+              NIL))
+            NIL)
+           ("3" (HIDE 2)
+            (("3" (EXPAND "emptyset")
               (("3"
                 (CASE-REPLACE "{f : FieldDecl | FALSE} = emptyset[FieldDecl]")
                 (("1" (USE "finite_emptyset[FieldDecl]") NIL NIL)
@@ -1822,7 +1760,7 @@
   (|declared_var_names_TCC1-1| NIL 3394869665 3398058960
    ("" (SKOSIMP)
     ((""
-      (case-replace "{n: Name |
+      (CASE-REPLACE "{n: Name |
               var_names(getFieldDecls(p!1))(n) OR
               var_names(getLocalDecls(p!1))(n) OR
               var_names(getGhostDecls(p!1))(n)} =
@@ -1924,7 +1862,7 @@
       (("" (EXPAND "is_finite")
         (("" (SKOLEM!)
           ((""
-            (inst 1 "N!1"
+            (INST 1 "N!1"
              "LAMBDA (n : ({n: Name | EXISTS (c : Class): classes(p!1)(c) AND name(c) = n})) :
                       f!1(choose({c : Class | classes(p!1)(c) AND name(c) = n}))")
             (("1" (EXPAND "injective?")
@@ -2000,7 +1938,7 @@
       (("" (EXPAND "is_finite")
         (("" (SKOLEM!)
           ((""
-            (inst 1 "N!1"
+            (INST 1 "N!1"
              "LAMBDA (n: {n: Name | EXISTS (m: Method): classes(p!1)(c!1) AND methods(c!1)(m) AND name(m) = n}):
                      f!1(choose({m : Method | methods(c!1)(m) AND name(m) = n}))")
             (("1" (EXPAND "injective?")
@@ -2080,61 +2018,53 @@
    ("" (SKOSIMP*)
     (("" (USE "finite_set_induction[Class]")
       ((""
-        (inst -1
-         "LAMBDA(C : finite_set[Class]) : is_finite[Method[Name]]
+        (INST -1 "LAMBDA(C : finite_set[Class]) : is_finite[Method[Name]]
             ({m: Method[Name] |
                 EXISTS (c: Class[Name]): C(c) AND methods(c)(m)})")
-        (("" (assert)
-          (("" (split -1)
-            (("1" (inst -1 "classes(p!1)") nil nil)
-             ("2" (hide 2)
-              (("2" (skosimp*)
+        (("" (ASSERT)
+          (("" (SPLIT -1)
+            (("1" (INST -1 "classes(p!1)") NIL NIL)
+             ("2" (HIDE 2)
+              (("2" (SKOSIMP*)
                 (("2"
-                  (case-replace "({m: Method[Name] |
+                  (CASE-REPLACE "({m: Method[Name] |
                    EXISTS (c: Class[Name]): add(t!1, x!1)(c) AND methods(c)(m)})
      = union({m : Method[Name] | methods(t!1)(m)}, {m : Method[Name] | EXISTS (c : Class[Name]) : x!1(c) AND methods(c)(m)})"
-                   :hide? t)
-                  (("1" (use "finite_union[Method[Name]]")
-                    (("1" (hide -1 2)
-                      (("1" (typepred "methods(t!1)")
+                   :HIDE? T)
+                  (("1" (USE "finite_union[Method[Name]]")
+                    (("1" (HIDE -1 2)
+                      (("1" (TYPEPRED "methods(t!1)")
                         (("1"
-                          (case-replace
+                          (CASE-REPLACE
                            "methods(t!1) = {m : Method[Name] | methods(t!1)(m)}"
-                           :hide? t)
-                          (("1" (grind) nil nil)) nil))
-                        nil))
-                      nil))
-                    nil)
-                   ("2" (hide -1 2)
-                    (("2" (apply-extensionality :hide? t)
-                      (("2" (expand* "union" "add" "member")
-                        (("2" (iff)
-                          (("2" (prop)
-                            (("1" (skosimp*)
-                              (("1"
-                                (inst?)
-                                (("1" (assert) nil nil))
-                                nil))
-                              nil)
-                             ("2" (inst?) nil nil)
-                             ("3" (skosimp*)
-                              (("3"
-                                (inst?)
-                                (("3" (assert) nil nil))
-                                nil))
-                              nil))
-                            nil))
-                          nil))
-                        nil))
-                      nil))
-                    nil))
-                  nil))
-                nil))
-              nil)
-             ("3" (hide 2)
-              (("3" (expand "emptyset")
+                           :HIDE? T)
+                          (("1" (GRIND) NIL NIL)) NIL))
+                        NIL))
+                      NIL))
+                    NIL)
+                   ("2" (HIDE -1 2)
+                    (("2" (APPLY-EXTENSIONALITY :HIDE? T)
+                      (("2" (EXPAND* "union" "add" "member")
+                        (("2" (IFF)
+                          (("2" (PROP)
+                            (("1" (SKOSIMP*)
+                              (("1" (INST?) (("1" (ASSERT) NIL NIL)) NIL)) NIL)
+                             ("2" (INST?) NIL NIL)
+                             ("3" (SKOSIMP*)
+                              (("3" (INST?) (("3" (ASSERT) NIL NIL)) NIL))
+                              NIL))
+                            NIL))
+                          NIL))
+                        NIL))
+                      NIL))
+                    NIL))
+                  NIL))
+                NIL))
+              NIL)
+             ("3" (HIDE 2)
+              (("3" (EXPAND "emptyset")
                 (("3"
-                  (case-replace
+                  (CASE-REPLACE
                    "{m: Method[Name] | FALSE} = emptyset[Method[Name]]")
                   (("1" (USE "finite_emptyset[Method[Name]]") NIL NIL)
                    ("2" (APPLY-EXTENSIONALITY :HIDE? T) (("2" (GRIND) NIL NIL))
@@ -3529,60 +3459,61 @@
     (("" (INDUCT "b2")
       (("1" (GRIND) NIL NIL)
        ("2"
-        (apply (then (skosimp*) (expand "var_names" 1 2) (assert)
-                (skosimp*) (expand "<<" -3) (split -) (assert)
-                (inst? -2 :where -1) (assert) (inst? -2) (assert)
-                (assert) (inst? -3 :where -1) (assert) (inst? -3)
-                (assert)))
-        nil nil)
-       ("3" (grind) nil nil) ("4" (grind) nil nil)
-       ("5" (grind) nil nil) ("6" (grind) nil nil)
+        (APPLY
+         (THEN (SKOSIMP*) (EXPAND "var_names" 1 2) (ASSERT) (SKOSIMP*)
+          (EXPAND "<<" -3) (SPLIT -) (ASSERT) (INST? -2 :WHERE -1) (ASSERT)
+          (INST? -2) (ASSERT) (ASSERT) (INST? -3 :WHERE -1) (ASSERT) (INST? -3)
+          (ASSERT)))
+        NIL NIL)
+       ("3" (GRIND) NIL NIL) ("4" (GRIND) NIL NIL) ("5" (GRIND) NIL NIL)
+       ("6" (GRIND) NIL NIL)
        ("7"
-        (apply (then (skosimp*) (expand "var_names" 1 2) (assert)
-                (skosimp*) (expand "<<" -3) (split -) (assert)
-                (inst? -2 :where -1) (assert) (inst? -2) (assert)
-                (assert) (inst? -3 :where -1) (assert) (inst? -3)
-                (assert)))
-        nil nil)
+        (APPLY
+         (THEN (SKOSIMP*) (EXPAND "var_names" 1 2) (ASSERT) (SKOSIMP*)
+          (EXPAND "<<" -3) (SPLIT -) (ASSERT) (INST? -2 :WHERE -1) (ASSERT)
+          (INST? -2) (ASSERT) (ASSERT) (INST? -3 :WHERE -1) (ASSERT) (INST? -3)
+          (ASSERT)))
+        NIL NIL)
        ("8"
-        (apply (then (skosimp*) (expand "var_names" 1 2) (assert)
-                (skosimp*) (expand "<<" -3) (split -) (assert)
-                (inst? -2 :where -1) (assert) (inst? -2) (assert)
-                (assert) (inst? -3 :where -1) (assert) (inst? -3)
-                (assert)))
-        nil nil)
-       ("9" (grind) nil nil) ("10" (grind) nil nil)
-       ("11" (grind) nil nil)
+        (APPLY
+         (THEN (SKOSIMP*) (EXPAND "var_names" 1 2) (ASSERT) (SKOSIMP*)
+          (EXPAND "<<" -3) (SPLIT -) (ASSERT) (INST? -2 :WHERE -1) (ASSERT)
+          (INST? -2) (ASSERT) (ASSERT) (INST? -3 :WHERE -1) (ASSERT) (INST? -3)
+          (ASSERT)))
+        NIL NIL)
+       ("9" (GRIND) NIL NIL) ("10" (GRIND) NIL NIL) ("11" (GRIND) NIL NIL)
        ("12"
-        (apply (then (skosimp*) (expand "var_names" 1 2) (assert)
-                (skosimp*) (expand "<<" -2) (split -) (assert)
-                (inst? -2 :where -1) (assert) (inst? -2) (assert)))
-        nil nil)
+        (APPLY
+         (THEN (SKOSIMP*) (EXPAND "var_names" 1 2) (ASSERT) (SKOSIMP*)
+          (EXPAND "<<" -2) (SPLIT -) (ASSERT) (INST? -2 :WHERE -1) (ASSERT)
+          (INST? -2) (ASSERT)))
+        NIL NIL)
        ("13"
-        (apply (then (skosimp*) (expand "var_names" 1 2) (assert)
-                (skosimp*) (expand "<<" -2) (split -) (assert)
-                (inst? -2 :where -1) (assert) (inst? -2) (assert)))
-        nil nil)
+        (APPLY
+         (THEN (SKOSIMP*) (EXPAND "var_names" 1 2) (ASSERT) (SKOSIMP*)
+          (EXPAND "<<" -2) (SPLIT -) (ASSERT) (INST? -2 :WHERE -1) (ASSERT)
+          (INST? -2) (ASSERT)))
+        NIL NIL)
        ("14"
-        (apply (then (skosimp*) (expand "var_names" 1 2) (assert)
-                (skosimp*) (expand "<<" -4) (split -) (assert)
-                (inst? -2 :where -1) (assert) (inst? -2) (assert)
-                (assert) (inst? -3 :where -1) (assert) (inst? -3)
-                (assert) (assert) (inst? -4 :where -1) (assert)
-                (inst? -4)))
-        (("14" (assert) nil nil)) nil)
+        (APPLY
+         (THEN (SKOSIMP*) (EXPAND "var_names" 1 2) (ASSERT) (SKOSIMP*)
+          (EXPAND "<<" -4) (SPLIT -) (ASSERT) (INST? -2 :WHERE -1) (ASSERT)
+          (INST? -2) (ASSERT) (ASSERT) (INST? -3 :WHERE -1) (ASSERT) (INST? -3)
+          (ASSERT) (ASSERT) (INST? -4 :WHERE -1) (ASSERT) (INST? -4)))
+        (("14" (ASSERT) NIL NIL)) NIL)
        ("15"
-        (apply (then (skosimp*) (expand "var_names" 1 2) (assert)
-                (skosimp*) (expand "<<" -3) (split -) (assert)
-                (inst? -2 :where -1) (assert) (inst? -2) (assert)
-                (assert) (inst? -3 :where -1) (assert) (inst? -3)
-                (assert) (assert)))
-        nil nil)
+        (APPLY
+         (THEN (SKOSIMP*) (EXPAND "var_names" 1 2) (ASSERT) (SKOSIMP*)
+          (EXPAND "<<" -3) (SPLIT -) (ASSERT) (INST? -2 :WHERE -1) (ASSERT)
+          (INST? -2) (ASSERT) (ASSERT) (INST? -3 :WHERE -1) (ASSERT) (INST? -3)
+          (ASSERT) (ASSERT)))
+        NIL NIL)
        ("16"
-        (apply (then (skosimp*) (expand "var_names" 1 2) (assert)
-                (skosimp*) (expand "<<" -2) (split -) (assert)
-                (inst? -2 :where -1) (assert) (inst? -2) (assert)))
-        nil nil)
+        (APPLY
+         (THEN (SKOSIMP*) (EXPAND "var_names" 1 2) (ASSERT) (SKOSIMP*)
+          (EXPAND "<<" -2) (SPLIT -) (ASSERT) (INST? -2 :WHERE -1) (ASSERT)
+          (INST? -2) (ASSERT)))
+        NIL NIL)
        ("17"
         (APPLY
          (THEN (SKOSIMP*) (EXPAND "var_names" 1 2) (ASSERT) (SKOSIMP*)
@@ -3697,47 +3628,49 @@
           NIL))
         NIL)
        ("19"
-        (apply (then (skosimp*) (expand "var_names" 1 2) (assert)
-                (skosimp*) (expand "<<" -4) (split -) (assert)
-                (inst? -2 :where -1) (assert) (inst? -2) (assert)
-                (assert) (inst? -3 :where -1) (assert) (inst? -3)
-                (assert) (assert) (assert) (inst? -4 :where -1)
-                (assert) (inst? -4) (assert)))
-        nil nil)
+        (APPLY
+         (THEN (SKOSIMP*) (EXPAND "var_names" 1 2) (ASSERT) (SKOSIMP*)
+          (EXPAND "<<" -4) (SPLIT -) (ASSERT) (INST? -2 :WHERE -1) (ASSERT)
+          (INST? -2) (ASSERT) (ASSERT) (INST? -3 :WHERE -1) (ASSERT) (INST? -3)
+          (ASSERT) (ASSERT) (ASSERT) (INST? -4 :WHERE -1) (ASSERT) (INST? -4)
+          (ASSERT)))
+        NIL NIL)
        ("20"
-        (apply (then (skosimp*) (expand "var_names" 1 2) (assert)
-                (skosimp*) (expand "<<" -3) (split -) (assert)
-                (inst? -2 :where -1) (assert) (inst? -2) (assert)
-                (assert) (inst? -3 :where -1) (assert) (inst? -3)
-                (assert)))
-        nil nil)
+        (APPLY
+         (THEN (SKOSIMP*) (EXPAND "var_names" 1 2) (ASSERT) (SKOSIMP*)
+          (EXPAND "<<" -3) (SPLIT -) (ASSERT) (INST? -2 :WHERE -1) (ASSERT)
+          (INST? -2) (ASSERT) (ASSERT) (INST? -3 :WHERE -1) (ASSERT) (INST? -3)
+          (ASSERT)))
+        NIL NIL)
        ("21"
-        (apply (then (skosimp*) (expand "var_names" 1 2) (assert)
-                (skosimp*) (expand "<<" -2) (split -) (assert)
-                (inst? -2 :where -1) (assert) (inst? -2) (assert)))
-        nil nil)
-       ("22" (grind) nil nil)
+        (APPLY
+         (THEN (SKOSIMP*) (EXPAND "var_names" 1 2) (ASSERT) (SKOSIMP*)
+          (EXPAND "<<" -2) (SPLIT -) (ASSERT) (INST? -2 :WHERE -1) (ASSERT)
+          (INST? -2) (ASSERT)))
+        NIL NIL)
+       ("22" (GRIND) NIL NIL)
        ("23"
-        (apply (then (skosimp*) (expand "var_names" 1 2) (assert)
-                (skosimp*) (expand "<<" -2) (split -) (assert)
-                (inst? -2 :where -1) (assert) (inst? -2) (assert)))
-        nil nil)
-       ("24" (grind) nil nil)
+        (APPLY
+         (THEN (SKOSIMP*) (EXPAND "var_names" 1 2) (ASSERT) (SKOSIMP*)
+          (EXPAND "<<" -2) (SPLIT -) (ASSERT) (INST? -2 :WHERE -1) (ASSERT)
+          (INST? -2) (ASSERT)))
+        NIL NIL)
+       ("24" (GRIND) NIL NIL)
        ("25"
-        (apply (then (skosimp*) (expand "var_names" 1 2) (assert)
-                (skosimp*) (expand "<<" -4) (split -) (assert)
-                (inst? -2 :where -1) (assert) (inst? -2) (assert)
-                (assert) (inst? -3 :where -1) (assert) (inst? -3)
-                (assert) (assert) (assert) (inst? -4 :where -1)
-                (assert) (inst? -4) (assert)))
-        nil nil)
+        (APPLY
+         (THEN (SKOSIMP*) (EXPAND "var_names" 1 2) (ASSERT) (SKOSIMP*)
+          (EXPAND "<<" -4) (SPLIT -) (ASSERT) (INST? -2 :WHERE -1) (ASSERT)
+          (INST? -2) (ASSERT) (ASSERT) (INST? -3 :WHERE -1) (ASSERT) (INST? -3)
+          (ASSERT) (ASSERT) (ASSERT) (INST? -4 :WHERE -1) (ASSERT) (INST? -4)
+          (ASSERT)))
+        NIL NIL)
        ("26"
-        (apply (then (skosimp*) (expand "var_names" 1 2) (assert)
-                (skosimp*) (expand "<<" -3) (split -) (assert)
-                (inst? -2 :where -1) (assert) (inst? -2) (assert)
-                (assert) (inst? -3 :where -1) (assert) (inst? -3)
-                (assert)))
-        nil nil)
+        (APPLY
+         (THEN (SKOSIMP*) (EXPAND "var_names" 1 2) (ASSERT) (SKOSIMP*)
+          (EXPAND "<<" -3) (SPLIT -) (ASSERT) (INST? -2 :WHERE -1) (ASSERT)
+          (INST? -2) (ASSERT) (ASSERT) (INST? -3 :WHERE -1) (ASSERT) (INST? -3)
+          (ASSERT)))
+        NIL NIL)
        ("27"
         (APPLY
          (THEN (SKOSIMP*) (EXPAND "var_names" 1 2) (ASSERT) (SKOSIMP*)
@@ -3746,7 +3679,7 @@
         NIL NIL))
       NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|some_is_exists| FORMULA-DECL NIL |listfuncs| NIL)
     (= CONST-DECL "[T, T -> boolean]" |equalities| NIL)
     (|list| TYPE-DECL NIL |list_adt| NIL)
