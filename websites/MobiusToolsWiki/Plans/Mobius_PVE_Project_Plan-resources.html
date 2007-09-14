@@ -1,0 +1,2880 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+    <head>
+        <title>Mobius Program Verification Environment (PVE)</title>
+        <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+        <style type="text/css">
+/* general stuff */
+body 
+{
+    text-align: left;
+    font-family: "helvetica", sans-serif;
+    font-size: 11pt;
+}
+
+a:link
+{
+    color: #0057cb;
+    text-decoration: none;
+}
+
+a:visited
+{
+    color: #00449e;
+    text-decoration: none;
+}
+
+a:hover
+{
+    color: #0057cb;
+    text-decoration: underline;
+}
+
+h1 
+{
+    text-align: center;
+    font-size: 20pt;
+}
+
+/* index sections */
+h2.section-head-open
+{
+    font-size: 14pt;
+    margin-bottom: 0pt;
+    padding: 4pt;
+    background-color: #e6edff;
+    border-bottom: none;
+    border-top: 1pt solid #888888;
+    border-left: 1pt solid #888888;
+    border-right: 1pt solid #888888;
+}
+
+.section-body
+{
+    margin-top: 0pt;
+    border-bottom: 1pt solid #888888;
+    border-left: 1pt solid #888888;
+    border-right: 1pt solid #888888;
+    overflow: auto;
+}
+
+.section-content
+{
+    padding: 8pt;
+}
+
+table.chunks
+{
+    border-collapse: collapse;
+}
+
+.chunks td
+{
+    text-align: center;
+    padding-left: 8pt;
+    padding-right: 8pt;
+    padding-top: 0pt;
+    padding-bottom: 0pt;
+    width: 10%;
+}
+
+.data-label
+{
+    font-weight: bold;
+    color: #333333;
+}
+
+.data-content-huge
+{
+    font-size: 
+    font-weight: bold;
+    color: #666666;
+}
+
+.data-content-big
+{
+    font-size: 24pt;
+    font-weight: bold;
+    color: #666666;
+    vertical-align: top;
+}
+
+.data-content-small
+{
+    font-size: 11pt;
+    font-weight: bold;
+    color: #666666;
+}
+
+/* for escaping from floats */
+div.clearer
+{
+    clear: both;
+}
+
+/* normal data table */
+table.basic
+{
+    border-collapse: collapse;
+    font-size: 9pt;
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.basic td
+{
+    border: 1pt solid #bfbfbf;
+    padding-top: 4pt;
+    padding-bottom: 4pt;
+    padding-left: 8pt;
+    padding-right: 8pt;
+}
+
+td.wrap
+{
+    word-wrap: break-word;
+}
+
+td.header 
+{
+    background-color: #bfbfbf;
+    font-weight: bold;
+}
+
+td.level1 
+{
+    padding-left: 10pt;
+}
+
+td.level2 
+{
+    padding-left: 20pt;
+}
+
+td.date 
+{
+    text-align: right;
+}
+
+td.duration 
+{
+    text-align: right;
+}
+
+tr.resource td
+{
+    font-weight: bold;
+}
+
+p.unregistered 
+{
+    text-align: left;
+    font-size: 12pt;
+    color: #333333;
+    border-top: 1pt solid #999999;
+}
+
+p.footer 
+{
+    text-align: center;
+    font-size: 8pt;
+    color: #333333;
+}
+
+ul.report-links
+{
+    margin: 0pt;
+    padding: 4pt;
+    
+    list-style-type: none;
+    line-height: 12pt;
+}
+
+.report-links li
+{
+    display: inline;
+    padding-left: 24pt;
+}
+
+img.small-icon
+{
+    width: 16px;
+    height: 16px;
+    margin-left: 0pt;
+    margin-top: 0pt;
+    margin-bottom: 0pt;
+    margin-right: 2pt;
+    vertical-align: middle;
+    border: none;
+}
+
+img.icon
+{
+    width: 32px;
+    height: 32px;
+    margin-left: 0pt;
+    margin-top: 0pt;
+    margin-bottom: 2pt;
+    margin-right: 0pt;
+    vertical-align: middle;
+    border: none;
+}
+</style></head>
+    <body>
+        <h1>Resource Report: Mobius Program Verification Environment (PVE)</h1>
+        <table class="basic" id="resource-report">
+            <tr>
+                <td class="header">Name</td>
+                <td class="header">Start Date</td>
+                <td class="header">End Date</td>
+                <td class="header">Duration</td>
+                <td class="header">% Complete</td>
+                <td class="header">Assignment Cost</td>
+            </tr>
+            <tr class="resource Group">
+                <td class="wrap">Mobius Partners</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>NaN</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Group">
+                <td class="wrap">Chalmers Technical University Sweden</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>NaN</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">Reiner Hähnle</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>NaN</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">Andrei Sabelfeld</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>NaN</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">David Sands</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>NaN</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Group">
+                <td class="wrap">ETH Zurich, Switzerland</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>NaN</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">Claudia Brauchli</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>NaN</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">Adam Darvas</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>NaN</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">Werner Dietl</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>NaN</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">Hermann Lehner</td>
+                <td>1/5/2006 9:00</td>
+                <td>17/10/2006 12:00</td>
+                <td>14w 1d</td>
+                <td>21.13%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">proof-transforming compiler</td>
+                <td>1/5/2006 9:00</td>
+                <td>29/6/2006 17:00</td>
+                <td>12w</td>
+                <td>10%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">universes type system</td>
+                <td>6/10/2006 9:00</td>
+                <td>17/10/2006 12:00</td>
+                <td>2w</td>
+                <td>90%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">BoogiePL GC</td>
+                <td>9/10/2006 23:00</td>
+                <td>10/10/2006 17:00</td>
+                <td>1d</td>
+                <td>0%</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">Ovidio Mallo</td>
+                <td>6/10/2006 9:00</td>
+                <td>17/10/2006 12:00</td>
+                <td>2w</td>
+                <td>90%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">universes type system</td>
+                <td>6/10/2006 9:00</td>
+                <td>17/10/2006 12:00</td>
+                <td>2w</td>
+                <td>90%</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">Peter Müller</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>NaN</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">Manuel Oriol</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>NaN</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Group">
+                <td class="wrap">Imperial College, London, United Kingdom</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>NaN</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">Sophia Drossopoulou</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>NaN</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">Adrian Francalanza</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>NaN</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">Simitris Mostrous</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>NaN</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">Nobuko Yoshida</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>NaN</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Group">
+                <td class="wrap">INRIA, France</td>
+                <td>6/10/2006 9:00</td>
+                <td>12/12/2006 12:00</td>
+                <td></td>
+                <td>90%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">base logic</td>
+                <td>6/10/2006 9:00</td>
+                <td>12/12/2006 12:00</td>
+                <td></td>
+                <td>90%</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">Gilles Barthe</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>NaN</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">Santiago Zanella Béguelin</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>NaN</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">Frédéric Besson</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>NaN</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">Julien Charles</td>
+                <td>3/5/2006 18:00</td>
+                <td>23/1/2007 23:35</td>
+                <td>&lt; 12w 6.75h</td>
+                <td>88.36%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">base logic</td>
+                <td>3/5/2006 18:00</td>
+                <td>18/5/2006 17:00</td>
+                <td>3w</td>
+                <td>75%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">core semantics</td>
+                <td>6/10/2006 9:00</td>
+                <td>10/10/2006 14:40</td>
+                <td>&lt; 3d 2.75h</td>
+                <td>90%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">Coq GC translator</td>
+                <td>6/10/2006 9:00</td>
+                <td>17/10/2006 12:00</td>
+                <td>2w</td>
+                <td>90%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">ProverEditor</td>
+                <td>10/10/2006 14:40</td>
+                <td>11/10/2006 10:40</td>
+                <td>1d</td>
+                <td>0%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">Coq</td>
+                <td>27/10/2006 15:56</td>
+                <td>2/11/2006 10:56</td>
+                <td>1w</td>
+                <td>90%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">Coq</td>
+                <td>27/10/2006 22:56</td>
+                <td>2/11/2006 15:56</td>
+                <td>1w</td>
+                <td>90%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">design of subsystem</td>
+                <td>7/11/2006 18:56</td>
+                <td>17/11/2006 9:56</td>
+                <td>2w</td>
+                <td>100%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">design review</td>
+                <td>11/1/2007 16:35</td>
+                <td>12/1/2007 17:35</td>
+                <td>1d 4h</td>
+                <td>100%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">initial implementation for Coq</td>
+                <td>12/1/2007 17:35</td>
+                <td>23/1/2007 23:35</td>
+                <td>2w</td>
+                <td>100%</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">Joëlle Despeyroux</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>NaN</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">Benjamin Grégoire</td>
+                <td>3/5/2006 18:00</td>
+                <td>12/12/2006 12:00</td>
+                <td>&lt; 18w 3d 2.75h</td>
+                <td>87.59%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">base logic</td>
+                <td>3/5/2006 18:00</td>
+                <td>18/5/2006 17:00</td>
+                <td>3w</td>
+                <td>75%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">base logic</td>
+                <td>6/10/2006 9:00</td>
+                <td>12/12/2006 12:00</td>
+                <td>13w</td>
+                <td>90%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">core semantics</td>
+                <td>6/10/2006 9:00</td>
+                <td>10/10/2006 14:40</td>
+                <td>&lt; 3d 2.75h</td>
+                <td>90%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">Coq GC translator</td>
+                <td>6/10/2006 9:00</td>
+                <td>17/10/2006 12:00</td>
+                <td>2w</td>
+                <td>90%</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">Sophie Hadjadj</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>NaN</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">Laurent Hubert</td>
+                <td>6/10/2006 9:00</td>
+                <td>10/10/2006 14:40</td>
+                <td>&lt; 3d 2.75h</td>
+                <td>90%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">core semantics</td>
+                <td>6/10/2006 9:00</td>
+                <td>10/10/2006 14:40</td>
+                <td>&lt; 3d 2.75h</td>
+                <td>90%</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">Marieke Huisman</td>
+                <td>6/10/2006 9:00</td>
+                <td>6/11/2006 22:00</td>
+                <td>&lt; 3w 4d 6.5h</td>
+                <td>75%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">concurrency support</td>
+                <td>6/10/2006 9:00</td>
+                <td>6/11/2006 22:00</td>
+                <td>&lt; 3w 4d 6.5h</td>
+                <td>75%</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">Clément Hurlin</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>NaN</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">Thomas Jensen</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>NaN</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">César Kunsz</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>NaN</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">Dale Miller</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>NaN</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">Gustavo Petri</td>
+                <td>6/10/2006 9:00</td>
+                <td>6/11/2006 22:00</td>
+                <td>&gt; 6w</td>
+                <td>75%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">concurrency support</td>
+                <td>6/10/2006 9:00</td>
+                <td>6/11/2006 22:00</td>
+                <td>&gt; 6w</td>
+                <td>75%</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">David Pichardie</td>
+                <td>1/5/2006 9:00</td>
+                <td>12/12/2006 12:00</td>
+                <td>&lt; 27w 3d 2.75h</td>
+                <td>79.92%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">Bicolano semantics</td>
+                <td>1/5/2006 9:00</td>
+                <td>15/5/2006 23:00</td>
+                <td>3w</td>
+                <td>75%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">base logic</td>
+                <td>3/5/2006 18:00</td>
+                <td>18/5/2006 17:00</td>
+                <td>3w</td>
+                <td>75%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">base logic</td>
+                <td>6/10/2006 9:00</td>
+                <td>12/12/2006 12:00</td>
+                <td>13w</td>
+                <td>90%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">base logic</td>
+                <td>6/10/2006 9:00</td>
+                <td>12/12/2006 12:00</td>
+                <td></td>
+                <td>90%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">core semantics</td>
+                <td>6/10/2006 9:00</td>
+                <td>10/10/2006 14:40</td>
+                <td>&lt; 3d 2.75h</td>
+                <td>90%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">infomation flow type system</td>
+                <td>6/10/2006 9:00</td>
+                <td>16/11/2006 10:00</td>
+                <td>8w</td>
+                <td>50%</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Group">
+                <td class="wrap">Institute of Cybernetics, Tallinn, Estonia</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>NaN</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">Peeter Laud</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>NaN</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">Ando Saabas</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>NaN</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">Olha Shkaravska</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>NaN</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">Tarmo Uustalu</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>NaN</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Group">
+                <td class="wrap">Ludwig-Maximilian Universitat, Munich, Germany</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>NaN</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">Lennart Beringer</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>NaN</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">Martin Hoffman</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>NaN</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Group">
+                <td class="wrap">Radboud Universiteit Nijmegen, the Netherlands</td>
+                <td>30/1/2006 9:00</td>
+                <td>15/2/2006 18:00</td>
+                <td></td>
+                <td>78.57%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">revive Houdini</td>
+                <td>30/1/2006 9:00</td>
+                <td>8/2/2006 12:00</td>
+                <td></td>
+                <td>100%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">develop new, augmented test suite</td>
+                <td>8/2/2006 13:00</td>
+                <td>13/2/2006 23:00</td>
+                <td></td>
+                <td>50%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">document current features and bugs</td>
+                <td>13/2/2006 23:00</td>
+                <td>15/2/2006 18:00</td>
+                <td></td>
+                <td>50%</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">Arnout Engelen</td>
+                <td>30/1/2006 9:00</td>
+                <td>15/2/2006 18:00</td>
+                <td>3w 2d 4h</td>
+                <td>78.57%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">revive Houdini</td>
+                <td>30/1/2006 9:00</td>
+                <td>8/2/2006 12:00</td>
+                <td></td>
+                <td>100%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">revive Houdini</td>
+                <td>30/1/2006 9:00</td>
+                <td>8/2/2006 12:00</td>
+                <td>2w</td>
+                <td>100%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">develop new, augmented test suite</td>
+                <td>8/2/2006 13:00</td>
+                <td>13/2/2006 23:00</td>
+                <td></td>
+                <td>50%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">develop new, augmented test suite</td>
+                <td>8/2/2006 13:00</td>
+                <td>13/2/2006 23:00</td>
+                <td>1w</td>
+                <td>50%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">document current features and bugs</td>
+                <td>13/2/2006 23:00</td>
+                <td>15/2/2006 18:00</td>
+                <td></td>
+                <td>50%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">document current features and bugs</td>
+                <td>13/2/2006 23:00</td>
+                <td>15/2/2006 18:00</td>
+                <td>2d 4h</td>
+                <td>50%</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">Christian Haack</td>
+                <td>1/5/2006 9:00</td>
+                <td>17/10/2006 12:00</td>
+                <td>13w</td>
+                <td>28.46%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">define immutability</td>
+                <td>1/5/2006 9:00</td>
+                <td>19/5/2006 16:00</td>
+                <td>4w</td>
+                <td>90%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">design immutability checker</td>
+                <td>1/5/2006 9:00</td>
+                <td>10/5/2006 12:00</td>
+                <td>2w</td>
+                <td>0%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">integrate immutability checker</td>
+                <td>10/5/2006 13:00</td>
+                <td>15/5/2006 23:00</td>
+                <td>1w</td>
+                <td>0%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">implement immutability checker</td>
+                <td>19/5/2006 16:00</td>
+                <td>9/6/2006 10:00</td>
+                <td>4w</td>
+                <td>0%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">immutability type system</td>
+                <td>6/10/2006 9:00</td>
+                <td>17/10/2006 12:00</td>
+                <td>2w</td>
+                <td>5%</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">Erik Poll</td>
+                <td>1/5/2006 9:00</td>
+                <td>17/10/2006 12:00</td>
+                <td>6w</td>
+                <td>61.67%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">define immutability</td>
+                <td>1/5/2006 9:00</td>
+                <td>19/5/2006 16:00</td>
+                <td>4w</td>
+                <td>90%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">immutability type system</td>
+                <td>6/10/2006 9:00</td>
+                <td>17/10/2006 12:00</td>
+                <td>2w</td>
+                <td>5%</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Group">
+                <td class="wrap">SAP AG, Germany</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>NaN</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">Maarten Rits</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>NaN</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Group">
+                <td class="wrap">Tenchnische Universitaet Darmstadt, Germany</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>NaN</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">Heiko Mantel</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>NaN</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Group">
+                <td class="wrap">University College Dublin, Ireland</td>
+                <td>6/10/2006 8:00</td>
+                <td>6/10/2006 8:00</td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeMilestonewrap">ship first Mobius-internal version</td>
+                <td>6/10/2006 8:00</td>
+                <td>6/10/2006 8:00</td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeMilestonewrap">ESC/Java2.0b0 release</td>
+                <td>6/10/2006 8:00</td>
+                <td>6/10/2006 8:00</td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">Fintan Fairmichael</td>
+                <td>27/10/2006 18:48</td>
+                <td>30/10/2006 18:28</td>
+                <td>&gt; 1h</td>
+                <td>80%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">Mac OS X</td>
+                <td>27/10/2006 18:48</td>
+                <td>30/10/2006 18:28</td>
+                <td>&gt; 1h</td>
+                <td>80%</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">Robin Green</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>NaN</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">Radu Grigore</td>
+                <td>1/5/2006 9:00</td>
+                <td>7/3/2007 18:00</td>
+                <td>&lt; 19w 2d 0.75h</td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">revive RCC</td>
+                <td>1/5/2006 9:00</td>
+                <td>15/5/2006 23:00</td>
+                <td>3w</td>
+                <td>100%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">structured BoogiePL design</td>
+                <td>1/5/2006 9:00</td>
+                <td>10/5/2006 12:00</td>
+                <td>2w</td>
+                <td>10%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">explicit heap semantics</td>
+                <td>9/5/2006 23:00</td>
+                <td>15/5/2006 16:00</td>
+                <td>1w</td>
+                <td>10%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">design and implement ASTs</td>
+                <td>11/5/2006 18:00</td>
+                <td>17/5/2006 14:00</td>
+                <td>1w</td>
+                <td>90%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">lexer, parser, typechecker</td>
+                <td>11/5/2006 18:00</td>
+                <td>23/5/2006 0:00</td>
+                <td>2w</td>
+                <td>90%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">integrate JMM</td>
+                <td>15/5/2006 23:00</td>
+                <td>19/5/2006 16:00</td>
+                <td>1w</td>
+                <td>100%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">develop new, augmented test suite</td>
+                <td>19/5/2006 16:00</td>
+                <td>25/5/2006 11:00</td>
+                <td>1w</td>
+                <td>100%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">document current features and bugs</td>
+                <td>25/5/2006 11:00</td>
+                <td>30/5/2006 19:00</td>
+                <td>1w</td>
+                <td>0%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">separation logic integration</td>
+                <td>30/5/2006 10:00</td>
+                <td>19/6/2006 17:00</td>
+                <td>4w</td>
+                <td>5%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">VC generation</td>
+                <td>19/6/2006 17:00</td>
+                <td>28/6/2006 23:00</td>
+                <td>2w</td>
+                <td>0%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">Linux</td>
+                <td>10/10/2006 17:00</td>
+                <td>10/10/2006 23:20</td>
+                <td>&gt; 3.25h</td>
+                <td>0%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">verified model classes</td>
+                <td>19/10/2006 10:00</td>
+                <td>25/10/2006 23:20</td>
+                <td>&gt; 1w 1d 5.25h</td>
+                <td>10%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeMilestonewrap">RCC 1.0 release</td>
+                <td>7/3/2007 18:00</td>
+                <td>7/3/2007 18:00</td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">Mikolas Janota</td>
+                <td>6/10/2006 9:00</td>
+                <td>10/4/2007 0:00</td>
+                <td>&lt; 3w 1d 3.25h</td>
+                <td>39.75%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">cleanup predicate abstraction subsystem</td>
+                <td>6/10/2006 9:00</td>
+                <td>11/10/2006 17:00</td>
+                <td>1d 2h</td>
+                <td>50%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">experiment with BDD libraries</td>
+                <td>6/10/2006 9:00</td>
+                <td>9/10/2006 19:00</td>
+                <td>5h</td>
+                <td>50%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">implement loop invariant derivation engine</td>
+                <td>6/10/2006 14:00</td>
+                <td>17/10/2006 17:00</td>
+                <td>2d 4h</td>
+                <td>50%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">design loop invariant derivation engine</td>
+                <td>6/10/2006 14:00</td>
+                <td>12/10/2006 0:00</td>
+                <td>1d 2h</td>
+                <td>90%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">loop invariant generation</td>
+                <td>17/10/2006 17:00</td>
+                <td>18/10/2006 18:00</td>
+                <td>3h</td>
+                <td>0%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">ESC/Java2 GC</td>
+                <td>18/10/2006 18:00</td>
+                <td>23/10/2006 17:00</td>
+                <td>1d</td>
+                <td>0%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">Mac OS X</td>
+                <td>27/10/2006 18:48</td>
+                <td>30/10/2006 18:28</td>
+                <td>&lt; 2.75h</td>
+                <td>80%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">Logics and Calculi update</td>
+                <td>1/12/2006 10:20</td>
+                <td>21/12/2006 17:20</td>
+                <td>1w</td>
+                <td>0%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">learn the basics of PVS</td>
+                <td>19/3/2007 9:00</td>
+                <td>23/3/2007 19:00</td>
+                <td>1d 5.25h</td>
+                <td>100%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">learn the basics of Coq</td>
+                <td>23/3/2007 14:00</td>
+                <td>31/3/2007 0:00</td>
+                <td>4.25h</td>
+                <td>100%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">generate proofs in Coq</td>
+                <td>26/3/2007 11:00</td>
+                <td>2/4/2007 23:00</td>
+                <td>5h</td>
+                <td>100%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">build on Mac OS X/intel</td>
+                <td>4/4/2007 14:00</td>
+                <td>10/4/2007 0:00</td>
+                <td>1d 2h</td>
+                <td>10%</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">Joseph Kiniry</td>
+                <td>1/3/2006 9:00</td>
+                <td>5/6/2007 16:00</td>
+                <td>&lt; 23w 3d 1.75h</td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">outline structure of web</td>
+                <td>1/3/2006 9:00</td>
+                <td>8/3/2006 15:00</td>
+                <td>3d</td>
+                <td>100%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">request for wiki web creation</td>
+                <td>1/3/2006 9:00</td>
+                <td>1/3/2006 10:00</td>
+                <td>&lt; 0.5h</td>
+                <td>100%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">integrate immutability checker</td>
+                <td>10/5/2006 13:00</td>
+                <td>15/5/2006 23:00</td>
+                <td>2d</td>
+                <td>0%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeMilestonewrap">ship first Mobius-internal version</td>
+                <td>6/10/2006 8:00</td>
+                <td>6/10/2006 8:00</td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeMilestonewrap">ESC/Java2.0b0 release</td>
+                <td>6/10/2006 8:00</td>
+                <td>6/10/2006 8:00</td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">Mobius specification soundness checker</td>
+                <td>6/10/2006 9:00</td>
+                <td>12/10/2006 22:19</td>
+                <td>&gt; 2d 5.25h</td>
+                <td>75%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">design prover interface</td>
+                <td>6/10/2006 9:00</td>
+                <td>6/10/2006 18:00</td>
+                <td>&lt; 3.25h</td>
+                <td>100%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">transform Users&#39;s Guide from HTML to Texinfo</td>
+                <td>6/10/2006 9:00</td>
+                <td>6/10/2006 18:00</td>
+                <td>&lt; 3.25h</td>
+                <td>50%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">remove parts that no longer reflect the state of ESC/Java2.0b1</td>
+                <td>6/10/2006 18:00</td>
+                <td>9/10/2006 10:00</td>
+                <td>&gt; 1.5h</td>
+                <td>0%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">unsorted logic (ESC/Java2)</td>
+                <td>6/10/2006 18:00</td>
+                <td>9/10/2006 10:00</td>
+                <td>&gt; 1.5h</td>
+                <td>100%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">sorted logic (ESC/Java2)</td>
+                <td>9/10/2006 10:00</td>
+                <td>10/10/2006 13:20</td>
+                <td>&gt; 5.25h</td>
+                <td>90%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">Mobius soundness and completeness warning system</td>
+                <td>9/10/2006 11:19</td>
+                <td>16/10/2006 9:38</td>
+                <td>&gt; 2d 5.25h</td>
+                <td>75%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">higher-order logic (ESC/Java2+)</td>
+                <td>10/10/2006 13:20</td>
+                <td>19/10/2006 16:20</td>
+                <td>4d</td>
+                <td>90%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">Linux</td>
+                <td>10/10/2006 17:00</td>
+                <td>10/10/2006 23:20</td>
+                <td>&gt; 1.25h</td>
+                <td>0%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">specification soundness checker</td>
+                <td>16/10/2006 9:39</td>
+                <td>18/10/2006 11:39</td>
+                <td>&gt; 1d 1.5h</td>
+                <td>0%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">itemize resources</td>
+                <td>16/10/2006 16:39</td>
+                <td>18/10/2006 14:39</td>
+                <td>1d</td>
+                <td>90%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">verified model classes</td>
+                <td>19/10/2006 10:00</td>
+                <td>25/10/2006 23:20</td>
+                <td>&gt; 2d 5.25h</td>
+                <td>10%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">design and implement example stubs in C</td>
+                <td>19/10/2006 16:20</td>
+                <td>20/10/2006 13:20</td>
+                <td>&lt; 3.25h</td>
+                <td>100%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">design and implement example stubs in OCaml</td>
+                <td>20/10/2006 13:20</td>
+                <td>23/10/2006 9:20</td>
+                <td>&lt; 3.25h</td>
+                <td>100%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">soundness and completeness warning system</td>
+                <td>25/10/2006 23:20</td>
+                <td>30/10/2006 10:20</td>
+                <td>&gt; 1d 1.5h</td>
+                <td>0%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">build workspace</td>
+                <td>26/10/2006 18:20</td>
+                <td>30/10/2006 16:20</td>
+                <td>1d</td>
+                <td>75%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">define Mobius code style</td>
+                <td>26/10/2006 18:39</td>
+                <td>30/10/2006 16:39</td>
+                <td>1d</td>
+                <td>100%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">implement CheckStyle specification</td>
+                <td>27/10/2006 10:39</td>
+                <td>30/10/2006 23:39</td>
+                <td>1d</td>
+                <td>100%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">PVS</td>
+                <td>27/10/2006 15:56</td>
+                <td>2/11/2006 10:56</td>
+                <td>2d</td>
+                <td>50%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">Mac OS X</td>
+                <td>27/10/2006 18:48</td>
+                <td>30/10/2006 18:28</td>
+                <td>&gt; 4.25h</td>
+                <td>80%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">PVS</td>
+                <td>31/10/2006 13:56</td>
+                <td>3/11/2006 23:56</td>
+                <td>2d</td>
+                <td>50%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">verified model classes</td>
+                <td>3/11/2006 23:56</td>
+                <td>9/11/2006 16:56</td>
+                <td>2d</td>
+                <td>0%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">Extending ESC/Java update</td>
+                <td>10/11/2006 16:20</td>
+                <td>21/11/2006 22:20</td>
+                <td>4d</td>
+                <td>0%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">Prover Guide update</td>
+                <td>21/11/2006 22:20</td>
+                <td>1/12/2006 10:20</td>
+                <td>4d</td>
+                <td>0%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">Logics and Calculi update</td>
+                <td>1/12/2006 10:20</td>
+                <td>21/12/2006 17:20</td>
+                <td>1w 3d</td>
+                <td>0%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">splash screen</td>
+                <td>21/12/2006 17:20</td>
+                <td>25/12/2006 15:20</td>
+                <td>1d</td>
+                <td>0%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">Java AST</td>
+                <td>29/12/2006 10:20</td>
+                <td>1/1/2007 23:20</td>
+                <td>1d</td>
+                <td>0%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">JML AST</td>
+                <td>1/1/2007 23:20</td>
+                <td>3/1/2007 18:20</td>
+                <td>1d</td>
+                <td>0%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">GC AST</td>
+                <td>3/1/2007 18:20</td>
+                <td>5/1/2007 16:20</td>
+                <td>1d</td>
+                <td>0%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">VC AST</td>
+                <td>5/1/2007 16:20</td>
+                <td>9/1/2007 14:20</td>
+                <td>1d</td>
+                <td>0%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">private wiki</td>
+                <td>9/1/2007 14:20</td>
+                <td>11/1/2007 11:20</td>
+                <td>1d</td>
+                <td>0%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">public wiki</td>
+                <td>11/1/2007 11:20</td>
+                <td>15/1/2007 9:20</td>
+                <td>1d</td>
+                <td>0%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">integrate CheckStyle</td>
+                <td>11/1/2007 16:35</td>
+                <td>15/1/2007 14:35</td>
+                <td>1d</td>
+                <td>100%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">design review</td>
+                <td>11/1/2007 16:35</td>
+                <td>12/1/2007 17:35</td>
+                <td>&gt; 4.75h</td>
+                <td>100%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">identify code complexity analysis plugin</td>
+                <td>11/1/2007 23:35</td>
+                <td>15/1/2007 18:35</td>
+                <td>1d</td>
+                <td>100%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">update project plan</td>
+                <td>15/1/2007 9:20</td>
+                <td>16/1/2007 22:20</td>
+                <td>1d</td>
+                <td>25%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">integrate code complexity analysis plugin</td>
+                <td>15/1/2007 18:35</td>
+                <td>17/1/2007 16:35</td>
+                <td>1d</td>
+                <td>100%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">update project plan website (GForge)</td>
+                <td>16/1/2007 22:20</td>
+                <td>18/1/2007 17:20</td>
+                <td>1d</td>
+                <td>0%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">add warnings for exceeding complexity guidelines</td>
+                <td>17/1/2007 16:35</td>
+                <td>23/1/2007 11:35</td>
+                <td>2d</td>
+                <td>0%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">JML2</td>
+                <td>18/1/2007 17:20</td>
+                <td>22/1/2007 15:20</td>
+                <td>1d</td>
+                <td>0%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">FindBugs integration</td>
+                <td>19/1/2007 18:35</td>
+                <td>23/1/2007 16:35</td>
+                <td>1d</td>
+                <td>100%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">JavaFE</td>
+                <td>22/1/2007 15:20</td>
+                <td>24/1/2007 13:20</td>
+                <td>1d</td>
+                <td>0%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">ESC/Java2</td>
+                <td>24/1/2007 13:20</td>
+                <td>26/1/2007 10:20</td>
+                <td>1d</td>
+                <td>0%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">process description</td>
+                <td>26/1/2007 10:20</td>
+                <td>29/1/2007 23:20</td>
+                <td>1d</td>
+                <td>0%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">architecture description</td>
+                <td>29/1/2007 23:20</td>
+                <td>31/1/2007 18:20</td>
+                <td>1d</td>
+                <td>0%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">coding standard</td>
+                <td>31/1/2007 18:20</td>
+                <td>2/2/2007 16:20</td>
+                <td>1d</td>
+                <td>0%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">verification bus features</td>
+                <td>2/2/2007 16:20</td>
+                <td>6/2/2007 14:20</td>
+                <td>1d</td>
+                <td>0%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">features</td>
+                <td>6/2/2007 14:20</td>
+                <td>8/2/2007 11:20</td>
+                <td>1d</td>
+                <td>0%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">bug fixes</td>
+                <td>8/2/2007 11:20</td>
+                <td>12/2/2007 9:20</td>
+                <td>&gt; 1d</td>
+                <td>0%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">features</td>
+                <td>12/2/2007 9:20</td>
+                <td>13/2/2007 22:20</td>
+                <td>1d</td>
+                <td>0%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">reflective unit testing</td>
+                <td>1/3/2007 9:00</td>
+                <td>31/5/2007 16:00</td>
+                <td>&lt; 6w 3d 6.5h</td>
+                <td>15%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">PMD</td>
+                <td>16/3/2007 9:35</td>
+                <td>19/3/2007 22:35</td>
+                <td>1d</td>
+                <td>100%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">Mylar</td>
+                <td>19/3/2007 22:35</td>
+                <td>21/3/2007 17:35</td>
+                <td>1d</td>
+                <td>100%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">JavaNCSS</td>
+                <td>21/3/2007 17:35</td>
+                <td>23/3/2007 15:35</td>
+                <td>1d</td>
+                <td>100%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">create initial project plan</td>
+                <td>26/3/2007 8:00</td>
+                <td>4/4/2007 18:00</td>
+                <td>2d</td>
+                <td>75%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">build on Mac OS X/intel</td>
+                <td>4/4/2007 14:00</td>
+                <td>10/4/2007 0:00</td>
+                <td>2d</td>
+                <td>10%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">Subclipse</td>
+                <td>4/4/2007 18:00</td>
+                <td>6/4/2007 16:00</td>
+                <td>1d</td>
+                <td>100%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">document current state</td>
+                <td>10/4/2007 9:00</td>
+                <td>13/4/2007 17:00</td>
+                <td>2d</td>
+                <td>0%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeMilestonewrap">Simplify 1.5 release</td>
+                <td>1/5/2007 13:00</td>
+                <td>1/5/2007 13:00</td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeMilestonewrap">ESC/Java2.0b1 release</td>
+                <td>1/6/2007 8:00</td>
+                <td>1/6/2007 8:00</td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeMilestonewrap">Mobius PVE alpha release milestone</td>
+                <td>5/6/2007 16:00</td>
+                <td>5/6/2007 16:00</td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">Alan Morkan</td>
+                <td>6/10/2006 9:00</td>
+                <td>12/2/2007 9:20</td>
+                <td>&lt; 3d 2.75h</td>
+                <td>63.16%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">Mobius specification soundness checker</td>
+                <td>6/10/2006 9:00</td>
+                <td>12/10/2006 22:19</td>
+                <td>&gt; 1d 5.25h</td>
+                <td>75%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">Mobius soundness and completeness warning system</td>
+                <td>9/10/2006 11:19</td>
+                <td>16/10/2006 9:38</td>
+                <td>&gt; 1d 5.25h</td>
+                <td>75%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">bug fixes</td>
+                <td>8/2/2007 11:20</td>
+                <td>12/2/2007 9:20</td>
+                <td></td>
+                <td>0%</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">Michal Moskal</td>
+                <td>6/10/2006 9:00</td>
+                <td>2/4/2007 23:00</td>
+                <td>&gt; 16w 4d 1.25h</td>
+                <td>45.21%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">VC type lifting</td>
+                <td>6/10/2006 9:00</td>
+                <td>9/10/2006 10:00</td>
+                <td>1d 4h</td>
+                <td>0%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">sorted AST</td>
+                <td>6/10/2006 9:00</td>
+                <td>11/10/2006 17:00</td>
+                <td>1w</td>
+                <td>100%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">AutoProve</td>
+                <td>9/10/2006 23:00</td>
+                <td>10/10/2006 17:00</td>
+                <td>1d</td>
+                <td>0%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">Linux</td>
+                <td>10/10/2006 17:00</td>
+                <td>10/10/2006 23:20</td>
+                <td>&gt; 3.25h</td>
+                <td>0%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">evaluate current state of prover backend</td>
+                <td>23/10/2006 9:20</td>
+                <td>23/10/2006 18:20</td>
+                <td>1d</td>
+                <td>100%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">implement type lifting</td>
+                <td>23/10/2006 9:20</td>
+                <td>26/10/2006 17:20</td>
+                <td>1w</td>
+                <td>100%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">refactor design of prover backend</td>
+                <td>23/10/2006 18:20</td>
+                <td>24/10/2006 15:20</td>
+                <td>1d</td>
+                <td>100%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">design and implement type lifting test suite</td>
+                <td>26/10/2006 14:56</td>
+                <td>27/10/2006 15:56</td>
+                <td>1d 4h</td>
+                <td>20%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">Simplify</td>
+                <td>27/10/2006 15:56</td>
+                <td>30/10/2006 23:56</td>
+                <td>2d</td>
+                <td>90%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">Fx7</td>
+                <td>30/10/2006 23:56</td>
+                <td>3/11/2006 16:56</td>
+                <td>1w</td>
+                <td>100%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">Simplify</td>
+                <td>1/11/2006 17:20</td>
+                <td>3/11/2006 22:20</td>
+                <td>3d</td>
+                <td>90%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">Fx7</td>
+                <td>3/11/2006 22:20</td>
+                <td>9/11/2006 15:20</td>
+                <td>1w</td>
+                <td>100%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">prover backend</td>
+                <td>9/11/2006 15:20</td>
+                <td>10/11/2006 16:20</td>
+                <td>1d 4h</td>
+                <td>0%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">Extending ESC/Java update</td>
+                <td>10/11/2006 16:20</td>
+                <td>21/11/2006 22:20</td>
+                <td>2w</td>
+                <td>0%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">Prover Guide update</td>
+                <td>21/11/2006 22:20</td>
+                <td>1/12/2006 10:20</td>
+                <td>2w</td>
+                <td>0%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">Logics and Calculi update</td>
+                <td>1/12/2006 10:20</td>
+                <td>21/12/2006 17:20</td>
+                <td>4w</td>
+                <td>0%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">learn the basics of PVS</td>
+                <td>19/3/2007 9:00</td>
+                <td>23/3/2007 19:00</td>
+                <td>1w 1d 5h</td>
+                <td>100%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">learn the basics of Coq</td>
+                <td>23/3/2007 14:00</td>
+                <td>31/3/2007 0:00</td>
+                <td>2d 1h</td>
+                <td>100%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">generate proofs in Coq</td>
+                <td>26/3/2007 11:00</td>
+                <td>2/4/2007 23:00</td>
+                <td>2d 4h</td>
+                <td>100%</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Group">
+                <td class="wrap">Universidad Politecnica de Madrid, Spain</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>NaN</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">Manuel Hermenegildo</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>NaN</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">German Puebla</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>NaN</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Group">
+                <td class="wrap">University of Edinburgh, United Kingdom</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>NaN</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">David Aspinall</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>NaN</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">Patrick Maier</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>NaN</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">Randy Pollack</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>NaN</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">Ian Stark</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>NaN</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Group">
+                <td class="wrap">University of Warsaw, Poland</td>
+                <td>6/10/2006 9:00</td>
+                <td>24/10/2006 18:00</td>
+                <td></td>
+                <td>57.69%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">design Java VM bytecode/BML viewer</td>
+                <td>6/10/2006 9:00</td>
+                <td>11/10/2006 17:00</td>
+                <td></td>
+                <td>100%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">implement BML ASTs</td>
+                <td>6/10/2006 9:00</td>
+                <td>9/10/2006 19:00</td>
+                <td></td>
+                <td>90%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">design BML editor</td>
+                <td>9/10/2006 22:00</td>
+                <td>11/10/2006 17:00</td>
+                <td></td>
+                <td>0%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">design BML ASTs</td>
+                <td>11/10/2006 17:00</td>
+                <td>13/10/2006 15:00</td>
+                <td></td>
+                <td>100%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">implement BML editor</td>
+                <td>11/10/2006 17:00</td>
+                <td>20/10/2006 23:00</td>
+                <td></td>
+                <td>0%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">implement BML viewer</td>
+                <td>13/10/2006 15:00</td>
+                <td>24/10/2006 18:00</td>
+                <td></td>
+                <td>90%</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">Jacek Chrząszcz</td>
+                <td>6/10/2006 9:00</td>
+                <td>24/10/2006 18:00</td>
+                <td>6w 2d 4h</td>
+                <td>57.69%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">design Java VM bytecode/BML viewer</td>
+                <td>6/10/2006 9:00</td>
+                <td>11/10/2006 17:00</td>
+                <td></td>
+                <td>100%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">design Java VM bytecode/BML viewer</td>
+                <td>6/10/2006 9:00</td>
+                <td>11/10/2006 17:00</td>
+                <td>1w</td>
+                <td>100%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">implement BML ASTs</td>
+                <td>6/10/2006 9:00</td>
+                <td>9/10/2006 19:00</td>
+                <td></td>
+                <td>90%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">implement BML ASTs</td>
+                <td>6/10/2006 9:00</td>
+                <td>9/10/2006 19:00</td>
+                <td>2d 4h</td>
+                <td>90%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">design BML editor</td>
+                <td>9/10/2006 22:00</td>
+                <td>11/10/2006 17:00</td>
+                <td>2d 4h</td>
+                <td>0%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">design BML editor</td>
+                <td>9/10/2006 22:00</td>
+                <td>11/10/2006 17:00</td>
+                <td></td>
+                <td>0%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">implement BML editor</td>
+                <td>11/10/2006 17:00</td>
+                <td>20/10/2006 23:00</td>
+                <td>2w</td>
+                <td>0%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">design BML ASTs</td>
+                <td>11/10/2006 17:00</td>
+                <td>13/10/2006 15:00</td>
+                <td>2d 4h</td>
+                <td>100%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">implement BML editor</td>
+                <td>11/10/2006 17:00</td>
+                <td>20/10/2006 23:00</td>
+                <td></td>
+                <td>0%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">design BML ASTs</td>
+                <td>11/10/2006 17:00</td>
+                <td>13/10/2006 15:00</td>
+                <td></td>
+                <td>100%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">implement BML viewer</td>
+                <td>13/10/2006 15:00</td>
+                <td>24/10/2006 18:00</td>
+                <td></td>
+                <td>90%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">implement BML viewer</td>
+                <td>13/10/2006 15:00</td>
+                <td>24/10/2006 18:00</td>
+                <td>2w</td>
+                <td>90%</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">Patryk Czarnik</td>
+                <td>1/5/2006 9:00</td>
+                <td>12/12/2006 12:00</td>
+                <td>&lt; 27w 3d 2.75h</td>
+                <td>82.41%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">Bicolano semantics</td>
+                <td>1/5/2006 9:00</td>
+                <td>15/5/2006 23:00</td>
+                <td>3w</td>
+                <td>75%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">base logic</td>
+                <td>3/5/2006 18:00</td>
+                <td>18/5/2006 17:00</td>
+                <td>3w</td>
+                <td>75%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">base logic</td>
+                <td>6/10/2006 9:00</td>
+                <td>12/12/2006 12:00</td>
+                <td>13w</td>
+                <td>90%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">core semantics</td>
+                <td>6/10/2006 9:00</td>
+                <td>10/10/2006 14:40</td>
+                <td>&lt; 3d 2.75h</td>
+                <td>90%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">Bicolano extensions</td>
+                <td>6/10/2006 9:00</td>
+                <td>26/10/2006 16:00</td>
+                <td>4w</td>
+                <td>75%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">Effects Bicolano</td>
+                <td>11/10/2006 17:00</td>
+                <td>1/11/2006 11:00</td>
+                <td>4w</td>
+                <td>75%</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">Aleksy Schubert</td>
+                <td>6/10/2006 9:00</td>
+                <td>17/10/2006 12:00</td>
+                <td>2w</td>
+                <td>90%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">universes type system</td>
+                <td>6/10/2006 9:00</td>
+                <td>17/10/2006 12:00</td>
+                <td>2w</td>
+                <td>90%</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">Andrzej Tarlecki</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>NaN</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Group">
+                <td class="wrap">France Telecom France</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>NaN</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">Pierre Cregut</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>NaN</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Group">
+                <td class="wrap">TLS Technologies Poland</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>NaN</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">Grzegorz Grudzinski</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>NaN</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">Robert Maron</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>NaN</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Group">
+                <td class="wrap">Trusted Logic, France</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>NaN</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">Eric Vetillard</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>NaN</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Group">
+                <td class="wrap">JML Developers</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>NaN</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">Original DEC SRC ESC/Java team</td>
+                <td>6/10/2006 9:00</td>
+                <td>9/10/2006 15:00</td>
+                <td>2d</td>
+                <td>100%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">unsorted logic (original SRC ESC/Java)</td>
+                <td>6/10/2006 9:00</td>
+                <td>6/10/2006 18:00</td>
+                <td>1d</td>
+                <td>100%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">unsorted AST</td>
+                <td>6/10/2006 18:00</td>
+                <td>9/10/2006 15:00</td>
+                <td>1d</td>
+                <td>100%</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">Clark Barrett</td>
+                <td>27/10/2006 15:56</td>
+                <td>7/11/2006 18:56</td>
+                <td>2w</td>
+                <td>0%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">SMT</td>
+                <td>27/10/2006 15:56</td>
+                <td>2/11/2006 10:56</td>
+                <td>1w</td>
+                <td>0%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">SMT</td>
+                <td>2/11/2006 10:56</td>
+                <td>7/11/2006 18:56</td>
+                <td>1w</td>
+                <td>0%</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">Yoonsik Cheon</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>NaN</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">David Cok</td>
+                <td>6/10/2006 18:00</td>
+                <td>28/3/2012 17:00</td>
+                <td>142w 7h</td>
+                <td>74.3%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">unsorted logic (ESC/Java2)</td>
+                <td>6/10/2006 18:00</td>
+                <td>9/10/2006 10:00</td>
+                <td>4h</td>
+                <td>100%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">Yices</td>
+                <td>27/10/2006 15:56</td>
+                <td>2/11/2006 10:56</td>
+                <td>1w</td>
+                <td>0%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">Yices</td>
+                <td>2/11/2006 10:56</td>
+                <td>7/11/2006 18:56</td>
+                <td>1w</td>
+                <td>0%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">javac experimentation</td>
+                <td>1/1/2007 9:00</td>
+                <td>27/4/2007 15:00</td>
+                <td>22w 1d 5h</td>
+                <td>50%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">JML4 Eclipse integration experiments</td>
+                <td>6/8/2010 15:00</td>
+                <td>28/3/2012 17:00</td>
+                <td>117w 3d 6h</td>
+                <td>80%</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">Stephen Edwards</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>NaN</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">Claude Marché</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>NaN</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">Ke Sun</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>NaN</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">Mark Utting</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>NaN</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">Dan Zimmerman</td>
+                <td>1/3/2007 9:00</td>
+                <td>31/5/2007 16:00</td>
+                <td>16w 4d 4h</td>
+                <td>15%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">reflective unit testing</td>
+                <td>1/3/2007 9:00</td>
+                <td>31/5/2007 16:00</td>
+                <td>16w 4d 4h</td>
+                <td>15%</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Group">
+                <td class="wrap">Concordia University</td>
+                <td>6/8/2010 15:00</td>
+                <td>28/3/2012 17:00</td>
+                <td></td>
+                <td>80%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">JML3 Eclipse integration experiments</td>
+                <td>6/8/2010 15:00</td>
+                <td>28/3/2012 17:00</td>
+                <td></td>
+                <td>80%</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">Patrice Chalin</td>
+                <td>6/10/2006 9:00</td>
+                <td>28/3/2012 17:00</td>
+                <td>&lt; 3w 3d 2.75h</td>
+                <td>79.42%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">non-null type system</td>
+                <td>6/10/2006 9:00</td>
+                <td>17/10/2006 12:00</td>
+                <td>2w</td>
+                <td>90%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">sorted logic (ESC/Java2)</td>
+                <td>9/10/2006 10:00</td>
+                <td>10/10/2006 13:20</td>
+                <td>&gt; 1d 5.25h</td>
+                <td>90%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">verified model classes</td>
+                <td>19/10/2006 10:00</td>
+                <td>25/10/2006 23:20</td>
+                <td>&gt; 1w 1d 5.25h</td>
+                <td>10%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">JML3 Eclipse integration experiments</td>
+                <td>6/8/2010 15:00</td>
+                <td>28/3/2012 17:00</td>
+                <td></td>
+                <td>80%</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">Perry James</td>
+                <td>6/10/2006 9:00</td>
+                <td>17/10/2006 12:00</td>
+                <td>2w</td>
+                <td>90%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">non-null type system</td>
+                <td>6/10/2006 9:00</td>
+                <td>17/10/2006 12:00</td>
+                <td>2w</td>
+                <td>90%</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">George Karabotsos</td>
+                <td>6/10/2006 9:00</td>
+                <td>17/10/2006 12:00</td>
+                <td>2w</td>
+                <td>90%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">non-null type system</td>
+                <td>6/10/2006 9:00</td>
+                <td>17/10/2006 12:00</td>
+                <td>2w</td>
+                <td>90%</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Group">
+                <td class="wrap">Iowa State University</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>NaN</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">Kristina Boysen</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>NaN</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">Gary Leavens</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>NaN</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Group">
+                <td class="wrap">Kansas State University</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>NaN</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">Torben Amtoft</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>NaN</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">Sruthi Bandhakavi</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>NaN</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">Anindya Banerjee</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>NaN</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">John Hatcliff</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>NaN</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">George Jung</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>NaN</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">Robby</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>NaN</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">Edwin Rodriguez</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>NaN</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">Todd Wallentine</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>NaN</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Group">
+                <td class="wrap">MIT</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>NaN</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">Michael Ernst</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>NaN</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">Adam Kiezun</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>NaN</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">Viktor Kuncak</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>NaN</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Group">
+                <td class="wrap">University of Iowa</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>NaN</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">Alex Fuchs</td>
+                <td>27/10/2006 15:56</td>
+                <td>7/11/2006 18:56</td>
+                <td>2w</td>
+                <td>0%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">CVC3</td>
+                <td>27/10/2006 15:56</td>
+                <td>2/11/2006 10:56</td>
+                <td>1w</td>
+                <td>0%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">CVC3</td>
+                <td>2/11/2006 10:56</td>
+                <td>7/11/2006 18:56</td>
+                <td>1w</td>
+                <td>0%</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">Cesare Tinelli</td>
+                <td>9/10/2006 10:00</td>
+                <td>10/10/2006 13:20</td>
+                <td>&gt; 1d 5.25h</td>
+                <td>90%</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="level2 taskTypeTaskwrap">sorted logic (ESC/Java2)</td>
+                <td>9/10/2006 10:00</td>
+                <td>10/10/2006 13:20</td>
+                <td>&gt; 1d 5.25h</td>
+                <td>90%</td>
+                <td></td>
+            </tr>
+            
+            <tr class="resource Staff">
+                <td class="wrap">Jed Hagen</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>NaN</td>
+                <td></td>
+            </tr>
+            
+            </table>
+        <p/>
+        <p class="footer">Exported 14/9/2007</p>
+        <p class="footer">OmniPlan&nbsp;1.1.2&nbsp;by <a href="http://www.omnigroup.com">The Omni Group</a></p>
+    </body>
+</html>

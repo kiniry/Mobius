@@ -107,13 +107,13 @@
 				<key>DayWidth</key>
 				<real>0.25</real>
 				<key>OutlineVisibleRect</key>
-				<string>{{0, 931}, {428, 991}}</string>
+				<string>{{0, 0}, {428, 991}}</string>
 				<key>ShowGanttAssignments</key>
 				<false/>
 				<key>ShowGanttTitles</key>
 				<true/>
 				<key>TimelineVisibleRect</key>
-				<string>{{-224, 0}, {647, 991}}</string>
+				<string>{{-264, 0}, {647, 991}}</string>
 				<key>activeColumnIdentifiers</key>
 				<array>
 					<string>Notes</string>
@@ -701,7 +701,7 @@
 			<key>addressBookUID</key>
 			<string>1B55EB55-3DFE-4EB5-82EA-032DAD686EEE:ABPerson</string>
 			<key>name</key>
-			<string>Peter Müller</string>
+			<string>Peter Muller</string>
 			<key>objectId</key>
 			<integer>47</integer>
 		</dict>
@@ -1384,7 +1384,7 @@
 		<array>
 			<dict>
 				<key>date</key>
-				<string>20070914</string>
+				<string>20080217</string>
 				<key>spans</key>
 				<array>
 					<dict>
@@ -1397,7 +1397,7 @@
 			</dict>
 			<dict>
 				<key>date</key>
-				<string>20070915</string>
+				<string>20080218</string>
 				<key>spans</key>
 				<array>
 					<dict>
@@ -1410,7 +1410,7 @@
 			</dict>
 			<dict>
 				<key>date</key>
-				<string>20070916</string>
+				<string>20080219</string>
 				<key>spans</key>
 				<array>
 					<dict>
@@ -1423,7 +1423,7 @@
 			</dict>
 			<dict>
 				<key>date</key>
-				<string>20070917</string>
+				<string>20080220</string>
 				<key>spans</key>
 				<array>
 					<dict>
@@ -1436,7 +1436,7 @@
 			</dict>
 			<dict>
 				<key>date</key>
-				<string>20070918</string>
+				<string>20080221</string>
 				<key>spans</key>
 				<array>
 					<dict>
