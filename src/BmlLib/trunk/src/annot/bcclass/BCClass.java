@@ -41,7 +41,9 @@ public class BCClass {
 	public BCClass(String fileName, String className)
 			throws ClassNotFoundException, ReadAttributeException {
 		this.parser = new Parsing(this);
-		ClassPath cp = new ClassPath(Paths.path);
+		MLog.putMsg(MLog.PInfo, "filename="+fileName);
+		MLog.putMsg(MLog.PInfo, "className="+className);
+		ClassPath cp = new ClassPath(fileName);
 		JavaClass jc = SyntheticRepository.getInstance(cp).loadClass(className);
 		load(jc);
 	}

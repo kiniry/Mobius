@@ -28,9 +28,10 @@ import annot.textio.Parsing;
 
 public class OldTests {
 
-	static public final boolean goGenerateRandomQuantifiedFormulas = false;
+	public static final boolean goGenerateRandomQuantifiedFormulas = true;
+	public static final boolean go3argQuantifiersGenerated = true;
 	
-	static public String xxx = "################################################################################";
+	public static String xxx = "################################################################################";
 	private static BCClass bcc;
 	private static Random random;
 
@@ -53,11 +54,11 @@ public class OldTests {
 
 	private static AbstractFormula grf(int size, double w, int ind) {
 		int[] connectors = { Code.TRUE, Code.FALSE, Code.NOT, Code.AND,
-				Code.OR, Code.IMPLIES, Code.FORALL_WITH_NAME };
+				Code.OR, Code.IMPLIES, Code.FORALL_WITH_NAME, Code.EXISTS_WITH_NAME };
 		String[] names = { "a", "b", "c", "d", "e", "f", "g", "h", "i", "j" };
 		int n = connectors.length;
 		if (!goGenerateRandomQuantifiedFormulas)
-			n--;
+			n-=2;
 		int r = rand() % n;
 		if (w > 1)
 			w = 1;
@@ -78,6 +79,7 @@ public class OldTests {
 		case Code.FALSE:
 			return Predicate0Ar.FALSE;
 		case Code.FORALL_WITH_NAME:
+		case Code.EXISTS_WITH_NAME:
 			QuantifiedFormula qf = new QuantifiedFormula(code);
 			int bvc = rand() % 3 + 1;
 			for (int i = 0; i < bvc; i++) {
@@ -85,17 +87,25 @@ public class OldTests {
 						names[ind % names.length]));
 				ind++;
 			}
-			qf.setFormula(grf(s, w + 0.1, ind));
+			AbstractFormula f;
+			if (go3argQuantifiersGenerated) {
+				AbstractFormula f1 = grf(s, w + 0.1, ind);
+				AbstractFormula f2 = grf(s, w + 0.1, ind);
+				f = new Formula(Code.IMPLIES, f1, f2);
+			} else {
+				f = grf(s, w + 0.1, ind);
+			}
+			qf.setFormula(f);
 			return qf;
 		default:
 			throw new RuntimeException("error in generateRandomFormula");
 		}
 	}
 
-	private static void refresh(String clName) throws IOException,
+	private static void refresh() throws IOException,
 			ClassNotFoundException, ReadAttributeException {
-		bcc.saveToFile(Paths.tmp_path + clName + ".class");
-		bcc = new BCClass(Paths.tmp_path + clName + ".class", "test.Empty");
+		bcc.saveToFile(Paths.tmp_path + "test\\Empty.class");
+		bcc = new BCClass(Paths.tmp_path, "test.Empty");
 		String cpCode = bcc.printCp();
 		System.out.println(xxx);
 		System.out.println(cpCode);
@@ -125,12 +135,12 @@ public class OldTests {
 		System.out.println("minor = " + newa.minor);
 		if (newa.minor != 4)
 			throw new RuntimeException("error (minor != 4)");
-		refresh("tmp1");
+		refresh();
 		CodeSearch.ComputeAttributeLines(bcc);
 		BCPrintableAttribute[] all = bcc.getAllAttributes(AType.C_ALL);
 		for (int i = 0; i < all.length; i++)
 			all[i].remove();
-		refresh("tmp2");
+		refresh();
 	}
 
 	private static String addLineNumbers(String str) {
@@ -211,14 +221,21 @@ public class OldTests {
 	}
 
 	private static void pp_test() throws ClassNotFoundException,
-			ReadAttributeException {
-		bcc = new BCClass(Paths.path, "test.Empty");
-		BCMethod m = bcc.methods[1];
-		AbstractFormula f = generateRandomFormula(8);
-		// AbstractFormula f = getSampleFormula();
-		// AbstractFormula f = sampleQuantifiedFormula();
-		SingleAssert sa = new SingleAssert(m, 8, 3, f);
-		m.addAttribute(sa);
+			ReadAttributeException, IOException {
+		final boolean generate = true;
+		final String fname = "c04";
+		if (generate) {
+			bcc = new BCClass(Paths.path, "test.Empty");
+			BCMethod m = bcc.methods[1];
+			AbstractFormula f = generateRandomFormula(5);
+//			AbstractFormula f = getSampleFormula();
+//			AbstractFormula f = sampleQuantifiedFormula();
+			SingleAssert sa = new SingleAssert(m, 8, 3, f);
+			m.addAttribute(sa);
+			bcc.saveToFile(Paths.tmp_path+"test\\"+fname+".class");
+		} else {
+			bcc = new BCClass(Paths.tmp_path, "test."+fname);
+		}
 		String code = bcc.printCode();
 		System.out.println(xxx);
 		System.out.println(code);
@@ -226,8 +243,8 @@ public class OldTests {
 
 	public static void main(String[] args) {
 		try {
-			addRemoveTest();
-			addRemoveTest2();
+//			addRemoveTest();
+//			addRemoveTest2();
 			pp_test();
 			System.out.println("done.");
 		} catch (Exception e) {

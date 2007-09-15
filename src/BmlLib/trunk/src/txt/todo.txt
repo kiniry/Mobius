@@ -4,12 +4,12 @@ TODO:
 + repair nested quantifiers saving / loading
 + remove 'forall' filed from quantifiedFormula
 + add type checking after parsing
++ repair prettyPrinter (any)
 - check fields / methods visibility
 - remove warnings
 - add update.txt readme file
 - add JavaDocs
 - integrate with Umbra
-- repair prettyPrinter (any)
 - complete specificationCase attribute
 - add constants
 - add attributes

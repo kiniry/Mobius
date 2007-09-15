@@ -108,9 +108,9 @@ public class Testuj {
 	private static boolean checkSaveAndLoad() throws IOException,
 			ClassNotFoundException {
 		String code1 = bcc.printCode();
-		bcc.saveToFile(Paths.tmp_path + "tmp3.class");
+		bcc.saveToFile(Paths.tmp_path + "test\\tmp03.class");
 		try {
-			bcc = new BCClass(Paths.tmp_path + "tmp3.class", "test.Empty2");
+			bcc = new BCClass(Paths.tmp_path, "test.tmp03");
 		} catch (ReadAttributeException e) {
 			System.out.println("\nError while saving / loading");
 			if (goShowFileChangesIfAny)

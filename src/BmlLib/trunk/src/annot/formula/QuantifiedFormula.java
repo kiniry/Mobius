@@ -11,6 +11,7 @@ import annot.io.AttributeWriter;
 import annot.io.Code;
 import annot.io.ReadAttributeException;
 import annot.textio.BMLConfig;
+import annot.textio.IDisplayStyle;
 import annot.textio.Priorities;
 
 public class QuantifiedFormula extends AbstractFormula {
@@ -42,13 +43,19 @@ public class QuantifiedFormula extends AbstractFormula {
 	@Override
 	public String printCode1(BMLConfig conf) {
 		String code = printRoot();
+		code += IDisplayStyle.expr_block_start;
 		Iterator<BoundVar> iter = vars.iterator();
 		while (iter.hasNext()) {
 			BoundVar bv = iter.next();
 			code += " " + bv.getType().printCode1(conf);// !
 			code += " " + bv.printCode1(conf);// !
 		}
-		code += "; " + subExpr[0].printCode(conf);
+		code += "; ";
+		code += IDisplayStyle.expr_block_end;
+		String str = subExpr[0].printCode(conf);
+		if (IDisplayStyle.go3argQuantifiers)
+			str = str.substring(1, str.length() - 1);
+		code += str;
 		return code;
 	}
 

@@ -3,6 +3,7 @@ package annot.textio;
 import java.util.Vector;
 
 public class PrettyPrinter extends AbstractPrettyPrinter {
+	//FIXME! ERRORS!
 
 	/**
 	 * true iff infix operators should be at the beginning of a line.
@@ -10,62 +11,7 @@ public class PrettyPrinter extends AbstractPrettyPrinter {
 	public boolean startFormOp = true;
 
 	public PrettyPrinter(BMLConfig conf) {
-		this.conf = conf;
-	}
-
-	/**
-	 * Adds vertical line after screen width (conf.max_total_line_width) column.
-	 * 
-	 * @param s -
-	 *            string (single line, without \n) to be processed
-	 * @return s with "|" inserted after screen width's column
-	 */
-	private String filter2(String s) {
-		String result = "";
-		s = s.replaceAll("\t", "        ");
-		if (s.length() < IDisplayStyle.max_total_line_width) {
-			result = s;
-			for (int i = s.length(); i < IDisplayStyle.max_total_line_width; i++)
-				result += " ";
-			result += "|";
-		} else {
-			result = s.substring(0, IDisplayStyle.max_total_line_width) + "|"
-					+ s.substring(IDisplayStyle.max_total_line_width);
-		}
-		return result;
-	}
-
-	/**
-	 * Removes trailing spaces from given line.
-	 * 
-	 * @param s -
-	 *            string (single line, without \n) to be processed
-	 * @return s with trailing spaces removed.
-	 */
-	private String filter1(String s) {
-		int i = s.length() - 1;
-		while ((i >= 0) && (s.charAt(i) == ' '))
-			i--;
-		if (i < 0)
-			return "";
-		return s.substring(0, i + 1);
-	}
-
-	/**
-	 * Applies some filters for each line of generated code, to improve it's
-	 * look. Should be called after generating code.
-	 */
-	@Override
-	public String afterDisplay(String str) {
-		String result = "";
-		String[] lines = str.split("\n");
-		for (int i = 0; i < lines.length; i++) {
-			String s = lines[i];
-			s = filter1(s);
-			// s = filter2(s);
-			result += s + "\n";
-		}
-		return result;
+		super(conf);
 	}
 
 	/**
@@ -107,9 +53,6 @@ public class PrettyPrinter extends AbstractPrettyPrinter {
 				sub += ch;
 			}
 		}
-		// if ((v.size() == 0) &&
-		// (str.lastIndexOf(IDisplayStyle.expr_block_start) >= 0))
-		// return (splitRoot(str.substring(1, str.length()-1)));
 		v.add(sub);
 		v.add("");
 		String[] result = new String[v.size()];
@@ -124,17 +67,6 @@ public class PrettyPrinter extends AbstractPrettyPrinter {
 			return nr;
 		}
 		return result;
-	}
-
-	/**
-	 * Computes length of a string, without block marks.
-	 * 
-	 * @param str -
-	 *            a String with blocks marked as in procedures above.
-	 * @return length of str without block marks.
-	 */
-	protected int strlen(String str) {
-		return cleanup(str).length();
 	}
 
 	/**

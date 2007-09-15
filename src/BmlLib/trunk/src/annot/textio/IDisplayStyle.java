@@ -2,12 +2,16 @@ package annot.textio;
 
 public interface IDisplayStyle {
 
-	public boolean goControlPrint = false;
-	public int max_total_line_width = 40;
+	public static boolean goControlPrint = false;
+	public static int max_total_line_width = 60;
+	public static final boolean go3argQuantifiers = true;
+	
+	public static final boolean goShowRightMargin = true;
 
 	public static final String comment_start = "/* ";
 	public static final String comment_next = " * ";
 	public static final String comment_end = " */";
+	public static final int comment_length = comment_next.length();
 
 	public static final char expr_block_start = '{';
 	public static final char expr_block_end = '}';

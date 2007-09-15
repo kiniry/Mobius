@@ -1,24 +1,14 @@
 package annot.textio;
 
-public class NewPrettyPrinter extends PrettyPrinter {
+public class AnotherPrettyPrinter extends PrettyPrinter {
 	// FIXME! ERRORS!
 
 	private int maxW;
 
-	public NewPrettyPrinter(BMLConfig conf) {
+	public AnotherPrettyPrinter(BMLConfig conf) {
 		super(conf);
 		maxW = IDisplayStyle.max_total_line_width - conf.indent.length()
 				- IDisplayStyle.comment_next.length();
-	}
-
-	private String firstLines(String str) {
-		if (str.lastIndexOf("\n") < 0)
-			return "";
-		return str.substring(0, str.lastIndexOf("\n") + 1);
-	}
-
-	private String lastLine(String str) {
-		return str.substring(str.lastIndexOf("\n") + 1);
 	}
 
 	private String indent(String code, int n) {
