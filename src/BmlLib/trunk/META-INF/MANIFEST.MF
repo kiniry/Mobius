@@ -1,8 +1,19 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: BmlLib3 Plug-in
-Bundle-SymbolicName: BmlLib3
-Bundle-Version: 1.0.0
+Bundle-SymbolicName: mobius.bmllib
+Bundle-Version: 1.1.0
 Bundle-Localization: plugin
 Require-Bundle: org.apache.bcel_5.1,
  org.eclipse.core.runtime
+Export-Package: annot.attributes,
+ annot.bcclass,
+ annot.bcexpression,
+ annot.formula,
+ annot.io,
+ annot.textio,
+ bmllib,
+ org.antlr.runtime,
+ org.antlr.runtime.debug,
+ org.antlr.runtime.misc,
+ org.antlr.runtime.tree
