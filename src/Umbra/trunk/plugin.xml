@@ -30,14 +30,14 @@
                id="umbra.bytecodeMenu">
                <separator name="showGroup"/>
          </menu>
-         <action
+<!--         <action
                toolbarPath="showGroup"
                label="(TestAction)"
                tooltip="Test Action"
                icon="icons/convert_to_boogiepl.gif"
                class="umbra.java.actions.B2BPLTranslation"
                menubarPath="umbra.bytecodeMenu/showGroup"
-               id="umbra.textAction"/>
+               id="umbra.textAction"/> -->
          <action
                toolbarPath="showGroup"
                label="Disassemble"
@@ -73,7 +73,7 @@
                <separator name="historyGroup"/>
                <separator name="helpGroup"/>
          </menu>
-         <action
+<!--         <action
                toolbarPath="verifyGroup"
                label="Convert to BoogiePL"
                tooltip="Convert to BoogiePL"
@@ -88,7 +88,7 @@
                icon="icons/convert_to_boogiepl.gif"
                class="umbra.java.actions.VerifyAction"
                menubarPath="umbra.bytecodeMenu/verifyGroup"
-               id="umbra.verify"/>
+               id="umbra.verify"/> -->
          <action
                toolbarPath="historyGroup"
                label="&amp;Add to history"

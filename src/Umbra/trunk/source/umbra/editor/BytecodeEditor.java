@@ -37,7 +37,7 @@ import org.eclipse.ui.part.FileEditorInput;
 import umbra.UmbraHelper;
 import umbra.UmbraPlugin;
 import annot.bcclass.BCClass;
-import annot.bcio.ReadAttributeException;
+import annot.io.ReadAttributeException;
 
 /**
  * This is the main class that defines the bytecode editor.
@@ -284,7 +284,7 @@ public class BytecodeEditor extends TextEditor {
 //    int off = 0;
     BCClass bcc;
     try {
-      bcc = new BCClass(jc, true);
+      bcc = new BCClass(jc);
       Global.bmlp = new BMLParsing(bcc);
       //this is where the textual representation is generated
       //FIXME we have to make sure it makes sense!!!
