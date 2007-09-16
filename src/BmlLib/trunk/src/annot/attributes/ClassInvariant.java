@@ -10,6 +10,7 @@ import annot.io.AttributeWriter;
 import annot.io.ReadAttributeException;
 import annot.textio.BMLConfig;
 import annot.textio.IDisplayStyle;
+import annot.textio.Parsing;
 
 public class ClassInvariant extends BCPrintableAttribute implements
 		IBCAttribute {
@@ -36,7 +37,7 @@ public class ClassInvariant extends BCPrintableAttribute implements
 	@Override
 	public String printCode1(BMLConfig conf) {
 		String code = invariant.printLine(conf, IDisplayStyle._classInvariant);
-		return "\n" + conf.addComment(code);
+		return "\n" + Parsing.addComment(code);
 	}
 
 	@Override

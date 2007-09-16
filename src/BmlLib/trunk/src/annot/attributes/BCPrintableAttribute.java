@@ -7,14 +7,16 @@ import annot.bcclass.BCClass;
 import annot.bcclass.BCMethod;
 import annot.bcclass.MLog;
 import annot.textio.BMLConfig;
+import annot.textio.Parsing;
 
 public abstract class BCPrintableAttribute {
 
 	public String last_code = "";
 
 	public String printCode(BMLConfig conf) {
-		last_code = printCode1(conf);
-		return last_code;
+		String ret = last_code = printCode1(conf);
+		last_code = Parsing.removeComment(last_code);
+		return ret;
 	}
 
 	public abstract String printCode1(BMLConfig conf);
@@ -30,7 +32,7 @@ public abstract class BCPrintableAttribute {
 
 	public void parse(BCClass bcc, BCMethod m, InstructionHandle ih, int minor,
 			String code) throws RecognitionException {
-		BCPrintableAttribute pa = bcc.parser.parseAttribute(bcc, m, ih, minor,
+		BCPrintableAttribute pa = bcc.parser.parseAttribute(m, ih, minor,
 				code);
 		if (pa.getClass() == this.getClass()) {
 			replaceWith(pa);

@@ -6,7 +6,7 @@ public interface IDisplayStyle {
 	public static int max_total_line_width = 60;
 	public static final boolean go3argQuantifiers = true;
 	
-	public static final boolean goShowRightMargin = true;
+	public static final boolean goShowRightMargin = false;
 
 	public static final String comment_start = "/* ";
 	public static final String comment_next = " * ";

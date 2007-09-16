@@ -53,7 +53,33 @@ public class Parsing {
 		return attr;
 	}
 
-	public BCPrintableAttribute parseAttribute(BCClass bcc, BCMethod m,
+	public static String addComment(String code) {
+		if (code.length() < 1)
+			return "";
+		if (code.lastIndexOf("\n") == code.length() - 1)
+			code = code.substring(0, code.length() - 1);
+		if ((code.lastIndexOf("\n") >= 0)
+				|| (code.length() > IDisplayStyle.max_total_line_width
+						- IDisplayStyle.comment_start.length()
+						- IDisplayStyle.comment_end.length())) {
+			String[] lines = code.split("\n");
+			code = "";
+			for (int i = 0; i < lines.length; i++) {
+				if (!lines[i].startsWith(IDisplayStyle.comment_next))
+					lines[i] = IDisplayStyle.comment_next + lines[i];
+				if (lines[i].equals(IDisplayStyle.comment_next))
+					continue;
+				code += lines[i] + "\n";
+			}
+			return IDisplayStyle.comment_start + "\n" + code
+					+ IDisplayStyle.comment_end + "\n";
+		} else {
+			return IDisplayStyle.comment_start + code
+					+ IDisplayStyle.comment_end + "\n";
+		}
+	}
+
+	public BCPrintableAttribute parseAttribute(BCMethod m,
 			InstructionHandle ih, int minor, String str)
 			throws RecognitionException {
 		CharStream chstr = new ANTLRStringStream(str);
@@ -69,10 +95,10 @@ public class Parsing {
 		return result;
 	}
 
-	public BCPrintableAttribute checkSyntax(BCClass bcc, BCMethod m,
+	public BCPrintableAttribute checkSyntax(BCMethod m,
 			InstructionHandle ih, int minor, String str) {
 		try {
-			BCPrintableAttribute newattr = parseAttribute(bcc, m, ih, minor,
+			BCPrintableAttribute newattr = parseAttribute(m, ih, minor,
 					str);
 			return newattr;
 		} catch (RecognitionException e) {

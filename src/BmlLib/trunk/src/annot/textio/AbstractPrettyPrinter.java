@@ -26,6 +26,9 @@ public abstract class AbstractPrettyPrinter {
 	}
 	
 	private String filter1(String s) {
+		if ((IDisplayStyle.comment_start.equals(s))
+			|| (IDisplayStyle.comment_end.equals(s)))
+				return s;
 		int i = s.length() - 1;
 		while ((i >= 0) && (s.charAt(i) == ' '))
 			i--;
@@ -58,6 +61,8 @@ public abstract class AbstractPrettyPrinter {
 			if ((!line.startsWith(IDisplayStyle.comment_start))
 				&& (!line.startsWith(IDisplayStyle.comment_next)))
 				continue;
+			if (i == 0)
+					continue;
 			String prev = lines[i-1];
 			for(;;) {
 				String suf = null;

@@ -17,6 +17,7 @@ import annot.io.AttributeReader;
 import annot.io.AttributeWriter;
 import annot.io.ReadAttributeException;
 import annot.textio.BMLConfig;
+import annot.textio.Parsing;
 
 public class BCMethod {
 
@@ -78,7 +79,7 @@ public class BCMethod {
 						AType.C_ALL);
 				for (int i = 0; i < attrs.length; i++)
 					annotLines += attrs[i].printCode(conf);
-				bcode += conf.addComment(annotLines) + line + "\n";
+				bcode += Parsing.addComment(annotLines) + line + "\n";
 			}
 		}
 		return code + bcode;

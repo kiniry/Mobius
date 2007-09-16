@@ -34,6 +34,8 @@ public class CodeSearch {
 		for (int i = 0; i < all.length; i++)
 			if (line.startsWith(all[i]))
 				return all[i];
+		if (line.length() == 0)
+			return "";
 		while (line.charAt(0) == ' ') {
 			if (line.length() < 2)
 				return "";
@@ -121,13 +123,16 @@ public class CodeSearch {
 	}
 
 	public static void ComputeAttributeLines(BCClass bcc) {
+		BMLConfig conf = new BMLConfig();
 		BCPrintableAttribute[] all = bcc.getAllAttributes(AType.C_ALL);
 		String code = bcc.printCode();
 		code = Parsing.removeComment(code);
 		// MLog.putMsg(MLog.PDebug, code);
 		for (int a = 0; a < all.length; a++) {
-			String lc = Parsing.removeComment(all[a].last_code);
-			lc = new BMLConfig().prittyPrinter.afterDisplay(lc);
+			String lc = all[a].last_code;
+			lc = Parsing.addComment(lc);
+			lc = conf.prittyPrinter.afterDisplay(lc);
+			lc = Parsing.removeComment(lc);
 			// MLog.putMsg(MLog.PDebug, "#"+lc+"#");
 			if (lc.length() == 0)
 				throw new RuntimeException("attribute wasn't displayed yet!");

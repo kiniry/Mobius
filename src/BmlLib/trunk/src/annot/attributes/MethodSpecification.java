@@ -9,6 +9,7 @@ import annot.io.AttributeWriter;
 import annot.io.ReadAttributeException;
 import annot.textio.BMLConfig;
 import annot.textio.IDisplayStyle;
+import annot.textio.Parsing;
 
 public class MethodSpecification extends BCPrintableAttribute implements
 		IBCAttribute {
@@ -44,7 +45,7 @@ public class MethodSpecification extends BCPrintableAttribute implements
 		if (specCases.length > 0)
 			for (int i = 0; i < specCases.length; i++)
 				code += specCases[i].printCode(conf);
-		return conf.addComment(code);
+		return Parsing.addComment(code);
 	}
 
 	@Override

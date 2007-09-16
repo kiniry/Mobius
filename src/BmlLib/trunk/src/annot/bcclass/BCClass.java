@@ -23,8 +23,6 @@ import annot.textio.BMLConfig;
 import annot.textio.IDisplayStyle;
 import annot.textio.Parsing;
 
-import test.Paths;
-
 public class BCClass {
 
 	public JavaClass jc;

@@ -6,6 +6,7 @@ import java.util.LinkedList;
 
 import annot.bcclass.MLog;
 import annot.textio.BMLConfig;
+import annot.textio.Parsing;
 
 public class SingleList implements Comparable<SingleList> {
 
@@ -38,7 +39,7 @@ public class SingleList implements Comparable<SingleList> {
 		Iterator<InCodeAttribute> iter = attributes.iterator();
 		while (iter.hasNext())
 			code += iter.next().printCode(conf);
-		return conf.addComment(code);
+		return Parsing.addComment(code);
 	}
 
 	public void addAttribute(InCodeAttribute ica) {
