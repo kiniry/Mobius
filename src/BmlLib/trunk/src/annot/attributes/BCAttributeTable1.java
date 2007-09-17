@@ -7,8 +7,8 @@ import annot.io.ReadAttributeException;
 
 public abstract class BCAttributeTable1 implements IBCAttribute {
 
-	protected BCMethod method;
-	protected BCAttributeMap parent;
+	private BCMethod method;
+	private BCAttributeMap parent;
 
 	public BCAttributeTable1(BCMethod m, BCAttributeMap parent) {
 		this.method = m;
@@ -28,8 +28,8 @@ public abstract class BCAttributeTable1 implements IBCAttribute {
 		for (int i = 0; i < n; i++) {
 			int pc = ar.readShort();
 			InCodeAttribute ica = loadSingle(method, ar);
-			ica.ih = method.findAtPC(pc);
-			if (ica.ih == null)
+			ica.setIh(method.findAtPC(pc));
+			if (ica.getIh() == null)
 				throw new ReadAttributeException("Attribute unplaceble: pc="
 						+ pc);
 			parent.addAttribute(ica);
@@ -46,7 +46,7 @@ public abstract class BCAttributeTable1 implements IBCAttribute {
 	}
 
 	public int getIndex() {
-		return method.bcc.cp.findConstant(getName());
+		return method.getBcc().getCp().findConstant(getName());
 	}
 
 }

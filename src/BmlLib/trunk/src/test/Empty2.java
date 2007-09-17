@@ -2,7 +2,7 @@ package test;
 
 public class Empty2 {
 
-	static int l = 0;
+	private static int l = 0;
 
 	private static int fib(int n) {
 		l++;

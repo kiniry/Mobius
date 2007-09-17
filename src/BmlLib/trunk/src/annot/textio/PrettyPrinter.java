@@ -2,13 +2,14 @@ package annot.textio;
 
 import java.util.Vector;
 
+@Deprecated
 public class PrettyPrinter extends AbstractPrettyPrinter {
 	//FIXME! ERRORS!
 
 	/**
 	 * true iff infix operators should be at the beginning of a line.
 	 */
-	public boolean startFormOp = true;
+	public final boolean startFormOp = true;
 
 	public PrettyPrinter(BMLConfig conf) {
 		super(conf);
@@ -19,7 +20,7 @@ public class PrettyPrinter extends AbstractPrettyPrinter {
 	 * 
 	 * @param str -
 	 *            string representation of expression, with infix blocks marked
-	 *            using constants in BMLConfig, and without line breaks.
+	 *            using constants in BMLgetConf()ig, and without line breaks.
 	 * @return String array of infix operators on even positions, and following
 	 *         subexpressions on odd positions. Last element is an empty string,
 	 *         to avoid ArrayIndexOutOfBounds errors.
@@ -74,7 +75,7 @@ public class PrettyPrinter extends AbstractPrettyPrinter {
 	 * 
 	 * @param str -
 	 *            String representation of an expression with blocks marked with
-	 *            BMLConfig.expr_block_start and BMLConfig.expr_block_end and
+	 *            BMLgetConf()ig.expr_block_start and BMLgetConf()ig.expr_block_end and
 	 *            without newLines ("\n")
 	 * @param start -
 	 *            used characters in current line, excluding standard
@@ -90,7 +91,7 @@ public class PrettyPrinter extends AbstractPrettyPrinter {
 	 *            <code>startFromOp</code> == true).
 	 * @return <code>str</code> with line-breaks and indentation when
 	 *         nessesery. No line of this expression should be longer than
-	 *         max_total_line_width defined in BMLConfig (if possible). The
+	 *         max_total_line_width defined in BMLgetConf()ig (if possible). The
 	 *         first line should be shorter by at least <code>start</code>
 	 *         lines, and the last line by <code>end</code> lines.
 	 */
@@ -101,15 +102,15 @@ public class PrettyPrinter extends AbstractPrettyPrinter {
 		if (str.length() == 0)
 			return "";
 		String result = ""; // returned String
-		if (conf.start_line_pos() + start + strlen(str) < IDisplayStyle.max_total_line_width
+		if (getConf().start_line_pos() + start + strlen(str) < IDisplayStyle.max_total_line_width
 				- end) {
 			return cleanup(str); // if whole expression fit into current line
 		}
 		String[] sub = splitRoot(str);
 		if (sub.length <= 2) // if we are in leaf of the expression
 			return prefix + cleanup(sub[0]);
-		String oldInd = conf.indent;
-		conf.indent = w; // increase indentation to w (for next lines)
+		String oldInd = getConf().getIndent();
+		getConf().setIndent(w); // increase indentation to w (for next lines)
 		boolean ok = true; // iff all subexpr. can be displayed in one line
 		if (startFormOp) {
 			for (int i = 0; i < sub.length - 1; i += 2) { // for each
@@ -119,7 +120,7 @@ public class PrettyPrinter extends AbstractPrettyPrinter {
 				// in this case (startFromOp == true)
 				String s = sub[i] + sub[i + 1]; // current (operator +
 				// subexpression)
-				if ((conf.start_line_pos() + start + strlen(s) <= IDisplayStyle.max_total_line_width
+				if ((getConf().start_line_pos() + start + strlen(s) <= IDisplayStyle.max_total_line_width
 						- epos)
 						&& ok) {
 					// s fit into current line
@@ -159,7 +160,7 @@ public class PrettyPrinter extends AbstractPrettyPrinter {
 					if (e.charAt(0) != '\n') {
 						// adding newline unless we did it at the beginning of
 						// recursive call.
-						result += conf.newLine();
+						result += getConf().newLine();
 						if (i < 2) // if it's the first subexpression, we
 							// should add prefix just after newline
 							result += prefix;
@@ -173,7 +174,7 @@ public class PrettyPrinter extends AbstractPrettyPrinter {
 					// recursive call, as a 'prefix' argument}
 					result += e; // writing current subexpression
 					start += result.length() - (result.lastIndexOf("\n") + 1)
-							- conf.start_line_pos(); // updating position in
+							- getConf().start_line_pos(); // updating position in
 					// current line
 				}
 				prefix = "";
@@ -189,7 +190,7 @@ public class PrettyPrinter extends AbstractPrettyPrinter {
 				int epos = (i > sub.length - 4) ? end : 0;
 				String s = sub[i] + sub[i + 1]; // current (subexpression +
 				// operator)
-				if ((conf.start_line_pos() + start + strlen(s) <= IDisplayStyle.max_total_line_width
+				if ((getConf().start_line_pos() + start + strlen(s) <= IDisplayStyle.max_total_line_width
 						- epos)
 						&& ok) {
 					result += cleanup(s);
@@ -205,18 +206,18 @@ public class PrettyPrinter extends AbstractPrettyPrinter {
 							sub[i + 1].length() + epos, b ? w : w
 									+ IDisplayStyle.lineIndent, "");
 					if ((e.charAt(0) != '\n') && (i > 1)) {
-						result += conf.newLine();
+						result += getConf().newLine();
 						start = 0;
 						if (e.substring(1).lastIndexOf("\n") >= 0)
 							ok = false;
 					}
 					result += e + sub[i + 1];
 					start += result.length() - (result.lastIndexOf("\n") + 1)
-							- conf.start_line_pos();
+							- getConf().start_line_pos();
 				}
 			}
 		}
-		conf.indent = oldInd; // restoring indentation
+		getConf().setIndent(oldInd); // restoring indentation
 		return result;
 	}
 
@@ -226,7 +227,7 @@ public class PrettyPrinter extends AbstractPrettyPrinter {
 	 */
 	@Override
 	public String breakLines(String str, int spos) {
-		return breakLines(str, spos, 0, conf.indent, "");
+		return breakLines(str, spos, 0, getConf().getIndent(), "");
 	}
 
 }

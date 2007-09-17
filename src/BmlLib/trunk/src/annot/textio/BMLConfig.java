@@ -2,16 +2,15 @@ package annot.textio;
 
 public class BMLConfig implements IDisplayStyle {
 
-	public String indent = "";
+	private String indent = "";
 
-	public AbstractPrettyPrinter prittyPrinter = new NewPrettyPrinter1(this);
+	private AbstractPrettyPrinter prettyPrinter = new NewPrettyPrinter1(this);
 
-	public boolean goControlPrint = false;
+	private boolean goControlPrint = false;
 
-	public int root_pri;
+	private int root_pri;
 
-	public BMLConfig() {
-	}
+	public BMLConfig() {}
 
 	public String newLine() {
 		return "\n" + comment_next + indent;
@@ -27,6 +26,34 @@ public class BMLConfig implements IDisplayStyle {
 
 	public void decInd() {
 		indent = indent.substring(0, indent.length() - lineIndent.length());
+	}
+
+	public boolean isGoControlPrint() {
+		return goControlPrint;
+	}
+
+	public void setGoControlPrint(boolean goControlPrint) {
+		this.goControlPrint = goControlPrint;
+	}
+
+	public String getIndent() {
+		return indent;
+	}
+
+	public void setIndent(String indent) {
+		this.indent = indent;
+	}
+
+	public AbstractPrettyPrinter getPrettyPrinter() {
+		return prettyPrinter;
+	}
+
+	public int getRoot_pri() {
+		return root_pri;
+	}
+
+	public void setRoot_pri(int root_pri) {
+		this.root_pri = root_pri;
 	}
 
 }

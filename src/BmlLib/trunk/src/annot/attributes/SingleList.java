@@ -28,7 +28,7 @@ public class SingleList implements Comparable<SingleList> {
 		int pos = 0;
 		for (int i = 0; i < all.length; i++)
 			if ((all[i].aType() & types) > 0) {
-				MLog.putMsg(MLog.PDebug, all[i].getPC() + "; " + all[i].minor);
+				MLog.putMsg(MLog.PDebug, all[i].getPC() + "; " + all[i].getMinor());
 				filtered[pos++] = all[i];
 			}
 		return filtered;
@@ -43,23 +43,23 @@ public class SingleList implements Comparable<SingleList> {
 	}
 
 	public void addAttribute(InCodeAttribute ica) {
-		if (ica.minor == -1) {
+		if (ica.getMinor() == -1) {
 			if (attributes.size() == 0) {
-				ica.minor = 0;
+				ica.setMinor(0);
 			} else {
-				ica.minor = attributes.getLast().minor + 1;
+				ica.setMinor(attributes.getLast().getMinor() + 1);
 			}
 		}
 		if (attributes.size() > 0)
-			if (attributes.getFirst().ih != ica.ih)
+			if (attributes.getFirst().getIh() != ica.getIh())
 				throw new RuntimeException(
 						"difrent instruction's annotations in one SingleList");
-		int m = ica.minor;
+		int m = ica.getMinor();
 		Iterator<InCodeAttribute> iter = attributes.iterator();
 		InCodeAttribute prev = null;
 		while (iter.hasNext()) {
 			InCodeAttribute a = iter.next();
-			if (a.minor >= m)
+			if (a.getMinor() >= m)
 				prev = a;
 		}
 		if (prev == null) {
@@ -72,10 +72,10 @@ public class SingleList implements Comparable<SingleList> {
 		int inc = 0;
 		while (iter.hasNext()) {
 			InCodeAttribute a = iter.next();
-			if (a.minor + inc == minor)
+			if (a.getMinor() + inc == minor)
 				inc++;
-			minor = a.minor;
-			a.minor += inc;
+			minor = a.getMinor();
+			a.setMinor(a.getMinor() + inc);
 		}
 	}
 
@@ -98,7 +98,7 @@ public class SingleList implements Comparable<SingleList> {
 		Iterator<InCodeAttribute> iter = attributes.iterator();
 		while (iter.hasNext()) {
 			InCodeAttribute ica = iter.next();
-			if (ica.minor == minor)
+			if (ica.getMinor() == minor)
 				return ica;
 		}
 		return null;

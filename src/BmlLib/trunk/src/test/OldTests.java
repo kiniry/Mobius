@@ -31,7 +31,7 @@ public class OldTests {
 	public static final boolean goGenerateRandomQuantifiedFormulas = true;
 	public static final boolean go3argQuantifiersGenerated = true;
 	
-	public static String xxx = "################################################################################";
+	public static final String xxx = "################################################################################";
 	private static BCClass bcc;
 	private static Random random;
 
@@ -118,22 +118,22 @@ public class OldTests {
 			ClassNotFoundException, ReadAttributeException {
 		System.out.println(xxx);
 		bcc = new BCClass(Paths.path, "test.Empty");
-		bcc.invariant = new ClassInvariant(bcc);
-		BCMethod m = bcc.methods[1];
+		bcc.setInvariant(new ClassInvariant(bcc));
+		BCMethod m = bcc.getMethod(1);
 		SpecificationCase[] sc = { new SpecificationCase(m, Predicate0Ar.TRUE,
 				Predicate0Ar.FALSE) };
-		m.mspec = new MethodSpecification(m, Predicate0Ar.TRUE, sc);
-		SingleAssert olda = (SingleAssert) m.amap.addAttribute(1, 8, 3);
-		m.amap.addAttribute(1, 5, 0);
-		SingleAssert sa = (SingleAssert) m.amap.addAttribute(1, 8, 2);
-		sa.formula = Predicate0Ar.FALSE;
+		m.setMspec(new MethodSpecification(m, Predicate0Ar.TRUE, sc));
+		SingleAssert olda = (SingleAssert) m.getAmap().addAttribute(1, 8, 3);
+		m.getAmap().addAttribute(1, 5, 0);
+		SingleAssert sa = (SingleAssert) m.getAmap().addAttribute(1, 8, 2);
+		sa.setFormula(Predicate0Ar.FALSE);
 		AbstractFormula af = generateRandomFormula(5);
 		SingleAssert newa = new SingleAssert(m, null, -1, af);
 		olda.replaceWith(newa);
 		SingleAssert a2 = new SingleAssert(m, 8, -1, Predicate0Ar.TRUE);
-		m.amap.addAttribute(a2, 2);
-		System.out.println("minor = " + newa.minor);
-		if (newa.minor != 4)
+		m.getAmap().addAttribute(a2, 2);
+		System.out.println("minor = " + newa.getMinor());
+		if (newa.getMinor() != 4)
 			throw new RuntimeException("error (minor != 4)");
 		refresh();
 		CodeSearch.ComputeAttributeLines(bcc);
@@ -160,7 +160,7 @@ public class OldTests {
 			ReadAttributeException {
 		System.out.println(xxx);
 		bcc = new BCClass(Paths.path, "test.Empty2");
-		BCMethod m2 = bcc.methods[3];
+		BCMethod m2 = bcc.getMethod(3);
 		SingleAssert a1 = new SingleAssert(m2, 58, -1);
 		m2.addAttribute(a1);
 		SingleAssert a2 = new SingleAssert(m2, 58, -1);
@@ -170,7 +170,7 @@ public class OldTests {
 		SingleAssert a4 = new SingleAssert(m2, 58, -1);
 		m2.addAttribute(a4);
 		MethodSpecification ms = new MethodSpecification(m2);
-		m2.mspec = ms;
+		m2.setMspec(ms);
 		ClassInvariant civ = new ClassInvariant(bcc);
 		bcc.addAttribute(civ);
 		// String cp = bcc.printCp();
@@ -194,7 +194,7 @@ public class OldTests {
 		System.out.println(pa.getClass().toString());
 		String str = Parsing.purge("/* \\requires false */");
 		System.out.println("|" + str + "|");
-		BCMethod m = bcc.methods[w[0]];
+		BCMethod m = bcc.getMethod(w[0]);
 		pa.parse(bcc, m, m.findAtPC(w[1]), w[2], str);
 		System.out.println(xxx);
 		code = bcc.printCode();
@@ -226,7 +226,7 @@ public class OldTests {
 		final String fname = "c03";
 		if (generate) {
 			bcc = new BCClass(Paths.path, "test.Empty");
-			BCMethod m = bcc.methods[1];
+			BCMethod m = bcc.getMethod(1);
 			AbstractFormula f = generateRandomFormula(5);
 //			AbstractFormula f = getSampleFormula();
 //			AbstractFormula f = sampleQuantifiedFormula();

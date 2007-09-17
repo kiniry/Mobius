@@ -17,9 +17,9 @@ public class JavaType extends BCExpression {
 		this.name = name;
 	};
 
-	public static JavaType JavaType = new JavaType(null);
-	public static JavaType JavaInt = new JavaType(IDisplayStyle.jt_int);
-	public static JavaType JavaBool = new JavaType(IDisplayStyle.jt_boolean);
+	public static final JavaType JavaType = new JavaType(null);
+	public static final JavaType JavaInt = new JavaType(IDisplayStyle.jt_int);
+	public static final JavaType JavaBool = new JavaType(IDisplayStyle.jt_boolean);
 
 	public static JavaType getJavaType(String name)
 			throws ReadAttributeException {

@@ -2,7 +2,7 @@ package annot.textio;
 
 public abstract class AbstractPrettyPrinter {
 
-	protected BMLConfig conf;
+	private BMLConfig conf;
 
 	protected AbstractPrettyPrinter(BMLConfig conf) {
 		this.conf = conf;
@@ -113,6 +113,10 @@ public abstract class AbstractPrettyPrinter {
 
 	protected String lastLine(String str) {
 		return str.substring(str.lastIndexOf("\n") + 1);
+	}
+
+	public BMLConfig getConf() {
+		return conf;
 	}
 
 }

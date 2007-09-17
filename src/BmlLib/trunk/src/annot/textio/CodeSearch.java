@@ -99,12 +99,12 @@ public class CodeSearch {
 			return null;
 		String type = getKeyword(code.split("\n")[line]);
 		if (IDisplayStyle._classInvariant.equals(type))
-			return bcc.invariant;
+			return bcc.getInvariant();
 		if (IDisplayStyle._requires.equals(type))
-			return bcc.methods[w[0]].mspec;
+			return bcc.getMethod(w[0]).getMspec();
 		if (IDisplayStyle._assert.equals(type)) {
-			BCMethod m = bcc.methods[w[0]];
-			return m.amap.getAllAt(m.findAtPC(w[1])).getAll(AType.C_ALL)[w[2]];
+			BCMethod m = bcc.getMethod(w[0]);
+			return m.getAmap().getAllAt(m.findAtPC(w[1])).getAll(AType.C_ALL)[w[2]];
 		}
 		return null;
 	}
@@ -129,16 +129,16 @@ public class CodeSearch {
 		code = Parsing.removeComment(code);
 		// MLog.putMsg(MLog.PDebug, code);
 		for (int a = 0; a < all.length; a++) {
-			String lc = all[a].last_code;
+			String lc = all[a].getLast_code();
 			lc = Parsing.addComment(lc);
-			lc = conf.prittyPrinter.afterDisplay(lc);
+			lc = conf.getPrettyPrinter().afterDisplay(lc);
 			lc = Parsing.removeComment(lc);
 			// MLog.putMsg(MLog.PDebug, "#"+lc+"#");
 			if (lc.length() == 0)
 				throw new RuntimeException("attribute wasn't displayed yet!");
 			int pos = code.indexOf(lc);
 			if (pos < 0){
-				System.out.println(all[a].last_code);
+				System.out.println(all[a].getLast_code());
 				System.out.println(lc);
 				System.out.println(code);
 				throw new RuntimeException("attribute's code not found!");

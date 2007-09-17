@@ -28,7 +28,7 @@ public class QuantifiedFormula extends AbstractFormula {
 	}
 
 	private String printRoot() {
-		switch (connector) {
+		switch (getConnector()) {
 		case Code.FORALL:
 		case Code.FORALL_WITH_NAME:
 			return "forall";
@@ -52,7 +52,7 @@ public class QuantifiedFormula extends AbstractFormula {
 		}
 		code += "; ";
 		code += IDisplayStyle.expr_block_end;
-		String str = subExpr[0].printCode(conf);
+		String str = getSubExpr(0).printCode(conf);
 		if (IDisplayStyle.go3argQuantifiers)
 			str = str.substring(1, str.length() - 1);
 		code += str;
@@ -63,7 +63,7 @@ public class QuantifiedFormula extends AbstractFormula {
 	public void read(AttributeReader ar, int root)
 			throws ReadAttributeException {
 		int n = ar.readByte();
-		int bvc = ar.bvars.size();
+		int bvc = ar.getBvarCount();
 		for (int i = 0; i < n; i++) {
 			BCExpression expr = ar.readExpression();
 			if (!(expr instanceof JavaType))
@@ -79,27 +79,27 @@ public class QuantifiedFormula extends AbstractFormula {
 					bv.setVname(vname);
 				}
 			}
-			ar.bvars.add(bv);
+			ar.getBvars().add(bv);
 			vars.add(bv);
 		}
-		subExpr[0] = ar.readExpression();
+		setSubExpr(0, ar.readExpression());
 		for (int i = 0; i < n; i++)
-			ar.bvars.remove(ar.bvars.size() - 1);
+			ar.getBvars().remove(ar.getBvarCount() - 1);
 	}
 
 	private int chkConnector() {
 		if (BoundVar.goWriteVarNames) {
-			if (connector == Code.FORALL)
+			if (getConnector() == Code.FORALL)
 				return Code.FORALL_WITH_NAME;
-			if (connector == Code.EXISTS)
+			if (getConnector() == Code.EXISTS)
 				return Code.EXISTS_WITH_NAME;
 		} else {
-			if (connector == Code.FORALL_WITH_NAME)
+			if (getConnector() == Code.FORALL_WITH_NAME)
 				return Code.FORALL;
-			if (connector == Code.EXISTS_WITH_NAME)
+			if (getConnector() == Code.EXISTS_WITH_NAME)
 				return Code.EXISTS;
 		}
-		return connector;
+		return getConnector();
 	}
 
 	@Override
@@ -126,7 +126,7 @@ public class QuantifiedFormula extends AbstractFormula {
 
 	@Override
 	public void init() {
-		this.subExpr = new BCExpression[1];
+		setSubExprCount(1);
 		this.vars = new Vector<BoundVar>();
 	}
 
@@ -136,32 +136,32 @@ public class QuantifiedFormula extends AbstractFormula {
 		Iterator<BoundVar> iter = vars.iterator();
 		while (iter.hasNext())
 			code += " " + iter.next().toString();
-		code += " " + subExpr[0].toString();
+		code += " " + getSubExpr(0).toString();
 		return code;
 	}
 
 	@Override
 	public int getPriority() {
-		return Priorities.getPriority(connector);
+		return Priorities.getPriority(getConnector());
 	}
 
 	@Override
 	public JavaType getType1() {
-		if (subExpr[0].getType() != JavaType.JavaBool)
+		if (getSubExpr(0).getType() != JavaType.JavaBool)
 			return null;
 		return JavaType.JavaBool;
 	}
 
 	public void addVariable(BoundVar bv) {
-		if (subExpr[0] != null)
+		if (getSubExpr(0) != null)
 			throw new RuntimeException("formula is already set!");
 		vars.add(bv);
 	}
 
 	public void setFormula(BCExpression expression) {
-		if (subExpr[0] != null)
+		if (getSubExpr(0) != null)
 			throw new RuntimeException("formula is already set!");
-		subExpr[0] = expression;
+		setSubExpr(0, expression);
 	}
 
 	public BoundVar getVar(int index) {

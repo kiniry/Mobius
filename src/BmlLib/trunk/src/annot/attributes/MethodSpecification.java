@@ -50,7 +50,7 @@ public class MethodSpecification extends BCPrintableAttribute implements
 
 	@Override
 	public void replaceWith(BCPrintableAttribute pa) {
-		method.mspec = (MethodSpecification) pa;
+		method.setMspec((MethodSpecification)pa);
 	}
 
 	public void save(AttributeWriter aw) {
@@ -61,7 +61,7 @@ public class MethodSpecification extends BCPrintableAttribute implements
 	}
 
 	public int getIndex() {
-		return method.bcc.cp.findConstant(IDisplayStyle.__mspec);
+		return method.getBcc().getCp().findConstant(IDisplayStyle.__mspec);
 	}
 
 	public String getName() {
@@ -70,12 +70,12 @@ public class MethodSpecification extends BCPrintableAttribute implements
 
 	@Override
 	public void remove() {
-		method.mspec = null;
+		method.setMspec(null);
 	}
 
 	@Override
 	public void parse(String code) throws RecognitionException {
-		parse(method.bcc, method, null, -1, code);
+		parse(method.getBcc(), method, null, -1, code);
 	}
 
 	@Override

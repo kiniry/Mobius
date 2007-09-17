@@ -11,6 +11,7 @@ public class Predicate0Ar extends AbstractFormula {
 
 	public static final Predicate0Ar TRUE = new Predicate0Ar(true);
 	public static final Predicate0Ar FALSE = new Predicate0Ar(false);
+	
 	private boolean value;
 
 	public Predicate0Ar(boolean value) {

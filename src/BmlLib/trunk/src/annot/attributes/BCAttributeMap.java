@@ -15,7 +15,7 @@ public class BCAttributeMap {
 	private int length;
 	private HashMap<InstructionHandle, SingleList> map;
 
-	public AssertTable atab;
+	private AssertTable atab;
 
 	public BCAttributeMap(BCMethod m) {
 		this.method = m;
@@ -42,23 +42,23 @@ public class BCAttributeMap {
 	}
 
 	public void addAttribute(InCodeAttribute ica, int minor) {
-		if (ica.ih == null)
+		if (ica.getIh() == null)
 			throw new RuntimeException("InstructionHandle not set");
-		ica.minor = minor;
-		if (map.containsKey(ica.ih)) {
-			map.get(ica.ih).addAttribute(ica);
+		ica.setMinor(minor);
+		if (map.containsKey(ica.getIh())) {
+			map.get(ica.getIh()).addAttribute(ica);
 		} else {
 			SingleList sl = new SingleList();
 			sl.addAttribute(ica);
-			map.put(ica.ih, sl);
+			map.put(ica.getIh(), sl);
 		}
 		length++;
 	}
 
 	public void removeAttribute(InCodeAttribute ica) {
-		if (!map.containsKey(ica.ih))
+		if (!map.containsKey(ica.getIh()))
 			throw new RuntimeException("attribute not found!");
-		map.get(ica.ih).removeAttribute(ica);
+		map.get(ica.getIh()).removeAttribute(ica);
 		length--;
 	}
 
@@ -73,11 +73,11 @@ public class BCAttributeMap {
 	}
 
 	public void replaceAttribute(InCodeAttribute olda, InCodeAttribute newa) {
-		if (!map.containsKey(olda.ih))
+		if (!map.containsKey(olda.getIh()))
 			throw new RuntimeException("attribute not found!");
-		newa.ih = olda.ih;
-		newa.minor = olda.minor;
-		SingleList sl = map.get(olda.ih);
+		newa.setIh(olda.getIh());
+		newa.setMinor(olda.getMinor());
+		SingleList sl = map.get(olda.getIh());
 		sl.replace(olda, newa);
 	}
 
@@ -108,6 +108,10 @@ public class BCAttributeMap {
 
 	public int getLength() {
 		return length;
+	}
+
+	public AssertTable getAtab() {
+		return atab;
 	}
 
 }

@@ -86,7 +86,7 @@ public class Parsing {
 		BMLLexer lex = new BMLLexer(chstr);
 		CommonTokenStream tokens = new CommonTokenStream(lex);
 		BMLParser parser = new BMLParser(tokens);
-		parser.init(bcc, m, bcc.cp, ih, minor);
+		parser.init(bcc, m, bcc.getCp(), ih, minor);
 		BCPrintableAttribute result = parser.printableAttribute().ast;
 		if (lex.lastE != null)
 			throw lex.lastE;

@@ -25,11 +25,11 @@ import annot.textio.Parsing;
 
 public class BCClass {
 
-	public JavaClass jc;
-	public BCMethod[] methods;
-	public BCConstantPool cp;
-	public ClassInvariant invariant;
-	public Parsing parser;
+	private JavaClass jc;
+	private BCMethod[] methods;
+	private BCConstantPool cp;
+	private ClassInvariant invariant;
+	private Parsing parser;
 
 	public BCClass(JavaClass jc) throws ReadAttributeException {
 		this.parser = new Parsing(this);
@@ -80,7 +80,7 @@ public class BCClass {
 			code += invariant.printCode(conf);
 		for (int i = 0; i < methods.length; i++)
 			code += "\n" + methods[i].printCode(conf);
-		return conf.prittyPrinter.afterDisplay(code);
+		return conf.getPrettyPrinter().afterDisplay(code);
 	}
 
 	public String printCp() {
@@ -115,10 +115,10 @@ public class BCClass {
 			v.add(invariant);
 		for (int i = 0; i < methods.length; i++) {
 			BCMethod m = methods[i];
-			if (m.mspec != null)
-				v.add(m.mspec);
-			if (m.amap != null) {
-				InCodeAttribute[] at = m.amap.getAllAttributes(types);
+			if (m.getMspec() != null)
+				v.add(m.getMspec());
+			if (m.getAmap() != null) {
+				InCodeAttribute[] at = m.getAmap().getAllAttributes(types);
 				for (int j = 0; j < at.length; j++)
 					v.add(at[j]);
 			}
@@ -196,6 +196,30 @@ public class BCClass {
 		MLog.putMsg(MLog.PProgress, "saving to: " + fileName);
 		saveJC();
 		jc.dump(fileName);
+	}
+
+	public ClassInvariant getInvariant() {
+		return invariant;
+	}
+
+	public void setInvariant(ClassInvariant invariant) {
+		this.invariant = invariant;
+	}
+
+	public BCConstantPool getCp() {
+		return cp;
+	}
+
+	public JavaClass getJc() {
+		return jc;
+	}
+
+	public BCMethod getMethod(int index) {
+		return methods[index];
+	}
+
+	public Parsing getParser() {
+		return parser;
 	}
 
 }

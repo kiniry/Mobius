@@ -42,12 +42,12 @@ public class ClassInvariant extends BCPrintableAttribute implements
 
 	@Override
 	public void replaceWith(BCPrintableAttribute pa) {
-		bcc.invariant = (ClassInvariant) pa;
+		bcc.setInvariant((ClassInvariant)pa);
 	}
 
 	@Override
 	public void remove() {
-		bcc.invariant = null;
+		bcc.setInvariant(null);
 	}
 
 	@Override
@@ -61,7 +61,7 @@ public class ClassInvariant extends BCPrintableAttribute implements
 	}
 
 	public int getIndex() {
-		return bcc.cp.findConstant(IDisplayStyle.__classInvariant);
+		return bcc.getCp().findConstant(IDisplayStyle.__classInvariant);
 	}
 
 	public String getName() {

@@ -23,10 +23,10 @@ public class BCMethod {
 
 	private final static boolean displayStyle = false;
 
-	public BCClass bcc;
+	private BCClass bcc;
 	private MethodGen bcelMethod;
-	public MethodSpecification mspec;
-	public BCAttributeMap amap;
+	private MethodSpecification mspec;
+	private BCAttributeMap amap;
 
 	public BCMethod(BCClass bcc, MethodGen m) throws ReadAttributeException {
 		MLog.putMsg(MLog.PInfo, "  initializing method: " + m.getName());
@@ -63,7 +63,7 @@ public class BCMethod {
 				bcode += ih.getPosition()
 						+ ": "
 						+ ih.getInstruction()
-								.toString(bcc.jc.getConstantPool()) + "\n";
+								.toString(bcc.getJc().getConstantPool()) + "\n";
 			}
 		} else {
 			bcode += bcelMethod.getMethod().getCode().toString();
@@ -87,7 +87,7 @@ public class BCMethod {
 
 	public void addAttribute(InCodeAttribute ica) {
 		MLog.putMsg(MLog.PProgress, "adding attribute: " + ica.toString());
-		amap.addAttribute(ica, ica.minor);
+		amap.addAttribute(ica, ica.getMinor());
 	}
 
 	public Method save() {
@@ -98,7 +98,7 @@ public class BCMethod {
 		if (mspec != null)
 			attrs = BCClass.addAttribute(attrs, aw.writeAttribute(mspec));
 		if (amap.getLength() > 0)
-			attrs = BCClass.addAttribute(attrs, aw.writeAttribute(amap.atab));
+			attrs = BCClass.addAttribute(attrs, aw.writeAttribute(amap.getAtab()));
 		bcelMethod.removeAttributes();
 		for (int i = 0; i < attrs.length; i++)
 			bcelMethod.addAttribute(attrs[i]);
@@ -122,6 +122,22 @@ public class BCMethod {
 				return ih;
 		}
 		return null;
+	}
+
+	public BCAttributeMap getAmap() {
+		return amap;
+	}
+
+	public BCClass getBcc() {
+		return bcc;
+	}
+
+	public MethodSpecification getMspec() {
+		return mspec;
+	}
+
+	public void setMspec(MethodSpecification mspec) {
+		this.mspec = mspec;
 	}
 
 }

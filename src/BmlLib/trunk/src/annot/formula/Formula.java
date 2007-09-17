@@ -32,7 +32,7 @@ public class Formula extends AbstractFormula {
 	}
 
 	public String printRoot(BMLConfig conf) {
-		switch (connector) {
+		switch (getConnector()) {
 		case Code.AND:
 			return " && ";
 		case Code.OR:
@@ -52,34 +52,34 @@ public class Formula extends AbstractFormula {
 
 	@Override
 	public String printCode1(BMLConfig conf) {
-		if (subExpr.length == 1)
-			return printRoot(conf) + subExpr[0].printCode(conf);
-		return subExpr[0].printCode(conf) + printRoot(conf)
-				+ subExpr[1].printCode(conf);
+		if (getSubExprCount() == 1)
+			return printRoot(conf) + getSubExpr(0).printCode(conf);
+		return getSubExpr(0).printCode(conf) + printRoot(conf)
+				+ getSubExpr(1).printCode(conf);
 	}
 
 	@Override
 	public void read(AttributeReader ar, int root)
 			throws ReadAttributeException {
 		if (root == Code.NOT) {
-			subExpr = new BCExpression[1];
-			subExpr[0] = ar.readExpression();
+			setSubExprCount(1);
+			setSubExpr(0, ar.readExpression());
 		} else {
-			subExpr = new BCExpression[2];
-			subExpr[0] = ar.readExpression();
-			subExpr[1] = ar.readExpression();
+			setSubExprCount(2);
+			setSubExpr(0, ar.readExpression());
+			setSubExpr(1, ar.readExpression());
 		}
 	}
 
 	@Override
 	public void write(AttributeWriter aw) {
-		aw.writeByte(connector);
+		aw.writeByte(getConnector());
 		writeSubExpressions(aw);
 	}
 
 	@Override
 	public int getPriority() {
-		return Priorities.getPriority(connector);
+		return Priorities.getPriority(getConnector());
 	}
 
 	@Override
@@ -88,18 +88,18 @@ public class Formula extends AbstractFormula {
 
 	@Override
 	public String toString() {
-		if (subExpr.length == 1) {
-			return printRoot(null) + subExpr[0].toString();
+		if (getSubExprCount() == 1) {
+			return printRoot(null) + getSubExpr(0).toString();
 		} else {
-			return subExpr[0].toString() + printRoot(null)
-					+ subExpr[1].toString();
+			return getSubExpr(0).toString() + printRoot(null)
+					+ getSubExpr(1).toString();
 		}
 	}
 
 	@Override
 	public JavaType getType1() {
-		for (int i = 0; i < subExpr.length; i++)
-			if (subExpr[i].getType() != JavaType.JavaBool)
+		for (int i = 0; i < getSubExprCount(); i++)
+			if (getSubExpr(i).getType() != JavaType.JavaBool)
 				return null;
 		return JavaType.JavaBool;
 	}

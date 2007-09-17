@@ -13,7 +13,7 @@ import annot.textio.IDisplayStyle;
 
 public class SingleAssert extends InCodeAttribute {
 
-	public AbstractFormula formula;
+	private AbstractFormula formula;
 
 	public SingleAssert(BCMethod m, InstructionHandle ih, int minor) {
 		super(m, ih, minor);
@@ -55,7 +55,7 @@ public class SingleAssert extends InCodeAttribute {
 
 	@Override
 	public void remove() {
-		method.amap.removeAttribute(this);
+		getMethod().getAmap().removeAttribute(this);
 	}
 
 	@Override
@@ -65,8 +65,16 @@ public class SingleAssert extends InCodeAttribute {
 
 	@Override
 	public String toString() {
-		return "assert at (" + getPC() + ", " + ((minor == -1) ? "any" : minor)
+		return "assert at (" + getPC() + ", " + ((getMinor() == -1) ? "any" : getMinor())
 				+ ")";
+	}
+
+	public AbstractFormula getFormula() {
+		return formula;
+	}
+
+	public void setFormula(AbstractFormula formula) {
+		this.formula = formula;
 	}
 
 }

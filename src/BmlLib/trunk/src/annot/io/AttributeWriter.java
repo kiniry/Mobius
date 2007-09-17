@@ -20,7 +20,7 @@ public class AttributeWriter {
 	}
 
 	public AttributeWriter(BCMethod bcm) {
-		this.bcc = bcm.bcc;
+		this.bcc = bcm.getBcc();
 		this.bcm = bcm;
 	}
 
@@ -32,7 +32,7 @@ public class AttributeWriter {
 		byte[] bytes = new byte[pos];
 		for (int i = 0; i < pos; i++)
 			bytes[i] = output[i];
-		return new Unknown(attr.getIndex(), pos, bytes, bcc.jc
+		return new Unknown(attr.getIndex(), pos, bytes, bcc.getJc()
 				.getConstantPool());
 	}
 
@@ -82,11 +82,11 @@ public class AttributeWriter {
 	}
 
 	public int findConstant(String str) {
-		int pos = bcc.cp.findConstant(str);
+		int pos = bcc.getCp().findConstant(str);
 		if (pos == -1) {
 			ConstantUtf8 cu8 = new ConstantUtf8(str);
-			bcc.cp.addConstant(cu8);
-			return bcc.cp.size() - 1;
+			bcc.getCp().addConstant(cu8);
+			return bcc.getCp().size() - 1;
 		}
 		return pos;
 	}

@@ -29,7 +29,7 @@ public class AttributeReader {
 	private int pos;
 	private int length;
 	private String attrName = "?"; // debug
-	public Vector<BoundVar> bvars;
+	private Vector<BoundVar> bvars;
 
 	public AttributeReader(BCClass bcc) {
 		this.bcc = bcc;
@@ -37,7 +37,7 @@ public class AttributeReader {
 	}
 
 	public AttributeReader(BCMethod bcm) {
-		this.bcc = bcm.bcc;
+		this.bcc = bcm.getBcc();
 		this.method = bcm;
 		this.bvars = new Vector<BoundVar>();
 	}
@@ -50,15 +50,15 @@ public class AttributeReader {
 		if (aname.equals(IDisplayStyle.__mspec)) {
 			MLog.putMsg(MLog.PInfo, "    reading attribute: "
 					+ IDisplayStyle.__mspec);
-			method.mspec = new MethodSpecification(method, this);
+			method.setMspec(new MethodSpecification(method, this));
 		} else if (aname.equals(IDisplayStyle.__classInvariant)) {
 			MLog.putMsg(MLog.PInfo, "    reading attribute: "
 					+ IDisplayStyle.__classInvariant);
-			bcc.invariant = new ClassInvariant(bcc, this);
+			bcc.setInvariant(new ClassInvariant(bcc, this));
 		} else if (aname.equals(IDisplayStyle.__assertTable)) {
 			MLog.putMsg(MLog.PInfo, "    reading attribute: "
 					+ IDisplayStyle.__assertTable);
-			method.amap.atab.load(this);
+			method.getAmap().getAtab().load(this);
 		} else {
 			MLog.putMsg(MLog.PTodo, "    unrecognized attribute: " + aname);
 			return;
@@ -103,7 +103,7 @@ public class AttributeReader {
 	}
 
 	public String findString(int index) throws ReadAttributeException {
-		Constant c = bcc.cp.getConstant(index);
+		Constant c = bcc.getCp().getConstant(index);
 		if (c instanceof ConstantUtf8)
 			return ((ConstantUtf8) c).getBytes();
 		throw new ReadAttributeException("invalid constant index: " + index);
@@ -142,7 +142,7 @@ public class AttributeReader {
 			return BoundVar.getBoundVar(this);
 		case Code.JAVA_TYPE:
 			int i = readShort();
-			Constant c = bcc.cp.getConstant(i);
+			Constant c = bcc.getCp().getConstant(i);
 			if (!(c instanceof ConstantUtf8))
 				throw new ReadAttributeException(
 						"Utf8 expected as javaType name");
@@ -151,6 +151,18 @@ public class AttributeReader {
 		default:
 			throw new ReadAttributeException("Unknown expression code: " + b);
 		}
+	}
+
+	public BoundVar getBvar(int index) {
+		return bvars.elementAt(index);
+	}
+
+	public int getBvarCount() {
+		return bvars.size();
+	}
+	
+	public Vector<BoundVar> getBvars() {
+		return bvars;
 	}
 
 }

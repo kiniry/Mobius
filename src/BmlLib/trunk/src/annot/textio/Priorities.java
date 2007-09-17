@@ -4,9 +4,9 @@ import annot.io.Code;
 
 public abstract class Priorities implements Code {
 
-	public static int[] priorities;
+	private static int[] priorities;
 
-	public static int LEAF = 0;
+	public static final int LEAF = 0;
 
 	private static void setPrioritues() {
 		priorities = new int[255];

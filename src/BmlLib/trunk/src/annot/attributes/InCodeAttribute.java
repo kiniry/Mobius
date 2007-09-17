@@ -12,9 +12,9 @@ import annot.textio.BMLConfig;
 public abstract class InCodeAttribute extends BCPrintableAttribute implements
 		Comparable<InCodeAttribute> {
 
-	protected BCMethod method;
-	public InstructionHandle ih;
-	public int minor;
+	private BCMethod method;
+	private InstructionHandle ih;
+	private int minor;
 
 	public InCodeAttribute(BCMethod m, InstructionHandle ih, int minor) {
 		this.method = m;
@@ -43,12 +43,12 @@ public abstract class InCodeAttribute extends BCPrintableAttribute implements
 			ica.ih = ih;
 			ica.minor = minor;
 		}
-		method.amap.replaceAttribute(this, ica);
+		method.getAmap().replaceAttribute(this, ica);
 	}
 
 	@Override
 	public void parse(String code) throws RecognitionException {
-		parse(method.bcc, method, ih, minor, code);
+		parse(method.getBcc(), method, ih, minor, code);
 	}
 
 	public int getPC() {
@@ -68,6 +68,26 @@ public abstract class InCodeAttribute extends BCPrintableAttribute implements
 		} else {
 			return pc - opc;
 		}
+	}
+
+	public InstructionHandle getIh() {
+		return ih;
+	}
+
+	public void setIh(InstructionHandle ih) {
+		this.ih = ih;
+	}
+
+	public BCMethod getMethod() {
+		return method;
+	}
+
+	public int getMinor() {
+		return minor;
+	}
+
+	public void setMinor(int minor) {
+		this.minor = minor;
 	}
 
 }

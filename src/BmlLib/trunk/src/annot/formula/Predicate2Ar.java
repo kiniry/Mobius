@@ -21,7 +21,7 @@ public class Predicate2Ar extends AbstractFormula {
 	}
 
 	public String printRoot() {
-		switch (connector) {
+		switch (getConnector()) {
 		case Code.GRT:
 			return " > ";
 		case Code.GRTEQ:
@@ -41,27 +41,27 @@ public class Predicate2Ar extends AbstractFormula {
 
 	@Override
 	public String printCode1(BMLConfig conf) {
-		return subExpr[0].printCode(conf) + printRoot()
-				+ subExpr[1].printCode(conf);
+		return getSubExpr(0).printCode(conf) + printRoot()
+				+ getSubExpr(1).printCode(conf);
 	}
 
 	@Override
 	public void read(AttributeReader ar, int root)
 			throws ReadAttributeException {
-		subExpr = new BCExpression[2];
-		subExpr[0] = ar.readExpression();
-		subExpr[1] = ar.readExpression();
+		setSubExprCount(2);
+		setSubExpr(0, ar.readExpression());
+		setSubExpr(1, ar.readExpression());
 	}
 
 	@Override
 	public void write(AttributeWriter aw) {
-		aw.writeByte(connector);
+		aw.writeByte(getConnector());
 		writeSubExpressions(aw);
 	}
 
 	@Override
 	public int getPriority() {
-		return Priorities.getPriority(connector);
+		return Priorities.getPriority(getConnector());
 	}
 
 	@Override
@@ -70,17 +70,17 @@ public class Predicate2Ar extends AbstractFormula {
 
 	@Override
 	public String toString() {
-		if (subExpr.length == 1) {
-			return printRoot() + subExpr[0].toString();
+		if (getSubExprCount() == 1) {
+			return printRoot() + getSubExpr(0).toString();
 		} else {
-			return subExpr[0].toString() + printRoot() + subExpr[1].toString();
+			return getSubExpr(0).toString() + printRoot() + getSubExpr(1).toString();
 		}
 	}
 
 	@Override
 	public JavaType getType1() {
-		for (int i = 0; i < subExpr.length; i++)
-			if (subExpr[i].getType() != JavaType.JavaInt)
+		for (int i = 0; i < getSubExprCount(); i++)
+			if (getSubExpr(i).getType() != JavaType.JavaInt)
 				return null;
 		return JavaType.JavaBool;
 	}

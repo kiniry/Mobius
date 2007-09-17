@@ -142,7 +142,7 @@ public class NewPrettyPrinter1 extends AbstractPrettyPrinter {
 		String start = "";
 		for (int i=0; i<spos; i++)
 			start += " ";
-		String ret = bl(start, str, "", conf.indent);
+		String ret = bl(start, str, "", getConf().getIndent());
 		ret = ret.substring(spos);
 		return ret;
 	}

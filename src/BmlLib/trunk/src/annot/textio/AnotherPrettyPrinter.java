@@ -1,5 +1,6 @@
 package annot.textio;
 
+@Deprecated
 public class AnotherPrettyPrinter extends PrettyPrinter {
 	// FIXME! ERRORS!
 
@@ -7,7 +8,8 @@ public class AnotherPrettyPrinter extends PrettyPrinter {
 
 	public AnotherPrettyPrinter(BMLConfig conf) {
 		super(conf);
-		maxW = IDisplayStyle.max_total_line_width - conf.indent.length()
+		maxW = IDisplayStyle.max_total_line_width
+				- conf.getIndent().length()
 				- IDisplayStyle.comment_next.length();
 	}
 
@@ -37,7 +39,7 @@ public class AnotherPrettyPrinter extends PrettyPrinter {
 		}
 		String[] sub = splitRoot(input);
 		if (sub.length <= 2) // if we are in leaf of the expression
-			return prefix + conf.newLine() + cleanup(sub[0]) + suffix;
+			return prefix + getConf().newLine() + cleanup(sub[0]) + suffix;
 		int maxi = sub.length;
 		maxi -= 4;
 		suffix = sub[sub.length - 2] + suffix;
@@ -46,9 +48,9 @@ public class AnotherPrettyPrinter extends PrettyPrinter {
 		int n = 1;
 		String output = prefix; // returned String
 		if (startFormOp) {
-			if (!conf.newLine().equals("\n" + prefix))
+			if (!getConf().newLine().equals("\n" + prefix))
 				if (strlen(prefix + sub[0] + sub[1] + suffix) >= maxW) {
-					output += conf.newLine();
+					output += getConf().newLine();
 					n = 2;
 				}
 			for (int i = 0; i <= maxi; i += 2) {
@@ -69,10 +71,10 @@ public class AnotherPrettyPrinter extends PrettyPrinter {
 		String prefix = "";
 		for (int i = 0; i < spos; i++)
 			prefix += " ";
-		conf.decInd();// ?
+		getConf().decInd();// ?
 		String ret = bl(prefix, str, "");
 		// ret = indent(ret, 0);
-		conf.incInd();// ?
+		getConf().incInd();// ?
 		ret = ret.substring(spos);
 		return ret;
 	}

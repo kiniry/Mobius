@@ -42,7 +42,7 @@ public class Testuj {
 		try {
 			BCPrintableAttribute pa = at[attr_id];
 			String rc = IDisplayStyle.comment_next
-					+ Parsing.purge(pa.last_code);
+					+ Parsing.purge(pa.getLast_code());
 			String kw = CodeSearch.getKeyword(rc) + " ";
 			newval = kw + newval;
 			pa.parse(newval);

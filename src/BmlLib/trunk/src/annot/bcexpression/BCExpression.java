@@ -9,10 +9,11 @@ import annot.textio.IDisplayStyle;
 
 public abstract class BCExpression {
 
-	protected int connector;
-	protected BCExpression[] subExpr;
-	protected int priority = 0;
-	protected static int MAX_PRI = 18;
+	public static final int MAX_PRI = 18;
+
+	private int connector;
+	private BCExpression[] subExpr;
+	private int priority = 0;
 
 	public BCExpression() {
 		this.subExpr = new BCExpression[0];
@@ -81,20 +82,20 @@ public abstract class BCExpression {
 	 * @return string representation of expression
 	 */
 	public String printLine(BMLConfig conf, String prefix) {
-		conf.root_pri = MAX_PRI;
+		conf.setRoot_pri(MAX_PRI);
 		conf.incInd();
-		conf.goControlPrint = false;
+		conf.setGoControlPrint(false);
 		String str = printCode(conf);
-		str = conf.prittyPrinter.breakLines(str, prefix.length() + 1);
+		str = conf.getPrettyPrinter().breakLines(str, prefix.length() + 1);
 		if (IDisplayStyle.goControlPrint) {
 			str += "\n------------------------------------------\n"
 					+ printCode(conf);
-			str += "\n" + conf.prittyPrinter.cleanup(printCode(conf));
-			conf.goControlPrint = true;
+			str += "\n" + conf.getPrettyPrinter().cleanup(printCode(conf));
+			conf.setGoControlPrint(true);
 			str += "\n" + printCode(conf);
 		}
 		conf.decInd();
-		return conf.indent + prefix + " " + str + "\n";
+		return conf.getIndent() + prefix + " " + str + "\n";
 	}
 
 	/**
@@ -106,8 +107,8 @@ public abstract class BCExpression {
 	 *         root
 	 */
 	private String printCode2(BMLConfig conf) {
-		int rp = conf.root_pri;
-		conf.root_pri = priority;
+		int rp = conf.getRoot_pri();
+		conf.setRoot_pri(priority);
 		String str = "";
 		boolean lvlinc = (rp != priority);
 		if (subExpr.length == 0) {
@@ -119,9 +120,9 @@ public abstract class BCExpression {
 		String sub = printCode1(conf);
 		if (subExpr.length == 1) // ~~
 			if (subExpr[0].subExpr.length == 1) {
-				conf.root_pri--;
+				conf.setRoot_pri(conf.getRoot_pri() - 1);
 				sub = printCode1(conf); // 2^n
-				conf.root_pri = priority;
+				conf.setRoot_pri(priority);
 			}
 		str += sub;
 		if (lvlinc)
@@ -141,7 +142,7 @@ public abstract class BCExpression {
 			}
 			str = str2;
 		}
-		conf.root_pri = rp;
+		conf.setRoot_pri(rp);
 		return str;
 	}
 
@@ -168,7 +169,7 @@ public abstract class BCExpression {
 			str += connector;
 		}
 		for (int i = 0; i < length; i++)
-			str += ",\n" + conf.indent + subExpr[i].controlPrint(conf);
+			str += ",\n" + conf.getIndent() + subExpr[i].controlPrint(conf);
 		str += ")";
 		conf.decInd();
 		return str;
@@ -184,7 +185,7 @@ public abstract class BCExpression {
 	 *         root
 	 */
 	public String printCode(BMLConfig conf) {
-		if (conf.goControlPrint) {
+		if (conf.isGoControlPrint()) {
 			return controlPrint(conf);
 		} else {
 			return printCode2(conf);
@@ -194,6 +195,34 @@ public abstract class BCExpression {
 	public void writeSubExpressions(AttributeWriter aw) {
 		for (int i = 0; i < subExpr.length; i++)
 			subExpr[i].write(aw);
+	}
+
+	public int getConnector() {
+		return connector;
+	}
+
+	public void setConnector(int connector) {
+		this.connector = connector;
+	}
+
+	public BCExpression getSubExpr(int index) {
+		return subExpr[index];
+	}
+
+	public int getSubExprCount() {
+		return subExpr.length;
+	}
+	
+	protected void setSubExpr(int index, BCExpression subExpr) {
+		this.subExpr[index] = subExpr;
+	}
+
+	protected void setSubExprCount(int n) {
+		this.subExpr = new BCExpression[n];
+	}
+	
+	protected void setPriority(int priority) {
+		this.priority = priority;
 	}
 
 }

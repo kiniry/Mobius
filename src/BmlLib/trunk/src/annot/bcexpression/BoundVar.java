@@ -28,7 +28,7 @@ public class BoundVar extends BCExpression {
 	public static BoundVar getBoundVar(AttributeReader ar)
 			throws ReadAttributeException {
 		int i = ar.readShort();
-		return ar.bvars.elementAt(i);
+		return ar.getBvar(i);
 	}
 
 	@Override

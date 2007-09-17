@@ -5,7 +5,7 @@ TODO:
 + remove 'forall' filed from quantifiedFormula
 + add type checking after parsing
 + repair prettyPrinter (any)
-- check fields / methods visibility
++ check fields / methods visibility
 - remove warnings
 - add update.txt readme file
 - add JavaDocs
