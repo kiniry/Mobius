@@ -32,7 +32,7 @@
 			<key>GanttHideRedundant</key>
 			<false/>
 			<key>GanttVisibleRect</key>
-			<string>{{-195, 0}, {654, 991}}</string>
+			<string>{{-184, 0}, {654, 991}}</string>
 			<key>OutlineVisibleRect</key>
 			<string>{{0, 0}, {464, 991}}</string>
 			<key>SelectedPlanView</key>
@@ -66,7 +66,7 @@
 			<key>calendarController</key>
 			<dict>
 				<key>OutlineVisibleRect</key>
-				<string>{{0, 0}, {193, 770}}</string>
+				<string>{{0, 0}, {192, 770}}</string>
 				<key>activeColumnIdentifiers</key>
 				<array>
 					<string>Notes</string>
@@ -84,7 +84,7 @@
 				</dict>
 			</dict>
 			<key>calendarSplit</key>
-			<real>0.81641662120819092</real>
+			<real>0.81729918718338013</real>
 			<key>columnWidths</key>
 			<dict>
 				<key>%Done</key>
@@ -101,19 +101,19 @@
 			<key>dayWidth</key>
 			<real>0.25</real>
 			<key>resourceSplit</key>
-			<real>0.60900264978408813</real>
+			<real>0.73488926887512207</real>
 			<key>resourcesController</key>
 			<dict>
 				<key>DayWidth</key>
 				<real>0.25</real>
 				<key>OutlineVisibleRect</key>
-				<string>{{0, 0}, {428, 991}}</string>
+				<string>{{0, 0}, {428, 916}}</string>
 				<key>ShowGanttAssignments</key>
 				<false/>
 				<key>ShowGanttTitles</key>
 				<true/>
 				<key>TimelineVisibleRect</key>
-				<string>{{-264, 0}, {647, 991}}</string>
+				<string>{{-210, 671}, {1185, 916}}</string>
 				<key>activeColumnIdentifiers</key>
 				<array>
 					<string>Notes</string>
@@ -133,7 +133,7 @@
 			<key>side</key>
 			<real>0.59046781063079834</real>
 			<key>window</key>
-			<string>{{1930, 75}, {1142, 1125}}</string>
+			<string>{{1680, 0}, {1680, 1050}}</string>
 		</dict>
 	</array>
 	<key>displaySeconds</key>
@@ -188,7 +188,7 @@
 		<key>NSPaperName</key>
 		<string>A4</string>
 		<key>NSPrinterName</key>
-		<string>csicastlecolourprinter1.ucd.ie</string>
+		<string>csicaslbwprinter02.ucd.ie</string>
 		<key>NSScalingFactor</key>
 		<real>1</real>
 	</dict>
@@ -197,7 +197,7 @@
 	<key>resourceDifferenceEngine</key>
 	<dict>
 		<key>nextId</key>
-		<integer>124</integer>
+		<integer>126</integer>
 	</dict>
 	<key>resourceUserKeys</key>
 	<array/>
@@ -221,9 +221,10 @@
 		</dict>
 		<dict>
 			<key>available</key>
-			<real>3.5</real>
+			<real>4.25</real>
 			<key>children</key>
 			<array>
+				<integer>125</integer>
 				<integer>38</integer>
 				<integer>36</integer>
 				<integer>37</integer>
@@ -885,7 +886,7 @@
 		</dict>
 		<dict>
 			<key>available</key>
-			<real>57.159999847412109</real>
+			<real>57.909999847412109</real>
 			<key>children</key>
 			<array>
 				<integer>18</integer>
@@ -1339,9 +1340,9 @@
 			<key>addressBookUID</key>
 			<string>20952E69-5F16-4480-9A9F-E2704C27C633:ABPerson</string>
 			<key>available</key>
-			<real>0.25</real>
+			<real>0.0</real>
 			<key>name</key>
-			<string>Alan Morkan</string>
+			<string>Alan Morkan (on leave)</string>
 			<key>objectId</key>
 			<integer>115</integer>
 		</dict>
@@ -1377,6 +1378,12 @@
 			<key>objectId</key>
 			<integer>123</integer>
 		</dict>
+		<dict>
+			<key>name</key>
+			<string>Dermot Cochran</string>
+			<key>objectId</key>
+			<integer>125</integer>
+		</dict>
 	</array>
 	<key>schedule</key>
 	<dict>
@@ -1384,7 +1391,7 @@
 		<array>
 			<dict>
 				<key>date</key>
-				<string>20080217</string>
+				<string>20080323</string>
 				<key>spans</key>
 				<array>
 					<dict>
@@ -1397,7 +1404,7 @@
 			</dict>
 			<dict>
 				<key>date</key>
-				<string>20080218</string>
+				<string>20080324</string>
 				<key>spans</key>
 				<array>
 					<dict>
@@ -1410,7 +1417,7 @@
 			</dict>
 			<dict>
 				<key>date</key>
-				<string>20080219</string>
+				<string>20080325</string>
 				<key>spans</key>
 				<array>
 					<dict>
@@ -1423,7 +1430,7 @@
 			</dict>
 			<dict>
 				<key>date</key>
-				<string>20080220</string>
+				<string>20080326</string>
 				<key>spans</key>
 				<array>
 					<dict>
@@ -1436,7 +1443,7 @@
 			</dict>
 			<dict>
 				<key>date</key>
-				<string>20080221</string>
+				<string>20080327</string>
 				<key>spans</key>
 				<array>
 					<dict>
@@ -4614,7 +4621,7 @@
 			<key>isEffortFixed</key>
 			<false/>
 			<key>lockedEndDate</key>
-			<string>200704271500</string>
+			<string>200704241100</string>
 			<key>lockedStartDate</key>
 			<string>200701010900</string>
 			<key>objectId</key>
@@ -4673,7 +4680,7 @@
 			<key>isEffortFixed</key>
 			<false/>
 			<key>lockedEndDate</key>
-			<string>200705311600</string>
+			<string>200705251500</string>
 			<key>lockedStartDate</key>
 			<string>200703010900</string>
 			<key>objectId</key>
