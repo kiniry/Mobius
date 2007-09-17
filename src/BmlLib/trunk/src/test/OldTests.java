@@ -222,8 +222,8 @@ public class OldTests {
 
 	private static void pp_test() throws ClassNotFoundException,
 			ReadAttributeException, IOException {
-		final boolean generate = false;
-		final String fname = "c03";
+		final boolean generate = true;
+		final String fname = "c04";
 		if (generate) {
 			bcc = new BCClass(Paths.path, "test.Empty");
 			BCMethod m = bcc.getMethod(1);

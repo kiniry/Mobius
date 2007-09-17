@@ -74,7 +74,7 @@ public abstract class InCodeAttribute extends BCPrintableAttribute implements
 		return ih;
 	}
 
-	public void setIh(InstructionHandle ih) {
+	protected void setIh(InstructionHandle ih) {
 		this.ih = ih;
 	}
 
@@ -86,7 +86,7 @@ public abstract class InCodeAttribute extends BCPrintableAttribute implements
 		return minor;
 	}
 
-	public void setMinor(int minor) {
+	protected void setMinor(int minor) {
 		this.minor = minor;
 	}
 

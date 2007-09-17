@@ -197,19 +197,19 @@ public abstract class BCExpression {
 			subExpr[i].write(aw);
 	}
 
-	public int getConnector() {
+	protected int getConnector() {
 		return connector;
 	}
 
-	public void setConnector(int connector) {
+	protected void setConnector(int connector) {
 		this.connector = connector;
 	}
 
-	public BCExpression getSubExpr(int index) {
+	protected BCExpression getSubExpr(int index) {
 		return subExpr[index];
 	}
 
-	public int getSubExprCount() {
+	protected int getSubExprCount() {
 		return subExpr.length;
 	}
 	

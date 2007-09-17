@@ -2,11 +2,11 @@ package annot.textio;
 
 import java.util.Vector;
 
-public class NewPrettyPrinter1 extends AbstractPrettyPrinter {
+public class AdvancedPrettyPrinter extends AbstractPrettyPrinter {
 
 	private static final boolean startFromOp = false;
 	
-	public NewPrettyPrinter1(BMLConfig conf) {
+	public AdvancedPrettyPrinter(BMLConfig conf) {
 		super(conf);
 	}
 

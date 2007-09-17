@@ -55,8 +55,9 @@ public class BCMethod {
 		if (displayStyle) {
 			InstructionList il = bcelMethod.getInstructionList();
 			il.setPositions();
-			Iterator<InstructionHandle> iter = bcelMethod.getInstructionList()
-					.iterator();
+			Iterator iterator = bcelMethod.getInstructionList()
+								.iterator();
+			Iterator<InstructionHandle> iter = iterator;
 			while (iter.hasNext()) {
 				InstructionHandle ih = iter.next();
 				bcode += amap.getAllAt(ih).printCode(conf);

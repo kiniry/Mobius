@@ -115,7 +115,7 @@ public abstract class AbstractPrettyPrinter {
 		return str.substring(str.lastIndexOf("\n") + 1);
 	}
 
-	public BMLConfig getConf() {
+	protected BMLConfig getConf() {
 		return conf;
 	}
 

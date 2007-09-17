@@ -5,6 +5,7 @@ public interface IDisplayStyle {
 	public static boolean goControlPrint = false;
 	public static int max_total_line_width = 60;
 	public static final boolean go3argQuantifiers = true;
+	public static final boolean goUseSimplePrettyPrinter = false;
 	
 	public static final boolean goShowRightMargin = false;
 

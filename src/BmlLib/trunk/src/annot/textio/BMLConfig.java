@@ -4,7 +4,10 @@ public class BMLConfig implements IDisplayStyle {
 
 	private String indent = "";
 
-	private AbstractPrettyPrinter prettyPrinter = new NewPrettyPrinter1(this);
+	private AbstractPrettyPrinter prettyPrinter
+		= IDisplayStyle.goUseSimplePrettyPrinter
+		? new SimplePrettyPrinter(this)
+		: new AdvancedPrettyPrinter(this);
 
 	private boolean goControlPrint = false;
 

@@ -1,3 +1,6 @@
 [pl] pytania do Chrzaszcza na najblizsze spotkanie.
 
 - czy przejmowac sie wydajnoscia i kiedy?
+- czy BCConstantPool powinien byc kolekcja stalych[*], czy
+	dwoma zwyklymi (BCEL-owymi) constantPool-ami?
+- jak pozbyc sie warningow o operatorach?
