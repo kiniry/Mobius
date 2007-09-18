@@ -183,7 +183,7 @@ fix-perms:	.perms-fixed
 
 # To really clean, we need to clean Javafe last since some of its
 # tools are used in cleaning.
-clean: clean-norel clean-release clean-release-test cleanup
+clean: clean-norel clean-release clean-release-test clean-norel-noreltemp cleanup
 
 # Cleans out the release directory
 clean-release:
@@ -502,8 +502,8 @@ source-release: cleanup alldocs
 	cp ${ESCJ_SIMPLIFY_DIR}/Simplify-1.5.4* ${RELTEMP}
 	cp README.first README.txt ${RELTEMP}
 	cd release-files; cp `ls | grep -v CVS` ${RELTEMP}
-	-find ${RELTEMP} -name "CVS" -exec rm -rf {} \; > /dev/null 2>&1
-	-find ${RELTEMP} -name ".cvsignore" -exec rm -rf {} \; > /dev/null  2>&1
+	-find ${RELTEMP} -name ".svn" -exec rm -rf {} \; > /dev/null 2>&1
+	-find ${RELTEMP} -name ".svnignore" -exec rm -rf {} \; > /dev/null  2>&1
 	-find ${RELTEMP} -name "*~" -or -name ".#*" -exec rm -f {} \; > /dev/null 2>&1
 	cd ${RELTEMP}; tar cjvf ${RELDIR}/${RELSRCTAR}.tbz *
 	cd ${RELTEMP}; tar czvf ${RELDIR}/${RELSRCTAR}.tgz *
