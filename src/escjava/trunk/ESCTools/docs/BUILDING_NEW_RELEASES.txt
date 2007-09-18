@@ -12,8 +12,8 @@ or
   ESC_VERSION=2.0.4 ESC_RELEASE_DATE=`date "+%d-%m-%y"` make releases-notests
 o Take release to another machine, unpack, install, and test.
 o Tag repository for new release.  E.g.,
-  cvs tag escjava-2-0-4
-o Upload to GForge
+  tags/escjava-2-0-4
+o Upload to mobius.ucd.ie Trac
 o Announce to world
  + All JMLSpecs mailing lists
  + ESC/Java developer list
