@@ -67,7 +67,7 @@ jars: $(ESCJAVA2_SPECS_JAR) jar srcjar
 .PHONY: build buildall test javafetests escjavatests alltests \
 	javafealltests escjavaalltests findbugs self_typecheck test1
 
-build buildall: fix-perms
+build buildall: source fix-perms
 	for d in $(SUBDIRS) ; do \
 	    $(MAKE) -C $$d $@ || exit 1; \
 	done
