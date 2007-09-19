@@ -93,7 +93,6 @@ BEGIN
   halted_implies_JMLExc_preserved_by_raise : LEMMA % :-)
     FORALL (mp)(sMP : MPState, sAP : APState, e : Excpt) :
       related_states(mp)(sMP, sAP) IMPLIES
-      NOT e = JMLExc IMPLIES
       NOT up?(ex(pstate(sAP))) IMPLIES
         halted_implies_JMLExc(mp)(update_PState(sMP, raise(e)), 
                                   update_PState(sAP, raise(e)))
@@ -108,7 +107,6 @@ BEGIN
   related_states_preserved_by_raise : LEMMA % :-)
     FORALL (mp)(sMP : MPState, sAP : APState, e : Excpt) :
       related_states(mp)(sMP, sAP) IMPLIES
-      NOT e = JMLExc IMPLIES
       NOT up?(ex(pstate(sAP))) IMPLIES
         related_states(mp)(update_PState(sMP, raise(e)), 
                            update_PState(sAP, raise(e)))

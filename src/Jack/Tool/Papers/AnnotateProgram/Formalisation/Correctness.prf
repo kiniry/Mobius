@@ -1,26 +1,26 @@
 (|RelatedStateProperties|
  (|IMP_VariableNames_TCC1| 0
-  (|IMP_VariableNames_TCC1-2| NIL 3398685333 3398685370
+  (|IMP_VariableNames_TCC1-2| NIL 3398685333 3399203182
    (";;; Proof IMP_VariableNames_TCC1-1 for formula CorrectnessAnnProgram.IMP_VariableNames_TCC1"
     (USE "infinite_namespace") NIL
     ";;; developed with SHOSTAK decision procedures")
-   UNCHECKED
-   ((|infinite_namespace| FORMULA-DECL NIL |RelatedStateProperties| NIL)) 1 1
+   PROVED
+   ((|infinite_namespace| FORMULA-DECL NIL |RelatedStateProperties| NIL)) 2 2
    NIL NIL)
   (|IMP_VariableNames_TCC1-1| NIL 3398684877 3398685231
    ("" (ASSUMING-TCC) NIL NIL) UNFINISHED NIL 227 183 NIL NIL))
  (|IMP_Equivalence_TCC1| 0
-  (|IMP_Equivalence_TCC1-1| NIL 3398684877 3398685351
-   ("" (USE "CP_is_enumerable") NIL NIL) UNCHECKED
-   ((|CP_is_enumerable| FORMULA-DECL NIL |RelatedStateProperties| NIL)) 1086 1
-   T NIL))
+  (|IMP_Equivalence_TCC1-1| NIL 3398684877 3399203182
+   ("" (USE "CP_is_enumerable") NIL NIL) PROVED
+   ((|CP_is_enumerable| FORMULA-DECL NIL |RelatedStateProperties| NIL)) 1 1 T
+   NIL))
  (|IMP_Equivalence_TCC2| 0
-  (|IMP_Equivalence_TCC2-1| NIL 3398684877 3398685366
-   ("" (USE "name_of_exists") NIL NIL) UNCHECKED
-   ((|name_of_exists| FORMULA-DECL NIL |RelatedStateProperties| NIL)) 851 1 T
+  (|IMP_Equivalence_TCC2-1| NIL 3398684877 3399203182
+   ("" (USE "name_of_exists") NIL NIL) PROVED
+   ((|name_of_exists| FORMULA-DECL NIL |RelatedStateProperties| NIL)) 1 1 T
    NIL))
  (|get_address_same_in_related_states| 0
-  (|get_address_same_in_related_states-1| NIL 3398684920 3398685234
+  (|get_address_same_in_related_states-1| NIL 3398684920 3399203182
    (";;; Proof get_address_same_in_related_states-1 for formula CorrectnessAnnProgram.get_address_same_in_related_states"
     (SKOSIMP*)
     ((";;; Proof get_address_same_in_related_states-1 for formula CorrectnessAnnProgram.get_address_same_in_related_states"
@@ -34,14 +34,14 @@
             ((";;; Proof get_address_same_in_related_states-1 for formula CorrectnessAnnProgram.get_address_same_in_related_states"
               (ASSERT) NIL))))))))))
     ";;; developed with SHOSTAK decision procedures")
-   UNTRIED
+   PROVED
    ((|Program_modeled?| CONST-DECL "boolean" |Equivalence| NIL)
     (|MP_modeled?| CONST-DECL "boolean" |Equivalence| NIL)
     (|related_states| CONST-DECL "boolean" |Equivalence| NIL)
     (|get_address| CONST-DECL "int" |Semantics| NIL))
-   31 30 NIL NIL))
+   22 22 NIL NIL))
  (|get_dynamic_type_name_same_in_related_states| 0
-  (|get_dynamic_type_name_same_in_related_states-1| NIL 3398684937 3398685234
+  (|get_dynamic_type_name_same_in_related_states-1| NIL 3398684937 3399203182
    (";;; Proof get_dynamic_type_name_same_in_related_states-1 for formula CorrectnessAnnProgram.get_dynamic_type_name_same_in_related_states"
     (SKOSIMP*)
     ((";;; Proof get_dynamic_type_name_same_in_related_states-1 for formula CorrectnessAnnProgram.get_dynamic_type_name_same_in_related_states"
@@ -53,14 +53,14 @@
           ((";;; Proof get_dynamic_type_name_same_in_related_states-1 for formula CorrectnessAnnProgram.get_dynamic_type_name_same_in_related_states"
             (ASSERT) NIL))))))))
     ";;; developed with SHOSTAK decision procedures")
-   UNTRIED
+   PROVED
    ((|Program_modeled?| CONST-DECL "boolean" |Equivalence| NIL)
     (|MP_modeled?| CONST-DECL "boolean" |Equivalence| NIL)
     (|related_states| CONST-DECL "boolean" |Equivalence| NIL)
     (|get_dynamic_type_name| CONST-DECL "Name" |Semantics| NIL))
-   5 4 NIL NIL))
+   5 5 NIL NIL))
  (|MP_modeled_implies_same_exception| 0
-  (|MP_modeled_implies_same_exception-1| NIL 3398684954 3398685234
+  (|MP_modeled_implies_same_exception-1| NIL 3398684954 3399203182
    (";;; Proof MP_modeled_implies_same_exception-1 for formula CorrectnessAnnProgram.MP_modeled_implies_same_exception"
     (SKOSIMP)
     ((";;; Proof MP_modeled_implies_same_exception-1 for formula CorrectnessAnnProgram.MP_modeled_implies_same_exception"
@@ -70,12 +70,12 @@
         ((";;; Proof MP_modeled_implies_same_exception-1 for formula CorrectnessAnnProgram.MP_modeled_implies_same_exception"
           (GROUND) NIL))))))
     ";;; developed with SHOSTAK decision procedures")
-   UNTRIED
+   PROVED
    ((|MP_modeled?| CONST-DECL "boolean" |Equivalence| NIL)
     (|Program_modeled?| CONST-DECL "boolean" |Equivalence| NIL))
-   3 3 NIL NIL))
+   21 21 NIL NIL))
  (|related_states_implies_same_exception| 0
-  (|related_states_implies_same_exception-1| NIL 3398684974 3398685234
+  (|related_states_implies_same_exception-1| NIL 3398684974 3399203183
    (";;; Proof related_states_implies_same_exception-1 for formula CorrectnessAnnProgram.related_states_implies_same_exception"
     (SKOSIMP*)
     ((";;; Proof related_states_implies_same_exception-1 for formula CorrectnessAnnProgram.related_states_implies_same_exception"
@@ -87,7 +87,7 @@
           ((";;; Proof related_states_implies_same_exception-1 for formula CorrectnessAnnProgram.related_states_implies_same_exception"
             (ASSERT) NIL))))))))
     ";;; developed with SHOSTAK decision procedures")
-   UNTRIED
+   PROVED
    ((|related_states| CONST-DECL "boolean" |Equivalence| NIL)
     (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |RelatedStateProperties| NIL)
     (CP FORMAL-NONEMPTY-TYPE-DECL NIL |RelatedStateProperties| NIL)
@@ -114,9 +114,9 @@
     (|APState| TYPE-EQ-DECL NIL |AnnotatedProgramSemantics| NIL)
     (|MP_modeled_implies_same_exception| FORMULA-DECL NIL
      |RelatedStateProperties| NIL))
-   30 29 NIL NIL))
+   5 5 NIL NIL))
  (|related_states_implies_same_lookup| 0
-  (|related_states_implies_same_lookup-1| NIL 3398684989 3398685239
+  (|related_states_implies_same_lookup-1| NIL 3398684989 3399203186
    (";;; Proof related_states_implies_same_lookup-1 for formula CorrectnessAnnProgram.related_states_implies_same_lookup"
     (SKOSIMP*)
     ((";;; Proof related_states_implies_same_lookup-1 for formula CorrectnessAnnProgram.related_states_implies_same_lookup"
@@ -176,7 +176,7 @@
                                                         (("2" (GRIND)
                                                           NIL))))))))))))))))))))))))))))))))))))))))))))))))))))))
     ";;; developed with SHOSTAK decision procedures")
-   UNTRIED
+   PROVED
    ((|related_states| CONST-DECL "boolean" |Equivalence| NIL)
     (|AState| TYPE-EQ-DECL NIL |MVASemantics| NIL)
     (|Store| TYPE-EQ-DECL NIL |State| NIL)
@@ -238,9 +238,9 @@
     (|ann_program_preserves_pstate_vars| FORMULA-DECL NIL
      |AnnotateProgramProperties| NIL)
     (|APState| TYPE-EQ-DECL NIL |AnnotatedProgramSemantics| NIL))
-   467 431 NIL NIL))
+   363 360 NIL NIL))
  (|MP_modeled_preserved_by_update| 0
-  (|MP_modeled_preserved_by_update-1| NIL 3398685016 3398685239
+  (|MP_modeled_preserved_by_update-1| NIL 3398685016 3399203187
    (";;; Proof MP_modeled_preserved_by_update-1 for formula CorrectnessAnnProgram.MP_modeled_preserved_by_update"
     (SKOSIMP*)
     ((";;; Proof MP_modeled_preserved_by_update-1 for formula CorrectnessAnnProgram.MP_modeled_preserved_by_update"
@@ -257,7 +257,7 @@
            ("2" (EXPAND* "Program_modeled?" "Program_gvs_modeled?")
             (("2" (GROUND) NIL))))))))))
     ";;; developed with SHOSTAK decision procedures")
-   UNTRIED
+   PROVED
    ((|update_PState| CONST-DECL "(update_PState_type)"
      |AnnotatedProgramSemantics| NIL)
     (|update_PState| CONST-DECL "(update_PState_type)"
@@ -270,9 +270,9 @@
     (|MVA_modeled?| CONST-DECL "boolean" |Equivalence| NIL)
     (|Program_modeled?| CONST-DECL "boolean" |Equivalence| NIL)
     (|Program_gvs_modeled?| CONST-DECL "boolean" |Equivalence| NIL))
-   39 37 NIL NIL))
+   12 13 NIL NIL))
  (|halted_implies_JMLExc_preserved_by_update| 0
-  (|halted_implies_JMLExc_preserved_by_update-1| NIL 3398685037 3398685239
+  (|halted_implies_JMLExc_preserved_by_update-1| NIL 3398685037 3399203187
    (";;; Proof halted_implies_JMLExc_preserved_by_update-1 for formula CorrectnessAnnProgram.halted_implies_JMLExc_preserved_by_update"
     (SKOSIMP*)
     ((";;; Proof halted_implies_JMLExc_preserved_by_update-1 for formula CorrectnessAnnProgram.halted_implies_JMLExc_preserved_by_update"
@@ -282,16 +282,16 @@
         ((";;; Proof halted_implies_JMLExc_preserved_by_update-1 for formula CorrectnessAnnProgram.halted_implies_JMLExc_preserved_by_update"
           (ASSERT) NIL))))))
     ";;; developed with SHOSTAK decision procedures")
-   UNTRIED
+   PROVED
    ((|update_PState| CONST-DECL "(update_PState_type)"
      |AnnotatedProgramSemantics| NIL)
     (|update_PState| CONST-DECL "(update_PState_type)"
      |MonitoredProgramSemantics| NIL)
     (|halted_implies_JMLExc| CONST-DECL "boolean" |Equivalence| NIL)
     (|related_states| CONST-DECL "boolean" |Equivalence| NIL))
-   6 6 NIL NIL))
+   24 25 NIL NIL))
  (|related_states_preserved_by_update_local| 0
-  (|related_states_preserved_by_update_local-1| NIL 3398685055 3398685241
+  (|related_states_preserved_by_update_local-1| NIL 3398685055 3399203188
    (";;; Proof related_states_preserved_by_update_local-1 for formula CorrectnessAnnProgram.related_states_preserved_by_update_local"
     (SKOSIMP*)
     ((";;; Proof related_states_preserved_by_update_local-1 for formula CorrectnessAnnProgram.related_states_preserved_by_update_local"
@@ -326,7 +326,7 @@
             (("4" (EXPAND "update_PState")
               (("4" (EXPAND "update_local") (("4" (PROPAX) NIL))))))))))))))
     ";;; developed with SHOSTAK decision procedures")
-   UNTRIED
+   PROVED
    ((|related_states| CONST-DECL "boolean" |Equivalence| NIL)
     (|update_PState| CONST-DECL "(update_PState_type)"
      |MonitoredProgramSemantics| NIL)
@@ -377,9 +377,9 @@
     (|Program_modeled?| CONST-DECL "boolean" |Equivalence| NIL)
     (|Program_gvs_modeled?| CONST-DECL "boolean" |Equivalence| NIL)
     (|halted_implies_JMLExc| CONST-DECL "boolean" |Equivalence| NIL))
-   109 107 NIL NIL))
+   71 70 NIL NIL))
  (|MP_modeled_preserved_by_catch| 0
-  (|MP_modeled_preserved_by_catch-1| NIL 3398685069 3398685241
+  (|MP_modeled_preserved_by_catch-1| NIL 3398685069 3399203188
    (";;; Proof MP_modeled_preserved_by_catch-1 for formula CorrectnessAnnProgram.MP_modeled_preserved_by_catch"
     (SKOSIMP*)
     ((";;; Proof MP_modeled_preserved_by_catch-1 for formula CorrectnessAnnProgram.MP_modeled_preserved_by_catch"
@@ -397,7 +397,7 @@
          ("5" (EXPAND "Program_gvs_modeled?")
           (("5" (EXPAND "update_PState") (("5" (PROPAX) NIL))))))))))
     ";;; developed with SHOSTAK decision procedures")
-   UNTRIED
+   PROVED
    ((|Program_modeled?| CONST-DECL "boolean" |Equivalence| NIL)
     (|MVA_modeled?| CONST-DECL "boolean" |Equivalence| NIL)
     (|MP_modeled?| CONST-DECL "boolean" |Equivalence| NIL)
@@ -410,9 +410,9 @@
      |MonitoredProgramSemantics| NIL)
     (|update_PState| CONST-DECL "(update_PState_type)"
      |AnnotatedProgramSemantics| NIL))
-   11 11 NIL NIL))
+   30 30 NIL NIL))
  (|MP_modeled_preserved_by_raise| 0
-  (|MP_modeled_preserved_by_raise-1| NIL 3398685090 3398685241
+  (|MP_modeled_preserved_by_raise-1| NIL 3398685090 3399203189
    (";;; Proof MP_modeled_preserved_by_raise-1 for formula CorrectnessAnnProgram.MP_modeled_preserved_by_raise"
     (SKOSIMP*)
     ((";;; Proof MP_modeled_preserved_by_raise-1 for formula CorrectnessAnnProgram.MP_modeled_preserved_by_raise"
@@ -430,7 +430,7 @@
          ("5" (EXPAND "Program_gvs_modeled?")
           (("5" (EXPAND "update_PState") (("5" (PROPAX) NIL))))))))))
     ";;; developed with SHOSTAK decision procedures")
-   UNTRIED
+   PROVED
    ((|Program_modeled?| CONST-DECL "boolean" |Equivalence| NIL)
     (|MVA_modeled?| CONST-DECL "boolean" |Equivalence| NIL)
     (|MP_modeled?| CONST-DECL "boolean" |Equivalence| NIL)
@@ -443,9 +443,9 @@
      |MonitoredProgramSemantics| NIL)
     (|update_PState| CONST-DECL "(update_PState_type)"
      |AnnotatedProgramSemantics| NIL))
-   36 36 NIL NIL))
+   31 30 NIL NIL))
  (|halted_implies_JMLExc_preserved_by_catch| 0
-  (|halted_implies_JMLExc_preserved_by_catch-1| NIL 3398685116 3398685242
+  (|halted_implies_JMLExc_preserved_by_catch-1| NIL 3398685116 3399203189
    (";;; Proof halted_implies_JMLExc_preserved_by_catch-1 for formula CorrectnessAnnProgram.halted_implies_JMLExc_preserved_by_catch"
     (SKOSIMP*)
     ((";;; Proof halted_implies_JMLExc_preserved_by_catch-1 for formula CorrectnessAnnProgram.halted_implies_JMLExc_preserved_by_catch"
@@ -466,7 +466,7 @@
                   ((";;; Proof halted_implies_JMLExc_preserved_by_catch-1 for formula CorrectnessAnnProgram.halted_implies_JMLExc_preserved_by_catch"
                     (ASSERT) NIL))))))))))))))))
     ";;; developed with SHOSTAK decision procedures")
-   UNTRIED
+   PROVED
    ((|halted_implies_JMLExc| CONST-DECL "boolean" |Equivalence| NIL)
     (|related_states| CONST-DECL "boolean" |Equivalence| NIL)
     (|update_PState| CONST-DECL "(update_PState_type)"
@@ -474,24 +474,20 @@
     (|update_PState| CONST-DECL "(update_PState_type)"
      |MonitoredProgramSemantics| NIL)
     (|catch| CONST-DECL "PState" |State| NIL))
-   58 56 NIL NIL))
+   7 8 NIL NIL))
  (|halted_implies_JMLExc_preserved_by_raise| 0
-  (|halted_implies_JMLExc_preserved_by_raise-1| NIL 3398685129 3398685242
-   (";;; Proof halted_implies_JMLExc_preserved_by_raise-1 for formula CorrectnessAnnProgram.halted_implies_JMLExc_preserved_by_raise"
-    (SKOSIMP*)
-    ((";;; Proof halted_implies_JMLExc_preserved_by_raise-1 for formula CorrectnessAnnProgram.halted_implies_JMLExc_preserved_by_raise"
+  (|halted_implies_JMLExc_preserved_by_raise-1| NIL 3398685129 3399203189
+   ("" (SKOSIMP*)
+    ((""
       (EXPAND* "related_states" "halted_implies_JMLExc" "MVA_modeled?"
        "Program_modeled?")
-      ((";;; Proof halted_implies_JMLExc_preserved_by_raise-1 for formula CorrectnessAnnProgram.halted_implies_JMLExc_preserved_by_raise"
-        (FLATTEN)
-        ((";;; Proof halted_implies_JMLExc_preserved_by_raise-1 for formula CorrectnessAnnProgram.halted_implies_JMLExc_preserved_by_raise"
-          (EXPAND "update_PState")
-          ((";;; Proof halted_implies_JMLExc_preserved_by_raise-1 for formula CorrectnessAnnProgram.halted_implies_JMLExc_preserved_by_raise"
-            (EXPAND "raise")
-            ((";;; Proof halted_implies_JMLExc_preserved_by_raise-1 for formula CorrectnessAnnProgram.halted_implies_JMLExc_preserved_by_raise"
-              (ASSERT) NIL))))))))))
-    ";;; developed with SHOSTAK decision procedures")
-   UNTRIED
+      (("" (FLATTEN)
+        (("" (EXPAND "update_PState")
+          (("" (EXPAND "raise") (("" (ASSERT) NIL NIL)) NIL)) NIL))
+        NIL))
+      NIL))
+    NIL)
+   PROVED
    ((|halted_implies_JMLExc| CONST-DECL "boolean" |Equivalence| NIL)
     (|related_states| CONST-DECL "boolean" |Equivalence| NIL)
     (|update_PState| CONST-DECL "(update_PState_type)"
@@ -499,9 +495,9 @@
     (|update_PState| CONST-DECL "(update_PState_type)"
      |MonitoredProgramSemantics| NIL)
     (|raise| CONST-DECL "PState" |State| NIL))
-   6 7 NIL NIL))
+   44 43 T NIL))
  (|related_states_preserved_by_catch| 0
-  (|related_states_preserved_by_catch-1| NIL 3398685147 3398685242
+  (|related_states_preserved_by_catch-1| NIL 3398685147 3399203190
    (";;; Proof related_states_preserved_by_catch-1 for formula CorrectnessAnnProgram.related_states_preserved_by_catch"
     (SKOSIMP*)
     ((";;; Proof related_states_preserved_by_catch-1 for formula CorrectnessAnnProgram.related_states_preserved_by_catch"
@@ -528,7 +524,7 @@
          ("4" (USE "halted_implies_JMLExc_preserved_by_catch")
           (("4" (ASSERT) NIL))))))))
     ";;; developed with SHOSTAK decision procedures")
-   UNTRIED
+   PROVED
    ((|related_states| CONST-DECL "boolean" |Equivalence| NIL)
     (|halted_implies_JMLExc_preserved_by_catch| FORMULA-DECL NIL
      |RelatedStateProperties| NIL)
@@ -575,36 +571,46 @@
     (|wf_state_catch| FORMULA-DECL NIL |State| NIL)
     (|update_PState| CONST-DECL "(update_PState_type)"
      |MonitoredProgramSemantics| NIL))
-   73 73 NIL NIL))
+   61 61 NIL NIL))
  (|related_states_preserved_by_raise| 0
-  (|related_states_preserved_by_raise-1| NIL 3398685162 3398685243
-   (";;; Proof related_states_preserved_by_raise-1 for formula CorrectnessAnnProgram.related_states_preserved_by_raise"
-    (SKOSIMP*)
-    ((";;; Proof related_states_preserved_by_raise-1 for formula CorrectnessAnnProgram.related_states_preserved_by_raise"
-      (EXPAND "related_states" 3)
-      ((";;; Proof related_states_preserved_by_raise-1 for formula CorrectnessAnnProgram.related_states_preserved_by_raise"
-        (SPLIT 3)
+  (|related_states_preserved_by_raise-1| NIL 3398685162 3399203244
+   ("" (SKOSIMP*)
+    (("" (EXPAND "related_states" 2)
+      (("" (SPLIT 2)
         (("1" (EXPAND "related_states")
           (("1" (FLATTEN)
             (("1" (USE "wf_update_PState" ("p" "mp!1"))
               (("1" (ASSERT)
                 (("1" (SKOSIMP*)
                   (("1" (EXPAND "update_PState")
-                    (("1" (USE "wf_state_raise")
-                      (("1" (ASSERT) NIL)))))))))))))))
+                    (("1" (USE "wf_state_raise") (("1" (ASSERT) NIL NIL)) NIL))
+                    NIL))
+                  NIL))
+                NIL))
+              NIL))
+            NIL))
+          NIL)
          ("2" (EXPAND "related_states")
           (("2" (FLATTEN)
             (("2" (USE "wf_update_PState" ("p" "ann_program(mp!1)"))
               (("2" (ASSERT)
                 (("2" (SKOSIMP*)
                   (("2" (EXPAND "update_PState")
-                    (("2" (USE "wf_state_raise")
-                      (("2" (ASSERT) NIL)))))))))))))))
-         ("3" (USE "MP_modeled_preserved_by_raise") (("3" (ASSERT) NIL)))
+                    (("2" (USE "wf_state_raise") (("2" (ASSERT) NIL NIL)) NIL))
+                    NIL))
+                  NIL))
+                NIL))
+              NIL))
+            NIL))
+          NIL)
+         ("3" (USE "MP_modeled_preserved_by_raise") (("3" (ASSERT) NIL NIL))
+          NIL)
          ("4" (USE "halted_implies_JMLExc_preserved_by_raise")
-          (("4" (ASSERT) NIL))))))))
-    ";;; developed with SHOSTAK decision procedures")
-   UNTRIED
+          (("4" (ASSERT) NIL NIL)) NIL))
+        NIL))
+      NIL))
+    NIL)
+   PROVED
    ((|related_states| CONST-DECL "boolean" |Equivalence| NIL)
     (|halted_implies_JMLExc_preserved_by_raise| FORMULA-DECL NIL
      |RelatedStateProperties| NIL)
@@ -651,9 +657,9 @@
     (|wf_state_raise| FORMULA-DECL NIL |State| NIL)
     (|update_PState| CONST-DECL "(update_PState_type)"
      |MonitoredProgramSemantics| NIL))
-   72 72 NIL NIL))
+   1690 85 T NIL))
  (|MP_modeled_implies_cp_halted_correspondence| 0
-  (|MP_modeled_implies_cp_halted_correspondence-1| NIL 3398685196 3398685248
+  (|MP_modeled_implies_cp_halted_correspondence-1| NIL 3398685196 3399203195
    (";;; Proof MP_modeled_implies_cp_halted_correspondence-1 for formula CorrectnessAnnProgram.MP_modeled_implies_cp_halted_correspondence"
     (SKOSIMP*)
     ((";;; Proof MP_modeled_implies_cp_halted_correspondence-1 for formula CorrectnessAnnProgram.MP_modeled_implies_cp_halted_correspondence"
@@ -714,7 +720,7 @@
              ("2" (TYPEPRED "mva(mp!1)")
               (("2" (EXPAND "complete") (("2" (FLATTEN) NIL))))))))))))))
     ";;; developed with SHOSTAK decision procedures")
-   UNTRIED
+   PROVED
    ((|MVA_cps_modeled?| CONST-DECL "boolean" |Equivalence| NIL)
     (|MVA_cp_modeled?| CONST-DECL "boolean" |Equivalence| NIL)
     (|MVA_modeled?| CONST-DECL "boolean" |Equivalence| NIL)
@@ -774,10 +780,10 @@
      NIL)
     (|forbidden_names| CONST-DECL "set[Name]" |VariableNames| NIL)
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL))
-   510 507 NIL NIL))
+   495 493 NIL NIL))
  (|related_states_implies_cp_halted_correspondence| 0
   (|related_states_implies_cp_halted_correspondence-1| NIL 3398685212
-   3398685249
+   3399203195
    (";;; Proof related_states_implies_cp_halted_correspondence-1 for formula CorrectnessAnnProgram.related_states_implies_cp_halted_correspondence"
     (SKOSIMP*)
     ((";;; Proof related_states_implies_cp_halted_correspondence-1 for formula CorrectnessAnnProgram.related_states_implies_cp_halted_correspondence"
@@ -789,7 +795,7 @@
           ((";;; Proof related_states_implies_cp_halted_correspondence-1 for formula CorrectnessAnnProgram.related_states_implies_cp_halted_correspondence"
             (ASSERT) NIL))))))))
     ";;; developed with SHOSTAK decision procedures")
-   UNTRIED
+   PROVED
    ((|related_states| CONST-DECL "boolean" |Equivalence| NIL)
     (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |RelatedStateProperties| NIL)
     (CP FORMAL-NONEMPTY-TYPE-DECL NIL |RelatedStateProperties| NIL)
@@ -816,9 +822,9 @@
     (|APState| TYPE-EQ-DECL NIL |AnnotatedProgramSemantics| NIL)
     (|MP_modeled_implies_cp_halted_correspondence| FORMULA-DECL NIL
      |RelatedStateProperties| NIL))
-   30 30 NIL NIL))
+   5 5 NIL NIL))
  (|related_states_preserved_by_update_stack| 0
-  (|related_states_preserved_by_update_stack-1| NIL 3398685224 3398685257
+  (|related_states_preserved_by_update_stack-1| NIL 3398685224 3399203203
    (";;; Proof related_states_preserved_by_update_stack-1 for formula CorrectnessAnnProgram.related_states_preserved_by_update_stack"
     (SKOSIMP*)
     ((";;; Proof related_states_preserved_by_update_stack-1 for formula CorrectnessAnnProgram.related_states_preserved_by_update_stack"
@@ -923,9 +929,26 @@
                                 NIL)))))))))))))))))
                ("2" (EXPAND "related_states") (("2" (FLATTEN) NIL))))))))))))))
     ";;; developed with SHOSTAK decision procedures")
-   UNTRIED
-   ((|related_states| CONST-DECL "boolean" |Equivalence| NIL) NIL NIL NIL NIL
-    NIL NIL
+   PROVED
+   ((|related_states| CONST-DECL "boolean" |Equivalence| NIL)
+    (|x!1| SKOLEM-CONST-DECL "({x: [Name, Val[Name]] |
+    EXISTS (l: LocalVarDecl[Name]):
+      lvds!1(l) AND
+       name(l) = PROJ_1(x) AND default_value[Name](jtype(l)) = PROJ_2(x)})"
+     |RelatedStateProperties| NIL)
+    (|l!1| SKOLEM-CONST-DECL "LocalVarDecl[Name]" |RelatedStateProperties| NIL)
+    (|x2!1| SKOLEM-CONST-DECL "({x: [Name, Val[Name]] |
+    EXISTS (l: LocalVarDecl[Name]):
+      lvds!1(l) AND
+       name(l) = PROJ_1(x) AND default_value[Name](jtype(l)) = PROJ_2(x)})"
+     |RelatedStateProperties| NIL)
+    (|x1!1| SKOLEM-CONST-DECL "({x: [Name, Val[Name]] |
+    EXISTS (l: LocalVarDecl[Name]):
+      lvds!1(l) AND
+       name(l) = PROJ_1(x) AND default_value[Name](jtype(l)) = PROJ_2(x)})"
+     |RelatedStateProperties| NIL)
+    (|l!1| SKOLEM-CONST-DECL "LocalVarDecl[Name]" |RelatedStateProperties| NIL)
+    (|l!1| SKOLEM-CONST-DECL "LocalVarDecl[Name]" |RelatedStateProperties| NIL)
     (|halted_implies_JMLExc_preserved_by_update| FORMULA-DECL NIL
      |RelatedStateProperties| NIL)
     (|update_stack| CONST-DECL "FullState" |Semantics| NIL)
@@ -936,7 +959,9 @@
     (|This| CONST-DECL "Name" |Program| NIL)
     (|update_locals| DEF-DECL "PState" |State| NIL)
     (|default_value| CONST-DECL "(defined?)" |ValProp| NIL)
-    (= CONST-DECL "[T, T -> boolean]" |equalities| NIL) NIL
+    (= CONST-DECL "[T, T -> boolean]" |equalities| NIL)
+    (|lvds!1| SKOLEM-CONST-DECL "finite_set[LocalVarDecl[Name]]"
+     |RelatedStateProperties| NIL)
     (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
     (|MP_modeled_preserved_by_update| FORMULA-DECL NIL |RelatedStateProperties|
      NIL)
@@ -954,12 +979,33 @@
     (< CONST-DECL "bool" |reals| NIL)
     (|below| TYPE-EQ-DECL NIL |nat_types| NIL)
     (|choose| CONST-DECL "(p)" |sets| NIL)
-    (|nonempty?| CONST-DECL "bool" |sets| NIL) NIL
-    (|nonempty_exists| FORMULA-DECL NIL |sets_lemmas| NIL) NIL NIL NIL
-    (|injective?| CONST-DECL "bool" |functions| NIL) NIL NIL
+    (|nonempty?| CONST-DECL "bool" |sets| NIL)
+    (|l!1| SKOLEM-CONST-DECL "LocalVarDecl[Name]" |RelatedStateProperties| NIL)
+    (|nonempty_exists| FORMULA-DECL NIL |sets_lemmas| NIL)
+    (|l!1| SKOLEM-CONST-DECL "LocalVarDecl[Name]" |RelatedStateProperties| NIL)
+    (|x1!1| SKOLEM-CONST-DECL "({x: [Name, Val[Name]] |
+    EXISTS (l: LocalVarDecl[Name]):
+      lvds!1(l) AND
+       name(l) = PROJ_1(x) AND default_value[Name](jtype(l)) = PROJ_2(x)})"
+     |RelatedStateProperties| NIL)
+    (|x2!1| SKOLEM-CONST-DECL "({x: [Name, Val[Name]] |
+    EXISTS (l: LocalVarDecl[Name]):
+      lvds!1(l) AND
+       name(l) = PROJ_1(x) AND default_value[Name](jtype(l)) = PROJ_2(x)})"
+     |RelatedStateProperties| NIL)
+    (|injective?| CONST-DECL "bool" |functions| NIL)
+    (|l!1| SKOLEM-CONST-DECL "LocalVarDecl[Name]" |RelatedStateProperties| NIL)
+    (|x!1| SKOLEM-CONST-DECL "({x: [Name, Val[Name]] |
+    EXISTS (l: LocalVarDecl[Name]):
+      lvds!1(l) AND
+       name(l) = PROJ_1(x) AND default_value[Name](jtype(l)) = PROJ_2(x)})"
+     |RelatedStateProperties| NIL)
     (|ann_program_preserves_var_decls| FORMULA-DECL NIL
      |AnnotateProgramProperties| NIL)
-    (|APState| TYPE-EQ-DECL NIL |AnnotatedProgramSemantics| NIL) NIL NIL
+    (|APState| TYPE-EQ-DECL NIL |AnnotatedProgramSemantics| NIL)
+    (|arg!1| SKOLEM-CONST-DECL "(getLocalDecls(program(mp!1)))"
+     |RelatedStateProperties| NIL)
+    (|mp!1| SKOLEM-CONST-DECL "(wf_MP)" |RelatedStateProperties| NIL)
     (|wf_state_update_stack| FORMULA-DECL NIL |AnnotatedProgramSemantics| NIL)
     (|ann_program| CONST-DECL "Program" |AnnotateProgram| NIL)
     (|subset_is_partial_order| NAME-JUDGEMENT "(partial_order?[set[T]])"
@@ -1001,7 +1047,7 @@
     (|wf_MP| CONST-DECL "boolean" |MonitoredProgram| NIL)
     (CP FORMAL-NONEMPTY-TYPE-DECL NIL |RelatedStateProperties| NIL)
     (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |RelatedStateProperties| NIL))
-   818 809 NIL NIL)))
+   784 781 NIL NIL)))
 (|MethodCallsPreserveRelatedState|
  (|IMP_VariableNames_TCC1| 0
   (|IMP_VariableNames_TCC1-1| NIL 3398591374 3398685392
@@ -1022,7 +1068,7 @@
    388 1 T NIL))
  (|on_method_entry_preserves_related_states_not_annotated| 0
   (|on_method_entry_preserves_related_states_not_annotated-1| NIL 3398684696
-   3398691804
+   3399203447
    ("" (SKOSIMP*)
     (("" (EXPAND "on_method_entry_MP")
       (("" (EXPAND "on_method_entry")
@@ -1198,15 +1244,60 @@
                                                                          -7)
                                                                         (ASSERT)))
                                                                       (("2"
-                                                                        (POSTPONE)
-                                                                        NIL
+                                                                        (EXPAND
+                                                                         "var_names"
+                                                                         1)
+                                                                        (("2"
+                                                                          (EXPAND
+                                                                           "Union")
+                                                                          (("2"
+                                                                            (POSTPONE)
+                                                                            NIL
+                                                                            NIL))
+                                                                          NIL))
                                                                         NIL))
                                                                       NIL))
                                                                     NIL))
                                                                   NIL))
                                                                 NIL)
-                                                               ("2" (POSTPONE)
-                                                                NIL NIL))
+                                                               ("2"
+                                                                (REPLACE -21)
+                                                                (("2"
+                                                                  (REPLACE -31)
+                                                                  (("2"
+                                                                    (LIFT-IF)
+                                                                    (("2"
+                                                                      (ASSERT)
+                                                                      (("2"
+                                                                        (SPLIT
+                                                                         1)
+                                                                        (("1"
+                                                                          (SKOSIMP*)
+                                                                          (("1"
+                                                                            (SPLIT
+                                                                             1)
+                                                                            (("1"
+                                                                              (PROPAX)
+                                                                              NIL
+                                                                              NIL)
+                                                                             ("2"
+                                                                              (SKOSIMP*)
+                                                                              (("2"
+                                                                                (POSTPONE)
+                                                                                NIL
+                                                                                NIL))
+                                                                              NIL))
+                                                                            NIL))
+                                                                          NIL)
+                                                                         ("2"
+                                                                          (PROPAX)
+                                                                          NIL
+                                                                          NIL))
+                                                                        NIL))
+                                                                      NIL))
+                                                                    NIL))
+                                                                  NIL))
+                                                                NIL))
                                                               NIL))
                                                             NIL)
                                                            ("2" (POSTPONE) NIL
@@ -1215,7 +1306,38 @@
                                                         NIL))
                                                       NIL))
                                                     NIL)
-                                                   ("2" (POSTPONE) NIL NIL))
+                                                   ("2" (REPLACE -15)
+                                                    (("2" (REPLACE -25)
+                                                      (("2" (LIFT-IF)
+                                                        (("2" (ASSERT)
+                                                          (("2" (SPLIT 1)
+                                                            (("1" (SKOSIMP*)
+                                                              (("1" (SPLIT 1)
+                                                                (("1" (PROPAX)
+                                                                  NIL NIL)
+                                                                 ("2"
+                                                                  (SKOSIMP*)
+                                                                  (("2"
+                                                                    (USE
+                                                                     "related_states_preserved_by_raise")
+                                                                    (("2"
+                                                                      (ASSERT)
+                                                                      (("2"
+                                                                        (POSTPONE)
+                                                                        NIL
+                                                                        NIL))
+                                                                      NIL))
+                                                                    NIL))
+                                                                  NIL))
+                                                                NIL))
+                                                              NIL)
+                                                             ("2" (PROPAX) NIL
+                                                              NIL))
+                                                            NIL))
+                                                          NIL))
+                                                        NIL))
+                                                      NIL))
+                                                    NIL))
                                                   NIL))
                                                 NIL)
                                                ("2" (POSTPONE) NIL NIL))
@@ -1241,7 +1363,7 @@
         NIL))
       NIL))
     NIL)
-   UNFINISHED NIL 159193 2264 T SHOSTAK)))
+   UNFINISHED NIL 18727 1179 T SHOSTAK)))
 (|CorrectnessAnnProgram|
  (|IMP_VariableNames_TCC1| 0
   (|IMP_VariableNames_TCC1-1| NIL 3396605539 3398152404
@@ -1250,10 +1372,10 @@
    NIL))
  (|IMP_MethodCallsPreserveRelatedState_TCC1| 0
   (|IMP_MethodCallsPreserveRelatedState_TCC1-1| NIL 3398689934 NIL
-   ("" (ASSUMING-TCC) NIL NIL) NIL NIL NIL NIL NIL NIL))
+   ("" (ASSUMING-TCC) NIL NIL) UNFINISHED NIL NIL NIL NIL NIL))
  (|IMP_MethodCallsPreserveRelatedState_TCC2| 0
   (|IMP_MethodCallsPreserveRelatedState_TCC2-1| NIL 3398689934 NIL
-   ("" (ASSUMING-TCC) NIL NIL) NIL NIL NIL NIL NIL NIL))
+   ("" (ASSUMING-TCC) NIL NIL) UNFINISHED NIL NIL NIL NIL NIL))
  (|initial_states_are_equivalent| 0
   (|initial_states_are_equivalent-2| NIL 3396612347 3398156851
    ("" (SKOSIMP*)
