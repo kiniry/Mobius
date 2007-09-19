@@ -32,7 +32,7 @@
 			<key>GanttHideRedundant</key>
 			<false/>
 			<key>GanttVisibleRect</key>
-			<string>{{-50, 0}, {1139, 894}}</string>
+			<string>{{-122, 0}, {1139, 894}}</string>
 			<key>OutlineVisibleRect</key>
 			<string>{{0, 0}, {464, 894}}</string>
 			<key>SelectedPlanView</key>
@@ -1606,7 +1606,7 @@
 	<key>taskDifferenceEngine</key>
 	<dict>
 		<key>nextId</key>
-		<integer>376</integer>
+		<integer>377</integer>
 	</dict>
 	<key>taskUserKeys</key>
 	<array>
@@ -1626,7 +1626,7 @@
 				<integer>312</integer>
 				<integer>311</integer>
 				<integer>64</integer>
-				<integer>358</integer>
+				<integer>376</integer>
 				<integer>4</integer>
 				<integer>298</integer>
 				<integer>254</integer>
@@ -1652,9 +1652,9 @@
 			<key>workDone</key>
 			<real>13465.099609375</real>
 			<key>workSeconds</key>
-			<real>84754800</real>
+			<real>84783600</real>
 			<key>workTime</key>
-			<real>23543</real>
+			<real>23551</real>
 		</dict>
 		<dict>
 			<key>children</key>
@@ -8983,30 +8983,18 @@
 		</dict>
 		<dict>
 			<key>forcedStart</key>
-			<string>200706010900</string>
+			<string>200712210900</string>
 			<key>objectId</key>
-			<integer>358</integer>
+			<integer>360</integer>
 			<key>prerequisites</key>
 			<array>
 				<dict>
 					<key>id</key>
-					<integer>19</integer>
+					<integer>363</integer>
 					<key>kind</key>
-					<integer>2</integer>
+					<integer>3</integer>
 				</dict>
 			</array>
-			<key>task</key>
-			<string>Mobius PVE beta release</string>
-			<key>workSeconds</key>
-			<real>0.0</real>
-			<key>workTime</key>
-			<real>0.0</real>
-		</dict>
-		<dict>
-			<key>forcedStart</key>
-			<string>200712210900</string>
-			<key>objectId</key>
-			<integer>360</integer>
 			<key>task</key>
 			<string>Mobius PVE delta release</string>
 			<key>workSeconds</key>
@@ -9017,8 +9005,19 @@
 		<dict>
 			<key>children</key>
 			<array/>
+			<key>isExpanded</key>
+			<false/>
 			<key>objectId</key>
 			<integer>363</integer>
+			<key>prerequisites</key>
+			<array>
+				<dict>
+					<key>id</key>
+					<integer>66</integer>
+					<key>kind</key>
+					<integer>2</integer>
+				</dict>
+			</array>
 			<key>task</key>
 			<string>Mobius PVE delta development</string>
 			<key>workSeconds</key>
@@ -9149,6 +9148,25 @@
 			<real>360000</real>
 			<key>workTime</key>
 			<real>100</real>
+		</dict>
+		<dict>
+			<key>objectId</key>
+			<integer>376</integer>
+			<key>prerequisites</key>
+			<array>
+				<dict>
+					<key>id</key>
+					<integer>64</integer>
+					<key>kind</key>
+					<integer>2</integer>
+				</dict>
+			</array>
+			<key>task</key>
+			<string>Mobius  PVE beta release</string>
+			<key>workSeconds</key>
+			<real>28800</real>
+			<key>workTime</key>
+			<real>8</real>
 		</dict>
 	</array>
 	<key>topResources</key>
