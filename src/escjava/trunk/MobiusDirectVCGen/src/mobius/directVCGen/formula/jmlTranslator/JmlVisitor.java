@@ -24,6 +24,7 @@ import javafe.ast.BlockStmt;
 import javafe.ast.ClassDecl;
 import javafe.ast.ConstructorDecl;
 import javafe.ast.DoStmt;
+import javafe.ast.ExprVec;
 import javafe.ast.FieldAccess;
 import javafe.ast.ForStmt;
 import javafe.ast.FormalParaDecl;
@@ -130,21 +131,23 @@ public class JmlVisitor extends VisitorArgResult {
     fProperties.put("unaryOp", 0);
     fProperties.put("old", Boolean.FALSE);
     fProperties.put("visibleTypeSet", new HashSet<QuantVariableRef>());
-    fProperties.put("doSubsetChecking", Boolean.FALSE); // cbr: doSubsetChecking to collect all fieldaccess in the subsetCheckingSet
-    fProperties.put("subsetCheckingSet", new HashSet<FieldAccess>()); // cbr: subSetCheckingSet for invariant checking 
+    fProperties.put("freshSet", new HashSet<QuantVariableRef>());
+    fProperties.put("doSubsetChecking", Boolean.FALSE); 
+    fProperties.put("subsetCheckingSet", new HashSet<FieldAccess>()); 
     fProperties.put("subsetCheckingSetConstraints", new HashSet<FieldAccess>());
     fProperties.put("subSetCheckingSetInitially", new HashSet<FieldAccess>());
     fProperties.put("assignableSet", new HashSet<QuantVariableRef[]>()); 
-    fProperties.put("nothing", Boolean.FALSE); // cbr: nothing used for assignable
+    fProperties.put("nothing", Boolean.FALSE); 
     fProperties.put("interesting", Boolean.FALSE);
     fProperties.put("routinebegin", Boolean.TRUE);  
     fProperties.put("quantifier", Boolean.FALSE);
     fProperties.put("quantVars", new HashSet<QuantVariable>());
     fProperties.put("isHelper", Boolean.FALSE);
     fProperties.put("fresh", Boolean.FALSE);
-    fProperties.put("dsc", Boolean.FALSE); // cbr: dsc = do subset checking, value of option flag
-    fProperties.put("classId", Identifier.intern("")); // for dsc, to check, whether class invariants only access own fields
+    fProperties.put("dsc", Boolean.FALSE); 
+    fProperties.put("classId", Identifier.intern("")); 
     fProperties.put("firstExPost", Boolean.TRUE);
+    fProperties.put("isConstructor", Boolean.FALSE);
     fTranslator = new JmlExprToFormula(this);
      
   }
@@ -193,9 +196,11 @@ public class JmlVisitor extends VisitorArgResult {
     ((Properties) o).put("nothing", Boolean.FALSE);
     
     boolean hasPost = false;
+    int tag;
     // Check, if method has at least one postcondition/exceptional postcondition or is a helper method
     for (int i = 0; i < x.pmodifiers.size(); i++) {
-      if (x.pmodifiers.elementAt(i).getTag() == TagConstants.ENSURES) {
+      tag = x.pmodifiers.elementAt(i).getTag();
+      if ((tag == TagConstants.ENSURES) | (tag == TagConstants.POSTCONDITION) | (tag == TagConstants.POSTCONDITION_REDUNDANTLY)) {
         hasPost = true;
       }
       else if (x.pmodifiers.elementAt(i).getTag() == TagConstants.HELPER) {
@@ -217,8 +222,8 @@ public class JmlVisitor extends VisitorArgResult {
     visitASTNode(x, o);
     doAssignable(o);
     
-    // Add invPred (forall r:ref, t:type (isAlive(r) and assignCompat (r, t) -> inv(r, t))) to method's or constructor's post- and exceptional postconditions
     if (!((Boolean) ((Properties) o).get("isHelper")).booleanValue()) {
+      invPredToPreconditions(o);
       invPredToPostconditions(o);
       invPredToExceptionalPostconditions(o);    
     }  
@@ -239,7 +244,6 @@ public class JmlVisitor extends VisitorArgResult {
     
     if (((Boolean)((Properties)o).get("isHelper")).booleanValue() == Boolean.FALSE) {
       final Term constraints = Lookup.constraints.get(x.getParent());
-      invPredToPreconditions(o);
       addToPostcondition(constraints, o);
       addToExceptionalPostcondition(constraints, o);
     }  
@@ -251,7 +255,9 @@ public class JmlVisitor extends VisitorArgResult {
    */
   @Override
   public final Object visitConstructorDecl(final /*@non_null*/ ConstructorDecl x, final Object o) {
+    ((Properties) o).put("isConstructor", Boolean.TRUE);
     visitRoutineDecl(x, o);
+    ((Properties) o).put("isConstructor", Boolean.FALSE);
  
     if (((Boolean)((Properties)o).get("isHelper")).booleanValue() == Boolean.FALSE) {
       Term initially = (Term) ((Properties)o).get("initiallyFOL");
@@ -497,7 +503,7 @@ public class JmlVisitor extends VisitorArgResult {
       t = (Term) ((Properties) o).get("initiallyFOL");
       boolean initIsValid = doSubsetChecking(o);
       if (initIsValid) {
-        if (initiallyFOL != null) { //NullLiteral is default value for initiallyFOL
+        if (initiallyFOL != null) { 
           if (t != null) {
             t = Logic.and(t, initiallyFOL);
           }
@@ -512,13 +518,13 @@ public class JmlVisitor extends VisitorArgResult {
       }
     }
     else if (x.tag == TagConstants.INVARIANT) { 
-      fProperties.put("doSubsetChecking", Boolean.TRUE); // to collect all fields in invariant to do the subset check
+      fProperties.put("doSubsetChecking", Boolean.TRUE);
       t = (Term) x.expr.accept(this, o);
       fProperties.put("doSubsetChecking", Boolean.FALSE);
       addToInv(x, t, o);
     }
     else if (x.tag == TagConstants.CONSTRAINT) {
-      fProperties.put("doSubsetChecking", Boolean.TRUE); // to collect all fields in constraint to do the subset check
+      fProperties.put("doSubsetChecking", Boolean.TRUE); 
       t = (Term) x.expr.accept(this, o);
       fProperties.put("doSubsetChecking", Boolean.FALSE);
       constrToConstraints(x, t, o);
@@ -538,7 +544,7 @@ public class JmlVisitor extends VisitorArgResult {
     
     final Term allConst = Lookup.constraints.get(x.parent);
     
-    if (((Boolean) ((Properties) o).get("dsc")).booleanValue()) { // doSubsetChecking
+    if (((Boolean) ((Properties) o).get("dsc")).booleanValue()) { 
       constIsValid = doSubsetChecking(o);
     }
     if (constIsValid && allConst != null) {
@@ -550,10 +556,6 @@ public class JmlVisitor extends VisitorArgResult {
     else if (!constIsValid) {
       System.out.println("Constraint error (subset check)! The following term was not conjoined to the overall type constraints: " + t.toString() + "\n");
     }
-    // cbr:
-    // TODO: Now: All constraints get conjoined to one FOL term for each class (I miss the list of methods in the ExprDeclPragma node)
-    // Should be: Every constraint could be followed by a list of methods that have to resprect the constraint 
-    //           Safe each constraint in Lookup.constraints as <classDecl, Set1>, Set1 = <Set2, FOL term> and Set2 = <MethodDecl>
   }
   
 
@@ -570,6 +572,8 @@ public class JmlVisitor extends VisitorArgResult {
         addToPrecondition(t, o);
         break;
       case TagConstants.ENSURES:
+      case TagConstants.POSTCONDITION:
+      case TagConstants.POSTCONDITION_REDUNDANTLY:
         addToPostcondition(t, o);
         break;
       default:
@@ -779,9 +783,6 @@ public class JmlVisitor extends VisitorArgResult {
   public final Object visitGCExpr(final /*@non_null*/ GCExpr x, final Object o) {
     
     if (x instanceof TypeExpr) { 
-      // creates a QuantVariableRef with name:=x.type and type:=sortType
-      // ex. \typeof(true) --> ?boolean:type
-      // ex. \typeof(5)    --> ?int:type
       final String name = Types.printName(((TypeExpr)x).type);
       return Expression.rvar(name, Type.sort);
     }
@@ -1208,7 +1209,11 @@ public class JmlVisitor extends VisitorArgResult {
     final Term invTerm = Logic.inv(Heap.var, x, type);
     final Term typeOfTerm = Logic.assignCompat(Heap.var, x, type);
     final Term allocTerm = Logic.isAlive(Heap.var, x);
-    final Term andTerm = Logic.and(allocTerm, typeOfTerm);
+    Term andTerm = Logic.and(allocTerm, typeOfTerm);
+    if (((Boolean)((Properties)o).get("isConstructor")).booleanValue()) { 
+      Term notEQThis = Logic.not(Logic.equals(x, Ref.varThis));
+      andTerm = Logic.and(andTerm, notEQThis);
+    }    
     final Term implTerm = Logic.implies(andTerm, invTerm);
     final Term forAllTerm = Logic.forall(vars, implTerm);
     addToPrecondition(forAllTerm, o);
@@ -1376,7 +1381,7 @@ public class JmlVisitor extends VisitorArgResult {
       Term invTerm = t;
       final Term allInvs = Lookup.invariants.get(x.parent);
       
-      if (((Boolean) ((Properties) o).get("dsc")).booleanValue()) { // doSubsetChecking
+      if (((Boolean) ((Properties) o).get("dsc")).booleanValue()) { 
         invIsValid = doSubsetChecking(o);
       }
       if (invIsValid && allInvs != null) {
