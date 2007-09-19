@@ -231,14 +231,12 @@ public final class Logic {
     Term left = l;
     Term right = r;
     
-    if ((l.getSort() == Formula.sort) | (r.getSort() == Formula.sort))
-    {
+    if ((l.getSort() == Formula.sort) | (r.getSort() == Formula.sort)) {
       return Formula.lf.mkFnTerm(Formula.lf.symAnyEQ, new Term[]{left, right});
     }
     
     if (l.getSort() != r.getSort() && 
-        (!Num.isNum(r.getSort()) || !Num.isNum(l.getSort())))
-        {
+        (!Num.isNum(r.getSort()) || !Num.isNum(l.getSort()))) {
       throw new IllegalArgumentException("Different types when creating equals, " +
                                          "found: " + l.getSort() + " and " + r.getSort());
     }
@@ -413,7 +411,7 @@ public final class Logic {
    * @return The and expression a FnTerm with tag {@link NodeBuilder#predLE}
    */
   public static Term gt(final Term l, final Term r) {
-    return numBinaryOp(l,r,NodeBuilder.predGT);
+    return numBinaryOp(l, r, NodeBuilder.predGT);
   }
 
 
@@ -566,7 +564,7 @@ public final class Logic {
    * @param fieldVar field of object targetVar
    * @return A term expressing the field "fieldVar" is of object "targetVar"
    */
-  public static Term isFieldOf(QuantVariableRef heap, QuantVariableRef targetVar, QuantVariableRef fieldVar) {
+  public static Term isFieldOf(final QuantVariableRef heap, final QuantVariableRef targetVar, final QuantVariableRef fieldVar) {
     if (heap.getSort() != Heap.sort) {
       throw new IllegalArgumentException("Type of the first param should be heap (" + 
                                          Heap.sort + "), found: " + heap.getSort());
@@ -580,7 +578,7 @@ public final class Logic {
    * @param o Parameter object also containing a list of modifiable types.
    * @return A Term expressing the check described above.
    */
-  public static Term isAssignable(final  Term targetVar,final QuantVariableRef fieldVar, final Object o) {
+  public static Term isAssignable(final  Term targetVar, final QuantVariableRef fieldVar, final Object o) {
     Term t1 = null;
     Term t2 = null;
     final Set assignSet = (HashSet<QuantVariableRef[]>) ((Properties)o).get("assignableSet");
@@ -588,7 +586,7 @@ public final class Logic {
     
     while (iter.hasNext()) {
       final QuantVariableRef[] setVar = (QuantVariableRef[]) iter.next();
-      t1 = Logic.equals(Heap.loc(Heap.var, setVar[0], setVar[1].qvar), Heap.loc(Heap.var, targetVar, fieldVar.qvar));
+      t1 = Logic.equals(Heap.loc(Heap.var, targetVar, fieldVar.qvar), Heap.loc(Heap.var, setVar[0], setVar[1].qvar));
       if (t2 == null) {
         t2 = t1;
       }
