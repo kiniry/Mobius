@@ -547,8 +547,7 @@ BEGIN
       name(m1) = name(m2) IMPLIES
         m1 = m2
 
-  % This misses that the set statement actually occurs in the program
-  wf_program_all_variables_declared : LEMMA
+  wf_program_all_variables_declared : LEMMA % :-)
     FORALL(p : Program, v : Name) : 
       wf_Program(p) IMPLIES
         var_names(p)(v) IMPLIES

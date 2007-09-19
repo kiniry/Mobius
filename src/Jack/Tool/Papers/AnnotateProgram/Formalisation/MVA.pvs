@@ -97,6 +97,9 @@ BEGIN
     FORALL (vd1, vd2 : ProgVarDecl) : vds(vd1) IMPLIES vds(vd2) IMPLIES
       name(vd1) = name(vd2) IMPLIES vd1 = vd2
 
+%   wf_Guard(a : MVA)(g : Guard) : boolean =
+%     subset?(var_names(guard_to_expression(a)(g)), var_names(a))
+
   wf_Guard(a : MVA)(g : Guard) : boolean =
     FORALL (sA : Store, sP : PSt, n : Name, v : Val) :
       (NOT var_names(vdsA(a))(n) AND NOT var_names(vdsP(a))(n)) IMPLIES
@@ -111,12 +114,12 @@ BEGIN
                  union(var_names(vdsA(a)), var_names(vdsP(a)))))
 
   wf_Trans(a : MVA)(t : Transition) : boolean = 
-      ts(a)(t) IMPLIES
-        cps(a)(scp(t)) AND
-        cps(a)(tcp(t)) AND
-        evs(a)(event(t)) AND
-        wf_Guard(a)(guard(t)) AND
-        wf_Action(a)(action(t))
+    ts(a)(t) IMPLIES
+      cps(a)(scp(t)) AND
+      cps(a)(tcp(t)) AND
+      evs(a)(event(t)) AND
+      wf_Guard(a)(guard(t)) AND
+      wf_Action(a)(action(t))
 
   % Rules that every MVA must follow:
   % The initial control point is in the set of control points of the automaton
@@ -226,6 +229,13 @@ BEGIN
   % guard_to_expression is implicitly defined by guard_to_expression_behavior
   % in Equivalence.
   guard_to_expression(a : MVA)(g : Guard) : BoolExpr
+
+  var_names_guard_to_expresion : AXIOM
+    FORALL(a : MVA, t : Transition) :
+      wf_MVA(a) IMPLIES
+      ts(a)(t) IMPLIES
+        subset?(var_names(guard_to_expression(a)(guard(t))), 
+                var_names(a))
 
   % NOTE: eval is implicitly defined by eval_action_behavior in Equivalence.
   % Since we only consider the PSt of the state of the program, actions can not

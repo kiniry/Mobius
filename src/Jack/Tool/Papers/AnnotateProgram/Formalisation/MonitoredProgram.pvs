@@ -45,9 +45,19 @@ BEGIN
 
   MonitoredProgram : TYPE = (compatible)
 
+  get_monitored_class(mp : MonitoredProgram) : Class =
+    choose({c : Class | classes(program(mp))(c) AND 
+                        name(c) = class_name(mva(mp))})
+
   wf_MP(mp : MonitoredProgram) : boolean =
     wf_MVA(mva(mp)) AND
     wf_Program(program(mp))
+
+  get_monitored_class_unique_for_wf_MP : LEMMA
+    FORALL (mp : MonitoredProgram) :
+      wf_MP(mp) IMPLIES
+        get_monitored_class(mp) = the({c : Class | classes(program(mp))(c) AND 
+                                                   name(c) = class_name(mva(mp))})
 
 
 END MonitoredProgram
@@ -118,6 +128,9 @@ BEGIN
 
   % Instantiation of its semantics
 
+  % TODO: We must add constrain saying that the method belongs to the monitored
+  % class. To get the monitored class we could use get_monitored_class(mp), the
+  % problem is how to get the class of the method.
   on_method_MVA(etype : EventType)
                (mp : MonitoredProgram, md : Method)(s : MPState) : AState =
     IF wf_state(mp)(s) AND

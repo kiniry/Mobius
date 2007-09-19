@@ -17,11 +17,12 @@ BEGIN
 
   cp(mp : MonitoredProgram) : {n : Name | NOT forbidden_names(mp)(n)}
 
-
   legal_names(mp : MonitoredProgram) : set[Name] =
     {n : Name | NOT forbidden_names(mp)(n) AND NOT n = cp(mp)}
 
+
 END VariableNames
+
 
 NewVariableDeclarations[CP, Name : TYPE+] : THEORY
 BEGIN
@@ -112,6 +113,7 @@ BEGIN
 
   cp_not_mva_ghostvar : LEMMA % :-)
     NOT new_mva_vars_gvds(mp)(new_cp_gvd(mp))
+
 
 END NewVariableDeclarations
 
@@ -315,7 +317,8 @@ BEGIN
       wf_state(ann_program(mp))(sAP) IMPLIES
         (is_ghost(vn, sMP) IMPLIES is_ghost(vn, sAP))
 
-
+  % NOTE: The following lemmas are simple but are useful as autorewrite rules
+  
   ann_method_body : LEMMA % :-)
     FORALL(m : Method) :
       body(ann_method(mp)(m)) = body(m)
@@ -392,11 +395,9 @@ BEGIN
           EXISTS(x : [BoolExpr, Stmt]) :
             s(x) AND union(var_names(proj_1(x)), var_names(proj_2(x)))(n)
 
-  var_names_guard_to_expresion : LEMMA % ? AXIOM or provable
-    FORALL(t : Transition, n : Name) : 
-      ts(mva(mp))(t) IMPLIES
-      var_names(guard_to_expression(mva(mp))(guard(t)))(n) IMPLIES
-      (var_names(program(mp))(n) OR var_names(new_gvds(mp))(n))
+  var_names_MVA_subset_var_names_new_gdvs : LEMMA % :-)
+    subset?(var_names(mva(mp)), 
+            union(var_names(program(mp)), var_names(new_gvds(mp))))
 
   var_names_ann_event : LEMMA % :-)
     FORALL(ts : finite_set[Transition]) :
@@ -415,6 +416,9 @@ BEGIN
   % unprovable for the moment
   % one problem: derive(mp)(inv) = derive(ann_program(mp))(inv)
   % should not depend on astate
+  % TODO: See the proofs in AnnGenerationLemmas where it is used and try to do
+  % without it (we need another lemma saying that the annotations we add have
+  % no side-effect.
   ann_program_preserves_well_behaved_Program : LEMMA
     well_behaved_Program(mp) IMPLIES
       well_behaved_Program(ann_program(mp))

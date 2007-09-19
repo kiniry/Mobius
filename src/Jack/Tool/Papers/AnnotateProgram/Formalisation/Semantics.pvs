@@ -624,7 +624,6 @@ BEGIN
       st(pstate(s1)) = st(pstate(s2))
     ENDIF
 
-  % TODO: See on_method_entry_TCC3
   on_method_entry : (on_method_event_type) =
     LAMBDA (p : FullProgram, md : Method, a : Val, s1, s2 : FullState, n : nat,
             derive_rec : derive_rec_type(n)) :
@@ -640,7 +639,6 @@ BEGIN
       st(pstate(s1)) = st(pstate(s2))
     ENDIF
 
-  % TODO: See on_method_exit_normal_TCC4
   on_method_exit_normal : (on_method_event_type) =
     LAMBDA (p : FullProgram, md : Method, a : Val, s1, s2 : FullState, n : nat,
             derive_rec : derive_rec_type(n)) :
