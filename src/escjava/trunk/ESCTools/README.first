@@ -140,49 +140,52 @@ on further distribution of the source.
 
 OBTAINING CURRENT SOURCE FOR ESC/Java2
 
-A CVS repository of the current work is maintained by Joe Kiniry
+A subversion repository of the current work is maintained by Joe Kiniry
 <kiniry@acm.org>.  Build and execution instructions are provided later
 in this README file.
 
-To obtain access to the CVS distribution, you will need:
+To obtain access to the subversion distribution, you will need:
 - a sufficiently current version of CVS
 - development tools and a VM for Java 1.4 or Java 1.5 (this release has not 
   been not tested with the Java 1.6 VM)
 - a working version of SSH, in order to securely transfer files to and
-  from the CVS repository
+  from the subversion repository
 - Building it will require other UNIX tools: e.g. flex, cc, diff,
   bash, tcsh
 - Some tests use JUnit
 - To (optionally) build the Simplify tool you will need a Modula-3
   compiler
 
-To obtain access to the CVS distribution, follow these steps:
+To get read-only access to the source code:
+
+  svn co https://mobius.ucd.ie/repos/src/escjava/trunk/ESCTools
+
+To obtain access to the subversion distribution, follow these steps:
 
 a) Provide evidence to Joe that you have obtained the original sources
    from SRC (see above) and agreed to the license restrictions.
    Sufficient evidence is the size (in bytes) of the Javafe and
    ESC/Java archives you have downloaded from SRC.
 
-b) Create an account on the UCD GForge server located at
-   http://sort.ucd.ie/
+b) Create an account on the UCD Trac server located at
+   http://mobius.ucd.ie/
 
    Notify Joe that you wish to have access to our CVS repository via
    the GForge.  Make sure you tell him your GForge username.
 
-c) Follow the directions located at http://sort.ucd.ie/scm/?group_id=97
-   The module name of ESC/Java2 is "ESCTools."
+c) The module name of ESC/Java2 is "ESCTools."
 
-   Choose a place where you would like to have the CVS distribution
+   Choose a place where you would like to have the subversion distribution
    installed.  The following commands will create a subdirectory of
    the current directory, name it ESCTools and place a working copy of
    the CVS repository in ESCTools.
 
-d) Execute a CVS checkout on the server (replacing the characters
-   'username' in the command below with your GForge username):
+d) Execute a subversion checkout on the server (replacing the characters
+   'username' in the command below with your Trac username):
+ 
+   svn co svn+ssh://mobius.ucd.ie/Volumes/Data/svn_mobius/src/escjava/trunk/ESCTools
 
-   cvs -d :ext:username@sort.ucd.ie/cvsroot/escjava checkout -P ESCTools 
-
-e) If you want to avoid using your password on every CVS transaction,
+e) If you want to avoid using your password on every subversion transaction,
   you will need to generate a public key/private key pair and copy the
   public key to your account on kindsoftware.com.  Login to this
   computer is only allowed via SSH:
@@ -194,7 +197,7 @@ e) If you want to avoid using your password on every CVS transaction,
 	iii) Be sure id_dsa is readable only by you
 		(chmod go-rwx ~/.ssh/id_dsa)
         iv) type out the id_dsa.pub file (cat id_dsa.pub)
-	v) Login in to the CVS server:  ssh username@kindsoftware.com
+	v) Login in to the subversion server:  ssh username@kindsoftware.com
 		(replace 'username' by your username on kindsoftware.com)
 	vi) On kindsoftware.com, edit the file ~/.ssh/authorized_keys,
 		pasting in the contents of id_dsa.pub on a line of its own
