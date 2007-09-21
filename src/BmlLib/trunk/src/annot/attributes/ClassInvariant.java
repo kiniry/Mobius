@@ -12,62 +12,135 @@ import annot.textio.BMLConfig;
 import annot.textio.IDisplayStyle;
 import annot.textio.Parsing;
 
+/**
+ * This class represents class invariant attribute.
+ * 
+ * @author tomekb
+ */
 public class ClassInvariant extends BCPrintableAttribute implements
 		IBCAttribute {
 
+	/**
+	 * BCClass contaning this attribute.
+	 */
 	private BCClass bcc;
+
+	/**
+	 * The invariant formula.
+	 */
 	private AbstractFormula invariant;
 
+	/**
+	 * Creates empty class invariant (with formula 'true').
+	 * 
+	 * @param bcc - BCClass containign this invariant.
+	 */
 	public ClassInvariant(BCClass bcc) {
 		this.bcc = bcc;
 		this.invariant = Predicate0Ar.TRUE;
 	}
 
+	/**
+	 * A Constructor from BCClass and AbstractFormula.
+	 * 
+	 * @param bcc - BCClass containing this invariant,
+	 * @param invariant - a invariant formula.
+	 */
 	public ClassInvariant(BCClass bcc, AbstractFormula invariant) {
 		this.bcc = bcc;
 		this.invariant = invariant;
 	}
 
+	/**
+	 * A constructor from attributeReader, for use in class
+	 * loading only.
+	 * 
+	 * @param bcc - BCClass containing this invariant,
+	 * @param ar - stream to load invariant from.
+	 * @throws ReadAttributeException - if data left
+	 * 		in <code>ar</code> doesn't represent correct
+	 * 		class invariant.
+	 */
 	public ClassInvariant(BCClass bcc, AttributeReader ar)
 			throws ReadAttributeException {
 		this.bcc = bcc;
 		this.invariant = (AbstractFormula) ar.readExpression();
 	}
 
+	/**
+	 * Prints annotation's code to a String.
+	 * 
+	 * @param conf - see {@link BMLConfig}.
+	 * @return String representation of this invariant.
+	 */
 	@Override
-	public String printCode1(BMLConfig conf) {
+	protected String printCode1(BMLConfig conf) {
 		String code = invariant.printLine(conf, IDisplayStyle._classInvariant);
 		return "\n" + Parsing.addComment(code);
 	}
 
+	/**
+	 * Replaces this annotation with a given one, updating
+	 * nessesery references in BCClass.
+	 * 
+	 * @param pa - annotation to replace with.
+	 */
 	@Override
 	public void replaceWith(BCPrintableAttribute pa) {
-		bcc.setInvariant((ClassInvariant)pa);
+		bcc.setInvariant((ClassInvariant) pa);
 	}
 
+	/**
+	 * Removes this annotation.
+	 */
 	@Override
 	public void remove() {
 		bcc.setInvariant(null);
 	}
 
+	/**
+	 * Replaces this annotation with the one parsed from
+	 * given String.
+	 * 
+	 * @param code - correct code of class invariant
+	 * 		to replace with.
+	 * @throws RecognitionException - if <code>code</code>
+	 * 		is not correct class invariant's code.
+	 */
 	@Override
 	public void parse(String code) throws RecognitionException {
 		parse(bcc, null, null, -1, code);
 	}
 
+	/**
+	 * @return Simple string represenatations of attribute,
+	 * 		for use in debugger only.
+	 */
 	@Override
 	public String toString() {
 		return "class invariant";
 	}
 
+	/**
+	 * @return nameIndex of BCEL's Unknown
+	 * 		attribute it represents.
+	 */
 	public int getIndex() {
 		return bcc.getCp().findConstant(IDisplayStyle.__classInvariant);
 	}
 
+	/**
+	 * @return Unknown (BCEL) attribute name.
+	 */
 	public String getName() {
 		return IDisplayStyle.__classInvariant;
 	}
 
+	/**
+	 * Saves this annotation to BCEL's Unknown attribute,
+	 * using attributeWriter.
+	 * @param aw - stream to save to.
+	 */
 	public void save(AttributeWriter aw) {
 		invariant.write(aw);
 	}

@@ -11,70 +11,143 @@ import annot.io.ReadAttributeException;
 import annot.textio.BMLConfig;
 import annot.textio.IDisplayStyle;
 
+/**
+ * This class represents single assert annotation
+ * (on or more InCodeAttribute per one bytecode instruction) 
+ * 
+ * @author tomekb
+ */
 public class SingleAssert extends InCodeAttribute {
 
+	/**
+	 * assert formula
+	 */
 	private AbstractFormula formula;
 
+	/**
+	 * Creates an empty annotation: '/assert true'.
+	 * 
+	 * @param m - BCMethod containing this annotation,
+	 * @param ih - instructionHandle of bytecode instruction
+	 * 		that this annotation should be attached to,
+	 * @param minor - minor number of annotation, responsible
+	 * 		for annotation ordering within single instruction.
+	 */
 	public SingleAssert(BCMethod m, InstructionHandle ih, int minor) {
 		super(m, ih, minor);
 		this.formula = Predicate0Ar.TRUE;
 	}
 
+	/**
+	 * A standard constructor.
+	 * 
+	 * @param m - BCMethod containing this annotation,
+	 * @param ih - instructionHandle of bytecode instruction
+	 * 		that this annotation should be attached to,
+	 * @param minor - minor number of annotation, responsible
+	 * 		for annotation ordering within single instruction.
+	 */
 	public SingleAssert(BCMethod m, InstructionHandle ih, int minor,
 			AbstractFormula formula) {
 		super(m, ih, minor);
 		this.formula = formula;
 	}
 
+	/**
+	 * A constructor for tests only. It can be used only
+	 * when we are sure that bytecode itself won't change.
+	 * 
+	 * @param m - BCMethod containing this annotation,
+	 * @param pc - pc number of bytecode instruction that
+	 * 		this annotation should be attached to. You should
+	 * 		be sure that instruction of that pc really
+	 * 		exists in given method.
+	 * @param minor - minor number of annotation, responsible
+	 * 		for annotation ordering within single instruction.
+	 * @param f - assertion formula.
+	 */
 	@Deprecated
 	public SingleAssert(BCMethod m, int pc, int minor, AbstractFormula f) {
 		super(m, pc, minor);
 		this.formula = f;
 	}
 
+	/**
+	 * A constructor for tests only. It can be used only
+	 * when we are sure that bytecode itself won't change.
+	 * Creates an empty assert (/assert true).
+	 * 
+	 * @param m - BCMethod containing this annotation,
+	 * @param pc - pc number of bytecode instruction that
+	 * 		this annotation should be attached to. You should
+	 * 		be sure that instruction of that pc really
+	 * 		exists in given method.
+	 * @param minor - minor number of annotation, responsible
+	 * 		for annotation ordering within single instruction.
+	 */
 	@Deprecated
 	public SingleAssert(BCMethod m, int pc, int minor) {
 		super(m, pc, minor);
 		this.formula = Predicate0Ar.TRUE;
 	}
 
+	/**
+	 * Loads assertion content from AttributeReader.
+	 * 
+	 * @param ar - stream to load from.
+	 * @throws ReadAttributeException - if data left
+	 * 		in <code>ar</code> doesn't represent correct
+	 * 		assertion.
+	 */
 	@Override
-	public void load(AttributeReader ar) throws ReadAttributeException {
+	protected void load(AttributeReader ar) throws ReadAttributeException {
 		formula = (AbstractFormula) ar.readExpression();
 	}
 
+	/**
+	 * Saves assertion content using AttributeWriter.
+	 * 
+	 * @param aw - stream to save to.
+	 */
 	@Override
-	public String printCode1(BMLConfig conf) {
-		return formula.printLine(conf, IDisplayStyle._assert);
-	}
-
-	@Override
-	public void saveSingle(AttributeWriter aw) {
+	protected void saveSingle(AttributeWriter aw) {
 		formula.write(aw);
 	}
 
+	/**
+	 * This method should simply print annotation to a string.
+	 * 
+	 * @param conf - see {@link BMLConfig}.
+	 * @return string representation of assertion.
+	 */
 	@Override
-	public void remove() {
-		getMethod().getAmap().removeAttribute(this);
+	protected String printCode1(BMLConfig conf) {
+		return formula.printLine(conf, IDisplayStyle._assert);
 	}
 
+	/**
+	 * @return annotation's type id, from AType interface.
+	 */
 	@Override
-	public int aType() {
+	protected int aType() {
 		return AType.C_ASSERT;
 	}
 
+	/**
+	 * @return Simple string represenatations of attribute,
+	 * 		for use in debugger only.
+	 */
 	@Override
 	public String toString() {
-		return "assert at (" + getPC() + ", " + ((getMinor() == -1) ? "any" : getMinor())
-				+ ")";
+		return "assert at (" + getPC() + ", "
+				+ ((getMinor() == -1) ? "any" : getMinor()) + ")";
 	}
 
+	/**
+	 * @return assertion formula.
+	 */
 	public AbstractFormula getFormula() {
 		return formula;
-	}
-
-	public void setFormula(AbstractFormula formula) {
-		this.formula = formula;
 	}
 
 }

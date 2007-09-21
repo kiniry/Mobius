@@ -1,0 +1,43 @@
+This document describes changes in code required to extend
+  supported language:
+
+1. To add a constant:
+	- update ConstantPoolReader.readConstant(file)
+
+2. To add an attribute:
+	a). Class attribute:
+		- create a subclass of BCPrintableAttribute
+			that implements IBCAttribute,
+		- add new attribute type to AType interface,
+		- update BCPrintableAttribute.parse(...) method,
+		- update BCClass.getAllAttributes(types),
+		- update BCClass.addAttribute(pa),
+		- update BCClass.removeBMLAttributes(arr),
+		- update BCClass.saveJC(),
+		- update BCConstantPool.addStandardConstants(),
+		- update AttributeReader.readAttribute(ua),
+		- update CodeSearch.getAllAttributeNames(),
+		- update CodeSearch.findAttributeAtLine(...),
+		- add parser rule to BML.g3 grammatic.
+	b). Method atribute (except method specification):
+		- create a subclass of BCAttributeTable,
+		- create a subclass of InCodeAttribute,
+		- add new attribute type to AType interface,
+		- update switch in BCAttributeMap.addAttribute(
+			atype, pc, minor),
+		- update BCPrintableAttribute.parse(...) method,
+		- update BCClass.removeBMLAttributes(arr),
+		- update BCConstantPool.addStandardConstants(),
+		- update BCMethod.save(),
+		- update AttributeReader.readAttribute(ua),
+		- update CodeSearch.getAllAttributeNames(),
+		- update CodeSearch.findAttributeAtLine(...),
+		- add parser rule to BML.g3 grammatic.
+
+3. To add an Expression:
+	- create subclass of BCExpression or ane of it's subclasses,
+	- add opcedes to Code interface,
+	- update Priorities.setPriorities(),
+	- update AttributeReader.readExpression(),
+	- add parser rules to grammatic (annot.textio.BML.g3),
+	- create test cases in test.Testuj.ParserTest().

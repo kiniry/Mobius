@@ -20,6 +20,7 @@ options {
 @members {
 	public RecognitionException lastE = null;
 	
+	// initail data (parser parameters)
 	private BCClass bcc;
 	private BCMethod m;
 	private BCConstantPool cp;
@@ -27,9 +28,9 @@ options {
 	private int minor;
 
 	// global variables
-	private int bvc;
-	private int lqfs;
-	private HashMap<String, BoundVar> env;
+	private int bvc;  						// number of currently visible bound variables
+	private int lqfs; 						// last (current) quantified formula size
+	private HashMap<String, BoundVar> env;	// bound variable map
 
 	// set context for attribute parsing
 	public void init(BCClass bcc, BCMethod m, BCConstantPool cp, InstructionHandle ih, int minor) {
@@ -49,6 +50,9 @@ options {
 		lastE = rex;
 	}
 	
+	// Searches for an identifier name in diffrent locations
+	// and returns proper one, or null if no identifier
+	// of this name could be found.
 	private BCExpression whatIsIt(String ident) {
 		if (env.containsKey(ident))
 			return env.get(ident);
@@ -144,10 +148,12 @@ quantifiedFormula returns [BCExpression ast] :
 			JavaType jt = JavaType.getJavaType($t.text);
 			lqfs++;
 			BoundVar bv = new BoundVar(jt, bvc++, (QuantifiedFormula)$ast, $v.text);
+			if (env.containsKey($v.text))
+				reportError(null);
 			env.put($v.text, bv);
 	 		((QuantifiedFormula)$ast).addVariable(bv);
 	 	} catch(ReadAttributeException e) {
-	 		reportError(new RecognitionException());
+	 		reportError(null);
 	 		//throw new RuntimeException("Error in BML.g3.quantifiedFormula");
 	 	}})+
 	 	SEMICOLON

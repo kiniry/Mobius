@@ -9,6 +9,8 @@ import org.apache.bcel.generic.InstructionHandle;
 import org.apache.bcel.generic.InstructionList;
 import org.apache.bcel.generic.MethodGen;
 
+import com.sun.org.apache.bcel.internal.generic.RETURN;
+
 import annot.attributes.AType;
 import annot.attributes.BCAttributeMap;
 import annot.attributes.InCodeAttribute;
@@ -19,15 +21,48 @@ import annot.io.ReadAttributeException;
 import annot.textio.BMLConfig;
 import annot.textio.Parsing;
 
+/**
+ * This class represents a bytecode method.
+ * 
+ * @author tomekb
+ */
 public class BCMethod {
 
+	/**
+	 * A flag to choose how bytecode should be displayed.
+	 */
 	private final static boolean displayStyle = false;
 
+	/**
+	 * BCClass containing this method.
+	 */
 	private BCClass bcc;
+
+	/**
+	 * Original (BCEL) method. Do not use any other methodGen's
+	 * 		to manipulate bytecode.
+	 */
 	private MethodGen bcelMethod;
+
+	/**
+	 * Method specification attribute.
+	 */
 	private MethodSpecification mspec;
+
+	/**
+	 * Collection of all attributes inside method body.
+	 */
 	private BCAttributeMap amap;
 
+	/**
+	 * A standard constructor from BCClass and MethodGen.
+	 * 
+	 * @param bcc - BCClass containig this method,
+	 * @param m - BCEL's methodGen for this method.
+	 * @throws ReadAttributeException - if any of BML
+	 * 		attributes wasn't correctly parsed
+	 * 		by this library.
+	 */
 	public BCMethod(BCClass bcc, MethodGen m) throws ReadAttributeException {
 		MLog.putMsg(MLog.PInfo, "  initializing method: " + m.getName());
 		this.bcc = bcc;
@@ -41,11 +76,20 @@ public class BCMethod {
 		}
 	}
 
+	/**
+	 * @return String representation of method's header.
+	 */
 	@Override
 	public String toString() {
 		return bcelMethod.toString() + "\n";
 	}
 
+	/**
+	 * Displays method's bytecode with BML annotations.
+	 * 
+	 * @param conf - see {@link BMLConfig}.
+	 * @return String representation of method's bytecode.
+	 */
 	public String printCode(BMLConfig conf) {
 		String code = "";
 		if (mspec != null)
@@ -55,16 +99,15 @@ public class BCMethod {
 		if (displayStyle) {
 			InstructionList il = bcelMethod.getInstructionList();
 			il.setPositions();
-			Iterator iterator = bcelMethod.getInstructionList()
-								.iterator();
+			Iterator iterator = bcelMethod.getInstructionList().iterator();
 			Iterator<InstructionHandle> iter = iterator;
 			while (iter.hasNext()) {
 				InstructionHandle ih = iter.next();
 				bcode += amap.getAllAt(ih).printCode(conf);
 				bcode += ih.getPosition()
 						+ ": "
-						+ ih.getInstruction()
-								.toString(bcc.getJc().getConstantPool()) + "\n";
+						+ ih.getInstruction().toString(
+								bcc.getJc().getConstantPool()) + "\n";
 			}
 		} else {
 			bcode += bcelMethod.getMethod().getCode().toString();
@@ -86,11 +129,22 @@ public class BCMethod {
 		return code + bcode;
 	}
 
+	/**
+	 * Adds an annotation to the BCMethod.
+	 * 
+	 * @param ica - annotation to be added.
+	 */
 	public void addAttribute(InCodeAttribute ica) {
 		MLog.putMsg(MLog.PProgress, "adding attribute: " + ica.toString());
 		amap.addAttribute(ica, ica.getMinor());
 	}
 
+	/**
+	 * Updates BCEL MethodGen's attributes and generates
+	 * BCEL's method.
+	 * 
+	 * @return generated BCEL Method.
+	 */
 	public Method save() {
 		MLog.putMsg(MLog.PInfo, "  saving method: " + bcelMethod.getName());
 		AttributeWriter aw = new AttributeWriter(this);
@@ -98,8 +152,10 @@ public class BCMethod {
 				.getAttributes());
 		if (mspec != null)
 			attrs = BCClass.addAttribute(attrs, aw.writeAttribute(mspec));
-		if (amap.getLength() > 0)
-			attrs = BCClass.addAttribute(attrs, aw.writeAttribute(amap.getAtab()));
+		if (amap.getLength() > 0) {
+			attrs = BCClass.addAttribute(attrs, aw.writeAttribute(amap
+					.getAtab()));
+		}
 		bcelMethod.removeAttributes();
 		for (int i = 0; i < attrs.length; i++)
 			bcelMethod.addAttribute(attrs[i]);
@@ -109,10 +165,21 @@ public class BCMethod {
 		return bcelMethod.getMethod();
 	}
 
+	/**
+	 * @return BCEL MethodGen's instructionList.
+	 */
 	public InstructionList getInstructions() {
 		return bcelMethod.getInstructionList();
 	}
 
+	/**
+	 * Computes instructions pc numbers (for all instructions)
+	 * and searches for instruction of given PC number.
+	 * 
+	 * @param pc - offset (program counter) of an instruction.
+	 * @return instruction of given offset (from this method)
+	 * 		or null if there is no such instruction.
+	 */
 	public InstructionHandle findAtPC(int pc) {
 		InstructionList il = getInstructions();
 		il.setPositions();
@@ -125,20 +192,42 @@ public class BCMethod {
 		return null;
 	}
 
+	/**
+	 * @return attribute map.
+	 */
 	public BCAttributeMap getAmap() {
 		return amap;
 	}
 
+	/**
+	 * @return BCClass containing this method.
+	 */
 	public BCClass getBcc() {
 		return bcc;
 	}
 
+	/**
+	 * @return method specification
+	 */
 	public MethodSpecification getMspec() {
 		return mspec;
 	}
 
+	/**
+	 * Sets method specification attribute for this method.
+	 * 
+	 * @param mspec - new method specification.
+	 */
 	public void setMspec(MethodSpecification mspec) {
 		this.mspec = mspec;
+	}
+
+	/**
+	 * @return BCEL method generator. Use this instead of
+	 * 		creating new on from BCEL Method.
+	 */
+	public MethodGen getBcelMethod() {
+		return bcelMethod;
 	}
 
 }

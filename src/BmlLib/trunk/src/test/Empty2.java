@@ -1,5 +1,10 @@
 package test;
 
+/**
+ * Another example for tests.
+ * 
+ * @author tomekb
+ */
 public class Empty2 {
 
 	private static int l = 0;

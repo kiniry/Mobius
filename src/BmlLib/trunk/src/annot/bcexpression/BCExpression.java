@@ -7,28 +7,68 @@ import annot.io.ReadAttributeException;
 import annot.textio.BMLConfig;
 import annot.textio.IDisplayStyle;
 
+/**
+ * This class represents an BML expression. It's a superclass
+ * for all types of expression. To add a new subexpression
+ * create a subclass of this class or one of it's subclasses
+ * (eg. AbstractIntExpression for expression that returns
+ * integer value, AbstractFormula for boolean expression).
+ * 
+ * @author tomekb
+ */
 public abstract class BCExpression {
 
+	/**
+	 * Maximum possible expression priority.
+	 */
 	public static final int MAX_PRI = 18;
 
-	private int connector;
+	/**
+	 * Type of expression, from annot.io.Code interface,
+	 * used also for .class file i/o operations.
+	 */
+	private int connector = -1;
+
+	/**
+	 * Array of subexpressions.
+	 */
 	private BCExpression[] subExpr;
+
+	/**
+	 * Expression's priority.
+	 */
 	private int priority = 0;
 
-	public BCExpression() {
+	/**
+	 * A constructor for 0Arg expressions.
+	 */
+	protected BCExpression() {
 		this.subExpr = new BCExpression[0];
 		this.priority = getPriority();
 		init();
 	}
 
-	public BCExpression(int connector) {
+	/**
+	 * Another constructor for 0Arg expressions.
+	 * 
+	 * @param connector - type of expression
+	 * 		(from annot.io.Code interface).
+	 */
+	protected BCExpression(int connector) {
 		this.connector = connector;
 		this.priority = getPriority();
 		this.subExpr = new BCExpression[0];
 		init();
 	}
 
-	public BCExpression(int connector, BCExpression subExpr) {
+	/**
+	 * A Constructor for unary expressions.
+	 * 
+	 * @param connector - type of expression
+	 * 		(from annot.io.Code interface),
+	 * @param subExpr - subexpression.
+	 */
+	protected BCExpression(int connector, BCExpression subExpr) {
 		this.connector = connector;
 		this.priority = getPriority();
 		this.subExpr = new BCExpression[1];
@@ -36,7 +76,15 @@ public abstract class BCExpression {
 		init();
 	}
 
-	public BCExpression(int connector, BCExpression left, BCExpression right) {
+	/**
+	 * A constructor for binary expressions.
+	 * 
+	 * @param connector - type of expression
+	 * 		(from annot.io.Code interface),
+	 * @param left - left subexpression,
+	 * @param right - right subexrpession.
+	 */
+	protected BCExpression(int connector, BCExpression left, BCExpression right) {
 		this.connector = connector;
 		this.priority = getPriority();
 		this.subExpr = new BCExpression[2];
@@ -45,7 +93,24 @@ public abstract class BCExpression {
 		init();
 	}
 
-	public BCExpression(AttributeReader ar, int root)
+	/**
+	 * A constructor from AttributeReader. After reading
+	 * type of expression (connector) Attribuet reader
+	 * creates a proper subclass of BCExpression using
+	 * this constructor, passing to it connector and
+	 * AttributeReader itself. This constructor calls
+	 * init() method for private fields initializetion
+	 * and than read(ar, root) method that reads expression
+	 * data ()including it's subexpression) from given
+	 * AttributeReader.
+	 * 
+	 * @param ar - stream to load from,
+	 * @param root - expression type (connector).
+	 * @throws ReadAttributeException - if connector + stream
+	 * 		in <code>ar</code> doesn't represent any
+	 * 		expression from constructing subclass.
+	 */
+	protected BCExpression(AttributeReader ar, int root)
 			throws ReadAttributeException {
 		this.connector = root;
 		this.subExpr = new BCExpression[0];
@@ -54,17 +119,86 @@ public abstract class BCExpression {
 		this.priority = getPriority();
 	}
 
-	public abstract String printCode1(BMLConfig conf);
-	public abstract void write(AttributeWriter aw);
-	public abstract void read(AttributeReader ar, int root)
-			throws ReadAttributeException;
-	public abstract void init();
-	public abstract int getPriority();
-	public abstract JavaType getType1();
+	/**
+	 * This method should be implemented in subclasses
+	 * to return expression's String representation.
+	 * Subclasses should call printCode(conf) method instead
+	 * of this method for recursive displaying subecpressions,
+	 * unless they want them to be displayed in the same line
+	 * and without parenthness.
+	 * 
+	 * @param conf - see {@link BMLConfig}.
+	 * @return String representation of expression,
+	 * 		without (block marks (used for line-breaking
+	 * 		by prettyPrinter) and parenthness) at root.
+	 */
+	protected abstract String printCode1(BMLConfig conf);
 
+	/**
+	 * @return Simple String representation of this
+	 * 		expression, for debugging only.
+	 */
 	@Override
 	public abstract String toString();
 
+	/**
+	 * Reads the exression from an AttributeReader (except
+	 * connector, thar has been already read and set).
+	 * 
+	 * @param ar - stream to load from,
+	 * @param root - connentor.
+	 * @throws ReadAttributeException - if connector + stream
+	 * 		in <code>ar</code> doesn't represent any
+	 * 		expression from calling subclass.
+	 */
+	protected abstract void read(AttributeReader ar, int root)
+			throws ReadAttributeException;
+
+	/**
+	 * Writes this expression to AttributeWirter.
+	 * Don't forget to write connector first, then
+	 * other data and finally call writeSubExpressions(aw)
+	 * to write all subexpressions recursivly while
+	 * implementing this method in subclasses.
+	 * 
+	 * @param aw - stream to save to.
+	 */
+	public abstract void write(AttributeWriter aw);
+
+	/**
+	 * Initialize private data of subclass.
+	 * Use this method instead of initialize private fields
+	 * in constructor, becouse read() method is called in
+	 * spuerclass constructor (from AttributeReader, that is,
+	 * before calling subclass constructor).
+	 */
+	protected abstract void init();
+
+	/**
+	 * @return priority of this expression
+	 * 		(from annot.textio.Priorities).
+	 */
+	protected abstract int getPriority();
+
+	/**
+	 * This method should check if all subexpression have
+	 * correct types and return type of this expression.
+	 * You can assume that all subexpressions are not-null.
+	 * 
+	 * @return JavaType of result of this exrpession,
+	 * 		or null if it's invalid (if one of it's
+	 * 		subexpression have wrong type or is invalid).
+	 */
+	protected abstract JavaType getType1();
+
+	/**
+	 * Checks if all subexpressions have correct types
+	 * and return type of this expression.
+	 * 
+	 * @return JavaType of result of this exrpession,
+	 * 		or null if it's invalid (if one of it's
+	 * 		subexpression have wrong type or is invalid).
+	 */
 	public JavaType getType() {
 		for (int i = 0; i < subExpr.length; i++)
 			if (subExpr[i] == null)
@@ -73,13 +207,15 @@ public abstract class BCExpression {
 	}
 
 	/**
-	 * Prints expression as a whole attribute
+	 * Prints expression as a whole attribute.
+	 * This method should not be called by subclasses.
 	 * 
-	 * @param conf -
-	 *            see {@link BMLConfig}
-	 * @param usedc - #
-	 *            characters displayed in current line before this expression
-	 * @return string representation of expression
+	 * @param conf - see {@link BMLConfig},
+	 * @param usedc - # of characters displayed in current
+	 * 		line before this expression (excluding comment
+	 * 		mark - annot.textio.IdisplayStyle.comment_*).
+	 * @return pretty printed String representation
+	 * 		of this expression.
 	 */
 	public String printLine(BMLConfig conf, String prefix) {
 		conf.setRoot_pri(MAX_PRI);
@@ -99,12 +235,12 @@ public abstract class BCExpression {
 	}
 
 	/**
-	 * Adds parenthness to root of the expression.
+	 * Adds parenthness and block marks to the root
+	 * of this expression.
 	 * 
-	 * @param conf -
-	 *            see {@link BMLConfig}
-	 * @return string representation of expression, before line breaking in the
-	 *         root
+	 * @param conf - see {@link BMLConfig}.
+	 * @return String representation of expression, without
+	 * 		line-breaking.
 	 */
 	private String printCode2(BMLConfig conf) {
 		int rp = conf.getRoot_pri();
@@ -147,11 +283,11 @@ public abstract class BCExpression {
 	}
 
 	/**
-	 * Prints expression in debug (raw) mode
+	 * Prints expression in debug (raw) mode.
 	 * 
-	 * @param conf -
-	 *            see {@link BMLConfig}
-	 * @return string representation of expression
+	 * @param conf - see {@link BMLConfig}.
+	 * @return debug string representation of expression,
+	 * 		with simple line-breaking and indention.
 	 */
 	public String controlPrint(BMLConfig conf) {
 		String str = this.getClass().getName();
@@ -176,13 +312,14 @@ public abstract class BCExpression {
 	}
 
 	/**
-	 * Prints expression as a string. This method should be called in attributes
-	 * and subclasses to get full string representation.
+	 * Prints expression as a string. This method should not
+	 * be called in attributes nor subclasses to get full
+	 * string representation. Use printLine(conf)
+	 * in attributes and printCode1(conf) in subclasses.
 	 * 
-	 * @param conf -
-	 *            see {@link BMLConfig}
-	 * @return string representation of expression, before line breaking in the
-	 *         root
+	 * @param conf - see {@link BMLConfig}.
+	 * @return string representation of expression,
+	 * 		without line-breaking.
 	 */
 	public String printCode(BMLConfig conf) {
 		if (conf.isGoControlPrint()) {
@@ -192,37 +329,59 @@ public abstract class BCExpression {
 		}
 	}
 
-	public void writeSubExpressions(AttributeWriter aw) {
+	/**
+	 * Writes subexpressions to given AttributeWriter.
+	 * 
+	 * @param aw - stream to write to.
+	 */
+	protected void writeSubExpressions(AttributeWriter aw) {
 		for (int i = 0; i < subExpr.length; i++)
 			subExpr[i].write(aw);
 	}
 
+	/**
+	 * @return expression type (connector),
+	 * 		from annot.io.Code interface.
+	 */
 	protected int getConnector() {
 		return connector;
 	}
 
-	protected void setConnector(int connector) {
-		this.connector = connector;
-	}
-
+	/**
+	 * @param index - index of subespression.
+	 * @return subexpression of this expression of given index
+	 * 		(with 0 for left-most subexpression)
+	 */
 	protected BCExpression getSubExpr(int index) {
 		return subExpr[index];
 	}
 
+	/**
+	 * @return number of subexpressions.
+	 */
 	protected int getSubExprCount() {
 		return subExpr.length;
 	}
-	
+
+	/**
+	 * Sets given subexpression.
+	 * 
+	 * @param index - index of the subexpression to be set.
+	 * @param subExpr - new subexpression to be set at
+	 * 		<code>index</code> position.
+	 */
 	protected void setSubExpr(int index, BCExpression subExpr) {
 		this.subExpr[index] = subExpr;
 	}
 
+	/**
+	 * Removes all subexpressions and initializes
+	 * subexpression array.
+	 * 
+	 * @param n - subexpression count (size of the array).
+	 */
 	protected void setSubExprCount(int n) {
 		this.subExpr = new BCExpression[n];
-	}
-	
-	protected void setPriority(int priority) {
-		this.priority = priority;
 	}
 
 }

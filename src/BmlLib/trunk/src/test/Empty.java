@@ -1,5 +1,10 @@
 package test;
 
+/**
+ * A simple class, used as an example (of bytecode).
+ * 
+ * @author tomekb
+ */
 public class Empty {
 
 	public static final int c = 10;

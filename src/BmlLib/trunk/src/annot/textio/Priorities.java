@@ -2,13 +2,29 @@ package annot.textio;
 
 import annot.io.Code;
 
+/**
+ * This class contains priorities of all expression types.
+ * 
+ * @author tomekb
+ */
 public abstract class Priorities implements Code {
 
+	/**
+	 * Expression's priority array, from expression's type
+	 * (connector, from {@link Code} interface) to it's
+	 * priority.
+	 */
 	private static int[] priorities;
 
+	/**
+	 * Priority of expressions that have no subexpressions.
+	 */
 	public static final int LEAF = 0;
 
-	private static void setPrioritues() {
+	/**
+	 * Initializes <code>priorities</code> array.
+	 */
+	private static void setPriorities() {
 		priorities = new int[255];
 		for (int i = 0; i < 255; i++)
 			priorities[i] = -1;
@@ -31,9 +47,17 @@ public abstract class Priorities implements Code {
 		priorities[EXISTS_WITH_NAME] = 17;
 	}
 
+	/**
+	 * Returns priority of expression with given type
+	 * (connector). Sets all priorities at first call.
+	 * 
+	 * @param opcode - expression type (connector), from
+	 * 		{@link Code} interface.
+	 * @return Priority of expressions of given type.
+	 */
 	public static int getPriority(int opcode) {
 		if (priorities == null)
-			setPrioritues();
+			setPriorities();
 		if (opcode > 255)
 			throw new RuntimeException("invalid opcode: " + opcode);
 		if (priorities[opcode] == -1) {

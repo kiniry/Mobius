@@ -8,14 +8,36 @@ import annot.bcclass.MLog;
 import annot.textio.BMLConfig;
 import annot.textio.Parsing;
 
+/**
+ * This class represents list of annotations attached
+ * to single bytecode instruction handle.
+ * 
+ * @author tomekb
+ */
 public class SingleList implements Comparable<SingleList> {
 
+	/**
+	 * collection containing the annotations.
+	 */
 	private LinkedList<InCodeAttribute> attributes;
 
+	/**
+	 * A standard constructor. Creates an empty list.
+	 */
 	public SingleList() {
 		attributes = new LinkedList<InCodeAttribute>();
 	}
 
+	/**
+	 * Sorts and returns all annotations from this list
+	 * of given types.
+	 * 
+	 * @param types - bitmask representing a set of annotation
+	 * 		types from AType interface;
+	 * @return Array of all annotations from this list matching
+	 * 		given type (it's type & types > 0), sorted by
+	 * 		their's minor numbers.
+	 */
 	public InCodeAttribute[] getAll(int types) {
 		Collections.sort(attributes);
 		InCodeAttribute[] all = attributes
@@ -28,12 +50,20 @@ public class SingleList implements Comparable<SingleList> {
 		int pos = 0;
 		for (int i = 0; i < all.length; i++)
 			if ((all[i].aType() & types) > 0) {
-				MLog.putMsg(MLog.PDebug, all[i].getPC() + "; " + all[i].getMinor());
+				MLog.putMsg(MLog.PDebug, all[i].getPC() + "; "
+						+ all[i].getMinor());
 				filtered[pos++] = all[i];
 			}
 		return filtered;
 	}
 
+	/**
+	 * Prints all its annotations to a String.
+	 * 
+	 * @param conf - see {@link BMLConfig}.
+	 * @return String representation of all annotations
+	 * 		in one comment.
+	 */
 	public String printCode(BMLConfig conf) {
 		String code = "";
 		Iterator<InCodeAttribute> iter = attributes.iterator();
@@ -42,6 +72,14 @@ public class SingleList implements Comparable<SingleList> {
 		return Parsing.addComment(code);
 	}
 
+	/**
+	 * Adds an annotaton to the list, updating minor numbers
+	 * to ensure no two annotations from it has the same minor
+	 * number and saving list's ordering (no annotations are
+	 * swapped on the list and list is still sorted).
+	 * 
+	 * @param ica - annotation to be added.
+	 */
 	public void addAttribute(InCodeAttribute ica) {
 		if (ica.getMinor() == -1) {
 			if (attributes.size() == 0) {
@@ -65,7 +103,7 @@ public class SingleList implements Comparable<SingleList> {
 		if (prev == null) {
 			attributes.addLast(ica);
 		} else {
-			attributes.add(attributes.indexOf(prev), ica); //?
+			attributes.add(attributes.indexOf(prev), ica); // ?
 		}
 		iter = attributes.iterator();
 		int minor = -1;
@@ -79,14 +117,30 @@ public class SingleList implements Comparable<SingleList> {
 		}
 	}
 
+	/**
+	 * Removes annotation from the list.
+	 * 
+	 * @param ica - annotation to be removed.
+	 */
 	public void removeAttribute(InCodeAttribute ica) {
 		attributes.remove(ica);
 	}
 
+	/**
+	 * Clears the list, removing all annotations from it.
+	 */
 	public void removeAll() {
 		attributes.clear();
 	}
 
+	/**
+	 * Replaces an annotation from the list with another one.
+	 * They should have both the same minor numbers.
+	 * 
+	 * @param olda - annotation to be removed,
+	 * @param newa - annotation to be added
+	 * 		at <code>olda</code>'s place.
+	 */
 	public void replace(InCodeAttribute olda, InCodeAttribute newa) {
 		if (!attributes.contains(olda))
 			throw new RuntimeException(
@@ -94,6 +148,15 @@ public class SingleList implements Comparable<SingleList> {
 		attributes.set(attributes.indexOf(olda), newa);
 	}
 
+	/**
+	 * Returns an annotation from the list with given
+	 * minor number.
+	 * 
+	 * @param minor - minor number of returned annotation.
+	 * @return An annotation with minor number equal to the
+	 * 		given one, or null if no annotations with such
+	 * 		minor number could be found.
+	 */
 	public InCodeAttribute get(int minor) {
 		Iterator<InCodeAttribute> iter = attributes.iterator();
 		while (iter.hasNext()) {
@@ -104,12 +167,27 @@ public class SingleList implements Comparable<SingleList> {
 		return null;
 	}
 
+	/**
+	 * @return pc numner of annotation's bytecode instruction,
+	 * 		or -1 if list is empty.
+	 */
 	public int getPC() {
 		if (attributes.size() == 0)
 			return -1;
 		return attributes.getFirst().getPC();
 	}
 
+	/**
+	 * compares this annotation list to given one in order they
+	 * should appead in String representation of a method.
+	 * Both annotation lists should be from the same method.
+	 * @param o - annotation list to compare to.
+	 * @return a positive integer if <code>o</code> is above
+	 * 		this annotation list in String representation
+	 * 		of method, a negative integer if <code>o</code>
+	 * 		is below, and zero if <code>o</code> is the same
+	 * 		annotation list.
+	 */
 	public int compareTo(SingleList o) {
 		return getPC() - o.getPC();
 	}

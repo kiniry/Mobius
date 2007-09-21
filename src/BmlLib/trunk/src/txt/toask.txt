@@ -1,6 +1,12 @@
 [pl] pytania do Chrzaszcza na najblizsze spotkanie.
 
+- czy bedzie potrzebna funkcjonalnosc dodawania
+	i usuwania metod?
 - czy przejmowac sie wydajnoscia i kiedy?
-- czy BCConstantPool powinien byc kolekcja stalych[*], czy
+- czy BCConstantPool powinien byc kolekcja stalych, czy
 	dwoma zwyklymi (BCEL-owymi) constantPool-ami?
 - jak pozbyc sie warningow o operatorach?
+- co oznacza 'final' przy definicji klasy?
+- czy annotacje powinny byc do wszystkich klas, pol i metod
+	czy tylko tych, ktore sa nieoczywiste? Czy do
+	przedefiniowanych metod w podklasach te¿ (@Override)?

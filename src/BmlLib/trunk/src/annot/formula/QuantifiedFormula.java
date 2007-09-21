@@ -14,19 +14,51 @@ import annot.textio.BMLConfig;
 import annot.textio.IDisplayStyle;
 import annot.textio.Priorities;
 
+/**
+ * This class represents a quantifier with bound variable
+ * declarations and formula. 
+ * 
+ * @author tomekb
+ */
 public class QuantifiedFormula extends AbstractFormula {
 
+	/**
+	 * Vector of bound variables
+	 */
 	private Vector<BoundVar> vars;
 
+	/**
+	 * A standard constructor, used by parser. After creating
+	 * QuantifiedFormula this way, you must add all it's
+	 * bound variables and set it's formula, before using
+	 * this expression.
+	 * 
+	 * @param connector - type of quantifier
+	 * 		(eg. Code.EXISTS, Code.FORALL).
+	 */
 	public QuantifiedFormula(int connector) {
 		super(connector);
 	}
 
+	/**
+	 * A constructor from AttributeReader.
+	 * 
+	 * @param ar - stream to load from,
+	 * @param root - quantifier type (connector).
+	 * @throws ReadAttributeException - if connector + stream
+	 * 		in <code>ar</code> doesn't represent correct
+	 * 		quantified expression.
+	 * @see AbstractFormula#AbstractFormula(AttributeReader, int)
+	 */
 	public QuantifiedFormula(AttributeReader ar, int root)
 			throws ReadAttributeException {
 		super(ar, root);
 	}
 
+	/**
+	 * @return String representation of quantifier
+	 * 		(connector)
+	 */
 	private String printRoot() {
 		switch (getConnector()) {
 		case Code.FORALL:
@@ -40,8 +72,16 @@ public class QuantifiedFormula extends AbstractFormula {
 		}
 	}
 
+	/**
+	 * Prints quantifier with its formula to a String.
+	 * 
+	 * @param conf - see {@link BMLConfig}.
+	 * @return String representation of expression,
+	 * 		without (block marks (used for line-breaking
+	 * 		by prettyPrinter) and parenthness) at root.
+	 */
 	@Override
-	public String printCode1(BMLConfig conf) {
+	protected String printCode1(BMLConfig conf) {
 		String code = printRoot();
 		code += IDisplayStyle.expr_block_start;
 		Iterator<BoundVar> iter = vars.iterator();
@@ -59,8 +99,32 @@ public class QuantifiedFormula extends AbstractFormula {
 		return code;
 	}
 
+	/**
+	 * @return Simple String representation of this
+	 * 		expression, for debugging only.
+	 */
 	@Override
-	public void read(AttributeReader ar, int root)
+	public String toString() {
+		String code = printRoot();
+		Iterator<BoundVar> iter = vars.iterator();
+		while (iter.hasNext())
+			code += " " + iter.next().toString();
+		code += " " + getSubExpr(0).toString();
+		return code;
+	}
+
+	/**
+	 * Reads the bound variable declarations and quantified
+	 * formula from an AttributeReader.
+	 * 
+	 * @param ar - stream to load from,
+	 * @param root - connentor (quantifier).
+	 * @throws ReadAttributeException - if connector + stream
+	 * 		in <code>ar</code> doesn't represent correct
+	 * 		quantified expression.
+	 */
+	@Override
+	protected void read(AttributeReader ar, int root)
 			throws ReadAttributeException {
 		int n = ar.readByte();
 		int bvc = ar.getBvarCount();
@@ -87,6 +151,13 @@ public class QuantifiedFormula extends AbstractFormula {
 			ar.getBvars().remove(ar.getBvarCount() - 1);
 	}
 
+	/**
+	 * Changes connector between new ones (for new .class file
+	 * format, with bound variable names) and old one,
+	 * depending on {@link BoundVar#goWriteVarNames} flag.
+	 * 
+	 * @return corrected connector.
+	 */
 	private int chkConnector() {
 		if (BoundVar.goWriteVarNames) {
 			if (getConnector() == Code.FORALL)
@@ -102,6 +173,11 @@ public class QuantifiedFormula extends AbstractFormula {
 		return getConnector();
 	}
 
+	/**
+	 * Writes this expression to AttributeWirter.
+	 * 
+	 * @param aw - stream to save to.
+	 */
 	@Override
 	public void write(AttributeWriter aw) {
 		int conn = chkConnector();
@@ -124,50 +200,81 @@ public class QuantifiedFormula extends AbstractFormula {
 		writeSubExpressions(aw);
 	}
 
+	/**
+	 * Initialize private fields of this subclass.
+	 */
 	@Override
-	public void init() {
+	protected void init() {
 		setSubExprCount(1);
 		this.vars = new Vector<BoundVar>();
 	}
 
+	/**
+	 * @return priority of this expression
+	 * 		(from annot.textio.Priorities).
+	 */
 	@Override
-	public String toString() {
-		String code = printRoot();
-		Iterator<BoundVar> iter = vars.iterator();
-		while (iter.hasNext())
-			code += " " + iter.next().toString();
-		code += " " + getSubExpr(0).toString();
-		return code;
-	}
-
-	@Override
-	public int getPriority() {
+	protected int getPriority() {
 		return Priorities.getPriority(getConnector());
 	}
 
+	/**
+	 * Checks if subexpression has correct type
+	 * and return type of this expression.
+	 * 
+	 * @return JavaBool or null if it's invalid
+	 * 		(if it's subexpression have wrong type
+	 * 		or is invalid).
+	 */
 	@Override
-	public JavaType getType1() {
+	protected JavaType getType1() {
 		if (getSubExpr(0).getType() != JavaType.JavaBool)
 			return null;
 		return JavaType.JavaBool;
 	}
 
+	/**
+	 * Adds given bound variable to this formula.
+	 * This should be called after creating QuantifiedFormula
+	 * using {@link #QuantifiedFormula(int)} constructor,
+	 * but before setting its formula.
+	 * 
+	 * @param bv - bound variable to be added. It should
+	 * 		be a newly created variable, not recived using
+	 * 		{@link BoundVar#getBoundVar(AttributeReader)}.
+	 */
 	public void addVariable(BoundVar bv) {
 		if (getSubExpr(0) != null)
 			throw new RuntimeException("formula is already set!");
 		vars.add(bv);
 	}
 
+	/**
+	 * Sets a quantified formula. This should be called after
+	 * all bound variables have been added, but before using
+	 * this expression.
+	 * 
+	 * @param expression - formula to be set.
+	 */
 	public void setFormula(BCExpression expression) {
 		if (getSubExpr(0) != null)
 			throw new RuntimeException("formula is already set!");
 		setSubExpr(0, expression);
 	}
 
+	/**
+	 * @param index - index of bound variable bound by this
+	 * 		quantifier, from left to right, with 0 for
+	 * 		the left-most bound variable of this formula.
+	 * @return Bound variable at given index.
+	 */
 	public BoundVar getVar(int index) {
 		return vars.elementAt(index);
 	}
 
+	/**
+	 * @return Number of variables bound by this quantifier.
+	 */
 	public int getLength() {
 		return vars.size();
 	}

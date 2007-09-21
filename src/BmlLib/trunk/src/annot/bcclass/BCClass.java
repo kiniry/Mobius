@@ -23,29 +23,100 @@ import annot.textio.BMLConfig;
 import annot.textio.IDisplayStyle;
 import annot.textio.Parsing;
 
+/**
+ * This class represents a bytecode class. It should be
+ * created at the beginning of using this library
+ * (for each bytecode class). This library can be used to
+ * manipulate BML annotations, while operation on bytecode
+ * itself can be performed using methods from BCEL library,
+ * but BCEL's object should be accessed from this class.
+ * JavaClass from this object (jc field) should be
+ * the same as JavaClass used for performing operations on
+ * bytecode using BCEL library. Also all BCEL methods should
+ * be accessed (or at least be the same) from this class
+ * (getMethod(index).getBCELMethod()).
+ * 
+ * @author tomekb
+ */
 public class BCClass {
 
+	/**
+	 * BCEL's JavaClass for this class, for bytecode
+	 * operations.
+	 */
 	private JavaClass jc;
+
+	/**
+	 * Method array.
+	 */
 	private BCMethod[] methods;
+
+	/**
+	 * Constant pool (including second constant pool's
+	 * constants).
+	 */
 	private BCConstantPool cp;
+
+	/**
+	 * Class invariant BML attribute
+	 */
 	private ClassInvariant invariant;
+
+	/**
+	 * A set of functions for parsing annotations.
+	 */
 	private Parsing parser;
 
+	/**
+	 * A constructor from already existing JavaClass. That
+	 * JavaClass should be used for operations on bytecode
+	 * via BCEL library.
+	 * 
+	 * @param jc - JavaClass representing bytecode class
+	 * 		this class ahould operate on.
+	 * @throws ReadAttributeException - if any of BML
+	 * 		attributes wasn't correctly parsed
+	 * 		by this library.
+	 */
 	public BCClass(JavaClass jc) throws ReadAttributeException {
-		this.parser = new Parsing(this);
 		load(jc);
 	}
 
-	public BCClass(String fileName, String className)
+	/**
+	 * A constructor from a .class file. It loads JavaClass
+	 * from that file (using BCEL) first, then loads BML
+	 * annotations from it. Don't forget to get JavaClass
+	 * from constructed object (getJC() method), instead of
+	 * creating a new instance of JavaClass using BCEL.
+	 * 
+	 * @param dirName - path of directory where .class file
+	 * 		is located, excluding directories included
+	 * 		in <code>className</code>,
+	 * @param className - package and class name of class that
+	 * 		should be loaded. For example, constructor call:
+	 * 		BCClass("C:\\workspace\\Project\\", "test.aclass");
+	 * 		searches for file:
+	 * 		C:\workspace\Project\test\aclass.class,
+	 * @throws ClassNotFoundException - iff .class file
+	 * 		could not be found,
+	 * @throws ReadAttributeException - if any of BML
+	 * 		attributes wasn't correctly parsed
+	 * 		by this library.
+	 */
+	public BCClass(String dirName, String className)
 			throws ClassNotFoundException, ReadAttributeException {
-		this.parser = new Parsing(this);
-		MLog.putMsg(MLog.PInfo, "filename="+fileName);
-		MLog.putMsg(MLog.PInfo, "className="+className);
-		ClassPath cp = new ClassPath(fileName);
+		MLog.putMsg(MLog.PInfo, "filename=" + dirName);
+		MLog.putMsg(MLog.PInfo, "className=" + className);
+		ClassPath cp = new ClassPath(dirName);
 		JavaClass jc = SyntheticRepository.getInstance(cp).loadClass(className);
 		load(jc);
 	}
 
+	/**
+	 * Displays class header, similar to one in Java.
+	 * 
+	 * @return String representation of class header.
+	 */
 	@Override
 	public String toString() {
 		String ret = "package " + jc.getPackageName() + "\n\n";
@@ -72,6 +143,11 @@ public class BCClass {
 		return ret + "\n";
 	}
 
+	/**
+	 * Dumps all bytecode of this class, with BML annotations.
+	 * 
+	 * @return string representation of this class' bytecode.
+	 */
 	public String printCode() {
 		MLog.putMsg(MLog.PProgress, "generating class' code");
 		BMLConfig conf = new BMLConfig();
@@ -83,15 +159,31 @@ public class BCClass {
 		return conf.getPrettyPrinter().afterDisplay(code);
 	}
 
+	/**
+	 * Displays constant pools.
+	 * 
+	 * @return String representation of class' constant pool,
+	 * 		including secons constant pool, if any.
+	 */
 	public String printCp() {
 		MLog.putMsg(MLog.PProgress, "displaying constant pool");
 		return cp.printCode();
 	}
 
+	/**
+	 * Initialize BCClass and read BML attributes from
+	 * given JavaClass.
+	 * 
+	 * @param jc - JavaClass to initialize from.
+	 * @throws ReadAttributeException - if any of BML
+	 * 		attributes wasn't correctly parsed
+	 * 		by this library.
+	 */
 	private void load(JavaClass jc) throws ReadAttributeException {
 		MLog.putMsg(MLog.PProgress, "initializing bcclass");
 		this.jc = jc;
 		this.cp = new BCConstantPool(jc);
+		this.parser = new Parsing(this);
 		MLog.putMsg(MLog.PInfo, "  loading class attributes");
 		Attribute[] attrs = jc.getAttributes();
 		AttributeReader ar = new AttributeReader(this);
@@ -105,18 +197,34 @@ public class BCClass {
 					.getClassName(), new ConstantPoolGen(jc.getConstantPool())));
 	}
 
+	/**
+	 * @return array of all BML annotations, ordered by their
+	 * 		occurences in string representation of bytecode.
+	 */
 	public BCPrintableAttribute[] getAllAttributes() {
 		return getAllAttributes(AType.C_ALL);
 	}
 
+	/**
+	 * Gives all attributes of type matching given bitmask.
+	 * 
+	 * @param types - set of types (bitmask), from AType
+	 * 		interface.
+	 * @return array of BML annotations of type matching
+	 * 		given bitmask (it's_type & types > 0),
+	 * 		ordered by their occurences in string
+	 * 		representation of bytecode.
+	 */
 	public BCPrintableAttribute[] getAllAttributes(int types) {
 		Vector<BCPrintableAttribute> v = new Vector<BCPrintableAttribute>();
-		if (invariant != null)
-			v.add(invariant);
+		if ((types & AType.C_CLASSINVARIANT) > 0)
+			if (invariant != null)
+				v.add(invariant);
 		for (int i = 0; i < methods.length; i++) {
 			BCMethod m = methods[i];
-			if (m.getMspec() != null)
-				v.add(m.getMspec());
+			if ((types & AType.C_METHODSPEC) > 0)
+				if (m.getMspec() != null)
+					v.add(m.getMspec());
 			if (m.getAmap() != null) {
 				InCodeAttribute[] at = m.getAmap().getAllAttributes(types);
 				for (int j = 0; j < at.length; j++)
@@ -128,6 +236,14 @@ public class BCClass {
 		return arr;
 	}
 
+	/**
+	 * Adds an BML class annotation to this class.
+	 * If given annotation is a method annotation,
+	 * nothing happens.
+	 * 
+	 * @param pa - annotation to be added.
+	 * @return if <code>pa</code> is an BML class attribute.
+	 */
 	public boolean addAttribute(BCPrintableAttribute pa) {
 		MLog.putMsg(MLog.PProgress, "adding class attribute: " + pa.toString());
 		if (pa instanceof ClassInvariant) {
@@ -137,6 +253,14 @@ public class BCClass {
 		return false;
 	}
 
+	/**
+	 * Adds Unknown class attribute to BCEL's Attribute array,
+	 * or replaces one from array if it has the same name.
+	 * 
+	 * @param arr - array of BCEL's Attributes,
+	 * @param ua - BCEL's Unknown attribute to be added.
+	 * @return <code>arr</code> with <code>ua</code> inserted.
+	 */
 	public static Attribute[] addAttribute(Attribute[] arr, Unknown ua) {
 		int n = arr.length;
 		for (int i = 0; i < n; i++)
@@ -154,6 +278,14 @@ public class BCClass {
 		return a2;
 	}
 
+	/**
+	 * Removes all Attributes used by this library from
+	 * given array.
+	 * 
+	 * @param arr - an array of BCEL's Attributes.
+	 * @return <code>arr</code> with all BML attributes
+	 * 		removed.
+	 */
 	public static Attribute[] removeBMLAttributes(Attribute[] arr) {
 		Vector<Attribute> v = new Vector<Attribute>();
 		for (int i = 0; i < arr.length; i++) {
@@ -175,7 +307,11 @@ public class BCClass {
 		return attrs;
 	}
 
-	private void saveJC() throws IOException {
+	/**
+	 * Updates it's JavaClass by writing all BML attributes
+	 * into it.
+	 */
+	private void saveJC() {
 		Method[] marr = new Method[methods.length];
 		for (int i = 0; i < methods.length; i++)
 			marr[i] = methods[i].save();
@@ -192,32 +328,62 @@ public class BCClass {
 		jc.setAttributes(attrs);
 	}
 
+	/**
+	 * Updates it's JavaClass and saves it to file.
+	 * 
+	 * @param fileName - path to file to save to.
+	 * @throws IOException - if file cannot be written.
+	 */
 	public void saveToFile(String fileName) throws IOException {
 		MLog.putMsg(MLog.PProgress, "saving to: " + fileName);
 		saveJC();
 		jc.dump(fileName);
 	}
 
+	/**
+	 * @return class invariant.
+	 */
 	public ClassInvariant getInvariant() {
 		return invariant;
 	}
 
+	/**
+	 * Sets class invariant.
+	 * 
+	 * @param invariant - new class invariant.
+	 */
 	public void setInvariant(ClassInvariant invariant) {
 		this.invariant = invariant;
 	}
 
+	/**
+	 * @return constant pool (from this library, not
+	 * BCEL's one)
+	 */
 	public BCConstantPool getCp() {
 		return cp;
 	}
 
+	/**
+	 * @return BCEL's JavaClass
+	 */
 	public JavaClass getJc() {
 		return jc;
 	}
 
+	/**
+	 * @param index - index of method (position in string
+	 * 		representation of bytecode), starting from 0
+	 * 		(including <clinit> and <init>, if any).
+	 * @return BCMethod of given index.
+	 */
 	public BCMethod getMethod(int index) {
 		return methods[index];
 	}
 
+	/**
+	 * @return object used for parsing BML annotations.
+	 */
 	public Parsing getParser() {
 		return parser;
 	}

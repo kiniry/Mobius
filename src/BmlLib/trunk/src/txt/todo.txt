@@ -6,10 +6,9 @@ TODO:
 + add type checking after parsing
 + repair prettyPrinter (any)
 + check fields / methods visibility
-- add update.txt readme file
-- add JavaDocs
++ add update.txt and readme file
++ add JavaDocs
 - integrate with Umbra
 - complete specificationCase attribute
-- add constants
 - add attributes
 - add expressions

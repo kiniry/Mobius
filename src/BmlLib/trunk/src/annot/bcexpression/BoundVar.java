@@ -8,15 +8,52 @@ import annot.io.ReadAttributeException;
 import annot.textio.BMLConfig;
 import annot.textio.Priorities;
 
+/**
+ * This class represents bound variable. It represents
+ * a variable, not it's ocurence, eg. in 'forall a ; a > 0'
+ * both occurences of 'a' are the same object.
+ * 
+ * @author tomekb
+ */
 public class BoundVar extends BCExpression {
 
+	/**
+	 * Display style (true for variable name, false
+	 * for 'var['+index+']'.
+	 */
 	public static final boolean goWriteVarNames = true;
 
+	/**
+	 * Declared type of variable.
+	 */
 	private JavaType type;
+
+	/**
+	 * Variable id. In each place in expression, all visible
+	 * bound variables have distinct ids.
+	 */
 	private int index;
+
+	/**
+	 * Quantifier where this variable was declared.
+	 */
 	private QuantifiedFormula qf;
+
+	/**
+	 * variable name.
+	 */
 	private String vname;
 
+	/**
+	 * A constructor for use in quantifier only.
+	 * Inside quantified expression use
+	 * {@link #getBoundVar(AttributeReader)} instead.
+	 * 
+	 * @param jt - declared type of variable,
+	 * @param index - variable id,
+	 * @param qf - quantifier, where it is declared,
+	 * @param vname - variable name (can be null).
+	 */
 	public BoundVar(JavaType jt, int index, QuantifiedFormula qf, String vname) {
 		super(Code.BOUND_VAR);
 		this.type = jt;
@@ -25,17 +62,31 @@ public class BoundVar extends BCExpression {
 		setVname(vname);
 	}
 
+	/**
+	 * Use this to get proper instance while reading occurence
+	 * (not declaration) of bound variable in an expression.
+	 * 
+	 * @param ar - stram to read variable id from.
+	 * @return proper bound variable (declared before,
+	 * 		at quantifier)
+	 * @throws ReadAttributeException - if <code>ar</code>
+	 * 		contains invalid variable index.
+	 */
 	public static BoundVar getBoundVar(AttributeReader ar)
 			throws ReadAttributeException {
 		int i = ar.readShort();
 		return ar.getBvar(i);
 	}
 
-	@Override
-	public int getPriority() {
-		return Priorities.LEAF;
-	}
-
+	/**
+	 * Displays expression to a String.
+	 * 
+	 * @param conf - see {@link BMLConfig}.
+	 * @return String representation of expression,
+	 * 		without (block marks (used for line-breaking
+	 * 		by prettyPrinter) and parenthness) at root.
+	 * @see BCExpression#printCode1(BMLConfig)
+	 */
 	@Override
 	public String printCode1(BMLConfig conf) {
 		String n = getVname();
@@ -44,37 +95,84 @@ public class BoundVar extends BCExpression {
 		return "var[" + index + "]";
 	}
 
+	/**
+	 * @return Simple String representation of this
+	 * 		expression, for debugging only.
+	 */
 	@Override
-	public void read(AttributeReader ar, int root)
+	public String toString() {
+		return "var[" + index + "]";
+	}
+
+	/**
+	 * This method should not be called.
+	 * 
+	 * @throws RuntimeException - always.
+	 */
+	@Override
+	protected void read(AttributeReader ar, int root)
 			throws ReadAttributeException {
 		throw new RuntimeException(
 				"read() method unavaliable, use getBoundVar() instead");
 	}
 
+	/**
+	 * Writes this expression to AttributeWirter.
+	 * 
+	 * @param aw - stream to save to.
+	 */
 	@Override
 	public void write(AttributeWriter aw) {
 		aw.writeByte(Code.BOUND_VAR);
 		aw.writeShort(index);
 	}
 
+	/**
+	 * Does nothing.
+	 */
 	@Override
-	public JavaType getType1() {
+	protected void init() {
+	}
+
+	/**
+	 * Bound variable has no subexpressions, so it has
+	 * the highest priority.
+	 * 
+	 * @return priority of this expression
+	 * 		(from annot.textio.Priorities).
+	 */
+	@Override
+	protected int getPriority() {
+		return Priorities.LEAF;
+	}
+
+	/**
+	 * Checks if all subexpression have
+	 * correct types and return type of this expression.
+	 * 
+	 * @return JavaType of result of this exrpession,
+	 * 		or null if it's invalid (if one of it's
+	 * 		subexpression have wrong type or is invalid).
+	 */
+	@Override
+	protected JavaType getType1() {
 		return type;
 	}
 
-	@Override
-	public void init() {
-	}
-
-	@Override
-	public String toString() {
-		return "var[" + index + "]";
-	}
-
+	/**
+	 * @return variable name, or null if it is unknown
+	 * 		(eg. some old .class file formats don't support
+	 * 		bound variable names).
+	 */
 	public String getVname() {
 		return vname;
 	}
 
+	/**
+	 * Sets a variable name.
+	 * 
+	 * @param vname - variable name to be set.
+	 */
 	public void setVname(String vname) {
 		this.vname = vname;
 	}

@@ -5,41 +5,68 @@ import annot.io.AttributeWriter;
 import annot.io.ReadAttributeException;
 import annot.textio.BMLConfig;
 
+/**
+ * This class represents expressions that returns an integer
+ * value.
+ * 
+ * @author tomekb
+ */
 public abstract class AbstractIntExpression extends BCExpression {
 
-	public AbstractIntExpression() {
+	/**
+	 * A constructor for 0Arg expressions.
+	 */
+	protected AbstractIntExpression() {
 		super();
 	}
 
-	public AbstractIntExpression(int connector) {
+	/**
+	 * Another constructor for 0Arg expressions.
+	 * 
+	 * @param connector - type of expression
+	 * 		(from annot.io.Code interface).
+	 */
+	protected AbstractIntExpression(int connector) {
 		super(connector);
 	}
 
-	public AbstractIntExpression(int connector, BCExpression subExpr) {
+	/**
+	 * A Constructor for unary expressions.
+	 * 
+	 * @param connector - type of expression
+	 * 		(from annot.io.Code interface),
+	 * @param subExpr - subexpression.
+	 */
+	protected AbstractIntExpression(int connector, BCExpression subExpr) {
 		super(connector, subExpr);
 	}
 
-	public AbstractIntExpression(int connector, BCExpression left,
+	/**
+	 * A constructor for binary expressions.
+	 * 
+	 * @param connector - type of expression
+	 * 		(from annot.io.Code interface),
+	 * @param left - left subexpression,
+	 * @param right - right subexrpession.
+	 */
+	protected AbstractIntExpression(int connector, BCExpression left,
 			BCExpression right) {
 		super(connector, left, right);
 	}
 
-	public AbstractIntExpression(AttributeReader ar, int root)
+	/**
+	 * A constructor from AttributeReader.
+	 * 
+	 * @param ar - stream to load from,
+	 * @param root - expression type (connector).
+	 * @throws ReadAttributeException - if connector + stream
+	 * 		in <code>ar</code> doesn't represent any
+	 * 		expression from constructing subclass.
+	 * @see BCExpression#BCExpression(AttributeReader, int)
+	 */
+	protected AbstractIntExpression(AttributeReader ar, int root)
 			throws ReadAttributeException {
 		super(ar, root);
 	}
-
-	@Override
-	public abstract int getPriority();
-
-	@Override
-	public abstract String printCode1(BMLConfig conf);
-
-	@Override
-	public abstract void read(AttributeReader ar, int root)
-			throws ReadAttributeException;
-
-	@Override
-	public abstract void write(AttributeWriter aw);
 
 }
