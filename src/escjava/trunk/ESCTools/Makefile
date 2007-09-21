@@ -437,10 +437,9 @@ releases: releases-notests
 	${MAKE} test-releases
 
 test-releases:
-	@echo "Testing release versions .........."
+	@echo "Testing binary and patch release versions .........."
 	${MAKE} test-binary-release
 	${MAKE} test-patch-release
-## FIXME:	${MAKE} test-source-release
 
 releases-notests:
 	@echo "Making release versions ${ESC_PROJECT}-${ESC_VERSION} ........"
@@ -508,6 +507,8 @@ source-release: cleanup alldocs
 	cd ${RELTEMP}; tar cjvf ${RELDIR}/${RELSRCTAR}.tbz *
 	cd ${RELTEMP}; tar czvf ${RELDIR}/${RELSRCTAR}.tgz *
 	cd ${RELTEMP}; zip -Ar ${RELDIR}/${RELSRCTAR}.zip *
+	@echo "Testing source release..."
+	$(MAKE) -C $(RELTEMP) 
 	rm -rf ${RELTEMP}
 
 patch-release: clean
