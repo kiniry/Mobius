@@ -459,21 +459,21 @@ source-release: cleanup alldocs
 	${MAKE} jars
 #	Now copy in all specs, new and old
 	rm -rf ${RELTEMP}/specs
-	cp -r ${ESCJAVA2_SPECS} ${RELTEMP}
+	cp -rf ${ESCJAVA2_SPECS} ${RELTEMP}
 	rm -rf ${RELTEMP}/original-specs
 	cp -r ${ORIG_SRC_SPECS} ${RELTEMP}
 #       Copy all source code, tests, libs, Makefiles, ChangeLog, etc.
-	cp -r ${UTILS_SOURCE_DIR} ${RELTEMP}
-	cp -r ${MOCHA_SOURCE_DIR} ${RELTEMP}
-	cp -r ${JAVAFE_SOURCE_DIR} ${RELTEMP}
-	cp -r ${ESCJAVA_SOURCE_DIR} ${RELTEMP}
+	cp -rf ${UTILS_SOURCE_DIR} ${RELTEMP}
+	cp -rf ${MOCHA_SOURCE_DIR} ${RELTEMP}
+	cp -rf ${JAVAFE_SOURCE_DIR} ${RELTEMP}
+	cp -rf ${ESCJAVA_SOURCE_DIR} ${RELTEMP}
 	cp ${XMLRPC_LIB} ${RELTEMP}/xmlrpc.jar
 	cp Makefile* ${RELTEMP}
 	cp build.xml ${RELTEMP}
 	cp prj.el ${RELTEMP}
 	cp ChangeLog ${RELTEMP}
 #	Copy Javadoc API docs
-	cp -r $(JAVADOC_GEN_DIR) ${RELTEMP}
+	cp -rf $(JAVADOC_GEN_DIR) ${RELTEMP}
 #	Copy papers and slides and other documentation
 	mkdir ${RELTEMP}/papers
 	cp papers/*.pdf ${RELTEMP}/papers
@@ -487,7 +487,7 @@ source-release: cleanup alldocs
 	cp docs/Escjava2-Logics/Escjava2-Logics.pdf ${RELTEMP}/docs
 	cp docs/Escjava2-Provers/Escjava2-Provers.pdf ${RELTEMP}/docs
 	cp docs/ESCJAVA-UsersManual.html ${RELTEMP}/docs
-	cp -r Escjava/release/master/examples ${RELTEMP}
+	cp -rf Escjava/release/master/examples ${RELTEMP}
 #	Copy actual jar files with all ESC/Java2's classfiles and the two jar files
 #       with specs in them.
 	cp esctools2.jar ${RELTEMP}
@@ -529,8 +529,8 @@ jar:	build
 	mkdir -p ${RELTEMP}/sub
 	cp ${ESCTOOLS_ROOT}/Escjava/java/escjava/vcGeneration/xml/*.xslt ${ESCJAVA_CLASSFILES}/escjava/vcGeneration/xml
 	cp ${ESCTOOLS_ROOT}/Escjava/java/escjava/vcGeneration/xml/xmlprover.dtd ${ESCJAVA_CLASSFILES}/escjava/vcGeneration/xml
-	cp -r ${JAVAFE_CLASSFILES}/* ${RELTEMP}/sub
-	cp -r ${ESCJAVA_CLASSFILES}/* ${RELTEMP}/sub
+	cp -rf ${JAVAFE_CLASSFILES}/* ${RELTEMP}/sub
+	cp -rf ${ESCJAVA_CLASSFILES}/* ${RELTEMP}/sub
 	mkdir -p ${RELTEMP}/sub/junitutils
 	( cd ${ESCTOOLS_ROOT}/Utils/junitutils; \
 	  cp `find . -name '*.class'` ${RELTEMP}/sub/junitutils )
@@ -544,10 +544,10 @@ jar:	build
 
 srcjar:
 	mkdir -p ${RELTEMP}/sub
-	cp -r ${ESCTOOLS_ROOT}/Javafe/java/* ${RELTEMP}/sub
-	cp -r ${ESCTOOLS_ROOT}/Escjava/java/* ${RELTEMP}/sub
-	cp -r ${ESCJAVA2_SPECS} ${RELTEMP}/sub/specs
-	cp -r ${ORIG_SRC_SPECS} ${RELTEMP}/sub/original-specs
+	cp -rf ${ESCTOOLS_ROOT}/Javafe/java/* ${RELTEMP}/sub
+	cp -rf ${ESCTOOLS_ROOT}/Escjava/java/* ${RELTEMP}/sub
+	cp -rf ${ESCJAVA2_SPECS} ${RELTEMP}/sub/specs
+	cp -rf ${ORIG_SRC_SPECS} ${RELTEMP}/sub/original-specs
 	mkdir -p ${RELTEMP}/sub/junitutils
 	( cd ${ESCTOOLS_ROOT}/Utils/junitutils; \
 	  cp `find . -name '*.java'` ${RELTEMP}/sub/junitutils )
@@ -568,13 +568,13 @@ binary-release: build jars alldocs cleanup
 	${MAKE} jars
 #	Now copy in all specs, new and old
 	rm -rf ${RELTEMP}/specs
-	cp -r ${ESCJAVA2_SPECS} ${RELTEMP}
+	cp -rf ${ESCJAVA2_SPECS} ${RELTEMP}
 	-find ${RELTEMP}/specs -name "CVS" -exec rm -rf {} \; > /dev/null  2>&1
 	rm -rf ${RELTEMP}/original-specs
-	cp -r ${ORIG_SRC_SPECS} ${RELTEMP}
+	cp -rf ${ORIG_SRC_SPECS} ${RELTEMP}
 	-find ${RELTEMP}/original-specs -name "CVS" -exec rm -rf {} \; > /dev/null  2>&1
 #	Copy Javadoc API docs
-	cp -r $(JAVADOC_GEN_DIR) ${RELTEMP}
+	cp -rf $(JAVADOC_GEN_DIR) ${RELTEMP}
 #	Copy papers and slides and other documentation
 	mkdir ${RELTEMP}/papers
 	cp papers/*.pdf ${RELTEMP}/papers
@@ -588,7 +588,7 @@ binary-release: build jars alldocs cleanup
 	cp docs/Escjava2-Logics/Escjava2-Logics.pdf ${RELTEMP}/docs
 	cp docs/Escjava2-Provers/Escjava2-Provers.pdf ${RELTEMP}/docs
 	cp docs/ESCJAVA-UsersManual.html ${RELTEMP}/docs
-	cp -r Escjava/release/master/examples ${RELTEMP}
+	cp -rf Escjava/release/master/examples ${RELTEMP}
 	-find ${RELTEMP}/examples -name "CVS" -exec rm -rf {} \; > /dev/null 2>&1
 #	Copy actual jar files with all ESC/Java2's classfiles and the two jar files
 #       with specs in them.
@@ -599,7 +599,7 @@ binary-release: build jars alldocs cleanup
 	${MAKE} clean-norel-noreltemp
 	${MAKE} -C Utils build
 	mkdir ${RELTEMP}/Utils
-	cp -r ${ESCTOOLS_ROOT}/Utils/BCEL ${RELTEMP}/Utils/BCEL
+	cp -rf ${ESCTOOLS_ROOT}/Utils/BCEL ${RELTEMP}/Utils/BCEL
 	cp ${ESCJAVA_ROOT}/escj ${RELTEMP}
 	cp ${ESCJAVA_ROOT}/escj.bat ${RELTEMP}
 	cp ${ESCJAVA_ROOT}/escjava2.exe ${RELTEMP}
@@ -689,8 +689,8 @@ generate-specs-archive:
 	mkdir -p ${RELTEMP}
 	rm -rf ${RELTEMP}/specs
 	rm -rf ${RELTEMP}/original-specs
-	cp -r ${ESCJAVA2_SPECS} ${RELTEMP}
-	cp -r ${ORIG_SRC_SPECS} ${RELTEMP}
+	cp -rf ${ESCJAVA2_SPECS} ${RELTEMP}
+	cp -rf ${ORIG_SRC_SPECS} ${RELTEMP}
 	-find ${RELTEMP}/specs -name "CVS" -exec rm -rf {} \;  > /dev/null 2>&1
 	-find ${RELTEMP}/original-specs -name "CVS" -exec rm -rf {} \;  > /dev/null 2>&1
 	( cd ${RELTEMP}; tar cjf ${PATCH_DIR}/${SPECS_TAR} specs original-specs; )
@@ -705,11 +705,11 @@ generate-toplevel-archive: clean
 		${ESCTOOLS_ROOT}/README.first ${ESCTOOLS_ROOT}/README.txt \
 		${ESCTOOLS_ROOT}/TODO.kotl ${ESCTOOLS_ROOT}/build.xml \
 		${ESCTOOLS_ROOT}/clean_env.sh ${RELTEMP}/ESCTools
-	cp -r ${ESCTOOLS_ROOT}/docs ${RELTEMP}/ESCTools
-	cp -r ${ESCTOOLS_ROOT}/papers ${RELTEMP}/ESCTools
-	cp -r ${ESCTOOLS_ROOT}/slides ${RELTEMP}/ESCTools
-	cp -r ${ESCTOOLS_ROOT}/Utils ${RELTEMP}/ESCTools
-	cp -r ${JAR_FILES} ${RELTEMP}/ESCTools
+	cp -rf ${ESCTOOLS_ROOT}/docs ${RELTEMP}/ESCTools
+	cp -rf ${ESCTOOLS_ROOT}/papers ${RELTEMP}/ESCTools
+	cp -rf ${ESCTOOLS_ROOT}/slides ${RELTEMP}/ESCTools
+	cp -rf ${ESCTOOLS_ROOT}/Utils ${RELTEMP}/ESCTools
+	cp -rf ${JAR_FILES} ${RELTEMP}/ESCTools
 # 	cp $(JML2_SPECS_JAR) ${RELTEMP}/ESCTools
 # 	cp $(ESCJAVA2_SPECS_JAR) ${RELTEMP}/ESCTools
 	mkdir -p ${RELTEMP}/ESCTools/Escjava/release/master/bin
