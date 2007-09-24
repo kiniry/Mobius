@@ -1,4 +1,5 @@
 /* Copyright 2000, 2001, Compaq Computer Corporation */
+/* Modified 2007, Systems Research Group, University College Dublin */
 
 package escjava.translate;
 
@@ -29,7 +30,9 @@ import escjava.prover.Atom;
 
 public class TrAnExpr {
   
-  /** This hashtable keeps track of cautions issued, with respect to
+  public static final String UNABLE_TO_PARSE = "Unable to parse this expression - might not be valid syntax";
+
+/** This hashtable keeps track of cautions issued, with respect to
    * using variables in \old pragmas that were not mentioned in modifies
    * pragmas.  The purpose of this hashtable is to prevent issuing
    * duplicate cautions.

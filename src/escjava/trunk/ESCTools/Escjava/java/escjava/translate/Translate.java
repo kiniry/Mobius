@@ -133,7 +133,9 @@ import escjava.tc.Types;
 
 public final class Translate
 {
-  Frame frameHandler = null;
+  public static final String PURE_MODIFIER_BEFORE_METHOD_SPECIFICATIONS = "The @pure modifier may not come before method specifications.";
+
+Frame frameHandler = null;
   
   // This Set contains method declarations for which axioms derived from
   // postconditions need to be added to the assumptions for verifying the body.
@@ -1659,7 +1661,14 @@ public final class Translate
     case TagConstants.EVALSTMT: 
       {
         EvalStmt x = (EvalStmt)stmt;
+        // Ticket #28 : Null pointer exception when @pure is before a method specification
+        try {
         ptrExpr(x.expr);
+        }
+        catch (Exception ex) {
+           ErrorSet.fatal(x.getStartLoc(),
+           PURE_MODIFIER_BEFORE_METHOD_SPECIFICATIONS);
+        }
         return;
       }
       

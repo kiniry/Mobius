@@ -89,7 +89,7 @@ test99	Empty	Empty
 test100 FIX    safe checking of loop invariants - fails, mjm
 test101 Omit    predicate abstraction
 
-test102 Omit    created it but not using it right now --S.Q.
+test102 Good    See https://mobius.ucd.ie/ticket/28 - dcochran
 test103 Omit	benchmarks for predicate abstraction
 test200 Good
 test201 Good

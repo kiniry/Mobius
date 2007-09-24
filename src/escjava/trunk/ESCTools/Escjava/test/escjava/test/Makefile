@@ -76,7 +76,7 @@ clean_escjava_parser_test:
 clean_out_and_diff:
 	rm -f test*/out test*/diffs out diffs
 	for f in test* ; do \
-		( cd $$f; rm -f out diffs `cat .svnignore` ;);\
+		( cd $$f; rm -f out diffs ;);\
 	done
 
 # End of file

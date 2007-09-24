@@ -180,6 +180,6 @@ skipped:
 ## Cleans all temporary files
 .PHONY: clean
 clean:
-	@rm -f `cat .svnignore` core* .sedScript
+	@rm -f core* .sedScript
 
 # End of file

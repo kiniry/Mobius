@@ -207,6 +207,6 @@ skip:
 ## Deletes all temporary files
 .PHONY: clean
 clean:
-	@rm -f `cat .svnignore` core*
+	@rm -f core*
 
 # End of file

@@ -502,7 +502,6 @@ source-release: cleanup alldocs
 	cp README.first README.txt ${RELTEMP}
 	cd release-files; cp `ls | grep -v CVS` ${RELTEMP}
 	-find ${RELTEMP} -name ".svn" -exec rm -rf {} \; > /dev/null 2>&1
-	-find ${RELTEMP} -name ".svnignore" -exec rm -rf {} \; > /dev/null  2>&1
 	-find ${RELTEMP} -name "*~" -or -name ".#*" -exec rm -f {} \; > /dev/null 2>&1
 	cd ${RELTEMP}; tar cjvf ${RELDIR}/${RELSRCTAR}.tbz *
 	cd ${RELTEMP}; tar czvf ${RELDIR}/${RELSRCTAR}.tgz *

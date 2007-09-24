@@ -130,7 +130,7 @@ clean: clean-this
 clean-this: cleanlocal
 
 cleanlocal:
-	$(DELTREE) `cat .svnignore` *.log *~
+	$(DELTREE) *.log *~
 
 clean-classes-this: remove-dot-class-files
 
