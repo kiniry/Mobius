@@ -27,7 +27,7 @@ import freeboogie.util.Err;
  * @author rgrig 
  * @author reviewed by TODO
  * @param <U> the usage type
- * @param <D> the definitiion type
+ * @param <D> the definition type
  */
 class Printer<U extends Ast, D extends Ast> extends Closure<D> {
   private String name;
