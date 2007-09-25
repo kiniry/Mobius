@@ -6,6 +6,3 @@
 
 NOTES
  * should I warn if no return is reachable?
-
-GRRRR
-Mergi ma! Te rog eu frumos.
