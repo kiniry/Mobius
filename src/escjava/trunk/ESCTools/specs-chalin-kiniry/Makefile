@@ -330,7 +330,6 @@ $(timestamppath)/src_distr.stamp: distr clean_src_distr
 	cp ChangeLog distr/koa
 	cp $(version_file) distr/koa
 	cd jars; cp -r src ../distr/koa/lib/
-	rm -rf distr/koa/lib/src/CVS
 	cat README.header > distr/$(readme_file)
 	cd distr; zip -r koa.zip koa/
 	cd distr; echo '' >> $(readme_file)

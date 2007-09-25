@@ -131,7 +131,7 @@ jmlc_test:
 
 .PHONY: fix-perms .perms-fixed
 
-## This rule is needed because CVS does not properly keep permissions
+## This rule was needed because CVS did not properly keep permissions
 ## (expecially x bits), so sometimes we need a reset.  Delete the
 ## datestamp file ".perms-fixed" to force re-execution.
 fix-perms:	.perms-fixed
@@ -212,7 +212,7 @@ clean-norel-noreltemp:
 	rm -f $(JAR_FILES)/*.jar
 	rm -f tags TAGS SpecTest.java .specs
 
-# Cleans all backups files, log files, CVS merge files, etc.
+# Cleans all backups files, log files, merge files, etc.
 cleanup:
 	-find ${ESCTOOLS_ROOT} \
 		\( -name "*~" -or -name "*.#*" -or -name "semantic.cache*" \) \
@@ -261,7 +261,7 @@ papers:
 # Choose which specs you wish to use for documentation generation and
 # typechecking.
 
-# The CVS HEAD JML specs,
+# The JML specs,
 #SPECS = ${JML_ROOT}/specs:${JML_ROOT}
 # The latest JML stable release specs.
 #SPECS = /usr/local/Java/JML/specs:/usr/local/Java/JML
@@ -331,12 +331,11 @@ jmldoc: build
 
 JML_PACKAGES=junitutils javafe escjava
 
-# TODO: Add package decsrc
 jml: build
-	$(JML) \
+	-$(JML) \
 	  --sourcepath "$(call canonicalize,$(SOURCEPATH):$(SPECS))" \
 	  --classpath "$(call canonicalize,${ESCJAVA_BUILD_CLASSPATH}:)${CLASSPATH}" \
-	  -a -A --purity -n \
+	  --assignable --Assignable --purity --defaultNonNull \
 	  --keepGoing --source 1.4 --Quiet --recursive \
 	  $(JML_PACKAGES)
 
@@ -448,61 +447,8 @@ releases-notests:
 	${MAKE} source-release
 
 source-release: cleanup alldocs
-	@echo "Creating source release .........."
-#	RELDIR is the staging area for all files
-#	First copy all .class files to sub and build a jar file
-	mkdir -p ${RELDIR}
-	rm -rf ${RELTEMP}
-	mkdir -p ${RELTEMP}
-	cp license.txt ${RELTEMP}
-	${MAKE} jars
-#	Now copy in all specs, new and old
-	rm -rf ${RELTEMP}/specs
-	cp -rf ${ESCJAVA2_SPECS} ${RELTEMP}
-	rm -rf ${RELTEMP}/original-specs
-	cp -r ${ORIG_SRC_SPECS} ${RELTEMP}
-#       Copy all source code, tests, libs, Makefiles, ChangeLog, etc.
-	cp -rf ${UTILS_SOURCE_DIR} ${RELTEMP}
-	cp -rf ${MOCHA_SOURCE_DIR} ${RELTEMP}
-	cp -rf ${JAVAFE_SOURCE_DIR} ${RELTEMP}
-	cp -rf ${ESCJAVA_SOURCE_DIR} ${RELTEMP}
-	cp ${XMLRPC_LIB} ${RELTEMP}/xmlrpc.jar
-	cp Makefile* ${RELTEMP}
-	cp build.xml ${RELTEMP}
-	cp prj.el ${RELTEMP}
-	cp ChangeLog ${RELTEMP}
-#	Copy Javadoc API docs
-	cp -rf $(JAVADOC_GEN_DIR) ${RELTEMP}
-#	Copy papers and slides and other documentation
-	mkdir ${RELTEMP}/papers
-	cp papers/*.pdf ${RELTEMP}/papers
-	mkdir ${RELTEMP}/slides
-	cp slides/ETAPSTutorial/*.pdf ${RELTEMP}/slides
-	cp slides/introjml.pdf ${RELTEMP}/slides
-	cp slides/escjava_demo.pdf ${RELTEMP}/slides
-	mkdir ${RELTEMP}/docs
-	cp docs/Escjava2-ImplementationNotes/*.pdf ${RELTEMP}/docs
-	cp docs/Escjava2-Extending/Escjava2-Extending.pdf ${RELTEMP}/docs
-	cp docs/Escjava2-Logics/Escjava2-Logics.pdf ${RELTEMP}/docs
-	cp docs/Escjava2-Provers/Escjava2-Provers.pdf ${RELTEMP}/docs
-	cp docs/ESCJAVA-UsersManual.html ${RELTEMP}/docs
-	cp -rf Escjava/release/master/examples ${RELTEMP}
-#	Copy actual jar files with all ESC/Java2's classfiles and the two jar files
-#       with specs in them.
-	cp esctools2.jar ${RELTEMP}
-	cp $(ESCJAVA2_SPECS_JAR) ${RELTEMP}
-#	cp $(JML2_SPECS_JAR) ${RELTEMP}
-# 	Copy other miscellaneous files
-	${MAKE} clean-norel-noreltemp
-	cp ${ESCJAVA_ROOT}/escj ${RELTEMP}
-	cp ${ESCJAVA_ROOT}/escj.bat ${RELTEMP}
-	cp ${ESCJAVA_ROOT}/escjava2.exe ${RELTEMP}
-	cp ${ESCJAVA_ROOT}/escjava2.sample ${RELTEMP}
-	cp ${ESCJ_SIMPLIFY_DIR}/Simplify-1.5.4* ${RELTEMP}
-	cp README.first README.txt ${RELTEMP}
-	cd release-files; cp `ls | grep -v CVS` ${RELTEMP}
-	-find ${RELTEMP} -name ".svn" -exec rm -rf {} \; > /dev/null 2>&1
-	-find ${RELTEMP} -name "*~" -or -name ".#*" -exec rm -f {} \; > /dev/null 2>&1
+	@echo "Exporting source release .........."
+    svn export https://mobius.ucd.ie/repos/src/escjava/trunk/ESCTools ${RELTEMP}
 	cd ${RELTEMP}; tar cjvf ${RELDIR}/${RELSRCTAR}.tbz *
 	cd ${RELTEMP}; tar czvf ${RELDIR}/${RELSRCTAR}.tgz *
 	cd ${RELTEMP}; zip -Ar ${RELDIR}/${RELSRCTAR}.zip *
@@ -535,7 +481,6 @@ jar:	build
 	( cd ${ESCTOOLS_ROOT}/Utils/junitutils; \
 	  cp `find . -name '*.class'` ${RELTEMP}/sub/junitutils )
 	( cd ${RELTEMP}/sub; jar xf $(ESCJAVA2_SPECS_JAR) )
-	( cd ${RELTEMP}/sub; rm -rf `find . -name CVS`; )
 	( cd ${RELTEMP}/sub; jar cmf ../../manifest.txt \
 	  ${RELJAR} *; jar i ${RELJAR}; )
 #	 ${JARMUPDATE} manifest.txt ${RELJAR}
@@ -551,7 +496,6 @@ srcjar:
 	mkdir -p ${RELTEMP}/sub/junitutils
 	( cd ${ESCTOOLS_ROOT}/Utils/junitutils; \
 	  cp `find . -name '*.java'` ${RELTEMP}/sub/junitutils )
-	( cd ${RELTEMP}/sub; rm -rf `find . -name CVS`; )
 	( cd ${RELTEMP}/sub; jar cf ${RELSRCJAR} *; )
 	rm -rf ${RELTEMP}/sub
 	cp ${RELSRCJAR} ${ESCTOOLS_ROOT}
@@ -569,10 +513,8 @@ binary-release: build jars alldocs cleanup
 #	Now copy in all specs, new and old
 	rm -rf ${RELTEMP}/specs
 	cp -rf ${ESCJAVA2_SPECS} ${RELTEMP}
-	-find ${RELTEMP}/specs -name "CVS" -exec rm -rf {} \; > /dev/null  2>&1
 	rm -rf ${RELTEMP}/original-specs
 	cp -rf ${ORIG_SRC_SPECS} ${RELTEMP}
-	-find ${RELTEMP}/original-specs -name "CVS" -exec rm -rf {} \; > /dev/null  2>&1
 #	Copy Javadoc API docs
 	cp -rf $(JAVADOC_GEN_DIR) ${RELTEMP}
 #	Copy papers and slides and other documentation
@@ -589,7 +531,6 @@ binary-release: build jars alldocs cleanup
 	cp docs/Escjava2-Provers/Escjava2-Provers.pdf ${RELTEMP}/docs
 	cp docs/ESCJAVA-UsersManual.html ${RELTEMP}/docs
 	cp -rf Escjava/release/master/examples ${RELTEMP}
-	-find ${RELTEMP}/examples -name "CVS" -exec rm -rf {} \; > /dev/null 2>&1
 #	Copy actual jar files with all ESC/Java2's classfiles and the two jar files
 #       with specs in them.
 	cp esctools2.jar ${RELTEMP}
@@ -607,7 +548,6 @@ binary-release: build jars alldocs cleanup
 	cp ${ESCJ_SIMPLIFY_DIR}/Simplify-1.5.4* ${RELTEMP}
 #   The two readme files below are irrelevant for binary release
 #   cp README.first README.txt ${RELTEMP}
-	cd release-files; cp `ls | grep -v CVS` ${RELTEMP}
 	-find ${RELTEMP} -name "*~" -exec rm -f {} \; > /dev/null 2>&1
 	cd ${RELTEMP}; tar cjvf ${RELDIR}/${RELTAR}.tbz *
 	cd ${RELTEMP}; tar czvf ${RELDIR}/${RELTAR}.tgz *
@@ -660,23 +600,23 @@ PATCH_PREFIX = ${PATCH_DIR}/${PATCH_NAME}
 generate-patches: clean
 	@echo "Generating patches..."
 	( cd ${ESCTOOLS_ROOT}/.. ; mkdir -p ${PATCH_DIR}; \
-	LC_ALL=C TZ=UTC0 diff -Naur --exclude=*.class --exclude=.#* --exclude=CVS \
+	LC_ALL=C TZ=UTC0 diff -Naur --exclude=*.class --exclude=.#* --exclude=.svn \
 		--exclude=Simplify-1* ${ESCTOOLS_ORIGINAL}/Calvin ESCTools/Calvin \
 		| bzip2 > ${PATCH_DIR}/${CALVIN_PATCHES}; \
-	LC_ALL=C TZ=UTC0 diff -Naur --exclude=*.class --exclude=.#* --exclude=CVS \
+	LC_ALL=C TZ=UTC0 diff -Naur --exclude=*.class --exclude=.#* --exclude=.svn \
 		--exclude=Simplify-1* --exclude=javadoc \
 		${ESCTOOLS_ORIGINAL}/Escjava ESCTools/Escjava \
 		| bzip2 > ${PATCH_DIR}/${ESCJAVA_PATCHES}; \
-	LC_ALL=C TZ=UTC0 diff -Naur --exclude=*.class --exclude=.#* --exclude=CVS \
+	LC_ALL=C TZ=UTC0 diff -Naur --exclude=*.class --exclude=.#* --exclude=.svn \
 		${ESCTOOLS_ORIGINAL}/Houdini ESCTools/Houdini \
 		| bzip2 > ${PATCH_DIR}/${HOUDINI_PATCHES}; \
-	LC_ALL=C TZ=UTC0 diff -Naur --exclude=*.class --exclude=.#* --exclude=CVS \
+	LC_ALL=C TZ=UTC0 diff -Naur --exclude=*.class --exclude=.#* --exclude=.svn \
 		${ESCTOOLS_ORIGINAL}/Javafe ESCTools/Javafe \
 		| bzip2 > ${PATCH_DIR}/${JAVAFE_PATCHES}; \
-	LC_ALL=C TZ=UTC0 diff -Naur --exclude=*.class --exclude=.#* --exclude=CVS \
+	LC_ALL=C TZ=UTC0 diff -Naur --exclude=*.class --exclude=.#* --exclude=.svn \
 		${ESCTOOLS_ORIGINAL}/Rcc ESCTools/Rcc \
 		| bzip2 > ${PATCH_DIR}/${RCC_PATCHES}; \
-	LC_ALL=C TZ=UTC0 diff -Naur --exclude=PPC_DARWIN --exclude=.#* --exclude=CVS \
+	LC_ALL=C TZ=UTC0 diff -Naur --exclude=PPC_DARWIN --exclude=.#* --exclude=.svn \
 		--exclude=*.dylib --exclude=*.a --exclude=*.io --exclude=*.mo \
 		${ESCTOOLS_ORIGINAL}/Simplify ESCTools/Simplify \
 		| bzip2 > ${PATCH_DIR}/${SIMPLIFY_PATCHES}; \

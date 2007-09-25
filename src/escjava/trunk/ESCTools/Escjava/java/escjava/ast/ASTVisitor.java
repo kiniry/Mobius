@@ -25,7 +25,7 @@ public abstract class ASTVisitor extends Visitor {
     super();
   }
 
-  public void visitASTNode(ASTNode x) {
+  public void visitASTNode(/*@non_null*/ASTNode x) {
     // a child of this node
     Object child = null;
     // temporary ASTNode

@@ -153,9 +153,9 @@ export TEXI2PDF ?= texi2pdf
 ## file, which is used by Main.java to provide a version string.
 
 export ESC_PROJECT ?= ESCJava
-export ESC_VERSION ?= CURRENT-CVS
+export ESC_VERSION ?= CURRENT
 
-export COPYRIGHT = 'ESC/Java2<br />&copy; 2003,2004,2005,2006 David Cok and Joseph Kiniry<br />&copy; 2005,2006 UCD Dublin<br />&copy; 2003,2004 Radboud University Nijmegen<br />&copy; 1999,2000 Compaq Computer Corporation<br />&copy; 1997,1998,1999 Digital Equipment Corporation<br />All Rights Reserved'
+export COPYRIGHT = 'ESC/Java2<br />&copy; 2003,2004,2005,2006 David Cok and Joseph Kiniry<br />&copy; 2005,2006,2007 UCD Dublin<br />&copy; 2003,2004 Radboud University Nijmegen<br />&copy; 1999,2000 Compaq Computer Corporation<br />&copy; 1997,1998,1999 Digital Equipment Corporation<br />All Rights Reserved'
 
 ##########################################################################
 ## The following definitions are used in various Makefiles and should

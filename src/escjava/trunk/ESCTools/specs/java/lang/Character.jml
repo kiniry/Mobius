@@ -521,10 +521,8 @@ public /*@ pure @*/ final
       @                         ch == '\u001C' ||  // FILE SEPARATOR
       @                         ch == '\u001D' ||  // GROUP SEPARATOR
       @                         ch == '\u001E' ||  // RECORD SEPARATOR
-      @                         ch == '\u001F';    // UNIT SEPARATOR */
-     /*>>> commenting out as the comments is translated into result==true at the moment 
-      >@   ensures_redundantly  \result <==> (* ch is a Java whitespace character *);
-      >@*/
+      @                         ch == '\u001F';    // UNIT SEPARATOR 
+      @*/
     public static /*@ pure @*/ boolean isWhitespace(char ch); 
 
     /*@  public normal_behavior
