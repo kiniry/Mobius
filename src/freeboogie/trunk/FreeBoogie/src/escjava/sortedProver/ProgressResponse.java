@@ -25,7 +25,7 @@ public class ProgressResponse extends SortedProverResponse {
    * Can be called by the reciver to tell the prover to stop trying to prove the
    * formula.
    * 
-   * @note not sure about this one, maybe it's better to have a method in
+   * note: not sure about this one, maybe it's better to have a method in
    *       SortedProver?
    */
   public void stopTrying() {}
