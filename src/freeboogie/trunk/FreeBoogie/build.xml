@@ -65,6 +65,7 @@
   <target name="doc" description="generate javadoc">
     <javadoc destdir="${doc}" sourcepath="${src}">
       <package name="freeboogie.*" />
+      <package name="escjava.*" />
       <classpath refid="classpath" />
     </javadoc>
   </target>

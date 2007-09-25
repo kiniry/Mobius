@@ -1,11 +1,8 @@
- 6 integrate Michal's sorted prover
+ 8 subclass NodeBuilder and SortedProver
 24 VC generation
  1 remove extra files (from build.xml)
  3 sometimes not everything is rebuilt by "ant", why?
  6 simple interface to parse from strings
-OBS At this point the visiting infrastructure should sort of work.
 
 NOTES
  * should I warn if no return is reachable?
- 
-Commit message:
