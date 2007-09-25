@@ -131,7 +131,7 @@ jmlc_test:
 
 .PHONY: fix-perms .perms-fixed
 
-## This rule was needed because CVS did not properly keep permissions
+## This rule was needed because the repository did not properly keep permissions
 ## (expecially x bits), so sometimes we need a reset.  Delete the
 ## datestamp file ".perms-fixed" to force re-execution.
 fix-perms:	.perms-fixed
@@ -463,6 +463,7 @@ patch-release: clean
 	${MAKE} jars generate-patches generate-archives zero-length-files
 	cp ${ESCTOOLS_ROOT}/install.sh ${PATCH_DIR}
 	mkdir -p ${RELDIR}
+	-find ${PATCH_DIR} -name ".svn" -print | xargs rm -rf
 	cd ${PATCH_DIR}; tar cvjf ${RELDIR}/${RELPATCHTAR}.tbz .
 	cd ${PATCH_DIR}; tar cvzf ${RELDIR}/${RELPATCHTAR}.tgz .
 	cd ${PATCH_DIR}; zip -Ar ${RELDIR}/${RELPATCHTAR}.zip .
@@ -549,6 +550,7 @@ binary-release: build jars alldocs cleanup
 #   The two readme files below are irrelevant for binary release
 #   cp README.first README.txt ${RELTEMP}
 	-find ${RELTEMP} -name "*~" -exec rm -f {} \; > /dev/null 2>&1
+	-find ${RELTEMP} -name ".svn" -print | xargs rm -rf
 	cd ${RELTEMP}; tar cjvf ${RELDIR}/${RELTAR}.tbz *
 	cd ${RELTEMP}; tar czvf ${RELDIR}/${RELTAR}.tgz *
 	cd ${RELTEMP}; zip -Ar ${RELDIR}/${RELTAR}.zip *
@@ -562,7 +564,7 @@ test-binary-release:
 	cd ${RELTEST} ;\
 	    unset ESC_CLASSPATH ; \
 	    tar xjf ${RELTAR}.tbz ;\
-	    ./quicktest
+	    {RELDIR}/quicktest
 
 ## Note - we need to unset lots of environmental variables here because we
 ## want them to be reset based on the value of ESC_RELEASE in install.sh.
@@ -631,8 +633,6 @@ generate-specs-archive:
 	rm -rf ${RELTEMP}/original-specs
 	cp -rf ${ESCJAVA2_SPECS} ${RELTEMP}
 	cp -rf ${ORIG_SRC_SPECS} ${RELTEMP}
-	-find ${RELTEMP}/specs -name "CVS" -exec rm -rf {} \;  > /dev/null 2>&1
-	-find ${RELTEMP}/original-specs -name "CVS" -exec rm -rf {} \;  > /dev/null 2>&1
 	( cd ${RELTEMP}; tar cjf ${PATCH_DIR}/${SPECS_TAR} specs original-specs; )
 	rm -rf ${RELTEMP}/specs ${RELTEMP}/original-specs
 
@@ -653,9 +653,8 @@ generate-toplevel-archive: clean
 # 	cp $(JML2_SPECS_JAR) ${RELTEMP}/ESCTools
 # 	cp $(ESCJAVA2_SPECS_JAR) ${RELTEMP}/ESCTools
 	mkdir -p ${RELTEMP}/ESCTools/Escjava/release/master/bin
-	cp ${ESCTOOLS_ROOT}/Escjava/release/master/bin/Simplify-1.5.4.macosx \
+	cp ${ESCTOOLS_ROOT}/Escjava/release/master/bin/Simplify-1.5.4.* \
 		${RELTEMP}/ESCTools/Escjava/release/master/bin
-	-find ${RELTEMP}/ESCTools -name "CVS" -exec rm -rf {} \;  > /dev/null  2>&1
 	( cd ${RELTEMP}/ESCTools; tar cjf ${PATCH_DIR}/${TOPLEVEL_TAR} . ; )
 	rm -rf ${RELTEMP}/ESCTools
 
