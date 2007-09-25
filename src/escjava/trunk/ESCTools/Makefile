@@ -564,7 +564,7 @@ test-binary-release:
 	cd ${RELTEST} ;\
 	    unset ESC_CLASSPATH ; \
 	    tar xjf ${RELTAR}.tbz ;\
-	    {RELDIR}/quicktest
+	    ${RELDIR}/quicktest
 
 ## Note - we need to unset lots of environmental variables here because we
 ## want them to be reset based on the value of ESC_RELEASE in install.sh.
