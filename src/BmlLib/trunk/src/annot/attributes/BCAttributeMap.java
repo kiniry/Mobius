@@ -106,7 +106,7 @@ public class BCAttributeMap {
 		if (map.containsKey(ica.getIh())) {
 			map.get(ica.getIh()).addAttribute(ica);
 		} else {
-			SingleList sl = new SingleList();
+			SingleList sl = new SingleList(method, ica.getIh());
 			sl.addAttribute(ica);
 			map.put(ica.getIh(), sl);
 		}
@@ -168,7 +168,7 @@ public class BCAttributeMap {
 	public SingleList getAllAt(InstructionHandle ih) {
 		SingleList sl = map.get(ih);
 		if (sl == null)
-			return new SingleList(); //XXX new?
+			return new SingleList(method, ih); //XXX new?
 		return sl;
 	}
 

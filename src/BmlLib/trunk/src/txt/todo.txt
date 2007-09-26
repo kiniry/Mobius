@@ -1,13 +1,10 @@
 TODO:
-
-+ replace constantPool
-+ repair nested quantifiers saving / loading
-+ remove 'forall' filed from quantifiedFormula
-+ add type checking after parsing
-+ repair prettyPrinter (any)
-+ check fields / methods visibility
-+ add update.txt and readme file
-+ add JavaDocs
+> create CodeFragment class
+	- initialize changes range and affected structure's code
+	> complete parse method's branches
+		- replacing method
+		- relpacing whole class
+	- write tests for new functionality
 - integrate with Umbra
 - complete specificationCase attribute
 - add attributes

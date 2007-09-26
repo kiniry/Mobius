@@ -13,7 +13,7 @@
 	test.Testuj (it should not crash and it should display that
 	all tests passes).
 
-3. Using this library.
+3. Using this library [may change soon].
 	Create a annot.bcclass.BCClass (from JavaClass or from
 	filename), it represents a bytecode class. Use it's
 	getMethod(int) method to get bytecode methods, or

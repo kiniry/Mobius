@@ -173,6 +173,20 @@ public class BCMethod {
 	}
 
 	/**
+	 * Computes pc numbers for each bytecode instruction of
+	 * a method containing this annotation and returns,
+	 * and returns pc number of instruction this annotation
+	 * is attached to.
+	 * 
+	 * @return pc number of this annotation's
+	 * 		bytecode instruction.
+	 */
+	public int getPC(InstructionHandle ih) {
+		bcelMethod.getInstructionList().setPositions();
+		return ih.getPosition();
+	}
+	
+	/**
 	 * Computes instructions pc numbers (for all instructions)
 	 * and searches for instruction of given PC number.
 	 * 

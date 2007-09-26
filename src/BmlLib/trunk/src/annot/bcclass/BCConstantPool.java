@@ -100,6 +100,18 @@ public class BCConstantPool {
 	}
 
 	/**
+	 * Appends a constant to primary constant pool.
+	 * Cannot be used in saving to \ loading from file.
+	 * 
+	 * @param c
+	 */
+	public void addPrimary(Constant c) {
+		//XXX untested!
+		constants.add(initialSize, c);
+		initialSize++;
+	}
+	
+	/**
 	 * Appends a constant to the second constant pool.
 	 * 
 	 * @param c - Constant to be added.
@@ -113,6 +125,7 @@ public class BCConstantPool {
 	 * second constant pool have indexes starting from
 	 * <code>initialSize</code>, while constants from primary
 	 * constant pool have indexes from 0 to initialSize - 1.
+	 * Can be used in loading from file only.
 	 * 
 	 * @param i - constant index
 	 * @return i-th constant.

@@ -4,6 +4,9 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import org.apache.bcel.generic.InstructionHandle;
+
+import annot.bcclass.BCMethod;
 import annot.bcclass.MLog;
 import annot.textio.BMLConfig;
 import annot.textio.Parsing;
@@ -17,14 +20,30 @@ import annot.textio.Parsing;
 public class SingleList implements Comparable<SingleList> {
 
 	/**
-	 * collection containing the annotations.
+	 * Collection containing the annotations.
 	 */
 	private LinkedList<InCodeAttribute> attributes;
 
 	/**
-	 * A standard constructor. Creates an empty list.
+	 * Bytecode instruction that all annotations from this
+	 * list are attached to.
 	 */
-	public SingleList() {
+	private InstructionHandle ih;
+	
+	private BCMethod method;
+	
+	/**
+	 * A standard constructor. Creates an empty list.
+	 * This list will contain all annotations attached
+	 * to given <code>instruction</code>.
+	 * 
+	 * @param method - method of an bytecode instruction
+	 * 		for this list.
+	 * @param ih - bytecode instruction for this list.
+	 */
+	public SingleList(BCMethod method, InstructionHandle ih) {
+		this.method = method;
+		this.ih = ih;
 		attributes = new LinkedList<InCodeAttribute>();
 	}
 
@@ -172,9 +191,15 @@ public class SingleList implements Comparable<SingleList> {
 	 * 		or -1 if list is empty.
 	 */
 	public int getPC() {
-		if (attributes.size() == 0)
-			return -1;
-		return attributes.getFirst().getPC();
+		return method.getPC(ih);
+	}
+
+	/**
+	 * @return bytecode instruction that all annotations from this
+	 * list are attached to.
+	 */
+	public InstructionHandle getIh() {
+		return ih;
 	}
 
 	/**

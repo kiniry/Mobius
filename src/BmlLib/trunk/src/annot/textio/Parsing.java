@@ -152,7 +152,9 @@ public class Parsing {
 	 * 		class annotations),
 	 * @param ih - instructionHandle of parsing annotation, 
 	 * @param minor - minor number of parsing annotation,
-	 * @param str - new String representation to be parsed,
+	 * @param str - new String representation to be parsed
+	 * 		(without surrounding comment - use
+	 * 		{@link #purge(String)} method to remove comment),
 	 * @return new BCPrintableAttribute parsed from
 	 * 		<code>str</code>.
 	 * @throws RecognitionException - if <code>str</code>
@@ -182,7 +184,9 @@ public class Parsing {
 	 * 		class annotations),
 	 * @param ih - instructionHandle of parsing annotation, 
 	 * @param minor - minor number of parsing annotation,
-	 * @param str - new String representation to be parsed,
+	 * @param str - new String representation to be parsed
+	 * 		(without surrounding comment - use
+	 * 		{@link #purge(String)} method to remove comment),
 	 * @return true iff <code>str</code> is correct, false
 	 * 		otherwise.
 	 */

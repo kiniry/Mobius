@@ -16,7 +16,7 @@ public final class CodeSearch {
 	/**
 	 * @return array of all keywords.
 	 */
-	private static String[] getAllAttributeNames() {
+	public static String[] getAllAttributeNames() {
 		String[] ret = { IDisplayStyle._classInvariant,
 				IDisplayStyle._requires, IDisplayStyle._precondition,
 				IDisplayStyle._postcondition, IDisplayStyle._assert };

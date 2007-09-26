@@ -153,8 +153,7 @@ public abstract class InCodeAttribute extends BCPrintableAttribute implements
 	 * 		bytecode instruction.
 	 */
 	public int getPC() {
-		method.getInstructions().setPositions();
-		return ih.getPosition();
+		return method.getPC(ih);
 	}
 
 	/**

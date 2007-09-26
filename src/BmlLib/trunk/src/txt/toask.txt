@@ -5,6 +5,9 @@
 - czy przejmowac sie wydajnoscia i kiedy?
 - czy BCConstantPool powinien byc kolekcja stalych, czy
 	dwoma zwyklymi (BCEL-owymi) constantPool-ami?
+- czy stale z second constant poola powinny miec indeksy
+	od rozmiaru pierwszego constant poola w gore, czy od
+	65535 w dol?
 - jak pozbyc sie warningow o operatorach?
 - co oznacza 'final' przy definicji klasy?
 - czy annotacje powinny byc do wszystkich klas, pol i metod
