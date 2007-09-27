@@ -13,6 +13,7 @@ import annot.attributes.SingleAssert;
 import annot.attributes.SpecificationCase;
 import annot.bcclass.BCClass;
 import annot.bcclass.BCMethod;
+import annot.bcclass.MLog;
 import annot.bcexpression.BoundVar;
 import annot.bcexpression.JavaType;
 import annot.bcexpression.NumberLiteral;
@@ -23,6 +24,7 @@ import annot.formula.Predicate2Ar;
 import annot.formula.QuantifiedFormula;
 import annot.io.Code;
 import annot.io.ReadAttributeException;
+import annot.textio.CodeFragment;
 import annot.textio.CodeSearch;
 import annot.textio.Parsing;
 
@@ -157,6 +159,35 @@ public final class OldTests {
 		}
 	}
 
+	/**
+	 * Creates a pseudo-random formula. Each call of this
+	 * function with the same parameters will give the same
+	 * formula (similar, but not the same object).
+	 * 
+	 * @param size - depth of generated formula,
+	 * @param seed - another parameter,
+	 * @return a formula, containing (at most) true, false,
+	 * 		conniunction, alternative and negation.
+	 */
+	private static AbstractFormula getSampleFormula(int size, int seed) {
+		seed %= 1000000;
+		seed++;
+		if (size <= 0) {
+			switch (seed % 2) {
+			case 0: return Predicate0Ar.FALSE;
+			case 1: return Predicate0Ar.TRUE;
+			default: throw new RuntimeException("internal tests error");
+			}
+		}else {
+			switch (seed % 3) {
+			case 0: return new Formula(Code.AND, getSampleFormula(size-1, seed*5), getSampleFormula(size-1, seed*7));
+			case 1: return new Formula(Code.OR, getSampleFormula(size-1, seed*11), getSampleFormula(size-1, seed*13));
+			case 2: return new Formula(Code.NOT, getSampleFormula(size-1, seed*17));
+			default: throw new RuntimeException("internal tests error");
+			}
+		}
+	}
+	
 	// below are some test scenarios. They can throw many
 	// exception that are catched in main method.
 	// An exception usually means an error in BmlLib library
@@ -208,16 +239,20 @@ public final class OldTests {
 	 */
 	public static BCClass createSampleClass() throws ClassNotFoundException,
 			ReadAttributeException {
-		System.out.println(xxx);
+		MLog.putMsg(MLog.PInfo, xxx);
 		bcc = new BCClass(Paths.path, "test.Empty2");
 		BCMethod m2 = bcc.getMethod(3);
-		SingleAssert a1 = new SingleAssert(m2, 58, -1);
+		AbstractFormula f1 = getSampleFormula(5, 0);
+		SingleAssert a1 = new SingleAssert(m2, 58, -1, f1);
 		m2.addAttribute(a1);
-		SingleAssert a2 = new SingleAssert(m2, 58, -1);
+		AbstractFormula f2 = getSampleFormula(5, 1);
+		SingleAssert a2 = new SingleAssert(m2, 58, -1, f2);
 		m2.addAttribute(a2);
-		SingleAssert a3 = new SingleAssert(m2, 46, -1);
+		AbstractFormula f3 = getSampleFormula(5, 2);
+		SingleAssert a3 = new SingleAssert(m2, 46, -1, f3);
 		m2.addAttribute(a3);
-		SingleAssert a4 = new SingleAssert(m2, 58, -1);
+		AbstractFormula f4 = getSampleFormula(5, 3);
+		SingleAssert a4 = new SingleAssert(m2, 58, -1, f4);
 		m2.addAttribute(a4);
 		MethodSpecification ms = new MethodSpecification(m2);
 		m2.setMspec(ms);
@@ -269,27 +304,70 @@ public final class OldTests {
 			all[i].remove();
 		refresh();
 	}
-
+	
 	/**
-	 * Another simple test scenario.
+	 * Another test scenario, for parsing large fragments
+	 * of code.
 	 */
-	private static void addRemoveTest2() throws ClassNotFoundException,
-			ReadAttributeException, RecognitionException, IOException {
-		String code = createSampleClass().printCode();
-		System.out.println(xxx);
-		int[] w = CodeSearch.where(code, 104);
-		System.out.println("m=" + w[0] + "  p=" + w[1] + "  m=" + w[2] + "  l="
-				+ w[3]);
-		BCPrintableAttribute pa = CodeSearch
-				.findAttributeAtLine(bcc, code, 104);
-		System.out.println(pa.getClass().toString());
-		String str = Parsing.purge("/* \\requires false */");
-		System.out.println("|" + str + "|");
-		BCMethod m = bcc.getMethod(w[0]);
-		pa.parse(str);
-		System.out.println(xxx);
-		code = bcc.printCode();
+	private static void attributeSearchTest() throws ClassNotFoundException,
+			ReadAttributeException {
+		bcc = createSampleClass();
+		String code = bcc.printCode();
 		System.out.println(addLineNumbers(code));
+		System.out.println(xxx);
+		String[] lines = code.split("\n");
+		for (int i=0; i<lines.length; i++)
+			System.out.println(i+": "+CodeFragment.getKeyword(lines[i]));
+		System.out.println(xxx);
+		for (int i=0; i<lines.length; i++) {
+			int[] p = CodeFragment.where(code, i, 3);
+			if (p == null) {
+				System.out.println(i+": null");
+			} else {
+				System.out.println(i+": ["+p[0]+", "+p[1]+
+					", "+p[2]+"]" + ((p[3]!=0) ? " *" : ""));
+			}
+		}
+		System.out.println("total code length: " + code.length());
+		CodeFragment cf = new CodeFragment(bcc, code);
+		System.out.println("### stage 1");
+		cf.modify(2500, 20, "| false) && (true |");
+		System.out.println(cf.toString());
+		if (!cf.correct())
+			throw new RuntimeException("test 1: code replace failed!");
+		cf = new CodeFragment(bcc, code);
+		System.out.println("### stage 2");
+		cf.modify(2600, 50, "ue || false))))\n * \\assert ((true ==> true) && (false || true");
+		System.out.println(cf.toString());
+		if (!cf.correct())
+			throw new RuntimeException("test 2: code replace failed!");
+		cf = new CodeFragment(bcc, code);
+		System.out.println("### stage 3");
+		cf.modify(2000, 500,
+				"    ~(~(~false))) &&\n"+
+				" *    ((false && false || ~false) &&\n"+
+				" *        (false && true || ~false) ||\n"+
+				" *      ~(~(~false)))\n"+
+				" */\n"+
+				"46:   getstatic		test.Empty2.l I (10)\n"+
+				"49:   invokevirtual	java.lang.StringBuilder.append (I)Ljava/lang/StringBuilder; (42)\n"+
+				"52:   invokevirtual	java.lang.StringBuilder.toString ()Ljava/lang/String; (51)\n"+
+				"55:   invokevirtual	java.io.PrintStream.println (Ljava/lang/String;)V (55)\n"+
+				"/*\n"+ 
+				" * \\assert ((false || false) &&\n"+
+				" *          (false || false) || ~false) &&\n"+
+				" *      ((false |");
+		System.out.println(cf.toString());
+		if (!cf.correct())
+			throw new RuntimeException("test 3: code replace failed!");
+		cf = new CodeFragment(bcc, code);
+		System.out.println("### stage 4");
+		cf.modify(2600, 50,
+				"ad\n65:   ireturn\n\n/* \requires false */\n"+
+				"public static void main(String[] args)\n0");
+		System.out.println(cf.toString());
+		if (!cf.correct())
+			throw new RuntimeException("test 4: code replace failed!");
 	}
 
 	/**
@@ -327,9 +405,9 @@ public final class OldTests {
 	 */
 	public static void main(String[] args) {
 		try {
-			addRemoveTest();
-			addRemoveTest2();
-			pp_test();
+//			addRemoveTest();
+			attributeSearchTest();
+//			pp_test();
 			System.out.println("done.");
 		} catch (Exception e) {
 			System.out.println("error!");

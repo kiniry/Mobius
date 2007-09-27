@@ -1,10 +1,5 @@
 TODO:
-> create CodeFragment class
-	- initialize changes range and affected structure's code
-	> complete parse method's branches
-		- replacing method
-		- relpacing whole class
-	- write tests for new functionality
+- create CodeFragment class
 - integrate with Umbra
 - complete specificationCase attribute
 - add attributes

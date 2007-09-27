@@ -8,6 +8,8 @@
 - czy stale z second constant poola powinny miec indeksy
 	od rozmiaru pierwszego constant poola w gore, czy od
 	65535 w dol?
+- czy moge zalozyc, ze kazda adnotacja bedzie w innej linii?
+- czy moze wogole uzyc antlr-a do parsowania calej klasy?
 - jak pozbyc sie warningow o operatorach?
 - co oznacza 'final' przy definicji klasy?
 - czy annotacje powinny byc do wszystkich klas, pol i metod

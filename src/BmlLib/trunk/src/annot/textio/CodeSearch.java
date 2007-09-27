@@ -11,6 +11,7 @@ import annot.bcclass.MLog;
  * 
  * @author tomekb
  */
+@Deprecated
 public final class CodeSearch {
 
 	/**
@@ -74,7 +75,7 @@ public final class CodeSearch {
 	 * @return wether <code>str</code> is a annotation
 	 * 		keyword or not.
 	 */
-	private static boolean isAttributeStr(String str) {
+	public static boolean isAttributeStr(String str) {
 		String[] all = getAllAttributeNames();
 		for (int i = 0; i < all.length; i++)
 			if (all[i].equals(str))
@@ -89,7 +90,7 @@ public final class CodeSearch {
 	 * @return wether <code>str</code> is a String
 	 * 		representation of number or not.
 	 */
-	private static boolean isNumber(String str) {
+	public static boolean isNumber(String str) {
 		return str.matches("[0-9]+");
 	}
 

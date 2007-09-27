@@ -41,3 +41,7 @@ This document describes changes in code required to extend
 	- update AttributeReader.readExpression(),
 	- add parser rules to grammatic (annot.textio.BML.g3),
 	- create test cases in test.Testuj.ParserTest().
+
+4. To change display style:
+	- change IdisplayStyle interface,
+	- update CodeSearch.getKeyword.
