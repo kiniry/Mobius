@@ -185,6 +185,18 @@ t *);
       @      ensures (\forall int i; 0 <= i && i < length;
       @                 sa[(int)(srcPos+i)] == da[(int)(destPos+i)]);
       @   |}
+           also
+    requires \elemtype(\typeof(src)) == \type(byte) &&
+       \elemtype(\typeof(dest)) == \type(byte) &&
+      @                 srcPos + length <= ((byte[])src).length
+      @                && destPos + length <= ((byte[])dest).length;
+      @   {|
+      @      old long [] sa = (byte[]) src;
+      @      old long [] da = (byte[]) dest;
+      @      assignable da[destPos .. destPos + length - 1];
+      @      ensures (\forall int i; 0 <= i && i < length;
+      @                 sa[(int)(srcPos+i)] == da[(int)(destPos+i)]);
+      @   |}
 	   |}
       @*/
     //@ implies_that
