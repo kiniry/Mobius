@@ -472,294 +472,294 @@ public void visitASTNode(/*@ non_null */ ASTNode x) {
     visitASTNode(x);
   }
     
-    public void visitAnOverview(AnOverview x) {
+    public void visitAnOverview(/*@ non_null */ AnOverview x) {
        visitASTNode(x);
        
     }
 
 
-    public void visitArrayRangeRefExpr(ArrayRangeRefExpr x) {
+    public void visitArrayRangeRefExpr(/*@ non_null */ ArrayRangeRefExpr x) {
        visitASTNode(x);
        
     }
 
 
-    public void visitCondExprModifierPragma(CondExprModifierPragma x) {
+    public void visitCondExprModifierPragma(/*@ non_null */ CondExprModifierPragma x) {
        visitASTNode(x);
        
     }
 
 
-    public void visitCondition(Condition x) {
+    public void visitCondition(/*@ non_null */ Condition x) {
        visitASTNode(x);
        
     }
 
 
-    public void visitDecreasesInfo(DecreasesInfo x) {
+    public void visitDecreasesInfo(/*@ non_null */ DecreasesInfo x) {
        visitASTNode(x);
        
     }
 
 
-    public void visitDefPred(DefPred x) {
+    public void visitDefPred(/*@ non_null */ DefPred x) {
        visitASTNode(x);
        
     }
 
 
-    public void visitDefPredApplExpr(DefPredApplExpr x) {
+    public void visitDefPredApplExpr(/*@ non_null */ DefPredApplExpr x) {
        visitASTNode(x);
        
     }
 
 
-    public void visitDefPredLetExpr(DefPredLetExpr x) {
+    public void visitDefPredLetExpr(/*@ non_null */ DefPredLetExpr x) {
        visitASTNode(x);
        
     }
 
 
-    public void visitDependsPragma(DependsPragma x) {
+    public void visitDependsPragma(/*@ non_null */ DependsPragma x) {
        visitASTNode(x);
        
     }
 
 
-    public void visitEscPrimitiveType(EscPrimitiveType x) {
+    public void visitEscPrimitiveType(/*@ non_null */ EscPrimitiveType x) {
        visitASTNode(x);
        
     }
 
 
-    public void visitEverythingExpr(EverythingExpr x) {
+    public void visitEverythingExpr(/*@ non_null */ EverythingExpr x) {
        visitASTNode(x);
        
     }
 
 
-    public void visitExprDeclPragma(ExprDeclPragma x) {
+    public void visitExprDeclPragma(/*@ non_null */ ExprDeclPragma x) {
        visitASTNode(x);
        
     }
 
 
-    public void visitExprModifierPragma(ExprModifierPragma x) {
+    public void visitExprModifierPragma(/*@ non_null */ ExprModifierPragma x) {
        visitASTNode(x);
        
     }
 
 
-    public void visitExprStmtPragma(ExprStmtPragma x) {
+    public void visitExprStmtPragma(/*@ non_null */ExprStmtPragma x) {
        visitASTNode(x);
        
     }
 
 
-    public void visitGCExpr(GCExpr x) {
+    public void visitGCExpr(/*@ non_null */GCExpr x) {
        visitASTNode(x);
        
     }
 
 
-    public void visitGhostDeclPragma(GhostDeclPragma x) {
+    public void visitGhostDeclPragma(/*@ non_null */GhostDeclPragma x) {
        visitASTNode(x);
        
     }
 
 
-    public void visitGuardExpr(GuardExpr x) {
+    public void visitGuardExpr(/*@ non_null */GuardExpr x) {
        visitASTNode(x);
        
     }
 
 
-    public void visitGuardedCmd(GuardedCmd x) {
+    public void visitGuardedCmd(/*@ non_null */GuardedCmd x) {
        visitASTNode(x);
        
     }
 
 
-    public void visitIdExprDeclPragma(IdExprDeclPragma x) {
+    public void visitIdExprDeclPragma(/*@ non_null */IdExprDeclPragma x) {
        visitASTNode(x);
        
     }
 
 
-    public void visitIdentifierModifierPragma(IdentifierModifierPragma x) {
+    public void visitIdentifierModifierPragma(/*@ non_null */IdentifierModifierPragma x) {
        visitASTNode(x);
        
     }
 
 
-    public void visitImportPragma(ImportPragma x) {
+    public void visitImportPragma(/*@ non_null */ImportPragma x) {
        visitASTNode(x);
        
     }
 
 
-    public void visitLockSetExpr(LockSetExpr x) {
+    public void visitLockSetExpr(/*@ non_null */LockSetExpr x) {
        visitASTNode(x);
        
     }
 
 
-    public void visitMapsExprModifierPragma(MapsExprModifierPragma x) {
+    public void visitMapsExprModifierPragma(/*@ non_null */MapsExprModifierPragma x) {
        visitASTNode(x);
        
     }
 
 
-    public void visitModelConstructorDeclPragma(ModelConstructorDeclPragma x) {
+    public void visitModelConstructorDeclPragma(/*@ non_null */ModelConstructorDeclPragma x) {
        visitASTNode(x);
        
     }
 
 
-    public void visitModelDeclPragma(ModelDeclPragma x) {
+    public void visitModelDeclPragma(/*@ non_null */ModelDeclPragma x) {
        visitASTNode(x);
        
     }
 
 
-    public void visitModelMethodDeclPragma(ModelMethodDeclPragma x) {
+    public void visitModelMethodDeclPragma(/*@ non_null */ModelMethodDeclPragma x) {
        visitASTNode(x);
        
     }
 
 
-    public void visitModelProgamModifierPragma(ModelProgamModifierPragma x) {
+    public void visitModelProgamModifierPragma(/*@ non_null */ModelProgamModifierPragma x) {
        visitASTNode(x);
        
     }
 
 
-    public void visitModelTypePragma(ModelTypePragma x) {
+    public void visitModelTypePragma(/*@ non_null */ModelTypePragma x) {
        visitASTNode(x);
        
     }
 
 
-    public void visitModifiesGroupPragma(ModifiesGroupPragma x) {
+    public void visitModifiesGroupPragma(/*@ non_null */ModifiesGroupPragma x) {
        visitASTNode(x);
        
     }
 
 
-    public void visitNamedExprDeclPragma(NamedExprDeclPragma x) {
+    public void visitNamedExprDeclPragma(/*@ non_null */NamedExprDeclPragma x) {
        visitASTNode(x);
        
     }
 
 
-    public void visitNestedModifierPragma(NestedModifierPragma x) {
+    public void visitNestedModifierPragma(/*@ non_null */NestedModifierPragma x) {
        visitASTNode(x);
        
     }
 
 
-    public void visitNotModifiedExpr(NotModifiedExpr x) {
+    public void visitNotModifiedExpr(/*@ non_null */NotModifiedExpr x) {
        visitASTNode(x);
        
     }
 
 
-    public void visitNotSpecifiedExpr(NotSpecifiedExpr x) {
+    public void visitNotSpecifiedExpr(/*@ non_null */NotSpecifiedExpr x) {
        visitASTNode(x);
        
     }
 
 
-    public void visitNothingExpr(NothingExpr x) {
+    public void visitNothingExpr(/*@ non_null */NothingExpr x) {
        visitASTNode(x);
        
     }
 
 
-    public void visitNowarnPragma(NowarnPragma x) {
+    public void visitNowarnPragma(/*@ non_null */NowarnPragma x) {
        visitASTNode(x);
        
     }
 
 
-    public void visitParsedSpecs(ParsedSpecs x) {
+    public void visitParsedSpecs(/*@ non_null */ParsedSpecs x) {
        visitASTNode(x);
        
     }
 
 
-    public void visitReachModifierPragma(ReachModifierPragma x) {
+    public void visitReachModifierPragma(/*@ non_null */ReachModifierPragma x) {
        visitASTNode(x);
        
     }
 
 
-    public void visitRefinePragma(RefinePragma x) {
+    public void visitRefinePragma(/*@ non_null */RefinePragma x) {
        visitASTNode(x);
        
     }
 
 
-    public void visitResExpr(ResExpr x) {
+    public void visitResExpr(/*@ non_null */ResExpr x) {
        visitASTNode(x);
        
     }
 
 
-    public void visitSetCompExpr(SetCompExpr x) {
+    public void visitSetCompExpr(/*@ non_null */SetCompExpr x) {
        visitASTNode(x);
        
     }
 
 
-    public void visitSetStmtPragma(SetStmtPragma x) {
+    public void visitSetStmtPragma(/*@ non_null */SetStmtPragma x) {
        visitASTNode(x);
        
     }
 
 
-    public void visitSimpleModifierPragma(SimpleModifierPragma x) {
+    public void visitSimpleModifierPragma(/*@ non_null */SimpleModifierPragma x) {
        visitASTNode(x);
        
     }
 
 
-    public void visitSimpleStmtPragma(SimpleStmtPragma x) {
+    public void visitSimpleStmtPragma(/*@ non_null */SimpleStmtPragma x) {
        visitASTNode(x);
        
     }
 
 
-    public void visitSpec(Spec x) {
+    public void visitSpec(/*@ non_null */Spec x) {
        visitASTNode(x);
        
     }
 
 
-    public void visitStillDeferredDeclPragma(StillDeferredDeclPragma x) {
+    public void visitStillDeferredDeclPragma(/*@ non_null */StillDeferredDeclPragma x) {
        visitASTNode(x);
        
     }
 
 
-    public void visitVarDeclModifierPragma(VarDeclModifierPragma x) {
+    public void visitVarDeclModifierPragma(/*@ non_null */VarDeclModifierPragma x) {
        visitASTNode(x);
        
     }
 
 
-    public void visitWildRefExpr(WildRefExpr x) {
+    public void visitWildRefExpr(/*@ non_null */WildRefExpr x) {
        visitASTNode(x);
        
     }
 
-    public void visitSkolemConstantPragma(SkolemConstantPragma x) {
+    public void visitSkolemConstantPragma(/*@ non_null */SkolemConstantPragma x) {
        visitASTNode(x);
        
     }
 
 
-    public void visitVarExprModifierPragma(VarExprModifierPragma x) {
+    public void visitVarExprModifierPragma(/*@ non_null */VarExprModifierPragma x) {
        visitASTNode(x);
        
     }

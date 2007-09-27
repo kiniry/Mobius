@@ -124,5 +124,5 @@ There are many options available, most of them experimental and not
 documented.  The "official" options are listed using "escj -help".
 
 An Eclipse plugin for ESC/Java2 is also available.  Please see the
-ESC/Java2 Plugin GForge project web site for more information.
-<http://sort.ucd.ie/projects/escjava-eclipse/>
+ESC/Java2 Plugin Trac project web site for more information.
+<https://mobius.ucd.ie/wiki/ESCJava2Plugin/>
