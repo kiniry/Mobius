@@ -1,3 +1,86 @@
+version 2.0b2 "Mobius PVE Internal Release" (1 October 2007)
+
+New major features include:
+
+o Joe Kiniry has moved ESC/Java2 from a CVS/GForge repository to a Subversion/Trac repository
+
+o Numerous bugs have been identified, fixed, and added. :)
+
+The following Trac Tickets are FIXED or CLOSED in this release:
+
+
+The following GForge tickets are known to EXIST in this release:
+
+ID      Summary                                                                               Open Date            Assigned To       Submitted By
+570	    semantics of modifies \everything	                                                  2007-05-12 11:16	   Joseph Kiniry	    Mikolas Janota
+568	    Specification of the get method in Map	                                              2007-05-11 15:54	   Joseph Kiniry	    Mikolas Janota
+567	    non_null treated wrongly for arrays	                                                  2007-05-11 14:56	   Joseph Kiniry	    Mikolas Janota 
+551	    The initially clause is not propagated to the descendants	                          2007-04-25 13:40	   Joseph Kiniry	    Mikolas Janota
+550	    The spec of InputStream is wrong	                                                  2007-04-24 11:44	   Mikolas Janota	   Mikolas Janota
+549	    skip method in InputStream and ByteArrayInputStream is inconsistent	                  2007-04-23 10:47	   Mikolas Janota	   Mikolas Janota
+547	    Semantics of Informal predicate (* .. *) incorrect	                                  2007-04-20 14:11	   Joseph Kiniry	    Mikolas Janota
+546	    Translation of exceptional behavior seems to be wrong	                              2007-04-18 17:52	   Mikolas Janota	   Mikolas Janota
+543	    Simplify not killed, or dying	                                                      2007-04-06 09:44	   Robin Green	     Mikolas Janota
+534	    fix-perms rule does not work	                                                      2007-03-28 20:18	   Robin Green	     Joseph Kiniry
+530	    several tests are failing in ESCTools/Escjava/test/escjava/test	                      2007-03-21 16:57	   Dermot Cochran	   Michal Moskal
+519	    RCC: thread_shared default does not always work	                                      2007-02-13 10:24	   Radu Grigore	     Radu Grigore
+516	    private helper methods	                                                              2007-01-24 09:48	   Nobody	         Aleksy Schubert
+514	    build fails under cygwin when using javac	                                          2006-12-18 13:07	   Robin Green	     Patrice Chalin
+513	    Reinstate tests that should still pass in Escjava/test/jdktests	                      2006-12-18 02:41	   Dermot Cochran	   Patrice Chalin
+511	    Run escjava on itself	                                                              2006-12-04 14:53	   Radu Grigore	     Radu Grigore
+508	    nowarn NonNull doesn't work for method calls	                                      2006-12-01 12:49	   George Karabotsos	Patrice Chalin
+500	    make error reporting in the new backend use javafe.utils.ErrorSet for the moment	  2006-10-26 22:25	   Radu Grigore	     Joseph Kiniry
+499	    stack too big in parsing background predicate - implement more constant folding	      2006-10-22 10:41	   David Cok	     David Cok
+498	    grammar change for JML expression \max	                                              2006-10-12 17:02	   Robin Green	     Joseph Kiniry
+488	    Can't generate VCs without having a Simplify binary around	                          2006-10-06 22:00	   Radu Grigore	     Nobody
+485	    do not include docs/papers/koa_state_diagram in release's papers directory            2006-10-04 14:49	   Robin Green	     Joseph Kiniry
+484	    do not include api/src-html in binary release	                                      2006-10-04 14:48	   Nobody	         Joseph Kiniry
+553	    support J2SE 5+ bytecodes so that ESC/Java2 runs inside of a J2SE5                    2007-04-25 15:44     Dermot Cochran	   Joseph Kiniry
+        (i.e., JDK 1.5, 1.6, etc.) VM
+155     TestByteArrayInputStream missing five previously issued warnings                      2005-09-03 11:47     David Cok         Joseph Kiniry
+238     sos.koa.Candidate: toString() causes escj to crash                                    2006-01-26 01:35     George Karabotsos Patrice Chalin
+105     handling DSA for recursive specs is broken                                            2005-06-01 19:15     Radu Grigore      Joseph Kiniry
+474     attempting to process the escjava package with escjava2 results in an infinite loop   2006-09-25 08:59     Nobody            Joseph Kiniry
+125     Must be able to reason about clone() in ESC/Java, verif. too                          2005-08-18 09:25     Joseph Kiniry     Joseph Kiniry
+414     non-pure methods can be used in assertion expressions                                 2006-08-08 13:00     Nobody            Patrice Chalin
+412     Simplify crashes when blank lines added                                               2006-08-01 22:02     Joseph Kiniry     Patrice Chalin
+137     specs for java.util.Calendar, java.util.Date,                                         2005-08-21 22:23     Robin Green       Joseph Kiniry
+        and java.util.GregorianCalendar need to be finished
+211     main() should have a default spec                                                     2005-11-10 16:57     Radu Grigore      Joseph Kiniry
+247     Houdini CopyLoaded does not copy all required files                                   2006-02-17 16:34     Nobody            Arnout Engelen
+222     Type checking errors with new VC generator                                            2005-11-29 11:05     Joseph Kiniry     Carl Pulley
+318     [found-by-esc] various errors reported by esc when run on junitutils                  2006-06-08 12:51     Patrice Chalin    Patrice Chalin
+161     deeply nested inner classes and inheritance                                           2005-09-04 16:57     Radu Grigore      Joseph Kiniry
+127     SecurityKey and KeySet example.                                                       2005-08-18 09:45     Joseph Kiniry     Joseph Kiniry
+226     Hidden warnings                                                                       2005-12-02 17:20     Nobody            Mikolas Janota
+223     Simple Java programs with loops pass checking wrongly                                 2005-12-01 00:10     Mikolas Janota    Hermann Lehner
+187     bogus warning in Map.spec when working with two byte[],                               2005-10-24 13:26     Radu Grigore      Radu Grigore
+        one of them obtained from a string arg
+143     [found-by-jmlc] ERRORTYPE tag constant is not a legal PrimitiveType tag value         2005-09-01 14:35     Patrice Chalin    Patrice Chalin
+209     Mysterious broken object invariant (with -LoopSafe option)                            2005-11-08 16:37     Nobody            Christian Haack
+317     Escjava/test/junittests/SpecFile.jml fails under cygwin                               2006-06-08 11:35     Dermot Cochran    Patrice Chalin
+210     javafe.util.AssertionFailureException                                                 2005-11-08 17:43     Nobody            Christian Haack
+290     nullity annotations should be cleaned up                                              2006-05-17 15:10     Perry James       Perry James
+220     source file generation in escjava.vcGeneration                                        2005-11-28 14:23     Nobody            Joseph Kiniry
+55      inheritance of invariants                                                             2005-04-08 12:29     Alan Morkan       Peter van Rossum
+291     fields of subclasses of ASTNode are declared public                                   2006-05-17 15:15     Perry James       Perry James
+126     remaining scope problem with java/jml fields                                          2005-08-18 09:42     Robin Green       Joseph Kiniry
+129     Model imports change name resolution                                                  2005-08-18 09:53     Robin Green       Joseph Kiniry
+208     assertion failure in escjava.translate.Inner.getEnclosingInstanceField                2005-11-08 10:39     Nobody            Aleksy Schubert
+217     The String class in JRE_1.4.2_10-build3 does not typecheck.                           2005-11-23 15:42     Radu Grigore      Radu Grigore
+270     method call resolution (static vs. dynamic types)                                     2006-04-23 14:19     Radu Grigore      Joseph Kiniry
+243     problem with += when lvalue is array element                                          2006-02-09 13:21     Nobody            Arnout Engelen
+124     problems with quantifier triggering                                                   2005-08-18 09:23     Nobody            Joseph Kiniry
+158     cannot typecheck several classes in JDK 1.4's source                                  2005-09-03 19:45     Radu Grigore      Joseph Kiniry
+        due to inner class resolution problems
+229     Java builder in Eclipse does not output .class files in expected location             2005-12-07 15:12     Joseph Kiniry     Robin Green
+231     javafe.util.AssertionFailureException in modeBatch()...                               2005-12-28 16:28     Joseph Kiniry     Nobody
+272     Simplify needs xwindows library under mac os                                          2006-04-26 20:37     Joseph Kiniry     Mikolas Janota
+111     Recursive postconditions                                                              2005-07-21 11:59     Alan Morkan       Joseph Kiniry
+251     add support for \same keyword                                                         2006-02-28 19:08     Nobody            Joseph Kiniry
+131     Typechecking with no specs results in mysterious typechecking errors.                 2005-08-20 10:12     Dermot Cochran    Joseph Kiniry
+219     Pollution with multiple provers targeted by VC generator                              2005-11-28 10:10     Nobody            Carl Pulley
+
 -------------------------------------------------------------------
 version 2.0b1 "Mobius PVE Internal Release" (31 May 2007)
 
