@@ -1,3 +1,1899 @@
+ ------------------------------------------------------------------------
+r2912 | dcochran | 2007-09-27 12:34:02 +0100 (Thu, 27 Sep 2007) | 1 line
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Escjava/java/escjava/completeness/FloatingPointCompletenessVisitor.java
+   M /src/escjava/trunk/ESCTools/Escjava/java/escjava/soundness/LShiftVisitor.java
+   M /src/escjava/trunk/ESCTools/Escjava/java/escjava/soundness/LoopSoundnessVisitor.java
+   M /src/escjava/trunk/ESCTools/Escjava/java/escjava/soundness/ModificationSoundnessVisitor.java
+   M /src/escjava/trunk/ESCTools/Escjava/java/escjava/soundness/ObjectInvariantSoundnessVisitor.java
+   M /src/escjava/trunk/ESCTools/Escjava/java/escjava/soundness/RShiftVisitor.java
+   M /src/escjava/trunk/ESCTools/Escjava/java/escjava/soundness/TrustingPragmaSoundnessVisitor.java
+   M /src/escjava/trunk/ESCTools/Escjava/test/junittests
+   M /src/escjava/trunk/ESCTools/release-files/README.release
+
+Ticket #27: Fixed nullity mismatch in soundness and completeness visitors
+------------------------------------------------------------------------
+r2911 | dcochran | 2007-09-25 17:52:49 +0100 (Tue, 25 Sep 2007) | 1 line
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Makefile
+
+Ticket #27: Replace references to CVS metadata with references to Subversion metadata
+------------------------------------------------------------------------
+r2910 | dcochran | 2007-09-25 17:49:33 +0100 (Tue, 25 Sep 2007) | 1 line
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Makefile
+
+Ticket #27: Replace references to CVS metadata with references to Subversion metadata
+------------------------------------------------------------------------
+r2909 | dcochran | 2007-09-25 17:16:30 +0100 (Tue, 25 Sep 2007) | 1 line
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Escjava/java/escjava/ast/ASTVisitor.java
+   M /src/escjava/trunk/ESCTools/Escjava/java/escjava/completeness/FloatingPointCompletenessVisitor.java
+   M /src/escjava/trunk/ESCTools/Makefile
+   M /src/escjava/trunk/ESCTools/Makefile.defs
+   A /src/escjava/trunk/ESCTools/Makefile.local.SimpleExample
+   M /src/escjava/trunk/ESCTools/docs/BUILDING_NEW_RELEASES.txt
+   M /src/escjava/trunk/ESCTools/specs/java/lang/Character.jml
+   M /src/escjava/trunk/ESCTools/specs-chalin-kiniry/Makefile
+
+Ticket #27: Streamlining the release process
+------------------------------------------------------------------------
+r2899 | dcochran | 2007-09-24 16:31:40 +0100 (Mon, 24 Sep 2007) | 1 line
+Changed paths:
+   D /src/escjava/trunk/ESCTools/.svnignore
+   M /src/escjava/trunk/ESCTools/Escjava/java/escjava/translate/TrAnExpr.java
+   M /src/escjava/trunk/ESCTools/Escjava/java/escjava/translate/Translate.java
+   D /src/escjava/trunk/ESCTools/Escjava/mochalib/.svnignore
+   M /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/Makefile
+   M /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/alltests
+   M /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test102
+   M /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test102/C.java
+   M /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test102/ans
+   M /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test102/run
+   M /src/escjava/trunk/ESCTools/Escjava/test/jdktests/Makefile
+   M /src/escjava/trunk/ESCTools/Escjava/test/junittests/Makefile
+   M /src/escjava/trunk/ESCTools/Makefile
+   M /src/escjava/trunk/ESCTools/docs/Escjava2-ImplementationNotes/Makefile
+
+Fixed Ticket #28
+------------------------------------------------------------------------
+r2895 | dcochran | 2007-09-24 10:26:20 +0100 (Mon, 24 Sep 2007) | 1 line
+Changed paths:
+   A /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test102/ans
+   A /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test102/run
+
+Added test case for Ticket #28
+------------------------------------------------------------------------
+r2894 | dcochran | 2007-09-24 10:23:23 +0100 (Mon, 24 Sep 2007) | 1 line
+Changed paths:
+   A /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test102
+   A /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test102/C.java
+
+Added test case for Ticket #28
+------------------------------------------------------------------------
+r2893 | dcochran | 2007-09-24 10:18:27 +0100 (Mon, 24 Sep 2007) | 1 line
+Changed paths:
+   A /src/escjava/trunk/ESCTools/Escjava/mochalib/.svnignore
+
+Added 'classes' to subversion ignore list, because these tend to be generated files.
+------------------------------------------------------------------------
+r2892 | dcochran | 2007-09-24 10:15:56 +0100 (Mon, 24 Sep 2007) | 1 line
+Changed paths:
+   A /src/escjava/trunk/ESCTools/.svnignore
+
+Added 'classes' to subversion ignore list, because these tend to be generated files.
+------------------------------------------------------------------------
+r2891 | dcochran | 2007-09-24 09:59:36 +0100 (Mon, 24 Sep 2007) | 1 line
+Changed paths:
+   D /src/escjava/trunk/ESCTools/Escjava/mochalib/classes
+
+Removing generated files from source repository
+------------------------------------------------------------------------
+r2890 | dcochran | 2007-09-21 13:09:36 +0100 (Fri, 21 Sep 2007) | 1 line
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Makefile
+   M /src/escjava/trunk/ESCTools/Makefile.defs
+
+Ticket #27: Added automated test for source releases
+------------------------------------------------------------------------
+r2889 | dcochran | 2007-09-21 11:35:14 +0100 (Fri, 21 Sep 2007) | 1 line
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Makefile
+   M /src/escjava/trunk/ESCTools/README.first
+
+Ticket #27: Fixed some of the .svn issues with the top level Makefile
+------------------------------------------------------------------------
+r2886 | dcochran | 2007-09-20 13:50:19 +0100 (Thu, 20 Sep 2007) | 1 line
+Changed paths:
+   M /src/escjava/trunk/ESCTools/README.first
+
+Ticket #26: Update documentation for subversion and Trac access
+------------------------------------------------------------------------
+r2875 | dcochran | 2007-09-18 16:15:17 +0100 (Tue, 18 Sep 2007) | 1 line
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Makefile
+
+Ensure that generated code is included in the build target
+------------------------------------------------------------------------
+r2874 | dcochran | 2007-09-18 16:05:16 +0100 (Tue, 18 Sep 2007) | 1 line
+Changed paths:
+   M /src/escjava/trunk/ESCTools/.settings/org.eclipse.mylyn.tasks.ui.prefs
+   M /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/Makefile
+   M /src/escjava/trunk/ESCTools/Escjava/test/jdktests/Makefile
+   M /src/escjava/trunk/ESCTools/Escjava/test/junittests/Makefile
+   M /src/escjava/trunk/ESCTools/Makefile
+   M /src/escjava/trunk/ESCTools/docs/Escjava2-ImplementationNotes/Makefile
+
+Included missing subtarget for make clean and replaced .cvsignore with .svnignore
+------------------------------------------------------------------------
+r2873 | dcochran | 2007-09-18 15:09:25 +0100 (Tue, 18 Sep 2007) | 1 line
+Changed paths:
+   D /src/escjava/trunk/ESCTools/.cvsignore
+   D /src/escjava/trunk/ESCTools/Calvin/.cvsignore
+   D /src/escjava/trunk/ESCTools/Calvin/doc/.cvsignore
+   D /src/escjava/trunk/ESCTools/Calvin/java/escjava/ast/.cvsignore
+   D /src/escjava/trunk/ESCTools/Calvin/java/escjava/backpred/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/doc/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/doc/javadoc/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/doc/jml/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/java/escjava/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/java/escjava/ast/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/java/escjava/backpred/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/java/escjava/parser/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/java/escjava/prover/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/java/escjava/tc/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/java/escjava/translate/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/java/escjava/vcGeneration/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/java/escjava/vcGeneration/coq/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/mochalib/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/mochalib/classes/mocha/wrappers/jbdd/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/test/escjava/parser/test/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test0/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test1/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test10/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test100/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test101/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test11/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test13/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test14/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test15/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test17/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test18/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test19/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test2/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test20/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test200/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test201/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test202/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test202/t/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test21/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test22/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test23/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test24/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test25/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test26/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test27/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test28/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test3/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test31/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test32/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test34/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test35/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test36/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test37/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test38/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test39/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test4/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test40/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test41/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test42/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test43/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test44/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test45/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test46/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test47/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test48/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test49/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test5/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test50/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test51/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test52/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test53/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test54/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test55/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test56/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test57/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test58/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test59/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test6/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test60/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test61/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test62/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test63/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test64/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test65/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test66/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test67/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test68/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test69/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test7/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test70/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test71/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test72/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test8/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test9/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test95/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test96/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test97/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test98/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/testA0/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/test/hofmann/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/test/jdktests/.cvsignore
+   D /src/escjava/trunk/ESCTools/Escjava/test/junittests/.cvsignore
+   D /src/escjava/trunk/ESCTools/Houdini/.cvsignore
+   D /src/escjava/trunk/ESCTools/Javafe/.cvsignore
+   D /src/escjava/trunk/ESCTools/Javafe/astgen/.cvsignore
+   D /src/escjava/trunk/ESCTools/Javafe/doc/.cvsignore
+   D /src/escjava/trunk/ESCTools/Javafe/doc/javadoc/.cvsignore
+   D /src/escjava/trunk/ESCTools/Javafe/java/javafe/.cvsignore
+   D /src/escjava/trunk/ESCTools/Javafe/java/javafe/ast/.cvsignore
+   D /src/escjava/trunk/ESCTools/Javafe/java/javafe/decsrc/.cvsignore
+   D /src/escjava/trunk/ESCTools/Javafe/java/javafe/parser/.cvsignore
+   D /src/escjava/trunk/ESCTools/Javafe/java/javafe/tc/.cvsignore
+   D /src/escjava/trunk/ESCTools/Javafe/java/javafe/util/.cvsignore
+   D /src/escjava/trunk/ESCTools/Javafe/test/javafe/parser/test/.cvsignore
+   D /src/escjava/trunk/ESCTools/Javafe/test/javafe/test/fe/.cvsignore
+   D /src/escjava/trunk/ESCTools/Javafe/test/javafe/test/fe/test1/.cvsignore
+   D /src/escjava/trunk/ESCTools/Javafe/test/javafe/test/fe/test10/.cvsignore
+   D /src/escjava/trunk/ESCTools/Javafe/test/javafe/test/fe/test100/.cvsignore
+   D /src/escjava/trunk/ESCTools/Javafe/test/javafe/test/fe/test1000/.cvsignore
+   D /src/escjava/trunk/ESCTools/Javafe/test/javafe/test/fe/test1001/.cvsignore
+   D /src/escjava/trunk/ESCTools/Javafe/test/javafe/test/fe/test1002/.cvsignore
+   D /src/escjava/trunk/ESCTools/Javafe/test/javafe/test/fe/test1003/.cvsignore
+   D /src/escjava/trunk/ESCTools/Javafe/test/javafe/test/fe/test1004/.cvsignore
+   D /src/escjava/trunk/ESCTools/Javafe/test/javafe/test/fe/test1005/.cvsignore
+   D /src/escjava/trunk/ESCTools/Javafe/test/javafe/test/fe/test1006/.cvsignore
+   D /src/escjava/trunk/ESCTools/Javafe/test/javafe/test/fe/test1007/.cvsignore
+   D /src/escjava/trunk/ESCTools/Javafe/test/javafe/test/fe/test101/.cvsignore
+   D /src/escjava/trunk/ESCTools/Javafe/test/javafe/test/fe/test102/.cvsignore
+   D /src/escjava/trunk/ESCTools/Javafe/test/javafe/test/fe/test103/.cvsignore
+   D /src/escjava/trunk/ESCTools/Javafe/test/javafe/test/fe/test104/.cvsignore
+   D /src/escjava/trunk/ESCTools/Javafe/test/javafe/test/fe/test105/.cvsignore
+   D /src/escjava/trunk/ESCTools/Javafe/test/javafe/test/fe/test106/.cvsignore
+   D /src/escjava/trunk/ESCTools/Javafe/test/javafe/test/fe/test107/.cvsignore
+   D /src/escjava/trunk/ESCTools/Javafe/test/javafe/test/fe/test108/.cvsignore
+   D /src/escjava/trunk/ESCTools/Javafe/test/javafe/test/fe/test109/.cvsignore
+   D /src/escjava/trunk/ESCTools/Javafe/test/javafe/test/fe/test11/.cvsignore
+   D /src/escjava/trunk/ESCTools/Javafe/test/javafe/test/fe/test110/.cvsignore
+   D /src/escjava/trunk/ESCTools/Javafe/test/javafe/test/fe/test1100/.cvsignore
+   D /src/escjava/trunk/ESCTools/Javafe/test/javafe/test/fe/test1101/.cvsignore
+   D /src/escjava/trunk/ESCTools/Javafe/test/javafe/test/fe/test1102/.cvsignore
+   D /src/escjava/trunk/ESCTools/Javafe/test/javafe/test/fe/test1103/.cvsignore
+   D /src/escjava/trunk/ESCTools/Javafe/test/javafe/test/fe/test1105/.cvsignore
+   D /src/escjava/trunk/ESCTools/Javafe/test/javafe/test/fe/test111/.cvsignore
+   D /src/escjava/trunk/ESCTools/Javafe/test/javafe/test/fe/test112/.cvsignore
+   D /src/escjava/trunk/ESCTools/Javafe/test/javafe/test/fe/test113/.cvsignore
+   D /src/escjava/trunk/ESCTools/Javafe/test/javafe/test/fe/test114/.cvsignore
+   D /src/escjava/trunk/ESCTools/Javafe/test/javafe/test/fe/test115/.cvsignore
+   D /src/escjava/trunk/ESCTools/Javafe/test/javafe/test/fe/test12/.cvsignore
+   D /src/escjava/trunk/ESCTools/Javafe/test/javafe/test/fe/test13/.cvsignore
+   D /src/escjava/trunk/ESCTools/Javafe/test/javafe/test/fe/test14/.cvsignore
+   D /src/escjava/trunk/ESCTools/Javafe/test/javafe/test/fe/test15/.cvsignore
+   D /src/escjava/trunk/ESCTools/Javafe/test/javafe/test/fe/test16/.cvsignore
+   D /src/escjava/trunk/ESCTools/Javafe/test/javafe/test/fe/test17/.cvsignore
+   D /src/escjava/trunk/ESCTools/Javafe/test/javafe/test/fe/test18/.cvsignore
+   D /src/escjava/trunk/ESCTools/Javafe/test/javafe/test/fe/test19/.cvsignore
+   D /src/escjava/trunk/ESCTools/Javafe/test/javafe/test/fe/test2/.cvsignore
+   D /src/escjava/trunk/ESCTools/Javafe/test/javafe/test/fe/test20/.cvsignore
+   D /src/escjava/trunk/ESCTools/Javafe/test/javafe/test/fe/test200/.cvsignore
+   D /src/escjava/trunk/ESCTools/Javafe/test/javafe/test/fe/test2000/.cvsignore
+   D /src/escjava/trunk/ESCTools/Javafe/test/javafe/test/fe/test2001/.cvsignore
+   D /src/escjava/trunk/ESCTools/Javafe/test/javafe/test/fe/test201/.cvsignore
+   D /src/escjava/trunk/ESCTools/Javafe/test/javafe/test/fe/test21/.cvsignore
+   D /src/escjava/trunk/ESCTools/Javafe/test/javafe/test/fe/test22/.cvsignore
+   D /src/escjava/trunk/ESCTools/Javafe/test/javafe/test/fe/test3/.cvsignore
+   D /src/escjava/trunk/ESCTools/Javafe/test/javafe/test/fe/test4/.cvsignore
+   D /src/escjava/trunk/ESCTools/Javafe/test/javafe/test/fe/test5/.cvsignore
+   D /src/escjava/trunk/ESCTools/Javafe/test/javafe/test/fe/test6/.cvsignore
+   D /src/escjava/trunk/ESCTools/Javafe/test/javafe/test/fe/test7/.cvsignore
+   D /src/escjava/trunk/ESCTools/Javafe/test/javafe/test/fe/test8/.cvsignore
+   D /src/escjava/trunk/ESCTools/Javafe/test/javafe/test/fe/test9/.cvsignore
+   D /src/escjava/trunk/ESCTools/Javafe/test/javafe/test/lex/.cvsignore
+   D /src/escjava/trunk/ESCTools/Rcc/.cvsignore
+   D /src/escjava/trunk/ESCTools/Rcc/java/rccwizard/.cvsignore
+   D /src/escjava/trunk/ESCTools/Rcc/lib/.cvsignore
+   D /src/escjava/trunk/ESCTools/Rcc/test/functional/rccw_big/.cvsignore
+   D /src/escjava/trunk/ESCTools/Rcc/test/functional/rccw_small/.cvsignore
+   D /src/escjava/trunk/ESCTools/Simplify/.cvsignore
+   D /src/escjava/trunk/ESCTools/Simplify/cgi-utils/.cvsignore
+   D /src/escjava/trunk/ESCTools/Simplify/digraph/.cvsignore
+   D /src/escjava/trunk/ESCTools/Simplify/digraph/tests/DiGraphTest/.cvsignore
+   D /src/escjava/trunk/ESCTools/Simplify/digraph/tests/TopSortTest/.cvsignore
+   D /src/escjava/trunk/ESCTools/Simplify/libs/m3-comm/tcp/.cvsignore
+   D /src/escjava/trunk/ESCTools/Simplify/libs/m3-libs/set/.cvsignore
+   D /src/escjava/trunk/ESCTools/Simplify/libs/m3-libs/table-list/.cvsignore
+   D /src/escjava/trunk/ESCTools/Simplify/libs/m3-tools/mtex/.cvsignore
+   D /src/escjava/trunk/ESCTools/Simplify/libs/m3-ui/X11R4/.cvsignore
+   D /src/escjava/trunk/ESCTools/Simplify/libs/m3-ui/ui/.cvsignore
+   D /src/escjava/trunk/ESCTools/Simplify/libs/m3-ui/ui/test/Argus/.cvsignore
+   D /src/escjava/trunk/ESCTools/Simplify/libs/m3-ui/ui/test/BadBricks/.cvsignore
+   D /src/escjava/trunk/ESCTools/Simplify/libs/m3-ui/ui/test/ButtonTest/.cvsignore
+   D /src/escjava/trunk/ESCTools/Simplify/libs/m3-ui/ui/test/Cards/.cvsignore
+   D /src/escjava/trunk/ESCTools/Simplify/libs/m3-ui/ui/test/ColorMonster/.cvsignore
+   D /src/escjava/trunk/ESCTools/Simplify/libs/m3-ui/ui/test/Draw/.cvsignore
+   D /src/escjava/trunk/ESCTools/Simplify/libs/m3-ui/ui/test/EyesVBT/.cvsignore
+   D /src/escjava/trunk/ESCTools/Simplify/libs/m3-ui/ui/test/Hello/.cvsignore
+   D /src/escjava/trunk/ESCTools/Simplify/libs/m3-ui/ui/test/Monster/.cvsignore
+   D /src/escjava/trunk/ESCTools/Simplify/libs/m3-ui/ui/test/Sketch2/.cvsignore
+   D /src/escjava/trunk/ESCTools/Simplify/libs/m3-ui/ui/test/StarAnim/.cvsignore
+   D /src/escjava/trunk/ESCTools/Simplify/libs/m3-ui/ui/test/Track/.cvsignore
+   D /src/escjava/trunk/ESCTools/Simplify/libs/m3-ui/ui/test/TypeInTest/.cvsignore
+   D /src/escjava/trunk/ESCTools/Simplify/prover/.cvsignore
+   D /src/escjava/trunk/ESCTools/Simplify/prover/test/.cvsignore
+   D /src/escjava/trunk/ESCTools/Simplify/simplify/.cvsignore
+   D /src/escjava/trunk/ESCTools/Simplify/simplify/test/.cvsignore
+   D /src/escjava/trunk/ESCTools/Utils/.cvsignore
+   D /src/escjava/trunk/ESCTools/Utils/junitutils/.cvsignore
+   D /src/escjava/trunk/ESCTools/docs/.cvsignore
+   M /src/escjava/trunk/ESCTools/docs/BUILDING_NEW_RELEASES.txt
+   D /src/escjava/trunk/ESCTools/docs/Escjava2-Extending/.cvsignore
+   D /src/escjava/trunk/ESCTools/docs/Escjava2-ImplementationNotes/.cvsignore
+   D /src/escjava/trunk/ESCTools/docs/Escjava2-Logics/.cvsignore
+   D /src/escjava/trunk/ESCTools/docs/Escjava2-Logics/coq/.cvsignore
+   D /src/escjava/trunk/ESCTools/docs/Escjava2-Logics/pvs/.cvsignore
+   D /src/escjava/trunk/ESCTools/docs/Escjava2-Logics/pvs/vcGen_experiments/.cvsignore
+   D /src/escjava/trunk/ESCTools/docs/Escjava2-Logics/simplify/.cvsignore
+   D /src/escjava/trunk/ESCTools/docs/Escjava2-Logics/smt-lib/.cvsignore
+   D /src/escjava/trunk/ESCTools/docs/Escjava2-Logics/unsorted/.cvsignore
+   D /src/escjava/trunk/ESCTools/docs/Escjava2-Provers/.cvsignore
+   D /src/escjava/trunk/ESCTools/docs/Escjava2-UsersManual/.cvsignore
+   D /src/escjava/trunk/ESCTools/docs/Escjava2-UsersManual/java/.cvsignore
+   D /src/escjava/trunk/ESCTools/jars/.cvsignore
+   D /src/escjava/trunk/ESCTools/libs/.cvsignore
+   D /src/escjava/trunk/ESCTools/papers/.cvsignore
+   D /src/escjava/trunk/ESCTools/papers/ChalinKiniry/.cvsignore
+   D /src/escjava/trunk/ESCTools/papers/problems/.cvsignore
+   D /src/escjava/trunk/ESCTools/slides/.cvsignore
+   D /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/.cvsignore
+   D /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/.cvsignore
+   D /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples_toedit/.cvsignore
+   D /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples_worked/.cvsignore
+   D /src/escjava/trunk/ESCTools/slides/ECOOPTutorial-cok/.cvsignore
+   D /src/escjava/trunk/ESCTools/slides/ETAPSTutorial/.cvsignore
+   D /src/escjava/trunk/ESCTools/specs/java/io/.cvsignore
+   D /src/escjava/trunk/ESCTools/specs/java/lang/.cvsignore
+   D /src/escjava/trunk/ESCTools/specs/java/util/.cvsignore
+   D /src/escjava/trunk/ESCTools/specs-chalin-kiniry/.cvsignore
+   D /src/escjava/trunk/ESCTools/specs-chalin-kiniry/jmlunit/.cvsignore
+   D /src/escjava/trunk/ESCTools/specs-chalin-kiniry/old_src/.cvsignore
+   D /src/escjava/trunk/ESCTools/specs-chalin-kiniry/src/.cvsignore
+
+Remove obslete .cvsignore files
+------------------------------------------------------------------------
+r2864 | dcochran | 2007-09-14 13:21:29 +0100 (Fri, 14 Sep 2007) | 1 line
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Escjava/release/master/bin/Simplify-1.5.1.exe
+   M /src/escjava/trunk/ESCTools/Escjava/release/master/bin/Simplify-1.5.1.linux
+   M /src/escjava/trunk/ESCTools/Escjava/release/master/bin/Simplify-1.5.1.solaris
+   M /src/escjava/trunk/ESCTools/Escjava/release/master/bin/Simplify-1.5.1.tru64
+   M /src/escjava/trunk/ESCTools/Escjava/release/master/bin/Simplify-1.5.2.exe
+   M /src/escjava/trunk/ESCTools/Escjava/release/master/bin/Simplify-1.5.2.linux
+   M /src/escjava/trunk/ESCTools/Escjava/release/master/bin/Simplify-1.5.2.solaris
+   M /src/escjava/trunk/ESCTools/Escjava/release/master/bin/Simplify-1.5.2.tru64
+   M /src/escjava/trunk/ESCTools/Escjava/release/master/bin/Simplify-1.5.4.exe
+   M /src/escjava/trunk/ESCTools/Escjava/release/master/bin/Simplify-1.5.4.linux
+   M /src/escjava/trunk/ESCTools/Escjava/release/master/bin/Simplify-1.5.4.macosx
+   M /src/escjava/trunk/ESCTools/Escjava/release/master/bin/Simplify-1.5.4.solaris
+   M /src/escjava/trunk/ESCTools/Escjava/release/master/bin/Simplify-1.5.4.tru64
+
+cleaned up misnamed properties
+------------------------------------------------------------------------
+r2863 | dcochran | 2007-09-14 13:18:49 +0100 (Fri, 14 Sep 2007) | 1 line
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Escjava/release/master/bin/Simplify-1.5.1.exe
+   M /src/escjava/trunk/ESCTools/Escjava/release/master/bin/Simplify-1.5.1.linux
+   M /src/escjava/trunk/ESCTools/Escjava/release/master/bin/Simplify-1.5.1.solaris
+   M /src/escjava/trunk/ESCTools/Escjava/release/master/bin/Simplify-1.5.1.tru64
+   M /src/escjava/trunk/ESCTools/Escjava/release/master/bin/Simplify-1.5.2.exe
+   M /src/escjava/trunk/ESCTools/Escjava/release/master/bin/Simplify-1.5.2.linux
+   M /src/escjava/trunk/ESCTools/Escjava/release/master/bin/Simplify-1.5.2.solaris
+   M /src/escjava/trunk/ESCTools/Escjava/release/master/bin/Simplify-1.5.2.tru64
+   M /src/escjava/trunk/ESCTools/Escjava/release/master/bin/Simplify-1.5.4.exe
+   M /src/escjava/trunk/ESCTools/Escjava/release/master/bin/Simplify-1.5.4.linux
+   M /src/escjava/trunk/ESCTools/Escjava/release/master/bin/Simplify-1.5.4.macosx
+   M /src/escjava/trunk/ESCTools/Escjava/release/master/bin/Simplify-1.5.4.solaris
+   M /src/escjava/trunk/ESCTools/Escjava/release/master/bin/Simplify-1.5.4.tru64
+
+set svn:mime-type to be application/octet-stream
+------------------------------------------------------------------------
+r2860 | dcochran | 2007-09-11 15:15:44 +0100 (Tue, 11 Sep 2007) | 1 line
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Makefile
+
+Fixed location of BCEL jar in release file
+------------------------------------------------------------------------
+r2859 | dcochran | 2007-09-11 15:06:27 +0100 (Tue, 11 Sep 2007) | 1 line
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Makefile
+
+Fixed location of BCEL jar in release file
+------------------------------------------------------------------------
+r2858 | dcochran | 2007-09-11 14:51:07 +0100 (Tue, 11 Sep 2007) | 1 line
+Changed paths:
+   A /src/escjava/trunk/ESCTools/Escjava/java/escjava/soundness/Consistency.java
+   A /src/escjava/trunk/ESCTools/Escjava/java/escjava/soundness/Visit.java
+   M /src/escjava/trunk/ESCTools/Escjava/release/master/bin/Simplify-1.5.1.exe
+   M /src/escjava/trunk/ESCTools/Escjava/release/master/bin/Simplify-1.5.1.linux
+   M /src/escjava/trunk/ESCTools/Escjava/release/master/bin/Simplify-1.5.1.solaris
+   M /src/escjava/trunk/ESCTools/Escjava/release/master/bin/Simplify-1.5.1.tru64
+   M /src/escjava/trunk/ESCTools/Escjava/release/master/bin/Simplify-1.5.2.exe
+   M /src/escjava/trunk/ESCTools/Escjava/release/master/bin/Simplify-1.5.2.linux
+   M /src/escjava/trunk/ESCTools/Escjava/release/master/bin/Simplify-1.5.2.solaris
+   M /src/escjava/trunk/ESCTools/Escjava/release/master/bin/Simplify-1.5.2.tru64
+   M /src/escjava/trunk/ESCTools/Escjava/release/master/bin/Simplify-1.5.4.exe
+   M /src/escjava/trunk/ESCTools/Escjava/release/master/bin/Simplify-1.5.4.linux
+   M /src/escjava/trunk/ESCTools/Escjava/release/master/bin/Simplify-1.5.4.macosx
+   M /src/escjava/trunk/ESCTools/Escjava/release/master/bin/Simplify-1.5.4.solaris
+   M /src/escjava/trunk/ESCTools/Escjava/release/master/bin/Simplify-1.5.4.tru64
+
+Set binary executable properties for Simplify
+------------------------------------------------------------------------
+r2857 | dcochran | 2007-09-11 14:12:42 +0100 (Tue, 11 Sep 2007) | 1 line
+Changed paths:
+   A /src/escjava/trunk/ESCTools/Escjava/java/escjava/Main.java
+
+Resynchronized
+------------------------------------------------------------------------
+r2856 | dcochran | 2007-09-11 14:04:58 +0100 (Tue, 11 Sep 2007) | 1 line
+Changed paths:
+   D /src/escjava/trunk/ESCTools/Escjava/java/escjava/Main.java
+   D /src/escjava/trunk/ESCTools/Escjava/java/escjava/soundness/Consistency.java
+   D /src/escjava/trunk/ESCTools/Escjava/java/escjava/soundness/Visit.java
+
+Resynchronized
+------------------------------------------------------------------------
+r2854 | chalin | 2007-09-11 09:51:15 +0100 (Tue, 11 Sep 2007) | 1 line
+Changed paths:
+   M /src/escjava/trunk/ESCTools/specs-chalin-kiniry/Makefile
+
+
+------------------------------------------------------------------------
+r2844 | claudia | 2007-09-10 15:39:59 +0100 (Mon, 10 Sep 2007) | 1 line
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Escjava/java/escjava/sortedProver/simplify/SimplifyNodeBuilder.java
+
+cbr:new symbol for assignable-clause: %isFieldOf(heap, obj, field)
+------------------------------------------------------------------------
+r2843 | claudia | 2007-09-10 15:39:44 +0100 (Mon, 10 Sep 2007) | 1 line
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Escjava/java/escjava/sortedProver/Lifter.java
+
+cbr: new symbol for assignable-clause: %isFieldOf(heap, obj, field)
+------------------------------------------------------------------------
+r2841 | claudia | 2007-09-10 15:38:47 +0100 (Mon, 10 Sep 2007) | 1 line
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Escjava/java/escjava/sortedProver/auflia/AufliaNodeBuilder.java
+
+new symbol for assignable-clause: %isFieldOf(heap, obj, field)
+------------------------------------------------------------------------
+r2840 | claudia | 2007-09-10 15:38:11 +0100 (Mon, 10 Sep 2007) | 1 line
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Escjava/java/escjava/sortedProver/NodeBuilder.java
+
+new symbol for assignable-clause: %isFieldOf(heap, obj, field)
+------------------------------------------------------------------------
+r2839 | dcochran | 2007-09-10 13:17:16 +0100 (Mon, 10 Sep 2007) | 1 line
+Changed paths:
+   A /src/escjava/trunk/ESCTools/.settings/org.eclipse.mylyn.tasks.ui.prefs
+
+Added link from Mylyn to Mobius Trac task sever
+------------------------------------------------------------------------
+r2838 | dcochran | 2007-09-10 10:29:46 +0100 (Mon, 10 Sep 2007) | 1 line
+Changed paths:
+   A /src/escjava/trunk/ESCTools/Escjava/java/escjava/ast/ASTVisitor.java
+   D /src/escjava/trunk/ESCTools/Escjava/java/escjava/ast/ModificationSoundnessVisitor.java
+   D /src/escjava/trunk/ESCTools/Escjava/java/escjava/ast/ObjectInvariantSoundnessVisitor.java
+   D /src/escjava/trunk/ESCTools/Escjava/java/escjava/ast/TrustingPragmaSoundnessVisitor.java
+   D /src/escjava/trunk/ESCTools/Javafe/java/javafe/ast/ASTVisitor.java
+   D /src/escjava/trunk/ESCTools/Javafe/java/javafe/ast/CompletenessVisitor.java
+   D /src/escjava/trunk/ESCTools/Javafe/java/javafe/ast/LShiftVisitor.java
+   D /src/escjava/trunk/ESCTools/Javafe/java/javafe/ast/LoopSoundnessVisitor.java
+   D /src/escjava/trunk/ESCTools/Javafe/java/javafe/ast/RShiftVisitor.java
+
+Added AST visitor classes for soundness and completeness warnings
+------------------------------------------------------------------------
+r2837 | dcochran | 2007-09-10 10:16:03 +0100 (Mon, 10 Sep 2007) | 1 line
+Changed paths:
+   A /src/escjava/trunk/ESCTools/Escjava/java/escjava/completeness
+   A /src/escjava/trunk/ESCTools/Escjava/java/escjava/completeness/FloatingPointCompletenessVisitor.java
+   A /src/escjava/trunk/ESCTools/Escjava/java/escjava/soundness/LShiftVisitor.java
+   A /src/escjava/trunk/ESCTools/Escjava/java/escjava/soundness/LoopSoundnessVisitor.java
+   A /src/escjava/trunk/ESCTools/Escjava/java/escjava/soundness/ModificationSoundnessVisitor.java
+   A /src/escjava/trunk/ESCTools/Escjava/java/escjava/soundness/ObjectInvariantSoundnessVisitor.java
+   A /src/escjava/trunk/ESCTools/Escjava/java/escjava/soundness/RShiftVisitor.java
+   A /src/escjava/trunk/ESCTools/Escjava/java/escjava/soundness/TrustingPragmaSoundnessVisitor.java
+
+Added AST visitor classes for soundness and completeness warnings
+------------------------------------------------------------------------
+r2836 | hermann | 2007-09-07 11:43:38 +0100 (Fri, 07 Sep 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Escjava/java/escjava/sortedProver/NodeBuilder.java
+
+Node builder forgotten to check in
+
+------------------------------------------------------------------------
+r2835 | claudia | 2007-09-06 17:01:11 +0100 (Thu, 06 Sep 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Escjava/java/escjava/sortedProver/simplify/SimplifyNodeBuilder.java
+
+cbr: inv new with heap
+buildInv(SMap map, SValue val, SAny type)
+------------------------------------------------------------------------
+r2834 | claudia | 2007-09-06 17:00:48 +0100 (Thu, 06 Sep 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Escjava/java/escjava/sortedProver/auflia/AufliaNodeBuilder.java
+
+cbr: inv new with heap
+buildInv(SMap map, SValue val, SAny type)
+------------------------------------------------------------------------
+r2832 | claudia | 2007-09-06 16:59:20 +0100 (Thu, 06 Sep 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Escjava/java/escjava/sortedProver/Lifter.java
+
+cbr: inv new with heap
+buildInv(SMap map, SValue val, SAny type)
+------------------------------------------------------------------------
+r2831 | claudia | 2007-09-06 16:49:29 +0100 (Thu, 06 Sep 2007) | 1 line
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Escjava/java/escjava/sortedProver/README
+
+
+------------------------------------------------------------------------
+r2826 | kiniry | 2007-09-04 19:44:14 +0100 (Tue, 04 Sep 2007) | 1 line
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Escjava/xmlrpc-1.2-b1-modified.jar
+
+Trying again; something weird is going on with svn.
+------------------------------------------------------------------------
+r2825 | kiniry | 2007-09-04 19:23:22 +0100 (Tue, 04 Sep 2007) | 1 line
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Escjava/xmlrpc-1.2-b1-modified.jar
+
+Fixed jar import problem by re-copying jar from CVS sandbox.
+------------------------------------------------------------------------
+r2824 | kiniry | 2007-08-31 19:47:22 +0100 (Fri, 31 Aug 2007) | 1 line
+Changed paths:
+   D /src/escjava/trunk/ESCTools/docs/foo
+
+removing test file
+------------------------------------------------------------------------
+r2823 | kiniry | 2007-08-31 19:43:44 +0100 (Fri, 31 Aug 2007) | 1 line
+Changed paths:
+   A /src/escjava/trunk/ESCTools/docs/foo
+
+test
+------------------------------------------------------------------------
+r2822 | hermann | 2007-08-13 08:19:16 +0100 (Mon, 13 Aug 2007) | 3 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Escjava/java/escjava/sortedProver/Lifter.java
+
+cbr: Adjust return type of buildDynLoc (to SRef):
+public SRef buildDynLoc(SMap map, SRef obj, SRef field);
+
+------------------------------------------------------------------------
+r2821 | dcochran | 2007-08-02 14:11:09 +0100 (Thu, 02 Aug 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/docs/BUILDING_NEW_RELEASES.txt
+
+Added note about updating of version numbers.
+
+------------------------------------------------------------------------
+r2820 | hermann | 2007-07-30 15:16:03 +0100 (Mon, 30 Jul 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Javafe/java/javafe/Options.java
+
+cbr: new option "doSubsetChecking". TODO: Adding option everywhere else
+
+------------------------------------------------------------------------
+r2819 | hermann | 2007-07-30 15:13:59 +0100 (Mon, 30 Jul 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Escjava/java/escjava/sortedProver/auflia/AufliaNodeBuilder.java
+   M /src/escjava/trunk/ESCTools/Escjava/java/escjava/sortedProver/simplify/SimplifyNodeBuilder.java
+
+cbr: Added two new symbols "symDynLoc" and "symIsAlive"
+
+------------------------------------------------------------------------
+r2818 | hermann | 2007-07-30 15:13:13 +0100 (Mon, 30 Jul 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Escjava/java/escjava/sortedProver/Lifter.java
+   M /src/escjava/trunk/ESCTools/Escjava/java/escjava/sortedProver/NodeBuilder.java
+
+cbr: added two new symbols "symDynLoc" and "symIsAlive"
+
+------------------------------------------------------------------------
+r2810 | dcochran | 2007-07-24 10:36:13 +0100 (Tue, 24 Jul 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Escjava/java/escjava/Main.java
+
+Added Radu's algorithm for version string checking.
+
+------------------------------------------------------------------------
+r2809 | dcochran | 2007-07-24 09:46:36 +0100 (Tue, 24 Jul 2007) | 2 lines
+Changed paths:
+   A /src/escjava/trunk/ESCTools/Escjava/java/escjava/ast/ModificationSoundnessVisitor.java
+
+Added work-in-progress of soundness visitor for modification pragmas
+
+------------------------------------------------------------------------
+r2808 | dcochran | 2007-07-24 09:45:10 +0100 (Tue, 24 Jul 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Escjava/escj.bat
+
+Adding the fix described by Jonathan Aldrich - see task #594
+
+------------------------------------------------------------------------
+r2807 | dcochran | 2007-07-23 17:17:26 +0100 (Mon, 23 Jul 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Javafe/java/javafe/ast/LoopSoundnessVisitor.java
+   D /src/escjava/trunk/ESCTools/Javafe/java/javafe/ast/SoundnessVisitor.java
+
+Fixed comments
+
+------------------------------------------------------------------------
+r2806 | dcochran | 2007-07-23 17:16:41 +0100 (Mon, 23 Jul 2007) | 2 lines
+Changed paths:
+   A /src/escjava/trunk/ESCTools/Escjava/java/escjava/ast/ObjectInvariantSoundnessVisitor.java
+   A /src/escjava/trunk/ESCTools/Escjava/java/escjava/ast/TrustingPragmaSoundnessVisitor.java
+   M /src/escjava/trunk/ESCTools/Escjava/java/escjava/soundness/Visit.java
+
+Added soundness checking visitors for trusting pragmas and object invariants
+
+------------------------------------------------------------------------
+r2805 | dcochran | 2007-07-23 14:42:23 +0100 (Mon, 23 Jul 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Javafe/java/javafe/reader/BinReader.java
+
+Also use BCEL with Java 1.6
+
+------------------------------------------------------------------------
+r2804 | dcochran | 2007-07-23 13:33:22 +0100 (Mon, 23 Jul 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Escjava/java/escjava/Main.java
+
+Added visitor for loop soundness warnings
+
+------------------------------------------------------------------------
+r2803 | dcochran | 2007-07-23 13:32:37 +0100 (Mon, 23 Jul 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Javafe/java/javafe/ast/LShiftVisitor.java
+
+Fixed comments
+
+------------------------------------------------------------------------
+r2802 | dcochran | 2007-07-23 12:32:33 +0100 (Mon, 23 Jul 2007) | 2 lines
+Changed paths:
+   A /src/escjava/trunk/ESCTools/Javafe/java/javafe/ast/LoopSoundnessVisitor.java
+
+Added soundness warning visitor for for-loop
+
+------------------------------------------------------------------------
+r2801 | dcochran | 2007-07-23 12:26:28 +0100 (Mon, 23 Jul 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Escjava/escj.bat
+
+If ESCJAVA_ROOT is already defined as an environment variable then do not overwrite it with the default value.
+
+------------------------------------------------------------------------
+r2800 | hermann | 2007-07-20 12:03:20 +0100 (Fri, 20 Jul 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Escjava/java/escjava/sortedProver/Lifter.java
+   M /src/escjava/trunk/MobiusDirectVCGen/src/mobius/directVCGen/formula/Logic.java
+
+*** empty log message ***
+
+------------------------------------------------------------------------
+r2796 | hermann | 2007-07-19 16:18:51 +0100 (Thu, 19 Jul 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Escjava/java/escjava/sortedProver/Lifter.java
+
+new symbol added: symFresh
+
+------------------------------------------------------------------------
+r2793 | hermann | 2007-07-18 08:29:58 +0100 (Wed, 18 Jul 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Escjava/java/escjava/sortedProver/Lifter.java
+
+Modified: printTo() of QuantTerm. New: forall and exists JML features
+
+------------------------------------------------------------------------
+r2789 | g_karab | 2007-07-13 02:19:05 +0100 (Fri, 13 Jul 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Escjava/java/escjava/Main.java
+   M /src/escjava/trunk/ESCTools/Escjava/java/escjava/translate/NoWarn.java
+
+Cleaned up a couple of memory leaks.
+
+------------------------------------------------------------------------
+r2787 | everest | 2007-07-11 16:47:28 +0100 (Wed, 11 Jul 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Escjava/java/escjava/sortedProver/Lifter.java
+   M /src/escjava/trunk/ESCTools/Escjava/java/escjava/sortedProver/NodeBuilder.java
+   M /src/escjava/trunk/ESCTools/Escjava/java/escjava/sortedProver/auflia/AufliaNodeBuilder.java
+   M /src/escjava/trunk/ESCTools/Escjava/java/escjava/sortedProver/simplify/SimplifyNodeBuilder.java
+
+added RefBoolFun
+
+------------------------------------------------------------------------
+r2782 | hermann | 2007-07-10 11:00:26 +0100 (Tue, 10 Jul 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Escjava/java/escjava/sortedProver/Lifter.java
+
+New symbols: symDinLoc and symValueToAny
+
+------------------------------------------------------------------------
+r2774 | dcochran | 2007-07-06 17:05:06 +0100 (Fri, 06 Jul 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Escjava/java/escjava/dfa/buildcfd/GCtoCFDBuilder.java
+   M /src/escjava/trunk/ESCTools/Escjava/java/escjava/dfa/daganalysis/DAGBackpropagation.java
+   M /src/escjava/trunk/ESCTools/Escjava/java/escjava/dfa/daganalysis/ReachabilityAnalysis.java
+   M /src/escjava/trunk/ESCTools/Escjava/java/escjava/parser/EscPragmaParser.java
+
+Added file header comments and refactored some of the message strings.
+
+------------------------------------------------------------------------
+r2773 | leavens | 2007-07-05 11:19:32 +0100 (Thu, 05 Jul 2007) | 2 lines
+Changed paths:
+   D /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/BagOfInt_JML_Test.java
+
+This should not be here.
+
+------------------------------------------------------------------------
+r2772 | leavens | 2007-07-05 11:18:46 +0100 (Thu, 05 Jul 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/.cvsignore
+
+Better
+
+------------------------------------------------------------------------
+r2771 | leavens | 2007-07-05 11:16:42 +0100 (Thu, 05 Jul 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/JMLTutorial.tex
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/JMLTutorialHandouts.tex
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/JMLTutorialPresentation.tex
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/JMLTutorialPresentationWithNotes.tex
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/Makefile
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/README.txt
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/BagOfInt.jml
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/BagOfInt.jml-refined
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples_toedit/BagOfInt.jml
+
+Making different documents for each way of looking at the tutorial.
+
+------------------------------------------------------------------------
+r2768 | dcochran | 2007-07-03 17:35:22 +0100 (Tue, 03 Jul 2007) | 2 lines
+Changed paths:
+   A /src/escjava/trunk/ESCTools/Javafe/java/javafe/ast/ASTVisitor.java
+   A /src/escjava/trunk/ESCTools/Javafe/java/javafe/ast/CompletenessVisitor.java
+   M /src/escjava/trunk/ESCTools/Javafe/java/javafe/ast/LShiftVisitor.java
+   M /src/escjava/trunk/ESCTools/Javafe/java/javafe/ast/RShiftVisitor.java
+   A /src/escjava/trunk/ESCTools/Javafe/java/javafe/ast/SoundnessVisitor.java
+
+Refactored soundness and completeness visitors.
+
+------------------------------------------------------------------------
+r2767 | dcochran | 2007-07-03 17:34:45 +0100 (Tue, 03 Jul 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Escjava/java/escjava/soundness/Consistency.java
+
+Fixed line reported by FindBugs.
+
+------------------------------------------------------------------------
+r2766 | leavens | 2007-07-03 17:03:38 +0100 (Tue, 03 Jul 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/README.txt
+
+Added a bit
+
+------------------------------------------------------------------------
+r2765 | leavens | 2007-07-03 11:25:02 +0100 (Tue, 03 Jul 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/new-diagrams.ppt
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/tools-overview.pdf
+
+Final version for CAV
+
+------------------------------------------------------------------------
+r2764 | leavens | 2007-07-03 10:22:14 +0100 (Tue, 03 Jul 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples_toedit/Makefile
+
+Better
+
+------------------------------------------------------------------------
+r2763 | leavens | 2007-07-03 10:19:55 +0100 (Tue, 03 Jul 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/ActorUnderspecified.java
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/GenderedEqualsBad.java
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/GenderedEqualsGood.java
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/Makefile
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/Person.refines-jml
+
+Some corrections
+
+------------------------------------------------------------------------
+r2762 | leavens | 2007-07-02 23:46:46 +0100 (Mon, 02 Jul 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/Makefile
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples_toedit/BagOfInt.java
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples_toedit/Makefile
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples_toedit/sourceme.sh
+
+Minor adjustments
+
+------------------------------------------------------------------------
+r2760 | leavens | 2007-07-02 12:03:33 +0100 (Mon, 02 Jul 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples_toedit/Alias.java
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples_toedit/Ex.java
+
+Slight improvements
+
+------------------------------------------------------------------------
+r2759 | leavens | 2007-07-02 12:02:10 +0100 (Mon, 02 Jul 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/JMLTutorial.tex
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples_toedit/Alias.java
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples_toedit/Ex.java
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples_toedit/ModularityDemo.java
+
+Fixes from practicing the scond half of the tutorial.  It seems that it's not too long after all.
+
+------------------------------------------------------------------------
+r2758 | leavens | 2007-07-01 19:01:26 +0100 (Sun, 01 Jul 2007) | 2 lines
+Changed paths:
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples_toedit
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples_toedit/.cvsignore
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples_toedit/BagOfInt.java
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples_toedit/BagOfInt.jml
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples_toedit/BagOfInt.jml-refined
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples_toedit/BagOfIntMain.java
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples_toedit/BoundedStack.java
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples_toedit/Makefile
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples_worked
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples_worked/.cvsignore
+
+Setup for demos
+
+------------------------------------------------------------------------
+r2757 | leavens | 2007-07-01 18:58:52 +0100 (Sun, 01 Jul 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/JMLTutorial.tex
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/README.txt
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/Actor.java
+
+Edits from a first practice of the first half.
+
+------------------------------------------------------------------------
+r2756 | leavens | 2007-07-01 13:31:06 +0100 (Sun, 01 Jul 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/JMLTutorial.tex
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/Topics.txt
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/alias-brokenobj.pdf
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/correctimpl.pdf
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/ensures.pdf
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/equalsbad1.pdf
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/equalsbad2.pdf
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/equalsgood.pdf
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/escarch.pdf
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/Actor.java
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/ActorUnderspecified.java
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/Alias.java
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/Doctor.java
+   D /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/Dog.java
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/Factor.java
+   D /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/GermanNoun.java
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/HeadTest.java
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/Makefile
+   D /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/Neuter.java
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/Nurse.java
+   D /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/OldAnimal.java
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/Person.refines-jml
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/PrimeException.java
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/README.txt
+   D /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/Senior.java
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/Staff.java
+   D /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/TableGet.java
+   D /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/UnboundedStack.java
+   D /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/ValidForEx.java
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/if1.pdf
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/join-both.pdf
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/join-intersect.pdf
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/meth-refine1.pdf
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/meth-refine2.pdf
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/meth-refine3.pdf
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/multiple-inh2.pdf
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/new-diagrams.ppt
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/requires.pdf
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/unsatisfiable.pdf
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/unsatisfiable2.pdf
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/visibility-modifiers.pdf
+
+Checkpoint, work on the plane
+
+------------------------------------------------------------------------
+r2755 | leavens | 2007-06-30 13:29:22 +0100 (Sat, 30 Jun 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/JMLTutorial.tex
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/Topics.txt
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/Ex.java
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/ModularityDemo.java
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/ScreenPoint.java
+
+Checkpoint, work on ESC/Java section.
+
+------------------------------------------------------------------------
+r2754 | leavens | 2007-06-29 23:43:39 +0100 (Fri, 29 Jun 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/JMLTutorial.tex
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/equalsbad1.pdf
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/equalsbad2.pdf
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/equalsgood.pdf
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/Doctor.java
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/GenderedEqualsBad.java
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/GenderedEqualsGood.java
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/HeadTest.java
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/Nurse.java
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/Patient.java
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/invariant-call1.pdf
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/invariant-call2.pdf
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/invariant-inh.pdf
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/join-both.pdf
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/join-intersect.pdf
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/meth-refine1.pdf
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/meth-refine2.pdf
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/meth-refine3.pdf
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/multiple-inh.pdf
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/new-diagrams.ppt
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/unsatisfiable.pdf
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/unsatisfiable2.pdf
+
+Checkpoint, work on subtyping
+
+------------------------------------------------------------------------
+r2753 | leavens | 2007-06-29 16:45:09 +0100 (Fri, 29 Jun 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/JMLTutorial.tex
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/BoundedStack.java
+
+Checkpoint
+
+------------------------------------------------------------------------
+r2752 | dcochran | 2007-06-29 16:39:56 +0100 (Fri, 29 Jun 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/.settings/org.eclipse.jdt.core.prefs
+
+Report warnings instead or errors for null references
+
+------------------------------------------------------------------------
+r2751 | leavens | 2007-06-29 15:31:32 +0100 (Fri, 29 Jun 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/BoundedStack.java
+
+Correction from Patrice.
+
+------------------------------------------------------------------------
+r2750 | leavens | 2007-06-29 06:05:32 +0100 (Fri, 29 Jun 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/JMLTutorial.tex
+
+Checkpoint
+
+------------------------------------------------------------------------
+r2749 | leavens | 2007-06-29 05:39:42 +0100 (Fri, 29 Jun 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/JMLTutorial.tex
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/ActorUnderspecified.java
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/BagOfInt.jml
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/BoundedStack.java
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/Gendered.java
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/Hailstone2.java
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/SortedInts.java
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/SortedInts2.java
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/SortedInts3.java
+
+Fixes, with help from Clyde Ruby
+
+------------------------------------------------------------------------
+r2748 | leavens | 2007-06-28 23:51:23 +0100 (Thu, 28 Jun 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/JMLTutorial.tex
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/Topics.txt
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/datagroup.pdf
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/Animal.java
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/Females.java
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/Patient.java
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/SortedInts3.java
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/new-diagrams.ppt
+
+Checkpoint
+
+------------------------------------------------------------------------
+r2747 | leavens | 2007-06-28 18:07:18 +0100 (Thu, 28 Jun 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/JMLTutorial.tex
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/Topics.txt
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/Animal.java
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/BagOfInt_JML_Test.java
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/Dog.java
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/FemalePatient.java
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/Females.java
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/Gendered.java
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/GenderedEqualsBad.java
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/GermanNoun.java
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/GreekNoun.java
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/Neuter.java
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/OldAnimal.java
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/Patient.java
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/Person.java
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/Senior.java
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/ValidForEx.java
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/model-correctness.pdf
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/new-diagrams.ppt
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/visibility-modifiers.pdf
+
+Work on abstraction section
+
+------------------------------------------------------------------------
+r2745 | leavens | 2007-06-28 07:22:18 +0100 (Thu, 28 Jun 2007) | 2 lines
+Changed paths:
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/TableGet.java
+
+Adding this.
+
+------------------------------------------------------------------------
+r2744 | leavens | 2007-06-28 07:20:32 +0100 (Thu, 28 Jun 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/JMLTutorial.tex
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/Actor.java
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/ActorUnderspecified.java
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/Aging.java
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/DeathException.java
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/Factor.java
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/Hailstone.java
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/SortedInts2.java
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/SortedInts3.java
+
+Finished with Reading and Writing basics, on to subtyping tomorrow...
+
+------------------------------------------------------------------------
+r2743 | leavens | 2007-06-27 23:15:34 +0100 (Wed, 27 Jun 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/JMLTutorial.tex
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/Topics.txt
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/Aging.java
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/ScreenPoint.java
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/ScreenPoint2.java
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/join-both.pdf
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/join-intersect.pdf
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/new-diagrams.ppt
+
+Checkpoint, work on spec cases
+
+------------------------------------------------------------------------
+r2742 | leavens | 2007-06-27 20:02:57 +0100 (Wed, 27 Jun 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/JMLTutorial.tex
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/SortedInts.java
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/SortedInts2.java
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/SortedInts3.java
+
+Checkpoint, work on aliasing
+
+------------------------------------------------------------------------
+r2740 | leavens | 2007-06-27 18:19:25 +0100 (Wed, 27 Jun 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/.cvsignore
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/JMLTutorial.tex
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/Makefile
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/README.txt
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/aliasxy.pdf
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/Counter2.java
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/Makefile
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/new-diagrams.ppt
+
+Checkpoint, work on aliasing
+
+------------------------------------------------------------------------
+r2739 | everest | 2007-06-27 15:52:45 +0100 (Wed, 27 Jun 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Escjava/java/escjava/sortedProver/Lifter.java
+
+corrected a bug in equals
+
+------------------------------------------------------------------------
+r2737 | chalin | 2007-06-27 13:05:59 +0100 (Wed, 27 Jun 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Escjava/java/escjava/sortedProver/Lifter.java
+
+Fixes to bug #581 and bug #582.
+
+------------------------------------------------------------------------
+r2736 | chalin | 2007-06-27 13:00:54 +0100 (Wed, 27 Jun 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Escjava/java/escjava/OptionsConsistency.java
+   M /src/escjava/trunk/ESCTools/Escjava/java/escjava/sortedProver/NodeBuilder.java
+   M /src/escjava/trunk/ESCTools/Escjava/java/escjava/sortedProver/fx7pg/Fx7pgProver.java
+   M /src/escjava/trunk/ESCTools/Escjava/java/escjava/sortedProver/trew/TrewProver.java
+   M /src/escjava/trunk/ESCTools/Escjava/java/escjava/vcGeneration/coq/SimpleVisitor.java
+   M /src/escjava/trunk/ESCTools/Javafe/java/javafe/reader/ASTClassFileParser.java
+   M /src/escjava/trunk/ESCTools/Javafe/java/javafe/reader/BCELReader.java
+   M /src/escjava/trunk/ESCTools/Javafe/java/javafe/reader/BinReader.java
+
+Fixed to bug #581, "make jml fails due to spec errors".
+
+------------------------------------------------------------------------
+r2735 | chalin | 2007-06-27 11:46:13 +0100 (Wed, 27 Jun 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/specs/java/awt/Color.jml
+   A /src/escjava/trunk/ESCTools/specs/java/awt/color
+   A /src/escjava/trunk/ESCTools/specs/java/awt/color/ColorSpace.jml
+
+*** empty log message ***
+
+------------------------------------------------------------------------
+r2734 | everest | 2007-06-27 10:01:23 +0100 (Wed, 27 Jun 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Escjava/java/escjava/sortedProver/EscNodeBuilder.java
+
+put the sort type into the node builder back
+
+------------------------------------------------------------------------
+r2733 | leavens | 2007-06-27 06:27:30 +0100 (Wed, 27 Jun 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/JMLTutorial.tex
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/aliasxy.pdf
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/Counter.java
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/Makefile
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/new-diagrams.ppt
+
+More work on this.
+
+------------------------------------------------------------------------
+r2732 | leavens | 2007-06-27 00:54:08 +0100 (Wed, 27 Jun 2007) | 2 lines
+Changed paths:
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/BagOfIntMain.java
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/BagOfInt_JML_TestData_Example.txt
+
+Adding more
+
+------------------------------------------------------------------------
+r2731 | leavens | 2007-06-27 00:50:23 +0100 (Wed, 27 Jun 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/JMLTutorial.tex
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/BagOfInt.java
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/BagOfInt.jml
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/Makefile
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/sourceme.sh
+
+Work on the first tool demo section
+
+------------------------------------------------------------------------
+r2730 | leavens | 2007-06-26 20:44:21 +0100 (Tue, 26 Jun 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/ArrayOps.java
+
+Taking out the non_null, which shouldn't be needed...
+
+------------------------------------------------------------------------
+r2729 | leavens | 2007-06-26 20:37:47 +0100 (Tue, 26 Jun 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/.classpath
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/ArrayOps.java
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/UnboundedStack.java
+
+Some minor improvements.
+
+------------------------------------------------------------------------
+r2728 | leavens | 2007-06-26 18:56:29 +0100 (Tue, 26 Jun 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/JMLTutorial.tex
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/ArrayOps.java
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/Makefile
+
+Better
+
+------------------------------------------------------------------------
+r2727 | leavens | 2007-06-26 18:05:57 +0100 (Tue, 26 Jun 2007) | 2 lines
+Changed paths:
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/.classpath
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/.project
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/BagOfInt.java
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/BagOfInt.jml
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/UnboundedStack.java
+
+A few fixes
+
+------------------------------------------------------------------------
+r2725 | leavens | 2007-06-26 16:05:54 +0100 (Tue, 26 Jun 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/JMLTutorial.tex
+
+Checkpoint
+
+------------------------------------------------------------------------
+r2721 | leavens | 2007-06-26 04:51:32 +0100 (Tue, 26 Jun 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/JMLTutorial.tex
+
+checkpoint
+
+------------------------------------------------------------------------
+r2720 | leavens | 2007-06-25 23:41:12 +0100 (Mon, 25 Jun 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/JMLTutorial.tex
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/Bag.java
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/BagOfInt.java
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/BagOfInt.jml
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/BagOfInt.jml-refined
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/jml-listings.tex
+
+More work on this.  Adding an exercise to specify Bag just before the first demo of the tools.
+
+------------------------------------------------------------------------
+r2716 | everest | 2007-06-25 14:22:14 +0100 (Mon, 25 Jun 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Escjava/java/escjava/sortedProver/Lifter.java
+   M /src/escjava/trunk/ESCTools/Escjava/java/escjava/sortedProver/NodeBuilder.java
+   M /src/escjava/trunk/MobiusDirectVCGen/src/mobius/directVCGen/formula/coq/CoqNodeBuilder.java
+
+added the Herman's Inv construct support
+
+------------------------------------------------------------------------
+r2715 | everest | 2007-06-25 14:17:31 +0100 (Mon, 25 Jun 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Escjava/java/escjava/sortedProver/auflia/AufliaNodeBuilder.java
+   M /src/escjava/trunk/ESCTools/Escjava/java/escjava/sortedProver/simplify/SimplifyNodeBuilder.java
+
+added the invariant support
+
+------------------------------------------------------------------------
+r2714 | everest | 2007-06-25 13:34:29 +0100 (Mon, 25 Jun 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Escjava/java/escjava/sortedProver/Lifter.java
+
+corrected a bug
+
+------------------------------------------------------------------------
+r2711 | leavens | 2007-06-25 07:06:10 +0100 (Mon, 25 Jun 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/.cvsignore
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/JMLTutorial.tex
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/diagrams.ppt
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/UnboundedStack.java
+
+More work on this
+
+------------------------------------------------------------------------
+r2710 | leavens | 2007-06-25 06:29:32 +0100 (Mon, 25 Jun 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/JMLTutorial.tex
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/correctimpl.pdf
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/ensures.pdf
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/BoundedStack.java
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/new-diagrams.ppt
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/requires.pdf
+
+More work on this, checkpoint
+
+------------------------------------------------------------------------
+r2709 | leavens | 2007-06-24 22:16:44 +0100 (Sun, 24 Jun 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/JMLTutorial.tex
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/new-diagrams.ppt
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/tools-overview.pdf
+
+Checkpoint, done with firstsection -- overview
+
+------------------------------------------------------------------------
+r2707 | leavens | 2007-06-24 03:50:11 +0100 (Sun, 24 Jun 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/JMLTutorial.tex
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/Makefile
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/if0.pdf
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/if1.pdf
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/new-diagrams.ppt
+
+Learning how to do pictures in beamer.
+
+------------------------------------------------------------------------
+r2705 | leavens | 2007-06-22 21:18:15 +0100 (Fri, 22 Jun 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/JMLTutorial.tex
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/Topics.txt
+
+Checkpoint
+
+------------------------------------------------------------------------
+r2704 | leavens | 2007-06-22 17:59:49 +0100 (Fri, 22 Jun 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/JMLTutorial.tex
+
+Better, checkpoint
+
+------------------------------------------------------------------------
+r2703 | leavens | 2007-06-22 16:07:35 +0100 (Fri, 22 Jun 2007) | 2 lines
+Changed paths:
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/NotesFromErik-Joe.txt
+
+Adding these notes
+
+------------------------------------------------------------------------
+r2702 | chalin | 2007-06-22 12:56:45 +0100 (Fri, 22 Jun 2007) | 2 lines
+Changed paths:
+   A /src/escjava/trunk/ESCTools/specs/java/awt/Color.jml
+
+*** empty log message ***
+
+------------------------------------------------------------------------
+r2701 | leavens | 2007-06-22 07:02:17 +0100 (Fri, 22 Jun 2007) | 2 lines
+Changed paths:
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/ArrayOps.java
+
+Added
+
+------------------------------------------------------------------------
+r2700 | leavens | 2007-06-22 07:01:55 +0100 (Fri, 22 Jun 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/JMLTutorial.tex
+
+Work on typesetting an example.
+
+------------------------------------------------------------------------
+r2699 | leavens | 2007-06-21 23:59:15 +0100 (Thu, 21 Jun 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/README.txt
+
+Test
+
+------------------------------------------------------------------------
+r2698 | leavens | 2007-06-21 23:15:31 +0100 (Thu, 21 Jun 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/README.txt
+
+Test
+
+------------------------------------------------------------------------
+r2697 | leavens | 2007-06-21 23:04:29 +0100 (Thu, 21 Jun 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/Makefile
+
+Test
+
+------------------------------------------------------------------------
+r2696 | leavens | 2007-06-21 22:53:01 +0100 (Thu, 21 Jun 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/JMLTutorial.tex
+
+Better
+
+------------------------------------------------------------------------
+r2695 | leavens | 2007-06-21 22:47:02 +0100 (Thu, 21 Jun 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/JMLTutorial.tex
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/Topics.txt
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/.cvsignore
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/Makefile
+
+Checkpoint
+
+------------------------------------------------------------------------
+r2694 | leavens | 2007-06-21 20:38:18 +0100 (Thu, 21 Jun 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/Topics.txt
+
+Better list of topics
+
+------------------------------------------------------------------------
+r2693 | g_karab | 2007-06-21 17:34:35 +0100 (Thu, 21 Jun 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/.classpath
+   M /src/escjava/trunk/ESCTools/.project
+   A /src/escjava/trunk/ESCTools/META-INF
+   A /src/escjava/trunk/ESCTools/META-INF/MANIFEST.MF
+   A /src/escjava/trunk/ESCTools/build.properties
+
+Converted project to an Eclipse plug-in project.
+
+------------------------------------------------------------------------
+r2692 | leavens | 2007-06-21 16:58:10 +0100 (Thu, 21 Jun 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/JMLTutorial.tex
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/README.txt
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/Topics.txt
+
+Checkpoint
+
+------------------------------------------------------------------------
+r2691 | leavens | 2007-06-21 14:27:49 +0100 (Thu, 21 Jun 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/JMLTutorial.tex
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/Makefile
+
+Making the handout generation systematic
+
+------------------------------------------------------------------------
+r2690 | leavens | 2007-06-21 07:45:37 +0100 (Thu, 21 Jun 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/Makefile
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/README.txt
+
+Notes on handouts
+
+------------------------------------------------------------------------
+r2689 | leavens | 2007-06-21 07:43:58 +0100 (Thu, 21 Jun 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/JMLTutorial.tex
+
+fixing for use with pgf to make handouts.
+
+------------------------------------------------------------------------
+r2688 | leavens | 2007-06-21 07:25:04 +0100 (Thu, 21 Jun 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/.cvsignore
+
+fixed
+
+------------------------------------------------------------------------
+r2687 | leavens | 2007-06-21 07:24:18 +0100 (Thu, 21 Jun 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/.cvsignore
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/JMLTutorial.tex
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/Makefile
+   D /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/beamertest.tex
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/jml-logo-hires.eps
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/jml-logo-hires.png
+
+Working on stylistic details and understanding the beamer style.
+
+------------------------------------------------------------------------
+r2686 | leavens | 2007-06-21 01:04:45 +0100 (Thu, 21 Jun 2007) | 2 lines
+Changed paths:
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/beamertest.tex
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/jml-listings.tex
+
+Adding these
+
+------------------------------------------------------------------------
+r2685 | leavens | 2007-06-20 21:07:36 +0100 (Wed, 20 Jun 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/Objectives.txt
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/README.txt
+
+Refined these a bit
+
+------------------------------------------------------------------------
+r2684 | dcochran | 2007-06-20 17:27:25 +0100 (Wed, 20 Jun 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Escjava/java/escjava/ast/TagConstants.java
+
+Fixed out-of-line indent
+
+------------------------------------------------------------------------
+r2680 | jkiniry | 2007-06-18 17:48:07 +0100 (Mon, 18 Jun 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Escjava/escj
+
+Explicit config for XMLRPC library.
+
+------------------------------------------------------------------------
+r2672 | mjm | 2007-06-14 15:51:53 +0100 (Thu, 14 Jun 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Escjava/java/escjava/sortedProver/trew/TrewProver.java
+
+Make it actually work (forgotten commit).
+
+------------------------------------------------------------------------
+r2670 | hermann | 2007-06-14 11:25:41 +0100 (Thu, 14 Jun 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Escjava/java/escjava/sortedProver/Lifter.java
+   M /src/escjava/trunk/MobiusDirectVCGen/src/mobius/directVCGen/formula/Logic.java
+   M /src/escjava/trunk/MobiusDirectVCGen/src/mobius/directVCGen/formula/jmlTranslator/JmlVisitor.java
+
+*** empty log message ***
+
+------------------------------------------------------------------------
+r2669 | dcochran | 2007-06-13 18:02:50 +0100 (Wed, 13 Jun 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Javafe/java/javafe/reader/BCELReader.java
+   M /src/escjava/trunk/ESCTools/Javafe/java/javafe/tc/PrepTypeDeclaration.java
+
+Fixed JML annotaions by removing unwanted white spaces.
+
+------------------------------------------------------------------------
+r2668 | dcochran | 2007-06-13 17:34:20 +0100 (Wed, 13 Jun 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Makefile
+
+Adding license file to bianry and source releases
+
+------------------------------------------------------------------------
+r2667 | dcochran | 2007-06-13 17:32:07 +0100 (Wed, 13 Jun 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Javafe/java/javafe/reader/BCELReader.java
+   M /src/escjava/trunk/ESCTools/Javafe/java/javafe/tc/PrepTypeDeclaration.java
+
+Fixed non_null annotations
+
+------------------------------------------------------------------------
+r2666 | dcochran | 2007-06-12 13:14:53 +0100 (Tue, 12 Jun 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/license.txt
+
+Updated license file
+
+------------------------------------------------------------------------
+r2665 | dcochran | 2007-06-12 12:20:03 +0100 (Tue, 12 Jun 2007) | 2 lines
+Changed paths:
+   A /src/escjava/trunk/ESCTools/license.txt
+
+Added license file; this is the MIT license composed with the Apache license composed with the HP license for the original ESCJava.
+
+------------------------------------------------------------------------
+r2664 | jkiniry | 2007-06-11 16:47:33 +0100 (Mon, 11 Jun 2007) | 2 lines
+Changed paths:
+   A /src/escjava/trunk/ESCTools/docs/mobius-checkstyle-2.4.xml
+   A /src/escjava/trunk/ESCTools/docs/mobius-checkstyle-4.2.xml
+
+Eclipse code formatter snapshot and CheckStyle specifications for the UCD-Mobius coding standard.
+
+------------------------------------------------------------------------
+r2663 | dcochran | 2007-06-08 17:23:49 +0100 (Fri, 08 Jun 2007) | 2 lines
+Changed paths:
+   D /src/escjava/trunk/ESCTools/lgpl.txt
+
+Lincense to be determined
+
+------------------------------------------------------------------------
+r2662 | dcochran | 2007-06-08 16:54:06 +0100 (Fri, 08 Jun 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Makefile
+
+Fixed makefile
+
+------------------------------------------------------------------------
+r2661 | chalin | 2007-06-08 15:11:42 +0100 (Fri, 08 Jun 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Escjava/test/jdktests/TestVector.java-expected
+
+Removed trace output from .java-expected.
+
+------------------------------------------------------------------------
+r2660 | chalin | 2007-06-08 14:53:47 +0100 (Fri, 08 Jun 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Makefile.defs
+
+Changed a ";" to a ":" in JUNIT_UTILS_PATH since it prevented the path from being properly processed under Windows (IMHO it should have caused problems under Linux too).
+
+------------------------------------------------------------------------
+r2659 | chalin | 2007-06-08 14:46:11 +0100 (Fri, 08 Jun 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Escjava/java/escjava/vcGeneration/coq/SimpleVisitor.java
+
+Disabled assertions in JML annotations that are not in JML syntax.
+
+------------------------------------------------------------------------
+r2658 | chalin | 2007-06-08 14:30:02 +0100 (Fri, 08 Jun 2007) | 4 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/.settings/org.eclipse.jdt.core.prefs
+
+Updated settings:
+- Ignore: problems with generics (until we actually start making use of generics).
+- Error: for Null pointer access.
+
+------------------------------------------------------------------------
+r2657 | chalin | 2007-06-08 14:28:34 +0100 (Fri, 08 Jun 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Escjava/java/escjava/translate/DefGCmd.java
+
+NPE bug fix (found by NPE analysis).
+
+------------------------------------------------------------------------
+r2656 | chalin | 2007-06-08 14:25:38 +0100 (Fri, 08 Jun 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Javafe/test/javafe/test/fe/skip
+
+Added test1007.
+
+------------------------------------------------------------------------
+r2655 | jkiniry | 2007-06-08 12:54:22 +0100 (Fri, 08 Jun 2007) | 2 lines
+Changed paths:
+   D /src/escjava/trunk/ESCTools/docs/UCD Mobius Eclipse code formatting specification
+   A /src/escjava/trunk/ESCTools/docs/UCD-Mobius_Eclipse_code_formatting_specification.xml
+
+renamed checkstyle-based code standard specification per Radu's request
+
+------------------------------------------------------------------------
+r2654 | chalin | 2007-06-08 12:46:34 +0100 (Fri, 08 Jun 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Javafe/test/javafe/test/Makefile
+
+Canonicalizing paths to get tests to run under Windows.
+
+------------------------------------------------------------------------
+r2653 | chalin | 2007-06-08 12:46:02 +0100 (Fri, 08 Jun 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Javafe/Makefile
+
+(Cleanup. No need to set JAVAFE_CLASSPATH_CAN on the command line in recursive make calls.)
+
+------------------------------------------------------------------------
+r2652 | chalin | 2007-06-08 12:04:04 +0100 (Fri, 08 Jun 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Javafe/test/javafe/test/fe/Makefile
+   M /src/escjava/trunk/ESCTools/Javafe/test/javafe/test/lex/Makefile
+   M /src/escjava/trunk/ESCTools/Makefile.defs
+
+Moved definition of JAVAFE_CLASSPATH_CAN to the top Makefile.defs and fixed Javafe Makefiles so that they use canonicalized classpaths (otherwise tests do not run under Windows).
+
+------------------------------------------------------------------------
+r2651 | chalin | 2007-06-08 11:37:00 +0100 (Fri, 08 Jun 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/.externalToolBuilders/make-source.launch
+   M /src/escjava/trunk/ESCTools/.project
+   M /src/escjava/trunk/ESCTools/.settings/org.eclipse.jdt.core.prefs
+   M /src/escjava/trunk/ESCTools/.settings/org.eclipse.jdt.ui.prefs
+
+Updated project settings.
+
+------------------------------------------------------------------------
+r2650 | dcochran | 2007-06-08 09:55:46 +0100 (Fri, 08 Jun 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/specs/java/lang/Character.jml
+
+Removed unused constant CHAR_ERROR which appeared in JDK 1.4, but is not in JDK 1.5.
+
+------------------------------------------------------------------------
+r2649 | dcochran | 2007-06-07 15:44:04 +0100 (Thu, 07 Jun 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Makefile
+
+Fixed makefile.
+
+------------------------------------------------------------------------
+r2648 | dcochran | 2007-06-07 15:20:07 +0100 (Thu, 07 Jun 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Makefile
+
+Include BCEL in the binary release
+
+------------------------------------------------------------------------
+r2647 | dcochran | 2007-06-07 14:55:33 +0100 (Thu, 07 Jun 2007) | 2 lines
+Changed paths:
+   A /src/escjava/trunk/ESCTools/lgpl.txt
+
+Added lesser GPL license file.
+
+------------------------------------------------------------------------
+r2646 | leavens | 2007-06-05 19:25:12 +0100 (Tue, 05 Jun 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/.cvsignore
+
+Adding this
+
+------------------------------------------------------------------------
+r2645 | leavens | 2007-06-05 19:23:04 +0100 (Tue, 05 Jun 2007) | 2 lines
+Changed paths:
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial
+   A /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/Objectives.txt
+
+added
+
+------------------------------------------------------------------------
+r2644 | mjm | 2007-06-04 16:24:00 +0100 (Mon, 04 Jun 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Escjava/java/escjava/sortedProver/fx7pg/Fx7pgProver.java
+
+Bug fix.
+
+------------------------------------------------------------------------
+r2643 | mjm | 2007-06-04 16:23:39 +0100 (Mon, 04 Jun 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Escjava/java/escjava/sortedProver/auflia/AufliaNodeBuilder.java
+
+Implement a kludge (sorting of children of and and or) to workaround ESC/Java randomness.
+
+------------------------------------------------------------------------
+r2642 | mjm | 2007-06-04 16:22:58 +0100 (Mon, 04 Jun 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Escjava/java/escjava/sortedProver/fx7/Fx7Prover.java
+
+Don't send (PRAGMA ProblemName ...) as it confuses the prover.
+
+------------------------------------------------------------------------
+r2640 | mjm | 2007-06-01 19:36:56 +0100 (Fri, 01 Jun 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Escjava/java/escjava/sortedProver/fx7pg/Fx7pgProver.java
+   M /src/escjava/trunk/ESCTools/Escjava/java/escjava/sortedProver/trew/TrewProver.java
+
+It somewhat works.
+
+------------------------------------------------------------------------
+r2639 | mjm | 2007-06-01 19:36:39 +0100 (Fri, 01 Jun 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Escjava/java/escjava/sortedProver/Lifter.java
+
+Make it handle one more case.
+
+------------------------------------------------------------------------
+r2638 | dcochran | 2007-06-01 17:53:41 +0100 (Fri, 01 Jun 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/install.sh
+
+Fixed permissions
+
+------------------------------------------------------------------------
+r2637 | dcochran | 2007-06-01 17:53:26 +0100 (Fri, 01 Jun 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/docs/BUILDING_NEW_RELEASES.txt
+
+Added note about MAC OS X
+
+------------------------------------------------------------------------
+r2636 | dcochran | 2007-06-01 17:53:05 +0100 (Fri, 01 Jun 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Makefile
+
+Include BCEL in the binary release
+
+------------------------------------------------------------------------
+r2635 | dcochran | 2007-06-01 17:52:36 +0100 (Fri, 01 Jun 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/release-files/escj.bat
+
+Added BCEL to the classpath
+
+------------------------------------------------------------------------
+r2634 | jkiniry | 2007-05-31 18:15:10 +0100 (Thu, 31 May 2007) | 2 lines
+Changed paths:
+   A /src/escjava/trunk/ESCTools/docs/UCD Mobius Eclipse code formatting specification
+
+This is the Eclipse code style for UCD's Java development.  Just import it into your project or environment's code style page.
+
+------------------------------------------------------------------------
+r2633 | jkiniry | 2007-05-31 18:08:38 +0100 (Thu, 31 May 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Escjava/java/escjava/Main.java
+   M /src/escjava/trunk/ESCTools/Javafe/java/javafe/FrontEndTool.java
+
+Added protected method FrontEndTool.virtualMachineVersionCheck so that javafe subtools can check their VM version in a single place.  The overridden version of this method in escjava.Main implements bug#575.
+
+------------------------------------------------------------------------
+r2632 | dcochran | 2007-05-31 18:07:23 +0100 (Thu, 31 May 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Javafe/java/javafe/reader/BCELReader.java
+
+Added semicolons to JML annotations;
+
+------------------------------------------------------------------------
+r2631 | jkiniry | 2007-05-31 18:07:13 +0100 (Thu, 31 May 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Javafe/java/javafe/util/ErrorSet.java
+
+Corrected some indentation and added some docs.
+
+------------------------------------------------------------------------
+r2630 | jkiniry | 2007-05-31 17:32:44 +0100 (Thu, 31 May 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/.project
+
+Added back in Java nature so that this is a Java project.
+
+------------------------------------------------------------------------
+r2629 | dcochran | 2007-05-31 17:25:55 +0100 (Thu, 31 May 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/README.first
+   M /src/escjava/trunk/ESCTools/release-files/README.release
+   M /src/escjava/trunk/ESCTools/release-files/RELEASE_NOTES.txt
+
+Updated release notes
+
+------------------------------------------------------------------------
+r2628 | dcochran | 2007-05-31 17:10:22 +0100 (Thu, 31 May 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Javafe/java/javafe/reader/BCELReader.java
+
+Added usage of interface type names.
+
+------------------------------------------------------------------------
+r2627 | jkiniry | 2007-05-31 17:01:20 +0100 (Thu, 31 May 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Javafe/java/javafe/reader/ASTClassFileParser.java
+   M /src/escjava/trunk/ESCTools/Javafe/java/javafe/reader/BCELReader.java
+
+Performed an analysis of the type interface of ASTClassFileParser to ensure that the new BCELReader conforms to the same interface.  Part of this work was cleaning up the formatting of the code, documenting all fields, fixing all JML annotations, and realizing that only BinReader read from a few of the fields of ASTClassFileParser.  Therefore, I tightened down the visibility of these fields from public to package, and annotated that the remaining fields should be eliminated from the new BCELReader as they are unused by all tools that depend upon javafe at this time.
+
+------------------------------------------------------------------------
+r2625 | jkiniry | 2007-05-31 15:51:46 +0100 (Thu, 31 May 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/docs/Escjava2-UsersManual/java
+   M /src/escjava/trunk/ESCTools/docs/Escjava2-UsersManual/java/.cvsignore
+
+Ignoring Texinfo generated from Java source.
+
+------------------------------------------------------------------------
+r2624 | jkiniry | 2007-05-31 15:51:11 +0100 (Thu, 31 May 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Escjava/Makefile
+
+AnOverview.java is generated by astgen; don't remove it from the RHS of the Makefile rule!
+
+------------------------------------------------------------------------
+r2623 | jkiniry | 2007-05-31 15:45:54 +0100 (Thu, 31 May 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/docs/Escjava2-UsersManual/Escjava2-UsersManual.texinfo
+
+Corrected syntax of some Texinfo cross-references and use of verbatim vs. example environments for code examples.
+
+------------------------------------------------------------------------
+r2622 | jkiniry | 2007-05-31 15:40:58 +0100 (Thu, 31 May 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Javafe/java/javafe/decsrc
+   A /src/escjava/trunk/ESCTools/Javafe/java/javafe/decsrc/.cvsignore
+   M /src/escjava/trunk/ESCTools/Javafe/java/javafe/tc
+   M /src/escjava/trunk/ESCTools/Javafe/java/javafe/tc/.cvsignore
+   M /src/escjava/trunk/ESCTools/docs/Escjava2-Logics
+   M /src/escjava/trunk/ESCTools/docs/Escjava2-Logics/.cvsignore
+   M /src/escjava/trunk/ESCTools/docs/Escjava2-UsersManual
+   M /src/escjava/trunk/ESCTools/docs/Escjava2-UsersManual/.cvsignore
+   M /src/escjava/trunk/ESCTools/docs/Escjava2-UsersManual/java
+   A /src/escjava/trunk/ESCTools/docs/Escjava2-UsersManual/java/.cvsignore
+
+Ignoring Emacs's semantic.cache files.
+
+------------------------------------------------------------------------
+r2621 | jkiniry | 2007-05-31 15:40:30 +0100 (Thu, 31 May 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Javafe/java/javafe/util/LocationManagerCorrelatedReader.java
+
+Indentation fix (whitespace-only).
+
+------------------------------------------------------------------------
+r2620 | jkiniry | 2007-05-31 15:37:12 +0100 (Thu, 31 May 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/.project
+
+Removed use of ESC/Java2 plugin autochecker.
+
+------------------------------------------------------------------------
+r2619 | dcochran | 2007-05-31 14:20:16 +0100 (Thu, 31 May 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/ChangeLog
+   M /src/escjava/trunk/ESCTools/docs/BUILDING_NEW_RELEASES.txt
+   M /src/escjava/trunk/ESCTools/docs/Escjava2-ImplementationNotes/Escjava2-ImplementationNotes.texinfo
+   M /src/escjava/trunk/ESCTools/release-files/RELEASE_NOTES.txt
+
+Updated release notes and change log
+
+------------------------------------------------------------------------
+r2618 | dcochran | 2007-05-31 14:17:53 +0100 (Thu, 31 May 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Javafe/java/javafe/reader/BCELReader.java
+
+Clarify that javaClass.getClassNamIndex() actually returns the class index.
+ 
+------------------------------------------------------------------------
+-------------------------------
+
+
 Thur May 31 11:31:21 IST 2007	dcochran
 
 	Changed use of valueOf to new constructor so that this will compile in Java 
