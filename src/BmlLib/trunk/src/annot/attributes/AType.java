@@ -2,8 +2,10 @@ package annot.attributes;
 
 /**
  * Contains codes for each printable attribute type
- * and common used bit mask represents sets of attributes
- * that we want get (in getAllAttribute(int mask) methods).
+ * and commonly used bit masks to represent sets of attributes
+ * that we want retrieve (through getAllAttribute(int mask) methods).
+ * TODO może @link do getAllAttribute?
+ * TODO w czym te kody sa wykorzystywane? 
  * 
  * @author tomekb
  */
@@ -12,7 +14,7 @@ public interface AType {
 	// attribute masks:
 	
 	/**
-	 * Attribute mask for all attribute types
+	 * Attribute mask that admits all the attribute types
 	 */
 	public static final int C_ALL = 0xffffffff;
 

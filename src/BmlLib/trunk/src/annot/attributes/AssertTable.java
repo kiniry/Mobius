@@ -18,7 +18,7 @@ public class AssertTable extends BCAttributeTable {
 	 * 
 	 * @param m - method containing this attribute,
 	 * @param parent - BCAttributeMap containing
-	 * 		its attributes.
+	 * 		its attributes. TODO czyje atrybuty?
 	 * @see BCAttributeTable#BCAttributeTable(BCMethod, BCAttributeMap)
 	 */
 	public AssertTable(BCMethod m, BCAttributeMap parent) {
@@ -26,12 +26,12 @@ public class AssertTable extends BCAttributeTable {
 	}
 
 	/**
-	 * Loads single assert from file.
+	 * Loads single assert from a file.
 	 * 
-	 * @param m - method containing this attribute,
-	 * @param ar - stream to load from.
+	 * @param m - a method containing this attribute,
+	 * @param ar - a stream to load the assert from.
 	 * @throws ReadAttributeException - if data left
-	 * 		in <code>ar</code> doesn't represent correct
+	 * 		in <code>ar</code> doesn't represent a correct
 	 * 		assert.
 	 */
 	@Override
@@ -43,7 +43,7 @@ public class AssertTable extends BCAttributeTable {
 	}
 
 	/**
-	 * @return Unknown (BCEL) attribute name.
+	 * @return Unknown (BCEL) attribute name. TODO unknown dla kogo
 	 */
 	@Override
 	public String getName() {
@@ -51,7 +51,7 @@ public class AssertTable extends BCAttributeTable {
 	}
 
 	/**
-	 * @return attribute type of single annotation. 
+	 * @return attribute type of a single annotation. 
 	 */
 	@Override
 	protected int singleType() {
