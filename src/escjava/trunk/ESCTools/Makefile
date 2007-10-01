@@ -542,6 +542,7 @@ binary-release: build jars alldocs cleanup
 	${MAKE} -C Utils build
 	mkdir ${RELTEMP}/Utils
 	cp -rf ${ESCTOOLS_ROOT}/Utils/BCEL ${RELTEMP}/Utils/BCEL
+	cp ${ESCTOOLS_ROOT}/release-files/quicktest ${RELTEMP}
 	cp ${ESCJAVA_ROOT}/escj ${RELTEMP}
 	cp ${ESCJAVA_ROOT}/escj.bat ${RELTEMP}
 	cp ${ESCJAVA_ROOT}/escjava2.exe ${RELTEMP}
@@ -564,7 +565,7 @@ test-binary-release:
 	cd ${RELTEST} ;\
 	    unset ESC_CLASSPATH ; \
 	    tar xjf ${RELTAR}.tbz ;\
-	    ${RELDIR}/quicktest
+	    ${RELTEST}/quicktest
 
 ## Note - we need to unset lots of environmental variables here because we
 ## want them to be reset based on the value of ESC_RELEASE in install.sh.
