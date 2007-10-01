@@ -3,13 +3,17 @@ version 2.0b2 "Mobius PVE Internal Release" (1 October 2007)
 New major features include:
 
 o Joe Kiniry has moved ESC/Java2 from a CVS/GForge repository to a Subversion/Trac repository
+o Soundness and Completeness warnings have been further extended
 
-o Numerous bugs have been identified, fixed, and added. :)
+The following Trac [mobius.ucd.ie] tickets are FIXED or CLOSED in this release:
 
-The following Trac Tickets are FIXED or CLOSED in this release:
+Ticket	Summary	                                                                             Owner	    Type	Priority	Component	Version
+25	    ESC/Java-2.0b1 Support	                                                             dcochran	defect	major	    ESC/Java	2.0b1
+28	    NullPointerException thrown with @pure modified comes before @modifies spec	         dcochran	defect	major	    ESC/Java	2.0b1 
+31	    Tests failing in ESCJava2 trunk	                                                     dcochran	defect	major	    ESC/Java	2.0b1 
+10	    build system weirdness (error in Javafe)	                                         dcochran	defect	minor	    ESC/Java	2.0b1 
 
-
-The following GForge tickets are known to EXIST in this release:
+The following GForge [sort.ucd.ie/tracker] tickets are known to EXIST in this release:
 
 ID      Summary                                                                               Open Date            Assigned To       Submitted By
 570	    semantics of modifies \everything	                                                  2007-05-12 11:16	   Joseph Kiniry	    Mikolas Janota
