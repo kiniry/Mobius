@@ -28,4 +28,4 @@ rem USERPATH is a variable local to this batch file
 if "%CLASSPATH%"=="" set USERPATH=.
 if not "%CLASSPATH%"=="" set USERPATH=%CLASSPATH%
 @echo on
-"%JAVA%"  -Dsimplify=%ESCJ_SIMPLIFY% -classpath "%ESCJAVA_ROOT%\esctools2.jar;%ESCJAVA_ROOT%\Utils\bcel-5.2\bcel-5.2.jar" escjava.Main -classpath   %ESCJAVA_ROOT%\jmlspecs.jar -classpath . %ESCJ_STDARGS% %ESCJ_ARGS%
+"%JAVA%"  -Dsimplify=%ESCJ_SIMPLIFY% -classpath "%ESCJAVA_ROOT%\esctools2.jar:%ESCJAVA_ROOT%\Utils\BCEL\bcel-5.2\bcel-5.2.jar" escjava.Main -classpath   %ESCJAVA_ROOT%\jmlspecs.jar -classpath . %ESCJ_STDARGS% %ESCJ_ARGS%
