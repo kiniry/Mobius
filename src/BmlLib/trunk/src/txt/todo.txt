@@ -1,5 +1,15 @@
 TODO:
-- create CodeFragment class
+> create CodeFragment class
+	+ complete addChange method,
+	+ test addChange method,
+	- fix where method,
+	- compute changes range and affected fragment,
+	> parse changes on each levels:
+		- annotation,
+		- instruction,
+		- method (replace all annotations from it),
+		- class (replace all methods from it).
+	- recompute pc numbers.
 - integrate with Umbra
 - complete specificationCase attribute
 - add attributes

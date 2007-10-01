@@ -188,6 +188,11 @@ public final class OldTests {
 		}
 	}
 	
+	private static void error(String errMsg) {
+		System.out.println("Fatal error: " + errMsg);
+		throw new RuntimeException(errMsg);
+	}
+	
 	// below are some test scenarios. They can throw many
 	// exception that are catched in main method.
 	// An exception usually means an error in BmlLib library
@@ -311,6 +316,22 @@ public final class OldTests {
 	 */
 	private static void attributeSearchTest() throws ClassNotFoundException,
 			ReadAttributeException {
+		String change1 = "| false) && (true |";
+		String change2 = "ue || false))))\n * \\assert ((true ==> true) && (false || true";
+		String change3 = "    ~(~(~false))) &&\n"+
+		" *    ((false && false || ~false) &&\n"+
+		" *        (false && true || ~false) ||\n"+
+		" *      ~(~(~false)))\n"+
+		" */\n"+
+		"46:   getstatic		test.Empty2.l I (10)\n"+
+		"49:   invokevirtual	java.lang.StringBuilder.append (I)Ljava/lang/StringBuilder; (42)\n"+
+		"52:   invokevirtual	java.lang.StringBuilder.toString ()Ljava/lang/String; (51)\n"+
+		"55:   invokevirtual	java.io.PrintStream.println (Ljava/lang/String;)V (55)\n"+
+		"/*\n"+ 
+		" * \\assert ((false || false) &&\n"+
+		" *          (false || false) || ~false) &&\n"+
+		" *      ((false |";
+		String change4 = "ad\n65:   ireturn\n\n/* \requires false */\npublic static void main(String[] args)\n0";
 		bcc = createSampleClass();
 		String code = bcc.printCode();
 		System.out.println(addLineNumbers(code));
@@ -328,46 +349,38 @@ public final class OldTests {
 					", "+p[2]+"]" + ((p[3]!=0) ? " *" : ""));
 			}
 		}
+		System.out.println(xxx);
 		System.out.println("total code length: " + code.length());
 		CodeFragment cf = new CodeFragment(bcc, code);
+		System.out.println("### stage 0");
+		cf.addChange(2500, 20, change1);
+		cf.addChange(2502, 5, "true");
+		cf.addChange(2517, 2, "==>");
+		cf.addChange(2493, 10, "true || t");
+		cf.addChange(2493, 30, "true && fal");
+		cf.addChange(2492, 0, "(0<1) || ");
+		cf.addChange(2514, 4, "e && true) |");
+		cf.performChanges();
+		cf = new CodeFragment(bcc, code);
 		System.out.println("### stage 1");
-		cf.modify(2500, 20, "| false) && (true |");
-		System.out.println(cf.toString());
-		if (!cf.correct())
-			throw new RuntimeException("test 1: code replace failed!");
-		cf = new CodeFragment(bcc, code);
-		System.out.println("### stage 2");
-		cf.modify(2600, 50, "ue || false))))\n * \\assert ((true ==> true) && (false || true");
-		System.out.println(cf.toString());
-		if (!cf.correct())
-			throw new RuntimeException("test 2: code replace failed!");
-		cf = new CodeFragment(bcc, code);
-		System.out.println("### stage 3");
-		cf.modify(2000, 500,
-				"    ~(~(~false))) &&\n"+
-				" *    ((false && false || ~false) &&\n"+
-				" *        (false && true || ~false) ||\n"+
-				" *      ~(~(~false)))\n"+
-				" */\n"+
-				"46:   getstatic		test.Empty2.l I (10)\n"+
-				"49:   invokevirtual	java.lang.StringBuilder.append (I)Ljava/lang/StringBuilder; (42)\n"+
-				"52:   invokevirtual	java.lang.StringBuilder.toString ()Ljava/lang/String; (51)\n"+
-				"55:   invokevirtual	java.io.PrintStream.println (Ljava/lang/String;)V (55)\n"+
-				"/*\n"+ 
-				" * \\assert ((false || false) &&\n"+
-				" *          (false || false) || ~false) &&\n"+
-				" *      ((false |");
-		System.out.println(cf.toString());
-		if (!cf.correct())
-			throw new RuntimeException("test 3: code replace failed!");
-		cf = new CodeFragment(bcc, code);
-		System.out.println("### stage 4");
-		cf.modify(2600, 50,
-				"ad\n65:   ireturn\n\n/* \requires false */\n"+
-				"public static void main(String[] args)\n0");
-		System.out.println(cf.toString());
-		if (!cf.correct())
-			throw new RuntimeException("test 4: code replace failed!");
+		cf.modify(2500, 20, change1);
+		if (!cf.isCorrect())
+			error("test 1: code replace failed!");
+//		cf = new CodeFragment(bcc, code);
+//		System.out.println("### stage 2");
+//		cf.modify(2600, 50, change2);
+//		if (!cf.isCorrect())
+//			error("test 2: code replace failed!");
+//		cf = new CodeFragment(bcc, code);
+//		System.out.println("### stage 3");
+//		cf.modify(2000, 500, change3);
+//		if (!cf.isCorrect())
+//			error("test 3: code replace failed!");
+//		cf = new CodeFragment(bcc, code);
+//		System.out.println("### stage 4");
+//		cf.modify(2600, 50, change4);
+//		if (!cf.isCorrect())
+//			error("test 4: code replace failed!");
 	}
 
 	/**
