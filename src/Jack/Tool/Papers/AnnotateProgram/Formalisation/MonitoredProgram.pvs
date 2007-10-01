@@ -134,6 +134,7 @@ BEGIN
   on_method_MVA(etype : EventType)
                (mp : MonitoredProgram, md : Method)(s : MPState) : AState =
     IF wf_state(mp)(s) AND
+       methods(get_monitored_class(mp))(md) AND
        evs(mva(mp))((# etype := etype, mname := name(md) #))
     THEN step(mva(mp))(astate(s), (# stP := st(pstate(s)),
                                      event := (# etype := etype,
@@ -148,13 +149,16 @@ BEGIN
     NOT cp(astate(s1)) = halted AND
     IF up?(ex(pstate(s1)))
     THEN s1 = s2 AND n = 0
-    ELSE
-      astate(s2) = on_method_MVA(Entry)(mp, md)(s1) AND
-      EXISTS (s3 : MPState) : 
-        pstate(s3) = pstate(s2) AND
-        gvs(s3) = gvs(s2) AND
-        on_method_entry(mp, md, a, s1, s3, n, derive_rec)
+    ELSE EXISTS(s_new : MPState) : 
+      on_method_entry(mp, md, a, s1, s_new, n, derive_rec) AND
+      IF up?(ex(pstate(s_new)))
+      THEN s2 = s_new
+      ELSE s2 = (# astate := on_method_MVA(Entry)(mp, md)(s_new),
+                   pstate := pstate(s_new),
+                   gvs := gvs(s_new) #)
+      ENDIF
     ENDIF
+
 
   on_method_exit_normal_MP : (on_method_event_type) =
     LAMBDA (mp : MonitoredProgram, md : Method, a : Val, s1, s2 : MPState,
