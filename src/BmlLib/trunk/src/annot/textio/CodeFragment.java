@@ -17,7 +17,7 @@ public class CodeFragment {
 	public static final int RANGE_ANNOT = 0;
 	private static final int CONTEXT_LENGTH = 200;
 
-	private static final String[] RANGE_NAMES = {
+	public static final String[] RANGE_NAMES = {
 		"not set yet", "annotation", "instruction", "method", "class"
 	};
 	
@@ -130,8 +130,10 @@ public class CodeFragment {
 		int line_start = getLineOfOffset(code, begin);
 		int line_end = getLineOfOffset(code, end);
 		int line_count = code.split("\n").length;
+		int line_pos1 = begin - getLineOffset(code, line_start);
+		int line_pos2 = end - getLineOffset(code, line_end);
 		for (int line = line_start; line>=0; line--) {
-			int[] pos = where(code, line, 0);
+			int[] pos = where(code, line, line_pos1);
 			if ((pos[0] != pos1[0]) && (range <= RANGE_METHOD)
 				|| (pos[4] != pos1[4]) && (range <= RANGE_INSTRUCTION)
 				|| (pos[2] != pos1[2]) && (range <= RANGE_ANNOT)
@@ -141,7 +143,7 @@ public class CodeFragment {
 				}
 		}
 		for (int line = line_end; line<line_count; line++) {
-			int[] pos = where(code, line, 0);
+			int[] pos = where(code, line, line_pos2);
 			if ((pos[0] != pos1[0]) && (range <= RANGE_METHOD)
 					|| ((pos[4] != pos1[4]) || (pos[3] == 0))
 						&& (range <= RANGE_INSTRUCTION)
@@ -156,7 +158,9 @@ public class CodeFragment {
 	public void performChanges() {
 		correct = false;
 		MLog.putMsg(MLog.PInfo, toString()); //rm
-		if (range == RANGE_ANNOT) {
+		if (range == -1 ) {
+			MLog.putMsg(MLog.PNotice, "No changes detected!");
+		} else if (range == RANGE_ANNOT) {
 			//TODO
 		} else if (range == RANGE_INSTRUCTION) {
 			//TODO
@@ -164,11 +168,14 @@ public class CodeFragment {
 			//TODO
 		} else if (range == RANGE_CLASS) {
 			//TODO
-		} //else throw new RuntimeException("invalid range: " + range);
+		} else throw new RuntimeException("invalid range: " + range);
+	}
+
+	private void applyChanges() {
 		modified = false;
 		begin = o_begin = o_end = end = range = -1;
 	}
-
+	
 	public void modify(int cfrom, int length, String nc) {
 		addChange(cfrom, length, nc);
 		performChanges();

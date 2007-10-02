@@ -17,3 +17,5 @@ Export-Package: annot.attributes,
  org.antlr.runtime.debug,
  org.antlr.runtime.misc,
  org.antlr.runtime.tree
+Bundle-ClassPath: lib/antlr-runtime-3.0.jar,
+ .

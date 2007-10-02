@@ -10,7 +10,7 @@ TODO:
 		- method (replace all annotations from it),
 		- class (replace all methods from it).
 	- recompute pc numbers.
-- integrate with Umbra
+> integrate with Umbra
 - complete specificationCase attribute
 - add attributes
 - add expressions

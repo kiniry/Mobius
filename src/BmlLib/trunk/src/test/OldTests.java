@@ -24,6 +24,8 @@ import annot.formula.Predicate2Ar;
 import annot.formula.QuantifiedFormula;
 import annot.io.Code;
 import annot.io.ReadAttributeException;
+import annot.textio.BMLConfig;
+import annot.textio.BMLParser;
 import annot.textio.CodeFragment;
 import annot.textio.CodeSearch;
 import annot.textio.Parsing;
@@ -246,7 +248,11 @@ public final class OldTests {
 			ReadAttributeException {
 		MLog.putMsg(MLog.PInfo, xxx);
 		bcc = new BCClass(Paths.path, "test.Empty2");
+		BCMethod m1 = bcc.getMethod(2);
 		BCMethod m2 = bcc.getMethod(3);
+		AbstractFormula f0 = getSampleFormula(2, 0);
+		SingleAssert a0 = new SingleAssert(m1, 0, -1, f0);
+		m1.addAttribute(a0);
 		AbstractFormula f1 = getSampleFormula(5, 0);
 		SingleAssert a1 = new SingleAssert(m2, 58, -1, f1);
 		m2.addAttribute(a1);
@@ -331,7 +337,7 @@ public final class OldTests {
 		" * \\assert ((false || false) &&\n"+
 		" *          (false || false) || ~false) &&\n"+
 		" *      ((false |";
-		String change4 = "ad\n65:   ireturn\n\n/* \requires false */\npublic static void main(String[] args)\n0";
+		String change4 = "ad\n65:   ireturn\n\n/* \\requires false */\npublic static void main(String[] args)\n0";
 		bcc = createSampleClass();
 		String code = bcc.printCode();
 		System.out.println(addLineNumbers(code));
@@ -354,34 +360,39 @@ public final class OldTests {
 		System.out.println("total code length: " + code.length());
 		CodeFragment cf = new CodeFragment(bcc, code);
 		System.out.println("### stage 0");
-		cf.addChange(2500, 20, change1);
-		cf.addChange(2502, 5, "true");
-		cf.addChange(2517, 2, "==>");
-		cf.addChange(2493, 10, "true || t");
-		cf.addChange(2493, 30, "true && fal");
-		cf.addChange(2492, 0, "(0<1) || ");
-		cf.addChange(2514, 4, "e && true) |");
+		cf.addChange(2535, 20, change1);
+		cf.addChange(2537, 5, "true");
+		cf.addChange(2552, 2, "==>");
+		cf.addChange(2528, 10, "true || t");
+		cf.addChange(2528, 30, "true && fal");
+		cf.addChange(2527, 0, "(0<1) || ");
+		cf.addChange(2549, 4, "e && true) |");
 		cf.performChanges();
 		cf = new CodeFragment(bcc, code);
 		System.out.println("### stage 1");
-		cf.modify(2500, 20, change1);
+		cf.modify(2535, 20, change1);
 //		if (!cf.isCorrect())
 //			error("test 1: code replace failed!");
 		cf = new CodeFragment(bcc, code);
 		System.out.println("### stage 2");
-		cf.modify(2600, 50, change2);
+		cf.modify(2635, 50, change2);
 //		if (!cf.isCorrect())
 //			error("test 2: code replace failed!");
 		cf = new CodeFragment(bcc, code);
 		System.out.println("### stage 3");
-		cf.modify(2000, 500, change3);
+		cf.modify(2035, 500, change3);
 //		if (!cf.isCorrect())
 //			error("test 3: code replace failed!");
 		cf = new CodeFragment(bcc, code);
 		System.out.println("### stage 4");
-		cf.modify(1080, 80, change4);
+		cf.modify(1116, 79, change4);
 //		if (!cf.isCorrect())
 //			error("test 4: code replace failed!");
+		cf = new CodeFragment(bcc, code);
+		System.out.println("### stage 5");
+		cf.modify(307, 2, "<=!=>");
+//		if (!cf.isCorrect())
+//		error("test 5: code replace failed!");
 	}
 
 	/**

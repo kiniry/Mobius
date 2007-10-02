@@ -82,10 +82,12 @@ public interface IDisplayStyle {
 	/**
 	 * BML annotations keywords (at the beginning
 	 * of annotations only).
+	 * Must not end with whitespace (it causes errors
+	 * in tests)!
 	 */
 	public static final String _classInvariant = "\\class invariant";
 	public static final String _assert = "\\assert";
-	public static final String _requires = "\\requires ";
+	public static final String _requires = "\\requires";
 	public static final String _sc_start = "{|";
 	public static final String _sc_end = "|}";
 	public static final String _precondition = "\\precondition";
