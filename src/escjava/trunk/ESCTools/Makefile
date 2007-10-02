@@ -463,7 +463,7 @@ patch-release: clean
 	${MAKE} jars generate-patches generate-archives zero-length-files
 	cp ${ESCTOOLS_ROOT}/install.sh ${PATCH_DIR}
 	mkdir -p ${RELDIR}
-	-find ${PATCH_DIR} -name ".svn" -print | xargs rm -rf
+	-find ${PATCH_DIR} -name ".svn*" -print | xargs rm -rf
 	cd ${PATCH_DIR}; tar cvjf ${RELDIR}/${RELPATCHTAR}.tbz .
 	cd ${PATCH_DIR}; tar cvzf ${RELDIR}/${RELPATCHTAR}.tgz .
 	cd ${PATCH_DIR}; zip -Ar ${RELDIR}/${RELPATCHTAR}.zip .
@@ -581,17 +581,6 @@ test-patch-release:
 	mkdir -p ${RELTEST}
 	cd ${RELTEST}; \
 		tar xvjf ${RELDIR}/*patch.tbz ;\
-		unset ESCTOOLS_ROOT ;\
-		unset ESC_SPECS; \
-		unset JUNIT_LIB ;\
-		unset ANT_LIB ;\
-		unset PATCH_DIR ;\
-		unset RELDIR ;\
-		unset RELTEMP ;\
-		unset RELTEST ;\
-		unset ESCJ_SIMPLIFY_DIR; \
-		unset ESC_CLASSPATH ;\
-		./install.sh  ${ORIGINAL_TAR_DIR}
 
 ## These patches are used by unpacking the original
 ## Compaq/H.P. ESCTools sources as appropriate, cd-ing to the

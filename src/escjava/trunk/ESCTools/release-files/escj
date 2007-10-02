@@ -128,7 +128,7 @@ fi
 if [ -z "$SIMPLIFY" ]; then
     case "$OSTYPE" in
 	linux*)   SIMPLIFY=Simplify-1.5.4.linux	;;
-	darwin)  SIMPLIFY=Simplify-1.5.4.macosx	;;
+	darwin*)  SIMPLIFY=Simplify-1.5.4.macosx	;;
 	cygwin)  SIMPLIFY=Simplify-1.5.4.exe	;;
 	solaris) SIMPLIFY=Simplify-1.5.4.solaris	;;
 	*)	;;
