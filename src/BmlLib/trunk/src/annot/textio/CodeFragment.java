@@ -15,6 +15,7 @@ public class CodeFragment {
 	public static final int RANGE_METHOD = 2;
 	public static final int RANGE_INSTRUCTION = 1;
 	public static final int RANGE_ANNOT = 0;
+	private static final int CONTEXT_LENGTH = 200;
 
 	private static final String[] RANGE_NAMES = {
 		"not set yet", "annotation", "instruction", "method", "class"
@@ -111,13 +112,50 @@ public class CodeFragment {
 		suffix = code.substring(end);
 		end += toAdd.length() - (end - begin);
 		code = prefix + toAdd + suffix;
+		computeRange();//mv
+	}
+	
+	private void computeRange() {
+		int[] pos1 = where(code, begin);
+		int[] pos2 = where(code, end);
+		range = RANGE_ANNOT;
+		if (pos1[2] != pos2[2])
+			range = RANGE_INSTRUCTION;
+		if ((pos1[4] != pos2[4]) || (pos1[3] == 0) || (pos2[3] == 0))
+			range = RANGE_METHOD;
+		if (pos1[0] != pos2[0])
+			range = RANGE_CLASS;
+		o_begin = 0;
+		o_end = code.length();
+		int line_start = getLineOfOffset(code, begin);
+		int line_end = getLineOfOffset(code, end);
+		int line_count = code.split("\n").length;
+		for (int line = line_start; line>=0; line--) {
+			int[] pos = where(code, line, 0);
+			if ((pos[0] != pos1[0]) && (range <= RANGE_METHOD)
+				|| (pos[4] != pos1[4]) && (range <= RANGE_INSTRUCTION)
+				|| (pos[2] != pos1[2]) && (range <= RANGE_ANNOT)
+				) {
+					o_begin = getLineOffset(code, line+1);
+					break;
+				}
+		}
+		for (int line = line_end; line<line_count; line++) {
+			int[] pos = where(code, line, 0);
+			if ((pos[0] != pos1[0]) && (range <= RANGE_METHOD)
+					|| ((pos[4] != pos1[4]) || (pos[3] == 0))
+						&& (range <= RANGE_INSTRUCTION)
+					|| (pos[2] != pos1[2]) && (range <= RANGE_ANNOT)
+					) {
+					o_end = getLineOffset(code, line)-1;
+					break;
+				}
+		}
 	}
 	
 	public void performChanges() {
 		correct = false;
-		//TODO: compute changes range (set o_begin, o_end and range)
 		MLog.putMsg(MLog.PInfo, toString()); //rm
-		//TODO: check wether code is correct and parse it
 		if (range == RANGE_ANNOT) {
 			//TODO
 		} else if (range == RANGE_INSTRUCTION) {
@@ -147,6 +185,8 @@ public class CodeFragment {
 		if (line.matches("^[0-9]+: .*$"))
 			return ""+Integer.parseInt(
 				line.substring(0, line.indexOf(":")));
+		if (line.startsWith(":"))
+			return "-1";
 		String[] anames = CodeSearch.getAllAttributeNames();
 		for (int i=0; i<anames.length; i++)
 			if (line.indexOf(anames[i]) > 0)
@@ -167,13 +207,15 @@ public class CodeFragment {
 	}
 	
 	public static int[] where(String code, int lnr, int lpos) {
-		int[] loc = {-1, -1, -1, -1}; // method, instruction, minor, in_comment
-		//TODO: compute changes range (cfrom, cto)
+		int[] loc = {-1, -1, -1, -1, -2};
+		// method, instruction(pc), minor, in_comment,
+		// instruction(pos in list).
 		String[] lines = code.split("\n");
 		if (lpos > lines[lnr].length() - 1)
 			lpos = lines[lnr].length() - 1;
 		boolean after_mspec = false;
 		boolean inComment = false;
+		int ipos = 0;
 		for (int i=0; i<lines.length; i++) {
 			String line = lines[i];
 			if (line.startsWith(IDisplayStyle.comment_start))
@@ -199,9 +241,14 @@ public class CodeFragment {
 					after_mspec = false;
 					if ((i >= lnr) && (loc[1] == -1))
 						loc[1] = -2;
+					ipos = 0;
+					if ((i >= lnr) && (loc[4] == -2))
+						loc[4] = -1;
 				} else if (CodeSearch.isNumber(kw)) {
+					if ((i >= lnr) && (loc[4] == -2))
+						loc[4] = ipos;
+					ipos++;
 					if ((i >= lnr) && (loc[1] == -1))
-						//FIXME! do not trust pc numbers, use position in instructionList instead!
 						loc[1] = Integer.parseInt(kw);
 				}
 			}
@@ -236,16 +283,24 @@ public class CodeFragment {
 	public String toString() {
 		if (!modified)
 			return "code hasn't been modified yet";
-		String p = prefix;
-		String s = suffix;
-		if (begin > 100)
-			p = "... " + prefix.substring(((begin - 10) / 100) * 100);
-		if (suffix.length() > 100)
-			s = suffix.substring(0, (end + 10) % 100) + " ...";
+		String part1 = code.substring(0, o_begin);
+		String part2 = code.substring(o_begin, begin);
+		String part3 = code.substring(begin, end);
+		String part4 = code.substring(end, o_end);
+		String part5 = code.substring(o_end);
+		if (!part3.equals(toAdd)) {
+			MLog.putMsg(MLog.PError, "part3="+part3+"\ntoAdd="+toAdd);
+			throw new RuntimeException("error in CodeFragment!");
+		}
+		if (o_begin > CONTEXT_LENGTH)
+			part1 = "... " + part1.substring(o_begin - CONTEXT_LENGTH);
+		if (part5.length() > CONTEXT_LENGTH)
+			part5 = part5.substring(0, CONTEXT_LENGTH) + " ...";
 		String ret = "*** removed code: ***\n";
 		ret += toRemove;
 		ret += "\n*** new (modified) code: ***\n";
-		ret += p + "##" + toAdd + "##" + s;
+		ret += part1 + "$$" + part2 + "##" + part3 + "##"
+			+ part4 + "$$" + part5;
 		ret += "\n*** CodeFragment status: ***";
 		ret += "\ntotal length: " + code.length();
 		ret += "\nchanged fragment: " + begin + " to " + end;
@@ -258,6 +313,10 @@ public class CodeFragment {
 	
 	public String getCode() {
 		return code;
+	}
+
+	public int getRange() {
+		return range;
 	}
 
 	public boolean isCorrect() {

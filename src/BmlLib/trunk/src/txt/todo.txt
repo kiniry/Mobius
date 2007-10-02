@@ -2,8 +2,8 @@ TODO:
 > create CodeFragment class
 	+ complete addChange method,
 	+ test addChange method,
-	- fix where method,
-	- compute changes range and affected fragment,
+	+ fix where method,
+	+ compute changes range and affected fragment,
 	> parse changes on each levels:
 		- annotation,
 		- instruction,

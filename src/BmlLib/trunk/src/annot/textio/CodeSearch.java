@@ -91,7 +91,7 @@ public final class CodeSearch {
 	 * 		representation of number or not.
 	 */
 	public static boolean isNumber(String str) {
-		return str.matches("[0-9]+");
+		return str.matches("^\\-?[0-9]+");
 	}
 
 	/**

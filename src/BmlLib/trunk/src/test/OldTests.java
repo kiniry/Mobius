@@ -345,8 +345,9 @@ public final class OldTests {
 			if (p == null) {
 				System.out.println(i+": null");
 			} else {
-				System.out.println(i+": ["+p[0]+", "+p[1]+
-					", "+p[2]+"]" + ((p[3]!=0) ? " *" : ""));
+				System.out.println(i + ": [" + p[0] + ", "
+					+ p[1] + ", " + p[2] + ", " + p[4] + "]"
+					+ ((p[3]!=0) ? " *" : ""));
 			}
 		}
 		System.out.println(xxx);
@@ -364,21 +365,21 @@ public final class OldTests {
 		cf = new CodeFragment(bcc, code);
 		System.out.println("### stage 1");
 		cf.modify(2500, 20, change1);
-		if (!cf.isCorrect())
-			error("test 1: code replace failed!");
-//		cf = new CodeFragment(bcc, code);
-//		System.out.println("### stage 2");
-//		cf.modify(2600, 50, change2);
+//		if (!cf.isCorrect())
+//			error("test 1: code replace failed!");
+		cf = new CodeFragment(bcc, code);
+		System.out.println("### stage 2");
+		cf.modify(2600, 50, change2);
 //		if (!cf.isCorrect())
 //			error("test 2: code replace failed!");
-//		cf = new CodeFragment(bcc, code);
-//		System.out.println("### stage 3");
-//		cf.modify(2000, 500, change3);
+		cf = new CodeFragment(bcc, code);
+		System.out.println("### stage 3");
+		cf.modify(2000, 500, change3);
 //		if (!cf.isCorrect())
 //			error("test 3: code replace failed!");
-//		cf = new CodeFragment(bcc, code);
-//		System.out.println("### stage 4");
-//		cf.modify(2600, 50, change4);
+		cf = new CodeFragment(bcc, code);
+		System.out.println("### stage 4");
+		cf.modify(1080, 80, change4);
 //		if (!cf.isCorrect())
 //			error("test 4: code replace failed!");
 	}
