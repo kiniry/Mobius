@@ -1,11 +1,13 @@
 # $Id$
 
+# Modified 2007, Mobius Project, Systems Research Group, University College Dublin
+
 TOP = ../../..
 include ${TOP}/Makefile.defs
 
 ############################################################################
 # ESCJAVA is (only) used for standalone tests
-ESCJAVA = ${ESCTOOLS_ROOT}/Escjava/escj 
+ESCJAVA = ${ESCJ_ROOT}/escj 
 
 _CLASSPATH = $(call canonicalize,${ESC_CLASSPATH}:${JUNIT_UTILS_PATH}:.${EXTRA_CP})
 _TMP = $(call canonicalize,/tmp)

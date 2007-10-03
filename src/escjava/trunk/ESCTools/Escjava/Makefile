@@ -3,6 +3,7 @@
 # Copyright 2003 University of Nijmegen
 # Copyright 2003 David R. Cok
 # This file is extensively revised in the 2003 ESC revision.
+# Modified 2007, Mobius Project, Systems Research Group, University College Dublin, Ireland
 
 export TOP = ..
 include ${TOP}/Makefile.defs
@@ -95,7 +96,7 @@ OTHER_SOURCE_FILES = \
 	$(subst Utils,$(ESCTOOLS_ROOT)/Utils,$(javafile)))
 
 # The executable to run escjava
-export ESCJ = ${ESCJAVA_ROOT}/escj
+export ESCJ = ${ESCJ_ROOT}/escj
 
 ## These definitions are used in subsidiary makes, hence are exported
 export CLASSDIRECTORY=${ESCJAVA_CLASSFILES}
