@@ -16,11 +16,6 @@ import freeboogie.ast.*;
 //      the prover is higher-order. That is not supported.
 // NOTE I don't want to distinguish axioms from assumptions.
 
-interface Sort {
-  public boolean isSubSortOf(Sort other);
-  public Sort superSort();
-}
-
 class TermType {
   private Class cls;
   private Sort[] argSorts;
@@ -47,7 +42,7 @@ class TermType {
 }
 
 // NOTE Sorts don't vary too much from prover to prover. 
-enum CommonSorts implements Sort {
+enum Sort {
   ANY(null),
   PRED(ANY),
   VALUE(ANY),
@@ -56,8 +51,8 @@ enum CommonSorts implements Sort {
   REAL(VALUE),
   REF(VALUE);
 
-  public final CommonSorts superSort;
-  CommonSorts(CommonSorts superSort) {
+  public final Sort superSort;
+  Sort(Sort superSort) {
     this.superSort = superSort;
   }
   public boolean isSubSortOf(Sort other) {
@@ -65,7 +60,7 @@ enum CommonSorts implements Sort {
     if (superSort == null) return false;
     return superSort.isSubSortOf(other);
   }
-  public CommonSorts superSort() {
+  public Sort superSort() {
     return superSort;
   }
 }
@@ -234,23 +229,23 @@ interface Prover {
 class ConcreteBuilder extends Builder {
   public ConcreteBuilder() {
     // built-in operators
-    reg("and", CommonSorts.BOOL, CommonSorts.BOOL);
+    reg("and", Sort.BOOL, Sort.BOOL);
 
     // built-in functions?
 
     // constants
-    reg("const_int", Integer.class, CommonSorts.INT);
-    reg("const_bool", Boolean.class, CommonSorts.BOOL);
+    reg("const_int", Integer.class, Sort.INT);
+    reg("const_bool", Boolean.class, Sort.BOOL);
 
     // to-be-bound variables
-    reg("var_int", String.class, CommonSorts.INT);
-    reg("var_bool", String.class, CommonSorts.BOOL);
+    reg("var_int", String.class, Sort.INT);
+    reg("var_bool", String.class, Sort.BOOL);
 
     // quantifiers
-    reg("any_int", new CommonSorts[]{CommonSorts.INT, CommonSorts.PRED}, 
-      CommonSorts.PRED);
-    reg("exists_int", new CommonSorts[]{CommonSorts.INT, CommonSorts.PRED}, 
-      CommonSorts.PRED);
+    reg("any_int", new Sort[]{Sort.INT, Sort.PRED}, 
+      Sort.PRED);
+    reg("exists_int", new Sort[]{Sort.INT, Sort.PRED}, 
+      Sort.PRED);
     // (idea: a bunch of provers reuse the same builder)
   }
 
@@ -264,7 +259,7 @@ class ConcreteProver implements Prover {
     return new ConcreteBuilder(); 
   }
   public void makeAssumption(Term t) {
-    assert t.sort() == CommonSorts.PRED;
+    assert t.sort() == Sort.PRED;
     // todo
   }
   public void retractAssumption() {
