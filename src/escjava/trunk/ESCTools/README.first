@@ -260,7 +260,7 @@ b) for Makefiles, by creating a file $ESCTOOLS_ROOT/Makefile.local
 
 c) for executables, namely escj, by creating a wrapper script file
    that sets the variables prior to invoking escj.  A sample such
-   wrapper script is found in $ESCTOOLS_ROOT/Escjava/escjava2.sample
+   wrapper script is found in $ESCTOOLS_ROOT/release-files/escjava2.sample
 
 The required variables are:
 
@@ -404,7 +404,7 @@ The test target runs the tests on all the subsystems for which tests
 exist.  The jUnit-based tests rely upon having an executable shell
 script named "escjava" in your path with which to test. Such an
 executable is not included in the CVS sources, but an example of such
-a script is found in $ESCTOOLS_ROOT/Escjava/escjava2.sample.  Create
+a script is found in $ESCTOOLS_ROOT/release-files/escjava2.sample.  Create
 your own escjava shell script and add it to your path if you want all
 jUnit-based tests to complete successfully.  By modifying this script,
 or your path, one can test ESC/Java2 releases with multiple versions
@@ -471,7 +471,7 @@ at your own risk, as it is not currently being kept up-to-date.
 
 RUNNING THE escjava2 TOOL
 
-The script $ESCTOOLS_ROOT/Escjava/escj runs the escjava2 tool.  You
+The script $ESCTOOLS_ROOT/release-files/escj runs the escjava2 tool.  You
 need to have the variables ESCTOOLS_ROOT and SIMPLIFY defined as
 described above, either in your environment or in a wrapper script.
 
@@ -481,7 +481,7 @@ environment variables defined below.
 
 There is a set of commonly used command-line options and also many
 (generally undocumented) experimental options.  A list of the former
-can be obtained by executing "$ESCTOOLS_ROOT/Escjava/escj -help".
+can be obtained by executing "$ESCTOOLS_ROOT/release-files/escj -help".
 Commonly used options are:
         -classpath <pathlist>  Defines the path to find referenced classes
 	-quiet                 Suppresses informational output

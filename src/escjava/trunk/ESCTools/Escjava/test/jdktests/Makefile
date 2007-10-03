@@ -1,11 +1,13 @@
 # $Id$
 
+# Modified 2007, Mobius Project, Systems Research Group, University College Dublin
+
 export TOP = ../../..
 include ${TOP}/Makefile.defs
 
 ############################################################################
 # ESCJAVA is (only) used for standalone tests
-ESCJAVA = ${ESCTOOLS_ROOT}/Escjava/escj 
+ESCJAVA = ${ESCJ_ROOT}/escj 
 
 _ECLASSPATH = $(call canonicalize,${ESC_CLASSPATH}:${JUNIT_UTILS_PATH}:.${EXTRA_CP})
 _CLASSPATH = $(call canonicalize,:${JUNIT_UTILS_PATH}:.${EXTRA_CP})
@@ -175,7 +177,7 @@ skipped:
 	@echo SKIPPING: `(echo Test*.java | grep -f skip )`
 
 .sedScript:
-	@echo "s@${_ESCROOT}@ESCTOOLSROOT@" | tr '\\' '/' > .sedScript
+	@echo "s@${_ESCROOT}@ESCTOOLS_ROOT@" | tr '\\' '/' > .sedScript
 
 ## Cleans all temporary files
 .PHONY: clean

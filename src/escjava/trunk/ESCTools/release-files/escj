@@ -3,6 +3,7 @@
 # Copyright 2001, Compaq Computer Corporation
 # Copyright 2003 University of Nijmegen
 # Copyright 2003-2005 David R. Cok, P.Chalin
+# Modified 2007, Mobius Project, Systems Research Group, University College Dublin
 
 ############################################################################
 ## Required variables:
@@ -56,7 +57,8 @@ if [ -z "$ESCTOOLS_RELEASE" ]; then
 	    ## We are running an executable from a release, so set 
 	    ## ESCTOOLS_RELEASE
 	    ESCTOOLS_RELEASE=$ROOT
-	    echo "Warning: Guessing ESCTOOLS_RELEASE = $ESCTOOLS_RELEASE"
+	    ## Don't echo anything here because that would confuse the automated tests - dcochran
+	    ## echo "Warning: Guessing ESCTOOLS_RELEASE = $ESCTOOLS_RELEASE"
 	fi
     fi
 fi
@@ -228,7 +230,8 @@ fi
 ## Simplify settings
 : ${PROVER_KILL_TIME:=300}
 : ${PROVER_CC_LIMIT:=10}
-export PROVER_KILL_TIME PROVER_CC_LIMIT
+: ${PROVER_MAX_FNUR:=700} ### Ticket #34
+export PROVER_KILL_TIME PROVER_CC_LIMIT PROVER_MAX_FNUR
 
 # ESC/Java's class and spec path.
 if [ -n "$COMSPEC" ]; then 

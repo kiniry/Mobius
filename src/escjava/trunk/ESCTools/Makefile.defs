@@ -4,6 +4,8 @@
 ## author: David Cok - 1 May 2003
 ## author: Joe Kiniry
 ##
+## Modified 2007, Mobius Project, Systems Research Group, University College Dublin
+##
 ## This file contains variable definitions common to the Makefiles in
 ## various subdirectories of the ESC tools.  These should not need to
 ## be modified by the user (those variables are in Makefile.local).
@@ -101,6 +103,7 @@ export ESCJ_SIMPLIFY = ${ESCJ_SIMPLIFY_DIR}/${SIMPLIFY}
 ### Simplify settings
 export PROVER_KILL_TIME ?= 300
 export PROVER_CC_LIMIT ?= 10
+export PROVER_MAX_FNUR ?= 700 #### Ticket #34
 
 ##########################################################################
 ## Specifications
@@ -203,7 +206,8 @@ export ESC_CLASSPATH = \
 export ESCJAVA_CLASSPATH=$(ESC_CLASSPATH)
 
 ## The front-end for Escjava that should be used for testing.
-export ESCJ = ${ESCJAVA_ROOT}/escj -nowarn Modifies
+export ESCJ_ROOT = ${ESCTOOLS_ROOT}/release-files
+export ESCJ = ${ESCJ_ROOT}/escj -nowarn Modifies
 
 ################################################################################
 ## Pertinent locations for building a release

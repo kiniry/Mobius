@@ -41,7 +41,7 @@ include Makefile.defs
 ## subdirectories other than Javafe presume that Javafe has been
 ## built.
 
-export ESCJAVA = ${ESCTOOLS_ROOT}/Escjava/escj
+export ESCJAVA = ${ESCTOOLS_ROOT}/release_files/escj
 
 # List subprojects in the order in which they should be built.  Javafe
 # must be before any other ESCTools directories.
