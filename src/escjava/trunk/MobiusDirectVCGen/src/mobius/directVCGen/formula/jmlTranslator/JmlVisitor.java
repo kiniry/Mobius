@@ -1285,7 +1285,7 @@ public class JmlVisitor extends VisitorArgResult {
     {
       Term forAllTerm = null;
       final QuantVariableRef targetVar = Expression.rvar(Ref.sort); 
-      final QuantVariableRef fieldVar = Expression.rvar(Formula.sort); // FIXME: Why sortRef is not available?
+      final QuantVariableRef fieldVar = Expression.rvar(Ref.sort); // FIXME: Why sortRef is not available?
       final Term equalsTerm = Logic.equals(Heap.select(Heap.varPre, (Term) targetVar, fieldVar.qvar), Heap.select(Heap.var, (Term) targetVar, fieldVar.qvar)); //gibt noch kein any
       final QuantVariable[] vars = {targetVar.qvar, fieldVar.qvar}; 
       Term assigTerm = Logic.not(Logic.isAlive(Heap.varPre, targetVar));

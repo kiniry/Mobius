@@ -178,6 +178,7 @@ public class CoqNodeBuilder extends EscNodeBuilder {
       res = new CType(name);
     }
     else if (s.equals(sortAny)) {
+      res = new CRef(name);
       throw new IllegalArgumentException("The type of " + var + 
                                          " should not be any, it should be known!");
     }
@@ -654,12 +655,20 @@ public class CoqNodeBuilder extends EscNodeBuilder {
     CPred res;
     switch (intPredTag) {
       case NodeBuilder.predLE:
-        res = new CPred(false, "<", arg1,
+        res = new CPred(false, "<=", arg1,
                       arg2);
         break;
       case NodeBuilder.predLT:
-        res = new CPred(false, "<=", arg1,
+        res = new CPred(false, "<", arg1,
             arg2);
+        break;
+      case NodeBuilder.predGT:
+        res = new CPred(false, "<=", arg2,
+            arg1);
+        break;
+      case NodeBuilder.predGE:
+        res = new CPred(false, "<", arg2,
+                      arg1);
         break;
       case NodeBuilder.predEQ:
         res = new CPred(false, "=", arg1,
@@ -719,7 +728,7 @@ public class CoqNodeBuilder extends EscNodeBuilder {
   
   
   public SPred buildIsFieldOf(SMap map, SRef obj, SAny field) {
-    throw new UnsupportedOperationException();
+    return new CPred("isAlive", new STerm [] {map, obj, field});
   }
   
 
