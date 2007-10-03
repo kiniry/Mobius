@@ -22,7 +22,7 @@ public class Grammar {
   
   /** Creates a new grammar object. */
   public Grammar() {
-    classes = new HashMap<String, AgClass>(100);
+    classes = new HashMap<String, AgClass>(101);
   }
   
   /**
