@@ -1,5 +1,6 @@
 package mobius.directVCGen.formula.jmlTranslator;
 
+import escjava.ast.ArrayRangeRefExpr;
 import escjava.ast.Condition;
 import escjava.ast.DecreasesInfo;
 import escjava.ast.DefPred;
@@ -332,4 +333,12 @@ public class BasicJMLTranslator extends ABasicVisitor{
     return null;
   }
 
+  /* (non-Javadoc)
+   * @see escjava.ast.VisitorArgResult#visitArrayRangeRefExpr(escjava.ast.ArrayRangeRefExpr, java.lang.Object)
+   */
+  @Override
+  public final Object visitArrayRangeRefExpr(final /*@non_null*/ ArrayRangeRefExpr x, final Object o) {
+    return null;
+  }
+  
 }

@@ -141,7 +141,6 @@ public class JmlVisitorTest extends TestCase {
     fProp.put("interesting", Boolean.TRUE);
     fProp.put("doSubsetChecking", Boolean.TRUE);
     fProp.put("subsetCheckingSet", new HashSet<FieldAccess>());
-    fProp.put("dsc", Boolean.FALSE);
 
     
    

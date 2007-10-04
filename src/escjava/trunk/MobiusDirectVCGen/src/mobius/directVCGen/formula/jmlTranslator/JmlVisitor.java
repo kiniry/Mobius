@@ -45,7 +45,6 @@ import mobius.directVCGen.formula.annotation.Cut;
 import mobius.directVCGen.formula.annotation.Set;
 import mobius.directVCGen.vcgen.struct.Post;
 import escjava.ast.AnOverview;
-import escjava.ast.ArrayRangeRefExpr;
 import escjava.ast.CondExprModifierPragma;
 import escjava.ast.EverythingExpr;
 import escjava.ast.ExprDeclPragma;
@@ -75,44 +74,37 @@ import escjava.tc.Types;
  * 
  */
 public class JmlVisitor extends BasicJMLTranslator {
+  /** global properties of a class. */
+  final GlobalProperties fGlobal = new GlobalProperties();
   
   /** Reference to JML Expression Translator. */
   private final JmlExprToFormula fTranslator;
   
-  /** global properties of a class. */
-  final GlobalProperties fGlobal = new GlobalProperties();
+  /** the subset checking option. */
+  private boolean fDoSubsetChecking;
   
   /**
    * Visitor that translates JML Constructs to FOL by using JmlExprToFormula to
    * translate expressions.
    */
   public JmlVisitor() {
-    //fProperties = new MethodProperties();
+    this(false);
+     
+  }
+
+  /**
+   * Visitor that translates JML Constructs to FOL by using JmlExprToFormula to
+   * translate expressions.
+   * @param doSubsetChecking if the subset checking has to be done
+   */
+  public JmlVisitor(final boolean doSubsetChecking) {
+    fDoSubsetChecking = doSubsetChecking;
     
     fTranslator = new JmlExprToFormula(this);
      
   }
 
-  /**
-   * Initialize the properties with default values.
-   */
 
-
-  /* (non-Javadoc)
-   * @see javafe.ast.VisitorArgResult#visitASTNode(javafe.ast.ASTNode, java.lang.Object)
-   */
-  @Override
-  public final Object visitASTNode(final ASTNode x, final Object prop) {
-    Object o = null;
-    final int max = x.childCount();
-    for (int i = 0; i < max; i++) {
-      final Object child = x.childAt(i);
-      if (child instanceof ASTNode) {
-        o = ((ASTNode) child).accept(this, prop);
-      }
-    }
-    return o;
-  }
 
   /* (non-Javadoc)
    * @see javafe.ast.VisitorArgResult#visitClassDecl(javafe.ast.ClassDecl, java.lang.Object)
@@ -120,8 +112,7 @@ public class JmlVisitor extends BasicJMLTranslator {
   @Override
   public final Object visitClassDecl(final /*@non_null*/ ClassDecl x, final Object o) {
     fGlobal.put("classId", x.id);
-    //fProperties.remove("initiallyFOL");
-    fGlobal.put("dsc", ((Boolean) ((Properties) o).get("dsc")).booleanValue()); // option dsc = doSubsetChecking
+    
     //Use default properties to start with.
     return visitTypeDecl(x, null);
   }
@@ -329,13 +320,6 @@ public class JmlVisitor extends BasicJMLTranslator {
     }
   }
 
-  /* (non-Javadoc)
-   * @see escjava.ast.VisitorArgResult#visitArrayRangeRefExpr(escjava.ast.ArrayRangeRefExpr, java.lang.Object)
-   */
-  @Override
-  public final Object visitArrayRangeRefExpr(final /*@non_null*/ ArrayRangeRefExpr x, final Object o) {
-    return null;
-  }
   
   public /*@non_null*/ Object visitArrayRefExpr(/*@non_null*/ ArrayRefExpr x, Object o) {
     final Term var = (Term) x.array.accept(this, o); 

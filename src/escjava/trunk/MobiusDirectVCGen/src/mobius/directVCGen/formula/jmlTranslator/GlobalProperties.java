@@ -14,7 +14,7 @@ final class GlobalProperties extends Properties {
 
   /** valid properties string. */
   private static final String [] validStr = {
-    "dsc", "classId",
+    "classId",
     "doSubsetChecking"
   };
   
@@ -37,7 +37,6 @@ final class GlobalProperties extends Properties {
   
   private void initProperties() {
     put("doSubsetChecking", Boolean.FALSE); 
-    put("dsc", Boolean.FALSE);
     put("classId", Identifier.intern(""));       
   }
   

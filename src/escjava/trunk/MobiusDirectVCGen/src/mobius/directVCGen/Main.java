@@ -6,7 +6,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
-import java.util.Properties;
 
 import javafe.ast.DelegatingPrettyPrint;
 import javafe.ast.StandardPrettyPrint;
@@ -222,9 +221,8 @@ public class Main extends escjava.Main {
     fOut.println("[" + timeUsed(startTime) + "]\n");
 
     final long midTime = currentTime();
-    final Properties prop = new Properties();
-    prop.put("dsc", options.doSubsetChecking);
-    sig.getCompilationUnit().accept(new JmlVisitor(), prop);
+    
+    sig.getCompilationUnit().accept(new JmlVisitor(options.doSubsetChecking), null);
     fOut.println("[" + timeUsed(midTime) + "]\n");
 
     doSrcVCGen(sig);
