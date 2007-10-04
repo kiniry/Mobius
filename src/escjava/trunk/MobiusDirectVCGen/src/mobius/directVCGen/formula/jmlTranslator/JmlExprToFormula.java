@@ -18,6 +18,7 @@ import mobius.directVCGen.formula.Logic;
 import mobius.directVCGen.formula.Num;
 import mobius.directVCGen.formula.Ref;
 import mobius.directVCGen.formula.Type;
+import mobius.directVCGen.formula.jmlTranslator.JmlVisitor.MethodProperties;
 import escjava.ast.NaryExpr;
 import escjava.ast.QuantifiedExpr;
 import escjava.ast.ResExpr;
@@ -122,7 +123,7 @@ public class JmlExprToFormula {
 
 
   public Object ge(final BinaryExpr expr, final Object o) {
-    final Boolean pred = (Boolean) ((Properties) o).get("pred");
+    final Boolean pred = fVisitor.fGlobal.pred;
     final Term t1 = (Term)expr.left.accept(fVisitor, o);
     final Term t2 = (Term)expr.right.accept(fVisitor, o);
 
@@ -136,7 +137,7 @@ public class JmlExprToFormula {
 
 
   public Object gt(final BinaryExpr expr, final Object o) {
-    final Boolean pred = (Boolean) ((Properties) o).get("pred");
+    final Boolean pred = fVisitor.fGlobal.pred;
     final Term t1 = (Term)expr.left.accept(fVisitor, o);
     final Term t2 = (Term)expr.right.accept(fVisitor, o);
 
@@ -400,9 +401,15 @@ public class JmlExprToFormula {
     }
   }
 
-
-  public Object resultLiteral(final ResExpr x, final Object o) {
-    return ((Properties) o).get("result");
+  
+  public QuantVariableRef resultLiteral(final ResExpr x, 
+                                        final MethodProperties prop) {
+    final QuantVariableRef qvr = prop.fResult;
+    if (qvr == null) {
+      throw new NullPointerException();
+      // should not be called if the method returns void
+    }
+    return qvr;
   }
 
   public Object variableAccess(final VariableAccess x, final Object o) {
@@ -499,7 +506,8 @@ public class JmlExprToFormula {
   
   
   /**
-   * Generates a Term of an fresh variable: (x != null) and !isAlive(Pre_Heap, x) and isAlive(Heap, x)
+   * Generates a Term of an fresh variable: (x != null) and 
+   * !isAlive(Pre_Heap, x) and isAlive(Heap, x).
    * @param qref the Term to translate into a fresh FOL term
    * @return the generated FOL term
    */

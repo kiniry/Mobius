@@ -1,22 +1,10 @@
 package mobius.directVCGen.formula.jmlTranslator;
 
-import mobius.directVCGen.formula.Expression;
-import mobius.directVCGen.formula.Formula;
-import mobius.directVCGen.formula.Heap;
-import mobius.directVCGen.formula.Logic;
-import mobius.directVCGen.formula.Lookup;
-import mobius.directVCGen.formula.Ref;
-import mobius.directVCGen.formula.Type;
-import mobius.directVCGen.formula.annotation.AAnnotation;
-import mobius.directVCGen.formula.annotation.AnnotationDecoration;
-import mobius.directVCGen.formula.annotation.Assume;
-import mobius.directVCGen.formula.annotation.Cut;
-import mobius.directVCGen.formula.annotation.Set;
-import mobius.directVCGen.vcgen.struct.Post;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Properties;
 import java.util.Vector;
+
 import javafe.ast.ASTNode;
 import javafe.ast.ArrayRefExpr;
 import javafe.ast.BinaryExpr;
@@ -24,7 +12,6 @@ import javafe.ast.BlockStmt;
 import javafe.ast.ClassDecl;
 import javafe.ast.ConstructorDecl;
 import javafe.ast.DoStmt;
-import javafe.ast.ExprVec;
 import javafe.ast.FieldAccess;
 import javafe.ast.ForStmt;
 import javafe.ast.FormalParaDecl;
@@ -45,6 +32,18 @@ import javafe.ast.UnaryExpr;
 import javafe.ast.VarDeclStmt;
 import javafe.ast.VariableAccess;
 import javafe.ast.WhileStmt;
+import mobius.directVCGen.formula.Expression;
+import mobius.directVCGen.formula.Heap;
+import mobius.directVCGen.formula.Logic;
+import mobius.directVCGen.formula.Lookup;
+import mobius.directVCGen.formula.Ref;
+import mobius.directVCGen.formula.Type;
+import mobius.directVCGen.formula.annotation.AAnnotation;
+import mobius.directVCGen.formula.annotation.AnnotationDecoration;
+import mobius.directVCGen.formula.annotation.Assume;
+import mobius.directVCGen.formula.annotation.Cut;
+import mobius.directVCGen.formula.annotation.Set;
+import mobius.directVCGen.vcgen.struct.Post;
 import escjava.ast.AnOverview;
 import escjava.ast.ArrayRangeRefExpr;
 import escjava.ast.CondExprModifierPragma;
@@ -111,46 +110,145 @@ import escjava.tc.Types;
  * 
  */
 public class JmlVisitor extends VisitorArgResult {
-
-  /**
-   * Reference to JML Expression Translator.
-   */
+  
+  //private static final String INTERESTING = "interesting";
+  /** Reference to JML Expression Translator. */
   private final JmlExprToFormula fTranslator;
-  /**
-   * Properties that are passed as argument of the visitor.
-   */
-  private final Properties fProperties;
+  
+  /** Properties that are passed as argument of the visitor. */
+  final static class MethodProperties extends Properties {
 
+    /** */
+    private static final long serialVersionUID = 1L;
+    
+    
+    /** valid properties string. */
+    private static final String [] validStr = {
+      "unaryOp",  
+      "old",
+      "freshSet", 
+      "subsetCheckingSet",
+      "subsetCheckingSetConstraints",
+      "subSetCheckingSetInitially",
+      "assignableSet",
+      "nothing",
+      "routinebegin",
+      "quantifier",
+      "quantVars",
+      "isHelper",
+      "fresh",
+      "firstExPost", 
+      "isConstructor"
+    };
+    
+    
+    /** key to represent a result in the properties set. */  
+    QuantVariableRef fResult;
+    
+    
+    /**
+     * initialize the properties with default values.
+     */
+    public MethodProperties() {
+      initProperties(); 
+    }
+    
+    
+    private void initProperties() {
+     
+      
+      put("unaryOp", 0);
+      put("old", Boolean.FALSE);
+      put("freshSet", new HashSet<QuantVariableRef>());
+ 
+      put("subsetCheckingSet", new HashSet<FieldAccess>()); 
+      put("subsetCheckingSetConstraints", new HashSet<FieldAccess>());
+      put("subSetCheckingSetInitially", new HashSet<FieldAccess>());
+      put("assignableSet", new HashSet<QuantVariableRef[]>()); 
+      put("nothing", Boolean.FALSE); 
+      put("routinebegin", Boolean.TRUE);  
+      put("quantifier", Boolean.FALSE);
+      put("quantVars", new HashSet<QuantVariable>());
+      put("isHelper", Boolean.FALSE);
+      put("fresh", Boolean.FALSE);
+      
+
+      put("firstExPost", Boolean.TRUE);
+      put("isConstructor", Boolean.FALSE);
+    }
+
+    
+    @Override
+    public Object put (final Object key, final Object value) {
+      for (String valid: validStr) {
+        if (key.equals(valid)) {
+          return super.put(key, value);
+        }
+      }
+      throw new IllegalArgumentException("Invalid key: " + key);
+    }
+  }
+  
+ // /** Properties that are passed as argument of the visitor. */
+//  private final MethodProperties fProperties;
+  static final class GlobalProperties extends Properties {
+    /** */
+    private static final long serialVersionUID = 1L;
+
+    /** valid properties string. */
+    private static final String [] validStr = {
+      "dsc", "classId",
+      "doSubsetChecking"
+    };
+    
+    final java.util.Set<Type> visibleTypeSet = new HashSet<Type>();
+    
+    /** tell wether or not annotations are being currently inspected. */
+    boolean interesting;
+    
+    /** tell wether or not a predicate are being currently inspected. */
+    boolean pred =  true;
+    
+    
+    public GlobalProperties() {
+      initProperties(); 
+    }
+    
+    private void initProperties() {
+      put("doSubsetChecking", Boolean.FALSE); 
+      put("dsc", Boolean.FALSE);
+      put("classId", Identifier.intern(""));       
+    }
+    
+    @Override
+    public Object put (final Object key, final Object value) {
+      for (String valid: validStr) {
+        if (key.equals(valid)) {
+          return super.put(key, value);
+        }
+      }
+      throw new IllegalArgumentException("Invalid key: " + key);
+    }
+  }
+  
+  /** global properties of a class. */
+  final GlobalProperties fGlobal = new GlobalProperties();
+  
   /**
    * Visitor that translates JML Constructs to FOL by using JmlExprToFormula to
    * translate expressions.
    */
   public JmlVisitor() {
-    fProperties = new Properties();
-    fProperties.put("pred", Boolean.TRUE);
-    fProperties.put("unaryOp", 0);
-    fProperties.put("old", Boolean.FALSE);
-    fProperties.put("visibleTypeSet", new HashSet<QuantVariableRef>());
-    fProperties.put("freshSet", new HashSet<QuantVariableRef>());
-    fProperties.put("doSubsetChecking", Boolean.FALSE); 
-    fProperties.put("subsetCheckingSet", new HashSet<FieldAccess>()); 
-    fProperties.put("subsetCheckingSetConstraints", new HashSet<FieldAccess>());
-    fProperties.put("subSetCheckingSetInitially", new HashSet<FieldAccess>());
-    fProperties.put("assignableSet", new HashSet<QuantVariableRef[]>()); 
-    fProperties.put("nothing", Boolean.FALSE); 
-    fProperties.put("interesting", Boolean.FALSE);
-    fProperties.put("routinebegin", Boolean.TRUE);  
-    fProperties.put("quantifier", Boolean.FALSE);
-    fProperties.put("quantVars", new HashSet<QuantVariable>());
-    fProperties.put("isHelper", Boolean.FALSE);
-    fProperties.put("fresh", Boolean.FALSE);
-    fProperties.put("dsc", Boolean.FALSE); 
-    fProperties.put("classId", Identifier.intern("")); 
-    fProperties.put("firstExPost", Boolean.TRUE);
-    fProperties.put("isConstructor", Boolean.FALSE);
+    //fProperties = new MethodProperties();
+    
     fTranslator = new JmlExprToFormula(this);
      
   }
+
+  /**
+   * Initialize the properties with default values.
+   */
+
 
   /* (non-Javadoc)
    * @see javafe.ast.VisitorArgResult#visitASTNode(javafe.ast.ASTNode, java.lang.Object)
@@ -173,11 +271,11 @@ public class JmlVisitor extends VisitorArgResult {
    */
   @Override
   public final Object visitClassDecl(final /*@non_null*/ ClassDecl x, final Object o) {
-    fProperties.put("classId", x.id);
-    fProperties.remove("initiallyFOL");
-    fProperties.put("dsc", ((Boolean) ((Properties) o).get("dsc")).booleanValue()); // option dsc = doSubsetChecking
+    fGlobal.put("classId", x.id);
+    //fProperties.remove("initiallyFOL");
+    fGlobal.put("dsc", ((Boolean) ((Properties) o).get("dsc")).booleanValue()); // option dsc = doSubsetChecking
     //Use default properties to start with.
-    return visitTypeDecl(x, this.fProperties);
+    return visitTypeDecl(x, null);
   }
 
   
@@ -188,12 +286,12 @@ public class JmlVisitor extends VisitorArgResult {
    */
   @Override
   public final Object visitRoutineDecl(final /*@non_null*/ RoutineDecl x, final Object o) {
-    fProperties.put("visibleTypeSet", new HashSet<QuantVariableRef>());
+    final MethodProperties prop = (MethodProperties) o;
     x.accept(new VisibleTypeCollector(), o); 
-    ((Properties) o).put("method", x);
-    ((Properties) o).put("isHelper", Boolean.FALSE);
-    ((Properties) o).put("routinebegin", Boolean.TRUE);
-    ((Properties) o).put("nothing", Boolean.FALSE);
+    prop.put("method", x);
+    prop.put("isHelper", Boolean.FALSE);
+    prop.put("routinebegin", Boolean.TRUE);
+    prop.put("nothing", Boolean.FALSE);
     
     boolean hasPost = false;
     int tag;
@@ -217,7 +315,7 @@ public class JmlVisitor extends VisitorArgResult {
     
     // Add dummy exceptional postcondition to Lookup hash map   
     Lookup.exceptionalPostconditions.put(x, new Post(Expression.rvar(Ref.sort), Logic.True())); 
-    fProperties.put("firstExPost", Boolean.TRUE);
+    prop.put("firstExPost", Boolean.TRUE);
     
     visitASTNode(x, o);
     doAssignable(o);
@@ -239,7 +337,8 @@ public class JmlVisitor extends VisitorArgResult {
    */
   @Override
   public final Object visitMethodDecl(final /*@non_null*/ MethodDecl x, final Object o) {
-    ((Properties) o).put("result", Expression.rvar(Expression.getResultVar(x)));
+    final MethodProperties prop = new MethodProperties();
+    prop.fResult =  Expression.rvar(Expression.getResultVar(x));
     visitRoutineDecl(x, o);
     
     if (((Boolean)((Properties)o).get("isHelper")).booleanValue() == Boolean.FALSE) {
@@ -247,7 +346,7 @@ public class JmlVisitor extends VisitorArgResult {
       addToPostcondition(constraints, o);
       addToExceptionalPostcondition(constraints, o);
     }  
-    return null;
+    return prop;
   }
 
   /* (non-Javadoc)
@@ -280,7 +379,7 @@ public class JmlVisitor extends VisitorArgResult {
    */
   @Override
   public final Object visitLiteralExpr(final /*@non_null*/ LiteralExpr x, final Object o) {
-    if (((Boolean) ((Properties) o).get("interesting")).booleanValue()) {
+    if (fGlobal.interesting) {
       return this.fTranslator.literal(x, o);
     }
     else {
@@ -293,7 +392,7 @@ public class JmlVisitor extends VisitorArgResult {
    */
   @Override
   public final Object visitVariableAccess(final /*@non_null*/ VariableAccess x, final Object o) {
-    if (((Boolean) ((Properties) o).get("interesting")).booleanValue()) {
+    if (fGlobal.interesting) {
       return this.fTranslator.variableAccess(x, o);
     }
     else {
@@ -306,7 +405,7 @@ public class JmlVisitor extends VisitorArgResult {
    */
   @Override
   public final Object visitFieldAccess(final /*@non_null*/ FieldAccess x, final Object o) {
-    if (((Boolean) ((Properties) o).get("interesting")).booleanValue()) {
+    if (fGlobal.interesting) {
       return this.fTranslator.fieldAccess(x, o);
     }
     else {
@@ -336,7 +435,7 @@ public class JmlVisitor extends VisitorArgResult {
    */
   @Override
   public final Object visitNaryExpr(final /*@non_null*/ NaryExpr x, final Object o) {
-    if (((Boolean) ((Properties) o).get("interesting")).booleanValue()) {
+    if (fGlobal.interesting) {
       if (x.op == TagConstants.PRE) {
         return this.fTranslator.oldExpr(x, o);
       }
@@ -361,7 +460,7 @@ public class JmlVisitor extends VisitorArgResult {
    */
   @Override
   public final Object visitInstanceOfExpr(final /*@non_null*/ InstanceOfExpr x, final Object o) {
-    if (((Boolean) ((Properties) o).get("interesting")).booleanValue()) {
+    if (fGlobal.interesting) {
       return this.fTranslator.instanceOfExpr(x, o);
     }
     else {
@@ -374,7 +473,7 @@ public class JmlVisitor extends VisitorArgResult {
    */
   @Override
   public final Object visitThisExpr(final /*@non_null*/ ThisExpr x, final Object o) {
-    if (((Boolean) ((Properties) o).get("interesting")).booleanValue()) {
+    if (fGlobal.interesting) {
       return this.fTranslator.thisLiteral(x, o);
     }
     else {
@@ -493,13 +592,14 @@ public class JmlVisitor extends VisitorArgResult {
    */
   @Override
   public final Object visitExprDeclPragma(final /*@non_null*/ ExprDeclPragma x, final Object o) {
-    ((Properties) o).put("interesting", Boolean.TRUE);
+    
+    fGlobal.interesting = true;
     Term t;
     
     if (x.tag == TagConstants.INITIALLY) {
-      fProperties.put("doSubsetChecking", Boolean.TRUE); // to collect all fields in initially to do the subset check
+      fGlobal.put("doSubsetChecking", Boolean.TRUE); // to collect all fields in initially to do the subset check
       final Term initiallyFOL = (Term) x.expr.accept(this, o);
-      fProperties.put("doSubsetChecking", Boolean.FALSE);
+      fGlobal.put("doSubsetChecking", Boolean.FALSE);
       t = (Term) ((Properties) o).get("initiallyFOL");
       boolean initIsValid = doSubsetChecking(o);
       if (initIsValid) {
@@ -518,15 +618,15 @@ public class JmlVisitor extends VisitorArgResult {
       }
     }
     else if (x.tag == TagConstants.INVARIANT) { 
-      fProperties.put("doSubsetChecking", Boolean.TRUE);
+      fGlobal.put("doSubsetChecking", Boolean.TRUE);
       t = (Term) x.expr.accept(this, o);
-      fProperties.put("doSubsetChecking", Boolean.FALSE);
+      fGlobal.put("doSubsetChecking", Boolean.FALSE);
       addToInv(x, t, o);
     }
     else if (x.tag == TagConstants.CONSTRAINT) {
-      fProperties.put("doSubsetChecking", Boolean.TRUE); 
+      fGlobal.put("doSubsetChecking", Boolean.TRUE); 
       t = (Term) x.expr.accept(this, o);
-      fProperties.put("doSubsetChecking", Boolean.FALSE);
+      fGlobal.put("doSubsetChecking", Boolean.FALSE);
       constrToConstraints(x, t, o);
     }
     return null;
@@ -564,7 +664,7 @@ public class JmlVisitor extends VisitorArgResult {
    */
   @Override
   public final Object visitExprModifierPragma(final /*@non_null*/ ExprModifierPragma x, final Object o) {
-    ((Properties) o).put("interesting", Boolean.TRUE);
+    fGlobal.interesting = true;
     Term t = (Term)visitASTNode(x, o);
     t = Logic.boolToPred(t);
     switch (x.getTag()) {
@@ -587,10 +687,10 @@ public class JmlVisitor extends VisitorArgResult {
    */
   @Override
   public final Object visitVarExprModifierPragma(final /*@non_null*/ VarExprModifierPragma x, final Object o) {
-    ((Properties) o).put("interesting", Boolean.TRUE);
+    fGlobal.interesting = true;
 
     final RoutineDecl currentRoutine = (RoutineDecl) ((Properties) o).get("method");
-    Post allExPosts = Lookup.exceptionalPostconditions.get(currentRoutine);
+    final Post allExPosts = Lookup.exceptionalPostconditions.get(currentRoutine);
     final QuantVariableRef commonExceptionVar = allExPosts.getRVar();
 
     final Term typeOfException = Type.translate(x.arg.type);
@@ -634,7 +734,7 @@ public class JmlVisitor extends VisitorArgResult {
       interesting = false;
       if (s instanceof ExprStmtPragma) { //Asserts, Assumes and Loop Invariants
         interesting = true; 
-        ((Properties) o).put("interesting", Boolean.TRUE);
+        fGlobal.interesting = true;
         t = (Term)s.accept(this, o);
         switch (s.getTag()) {
           case javafe.parser.TagConstants.ASSERT:
@@ -667,7 +767,7 @@ public class JmlVisitor extends VisitorArgResult {
             }
           }
           if (interesting) {
-            ((Properties) o).put("interesting", Boolean.TRUE);
+            fGlobal.interesting = true;
             final Set ghostVar = (Set) s.accept(this, o);
             annos.add(ghostVar);
           }
@@ -675,7 +775,7 @@ public class JmlVisitor extends VisitorArgResult {
         else {
           if (s instanceof SetStmtPragma) {
             interesting = true;
-            ((Properties) o).put("interesting", Boolean.TRUE);
+            fGlobal.interesting = true;
             assignment = (Set.Assignment)s.accept(this, o);
             final Set newSet = new Set();
             newSet.assignment = assignment;
@@ -700,7 +800,7 @@ public class JmlVisitor extends VisitorArgResult {
         x.stmts.removeElement(s);
       } 
       else { // Put annotations to next Java Stmt
-        ((Properties) o).put("interesting", Boolean.FALSE);
+        fGlobal.interesting = false;
         if (!annos.isEmpty()) {
           AnnotationDecoration.inst.setAnnotPre(s, annos);
           annos.clear();
@@ -1002,9 +1102,11 @@ public class JmlVisitor extends VisitorArgResult {
   /* (non-Javadoc)
    * @see escjava.ast.VisitorArgResult#visitResExpr(escjava.ast.ResExpr, java.lang.Object)
    */
+  @Override
   public final Object visitResExpr(final /*@non_null*/ ResExpr x, final Object o) {
-    if (((Boolean) ((Properties) o).get("interesting")).booleanValue()) {
-      return this.fTranslator.resultLiteral(x, o);
+    final MethodProperties prop = (MethodProperties) o;
+    if (fGlobal.interesting) {
+      return this.fTranslator.resultLiteral(x, prop);
     }
    return null;
   }
@@ -1105,7 +1207,7 @@ public class JmlVisitor extends VisitorArgResult {
    * @see javafe.ast.VisitorArgResult#visitBinaryExpr(javafe.ast.BinaryExpr, java.lang.Object)
    */
   public final Object visitBinaryExpr(final /*@non_null*/ BinaryExpr expr, final Object o) {
-    if (((Boolean) ((Properties) o).get("interesting")).booleanValue()) {
+    if (fGlobal.interesting) {
       switch(expr.op) {
         case TagConstants.EQ: 
           return this.fTranslator.eq(expr, o);
@@ -1228,7 +1330,7 @@ public class JmlVisitor extends VisitorArgResult {
     final Term typeOfTerm = Logic.assignCompat(Heap.var, x, type);
     final Term allocTerm = Logic.isAlive(Heap.var, x);
     Term andTerm = Logic.and(allocTerm, typeOfTerm);
-    java.util.Set<Type> visSet = (java.util.Set) ((Properties)o).get("visibleTypeSet");
+    final java.util.Set<Type> visSet = fGlobal.visibleTypeSet;
     if (!visSet.isEmpty()) {
       final Term visibleTerm = Logic.isVisibleIn(type, o);
       andTerm = Logic.and(andTerm, visibleTerm);
@@ -1255,8 +1357,10 @@ public class JmlVisitor extends VisitorArgResult {
    * @param o containing all field access of the invariant and the class id
    * @return boolean value whether the subset checking of the invariant fields was successfull 
    */
-  public boolean doSubsetChecking(Object o) {  
-    final HashSet<FieldAccess> subSet = (HashSet) ((Properties)o).get("subsetCheckingSet");
+  @SuppressWarnings("unchecked")
+  public boolean doSubsetChecking(final Object o) {
+    final MethodProperties prop = (MethodProperties) o;
+    final java.util.Set<FieldAccess> subSet = (HashSet) prop.get("subsetCheckingSet");
     FieldAccess fa;
     final Identifier parentId = (Identifier) ((Properties)o).get("classId");
     Identifier typeId;
@@ -1266,16 +1370,20 @@ public class JmlVisitor extends VisitorArgResult {
       fa = (FieldAccess)iter.next();
       typeId = fa.decl.parent.id;
       if (!parentId.equals(typeId)) {
-        System.out.println("Subset checking: failed! The field \"" + fa.id + "\" is a field of class " + typeId + " and not as expected of class " + parentId + "!");  
+        System.out.println("Subset checking: failed! " +
+            "The field \"" + fa.id + 
+            "\" is a field of class " + typeId + 
+            " and not as expected of class " + parentId + "!");  
         result = false;
       }
-     }
-    fProperties.put("subsetCheckingSet", new HashSet<FieldAccess>()); //empty set
+    }
+    prop.put("subsetCheckingSet", new HashSet<FieldAccess>()); //empty set
     return result;
   }
   
   /**
-   * Adds a Term to the routines postcondition describing all assignable variables
+   * Adds a Term to the routines postcondition describing 
+   * all assignable variables.
    * @param o Properties object also containing all assignable variables
    */
   public void doAssignable(final Object o) {
@@ -1285,10 +1393,12 @@ public class JmlVisitor extends VisitorArgResult {
     {
       Term forAllTerm = null;
       final QuantVariableRef targetVar = Expression.rvar(Ref.sort); 
-      final QuantVariableRef fieldVar = Expression.rvar(Ref.sort); // FIXME: Why sortRef is not available?
+      final QuantVariableRef fieldVar = Expression.rvar(Ref.sort);
+                  // FIXME: Why sortRef is not available?
       final Term equalsTerm = 
-          //FIXME jgc: here there is a type mistake fieldVar.qvar is supposed to be the name of the field, not a variable ref or fieldVar if you prefer
-          
+          // FIXME jgc: here there is a type mistake fieldVar.qvar 
+          // is supposed to be the name of the field, 
+          // not a variable ref or fieldVar if you prefer
           //  Logic.equals(Heap.select(Heap.varPre, (Term) targetVar, fieldVar.qvar), 
             //         Heap.select(Heap.var, (Term) targetVar, fieldVar.qvar)); 
                         //gibt noch kein any
@@ -1310,7 +1420,7 @@ public class JmlVisitor extends VisitorArgResult {
 
   
   /**
-   * Adds a given Term to preconditions of a given method
+   * Adds a given Term to preconditions of a given method.
    * @param folTerm to add to preconditions in Lookup hash map
    * @param o Properties object contains the concerning method
    */
@@ -1331,18 +1441,19 @@ public class JmlVisitor extends VisitorArgResult {
   
   
   /**
-   * Adds a given Term to postconditions of a given method 
+   * Adds a given Term to postconditions of a given method. 
    * @param folTerm to add to postconditions in Lookup hash map
    * @param o Properties object contains the concerning method
    */
   public void addToPostcondition(final Term folTerm, final Object o) {
+    final MethodProperties prop = (MethodProperties) o;
     if (folTerm != null) {
-      Post folPost = new Post(folTerm);
+      final Post folPost = new Post(folTerm);
       final RoutineDecl rd = (RoutineDecl)((Properties) o).get("method");
       Post allPosts = Lookup.postconditions.get(rd);
       
       if (allPosts == null) {
-        final QuantVariableRef result = (QuantVariableRef) ((Properties) o).get("result");
+        final QuantVariableRef result = prop.fResult;
         Lookup.postconditions.put(rd, new Post(result, folTerm));
       }
       else {
