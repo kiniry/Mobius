@@ -382,6 +382,13 @@ public class BCClass {
 	}
 
 	/**
+	 * @return number of BCMethods in this class.
+	 */
+	public int getMethodCount() {
+		return methods.length;
+	}
+
+	/**
 	 * @return object used for parsing BML annotations.
 	 */
 	public Parsing getParser() {

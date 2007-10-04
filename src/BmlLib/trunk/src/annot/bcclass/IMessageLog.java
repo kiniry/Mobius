@@ -14,17 +14,22 @@ public interface IMessageLog {
 	/**
 	 * Displays all messages.
 	 */
-	public static final int PDEBUG = 63;
+	public static final int PALL = 127;
+
+	/**
+	 * Displays almost all messages.
+	 */
+	public static final int PDEBUG = 126;
 
 	/**
 	 * Displays all except debug messages.
 	 */
-	public static final int PNORMAL = 62;
+	public static final int PNORMAL = 124;
 
 	/**
 	 * Displays only error messages.
 	 */
-	public static final int PERRORS = 32;
+	public static final int PERRORS = 64;
 
 	/**
 	 * Displays no messages.
@@ -35,38 +40,44 @@ public interface IMessageLog {
 	// higher it's priority:
 
 	/**
+	 * For debug message that appear very frequently
+	 * (or that are very long), slowing down the library.
+	 */
+	public static final int PDebug2 = 1;
+
+	/**
 	 * For debug message that appear frequently,
 	 * trashing the console.
 	 */
-	public static final int PDebug = 1;
+	public static final int PDebug = 2;
 
 	/**
 	 * For debug message that occures about once per
 	 * attribute operation (adding / modifying / removing
 	 *  / saving / loading / etc).
 	 */
-	public static final int PInfo = 2;
+	public static final int PInfo = 4;
 
 	/**
 	 * For debug message that appears rarely, about once per
 	 * class operation (saving / loading / etc).
 	 */
-	public static final int PNotice = 4;
+	public static final int PNotice = 8;
 
 	/**
 	 * For displaing progress while saving / loading
 	 */
-	public static final int PProgress = 8;
+	public static final int PProgress = 16;
 
 	/**
 	 * Indicates that it's time to implement missing
 	 * code branch to make this test case run correctly.
 	 */
-	public static final int PTodo = 16;
+	public static final int PTodo = 32;
 
 	/**
 	 * For displaying error messages.
 	 */
-	public static final int PError = 32;
+	public static final int PError = 64;
 
 }

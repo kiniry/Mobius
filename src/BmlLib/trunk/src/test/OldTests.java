@@ -4,10 +4,12 @@ import java.io.IOException;
 import java.util.Random;
 
 import org.antlr.runtime.RecognitionException;
+import org.apache.bcel.generic.InstructionHandle;
 
 import annot.attributes.AType;
 import annot.attributes.BCPrintableAttribute;
 import annot.attributes.ClassInvariant;
+import annot.attributes.InCodeAttribute;
 import annot.attributes.MethodSpecification;
 import annot.attributes.SingleAssert;
 import annot.attributes.SpecificationCase;
@@ -68,6 +70,16 @@ public final class OldTests {
 	 */
 	private static BCClass bcc;
 
+	/**
+	 * Current test's number.
+	 */
+	private static int test_nr = 0;
+	
+	/**
+	 * Test class's (bcc's) code.
+	 */
+	private static String code;
+	
 	/**
 	 * A random stream.
 	 */
@@ -272,6 +284,23 @@ public final class OldTests {
 		return bcc;
 	}
 
+	public static BCClass createSampleClass2()
+			throws ClassNotFoundException,
+			ReadAttributeException {
+		bcc = new BCClass(Paths.path, "test.Empty");
+		bcc.addAttribute(new ClassInvariant(bcc, getSampleFormula(4, 0)));
+		for (int i=0; i<bcc.getMethodCount(); i++) {
+			BCMethod m = bcc.getMethod(i);
+			InstructionHandle[] ihs = m.getInstructions().getInstructionHandles();
+			m.setMspec(new MethodSpecification(m, getSampleFormula(2*i+1, 0), new SpecificationCase[0]));
+			m.addAttribute(new SingleAssert(m, ihs[0], 0, getSampleFormula(2*i+2, 0)));
+			m.addAttribute(new SingleAssert(m, ihs[2], 0, getSampleFormula(2*i+2, 1)));
+			m.addAttribute(new SingleAssert(m, ihs[2], 4, getSampleFormula(2*i+2, 2)));
+			m.addAttribute(new SingleAssert(m, ihs[2], 0, getSampleFormula(2*i+2, 3)));
+		}
+		return bcc;
+	}
+	
 	/**
 	 * @return newly created simple quantified formula.
 	 */
@@ -346,18 +375,18 @@ public final class OldTests {
 		for (int i=0; i<lines.length; i++)
 			System.out.println(i+": "+CodeFragment.getKeyword(lines[i]));
 		System.out.println(xxx);
-		for (int i=0; i<lines.length; i++) {
-			int[] p = CodeFragment.where(code, i, 3);
-			if (p == null) {
-				System.out.println(i+": null");
-			} else {
-				System.out.println(i + ": [" + p[0] + ", "
-					+ p[1] + ", " + p[2] + ", " + p[4] + "]"
-					+ ((p[3]!=0) ? " *" : ""));
-			}
-		}
+		for (int i=0; i<lines.length; i++)
+			System.out.println("" + i + ": "
+				+ CodeFragment.where(code, i, 3).toString());
 		System.out.println(xxx);
 		System.out.println("total code length: " + code.length());
+		for (int i=1; i<lines.length; i++) {
+			int off = CodeFragment.getLineOffset(code, i);
+			if (CodeFragment.getLineOfOffset(code, off) != i)
+				error("offset error ("+i+"b)");
+			if (CodeFragment.getLineOfOffset(code, off-1) != i-1)
+				error("offset error ("+i+"e)");
+		}
 		CodeFragment cf = new CodeFragment(bcc, code);
 		System.out.println("### stage 0");
 		cf.addChange(2535, 20, change1);
@@ -423,6 +452,79 @@ public final class OldTests {
 		System.out.println(code);
 	}
 
+	private static void singleTest(String from, String to) {
+		singleTest(from, to, -1);
+	}
+
+	private static void singleTest(String from, String to, int hash) {
+		int cfrom = code.indexOf(from) + from.length();
+		int cto = code.indexOf(to, cfrom);
+		String newCode = code.substring(cfrom, cto);
+		newCode = newCode.toUpperCase(); // changes sth.
+		singleTest(from, to, hash, newCode);
+	}
+
+	private static void singleTest(String from, String to, int hash, String newCode) {
+		System.out.println("************ test nr " + test_nr + " ************");
+		int oldMask = MLog.mask;
+		MLog.mask = MLog.PERRORS;
+		CodeFragment cf = new CodeFragment(bcc, code);
+		int cfrom = code.indexOf(from) + from.length();
+		int cto = code.indexOf(to, cfrom);
+		cf.modify(cfrom, cto - cfrom, newCode);
+		int h = cf.hash();
+		System.out.print("hash = " + h);
+		if (h == hash) {
+			System.out.println(" (ok)");
+		} else {
+			if (hash == -1) {
+				System.out.println(" (not set yet)");
+			} else {
+				System.out.println(" (should be " + hash + ")");
+			}
+			MLog.mask = MLog.PNORMAL;
+			cf = new CodeFragment(bcc, code);
+			cf.modify(cfrom, cto - cfrom, newCode);
+		}
+//		if (!cf.isCorrect())
+//			error("Test " + test_nr + ": code replace failed");
+		MLog.mask = oldMask;
+		test_nr++;
+	}
+	
+	private static void attributeSearchTest2()
+			throws ClassNotFoundException,
+			ReadAttributeException {
+		bcc = createSampleClass2();
+		code = bcc.printCode();
+		System.out.println(code);
+		System.out.println(xxx);
+		System.out.println("length: " + code.length());
+		singleTest("~true", " && true || ~true) ||", 717);
+//		singleTest("\\class", "))", 129);
+//		singleTest("\\req", "| false", 87);
+//		singleTest("\\a", "~tr", 146);
+//		singleTest("~(~f", "e)", 50);
+//		singleTest("rt (tr", "ue) &", 169);
+//		singleTest("*    ~(~(~", "))", 505);
+//		singleTest(" *    ~(~f", "e)", 941);
+//		singleTest("~(~(~(~", "sse", 309);
+//		singleTest("/*", "*/", 629);
+//		singleTest(")\n/*", "*/", 145);
+//		singleTest("assert", "~(~", 295);
+//		singleTest("ldc", "~", 732);
+//		singleTest("requires", "true", 462);
+//		singleTest("res (", "e))", 985);
+//		singleTest("~(~false", "\\req", 785);
+//		singleTest("invariant", "requires", 82);
+//		singleTest("rt false", " && (", 301, "");
+//		singleTest("~(~(~(~", "\\a", 385, "false)))\n\\assert true\n * ");
+//		singleTest("(20)", "\n3:", 394, "\n/* \\assert false");
+//		singleTest("(20)", "\n3:", 354, "\n/* \\assert false */");
+//		singleTest("()\n", "\n0:", -1, "");
+//		singleTest("/*", "*/", -1, "");
+	}
+	
 	/**
 	 * Main method for running these tests.
 	 * 
@@ -431,7 +533,8 @@ public final class OldTests {
 	public static void main(String[] args) {
 		try {
 //			addRemoveTest();
-			attributeSearchTest();
+//			attributeSearchTest();
+			attributeSearchTest2();
 //			pp_test();
 			System.out.println("done.");
 		} catch (Exception e) {

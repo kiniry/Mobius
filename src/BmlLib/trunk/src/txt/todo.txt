@@ -1,15 +1,21 @@
-TODO:
+TODO: (- : to do, + : done, * : optional, > : in progress)
+
 > create CodeFragment class
-	+ complete addChange method,
-	+ test addChange method,
-	+ fix where method,
-	+ compute changes range and affected fragment,
+	+ create full tests,
+	+ compute changes range (method, instr and attr),
+	+ create CodePosition class,
+	+ use CodePosition class in where method,
+	- fix CodeSearch to pass tests,
+	- move automated tests to "Testuj" class,
 	> parse changes on each levels:
 		- annotation,
 		- instruction,
-		- method (replace all annotations from it),
-		- class (replace all methods from it).
-	- recompute pc numbers.
+		* method (replace all annotations from it),
+		- class attribute,
+		* class (replace all methods from it).
+	* recompute pc numbers,
+	- remove CodeSearch class,
+	- update update.txt file.
 > integrate with Umbra
 - complete specificationCase attribute
 - add attributes

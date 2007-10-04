@@ -187,6 +187,17 @@ public class SingleList implements Comparable<SingleList> {
 	}
 
 	/**
+	 * Returns <code>n</code>-th annotation from the list.
+	 * 
+	 * @param n - position of annotation (number of annotations
+	 * 		displayed before it for the same instruction).
+	 * @return <code>n</code>-th annotation from this list.
+	 */
+	public InCodeAttribute nth(int n) {
+		return attributes.get(n);
+	}
+
+	/**
 	 * @return pc numner of annotation's bytecode instruction,
 	 * 		or -1 if list is empty.
 	 */
