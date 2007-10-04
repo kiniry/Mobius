@@ -449,17 +449,16 @@ public class JmlExprToFormula {
 
   public Object fieldAccess(final FieldAccess x, final Object o) {
 
-    if ((Boolean) ((Properties) o).get("fresh")) { 
+    if (fVisitor.fGlobal.fresh) { 
       final QuantVariableRef qref = Expression.rvar(x.decl);
       final HashSet<Term> freshSet = (HashSet) ((Properties)o).get("freshSet");
       freshSet.add(qref);
       ((Properties)o).put("freshSet", freshSet);
     }
     else { 
-      if ((Boolean) ((Properties) o).get("doSubsetChecking")) {
-        final HashSet<FieldAccess> subSet = (HashSet) ((Properties)o).get("subsetCheckingSet");
+      if ((Boolean) (fVisitor.fGlobal.get("doSubsetChecking"))) {
+        final java.util.Set<FieldAccess> subSet = fVisitor.fGlobal.subsetCheckingSet;
         subSet.add(x);
-        ((Properties)o).put("subsetCheckingSet", subSet);
       }
       final Boolean oldProp = (Boolean) ((Properties) o).get("old");
       final Term obj = (Term) x.od.accept(fVisitor, o);
@@ -538,7 +537,7 @@ public class JmlExprToFormula {
     fVisitor.visitGCExpr(x, o);  
     ((Properties) o).put("quantifier", Boolean.FALSE); 
     
-    final HashSet<QuantVariable> qVarsSet    = (HashSet) ((Properties) o).get("quantVars");
+    final java.util.Set<QuantVariable> qVarsSet    = (HashSet) ((Properties) o).get("quantVars");
     final QuantVariable[] qVarArray = new QuantVariable[qVarsSet.size()];
     final Iterator iter = qVarsSet.iterator();
     int i = 0;
