@@ -708,7 +708,7 @@ public class JmlVisitorTest extends TestCase {
     pragmaVec = ModifierPragmaVec.make(new ModifierPragma[] {pragmaEnsures});
     methodDecl = MethodDecl.make(0, pragmaVec, null, null, null, null, 0, 0, 0, 0, Identifier.intern("Test"), JavafePrimitiveType.make(103, 0), 0);
     fProp.put("method", methodDecl);
-    fProp.put("result", Expression.rvar(Expression.getResultVar(methodDecl)));
+    fProp.put("result", Expression.getResultRVar(methodDecl));
     //**************Ensures*******************************
     fVisitor.visitExprModifierPragma(pragmaEnsures, fProp);
     evaluatedTerm = ((Post) Lookup.postconditions.get(methodDecl)).getPost();

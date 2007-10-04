@@ -87,6 +87,20 @@ public class Post {
   }
 
   /**
+   * Substitute the current variable ({@link #fVar}) with the logical formula given
+   * as an argument. This non safe version doesn't do any checks...
+   * @param v a variable or an expression to substitute
+   * @param f the formula to substitute the variable with
+   * @return a term where the variable has been substituted
+   */
+  public Term nonSafeSubst(final Term v, final Term f) {
+    if ((v != null) && (f != null)) {
+        
+      return fPost.subst(v, f);
+    }
+    return fPost;
+  }
+  /**
    * Make one post out of two (isn't that magickal?) and does it robustly.
    * If one of the argument is <code>null</code> it simply returns the other.
    * In the case if both are different from <code>null</code> it joins

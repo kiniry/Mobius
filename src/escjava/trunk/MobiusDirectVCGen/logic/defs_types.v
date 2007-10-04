@@ -45,5 +45,6 @@ Definition le_bool (v1: Int.t) (v2: Int.t): bool :=
 Definition lt_bool (v1: Int.t) (v2: Int.t): bool :=
   Zlt_bool (Int.toZ v1) (Int.toZ v2).
 
-Variable inv: value -> type -> Prop.
+Variable inv: Heap.t -> value -> type -> Prop.
 Variable isAlive: Heap.t -> value -> Prop.
+Variable isFieldOf: Heap.t -> value -> value -> Prop.

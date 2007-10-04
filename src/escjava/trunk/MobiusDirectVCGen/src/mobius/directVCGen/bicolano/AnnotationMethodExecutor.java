@@ -11,6 +11,7 @@ import org.apache.bcel.classfile.Method;
 import org.apache.bcel.generic.Type;
 
 import escjava.sortedProver.Lifter.QuantVariableRef;
+import escjava.sortedProver.Lifter.Term;
 
 import mobius.bico.Util.Stream;
 import mobius.bico.dico.MethodHandler;
@@ -19,6 +20,7 @@ import mobius.directVCGen.formula.Expression;
 import mobius.directVCGen.formula.Formula;
 import mobius.directVCGen.formula.Heap;
 import mobius.directVCGen.formula.Lookup;
+import mobius.directVCGen.formula.Num;
 import mobius.directVCGen.formula.Ref;
 import mobius.directVCGen.vcgen.struct.Post;
 
@@ -144,6 +146,12 @@ public class AnnotationMethodExecutor extends ABasicExecutor {
     }
         
     Post normalPost = Lookup.normalPostcondition(fRout);
+    if (!normalPost.getRVar().getSort().equals(Num.sortInt)) {
+      final QuantVariableRef v = normalPost.getRVar();
+      final Term f = Heap.valueToSort(v, Num.sortInt);
+      System.out.println(f);
+      normalPost = new Post(v, normalPost.nonSafeSubst(v, f));
+    }
     Post excpPost = Lookup.exceptionalPostcondition(fRout);
     out.incTab();
     out.println("fun " + "(t: ReturnVal) " + varsAndType + " => ");

@@ -165,7 +165,7 @@ public final class Heap {
    * @param type the type to which to convert the term
    * @return the conversion term
    */
-  private static Term valueToSort(final Term t, final Sort type) {
+  public static Term valueToSort(final Term t, final Sort type) {
     FnTerm res;
     if (type == Formula.lf.sortBool) {
       res = Formula.lf.mkFnTerm(Formula.lf.symValueToBool,  new Term [] {t});
