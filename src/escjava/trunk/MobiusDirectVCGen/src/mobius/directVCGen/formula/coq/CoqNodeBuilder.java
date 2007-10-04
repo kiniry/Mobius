@@ -728,7 +728,7 @@ public class CoqNodeBuilder extends EscNodeBuilder {
   
   
   public SPred buildIsFieldOf(SMap map, SRef obj, SAny field) {
-    return new CPred("isAlive", new STerm [] {map, obj, field});
+    return new CPred("isFieldOf", new STerm [] {map, obj, field});
   }
   
 

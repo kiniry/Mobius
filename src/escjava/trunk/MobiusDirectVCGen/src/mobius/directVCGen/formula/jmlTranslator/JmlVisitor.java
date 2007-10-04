@@ -1286,11 +1286,19 @@ public class JmlVisitor extends VisitorArgResult {
       Term forAllTerm = null;
       final QuantVariableRef targetVar = Expression.rvar(Ref.sort); 
       final QuantVariableRef fieldVar = Expression.rvar(Ref.sort); // FIXME: Why sortRef is not available?
-      final Term equalsTerm = Logic.equals(Heap.select(Heap.varPre, (Term) targetVar, fieldVar.qvar), Heap.select(Heap.var, (Term) targetVar, fieldVar.qvar)); //gibt noch kein any
+      final Term equalsTerm = 
+          //FIXME jgc: here there is a type mistake fieldVar.qvar is supposed to be the name of the field, not a variable ref or fieldVar if you prefer
+          
+          //  Logic.equals(Heap.select(Heap.varPre, (Term) targetVar, fieldVar.qvar), 
+            //         Heap.select(Heap.var, (Term) targetVar, fieldVar.qvar)); 
+                        //gibt noch kein any
+        Logic.True();
       final QuantVariable[] vars = {targetVar.qvar, fieldVar.qvar}; 
       Term assigTerm = Logic.not(Logic.isAlive(Heap.varPre, targetVar));
       if (!assignableSet.isEmpty()) {
-        assigTerm = Logic.or(assigTerm, Logic.isAssignable((Term) targetVar, fieldVar, o));       
+        assigTerm = Logic.or(assigTerm, 
+                             Logic.isAssignable((Term) targetVar, 
+                                                fieldVar, o));       
       }
       assigTerm = Logic.or(assigTerm, equalsTerm);
       assigTerm = Logic.implies(Logic.isFieldOf(Heap.var, targetVar, fieldVar), assigTerm);

@@ -586,7 +586,10 @@ public final class Logic {
     
     while (iter.hasNext()) {
       final QuantVariableRef[] setVar = (QuantVariableRef[]) iter.next();
-      t1 = Logic.equals(Heap.loc(Heap.var, targetVar, fieldVar.qvar), Heap.loc(Heap.var, setVar[0], setVar[1].qvar));
+      // FIXME jgc: here there is a type mistake fieldVar.qvar is supposed to be the name of the field, not a variable ref or fieldVar if you prefer
+      //t1 = Logic.equals(Heap.loc(Heap.var, targetVar, fieldVar.qvar), Heap.loc(Heap.var, setVar[0], setVar[1].qvar));
+      // FIXME claudia/ Hermann : fix this!
+      t1 = Logic.equals(fieldVar, setVar[1]);
       if (t2 == null) {
         t2 = t1;
       }
