@@ -1,4 +1,4 @@
-package mobius.directVCGen.formula.jmlTranslator;
+package mobius.directVCGen.formula.jmlTranslator.struct;
 
 import java.util.HashSet;
 import java.util.Properties;
@@ -8,7 +8,7 @@ import escjava.sortedProver.Lifter.QuantVariable;
 import escjava.sortedProver.Lifter.QuantVariableRef;
 
 /** Properties that are passed as argument of the visitor. */
-final class MethodProperties extends Properties {
+public final class MethodProperties extends Properties {
 
   /** */
   private static final long serialVersionUID = 1L;
@@ -33,7 +33,7 @@ final class MethodProperties extends Properties {
   
   
   /** key to represent a result in the properties set. */  
-  QuantVariableRef fResult;
+  public QuantVariableRef fResult;
   
   
   /**

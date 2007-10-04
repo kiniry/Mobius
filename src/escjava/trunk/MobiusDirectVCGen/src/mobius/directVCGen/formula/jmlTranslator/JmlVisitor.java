@@ -5,7 +5,6 @@ import java.util.Iterator;
 import java.util.Properties;
 import java.util.Vector;
 
-import javafe.ast.ASTNode;
 import javafe.ast.ArrayRefExpr;
 import javafe.ast.BinaryExpr;
 import javafe.ast.BlockStmt;
@@ -43,6 +42,8 @@ import mobius.directVCGen.formula.annotation.AnnotationDecoration;
 import mobius.directVCGen.formula.annotation.Assume;
 import mobius.directVCGen.formula.annotation.Cut;
 import mobius.directVCGen.formula.annotation.Set;
+import mobius.directVCGen.formula.jmlTranslator.struct.GlobalProperties;
+import mobius.directVCGen.formula.jmlTranslator.struct.MethodProperties;
 import mobius.directVCGen.vcgen.struct.Post;
 import escjava.ast.AnOverview;
 import escjava.ast.CondExprModifierPragma;
@@ -421,7 +422,7 @@ public class JmlVisitor extends BasicJMLTranslator {
     
     final Term allConst = Lookup.constraints.get(x.parent);
     
-    if (((Boolean) ((Properties) o).get("dsc")).booleanValue()) { 
+    if (fDoSubsetChecking) { 
       constIsValid = doSubsetChecking(o);
     }
     if (constIsValid && allConst != null) {
@@ -1049,7 +1050,7 @@ public class JmlVisitor extends BasicJMLTranslator {
       Term invTerm = t;
       final Term allInvs = Lookup.invariants.get(x.parent);
       
-      if (((Boolean) ((Properties) o).get("dsc")).booleanValue()) { 
+      if (fDoSubsetChecking) { 
         invIsValid = doSubsetChecking(o);
       }
       if (invIsValid && allInvs != null) {

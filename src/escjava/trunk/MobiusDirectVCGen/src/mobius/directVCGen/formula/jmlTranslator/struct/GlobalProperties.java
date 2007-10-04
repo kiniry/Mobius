@@ -1,4 +1,4 @@
-package mobius.directVCGen.formula.jmlTranslator;
+package mobius.directVCGen.formula.jmlTranslator.struct;
 
 import java.util.HashSet;
 import java.util.Properties;
@@ -8,36 +8,36 @@ import javafe.ast.Identifier;
 import mobius.directVCGen.formula.Type;
 
 /** Properties that are passed as argument of the visitor. */
-final class GlobalProperties extends Properties {
+public final class GlobalProperties extends Properties {
   /** */
   private static final long serialVersionUID = 1L;
 
   /** valid properties string. */
   private static final String [] validStr = {
-    "classId",
     "doSubsetChecking"
   };
   
-  final java.util.Set<Type> visibleTypeSet = new HashSet<Type>();
+  public final java.util.Set<Type> visibleTypeSet = new HashSet<Type>();
   
   /** tell wether or not annotations are being currently inspected. */
-  boolean interesting;
+  public boolean interesting;
   
   /** tell wether or not a predicate are being currently inspected. */
-  boolean pred =  true;
+  public boolean pred =  true;
   
   /** tell wether or not we are being currently inside a fresh annotation. */
-  boolean fresh = false;
+  public boolean fresh = false;
 
-  final HashSet<FieldAccess> subsetCheckingSet = new HashSet<FieldAccess>();
+  public Identifier classId = Identifier.intern("");
+  
+  public final HashSet<FieldAccess> subsetCheckingSet = new HashSet<FieldAccess>();
   
   public GlobalProperties() {
     initProperties(); 
   }
   
   private void initProperties() {
-    put("doSubsetChecking", Boolean.FALSE); 
-    put("classId", Identifier.intern(""));       
+    put("doSubsetChecking", Boolean.FALSE);  
   }
   
   @Override
