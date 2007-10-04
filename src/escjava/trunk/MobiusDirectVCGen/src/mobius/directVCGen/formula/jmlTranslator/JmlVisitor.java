@@ -42,6 +42,7 @@ import mobius.directVCGen.formula.annotation.AnnotationDecoration;
 import mobius.directVCGen.formula.annotation.Assume;
 import mobius.directVCGen.formula.annotation.Cut;
 import mobius.directVCGen.formula.annotation.Set;
+import mobius.directVCGen.formula.jmlTranslator.struct.ContextProperties;
 import mobius.directVCGen.formula.jmlTranslator.struct.GlobalProperties;
 import mobius.directVCGen.formula.jmlTranslator.struct.MethodProperties;
 import mobius.directVCGen.vcgen.struct.Post;
@@ -112,10 +113,10 @@ public class JmlVisitor extends BasicJMLTranslator {
    */
   @Override
   public final Object visitClassDecl(final /*@non_null*/ ClassDecl x, final Object o) {
-    fGlobal.put("classId", x.id);
+    fGlobal.classId = x.id;
     
     //Use default properties to start with.
-    return visitTypeDecl(x, null);
+    return visitTypeDecl(x, new ContextProperties());
   }
 
   
@@ -127,7 +128,8 @@ public class JmlVisitor extends BasicJMLTranslator {
   @Override
   public final Object visitRoutineDecl(final /*@non_null*/ RoutineDecl x, final Object o) {
     final MethodProperties prop = (MethodProperties) o;
-    x.accept(new VisibleTypeCollector(), o); 
+    
+    fGlobal.visibleTypeSet = VisibleTypeCollector.getVisibleTypeSet(x);
     prop.put("method", x);
     prop.put("isHelper", Boolean.FALSE);
     prop.put("routinebegin", Boolean.TRUE);
@@ -179,9 +181,10 @@ public class JmlVisitor extends BasicJMLTranslator {
   public final Object visitMethodDecl(final /*@non_null*/ MethodDecl x, final Object o) {
     final MethodProperties prop = new MethodProperties();
     prop.fResult =  Expression.rvar(Expression.getResultVar(x));
-    visitRoutineDecl(x, o);
     
-    if (((Boolean)((Properties)o).get("isHelper")).booleanValue() == Boolean.FALSE) {
+    visitRoutineDecl(x, prop);
+    
+    if (((Boolean)prop.get("isHelper")).booleanValue() == Boolean.FALSE) {
       final Term constraints = Lookup.constraints.get(x.getParent());
       addToPostcondition(constraints, o);
       addToExceptionalPostcondition(constraints, o);
@@ -219,7 +222,7 @@ public class JmlVisitor extends BasicJMLTranslator {
    */
   @Override
   public final Object visitLiteralExpr(final /*@non_null*/ LiteralExpr x, final Object o) {
-    if (fGlobal.interesting) {
+    if (((ContextProperties)o).interesting) {
       return this.fTranslator.literal(x, o);
     }
     else {
@@ -232,7 +235,7 @@ public class JmlVisitor extends BasicJMLTranslator {
    */
   @Override
   public final Object visitVariableAccess(final /*@non_null*/ VariableAccess x, final Object o) {
-    if (fGlobal.interesting) {
+    if (((ContextProperties)o).interesting) {
       return this.fTranslator.variableAccess(x, o);
     }
     else {
@@ -245,7 +248,7 @@ public class JmlVisitor extends BasicJMLTranslator {
    */
   @Override
   public final Object visitFieldAccess(final /*@non_null*/ FieldAccess x, final Object o) {
-    if (fGlobal.interesting) {
+    if (((ContextProperties)o).interesting) {
       return this.fTranslator.fieldAccess(x, o);
     }
     else {
@@ -275,7 +278,7 @@ public class JmlVisitor extends BasicJMLTranslator {
    */
   @Override
   public final Object visitNaryExpr(final /*@non_null*/ NaryExpr x, final Object o) {
-    if (fGlobal.interesting) {
+    if (((ContextProperties) o).interesting) {
       if (x.op == TagConstants.PRE) {
         return this.fTranslator.oldExpr(x, o);
       }
@@ -300,7 +303,7 @@ public class JmlVisitor extends BasicJMLTranslator {
    */
   @Override
   public final Object visitInstanceOfExpr(final /*@non_null*/ InstanceOfExpr x, final Object o) {
-    if (fGlobal.interesting) {
+    if (((ContextProperties) o).interesting) {
       return this.fTranslator.instanceOfExpr(x, o);
     }
     else {
@@ -313,7 +316,7 @@ public class JmlVisitor extends BasicJMLTranslator {
    */
   @Override
   public final Object visitThisExpr(final /*@non_null*/ ThisExpr x, final Object o) {
-    if (fGlobal.interesting) {
+    if (((ContextProperties) o).interesting) {
       return this.fTranslator.thisLiteral(x, o);
     }
     else {
@@ -371,7 +374,7 @@ public class JmlVisitor extends BasicJMLTranslator {
   @Override
   public final Object visitExprDeclPragma(final /*@non_null*/ ExprDeclPragma x, final Object o) {
     
-    fGlobal.interesting = true;
+    ((ContextProperties) o).interesting = true;
     Term t;
     
     if (x.tag == TagConstants.INITIALLY) {
@@ -442,7 +445,7 @@ public class JmlVisitor extends BasicJMLTranslator {
    */
   @Override
   public final Object visitExprModifierPragma(final /*@non_null*/ ExprModifierPragma x, final Object o) {
-    fGlobal.interesting = true;
+    ((ContextProperties) o).interesting = true;
     Term t = (Term)visitASTNode(x, o);
     t = Logic.boolToPred(t);
     switch (x.getTag()) {
@@ -465,7 +468,7 @@ public class JmlVisitor extends BasicJMLTranslator {
    */
   @Override
   public final Object visitVarExprModifierPragma(final /*@non_null*/ VarExprModifierPragma x, final Object o) {
-    fGlobal.interesting = true;
+    ((ContextProperties) o).interesting = true;
 
     final RoutineDecl currentRoutine = (RoutineDecl) ((Properties) o).get("method");
     final Post allExPosts = Lookup.exceptionalPostconditions.get(currentRoutine);
@@ -512,7 +515,7 @@ public class JmlVisitor extends BasicJMLTranslator {
       interesting = false;
       if (s instanceof ExprStmtPragma) { //Asserts, Assumes and Loop Invariants
         interesting = true; 
-        fGlobal.interesting = true;
+        ((ContextProperties) o).interesting = true;
         t = (Term)s.accept(this, o);
         switch (s.getTag()) {
           case javafe.parser.TagConstants.ASSERT:
@@ -545,7 +548,7 @@ public class JmlVisitor extends BasicJMLTranslator {
             }
           }
           if (interesting) {
-            fGlobal.interesting = true;
+            ((ContextProperties) o).interesting = true;
             final Set ghostVar = (Set) s.accept(this, o);
             annos.add(ghostVar);
           }
@@ -553,7 +556,7 @@ public class JmlVisitor extends BasicJMLTranslator {
         else {
           if (s instanceof SetStmtPragma) {
             interesting = true;
-            fGlobal.interesting = true;
+            ((ContextProperties) o).interesting = true;
             assignment = (Set.Assignment)s.accept(this, o);
             final Set newSet = new Set();
             newSet.assignment = assignment;
@@ -578,7 +581,7 @@ public class JmlVisitor extends BasicJMLTranslator {
         x.stmts.removeElement(s);
       } 
       else { // Put annotations to next Java Stmt
-        fGlobal.interesting = false;
+        ((ContextProperties) o).interesting = false;
         if (!annos.isEmpty()) {
           AnnotationDecoration.inst.setAnnotPre(s, annos);
           annos.clear();
@@ -714,7 +717,7 @@ public class JmlVisitor extends BasicJMLTranslator {
   @Override
   public final Object visitResExpr(final /*@non_null*/ ResExpr x, final Object o) {
     final MethodProperties prop = (MethodProperties) o;
-    if (fGlobal.interesting) {
+    if (((ContextProperties)o).interesting) {
       return this.fTranslator.resultLiteral(x, prop);
     }
    return null;
@@ -757,7 +760,7 @@ public class JmlVisitor extends BasicJMLTranslator {
    * @see javafe.ast.VisitorArgResult#visitBinaryExpr(javafe.ast.BinaryExpr, java.lang.Object)
    */
   public final Object visitBinaryExpr(final /*@non_null*/ BinaryExpr expr, final Object o) {
-    if (fGlobal.interesting) {
+    if (((ContextProperties)o).interesting) {
       switch(expr.op) {
         case TagConstants.EQ: 
           return this.fTranslator.eq(expr, o);
@@ -880,9 +883,9 @@ public class JmlVisitor extends BasicJMLTranslator {
     final Term typeOfTerm = Logic.assignCompat(Heap.var, x, type);
     final Term allocTerm = Logic.isAlive(Heap.var, x);
     Term andTerm = Logic.and(allocTerm, typeOfTerm);
-    final java.util.Set<Type> visSet = fGlobal.visibleTypeSet;
+    final java.util.Set<javafe.ast.Type> visSet = fGlobal.visibleTypeSet;
     if (!visSet.isEmpty()) {
-      final Term visibleTerm = Logic.isVisibleIn(type, o);
+      final Term visibleTerm = Logic.isVisibleIn(type, fGlobal);
       andTerm = Logic.and(andTerm, visibleTerm);
     }
     

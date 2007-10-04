@@ -1,7 +1,8 @@
 package mobius.directVCGen.formula.jmlTranslator;
 
 import java.util.HashSet;
-import java.util.Properties;
+import java.util.Set;
+
 import javafe.ast.ASTNode;
 import javafe.ast.BinaryExpr;
 import javafe.ast.ClassDecl;
@@ -84,12 +85,14 @@ import escjava.ast.WildRefExpr;
 public class VisibleTypeCollector extends VisitorArgResult {
 
   private java.util.Set<Type> fTypeSet;
-  private Properties fProperties;
 
-  public VisibleTypeCollector() {
-    fProperties = new Properties();
-    fProperties.put("old", Boolean.FALSE);
-    fProperties.put("everything", Boolean.FALSE); 
+  private boolean fAssign;
+  private boolean fEverything;
+
+  private VisibleTypeCollector() {
+    //fProperties = new Properties();
+    //fProperties.put("old", Boolean.FALSE);
+    //fProperties.put("everything", Boolean.FALSE);
     fTypeSet = new HashSet<Type>();
   }
 
@@ -109,19 +112,18 @@ public class VisibleTypeCollector extends VisitorArgResult {
   @Override
   public Object visitClassDecl(final /*@non_null*/ ClassDecl x, final Object o) {
     //should never be called
-    return visitTypeDecl(x, fProperties);
+    return visitTypeDecl(x, null);
   }
 
   @Override
   public Object visitRoutineDecl(final /*@non_null*/ RoutineDecl x, final Object o) {
     fTypeSet.add((Type) x.parent.getDecorations()[3]);
     // FIXME should be replaced by the proper call to FlowInsensitiveChecks
-    ((Properties) o).put("assign", new Boolean(false));
+    fAssign = false;
     visitASTNode(x, o); 
-    if ((Boolean) ((Properties) fProperties).get("everything") == Boolean.TRUE) {
+    if (fEverything) {
       fTypeSet.clear();
     }
-    ((Properties) o).put("visibleTypeSet", fTypeSet); 
     return null;
   }
 
@@ -152,7 +154,7 @@ public class VisibleTypeCollector extends VisitorArgResult {
             fTypeSet.add(type2);
           }
           else if (assigPragma.expr instanceof EverythingExpr) {
-            fProperties.put("everything", Boolean.TRUE); 
+            fEverything = true; 
             break;
           }
         }
@@ -183,7 +185,7 @@ public class VisibleTypeCollector extends VisitorArgResult {
   @Override
   public Object visitVariableAccess(final /*@non_null*/ VariableAccess x, 
                                                   final Object o) {
-    if (((Boolean) ((Properties) o).get("assign")).booleanValue()) {
+    if (fAssign) {
       final javafe.ast.Type type = javafe.tc.FlowInsensitiveChecks.getType(x);
       if (!(type instanceof PrimitiveType)) {
         fTypeSet.add(type);
@@ -197,12 +199,11 @@ public class VisibleTypeCollector extends VisitorArgResult {
                                                final Object o) {
 
     final javafe.ast.Type type = x.od.type();
-    if (!(type instanceof PrimitiveType) &&
-        (((Boolean) ((Properties) o).get("assign")).booleanValue())) {
+    if (!(type instanceof PrimitiveType) && fAssign) {
       fTypeSet.add(type);
     }
 
-    ((Properties) o).put("assign", new Boolean(false));
+    fAssign = false;
     ((Expr)x.od.childAt(0)).accept(this, o);
 
     return null;
@@ -524,9 +525,9 @@ public class VisibleTypeCollector extends VisitorArgResult {
         (expr.op == OperatorTags.ASGRSHIFT) |
         (expr.op == OperatorTags.ASGURSHIFT) | 
         (expr.op == OperatorTags.ASGBITAND)) {
-      ((Properties) o).put("assign", new Boolean(false));
+      fAssign = false;
       expr.right.accept(this, o); 
-      ((Properties) o).put("assign", new Boolean(true));
+      fAssign = true;
       expr.left.accept(this, o);
       return null;
     }
@@ -537,8 +538,14 @@ public class VisibleTypeCollector extends VisitorArgResult {
 
   @Override
   public Object visitUnaryExpr(final /*@non_null*/ UnaryExpr x, final Object o) {
-    ((Properties) o).put("assign", new Boolean(true));
+    fAssign = true;
     return visitExpr(x, o);
+  }
+
+  public static Set<Type> getVisibleTypeSet(RoutineDecl x) {
+    VisibleTypeCollector vtc = new VisibleTypeCollector();
+    x.accept(vtc, null);
+    return vtc.fTypeSet;
   }
 
 }

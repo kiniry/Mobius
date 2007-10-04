@@ -1,35 +1,37 @@
 package mobius.directVCGen.formula.jmlTranslator.struct;
 
+import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Properties;
+import java.util.List;
 
 import javafe.ast.FieldAccess;
 import escjava.sortedProver.Lifter.QuantVariable;
 import escjava.sortedProver.Lifter.QuantVariableRef;
 
 /** Properties that are passed as argument of the visitor. */
-public final class MethodProperties extends Properties {
+public final class MethodProperties extends ContextProperties {
 
   /** */
   private static final long serialVersionUID = 1L;
   
   
   /** valid properties string. */
-  private static final String [] validStr = {
-    "unaryOp",  
-    "old",
-    "freshSet", 
-    "subsetCheckingSetConstraints",
-    "subSetCheckingSetInitially",
-    "assignableSet",
-    "nothing",
-    "routinebegin",
-    "quantifier",
-    "quantVars",
-    "isHelper",
-    "firstExPost", 
-    "isConstructor"
-  };
+  private static final List<String> validStr = 
+    new ArrayList<String>();
+  static
+  {
+    validStr.add("freshSet");
+    validStr.add("subsetCheckingSetConstraints");
+    validStr.add("subSetCheckingSetInitially");
+    validStr.add("assignableSet");
+    validStr.add("nothing");
+    validStr.add("routinebegin");
+    validStr.add("quantifier");
+    validStr.add("quantVars");
+    validStr.add("isHelper");
+    validStr.add("firstExPost"); 
+    validStr.add("isConstructor");
+  }
   
   
   /** key to represent a result in the properties set. */  
@@ -41,14 +43,16 @@ public final class MethodProperties extends Properties {
    */
   public MethodProperties() {
     initProperties(); 
+    validStr.addAll(super.getValidStr());
+    
   }
   
   
   private void initProperties() {
    
     
-    put("unaryOp", 0);
-    put("old", Boolean.FALSE);
+
+
     put("freshSet", new HashSet<QuantVariableRef>());
     put("subsetCheckingSetConstraints", new HashSet<FieldAccess>());
     put("subSetCheckingSetInitially", new HashSet<FieldAccess>());
@@ -65,13 +69,8 @@ public final class MethodProperties extends Properties {
   }
 
   
-  @Override
-  public Object put (final Object key, final Object value) {
-    for (String valid: validStr) {
-      if (key.equals(valid)) {
-        return super.put(key, value);
-      }
-    }
-    throw new IllegalArgumentException("Invalid key: " + key);
+
+  public List<String> getValidStr() {
+    return validStr;
   }
 }

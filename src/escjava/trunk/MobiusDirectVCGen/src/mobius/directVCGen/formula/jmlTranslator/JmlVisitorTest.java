@@ -126,7 +126,6 @@ public class JmlVisitorTest extends TestCase {
     fProp = new Properties();
     fProp.put("pred", Boolean.TRUE);
     fProp.put("old", Boolean.FALSE);
-    fProp.put("visibleTypeSet", new HashSet<QuantVariableRef>());
     fProp.put("assignableSet", new HashSet<QuantVariableRef[]>());
     fProp.put("freshSet", new HashSet<Term>());
     fProp.put("nothing", Boolean.FALSE);

@@ -6,6 +6,8 @@ import java.util.Iterator;
 import java.util.Properties;
 import java.util.Set;
 
+import mobius.directVCGen.formula.jmlTranslator.struct.GlobalProperties;
+
 import javafe.ast.GenericVarDecl;
 import javafe.ast.VariableAccess;
 
@@ -538,10 +540,10 @@ public final class Logic {
    * @param o Parameter object also containing a list of motifiable types.
    * @return A Term expressing the check described above.
    */
-  public static Term isVisibleIn(final Term var, final Object o) {
+  public static Term isVisibleIn(final Term var, final GlobalProperties o) {
     Term t1 = null;
     Term t2 = null;
-    final Set typeSet = (HashSet) ((Properties)o).get("visibleTypeSet");
+    final Set typeSet = o.visibleTypeSet;
     final Iterator iter = typeSet.iterator();
 
     while (iter.hasNext()) {

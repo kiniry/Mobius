@@ -2,6 +2,7 @@ package mobius.directVCGen.formula.jmlTranslator.struct;
 
 import java.util.HashSet;
 import java.util.Properties;
+import java.util.Set;
 
 import javafe.ast.FieldAccess;
 import javafe.ast.Identifier;
@@ -17,16 +18,11 @@ public final class GlobalProperties extends Properties {
     "doSubsetChecking"
   };
   
-  public final java.util.Set<Type> visibleTypeSet = new HashSet<Type>();
+  public Set<javafe.ast.Type> visibleTypeSet = new HashSet<javafe.ast.Type>();
   
-  /** tell wether or not annotations are being currently inspected. */
-  public boolean interesting;
+
   
-  /** tell wether or not a predicate are being currently inspected. */
-  public boolean pred =  true;
-  
-  /** tell wether or not we are being currently inside a fresh annotation. */
-  public boolean fresh = false;
+
 
   public Identifier classId = Identifier.intern("");
   

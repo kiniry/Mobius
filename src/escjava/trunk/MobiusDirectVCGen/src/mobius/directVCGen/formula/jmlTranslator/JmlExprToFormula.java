@@ -18,6 +18,7 @@ import mobius.directVCGen.formula.Logic;
 import mobius.directVCGen.formula.Num;
 import mobius.directVCGen.formula.Ref;
 import mobius.directVCGen.formula.Type;
+import mobius.directVCGen.formula.jmlTranslator.struct.ContextProperties;
 import mobius.directVCGen.formula.jmlTranslator.struct.MethodProperties;
 import escjava.ast.NaryExpr;
 import escjava.ast.QuantifiedExpr;
@@ -123,7 +124,7 @@ public class JmlExprToFormula {
 
 
   public Object ge(final BinaryExpr expr, final Object o) {
-    final Boolean pred = fVisitor.fGlobal.pred;
+    final Boolean pred = ((ContextProperties)o).pred;
     final Term t1 = (Term)expr.left.accept(fVisitor, o);
     final Term t2 = (Term)expr.right.accept(fVisitor, o);
 
@@ -137,7 +138,7 @@ public class JmlExprToFormula {
 
 
   public Object gt(final BinaryExpr expr, final Object o) {
-    final Boolean pred = fVisitor.fGlobal.pred;
+    final Boolean pred = ((ContextProperties)o).pred;
     final Term t1 = (Term)expr.left.accept(fVisitor, o);
     final Term t2 = (Term)expr.right.accept(fVisitor, o);
 
@@ -151,7 +152,7 @@ public class JmlExprToFormula {
 
 
   public Object le(final BinaryExpr expr, final Object o) {
-    final Boolean pred = (Boolean) ((Properties) o).get("pred");
+    final Boolean pred = ((ContextProperties)o).pred;
     final Term t1 = (Term)expr.left.accept(fVisitor, o);
     final Term t2 = (Term)expr.right.accept(fVisitor, o);
 
@@ -165,7 +166,7 @@ public class JmlExprToFormula {
 
 
   public Object lt(final BinaryExpr expr, final Object o) {
-    final Boolean pred = (Boolean) ((Properties) o).get("pred");
+    final Boolean pred = ((ContextProperties)o).pred;
     final Term t1 = (Term)expr.left.accept(fVisitor, o);
     final Term t2 = (Term)expr.right.accept(fVisitor, o);
 
@@ -448,8 +449,8 @@ public class JmlExprToFormula {
   }
 
   public Object fieldAccess(final FieldAccess x, final Object o) {
-
-    if (fVisitor.fGlobal.fresh) { 
+    ContextProperties prop = (ContextProperties) o;
+    if (prop.fresh) { 
       final QuantVariableRef qref = Expression.rvar(x.decl);
       final HashSet<Term> freshSet = (HashSet) ((Properties)o).get("freshSet");
       freshSet.add(qref);
