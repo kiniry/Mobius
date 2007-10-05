@@ -115,15 +115,24 @@ BEGIN
     FORALL(mp)(sMP : MPState, sAP : APState) :
       wf_state(ann_program(mp))(sAP) IMPLIES
       MP_modeled?(mp)(sMP, sAP) IMPLIES
-      cp(astate(sMP)) = halted IMPLIES
-      lookup(cp(mp), sAP) = lookup(halted(mp), sAP)
+      (cp(astate(sMP)) = halted) = 
+      (lookup(cp(mp), sAP) = lookup(halted(mp), sAP))
 
   related_states_implies_cp_halted_correspondence : LEMMA % :-)
     FORALL(mp)(sMP : MPState, sAP : APState) :
       related_states(mp)(sMP, sAP) IMPLIES
-      cp(astate(sMP)) = halted IMPLIES
-      lookup(cp(mp), sAP) = lookup(halted(mp), sAP)
+      (cp(astate(sMP)) = halted) =
+      (lookup(cp(mp), sAP) = lookup(halted(mp), sAP))
 
+  MP_modeled_implies_cp_Int : LEMMA % TO DO
+    FORALL(mp)(sMP : MPState, sAP : APState) :
+      MP_modeled?(mp)(sMP, sAP) IMPLIES
+      Int?(lookup(cp(mp), sAP))
+
+  MP_modeled_implies_halted_Int : LEMMA % TO DO
+    FORALL(mp)(sMP : MPState, sAP : APState) :
+      MP_modeled?(mp)(sMP, sAP) IMPLIES
+      Int?(lookup(halted(mp), sAP))
 
   related_states_preserved_by_update_stack : LEMMA % :-)
     FORALL(mp)(sMP : MPState, sAP : APState,
@@ -170,7 +179,6 @@ BEGIN
            sMP1, sMP2 : MPState, sAP1, sAP2 : APState) : 
       related_states(mp)(sMP1, sAP1) IMPLIES
       NOT up?(ex(pstate(sAP1))) IMPLIES
-      NOT a = Null IMPLIES
       up?(get_class[Name](program(mp))(a)) IMPLIES
       name(down(get_class(program(mp))(a))) = class_name(mva(mp)) IMPLIES
       up?(lookup_mthd(program(mp), a, mn)) IMPLIES
@@ -198,12 +206,11 @@ BEGIN
                         derive(p)(b, sigma1, v, sigma2)(m)) IMPLIES
         related_states(mp)(sMP2, sAP2)
 
-  on_method_entry_preserves_related_states_not_annotated : LEMMA
+  on_method_entry_preserves_related_states_not_annotated : LEMMA % :-)
     FORALL(mn : Name, md : Method, a : (defined?), m1, m2 : nat,
            sMP1, sMP2 : MPState, sAP1, sAP2 : APState) : 
       related_states(mp)(sMP1, sAP1) IMPLIES
       NOT up?(ex(pstate(sAP1))) IMPLIES
-      NOT a = Null IMPLIES
       up?(get_class[Name](program(mp))(a)) IMPLIES
       NOT name(down(get_class(program(mp))(a))) = class_name(mva(mp)) IMPLIES
       up?(lookup_mthd(program(mp), a, mn)) IMPLIES
@@ -236,7 +243,6 @@ BEGIN
            sMP1, sMP2 : MPState, sAP1, sAP2 : APState) : 
       related_states(mp)(sMP1, sAP1) IMPLIES
       NOT up?(ex(pstate(sAP1))) IMPLIES
-      NOT a = Null IMPLIES
       up?(get_class[Name](program(mp))(a)) IMPLIES
       name(down(get_class(program(mp))(a))) = class_name(mva(mp)) IMPLIES
       up?(lookup_mthd(program(mp), a, mn)) IMPLIES
@@ -270,7 +276,6 @@ BEGIN
            sMP1, sMP2 : MPState, sAP1, sAP2 : APState) : 
       related_states(mp)(sMP1, sAP1) IMPLIES
       NOT up?(ex(pstate(sAP1))) IMPLIES
-      NOT a = Null IMPLIES
       up?(get_class[Name](program(mp))(a)) IMPLIES
       NOT name(down(get_class(program(mp))(a))) = class_name(mva(mp)) IMPLIES
       up?(lookup_mthd(program(mp), a, mn)) IMPLIES
@@ -303,7 +308,6 @@ BEGIN
            sMP1, sMP2 : MPState, sAP1, sAP2 : APState) : 
       related_states(mp)(sMP1, sAP1) IMPLIES
       up?(ex(pstate(sAP1))) IMPLIES
-      NOT a = Null IMPLIES
       up?(get_class[Name](program(mp))(a)) IMPLIES
       name(down(get_class(program(mp))(a))) = class_name(mva(mp)) IMPLIES
       up?(lookup_mthd(program(mp), a, mn)) IMPLIES
@@ -337,7 +341,6 @@ BEGIN
            sMP1, sMP2 : MPState, sAP1, sAP2 : APState) : 
       related_states(mp)(sMP1, sAP1) IMPLIES
       up?(ex(pstate(sAP1))) IMPLIES
-      NOT a = Null IMPLIES
       up?(get_class[Name](program(mp))(a)) IMPLIES
       NOT name(down(get_class(program(mp))(a))) = class_name(mva(mp)) IMPLIES
       up?(lookup_mthd(program(mp), a, mn)) IMPLIES

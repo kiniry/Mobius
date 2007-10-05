@@ -1534,7 +1534,7 @@
     (("" (EXPAND "getLocalDecls") (("" (INST?) (("" (ASSERT) NIL NIL)) NIL))
       NIL))
     NIL)
-   PROVED
+   UNFINISHED
    ((|getLocalDecls| CONST-DECL "finite_set[LocalVarDecl]" |ProgramFunctions|
      NIL)
     (|Class| TYPE-EQ-DECL NIL |Program| NIL)
@@ -2150,6 +2150,22 @@
     (|Val| TYPE-DECL NIL |Val_adt| NIL)
     (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |ProgramFunctions| NIL))
    51 50 NIL NIL))
+ (|get_class_in_classes| 0
+  (|get_class_in_classes-1| NIL 3400562445 3400562461
+   ("" (SKOSIMP*)
+    (("" (EXPAND "get_class")
+      (("" (LIFT-IF)
+        (("" (ASSERT)
+          (("" (SPLIT -1)
+            (("1" (FLATTEN) (("1" (ASSERT) NIL NIL)) NIL)
+             ("2" (PROPAX) NIL NIL))
+            NIL))
+          NIL))
+        NIL))
+      NIL))
+    NIL)
+   UNCHECKED ((|get_class| CONST-DECL "lift[Class]" |ProgramFunctions| NIL))
+   1553 22 T SHOSTAK))
  (|lookup_mthd_TCC1| 0
   (|lookup_mthd_TCC1-1| NIL 3396591590 3398058972 ("" (SUBTYPE-TCC) NIL NIL)
    UNCHECKED
@@ -2201,6 +2217,20 @@
     (|method_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
     (|methods| CONST-DECL "finite_set[Method]" |ProgramFunctions| NIL))
    31 31 T NIL))
+ (|lookup_mthd_in_methods_class| 0
+  (|lookup_mthd_in_methods_class-1| NIL 3400562626 3400562648
+   ("" (SKOSIMP*)
+    (("" (EXPAND "lookup_mthd")
+      (("" (LIFT-IF)
+        (("" (ASSERT)
+          (("" (SPLIT -2) (("1" (ASSERT) NIL NIL) ("2" (PROPAX) NIL NIL)) NIL))
+          NIL))
+        NIL))
+      NIL))
+    NIL)
+   PROVED
+   ((|lookup_mthd| CONST-DECL "lift[(methods(p))]" |ProgramFunctions| NIL))
+   2206 7 T SHOSTAK))
  (|proper_subterm_sequence| 0
   (|proper_subterm_sequence-2| NIL 3397378089 3398058989
    ("" (INDUCT "c3")

@@ -361,6 +361,12 @@ BEGIN
     ELSE bottom
     ENDIF
 
+ 
+  get_class_in_classes : LEMMA % :-)
+    FORALL(p : Program)(tgt : Val) :
+      up?(get_class(p)(tgt)) IMPLIES
+        classes(p)(down(get_class(p)(tgt)))
+
   % TODO: This specification is not correct because we can not return any method
   % in the program that has the required name, we should return the first in the
   % hierarchy of classes of the dynamic type of tgt.
@@ -372,6 +378,13 @@ BEGIN
                                  AND name(m) = mn}))
     ELSE bottom
     ENDIF
+
+  lookup_mthd_in_methods_class : LEMMA % :-)
+     FORALL(p : Program, tgt : Val, mn : Name) :
+       up?(get_class(p)(tgt)) IMPLIES
+       up?(lookup_mthd(p, tgt, mn)) IMPLIES
+         methods(down(get_class(p)(tgt)))(down(lookup_mthd(p, tgt, mn)))
+
 
   % TODO: Maybe this function should be left undefined since it should also
   % return the conjunction of the invariant of the the parent classes.
@@ -484,7 +497,16 @@ BEGIN
 
   wf_program_all_variables_declared(p : Program) : boolean =
     FORALL(v : Name) : var_names(p)(v) IMPLIES declared_var_names(p)(v)
-    
+
+  wf_program_methods_only_in_one_class(p : Program) : boolean =
+    FORALL (c1, c2 : Class, m : Method) :    
+      classes(p)(c1) IMPLIES
+      classes(p)(c2) IMPLIES
+      methods(c1)(m) IMPLIES
+      methods(c2)(m) IMPLIES
+        c1 = c2
+      
+
 %  % Basic type information
 %  invariants_are_bool_expr(p : Program) : boolean =
 %    FORALL (c : Class) :
@@ -501,7 +523,8 @@ BEGIN
     wf_program_variables_not_reserved_words_def(p) AND
     wf_program_has_unique_class_names_def(p) AND
     wf_Classes(p) AND
-    wf_program_all_variables_declared(p)
+    wf_program_all_variables_declared(p) AND
+    wf_program_methods_only_in_one_class(p)
 %    invariants_are_bool_expr(p)
 
   AUTO_REWRITE- wf_Program

@@ -29,6 +29,13 @@
     (|real_lt_is_strict_total_order| NAME-JUDGEMENT
      "(strict_total_order?[real])" |real_props| NIL))
    22 23 T NIL))
+ (|val2int_injective| 0
+  (|val2int_injective-1| NIL 3400582099 3400582152
+   ("" (EXPAND "injective?")
+    (("" (SKOSIMP*) (("" (EXPAND "val2int") (("" (POSTPONE) NIL NIL)) NIL))
+      NIL))
+    NIL)
+   UNFINISHED NIL 5315 5 T SHOSTAK))
  (|initial_Program_state_TCC1| 0
   (|initial_Program_state_TCC1-1| NIL 3390799294 3395750968
    ("" (SUBTYPE-TCC) NIL NIL) UNCHECKED
@@ -615,7 +622,7 @@
         NIL))
       NIL))
     NIL)
-   PROVED
+   UNFINISHED
    ((|wf_state| CONST-DECL "boolean" |State| NIL)
     (|arg_in_getLocalDecls| FORMULA-DECL NIL |ProgramFunctions| NIL)
     (|Program| TYPE-EQ-DECL NIL |Program| NIL)
@@ -624,9 +631,7 @@
     (|FieldDecl| TYPE-EQ-DECL NIL |Program| NIL)
     (|defined?| CONST-DECL "boolean" |ValProp| NIL)
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
-    (|Val| TYPE-DECL NIL |Val_adt| NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    (|Val| TYPE-DECL NIL |Val_adt| NIL) NIL NIL
     (|Method| TYPE-EQ-DECL NIL |Program| NIL)
     (|Expr| TYPE-EQ-DECL NIL |Body_adt| NIL)
     (|BoolExpr| TYPE-EQ-DECL NIL |Body_adt| NIL)

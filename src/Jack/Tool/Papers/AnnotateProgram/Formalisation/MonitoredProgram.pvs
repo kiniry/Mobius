@@ -49,6 +49,14 @@ BEGIN
     choose({c : Class | classes(program(mp))(c) AND 
                         name(c) = class_name(mva(mp))})
 
+  name_get_monitored_class : LEMMA % :-)
+    FORALl(mp : MonitoredProgram) :
+      name(get_monitored_class(mp)) = class_name(mva(mp))
+
+  get_monitored_class_in_classes : LEMMA % :-)
+    FORALl(mp : MonitoredProgram) :
+      classes(program(mp))(get_monitored_class(mp))
+
   wf_MP(mp : MonitoredProgram) : boolean =
     wf_MVA(mva(mp)) AND
     wf_Program(program(mp))
