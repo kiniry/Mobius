@@ -1,0 +1,25 @@
+In order to have the MOBIUS PVE installed you have to:
+
+* download checklipse:
+   http://sourceforge.net/project/showfiles.php?group_id=80808
+  and install this manually
+* download mylyn
+   http://www.eclipse.org/mylyn/downloads/
+* download pmd
+   http://pmd.sourceforge.net/
+* download 
+   http://gforge.inria.fr/projects/provereditor/
+* update eclipse checkstyle plugin:
+   http://eclipse-cs.sourceforge.net/update
+* update eclemma via eclipse update:
+   http://update.eclemma.org/
+* update findbugs
+   http://findbugs.cs.umd.edu/eclipse 
+* update esc/java2
+   http://sort.ucd.ie/www/escjava-eclipse/updates
+* update metrics
+   http://metrics.sourceforge.net/update
+   
+More things, rather immature:
+* Umbra
+* BoogiePL support
