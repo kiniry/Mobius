@@ -72,6 +72,7 @@ public class AnnotationClassExecutor extends ClassExecutor {
       anOut.println("Export BicoMapProgram.");
 
       anOut.println("Import P MDom Mwp.");
+      anOut.println("\nCoercion Int.toZ : Int.t >-> Z.");
       
       for (Method met: methods) {
         final AnnotationMethodExecutor ame = 

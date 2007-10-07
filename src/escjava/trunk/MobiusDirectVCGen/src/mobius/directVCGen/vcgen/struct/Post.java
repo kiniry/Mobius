@@ -123,6 +123,30 @@ public class Post {
     return new Post(p1.fVar, 
                     Logic.and(p1.fPost, p2.subst(p2.fVar, p1.fVar)));
   }
+  
+  /**
+   * Make one post out of two and does it robustly.
+   * If one of the argument is <code>null</code> it simply returns the other.
+   * In the case if both are different from <code>null</code> it joins
+   * them with an end and replaces the variable of the second by the one of the
+   * first. The result is of this form 
+   * <code>{p.var, (p.post /\ term)}</code>.
+   * The and used is the one presented in the 
+   * {@link mobius.directVCGen.formula.Logic#and(Term, Term)} method.
+   * @param p the left part of the <code>and</code>
+   * @param term the right part of the <code>and</code>
+   * @return a new Post object with the properties mentionned above or p or term
+   */
+  public static Post and(Post p, Term term) {
+    if (p == null) {
+      return new Post(term);
+    }
+    if (term == null) {
+      return p;
+    }
+    return new Post(p.fVar, 
+                    Logic.and(p.fPost, term));
+  }
 
   /**
    * Nearly the same semantic as the {@link #and(Post, Post)} method.
@@ -206,4 +230,6 @@ public class Post {
   public QuantVariable getVar() {
     return fVar.qvar;
   }
+
+
 }

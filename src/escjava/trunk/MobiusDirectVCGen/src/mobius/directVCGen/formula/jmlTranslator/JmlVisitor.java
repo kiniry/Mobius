@@ -2,7 +2,6 @@ package mobius.directVCGen.formula.jmlTranslator;
 
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Properties;
 import java.util.Vector;
 
 import javafe.ast.ArrayRefExpr;
@@ -130,9 +129,9 @@ public class JmlVisitor extends BasicJMLTranslator {
     final MethodProperties prop = (MethodProperties) o;
     prop.fMethod = x;
     fGlobal.visibleTypeSet = VisibleTypeCollector.getVisibleTypeSet(x);
-    prop.put("isHelper", Boolean.FALSE);
+    prop.fIsHelper = false;
     prop.put("routinebegin", Boolean.TRUE);
-    prop.put("nothing", Boolean.FALSE);
+    prop.fNothing = false;
     
     boolean hasPost = false;
     int tag;
@@ -143,7 +142,7 @@ public class JmlVisitor extends BasicJMLTranslator {
         hasPost = true;
       }
       else if (x.pmodifiers.elementAt(i).getTag() == TagConstants.HELPER) {
-        ((Properties) o).put("isHelper", Boolean.TRUE);
+        prop.fIsHelper = true;
       }
     }
     
@@ -156,12 +155,12 @@ public class JmlVisitor extends BasicJMLTranslator {
     
     // Add dummy exceptional postcondition to Lookup hash map   
     //Lookup.exceptionalPostconditions.put(x, new Post(Expression.rvar(Ref.sort), Logic.True())); 
-    prop.put("firstExPost", Boolean.TRUE);
+    //prop.put("firstExPost", Boolean.TRUE);
     
     visitASTNode(x, o);
     doAssignable(o);
     
-    if (!((Boolean) ((Properties) o).get("isHelper")).booleanValue()) {
+    if (!prop.fIsHelper) {
       invPredToPreconditions(o);
       invPredToPostconditions(o);
       invPredToExceptionalPostconditions(o);    
@@ -183,10 +182,10 @@ public class JmlVisitor extends BasicJMLTranslator {
     
     visitRoutineDecl(x, prop);
     
-    if (((Boolean)prop.get("isHelper")).booleanValue() == Boolean.FALSE) {
+    if (!prop.fIsHelper) {
       final Term constraints = Lookup.constraints.get(x.getParent());
       addToPostcondition(constraints, prop);
-      addToExceptionalPostcondition(constraints, prop);
+      Lookup.addExceptionalPostcondition(prop.fMethod, constraints);
     }  
     return prop;
   }
@@ -203,10 +202,10 @@ public class JmlVisitor extends BasicJMLTranslator {
     visitRoutineDecl(x, prop);
     
  
-    if (((Boolean) prop.get("isHelper")).booleanValue() == Boolean.FALSE) {
-      final Term initially = (Term) ((Properties)o).get("initiallyFOL");
+    if (!prop.fIsHelper) {
+      final Term initially = (Term) prop.get("initiallyFOL");
       addToPostcondition(initially, prop);
-      addToExceptionalPostcondition(initially, prop);
+      Lookup.addExceptionalPostcondition(prop.fMethod, initially);
     } 
     return prop;
   }
@@ -266,11 +265,11 @@ public class JmlVisitor extends BasicJMLTranslator {
   @Override
   public Object visitLocalVarDecl(final /*@non_null*/ LocalVarDecl x, final Object o) {
     
-    if (((Boolean) ((Properties) o).get("quantifier")).booleanValue()) {
-      HashSet<QuantVariable> qVarsSet = (HashSet) ((Properties) o).get("quantVars");
+    if (((Boolean) ((MethodProperties) o).get("quantifier")).booleanValue()) {
+      HashSet<QuantVariable> qVarsSet = (HashSet) ((MethodProperties) o).get("quantVars");
       final QuantVariable qvar = Expression.var(x);
       qVarsSet.add(qvar);
-      ((Properties) o).put("quantVars", qVarsSet);
+      ((MethodProperties) o).put("quantVars", qVarsSet);
     }   
     return null;
   }
@@ -340,19 +339,19 @@ public class JmlVisitor extends BasicJMLTranslator {
    */
   @Override
   public final Object visitCondExprModifierPragma(final /*@non_null*/ CondExprModifierPragma x, final Object o) {
+    final MethodProperties prop = ((MethodProperties) o);
     
     if (x.getTag() == TagConstants.ASSIGNABLE) {
       if (x.expr instanceof FieldAccess) {
-        final HashSet<QuantVariableRef[]> fAssignableSet = (HashSet<QuantVariableRef[]>) ((Properties) o).get("assignableSet");
+        
         final FieldAccess var = (FieldAccess) x.expr;
         final QuantVariableRef targetVar = (QuantVariableRef) var.od.accept(this, o);
         final QuantVariableRef fieldVar = Expression.rvar(var.decl);
         final QuantVariableRef[] qvars = {targetVar, fieldVar};
-        fAssignableSet.add(qvars);
-        ((Properties) o).put("assignableSet", fAssignableSet);    
+        prop.fAssignableSet.add(qvars);   
       } 
       else if (x.expr instanceof NothingExpr) {
-        ((Properties) o).put("nothing", Boolean.TRUE);
+        prop.fNothing = true;
       }
     }
     
@@ -383,7 +382,7 @@ public class JmlVisitor extends BasicJMLTranslator {
       fGlobal.put("doSubsetChecking", Boolean.TRUE); // to collect all fields in initially to do the subset check
       final Term initiallyFOL = (Term) x.expr.accept(this, o);
       fGlobal.put("doSubsetChecking", Boolean.FALSE);
-      t = (Term) ((Properties) o).get("initiallyFOL");
+      t = (Term) ((MethodProperties) o).get("initiallyFOL");
       boolean initIsValid = doSubsetChecking(o);
       if (initIsValid) {
         if (initiallyFOL != null) { 
@@ -394,7 +393,7 @@ public class JmlVisitor extends BasicJMLTranslator {
             t = initiallyFOL;
           }
         }
-        ((Properties) o).put("initiallyFOL", t);
+        ((MethodProperties) o).put("initiallyFOL", t);
       }
       else if (!initIsValid) {
         System.out.println("Initially error (subset check)! The following term was not conjoined to the overall type initially term: " + initiallyFOL.toString() + "\n");
@@ -483,8 +482,8 @@ public class JmlVisitor extends BasicJMLTranslator {
     Term newExPost = (Term)x.expr.accept(this, o);
     newExPost = newExPost.subst(newExceptionVar, commonExceptionVar);
     final Term guard = Logic.assignCompat(Heap.var, commonExceptionVar, typeOfException);
-    final Term result = Logic.Safe.implies(guard, newExPost);
-    addToExceptionalPostcondition(result, o);
+    final Post result = new Post (commonExceptionVar, Logic.Safe.implies(guard, newExPost));
+    Lookup.addExceptionalPostcondition(prop.fMethod, result);
     return null;
   }
 
@@ -621,14 +620,15 @@ public class JmlVisitor extends BasicJMLTranslator {
     final Vector<AAnnotation> annos = new Vector<AAnnotation>();
     
     //Save argument's values in prestate as ghosts at beginning of each routine (in annos)
-    if (((Boolean)((Properties) o).get("routinebegin")).booleanValue()) {
-      ((Properties) o).put("routinebegin", Boolean.FALSE);
+    if (((Boolean)((MethodProperties) o).get("routinebegin")).booleanValue()) {
+      ((MethodProperties) o).put("routinebegin", Boolean.FALSE);
       argsToGhost(annos, o);
     }
 
     handleStmt(x, annos, o);
     
-    // If there is no more Stmt, we generate a dummy SkipStmt to add last Stmt Pragma as precondition
+    // If there is no more Stmt, we generate a dummy SkipStmt 
+    // to add last Stmt Pragma as precondition
     if (!annos.isEmpty()) { 
       final SkipStmt skipStmt = SkipStmt.make(0); //FIXME cbr: which location?
       AnnotationDecoration.inst.setAnnotPre(skipStmt, annos);
@@ -651,7 +651,7 @@ public class JmlVisitor extends BasicJMLTranslator {
     }
     ghostVar.declaration = Expression.rvar(x.decl); 
     return ghostVar;
- }
+  }
 
   /* (non-Javadoc)
    * @see escjava.ast.VisitorArgResult#visitExprStmtPragma(escjava.ast.ExprStmtPragma, java.lang.Object)
@@ -755,7 +755,7 @@ public class JmlVisitor extends BasicJMLTranslator {
   }
   
   public /*@non_null*/ Object visitUnaryExpr(/*@non_null*/ UnaryExpr x, Object o) {
-    ((Properties) o).put("unaryOp", (int) x.op);
+    ((ContextProperties) o).put("unaryOp", (int) x.op);
     return visitExpr(x, o);
   }
   
@@ -869,8 +869,8 @@ public class JmlVisitor extends BasicJMLTranslator {
     final Term typeOfTerm = Logic.assignCompat(Heap.var, x, type);
     final Term allocTerm = Logic.isAlive(Heap.var, x);
     Term andTerm = Logic.and(allocTerm, typeOfTerm);
-    if (((Boolean)((Properties)o).get("isConstructor")).booleanValue()) { 
-      Term notEQThis = Logic.not(Logic.equals(x, Ref.varThis));
+    if (((MethodProperties)o).fIsConstructor) {
+      final Term notEQThis = Logic.not(Logic.equals(x, Ref.varThis));
       andTerm = Logic.and(andTerm, notEQThis);
     }    
     final Term implTerm = Logic.implies(andTerm, invTerm);
@@ -905,7 +905,9 @@ public class JmlVisitor extends BasicJMLTranslator {
 
   
   private void invPredToExceptionalPostconditions(Object o) {
-    this.addToExceptionalPostcondition(this.invPostPred(o), o);
+    final MethodProperties prop = (MethodProperties) o;
+    Lookup.addExceptionalPostcondition(prop.fMethod, 
+                                       invPostPred(o));
   }
   
 
@@ -919,7 +921,7 @@ public class JmlVisitor extends BasicJMLTranslator {
     final MethodProperties prop = (MethodProperties) o;
     final java.util.Set<FieldAccess> subSet = (HashSet) prop.get("subsetCheckingSet");
     FieldAccess fa;
-    final Identifier parentId = (Identifier) ((Properties)o).get("classId");
+    final Identifier parentId = fGlobal.classId;
     Identifier typeId;
     boolean result = true;
     final Iterator iter = subSet.iterator();
@@ -944,11 +946,11 @@ public class JmlVisitor extends BasicJMLTranslator {
    * @param o Properties object also containing all assignable variables
    */
   public void doAssignable(final Object o) {
-    final HashSet assignableSet    = (HashSet) ((Properties) o).get("assignableSet");
+    final MethodProperties prop = (MethodProperties) o;
     
-    if (((Boolean) ((Properties) o).get("nothing")).booleanValue() | !assignableSet.isEmpty())
-    {
-      Term forAllTerm = null;
+    
+    if (prop.fNothing || !prop.fAssignableSet.isEmpty()) {
+      
       final QuantVariableRef targetVar = Expression.rvar(Ref.sort); 
       final QuantVariableRef fieldVar = Expression.rvar(Ref.sort);
                   // FIXME: Why sortRef is not available?
@@ -962,16 +964,16 @@ public class JmlVisitor extends BasicJMLTranslator {
         Logic.True();
       final QuantVariable[] vars = {targetVar.qvar, fieldVar.qvar}; 
       Term assigTerm = Logic.not(Logic.isAlive(Heap.varPre, targetVar));
-      if (!assignableSet.isEmpty()) {
+      if (!prop.fAssignableSet.isEmpty()) {
         assigTerm = Logic.or(assigTerm, 
                              Logic.isAssignable((Term) targetVar, 
                                                 fieldVar, o));       
       }
       assigTerm = Logic.or(assigTerm, equalsTerm);
       assigTerm = Logic.implies(Logic.isFieldOf(Heap.var, targetVar, fieldVar), assigTerm);
-      forAllTerm = Logic.forall(vars, assigTerm);
+      final Term forAllTerm = Logic.forall(vars, assigTerm);
       addToPostcondition(forAllTerm, o);
-      addToExceptionalPostcondition(forAllTerm, o);
+      Lookup.addExceptionalPostcondition(prop.fMethod, forAllTerm);
     } 
   }
 
@@ -983,7 +985,8 @@ public class JmlVisitor extends BasicJMLTranslator {
    */
   public void addToPrecondition(final Term folTerm, final Object o) {
     if (folTerm != null) {
-      final RoutineDecl rd = (RoutineDecl)((Properties) o).get("method");
+      final MethodProperties prop = (MethodProperties) o;
+      final RoutineDecl rd = prop.fMethod;
       Term allPres = Lookup.preconditions.get(rd);
       
       if (allPres == null) {
@@ -1006,7 +1009,7 @@ public class JmlVisitor extends BasicJMLTranslator {
     final MethodProperties prop = (MethodProperties) o;
     if (folTerm != null) {
       final Post folPost = new Post(folTerm);
-      final RoutineDecl rd = (RoutineDecl)((Properties) o).get("method");
+      final RoutineDecl rd = prop.fMethod;
       Post allPosts = Lookup.postconditions.get(rd);
       
       if (allPosts == null) {
@@ -1022,27 +1025,8 @@ public class JmlVisitor extends BasicJMLTranslator {
   
   
   
-  /**
-   * Adds a given Term to exceptional postconditions of a given method 
-   * @param folTerm to add to exceptional postconditions in Lookup hash map
-   * @param o Properties object contains the concerning method
-   */
-  public void addToExceptionalPostcondition(final Term folTerm, final Object o) {
-    if (folTerm != null) {
-      Post folPost = new Post(folTerm);
-      final RoutineDecl rd = (RoutineDecl)((Properties) o).get("method");
-      Post allExPosts = Lookup.getExceptionalPostcondition(rd);
-      
-      if ((Boolean) ((Properties)o).get("firstExPost") == Boolean.TRUE) {
-        ((Properties)o).put("firstExPost", Boolean.FALSE);
-        allExPosts = new Post(allExPosts.getRVar(), folTerm);
-      }
-      else {
-        allExPosts = Post.and(allExPosts, folPost);
-      }
-      Lookup.addExceptionalPostcondition(rd, allExPosts);
-    }
-  } 
+
+
   
   
 
@@ -1051,7 +1035,7 @@ public class JmlVisitor extends BasicJMLTranslator {
    * @param t translated term to conjoin the class invariants
    * @param o object containing the flag for subset checking
    */
-  public void addToInv(ExprDeclPragma x, Term t, Object o) {
+  public void addToInv(final ExprDeclPragma x, final Term t, final Object o) {
     if (t != null) {
       boolean invIsValid = true;
       Term invTerm = t;
@@ -1067,7 +1051,9 @@ public class JmlVisitor extends BasicJMLTranslator {
         Lookup.invariants.put(x.parent, invTerm); 
       }
       else if (!invIsValid) {
-        System.out.println("Invariant error (subset check)! The following term was not conjoined to the overall type invariant: " + t.toString() + "\n");
+        System.out.println("Invariant error (subset check)! " +
+            "The following term was not conjoined to the overall type " +
+            "invariant: " + t.toString() + "\n");
       }
     }
    

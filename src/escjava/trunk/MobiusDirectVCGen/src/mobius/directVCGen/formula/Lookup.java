@@ -165,14 +165,42 @@ public class Lookup {
     return p;
   }
 
-
+  /**
+   * Adds a given Term to exceptional postconditions of a given method. 
+   * @param rd the method
+   * @param post to add to exceptional postconditions in Lookup hash map
+   */
   public static void addExceptionalPostcondition(final RoutineDecl rd, 
                                                  final Post post) {
-    Post p = post;
-    if (p == null) {
-      p = new Post(Expression.rvar(Ref.sort), Logic.True());
+    Post pNew = post;
+    
+    if (pNew == null) {
+      pNew = new Post(Expression.rvar(Ref.sort), Logic.True());
     }
-    exceptionalPostconditions.put(rd, p);
+    if (pNew.getRVar() == null) {
+      // we have to fix that
+      pNew = new Post(Expression.rvar(Ref.sort), pNew);
+    }
+    
+    final Post pOld = exceptionalPostconditions.get(rd);
+    if (pOld != null) {
+      // not the first time
+      pNew = Post.and(pNew, pOld);
+    }
+    exceptionalPostconditions.put(rd, pNew);
+  }
+
+
+  public static void addExceptionalPostcondition(RoutineDecl rd, Term term) {
+    final Post pOld = exceptionalPostconditions.get(rd);
+    Post pNew;
+    if (pOld == null) {
+      pNew = new Post(Expression.rvar(Ref.sort), term);
+    }
+    else {
+      pNew = Post.and(pOld, term);
+    }
+    exceptionalPostconditions.put(rd, pNew);
   }
 
 }

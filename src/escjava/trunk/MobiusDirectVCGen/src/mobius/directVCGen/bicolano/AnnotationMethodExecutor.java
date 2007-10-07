@@ -147,9 +147,9 @@ public class AnnotationMethodExecutor extends ABasicExecutor {
         
     Post normalPost = Lookup.normalPostcondition(fRout);
     final QuantVariableRef varRes = normalPost.getRVar();
-    if (varRes != null && !varRes.getSort().equals(Num.sortInt)) {
+    if (varRes != null) {
       final QuantVariableRef v = normalPost.getRVar();
-      final Term f = Heap.valueToSort(v, Num.sortInt);
+      final Term f = Heap.valueToSort(v, varRes.getSort());
       System.out.println(f);
       normalPost = new Post(v, normalPost.nonSafeSubst(v, f));
     }

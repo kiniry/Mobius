@@ -140,7 +140,7 @@ public final class Expression {
     String name = UniqName.variable(decl);
     if (decl instanceof FieldDecl) {
       final FieldDecl field = (FieldDecl) decl;
-      name = field.parent.id.toString() + "?" + 
+      name = field.parent.id.toString() + "Signature?" + 
              field.id.toString() + "FieldSignature";
     }
     return Formula.lf.mkQuantVariable(decl, name);

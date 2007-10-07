@@ -3,6 +3,7 @@ package mobius.directVCGen.formula.jmlTranslator.struct;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javafe.ast.FieldAccess;
 import javafe.ast.RoutineDecl;
@@ -25,14 +26,9 @@ public final class MethodProperties extends ContextProperties {
     validStr.add("freshSet");
     validStr.add("subsetCheckingSetConstraints");
     validStr.add("subSetCheckingSetInitially");
-    validStr.add("assignableSet");
-    validStr.add("nothing");
     validStr.add("routinebegin");
     validStr.add("quantifier");
     validStr.add("quantVars");
-    validStr.add("isHelper");
-    validStr.add("firstExPost"); 
-    validStr.add("isConstructor");
   }
   
   
@@ -42,8 +38,19 @@ public final class MethodProperties extends ContextProperties {
   /** the current method which is inspected. */
   public  RoutineDecl fMethod;
   
-  /** telles whether or not we are inspecting a constructor. */
+  /** tells whether or not we are inspecting a constructor. */
   public  boolean fIsConstructor;
+  
+  /** ????? */
+  public  boolean fIsHelper;
+  
+  /** the set of variables that can be assigned in the current method. */
+  public  final Set<QuantVariableRef[]> fAssignableSet = new HashSet<QuantVariableRef[]>(); 
+  
+  
+  /** if the flag modifies nothing is set for the method. */
+  public boolean fNothing;
+  
   /**
    * initialize the properties with default values.
    */
@@ -56,22 +63,13 @@ public final class MethodProperties extends ContextProperties {
   
   private void initProperties() {
    
-    
-
-
     put("freshSet", new HashSet<QuantVariableRef>());
     put("subsetCheckingSetConstraints", new HashSet<FieldAccess>());
     put("subSetCheckingSetInitially", new HashSet<FieldAccess>());
-    put("assignableSet", new HashSet<QuantVariableRef[]>()); 
-    put("nothing", Boolean.FALSE); 
     put("routinebegin", Boolean.TRUE);  
     put("quantifier", Boolean.FALSE);
     put("quantVars", new HashSet<QuantVariable>());
-    put("isHelper", Boolean.FALSE);
     
-
-    put("firstExPost", Boolean.TRUE);
-    put("isConstructor", Boolean.FALSE);
   }
 
   
