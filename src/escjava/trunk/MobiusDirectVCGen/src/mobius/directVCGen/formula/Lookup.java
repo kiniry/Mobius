@@ -7,21 +7,19 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
-import mobius.directVCGen.vcgen.struct.Post;
-
-import escjava.ast.Modifiers;
-import escjava.ast.TagConstants;
-import escjava.sortedProver.Lifter.QuantVariable;
-import escjava.sortedProver.Lifter.Term;
-import escjava.sortedProver.NodeBuilder.FnSymbol;
-import escjava.sortedProver.NodeBuilder.Sort;
-import javafe.ast.ClassDecl;
 import javafe.ast.ConstructorDecl;
 import javafe.ast.FormalParaDecl;
 import javafe.ast.FormalParaDeclVec;
 import javafe.ast.MethodDecl;
 import javafe.ast.RoutineDecl;
 import javafe.ast.TypeDecl;
+import mobius.directVCGen.vcgen.struct.Post;
+import escjava.ast.Modifiers;
+import escjava.ast.TagConstants;
+import escjava.sortedProver.Lifter.QuantVariable;
+import escjava.sortedProver.Lifter.Term;
+import escjava.sortedProver.NodeBuilder.FnSymbol;
+import escjava.sortedProver.NodeBuilder.Sort;
 
 /**
  * @author hel
@@ -42,7 +40,7 @@ public class Lookup {
   public static Map<RoutineDecl, Post> postconditions = new HashMap<RoutineDecl, Post>();
 
   /** map containing RoutineDecl as keys and Terms (the exceptional postcondition) as value. */
-  public static Map<RoutineDecl, Post> exceptionalPostconditions = 
+  private static Map<RoutineDecl, Post> exceptionalPostconditions = 
     new HashMap<RoutineDecl, Post>();
 
   /** map containing ClassDecl as keys and Terms (the invariant) as value. **/
@@ -158,13 +156,23 @@ public class Lookup {
    * @param m the method of interest
    * @return the exceptional postcondition or <code>True</code>
    */
-  public static Post exceptionalPostcondition(final RoutineDecl m) {
+  public static Post getExceptionalPostcondition(final RoutineDecl m) {
     //return new Post(Expression.rvar(Ref.sort), buildStdCond (m, "_excp", false)); 
     Post p = exceptionalPostconditions.get(m);
     if (p == null) {
-      p = new Post(Logic.True());
+      p = new Post(Expression.rvar(Ref.sort), Logic.True());
     }
     return p;
+  }
+
+
+  public static void addExceptionalPostcondition(final RoutineDecl rd, 
+                                                 final Post post) {
+    Post p = post;
+    if (p == null) {
+      p = new Post(Expression.rvar(Ref.sort), Logic.True());
+    }
+    exceptionalPostconditions.put(rd, p);
   }
 
 }

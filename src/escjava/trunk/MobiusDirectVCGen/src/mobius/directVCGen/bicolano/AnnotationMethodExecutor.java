@@ -153,7 +153,7 @@ public class AnnotationMethodExecutor extends ABasicExecutor {
       System.out.println(f);
       normalPost = new Post(v, normalPost.nonSafeSubst(v, f));
     }
-    Post excpPost = Lookup.exceptionalPostcondition(fRout);
+    Post excpPost = Lookup.getExceptionalPostcondition(fRout);
     out.incTab();
     out.println("fun " + "(t: ReturnVal) " + varsAndType + " => ");
     out.incTab();

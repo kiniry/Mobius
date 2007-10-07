@@ -65,7 +65,7 @@ public class ExpressionVCGen extends BinaryExpressionVCGen {
   
   public Post methodInvocation(final MethodInvocation mi, final VCEntry entry) {
     final Post normalPost = Lookup.normalPostcondition(mi.decl);
-    final Post excpPost = Lookup.exceptionalPostcondition(mi.decl);
+    final Post excpPost = Lookup.getExceptionalPostcondition(mi.decl);
     final Term pre = Lookup.precondition(mi.decl);
     final QuantVariableRef newThis = Expression.rvar(Ref.sort);
 
@@ -179,7 +179,7 @@ public class ExpressionVCGen extends BinaryExpressionVCGen {
 
 
     final Post normalPost = Lookup.normalPostcondition(ni.decl);
-    final Post excpPost = Lookup.exceptionalPostcondition(ni.decl);
+    final Post excpPost = Lookup.getExceptionalPostcondition(ni.decl);
     final Term pre = Lookup.precondition(ni.decl);
     final QuantVariableRef newThis = entry.fPost.getRVar();
 

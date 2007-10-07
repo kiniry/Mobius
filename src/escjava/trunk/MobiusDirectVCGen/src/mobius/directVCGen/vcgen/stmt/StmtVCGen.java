@@ -563,7 +563,7 @@ public class StmtVCGen extends ExpressionVisitor {
                                       final Object o) {
     final VCEntry entry = (VCEntry)o;
     final Post normalPost = Lookup.normalPostcondition(ci.decl);
-    final Post excpPost = Lookup.exceptionalPostcondition(ci.decl);
+    final Post excpPost = Lookup.getExceptionalPostcondition(ci.decl);
     final Term pre = Lookup.precondition(ci.decl);
     final QuantVariableRef newThis = Expression.rvar(Ref.sort);
 

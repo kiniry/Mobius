@@ -103,7 +103,7 @@ public final class MethodVisitor extends DirectVCGen {
   @Override
   public void visitBlockStmt(final /*@non_null*/ BlockStmt x) {
     final VCEntry post = new VCEntry(Lookup.normalPostcondition(fMeth),
-                               Lookup.exceptionalPostcondition(fMeth));
+                               Lookup.getExceptionalPostcondition(fMeth));
     final StmtVCGen dvcg = new StmtVCGen(fMeth);
     final Post pre = (Post)x.accept(dvcg, post);
     final Term po = Post.implies(Lookup.precondition(fMeth), pre);

@@ -128,9 +128,8 @@ public class JmlVisitor extends BasicJMLTranslator {
   @Override
   public final Object visitRoutineDecl(final /*@non_null*/ RoutineDecl x, final Object o) {
     final MethodProperties prop = (MethodProperties) o;
-    
+    prop.fMethod = x;
     fGlobal.visibleTypeSet = VisibleTypeCollector.getVisibleTypeSet(x);
-    prop.put("method", x);
     prop.put("isHelper", Boolean.FALSE);
     prop.put("routinebegin", Boolean.TRUE);
     prop.put("nothing", Boolean.FALSE);
@@ -156,7 +155,7 @@ public class JmlVisitor extends BasicJMLTranslator {
     }
     
     // Add dummy exceptional postcondition to Lookup hash map   
-    Lookup.exceptionalPostconditions.put(x, new Post(Expression.rvar(Ref.sort), Logic.True())); 
+    //Lookup.exceptionalPostconditions.put(x, new Post(Expression.rvar(Ref.sort), Logic.True())); 
     prop.put("firstExPost", Boolean.TRUE);
     
     visitASTNode(x, o);
@@ -186,8 +185,8 @@ public class JmlVisitor extends BasicJMLTranslator {
     
     if (((Boolean)prop.get("isHelper")).booleanValue() == Boolean.FALSE) {
       final Term constraints = Lookup.constraints.get(x.getParent());
-      addToPostcondition(constraints, o);
-      addToExceptionalPostcondition(constraints, o);
+      addToPostcondition(constraints, prop);
+      addToExceptionalPostcondition(constraints, prop);
     }  
     return prop;
   }
@@ -197,16 +196,19 @@ public class JmlVisitor extends BasicJMLTranslator {
    */
   @Override
   public final Object visitConstructorDecl(final /*@non_null*/ ConstructorDecl x, final Object o) {
-    ((Properties) o).put("isConstructor", Boolean.TRUE);
-    visitRoutineDecl(x, o);
-    ((Properties) o).put("isConstructor", Boolean.FALSE);
+    final MethodProperties prop = new MethodProperties();
+    prop.fResult =  null;
+    
+    prop.fIsConstructor = true;
+    visitRoutineDecl(x, prop);
+    
  
-    if (((Boolean)((Properties)o).get("isHelper")).booleanValue() == Boolean.FALSE) {
-      Term initially = (Term) ((Properties)o).get("initiallyFOL");
-      addToPostcondition(initially, o);
-      addToExceptionalPostcondition(initially, o);
+    if (((Boolean) prop.get("isHelper")).booleanValue() == Boolean.FALSE) {
+      final Term initially = (Term) ((Properties)o).get("initiallyFOL");
+      addToPostcondition(initially, prop);
+      addToExceptionalPostcondition(initially, prop);
     } 
-    return null;
+    return prop;
   }
 
   /* (non-Javadoc)
@@ -468,10 +470,11 @@ public class JmlVisitor extends BasicJMLTranslator {
    */
   @Override
   public final Object visitVarExprModifierPragma(final /*@non_null*/ VarExprModifierPragma x, final Object o) {
-    ((ContextProperties) o).interesting = true;
-
-    final RoutineDecl currentRoutine = (RoutineDecl) ((Properties) o).get("method");
-    final Post allExPosts = Lookup.exceptionalPostconditions.get(currentRoutine);
+    final MethodProperties prop = (MethodProperties) o;
+    prop.interesting = true;
+    
+    final RoutineDecl currentRoutine = prop.fMethod;
+    final Post allExPosts = Lookup.getExceptionalPostcondition(currentRoutine);
     final QuantVariableRef commonExceptionVar = allExPosts.getRVar();
 
     final Term typeOfException = Type.translate(x.arg.type);
@@ -491,7 +494,8 @@ public class JmlVisitor extends BasicJMLTranslator {
    * @param o Properties Object holding routines declaration
    */
   public void argsToGhost(Vector<AAnnotation> annos, Object o) {  
-    final RoutineDecl m = (RoutineDecl) ((Properties) o).get("method");
+    final RoutineDecl m = ((MethodProperties) o).fMethod;
+    
     for (final FormalParaDecl p: m.args.toArray()) {
       final Term t1 = Expression.rvar(p);
       final Term t2 = Expression.old(p);
@@ -1027,7 +1031,7 @@ public class JmlVisitor extends BasicJMLTranslator {
     if (folTerm != null) {
       Post folPost = new Post(folTerm);
       final RoutineDecl rd = (RoutineDecl)((Properties) o).get("method");
-      Post allExPosts = Lookup.exceptionalPostconditions.get(rd);
+      Post allExPosts = Lookup.getExceptionalPostcondition(rd);
       
       if ((Boolean) ((Properties)o).get("firstExPost") == Boolean.TRUE) {
         ((Properties)o).put("firstExPost", Boolean.FALSE);
@@ -1036,7 +1040,7 @@ public class JmlVisitor extends BasicJMLTranslator {
       else {
         allExPosts = Post.and(allExPosts, folPost);
       }
-      Lookup.exceptionalPostconditions.put(rd, allExPosts);
+      Lookup.addExceptionalPostcondition(rd, allExPosts);
     }
   } 
   

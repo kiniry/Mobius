@@ -2,7 +2,6 @@ package mobius.directVCGen.formula.jmlTranslator;
 
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Properties;
 
 import javafe.ast.BinaryExpr;
 import javafe.ast.FieldAccess;
@@ -37,11 +36,11 @@ public class JmlExprToFormula {
   }
 
   public Term and(final BinaryExpr expr, final Object o) {
-    final Boolean pred = (Boolean) ((Properties) o).get("pred");
+    final boolean pred = ((ContextProperties) o).pred;
     final Term t1 = (Term)expr.left.accept(fVisitor, o);
     final Term t2 = (Term)expr.right.accept(fVisitor, o);
 
-    if (!pred.booleanValue() && 
+    if (!pred && 
         (t1.getSort() != Logic.sort) &&
         (t2.getSort() != Logic.sort)) {
       return Bool.and(t1, t2);
@@ -53,11 +52,11 @@ public class JmlExprToFormula {
 
 
   public Object or(final BinaryExpr expr, final Object o) {
-    final Boolean pred = (Boolean) ((Properties) o).get("pred");
+    final boolean pred = ((ContextProperties) o).pred;
     final Term t1 = (Term)expr.left.accept(fVisitor, o);
     final Term t2 = (Term)expr.right.accept(fVisitor, o);
 
-    if (!pred.booleanValue() && 
+    if (!pred && 
         (t1.getSort() != Logic.sort) && 
         (t2.getSort() != Logic.sort)) {
       return Bool.or(t1, t2);
@@ -84,18 +83,18 @@ public class JmlExprToFormula {
    * @return term in the excepted sort, if possible
    */
   public Object eq(final BinaryExpr expr, final Object o) {
-    final Boolean predOld = (Boolean) ((Properties) o).get("pred");
+    final boolean predOld = ((ContextProperties) o).pred;
     //set Properties.prop:=false (equality operation wants sortBool)
-    ((Properties) o).put("pred", Boolean.FALSE);
+    ((ContextProperties) o).pred = false;
     final Term t1 = (Term)expr.left.accept(fVisitor, o);
     final Term t2 = (Term)expr.right.accept(fVisitor, o);
-    ((Properties) o).put("pred", predOld);
-    if (!predOld.booleanValue() && 
+    ((ContextProperties) o).pred = predOld;
+    if (!predOld && 
         (t1.getSort() != Logic.sort) &&
         (t2.getSort() != Logic.sort)) {
       return Bool.equals(t1, t2);
     }
-    else if (predOld.booleanValue() && 
+    else if (predOld && 
         (t1.getSort() != Logic.sort) && 
         (t2.getSort() != Logic.sort)) {
       return Logic.equals(t1, t2);
@@ -110,10 +109,10 @@ public class JmlExprToFormula {
    * ne(t1,t2) <--> not(equal(t1,t2)).
    */
   public Object ne(final BinaryExpr expr, final Object o) {
-    final Boolean pred = (Boolean) ((Properties) o).get("pred");
+    final boolean pred = ((ContextProperties) o).pred;
     final Term t = (Term) eq(expr, o);
 
-    if (!pred.booleanValue() && (t.getSort() != Logic.sort)) {
+    if (!pred && (t.getSort() != Logic.sort)) {
       return Bool.not(t);
     }
     else {
@@ -289,11 +288,11 @@ public class JmlExprToFormula {
   }
 
   public Object implies(final BinaryExpr expr, final Object o) {
-    final Boolean pred = (Boolean) ((Properties) o).get("pred");
+    final boolean pred = ((ContextProperties) o).pred;
     final Term t1 = (Term)expr.left.accept(fVisitor, o);
     final Term t2 = (Term)expr.right.accept(fVisitor, o);
 
-    if (!pred.booleanValue() && 
+    if (!pred && 
         (t1.getSort() != Logic.sort) &&
         (t2.getSort() != Logic.sort)) {
       return Bool.implies(t1, t2);
@@ -341,8 +340,8 @@ public class JmlExprToFormula {
 
   
   public Object literal(final LiteralExpr x, final Object o) {
-    final int unaryOp = (Integer) ((Properties) o).get("unaryOp");
-    ((Properties) o).put("unaryOp", 0); // default value
+    final int unaryOp = (Integer) ((ContextProperties) o).get("unaryOp");
+    ((ContextProperties) o).put("unaryOp", 0); // default value
     final int neg = -1;
     switch (x.getTag()) {
       case javafe.ast.TagConstants.BOOLEANLIT: 
@@ -414,35 +413,35 @@ public class JmlExprToFormula {
   }
 
   public Object variableAccess(final VariableAccess x, final Object o) {
-    final Boolean oldProp = (Boolean) ((Properties) o).get("old");
-    final Boolean predProp = (Boolean) ((Properties)o).get("pred");
+    final boolean oldProp = (Boolean) ((ContextProperties) o).get("old");
+    final boolean predProp = ((ContextProperties)o).pred;
     Term res = null;
     
     
-    if (oldProp.booleanValue()) { 
+    if (oldProp) { 
       res = Expression.old(x.decl); // x.decl cannot be null
     }
     else {
       res = Expression.rvar(x.decl);
     }
-    if (predProp.booleanValue() && (res.getSort() == Bool.sort)) {
+    if (predProp && (res.getSort() == Bool.sort)) {
       res = Logic.boolToPred(res);
     }
     return res;
   }
 
   public Object genericVarDecl(final GenericVarDecl x, final Object o) {
-    final Boolean oldProp = (Boolean) ((Properties) o).get("old");
-    final Boolean predProp = (Boolean) ((Properties)o).get("pred");
+    final boolean oldProp = (Boolean) ((ContextProperties) o).get("old");
+    final boolean predProp = ((ContextProperties)o).pred;
 
     Term res;
-    if (oldProp.booleanValue()) {
+    if (oldProp) {
       res = Expression.old(x);
     }
     else { 
       res = Expression.rvar(x);
     }
-    if (predProp.booleanValue() && (res.getSort() == Bool.sort)) {
+    if (predProp && (res.getSort() == Bool.sort)) {
       res = Logic.boolToPred(res);
     }
     return res;
@@ -452,20 +451,20 @@ public class JmlExprToFormula {
     ContextProperties prop = (ContextProperties) o;
     if (prop.fresh) { 
       final QuantVariableRef qref = Expression.rvar(x.decl);
-      final HashSet<Term> freshSet = (HashSet) ((Properties)o).get("freshSet");
+      final HashSet<Term> freshSet = (HashSet) ((ContextProperties)o).get("freshSet");
       freshSet.add(qref);
-      ((Properties)o).put("freshSet", freshSet);
+      ((ContextProperties)o).put("freshSet", freshSet);
     }
     else { 
       if ((Boolean) (fVisitor.fGlobal.get("doSubsetChecking"))) {
         final java.util.Set<FieldAccess> subSet = fVisitor.fGlobal.subsetCheckingSet;
         subSet.add(x);
       }
-      final Boolean oldProp = (Boolean) ((Properties) o).get("old");
+      final boolean oldProp = (Boolean) ((ContextProperties) o).get("old");
       final Term obj = (Term) x.od.accept(fVisitor, o);
       QuantVariable var = null;
       QuantVariableRef heap = Heap.var;
-      if (oldProp.booleanValue()) {
+      if (oldProp) {
         heap = Heap.varPre;
       }
       var = Expression.var(x.decl);
@@ -482,10 +481,10 @@ public class JmlExprToFormula {
    * @return the generated FOL term
    */
   public Object freshExpr(final NaryExpr x, final Object o) { 
-    ((Properties) o).put("fresh", Boolean.TRUE);
+    ((ContextProperties) o).fresh = true;
     fVisitor.visitGCExpr(x, o);
-    ((Properties) o).put("fresh", Boolean.FALSE);
-    final HashSet freshVars = (HashSet) ((Properties)o).get("freshSet");
+    ((ContextProperties) o).fresh = false;
+    final HashSet freshVars = (HashSet) ((ContextProperties)o).get("freshSet");
     
     Term res = null;
     
@@ -519,10 +518,10 @@ public class JmlExprToFormula {
   }
   
   public Object oldExpr(final NaryExpr x, final Object o) {
-    final Boolean old = (Boolean) ((Properties) o).get("old");
-    ((Properties) o).put("old", Boolean.TRUE);
+    final boolean old = (Boolean) ((ContextProperties) o).get("old");
+    ((ContextProperties) o).put("old", Boolean.TRUE);
     final Object res = fVisitor.visitGCExpr(x, o);
-    ((Properties) o).put("old", old);
+    ((ContextProperties) o).put("old", old);
     return res;
   }
 
@@ -534,11 +533,11 @@ public class JmlExprToFormula {
   
   public Term quantifier(final QuantifiedExpr x, final Object o) {
   
-    ((Properties) o).put("quantifier", Boolean.TRUE); 
+    ((MethodProperties) o).put("quantifier", Boolean.TRUE); 
     fVisitor.visitGCExpr(x, o);  
-    ((Properties) o).put("quantifier", Boolean.FALSE); 
+    ((MethodProperties) o).put("quantifier", Boolean.FALSE); 
     
-    final java.util.Set<QuantVariable> qVarsSet    = (HashSet) ((Properties) o).get("quantVars");
+    final java.util.Set<QuantVariable> qVarsSet    = (HashSet) ((MethodProperties) o).get("quantVars");
     final QuantVariable[] qVarArray = new QuantVariable[qVarsSet.size()];
     final Iterator iter = qVarsSet.iterator();
     int i = 0;
@@ -546,7 +545,7 @@ public class JmlExprToFormula {
       qVarArray[i] = (QuantVariable) iter.next();
       i++;
     }  
-    ((Properties) o).put("quantVars", new HashSet<QuantVariable>()); 
+    ((MethodProperties) o).put("quantVars", new HashSet<QuantVariable>()); 
     final Term exprTerm = (Term) x.expr.accept(fVisitor, o);
     
     if (x.quantifier == TagConstants.FORALL) {

@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import javafe.ast.FieldAccess;
+import javafe.ast.RoutineDecl;
 import escjava.sortedProver.Lifter.QuantVariable;
 import escjava.sortedProver.Lifter.QuantVariableRef;
 
@@ -18,6 +19,7 @@ public final class MethodProperties extends ContextProperties {
   /** valid properties string. */
   private static final List<String> validStr = 
     new ArrayList<String>();
+  
   static
   {
     validStr.add("freshSet");
@@ -37,7 +39,11 @@ public final class MethodProperties extends ContextProperties {
   /** key to represent a result in the properties set. */  
   public QuantVariableRef fResult;
   
+  /** the current method which is inspected. */
+  public  RoutineDecl fMethod;
   
+  /** telles whether or not we are inspecting a constructor. */
+  public  boolean fIsConstructor;
   /**
    * initialize the properties with default values.
    */
