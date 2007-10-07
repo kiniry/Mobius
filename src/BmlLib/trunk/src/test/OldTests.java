@@ -371,13 +371,14 @@ public final class OldTests {
 		String code = bcc.printCode();
 		System.out.println(addLineNumbers(code));
 		System.out.println(xxx);
+		CodeFragment cf = new CodeFragment(bcc, code);
 		String[] lines = code.split("\n");
 		for (int i=0; i<lines.length; i++)
 			System.out.println(i+": "+CodeFragment.getKeyword(lines[i]));
 		System.out.println(xxx);
 		for (int i=0; i<lines.length; i++)
 			System.out.println("" + i + ": "
-				+ CodeFragment.where(code, i, 3).toString());
+				+ cf.where(i, 3).toString());
 		System.out.println(xxx);
 		System.out.println("total code length: " + code.length());
 		for (int i=1; i<lines.length; i++) {
@@ -387,7 +388,7 @@ public final class OldTests {
 			if (CodeFragment.getLineOfOffset(code, off-1) != i-1)
 				error("offset error ("+i+"e)");
 		}
-		CodeFragment cf = new CodeFragment(bcc, code);
+		cf = new CodeFragment(bcc, code);
 		System.out.println("### stage 0");
 		cf.addChange(2535, 20, change1);
 		cf.addChange(2537, 5, "true");
@@ -459,7 +460,7 @@ public final class OldTests {
 	private static void singleTest(String from, String to, int hash) {
 		int cfrom = code.indexOf(from) + from.length();
 		int cto = code.indexOf(to, cfrom);
-		String newCode = code.substring(cfrom, cto);
+		String newCode = "XXX"+code.substring(cfrom, cto);
 		newCode = newCode.toUpperCase(); // changes sth.
 		singleTest(from, to, hash, newCode);
 	}
@@ -485,6 +486,7 @@ public final class OldTests {
 			MLog.mask = MLog.PNORMAL;
 			cf = new CodeFragment(bcc, code);
 			cf.modify(cfrom, cto - cfrom, newCode);
+			System.out.println(cf.toString());
 		}
 //		if (!cf.isCorrect())
 //			error("Test " + test_nr + ": code replace failed");
@@ -500,9 +502,9 @@ public final class OldTests {
 		System.out.println(code);
 		System.out.println(xxx);
 		System.out.println("length: " + code.length());
-		singleTest("~true", " && true || ~true) ||", 717);
-//		singleTest("\\class", "))", 129);
-//		singleTest("\\req", "| false", 87);
+		singleTest("~true", " && true || ~true) ||", -1);
+//		singleTest("\\class", "))", 810);
+//		singleTest("\\req", "| false", -1);
 //		singleTest("\\a", "~tr", 146);
 //		singleTest("~(~f", "e)", 50);
 //		singleTest("rt (tr", "ue) &", 169);

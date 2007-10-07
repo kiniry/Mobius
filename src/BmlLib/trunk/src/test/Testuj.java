@@ -11,7 +11,7 @@ import annot.bcclass.IMessageLog;
 import annot.bcclass.MLog;
 import annot.io.ReadAttributeException;
 import annot.textio.BMLConfig;
-import annot.textio.CodeSearch;
+import annot.textio.CodeFragment;
 import annot.textio.IDisplayStyle;
 import annot.textio.Parsing;
 
@@ -109,7 +109,7 @@ public final class Testuj {
 			BCPrintableAttribute pa = at[attr_id];
 			String rc = IDisplayStyle.comment_next
 					+ Parsing.purge(pa.getLast_code());
-			String kw = CodeSearch.getKeyword(rc) + " ";
+			String kw = CodeFragment.getKeyword(rc) + " ";
 			newval = kw + newval;
 			pa.parse(newval);
 			at = bcc.getAllAttributes(AType.C_ALL);

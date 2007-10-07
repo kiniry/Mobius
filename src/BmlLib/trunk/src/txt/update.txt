@@ -16,8 +16,7 @@ This document describes changes in code required to extend
 		- update BCClass.saveJC(),
 		- update BCConstantPool.addStandardConstants(),
 		- update AttributeReader.readAttribute(ua),
-		- update CodeSearch.getAllAttributeNames(),
-		- update CodeSearch.findAttributeAtLine(...),
+		- update CodeFragment.getAllAttributeNames(),
 		- add parser rule to BML.g3 grammatic.
 	b). Method atribute (except method specification):
 		- create a subclass of BCAttributeTable,
@@ -30,8 +29,7 @@ This document describes changes in code required to extend
 		- update BCConstantPool.addStandardConstants(),
 		- update BCMethod.save(),
 		- update AttributeReader.readAttribute(ua),
-		- update CodeSearch.getAllAttributeNames(),
-		- update CodeSearch.findAttributeAtLine(...),
+		- update CodeFragment.getAllAttributeNames(),
 		- add parser rule to BML.g3 grammatic.
 
 3. To add an Expression:
@@ -45,4 +43,4 @@ This document describes changes in code required to extend
 4. To change display style:
 	- change IdisplayStyle interface,
 	- change tests (both classes),
-	- update CodeSearch.getKeyword.
+	- update CodeFragment.getKeyword.
