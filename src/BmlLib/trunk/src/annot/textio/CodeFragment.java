@@ -1,5 +1,7 @@
 package annot.textio;
 
+import org.antlr.runtime.RecognitionException;
+
 import annot.attributes.BCPrintableAttribute;
 import annot.attributes.SingleList;
 import annot.bcclass.BCClass;
@@ -9,21 +11,30 @@ import annot.bcclass.MLog;
 public class CodeFragment {
 
 	private BCClass bcc;
+	private String oldCode;
 	private String code;
 	private String prefix;
 	private String toAdd;
 	private String toRemove;
 	private String suffix;
+	private String errMsg = "";
 	private int begin;
 	private int end;
+	private int oldEnd;
 	private boolean modified = false;
 	private boolean correct = true;
 	
 	public CodeFragment(BCClass bcc, String code) {
 		this.bcc = bcc;
 		this.code = code;
+		this.oldCode = code;
 	}
 
+	private void showMsg(String msg) {
+		MLog.putMsg(MLog.PInfo, msg);
+		errMsg = msg;
+	}
+	
 	public void addChange(int cfrom, int length, String nc) {
 		int cto = cfrom + length;
 		if (cfrom > cto)
@@ -87,6 +98,7 @@ public class CodeFragment {
 				end = cto;
 			}
 		}
+		oldEnd = end + toRemove.length() - toAdd.length();
 		prefix = code.substring(0, begin);
 		suffix = code.substring(end);
 		end += toAdd.length() - (end - begin);
@@ -110,6 +122,18 @@ public class CodeFragment {
 				IDisplayStyle._requires, IDisplayStyle._precondition,
 				IDisplayStyle._postcondition, IDisplayStyle._assert };
 		return ret;
+	}
+
+	public static boolean isAttributeStr(String str) {
+		String[] all = getAllAttributeNames();
+		for (int i = 0; i < all.length; i++)
+			if (all[i].equals(str))
+				return true;
+		return false;
+	}
+
+	public static boolean isNumber(String str) {
+		return str.matches("^\\-?[0-9]+");
 	}
 
 	public static String getKeyword(String line) {
@@ -139,14 +163,108 @@ public class CodeFragment {
 		return "";
 	}
 
+	public boolean isKeyword(String line) {
+		return isAttributeStr(getKeyword(line));
+	}
+	
 	public CodePosition where(String code, int pos) {
 		int lnr = getLineOfOffset(code, pos);
 		return where(lnr, pos - getLineOffset(code, lnr));
 	}
+
+	private boolean isNewAnnotLine(String line) {
+		if (isKeyword(line))
+			return true;
+		if (line.matches(Parsing.escape(IDisplayStyle.comment_start)))
+			return true;
+		if (line.matches(Parsing.escape(IDisplayStyle.comment_end)))
+			return true;
+		return false;
+	}
 	
-	private boolean quickChanges() {
-		//TODO check if changes affected only single annotation
-		//TODO parse modified annotations
+	@Deprecated
+	private boolean quickChange() {
+		//XXX low quality (may contain errors)
+		//DONE check if changes affected only single annotation
+		int lstart = getLineOfOffset(code, begin);
+		int loldEnd = getLineOfOffset(oldCode, oldEnd);
+		int lnewEnd = getLineOfOffset(code, end);
+		if (isKeyword(code.split("\n")[lstart]))
+			if (!isKeyword((prefix+"\n").split("\n")[lstart])) {
+				showMsg("annotation's keyword affected");
+				return false;
+			}
+		if (isKeyword(oldCode.split("\n")[lstart]))
+			if (!isKeyword((prefix+"\n").split("\n")[lstart])) {
+				showMsg("annotation's keyword affected");
+				return false;
+			}
+		if (oldCode.split("\n")[loldEnd].endsWith(IDisplayStyle.comment_end))
+			if (!(oldCode+"\n").split("\n")[0].endsWith(IDisplayStyle.comment_end)) {
+				showMsg("end of coment affected");
+				return false;
+			}
+		if (isKeyword(oldCode.split("\n")[loldEnd]))
+			if (!isKeyword((oldCode+"\n").split("\n")[loldEnd])) {
+				showMsg("other annotation's keyword affected");
+				return false;
+			}
+		if (code.split("\n")[lnewEnd].endsWith(IDisplayStyle.comment_end))
+			if (!(code+"\n").split("\n")[0].endsWith(IDisplayStyle.comment_end)) {
+				showMsg("end of coment affected");
+				return false;
+			}
+		if (isKeyword(code.split("\n")[lnewEnd]))
+			if (!isKeyword((code+"\n").split("\n")[lnewEnd])) {
+				showMsg("other annotation's keyword affected");
+				return false;
+			}
+		String[] rlines = toRemove.split("\n");
+		for (int i=0; i<rlines.length; i++)
+			if (isNewAnnotLine(rlines[i])) {
+				showMsg("added or removed fragment contains annotation borders");
+				return false;
+			}
+		//DONE parse modified annotations
+		String[] lines = code.split("\n");
+		int pos = lnewEnd + 1;
+		for (;; pos++) {
+			if (isNewAnnotLine(lines[pos]))
+				break;
+			if (pos >= lines.length) {
+				showMsg("cannot find end of comment");
+				return false;
+			}
+		}
+		String toParse = "";
+		if (!isKeyword(lines[pos]))
+			toParse = lines[pos];
+		pos--;
+		for (;; pos--) {
+			toParse = lines[pos] + "\n" + toParse;
+			if (isNewAnnotLine(lines[pos]))
+				break;
+			if (pos <= 0) {
+				showMsg("cannot find beginning of comment");
+				return false;
+			}
+		}
+		int anr = -1;
+		for (; pos >= 0; pos--)
+			if (isKeyword(lines[pos]))
+				anr++;
+		toParse = Parsing.purge(toParse);
+		MLog.putMsg(MLog.PInfo, "code to be parsed:\n" + toParse);
+		MLog.putMsg(MLog.PInfo, "parsing annotation's number: " + anr);
+		BCPrintableAttribute pa = bcc.getAllAttributes()[anr];
+		try {
+			pa.parse(toParse);
+		} catch (RecognitionException e) {
+			showMsg("syntax error");
+			correct = false;
+			return true;
+		}
+		MLog.putMsg(MLog.PNotice, "quickChange parsed annotation successfully.");
 		return true;
 	}
 	
@@ -159,13 +277,18 @@ public class CodeFragment {
 	
 	public void performChanges() {
 		correct = true;
-		if (quickChanges())
+		errMsg = "";
+		if (quickChange())
 			return;
 		//TODO compute positions of affected code
 		//TODO change unaffected fragments to stubs
 		//TODO create grammar for parsing bytecode
 		//TODO check correctness of new code fragment
 		//TODO and parse it into bcc.
+		oldCode = code;
+		begin = end = oldEnd = -1;
+		toAdd = toRemove = prefix = suffix = null;
+		modified = false;
 	}
 	
 	public void modify(int cfrom, int length, String nc) {
@@ -202,6 +325,8 @@ public class CodeFragment {
 		ret += "\ntotal length: " + code.length();
 		ret += "\nchanged fragment: " + begin + " to " + end;
 		ret += "\ncode is currently " + (correct ? "correct" : "incorrect");
+		if (errMsg.length() > 0)
+			ret += "\nlast error message: " + errMsg;
 		ret += "\nhash: " + hash();
 		return ret;
 	}
@@ -212,5 +337,9 @@ public class CodeFragment {
 
 	public boolean isCorrect() {
 		return correct;
+	}
+
+	public String getErrMsg() {
+		return errMsg;
 	}
 }

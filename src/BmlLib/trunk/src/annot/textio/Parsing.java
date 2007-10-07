@@ -87,6 +87,8 @@ public class Parsing {
 	 * @return <code>attr</code> without surrounding comment.
 	 */
 	public static String removeComment(String attr) {
+		if (attr.startsWith(IDisplayStyle.comment_next))
+			attr = attr.substring(IDisplayStyle.comment_length);
 		attr = attr.replaceAll(escape(IDisplayStyle.comment_start), "");
 		attr = attr.replaceAll(escape("\n" + IDisplayStyle.comment_next), "\n");
 		attr = attr.replaceAll(escape(IDisplayStyle.comment_end), "");
@@ -108,6 +110,7 @@ public class Parsing {
 		attr = attr.replaceAll("\n", "");
 		while (attr.lastIndexOf("  ") >= 0)
 			attr = attr.replaceAll("  ", " ");
+		attr = attr.replaceAll("~ ", "~");
 		return attr;
 	}
 

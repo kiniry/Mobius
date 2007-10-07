@@ -375,10 +375,10 @@ public final class OldTests {
 		String[] lines = code.split("\n");
 		for (int i=0; i<lines.length; i++)
 			System.out.println(i+": "+CodeFragment.getKeyword(lines[i]));
-		System.out.println(xxx);
-		for (int i=0; i<lines.length; i++)
-			System.out.println("" + i + ": "
-				+ cf.where(i, 3).toString());
+//		System.out.println(xxx);
+//		for (int i=0; i<lines.length; i++)
+//			System.out.println("" + i + ": "
+//				+ cf.where(i, 3).toString());
 		System.out.println(xxx);
 		System.out.println("total code length: " + code.length());
 		for (int i=1; i<lines.length; i++) {
@@ -398,31 +398,33 @@ public final class OldTests {
 		cf.addChange(2527, 0, "(0<1) || ");
 		cf.addChange(2549, 4, "e && true) |");
 		cf.performChanges();
+		System.out.println(cf.toString());
 		cf = new CodeFragment(bcc, code);
 		System.out.println("### stage 1");
 		cf.modify(2535, 20, change1);
-//		if (!cf.isCorrect())
-//			error("test 1: code replace failed!");
-		cf = new CodeFragment(bcc, code);
-		System.out.println("### stage 2");
-		cf.modify(2635, 50, change2);
-//		if (!cf.isCorrect())
-//			error("test 2: code replace failed!");
-		cf = new CodeFragment(bcc, code);
-		System.out.println("### stage 3");
-		cf.modify(2035, 500, change3);
-//		if (!cf.isCorrect())
-//			error("test 3: code replace failed!");
-		cf = new CodeFragment(bcc, code);
-		System.out.println("### stage 4");
-		cf.modify(1116, 79, change4);
-//		if (!cf.isCorrect())
-//			error("test 4: code replace failed!");
-		cf = new CodeFragment(bcc, code);
-		System.out.println("### stage 5");
-		cf.modify(307, 2, "<=!=>");
-//		if (!cf.isCorrect())
-//		error("test 5: code replace failed!");
+		System.out.println(cf.toString());
+		if (!cf.isCorrect())
+			error("test 1: code replace failed!");
+//		cf = new CodeFragment(bcc, code);
+//		System.out.println("### stage 2");
+//		cf.modify(2635, 50, change2);
+////		if (!cf.isCorrect())
+////			error("test 2: code replace failed!");
+//		cf = new CodeFragment(bcc, code);
+//		System.out.println("### stage 3");
+//		cf.modify(2035, 500, change3);
+////		if (!cf.isCorrect())
+////			error("test 3: code replace failed!");
+//		cf = new CodeFragment(bcc, code);
+//		System.out.println("### stage 4");
+//		cf.modify(1116, 79, change4);
+////		if (!cf.isCorrect())
+////			error("test 4: code replace failed!");
+//		cf = new CodeFragment(bcc, code);
+//		System.out.println("### stage 5");
+//		cf.modify(307, 2, "<=!=>");
+////		if (!cf.isCorrect())
+////		error("test 5: code replace failed!");
 	}
 
 	/**
@@ -535,8 +537,8 @@ public final class OldTests {
 	public static void main(String[] args) {
 		try {
 //			addRemoveTest();
-//			attributeSearchTest();
-			attributeSearchTest2();
+			attributeSearchTest();
+//			attributeSearchTest2();
 //			pp_test();
 			System.out.println("done.");
 		} catch (Exception e) {

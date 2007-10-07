@@ -267,6 +267,14 @@ public final class Testuj {
 		test(true, 3, "(true && false) || (false && true)",
 				"true && false || false && true");
 		test(true, 3, "(true || false) && (false || true)");
+		test(true, 3, "~false");
+		test(true, 3, "~(true || false)");
+		test(true, 3, "~(~true)");
+		test(true, 3, "~~false", "~(~false)");
+		test(true, 3, "((false || false) && (false || false)" +
+				" || ~(~false)) && ((false || false)" +
+				" && (true || false) || ~(~false))" +
+				" || ~(~(~(~false)))");
 		test(true, 3, "1 > 2");
 		test(true, 3, "1 < 2 && 3 <= 4 && 4 >= 5 && 6 > 7");
 		test(false, 3, "1 > 2 > 3");
@@ -302,6 +310,7 @@ public final class Testuj {
 		test(true, 3, "forall int a int c; (exists int b; true)");
 		test(true, 2, "forall int a boolean b; (exists int c; a < c && b) && (exists int c; a >= c)");
 		test(true, 3, "forall int a; (exists int b; (forall int c; a <= b ==> b >= c))");
+		test(false, 1, "");
 
 		// test(true, 3, "(true ? 1 : 2) < 1");
 		// test(true, 3, "(12 < 34 ? 1 : 2) < 45");

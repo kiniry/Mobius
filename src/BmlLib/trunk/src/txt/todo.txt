@@ -1,12 +1,13 @@
 TODO: (- : to do, + : done, * : optional, > : in progress)
 
 > create CodeFragment class
-	- complete quickChange method,
+	+ complete quickChange method,
 	- complete where method,
 	- complete performChanges method,
 	- lower method's visibility,
 	- write JavaDocs for CodeFragment and CodePosition.
 > integrate with Umbra
+- create random parser tests
 - complete specificationCase attribute
 - add attributes
 - add expressions

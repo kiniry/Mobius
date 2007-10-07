@@ -73,8 +73,7 @@ options {
 
 	public void reportError(RecognitionException rex) {
 		lastE = rex;
-		MLog.putMsg(MLog.PError, "LEXER ERROR");
-		super.reportError(rex);
+		MLog.putMsg(MLog.PDebug, "LEXER ERROR");
 	}
 }
 
@@ -92,7 +91,7 @@ expression returns [BCExpression ast] :
 formula returns [AbstractFormula ast] :
 	e=uncheckedFormula {
 		if ($e.ast == null) {
-			$ast = null;
+			reportError(null);
 		} else {
 			if ($e.ast.getType() != JavaType.JavaBool)
 				reportError(null);
@@ -168,6 +167,7 @@ primaryFormula returns [BCExpression ast] :
 	FALSE {$ast = Predicate0Ar.FALSE;}
 	| TRUE {$ast = Predicate0Ar.TRUE;}
 	| i=IDENT {$ast = whatIsIt($i.text);}
+	| LOG_NOT p=primaryFormula {$ast = new Formula(Code.NOT, $p.ast);}
 	| PAR_LEFT f=uncheckedFormula PAR_RIGHT {$ast = $f.ast;}
 	;
 
