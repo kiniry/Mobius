@@ -10,7 +10,7 @@ Require Export BicoMap.
 Export BicoMapProgram.
 Import P.
 Require Export ImplemSWp.
-Import MDom.
+Import Mwp.
 
 Variable heap: Heap.t.
 Definition p := program.
@@ -28,6 +28,7 @@ match val with
 | Num (I i) => i
 | _ => Int.const 0
 end.
+Coercion Int.toZ : Int.t >-> Z.
 
 Definition loc (v: value): Location := 
 match v with 
