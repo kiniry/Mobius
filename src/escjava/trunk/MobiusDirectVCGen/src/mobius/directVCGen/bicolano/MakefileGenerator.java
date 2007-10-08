@@ -15,12 +15,11 @@ public class MakefileGenerator extends mobius.bico.MakefileGenerator {
   
   protected List<String> getExtraGeneratedFiles(PrintStream out) {
     final List<String> generatedFiles = new ArrayList<String>();
-    final String filename = "defs_types.v";
-    out.println("\t# Prelude ;) ");
-    out.println("\tcoqc " + filename);
-    generatedFiles.add(filename + "o");
+    final String filename = "defs_types.vo $(Annotation)";
+
     generatedFiles.addAll(printCompileInstr(out, "Annotation", "_annotations"));
-    
+    out.println("Extra= " + filename);
+    generatedFiles.add(filename);
     return generatedFiles;
   }
 
