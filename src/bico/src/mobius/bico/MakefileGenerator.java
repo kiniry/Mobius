@@ -5,7 +5,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import mobius.bico.executors.ClassExecutor;
@@ -48,18 +47,28 @@ public class MakefileGenerator {
     
     try {
       final PrintStream out = new PrintStream(new FileOutputStream(mkfile));
-      out.println("all:");
-      generatedFiles.addAll(printCompileInstr(out, "Type", "_type"));
-      generatedFiles.addAll(printCompileInstr(out, "Signature", "_signature"));
-      generatedFiles.addAll(printCompileInstr(out, "Main", ""));
-      generatedFiles.addAll(getExtraGeneratedFiles(out));
+
+      final List<String> typeFiles = printCompileInstr(out, "Type", "_type");
+      final List<String> sigFiles = printCompileInstr(out, "Signature", "_signature");
+      final List<String> mainFiles = printCompileInstr(out, "Main", "");
+      final List<String> extraFiles = getExtraGeneratedFiles(out);
+      out.println("all:  $(Extra)");
+      out.println("$(Extra): $(Main)");
+      out.println("$(Main): $(Signature)"); 
+      out.println("$(Signature): $(Type)"); 
+      generatedFiles.addAll(typeFiles);
+      generatedFiles.addAll(sigFiles);
+      generatedFiles.addAll(mainFiles);
+      generatedFiles.addAll(extraFiles);
       out.println("\nclean:");
       out.print("\trm -f");
       for (String name: generatedFiles) {
         out.print(" " + name);
       }
       out.println();
-      
+      out.println("\n# implicit rules");
+      out.println("%.vo : %.v");
+      out.println("\tcoqc $<\n");
       out.close();
     } 
     catch (FileNotFoundException e) {
@@ -71,6 +80,7 @@ public class MakefileGenerator {
 
 
   protected List<String> getExtraGeneratedFiles(PrintStream out) {
+    out.println("Extra= ");
     return new ArrayList<String>();
   }
 
@@ -87,16 +97,17 @@ public class MakefileGenerator {
                                          final String word,
                                          final String postfix) {
     final List<String> generatedFiles = new ArrayList<String>();
-    out.println("\t# " + word + " compilation ");
     String filename;
+    out.print(word + "=");
     for (ClassExecutor ce: fTreated) {
-      filename = ce.getModuleFileName() + postfix + ".v";
-      out.println("\tcoqc " + filename);
-      generatedFiles.add(filename + "o");
+      filename = ce.getModuleFileName() + postfix + ".vo";
+      out.print(" " + filename);
+      generatedFiles.add(filename);
     }
-    filename = fBaseName + postfix + ".v";
-    out.println("\tcoqc " + filename);
-    generatedFiles.add(filename + "o");
+    filename = fBaseName + postfix + ".vo";
+    out.print(" " + filename);
+    generatedFiles.add(filename);
+    out.println();
     return generatedFiles;
   }
   

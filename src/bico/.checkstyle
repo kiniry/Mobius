@@ -3,7 +3,7 @@
     <local-check-config name="Mobius bico" location="lib/mobius-inria-checkstyle-1.xml" type="project" description="">
         <additional-data name="protect-config-file" value="false"/>
     </local-check-config>
-    <fileset name="all" enabled="true" check-config-name="Mobius bico" local="true">
+    <fileset name="all" enabled="true" check-config-name="Inria Config" local="false">
         <file-match-pattern match-pattern="." include-pattern="true"/>
     </fileset>
     <filter name="NonSrcDirs" enabled="true"/>
