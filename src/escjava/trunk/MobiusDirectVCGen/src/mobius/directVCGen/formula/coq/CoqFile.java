@@ -23,10 +23,12 @@ public class CoqFile {
   public static final String suffix = ".v";
   
   /** the stream to print to the target file. */
-  private PrintStream fOut;
+  protected PrintStream fOut;
 
   /** the name of the directory which contains bicolano's library files. */
   private String fBase;
+
+
 
 
 
@@ -75,23 +77,10 @@ public class CoqFile {
   public void writeDefs(final List<FnSymbol> symToDeclare, 
                         final Set<QuantVariable> fieldsToDeclare, 
                         final List<String> classNames) {
-    fOut.println("Add LoadPath \"" + fBase + "\".\n" +
-                 "Add LoadPath \"" + fBase + File.separator + "Formalisation\".\n" +
-                 "Add LoadPath \"" + fBase + File.separator + "Formalisation" +
-                 File.separator + "Bicolano" + "\".\n" +
-                 "Add LoadPath \"" + fBase + File.separator + "Formalisation" +
-                 File.separator + "Logic" + "\".\n" +
-                 "Add LoadPath \"" + fBase + File.separator + "Formalisation" +
-                 File.separator + "Library" + "\".\n" +
-                 "Add LoadPath \"" + fBase + File.separator + "Formalisation" +
-                 File.separator + "Library" + 
-                 File.separator + "Map" + "\".\n");
-
-    fOut.println("Require Import BicoMap_annotations.");
-    fOut.println("Require Import defs_types.");
-    fOut.println("Import BicoMapAnnotations P Mwp.");
-    fOut.println();
-
+    
+    // source
+    writeHeader(fOut);
+    
     
     fOut.println();
     for (FnSymbol sym : symToDeclare) {
@@ -107,6 +96,27 @@ public class CoqFile {
     fOut.println();
     
     fOut.println("Open Local Scope Z_scope.");
+    
+
+  }
+
+  public void writeHeader(PrintStream out) {
+    out.println("Add LoadPath \"" + fBase + "\".\n" +
+                 "Add LoadPath \"" + fBase + File.separator + "Formalisation\".\n" +
+                 "Add LoadPath \"" + fBase + File.separator + "Formalisation" +
+                 File.separator + "Bicolano" + "\".\n" +
+                 "Add LoadPath \"" + fBase + File.separator + "Formalisation" +
+                 File.separator + "Logic" + "\".\n" +
+                 "Add LoadPath \"" + fBase + File.separator + "Formalisation" +
+                 File.separator + "Library" + "\".\n" +
+                 "Add LoadPath \"" + fBase + File.separator + "Formalisation" +
+                 File.separator + "Library" + 
+                 File.separator + "Map" + "\".\n");
+
+    out.println("Require Import BicoMap_annotations.");
+    out.println("Require Import defs_types.");
+    out.println("Import BicoMapAnnotations P Mwp.");
+    out.println();
   }
 
 }

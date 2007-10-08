@@ -1,6 +1,7 @@
 package mobius.directVCGen.vcgen;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -17,6 +18,7 @@ import mobius.directVCGen.formula.Heap;
 import mobius.directVCGen.formula.Logic;
 import mobius.directVCGen.formula.Lookup;
 import mobius.directVCGen.formula.Type;
+import mobius.directVCGen.formula.coq.BcCoqFile;
 import mobius.directVCGen.formula.coq.CoqFile;
 import mobius.directVCGen.vcgen.stmt.StmtVCGen;
 import mobius.directVCGen.vcgen.struct.Post;
@@ -75,7 +77,21 @@ public final class MethodVisitor extends DirectVCGen {
   private void dump() {
     int num = 1;
     final String rawsuffix = ".raw";
-
+    
+    BcCoqFile bcf;
+    try {
+      bcf = new BcCoqFile(getBaseDir(), getPkgsDir());
+      String name = "" + fMeth.id();
+      if (name.equals("" + fMeth.parent.id)) {
+        name = "_init_";
+      }
+      
+      bcf.doIt("" + fMeth.parent.id, name);
+    } 
+    catch (FileNotFoundException e1) {
+      // TODO Auto-generated catch block
+      e1.printStackTrace();
+    }
     for (Term t: fVcs) {
       final String name = "goal" + num++;
       try {

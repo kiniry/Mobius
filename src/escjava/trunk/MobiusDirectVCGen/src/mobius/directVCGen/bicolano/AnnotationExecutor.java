@@ -103,11 +103,7 @@ public class AnnotationExecutor extends Executor {
     }
     out.decTab();
     out.decPrintln(".\n");
-//      (MM.update
-//      (MM.update 
-//            (MM.empty _)
-//            BillSignature.round_cost BillAnnotations.round_cost.spec) 
-//            BillSignature.produce_bill BillAnnotations.produce_bill.spec).
+
     out.incPrintln("Definition anno_prog :="); 
     out.println("AnnoProg BicoMapProgram.program " +
         "BicoMapProgram.subclass program_spec.");
