@@ -51,11 +51,10 @@ public class Executor extends ABasicExecutor {
     "-----------------------------------------------------------------------------------";
 
   /** the coq files extension. */
-  private static final String suffix = ".v";
+  public static final String suffix = ".v";
 
   /** the standard lib paths. */
-  //FIXME: should be relative to the package dir
-  private static final String libPath = 
+  public static final String libPath = 
                       "Add LoadPath \"Formalisation/Library\".\n" + 
                       "Add LoadPath \"Formalisation/Library/Map\".\n" +
                       "Add LoadPath \"Formalisation/Logic\".\n" +
@@ -509,10 +508,28 @@ public class Executor extends ABasicExecutor {
   }
   
   /**
-   * Returns the name of the module.
+   * Returns the name of the module, the content of the field
+   * {@link #fName}.
    * @return not null
    */
   public String getModuleName() {  
     return fName;
   }
+  
+  /**
+   * Return the list of the classes treated by the executor. 
+   * @return a list: can be empty.
+   */
+  public List<ClassExecutor> getTreatedClasses() {
+    return fTreatedClasses;
+  }
+
+  /**
+   * Return the list of the classes treated by the executor. 
+   * @return a list: can be empty.
+   */
+  public List<ClassExecutor> getTreatedInterfaces() {
+    return fTreatedInterfaces;
+  }
+
 }
