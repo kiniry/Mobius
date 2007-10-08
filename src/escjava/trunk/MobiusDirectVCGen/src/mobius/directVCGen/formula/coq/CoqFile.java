@@ -80,20 +80,20 @@ public class CoqFile {
                  "Add LoadPath \"" + fBase + File.separator + "Formalisation" +
                  File.separator + "Bicolano" + "\".\n" +
                  "Add LoadPath \"" + fBase + File.separator + "Formalisation" +
+                 File.separator + "Logic" + "\".\n" +
+                 "Add LoadPath \"" + fBase + File.separator + "Formalisation" +
                  File.separator + "Library" + "\".\n" +
                  "Add LoadPath \"" + fBase + File.separator + "Formalisation" +
                  File.separator + "Library" + 
                  File.separator + "Map" + "\".\n");
+
+    fOut.println("Require Import BicoMap_annotations.");
     fOut.println("Require Import defs_types.");
-    fOut.println("Import P.");
-    fOut.println("Import Dom.\n");
-   //    for (String name: classNames) {
-//      fOut.println("Variable " + name + ": ClassName.");
-//    }
+    fOut.println("Import BicoMapAnnotations P Mwp.");
+    fOut.println("Require Import defs_types.");
     fOut.println();
-    for (QuantVariable field: fieldsToDeclare) {
-      fOut.println("Variable " + CoqNodeBuilder.normalize(field.name) + ": FieldSignature.");
-    }
+
+    
     fOut.println();
     for (FnSymbol sym : symToDeclare) {
       fOut.print("Variable " + sym.name + ": ");
@@ -106,7 +106,7 @@ public class CoqFile {
     }
 
     fOut.println();
-    fOut.println("Coercion Int.toZ : Int.t >-> Z.");
+    
     fOut.println("Open Local Scope Z_scope.");
   }
 
