@@ -1,5 +1,0 @@
-#!/bin/bash
-SCRIPT=`which $0`
-HERE=`dirname $SCRIPT`
-java -classpath $HERE/classes:$HERE/lib/javafe-1.0.jar rcc.Main -quiet $*
-

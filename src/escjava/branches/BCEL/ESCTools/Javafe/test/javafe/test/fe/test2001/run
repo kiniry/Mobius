@@ -1,5 +1,0 @@
-#!/bin/sh
-
-## Tests that uninitialized Public Static Final fields are caught
-
-${TOOL} TestStaticFinalFields.java

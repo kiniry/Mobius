@@ -1,7 +1,0 @@
-#!/bin/sh
-# usage: run FLAGS
-
-${ESCJ} $* C.java
-${ESCJ} $* DoesntEvenParse0.java
-${ESCJ} $* DoesntEvenParse1.java
-${ESCJ} $* DoesntEvenParse2.java

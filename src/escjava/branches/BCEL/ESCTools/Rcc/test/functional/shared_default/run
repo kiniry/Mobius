@@ -1,2 +1,0 @@
-rcc -nowarn_package java -dts *.java
-

@@ -1,4 +1,0 @@
-// Tests .java file not in the Refinement Sequence
-//#FLAGS: -classpath .
-public class RefineNoJava {
-}

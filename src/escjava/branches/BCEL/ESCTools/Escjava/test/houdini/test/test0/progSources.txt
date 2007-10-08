@@ -1,5 +1,0 @@
-./tohtml/Java2Html.java
-./tohtml/JFile.java
-./tohtml/Package.java
-./tohtml/VectorSorter.java
-./tohtml/LineNumberPrintWriter.java

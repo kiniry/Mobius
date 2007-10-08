@@ -1,9 +1,0 @@
-package java.lang;
-
-//@ pure
-public class StringIndexOutOfBoundsException extends RuntimeException
-{
-    public StringIndexOutOfBoundsException();
-    public StringIndexOutOfBoundsException(String s);
-}
-

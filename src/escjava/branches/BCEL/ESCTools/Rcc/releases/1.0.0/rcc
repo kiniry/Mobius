@@ -1,5 +1,0 @@
-#!/bin/bash
-SCRIPT=`which $0`
-HERE=`dirname $SCRIPT`
-java -jar $HERE/rcc-1.0.0.jar -quiet -dts -chl -nowarn_package java $*
-

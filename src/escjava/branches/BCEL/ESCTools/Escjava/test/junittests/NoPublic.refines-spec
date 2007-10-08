@@ -1,4 +1,0 @@
-//@ refine "NoPublic.spec";
-// Tests the merging of specs when there are no public classes
-class NoPublicB{}
-class NoPublicC{}

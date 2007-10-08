@@ -1,5 +1,0 @@
-ESC/Java version VERSION
-ConstructorErrors.java:18: Fatal error: Invalid name 'Constructor' for constructor; expected 'ConstructorErrors'
-        public Constructor(int i) { k++; j=i; }
-                          ^
-1 error

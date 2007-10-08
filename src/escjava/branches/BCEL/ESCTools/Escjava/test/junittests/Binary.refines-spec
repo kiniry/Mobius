@@ -1,4 +1,0 @@
-//@ refine "Binary.spec";
-// Tests matching spec files against class files
-class BinaryB{}
-class BinaryC{}

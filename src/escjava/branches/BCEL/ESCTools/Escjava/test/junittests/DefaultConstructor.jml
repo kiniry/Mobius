@@ -1,2 +1,0 @@
-//@ refine "DefaultConstructor.jml-refined";
-public class DefaultConstructor {}
