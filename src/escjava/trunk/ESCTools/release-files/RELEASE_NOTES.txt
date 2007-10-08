@@ -21,144 +21,144 @@ Ticket	Summary
 
 The following GForge tickets are FIXED or CLOSED in this release:
 
-ID 	Summary 																Open Date 			Assigned To 	Submitted By
-594	escj.bat uses the wrong path separator character for Windows	  		2007-07-21 19:15	Dermot Cochran	Jonathan Aldrich
-                                        
+ID 	Summary 																
+594	escj.bat uses the wrong path separator character for Windows	  		 
+
 The following GForge tickets are known to EXIST in this release:
 
-ID 	Summary 																Open Date 			Assigned To 	Submitted By
-55	inheritance of invariants												2005-04-08 12:29	Alan Morkan	Peter van Rossum
-105	handling DSA for recursive specs is broken								2005-06-01 19:15	Radu Grigore	Joseph Kiniry
-111	Recursive postconditions												2005-07-21 11:59	Alan Morkan	Joseph Kiniry
-124	problems with quantifier triggering										2005-08-18 09:23	Nobody	Joseph Kiniry
-125	Must be able to reason about clone() in ESC/Java, verif. too			2005-08-18 09:25	Joseph Kiniry	Joseph Kiniry
-126	remaining scope problem with java/jml fields							2005-08-18 09:42	Robin Green	Joseph Kiniry
-127	SecurityKey and KeySet example.											2005-08-18 09:45	Joseph Kiniry	Joseph Kiniry
-129	Model imports change name resolution									2005-08-18 09:53	Robin Green	Joseph Kiniry
-131	Typechecking with no specs results in mysterious typechecking errors.	2005-08-20 10:12	Dermot Cochran	Joseph Kiniry
+ID 	Summary 																 
+55	inheritance of invariants												 
+105	handling DSA for recursive specs is broken								 
+111	Recursive postconditions												 
+124	problems with quantifier triggering										 
+125	Must be able to reason about clone() in ESC/Java, verif. too			 
+126	remaining scope problem with java/jml fields							 
+127	SecurityKey and KeySet example.											 
+129	Model imports change name resolution									 
+131	Typechecking with no specs results in mysterious typechecking errors.	 
 137	specs for java.util.Calendar, java.util.Date, and 
-	java.util.GregorianCalendar need to be finished							2005-08-21 22:23	Robin Green	Joseph Kiniry
+	java.util.GregorianCalendar need to be finished							 
 143	[found-by-jmlc] ERRORTYPE tag constant is not a legal PrimitiveType
-	tag value																2005-09-01 14:35	Patrice Chalin	Patrice Chalin
-155	TestByteArrayInputStream missing five previously issued warnings		2005-09-03 11:47	Mikolas Janota	Joseph Kiniry
+	tag value																 
+155	TestByteArrayInputStream missing five previously issued warnings		 
 158	cannot typecheck several classes in JDK 1.4's source due to inner 
-	class resolution problems												2005-09-03 19:45	Radu Grigore	Joseph Kiniry
-161	deeply nested inner classes and inheritance								2005-09-04 16:57	Radu Grigore	Joseph Kiniry
-185	String's infix + operator doesn't type check							2005-10-20 23:16	Dermot Cochran	Gary T. Leavens
+	class resolution problems												
+161	deeply nested inner classes and inheritance								
+185	String's infix + operator doesn't type check							
 187	bogus warning in Map.spec when working with two byte[], one of them 
-    obtained from a string arg												2005-10-24 13:26	Radu Grigore	Radu Grigore
-208	assertion failure in escjava.translate.Inner.getEnclosingInstanceField	2005-11-08 10:39	Nobody	Aleksy Schubert
-209	Mysterious broken object invariant (with -LoopSafe option)				2005-11-08 16:37	Mikolas Janota	Christian Haack
-210	javafe.util.AssertionFailureException									2005-11-08 17:43	Nobody	Christian Haack
-211	main() should have a default spec										2005-11-10 16:57	Radu Grigore	Joseph Kiniry
-217	The String class in JRE_1.4.2_10-build3 does not typecheck.				2005-11-23 15:42	Radu Grigore	Radu Grigore
-219	Pollution with multiple provers targeted by VC generator				2005-11-28 10:10	Nobody	Carl Pulley
-220	source file generation in escjava.vcGeneration							2005-11-28 14:23	Nobody	Joseph Kiniry
-222	Type checking errors with new VC generator								2005-11-29 11:05	Joseph Kiniry	Carl Pulley
-226	Hidden warnings															2005-12-02 17:20	Nobody	Mikolas Janota
+    obtained from a string arg												
+208	assertion failure in escjava.translate.Inner.getEnclosingInstanceField	
+209	Mysterious broken object invariant (with -LoopSafe option)				
+210	javafe.util.AssertionFailureException									
+211	main() should have a default spec										
+217	The String class in JRE_1.4.2_10-build3 does not typecheck.				
+219	Pollution with multiple provers targeted by VC generator				
+220	source file generation in escjava.vcGeneration							
+222	Type checking errors with new VC generator								
+226	Hidden warnings															
 229	Java builder in Eclipse does not output .class files in expected 
-    location																2005-12-07 15:12	Joseph Kiniry	Robin Green
+    location																
 231	javafe.util.AssertionFailureException in modeBatch(), 
-	GCSanity assertion														2005-12-28 16:28	Mikolas Janota	Nobody
-238	sos.koa.Candidate: toString() causes escj to crash						2006-01-26 01:35	George Karabotsos	Patrice Chalin
-243	problem with += when lvalue is array element							2006-02-09 13:21	Nobody	Arnout Engelen
-247	Houdini CopyLoaded does not copy all required files						2006-02-17 16:34	Nobody	Arnout Engelen
-251	add support for \same keyword											2006-02-28 19:08	Nobody	Joseph Kiniry
-270	method call resolution (static vs. dynamic types)						2006-04-23 14:19	Radu Grigore	Joseph Kiniry
-272	Simplify needs xwindows library under mac os							2006-04-26 20:37	Joseph Kiniry	Mikolas Janota
-290	nullity annotations should be cleaned up								2006-05-17 15:10	Patrice Chalin	Perry James
-291	fields of subclasses of ASTNode are declared public						2006-05-17 15:15	Perry James	Perry James
-317	Escjava/test/junittests/SpecFile.jml fails under cygwin					2006-06-08 11:35	Dermot Cochran	Patrice Chalin
-318	[found-by-esc] various errors reported by esc when run on junitutils	2006-06-08 12:51	Patrice Chalin	Patrice Chalin
-412	Simplify crashes when blank lines added									2006-08-01 22:02	Joseph Kiniry	Patrice Chalin
-414	non-pure methods can be used in assertion expressions					2006-08-08 13:00	Nobody	Patrice Chalin
+	GCSanity assertion														
+238	sos.koa.Candidate: toString() causes escj to crash						
+243	problem with += when lvalue is array element							
+247	Houdini CopyLoaded does not copy all required files						
+251	add support for \same keyword											
+270	method call resolution (static vs. dynamic types)						
+272	Simplify needs xwindows library under mac os							
+290	nullity annotations should be cleaned up								
+291	fields of subclasses of ASTNode are declared public						
+317	Escjava/test/junittests/SpecFile.jml fails under cygwin					
+318	[found-by-esc] various errors reported by esc when run on junitutils	
+412	Simplify crashes when blank lines added									
+414	non-pure methods can be used in assertion expressions					
 474	attempting to process the escjava package with escjava2 results in an 
-    infinite loop															2006-09-25 08:59	Radu Grigore	Joseph Kiniry
-480	universes type system support breaks Java parsing of some existing code 2006-10-01 19:13	Dermot Cochran	Joseph Kiniry
-484	do not include api/src-html in binary release							2006-10-04 14:48	Nobody	Joseph Kiniry
+    infinite loop															
+480	universes type system support breaks Java parsing of some existing code 
+484	do not include api/src-html in binary release							
 485	do not include docs/papers/koa_state_diagram in release's papers 
-	directory																2006-10-04 14:49	Robin Green	Joseph Kiniry
-488	Can't generate VCs without having a Simplify binary around				2006-10-06 22:00	Radu Grigore	Nobody
-498	grammar change for JML expression \max									2006-10-12 17:02	Robin Green	Joseph Kiniry
+	directory																
+488	Can't generate VCs without having a Simplify binary around				
+498	grammar change for JML expression \max									
 499	stack too big in parsing background predicate - implement more 
-	constant folding														2006-10-22 10:41	David Cok	David Cok
+	constant folding														
 500	make error reporting in the new backend use javafe.utils.ErrorSet for 
-	the moment																2006-10-26 22:25	Radu Grigore	Joseph Kiniry
-508	nowarn NonNull doesn't work for method calls							2006-12-01 12:49	George Karabotsos	Patrice Chalin
-511	Run escjava on itself													2006-12-04 14:53	Radu Grigore	Radu Grigore
-513	Reinstate tests that should still pass in Escjava/test/jdktests			2006-12-18 02:41	Dermot Cochran	Patrice Chalin
-514	build fails under cygwin when using javac								2006-12-18 13:07	Robin Green	Patrice Chalin
-516	private helper methods													2007-01-24 09:48	Nobody	Aleksy Schubert
-519	RCC: thread_shared default does not always work							2007-02-13 10:24	Radu Grigore	Radu Grigore
-543	Simplify not killed, or dying											2007-04-06 09:44	Robin Green	Mikolas Janota
-547	Semantics of Informal predicate (* .. *) incorrect						2007-04-20 14:11	Joseph Kiniry	Mikolas Janota
-549	skip method in InputStream and ByteArrayInputStream is inconsistent		2007-04-23 10:47	Mikolas Janota	Mikolas Janota
-550	The spec of InputStream is wrong										2007-04-24 11:44	Mikolas Janota	Mikolas Janota
-551	The initially clause is not propagated to the descendants				2007-04-25 13:40	Joseph Kiniry	Mikolas Janota
-567	non_null treated wrongly for arrays										2007-05-11 14:56	Joseph Kiniry	Mikolas Janota
-568	Specification of the get method in Map									2007-05-11 15:54	Joseph Kiniry	Mikolas Janota
-570	semantics of modifies \everything										2007-05-12 11:16	Joseph Kiniry	Mikolas Janota
-574	nested (anonymous) class parsing from Java 1.5 VMs is not supported		2007-05-31 16:16	Dermot Cochran	Joseph Kiniry
-577	Modifies warning disappears												2007-06-14 13:42	Nobody	Aleksy Schubert
-579	JML keyword refines is not recognized									2007-06-26 17:12	Dermot Cochran	Gary T. Leavens
-580	Null is still the default for declarations, contrary to JML				2007-06-26 17:21	Patrice Chalin	Gary T. Leavens
+	the moment																
+508	nowarn NonNull doesn't work for method calls							
+511	Run escjava on itself													
+513	Reinstate tests that should still pass in Escjava/test/jdktests			
+514	build fails under cygwin when using javac								
+516	private helper methods													
+519	RCC: thread_shared default does not always work							
+543	Simplify not killed, or dying											
+547	Semantics of Informal predicate (* .. *) incorrect						
+549	skip method in InputStream and ByteArrayInputStream is inconsistent		
+550	The spec of InputStream is wrong										
+551	The initially clause is not propagated to the descendants				
+567	non_null treated wrongly for arrays										
+568	Specification of the get method in Map									
+570	semantics of modifies \everything										
+574	nested (anonymous) class parsing from Java 1.5 VMs is not supported		
+577	Modifies warning disappears												
+579	JML keyword refines is not recognized									
+580	Null is still the default for declarations, contrary to JML				
 582	pure equals() in escjava/sortedProver/Lifter classes call non-pure 
-	hashCode																2007-06-27 11:55	Joseph Kiniry	Patrice Chalin
-583	ESC/Java2 doesn't detect rep exposure									2007-06-27 18:48	Radu Grigore	Gary T. Leavens
+	hashCode																
+583	ESC/Java2 doesn't detect rep exposure									
 584	Using -nonNullByDefault doesn't get out all Null warnings 
-	(just for arrays?)								 						2007-06-27 18:53	Patrice Chalin	Gary T. Leavens
+	(just for arrays?)								 						
 586	conditionally disable handful of tests that are currently failing in 
-    JDK 1.5+ VM due to bug#574												2007-06-29 13:47	Dermot Cochran	Joseph Kiniry
-587	ESC/Java2 doesn't recognize the \pre expression keyword					2007-06-30 10:56	Robin Green	Nobody
-588	ESC/Java passes methods with framing problems							2007-06-30 11:08	Joseph Kiniry	Gary T. Leavens
-589	Parser doesn't allow nullable modifier in quantifier declarationS		2007-07-03 09:09	Patrice Chalin	Gary T. Leavens
-595	The specification of FileOutpuStream is wrong							2007-08-22 14:11	Mikolas Janota	Mikolas Janota
-36	Add SMT-LIB benchmark generation facility								2005-03-29 10:01	Nobody	Joseph Kiniry
-102	Add file/folder chooser to CLASSPATH GUI								2005-05-31 11:20	Nobody	Nobody
-114	Implement support for &amp;quot;code&amp;quot; specification cases		2005-08-08 20:14	Nobody	Joseph Kiniry
-116	Add support for the PVS theorem prover									2005-08-08 20:17	Ke Sun	Joseph Kiniry
-117	Check all theorems in the new PVS logic									2005-08-08 20:24	Joseph Kiniry	Joseph Kiniry
-118	Finish new escjava3 logic												2005-08-08 20:27	Joseph Kiniry	Joseph Kiniry
-119	Design and write a new VC generator for the sorted escjava2 logic.		2005-08-08 20:29	Nobody	Joseph Kiniry
-120	Design and write a new VC generator for the PVS unsorted escjava logic.	2005-08-08 20:30	Nobody	Joseph Kiniry
-121	Review the PVS sorted escjava2 logic for realisation in SMT				2005-08-08 20:32	Cesare Tinelli	Joseph Kiniry
-122	non-null references by default											2005-08-10 13:40	Patrice Chalin	Patrice Chalin
-140	definedness checking													2005-08-30 22:22	Patrice Chalin	Joseph Kiniry
-141	support new JML assertion logic											2005-08-31 08:33	Patrice Chalin	Patrice Chalin
-165	Warn when @ preceded by spaces at start of comment						2005-09-29 11:22	Dermot Cochran	Robin Green
-168	characterisation of specification semantics in different tools			2005-10-03 14:35	Joseph Kiniry	Joseph Kiniry
-169	automatically detect misuse of full JML specs							2005-10-04 09:58	Radu Grigore	Joseph Kiniry
+    JDK 1.5+ VM due to bug#574												
+587	ESC/Java2 doesn't recognize the \pre expression keyword					
+588	ESC/Java passes methods with framing problems							
+589	Parser doesn't allow nullable modifier in quantifier declarationS		
+595	The specification of FileOutpuStream is wrong							
+36	Add SMT-LIB benchmark generation facility								
+102	Add file/folder chooser to CLASSPATH GUI								
+114	Implement support for &amp;quot;code&amp;quot; specification cases		
+116	Add support for the PVS theorem prover									
+117	Check all theorems in the new PVS logic									
+118	Finish new escjava3 logic												
+119	Design and write a new VC generator for the sorted escjava2 logic.		
+120	Design and write a new VC generator for the PVS unsorted escjava logic.	 
+121	Review the PVS sorted escjava2 logic for realisation in SMT				 
+122	non-null references by default											 
+140	definedness checking													 
+141	support new JML assertion logic											 
+165	Warn when @ preceded by spaces at start of comment						 
+168	characterisation of specification semantics in different tools			 
+169	automatically detect misuse of full JML specs							 
 170	add support for new and old keywords used in Rodriguez et al's 
-	ECOOP05 paper															2005-10-04 15:18	Nobody	Joseph Kiniry
-171	add support for the "when" keyword										2005-10-07 13:03	Nobody	Joseph Kiniry
-174	runtime environmental robustness improvements							2005-10-12 14:30	Radu Grigore	Joseph Kiniry
-184	specification soundness checker											2005-10-20 10:33	Alan Morkan	Joseph Kiniry
+	ECOOP05 paper															 
+171	add support for the "when" keyword										 
+174	runtime environmental robustness improvements							 
+184	specification soundness checker											 
 186	Integrate Clement's documentation into the Implementation Notes and 
-    the Extending book														2005-10-24 10:01	Alan Morkan	Alan Morkan
-213	consider "trickling out" warnings										2005-11-20 16:20	Nobody	Joseph Kiniry
-230	Packages extract to current directory									2005-12-17 11:57	Nobody	Arnout Engelen
-248	XML or s-expression-based pretty printing								2006-02-23 15:06	Nobody	Joseph Kiniry
-249	pretty-printing AST subtrees											2006-02-28 19:05	Nobody	Joseph Kiniry
-252	assert warnings as soundness passes										2006-02-28 19:11	Alan Morkan	Joseph Kiniry
-307	Add -visibility switch to filter specs for static checking.				2006-05-26 16:09	Nobody	Joseph Kiniry
-308	add support for Universes type annotations and typechecking				2006-05-26 16:14	Joseph Kiniry	Joseph Kiniry
-309	model methods in interfaces												2006-05-26 16:16	Nobody	Joseph Kiniry
-502	resolve desugaring method ambiguity										2006-11-06 13:03	Nobody	Joseph Kiniry
-509	build simplify for OS X on intel										2006-12-03 14:06	Joseph Kiniry	Joseph Kiniry
+    the Extending book														 
+213	consider "trickling out" warnings										 
+230	Packages extract to current directory									 
+248	XML or s-expression-based pretty printing								 
+249	pretty-printing AST subtrees											 
+252	assert warnings as soundness passes										 
+307	Add -visibility switch to filter specs for static checking.				 
+308	add support for Universes type annotations and typechecking				 
+309	model methods in interfaces												 
+502	resolve desugaring method ambiguity										 
+509	build simplify for OS X on intel										 
 569	Improving ESC/Java2 support for new JML developments v-v code_contract 
-    and measured_by															2007-05-11 16:15	Dermot Cochran	Dermot Cochran
-191	specification soundness checking										2005-10-26 10:39	Dermot Cochran	Joseph Kiniry
-192	generalised specification-aware warnings								2005-10-26 10:46	Nobody	Joseph Kiniry
-193	soundness and completeness warning system								2005-10-26 10:49	Dermot Cochran	Joseph Kiniry
-194	loop checking															2005-10-26 11:08	Nobody	Joseph Kiniry
-195	JavaCard and MIDP support (generalised Java platform variant support)	2005-10-26 12:15	Nobody	Joseph Kiniry
-196	immutability															2005-10-26 12:23	Robin Green	Joseph Kiniry
-197	new JML model classes													2005-10-26 14:36	Radu Grigore	Joseph Kiniry
-198	purity																	2005-10-27 16:03	Nobody	Joseph Kiniry
-199	escjava3_logic															2005-10-27 16:50	Nobody	Joseph Kiniry
-548	Translation of informal predicate, (* .. *)	  							2007-04-20 14:19	Nobody	Mikolas Janota
-552	develop a full PVS VC generator	  										2007-04-25 14:46	Nobody	Joseph Kiniry
-585	finish off implementation and documentation of reachability analysis 	2007-06-29 12:50	Dermot Cochran	Joseph Kiniry
+    and measured_by															 
+191	specification soundness checking										 
+192	generalised specification-aware warnings								 
+193	soundness and completeness warning system								 
+194	loop checking															 
+195	JavaCard and MIDP support (generalised Java platform variant support)	 
+196	immutability															 
+197	new JML model classes													 
+198	purity																	 
+199	escjava3_logic															 
+548	Translation of informal predicate, (* .. *)	  							 
+552	develop a full PVS VC generator	  										 
+585	finish off implementation and documentation of reachability analysis 	 
 	
 -------------------------------------------------------------------
 version 2.0b1 "Mobius PVE Internal Release" (31 May 2007)
