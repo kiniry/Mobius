@@ -72,7 +72,8 @@ public class AnnotationClassExecutor extends ClassExecutor {
       anOut.println("Export BicoMapProgram.");
 
       anOut.println("Import P Mwp.");
-      //anOut.println("\nCoercion Int.toZ : Int.t >-> Z.");
+
+      anOut.incPrintln("Module " + this.getModuleName() + "Annotations.");
       
       for (Method met: methods) {
         final AnnotationMethodExecutor ame = 
@@ -81,6 +82,8 @@ public class AnnotationClassExecutor extends ClassExecutor {
         ame.start();
   
       }
+      anOut.decPrintln("End " + this.getModuleName() + "Annotations.\n");
+      
     } 
     catch (FileNotFoundException e) {
       e.printStackTrace();

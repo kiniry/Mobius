@@ -90,7 +90,6 @@ public class CoqFile {
     fOut.println("Require Import BicoMap_annotations.");
     fOut.println("Require Import defs_types.");
     fOut.println("Import BicoMapAnnotations P Mwp.");
-    fOut.println("Require Import defs_types.");
     fOut.println();
 
     

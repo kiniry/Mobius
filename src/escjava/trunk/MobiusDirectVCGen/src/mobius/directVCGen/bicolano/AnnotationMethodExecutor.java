@@ -55,35 +55,40 @@ public class AnnotationMethodExecutor extends ABasicExecutor {
   private void doMethodPreAndPostDefinition() {
     final MethodHandler hdl = getMethodHandler();
     final String name = hdl.getName(fMeth);
-    final String nameModule = name + "_annotations";
+    final String nameModule = name;
     final String namePre = "pre";
     final String namePost = "post";
     final String nameAssertion = "assertion";
     final String nameAssumption = "assumption";
     final String nameSpec = "spec";
-    final String defaultSpecs = "(0%nat,,(" + namePre + ",," + namePost + "))";
+    final String defaultSpecs = "(0%nat,,global_spec)";
 
     final Stream out = getAnnotationOut();
-//    out.println(tab, "Definition " + namePost + " (s0:InitState) (t:ReturnState) := " +
-//                        " @nil Prop.\n");
+    
     out.println("Module " + nameModule + ".");
     out.incTab();
     
+    // pre and post def
     doMethodPre(namePre);
     doMethodPost(namePost);
+    out.println("Definition global_spec: GlobalMethSpec := (" + namePre + 
+                " ,, " + namePost + ").\n");
+
+    // assertion and assumption def
     out.println("Definition " + nameAssertion + " := " +
                 AnnotationVisitor.getAssertion(out, fRout, fMeth) + ".");
     out.println("Definition " + nameAssumption + " :=" +
                   " (@PCM.empty Assumption).");
+    out.println("Definition local_spec: LocMethSpec := (" + nameAssertion + " ,, " + 
+                nameAssumption + ").\n");
+    
+    // al together
     out.println("Definition " + nameSpec + " :=");
     out.incTab();
-    out.println("(" + defaultSpecs + ",,");
-    out.incTab();
-    out.println("(assertion,,assumption)). ");
+    out.println("(" + defaultSpecs + ",,local_spec). ");
     out.decTab();
     out.decTab();
-    out.decTab();
-    out.println("End " + nameModule + ".\n\n");
+    out.println("End " + nameModule + ".\n");
     
   }
   
@@ -111,12 +116,12 @@ public class AnnotationMethodExecutor extends ABasicExecutor {
     out.println(Formula.generateFormulas(Lookup.precondition(fRout)) + ".");
     out.decTab();
     out.decTab();
-    out.println("Definition " + namePre + " (s0:InitState) := ");
+    out.println("Definition " + namePre + " (s0:InitState): list Prop := ");
     out.incTab();
     final String vars = doLetPre();
     out.incTab();
     //out.println(tab, "   let " + Ref.varThis + " := (do_lvget (fst s0) 0%N)" + " in " +
-    out.println("mk_" + namePre +  " " + vars + ".");
+    out.println("(mk_" + namePre +  " " + vars + "):: nil.");
     out.decTab();
     out.decTab();
   }
@@ -198,17 +203,18 @@ public class AnnotationMethodExecutor extends ABasicExecutor {
                                        excpPost.substWith(
                                               Ref.fromLoc(excpPost.getRVar()))));
     out.decTab();
-    out.println("end" + ".");
+    out.println("end.");
     out.decTab();
     out.decTab();
     
     // definition of the usable version
-    out.println("Definition " + namePost + " (s0:InitState) (t:ReturnState) := ");
+    out.println("Definition " + namePost + " (s0:InitState) (t:ReturnState): " +
+        "list Prop := ");
     out.incTab();
     final String vars = doLetPost();
     out.incTab();
     //out.println(tab, "   let " + Ref.varThis + " := (do_lvget (fst s0) 0%N)" + " in " +
-    out.println( "mk_" + namePost +  " (snd t) " + vars + ".");
+    out.println( "(mk_" + namePost +  " (snd t) " + vars + "):: nil.");
     out.decTab();
     out.decTab();
     

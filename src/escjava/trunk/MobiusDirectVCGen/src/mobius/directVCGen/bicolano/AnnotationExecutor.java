@@ -4,13 +4,19 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javafe.tc.TypeSig;
+import mobius.bico.Util;
 import mobius.bico.Util.Stream;
+import mobius.bico.dico.Dictionary;
+import mobius.bico.dico.MethodHandler;
 import mobius.bico.executors.ClassExecutor;
 import mobius.bico.executors.Executor;
 
+import org.apache.bcel.classfile.Method;
 import org.apache.bcel.generic.ClassGen;
 
 /**
@@ -57,16 +63,54 @@ public class AnnotationExecutor extends Executor {
     out.println();
     out.incPrintln("Module " + getModuleName() + "Annotations.");
 
-
     // the already treated classes + interfaces
     for (ClassExecutor ce: getTreatedClasses()) {
-      out.println("Load \"" + ce.getModuleFileName() + "_signature.v\".");
+      out.println("Load \"" + ce.getModuleFileName() + "_annotations.v\".");
     }
     
     for (ClassExecutor ce: getTreatedInterfaces()) {
-      out.println("Load \"" + ce.getModuleFileName() + "_signature.v\".");
+      out.println("Load \"" + ce.getModuleFileName() + "_annotations.v\".");
     }
+
+    out.incPrintln("Definition program_spec: MethSpecTab :=");
+    final Dictionary dico = getDico();
+    final Collection<Integer> meths = dico.getMethods();
     
+    for (int meth: meths) {
+      final String fullname = dico.getMethodName(meth);
+      String classname = Util.coqify(dico.getClassName(dico.getClassFromMethod(meth)));
+      if (classname.startsWith("java")) {
+        // FIXME: quick fix should be put in Bicolano
+        continue;
+      }
+
+
+      out.println("(MM.update ");
+    }
+    out.incTab();
+    out.println("(MM.empty _)");
+    for (int meth: meths) {
+      final String fullname = dico.getMethodName(meth);
+      
+      final String name = Util.coqify(fullname.substring(fullname.lastIndexOf('.') + 1));
+      String classname = Util.coqify(dico.getClassName(dico.getClassFromMethod(meth)));
+      if (classname.startsWith("java")) {
+        continue;
+      }
+      
+      out.println(classname + "Signature." + name + " " + 
+                  classname + "Annotations." + name + ".spec)"); 
+    }
+    out.decTab();
+    out.decPrintln(".\n");
+//      (MM.update
+//      (MM.update 
+//            (MM.empty _)
+//            BillSignature.round_cost BillAnnotations.round_cost.spec) 
+//            BillSignature.produce_bill BillAnnotations.produce_bill.spec).
+    out.incPrintln("Definition anno_prog :="); 
+    out.println("AnnoProg BicoMapProgram.program " +
+        "BicoMapProgram.subclass program_spec.");
     out.decPrintln("End " + getModuleName() + "Annotations.");
     
   }  
