@@ -1,8 +1,11 @@
 package mobius.bico.dico;
 
 import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.bcel.classfile.JavaClass;
 
@@ -126,14 +129,30 @@ public class CamlDictionary implements Dictionary {
    * This class represents integer couples.
    * @author Laurent.Hubert@irisa.fr
    */
-  private static final class Couple extends ABaseCouple<Integer> {
+  private static final class ClassType {
+    private int fClzz;
+    private int fPk;
+
     /**
      * Build a couple of int.
-     * @param i1 the first element of the couple
-     * @param i2 the second element of the couple
+     * @param classNumber the first element of the couple
+     * @param pkgNumber the second element of the couple
      */
-    Couple(final int i1, final int i2) {
-      super(i1, i2);
+    ClassType(int classNumber, int pkgNumber) {
+      fClzz = classNumber;
+      fPk = pkgNumber;
+    }
+    
+    public String toString() {
+      return "(" + fPk + ", " + fClzz + ")";
+    }
+    
+    public int getClazz() {
+      return fClzz;
+    }
+    
+    public int getPackage() {
+      return fPk;
     }
   } 
   
@@ -141,15 +160,15 @@ public class CamlDictionary implements Dictionary {
    * This class represents integer triplets.
    * @author Laurent.Hubert@irisa.fr
    */
-  private static final class Triplet extends ABaseCouple<Couple> {
+  private static final class Triplet extends ABaseCouple<ClassType> {
     /**
      * Build a triplet.
      * @param i1 the first element of the triplet
      * @param i2 the second element of the triplet
      * @param i3 the third element of the triplet
      */
-    Triplet(final int i1, final int i2, final int i3) {
-      super(new Couple(i1, i2), i3);
+    Triplet(ClassType ct, final int i3) {
+      super(ct, i3);
     }
     
   }
@@ -158,7 +177,7 @@ public class CamlDictionary implements Dictionary {
   private final Map<String, Integer> fPackageNames = new HashMap<String, Integer>();
   
   /** the class names and their associated numbers (class number and package number). */
-  private final Map<String, Couple> fClassNames = new HashMap<String, Couple>();
+  private final Map<String, ClassType> fClassNames = new HashMap<String, ClassType>();
   
   /** the field names and their associated numbers (class, package and field numbers). */
   private final Map<String, Triplet> fFieldNames = new HashMap<String, Triplet>();
@@ -178,7 +197,7 @@ public class CamlDictionary implements Dictionary {
     if (coqClassName > fCurrentClass) {
       fCurrentClass = coqClassName;
     }
-    fClassNames.put(javaName, new Couple(packageName, coqClassName));
+    fClassNames.put(javaName, new ClassType(coqClassName, packageName));
   }
   
   public void addClass(final JavaClass jc) {
@@ -196,12 +215,12 @@ public class CamlDictionary implements Dictionary {
 
   
   public int getCoqClassName(final JavaClass jc) {
-    final Couple c = fClassNames.get(jc.getClassName());
+    final ClassType c = fClassNames.get(jc.getClassName());
     if (c == null) {
       return 0;
     }
     else {
-      return c.fI2;
+      return c.getClazz();
     }
   }
 
@@ -230,7 +249,7 @@ public class CamlDictionary implements Dictionary {
                        final int coqClassName,
                        final int coqFieldName) {
     fFieldNames.put(javaName,
-           new Triplet(coqPackageName, coqClassName, coqFieldName));
+           new Triplet(new ClassType(coqClassName, coqPackageName), coqFieldName));
   }
 
   /*
@@ -240,7 +259,11 @@ public class CamlDictionary implements Dictionary {
    */
   public void addMethod(final String javaName, final int coqPackageName,
                         final int coqClassName, final int coqMethodName) {
-    fMethodNames.put(javaName, new Triplet(coqPackageName, coqClassName,
+    if (this.getClassName(coqClassName) == null) {
+      throw new IllegalArgumentException("Unknown class: " + coqClassName +"\n"
+                                          + fClassNames);
+    }
+    fMethodNames.put(javaName, new Triplet(new ClassType(coqClassName, coqPackageName),
                                  coqMethodName));
   }
 
@@ -266,7 +289,7 @@ public class CamlDictionary implements Dictionary {
                 e.getKey().replaceAll("\"", "\\\"") + "\" pn\n");
     }
 
-    for (Map.Entry<String, Couple> e: fClassNames.entrySet()) {
+    for (Map.Entry<String, ClassType> e: fClassNames.entrySet()) {
       out.print("let cn= DicoCN.add " + e.getValue() + " \"" + 
                 e.getKey().replaceAll("\"", "\\\"") + "\" cn\n");
     }
@@ -280,6 +303,60 @@ public class CamlDictionary implements Dictionary {
       out.print("let mn= DicoMN.add (" + e.getValue() + ") \"" + 
                 e.getKey().replaceAll("\"", "\\\"") + "\" mn\n");
     }
+  }
+
+  public Collection<Integer> getMethods() {
+    final Collection<Integer> coll = new ArrayList<Integer>();
+    for (Entry<String, Triplet> entry: fMethodNames.entrySet()) {
+      coll.add(entry.getValue().fI2);
+    }
+    return coll;
+  }
+
+  public String getClassName(int coqName) {
+    for (Map.Entry<String, ClassType> entry: fClassNames.entrySet()) {
+      if (entry.getValue().getClazz() == coqName) {
+        return entry.getKey();
+      }
+    }
+    throw new IllegalArgumentException("Key not found: " + coqName + "\n" + 
+                                       fClassNames);
+  }
+
+  public String getMethodName(int coqName) {
+    for (Map.Entry<String, Triplet> entry: fMethodNames.entrySet()) {
+      if (entry.getValue().fI2 == coqName) {
+        return entry.getKey();
+      }
+    }
+    return null;
+  }
+
+  public String getPackageName(int coqName) {
+    for (Map.Entry<String, Integer> entry: fPackageNames.entrySet()) {
+      if (entry.getValue().intValue() == coqName) {
+        return entry.getKey();
+      }
+    }
+    return null;
+  }
+
+  public int getClassFromMethod(int meth) {
+    for (Map.Entry<String, Triplet> entry: fMethodNames.entrySet()) {
+      if (entry.getValue().fI2 == meth) {
+        return entry.getValue().fI1.getClazz();
+      }
+    }
+    return 0;
+  }
+
+  public int getPackageFromClass(int clzz) {
+    for (Map.Entry<String, ClassType> entry: fClassNames.entrySet()) {
+      if (entry.getValue().getClazz() == clzz) {
+        return entry.getValue().getPackage();
+      }
+    }
+    return 0;
   }
 
 

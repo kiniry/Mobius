@@ -1,6 +1,8 @@
 package mobius.bico.dico;
 
 import java.io.PrintStream;
+import java.util.Collection;
+import java.util.List;
 
 import org.apache.bcel.classfile.JavaClass;
 
@@ -97,6 +99,28 @@ public interface Dictionary {
    */
   void addMethod(String javaName, int coqPackageName,
                         int coqClassName, int coqMethodName);
+  
+  /**
+   * Return the class name from a class number.
+   * @param coqName a valid integer
+   * @return the class name
+   */
+  String getClassName(int coqName);
+  
+  
+  String getPackageName(int coqName);
+  String getMethodName(int coqName);
+  
+  /**
+   * Returns all the methods that were registered so far.
+   * @return a list of number representing the methods
+   */
+  Collection<Integer> getMethods();
+  
+  int getClassFromMethod(int meth);
+  int getPackageFromClass(int clzz);
+  
+  
   
   /**
    * Dump the dictionnary to the given stream.

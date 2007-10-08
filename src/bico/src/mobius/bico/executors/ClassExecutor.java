@@ -286,8 +286,19 @@ public class ClassExecutor extends ASignatureExecutor {
   }
 
   
+  /**
+   * Return the current working directory.
+   * @return the content of the field {@link #fWorkingDir}
+   */
   public File getWorkingDir() {
     return fWorkingDir;
   }
 
+  /**
+   * Return the bcel version of the class.
+   * @return the class taken from the field {@link #fClass}
+   */
+  public JavaClass getJavaClass() {
+    return fClass.getJavaClass();
+  }
 }

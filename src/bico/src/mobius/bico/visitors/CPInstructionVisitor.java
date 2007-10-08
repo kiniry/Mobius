@@ -100,8 +100,7 @@ public final class CPInstructionVisitor extends EmptyVisitor {
     else if (ins instanceof InvokeInstruction) {
       String ms;
       ms = className + "Signature" + "." + 
-           fMethodHandler.getName((InvokeInstruction) ins, fConstantPool) + 
-           "Signature";
+           fMethodHandler.getName((InvokeInstruction) ins, fConstantPool);
 
       fRes = name + " " + ms;
     } 

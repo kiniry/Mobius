@@ -476,6 +476,12 @@ public class Executor extends ABasicExecutor {
     fOut.println("AllClasses");
     fOut.println("AllInterfaces");
     fOut.decPrintln(".\n");
+    fOut.incPrintln("Definition subclass :="); 
+    fOut.println("match P.subclass_test program with\n" +
+                 "| Some f => f\n" +
+                 "| None => fun x y => true");
+    fOut.println("end");
+    fOut.decPrintln(".\n");
     fOut.decPrintln("End " + fName + "Program.\n");
   }
 

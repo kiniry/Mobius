@@ -101,6 +101,13 @@ public abstract class ABasicExecutor {
     return fMethodHandler;
   }
   
+  /**
+   * Returns the dictionnary containing the Coq/Java correspondances.
+   * @return the content of the field {@link #fDico}
+   */
+  public final Dictionary getDico() {
+    return fDico;
+  }
   
   /**
    * Sets the base directory to the specified file.

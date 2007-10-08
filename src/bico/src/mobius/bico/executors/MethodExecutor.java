@@ -106,7 +106,7 @@ class MethodExecutor extends ASignatureExecutor {
                                  final String name) throws ClassNotFoundException {
     
     String str = "Definition " + name;
-    str += "ShortSignature : ShortMethodSignature := METHODSIGNATURE.Build_t";
+    str += "Short : ShortMethodSignature := METHODSIGNATURE.Build_t";
     fOutSig.incPrintln(str);
     str = "(" + coqMethodName + "%positive)";
     fOutSig.println(str);
@@ -131,8 +131,8 @@ class MethodExecutor extends ASignatureExecutor {
       clName = "interfaceName";
     }
 
-    str = "Definition " + name + "Signature : MethodSignature := " + 
-                   "(" + clName + ", " + name + "ShortSignature).\n\n";
+    str = "Definition " + name + " : MethodSignature := " + 
+                   "(" + clName + ", " + name + "Short).\n\n";
     fOutSig.println(str);
   }
   
@@ -150,7 +150,7 @@ class MethodExecutor extends ASignatureExecutor {
     // System.out.println(str);
     fOut.println(str);
     fOut.incTab();
-    fOut.println(name + "ShortSignature");
+    fOut.println(name + "Short");
     if (method.isAbstract()) {
       str = "None";
     } 
