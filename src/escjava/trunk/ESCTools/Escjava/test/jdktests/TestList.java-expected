@@ -10,13 +10,13 @@ TestList.java:164: Warning: Possible assertion failure (Assert)
 TestList.java:178: Warning: Possible assignment of null to variable declared non_null (NonNull)
             b = c.retainAll(null); // illegal argument - Throws except ...
                            ^
-Associated declaration is "ESCTOOLSROOT/specs/java/util/Collection.spec", line 301, col 25:
+Associated declaration is "ESCTOOLS_ROOT/specs/java/util/Collection.spec", line 301, col 25:
     boolean retainAll(/*@non_null*/ Collection c) throws NullPointerEx ...
                          ^
 TestList.java:197: Warning: Possible assignment of null to variable declared non_null (NonNull)
             b = c.removeAll(null); // illegal argument - Throws except ...
                            ^
-Associated declaration is "ESCTOOLSROOT/specs/java/util/Collection.spec", line 279, col 25:
+Associated declaration is "ESCTOOLS_ROOT/specs/java/util/Collection.spec", line 279, col 25:
     boolean removeAll(/*@non_null*/ Collection c) throws NullPointerEx ...
                          ^
 TestList.java:258: Warning: Possible assertion failure (Assert)

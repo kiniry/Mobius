@@ -10,7 +10,7 @@ Bug1: m(java.util.Collection) ...
 Bug1.java:10: Warning: Possible assignment of null to variable declared non_null (NonNull)
    a = c.toArray(a);
                 ^
-Associated declaration is "ESCTOOLSROOT|specs|java|util|Collection.spec", line 186, col 41:
+Associated declaration is "ESCTOOLS_ROOT|specs|java|util|Collection.spec", line 186, col 41:
     /*@ non_null @*/ Object[] toArray(/*@non_null*/ Object[] a) throws ...
                                          ^
 ------------------------------------------------------------------------

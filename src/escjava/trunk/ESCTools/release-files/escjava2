@@ -32,4 +32,4 @@ endif
 
 ######## Execute
 
-$ESCTOOLS_RELEASE/release-files/escj -specs $ESCTOOLS_RELEASE/specs $*
+$ESCTOOLS_RELEASE/escj -specs $ESCTOOLS_RELEASE/specs $*

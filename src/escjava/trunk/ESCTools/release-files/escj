@@ -92,7 +92,7 @@ if [ -z "$ESCTOOLS_RELEASE" ]; then
     fi
 fi
 
-## Check that if ESCTOOLS_ROOT is defined, it looks like a CVS hierarchy
+## Check that if ESCTOOLS_ROOT is defined, it looks like a Subversion hierarchy
 if [ -n "$ESCTOOLS_ROOT" ] && [ -n "$ESCTOOLS_RELEASE" ]; then
     if [ ! -d $ESCTOOLS_ROOT/Escjava ]; then
 	echo "Warning: $ESCTOOLS_ROOT does not appear to be a legitimate root"

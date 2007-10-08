@@ -1,4 +1,95 @@
  ------------------------------------------------------------------------
+r2933 | dcochran | 2007-10-03 12:17:14 +0100 (Wed, 03 Oct 2007) | 1 line
+Changed paths:
+   A /src/escjava/trunk/ESCTools/install.sh
+
+Ticket #27: Undelete install.sh, although it needs to  be fixed
+------------------------------------------------------------------------
+r2932 | dcochran | 2007-10-03 11:56:51 +0100 (Wed, 03 Oct 2007) | 1 line
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Escjava/Makefile
+   M /src/escjava/trunk/ESCTools/Escjava/test/junittests/Makefile
+
+Ticket #27: Streamlining escj script into one instance, not two
+------------------------------------------------------------------------
+r2931 | dcochran | 2007-10-03 10:17:55 +0100 (Wed, 03 Oct 2007) | 1 line
+Changed paths:
+   D /src/escjava/trunk/ESCTools/Escjava/escj
+   M /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/alltests
+   A /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test203
+   A /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test203/B.java
+   A /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test203/C.java
+   A /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test203/D.java
+   A /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test203/ans
+   A /src/escjava/trunk/ESCTools/Escjava/test/escjava/test/test203/run
+   M /src/escjava/trunk/ESCTools/Escjava/test/jdktests/Makefile
+   M /src/escjava/trunk/ESCTools/Makefile
+   M /src/escjava/trunk/ESCTools/Makefile.defs
+   M /src/escjava/trunk/ESCTools/README.first
+   M /src/escjava/trunk/ESCTools/release-files/escj
+   M /src/escjava/trunk/ESCTools/specs-kiniry/run.sh
+
+Fixes ticket #34
+------------------------------------------------------------------------
+r2930 | dcochran | 2007-10-02 16:39:34 +0100 (Tue, 02 Oct 2007) | 1 line
+Changed paths:
+   A /src/escjava/trunk/ESCTools/Escjava/escj
+
+Ticket #27: Add redirection from Escjava/escj to release-files/escj
+------------------------------------------------------------------------
+r2929 | dcochran | 2007-10-02 15:39:55 +0100 (Tue, 02 Oct 2007) | 1 line
+Changed paths:
+   M /src/escjava/trunk/ESCTools
+   D /src/escjava/trunk/ESCTools/Escjava/escj
+   D /src/escjava/trunk/ESCTools/Escjava/escj.bat
+   D /src/escjava/trunk/ESCTools/Escjava/escjava2.exe
+   D /src/escjava/trunk/ESCTools/Escjava/escjava2.sample
+   M /src/escjava/trunk/ESCTools/Makefile
+   D /src/escjava/trunk/ESCTools/install.sh
+   A /src/escjava/trunk/ESCTools/release-files/escj (from /src/escjava/trunk/ESCTools/Escjava/escj:2926)
+   M /src/escjava/trunk/ESCTools/release-files/escjava2
+   A /src/escjava/trunk/ESCTools/release-files/escjava2.exe (from /src/escjava/trunk/ESCTools/Escjava/escjava2.exe:2926)
+   A /src/escjava/trunk/ESCTools/release-files/escjava2.sample (from /src/escjava/trunk/ESCTools/Escjava/escjava2.sample:2926)
+
+Ticket #27: Improve release process
+------------------------------------------------------------------------
+r2927 | dcochran | 2007-10-02 10:48:18 +0100 (Tue, 02 Oct 2007) | 1 line
+Changed paths:
+   D /src/escjava/trunk/ESCTools/release-files/escj.bat
+
+Ticket 27: remove duplicate of escj.bat to avoid confusion
+------------------------------------------------------------------------
+r2926 | dcochran | 2007-10-01 17:31:57 +0100 (Mon, 01 Oct 2007) | 1 line
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Escjava/escj.bat
+
+Fixed location of BCEL jar file.
+------------------------------------------------------------------------
+r2925 | dcochran | 2007-10-01 17:30:38 +0100 (Mon, 01 Oct 2007) | 1 line
+Changed paths:
+   M /src/escjava/trunk/ESCTools/release-files/RELEASE_NOTES.txt
+
+Ticket #27: Added list of resolved Trac tickets
+------------------------------------------------------------------------
+r2924 | dcochran | 2007-10-01 13:53:59 +0100 (Mon, 01 Oct 2007) | 1 line
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Makefile
+
+Ticket #27: fixing release process
+------------------------------------------------------------------------
+r2915 | dcochran | 2007-09-27 17:37:31 +0100 (Thu, 27 Sep 2007) | 1 line
+Changed paths:
+   M /src/escjava/trunk/ESCTools/release-files/RELEASE_NOTES.txt
+
+Ticket #27: Transitional release notes.  Any tickets which are fixed will have a Trac ticket number.  Legacy tickets will have a Gforge ticket number.
+------------------------------------------------------------------------
+r2914 | dcochran | 2007-09-27 16:13:31 +0100 (Thu, 27 Sep 2007) | 1 line
+Changed paths:
+   M /src/escjava/trunk/ESCTools/ChangeLog
+
+Ticket #27: Updated change log in preparation for 2.0b2 release
+ 
+ ------------------------------------------------------------------------
 r2912 | dcochran | 2007-09-27 12:34:02 +0100 (Thu, 27 Sep 2007) | 1 line
 Changed paths:
    M /src/escjava/trunk/ESCTools/Escjava/java/escjava/completeness/FloatingPointCompletenessVisitor.java

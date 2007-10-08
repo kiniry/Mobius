@@ -123,6 +123,10 @@ Please see the SRG Mailman web pages at
   <http://topos.ucd.ie/mailman/listinfo>
 for more information.
 
+To make a new bugs report: 
+  <mailto:mobius-ticket@mobius.ucd.ie> 
+  with "component=ESCJava2,version=2.0b2" as part of the subject line.
+
 ----------------------------------------------------------------------------
 
 OBTAINING THE ORIGINAL SOURCE FOR SRC's "Java Programming Toolkit
@@ -183,7 +187,7 @@ c) The module name of ESC/Java2 is "ESCTools."
 d) Execute a subversion checkout on the server (replacing the characters
    'username' in the command below with your Trac username):
  
-   svn co svn+ssh://username@mobius.ucd.ie/Volumes/Data/svn_mobius/src/escjava/trunk/ESCTools
+   svn co svn+ssh://username@mobius.ucd.ie/Volumes/Data/subversion/svn_mobius/src/escjava/trunk/ESCTools
 
 e) If you want to avoid using your password on every subversion transaction,
   you will need to generate a public key/private key pair and copy the
@@ -199,7 +203,7 @@ e) If you want to avoid using your password on every subversion transaction,
         iv) type out the id_dsa.pub file (cat id_dsa.pub)
 	v) Login in to the subversion server:  ssh username@mobius.ucd.ie
 		(replace 'username' by your username on mobius.ucd.ie)
-	vi) On kindsoftware.com, edit the file ~/.ssh/authorized_keys,
+	vi) On mobius.ucd.ie, edit the file ~/.ssh/authorized_keys,
 		pasting in the contents of id_dsa.pub on a line of its own
 		(being careful not to introduce any spurious line breaks)
 	vii) Be sure that ~/.ssh/authorized_keys is readable only by you
@@ -538,10 +542,10 @@ affect the behavior of Simplify.  The most important are:
 
 ----------------------------------------------------------------------------
 
-BUILDING A WORKING VERSION OF Simplify FROM CVS SOURCES
+BUILDING A WORKING VERSION OF Simplify FROM Subversion SOURCES
 
 We have modified Simplify slightly so that it will build properly on
-OS X 10.2 using the Critical Mass Modula-3 (CM3) compiler.  We also
+OS X 10.4 using the Critical Mass Modula-3 (CM3) compiler.  We also
 use CM3 on Linux.
 
 We had to patch the following modules so that they would build

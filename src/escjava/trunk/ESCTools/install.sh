@@ -50,25 +50,25 @@ echo Removing empty files
 rm -rf `cat ${PATCH_DIR}${PSEP}*emptyFilesThatDisappeared`
 
 # Fix permissions on test files
-echo Fixing permissions
-chmod +x `find . -name run`
-chmod +x `find . -name rtestall`
-chmod +x `find . -name rtest`
-chmod +x `find . -name make_tags`
-chmod +x `find . -name insert_ensures`
-chmod +x `find . -name clean.sh`
-chmod +x `find . -name "*.sh"`
-chmod +x `find . -name "*.pl"`
+#echo Fixing permissions
+#chmod +x `find . -name run`
+#chmod +x `find . -name rtestall`
+#chmod +x `find . -name rtest`
+#chmod +x `find . -name make_tags`
+#chmod +x `find . -name insert_ensures`
+#chmod +x `find . -name clean.sh`
+#chmod +x `find . -name "*.sh"`
+#chmod +x `find . -name "*.pl"`
 
 (cd Escjava/release/master/bin; mv Simplify-1.5.4.exe.win Simplify-1.5.4.exe)
 
 ###### Have the user create their own Makefile.local.
 ###### Wait for them to finish.
 
-export ESCTOOLS_ROOT=`pwd`
-echo Building and testing the patched release in ${ESCTOOLS_ROOT}
+#export ESCTOOLS_ROOT=`pwd`
+#echo Building and testing the patched release in ${ESCTOOLS_ROOT}
 
 # Clean, build, and test the release.
-make -s clean build test
+#make -s clean build test
 
 echo Completed installation and test script

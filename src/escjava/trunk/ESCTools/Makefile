@@ -20,7 +20,7 @@ include Makefile.defs
 ##  alltests - test + rarely used or long tests
 ##  docs  - creates all docs; to get javadocs you must execute the
 ##          make from this directory
-##  all   - does all of the above
+##  all+   - does all of the above
 ##
 ## You can run each of these in a subdirectory and only apply it to
 ## the code in that subdirectory, if you like.  Note though, that the
@@ -436,8 +436,9 @@ releases: releases-notests
 	${MAKE} test-releases
 
 test-releases:
-	@echo "Testing binary and patch release versions .........."
+	@echo "Testing the releases..."
 	${MAKE} test-binary-release
+	${MAKE} test-source-release
 	${MAKE} test-patch-release
 
 releases-notests:
@@ -447,13 +448,42 @@ releases-notests:
 	${MAKE} source-release
 
 source-release: cleanup alldocs
-	@echo "Exporting source release .........."
-    svn export https://mobius.ucd.ie/repos/src/escjava/trunk/ESCTools ${RELTEMP}
+	@echo "Creating source release..."
+	cp -rf ${ESCJAVA2_SPECS} ${RELTEMP} 
+	rm -rf ${RELTEMP}/original-specs 
+	cp -r ${ORIG_SRC_SPECS} ${RELTEMP} 
+#   Copy all source code, tests, libs, Makefiles, ChangeLog, etc. 
+	cp -rf ${UTILS_SOURCE_DIR} ${RELTEMP}
+	cp -rf ${JAVAFE_ROOT} ${RELTEMP}
+	cp -rf ${ESCJAVA_ROOT} ${RELTEMP}
+	cp -rf ${MOCHA_SOURCE_DIR} ${RELTEMP}/Escjava/mochalib
+	cp ${XMLRPC_LIB} ${RELTEMP}/Escjava/xmlrpc.jar 
+	cp Makefile* ${RELTEMP} 
+	cp build.xml ${RELTEMP} 
+	cp prj.el ${RELTEMP} 
+	cp ChangeLog ${RELTEMP} 
+	cp -rf ${ORIG_SRC_SPECS} ${RELTEMP} 
+	cp -rf docs ${RELTEMP}
+	cp -rf papers ${RELTEMP}
+	cp -rf slides ${RELTEMP}
+	cp -rf Simplify ${RELTEMP}
+	cp -rf specs* ${RELTEMP}
+	cp license.txt ${RELTEMP}
+#   Copy Javadoc API docs 
+	cp -rf $(JAVADOC_GEN_DIR) ${RELTEMP}/docs 
+#   Copy other miscellaneous files 
+	cp ${ESCJ_ROOT}/escj ${RELTEMP} 
+	cp ${ESCJ_ROOT}/escj.bat ${RELTEMP} 
+	cp ${ESCJ_ROOT}/escjava2.exe ${RELTEMP} 
+	cp ${ESCJ_ROOT}/escjava2.sample ${RELTEMP} 
+	cp ${ESCJ_SIMPLIFY_DIR}/Simplify-1.5.4* ${RELTEMP} 
+	cp README.first README.txt ${RELTEMP} 
+	cd release-files; cp `ls | grep -v CVS` ${RELTEMP} 
+	-find ${RELTEMP} -name "*.svn*" -exec rm -rf {} \; > /dev/null 2>&1
+	-find ${RELTEMP} -name "*~" -or -name ".#*" -exec rm -f {} \; > /dev/null 2>&1 
 	cd ${RELTEMP}; tar cjvf ${RELDIR}/${RELSRCTAR}.tbz *
 	cd ${RELTEMP}; tar czvf ${RELDIR}/${RELSRCTAR}.tgz *
 	cd ${RELTEMP}; zip -Ar ${RELDIR}/${RELSRCTAR}.zip *
-	@echo "Testing source release..."
-	$(MAKE) -C $(RELTEMP) 
 	rm -rf ${RELTEMP}
 
 patch-release: clean
@@ -463,10 +493,9 @@ patch-release: clean
 	${MAKE} jars generate-patches generate-archives zero-length-files
 	cp ${ESCTOOLS_ROOT}/install.sh ${PATCH_DIR}
 	mkdir -p ${RELDIR}
-	-find ${PATCH_DIR} -name ".svn*" -print | xargs rm -rf
-	cd ${PATCH_DIR}; tar cvjf ${RELDIR}/${RELPATCHTAR}.tbz .
-	cd ${PATCH_DIR}; tar cvzf ${RELDIR}/${RELPATCHTAR}.tgz .
-	cd ${PATCH_DIR}; zip -Ar ${RELDIR}/${RELPATCHTAR}.zip .
+	cd ${PATCH_DIR}; tar cvjf ${RELDIR}/${RELPATCHTAR}.tbz *
+	cd ${PATCH_DIR}; tar cvzf ${RELDIR}/${RELPATCHTAR}.tgz *
+	cd ${PATCH_DIR}; zip -Ar ${RELDIR}/${RELPATCHTAR}.zip *
 	rm -rf ${PATCH_DIR}
 
 version:
@@ -498,27 +527,25 @@ srcjar:
 	( cd ${ESCTOOLS_ROOT}/Utils/junitutils; \
 	  cp `find . -name '*.java'` ${RELTEMP}/sub/junitutils )
 	( cd ${RELTEMP}/sub; jar cf ${RELSRCJAR} *; )
-	rm -rf ${RELTEMP}/sub
-	cp ${RELSRCJAR} ${ESCTOOLS_ROOT}
-
+	
 .PHONY: binary-release
 binary-release: build jars alldocs cleanup
 	@echo "Creating binary release .........."
-#	RELDIR is the staging area for all files
-#	First copy all .class files to sub and build a jar file
+#       RELDIR is the staging area for all files
+#       First copy all .class files to sub and build a jar file
 	mkdir -p ${RELDIR}
 	rm -rf ${RELTEMP}
 	mkdir -p ${RELTEMP}
 	cp license.txt ${RELTEMP}
 	${MAKE} jars
-#	Now copy in all specs, new and old
+#       Now copy in all specs, new and old
 	rm -rf ${RELTEMP}/specs
 	cp -rf ${ESCJAVA2_SPECS} ${RELTEMP}
 	rm -rf ${RELTEMP}/original-specs
 	cp -rf ${ORIG_SRC_SPECS} ${RELTEMP}
-#	Copy Javadoc API docs
+#       Copy Javadoc API docs
 	cp -rf $(JAVADOC_GEN_DIR) ${RELTEMP}
-#	Copy papers and slides and other documentation
+#       Copy papers and slides and other documentation
 	mkdir ${RELTEMP}/papers
 	cp papers/*.pdf ${RELTEMP}/papers
 	mkdir ${RELTEMP}/slides
@@ -532,26 +559,27 @@ binary-release: build jars alldocs cleanup
 	cp docs/Escjava2-Provers/Escjava2-Provers.pdf ${RELTEMP}/docs
 	cp docs/ESCJAVA-UsersManual.html ${RELTEMP}/docs
 	cp -rf Escjava/release/master/examples ${RELTEMP}
-#	Copy actual jar files with all ESC/Java2's classfiles and the two jar files
+#       Copy actual jar files with all ESC/Java2's classfiles and the two jar files
 #       with specs in them.
 	cp esctools2.jar ${RELTEMP}
 	cp $(ESCJAVA2_SPECS_JAR) ${RELTEMP}
-#	cp $(JML2_SPECS_JAR) ${RELTEMP}
-# 	Copy other miscellaneous files
+#       cp $(JML2_SPECS_JAR) ${RELTEMP}
+#       Copy other miscellaneous files
 	${MAKE} clean-norel-noreltemp
 	${MAKE} -C Utils build
-	mkdir ${RELTEMP}/Utils
-	cp -rf ${ESCTOOLS_ROOT}/Utils/BCEL ${RELTEMP}/Utils/BCEL
+	mkdir -p ${RELTEMP}/Utils
+	cp -rf ${ESCTOOLS_ROOT}/Utils/BCEL ${RELTEMP}/Utils
 	cp ${ESCTOOLS_ROOT}/release-files/quicktest ${RELTEMP}
-	cp ${ESCJAVA_ROOT}/escj ${RELTEMP}
-	cp ${ESCJAVA_ROOT}/escj.bat ${RELTEMP}
-	cp ${ESCJAVA_ROOT}/escjava2.exe ${RELTEMP}
-	cp ${ESCJAVA_ROOT}/escjava2.sample ${RELTEMP}
+	cp ${ESCTOOLS_ROOT}/release-files/escj ${RELTEMP}
+	cp ${ESCTOOLS_ROOT}/release-files/escj.bat ${RELTEMP}
+	cp ${ESCTOOLS_ROOT}/release-files/escjava2 ${RELTEMP}
+	cp ${ESCTOOLS_ROOT}/release-files/escjava2.exe ${RELTEMP}
+	cp ${ESCTOOLS_ROOT}/release-files/escjava2.sample ${RELTEMP}
 	cp ${ESCJ_SIMPLIFY_DIR}/Simplify-1.5.4* ${RELTEMP}
 #   The two readme files below are irrelevant for binary release
 #   cp README.first README.txt ${RELTEMP}
 	-find ${RELTEMP} -name "*~" -exec rm -f {} \; > /dev/null 2>&1
-	-find ${RELTEMP} -name ".svn" -print | xargs rm -rf
+	-find ${RELTEMP} -name "*.svn*" -print | xargs rm -rf
 	cd ${RELTEMP}; tar cjvf ${RELDIR}/${RELTAR}.tbz *
 	cd ${RELTEMP}; tar czvf ${RELDIR}/${RELTAR}.tgz *
 	cd ${RELTEMP}; zip -Ar ${RELDIR}/${RELTAR}.zip *
@@ -564,8 +592,31 @@ test-binary-release:
 	cp ${RELDIR}/${RELTAR}.tbz ${RELTEST}
 	cd ${RELTEST} ;\
 	    unset ESC_CLASSPATH ; \
+	    unset ESCTOOLS_RELEASE ; \
+	    export ESCJ_ROOT = ${RELTEST} ; \
 	    tar xjf ${RELTAR}.tbz ;\
 	    ${RELTEST}/quicktest
+	    
+test-source-release:
+	@echo "Testing source release ............"
+	rm -rf ${RELTEST}
+	mkdir -p ${RELTEST}
+	cp ${RELDIR}/${RELSRCTAR}.tbz ${RELTEST}
+	cd ${RELTEST} ;\
+		unset ESCJ_ROOT ; \
+		unset ESCTOOLS_ROOT ; \
+		unset ESC_SPECS ; \
+		unset JUNIT_LIB ; \
+		unset ANT_LIB ; \
+		unset PATCH_DIR ; \
+		unset RELDIR ; \
+		unset RELTEMP ; \
+		unset RELTEST ; \
+		unset ESCJ_SIMPLIFY_DIR ; \
+		unset ESC_CLASSPATH ;\
+		unset JAR_FILES ; \
+		tar xjf ${RELSRCTAR}.tbz ;\
+		$(MAKE) -s clean-norel-noreltemp build test docs jars                               
 
 ## Note - we need to unset lots of environmental variables here because we
 ## want them to be reset based on the value of ESC_RELEASE in install.sh.
@@ -580,7 +631,20 @@ test-patch-release:
 	rm -rf ${RELTEST}
 	mkdir -p ${RELTEST}
 	cd ${RELTEST}; \
-		tar xvjf ${RELDIR}/*patch.tbz ;\
+		tar xvjf ${RELDIR}/*patch.tbz; \
+		unset ESCJ_ROOT; \
+		unset ESCTOOLS_ROOT; \
+		unset ESC_SPECS; \
+		unset JUNIT_LIB; \
+		unset ANT_LIB; \
+		unset PATCH_DIR; \
+		unset RELDIR; \
+		unset RELTEMP; \
+		unset RELTEST; \
+		unset ESCJ_SIMPLIFY_DIR; \
+		unset ESC_CLASSPATH ;\
+		chmod a+x install.sh; \
+		./install.sh ${ORIGINAL_TAR_DIR} 
 
 ## These patches are used by unpacking the original
 ## Compaq/H.P. ESCTools sources as appropriate, cd-ing to the
