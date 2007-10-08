@@ -305,7 +305,7 @@ shrink significantly over time.
 Note also that we plan on having much more regular releases now that
 we have moved into beta.  We hope to put out monthly beta releases, in
 conjunction with regularly releases of Mobius program Verification
-Environment components. <http://mobius.inria.fr/>
+Environment components (http://mobius.inria.fr).
 
 New features include:
 
@@ -626,7 +626,7 @@ The following bugs are known to EXIST in this release:
   [ 924986  ] Self-checking Javafe
   [ 924856  ] Example escjava2 tcsh script fails on paths w whitespace
   [ 888368  ] remaining scope problem with java/jml fields
-  [ 879849  ] SecurityKey & KeySet example.
+  [ 879849  ] SecurityKey and KeySet example.
   [ 879832  ] Implicit constructor postconditions.
   [ 876972  ] NullPointerException by ESC/Java-2.0a5
   [ 876093  ] Supplying the same command-line switch multiple times.
@@ -724,7 +724,7 @@ The following bugs are known to EXIST in this release:
   [ 924986 ] Self-checking Javafe
   [ 924856 ] Example escjava2 tcsh script fails on paths w whitespace
   [ 888368 ] remaining scope problem with java/jml fields
-  [ 879849 ] SecurityKey & KeySet example.
+  [ 879849 ] SecurityKey and KeySet example.
   [ 879832 ] Implicit constructor postconditions.
   [ 876972 ] NullPointerException by ESC/Java-2.0a5
   [ 876093 ] Supplying the same command-line switch multiple times.
@@ -740,13 +740,6 @@ The following feature requests are still unfulfilled:
   [ 970215 ] Add Java Card support.
   [ 962110 ] Add switch to print out number of VC variables and/or terms
   [ 919162 ] model methods in interfaces
-
-The old bug tracking system is available via
-  http://sourceforge.net/tracker/?func=browse&group_id=65346&atid=510629
-The new GForge site for ESC/Java2 is located here
-  http://sort.ucd.ie/projects/escjava/
-The new bug tracking system is available via
-  http://sort.ucd.ie/tracker/?group_id=97
 
 Bugs are being migrated from the old to the new site as needed.
 
@@ -785,7 +778,7 @@ The following bugs are known to EXIST in this release:
   [ 924986 ] Self-checking Javafe
   [ 924856 ] Example escjava2 tcsh script fails on paths w whitespace
   [ 888368 ] remaining scope problem with java/jml fields
-  [ 879849 ] SecurityKey & KeySet example.
+  [ 879849 ] SecurityKey and KeySet example.
   [ 879832 ] Implicit constructor postconditions.
   [ 876972 ] NullPointerException by ESC/Java-2.0a5
   [ 876093 ] Supplying the same command-line switch multiple times.
@@ -800,9 +793,6 @@ The following feature requests are still unfulfilled:
   [ 970215 ] Add Java Card support.
   [ 962110 ] Add switch to print out number of VC variables and/or terms
   [ 919162 ] model methods in interfaces
-
-The bug tracking system is available via
-  http://sourceforge.net/tracker/?func=browse&group_id=65346&atid=510629
 
 -------------------------------------------------------------------
 version 2.0a6 (29 March 2004)
@@ -839,19 +829,18 @@ The following bugs are known to STILL EXIST in this release:
   [ 868258 ] Unit test Desugaring.java OS-dependency
   [ 876093 ] Supplying the same command-line switch multiple times
   [ 879832 ] Implicit constructor postconditions
-  [ 879849 ] SecurityKey & KeySet example
+  [ 879849 ] SecurityKey and KeySet example
   [ 888368 ] remaining scope problem with java/jml fields
 
 The following feature requests are still unfulfilled:
   [ 919162 ] model methods in interfaces
 
-The bug tracking system is available via
-  http://sourceforge.net/tracker/?func=browse&group_id=65346&atid=510629
+ 
 
 -------------------------------------------------------------------
 version 2.0a5
 
-30 December, 2003: The "New Year's Eve's Eve" release.
+30 December, 2003: The "New Year's Eve's" release.
 
 This release is the first to include the JML specifications from the
 JMLSpecs tool suite.
@@ -886,7 +875,7 @@ Other new features include:
   o and, of course, a number of bug fixes.
  
 Currently, to run or build ESC/Java2 on Windows, one must first
-install Cygwin (<http://www.cygwin.com/>) and a number of its tools.
+install Cygwin (http://www.cygwin.com/) and a number of its tools.
  
 To *run* ESC/Java, all one needs is Borne shell (/bin/sh), tcsh, and a
 Java runtime.  This means that one should download and install the
@@ -921,7 +910,7 @@ This release is due entirely to the hard work of David Cok.
 -------------------------------------------------------------------
 version 2.0a2
 
-29 September 2003: Third "Friends & Family" alpha release.
+29 September 2003: Third "Friends and Family" alpha release.
 
 Major changes to new release include:
   o Improved support for ghost and model variables.
@@ -936,7 +925,7 @@ This release is due entirely to the work of David Cok.
 -------------------------------------------------------------------
 version 2.0a1
 
-18-September-2003: Second "Friends & Family" alpha release.
+18-September-2003: Second "Friends and Family" alpha release.
 
 Major changes to this release include:
   o Additional support for Java 2 assert statement.  We now support
@@ -954,7 +943,7 @@ Major changes to this release include:
 -------------------------------------------------------------------
 version 2.0a0
 
-05-September-2003: First "Friends & Family" alpha release.
+05-September-2003: First "Friends amd Family" alpha release.
 
 Major changes to this release include:
   o Parses the full Java 2 and JML languages.
