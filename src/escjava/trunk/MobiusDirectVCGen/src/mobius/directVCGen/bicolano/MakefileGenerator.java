@@ -15,7 +15,7 @@ public class MakefileGenerator extends mobius.bico.MakefileGenerator {
   
   protected List<String> getExtraGeneratedFiles(PrintStream out) {
     final List<String> generatedFiles = new ArrayList<String>();
-    final String filename = "defs_types.vo $(Annotation)";
+    final String filename = "defs_types.vo $(Annotation) BicoMap_annotations.vo";
 
     generatedFiles.addAll(printCompileInstr(out, "Annotation", "_annotations"));
     out.println("Extra= " + filename);

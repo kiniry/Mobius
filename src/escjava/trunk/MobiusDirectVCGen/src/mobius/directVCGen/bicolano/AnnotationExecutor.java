@@ -2,15 +2,16 @@ package mobius.directVCGen.bicolano;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
 
 import javafe.tc.TypeSig;
-
-import org.apache.bcel.generic.ClassGen;
-
+import mobius.bico.Util.Stream;
 import mobius.bico.executors.ClassExecutor;
 import mobius.bico.executors.Executor;
+
+import org.apache.bcel.generic.ClassGen;
 
 /**
  * An executor that generates the annotations for the class
@@ -39,7 +40,36 @@ public class AnnotationExecutor extends Executor {
     fSig = sig;
   }
 
+  /**
+   * Write the annotation main file. And do everything and the coffee.
+   * @throws IOException in case the file cannot be written
+   * @throws ClassNotFoundException in case a Class cannot be resolved
+   */
   
+  public void start() throws IOException, ClassNotFoundException {
+    super.start(); // everything except the coffee
+    
+    // the coffee
+    final File typ = new File(getBaseDir(), getModuleName() + "_annotations" + suffix);
+    final Stream out = new Stream(new FileOutputStream(typ));
+    out.println(libPath);
+    
+    out.println();
+    out.incPrintln("Module " + getModuleName() + "Annotations.");
+
+
+    // the already treated classes + interfaces
+    for (ClassExecutor ce: getTreatedClasses()) {
+      out.println("Load \"" + ce.getModuleFileName() + "_signature.v\".");
+    }
+    
+    for (ClassExecutor ce: getTreatedInterfaces()) {
+      out.println("Load \"" + ce.getModuleFileName() + "_signature.v\".");
+    }
+    
+    out.decPrintln("End " + getModuleName() + "Annotations.");
+    
+  }  
   /**
    * Returns an instance of a class executor.
    * This method is there as an extension point.
@@ -52,8 +82,15 @@ public class AnnotationExecutor extends Executor {
     return new AnnotationClassExecutor(this, cg, fWorkingDir, fSig, this.getModuleName());
   }
 
-  
-  public mobius.bico.MakefileGenerator getMakefileGenerator(File file, String name, final List<ClassExecutor> treated) {
+  /**
+   * @return The make file generator.
+   * @param file the target directory
+   * @param name the name of the output file
+   * @param treated a list of all the treated classes
+   */
+  public mobius.bico.MakefileGenerator getMakefileGenerator(final File file, 
+                                                            final String name, 
+                                                            final List<ClassExecutor> treated) {
     return new MakefileGenerator(file, name, treated);
   }
 }

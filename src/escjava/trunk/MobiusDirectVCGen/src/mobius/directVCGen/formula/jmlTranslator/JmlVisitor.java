@@ -620,7 +620,7 @@ public class JmlVisitor extends BasicJMLTranslator {
     final Vector<AAnnotation> annos = new Vector<AAnnotation>();
     
     //Save argument's values in prestate as ghosts at beginning of each routine (in annos)
-    if (((Boolean)((MethodProperties) o).get("routinebegin")).booleanValue()) {
+    if (((Boolean)((MethodProperties) o).get("routinebegin"))) {
       ((MethodProperties) o).put("routinebegin", Boolean.FALSE);
       argsToGhost(annos, o);
     }

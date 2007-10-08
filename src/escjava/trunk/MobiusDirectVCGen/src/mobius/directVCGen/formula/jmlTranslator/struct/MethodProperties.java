@@ -41,7 +41,7 @@ public final class MethodProperties extends ContextProperties {
   /** tells whether or not we are inspecting a constructor. */
   public  boolean fIsConstructor;
   
-  /** ????? */
+  /** the routine is a JML \helper routine. See JML reference */
   public  boolean fIsHelper;
   
   /** the set of variables that can be assigned in the current method. */

@@ -6,8 +6,9 @@
                //@ ensures \result <= x;
                abstract int round_cost(int x) throws Exception;
 
-               //@ requires n > 0;
-               //@ ensures sum <= \old(sum) + n * (n + 1) / 2;
+               //  requires n > 0;
+               //  ensures sum <= \old(sum) + n * (n + 1) / 2;
+               //@ modifies this.sum;
                public boolean produce_bill(int n) {
                  int i;
                  try{
