@@ -2,27 +2,29 @@ version 2.0b2 "Mobius PVE Internal Release" (8 October 2007)
 
 New major features include:
 
-o Joe Kiniry has moved ESC/Java2 from a CVS/GForge repository to a Subversion/Trac repository
-o Soundness and Completeness warnings have been further extended
+o Joe Kiniry has moved ESC/Java2 from a CVS/GForge repository to a Subversion/Trac 
+  repository
 
-The following Trac <mobius.ucd.ie> tickets are FIXED or CLOSED in this release:
+The following tickets are FIXED or CLOSED in this release:
 
 Ticket	Summary	 
-10	    build system weirdness (error in Javafe)	                                                                             
-25	    ESC/Java-2.0b1 Support	 
-26      Update ESC/Java2 documentation to reflect change from CVS and GForge to Subversion and Trac
+10		build system weirdness (error in Javafe)	                                                                             
+25		ESC/Java-2.0b1 Support	 
+26		Update ESC/Java2 documentation to reflect change from CVS and 
+		GForge to Subversion and Trac
 27		Review release process for ESC/Java2                                                      
-28	    NullPointerException thrown with @pure modified comes before @modifies spec
-29 	    please update ESC/Java2 plugin webpage to reflect new developments      
-31	    Tests failing in ESCJava2 trunk	                                                      
+28		NullPointerException thrown with @pure modified comes before 
+		@modifies spec
+29		please update ESC/Java2 plugin webpage to reflect new developments      
+31		Tests failing in ESCJava2 trunk	                                                      
 34		Wrong output to Simplify
 
-The following GForge <sort.ucd.ie> tickets are FIXED or CLOSED in this release:
+The following GForge tickets are FIXED or CLOSED in this release:
 
 ID 	Summary 																Open Date 			Assigned To 	Submitted By
 594	escj.bat uses the wrong path separator character for Windows	  		2007-07-21 19:15	Dermot Cochran	Jonathan Aldrich
                                         
-The following GForge <sort.ucd.ie> tickets are known to EXIST in this release:
+The following GForge tickets are known to EXIST in this release:
 
 ID 	Summary 																Open Date 			Assigned To 	Submitted By
 55	inheritance of invariants												2005-04-08 12:29	Alan Morkan	Peter van Rossum
