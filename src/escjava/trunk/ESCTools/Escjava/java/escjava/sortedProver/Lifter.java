@@ -336,7 +336,13 @@ public class Lifter extends EscNodeBuilder
 		final public Sort retType;
 		public boolean isStringConst;
 		public boolean isDistinctSymbol;
-		
+    
+    public FnTerm(FnSymbol fn, Term[] args, Sort s) {
+      this.fn = fn;
+      this.args = args;
+      retType = s;
+      
+    }
 
 		public FnTerm(FnSymbol fn, Term[] args)
 		{
@@ -1200,7 +1206,9 @@ public class Lifter extends EscNodeBuilder
 		if (s != null)
 			if (!require(s, fn.retType, "symbol ref"))
 				ErrorSet.error("symbol ref " + name);
-		return new FnTerm(fn, emptyTerms);
+    FnTerm f = new FnTerm(fn, emptyTerms, s);
+    
+		return f;
 	}
 	
 	public FnTerm symbolRef(String name) {
