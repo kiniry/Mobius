@@ -898,6 +898,10 @@ public class Lifter extends EscNodeBuilder
 	public LabeledTerm mkLabeledTerm(boolean pos, String l, Term b) {
 		return new LabeledTerm(pos, l, b);
 	}
+  
+  public PredSymbol mkPredSymbol(final String name, final Sort [] tab) {
+    return new PredSymbol(name, tab);
+  }
 	
 	/*@ non_null_by_default @*/
 	public class IntLiteral extends Term
