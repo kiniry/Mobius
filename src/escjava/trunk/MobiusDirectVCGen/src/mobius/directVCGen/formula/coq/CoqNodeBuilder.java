@@ -253,8 +253,9 @@ public class CoqNodeBuilder extends EscNodeBuilder {
    */
   @Override
   public SPred buildExists(final QuantVar[] vars, final SPred body) {
-    if (vars.length == 0)
+    if (vars.length == 0) {
       return body;
+    }
     return new CExists(this, vars, body);
   }
 

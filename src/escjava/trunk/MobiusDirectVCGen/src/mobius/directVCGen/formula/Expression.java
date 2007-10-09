@@ -234,9 +234,10 @@ public final class Expression {
    * @return a newly built term
    */
   private static Term binaryOp(final Term l, final Term r, final int tag) {
-    if (l.getSort() != r.getSort())
+    if (l.getSort() != r.getSort()) {
       throw new IllegalArgumentException("The sort of " + l + 
                                          " is different from the sort of " + r + ".");
+    }
     FnTerm t = null;
     if (l.getSort() == Bool.sort) {
       t = Formula.lf.mkFnTerm(Formula.lf.symBoolFn, new Term[] {l, r});

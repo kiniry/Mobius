@@ -55,8 +55,9 @@ public class CExists extends CForall {
    */
   private static STerm buildExists(final CoqNodeBuilder builder, final QuantVar[] vars, 
                                    final SPred pred, final int idx) {
-    if (idx == vars.length)
+    if (idx == vars.length) {
       return pred;
+    }
     else {
       return new CExists(builder, vars, pred, idx + 1);
     }

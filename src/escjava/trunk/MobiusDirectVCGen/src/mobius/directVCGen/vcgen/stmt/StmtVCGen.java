@@ -93,8 +93,9 @@ public class StmtVCGen extends ExpressionVisitor {
    * @return a postcondition computed from the annotation
    */
   public Post treatAnnot(final VCEntry vce, final List<AAnnotation> annot) {
-    if (annot == null)
+    if (annot == null) {
       return vce.fPost;
+    }
     Term post = vce.fPost.getPost();
     final int len = annot.size();
     for (int i = len - 1; i >= 0; i--) {
@@ -114,7 +115,7 @@ public class StmtVCGen extends ExpressionVisitor {
           final mobius.directVCGen.formula.annotation.Set s = 
             (mobius.directVCGen.formula.annotation.Set) aa;
           if (s.assignment != null) {
-            post.subst(s.assignment.var, s.assignment.expr);
+            post.subst(s.assignment.fVar, s.assignment.fExpr);
           }
           else if (s.declaration != null) {
             if (s.assignment == null) {
@@ -329,7 +330,9 @@ public class StmtVCGen extends ExpressionVisitor {
    * @return a valid post condition or null if the label was not found
    */
   public static Post getBreakPost(final Identifier label, final VCEntry vce) {
-    if (label == null) return vce.fBrPost; 
+    if (label == null) {
+      return vce.fBrPost; 
+    }
     return vce.lbrpost.get(label);
   }
 
@@ -349,8 +352,9 @@ public class StmtVCGen extends ExpressionVisitor {
    */
   public static Post getContinuePost(final Identifier label, final VCEntry vce) {
     if (label == null) {
-      if (vce.fContPost == null)
+      if (vce.fContPost == null) {
         throw new NullPointerException();
+      }
       return vce.fContPost; 
     }
     return vce.lcontpost.get(label);

@@ -82,9 +82,10 @@ public final class Bool {
    * @return a well formed and well typed term
    */
   private static Term boolUnaryOp(final Term t, final int tag) {
-    if (t.getSort() != Bool.sort)
+    if (t.getSort() != Bool.sort) {
       throw new IllegalArgumentException("The sorts of the arguments should be " +
           "bool found: " + t.getSort());
+    }
     final FnTerm res = Formula.lf.mkFnTerm(Formula.lf.symBoolUnaryFn, new Term[] {t});
     res.tag = tag;
     return res;
@@ -103,9 +104,10 @@ public final class Bool {
     Term left = l;
     Term right = r;
     if (l.getSort() != r.getSort() &&
-        (!Num.isNum(l.getSort()) || !Num.isNum(r.getSort())))
+        (!Num.isNum(l.getSort()) || !Num.isNum(r.getSort()))) {
       throw new IllegalArgumentException("The sort of " + l + 
                                          " is different from the sort of " + r + ".");
+    }
     FnTerm t = null;
     if (l.getSort() == Num.sortInt) {
       if (r.getSort() == Num.sortReal) {

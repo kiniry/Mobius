@@ -23,14 +23,10 @@ public class CoqFile {
   public static final String suffix = ".v";
   
   /** the stream to print to the target file. */
-  protected PrintStream fOut;
+  private PrintStream fOut;
 
   /** the name of the directory which contains bicolano's library files. */
   private String fBase;
-
-
-
-
 
 
   /**
@@ -79,7 +75,7 @@ public class CoqFile {
                         final List<String> classNames) {
     
     // source
-    writeHeader(fOut);
+    writeHeader();
     
     
     fOut.println();
@@ -100,8 +96,11 @@ public class CoqFile {
 
   }
 
-  public void writeHeader(PrintStream out) {
-    out.println("Add LoadPath \"" + fBase + "\".\n" +
+  /**
+   * Write the header of the coq file (load path, requires...).
+   */
+  public void writeHeader() {
+    fOut.println("Add LoadPath \"" + fBase + "\".\n" +
                  "Add LoadPath \"" + fBase + File.separator + "Formalisation\".\n" +
                  "Add LoadPath \"" + fBase + File.separator + "Formalisation" +
                  File.separator + "Bicolano" + "\".\n" +
@@ -113,10 +112,18 @@ public class CoqFile {
                  File.separator + "Library" + 
                  File.separator + "Map" + "\".\n");
 
-    out.println("Require Import BicoMap_annotations.");
-    out.println("Require Import defs_types.");
-    out.println("Import BicoMapAnnotations P Mwp.");
-    out.println();
+    fOut.println("Require Import BicoMap_annotations.");
+    fOut.println("Require Import defs_types.");
+    fOut.println("Import BicoMapAnnotations P Mwp.");
+    fOut.println();
+  }
+  
+  /**
+   * Return the output stream.
+   * @return the content of the field {@link #fOut}
+   */
+  public PrintStream getOut() {
+    return fOut;
   }
 
 }

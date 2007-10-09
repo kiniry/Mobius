@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -12,11 +11,9 @@ import javafe.tc.TypeSig;
 import mobius.bico.Util;
 import mobius.bico.Util.Stream;
 import mobius.bico.dico.Dictionary;
-import mobius.bico.dico.MethodHandler;
 import mobius.bico.executors.ClassExecutor;
 import mobius.bico.executors.Executor;
 
-import org.apache.bcel.classfile.Method;
 import org.apache.bcel.generic.ClassGen;
 
 /**
@@ -51,7 +48,7 @@ public class AnnotationExecutor extends Executor {
    * @throws IOException in case the file cannot be written
    * @throws ClassNotFoundException in case a Class cannot be resolved
    */
-  
+  @Override
   public void start() throws IOException, ClassNotFoundException {
     super.start(); // everything except the coffee
     
@@ -77,8 +74,7 @@ public class AnnotationExecutor extends Executor {
     final Collection<Integer> meths = dico.getMethods();
     
     for (int meth: meths) {
-      final String fullname = dico.getMethodName(meth);
-      String classname = Util.coqify(dico.getClassName(dico.getClassFromMethod(meth)));
+      final String classname = Util.coqify(dico.getClassName(dico.getClassFromMethod(meth)));
       if (classname.startsWith("java")) {
         // FIXME: quick fix should be put in Bicolano
         continue;
@@ -93,7 +89,7 @@ public class AnnotationExecutor extends Executor {
       final String fullname = dico.getMethodName(meth);
       
       final String name = Util.coqify(fullname.substring(fullname.lastIndexOf('.') + 1));
-      String classname = Util.coqify(dico.getClassName(dico.getClassFromMethod(meth)));
+      final String classname = Util.coqify(dico.getClassName(dico.getClassFromMethod(meth)));
       if (classname.startsWith("java")) {
         continue;
       }

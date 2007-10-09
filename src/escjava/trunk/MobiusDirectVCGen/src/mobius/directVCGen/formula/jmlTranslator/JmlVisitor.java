@@ -569,7 +569,7 @@ public class JmlVisitor extends BasicJMLTranslator {
               final AAnnotation annot = (AAnnotation) iter.next();
               if (annot instanceof Set) {
                 final Set existingSet = (Set) annot;
-                if (existingSet.declaration.equals(newSet.assignment.var)) {
+                if (existingSet.declaration.equals(newSet.assignment.fVar)) {
                   annos.remove(existingSet);
                   newSet.declaration = existingSet.declaration;
                   break;
@@ -646,8 +646,8 @@ public class JmlVisitor extends BasicJMLTranslator {
     final Set ghostVar = new Set();
     if (x.decl.init != null) {
       ghostVar.assignment = new Set.Assignment();
-      ghostVar.assignment.expr = (Term) x.decl.init.accept(this, o);
-      ghostVar.assignment.var = Expression.rvar(x.decl);
+      ghostVar.assignment.fExpr = (Term) x.decl.init.accept(this, o);
+      ghostVar.assignment.fVar = Expression.rvar(x.decl);
     }
     ghostVar.declaration = Expression.rvar(x.decl); 
     return ghostVar;
@@ -736,8 +736,8 @@ public class JmlVisitor extends BasicJMLTranslator {
   public final Object visitSetStmtPragma(final /*@non_null*/ SetStmtPragma x, final Object o) {
     final Set.Assignment res = new Set.Assignment();
     if (x.target instanceof VariableAccess) {
-      res.var = (QuantVariableRef) x.target.accept(this, o);
-      res.expr = (Term) x.value.accept(this, o);
+      res.fVar = (QuantVariableRef) x.target.accept(this, o);
+      res.fExpr = (Term) x.value.accept(this, o);
     }
     return res;
   }

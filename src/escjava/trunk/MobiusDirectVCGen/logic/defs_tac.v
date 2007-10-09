@@ -1,35 +1,7 @@
-(* LA tactique primitive *)
-Ltac genclear H := generalize H;clear H.
-
-
-Ltac unfoldArrAx_intern R :=
-         match goal with
-          | [H : (arrayFresh ?a  ?a0  ?b0 ?e (arrayShapeOne ?n) ?T ?v) |- _ ] =>
-               let H1 := fresh "H" in (assert (H1 :=  (array_axiom2 a a0  b0  e  n  T  v H)));
-                genclear H; unfoldArrAx_intern R
-          | [H: _ |- _ ] => genclear H; unfoldArrAx_intern R
-          | _ => intros
-        end.
-
-Ltac unfoldArrAx  :=
-         match goal with
-          | [H : _|- ?R ] =>  unfoldArrAx_intern R
-        end.
-
-Ltac arrtac := (* a ameliorer *)
-match goal with
-| [H1: (arrayFresh null  ?a0  ?b0 ?e (arrayShapeOne ?n) ?T ?v) |- _] => 
-                 let H:= fresh "H" in (assert (H :=  (array_axiom2 null a0  b0  e  n  T  v H1)); repeat (destruct H); trivial)
-| [H1: (arrayFresh ?a  ?a0  ?b0 ?e (arrayShapeOne ?n) ?T ?v) |- _] => 
-                 let H:= fresh "H" in (assert (H :=  (array_axiom2 null a0  b0  e  n  T  v H1)); repeat (destruct H); trivial)
-end.
 
 
 
-
-
-Hint Resolve Heap.select_store2.
-Hint Rewrite  -> Heap.select_store1 Heap.arrselect_store1: escj_select.
+Ltac genclear H := generalize H; clear H.
 
 
 
@@ -216,27 +188,54 @@ end.
 
 
 
-Ltac simplsc := intros; subst; elimOr; elimAnd; intros; subst; 
-try match goal with
-| [H: context a [negb (negb _)] |- _] =>
-	rewrite negb_elim in H
-end;
-repeat match goal with
-|[H: _ |- _] => rewrite Heap.select_store1 in H
-end;
- autorewrite with escj; autorewrite with escj_select;
-auto.
-Ltac startsc := unfoldEscTime; unfoldEscArith; autorewrite with escj; autorewrite with escj_select; intros; subst.
-(* unfoldArrAx. *)
-Ltac autosc := simplsc;
-repeat match goal with
-| [ H: ?v = ?v -> _ |- _ ] =>
-     let h := fresh "H" in
-       assert(h := H (refl_equal ecReturn));
-       clear H; try subst
-end;
-try match goal with 
-| [ H: (~ True) = True |- _ ] => 
-       let h := fresh "H" in
-        (assert(h := I); rewrite <- H in h; apply h); exact I
-end.
+
+Ltac startsc := autorewrite with escj; autorewrite with escj_select; intros; subst.
+
+
+
+
+Ltac myred := 
+ hnf;match goal with
+ | [|- _ -> _] => intro;hnf;myred
+ | [|- _ /\ _] => split;hnf;myred
+ | _ => idtac
+ end.
+
+Ltac simpl_hyps := 
+ match goal with 
+ | [H : _ /\ _ |- _ ] => 
+    let h1 := fresh "H" in let h2 := fresh "H" in destruct H as (h1,h2);simpl_hyps
+ | [H:SemCompInt _ _ _ |- _] => simpl in H;simpl_hyps
+ | [H:METHOD.valid_var _ _ |- _ ] => clear H;simpl_hyps
+ | [H:compat_ValKind_value _ _ |- _] => clear H;simpl_hyps
+ | _ => idtac
+  end.
+Ltac my_simpl :=
+ simpl interp_swp in *;
+ simpl interp_initstate in *;
+ simpl interp_localstate in *;
+ simpl interp_returnstate in *;
+ simpl interp_wptype in *;
+ simpl interp_assert in *;
+(* simpl top in *;*)
+ simpl fst in *;
+ simpl snd in *.
+
+Ltac round_method :=
+ match goal with
+ [ H : True -> _ |- _ ] => elim H; intros; trivial; clear H
+ end.
+Ltac solve := myred;simpl_hyps;simpl_eq;subst;auto.
+
+
+
+ Ltac this_not_null :=
+   match goal with
+   [ H : do_lvget _ 0%N = do_lvget _ 0%N,
+     H1 : do_lvget _ 0%N <> Null,
+     H2 : interp_value (SLvGet _ 0%N) = Null |- _] => 
+     unfold interp_value in H2;
+     simpl in H2;
+     rewrite H in H2;
+     elim (H1 H2)
+   end.

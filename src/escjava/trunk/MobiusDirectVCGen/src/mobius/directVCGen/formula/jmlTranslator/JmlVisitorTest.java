@@ -609,7 +609,7 @@ public class JmlVisitorTest extends TestCase {
     list =  AnnotationDecoration.inst.getAnnotPre((ASTNode) javaSkipStmt);
     ghostSet = (Set)list.get(0);
     evaluatedGhostDecl = ghostSet.declaration;
-    Term evaluatedGhostAssig = ghostSet.assignment.expr;
+    Term evaluatedGhostAssig = ghostSet.assignment.fExpr;
     //***************Term**********************************
     expectedGhostDecl = Expression.rvar(ghostDecl);
     Term expectedGhostAssig = Num.value((Integer) ((LiteralExpr) ghostDecl.init).value);
@@ -629,7 +629,7 @@ public class JmlVisitorTest extends TestCase {
     fVisitor.visitBlockStmt(allStmts, fProp);
     list =  AnnotationDecoration.inst.getAnnotPre((ASTNode) javaSkipStmt);
     ghostSet = (Set)list.get(0);
-    evaluatedGhostAssig = ghostSet.assignment.expr;
+    evaluatedGhostAssig = ghostSet.assignment.fExpr;
     expectedGhostAssig = Num.value((Integer) ((LiteralExpr) ghostDecl.init).value);
     //***************Test***********************************
     assertEquals(expectedGhostAssig.toString(), evaluatedGhostAssig.toString());

@@ -54,21 +54,21 @@ public class Set extends AAnnotation {
 
     // TODO: add comments
     public Assignment(QuantVariableRef var, Term expr) {
-      this.var = var;
-      this.expr = expr;
+      this.fVar = var;
+      this.fExpr = expr;
     }
 
     // TODO: add comments
-    public QuantVariableRef var;
+    public QuantVariableRef fVar;
     // TODO: add comments
-    public Term expr;
+    public Term fExpr;
 
     /*
      * (non-Javadoc)
      * @see java.lang.Object#toString()
      */
     public String toString() {
-      return var + " := " + expr;
+      return fVar + " := " + fExpr;
     }
   }
 
