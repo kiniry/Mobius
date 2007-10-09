@@ -11,7 +11,7 @@
                //@ modifies this.sum;
                public boolean produce_bill(int n) {
                  int i;
-                 try{
+                 try {
                    //@ loop_invariant i <= n + 1 && sum <= \old(sum) + (i - 1) * i / 2;
                    for (i = 1; i <= n; i++) {
                      this.sum = this.sum + round_cost(i);

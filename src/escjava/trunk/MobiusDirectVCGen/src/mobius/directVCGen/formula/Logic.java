@@ -162,7 +162,7 @@ public final class Logic {
    * are boolean instead of pred, even better they are converted 
    * to pred.
    */
-  public final static class Safe {
+  public static final class Safe {
     /**
      * Create a And in the prop territory, from 2 booleans or
      * 2 properties. The 2 arguments should not have different types.

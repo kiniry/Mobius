@@ -4,12 +4,11 @@ public class BlockSample {
   public static void f() {
     int i = 0;
     labl: {
-    	i++;
+      i++;
     }
     
-     {
-    	 
-    	 i++;
+    {
+      i++;
     }
     Throwable o;
     RuntimeException r = new NullPointerException();

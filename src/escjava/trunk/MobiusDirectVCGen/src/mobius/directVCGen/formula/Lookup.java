@@ -30,7 +30,7 @@ public class Lookup {
   /** Defines whether 'null' can be returned or not. 
    *  If fFailSave is true, a default Term is returned
    *  instead of 'null' */
-  public final static boolean fFailSave=false;
+  public static final boolean fFailSave = false;
   
   /** list of symbols to declare. */
   public static List<FnSymbol> symToDeclare = new Vector<FnSymbol>();

@@ -3,7 +3,7 @@ public class Audi {
 	int age;
 	Opel o;
 	
-	public Audi(VW v,int ae)
+	public Audi(VW v, int ae)
 	{
 		//(o.vw = v).price = 4;
 		//o.vw.price = 12000;
@@ -17,7 +17,7 @@ public class Audi {
 	
 	public int doSomething(VW v){
 		//(o.vw = v).price = 4;
-		return 8;//(o.vw = v).price;
+		return 8; //(o.vw = v).price;
 		
 	}
 	

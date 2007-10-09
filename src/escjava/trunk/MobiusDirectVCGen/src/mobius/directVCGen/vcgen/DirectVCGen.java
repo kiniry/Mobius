@@ -56,9 +56,9 @@ public class DirectVCGen extends Visitor {
     System.out.println(mv);
   }
 
-  /*
-   * (non-Javadoc)
-   * @see javafe.ast.Visitor#visitConstructorDecl(javafe.ast.ConstructorDecl)
+  /**
+   * Computes the vcs of the constructor to visit.
+   * @param cd the constructor to visit
    */
   @Override
   public void visitConstructorDecl(final /*@non_null*/ ConstructorDecl cd) {

@@ -214,7 +214,7 @@ public class AnnotationMethodExecutor extends ABasicExecutor {
     final String vars = doLetPost();
     out.incTab();
     //out.println(tab, "   let " + Ref.varThis + " := (do_lvget (fst s0) 0%N)" + " in " +
-    out.println( "(mk_" + namePost +  " (snd t) " + vars + "):: nil.");
+    out.println("(mk_" + namePost +  " (snd t) " + vars + "):: nil.");
     out.decTab();
     out.decTab();
     

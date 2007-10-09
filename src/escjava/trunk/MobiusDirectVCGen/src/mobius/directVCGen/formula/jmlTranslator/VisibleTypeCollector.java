@@ -82,7 +82,7 @@ import escjava.ast.WildRefExpr;
  * @author Julien Charles (julien.charles@inria.fr)
  *
  */
-public class VisibleTypeCollector extends VisitorArgResult {
+public final class VisibleTypeCollector extends VisitorArgResult {
 
   private java.util.Set<Type> fTypeSet;
 

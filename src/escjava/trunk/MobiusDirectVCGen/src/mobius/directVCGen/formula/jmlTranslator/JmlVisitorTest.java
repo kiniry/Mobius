@@ -307,7 +307,7 @@ public class JmlVisitorTest extends TestCase {
     expTerm1 = Logic.not(Logic.equalsNull(Expression.rvar((GenericVarDecl) xFieldDeclRef)));
     expTerm2 = Logic.not(Logic.isAlive(Heap.varPre, Expression.rvar((GenericVarDecl) xFieldDeclRef)));
     expTerm3 = Logic.isAlive(Heap.var, Expression.rvar((GenericVarDecl) xFieldDeclRef));
-    expTerm4 = Logic.and(Logic.and(expTerm1,expTerm2), expTerm3);
+    expTerm4 = Logic.and(Logic.and(expTerm1, expTerm2), expTerm3);
     
     expTerm1 = Logic.not(Logic.equalsNull(Expression.rvar((GenericVarDecl) yFieldDeclRef)));
     expTerm2 = Logic.not(Logic.isAlive(Heap.varPre, Expression.rvar((GenericVarDecl) yFieldDeclRef)));

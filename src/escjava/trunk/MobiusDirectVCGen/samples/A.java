@@ -1,9 +1,9 @@
 public class A {
-  int val ; 
+  int val;
   A next;
 
-  A m(A list ) {
-   while (list.next != null ) {
+  A m(A list) {
+   while (list.next != null) {
      list = list.next;
    }
 //   A copy = new A();

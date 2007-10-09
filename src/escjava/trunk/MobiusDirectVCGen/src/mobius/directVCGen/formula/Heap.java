@@ -13,13 +13,13 @@ import escjava.sortedProver.NodeBuilder.Sort;
  */
 public final class Heap {
   /** the sort that represents the type of a heap. */
-  public final static Sort sort = Formula.lf.sortMap;
+  public  static final Sort sort = Formula.lf.sortMap;
 
   /** the variable representing the heap. */
-  public final static QuantVariableRef var = Expression.rvar("heap", sort);
+  public static final QuantVariableRef var = Expression.rvar("heap", sort);
 
   /** the variable representing the heap in the prestate. */
-  public final static QuantVariableRef varPre = Expression.old(var);
+  public static final QuantVariableRef varPre = Expression.old(var);
 
   /** the counter to count the number of instanciation of the heap variable. */
   private static int heapc;

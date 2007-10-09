@@ -13,7 +13,7 @@ public class Test2 {
 	public Test2(int g){
 		//@ assert g < 11;
 		int k = 55 + 55;
-		hallo(10,1);
+		hallo(10, 1);
 	}
 	
 	

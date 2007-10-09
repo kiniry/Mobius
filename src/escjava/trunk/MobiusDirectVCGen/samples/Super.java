@@ -1,7 +1,7 @@
 public class Super {
 
 	Super i;
-	int j,k;
+	int j, k;
 	
 	//@requires i != null;
 	//@ensures \result == this;
