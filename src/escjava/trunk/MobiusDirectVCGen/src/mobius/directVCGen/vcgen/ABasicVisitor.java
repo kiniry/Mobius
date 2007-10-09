@@ -69,7 +69,14 @@ public abstract class ABasicVisitor extends VisitorArgResult {
   public static Object illegalExpr(final ASTNode x, final Object o) {
     throw new IllegalArgumentException("Illegal Expression");
   }
-
+  
+  /**
+   * Throws an exception which significate that we have reached an 
+   * illegal statement.
+   * @param x any node
+   * @param o anything
+   * @return nothing; throws a {@link java.lang.IllegalArgumentException}
+   */
   public Object illegalStmt(final ASTNode x, final Object o) {
     throw new IllegalArgumentException("Illegal Statement");
   }
