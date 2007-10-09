@@ -27,7 +27,7 @@ public final class Dico implements IClassConstants {
     final JavaClass thrw = repos.loadClass("java.lang.Throwable");
     final JavaClass excp = repos.loadClass("java.lang.Exception");
     final JavaClass str = repos.loadClass("java.lang.String");
-  
+    final JavaClass nllexcp = repos.loadClass("java.lang.NullPointerException");
     
     dico.addPackage(obj.getPackageName(), pkgJavaLang);
     dico.addPackage("", pkgEmpty);
@@ -35,10 +35,12 @@ public final class Dico implements IClassConstants {
     dico.addClass(obj, object);
     dico.addClass(thrw, throwable);
     dico.addClass(excp, exception);
+    dico.addClass(nllexcp, nullPointerException);
     dico.addClass(str, string);
     
     dico.addMethod("Object.<init>", pkgJavaLang, object, methObj);
     dico.addMethod("Exception.<init>", pkgJavaLang, exception, methExcp);
+    dico.addMethod("NullPointerException.<init>", pkgJavaLang, nullPointerException, methExcp);
     dico.addMethod("String.<init>", pkgJavaLang, string, methStr);
     dico.addMethod("Throwable.<init>", pkgJavaLang, throwable, methThrw);
     // TODO complete the list...

@@ -68,7 +68,8 @@ public class Executor extends ABasicExecutor {
 
   /** classes to be read from hand-made files. */
   private final String[] fSpecialLibs = {"java.lang.Object", "java.lang.Throwable",
-                                         "java.lang.Exception", "java.lang.String" };
+                                         "java.lang.Exception", "java.lang.String",
+                                         "java.lang.NullPointerException" };
 
   /** list of already treated classes. */
   private List<ClassExecutor> fTreatedClasses = new ArrayList<ClassExecutor>();
