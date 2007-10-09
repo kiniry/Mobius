@@ -2,7 +2,6 @@ package mobius.bico.dico;
 
 import java.io.PrintStream;
 import java.util.Collection;
-import java.util.List;
 
 import org.apache.bcel.classfile.JavaClass;
 

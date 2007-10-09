@@ -130,29 +130,32 @@ public class CamlDictionary implements Dictionary {
    * @author Laurent.Hubert@irisa.fr
    */
   private static final class ClassType {
-    private int fClzz;
-    private int fPk;
+    /** the Coq class number. */
+    private int fClass;
+    
+    /** the Coq package number. */
+    private int fPkg;
 
     /**
      * Build a couple of int.
      * @param classNumber the first element of the couple
      * @param pkgNumber the second element of the couple
      */
-    ClassType(int classNumber, int pkgNumber) {
-      fClzz = classNumber;
-      fPk = pkgNumber;
+    ClassType(final int classNumber, final int pkgNumber) {
+      fClass = classNumber;
+      fPkg = pkgNumber;
     }
     
     public String toString() {
-      return "(" + fPk + ", " + fClzz + ")";
+      return "(" + fPkg + ", " + fClass + ")";
     }
     
-    public int getClazz() {
-      return fClzz;
+    public int getClassNum() {
+      return fClass;
     }
     
-    public int getPackage() {
-      return fPk;
+    public int getPkgNum() {
+      return fPkg;
     }
   } 
   
@@ -163,12 +166,11 @@ public class CamlDictionary implements Dictionary {
   private static final class Triplet extends ABaseCouple<ClassType> {
     /**
      * Build a triplet.
-     * @param i1 the first element of the triplet
-     * @param i2 the second element of the triplet
-     * @param i3 the third element of the triplet
+     * @param ct the class containing the field or the method
+     * @param num the number representing in Coq the field or the method
      */
-    Triplet(ClassType ct, final int i3) {
-      super(ct, i3);
+    Triplet(final ClassType ct, final int num) {
+      super(ct, num);
     }
     
   }
@@ -186,7 +188,7 @@ public class CamlDictionary implements Dictionary {
   private final Map<String, Triplet> fMethodNames = new HashMap<String, Triplet>();
 
 
-  
+  @Override
   public void addClass(final JavaClass jc, 
                        final int coqClassName) {
     addClass(jc.getClassName(), fPackageNames.get(jc.getPackageName()), coqClassName);
@@ -200,6 +202,7 @@ public class CamlDictionary implements Dictionary {
     fClassNames.put(javaName, new ClassType(coqClassName, packageName));
   }
   
+  @Override
   public void addClass(final JavaClass jc) {
     if (getCoqClassName(jc) == 0) {
       fCurrentClass++;
@@ -207,24 +210,23 @@ public class CamlDictionary implements Dictionary {
     }
   }
   
-  
   public int getCurrentClass() {
     return fCurrentClass;
   }
 
 
-  
+  @Override
   public int getCoqClassName(final JavaClass jc) {
     final ClassType c = fClassNames.get(jc.getClassName());
     if (c == null) {
       return 0;
     }
     else {
-      return c.getClazz();
+      return c.getClassNum();
     }
   }
 
-
+  @Override
   public int getCoqPackageName(final JavaClass jc) {
     if (fPackageNames == null) {
       throw new NullPointerException();
@@ -232,7 +234,7 @@ public class CamlDictionary implements Dictionary {
     if (jc == null) {
       throw new NullPointerException();
     }
-    int packageName = 0;// fPackageNames.get(jc.getPackageName());
+    int packageName = 0; // fPackageNames.get(jc.getPackageName());
     if (packageName == 0) {
       packageName = fCurrentPackage++;
       addPackage(jc.getPackageName(), packageName);
@@ -245,6 +247,7 @@ public class CamlDictionary implements Dictionary {
    * 
    * @see bico.Dictionary#addField(java.lang.String, int, int, int)
    */
+  @Override
   public void addField(final String javaName, final int coqPackageName, 
                        final int coqClassName,
                        final int coqFieldName) {
@@ -257,11 +260,12 @@ public class CamlDictionary implements Dictionary {
    * 
    * @see bico.Dictionary#addMethod(java.lang.String, int, int, int)
    */
+  @Override
   public void addMethod(final String javaName, final int coqPackageName,
                         final int coqClassName, final int coqMethodName) {
     if (this.getClassName(coqClassName) == null) {
-      throw new IllegalArgumentException("Unknown class: " + coqClassName +"\n"
-                                          + fClassNames);
+      throw new IllegalArgumentException("Unknown class: " + coqClassName + "\n" + 
+                                         fClassNames);
     }
     fMethodNames.put(javaName, new Triplet(new ClassType(coqClassName, coqPackageName),
                                  coqMethodName));
@@ -272,6 +276,7 @@ public class CamlDictionary implements Dictionary {
    * 
    * @see bico.Dictionary#addPackage(java.lang.String, int)
    */
+  @Override
   public void addPackage(final String javaName, final int coqPackageName) {
     fPackageNames.put(javaName, coqPackageName);
   }
@@ -305,6 +310,7 @@ public class CamlDictionary implements Dictionary {
     }
   }
 
+  @Override
   public Collection<Integer> getMethods() {
     final Collection<Integer> coll = new ArrayList<Integer>();
     for (Entry<String, Triplet> entry: fMethodNames.entrySet()) {
@@ -312,18 +318,20 @@ public class CamlDictionary implements Dictionary {
     }
     return coll;
   }
-
-  public String getClassName(int coqName) {
+  
+  @Override
+  public String getClassName(final int coqName) {
     for (Map.Entry<String, ClassType> entry: fClassNames.entrySet()) {
-      if (entry.getValue().getClazz() == coqName) {
+      if (entry.getValue().getClassNum() == coqName) {
         return entry.getKey();
       }
     }
     throw new IllegalArgumentException("Key not found: " + coqName + "\n" + 
                                        fClassNames);
   }
-
-  public String getMethodName(int coqName) {
+  
+  @Override
+  public String getMethodName(final int coqName) {
     for (Map.Entry<String, Triplet> entry: fMethodNames.entrySet()) {
       if (entry.getValue().fI2 == coqName) {
         return entry.getKey();
@@ -332,7 +340,8 @@ public class CamlDictionary implements Dictionary {
     return null;
   }
 
-  public String getPackageName(int coqName) {
+  @Override
+  public String getPackageName(final int coqName) {
     for (Map.Entry<String, Integer> entry: fPackageNames.entrySet()) {
       if (entry.getValue().intValue() == coqName) {
         return entry.getKey();
@@ -341,19 +350,21 @@ public class CamlDictionary implements Dictionary {
     return null;
   }
 
-  public int getClassFromMethod(int meth) {
+  @Override
+  public int getClassFromMethod(final int meth) {
     for (Map.Entry<String, Triplet> entry: fMethodNames.entrySet()) {
       if (entry.getValue().fI2 == meth) {
-        return entry.getValue().fI1.getClazz();
+        return entry.getValue().fI1.getClassNum();
       }
     }
     return 0;
   }
 
-  public int getPackageFromClass(int clzz) {
+  @Override
+  public int getPackageFromClass(final int clzz) {
     for (Map.Entry<String, ClassType> entry: fClassNames.entrySet()) {
-      if (entry.getValue().getClazz() == clzz) {
-        return entry.getValue().getPackage();
+      if (entry.getValue().getClassNum() == clzz) {
+        return entry.getValue().getPkgNum();
       }
     }
     return 0;

@@ -48,18 +48,17 @@ public class MakefileGenerator {
     try {
       final PrintStream out = new PrintStream(new FileOutputStream(mkfile));
 
-      final List<String> typeFiles = printCompileInstr(out, "Type", "_type");
-      final List<String> sigFiles = printCompileInstr(out, "Signature", "_signature");
-      final List<String> mainFiles = printCompileInstr(out, "Main", "");
-      final List<String> extraFiles = getExtraGeneratedFiles(out);
+      generatedFiles.addAll(printCompileInstr(out, "Type", "_type"));
+      generatedFiles.addAll(printCompileInstr(out, "Signature", "_signature"));
+      generatedFiles.addAll(printCompileInstr(out, "Main", ""));
+      generatedFiles.addAll(getExtraGeneratedFiles(out));
+      
+      
       out.println("all:  $(Extra)");
       out.println("$(Extra): $(Main)");
       out.println("$(Main): $(Signature)"); 
       out.println("$(Signature): $(Type)"); 
-      generatedFiles.addAll(typeFiles);
-      generatedFiles.addAll(sigFiles);
-      generatedFiles.addAll(mainFiles);
-      generatedFiles.addAll(extraFiles);
+
       out.println("\nclean:");
       out.print("\trm -f");
       for (String name: generatedFiles) {
@@ -79,7 +78,12 @@ public class MakefileGenerator {
   }
 
 
-  protected List<String> getExtraGeneratedFiles(PrintStream out) {
+  /**
+   * Writes the compilation instructions for the extra files.
+   * @param out the make file were to print the commands
+   * @return the list of files that are supposed to be generated
+   */
+  protected List<String> getExtraGeneratedFiles(final PrintStream out) {
     out.println("Extra= ");
     return new ArrayList<String>();
   }

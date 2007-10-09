@@ -272,7 +272,9 @@ public class Executor extends ABasicExecutor {
   }
 
 
-  public MakefileGenerator getMakefileGenerator(File file, String name, final List<ClassExecutor> treated) {
+  public MakefileGenerator getMakefileGenerator(final File file, 
+                                                final String name, 
+                                                final List<ClassExecutor> treated) {
     return new MakefileGenerator(file, name, treated);
   }
 
