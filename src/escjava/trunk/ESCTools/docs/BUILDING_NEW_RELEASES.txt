@@ -7,8 +7,7 @@ o Resynchronize with Subversion
 o Release builds (binary and source) 
   ESC_VERSION=2.0b3 make releases
 o Take release to another machine, unpack, install, and test.
-o Tag repository for new release.  E.g.,
-  svn copy escjava/trunk/ESCtools escjava/tags/escjava-2-0b3/ESCTools
+o Tag repository for new release e.g. svn copy trunk/ tags/escjava-2-0b2/ 
 o Upload to <products/opensource/archives> on release site
 o Announce to world
  + KindSoftware website
