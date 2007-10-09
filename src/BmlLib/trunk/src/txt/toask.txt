@@ -1,7 +1,11 @@
 [pl] pytania do Chrzaszcza na najblizsze spotkanie.
 
+- czy moge zalozyc, ze poczatek komentarza bedzie zawsze
+	na poczatku linii, a koniec komentarza na koncu linii?
+- czy mam korzystac z JavaClass, Method, czy z ClassGen,
+	MethodGen?
 - czy bedzie potrzebna funkcjonalnosc dodawania
-	i usuwania metod?
+	i usuwania metod (w bibliotece / edytorze)?
 - czy przejmowac sie wydajnoscia i kiedy?
 - czy BCConstantPool powinien byc kolekcja stalych, czy
 	dwoma zwyklymi (BCEL-owymi) constantPool-ami?

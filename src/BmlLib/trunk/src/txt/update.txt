@@ -43,4 +43,5 @@ This document describes changes in code required to extend
 4. To change display style:
 	- change IdisplayStyle interface,
 	- change tests (both classes),
-	- update CodeFragment.getKeyword.
+	- update CodeFragment.getKeyword,
+	- update grammar (BML.g3).

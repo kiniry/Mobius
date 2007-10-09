@@ -81,10 +81,15 @@ public final class OldTests {
 	private static String code;
 	
 	/**
+	 * Number of failed tests so far.
+	 */
+	private static int errc = 0;
+	
+	/**
 	 * A random stream.
 	 */
 	private static Random random;
-
+	
 	/**
 	 * @return random non-negative integer value.
 	 */
@@ -368,6 +373,7 @@ public final class OldTests {
 		" *      ((false |";
 		String change4 = "ad\n65:   ireturn\n\n/* \\requires false */\npublic static void main(String[] args)\n0";
 		bcc = createSampleClass();
+//		bcc.getMethod(0).setMspec(new MethodSpecification(bcc.getMethod(0)));
 		String code = bcc.printCode();
 		System.out.println(addLineNumbers(code));
 		System.out.println(xxx);
@@ -398,11 +404,11 @@ public final class OldTests {
 		cf.addChange(2527, 0, "(0<1) || ");
 		cf.addChange(2549, 4, "e && true) |");
 		cf.performChanges();
-		System.out.println(cf.toString());
 		cf = new CodeFragment(bcc, code);
 		System.out.println("### stage 1");
-		cf.modify(2535, 20, change1);
-		System.out.println(cf.toString());
+//		cf.modify(2535, 20, change1);
+		cf.addChange(302, 12, "false || false");
+		cf.performChanges();
 		if (!cf.isCorrect())
 			error("test 1: code replace failed!");
 //		cf = new CodeFragment(bcc, code);
@@ -474,7 +480,8 @@ public final class OldTests {
 		CodeFragment cf = new CodeFragment(bcc, code);
 		int cfrom = code.indexOf(from) + from.length();
 		int cto = code.indexOf(to, cfrom);
-		cf.modify(cfrom, cto - cfrom, newCode);
+		cf.addChange(cfrom, cto - cfrom, newCode);
+		cf.performChanges();
 		int h = cf.hash();
 		System.out.print("hash = " + h);
 		if (h == hash) {
@@ -483,12 +490,12 @@ public final class OldTests {
 			if (hash == -1) {
 				System.out.println(" (not set yet)");
 			} else {
+				errc++;
 				System.out.println(" (should be " + hash + ")");
 			}
 			MLog.mask = MLog.PNORMAL;
 			cf = new CodeFragment(bcc, code);
 			cf.modify(cfrom, cto - cfrom, newCode);
-			System.out.println(cf.toString());
 		}
 //		if (!cf.isCorrect())
 //			error("Test " + test_nr + ": code replace failed");
@@ -504,29 +511,35 @@ public final class OldTests {
 		System.out.println(code);
 		System.out.println(xxx);
 		System.out.println("length: " + code.length());
-		singleTest("~true", " && true || ~true) ||", -1);
-//		singleTest("\\class", "))", 810);
-//		singleTest("\\req", "| false", -1);
-//		singleTest("\\a", "~tr", 146);
-//		singleTest("~(~f", "e)", 50);
-//		singleTest("rt (tr", "ue) &", 169);
-//		singleTest("*    ~(~(~", "))", 505);
-//		singleTest(" *    ~(~f", "e)", 941);
-//		singleTest("~(~(~(~", "sse", 309);
-//		singleTest("/*", "*/", 629);
-//		singleTest(")\n/*", "*/", 145);
-//		singleTest("assert", "~(~", 295);
-//		singleTest("ldc", "~", 732);
-//		singleTest("requires", "true", 462);
-//		singleTest("res (", "e))", 985);
-//		singleTest("~(~false", "\\req", 785);
-//		singleTest("invariant", "requires", 82);
-//		singleTest("rt false", " && (", 301, "");
-//		singleTest("~(~(~(~", "\\a", 385, "false)))\n\\assert true\n * ");
-//		singleTest("(20)", "\n3:", 394, "\n/* \\assert false");
-//		singleTest("(20)", "\n3:", 354, "\n/* \\assert false */");
-//		singleTest("()\n", "\n0:", -1, "");
-//		singleTest("/*", "*/", -1, "");
+		errc = 0;
+		singleTest("~true", " && true || ~true) ||", 235);
+		singleTest("\\class", "))", 880);
+		singleTest("\\req", "| false", 379);
+		singleTest("\\a", "~tr", 41);
+		singleTest("~(~f", "e)", 900);
+		singleTest("rt (tr", "ue) &", 457);
+		singleTest("*    ~(~(~", "))", 900);
+		singleTest(" *    ~(~f", "e)", 143);
+		singleTest("~(~(~(~", "sse", 198);
+		singleTest("/*", "*/", 943);
+		singleTest(")\n/*", "*/", 679);
+		singleTest("assert", "~(~", 119);
+		singleTest("ldc", "~", 494);
+		singleTest("requires", "true", 561);
+		singleTest("res (", "e))", 738);
+		singleTest("~(~false", "\\req", 181);
+		singleTest("invariant", "requires", 567);
+		singleTest("rt false", " && (", 738, "");
+		singleTest("~(~(~(~", "\\a", 464, "false)))\n\\assert true\n * ");
+		singleTest("(20)", "\n3:", 638, "\n/* \\assert false");
+		singleTest("(20)", "\n3:", 254, "\n/* \\assert false */");
+		singleTest("()\n", "\n0:", 758, "");
+		singleTest("/*", "*/", 168, "");
+		if (errc > 0) {
+			System.out.println("FAILURES: " + errc + " tests failed!");
+		} else {
+			System.out.println("SUCCESS: all tests passed");
+		}
 	}
 	
 	/**
@@ -537,8 +550,8 @@ public final class OldTests {
 	public static void main(String[] args) {
 		try {
 //			addRemoveTest();
-			attributeSearchTest();
-//			attributeSearchTest2();
+//			attributeSearchTest();
+			attributeSearchTest2();
 //			pp_test();
 			System.out.println("done.");
 		} catch (Exception e) {
