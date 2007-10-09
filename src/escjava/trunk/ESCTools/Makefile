@@ -578,6 +578,7 @@ binary-release: build jars alldocs cleanup
 	cp ${ESCJ_SIMPLIFY_DIR}/Simplify-1.5.4* ${RELTEMP}
 #   The two readme files below are irrelevant for binary release
 #   cp README.first README.txt ${RELTEMP}
+	cd release-files; cp `ls | grep -v CVS` ${RELTEMP} 
 	-find ${RELTEMP} -name "*~" -exec rm -f {} \; > /dev/null 2>&1
 	-find ${RELTEMP} -name "*.svn*" -print | xargs rm -rf
 	cd ${RELTEMP}; tar cjvf ${RELDIR}/${RELTAR}.tbz *
