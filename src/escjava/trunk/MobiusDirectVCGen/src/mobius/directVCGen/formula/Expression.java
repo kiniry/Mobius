@@ -8,6 +8,7 @@ import escjava.sortedProver.Lifter.FnTerm;
 import escjava.sortedProver.Lifter.QuantVariable;
 import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
+import escjava.sortedProver.NodeBuilder.PredSymbol;
 import escjava.sortedProver.NodeBuilder.Sort;
 import escjava.tc.Types;
 import escjava.translate.UniqName;
@@ -47,7 +48,7 @@ public final class Expression {
 
   static {
     length = var("length", Num.sortInt);
-    Lookup.fieldsToDeclare.add(length);
+    //Lookup.fieldsToDeclare.add(length);
   }
   
   /**
@@ -301,7 +302,15 @@ public final class Expression {
   public static FnTerm sym(final String name, final Sort s) {
     return Formula.lf.symbolRef (name, s);
   }
+  public static FnTerm sym(final String name, Term [] args ) {
+    final Sort [] tab = new Sort[args.length];
+    for (int i = 0; i < tab.length; i++) {
+      tab[i] = args[i].getSort();
+    }
+    final PredSymbol ps = Formula.lf.mkPredSymbol(name, tab);
+    return Formula.lf.mkFnTerm(ps, args);
 
+  }
   /**
    * Return a variable representing a result, with its type
    * corresponding to the return type of the given method.

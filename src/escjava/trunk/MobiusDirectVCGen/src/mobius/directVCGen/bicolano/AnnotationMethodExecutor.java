@@ -6,13 +6,7 @@ import java.util.Vector;
 import javafe.ast.FormalParaDecl;
 import javafe.ast.FormalParaDeclVec;
 import javafe.ast.RoutineDecl;
-
-import org.apache.bcel.classfile.Method;
-import org.apache.bcel.generic.Type;
-
-import escjava.sortedProver.Lifter.QuantVariableRef;
-import escjava.sortedProver.Lifter.Term;
-
+import javafe.ast.TypeModifierPragma;
 import mobius.bico.Util.Stream;
 import mobius.bico.dico.MethodHandler;
 import mobius.bico.executors.ABasicExecutor;
@@ -20,21 +14,31 @@ import mobius.directVCGen.formula.Expression;
 import mobius.directVCGen.formula.Formula;
 import mobius.directVCGen.formula.Heap;
 import mobius.directVCGen.formula.Lookup;
-import mobius.directVCGen.formula.Num;
 import mobius.directVCGen.formula.Ref;
 import mobius.directVCGen.vcgen.struct.Post;
+
+import org.apache.bcel.classfile.Method;
+import org.apache.bcel.generic.ClassGen;
+import org.apache.bcel.generic.MethodGen;
+import org.apache.bcel.generic.Type;
+
+import escjava.ast.TagConstants;
+import escjava.sortedProver.Lifter.QuantVariableRef;
+import escjava.sortedProver.Lifter.Term;
 
 public class AnnotationMethodExecutor extends ABasicExecutor {
   /** the current routine (method) that is treated - esc java style. */
   private final RoutineDecl fRout;
   /** the current method (routine) that is treated - bcel style. */
-  private final Method fMeth;
+  private final MethodGen fMeth;
   
   /** the stream where to write the annotations. */
   private final Stream fAnnotOut;
+  /** the class from which the inspected method is taken. */
+  private ClassGen fClass;
 
   public AnnotationMethodExecutor(ABasicExecutor be, final Stream annotationOut, 
-                                  final Method met, final RoutineDecl rout) {
+                                  ClassGen clzz, final Method met, final RoutineDecl rout) {
     super(be);
     if (rout == null) {
       throw new NullPointerException();
@@ -43,7 +47,8 @@ public class AnnotationMethodExecutor extends ABasicExecutor {
       throw new NullPointerException();
     }
     fRout = rout;
-    fMeth = met;
+    fMeth = new MethodGen(met, clzz.getClassName(), clzz.getConstantPool());
+    fClass = clzz;
     fAnnotOut = annotationOut;
   }
 
@@ -75,6 +80,7 @@ public class AnnotationMethodExecutor extends ABasicExecutor {
                 " ,, " + namePost + ").\n");
 
     // assertion and assumption def
+    
     out.println("Definition " + nameAssertion + " := " +
                 AnnotationVisitor.getAssertion(out, fRout, fMeth) + ".");
     out.println("Definition " + nameAssumption + " :=" +
@@ -99,7 +105,7 @@ public class AnnotationMethodExecutor extends ABasicExecutor {
   private void doMethodPre(final String namePre) {
     final Stream out = getAnnotationOut();
     out.println("Definition mk_" + namePre + " := ");
-    final List<QuantVariableRef> list = mkArguments(fRout, fMeth);
+    final List<QuantVariableRef> list = mkArguments(fRout);
     
     String varsAndType = "";
     final String hname = Formula.generateFormulas(Heap.var).toString();
@@ -227,7 +233,7 @@ public class AnnotationMethodExecutor extends ABasicExecutor {
     out.println("let " + hname + " := (snd s0) " + " in");
     vars += hname;
     int count = 0;
-    for (QuantVariableRef qvr: mkArguments(fRout, fMeth)) {
+    for (QuantVariableRef qvr: mkArguments(fRout)) {
       final String vname = Formula.generateFormulas(qvr).toString();
       out.println("let " + vname + " := " +
                            "(do_lvget (fst s0) " + count++ + "%N)" + " in ");
@@ -257,7 +263,7 @@ public class AnnotationMethodExecutor extends ABasicExecutor {
     return vars;
   }
   
-  public static List<QuantVariableRef> mkOldArguments(final RoutineDecl rd, Method met) {
+  public static List<QuantVariableRef> mkOldArguments(final RoutineDecl rd, MethodGen met) {
     final List<QuantVariableRef> v = new Vector<QuantVariableRef>();
     final FormalParaDeclVec fpdvec = rd.args;
     if (!met.isStatic()) {
@@ -271,11 +277,12 @@ public class AnnotationMethodExecutor extends ABasicExecutor {
     return v;
   }
   
-  public static List<QuantVariableRef> mkArguments(final RoutineDecl rd, Method met) {
+  public static List<QuantVariableRef> mkArguments(final RoutineDecl rd) {
     final List<QuantVariableRef> v = new Vector<QuantVariableRef>();
     final FormalParaDeclVec fpdvec = rd.args;
-    if (!met.isStatic()) {
-      v.add(Ref.varThis);
+    
+    if ((rd.modifiers & TagConstants.STATIC) != 0) {
+      v.add(Ref.varThis); 
     }
     final FormalParaDecl[] args = fpdvec.toArray();
     for (FormalParaDecl fpd: args) {

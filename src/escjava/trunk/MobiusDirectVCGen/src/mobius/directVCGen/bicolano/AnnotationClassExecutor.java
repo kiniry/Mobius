@@ -77,7 +77,7 @@ public class AnnotationClassExecutor extends ClassExecutor {
       
       for (Method met: methods) {
         final AnnotationMethodExecutor ame = 
-            new AnnotationMethodExecutor(this, anOut, met, 
+            new AnnotationMethodExecutor(this, anOut, fClass, met, 
                                          MethodGetter.get(fSig, met));
         ame.start();
   

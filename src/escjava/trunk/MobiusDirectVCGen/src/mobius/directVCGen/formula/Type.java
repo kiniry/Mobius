@@ -78,6 +78,7 @@ public final class Type {
     else {
       String name = UniqName.type(type);
       if (Types.isReferenceType(type)) {
+        
         if (Types.toClassTypeSig(type) != null) {
           name = "(ClassType " + name.substring(2) + "Type.className)";
         }
@@ -93,7 +94,28 @@ public final class Type {
       return t;
     }
   }
-
+    
+  public static QuantVariableRef translateToName(final javafe.ast.Type type) {
+    QuantVariableRef t = types.get(type);
+    if (t != null) {
+      return t;
+    }
+    else {
+      String name = UniqName.type(type);
+      if (Types.isReferenceType(type)) {
+        if (Types.toClassTypeSig(type) != null) {
+          name =  name.substring(2) + "Type.className";
+        }
+        else {
+          name =  name.substring(2) + "Type.interfaceName";
+        }
+      }
+      t = Expression.rvar(name, Type.sort);
+      types.put(type, t);
+      revtyp.put(t, type);
+      return t;
+    }
+  }
   /**
    * Translate a type to a term which is a type in the target
    * representation language.
@@ -182,6 +204,13 @@ public final class Type {
    */
   public static Term javaLangArithmeticException() {
     return translate(Types.getJavaLang("ArithmeticException"));
+  }
+  
+  public static Term javaLangArithmeticExceptionName() {
+    return translateToName(Types.getJavaLang("ArithmeticException"));
+  }
+  public static Term javaLangNullPointerExceptionName() {
+    return translateToName(Types.getJavaLang("NullPointerException"));
   }
 
   /**

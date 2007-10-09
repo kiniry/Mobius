@@ -13,6 +13,7 @@ import javafe.ast.FieldAccess;
 import javafe.ast.FormalParaDecl;
 import javafe.ast.FormalParaDeclVec;
 import javafe.ast.InstanceOfExpr;
+import javafe.ast.MethodDecl;
 import javafe.ast.MethodInvocation;
 import javafe.ast.NewArrayExpr;
 import javafe.ast.NewInstanceExpr;
@@ -20,6 +21,7 @@ import javafe.ast.ObjectDesignator;
 import javafe.ast.UnaryExpr;
 import javafe.ast.VarInit;
 import javafe.ast.VarInitVec;
+import mobius.directVCGen.bicolano.AnnotationMethodExecutor;
 import mobius.directVCGen.formula.Bool;
 import mobius.directVCGen.formula.Expression;
 import mobius.directVCGen.formula.Heap;
@@ -28,6 +30,7 @@ import mobius.directVCGen.formula.Lookup;
 import mobius.directVCGen.formula.Num;
 import mobius.directVCGen.formula.Ref;
 import mobius.directVCGen.formula.Type;
+import mobius.directVCGen.vcgen.DirectVCGen;
 import mobius.directVCGen.vcgen.stmt.StmtVCGen;
 import mobius.directVCGen.vcgen.struct.Post;
 import mobius.directVCGen.vcgen.struct.VCEntry;
@@ -66,7 +69,24 @@ public class ExpressionVCGen extends BinaryExpressionVCGen {
   public Post methodInvocation(final MethodInvocation mi, final VCEntry entry) {
     final Post normalPost = Lookup.normalPostcondition(mi.decl);
     final Post excpPost = Lookup.getExceptionalPostcondition(mi.decl);
-    final Term pre = Lookup.precondition(mi.decl);
+    final Term pre;
+    if (DirectVCGen.fByteCodeTrick) {
+      final String name = getMethodName(mi.decl);
+      final List<QuantVariableRef> l = AnnotationMethodExecutor.mkArguments(mi.decl);
+      final Term[] tab = new Term[l.size() + 1];
+      tab[0] = Heap.var;
+      int i = 1;
+      for (QuantVariableRef qvr : l) {
+        tab[i] = qvr;
+        i++;
+      }
+      pre = Expression.sym(name + ".mk_pre", tab);
+      
+    }
+    else {
+      pre = Lookup.precondition(mi.decl);
+    }
+    
     final QuantVariableRef newThis = Expression.rvar(Ref.sort);
 
     // first: the exceptional post
@@ -91,6 +111,11 @@ public class ExpressionVCGen extends BinaryExpressionVCGen {
   }
 
 
+
+  private String getMethodName(MethodDecl decl) {
+    
+    return decl.parent.id + "Annotations." + decl.id;
+  }
 
   public Post instanceOf(final InstanceOfExpr x, final VCEntry entry) {
     Post p = entry.fPost;
@@ -155,7 +180,7 @@ public class ExpressionVCGen extends BinaryExpressionVCGen {
                                Logic.and(Logic.implies(Logic.not(Logic.equalsNull(obj)), 
                                                        entry.fPost.getPost()), 
                                              Logic.implies(Logic.equalsNull(obj), 
-                                         getNewExcpPost(Type.javaLangNullPointerException(), 
+                                         getNewExcpPost(Type.javaLangNullPointerExceptionName(), 
                                                         entry))));
         return getPre(eod.expr, entry);
   
@@ -202,7 +227,7 @@ public class ExpressionVCGen extends BinaryExpressionVCGen {
     entry.fPost = new Post(Logic.forall(newThis, 
                                        Logic.forall(newheap, 
                                                     Logic.implies(Heap.newObject(Heap.var, 
-                                                                       Type.translate(ni.type),
+                                                                       Type.translateToName(ni.type),
                                                                        newheap, newThis), 
                                                           entry.fPost.subst(Heap.var, 
                                                                             newheap)))));
@@ -219,7 +244,7 @@ public class ExpressionVCGen extends BinaryExpressionVCGen {
 
   public Post fieldAccess(final FieldAccess field, final VCEntry entry) {
     final QuantVariable f = Expression.var(field.decl);
-    Lookup.fieldsToDeclare.add(f);
+    //Lookup.fieldsToDeclare.add(f);
     if (Modifiers.isStatic(field.decl.modifiers)) {
       return new Post(entry.fPost.substWith(Heap.select(Heap.var, f)));
     }

@@ -35,8 +35,6 @@ public class Lookup {
   /** list of symbols to declare. */
   public static List<FnSymbol> symToDeclare = new Vector<FnSymbol>();
 
-  /** the list of fields to declare. */
-  public static Set<QuantVariable> fieldsToDeclare = new HashSet<QuantVariable>();
 
   /** map containing RoutineDecl as keys and Terms (the precondition) as value. **/
   public static Map<RoutineDecl, Term> preconditions = new HashMap<RoutineDecl, Term>();

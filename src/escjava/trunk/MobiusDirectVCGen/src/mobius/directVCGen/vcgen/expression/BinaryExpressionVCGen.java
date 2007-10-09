@@ -130,7 +130,7 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn {
                                                                          Num.value(0))), 
                                                   post.fPost.substWith(formula)),
                                     Logic.implies(Logic.equals(rvar, Num.value(0)),
-                                            getNewExcpPost(Type.javaLangArithmeticException(), 
+                                            getNewExcpPost(Type.javaLangArithmeticExceptionName(), 
                                                            post))));
 
     post.fPost = rPost;
@@ -174,7 +174,7 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn {
       final FieldAccess field = (FieldAccess) left;
       final ObjectDesignator od = field.od;
       final QuantVariableRef f = Expression.rvar(field.decl);
-      Lookup.fieldsToDeclare.add(f.qvar);
+      //Lookup.fieldsToDeclare.add(f.qvar);
       switch(od.getTag()) {
         case TagConstants.EXPROBJECTDESIGNATOR: {
           // can be null

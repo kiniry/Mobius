@@ -5,10 +5,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
 import java.util.List;
-import java.util.Set;
 
 import mobius.directVCGen.formula.Formula;
-import escjava.sortedProver.Lifter.QuantVariable;
 import escjava.sortedProver.NodeBuilder.FnSymbol;
 import escjava.sortedProver.NodeBuilder.STerm;
 
@@ -42,6 +40,17 @@ public class CoqFile {
                               name + suffix)));
     fBase = configDir.toString();
   }
+  
+  /**
+   * Construct an object used to print a proof obligation in a file.
+   * The name is the default one ("sourceVc").
+   * @param configDir the library directory
+   * @param baseDir the directory where the generated file should be put 
+   * @throws FileNotFoundException if opening the file fails
+   */
+  public CoqFile(final File configDir, final File baseDir) throws FileNotFoundException {
+     this (configDir, baseDir, "sourceVc");
+  }
 
   /**
    * Write the proof obligation represented by the
@@ -67,11 +76,9 @@ public class CoqFile {
    * Write the definitions for coq: basically it writes class
    * definitions; fields to declare; and special magickal symbols.
    * @param symToDeclare Special relation symbols to declare
-   * @param fieldsToDeclare the fields to declare
    * @param classNames the class names to declare
    */
   public void writeDefs(final List<FnSymbol> symToDeclare, 
-                        final Set<QuantVariable> fieldsToDeclare, 
                         final List<String> classNames) {
     
     // source

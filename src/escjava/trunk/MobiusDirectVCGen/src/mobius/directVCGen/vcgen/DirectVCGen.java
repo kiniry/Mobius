@@ -15,12 +15,17 @@ import javafe.ast.Visitor;
  * @author J. Charles (julien.charles@inria.fr)
  */
 public class DirectVCGen extends Visitor {
+  /** special tricks to ease the correspondance.  */
+  public static final boolean fByteCodeTrick = true;
+  
   /** the base directory which contains the libraries. */
   private final File fBasedir;
   /** the directory representing the packages. */
   private final File fPkgsdir;
   /** the directory representing the class. */
   private File fClassDir;
+  
+
 
   /**
    * Build a new vc gen, ready to generate new verification conditions!

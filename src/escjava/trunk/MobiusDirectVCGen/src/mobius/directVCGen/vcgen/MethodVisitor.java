@@ -92,6 +92,7 @@ public final class MethodVisitor extends DirectVCGen {
       // TODO Auto-generated catch block
       e1.printStackTrace();
     }
+    Term all = null;
     for (Term t: fVcs) {
       final String name = "goal" + num++;
       try {
@@ -100,14 +101,31 @@ public final class MethodVisitor extends DirectVCGen {
         fos.println(t);
         fos.close();
         final CoqFile cf = new CoqFile(getBaseDir(), getPkgsDir(), name);
-        cf.writeDefs(Lookup.symToDeclare, Lookup.fieldsToDeclare, Type.getAllTypes());
+        cf.writeDefs(Lookup.symToDeclare,  Type.getAllTypes());
         cf.writeProof(Formula.generateFormulas(t));
-
+        if (all == null) {
+          all = t;
+        }
+        else {
+          all = Logic.and(t, all);
+        }
       }
       catch (IOException e) {
         e.printStackTrace();
       }
     }
+    
+    // write the file
+
+    try {
+      final CoqFile cf = new CoqFile(getBaseDir(), getPkgsDir());
+      cf.writeDefs(Lookup.symToDeclare,  Type.getAllTypes());
+      cf.writeProof(Formula.generateFormulas(all));
+    } 
+    catch (FileNotFoundException e) {
+      e.printStackTrace();
+    }
+
   }
 
 
@@ -122,6 +140,7 @@ public final class MethodVisitor extends DirectVCGen {
                                Lookup.getExceptionalPostcondition(fMeth));
     final StmtVCGen dvcg = new StmtVCGen(fMeth);
     final Post pre = (Post)x.accept(dvcg, post);
+    
     final Term po = Post.implies(Lookup.precondition(fMeth), pre);
     final FormalParaDeclVec vec = fMeth.args;
 

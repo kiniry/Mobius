@@ -20,6 +20,9 @@ import org.apache.bcel.classfile.LineNumber;
 import org.apache.bcel.classfile.LineNumberTable;
 import org.apache.bcel.classfile.LocalVariable;
 import org.apache.bcel.classfile.Method;
+import org.apache.bcel.generic.LineNumberGen;
+import org.apache.bcel.generic.LocalVariableGen;
+import org.apache.bcel.generic.MethodGen;
 
 import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
@@ -41,7 +44,7 @@ public final class AnnotationVisitor extends ABasicVisitor {
 
   
   /** the currently treated method. */
-  private final Method fMet;
+  private final MethodGen fMet;
   
   /** the arguments of the method. */
   private List<QuantVariableRef> fArgs;
@@ -63,10 +66,10 @@ public final class AnnotationVisitor extends ABasicVisitor {
    */
   private AnnotationVisitor(final Stream out, 
                             final RoutineDecl decl, 
-                            final Method met) {
+                            final MethodGen met) {
     fOut = out;
     fMet = met;
-    fArgs = AnnotationMethodExecutor.mkArguments(decl, met);
+    fArgs = AnnotationMethodExecutor.mkArguments(decl);
 
   }
 
@@ -101,9 +104,9 @@ public final class AnnotationVisitor extends ABasicVisitor {
    
       // let's do a third thing
       final int lineNum = Location.toLineNumber(x.getStartLoc());
-      final LineNumber line = getLineNumberFromLine(lineNum);
+      final LineNumberGen line = getLineNumberFromLine(lineNum);
       final Term t = fAnnot.getInvariant(x);
-      final List<LocalVariable> list = getValidVariables(getLineNumbers(lineNum));
+      final List<LocalVariableGen> list = getValidVariables(getLineNumbers(lineNum));
       final List<QuantVariableRef> flat = flattenLocals();
       final String invName = "invariant" + fInvCounter++; 
       buildMker(invName, t, flat);
@@ -111,9 +114,9 @@ public final class AnnotationVisitor extends ABasicVisitor {
       if (list.size() != flat.size()) {
         System.out.println(list + " " + fLocalVars);
       }
-      res = "(PCM.update " + res + " " + line.getStartPC() + "%N" +
+      res = "(PCM.update " + res + " " + line.getLineNumber().getStartPC() + "%N" +
                      " (" + invName + ",," +  
-                            fMet.getCode().getAttributes() + "%nat))";
+                            fMet.getInstructionList().size() + "%nat))";
     }
     
     final int max = x.childCount();
@@ -222,12 +225,12 @@ public final class AnnotationVisitor extends ABasicVisitor {
 
 
 
-  public List<LocalVariable> getValidVariables(List<LineNumber> lines) {
-    final List<LocalVariable> res = new Vector<LocalVariable>();
-    final LocalVariable[] lvt = fMet.getCode().getLocalVariableTable().getLocalVariableTable();
+  public List<LocalVariableGen> getValidVariables(List<LineNumberGen> lines) {
+    final List<LocalVariableGen> res = new Vector<LocalVariableGen>();
+    final LocalVariableGen[] lvt = fMet.getLocalVariables();
     int skip = fArgs.size(); // we skip the n first variables
    
-    for (LocalVariable local: lvt) {
+    for (LocalVariableGen local: lvt) {
       if (skip > 0) {
         skip--;
       }
@@ -238,10 +241,13 @@ public final class AnnotationVisitor extends ABasicVisitor {
     }
     return res;
   }
-  private boolean belongs(LocalVariable local, List<LineNumber> lines) {
-    for (LineNumber line: lines) {
-      if ((line.getStartPC() >= local.getStartPC()) &&
-          (line.getStartPC() <= local.getStartPC() + local.getLength())) {
+  private boolean belongs(LocalVariableGen local, List<LineNumberGen> lines) {
+     
+    for (LineNumberGen line: lines) {
+      final int linePc = line.getLineNumber().getStartPC();
+      final int localPc = local.getStart().getPosition();
+      if ((linePc >= localPc) &&
+          (line.getLineNumber().getStartPC() <= localPc + local.getStart().getPosition())) {
         return true;
       }
     }
@@ -254,17 +260,16 @@ public final class AnnotationVisitor extends ABasicVisitor {
 
 
 
-  public LineNumber getLineNumberFromLine(int lineNum) {
-    final LineNumberTable lnt = fMet.getCode().getLineNumberTable();
-    final LineNumber [] tab = lnt.getLineNumberTable();
+  public LineNumberGen getLineNumberFromLine(int lineNum) {
+    final LineNumberGen [] tab = fMet.getLineNumbers();
     if (tab.length == 0) {
       return null;
     }
-    LineNumber min = tab[0];
-    int oldspan = Math.abs(min.getLineNumber() - lineNum);
+    LineNumberGen min = tab[0];
+    int oldspan = Math.abs(min.getSourceLine() - lineNum);
     
-    for (LineNumber line: tab) {
-      final int span = (Math.abs(line.getLineNumber() - lineNum));
+    for (LineNumberGen line: tab) {
+      final int span = (Math.abs(line.getSourceLine() - lineNum));
       if (span  > 0) {
         if (span < oldspan) {
           min = line;
@@ -279,13 +284,13 @@ public final class AnnotationVisitor extends ABasicVisitor {
     fLocalVars.getLast().add(Expression.rvar(x.decl));
     return o;
   }
-  public List<LineNumber> getLineNumbers(int lineNum) {
-    final List<LineNumber> res = new Vector<LineNumber>();
-    final LineNumber first = getLineNumberFromLine(lineNum);
-    final LineNumberTable lnt = fMet.getCode().getLineNumberTable();
-    final LineNumber [] tab = lnt.getLineNumberTable();
+  public List<LineNumberGen> getLineNumbers(int lineNum) {
+    final List<LineNumberGen> res = new Vector<LineNumberGen>();
+    final LineNumberGen first = getLineNumberFromLine(lineNum);
+    final LineNumberGen [] tab = fMet.getLineNumbers();
+//    final LineNumber [] tab = lnt.getLineNumberTable();
     
-    for (LineNumber line: tab) {
+    for (LineNumberGen line: tab) {
       if (line.getLineNumber() == first.getLineNumber()) {
         res.add(line);
       }
@@ -293,7 +298,7 @@ public final class AnnotationVisitor extends ABasicVisitor {
     return res;
   }
   
-  public static String getAssertion(final Stream out, final RoutineDecl decl, final Method met) {
+  public static String getAssertion(final Stream out, final RoutineDecl decl, final MethodGen met) {
     final String res = (String) decl.accept(new AnnotationVisitor(out, decl, met),  
                          assertionEmpty);
     return res;

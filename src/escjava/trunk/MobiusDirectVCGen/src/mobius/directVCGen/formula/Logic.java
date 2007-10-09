@@ -50,7 +50,7 @@ public final class Logic {
    * @return a well formed binary op
    */
   private static Term logicBinaryOp(final Term f1, final Term f2, final PredSymbol sym) {
-    if ((f1.getSort() != sort || f2.getSort() != sort)) {
+    if ((!f1.getSort().equals(sort) || !f2.getSort().equals(sort))) {
       throw new IllegalArgumentException("Bad type. Expecting predicates, " +
                                          "found: " + f1.getSort() + " and " + f2.getSort());
     }
