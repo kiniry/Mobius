@@ -1,0 +1,15 @@
+#!/bin/bash
+
+## This is a sample script file to run escjava2 in the context of the
+## CVS directory hierarchy
+
+## You need to set the following two environment variables according
+## to your environment (see the discussion in README.first), and then
+## invoke the escj tool, passing on any command-line arguments
+
+unset ESCTOOLS_RELEASE
+export ESCTOOLS_RELEASE
+export ESCTOOLS_ROOT=$HOME/ESCTools/ESCTools
+export SIMPLIFY=Simplify-1.5.4.linux
+
+$ESCTOOLS_ROOT/Escjava/escj $@

@@ -1,0 +1,16 @@
+o Synchronize all workspaces (svn update)
+o Update ChangeLog
+o Full build and alltests. 'make build alltests'
+o Update the version number: the current version is 2.0b2
+o Update release-files/RELEASE_NOTES.txt
+o Resynchronize with Subversion
+o Release builds (binary and source) 
+  ESC_VERSION=2.0b2 make releases
+o Take release to another machine, unpack, install, and test.
+o Tag repository for new release.  E.g.,
+  svn copy trunk/ESCtools tags/escjava-2-0b2/ESCTools
+o Upload to release site
+o Announce to world
+ + All JMLSpecs mailing lists
+ + ESC/Java developer list
+ + FreshMeat

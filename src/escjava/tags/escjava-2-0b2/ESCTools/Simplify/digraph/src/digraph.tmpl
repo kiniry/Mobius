@@ -1,0 +1,24 @@
+% Copyright (C) 1993 Digital Equipment Corporation
+% All rights reserved.
+% See the file COPYRIGHT for a full description.
+%
+% Last modified on Mon Oct 14 09:53:42 PDT 1996 by heydon  
+%      modified on Tue Oct 24 15:27:20 PDT 1995 by detlefs 
+%      modified on Mon Sep 20 12:26:41 PDT 1993 by kalsow 
+
+%
+%  Quake functions to instantiate a generic table.
+%
+
+readonly proc Digraph (nodeName, edgeName, node, edge) is
+  local graph = nodeName & edgeName & "DiGraph"
+  build_generic_intf (graph, "DiGraph", [node, edge], VISIBLE)
+  build_generic_impl (graph, "DiGraph", [node, edge])
+end
+
+readonly proc digraph (nodeName, edgeName, node, edge) is
+  local graph = nodeName & edgeName & "DiGraph"
+  build_generic_intf (graph, "DiGraph", [node, edge], HIDDEN)
+  build_generic_impl (graph, "DiGraph", [node, edge])
+end
+

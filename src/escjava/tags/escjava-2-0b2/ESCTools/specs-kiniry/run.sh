@@ -1,0 +1,1 @@
+CLASSPATH=/usr/local/Java/JML-5.0/bin/jmlruntime.jar:$CLASSPATH ~/JML/ESCTools/release-files/escj -counterexample -suggest -specs /Users/kiniry/JML/ESCTools/specs-kiniry/:/usr/local/Java/JML-5.0/specs/:/usr/local/Java/JML-5.0/: java/lang/String.java -routine String

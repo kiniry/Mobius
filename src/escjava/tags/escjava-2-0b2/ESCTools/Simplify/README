@@ -1,0 +1,81 @@
+Copyright (c) 2002 Hewlett-Packard Company
+
+The files in this directory contain the Modula-3 sources for the
+Simplify theorem prover.  The remainder of this file describes the
+steps for building it.
+
+Untarring the tar file produces four directories:
+   ./cgi-utils
+   ./digraph
+   ./prover
+   ./simplify
+which are to be built in that order with m3build.
+
+Below is one recipe we have successfully used under Linux with
+the pm3 compiler.
+
+(Note: As of July 2002, the PM3 compiler is available at
+  http://www.inference.phy.cam.ac.uk/ear23/m3/
+  When installing this compiler, you will need the following modules:
+  m3back, m3-base, m3doc, m3driver, m3front, m3linker, m3middle,
+  m3objfile, m3quake, m3templates, mtex, set, table-list, tcp, ui,
+  and X11 .)
+
+
+The following recipe assumes that the PM3 compiler has been installed
+in /usr/local/pm3, so `which m3build' yields '/usr/local/pm3/bin/m3build' .
+
+% tar zxvf Simplify.tar 
+% setenv PATH ${PATH}:/usr/local/pm3/bin
+% cd cgi-utils
+% m3build
+% su -c 'm3ship'
+% cd ../digraph
+% m3build
+% su -c 'm3ship'
+% cd ../prover
+% m3build
+% su -c 'm3ship'
+% cd ../simplify
+% m3build
+% su -c 'm3ship'
+% cd ..
+
+The file ./simplify/LINUXLIBC6/Simplify will then contain the
+executable.  (The final m3ship will also place it in /usr/local/pm3/bin.)
+
+
+On other platforms you may need to edit the m3makefiles
+
+  ./cgi-utils/src/m3makefile
+  ./digraph/src/m3makefile
+  ./digraph/tests/DiGraphTest/src/m3makefile
+  ./digraph/tests/TopSortTest/src/m3makefile
+  ./prover/src/gens/m3makefile
+  ./prover/src/m3makefile
+  ./prover/test/src/m3makefile
+  ./simplify/src/m3makefile
+
+and comment out the line
+
+  option("standalone", "T") 
+
+or replace it with the line
+
+  build_standalone()
+
+Some test cases can be found in ./simplify/test and run with the
+command
+
+% make test
+
+You will first need to edit ./simplify/test/Makefile to start with a
+line identifying the version of Simplify to use.  Running the tests
+compares the results with the results of the previous run.  To restore
+the released version of the test results, copy
+  ./simplify/test/test.out.master
+to
+  ./simplify/test/test.out
+
+
+

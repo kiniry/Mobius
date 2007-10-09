@@ -1,0 +1,278 @@
+#!/bin/bash
+# $Id$
+# Copyright 2001, Compaq Computer Corporation
+# Copyright 2003 University of Nijmegen
+# Copyright 2003-2005 David R. Cok, P.Chalin
+# Modified 2007, Mobius Project, Systems Research Group, University College Dublin
+
+############################################################################
+## Required variables:
+##	ESCTOOLS_RELEASE (if present, presumes a release; if not defined,
+##                    presumes running within CVS directories)
+##	ESCTOOLS_ROOT    (if not defined, tries to guess from the location
+##                    of the current file)
+##	SIMPLIFY         (if not defined, guesses for some platforms)
+##	CLASSPATH        (defaults to "."; set it to point to any java or
+##                    spec files that escjava is acting on)
+
+## Optional variables:
+##      ESC_SPECS        (path for system specification files)
+##	ESCJ_VERBOSE     (turns on some debugging)
+##	BOOTCLASSPATH    (rarely needed - changes the system files being used)
+##	ESCJ_STDARGS     (the set of always used arguments to escjava)
+##	JAVA             (the VM to use)
+##	JAVA_VM_FLAGS    (the set of flags to supply to the VM)
+##	ESC_REMOTE_DEBUG (if on, adds the debug flags to JAVA_VM_FLAGS)
+##	JAVA_VM_DEBUG_FLAGS (the set of debug flags - a default set is already
+##                       defined)
+##      XMLPROVERPATH    (path for prover based stylesheets to be used by the 
+##                        VC generator)
+##
+## The following are set based on the structure of a standard release (if
+## ESCTOOLS_RELEASE is defined) or otherwise on the structure of the CVS files
+##      ESCJ_SIMPLIFY_DIR  (The directory containing the Simplify executable,
+##                          as named by the SIMPLIFY variable)
+##	ESC_CLASSPATH      (The class path needed to invoke escjava)
+##                     
+
+############################################################################
+
+if [ "$1"x = "-gui"x ]; then
+    ## Run GUI
+    MAIN=escjava.gui.GUI
+    shift
+else
+    MAIN=escjava.Main
+fi
+
+if [ -z "$ESCTOOLS_RELEASE" ]; then
+    ## Check if this looks like a release even if ESCTOOLS_RELEASE is not set
+    if [ -e "$NAME" ]; then
+	ROOT=`dirname "$NAME"`
+    elif [ -e $0 ]; then
+	ROOT=`dirname "$0"`
+    fi
+    if [ -n "$ROOT" ]; then
+	if [ -e $ROOT/README.release ]; then
+	    ## We are running an executable from a release, so set 
+	    ## ESCTOOLS_RELEASE
+	    ESCTOOLS_RELEASE=$ROOT
+	    ## Don't echo anything here because that would confuse the automated tests - dcochran
+	    ## echo "Warning: Guessing ESCTOOLS_RELEASE = $ESCTOOLS_RELEASE"
+	fi
+    fi
+fi
+
+## Check that if ESCTOOLS_RELEASE is defined, it looks like a release directory
+if [ -n "$ESCTOOLS_RELEASE" ]; then
+    if [ ! -e $ESCTOOLS_RELEASE/escj ]; then
+	echo "Warning: $ESCTOOLS_RELEASE does not appear to be a release"
+    fi
+    if [ ! -e $ESCTOOLS_RELEASE/README.release ]; then
+	echo "Warning: $ESCTOOLS_RELEASE does not appear to be a release"
+    fi
+    unset ESCTOOLS_ROOT
+fi
+
+## If ESCTOOLS_RELEASE is not defined, try to guess ESCTOOLS_ROOT if it is not
+## defined
+if [ -z "$ESCTOOLS_RELEASE" ]; then
+    if [ -z "$ESCTOOLS_ROOT" ]; then
+	if [ -e "$NAME" ]; then
+	    ESCTOOLS_ROOT=`dirname "$NAME"`/..
+	    echo "Warning: Guessing ESCTOOLS_ROOT = $ESCTOOLS_ROOT"
+	elif [ -e "$0" ]; then
+	    ESCTOOLS_ROOT=`dirname "$0"`/..
+	    echo "Warning: Guessing ESCTOOLS_ROOT = $ESCTOOLS_ROOT"
+	fi
+	if [ -z "$ESCTOOLS_ROOT" ]; then
+	    echo "Error: ESCTOOLS_ROOT is not set and guessing was unsuccessful."
+	    exit 2
+	fi
+    fi
+fi
+
+## Check that if ESCTOOLS_ROOT is defined, it looks like a Subversion hierarchy
+if [ -n "$ESCTOOLS_ROOT" ] && [ -n "$ESCTOOLS_RELEASE" ]; then
+    if [ ! -d $ESCTOOLS_ROOT/Escjava ]; then
+	echo "Warning: $ESCTOOLS_ROOT does not appear to be a legitimate root"
+    fi
+    if [ ! -e $ESCTOOLS_ROOT/Makefile ]; then
+	echo "Warning: $ESCTOOLS_ROOT does not appear to be a legitimate root"
+    fi
+fi
+
+############ Setting ESCJ_SIMPLIFY_DIR, if necessary
+
+if [ -z "$ESCJ_SIMPLIFY_DIR" ]; then
+    if [ -n "$ESCTOOLS_RELEASE" ]; then
+        ESCJ_SIMPLIFY_DIR=${ESCTOOLS_RELEASE}
+    else
+	ESCJ_SIMPLIFY_DIR=${ESCTOOLS_ROOT}/Escjava/release/master/bin
+    fi
+fi
+
+############ Setting BCEL_LIB, if necessary
+
+if [ -z "$BCEL_LIB" ]; then
+     BCEL_LIB=${ESCTOOLS_ROOT}/Utils/BCEL/bcel-5.2/bcel-5.2.jar
+fi
+
+############ Setting XMLRPC_LIB, if necessary
+
+if [ -z "$XMLRPC_LIB" ]; then
+    XMLRPC_LIB=${ESCTOOLS_ROOT}/xmlrpc.jar
+fi
+
+
+############ Setting SIMPLIFY
+
+if [ -z "$SIMPLIFY" ]; then
+    case "$OSTYPE" in
+	linux*)   SIMPLIFY=Simplify-1.5.4.linux	;;
+	darwin*)  SIMPLIFY=Simplify-1.5.4.macosx	;;
+	cygwin)  SIMPLIFY=Simplify-1.5.4.exe	;;
+	solaris) SIMPLIFY=Simplify-1.5.4.solaris	;;
+	*)	;;
+    esac
+
+    if [ -n "$COMSPEC" ]; then
+	SIMPLIFY=Simplify-1.5.4.exe; 
+    fi
+    if [ -n "$SIMPLIFY" ]; then
+	echo "Warning: Guessing SIMPLIFY = $SIMPLIFY"
+    fi
+fi
+
+if [ -z "$SIMPLIFY" ]; then
+    echo "Error: The SIMPLIFY environment variable must be set to an appropriate value (the name of, not path to, an executable in $ESCJ_SIMPLIFY_DIR )"
+    exit 1
+fi
+
+if [ -n "$COMSPEC" ]; then
+    ESCJ_SIMPLIFY=`cygpath -p -m ${ESCJ_SIMPLIFY_DIR}/${SIMPLIFY}`
+else
+    ESCJ_SIMPLIFY=${ESCJ_SIMPLIFY_DIR}/${SIMPLIFY}
+fi
+    
+## (Optional) If the OS does not supply the class path for Java system files,
+## or you want to override it, then supply a definition for BOOTCLASSPATH
+if [ -z "$BOOTCLASSPATH" ]; then
+    JBIN=""
+else
+    if [ -n "$COMSPEC" ]; then
+	JBIN="-bootclasspath `cygpath -p -m ${BOOTCLASSPATH}`"
+    else
+        JBIN="-bootclasspath ${BOOTCLASSPATH}"
+    fi
+fi
+
+## (Optional) Supply a definition for JAVA if you want to use a different VM
+: ${JAVA:=java}
+export JAVA
+
+# (Optional) If no standard arguments are set, set some escjava defaults for now.
+if [ -z "$ESCJ_STDARGS" ]; then
+    ESCJ_STDARGS="-nowarn Deadlock"
+fi
+
+# CLASSPATH is the path on which source files and specs referenced by
+# the files on the command-line will be found.  Include here the
+# classpath for the files on the command-line, source or class files
+# referenced by them, and the paths to any spec files that are needed.
+# The Java system files are automatically included.  Default is the
+# value of CLASSPATH set in the environment.  If that is not set, the
+# default is the current directory.
+: ${CLASSPATH:=.}
+export CLASSPATH
+
+if [ -z "$ESC_SPECS" ]; then
+    if [ -n "$ESCTOOLS_RELEASE" ]; then
+	ESC_SPECS=$ESCTOOLS_RELEASE/escspecs.jar
+    else
+	ESC_SPECS=$ESCTOOLS_ROOT/specs
+    fi
+fi
+
+## (Optional) Set this to whatever flags the VM needs (empty by default)
+: ${JAVA_VM_FLAGS=""}
+export JAVA_VM_FLAGS
+
+## (Optional) Define ESC_REMOTE_DEBUG to something non-empty to provide 
+## the flags for debugging a run of escjava
+: ${JAVA_VM_DEBUG_FLAGS:="-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,address=8000,server=y,suspend=y"}
+export JAVA_VM_DEBUG_FLAGS
+
+if [ -n "$ESC_REMOTE_DEBUG" ]; then
+    JAVA_VM_FLAGS="$JAVA_VM_DEBUG_FLAGS $JAVA_VM_FLAGS"
+fi
+
+## (optional) Define ESCJ_VERBOSE to something non-empty to see the 
+## arguments being supplied to the executable
+
+##########################################################################
+
+## This is the path needed to run escjava
+## If it is not set, use the path suitable for working in CVS or in the
+## release
+if [ -z "$ESC_CLASSPATH" ]; then
+    if [ -n "$ESCTOOLS_RELEASE" ]; then
+	ESC_CLASSPATH=${ESCTOOLS_RELEASE}/esctools2.jar:${XMLRPC_LIB}:${BCEL_LIB}
+    else
+	ESC_CLASSPATH=${ESCTOOLS_ROOT}/Escjava/classfiles:${ESCTOOLS_ROOT}/Javafe/classfiles:${ESCTOOLS_ROOT}/Utils:${XMLRPC_LIB}:${BCEL_LIB}
+    fi
+fi
+
+if [ -n "$COMSPEC" ]; then
+    ESC_CLASSPATH=`cygpath -p -m ${ESC_CLASSPATH}`
+fi
+
+## Simplify settings
+: ${PROVER_KILL_TIME:=300}
+: ${PROVER_CC_LIMIT:=10}
+: ${PROVER_MAX_FNUR:=700} ### Ticket #34
+export PROVER_KILL_TIME PROVER_CC_LIMIT PROVER_MAX_FNUR
+
+# ESC/Java's class and spec path.
+if [ -n "$COMSPEC" ]; then 
+    ## Need to convert to forward slashes.  However, -m presumes the input
+    ## is a unix-style path, which is incorrect.  So we first convert from
+    ## windows to unix and then from unix to windows-with-forward-slashes.
+    ## It is necessary to have Windows style drive letters and ; for separators
+    ## but the script below balks at backslashes
+    if echo ${CLASSPATH} | grep cygdrive > /dev/null; then
+	CLASSPATH=`cygpath -p -u ${CLASSPATH}`
+	CLASSPATH=`cygpath -p -m ${CLASSPATH}`
+    fi
+    if echo ${ESC_SPECS} | grep cygdrive > /dev/null; then
+	ESC_SPECS=`cygpath -p -u ${ESC_SPECS}`
+	ESC_SPECS=`cygpath -p -m ${ESC_SPECS}`
+    fi
+fi
+
+if [ -n "$ESCJ_VERBOSE" ]; then
+    if [ "$ESCJ_VERBOSE" -eq 2 ]; then
+	echo "=================================================================="
+	echo " ESCJ_SIMPLIFY_DIR = ${ESCJ_SIMPLIFY_DIR}";
+	echo " SIMPLIFY = ${SIMPLIFY}";
+	echo " ESCJ_SIMPLIFY = ${ESCJ_SIMPLIFY}";
+    fi
+    echo "=================================================================="
+    echo "Executing:";
+    echo "${JAVA} ${JAVA_VM_FLAGS}";
+    echo "  -Dsimplify=${ESCJ_SIMPLIFY}";
+    echo "  -classpath ${ESC_CLASSPATH}";
+    echo "  " ${MAIN} ;
+    echo "  " ${JBIN} ;
+    echo "  -classpath ${CLASSPATH}";
+    echo "  -specs ${ESC_SPECS}";
+    echo "  ${ESCJ_STDARGS}";
+    echo "  $*";
+    echo "=================================================================="
+fi
+
+${JAVA} ${JAVA_VM_FLAGS} -DXMLPROVERPATH="${XMLPROVERPATH}" -Dsimplify="${ESCJ_SIMPLIFY}" \
+    -classpath "${ESC_CLASSPATH}" ${MAIN} \
+    ${JBIN} -classpath "${CLASSPATH}" -specs "${ESC_SPECS}" ${ESCJ_STDARGS} $*
+
+# End of $RCSflie$
