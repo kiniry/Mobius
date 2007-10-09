@@ -2,8 +2,8 @@
 <classpath>
 	<classpathentry kind="src" output="bin" path="src"/>
 	<classpathentry kind="src" output="samples" path="samples"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/bico"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/ESCTools"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/bico"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

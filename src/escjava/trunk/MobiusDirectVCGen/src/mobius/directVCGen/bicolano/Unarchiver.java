@@ -89,7 +89,7 @@ public class Unarchiver {
         f.getParentFile().mkdirs();
 
       }
-      if (name.startsWith("defs_")) {
+      if (name.startsWith("defs_types")) {
         // special case for prelude file
         inflatPrelude(basedir, bico, entry);
         continue;

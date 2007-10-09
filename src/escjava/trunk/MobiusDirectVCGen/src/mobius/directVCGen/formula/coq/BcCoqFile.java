@@ -21,14 +21,15 @@ public class BcCoqFile extends CoqFile {
     // bytecode
     final PrintStream out = getOut();
     writeHeader();
-    out.println("Load \"defs_tac.v\"");
+    out.println("Load \"defs_tac.v\".");
     out.println("Lemma l :\n" +  
       "  interp_swp BicoMapAnnotations.anno_prog BicoMapProgram.program\n" + 
       "    (certifiedMethod BicoMapAnnotations.anno_prog " +
                                     classname + "Signature." + meth + " " +
                                     classname + "." + meth + "Method " + 
                                     classname + "Annotations." + meth + ".spec).");
-    out.println("Proof with solve.\n");
+    out.println("Proof with solve.");
+    out.println("   prettyfy.\n");
     out.println("Qed.");
   }
 }

@@ -239,3 +239,16 @@ Ltac solve := myred;simpl_hyps;simpl_eq;subst;auto.
      rewrite H in H2;
      elim (H1 H2)
    end.
+   
+Ltac prettyfy :=
+match goal with 
+[ |- interp_swp _ _ (certifiedMethod ?anno ?sig ?meth ?meth_annot) ] =>
+   let x := fresh "x" in (
+   let Heq := fresh "Heq" in (
+   pose (x:=  (certifiedMethod anno sig meth meth_annot)); vm_compute in x;
+   let res := (eval vm_compute in x) in
+   assert (Heq: (certifiedMethod anno sig meth meth_annot)  = res);
+   [ vm_cast_no_check (refl_equal x) | idtac];
+   rewrite Heq;
+   clear Heq x))
+end; my_simpl. 

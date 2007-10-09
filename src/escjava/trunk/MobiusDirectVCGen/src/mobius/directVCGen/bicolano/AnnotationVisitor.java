@@ -34,7 +34,7 @@ public final class AnnotationVisitor extends ABasicVisitor {
   /** the Coq type of the assertions. */
   private static final String assertionType = "(InitState -> LocalState -> list Prop)";
   /** the Coq representation of an empty assertion. */
-  private static final String assertionEmpty = "(@PCM.empty (" + assertionType + " " +
+  private static final String assertionEmpty = "(PCM.empty (" + assertionType + " " +
                                                               "** nat))";
   /** the decorator that add the annotations or read the annotations from a node. */
   private final AnnotationDecoration fAnnot = AnnotationDecoration.inst;
@@ -42,10 +42,17 @@ public final class AnnotationVisitor extends ABasicVisitor {
   
   /** the currently treated method. */
   private final Method fMet;
+  
+  /** the arguments of the method. */
   private List<QuantVariableRef> fArgs;
+  
+  /** the local variables. */
   private LinkedList<List<QuantVariableRef>> fLocalVars = new LinkedList<List<QuantVariableRef>> ();
+  
+  /** the output file. */
   private final Stream fOut;
   
+  /** the invariants counter. */
   private int fInvCounter = 1;
   
   /**
@@ -54,7 +61,9 @@ public final class AnnotationVisitor extends ABasicVisitor {
    * @param decl 
    * @param met the method to inspect
    */
-  private AnnotationVisitor(Stream out, RoutineDecl decl, final Method met) {
+  private AnnotationVisitor(final Stream out, 
+                            final RoutineDecl decl, 
+                            final Method met) {
     fOut = out;
     fMet = met;
     fArgs = AnnotationMethodExecutor.mkArguments(decl, met);
@@ -66,9 +75,9 @@ public final class AnnotationVisitor extends ABasicVisitor {
   @Override
   public /*@non_null*/ Object visitBlockStmt(final /*@non_null*/ BlockStmt x, final Object o) {
     fLocalVars.addLast(new Vector<QuantVariableRef>());
-    visitASTNode(x, o);
+    final Object res = visitASTNode(x, o);
     fLocalVars.removeLast();
-    return o;
+    return res;
   }
   
 
@@ -104,9 +113,7 @@ public final class AnnotationVisitor extends ABasicVisitor {
       }
       res = "(PCM.update " + res + " " + line.getStartPC() + "%N" +
                      " (" + invName + ",," +  
-                            fMet.getCode().getLength() + "%nat))";
-     
-
+                            fMet.getCode().getAttributes() + "%nat))";
     }
     
     final int max = x.childCount();
@@ -157,9 +164,9 @@ public final class AnnotationVisitor extends ABasicVisitor {
       
       vars += " " + vname;
     }
-    fOut.println("Definition " + name + " (s0:InitState) (s:LocalState) := ");
+    fOut.println("Definition " + name + " (s0:InitState) (s:LocalState): list Prop := ");
     fOut.incTab();
-    fOut.println(lets + "  mk_" + name + " " +  vars + ".");
+    fOut.println("(" + lets + "  mk_" + name + " " +  vars + "):: nil.");
     fOut.decTab();
   }
 
@@ -287,8 +294,9 @@ public final class AnnotationVisitor extends ABasicVisitor {
   }
   
   public static String getAssertion(final Stream out, final RoutineDecl decl, final Method met) {
-    return (String) decl.accept(new AnnotationVisitor(out, decl, met),  
-                                       assertionEmpty);  
+    final String res = (String) decl.accept(new AnnotationVisitor(out, decl, met),  
+                         assertionEmpty);
+    return res;
   }
   
 }

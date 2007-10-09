@@ -78,7 +78,7 @@ public class AnnotationMethodExecutor extends ABasicExecutor {
     out.println("Definition " + nameAssertion + " := " +
                 AnnotationVisitor.getAssertion(out, fRout, fMeth) + ".");
     out.println("Definition " + nameAssumption + " :=" +
-                  " (@PCM.empty Assumption).");
+                  " (PCM.empty Assumption).");
     out.println("Definition local_spec: LocMethSpec := (" + nameAssertion + " ,, " + 
                 nameAssumption + ").\n");
     
