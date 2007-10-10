@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
@@ -18,12 +19,14 @@ import mobius.directVCGen.formula.Heap;
 import mobius.directVCGen.formula.Logic;
 import mobius.directVCGen.formula.Lookup;
 import mobius.directVCGen.formula.Type;
+import mobius.directVCGen.formula.Util;
 import mobius.directVCGen.formula.coq.BcCoqFile;
 import mobius.directVCGen.formula.coq.CoqFile;
 import mobius.directVCGen.vcgen.stmt.StmtVCGen;
 import mobius.directVCGen.vcgen.struct.Post;
 import mobius.directVCGen.vcgen.struct.VCEntry;
 import escjava.sortedProver.Lifter.QuantVariable;
+import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
 import escjava.tc.Types;
 
@@ -139,31 +142,43 @@ public final class MethodVisitor extends DirectVCGen {
     final VCEntry post = new VCEntry(Lookup.normalPostcondition(fMeth),
                                Lookup.getExceptionalPostcondition(fMeth));
     final StmtVCGen dvcg = new StmtVCGen(fMeth);
-    final Post pre = (Post)x.accept(dvcg, post);
+    final Post wp = (Post)x.accept(dvcg, post);
+    final List<Term> vcs = new ArrayList<Term>(); 
+    vcs.add(wp.getPost());
+    vcs.addAll (dvcg.getVcs());
     
-    final Term po = Post.implies(Lookup.precondition(fMeth), pre);
-    final FormalParaDeclVec vec = fMeth.args;
+    final List<QuantVariableRef> args = Lookup.getInst().getPreconditionArgs(fMeth);
+    for (Term t: vcs) {
+      final  Term pre;
+      if (DirectVCGen.fByteCodeTrick) {
+        final String name = Util.getMethodName(fMeth);
+        final List<QuantVariableRef> l = Lookup.getInst().getPreconditionArgs(fMeth);
+        final Term[] tab = l.toArray(new Term [l.size()]);
+        pre = Expression.sym(name + ".mk_pre", tab);
+          
 
-    final QuantVariable[] qvs = new QuantVariable[vec.size() + 1];
-    for (int i = 0; i < vec.size(); i++) {
-      final FormalParaDecl dec = vec.elementAt(i);
-      final QuantVariable qv = Expression.var(dec);
-      qvs[i] = qv;
+      }
+      else {
+        pre = Logic.implies(Lookup.precondition(fMeth), t);
+      }
+
+      t = Logic.implies(pre, t);
+      for (Term vars: args) {
+        final QuantVariableRef qvr = (QuantVariableRef) vars;
+        t = t.subst(Expression.old(qvr), qvr);
+      }
+      fVcs.add(t);
     }
-    qvs [qvs.length - 1] = Heap.varPre.qvar;
-    //po = Logic.forall(qvs, po);
-    //System out.println(po);
+    addVarDecl(args);
+    
 
-    fVcs.add(po);
-    fVcs.addAll (dvcg.getVcs());
-    addVarDecl(qvs);
   }
 
   /**
    * Add the given variables to all the current vcs.
    * @param qvs the variables to quantify over the vcs
    */
-  public void addVarDecl(final QuantVariable[] qvs) {
+  public void addVarDecl(final List<QuantVariableRef> qvs) {
     final List<Term> oldvcs = fVcs;
     fVcs = new Vector<Term>();
     for (Term t: oldvcs) {

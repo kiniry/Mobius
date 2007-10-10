@@ -30,6 +30,7 @@ import mobius.directVCGen.formula.Lookup;
 import mobius.directVCGen.formula.Num;
 import mobius.directVCGen.formula.Ref;
 import mobius.directVCGen.formula.Type;
+import mobius.directVCGen.formula.Util;
 import mobius.directVCGen.vcgen.DirectVCGen;
 import mobius.directVCGen.vcgen.stmt.StmtVCGen;
 import mobius.directVCGen.vcgen.struct.Post;
@@ -71,8 +72,8 @@ public class ExpressionVCGen extends BinaryExpressionVCGen {
     final Post excpPost = Lookup.getExceptionalPostcondition(mi.decl);
     final Term pre;
     if (DirectVCGen.fByteCodeTrick) {
-      final String name = getMethodName(mi.decl);
-      final List<Term> l = Lookup.getInst().getPreconditionArgs(mi.decl);
+      final String name = Util.getMethodName(mi.decl);
+      final List<QuantVariableRef> l = Lookup.getInst().getPreconditionArgs(mi.decl);
       final Term[] tab = l.toArray(new Term [l.size()]);
       pre = Expression.sym(name + ".mk_pre", tab);
       
@@ -106,10 +107,7 @@ public class ExpressionVCGen extends BinaryExpressionVCGen {
 
 
 
-  private String getMethodName(MethodDecl decl) {
-    
-    return decl.parent.id + "Annotations." + decl.id;
-  }
+
 
   public Post instanceOf(final InstanceOfExpr x, final VCEntry entry) {
     Post p = entry.fPost;

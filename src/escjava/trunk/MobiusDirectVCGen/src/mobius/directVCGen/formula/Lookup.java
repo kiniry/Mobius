@@ -12,7 +12,6 @@ import javafe.ast.RoutineDecl;
 import javafe.ast.TypeDecl;
 import mobius.directVCGen.vcgen.struct.Post;
 import escjava.ast.Modifiers;
-import escjava.ast.TagConstants;
 import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
 
@@ -48,11 +47,11 @@ public class Lookup {
   public static Map<TypeDecl, Term> constraints = new HashMap<TypeDecl, Term>();
   
   /** the argument lists of each precondition. */
-  private final Map<RoutineDecl, List<Term>> fPreArgs = 
-    new HashMap<RoutineDecl, List<Term>>(); 
+  private final Map<RoutineDecl, List<QuantVariableRef>> fPreArgs = 
+    new HashMap<RoutineDecl, List<QuantVariableRef>>(); 
   /**  the argument lists of each precondition without the heap. */
-  private final Map<RoutineDecl, List<Term>> fPreArgsWithoutHeap = 
-    new HashMap<RoutineDecl, List<Term>>(); 
+  private final Map<RoutineDecl, List<QuantVariableRef>> fPreArgsWithoutHeap = 
+    new HashMap<RoutineDecl, List<QuantVariableRef>>(); 
   
   /**
    * Returns the FOL Term representation of the precondition of method m.
@@ -150,8 +149,8 @@ public class Lookup {
   public void computePreconditionArgs() {
     if (fPreArgs.isEmpty()) {
       for (RoutineDecl rd: preconditions.keySet()) {
-        final List<Term> args = mkArguments(rd);
-        final LinkedList<Term> argsWithoutHeap = new LinkedList<Term>();
+        final List<QuantVariableRef> args = mkArguments(rd);
+        final LinkedList<QuantVariableRef> argsWithoutHeap = new LinkedList<QuantVariableRef>();
         argsWithoutHeap.addAll(args);
         argsWithoutHeap.removeFirst();
         fPreArgs.put(rd, args);
@@ -160,10 +159,10 @@ public class Lookup {
     }
   }
   
-  public List<Term> getPreconditionArgs(final RoutineDecl m) {
+  public List<QuantVariableRef> getPreconditionArgs(final RoutineDecl m) {
     return fPreArgs.get(m);
   }
-  public List<Term> getPreconditionArgsWithoutHeap(final RoutineDecl m) {
+  public List<QuantVariableRef> getPreconditionArgsWithoutHeap(final RoutineDecl m) {
     return fPreArgsWithoutHeap.get(m);
   }
   /**
@@ -178,8 +177,8 @@ public class Lookup {
            
   }
   
-  private static List<Term> mkArguments(final RoutineDecl rd) {
-    final List<Term> v = new Vector<Term>();
+  private static List<QuantVariableRef> mkArguments(final RoutineDecl rd) {
+    final List<QuantVariableRef> v = new Vector<QuantVariableRef>();
     final FormalParaDeclVec fpdvec = rd.args;
     v.add(Heap.var);
     if (Modifiers.isStatic(rd.modifiers)) {

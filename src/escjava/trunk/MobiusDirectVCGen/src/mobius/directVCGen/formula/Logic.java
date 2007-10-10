@@ -1,18 +1,14 @@
 package mobius.directVCGen.formula;
 
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Properties;
+import java.util.List;
 import java.util.Set;
 
 import mobius.directVCGen.formula.jmlTranslator.struct.GlobalProperties;
 import mobius.directVCGen.formula.jmlTranslator.struct.MethodProperties;
-
-import javafe.ast.GenericVarDecl;
-import javafe.ast.VariableAccess;
-
-import escjava.sortedProver.Lifter;
 import escjava.sortedProver.NodeBuilder;
 import escjava.sortedProver.Lifter.FnTerm;
 import escjava.sortedProver.Lifter.QuantTerm;
@@ -326,7 +322,25 @@ public final class Logic {
     return Formula.lf.mkQuantTerm(true, new QuantVariable [] {v.qvar}, f, null, null);
   }
   
-  
+  /**
+   * Creates a universal binding for several vars from the formula f.
+   * @param v the variable to bind
+   * @param f the formula which is the body of the forall
+   * @return the forall construct newly created
+   */
+  public static QuantTerm forall(final List<QuantVariableRef> v, final Term f) {
+
+    if (f.getSort() != sort) {
+      throw new IllegalArgumentException("Bad type when creating forall, " +
+                                         "found: " + f.getSort());
+    }
+    
+    List<QuantVariable> vars = new ArrayList<QuantVariable>();
+    for (QuantVariableRef qvr: v) {
+      vars.add(qvr.qvar);
+    }
+    return Logic.forall(vars.toArray(new QuantVariable [vars.size()]), f);
+  } 
   /**
    * Creates a universal binding for several vars from the formula f.
    * @param v the variable to bind

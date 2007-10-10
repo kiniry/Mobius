@@ -21,7 +21,7 @@ public class BcCoqFile extends CoqFile {
     // bytecode
     final PrintStream out = getOut();
     writeHeader();
-    out.println("Load \"defs_tac.v\".");
+
     out.println("Lemma l :\n" +  
       "  interp_swp BicoMapAnnotations.anno_prog BicoMapProgram.program\n" + 
       "    (certifiedMethod BicoMapAnnotations.anno_prog " +
@@ -30,7 +30,7 @@ public class BcCoqFile extends CoqFile {
                                     classname + "Annotations." + meth + ".spec).");
     out.println("Proof with solve.");
     out.println("   prettyfy.");
-    out.println("   intros; repeat (split; intros).\n");
+    out.println("   intros; repeat (split; intros); cleanstart.\n");
     out.println("Qed.");
   }
 }

@@ -108,7 +108,7 @@ public class AnnotationMethodExecutor extends ABasicExecutor {
   private void doMethodPre(final String namePre) {
     final Stream out = getAnnotationOut();
     out.println("Definition mk_" + namePre + " := ");
-    final List<Term> list = Lookup.getInst().getPreconditionArgs(fRout);
+    final List<QuantVariableRef> list = Lookup.getInst().getPreconditionArgs(fRout);
     
     String varsAndType = "";
 
@@ -139,7 +139,7 @@ public class AnnotationMethodExecutor extends ABasicExecutor {
     final Stream out = getAnnotationOut();
     // definition of the mk method
     out.println("Definition mk_" + namePost + " := ");
-    final List<Term> list = Lookup.getInst().getPreconditionArgsWithoutHeap(fRout);
+    final List<QuantVariableRef> list = Lookup.getInst().getPreconditionArgsWithoutHeap(fRout);
     
     String varsAndType = "";
     

@@ -60,7 +60,7 @@ public class CoqFile {
   public void writeProof(final STerm term) {
     fOut.println("Lemma l:\n" + term + ".");
     fOut.println("Proof.");
-    fOut.println("   intros; repeat (split; intros).\n\nQed.");
+    fOut.println("   intros; repeat (split; intros); cleanstart.\n\nQed.");
   }
 
   /**
@@ -81,22 +81,6 @@ public class CoqFile {
     
     // source
     writeHeader();
-    
-    
-    fOut.println();
-//    for (FnSymbol sym : symToDeclare) {
-//      fOut.print("Variable " + sym.name + ": ");
-//      final STerm [] terms = Formula.generateTypes(sym.argumentTypes);
-//      for (STerm t: terms) {
-//        final String str = t.toString();
-//        fOut.print(str + " -> ");
-//      }
-//      fOut.println(Formula.generateType(sym.retType) + ".");
-//    }
-
-    fOut.println();
-    
-    fOut.println("Open Local Scope Z_scope.");
     
 
   }
@@ -121,6 +105,8 @@ public class CoqFile {
     fOut.println("Require Import defs_types.");
     fOut.println("Import BicoMapAnnotations P Mwp.");
     fOut.println();
+    fOut.println("Load \"defs_tac.v\".");
+    fOut.println("Open Local Scope Z_scope.");
   }
   
   /**

@@ -252,3 +252,16 @@ match goal with
    rewrite Heq;
    clear Heq x))
 end; my_simpl. 
+Ltac cleanstart :=
+repeat match goal with
+[ H: OperandStack.t |- _ ] => clear H
+end;
+repeat match goal with
+[ H: Heap.t |- _ ] => (clear H)
+end;
+repeat match goal with
+[ H: LocalVar.t |- _ ] => (clear H)
+end;
+repeat match goal with
+[ H: Int.t |- _ ] => (clear H)
+end.

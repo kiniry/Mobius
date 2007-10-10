@@ -121,9 +121,9 @@ public final class AnnotationVisitor extends ABasicVisitor {
         System.out.println(list + " " + fLocalVars);
       }
       
-      res = "(PCM.update " + res + " " + line.getInstruction().getPosition() + "%N" +
-                     " (" + invName + ",," +  
-                            fMet.getInstructionList().size() + "%nat))";
+//      res = "(PCM.update " + res + " " + line.getInstruction().getPosition() + "%N" +
+//                     " (" + invName + ",," +  
+//                            fMet.getInstructionList().size() + "%nat))";
       final InstructionHandle ih = findLastInstruction(lineList);
       res = "(PCM.update " + res + " " + ih.getPosition() + "%N" +
                     " (" + invName + ",," +  
@@ -144,24 +144,47 @@ public final class AnnotationVisitor extends ABasicVisitor {
   private InstructionHandle findLastInstruction(List<LineNumberGen> list) {
     final InstructionHandle baseih = list.get(list.size() - 1).getInstruction();
     InstructionHandle ih = baseih.getNext();
-    while (ih != baseih) {
-      if (ih.getInstruction() instanceof BranchInstruction) {
-
-        final BranchInstruction bi =  (BranchInstruction) ih.getInstruction();
-        for (LineNumberGen line : list) {
-          line.containsTarget(bi.getTarget());
-          return ih.getPrev();
-        }
+    
+    return ih;
+    // first we find the first instruction 'not on this line'
+//    boolean ofthisline = true; 
+//    while (ofthisline == true) {
+//      System.out.println(ih + "???");
+//      ofthisline = false; 
+//      for (LineNumberGen line : list) {
+//        
+//        ofthisline |= line.containsTarget(ih);
+//      }
+//      ih = ih.getNext();
+//    }
+//    
+//    while (ofthisline == false) {
+//      System.out.println(ih + "???");
+//      ofthisline = false; 
+//      for (LineNumberGen line : list) {
+//        ofthisline |= line.containsTarget(ih);
+//      }
+//      ih = ih.getNext();
+//    }
+//    return ih.getPrev();
+//    while (ih != baseih) {
+//      if (ih.getInstruction() instanceof BranchInstruction) {
+//
+//        final BranchInstruction bi =  (BranchInstruction) ih.getInstruction();
+//        for (LineNumberGen line : list) {
+//          line.containsTarget(bi.getTarget());
+//          return ih.getPrev();
+//        }
 //        System.out.println(baseih + "???" + ih + " ??"  + 
 //                           baseih.getTargeters()[0] + 
 //                           list.containsTarget(bi.getTarget()));
-        if (bi.getTarget().equals(baseih) || bi.getTarget().equals(baseih.getNext())) {
-          return ih.getPrev();
-        }
-      }    
-      ih = ih.getNext();
-    }
-    return ih;
+//        if (bi.getTarget().equals(baseih) || bi.getTarget().equals(baseih.getNext())) {
+//          return ih.getPrev();
+//        }
+//      }    
+//      ih = ih.getNext();
+//    }
+//    return ih;
   }
 
 
