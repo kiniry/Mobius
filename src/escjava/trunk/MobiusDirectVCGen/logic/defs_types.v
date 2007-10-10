@@ -50,6 +50,16 @@ Definition le_bool (v1: Int.t) (v2: Int.t): bool :=
 Definition lt_bool (v1: Int.t) (v2: Int.t): bool :=
   Zlt_bool (Int.toZ v1) (Int.toZ v2).
 
-Variable inv: Heap.t -> value -> type -> Prop.
-Variable isAlive: Heap.t -> value -> Prop.
-Variable isFieldOf: Heap.t -> value -> value -> Prop.
+Definition isAlive (heap: Heap.t) (val: value) : Prop :=
+  Heap.typeof heap val <> None.
+
+
+(*  
+ *  Here, we should put all information about invariants in it
+ *  Let's assume for the moment that all invariants are always
+ *  True 
+ *)
+Definition inv (heap:Heap.t) (val: value) (typ: type) : Prop := 
+  True.
+
+Variable assignPred: Heap.t -> Heap.t -> value -> value -> Prop.

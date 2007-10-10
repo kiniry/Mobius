@@ -7,6 +7,7 @@ import java.util.Properties;
 import java.util.Set;
 
 import mobius.directVCGen.formula.jmlTranslator.struct.GlobalProperties;
+import mobius.directVCGen.formula.jmlTranslator.struct.MethodProperties;
 
 import javafe.ast.GenericVarDecl;
 import javafe.ast.VariableAccess;
@@ -562,16 +563,21 @@ public final class Logic {
 
   /**
    * @param heap the current heap
+   * @param heap_pre the old heap
    * @param targetVar the object containing fieldVar
-   * @param fieldVar field of object targetVar
-   * @return A term expressing the field "fieldVar" is of object "targetVar"
+   * @param locVar location
+   * @return A term used for assignable clauses
    */
-  public static Term isFieldOf(final QuantVariableRef heap, final QuantVariableRef targetVar, final QuantVariableRef fieldVar) {
+  public static Term assignablePred(final QuantVariableRef heap, final QuantVariableRef heap_pre, final QuantVariableRef targetVar, final QuantVariableRef locVar) {
     if (heap.getSort() != Heap.sort) {
       throw new IllegalArgumentException("Type of the first param should be heap (" + 
                                          Heap.sort + "), found: " + heap.getSort());
     }
-    return Formula.lf.mkFnTerm(Formula.lf.symIsFieldOf, new Term [] {heap, targetVar, fieldVar});
+    if (heap_pre.getSort() != Heap.sort) {
+      throw new IllegalArgumentException("Type of the second param should be heap (" + 
+                                         Heap.sort + "), found: " + heap.getSort());
+    }
+    return Formula.lf.mkFnTerm(Formula.lf.symAssignPred, new Term [] {heap, heap_pre, targetVar, locVar});
   }
 
   /**
@@ -580,18 +586,20 @@ public final class Logic {
    * @param o Parameter object also containing a list of modifiable types.
    * @return A Term expressing the check described above.
    */
-  public static Term isAssignable(final  Term targetVar, final QuantVariableRef fieldVar, final Object o) {
+  public static Term isAssignable(final QuantVariableRef l, final Object o) {
+    final MethodProperties prop = (MethodProperties) o;
     Term t1 = null;
     Term t2 = null;
-    final Set assignSet = (HashSet<QuantVariableRef[]>) ((Properties)o).get("assignableSet");
+    final Set assignSet = (HashSet<QuantVariableRef[]>) prop.fAssignableSet;
     final Iterator iter = assignSet.iterator();
     
     while (iter.hasNext()) {
       final QuantVariableRef[] setVar = (QuantVariableRef[]) iter.next();
-      // FIXME jgc: here there is a type mistake fieldVar.qvar is supposed to be the name of the field, not a variable ref or fieldVar if you prefer
-      //t1 = Logic.equals(Heap.loc(Heap.var, targetVar, fieldVar.qvar), Heap.loc(Heap.var, setVar[0], setVar[1].qvar));
+      // FIXME jgc: here there is a type mistake fieldVar.qvar is supposed to be
+      // the name of the field, not a variable ref or fieldVar if you prefer
+       t1 = Logic.equals(l, Heap.loc(Heap.var, setVar[0], setVar[1].qvar));
       // FIXME claudia/ Hermann : fix this!
-      t1 = Logic.equals(fieldVar, setVar[1]);
+      // t1 = Logic.equals(fieldVar, setVar[1]);
       if (t2 == null) {
         t2 = t1;
       }

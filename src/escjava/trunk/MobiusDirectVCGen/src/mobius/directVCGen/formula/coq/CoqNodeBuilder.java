@@ -523,7 +523,7 @@ public class CoqNodeBuilder extends EscNodeBuilder {
    */
   @Override
   //TODO: cbr: change body of this method. copied out of buildDynSelect
-  public SRef buildDynLoc(final SMap heap, final SRef obj, final SRef field) {
+  public SRef buildDynLoc(final SMap heap, final SRef obj, final SAny field) {
     final CRef addr = new CRef("Heap.DynamicField", new STerm [] {getLoc(obj), field});
     return new CRef("get", new STerm[] {heap, addr});
   }
@@ -728,8 +728,8 @@ public class CoqNodeBuilder extends EscNodeBuilder {
   
   
   
-  public SPred buildIsFieldOf(SMap map, SRef obj, SAny field) {
-    return new CPred("isFieldOf", new STerm [] {map, obj, field});
+  public SPred buildAssignPred(SMap map, SMap map_pre, SRef target, SRef loc) {
+    return new CPred("assignPred", new STerm [] {map, map_pre, target, loc});
   }
   
 

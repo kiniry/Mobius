@@ -340,8 +340,9 @@ public class JmlVisitor extends BasicJMLTranslator {
   @Override
   public final Object visitCondExprModifierPragma(final /*@non_null*/ CondExprModifierPragma x, final Object o) {
     final MethodProperties prop = ((MethodProperties) o);
-    
-    if (x.getTag() == TagConstants.ASSIGNABLE) {
+    final int tag = x.getTag();
+    if (tag == TagConstants.ASSIGNABLE | tag == TagConstants.MODIFIABLE
+        | tag == TagConstants.MODIFIES) {
       if (x.expr instanceof FieldAccess) {
         
         final FieldAccess var = (FieldAccess) x.expr;
@@ -947,31 +948,20 @@ public class JmlVisitor extends BasicJMLTranslator {
    */
   public void doAssignable(final Object o) {
     final MethodProperties prop = (MethodProperties) o;
-    
-    
     if (prop.fNothing || !prop.fAssignableSet.isEmpty()) {
-      
-      final QuantVariableRef targetVar = Expression.rvar(Ref.sort); 
-      final QuantVariableRef fieldVar = Expression.rvar(Ref.sort);
-                  // FIXME: Why sortRef is not available?
-      final Term equalsTerm = 
-          // FIXME jgc: here there is a type mistake fieldVar.qvar 
-          // is supposed to be the name of the field, 
-          // not a variable ref or fieldVar if you prefer
-          //  Logic.equals(Heap.select(Heap.varPre, (Term) targetVar, fieldVar.qvar), 
-            //         Heap.select(Heap.var, (Term) targetVar, fieldVar.qvar)); 
-                        //gibt noch kein any
-        Logic.True();
-      final QuantVariable[] vars = {targetVar.qvar, fieldVar.qvar}; 
-      Term assigTerm = Logic.not(Logic.isAlive(Heap.varPre, targetVar));
+      final QuantVariableRef target = Expression.rvar(Ref.sort);
+      final QuantVariableRef loc = Expression.rvar(Ref.sort);
+      final QuantVariable[] vars = {target.qvar, loc.qvar};
+      Term t;
       if (!prop.fAssignableSet.isEmpty()) {
-        assigTerm = Logic.or(assigTerm, 
-                             Logic.isAssignable((Term) targetVar, 
-                                                fieldVar, o));       
+        t = Logic.implies(Logic.isAssignable(loc, o), 
+                          Logic.assignablePred(Heap.var, Heap.varPre, target, loc));
+      } 
+      else {
+        t = Logic.assignablePred(Heap.var, Heap.varPre, target, loc);
       }
-      assigTerm = Logic.or(assigTerm, equalsTerm);
-      assigTerm = Logic.implies(Logic.isFieldOf(Heap.var, targetVar, fieldVar), assigTerm);
-      final Term forAllTerm = Logic.forall(vars, assigTerm);
+      
+      final Term forAllTerm = Logic.forall(vars, t);
       addToPostcondition(forAllTerm, o);
       Lookup.addExceptionalPostcondition(prop.fMethod, forAllTerm);
     } 

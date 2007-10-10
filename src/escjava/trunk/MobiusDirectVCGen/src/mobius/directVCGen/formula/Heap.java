@@ -125,7 +125,8 @@ public final class Heap {
                             final QuantVariable var) {
     final Term loc = Formula.lf.mkFnTerm(Formula.lf.symDynLoc, 
                                       new Term[] {heap, obj, Expression.rvar(var)});
-    return valueToSort(loc, var.type);
+    //return valueToSort(loc, var.type);
+    return loc;
   }
   
 
