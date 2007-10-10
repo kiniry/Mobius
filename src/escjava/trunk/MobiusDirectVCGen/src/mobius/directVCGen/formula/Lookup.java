@@ -153,6 +153,7 @@ public class Lookup {
         final List<Term> args = mkArguments(rd);
         final LinkedList<Term> argsWithoutHeap = new LinkedList<Term>();
         argsWithoutHeap.addAll(args);
+        argsWithoutHeap.removeFirst();
         fPreArgs.put(rd, args);
         fPreArgsWithoutHeap.put(rd, argsWithoutHeap);
       }
