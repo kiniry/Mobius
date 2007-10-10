@@ -1,5 +1,3 @@
-/** Public domain. */
-
 package freeboogie.tc;
 
 import java.util.HashMap;

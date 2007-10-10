@@ -2,7 +2,6 @@ This template generates java classes for the normal classes.
 
 \normal_classes{\file{\ClassName.java}
 /**
-  Public domain.
   This class is generated automatically from normal_classes.tpl. 
   Do not edit.
  */

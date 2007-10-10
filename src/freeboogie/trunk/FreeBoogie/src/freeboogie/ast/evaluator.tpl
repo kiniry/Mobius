@@ -8,7 +8,6 @@ by the return type for each type of node.
 
 \file{Evaluator.java}
 /** 
-  Public domain. 
   This file is generated from evaluator.tpl. Do not edit.
 */
 package freeboogie.ast;

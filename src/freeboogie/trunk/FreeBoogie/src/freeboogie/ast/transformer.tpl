@@ -1,6 +1,5 @@
 \file{Transformer.java}
 /**
-  Public domain.
   This file was generated from transformer.tpl. Do not edit.
  */
 package freeboogie.ast;

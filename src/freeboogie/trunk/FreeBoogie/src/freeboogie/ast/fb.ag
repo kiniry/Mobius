@@ -1,9 +1,6 @@
 // This is the abstract grammar for FreeBoogie used to generate
 // the AST. See also the template (*.tpl) files.
 
-// TODO: there is some repetition here (the tail). Make the
-// code generator smarter
-
 // The program is a (functional) list of (global) declarations
 Declaration :> TypeDecl, ConstDecl, Function, Axiom, 
                VariableDecl, Procedure, Implementation;
@@ -28,7 +25,7 @@ TupleType = Type! type, TupleType tail;
   // Not constructed during parsing.
   // In BoogiePL equal(TupleType(t,null), t).
   // The alternative is to put tails on all types but that looked
-  // much more invasive that this solution which affects only one
+  // much more invasive than this solution which affects only one
   // place in the typechecker (roughly) in an ugly way.
   
 

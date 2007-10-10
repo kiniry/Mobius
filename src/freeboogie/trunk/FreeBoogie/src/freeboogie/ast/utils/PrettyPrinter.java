@@ -1,5 +1,3 @@
-/** Public domain. */
-
 package freeboogie.ast.utils;
 
 import java.io.IOException;

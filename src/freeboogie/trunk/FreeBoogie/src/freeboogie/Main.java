@@ -1,5 +1,3 @@
-/** Public domain. */
-
 package freeboogie;
 
 import java.io.FileNotFoundException;

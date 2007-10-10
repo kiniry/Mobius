@@ -2,7 +2,6 @@ This template generates java classes for the abstract classes.
 
 \abstract_classes{\file{\ClassName.java}
 /**
-  Public domain.
   This class is generated automatically from abstract_classes.tpl. 
   Do not edit.
  */

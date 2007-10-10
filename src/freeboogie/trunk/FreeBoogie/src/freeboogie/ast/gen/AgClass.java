@@ -1,5 +1,3 @@
-/** Public domain. */
-
 package freeboogie.ast.gen;
 
 import java.util.ArrayList;

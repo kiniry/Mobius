@@ -1,4 +1,3 @@
-/** Public domain. */
 package freeboogie.ast;
 
 /** Base class for the AST hierarchy. */
