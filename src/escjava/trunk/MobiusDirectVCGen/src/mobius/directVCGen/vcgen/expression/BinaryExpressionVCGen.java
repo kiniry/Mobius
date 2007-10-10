@@ -126,12 +126,13 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn {
                                            " " +  left + " " + right);
     }
     final Post rPost = new Post(rvar, 
-                          Logic.and(Logic.implies(Logic.not(Logic.equals(rvar, 
+                          Logic.and(Logic.implies(Logic.equals(rvar, Num.value(0)),
+                                                  getNewExcpPost(Type.javaLangArithmeticExceptionName(), 
+                                                                 post)),
+                                    Logic.implies(Logic.not(Logic.equals(rvar, 
                                                                          Num.value(0))), 
-                                                  post.fPost.substWith(formula)),
-                                    Logic.implies(Logic.equals(rvar, Num.value(0)),
-                                            getNewExcpPost(Type.javaLangArithmeticExceptionName(), 
-                                                           post))));
+                                                  post.fPost.substWith(formula))
+                                    ));
 
     post.fPost = rPost;
     Post pre = getPre(right, post);

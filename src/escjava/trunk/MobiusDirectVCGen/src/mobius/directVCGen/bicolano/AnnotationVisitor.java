@@ -22,6 +22,7 @@ import org.apache.bcel.classfile.LineNumberTable;
 import org.apache.bcel.classfile.LocalVariable;
 import org.apache.bcel.classfile.Method;
 import org.apache.bcel.generic.BranchInstruction;
+import org.apache.bcel.generic.GotoInstruction;
 import org.apache.bcel.generic.InstructionHandle;
 import org.apache.bcel.generic.LineNumberGen;
 import org.apache.bcel.generic.LocalVariableGen;
@@ -127,7 +128,7 @@ public final class AnnotationVisitor extends ABasicVisitor {
       final InstructionHandle ih = findLastInstruction(lineList);
       res = "(PCM.update " + res + " " + ih.getPosition() + "%N" +
                     " (" + invName + ",," +  
-                        fMet.getInstructionList().size() + "%nat))";
+                        fMet.getInstructionList().getEnd().getPosition() + "%nat))";
     }
     
     final int max = x.childCount();
@@ -142,21 +143,17 @@ public final class AnnotationVisitor extends ABasicVisitor {
   }
  
   private InstructionHandle findLastInstruction(List<LineNumberGen> list) {
-    final InstructionHandle baseih = list.get(list.size() - 1).getInstruction();
+    final InstructionHandle baseih = list.get(0).getInstruction();
     InstructionHandle ih = baseih.getNext();
     
-    return ih;
-    // first we find the first instruction 'not on this line'
-//    boolean ofthisline = true; 
-//    while (ofthisline == true) {
-//      System.out.println(ih + "???");
-//      ofthisline = false; 
-//      for (LineNumberGen line : list) {
-//        
-//        ofthisline |= line.containsTarget(ih);
-//      }
-//      ih = ih.getNext();
-//    }
+    //return ih;
+    // first we find the first goto
+
+    while (!(ih.getInstruction() instanceof GotoInstruction)) {
+      ih = ih.getNext();
+    }
+    final GotoInstruction bi =  (GotoInstruction) ih.getInstruction();
+    return bi.getTarget();
 //    
 //    while (ofthisline == false) {
 //      System.out.println(ih + "???");

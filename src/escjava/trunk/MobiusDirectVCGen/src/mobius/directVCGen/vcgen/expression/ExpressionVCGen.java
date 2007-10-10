@@ -169,11 +169,11 @@ public class ExpressionVCGen extends BinaryExpressionVCGen {
         //Sort s = f.type;
         final QuantVariableRef obj = entry.fPost.getRVar();
         entry.fPost = new Post(obj, 
-                               Logic.and(Logic.implies(Logic.not(Logic.equalsNull(obj)), 
-                                                       entry.fPost.getPost()), 
-                                             Logic.implies(Logic.equalsNull(obj), 
-                                         getNewExcpPost(Type.javaLangNullPointerExceptionName(), 
-                                                        entry))));
+                               Logic.and(Logic.implies(Logic.equalsNull(obj), 
+                                                       getNewExcpPost(Type.javaLangNullPointerExceptionName(), 
+                                                                      entry)),
+                                         Logic.implies(Logic.not(Logic.equalsNull(obj)), 
+                                                       entry.fPost.getPost())));
         return getPre(eod.expr, entry);
   
       }
