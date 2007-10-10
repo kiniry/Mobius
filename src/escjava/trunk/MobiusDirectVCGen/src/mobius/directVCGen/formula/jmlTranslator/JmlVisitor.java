@@ -955,10 +955,10 @@ public class JmlVisitor extends BasicJMLTranslator {
       Term t;
       if (!prop.fAssignableSet.isEmpty()) {
         t = Logic.or(Logic.isAssignable(target, field, o), 
-                          Logic.assignablePred(Heap.var, Heap.varPre));
+                          Logic.assignablePred(Heap.var, Heap.varPre, target, field));
       } 
       else {
-        t = Logic.assignablePred(Heap.var, Heap.varPre);
+        t = Logic.assignablePred(Heap.var, Heap.varPre, target, field);
       }
       
       final Term forAllTerm = Logic.forall(vars, t);

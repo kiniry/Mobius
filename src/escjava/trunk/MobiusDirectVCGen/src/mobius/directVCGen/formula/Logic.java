@@ -568,7 +568,7 @@ public final class Logic {
    * @param locVar location
    * @return A term used for assignable clauses
    */
-  public static Term assignablePred(final QuantVariableRef heap, final QuantVariableRef heap_pre) {
+  public static Term assignablePred(final QuantVariableRef heap, final QuantVariableRef heap_pre, final QuantVariableRef target, final QuantVariableRef field) {
     if (heap.getSort() != Heap.sort) {
       throw new IllegalArgumentException("Type of the first param should be heap (" + 
                                          Heap.sort + "), found: " + heap.getSort());
@@ -577,7 +577,7 @@ public final class Logic {
       throw new IllegalArgumentException("Type of the second param should be heap (" + 
                                          Heap.sort + "), found: " + heap.getSort());
     }
-    return Formula.lf.mkFnTerm(Formula.lf.symAssignPred, new Term [] {heap, heap_pre});
+    return Formula.lf.mkFnTerm(Formula.lf.symAssignPred, new Term [] {heap, heap_pre, target, field});
   }
 
   /**
