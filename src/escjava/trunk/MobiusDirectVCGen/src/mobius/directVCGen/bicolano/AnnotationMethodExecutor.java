@@ -69,8 +69,12 @@ public class AnnotationMethodExecutor extends ABasicExecutor {
     final String nameAssertion = "assertion";
     final String nameAssumption = "assumption";
     final String nameSpec = "spec";
+    int needed = 0;
+    if (fMeth.getInstructionList() != null) {
+      needed = fMeth.getInstructionList().getEnd().getPosition(); 
+    }
     final String defaultSpecs = "(" +
-            fMeth.getInstructionList().getEnd().getPosition() + 
+             needed + 
             "%nat,,global_spec)";
 
     final Stream out = getAnnotationOut();
