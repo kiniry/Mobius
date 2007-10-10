@@ -3,6 +3,8 @@
 // Adapted in part from Compaq SRC's specification for ESC/Java
 
 // Copyright (C) 2000, 2002 Iowa State University
+// Modified 2007, Mobius Project, Systems Research Group, 
+//                University College Dublin, Ireland
 
 // This file is part of JML
 
@@ -117,7 +119,7 @@ public interface Collection {
     //@ public model pure boolean containsObject(Object o);
 
 
-    /*@ public normal_behavior
+    /*@ also public normal_behavior
       @   ensures \result != null;
       @   ensures \fresh(\result);
       @   ensures \result.elementType == elementType;

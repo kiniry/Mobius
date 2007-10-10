@@ -97,3 +97,7 @@ AClass.java
 ##
 ## To be assessed
 Min.java
+#
+# JDK 1.5 Assertion Failure
+#
+Bug2.java
