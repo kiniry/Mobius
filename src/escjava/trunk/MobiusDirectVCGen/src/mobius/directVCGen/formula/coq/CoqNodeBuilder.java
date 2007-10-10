@@ -88,6 +88,9 @@ public class CoqNodeBuilder extends EscNodeBuilder {
     else if (realtype.equals(sortType)) {
       res = new CType("type");
     }
+    else if (realtype.equals(sortField)) {
+      res = new CType("FieldSignature");
+    }
     else {
       res = new CType("value");
       throw new IllegalArgumentException();
