@@ -11,6 +11,7 @@ import org.apache.bcel.classfile.Method;
 import org.apache.bcel.generic.ClassGen;
 import org.apache.bcel.generic.ConstantPoolGen;
 import org.apache.bcel.generic.Instruction;
+import org.apache.bcel.generic.InstructionHandle;
 import org.apache.bcel.generic.InstructionList;
 import org.apache.bcel.generic.MethodGen;
 import org.apache.bcel.generic.Type;
@@ -193,21 +194,27 @@ class MethodExecutor extends ASignatureExecutor {
     // System.out.println(str);
     fOut.println(str);
     fOut.incTab();
+    
     final InstructionList il = mg.getInstructionList();
+    il.setPositions();
+
     if (il != null) {
-      final Instruction[] listins = il.getInstructions();
+      InstructionHandle ih = il.getInstructionHandles()[0];
+      
       int pos = 0;
       String paren = "";
-      for (int i = 0; i < listins.length - 1; i++) {
+      while (ih.getNext() != null) {
         paren += ")";
-        str = doInstruction(pos, listins[i]);
-        final int posPre = pos;
-        pos = pos + listins[i].getLength();
+        str = doInstruction(pos, ih.getInstruction());
+        final int posPre = ih.getPosition();
+        pos = ih.getNext().getPosition();
         fOut.println(fImplemSpecif.instructionsCons(str, posPre, pos));
+        ih = ih.getNext();
       }
       // special case for the last instruction
       fOut.println(fImplemSpecif.instructionsEnd(doInstruction(pos,
-                                    listins[listins.length - 1]), pos));
+                                    ih.getInstruction()), pos));
+      
     } 
     else {
       fOut.println(fImplemSpecif.getNoInstructions());
