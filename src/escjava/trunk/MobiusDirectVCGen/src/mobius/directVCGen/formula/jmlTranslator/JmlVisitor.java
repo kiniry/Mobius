@@ -954,11 +954,11 @@ public class JmlVisitor extends BasicJMLTranslator {
       final QuantVariable[] vars = {target.qvar, field.qvar};
       Term t;
       if (!prop.fAssignableSet.isEmpty()) {
-        t = Logic.implies(Logic.isAssignable(target, field, o), 
-                          Logic.assignablePred(Heap.var, Heap.varPre, target, field));
+        t = Logic.or(Logic.isAssignable(target, field, o), 
+                          Logic.assignablePred(Heap.var, Heap.varPre));
       } 
       else {
-        t = Logic.assignablePred(Heap.var, Heap.varPre, target, field);
+        t = Logic.assignablePred(Heap.var, Heap.varPre);
       }
       
       final Term forAllTerm = Logic.forall(vars, t);

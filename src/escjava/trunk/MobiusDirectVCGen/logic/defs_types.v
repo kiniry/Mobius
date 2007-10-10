@@ -62,4 +62,6 @@ Definition isAlive (heap: Heap.t) (val: value) : Prop :=
 Definition inv (heap:Heap.t) (val: value) (typ: type) : Prop := 
   True.
 
-Variable assignPred: Heap.t -> Heap.t -> value -> FieldSignature -> Prop.
+Definition assignPred (h: Heap.t) (h0: Heap.t) (t: value) (f: FieldSignature) : Prop :=
+    Heap.get h (Heap.DynamicField (loc t) f) = Heap.get h0 (Heap.DynamicField (loc t) f)
+    \/ not (isAlive h0 t).
