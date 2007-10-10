@@ -1,5 +1,6 @@
 package mobius.directVCGen.bicolano;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
@@ -110,12 +111,16 @@ public class AnnotationMethodExecutor extends ABasicExecutor {
     String varsAndType = "";
     final String hname = Formula.generateFormulas(Heap.var).toString();
     varsAndType += "(" + hname + ": " + Formula.generateType(Heap.var.getSort()) +  ")";
-        
+    List<Term> args = new ArrayList<Term>();
+    args.add(Heap.var);
     for (QuantVariableRef qvr: list) {
       final String vname = Formula.generateFormulas(qvr).toString();
       varsAndType += " (" + vname + ": " + Formula.generateType(qvr.getSort()) +  ")";
       
     }
+    args.addAll(list);
+    Lookup.getInstance().addPreconditionArgs(fRout, args);
+    
     out.incTab();
     out.println("fun " + varsAndType + " => ");
     out.incTab();

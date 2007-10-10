@@ -29,7 +29,8 @@ public class BcCoqFile extends CoqFile {
                                     classname + "." + meth + "Method " + 
                                     classname + "Annotations." + meth + ".spec).");
     out.println("Proof with solve.");
-    out.println("   prettyfy.\n");
+    out.println("   prettyfy.");
+    out.println("   intros; repeat (split; intros).\n");
     out.println("Qed.");
   }
 }

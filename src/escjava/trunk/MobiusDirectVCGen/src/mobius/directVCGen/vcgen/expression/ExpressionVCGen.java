@@ -72,14 +72,9 @@ public class ExpressionVCGen extends BinaryExpressionVCGen {
     final Term pre;
     if (DirectVCGen.fByteCodeTrick) {
       final String name = getMethodName(mi.decl);
-      final List<QuantVariableRef> l = AnnotationMethodExecutor.mkArguments(mi.decl);
-      final Term[] tab = new Term[l.size() + 1];
-      tab[0] = Heap.var;
-      int i = 1;
-      for (QuantVariableRef qvr : l) {
-        tab[i] = qvr;
-        i++;
-      }
+      final List<Term> l = Lookup.getInstance().getPreconditionArgs(mi.decl);
+      
+      final Term[] tab = l.toArray(new Term [0]);
       pre = Expression.sym(name + ".mk_pre", tab);
       
     }

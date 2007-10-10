@@ -60,7 +60,7 @@ public class CoqFile {
   public void writeProof(final STerm term) {
     fOut.println("Lemma l:\n" + term + ".");
     fOut.println("Proof.");
-    fOut.println("intros; repeat (split; intros).\n\nQed.");
+    fOut.println("   intros; repeat (split; intros).\n\nQed.");
   }
 
   /**
@@ -75,26 +75,24 @@ public class CoqFile {
   /**
    * Write the definitions for coq: basically it writes class
    * definitions; fields to declare; and special magickal symbols.
-   * @param symToDeclare Special relation symbols to declare
    * @param classNames the class names to declare
    */
-  public void writeDefs(final List<FnSymbol> symToDeclare, 
-                        final List<String> classNames) {
+  public void writeDefs(final List<String> classNames) {
     
     // source
     writeHeader();
     
     
     fOut.println();
-    for (FnSymbol sym : symToDeclare) {
-      fOut.print("Variable " + sym.name + ": ");
-      final STerm [] terms = Formula.generateTypes(sym.argumentTypes);
-      for (STerm t: terms) {
-        final String str = t.toString();
-        fOut.print(str + " -> ");
-      }
-      fOut.println(Formula.generateType(sym.retType) + ".");
-    }
+//    for (FnSymbol sym : symToDeclare) {
+//      fOut.print("Variable " + sym.name + ": ");
+//      final STerm [] terms = Formula.generateTypes(sym.argumentTypes);
+//      for (STerm t: terms) {
+//        final String str = t.toString();
+//        fOut.print(str + " -> ");
+//      }
+//      fOut.println(Formula.generateType(sym.retType) + ".");
+//    }
 
     fOut.println();
     

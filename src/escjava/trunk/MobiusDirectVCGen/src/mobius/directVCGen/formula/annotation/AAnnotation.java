@@ -1,5 +1,7 @@
 package mobius.directVCGen.formula.annotation;
 
+import java.util.List;
+
 import escjava.sortedProver.Lifter.Term;
 
 /**
@@ -18,10 +20,15 @@ public abstract class AAnnotation {
   /** the id of a set class. */
   public static final int annotSet = annotCut + 1;
 
-  /**
-   * FOL-Term that represents the annotation at that point.
-   */
+  /** FOL-Term that represents the annotation at that point. */
   public final Term formula;
+  
+  /** the name of the annotation. */
+  public String fName;
+  
+  /** the arguments of the annotation. */
+  public List<Term> fArgs;
+  
 
   /**
    * Default constructor.

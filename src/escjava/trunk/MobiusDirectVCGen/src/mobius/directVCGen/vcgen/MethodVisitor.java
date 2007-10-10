@@ -101,7 +101,7 @@ public final class MethodVisitor extends DirectVCGen {
         fos.println(t);
         fos.close();
         final CoqFile cf = new CoqFile(getBaseDir(), getPkgsDir(), name);
-        cf.writeDefs(Lookup.symToDeclare,  Type.getAllTypes());
+        cf.writeDefs(Type.getAllTypes());
         cf.writeProof(Formula.generateFormulas(t));
         if (all == null) {
           all = t;
@@ -119,7 +119,7 @@ public final class MethodVisitor extends DirectVCGen {
 
     try {
       final CoqFile cf = new CoqFile(getBaseDir(), getPkgsDir());
-      cf.writeDefs(Lookup.symToDeclare,  Type.getAllTypes());
+      cf.writeDefs(Type.getAllTypes());
       cf.writeProof(Formula.generateFormulas(all));
     } 
     catch (FileNotFoundException e) {

@@ -20,6 +20,8 @@ import org.apache.bcel.classfile.LineNumber;
 import org.apache.bcel.classfile.LineNumberTable;
 import org.apache.bcel.classfile.LocalVariable;
 import org.apache.bcel.classfile.Method;
+import org.apache.bcel.generic.BranchInstruction;
+import org.apache.bcel.generic.InstructionHandle;
 import org.apache.bcel.generic.LineNumberGen;
 import org.apache.bcel.generic.LocalVariableGen;
 import org.apache.bcel.generic.MethodGen;
@@ -105,6 +107,7 @@ public final class AnnotationVisitor extends ABasicVisitor {
       // let's do a third thing
       final int lineNum = Location.toLineNumber(x.getStartLoc());
       final LineNumberGen line = getLineNumberFromLine(lineNum);
+      final List<LineNumberGen> lineList = getLineNumbers(lineNum);
       final Term t = fAnnot.getInvariant(x);
       final List<LocalVariableGen> list = getValidVariables(getLineNumbers(lineNum));
       final List<QuantVariableRef> flat = flattenLocals();
@@ -114,9 +117,14 @@ public final class AnnotationVisitor extends ABasicVisitor {
       if (list.size() != flat.size()) {
         System.out.println(list + " " + fLocalVars);
       }
-      res = "(PCM.update " + res + " " + line.getLineNumber().getStartPC() + "%N" +
+      
+      res = "(PCM.update " + res + " " + line.getInstruction().getPosition() + "%N" +
                      " (" + invName + ",," +  
                             fMet.getInstructionList().size() + "%nat))";
+      final InstructionHandle ih = findLastInstruction(lineList);
+      res = "(PCM.update " + res + " " + ih.getPosition() + "%N" +
+                    " (" + invName + ",," +  
+                        fMet.getInstructionList().size() + "%nat))";
     }
     
     final int max = x.childCount();
@@ -130,6 +138,31 @@ public final class AnnotationVisitor extends ABasicVisitor {
     return res;
   }
  
+  private InstructionHandle findLastInstruction(List<LineNumberGen> list) {
+    final InstructionHandle baseih = list.get(list.size() - 1).getInstruction();
+    InstructionHandle ih = baseih.getNext();
+    while (ih != baseih) {
+      if (ih.getInstruction() instanceof BranchInstruction) {
+
+        final BranchInstruction bi =  (BranchInstruction) ih.getInstruction();
+        for (LineNumberGen line : list) {
+          line.containsTarget(bi.getTarget());
+          return ih.getPrev();
+        }
+//        System.out.println(baseih + "???" + ih + " ??"  + 
+//                           baseih.getTargeters()[0] + 
+//                           list.containsTarget(bi.getTarget()));
+        if (bi.getTarget().equals(baseih) || bi.getTarget().equals(baseih.getNext())) {
+          return ih.getPrev();
+        }
+      }    
+      ih = ih.getNext();
+    }
+    return ih;
+  }
+
+
+
   private void buildDefiner(String name, Term t, List<QuantVariableRef> flat) {
     String lets = "";
     String vars = "";
@@ -291,7 +324,7 @@ public final class AnnotationVisitor extends ABasicVisitor {
 //    final LineNumber [] tab = lnt.getLineNumberTable();
     
     for (LineNumberGen line: tab) {
-      if (line.getLineNumber() == first.getLineNumber()) {
+      if (line.getLineNumber().getLineNumber() == first.getLineNumber().getLineNumber()) {
         res.add(line);
       }
     }
