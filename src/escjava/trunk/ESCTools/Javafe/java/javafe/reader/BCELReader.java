@@ -692,7 +692,8 @@ class BCELReader extends Reader {
 			
 		case Constants.T_CHAR:
 			typeTag = TagConstants.CHARTYPE;
-
+			break;
+			
 		// Non primitive types
 		default:
 			typeTag = TagConstants.NULLTYPE;
