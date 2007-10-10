@@ -62,4 +62,4 @@ Definition isAlive (heap: Heap.t) (val: value) : Prop :=
 Definition inv (heap:Heap.t) (val: value) (typ: type) : Prop := 
   True.
 
-Variable assignPred: Heap.t -> Heap.t -> value -> value -> Prop.
+Variable assignPred: Heap.t -> Heap.t -> value -> FieldSignature -> Prop.
