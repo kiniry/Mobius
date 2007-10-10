@@ -3,7 +3,8 @@
 # Copyright 2003 University of Nijmegen
 # Copyright 2003 David R. Cok
 # This file is extensively revised in the 2003 ESC revision.
-# Modified 2007, Mobius Project, Systems Research Group, University College Dublin, Ireland
+# Modified 2007, Mobius Project, Systems Research Group, 
+#                University College Dublin, Ireland
 
 export TOP = ..
 include ${TOP}/Makefile.defs
@@ -429,7 +430,7 @@ test_escjava_parser:
 
 self_typecheck:
 	@JAVA_VM_FLAGS=-Xmx256m \
-	${ESCJ} -classpath "$(call canonicalize,${ESCJAVA_BUILD_CLASSPATH}:)${CLASSPATH}" \
+	${ESCJ} -classpath "$(call canonicalize,${ESCJAVA_BUILD_CLASSPATH}:${CLASSPATH})" \
 		-sourcepath "$(call canonicalize,$(SOURCEPATH):$(SPECS):$(JUNIT_SOURCEPATH))" \
 		-specs "${call canonicalize,${ESCTOOLS_ROOT}/specs}" \
 		-source 1.4 -typecheck -quiet \
