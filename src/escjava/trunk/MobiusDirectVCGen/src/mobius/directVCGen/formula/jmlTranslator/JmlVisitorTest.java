@@ -174,11 +174,11 @@ public class JmlVisitorTest extends TestCase {
     sevenTermIntNeg = Num.value((Integer) (-7));
     sevenTermRealNeg = Num.value((Double) (-7.0));    
     
-    xFieldAccessTermInt = Heap.select(Heap.var, Ref.varThis, Expression.var(xFieldDeclInt));
-    xOldFieldAccessTermInt = Heap.select(Heap.varPre, Ref.varThis, Expression.var(xFieldDeclInt));
-    yFieldAccessTermInt = Heap.select(Heap.var, Ref.varThis, Expression.var(yFieldDeclInt));
-    xFieldAccessTermRef = Heap.select(Heap.var, Ref.varThis, Expression.var(xFieldDeclRef));
-    yFieldAccessTermRef = Heap.select(Heap.var, Ref.varThis, Expression.var(yFieldDeclRef));
+//    xFieldAccessTermInt = Heap.select(Heap.var, Ref.varThis, Expression.var(xFieldDeclInt));
+//    xOldFieldAccessTermInt = Heap.select(Heap.varPre, Ref.varThis, Expression.var(xFieldDeclInt));
+//    yFieldAccessTermInt = Heap.select(Heap.var, Ref.varThis, Expression.var(yFieldDeclInt));
+//    xFieldAccessTermRef = Heap.select(Heap.var, Ref.varThis, Expression.var(xFieldDeclRef));
+//    yFieldAccessTermRef = Heap.select(Heap.var, Ref.varThis, Expression.var(yFieldDeclRef));
     xLocalVarAccessExprInt = VariableAccess.make(Identifier.intern("x"), loc1, xLocalDeclInt);
     xLocalVarAccessTerm =  Expression.rvar(xLocalVarAccessExprInt.decl);
 
@@ -236,7 +236,7 @@ public class JmlVisitorTest extends TestCase {
     //***************Term****************************
     final Term obj = (Term) arrayFieldAccessIndexExpr.od.accept(fVisitor, fProp);
     final QuantVariable var = (QuantVariable) Expression.var(arrayFieldAccessIndexExpr.decl);
-    final Term array = Heap.select(Heap.var, obj, var);
+    final Term array = Heap.select(Heap.var, obj, var, Num.sortInt);
     arrayVarAccessExpr = VariableAccess.make(Identifier.intern("i"), loc1, indexLocalDeclInt);
     indexLocalVarAccessTerm =  Expression.rvar(arrayVarAccessExpr.decl);
     

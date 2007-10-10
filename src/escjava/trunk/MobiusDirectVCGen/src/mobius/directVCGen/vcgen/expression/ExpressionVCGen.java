@@ -244,7 +244,8 @@ public class ExpressionVCGen extends BinaryExpressionVCGen {
     }
     else { // not static :)
       final QuantVariableRef obj = Expression.rvar(Ref.sort);
-      final Term normal = entry.fPost.substWith(Heap.select(Heap.var, obj, f));
+      final Term normal = entry.fPost.substWith(Heap.select(Heap.var, obj, f,
+                                                            Type.getSort(field)));
       entry.fPost = new Post(obj, normal);
       final Post p = objectDesignator(field.od, entry);
 
@@ -308,7 +309,7 @@ public class ExpressionVCGen extends BinaryExpressionVCGen {
     final QuantVariableRef var = Expression.rvar(Ref.sort);
     final QuantVariableRef idx = Expression.rvar(Num.sortInt);
     Term pre = entry.fPost.getPost();
-    final Term length = Heap.select(Heap.var, var, Expression.length);
+    final Term length = Heap.select(Heap.var, var, Expression.length, Num.sortInt);
 
     pre = entry.fPost.substWith(Heap.selectArray(Heap.var, var, idx, Type.getSort(arr)));
     Term norm = Logic.implies(Logic.interval0To(length, idx), pre);

@@ -26,6 +26,7 @@ import escjava.ast.TagConstants;
 import escjava.sortedProver.Lifter.QuantVariable;
 import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
+import escjava.sortedProver.NodeBuilder.Sort;
 
 public class JmlExprToFormula {
 
@@ -447,10 +448,10 @@ public class JmlExprToFormula {
     return res;
   }
 
-  public Object fieldAccess(final FieldAccess x, final Object o) {
+  public Object fieldAccess(final FieldAccess fieldAccess, final Object o) {
     ContextProperties prop = (ContextProperties) o;
     if (prop.fresh) { 
-      final QuantVariableRef qref = Expression.rvar(x.decl);
+      final QuantVariableRef qref = Expression.rvar(fieldAccess.decl);
       final HashSet<Term> freshSet = (HashSet) ((ContextProperties)o).get("freshSet");
       freshSet.add(qref);
       ((ContextProperties)o).put("freshSet", freshSet);
@@ -458,17 +459,18 @@ public class JmlExprToFormula {
     else { 
       if ((Boolean) (fVisitor.fGlobal.get("doSubsetChecking"))) {
         final java.util.Set<FieldAccess> subSet = fVisitor.fGlobal.subsetCheckingSet;
-        subSet.add(x);
+        subSet.add(fieldAccess);
       }
       final boolean oldProp = (Boolean) ((ContextProperties) o).get("old");
-      final Term obj = (Term) x.od.accept(fVisitor, o);
+      final Term obj = (Term) fieldAccess.od.accept(fVisitor, o);
       QuantVariable var = null;
       QuantVariableRef heap = Heap.var;
       if (oldProp) {
         heap = Heap.varPre;
       }
-      var = Expression.var(x.decl);
-      return Heap.select(heap, obj, var);
+      var = Expression.var(fieldAccess.decl);
+      final Sort type = Type.getSort(fieldAccess);
+      return Heap.select(heap, obj, var, type);
     }
     return null;
   }

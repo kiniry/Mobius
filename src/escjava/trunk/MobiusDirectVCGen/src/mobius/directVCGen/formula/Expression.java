@@ -143,6 +143,7 @@ public final class Expression {
       final FieldDecl field = (FieldDecl) decl;
       name = field.parent.id.toString() + "Signature?" + 
              field.id.toString() + "FieldSignature";
+      return var(name, Type.sortField);
     }
     return Formula.lf.mkQuantVariable(decl, name);
   }

@@ -104,13 +104,14 @@ public final class Heap {
    * @param heap the heap on which to do the select
    * @param obj the object to which the field belong
    * @param var the name of the field on which to do the select
+   * @param type the type of the result of the select
    * @return the term representing the select
    */
   public static Term select(final QuantVariableRef heap, final Term obj, 
-                            final QuantVariable var) {
+                            final QuantVariable var, Sort type) {
     final Term select = Formula.lf.mkFnTerm(Formula.lf.symDynSelect, 
                                       new Term[] {heap, obj, Expression.rvar(var)});
-    return valueToSort(select, var.type);
+    return valueToSort(select, type);
   }
   
   

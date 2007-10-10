@@ -177,6 +177,9 @@ public class CoqNodeBuilder extends EscNodeBuilder {
     else if (s.equals(sortType)) {
       res = new CType(name);
     }
+    else if (s.equals(sortField)) {
+      res = new CRef(name);
+    }
     else if (s.equals(sortAny)) {
       res = new CRef(name);
       throw new IllegalArgumentException("The type of " + var + 

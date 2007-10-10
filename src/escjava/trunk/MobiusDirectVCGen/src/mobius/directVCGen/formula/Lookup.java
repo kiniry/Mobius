@@ -3,10 +3,15 @@ package mobius.directVCGen.formula;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Vector;
 
+import javafe.ast.FormalParaDecl;
+import javafe.ast.FormalParaDeclVec;
 import javafe.ast.RoutineDecl;
 import javafe.ast.TypeDecl;
 import mobius.directVCGen.vcgen.struct.Post;
+import escjava.ast.TagConstants;
+import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
 
 /**
@@ -137,12 +142,14 @@ public class Lookup {
     return inst;
   }
 
-  public List<Term> addPreconditionArgs(final RoutineDecl m,
-                                        final List<Term> args) {
-    if (args == null) {
-      throw new NullPointerException("" + m);
+  
+  public void computePreconditionArgs() {
+    if (fPreArgs.isEmpty()) {
+      for (RoutineDecl rd: preconditions.keySet()) {
+        final List<Term> args = mkArguments(rd);
+        fPreArgs.put(rd, args);
+      }
     }
-    return fPreArgs.put(m, args);
   }
   public List<Term> getPreconditionArgs(final RoutineDecl m) {
     return fPreArgs.get(m);
@@ -158,5 +165,19 @@ public class Lookup {
                        "Terms: " + preconditions + "\n";
     return pre;
            
+  }
+  
+  private static List<Term> mkArguments(final RoutineDecl rd) {
+    final List<Term> v = new Vector<Term>();
+    final FormalParaDeclVec fpdvec = rd.args;
+    v.add(Heap.var);
+    if ((rd.modifiers & TagConstants.STATIC) == 0) {
+      v.add(Ref.varThis); 
+    }
+    final FormalParaDecl[] args = fpdvec.toArray();
+    for (FormalParaDecl fpd: args) {
+      v.add(Expression.rvar(fpd));
+    }
+    return v;
   }
 }

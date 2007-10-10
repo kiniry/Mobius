@@ -1,6 +1,7 @@
 package mobius.directVCGen.bicolano;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 
@@ -55,6 +56,7 @@ public class AnnotationMethodExecutor extends ABasicExecutor {
 
   @Override
   public void start() {
+    Lookup.getInst().computePreconditionArgs();
     doMethodPreAndPostDefinition();
   }
   
@@ -106,23 +108,16 @@ public class AnnotationMethodExecutor extends ABasicExecutor {
   private void doMethodPre(final String namePre) {
     final Stream out = getAnnotationOut();
     out.println("Definition mk_" + namePre + " := ");
-    final List<QuantVariableRef> list = mkArguments(fRout);
+    final List<Term> list = Lookup.getInst().getPreconditionArgs(fRout);
     
     String varsAndType = "";
-    final String hname = Formula.generateFormulas(Heap.var).toString();
-    varsAndType += "(" + hname + ": " + Formula.generateType(Heap.var.getSort()) +  ")";
-    List<Term> args = new ArrayList<Term>();
-    args.add(Heap.var);
-    args.addAll(list);
-    Lookup.getInst().addPreconditionArgs(fRout, args);
-    for (QuantVariableRef qvr: list) {
+
+    for (Term qvr: list) {
       final String vname = Formula.generateFormulas(qvr).toString();
       varsAndType += " (" + vname + ": " + Formula.generateType(qvr.getSort()) +  ")";
       
     }
 
-
-    
     out.incTab();
     out.println("fun " + varsAndType + " => ");
     out.incTab();
@@ -240,7 +235,10 @@ public class AnnotationMethodExecutor extends ABasicExecutor {
     out.println("let " + hname + " := (snd s0) " + " in");
     vars += hname;
     int count = 0;
-    for (QuantVariableRef qvr: mkArguments(fRout)) {
+    LinkedList<Term> list = new LinkedList<Term>();
+    list.addAll(Lookup.getInst().getPreconditionArgs(fRout));
+    list.removeFirst();    
+    for (Term qvr: list) {
       final String vname = Formula.generateFormulas(qvr).toString();
       out.println("let " + vname + " := " +
                            "(do_lvget (fst s0) " + count++ + "%N)" + " in ");
@@ -248,6 +246,8 @@ public class AnnotationMethodExecutor extends ABasicExecutor {
     }
     return vars;
   }
+  
+  
   private String doLetPost() {
     final Stream out = getAnnotationOut();
     String vars = "";
@@ -284,18 +284,6 @@ public class AnnotationMethodExecutor extends ABasicExecutor {
     return v;
   }
   
-  public static List<QuantVariableRef> mkArguments(final RoutineDecl rd) {
-    final List<QuantVariableRef> v = new Vector<QuantVariableRef>();
-    final FormalParaDeclVec fpdvec = rd.args;
-    
-    if ((rd.modifiers & TagConstants.STATIC) == 0) {
-      v.add(Ref.varThis); 
-    }
-    final FormalParaDecl[] args = fpdvec.toArray();
-    for (FormalParaDecl fpd: args) {
-      v.add(Expression.rvar(fpd));
-    }
-    return v;
-  }
+
 
 }

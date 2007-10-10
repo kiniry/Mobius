@@ -27,6 +27,8 @@ public final class Type {
   /** the sort representing a type. */
   public static Sort sort = Formula.lf.sortType;
   
+  public static Sort sortField = Formula.lf.sortField;
+  
   /** an hash map not to compute twice the types/term correspondance. */
   private static final Map<javafe.ast.Type, QuantVariableRef> types = 
     new HashMap<javafe.ast.Type, QuantVariableRef>();

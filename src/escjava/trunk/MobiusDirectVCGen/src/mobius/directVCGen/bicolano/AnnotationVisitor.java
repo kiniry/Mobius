@@ -13,6 +13,7 @@ import mobius.bico.Util.Stream;
 import mobius.directVCGen.formula.Expression;
 import mobius.directVCGen.formula.Formula;
 import mobius.directVCGen.formula.Heap;
+import mobius.directVCGen.formula.Lookup;
 import mobius.directVCGen.formula.annotation.AnnotationDecoration;
 import mobius.directVCGen.vcgen.ABasicVisitor;
 
@@ -49,7 +50,7 @@ public final class AnnotationVisitor extends ABasicVisitor {
   private final MethodGen fMet;
   
   /** the arguments of the method. */
-  private List<QuantVariableRef> fArgs;
+  private LinkedList<Term> fArgs;
   
   /** the local variables. */
   private LinkedList<List<QuantVariableRef>> fLocalVars = new LinkedList<List<QuantVariableRef>> ();
@@ -71,7 +72,8 @@ public final class AnnotationVisitor extends ABasicVisitor {
                             final MethodGen met) {
     fOut = out;
     fMet = met;
-    fArgs = AnnotationMethodExecutor.mkArguments(decl);
+    fArgs = new LinkedList<Term>(); 
+    fArgs.addAll(Lookup.getInst().getPreconditionArgs(decl));
 
   }
 
@@ -171,8 +173,9 @@ public final class AnnotationVisitor extends ABasicVisitor {
     lets += "let " + olhname + " := (snd s0) in \n";
     vars += olhname;
     int varcount = 0;
-    for (QuantVariableRef qvr: fArgs) {
+    for (Term ter: fArgs) {
       varcount++;
+      QuantVariableRef qvr = (QuantVariableRef) ter;
       if (qvr.qvar.name.equals("this")) {
         continue;
       }
@@ -187,7 +190,7 @@ public final class AnnotationVisitor extends ABasicVisitor {
     lets += "let " + hname + " :=  (fst (fst s)) in \n";
     vars += " " + hname;
     varcount = 0;
-    for (QuantVariableRef qvr: fArgs) {
+    for (Term qvr: fArgs) {
       varcount++;
       final String vname = Formula.generateFormulas(qvr).toString();
       lets += "let " + vname + " := (do_lvget (snd s) " + varcount + "%N) in \n";
@@ -213,7 +216,8 @@ public final class AnnotationVisitor extends ABasicVisitor {
     // olds
     final String olhname = Formula.generateFormulas(Heap.varPre).toString();
     varsAndType += "(" + olhname + ": " + Formula.generateType(Heap.varPre.getSort()) +  ") ";
-    for (QuantVariableRef qvr: fArgs) {
+    for (Term t: fArgs) {
+      QuantVariableRef qvr = (QuantVariableRef) t;
       if (qvr.qvar.name.equals("this")) {
         continue;
       }
@@ -227,7 +231,7 @@ public final class AnnotationVisitor extends ABasicVisitor {
     final String hname = Formula.generateFormulas(Heap.var).toString();
     varsAndType += "(" + hname + ": " + Formula.generateType(Heap.var.getSort()) +  ") ";
      
-    for (QuantVariableRef qvr: fArgs) {
+    for (Term qvr: fArgs) {
       final String vname = Formula.generateFormulas(qvr).toString();
       varsAndType += "(" + vname + ": " + Formula.generateType(qvr.getSort()) +  ") ";
       
