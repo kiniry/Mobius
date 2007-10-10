@@ -10,6 +10,7 @@ import javafe.ast.FormalParaDeclVec;
 import javafe.ast.RoutineDecl;
 import javafe.ast.TypeDecl;
 import mobius.directVCGen.vcgen.struct.Post;
+import escjava.ast.Modifiers;
 import escjava.ast.TagConstants;
 import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
@@ -171,7 +172,7 @@ public class Lookup {
     final List<Term> v = new Vector<Term>();
     final FormalParaDeclVec fpdvec = rd.args;
     v.add(Heap.var);
-    if ((rd.modifiers & TagConstants.STATIC) == 0) {
+    if (Modifiers.isStatic(rd.modifiers)) {
       v.add(Ref.varThis); 
     }
     final FormalParaDecl[] args = fpdvec.toArray();
