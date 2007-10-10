@@ -168,6 +168,7 @@ public abstract class EscNodeBuilder extends NodeBuilder
 		else if (sort == sortRef) return other.sortRef;
 		else if (sort == sortMap) return other.sortMap;
     else if (sort == sortType) return other.sortType;
+    else if (sort == sortField) return other.sortField;
 		ErrorSet.fatal("cannot map " + sort + " from " + this + " to " + other);
 		return null;
 	}
