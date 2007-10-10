@@ -420,7 +420,7 @@ public class SimplifyNodeBuilder extends EscNodeBuilder
 	public SValue buildDynSelect(SMap map, SRef obj, SAny field) {
 		throw new UnsupportedOperationException();
 	}
-  public SRef buildDynLoc(SMap map, SRef obj, SRef field) {
+  public SRef buildDynLoc(SMap map, SRef obj, SAny field) {
     throw new UnsupportedOperationException();
   }
 	public SMap buildDynStore(SMap map, SRef obj, SAny field, SValue val) {
@@ -444,7 +444,7 @@ public class SimplifyNodeBuilder extends EscNodeBuilder
   public SPred buildIsAlive(SMap map, SRef ref) {
     throw new UnsupportedOperationException();
   }
-  public SPred buildIsFieldOf(SMap map, SRef obj, SAny field) {
+  public SPred buildAssignPred(SMap map, SMap map_pre, SRef target, SRef loc) {
     throw new UnsupportedOperationException();
   }
 }

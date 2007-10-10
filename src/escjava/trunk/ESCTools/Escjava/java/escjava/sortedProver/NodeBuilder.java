@@ -440,7 +440,7 @@ public abstract class NodeBuilder
 	abstract public SPred buildNewObject(SMap oldh, SAny type, SMap heap, SRef r) ;
 	abstract public SAny buildSort(Sort s);
 	abstract public SValue buildDynSelect(SMap map, SRef obj, SAny field);
-  abstract public SRef buildDynLoc(SMap map, SRef obj, SRef field);
+  abstract public SRef buildDynLoc(SMap map, SRef obj, SAny field);
 	abstract public SMap buildDynStore(SMap map, SRef obj, SAny field, SValue val);
 	abstract public SPred buildNewArray(SMap oldh, SAny type, SMap heap, SRef r, SInt len) ;
 	abstract public SValue buildArrSelect(SMap map, SRef obj, SInt idx);
@@ -448,6 +448,6 @@ public abstract class NodeBuilder
 	abstract public SPred buildAssignCompat(SMap map, SValue val, SAny type);
   abstract public SPred buildInv(SMap map, SValue val, SAny type);
   abstract public SPred buildIsAlive(SMap map, SRef obj);
-  abstract public SPred buildIsFieldOf(SMap map, SRef obj, SAny field);
+  abstract public SPred buildAssignPred(SMap map, SMap map_pre, SRef target, SRef loc);
 
 }

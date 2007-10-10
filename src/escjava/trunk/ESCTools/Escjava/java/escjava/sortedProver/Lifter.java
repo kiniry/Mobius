@@ -42,6 +42,8 @@ import escjava.ast.TypeExpr;
 import escjava.backpred.BackPred;
 import escjava.backpred.FindContributors;
 import escjava.sortedProver.NodeBuilder.FnSymbol;
+import escjava.sortedProver.NodeBuilder.SMap;
+import escjava.sortedProver.NodeBuilder.SRef;
 import escjava.translate.GC;
 import escjava.translate.TrAnExpr;
 import escjava.translate.UniqName;
@@ -602,7 +604,7 @@ public class Lifter extends EscNodeBuilder
 				return dumpBuilder.buildDynSelect((SMap)args[0].dump(), args[1].dumpRef(), args[2].dumpValue());
 			}
       if (fn == symDynLoc){
-        return dumpBuilder.buildDynLoc((SMap)args[0].dump(), args[1].dumpRef(), args[2].dumpRef());
+        return dumpBuilder.buildDynLoc((SMap)args[0].dump(), args[1].dumpRef(), args[2].dumpValue());
       }
 			if (fn == symDynStore){
 				return dumpBuilder.buildDynStore((SMap)args[0].dump(), args[1].dumpRef(), args[2].dumpValue(), args[3].dumpValue());
@@ -625,8 +627,8 @@ public class Lifter extends EscNodeBuilder
       if (fn == symInv) {
         return dumpBuilder.buildInv((SMap)args[0].dumpValue(), args[1].dumpValue(), args[2].dumpAny());
       }
-      if (fn == symIsFieldOf) {
-        return dumpBuilder.buildIsFieldOf((SMap)args[0].dumpValue(), args[1].dumpRef(), args[2].dumpAny());
+      if (fn == symAssignPred) {
+        return dumpBuilder.buildAssignPred((SMap)args[0].dumpValue(),(SMap)args[1].dumpValue(), args[2].dumpRef(), args[3].dumpRef());
       }
       if (fn == symRefBoolFn) {
         return dumpBuilder.buildRefBoolFun(tag, args[0].dumpRef(), args[1].dumpRef());
@@ -1036,7 +1038,7 @@ public class Lifter extends EscNodeBuilder
     /** cbr: symbol to denote that the object is alive in heap */
     public PredSymbol symIsAlive = registerPredSymbol("%isAlive", new Sort[] {sortMap, sortRef});
     /** cbr: symbol to state that field is of object in given heap*/
-    public PredSymbol symIsFieldOf = registerPredSymbol("%isFieldOf", new Sort[] {sortMap, sortRef, sortAny});
+    public PredSymbol symAssignPred = registerPredSymbol("%assignPred", new Sort[] {sortMap, sortMap, sortRef, sortRef});
     
 	// we just want Sort and the like, don't implement anything	
 	static class Die extends RuntimeException { private static final long serialVersionUID = 1L; }
@@ -1083,14 +1085,14 @@ public class Lifter extends EscNodeBuilder
 	public SAny buildSort(Sort s) { throw new Die(); }
 	public SValue buildDynSelect(SMap map, SRef obj, SAny field) {throw new Die(); }
 	public SMap buildDynStore(SMap map, SRef obj, SAny field, SValue val) {throw new Die(); }
-  public SRef buildDynLoc(SMap map, SRef obj, SRef field) {throw new Die(); }
+  public SRef buildDynLoc(SMap map, SRef obj, SAny field) {throw new Die(); }
   public SPred buildNewArray(SMap oldh, SAny type, SMap heap, SRef r, SInt len) { throw new Die(); }
 	public SValue buildArrSelect(SMap map, SRef obj, SInt idx) {throw new Die(); }
 	public SMap buildArrStore(SMap map, SRef obj, SInt idx, SValue val) {throw new Die(); }
 	public SPred buildAssignCompat(SMap map, SValue val, SAny type) {throw new Die(); }
   public SPred buildInv(SMap map, SValue val, SAny type) {throw new Die(); }
   public SPred buildIsAlive(SMap map, SRef obj) {throw new Die(); }
-  public SPred buildIsFieldOf(SMap map, SRef obj, SAny field) {throw new Die(); }
+  public SPred buildAssignPred(SMap map, SMap map_pre, SRef target, SRef loc) {throw new Die(); }
   
 	boolean isEarlySort(Sort s, Sort p)
 	{
