@@ -525,10 +525,8 @@ public class CoqNodeBuilder extends EscNodeBuilder {
    * @see escjava.sortedProver.NodeBuilder#buildDynSelect(escjava.sortedProver.NodeBuilder.SMap, escjava.sortedProver.NodeBuilder.SRef, escjava.sortedProver.NodeBuilder.SAny)
    */
   @Override
-  //TODO: cbr: change body of this method. copied out of buildDynSelect
   public SRef buildDynLoc(final SMap heap, final SRef obj, final SAny field) {
-    final CRef addr = new CRef("Heap.DynamicField", new STerm [] {getLoc(obj), field});
-    return new CRef("get", new STerm[] {heap, addr});
+    return new CRef("Heap.DynamicField", new STerm [] {getLoc(obj), field});
   }
   
   

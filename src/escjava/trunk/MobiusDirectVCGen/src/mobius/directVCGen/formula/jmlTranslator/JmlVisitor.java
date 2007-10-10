@@ -950,15 +950,15 @@ public class JmlVisitor extends BasicJMLTranslator {
     final MethodProperties prop = (MethodProperties) o;
     if (prop.fNothing || !prop.fAssignableSet.isEmpty()) {
       final QuantVariableRef target = Expression.rvar(Ref.sort);
-      final QuantVariableRef loc = Expression.rvar(Ref.sort);
-      final QuantVariable[] vars = {target.qvar, loc.qvar};
+      final QuantVariableRef field = Expression.rvar(Type.sortField);
+      final QuantVariable[] vars = {target.qvar, field.qvar};
       Term t;
       if (!prop.fAssignableSet.isEmpty()) {
-        t = Logic.implies(Logic.isAssignable(loc, o), 
-                          Logic.assignablePred(Heap.var, Heap.varPre, target, loc));
+        t = Logic.implies(Logic.isAssignable(target,field, o), 
+                          Logic.assignablePred(Heap.var, Heap.varPre, target, field));
       } 
       else {
-        t = Logic.assignablePred(Heap.var, Heap.varPre, target, loc);
+        t = Logic.assignablePred(Heap.var, Heap.varPre, target, field);
       }
       
       final Term forAllTerm = Logic.forall(vars, t);

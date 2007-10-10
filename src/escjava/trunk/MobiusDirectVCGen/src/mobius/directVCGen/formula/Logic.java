@@ -586,7 +586,7 @@ public final class Logic {
    * @param o Parameter object also containing a list of modifiable types.
    * @return A Term expressing the check described above.
    */
-  public static Term isAssignable(final QuantVariableRef l, final Object o) {
+  public static Term isAssignable(final QuantVariableRef t, final QuantVariableRef f, final Object o) {
     final MethodProperties prop = (MethodProperties) o;
     Term t1 = null;
     Term t2 = null;
@@ -597,7 +597,7 @@ public final class Logic {
       final QuantVariableRef[] setVar = (QuantVariableRef[]) iter.next();
       // FIXME jgc: here there is a type mistake fieldVar.qvar is supposed to be
       // the name of the field, not a variable ref or fieldVar if you prefer
-       t1 = Logic.equals(l, Heap.loc(Heap.var, setVar[0], setVar[1].qvar));
+       t1 = Logic.equals(Heap.loc(Heap.var, t, f.qvar), Heap.loc(Heap.var, setVar[0], setVar[1].qvar));
       // FIXME claudia/ Hermann : fix this!
       // t1 = Logic.equals(fieldVar, setVar[1]);
       if (t2 == null) {
