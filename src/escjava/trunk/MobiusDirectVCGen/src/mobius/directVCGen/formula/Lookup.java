@@ -1,6 +1,7 @@
 package mobius.directVCGen.formula;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
@@ -49,7 +50,9 @@ public class Lookup {
   /** the argument lists of each precondition. */
   private final Map<RoutineDecl, List<Term>> fPreArgs = 
     new HashMap<RoutineDecl, List<Term>>(); 
-  
+  /**  the argument lists of each precondition without the heap. */
+  private final Map<RoutineDecl, List<Term>> fPreArgsWithoutHeap = 
+    new HashMap<RoutineDecl, List<Term>>(); 
   
   /**
    * Returns the FOL Term representation of the precondition of method m.
@@ -148,14 +151,20 @@ public class Lookup {
     if (fPreArgs.isEmpty()) {
       for (RoutineDecl rd: preconditions.keySet()) {
         final List<Term> args = mkArguments(rd);
+        final LinkedList<Term> argsWithoutHeap = new LinkedList<Term>();
+        argsWithoutHeap.addAll(args);
         fPreArgs.put(rd, args);
+        fPreArgsWithoutHeap.put(rd, argsWithoutHeap);
       }
     }
   }
+  
   public List<Term> getPreconditionArgs(final RoutineDecl m) {
     return fPreArgs.get(m);
   }
-  
+  public List<Term> getPreconditionArgsWithoutHeap(final RoutineDecl m) {
+    return fPreArgsWithoutHeap.get(m);
+  }
   /**
    * @return the content of the object
    */

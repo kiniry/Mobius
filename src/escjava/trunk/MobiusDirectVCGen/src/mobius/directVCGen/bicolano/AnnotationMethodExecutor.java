@@ -139,7 +139,7 @@ public class AnnotationMethodExecutor extends ABasicExecutor {
     final Stream out = getAnnotationOut();
     // definition of the mk method
     out.println("Definition mk_" + namePost + " := ");
-    final List<QuantVariableRef> list = mkOldArguments(fRout);
+    final List<Term> list = Lookup.getInst().getPreconditionArgsWithoutHeap(fRout);
     
     String varsAndType = "";
     
@@ -151,7 +151,7 @@ public class AnnotationMethodExecutor extends ABasicExecutor {
     varsAndType += "(" + hname + ": " + Formula.generateType(Heap.var.getSort()) +  ")";
     
     
-    for (QuantVariableRef qvr: list) {
+    for (Term qvr: list) {
       final String vname = Formula.generateFormulas(qvr).toString();
 
       varsAndType += " (" + vname + ": " + Formula.generateType(qvr.getSort()) +  ")";
@@ -183,10 +183,10 @@ public class AnnotationMethodExecutor extends ABasicExecutor {
     }
     
     // momentary fix
-    for (QuantVariableRef qvr: list) {
+    for (Term t: list) {
 //      System.out.println();
 //      System.out.println(qvr + " " + Expression.old(qvr));
-      
+      final QuantVariableRef qvr = (QuantVariableRef) t;
       normalPost = new Post(normalPost.getRVar(),
                             normalPost.subst(Expression.old(qvr), qvr));
       excpPost = new Post(excpPost.getRVar(),
@@ -235,10 +235,7 @@ public class AnnotationMethodExecutor extends ABasicExecutor {
     out.println("let " + hname + " := (snd s0) " + " in");
     vars += hname;
     int count = 0;
-    LinkedList<Term> list = new LinkedList<Term>();
-    list.addAll(Lookup.getInst().getPreconditionArgs(fRout));
-    list.removeFirst();    
-    for (Term qvr: list) {
+    for (Term qvr: Lookup.getInst().getPreconditionArgsWithoutHeap(fRout)) {
       final String vname = Formula.generateFormulas(qvr).toString();
       out.println("let " + vname + " := " +
                            "(do_lvget (fst s0) " + count++ + "%N)" + " in ");
@@ -260,7 +257,10 @@ public class AnnotationMethodExecutor extends ABasicExecutor {
     vars += " " + hname;
     
     int count = 0;
-    for (QuantVariableRef qvr: mkOldArguments(fRout)) {
+    final LinkedList<Term> args = new LinkedList<Term>();
+    args.addAll(Lookup.getInst().getPreconditionArgs(fRout));
+    args.removeFirst();
+    for (Term qvr: args) {
       final String vname = Formula.generateFormulas(qvr).toString();
       out.println("let " + vname + " := " +
                            "(do_lvget (fst s0) " + count++ + "%N)" + " in ");
@@ -270,19 +270,7 @@ public class AnnotationMethodExecutor extends ABasicExecutor {
     return vars;
   }
   
-  public static List<QuantVariableRef> mkOldArguments(final RoutineDecl rd) {
-    final List<QuantVariableRef> v = new Vector<QuantVariableRef>();
-    final FormalParaDeclVec fpdvec = rd.args;
 
-    if ((rd.modifiers & TagConstants.STATIC) == 0) {
-      v.add(Ref.varThis); 
-    }
-    final FormalParaDecl[] args = fpdvec.toArray();
-    for (FormalParaDecl fpd: args) {
-      v.add(Expression.rvar(fpd));
-    }
-    return v;
-  }
   
 
 

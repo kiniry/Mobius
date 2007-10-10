@@ -74,6 +74,7 @@ public final class AnnotationVisitor extends ABasicVisitor {
     fMet = met;
     fArgs = new LinkedList<Term>(); 
     fArgs.addAll(Lookup.getInst().getPreconditionArgs(decl));
+    fArgs.removeFirst();
 
   }
 
@@ -175,7 +176,7 @@ public final class AnnotationVisitor extends ABasicVisitor {
     int varcount = 0;
     for (Term ter: fArgs) {
       varcount++;
-      QuantVariableRef qvr = (QuantVariableRef) ter;
+      final QuantVariableRef qvr = (QuantVariableRef) ter;
       if (qvr.qvar.name.equals("this")) {
         continue;
       }
