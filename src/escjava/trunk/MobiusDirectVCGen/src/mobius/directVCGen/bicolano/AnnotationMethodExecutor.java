@@ -113,13 +113,15 @@ public class AnnotationMethodExecutor extends ABasicExecutor {
     varsAndType += "(" + hname + ": " + Formula.generateType(Heap.var.getSort()) +  ")";
     List<Term> args = new ArrayList<Term>();
     args.add(Heap.var);
+    args.addAll(list);
+    Lookup.getInst().addPreconditionArgs(fRout, args);
     for (QuantVariableRef qvr: list) {
       final String vname = Formula.generateFormulas(qvr).toString();
       varsAndType += " (" + vname + ": " + Formula.generateType(qvr.getSort()) +  ")";
       
     }
-    args.addAll(list);
-    Lookup.getInstance().addPreconditionArgs(fRout, args);
+
+
     
     out.incTab();
     out.println("fun " + varsAndType + " => ");
@@ -142,7 +144,7 @@ public class AnnotationMethodExecutor extends ABasicExecutor {
     final Stream out = getAnnotationOut();
     // definition of the mk method
     out.println("Definition mk_" + namePost + " := ");
-    final List<QuantVariableRef> list = mkOldArguments(fRout, fMeth);
+    final List<QuantVariableRef> list = mkOldArguments(fRout);
     
     String varsAndType = "";
     
@@ -258,7 +260,7 @@ public class AnnotationMethodExecutor extends ABasicExecutor {
     vars += " " + hname;
     
     int count = 0;
-    for (QuantVariableRef qvr: mkOldArguments(fRout, fMeth)) {
+    for (QuantVariableRef qvr: mkOldArguments(fRout)) {
       final String vname = Formula.generateFormulas(qvr).toString();
       out.println("let " + vname + " := " +
                            "(do_lvget (fst s0) " + count++ + "%N)" + " in ");
@@ -268,12 +270,12 @@ public class AnnotationMethodExecutor extends ABasicExecutor {
     return vars;
   }
   
-  public static List<QuantVariableRef> mkOldArguments(final RoutineDecl rd, MethodGen met) {
+  public static List<QuantVariableRef> mkOldArguments(final RoutineDecl rd) {
     final List<QuantVariableRef> v = new Vector<QuantVariableRef>();
     final FormalParaDeclVec fpdvec = rd.args;
-    if (!met.isStatic()) {
-      v.add(Ref.varThis);
-      
+
+    if ((rd.modifiers & TagConstants.STATIC) == 0) {
+      v.add(Ref.varThis); 
     }
     final FormalParaDecl[] args = fpdvec.toArray();
     for (FormalParaDecl fpd: args) {
@@ -286,7 +288,7 @@ public class AnnotationMethodExecutor extends ABasicExecutor {
     final List<QuantVariableRef> v = new Vector<QuantVariableRef>();
     final FormalParaDeclVec fpdvec = rd.args;
     
-    if ((rd.modifiers & TagConstants.STATIC) != 0) {
+    if ((rd.modifiers & TagConstants.STATIC) == 0) {
       v.add(Ref.varThis); 
     }
     final FormalParaDecl[] args = fpdvec.toArray();

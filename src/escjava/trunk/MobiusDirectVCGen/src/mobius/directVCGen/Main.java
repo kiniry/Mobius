@@ -225,9 +225,10 @@ public class Main extends escjava.Main {
     sig.getCompilationUnit().accept(new JmlVisitor(options.doSubsetChecking), null);
     fOut.println("[" + timeUsed(midTime) + "]\n");
 
+    doBcVCGen(sig); 
     doSrcVCGen(sig);
 
-    doBcVCGen(sig); 
+
     return false;
 
   }

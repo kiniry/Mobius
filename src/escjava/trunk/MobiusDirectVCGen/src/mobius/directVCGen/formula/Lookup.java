@@ -133,7 +133,7 @@ public class Lookup {
    * Returns the current instance of the lookup object.
    * @return cannot be null
    */
-  public static Lookup getInstance() {
+  public static Lookup getInst() {
     return inst;
   }
 
@@ -148,10 +148,15 @@ public class Lookup {
     return fPreArgs.get(m);
   }
   
+  /**
+   * @return the content of the object
+   */
+  @Override
   public String toString() {
-    return "Precondition: " +
-        "Arguments:" + fPreArgs + "\n" +
-        "Terms: " + preconditions;
+    final String pre = "Preconditions: \n" +
+                       "Arguments:" + fPreArgs + "\n" +
+                       "Terms: " + preconditions + "\n";
+    return pre;
            
   }
 }
