@@ -295,7 +295,7 @@ class BCELReader extends Reader {
 	 * 
 	 * @param fields
 	 *            Array of fields in BCEL
-	 * @return Field declation
+	 * @return Field declaration
 	 */
 	protected FieldDecl[] getFieldDecl(Field[] fields) {
 		int numberOfFieldsInClass = fields.length;

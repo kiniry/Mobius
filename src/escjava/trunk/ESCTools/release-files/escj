@@ -121,7 +121,20 @@ fi
 ############ Setting XMLRPC_LIB, if necessary
 
 if [ -z "$XMLRPC_LIB" ]; then
-    XMLRPC_LIB=${ESCTOOLS_ROOT}/xmlrpc.jar
+    XMLRPC_LIB ?= $(ESCTOOLS_ROOT)/Escjava/xmlrpc-1.2-b1-modified.jar
+fi
+
+############ Setting JUNIT_LIB, if necessary
+
+if [ -z "$JUNIT_LIB" ]; then
+export JUNIT_LIB ?= ${ESCTOOLS_ROOT}/Utils/junit.jar
+fi
+
+
+############ Setting ANT_LIB, if necessary
+
+if [ -z "$ANT_LIB" ]; then
+export ANT_LIB ?= ${ESCTOOLS_ROOT}/Utils/ant.jar
 fi
 
 
@@ -217,9 +230,9 @@ fi
 ## release
 if [ -z "$ESC_CLASSPATH" ]; then
     if [ -n "$ESCTOOLS_RELEASE" ]; then
-	ESC_CLASSPATH=${ESCTOOLS_RELEASE}/esctools2.jar:${XMLRPC_LIB}:${BCEL_LIB}
+	ESC_CLASSPATH=${ESCTOOLS_RELEASE}/esctools2.jar:${XMLRPC_LIB}:${BCEL_LIB}:${ANT_LIB}:${JUNIT_LIB}
     else
-	ESC_CLASSPATH=${ESCTOOLS_ROOT}/Escjava/classfiles:${ESCTOOLS_ROOT}/Javafe/classfiles:${ESCTOOLS_ROOT}/Utils:${XMLRPC_LIB}:${BCEL_LIB}
+	ESC_CLASSPATH=${ESCTOOLS_ROOT}/Escjava/classfiles:${ESCTOOLS_ROOT}/Javafe/classfiles:${ESCTOOLS_ROOT}/Utils:${XMLRPC_LIB}:${BCEL_LIB}:{ANT_LIB}:{JUNIT_LIB}
     fi
 fi
 

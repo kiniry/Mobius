@@ -75,7 +75,7 @@ public abstract class InputStream {
     //@ pure
     public InputStream();
 
-    /*@ public behavior
+    /*@ also public behavior
       @   assignable streamState;
       @   ensures !isOpen && wasClosed;
       @   signals (Exception) !isOpen && wasClosed && (* an IO error occured *);

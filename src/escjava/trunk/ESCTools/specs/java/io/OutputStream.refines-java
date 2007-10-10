@@ -1,6 +1,7 @@
 // @(#)$Id$
 
 // Copyright (C) 2004 Iowa State University
+// Modified for JDK 1.5, 2007, Systems Research Group, University College Dublin
 
 // This file is part of JML
 
@@ -27,7 +28,7 @@ package java.io;
 /** JML's specification of OutputStream.
  * @author Gary T. Leavens
  */
-public abstract class OutputStream extends Object {
+public abstract class OutputStream extends Object implements Closeable, Flushable {
 
     // FIELDS
     /** The output data group is used to specify things like caching,
@@ -61,7 +62,7 @@ public abstract class OutputStream extends Object {
     //@ pure
     public OutputStream();
 
-    /*@ public behavior
+    /*@ also public behavior
       @   requires isOpen;
       @   assignable output, isOpen, wasClosed;
       @   ensures !isOpen;
@@ -72,7 +73,7 @@ public abstract class OutputStream extends Object {
     public void close() throws IOException;
 
 // FIXME - ought to keep track of how much of hte outputBytes buffer is flushed?
-    /*@ public behavior
+    /*@ also public behavior
       @   requires isOpen;
       @   assignable output;
       @   ensures \not_modified(outputBytes);

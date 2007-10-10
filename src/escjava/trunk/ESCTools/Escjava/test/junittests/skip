@@ -98,6 +98,8 @@ AClass.java
 ## To be assessed
 Min.java
 #
-# JDK 1.5 Assertion Failure
+# JDK 1.5 Assertion Failures - To be updated
 #
 Bug2.java
+ParseImports.java
+ParseImports2.java
