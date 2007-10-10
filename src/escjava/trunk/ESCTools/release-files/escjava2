@@ -1,4 +1,4 @@
-#! /bin/tcsh -f
+#!/bin/bash
 
 ## This script presumes it is operating from a release.
 ## It checks and sets various environment variables and then invokes the

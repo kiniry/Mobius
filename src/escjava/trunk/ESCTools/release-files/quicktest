@@ -1,4 +1,4 @@
-#! /bin/tcsh -f
+#!/bin/bash
 ## This script executes a short test that an installation was successful
 ## You should have ESCTOOLS_RELEASE set to the directory containing the
 ## release, but if it is not set, this script attempts to guess it.
