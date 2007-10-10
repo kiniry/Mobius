@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>ESCTools</name>
+	<name>ESCJava2</name>
 	<comment></comment>
 	<projects>
 		<project>JmlSpecs</project>
@@ -8,7 +8,7 @@
 	<buildSpec>
 		<buildCommand>
 			<name>org.eclipse.ui.externaltools.ExternalToolBuilder</name>
-			<triggers>incremental,</triggers>
+			<triggers>full,</triggers>
 			<arguments>
 				<dictionary>
 					<key>LaunchConfigHandle</key>
@@ -18,7 +18,7 @@
 		</buildCommand>
 		<buildCommand>
 			<name>org.eclipse.ui.externaltools.ExternalToolBuilder</name>
-			<triggers>auto,full,incremental,</triggers>
+			<triggers>incremental,</triggers>
 			<arguments>
 				<dictionary>
 					<key>LaunchConfigHandle</key>
