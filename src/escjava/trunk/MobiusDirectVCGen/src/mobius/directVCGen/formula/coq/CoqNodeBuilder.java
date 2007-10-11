@@ -421,6 +421,9 @@ public class CoqNodeBuilder extends EscNodeBuilder {
         return new CType("typeof", args[0], getLoc((SValue)args[1]));
       }
     }
+    if (fn.name.startsWith("(PrimitiveType")) {
+      return new CType(fn.name);
+    }
     throw new IllegalArgumentException("Unknown symbol: " + fn);
   }
 

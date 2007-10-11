@@ -22,8 +22,11 @@ import javafe.ast.VarInit;
 import javafe.ast.VariableAccess;
 import mobius.directVCGen.formula.Bool;
 import mobius.directVCGen.formula.Expression;
+import mobius.directVCGen.formula.Heap;
+import mobius.directVCGen.formula.Logic;
 import mobius.directVCGen.formula.Num;
 import mobius.directVCGen.formula.Ref;
+import mobius.directVCGen.formula.Type;
 import mobius.directVCGen.vcgen.ABasicVisitor;
 import mobius.directVCGen.vcgen.struct.Post;
 import mobius.directVCGen.vcgen.struct.VCEntry;
@@ -112,22 +115,51 @@ public class ExpressionVisitor extends ABasicVisitor {
     final VCEntry vce = (VCEntry) o;
     final Post result = vce.fPost;
     Term term = null;
+    Term val;
+
+    final Term intMin = Num.value(Integer.MIN_VALUE);
+    final Term intMax = Num.value(Integer.MAX_VALUE);
     // System out.println(TagConstants.toString(expr.tag));
     switch (expr.tag) {
       case TagConstants.BOOLEANLIT:
-        term = result.substWith(Bool.value((Boolean)expr.value));
+        // -2^31 <= z < 2^31 
+        if ((Boolean)expr.value) {
+          val = Num.value(1); 
+        }
+        else {
+          val = Num.value(0); 
+        }
+        term =  Logic.implies (Logic.and(Logic.le(intMin, val), Logic.le(val, intMax)),
+                     Logic.implies(Logic.assignCompat(Heap.var, Heap.sortToValue(val), 
+                                                      Expression.sym("(PrimitiveType BOOLEAN)", 
+                                                                     Type.sort)),
+                               result.substWith(Bool.value((Boolean)expr.value))));
+        
         break;
       case TagConstants.INTLIT:
-        term = result.substWith(Num.value((Integer)expr.value));
+        //-2^31 <= z < 2^31 
+        val = Num.value((Integer)expr.value);
+        term = Logic.implies (Logic.and(Logic.le(intMin, val), Logic.le(val, intMax)),
+                              result.substWith(val));
         break;
       case TagConstants.LONGLIT:
         term = result.substWith(Num.value((Long)expr.value));
         break;
       case TagConstants.BYTELIT:
-        result.substWith(Num.value((Byte)expr.value));
+        //-2^7  <= z < 2^7
+        val = Num.value((Byte)expr.value);
+        final Term byteMin = Num.value(Byte.MIN_VALUE);
+        final Term byteMax = Num.value(Byte.MAX_VALUE);
+        term = Logic.implies (Logic.and(Logic.le(byteMin, val), Logic.le(val, byteMax)),
+                              result.substWith(val));
         break;
-      case TagConstants.SHORTLIT: 
-        term = result.substWith(Num.value((Short)expr.value));
+      case TagConstants.SHORTLIT:
+        //-2^15 <= z < 2^15 
+        val = Num.value((Short)expr.value);
+        final Term shortMin = Num.value(Short.MIN_VALUE);
+        final Term shortMax = Num.value(Short.MAX_VALUE);
+        term = Logic.implies (Logic.and(Logic.le(shortMin, val), Logic.le(val, shortMax)),
+                              result.substWith(val));
         break;
       case TagConstants.FLOATLIT:
         term = result.substWith(Num.value((Float)expr.value));

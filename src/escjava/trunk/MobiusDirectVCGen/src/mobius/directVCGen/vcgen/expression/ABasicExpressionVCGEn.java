@@ -1,15 +1,8 @@
 package mobius.directVCGen.vcgen.expression;
 
 import javafe.ast.ASTNode;
-import mobius.directVCGen.formula.Expression;
-import mobius.directVCGen.formula.Heap;
-import mobius.directVCGen.formula.Logic;
-import mobius.directVCGen.formula.Ref;
-import mobius.directVCGen.vcgen.stmt.StmtVCGen;
 import mobius.directVCGen.vcgen.struct.Post;
 import mobius.directVCGen.vcgen.struct.VCEntry;
-import escjava.sortedProver.Lifter.QuantVariableRef;
-import escjava.sortedProver.Lifter.Term;
 
 /**
  * This visitor gives the basic functionnality of the expression vc gen(s).
@@ -44,22 +37,7 @@ public abstract class ABasicExpressionVCGEn {
   }
 
 
-  /**
-   * This method returns a valid new object (with all the necessary properties)
-   * to use while creating a new exception.
-   * @param type the type of the exception 
-   * @param post the current post condition
-   * @return the post condition newly formed 
-   */
-  public Term getNewExcpPost(final Term type, final VCEntry post) {
-    final Post p = StmtVCGen.getExcpPost(type, post);
-    final QuantVariableRef e = Expression.rvar(Ref.sort);
-    final QuantVariableRef heap = Heap.newVar();
-    return Logic.forall(e,
-                        Logic.forall(heap,
-                                     Logic.implies(Heap.newObject(Heap.var, type, heap, e),
-                                                   p.substWith(e).subst(Heap.var, heap))));
-  }
+
 
 
 }

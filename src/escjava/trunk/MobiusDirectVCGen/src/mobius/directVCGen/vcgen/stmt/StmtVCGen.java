@@ -295,33 +295,14 @@ public class StmtVCGen extends ExpressionVisitor {
 
   }
 
-  // TODO: add comments
-  public static Post getExcpPost(final Term typ, final VCEntry vce) {
-    final Iterator iter = vce.lexcpost.iterator();
-    Post res = vce.fExcPost;
-    while (iter.hasNext()) {
-      final ExcpPost p = (ExcpPost)iter.next();
-      if (Type.isSubClassOrEq(typ, p.type)) {
-        res = p.post;
-      }
-      else if (Type.isSubClassOrEq(p.type, typ)) {
-        final Term var = Expression.rvar(Ref.sort);
-        final Post typeof = new Post(
-                               Logic.assignCompat(Heap.var, var, 
-                                                  p.type));
-        res = Post.and(Post.implies(typeof, p.post), 
-                       Post.implies(Post.not(typeof), res));
-      }
-    }
-    return res;
-  }
+
 
   // TODO: add comments
   public /*@non_null*/ Object visitThrowStmt(final /*@non_null*/ ThrowStmt x, final Object o) {
     final VCEntry vce = (VCEntry)o;
     vce.fPost = treatAnnot(vce, fAnnot.getAnnotPost(x));
     final Term typ = Type.getTypeName(x.expr);
-    vce.fPost = getExcpPost(typ, vce);
+    vce.fPost = Util.getExcpPost(typ, vce);
     vce.fPost = ((Post)x.expr.accept(fExprVisitor, vce));
     return treatAnnot(vce, fAnnot.getAnnotPre(x));
   }
@@ -507,8 +488,9 @@ public class StmtVCGen extends ExpressionVisitor {
     final VCEntry post = new VCEntry(vce);
     post.lexcpost.clear();
     post.lexcpost.addAll(l);
+    //System.out.println(l);
     post.lexcpost.addAll(vce.lexcpost);
-    vce.fPost = visitInnerBlockStmt(x.tryClause, vce);
+    vce.fPost = visitInnerBlockStmt(x.tryClause, post);
     return treatAnnot(vce, fAnnot.getAnnotPre(x));
   }
 
@@ -582,7 +564,7 @@ public class StmtVCGen extends ExpressionVisitor {
     final Term tExcp = Logic.forall(exc.qvar, 
                Logic.implies(excpPost.substWith(exc).subst(Ref.varThis, 
                                                            newThis), 
-                             StmtVCGen.getExcpPost(Type.javaLangThrowable(), 
+                             Util.getExcpPost(Type.javaLangThrowable(), 
                                                    entry).substWith(exc)));
     // the normal post
     //QuantVariableRef res = entry.post.var;

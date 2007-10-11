@@ -5,6 +5,9 @@ import java.util.Vector;
 
 import mobius.directVCGen.formula.annotation.AAnnotation;
 import mobius.directVCGen.vcgen.DirectVCGen;
+import mobius.directVCGen.vcgen.struct.ExcpPost;
+import mobius.directVCGen.vcgen.struct.Post;
+import mobius.directVCGen.vcgen.struct.VCEntry;
 
 import org.apache.bcel.generic.GotoInstruction;
 import org.apache.bcel.generic.InstructionHandle;
@@ -12,6 +15,7 @@ import org.apache.bcel.generic.LineNumberGen;
 import org.apache.bcel.generic.LocalVariableGen;
 import org.apache.bcel.generic.MethodGen;
 
+import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
 
 import javafe.ast.RoutineDecl;
@@ -118,5 +122,55 @@ public class Util {
       res = annot.formula;
     }
     return res;
+  }
+  // TODO: add comments
+  public static Post getExcpPost(final Term typ, final VCEntry vce) {
+    Post res = null;
+    for (ExcpPost p: vce.lexcpost) {
+      if (Type.isSubClassOrEq(typ, p.type)) {
+        final QuantVariableRef var = vce.fExcPost.getRVar();
+        final Post typeof = new Post(var, Logic.assignCompat(Heap.var, var, p.type));
+
+        if (res == null) {
+          res = Post.implies(typeof, p.post);
+        }
+        else {
+          res = Post.and(Post.implies(typeof, p.post), res);
+        }
+        return res;
+      }
+      else {
+        final QuantVariableRef var = vce.fExcPost.getRVar();
+        final Post typeof = new Post(var,
+                               Logic.assignCompat(Heap.var, var, 
+                                                  p.type));
+        if (res == null) {
+          res = Post.implies(typeof, p.post);
+        }
+        else {
+          res = Post.and(Post.implies(typeof, p.post), res);
+        }
+      }
+    }
+    final Post ex = vce.fExcPost;
+    res = Post.and(ex, res);
+    return res;
+  }
+  /**
+   * This method returns a valid new object (with all the necessary properties)
+   * to use while creating a new exception.
+   * @param type the type of the exception 
+   * @param post the current post condition
+   * @return the post condition newly formed 
+   */
+  public static Term getNewExcpPost(final Term type, final VCEntry post) {
+    final Post p = Util.getExcpPost(type, post);
+    final QuantVariableRef e = Expression.rvar(Ref.sort);
+    final QuantVariableRef heap = Heap.newVar();
+    
+    return Logic.forall(e,
+             Logic.forall(heap,
+                          Logic.implies(Heap.newObject(Heap.var, type, heap, e),
+                                        p.substWith(e).subst(Heap.var, heap))));
   }
 }

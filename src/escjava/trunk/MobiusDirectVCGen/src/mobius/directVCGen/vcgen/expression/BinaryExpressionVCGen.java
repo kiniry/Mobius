@@ -14,6 +14,7 @@ import mobius.directVCGen.formula.Lookup;
 import mobius.directVCGen.formula.Num;
 import mobius.directVCGen.formula.Ref;
 import mobius.directVCGen.formula.Type;
+import mobius.directVCGen.formula.Util;
 import mobius.directVCGen.vcgen.stmt.StmtVCGen;
 import mobius.directVCGen.vcgen.struct.Post;
 import mobius.directVCGen.vcgen.struct.VCEntry;
@@ -127,7 +128,7 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn {
     }
     final Post rPost = new Post(rvar, 
                           Logic.and(Logic.implies(Logic.equals(rvar, Num.value(0)),
-                                                  getNewExcpPost(Type.javaLangArithmeticExceptionName(), 
+                                                  Util.getNewExcpPost(Type.javaLangArithmeticExceptionName(), 
                                                                  post)),
                                     Logic.implies(Logic.not(Logic.equals(rvar, 
                                                                          Num.value(0))), 
@@ -217,10 +218,8 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn {
       //QuantVariableRef val = Expression.rvar(Type.getSort(arr));
       final QuantVariableRef idx = Expression.rvar(Num.sortInt);
       final QuantVariableRef exc = Expression.rvar(Ref.sort);
-      final Term tExcp = Logic.forall(exc.qvar, 
-                            Logic.implies(Logic.equalsNull(arrVar), 
-                               StmtVCGen.getExcpPost(Type.javaLangNullPointerException(), 
-                                                    entry).substWith(exc)));
+      final Term tExcp = Logic.implies(Logic.equalsNull(arrVar), 
+                               Util.getNewExcpPost(Type.javaLangNullPointerException(), entry));
 
       // the normal post
       Term tNormal = entry.fPost.subst(Heap.var, 

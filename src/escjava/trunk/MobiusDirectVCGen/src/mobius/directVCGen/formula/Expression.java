@@ -306,7 +306,12 @@ public final class Expression {
   public static FnTerm sym(final String name, Term [] args ) {
     final Sort [] tab = new Sort[args.length];
     for (int i = 0; i < tab.length; i++) {
-      tab[i] = args[i].getSort();
+      if (args[i].getSort().equals(Logic.sort)) {
+        tab[i] = Bool.sort;
+      }
+      else {
+        tab[i] = args[i].getSort();
+      }
     }
     final PredSymbol ps = Formula.lf.mkPredSymbol(name, tab);
     return Formula.lf.mkFnTerm(ps, args);

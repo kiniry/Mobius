@@ -265,3 +265,5 @@ end;
 repeat match goal with
 [ H: Int.t |- _ ] => (clear H)
 end.
+
+Lemma user : forall p: Prop, p.

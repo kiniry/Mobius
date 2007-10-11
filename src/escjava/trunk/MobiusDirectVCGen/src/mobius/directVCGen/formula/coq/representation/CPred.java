@@ -7,7 +7,7 @@ import escjava.sortedProver.NodeBuilder.STerm;
  * A class to represent formulas of type predicate (prop in Coq terms).
  * @author J. Charles (julien.charles@inria.fr)
  */
-public class CPred extends CTerm implements SPred {
+public class CPred extends CAny implements SPred {
   /**
    * Constructs a formula of type pred.
    * @param pref if the symbol is prefix

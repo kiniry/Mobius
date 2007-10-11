@@ -1,5 +1,6 @@
 package mobius.directVCGen.vcgen.expression;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 
@@ -21,7 +22,6 @@ import javafe.ast.ObjectDesignator;
 import javafe.ast.UnaryExpr;
 import javafe.ast.VarInit;
 import javafe.ast.VarInitVec;
-import mobius.directVCGen.bicolano.AnnotationMethodExecutor;
 import mobius.directVCGen.formula.Bool;
 import mobius.directVCGen.formula.Expression;
 import mobius.directVCGen.formula.Heap;
@@ -32,7 +32,6 @@ import mobius.directVCGen.formula.Ref;
 import mobius.directVCGen.formula.Type;
 import mobius.directVCGen.formula.Util;
 import mobius.directVCGen.vcgen.DirectVCGen;
-import mobius.directVCGen.vcgen.stmt.StmtVCGen;
 import mobius.directVCGen.vcgen.struct.Post;
 import mobius.directVCGen.vcgen.struct.VCEntry;
 import escjava.ast.Modifiers;
@@ -68,8 +67,40 @@ public class ExpressionVCGen extends BinaryExpressionVCGen {
   }
   
   public Post methodInvocation(final MethodInvocation mi, final VCEntry entry) {
-    final Post normalPost = Lookup.getNormalPostcondition(mi.decl);
-    final Post excpPost = Lookup.getExceptionalPostcondition(mi.decl);
+    final MethodDecl fMeth = mi.decl;
+    final Post normPost;
+    final Post excpPost;
+    if (DirectVCGen.fByteCodeTrick) {
+      final String name = Util.getMethodName(fMeth);
+      LinkedList<Term> args = new LinkedList<Term> ();
+      args.add(Heap.varPre);
+      args.addAll(Lookup.getInst().getPreconditionArgs(fMeth));
+      QuantVariableRef qvr = Lookup.getNormalPostcondition(fMeth).getRVar();
+      if (qvr != null) {
+        args.addFirst(Expression.sym("Normal", new Term [] {
+                            Expression.sym("Some", new Term [] {Heap.sortToValue(qvr)})}));
+      }
+      else {
+        args.addFirst(Expression.sym("Normal None", new Term [] {}));
+      }
+      Term[] tab = args.toArray(new Term [args.size()]);
+      normPost = new Post(qvr, 
+                          Expression.sym(name + ".mk_post", tab));
+      
+      args = new LinkedList<Term> ();
+      args.add(Heap.varPre);
+      args.addAll(Lookup.getInst().getPreconditionArgs(fMeth));
+      qvr = Lookup.getExceptionalPostcondition(fMeth).getRVar();
+      args.addFirst(Expression.sym("Exception", new Term [] {qvr}));
+      tab = args.toArray(new Term [args.size()]);
+      excpPost = new Post(Lookup.getExceptionalPostcondition(fMeth).getRVar(), 
+                          Expression.sym(name + ".mk_post", tab));
+
+    }
+    else {
+      normPost = Lookup.getNormalPostcondition(fMeth);
+      excpPost = Lookup.getExceptionalPostcondition(fMeth);
+    }
     final Term pre;
     if (DirectVCGen.fByteCodeTrick) {
       final String name = Util.getMethodName(mi.decl);
@@ -86,14 +117,15 @@ public class ExpressionVCGen extends BinaryExpressionVCGen {
 
     // first: the exceptional post
     final QuantVariableRef exc = Expression.rvar(Ref.sort);
-    final Term tExcp = Logic.forall(exc.qvar, Logic.implies(excpPost.substWith(exc).subst(Ref.varThis, newThis), 
-                                                      StmtVCGen.getExcpPost(Type.javaLangThrowable(), entry).substWith(exc)));
+    final Term tExcp = Logic.forall(exc.qvar, Logic.implies(Logic.implies(pre, excpPost.substWith(exc).subst(Ref.varThis, newThis)), 
+                                                      Util.getExcpPost(Type.javaLangThrowable(), entry).substWith(exc)));
     // the normal post
     final QuantVariableRef res = entry.fPost.getRVar();
-    Term tNormal = normalPost.substWith(res);
-    tNormal = Logic.forall(res, Logic.implies(tNormal, entry.fPost.substWith(res)).subst(Ref.varThis, newThis));
+    Term tNormal = normPost.substWith(res);
+    tNormal = Logic.forall(res, Logic.implies(Logic.implies(pre, tNormal), entry.fPost.substWith(res)).subst(Ref.varThis, newThis));
 
-    entry.fPost = new Post(Logic.and(pre, Logic.implies(pre, Logic.and(tNormal, tExcp))));
+    entry.fPost = new Post( Logic.and(tNormal, tExcp));
+    //entry.fPost = new Post(Logic.and(pre, Logic.implies(pre, Logic.and(tNormal, tExcp))));
     final List<QuantVariableRef> v = mkArguments(mi);
     final ExprVec ev = mi.args;
     for (int i = ev.size() - 1; i >= 0; i--) {
@@ -170,7 +202,7 @@ public class ExpressionVCGen extends BinaryExpressionVCGen {
         final QuantVariableRef obj = entry.fPost.getRVar();
         entry.fPost = new Post(obj, 
                                Logic.and(Logic.implies(Logic.equalsNull(obj), 
-                                                       getNewExcpPost(Type.javaLangNullPointerExceptionName(), 
+                                                       Util.getNewExcpPost(Type.javaLangNullPointerExceptionName(), 
                                                                       entry)),
                                          Logic.implies(Logic.not(Logic.equalsNull(obj)), 
                                                        entry.fPost.getPost())));
@@ -205,7 +237,7 @@ public class ExpressionVCGen extends BinaryExpressionVCGen {
     final Term tExcp = Logic.forall(exc.qvar, Logic.implies(excpPost.substWith(
                                                                  exc).subst(Ref.varThis, 
                                                                             newThis), 
-                                           StmtVCGen.getExcpPost(Type.javaLangThrowable(), 
+                                           Util.getExcpPost(Type.javaLangThrowable(), 
                                                                 entry).substWith(exc)));
     // the normal post
     final QuantVariableRef res = entry.fPost.getRVar();
@@ -312,23 +344,20 @@ public class ExpressionVCGen extends BinaryExpressionVCGen {
     pre = entry.fPost.substWith(Heap.selectArray(Heap.var, var, idx, Type.getSort(arr)));
     Term norm = Logic.implies(Logic.interval0To(length, idx), pre);
 
-    final QuantVariableRef exc = Expression.rvar(Ref.sort);
-    Term tExcp = Logic.forall(exc.qvar, 
-                              Logic.implies(Logic.not(Logic.interval0To(length, idx)), 
-                                            StmtVCGen.getExcpPost(
+    Term tExcp = Logic.implies(Logic.not(Logic.interval0To(length, idx)), 
+                                            Util.getNewExcpPost(
                                                   Type.javaLangArrayOutOfBoundException(), 
-                                                                  entry).substWith(exc)));
+                                                                  entry));
 
     pre = Logic.and(norm, tExcp);
     entry.fPost = new Post(idx, pre);
     pre = getPre(arr.index, entry).getPost();
 
     norm = Logic.implies(Logic.not(Logic.equalsNull(var)), pre);
-    tExcp = Logic.forall(exc.qvar, 
-                         Logic.implies(Logic.equalsNull(var), 
-                                       StmtVCGen.getExcpPost(
+    tExcp = Logic.implies(Logic.equalsNull(var), 
+                                       Util.getNewExcpPost(
                                                 Type.javaLangNullPointerException(), 
-                                                entry).substWith(exc)));
+                                                entry));
 
     pre = Logic.and(norm, tExcp);
     entry.fPost = new Post(var, pre);

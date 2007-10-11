@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 
@@ -139,8 +140,39 @@ public final class MethodVisitor extends DirectVCGen {
    */
   @Override
   public void visitBlockStmt(final /*@non_null*/ BlockStmt x) {
-    final VCEntry post = new VCEntry(Lookup.getNormalPostcondition(fMeth),
-                               Lookup.getExceptionalPostcondition(fMeth));
+    final Post normPost;
+    final Post excpPost;
+    if (DirectVCGen.fByteCodeTrick) {
+      final String name = Util.getMethodName(fMeth);
+      LinkedList<Term> args = new LinkedList<Term> ();
+      args.add(Heap.varPre);
+      args.addAll(Lookup.getInst().getPreconditionArgs(fMeth));
+      QuantVariableRef qvr = Lookup.getNormalPostcondition(fMeth).getRVar();
+      if (qvr != null) {
+        args.addFirst(Expression.sym("Normal", new Term [] {qvr}));
+      }
+      else {
+        args.addFirst(Expression.sym("Normal None", new Term [] {}));
+      }
+      Term[] tab = args.toArray(new Term [args.size()]);
+      normPost = new Post(qvr, 
+                          Expression.sym(name + ".mk_post", tab));
+      
+      args = new LinkedList<Term> ();
+      args.add(Heap.varPre);
+      args.addAll(Lookup.getInst().getPreconditionArgs(fMeth));
+      qvr = Lookup.getExceptionalPostcondition(fMeth).getRVar();
+      args.addFirst(Expression.sym("Exception", new Term [] {qvr}));
+      tab = args.toArray(new Term [args.size()]);
+      excpPost = new Post(Lookup.getExceptionalPostcondition(fMeth).getRVar(), 
+                          Expression.sym(name + ".mk_post", tab));
+
+    }
+    else {
+      normPost = Lookup.getNormalPostcondition(fMeth);
+      excpPost = Lookup.getExceptionalPostcondition(fMeth);
+    }
+    final VCEntry post = new VCEntry(normPost, excpPost);
     final StmtVCGen dvcg = new StmtVCGen(fMeth);
     final Post wp = (Post)x.accept(dvcg, post);
     final List<Term> vcs = new ArrayList<Term>(); 
@@ -150,8 +182,6 @@ public final class MethodVisitor extends DirectVCGen {
       final List<QuantVariableRef> l = Lookup.getInst().getPreconditionArgs(fMeth);
       final Term[] tab = l.toArray(new Term [l.size()]);
       pre = Expression.sym(name + ".mk_pre", tab);
-        
-
     }
     else {
       pre = Lookup.getPrecondition(fMeth);
