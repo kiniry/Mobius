@@ -185,7 +185,7 @@ public class JmlVisitor extends BasicJMLTranslator {
     if (!prop.fIsHelper) {
       final Term constraints = Lookup.getConstraint(x.getParent());
       //addToPostcondition(constraints, prop);
-      Lookup.addNormalPostcondition(prop.fMethod, constraints);
+      Lookup.addNormalPostcondition(prop, constraints);
       Lookup.addExceptionalPostcondition(prop.fMethod, constraints);
     }  
     return prop;
@@ -206,7 +206,7 @@ public class JmlVisitor extends BasicJMLTranslator {
     if (!prop.fIsHelper) {
       final Term initially = (Term) prop.get("initiallyFOL");
       //addToPostcondition(initially, prop);
-      Lookup.addNormalPostcondition(prop.fMethod, initially);
+      Lookup.addNormalPostcondition(prop, initially);
       Lookup.addExceptionalPostcondition(prop.fMethod, initially);
     } 
     return prop;
@@ -462,7 +462,7 @@ public class JmlVisitor extends BasicJMLTranslator {
       case TagConstants.POSTCONDITION:
       case TagConstants.POSTCONDITION_REDUNDANTLY:
         //addToPostcondition(t, o);
-        Lookup.addNormalPostcondition(prop.fMethod, t);
+        Lookup.addNormalPostcondition(prop, t);
         break;
       default:
         break;
@@ -921,7 +921,7 @@ public class JmlVisitor extends BasicJMLTranslator {
   public void invPredToPostconditions(final /*@non_null*/ Object o) { 
     //this.addToPostcondition(this.invPostPred(o), o);
     final MethodProperties prop = (MethodProperties) o;
-    Lookup.addNormalPostcondition(prop.fMethod, 
+    Lookup.addNormalPostcondition(prop, 
                                   invPostPred(o));
   }
 
@@ -984,7 +984,7 @@ public class JmlVisitor extends BasicJMLTranslator {
       
       final Term forAllTerm = Logic.forall(vars, t);
       //addToPostcondition(forAllTerm, o);
-      Lookup.addNormalPostcondition(prop.fMethod,forAllTerm);
+      Lookup.addNormalPostcondition(prop,forAllTerm);
       Lookup.addExceptionalPostcondition(prop.fMethod, forAllTerm);
     } 
   }

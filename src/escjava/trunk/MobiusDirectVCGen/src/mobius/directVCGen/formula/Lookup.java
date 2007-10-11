@@ -10,6 +10,7 @@ import javafe.ast.FormalParaDecl;
 import javafe.ast.FormalParaDeclVec;
 import javafe.ast.RoutineDecl;
 import javafe.ast.TypeDecl;
+import mobius.directVCGen.formula.jmlTranslator.struct.MethodProperties;
 import mobius.directVCGen.vcgen.struct.Post;
 import escjava.ast.Modifiers;
 import escjava.sortedProver.Lifter.QuantVariableRef;
@@ -63,7 +64,7 @@ public class Lookup {
   public static Term getInvariant(final TypeDecl type) {
     //return buildStdCond(m, "_pre", false);
     Term t = invariants.get(type);
-    if (t == null && fFailSave) {
+    if (t == null) {
       t = Logic.True();
     }
     return t;
@@ -95,7 +96,7 @@ public class Lookup {
   public static Term getConstraint(final TypeDecl type) {
     //return buildStdCond(m, "_pre", false);
     Term t = constraints.get(type);
-    if (t == null && fFailSave) {
+    if (t == null) {
       t = Logic.True();
     }
     return t;
@@ -127,7 +128,7 @@ public class Lookup {
   public static Term getPrecondition(final RoutineDecl m) {
     //return buildStdCond(m, "_pre", false);
     Term t = preconditions.get(m);
-    if (t == null && fFailSave) {
+    if (t == null) {
       t = Logic.True();
     }
     return t;
@@ -161,7 +162,7 @@ public class Lookup {
   public static Post getNormalPostcondition(final RoutineDecl m) {
     //return new Post(buildStdCond (m, "_norm", true)); 
     Post p = postconditions.get(m);
-    if (p == null && fFailSave) {
+    if (p == null) {
       p = new Post(Logic.True());
     }
     return p;
@@ -195,20 +196,25 @@ public class Lookup {
 
   /**
    * Adds a given Term to postconditions of a given method. 
-   * @param rd the method
+   * @param mp the method
    * @param term fol term to be used as condition
    */
-  public static void addNormalPostcondition(final RoutineDecl rd, 
+  public static void addNormalPostcondition(final MethodProperties mp, 
                                             final Term term) {
-    final Post pOld = postconditions.get(rd);
+    final Post pOld = postconditions.get(mp.fMethod);
     Post pNew;
     if (pOld == null) {
-      pNew = new Post(Expression.rvar(Ref.sort), term);
+      if (mp.fResult == null){
+        pNew = new Post(null, term);
+      }
+      else{
+        pNew = new Post(mp.fResult, term);
+      }
     }
     else {
       pNew = Post.and(pOld, term);
     }
-    postconditions.put(rd, pNew);
+    postconditions.put(mp.fMethod, pNew);
   }
  
   
@@ -222,7 +228,7 @@ public class Lookup {
   public static Post getExceptionalPostcondition(final RoutineDecl m) {
     //return new Post(Expression.rvar(Ref.sort), buildStdCond (m, "_excp", false)); 
     Post p = exceptionalPostconditions.get(m);
-    if (p == null && fFailSave) {
+    if (p == null) {
       p = new Post(Expression.rvar(Ref.sort), Logic.True());
     }
     return p;
