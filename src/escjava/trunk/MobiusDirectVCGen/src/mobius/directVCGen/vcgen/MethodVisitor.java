@@ -144,25 +144,28 @@ public final class MethodVisitor extends DirectVCGen {
     final StmtVCGen dvcg = new StmtVCGen(fMeth);
     final Post wp = (Post)x.accept(dvcg, post);
     final List<Term> vcs = new ArrayList<Term>(); 
-    vcs.add(wp.getPost());
+    Term pre;
+    if (DirectVCGen.fByteCodeTrick) {
+      final String name = Util.getMethodName(fMeth);
+      final List<QuantVariableRef> l = Lookup.getInst().getPreconditionArgs(fMeth);
+      final Term[] tab = l.toArray(new Term [l.size()]);
+      pre = Expression.sym(name + ".mk_pre", tab);
+        
+
+    }
+    else {
+      pre = Lookup.precondition(fMeth);
+    }
+
+    pre = Logic.implies(pre, wp.getPost());
+    
+    vcs.add(pre);
     vcs.addAll (dvcg.getVcs());
+    
     
     final List<QuantVariableRef> args = Lookup.getInst().getPreconditionArgs(fMeth);
     for (Term t: vcs) {
-      final  Term pre;
-      if (DirectVCGen.fByteCodeTrick) {
-        final String name = Util.getMethodName(fMeth);
-        final List<QuantVariableRef> l = Lookup.getInst().getPreconditionArgs(fMeth);
-        final Term[] tab = l.toArray(new Term [l.size()]);
-        pre = Expression.sym(name + ".mk_pre", tab);
-          
-
-      }
-      else {
-        pre = Logic.implies(Lookup.precondition(fMeth), t);
-      }
-
-      t = Logic.implies(pre, t);
+      
       for (Term vars: args) {
         final QuantVariableRef qvr = (QuantVariableRef) vars;
         t = t.subst(Expression.old(qvr), qvr);

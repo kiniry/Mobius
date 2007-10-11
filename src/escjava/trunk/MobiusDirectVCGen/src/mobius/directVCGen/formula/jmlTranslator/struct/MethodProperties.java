@@ -2,13 +2,17 @@ package mobius.directVCGen.formula.jmlTranslator.struct;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+
+import mobius.directVCGen.formula.Lookup;
 
 import javafe.ast.FieldAccess;
 import javafe.ast.RoutineDecl;
 import escjava.sortedProver.Lifter.QuantVariable;
 import escjava.sortedProver.Lifter.QuantVariableRef;
+import escjava.sortedProver.Lifter.Term;
 
 /** Properties that are passed as argument of the visitor. */
 public final class MethodProperties extends ContextProperties {
@@ -36,7 +40,7 @@ public final class MethodProperties extends ContextProperties {
   public QuantVariableRef fResult;
   
   /** the current method which is inspected. */
-  public  RoutineDecl fMethod;
+  public  final RoutineDecl fMethod;
   
   /** tells whether or not we are inspecting a constructor. */
   public  boolean fIsConstructor;
@@ -50,16 +54,25 @@ public final class MethodProperties extends ContextProperties {
   
   /** if the flag modifies nothing is set for the method. */
   public boolean fNothing;
+
+  /** the local variables. */
+  public LinkedList<List<QuantVariableRef>> fLocalVars = new LinkedList<List<QuantVariableRef>> ();
+  /** the arguments of the method. */
+  public LinkedList<Term> fArgs;
   
   /**
    * initialize the properties with default values.
    */
-  public MethodProperties() {
+  public MethodProperties(RoutineDecl met) {
     initProperties(); 
     validStr.addAll(super.getValidStr());
-    
+    fMethod = met;
+    fArgs = new LinkedList<Term>(); 
+    fArgs.addAll(Lookup.mkArguments(met));
+
   }
   
+
   
   private void initProperties() {
    
@@ -76,5 +89,13 @@ public final class MethodProperties extends ContextProperties {
 
   public List<String> getValidStr() {
     return validStr;
+  }
+  
+  public List<QuantVariableRef> flattenLocals() {
+    final List<QuantVariableRef> res = new LinkedList<QuantVariableRef>();
+    for (List<QuantVariableRef> list: fLocalVars) {
+      res.addAll(list);
+    }
+    return res;
   }
 }

@@ -177,7 +177,7 @@ public class Lookup {
            
   }
   
-  private static List<QuantVariableRef> mkArguments(final RoutineDecl rd) {
+  public static List<QuantVariableRef> mkArguments(final RoutineDecl rd) {
     final List<QuantVariableRef> v = new Vector<QuantVariableRef>();
     final FormalParaDeclVec fpdvec = rd.args;
     v.add(Heap.var);

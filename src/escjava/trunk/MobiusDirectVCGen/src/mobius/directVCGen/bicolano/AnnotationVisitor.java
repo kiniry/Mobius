@@ -14,18 +14,12 @@ import mobius.directVCGen.formula.Expression;
 import mobius.directVCGen.formula.Formula;
 import mobius.directVCGen.formula.Heap;
 import mobius.directVCGen.formula.Lookup;
+import mobius.directVCGen.formula.Util;
 import mobius.directVCGen.formula.annotation.AnnotationDecoration;
 import mobius.directVCGen.vcgen.ABasicVisitor;
 
-import org.apache.bcel.classfile.LineNumber;
-import org.apache.bcel.classfile.LineNumberTable;
-import org.apache.bcel.classfile.LocalVariable;
-import org.apache.bcel.classfile.Method;
-import org.apache.bcel.generic.BranchInstruction;
-import org.apache.bcel.generic.GotoInstruction;
 import org.apache.bcel.generic.InstructionHandle;
 import org.apache.bcel.generic.LineNumberGen;
-import org.apache.bcel.generic.LocalVariableGen;
 import org.apache.bcel.generic.MethodGen;
 
 import escjava.sortedProver.Lifter.QuantVariableRef;
@@ -50,22 +44,15 @@ public final class AnnotationVisitor extends ABasicVisitor {
   /** the currently treated method. */
   private final MethodGen fMet;
   
-  /** the arguments of the method. */
-  private LinkedList<Term> fArgs;
-  
-  /** the local variables. */
-  private LinkedList<List<QuantVariableRef>> fLocalVars = new LinkedList<List<QuantVariableRef>> ();
-  
+
   /** the output file. */
   private final Stream fOut;
   
-  /** the invariants counter. */
-  private int fInvCounter = 1;
   
   /**
    * Create an annotation visitor targetting a specific method.
-   * @param out 
-   * @param decl 
+   * @param out the file where to output the annotations
+   * @param decl the routine which is currently inspected
    * @param met the method to inspect
    */
   private AnnotationVisitor(final Stream out, 
@@ -73,21 +60,12 @@ public final class AnnotationVisitor extends ABasicVisitor {
                             final MethodGen met) {
     fOut = out;
     fMet = met;
-    fArgs = new LinkedList<Term>(); 
-    fArgs.addAll(Lookup.getInst().getPreconditionArgs(decl));
-    fArgs.removeFirst();
+
 
   }
 
 
 
-  @Override
-  public /*@non_null*/ Object visitBlockStmt(final /*@non_null*/ BlockStmt x, final Object o) {
-    fLocalVars.addLast(new Vector<QuantVariableRef>());
-    final Object res = visitASTNode(x, o);
-    fLocalVars.removeLast();
-    return res;
-  }
   
 
 
@@ -110,22 +88,16 @@ public final class AnnotationVisitor extends ABasicVisitor {
    
       // let's do a third thing
       final int lineNum = Location.toLineNumber(x.getStartLoc());
-      final LineNumberGen line = getLineNumberFromLine(lineNum);
-      final List<LineNumberGen> lineList = getLineNumbers(lineNum);
+      final List<LineNumberGen> lineList = Util.getLineNumbers(fMet, lineNum);
       final Term t = fAnnot.getInvariant(x);
-      final List<LocalVariableGen> list = getValidVariables(getLineNumbers(lineNum));
-      final List<QuantVariableRef> flat = flattenLocals();
-      final String invName = "invariant" + fInvCounter++; 
-      buildMker(invName, t, flat);
-      buildDefiner(invName, t, flat);
-      if (list.size() != flat.size()) {
-        System.out.println(list + " " + fLocalVars);
-      }
+      //final List<QuantVariableRef> flat = flattenLocals();
       
-//      res = "(PCM.update " + res + " " + line.getInstruction().getPosition() + "%N" +
-//                     " (" + invName + ",," +  
-//                            fMet.getInstructionList().size() + "%nat))";
-      final InstructionHandle ih = findLastInstruction(lineList);
+      final String invName = fAnnot.getInvariantName(x); 
+      buildMker(invName, t, fAnnot.getInvariantArgs(x));
+      buildDefiner(invName, t,  fAnnot.getInvariantArgs(x));
+      
+
+      final InstructionHandle ih = Util.findLastInstruction(lineList);
       res = "(PCM.update " + res + " " + ih.getPosition() + "%N" +
                     " (" + invName + ",," +  
                         fMet.getInstructionList().getEnd().getPosition() + "%nat))";
@@ -142,47 +114,7 @@ public final class AnnotationVisitor extends ABasicVisitor {
     return res;
   }
  
-  private InstructionHandle findLastInstruction(List<LineNumberGen> list) {
-    final InstructionHandle baseih = list.get(0).getInstruction();
-    InstructionHandle ih = baseih.getNext();
-    
-    //return ih;
-    // first we find the first goto
 
-    while (!(ih.getInstruction() instanceof GotoInstruction)) {
-      ih = ih.getNext();
-    }
-    final GotoInstruction bi =  (GotoInstruction) ih.getInstruction();
-    return bi.getTarget();
-//    
-//    while (ofthisline == false) {
-//      System.out.println(ih + "???");
-//      ofthisline = false; 
-//      for (LineNumberGen line : list) {
-//        ofthisline |= line.containsTarget(ih);
-//      }
-//      ih = ih.getNext();
-//    }
-//    return ih.getPrev();
-//    while (ih != baseih) {
-//      if (ih.getInstruction() instanceof BranchInstruction) {
-//
-//        final BranchInstruction bi =  (BranchInstruction) ih.getInstruction();
-//        for (LineNumberGen line : list) {
-//          line.containsTarget(bi.getTarget());
-//          return ih.getPrev();
-//        }
-//        System.out.println(baseih + "???" + ih + " ??"  + 
-//                           baseih.getTargeters()[0] + 
-//                           list.containsTarget(bi.getTarget()));
-//        if (bi.getTarget().equals(baseih) || bi.getTarget().equals(baseih.getNext())) {
-//          return ih.getPrev();
-//        }
-//      }    
-//      ih = ih.getNext();
-//    }
-//    return ih;
-  }
 
 
 
@@ -194,11 +126,14 @@ public final class AnnotationVisitor extends ABasicVisitor {
     lets += "let " + olhname + " := (snd s0) in \n";
     vars += olhname;
     int varcount = 0;
-    for (Term ter: fArgs) {
+    for (Term ter: flat) {
       varcount++;
       final QuantVariableRef qvr = (QuantVariableRef) ter;
       if (qvr.qvar.name.equals("this")) {
         continue;
+      }
+      if (qvr.equals(Heap.var)) {
+        break;
       }
       final String vname = Formula.generateFormulas(Expression.old(qvr)).toString();
       lets += "let " + vname + " := (do_lvget (fst s0) " + varcount + "%N) in ";
@@ -211,17 +146,10 @@ public final class AnnotationVisitor extends ABasicVisitor {
     lets += "let " + hname + " :=  (fst (fst s)) in \n";
     vars += " " + hname;
     varcount = 0;
-    for (Term qvr: fArgs) {
+    for (Term qvr: flat) {
       varcount++;
       final String vname = Formula.generateFormulas(qvr).toString();
       lets += "let " + vname + " := (do_lvget (snd s) " + varcount + "%N) in \n";
-      vars += " " + vname;
-    }
-    for (QuantVariableRef qvr: flat) {
-      varcount++;
-      final String vname = Formula.generateFormulas(qvr).toString();
-      lets += "let " + vname + " := (do_lvget (snd s) " + varcount + "%N) in \n";
-      
       vars += " " + vname;
     }
     fOut.println("Definition " + name + " (s0:InitState) (s:LocalState): list Prop := ");
@@ -237,8 +165,8 @@ public final class AnnotationVisitor extends ABasicVisitor {
     // olds
     final String olhname = Formula.generateFormulas(Heap.varPre).toString();
     varsAndType += "(" + olhname + ": " + Formula.generateType(Heap.varPre.getSort()) +  ") ";
-    for (Term t: fArgs) {
-      QuantVariableRef qvr = (QuantVariableRef) t;
+    for (Term t: flat) {
+      final QuantVariableRef qvr = (QuantVariableRef) t;
       if (qvr.qvar.name.equals("this")) {
         continue;
       }
@@ -252,7 +180,7 @@ public final class AnnotationVisitor extends ABasicVisitor {
     final String hname = Formula.generateFormulas(Heap.var).toString();
     varsAndType += "(" + hname + ": " + Formula.generateType(Heap.var.getSort()) +  ") ";
      
-    for (Term qvr: fArgs) {
+    for (Term qvr: flat) {
       final String vname = Formula.generateFormulas(qvr).toString();
       varsAndType += "(" + vname + ": " + Formula.generateType(qvr.getSort()) +  ") ";
       
@@ -273,89 +201,22 @@ public final class AnnotationVisitor extends ABasicVisitor {
 
 
 
-  private List<QuantVariableRef> flattenLocals() {
-    List<QuantVariableRef> res = new LinkedList<QuantVariableRef>();
-    for (List<QuantVariableRef> list: fLocalVars) {
-      res.addAll(list);
-    }
-    return res;
-  }
-
-
-
-  public List<LocalVariableGen> getValidVariables(List<LineNumberGen> lines) {
-    final List<LocalVariableGen> res = new Vector<LocalVariableGen>();
-    final LocalVariableGen[] lvt = fMet.getLocalVariables();
-    int skip = fArgs.size(); // we skip the n first variables
-   
-    for (LocalVariableGen local: lvt) {
-      if (skip > 0) {
-        skip--;
-      }
-      else if (belongs(local, lines)) {
-        
-        res.add(local);
-      }
-    }
-    return res;
-  }
-  private boolean belongs(LocalVariableGen local, List<LineNumberGen> lines) {
-     
-    for (LineNumberGen line: lines) {
-      final int linePc = line.getLineNumber().getStartPC();
-      final int localPc = local.getStart().getPosition();
-      if ((linePc >= localPc) &&
-          (line.getLineNumber().getStartPC() <= localPc + local.getStart().getPosition())) {
-        return true;
-      }
-    }
-    return false;
-  }
 
 
 
 
 
-
-
-  public LineNumberGen getLineNumberFromLine(int lineNum) {
-    final LineNumberGen [] tab = fMet.getLineNumbers();
-    if (tab.length == 0) {
-      return null;
-    }
-    LineNumberGen min = tab[0];
-    int oldspan = Math.abs(min.getSourceLine() - lineNum);
-    
-    for (LineNumberGen line: tab) {
-      final int span = (Math.abs(line.getSourceLine() - lineNum));
-      if (span  > 0) {
-        if (span < oldspan) {
-          min = line;
-          oldspan = span;
-        }
-      }
-    }
-    return min;
-  }
-  public /*@non_null*/ Object visitVarDeclStmt(final /*@non_null*/ VarDeclStmt x, 
-                                               final Object o) {
-    fLocalVars.getLast().add(Expression.rvar(x.decl));
-    return o;
-  }
-  public List<LineNumberGen> getLineNumbers(int lineNum) {
-    final List<LineNumberGen> res = new Vector<LineNumberGen>();
-    final LineNumberGen first = getLineNumberFromLine(lineNum);
-    final LineNumberGen [] tab = fMet.getLineNumbers();
-//    final LineNumber [] tab = lnt.getLineNumberTable();
-    
-    for (LineNumberGen line: tab) {
-      if (line.getLineNumber().getLineNumber() == first.getLineNumber().getLineNumber()) {
-        res.add(line);
-      }
-    }
-    return res;
-  }
   
+  
+
+  
+  /**
+   * Returns the assertion enumeration.
+   * @param out the file to dump the assertion definition to
+   * @param decl the method to inspect, from ESC/Java
+   * @param met the method to inspect, from BCEL
+   * @return an enumeration of assertions
+   */
   public static String getAssertion(final Stream out, final RoutineDecl decl, final MethodGen met) {
     final String res = (String) decl.accept(new AnnotationVisitor(out, decl, met),  
                          assertionEmpty);

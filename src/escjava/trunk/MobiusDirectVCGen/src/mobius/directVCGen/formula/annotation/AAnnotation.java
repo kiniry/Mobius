@@ -23,11 +23,7 @@ public abstract class AAnnotation {
   /** FOL-Term that represents the annotation at that point. */
   public final Term formula;
   
-  /** the name of the annotation. */
-  public String fName;
-  
-  /** the arguments of the annotation. */
-  public List<Term> fArgs;
+
   
 
   /**

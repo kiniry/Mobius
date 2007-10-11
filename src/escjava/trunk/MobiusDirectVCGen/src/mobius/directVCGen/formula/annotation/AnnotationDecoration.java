@@ -3,8 +3,11 @@ package mobius.directVCGen.formula.annotation;
 import java.util.List;
 import java.util.Vector;
 
+import mobius.directVCGen.formula.jmlTranslator.struct.MethodProperties;
+
 import javafe.ast.ASTDecoration;
 import javafe.ast.ASTNode;
+import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
 
 /**
@@ -16,6 +19,9 @@ import escjava.sortedProver.Lifter.Term;
 public class AnnotationDecoration extends ASTDecoration {
   /** the current instance initialized of the annotation decorations. */
   public static final AnnotationDecoration inst = new AnnotationDecoration();
+  
+  /** the number of invariants already generated for this method. */
+  private int fInvCount;
 
   /**
    * Constructor of the decoration helper.
@@ -35,6 +41,12 @@ public class AnnotationDecoration extends ASTDecoration {
     final List<AAnnotation> fPost = new Vector<AAnnotation>();
     /** the invariant associated with a while instruction. */
     Term fInv;
+    
+    /** the name of the invariant. */
+    String fInvName;
+    
+    /** the arguments of the invariant. */
+    List<QuantVariableRef> fInvArgs;
   }
 
   /**
@@ -127,27 +139,51 @@ public class AnnotationDecoration extends ASTDecoration {
    * Sets the invariant associated with the given node.
    * @param n the node to decorate
    * @param inv the invariant to set
+   * @param prop 
    */
-  public void setInvariant(final ASTNode n, final Term inv) {
+  public void setInvariant(final ASTNode n, final Term inv, MethodProperties prop) {
     Annotation res = getAnnot(n);
     if (res == null) {
       res = new Annotation();
       super.set(n, res);
     }
     res.fInv = inv;
+    res.fInvName = "invariant" + fInvCount;
+    fInvCount++;
+    
   }
 
   /**
    * Retrieve the invariant associated with the node.
-   * @param n the node to decorate
-   * @return the invariant the node is decorated with, or true
+   * @param n the node decorated
+   * @return the invariant the node is decorated with, or null
    */
-  @SuppressWarnings("unchecked")
   public Term getInvariant(final ASTNode n) {
     final Annotation v =  getAnnot(n);
     if (v == null) {
       return null;
     }
     return v.fInv;
+  }
+  
+  /**
+   * Retrieve the invariant name associated with the node.
+   * @param n the node decorated
+   * @return the invariant name  the node is decorated with, or null
+   */
+  public String getInvariantName(final ASTNode n) {
+    final Annotation v =  getAnnot(n);
+    if (v == null) {
+      return null;
+    }
+    return v.fInvName;
+  }
+
+  public List<QuantVariableRef> getInvariantArgs(final ASTNode x) {
+    final Annotation v =  getAnnot(x);
+    if (v == null) {
+      return null;
+    }
+    return v.fInvArgs;
   }
 }

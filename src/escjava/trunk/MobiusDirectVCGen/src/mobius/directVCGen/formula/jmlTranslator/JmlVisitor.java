@@ -127,7 +127,6 @@ public class JmlVisitor extends BasicJMLTranslator {
   @Override
   public final Object visitRoutineDecl(final /*@non_null*/ RoutineDecl x, final Object o) {
     final MethodProperties prop = (MethodProperties) o;
-    prop.fMethod = x;
     fGlobal.visibleTypeSet = VisibleTypeCollector.getVisibleTypeSet(x);
     prop.fIsHelper = false;
     prop.put("routinebegin", Boolean.TRUE);
@@ -177,7 +176,7 @@ public class JmlVisitor extends BasicJMLTranslator {
    */
   @Override
   public final Object visitMethodDecl(final /*@non_null*/ MethodDecl x, final Object o) {
-    final MethodProperties prop = new MethodProperties();
+    final MethodProperties prop = new MethodProperties(x);
     prop.fResult =  Expression.rvar(Expression.getResultVar(x));
     
     visitRoutineDecl(x, prop);
@@ -195,7 +194,7 @@ public class JmlVisitor extends BasicJMLTranslator {
    */
   @Override
   public final Object visitConstructorDecl(final /*@non_null*/ ConstructorDecl x, final Object o) {
-    final MethodProperties prop = new MethodProperties();
+    final MethodProperties prop = new MethodProperties(x);
     prop.fResult =  null;
     
     prop.fIsConstructor = true;
@@ -507,9 +506,10 @@ public class JmlVisitor extends BasicJMLTranslator {
   /**
    * @param x BlockStmt holding all statements of one entire block
    * @param annos Collection of statement pragmas as annotations
-   * @param o Object as Properties object
+   * @param prop Object as Properties object
    */
-  public void handleStmt(final BlockStmt x, final Vector<AAnnotation> annos, final Object o) {
+  public void handleStmt(final BlockStmt x, final Vector<AAnnotation> annos, 
+                         final MethodProperties prop) {
     Term inv = null;
     Term t = null;
     Set.Assignment assignment = null;
@@ -519,8 +519,8 @@ public class JmlVisitor extends BasicJMLTranslator {
       interesting = false;
       if (s instanceof ExprStmtPragma) { //Asserts, Assumes and Loop Invariants
         interesting = true; 
-        ((ContextProperties) o).interesting = true;
-        t = (Term)s.accept(this, o);
+        prop.interesting = true;
+        t = (Term)s.accept(this, prop);
         switch (s.getTag()) {
           case javafe.parser.TagConstants.ASSERT:
             annos.add(new Cut(t));
@@ -552,16 +552,16 @@ public class JmlVisitor extends BasicJMLTranslator {
             }
           }
           if (interesting) {
-            ((ContextProperties) o).interesting = true;
-            final Set ghostVar = (Set) s.accept(this, o);
+            prop.interesting = true;
+            final Set ghostVar = (Set) s.accept(this, prop);
             annos.add(ghostVar);
           }
         }
         else {
           if (s instanceof SetStmtPragma) {
             interesting = true;
-            ((ContextProperties) o).interesting = true;
-            assignment = (Set.Assignment)s.accept(this, o);
+            prop.interesting = true;
+            assignment = (Set.Assignment)s.accept(this, prop);
             final Set newSet = new Set();
             newSet.assignment = assignment;
             final Iterator iter = annos.iterator();
@@ -585,7 +585,7 @@ public class JmlVisitor extends BasicJMLTranslator {
         x.stmts.removeElement(s);
       } 
       else { // Put annotations to next Java Stmt
-        ((ContextProperties) o).interesting = false;
+        prop.interesting = false;
         if (!annos.isEmpty()) {
           AnnotationDecoration.inst.setAnnotPre(s, annos);
           annos.clear();
@@ -594,7 +594,9 @@ public class JmlVisitor extends BasicJMLTranslator {
           if (s instanceof WhileStmt || 
               s instanceof ForStmt || 
               s instanceof DoStmt) {
-            AnnotationDecoration.inst.setInvariant(s, inv);
+            
+            AnnotationDecoration.inst.setInvariant(s, inv, prop);
+            
             inv = null;
           }
         }
@@ -604,7 +606,7 @@ public class JmlVisitor extends BasicJMLTranslator {
             s instanceof BlockStmt || 
             s instanceof TryCatchStmt ||
             s instanceof IfStmt) {
-          s.accept(this, o);
+          s.accept(this, prop);
         }
       }
     }
@@ -619,14 +621,16 @@ public class JmlVisitor extends BasicJMLTranslator {
   @Override
   public final Object visitBlockStmt(final /*@non_null*/ BlockStmt x, final Object o) {
     final Vector<AAnnotation> annos = new Vector<AAnnotation>();
-    
+   
+    MethodProperties prop = (MethodProperties) o;
+    prop.fLocalVars.addLast(new Vector<QuantVariableRef>());
     //Save argument's values in prestate as ghosts at beginning of each routine (in annos)
-    if (((Boolean)((MethodProperties) o).get("routinebegin"))) {
-      ((MethodProperties) o).put("routinebegin", Boolean.FALSE);
-      argsToGhost(annos, o);
+    if (((Boolean) prop.get("routinebegin"))) {
+      prop.put("routinebegin", Boolean.FALSE);
+      argsToGhost(annos, prop);
     }
 
-    handleStmt(x, annos, o);
+    handleStmt(x, annos, prop);
     
     // If there is no more Stmt, we generate a dummy SkipStmt 
     // to add last Stmt Pragma as precondition
@@ -634,7 +638,8 @@ public class JmlVisitor extends BasicJMLTranslator {
       final SkipStmt skipStmt = SkipStmt.make(0); //FIXME cbr: which location?
       AnnotationDecoration.inst.setAnnotPre(skipStmt, annos);
       x.stmts.addElement(skipStmt);
-    }    
+    }
+    prop.fLocalVars.removeLast();
     return null;
   }
 
@@ -643,6 +648,9 @@ public class JmlVisitor extends BasicJMLTranslator {
    */
   @Override
   public final Object visitVarDeclStmt(final /*@non_null*/ VarDeclStmt x, final Object o) {
+    MethodProperties prop = (MethodProperties) o;
+    prop.fLocalVars.getLast().add(Expression.rvar(x.decl));
+    
     //It's only called if we have a ghost variable declaration with maybe a set stmt
     final Set ghostVar = new Set();
     if (x.decl.init != null) {
