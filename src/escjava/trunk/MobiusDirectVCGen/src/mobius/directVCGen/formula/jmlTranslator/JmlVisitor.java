@@ -2,6 +2,7 @@ package mobius.directVCGen.formula.jmlTranslator;
 
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
 
 import javafe.ast.ArrayRefExpr;
@@ -263,12 +264,12 @@ public class JmlVisitor extends BasicJMLTranslator {
    */
   @Override
   public Object visitLocalVarDecl(final /*@non_null*/ LocalVarDecl x, final Object o) {
-    
-    if (((Boolean) ((MethodProperties) o).get("quantifier")).booleanValue()) {
-      HashSet<QuantVariable> qVarsSet = (HashSet) ((MethodProperties) o).get("quantVars");
+    final MethodProperties prop = (MethodProperties) o;
+    if (((Boolean) prop.get("quantifier")).booleanValue()) {
+      final java.util.Set<QuantVariable> qVarsSet = (HashSet) prop.get("quantVars");
       final QuantVariable qvar = Expression.var(x);
       qVarsSet.add(qvar);
-      ((MethodProperties) o).put("quantVars", qVarsSet);
+      prop.put("quantVars", qVarsSet);
     }   
     return null;
   }
@@ -492,7 +493,8 @@ public class JmlVisitor extends BasicJMLTranslator {
    * @param annos Vector of AAnotations, here Annotations = Assignments
    * @param o Properties Object holding routines declaration
    */
-  public void argsToGhost(Vector<AAnnotation> annos, Object o) {  
+  public void argsToGhost(final List<AAnnotation> annos, 
+                          final Object o) {  
     final RoutineDecl m = ((MethodProperties) o).fMethod;
     
     for (final FormalParaDecl p: m.args.toArray()) {
@@ -508,7 +510,7 @@ public class JmlVisitor extends BasicJMLTranslator {
    * @param annos Collection of statement pragmas as annotations
    * @param prop Object as Properties object
    */
-  public void handleStmt(final BlockStmt x, final Vector<AAnnotation> annos, 
+  public void handleStmt(final BlockStmt x, final List<AAnnotation> annos, 
                          final MethodProperties prop) {
     Term inv = null;
     Term t = null;
@@ -551,6 +553,8 @@ public class JmlVisitor extends BasicJMLTranslator {
               break;
             }
           }
+          final VarDeclStmt varDecl = (VarDeclStmt) s;
+          prop.fLocalVars.getLast().add(Expression.rvar(varDecl.decl));
           if (interesting) {
             prop.interesting = true;
             final Set ghostVar = (Set) s.accept(this, prop);
@@ -620,9 +624,9 @@ public class JmlVisitor extends BasicJMLTranslator {
    */
   @Override
   public final Object visitBlockStmt(final /*@non_null*/ BlockStmt x, final Object o) {
-    final Vector<AAnnotation> annos = new Vector<AAnnotation>();
+    final List<AAnnotation> annos = new Vector<AAnnotation>();
    
-    MethodProperties prop = (MethodProperties) o;
+    final MethodProperties prop = (MethodProperties) o;
     prop.fLocalVars.addLast(new Vector<QuantVariableRef>());
     //Save argument's values in prestate as ghosts at beginning of each routine (in annos)
     if (((Boolean) prop.get("routinebegin"))) {
@@ -648,8 +652,8 @@ public class JmlVisitor extends BasicJMLTranslator {
    */
   @Override
   public final Object visitVarDeclStmt(final /*@non_null*/ VarDeclStmt x, final Object o) {
-    MethodProperties prop = (MethodProperties) o;
-    prop.fLocalVars.getLast().add(Expression.rvar(x.decl));
+    final MethodProperties prop = (MethodProperties) o;
+
     
     //It's only called if we have a ghost variable declaration with maybe a set stmt
     final Set ghostVar = new Set();
