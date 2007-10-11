@@ -2,9 +2,10 @@
 	Incomplete. This library supports only a few BML annotation
 	types, and only a few BML expression types yet. It can
 	load a .class file with annotations, save it,
-	parse supported BML annotations and display single BML
-	annotation, single method or the whole class to a String.
-	Adding to / removing methods from BCClass is not supported.
+	parse supported BML annotations or fragment of bytecode
+	and display single BML annotation, single method
+	or the whole class to a String.	Adding methods to
+	/ removing from BCClass is not supported.
 
 2. Testing.
 	After installing this library, set proper paths in
@@ -27,14 +28,16 @@
 	debugger). BCClass and BCMethod have also printCode methods.
 	If you don't know how to get a BMLConfig conf parameter,
 	you can usually simply create a new one. Use methods from
-	annot.textio.CodeSearch to find an annotation at given line
-	of bytecode (unless it's format is unchanged).
+	annot.textio.CodeFragment to find position in bytecode
+	(method, instruction and annotation) at given line
+	of bytecode (unless it's format changes). Use CodeFragment
+	for parsing large fragments of bytecode into BCClass.
 	Do not use BCEL's class nor method diffrent than in this
 	library (you should access BCEL structures via BCClass,
 	do not create new JavaClass nor MethodGen, unrelated with
 	used BCClass).
 
 4. Extending supported language.
-	To add a constant, BML attribute, or new BML expression,
-	see update.txt file how to do it and which methods should
-	be updated.
+	To add a constant, BML attribute, new BML expression,
+	or change display style	see update.txt file how to do it
+	and which methods should be updated.

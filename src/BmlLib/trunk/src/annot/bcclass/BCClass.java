@@ -7,6 +7,7 @@ import org.apache.bcel.classfile.Attribute;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Method;
 import org.apache.bcel.classfile.Unknown;
+import org.apache.bcel.generic.ClassGen;
 import org.apache.bcel.generic.ConstantPoolGen;
 import org.apache.bcel.generic.MethodGen;
 import org.apache.bcel.util.ClassPath;
@@ -311,7 +312,7 @@ public class BCClass {
 	 * Updates it's JavaClass by writing all BML attributes
 	 * into it.
 	 */
-	private void saveJC() {
+	public void saveJC() {
 		Method[] marr = new Method[methods.length];
 		for (int i = 0; i < methods.length; i++)
 			marr[i] = methods[i].save();

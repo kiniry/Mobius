@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import org.apache.bcel.generic.InstructionHandle;
 
 import annot.bcclass.BCMethod;
+import annot.bcclass.MLog;
 
 /**
  * This class represents collection of all annotations inside
@@ -25,7 +26,9 @@ public class BCAttributeMap {
 
 	/**
 	 * Single annotations count.
+	 * May be out of date, use getLength() instead!
 	 */
+	@Deprecated
 	private int length;
 
 	/**
@@ -179,7 +182,7 @@ public class BCAttributeMap {
 	 * @return array of annotations matching given type mask.
 	 */
 	public InCodeAttribute[] getAllAttributes(int types) {
-		InCodeAttribute[] all = new InCodeAttribute[length];
+		InCodeAttribute[] all = new InCodeAttribute[getLength()];
 		LinkedList<SingleList> ll = new LinkedList<SingleList>();
 		Iterator<SingleList> iter1 = map.values().iterator();
 		while (iter1.hasNext())
@@ -197,10 +200,29 @@ public class BCAttributeMap {
 	}
 
 	/**
+	 * Replaces current annotation list for given instruction
+	 * handle with given one.
+	 * 
+	 * @param ih - instruction whose annotation list should
+	 * 		be replaced,
+	 * @param sl - new annotations list.
+	 */
+	public void setAtributesForInstruction(InstructionHandle ih, SingleList sl) {
+		MLog.putMsg(MLog.PInfo, "singleList replaced");
+		map.put(ih, sl);
+	}
+	
+	/**
+	 * Computes total count of annotations in this map.
+	 * 
 	 * @return total annotation count.
 	 */
 	public int getLength() {
-		return length;
+		int l = 0;
+		Iterator<SingleList> iter1 = map.values().iterator();
+		while (iter1.hasNext())
+			l += iter1.next().size();
+		return l;
 	}
 
 	/**

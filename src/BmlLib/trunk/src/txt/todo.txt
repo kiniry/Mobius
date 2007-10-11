@@ -1,17 +1,14 @@
 TODO: (- : to do, + : done, * : optional, > : in progress)
 
-> create CodeFragment class
++ ...
++ create CodeFragment class
 	+ complete quickChange method,
 	+ complete where method,
-	> complete performChanges method:
-		+ fix annotation folding,
-		+ pass all tests,
-		- comlete the method.
-	- lower method's visibility,
-	- write JavaDocs for CodeFragment and CodePosition.
+	+ complete performChanges method:
+	+ lower method's visibility,
+	+ write JavaDocs for BCClassAttribute,
+		CodeFragment and CodePosition.
 > integrate with Umbra
-	- synchronize JavaClass and ClassGen (in BCClass)
-- create random parser tests
 - complete specificationCase attribute
 - add attributes
 - add expressions

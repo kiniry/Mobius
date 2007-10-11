@@ -14,22 +14,31 @@ public interface IMessageLog {
 	/**
 	 * Displays all messages.
 	 */
-	public static final int PALL = 127;
+	public static final int PALL = 255;
 
 	/**
 	 * Displays almost all messages.
 	 */
-	public static final int PDEBUG = 126;
+	public static final int PDEBUG = 254;
+
+	
+	/**
+	 * Normal verbosity level for developing
+	 * <code>bmllib</code> + displays parser
+	 * failures and parsing progress.
+	 */
+	public static final int PPARSER = 252;
 
 	/**
-	 * Displays all except debug messages.
+	 * Normal verbosity level for developing
+	 * <code>bmllib</code>.
 	 */
-	public static final int PNORMAL = 124;
+	public static final int PNORMAL = 236;
 
 	/**
 	 * Displays only error messages.
 	 */
-	public static final int PERRORS = 64;
+	public static final int PERRORS = 128;
 
 	/**
 	 * Displays no messages.
@@ -65,19 +74,24 @@ public interface IMessageLog {
 	public static final int PNotice = 8;
 
 	/**
+	 * For displaying messages while parsing with ANTLR
+	 */
+	public static final int PParser = 16;
+	
+	/**
 	 * For displaing progress while saving / loading
 	 */
-	public static final int PProgress = 16;
+	public static final int PProgress = 32;
 
 	/**
 	 * Indicates that it's time to implement missing
 	 * code branch to make this test case run correctly.
 	 */
-	public static final int PTodo = 32;
+	public static final int PTodo = 64;
 
 	/**
 	 * For displaying error messages.
 	 */
-	public static final int PError = 64;
+	public static final int PError = 128;
 
 }

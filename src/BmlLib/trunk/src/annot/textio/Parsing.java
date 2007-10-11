@@ -203,4 +203,43 @@ public class Parsing {
 		}
 	}
 
+	/**
+	 * Parses a whole class.
+	 * Should be called with <code>affectBCC = false</code>
+	 * first (for error-checking) and, if it returns true,
+	 * then with <code>affectBcc = true</code> to parse
+	 * the same code into it's BCClass.
+	 * Adding / removing / replacing methods is currently
+	 * unsupported.
+	 * 
+	 * @param code - preprocessed class's code to be parsed.
+	 * 		Should have all bytecode lines and unaffected
+	 * 		fragments collapsed to proper stubs,
+	 * @param affectBcc - wether to affect bcclass or not.
+	 * 		if it is set to false, parser will perform
+	 * 		error-check only, without affecting BCClass.
+	 * @return wether <code>code</code> is correct String
+	 * 		representation for current BCClass.
+	 * 		Crashes if <code>affectBcc</code> is true
+	 * 		and given code is incorrect.
+	 */
+	public boolean parseClass(String code, boolean affectBcc) {
+		CharStream chstr = new ANTLRStringStream(code);
+		BMLLexer lex = new BMLLexer(chstr);
+		CommonTokenStream tokens = new CommonTokenStream(lex);
+		BMLParser parser = new BMLParser(tokens);
+		parser.initClass(bcc, affectBcc);
+		try {
+			parser.parseClass();
+			if (lex.lastE != null)
+				throw lex.lastE;
+			if (parser.lastE != null)
+				throw parser.lastE;
+		} catch (RecognitionException e) {
+			if (affectBcc)
+				throw new RuntimeException("parsing failed while updating BCClass");
+			return false;
+		}
+		return true;
+	}
 }

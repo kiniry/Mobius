@@ -29,6 +29,7 @@ import annot.io.ReadAttributeException;
 import annot.textio.BMLConfig;
 import annot.textio.BMLParser;
 import annot.textio.CodeFragment;
+import annot.textio.CodePosition;
 import annot.textio.CodeSearch;
 import annot.textio.Parsing;
 
@@ -51,6 +52,13 @@ public final class OldTests {
 	 */
 	public static final boolean goGenerateRandomQuantifiedFormulas = true;
 
+	/**
+	 * Disables lowering verbosity level on first test's run,
+	 * for debugging test cases that crashes (that throws
+	 * RuntimeExceptions).
+	 */
+	public static final boolean goDisplayAllMessages = false;
+	
 	/**
 	 * If a flag above is on, this flag controls wether
 	 * random formula generator should generate only
@@ -207,6 +215,12 @@ public final class OldTests {
 		}
 	}
 	
+	/**
+	 * Displays error message to stdout and throws
+	 * RuntimeException.
+	 * 
+	 * @param errMsg - error message to be displayed.
+	 */
 	private static void error(String errMsg) {
 		System.out.println("Fatal error: " + errMsg);
 		throw new RuntimeException(errMsg);
@@ -255,7 +269,7 @@ public final class OldTests {
 
 	/**
 	 * Adds some annotations to BCClass loaded from
-	 * "Empty2.class" file. Deterministic. Do not change
+	 * "Empty2.class" file. Deterministic. Do not changes
 	 * "Empty2.class" file.
 	 * 
 	 * @return BCClass loaded from "Empty2.class" example
@@ -289,6 +303,15 @@ public final class OldTests {
 		return bcc;
 	}
 
+	/**
+	 * Another sample class, with few code and lots
+	 * of anotations. Adds many annotations to BCClass
+	 * loaded from "Empty.class" file. Deterministic.
+	 * Do not changes "Empty.class" file.
+	 * 
+	 * @return BCClass loaded from "Empty.class" example
+	 * 		file, with many (11) BML annotations.
+	 */
 	public static BCClass createSampleClass2()
 			throws ClassNotFoundException,
 			ReadAttributeException {
@@ -351,89 +374,6 @@ public final class OldTests {
 	}
 	
 	/**
-	 * Another test scenario, for parsing large fragments
-	 * of code.
-	 */
-	private static void attributeSearchTest() throws ClassNotFoundException,
-			ReadAttributeException {
-		String change1 = "| false) && (true |";
-		String change2 = "ue || false))))\n * \\assert ((true ==> true) && (false || true";
-		String change3 = "    ~(~(~false))) &&\n"+
-		" *    ((false && false || ~false) &&\n"+
-		" *        (false && true || ~false) ||\n"+
-		" *      ~(~(~false)))\n"+
-		" */\n"+
-		"46:   getstatic		test.Empty2.l I (10)\n"+
-		"49:   invokevirtual	java.lang.StringBuilder.append (I)Ljava/lang/StringBuilder; (42)\n"+
-		"52:   invokevirtual	java.lang.StringBuilder.toString ()Ljava/lang/String; (51)\n"+
-		"55:   invokevirtual	java.io.PrintStream.println (Ljava/lang/String;)V (55)\n"+
-		"/*\n"+ 
-		" * \\assert ((false || false) &&\n"+
-		" *          (false || false) || ~false) &&\n"+
-		" *      ((false |";
-		String change4 = "ad\n65:   ireturn\n\n/* \\requires false */\npublic static void main(String[] args)\n0";
-		bcc = createSampleClass();
-//		bcc.getMethod(0).setMspec(new MethodSpecification(bcc.getMethod(0)));
-		String code = bcc.printCode();
-		System.out.println(addLineNumbers(code));
-		System.out.println(xxx);
-		CodeFragment cf = new CodeFragment(bcc, code);
-		String[] lines = code.split("\n");
-		for (int i=0; i<lines.length; i++)
-			System.out.println(i+": "+CodeFragment.getKeyword(lines[i]));
-//		System.out.println(xxx);
-//		for (int i=0; i<lines.length; i++)
-//			System.out.println("" + i + ": "
-//				+ cf.where(i, 3).toString());
-		System.out.println(xxx);
-		System.out.println("total code length: " + code.length());
-		for (int i=1; i<lines.length; i++) {
-			int off = CodeFragment.getLineOffset(code, i);
-			if (CodeFragment.getLineOfOffset(code, off) != i)
-				error("offset error ("+i+"b)");
-			if (CodeFragment.getLineOfOffset(code, off-1) != i-1)
-				error("offset error ("+i+"e)");
-		}
-		cf = new CodeFragment(bcc, code);
-		System.out.println("### stage 0");
-		cf.addChange(2535, 20, change1);
-		cf.addChange(2537, 5, "true");
-		cf.addChange(2552, 2, "==>");
-		cf.addChange(2528, 10, "true || t");
-		cf.addChange(2528, 30, "true && fal");
-		cf.addChange(2527, 0, "(0<1) || ");
-		cf.addChange(2549, 4, "e && true) |");
-		cf.performChanges();
-		cf = new CodeFragment(bcc, code);
-		System.out.println("### stage 1");
-//		cf.modify(2535, 20, change1);
-		cf.addChange(302, 12, "false || false");
-		cf.performChanges();
-		if (!cf.isCorrect())
-			error("test 1: code replace failed!");
-//		cf = new CodeFragment(bcc, code);
-//		System.out.println("### stage 2");
-//		cf.modify(2635, 50, change2);
-////		if (!cf.isCorrect())
-////			error("test 2: code replace failed!");
-//		cf = new CodeFragment(bcc, code);
-//		System.out.println("### stage 3");
-//		cf.modify(2035, 500, change3);
-////		if (!cf.isCorrect())
-////			error("test 3: code replace failed!");
-//		cf = new CodeFragment(bcc, code);
-//		System.out.println("### stage 4");
-//		cf.modify(1116, 79, change4);
-////		if (!cf.isCorrect())
-////			error("test 4: code replace failed!");
-//		cf = new CodeFragment(bcc, code);
-//		System.out.println("### stage 5");
-//		cf.modify(307, 2, "<=!=>");
-////		if (!cf.isCorrect())
-////		error("test 5: code replace failed!");
-	}
-
-	/**
 	 * A prettyPrinter test. Loads "Empty.class" file and
 	 * adds an large assert to it, then displays it.
 	 */
@@ -461,22 +401,143 @@ public final class OldTests {
 		System.out.println(code);
 	}
 
-	private static void singleTest(String from, String to) {
-		singleTest(from, to, -1);
-	}
-
+	/**
+	 * Single test scenario for {@link CodeFragment} class.
+	 * Replaces given fragment of bytecode with sth incorrect
+	 * and gives it to {@link CodeFragment} class to parse it.
+	 * Notifies if it's behavior changes.
+	 * 
+	 * @param from - beginning of replaced fragment,
+	 * @param to - end of replaced fragment,
+	 * @param hash - model state ({@link CodeFragment#hash()}
+	 * 		method result) of {@link CodeFragment} class
+	 * 		after parsing given sample.
+	 * @see #singleTest(String, String, int, String, int)
+	 */
 	private static void singleTest(String from, String to, int hash) {
 		int cfrom = code.indexOf(from) + from.length();
 		int cto = code.indexOf(to, cfrom);
 		String newCode = "XXX"+code.substring(cfrom, cto);
 		newCode = newCode.toUpperCase(); // changes sth.
-		singleTest(from, to, hash, newCode);
+		singleTest(from, to, hash, newCode, 0);
 	}
 
-	private static void singleTest(String from, String to, int hash, String newCode) {
-		System.out.println("************ test nr " + test_nr + " ************");
+	/**
+	 * Single test scenario for {@link CodeFragment} class.
+	 * Replaces given fragment of bytecode with sth correct
+	 * and gives it to {@link CodeFragment} class to parse it.
+	 * Notifies if it's behavior or parsed class changes.
+	 * 
+	 * @param from - beginning of replaced fragment,
+	 * @param to - end of replaced fragment,
+	 * @param hash - model state ({@link CodeFragment#hash()}
+	 * 		method result) of {@link CodeFragment} class
+	 * 		after parsing given sample.
+	 * @see #replaceTest(String, String, int, int, boolean, String)
+	 */
+	private static void replaceTest(String from, String to,
+			int hash, int hash2, boolean correct)
+			throws ClassNotFoundException,
+			ReadAttributeException {
+		int cfrom = code.indexOf(from) + from.length();
+		int cto = code.indexOf(to, cfrom);
+		String newCode = code.substring(cfrom, cto);
+		// changes sth.
+		newCode = newCode.replaceAll("true", "TRUE");
+		newCode = newCode.replaceAll("false", "true");
+		newCode = newCode.replaceAll("TRUE", "false");
+		replaceTest(from, to, hash, hash2, correct, newCode);
+	}
+
+	/**
+	 * Single test scenario for {@link CodeFragment} class.
+	 * Replaces given fragment of bytecode with sth correct
+	 * and gives it to {@link CodeFragment} class to parse it.
+	 * Notifies if it's behavior or parsed class changes,
+	 * Displaying debug messages, sample bytecode with marked
+	 * new (replaced) fragment, and bytecode generated
+	 * by BCClass after parsing (they should be the same).
+	 * 
+	 * @param from - beginning of replaced fragment,
+	 * @param to - end of replaced fragment,
+	 * @param hash - model state ({@link CodeFragment#hash()}
+	 * 		method result) of {@link CodeFragment} class
+	 * 		after parsing given sample.
+	 * @see #singleTest(String, String, int, String, int)
+	 * @see #replaceTest(String, String, int, int, boolean, String)
+	 */
+	private static void replaceTest(String from, String to,
+		int hash, int hash2, boolean correct, String newCode)
+		throws ClassNotFoundException,
+		ReadAttributeException {
 		int oldMask = MLog.mask;
 		MLog.mask = MLog.PERRORS;
+		bcc = createSampleClass2();
+		code = bcc.printCode();
+		MLog.mask = oldMask;
+		int cfrom = code.indexOf(from) + from.length();
+		int cto = code.indexOf(to, cfrom);
+		boolean ok = singleTest(from, to, hash, newCode, correct ? 1 : -1);
+		if (!ok)
+			return;
+		if (hash2  < -1)
+			return;
+		int ac = bcc.getAllAttributes().length;
+		System.out.println("attribute count: " + ac);
+		String code1 = bcc.printCode();
+		int h = CodePosition.StrHash(code1) % 1000;
+		if (h != hash2) {
+			bcc = createSampleClass2();
+			code = bcc.printCode();
+			CodeFragment cf = new CodeFragment(bcc, code);
+			cf.addChange(cfrom, cto - cfrom, newCode);
+			cf.performChanges();
+			System.out.println(cf.toString());
+			System.out.println("***** code after parsing: *****\n" + code1);
+			if (hash2 == -1) {
+				System.out.println("result hash: "
+					+ h + " (not set yet)");
+			} else {
+				System.out.println("result hash: "
+					+ h + " (should be " + hash2 + ")");
+				errc++;
+			}
+		} else {
+			System.out.println("hash2 = " + hash2 + " (ok)");
+		}
+	}
+
+	/**
+	 * Single test scenario for {@link CodeFragment} class.
+	 * Replaces given fragment of bytecode with given String.
+	 * and gives it to {@link CodeFragment} class to parse it.
+	 * Notifies if it's behavior changes (if it has diffrent
+	 * {@link CodeFragment#hash()} value).
+	 * Replaced fragment is first fragment starting just after
+	 * first occurence of <code>from</code> text, and ending
+	 * just befor first following occurence
+	 * of <code>to</code> text.
+	 * 
+	 * @param from - beginning of replaced fragment,
+	 * @param to - end of replaced fragment,
+	 * @param hash - model state ({@link CodeFragment#hash()}
+	 * 		method result) of {@link CodeFragment} class
+	 * 		after parsing given sample.
+	 * @param newCode - code fragment to replace given
+	 *  	fragment.
+	 * @param correct - wether this sample is correct or not.
+	 * @return true if {@link CodeFragment}'s reaction for
+	 * 		this sample was as expected (in <code>hash</code>
+	 * 		and <code>correct</code> parameters).
+	 */
+	private static boolean singleTest(String from, String to, int hash, String newCode, int correct) {
+		System.out.println("************ test nr " + test_nr + " ************");
+		boolean ret = true;
+		if ((correct < -1) || (correct > 1))
+			throw new RuntimeException("invalid parameter value.");
+		int oldMask = MLog.mask;
+		if (!goDisplayAllMessages)
+			MLog.mask = MLog.PERRORS;
 		CodeFragment cf = new CodeFragment(bcc, code);
 		int cfrom = code.indexOf(from) + from.length();
 		int cto = code.indexOf(to, cfrom);
@@ -486,55 +547,82 @@ public final class OldTests {
 		System.out.print("hash = " + h);
 		if (h == hash) {
 			System.out.println(" (ok)");
+			if (correct != 0) {
+				boolean ok = cf.isCorrect();
+				if ((correct == 1) && !ok) {
+					ret = false;
+					cf = new CodeFragment(bcc, code);
+					MLog.mask = oldMask;
+					cf.modify(cfrom, cto - cfrom, newCode);
+					System.out.println("Test " + test_nr + ": code replace failed!");
+				}
+				if ((correct == -1) && ok) {
+					ret = false;
+					MLog.mask = oldMask;
+					cf = new CodeFragment(bcc, code);
+					cf.modify(cfrom, cto - cfrom, newCode);
+					System.out.println("Test " + test_nr + ": syntax error not detected!");
+				}
+			}
 		} else {
 			if (hash == -1) {
 				System.out.println(" (not set yet)");
 			} else {
-				errc++;
+				ret = false;
 				System.out.println(" (should be " + hash + ")");
 			}
-			MLog.mask = MLog.PNORMAL;
+			MLog.mask = oldMask;
 			cf = new CodeFragment(bcc, code);
 			cf.modify(cfrom, cto - cfrom, newCode);
 		}
-//		if (!cf.isCorrect())
-//			error("Test " + test_nr + ": code replace failed");
 		MLog.mask = oldMask;
 		test_nr++;
+		if (!ret)
+			errc++;
+		return ret;
 	}
 	
-	private static void attributeSearchTest2()
-			throws ClassNotFoundException,
-			ReadAttributeException {
+	/**
+	 * A test case for {@link CodeFragment} class. Contains
+	 * diffrent edit scenarios (replacing one fragment
+	 * (substring) of bytecode with another), both correct
+	 * and incorrect, to be parsed.
+	 */
+	private static void codeReplaceTest()
+		throws ClassNotFoundException,
+		ReadAttributeException {
 		bcc = createSampleClass2();
 		code = bcc.printCode();
+		int noChange = CodePosition.StrHash(code) % 1000;
 		System.out.println(code);
 		System.out.println(xxx);
 		System.out.println("length: " + code.length());
 		errc = 0;
-		singleTest("~true", " && true || ~true) ||", 235);
-		singleTest("\\class", "))", 880);
-		singleTest("\\req", "| false", 379);
-		singleTest("\\a", "~tr", 41);
-		singleTest("~(~f", "e)", 900);
-		singleTest("rt (tr", "ue) &", 457);
-		singleTest("*    ~(~(~", "))", 900);
-		singleTest(" *    ~(~f", "e)", 143);
-		singleTest("~(~(~(~", "sse", 198);
-		singleTest("/*", "*/", 943);
-		singleTest(")\n/*", "*/", 679);
-		singleTest("assert", "~(~", 119);
-		singleTest("ldc", "~", 494);
-		singleTest("requires", "true", 561);
-		singleTest("res (", "e))", 738);
-		singleTest("~(~false", "\\req", 181);
-		singleTest("invariant", "requires", 567);
-		singleTest("rt false", " && (", 738, "");
-		singleTest("~(~(~(~", "\\a", 464, "false)))\n\\assert true\n * ");
-		singleTest("(20)", "\n3:", 638, "\n/* \\assert false");
-		singleTest("(20)", "\n3:", 254, "\n/* \\assert false */");
-		singleTest("()\n", "\n0:", 758, "");
-		singleTest("/*", "*/", 168, "");
+		replaceTest("~true", " && true || ~true) ||", 690, 856, true);
+		replaceTest("\\class", "))", 316, 765, true);
+		replaceTest("\\req", "| false", 199, 480, true);
+		replaceTest("\\a", "~tr", 764, 209, true);
+		replaceTest("~(~f", "e)", 991, noChange, true);
+		replaceTest("rt (tr", "ue) &", 899, noChange, true);
+		replaceTest("*    ~(~(~", "))", 889, 718, true);
+		replaceTest(" *    ~(~f", "e)", 791, noChange, true);
+		replaceTest("~(~(~(~", "sse", 189, 42, true);
+		replaceTest("/*", "*/", 71, 765, true);
+		replaceTest(")\n/*", "*/", 846, 923, true);
+		replaceTest("assert", "~(~", 879, 923, true);
+		replaceTest("ldc", "~", 19, noChange, true);
+		replaceTest("requires", "true", 526, 599, true);
+		replaceTest("res (", "e))", 909, 25, true);
+		replaceTest("~(~false", "\\req", 834, 517, true);
+		replaceTest("invariant", "requires", 570, 765, true);
+		replaceTest("rt false", " && (", 738, 830, true, "");
+		replaceTest("~(~(~(~", "\\a", 464, 431, true, "false)))\n\\assert true\n * ");
+		replaceTest("(20)", "\n3:", 638, noChange, false, "\n/* \\assert false");
+		replaceTest("(20)", "\n3:", 254, 993, true, "\n/* \\assert false */");
+		replaceTest("()\n", "\n0:", 758, 535, true, "");
+		replaceTest("/*", "*/", 163, noChange, false, "");
+		replaceTest("/*", "*/", 328, 280, true, "  ");
+		System.out.println("code replace tests completed.");
 		if (errc > 0) {
 			System.out.println("FAILURES: " + errc + " tests failed!");
 		} else {
@@ -550,8 +638,7 @@ public final class OldTests {
 	public static void main(String[] args) {
 		try {
 //			addRemoveTest();
-//			attributeSearchTest();
-			attributeSearchTest2();
+			codeReplaceTest();
 //			pp_test();
 			System.out.println("done.");
 		} catch (Exception e) {

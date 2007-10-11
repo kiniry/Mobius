@@ -26,11 +26,28 @@ options {
 	private BCConstantPool cp;
 	private InstructionHandle ih;
 	private int minor;
+	private boolean affectBcc = false;
 
 	// global variables
+	private int mnr;						// number of current method
+	private int inr;						// number of current instruction
 	private int bvc;  						// number of currently visible bound variables
 	private int lqfs; 						// last (current) quantified formula size
 	private HashMap<String, BoundVar> env;	// bound variable map
+
+	// set wether to affect parsed BCClass, or only check syntax
+	public void initClass(BCClass bcc, boolean affectBcc) {
+		this.bcc = bcc;
+		this.affectBcc = affectBcc;
+		this.cp = bcc.getCp();
+	}
+
+	// initialize environment for expression parsing
+	private void initExpression() {
+		this.bvc = 0;
+		this.lqfs = 0;
+		this.env = new HashMap<String, BoundVar>();
+	}
 
 	// set context for attribute parsing
 	public void init(BCClass bcc, BCMethod m, BCConstantPool cp, InstructionHandle ih, int minor) {
@@ -39,15 +56,19 @@ options {
 		this.cp = cp;
 		this.ih = ih;
 		this.minor = minor;
-		this.bvc = 0;
-		this.lqfs = 0;
-		this.env = new HashMap<String, BoundVar>();
+	}
+
+	private void syso(String msg) {
+		MLog.putMsg(MLog.PParser, msg);
 	}
 
 	public void reportError(RecognitionException rex) {
 		if (rex == null)
 			rex = new RecognitionException();
 		lastE = rex;
+		syso("*** error ***");
+		if ((MLog.mask & MLog.PParser) > 0)
+			super.reportError(rex);
 	}
 	
 	// Searches for an identifier name in diffrent locations
@@ -73,22 +94,142 @@ options {
 
 	public void reportError(RecognitionException rex) {
 		lastE = rex;
-		MLog.putMsg(MLog.PDebug, "LEXER ERROR");
+		MLog.putMsg(MLog.PParser, "LEXER ERROR");
+		if ((MLog.mask & MLog.PParser) > 0) {
+			System.err.println("LEXER ERROR");
+			super.reportError(rex);
+		}
 	}
 }
 
-// PARSER RULES:
+// ***** PARSER RULES *****
+
+// bytecode level
+
+parseClass :
+	{syso("--------------- parsing started ---------------");}
+	PACKAGE? CLASS?
+	{syso("class");}
+	(NO_CLA {syso("skipping class declarations");}
+		| classComment {syso("class declarations");}
+			EOD)
+	{syso("end of class decl");
+	mnr = 0;
+	m = bcc.getMethod(mnr);
+	}
+	(method
+		{syso("method");
+		mnr++;
+		if (mnr < bcc.getMethodCount())
+			m = bcc.getMethod(mnr);
+	})+
+	EOF
+	{syso("-------------- parsing completed --------------");}
+	;
+
+classComment :
+	EOA {
+		syso("begin of class decl");
+		bcc.setInvariant(null);
+	}
+	(c=classAttribute {
+		syso("next class attribute");
+		if (affectBcc)
+			$c.ast.replace(bcc);
+	}
+		EOA)*
+	;
+
+method :
+	NO_METHOD {syso("skipping method");}
+	|	((NO_MSPEC {syso("skipping method specification");}
+		| met=methodSpecification {
+				syso("method specification");
+				if (affectBcc)
+					m.setMspec($met.ast);
+			} EOA)?
+		MHEAD {
+			syso("method header");
+			inr = 0;
+		}
+		(instruction {inr++;})+
+		EOM {syso("end of method");})
+	;
+
+instruction :
+	{InstructionHandle[] iha = m.getBcelMethod().getInstructionList().getInstructionHandles();
+		if (iha.length <= inr) {
+			if (affectBcc) {
+				System.err.println("mnr="+mnr+", index="+inr+", size="+iha.length);
+				throw new RuntimeException("instruction count changed! Bytecode parsing unsupported.");
+			} else {
+				syso("instruction count changed");
+				reportError(null);
+			}
+		}
+		if (inr < iha.length) {
+			ih = iha[inr];
+			syso("ih="+ih);
+		}
+	}
+	(NO_INSTRUCTION {syso("skipping instruction");}
+	| ((comment {syso("comment");})?
+		INSTRUCTION {
+			syso("instruction");
+			SingleList sl = m.getAmap().getAllAt(ih);
+			if (affectBcc) {
+				sl.trunce(minor);
+				syso("minor="+minor+", size="+sl.size());
+				m.getAmap().setAtributesForInstruction(ih, sl);
+			}
+		}))
+	;
+
+comment :
+	EOA {syso("beginning of comment");
+		minor = 0;
+	}
+	( NO_ANNOTATION {
+		syso("annotation unaffected");
+		minor++;
+	}
+		| ica=inCodeAttribute {
+			syso("annotation");
+			SingleList sl = m.getAmap().getAllAt(ih);
+			if (affectBcc) {
+				sl.setNth(minor, $ica.ast);
+				m.getAmap().setAtributesForInstruction(ih, sl);
+			}
+			minor++;
+		} EOA)*
+	;
+
+// bml level
 
 printableAttribute returns [BCPrintableAttribute ast] :
-	ASSERT f1=formula EOF {$ast = new SingleAssert(m, null, -1, $f1.ast);}
-	| CLASSINVARIANT f2=formula EOF {$ast = new ClassInvariant(bcc, $f2.ast);}
-	| REQUIRES f3=formula EOF {$ast = new MethodSpecification(m, $f3.ast, new SpecificationCase[0]);}
+	(c=classAttribute {$ast = $c.ast;}
+	| met=methodSpecification {$ast = $met.ast;}
+	| i=inCodeAttribute {$ast = $i.ast;})
+	EOF
+	;
+
+classAttribute returns [ClassAttribute ast] :
+	| CLASSINVARIANT f2=formula {$ast = new ClassInvariant(bcc, $f2.ast);}
+	;
+
+methodSpecification returns [MethodSpecification ast] :
+	| REQUIRES f3=formula {$ast = new MethodSpecification(m, $f3.ast, new SpecificationCase[0]);}
+	;
+
+inCodeAttribute returns [InCodeAttribute ast] :
+	ASSERT f1=formula {$ast = new SingleAssert(m, ih, -1, $f1.ast);}
 	;
 
 expression returns [BCExpression ast] :
 	e=shiftExpr {$ast = $e.ast;};
 
 formula returns [AbstractFormula ast] :
+	{initExpression();}
 	e=uncheckedFormula {
 		if ($e.ast == null) {
 			reportError(null);
@@ -180,7 +321,24 @@ primaryExpr returns [BCExpression ast] :
 	| PAR_LEFT e=expression PAR_RIGHT {$ast = $e.ast;}
 	;
 
-// LEXER RULES:
+// ***** LEXER RULES *****
+
+// bytecode level
+
+PACKAGE: '[package]';
+CLASS: '[class]';
+NO_CLA: '\\class attributes unaffected';
+NO_METHOD: '\\method unaffected';
+MHEAD: '[method header]';
+NO_INSTRUCTION: '\\instruction unaffected';
+INSTRUCTION: '[instruction]';
+NO_MSPEC: '\\method specification unaffected';
+NO_ANNOTATION: '\\annotation unaffected';
+EOD: 'EOD';
+EOM: 'EOM';
+EOA: 'EOA';
+
+// bml level
 
 ASSERT: '\\assert';
 CLASSINVARIANT: '\\class invariant';
@@ -208,5 +366,5 @@ PAR_RIGHT: ')';
 NAT: ('0'..'9')+;
 IDENT: ('a'..'z')+;
 
-WS: (' '|'\t')+ {skip();};
+WS: (' '|'\t'|'\n')+ {skip();};
 EOF: '\f';

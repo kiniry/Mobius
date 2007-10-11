@@ -30,6 +30,10 @@ public class SingleList implements Comparable<SingleList> {
 	 */
 	private InstructionHandle ih;
 	
+	/**
+	 * Method containing instruction whose comment this
+	 * list represents.
+	 */
 	private BCMethod method;
 	
 	/**
@@ -198,13 +202,57 @@ public class SingleList implements Comparable<SingleList> {
 	}
 
 	/**
+	 * Replaces n-th annotation from this list with given one
+	 * (or appends it to the list, if <code>n > size</code>).
+	 * 
+	 * @param n - position of annotation to be replaced
+	 * @param ica - annotation to replace <code>n</code>-th
+	 * 		annotation from list.
+	 */
+	public void setNth(int n, InCodeAttribute ica) {
+		if (n < attributes.size()) {
+			nth(n).replaceWith(ica);
+		} else {
+			ica.setMinor(-1);
+			addAttribute(ica);
+		}
+	}
+	
+	/**
+	 * Removes all except first <code>n</code> annotations
+	 * from list.
+	 * 
+	 * @param n - number of annotations that should left
+	 * 		on the list.
+	 */
+	public void trunce(int n) {
+		if (n < 0)
+			throw new RuntimeException("invalid argument value: " + n);
+		while (attributes.size() > n)
+			attributes.removeLast();
+	}
+	
+	/**
 	 * @return pc numner of annotation's bytecode instruction,
 	 * 		or -1 if list is empty.
 	 */
+	@Deprecated
 	public int getPC() {
 		return method.getPC(ih);
 	}
 
+	/**
+	 * @return position in method's instruction list. This
+	 * 		should be more reliable than {@link #getPC()}.
+	 */
+	public int getPosition() {
+		InstructionHandle[] handles = method.getInstructions().getInstructionHandles();
+		for (int i=0; i<handles.length; i++)
+			if (ih == handles[i])
+				return i;
+		return -1;
+	}
+	
 	/**
 	 * @return bytecode instruction that all annotations from this
 	 * list are attached to.
@@ -213,6 +261,13 @@ public class SingleList implements Comparable<SingleList> {
 		return ih;
 	}
 
+	/**
+	 * @return length of this list.
+	 */
+	public int size() {
+		return attributes.size();
+	}
+	
 	/**
 	 * compares this annotation list to given one in order they
 	 * should appead in String representation of a method.
@@ -225,7 +280,7 @@ public class SingleList implements Comparable<SingleList> {
 	 * 		annotation list.
 	 */
 	public int compareTo(SingleList o) {
-		return getPC() - o.getPC();
+		return getPosition() - o.getPosition();
 	}
 
 }

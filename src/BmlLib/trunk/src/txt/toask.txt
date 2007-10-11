@@ -6,6 +6,8 @@
 	MethodGen?
 - czy bedzie potrzebna funkcjonalnosc dodawania
 	i usuwania metod (w bibliotece / edytorze)?
+- czy w jednej klasie mo¿e byæ kilka atrybutów klasowych
+	(np. classInvariant) tego samego typu?
 - czy przejmowac sie wydajnoscia i kiedy?
 - czy BCConstantPool powinien byc kolekcja stalych, czy
 	dwoma zwyklymi (BCEL-owymi) constantPool-ami?
@@ -14,8 +16,12 @@
 	65535 w dol?
 - czy moge zalozyc, ze kazda adnotacja bedzie w innej linii?
 - czy moze wogole uzyc antlr-a do parsowania calej klasy?
+- co oznaczaja bledy typu "argument not valid" w Umbrze?
+- czy status "correct" powinien dotyczyc poprawnosci calego
+	bajtkodu, czy tylko edytowanego fragmentu?
 - jak pozbyc sie warningow o operatorach?
 - co oznacza 'final' przy definicji klasy?
 - czy annotacje powinny byc do wszystkich klas, pol i metod
 	czy tylko tych, ktore sa nieoczywiste? Czy do
 	przedefiniowanych metod w podklasach te¿ (@Override)?
+- jak formatowac pliki .g3?

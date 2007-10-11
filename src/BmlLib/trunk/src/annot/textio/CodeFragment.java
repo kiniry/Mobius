@@ -5,43 +5,165 @@ import org.antlr.runtime.RecognitionException;
 import test.OldTests;
 
 import annot.attributes.BCPrintableAttribute;
-import annot.attributes.SingleList;
 import annot.bcclass.BCClass;
-import annot.bcclass.BCMethod;
 import annot.bcclass.MLog;
 
+/**
+ * This class represents BMl of an editing bytecode. It's
+ * objects can be contructed  with {@link BCClass} and current
+ * String representation of bytecode. You can add one or more
+ * changes (using {@link #addChange(int, int, String)}
+ * method), then execute these changes using
+ * {@link #performChanges()} method (this will parse all
+ * that changes merged to one, single change, updating
+ * it's {@link BCClass}) and see that it's correct, than call
+ * {@link #resetChanges()} method. If some changes has been
+ * parsed outside this class, call {@link #resetChanges()}
+ * to assume that {@link BCClass} is up to date.
+ * It can parse only BML placed somewhere in bytecode,
+ * not the bytecode itself. Bytecode changes won't be updated
+ * into {@link BCClass}.
+ * 
+ * @author tomekb
+ */
 public class CodeFragment {
 
+	/**
+	 * Enables faster parsing of single annotations, but
+	 * this functionality may contain errors.
+	 * It is recommended not to use it.
+	 */
 	private static final boolean goQuickParse = false;
-	private static final boolean goShowDecoratedCode = true;
 	
+	/**
+	 * Shows code after preprocessing it
+	 * by {@link #decorate(String)} method.
+	 */
+	private static final boolean goShowDecoratedCode = false;
+	
+	/**
+	 * Disable parsing single attributes; for debugging only.
+	 */
+	private static final boolean goDisableParser = false;
+	
+	/**
+	 * BCClass related with current bytecode.
+	 */
 	private BCClass bcc;
-	private String oldCode;
-	private String code;
-	private String prefix;
-	private String toAdd;
-	private String toRemove;
-	private String suffix;
-	private String errMsg = "";
-	private int begin;
-	private int end;
-	private int oldEnd;
-	private boolean modified = false;
-	private boolean correct = true;
-	private String last_parsed = ""; //rm
-	private int cp_hash = 0; //rm
 	
+	/**
+	 * Old (original) version of bytecode.
+	 */
+	private String oldCode;
+	
+	/**
+	 * Current bytecode.
+	 */
+	private String code;
+	
+	/**
+	 * Common prefix for original and current bytecode.
+	 */
+	private String prefix;
+	
+	/**
+	 * Code that should be added in merged changes
+	 * in bytecode.
+	 */
+	private String toAdd;
+	
+	/**
+	 * Code that should be removed in merged changes
+	 * in bytecode.
+	 */
+	private String toRemove;
+	
+	/**
+	 * Common suffix for original and current bytecode.
+	 */
+	private String suffix;
+
+	/**
+	 * oldCode == prefix + toRemove + suffix;
+	 * code == prefix + toAdd + suffix;
+	 */
+	
+	/**
+	 * Last error message.
+	 */
+	private String errMsg = "";
+	
+	/**
+	 * Position of first character on which old and current
+	 * bytecodes differs.
+	 */
+	private int begin;
+	
+	/**
+	 * Position of first unaffected character (in current
+	 * bytecode).
+	 */
+	private int end;
+
+	/**
+	 * Position of first unaffected character (in original
+	 * bytecode).
+	 */
+	private int oldEnd;
+	
+	/**
+	 * Wether any changes has been added since last
+	 * {@link #resetChanges()} call.
+	 */
+	private boolean modified = false;
+
+	/**
+	 * Wether current bytecode is correct or not.
+	 */
+	private boolean correct = true;
+	
+	// the two fields below are unused, but should be
+	// left alone for tests compatibility.
+	
+	//unused
+	private String last_parsed = "";
+	
+	//unused
+	private int cp_hash = 0;
+	
+	/**
+	 * A standard contructor.
+	 * 
+	 * @param bcc - BCClass related with this bytecode,
+	 * @param code - a String representation of bytecode.
+	 */
 	public CodeFragment(BCClass bcc, String code) {
 		this.bcc = bcc;
 		this.code = code;
 		this.oldCode = code;
 	}
 
+	/**
+	 * Displays an error message and remembers
+	 * it in errMsg field, as last error message.
+	 * 
+	 * @param msg
+	 */
 	private void showMsg(String msg) {
 		MLog.putMsg(MLog.PInfo, msg);
 		errMsg = msg;
 	}
 	
+	/**
+	 * Adds a change (effect of bytecode editing) to this
+	 * bytecode. A change is replacing one fragment of this
+	 * bytecode with another String.
+	 * 
+	 * @param cfrom - position of first modified character,
+	 * @param length - length of removed String,
+	 * @param nc - new String added at removed String's
+	 * 		position.
+	 */
 	public void addChange(int cfrom, int length, String nc) {
 		int cto = cfrom + length;
 		if (cfrom > cto)
@@ -112,11 +234,30 @@ public class CodeFragment {
 		code = prefix + toAdd + suffix;
 	}
 
-	public static int getLineOfOffset(String code, int pos) {
+	/**
+	 * Translates character position in a String to number
+	 * of line containing this character.
+	 * 
+	 * @param code - multi-line String,
+	 * @param pos - number of character (offset)
+	 * 		in <code>code</code>.
+	 * @return Number of line in <code>code</code> containing
+	 * 		character with offset <code>pos</code>.
+	 */
+	private static int getLineOfOffset(String code, int pos) {
 		return (code.substring(0, pos)+'.').split("\n").length-1;
 	}
 	
-	public static int getLineOffset(String code, int lnr) {
+	/**
+	 * Translates line number of a String to character number
+	 * (offset).
+	 * 
+	 * @param code - multi-line String,
+	 * @param lnr - number of line in <code>code</code>.
+	 * @return Offset of first character of <code>lnr</code>'s
+	 * 		line in <code>code</code>.
+	 */
+	private static int getLineOffset(String code, int lnr) {
 		String[] lines = code.split("\n");
 		int pos = 0;
 		for (int i=0; i<lnr; i++)
@@ -124,14 +265,27 @@ public class CodeFragment {
 		return pos;
 	}
 
-	public static String[] getAllAttributeNames() {
+	/**
+	 * @return all keywords that can stand at the beginning
+	 * 		of an annotation.
+	 */
+	private static String[] getAllAttributeNames() {
 		String[] ret = { IDisplayStyle._classInvariant,
 				IDisplayStyle._requires, IDisplayStyle._precondition,
 				IDisplayStyle._postcondition, IDisplayStyle._assert };
 		return ret;
 	}
 
-	public static boolean isAttributeStr(String str) {
+	/**
+	 * Searches for given keyword
+	 * in {@link #getAllAttributeNames()}.
+	 * 
+	 * @param str - a keyword, returned by
+	 * 		{@link #getKeyword(String)} method.
+	 * @return <b>true</b>, if it is an annotation's keyword,
+	 * 		or <b>false</b> otherwise.
+	 */
+	private static boolean isAttributeStr(String str) {
 		String[] all = getAllAttributeNames();
 		for (int i = 0; i < all.length; i++)
 			if (all[i].equals(str))
@@ -139,10 +293,34 @@ public class CodeFragment {
 		return false;
 	}
 
-	public static boolean isNumber(String str) {
+	/**
+	 * Checks wether given String represents an integer.
+	 * 
+	 * @param str - a String.
+	 * @return wether <code>str</code> is correct String
+	 * 		representation of an integer or not.
+	 */
+	private static boolean isNumber(String str) {
 		return str.matches("^\\-?[0-9]+");
 	}
 
+	/**
+	 * Returns a keyword of given bytecode line.
+	 * 
+	 * @param line - a line of bytecode.
+	 * @return <b>"EOM", "EOD" or "EOA"</b> for the
+	 * 			same lines,<br>
+	 * 		<b>"package"</b> for package declaration,<br>
+	 * 		<b>"class"</b> for class ehader,<br>
+	 * 		<b>"method"</b> for method header,<br>
+	 * 		<b>pc number</b> for instruction line (<b>-1</b>
+	 * 				if it doesn't contain pc number),<br>
+	 * 		<b>attribute keyword</b> for first line
+	 * 				of an annotation,<br>
+	 * 		<b>"comment_start"</b> for beginning of comment,<br>
+	 * 		<b>"comment_end"</b> for end of comment,
+	 * 		<b>an empty String</b>  otherwise.
+	 */
 	public static String getKeyword(String line) {
 		//XXX shouln't it return an Object containing
 		//	type, number or annotation's keyword?
@@ -172,7 +350,7 @@ public class CodeFragment {
 				return anames[i];
 		if (line.startsWith(IDisplayStyle.comment_start)) {
 			if (line.endsWith(IDisplayStyle.comment_end))
-				return "single_line_comment";
+				return "single_line_comment"; //unused?
 			return "comment_start";
 		}
 		if (line.endsWith(IDisplayStyle.comment_end))
@@ -180,10 +358,28 @@ public class CodeFragment {
 		return "";
 	}
 
-	public boolean isKeyword(String line) {
+	/**
+	 * Returns wether given line contains an annotation's
+	 * keyword.
+	 * 
+	 * @param line - a line of bytecode.
+	 * @return wether given line contains an annotation's
+	 * 		keyword.
+	 */
+	private boolean isKeyword(String line) {
 		return isAttributeStr(getKeyword(line));
 	}
 	
+	/**
+	 * Checks if given line is an annotation's start,
+	 * or comment border.
+	 * 
+	 * @param line - a line of bytecode.
+	 * @return <b>true</b> for first annotation lines
+	 * 		and first or last lines of comment, <b>false</b>
+	 * 		otherwise.
+	 */
+	@Deprecated
 	private boolean isNewAnnotLine(String line) {
 		if (isKeyword(line))
 			return true;
@@ -194,6 +390,13 @@ public class CodeFragment {
 		return false;
 	}
 	
+	/**
+	 * Parses current changes in bytecode if they concerns
+	 * only a single annotation.
+	 * 
+	 * @return <b>true</b> if changes was parsed by this
+	 * 		method, <b>false</b> otherwise.
+	 */
 	@Deprecated
 	private boolean quickParse() {
 		//XXX low quality (may contain errors)
@@ -282,7 +485,21 @@ public class CodeFragment {
 		return true;
 	}
 	
-	public static String decorate(String code) {
+	/**
+	 * Adds EOD, EOM and EOA marks to given bytecode.
+	 * "EOD" line is inserted after class attributes, but
+	 * before first method, "EOM" line is inserted after each
+	 * method, and "EOA" lines are inserted at the beginning
+	 * of each comment and after each annotation.
+	 * Use {@link #goShowDecoratedCode} flag to see decorated
+	 * code while performing changes (at PInfo display level).
+	 * 
+	 * @param code - bytecode to be decorated,
+	 * @return <code>code</code> with EOD, EOM and EOA marks
+	 * 		inserted, or <code>null</code> it <code>code</code>
+	 * 		is not correct enough to process it.
+	 */
+	private static String decorate(String code) {
 		String[] lines = code.split("\n");
 		boolean met = true;
 		boolean decl = false;
@@ -291,15 +508,10 @@ public class CodeFragment {
 		for (int l=lines.length - 1; l >= 0; l--) {
 			String line = lines[l];
 			String kw = getKeyword(line);
-			boolean annot = false;
-			if (isAttributeStr(kw)) {
+			if (isAttributeStr(kw))
 				lines[l] = "EOA\n" + lines[l];
-				annot = true;
-			}
-			if (lines[l].endsWith(IDisplayStyle.comment_end)) {
+			if (lines[l].endsWith(IDisplayStyle.comment_end))
 				lines[l] = lines[l] + "\nEOA";
-				annot = true;
-			}
 			if (met) {
 				if (isNumber(kw)) {
 					lines[l] += "\nEOM";
@@ -317,8 +529,9 @@ public class CodeFragment {
 						lines[last_eoc] += "\nEOD";
 						decl = true;
 					}
-					if (line.startsWith(IDisplayStyle.comment_start))
+					if (line.startsWith(IDisplayStyle.comment_start)) {
 						last_boc = l - 1;
+					}
 				}
 			}
 			if ("method".equals(kw)) {
@@ -338,7 +551,18 @@ public class CodeFragment {
 		return newCode;
 	}
 	
-	public static int newPos(String oldCode, String newCode, int oldPos) {
+	/**
+	 * Synchronizes position from original bytecode to
+	 * bytecode decorated with {@link #decorate(String)}
+	 * method.
+	 * 
+	 * @param oldCode - original bytecode,
+	 * @param newCode - bytecode decorated
+	 * 		by {@link #decorate(String)} method,
+	 * @param oldPos - position (offset) in original bytecode.
+	 * @return position (offset) in decorated bytecode.
+	 */
+	private static int newPos(String oldCode, String newCode, int oldPos) {
 		String oldLines[] = oldCode.split("\n");
 		String newLines[] = newCode.split("\n");
 		int diff = 0;
@@ -357,38 +581,27 @@ public class CodeFragment {
 		return oldPos + diff;
 	}
 	
-	public static CodePosition where(String code, int pos) {
-		int lnr = getLineOfOffset(code, pos);
-		return where(code, lnr, pos - getLineOffset(code, lnr));
-	}
-
-	public static CodePosition where(String code, int lnr, int lpos) {
-		if (code.indexOf("\n") < 0) {
-			MLog.putMsg(MLog.PInfo, "code too short");
-			return null;
-		}
-		CodePosition cpos = new CodePosition(code);
-		//DONE add end of declarations and end of method marks
-		String newCode = decorate(code);
-		if (newCode == null)
-			throw new RuntimeException("error in where()");
-		int pos = getLineOffset(code, lnr) + lpos;
-		int pos1 = newPos(code, newCode, pos);
-		lnr = getLineOfOffset(newCode, pos1);
-		lpos = pos1 - getLineOffset(newCode, lnr);
-		//DONE check comments parenthness (/* */) and keywords
-		if (newCode.indexOf("\nEOD\n") < 0) {
-			MLog.putMsg(MLog.PInfo, "no EOD found");
-			return null;
-		}
-		String[] lines = newCode.split("\n");
+	/**
+	 * Perform basic syntax checking for given bytecode.
+	 * Check comment parenthness and apperance of some
+	 * keyword (wether they are inside or outside comment).
+	 * 
+	 * @param code - a String representation of bytecode,
+	 * @return <b>true</b> if <code>code</code> is correct
+	 * 		enought to attempt searching CodePositions in it,
+	 * 		<b>false</b> otherwise.
+	 */
+	private static boolean checkParenthness(String code) {
+		if (code == null)
+			return false;
+		String[] lines = code.split("\n");
 		boolean inComment = false;
 		for (int l=0; l<lines.length; l++) {
 			String line = lines[l];
 			if (line.startsWith(IDisplayStyle.comment_start)) {
 				if (inComment) {
 					MLog.putMsg(MLog.PInfo, "invalid comment parenthness: /*/*");
-					return null;
+					return false;
 				}
 				inComment = true;
 			}
@@ -399,22 +612,73 @@ public class CodeFragment {
 					|| ("package".equals(kw))
 					|| (isNumber(kw))) {
 						MLog.putMsg(MLog.PInfo, "invalid keyword in comment: " + kw);
-						return null;
+						return false;
 					}
 			} else {
 				if (isAttributeStr(kw)) {
 					MLog.putMsg(MLog.PInfo, "invalid keyword outside comment");
-					return null;
+					return false;
 				}
 			}
 			if (line.endsWith(IDisplayStyle.comment_end)) {
 				if (!inComment) {
 					MLog.putMsg(MLog.PInfo, "invalid comment parenthness: */*/");
-					return null;
+					return false;
 				}
 				inComment = false;
 			}
 		}
+		return true;
+	}
+	
+	/**
+	 * Returns {@link CodePosition} representing given offset
+	 * in given bytecode.
+	 * 
+	 * @param code - a String representation of bytecode,
+	 * @param pos - offset in <code>code</code>.
+	 * @return {@link CodePosition} representing logical
+	 * 		position in bytecode, related with
+	 * 		<code>pos</code> offset in <code>code</code>.
+	 */
+	public static CodePosition where(String code, int pos) {
+		int lnr = getLineOfOffset(code, pos);
+		return where(code, lnr, pos - getLineOffset(code, lnr));
+	}
+
+	/**
+	 * Returns {@link CodePosition} representing given offset
+	 * in given bytecode.
+	 * 
+	 * @param code - a String representation of bytecode,
+	 * @param lnr - number of line in <code>code</code>,
+	 * @param pos - offset in <code>line</code>.
+	 * @return {@link CodePosition} representing logical
+	 * 		position in bytecode, related with
+	 * 		given offset in <code>code</code>.
+	 */
+	public static CodePosition where(String code, int lnr, int lpos) {
+		if (code.indexOf("\n") < 0) {
+			MLog.putMsg(MLog.PInfo, "code too short");
+			return null;
+		}
+		CodePosition cpos = new CodePosition();
+		//DONE add end of declarations and end of method marks
+		String newCode = decorate(code);
+		if (newCode == null)
+			return null;
+		int pos = getLineOffset(code, lnr) + lpos;
+		int pos1 = newPos(code, newCode, pos);
+		lnr = getLineOfOffset(newCode, pos1);
+		lpos = pos1 - getLineOffset(newCode, lnr);
+		if (newCode.indexOf("\nEOD\n") < 0) {
+			MLog.putMsg(MLog.PInfo, "no EOD found");
+			return null;
+		}
+		//DONE check comments parenthness (/* */) and keywords
+		if (!checkParenthness(newCode))
+			return null;
+		String[] lines = newCode.split("\n");
 		//DONE compute positions of affected code
 		int anr = -1;
 		boolean nexta = false;
@@ -493,6 +757,16 @@ public class CodeFragment {
 		return cpos;
 	}
 	
+	/**
+	 * Commits BML changes in bytecode into BCClass.
+	 * First, checks that current bytecode is correct,
+	 * then parse it, affecting as few elements of BCClass
+	 * as it can. Parsing whole class can be uneffective
+	 * (slow), so it tries to skip unaffected BML annotations,
+	 * comments and methods. It can parse only BML
+	 * annotations, not the bytecode itself (bytecode-level
+	 * (BCEL's) structures will be unaffected).
+	 */
 	public void performChanges() {
 		correct = true;
 		errMsg = "";
@@ -504,6 +778,14 @@ public class CodeFragment {
 		CodePosition cp_start = where(code, begin);
 		CodePosition cp_old = where(oldCode, oldEnd);
 		CodePosition cp_new = where(code, end);
+		if (cp_old == null)
+			if (!checkParenthness(decorate(oldCode)))
+				if (cp_start != null) {
+					MLog.putMsg(MLog.PNotice,
+						"code has just became correct enought"
+						+ " to attempt to parse it.");
+					cp_old = cp_new;
+				}
 		cp_hash = 0;
 		if (cp_start != null)
 			cp_hash += cp_start.hash();
@@ -520,7 +802,6 @@ public class CodeFragment {
 			correct = false;
 			return;
 		}
-		//FIXME! change unaffected fragments to stubs
 		boolean decl = true;
 		boolean mspec = true;
 		boolean affd = cp_start.isInClassAttribute();
@@ -591,6 +872,7 @@ public class CodeFragment {
 			if ("method".equals(kw)) {
 				lines[l] = "[method header]";
 				mspec = false;
+				anr = -1;
 				continue;
 			}
 			// instructions
@@ -666,11 +948,29 @@ public class CodeFragment {
 			shortCode = shortCode.replaceAll("\n\n", "\n");
 		last_parsed = shortCode;
 		MLog.putMsg(MLog.PInfo, "code to be parsed:\n" + shortCode);
-		//TODO create grammar for parsing bytecode
-		//TODO check correctness of new code fragment
+		if (goDisableParser)
+			return;
+		//DONE create grammar for parsing bytecode
+		//DONE check correctness of new code fragment
+		if (!correct)
+			throw new RuntimeException("error in performChanges()");
+		correct = bcc.getParser().parseClass(shortCode, false);
 		//TODO and parse it into bcc.
+		if (correct)
+			bcc.getParser().parseClass(shortCode, true);
 	}
 	
+	/**
+	 * Assumes that bytecode has been parsed succesfuly.
+	 * It should be called after each
+	 * {@link #performChanges()} call, if bytecode is correct.
+	 * Calling it for incorrect bytecode may result of ignoring
+	 * some errors in next parsing attempt.
+	 * This method has been separated from
+	 * {@link #performChanges()} method only for test
+	 * pusposes, to show {@link CodeFragment}'s state
+	 * just after parsing it.
+	 */
 	public void resetChanges() {
 		oldCode = code;
 		begin = end = oldEnd = -1;
@@ -678,6 +978,21 @@ public class CodeFragment {
 		modified = false;
 	}
 	
+	/**
+	 * Modifies current bytecode, replacing given fragment
+	 * with another String and updating {@link BCClass}.
+	 * Either use this or seuqntly:<br>
+	 * - {@link #addChange(int, int, String)} (one or more
+	 * 		times (for merged changes)),<br>
+	 * - {@link #performChanges()},<br>
+	 * - {@link #resetChanges()}.
+	 * 
+	 * @param cfrom - position of first modified character,
+	 * @param length - length of removed String,
+	 * @param nc - new String added at removed String's
+	 * 		position.
+	 * @see #addChange(int, int, String)
+	 */
 	public void modify(int cfrom, int length, String nc) {
 		addChange(cfrom, length, nc);
 		performChanges();
@@ -685,6 +1000,11 @@ public class CodeFragment {
 		resetChanges();
 	}
 	
+	/**
+	 * @return a hash code for this editing bytecode
+	 * 		(the same result if (but not only if) all
+	 * 		fields are the same).
+	 */
 	public int hash() {
 		int h = CodePosition.StrHash(code);
 		h += CodePosition.StrHash(oldCode);
@@ -701,6 +1021,9 @@ public class CodeFragment {
 		return h % 1000;
 	}
 
+	/**
+	 * Displays current state of this bytecode fragment.
+	 */
 	public String toString() {
 		if (!modified)
 			return "code hasn't been modified yet";
@@ -718,14 +1041,30 @@ public class CodeFragment {
 		return ret;
 	}
 
+	/**
+	 * @return current bytecode.
+	 */
 	public String getCode() {
 		return code;
 	}
 
+	/**
+	 * @return wether current bytecode is correct.
+	 * 		It can ignore errors that are far enought from
+	 * 		edited fragment (eg. if they were there at the
+	 * 		beginnin, or before last {@link #resetChanges()}
+	 * 		call.
+	 */
 	public boolean isCorrect() {
 		return correct;
 	}
 
+	/**
+	 * @return last error message.
+	 * 		Currenlty error messages tells only if code were
+	 * 		parsed by ANTLR, or was so incorrect that was
+	 * 		rejected before passing it to ANTLR.
+	 */
 	public String getErrMsg() {
 		return errMsg;
 	}
