@@ -58,7 +58,7 @@ public final class MethodProperties extends ContextProperties {
   /** the local variables. */
   public LinkedList<List<QuantVariableRef>> fLocalVars = new LinkedList<List<QuantVariableRef>> ();
   /** the arguments of the method. */
-  public LinkedList<Term> fArgs;
+  public LinkedList<QuantVariableRef> fArgs;
   
   /**
    * initialize the properties with default values.
@@ -67,7 +67,7 @@ public final class MethodProperties extends ContextProperties {
     initProperties(); 
     validStr.addAll(super.getValidStr());
     fMethod = met;
-    fArgs = new LinkedList<Term>(); 
+    fArgs = new LinkedList<QuantVariableRef>(); 
     fArgs.addAll(Lookup.mkArguments(met));
 
   }
@@ -91,7 +91,7 @@ public final class MethodProperties extends ContextProperties {
     return validStr;
   }
   
-  public List<QuantVariableRef> flattenLocals() {
+  public List<QuantVariableRef> getLocalVars() {
     final List<QuantVariableRef> res = new LinkedList<QuantVariableRef>();
     for (List<QuantVariableRef> list: fLocalVars) {
       res.addAll(list);

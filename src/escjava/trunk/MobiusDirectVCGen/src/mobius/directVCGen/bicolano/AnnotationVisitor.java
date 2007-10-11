@@ -1,19 +1,14 @@
 package mobius.directVCGen.bicolano;
 
-import java.util.LinkedList;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Vector;
 
 import javafe.ast.ASTNode;
-import javafe.ast.BlockStmt;
 import javafe.ast.RoutineDecl;
-import javafe.ast.VarDeclStmt;
 import javafe.util.Location;
 import mobius.bico.Util.Stream;
-import mobius.directVCGen.formula.Expression;
 import mobius.directVCGen.formula.Formula;
 import mobius.directVCGen.formula.Heap;
-import mobius.directVCGen.formula.Lookup;
 import mobius.directVCGen.formula.Util;
 import mobius.directVCGen.formula.annotation.AnnotationDecoration;
 import mobius.directVCGen.vcgen.ABasicVisitor;
@@ -90,11 +85,10 @@ public final class AnnotationVisitor extends ABasicVisitor {
       final int lineNum = Location.toLineNumber(x.getStartLoc());
       final List<LineNumberGen> lineList = Util.getLineNumbers(fMet, lineNum);
       final Term t = fAnnot.getInvariant(x);
-      //final List<QuantVariableRef> flat = flattenLocals();
       
       final String invName = fAnnot.getInvariantName(x); 
       buildMker(invName, t, fAnnot.getInvariantArgs(x));
-      buildDefiner(invName, t,  fAnnot.getInvariantArgs(x));
+      buildDefiner(invName, fAnnot.getInvariantArgs(x));
       
 
       final InstructionHandle ih = Util.findLastInstruction(lineList);
@@ -115,43 +109,49 @@ public final class AnnotationVisitor extends ABasicVisitor {
   }
  
 
-
-
-
-  private void buildDefiner(String name, Term t, List<QuantVariableRef> flat) {
+  /**
+   * Define the annotations for the bytecide with the right local variables.
+   * @param name the name of the annotation do define
+   * @param listVar the list of variables used in the annotation
+   */
+  private void buildDefiner(final String name, final List<QuantVariableRef> listVar) {
     String lets = "";
     String vars = "";
+    final Iterator<QuantVariableRef> iter = listVar.iterator();
+    QuantVariableRef var;
     // olds
-    final String olhname = Formula.generateFormulas(Heap.varPre).toString();
+    var = iter.next(); // the old heap
+    final String olhname = Formula.generateFormulas(var).toString();
     lets += "let " + olhname + " := (snd s0) in \n";
     vars += olhname;
+    
+    // now the variables
     int varcount = 0;
-    for (Term ter: flat) {
+    var = iter.next();
+    while (!var.equals(Heap.var)) {
       varcount++;
-      final QuantVariableRef qvr = (QuantVariableRef) ter;
-      if (qvr.qvar.name.equals("this")) {
-        continue;
-      }
-      if (qvr.equals(Heap.var)) {
-        break;
-      }
-      final String vname = Formula.generateFormulas(Expression.old(qvr)).toString();
+      final String vname = Formula.generateFormulas(var).toString();
       lets += "let " + vname + " := (do_lvget (fst s0) " + varcount + "%N) in ";
       vars += " " + vname;
+      var = iter.next();
     }  
     lets += "\n";
     
     // new :)
-    final String hname = Formula.generateFormulas(Heap.var).toString();
+    final String hname = Formula.generateFormulas(var).toString();
     lets += "let " + hname + " :=  (fst (fst s)) in \n";
     vars += " " + hname;
+    
+    // new variables
     varcount = 0;
-    for (Term qvr: flat) {
+    while (iter.hasNext()) {
+      var = iter.next();
       varcount++;
-      final String vname = Formula.generateFormulas(qvr).toString();
+      final String vname = Formula.generateFormulas(var).toString();
       lets += "let " + vname + " := (do_lvget (snd s) " + varcount + "%N) in \n";
       vars += " " + vname;
     }
+    
     fOut.println("Definition " + name + " (s0:InitState) (s:LocalState): list Prop := ");
     fOut.incTab();
     fOut.println("(" + lets + "  mk_" + name + " " +  vars + "):: nil.");
@@ -159,39 +159,21 @@ public final class AnnotationVisitor extends ABasicVisitor {
   }
 
 
-
-  private void buildMker(final String name, final Term body, List<QuantVariableRef> flat) {
+  /**
+   * Write the base definition of an assertion. The name used is of the form
+   * <code>mk_</code>
+   * @param name the name of the assertion
+   * @param body the body of the assertion
+   * @param varList the list of the variables used
+   */
+  private void buildMker(final String name, final Term body, 
+                         final List<QuantVariableRef> varList) {
     String varsAndType = "";
-    // olds
-    final String olhname = Formula.generateFormulas(Heap.varPre).toString();
-    varsAndType += "(" + olhname + ": " + Formula.generateType(Heap.varPre.getSort()) +  ") ";
-    for (Term t: flat) {
-      final QuantVariableRef qvr = (QuantVariableRef) t;
-      if (qvr.qvar.name.equals("this")) {
-        continue;
-      }
-      final String vname = Formula.generateFormulas(Expression.old(qvr)).toString();
-      varsAndType += "(" + vname + ": " + Formula.generateType(qvr.getSort()) +  ") ";
-      
-    }  
-    varsAndType += "\n    ";
-    
-    // new :)
-    final String hname = Formula.generateFormulas(Heap.var).toString();
-    varsAndType += "(" + hname + ": " + Formula.generateType(Heap.var.getSort()) +  ") ";
-     
-    for (Term qvr: flat) {
+    for (QuantVariableRef qvr: varList) {
       final String vname = Formula.generateFormulas(qvr).toString();
       varsAndType += "(" + vname + ": " + Formula.generateType(qvr.getSort()) +  ") ";
       
     }
-    varsAndType += "\n    ";
-    for (QuantVariableRef qvr: flat) {
-      final String vname = Formula.generateFormulas(qvr).toString();
-      varsAndType += "(" + vname + ": " + Formula.generateType(qvr.getSort()) +  ") ";
-      
-    }
-    
     fOut.println("Definition mk_" + name + ":= ");
     fOut.incTab();
     fOut.println("fun " + varsAndType + "=> \n" + 
@@ -199,14 +181,6 @@ public final class AnnotationVisitor extends ABasicVisitor {
     fOut.decTab();
   }
 
-
-
-
-
-
-
-
-  
   
 
   

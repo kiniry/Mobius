@@ -1,12 +1,13 @@
 package mobius.directVCGen.formula.annotation;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 
-import mobius.directVCGen.formula.jmlTranslator.struct.MethodProperties;
-
 import javafe.ast.ASTDecoration;
 import javafe.ast.ASTNode;
+import mobius.directVCGen.formula.Expression;
+import mobius.directVCGen.formula.jmlTranslator.struct.MethodProperties;
 import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
 
@@ -139,9 +140,9 @@ public class AnnotationDecoration extends ASTDecoration {
    * Sets the invariant associated with the given node.
    * @param n the node to decorate
    * @param inv the invariant to set
-   * @param prop 
+   * @param prop the properties to add all the arguments to the invariant
    */
-  public void setInvariant(final ASTNode n, final Term inv, MethodProperties prop) {
+  public void setInvariant(final ASTNode n, final Term inv, final MethodProperties prop) {
     Annotation res = getAnnot(n);
     if (res == null) {
       res = new Annotation();
@@ -149,10 +150,28 @@ public class AnnotationDecoration extends ASTDecoration {
     }
     res.fInv = inv;
     res.fInvName = "invariant" + fInvCount;
+    res.fInvArgs = buildArgs(prop);
     fInvCount++;
     
+    
   }
-
+  
+  private List<QuantVariableRef> buildArgs(final MethodProperties prop) {
+    final List<QuantVariableRef> args = new LinkedList<QuantVariableRef>();
+    // olds
+    
+    for (QuantVariableRef qvr: prop.fArgs) {
+      if (qvr.qvar.name.equals("this")) {
+        continue;
+      }
+      args.add(Expression.old(qvr));  
+    }
+    
+    // new :)
+    args.addAll(prop.fArgs);
+    args.addAll(prop.getLocalVars());
+    return args;
+  }
   /**
    * Retrieve the invariant associated with the node.
    * @param n the node decorated
