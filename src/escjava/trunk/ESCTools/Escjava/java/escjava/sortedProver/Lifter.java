@@ -247,7 +247,8 @@ public class Lifter extends EscNodeBuilder
 		
 		public SAny dumpAny()
 		{
-			Assert.notFalse(follow(getSort()) != sortPred);
+      // jgc: in mobius direct vc gen, the sort any contains pred
+			//Assert.notFalse(follow(getSort()) != sortPred);
 			return (SAny)dump();
 		}
 		
