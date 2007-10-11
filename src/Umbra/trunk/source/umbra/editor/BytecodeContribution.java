@@ -211,12 +211,14 @@ public class BytecodeContribution extends ControlContribution {
         // TODO Auto-generated catch block
         e.printStackTrace();
       }
-      my_bcc.removeIncorrects(start_rem, stop_rem);
-      my_bcc.addAllLines(an_event.fDocument, start_rem, stop_rem, stop);
-      my_bcc.checkAllLines(start_rem, stop);
-      if (!my_bcc.allCorrect())
-        displayError(an_event.fDocument, my_bcc.getFirstError());
-      else displayCorrect(an_event.fDocument);
+      if (BMLParsing.umbraEnabled) {
+        my_bcc.removeIncorrects(start_rem, stop_rem);
+        my_bcc.addAllLines(an_event.fDocument, start_rem, stop_rem, stop);
+        my_bcc.checkAllLines(start_rem, stop);
+        if (!my_bcc.allCorrect())
+          displayError(an_event.fDocument, my_bcc.getFirstError());
+        else displayCorrect(an_event.fDocument);
+      }
       Global.bmlp.onChange(an_event);
     }
 

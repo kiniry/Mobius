@@ -189,7 +189,12 @@ public class BytecodeEditor extends TextEditor {
       e1.printStackTrace();
     }
     try {
-      final JavaClass jc = my_classgen.getJavaClass();
+      JavaClass jc = my_classgen.getJavaClass();
+      if (BMLParsing.enabled && !BMLParsing.umbraEnabled) {
+        BCClass bcc = Global.bmlp.getBcc();
+        bcc.saveJC();
+        jc = bcc.getJc();
+      }
       final String path3 = a_fileFrom.getLocation().toOSString();
       jc.dump(path3);
     } catch (IOException e) {
