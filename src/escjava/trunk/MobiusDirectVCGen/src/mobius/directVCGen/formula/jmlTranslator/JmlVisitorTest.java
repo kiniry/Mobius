@@ -555,7 +555,7 @@ public class JmlVisitorTest extends TestCase {
     vec = StmtVec.make(new Stmt[] {jmlStmt, javaWhileStmt});
     allStmts = BlockStmt.make(vec, 0, 0);
     fVisitor.visitBlockStmt(allStmts, fProp);
-    evaluatedTerm = AnnotationDecoration.inst.getInvariant((ASTNode) javaWhileStmt);
+    evaluatedTerm = AnnotationDecoration.inst.getInvariant((ASTNode) javaWhileStmt).formula;
     //***************Term**********************************
     expectedTerm = Logic.gt(xFieldAccessTermInt, sevenTermInt);
     //*************Test************************

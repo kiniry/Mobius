@@ -2,6 +2,7 @@ package mobius.directVCGen.formula.annotation;
 
 import java.util.List;
 
+import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
 
 /**
@@ -23,14 +24,15 @@ public abstract class AAnnotation {
   /** FOL-Term that represents the annotation at that point. */
   public final Term formula;
   
-
+  public final String fName;
+  public final List<QuantVariableRef> fArgs;
   
 
   /**
    * Default constructor.
    */
   protected AAnnotation() {
-    formula = null;
+    this(null);
   }
 
   /**
@@ -39,9 +41,14 @@ public abstract class AAnnotation {
    * the annotation
    */
   public AAnnotation(final Term term) {
-    formula = term;
+    this (null, null, term);
   }
-
+  public AAnnotation(String name, List<QuantVariableRef> args,
+                     final Term term) {
+    formula = term;
+    fArgs = args;
+    fName = name;
+  }
   /**
    * Return the ID of the class in order to do a switch.
    * @return an id precising which class the current object is from

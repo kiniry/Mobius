@@ -49,8 +49,10 @@ import mobius.directVCGen.formula.Logic;
 import mobius.directVCGen.formula.Lookup;
 import mobius.directVCGen.formula.Ref;
 import mobius.directVCGen.formula.Type;
+import mobius.directVCGen.formula.Util;
 import mobius.directVCGen.formula.annotation.AAnnotation;
 import mobius.directVCGen.formula.annotation.AnnotationDecoration;
+import mobius.directVCGen.vcgen.DirectVCGen;
 import mobius.directVCGen.vcgen.expression.ExpressionVisitor;
 import mobius.directVCGen.vcgen.struct.ExcpPost;
 import mobius.directVCGen.vcgen.struct.Post;
@@ -220,7 +222,9 @@ public class StmtVCGen extends ExpressionVisitor {
   public /*@non_null*/ Object visitWhileStmt(final /*@non_null*/ WhileStmt x, final Object o) {
     final VCEntry vce = (VCEntry)o;
     vce.fPost = treatAnnot(vce, fAnnot.getAnnotPost(x));
-    final Term inv = fAnnot.getInvariant(x);
+    final Term inv = Util.getAssertion(fMeth, fAnnot.getInvariant(x));
+
+    
     final Term post = vce.fPost.getPost();
     final Post pinv = new Post(inv);
     final VCEntry vceBody = mkEntryWhile(vce, pinv);
@@ -387,8 +391,10 @@ public class StmtVCGen extends ExpressionVisitor {
     final Stmt s = x.stmt;
     VCEntry vce = (VCEntry)o;
     vce.fPost = treatAnnot(vce, fAnnot.getAnnotPost(x));
+    
     if (s instanceof WhileStmt || s instanceof DoStmt || s instanceof ForStmt) {
-      vce = mkEntryLoopLabel(x.label, vce, new Post(fAnnot.getInvariant(s)));
+      final Term t =  Util.getAssertion(fMeth, fAnnot.getInvariant(s));
+      vce = mkEntryLoopLabel(x.label, vce, new Post(t));
     }
     vce.fPost = (Post) x.stmt.accept(fExprVisitor, vce);
     return treatAnnot(vce, fAnnot.getAnnotPre(x));
@@ -611,7 +617,7 @@ public class StmtVCGen extends ExpressionVisitor {
 
     final VCEntry vce = (VCEntry)o;
     vce.fPost = treatAnnot(vce, fAnnot.getAnnotPost(x));
-    final Term inv = fAnnot.getInvariant(x);
+    final Term inv =  Util.getAssertion(fMeth, fAnnot.getInvariant(x));
     final Term post = vce.fPost.getPost();
     final Post pinv = new Post(inv);
     final VCEntry vceBody = mkEntryWhile(vce, pinv);
@@ -651,6 +657,9 @@ public class StmtVCGen extends ExpressionVisitor {
     }
     return treatAnnot(vce, fAnnot.getAnnotPre(x));
   }
+
+
+
 
 
   //pas implementer

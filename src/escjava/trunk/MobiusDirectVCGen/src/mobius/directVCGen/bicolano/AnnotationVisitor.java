@@ -10,6 +10,7 @@ import mobius.bico.Util.Stream;
 import mobius.directVCGen.formula.Formula;
 import mobius.directVCGen.formula.Heap;
 import mobius.directVCGen.formula.Util;
+import mobius.directVCGen.formula.annotation.AAnnotation;
 import mobius.directVCGen.formula.annotation.AnnotationDecoration;
 import mobius.directVCGen.vcgen.ABasicVisitor;
 
@@ -84,16 +85,14 @@ public final class AnnotationVisitor extends ABasicVisitor {
       // let's do a third thing
       final int lineNum = Location.toLineNumber(x.getStartLoc());
       final List<LineNumberGen> lineList = Util.getLineNumbers(fMet, lineNum);
-      final Term t = fAnnot.getInvariant(x);
-      
-      final String invName = fAnnot.getInvariantName(x); 
-      buildMker(invName, t, fAnnot.getInvariantArgs(x));
-      buildDefiner(invName, fAnnot.getInvariantArgs(x));
+      final AAnnotation inv = fAnnot.getInvariant(x);
+      buildMker(inv);
+      buildDefiner(inv);
       
 
       final InstructionHandle ih = Util.findLastInstruction(lineList);
       res = "(PCM.update " + res + " " + ih.getPosition() + "%N" +
-                    " (" + invName + ",," +  
+                    " (" + inv.fName + ",," +  
                         fMet.getInstructionList().getEnd().getPosition() + "%nat))";
     }
     
@@ -111,13 +110,12 @@ public final class AnnotationVisitor extends ABasicVisitor {
 
   /**
    * Define the annotations for the bytecide with the right local variables.
-   * @param name the name of the annotation do define
-   * @param listVar the list of variables used in the annotation
+   * @param annot the assertion to translate
    */
-  private void buildDefiner(final String name, final List<QuantVariableRef> listVar) {
+  private void buildDefiner(final AAnnotation annot) {
     String lets = "";
     String vars = "";
-    final Iterator<QuantVariableRef> iter = listVar.iterator();
+    final Iterator<QuantVariableRef> iter = annot.fArgs.iterator();
     QuantVariableRef var;
     // olds
     var = iter.next(); // the old heap
@@ -152,9 +150,9 @@ public final class AnnotationVisitor extends ABasicVisitor {
       vars += " " + vname;
     }
     
-    fOut.println("Definition " + name + " (s0:InitState) (s:LocalState): list Prop := ");
+    fOut.println("Definition " + annot.fName + " (s0:InitState) (s:LocalState): list Prop := ");
     fOut.incTab();
-    fOut.println("(" + lets + "  mk_" + name + " " +  vars + "):: nil.");
+    fOut.println("(" + lets + "  mk_" + annot.fName + " " +  vars + "):: nil.");
     fOut.decTab();
   }
 
@@ -162,22 +160,19 @@ public final class AnnotationVisitor extends ABasicVisitor {
   /**
    * Write the base definition of an assertion. The name used is of the form
    * <code>mk_</code>
-   * @param name the name of the assertion
-   * @param body the body of the assertion
-   * @param varList the list of the variables used
+   * @param annot the assertion to translate
    */
-  private void buildMker(final String name, final Term body, 
-                         final List<QuantVariableRef> varList) {
+  private void buildMker(final AAnnotation annot) {
     String varsAndType = "";
-    for (QuantVariableRef qvr: varList) {
+    for (QuantVariableRef qvr: annot.fArgs) {
       final String vname = Formula.generateFormulas(qvr).toString();
       varsAndType += "(" + vname + ": " + Formula.generateType(qvr.getSort()) +  ") ";
       
     }
-    fOut.println("Definition mk_" + name + ":= ");
+    fOut.println("Definition mk_" + annot.fName + ":= ");
     fOut.incTab();
     fOut.println("fun " + varsAndType + "=> \n" + 
-                   Formula.generateFormulas(body) + ".");
+                   Formula.generateFormulas(annot.formula) + ".");
     fOut.decTab();
   }
 

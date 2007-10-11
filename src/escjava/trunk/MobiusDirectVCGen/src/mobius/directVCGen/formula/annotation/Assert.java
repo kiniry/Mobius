@@ -1,5 +1,8 @@
 package mobius.directVCGen.formula.annotation;
 
+import java.util.List;
+
+import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
 
 /**
@@ -19,7 +22,12 @@ public class Assert extends AAnnotation {
       throw new NullPointerException();
     }
   }
-  
+  public Assert(String name, List<QuantVariableRef> args, final Term t) {
+    super(name, args, t);
+    if (t == null) {
+      throw new NullPointerException();
+    }
+  }
   /*
    * (non-Javadoc)
    * @see mobius.directVCGen.formula.annotation.AAnnotation#getID()

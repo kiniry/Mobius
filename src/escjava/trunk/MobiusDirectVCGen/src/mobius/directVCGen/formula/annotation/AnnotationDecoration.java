@@ -40,14 +40,11 @@ public class AnnotationDecoration extends ASTDecoration {
     final List<AAnnotation> fPre = new Vector<AAnnotation>();
     /** the post annotations of the decorated instruction. */
     final List<AAnnotation> fPost = new Vector<AAnnotation>();
+
     /** the invariant associated with a while instruction. */
-    Term fInv;
+    AAnnotation fInv;
     
-    /** the name of the invariant. */
-    String fInvName;
-    
-    /** the arguments of the invariant. */
-    List<QuantVariableRef> fInvArgs;
+
   }
 
   /**
@@ -148,9 +145,10 @@ public class AnnotationDecoration extends ASTDecoration {
       res = new Annotation();
       super.set(n, res);
     }
-    res.fInv = inv;
-    res.fInvName = "invariant" + fInvCount;
-    res.fInvArgs = buildArgs(prop);
+    res.fInv = new Assert("invariant" + fInvCount,
+                          buildArgs(prop),
+                          inv);
+
     fInvCount++;
     
     
@@ -177,7 +175,7 @@ public class AnnotationDecoration extends ASTDecoration {
    * @param n the node decorated
    * @return the invariant the node is decorated with, or null
    */
-  public Term getInvariant(final ASTNode n) {
+  public AAnnotation getInvariant(final ASTNode n) {
     final Annotation v =  getAnnot(n);
     if (v == null) {
       return null;
@@ -195,7 +193,7 @@ public class AnnotationDecoration extends ASTDecoration {
     if (v == null) {
       return null;
     }
-    return v.fInvName;
+    return v.fInv.fName;
   }
 
   public List<QuantVariableRef> getInvariantArgs(final ASTNode x) {
@@ -203,6 +201,6 @@ public class AnnotationDecoration extends ASTDecoration {
     if (v == null) {
       return null;
     }
-    return v.fInvArgs;
+    return v.fInv.fArgs;
   }
 }

@@ -3,11 +3,16 @@ package mobius.directVCGen.formula;
 import java.util.List;
 import java.util.Vector;
 
+import mobius.directVCGen.formula.annotation.AAnnotation;
+import mobius.directVCGen.vcgen.DirectVCGen;
+
 import org.apache.bcel.generic.GotoInstruction;
 import org.apache.bcel.generic.InstructionHandle;
 import org.apache.bcel.generic.LineNumberGen;
 import org.apache.bcel.generic.LocalVariableGen;
 import org.apache.bcel.generic.MethodGen;
+
+import escjava.sortedProver.Lifter.Term;
 
 import javafe.ast.RoutineDecl;
 
@@ -97,6 +102,20 @@ public class Util {
         
         res.add(local);
       }
+    }
+    return res;
+  }
+  
+  public static Term getAssertion(RoutineDecl meth, 
+                                  AAnnotation annot) {
+    final Term res;
+    if (DirectVCGen.fByteCodeTrick) {
+      final String methname = Util.getMethodName(meth);
+      final Term[] tab = annot.fArgs.toArray(new Term [annot.fArgs.size()]);
+      res = Expression.sym(methname + ".mk_" + annot.fName, tab);
+    }
+    else {
+      res = annot.formula;
     }
     return res;
   }
