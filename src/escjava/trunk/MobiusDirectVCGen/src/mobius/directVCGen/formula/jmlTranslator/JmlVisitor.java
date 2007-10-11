@@ -183,8 +183,9 @@ public class JmlVisitor extends BasicJMLTranslator {
     visitRoutineDecl(x, prop);
     
     if (!prop.fIsHelper) {
-      final Term constraints = Lookup.constraints.get(x.getParent());
-      addToPostcondition(constraints, prop);
+      final Term constraints = Lookup.getConstraint(x.getParent());
+      //addToPostcondition(constraints, prop);
+      Lookup.addNormalPostcondition(prop.fMethod, constraints);
       Lookup.addExceptionalPostcondition(prop.fMethod, constraints);
     }  
     return prop;
@@ -204,7 +205,8 @@ public class JmlVisitor extends BasicJMLTranslator {
  
     if (!prop.fIsHelper) {
       final Term initially = (Term) prop.get("initiallyFOL");
-      addToPostcondition(initially, prop);
+      //addToPostcondition(initially, prop);
+      Lookup.addNormalPostcondition(prop.fMethod, initially);
       Lookup.addExceptionalPostcondition(prop.fMethod, initially);
     } 
     return prop;
@@ -425,7 +427,7 @@ public class JmlVisitor extends BasicJMLTranslator {
     boolean constIsValid = true;
     Term constTerm = t;
     
-    final Term allConst = Lookup.constraints.get(x.parent);
+    final Term allConst = Lookup.getConstraint(x.parent);
     
     if (fDoSubsetChecking) { 
       constIsValid = doSubsetChecking(o);
@@ -434,7 +436,7 @@ public class JmlVisitor extends BasicJMLTranslator {
       constTerm = Logic.and(allConst, constTerm); 
     }
     else if (constIsValid) {
-      Lookup.constraints.put(x.parent, constTerm); 
+      Lookup.addConstraint(x.parent, constTerm); 
     }
     else if (!constIsValid) {
       System.out.println("Constraint error (subset check)! The following term was not conjoined to the overall type constraints: " + t.toString() + "\n");
@@ -447,17 +449,20 @@ public class JmlVisitor extends BasicJMLTranslator {
    */
   @Override
   public final Object visitExprModifierPragma(final /*@non_null*/ ExprModifierPragma x, final Object o) {
-    ((ContextProperties) o).interesting = true;
+    final MethodProperties prop = (MethodProperties)o;
+    prop.interesting = true;
     Term t = (Term)visitASTNode(x, o);
     t = Logic.boolToPred(t);
     switch (x.getTag()) {
       case TagConstants.REQUIRES:
-        addToPrecondition(t, o);
+        //addToPrecondition(t, o);
+        Lookup.addPrecondition(prop.fMethod, t);
         break;
       case TagConstants.ENSURES:
       case TagConstants.POSTCONDITION:
       case TagConstants.POSTCONDITION_REDUNDANTLY:
-        addToPostcondition(t, o);
+        //addToPostcondition(t, o);
+        Lookup.addNormalPostcondition(prop.fMethod, t);
         break;
       default:
         break;
@@ -874,7 +879,7 @@ public class JmlVisitor extends BasicJMLTranslator {
    * 
    */
   public void invPredToPreconditions(final /*@non_null*/ Object o) {
-     
+    final MethodProperties prop = (MethodProperties) o;
     final QuantVariableRef x = Expression.rvar(Ref.sort);
     final QuantVariableRef type = Expression.rvar(Type.sort);
     final QuantVariable[] vars = {x.qvar, type.qvar};
@@ -888,7 +893,8 @@ public class JmlVisitor extends BasicJMLTranslator {
     }    
     final Term implTerm = Logic.implies(andTerm, invTerm);
     final Term forAllTerm = Logic.forall(vars, implTerm);
-    addToPrecondition(forAllTerm, o);
+    //addToPrecondition(forAllTerm, o);
+    Lookup.addPrecondition(prop.fMethod, forAllTerm);
   }
 
 
@@ -913,7 +919,10 @@ public class JmlVisitor extends BasicJMLTranslator {
   
   
   public void invPredToPostconditions(final /*@non_null*/ Object o) { 
-    this.addToPostcondition(this.invPostPred(o), o);
+    //this.addToPostcondition(this.invPostPred(o), o);
+    final MethodProperties prop = (MethodProperties) o;
+    Lookup.addNormalPostcondition(prop.fMethod, 
+                                  invPostPred(o));
   }
 
   
@@ -974,56 +983,57 @@ public class JmlVisitor extends BasicJMLTranslator {
       }
       
       final Term forAllTerm = Logic.forall(vars, t);
-      addToPostcondition(forAllTerm, o);
+      //addToPostcondition(forAllTerm, o);
+      Lookup.addNormalPostcondition(prop.fMethod,forAllTerm);
       Lookup.addExceptionalPostcondition(prop.fMethod, forAllTerm);
     } 
   }
 
   
-  /**
-   * Adds a given Term to preconditions of a given method.
-   * @param folTerm to add to preconditions in Lookup hash map
-   * @param o Properties object contains the concerning method
-   */
-  public void addToPrecondition(final Term folTerm, final Object o) {
-    if (folTerm != null) {
-      final MethodProperties prop = (MethodProperties) o;
-      final RoutineDecl rd = prop.fMethod;
-      Term allPres = Lookup.preconditions.get(rd);
-      
-      if (allPres == null) {
-        allPres = folTerm;
-      }
-      else {
-        allPres = Logic.Safe.and(allPres, folTerm);
-      }
-      Lookup.preconditions.put(rd, allPres);
-    }
-  }  
+//  /**
+//   * Adds a given Term to preconditions of a given method.
+//   * @param folTerm to add to preconditions in Lookup hash map
+//   * @param o Properties object contains the concerning method
+//   */
+//  public void addToPrecondition(final Term folTerm, final Object o) {
+//    if (folTerm != null) {
+//      final MethodProperties prop = (MethodProperties) o;
+//      final RoutineDecl rd = prop.fMethod;
+//      Term allPres = Lookup.preconditions.get(rd);
+//      
+//      if (allPres == null) {
+//        allPres = folTerm;
+//      }
+//      else {
+//        allPres = Logic.Safe.and(allPres, folTerm);
+//      }
+//      Lookup.preconditions.put(rd, allPres);
+//    }
+//  }  
   
   
-  /**
-   * Adds a given Term to postconditions of a given method. 
-   * @param folTerm to add to postconditions in Lookup hash map
-   * @param o Properties object contains the concerning method
-   */
-  public void addToPostcondition(final Term folTerm, final Object o) {
-    final MethodProperties prop = (MethodProperties) o;
-    if (folTerm != null) {
-      final Post folPost = new Post(folTerm);
-      final RoutineDecl rd = prop.fMethod;
-      Post allPosts = Lookup.postconditions.get(rd);
-      
-      if (allPosts == null) {
-        final QuantVariableRef result = prop.fResult;
-        Lookup.postconditions.put(rd, new Post(result, folTerm));
-      }
-      else {
-        allPosts = Post.and(allPosts, folPost);
-        Lookup.postconditions.put(rd, allPosts);
-      }
-    }
-  }
+//  /**
+//   * Adds a given Term to postconditions of a given method. 
+//   * @param folTerm to add to postconditions in Lookup hash map
+//   * @param o Properties object contains the concerning method
+//   */
+//  public void addToPostcondition(final Term folTerm, final Object o) {
+//    final MethodProperties prop = (MethodProperties) o;
+//    if (folTerm != null) {
+//      final Post folPost = new Post(folTerm);
+//      final RoutineDecl rd = prop.fMethod;
+//      Post allPosts = Lookup.postconditions.get(rd);
+//      
+//      if (allPosts == null) {
+//        final QuantVariableRef result = prop.fResult;
+//        Lookup.postconditions.put(rd, new Post(result, folTerm));
+//      }
+//      else {
+//        allPosts = Post.and(allPosts, folPost);
+//        Lookup.postconditions.put(rd, allPosts);
+//      }
+//    }
+//  }
   
   
   
@@ -1041,7 +1051,7 @@ public class JmlVisitor extends BasicJMLTranslator {
     if (t != null) {
       boolean invIsValid = true;
       Term invTerm = t;
-      final Term allInvs = Lookup.invariants.get(x.parent);
+      final Term allInvs = Lookup.getInvariant(x.parent);
       
       if (fDoSubsetChecking) { 
         invIsValid = doSubsetChecking(o);
@@ -1050,7 +1060,7 @@ public class JmlVisitor extends BasicJMLTranslator {
         invTerm = Logic.and(allInvs, invTerm); 
       }
       else if (invIsValid) {
-        Lookup.invariants.put(x.parent, invTerm); 
+        Lookup.addInvariant(x.parent, invTerm); 
       }
       else if (!invIsValid) {
         System.out.println("Invariant error (subset check)! " +

@@ -273,10 +273,10 @@ public class StmtVCGen extends ExpressionVisitor {
     final VCEntry vce = (VCEntry) o;
     if (fMeth instanceof MethodDecl) {
       vce.fPost = new Post(Expression.getResultRVar((MethodDecl)fMeth), 
-                          Lookup.normalPostcondition(fMeth));
+                          Lookup.getNormalPostcondition(fMeth));
     }
     else {
-      vce.fPost = Lookup.normalPostcondition(fMeth);
+      vce.fPost = Lookup.getNormalPostcondition(fMeth);
 
     }
     vce.fPost = (Post) x.expr.accept(fExprVisitor, vce);
@@ -572,9 +572,9 @@ public class StmtVCGen extends ExpressionVisitor {
                                       final /*@non_null*/ ConstructorInvocation ci, 
                                       final Object o) {
     final VCEntry entry = (VCEntry)o;
-    final Post normalPost = Lookup.normalPostcondition(ci.decl);
+    final Post normalPost = Lookup.getNormalPostcondition(ci.decl);
     final Post excpPost = Lookup.getExceptionalPostcondition(ci.decl);
-    final Term pre = Lookup.precondition(ci.decl);
+    final Term pre = Lookup.getPrecondition(ci.decl);
     final QuantVariableRef newThis = Expression.rvar(Ref.sort);
 
     // first: the exceptional post

@@ -127,7 +127,7 @@ public class AnnotationMethodExecutor extends ABasicExecutor {
     out.incTab();
     out.println("fun " + varsAndType + " => ");
     out.incTab();
-    out.println(Formula.generateFormulas(Lookup.precondition(fRout)) + ".");
+    out.println(Formula.generateFormulas(Lookup.getPrecondition(fRout)) + ".");
     out.decTab();
     out.decTab();
     out.println("Definition " + namePre + " (s0:InitState): list Prop := ");
@@ -164,7 +164,7 @@ public class AnnotationMethodExecutor extends ABasicExecutor {
       
     }
         
-    Post normalPost = Lookup.normalPostcondition(fRout);
+    Post normalPost = Lookup.getNormalPostcondition(fRout);
     final QuantVariableRef varRes = normalPost.getRVar();
     if (varRes != null) {
       final QuantVariableRef v = normalPost.getRVar();

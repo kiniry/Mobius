@@ -24,27 +24,29 @@ public class Lookup {
   /** Defines whether 'null' can be returned or not. 
    *  If fFailSave is true, a default Term is returned
    *  instead of 'null' */
-  public static final boolean fFailSave = false;
+  private static final boolean fFailSave = false;
   
   /** an instance of the lookup object. */
   private static final Lookup inst = new Lookup();
   
   
   /** map containing RoutineDecl as keys and Terms (the precondition) as value. **/
-  public static Map<RoutineDecl, Term> preconditions = new HashMap<RoutineDecl, Term>();
+  private static Map<RoutineDecl, Term> preconditions = 
+    new HashMap<RoutineDecl, Term>();
 
   /** map containing RoutineDecl as keys and Terms (the postcondition) as value. **/
-  public static Map<RoutineDecl, Post> postconditions = new HashMap<RoutineDecl, Post>();
+  private static Map<RoutineDecl, Post> postconditions = 
+    new HashMap<RoutineDecl, Post>();
 
   /** map containing RoutineDecl as keys and Terms (the exceptional postcondition) as value. */
   private static Map<RoutineDecl, Post> exceptionalPostconditions = 
     new HashMap<RoutineDecl, Post>();
 
   /** map containing ClassDecl as keys and Terms (the invariant) as value. **/
-  public static Map<TypeDecl, Term> invariants = new HashMap<TypeDecl, Term>();
+  private static Map<TypeDecl, Term> invariants = new HashMap<TypeDecl, Term>();
 
   /** map containing ClassDecl as keys and Terms (the constraint) as value. **/
-  public static Map<TypeDecl, Term> constraints = new HashMap<TypeDecl, Term>();
+  private static Map<TypeDecl, Term> constraints = new HashMap<TypeDecl, Term>();
   
   /** the argument lists of each precondition. */
   private final Map<RoutineDecl, List<QuantVariableRef>> fPreArgs = 
@@ -58,31 +60,158 @@ public class Lookup {
    * @param m the method of interest
    * @return the precondition or <code>True</code>
    */
-  public static Term precondition(final RoutineDecl m) {
+  public static Term getInvariant(final TypeDecl type) {
     //return buildStdCond(m, "_pre", false);
-    Term t = preconditions.get(m);
-    if (t == null) {
+    Term t = invariants.get(type);
+    if (t == null && fFailSave) {
       t = Logic.True();
     }
     return t;
   }
 
+  /**
+   * Adds a given Term to precondition of a given method. 
+   * @param rd the method
+   * @param term fol term to be used as condition
+   */
+  public static void addInvariant(final TypeDecl type, 
+                                            final Term term) {
+    final Term pOld = invariants.get(type);
+    Term pNew;
+    if (pOld == null) {
+      pNew = term;
+    }
+    else {
+      pNew = Logic.and(pOld, term);
+    }
+    invariants.put(type, pNew);
+  }
+  
+  /**
+   * Returns the FOL Term representation of the precondition of method m.
+   * @param m the method of interest
+   * @return the precondition or <code>True</code>
+   */
+  public static Term getConstraint(final TypeDecl type) {
+    //return buildStdCond(m, "_pre", false);
+    Term t = constraints.get(type);
+    if (t == null && fFailSave) {
+      t = Logic.True();
+    }
+    return t;
+  }
 
+  /**
+   * Adds a given Term to precondition of a given method. 
+   * @param rd the method
+   * @param term fol term to be used as condition
+   */
+  public static void addConstraint(final TypeDecl type, 
+                                            final Term term) {
+    final Term pOld = constraints.get(type);
+    Term pNew;
+    if (pOld == null) {
+      pNew = term;
+    }
+    else {
+      pNew = Logic.and(pOld, term);
+    }
+    constraints.put(type, pNew);
+  }  
+  
+  /**
+   * Returns the FOL Term representation of the precondition of method m.
+   * @param m the method of interest
+   * @return the precondition or <code>True</code>
+   */
+  public static Term getPrecondition(final RoutineDecl m) {
+    //return buildStdCond(m, "_pre", false);
+    Term t = preconditions.get(m);
+    if (t == null && fFailSave) {
+      t = Logic.True();
+    }
+    return t;
+  }
+
+  /**
+   * Adds a given Term to precondition of a given method. 
+   * @param rd the method
+   * @param term fol term to be used as condition
+   */
+  public static void addPrecondition(final RoutineDecl rd, 
+                                            final Term term) {
+    final Term pOld = preconditions.get(rd);
+    Term pNew;
+    if (pOld == null) {
+      pNew = term;
+    }
+    else {
+      pNew = Logic.and(pOld, term);
+    }
+    preconditions.put(rd, pNew);
+  }
+  
+  
 
   /**
    * Returns the FOL Term representation of the normal postcondition of routine m.
    * @param m the method of interest
    * @return the normal postcondition or <code>True</code>
    */
-  public static Post normalPostcondition(final RoutineDecl m) {
+  public static Post getNormalPostcondition(final RoutineDecl m) {
     //return new Post(buildStdCond (m, "_norm", true)); 
     Post p = postconditions.get(m);
-    if (p == null) {
+    if (p == null && fFailSave) {
       p = new Post(Logic.True());
     }
     return p;
   }
 
+  /**
+   * Adds a given Term to postconditions of a given method. 
+   * @param rd the method
+   * @param post to add to postconditions in Lookup hash map
+   */
+  public static void addNormalPostcondition(final RoutineDecl rd, 
+                                            final Post post) {
+    Post pNew = post;
+    
+    if (pNew == null && fFailSave) {
+      pNew = new Post(Expression.rvar(Ref.sort), Logic.True());
+    }
+    
+    if (pNew != null && pNew.getRVar() == null && fFailSave) {
+      pNew = new Post(Expression.rvar(Ref.sort), pNew);
+    }
+    
+    final Post pOld = postconditions.get(rd);
+    if (pOld != null) {
+      // not the first time
+      pNew = Post.and(pNew, pOld);
+    }
+    postconditions.put(rd, pNew);
+  }
+
+
+  /**
+   * Adds a given Term to postconditions of a given method. 
+   * @param rd the method
+   * @param term fol term to be used as condition
+   */
+  public static void addNormalPostcondition(final RoutineDecl rd, 
+                                            final Term term) {
+    final Post pOld = postconditions.get(rd);
+    Post pNew;
+    if (pOld == null) {
+      pNew = new Post(Expression.rvar(Ref.sort), term);
+    }
+    else {
+      pNew = Post.and(pOld, term);
+    }
+    postconditions.put(rd, pNew);
+  }
+ 
+  
   /**
    * Returns a vector of FOL Term representations of the exceptional 
    * postconditions of method m.
@@ -93,7 +222,7 @@ public class Lookup {
   public static Post getExceptionalPostcondition(final RoutineDecl m) {
     //return new Post(Expression.rvar(Ref.sort), buildStdCond (m, "_excp", false)); 
     Post p = exceptionalPostconditions.get(m);
-    if (p == null) {
+    if (p == null && fFailSave) {
       p = new Post(Expression.rvar(Ref.sort), Logic.True());
     }
     return p;
@@ -108,11 +237,11 @@ public class Lookup {
                                                  final Post post) {
     Post pNew = post;
     
-    if (pNew == null) {
+    if (pNew == null && fFailSave) {
       pNew = new Post(Expression.rvar(Ref.sort), Logic.True());
     }
-    if (pNew.getRVar() == null) {
-      // we have to fix that
+    
+    if (pNew != null && pNew.getRVar() == null && fFailSave) {
       pNew = new Post(Expression.rvar(Ref.sort), pNew);
     }
     
@@ -125,7 +254,13 @@ public class Lookup {
   }
 
 
-  public static void addExceptionalPostcondition(RoutineDecl rd, Term term) {
+  /**
+   * Adds a given Term to exceptional postconditions of a given method. 
+   * @param rd the method
+   * @param term fol term to be used as condition
+   */
+  public static void addExceptionalPostcondition(final RoutineDecl rd, 
+                                                 final Term term) {
     final Post pOld = exceptionalPostconditions.get(rd);
     Post pNew;
     if (pOld == null) {

@@ -475,7 +475,7 @@ public class JmlVisitorTest extends TestCase {
     x = ExprDeclPragma.make(TagConstants.INVARIANT, binExpr, 0, loc1);
     x.parent = twoClassDecl;
     fVisitor.visitExprDeclPragma(x, fProp);
-    evaluatedTerm = (Term) Lookup.invariants.get(twoClassDecl);
+    evaluatedTerm = (Term) Lookup.getInvariant(twoClassDecl);
     //***************Term**********************************
     expectedTerm = Logic.le(xFieldAccessTermInt, fourTermInt);
     //*************Test************************
@@ -489,7 +489,7 @@ public class JmlVisitorTest extends TestCase {
     x = ExprDeclPragma.make(TagConstants.CONSTRAINT, binExpr, 0, loc1);
     x.parent = twoClassDecl;
     fVisitor.visitExprDeclPragma(x, fProp);
-    evaluatedTerm = (Term) Lookup.constraints.get(twoClassDecl);
+    evaluatedTerm = (Term) Lookup.getConstraint(twoClassDecl);
     //***************Term**********************************
     expectedTerm = Logic.gt(yFieldAccessTermInt, zeroTermInt);
     //*************Test************************
@@ -684,7 +684,7 @@ public class JmlVisitorTest extends TestCase {
     
     //***************Requires******************************
     fVisitor.visitExprModifierPragma(pragmaRequires, fProp);
-    evaluatedTerm = (Term) Lookup.preconditions.get(methodDecl);
+    evaluatedTerm = (Term) Lookup.getPrecondition(methodDecl);
     //***************Term**********************************
     expectedTerm = Logic.gt(xFieldAccessTermInt, zeroTermInt);
     //*************Test************************
@@ -692,7 +692,7 @@ public class JmlVisitorTest extends TestCase {
     
     //***************Ensures*******************************
     fVisitor.visitExprModifierPragma(pragmaEnsures, fProp);
-    evaluatedTerm = ((Post) Lookup.postconditions.get(methodDecl)).getPost();
+    evaluatedTerm = ((Post) Lookup.getNormalPostcondition(methodDecl)).getPost();
     //***************Term**********************************
     expectedTerm = Logic.gt(xFieldAccessTermInt, zeroTermInt);
     //*************Test************************
@@ -709,7 +709,7 @@ public class JmlVisitorTest extends TestCase {
     fProp.put("result", Expression.getResultRVar(methodDecl));
     //**************Ensures*******************************
     fVisitor.visitExprModifierPragma(pragmaEnsures, fProp);
-    evaluatedTerm = ((Post) Lookup.postconditions.get(methodDecl)).getPost();
+    evaluatedTerm = ((Post) Lookup.getNormalPostcondition(methodDecl)).getPost();
     //***************Term**********************************
     expectedTerm = Logic.gt(Expression.rvar(Expression.getResultVar(methodDecl)), zeroTermInt);
     assertEquals(expectedTerm.toString(), evaluatedTerm.toString());

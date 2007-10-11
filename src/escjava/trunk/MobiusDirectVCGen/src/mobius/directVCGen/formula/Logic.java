@@ -525,6 +525,7 @@ public final class Logic {
 
 
   /**
+   * @param heap Da heap
    * @param x The object for which we want to get the invariant.
    * @param t The type where the invariant is defined.
    * @return A Predicate 'inv' representing an invariant of type t for object x.
@@ -577,26 +578,34 @@ public final class Logic {
 
   /**
    * @param heap the current heap
-   * @param heap_pre the old heap
-   * @param targetVar the object containing fieldVar
-   * @param locVar location
+   * @param heapPre the old heap
+   * @param target the object containing fieldVar
+   * @param field field signature
    * @return A term used for assignable clauses
    */
-  public static Term assignablePred(final QuantVariableRef heap, final QuantVariableRef heap_pre, final QuantVariableRef target, final QuantVariableRef field) {
-    if (heap.getSort() != Heap.sort) {
-      throw new IllegalArgumentException("Type of the first param should be heap (" + 
-                                         Heap.sort + "), found: " + heap.getSort());
+  public static Term assignablePred(
+                                    final QuantVariableRef heap, 
+                                    final QuantVariableRef heapPre, 
+                                    final QuantVariableRef target, 
+                                    final QuantVariableRef field) {
+    if (heap.getSort() != Heap.sort || heapPre.getSort() != Heap.sort) {
+      throw new IllegalArgumentException("Type of the first and second param should be heap (" + 
+                                         Heap.sort + "), found: " + heap.getSort()+ " and " + heapPre.getSort());
     }
-    if (heap_pre.getSort() != Heap.sort) {
-      throw new IllegalArgumentException("Type of the second param should be heap (" + 
-                                         Heap.sort + "), found: " + heap.getSort());
+    if (target.getSort() != Ref.sort) {
+      throw new IllegalArgumentException("Type of the third param should be ref (" + 
+                                         Ref.sort + "), found: " + target.getSort());
     }
-    return Formula.lf.mkFnTerm(Formula.lf.symAssignPred, new Term [] {heap, heap_pre, target, field});
+    if (field.getSort() != Type.sortField) {
+      throw new IllegalArgumentException("Type of the fourth param should be fieldsig (" + 
+                                         Type.sortField + "), found: " + field.getSort());
+    }
+    return Formula.lf.mkFnTerm(Formula.lf.symAssignPred, new Term [] {heap, heapPre, target, field});
   }
 
   /**
-   * @param targetVar the object containing the fieldVar
-   * @param fieldVar the field for which we want to find out whether it's assignable or not
+   * @param t the object containing the fieldVar
+   * @param f the field for which we want to find out whether it's assignable or not
    * @param o Parameter object also containing a list of modifiable types.
    * @return A Term expressing the check described above.
    */

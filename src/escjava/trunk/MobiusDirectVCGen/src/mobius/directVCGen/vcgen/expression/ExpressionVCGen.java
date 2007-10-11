@@ -68,7 +68,7 @@ public class ExpressionVCGen extends BinaryExpressionVCGen {
   }
   
   public Post methodInvocation(final MethodInvocation mi, final VCEntry entry) {
-    final Post normalPost = Lookup.normalPostcondition(mi.decl);
+    final Post normalPost = Lookup.getNormalPostcondition(mi.decl);
     final Post excpPost = Lookup.getExceptionalPostcondition(mi.decl);
     final Term pre;
     if (DirectVCGen.fByteCodeTrick) {
@@ -79,7 +79,7 @@ public class ExpressionVCGen extends BinaryExpressionVCGen {
       
     }
     else {
-      pre = Lookup.precondition(mi.decl);
+      pre = Lookup.getPrecondition(mi.decl);
     }
     
     final QuantVariableRef newThis = Expression.rvar(Ref.sort);
@@ -195,9 +195,9 @@ public class ExpressionVCGen extends BinaryExpressionVCGen {
     final QuantVariableRef newheap = Heap.newVar();
 
 
-    final Post normalPost = Lookup.normalPostcondition(ni.decl);
+    final Post normalPost = Lookup.getNormalPostcondition(ni.decl);
     final Post excpPost = Lookup.getExceptionalPostcondition(ni.decl);
-    final Term pre = Lookup.precondition(ni.decl);
+    final Term pre = Lookup.getPrecondition(ni.decl);
     final QuantVariableRef newThis = entry.fPost.getRVar();
 
     // first: the exceptional post
