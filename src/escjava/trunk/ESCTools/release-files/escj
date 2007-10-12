@@ -121,20 +121,20 @@ fi
 ############ Setting XMLRPC_LIB, if necessary
 
 if [ -z "$XMLRPC_LIB" ]; then
-    XMLRPC_LIB ?= $(ESCTOOLS_ROOT)/Escjava/xmlrpc-1.2-b1-modified.jar
+    XMLRPC_LIB=${ESCTOOLS_ROOT}/Escjava/xmlrpc-1.2-b1-modified.jar
 fi
 
 ############ Setting JUNIT_LIB, if necessary
 
 if [ -z "$JUNIT_LIB" ]; then
-export JUNIT_LIB ?= ${ESCTOOLS_ROOT}/Utils/junit.jar
+export JUNIT_LIB=${ESCTOOLS_ROOT}/Utils/junit.jar
 fi
 
 
 ############ Setting ANT_LIB, if necessary
 
 if [ -z "$ANT_LIB" ]; then
-export ANT_LIB ?= ${ESCTOOLS_ROOT}/Utils/ant.jar
+export ANT_LIB=${ESCTOOLS_ROOT}/Utils/ant.jar
 fi
 
 
@@ -285,7 +285,7 @@ if [ -n "$ESCJ_VERBOSE" ]; then
 fi
 
 ${JAVA} ${JAVA_VM_FLAGS} -DXMLPROVERPATH="${XMLPROVERPATH}" -Dsimplify="${ESCJ_SIMPLIFY}" \
-    -classpath "${ESC_CLASSPATH}" ${MAIN} \
-    ${JBIN} -classpath "${CLASSPATH}" -specs "${ESC_SPECS}" ${ESCJ_STDARGS} $*
+    ${MAIN} \
+    ${JBIN} -classpath "${CLASSPATH}:${ESC_CLASSPATH}" -specs "${ESC_SPECS}" ${ESCJ_STDARGS} $*
 
-# End of $RCSflie$
+# End of File
