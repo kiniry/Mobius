@@ -479,7 +479,7 @@ public final class OutsideEnv {
     }
 
     // Make sure the CompilationUnit actually contains sig:
-    if (!sig.isPreloaded() && !cu.isBinary()) {
+    if (!sig.isPreloaded()) {
       int fileLoc = Location.createWholeFileLoc(Location.toFile(cu.loc));
       ErrorSet.fatal(fileLoc, "file does not contain the type "
           + sig.getExternalName() + " as expected");
