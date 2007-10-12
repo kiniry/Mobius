@@ -332,13 +332,27 @@ public class BCClass {
 	/**
 	 * Updates it's JavaClass and saves it to file.
 	 * 
-	 * @param fileName - path to file to save to.
+	 * @param fileName - path to file to save to (in universal representation)
 	 * @throws IOException - if file cannot be written.
 	 */
 	public void saveToFile(String fileName) throws IOException {
+		String osSpecificFileName = toOsSpecificName(fileName); 
 		MLog.putMsg(MLog.PProgress, "saving to: " + fileName);
 		saveJC();
-		jc.dump(fileName);
+		jc.dump(osSpecificFileName);
+	}
+
+	/**
+	 * A method to convert the universal path representation 
+	 * ("/" separates the path segments) to the local operating
+	 * system specific one.
+	 * 
+	 * @param fileName the path in the universal representation
+	 * @return the path in the local operating system representation
+	 */
+	private static String toOsSpecificName(String fileName) {
+		String filesep = System.getProperty("file.separator");
+		return fileName.replaceAll("/", filesep);
 	}
 
 	/**

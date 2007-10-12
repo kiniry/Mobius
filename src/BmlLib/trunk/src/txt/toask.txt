@@ -1,27 +1,27 @@
 [pl] pytania do Chrzaszcza na najblizsze spotkanie.
 
 - czy moge zalozyc, ze poczatek komentarza bedzie zawsze
-	na poczatku linii, a koniec komentarza na koncu linii?
+	na poczatku linii, a koniec komentarza na koncu linii? (NIE)
 - czy mam korzystac z JavaClass, Method, czy z ClassGen,
-	MethodGen?
+	MethodGen? ...
 - czy bedzie potrzebna funkcjonalnosc dodawania
-	i usuwania metod (w bibliotece / edytorze)?
-- czy w jednej klasie mo¿e byæ kilka atrybutów klasowych
-	(np. classInvariant) tego samego typu?
-- czy przejmowac sie wydajnoscia i kiedy?
+	i usuwania metod (w bibliotece / edytorze)? NIE
+- czy w jednej klasie moe by kilka atrybutw klasowych
+	(np. classInvariant) tego samego typu? NIE
+- czy przejmowac sie wydajnoscia i kiedy? srednio
 - czy BCConstantPool powinien byc kolekcja stalych, czy
-	dwoma zwyklymi (BCEL-owymi) constantPool-ami?
+	dwoma zwyklymi (BCEL-owymi) constantPool-ami? ok
 - czy stale z second constant poola powinny miec indeksy
 	od rozmiaru pierwszego constant poola w gore, czy od
-	65535 w dol?
-- czy moge zalozyc, ze kazda adnotacja bedzie w innej linii?
-- czy moze wogole uzyc antlr-a do parsowania calej klasy?
-- co oznaczaja bledy typu "argument not valid" w Umbrze?
+	65535 w dol? (sprawdzic zapis gdy cp1 sie powiekszy)
+- czy moge zalozyc, ze kazda adnotacja bedzie w innej linii? TAK
+- czy moze wogole uzyc antlr-a do parsowania calej klasy? ok
+- co oznaczaja bledy typu "argument not valid" w Umbrze? ...
 - czy status "correct" powinien dotyczyc poprawnosci calego
-	bajtkodu, czy tylko edytowanego fragmentu?
-- jak pozbyc sie warningow o operatorach?
-- co oznacza 'final' przy definicji klasy?
+	bajtkodu, czy tylko edytowanego fragmentu? do calosci
+- jak pozbyc sie warningow o operatorach? uzywac rzutowania zamiast tempateow
+- co oznacza 'final' przy definicji klasy? ze nie wolno podklasowac
 - czy annotacje powinny byc do wszystkich klas, pol i metod
 	czy tylko tych, ktore sa nieoczywiste? Czy do
-	przedefiniowanych metod w podklasach te¿ (@Override)?
-- jak formatowac pliki .g3?
+	przedefiniowanych metod w podklasach te (@Override)? ok
+
