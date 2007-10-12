@@ -132,10 +132,12 @@ public class Util {
         final Post typeof = new Post(var, Logic.assignCompat(Heap.var, var, p.type));
 
         if (res == null) {
-          res = Post.implies(typeof, p.post);
+          res = p.post;
+          //res = Post.implies(typeof, p.post);
         }
         else {
-          res = Post.and(Post.implies(typeof, p.post), res);
+          res = Post.and(p.post, res);
+          //res = Post.and(Post.implies(typeof, p.post), res);
         }
         return res;
       }
@@ -168,8 +170,8 @@ public class Util {
     final QuantVariableRef e = Expression.rvar(Ref.sort);
     final QuantVariableRef heap = Heap.newVar();
     
-    return Logic.forall(e,
-             Logic.forall(heap,
+    return Logic.forall(heap,
+             Logic.forall(e,
                           Logic.implies(Heap.newObject(Heap.var, type, heap, e),
                                         p.substWith(e).subst(Heap.var, heap))));
   }

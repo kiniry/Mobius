@@ -44,7 +44,6 @@ import javafe.ast.VarInit;
 import javafe.ast.WhileStmt;
 import mobius.directVCGen.formula.Bool;
 import mobius.directVCGen.formula.Expression;
-import mobius.directVCGen.formula.Heap;
 import mobius.directVCGen.formula.Logic;
 import mobius.directVCGen.formula.Lookup;
 import mobius.directVCGen.formula.Ref;
@@ -52,7 +51,6 @@ import mobius.directVCGen.formula.Type;
 import mobius.directVCGen.formula.Util;
 import mobius.directVCGen.formula.annotation.AAnnotation;
 import mobius.directVCGen.formula.annotation.AnnotationDecoration;
-import mobius.directVCGen.vcgen.DirectVCGen;
 import mobius.directVCGen.vcgen.expression.ExpressionVisitor;
 import mobius.directVCGen.vcgen.struct.ExcpPost;
 import mobius.directVCGen.vcgen.struct.Post;
@@ -490,7 +488,8 @@ public class StmtVCGen extends ExpressionVisitor {
     post.lexcpost.addAll(l);
     //System.out.println(l);
     post.lexcpost.addAll(vce.lexcpost);
-    vce.fPost = visitInnerBlockStmt(x.tryClause, post);
+    vce.fPost = (Post)x.tryClause.accept(this, post);
+    //visitInnerBlockStmt(x.tryClause, post);
     return treatAnnot(vce, fAnnot.getAnnotPre(x));
   }
 
@@ -624,11 +623,9 @@ public class StmtVCGen extends ExpressionVisitor {
     // we add the for declared variables
     for (int i = x.forInit.size() - 1; i >= 0; i--) {
       final Stmt s = (Stmt) x.forInit.elementAt(i);
-      if (s instanceof VarDeclStmt) {
-        final VarDeclStmt decl = (VarDeclStmt) s;
-        final QuantVariable qv = Expression.var(decl.decl);
-        vc = Logic.forall(qv, vc);
-      }
+      VCEntry newEntry = new VCEntry(vce);
+      newEntry.fPost = new Post(vc);
+      vc = ((Post)s.accept(this, newEntry)).getPost();
     }
     fVcs.add(vc);
 

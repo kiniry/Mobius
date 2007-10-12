@@ -129,11 +129,15 @@ public class ExpressionVisitor extends ABasicVisitor {
         else {
           val = Num.value(0); 
         }
+        final QuantVariableRef ival = Expression.rvar("Ival", Type.sort);
+        Term vval = Heap.sortToValue(val);
+        final Term compat = Expression.sym("compat_ValKind_value", new Term[] {ival, vval});
+        
         term =  Logic.implies (Logic.and(Logic.le(intMin, val), Logic.le(val, intMax)),
-                     Logic.implies(Logic.assignCompat(Heap.var, Heap.sortToValue(val), 
-                                                      Expression.sym("(PrimitiveType BOOLEAN)", 
+                     Logic.implies(Logic.assignCompat(Heap.var, vval, 
+                                                      Expression.rvar("(PrimitiveType BOOLEAN)", 
                                                                      Type.sort)),
-                               result.substWith(Bool.value((Boolean)expr.value))));
+                         Logic.implies(compat, result.substWith(Bool.value((Boolean)expr.value)))));
         
         break;
       case TagConstants.INTLIT:

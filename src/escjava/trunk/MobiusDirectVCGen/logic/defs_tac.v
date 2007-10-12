@@ -264,6 +264,11 @@ repeat match goal with
 end;
 repeat match goal with
 [ H: Int.t |- _ ] => (clear H)
-end.
-
-Lemma user : forall p: Prop, p.
+end;
+repeat match goal with 
+| [ H: context [do_lvget (stack2localvar _ _) _] |- _ ] =>
+     progress (unfold do_lvget in H; 
+simpl in H)
+end;
+unfold interp_value, interp_v in *; simpl in *.
+Axiom user : forall p: Prop, p.
