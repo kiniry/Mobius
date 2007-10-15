@@ -55,7 +55,7 @@ endif
 ## Check if ESCTOOLS_ROOT is set
 
 ifndef ESCTOOLS_ROOT
-  @echo You must have ESCTOOLS_ROOT defined, either as an environment variable or in the file Makefile.local in the same directory as Makefile.defs 
+  $(error You must have ESCTOOLS_ROOT defined, either as an environment variable or in the file Makefile.local in the same directory as Makefile.defs)
   export ESCTOOLS_ROOT ?= $PWD
 endif
 
