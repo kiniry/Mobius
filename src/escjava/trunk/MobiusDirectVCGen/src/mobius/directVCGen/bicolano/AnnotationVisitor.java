@@ -1,14 +1,20 @@
 package mobius.directVCGen.bicolano;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javafe.ast.ASTNode;
+import javafe.ast.FormalParaDecl;
 import javafe.ast.RoutineDecl;
+import javafe.ast.VarDeclStmt;
 import javafe.util.Location;
 import mobius.bico.Util.Stream;
+import mobius.directVCGen.formula.Expression;
 import mobius.directVCGen.formula.Formula;
 import mobius.directVCGen.formula.Heap;
+import mobius.directVCGen.formula.Ref;
 import mobius.directVCGen.formula.Util;
 import mobius.directVCGen.formula.annotation.AAnnotation;
 import mobius.directVCGen.formula.annotation.AnnotationDecoration;
@@ -16,6 +22,7 @@ import mobius.directVCGen.vcgen.ABasicVisitor;
 
 import org.apache.bcel.generic.InstructionHandle;
 import org.apache.bcel.generic.LineNumberGen;
+import org.apache.bcel.generic.LocalVariableGen;
 import org.apache.bcel.generic.MethodGen;
 
 import escjava.sortedProver.Lifter.QuantVariableRef;
@@ -43,8 +50,10 @@ public final class AnnotationVisitor extends ABasicVisitor {
 
   /** the output file. */
   private final Stream fOut;
+  private Map<QuantVariableRef, Term> fVariables;
   
-  
+
+
   /**
    * Create an annotation visitor targetting a specific method.
    * @param out the file where to output the annotations
@@ -56,6 +65,8 @@ public final class AnnotationVisitor extends ABasicVisitor {
                             final MethodGen met) {
     fOut = out;
     fMet = met;
+    
+
 
 
   }
@@ -186,9 +197,13 @@ public final class AnnotationVisitor extends ABasicVisitor {
    * @param met the method to inspect, from BCEL
    * @return an enumeration of assertions
    */
-  public static String getAssertion(final Stream out, final RoutineDecl decl, final MethodGen met) {
-    final String res = (String) decl.accept(new AnnotationVisitor(out, decl, met),  
-                         assertionEmpty);
+  public static String getAssertion(final Stream out, 
+                                    final RoutineDecl decl, 
+                                    final MethodGen met) {
+    final AnnotationVisitor vis = new AnnotationVisitor(out, decl, met);
+    vis.fVariables = VarCorrVisitor.getVariables(decl, met);
+    final String res = (String) decl.accept(vis, assertionEmpty);
+ 
     return res;
   }
   

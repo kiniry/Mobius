@@ -41,7 +41,7 @@ public final class MethodProperties extends ContextProperties {
   public QuantVariableRef fResult;
   
   /** the current method which is inspected. */
-  private  final RoutineDecl fMethod;
+  private final RoutineDecl fMethod;
   
   /** tells whether or not we are inspecting a constructor. */
   public final boolean fIsConstructor;

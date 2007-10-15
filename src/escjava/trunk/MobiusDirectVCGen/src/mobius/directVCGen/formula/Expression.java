@@ -8,6 +8,7 @@ import escjava.sortedProver.Lifter.FnTerm;
 import escjava.sortedProver.Lifter.QuantVariable;
 import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
+import escjava.sortedProver.NodeBuilder.FnSymbol;
 import escjava.sortedProver.NodeBuilder.PredSymbol;
 import escjava.sortedProver.NodeBuilder.Sort;
 import escjava.tc.Types;
@@ -314,6 +315,21 @@ public final class Expression {
       }
     }
     final PredSymbol ps = Formula.lf.mkPredSymbol(name, tab);
+    return Formula.lf.mkFnTerm(ps, args);
+
+  }
+  
+  public static FnTerm sym(final String name, Sort ret, Term [] args ) {
+    final Sort [] tab = new Sort[args.length];
+    for (int i = 0; i < tab.length; i++) {
+      if (args[i].getSort().equals(Logic.sort)) {
+        tab[i] = Bool.sort;
+      }
+      else {
+        tab[i] = args[i].getSort();
+      }
+    }
+    final FnSymbol ps = Formula.lf.mkFnSymbol(name, tab, ret);
     return Formula.lf.mkFnTerm(ps, args);
 
   }

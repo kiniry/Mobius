@@ -40,8 +40,13 @@ public class CForall extends CPred {
   public String toString() {
     String res  = "(forall";
     for (QuantVar v: fVars) {
-      res += " (" + CoqNodeBuilder.normalize(v.name) + ":" + 
-                    this.fBuilder.buildSort(v.type) + ")";
+      if (v.name.startsWith("lv") && v.name.length() <= 3) {
+        res += " (" + CoqNodeBuilder.normalize(v.name) + ": LocalVar.t)";
+      }
+      else {
+        res += " (" + CoqNodeBuilder.normalize(v.name) + ":" + 
+                 this.fBuilder.buildSort(v.type) + ")";
+      }
     }
     res += ", " + fArgs[0] + ")";
     return res;

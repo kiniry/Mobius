@@ -79,10 +79,18 @@ public class StmtVCGen extends ExpressionVisitor {
   /** the current method or constructor that is being inspected. */
   private final RoutineDecl fMeth;
 
+  /** the correspondence from source to bytecode for the variables. */
+  private Map<QuantVariableRef, Term> fVariables;
+  
+  
+  public Map<QuantVariableRef, Term> getVars() {
+    return fVariables;
+  }
 
-
-  public StmtVCGen(final RoutineDecl meth) {
+  public StmtVCGen(final RoutineDecl meth, Map<QuantVariableRef, Term> variables) {
     fMeth = meth;
+    fVariables = variables;
+    
   }
 
 
@@ -513,8 +521,12 @@ public class StmtVCGen extends ExpressionVisitor {
 
     }
     else {
+      final QuantVariableRef qvr = Expression.rvar(x.decl);
       // the quantification is preemptive
-      vce.fPost = new Post(Logic.forall(qv, vce.fPost.getPost()));
+      vce.fPost = new Post(vce.fPost.getRVar(), 
+                           vce.fPost.subst(qvr, fVariables.get(qvr)));
+      //vce.fPost = new Post(Logic.forall(qv, vce.fPost.getPost()));
+      
     }
     // we must anyway declare it for every vc:
     addVarDecl(qv);
@@ -528,9 +540,13 @@ public class StmtVCGen extends ExpressionVisitor {
    */
   private void addVarDecl(final QuantVariable qv) {
     final List<Term> oldvcs = fVcs;
+
+    final QuantVariableRef qvr = Expression.rvar(qv);
     fVcs = new Vector<Term>();
     for (Term t: oldvcs) {
-      fVcs.add(Logic.forall(qv, t));
+      // the quantification is preemptive
+      fVcs.add(t.subst(qvr, fVariables.get(qvr)));
+      //fVcs.add(Logic.forall(qv, t));
     }
 
   }
@@ -614,12 +630,12 @@ public class StmtVCGen extends ExpressionVisitor {
     }
 
     final QuantVariableRef v = Expression.rvar(Logic.sort);
-    vce.fPost = new Post(v,
-                        Logic.and(Logic.implies(Logic.boolToPred(v), bodypre.getPost()),
-                                  Logic.implies(Logic.not(Logic.boolToPred(v)), post)));
-    // the only field that can be modified in a VCentry is post 
+    vce.fPost = new Post(v, 
+                        Logic.and(Logic.implies(v, bodypre.getPost()),
+                                  Logic.implies(Logic.not(v), post)));
+
     final Term aux = ((Post) x.test.accept(fExprVisitor, vce)).getPost();
-    Term vc = Logic.implies(inv, aux);
+    Term vc = Util.mkNewEnv(Logic.implies(inv, aux));
     // we add the for declared variables
     for (int i = x.forInit.size() - 1; i >= 0; i--) {
       final Stmt s = (Stmt) x.forInit.elementAt(i);
@@ -627,7 +643,7 @@ public class StmtVCGen extends ExpressionVisitor {
       newEntry.fPost = new Post(vc);
       vc = ((Post)s.accept(this, newEntry)).getPost();
     }
-    fVcs.add(vc);
+    fVcs.add(Util.mkNewEnv(vc));
 
     vce.fPost = pinv;
     for (int i = x.forInit.size() - 1; i >= 0; i--) {

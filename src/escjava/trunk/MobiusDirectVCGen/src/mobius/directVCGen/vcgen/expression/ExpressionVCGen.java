@@ -70,6 +70,8 @@ public class ExpressionVCGen extends BinaryExpressionVCGen {
     final MethodDecl fMeth = mi.decl;
     final Post normPost;
     final Post excpPost;
+    
+    
     if (DirectVCGen.fByteCodeTrick) {
       final String name = Util.getMethodName(fMeth);
       LinkedList<Term> args = new LinkedList<Term> ();
@@ -122,9 +124,10 @@ public class ExpressionVCGen extends BinaryExpressionVCGen {
     // the normal post
     final QuantVariableRef res = entry.fPost.getRVar();
     Term tNormal = normPost.substWith(res);
-    tNormal = Logic.forall(res, Logic.implies(Logic.implies(pre, tNormal), entry.fPost.substWith(res)).subst(Ref.varThis, newThis));
+    tNormal = Logic.forall(res, Logic.implies(Logic.implies(pre, tNormal), 
+                                              entry.fPost.substWith(res)).subst(Ref.varThis, newThis));
 
-    entry.fPost = new Post( Logic.and(tNormal, tExcp));
+    entry.fPost = new Post(Logic.and(tNormal, tExcp));
     //entry.fPost = new Post(Logic.and(pre, Logic.implies(pre, Logic.and(tNormal, tExcp))));
     final List<QuantVariableRef> v = mkArguments(mi);
     final ExprVec ev = mi.args;
@@ -132,10 +135,12 @@ public class ExpressionVCGen extends BinaryExpressionVCGen {
       entry.fPost = new Post(v.get(i), entry.fPost);
       entry.fPost = getPre(ev.elementAt(i), entry);
     }
-    entry.fPost = new Post(newThis, entry.fPost);
+    entry.fPost = new Post(newThis, Util.mkNewEnv(entry.fPost));
     entry.fPost = getPre(mi.od, entry);
     return entry.fPost;
   }
+
+
 
 
 

@@ -18,11 +18,14 @@ public final class Heap {
   /** the variable representing the heap. */
   public static final QuantVariableRef var = Expression.rvar("heap", sort);
 
+  public static final QuantVariableRef lvvar = Expression.rvar("lv", Ref.sort);
+
   /** the variable representing the heap in the prestate. */
   public static final QuantVariableRef varPre = Expression.old(var);
 
   /** the counter to count the number of instanciation of the heap variable. */
   private static int heapc;
+  private static int lvc;
   
   /**
    * @deprecated
@@ -229,7 +232,9 @@ public final class Heap {
   public static QuantVariableRef newVar() {
     return Expression.rvar("heap" + (heapc++), Heap.sort);
   }
-
+  public static QuantVariableRef newLvVar() {
+    return Expression.rvar("lv" + (lvc++), Ref.sort);
+  }
   /**
    * Create the term to represent creation of a new object.
    * It takes the old heap, the type of the location to allocate

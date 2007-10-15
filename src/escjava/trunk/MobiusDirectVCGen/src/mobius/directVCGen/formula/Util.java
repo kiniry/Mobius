@@ -170,9 +170,23 @@ public class Util {
     final QuantVariableRef e = Expression.rvar(Ref.sort);
     final QuantVariableRef heap = Heap.newVar();
     
-    return Logic.forall(heap,
+    //return Logic.forall(heap,
+    return Util.mkNewEnv(heap,
              Logic.forall(e,
                           Logic.implies(Heap.newObject(Heap.var, type, heap, e),
-                                        p.substWith(e).subst(Heap.var, heap))));
+                                        p.substWith(e))));
+                                        //.subst(Heap.var, heap))));
+  }
+  public static Term mkNewEnv(QuantVariableRef newHeap, Term post) {
+    final QuantVariableRef newLv = Heap.newLvVar();
+    Term lvt = Logic.forall(newLv, post.subst(Heap.lvvar, newLv));
+    return Logic.forall(newHeap, lvt.subst(Heap.var, newHeap));
+  }
+  public static Term mkNewEnv(Term post) {
+    final QuantVariableRef heap = Heap.newVar();
+    return mkNewEnv(heap, post);
+  }
+  public static Term mkNewEnv(Post post) {
+    return mkNewEnv(post.getPost());
   }
 }

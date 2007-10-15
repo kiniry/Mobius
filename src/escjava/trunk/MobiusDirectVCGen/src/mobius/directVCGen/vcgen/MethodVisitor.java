@@ -8,12 +8,16 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
+
+import org.apache.bcel.generic.LocalVariableGen;
 
 import javafe.ast.BlockStmt;
 import javafe.ast.FormalParaDecl;
 import javafe.ast.FormalParaDeclVec;
 import javafe.ast.RoutineDecl;
+import mobius.directVCGen.bicolano.VarCorrDecoration;
 import mobius.directVCGen.formula.Expression;
 import mobius.directVCGen.formula.Formula;
 import mobius.directVCGen.formula.Heap;
@@ -26,7 +30,6 @@ import mobius.directVCGen.formula.coq.CoqFile;
 import mobius.directVCGen.vcgen.stmt.StmtVCGen;
 import mobius.directVCGen.vcgen.struct.Post;
 import mobius.directVCGen.vcgen.struct.VCEntry;
-import escjava.sortedProver.Lifter.QuantVariable;
 import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
 import escjava.tc.Types;
@@ -41,6 +44,10 @@ public final class MethodVisitor extends DirectVCGen {
   private RoutineDecl fMeth;
   /** the vcs that have been calculated. */
   private List<Term> fVcs = new Vector<Term>();
+  
+
+  
+  
 
   /**
    * The internal constructor should not be called from outside
@@ -53,6 +60,7 @@ public final class MethodVisitor extends DirectVCGen {
     super(basedir, methoddir);
     methoddir.mkdirs();
     fMeth = rd;
+    
   }
 
   /**
@@ -142,6 +150,8 @@ public final class MethodVisitor extends DirectVCGen {
   public void visitBlockStmt(final /*@non_null*/ BlockStmt x) {
     final Post normPost;
     final Post excpPost;
+    Map<QuantVariableRef, Term> variables = VarCorrDecoration.inst.get(fMeth);
+    
     if (DirectVCGen.fByteCodeTrick) {
       final String name = Util.getMethodName(fMeth);
       LinkedList<Term> args = new LinkedList<Term> ();
@@ -172,8 +182,9 @@ public final class MethodVisitor extends DirectVCGen {
       normPost = Lookup.getNormalPostcondition(fMeth);
       excpPost = Lookup.getExceptionalPostcondition(fMeth);
     }
+    
     final VCEntry post = new VCEntry(normPost, excpPost);
-    final StmtVCGen dvcg = new StmtVCGen(fMeth);
+    final StmtVCGen dvcg = new StmtVCGen(fMeth, variables);
     final Post wp = (Post)x.accept(dvcg, post);
     final List<Term> vcs = new ArrayList<Term>(); 
     Term pre;
@@ -198,11 +209,16 @@ public final class MethodVisitor extends DirectVCGen {
       
       for (Term vars: args) {
         final QuantVariableRef qvr = (QuantVariableRef) vars;
-        t = t.subst(Expression.old(qvr), qvr);
+        if (qvr.equals(Heap.var)) {
+          t = t.subst(Expression.old(qvr), qvr);
+        }
+        else {
+          t = t.subst(Expression.old(qvr), variables.get(qvr));
+        }
       }
       fVcs.add(t);
     }
-    addVarDecl(args);
+    addVarDecl(args, variables);
     
 
   }
@@ -210,12 +226,24 @@ public final class MethodVisitor extends DirectVCGen {
   /**
    * Add the given variables to all the current vcs.
    * @param qvs the variables to quantify over the vcs
+   * @param variables 
    */
-  public void addVarDecl(final List<QuantVariableRef> qvs) {
+  public void addVarDecl(final List<QuantVariableRef> qvs, Map<QuantVariableRef, Term> variables) {
     final List<Term> oldvcs = fVcs;
     fVcs = new Vector<Term>();
+    
     for (Term t: oldvcs) {
-      fVcs.add(Logic.forall(qvs, t));
+      for (QuantVariableRef qvr: qvs) {
+        if (qvr.equals(Heap.var)) {
+          t = Logic.forall(qvs, t);
+          t = Logic.forall(Heap.lvvar, t);
+        }
+        else {
+          t = t.subst(qvr, variables.get(qvr));
+        }
+      }
+      fVcs.add(t);
+      //fVcs.add(Logic.forall(qvs, t));
     }
 
   }
@@ -282,4 +310,7 @@ public final class MethodVisitor extends DirectVCGen {
     res += ")";
     return res;
   }
+  
+
+  
 } 
