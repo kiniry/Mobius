@@ -15,21 +15,11 @@
 
 ########## Check if ESCTOOLS_RELEASE is defined; try to guess it if it is not
 
-if ( ! $?ESCTOOLS_RELEASE ) then
-    set NAME=$PWD/$0
-    if ( -e $NAME ) then
-	setenv ESCTOOLS_RELEASE  $NAME:h
-        echo Guessing ESCTOOLS_RELEASE = $ESCTOOLS_RELEASE
-    else if ( -e $0 ) then
-        setenv ESCTOOLS_RELEASE  $0:h
-        echo Guessing ESCTOOLS_RELEASE = $ESCTOOLS_RELEASE
-    endif
-    if ( ! $?ESCTOOLS_RELEASE ) then
-        echo "Error: ESCTOOLS_RELEASE is not set and guessing was unsuccessful."
-        exit 2
-    endif
-endif
+if [ -z "escj" ]; then
+	echo "The escj bash script needs to be in the same directory as escjava2"
+	exit 1
+fi
 
 ######## Execute
 
-$ESCTOOLS_RELEASE/escj -specs $ESCTOOLS_RELEASE/specs $*
+./escj -specs $ESCTOOLS_RELEASE/specs $*

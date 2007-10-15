@@ -100,11 +100,7 @@ fi
 ############ Setting ESCJ_SIMPLIFY_DIR, if necessary
 
 if [ -z "$ESCJ_SIMPLIFY_DIR" ]; then
-  if [ $VCSVER ]; then
-    ESCJ_SIMPLIFY_DIR=$ESCTOOLS_ROOT
-  else
     ESCJ_SIMPLIFY_DIR=$ESCTOOLS_ROOT/Escjava/release/master/bin
-  fi
   warn "Guessing ESCJ_SIMPLIFY_DIR=$ESCJ_SIMPLIFY_DIR"
 fi
 

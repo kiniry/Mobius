@@ -3,34 +3,21 @@
 ## You should have ESCTOOLS_RELEASE set to the directory containing the
 ## release, but if it is not set, this script attempts to guess it.
 
-unsetenv ESCTOOLS_ROOT
-unsetenv ESC_SPECS
-unsetenv ESCJ_SIMPLIFY_DIR
-
-
-set TMP = /tmp
-
 echo "### Trying a quick test of the release in directory " $TMP
 
-if ( ! $?ESCTOOLS_RELEASE ) then
-    set NAME = $PWD/$0
-    if ( -e $NAME ) then
-	set ESCTOOLS_RELEASE=$NAME:h
-	echo Guessing ESCTOOLS_RELEASE = $ESCTOOLS_RELEASE
-    else if ( -e $0 ) then
-	set ESCTOOLS_RELEASE=$0:h
-	echo Guessing ESCTOOLS_RELEASE = $ESCTOOLS_RELEASE
-    endif
-endif
-if ( ! $?ESCTOOLS_RELEASE ) then
-	echo "You need to set the environment variables ESCTOOLS_RELEASE to the location of the escjava2 release files"
+if [ -z "escj" ]; then
+	echo "The escj bash script needs to be in the same directory as quicktest"
 	exit 1
-endif
+fi
 
-cd $TMP
+if [ -z "escjava2" ]; then
+	echo "The escjava2 bash script needs to be in the same directory as quicktest"
+	exit 1
+fi
+
 echo "## Running with a help argument to get a usage message"
 
-$ESCTOOLS_RELEASE/escj -help || (echo "FAILED"; exit 1)
+./escj -help || (echo "FAILED"; exit 1)
 
 
 echo
@@ -41,14 +28,14 @@ echo "public class A {" > A.java
 echo "  public void m(Object o) { String s = o.toString(); }" >> A.java
 echo "}" >> A.java
 
-$ESCTOOLS_RELEASE/escj A.java || (echo "FAILED"; exit 1)
+./escj A.java || (echo "FAILED"; exit 1)
 rm -f A.java
 
 echo
 echo "## Now testing the escjava2 script"
 echo "## Running with a help argument to get a usage message"
 
-$ESCTOOLS_RELEASE/escjava2 -help || (echo "FAILED"; exit 1)
+./escjava2 -help || (echo "FAILED"; exit 1)
 
 
 echo
@@ -59,8 +46,10 @@ echo "public class A {" > A.java
 echo "  public void m(Object o) { String s = o.toString(); }" >> A.java
 echo "}" >> A.java
 
-$ESCTOOLS_RELEASE/escjava2 A.java || (echo "FAILED"; exit 1)
+./escjava2 A.java || (echo "FAILED"; exit 1)
 rm -f A.java
 
 echo
 echo "## End of quick test"
+
+# End of File

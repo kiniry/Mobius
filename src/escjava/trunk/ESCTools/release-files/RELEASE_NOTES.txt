@@ -1,9 +1,10 @@
-version 2.0b2 "Mobius PVE Internal Release" (8 October 2007)
+version 2.0b2 "Mobius PVE Internal Release" (15 October 2007)
 
 New major features include:
 
-o Joe Kiniry has moved ESC/Java2 from a CVS/GForge repository to a Subversion/Trac 
-  repository
+o Joe Kiniry, Radu Grigore and Dermot Cochran  have moved ESC/Java2 from a CVS/GForge 
+  repository to a Subversion/Trac repository and also updated the makefiles and
+  shell scripts to reflect this
 
 The following tickets are FIXED or CLOSED in this release:
 
@@ -18,6 +19,8 @@ Ticket	Summary
 29		please update ESC/Java2 plugin webpage to reflect new developments      
 31		Tests failing in ESCJava2 trunk	                                                      
 34		Wrong output to Simplify
+39
+40      ESC/Java2.0b2 release does not run on OS X 10.4.10 with JVM 1.5.0_07
 
 The following GForge tickets are FIXED or CLOSED in this release:
 
