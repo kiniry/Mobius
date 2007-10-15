@@ -155,9 +155,7 @@ BEGIN
     LAMBDA (mp : MonitoredProgram, md : Method, a : Val, s1, s2 : MPState,
             n : nat, derive_rec : derive_rec_type(n)) :
     NOT cp(astate(s1)) = halted AND
-    IF up?(ex(pstate(s1)))
-    THEN s1 = s2 AND n = 0
-    ELSE EXISTS(s_new : MPState) : 
+    EXISTS(s_new : MPState) : 
       on_method_entry(mp, md, a, s1, s_new, n, derive_rec) AND
       IF up?(ex(pstate(s_new)))
       THEN s2 = s_new
@@ -165,26 +163,34 @@ BEGIN
                    pstate := pstate(s_new),
                    gvs := gvs(s_new) #)
       ENDIF
-    ENDIF
 
 
   on_method_exit_normal_MP : (on_method_event_type) =
     LAMBDA (mp : MonitoredProgram, md : Method, a : Val, s1, s2 : MPState,
             n : nat, derive_rec : derive_rec_type(n)) :
-    astate(s2) = on_method_MVA(Entry)(mp, md)(s1) AND
-    EXISTS (s3 : MPState) : 
-      pstate(s3) = pstate(s2) AND
-      gvs(s3) = gvs(s2) AND
-      on_method_exit_normal(mp, md, a, s1, s3, n, derive_rec)
+    NOT cp(astate(s1)) = halted AND
+    EXISTS(s_new : MPState) : 
+      on_method_exit_normal(mp, md, a, s1, s_new, n, derive_rec) AND
+      IF up?(ex(pstate(s_new)))
+      THEN s2 = s_new
+      ELSE s2 = (# astate := on_method_MVA(ExitNormal)(mp, md)(s_new),
+                   pstate := pstate(s_new),
+                   gvs := gvs(s_new) #)
+      ENDIF
 
   on_method_exit_exceptional_MP : (on_method_event_type) =
     LAMBDA (mp : MonitoredProgram, md : Method, a : Val, s1, s2 : MPState,
             n : nat, derive_rec : derive_rec_type(n)) :
-    astate(s2) = on_method_MVA(Entry)(mp, md)(s1) AND
-    EXISTS (s3 : MPState) : 
-      pstate(s3) = pstate(s2) AND
-      gvs(s3) = gvs(s2) AND
-      on_method_exit_exceptional(mp, md, a, s1, s3, n, derive_rec)
+    NOT cp(astate(s1)) = halted AND
+    EXISTS(s_new : MPState) : 
+      on_method_exit_exceptional(mp, md, a, s1, s_new, n, derive_rec) AND
+      IF up?(ex(pstate(s1))) AND up?(ex(pstate(s_new))) AND 
+         down(ex(pstate(s1))) = down(ex(pstate(s_new)))
+      THEN s2 = (# astate := on_method_MVA(ExitExceptional)(mp, md)(s_new),
+                   pstate := pstate(s_new),
+                   gvs := gvs(s_new) #)
+      ELSE s2 = s_new
+      ENDIF
 
   IMPORTING Semantics[Name, MonitoredProgram, MPState, 
                       LAMBDA (mp : MonitoredProgram) : program(mp),

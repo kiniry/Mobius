@@ -90,10 +90,26 @@ BEGIN
         halted_implies_JMLExc(mp)(update_PState(sMP, catch), 
                                   update_PState(sAP, catch))
 
+  halted_implies_JMLExc_preserved_by_catch2 : LEMMA % :-)
+    FORALL (mp)(sMP : MPState, sAP : APState) :
+      related_states(mp)(sMP, sAP) IMPLIES
+      NOT cp(astate(sMP)) = halted IMPLIES
+        halted_implies_JMLExc(mp)(update_PState(sMP, catch), 
+                                  update_PState(sAP, catch))
+
   halted_implies_JMLExc_preserved_by_raise : LEMMA % :-)
     FORALL (mp)(sMP : MPState, sAP : APState, e : Excpt) :
       related_states(mp)(sMP, sAP) IMPLIES
       NOT up?(ex(pstate(sAP))) IMPLIES
+        halted_implies_JMLExc(mp)(update_PState(sMP, raise(e)), 
+                                  update_PState(sAP, raise(e)))
+
+
+  halted_implies_JMLExc_preserved_by_raise2 : LEMMA % :-)
+    FORALL (mp)(sMP : MPState, sAP : APState, e : Excpt) :
+      related_states(mp)(sMP, sAP) IMPLIES
+      NOT cp(astate(sMP)) = halted IMPLIES
+      NOT e = JMLExc IMPLIES
         halted_implies_JMLExc(mp)(update_PState(sMP, raise(e)), 
                                   update_PState(sAP, raise(e)))
 
@@ -104,10 +120,25 @@ BEGIN
         related_states(mp)(update_PState(sMP, catch), 
                            update_PState(sAP, catch))
 
+  related_states_preserved_by_catch2 : LEMMA % :-)
+    FORALL (mp)(sMP : MPState, sAP : APState) :
+      related_states(mp)(sMP, sAP) IMPLIES
+      NOT cp(astate(sMP)) = halted IMPLIES
+        related_states(mp)(update_PState(sMP, catch), 
+                           update_PState(sAP, catch))
+
   related_states_preserved_by_raise : LEMMA % :-)
     FORALL (mp)(sMP : MPState, sAP : APState, e : Excpt) :
       related_states(mp)(sMP, sAP) IMPLIES
       NOT up?(ex(pstate(sAP))) IMPLIES
+        related_states(mp)(update_PState(sMP, raise(e)), 
+                           update_PState(sAP, raise(e)))
+
+  related_states_preserved_by_raise2 : LEMMA % :-)
+    FORALL (mp)(sMP : MPState, sAP : APState, e : Excpt) :
+      related_states(mp)(sMP, sAP) IMPLIES
+      NOT cp(astate(sMP)) = halted IMPLIES
+      NOT e = JMLExc IMPLIES
         related_states(mp)(update_PState(sMP, raise(e)), 
                            update_PState(sAP, raise(e)))
 
@@ -174,6 +205,7 @@ BEGIN
 
   mp : VAR (wf_MP)
 
+  % remaining case: lemma will be proven by Alejandro
   on_method_entry_preserves_related_states_annotated : LEMMA
     FORALL(mn : Name, md : Method, a : (defined?), m1, m2 : nat,
            sMP1, sMP2 : MPState, sAP1, sAP2 : APState) : 
@@ -271,7 +303,7 @@ BEGIN
                         derive(p)(b, sigma1, v, sigma2)(m)) IMPLIES
         related_states(mp)(sMP2, sAP2)
 
-  on_method_exit_normal_preserves_related_states_not_annotated : LEMMA
+  on_method_exit_normal_preserves_related_states_not_annotated : LEMMA % :-)
     FORALL(mn : Name, md : Method, a : (defined?), m1, m2 : nat,
            sMP1, sMP2 : MPState, sAP1, sAP2 : APState) : 
       related_states(mp)(sMP1, sAP1) IMPLIES
@@ -336,7 +368,7 @@ BEGIN
                         derive(p)(b, sigma1, v, sigma2)(m)) IMPLIES
         related_states(mp)(sMP2, sAP2)
 
-  on_method_exit_exceptional_preserves_related_states_not_annotated : LEMMA
+  on_method_exit_exceptional_preserves_related_states_not_annotated : LEMMA % :-)
     FORALL(mn : Name, md : Method, a : (defined?), m1, m2 : nat,
            sMP1, sMP2 : MPState, sAP1, sAP2 : APState) : 
       related_states(mp)(sMP1, sAP1) IMPLIES
