@@ -80,7 +80,7 @@ fi
 # We use the heuristic that release version does not have ".svn"
 # while the non-release version does.
 SCRIPTPATH=`dirname $0`
-if [[ ! "$SCRIPTPATH" =~ /.* ]]; then 
+if [ "${SCRIPTPATH:0:1}" != "/" ]; then 
   SCRIPTPATH=`pwd`/$SCRIPTPATH
 fi
 if [[ -e $SCRIPTPATH/.svn ]]; then
