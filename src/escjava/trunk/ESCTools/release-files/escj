@@ -7,8 +7,6 @@
 
 ############################################################################
 ## Required variables:
-##	ESCTOOLS_RELEASE (if present, presumes a release; if not defined,
-##                    presumes running within CVS directories)
 ##	ESCTOOLS_ROOT    (if not defined, tries to guess from the location
 ##                    of the current file)
 ##	SIMPLIFY         (if not defined, guesses for some platforms)
@@ -16,7 +14,7 @@
 ##                    spec files that escjava is acting on)
 
 ## Optional variables:
-##      ESC_SPECS        (path for system specification files)
+##  ESC_SPECS        (path for system specification files)
 ##	ESCJ_VERBOSE     (turns on some debugging)
 ##	BOOTCLASSPATH    (rarely needed - changes the system files being used)
 ##	ESCJ_STDARGS     (the set of always used arguments to escjava)
@@ -25,116 +23,118 @@
 ##	ESC_REMOTE_DEBUG (if on, adds the debug flags to JAVA_VM_FLAGS)
 ##	JAVA_VM_DEBUG_FLAGS (the set of debug flags - a default set is already
 ##                       defined)
-##      XMLPROVERPATH    (path for prover based stylesheets to be used by the 
-##                        VC generator)
+##  XMLPROVERPATH    (path for prover based stylesheets to be used by the 
+##                    VC generator)
 ##
-## The following are set based on the structure of a standard release (if
-## ESCTOOLS_RELEASE is defined) or otherwise on the structure of the CVS files
-##      ESCJ_SIMPLIFY_DIR  (The directory containing the Simplify executable,
-##                          as named by the SIMPLIFY variable)
-##	ESC_CLASSPATH      (The class path needed to invoke escjava)
+## The following should be set automatically for both the release
+## and the VCS versions.
+##
+## ESCJ_SIMPLIFY_DIR  (The directory containing the Simplify executable,
+##                     as named by the SIMPLIFY variable)
+## ESC_CLASSPATH      (The class path needed to invoke escjava)
 ##                     
 
 ############################################################################
 
-if [ "$1"x = "-gui"x ]; then
-    ## Run GUI
-    MAIN=escjava.gui.GUI
-    shift
+# Some globals, set soon after the script starts
+
+VERBOSE=0            # 0 - silent, 1 - important warnings, 2 - chatty
+MAIN=escjava.Main    # the main class
+VCSVER=0             # whether this is the VCS version (vs. release)
+ARGS=""              # extra arguments to be sent to ESCJava
+
+# Helper functions
+function warn {
+  if (( $VERBOSE > 0 )); then
+    echo "Warning: $1"
+  fi
+}
+function wwarn { # weak warn
+  if (( $VERBOSE > 1)); then
+    echo "Warning: $1"
+  fi
+}
+
+# Argument parsing
+while (( $# > 0 )); do
+  case "$1" in
+    "-gui" ) 
+        MAIN=escjava.gui.GUI;;
+    "-v" )   
+        VERBOSE=1
+        ARGS="$ARGS -v";;
+    "-vv" )  
+        VERBOSE=2
+        ARGS="$ARGS -v";;
+    * )  
+        ARGS="$ARGS $1";;
+  esac
+  shift
+done
+# Allow users to still turn on verbose with ESCJ_VERBOSE
+if [ -n "$ESCJ_VERBOSE" ] && [ $ESCJ_VERBOSE -gt $VERBOSE ]; then
+  VERBOSE=$ESCJ_VERBOSE
+fi
+
+# Guess the script path and whether this is a release or a VCS version.
+# We use the heuristic that release version does not have ".svn"
+# while the non-release version does.
+SCRIPTPATH=`dirname $0`
+if [[ ! "$SCRIPTPATH" =~ /.* ]]; then 
+  SCRIPTPATH=`pwd`/$SCRIPTPATH
+fi
+if [[ -e $SCRIPTPATH/.svn ]]; then
+  VCSVER=1
 else
-    MAIN=escjava.Main
+  VCSVER=0
 fi
-
-if [ -z "$ESCTOOLS_RELEASE" ]; then
-    ## Check if this looks like a release even if ESCTOOLS_RELEASE is not set
-    if [ -e "$NAME" ]; then
-	ROOT=`dirname "$NAME"`
-    elif [ -e $0 ]; then
-	ROOT=`dirname "$0"`
-    fi
-    if [ -n "$ROOT" ]; then
-	if [ -e $ROOT/README.release ]; then
-	    ## We are running an executable from a release, so set 
-	    ## ESCTOOLS_RELEASE
-	    ESCTOOLS_RELEASE=$ROOT
-	    ## Don't echo anything here because that would confuse the automated tests - dcochran
-	    ## echo "Warning: Guessing ESCTOOLS_RELEASE = $ESCTOOLS_RELEASE"
-	fi
-    fi
-fi
-
-## Check that if ESCTOOLS_RELEASE is defined, it looks like a release directory
-if [ -n "$ESCTOOLS_RELEASE" ]; then
-    if [ ! -e $ESCTOOLS_RELEASE/escj ]; then
-	echo "Warning: $ESCTOOLS_RELEASE does not appear to be a release"
-    fi
-    if [ ! -e $ESCTOOLS_RELEASE/README.release ]; then
-	echo "Warning: $ESCTOOLS_RELEASE does not appear to be a release"
-    fi
-    unset ESCTOOLS_ROOT
-fi
-
-## If ESCTOOLS_RELEASE is not defined, try to guess ESCTOOLS_ROOT if it is not
-## defined
-if [ -z "$ESCTOOLS_RELEASE" ]; then
-    if [ -z "$ESCTOOLS_ROOT" ]; then
-	if [ -e "$NAME" ]; then
-	    ESCTOOLS_ROOT=`dirname "$NAME"`/..
-	    echo "Warning: Guessing ESCTOOLS_ROOT = $ESCTOOLS_ROOT"
-	elif [ -e "$0" ]; then
-	    ESCTOOLS_ROOT=`dirname "$0"`/..
-	    echo "Warning: Guessing ESCTOOLS_ROOT = $ESCTOOLS_ROOT"
-	fi
-	if [ -z "$ESCTOOLS_ROOT" ]; then
-	    echo "Error: ESCTOOLS_ROOT is not set and guessing was unsuccessful."
-	    exit 2
-	fi
-    fi
-fi
-
-## Check that if ESCTOOLS_ROOT is defined, it looks like a Subversion hierarchy
-if [ -n "$ESCTOOLS_ROOT" ] && [ -n "$ESCTOOLS_RELEASE" ]; then
-    if [ ! -d $ESCTOOLS_ROOT/Escjava ]; then
-	echo "Warning: $ESCTOOLS_ROOT does not appear to be a legitimate root"
-    fi
-    if [ ! -e $ESCTOOLS_ROOT/Makefile ]; then
-	echo "Warning: $ESCTOOLS_ROOT does not appear to be a legitimate root"
-    fi
+if [ -z "$ESCTOOLS_ROOT" ]; then
+  if [ $VCSVER ]; then
+    ESCTOOLS_ROOT=$SCRIPTPATH/..
+  else
+    ESCTOOLS_ROOT=$SCRIPTPATH
+  fi
+  warn "Guessing ESCTOOLS_ROOT=$ESCTOOLS_ROOT"
 fi
 
 ############ Setting ESCJ_SIMPLIFY_DIR, if necessary
 
 if [ -z "$ESCJ_SIMPLIFY_DIR" ]; then
-    if [ -n "$ESCTOOLS_RELEASE" ]; then
-        ESCJ_SIMPLIFY_DIR=${ESCTOOLS_RELEASE}
-    else
-	ESCJ_SIMPLIFY_DIR=${ESCTOOLS_ROOT}/Escjava/release/master/bin
-    fi
+  if [ $VCSVER ]; then
+    ESCJ_SIMPLIFY_DIR=$ESCTOOLS_ROOT
+  else
+    ESCJ_SIMPLIFY_DIR=$ESCTOOLS_ROOT/Escjava/release/master/bin
+  fi
+  warn "Guessing ESCJ_SIMPLIFY_DIR=$ESCJ_SIMPLIFY_DIR"
 fi
 
 ############ Setting BCEL_LIB, if necessary
 
 if [ -z "$BCEL_LIB" ]; then
-     BCEL_LIB=${ESCTOOLS_RELEASE}/Utils/BCEL/bcel-5.2/bcel-5.2.jar
+  BCEL_LIB=$ESCTOOLS_ROOT/Utils/BCEL/bcel-5.2/bcel-5.2.jar
+  wwarn "Guessing BCEL_LIB=$BCEL_LIB"
 fi
 
 ############ Setting XMLRPC_LIB, if necessary
 
 if [ -z "$XMLRPC_LIB" ]; then
-    XMLRPC_LIB=${ESCTOOLS_ROOT}/Escjava/xmlrpc-1.2-b1-modified.jar
+  XMLRPC_LIB=$ESCTOOLS_ROOT/Escjava/xmlrpc-1.2-b1-modified.jar
+  wwarn "Guessing XMLRPC_LIB=$XMLRPC_LIB"
 fi
 
 ############ Setting JUNIT_LIB, if necessary
 
 if [ -z "$JUNIT_LIB" ]; then
-export JUNIT_LIB=${ESCTOOLS_ROOT}/Utils/junit.jar
+  export JUNIT_LIB=${ESCTOOLS_ROOT}/Utils/junit.jar
+  wwarn "Guessing JUNIT_LIB=$JUNIT_LIB"
 fi
 
 
 ############ Setting ANT_LIB, if necessary
 
 if [ -z "$ANT_LIB" ]; then
-export ANT_LIB=${ESCTOOLS_ROOT}/Utils/ant.jar
+  export ANT_LIB=${ESCTOOLS_ROOT}/Utils/ant.jar
+  wwarn "Guessing ANT_LIB=$ANT_LIB"
 fi
 
 
@@ -153,7 +153,7 @@ if [ -z "$SIMPLIFY" ]; then
 	SIMPLIFY=Simplify-1.5.4.exe; 
     fi
     if [ -n "$SIMPLIFY" ]; then
-	echo "Warning: Guessing SIMPLIFY = $SIMPLIFY"
+	warn "Guessing SIMPLIFY = $SIMPLIFY"
     fi
 fi
 
@@ -200,10 +200,10 @@ fi
 export CLASSPATH
 
 if [ -z "$ESC_SPECS" ]; then
-    if [ -n "$ESCTOOLS_RELEASE" ]; then
-	ESC_SPECS=$ESCTOOLS_RELEASE/escspecs.jar
-    else
+    if [ $VCSVER ]; then
 	ESC_SPECS=$ESCTOOLS_ROOT/specs
+    else
+	ESC_SPECS=$ESCTOOLS_ROOT/escspecs.jar
     fi
 fi
 
@@ -226,14 +226,15 @@ fi
 ##########################################################################
 
 ## This is the path needed to run escjava
-## If it is not set, use the path suitable for working in CVS or in the
+## If it is not set, use the path suitable for working in VCS or in the
 ## release
 if [ -z "$ESC_CLASSPATH" ]; then
-    if [ -n "$ESCTOOLS_RELEASE" ]; then
-	ESC_CLASSPATH=${ESCTOOLS_RELEASE}/esctools2.jar:${XMLRPC_LIB}:${BCEL_LIB}:${ANT_LIB}:${JUNIT_LIB}
-    else
+    if [ $VCSVER ]; then
 	ESC_CLASSPATH=${ESCTOOLS_ROOT}/Escjava/classfiles:${ESCTOOLS_ROOT}/Javafe/classfiles:${ESCTOOLS_ROOT}/Utils:${XMLRPC_LIB}:${BCEL_LIB}:{ANT_LIB}:{JUNIT_LIB}
+    else
+	ESC_CLASSPATH=${ESCTOOLS_RELEASE}/esctools2.jar:${XMLRPC_LIB}:${BCEL_LIB}:${ANT_LIB}:${JUNIT_LIB}
     fi
+    wwarn "Setting ESC_CLASSPATH=$ESC_CLASSPATH"
 fi
 
 if [ -n "$COMSPEC" ]; then
@@ -263,8 +264,8 @@ if [ -n "$COMSPEC" ]; then
     fi
 fi
 
-if [ -n "$ESCJ_VERBOSE" ]; then
-    if [ "$ESCJ_VERBOSE" -eq 2 ]; then
+if (( $VERBOSE > 0 )) ; then
+    if (( $VERBOSE > 1 )); then
 	echo "=================================================================="
 	echo " ESCJ_SIMPLIFY_DIR = ${ESCJ_SIMPLIFY_DIR}";
 	echo " SIMPLIFY = ${SIMPLIFY}";
@@ -280,12 +281,12 @@ if [ -n "$ESCJ_VERBOSE" ]; then
     echo "  -classpath ${CLASSPATH}";
     echo "  -specs ${ESC_SPECS}";
     echo "  ${ESCJ_STDARGS}";
-    echo "  $*";
+    echo "  $ARGS";
     echo "=================================================================="
 fi
 
 ${JAVA} ${JAVA_VM_FLAGS} -DXMLPROVERPATH="${XMLPROVERPATH}" -Dsimplify="${ESCJ_SIMPLIFY}" \
-    ${MAIN} \
-    ${JBIN} -classpath "${CLASSPATH}:${ESC_CLASSPATH}" -specs "${ESC_SPECS}" ${ESCJ_STDARGS} $*
+    -classpath "${ESC_CLASSPATH}" ${MAIN} \
+    ${JBIN} -classpath "${CLASSPATH}" -specs "${ESC_SPECS}" ${ESCJ_STDARGS} $ARGS
 
-# End of File
+# End of $RCSflie$
