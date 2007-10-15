@@ -495,8 +495,8 @@ BEGIN
       name(c1) = name(c2) IMPLIES
         c1 = c2
 
-  wf_program_all_variables_declared(p : Program) : boolean =
-    FORALL(v : Name) : var_names(p)(v) IMPLIES declared_var_names(p)(v)
+%  wf_program_all_variables_declared(p : Program) : boolean =
+%    FORALL(v : Name) : var_names(p)(v) IMPLIES declared_var_names(p)(v)
 
   wf_program_methods_only_in_one_class(p : Program) : boolean =
     FORALL (c1, c2 : Class, m : Method) :    
@@ -523,9 +523,11 @@ BEGIN
     wf_program_variables_not_reserved_words_def(p) AND
     wf_program_has_unique_class_names_def(p) AND
     wf_Classes(p) AND
-    wf_program_all_variables_declared(p) AND
     wf_program_methods_only_in_one_class(p)
 %    invariants_are_bool_expr(p)
+
+  wf_Body(p : Program)(b : Body) : boolean = 
+    (FORALL(v : Name) : var_names(b)(v) IMPLIES declared_var_names(p)(v))
 
   AUTO_REWRITE- wf_Program
 

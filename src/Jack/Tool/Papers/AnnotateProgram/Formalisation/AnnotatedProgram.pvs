@@ -6,7 +6,7 @@ BEGIN
   APState : TYPE = [# gvs : Store, pstate : PState #]
 
   IMPORTING SemanticsTypes[Name, Program, APState,
-                           LAMBDA (s : APState) : pstate(s)],
+                           id, LAMBDA (s : APState) : pstate(s)],
             SemanticsJMLTypes[Name, APState, LAMBDA (s : APState) : gvs(s)]
 
   update_PState : (update_PState_type) = 
@@ -131,7 +131,7 @@ BEGIN
 %        wf_state(p)(sigma2)
 
   derive_yields_wf_state_AP : LEMMA % :-)
-    FORALL (p : Program, b : Body, v : Val)
+    FORALL (p : Program, b : (wf_Body(p)), v : Val)
            (sigma1, sigma2 : APState, n : nat) :
       wf_Program(p) IMPLIES
       wf_state(p)(sigma1) IMPLIES
@@ -148,14 +148,14 @@ BEGIN
    on_method_entry(p, md, a, s1, s2, n, derive_rec)
 
   determ_step_AP : LEMMA % :-)
-    FORALL (p : Program)(n1, n2 : nat)(b : Body)
+    FORALL (p : Program)(n1, n2 : nat)(b : (wf_Body(p)))
            (v1, v2 : Val, sigma, sigma1, sigma2 : APState) :
         derive(p)(b, sigma, v1, sigma1)(n1) IMPLIES
         derive(p)(b, sigma, v2, sigma2)(n2) IMPLIES
            v1 = v2 AND sigma1 = sigma2 AND n1 = n2
 
   derive_bottom_iff_exception_step_AP : LEMMA % :-)
-    FORALL (p : Program)(b : Body)
+    FORALL (p : Program)(b : (wf_Body(p)))
            (sigma1, sigma2 : APState, v : Val, n : nat) :
       derive(p)(b, sigma1, v, sigma2)(n) IMPLIES
       Bottom?(v) = up?(ex(pstate(sigma2)))

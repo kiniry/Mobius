@@ -87,6 +87,7 @@ BEGIN
     #]
 
   IMPORTING SemanticsTypes[Name, MonitoredProgram, MPState, 
+                           LAMBDA (mp : MonitoredProgram) : program(mp),
                            LAMBDA (s : MPState) : pstate(s)],
             SemanticsJMLTypes[Name, MPState, LAMBDA (s : MPState) : gvs(s)]
 
@@ -234,7 +235,7 @@ BEGIN
                       on_method_exit_exceptional_MP]
 
   determ_step_MP : LEMMA % :-)
-    FORALL (p : MonitoredProgram, n1, n2 : nat, b : Body, sigma : MPState,
+    FORALL (p : MonitoredProgram, n1, n2 : nat, b : (wf_Body(program(p))), sigma : MPState,
             sigma1, sigma2 : MPState, v1, v2 : Val) :
         derive(p)(b, sigma, v1, sigma1)(n1) AND
         derive(p)(b, sigma, v2, sigma2)(n2) IMPLIES
@@ -273,7 +274,7 @@ BEGIN
         wf_state(p)(update_stack(this_val, arg, param_val, lvds, s))
 
   derive_yields_wf_state_MP : LEMMA % :-)
-    FORALL (mp : MonitoredProgram, b : Body, v : Val)
+    FORALL (mp : MonitoredProgram, b : (wf_Body(program(mp))), v : Val)
            (sigma1, sigma2 : MPState, n : nat) :
       wf_MP(mp) IMPLIES
       wf_state(mp)(sigma1) IMPLIES
@@ -284,7 +285,7 @@ BEGIN
 
   % method call case not finished
   derive_MP_from_derive_AP : LEMMA
-    FORALL(mp : MonitoredProgram, b : Body, v : Val)
+    FORALL(mp : MonitoredProgram, b : (wf_Body(program(mp))), v : Val)
           (sMP1 : MPState)(sAP1, sAP2 : APState)(n : nat) :
       pstate(sMP1) = pstate(sAP1) IMPLIES
       gvs(sMP1) = gvs(sAP1) IMPLIES

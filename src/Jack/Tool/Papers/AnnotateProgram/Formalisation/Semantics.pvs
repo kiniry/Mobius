@@ -11,13 +11,14 @@ END ReferenceFunctions
 
 SemanticsTypes[Name : TYPE+,
                FullProgram, FullState : TYPE,
+               (IMPORTING Program[Name]) program : [FullProgram -> Program],
                (IMPORTING State[Name]) pstate : [FullState -> PState]] : THEORY
 BEGIN
-
-  IMPORTING Program[Name]
+ 
+  IMPORTING WellFormedProgram[Name]
 
   derive_type(n : nat) : TYPE =
-    [FullProgram -> [Body, FullState, Val, FullState -> [below(n) -> bool]]]
+    [p : FullProgram -> [(WellFormedProgram[Name].wf_Body(program(p))), FullState, Val, FullState -> [below(n) -> bool]]]
 
   derive_rec_type(n : nat) : TYPE = [k : upto(n) -> derive_type(k)]
 
@@ -89,7 +90,8 @@ Semantics[Name : TYPE+,
           (IMPORTING Program[Name]) program : [FullProgram -> Program],
           (IMPORTING State[Name]) pstate : [FullState -> PState],
           lookup : [Name, FullState -> Val],
-          (IMPORTING SemanticsTypes[Name, FullProgram, FullState, pstate])
+          (IMPORTING SemanticsTypes[Name, FullProgram, FullState, 
+                                    program, pstate])
           update_PState : (update_PState_type),
           execute_set : (execute_set_type),
           execute_assert : (execute_assert_type),
@@ -147,16 +149,16 @@ BEGIN
     check_for_exception(final, final, v, otherwise)
 
   derive(p : FullProgram)
-        (b : Body, sigma1 : FullState, v : Val, sigma2 : FullState)
+        (b : (wf_Body(program(p))), sigma1 : FullState, v : Val, sigma2 : FullState)
         (n : nat) : RECURSIVE bool =
    LET derive_rec =
         LAMBDA (k : upto(n))(p : FullProgram)
-               (b : Body, sigma1 : FullState, v : Val, sigma2 : FullState)
+               (b : (wf_Body(program(p))), sigma1 : FullState, v : Val, sigma2 : FullState)
                (m : below(k)) :
           derive(p)(b, sigma1, v, sigma2)(m),
        bounded_derive_rec =
         LAMBDA (i : upto(n))(k : upto(i))(p : FullProgram)
-               (b : Body, sigma1 : FullState, v : Val, sigma2 : FullState)
+               (b : (wf_Body(program(p))), sigma1 : FullState, v : Val, sigma2 : FullState)
                (m : below(k)) :
           derive(p)(b, sigma1, v, sigma2)(m) IN
     IF up?(ex(pstate(sigma1)))
@@ -338,7 +340,7 @@ BEGIN
 
 
   derives(p : FullProgram)
-         (b : Body, sigma1 : FullState)(v : Val, sigma2 : FullState) : bool =
+         (b : (wf_Body(program(p))), sigma1 : FullState)(v : Val, sigma2 : FullState) : bool =
     EXISTS (n : nat) :
       derive(p)(b, sigma1, v, sigma2)(n)
 
@@ -348,7 +350,7 @@ BEGIN
 %%                        [(wf_Stmt(p)), FullState, FullState ->
 %%                        [nat -> bool]]]
 
-  spec_expr_has_no_side_effects(p : FullProgram)(e : Body) : boolean =
+  spec_expr_has_no_side_effects(p : FullProgram)(e : (wf_Body(program(p)))) : boolean =
     FORALL (s1, s2 : FullState, v : Val, n : nat) :
       derive(p)(e, s1, v, s2)(n) IMPLIES s1 = s2
 
@@ -383,7 +385,8 @@ SemanticsProofs[Name : TYPE+,
           (IMPORTING Program[Name]) program : [FullProgram -> Program],
           (IMPORTING State[Name]) pstate : [FullState -> PState],
           lookup : [Name, FullState -> Val],
-          (IMPORTING SemanticsTypes[Name, FullProgram, FullState, pstate])
+          (IMPORTING SemanticsTypes[Name, FullProgram, FullState, 
+                                    program, pstate])
           update_PState : (update_PState_type),
           execute_set : (execute_set_type),
           execute_assert : (execute_assert_type),
@@ -411,7 +414,7 @@ ASSUMING
       FORALL (p : FullProgram, m : Method[Name], v : Val,
               s, s1, s2 : FullState, n1, n2 : nat,
               d1 : derive_rec_type(n1), d2 : derive_rec_type(n2)) :
-        (FORALL (b : Body)(v1, v2 : Val)(sigma, sigma1, sigma2 : FullState)
+        (FORALL (b : (wf_Body(program(p))))(v1, v2 : Val)(sigma, sigma1, sigma2 : FullState)
                 (k1 : upto(n1), k2 : upto(n2))
                 (m1 : below(k1), m2 : below(k2)) :
           d1(k1)(p)(b, sigma, v1, sigma1)(m1) AND
@@ -425,7 +428,7 @@ ASSUMING
       FORALL (p : FullProgram, m : Method[Name], v : Val,
               s, s1, s2 : FullState, n1, n2 : nat,
               d1 : derive_rec_type(n1), d2 : derive_rec_type(n2)) : 
-        (FORALL (b : Body)(v1, v2 : Val)(sigma, sigma1, sigma2 : FullState)
+        (FORALL (b : (wf_Body(program(p))))(v1, v2 : Val)(sigma, sigma1, sigma2 : FullState)
                 (k1 : upto(n1), k2 : upto(n2))
                 (m1 : below(k1), m2 : below(k2)) :
           d1(k1)(p)(b, sigma, v1, sigma1)(m1) AND
@@ -439,7 +442,7 @@ ASSUMING
       FORALL (p : FullProgram, m : Method[Name], v : Val, 
               s, s1, s2 : FullState, n1, n2 : nat,
               d1 : derive_rec_type(n1), d2 : derive_rec_type(n2)) : 
-        (FORALL (b : Body)(v1, v2 : Val)(sigma, sigma1, sigma2 : FullState)
+        (FORALL (b : (wf_Body(program(p))))(v1, v2 : Val)(sigma, sigma1, sigma2 : FullState)
                 (k1 : upto(n1), k2 : upto(n2))
                 (m1 : below(k1), m2 : below(k2)) :
           d1(k1)(p)(b, sigma, v1, sigma1)(m1) AND
@@ -454,7 +457,7 @@ ASSUMING
             s, s1, s2 : FullState,
             n1, n2 : nat, 
             d1 : derive_rec_type(n1), d2 : derive_rec_type(n2)) :
-        (FORALL (b : Body)(v1, v2 : Val)(sigma, sigma1, sigma2 : FullState)
+        (FORALL (b : (wf_Body(program(p))))(v1, v2 : Val)(sigma, sigma1, sigma2 : FullState)
                 (k1 : upto(n1), k2 : upto(n2))
                 (m1 : below(k1), m2 : below(k2)) :
           d1(k1)(p)(b, sigma, v1, sigma1)(m1) AND
@@ -468,7 +471,7 @@ ASSUMING
     FORALL (p : FullProgram, vn : Name, e : Expr, s, s1, s2 : FullState,
             n1, n2 : nat, 
             d1 : derive_rec_type(n1), d2 : derive_rec_type(n2)) :
-        (FORALL (b : Body)(v1, v2 : Val)(sigma, sigma1, sigma2 : FullState)
+        (FORALL (b : (wf_Body(program(p))))(v1, v2 : Val)(sigma, sigma1, sigma2 : FullState)
                 (k1 : upto(n1), k2 : upto(n2))
                 (m1 : below(k1), m2 : below(k2)) :
           d1(k1)(p)(b, sigma, v1, sigma1)(m1) AND
@@ -482,7 +485,7 @@ ASSUMING
     FORALL (p : FullProgram, e : BoolExpr, s, s1, s2 : FullState,
             n1, n2 : nat, 
             d1 : derive_rec_type(n1), d2 : derive_rec_type(n2)) :
-        (FORALL (b : Body)(v1, v2 : Val)(sigma, sigma1, sigma2 : FullState)
+        (FORALL (b : (wf_Body(program(p))))(v1, v2 : Val)(sigma, sigma1, sigma2 : FullState)
                 (k1 : upto(n1), k2 : upto(n2))
                 (m1 : below(k1), m2 : below(k2)) :
           d1(k1)(p)(b, sigma, v1, sigma1)(m1) AND
@@ -497,7 +500,7 @@ ENDASSUMING
   IMPORTING WF[nat, nat] % used in the proofs
 
   derive_determ_step : LEMMA % 
-    FORALL (p : FullProgram)(n1, n2 : nat)(b : Body)
+    FORALL (p : FullProgram)(n1, n2 : nat)(b : (wf_Body(program(p))))
            (v1, v2 : Val, sigma, sigma1, sigma2 : FullState) :
         derive(p)(b, sigma, v1, sigma1)(n1) IMPLIES
         derive(p)(b, sigma, v2, sigma2)(n2) IMPLIES
@@ -505,7 +508,7 @@ ENDASSUMING
 
   
   derive_determ : LEMMA % :-)
-    FORALL (p : FullProgram)(sigma : FullState)(b : Body) :
+    FORALL (p : FullProgram)(sigma : FullState)(b : (wf_Body(program(p)))) :
       FORALL (v1, v2 : Val, sigma1, sigma2 : FullState) :
         derives(p)(b, sigma)(v1, sigma1) AND
         derives(p)(b, sigma)(v2, sigma2) IMPLIES
@@ -513,7 +516,7 @@ ENDASSUMING
 
 
   derive_bottom_iff_exception_step : LEMMA % :-)
-    FORALL (p : FullProgram)(e : Body)
+    FORALL (p : FullProgram)(e : (wf_Body(program(p))))
            (sigma1, sigma2 : FullState, v : Val, n : nat) :
       derive(p)(e, sigma1, v, sigma2)(n) IMPLIES
         Bottom?(v) = up?(ex(pstate(sigma2)))
@@ -537,7 +540,8 @@ SemanticsJML[Name : TYPE+,
              FullProgram, FullState : TYPE,
              (IMPORTING Program[Name]) program : [FullProgram -> Program[Name]],
              (IMPORTING State[Name]) pstate : [FullState -> PState],
-             (IMPORTING SemanticsTypes[Name, FullProgram, FullState, pstate])
+             (IMPORTING SemanticsTypes[Name, FullProgram, FullState, 
+                                       program, pstate])
              update_PState : (update_PState_type),
              gvs : [FullState -> Store[Name]],
              (IMPORTING SemanticsJMLTypes[Name, FullState, gvs])

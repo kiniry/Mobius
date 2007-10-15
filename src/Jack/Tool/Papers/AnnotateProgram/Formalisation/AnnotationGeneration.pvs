@@ -412,6 +412,10 @@ BEGIN
   ann_program_yields_wf_program : LEMMA % :-)
     wf_Program(ann_program(mp))
 
+  ann_program_preserves_wf_body : LEMMA % :-)
+    FORALL(b : (wf_Body(program(mp)))) :
+      wf_Body(ann_program(mp))(b)
+
   % PROVE
   % unprovable for the moment
   % one problem: derive(mp)(inv) = derive(ann_program(mp))(inv)
