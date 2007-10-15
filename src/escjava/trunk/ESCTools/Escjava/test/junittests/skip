@@ -103,3 +103,8 @@ Min.java
 Bug2.java
 ParseImports.java
 ParseImports2.java
+#
+# JDK 1.5 Generic Inner Classes
+#
+IsInitialised.java
+InnerClassGenerics.java
