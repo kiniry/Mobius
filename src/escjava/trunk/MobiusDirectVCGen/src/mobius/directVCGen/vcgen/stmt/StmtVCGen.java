@@ -613,7 +613,7 @@ public class StmtVCGen extends ExpressionVisitor {
       bodypre = (Post) x.body.accept(this, vceBody);
     }
 
-    final QuantVariableRef v = Expression.rvar(Bool.sort);
+    final QuantVariableRef v = Expression.rvar(Logic.sort);
     vce.fPost = new Post(v,
                         Logic.and(Logic.implies(Logic.boolToPred(v), bodypre.getPost()),
                                   Logic.implies(Logic.not(Logic.boolToPred(v)), post)));

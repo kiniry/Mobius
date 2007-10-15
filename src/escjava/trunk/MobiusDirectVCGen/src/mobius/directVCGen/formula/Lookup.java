@@ -201,7 +201,7 @@ public class Lookup {
    */
   public static void addNormalPostcondition(final MethodProperties mp, 
                                             final Term term) {
-    final Post pOld = postconditions.get(mp.fMethod);
+    final Post pOld = postconditions.get(mp.getDecl());
     Post pNew;
     if (pOld == null) {
       if (mp.fResult == null){
@@ -214,7 +214,7 @@ public class Lookup {
     else {
       pNew = Post.and(pOld, term);
     }
-    postconditions.put(mp.fMethod, pNew);
+    postconditions.put(mp.getDecl(), pNew);
   }
  
   
@@ -322,7 +322,7 @@ public class Lookup {
     final List<QuantVariableRef> v = new Vector<QuantVariableRef>();
     final FormalParaDeclVec fpdvec = rd.args;
     v.add(Heap.var);
-    if (Modifiers.isStatic(rd.modifiers)) {
+    if (!Modifiers.isStatic(rd.modifiers)) {
       v.add(Ref.varThis); 
     }
     final FormalParaDecl[] args = fpdvec.toArray();

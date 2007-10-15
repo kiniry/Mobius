@@ -34,6 +34,7 @@ public class VCEntry {
   /** the list of postconditions of the continue if there are labels attached to loops. */
   public final Map<Identifier, Post> lcontpost = new HashMap<Identifier, Post>(); 
 
+  public boolean isBoolExpression = false;
 
   /**
    * The constructor which construct an entry with all the postconditions

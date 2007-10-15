@@ -186,7 +186,7 @@ public class JmlVisitor extends BasicJMLTranslator {
       final Term constraints = Lookup.getConstraint(x.getParent());
       //addToPostcondition(constraints, prop);
       Lookup.addNormalPostcondition(prop, constraints);
-      Lookup.addExceptionalPostcondition(prop.fMethod, constraints);
+      Lookup.addExceptionalPostcondition(prop.getDecl(), constraints);
     }  
     return prop;
   }
@@ -198,8 +198,6 @@ public class JmlVisitor extends BasicJMLTranslator {
   public final Object visitConstructorDecl(final /*@non_null*/ ConstructorDecl x, final Object o) {
     final MethodProperties prop = new MethodProperties(x);
     prop.fResult =  null;
-    
-    prop.fIsConstructor = true;
     visitRoutineDecl(x, prop);
     
  
@@ -207,7 +205,7 @@ public class JmlVisitor extends BasicJMLTranslator {
       final Term initially = (Term) prop.get("initiallyFOL");
       //addToPostcondition(initially, prop);
       Lookup.addNormalPostcondition(prop, initially);
-      Lookup.addExceptionalPostcondition(prop.fMethod, initially);
+      Lookup.addExceptionalPostcondition(prop.getDecl(), initially);
     } 
     return prop;
   }
@@ -456,7 +454,7 @@ public class JmlVisitor extends BasicJMLTranslator {
     switch (x.getTag()) {
       case TagConstants.REQUIRES:
         //addToPrecondition(t, o);
-        Lookup.addPrecondition(prop.fMethod, t);
+        Lookup.addPrecondition(prop.getDecl(), t);
         break;
       case TagConstants.ENSURES:
       case TagConstants.POSTCONDITION:
@@ -478,7 +476,7 @@ public class JmlVisitor extends BasicJMLTranslator {
     final MethodProperties prop = (MethodProperties) o;
     prop.interesting = true;
     
-    final RoutineDecl currentRoutine = prop.fMethod;
+    final RoutineDecl currentRoutine = prop.getDecl();
     final Post allExPosts = Lookup.getExceptionalPostcondition(currentRoutine);
     final QuantVariableRef commonExceptionVar = allExPosts.getRVar();
 
@@ -489,7 +487,7 @@ public class JmlVisitor extends BasicJMLTranslator {
     newExPost = newExPost.subst(newExceptionVar, commonExceptionVar);
     final Term guard = Logic.assignCompat(Heap.var, commonExceptionVar, typeOfException);
     final Post result = new Post (commonExceptionVar, Logic.Safe.implies(guard, newExPost));
-    Lookup.addExceptionalPostcondition(prop.fMethod, result);
+    Lookup.addExceptionalPostcondition(prop.getDecl(), result);
     return null;
   }
 
@@ -500,7 +498,7 @@ public class JmlVisitor extends BasicJMLTranslator {
    */
   public void argsToGhost(final List<AAnnotation> annos, 
                           final Object o) {  
-    final RoutineDecl m = ((MethodProperties) o).fMethod;
+    final RoutineDecl m = ((MethodProperties) o).getDecl();
     
     for (final FormalParaDecl p: m.args.toArray()) {
       final Term t1 = Expression.rvar(p);
@@ -894,7 +892,7 @@ public class JmlVisitor extends BasicJMLTranslator {
     final Term implTerm = Logic.implies(andTerm, invTerm);
     final Term forAllTerm = Logic.forall(vars, implTerm);
     //addToPrecondition(forAllTerm, o);
-    Lookup.addPrecondition(prop.fMethod, forAllTerm);
+    Lookup.addPrecondition(prop.getDecl(), forAllTerm);
   }
 
 
@@ -928,7 +926,7 @@ public class JmlVisitor extends BasicJMLTranslator {
   
   private void invPredToExceptionalPostconditions(Object o) {
     final MethodProperties prop = (MethodProperties) o;
-    Lookup.addExceptionalPostcondition(prop.fMethod, 
+    Lookup.addExceptionalPostcondition(prop.getDecl(), 
                                        invPostPred(o));
   }
   
@@ -985,7 +983,7 @@ public class JmlVisitor extends BasicJMLTranslator {
       final Term forAllTerm = Logic.forall(vars, t);
       //addToPostcondition(forAllTerm, o);
       Lookup.addNormalPostcondition(prop,forAllTerm);
-      Lookup.addExceptionalPostcondition(prop.fMethod, forAllTerm);
+      Lookup.addExceptionalPostcondition(prop.getDecl(), forAllTerm);
     } 
   }
 

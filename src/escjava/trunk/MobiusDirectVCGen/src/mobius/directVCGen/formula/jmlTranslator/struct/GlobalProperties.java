@@ -6,7 +6,6 @@ import java.util.Set;
 
 import javafe.ast.FieldAccess;
 import javafe.ast.Identifier;
-import mobius.directVCGen.formula.Type;
 
 /** Properties that are passed as argument of the visitor. */
 public final class GlobalProperties extends Properties {

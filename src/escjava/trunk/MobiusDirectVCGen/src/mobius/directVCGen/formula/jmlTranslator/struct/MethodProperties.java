@@ -6,15 +6,16 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import mobius.directVCGen.formula.Lookup;
-
+import javafe.ast.ConstructorDecl;
 import javafe.ast.FieldAccess;
 import javafe.ast.RoutineDecl;
+import mobius.directVCGen.formula.Lookup;
 import escjava.sortedProver.Lifter.QuantVariable;
 import escjava.sortedProver.Lifter.QuantVariableRef;
-import escjava.sortedProver.Lifter.Term;
 
-/** Properties that are passed as argument of the visitor. */
+/** 
+ * Properties that are passed as argument of the visitor. 
+ */
 public final class MethodProperties extends ContextProperties {
 
   /** */
@@ -40,10 +41,10 @@ public final class MethodProperties extends ContextProperties {
   public QuantVariableRef fResult;
   
   /** the current method which is inspected. */
-  public  final RoutineDecl fMethod;
+  private  final RoutineDecl fMethod;
   
   /** tells whether or not we are inspecting a constructor. */
-  public  boolean fIsConstructor;
+  public final boolean fIsConstructor;
   
   /** the routine is a JML \helper routine. See JML reference */
   public  boolean fIsHelper;
@@ -57,25 +58,27 @@ public final class MethodProperties extends ContextProperties {
 
   /** the local variables. */
   public LinkedList<List<QuantVariableRef>> fLocalVars = new LinkedList<List<QuantVariableRef>> ();
+  
   /** the arguments of the method. */
   public LinkedList<QuantVariableRef> fArgs;
   
   /**
    * initialize the properties with default values.
+   * @param met the method which is inspected
    */
-  public MethodProperties(RoutineDecl met) {
-    initProperties(); 
+  public MethodProperties(final RoutineDecl met) { 
     validStr.addAll(super.getValidStr());
     fMethod = met;
     fArgs = new LinkedList<QuantVariableRef>(); 
     fArgs.addAll(Lookup.mkArguments(met));
-
+    initProperties();
+    fIsConstructor = fMethod instanceof ConstructorDecl;
   }
   
 
   
   private void initProperties() {
-   
+    
     put("freshSet", new HashSet<QuantVariableRef>());
     put("subsetCheckingSetConstraints", new HashSet<FieldAccess>());
     put("subSetCheckingSetInitially", new HashSet<FieldAccess>());
@@ -89,6 +92,10 @@ public final class MethodProperties extends ContextProperties {
 
   public List<String> getValidStr() {
     return validStr;
+  }
+  
+  public RoutineDecl getDecl() {
+    return fMethod;
   }
   
   public List<QuantVariableRef> getLocalVars() {

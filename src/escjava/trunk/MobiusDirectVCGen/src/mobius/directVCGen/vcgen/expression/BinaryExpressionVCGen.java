@@ -10,12 +10,10 @@ import mobius.directVCGen.formula.Bool;
 import mobius.directVCGen.formula.Expression;
 import mobius.directVCGen.formula.Heap;
 import mobius.directVCGen.formula.Logic;
-import mobius.directVCGen.formula.Lookup;
 import mobius.directVCGen.formula.Num;
 import mobius.directVCGen.formula.Ref;
 import mobius.directVCGen.formula.Type;
 import mobius.directVCGen.formula.Util;
-import mobius.directVCGen.vcgen.stmt.StmtVCGen;
 import mobius.directVCGen.vcgen.struct.Post;
 import mobius.directVCGen.vcgen.struct.VCEntry;
 import escjava.ast.TagConstants;
@@ -41,28 +39,68 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn {
     Term formula;
     switch (tag) {
       case TagConstants.EQ:
-        formula = Bool.equals(lvar, rvar);
+        if (post.isBoolExpression) {
+          formula = Bool.equals(lvar, rvar);
+        }
+        else {
+          formula = Logic.equals(lvar, rvar);
+        }
         break;
       case TagConstants.OR:
-        formula = Bool.or(lvar, rvar);
+        if (post.isBoolExpression) {
+          formula = Bool.or(lvar, rvar);
+        }
+        else {
+          formula = Logic.or(lvar, rvar);
+        }
         break;
       case TagConstants.AND:
-        formula = Bool.and(lvar, rvar);
+        if (post.isBoolExpression) {
+          formula = Bool.and(lvar, rvar);
+        }
+        else {
+          formula = Logic.and(lvar, rvar);
+        }
         break;
       case TagConstants.NE:
-        formula = Bool.notEquals(lvar, rvar);
+        if (post.isBoolExpression) {
+          formula = Bool.notEquals(lvar, rvar);
+        }
+        else {
+          formula = Logic.not(Logic.equals(lvar, rvar));
+        }
         break;
       case TagConstants.GE:
-        formula = Bool.ge(lvar, rvar);
+        if (post.isBoolExpression) {
+          formula = Bool.ge(lvar, rvar);
+        }
+        else {
+          formula = Logic.ge(lvar, rvar);
+        }
         break;
       case TagConstants.GT:
-        formula = Bool.gt(lvar, rvar);
+        if (post.isBoolExpression) {
+          formula = Bool.gt(lvar, rvar);
+        }
+        else {
+          formula = Logic.gt(lvar, rvar);
+        }
         break;
       case TagConstants.LE:
-        formula = Bool.le(lvar, rvar);
+        if (post.isBoolExpression) {
+          formula = Bool.le(lvar, rvar);
+        }
+        else {
+          formula = Logic.le(lvar, rvar);
+        }
         break;
       case TagConstants.LT:
-        formula = Bool.lt(lvar, rvar);
+        if (post.isBoolExpression) {
+          formula = Bool.lt(lvar, rvar);
+        }
+        else {
+          formula = Bool.lt(lvar, rvar);
+        }
         break;
       case TagConstants.BITOR:
         formula = Expression.bitor(lvar, rvar);

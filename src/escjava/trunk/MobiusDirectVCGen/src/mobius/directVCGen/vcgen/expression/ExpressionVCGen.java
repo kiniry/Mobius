@@ -158,7 +158,7 @@ public class ExpressionVCGen extends BinaryExpressionVCGen {
 
   public Post condExpr(final CondExpr x, final VCEntry e) {
     // of the form (cond ? st1 : st2 )
-    final QuantVariableRef cond = Expression.rvar(Bool.sort);
+    final QuantVariableRef cond = Expression.rvar(Logic.sort);
 
     final QuantVariableRef st1 = Expression.rvar(Type.getSort(x.thn));
     Post pthen = new Post(st1, e.fPost.substWith(st1));
