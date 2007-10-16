@@ -11,7 +11,7 @@ public class BufferedInputStream extends java.io.FilterInputStream {
 
     // FIELDS
     protected int markpos;
-    protected byte[] buf;
+    protected volatile byte[] buf;
     protected int count;
     protected int marklimit;
     protected int pos;

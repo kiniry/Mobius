@@ -45,6 +45,7 @@ import javafe.genericfile.GenericFile;
 import javafe.genericfile.NormalGenericFile;
 import javafe.parser.Lex;
 import javafe.parser.ParseType;
+import javafe.util.ErrorSet;
 import javafe.util.Location;
 
 import org.apache.bcel.Constants;
@@ -208,6 +209,9 @@ class BCELReader extends Reader {
 
 		// Make the type declaration
 		TypeDecl typeDecl = makeTypeDecl();
+		
+		// Remove extra constructor used for inner classes
+		removeExtraArg(typeDecl);
 
 		// Make the compilation unit
 		TypeDeclVec types = TypeDeclVec.make(new TypeDecl[] { typeDecl });
@@ -223,10 +227,13 @@ class BCELReader extends Reader {
 	 * Construct the type declaration
 	 * 
 	 * @throws ClassNotFoundException
+	 * @throws IOException 
 	 * @throws ClassFormatError
 	 */
-	// @ensures typeDecl.isBinary()
-	protected TypeDecl makeTypeDecl() throws ClassNotFoundException {
+	/*@ protected normal behavior: 
+	  @ ensures \result.isBinary();
+	  @*/
+	protected TypeDecl makeTypeDecl() throws IOException, ClassNotFoundException {
 
 		constantPool = javaClass.getConstantPool();
 		// N.B. This gets the class index not the class name index
@@ -240,18 +247,28 @@ class BCELReader extends Reader {
 		}
 
 		// Read interface names
-		JavaClass[] interfaces = javaClass.getInterfaces();
-		int numberOfInterfaces = interfaces.length;
-		TypeName[] interfaceTypeNames = new TypeName[interfaces.length];
-	
-		for (int interfaceLoopVar = 0; interfaceLoopVar < numberOfInterfaces; interfaceLoopVar++) {
-			JavaClass interfaceInst = interfaces[interfaceLoopVar];
-			String interfaceName = interfaceInst.getClassName();
-			interfaceTypeNames[interfaceLoopVar] = getCompoundTypeName(interfaceName);
-		}
+		TypeNameVec interfaceVector = null;
+		JavaClass[] interfaces;
+		try {
+			interfaces = javaClass.getInterfaces();
+			int numberOfInterfaces = interfaces.length;
+			TypeName[] interfaceTypeNames = new TypeName[interfaces.length];
 		
-		TypeNameVec interfaceVector =
-		    TypeNameVec.make(interfaceTypeNames);
+			for (int interfaceLoopVar = 0; interfaceLoopVar < numberOfInterfaces; interfaceLoopVar++) {
+				JavaClass interfaceInst = interfaces[interfaceLoopVar];
+				String interfaceName = interfaceInst.getClassName();
+				interfaceTypeNames[interfaceLoopVar] = getCompoundTypeName(interfaceName);
+			}
+			
+			interfaceVector =
+			    TypeNameVec.make(interfaceTypeNames);
+			
+		} catch (ClassNotFoundException e) {
+			// Missing classpath
+			ErrorSet.fatal(classLocation, "Incomplete classpath: " + e.getLocalizedMessage() + 
+					" CLASSPATH is " + System.getenv("CLASSPATH")+ ":"+ System.getenv("ESC_CLASSPATH"));
+		}
+		 
 		
 		Method[] methods = javaClass.getMethods();
 		readMethods(methods);
@@ -284,8 +301,6 @@ class BCELReader extends Reader {
 					super_class);
 		}
 		typeDecl.specOnly = true;
-		
-		removeExtraArg(typeDecl);
 
 		return typeDecl;
 	}
@@ -307,7 +322,6 @@ class BCELReader extends Reader {
 			String fieldName = field.getName();
 			javafe.ast.Type fieldType = getFieldType(field);
 
-			// FIXME investigate access flags
 			int fieldModifiers = field.getAccessFlags()
 					& ~Constants.ACC_SYNTHETIC & ~Constants.ACC_ANNOTATION;
 
@@ -486,8 +500,9 @@ class BCELReader extends Reader {
 	 * Read the class attributes
 	 * 
 	 * @throws ClassNotFoundException
+	 * @throws IOException 
 	 */
-	protected void readClassAttributes() throws ClassNotFoundException {
+	protected void readClassAttributes() throws ClassNotFoundException, IOException {
 
 		Attribute[] classAttributes = javaClass.getAttributes();
 
@@ -521,9 +536,10 @@ class BCELReader extends Reader {
 	 * @param innerClass
 	 *            BCEL representation of the inner class
 	 * @throws ClassNotFoundException
+	 * @throws IOException 
 	 */
 	protected void addInnerClass(InnerClass innerClass)
-			throws ClassNotFoundException {
+			throws ClassNotFoundException, IOException {
 
 		// Get inner class name
 		int innerNameIndex = innerClass.getInnerNameIndex();
@@ -553,18 +569,31 @@ class BCELReader extends Reader {
 						.getSibling(innerClassNamePath);
 				BCELReader innerClassReader = readInnerClass(sibling, true,
 						innerClassIndex);
-
+				
 				TypeDecl innerClassTypeDecl = innerClassReader.makeTypeDecl();
 				
 				// Set access modifier flags for inner class
-				innerClassTypeDecl.modifiers = innerClass.getInnerAccessFlags();
+				int innerAccessFlags = innerClass.getInnerAccessFlags();
+				innerClassTypeDecl.modifiers = innerAccessFlags;
 				
-				if (!innerClassReader.isSyntheticClass()) {
+				// Only add inner classes that are not synthetic and not anonymous
+				if (!innerClassReader.isSyntheticClass() 
+						&& !isAnonymous(innerClassName)) {
 					classMembers.addElement(innerClassTypeDecl);
 				}
 			}
 		}
 
+	}
+
+	/**
+	 * Indicates if this class name begins with a digit
+	 * 
+	 * @param innerClassName
+	 * @return True if anonymous
+	 */
+	protected /*@ pure @*/ boolean isAnonymous(/*@ non_null @*/ String innerClassName) {
+		return Character.isDigit(innerClassName.charAt(0));
 	}
 
 	/**
@@ -656,61 +685,58 @@ class BCELReader extends Reader {
 		switch (bcelFieldType.getType()) {
 		case Constants.T_BOOLEAN:
 			typeTag = TagConstants.BOOLEANTYPE;
+			astType = JavafePrimitiveType.make(typeTag, classLocation);
 			break;
 
 		case Constants.T_BYTE:
 			typeTag = TagConstants.BYTETYPE;
+			astType = JavafePrimitiveType.make(typeTag, classLocation);
 			break;
 
 		case Constants.T_INT:
 			typeTag = TagConstants.INTTYPE;
+			astType = JavafePrimitiveType.make(typeTag, classLocation);
 			break;
 
 		case Constants.T_LONG:
 			typeTag = TagConstants.LONGTYPE;
+			astType = JavafePrimitiveType.make(typeTag, classLocation);
 			break;
 
 		case Constants.T_VOID:
 			typeTag = TagConstants.VOIDTYPE;
+			astType = JavafePrimitiveType.make(typeTag, classLocation);
 			break;
 
 		case Constants.T_DOUBLE:
 			typeTag = TagConstants.DOUBLETYPE;
+			astType = JavafePrimitiveType.make(typeTag, classLocation);
 			break;
 
 		case Constants.T_ARRAY:
 			typeTag = TagConstants.ARRAYTYPE;
+			astType = DescriptorParser.parseField(bcelFieldType.getSignature());
 			break;
 
 		case Constants.T_FLOAT:
 			typeTag = TagConstants.FLOATTYPE;
+			astType = JavafePrimitiveType.make(typeTag, classLocation);
 			break;
 
 		case Constants.T_SHORT:
 			typeTag = TagConstants.SHORTTYPE;
+			astType = JavafePrimitiveType.make(typeTag, classLocation);
 			break;
 			
 		case Constants.T_CHAR:
 			typeTag = TagConstants.CHARTYPE;
+			astType = JavafePrimitiveType.make(typeTag, classLocation);
 			break;
 			
 		// Non primitive types
 		default:
-			typeTag = TagConstants.NULLTYPE;
-		}
-
-		// Non primitive types need to be parsed using full type name
-		switch (typeTag) {
-
-		case TagConstants.ARRAYTYPE:
-		case TagConstants.NULLTYPE:
-			String typeSignature = bcelFieldType.getSignature();
-			astType = DescriptorParser.parseField(typeSignature);
+			astType = DescriptorParser.parseField(bcelFieldType.getSignature());
 			break;
-
-		// Primitive types
-		default:
-			astType = JavafePrimitiveType.make(typeTag, classLocation);
 		}
 
 		return astType;
@@ -744,8 +770,6 @@ class BCELReader extends Reader {
 		String methodSignature = method.getSignature();
 
 		// Translate access modifier flags from BCEL
-		// FIXME investigate if transient and volatile bits get set
-		// for non-synthetic methods
 		int accessModifiers = method.getAccessFlags()
 				& ~Constants.ACC_TRANSIENT & ~Constants.ACC_VOLATILE
 				& ~Constants.ACC_ANNOTATION;
@@ -786,7 +810,7 @@ class BCELReader extends Reader {
 	protected TypeName[] typeNames;
 
 	/**
-	 * The class members of the class being parsed. Intialized by set_field,
+	 * The class members of the class being parsed. Initialized by set_field,
 	 * set_method, and set_class_attributes.
 	 */
 	protected /*@ non_null*/ TypeDeclElemVec classMembers = TypeDeclElemVec.make(0);
@@ -972,6 +996,9 @@ class BCELReader extends Reader {
 	/**
 	 * Read and parse a binary class file
 	 */
+	/*@ public normal behavior
+	  @   ensures \result != null
+	  @*/
 	public CompilationUnit read(/*@non_null*/ GenericFile target, boolean avoidSpec) {
 
 		this.classLocation = Location.createWholeFileLoc(target);
