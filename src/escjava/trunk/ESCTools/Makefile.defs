@@ -207,7 +207,7 @@ export ESCJAVA_CLASSPATH=$(ESC_CLASSPATH)
 
 ## The front-end for Escjava that should be used for testing.
 export ESCJ_ROOT = ${ESCTOOLS_ROOT}/release-files
-export ESCJ = ${ESCJ_ROOT}/escjava2 -nowarn Modifies
+export ESCJ = ${ESCJ_ROOT}/escj -nowarn Modifies
 
 ################################################################################
 ## Pertinent locations for building a release
