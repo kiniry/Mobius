@@ -151,7 +151,7 @@ public final class MethodVisitor extends DirectVCGen {
     final Post normPost;
     final Post excpPost;
     Map<QuantVariableRef, Term> variables = VarCorrDecoration.inst.get(fMeth);
-    
+    Expression.fVariables = variables;
     if (DirectVCGen.fByteCodeTrick) {
       final String name = Util.getMethodName(fMeth);
       LinkedList<Term> args = new LinkedList<Term> ();
@@ -209,12 +209,7 @@ public final class MethodVisitor extends DirectVCGen {
       
       for (Term vars: args) {
         final QuantVariableRef qvr = (QuantVariableRef) vars;
-        if (qvr.equals(Heap.var)) {
-          t = t.subst(Expression.old(qvr), qvr);
-        }
-        else {
-          t = t.subst(Expression.old(qvr), variables.get(qvr));
-        }
+        t = t.subst(Expression.old(qvr), variables.get(qvr));
       }
       fVcs.add(t);
     }
@@ -234,14 +229,18 @@ public final class MethodVisitor extends DirectVCGen {
     
     for (Term t: oldvcs) {
       for (QuantVariableRef qvr: qvs) {
-        if (qvr.equals(Heap.var)) {
-          t = Logic.forall(qvs, t);
-          t = Logic.forall(Heap.lvvar, t);
-        }
-        else {
+//        if (qvr.equals(Heap.var)) {
+//          t = Logic.forall(qvr, t);
+//          t = Logic.forall(Heap.lvvar, t);
+//        }
+//        else {
           t = t.subst(qvr, variables.get(qvr));
-        }
+//        }
       }
+      t = t.subst(Heap.varPre, Heap.var);
+      t = t.subst(Heap.lvvarPre, Heap.lvvar);
+      t = Logic.forall(Heap.var, t);
+      t = Logic.forall(Heap.lvvar, t);
       fVcs.add(t);
       //fVcs.add(Logic.forall(qvs, t));
     }

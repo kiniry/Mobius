@@ -1,14 +1,9 @@
 package mobius.directVCGen.bicolano;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Vector;
 
-import javafe.ast.FormalParaDecl;
-import javafe.ast.FormalParaDeclVec;
 import javafe.ast.RoutineDecl;
-import javafe.ast.TypeModifierPragma;
 import mobius.bico.Util.Stream;
 import mobius.bico.dico.MethodHandler;
 import mobius.bico.executors.ABasicExecutor;
@@ -24,7 +19,6 @@ import org.apache.bcel.generic.ClassGen;
 import org.apache.bcel.generic.MethodGen;
 import org.apache.bcel.generic.Type;
 
-import escjava.ast.TagConstants;
 import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
 

@@ -44,6 +44,7 @@ import javafe.ast.VarInit;
 import javafe.ast.WhileStmt;
 import mobius.directVCGen.formula.Bool;
 import mobius.directVCGen.formula.Expression;
+import mobius.directVCGen.formula.Heap;
 import mobius.directVCGen.formula.Logic;
 import mobius.directVCGen.formula.Lookup;
 import mobius.directVCGen.formula.Ref;
@@ -228,7 +229,7 @@ public class StmtVCGen extends ExpressionVisitor {
   public /*@non_null*/ Object visitWhileStmt(final /*@non_null*/ WhileStmt x, final Object o) {
     final VCEntry vce = (VCEntry)o;
     vce.fPost = treatAnnot(vce, fAnnot.getAnnotPost(x));
-    final Term inv = Util.getAssertion(fMeth, fAnnot.getInvariant(x));
+    final Term inv = Util.getAssertion(fMeth, fAnnot.getInvariant(x), fVariables);
 
     
     final Term post = vce.fPost.getPost();
@@ -380,7 +381,7 @@ public class StmtVCGen extends ExpressionVisitor {
     vce.fPost = treatAnnot(vce, fAnnot.getAnnotPost(x));
     
     if (s instanceof WhileStmt || s instanceof DoStmt || s instanceof ForStmt) {
-      final Term t =  Util.getAssertion(fMeth, fAnnot.getInvariant(s));
+      final Term t =  Util.getAssertion(fMeth, fAnnot.getInvariant(s), fVariables);
       vce = mkEntryLoopLabel(x.label, vce, new Post(t));
     }
     vce.fPost = (Post) x.stmt.accept(fExprVisitor, vce);
@@ -508,15 +509,17 @@ public class StmtVCGen extends ExpressionVisitor {
     final VCEntry vce = (VCEntry) o;
     vce.fPost = treatAnnot(vce, fAnnot.getAnnotPost(x));
     final VarInit init = x.decl.init;
-    final QuantVariable qv = Expression.var(x.decl);
+    //final QuantVariable qv = Expression.var(x.decl);
     if (init != null) {
       // the init value replaces the quantification
-      final QuantVariableRef qvr = Expression.rvar(qv);
-      vce.fPost = new Post(qvr, vce.fPost);
+      final QuantVariableRef val = Expression.rvar(x.decl);
+      final Term var = Expression.rvar(x.decl);
+      vce.fPost = new Post(val, vce.fPost.subst(Heap.lvvar, 
+                                                Expression.lvUpd(Heap.lvvar, var, val)));
       vce.fPost = (Post)init.accept(this, vce);
       if (init instanceof ArrayInit) {
         // FIXME should add the array new too
-        vce.fPost = new Post(Logic.forall(qv, vce.fPost.getPost()));
+        //vce.fPost = new Post(Logic.forall(qv, vce.fPost.getPost()));
       }
 
     }
@@ -529,7 +532,7 @@ public class StmtVCGen extends ExpressionVisitor {
       
     }
     // we must anyway declare it for every vc:
-    addVarDecl(qv);
+    //addVarDecl(qv);
     return treatAnnot(vce, fAnnot.getAnnotPre(x));
   }
 
@@ -614,7 +617,7 @@ public class StmtVCGen extends ExpressionVisitor {
 
     final VCEntry vce = (VCEntry)o;
     vce.fPost = treatAnnot(vce, fAnnot.getAnnotPost(x));
-    final Term inv =  Util.getAssertion(fMeth, fAnnot.getInvariant(x));
+    final Term inv =  Util.getAssertion(fMeth, fAnnot.getInvariant(x), fVariables);
     final Term post = vce.fPost.getPost();
     final Post pinv = new Post(inv);
     final VCEntry vceBody = mkEntryWhile(vce, pinv);
@@ -635,14 +638,14 @@ public class StmtVCGen extends ExpressionVisitor {
                                   Logic.implies(Logic.not(v), post)));
 
     final Term aux = ((Post) x.test.accept(fExprVisitor, vce)).getPost();
-    Term vc = Util.mkNewEnv(Logic.implies(inv, aux));
+    Term vc = Logic.implies(inv, aux);
     // we add the for declared variables
-    for (int i = x.forInit.size() - 1; i >= 0; i--) {
-      final Stmt s = (Stmt) x.forInit.elementAt(i);
-      VCEntry newEntry = new VCEntry(vce);
-      newEntry.fPost = new Post(vc);
-      vc = ((Post)s.accept(this, newEntry)).getPost();
-    }
+//    for (int i = x.forInit.size() - 1; i >= 0; i--) {
+//      final Stmt s = (Stmt) x.forInit.elementAt(i);
+//      final VCEntry newEntry = new VCEntry(vce);
+//      newEntry.fPost = new Post(vc);
+//      vc = //((Post)s.accept(this, newEntry)).getPost();
+//    }
     fVcs.add(Util.mkNewEnv(vc));
 
     vce.fPost = pinv;

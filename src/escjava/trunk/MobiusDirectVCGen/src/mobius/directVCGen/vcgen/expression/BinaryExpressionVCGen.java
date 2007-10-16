@@ -189,6 +189,7 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn {
    */
   public Post assign(final BinaryExpr expr, final VCEntry entry) {
     Post pre = assign(expr.left, entry);
+    entry.fPost = pre;
     pre = getPre(expr.right, entry);
     return pre;
   }
@@ -207,8 +208,12 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn {
     Post pre;
     if (left instanceof VariableAccess) {
       final VariableAccess va = (VariableAccess) left;
-      final QuantVariableRef var = Expression.rvar(va.decl);
-      pre = new Post(val, entry.fPost.subst(var, val));
+      final Term var = Expression.realvar(va.decl);
+      
+      pre = new Post(val, 
+                     entry.fPost.subst(Heap.lvvar, 
+                                       Expression.lvUpd(Heap.lvvar, var, val)));
+                                            
     }
     else if (left instanceof FieldAccess) { 
       final FieldAccess field = (FieldAccess) left;
@@ -225,7 +230,7 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn {
                                                         Heap.store(Heap.var, 
                                                                    obj, f.qvar, val)));
           pre = getPre(od, entry);
-          entry.fPost = new Post(val, pre);
+          pre = new Post(val, pre);
           break;
         }
         case TagConstants.SUPEROBJECTDESIGNATOR:
@@ -238,7 +243,6 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn {
           //entry.post = pre;
           //pre = getPre(od, entry);
           pre = new Post(val, pre);
-          entry.fPost = pre;
   
           break;
         }

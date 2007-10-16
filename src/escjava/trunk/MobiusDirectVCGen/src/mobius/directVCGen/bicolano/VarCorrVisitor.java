@@ -15,6 +15,7 @@ import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
 
 import mobius.directVCGen.formula.Expression;
+import mobius.directVCGen.formula.Heap;
 import mobius.directVCGen.formula.Ref;
 import mobius.directVCGen.vcgen.ABasicVisitor;
 
@@ -23,7 +24,7 @@ public class VarCorrVisitor extends ABasicVisitor {
     new HashMap<QuantVariableRef, LocalVariableGen>();
   /** the currently treated method. */
   private final MethodGen fMet;
-  
+  final Map<QuantVariableRef, Term> old = new HashMap<QuantVariableRef, Term>();
   
   private VarCorrVisitor(final RoutineDecl decl, 
                             final MethodGen met) {
@@ -31,11 +32,22 @@ public class VarCorrVisitor extends ABasicVisitor {
     fMet = met;
     if (tab.length == 0)
       return;
-    fVariables.put(Ref.varThis, tab[0]);
+    old.put(Ref.varThis, Expression.doLvGet(Ref.sort, Heap.lvvar, 
+                                            tab[0].getIndex()));
     int i = 1;
-    
+    old.put(Heap.varPre, Heap.varPre);
+    old.put(Heap.var, Heap.var);
     for (FormalParaDecl para: decl.args.toArray()) {
-      fVariables.put(Expression.rvar(para), tab[i]);
+      final QuantVariableRef qvr = Expression.rvar(para);
+      final QuantVariableRef oldqvr = Expression.old(qvr);
+      //fVariables.put(Expression.rvar(para), tab[i]);
+      final Term value = 
+        Expression.doLvGet(qvr.getSort(), Heap.lvvar, tab[i].getIndex());
+      final Term oldvalue = 
+        Expression.doLvGet(qvr.getSort(), Heap.lvvarPre, 
+                           tab[i].getIndex());
+      old.put(qvr, value); 
+      old.put(oldqvr, oldvalue);
       i++;
     }
   }
@@ -61,7 +73,7 @@ public class VarCorrVisitor extends ABasicVisitor {
     final VarCorrVisitor vis = new VarCorrVisitor(decl, met);
     decl.accept(vis, null);
     
-    VarCorrDecoration.inst.set(decl, vis.fVariables);
+    VarCorrDecoration.inst.set(decl, vis.fVariables, vis.old);
  
     return VarCorrDecoration.inst.get(decl);
   }

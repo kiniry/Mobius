@@ -1,5 +1,8 @@
 package mobius.directVCGen.formula;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javafe.ast.FieldDecl;
 import javafe.ast.GenericVarDecl;
 import javafe.ast.MethodDecl;
@@ -199,8 +202,20 @@ public final class Expression {
    * @return a variable reference corresponding to the declaration
    */
   public static QuantVariableRef rvar(final GenericVarDecl arg) {
-    return rvar(var(arg));
+    final QuantVariableRef v = rvar(var(arg));
+    return v;
   }
+  
+  public static Term realvar(final GenericVarDecl arg) {
+    final QuantVariableRef v = rvar(var(arg));
+    Term res = fVariables.get(v);
+    if (res == null) {
+      res = v;
+    }
+    return res;
+  }
+  
+  public static Map<QuantVariableRef, Term> fVariables = new HashMap<QuantVariableRef, Term>();
 
   /**
    * Returns a reference over a variable which has the given
@@ -353,5 +368,16 @@ public final class Expression {
   public static QuantVariableRef getResultRVar(final MethodDecl meth) {
     return rvar(Expression.result, Type.getReturnType(meth));
   }
-
+  public static Term doLvGet(Sort s, QuantVariableRef lv, int index) {
+    final Term idx = Expression.rvar(index + "%N", Num.sortInt);
+    return Expression.sym("do_lvget", s, new Term[] {lv, idx});
+  }
+  public static Term lvUpd(QuantVariableRef lv,
+                           Term var, Term val) {
+    final Term idx = ((FnTerm)var).args[1];
+    final Term upd = Expression.sym("LocalVar.update", Heap.lvvar.getSort(), 
+                   new Term[] {lv, idx, Heap.sortToValue(val)});
+    //(LocalVar.update lv1 2%N (Num (I (MDom.Int.const 1))))
+    return upd;
+  }
 }

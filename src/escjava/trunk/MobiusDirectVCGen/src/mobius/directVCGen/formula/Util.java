@@ -1,6 +1,7 @@
 package mobius.directVCGen.formula;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
 import mobius.directVCGen.formula.annotation.AAnnotation;
@@ -111,11 +112,18 @@ public class Util {
   }
   
   public static Term getAssertion(RoutineDecl meth, 
-                                  AAnnotation annot) {
+                                  AAnnotation annot, 
+                                  Map<QuantVariableRef, Term> variables) {
     final Term res;
     if (DirectVCGen.fByteCodeTrick) {
       final String methname = Util.getMethodName(meth);
-      final Term[] tab = annot.fArgs.toArray(new Term [annot.fArgs.size()]);
+      final Term[] tab = new Term[annot.fArgs.size()];
+      int i = 0;
+      for (QuantVariableRef qvr: annot.fArgs) {
+        tab[i] = variables.get(qvr);
+        i++;
+      }
+      
       res = Expression.sym(methname + ".mk_" + annot.fName, tab);
     }
     else {
@@ -174,17 +182,18 @@ public class Util {
     return Util.mkNewEnv(heap,
              Logic.forall(e,
                           Logic.implies(Heap.newObject(Heap.var, type, heap, e),
-                                        p.substWith(e))));
+                                        p.substWith(e).subst(Heap.var, heap))));
                                         //.subst(Heap.var, heap))));
   }
-  public static Term mkNewEnv(QuantVariableRef newHeap, Term post) {
+  public static Term mkNewEnv(QuantVariableRef newHeap, final Term post) {
     final QuantVariableRef newLv = Heap.newLvVar();
-    Term lvt = Logic.forall(newLv, post.subst(Heap.lvvar, newLv));
-    return Logic.forall(newHeap, lvt.subst(Heap.var, newHeap));
+    final Term h = Logic.forall(newHeap, post);
+    final Term lvt = Logic.forall(newLv, h.subst(Heap.lvvar, newLv));
+    return lvt;
   }
   public static Term mkNewEnv(Term post) {
     final QuantVariableRef heap = Heap.newVar();
-    return mkNewEnv(heap, post);
+    return mkNewEnv(heap, post.subst(Heap.var, heap));
   }
   public static Term mkNewEnv(Post post) {
     return mkNewEnv(post.getPost());

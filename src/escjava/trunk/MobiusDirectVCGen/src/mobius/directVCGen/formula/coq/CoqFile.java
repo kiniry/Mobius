@@ -60,7 +60,7 @@ public class CoqFile {
   public void writeProof(final STerm term) {
     fOut.println("Lemma l:\n" + term + ".");
     fOut.println("Proof.");
-    fOut.println("   intros; repeat (split; intros); cleanstart.\n\nQed.");
+    fOut.println("   nintros; repeat (split; nintros); cleanstart.\n\nQed.");
   }
 
   /**

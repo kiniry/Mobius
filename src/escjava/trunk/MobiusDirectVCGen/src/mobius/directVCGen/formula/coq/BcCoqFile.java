@@ -30,7 +30,7 @@ public class BcCoqFile extends CoqFile {
                                     classname + "Annotations." + meth + ".spec).");
     out.println("Proof with solve.");
     out.println("   prettyfy.");
-    out.println("   intros; repeat (split; intros); cleanstart.\n");
+    out.println("   nintros; repeat (split; nintros); cleanstart.\n");
     out.println("Qed.");
   }
 }

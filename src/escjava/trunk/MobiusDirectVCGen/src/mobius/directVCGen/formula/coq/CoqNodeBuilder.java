@@ -427,6 +427,9 @@ public class CoqNodeBuilder extends EscNodeBuilder {
     if (fn.name.startsWith("do_lvget")) {
       return new CValue(fn.name, args);
     }
+    if (fn.name.startsWith("LocalVar.update")) {
+      return new CRef(fn.name, args);
+    }
     throw new IllegalArgumentException("Unknown symbol: " + fn);
   }
 

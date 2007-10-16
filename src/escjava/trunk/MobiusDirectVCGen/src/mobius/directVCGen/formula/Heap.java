@@ -19,6 +19,7 @@ public final class Heap {
   public static final QuantVariableRef var = Expression.rvar("heap", sort);
 
   public static final QuantVariableRef lvvar = Expression.rvar("lv", Ref.sort);
+  public static final QuantVariableRef lvvarPre = Expression.old(lvvar);
 
   /** the variable representing the heap in the prestate. */
   public static final QuantVariableRef varPre = Expression.old(var);

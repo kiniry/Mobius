@@ -291,7 +291,8 @@ public class Lookup {
     if (fPreArgs.isEmpty()) {
       for (RoutineDecl rd: preconditions.keySet()) {
         final List<QuantVariableRef> args = mkArguments(rd);
-        final LinkedList<QuantVariableRef> argsWithoutHeap = new LinkedList<QuantVariableRef>();
+        final LinkedList<QuantVariableRef> argsWithoutHeap = 
+          new LinkedList<QuantVariableRef>();
         argsWithoutHeap.addAll(args);
         argsWithoutHeap.removeFirst();
         fPreArgs.put(rd, args);

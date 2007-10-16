@@ -135,14 +135,15 @@ public final class AnnotationVisitor extends ABasicVisitor {
     vars += olhname;
     
     // now the variables
-    int varcount = 0;
+    int varcount = 1;
     var = iter.next();
+    
     while (!var.equals(Heap.var)) {
-      varcount++;
       final String vname = Formula.generateFormulas(var).toString();
       lets += "let " + vname + " := (do_lvget (fst s0) " + varcount + "%N) in ";
       vars += " " + vname;
       var = iter.next();
+      varcount++;
     }  
     lets += "\n";
     
@@ -155,10 +156,17 @@ public final class AnnotationVisitor extends ABasicVisitor {
     varcount = 0;
     while (iter.hasNext()) {
       var = iter.next();
+      if (var.equals(Ref.varThis)) {
+        final String vname = Formula.generateFormulas(var).toString();
+        lets += "let " + vname + " := (do_lvget (snd s) " + varcount + "%N) in \n";
+        vars += " " + vname;
+      }
+      else {
+        final String vname = Formula.generateFormulas(var).toString();
+        lets += "let " + vname + " := (do_lvget (snd s) " + varcount + "%N) in \n";
+        vars += " " + vname;
+      }
       varcount++;
-      final String vname = Formula.generateFormulas(var).toString();
-      lets += "let " + vname + " := (do_lvget (snd s) " + varcount + "%N) in \n";
-      vars += " " + vname;
     }
     
     fOut.println("Definition " + annot.fName + " (s0:InitState) (s:LocalState): list Prop := ");

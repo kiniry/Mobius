@@ -143,6 +143,7 @@ public class ExpressionVisitor extends ABasicVisitor {
       case TagConstants.INTLIT:
         //-2^31 <= z < 2^31 
         val = Num.value((Integer)expr.value);
+//        term = result.substWith(val);
         term = Logic.implies (Logic.and(Logic.le(intMin, val), Logic.le(val, intMax)),
                               result.substWith(val));
         break;
@@ -225,7 +226,7 @@ public class ExpressionVisitor extends ABasicVisitor {
   @Override
   public /*@non_null*/ Object visitThisExpr(final /*@non_null*/ ThisExpr x, final Object o) {
     final VCEntry vce = (VCEntry) o;
-    return new Post(vce.fPost.substWith(Ref.varThis)); // variable particuliere
+    return new Post(vce.fPost.substWith(Expression.fVariables.get(Ref.varThis))); // variable particuliere
   }
 
   /**
@@ -267,7 +268,7 @@ public class ExpressionVisitor extends ABasicVisitor {
   @Override
   public Object visitVariableAccess(final VariableAccess m, final Object o) {
     final VCEntry res = (VCEntry) o;
-    final QuantVariableRef v = Expression.rvar(m.decl);
+    final Term v = Expression.realvar(m.decl);
     return  new Post(res.fPost.substWith(v));
   }
 
