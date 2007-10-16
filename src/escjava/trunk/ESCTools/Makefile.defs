@@ -202,7 +202,7 @@ export MOCHA_LIB = ${JAR_FILES}/mochalib.jar
 
 ## This is the path needed to *run* Escjava.
 export ESC_CLASSPATH = \
-	${JAVAFE_CLASSFILES}:${ESCJAVA_CLASSFILES}:${ESCTOOLS_ROOT}/Utils:${MOCHA_LIB}:${BCEL_LIB}
+	${JAVAFE_CLASSFILES}:${ESCJAVA_CLASSFILES}:${ESCTOOLS_ROOT}/Utils:${MOCHA_LIB}:${BCEL_LIB}:${JUNIT_LIB}:${ANT_LIB}:${XMLRPC_LIB}
 export ESCJAVA_CLASSPATH=$(ESC_CLASSPATH)
 
 ## The front-end for Escjava that should be used for testing.
