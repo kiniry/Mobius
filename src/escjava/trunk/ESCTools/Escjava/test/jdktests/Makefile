@@ -1,6 +1,5 @@
 # $Id$
-
-# Modified 2007, Mobius Project, Systems Research Group, University College Dublin
+# Modified 2007, Mobius Project, University College Dublin
 
 export TOP = ../../..
 include ${TOP}/Makefile.defs

@@ -16,6 +16,14 @@ import java.util.Enumeration;
 
 public class PrepTypeDeclaration {
 
+	public static final int INTERFACE_MODIFIERS = Modifiers.ACC_PUBLIC
+					| Modifiers.ACC_FINAL | Modifiers.ACC_STATIC;
+
+	public static final int ALLOWED_MODIFIERS = Modifiers.ACCESS_MODIFIERS | Modifiers.ACC_FINAL
+							| Modifiers.ACC_STATIC | Modifiers.ACC_TRANSIENT
+							| Modifiers.ACC_ENUM
+							| Modifiers.ACC_VOLATILE;
+
 	/** A (possibly extended) instance of PrepTypeDeclaration. */
 	/*@spec_public */protected static PrepTypeDeclaration inst;
 
@@ -538,19 +546,15 @@ public class PrepTypeDeclaration {
 					"Inner classes may not declare static members, unless they are"
 							+ " compile-time constant fields");
 
-		checkModifiers(x.modifiers, inInterface ? Modifiers.ACC_PUBLIC
-				| Modifiers.ACC_FINAL | Modifiers.ACC_STATIC
-				: Modifiers.ACCESS_MODIFIERS | Modifiers.ACC_FINAL
-						| Modifiers.ACC_STATIC | Modifiers.ACC_TRANSIENT
-						| Modifiers.ACC_VOLATILE, x.locId,
+		checkModifiers(x.modifiers, inInterface ? INTERFACE_MODIFIERS
+				: ALLOWED_MODIFIERS, x.locId,
 				inInterface ? "interface field" : "field");
 
 		// If in an interface, field declaration is implicitly
 		// public static final
 
 		if (inInterface)
-			x.modifiers |= Modifiers.ACC_PUBLIC | Modifiers.ACC_FINAL
-					| Modifiers.ACC_STATIC;
+			x.modifiers |= INTERFACE_MODIFIERS;
 
 		if (Modifiers.isFinal(x.modifiers) && Modifiers.isVolatile(x.modifiers))
 			ErrorSet.error(x.locId, "final fields cannot be volatile");

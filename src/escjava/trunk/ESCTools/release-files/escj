@@ -3,7 +3,7 @@
 # Copyright 2001, Compaq Computer Corporation
 # Copyright 2003 University of Nijmegen
 # Copyright 2003-2005 David R. Cok, P.Chalin
-# Modified 2007, Mobius Project, Systems Research Group, University College Dublin
+# Modified 2007, Mobius Project, University College Dublin
 
 ############################################################################
 ## Required variables:
@@ -226,7 +226,7 @@ fi
 ## release
 if [ -z "$ESC_CLASSPATH" ]; then
     if [ $VCSVER ]; then
-	ESC_CLASSPATH=${ESCTOOLS_ROOT}/Escjava/classfiles:${ESCTOOLS_ROOT}/Javafe/classfiles:${ESCTOOLS_ROOT}/Utils:${XMLRPC_LIB}:${BCEL_LIB}:{ANT_LIB}:{JUNIT_LIB}
+	ESC_CLASSPATH=${ESCTOOLS_ROOT}/Escjava/classfiles:${ESCTOOLS_ROOT}/Javafe/classfiles:${ESCTOOLS_ROOT}/Utils:${XMLRPC_LIB}:${BCEL_LIB}:${ANT_LIB}:${JUNIT_LIB}
     else
 	ESC_CLASSPATH=${ESCTOOLS_RELEASE}/esctools2.jar:${XMLRPC_LIB}:${BCEL_LIB}:${ANT_LIB}:${JUNIT_LIB}
     fi
@@ -285,4 +285,4 @@ ${JAVA} ${JAVA_VM_FLAGS} -DXMLPROVERPATH="${XMLPROVERPATH}" -Dsimplify="${ESCJ_S
     -classpath "${ESC_CLASSPATH}" ${MAIN} \
     ${JBIN} -classpath "${CLASSPATH}" -specs "${ESC_SPECS}" ${ESCJ_STDARGS} $ARGS
 
-# End of $RCSflie$
+# End of File

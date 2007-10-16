@@ -1,6 +1,9 @@
 /* Copyright 2000, 2001, Compaq Computer Corporation */
+/* Modified 2007, EU Mobius Project, University College Dublin */
 
 package javafe.ast;
+
+import org.apache.bcel.Constants;
 
 import javafe.parser.ParseUtil;
 
@@ -23,6 +26,7 @@ public class Modifiers {
   public static final int ACC_NATIVE            = 0X100;
   public static final int ACC_ABSTRACT          = 0X400;
   public static final int ACC_STRICT            = 0X800;
+  public static final int ACC_ENUM				= Constants.ACC_ENUM;
 
   public static final int SIZE_MODIFIER_BITSET  = 16;
 

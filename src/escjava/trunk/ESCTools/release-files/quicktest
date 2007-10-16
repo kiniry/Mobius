@@ -29,7 +29,6 @@ echo "  public void m(Object o) { String s = o.toString(); }" >> A.java
 echo "}" >> A.java
 
 ./escj A.java || (echo "FAILED"; exit 1)
-rm -f A.java
 
 echo
 echo "## Now testing the escjava2 script"
@@ -39,12 +38,8 @@ echo "## Running with a help argument to get a usage message"
 
 
 echo
-echo "## Creating a simple java file and testing it - should produce a warning"
+echo "## Testing a simple java file - should produce a warning"
 echo "   (This also checks that Simplify will run) "
-
-echo "public class A {" > A.java
-echo "  public void m(Object o) { String s = o.toString(); }" >> A.java
-echo "}" >> A.java
 
 ./escjava2 A.java || (echo "FAILED"; exit 1)
 rm -f A.java

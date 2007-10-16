@@ -20,7 +20,7 @@ public class FilterInputStream extends java.io.InputStream {
     // after construction.
 
     // FIELDS
-    protected java.io.InputStream in;
+    protected volatile java.io.InputStream in;
 
     // METHODS AND CONSTRUCTORS
 

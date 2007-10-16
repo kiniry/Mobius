@@ -27,4 +27,16 @@ TestByteArrayInputStream.java
 TestSystem3.java
 TestSystem4.java
 ##
+## JDK 1.5 specific failures with generic inner classes
+##
+TestArrayList2.java
+TestArrays.java
+TestCharacter.java
+TestCharacter2.java
+TestClass.java
+TestList.java
+TestMap.java
+TestObject.java
+TestVector.java
+##
 ## End of file - DO NOT LEAVE BLANK LINES BEYOND THIS POINT

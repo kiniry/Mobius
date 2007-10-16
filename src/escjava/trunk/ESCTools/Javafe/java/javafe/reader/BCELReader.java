@@ -87,6 +87,14 @@ import org.apache.bcel.generic.Type;
 
 class BCELReader extends Reader {
 
+	/** Access flags which we are not parsing at the moment */
+	public static final int HIDDEN_ACCESS_FLAGS = 
+		~Constants.ACC_TRANSIENT & 
+		~Constants.ACC_VOLATILE & 
+		~Constants.ACC_ANNOTATION & 
+		~Constants.ACC_SYNCHRONIZED &
+		~Constants.ACC_ENUM; // TODO will be needed when using Java 1.5 source code
+
 	/** The package name of the class being parsed. */
 	public Name classPackage;
 
@@ -107,13 +115,15 @@ class BCELReader extends Reader {
 	 * array of TypeDeclElems. A synthetic decl is one that had the synthetic
 	 * attribute, or is a static method decl for an interface.
 	 */
-	protected void addNonSyntheticDecls(
+	/*@
+	  @ protected normal_behavior
+	  @	  ensures \old(typeDeclElemVec.size()) <= typeDeclElemVec.size();
+	  @   ensures typeDeclElemVec.size() <= typeDeclElems.length + \old(typeDeclElemVec.size());
+	  @*/
+	protected void addElements(
 	/*@ non_null */ TypeDeclElemVec typeDeclElemVec,
 	/*@ non_null */ TypeDeclElem[] typeDeclElems) {
 		for (int i = 0; i < typeDeclElems.length; i++) {
-			if (synthetics.contains(typeDeclElems[i])) { //@ nowarn;
-				continue;
-			}
 			if ((javaClass.isInterface())
 					&& typeDeclElems[i] instanceof RoutineDecl) {
 				RoutineDecl rd = (RoutineDecl) typeDeclElems[i];
@@ -230,8 +240,8 @@ class BCELReader extends Reader {
 	 * @throws IOException 
 	 * @throws ClassFormatError
 	 */
-	/*@ protected normal behavior: 
-	  @ ensures \result.isBinary();
+	/*@ protected normal_behavior
+	  @   ensures \result.isBinary();
 	  @*/
 	protected TypeDecl makeTypeDecl() throws IOException, ClassNotFoundException {
 
@@ -264,14 +274,14 @@ class BCELReader extends Reader {
 			    TypeNameVec.make(interfaceTypeNames);
 			
 		} catch (ClassNotFoundException e) {
-			// Missing classpath
+			// Missing classpath entry
 			ErrorSet.fatal(classLocation, "Incomplete classpath: " + e.getLocalizedMessage() + 
 					" CLASSPATH is " + System.getenv("CLASSPATH")+ ":"+ System.getenv("ESC_CLASSPATH"));
 		}
 		 
 		
 		Method[] methods = javaClass.getMethods();
-		readMethods(methods);
+		RoutineDecl[] routineDecl = readMethods(methods);
 
 		Field[] fields = javaClass.getFields();
 		FieldDecl[] fieldDecl = getFieldDecl(fields);
@@ -282,12 +292,12 @@ class BCELReader extends Reader {
 		elementVec.append(classMembers);
 
 		// only add routines and fields that are not synthetic.
-		this.addNonSyntheticDecls(elementVec, routineDecl);
-		this.addNonSyntheticDecls(elementVec, fieldDecl);
+		addElements(elementVec, routineDecl);
+		addElements(elementVec, fieldDecl);
 
 		// The synchronized bit for classes is used for other purposes
 		int accessModifiers = javaClass.getAccessFlags()
-				& ~Constants.ACC_SYNCHRONIZED;
+				& HIDDEN_ACCESS_FLAGS;
 
 		TypeDecl typeDecl;
 		if (javaClass.isInterface()) {
@@ -433,7 +443,7 @@ class BCELReader extends Reader {
 	 *            of methods in BCEL
 	 * @throws ClassNotFoundException
 	 */
-	protected void readMethods(Method[] methods) throws ClassNotFoundException {
+	protected RoutineDecl[] readMethods(Method[] methods) throws ClassNotFoundException {
 
 		// Get total number of methods including synthetics
 		int numberOfMethodsInClass = methods.length;
@@ -477,10 +487,12 @@ class BCELReader extends Reader {
 		}
 
 		// Copy and resize the array
-		routineDecl = new RoutineDecl[numberOfRoutines];
+		RoutineDecl[] routineDecl = new RoutineDecl[numberOfRoutines];
 		for (int routineLoopVar = 0; routineLoopVar < numberOfRoutines; routineLoopVar++) {
 			routineDecl[routineLoopVar] = tempRoutineDecl[routineLoopVar];
 		}
+		
+		return routineDecl;
 	}
 
 	/**
@@ -574,7 +586,7 @@ class BCELReader extends Reader {
 				
 				// Set access modifier flags for inner class
 				int innerAccessFlags = innerClass.getInnerAccessFlags();
-				innerClassTypeDecl.modifiers = innerAccessFlags;
+				innerClassTypeDecl.modifiers = filterAccessFlags(innerAccessFlags);
 				
 				// Only add inner classes that are not synthetic and not anonymous
 				if (!innerClassReader.isSyntheticClass() 
@@ -584,6 +596,16 @@ class BCELReader extends Reader {
 			}
 		}
 
+	}
+
+	/**
+	 * Filter the list of access flags that will be used
+	 * 
+	 * @param accessFlags The original access flags
+	 * @return The filtered access flags
+	 */
+	protected int filterAccessFlags(int accessFlags) {
+		return accessFlags & HIDDEN_ACCESS_FLAGS;
 	}
 
 	/**
@@ -770,9 +792,7 @@ class BCELReader extends Reader {
 		String methodSignature = method.getSignature();
 
 		// Translate access modifier flags from BCEL
-		int accessModifiers = method.getAccessFlags()
-				& ~Constants.ACC_TRANSIENT & ~Constants.ACC_VOLATILE
-				& ~Constants.ACC_ANNOTATION;
+		int accessModifiers = method.getAccessFlags() & HIDDEN_ACCESS_FLAGS;
 
 		MethodSignature signature = DescriptorParser
 				.parseMethod(methodSignature);
@@ -814,14 +834,6 @@ class BCELReader extends Reader {
 	 * set_method, and set_class_attributes.
 	 */
 	protected /*@ non_null*/ TypeDeclElemVec classMembers = TypeDeclElemVec.make(0);
-
-	/**
-	 * The methods and constructors of the class being parsed. Initialized by
-	 * set_num_methods. Elements initialized by set_method.
-	 */
-	//@ invariant \typeof(routineDecl) == \type(RoutineDecl[]);
-	//@ spec_public
-	protected /*@ non_null*/ RoutineDecl[] routineDecl;
 
 	/**
 	 * The identifier of the class being parsed. Initialized by set_this_class.
@@ -996,8 +1008,8 @@ class BCELReader extends Reader {
 	/**
 	 * Read and parse a binary class file
 	 */
-	/*@ public normal behavior
-	  @   ensures \result != null
+	/*@ also public normal_behavior
+	  @   ensures \result != null;
 	  @*/
 	public CompilationUnit read(/*@non_null*/ GenericFile target, boolean avoidSpec) {
 
@@ -1010,6 +1022,11 @@ class BCELReader extends Reader {
 			readJavaClass(target);
 
 			CompilationUnit compilationUnit = getCompilationUnit();
+			
+			// If compilation unit is empty then issue a diagnostic warning
+			if (0 == compilationUnit.elems.size()) {
+				ErrorSet.warning(classLocation, "Empty class file");
+			}
 
 			return compilationUnit;
 
