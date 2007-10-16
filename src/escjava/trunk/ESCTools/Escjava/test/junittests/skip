@@ -106,5 +106,5 @@ ParseImports2.java
 #
 # JDK 1.5 Generic Inner Classes
 #
-IsInitialised.java
+IsInitialized.java
 InnerClassGenerics.java
