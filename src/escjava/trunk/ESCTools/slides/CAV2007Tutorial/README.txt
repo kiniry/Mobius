@@ -25,16 +25,16 @@ the PDF files included in the talk, and this is done using a custom
 page size of 6 inches (wide) by 10 inches (high), although on the
 screen it looks like 10 inches wide by 6 high.
 
-To get the handouts, you have to answer y to the question that comes
-up when running pdflatex on JMLTutorial.tex starts, and you have to be
-running pdflatex on a TeX install that has pgf installed.  (Miktex has
-it, or can if you install it, and the Makefile assumes that mpdflatex
-is the Miktex version of pdflatex.)
+To get the handouts, use the Makefile or run pdflatex on
+JMLTutorialHandouts.tex For this you have to be running pdflatex on a
+TeX install that has pgf installed.  (Miktex has it, or can if you
+install it, and the Makefile assumes that mpdflatex is the Miktex
+version of pdflatex.)
 
 Examples are mainly kept in the subdirectory examples/.
 The directory examples_toedit/ contains copies of some files to use
-when starting examples that are to be edited.  This directories
+when starting examples that are to be edited.  This directory's
 contents should be copied into examples_worked before the start of the
-show.
+show.  Edit the copies in examples_worked during the show.
 
 $Id$
