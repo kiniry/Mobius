@@ -905,7 +905,10 @@ public class Lifter extends EscNodeBuilder
   public PredSymbol mkPredSymbol(final String name, final Sort [] tab) {
     return new PredSymbol(name, tab);
   }
-	
+  public FnSymbol mkFnSymbol(final String name, final Sort [] tab,
+                               final Sort ret) {
+    return new FnSymbol(name, tab, ret);
+  }
 	/*@ non_null_by_default @*/
 	public class IntLiteral extends Term
 	{
