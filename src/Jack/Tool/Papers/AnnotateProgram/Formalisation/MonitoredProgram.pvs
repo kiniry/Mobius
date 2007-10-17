@@ -141,7 +141,8 @@ BEGIN
   % class. To get the monitored class we could use get_monitored_class(mp), the
   % problem is how to get the class of the method.
   on_method_MVA(etype : EventType)
-               (mp : MonitoredProgram, md : Method)(s : MPState) : AState =
+               (mp : MonitoredProgram, md : (wf_Method(program(mp))))
+               (s : MPState) : AState =
     IF wf_state(mp)(s) AND
        methods(get_monitored_class(mp))(md) AND
        evs(mva(mp))((# etype := etype, mname := name(md) #))
@@ -153,7 +154,8 @@ BEGIN
     ENDIF
 
   on_method_entry_MP : (on_method_event_type) =
-    LAMBDA (mp : MonitoredProgram, md : Method, a : Val, s1, s2 : MPState,
+    LAMBDA (mp : MonitoredProgram, md : (wf_Method(program(mp))), a : Val, 
+            s1, s2 : MPState,
             n : nat, derive_rec : derive_rec_type(n)) :
     NOT cp(astate(s1)) = halted AND
     EXISTS(s_new : MPState) : 
@@ -167,7 +169,8 @@ BEGIN
 
 
   on_method_exit_normal_MP : (on_method_event_type) =
-    LAMBDA (mp : MonitoredProgram, md : Method, a : Val, s1, s2 : MPState,
+    LAMBDA (mp : MonitoredProgram, md : (wf_Method(program(mp))), a : Val, 
+            s1, s2 : MPState,
             n : nat, derive_rec : derive_rec_type(n)) :
     NOT cp(astate(s1)) = halted AND
     EXISTS(s_new : MPState) : 
@@ -180,7 +183,8 @@ BEGIN
       ENDIF
 
   on_method_exit_exceptional_MP : (on_method_event_type) =
-    LAMBDA (mp : MonitoredProgram, md : Method, a : Val, s1, s2 : MPState,
+    LAMBDA (mp : MonitoredProgram, md : (wf_Method(program(mp))), a : Val, 
+            s1, s2 : MPState,
             n : nat, derive_rec : derive_rec_type(n)) :
     NOT cp(astate(s1)) = halted AND
     EXISTS(s_new : MPState) : 
@@ -217,7 +221,8 @@ BEGIN
          ENDIF
     #)
 
-  run_monitored_program(mp : MonitoredProgram)(main : Method, arg : int)
+  run_monitored_program(mp : MonitoredProgram)
+                       (main : (wf_Method(program(mp))), arg : int)
                        (this_val : Val)(final : MPState) : boolean =
     run_FullProgram(mp)(main, arg)(initial_MP_state(mp)(this_val), final)
 

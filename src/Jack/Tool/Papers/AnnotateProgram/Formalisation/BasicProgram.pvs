@@ -4,26 +4,27 @@ ProgramSemantics[Name : TYPE+] : THEORY
 BEGIN
 
   IMPORTING State[Name],
-            SemanticsTypes[Name, Program, PState, id]
+            SemanticsTypes[Name, Program, PState, id, id]
 
   execute_set : (execute_set_type) =
-    LAMBDA (p : Program, vn : Name, e : Expr, s1, s2 : PState, n : nat,
+    LAMBDA (p : Program, vn : Name, e : (wf_Expr(p)), s1, s2 : PState, n : nat,
             derive_rec : derive_rec_type(n)) :
       s1 = s2 AND n = 1
 
   execute_assert : (execute_assert_type) =
-    LAMBDA (p : Program, e : BoolExpr, s1, s2 : PState, n : nat,
+    LAMBDA (p : Program, e : (wf_BoolExpr(p)), s1, s2 : PState, n : nat,
             derive_rec : derive_rec_type(n)) :
       s1 = s2 AND n = 1
 
   execute_CaseJML : (execute_CaseJML_type) =
-    LAMBDA (p : Program, bs : list[[BoolExpr, Stmt]], s1, s2 : PState,  
+    LAMBDA (p : Program, bs : (wf_Branches(p)), s1, s2 : PState,  
             n : nat,
             derive_rec : derive_rec_type(n)) :
       s1 = s2 AND n = 1
 
   on_method_event : (on_method_event_type) =
-    LAMBDA (p : Program, md : Method, a : Val, s1, s2 : PState, n : nat,
+    LAMBDA (p : Program, md : (wf_Method(p)), a : Val, 
+            s1, s2 : PState, n : nat,
             derive_rec : derive_rec_type(n)) :
       s1 = s2 AND n = 1
 
@@ -32,7 +33,8 @@ BEGIN
                       execute_set, execute_assert, execute_CaseJML,
                       on_method_event, on_method_event, on_method_event]
 
-  run_program(p : Program)(main : Method, arg : int)(this_val : (defined?))
+  run_program(p : Program)(main : (wf_Method(p)), arg : int)
+             (this_val : (defined?))
              (s2 : PState) : boolean =
     run_FullProgram(p)(main, arg)(initial_Program_state(p)(this_val), s2)
 

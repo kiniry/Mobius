@@ -226,13 +226,13 @@ BEGIN
       on_method_entry_MP(mp, md, a, sMP1, sMP2, m1,
                          LAMBDA (k: upto(m1))
                                 (p: MonitoredProgram[CP, Name])
-                                (b: (wf_Body(program(mp))), sigma1: MPState[CP, Name],
+                                (b: (wf_Body(program(p))), sigma1: MPState[CP, Name],
                                  v: Val[Name], sigma2: MPState[CP, Name])
                                 (m: below(k)):
                            derive(p)(b, sigma1, v, sigma2)(m)) IMPLIES
       on_method_entry(ann_program(mp), ann_method(mp)(md), a, sAP1, sAP2, m2,
                       LAMBDA (k: upto(m2))(p: Program[Name])
-                             (b: (wf_Body(ann_program(mp))), sigma1: APState[Name],
+                             (b: (wf_Body(p)), sigma1: APState[Name],
                               v: Val[Name], sigma2: APState[Name])
                              (m: below(k)):
                         derive(p)(b, sigma1, v, sigma2)(m)) IMPLIES
@@ -258,13 +258,13 @@ BEGIN
       on_method_entry_MP(mp, md, a, sMP1, sMP2, m1,
                          LAMBDA (k: upto(m1))
                                 (p: MonitoredProgram[CP, Name])
-                                (b: (wf_Body(program(mp))), sigma1: MPState[CP, Name],
+                                (b: (wf_Body(program(p))), sigma1: MPState[CP, Name],
                                  v: Val[Name], sigma2: MPState[CP, Name])
                                 (m: below(k)):
                            derive(p)(b, sigma1, v, sigma2)(m)) IMPLIES
       on_method_entry(ann_program(mp), md, a, sAP1, sAP2, m2,
                       LAMBDA (k: upto(m2))(p: Program[Name])
-                             (b: (wf_Body(ann_program(mp))), sigma1: APState[Name],
+                             (b: (wf_Body(p)), sigma1: APState[Name],
                               v: Val[Name], sigma2: APState[Name])
                              (m: below(k)):
                         derive(p)(b, sigma1, v, sigma2)(m)) IMPLIES
@@ -290,14 +290,14 @@ BEGIN
       on_method_exit_normal_MP(mp, md, a, sMP1, sMP2, m1,
                          LAMBDA (k: upto(m1))
                                 (p: MonitoredProgram[CP, Name])
-                                (b: (wf_Body(program(mp))), sigma1: MPState[CP, Name],
+                                (b: (wf_Body(program(p))), sigma1: MPState[CP, Name],
                                  v: Val[Name], sigma2: MPState[CP, Name])
                                 (m: below(k)):
                            derive(p)(b, sigma1, v, sigma2)(m)) IMPLIES
       on_method_exit_normal(ann_program(mp), ann_method(mp)(md), 
                             a, sAP1, sAP2, m2,
                       LAMBDA (k: upto(m2))(p: Program[Name])
-                             (b: (wf_Body(ann_program(mp))), sigma1: APState[Name],
+                             (b: (wf_Body(p)), sigma1: APState[Name],
                               v: Val[Name], sigma2: APState[Name])
                              (m: below(k)):
                         derive(p)(b, sigma1, v, sigma2)(m)) IMPLIES
@@ -323,13 +323,13 @@ BEGIN
       on_method_exit_normal_MP(mp, md, a, sMP1, sMP2, m1,
                          LAMBDA (k: upto(m1))
                                 (p: MonitoredProgram[CP, Name])
-                                (b: (wf_Body(program(mp))), sigma1: MPState[CP, Name],
+                                (b: (wf_Body(program(p))), sigma1: MPState[CP, Name],
                                  v: Val[Name], sigma2: MPState[CP, Name])
                                 (m: below(k)):
                            derive(p)(b, sigma1, v, sigma2)(m)) IMPLIES
       on_method_exit_normal(ann_program(mp), md, a, sAP1, sAP2, m2,
                       LAMBDA (k: upto(m2))(p: Program[Name])
-                             (b: (wf_Body(ann_program(mp))), sigma1: APState[Name],
+                             (b: (wf_Body(p)), sigma1: APState[Name],
                               v: Val[Name], sigma2: APState[Name])
                              (m: below(k)):
                         derive(p)(b, sigma1, v, sigma2)(m)) IMPLIES
@@ -355,14 +355,14 @@ BEGIN
       on_method_exit_exceptional_MP(mp, md, a, sMP1, sMP2, m1,
                          LAMBDA (k: upto(m1))
                                 (p: MonitoredProgram[CP, Name])
-                                (b: (wf_Body(program(mp))), sigma1: MPState[CP, Name],
+                                (b: (wf_Body(program(p))), sigma1: MPState[CP, Name],
                                  v: Val[Name], sigma2: MPState[CP, Name])
                                 (m: below(k)):
                            derive(p)(b, sigma1, v, sigma2)(m)) IMPLIES
       on_method_exit_exceptional(ann_program(mp), ann_method(mp)(md), 
                                   a, sAP1, sAP2, m2,
                       LAMBDA (k: upto(m2))(p: Program[Name])
-                             (b: (wf_Body(ann_program(mp))), sigma1: APState[Name],
+                             (b: (wf_Body(p)), sigma1: APState[Name],
                               v: Val[Name], sigma2: APState[Name])
                              (m: below(k)):
                         derive(p)(b, sigma1, v, sigma2)(m)) IMPLIES
@@ -388,13 +388,13 @@ BEGIN
       on_method_exit_exceptional_MP(mp, md, a, sMP1, sMP2, m1,
                          LAMBDA (k: upto(m1))
                                 (p: MonitoredProgram[CP, Name])
-                                (b: (wf_Body(program(mp))), sigma1: MPState[CP, Name],
+                                (b: (wf_Body(program(p))), sigma1: MPState[CP, Name],
                                  v: Val[Name], sigma2: MPState[CP, Name])
                                 (m: below(k)):
                            derive(p)(b, sigma1, v, sigma2)(m)) IMPLIES
       on_method_exit_exceptional(ann_program(mp), md, a, sAP1, sAP2, m2,
                       LAMBDA (k: upto(m2))(p: Program[Name])
-                             (b: (wf_Body(ann_program(mp))), sigma1: APState[Name],
+                             (b: (wf_Body(p)), sigma1: APState[Name],
                               v: Val[Name], sigma2: APState[Name])
                              (m: below(k)):
                         derive(p)(b, sigma1, v, sigma2)(m)) IMPLIES

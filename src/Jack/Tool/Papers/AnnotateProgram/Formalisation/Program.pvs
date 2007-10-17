@@ -152,7 +152,7 @@ BEGIN
                     fields : finite_set[FieldDecl],
                     methods : finite_set[Method] #]
 
-  Program : TYPE = [# classes : finite_set[Class] #]
+  PreProgram : TYPE = [# classes : finite_set[Class] #]
 
 
 END Program
@@ -280,7 +280,7 @@ BEGIN
     union(var_names(fields(c)), 
     union(var_names(ghost_vars(c)), var_names(inv(c)))))
 
-  var_names(p : Program) : set[Name] =
+  var_names(p : PreProgram) : set[Name] =
     Union({ns : set[Name] | EXISTS (c : Class) :
       classes(p)(c) AND ns = var_names(c)})
 
@@ -291,71 +291,71 @@ BEGIN
 
   % Declared variable names
 
-  getFieldDecls(p : Program) : finite_set[FieldDecl] =
+  getFieldDecls(p : PreProgram) : finite_set[FieldDecl] =
     {f : FieldDecl | EXISTS (c : Class) : classes(p)(c) AND 
                                           fields(c)(f)}
 
-  getLocalDecls(p : Program) : finite_set[LocalVarDecl] =
+  getLocalDecls(p : PreProgram) : finite_set[LocalVarDecl] =
     {l : LocalVarDecl | EXISTS (c : Class, m : Method) : 
                         classes(p)(c) AND 
                         methods(c)(m) AND
                         (lvars(m)(l) OR l = arg(m))}
 
   arg_in_getLocalDecls : LEMMA % :-)
-    FORALL(p : Program, c : Class, m : Method) : 
+    FORALL(p : PreProgram, c : Class, m : Method) : 
       classes(p)(c) IMPLIES
       methods(c)(m) IMPLIES
       getLocalDecls(p)(arg(m))
 
 
-  getGhostDecls(p : Program) : finite_set[FieldDecl] =
+  getGhostDecls(p : PreProgram) : finite_set[FieldDecl] =
     {g : FieldDecl | EXISTS (c : Class) :  classes(p)(c) AND ghost_vars(c)(g)}
 
 
-  get_LocalDecl(n : Name, p : Program) : lift[LocalVarDecl] =
+  get_LocalDecl(n : Name, p : PreProgram) : lift[LocalVarDecl] =
     LET ng = {l : LocalVarDecl | getLocalDecls(p)(l) AND name(l) = n} IN
     IF nonempty?(ng)
     THEN up(choose(ng))
     ELSE bottom
     ENDIF
 
-  get_FieldDecl(n : Name, p : Program) : lift[FieldDecl] =
+  get_FieldDecl(n : Name, p : PreProgram) : lift[FieldDecl] =
     LET ng = {f : FieldDecl | getFieldDecls(p)(f) AND name(f) = n} IN
     IF nonempty?(ng)
     THEN up(choose(ng))
     ELSE bottom
     ENDIF
 
-  get_GhostDecl(n : Name, p : Program) : lift[FieldDecl] =
+  get_GhostDecl(n : Name, p : PreProgram) : lift[FieldDecl] =
     LET ng = {g : FieldDecl | getGhostDecls(p)(g) AND name(g) = n} IN
     IF nonempty?(ng)
     THEN up(choose(ng))
     ELSE bottom
     ENDIF
 
-  declared_var_names(p : Program) : finite_set[Name] =
+  declared_var_names(p : PreProgram) : finite_set[Name] =
     {n : Name | var_names(getFieldDecls(p))(n) OR
                 var_names(getLocalDecls(p))(n) OR
                 var_names(getGhostDecls(p))(n)}
 
-  ext_declared_var_names(p : Program) : finite_set[Name] =
+  ext_declared_var_names(p : PreProgram) : finite_set[Name] =
     union({n : Name | var_names(getFieldDecls(p))(n) OR
                       var_names(getLocalDecls(p))(n) OR
                       var_names(getGhostDecls(p))(n)},
           {n : Name | n = This})
 
 
-  class_names(p : Program) : finite_set[Name] =
+  class_names(p : PreProgram) : finite_set[Name] =
     {n : Name | EXISTS (c : Class) : classes(p)(c) AND name(c) = n}
 
-  method_names(p : Program, c : Class) : finite_set[Name] =
+  method_names(p : PreProgram, c : Class) : finite_set[Name] =
     {n : Name | EXISTS (m : Method) : classes(p)(c) AND methods(c)(m) AND
                                       name(m) = n}
 
-  methods(p : Program) : finite_set[Method] =
+  methods(p : PreProgram) : finite_set[Method] =
     {m : Method |EXISTS (c : Class) : classes(p)(c) AND methods(c)(m)}
 
-  get_class(p : Program)(tgt : Val) : lift[Class] =
+  get_class(p : PreProgram)(tgt : Val) : lift[Class] =
     IF Reference?(tgt) AND class_names(p)(class_name(tgt))
     THEN up(choose({c : Class | classes(p)(c) AND name(c) = class_name(tgt)}))
     ELSE bottom
@@ -363,7 +363,7 @@ BEGIN
 
  
   get_class_in_classes : LEMMA % :-)
-    FORALL(p : Program)(tgt : Val) :
+    FORALL(p : PreProgram)(tgt : Val) :
       up?(get_class(p)(tgt)) IMPLIES
         classes(p)(down(get_class(p)(tgt)))
 
@@ -371,7 +371,7 @@ BEGIN
   % in the program that has the required name, we should return the first in the
   % hierarchy of classes of the dynamic type of tgt.
   % Probably the best thing to do is to leave it undefined.
-  lookup_mthd(p : Program, tgt : Val, mn : Name) : lift[(methods(p))] =
+  lookup_mthd(p : PreProgram, tgt : Val, mn : Name) : lift[(methods(p))] =
     IF up?(get_class(p)(tgt)) AND method_names(p, down(get_class(p)(tgt)))(mn)
     THEN up(choose({m : Method | classes(p)(down(get_class(p)(tgt))) AND 
                                  methods(down(get_class(p)(tgt)))(m)
@@ -380,7 +380,7 @@ BEGIN
     ENDIF
 
   lookup_mthd_in_methods_class : LEMMA % :-)
-     FORALL(p : Program, tgt : Val, mn : Name) :
+     FORALL(p : PreProgram, tgt : Val, mn : Name) :
        up?(get_class(p)(tgt)) IMPLIES
        up?(lookup_mthd(p, tgt, mn)) IMPLIES
          methods(down(get_class(p)(tgt)))(down(lookup_mthd(p, tgt, mn)))
@@ -389,7 +389,7 @@ BEGIN
   % TODO: Maybe this function should be left undefined since it should also
   % return the conjunction of the invariant of the the parent classes.
   % If it can't find an invariant in tgt it just returns TRUE
-  lookup_inv(p : Program, tgt : Val) : BoolExpr =
+  lookup_inv(p : PreProgram, tgt : Val) : BoolExpr =
     IF up?(get_class(p)(tgt))
     THEN inv(down(get_class(p)(tgt)))
     ELSE TT
@@ -429,7 +429,7 @@ BEGIN
         b2 << b1 IMPLIES subset?(var_names(b2), v)
 
 
-%  program_code(p : Program)(s : Stmt) : boolean =
+%  program_code(p : PreProgram)(s : Stmt) : boolean =
 %    EXISTS(c : Class, m : Method) :
 %      classes(p)(c) AND
 %      methods(c)(m) AND
@@ -449,7 +449,7 @@ BEGIN
 %      TryCatch(t, c, f) : TryCatch?
 %  While(test : Expr, body : Stmt) : While?
 
-%  program_code(p : Program)(e : Expr) : boolean =
+%  program_code(p : PreProgram)(e : Expr) : boolean =
 %    EXISTS(c : Class, m : Method) :
 %      classes(p)(c) AND
 %      methods(c)(m) AND
@@ -467,17 +467,63 @@ BEGIN
 
   IMPORTING ProgramFunctions[Name]
 
-  wf_Class(c : Class) : boolean =
-    FORALL (m1, m2 : Method) :
-      methods(c)(m1) IMPLIES
-      methods(c)(m2) IMPLIES
-      name(m1) = name(m2) IMPLIES
-        m1 = m2
+  wf_Body(p : PreProgram)(b : Body) : boolean = 
+    (FORALL(v : Name) : var_names(b)(v) IMPLIES ext_declared_var_names(p)(v))
 
-  wf_Classes(p : Program) : boolean =
-    FORALL (c : Class) : classes(p)(c) IMPLIES wf_Class(c)
+
+  wf_Body_preserved_by_proper_subterm : LEMMA % :-)
+    FORALL(p : PreProgram)(b1, b2 : Body) :
+      wf_Body(p)(b1) IMPLIES
+      b2 << b1 IMPLIES
+        wf_Body(p)(b2)
+
+  wf_BoolExpr(p : PreProgram)(b : BoolExpr) : boolean =
+     wf_Body(p)(b)
+
+  wf_NumExpr(p : PreProgram)(n : NumExpr) : boolean =
+     wf_Body(p)(n)
+
+  wf_RefExpr(p : PreProgram)(r : RefExpr) : boolean =
+     wf_Body(p)(r)
+
+  wf_Expr(p : PreProgram)(e : Expr) : boolean =
+     wf_Body(p)(e)
+
+  wf_Stmt(p : PreProgram)(s : Stmt) : boolean =
+     wf_Body(p)(s)
+
+  wf_Branches(p : PreProgram)(l : list[[BoolExpr, Stmt]]) : boolean =
+     every(LAMBDA(x : [[BoolExpr, Stmt]]) : 
+           wf_Body(p)(proj_1(x)) AND wf_Body(p)(proj_2(x)))(l)
+
+  wf_Body_CaseJML : LEMMA % :-)
+    FORALL(p : PreProgram, l : list[[BoolExpr, Stmt]]) :
+      wf_Body(p)(CaseJML(l)) = wf_Branches(p)(l)
+
+  wf_Method(p : PreProgram)(m : Method) : boolean =
+    wf_Body(p)(body(m)) AND
+    wf_Body(p)(pre(m)) AND
+    wf_Body(p)(post(m)) AND
+    wf_Body(p)(pre_set(m)) AND
+    wf_Body(p)(post_set(m)) AND
+    wf_Body(p)(exc_set(m)) AND
+    wf_Body(p)(res(m))
+
+  wf_Class(p : PreProgram)(c : Class) : boolean =
+    (FORALL (m1, m2 : Method) :
+       methods(c)(m1) IMPLIES
+       methods(c)(m2) IMPLIES
+       name(m1) = name(m2) IMPLIES
+         m1 = m2) 
+     AND
+    (FORALL (m : Method) : methods(c)(m) IMPLIES wf_Method(p)(m)) AND
+     wf_Body(p)(inv(c))
+
+  wf_Classes(p : PreProgram) : boolean =
+    FORALL (c : Class) : classes(p)(c) IMPLIES wf_Class(p)(c)
+
     
-  wf_program_variables_disjoint_def(p : Program) : boolean =
+  wf_program_variables_disjoint_def(p : PreProgram) : boolean =
     LET fname = var_names(getFieldDecls(p)),
         lname = var_names(getLocalDecls(p)),
         gname = var_names(getGhostDecls(p)) IN
@@ -485,20 +531,20 @@ BEGIN
     disjoint?(lname, gname) AND
     disjoint?(fname, gname)
 
-  wf_program_variables_not_reserved_words_def(p : Program) : boolean =
+  wf_program_variables_not_reserved_words_def(p : PreProgram) : boolean =
     disjoint?(declared_var_names(p), reserved_words)
 
-  wf_program_has_unique_class_names_def(p : Program) : boolean =
+  wf_program_has_unique_class_names_def(p : PreProgram) : boolean =
     FORALL (c1, c2 : Class) :
       classes(p)(c1) IMPLIES
       classes(p)(c2) IMPLIES
       name(c1) = name(c2) IMPLIES
         c1 = c2
 
-%  wf_program_all_variables_declared(p : Program) : boolean =
+%  wf_program_all_variables_declared(p : PreProgram) : boolean =
 %    FORALL(v : Name) : var_names(p)(v) IMPLIES declared_var_names(p)(v)
 
-  wf_program_methods_only_in_one_class(p : Program) : boolean =
+  wf_program_methods_only_in_one_class(p : PreProgram) : boolean =
     FORALL (c1, c2 : Class, m : Method) :    
       classes(p)(c1) IMPLIES
       classes(p)(c2) IMPLIES
@@ -508,7 +554,7 @@ BEGIN
       
 
 %  % Basic type information
-%  invariants_are_bool_expr(p : Program) : boolean =
+%  invariants_are_bool_expr(p : PreProgram) : boolean =
 %    FORALL (c : Class) :
 %      classes(p)(c) IMPLIES
 %        BExpr?(inv(c))
@@ -518,7 +564,7 @@ BEGIN
   % requirements and then we would define well_typed_Program. Since we don't
   % have many type requirements, it doesn't make sense to have two different
   % notions.
-  wf_Program(p : Program) : boolean =
+  wf_Program(p : PreProgram) : boolean =
     wf_program_variables_disjoint_def(p) AND
     wf_program_variables_not_reserved_words_def(p) AND
     wf_program_has_unique_class_names_def(p) AND
@@ -526,8 +572,8 @@ BEGIN
     wf_program_methods_only_in_one_class(p)
 %    invariants_are_bool_expr(p)
 
-  wf_Body(p : Program)(b : Body) : boolean = 
-    (FORALL(v : Name) : var_names(b)(v) IMPLIES declared_var_names(p)(v))
+  
+  Program : TYPE = (wf_Program)
 
   AUTO_REWRITE- wf_Program
 
@@ -538,7 +584,6 @@ BEGIN
   % variables have a unique name within the program.
   wf_program_variables_disjoint : LEMMA % :-)
      FORALL(p : Program) :
-       wf_Program(p) IMPLIES
        LET fname = var_names(getFieldDecls(p)),
            lname = var_names(getLocalDecls(p)),
            gname = var_names(getGhostDecls(p)) IN
@@ -548,11 +593,10 @@ BEGIN
 
   wf_program_variables_not_reserved_words : LEMMA % :-)
     FORALL(p : Program) : 
-      wf_Program(p) IMPLIES disjoint?(declared_var_names(p), reserved_words)
+      disjoint?(declared_var_names(p), reserved_words)
 
   wf_program_has_unique_class_names : LEMMA % :-)
     FORALL (p : Program, c1, c2 : Class) :
-      wf_Program(p) IMPLIES
       classes(p)(c1) IMPLIES
       classes(p)(c2) IMPLIES
       name(c1) = name(c2) IMPLIES
@@ -560,23 +604,22 @@ BEGIN
 
   wf_program_has_wf_classes : LEMMA % :-)
     FORALL (p : Program, c : Class) :
-      wf_Program(p) IMPLIES
       classes(p)(c) IMPLIES
-        wf_Class(c)
+        wf_Class(p)(c)
 
   wf_class_has_unique_method_names : LEMMA % :-)
-    FORALL (c : Class, m1, m2 : Method) :
-      wf_Class(c) IMPLIES
+    FORALL (p : Program, c : Class, m1, m2 : Method) :
+      wf_Class(p)(c) IMPLIES
       methods(c)(m1) IMPLIES
       methods(c)(m2) IMPLIES
       name(m1) = name(m2) IMPLIES
         m1 = m2
 
-  wf_program_all_variables_declared : LEMMA % :-)
-    FORALL(p : Program, v : Name) : 
-      wf_Program(p) IMPLIES
-        var_names(p)(v) IMPLIES
-        declared_var_names(p)(v)
+%  wf_program_all_variables_declared : LEMMA % :-)
+%    FORALL(p : Program, v : Name) : 
+%      wf_Program(p) IMPLIES
+%        var_names(p)(v) IMPLIES
+%        declared_var_names(p)(v)
 
 
 END WellFormedProgram

@@ -212,9 +212,8 @@ BEGIN
 
   ann_class(mp)(c : Class) : Class =
     IF classes(program(mp))(c) AND name(c) = class_name(mva(mp))
-    THEN c WITH [inv := Conj(inv(c), 
-                             Neg(Eq(NExpr(NumVarEval(cp(mp))), 
-                                    NExpr(NumVarEval(halted(mp)))))),
+    THEN c WITH [inv := Conj(Neg(Eq(NExpr(NumVarEval(cp(mp))), 
+                                    NExpr(NumVarEval(halted(mp))))), inv(c)),
                  ghost_vars := union(ghost_vars(c),
                                      new_gvds(mp)),
                  methods := ann_methods(mp)(methods(c))]
@@ -366,7 +365,7 @@ BEGIN
     FORALL(c : Class) :
     IF classes(program(mp))(c) AND name(c) = class_name(mva(mp))
     THEN Conj?(inv(ann_class(mp)(c))) AND 
-         b1(inv(ann_class(mp)(c))) = inv(c)
+         b2(inv(ann_class(mp)(c))) = inv(c)
     ELSE inv(ann_class(mp)(c)) = inv(c)
     ENDIF
   

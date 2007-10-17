@@ -47,7 +47,7 @@ BEGIN
          ENDIF
     #)
 
-  run_annotated_program(p : Program)(main : Method, arg : int)
+  run_annotated_program(p : Program)(main : (wf_Method(p)), arg : int)
                        (this_val : Val)(final : APState) : boolean =
     run_FullProgram(p)(main, arg)(initial_AP_state(p)(this_val), final)
 
@@ -109,27 +109,6 @@ BEGIN
       wf_Program(p) IMPLIES wf_state(p)(initial_AP_state(p)(this_val))
 
 
-%  deriv_expr_yields_wf_state_AP : LEMMA % :-)
-%    FORALL (p : Program, e : Expr, v : Val)
-%           (sigma1, sigma2 : APState, n : nat) :
-%      wf_Program(p) IMPLIES
-%      (FORALL (c : Stmt)(tau1, tau2 : APState)(m : below(n)) :
-%          wf_state(p)(tau1) IMPLIES
-%          deriv_stmt(p)(c, tau1, tau2)(m) IMPLIES
-%            wf_state(p)(tau2)) IMPLIES
-%      wf_state(p)(sigma1) IMPLIES
-%      deriv_expr(p)(e, sigma1, v, sigma2)(n) IMPLIES
-%        wf_state(p)(sigma2)
-
-%  % Proven, but assumption about target of set statements not very nicely 
-%  % phrased.
-%  deriv_stmt_yields_wf_state_AP : LEMMA % :-)
-%    FORALL (p : Program, c : Stmt, sigma1, sigma2 : APState, n : nat) :
-%      wf_Program(p) IMPLIES
-%      wf_state(p)(sigma1) IMPLIES
-%      deriv_stmt(p)(c, sigma1, sigma2)(n) IMPLIES
-%        wf_state(p)(sigma2)
-
   derive_yields_wf_state_AP : LEMMA % :-)
     FORALL (p : Program, b : (wf_Body(p)), v : Val)
            (sigma1, sigma2 : APState, n : nat) :
@@ -143,7 +122,8 @@ BEGIN
   % theory parameters to uniquely identify them.
 
  on_method_entry_AP : (on_method_event_type) =
-   LAMBDA (p : Program, md : Method, a : Val, s1, s2 : APState, n : nat,
+   LAMBDA (p : Program, md : (wf_Method(p)), a : Val, 
+           s1, s2 : APState, n : nat,
            derive_rec : derive_rec_type(n)) :
    on_method_entry(p, md, a, s1, s2, n, derive_rec)
 
@@ -161,7 +141,7 @@ BEGIN
       Bottom?(v) = up?(ex(pstate(sigma2)))
 
   derive_boolean_expr_type_AP : LEMMA % :-)
-    FORALL (p : Program)(b : BoolExpr)
+    FORALL (p : Program)(b : (wf_BoolExpr(p)))
            (sigma1, sigma2 : APState, v : Val, n : nat) :
       derive(p)(b, sigma1, v, sigma2)(n) IMPLIES
       NOT up?(ex(pstate(sigma2))) IMPLIES
@@ -183,6 +163,7 @@ BEGIN
     FORALL (p : Program, c : (Set?)) 
            (s1, s2 : APState, v : Val, n : nat)
            (vn : Name) :
+      wf_Body(p)(c) IMPLIES
       spec_expr_has_no_side_effects(p)(source(c)) IMPLIES
       derive(p)(c, s1, v, s2)(n) IMPLIES
       NOT target(c) = vn IMPLIES
@@ -197,14 +178,16 @@ BEGIN
   % value for the whole CaseJML statement.
   CaseJML_exclusive_branches_semantics : LEMMA % :-)
     FORALL (p : Program, bs : list[[BoolExpr, Stmt]], s1, s2 : APState,
-            v : Val, n : nat, b1 : [BoolExpr, Stmt]) :
+            v : Val, n : nat, b1 : [(wf_BoolExpr(p)), (wf_Stmt(p))]) :
+      wf_Branches(p)(bs) IMPLIES
       NOT up?(ex(pstate(s1))) IMPLIES
       n > 0 IMPLIES
       member(b1, bs) IMPLIES
       (FORALL (tau : APState, v : Val, m1 : below(n)) :
         (derive(p)(PROJ_1(b1), s1, v, tau)(m1) IMPLIES
           s1 = tau AND v = Bool(TRUE))) IMPLIES
-      (FORALL (b2 : [BoolExpr, Stmt], tau : APState, v : Val, m2 : below(n)) :
+      (FORALL (b2 : [(wf_BoolExpr(p)), (wf_Stmt(p))], tau : APState, 
+               v : Val, m2 : below(n)) :
         before(b2, b1, bs) IMPLIES
         (derive(p)(PROJ_1(b2), s1, v, tau)(m2) IMPLIES
           s1 = tau AND v = Bool(FALSE))) IMPLIES
