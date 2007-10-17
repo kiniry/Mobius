@@ -333,7 +333,7 @@ public class JmlExprToFormula {
   public Object instanceOfExpr(final InstanceOfExpr x, final Object o) {
     final Term refTerm = (Term) x.expr.accept(this.fVisitor, o);
 
-    final Term sortType = Type.translate(x.type);
+    final Term sortType = Type.translateToType(x.type);
     return Logic.assignCompat(Heap.var, refTerm, sortType);
   }
 

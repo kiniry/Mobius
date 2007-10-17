@@ -128,7 +128,7 @@ public final class Expression {
    */
   public static QuantVariable var(final String name, final Sort s) {
     if (name.startsWith("T_")) {
-      throw new IllegalArgumentException();
+      throw new IllegalArgumentException(name);
     }
     return Formula.lf.mkQuantVariable(name, s);
   }

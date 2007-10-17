@@ -480,7 +480,7 @@ public class JmlVisitor extends BasicJMLTranslator {
     final Post allExPosts = Lookup.getExceptionalPostcondition(currentRoutine);
     final QuantVariableRef commonExceptionVar = allExPosts.getRVar();
 
-    final Term typeOfException = Type.translate(x.arg.type);
+    final Term typeOfException = Type.translateToType(x.arg.type);
     final QuantVariableRef newExceptionVar = Expression.rvar(x.arg);
 
     Term newExPost = (Term)x.expr.accept(this, o);

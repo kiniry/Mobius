@@ -206,8 +206,8 @@ public class CoqNodeBuilder extends EscNodeBuilder {
    */
   @Override
   public SInt buildInt(final long n) {
-    //return new CInt("Int.const", new STerm[]{new CInt("" + n)});
-    return new CInt("" + n);
+    return new CInt("Int.const", new STerm[]{new CInt("(" + n + ")")});
+    //return new CInt("Int.const " + n);
   }
 
   /*
@@ -629,16 +629,16 @@ public class CoqNodeBuilder extends EscNodeBuilder {
     SInt res;
     switch (intFunTag) {
       case NodeBuilder.funADD:
-        res = new CInt(false, "+", new STerm[] {arg1, arg2});
+        res = new CInt("Int.add", new STerm[] {arg1, arg2});
         break;
       case NodeBuilder.funSUB:
-        res = new CInt(false, "-", new STerm[] {arg1, arg2});
+        res = new CInt("Int.sub", new STerm[] {arg1, arg2});
         break;
       case NodeBuilder.funMUL:
-        res = new CInt(false, "*", new STerm[] {arg1, arg2});
+        res = new CInt("Int.mul", new STerm[] {arg1, arg2});
         break;
       case NodeBuilder.funDIV:
-        res = new CInt(false, "/", new STerm[] {arg1, arg2});
+        res = new CInt("Int.div", new STerm[] {arg1, arg2});
         break;
       case NodeBuilder.funMOD:
         res = new CInt("Int.mod", new STerm[] {arg1, arg2});

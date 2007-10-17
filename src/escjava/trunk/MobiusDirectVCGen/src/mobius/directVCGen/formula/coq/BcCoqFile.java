@@ -28,9 +28,17 @@ public class BcCoqFile extends CoqFile {
                                     classname + "Signature." + meth + " " +
                                     classname + "." + meth + "Method " + 
                                     classname + "Annotations." + meth + ".spec).");
-    out.println("Proof with solve.");
-    out.println("   prettyfy.");
-    out.println("   nintros; repeat (split; nintros); cleanstart.\n");
+    out.println("Proof with auto.");
+    out.print(getProof());
     out.println("Qed.");
   }
+  
+  @Override
+  protected String getDefaultProof() {
+    final String proof = "   prettyfy.\n" +
+                         "   nintros; repeat (split; nintros); cleanstart.\n";
+    return proof;
+  }
 }
+
+

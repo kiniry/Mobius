@@ -135,35 +135,35 @@ public class Util {
   public static Post getExcpPost(final Term typ, final VCEntry vce) {
     Post res = null;
     for (ExcpPost p: vce.lexcpost) {
-      if (Type.isSubClassOrEq(typ, p.type)) {
-        final QuantVariableRef var = vce.fExcPost.getRVar();
-        final Post typeof = new Post(var, Logic.assignCompat(Heap.var, var, p.type));
+      final QuantVariableRef var = vce.fExcPost.getRVar();
+      final Post typeof = new Post(var, Logic.assignCompat(Heap.var, var, p.type));
+      final Post nottypeof = new Post(var, Logic.not(Logic.assignCompat(Heap.var, var, p.type)));
 
+      if (Type.isSubClassOrEq(typ, p.type)) {
+        
         if (res == null) {
           res = p.post;
           //res = Post.implies(typeof, p.post);
         }
         else {
-          res = Post.and(p.post, res);
+          res = Post.and(Post.implies(nottypeof, res), p.post);
           //res = Post.and(Post.implies(typeof, p.post), res);
         }
         return res;
       }
       else {
-        final QuantVariableRef var = vce.fExcPost.getRVar();
-        final Post typeof = new Post(var,
-                               Logic.assignCompat(Heap.var, var, 
-                                                  p.type));
+
         if (res == null) {
           res = Post.implies(typeof, p.post);
         }
         else {
-          res = Post.and(Post.implies(typeof, p.post), res);
+          res = Post.and(Post.implies(nottypeof, res),
+                         Post.implies(typeof, p.post));
         }
       }
     }
     final Post ex = vce.fExcPost;
-    res = Post.and(ex, res);
+    res = Post.and(res, ex);
     return res;
   }
   /**
@@ -179,7 +179,7 @@ public class Util {
     final QuantVariableRef heap = Heap.newVar();
     
     //return Logic.forall(heap,
-    return Util.mkNewEnv(heap,
+    return Logic.forall(heap,
              Logic.forall(e,
                           Logic.implies(Heap.newObject(Heap.var, type, heap, e),
                                         p.substWith(e).subst(Heap.var, heap))));

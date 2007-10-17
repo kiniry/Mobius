@@ -271,4 +271,29 @@ repeat match goal with
 simpl in H)
 end;
 unfold interp_value, interp_v in *; simpl in *.
+
+
+Ltac nintros :=
+match goal with
+| [ |- forall x: Heap.t, _ ] =>let h:= fresh "h" in
+                                            intro h; nintros
+| [ |- forall x: LocalVar.t, _ ] =>let h:= fresh "lv" in
+                                            intro h; nintros
+| [ |- forall x, _] => intro; nintros
+| [ |- _] => intros
+end.
+Ltac magickal :=
+   repeat match goal with
+   | [ H : forall y, _ |- forall x, _] => let x := fresh "x" in (intro x; let H1 := fresh "H" in (assert (H1 := H x); clear H; try (clear x)))
+   | [ H : _ -> _ |- _ -> _] =>let A := fresh "H" in  (intros A; let H1 := fresh "H" in (assert (H1 := H A); clear H; clear A))
+   | [ H : _ /\ _ |- _ /\ _] =>let A := fresh "H" in 
+                                         let B := fresh "H" in 
+                                         (destruct H as (A, B); split; [clear B | clear A])
+   | [ H : (?x1 <=  ?x2  <= ?x4) -> _ |- _ ] =>
+    let H0 := fresh "H" in (
+     let O := fresh "H" in (
+    (intro; assert (O: (x1 <=  x2 /\x2 <= x4))); [omega| idtac];   
+     let H1 := fresh "H" in (assert (H1 := H O); clear H; clear H0 O)))
+   end.
+
 Axiom user : forall p: Prop, p.

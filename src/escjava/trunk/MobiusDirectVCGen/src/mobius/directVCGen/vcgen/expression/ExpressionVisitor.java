@@ -133,7 +133,7 @@ public class ExpressionVisitor extends ABasicVisitor {
         Term vval = Heap.sortToValue(val);
         final Term compat = Expression.sym("compat_ValKind_value", new Term[] {ival, vval});
         
-        term =  Logic.implies (Logic.and(Logic.le(intMin, val), Logic.le(val, intMax)),
+        term =  Logic.implies (Expression.sym("Int.range", new Term[] {val}),
                      Logic.implies(Logic.assignCompat(Heap.var, vval, 
                                                       Expression.rvar("(PrimitiveType BOOLEAN)", 
                                                                      Type.sort)),
@@ -144,7 +144,7 @@ public class ExpressionVisitor extends ABasicVisitor {
         //-2^31 <= z < 2^31 
         val = Num.value((Integer)expr.value);
 //        term = result.substWith(val);
-        term = Logic.implies (Logic.and(Logic.le(intMin, val), Logic.le(val, intMax)),
+        term = Logic.implies (Expression.sym("Int.range", new Term[] {val}),
                               result.substWith(val));
         break;
       case TagConstants.LONGLIT:
@@ -155,7 +155,7 @@ public class ExpressionVisitor extends ABasicVisitor {
         val = Num.value((Byte)expr.value);
         final Term byteMin = Num.value(Byte.MIN_VALUE);
         final Term byteMax = Num.value(Byte.MAX_VALUE);
-        term = Logic.implies (Logic.and(Logic.le(byteMin, val), Logic.le(val, byteMax)),
+        term = Logic.implies (Expression.sym("Byte.range", new Term[] {val}),
                               result.substWith(val));
         break;
       case TagConstants.SHORTLIT:
@@ -163,7 +163,7 @@ public class ExpressionVisitor extends ABasicVisitor {
         val = Num.value((Short)expr.value);
         final Term shortMin = Num.value(Short.MIN_VALUE);
         final Term shortMax = Num.value(Short.MAX_VALUE);
-        term = Logic.implies (Logic.and(Logic.le(shortMin, val), Logic.le(val, shortMax)),
+        term = Logic.implies (Expression.sym("Short.range", new Term[] {val}),
                               result.substWith(val));
         break;
       case TagConstants.FLOATLIT:

@@ -3,11 +3,11 @@ package mobius.directVCGen.formula.coq;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.LineNumberReader;
 import java.io.PrintStream;
-import java.util.List;
 
-import mobius.directVCGen.formula.Formula;
-import escjava.sortedProver.NodeBuilder.FnSymbol;
 import escjava.sortedProver.NodeBuilder.STerm;
 
 /**
@@ -26,6 +26,7 @@ public class CoqFile {
   /** the name of the directory which contains bicolano's library files. */
   private String fBase;
 
+  private String fOldProof;
 
   /**
    * Construct an object used to print a proof obligation in a file.
@@ -36,9 +37,11 @@ public class CoqFile {
    */
   public CoqFile(final File configDir, final File baseDir, 
                  final String name) throws FileNotFoundException {
-    fOut = new PrintStream(new FileOutputStream(new File(baseDir, 
-                              name + suffix)));
+    final File f = new File(baseDir, name + suffix);
+    getOldProof(f);
+    fOut = new PrintStream(new FileOutputStream(f));
     fBase = configDir.toString();
+
   }
   
   /**
@@ -58,9 +61,11 @@ public class CoqFile {
    * @param term the formula representing the proof obligation
    */
   public void writeProof(final STerm term) {
+    writeHeader();
     fOut.println("Lemma l:\n" + term + ".");
-    fOut.println("Proof.");
-    fOut.println("   nintros; repeat (split; nintros); cleanstart.\n\nQed.");
+    fOut.println("Proof with auto.");
+    fOut.print(getProof());
+    fOut.println("Qed.");
   }
 
   /**
@@ -72,18 +77,7 @@ public class CoqFile {
     fOut.close();
   }
 
-  /**
-   * Write the definitions for coq: basically it writes class
-   * definitions; fields to declare; and special magickal symbols.
-   * @param classNames the class names to declare
-   */
-  public void writeDefs(final List<String> classNames) {
-    
-    // source
-    writeHeader();
-    
 
-  }
 
   /**
    * Write the header of the coq file (load path, requires...).
@@ -115,6 +109,43 @@ public class CoqFile {
    */
   public PrintStream getOut() {
     return fOut;
+  }
+  
+  protected String getDefaultProof() {
+    return "   nintros; repeat (split; nintros); cleanstart.\n";
+  }
+  
+  public String getProof() {
+    return fOldProof;
+  }
+  
+  private void getOldProof(File f) {
+    if (f.exists()) {
+      fOldProof = "";
+      try {
+        final LineNumberReader reader = new LineNumberReader(new FileReader(f));
+        String line = reader.readLine();
+        //System.out.println (f + "\n" + line);
+        while ((line != null) && !line.startsWith("Proof with")) {
+          line = reader.readLine();
+        }
+        line = reader.readLine();
+        while ((line != null) && !line.startsWith("Qed.")) {
+          fOldProof = fOldProof + line + "\n";
+          line = reader.readLine();
+          
+        }
+        reader.close();
+//        System.out.println (fOldProof);
+       
+      } 
+      catch (IOException e) {
+        e.printStackTrace();
+      }
+    }
+    else {
+      fOldProof = getDefaultProof() + "\n";
+    }
   }
 
 }

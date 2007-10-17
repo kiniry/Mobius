@@ -31,7 +31,6 @@ import mobius.directVCGen.formula.Num;
 import mobius.directVCGen.formula.Ref;
 import mobius.directVCGen.formula.Type;
 import mobius.directVCGen.formula.Util;
-import mobius.directVCGen.vcgen.DirectVCGen;
 import mobius.directVCGen.vcgen.struct.Post;
 import mobius.directVCGen.vcgen.struct.VCEntry;
 import escjava.ast.Modifiers;
@@ -68,66 +67,93 @@ public class ExpressionVCGen extends BinaryExpressionVCGen {
   
   public Post methodInvocation(final MethodInvocation mi, final VCEntry entry) {
     final MethodDecl fMeth = mi.decl;
-    final Post normPost;
-    final Post excpPost;
     
     
-    if (DirectVCGen.fByteCodeTrick) {
-      final String name = Util.getMethodName(fMeth);
-      LinkedList<Term> args = new LinkedList<Term> ();
-      args.add(Heap.varPre);
-      args.addAll(Lookup.getInst().getPreconditionArgs(fMeth));
-      QuantVariableRef qvr = Lookup.getNormalPostcondition(fMeth).getRVar();
-      if (qvr != null) {
-        args.addFirst(Expression.sym("Normal", new Term [] {
-                            Expression.sym("Some", new Term [] {Heap.sortToValue(qvr)})}));
-      }
-      else {
-        args.addFirst(Expression.sym("Normal None", new Term [] {}));
-      }
-      Term[] tab = args.toArray(new Term [args.size()]);
-      normPost = new Post(qvr, 
-                          Expression.sym(name + ".mk_post", tab));
-      
-      args = new LinkedList<Term> ();
-      args.add(Heap.varPre);
-      args.addAll(Lookup.getInst().getPreconditionArgs(fMeth));
-      qvr = Lookup.getExceptionalPostcondition(fMeth).getRVar();
-      args.addFirst(Expression.sym("Exception", new Term [] {qvr}));
-      tab = args.toArray(new Term [args.size()]);
-      excpPost = new Post(Lookup.getExceptionalPostcondition(fMeth).getRVar(), 
-                          Expression.sym(name + ".mk_post", tab));
-
-    }
-    else {
-      normPost = Lookup.getNormalPostcondition(fMeth);
-      excpPost = Lookup.getExceptionalPostcondition(fMeth);
-    }
-    final Term pre;
-    if (DirectVCGen.fByteCodeTrick) {
-      final String name = Util.getMethodName(mi.decl);
-      final List<QuantVariableRef> l = Lookup.getInst().getPreconditionArgs(mi.decl);
-      final Term[] tab = l.toArray(new Term [l.size()]);
-      pre = Expression.sym(name + ".mk_pre", tab);
-      
-    }
-    else {
-      pre = Lookup.getPrecondition(mi.decl);
-    }
     
     final QuantVariableRef newThis = Expression.rvar(Ref.sort);
+    final QuantVariableRef newHeap = Heap.newVar();
+    
+    //mking the args
+    final String name = Util.getMethodName(fMeth);
+    final LinkedList<Term> args = new LinkedList<Term> ();
+    args.add(Heap.varPre);
+    args.addAll(Lookup.getInst().getPreconditionArgs(fMeth));
+    
+    // mking the meth norm post
+    final QuantVariableRef resVar = Lookup.getNormalPostcondition(fMeth).getRVar();
+    if (resVar != null) {
+      args.addFirst(Expression.sym("Normal", new Term [] {
+                          Expression.sym("Some", new Term [] {Heap.sortToValue(resVar)})}));
+    }
+    else {
+      args.addFirst(Expression.sym("Normal None", new Term [] {}));
+    }
+    Term[] tab = args.toArray(new Term [args.size()]);
+    for (int i = 0; i < tab.length; i++) {
+      if (tab[i].equals(Heap.var)) {
+        tab[i] = newHeap;
+      }
+      else if (tab[i].equals(Ref.varThis)) {
+        tab[i] = newThis;
+      }
+      else if (tab[i].equals(Heap.varPre)) {
+        tab[i] = Heap.var;
+      }
+    }
+    final Post methNormPost = new Post(resVar, Expression.sym(name + ".mk_post", tab));
+    
+    // mking the meth excp post
+    final QuantVariableRef excVar = Lookup.getExceptionalPostcondition(fMeth).getRVar();
+    tab = args.toArray(new Term [args.size()]);
+    tab [0] = Expression.sym("Exception", new Term [] {excVar});
+    for (int i = 0; i < tab.length; i++) {
+      if (tab[i].equals(Heap.var)) {
+        tab[i] = newHeap;
+      }
+      else if (tab[i].equals(Ref.varThis)) {
+        tab[i] = newThis;
+      }
+      else if (tab[i].equals(Heap.varPre)) {
+        tab[i] = Heap.var;
+      }
+    }
+    final Post methExcpPost = new Post(excVar, Expression.sym(name + ".mk_post", tab));
+
+   
+   
+    // mking the meth pre
+    final List<QuantVariableRef> preArgs = Lookup.getInst().getPreconditionArgs(fMeth);
+    
+    tab = preArgs.toArray(new Term [preArgs.size()]);
+    for (int i = 0; i < tab.length; i++) {
+      if (tab[i].equals(Ref.varThis)) {
+        tab[i] = newThis;
+      }
+      else if (tab[i].equals(Heap.var)) {
+        tab[i] = Heap.var;
+      }
+      else if (tab[i].equals(Heap.varPre)) {
+        throw new IllegalArgumentException("but, where does it come from?");
+      }
+    }
+    final Term pre = Expression.sym(name + ".mk_pre", tab);
+      
+    
 
     // first: the exceptional post
     final QuantVariableRef exc = Expression.rvar(Ref.sort);
-    final Term tExcp = Logic.forall(exc.qvar, Logic.implies(Logic.implies(pre, excpPost.substWith(exc).subst(Ref.varThis, newThis)), 
-                                                      Util.getExcpPost(Type.javaLangThrowable(), entry).substWith(exc)));
+    final Term excpPost =  Util.getExcpPost(Type.javaLangThrowable(), entry).substWith(exc)
+                                    .subst(Heap.var, newHeap);
+    final Term methExcp = Logic.implies(pre, methExcpPost.substWith(exc));
+    final Term tExcp = Logic.forall(exc, Logic.implies(methExcp, excpPost));
+    
     // the normal post
-    final QuantVariableRef res = entry.fPost.getRVar();
-    Term tNormal = normPost.substWith(res);
-    tNormal = Logic.forall(res, Logic.implies(Logic.implies(pre, tNormal), 
-                                              entry.fPost.substWith(res)).subst(Ref.varThis, newThis));
+    final QuantVariableRef res = Expression.rvar(entry.fPost.getRVar().getSort());
+    final Term normPost = entry.fPost.substWith(res).subst(Heap.var, newHeap);
+    final Term methNorm = Logic.implies(pre, methNormPost.substWith(res));
+    final Term tNormal = Logic.forall(res, Logic.implies(methNorm, normPost));
 
-    entry.fPost = new Post(Logic.and(tNormal, tExcp));
+    entry.fPost = new Post(Logic.forall(newHeap, Logic.and(tNormal, tExcp)));
     //entry.fPost = new Post(Logic.and(pre, Logic.implies(pre, Logic.and(tNormal, tExcp))));
     final List<QuantVariableRef> v = mkArguments(mi);
     final ExprVec ev = mi.args;
@@ -135,7 +161,7 @@ public class ExpressionVCGen extends BinaryExpressionVCGen {
       entry.fPost = new Post(v.get(i), entry.fPost);
       entry.fPost = getPre(ev.elementAt(i), entry);
     }
-    entry.fPost = new Post(newThis, Util.mkNewEnv(entry.fPost));
+    entry.fPost = new Post(newThis, entry.fPost);
     entry.fPost = getPre(mi.od, entry);
     return entry.fPost;
   }
@@ -151,10 +177,10 @@ public class ExpressionVCGen extends BinaryExpressionVCGen {
     final QuantVariableRef r = Expression.rvar(Ref.sort);
     p = new Post(r,
                  Logic.and(Logic.implies(Logic.assignCompat(Heap.var, r, 
-                                                            Type.translate(x.type)),
+                                                            Type.translateToType(x.type)),
                                                             p.substWith(Bool.value(true))), 
                                                             Logic.implies(Logic.not(Logic.typeLE(Type.of(Heap.var, r), 
-                                                                                                 Type.translate(x.type))),
+                                                                                                 Type.translateToType(x.type))),
                                                                                                  p.substWith(Bool.value(false)))));
     entry.fPost = p;
     final Post pre = getPre(x.expr, entry);
@@ -189,7 +215,7 @@ public class ExpressionVCGen extends BinaryExpressionVCGen {
     Post p = new Post(e.fPost.getRVar(), 
                       Logic.implies(Logic.assignCompat(Heap.var, 
                                                        e.fPost.getRVar(),
-                                                       Type.translateToType(x.type)),
+                                                       Type.translate(x.type)),
                                     e.fPost.getPost()));
     e.fPost = p;
     p = getPre(x.expr, e);
@@ -296,7 +322,7 @@ public class ExpressionVCGen extends BinaryExpressionVCGen {
     //ArrayInit init= narr.init;
     Term arr;
     Post pre = entry.fPost;
-    final Term type =  Type.translateToType(narr.type);
+    final Term type =  Type.translate(narr.type);
 
     // init expressions.
     if (narr.init != null) {
@@ -405,13 +431,16 @@ public class ExpressionVCGen extends BinaryExpressionVCGen {
   }
 
   public Post postfixInc(final UnaryExpr expr, final VCEntry entry) {
+    final Term between = Expression.sym("Byte.range", new Term[] {Num.value(1)});
+    
+      
     final Post oldp = entry.fPost;
     final QuantVariableRef var = Expression.rvar(Type.getSort(expr));
     entry.fPost = new Post(var, oldp);
     Post newpost = assign(expr.expr, entry);
     entry.fPost = new Post(var, newpost.substWith(Num.inc(newpost.getRVar())));
     newpost = getPre(expr.expr, entry);
-    entry.fPost = new Post(oldp.getRVar(), newpost);
+    entry.fPost = new Post(oldp.getRVar(), Post.implies(between, newpost));
     return getPre(expr.expr, entry);
   }
   public Post postfixDec(final UnaryExpr expr, final VCEntry entry) {
@@ -428,7 +457,12 @@ public class ExpressionVCGen extends BinaryExpressionVCGen {
 
   public Post inc(final UnaryExpr expr, final VCEntry entry) {
     final Post oldp = entry.fPost;
-    entry.fPost = new Post (oldp.getRVar(), oldp.substWith(Num.inc(oldp.getRVar())));
+    final Term between = Expression.sym("Byte.range", new Term[] {Num.value(1)});
+    
+                                  
+    entry.fPost = new Post (oldp.getRVar(), 
+                            Logic.implies(between,
+                                          oldp.substWith(Num.inc(oldp.getRVar()))));
     return getPre(expr.expr, entry);
   }
 

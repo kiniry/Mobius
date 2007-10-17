@@ -72,7 +72,7 @@ public final class Type {
    * @return a term which has the type {@link Type#sort} and which represents
    * the name of the type which is translated
    */
-  public static QuantVariableRef translate(final javafe.ast.Type type) {
+  public static QuantVariableRef translateToType(final javafe.ast.Type type) {
     QuantVariableRef t = types.get(type);
     if (t != null) {
       return t;
@@ -89,6 +89,9 @@ public final class Type {
           name = "(InterfaceType " + name.substring(2) + "Type.interfaceName)";
         }
         name = "(ReferenceType " + name + ")";
+      }
+      else {
+        name = "(PrimitiveType " + name.substring(2).toUpperCase() + ")";
       }
       t = Expression.rvar(name, Type.sort);
       types.put(type, t);
@@ -124,9 +127,10 @@ public final class Type {
    * @param type the type to translate
    * @return term which has the type {@link Type#sort} and which represents
    * the type which is translated
+   * @deprecated use {@link #translateToType(javafe.ast.Type)} instead
    */
-  public static Term translateToType(final javafe.ast.Type type) {
-    final QuantVariableRef q = translate(type);
+  public static Term translate(final javafe.ast.Type type) {
+    final QuantVariableRef q = translateToType(type);
     return Expression.rvar("(ReferenceType (ClassType " + q.qvar.name + "))", q.getSort());
   }
 
@@ -136,7 +140,7 @@ public final class Type {
    * @return a valid sort as decided by 
    * {@link escjava.sortedProver.Lifter#typeToSort(javafe.ast.Type)}
    * @see #getTypeName(VarInit)
-   * @see #translate(javafe.ast.Type)
+   * @see #translateToType(javafe.ast.Type)
    */
   public static Sort getSort(final VarInit e) {
     final javafe.ast.Type t = FlowInsensitiveChecks.getType(e);
@@ -148,7 +152,7 @@ public final class Type {
   /**
    * Returns true if we can determine that typ1 is a subtype of typ2.
    * Should be used only with real type terms that were obtained previously
-   * by a call to {@link #translate(javafe.ast.Type)} !!!
+   * by a call to {@link #translateToType(javafe.ast.Type)} !!!
    * @param typ1 the first type
    * @param typ2 the secont type to compare to the first one
    * @return if one is a subclass or the same as the other
@@ -169,10 +173,10 @@ public final class Type {
    * @param expr the expression to get the type from
    * @return a term representing a type
    * @see #getSort(VarInit)
-   * @see #translate(javafe.ast.Type)
+   * @see #translateToType(javafe.ast.Type)
    */
   public static Term getTypeName(final VarInit expr) {
-    return translate(FlowInsensitiveChecks.getType(expr));
+    return translateToType(FlowInsensitiveChecks.getType(expr));
   }
 
   /**
@@ -180,7 +184,7 @@ public final class Type {
    * type it is also surrounded by conversions things.
    * @param expr the expression to get the type of
    * @return a valid type
-   * @see #translateToType(javafe.ast.Type)
+   * @see #translate(javafe.ast.Type)
    */
   public static Term getType(final VarInit expr) {
     return translateToType(FlowInsensitiveChecks.getType(expr));
@@ -194,7 +198,7 @@ public final class Type {
    * @see #getJavaLang(String)
    */
   public static Term javaLangThrowable() {
-    return translate(Types.javaLangThrowable());
+    return translateToType(Types.javaLangThrowable());
   }
 
   /**
@@ -205,7 +209,7 @@ public final class Type {
    * @see #getJavaLang(String)
    */
   public static Term javaLangArithmeticException() {
-    return translate(Types.getJavaLang("ArithmeticException"));
+    return translateToType(Types.getJavaLang("ArithmeticException"));
   }
   
   public static Term javaLangArithmeticExceptionName() {
@@ -223,7 +227,7 @@ public final class Type {
    * @see #getJavaLang(String)
    */
   public static Term javaLangNullPointerException() {
-    return translate(Types.getJavaLang("NullPointerException"));
+    return translateToType(Types.getJavaLang("NullPointerException"));
   }
 
   /**
@@ -232,7 +236,7 @@ public final class Type {
    * @deprecated used for convenience only
    */
   public static Term getJavaLang(final String str) {
-    return translate(Types.getJavaLang(str));
+    return translateToType(Types.getJavaLang(str));
   }
   /**
    * @param t the type to convert
@@ -294,7 +298,7 @@ public final class Type {
    * @see #getJavaLang(String) 
    */
   public static Term javaLangArrayOutOfBoundException() {
-    return translate(Types.getJavaLang("ArrayOutOfBoundException"));
+    return translateToType(Types.getJavaLang("ArrayOutOfBoundException"));
   }
 
   /**

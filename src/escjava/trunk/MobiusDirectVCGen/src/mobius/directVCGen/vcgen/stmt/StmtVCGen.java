@@ -484,7 +484,7 @@ public class StmtVCGen extends ExpressionVisitor {
     final Post olpost = vce.fPost;
     for (CatchClause c: catches) {
       ExcpPost ep;
-      final Term t = Type.translate(c.arg.type);
+      final Term t = Type.translateToType(c.arg.type);
       final QuantVariableRef excp = Expression.rvar(c.arg);
       vce.fPost = olpost;
       Post epost = (Post)c.body.accept(this, vce);

@@ -564,7 +564,7 @@ public final class Logic {
 
     while (iter.hasNext()) {
       final javafe.ast.Type type = (javafe.ast.Type) iter.next();
-      final QuantVariableRef typeTerm = Type.translate(type);
+      final QuantVariableRef typeTerm = Type.translateToType(type);
       t1 = Logic.equals(var, typeTerm);
       if (t2 == null) {
         t2 = t1;

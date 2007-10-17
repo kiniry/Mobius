@@ -23,15 +23,18 @@ import mobius.directVCGen.formula.Formula;
 import mobius.directVCGen.formula.Heap;
 import mobius.directVCGen.formula.Logic;
 import mobius.directVCGen.formula.Lookup;
+import mobius.directVCGen.formula.Ref;
 import mobius.directVCGen.formula.Type;
 import mobius.directVCGen.formula.Util;
 import mobius.directVCGen.formula.coq.BcCoqFile;
 import mobius.directVCGen.formula.coq.CoqFile;
+import mobius.directVCGen.formula.coq.EquivCoqFile;
 import mobius.directVCGen.vcgen.stmt.StmtVCGen;
 import mobius.directVCGen.vcgen.struct.Post;
 import mobius.directVCGen.vcgen.struct.VCEntry;
 import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
+import escjava.sortedProver.NodeBuilder.STerm;
 import escjava.tc.Types;
 
 /**
@@ -90,9 +93,10 @@ public final class MethodVisitor extends DirectVCGen {
     int num = 1;
     final String rawsuffix = ".raw";
     
-    BcCoqFile bcf;
+    
+    
     try {
-      bcf = new BcCoqFile(getBaseDir(), getPkgsDir());
+      final BcCoqFile bcf = new BcCoqFile(getBaseDir(), getPkgsDir());
       String name = "" + fMeth.id();
       if (name.equals("" + fMeth.parent.id)) {
         name = "_init_";
@@ -101,7 +105,6 @@ public final class MethodVisitor extends DirectVCGen {
       bcf.doIt("" + fMeth.parent.id, name);
     } 
     catch (FileNotFoundException e1) {
-      // TODO Auto-generated catch block
       e1.printStackTrace();
     }
     Term all = null;
@@ -113,7 +116,6 @@ public final class MethodVisitor extends DirectVCGen {
         fos.println(t);
         fos.close();
         final CoqFile cf = new CoqFile(getBaseDir(), getPkgsDir(), name);
-        cf.writeDefs(Type.getAllTypes());
         cf.writeProof(Formula.generateFormulas(t));
         if (all == null) {
           all = t;
@@ -131,8 +133,15 @@ public final class MethodVisitor extends DirectVCGen {
 
     try {
       final CoqFile cf = new CoqFile(getBaseDir(), getPkgsDir());
-      cf.writeDefs(Type.getAllTypes());
-      cf.writeProof(Formula.generateFormulas(all));
+      final STerm term = Formula.generateFormulas(all);
+      cf.writeProof(term);
+      
+      String name = "" + fMeth.id();
+      if (name.equals("" + fMeth.parent.id)) {
+        name = "_init_";
+      }
+      final EquivCoqFile ecf = new EquivCoqFile(getBaseDir(), getPkgsDir());
+      ecf.doIt("" + fMeth.parent.id, name, term);
     } 
     catch (FileNotFoundException e) {
       e.printStackTrace();
@@ -148,8 +157,8 @@ public final class MethodVisitor extends DirectVCGen {
    */
   @Override
   public void visitBlockStmt(final /*@non_null*/ BlockStmt x) {
-    final Post normPost;
-    final Post excpPost;
+    Post normPost;
+    Post excpPost;
     Map<QuantVariableRef, Term> variables = VarCorrDecoration.inst.get(fMeth);
     Expression.fVariables = variables;
     if (DirectVCGen.fByteCodeTrick) {
@@ -183,6 +192,13 @@ public final class MethodVisitor extends DirectVCGen {
       excpPost = Lookup.getExceptionalPostcondition(fMeth);
     }
     
+    final Term varThis = variables.get(Ref.varThis);
+    final Term oldThis = varThis.subst(Heap.lvvar, Heap.lvvarPre);
+    normPost = new Post(normPost.getRVar(), 
+                        normPost.subst(varThis, oldThis));
+    excpPost = new Post(excpPost.getRVar(), 
+                        excpPost.subst(varThis, oldThis));
+    System.out.println(normPost);
     final VCEntry post = new VCEntry(normPost, excpPost);
     final StmtVCGen dvcg = new StmtVCGen(fMeth, variables);
     final Post wp = (Post)x.accept(dvcg, post);
@@ -210,6 +226,7 @@ public final class MethodVisitor extends DirectVCGen {
       for (Term vars: args) {
         final QuantVariableRef qvr = (QuantVariableRef) vars;
         t = t.subst(Expression.old(qvr), variables.get(qvr));
+        //t = t.subst(qvr, variables.get(qvr));
       }
       fVcs.add(t);
     }
@@ -229,13 +246,7 @@ public final class MethodVisitor extends DirectVCGen {
     
     for (Term t: oldvcs) {
       for (QuantVariableRef qvr: qvs) {
-//        if (qvr.equals(Heap.var)) {
-//          t = Logic.forall(qvr, t);
-//          t = Logic.forall(Heap.lvvar, t);
-//        }
-//        else {
-          t = t.subst(qvr, variables.get(qvr));
-//        }
+        t = t.subst(qvr, variables.get(qvr));
       }
       t = t.subst(Heap.varPre, Heap.var);
       t = t.subst(Heap.lvvarPre, Heap.lvvar);

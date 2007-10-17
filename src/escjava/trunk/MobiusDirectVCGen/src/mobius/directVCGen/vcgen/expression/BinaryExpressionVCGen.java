@@ -225,10 +225,14 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn {
           // can be null
   
           final QuantVariableRef obj = Expression.rvar(Ref.sort);
-  
-          entry.fPost = new Post(obj, entry.fPost.subst(Heap.var, 
-                                                        Heap.store(Heap.var, 
-                                                                   obj, f.qvar, val)));
+          Term p = 
+            Logic.implies(Logic.assignCompat(Heap.var, 
+                                             Heap.sortToValue(val), 
+                                             Type.getType(field)),
+                          entry.fPost.subst(Heap.var, 
+                                            Heap.store(Heap.var, 
+                                                       obj, f.qvar, val)));
+          entry.fPost = new Post(obj, p);
           pre = getPre(od, entry);
           pre = new Post(val, pre);
           break;
