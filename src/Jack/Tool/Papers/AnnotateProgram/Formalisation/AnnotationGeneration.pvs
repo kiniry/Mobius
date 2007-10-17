@@ -118,8 +118,9 @@ BEGIN
 END NewVariableDeclarations
 
 
-AnnotateProgram[CP, Name : TYPE+] : THEORY
+AnnotateEvent[CP, Name : TYPE+] : THEORY
 BEGIN
+
 
   ASSUMING
 
@@ -173,6 +174,7 @@ BEGIN
      CaseJML(ann_guard_actions(mp)(ts)))
 
 
+      
   ann_event_set(mp)(ts : finite_set[Transition]) : 
                          finite_set[[BoolExpr, Stmt]] = 
     {c : [BoolExpr, Stmt] | EXISTS (q : CP) : 
@@ -185,9 +187,42 @@ BEGIN
   ann_event(mp)(ts : finite_set[Transition]): Stmt =
     CaseJML(set2list(ann_event_set(mp)(ts)))
 
+  ann_event_var_names : LEMMA
+    FORALl(ts : finite_set[Transition], v : Name) :
+      var_names(ann_event(mp)(ts))(v) IMPLIES 
+        ext_declared_var_names(program(mp))(v) OR
+        var_names(new_gvds(mp))(v)
 
 
-  % Method annotation
+END AnnotateEvent
+
+
+AnnotateMethod[CP, Name : TYPE+] : THEORY
+BEGIN
+
+  ASSUMING
+
+    CP_is_enumerable : ASSUMPTION
+      EXISTS (f : [CP -> nat]) : injective?(f)
+
+    infinite_namespace : ASSUMPTION
+      is_infinite({n : Name | TRUE})
+
+    IMPORTING VariableNames[CP, Name]
+
+    name_of_exists : ASSUMPTION
+      EXISTS (f : [mp : (wf_MP) -> [CP -> (legal_names(mp))]]) : 
+        FORALL(mp : (wf_MP)) : 
+          injective?(f(mp))
+
+  ENDASSUMING
+
+  IMPORTING AnnotateEvent[CP, Name]
+
+  mp : VAR (wf_MP)
+
+  a : VAR (wf_MVA)
+
 
   filter_event(a)(et : EventType)(m : Name) : finite_set[Transition] =
     {t : Transition | ts(a)(t) AND etype(event(t)) = et AND mname(event(t)) = m}
@@ -208,7 +243,110 @@ BEGIN
     {m : Method | EXISTS (n : Method) : ms(n) AND m = ann_method(mp)(n)}
 
 
-  % Class annotation
+  % NOTE: The following lemmas are simple but are useful as autorewrite rules
+  
+  ann_method_body : LEMMA % :-)
+    FORALL(m : Method) :
+      body(ann_method(mp)(m)) = body(m)
+
+  ann_method_pre : LEMMA % :-)
+    FORALL(m : Method) :
+      pre(ann_method(mp)(m)) = pre(m)
+
+  ann_method_post : LEMMA % :-)
+    FORALL(m : Method) :
+      post(ann_method(mp)(m)) = post(m)
+
+  ann_method_arg : LEMMA % :-)
+    FORALL(m : Method) :
+      arg(ann_method(mp)(m)) = arg(m)
+
+  ann_method_res : LEMMA % :-)
+    FORALL(m : Method) :
+      res(ann_method(mp)(m)) = res(m)
+
+  ann_method_res_type : LEMMA % :-)
+    FORALL(m : Method) :
+      res_type(ann_method(mp)(m)) = res_type(m)
+
+  ann_method_lvars : LEMMA % :-)
+    FORALL(m : Method) :
+      lvars(ann_method(mp)(m)) = lvars(m)
+
+  ann_method_pre_set : LEMMA % :-)
+    FORALL(m : Method) :
+      Sequence?(pre_set(ann_method(mp)(m))) AND
+        s1(pre_set(ann_method(mp)(m))) = pre_set(m)
+
+  ann_method_post_set : LEMMA % :-)
+    FORALL(m : Method) :
+      Sequence?(post_set(ann_method(mp)(m))) AND
+        s1(post_set(ann_method(mp)(m))) = post_set(m)
+
+  ann_method_exc_set : LEMMA % :-)
+    FORALL(m : Method) :
+      Sequence?(exc_set(ann_method(mp)(m))) AND
+        s1(exc_set(ann_method(mp)(m))) = exc_set(m)
+
+  body_ann_method_wf_Body : LEMMA % :-)
+    FORALL(m : Method) :
+      wf_Method(program(mp))(m) IMPLIES
+      LET am = ann_method(mp)(m) IN
+      (FORALL(v : Name) : var_names(body(am))(v) IMPLIES 
+                          ext_declared_var_names(program(mp))(v)) 
+      AND
+      (FORALL(v : Name) : var_names(pre(am))(v) IMPLIES 
+                          ext_declared_var_names(program(mp))(v)) 
+      AND 
+      (FORALL(v : Name) : var_names(post(am))(v) IMPLIES 
+                          ext_declared_var_names(program(mp))(v)) 
+      AND 
+      (FORALL(v : Name) : var_names(res(am))(v) IMPLIES 
+                          ext_declared_var_names(program(mp))(v)) 
+      AND 
+      (FORALL(v : Name) : var_names(pre_set(am))(v) IMPLIES 
+                          ext_declared_var_names(program(mp))(v) OR
+                          var_names(new_gvds(mp))(v))
+      AND 
+      (FORALL(v : Name) : var_names(post_set(am))(v) IMPLIES 
+                          ext_declared_var_names(program(mp))(v) OR
+                          var_names(new_gvds(mp))(v))
+      AND 
+      (FORALL(v : Name) : var_names(exc_set(am))(v) IMPLIES 
+                          ext_declared_var_names(program(mp))(v) OR
+                          var_names(new_gvds(mp))(v))
+
+
+END AnnotateMethod
+
+
+AnnotateClass[CP, Name : TYPE+] : THEORY
+BEGIN
+
+  ASSUMING
+
+    CP_is_enumerable : ASSUMPTION
+      EXISTS (f : [CP -> nat]) : injective?(f)
+
+    infinite_namespace : ASSUMPTION
+      is_infinite({n : Name | TRUE})
+
+    IMPORTING VariableNames[CP, Name]
+
+    name_of_exists : ASSUMPTION
+      EXISTS (f : [mp : (wf_MP) -> [CP -> (legal_names(mp))]]) : 
+        FORALL(mp : (wf_MP)) : 
+          injective?(f(mp))
+
+  ENDASSUMING
+
+  IMPORTING AnnotateMethod[CP, Name]
+
+  mp : VAR (wf_MP)
+
+  a : VAR (wf_MVA)
+
+
 
   ann_class(mp)(c : Class) : Class =
     IF classes(program(mp))(c) AND name(c) = class_name(mva(mp))
@@ -219,6 +357,71 @@ BEGIN
                  methods := ann_methods(mp)(methods(c))]
     ELSE c
     ENDIF
+
+  FieldDecls_ann_class : LEMMA
+    FORALL(c : Class) :
+      fields(ann_class(mp)(c)) = fields(c)
+
+  LocalDecls_ann_class : LEMMA
+    FORALL(c : Class) :
+      getLocalDecls(ann_class(mp)(c)) = getLocalDecls(c)
+
+  GhostDecls_ann_class_annotated : LEMMA
+    FORALL(c : Class) :
+      classes(program(mp))(c) IMPLIES 
+      name(c) = class_name(mva(mp)) IMPLIES
+        ghost_vars(ann_class(mp)(c)) = union(ghost_vars(c), new_gvds(mp))
+
+  GhostDecls_ann_class_not_annotated : LEMMA
+    FORALL(c : Class) :
+      classes(program(mp))(c) IMPLIES
+      NOT name(c) = class_name(mva(mp)) IMPLIES
+        ghost_vars(ann_class(mp)(c)) = ghost_vars(c)
+
+
+  ann_class_wf_Class : LEMMA
+    FORALL(c : Class) :
+      wf_Class(program(mp))(c) IMPLIES
+      LET ac = ann_class(mp)(c) IN
+        (FORALL (m1, m2 : Method) :
+           methods(ac)(m1) IMPLIES
+           methods(ac)(m2) IMPLIES
+           name(m1) = name(m2) IMPLIES
+           m1 = m2) 
+     AND
+     (FORALL (v : Name) : var_names(inv(c))(v) IMPLIES 
+                          ext_declared_var_names(program(mp))(v) OR 
+                          var_names(new_gvds(mp))(v))
+        
+END AnnotateClass
+
+
+AnnotateProgram[CP, Name : TYPE+] : THEORY
+BEGIN
+
+  ASSUMING
+
+    CP_is_enumerable : ASSUMPTION
+      EXISTS (f : [CP -> nat]) : injective?(f)
+
+    infinite_namespace : ASSUMPTION
+      is_infinite({n : Name | TRUE})
+
+    IMPORTING VariableNames[CP, Name]
+
+    name_of_exists : ASSUMPTION
+      EXISTS (f : [mp : (wf_MP) -> [CP -> (legal_names(mp))]]) : 
+        FORALL(mp : (wf_MP)) : 
+          injective?(f(mp))
+
+  ENDASSUMING
+
+  IMPORTING AnnotateClass[CP, Name]
+
+  mp : VAR (wf_MP)
+
+  a : VAR (wf_MVA)
+
 
 
   % Program annotation
@@ -316,50 +519,6 @@ BEGIN
       wf_state(ann_program(mp))(sAP) IMPLIES
         (is_ghost(vn, sMP) IMPLIES is_ghost(vn, sAP))
 
-  % NOTE: The following lemmas are simple but are useful as autorewrite rules
-  
-  ann_method_body : LEMMA % :-)
-    FORALL(m : Method) :
-      body(ann_method(mp)(m)) = body(m)
-
-  ann_method_pre : LEMMA % :-)
-    FORALL(m : Method) :
-      pre(ann_method(mp)(m)) = pre(m)
-
-  ann_method_post : LEMMA % :-)
-    FORALL(m : Method) :
-      post(ann_method(mp)(m)) = post(m)
-
-  ann_method_arg : LEMMA % :-)
-    FORALL(m : Method) :
-      arg(ann_method(mp)(m)) = arg(m)
-
-  ann_method_res : LEMMA % :-)
-    FORALL(m : Method) :
-      res(ann_method(mp)(m)) = res(m)
-
-  ann_method_res_type : LEMMA % :-)
-    FORALL(m : Method) :
-      res_type(ann_method(mp)(m)) = res_type(m)
-
-  ann_method_lvars : LEMMA % :-)
-    FORALL(m : Method) :
-      lvars(ann_method(mp)(m)) = lvars(m)
-
-  ann_method_pre_set : LEMMA % :-)
-    FORALL(m : Method) :
-      Sequence?(pre_set(ann_method(mp)(m))) AND
-        s1(pre_set(ann_method(mp)(m))) = pre_set(m)
-
-  ann_method_post_set : LEMMA % :-)
-    FORALL(m : Method) :
-      Sequence?(post_set(ann_method(mp)(m))) AND
-        s1(post_set(ann_method(mp)(m))) = post_set(m)
-
-  ann_method_exc_set : LEMMA % :-)
-    FORALL(m : Method) :
-      Sequence?(exc_set(ann_method(mp)(m))) AND
-        s1(exc_set(ann_method(mp)(m))) = exc_set(m)
 
   ann_class_inv : LEMMA % :-)
     FORALL(c : Class) :

@@ -295,11 +295,14 @@ BEGIN
     {f : FieldDecl | EXISTS (c : Class) : classes(p)(c) AND 
                                           fields(c)(f)}
 
+  getLocalDecls(c : Class) : finite_set[LocalVarDecl] =
+    {l : LocalVarDecl | EXISTS (m : Method) : 
+                          methods(c)(m) AND                      
+                          (lvars(m)(l) OR l = arg(m))}
+
   getLocalDecls(p : PreProgram) : finite_set[LocalVarDecl] =
-    {l : LocalVarDecl | EXISTS (c : Class, m : Method) : 
-                        classes(p)(c) AND 
-                        methods(c)(m) AND
-                        (lvars(m)(l) OR l = arg(m))}
+    {l : LocalVarDecl | EXISTS (c : Class) : 
+                        classes(p)(c) AND getLocalDecls(c)(l)}
 
   arg_in_getLocalDecls : LEMMA % :-)
     FORALL(p : PreProgram, c : Class, m : Method) : 
