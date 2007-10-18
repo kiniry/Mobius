@@ -155,14 +155,26 @@ BEGIN
       (cp(astate(sMP)) = halted) =
       (lookup(cp(mp), sAP) = lookup(halted(mp), sAP))
 
-  MP_modeled_implies_cp_Int : LEMMA % TO DO
+  MP_modeled_implies_cp_Int : LEMMA % :-)
     FORALL(mp)(sMP : MPState, sAP : APState) :
       MP_modeled?(mp)(sMP, sAP) IMPLIES
+      wf_state(ann_program(mp))(sAP) IMPLIES
       Int?(lookup(cp(mp), sAP))
 
-  MP_modeled_implies_halted_Int : LEMMA % TO DO
+  MP_modeled_implies_halted_Int : LEMMA % :-)
     FORALL(mp)(sMP : MPState, sAP : APState) :
       MP_modeled?(mp)(sMP, sAP) IMPLIES
+      wf_state(ann_program(mp))(sAP) IMPLIES
+      Int?(lookup(halted(mp), sAP))
+
+  related_states_implies_cp_Int : LEMMA % :-)
+    FORALL(mp)(sMP : MPState, sAP : APState) :
+      related_states(mp)(sMP, sAP) IMPLIES
+      Int?(lookup(cp(mp), sAP))
+
+  related_states_implies_halted_Int : LEMMA % :-)
+    FORALL(mp)(sMP : MPState, sAP : APState) :
+      related_states(mp)(sMP, sAP) IMPLIES
       Int?(lookup(halted(mp), sAP))
 
   related_states_preserved_by_update_stack : LEMMA % :-)
@@ -207,7 +219,8 @@ BEGIN
 
   % remaining case: lemma will be proven by Alejandro
   on_method_entry_preserves_related_states_annotated : LEMMA
-    FORALL(mn : Name, md : Method, a : (defined?), m1, m2 : nat,
+    FORALL(mn : Name, md : (wf_Method(program(mp))), a : (defined?), 
+           m1, m2 : nat,
            sMP1, sMP2 : MPState, sAP1, sAP2 : APState) : 
       related_states(mp)(sMP1, sAP1) IMPLIES
       NOT up?(ex(pstate(sAP1))) IMPLIES
@@ -239,7 +252,7 @@ BEGIN
         related_states(mp)(sMP2, sAP2)
 
   on_method_entry_preserves_related_states_not_annotated : LEMMA % :-)
-    FORALL(mn : Name, md : Method, a : (defined?), m1, m2 : nat,
+    FORALL(mn : Name, md : (wf_Method(program(mp))), a : (defined?), m1, m2 : nat,
            sMP1, sMP2 : MPState, sAP1, sAP2 : APState) : 
       related_states(mp)(sMP1, sAP1) IMPLIES
       NOT up?(ex(pstate(sAP1))) IMPLIES
@@ -271,7 +284,7 @@ BEGIN
         related_states(mp)(sMP2, sAP2)
 
   on_method_exit_normal_preserves_related_states_annotated : LEMMA
-    FORALL(mn : Name, md : Method, a : (defined?), m1, m2 : nat,
+    FORALL(mn : Name, md : (wf_Method(program(mp))), a : (defined?), m1, m2 : nat,
            sMP1, sMP2 : MPState, sAP1, sAP2 : APState) : 
       related_states(mp)(sMP1, sAP1) IMPLIES
       NOT up?(ex(pstate(sAP1))) IMPLIES
@@ -304,7 +317,7 @@ BEGIN
         related_states(mp)(sMP2, sAP2)
 
   on_method_exit_normal_preserves_related_states_not_annotated : LEMMA % :-)
-    FORALL(mn : Name, md : Method, a : (defined?), m1, m2 : nat,
+    FORALL(mn : Name, md : (wf_Method(program(mp))), a : (defined?), m1, m2 : nat,
            sMP1, sMP2 : MPState, sAP1, sAP2 : APState) : 
       related_states(mp)(sMP1, sAP1) IMPLIES
       NOT up?(ex(pstate(sAP1))) IMPLIES
@@ -336,7 +349,7 @@ BEGIN
         related_states(mp)(sMP2, sAP2)
 
   on_method_exit_exceptional_preserves_related_states_annotated : LEMMA
-    FORALL(mn : Name, md : Method, a : (defined?), m1, m2 : nat,
+    FORALL(mn : Name, md : (wf_Method(program(mp))), a : (defined?), m1, m2 : nat,
            sMP1, sMP2 : MPState, sAP1, sAP2 : APState) : 
       related_states(mp)(sMP1, sAP1) IMPLIES
       up?(ex(pstate(sAP1))) IMPLIES
@@ -369,7 +382,7 @@ BEGIN
         related_states(mp)(sMP2, sAP2)
 
   on_method_exit_exceptional_preserves_related_states_not_annotated : LEMMA % :-)
-    FORALL(mn : Name, md : Method, a : (defined?), m1, m2 : nat,
+    FORALL(mn : Name, md : (wf_Method(program(mp))), a : (defined?), m1, m2 : nat,
            sMP1, sMP2 : MPState, sAP1, sAP2 : APState) : 
       related_states(mp)(sMP1, sAP1) IMPLIES
       up?(ex(pstate(sAP1))) IMPLIES
@@ -439,7 +452,7 @@ BEGIN
     FORALL (mp)(b : (wf_Body(program(mp))), v1, v2 : Val)
            (sMP1, sMP2 : MPState, sAP1, sAP2 : APState)
            (n1, n2 : nat) :
-      well_behaved_MP(mp) IMPLIES
+      well_behaved_MVA(mp) IMPLIES
       subset?(var_names(b), ext_declared_var_names(program(mp))) IMPLIES
       related_states(mp)(sMP1, sAP1) IMPLIES
       derive(mp)(b, sMP1, v1, sMP2)(n1) IMPLIES
@@ -453,7 +466,7 @@ BEGIN
     FORALL (mp)(main : Method, arg : int)
            (root_object : (defined?))
            (sMP : MPState, sAP : APState) :
-      well_behaved_MP(mp) IMPLIES
+      well_behaved_MVA(mp) IMPLIES
       run_monitored_program(mp)(main, arg)(root_object)(sMP) IMPLIES
       run_annotated_program(ann_program(mp))(main, arg)(root_object)(sAP)
       IMPLIES

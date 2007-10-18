@@ -364,17 +364,6 @@ BEGIN
     FORALL (s1, s2 : FullState, v : Val, n : nat) :
       derive(p)(e, s1, v, s2)(n) IMPLIES s1 = s2
 
-  % The following expression (that appear only in annotations) should have no
-  % side-effects: invariants, preconditions, postconditions, source expression
-  % of a set statement.
-  well_behaved_Program(p : FullProgram) : boolean =
-    FORALL (c : Class) : classes(program(p))(c) IMPLIES
-      spec_expr_has_no_side_effects(p)(inv(c)) AND
-      FORALL (m : Method) : methods(c)(m) IMPLIES
-        spec_expr_has_no_side_effects(p)(pre(m)) AND
-        spec_expr_has_no_side_effects(p)(post(m)) AND
-        (FORALL (s : Stmt) : proper_subterm_set_clause(s, m) IMPLIES
-          Set?(s) IMPLIES spec_expr_has_no_side_effects(p)(source(s)))
 
   run_FullProgram(p : FullProgram)(main : (wf_Method(program(p))), arg : int)
                  (initial, final : FullState) : boolean =

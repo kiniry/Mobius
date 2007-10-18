@@ -113,7 +113,13 @@ BEGIN
   wf_state(p : Program)(s : PState) : boolean =
     FORALL (vn : Name) :
       (is_field(vn, s) IFF var_names(getFieldDecls(p))(vn)) AND
-      (is_local(vn, s) IFF (var_names(getLocalDecls(p))(vn) OR vn = This))
+      (is_local(vn, s) IFF (var_names(getLocalDecls(p))(vn) OR vn = This)) 
+
+%AND
+%      (up?(get_FieldDecl(vn, p)) IMPLIES 
+%        welltyped?(lookup_field(vn, s), jtype(down(get_FieldDecl(vn, p))))) AND
+%      (up?(get_LocalDecl(vn, p)) IMPLIES 
+%        welltyped?(lookup_local(vn, s), jtype(down(get_LocalDecl(vn, p)))))
 
   % Well formed state properties
 

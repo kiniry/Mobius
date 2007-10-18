@@ -134,6 +134,7 @@ BEGIN
                            name : Name #]
 
   Method : TYPE = [# name : Name,
+                     classname : Name,
                      arg : LocalVarDecl,
                      pre : BoolExpr[Name],
                      post : BoolExpr[Name],
@@ -288,6 +289,15 @@ BEGIN
   var_names_union : LEMMA % :-)
     FORALL(fs1, fs2 : finite_set[FieldDecl]) :
       var_names(union(fs1, fs2)) = union(var_names(fs1), var_names(fs2))
+
+  IMPORTING WF_Card[[BoolExpr, Stmt]], set2list[[BoolExpr, Stmt]]
+
+
+  var_names_CaseJML_set2list : LEMMA % :-)
+    FORALL(s : finite_set[[BoolExpr, Stmt]], n : Name) :
+      var_names(CaseJML(set2list(s)))(n) =
+          EXISTS(x : [BoolExpr, Stmt]) :
+            s(x) AND union(var_names(proj_1(x)), var_names(proj_2(x)))(n)
 
   % Declared variable names
 
@@ -520,6 +530,7 @@ BEGIN
          m1 = m2) 
      AND
     (FORALL (m : Method) : methods(c)(m) IMPLIES wf_Method(p)(m)) AND
+    (FORALL (m : Method) : methods(c)(m) IMPLIES classname(m) = name(c)) AND
      wf_Body(p)(inv(c))
 
   wf_Classes(p : PreProgram) : boolean =
@@ -571,15 +582,14 @@ BEGIN
     wf_program_variables_disjoint_def(p) AND
     wf_program_variables_not_reserved_words_def(p) AND
     wf_program_has_unique_class_names_def(p) AND
-    wf_Classes(p) AND
-    wf_program_methods_only_in_one_class(p)
+    wf_Classes(p)% AND
+%    wf_program_methods_only_in_one_class(p)
 %    invariants_are_bool_expr(p)
 
   
   Program : TYPE = (wf_Program)
 
   AUTO_REWRITE- wf_Program
-
 
   % Properties needed of well-formed programs
 
@@ -618,11 +628,8 @@ BEGIN
       name(m1) = name(m2) IMPLIES
         m1 = m2
 
-%  wf_program_all_variables_declared : LEMMA % :-)
-%    FORALL(p : Program, v : Name) : 
-%      wf_Program(p) IMPLIES
-%        var_names(p)(v) IMPLIES
-%        declared_var_names(p)(v)
-
+  wf_program_methods_only_in_one_class : LEMMA % :-)
+    FORALL(p : Program) :
+      wf_program_methods_only_in_one_class(p)
 
 END WellFormedProgram

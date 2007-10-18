@@ -48,7 +48,7 @@
         NIL))
       NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
@@ -57,30 +57,11 @@
     (|LocalVarDecl| TYPE-EQ-DECL NIL |Program| NIL)
     (|set| TYPE-EQ-DECL NIL |sets| NIL)
     (|is_finite| CONST-DECL "bool" |finite_sets| NIL)
-    (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
-    (|x!1| SKOLEM-CONST-DECL "({x: [Name, Val[Name]] |
-    EXISTS (l: LocalVarDecl[Name]):
-      lvds!1(l) AND
-       name(l) = PROJ_1(x) AND default_value[Name](jtype(l)) = PROJ_2(x)})"
-     |Semantics| NIL)
-    (|l!1| SKOLEM-CONST-DECL "LocalVarDecl[Name]" |Semantics| NIL)
+    (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL) NIL NIL
     (|injective?| CONST-DECL "bool" |functions| NIL)
-    (|nonempty_exists| FORMULA-DECL NIL |sets_lemmas| NIL)
-    (|l!1| SKOLEM-CONST-DECL "LocalVarDecl[Name]" |Semantics| NIL)
-    (|x1!1| SKOLEM-CONST-DECL "({x: [Name, Val[Name]] |
-    EXISTS (l: LocalVarDecl[Name]):
-      lvds!1(l) AND
-       name(l) = PROJ_1(x) AND default_value[Name](jtype(l)) = PROJ_2(x)})"
-     |Semantics| NIL)
-    (|x2!1| SKOLEM-CONST-DECL "({x: [Name, Val[Name]] |
-    EXISTS (l: LocalVarDecl[Name]):
-      lvds!1(l) AND
-       name(l) = PROJ_1(x) AND default_value[Name](jtype(l)) = PROJ_2(x)})"
-     |Semantics| NIL)
+    (|nonempty_exists| FORMULA-DECL NIL |sets_lemmas| NIL) NIL NIL NIL
     (|Val| TYPE-DECL NIL |Val_adt| NIL)
-    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
-    (|lvds!1| SKOLEM-CONST-DECL "finite_set[LocalVarDecl[Name]]" |Semantics|
-     NIL)
+    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL) NIL
     (= CONST-DECL "[T, T -> boolean]" |equalities| NIL)
     (|defined?| CONST-DECL "boolean" |ValProp| NIL)
     (|default_value| CONST-DECL "(defined?)" |ValProp| NIL)
@@ -101,10 +82,10 @@
     (|number| NONEMPTY-TYPE-DECL NIL |numbers| NIL))
    198 197 T SHOSTAK))
  (|derive_TCC1| 0
-  (|derive_TCC1-1| NIL 3395749931 3401607679 ("" (TCC)) PROVED NIL 40 40 NIL
+  (|derive_TCC1-1| NIL 3395749931 3401607679 ("" (TCC)) UNCHECKED NIL 40 40 NIL
    NIL))
  (|derive_TCC2| 0
-  (|derive_TCC2-1| NIL 3395749931 3401607679 ("" (TCC)) PROVED NIL 41 40 NIL
+  (|derive_TCC2-1| NIL 3395749931 3401607679 ("" (TCC)) UNCHECKED NIL 41 40 NIL
    NIL))
  (|derive_TCC3| 0
   (|derive_TCC3-1| NIL 3395749931 3401607680
@@ -126,7 +107,7 @@
         NIL))
       NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
@@ -161,17 +142,14 @@
     (|member| CONST-DECL "bool" |sets| NIL))
    62 62 T NIL))
  (|derive_TCC4| 0
-  (|derive_TCC4-1| NIL 3395749931 3401607681 ("" (TCC)) PROVED
+  (|derive_TCC4-1| NIL 3395749931 3401607681 ("" (TCC)) UNCHECKED
    ((|posint_plus_nnint_is_posint| APPLICATION-JUDGEMENT "posint" |integers|
      NIL)
     (|var_names| DEF-DECL "[Name -> boolean]" |ProgramFunctions| NIL)
     (|member| CONST-DECL "bool" |sets| NIL)
     (|union| CONST-DECL "set" |sets| NIL)
     (|getFieldDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
-    (|getLocalDecls| CONST-DECL "finite_set[LocalVarDecl]" |ProgramFunctions|
-     NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    NIL NIL NIL
     (|getGhostDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
     (|ext_declared_var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions|
      NIL)
@@ -239,7 +217,7 @@
         NIL))
       NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
@@ -274,17 +252,14 @@
     (|member| CONST-DECL "bool" |sets| NIL))
    63 62 T NIL))
  (|derive_TCC6| 0
-  (|derive_TCC6-1| NIL 3395749931 3401607683 ("" (TCC)) PROVED
+  (|derive_TCC6-1| NIL 3395749931 3401607683 ("" (TCC)) UNCHECKED
    ((|posint_plus_nnint_is_posint| APPLICATION-JUDGEMENT "posint" |integers|
      NIL)
     (|var_names| DEF-DECL "[Name -> boolean]" |ProgramFunctions| NIL)
     (|member| CONST-DECL "bool" |sets| NIL)
     (|union| CONST-DECL "set" |sets| NIL)
     (|getFieldDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
-    (|getLocalDecls| CONST-DECL "finite_set[LocalVarDecl]" |ProgramFunctions|
-     NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    NIL NIL NIL
     (|getGhostDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
     (|ext_declared_var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions|
      NIL)
@@ -333,7 +308,7 @@
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL))
    125 124 NIL NIL))
  (|derive_TCC7| 0
-  (|derive_TCC7-1| NIL 3395749931 3401607684 ("" (TCC)) PROVED
+  (|derive_TCC7-1| NIL 3395749931 3401607684 ("" (TCC)) UNCHECKED
    ((|real_ge_is_total_order| NAME-JUDGEMENT "(total_order?[real])"
      |real_props| NIL)
     (|real_gt_is_strict_total_order| NAME-JUDGEMENT
@@ -344,10 +319,7 @@
     (|ext_declared_var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions|
      NIL)
     (|getGhostDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
-    (|getLocalDecls| CONST-DECL "finite_set[LocalVarDecl]" |ProgramFunctions|
-     NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    NIL NIL NIL
     (|getFieldDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
     (|var_names| DEF-DECL "[Name -> boolean]" |ProgramFunctions| NIL)
     (|BoolVarEval?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
@@ -408,7 +380,7 @@
         NIL))
       NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
@@ -437,7 +409,7 @@
     (|var_names| DEF-DECL "[Name -> boolean]" |ProgramFunctions| NIL))
    36 35 T NIL))
  (|derive_TCC9| 0
-  (|derive_TCC9-1| NIL 3395749931 3401607685 ("" (TCC)) PROVED NIL 41 40 NIL
+  (|derive_TCC9-1| NIL 3395749931 3401607685 ("" (TCC)) UNCHECKED NIL 41 40 NIL
    NIL))
  (|derive_TCC10| 0
   (|derive_TCC10-1| NIL 3395749931 3401607685
@@ -459,7 +431,7 @@
         NIL))
       NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
@@ -494,17 +466,14 @@
     (|member| CONST-DECL "bool" |sets| NIL))
    83 82 T NIL))
  (|derive_TCC11| 0
-  (|derive_TCC11-1| NIL 3395749931 3401607686 ("" (TCC)) PROVED
+  (|derive_TCC11-1| NIL 3395749931 3401607686 ("" (TCC)) UNCHECKED
    ((|posint_plus_nnint_is_posint| APPLICATION-JUDGEMENT "posint" |integers|
      NIL)
     (|var_names| DEF-DECL "[Name -> boolean]" |ProgramFunctions| NIL)
     (|member| CONST-DECL "bool" |sets| NIL)
     (|union| CONST-DECL "set" |sets| NIL)
     (|getFieldDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
-    (|getLocalDecls| CONST-DECL "finite_set[LocalVarDecl]" |ProgramFunctions|
-     NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    NIL NIL NIL
     (|getGhostDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
     (|ext_declared_var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions|
      NIL)
@@ -574,7 +543,7 @@
         NIL))
       NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
@@ -609,17 +578,14 @@
     (|member| CONST-DECL "bool" |sets| NIL))
    81 81 T NIL))
  (|derive_TCC13| 0
-  (|derive_TCC13-1| NIL 3395749931 3401607688 ("" (TCC)) PROVED
+  (|derive_TCC13-1| NIL 3395749931 3401607688 ("" (TCC)) UNCHECKED
    ((|posint_plus_nnint_is_posint| APPLICATION-JUDGEMENT "posint" |integers|
      NIL)
     (|var_names| DEF-DECL "[Name -> boolean]" |ProgramFunctions| NIL)
     (|member| CONST-DECL "bool" |sets| NIL)
     (|union| CONST-DECL "set" |sets| NIL)
     (|getFieldDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
-    (|getLocalDecls| CONST-DECL "finite_set[LocalVarDecl]" |ProgramFunctions|
-     NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    NIL NIL NIL
     (|getGhostDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
     (|ext_declared_var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions|
      NIL)
@@ -689,7 +655,7 @@
         NIL))
       NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
@@ -724,17 +690,14 @@
     (|member| CONST-DECL "bool" |sets| NIL))
    62 62 T NIL))
  (|derive_TCC15| 0
-  (|derive_TCC15-1| NIL 3395749931 3401607689 ("" (TCC)) PROVED
+  (|derive_TCC15-1| NIL 3395749931 3401607689 ("" (TCC)) UNCHECKED
    ((|posint_plus_nnint_is_posint| APPLICATION-JUDGEMENT "posint" |integers|
      NIL)
     (|var_names| DEF-DECL "[Name -> boolean]" |ProgramFunctions| NIL)
     (|member| CONST-DECL "bool" |sets| NIL)
     (|union| CONST-DECL "set" |sets| NIL)
     (|getFieldDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
-    (|getLocalDecls| CONST-DECL "finite_set[LocalVarDecl]" |ProgramFunctions|
-     NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    NIL NIL NIL
     (|getGhostDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
     (|ext_declared_var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions|
      NIL)
@@ -804,7 +767,7 @@
         NIL))
       NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
@@ -839,17 +802,14 @@
     (|member| CONST-DECL "bool" |sets| NIL))
    64 63 T NIL))
  (|derive_TCC17| 0
-  (|derive_TCC17-1| NIL 3395749931 3401607691 ("" (TCC)) PROVED
+  (|derive_TCC17-1| NIL 3395749931 3401607691 ("" (TCC)) UNCHECKED
    ((|posint_plus_nnint_is_posint| APPLICATION-JUDGEMENT "posint" |integers|
      NIL)
     (|var_names| DEF-DECL "[Name -> boolean]" |ProgramFunctions| NIL)
     (|member| CONST-DECL "bool" |sets| NIL)
     (|union| CONST-DECL "set" |sets| NIL)
     (|getFieldDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
-    (|getLocalDecls| CONST-DECL "finite_set[LocalVarDecl]" |ProgramFunctions|
-     NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    NIL NIL NIL
     (|getGhostDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
     (|ext_declared_var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions|
      NIL)
@@ -906,7 +866,7 @@
       (("" (EXPAND "wf_Body") (("" (INST?) (("" (ASSERT) NIL NIL)) NIL)) NIL))
       NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
@@ -958,7 +918,7 @@
         NIL))
       NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
@@ -989,10 +949,10 @@
     (|add| CONST-DECL "(nonempty?)" |sets| NIL))
    37 36 T NIL))
  (|derive_TCC20| 0
-  (|derive_TCC20-1| NIL 3395749931 3401607693 ("" (TCC)) PROVED NIL 41 40 NIL
-   NIL))
+  (|derive_TCC20-1| NIL 3395749931 3401607693 ("" (TCC)) UNCHECKED NIL 41 40
+   NIL NIL))
  (|derive_TCC21| 0
-  (|derive_TCC21-1| NIL 3395749931 3401607694 ("" (TCC)) PROVED
+  (|derive_TCC21-1| NIL 3395749931 3401607694 ("" (TCC)) UNCHECKED
    ((|real_ge_is_total_order| NAME-JUDGEMENT "(total_order?[real])"
      |real_props| NIL)
     (|real_gt_is_strict_total_order| NAME-JUDGEMENT
@@ -1003,10 +963,7 @@
     (|ext_declared_var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions|
      NIL)
     (|getGhostDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
-    (|getLocalDecls| CONST-DECL "finite_set[LocalVarDecl]" |ProgramFunctions|
-     NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    NIL NIL NIL
     (|getFieldDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
     (|var_names| DEF-DECL "[Name -> boolean]" |ProgramFunctions| NIL)
     (|BoolVarEval?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
@@ -1067,7 +1024,7 @@
         NIL))
       NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
@@ -1096,8 +1053,8 @@
     (|var_names| DEF-DECL "[Name -> boolean]" |ProgramFunctions| NIL))
    35 34 T NIL))
  (|derive_TCC23| 0
-  (|derive_TCC23-1| NIL 3395749931 3401607695 ("" (TCC)) PROVED NIL 40 40 NIL
-   NIL))
+  (|derive_TCC23-1| NIL 3395749931 3401607695 ("" (TCC)) UNCHECKED NIL 40 40
+   NIL NIL))
  (|derive_TCC24| 0
   (|derive_TCC24-1| NIL 3395749931 3401607696
    ("" (SKOSIMP*)
@@ -1118,7 +1075,7 @@
         NIL))
       NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
@@ -1153,17 +1110,14 @@
     (|member| CONST-DECL "bool" |sets| NIL))
    64 63 T NIL))
  (|derive_TCC25| 0
-  (|derive_TCC25-1| NIL 3395749931 3401607697 ("" (TCC)) PROVED
+  (|derive_TCC25-1| NIL 3395749931 3401607697 ("" (TCC)) UNCHECKED
    ((|posint_plus_nnint_is_posint| APPLICATION-JUDGEMENT "posint" |integers|
      NIL)
     (|var_names| DEF-DECL "[Name -> boolean]" |ProgramFunctions| NIL)
     (|member| CONST-DECL "bool" |sets| NIL)
     (|union| CONST-DECL "set" |sets| NIL)
     (|getFieldDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
-    (|getLocalDecls| CONST-DECL "finite_set[LocalVarDecl]" |ProgramFunctions|
-     NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    NIL NIL NIL
     (|getGhostDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
     (|ext_declared_var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions|
      NIL)
@@ -1239,7 +1193,7 @@
         NIL))
       NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
@@ -1293,7 +1247,7 @@
         NIL))
       NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
@@ -1328,17 +1282,14 @@
     (|member| CONST-DECL "bool" |sets| NIL))
    83 82 T NIL))
  (|derive_TCC28| 0
-  (|derive_TCC28-1| NIL 3395749931 3401607699 ("" (TCC)) PROVED
+  (|derive_TCC28-1| NIL 3395749931 3401607699 ("" (TCC)) UNCHECKED
    ((|posint_plus_nnint_is_posint| APPLICATION-JUDGEMENT "posint" |integers|
      NIL)
     (|var_names| DEF-DECL "[Name -> boolean]" |ProgramFunctions| NIL)
     (|member| CONST-DECL "bool" |sets| NIL)
     (|union| CONST-DECL "set" |sets| NIL)
     (|getFieldDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
-    (|getLocalDecls| CONST-DECL "finite_set[LocalVarDecl]" |ProgramFunctions|
-     NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    NIL NIL NIL
     (|getGhostDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
     (|ext_declared_var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions|
      NIL)
@@ -1414,7 +1365,7 @@
         NIL))
       NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
@@ -1449,7 +1400,7 @@
     (|member| CONST-DECL "bool" |sets| NIL))
    67 68 T NIL))
  (|derive_TCC30| 0
-  (|derive_TCC30-1| NIL 3395749931 3401607701 ("" (TCC)) PROVED
+  (|derive_TCC30-1| NIL 3395749931 3401607701 ("" (TCC)) UNCHECKED
    ((|posint_plus_nnint_is_posint| APPLICATION-JUDGEMENT "posint" |integers|
      NIL)
     (|wf_Method| CONST-DECL "boolean" |WellFormedProgram| NIL)
@@ -1461,10 +1412,7 @@
     (|BoolVarEval?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
     (|wf_BoolExpr| CONST-DECL "boolean" |WellFormedProgram| NIL)
     (|getFieldDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
-    (|getLocalDecls| CONST-DECL "finite_set[LocalVarDecl]" |ProgramFunctions|
-     NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    NIL NIL NIL
     (|getGhostDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
     (|ext_declared_var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions|
      NIL)
@@ -1537,7 +1485,7 @@
         NIL))
       NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
@@ -1572,7 +1520,7 @@
     (|member| CONST-DECL "bool" |sets| NIL))
    89 88 T NIL))
  (|derive_TCC32| 0
-  (|derive_TCC32-1| NIL 3395749931 3401607704 ("" (TCC)) PROVED
+  (|derive_TCC32-1| NIL 3395749931 3401607704 ("" (TCC)) UNCHECKED
    ((|posint_plus_nnint_is_posint| APPLICATION-JUDGEMENT "posint" |integers|
      NIL)
     (|wf_Method| CONST-DECL "boolean" |WellFormedProgram| NIL)
@@ -1584,10 +1532,7 @@
     (|BoolVarEval?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
     (|wf_BoolExpr| CONST-DECL "boolean" |WellFormedProgram| NIL)
     (|getFieldDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
-    (|getLocalDecls| CONST-DECL "finite_set[LocalVarDecl]" |ProgramFunctions|
-     NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    NIL NIL NIL
     (|getGhostDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
     (|ext_declared_var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions|
      NIL)
@@ -1641,7 +1586,7 @@
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL))
    154 152 NIL NIL))
  (|derive_TCC33| 0
-  (|derive_TCC33-1| NIL 3395749931 3401607706 ("" (TCC)) PROVED
+  (|derive_TCC33-1| NIL 3395749931 3401607706 ("" (TCC)) UNCHECKED
    ((|lookup_mthd| CONST-DECL "lift[(methods(p))]" |ProgramFunctions| NIL)
     (|method_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
     (|get_class| CONST-DECL "lift[Class]" |ProgramFunctions| NIL)
@@ -1668,10 +1613,7 @@
     (|ext_declared_var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions|
      NIL)
     (|getGhostDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
-    (|getLocalDecls| CONST-DECL "finite_set[LocalVarDecl]" |ProgramFunctions|
-     NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    NIL NIL NIL
     (|getFieldDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
     (|RExpr?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
     (|NExpr?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
@@ -1720,7 +1662,7 @@
     (("" (TYPEPRED "md!1")
       (("" (EXPAND "wf_Method") (("" (ASSERT) NIL NIL)) NIL)) NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
@@ -1751,7 +1693,7 @@
      NIL))
    63 63 T NIL))
  (|derive_TCC35| 0
-  (|derive_TCC35-1| NIL 3395749931 3401607710 ("" (TCC)) PROVED
+  (|derive_TCC35-1| NIL 3395749931 3401607710 ("" (TCC)) UNCHECKED
    ((|lookup_mthd| CONST-DECL "lift[(methods(p))]" |ProgramFunctions| NIL)
     (|method_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
     (|get_class| CONST-DECL "lift[Class]" |ProgramFunctions| NIL)
@@ -1782,10 +1724,7 @@
     (|ext_declared_var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions|
      NIL)
     (|getGhostDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
-    (|getLocalDecls| CONST-DECL "finite_set[LocalVarDecl]" |ProgramFunctions|
-     NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    NIL NIL NIL
     (|getFieldDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
     (|RExpr?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
     (|NExpr?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
@@ -1832,7 +1771,7 @@
     (("" (TYPEPRED "md!1")
       (("" (EXPAND "wf_Method") (("" (ASSERT) NIL NIL)) NIL)) NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
@@ -1863,7 +1802,7 @@
      NIL))
    90 90 T NIL))
  (|derive_TCC37| 0
-  (|derive_TCC37-1| NIL 3396354176 3401607713 ("" (TCC)) PROVED
+  (|derive_TCC37-1| NIL 3396354176 3401607713 ("" (TCC)) UNCHECKED
    ((|lookup_mthd| CONST-DECL "lift[(methods(p))]" |ProgramFunctions| NIL)
     (|method_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
     (|get_class| CONST-DECL "lift[Class]" |ProgramFunctions| NIL)
@@ -1894,10 +1833,7 @@
     (|ext_declared_var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions|
      NIL)
     (|getGhostDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
-    (|getLocalDecls| CONST-DECL "finite_set[LocalVarDecl]" |ProgramFunctions|
-     NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    NIL NIL NIL
     (|getFieldDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
     (|RExpr?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
     (|NExpr?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
@@ -1939,7 +1875,7 @@
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL))
    273 273 NIL NIL))
  (|derive_TCC38| 0
-  (|derive_TCC38-1| NIL 3396354176 3401607716 ("" (TCC)) PROVED
+  (|derive_TCC38-1| NIL 3396354176 3401607716 ("" (TCC)) UNCHECKED
    ((|lookup_mthd| CONST-DECL "lift[(methods(p))]" |ProgramFunctions| NIL)
     (|method_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
     (|get_class| CONST-DECL "lift[Class]" |ProgramFunctions| NIL)
@@ -1970,10 +1906,7 @@
     (|ext_declared_var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions|
      NIL)
     (|getGhostDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
-    (|getLocalDecls| CONST-DECL "finite_set[LocalVarDecl]" |ProgramFunctions|
-     NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    NIL NIL NIL
     (|getFieldDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
     (|RExpr?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
     (|NExpr?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
@@ -2015,7 +1948,8 @@
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL))
    322 320 NIL NIL))
  (|derive_TCC39| 0
-  (|derive_TCC39-1| NIL 3401446930 3401607719 ("" (SUBTYPE-TCC) NIL NIL) PROVED
+  (|derive_TCC39-1| NIL 3401446930 3401607719 ("" (SUBTYPE-TCC) NIL NIL)
+   UNCHECKED
    ((|method_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
     (|class_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
     (|lookup_local| CONST-DECL "Val" |State| NIL)
@@ -2041,10 +1975,7 @@
     (|ext_declared_var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions|
      NIL)
     (|getGhostDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
-    (|getLocalDecls| CONST-DECL "finite_set[LocalVarDecl]" |ProgramFunctions|
-     NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    NIL NIL NIL
     (|getFieldDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
     (|RExpr?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
     (|NExpr?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
@@ -2086,7 +2017,8 @@
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL))
    223 221 NIL NIL))
  (|derive_TCC40| 0
-  (|derive_TCC40-1| NIL 3401446930 3401607719 ("" (SUBTYPE-TCC) NIL NIL) PROVED
+  (|derive_TCC40-1| NIL 3401446930 3401607719 ("" (SUBTYPE-TCC) NIL NIL)
+   UNCHECKED
    ((|real_ge_is_total_order| NAME-JUDGEMENT "(total_order?[real])"
      |real_props| NIL)
     (|real_gt_is_strict_total_order| NAME-JUDGEMENT
@@ -2097,10 +2029,7 @@
     (|ext_declared_var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions|
      NIL)
     (|getGhostDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
-    (|getLocalDecls| CONST-DECL "finite_set[LocalVarDecl]" |ProgramFunctions|
-     NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    NIL NIL NIL
     (|getFieldDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
     (|var_names| DEF-DECL "[Name -> boolean]" |ProgramFunctions| NIL)
     (|NumExpr| TYPE-EQ-DECL NIL |Body_adt| NIL)
@@ -2144,17 +2073,15 @@
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL))
    64 64 NIL NIL))
  (|derive_TCC41| 0
-  (|derive_TCC41-1| NIL 3401446930 3401607721 ("" (SUBTYPE-TCC) NIL NIL) PROVED
+  (|derive_TCC41-1| NIL 3401446930 3401607721 ("" (SUBTYPE-TCC) NIL NIL)
+   UNCHECKED
    ((|wf_Body| CONST-DECL "boolean" |WellFormedProgram| NIL)
     (|union| CONST-DECL "set" |sets| NIL)
     (|member| CONST-DECL "bool" |sets| NIL)
     (|ext_declared_var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions|
      NIL)
     (|getGhostDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
-    (|getLocalDecls| CONST-DECL "finite_set[LocalVarDecl]" |ProgramFunctions|
-     NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    NIL NIL NIL
     (|getFieldDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
     (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |Semantics| NIL)
     (|real_gt_is_strict_total_order| NAME-JUDGEMENT
@@ -2202,9 +2129,10 @@
    128 126 NIL NIL))
  (|derive_TCC42| 0
   (|derive_TCC42-1| NIL 3401446930 3401607721 ("" (TERMINATION-TCC) NIL NIL)
-   PROVED NIL 38 37 NIL NIL))
+   UNCHECKED NIL 38 37 NIL NIL))
  (|derive_TCC43| 0
-  (|derive_TCC43-1| NIL 3401446930 3401607722 ("" (SUBTYPE-TCC) NIL NIL) PROVED
+  (|derive_TCC43-1| NIL 3401446930 3401607722 ("" (SUBTYPE-TCC) NIL NIL)
+   UNCHECKED
    ((|real_ge_is_total_order| NAME-JUDGEMENT "(total_order?[real])"
      |real_props| NIL)
     (|real_gt_is_strict_total_order| NAME-JUDGEMENT
@@ -2215,10 +2143,7 @@
     (|ext_declared_var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions|
      NIL)
     (|getGhostDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
-    (|getLocalDecls| CONST-DECL "finite_set[LocalVarDecl]" |ProgramFunctions|
-     NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    NIL NIL NIL
     (|getFieldDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
     (|var_names| DEF-DECL "[Name -> boolean]" |ProgramFunctions| NIL)
     (|RefExpr| TYPE-EQ-DECL NIL |Body_adt| NIL)
@@ -2261,17 +2186,15 @@
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL))
    66 64 NIL NIL))
  (|derive_TCC44| 0
-  (|derive_TCC44-1| NIL 3401446930 3401607723 ("" (SUBTYPE-TCC) NIL NIL) PROVED
+  (|derive_TCC44-1| NIL 3401446930 3401607723 ("" (SUBTYPE-TCC) NIL NIL)
+   UNCHECKED
    ((|wf_Body| CONST-DECL "boolean" |WellFormedProgram| NIL)
     (|union| CONST-DECL "set" |sets| NIL)
     (|member| CONST-DECL "bool" |sets| NIL)
     (|ext_declared_var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions|
      NIL)
     (|getGhostDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
-    (|getLocalDecls| CONST-DECL "finite_set[LocalVarDecl]" |ProgramFunctions|
-     NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    NIL NIL NIL
     (|getFieldDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
     (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |Semantics| NIL)
     (|real_gt_is_strict_total_order| NAME-JUDGEMENT
@@ -2318,7 +2241,7 @@
    118 117 NIL NIL))
  (|derive_TCC45| 0
   (|derive_TCC45-1| NIL 3401446930 3401607723 ("" (TERMINATION-TCC) NIL NIL)
-   PROVED NIL 37 37 NIL NIL))
+   UNCHECKED NIL 37 37 NIL NIL))
  (|derive_TCC46| 0
   (|derive_TCC46-1| NIL 3401446930 3401607889
    (""
@@ -2379,7 +2302,7 @@
         NIL))
       NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|FullProgram| FORMAL-TYPE-DECL NIL |Semantics| NIL)
     (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |Semantics| NIL)
     (|Body| TYPE-DECL NIL |Body_adt| NIL) (|Val| TYPE-DECL NIL |Val_adt| NIL)
@@ -2441,26 +2364,19 @@
     (|wf_Branches| CONST-DECL "boolean" |WellFormedProgram| NIL)
     (|real_gt_is_strict_total_order| NAME-JUDGEMENT
      "(strict_total_order?[real])" |real_props| NIL)
-    (|list_induction| FORMULA-DECL NIL |list_adt| NIL)
-    (|every| ADT-DEF-DECL "boolean" |list_adt| NIL)
+    (|list_induction| FORMULA-DECL NIL |list_adt| NIL) NIL
     (|union| CONST-DECL "set" |sets| NIL)
     (|member| CONST-DECL "bool" |sets| NIL)
     (|ext_declared_var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions|
      NIL)
     (|getGhostDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
-    (|getLocalDecls| CONST-DECL "finite_set[LocalVarDecl]" |ProgramFunctions|
-     NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    NIL NIL NIL
     (|getFieldDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
     (|wf_Body_CaseJML| FORMULA-DECL NIL |WellFormedProgram| NIL)
     (|cons?| ADT-RECOGNIZER-DECL "[list -> boolean]" |list_adt| NIL)
     (|cons| ADT-CONSTRUCTOR-DECL "[[T, list] -> (cons?)]" |list_adt| NIL)
-    (|var_names| DEF-DECL "[Name -> boolean]" |ProgramFunctions| NIL)
-    (|p!1| SKOLEM-CONST-DECL "FullProgram" |Semantics| NIL)
-    (|cons2_var!1| SKOLEM-CONST-DECL "list[[BoolExpr[Name], Stmt[Name]]]"
-     |Semantics| NIL))
+    (|var_names| DEF-DECL "[Name -> boolean]" |ProgramFunctions| NIL) NIL NIL)
    2566 170 T NIL))
  (|derive_TCC47| 0
   (|derive_TCC47-1| NIL 3401446930 3401607725
@@ -2482,7 +2398,7 @@
         NIL))
       NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
@@ -2536,7 +2452,7 @@
         NIL))
       NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
@@ -2589,7 +2505,7 @@
         NIL))
       NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
@@ -2643,7 +2559,7 @@
         NIL))
       NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
@@ -2697,7 +2613,7 @@
         NIL))
       NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
@@ -2750,7 +2666,7 @@
         NIL))
       NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
@@ -2804,7 +2720,7 @@
         NIL))
       NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
@@ -2857,7 +2773,7 @@
         NIL))
       NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
@@ -2892,17 +2808,15 @@
     (|member| CONST-DECL "bool" |sets| NIL))
    96 93 T NIL))
  (|derive_TCC55| 0
-  (|derive_TCC55-1| NIL 3401446930 3401607731 ("" (SUBTYPE-TCC) NIL NIL) PROVED
+  (|derive_TCC55-1| NIL 3401446930 3401607731 ("" (SUBTYPE-TCC) NIL NIL)
+   UNCHECKED
    ((|posint_plus_nnint_is_posint| APPLICATION-JUDGEMENT "posint" |integers|
      NIL)
     (|var_names| DEF-DECL "[Name -> boolean]" |ProgramFunctions| NIL)
     (|member| CONST-DECL "bool" |sets| NIL)
     (|union| CONST-DECL "set" |sets| NIL)
     (|getFieldDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
-    (|getLocalDecls| CONST-DECL "finite_set[LocalVarDecl]" |ProgramFunctions|
-     NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    NIL NIL NIL
     (|getGhostDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
     (|ext_declared_var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions|
      NIL)
@@ -2978,7 +2892,7 @@
         NIL))
       NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|wf_Expr| CONST-DECL "boolean" |WellFormedProgram| NIL)
     (|member| CONST-DECL "bool" |sets| NIL)
     (|add| CONST-DECL "(nonempty?)" |sets| NIL)
@@ -3011,14 +2925,11 @@
    34 33 T NIL))
  (|derive_TCC57| 0
   (|derive_TCC57-1| NIL 3401446930 3401607733 ("" (TERMINATION-TCC) NIL NIL)
-   PROVED
+   UNCHECKED
    ((|return_of_stmt| CONST-DECL "Val" |Semantics| NIL)
     (|var_names| DEF-DECL "[Name -> boolean]" |ProgramFunctions| NIL)
     (|getFieldDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
-    (|getLocalDecls| CONST-DECL "finite_set[LocalVarDecl]" |ProgramFunctions|
-     NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    NIL NIL NIL
     (|getGhostDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
     (|ext_declared_var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions|
      NIL)
@@ -3087,7 +2998,7 @@
         NIL))
       NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
@@ -3117,7 +3028,8 @@
    32 32 T NIL))
  (|derive_TCC59| 0
   (|derive_TCC59-1| NIL 3401446930 3401607734 ("" (TERMINATION-TCC) NIL NIL)
-   PROVED ((|return_of_stmt| CONST-DECL "Val" |Semantics| NIL)) 39 38 NIL NIL))
+   UNCHECKED ((|return_of_stmt| CONST-DECL "Val" |Semantics| NIL)) 39 38 NIL
+   NIL))
  (|derive_TCC60| 0
   (|derive_TCC60-1| NIL 3401446930 3401607734
    ("" (SKOSIMP*)
@@ -3138,7 +3050,7 @@
         NIL))
       NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
@@ -3188,7 +3100,7 @@
         NIL))
       NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
@@ -3241,7 +3153,7 @@
         NIL))
       NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
@@ -3285,14 +3197,14 @@
         NIL))
       NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|wf_Body| CONST-DECL "boolean" |WellFormedProgram| NIL)
     (|var_names| DEF-DECL "[Name -> boolean]" |ProgramFunctions| NIL)
     (|emptyset| CONST-DECL "set" |sets| NIL))
    41 30 T NIL))
  (|derive_TCC64| 0
   (|derive_TCC64-1| NIL 3401446930 3401607737 ("" (TERMINATION-TCC) NIL NIL)
-   PROVED
+   UNCHECKED
    ((|return_of_stmt| CONST-DECL "Val" |Semantics| NIL)
     (|posint_plus_nnint_is_posint| APPLICATION-JUDGEMENT "posint" |integers|
      NIL)
@@ -3303,10 +3215,7 @@
     (|ext_declared_var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions|
      NIL)
     (|getGhostDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
-    (|getLocalDecls| CONST-DECL "finite_set[LocalVarDecl]" |ProgramFunctions|
-     NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    NIL NIL NIL
     (|getFieldDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
     (|union| CONST-DECL "set" |sets| NIL)
     (|member| CONST-DECL "bool" |sets| NIL)
@@ -3377,7 +3286,7 @@
         NIL))
       NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
@@ -3444,7 +3353,7 @@
         NIL))
       NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
@@ -3479,16 +3388,13 @@
    97 96 T NIL))
  (|derive_TCC67| 0
   (|derive_TCC67-1| NIL 3401446930 3401607740 ("" (TERMINATION-TCC) NIL NIL)
-   PROVED
+   UNCHECKED
    ((|return_of_stmt| CONST-DECL "Val" |Semantics| NIL)
     (|var_names| DEF-DECL "[Name -> boolean]" |ProgramFunctions| NIL)
     (|member| CONST-DECL "bool" |sets| NIL)
     (|union| CONST-DECL "set" |sets| NIL)
     (|getFieldDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
-    (|getLocalDecls| CONST-DECL "finite_set[LocalVarDecl]" |ProgramFunctions|
-     NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    NIL NIL NIL
     (|getGhostDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
     (|ext_declared_var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions|
      NIL)
@@ -3582,7 +3488,7 @@
         NIL))
       NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
@@ -3615,7 +3521,8 @@
    76 76 T NIL))
  (|derive_TCC69| 0
   (|derive_TCC69-1| NIL 3401600202 3401607741 ("" (TERMINATION-TCC) NIL NIL)
-   PROVED ((|return_of_stmt| CONST-DECL "Val" |Semantics| NIL)) 55 55 NIL NIL))
+   UNCHECKED ((|return_of_stmt| CONST-DECL "Val" |Semantics| NIL)) 55 55 NIL
+   NIL))
  (|derive_TCC70| 0
   (|derive_TCC70-1| NIL 3401600202 3401607741
    ("" (SKOSIMP*)
@@ -3635,7 +3542,7 @@
         NIL))
       NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|wf_BoolExpr| CONST-DECL "boolean" |WellFormedProgram| NIL)
     (|var_names| DEF-DECL "[Name -> boolean]" |ProgramFunctions| NIL)
     (|real_gt_is_strict_total_order| NAME-JUDGEMENT
@@ -3680,7 +3587,7 @@
         NIL))
       NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
@@ -3730,7 +3637,7 @@
         NIL))
       NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
@@ -3785,7 +3692,7 @@
                           ((";;; Proof well_behaved_Program_TCC2-1 for formula Semantics.well_behaved_Program_TCC2"
                             (PROPAX) NIL))))))))))))))))))))))))
     ";;; developed with SHOSTAK decision procedures")
-   PROVED
+   UNCHECKED
    ((|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
@@ -3815,7 +3722,7 @@
    UNFINISHED NIL NIL NIL NIL NIL))
  (|well_behaved_Program_TCC4| 0
   (|well_behaved_Program_TCC4-1| NIL 3401446930 3401607743
-   ("" (SUBTYPE-TCC) NIL NIL) PROVED
+   ("" (SUBTYPE-TCC) NIL NIL) UNCHECKED
    ((|proper_subterm_set_clause| CONST-DECL "boolean" |ProgramFunctions| NIL)
     (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |Semantics| NIL)
     (|spec_expr_has_no_side_effects| CONST-DECL "boolean" |Semantics| NIL)
@@ -3837,7 +3744,7 @@
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL))
    117 117 T NIL))
  (|well_behaved_Program_TCC5| 0
-  (|well_behaved_Program_TCC5-1| NIL 3401446930 3401607744
+  (|well_behaved_Program_TCC5-1| NIL 3401446930 3401699785
    ("" (SKOSIMP*)
     (("" (EXPAND "proper_subterm_set_clause")
       (("" (TYPEPRED "program(p!1)")
@@ -3942,20 +3849,17 @@
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL))
-   63 62 T NIL))
+   4032 132 T NIL))
  (|run_FullProgram_TCC1| 0
   (|run_FullProgram_TCC1-1| NIL 3401446930 3401607745
-   ("" (SUBTYPE-TCC) NIL NIL) PROVED
+   ("" (SUBTYPE-TCC) NIL NIL) UNCHECKED
    ((|wf_Body| CONST-DECL "boolean" |WellFormedProgram| NIL)
     (|union| CONST-DECL "set" |sets| NIL)
     (|member| CONST-DECL "bool" |sets| NIL)
     (|ext_declared_var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions|
      NIL)
     (|getGhostDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
-    (|getLocalDecls| CONST-DECL "finite_set[LocalVarDecl]" |ProgramFunctions|
-     NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    NIL NIL NIL
     (|getFieldDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
     (|var_names| DEF-DECL "[Name -> boolean]" |ProgramFunctions| NIL)
     (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |Semantics| NIL)
@@ -4016,7 +3920,7 @@
         NIL))
       NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|derives| CONST-DECL "bool" |Semantics| NIL)
     (|derive_determ_step| FORMULA-DECL NIL |SemanticsProofs| NIL)
     (|FullState| FORMAL-TYPE-DECL NIL |SemanticsProofs| NIL)
@@ -4730,7 +4634,7 @@
       NIL)
      ("2" (USE "wf_nat") NIL NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|wf_nat| FORMULA-DECL NIL |naturalnumbers| NIL)
     (|FullProgram| FORMAL-TYPE-DECL NIL |SemanticsProofs| NIL)
     (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |SemanticsProofs| NIL)
@@ -4820,10 +4724,7 @@
     (|check_for_exception_final| CONST-DECL "bool" |Semantics| NIL)
     (|b| SHARED-ADT-ACCESSOR-DECL
      "[{X: Body | BExpr?(X) OR Neg?(X)} -> BoolExpr]" |Body_adt| NIL)
-    (|set| TYPE-EQ-DECL NIL |sets| NIL)
-    (|md!1| SKOLEM-CONST-DECL "(wf_Method(program(p!1)))" |SemanticsProofs|
-     NIL)
-    (|p!1| SKOLEM-CONST-DECL "FullProgram" |SemanticsProofs| NIL)
+    (|set| TYPE-EQ-DECL NIL |sets| NIL) NIL NIL
     (|r| ADT-ACCESSOR-DECL "[(RExpr?) -> RefExpr]" |Body_adt| NIL)
     (|RefExpr| TYPE-EQ-DECL NIL |Body_adt| NIL)
     (|RefVarEval?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
@@ -5676,17 +5577,14 @@
    15150 2600 T SHOSTAK))
  (|derive_boolean_expr_type_TCC1| 0
   (|derive_boolean_expr_type_TCC1-1| NIL 3401446935 3401607765
-   ("" (SUBTYPE-TCC) NIL NIL) PROVED
+   ("" (SUBTYPE-TCC) NIL NIL) UNCHECKED
    ((|wf_Body| CONST-DECL "boolean" |WellFormedProgram| NIL)
     (|union| CONST-DECL "set" |sets| NIL)
     (|member| CONST-DECL "bool" |sets| NIL)
     (|ext_declared_var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions|
      NIL)
     (|getGhostDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
-    (|getLocalDecls| CONST-DECL "finite_set[LocalVarDecl]" |ProgramFunctions|
-     NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    NIL NIL NIL
     (|getFieldDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
     (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |SemanticsProofs| NIL)
     (|program| FORMAL-CONST-DECL "[FullProgram -> Program]" |SemanticsProofs|
@@ -5778,7 +5676,7 @@
         (("30" (EXPAND "wf_BoolExpr") (("30" (PROPAX) NIL NIL)) NIL)) NIL))
       NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|number| NONEMPTY-TYPE-DECL NIL |numbers| NIL)
     (|number_field_pred| CONST-DECL "[number -> boolean]" |number_fields| NIL)
     (|number_field| NONEMPTY-TYPE-FROM-DECL NIL |number_fields| NIL)
@@ -5845,8 +5743,7 @@
     (|up?| ADT-RECOGNIZER-DECL "[lift -> boolean]" |lift_adt| NIL)
     (|Bool?| ADT-RECOGNIZER-DECL "[Val -> boolean]" |Val_adt| NIL)
     (|wf_Body| CONST-DECL "boolean" |WellFormedProgram| NIL)
-    (|FullState| FORMAL-TYPE-DECL NIL |SemanticsProofs| NIL)
-    (|p!1| SKOLEM-CONST-DECL "FullProgram" |SemanticsProofs| NIL)
+    (|FullState| FORMAL-TYPE-DECL NIL |SemanticsProofs| NIL) NIL
     (|program| FORMAL-CONST-DECL "[FullProgram -> Program]" |SemanticsProofs|
      NIL)
     (|Program| TYPE-EQ-DECL NIL |WellFormedProgram| NIL)
@@ -5888,7 +5785,7 @@
    27142 1514 T NIL)))
 (|SemanticsJML|
  (|wf_initial_ghost_state_TCC1| 0
-  (|wf_initial_ghost_state_TCC1-1| NIL 3392370163 3401613052 ("" (TCC)) PROVED
+  (|wf_initial_ghost_state_TCC1-1| NIL 3392370163 3401700301 ("" (TCC)) PROVED
    ((|get_GhostDecl| CONST-DECL "lift[FieldDecl]" |ProgramFunctions| NIL)
     (|choose| CONST-DECL "(p)" |sets| NIL)
     (|nonempty?| CONST-DECL "bool" |sets| NIL)
@@ -5896,9 +5793,9 @@
     (|member| CONST-DECL "bool" |sets| NIL)
     (|getGhostDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
     (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |SemanticsJML| NIL))
-   30 31 NIL NIL))
+   50 51 NIL NIL))
  (|wf_initial_ghost_state| 0
-  (|wf_initial_ghost_state-1| NIL 3392370167 3401613053
+  (|wf_initial_ghost_state-1| NIL 3392370167 3401700303
    ("" (SKOSIMP*)
     (("" (EXPAND "wf_ghoststate")
       (("" (SKOSIMP*)
@@ -5988,11 +5885,13 @@
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL))
-   93 93 T SHOSTAK))
+   159 160 T SHOSTAK))
  (|execute_set_TCC1| 0
-  (|execute_set_TCC1-1| NIL 3390908875 3401613054 ("" (TCC)) PROVED
+  (|execute_set_TCC1-1| NIL 3390908875 3401700304 ("" (TCC)) PROVED
    ((|getFieldDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
     (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    (|getLocalDecls| CONST-DECL "finite_set[LocalVarDecl]" |ProgramFunctions|
+     NIL)
     (|getLocalDecls| CONST-DECL "finite_set[LocalVarDecl]" |ProgramFunctions|
      NIL)
     (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
@@ -6049,9 +5948,9 @@
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL))
-   68 67 NIL NIL))
+   142 143 NIL NIL))
  (|execute_set_TCC2| 0
-  (|execute_set_TCC2-1| NIL 3390908875 3401613055 ("" (TCC)) PROVED
+  (|execute_set_TCC2-1| NIL 3390908875 3401700306 ("" (TCC)) PROVED
    ((|wf_Body| CONST-DECL "boolean" |WellFormedProgram| NIL)
     (|union| CONST-DECL "set" |sets| NIL)
     (|member| CONST-DECL "bool" |sets| NIL)
@@ -6059,6 +5958,8 @@
      NIL)
     (|getGhostDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
     (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    (|getLocalDecls| CONST-DECL "finite_set[LocalVarDecl]" |ProgramFunctions|
+     NIL)
     (|getLocalDecls| CONST-DECL "finite_set[LocalVarDecl]" |ProgramFunctions|
      NIL)
     (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
@@ -6109,12 +6010,12 @@
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL))
-   143 141 NIL NIL))
+   175 174 NIL NIL))
  (|execute_set_TCC3| 0
-  (|execute_set_TCC3-1| NIL 3390908875 3401613056 ("" (TCC)) PROVED NIL 40 40
+  (|execute_set_TCC3-1| NIL 3390908875 3401700307 ("" (TCC)) PROVED NIL 116 115
    NIL NIL))
  (|execute_set_TCC4| 0
-  (|execute_set_TCC4-1| NIL 3401446938 3401613056 ("" (SUBTYPE-TCC) NIL NIL)
+  (|execute_set_TCC4-1| NIL 3401446938 3401700308 ("" (SUBTYPE-TCC) NIL NIL)
    PROVED
    ((|execute_set_type| CONST-DECL "boolean" |SemanticsTypes| NIL)
     (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |SemanticsJML| NIL)
@@ -6165,11 +6066,13 @@
     (OR CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL))
-   64 63 NIL NIL))
+   119 118 NIL NIL))
  (|execute_CaseJML_TCC1| 0
-  (|execute_CaseJML_TCC1-1| NIL 3390908875 3401613057 ("" (TCC)) PROVED
+  (|execute_CaseJML_TCC1-1| NIL 3390908875 3401700310 ("" (TCC)) PROVED
    ((|getFieldDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
     (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    (|getLocalDecls| CONST-DECL "finite_set[LocalVarDecl]" |ProgramFunctions|
+     NIL)
     (|getLocalDecls| CONST-DECL "finite_set[LocalVarDecl]" |ProgramFunctions|
      NIL)
     (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
@@ -6238,9 +6141,13 @@
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL))
-   80 80 NIL NIL))
+   188 182 NIL NIL))
  (|execute_CaseJML_TCC2| 0
-  (|execute_CaseJML_TCC2-1| NIL 3390908875 3401613059
+  (|execute_CaseJML_TCC2-2| "no proof, because old one suddenly broken"
+   3401701533 3401701533
+   ("" (COMMENT "idioot") (("" (POSTPONE) NIL ";;; idioot")) NIL) UNFINISHED
+   NIL 2650 1 T SHOSTAK)
+  (|execute_CaseJML_TCC2-1| NIL 3390908875 3401701497
    ("" (INDUCT "xs")
     (("1" (SKOSIMP*)
       (("1" (TYPEPRED "branches!1")
@@ -6342,13 +6249,8 @@
         NIL))
       NIL))
     NIL)
-   PROVED
-   ((|cdr| ADT-ACCESSOR-DECL "[(cons?) -> list]" |list_adt| NIL)
-    (|branches!1| SKOLEM-CONST-DECL "({l: list[[BoolExpr[Name], Stmt[Name]]] |
-    wf_Branches[Name](program(p!1))(l)})"
-     |SemanticsJML| NIL)
-    (|p!1| SKOLEM-CONST-DECL "FullProgram" |SemanticsJML| NIL)
-    (|every| ADT-DEF-DECL "boolean" |list_adt| NIL)
+   UNFINISHED
+   ((|cdr| ADT-ACCESSOR-DECL "[(cons?) -> list]" |list_adt| NIL) NIL NIL NIL
     (|var_names| DEF-DECL "[Name -> boolean]" |ProgramFunctions| NIL)
     (|union| CONST-DECL "set" |sets| NIL)
     (|member| CONST-DECL "bool" |sets| NIL)
@@ -6422,10 +6324,10 @@
     (|Val| TYPE-DECL NIL |Val_adt| NIL)
     (|FullProgram| FORMAL-TYPE-DECL NIL |SemanticsJML| NIL)
     (|list| TYPE-DECL NIL |list_adt| NIL))
-   189 188 T NIL))
+   5099 135 T NIL))
  (|execute_CaseJML_TCC3| 0
-  (|execute_CaseJML_TCC3-1| NIL 3390908875 3401613059 ("" (TCC)) PROVED NIL 41
-   40 T SHOSTAK))
+  (|execute_CaseJML_TCC3-1| NIL 3390908875 3401613059 ("" (TCC)) UNCHECKED NIL
+   41 40 T SHOSTAK))
  (|execute_CaseJML_TCC4| 0
   (|execute_CaseJML_TCC4-1| NIL 3395749089 3401613064 ("" (TCC)) UNFINISHED
    ((|execute_CaseJML_type| CONST-DECL "boolean" |SemanticsTypes| NIL)
@@ -6456,7 +6358,7 @@
    517 510 T SHOSTAK))
  (|execute_CaseJML_TCC5| 0
   (|execute_CaseJML_TCC5-1| NIL 3401601612 3401613065
-   ("" (SUBTYPE-TCC) NIL NIL) PROVED
+   ("" (SUBTYPE-TCC) NIL NIL) UNCHECKED
    ((|execute_CaseJML_type| CONST-DECL "boolean" |SemanticsTypes| NIL)
     (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |SemanticsJML| NIL)
     (|FullProgram| FORMAL-TYPE-DECL NIL |SemanticsJML| NIL)
@@ -6492,10 +6394,7 @@
     (|ext_declared_var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions|
      NIL)
     (|getGhostDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
-    (|getLocalDecls| CONST-DECL "finite_set[LocalVarDecl]" |ProgramFunctions|
-     NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    NIL NIL NIL
     (|getFieldDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
     (|nat| NONEMPTY-TYPE-EQ-DECL NIL |naturalnumbers| NIL)
     (|int| NONEMPTY-TYPE-EQ-DECL NIL |integers| NIL)
@@ -6533,7 +6432,7 @@
    89 89 NIL NIL))
  (|check_assertion_TCC1| 0
   (|check_assertion_TCC1-1| NIL 3395749089 3401613065
-   ("" (SKOSIMP*) (("" (ASSERT) NIL NIL)) NIL) PROVED
+   ("" (SKOSIMP*) (("" (ASSERT) NIL NIL)) NIL) UNCHECKED
    ((|real_gt_is_strict_total_order| NAME-JUDGEMENT
      "(strict_total_order?[real])" |real_props| NIL)
     (|real_ge_is_total_order| NAME-JUDGEMENT "(total_order?[real])"
@@ -6546,7 +6445,7 @@
     (("" (TYPEPRED "e!1")
       (("" (EXPAND "wf_BoolExpr") (("" (PROPAX) NIL NIL)) NIL)) NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
@@ -6581,10 +6480,10 @@
    3 2 T NIL))
  (|execute_assert_TCC1| 0
   (|execute_assert_TCC1-1| NIL 3397383993 3401613066 ("" (SUBTYPE-TCC) NIL NIL)
-   PROVED NIL 37 36 NIL NIL))
+   UNCHECKED NIL 37 36 NIL NIL))
  (|execute_assert_TCC2| 0
   (|execute_assert_TCC2-1| NIL 3397383993 3401613074 ("" (SUBTYPE-TCC) NIL NIL)
-   PROVED
+   UNCHECKED
    ((|execute_assert_type| CONST-DECL "boolean" |SemanticsTypes| NIL)
     (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |SemanticsJML| NIL)
     (|FullProgram| FORMAL-TYPE-DECL NIL |SemanticsJML| NIL)
@@ -6617,10 +6516,7 @@
     (|real_ge_is_total_order| NAME-JUDGEMENT "(total_order?[real])"
      |real_props| NIL)
     (|getFieldDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
-    (|getLocalDecls| CONST-DECL "finite_set[LocalVarDecl]" |ProgramFunctions|
-     NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    NIL NIL NIL
     (|getGhostDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
     (|ext_declared_var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions|
      NIL)
@@ -6651,7 +6547,7 @@
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL))
    826 818 NIL NIL))
  (|on_method_entry_TCC1| 0
-  (|on_method_entry_TCC1-1| NIL 3390908875 3401613076 ("" (TCC)) PROVED
+  (|on_method_entry_TCC1-1| NIL 3390908875 3401613076 ("" (TCC)) UNCHECKED
    ((|lookup_inv| CONST-DECL "BoolExpr" |ProgramFunctions| NIL)
     (|get_class| CONST-DECL "lift[Class]" |ProgramFunctions| NIL)
     (|choose| CONST-DECL "(p)" |sets| NIL)
@@ -6678,10 +6574,7 @@
     (|ext_declared_var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions|
      NIL)
     (|getGhostDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
-    (|getLocalDecls| CONST-DECL "finite_set[LocalVarDecl]" |ProgramFunctions|
-     NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    NIL NIL NIL
     (|getFieldDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
     (|nat| NONEMPTY-TYPE-EQ-DECL NIL |naturalnumbers| NIL)
     (|int| NONEMPTY-TYPE-EQ-DECL NIL |integers| NIL)
@@ -6718,7 +6611,7 @@
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL))
    175 169 NIL NIL))
  (|on_method_entry_TCC2| 0
-  (|on_method_entry_TCC2-2| "" 3395751614 3401613077 ("" (TCC)) PROVED
+  (|on_method_entry_TCC2-2| "" 3395751614 3401613077 ("" (TCC)) UNCHECKED
    ((|lookup_inv| CONST-DECL "BoolExpr" |ProgramFunctions| NIL)
     (|get_class| CONST-DECL "lift[Class]" |ProgramFunctions| NIL)
     (|choose| CONST-DECL "(p)" |sets| NIL)
@@ -6738,10 +6631,7 @@
     (|BoolVarEval?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
     (|wf_BoolExpr| CONST-DECL "boolean" |WellFormedProgram| NIL)
     (|getFieldDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
-    (|getLocalDecls| CONST-DECL "finite_set[LocalVarDecl]" |ProgramFunctions|
-     NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    NIL NIL NIL
     (|getGhostDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
     (|ext_declared_var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions|
      NIL)
@@ -6821,7 +6711,7 @@
         (("" (EXPAND "wf_BoolExpr") (("" (ASSERT) NIL NIL)) NIL)) NIL))
       NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
@@ -6854,7 +6744,7 @@
      NIL))
    33 33 T SHOSTAK))
  (|on_method_entry_TCC4| 0
-  (|on_method_entry_TCC4-1| NIL 3390908875 3401613079 ("" (TCC)) PROVED
+  (|on_method_entry_TCC4-1| NIL 3390908875 3401613079 ("" (TCC)) UNCHECKED
    ((|lookup_inv| CONST-DECL "BoolExpr" |ProgramFunctions| NIL)
     (|get_class| CONST-DECL "lift[Class]" |ProgramFunctions| NIL)
     (|choose| CONST-DECL "(p)" |sets| NIL)
@@ -6885,10 +6775,7 @@
     (|ext_declared_var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions|
      NIL)
     (|getGhostDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
-    (|getLocalDecls| CONST-DECL "finite_set[LocalVarDecl]" |ProgramFunctions|
-     NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    NIL NIL NIL
     (|getFieldDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
     (|nat| NONEMPTY-TYPE-EQ-DECL NIL |naturalnumbers| NIL)
     (|int| NONEMPTY-TYPE-EQ-DECL NIL |integers| NIL)
@@ -6930,7 +6817,7 @@
     (("" (TYPEPRED "md!1")
       (("" (EXPAND "wf_Method") (("" (ASSERT) NIL NIL)) NIL)) NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
@@ -6963,7 +6850,7 @@
    33 33 T NIL))
  (|on_method_entry_TCC6| 0
   (|on_method_entry_TCC6-1| NIL 3401446938 3401613084
-   ("" (SUBTYPE-TCC) NIL NIL) PROVED
+   ("" (SUBTYPE-TCC) NIL NIL) UNCHECKED
    ((|on_method_event_type| CONST-DECL "boolean" |SemanticsTypes| NIL)
     (|FullProgram| FORMAL-TYPE-DECL NIL |SemanticsJML| NIL)
     (|FullState| FORMAL-TYPE-DECL NIL |SemanticsJML| NIL)
@@ -7008,10 +6895,7 @@
     (|real_ge_is_total_order| NAME-JUDGEMENT "(total_order?[real])"
      |real_props| NIL)
     (|getFieldDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
-    (|getLocalDecls| CONST-DECL "finite_set[LocalVarDecl]" |ProgramFunctions|
-     NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    NIL NIL NIL
     (|getGhostDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
     (|ext_declared_var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions|
      NIL)
@@ -7035,7 +6919,7 @@
    409 403 NIL NIL))
  (|on_method_exit_normal_TCC1| 0
   (|on_method_exit_normal_TCC1-1| NIL 3390908875 3401613084
-   ("" (SKOSIMP*) (("" (ASSERT) NIL NIL)) NIL) PROVED
+   ("" (SKOSIMP*) (("" (ASSERT) NIL NIL)) NIL) UNCHECKED
    ((|nnint_plus_posint_is_posint| APPLICATION-JUDGEMENT "posint" |integers|
      NIL)
     (|nnint_plus_nnint_is_nnint| APPLICATION-JUDGEMENT "nonneg_int" |integers|
@@ -7051,7 +6935,7 @@
     (("" (TYPEPRED "md!1")
       (("" (EXPAND "wf_Method") (("" (ASSERT) NIL NIL)) NIL)) NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
@@ -7088,7 +6972,7 @@
     (("" (TYPEPRED "post(md!1)") (("" (ASSERT) (("" (POSTPONE) NIL NIL)) NIL))
       NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
@@ -7139,7 +7023,7 @@
         NIL))
       NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
@@ -7180,7 +7064,7 @@
         (("" (EXPAND "wf_BoolExpr") (("" (ASSERT) NIL NIL)) NIL)) NIL))
       NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
@@ -7214,7 +7098,7 @@
    1662 13 T NIL))
  (|on_method_exit_normal_TCC6| 0
   (|on_method_exit_normal_TCC6-1| NIL 3401446938 3401613228
-   ("" (SUBTYPE-TCC) NIL NIL) PROVED
+   ("" (SUBTYPE-TCC) NIL NIL) UNCHECKED
    ((|on_method_event_type| CONST-DECL "boolean" |SemanticsTypes| NIL)
     (|FullProgram| FORMAL-TYPE-DECL NIL |SemanticsJML| NIL)
     (|FullState| FORMAL-TYPE-DECL NIL |SemanticsJML| NIL)
@@ -7259,10 +7143,7 @@
     (|real_ge_is_total_order| NAME-JUDGEMENT "(total_order?[real])"
      |real_props| NIL)
     (|getFieldDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
-    (|getLocalDecls| CONST-DECL "finite_set[LocalVarDecl]" |ProgramFunctions|
-     NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    NIL NIL NIL
     (|getGhostDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
     (|ext_declared_var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions|
      NIL)
@@ -7286,7 +7167,7 @@
    415 415 NIL NIL))
  (|on_method_exit_exceptional_TCC1| 0
   (|on_method_exit_exceptional_TCC1-1| NIL 3390908875 3401613228
-   ("" (SKOSIMP*) (("" (ASSERT) NIL NIL)) NIL) PROVED
+   ("" (SKOSIMP*) (("" (ASSERT) NIL NIL)) NIL) UNCHECKED
    ((|nnint_plus_posint_is_posint| APPLICATION-JUDGEMENT "posint" |integers|
      NIL)
     (|nnint_plus_nnint_is_nnint| APPLICATION-JUDGEMENT "nonneg_int" |integers|
@@ -7302,7 +7183,7 @@
     (("" (TYPEPRED "md!1")
       (("" (EXPAND "wf_Method") (("" (ASSERT) NIL NIL)) NIL)) NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
@@ -7335,7 +7216,7 @@
    52 51 T NIL))
  (|on_method_exit_exceptional_TCC3| 0
   (|on_method_exit_exceptional_TCC3-1| NIL 3390908875 3401613229 ("" (TCC))
-   PROVED
+   UNCHECKED
    ((|posint_plus_nnint_is_posint| APPLICATION-JUDGEMENT "posint" |integers|
      NIL))
    43 42 NIL NIL))
@@ -7372,7 +7253,7 @@
         NIL))
       NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|nnint_plus_posint_is_posint| APPLICATION-JUDGEMENT "posint" |integers|
      NIL)
     (|nnint_plus_nnint_is_nnint| APPLICATION-JUDGEMENT "nonneg_int" |integers|
@@ -7422,7 +7303,7 @@
         NIL))
       NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)

@@ -114,6 +114,11 @@ BEGIN
   cp_not_mva_ghostvar : LEMMA % :-)
     NOT new_mva_vars_gvds(mp)(new_cp_gvd(mp))
 
+  var_names_MVA_subset_var_names_new_gdvs : LEMMA % :-)
+    subset?(var_names(mva(mp)), 
+            union(var_names(program(mp)), var_names(new_gvds(mp))))
+
+
 
 END NewVariableDeclarations
 
@@ -155,6 +160,15 @@ BEGIN
     ENDCASES
   MEASURE length(l)
 
+
+  var_names_ann_action : LEMMA % :-)
+    FORALL(a : Action, n : Name) :
+      var_names(ann_action(a))(n) = 
+        EXISTS(oa : OneAction) : 
+          member(oa, a) AND
+          (n = target(oa) OR var_names(source(oa))(n))
+
+
   update_vars(mp)(t : Transition) : Stmt =
     Sequence(Set(cp(mp), NExpr(NumVarEval(name_of(mp)(tcp(t))))), 
              ann_action(action(t)))
@@ -165,6 +179,7 @@ BEGIN
           ts(t) AND x = (guard_to_expression(mva(mp))(guard(t)), 
           update_vars(mp)(t))}
 
+
   ann_guard_actions(mp)(ts : finite_set[Transition]) : list[[BoolExpr, Stmt]] =
     set2list(ann_guard_actions_set(mp)(ts))
 
@@ -174,7 +189,6 @@ BEGIN
      CaseJML(ann_guard_actions(mp)(ts)))
 
 
-      
   ann_event_set(mp)(ts : finite_set[Transition]) : 
                          finite_set[[BoolExpr, Stmt]] = 
     {c : [BoolExpr, Stmt] | EXISTS (q : CP) : 
@@ -187,8 +201,15 @@ BEGIN
   ann_event(mp)(ts : finite_set[Transition]): Stmt =
     CaseJML(set2list(ann_event_set(mp)(ts)))
 
-  ann_event_var_names : LEMMA
+  var_names_ann_event : LEMMA % :-)
+    FORALL(ts : finite_set[Transition]) :
+      subset?(ts, ts(mva(mp))) IMPLIES
+        subset?(var_names(ann_event(mp)(ts)), 
+                union(var_names(program(mp)), var_names(new_gvds(mp))))
+
+  ann_event_var_names : LEMMA % :-)
     FORALl(ts : finite_set[Transition], v : Name) :
+      subset?(ts, ts(mva(mp))) IMPLIES
       var_names(ann_event(mp)(ts))(v) IMPLIES 
         ext_declared_var_names(program(mp))(v) OR
         var_names(new_gvds(mp))(v)
@@ -226,6 +247,10 @@ BEGIN
 
   filter_event(a)(et : EventType)(m : Name) : finite_set[Transition] =
     {t : Transition | ts(a)(t) AND etype(event(t)) = et AND mname(event(t)) = m}
+
+  filter_event_subset : LEMMA % :-)
+    FORALL(et : EventType, m : Name) :
+      subset?(filter_event(a)(et)(m), ts(a))
 
   ann_method(mp)(m : Method) : Method =
     LET ann_event_type = LAMBDA (et : EventType) : 
@@ -288,7 +313,8 @@ BEGIN
       Sequence?(exc_set(ann_method(mp)(m))) AND
         s1(exc_set(ann_method(mp)(m))) = exc_set(m)
 
-  body_ann_method_wf_Body : LEMMA % :-)
+
+  ann_method_wf_Body : LEMMA % :-)
     FORALL(m : Method) :
       wf_Method(program(mp))(m) IMPLIES
       LET am = ann_method(mp)(m) IN
@@ -358,28 +384,28 @@ BEGIN
     ELSE c
     ENDIF
 
-  FieldDecls_ann_class : LEMMA
+  FieldDecls_ann_class : LEMMA % :-)
     FORALL(c : Class) :
       fields(ann_class(mp)(c)) = fields(c)
 
-  LocalDecls_ann_class : LEMMA
+  LocalDecls_ann_class : LEMMA % :-)
     FORALL(c : Class) :
       getLocalDecls(ann_class(mp)(c)) = getLocalDecls(c)
 
-  GhostDecls_ann_class_annotated : LEMMA
+  GhostDecls_ann_class_annotated : LEMMA % :-)
     FORALL(c : Class) :
       classes(program(mp))(c) IMPLIES 
       name(c) = class_name(mva(mp)) IMPLIES
         ghost_vars(ann_class(mp)(c)) = union(ghost_vars(c), new_gvds(mp))
 
-  GhostDecls_ann_class_not_annotated : LEMMA
+  GhostDecls_ann_class_not_annotated : LEMMA % :-)
     FORALL(c : Class) :
       classes(program(mp))(c) IMPLIES
       NOT name(c) = class_name(mva(mp)) IMPLIES
         ghost_vars(ann_class(mp)(c)) = ghost_vars(c)
 
 
-  ann_class_wf_Class : LEMMA
+  ann_class_almost_wf_Class : LEMMA % :-)
     FORALL(c : Class) :
       wf_Class(program(mp))(c) IMPLIES
       LET ac = ann_class(mp)(c) IN
@@ -389,9 +415,21 @@ BEGIN
            name(m1) = name(m2) IMPLIES
            m1 = m2) 
      AND
-     (FORALL (v : Name) : var_names(inv(c))(v) IMPLIES 
+     (FORALL (v : Name) : var_names(inv(ann_class(mp)(c)))(v) IMPLIES 
                           ext_declared_var_names(program(mp))(v) OR 
                           var_names(new_gvds(mp))(v))
+
+  ann_class_inv : LEMMA % :-)
+    FORALL(c : Class) :
+    IF classes(program(mp))(c) AND name(c) = class_name(mva(mp))
+    THEN Conj?(inv(ann_class(mp)(c))) AND 
+         b2(inv(ann_class(mp)(c))) = inv(c)
+    ELSE inv(ann_class(mp)(c)) = inv(c)
+    ENDIF
+
+  ann_program_preserves_class_name : LEMMA % :-)
+    FORALL(c : Class) :
+      name(ann_class(mp)(c)) = name(c)
         
 END AnnotateClass
 
@@ -499,6 +537,9 @@ BEGIN
     getGhostDecls(ann_program(mp)) =
       union(getGhostDecls(program(mp)), new_gvds(mp))
 
+  ann_program_ext_declared_var_names : LEMMA % :-)
+     ext_declared_var_names(ann_program(mp)) = 
+       union(ext_declared_var_names(program(mp)), var_names(new_gvds(mp)))
 
   ann_program_preserves_wf_state : LEMMA % :-)
     FORALL (s : PState) :
@@ -518,73 +559,18 @@ BEGIN
       wf_state(mp)(sMP) IMPLIES
       wf_state(ann_program(mp))(sAP) IMPLIES
         (is_ghost(vn, sMP) IMPLIES is_ghost(vn, sAP))
-
-
-  ann_class_inv : LEMMA % :-)
-    FORALL(c : Class) :
-    IF classes(program(mp))(c) AND name(c) = class_name(mva(mp))
-    THEN Conj?(inv(ann_class(mp)(c))) AND 
-         b2(inv(ann_class(mp)(c))) = inv(c)
-    ELSE inv(ann_class(mp)(c)) = inv(c)
-    ENDIF
   
-  var_names_ann_action : LEMMA % :-)
-    FORALL(a : Action, n : Name) :
-      var_names(ann_action(a))(n) = 
-        EXISTS(oa : OneAction) : 
-          member(oa, a) AND
-          (n = target(oa) OR var_names(source(oa))(n))
-
-
-%  var_names_ann_guard_actions : LEMMA
-%    FORALL(ts : finite_set[Transition], n : Name) :
-%      var_names(CaseJML(ann_guard_actions(mp)(ts)))(n) =
-%        EXISTS (t : Transition, x : [BoolExpr, Stmt]) : 
-%          ts(t) AND 
-%          x = (guard_to_expression(mva(mp))(guard(t)), update_vars(mp)(t)) AND
-%          union(var_names(proj_1(x)), var_names(proj_2(x)))(n)
-
-
-  IMPORTING WF_Card[[BoolExpr, Stmt]]
-
-  var_names_CaseJML_set2list : LEMMA % :-)
-    FORALL(s : finite_set[[BoolExpr, Stmt]], n : Name) :
-      var_names(CaseJML(set2list(s)))(n) =
-          EXISTS(x : [BoolExpr, Stmt]) :
-            s(x) AND union(var_names(proj_1(x)), var_names(proj_2(x)))(n)
-
-  var_names_MVA_subset_var_names_new_gdvs : LEMMA % :-)
-    subset?(var_names(mva(mp)), 
-            union(var_names(program(mp)), var_names(new_gvds(mp))))
-
-  var_names_ann_event : LEMMA % :-)
-    FORALL(ts : finite_set[Transition]) :
-      subset?(ts, ts(mva(mp))) IMPLIES
-        subset?(var_names(ann_event(mp)(ts)), 
-                union(var_names(program(mp)), var_names(new_gvds(mp))))
-
   var_names_ann_program : LEMMA % :-)
     subset?(var_names(ann_program(mp)), 
             union(var_names(program(mp)), var_names(new_gvds(mp))))
-
-  ann_program_yields_wf_program : LEMMA % :-)
-    wf_Program(ann_program(mp))
 
   ann_program_preserves_wf_body : LEMMA % :-)
     FORALL(b : (wf_Body(program(mp)))) :
       wf_Body(ann_program(mp))(b)
 
-  % PROVE
-  % unprovable for the moment
-  % one problem: derive(mp)(inv) = derive(ann_program(mp))(inv)
-  % should not depend on astate
-  % TODO: See the proofs in AnnGenerationLemmas where it is used and try to do
-  % without it (we need another lemma saying that the annotations we add have
-  % no side-effect.
-  ann_program_preserves_well_behaved_Program : LEMMA
-    well_behaved_Program(mp) IMPLIES
-      well_behaved_Program(ann_program(mp))
-
+  ann_program_preserves_wf_method : LEMMA  % :-)
+    FORALL(m : (wf_Method(program(mp)))) :
+      wf_Method(ann_program(mp))(ann_method(mp)(m))
 
   get_class_ann_program : LEMMA % :-)
     FORALL (c1, c2 : Class, tgt : Val) :
@@ -614,6 +600,7 @@ BEGIN
       name(m1) = name(m2) IMPLIES
         m2 = ann_method(mp)(m1)
 
+
   lookup_mthd_ann_program : LEMMA % :-)
     FORALL (m1, m2 : Method, mn : Name, tgt : Val) :
       up?(lookup_mthd(program(mp), tgt, mn)) IMPLIES
@@ -639,9 +626,6 @@ BEGIN
         is_ghost(n, s)
 
 
-  ann_program_preserves_class_name : LEMMA % :-)
-    FORALL(c : Class) :
-      name(ann_class(mp)(c)) = name(c)
 
   ann_program_preserves_class_names : LEMMA % :-)
     class_names(program(mp)) = class_names(ann_program(mp))

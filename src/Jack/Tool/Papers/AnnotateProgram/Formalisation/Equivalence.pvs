@@ -83,6 +83,7 @@ BEGIN
         ts(mva(mp))(t) AND guard(t) = g) IMPLIES
         EXISTS (e : Expr, v : Val, n : nat) : 
           guard_to_expression(mva(mp))(g) = e AND
+          wf_Body(ann_program(mp))(e) AND
           derive(ann_program(mp))(e, sAP, v, sAP)(n) AND
           (g(stA(sMVA), st(pstate(sAP))) IFF v = Bool(TRUE))
 
@@ -95,6 +96,7 @@ BEGIN
       wf_state(ann_program(mp))(sAP) IMPLIES
       NOT up?(ex(pstate(sAP))) IMPLIES
       MVA_vars_modeled?(sMVA, sAP) IMPLIES
+      wf_Body(ann_program(mp))(e) IMPLIES
         (eval(e)(stA(sMVA), st(pstate(sAP))) = v IFF
          EXISTS (n : nat) : derive(ann_program(mp))(e, sAP, v, sAP)(n))
 
@@ -102,9 +104,9 @@ BEGIN
     guard_to_expression_behavior(mp) AND
     eval_action_behavior(mp)
 
-  well_behaved_MP(mp) : boolean =
-    well_behaved_Program(mp) AND
-    well_behaved_MVA(mp)
+%  well_behaved_MP(mp) : boolean =
+%    well_behaved_Program(mp) AND
+%    well_behaved_MVA(mp)
 
   related_states(mp)(sMP : MPState, sAP : APState) : boolean = 
     wf_state(mp)(sMP) AND
